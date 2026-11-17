@@ -1,0 +1,70 @@
+{
+  "asof": "2026-11-17T00:26:42.976316+00:00",
+  "source_manifest": "269bfae3b1903ec375efcba779d3f1f3038373968e6644795f187e9e7d127986",
+  "controls": {
+    "absolute_liquidity_separable": true,
+    "conditional_variation_with_exact_event_mass": true,
+    "unsupported_anchor_refused": true,
+    "bad_probability_refused": true,
+    "invalid_size_refused": true,
+    "future_path_not_a_conditioning_feature": true,
+    "representative_weight_conservation": true,
+    "identical_states_split_mass_equally": true,
+    "inherited_execution": {
+      "unavoidable_prefix_and_queue_preservation": true,
+      "placement_latency_and_wait": true,
+      "actual_initial_depth_changes_new_queue": true,
+      "shared_volume_and_price_priority": true,
+      "no_flow": true,
+      "bid_ask_value_sign": true,
+      "economic_actions_and_inventory_cap": true,
+      "negative_volume_refused": true,
+      "nonfinite_state_refused": true,
+      "forecast_changes_shared_weights": true,
+      "invalid_probability_refused": true,
+      "observer_lane_off_parity": true,
+      "wrong_ledger_refused": true,
+      "compiled_canonical_paths": 24,
+      "compiled_canonical_nonempty": 24,
+      "unreceived_fill_and_hidden_queue_ignored": true,
+      "received_fill_changes_state": true,
+      "true_remainder_leak_refused": true,
+      "confirmed_partial_fill_front_preserved": true,
+      "known_bad_replenished_ahead_refused": true,
+      "pending_cache_deferred_until_activation": true,
+      "unknown_zero_queue_preserved": true,
+      "all_donor_labels_reconciled": 1929,
+      "ask_reach_relabels_at_current_price": true,
+      "stale_donor_label_refused": true,
+      "shared_support_and_continuous_prior": true,
+      "invalid_spread_refused": true,
+      "positive_and_negative_post_value": true
+    },
+    "wrong_value_refused_20261026values.parquet": true,
+    "wrong_value_refused_20261027values.parquet": true,
+    "wrong_value_refused_20261027oracle.parquet": true
+  },
+  "actions": {
+    "20261026:values.parquet": {
+      "selected": 418,
+      "common": 418
+    },
+    "20261027:values.parquet": {
+      "selected": 443,
+      "common": 443
+    },
+    "20261027:oracle.parquet": {
+      "selected": 443,
+      "common": 420
+    }
+  },
+  "bank": {
+    "retained_legacy": 1929,
+    "representatives": 3597
+  },
+  "pilot_status": "skipped_by_frozen_gate",
+  "inputs": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/conditional_map_20261117_v1/actions_20261026/receipt.json": "30523dca5488926d79ae7bdfc25c4bf8ccdf162eaaa7f7256cdb85348845f4ed",
+    "/home/yuqing/ctaNew/data/predict_fun/research/conditional_map_20261117_v1/actions_20261027/receipt.json": "24dbbd32802fd8a71d7322417fb28997600e067a17dc8b7f30cf054375c4da30"
+  }
+}

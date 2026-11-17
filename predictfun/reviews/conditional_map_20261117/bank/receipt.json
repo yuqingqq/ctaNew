@@ -1,0 +1,4555 @@
+{
+  "asof": "2026-11-17T00:21:27.126557+00:00",
+  "source_manifest": "269bfae3b1903ec375efcba779d3f1f3038373968e6644795f187e9e7d127986",
+  "training_days": [
+    "20261023",
+    "20261024",
+    "20261025"
+  ],
+  "eligible_times": 27875,
+  "selected_times": 19198,
+  "statuses": {
+    "eligible": 19198,
+    "missing_market_probes": 0
+  },
+  "retained_legacy": 1929,
+  "representatives": 3597,
+  "cells": {
+    "(1, 1.0, 0, 4)": {
+      "population": 11,
+      "representatives": 8,
+      "weight_sum": 11.0
+    },
+    "(1, 1.0, 0, 9)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 1.0, 1, 3)": {
+      "population": 51,
+      "representatives": 8,
+      "weight_sum": 51.0
+    },
+    "(1, 1.0, 1, 4)": {
+      "population": 13,
+      "representatives": 8,
+      "weight_sum": 13.0
+    },
+    "(1, 1.0, 1, 8)": {
+      "population": 16,
+      "representatives": 8,
+      "weight_sum": 16.0
+    },
+    "(1, 1.0, 1, 9)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(1, 1.0, 1, 13)": {
+      "population": 13,
+      "representatives": 8,
+      "weight_sum": 13.0
+    },
+    "(1, 1.0, 1, 14)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 1.0, 2, 2)": {
+      "population": 161,
+      "representatives": 8,
+      "weight_sum": 161.0
+    },
+    "(1, 1.0, 2, 3)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(1, 1.0, 2, 7)": {
+      "population": 282,
+      "representatives": 8,
+      "weight_sum": 282.0
+    },
+    "(1, 1.0, 2, 8)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(1, 1.0, 2, 12)": {
+      "population": 178,
+      "representatives": 8,
+      "weight_sum": 178.0
+    },
+    "(1, 1.0, 2, 13)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(1, 1.0, 3, 1)": {
+      "population": 45,
+      "representatives": 8,
+      "weight_sum": 45.0
+    },
+    "(1, 1.0, 3, 6)": {
+      "population": 145,
+      "representatives": 8,
+      "weight_sum": 145.0
+    },
+    "(1, 1.0, 3, 7)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(1, 1.0, 3, 11)": {
+      "population": 169,
+      "representatives": 8,
+      "weight_sum": 169.0
+    },
+    "(1, 1.0, 3, 12)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(1, 1.0, 4, 0)": {
+      "population": 6,
+      "representatives": 6,
+      "weight_sum": 6.0
+    },
+    "(1, 1.0, 4, 1)": {
+      "population": 17,
+      "representatives": 8,
+      "weight_sum": 17.0
+    },
+    "(1, 1.0, 4, 5)": {
+      "population": 46,
+      "representatives": 8,
+      "weight_sum": 46.0
+    },
+    "(1, 1.0, 4, 6)": {
+      "population": 41,
+      "representatives": 8,
+      "weight_sum": 41.0
+    },
+    "(1, 1.0, 4, 10)": {
+      "population": 191,
+      "representatives": 8,
+      "weight_sum": 191.0
+    },
+    "(1, 1.0, 4, 11)": {
+      "population": 104,
+      "representatives": 8,
+      "weight_sum": 104.0
+    },
+    "(1, 1.0, 5, 4)": {
+      "population": 53,
+      "representatives": 8,
+      "weight_sum": 53.0
+    },
+    "(1, 1.0, 5, 9)": {
+      "population": 11,
+      "representatives": 8,
+      "weight_sum": 11.0
+    },
+    "(1, 1.0, 5, 14)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(1, 1.0, 6, 3)": {
+      "population": 137,
+      "representatives": 8,
+      "weight_sum": 137.0
+    },
+    "(1, 1.0, 6, 4)": {
+      "population": 48,
+      "representatives": 8,
+      "weight_sum": 48.0
+    },
+    "(1, 1.0, 6, 8)": {
+      "population": 72,
+      "representatives": 8,
+      "weight_sum": 72.0
+    },
+    "(1, 1.0, 6, 9)": {
+      "population": 20,
+      "representatives": 8,
+      "weight_sum": 20.0
+    },
+    "(1, 1.0, 6, 13)": {
+      "population": 37,
+      "representatives": 8,
+      "weight_sum": 37.0
+    },
+    "(1, 1.0, 6, 14)": {
+      "population": 7,
+      "representatives": 7,
+      "weight_sum": 7.0
+    },
+    "(1, 1.0, 7, 2)": {
+      "population": 253,
+      "representatives": 8,
+      "weight_sum": 253.0
+    },
+    "(1, 1.0, 7, 7)": {
+      "population": 529,
+      "representatives": 8,
+      "weight_sum": 529.0
+    },
+    "(1, 1.0, 7, 8)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(1, 1.0, 7, 12)": {
+      "population": 293,
+      "representatives": 8,
+      "weight_sum": 293.0
+    },
+    "(1, 1.0, 7, 13)": {
+      "population": 6,
+      "representatives": 6,
+      "weight_sum": 6.0
+    },
+    "(1, 1.0, 8, 1)": {
+      "population": 13,
+      "representatives": 8,
+      "weight_sum": 13.0
+    },
+    "(1, 1.0, 8, 6)": {
+      "population": 65,
+      "representatives": 8,
+      "weight_sum": 65.0
+    },
+    "(1, 1.0, 8, 7)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(1, 1.0, 8, 11)": {
+      "population": 115,
+      "representatives": 8,
+      "weight_sum": 115.0
+    },
+    "(1, 1.0, 8, 12)": {
+      "population": 8,
+      "representatives": 8,
+      "weight_sum": 8.0
+    },
+    "(1, 1.0, 9, 0)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(1, 1.0, 9, 1)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 1.0, 9, 5)": {
+      "population": 13,
+      "representatives": 8,
+      "weight_sum": 13.0
+    },
+    "(1, 1.0, 9, 6)": {
+      "population": 12,
+      "representatives": 8,
+      "weight_sum": 12.0
+    },
+    "(1, 1.0, 9, 10)": {
+      "population": 72,
+      "representatives": 8,
+      "weight_sum": 72.0
+    },
+    "(1, 1.0, 9, 11)": {
+      "population": 47,
+      "representatives": 8,
+      "weight_sum": 47.0
+    },
+    "(1, 1.0, 10, 4)": {
+      "population": 203,
+      "representatives": 8,
+      "weight_sum": 203.0
+    },
+    "(1, 1.0, 10, 9)": {
+      "population": 70,
+      "representatives": 8,
+      "weight_sum": 70.0
+    },
+    "(1, 1.0, 10, 14)": {
+      "population": 37,
+      "representatives": 8,
+      "weight_sum": 37.0
+    },
+    "(1, 1.0, 11, 3)": {
+      "population": 165,
+      "representatives": 8,
+      "weight_sum": 165.0
+    },
+    "(1, 1.0, 11, 4)": {
+      "population": 116,
+      "representatives": 8,
+      "weight_sum": 116.0
+    },
+    "(1, 1.0, 11, 8)": {
+      "population": 111,
+      "representatives": 8,
+      "weight_sum": 111.0
+    },
+    "(1, 1.0, 11, 9)": {
+      "population": 38,
+      "representatives": 8,
+      "weight_sum": 38.0
+    },
+    "(1, 1.0, 11, 13)": {
+      "population": 79,
+      "representatives": 8,
+      "weight_sum": 79.0
+    },
+    "(1, 1.0, 11, 14)": {
+      "population": 20,
+      "representatives": 8,
+      "weight_sum": 20.0
+    },
+    "(1, 1.0, 12, 2)": {
+      "population": 140,
+      "representatives": 8,
+      "weight_sum": 140.0
+    },
+    "(1, 1.0, 12, 3)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(1, 1.0, 12, 7)": {
+      "population": 263,
+      "representatives": 8,
+      "weight_sum": 263.0
+    },
+    "(1, 1.0, 12, 8)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(1, 1.0, 12, 12)": {
+      "population": 210,
+      "representatives": 8,
+      "weight_sum": 210.0
+    },
+    "(1, 1.0, 12, 13)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 1.0, 13, 1)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(1, 1.0, 13, 6)": {
+      "population": 36,
+      "representatives": 8,
+      "weight_sum": 36.0
+    },
+    "(1, 1.0, 13, 7)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(1, 1.0, 13, 11)": {
+      "population": 65,
+      "representatives": 8,
+      "weight_sum": 65.0
+    },
+    "(1, 1.0, 13, 12)": {
+      "population": 6,
+      "representatives": 6,
+      "weight_sum": 6.0
+    },
+    "(1, 1.0, 14, 1)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(1, 1.0, 14, 5)": {
+      "population": 8,
+      "representatives": 8,
+      "weight_sum": 8.0
+    },
+    "(1, 1.0, 14, 6)": {
+      "population": 10,
+      "representatives": 8,
+      "weight_sum": 10.0
+    },
+    "(1, 1.0, 14, 10)": {
+      "population": 37,
+      "representatives": 8,
+      "weight_sum": 37.0
+    },
+    "(1, 1.0, 14, 11)": {
+      "population": 23,
+      "representatives": 8,
+      "weight_sum": 23.0
+    },
+    "(1, 2.0, 0, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 2.0, 1, 3)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(1, 2.0, 1, 8)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 2.0, 2, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 2.0, 2, 3)": {
+      "population": 8,
+      "representatives": 8,
+      "weight_sum": 8.0
+    },
+    "(1, 2.0, 2, 7)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(1, 2.0, 2, 8)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(1, 2.0, 2, 13)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(1, 2.0, 3, 1)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(1, 2.0, 3, 2)": {
+      "population": 9,
+      "representatives": 8,
+      "weight_sum": 9.0
+    },
+    "(1, 2.0, 3, 6)": {
+      "population": 6,
+      "representatives": 6,
+      "weight_sum": 6.0
+    },
+    "(1, 2.0, 3, 7)": {
+      "population": 9,
+      "representatives": 8,
+      "weight_sum": 9.0
+    },
+    "(1, 2.0, 3, 11)": {
+      "population": 6,
+      "representatives": 6,
+      "weight_sum": 6.0
+    },
+    "(1, 2.0, 3, 12)": {
+      "population": 12,
+      "representatives": 8,
+      "weight_sum": 12.0
+    },
+    "(1, 2.0, 4, 0)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(1, 2.0, 4, 5)": {
+      "population": 9,
+      "representatives": 8,
+      "weight_sum": 9.0
+    },
+    "(1, 2.0, 4, 10)": {
+      "population": 13,
+      "representatives": 8,
+      "weight_sum": 13.0
+    },
+    "(1, 2.0, 4, 11)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 2.0, 5, 4)": {
+      "population": 8,
+      "representatives": 8,
+      "weight_sum": 8.0
+    },
+    "(1, 2.0, 5, 14)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(1, 2.0, 6, 3)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(1, 2.0, 6, 13)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 2.0, 7, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 2.0, 7, 3)": {
+      "population": 13,
+      "representatives": 8,
+      "weight_sum": 13.0
+    },
+    "(1, 2.0, 7, 7)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 2.0, 7, 8)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 2.0, 7, 13)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 2.0, 8, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 2.0, 8, 7)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(1, 2.0, 8, 11)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(1, 2.0, 8, 12)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 2.0, 9, 10)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(1, 2.0, 9, 11)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 2.0, 10, 4)": {
+      "population": 11,
+      "representatives": 8,
+      "weight_sum": 11.0
+    },
+    "(1, 2.0, 10, 9)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 2.0, 10, 14)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 2.0, 11, 3)": {
+      "population": 10,
+      "representatives": 8,
+      "weight_sum": 10.0
+    },
+    "(1, 2.0, 11, 8)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(1, 2.0, 11, 9)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(1, 2.0, 12, 3)": {
+      "population": 12,
+      "representatives": 8,
+      "weight_sum": 12.0
+    },
+    "(1, 2.0, 12, 7)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 2.0, 12, 8)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 2.0, 12, 13)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 2.0, 13, 7)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(1, 2.0, 14, 10)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(1, 3.0, 1, 3)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(1, 3.0, 2, 2)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(1, 3.0, 2, 7)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(1, 3.0, 2, 12)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(1, 3.0, 2, 13)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 3.0, 3, 1)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(1, 3.0, 3, 6)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(1, 3.0, 3, 11)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(1, 3.0, 4, 5)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(1, 3.0, 4, 6)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 3.0, 4, 10)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(1, 3.0, 4, 11)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(1, 3.0, 5, 4)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(1, 3.0, 5, 9)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 3.0, 6, 3)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(1, 3.0, 9, 0)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 3.0, 9, 10)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 3.0, 10, 4)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(1, 3.0, 10, 14)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 3.0, 11, 3)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(1, 3.0, 11, 13)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 3.0, 12, 2)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(1, 3.0, 13, 1)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 4.0, 3, 2)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(1, 4.0, 3, 6)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(1, 4.0, 3, 7)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 4.0, 4, 5)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(1, 4.0, 4, 10)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(1, 4.0, 5, 4)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(1, 4.0, 6, 13)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 4.0, 7, 3)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 4.0, 10, 4)": {
+      "population": 6,
+      "representatives": 6,
+      "weight_sum": 6.0
+    },
+    "(1, 4.0, 13, 12)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 5.0, 1, 3)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 5.0, 1, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 5.0, 1, 9)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 5.0, 2, 2)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(1, 5.0, 4, 6)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 5.0, 4, 10)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(1, 5.0, 5, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 5.0, 6, 3)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 5.0, 9, 5)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 5.0, 9, 6)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 5.0, 10, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 5.0, 11, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 5.0, 13, 1)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 6.0, 0, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 6.0, 3, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 6.0, 4, 0)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 6.0, 4, 10)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 6.0, 5, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 6.0, 8, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 6.0, 10, 4)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(1, 7.0, 5, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 8.0, 3, 6)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 8.0, 4, 5)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 8.0, 4, 10)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 9.0, 5, 4)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(1, 10.0, 4, 10)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(1, 10.0, 10, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 11.0, 10, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 15.0, 4, 10)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 15.0, 5, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(1, 17.0, 10, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 1.0, 0, 4)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(2, 1.0, 0, 9)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(2, 1.0, 1, 3)": {
+      "population": 56,
+      "representatives": 8,
+      "weight_sum": 56.0
+    },
+    "(2, 1.0, 1, 4)": {
+      "population": 14,
+      "representatives": 8,
+      "weight_sum": 14.0
+    },
+    "(2, 1.0, 1, 8)": {
+      "population": 25,
+      "representatives": 8,
+      "weight_sum": 25.0
+    },
+    "(2, 1.0, 1, 9)": {
+      "population": 6,
+      "representatives": 6,
+      "weight_sum": 6.0
+    },
+    "(2, 1.0, 1, 13)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(2, 1.0, 1, 14)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(2, 1.0, 2, 2)": {
+      "population": 159,
+      "representatives": 8,
+      "weight_sum": 159.0
+    },
+    "(2, 1.0, 2, 3)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 1.0, 2, 7)": {
+      "population": 282,
+      "representatives": 8,
+      "weight_sum": 282.0
+    },
+    "(2, 1.0, 2, 8)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 1.0, 2, 12)": {
+      "population": 161,
+      "representatives": 8,
+      "weight_sum": 161.0
+    },
+    "(2, 1.0, 3, 1)": {
+      "population": 49,
+      "representatives": 8,
+      "weight_sum": 49.0
+    },
+    "(2, 1.0, 3, 6)": {
+      "population": 125,
+      "representatives": 8,
+      "weight_sum": 125.0
+    },
+    "(2, 1.0, 3, 7)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(2, 1.0, 3, 11)": {
+      "population": 147,
+      "representatives": 8,
+      "weight_sum": 147.0
+    },
+    "(2, 1.0, 3, 12)": {
+      "population": 6,
+      "representatives": 6,
+      "weight_sum": 6.0
+    },
+    "(2, 1.0, 4, 0)": {
+      "population": 6,
+      "representatives": 6,
+      "weight_sum": 6.0
+    },
+    "(2, 1.0, 4, 1)": {
+      "population": 15,
+      "representatives": 8,
+      "weight_sum": 15.0
+    },
+    "(2, 1.0, 4, 5)": {
+      "population": 45,
+      "representatives": 8,
+      "weight_sum": 45.0
+    },
+    "(2, 1.0, 4, 6)": {
+      "population": 43,
+      "representatives": 8,
+      "weight_sum": 43.0
+    },
+    "(2, 1.0, 4, 10)": {
+      "population": 161,
+      "representatives": 8,
+      "weight_sum": 161.0
+    },
+    "(2, 1.0, 4, 11)": {
+      "population": 69,
+      "representatives": 8,
+      "weight_sum": 69.0
+    },
+    "(2, 1.0, 5, 4)": {
+      "population": 44,
+      "representatives": 8,
+      "weight_sum": 44.0
+    },
+    "(2, 1.0, 5, 9)": {
+      "population": 16,
+      "representatives": 8,
+      "weight_sum": 16.0
+    },
+    "(2, 1.0, 5, 14)": {
+      "population": 7,
+      "representatives": 7,
+      "weight_sum": 7.0
+    },
+    "(2, 1.0, 6, 3)": {
+      "population": 163,
+      "representatives": 8,
+      "weight_sum": 163.0
+    },
+    "(2, 1.0, 6, 4)": {
+      "population": 41,
+      "representatives": 8,
+      "weight_sum": 41.0
+    },
+    "(2, 1.0, 6, 8)": {
+      "population": 63,
+      "representatives": 8,
+      "weight_sum": 63.0
+    },
+    "(2, 1.0, 6, 9)": {
+      "population": 17,
+      "representatives": 8,
+      "weight_sum": 17.0
+    },
+    "(2, 1.0, 6, 13)": {
+      "population": 31,
+      "representatives": 8,
+      "weight_sum": 31.0
+    },
+    "(2, 1.0, 6, 14)": {
+      "population": 9,
+      "representatives": 8,
+      "weight_sum": 9.0
+    },
+    "(2, 1.0, 7, 2)": {
+      "population": 256,
+      "representatives": 8,
+      "weight_sum": 256.0
+    },
+    "(2, 1.0, 7, 3)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(2, 1.0, 7, 7)": {
+      "population": 398,
+      "representatives": 8,
+      "weight_sum": 398.0
+    },
+    "(2, 1.0, 7, 8)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(2, 1.0, 7, 12)": {
+      "population": 289,
+      "representatives": 8,
+      "weight_sum": 289.0
+    },
+    "(2, 1.0, 7, 13)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(2, 1.0, 8, 1)": {
+      "population": 9,
+      "representatives": 8,
+      "weight_sum": 9.0
+    },
+    "(2, 1.0, 8, 6)": {
+      "population": 63,
+      "representatives": 8,
+      "weight_sum": 63.0
+    },
+    "(2, 1.0, 8, 7)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(2, 1.0, 8, 11)": {
+      "population": 77,
+      "representatives": 8,
+      "weight_sum": 77.0
+    },
+    "(2, 1.0, 8, 12)": {
+      "population": 11,
+      "representatives": 8,
+      "weight_sum": 11.0
+    },
+    "(2, 1.0, 9, 1)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(2, 1.0, 9, 5)": {
+      "population": 7,
+      "representatives": 7,
+      "weight_sum": 7.0
+    },
+    "(2, 1.0, 9, 6)": {
+      "population": 13,
+      "representatives": 8,
+      "weight_sum": 13.0
+    },
+    "(2, 1.0, 9, 10)": {
+      "population": 59,
+      "representatives": 8,
+      "weight_sum": 59.0
+    },
+    "(2, 1.0, 9, 11)": {
+      "population": 41,
+      "representatives": 8,
+      "weight_sum": 41.0
+    },
+    "(2, 1.0, 10, 4)": {
+      "population": 131,
+      "representatives": 8,
+      "weight_sum": 131.0
+    },
+    "(2, 1.0, 10, 9)": {
+      "population": 51,
+      "representatives": 8,
+      "weight_sum": 51.0
+    },
+    "(2, 1.0, 10, 14)": {
+      "population": 25,
+      "representatives": 8,
+      "weight_sum": 25.0
+    },
+    "(2, 1.0, 11, 3)": {
+      "population": 153,
+      "representatives": 8,
+      "weight_sum": 153.0
+    },
+    "(2, 1.0, 11, 4)": {
+      "population": 77,
+      "representatives": 8,
+      "weight_sum": 77.0
+    },
+    "(2, 1.0, 11, 8)": {
+      "population": 91,
+      "representatives": 8,
+      "weight_sum": 91.0
+    },
+    "(2, 1.0, 11, 9)": {
+      "population": 33,
+      "representatives": 8,
+      "weight_sum": 33.0
+    },
+    "(2, 1.0, 11, 13)": {
+      "population": 50,
+      "representatives": 8,
+      "weight_sum": 50.0
+    },
+    "(2, 1.0, 11, 14)": {
+      "population": 15,
+      "representatives": 8,
+      "weight_sum": 15.0
+    },
+    "(2, 1.0, 12, 2)": {
+      "population": 168,
+      "representatives": 8,
+      "weight_sum": 168.0
+    },
+    "(2, 1.0, 12, 3)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(2, 1.0, 12, 7)": {
+      "population": 268,
+      "representatives": 8,
+      "weight_sum": 268.0
+    },
+    "(2, 1.0, 12, 8)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(2, 1.0, 12, 12)": {
+      "population": 201,
+      "representatives": 8,
+      "weight_sum": 201.0
+    },
+    "(2, 1.0, 12, 13)": {
+      "population": 6,
+      "representatives": 6,
+      "weight_sum": 6.0
+    },
+    "(2, 1.0, 13, 1)": {
+      "population": 14,
+      "representatives": 8,
+      "weight_sum": 14.0
+    },
+    "(2, 1.0, 13, 6)": {
+      "population": 34,
+      "representatives": 8,
+      "weight_sum": 34.0
+    },
+    "(2, 1.0, 13, 7)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(2, 1.0, 13, 11)": {
+      "population": 58,
+      "representatives": 8,
+      "weight_sum": 58.0
+    },
+    "(2, 1.0, 13, 12)": {
+      "population": 6,
+      "representatives": 6,
+      "weight_sum": 6.0
+    },
+    "(2, 1.0, 14, 0)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 1.0, 14, 1)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(2, 1.0, 14, 5)": {
+      "population": 11,
+      "representatives": 8,
+      "weight_sum": 11.0
+    },
+    "(2, 1.0, 14, 6)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(2, 1.0, 14, 10)": {
+      "population": 26,
+      "representatives": 8,
+      "weight_sum": 26.0
+    },
+    "(2, 1.0, 14, 11)": {
+      "population": 17,
+      "representatives": 8,
+      "weight_sum": 17.0
+    },
+    "(2, 2.0, 0, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 2.0, 1, 3)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 2.0, 2, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 2.0, 2, 3)": {
+      "population": 10,
+      "representatives": 8,
+      "weight_sum": 10.0
+    },
+    "(2, 2.0, 2, 12)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 2.0, 2, 13)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 2.0, 3, 1)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 2.0, 3, 2)": {
+      "population": 8,
+      "representatives": 8,
+      "weight_sum": 8.0
+    },
+    "(2, 2.0, 3, 6)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(2, 2.0, 3, 7)": {
+      "population": 12,
+      "representatives": 8,
+      "weight_sum": 12.0
+    },
+    "(2, 2.0, 3, 11)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(2, 2.0, 3, 12)": {
+      "population": 8,
+      "representatives": 8,
+      "weight_sum": 8.0
+    },
+    "(2, 2.0, 4, 0)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 2.0, 4, 5)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(2, 2.0, 4, 10)": {
+      "population": 15,
+      "representatives": 8,
+      "weight_sum": 15.0
+    },
+    "(2, 2.0, 5, 4)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(2, 2.0, 5, 14)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 2.0, 6, 3)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(2, 2.0, 6, 8)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(2, 2.0, 7, 3)": {
+      "population": 10,
+      "representatives": 8,
+      "weight_sum": 10.0
+    },
+    "(2, 2.0, 7, 8)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(2, 2.0, 7, 13)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(2, 2.0, 8, 2)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(2, 2.0, 8, 6)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 2.0, 8, 7)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 2.0, 8, 11)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(2, 2.0, 9, 10)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 2.0, 10, 4)": {
+      "population": 8,
+      "representatives": 8,
+      "weight_sum": 8.0
+    },
+    "(2, 2.0, 10, 9)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 2.0, 11, 3)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(2, 2.0, 11, 8)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 2.0, 11, 13)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(2, 2.0, 12, 3)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(2, 2.0, 12, 7)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 2.0, 12, 8)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(2, 2.0, 12, 13)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 2.0, 13, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 2.0, 13, 11)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 2.0, 14, 10)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 3.0, 1, 3)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 3.0, 1, 8)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 3.0, 3, 1)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(2, 3.0, 3, 6)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 3.0, 3, 11)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(2, 3.0, 4, 6)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 3.0, 4, 10)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(2, 3.0, 4, 11)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 3.0, 5, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 3.0, 10, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 3.0, 11, 3)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(2, 3.0, 11, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 3.0, 13, 6)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 4.0, 0, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 4.0, 2, 3)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 4.0, 4, 5)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 4.0, 6, 3)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 4.0, 8, 11)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 5.0, 2, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 5.0, 4, 10)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 5.0, 5, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 5.0, 10, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 6.0, 3, 1)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 6.0, 4, 10)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 7.0, 4, 10)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(2, 12.0, 10, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 1.0, 0, 4)": {
+      "population": 9,
+      "representatives": 8,
+      "weight_sum": 9.0
+    },
+    "(3, 1.0, 0, 9)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 1.0, 1, 3)": {
+      "population": 39,
+      "representatives": 8,
+      "weight_sum": 39.0
+    },
+    "(3, 1.0, 1, 4)": {
+      "population": 13,
+      "representatives": 8,
+      "weight_sum": 13.0
+    },
+    "(3, 1.0, 1, 8)": {
+      "population": 10,
+      "representatives": 8,
+      "weight_sum": 10.0
+    },
+    "(3, 1.0, 1, 9)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(3, 1.0, 1, 13)": {
+      "population": 13,
+      "representatives": 8,
+      "weight_sum": 13.0
+    },
+    "(3, 1.0, 1, 14)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 1.0, 2, 2)": {
+      "population": 160,
+      "representatives": 8,
+      "weight_sum": 160.0
+    },
+    "(3, 1.0, 2, 3)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(3, 1.0, 2, 7)": {
+      "population": 280,
+      "representatives": 8,
+      "weight_sum": 280.0
+    },
+    "(3, 1.0, 2, 8)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(3, 1.0, 2, 12)": {
+      "population": 146,
+      "representatives": 8,
+      "weight_sum": 146.0
+    },
+    "(3, 1.0, 2, 13)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 1.0, 3, 1)": {
+      "population": 44,
+      "representatives": 8,
+      "weight_sum": 44.0
+    },
+    "(3, 1.0, 3, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 1.0, 3, 6)": {
+      "population": 111,
+      "representatives": 8,
+      "weight_sum": 111.0
+    },
+    "(3, 1.0, 3, 7)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(3, 1.0, 3, 11)": {
+      "population": 101,
+      "representatives": 8,
+      "weight_sum": 101.0
+    },
+    "(3, 1.0, 3, 12)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(3, 1.0, 4, 0)": {
+      "population": 14,
+      "representatives": 8,
+      "weight_sum": 14.0
+    },
+    "(3, 1.0, 4, 1)": {
+      "population": 16,
+      "representatives": 8,
+      "weight_sum": 16.0
+    },
+    "(3, 1.0, 4, 5)": {
+      "population": 34,
+      "representatives": 8,
+      "weight_sum": 34.0
+    },
+    "(3, 1.0, 4, 6)": {
+      "population": 45,
+      "representatives": 8,
+      "weight_sum": 45.0
+    },
+    "(3, 1.0, 4, 10)": {
+      "population": 118,
+      "representatives": 8,
+      "weight_sum": 118.0
+    },
+    "(3, 1.0, 4, 11)": {
+      "population": 83,
+      "representatives": 8,
+      "weight_sum": 83.0
+    },
+    "(3, 1.0, 5, 4)": {
+      "population": 40,
+      "representatives": 8,
+      "weight_sum": 40.0
+    },
+    "(3, 1.0, 5, 9)": {
+      "population": 8,
+      "representatives": 8,
+      "weight_sum": 8.0
+    },
+    "(3, 1.0, 5, 14)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(3, 1.0, 6, 3)": {
+      "population": 128,
+      "representatives": 8,
+      "weight_sum": 128.0
+    },
+    "(3, 1.0, 6, 4)": {
+      "population": 39,
+      "representatives": 8,
+      "weight_sum": 39.0
+    },
+    "(3, 1.0, 6, 8)": {
+      "population": 47,
+      "representatives": 8,
+      "weight_sum": 47.0
+    },
+    "(3, 1.0, 6, 9)": {
+      "population": 12,
+      "representatives": 8,
+      "weight_sum": 12.0
+    },
+    "(3, 1.0, 6, 13)": {
+      "population": 28,
+      "representatives": 8,
+      "weight_sum": 28.0
+    },
+    "(3, 1.0, 6, 14)": {
+      "population": 8,
+      "representatives": 8,
+      "weight_sum": 8.0
+    },
+    "(3, 1.0, 7, 2)": {
+      "population": 250,
+      "representatives": 8,
+      "weight_sum": 250.0
+    },
+    "(3, 1.0, 7, 3)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(3, 1.0, 7, 7)": {
+      "population": 346,
+      "representatives": 8,
+      "weight_sum": 346.0
+    },
+    "(3, 1.0, 7, 8)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(3, 1.0, 7, 12)": {
+      "population": 239,
+      "representatives": 8,
+      "weight_sum": 239.0
+    },
+    "(3, 1.0, 7, 13)": {
+      "population": 6,
+      "representatives": 6,
+      "weight_sum": 6.0
+    },
+    "(3, 1.0, 8, 1)": {
+      "population": 13,
+      "representatives": 8,
+      "weight_sum": 13.0
+    },
+    "(3, 1.0, 8, 2)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(3, 1.0, 8, 6)": {
+      "population": 49,
+      "representatives": 8,
+      "weight_sum": 49.0
+    },
+    "(3, 1.0, 8, 7)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 1.0, 8, 11)": {
+      "population": 77,
+      "representatives": 8,
+      "weight_sum": 77.0
+    },
+    "(3, 1.0, 8, 12)": {
+      "population": 9,
+      "representatives": 8,
+      "weight_sum": 9.0
+    },
+    "(3, 1.0, 9, 0)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(3, 1.0, 9, 1)": {
+      "population": 6,
+      "representatives": 6,
+      "weight_sum": 6.0
+    },
+    "(3, 1.0, 9, 5)": {
+      "population": 7,
+      "representatives": 7,
+      "weight_sum": 7.0
+    },
+    "(3, 1.0, 9, 6)": {
+      "population": 11,
+      "representatives": 8,
+      "weight_sum": 11.0
+    },
+    "(3, 1.0, 9, 10)": {
+      "population": 32,
+      "representatives": 8,
+      "weight_sum": 32.0
+    },
+    "(3, 1.0, 9, 11)": {
+      "population": 33,
+      "representatives": 8,
+      "weight_sum": 33.0
+    },
+    "(3, 1.0, 10, 4)": {
+      "population": 135,
+      "representatives": 8,
+      "weight_sum": 135.0
+    },
+    "(3, 1.0, 10, 9)": {
+      "population": 40,
+      "representatives": 8,
+      "weight_sum": 40.0
+    },
+    "(3, 1.0, 10, 14)": {
+      "population": 14,
+      "representatives": 8,
+      "weight_sum": 14.0
+    },
+    "(3, 1.0, 11, 3)": {
+      "population": 136,
+      "representatives": 8,
+      "weight_sum": 136.0
+    },
+    "(3, 1.0, 11, 4)": {
+      "population": 64,
+      "representatives": 8,
+      "weight_sum": 64.0
+    },
+    "(3, 1.0, 11, 8)": {
+      "population": 79,
+      "representatives": 8,
+      "weight_sum": 79.0
+    },
+    "(3, 1.0, 11, 9)": {
+      "population": 35,
+      "representatives": 8,
+      "weight_sum": 35.0
+    },
+    "(3, 1.0, 11, 13)": {
+      "population": 47,
+      "representatives": 8,
+      "weight_sum": 47.0
+    },
+    "(3, 1.0, 11, 14)": {
+      "population": 16,
+      "representatives": 8,
+      "weight_sum": 16.0
+    },
+    "(3, 1.0, 12, 2)": {
+      "population": 142,
+      "representatives": 8,
+      "weight_sum": 142.0
+    },
+    "(3, 1.0, 12, 3)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(3, 1.0, 12, 7)": {
+      "population": 212,
+      "representatives": 8,
+      "weight_sum": 212.0
+    },
+    "(3, 1.0, 12, 8)": {
+      "population": 11,
+      "representatives": 8,
+      "weight_sum": 11.0
+    },
+    "(3, 1.0, 12, 12)": {
+      "population": 137,
+      "representatives": 8,
+      "weight_sum": 137.0
+    },
+    "(3, 1.0, 12, 13)": {
+      "population": 6,
+      "representatives": 6,
+      "weight_sum": 6.0
+    },
+    "(3, 1.0, 13, 1)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(3, 1.0, 13, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 1.0, 13, 6)": {
+      "population": 25,
+      "representatives": 8,
+      "weight_sum": 25.0
+    },
+    "(3, 1.0, 13, 7)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(3, 1.0, 13, 11)": {
+      "population": 43,
+      "representatives": 8,
+      "weight_sum": 43.0
+    },
+    "(3, 1.0, 13, 12)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(3, 1.0, 14, 1)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(3, 1.0, 14, 5)": {
+      "population": 7,
+      "representatives": 7,
+      "weight_sum": 7.0
+    },
+    "(3, 1.0, 14, 6)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(3, 1.0, 14, 10)": {
+      "population": 23,
+      "representatives": 8,
+      "weight_sum": 23.0
+    },
+    "(3, 1.0, 14, 11)": {
+      "population": 11,
+      "representatives": 8,
+      "weight_sum": 11.0
+    },
+    "(3, 2.0, 0, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 2.0, 2, 3)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(3, 2.0, 3, 1)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(3, 2.0, 3, 6)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(3, 2.0, 3, 7)": {
+      "population": 12,
+      "representatives": 8,
+      "weight_sum": 12.0
+    },
+    "(3, 2.0, 3, 11)": {
+      "population": 6,
+      "representatives": 6,
+      "weight_sum": 6.0
+    },
+    "(3, 2.0, 3, 12)": {
+      "population": 9,
+      "representatives": 8,
+      "weight_sum": 9.0
+    },
+    "(3, 2.0, 4, 5)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(3, 2.0, 4, 10)": {
+      "population": 12,
+      "representatives": 8,
+      "weight_sum": 12.0
+    },
+    "(3, 2.0, 5, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 2.0, 6, 3)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(3, 2.0, 7, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 2.0, 7, 3)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(3, 2.0, 7, 8)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(3, 2.0, 7, 13)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 2.0, 8, 1)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 2.0, 8, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 2.0, 8, 7)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(3, 2.0, 8, 12)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 2.0, 10, 4)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(3, 2.0, 10, 14)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 2.0, 11, 3)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(3, 2.0, 11, 8)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 2.0, 12, 3)": {
+      "population": 7,
+      "representatives": 7,
+      "weight_sum": 7.0
+    },
+    "(3, 2.0, 12, 8)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 2.0, 12, 13)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 2.0, 13, 7)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 3.0, 0, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 3.0, 0, 14)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 3.0, 1, 8)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 3.0, 2, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 3.0, 2, 7)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(3, 3.0, 3, 6)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 3.0, 3, 11)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 3.0, 4, 10)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(3, 3.0, 5, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 3.0, 6, 3)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(3, 3.0, 10, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 3.0, 11, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 3.0, 12, 2)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(3, 4.0, 2, 3)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 4.0, 3, 6)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(3, 4.0, 4, 10)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(3, 4.0, 8, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 4.0, 10, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 5.0, 4, 10)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 6.0, 1, 3)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 7.0, 4, 10)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 7.0, 8, 1)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 7.0, 10, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 9.0, 4, 10)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 10.0, 4, 5)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(3, 10.0, 4, 10)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 1.0, 0, 4)": {
+      "population": 7,
+      "representatives": 7,
+      "weight_sum": 7.0
+    },
+    "(4, 1.0, 0, 9)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 1.0, 1, 3)": {
+      "population": 36,
+      "representatives": 8,
+      "weight_sum": 36.0
+    },
+    "(4, 1.0, 1, 4)": {
+      "population": 8,
+      "representatives": 8,
+      "weight_sum": 8.0
+    },
+    "(4, 1.0, 1, 8)": {
+      "population": 13,
+      "representatives": 8,
+      "weight_sum": 13.0
+    },
+    "(4, 1.0, 1, 9)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(4, 1.0, 1, 13)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(4, 1.0, 1, 14)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 1.0, 2, 2)": {
+      "population": 158,
+      "representatives": 8,
+      "weight_sum": 158.0
+    },
+    "(4, 1.0, 2, 3)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 1.0, 2, 7)": {
+      "population": 195,
+      "representatives": 8,
+      "weight_sum": 195.0
+    },
+    "(4, 1.0, 2, 8)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(4, 1.0, 2, 12)": {
+      "population": 120,
+      "representatives": 8,
+      "weight_sum": 120.0
+    },
+    "(4, 1.0, 2, 13)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 1.0, 3, 1)": {
+      "population": 34,
+      "representatives": 8,
+      "weight_sum": 34.0
+    },
+    "(4, 1.0, 3, 2)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(4, 1.0, 3, 6)": {
+      "population": 82,
+      "representatives": 8,
+      "weight_sum": 82.0
+    },
+    "(4, 1.0, 3, 7)": {
+      "population": 6,
+      "representatives": 6,
+      "weight_sum": 6.0
+    },
+    "(4, 1.0, 3, 11)": {
+      "population": 100,
+      "representatives": 8,
+      "weight_sum": 100.0
+    },
+    "(4, 1.0, 3, 12)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(4, 1.0, 4, 0)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(4, 1.0, 4, 1)": {
+      "population": 9,
+      "representatives": 8,
+      "weight_sum": 9.0
+    },
+    "(4, 1.0, 4, 5)": {
+      "population": 34,
+      "representatives": 8,
+      "weight_sum": 34.0
+    },
+    "(4, 1.0, 4, 6)": {
+      "population": 50,
+      "representatives": 8,
+      "weight_sum": 50.0
+    },
+    "(4, 1.0, 4, 10)": {
+      "population": 133,
+      "representatives": 8,
+      "weight_sum": 133.0
+    },
+    "(4, 1.0, 4, 11)": {
+      "population": 57,
+      "representatives": 8,
+      "weight_sum": 57.0
+    },
+    "(4, 1.0, 5, 4)": {
+      "population": 41,
+      "representatives": 8,
+      "weight_sum": 41.0
+    },
+    "(4, 1.0, 5, 9)": {
+      "population": 7,
+      "representatives": 7,
+      "weight_sum": 7.0
+    },
+    "(4, 1.0, 5, 14)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(4, 1.0, 6, 3)": {
+      "population": 91,
+      "representatives": 8,
+      "weight_sum": 91.0
+    },
+    "(4, 1.0, 6, 4)": {
+      "population": 32,
+      "representatives": 8,
+      "weight_sum": 32.0
+    },
+    "(4, 1.0, 6, 8)": {
+      "population": 36,
+      "representatives": 8,
+      "weight_sum": 36.0
+    },
+    "(4, 1.0, 6, 9)": {
+      "population": 9,
+      "representatives": 8,
+      "weight_sum": 9.0
+    },
+    "(4, 1.0, 6, 13)": {
+      "population": 26,
+      "representatives": 8,
+      "weight_sum": 26.0
+    },
+    "(4, 1.0, 6, 14)": {
+      "population": 11,
+      "representatives": 8,
+      "weight_sum": 11.0
+    },
+    "(4, 1.0, 7, 2)": {
+      "population": 205,
+      "representatives": 8,
+      "weight_sum": 205.0
+    },
+    "(4, 1.0, 7, 3)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(4, 1.0, 7, 7)": {
+      "population": 241,
+      "representatives": 8,
+      "weight_sum": 241.0
+    },
+    "(4, 1.0, 7, 8)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(4, 1.0, 7, 12)": {
+      "population": 160,
+      "representatives": 8,
+      "weight_sum": 160.0
+    },
+    "(4, 1.0, 7, 13)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(4, 1.0, 8, 1)": {
+      "population": 8,
+      "representatives": 8,
+      "weight_sum": 8.0
+    },
+    "(4, 1.0, 8, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 1.0, 8, 6)": {
+      "population": 31,
+      "representatives": 8,
+      "weight_sum": 31.0
+    },
+    "(4, 1.0, 8, 7)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(4, 1.0, 8, 11)": {
+      "population": 59,
+      "representatives": 8,
+      "weight_sum": 59.0
+    },
+    "(4, 1.0, 8, 12)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(4, 1.0, 9, 0)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(4, 1.0, 9, 1)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 1.0, 9, 5)": {
+      "population": 11,
+      "representatives": 8,
+      "weight_sum": 11.0
+    },
+    "(4, 1.0, 9, 6)": {
+      "population": 8,
+      "representatives": 8,
+      "weight_sum": 8.0
+    },
+    "(4, 1.0, 9, 10)": {
+      "population": 36,
+      "representatives": 8,
+      "weight_sum": 36.0
+    },
+    "(4, 1.0, 9, 11)": {
+      "population": 26,
+      "representatives": 8,
+      "weight_sum": 26.0
+    },
+    "(4, 1.0, 10, 4)": {
+      "population": 92,
+      "representatives": 8,
+      "weight_sum": 92.0
+    },
+    "(4, 1.0, 10, 9)": {
+      "population": 32,
+      "representatives": 8,
+      "weight_sum": 32.0
+    },
+    "(4, 1.0, 10, 14)": {
+      "population": 19,
+      "representatives": 8,
+      "weight_sum": 19.0
+    },
+    "(4, 1.0, 11, 3)": {
+      "population": 118,
+      "representatives": 8,
+      "weight_sum": 118.0
+    },
+    "(4, 1.0, 11, 4)": {
+      "population": 60,
+      "representatives": 8,
+      "weight_sum": 60.0
+    },
+    "(4, 1.0, 11, 8)": {
+      "population": 57,
+      "representatives": 8,
+      "weight_sum": 57.0
+    },
+    "(4, 1.0, 11, 9)": {
+      "population": 23,
+      "representatives": 8,
+      "weight_sum": 23.0
+    },
+    "(4, 1.0, 11, 13)": {
+      "population": 36,
+      "representatives": 8,
+      "weight_sum": 36.0
+    },
+    "(4, 1.0, 11, 14)": {
+      "population": 12,
+      "representatives": 8,
+      "weight_sum": 12.0
+    },
+    "(4, 1.0, 12, 2)": {
+      "population": 106,
+      "representatives": 8,
+      "weight_sum": 106.0
+    },
+    "(4, 1.0, 12, 3)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(4, 1.0, 12, 7)": {
+      "population": 176,
+      "representatives": 8,
+      "weight_sum": 176.0
+    },
+    "(4, 1.0, 12, 8)": {
+      "population": 10,
+      "representatives": 8,
+      "weight_sum": 10.0
+    },
+    "(4, 1.0, 12, 12)": {
+      "population": 114,
+      "representatives": 8,
+      "weight_sum": 114.0
+    },
+    "(4, 1.0, 12, 13)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(4, 1.0, 13, 1)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(4, 1.0, 13, 6)": {
+      "population": 17,
+      "representatives": 8,
+      "weight_sum": 17.0
+    },
+    "(4, 1.0, 13, 7)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(4, 1.0, 13, 11)": {
+      "population": 29,
+      "representatives": 8,
+      "weight_sum": 29.0
+    },
+    "(4, 1.0, 13, 12)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 1.0, 14, 0)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(4, 1.0, 14, 6)": {
+      "population": 7,
+      "representatives": 7,
+      "weight_sum": 7.0
+    },
+    "(4, 1.0, 14, 10)": {
+      "population": 21,
+      "representatives": 8,
+      "weight_sum": 21.0
+    },
+    "(4, 1.0, 14, 11)": {
+      "population": 14,
+      "representatives": 8,
+      "weight_sum": 14.0
+    },
+    "(4, 2.0, 0, 14)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 2.0, 1, 3)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(4, 2.0, 2, 3)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(4, 2.0, 2, 8)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(4, 2.0, 3, 1)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(4, 2.0, 3, 2)": {
+      "population": 6,
+      "representatives": 6,
+      "weight_sum": 6.0
+    },
+    "(4, 2.0, 3, 6)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(4, 2.0, 3, 7)": {
+      "population": 10,
+      "representatives": 8,
+      "weight_sum": 10.0
+    },
+    "(4, 2.0, 3, 11)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(4, 2.0, 3, 12)": {
+      "population": 10,
+      "representatives": 8,
+      "weight_sum": 10.0
+    },
+    "(4, 2.0, 4, 0)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(4, 2.0, 4, 1)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 2.0, 4, 5)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(4, 2.0, 4, 10)": {
+      "population": 8,
+      "representatives": 8,
+      "weight_sum": 8.0
+    },
+    "(4, 2.0, 5, 4)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(4, 2.0, 6, 3)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(4, 2.0, 7, 2)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(4, 2.0, 7, 3)": {
+      "population": 9,
+      "representatives": 8,
+      "weight_sum": 9.0
+    },
+    "(4, 2.0, 7, 8)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 2.0, 7, 13)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(4, 2.0, 8, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 2.0, 8, 11)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 2.0, 8, 12)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 2.0, 9, 0)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 2.0, 9, 11)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 2.0, 10, 4)": {
+      "population": 11,
+      "representatives": 8,
+      "weight_sum": 11.0
+    },
+    "(4, 2.0, 10, 9)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(4, 2.0, 10, 14)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 2.0, 11, 3)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(4, 2.0, 11, 8)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 2.0, 12, 3)": {
+      "population": 6,
+      "representatives": 6,
+      "weight_sum": 6.0
+    },
+    "(4, 2.0, 12, 13)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 2.0, 13, 2)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(4, 2.0, 13, 7)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 3.0, 2, 2)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(4, 3.0, 2, 7)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 3.0, 3, 1)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 3.0, 3, 11)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 3.0, 4, 5)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 3.0, 4, 6)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(4, 3.0, 4, 10)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(4, 3.0, 5, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 3.0, 7, 2)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(4, 3.0, 7, 12)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 3.0, 8, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 3.0, 8, 11)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 3.0, 10, 4)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(4, 3.0, 10, 14)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(4, 3.0, 11, 3)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 3.0, 11, 4)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(4, 3.0, 12, 12)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 3.0, 13, 6)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 3.0, 13, 11)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 4.0, 1, 3)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 4.0, 3, 6)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 4.0, 4, 10)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 4.0, 7, 13)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 4.0, 8, 6)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 4.0, 9, 5)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 4.0, 10, 4)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(4, 4.0, 13, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 5.0, 1, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 5.0, 2, 7)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 5.0, 4, 10)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(4, 5.0, 10, 4)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(4, 5.0, 11, 3)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 6.0, 0, 9)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 6.0, 3, 1)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 6.0, 3, 7)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 6.0, 4, 0)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 6.0, 4, 10)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 6.0, 10, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 7.0, 4, 10)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(4, 8.0, 4, 6)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 9.0, 11, 3)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 10.0, 0, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 10.0, 3, 7)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 10.0, 5, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 11.0, 4, 6)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 18.0, 4, 10)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(4, 21.0, 1, 3)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 1.0, 0, 4)": {
+      "population": 8,
+      "representatives": 8,
+      "weight_sum": 8.0
+    },
+    "(5, 1.0, 0, 9)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(5, 1.0, 1, 3)": {
+      "population": 8,
+      "representatives": 8,
+      "weight_sum": 8.0
+    },
+    "(5, 1.0, 1, 4)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(5, 1.0, 1, 8)": {
+      "population": 10,
+      "representatives": 8,
+      "weight_sum": 10.0
+    },
+    "(5, 1.0, 1, 9)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 1.0, 1, 13)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(5, 1.0, 1, 14)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 1.0, 2, 2)": {
+      "population": 30,
+      "representatives": 8,
+      "weight_sum": 30.0
+    },
+    "(5, 1.0, 2, 7)": {
+      "population": 59,
+      "representatives": 8,
+      "weight_sum": 59.0
+    },
+    "(5, 1.0, 2, 12)": {
+      "population": 44,
+      "representatives": 8,
+      "weight_sum": 44.0
+    },
+    "(5, 1.0, 2, 13)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 1.0, 3, 1)": {
+      "population": 19,
+      "representatives": 8,
+      "weight_sum": 19.0
+    },
+    "(5, 1.0, 3, 2)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(5, 1.0, 3, 6)": {
+      "population": 43,
+      "representatives": 8,
+      "weight_sum": 43.0
+    },
+    "(5, 1.0, 3, 7)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(5, 1.0, 3, 11)": {
+      "population": 44,
+      "representatives": 8,
+      "weight_sum": 44.0
+    },
+    "(5, 1.0, 3, 12)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 1.0, 4, 0)": {
+      "population": 6,
+      "representatives": 6,
+      "weight_sum": 6.0
+    },
+    "(5, 1.0, 4, 1)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 1.0, 4, 5)": {
+      "population": 42,
+      "representatives": 8,
+      "weight_sum": 42.0
+    },
+    "(5, 1.0, 4, 6)": {
+      "population": 16,
+      "representatives": 8,
+      "weight_sum": 16.0
+    },
+    "(5, 1.0, 4, 10)": {
+      "population": 88,
+      "representatives": 8,
+      "weight_sum": 88.0
+    },
+    "(5, 1.0, 4, 11)": {
+      "population": 25,
+      "representatives": 8,
+      "weight_sum": 25.0
+    },
+    "(5, 1.0, 5, 4)": {
+      "population": 33,
+      "representatives": 8,
+      "weight_sum": 33.0
+    },
+    "(5, 1.0, 5, 9)": {
+      "population": 14,
+      "representatives": 8,
+      "weight_sum": 14.0
+    },
+    "(5, 1.0, 5, 14)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 1.0, 6, 3)": {
+      "population": 36,
+      "representatives": 8,
+      "weight_sum": 36.0
+    },
+    "(5, 1.0, 6, 4)": {
+      "population": 25,
+      "representatives": 8,
+      "weight_sum": 25.0
+    },
+    "(5, 1.0, 6, 8)": {
+      "population": 18,
+      "representatives": 8,
+      "weight_sum": 18.0
+    },
+    "(5, 1.0, 6, 9)": {
+      "population": 8,
+      "representatives": 8,
+      "weight_sum": 8.0
+    },
+    "(5, 1.0, 6, 13)": {
+      "population": 13,
+      "representatives": 8,
+      "weight_sum": 13.0
+    },
+    "(5, 1.0, 6, 14)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 1.0, 7, 2)": {
+      "population": 71,
+      "representatives": 8,
+      "weight_sum": 71.0
+    },
+    "(5, 1.0, 7, 3)": {
+      "population": 7,
+      "representatives": 7,
+      "weight_sum": 7.0
+    },
+    "(5, 1.0, 7, 7)": {
+      "population": 62,
+      "representatives": 8,
+      "weight_sum": 62.0
+    },
+    "(5, 1.0, 7, 8)": {
+      "population": 7,
+      "representatives": 7,
+      "weight_sum": 7.0
+    },
+    "(5, 1.0, 7, 12)": {
+      "population": 60,
+      "representatives": 8,
+      "weight_sum": 60.0
+    },
+    "(5, 1.0, 7, 13)": {
+      "population": 8,
+      "representatives": 8,
+      "weight_sum": 8.0
+    },
+    "(5, 1.0, 8, 1)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(5, 1.0, 8, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 1.0, 8, 6)": {
+      "population": 18,
+      "representatives": 8,
+      "weight_sum": 18.0
+    },
+    "(5, 1.0, 8, 7)": {
+      "population": 7,
+      "representatives": 7,
+      "weight_sum": 7.0
+    },
+    "(5, 1.0, 8, 11)": {
+      "population": 17,
+      "representatives": 8,
+      "weight_sum": 17.0
+    },
+    "(5, 1.0, 8, 12)": {
+      "population": 9,
+      "representatives": 8,
+      "weight_sum": 9.0
+    },
+    "(5, 1.0, 9, 1)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 1.0, 9, 5)": {
+      "population": 18,
+      "representatives": 8,
+      "weight_sum": 18.0
+    },
+    "(5, 1.0, 9, 6)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 1.0, 9, 10)": {
+      "population": 38,
+      "representatives": 8,
+      "weight_sum": 38.0
+    },
+    "(5, 1.0, 9, 11)": {
+      "population": 13,
+      "representatives": 8,
+      "weight_sum": 13.0
+    },
+    "(5, 1.0, 10, 4)": {
+      "population": 67,
+      "representatives": 8,
+      "weight_sum": 67.0
+    },
+    "(5, 1.0, 10, 9)": {
+      "population": 36,
+      "representatives": 8,
+      "weight_sum": 36.0
+    },
+    "(5, 1.0, 10, 14)": {
+      "population": 22,
+      "representatives": 8,
+      "weight_sum": 22.0
+    },
+    "(5, 1.0, 11, 3)": {
+      "population": 68,
+      "representatives": 8,
+      "weight_sum": 68.0
+    },
+    "(5, 1.0, 11, 4)": {
+      "population": 27,
+      "representatives": 8,
+      "weight_sum": 27.0
+    },
+    "(5, 1.0, 11, 8)": {
+      "population": 41,
+      "representatives": 8,
+      "weight_sum": 41.0
+    },
+    "(5, 1.0, 11, 9)": {
+      "population": 17,
+      "representatives": 8,
+      "weight_sum": 17.0
+    },
+    "(5, 1.0, 11, 13)": {
+      "population": 17,
+      "representatives": 8,
+      "weight_sum": 17.0
+    },
+    "(5, 1.0, 11, 14)": {
+      "population": 9,
+      "representatives": 8,
+      "weight_sum": 9.0
+    },
+    "(5, 1.0, 12, 2)": {
+      "population": 42,
+      "representatives": 8,
+      "weight_sum": 42.0
+    },
+    "(5, 1.0, 12, 3)": {
+      "population": 10,
+      "representatives": 8,
+      "weight_sum": 10.0
+    },
+    "(5, 1.0, 12, 7)": {
+      "population": 66,
+      "representatives": 8,
+      "weight_sum": 66.0
+    },
+    "(5, 1.0, 12, 8)": {
+      "population": 18,
+      "representatives": 8,
+      "weight_sum": 18.0
+    },
+    "(5, 1.0, 12, 12)": {
+      "population": 68,
+      "representatives": 8,
+      "weight_sum": 68.0
+    },
+    "(5, 1.0, 12, 13)": {
+      "population": 8,
+      "representatives": 8,
+      "weight_sum": 8.0
+    },
+    "(5, 1.0, 13, 1)": {
+      "population": 8,
+      "representatives": 8,
+      "weight_sum": 8.0
+    },
+    "(5, 1.0, 13, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 1.0, 13, 6)": {
+      "population": 6,
+      "representatives": 6,
+      "weight_sum": 6.0
+    },
+    "(5, 1.0, 13, 7)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(5, 1.0, 13, 11)": {
+      "population": 18,
+      "representatives": 8,
+      "weight_sum": 18.0
+    },
+    "(5, 1.0, 13, 12)": {
+      "population": 6,
+      "representatives": 6,
+      "weight_sum": 6.0
+    },
+    "(5, 1.0, 14, 0)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(5, 1.0, 14, 5)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(5, 1.0, 14, 6)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(5, 1.0, 14, 10)": {
+      "population": 19,
+      "representatives": 8,
+      "weight_sum": 19.0
+    },
+    "(5, 1.0, 14, 11)": {
+      "population": 7,
+      "representatives": 7,
+      "weight_sum": 7.0
+    },
+    "(5, 2.0, 0, 4)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 2.0, 0, 14)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 2.0, 1, 3)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 2.0, 1, 8)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 2.0, 2, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 2.0, 2, 3)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 2.0, 2, 7)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(5, 2.0, 2, 8)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(5, 2.0, 2, 12)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 2.0, 2, 13)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 2.0, 3, 1)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 2.0, 3, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 2.0, 3, 6)": {
+      "population": 6,
+      "representatives": 6,
+      "weight_sum": 6.0
+    },
+    "(5, 2.0, 3, 7)": {
+      "population": 16,
+      "representatives": 8,
+      "weight_sum": 16.0
+    },
+    "(5, 2.0, 3, 11)": {
+      "population": 6,
+      "representatives": 6,
+      "weight_sum": 6.0
+    },
+    "(5, 2.0, 3, 12)": {
+      "population": 11,
+      "representatives": 8,
+      "weight_sum": 11.0
+    },
+    "(5, 2.0, 4, 0)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 2.0, 4, 5)": {
+      "population": 7,
+      "representatives": 7,
+      "weight_sum": 7.0
+    },
+    "(5, 2.0, 4, 6)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 2.0, 4, 10)": {
+      "population": 11,
+      "representatives": 8,
+      "weight_sum": 11.0
+    },
+    "(5, 2.0, 4, 11)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 2.0, 5, 4)": {
+      "population": 8,
+      "representatives": 8,
+      "weight_sum": 8.0
+    },
+    "(5, 2.0, 5, 14)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 2.0, 6, 3)": {
+      "population": 6,
+      "representatives": 6,
+      "weight_sum": 6.0
+    },
+    "(5, 2.0, 6, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 2.0, 6, 8)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(5, 2.0, 6, 9)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 2.0, 6, 14)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 2.0, 7, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 2.0, 7, 3)": {
+      "population": 8,
+      "representatives": 8,
+      "weight_sum": 8.0
+    },
+    "(5, 2.0, 7, 7)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(5, 2.0, 7, 8)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 2.0, 7, 12)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(5, 2.0, 7, 13)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 2.0, 8, 1)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(5, 2.0, 8, 2)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 2.0, 8, 6)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 2.0, 8, 7)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(5, 2.0, 8, 11)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(5, 2.0, 8, 12)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 2.0, 9, 5)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(5, 2.0, 9, 10)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(5, 2.0, 10, 4)": {
+      "population": 19,
+      "representatives": 8,
+      "weight_sum": 19.0
+    },
+    "(5, 2.0, 10, 9)": {
+      "population": 6,
+      "representatives": 6,
+      "weight_sum": 6.0
+    },
+    "(5, 2.0, 10, 14)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(5, 2.0, 11, 3)": {
+      "population": 10,
+      "representatives": 8,
+      "weight_sum": 10.0
+    },
+    "(5, 2.0, 11, 8)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 2.0, 11, 13)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 2.0, 11, 14)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 2.0, 12, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 2.0, 12, 3)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(5, 2.0, 12, 7)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(5, 2.0, 12, 8)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(5, 2.0, 12, 12)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 2.0, 12, 13)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 2.0, 13, 1)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 2.0, 13, 6)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 2.0, 13, 7)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(5, 2.0, 13, 11)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 2.0, 13, 12)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 2.0, 14, 5)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(5, 2.0, 14, 10)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 3.0, 1, 3)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 3.0, 1, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 3.0, 1, 8)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 3.0, 2, 2)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(5, 3.0, 2, 7)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(5, 3.0, 2, 12)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 3.0, 3, 1)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(5, 3.0, 3, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 3.0, 3, 6)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(5, 3.0, 3, 7)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 3.0, 3, 11)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(5, 3.0, 4, 0)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 3.0, 4, 5)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(5, 3.0, 4, 6)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(5, 3.0, 4, 10)": {
+      "population": 9,
+      "representatives": 8,
+      "weight_sum": 9.0
+    },
+    "(5, 3.0, 4, 11)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(5, 3.0, 5, 4)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(5, 3.0, 5, 9)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 3.0, 5, 14)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 3.0, 6, 3)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 3.0, 6, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 3.0, 6, 9)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 3.0, 6, 13)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 3.0, 7, 7)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 3.0, 7, 12)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 3.0, 8, 6)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 3.0, 8, 11)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 3.0, 8, 12)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 3.0, 9, 10)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 3.0, 10, 4)": {
+      "population": 8,
+      "representatives": 8,
+      "weight_sum": 8.0
+    },
+    "(5, 3.0, 10, 9)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 3.0, 11, 3)": {
+      "population": 7,
+      "representatives": 7,
+      "weight_sum": 7.0
+    },
+    "(5, 3.0, 11, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 3.0, 11, 13)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 3.0, 11, 14)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 3.0, 12, 2)": {
+      "population": 4,
+      "representatives": 4,
+      "weight_sum": 4.0
+    },
+    "(5, 3.0, 12, 3)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 3.0, 12, 13)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 3.0, 13, 1)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 3.0, 13, 7)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 3.0, 14, 5)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 3.0, 14, 10)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 4.0, 0, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 4.0, 1, 13)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 4.0, 2, 12)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 4.0, 3, 1)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 4.0, 3, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 4.0, 3, 6)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 4.0, 3, 11)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 4.0, 4, 0)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 4.0, 4, 5)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(5, 4.0, 4, 10)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 4.0, 5, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 4.0, 6, 3)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 4.0, 6, 8)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 4.0, 7, 2)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 4.0, 7, 3)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 4.0, 8, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 4.0, 8, 12)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 4.0, 9, 6)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 4.0, 9, 11)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 4.0, 10, 4)": {
+      "population": 6,
+      "representatives": 6,
+      "weight_sum": 6.0
+    },
+    "(5, 4.0, 10, 14)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 4.0, 11, 3)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(5, 4.0, 11, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 4.0, 11, 8)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 4.0, 12, 3)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 4.0, 12, 7)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 4.0, 13, 1)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 4.0, 13, 6)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 4.0, 13, 7)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 4.0, 13, 11)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 4.0, 13, 12)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 4.0, 14, 10)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 5.0, 2, 7)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 5.0, 2, 12)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 5.0, 3, 1)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 5.0, 3, 12)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 5.0, 4, 0)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 5.0, 4, 5)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 5.0, 4, 6)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(5, 5.0, 4, 10)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 5.0, 4, 11)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 5.0, 5, 4)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 5.0, 5, 14)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 5.0, 6, 3)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 5.0, 10, 4)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 5.0, 11, 3)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 5.0, 11, 8)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 5.0, 14, 5)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 6.0, 0, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 6.0, 3, 2)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 6.0, 4, 5)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(5, 6.0, 4, 6)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 6.0, 4, 10)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(5, 6.0, 4, 11)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 6.0, 5, 4)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 6.0, 8, 12)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 6.0, 9, 10)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 6.0, 10, 4)": {
+      "population": 5,
+      "representatives": 5,
+      "weight_sum": 5.0
+    },
+    "(5, 7.0, 0, 4)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 7.0, 2, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 7.0, 4, 11)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 7.0, 5, 4)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 7.0, 5, 9)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 7.0, 8, 11)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 7.0, 13, 1)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 8.0, 4, 5)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 8.0, 4, 10)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 8.0, 4, 11)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 8.0, 5, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 8.0, 9, 11)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 8.0, 10, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 8.0, 13, 6)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 9.0, 2, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 9.0, 4, 10)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 9.0, 5, 9)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 9.0, 8, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 9.0, 12, 8)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 10.0, 3, 2)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 10.0, 4, 0)": {
+      "population": 3,
+      "representatives": 3,
+      "weight_sum": 3.0
+    },
+    "(5, 10.0, 4, 5)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 11.0, 4, 0)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 11.0, 4, 10)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 11.0, 7, 3)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 12.0, 4, 0)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 12.0, 4, 10)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 13.0, 4, 10)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 14.0, 4, 10)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 14.0, 6, 8)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 15.0, 0, 4)": {
+      "population": 2,
+      "representatives": 2,
+      "weight_sum": 2.0
+    },
+    "(5, 15.0, 4, 0)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 18.0, 1, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 18.0, 4, 0)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 19.0, 9, 0)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 24.0, 0, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 26.0, 10, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    },
+    "(5, 27.0, 11, 4)": {
+      "population": 1,
+      "representatives": 1,
+      "weight_sum": 1.0
+    }
+  },
+  "normalizer": {
+    "median": [
+      1.9824619867411197,
+      2.824598705229757,
+      3.6994108388578058,
+      3.952733200836922,
+      2.03484283319532,
+      2.8070255934712423,
+      3.699967292041354,
+      3.9602145565951847,
+      2.276505425427687,
+      0.6931471805599453,
+      0.495,
+      0.0,
+      0.0,
+      -0.029051726683974266,
+      -0.22878862172365189,
+      0.0,
+      0.0
+    ],
+    "iqr": [
+      1.4349510342761964,
+      1.1283471420043134,
+      0.9946240236250392,
+      0.9574338496719665,
+      1.4645105846070416,
+      1.1670324632663247,
+      1.004536363839307,
+      0.9565241036882828,
+      0.6415946346944104,
+      1.0,
+      0.39999999999999997,
+      1.0,
+      1.0,
+      1.0302728936076164,
+      2.826290547847748,
+      1.0,
+      1.0
+    ],
+    "features": [
+      "bid_cum_0",
+      "bid_cum_1",
+      "bid_cum_3",
+      "bid_cum_5",
+      "ask_cum_0",
+      "ask_cum_1",
+      "ask_cum_3",
+      "ask_cum_5",
+      "liquidity_scale",
+      "spread",
+      "mid",
+      "own_mv250",
+      "opp_mv250",
+      "adv_ofi250",
+      "adv_ofi1000",
+      "adv_bn_r100",
+      "adv_bn_r1000"
+    ],
+    "missing_counts": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      3,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "inputs": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/flow_price_20261116_v1/20261023/receipt.json": "1af35f62f1df9bbf28f7360405371c7e690e4f36bd7fd24270fe65d33c5949e2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/flow_price_20261116_v1/20261024/receipt.json": "d299a7ec72b332f7d3e03c492d5a7f6ed8c900d2682dbb4e576a3446d34fd2e8",
+    "/home/yuqing/ctaNew/data/predict_fun/research/flow_price_20261116_v1/20261025/receipt.json": "395d5815d0f1b20538fe1579346a1a0ab700c60755ff63d59677a896f8423f90"
+  },
+  "old_bank_receipt_sha256": "0948617002bdab3636045ab3aaf6164683bb85d213e4d71163334da78af055da",
+  "output_sha256": "21f8c32b51f12a17b11bfc4542c86142e1ea3206e37af30a53c2449322b66ab0",
+  "seconds": 66.00194239616394
+}

@@ -1,0 +1,75 @@
+{
+  "asof": "2026-11-17T00:24:05.431257+00:00",
+  "source_manifest": "269bfae3b1903ec375efcba779d3f1f3038373968e6644795f187e9e7d127986",
+  "day": "20261026",
+  "selected_markets": [
+    3787215,
+    3790280,
+    3792862,
+    3798874,
+    3803248,
+    3804777,
+    3808371,
+    3817683,
+    3823986,
+    3833192,
+    3841803,
+    3847236
+  ],
+  "bank_receipt_sha256": "07c1448989cbb456a4493e39b5d87bbef811d35f9604d6eb62b784f1fb9d1484",
+  "old_receipt_sha256": "34fd1a1260dc50bdc6af8c2776586c590e8052c1ac65d44d600b7a431d2d6297",
+  "controls": {
+    "3787215": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3790280": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3792862": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3798874": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3803248": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3804777": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3808371": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3817683": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3823986": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3833192": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3841803": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3847236": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    }
+  },
+  "outputs": {
+    "values.parquet": "6cf49a13b3689aa6d6d352cdb63b9d1acddb98d863a8ec79be514fa5d430e973"
+  },
+  "seconds": 157.2949275970459
+}

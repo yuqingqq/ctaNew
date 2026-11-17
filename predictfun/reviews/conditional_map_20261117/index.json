@@ -1,0 +1,21 @@
+{
+  "asof": "2026-11-17T00:26:42.977261+00:00",
+  "source_manifest": "269bfae3b1903ec375efcba779d3f1f3038373968e6644795f187e9e7d127986",
+  "pilot_status": "skipped_by_frozen_gate",
+  "outputs": {
+    "bank/receipt.json": "07c1448989cbb456a4493e39b5d87bbef811d35f9604d6eb62b784f1fb9d1484",
+    "gate.json": "0c761df1d5734379a499d496b040f98e3d2f4dc49d9fc1cea207da9445f8c65f",
+    "actions_20261026/report.json": "58bcb3a1c7f89b908f8b153dcd9e435cc56c4b5120782ca63a9314985f0b7288",
+    "actions_20261026/receipt.json": "30523dca5488926d79ae7bdfc25c4bf8ccdf162eaaa7f7256cdb85348845f4ed",
+    "actions_20261027/report.json": "93d94552fe69c4938b4e4b99a7bfa04d7539c8007d227ad712000d7f60c5ff77",
+    "actions_20261027/receipt.json": "24dbbd32802fd8a71d7322417fb28997600e067a17dc8b7f30cf054375c4da30",
+    "actions_20261027/oracle_report.json": "48e6463e45ef8883592a9db8d3f6465ba2b195c0a8f829ab829b99bf05ec9258",
+    "audit_v1.json": "6f3b296616c6867ded71267fcbaeedb7d72288ba24597f99b53040862b2f4b7b"
+  },
+  "scope": [
+    "Consumed days; no validation, intervals, promotion or live profitability claim",
+    "Raw donor futures remain approximate, despite causal state conditioning",
+    "Same estimated trade clocks, client queue uncertainty and zero continuation beyond1s",
+    "Keeping event probabilities coherent does not guarantee accurate conditional responses or solve churn"
+  ]
+}
