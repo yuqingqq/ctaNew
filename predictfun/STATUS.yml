@@ -3135,7 +3135,7 @@ severe_support_20261117:
   session: aea5bfb9
   user: "Ok, go"
   code: {script: predictfun/research/pf_severe_support.py, commit: a580eed4}
-  predicates: {B1_low_p_shortfall: YES, C1_coverage_gap: NOT-SHOWN, C2_model_error: YES, C3_shift: NOT-SHOWN}
+  predicates: {B1_low_p_shortfall: YES, C1_coverage_gap: "NOT-SHOWN (top-15 inputs only)", C2_model_error: "YES (pooled kNN O/E only - not per-decision superiority, not proof of no shift; review 06:01Z)", C3_shift: NOT-SHOWN}
   band_oe_forward: {"<0.005": 1.41, "0.005-0.01": 1.46, "0.01-0.02": 1.54, "0.02-0.05": 1.46, "0.05-0.1": 1.06, "0.1-0.2": 0.92, ">=0.2": 0.87}
   band_oe_in_sample: {"<0.005": 0.00, "0.005-0.01": 0.01, "0.01-0.02": 0.03, "0.02-0.05": 0.18, "0.05-0.1": 0.44, "0.1-0.2": 1.37, ">=0.2": 2.22}
   support_bins_share: [0.448, 0.443, 0.098, 0.011]
