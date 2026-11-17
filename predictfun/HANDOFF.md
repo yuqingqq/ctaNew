@@ -1,3 +1,24 @@
+<!-- PREDICTFUN_SCHEDULED_REVIEW_20261117 -->
+## 2026-11-17 Scheduled review enabled; this session reviews, the other session develops
+
+User explicitly requested automatic reviews when fix commits arrive. Local
+predictfun-commit-review.timer checks mm-research every5 minutes and queues one
+request in the existing Codex review thread. No-change checks are silent to the
+thread; one durable pending request prevents duplicates. Reports go under
+predictfun/reviews/automatic/ and name the reviewed SHA plus one next priority.
+The reviewer may add evidence/reports but must not implement fixes or develop
+models/strategy. Development stays with the other session.
+
+Setup/docs: automation/README.md; watcher automation/commit_review_watch.py.
+State: ~/.local/state/predictfun-commit-review/state.json. Start checkpoint38de5e66;
+first queued review includes fixebd5c6b3, pinned through state commit323ddd7d.
+Transport successfully queued/resumed this existing review thread; five watcher
+control-flow tests pass. The local timer is enabled. Review-only commits carry
+Predictfun-Review-Only: true to avoid triggering themselves. Runtime checks and
+acknowledgement preserve newer commits for the next review. No research/tape
+run or model change in this setup. See README for status/pause/resume commands.
+<!-- /PREDICTFUN_SCHEDULED_REVIEW_20261117 -->
+
 ## 2026-11-17 15:25Z (session aea5bfb9) — UNMATCHED-ACCEPTANCE FIX (USER: "Check the review"; review 3cef4993 / 38de5e66 of b6eaa7c2): a trajectory null with any unmatched draw is NOT-EVALUABLE; a decision-level matched null is declared as the fallback; code (ebd5c6b3) + synthetic selftests, no tape read
 
 - Checked the review at the code: it holds. The trajectory null samples step by step, so early picks of long-lived orders can leave too few orders for a later step; report() sent every draw to K2 / K3 whatever its unmatched count (the review's 1,200-order case: null ~900 pulls, K2 passed with no ranking; K3 correctly failed).

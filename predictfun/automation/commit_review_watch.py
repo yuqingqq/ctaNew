@@ -62,7 +62,10 @@ def relevant(repo, commit):
 
 
 def initialize(path, repo, branch, thread, codex, baseline):
-    repo = str(Path(repo).resolve()); codex = str(Path(codex).resolve())
+    repo = str(Path(repo).resolve())
+    # Keep the stable CLI link rather than pinning a release directory that a
+    # later normal Codex upgrade may remove.
+    codex = os.path.abspath(os.path.expanduser(codex))
     config = dict(repo=repo, branch=branch, thread=thread, codex=codex)
     with locked(path):
         if path.exists():
