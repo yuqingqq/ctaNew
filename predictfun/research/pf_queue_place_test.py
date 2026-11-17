@@ -270,7 +270,7 @@ def report():
     ev = A[(A.kind != 'state')]; stt = A[A.kind == 'state']
 
     def summ(g, tag=''):
-        g = g[g['status' + tag] == 'eligible'] if 'status' + tag in g else g
+        g = g[g['v' + tag].notna()]                         # rows valued at this horizon (states carry no per-horizon status)
         v = g['v' + tag]; vo = g['v' + tag] - g['vy' + tag]; q = g['q' + tag]
         return dict(n=len(g), v=float(v.mean()), v_old=float(vo.mean()), fill=float((q > 1e-9).mean()), sh=float(q.sum()),
                     per_sh=float(v.sum() / max(q.sum(), 1e-9)))
