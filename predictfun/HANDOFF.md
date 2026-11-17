@@ -1,3 +1,30 @@
+<!-- CONDITIONAL_MAP_20261117 -->
+## 2026-11-17 State-conditioned value mapping: frozen comparison running
+
+Source f60e2144, freeze 62201b95; isolated branch
+research/predict-conditional-map-20261117 in /tmp/cta-conditional-map-20261117.
+Evidence target reviews/conditional_map_20261117/index.json; ignored data/logs
+under data/predict_fun/research/conditional_map_20261117_v1/. Sequential launcher
+run_conditional_map.sh uses Codex/core8 only. Selftests and bank build complete;
+neutral action checks for Oct26/27 then a frozen replay gate and audit follow.
+No forecast or controller changes; no fixed retry, minimum age or new threshold.
+
+One candidate preserves SOFT_JOINT's complete coarse event-pair probability
+exactly while conditioning raw future-path responses on causal book-depth,
+absolute liquidity and six recent market-dynamics features. Expanded-bank-only
+ablation isolates coverage from state conditioning. Same training exposures,
+all original paths retained, maximum eight representatives per original cell.
+One fixed training-only robust state geometry and kernel width; no tuning.
+
+Before any continuous replay, the retrospective true-coarse-pair diagnostic
+must improve or match baseline RMSE for BOTH posting and cancellation on the
+same supported Oct27 actions, with strict improvement for at least one. This is
+a development compute screen, not validation. Future coarse labels enter only
+that separate diagnostic, never ordinary predictions or policy. If gate fails,
+record skipped_by_frozen_gate and finish audit without pilot. All dates consumed;
+no intervals, promotion or protected-date access. SOFT_JOINT remains baseline.
+<!-- /CONDITIONAL_MAP_20261117 -->
+
 <!-- RESPONSE_BRIDGE_20261116 -->
 ## 2026-11-16 Richer response experiment complete: better markout, worse churn; mapping remains unresolved
 
