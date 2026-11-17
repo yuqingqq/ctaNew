@@ -1,3 +1,16 @@
+queue_place_ledger_20261117_v2:
+  status: code_committed_awaiting_go
+  asof: "2026-11-17 13:09Z"
+  session: aea5bfb9
+  user: "repair that ledger (latest results review, finding 3)"
+  code: {script: predictfun/research/pf_queue_place_ledger.py, mutation_check: predictfun/research/pf_queue_place_ledger_mutants.py, driver: predictfun/research/run_queue_place_ledger.sh, commit: 7905b3c1}
+  readings_declared: [L1 LEDGER-COMPLETE, L2 V1-REPRODUCED, L3 GAP-ACCOUNTED, L4 COVERAGE-AT-2S, L5 SIGN-ROBUST]
+  selftest: "synthetic tape only: v1 reproduced bit for bit; every reachable status planted; planted silent skip 524 = v1 saved 524 of 572 counted; 4 known-bad inputs refused; 10 planted artifact errors flagged"
+  mutation_check: "unchanged copy passes; 25 / 25 planted code errors fail the selftest"
+  tape_read: false
+  running: false
+  next: "USER go -> run_queue_place_ledger.sh smoke, then all; then keep vs pull of the same resting order at the actual cancel latency (code + selftests before any run)"
+
 latest_results_review_20261117:
   status: complete_readings_reproduced_interpretations_qualified
   asof: 2026-11-17T07:29:36Z
@@ -3144,6 +3157,7 @@ stop_ev_design_20261115:
   next: "USER's go: STOP-FLOW labels + VALUES -> STOP-FLOW head -> EV policy, selectivity check, portfolio replay vs the harm-only baseline"
 
 queue_place_20261117:
+  qualified: "2026-11-17 07:29Z latest_results_review_20261117: 2,054 of 151,228 counted causal states without row or status, 60 arm rows without a 2 s status (ledger v2 code 7905b3c1, run pending the USER's go); FIRST / LATE / EARLY change exposure as well as queue priority"
   status: done_not_profitable
   asof: "2026-11-17 06:46Z"
   session: aea5bfb9
