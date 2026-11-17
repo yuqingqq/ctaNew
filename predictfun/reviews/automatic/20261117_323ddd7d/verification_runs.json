@@ -1,0 +1,34 @@
+{
+  "asof": "2026-11-17T15:38:00Z",
+  "target_commit": "323ddd7d224b7b155b0f8873271b0fdc8346cddb",
+  "request_id": "a4588711-f930-43c6-9a8d-2f8e229e369f",
+  "checkout": "/tmp/predictfun-review-323ddd7d",
+  "checks": [
+    {
+      "command": "PF_SLOT=codex /home/yuqing/ctaNew/predictfun/research/run_light.sh auto_review_323ddd7d_selftest -- /home/yuqing/pricer-sol/venv/bin/python3 /tmp/predictfun-review-323ddd7d/predictfun/research/pf_keep_pull.py selftest",
+      "exit_code": 0,
+      "run_light_entry": "2026-11-17T15:34:54Z tag=auto_review_323ddd7d_selftest rc=0 peak_rss_mib=302 wall_s=14.72 cpu_user_s=14.35 memavail_start_gib=23 disk_free_gib=460->460 slot=codex",
+      "synthetic_population": {"orders": 3440, "eligible": 3151, "fills": 1351},
+      "kernel_checks": 270,
+      "invariance_checked": 290,
+      "planted_error_controls": {"drop_fill": true, "no_latency": true, "lookahead": true, "null_cross": true},
+      "known_bad_refusals": {"v1_rows_changed": true, "v1_value_moved_hash_updated": true, "day_output_exists": true, "undeclared_day": true},
+      "synthetic_readings": {"K1 ORACLE-BOUND": "AVOIDABLE-AT-LATENCY", "K2 SCORE-EARNS": "NOT-SHOWN", "K3 SCORE-RANKS-VALUE": "RANKS-VALUE-STATES", "estimand": "decision states", "trajectory": "NOT-EVALUABLE-UNMATCHED (499 / 500 draws, mean 4.3 pulls)"}
+    },
+    {
+      "command": "PF_SLOT=codex /home/yuqing/ctaNew/predictfun/research/run_light.sh auto_review_323ddd7d_reproduce -- /home/yuqing/pricer-sol/venv/bin/python3 /home/yuqing/ctaNew/predictfun/reviews/automatic/20261117_323ddd7d/reproduce.py /tmp/predictfun-review-323ddd7d",
+      "exit_code": 0,
+      "run_light_entry": "2026-11-17T15:36:59Z tag=auto_review_323ddd7d_reproduce rc=0 peak_rss_mib=249 wall_s=2.91 cpu_user_s=2.74 memavail_start_gib=23 disk_free_gib=459->459 slot=codex",
+      "evidence": "receipt_v1.json",
+      "warnings": "Zero-action sensitivity: empty/NaN per-removed-share summaries; K3 false."
+    }
+  ],
+  "market_tape_read": false,
+  "full_mutation_suite_rerun": false,
+  "candidate_sources_modified": false,
+  "real_output_metadata_check": {
+    "asof": "2026-11-17T15:37:40Z",
+    "keep_pull_20261117_directory_exists": false,
+    "queue_place_20261117_v2_directory_exists": false
+  }
+}

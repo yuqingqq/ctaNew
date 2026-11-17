@@ -1,3 +1,29 @@
+<!-- AUTOMATIC_REVIEW_20261117_323DDD7D -->
+## 2026-11-17 15:38 UTC Scheduled review: unmatched-acceptance fix verified
+
+Reviewed target 323ddd7d224b7b155b0f8873271b0fdc8346cddb, including implementation
+ebd5c6b3. Report: reviews/automatic/20261117_323ddd7d/report.md; evidence and
+independent reproduction are beside it. Prior P1 unmatched acceptance is closed
+for this target; no new blocking defect found in the reviewed changes.
+
+Pinned original selftest and independent report-level reproduction pass. The
+1,200-order / 500-draw exhaustion fixture still produces 300.232 unmatched pulls
+per draw, but the emitted trajectory K2/K3 are now null; STATES matches 1,200
+states and correctly shows no ranking. Equal-lifetime and perfect loser-selection
+controls pass; an ineligible state is refused. Synthetic only, no market tape,
+training, forward-day read, profitability claim or development-source edit.
+
+STATES is a local decision-state diagnostic: an order may appear at several
+steps, so its repeated future-fill values are not executable portfolio P&L.
+The report names that estimand separately from trajectory acceptance.
+
+ONE next priority for development: run the queue-place ledger smoke, then the
+full consumed Oct 23–27 reconciliation gate. Require L1/L2/L3 and statuses for
+all 2,054 formerly missing states and all 60 missing 2 s values. Those real gaps
+remain empirically open. The development session owns the run under its existing
+authorization boundary; this reviewer did not launch it.
+<!-- /AUTOMATIC_REVIEW_20261117_323DDD7D -->
+
 <!-- PREDICTFUN_SCHEDULED_REVIEW_20261117 -->
 ## 2026-11-17 Scheduled review enabled; this session reviews, the other session develops
 

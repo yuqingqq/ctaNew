@@ -1,0 +1,46 @@
+{
+  "asof": "2026-11-17T15:37:02.706136+00:00",
+  "target_commit": "323ddd7d224b7b155b0f8873271b0fdc8346cddb",
+  "scope": "Synthetic only. Date strings are fixture labels, not observations from those days. No tape read or performance estimate.",
+  "source_hashes": {
+    "pf_keep_pull.py": "58b972f92bda06fbc847c43d2ace8db9d7b12f4daaf67bcfaa14e92deb475835",
+    "pf_queue_place_ledger.py": "8fa16b929b4ae497109a70add4036dd7cd4501102a261c74eba63de0e0b94bb5",
+    "pf_keep_pull_mutants.py": "45e3e5366cd107cc4f7e455ab3c452a40141b87a6380e45f88bed3d58530e467"
+  },
+  "review_script_sha256": "830f59ca4a193d8a3e97fe9e8416b32c2b42ef67e947cf7d8d885b7dc4ed2433",
+  "population": {
+    "synthetic_orders": 1200,
+    "synthetic_day_cells": 5,
+    "strata": 100,
+    "null_draws": 500
+  },
+  "exhaustion": {
+    "score_pulls": 1200,
+    "trajectory_mean_pulls": 899.768,
+    "unmatched_mean": 300.232,
+    "draws_with_unmatched": 500,
+    "raw_trajectory_k2": true,
+    "gated_trajectory_k2": null,
+    "gated_trajectory_k3": null,
+    "state_pulls": 1200,
+    "state_k2": false,
+    "state_k3": false,
+    "mean_repeated_order_states": 300.1,
+    "interpretation": "STATES is a local state-selection diagnostic. Repeated-order suffix values cannot be summed as executable portfolio P&L."
+  },
+  "controls": {
+    "equal_lifetime_draws": 200,
+    "equal_lifetime_all_matched": true,
+    "equal_lifetime_k2": false,
+    "equal_lifetime_k3": false,
+    "perfect_ranking_draws": 200,
+    "perfect_ranking_k2_k3_both_nulls": true,
+    "ineligible_state_refused": true,
+    "ask_bid_mirror_equal": true,
+    "legal_payoff_bounds": true,
+    "pending_excluded_from_live": true,
+    "live_latency_landing": true,
+    "report_gates_every_unmatched_variant": true
+  },
+  "report_sha256": "b7d335f39d3603d39b0a789241ea0baeead7ae1f41338aef364b80c568092710"
+}

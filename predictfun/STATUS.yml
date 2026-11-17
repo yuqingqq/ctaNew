@@ -1,3 +1,22 @@
+automatic_review_20261117_323ddd7d:
+  status: complete_no_new_blocking_defect
+  asof: "2026-11-17T15:38:00Z"
+  request_id: a4588711-f930-43c6-9a8d-2f8e229e369f
+  target_commit: 323ddd7d224b7b155b0f8873271b0fdc8346cddb
+  implementation_commit: ebd5c6b333558d40c8202c908b100edbbe7970ef
+  report: predictfun/reviews/automatic/20261117_323ddd7d/report.md
+  evidence: predictfun/reviews/automatic/20261117_323ddd7d/receipt_v1.json
+  prior_unmatched_acceptance_finding: resolved_at_this_target
+  pinned_synthetic_selftest: passed
+  independent_report_reproduction: passed
+  states_scope: local_decision_state_selection_not_executable_portfolio_value
+  real_ledger_reconciliation: still_pending
+  market_tape_read: false
+  development_sources_modified: false
+  validation_or_promotion: false
+  next_priority: ledger_smoke_then_full_consumed_day_L1_L2_L3_reconciliation
+  development_owner: other_session
+
 scheduled_commit_review_20261117:
   status: enabled_local_user_timer
   requested_by_user: true

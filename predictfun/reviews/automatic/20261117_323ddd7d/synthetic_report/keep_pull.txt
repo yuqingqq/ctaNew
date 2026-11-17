@@ -1,0 +1,74 @@
+KEEP OR PULL THE SAME RESTING ORDER AT THE ACTUAL CANCEL LATENCY (pf_keep_pull.py; replay, consumed days Oct23-27, development only)
+JOIN orders (30 sh at the known best, live at +58 ms, END +5 s, valued at the END mid); LIVE pulls decided every 50 ms from +100 ms land after L ms; c per order
+
+population: 1,200 counted states, 1,200 eligible resting orders (all in the score population); 0 orders miss a causal fair price at some step (0 steps; such a decision falls back to KEEP)
+  20261023: eligible 240
+  20261024: eligible 240
+  20261025: eligible 240
+  20261026: eligible 240
+  20261027: eligible 240
+
+PART 1 - what is at stake (every eligible order, M50, L 37 ms): sums in c over all orders
+  KEEP value -1,200 (loss on losing orders 1,200)
+  arm                 | improvement | foregone G | avoided L1 | avoided L2 (severe excess) | severe events | removed shares | live time lost (s)
+  PULL-ALL (live)     |       1,200 |          0 |      1,200 |                          0 |             0 |          1,200 | 2,948
+  ORACLE (live)       |       1,200 |          0 |      1,200 |                          0 |             0 |          1,200 | 2,948
+  ORACLE-PENDING      |       1,200 |          0 |      1,200 |                          0 |             0 |          1,200 | 2,998
+  ORACLE (EX POST, NOT DEPLOYABLE; live decisions) by latency: L 0 ms 1,200 (100%) | L 25 ms 1,200 (100%) | L 37 ms 1,200 (100%) | L 100 ms 600 (50%) | L 250 ms 0 (0%) | L 500 ms 0 (0%)
+  DELAYS of KEEP's 1,200 c loss: posting window (before a +50 ms withdrawal lands, +95 ms) 0 | pending-to-live gap (+95 to +100 ms; orders gone before +100 ms) 0 | cancel latency (the zero-latency oracle's decisions valued at 0 vs 37 ms) 0 | avoidable at 37 ms by those decisions 1,200 (re-chosen at 37 ms 1,200)
+  K1 by day (live oracle avoided / KEEP loss): 20261023 100%, 20261024 100%, 20261025 100%, 20261026 100%, 20261027 100%
+  M250_L37: KEEP -1,200, loss 1,200, ORACLE 1,200, PULL-ALL 1,200
+  M0_L37: KEEP -1,200, loss 1,200, ORACLE 1,200, PULL-ALL 1,200
+  M50_noyoung_L37: KEEP -1,200, loss 1,200, ORACLE 1,200, PULL-ALL 1,200
+
+PART 2 - declared causal scores against matched nulls (500 draws for the declared policy, 200 for the others). TRAJ = one pull per order, executed pulls matched
+  by (day, market, side, minute) and step, early picks can use up later ones (any unmatched draw -> NOT-EVALUABLE); STATES = the same counts of live decision states per
+  (stratum, step), each valued alone (matched by construction). The reading uses TRAJ when every draw matches, else STATES (declared before the run).
+  variant          policy null   | pulls (null, unmatched) | removed sh (null) | improvement | null mean | null p95 | days > null | K2  | per removed share | null p5 | days < null | K3
+  M50_L0              A+0 TRAJ   |  1,200 (   900, 300.2) |   1,200 (    900) |       1,200 |       900 |      914 |           5 | n/e |            -1.000 |  -1.000 |           0 | n/e
+  M50_L0              A+0 STATES |  1,200 ( 1,200,     -) |   1,200 (  1,200) |       1,200 |     1,200 |    1,200 |           0 | no  |            -1.000 |  -1.000 |           0 | no
+  M50_L37             A+0 TRAJ   |  1,200 (   900, 300.2) |   1,200 (    900) |       1,200 |       900 |      914 |           5 | n/e |            -1.000 |  -1.000 |           0 | n/e
+  M50_L37             A+0 STATES |  1,200 ( 1,200,     -) |   1,200 (  1,200) |       1,200 |     1,200 |    1,200 |           0 | no  |            -1.000 |  -1.000 |           0 | no
+  M50_L37             A+1 TRAJ   |  1,200 (   899, 301.4) |   1,200 (    899) |       1,200 |       899 |      913 |           5 | n/e |            -1.000 |  -1.000 |           0 | n/e
+  M50_L37             A+1 STATES |  1,200 ( 1,200,     -) |   1,200 (  1,200) |       1,200 |     1,200 |    1,200 |           0 | no  |            -1.000 |  -1.000 |           0 | no
+  M50_L37             A-1 TRAJ   |      0 (     0,   0.0) |       0 (      0) |           0 |         0 |        0 |           0 | no  |               nan |     nan |           0 | no
+  M50_L37             A-1 STATES |      0 (     0,     -) |       0 (      0) |           0 |         0 |        0 |           0 | no  |               nan |     nan |           0 | no
+  M50_L37            B0.5 TRAJ   |  1,200 (   900, 300.2) |   1,200 (    900) |       1,200 |       900 |      913 |           5 | n/e |            -1.000 |  -1.000 |           0 | n/e
+  M50_L37            B0.5 STATES |  1,200 ( 1,200,     -) |   1,200 (  1,200) |       1,200 |     1,200 |    1,200 |           0 | no  |            -1.000 |  -1.000 |           0 | no
+  M50_L37              B1 TRAJ   |  1,200 (   900, 299.7) |   1,200 (    900) |       1,200 |       900 |      914 |           5 | n/e |            -1.000 |  -1.000 |           0 | n/e
+  M50_L37              B1 STATES |  1,200 ( 1,200,     -) |   1,200 (  1,200) |       1,200 |     1,200 |    1,200 |           0 | no  |            -1.000 |  -1.000 |           0 | no
+  M50_L37              B2 TRAJ   |  1,200 (   901, 299.4) |   1,200 (    901) |       1,200 |       901 |      916 |           5 | n/e |            -1.000 |  -1.000 |           0 | n/e
+  M50_L37              B2 STATES |  1,200 ( 1,200,     -) |   1,200 (  1,200) |       1,200 |     1,200 |    1,200 |           0 | no  |            -1.000 |  -1.000 |           0 | no
+  M50_noyoung_L37     A+0 TRAJ   |  1,200 (   900, 300.2) |   1,200 (    900) |       1,200 |       900 |      914 |           5 | n/e |            -1.000 |  -1.000 |           0 | n/e
+  M50_noyoung_L37     A+0 STATES |  1,200 ( 1,200,     -) |   1,200 (  1,200) |       1,200 |     1,200 |    1,200 |           0 | no  |            -1.000 |  -1.000 |           0 | no
+  M250_L37            A+0 TRAJ   |  1,200 (   900, 300.2) |   1,200 (    900) |       1,200 |       900 |      914 |           5 | n/e |            -1.000 |  -1.000 |           0 | n/e
+  M250_L37            A+0 STATES |  1,200 ( 1,200,     -) |   1,200 (  1,200) |       1,200 |     1,200 |    1,200 |           0 | no  |            -1.000 |  -1.000 |           0 | no
+  M0_L37              A+0 TRAJ   |  1,200 (   900, 300.2) |   1,200 (    900) |       1,200 |       900 |      914 |           5 | n/e |            -1.000 |  -1.000 |           0 | n/e
+  M0_L37              A+0 STATES |  1,200 ( 1,200,     -) |   1,200 (  1,200) |       1,200 |     1,200 |    1,200 |           0 | no  |            -1.000 |  -1.000 |           0 | no
+
+PART 3 - by day (M50, L 37 ms): improvement over KEEP = avoided L1 + L2 - foregone G; PULL-ALL and the live ORACLE on every eligible order, A+0 and the mean of its reading's null (decision states)
+  day      | KEEP loss | PULL-ALL imp (G / L1 / L2)       | ORACLE imp (L1 / L2, severe) | A+0 imp (G / L1 / L2, severe, pulls)          | null imp (pulls)
+  20261023 |       240 |      240 (     0 /    240 /      0) |      240 (   240 /      0,    0) |     240 (     0 /    240 /      0,    0,   240) |     240 (  240)
+  20261024 |       240 |      240 (     0 /    240 /      0) |      240 (   240 /      0,    0) |     240 (     0 /    240 /      0,    0,   240) |     240 (  240)
+  20261025 |       240 |      240 (     0 /    240 /      0) |      240 (   240 /      0,    0) |     240 (     0 /    240 /      0,    0,   240) |     240 (  240)
+  20261026 |       240 |      240 (     0 /    240 /      0) |      240 (   240 /      0,    0) |     240 (     0 /    240 /      0,    0,   240) |     240 (  240)
+  20261027 |       240 |      240 (     0 /    240 /      0) |      240 (   240 /      0,    0) |     240 (     0 /    240 /      0,    0,   240) |     240 (  240)
+
+PART 4 - splits (M50, L 37 ms): KEEP fills by trade source and by age after live; what A+0 removes
+  ws      : KEEP     -1,200 c on      1,200 sh | removed by A+0    -1,200 c on     1,200 sh
+  e2      : KEEP          0 c on          0 sh | removed by A+0         0 c on         0 sh
+  imputed : KEEP          0 c on          0 sh | removed by A+0         0 c on         0 sh
+  mixed   : KEEP          0 c on          0 sh | removed by A+0         0 c on         0 sh
+  age_0_100   : KEEP          0 c on          0 sh | removed         0 c
+  age_100_500 : KEEP     -1,200 c on      1,200 sh | removed    -1,200 c
+  age_500_END : KEEP          0 c on          0 sh | removed         0 c
+  structural-cancel triggers of eligible orders (the kernel rule on the known book) by side and cause (P47: an empty ask side cancels a bid; an empty bid side never cancels an ask): bid:behind 600, bid:none 600
+
+READINGS (declared before the run; computed)
+  K1 ORACLE-BOUND (EX POST, NOT DEPLOYABLE; live decisions): AVOIDABLE-AT-LATENCY - the oracle avoids 1,200 of KEEP's 1,200 c of loss (100%); >= 50% on 5 / 5 days
+  matched null used for K2 / K3: decision states (trajectory comparison NOT-EVALUABLE-UNMATCHED (500 / 500 draws, mean 300.2 pulls))
+  K2 SCORE-EARNS (A+0): NOT-SHOWN at M50 / 37 ms; the predicate (each variant's own reading null) holds at: none
+  K3 SCORE-RANKS-VALUE (A+0): NOT-SHOWN
+  K4 LATENCY (numbers, same decisions at 0 and 37 ms): live oracle 1,200 vs 1,200 (gap by day 0, 0, 0, 0, 0); A+0 1,200 vs 1,200 (gap by day 0, 0, 0, 0, 0)
+  live decisions 58,800, of which without a causal fair price 0 (fallback KEEP)
+  multiplicity: 6 score policies; passes outside A+0 (candidates only, never readings): none
