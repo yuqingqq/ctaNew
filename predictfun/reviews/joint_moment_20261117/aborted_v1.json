@@ -1,0 +1,16 @@
+{
+  "asof": "2026-11-17T01:25:05.187756+00:00",
+  "status": "aborted_before_fit",
+  "reason": "Selected Oct23 training action has unavailable stale_future_book path; v1 raised instead of retaining an exclusion status. Superseded by v2. No completed dataset or fitted model from v1.",
+  "superseding_freeze": "v2/freeze_v2.json",
+  "artifacts": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/joint_moment_20261117_v1/logs/data_20261023.log": "bc5ed81eb2679a49ecd408e7494a184c3e9f804cd6bf3fb397a240b398c22921",
+    "/home/yuqing/ctaNew/data/predict_fun/research/joint_moment_20261117_v1/20261023/progress.json": "76e03cb4a6e85c2f487fa4b74873ae37c92636a77cd23029b6f598e5fd100f99"
+  },
+  "last_progress": {
+    "asof": "2026-11-17T01:19:26.192661+00:00",
+    "markets": 85,
+    "checked": 35,
+    "mismatches": []
+  }
+}
