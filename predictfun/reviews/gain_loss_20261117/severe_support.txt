@@ -1,0 +1,36 @@
+SEVERE-EVENT PROBABILITY: calibration by band and training support (past-only folds; no model change); as of 2026-11-17T05:01:32Z
+controls: fold heads = RUNNING-ERRORS; Oct26 fold reproduces GAIN-LOSS P(severe); reference neighbours exclude own market (checked); planted no-exclusion reference smaller
+
+PART 1: by band of predicted P(severe) - forward days pooled: n | expected | observed | O/E || in-sample (training days of each fold) O/E
+  [0.0, 0.005)     n  5,834 |    19.9 |    28 | x1.41 || x0.00 (n 15,772)
+  [0.005, 0.01)    n  7,955 |    58.2 |    85 | x1.46 || x0.01 (n 20,246)
+  [0.01, 0.02)     n  7,983 |   114.7 |   177 | x1.54 || x0.03 (n 20,677)
+  [0.02, 0.05)     n  8,308 |   263.3 |   385 | x1.46 || x0.18 (n 19,868)
+  [0.05, 0.1)      n  3,761 |   262.5 |   278 | x1.06 || x0.44 (n 8,243)
+  [0.1, 0.2)       n  1,653 |   225.6 |   208 | x0.92 || x1.37 (n 3,248)
+  [0.2, 1.0)       n    562 |   172.2 |   149 | x0.87 || x2.22 (n 2,695)
+  by kind and day (O/E): cancel 20261024 x0.94 | cancel 20261025 x1.25 | cancel 20261026 x1.31 | cancel 20261027 x1.18 | post 20261024 x1.05 | post 20261025 x1.17 | post 20261026 x1.20 | post 20261027 x1.30
+  p < 0.02: O/E x1.50 (n 21,772, 290 events) | p >= 0.05: x0.96 (n 5,976, 635 events)
+
+PART 2: training support - bins by the training reference distance (50th neighbour, other markets): share of test decisions | observed rate | model mean p | kNN rate | model O/E | kNN O/E
+  <= p50   share 44.8% | 0.0273 | 0.0229 | 0.0250 | x1.19 | x1.09 (n 16,164, events 442)
+  p50-p90  share 44.3% | 0.0374 | 0.0319 | 0.0351 | x1.17 | x1.07 (n 15,981, events 598)
+  p90-p99  share  9.8% | 0.0638 | 0.0561 | 0.0540 | x1.14 | x1.18 (n 3,527, events 225)
+  > p99    share  1.1% | 0.1172 | 0.0986 | 0.0878 | x1.19 | x1.33 (n 384, events 45)
+    20261024 cancel: beyond p99  1.6% | model O/E x0.94 | kNN O/E x0.78
+    20261024 post  : beyond p99  1.6% | model O/E x1.05 | kNN O/E x0.77
+    20261025 cancel: beyond p99  1.1% | model O/E x1.25 | kNN O/E x1.22
+    20261025 post  : beyond p99  1.3% | model O/E x1.17 | kNN O/E x1.03
+    20261026 cancel: beyond p99  1.1% | model O/E x1.31 | kNN O/E x1.35
+    20261026 post  : beyond p99  0.5% | model O/E x1.20 | kNN O/E x1.18
+    20261027 cancel: beyond p99  0.6% | model O/E x1.18 | kNN O/E x1.33
+    20261027 post  : beyond p99  0.8% | model O/E x1.30 | kNN O/E x1.44
+
+  well-supported (<= p90) pooled: model O/E x1.18, kNN O/E x1.08 (n 32,145)
+
+B1 LOW-P-SHORTFALL: YES (p < 0.02 x1.50 vs p >= 0.05 x0.96)
+C1 COVERAGE-GAP: NOT-SHOWN (beyond training p99: 1.1% of test decisions; model O/E there x1.19 vs <= p50 x1.19)
+C2 MODEL-ERROR: YES (well-supported: kNN O/E x1.08 vs model O/E x1.18)
+C3 SHIFT: NOT-SHOWN (well-supported: kNN O/E x1.08, model O/E x1.18; both > 1.15 required)
+
+LIMITS: consumed days; four predicted days, no interval; kNN support in 15 standardized inputs is a support measure, not a density; simulated labels; the neutral population
