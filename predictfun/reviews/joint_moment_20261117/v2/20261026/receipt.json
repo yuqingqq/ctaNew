@@ -1,0 +1,70 @@
+{
+  "asof": "2026-11-17T01:40:44.181875+00:00",
+  "source_manifest": "b561ad332422b19b6d59b6175b7714108a9f941ebf4de16486ecac9a5fcf7fac",
+  "day": "20261026",
+  "markets": [
+    3787215,
+    3790280,
+    3792862,
+    3798874,
+    3803248,
+    3804777,
+    3808371,
+    3817683,
+    3823986,
+    3833192,
+    3841803,
+    3847236
+  ],
+  "action_statuses": {
+    "('cancel', 'eligible')": 205,
+    "('post', 'eligible')": 213
+  },
+  "candidate_statuses": {},
+  "controls": {
+    "3787215": {
+      "neutral_replay_equal": true
+    },
+    "3790280": {
+      "neutral_replay_equal": true
+    },
+    "3792862": {
+      "neutral_replay_equal": true
+    },
+    "3798874": {
+      "neutral_replay_equal": true
+    },
+    "3803248": {
+      "neutral_replay_equal": true
+    },
+    "3804777": {
+      "neutral_replay_equal": true
+    },
+    "3808371": {
+      "neutral_replay_equal": true
+    },
+    "3817683": {
+      "neutral_replay_equal": true
+    },
+    "3823986": {
+      "neutral_replay_equal": true
+    },
+    "3833192": {
+      "neutral_replay_equal": true
+    },
+    "3841803": {
+      "neutral_replay_equal": true
+    },
+    "3847236": {
+      "neutral_replay_equal": true
+    }
+  },
+  "canonical_checked": 418,
+  "canonical_positive": 46,
+  "mismatches": [],
+  "raw_receipt_sha256": "c276531748ffcd8b42a86aec7d66daf0c7a50b2195240cf08e362a1edc2ae49c",
+  "outputs": {
+    "actions.parquet": "5648f712f20ac47c59f8161493ec88e70a4a28ca1610f22e5c6ac86362d7a5b2"
+  },
+  "seconds": 75.30676245689392
+}

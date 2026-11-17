@@ -1,0 +1,94 @@
+{
+  "asof": "2026-11-17T01:42:07.621475+00:00",
+  "controls": {
+    "joint_target_detects_dependence": true,
+    "moment_bounds": true,
+    "tail_score_controls": true,
+    "latent_state_labels_only": true,
+    "unreceived_fill_inputs_invariant": true,
+    "unavailable_label_retained_as_status": true,
+    "leaked_feature_refused": true,
+    "invalid_tail_probability_refused": true
+  },
+  "populations": {
+    "20261023": {
+      "n": 9039,
+      "statuses": {
+        "('cancel', 'eligible')": 4971,
+        "('post', 'eligible')": 4068,
+        "('post', 'label_unavailable:stale_future_book')": 2,
+        "('post', 'not_available_in_client_state')": 1222
+      },
+      "canonical_checked": 88,
+      "canonical_positive": 10
+    },
+    "20261024": {
+      "n": 9259,
+      "statuses": {
+        "('cancel', 'eligible')": 5036,
+        "('post', 'eligible')": 4223,
+        "('post', 'not_available_in_client_state')": 1144
+      },
+      "canonical_checked": 61,
+      "canonical_positive": 8
+    },
+    "20261025": {
+      "n": 8938,
+      "statuses": {
+        "('cancel', 'eligible')": 4785,
+        "('post', 'eligible')": 4153,
+        "('post', 'not_available_in_client_state')": 1069
+      },
+      "canonical_checked": 83,
+      "canonical_positive": 12
+    },
+    "20261026": {
+      "n": 418,
+      "statuses": {
+        "('cancel', 'eligible')": 205,
+        "('post', 'eligible')": 213
+      },
+      "canonical_checked": 418,
+      "canonical_positive": 46
+    },
+    "20261027": {
+      "n": 443,
+      "statuses": {
+        "('cancel', 'eligible')": 221,
+        "('post', 'eligible')": 222
+      },
+      "canonical_checked": 443,
+      "canonical_positive": 52
+    }
+  },
+  "comparisons": {
+    "20261026:cancel": {
+      "n": 205,
+      "value_improved": false,
+      "tail_no_worse": false,
+      "market_beats_mechanical": false
+    },
+    "20261026:post": {
+      "n": 213,
+      "value_improved": true,
+      "tail_no_worse": true,
+      "market_beats_mechanical": false
+    },
+    "20261027:cancel": {
+      "n": 221,
+      "value_improved": false,
+      "tail_no_worse": true,
+      "market_beats_mechanical": false
+    },
+    "20261027:post": {
+      "n": 222,
+      "value_improved": false,
+      "tail_no_worse": true,
+      "market_beats_mechanical": true
+    }
+  },
+  "value_tail_screen_passed": false,
+  "market_incremental_screen_passed": false,
+  "role": "Consumed prediction screen only; no controller integration or promotion",
+  "source_manifest": "b561ad332422b19b6d59b6175b7714108a9f941ebf4de16486ecac9a5fcf7fac"
+}
