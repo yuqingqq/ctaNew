@@ -1,3 +1,52 @@
+<!-- VALUE_DECOMPOSITION_RESULTS_20261117 -->
+## 2026-11-17 Severe joint fill/price errors dominate posting; pending-fill state overstates some cancellation exposure
+
+Completed exact neutral action diagnostic, sourcef6b59100/freeze6743804b,
+results4846cf1e merged0bbee253. Report handoffs/20261117_value_decomposition_results.md;
+index reviews/value_decomposition_20261117/index.json; publication_v1.json also
+pins supplementary timestamp auditff999de8. All hashes verify after merge.
+No new model/policy or continuous replay; SOFT_JOINT retained, no job running.
+
+All418 Oct26 and443 Oct27 action identities/labels/predictions reproduce.
+Value splits exactly into current-mid edge, fill-weighted endpoint movement
+and inventory-risk difference, with focal/other orders separated. Cancellation
+quantity now measures avoidable fills, excluding shared unavoidable exposure.
+No-fill actions and all source/evaluation exclusions retained;200 matched nulls.
+
+As of2026-11-17T00:43:16Z/00:47:54Z, SOFT ordinary posting losses below-30c:
+12/213 Oct26 actions contribute88.3% of total squared error;11/222 Oct27
+contribute86.5%. Joint-motion truth substitution lowers RMSE36.111->16.285c
+and24.829->13.423c, while actual quantity alone worsens Oct26 to38.305c and
+actual endpoint alone worsens Oct27 to26.047c. Risk-only correction gives
+34.530/23.599c. Cancellation Oct27 improves31.826->13.971c with true joint
+motion (n221); Oct26 worsens8.449->15.693c (n205) as edge/motion errors offset.
+These substitutions use future information and are not usable-model results.
+
+Known coarse pair does not solve it: common420 Oct27 actions (208 cancel,
+212 post;23 unsupported retained) show SOFT->conditional affected-quantity MAE
+2.497->2.187 /3.875->3.403 shares but motion RMSE32.954->36.508 /29.452
+->31.718c. The mapping must model how much fills in the states with adverse
+price severity, not just volume means or mean movement independently.
+
+Actual-path/client-state controls: post RMSE.114/.366c, cancel5.498/1.967c
+on the full Oct26/27 populations. Post-hoc timestamp check asof00:49:56Z,n6
+(3 largest cancellation residuals/day):4 orders had unreceived fills,3 already
+fully filled. For one10-share order, fill30ms before decision/notice70ms after
+produces estimated54.518c cancellation benefit versus realized0. Four predicted
+affected quantities exceed actual remaining;2 residual examples are unresolved
+by remainder alone. This confirms state uncertainty in selected cases, not a
+population-wide churn attribution. True exchange state must not enter inputs.
+
+Next target: jointly calibrated Q=E[action-affected fills] and M=E[affected
+fills*signed endpoint move], conditioned on queue/depth/latency and market state;
+retain zero-fill exposures and severe tails, enforce shared volume and portfolio
+moments. Also represent causal uncertainty about unconfirmed remaining quantity.
+No-fill exposures must not be removed to simplify training.1s zero continuation,
+neutral-to-policy transport and external execution realism remain unresolved.
+Main/supplementary falsifiers and all accounting/identity checks pass; peak1284MiB,
+Codex/core8. Consumed dates only, no intervals or promotion; protected dates unopened.
+<!-- /VALUE_DECOMPOSITION_RESULTS_20261117 -->
+
 <!-- CONDITIONAL_MAP_RESULTS_20261117 -->
 ## 2026-11-17 Expanded state-conditioned responses fail the economic mapping gate
 
