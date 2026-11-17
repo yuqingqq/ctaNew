@@ -1,0 +1,30 @@
+{
+  "asof": "2026-11-17T03:16:11.078501+00:00",
+  "bank": "BID48",
+  "rule": {
+    "sides": [
+      0
+    ],
+    "per_market": 48
+  },
+  "training_days": [
+    "20261023",
+    "20261024",
+    "20261025"
+  ],
+  "drawn_times": {
+    "side0": 27567
+  },
+  "statuses": {
+    "eligible": 27567
+  },
+  "paths": 2278,
+  "cells": 1032,
+  "templates_by_event_side": {
+    "side0": 2278
+  },
+  "path_sha256": "3717f58f5f9bf262d9de05d5702ae655a32eb5318c41c1d619ed778b76da1c4c",
+  "old_sha256": "43c27d13f887cded37f8c479d4e51eb1b29437a68af16f0c4f1cb6aaf520a2ef",
+  "old_rule_rebuilt_equal": true,
+  "seconds": 80.76451635360718
+}

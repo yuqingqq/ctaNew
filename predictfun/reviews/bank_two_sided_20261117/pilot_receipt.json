@@ -1,0 +1,30 @@
+{
+  "asof": "2026-11-17T03:41:46.665792+00:00",
+  "selected_markets": [
+    3853227,
+    3855272,
+    3856795,
+    3861545,
+    3864969,
+    3866949,
+    3868537,
+    3872135,
+    3875576,
+    3878682,
+    3882891,
+    3887697
+  ],
+  "old_reproduced": true,
+  "archive_receipt_sha256": "6dc4a29181fa942d22950f14bd7d74ba261e688f582ad575c372cafebd3843d6",
+  "banks": {
+    "OLD": "43c27d13f887cded37f8c479d4e51eb1b29437a68af16f0c4f1cb6aaf520a2ef",
+    "TWO": "b34b4f5fa3b0858f9e9da32b031742a3fce7e0d8a3a9fc4b92b140ffe0b60974"
+  },
+  "outputs": {
+    "markets.parquet": "acb9ccda2f0457d09e79ea88c367bd5c37b076e6979522547121d0448029680f",
+    "inventory.parquet": "f2592dd1c26d65401261201f948c3e0f32c81f71923a5e2cda67ae54b21ce4c5",
+    "decisions.parquet": "b8bfa8c3e40983befe64769281e438c121f61ec019ed7fee34ce32db6aa12af9",
+    "fills.parquet": "c534b30f8f69a531b9425b55f38608802aede555ae3b475ecc9b0d353cce7da8"
+  },
+  "seconds": 1269.9830720424652
+}

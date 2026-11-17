@@ -1,0 +1,25 @@
+{"stage": "pilot", "bank": "OLD", "m": 3853227, "seconds": 124, "rss_mib": 538}
+{"stage": "pilot", "bank": "OLD", "m": 3855272, "seconds": 169, "rss_mib": 450}
+{"stage": "pilot", "bank": "OLD", "m": 3856795, "seconds": 231, "rss_mib": 493}
+{"stage": "pilot", "bank": "OLD", "m": 3861545, "seconds": 257, "rss_mib": 436}
+{"stage": "pilot", "bank": "OLD", "m": 3864969, "seconds": 284, "rss_mib": 438}
+{"stage": "pilot", "bank": "OLD", "m": 3866949, "seconds": 314, "rss_mib": 451}
+{"stage": "pilot", "bank": "OLD", "m": 3868537, "seconds": 350, "rss_mib": 448}
+{"stage": "pilot", "bank": "OLD", "m": 3872135, "seconds": 405, "rss_mib": 491}
+{"stage": "pilot", "bank": "OLD", "m": 3875576, "seconds": 444, "rss_mib": 444}
+{"stage": "pilot", "bank": "OLD", "m": 3878682, "seconds": 509, "rss_mib": 510}
+{"stage": "pilot", "bank": "OLD", "m": 3882891, "seconds": 567, "rss_mib": 513}
+{"stage": "pilot", "bank": "OLD", "m": 3887697, "seconds": 618, "rss_mib": 489}
+{"stage": "pilot", "bank": "TWO", "m": 3853227, "seconds": 663, "rss_mib": 478}
+{"stage": "pilot", "bank": "TWO", "m": 3855272, "seconds": 718, "rss_mib": 507}
+{"stage": "pilot", "bank": "TWO", "m": 3856795, "seconds": 794, "rss_mib": 548}
+{"stage": "pilot", "bank": "TWO", "m": 3861545, "seconds": 830, "rss_mib": 475}
+{"stage": "pilot", "bank": "TWO", "m": 3864969, "seconds": 863, "rss_mib": 477}
+{"stage": "pilot", "bank": "TWO", "m": 3866949, "seconds": 898, "rss_mib": 485}
+{"stage": "pilot", "bank": "TWO", "m": 3868537, "seconds": 943, "rss_mib": 481}
+{"stage": "pilot", "bank": "TWO", "m": 3872135, "seconds": 1015, "rss_mib": 566}
+{"stage": "pilot", "bank": "TWO", "m": 3875576, "seconds": 1061, "rss_mib": 480}
+{"stage": "pilot", "bank": "TWO", "m": 3878682, "seconds": 1137, "rss_mib": 558}
+{"stage": "pilot", "bank": "TWO", "m": 3882891, "seconds": 1212, "rss_mib": 571}
+{"stage": "pilot", "bank": "TWO", "m": 3887697, "seconds": 1270, "rss_mib": 537}
+2026-11-17T03:20:35Z tag=bank2_pilot rc=0 peak_rss_mib=1056 wall_s=1270.90 cpu_user_s=1254.07 memavail_start_gib=23 disk_free_gib=470->470 slot=claude
