@@ -1,3 +1,20 @@
+value_decomposition_20261117:
+  status: frozen_canonical_action_decomposition_running
+  source_commit: f6b59100
+  freeze_commit: 6743804b
+  branch: research/predict-value-decomposition-20261117
+  worktree: /tmp/cta-value-decomp-20261117
+  output: data/predict_fun/research/value_decomposition_20261117_v1
+  review_index: predictfun/reviews/value_decomposition_20261117/index.json
+  retained_baseline: SOFT_JOINT
+  new_models: 0
+  new_policies: 0
+  retrospective_substitutions: 7
+  action_counts: {20261026: 418, 20261027: 443}
+  running: true
+  promotion: false
+  dates: consumed_Oct26_27_development_only
+
 conditional_map_20261117:
   status: complete_audited_merged_gate_failed
   source_commit: f60e2144
