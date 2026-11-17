@@ -1,44 +1,48 @@
 <!-- VALUE_DIAGNOSIS_20261117 -->
-## 2026-11-17 Calibration/history and SOFT controller diagnosis: frozen, running
+## 2026-11-17 Calibration/history and SOFT controller diagnosis: complete, audited
 
-User authorized the calibration/coverage and controller consistency checks.
-Source726a5267, freeze8fea0ef3; isolated branch
-research/predict-calibration-controller-20261117, worktree
-/tmp/cta-calibration-controller-20261117. Calibration/history completed asof2026-11-17T02:33:52Z; current-controller
-replay is running, independent audit pending. Sequential Codex/core8 launcher
-run_value_diagnosis.sh. Output data/predict_fun/research/value_diagnosis_20261117_v1;
-evidence target reviews/value_diagnosis_20261117/index.json. Parent frozen joint
-moment and SOFT sources unchanged. Calibration/miscalibration/novelty controls,
-Shapley/timing-reversal controls and complement kernel invariance controls pass.
+Source 726a5267, freeze 8fea0ef3, results 38c14913, merge 9a9adc97.
+Report handoffs/20261117_value_diagnosis_results.md; evidence
+reviews/value_diagnosis_20261117/{index,audit_v2,publication_v1}.json.
+All artifacts and computed summary predicates verified after merge.
+No worker running and no controller change. Original auditor's UID index/column
+bug is superseded by source 076daf1a/receipt ea4fe573; numeric results unchanged.
+Use pf_value_diagnosis_record.py verify for immutable publication checks.
+The frozen run_value_diagnosis.sh retains the old audit call as provenance;
+current numerical auditor is pf_value_diagnosis_audit_v2.py.
 
-Reuses all27236 eligible Oct23-25 neutral training actions and exact861 Oct26/27
-evaluation actions. Fixed histories H1 Oct25, H2 Oct24-25, H3 Oct23-25 plus
-H3_MATCHED_N1 (three days hash-sampled to H1 kind/side/phase counts). Seven
-existing heads/targets/settings fixed; H3 artifacts reused, three history refits.
-Eight binary affected-fill diagnostic heads (full/mechanical per history),
-trained on all actions, never used to change action values. Fixed value/risk
-calibration bins, physical Q/p consistency, fill-weighted motion summaries.
-16-dimensional robust nearest-neighbor coverage and sparse regime cells; no
-label-dependent geometry or filtering. Training calibration is in-sample.
-200 count-matched economic nulls per action comparison. No history winner.
+As of 2026-11-17T02:49:32Z: four fixed histories (H1 8,938, H2 18,197,
+H3 27,236, H3 matched to H1 8,938), exact 418/443 Oct26/27 neutral actions.
+Original exclusions retained as statuses, no-fill mass retained. One-to-three-day
+history improves coverage but monotonically improves full-value RMSE in only
+one of four day/action comparisons. Full fill-event heads beat mechanical AUC,
+Brier and log loss in all four; all populated positive H3 joint-moment posting
+value bands have negative realized means on both dates (213/222 total posts).
+These small heavy-tailed samples do not identify exact conditional means.
+The new auxiliary probability head is inconsistent with quantity on some rows;
+it was not used by the old policy, so it did not cause that policy's losses.
 
-Current SOFT_JOINT pilot replay on the same12 consumed Oct27 markets, with exact
-archived trace/fill identity required. All post statuses retained;8 hash pairs
-per market/side/review-cancel group; SOFT16-cell attribution, horizon/pending-
-state sensitivities, complement-transformed kernel control and original-bank
-mirrored-query sensitivity. Other-session bid-bank and zero-continuation claims
-are hypotheses; symmetry sensitivity alone is not proof of causation/profit.
-No new controller, cooldown, threshold, queue premium or risk coefficient.
+Exact SOFT pilot trace/fills reproduced on 12 Oct27 markets: 10,847 entries,
+10,675 first-review pairs, 3,838 model-cancels. Attribution sample 192 cancels
+and 192 keeps, balanced by side/market. For sampled cancels, market/scenario
+and probability changes dominate predicted-value reversal; fixed original
+endpoint still cancels 170/192, two-second horizon 182/192, old queue 189/192.
+These are predicted sensitivities, not realized cancellation regret. True-state
+substitution covers queue, remaining and inventory; it does not isolate notices.
 
-Preliminary history result: only Oct26 cancel RMSE improves monotonically
-H1->H2->H3 (n205); the other213/221/222-action comparisons do not. H3 reduces
-coverage-outlier counts from75->45 of418 and42->25 of443. These are diagnostic
-reference-distance flags, not eligibility filters. Await audit before publication.
+Complementing BOTH paths and state preserves kernel values in all 384 tests.
+Complementing only queries against original bank changes preference 175/384.
+This supports a controlled side-balanced/complement-paired bank ablation, not
+proof that mirrored decisions profit or bid conditioning causes ask losses.
+The direct-wealth head bypasses bank focal valuation and also fails across dates;
+a bank correction cannot alone account for all prediction failures.
 
-Full independent saved-model/metric/coverage/sample/attribution reconstruction
-is queued after both stages. Consumed dates only, max3-day history; no intervals,
-untouched validation, protected dates, promotion or new policy P&L result.
-Global outcome RMSE must not be used as a calibrated decision margin.
+Next: fixed-policy training-only bank representation ablation, evaluated on
+neutral value calibration and full replay bid/ask markout, churn and queue
+retention; separately coherent quantity/value and conditional loss-severity
+calibration. No arbitrary RMSE margin or timer. Later untouched days needed
+for validation (at least five complete); Oct23-27 are consumed, no intervals
+or promotion. More than three days of history remains an open experiment.
 <!-- /VALUE_DIAGNOSIS_20261117 -->
 
 ## 2026-11-17 01:56Z (session aea5bfb9) — MODEL-STRUCTURE REVIEW OF SOFT_JOINT (USER: "it still does not perform well, can you review the model structure, check what's the critical issue")
