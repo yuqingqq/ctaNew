@@ -1,0 +1,4893 @@
+{
+  "asof": "2026-11-17T02:33:52.598325+00:00",
+  "history": "H3_MATCHED_N1",
+  "day": "20261027",
+  "n": 443,
+  "economic": {
+    "n": 443,
+    "metrics": {
+      "direct:cancel": {
+        "n": 221,
+        "rmse_cents": 31.88716529049545,
+        "mae_cents": 10.40560253678674,
+        "zero_prediction_rmse_cents": 31.63578542124353,
+        "spearman": 0.2740382416746136,
+        "mean_prediction": 4.1457265073695675,
+        "mean_actual": 4.136630620065388,
+        "severe_n": 9,
+        "severe_rmse_cents": 135.70307843490653,
+        "positive_n": 169,
+        "selected_actual_sum_cents": 942.95827137472,
+        "matched_null": {
+          "n": 221,
+          "selected": 169,
+          "draws": 200,
+          "observed_cents": 942.95827137472,
+          "mean_cents": 678.753079840328,
+          "min_cents": 125.56909788892628,
+          "max_cents": 996.8298391321532
+        }
+      },
+      "direct:post": {
+        "n": 222,
+        "rmse_cents": 25.838326488630603,
+        "mae_cents": 10.21344532309474,
+        "zero_prediction_rmse_cents": 25.7065662440039,
+        "spearman": 0.21599367334794123,
+        "mean_prediction": -5.367729656946874,
+        "mean_actual": -5.062009527767642,
+        "severe_n": 11,
+        "severe_rmse_cents": 104.99854112975477,
+        "positive_n": 57,
+        "selected_actual_sum_cents": -77.76451322183935,
+        "matched_null": {
+          "n": 222,
+          "selected": 57,
+          "draws": 200,
+          "observed_cents": -77.76451322183935,
+          "mean_cents": -215.62727377273637,
+          "min_cents": -659.8825277423136,
+          "max_cents": 39.098120431902466
+        }
+      },
+      "full:cancel": {
+        "n": 221,
+        "rmse_cents": 33.01366340110239,
+        "mae_cents": 10.90730155285659,
+        "zero_prediction_rmse_cents": 31.63578542124353,
+        "spearman": 0.274983234826669,
+        "mean_prediction": 3.866553953209626,
+        "mean_actual": 4.136630620065388,
+        "severe_n": 9,
+        "severe_rmse_cents": 136.88023327046992,
+        "positive_n": 145,
+        "selected_actual_sum_cents": 710.1321308095432,
+        "matched_null": {
+          "n": 221,
+          "selected": 145,
+          "draws": 200,
+          "observed_cents": 710.1321308095432,
+          "mean_cents": 537.8748032404555,
+          "min_cents": 63.07434706641551,
+          "max_cents": 1089.3543815736057
+        }
+      },
+      "full:post": {
+        "n": 222,
+        "rmse_cents": 25.958648783397795,
+        "mae_cents": 10.085809255347515,
+        "zero_prediction_rmse_cents": 25.7065662440039,
+        "spearman": 0.22952900008461619,
+        "mean_prediction": -5.079426859592902,
+        "mean_actual": -5.062009527767642,
+        "severe_n": 11,
+        "severe_rmse_cents": 103.58850841209757,
+        "positive_n": 77,
+        "selected_actual_sum_cents": -186.236398754062,
+        "matched_null": {
+          "n": 222,
+          "selected": 77,
+          "draws": 200,
+          "observed_cents": -186.236398754062,
+          "mean_cents": -277.6997099525378,
+          "min_cents": -715.5054639198856,
+          "max_cents": -9.659148564426832
+        }
+      },
+      "mechanical:cancel": {
+        "n": 221,
+        "rmse_cents": 32.44975809242416,
+        "mae_cents": 10.746678198735317,
+        "zero_prediction_rmse_cents": 31.63578542124353,
+        "spearman": 0.1921165668188105,
+        "mean_prediction": 3.6602786836580017,
+        "mean_actual": 4.136630620065388,
+        "severe_n": 9,
+        "severe_rmse_cents": 136.88820577370717,
+        "positive_n": 146,
+        "selected_actual_sum_cents": 630.2749109723568,
+        "matched_null": {
+          "n": 221,
+          "selected": 146,
+          "draws": 200,
+          "observed_cents": 630.2749109723568,
+          "mean_cents": 618.6613928886641,
+          "min_cents": 198.67976839295778,
+          "max_cents": 1168.1236155283893
+        }
+      },
+      "mechanical:post": {
+        "n": 222,
+        "rmse_cents": 25.817416919557424,
+        "mae_cents": 10.070490606131623,
+        "zero_prediction_rmse_cents": 25.7065662440039,
+        "spearman": 0.1494029032835226,
+        "mean_prediction": -5.16342949062228,
+        "mean_actual": -5.062009527767642,
+        "severe_n": 11,
+        "severe_rmse_cents": 107.22241911372367,
+        "positive_n": 68,
+        "selected_actual_sum_cents": -164.33925645423366,
+        "matched_null": {
+          "n": 222,
+          "selected": 68,
+          "draws": 200,
+          "observed_cents": -164.33925645423366,
+          "mean_cents": -309.6091184111433,
+          "min_cents": -755.7357026550012,
+          "max_cents": 19.654438450423626
+        }
+      },
+      "soft:cancel": {
+        "n": 221,
+        "rmse_cents": 31.825864352793523,
+        "mae_cents": 8.74420972074588,
+        "zero_prediction_rmse_cents": 31.63578542124353,
+        "spearman": 0.3394168248157076,
+        "mean_prediction": 1.954293265960886,
+        "mean_actual": 4.136630620065388,
+        "severe_n": 9,
+        "severe_rmse_cents": 136.240679108233,
+        "positive_n": 137,
+        "selected_actual_sum_cents": 955.6807041139269,
+        "matched_null": {
+          "n": 221,
+          "selected": 137,
+          "draws": 200,
+          "observed_cents": 955.6807041139269,
+          "mean_cents": 655.41735845147,
+          "min_cents": -60.46587504421225,
+          "max_cents": 1150.2343445047322
+        }
+      },
+      "soft:post": {
+        "n": 222,
+        "rmse_cents": 24.82874748597516,
+        "mae_cents": 8.589326434785347,
+        "zero_prediction_rmse_cents": 25.7065662440039,
+        "spearman": 0.22381263055788303,
+        "mean_prediction": -4.194055680640127,
+        "mean_actual": -5.062009527767642,
+        "severe_n": 11,
+        "severe_rmse_cents": 103.7654067025597,
+        "positive_n": 50,
+        "selected_actual_sum_cents": -19.994493919108024,
+        "matched_null": {
+          "n": 222,
+          "selected": 50,
+          "draws": 200,
+          "observed_cents": -19.994493919108024,
+          "mean_cents": -191.38980604667967,
+          "min_cents": -541.0682442630477,
+          "max_cents": 23.08383196721311
+        }
+      }
+    },
+    "by_side": {
+      "direct:cancel:0": {
+        "n": 109,
+        "rmse_cents": 38.781796769441044,
+        "mae_cents": 12.740065684108194,
+        "zero_prediction_rmse_cents": 38.39474297564395,
+        "spearman": 0.15459073137613155,
+        "mean_prediction": 4.802984130186539,
+        "mean_actual": 5.022412257846923,
+        "severe_n": 5,
+        "severe_rmse_cents": 150.25236761662256,
+        "positive_n": 86,
+        "selected_actual_sum_cents": 505.95125589841257,
+        "matched_null": {
+          "n": 109,
+          "selected": 86,
+          "draws": 200,
+          "observed_cents": 505.95125589841257,
+          "mean_cents": 397.9152471556491,
+          "min_cents": 21.205355182725697,
+          "max_cents": 547.4429361053146
+        }
+      },
+      "direct:cancel:1": {
+        "n": 112,
+        "rmse_cents": 23.29390126643891,
+        "mae_cents": 8.133669652339972,
+        "zero_prediction_rmse_cents": 23.241517219292554,
+        "spearman": 0.3786221872354888,
+        "mean_prediction": 3.506073999449479,
+        "mean_actual": 3.2745752761530023,
+        "severe_n": 4,
+        "severe_rmse_cents": 114.95549095018266,
+        "positive_n": 83,
+        "selected_actual_sum_cents": 437.00701547630734,
+        "matched_null": {
+          "n": 112,
+          "selected": 83,
+          "draws": 200,
+          "observed_cents": 437.00701547630734,
+          "mean_cents": 301.8763427014548,
+          "min_cents": 89.57636470766596,
+          "max_cents": 455.06153682485916
+        }
+      },
+      "direct:post:0": {
+        "n": 111,
+        "rmse_cents": 33.01095679213852,
+        "mae_cents": 12.613706359404187,
+        "zero_prediction_rmse_cents": 33.254485765130525,
+        "spearman": 0.25907444553056497,
+        "mean_prediction": -6.902850985574237,
+        "mean_actual": -7.110484022253684,
+        "severe_n": 7,
+        "severe_rmse_cents": 122.12733232222448,
+        "positive_n": 22,
+        "selected_actual_sum_cents": 0.0,
+        "matched_null": {
+          "n": 111,
+          "selected": 22,
+          "draws": 200,
+          "observed_cents": 0.0,
+          "mean_cents": -123.71146644608297,
+          "min_cents": -573.873858649346,
+          "max_cents": 43.9591749323734
+        }
+      },
+      "direct:post:1": {
+        "n": 111,
+        "rmse_cents": 15.668917101500785,
+        "mae_cents": 7.813184286785293,
+        "zero_prediction_rmse_cents": 14.689937801483458,
+        "spearman": 0.1561281494725907,
+        "mean_prediction": -3.832608328319511,
+        "mean_actual": -3.013535033281598,
+        "severe_n": 4,
+        "severe_rmse_cents": 64.93464586055627,
+        "positive_n": 35,
+        "selected_actual_sum_cents": -77.76451322183935,
+        "matched_null": {
+          "n": 111,
+          "selected": 35,
+          "draws": 200,
+          "observed_cents": -77.76451322183935,
+          "mean_cents": -93.88626835841282,
+          "min_cents": -265.54482613928553,
+          "max_cents": 28.230587276626313
+        }
+      },
+      "full:cancel:0": {
+        "n": 109,
+        "rmse_cents": 39.81476469445951,
+        "mae_cents": 13.307106651163549,
+        "zero_prediction_rmse_cents": 38.39474297564395,
+        "spearman": 0.12331551844975804,
+        "mean_prediction": 4.9533238343149995,
+        "mean_actual": 5.022412257846923,
+        "severe_n": 5,
+        "severe_rmse_cents": 152.3090163913952,
+        "positive_n": 79,
+        "selected_actual_sum_cents": 273.12511533323607,
+        "matched_null": {
+          "n": 109,
+          "selected": 79,
+          "draws": 200,
+          "observed_cents": 273.12511533323607,
+          "mean_cents": 346.52962944784923,
+          "min_cents": -113.5899186030186,
+          "max_cents": 721.765175485748
+        }
+      },
+      "full:cancel:1": {
+        "n": 112,
+        "rmse_cents": 24.654731411690307,
+        "mae_cents": 8.571776948254284,
+        "zero_prediction_rmse_cents": 23.241517219292554,
+        "spearman": 0.3870073464076546,
+        "mean_prediction": 2.808893979633863,
+        "mean_actual": 3.2745752761530023,
+        "severe_n": 4,
+        "severe_rmse_cents": 114.71225083990907,
+        "positive_n": 66,
+        "selected_actual_sum_cents": 437.00701547630734,
+        "matched_null": {
+          "n": 112,
+          "selected": 66,
+          "draws": 200,
+          "observed_cents": 437.00701547630734,
+          "mean_cents": 167.30015438666942,
+          "min_cents": -35.72641020068529,
+          "max_cents": 455.06153682485916
+        }
+      },
+      "full:post:0": {
+        "n": 111,
+        "rmse_cents": 33.097674339152285,
+        "mae_cents": 12.928086778264145,
+        "zero_prediction_rmse_cents": 33.254485765130525,
+        "spearman": 0.26654438227115496,
+        "mean_prediction": -7.195378586692653,
+        "mean_actual": -7.110484022253684,
+        "severe_n": 7,
+        "severe_rmse_cents": 119.60085281463815,
+        "positive_n": 27,
+        "selected_actual_sum_cents": -131.5557174994358,
+        "matched_null": {
+          "n": 111,
+          "selected": 27,
+          "draws": 200,
+          "observed_cents": -131.5557174994358,
+          "mean_cents": -136.1797508975559,
+          "min_cents": -445.0693515786473,
+          "max_cents": 43.9591749323734
+        }
+      },
+      "full:post:1": {
+        "n": 111,
+        "rmse_cents": 15.882280902282904,
+        "mae_cents": 7.24353173243088,
+        "zero_prediction_rmse_cents": 14.689937801483458,
+        "spearman": 0.15258280969619364,
+        "mean_prediction": -2.963475132493152,
+        "mean_actual": -3.013535033281598,
+        "severe_n": 4,
+        "severe_rmse_cents": 66.90631858717491,
+        "positive_n": 50,
+        "selected_actual_sum_cents": -54.680681254626236,
+        "matched_null": {
+          "n": 111,
+          "selected": 50,
+          "draws": 200,
+          "observed_cents": -54.680681254626236,
+          "mean_cents": -149.60522272544426,
+          "min_cents": -308.91156263890196,
+          "max_cents": 23.08383196721311
+        }
+      },
+      "mechanical:cancel:0": {
+        "n": 109,
+        "rmse_cents": 38.76242087342918,
+        "mae_cents": 12.849509442537885,
+        "zero_prediction_rmse_cents": 38.39474297564395,
+        "spearman": 0.1426675862287575,
+        "mean_prediction": 4.561770498286542,
+        "mean_actual": 5.022412257846923,
+        "severe_n": 5,
+        "severe_rmse_cents": 150.8378382124293,
+        "positive_n": 81,
+        "selected_actual_sum_cents": 319.2218390332314,
+        "matched_null": {
+          "n": 109,
+          "selected": 81,
+          "draws": 200,
+          "observed_cents": 319.2218390332314,
+          "mean_cents": 397.9457263528586,
+          "min_cents": 37.97906423591257,
+          "max_cents": 744.8238861053146
+        }
+      },
+      "mechanical:cancel:1": {
+        "n": 112,
+        "rmse_cents": 24.80906160274007,
+        "mae_cents": 8.70017279182032,
+        "zero_prediction_rmse_cents": 23.241517219292554,
+        "spearman": 0.20969085683927766,
+        "mean_prediction": 2.782933971207011,
+        "mean_actual": 3.2745752761530023,
+        "severe_n": 4,
+        "severe_rmse_cents": 117.13791096023118,
+        "positive_n": 65,
+        "selected_actual_sum_cents": 311.0530719391254,
+        "matched_null": {
+          "n": 112,
+          "selected": 65,
+          "draws": 200,
+          "observed_cents": 311.0530719391254,
+          "mean_cents": 199.32619299962593,
+          "min_cents": -12.643161405194759,
+          "max_cents": 454.8017380177922
+        }
+      },
+      "mechanical:post:0": {
+        "n": 111,
+        "rmse_cents": 33.02844440385402,
+        "mae_cents": 12.525473267958088,
+        "zero_prediction_rmse_cents": 33.254485765130525,
+        "spearman": 0.12837337315091357,
+        "mean_prediction": -6.315304209907628,
+        "mean_actual": -7.110484022253684,
+        "severe_n": 7,
+        "severe_rmse_cents": 124.9813150153232,
+        "positive_n": 27,
+        "selected_actual_sum_cents": -152.75843101531942,
+        "matched_null": {
+          "n": 111,
+          "selected": 27,
+          "draws": 200,
+          "observed_cents": -152.75843101531942,
+          "mean_cents": -186.55906517901283,
+          "min_cents": -555.5713844119704,
+          "max_cents": 43.9591749323734
+        }
+      },
+      "mechanical:post:1": {
+        "n": 111,
+        "rmse_cents": 15.562772666142246,
+        "mae_cents": 7.615507944305161,
+        "zero_prediction_rmse_cents": 14.689937801483458,
+        "spearman": 0.15291384377578623,
+        "mean_prediction": -4.0115547713369315,
+        "mean_actual": -3.013535033281598,
+        "severe_n": 4,
+        "severe_rmse_cents": 65.42326620911136,
+        "positive_n": 41,
+        "selected_actual_sum_cents": -11.580825438914268,
+        "matched_null": {
+          "n": 111,
+          "selected": 41,
+          "draws": 200,
+          "observed_cents": -11.580825438914268,
+          "mean_cents": -124.42732442915536,
+          "min_cents": -316.75601326189314,
+          "max_cents": 28.230587276626313
+        }
+      },
+      "soft:cancel:0": {
+        "n": 109,
+        "rmse_cents": 38.8843745272498,
+        "mae_cents": 11.12296684963629,
+        "zero_prediction_rmse_cents": 38.39474297564395,
+        "spearman": 0.3880398940297926,
+        "mean_prediction": 2.793178770447404,
+        "mean_actual": 5.022412257846923,
+        "severe_n": 5,
+        "severe_rmse_cents": 149.7663049933893,
+        "positive_n": 74,
+        "selected_actual_sum_cents": 547.4429361053145,
+        "matched_null": {
+          "n": 109,
+          "selected": 74,
+          "draws": 200,
+          "observed_cents": 547.4429361053145,
+          "mean_cents": 378.7430680846752,
+          "min_cents": -34.05113807431579,
+          "max_cents": 744.8238861053145
+        }
+      },
+      "soft:cancel:1": {
+        "n": 112,
+        "rmse_cents": 22.959653540701105,
+        "mae_cents": 6.429169300665033,
+        "zero_prediction_rmse_cents": 23.241517219292554,
+        "spearman": 0.26894413586193794,
+        "mean_prediction": 1.1378779089159703,
+        "mean_actual": 3.2745752761530023,
+        "severe_n": 4,
+        "severe_rmse_cents": 117.15798440352677,
+        "positive_n": 63,
+        "selected_actual_sum_cents": 408.23776800861236,
+        "matched_null": {
+          "n": 112,
+          "selected": 63,
+          "draws": 200,
+          "observed_cents": 408.23776800861236,
+          "mean_cents": 234.423752666542,
+          "min_cents": -12.48621012506215,
+          "max_cents": 454.8017380177923
+        }
+      },
+      "soft:post:0": {
+        "n": 111,
+        "rmse_cents": 32.0646969436649,
+        "mae_cents": 11.592405629680549,
+        "zero_prediction_rmse_cents": 33.254485765130525,
+        "spearman": 0.2640212214752769,
+        "mean_prediction": -5.402012216289785,
+        "mean_actual": -7.110484022253684,
+        "severe_n": 7,
+        "severe_rmse_cents": 119.91036120578732,
+        "positive_n": 24,
+        "selected_actual_sum_cents": -19.994493919108024,
+        "matched_null": {
+          "n": 111,
+          "selected": 24,
+          "draws": 200,
+          "observed_cents": -19.994493919108024,
+          "mean_cents": -137.16741570060793,
+          "min_cents": -455.2410363571573,
+          "max_cents": 0.0
+        }
+      },
+      "soft:post:1": {
+        "n": 111,
+        "rmse_cents": 14.310437217484388,
+        "mae_cents": 5.5862472398901435,
+        "zero_prediction_rmse_cents": 14.689937801483458,
+        "spearman": 0.16233808704682637,
+        "mean_prediction": -2.9860991449904684,
+        "mean_actual": -3.013535033281598,
+        "severe_n": 4,
+        "severe_rmse_cents": 66.69031571020476,
+        "positive_n": 26,
+        "selected_actual_sum_cents": 0.0,
+        "matched_null": {
+          "n": 111,
+          "selected": 26,
+          "draws": 200,
+          "observed_cents": 0.0,
+          "mean_cents": -51.86331175899796,
+          "min_cents": -193.8029106504714,
+          "max_cents": 28.230587276626313
+        }
+      }
+    },
+    "value_bins": {
+      "direct:cancel": {
+        "(5.0, 30.0]": {
+          "n": 68,
+          "predicted_mean": 10.091531961256894,
+          "actual_mean": 4.9778367501856025,
+          "bias": 5.1136952110712945,
+          "rmse": 36.52926832296826
+        },
+        "(1.0, 5.0]": {
+          "n": 71,
+          "predicted_mean": 2.9108098231580493,
+          "actual_mean": 8.513596793832377,
+          "bias": -5.602786970674329,
+          "rmse": 42.17983643138543
+        },
+        "(0.0, 1.0]": {
+          "n": 27,
+          "predicted_mean": 0.5170194082171448,
+          "actual_mean": 0.0,
+          "bias": 0.5170194082171448,
+          "rmse": 0.5798332689522345
+        },
+        "(-5.0, -1.0]": {
+          "n": 29,
+          "predicted_mean": -2.461075102452266,
+          "actual_mean": 0.4387045772140374,
+          "bias": -2.899779679666303,
+          "rmse": 9.425946600926677
+        },
+        "(-1.0, 0.0]": {
+          "n": 21,
+          "predicted_mean": -0.5281108058195985,
+          "actual_mean": 0.0,
+          "bias": -0.5281108058195985,
+          "rmse": 0.5705022901456879
+        },
+        "(30.0, inf]": {
+          "n": 3,
+          "predicted_mean": 35.7867230063844,
+          "actual_mean": 0.0,
+          "bias": 35.7867230063844,
+          "rmse": 36.16559789447902
+        },
+        "(-30.0, -5.0]": {
+          "n": 2,
+          "predicted_mean": -7.77215041435244,
+          "actual_mean": -20.74266853973806,
+          "bias": 12.97051812538562,
+          "rmse": 23.84662587795154
+        }
+      },
+      "direct:post": {
+        "(-1.0, 0.0]": {
+          "n": 28,
+          "predicted_mean": -0.4997272772666713,
+          "actual_mean": -3.1599068433255226,
+          "bias": 2.660179566058852,
+          "rmse": 21.529882244132285
+        },
+        "(1.0, 5.0]": {
+          "n": 34,
+          "predicted_mean": 2.6438021719716223,
+          "actual_mean": -0.672864133400359,
+          "bias": 3.3166663053719816,
+          "rmse": 5.330443892012408
+        },
+        "(-5.0, -1.0]": {
+          "n": 57,
+          "predicted_mean": -2.7643370404717915,
+          "actual_mean": -4.958629369505529,
+          "bias": 2.194292329033739,
+          "rmse": 35.41240125103385
+        },
+        "(-30.0, -5.0]": {
+          "n": 72,
+          "predicted_mean": -11.782547283319385,
+          "actual_mean": -7.783080524678533,
+          "bias": -3.9994667586408528,
+          "rmse": 25.614110003161333
+        },
+        "(-inf, -30.0]": {
+          "n": 8,
+          "predicted_mean": -39.58736152753304,
+          "actual_mean": -14.312567311349099,
+          "bias": -25.274794216183942,
+          "rmse": 38.87104946300272
+        },
+        "(0.0, 1.0]": {
+          "n": 17,
+          "predicted_mean": 0.4021408724739171,
+          "actual_mean": -3.228654863895714,
+          "bias": 3.630795736369631,
+          "rmse": 13.382727978051683
+        },
+        "(5.0, 30.0]": {
+          "n": 6,
+          "predicted_mean": 8.040036528053555,
+          "actual_mean": 0.0,
+          "bias": 8.040036528053555,
+          "rmse": 8.325947825388942
+        }
+      },
+      "full:cancel": {
+        "(0.0, 1.0]": {
+          "n": 31,
+          "predicted_mean": 0.38721698279909234,
+          "actual_mean": 3.8815038141610874,
+          "bias": -3.494286831361994,
+          "rmse": 21.549752641704053
+        },
+        "(-1.0, 0.0]": {
+          "n": 26,
+          "predicted_mean": -0.27906847058995854,
+          "actual_mean": 0.007561430451952302,
+          "bias": -0.28662990104191083,
+          "rmse": 0.3921848392145037
+        },
+        "(1.0, 5.0]": {
+          "n": 43,
+          "predicted_mean": 2.602878658125467,
+          "actual_mean": 5.483572106062664,
+          "bias": -2.880693447937198,
+          "rmse": 30.656499039908482
+        },
+        "(-5.0, -1.0]": {
+          "n": 38,
+          "predicted_mean": -2.4281726451148242,
+          "actual_mean": 6.473766966880616,
+          "bias": -8.90193961199544,
+          "rmse": 45.14685254062701
+        },
+        "(5.0, 30.0]": {
+          "n": 67,
+          "predicted_mean": 10.57859376396084,
+          "actual_mean": 5.2225912240276875,
+          "bias": 5.3560025399331535,
+          "rmse": 37.33060241562305
+        },
+        "(-30.0, -5.0]": {
+          "n": 12,
+          "predicted_mean": -7.446014114375342,
+          "actual_mean": -3.511375475692226,
+          "bias": -3.9346386386831145,
+          "rmse": 11.689848259732386
+        },
+        "(30.0, inf]": {
+          "n": 4,
+          "predicted_mean": 52.67341070749765,
+          "actual_mean": 1.024575,
+          "bias": 51.64883570749765,
+          "rmse": 58.295698597396886
+        }
+      },
+      "full:post": {
+        "(0.0, 1.0]": {
+          "n": 33,
+          "predicted_mean": 0.36693163296387193,
+          "actual_mean": -3.2870268343097777,
+          "bias": 3.65395846727365,
+          "rmse": 20.14514174802005
+        },
+        "(-1.0, 0.0]": {
+          "n": 24,
+          "predicted_mean": -0.27284740611410985,
+          "actual_mean": 0.0,
+          "bias": -0.27284740611410985,
+          "rmse": 0.4150508186322124
+        },
+        "(1.0, 5.0]": {
+          "n": 35,
+          "predicted_mean": 2.745248366611405,
+          "actual_mean": -1.5682037910350612,
+          "bias": 4.313452157646466,
+          "rmse": 10.254141842187245
+        },
+        "(-5.0, -1.0]": {
+          "n": 50,
+          "predicted_mean": -2.957893632852836,
+          "actual_mean": -1.4628988370100797,
+          "bias": -1.4949947958427565,
+          "rmse": 17.567229667347192
+        },
+        "(-30.0, -5.0]": {
+          "n": 61,
+          "predicted_mean": -11.710941071770575,
+          "actual_mean": -12.061007301170214,
+          "bias": 0.35006622939964066,
+          "rmse": 40.02583425850612
+        },
+        "(-inf, -30.0]": {
+          "n": 10,
+          "predicted_mean": -43.10980696006466,
+          "actual_mean": -12.86633291884672,
+          "bias": -30.24347404121794,
+          "rmse": 42.47940418942306
+        },
+        "(5.0, 30.0]": {
+          "n": 9,
+          "predicted_mean": 7.1203660910223014,
+          "actual_mean": -2.5419311706235788,
+          "bias": 9.66229726164588,
+          "rmse": 12.096633961265674
+        }
+      },
+      "mechanical:cancel": {
+        "(0.0, 1.0]": {
+          "n": 25,
+          "predicted_mean": 0.2968456623198399,
+          "actual_mean": 0.0,
+          "bias": 0.2968456623198399,
+          "rmse": 0.3836142208377696
+        },
+        "(-1.0, 0.0]": {
+          "n": 27,
+          "predicted_mean": -0.32540409590812014,
+          "actual_mean": -1.041410327365346,
+          "bias": 0.7160062314572256,
+          "rmse": 5.125946559572945
+        },
+        "(5.0, 30.0]": {
+          "n": 67,
+          "predicted_mean": 10.760280452333443,
+          "actual_mean": 7.89103732667876,
+          "bias": 2.8692431256546826,
+          "rmse": 51.209378753907714
+        },
+        "(1.0, 5.0]": {
+          "n": 53,
+          "predicted_mean": 2.925568151243086,
+          "actual_mean": 1.9165171714128284,
+          "bias": 1.0090509798302567,
+          "rmse": 9.846689903821908
+        },
+        "(-30.0, -5.0]": {
+          "n": 9,
+          "predicted_mean": -7.034476960533819,
+          "actual_mean": -3.3721365375323935,
+          "bias": -3.6623404230014267,
+          "rmse": 13.343300844991774
+        },
+        "(-5.0, -1.0]": {
+          "n": 39,
+          "predicted_mean": -2.347831855541829,
+          "actual_mean": 8.779173429198714,
+          "bias": -11.127005284740543,
+          "rmse": 32.66144986886358
+        },
+        "(30.0, inf]": {
+          "n": 1,
+          "predicted_mean": 89.16819080865315,
+          "actual_mean": 0.0,
+          "bias": 89.16819080865315,
+          "rmse": 89.16819080865315
+        }
+      },
+      "mechanical:post": {
+        "(0.0, 1.0]": {
+          "n": 33,
+          "predicted_mean": 0.33308861728714756,
+          "actual_mean": -0.017417351782434847,
+          "bias": 0.3505059690695824,
+          "rmse": 5.011828431624925
+        },
+        "(-5.0, -1.0]": {
+          "n": 40,
+          "predicted_mean": -3.007689422544395,
+          "actual_mean": -10.691274771228034,
+          "bias": 7.683585348683638,
+          "rmse": 46.44154483239601
+        },
+        "(-30.0, -5.0]": {
+          "n": 84,
+          "predicted_mean": -12.225718719382739,
+          "actual_mean": -5.655957433354695,
+          "bias": -6.569761286028042,
+          "rmse": 21.316705276246747
+        },
+        "(5.0, 30.0]": {
+          "n": 8,
+          "predicted_mean": 7.3269480079452975,
+          "actual_mean": 0.0,
+          "bias": 7.3269480079452975,
+          "rmse": 7.465147630161936
+        },
+        "(1.0, 5.0]": {
+          "n": 27,
+          "predicted_mean": 2.4694884422024086,
+          "actual_mean": -6.065351253533827,
+          "bias": 8.534839695736236,
+          "rmse": 26.008785995974346
+        },
+        "(-1.0, 0.0]": {
+          "n": 27,
+          "predicted_mean": -0.37099024551802295,
+          "actual_mean": 0.0,
+          "bias": -0.37099024551802295,
+          "rmse": 0.4914345648810153
+        },
+        "(-inf, -30.0]": {
+          "n": 3,
+          "predicted_mean": -41.760119110912406,
+          "actual_mean": -18.89181448642231,
+          "bias": -22.868304624490094,
+          "rmse": 36.44000920311715
+        }
+      },
+      "soft:cancel": {
+        "(-1.0, 0.0]": {
+          "n": 48,
+          "predicted_mean": -0.34577177006171184,
+          "actual_mean": 0.0,
+          "bias": -0.34577177006171184,
+          "rmse": 0.481541088437786
+        },
+        "(0.0, 1.0]": {
+          "n": 43,
+          "predicted_mean": 0.4193651332974499,
+          "actual_mean": 3.4680518879942603,
+          "bias": -3.048686754696811,
+          "rmse": 30.25215871682467
+        },
+        "(1.0, 5.0]": {
+          "n": 59,
+          "predicted_mean": 2.685628038170659,
+          "actual_mean": 7.473147096535271,
+          "bias": -4.787519058364613,
+          "rmse": 38.796119239793896
+        },
+        "(-30.0, -5.0]": {
+          "n": 6,
+          "predicted_mean": -8.25820811343941,
+          "actual_mean": -6.914222846579353,
+          "bias": -1.3439852668600576,
+          "rmse": 16.070386069914335
+        },
+        "(5.0, 30.0]": {
+          "n": 34,
+          "predicted_mean": 10.150861482173658,
+          "actual_mean": 10.754082183370373,
+          "bias": -0.6032207011967152,
+          "rmse": 51.99125227028776
+        },
+        "(-5.0, -1.0]": {
+          "n": 30,
+          "predicted_mean": -2.2902326863121436,
+          "actual_mean": 0.0,
+          "bias": -2.2902326863121436,
+          "rmse": 2.503614057543008
+        },
+        "(30.0, inf]": {
+          "n": 1,
+          "predicted_mean": 45.13804063255512,
+          "actual_mean": 0.0,
+          "bias": 45.13804063255512,
+          "rmse": 45.13804063255512
+        }
+      },
+      "soft:post": {
+        "(-1.0, 0.0]": {
+          "n": 55,
+          "predicted_mean": -0.3600987350586758,
+          "actual_mean": -3.026333750300998,
+          "bias": 2.666235015242321,
+          "rmse": 16.699283307977886
+        },
+        "(0.0, 1.0]": {
+          "n": 30,
+          "predicted_mean": 0.4242068722293885,
+          "actual_mean": 0.0,
+          "bias": 0.4242068722293885,
+          "rmse": 0.5368412425148609
+        },
+        "(-30.0, -5.0]": {
+          "n": 54,
+          "predicted_mean": -11.261644588676962,
+          "actual_mean": -11.663771839198679,
+          "bias": 0.4021272505217186,
+          "rmse": 42.53138691835143
+        },
+        "(-5.0, -1.0]": {
+          "n": 57,
+          "predicted_mean": -2.5257368677439276,
+          "actual_mean": -4.032223842071247,
+          "bias": 1.506486974327319,
+          "rmse": 17.154369498502763
+        },
+        "(-inf, -30.0]": {
+          "n": 6,
+          "predicted_mean": -39.59232807627633,
+          "actual_mean": -12.940471110660601,
+          "bias": -26.651856965615725,
+          "rmse": 31.76335654741256
+        },
+        "(1.0, 5.0]": {
+          "n": 18,
+          "predicted_mean": 2.1033633508659477,
+          "actual_mean": -1.1108052177282235,
+          "bias": 3.214168568594171,
+          "rmse": 5.649969767694242
+        },
+        "(5.0, 30.0]": {
+          "n": 2,
+          "predicted_mean": 13.894050275634047,
+          "actual_mean": 0.0,
+          "bias": 13.894050275634047,
+          "rmse": 14.596558644570488
+        }
+      }
+    },
+    "coverage_groups": {
+      "direct:cancel": {
+        "False": {
+          "n": 210,
+          "predicted_mean": 3.610341937999153,
+          "actual_mean": 4.126617755083033,
+          "bias": -0.5162758170838798,
+          "rmse": 32.30012975533653
+        },
+        "True": {
+          "n": 11,
+          "predicted_mean": 14.366704649895661,
+          "actual_mean": 4.327785315183089,
+          "bias": 10.038919334712574,
+          "rmse": 22.59971702110754
+        }
+      },
+      "direct:post": {
+        "False": {
+          "n": 206,
+          "predicted_mean": -5.108620088713373,
+          "actual_mean": -5.358114666239361,
+          "bias": 0.2494945775259873,
+          "rmse": 26.65647344678024
+        },
+        "True": {
+          "n": 16,
+          "predicted_mean": -8.703765347953192,
+          "actual_mean": -1.2496558699442515,
+          "bias": -7.454109478008941,
+          "rmse": 10.707832732537742
+        }
+      },
+      "full:cancel": {
+        "False": {
+          "n": 210,
+          "predicted_mean": 3.0116690208822083,
+          "actual_mean": 4.126617755083033,
+          "bias": -1.1149487342008249,
+          "rmse": 32.8707007789754
+        },
+        "True": {
+          "n": 11,
+          "predicted_mean": 20.187084479460353,
+          "actual_mean": 4.327785315183089,
+          "bias": 15.859299164277262,
+          "rmse": 35.63312043265433
+        }
+      },
+      "full:post": {
+        "False": {
+          "n": 206,
+          "predicted_mean": -5.124488467488764,
+          "actual_mean": -5.358114666239361,
+          "bias": 0.2336261987505965,
+          "rmse": 26.740216880737954
+        },
+        "True": {
+          "n": 16,
+          "predicted_mean": -4.499258657933694,
+          "actual_mean": -1.2496558699442515,
+          "bias": -3.249602787989443,
+          "rmse": 11.981616647289105
+        }
+      },
+      "mechanical:cancel": {
+        "False": {
+          "n": 210,
+          "predicted_mean": 2.976446040789036,
+          "actual_mean": 4.126617755083033,
+          "bias": -1.150171714293996,
+          "rmse": 32.48275434751407
+        },
+        "True": {
+          "n": 11,
+          "predicted_mean": 16.715265502065535,
+          "actual_mean": 4.327785315183089,
+          "bias": 12.387480186882447,
+          "rmse": 31.813267038890114
+        }
+      },
+      "mechanical:post": {
+        "False": {
+          "n": 206,
+          "predicted_mean": -5.056675674802914,
+          "actual_mean": -5.358114666239361,
+          "bias": 0.30143899143644715,
+          "rmse": 26.669509624840433
+        },
+        "True": {
+          "n": 16,
+          "predicted_mean": -6.537884869296619,
+          "actual_mean": -1.2496558699442515,
+          "bias": -5.288228999352368,
+          "rmse": 9.52475870017005
+        }
+      },
+      "soft:cancel": {
+        "False": {
+          "n": 210,
+          "predicted_mean": 1.9461368644088661,
+          "actual_mean": 4.126617755083033,
+          "bias": -2.1804808906741666,
+          "rmse": 32.47618603416705
+        },
+        "True": {
+          "n": 11,
+          "predicted_mean": 2.1100063864994487,
+          "actual_mean": 4.327785315183089,
+          "bias": -2.2177789286836407,
+          "rmse": 14.647892742984425
+        }
+      },
+      "soft:post": {
+        "False": {
+          "n": 206,
+          "predicted_mean": -4.434040821204355,
+          "actual_mean": -5.358114666239361,
+          "bias": 0.9240738450350062,
+          "rmse": 25.689766801686954
+        },
+        "True": {
+          "n": 16,
+          "predicted_mean": -1.1042469958756982,
+          "actual_mean": -1.2496558699442515,
+          "bias": 0.14540887406855335,
+          "rmse": 7.512487135566345
+        }
+      }
+    }
+  },
+  "calibration": {
+    "role": "consumed_later_actions",
+    "groups": {
+      "kind:('cancel',)": {
+        "full": {
+          "n": 221,
+          "fill": {
+            "n": 221,
+            "positives": 27,
+            "brier": 0.07908621694718873,
+            "logloss": 0.2605608709258453,
+            "auc": 0.8781977854142803,
+            "mean_predicted": 0.09555734404707854,
+            "actual_rate": 0.12217194570135746
+          },
+          "tail": {
+            "n": 221,
+            "positives": 9,
+            "brier": 0.03956439414139623,
+            "logloss": 0.17692538884573034,
+            "auc": 0.6928721174004193,
+            "mean_predicted": 0.025269278570715946,
+            "actual_rate": 0.04072398190045249
+          },
+          "quantity": {
+            "n": 221,
+            "predicted_mean": 2.1902770050744826,
+            "actual_mean": 2.5494750969587336,
+            "bias": -0.3591980918842515,
+            "rmse": 6.889247976036658
+          },
+          "motion": {
+            "n": 221,
+            "predicted_mean": -7.469782309506639,
+            "actual_mean": -7.856587572183278,
+            "bias": 0.38680526267663845,
+            "rmse": 40.69482515712233
+          },
+          "focal_wealth": {
+            "n": 221,
+            "predicted_mean": -3.5913464119150724,
+            "actual_mean": -3.895414386318984,
+            "bias": 0.3040679744039116,
+            "rmse": 32.031869824709034
+          },
+          "predicted_shares_per_fill": 22.921074532956798,
+          "actual_shares_per_fill": 20.86792579362519,
+          "predicted_fill_weighted_move": -3.4104281295016476,
+          "actual_fill_weighted_move": -3.0816490741782077,
+          "probability_quantity_incoherent_n": 88,
+          "fill_bins": {
+            "(-0.001, 0.01]": {
+              "n": 26,
+              "predicted_mean": 0.0071142730205160576,
+              "actual_mean": 0.0,
+              "bias": 0.0071142730205160576,
+              "rmse": 0.007365942978539691
+            },
+            "(0.01, 0.03]": {
+              "n": 58,
+              "predicted_mean": 0.017085120292149158,
+              "actual_mean": 0.0,
+              "bias": 0.017085120292149158,
+              "rmse": 0.01804029183812594
+            },
+            "(0.3, 0.6]": {
+              "n": 15,
+              "predicted_mean": 0.4234465926412839,
+              "actual_mean": 0.6,
+              "bias": -0.1765534073587161,
+              "rmse": 0.49274950913879456
+            },
+            "(0.03, 0.1]": {
+              "n": 69,
+              "predicted_mean": 0.058405635854959226,
+              "actual_mean": 0.08695652173913043,
+              "bias": -0.028550885884171213,
+              "rmse": 0.28158667178188324
+            },
+            "(0.1, 0.3]": {
+              "n": 52,
+              "predicted_mean": 0.17230143655814747,
+              "actual_mean": 0.21153846153846154,
+              "bias": -0.039237024980314054,
+              "rmse": 0.39675060780688937
+            },
+            "(0.6, 1.0]": {
+              "n": 1,
+              "predicted_mean": 0.6009024942911754,
+              "actual_mean": 1.0,
+              "bias": -0.39909750570882463,
+              "rmse": 0.39909750570882463
+            }
+          },
+          "tail_bins": {
+            "(-0.001, 0.01]": {
+              "n": 119,
+              "predicted_mean": 0.004768216261303008,
+              "actual_mean": 0.01680672268907563,
+              "bias": -0.012038506427772624,
+              "rmse": 0.12876485393551043
+            },
+            "(0.01, 0.03]": {
+              "n": 58,
+              "predicted_mean": 0.019663740463510528,
+              "actual_mean": 0.06896551724137931,
+              "bias": -0.04930177677786878,
+              "rmse": 0.2586905211712325
+            },
+            "(0.03, 0.1]": {
+              "n": 33,
+              "predicted_mean": 0.057015558898395116,
+              "actual_mean": 0.06060606060606061,
+              "bias": -0.003590501707665485,
+              "rmse": 0.2390508673606317
+            },
+            "(0.1, 0.3]": {
+              "n": 11,
+              "predicted_mean": 0.18137113077295614,
+              "actual_mean": 0.09090909090909091,
+              "bias": 0.09046203986386524,
+              "rmse": 0.3020331016622537
+            }
+          },
+          "focal_bins": {
+            "(-1.0, 0.0]": {
+              "n": 50,
+              "predicted_mean": -0.17618723845851078,
+              "actual_mean": -5.4864,
+              "bias": 5.3102127615414885,
+              "rmse": 38.743764686518944
+            },
+            "(-5.0, -1.0]": {
+              "n": 50,
+              "predicted_mean": -2.885218269028654,
+              "actual_mean": -3.9530806074388516,
+              "bias": 1.0678623384101977,
+              "rmse": 27.87771335436873
+            },
+            "(0.0, 1.0]": {
+              "n": 14,
+              "predicted_mean": 0.5053948509903952,
+              "actual_mean": -7.5,
+              "bias": 8.005394850990395,
+              "rmse": 28.226742882068255
+            },
+            "(1.0, 5.0]": {
+              "n": 37,
+              "predicted_mean": 2.4289309936088483,
+              "actual_mean": 0.5736827586206896,
+              "bias": 1.8552482349881578,
+              "rmse": 5.287593773817849
+            },
+            "(-30.0, -5.0]": {
+              "n": 57,
+              "predicted_mean": -10.952296163350532,
+              "actual_mean": -5.101662474974007,
+              "bias": -5.850633688376525,
+              "rmse": 39.22339751328397
+            },
+            "(5.0, 30.0]": {
+              "n": 10,
+              "predicted_mean": 7.059706451109766,
+              "actual_mean": 0.0,
+              "bias": 7.059706451109766,
+              "rmse": 7.2473003539307745
+            },
+            "(-inf, -30.0]": {
+              "n": 3,
+              "predicted_mean": -61.293146512127635,
+              "actual_mean": -4.78135,
+              "bias": -56.51179651212764,
+              "rmse": 64.3827649519981
+            }
+          }
+        },
+        "mechanical": {
+          "n": 221,
+          "fill": {
+            "n": 221,
+            "positives": 27,
+            "brier": 0.0858318107867619,
+            "logloss": 0.2946274680125479,
+            "auc": 0.8155784650630011,
+            "mean_predicted": 0.09123466996291418,
+            "actual_rate": 0.12217194570135746
+          },
+          "tail": {
+            "n": 221,
+            "positives": 9,
+            "brier": 0.040406830100038205,
+            "logloss": 0.1832596580305924,
+            "auc": 0.6346960167714885,
+            "mean_predicted": 0.027245966523901686,
+            "actual_rate": 0.04072398190045249
+          },
+          "quantity": {
+            "n": 221,
+            "predicted_mean": 2.044367212691184,
+            "actual_mean": 2.5494750969587336,
+            "bias": -0.5051078842675498,
+            "rmse": 7.107839244455853
+          },
+          "motion": {
+            "n": 221,
+            "predicted_mean": -6.4480286083893015,
+            "actual_mean": -7.856587572183278,
+            "bias": 1.4085589637939762,
+            "rmse": 41.25448247737528
+          },
+          "focal_wealth": {
+            "n": 221,
+            "predicted_mean": -3.385071142363447,
+            "actual_mean": -3.895414386318984,
+            "bias": 0.5103432439555368,
+            "rmse": 31.40820777918746
+          },
+          "predicted_shares_per_fill": 22.407788766290217,
+          "actual_shares_per_fill": 20.86792579362519,
+          "predicted_fill_weighted_move": -3.154046185225786,
+          "actual_fill_weighted_move": -3.0816490741782077,
+          "probability_quantity_incoherent_n": 66,
+          "fill_bins": {
+            "(0.01, 0.03]": {
+              "n": 61,
+              "predicted_mean": 0.017139246035600193,
+              "actual_mean": 0.03278688524590164,
+              "bias": -0.015647639210301455,
+              "rmse": 0.17793096640796358
+            },
+            "(0.3, 0.6]": {
+              "n": 13,
+              "predicted_mean": 0.3873623178661394,
+              "actual_mean": 0.6153846153846154,
+              "bias": -0.228022297518476,
+              "rmse": 0.523581850760143
+            },
+            "(0.1, 0.3]": {
+              "n": 51,
+              "predicted_mean": 0.1753106214532987,
+              "actual_mean": 0.17647058823529413,
+              "bias": -0.0011599667819954436,
+              "rmse": 0.3673933320474501
+            },
+            "(0.03, 0.1]": {
+              "n": 75,
+              "predicted_mean": 0.05824419830895284,
+              "actual_mean": 0.09333333333333334,
+              "bias": -0.03508913502438049,
+              "rmse": 0.2929700059692903
+            },
+            "(-0.001, 0.01]": {
+              "n": 20,
+              "predicted_mean": 0.00806929530790814,
+              "actual_mean": 0.0,
+              "bias": 0.00806929530790814,
+              "rmse": 0.008224086937894198
+            },
+            "(0.6, 1.0]": {
+              "n": 1,
+              "predicted_mean": 0.611115447924752,
+              "actual_mean": 1.0,
+              "bias": -0.38888455207524797,
+              "rmse": 0.38888455207524797
+            }
+          },
+          "tail_bins": {
+            "(-0.001, 0.01]": {
+              "n": 96,
+              "predicted_mean": 0.004893070557790498,
+              "actual_mean": 0.020833333333333332,
+              "bias": -0.015940262775542835,
+              "rmse": 0.1435674577022942
+            },
+            "(0.03, 0.1]": {
+              "n": 48,
+              "predicted_mean": 0.05493438415261226,
+              "actual_mean": 0.0625,
+              "bias": -0.007565615847387742,
+              "rmse": 0.24109217646385525
+            },
+            "(0.01, 0.03]": {
+              "n": 66,
+              "predicted_mean": 0.0174753384470091,
+              "actual_mean": 0.06060606060606061,
+              "bias": -0.043130722159051504,
+              "rmse": 0.24139917939837535
+            },
+            "(0.1, 0.3]": {
+              "n": 11,
+              "predicted_mean": 0.16012736830967225,
+              "actual_mean": 0.0,
+              "bias": 0.16012736830967225,
+              "rmse": 0.16925457061245355
+            }
+          },
+          "focal_bins": {
+            "(-1.0, 0.0]": {
+              "n": 45,
+              "predicted_mean": -0.09383870298394605,
+              "actual_mean": -0.6184666666666667,
+              "bias": 0.5246279636827207,
+              "rmse": 4.019230064491998
+            },
+            "(-30.0, -5.0]": {
+              "n": 58,
+              "predicted_mean": -10.444177211919957,
+              "actual_mean": -8.362146928583313,
+              "bias": -2.082030283336642,
+              "rmse": 54.33489517284177
+            },
+            "(-5.0, -1.0]": {
+              "n": 63,
+              "predicted_mean": -2.7744412562680485,
+              "actual_mean": -0.69249078710522,
+              "bias": -2.081950469162828,
+              "rmse": 6.791102875755703
+            },
+            "(1.0, 5.0]": {
+              "n": 35,
+              "predicted_mean": 2.632592387881185,
+              "actual_mean": -8.4064039408867,
+              "bias": 11.038996328767885,
+              "rmse": 31.390182150924556
+            },
+            "(5.0, 30.0]": {
+              "n": 5,
+              "predicted_mean": 5.925265036000186,
+              "actual_mean": -2.0400000000000005,
+              "bias": 7.965265036000187,
+              "rmse": 9.140734095181495
+            },
+            "(0.0, 1.0]": {
+              "n": 14,
+              "predicted_mean": 0.40510541906501263,
+              "actual_mean": 0.0,
+              "bias": 0.40510541906501263,
+              "rmse": 0.4918791125160938
+            },
+            "(-inf, -30.0]": {
+              "n": 1,
+              "predicted_mean": -90.76443801455244,
+              "actual_mean": 0.0,
+              "bias": -90.76443801455244,
+              "rmse": 90.76443801455244
+            }
+          }
+        },
+        "direct": {
+          "focal_wealth": {
+            "n": 221,
+            "predicted_mean": -3.870518966075013,
+            "actual_mean": -3.895414386318984,
+            "bias": 0.02489542024397083,
+            "rmse": 30.875207917066156
+          }
+        }
+      },
+      "kind:('post',)": {
+        "full": {
+          "n": 222,
+          "fill": {
+            "n": 222,
+            "positives": 25,
+            "brier": 0.08297202843075668,
+            "logloss": 0.26706398034942463,
+            "auc": 0.8558375634517766,
+            "mean_predicted": 0.1252214046336004,
+            "actual_rate": 0.11261261261261261
+          },
+          "tail": {
+            "n": 222,
+            "positives": 11,
+            "brier": 0.047530234714908484,
+            "logloss": 0.1826426337641425,
+            "auc": 0.7772511848341233,
+            "mean_predicted": 0.04601128863731987,
+            "actual_rate": 0.04954954954954955
+          },
+          "quantity": {
+            "n": 222,
+            "predicted_mean": 2.8140835709737178,
+            "actual_mean": 2.599176411573004,
+            "bias": 0.21490715940071317,
+            "rmse": 7.439537784437797
+          },
+          "motion": {
+            "n": 222,
+            "predicted_mean": -9.170036518583379,
+            "actual_mean": -8.542144383037236,
+            "bias": -0.6278921355461412,
+            "rmse": 31.7894230681643
+          },
+          "focal_wealth": {
+            "n": 222,
+            "predicted_mean": -4.352490562824501,
+            "actual_mean": -4.281824248694051,
+            "bias": -0.07066631413045016,
+            "rmse": 24.688568734369415
+          },
+          "predicted_shares_per_fill": 22.472863798387873,
+          "actual_shares_per_fill": 23.080686534768276,
+          "predicted_fill_weighted_move": -3.2586226696211438,
+          "actual_fill_weighted_move": -3.2864811888114933,
+          "probability_quantity_incoherent_n": 73,
+          "fill_bins": {
+            "(-0.001, 0.01]": {
+              "n": 21,
+              "predicted_mean": 0.006650597504359651,
+              "actual_mean": 0.0,
+              "bias": 0.006650597504359651,
+              "rmse": 0.006832351559936606
+            },
+            "(0.03, 0.1]": {
+              "n": 55,
+              "predicted_mean": 0.05942446373183363,
+              "actual_mean": 0.01818181818181818,
+              "bias": 0.04124264555001544,
+              "rmse": 0.13767763372815778
+            },
+            "(0.01, 0.03]": {
+              "n": 46,
+              "predicted_mean": 0.019820171582802797,
+              "actual_mean": 0.0,
+              "bias": 0.019820171582802797,
+              "rmse": 0.020645356181354334
+            },
+            "(0.3, 0.6]": {
+              "n": 24,
+              "predicted_mean": 0.3851466028509855,
+              "actual_mean": 0.3333333333333333,
+              "bias": 0.05181326951765213,
+              "rmse": 0.46434738688660543
+            },
+            "(0.1, 0.3]": {
+              "n": 76,
+              "predicted_mean": 0.18731443966558298,
+              "actual_mean": 0.21052631578947367,
+              "bias": -0.023211876123890696,
+              "rmse": 0.40035884074858447
+            }
+          },
+          "tail_bins": {
+            "(-0.001, 0.01]": {
+              "n": 93,
+              "predicted_mean": 0.004811300155566273,
+              "actual_mean": 0.0,
+              "bias": 0.004811300155566273,
+              "rmse": 0.0054031852414829495
+            },
+            "(0.03, 0.1]": {
+              "n": 43,
+              "predicted_mean": 0.05773740912549164,
+              "actual_mean": 0.046511627906976744,
+              "bias": 0.011225781218514893,
+              "rmse": 0.21324878841516426
+            },
+            "(0.01, 0.03]": {
+              "n": 53,
+              "predicted_mean": 0.0188048504459183,
+              "actual_mean": 0.05660377358490566,
+              "bias": -0.037798923138987355,
+              "rmse": 0.23478474985558503
+            },
+            "(0.1, 0.3]": {
+              "n": 31,
+              "predicted_mean": 0.1804400527261664,
+              "actual_mean": 0.1935483870967742,
+              "bias": -0.013108334370607795,
+              "rmse": 0.41856275933778664
+            },
+            "(0.3, 0.6]": {
+              "n": 2,
+              "predicted_mean": 0.34702393123819003,
+              "actual_mean": 0.0,
+              "bias": 0.34702393123819003,
+              "rmse": 0.3471067527695943
+            }
+          },
+          "focal_bins": {
+            "(-1.0, 0.0]": {
+              "n": 46,
+              "predicted_mean": -0.11601716262283397,
+              "actual_mean": -0.277636602628918,
+              "bias": 0.16161944000608403,
+              "rmse": 1.8448191330608539
+            },
+            "(1.0, 5.0]": {
+              "n": 37,
+              "predicted_mean": 2.9106551575996997,
+              "actual_mean": -1.2162162162162162,
+              "bias": 4.126871373815916,
+              "rmse": 8.570171899840812
+            },
+            "(-5.0, -1.0]": {
+              "n": 59,
+              "predicted_mean": -2.9917534904461096,
+              "actual_mean": -4.61537627018004,
+              "bias": 1.6236227797339304,
+              "rmse": 23.01090187068435
+            },
+            "(-30.0, -5.0]": {
+              "n": 46,
+              "predicted_mean": -12.773986069719985,
+              "actual_mean": -9.73216048842462,
+              "bias": -3.041825581295367,
+              "rmse": 40.7590660389377
+            },
+            "(-inf, -30.0]": {
+              "n": 9,
+              "predicted_mean": -41.09847902138252,
+              "actual_mean": -22.36046511627907,
+              "bias": -18.73801390510345,
+              "rmse": 51.733192676433525
+            },
+            "(0.0, 1.0]": {
+              "n": 17,
+              "predicted_mean": 0.48907635559023843,
+              "actual_mean": 0.8823529411764706,
+              "bias": -0.393276585586232,
+              "rmse": 3.509379204566091
+            },
+            "(5.0, 30.0]": {
+              "n": 8,
+              "predicted_mean": 7.134808999158809,
+              "actual_mean": 1.6796336206896552,
+              "bias": 5.4551753784691535,
+              "rmse": 7.776415840534919
+            }
+          }
+        },
+        "mechanical": {
+          "n": 222,
+          "fill": {
+            "n": 222,
+            "positives": 25,
+            "brier": 0.0915306972676984,
+            "logloss": 0.30276403906005794,
+            "auc": 0.76751269035533,
+            "mean_predicted": 0.12864882976352338,
+            "actual_rate": 0.11261261261261261
+          },
+          "tail": {
+            "n": 222,
+            "positives": 11,
+            "brier": 0.04792443517614099,
+            "logloss": 0.18621922692022919,
+            "auc": 0.7337354588539423,
+            "mean_predicted": 0.05088754665190945,
+            "actual_rate": 0.04954954954954955
+          },
+          "quantity": {
+            "n": 222,
+            "predicted_mean": 2.806458463494197,
+            "actual_mean": 2.599176411573004,
+            "bias": 0.20728205192119256,
+            "rmse": 7.892932953710366
+          },
+          "motion": {
+            "n": 222,
+            "predicted_mean": -8.627847212836157,
+            "actual_mean": -8.542144383037236,
+            "bias": -0.08570282979891955,
+            "rmse": 33.347020902789495
+          },
+          "focal_wealth": {
+            "n": 222,
+            "predicted_mean": -4.436493193853879,
+            "actual_mean": -4.281824248694051,
+            "bias": -0.15466894515982751,
+            "rmse": 24.732700200878647
+          },
+          "predicted_shares_per_fill": 21.814877513094412,
+          "actual_shares_per_fill": 23.080686534768276,
+          "predicted_fill_weighted_move": -3.0742828818118357,
+          "actual_fill_weighted_move": -3.2864811888114933,
+          "probability_quantity_incoherent_n": 48,
+          "fill_bins": {
+            "(0.01, 0.03]": {
+              "n": 36,
+              "predicted_mean": 0.017451172151001212,
+              "actual_mean": 0.0,
+              "bias": 0.017451172151001212,
+              "rmse": 0.018177777836792374
+            },
+            "(0.03, 0.1]": {
+              "n": 68,
+              "predicted_mean": 0.061956436647135536,
+              "actual_mean": 0.07352941176470588,
+              "bias": -0.011572975117570338,
+              "rmse": 0.26025538238845397
+            },
+            "(0.1, 0.3]": {
+              "n": 75,
+              "predicted_mean": 0.19512760193308926,
+              "actual_mean": 0.16,
+              "bias": 0.03512760193308926,
+              "rmse": 0.37448266517811374
+            },
+            "(0.3, 0.6]": {
+              "n": 24,
+              "predicted_mean": 0.3726128975160661,
+              "actual_mean": 0.3333333333333333,
+              "bias": 0.03927956418273273,
+              "rmse": 0.4647219345874136
+            },
+            "(-0.001, 0.01]": {
+              "n": 19,
+              "predicted_mean": 0.00744634908913949,
+              "actual_mean": 0.0,
+              "bias": 0.00744634908913949,
+              "rmse": 0.007588338523280385
+            }
+          },
+          "tail_bins": {
+            "(-0.001, 0.01]": {
+              "n": 63,
+              "predicted_mean": 0.005063335039912467,
+              "actual_mean": 0.0,
+              "bias": 0.005063335039912467,
+              "rmse": 0.0056576593112898374
+            },
+            "(0.03, 0.1]": {
+              "n": 67,
+              "predicted_mean": 0.060428190315511575,
+              "actual_mean": 0.08955223880597014,
+              "bias": -0.029124048490458576,
+              "rmse": 0.2903576044431322
+            },
+            "(0.01, 0.03]": {
+              "n": 62,
+              "predicted_mean": 0.018135362852505877,
+              "actual_mean": 0.03225806451612903,
+              "bias": -0.014122701663623156,
+              "rmse": 0.176198075560142
+            },
+            "(0.1, 0.3]": {
+              "n": 26,
+              "predicted_mean": 0.16390964480241813,
+              "actual_mean": 0.11538461538461539,
+              "bias": 0.048525029417802776,
+              "rmse": 0.3077099995925885
+            },
+            "(0.3, 0.6]": {
+              "n": 4,
+              "predicted_mean": 0.3858283090879755,
+              "actual_mean": 0.0,
+              "bias": 0.3858283090879755,
+              "rmse": 0.3879253101280133
+            }
+          },
+          "focal_bins": {
+            "(-1.0, 0.0]": {
+              "n": 42,
+              "predicted_mean": -0.16309557370823569,
+              "actual_mean": -0.7142857142857143,
+              "bias": 0.5511901405774786,
+              "rmse": 4.5377129794762086
+            },
+            "(-5.0, -1.0]": {
+              "n": 49,
+              "predicted_mean": -2.933958926029423,
+              "actual_mean": -8.571428571428571,
+              "bias": 5.637469645399149,
+              "rmse": 41.230147762273994
+            },
+            "(-30.0, -5.0]": {
+              "n": 75,
+              "predicted_mean": -11.331695958031295,
+              "actual_mean": -4.421304448820702,
+              "bias": -6.9103915092105925,
+              "rmse": 19.318899245038086
+            },
+            "(5.0, 30.0]": {
+              "n": 8,
+              "predicted_mean": 7.092368151958903,
+              "actual_mean": 0.0,
+              "bias": 7.092368151958903,
+              "rmse": 7.2884784128726485
+            },
+            "(1.0, 5.0]": {
+              "n": 31,
+              "predicted_mean": 2.2772056600455115,
+              "actual_mean": 1.072163515016685,
+              "bias": 1.2050421450288267,
+              "rmse": 4.962008096330115
+            },
+            "(0.0, 1.0]": {
+              "n": 14,
+              "predicted_mean": 0.45262308394115663,
+              "actual_mean": -11.16029900332226,
+              "bias": 11.612922087263415,
+              "rmse": 36.667592114137314
+            },
+            "(-inf, -30.0]": {
+              "n": 3,
+              "predicted_mean": -39.35977818809494,
+              "actual_mean": -15.320010822510822,
+              "bias": -24.039767365584122,
+              "rmse": 34.80797086705605
+            }
+          }
+        },
+        "direct": {
+          "focal_wealth": {
+            "n": 222,
+            "predicted_mean": -4.640793360178472,
+            "actual_mean": -4.281824248694051,
+            "bias": -0.35896911148442084,
+            "rmse": 24.58482705427786
+          }
+        }
+      },
+      "side:('cancel', 0)": {
+        "full": {
+          "n": 109,
+          "fill": {
+            "n": 109,
+            "positives": 14,
+            "brier": 0.08491400880140017,
+            "logloss": 0.2794506792760209,
+            "auc": 0.8631578947368421,
+            "mean_predicted": 0.09844149610436426,
+            "actual_rate": 0.12844036697247707
+          },
+          "tail": {
+            "n": 109,
+            "positives": 5,
+            "brier": 0.04637349038650749,
+            "logloss": 0.21921723103251792,
+            "auc": 0.5538461538461539,
+            "mean_predicted": 0.026073363143876933,
+            "actual_rate": 0.045871559633027525
+          },
+          "quantity": {
+            "n": 109,
+            "predicted_mean": 2.2738405450559496,
+            "actual_mean": 2.4676082476805856,
+            "bias": -0.19376770262463586,
+            "rmse": 6.736337801988599
+          },
+          "motion": {
+            "n": 109,
+            "predicted_mean": -8.136656032611581,
+            "actual_mean": -8.704672492920794,
+            "bias": 0.568016460309212,
+            "rmse": 49.37459946542666
+          },
+          "focal_wealth": {
+            "n": 109,
+            "predicted_mean": -4.204016828376273,
+            "actual_mean": -4.7318408461447214,
+            "bias": 0.5278240177684494,
+            "rmse": 39.0881356705818
+          },
+          "predicted_shares_per_fill": 23.09839483387476,
+          "actual_shares_per_fill": 19.212092785513132,
+          "predicted_fill_weighted_move": -3.578375823363363,
+          "actual_fill_weighted_move": -3.5275747279182994,
+          "probability_quantity_incoherent_n": 45,
+          "fill_bins": {
+            "(0.01, 0.03]": {
+              "n": 24,
+              "predicted_mean": 0.017413250036844092,
+              "actual_mean": 0.0,
+              "bias": 0.017413250036844092,
+              "rmse": 0.018379141240325445
+            },
+            "(0.03, 0.1]": {
+              "n": 41,
+              "predicted_mean": 0.06023574898376269,
+              "actual_mean": 0.07317073170731707,
+              "bias": -0.01293498272355439,
+              "rmse": 0.26088458443558044
+            },
+            "(0.1, 0.3]": {
+              "n": 28,
+              "predicted_mean": 0.17507094177255425,
+              "actual_mean": 0.25,
+              "bias": -0.07492905822744571,
+              "rmse": 0.427784617680481
+            },
+            "(-0.001, 0.01]": {
+              "n": 10,
+              "predicted_mean": 0.006580160436649174,
+              "actual_mean": 0.0,
+              "bias": 0.006580160436649174,
+              "rmse": 0.006864493555848317
+            },
+            "(0.3, 0.6]": {
+              "n": 5,
+              "predicted_mean": 0.45476977957359777,
+              "actual_mean": 0.6,
+              "bias": -0.14523022042640216,
+              "rmse": 0.4844145872849275
+            },
+            "(0.6, 1.0]": {
+              "n": 1,
+              "predicted_mean": 0.6009024942911754,
+              "actual_mean": 1.0,
+              "bias": -0.39909750570882463,
+              "rmse": 0.39909750570882463
+            }
+          },
+          "tail_bins": {
+            "(-0.001, 0.01]": {
+              "n": 50,
+              "predicted_mean": 0.004863764484961565,
+              "actual_mean": 0.02,
+              "bias": -0.015136235515038433,
+              "rmse": 0.14076567267812554
+            },
+            "(0.03, 0.1]": {
+              "n": 18,
+              "predicted_mean": 0.057057434928747854,
+              "actual_mean": 0.05555555555555555,
+              "bias": 0.0015018793731923065,
+              "rmse": 0.2360742340152994
+            },
+            "(0.01, 0.03]": {
+              "n": 36,
+              "predicted_mean": 0.02053732884330303,
+              "actual_mean": 0.08333333333333333,
+              "bias": -0.0627960044900303,
+              "rmse": 0.2844752636177557
+            },
+            "(0.1, 0.3]": {
+              "n": 5,
+              "predicted_mean": 0.16648613827162742,
+              "actual_mean": 0.0,
+              "bias": 0.16648613827162742,
+              "rmse": 0.17173270424853415
+            }
+          },
+          "focal_bins": {
+            "(-1.0, 0.0]": {
+              "n": 21,
+              "predicted_mean": -0.1670043873299579,
+              "actual_mean": -13.062857142857142,
+              "bias": 12.895852755527187,
+              "rmse": 59.78151701125701
+            },
+            "(0.0, 1.0]": {
+              "n": 8,
+              "predicted_mean": 0.5485152896685466,
+              "actual_mean": -13.125,
+              "bias": 13.673515289668547,
+              "rmse": 37.33769859989131
+            },
+            "(1.0, 5.0]": {
+              "n": 15,
+              "predicted_mean": 1.9886267711375623,
+              "actual_mean": 0.2800266666666667,
+              "bias": 1.7086001044708956,
+              "rmse": 2.186399411319145
+            },
+            "(-30.0, -5.0]": {
+              "n": 34,
+              "predicted_mean": -11.19396620277976,
+              "actual_mean": -2.6057282668681876,
+              "bias": -8.588237935911573,
+              "rmse": 47.44583232845037
+            },
+            "(-5.0, -1.0]": {
+              "n": 24,
+              "predicted_mean": -2.5732576893964207,
+              "actual_mean": -1.5713433815106799,
+              "bias": -1.0019143078857409,
+              "rmse": 6.216766066277426
+            },
+            "(5.0, 30.0]": {
+              "n": 5,
+              "predicted_mean": 7.516152360489784,
+              "actual_mean": 0.0,
+              "bias": 7.516152360489784,
+              "rmse": 7.802274471257101
+            },
+            "(-inf, -30.0]": {
+              "n": 2,
+              "predicted_mean": -42.08799620295968,
+              "actual_mean": -7.172025,
+              "bias": -34.91597120295968,
+              "rmse": 35.31744539810009
+            }
+          }
+        },
+        "mechanical": {
+          "n": 109,
+          "fill": {
+            "n": 109,
+            "positives": 14,
+            "brier": 0.08815563398872972,
+            "logloss": 0.3163498083154239,
+            "auc": 0.7699248120300752,
+            "mean_predicted": 0.10496922609969807,
+            "actual_rate": 0.12844036697247707
+          },
+          "tail": {
+            "n": 109,
+            "positives": 5,
+            "brier": 0.046489960960839356,
+            "logloss": 0.2337196783960628,
+            "auc": 0.3923076923076923,
+            "mean_predicted": 0.030918912603198758,
+            "actual_rate": 0.045871559633027525
+          },
+          "quantity": {
+            "n": 109,
+            "predicted_mean": 2.274918856754612,
+            "actual_mean": 2.4676082476805856,
+            "bias": -0.19268939092597348,
+            "rmse": 6.891262112992794
+          },
+          "motion": {
+            "n": 109,
+            "predicted_mean": -7.194369942288729,
+            "actual_mean": -8.704672492920794,
+            "bias": 1.5103025506320655,
+            "rmse": 49.83006959408925
+          },
+          "focal_wealth": {
+            "n": 109,
+            "predicted_mean": -3.8124634923478165,
+            "actual_mean": -4.7318408461447214,
+            "bias": 0.9193773537969051,
+            "rmse": 38.066726077821755
+          },
+          "predicted_shares_per_fill": 21.672245678880504,
+          "actual_shares_per_fill": 19.212092785513132,
+          "predicted_fill_weighted_move": -3.162473211265294,
+          "actual_fill_weighted_move": -3.5275747279182994,
+          "probability_quantity_incoherent_n": 26,
+          "fill_bins": {
+            "(0.01, 0.03]": {
+              "n": 22,
+              "predicted_mean": 0.01845488866132633,
+              "actual_mean": 0.09090909090909091,
+              "bias": -0.07245420224776458,
+              "rmse": 0.29540184140001335
+            },
+            "(0.1, 0.3]": {
+              "n": 30,
+              "predicted_mean": 0.17853463667103867,
+              "actual_mean": 0.13333333333333333,
+              "bias": 0.045201303337705355,
+              "rmse": 0.32396448697202135
+            },
+            "(0.3, 0.6]": {
+              "n": 6,
+              "predicted_mean": 0.4103294670766575,
+              "actual_mean": 0.6666666666666666,
+              "bias": -0.25633719959000906,
+              "rmse": 0.5184495161823529
+            },
+            "(-0.001, 0.01]": {
+              "n": 8,
+              "predicted_mean": 0.008654077040100036,
+              "actual_mean": 0.0,
+              "bias": 0.008654077040100036,
+              "rmse": 0.008776013439905472
+            },
+            "(0.03, 0.1]": {
+              "n": 42,
+              "predicted_mean": 0.06041128874955356,
+              "actual_mean": 0.07142857142857142,
+              "bias": -0.011017282679017859,
+              "rmse": 0.25709078622654735
+            },
+            "(0.6, 1.0]": {
+              "n": 1,
+              "predicted_mean": 0.611115447924752,
+              "actual_mean": 1.0,
+              "bias": -0.38888455207524797,
+              "rmse": 0.38888455207524797
+            }
+          },
+          "tail_bins": {
+            "(-0.001, 0.01]": {
+              "n": 36,
+              "predicted_mean": 0.0056307158469652,
+              "actual_mean": 0.05555555555555555,
+              "bias": -0.04992483970859036,
+              "rmse": 0.23435809011809117
+            },
+            "(0.03, 0.1]": {
+              "n": 32,
+              "predicted_mean": 0.054084596964538545,
+              "actual_mean": 0.03125,
+              "bias": 0.022834596964538545,
+              "rmse": 0.18010444577463441
+            },
+            "(0.01, 0.03]": {
+              "n": 35,
+              "predicted_mean": 0.0184552357824466,
+              "actual_mean": 0.05714285714285714,
+              "bias": -0.03868762136041055,
+              "rmse": 0.2356770409228248
+            },
+            "(0.1, 0.3]": {
+              "n": 6,
+              "predicted_mean": 0.13180255800117543,
+              "actual_mean": 0.0,
+              "bias": 0.13180255800117543,
+              "rmse": 0.13423865262449017
+            }
+          },
+          "focal_bins": {
+            "(-1.0, 0.0]": {
+              "n": 19,
+              "predicted_mean": -0.13688853237123697,
+              "actual_mean": -1.4647894736842106,
+              "bias": 1.3279009413129736,
+              "rmse": 6.181021322145395
+            },
+            "(-5.0, -1.0]": {
+              "n": 31,
+              "predicted_mean": -2.6301343795507757,
+              "actual_mean": -0.07667482540738277,
+              "bias": -2.553459554143392,
+              "rmse": 3.1345499338225986
+            },
+            "(-30.0, -5.0]": {
+              "n": 35,
+              "predicted_mean": -10.986391325747459,
+              "actual_mean": -7.658935218347022,
+              "bias": -3.3274561074004345,
+              "rmse": 61.31741366831589
+            },
+            "(1.0, 5.0]": {
+              "n": 16,
+              "predicted_mean": 2.5480547471408044,
+              "actual_mean": -13.59375,
+              "bias": 16.141804747140803,
+              "rmse": 39.73969132036987
+            },
+            "(0.0, 1.0]": {
+              "n": 6,
+              "predicted_mean": 0.28792393464237204,
+              "actual_mean": 0.0,
+              "bias": 0.28792393464237204,
+              "rmse": 0.35172974494302806
+            },
+            "(5.0, 30.0]": {
+              "n": 2,
+              "predicted_mean": 5.301902027134737,
+              "actual_mean": 0.0,
+              "bias": 5.301902027134737,
+              "rmse": 5.3031670361866565
+            }
+          }
+        },
+        "direct": {
+          "focal_wealth": {
+            "n": 109,
+            "predicted_mean": -4.053677124247813,
+            "actual_mean": -4.7318408461447214,
+            "bias": 0.6781637218969095,
+            "rmse": 38.07523500746498
+          }
+        }
+      },
+      "side:('cancel', 1)": {
+        "full": {
+          "n": 112,
+          "fill": {
+            "n": 112,
+            "positives": 13,
+            "brier": 0.07341452666050083,
+            "logloss": 0.2421770395850493,
+            "auc": 0.891996891996892,
+            "mean_predicted": 0.09275044606275583,
+            "actual_rate": 0.11607142857142858
+          },
+          "tail": {
+            "n": 112,
+            "positives": 4,
+            "brier": 0.032937684402850456,
+            "logloss": 0.1357663638603746,
+            "auc": 0.8171296296296297,
+            "mean_predicted": 0.024486731977193206,
+            "actual_rate": 0.03571428571428571
+          },
+          "quantity": {
+            "n": 112,
+            "predicted_mean": 2.108951774199662,
+            "actual_mean": 2.629149084202646,
+            "bias": -0.5201973100029845,
+            "rmse": 7.034871753041047
+          },
+          "motion": {
+            "n": 112,
+            "predicted_mean": -6.8207712754134375,
+            "actual_mean": -7.03121921182266,
+            "bias": 0.21044793640922263,
+            "rmse": 29.92034614594317
+          },
+          "focal_wealth": {
+            "n": 112,
+            "predicted_mean": -2.995086810180511,
+            "actual_mean": -3.0813922066671497,
+            "bias": 0.08630539648663925,
+            "rmse": 23.18709137014468
+          },
+          "predicted_shares_per_fill": 22.737915166173167,
+          "actual_shares_per_fill": 22.65113057159203,
+          "predicted_fill_weighted_move": -3.2341997379252025,
+          "actual_fill_weighted_move": -2.674332640195278,
+          "probability_quantity_incoherent_n": 43,
+          "fill_bins": {
+            "(-0.001, 0.01]": {
+              "n": 16,
+              "predicted_mean": 0.00744809338543286,
+              "actual_mean": 0.0,
+              "bias": 0.00744809338543286,
+              "rmse": 0.0076627030856354856
+            },
+            "(0.3, 0.6]": {
+              "n": 10,
+              "predicted_mean": 0.407784999175127,
+              "actual_mean": 0.6,
+              "bias": -0.19221500082487306,
+              "rmse": 0.4968645408434487
+            },
+            "(0.03, 0.1]": {
+              "n": 28,
+              "predicted_mean": 0.055725827344925594,
+              "actual_mean": 0.10714285714285714,
+              "bias": -0.05141702979793155,
+              "rmse": 0.30941138154321796
+            },
+            "(0.01, 0.03]": {
+              "n": 34,
+              "predicted_mean": 0.016853499295893908,
+              "actual_mean": 0.0,
+              "bias": 0.016853499295893908,
+              "rmse": 0.017797220149350933
+            },
+            "(0.1, 0.3]": {
+              "n": 24,
+              "predicted_mean": 0.16907034714133953,
+              "actual_mean": 0.16666666666666666,
+              "bias": 0.0024036804746728757,
+              "rmse": 0.3571521217605843
+            }
+          },
+          "tail_bins": {
+            "(-0.001, 0.01]": {
+              "n": 69,
+              "predicted_mean": 0.004698978418072169,
+              "actual_mean": 0.014492753623188406,
+              "bias": -0.009793775205116236,
+              "rmse": 0.11931673809282466
+            },
+            "(0.01, 0.03]": {
+              "n": 22,
+              "predicted_mean": 0.01823423220566825,
+              "actual_mean": 0.045454545454545456,
+              "bias": -0.027220313248877196,
+              "rmse": 0.20976862266108676
+            },
+            "(0.03, 0.1]": {
+              "n": 15,
+              "predicted_mean": 0.05696530766197183,
+              "actual_mean": 0.06666666666666667,
+              "bias": -0.009701359004694847,
+              "rmse": 0.2425746174887684
+            },
+            "(0.1, 0.3]": {
+              "n": 6,
+              "predicted_mean": 0.1937752911907301,
+              "actual_mean": 0.16666666666666666,
+              "bias": 0.02710862452406343,
+              "rmse": 0.3777131475415265
+            }
+          },
+          "focal_bins": {
+            "(-1.0, 0.0]": {
+              "n": 29,
+              "predicted_mean": -0.18283688927573877,
+              "actual_mean": 0.0,
+              "bias": -0.18283688927573877,
+              "rmse": 0.3493740563448745
+            },
+            "(-5.0, -1.0]": {
+              "n": 26,
+              "predicted_mean": -3.1731818809968684,
+              "actual_mean": -6.151607277526395,
+              "bias": 2.9784253965295258,
+              "rmse": 38.19524173227994
+            },
+            "(1.0, 5.0]": {
+              "n": 22,
+              "predicted_mean": 2.7291384180210874,
+              "actual_mean": 0.7739028213166144,
+              "bias": 1.9552355967044728,
+              "rmse": 6.615288206250623
+            },
+            "(-30.0, -5.0]": {
+              "n": 23,
+              "predicted_mean": -10.59504480071602,
+              "actual_mean": -8.791304347826088,
+              "bias": -1.8037404528899332,
+              "rmse": 22.02314181088068
+            },
+            "(5.0, 30.0]": {
+              "n": 5,
+              "predicted_mean": 6.603260541729748,
+              "actual_mean": 0.0,
+              "bias": 6.603260541729748,
+              "rmse": 6.646144590312493
+            },
+            "(0.0, 1.0]": {
+              "n": 6,
+              "predicted_mean": 0.44790093275285986,
+              "actual_mean": 0.0,
+              "bias": 0.44790093275285986,
+              "rmse": 0.5254043418910025
+            },
+            "(-inf, -30.0]": {
+              "n": 1,
+              "predicted_mean": -99.70344713046356,
+              "actual_mean": 0.0,
+              "bias": -99.70344713046356,
+              "rmse": 99.70344713046356
+            }
+          }
+        },
+        "mechanical": {
+          "n": 112,
+          "fill": {
+            "n": 112,
+            "positives": 13,
+            "brier": 0.0835702328491325,
+            "logloss": 0.2734869761106418,
+            "auc": 0.8663558663558664,
+            "mean_predicted": 0.0778680037226513,
+            "actual_rate": 0.11607142857142858
+          },
+          "tail": {
+            "n": 112,
+            "positives": 4,
+            "brier": 0.034486640244437074,
+            "logloss": 0.13415124535348286,
+            "auc": 0.8726851851851852,
+            "mean_predicted": 0.02367140292887149,
+            "actual_rate": 0.03571428571428571
+          },
+          "quantity": {
+            "n": 112,
+            "predicted_mean": 1.8199910590937414,
+            "actual_mean": 2.629149084202646,
+            "bias": -0.8091580251089051,
+            "rmse": 7.312458733488073
+          },
+          "motion": {
+            "n": 112,
+            "predicted_mean": -5.721678560219325,
+            "actual_mean": -7.03121921182266,
+            "bias": 1.3095406516033352,
+            "rmse": 30.68796553505867
+          },
+          "focal_wealth": {
+            "n": 112,
+            "predicted_mean": -2.969126801753659,
+            "actual_mean": -3.0813922066671497,
+            "bias": 0.1122654049134907,
+            "rmse": 23.157428011695526
+          },
+          "predicted_shares_per_fill": 23.372771511854204,
+          "actual_shares_per_fill": 22.65113057159203,
+          "predicted_fill_weighted_move": -3.1437948728541647,
+          "actual_fill_weighted_move": -2.674332640195278,
+          "probability_quantity_incoherent_n": 40,
+          "fill_bins": {
+            "(0.01, 0.03]": {
+              "n": 39,
+              "predicted_mean": 0.01639708865698544,
+              "actual_mean": 0.0,
+              "bias": 0.01639708865698544,
+              "rmse": 0.017138727598235252
+            },
+            "(0.3, 0.6]": {
+              "n": 7,
+              "predicted_mean": 0.36767618997140944,
+              "actual_mean": 0.5714285714285714,
+              "bias": -0.203752381457162,
+              "rmse": 0.5279412849945831
+            },
+            "(0.03, 0.1]": {
+              "n": 33,
+              "predicted_mean": 0.05548608320273372,
+              "actual_mean": 0.12121212121212122,
+              "bias": -0.0657260380093875,
+              "rmse": 0.33309106001280164
+            },
+            "(0.1, 0.3]": {
+              "n": 21,
+              "predicted_mean": 0.1707048854279558,
+              "actual_mean": 0.23809523809523808,
+              "bias": -0.06739035266728227,
+              "rmse": 0.42174700255846087
+            },
+            "(-0.001, 0.01]": {
+              "n": 12,
+              "predicted_mean": 0.007679440819780209,
+              "actual_mean": 0.0,
+              "bias": 0.007679440819780209,
+              "rmse": 0.00783456457023207
+            }
+          },
+          "tail_bins": {
+            "(-0.001, 0.01]": {
+              "n": 60,
+              "predicted_mean": 0.004450483384285677,
+              "actual_mean": 0.0,
+              "bias": 0.004450483384285677,
+              "rmse": 0.00493510035160892
+            },
+            "(0.03, 0.1]": {
+              "n": 16,
+              "predicted_mean": 0.05663395852875967,
+              "actual_mean": 0.125,
+              "bias": -0.06836604147124031,
+              "rmse": 0.33090948895530287
+            },
+            "(0.01, 0.03]": {
+              "n": 31,
+              "predicted_mean": 0.0163690027457087,
+              "actual_mean": 0.06451612903225806,
+              "bias": -0.048147126286549366,
+              "rmse": 0.2477008370610399
+            },
+            "(0.1, 0.3]": {
+              "n": 5,
+              "predicted_mean": 0.19411714067986843,
+              "actual_mean": 0.0,
+              "bias": 0.19411714067986843,
+              "rmse": 0.2034689712239363
+            }
+          },
+          "focal_bins": {
+            "(-1.0, 0.0]": {
+              "n": 26,
+              "predicted_mean": -0.06237921227784883,
+              "actual_mean": 0.0,
+              "bias": -0.06237921227784883,
+              "rmse": 0.20038394854836428
+            },
+            "(-30.0, -5.0]": {
+              "n": 23,
+              "predicted_mean": -9.619068777834624,
+              "actual_mean": -9.432251705029838,
+              "bias": -0.1868170728047833,
+              "rmse": 41.5139608134822
+            },
+            "(1.0, 5.0]": {
+              "n": 19,
+              "predicted_mean": 2.7037819800836105,
+              "actual_mean": -4.038112522686025,
+              "bias": 6.741894502769637,
+              "rmse": 22.027655681432663
+            },
+            "(5.0, 30.0]": {
+              "n": 3,
+              "predicted_mean": 6.340840375243819,
+              "actual_mean": -3.400000000000001,
+              "bias": 9.74084037524382,
+              "rmse": 10.97752154429942
+            },
+            "(-5.0, -1.0]": {
+              "n": 32,
+              "predicted_mean": -2.9142385430879063,
+              "actual_mean": -1.2890625,
+              "bias": -1.6251760430879063,
+              "rmse": 9.01546315545666
+            },
+            "(0.0, 1.0]": {
+              "n": 8,
+              "predicted_mean": 0.4929915323819931,
+              "actual_mean": 0.0,
+              "bias": 0.4929915323819931,
+              "rmse": 0.5749943453796476
+            },
+            "(-inf, -30.0]": {
+              "n": 1,
+              "predicted_mean": -90.76443801455244,
+              "actual_mean": 0.0,
+              "bias": -90.76443801455244,
+              "rmse": 90.76443801455244
+            }
+          }
+        },
+        "direct": {
+          "focal_wealth": {
+            "n": 112,
+            "predicted_mean": -3.6922668299961265,
+            "actual_mean": -3.0813922066671497,
+            "bias": -0.6108746233289768,
+            "rmse": 21.682505446200253
+          }
+        }
+      },
+      "side:('post', 0)": {
+        "full": {
+          "n": 111,
+          "fill": {
+            "n": 111,
+            "positives": 14,
+            "brier": 0.09312442271339794,
+            "logloss": 0.29678290089495346,
+            "auc": 0.8357879234167894,
+            "mean_predicted": 0.1449984722192908,
+            "actual_rate": 0.12612612612612611
+          },
+          "tail": {
+            "n": 111,
+            "positives": 7,
+            "brier": 0.05633049410529237,
+            "logloss": 0.20015908309927416,
+            "auc": 0.820054945054945,
+            "mean_predicted": 0.052610359670968124,
+            "actual_rate": 0.06306306306306306
+          },
+          "quantity": {
+            "n": 111,
+            "predicted_mean": 3.2650086190965846,
+            "actual_mean": 2.86695608502858,
+            "bias": 0.3980525340680044,
+            "rmse": 7.641667481160503
+          },
+          "motion": {
+            "n": 111,
+            "predicted_mean": -10.89458677261767,
+            "actual_mean": -11.591988424353442,
+            "bias": 0.6974016517357743,
+            "rmse": 39.80771164340986
+          },
+          "focal_wealth": {
+            "n": 111,
+            "predicted_mean": -5.974540547194043,
+            "actual_mean": -6.416961280861232,
+            "bias": 0.4424207336671874,
+            "rmse": 32.08165319200795
+          },
+          "predicted_shares_per_fill": 22.51753807556466,
+          "actual_shares_per_fill": 22.730866102726598,
+          "predicted_fill_weighted_move": -3.336771213679724,
+          "actual_fill_weighted_move": -4.043308680201806,
+          "probability_quantity_incoherent_n": 41,
+          "fill_bins": {
+            "(-0.001, 0.01]": {
+              "n": 6,
+              "predicted_mean": 0.005855556298677706,
+              "actual_mean": 0.0,
+              "bias": 0.005855556298677706,
+              "rmse": 0.005961425171825207
+            },
+            "(0.03, 0.1]": {
+              "n": 30,
+              "predicted_mean": 0.05982732205780197,
+              "actual_mean": 0.0,
+              "bias": 0.05982732205780197,
+              "rmse": 0.0629380681689765
+            },
+            "(0.3, 0.6]": {
+              "n": 16,
+              "predicted_mean": 0.3925666411477134,
+              "actual_mean": 0.3125,
+              "bias": 0.08006664114771339,
+              "rmse": 0.45950319809105705
+            },
+            "(0.1, 0.3]": {
+              "n": 40,
+              "predicted_mean": 0.1898211946156617,
+              "actual_mean": 0.225,
+              "bias": -0.03517880538433829,
+              "rmse": 0.4132430029641406
+            },
+            "(0.01, 0.03]": {
+              "n": 19,
+              "predicted_mean": 0.020577019675014248,
+              "actual_mean": 0.0,
+              "bias": 0.020577019675014248,
+              "rmse": 0.021373214981222376
+            }
+          },
+          "tail_bins": {
+            "(-0.001, 0.01]": {
+              "n": 35,
+              "predicted_mean": 0.005145960996699314,
+              "actual_mean": 0.0,
+              "bias": 0.005145960996699314,
+              "rmse": 0.005666592318242182
+            },
+            "(0.03, 0.1]": {
+              "n": 26,
+              "predicted_mean": 0.059008263817007744,
+              "actual_mean": 0.038461538461538464,
+              "bias": 0.02054672535546929,
+              "rmse": 0.1968216493711555
+            },
+            "(0.01, 0.03]": {
+              "n": 32,
+              "predicted_mean": 0.0193161648773905,
+              "actual_mean": 0.03125,
+              "bias": -0.0119338351226095,
+              "rmse": 0.17397027519736333
+            },
+            "(0.1, 0.3]": {
+              "n": 18,
+              "predicted_mean": 0.19485050851523833,
+              "actual_mean": 0.2777777777777778,
+              "bias": -0.08292726926253946,
+              "rmse": 0.48738828749817664
+            }
+          },
+          "focal_bins": {
+            "(-1.0, 0.0]": {
+              "n": 20,
+              "predicted_mean": -0.133103963817775,
+              "actual_mean": -0.6385641860465114,
+              "bias": 0.5054602222287363,
+              "rmse": 2.780405429818428
+            },
+            "(1.0, 5.0]": {
+              "n": 16,
+              "predicted_mean": 2.9854592781572005,
+              "actual_mean": 0.0,
+              "bias": 2.9854592781572005,
+              "rmse": 3.1509016825252005
+            },
+            "(-inf, -30.0]": {
+              "n": 8,
+              "predicted_mean": -40.428034937665124,
+              "actual_mean": -25.155523255813954,
+              "bias": -15.272511681851173,
+              "rmse": 52.3547856356109
+            },
+            "(-30.0, -5.0]": {
+              "n": 22,
+              "predicted_mean": -13.107923682072554,
+              "actual_mean": -15.043637839433295,
+              "bias": 1.9357141573607357,
+              "rmse": 56.84708942253174
+            },
+            "(0.0, 1.0]": {
+              "n": 7,
+              "predicted_mean": 0.5013530287079987,
+              "actual_mean": 0.0,
+              "bias": 0.5013530287079987,
+              "rmse": 0.6080609187184958
+            },
+            "(-5.0, -1.0]": {
+              "n": 37,
+              "predicted_mean": -2.9001108954816153,
+              "actual_mean": -4.521816214611417,
+              "bias": 1.6217053191297999,
+              "rmse": 23.739609298279685
+            },
+            "(5.0, 30.0]": {
+              "n": 1,
+              "predicted_mean": 7.313962526082426,
+              "actual_mean": 0.0,
+              "bias": 7.313962526082426,
+              "rmse": 7.313962526082426
+            }
+          }
+        },
+        "mechanical": {
+          "n": 111,
+          "fill": {
+            "n": 111,
+            "positives": 14,
+            "brier": 0.10823562075732845,
+            "logloss": 0.35706181696784894,
+            "auc": 0.6811487481590575,
+            "mean_predicted": 0.15611586864425578,
+            "actual_rate": 0.12612612612612611
+          },
+          "tail": {
+            "n": 111,
+            "positives": 7,
+            "brier": 0.05733702438038856,
+            "logloss": 0.21852518127775486,
+            "auc": 0.7197802197802198,
+            "mean_predicted": 0.05692022080770872,
+            "actual_rate": 0.06306306306306306
+          },
+          "quantity": {
+            "n": 111,
+            "predicted_mean": 3.3445214519691078,
+            "actual_mean": 2.86695608502858,
+            "bias": 0.47756536694052704,
+            "rmse": 8.407128158135599
+          },
+          "motion": {
+            "n": 111,
+            "predicted_mean": -9.404883173222302,
+            "actual_mean": -11.591988424353442,
+            "bias": 2.1871052511311393,
+            "rmse": 42.314066054682264
+          },
+          "focal_wealth": {
+            "n": 111,
+            "predicted_mean": -5.094466170409019,
+            "actual_mean": -6.416961280861232,
+            "bias": 1.322495110452213,
+            "rmse": 32.2286161371348
+          },
+          "predicted_shares_per_fill": 21.423327948745126,
+          "actual_shares_per_fill": 22.730866102726598,
+          "predicted_fill_weighted_move": -2.812026565918756,
+          "actual_fill_weighted_move": -4.043308680201806,
+          "probability_quantity_incoherent_n": 17,
+          "fill_bins": {
+            "(0.01, 0.03]": {
+              "n": 16,
+              "predicted_mean": 0.0200192318980027,
+              "actual_mean": 0.0,
+              "bias": 0.0200192318980027,
+              "rmse": 0.020721541474805642
+            },
+            "(0.1, 0.3]": {
+              "n": 48,
+              "predicted_mean": 0.20154779277543533,
+              "actual_mean": 0.14583333333333334,
+              "bias": 0.055714459442101995,
+              "rmse": 0.36533497878361954
+            },
+            "(0.3, 0.6]": {
+              "n": 15,
+              "predicted_mean": 0.36325186294523676,
+              "actual_mean": 0.26666666666666666,
+              "bias": 0.09658519627857014,
+              "rmse": 0.43923488617071943
+            },
+            "(0.03, 0.1]": {
+              "n": 28,
+              "predicted_mean": 0.06615115397727511,
+              "actual_mean": 0.10714285714285714,
+              "bias": -0.040991703165582045,
+              "rmse": 0.31090616738651505
+            },
+            "(-0.001, 0.01]": {
+              "n": 4,
+              "predicted_mean": 0.0083123500953003,
+              "actual_mean": 0.0,
+              "bias": 0.0083123500953003,
+              "rmse": 0.008327795296065893
+            }
+          },
+          "tail_bins": {
+            "(-0.001, 0.01]": {
+              "n": 23,
+              "predicted_mean": 0.005864711091811636,
+              "actual_mean": 0.0,
+              "bias": 0.005864711091811636,
+              "rmse": 0.00636337274792174
+            },
+            "(0.03, 0.1]": {
+              "n": 43,
+              "predicted_mean": 0.060654034059920515,
+              "actual_mean": 0.09302325581395349,
+              "bias": -0.03236922175403298,
+              "rmse": 0.29414351326372473
+            },
+            "(0.1, 0.3]": {
+              "n": 18,
+              "predicted_mean": 0.17005248016938082,
+              "actual_mean": 0.1111111111111111,
+              "bias": 0.058941369058269716,
+              "rmse": 0.3066204358992729
+            },
+            "(0.01, 0.03]": {
+              "n": 27,
+              "predicted_mean": 0.019044001737724563,
+              "actual_mean": 0.037037037037037035,
+              "bias": -0.01799303529931248,
+              "rmse": 0.18765721829785711
+            }
+          },
+          "focal_bins": {
+            "(-1.0, 0.0]": {
+              "n": 18,
+              "predicted_mean": -0.18920567929286405,
+              "actual_mean": 0.0,
+              "bias": -0.18920567929286405,
+              "rmse": 0.30946187059044
+            },
+            "(-30.0, -5.0]": {
+              "n": 43,
+              "predicted_mean": -11.825554575295117,
+              "actual_mean": -4.8855461316640145,
+              "bias": -6.940008443631102,
+              "rmse": 23.093971877015306
+            },
+            "(-5.0, -1.0]": {
+              "n": 26,
+              "predicted_mean": -2.9857704399062306,
+              "actual_mean": -12.115384615384615,
+              "bias": 9.129614175478382,
+              "rmse": 52.98131368126799
+            },
+            "(0.0, 1.0]": {
+              "n": 7,
+              "predicted_mean": 0.5350740535101062,
+              "actual_mean": -22.32059800664452,
+              "bias": 22.855672060154628,
+              "rmse": 51.853828520982674
+            },
+            "(5.0, 30.0]": {
+              "n": 4,
+              "predicted_mean": 6.885991297372694,
+              "actual_mean": 0.0,
+              "bias": 6.885991297372694,
+              "rmse": 6.9764276258228355
+            },
+            "(1.0, 5.0]": {
+              "n": 12,
+              "predicted_mean": 2.264548929387612,
+              "actual_mean": 1.25,
+              "bias": 1.0145489293876124,
+              "rmse": 4.346452331980683
+            },
+            "(-inf, -30.0]": {
+              "n": 1,
+              "predicted_mean": -34.41523522959043,
+              "actual_mean": -45.960032467532464,
+              "bias": 11.544797237942035,
+              "rmse": 11.544797237942035
+            }
+          }
+        },
+        "direct": {
+          "focal_wealth": {
+            "n": 111,
+            "predicted_mean": -5.682012946075627,
+            "actual_mean": -6.416961280861232,
+            "bias": 0.7349483347856055,
+            "rmse": 32.04293884564787
+          }
+        }
+      },
+      "side:('post', 1)": {
+        "full": {
+          "n": 111,
+          "fill": {
+            "n": 111,
+            "positives": 11,
+            "brier": 0.07281963414811544,
+            "logloss": 0.23734505980389597,
+            "auc": 0.8736363636363637,
+            "mean_predicted": 0.10544433704791001,
+            "actual_rate": 0.0990990990990991
+          },
+          "tail": {
+            "n": 111,
+            "positives": 4,
+            "brier": 0.03872997532452459,
+            "logloss": 0.16512618442901084,
+            "auc": 0.7079439252336449,
+            "mean_predicted": 0.03941221760367161,
+            "actual_rate": 0.036036036036036036
+          },
+          "quantity": {
+            "n": 111,
+            "predicted_mean": 2.36315852285085,
+            "actual_mean": 2.331396738117428,
+            "bias": 0.031761784733421845,
+            "rmse": 7.231760712269825
+          },
+          "motion": {
+            "n": 111,
+            "predicted_mean": -7.445486264549088,
+            "actual_mean": -5.492300341721031,
+            "bias": -1.9531859228280566,
+            "rmse": 20.892126070091667
+          },
+          "focal_wealth": {
+            "n": 111,
+            "predicted_mean": -2.7304405784549597,
+            "actual_mean": -2.1466872165268716,
+            "bias": -0.5837533619280879,
+            "rmse": 13.777459155123358
+          },
+          "predicted_shares_per_fill": 22.41143136759557,
+          "actual_shares_per_fill": 23.525912539184954,
+          "predicted_fill_weighted_move": -3.150650365836252,
+          "actual_fill_weighted_move": -2.3557982439985703,
+          "probability_quantity_incoherent_n": 32,
+          "fill_bins": {
+            "(0.03, 0.1]": {
+              "n": 25,
+              "predicted_mean": 0.05894103374067163,
+              "actual_mean": 0.04,
+              "bias": 0.018941033740671635,
+              "rmse": 0.19221822836025518
+            },
+            "(0.01, 0.03]": {
+              "n": 27,
+              "predicted_mean": 0.019287574777172512,
+              "actual_mean": 0.0,
+              "bias": 0.019287574777172512,
+              "rmse": 0.020117379266852017
+            },
+            "(0.3, 0.6]": {
+              "n": 8,
+              "predicted_mean": 0.3703065262575296,
+              "actual_mean": 0.375,
+              "bias": -0.004693473742470422,
+              "rmse": 0.4738872323806984
+            },
+            "(0.1, 0.3]": {
+              "n": 36,
+              "predicted_mean": 0.18452915638771772,
+              "actual_mean": 0.19444444444444445,
+              "bias": -0.009915288056726696,
+              "rmse": 0.3855384446829958
+            },
+            "(-0.001, 0.01]": {
+              "n": 15,
+              "predicted_mean": 0.006968613986632429,
+              "actual_mean": 0.0,
+              "bias": 0.006968613986632429,
+              "rmse": 0.007151084039660489
+            }
+          },
+          "tail_bins": {
+            "(-0.001, 0.01]": {
+              "n": 58,
+              "predicted_mean": 0.004609349647985989,
+              "actual_mean": 0.0,
+              "bias": 0.004609349647985989,
+              "rmse": 0.005237827929921177
+            },
+            "(0.03, 0.1]": {
+              "n": 17,
+              "predicted_mean": 0.05579374900905523,
+              "actual_mean": 0.058823529411764705,
+              "bias": -0.0030297804027094783,
+              "rmse": 0.23617281366086096
+            },
+            "(0.01, 0.03]": {
+              "n": 21,
+              "predicted_mean": 0.018025704645579704,
+              "actual_mean": 0.09523809523809523,
+              "bias": -0.07721239059251556,
+              "rmse": 0.30496405421746786
+            },
+            "(0.1, 0.3]": {
+              "n": 13,
+              "predicted_mean": 0.16048711394129755,
+              "actual_mean": 0.07692307692307693,
+              "bias": 0.08356403701822063,
+              "rmse": 0.29809473434967254
+            },
+            "(0.3, 0.6]": {
+              "n": 2,
+              "predicted_mean": 0.34702393123819003,
+              "actual_mean": 0.0,
+              "bias": 0.34702393123819003,
+              "rmse": 0.3471067527695943
+            }
+          },
+          "focal_bins": {
+            "(-1.0, 0.0]": {
+              "n": 26,
+              "predicted_mean": -0.10287346939595625,
+              "actual_mean": 0.0,
+              "bias": -0.10287346939595625,
+              "rmse": 0.2732541833914748
+            },
+            "(-5.0, -1.0]": {
+              "n": 22,
+              "predicted_mean": -3.145879672886396,
+              "actual_mean": -4.7727272727272725,
+              "bias": 1.6268475998408776,
+              "rmse": 21.730309637525156
+            },
+            "(-30.0, -5.0]": {
+              "n": 24,
+              "predicted_mean": -12.46787659173013,
+              "actual_mean": -4.86330625,
+              "bias": -7.6045703417301285,
+              "rmse": 14.895263079478807
+            },
+            "(1.0, 5.0]": {
+              "n": 21,
+              "predicted_mean": 2.853661541936842,
+              "actual_mean": -2.142857142857143,
+              "bias": 4.996518684793985,
+              "rmse": 11.038287077965832
+            },
+            "(0.0, 1.0]": {
+              "n": 10,
+              "predicted_mean": 0.4804826844078064,
+              "actual_mean": 1.5,
+              "bias": -1.0195173155921935,
+              "rmse": 4.547300894578962
+            },
+            "(5.0, 30.0]": {
+              "n": 7,
+              "predicted_mean": 7.1092156381697205,
+              "actual_mean": 1.9195812807881774,
+              "bias": 5.189634357381543,
+              "rmse": 7.840254175603176
+            },
+            "(-inf, -30.0]": {
+              "n": 1,
+              "predicted_mean": -46.46203169112168,
+              "actual_mean": 0.0,
+              "bias": -46.46203169112168,
+              "rmse": 46.46203169112168
+            }
+          }
+        },
+        "mechanical": {
+          "n": 111,
+          "fill": {
+            "n": 111,
+            "positives": 11,
+            "brier": 0.07482577377806829,
+            "logloss": 0.24846626115226672,
+            "auc": 0.8481818181818181,
+            "mean_predicted": 0.10118179088279097,
+            "actual_rate": 0.0990990990990991
+          },
+          "tail": {
+            "n": 111,
+            "positives": 4,
+            "brier": 0.03851184597189342,
+            "logloss": 0.1539132725627036,
+            "auc": 0.7406542056074766,
+            "mean_predicted": 0.04485487249611018,
+            "actual_rate": 0.036036036036036036
+          },
+          "quantity": {
+            "n": 111,
+            "predicted_mean": 2.268395475019286,
+            "actual_mean": 2.331396738117428,
+            "bias": -0.06300126309814152,
+            "rmse": 7.34281808001653
+          },
+          "motion": {
+            "n": 111,
+            "predicted_mean": -7.85081125245001,
+            "actual_mean": -5.492300341721031,
+            "bias": -2.3585109107289774,
+            "rmse": 20.822281817854297
+          },
+          "focal_wealth": {
+            "n": 111,
+            "predicted_mean": -3.7785202172987398,
+            "actual_mean": -2.1466872165268716,
+            "bias": -1.6318330007718678,
+            "rmse": 13.591512805361274
+          },
+          "predicted_shares_per_fill": 22.419008946451605,
+          "actual_shares_per_fill": 23.525912539184954,
+          "predicted_fill_weighted_move": -3.4609534972658422,
+          "actual_fill_weighted_move": -2.3557982439985703,
+          "probability_quantity_incoherent_n": 31,
+          "fill_bins": {
+            "(0.03, 0.1]": {
+              "n": 40,
+              "predicted_mean": 0.059020134516037846,
+              "actual_mean": 0.05,
+              "bias": 0.009020134516037847,
+              "rmse": 0.21790368850111835
+            },
+            "(0.3, 0.6]": {
+              "n": 9,
+              "predicted_mean": 0.3882146218007815,
+              "actual_mean": 0.4444444444444444,
+              "bias": -0.056229822643662976,
+              "rmse": 0.5043462387904836
+            },
+            "(0.01, 0.03]": {
+              "n": 20,
+              "predicted_mean": 0.015396724353400027,
+              "actual_mean": 0.0,
+              "bias": 0.015396724353400027,
+              "rmse": 0.015851532035646636
+            },
+            "(0.1, 0.3]": {
+              "n": 27,
+              "predicted_mean": 0.18371392932447406,
+              "actual_mean": 0.18518518518518517,
+              "bias": -0.001471255860711147,
+              "rmse": 0.39021608193514434
+            },
+            "(-0.001, 0.01]": {
+              "n": 15,
+              "predicted_mean": 0.0072154154874966075,
+              "actual_mean": 0.0,
+              "bias": 0.0072154154874966075,
+              "rmse": 0.0073786450940598975
+            }
+          },
+          "tail_bins": {
+            "(-0.001, 0.01]": {
+              "n": 40,
+              "predicted_mean": 0.004602543810070445,
+              "actual_mean": 0.0,
+              "bias": 0.004602543810070445,
+              "rmse": 0.005208757209830645
+            },
+            "(0.03, 0.1]": {
+              "n": 24,
+              "predicted_mean": 0.06002355360677886,
+              "actual_mean": 0.08333333333333333,
+              "bias": -0.023309779726554476,
+              "rmse": 0.2834480847301439
+            },
+            "(0.01, 0.03]": {
+              "n": 35,
+              "predicted_mean": 0.017434412855337176,
+              "actual_mean": 0.02857142857142857,
+              "bias": -0.011137015716091398,
+              "rmse": 0.1668212029078889
+            },
+            "(0.1, 0.3]": {
+              "n": 8,
+              "predicted_mean": 0.15008826522675206,
+              "actual_mean": 0.125,
+              "bias": 0.025088265226752074,
+              "rmse": 0.3101475232212002
+            },
+            "(0.3, 0.6]": {
+              "n": 4,
+              "predicted_mean": 0.3858283090879755,
+              "actual_mean": 0.0,
+              "bias": 0.3858283090879755,
+              "rmse": 0.3879253101280133
+            }
+          },
+          "focal_bins": {
+            "(-5.0, -1.0]": {
+              "n": 23,
+              "predicted_mean": -2.8753893886034665,
+              "actual_mean": -4.565217391304348,
+              "bias": 1.6898280027008812,
+              "rmse": 21.17609353085466
+            },
+            "(-30.0, -5.0]": {
+              "n": 32,
+              "predicted_mean": -10.668073441083033,
+              "actual_mean": -3.7974796875,
+              "bias": -6.870593753583033,
+              "rmse": 12.572581787329558
+            },
+            "(5.0, 30.0]": {
+              "n": 4,
+              "predicted_mean": 7.298745006545111,
+              "actual_mean": 0.0,
+              "bias": 7.298745006545111,
+              "rmse": 7.587706684596944
+            },
+            "(1.0, 5.0]": {
+              "n": 19,
+              "predicted_mean": 2.2851993846715537,
+              "actual_mean": 0.959845735027223,
+              "bias": 1.3253536496443308,
+              "rmse": 5.314169144839158
+            },
+            "(-1.0, 0.0]": {
+              "n": 24,
+              "predicted_mean": -0.1435129945197644,
+              "actual_mean": -1.25,
+              "bias": 1.1064870054802356,
+              "rmse": 5.996844454392242
+            },
+            "(0.0, 1.0]": {
+              "n": 7,
+              "predicted_mean": 0.3701721143722071,
+              "actual_mean": 0.0,
+              "bias": 0.3701721143722071,
+              "rmse": 0.45286931229011623
+            },
+            "(-inf, -30.0]": {
+              "n": 2,
+              "predicted_mean": -41.832049667347206,
+              "actual_mean": 0.0,
+              "bias": -41.832049667347206,
+              "rmse": 41.84197751290129
+            }
+          }
+        },
+        "direct": {
+          "focal_wealth": {
+            "n": 111,
+            "predicted_mean": -3.5995737742813185,
+            "actual_mean": -2.1466872165268716,
+            "bias": -1.4528865577544465,
+            "rmse": 13.49361006964319
+          }
+        }
+      },
+      "phase:('cancel', 1)": {
+        "full": {
+          "n": 48,
+          "fill": {
+            "n": 48,
+            "positives": 9,
+            "brier": 0.12332158885070992,
+            "logloss": 0.3906123439262202,
+            "auc": 0.8461538461538461,
+            "mean_predicted": 0.09393988324709472,
+            "actual_rate": 0.1875
+          },
+          "tail": {
+            "n": 48,
+            "positives": 5,
+            "brier": 0.10319003203137474,
+            "logloss": 0.4622120235458292,
+            "auc": 0.5488372093023256,
+            "mean_predicted": 0.027746573409622083,
+            "actual_rate": 0.10416666666666667
+          },
+          "quantity": {
+            "n": 48,
+            "predicted_mean": 2.2036301586296037,
+            "actual_mean": 5.218246124031007,
+            "bias": -3.014615965401404,
+            "rmse": 10.388036941096441
+          },
+          "motion": {
+            "n": 48,
+            "predicted_mean": -7.556788758532222,
+            "actual_mean": -21.659079457364342,
+            "bias": 14.10229069883212,
+            "rmse": 77.3165480465639
+          },
+          "focal_wealth": {
+            "n": 48,
+            "predicted_mean": -3.4877757281706274,
+            "actual_mean": -12.799956395348836,
+            "bias": 9.31218066717821,
+            "rmse": 63.270193351742265
+          },
+          "predicted_shares_per_fill": 23.457876276397812,
+          "actual_shares_per_fill": 27.83064599483204,
+          "predicted_fill_weighted_move": -3.4292454788473434,
+          "actual_fill_weighted_move": -4.1506435194039994,
+          "probability_quantity_incoherent_n": 15
+        },
+        "mechanical": {
+          "n": 48,
+          "fill": {
+            "n": 48,
+            "positives": 9,
+            "brier": 0.13474322911033873,
+            "logloss": 0.4496531599992723,
+            "auc": 0.7806267806267806,
+            "mean_predicted": 0.08831897938390694,
+            "actual_rate": 0.1875
+          },
+          "tail": {
+            "n": 48,
+            "positives": 5,
+            "brier": 0.09919177439772027,
+            "logloss": 0.4367961325742668,
+            "auc": 0.5395348837209303,
+            "mean_predicted": 0.03008665291629904,
+            "actual_rate": 0.10416666666666667
+          },
+          "quantity": {
+            "n": 48,
+            "predicted_mean": 2.170657332016714,
+            "actual_mean": 5.218246124031007,
+            "bias": -3.047588792014294,
+            "rmse": 10.419957086077929
+          },
+          "motion": {
+            "n": 48,
+            "predicted_mean": -7.6202022266911,
+            "actual_mean": -21.659079457364342,
+            "bias": 14.038877230673242,
+            "rmse": 77.15405364292943
+          },
+          "focal_wealth": {
+            "n": 48,
+            "predicted_mean": -4.0112646411077275,
+            "actual_mean": -12.799956395348836,
+            "bias": 8.788691754241109,
+            "rmse": 62.1032090933022
+          },
+          "predicted_shares_per_fill": 24.57747300929794,
+          "actual_shares_per_fill": 27.83064599483204,
+          "predicted_fill_weighted_move": -3.5105505204782017,
+          "actual_fill_weighted_move": -4.1506435194039994,
+          "probability_quantity_incoherent_n": 17
+        },
+        "direct": {
+          "focal_wealth": {
+            "n": 48,
+            "predicted_mean": -4.623700943562937,
+            "actual_mean": -12.799956395348836,
+            "bias": 8.1762554517859,
+            "rmse": 62.372010597225064
+          }
+        }
+      },
+      "phase:('cancel', 2)": {
+        "full": {
+          "n": 48,
+          "fill": {
+            "n": 48,
+            "positives": 3,
+            "brier": 0.04160838688395388,
+            "logloss": 0.150416000262177,
+            "auc": 0.9555555555555556,
+            "mean_predicted": 0.0826721827281528,
+            "actual_rate": 0.0625
+          },
+          "tail": {
+            "n": 48,
+            "positives": 0,
+            "brier": 0.0010479534473503173,
+            "logloss": 0.02076061817871847,
+            "auc": null,
+            "mean_predicted": 0.02020828099212278,
+            "actual_rate": 0.0
+          },
+          "quantity": {
+            "n": 48,
+            "predicted_mean": 2.00464001669182,
+            "actual_mean": 0.6376633986928106,
+            "bias": 1.3669766179990095,
+            "rmse": 2.8582401303444525
+          },
+          "motion": {
+            "n": 48,
+            "predicted_mean": -5.546964702132307,
+            "actual_mean": -0.9709967320261442,
+            "bias": -4.575967970106163,
+            "rmse": 7.642898380413479
+          },
+          "focal_wealth": {
+            "n": 48,
+            "predicted_mean": -1.9051173756980413,
+            "actual_mean": -0.4854983660130721,
+            "bias": -1.4196190096849692,
+            "rmse": 4.390181476810854
+          },
+          "predicted_shares_per_fill": 24.24805963190288,
+          "actual_shares_per_fill": 10.20261437908497,
+          "predicted_fill_weighted_move": -2.767062742410105,
+          "actual_fill_weighted_move": -1.5227418321588728,
+          "probability_quantity_incoherent_n": 24
+        },
+        "mechanical": {
+          "n": 48,
+          "fill": {
+            "n": 48,
+            "positives": 3,
+            "brier": 0.041818192039558215,
+            "logloss": 0.15287776207272277,
+            "auc": 0.9555555555555556,
+            "mean_predicted": 0.08897370868317321,
+            "actual_rate": 0.0625
+          },
+          "tail": {
+            "n": 48,
+            "positives": 0,
+            "brier": 0.0012594626230068926,
+            "logloss": 0.023718424429094585,
+            "auc": null,
+            "mean_predicted": 0.023044568688306025,
+            "actual_rate": 0.0
+          },
+          "quantity": {
+            "n": 48,
+            "predicted_mean": 1.807211898411649,
+            "actual_mean": 0.6376633986928106,
+            "bias": 1.1695484997188383,
+            "rmse": 2.7003793574388397
+          },
+          "motion": {
+            "n": 48,
+            "predicted_mean": -5.48416215924748,
+            "actual_mean": -0.9709967320261442,
+            "bias": -4.5131654272213355,
+            "rmse": 6.98540262879494
+          },
+          "focal_wealth": {
+            "n": 48,
+            "predicted_mean": -2.862690781535939,
+            "actual_mean": -0.4854983660130721,
+            "bias": -2.3771924155228668,
+            "rmse": 5.091566997767363
+          },
+          "predicted_shares_per_fill": 20.311751922660168,
+          "actual_shares_per_fill": 10.20261437908497,
+          "predicted_fill_weighted_move": -3.0345983025385608,
+          "actual_fill_weighted_move": -1.5227418321588728,
+          "probability_quantity_incoherent_n": 15
+        },
+        "direct": {
+          "focal_wealth": {
+            "n": 48,
+            "predicted_mean": -2.274657087247157,
+            "actual_mean": -0.4854983660130721,
+            "bias": -1.7891587212340847,
+            "rmse": 4.564934626554197
+          }
+        }
+      },
+      "phase:('cancel', 3)": {
+        "full": {
+          "n": 48,
+          "fill": {
+            "n": 48,
+            "positives": 6,
+            "brier": 0.08180771812620624,
+            "logloss": 0.27017145003347504,
+            "auc": 0.873015873015873,
+            "mean_predicted": 0.08020195261435072,
+            "actual_rate": 0.125
+          },
+          "tail": {
+            "n": 48,
+            "positives": 3,
+            "brier": 0.05856518873105957,
+            "logloss": 0.24787625171745567,
+            "auc": 0.7703703703703704,
+            "mean_predicted": 0.017966774719190736,
+            "actual_rate": 0.0625
+          },
+          "quantity": {
+            "n": 48,
+            "predicted_mean": 1.6992601172560453,
+            "actual_mean": 2.0396474137931038,
+            "bias": -0.3403872965370582,
+            "rmse": 5.564444451093422
+          },
+          "motion": {
+            "n": 48,
+            "predicted_mean": -4.532512390059106,
+            "actual_mean": -7.2408031609195405,
+            "bias": 2.7082907708604345,
+            "rmse": 30.21945250922403
+          },
+          "focal_wealth": {
+            "n": 48,
+            "predicted_mean": -1.6023901041568547,
+            "actual_mean": -3.418848706896552,
+            "bias": 1.816458602739697,
+            "rmse": 17.372730539585753
+          },
+          "predicted_shares_per_fill": 21.187266168280207,
+          "actual_shares_per_fill": 16.31717931034483,
+          "predicted_fill_weighted_move": -2.667344654318245,
+          "actual_fill_weighted_move": -3.550026887958013,
+          "probability_quantity_incoherent_n": 19
+        },
+        "mechanical": {
+          "n": 48,
+          "fill": {
+            "n": 48,
+            "positives": 6,
+            "brier": 0.09274878732777407,
+            "logloss": 0.3260465367576578,
+            "auc": 0.8015873015873016,
+            "mean_predicted": 0.07104780882790628,
+            "actual_rate": 0.125
+          },
+          "tail": {
+            "n": 48,
+            "positives": 3,
+            "brier": 0.06153217264366686,
+            "logloss": 0.27169283930621974,
+            "auc": 0.725925925925926,
+            "mean_predicted": 0.0205792275143389,
+            "actual_rate": 0.0625
+          },
+          "quantity": {
+            "n": 48,
+            "predicted_mean": 1.5332645803061962,
+            "actual_mean": 2.0396474137931038,
+            "bias": -0.506382833486907,
+            "rmse": 5.916816063327561
+          },
+          "motion": {
+            "n": 48,
+            "predicted_mean": -3.7105876791366406,
+            "actual_mean": -7.2408031609195405,
+            "bias": 3.5302154817828986,
+            "rmse": 34.39602897991281
+          },
+          "focal_wealth": {
+            "n": 48,
+            "predicted_mean": -1.6365290270264279,
+            "actual_mean": -3.418848706896552,
+            "bias": 1.782319679870124,
+            "rmse": 18.882480912615456
+          },
+          "predicted_shares_per_fill": 21.5807440876904,
+          "actual_shares_per_fill": 16.31717931034483,
+          "predicted_fill_weighted_move": -2.420056999161637,
+          "actual_fill_weighted_move": -3.550026887958013,
+          "probability_quantity_incoherent_n": 13
+        },
+        "direct": {
+          "focal_wealth": {
+            "n": 48,
+            "predicted_mean": -2.145130958287616,
+            "actual_mean": -3.418848706896552,
+            "bias": 1.273717748608936,
+            "rmse": 17.14448273507452
+          }
+        }
+      },
+      "phase:('cancel', 4)": {
+        "full": {
+          "n": 44,
+          "fill": {
+            "n": 44,
+            "positives": 5,
+            "brier": 0.07250698346044601,
+            "logloss": 0.23799442950388572,
+            "auc": 0.9025641025641026,
+            "mean_predicted": 0.08386109635156101,
+            "actual_rate": 0.11363636363636363
+          },
+          "tail": {
+            "n": 44,
+            "positives": 1,
+            "brier": 0.015109352380478343,
+            "logloss": 0.05088681439520316,
+            "auc": 1.0,
+            "mean_predicted": 0.018079500439819544,
+            "actual_rate": 0.022727272727272728
+          },
+          "quantity": {
+            "n": 44,
+            "predicted_mean": 2.223838574501499,
+            "actual_mean": 2.174342289633754,
+            "bias": 0.049496284867745,
+            "rmse": 6.105137447994133
+          },
+          "motion": {
+            "n": 44,
+            "predicted_mean": -5.771919552050087,
+            "actual_mean": -5.38078725398313,
+            "bias": -0.3911322980669562,
+            "rmse": 17.926083219242894
+          },
+          "focal_wealth": {
+            "n": 44,
+            "predicted_mean": -1.6023011837662489,
+            "actual_mean": -0.857252472802617,
+            "bias": -0.7450487109636321,
+            "rmse": 7.79192228311375
+          },
+          "predicted_shares_per_fill": 26.518119500593716,
+          "actual_shares_per_fill": 19.134212148777035,
+          "predicted_fill_weighted_move": -2.5954759568571357,
+          "actual_fill_weighted_move": -2.474673504551792,
+          "probability_quantity_incoherent_n": 23
+        },
+        "mechanical": {
+          "n": 44,
+          "fill": {
+            "n": 44,
+            "positives": 5,
+            "brier": 0.08616066047941788,
+            "logloss": 0.2867383435388089,
+            "auc": 0.8358974358974359,
+            "mean_predicted": 0.06622601512115657,
+            "actual_rate": 0.11363636363636363
+          },
+          "tail": {
+            "n": 44,
+            "positives": 1,
+            "brier": 0.020874196625980255,
+            "logloss": 0.08154230492297915,
+            "auc": 0.9302325581395349,
+            "mean_predicted": 0.01942232073923472,
+            "actual_rate": 0.022727272727272728
+          },
+          "quantity": {
+            "n": 44,
+            "predicted_mean": 1.7790476829724395,
+            "actual_mean": 2.174342289633754,
+            "bias": -0.395294606661315,
+            "rmse": 6.577130611323085
+          },
+          "motion": {
+            "n": 44,
+            "predicted_mean": -5.001820462177121,
+            "actual_mean": -5.38078725398313,
+            "bias": 0.37896679180600984,
+            "rmse": 20.381347717346824
+          },
+          "focal_wealth": {
+            "n": 44,
+            "predicted_mean": -2.055828353026936,
+            "actual_mean": -0.857252472802617,
+            "bias": -1.198575880224319,
+            "rmse": 8.057258430294855
+          },
+          "predicted_shares_per_fill": 26.863275401936495,
+          "actual_shares_per_fill": 19.134212148777035,
+          "predicted_fill_weighted_move": -2.8115156833908244,
+          "actual_fill_weighted_move": -2.474673504551792,
+          "probability_quantity_incoherent_n": 15
+        },
+        "direct": {
+          "focal_wealth": {
+            "n": 44,
+            "predicted_mean": -2.3926972910604545,
+            "actual_mean": -0.857252472802617,
+            "bias": -1.5354448182578373,
+            "rmse": 6.5726396873540605
+          }
+        }
+      },
+      "phase:('cancel', 5)": {
+        "full": {
+          "n": 33,
+          "fill": {
+            "n": 33,
+            "positives": 4,
+            "brier": 0.0740708293256765,
+            "logloss": 0.24771537738760507,
+            "auc": 0.9224137931034483,
+            "mean_predicted": 0.154582178867726,
+            "actual_rate": 0.12121212121212122
+          },
+          "tail": {
+            "n": 33,
+            "positives": 0,
+            "brier": 0.008011128437510806,
+            "logloss": 0.053961945948524555,
+            "auc": null,
+            "mean_predicted": 0.04923558627185624,
+            "actual_rate": 0.0
+          },
+          "quantity": {
+            "n": 33,
+            "predicted_mean": 3.1103292969598835,
+            "actual_mean": 2.690187961550994,
+            "bias": 0.4201413354088899,
+            "rmse": 7.366875811109924
+          },
+          "motion": {
+            "n": 33,
+            "predicted_mean": -16.676262705334217,
+            "actual_mean": -1.9923941049201697,
+            "bias": -14.683868600414051,
+            "rmse": 23.534058247420177
+          },
+          "focal_wealth": {
+            "n": 33,
+            "predicted_mean": -11.739779120069418,
+            "actual_mean": -0.6473001241446726,
+            "bias": -11.092478995924745,
+            "rmse": 22.37547173424841
+          },
+          "predicted_shares_per_fill": 20.12087887324549,
+          "actual_shares_per_fill": 22.194050682795698,
+          "predicted_fill_weighted_move": -5.361574647942914,
+          "actual_fill_weighted_move": -0.7406152036200029,
+          "probability_quantity_incoherent_n": 7
+        },
+        "mechanical": {
+          "n": 33,
+          "fill": {
+            "n": 33,
+            "positives": 4,
+            "brier": 0.06820821563187231,
+            "logloss": 0.24013531185582332,
+            "auc": 0.9051724137931034,
+            "mean_predicted": 0.16147192562163024,
+            "actual_rate": 0.12121212121212122
+          },
+          "tail": {
+            "n": 33,
+            "positives": 0,
+            "brier": 0.0071588223234666125,
+            "logloss": 0.053532363190604525,
+            "auc": null,
+            "mean_predicted": 0.049353785804443454,
+            "actual_rate": 0.0
+          },
+          "quantity": {
+            "n": 33,
+            "predicted_mean": 3.3028070617789567,
+            "actual_mean": 2.690187961550994,
+            "bias": 0.6126191002279631,
+            "rmse": 7.823398134584615
+          },
+          "motion": {
+            "n": 33,
+            "predicted_mean": -12.055046151352485,
+            "actual_mean": -1.9923941049201697,
+            "bias": -10.062652046432316,
+            "rmse": 19.838134102936362
+          },
+          "focal_wealth": {
+            "n": 33,
+            "predicted_mean": -7.549727919544608,
+            "actual_mean": -0.6473001241446726,
+            "bias": -6.9024277953999364,
+            "rmse": 18.804545133484012
+          },
+          "predicted_shares_per_fill": 20.45437340927161,
+          "actual_shares_per_fill": 22.194050682795698,
+          "predicted_fill_weighted_move": -3.6499395592485504,
+          "actual_fill_weighted_move": -0.7406152036200029,
+          "probability_quantity_incoherent_n": 6
+        },
+        "direct": {
+          "focal_wealth": {
+            "n": 33,
+            "predicted_mean": -9.576319370279633,
+            "actual_mean": -0.6473001241446726,
+            "bias": -8.92901924613496,
+            "rmse": 14.493317777206181
+          }
+        }
+      },
+      "phase:('post', 1)": {
+        "full": {
+          "n": 48,
+          "fill": {
+            "n": 48,
+            "positives": 7,
+            "brier": 0.08947282027926007,
+            "logloss": 0.2751089927313462,
+            "auc": 0.9128919860627178,
+            "mean_predicted": 0.12310207712936598,
+            "actual_rate": 0.14583333333333334
+          },
+          "tail": {
+            "n": 48,
+            "positives": 4,
+            "brier": 0.06905825435451918,
+            "logloss": 0.23433455580863205,
+            "auc": 0.8465909090909091,
+            "mean_predicted": 0.04881756144446415,
+            "actual_rate": 0.08333333333333333
+          },
+          "quantity": {
+            "n": 48,
+            "predicted_mean": 2.565622484018374,
+            "actual_mean": 4.173333333333333,
+            "bias": -1.607710849314959,
+            "rmse": 9.044968447981146
+          },
+          "motion": {
+            "n": 48,
+            "predicted_mean": -8.48561497812355,
+            "actual_mean": -17.540000000000003,
+            "bias": 9.05438502187645,
+            "rmse": 52.45884076740975
+          },
+          "focal_wealth": {
+            "n": 48,
+            "predicted_mean": -4.976255997745638,
+            "actual_mean": -10.765833333333333,
+            "bias": 5.789577335587695,
+            "rmse": 44.81700556239703
+          },
+          "predicted_shares_per_fill": 20.841423181854218,
+          "actual_shares_per_fill": 28.617142857142856,
+          "predicted_fill_weighted_move": -3.3074293006791327,
+          "actual_fill_weighted_move": -4.202875399361023,
+          "probability_quantity_incoherent_n": 7
+        },
+        "mechanical": {
+          "n": 48,
+          "fill": {
+            "n": 48,
+            "positives": 7,
+            "brier": 0.10945558497218226,
+            "logloss": 0.3372631921912985,
+            "auc": 0.7979094076655052,
+            "mean_predicted": 0.1166975691084174,
+            "actual_rate": 0.14583333333333334
+          },
+          "tail": {
+            "n": 48,
+            "positives": 4,
+            "brier": 0.07902489618938745,
+            "logloss": 0.3033858582156968,
+            "auc": 0.6079545454545454,
+            "mean_predicted": 0.03628679533597596,
+            "actual_rate": 0.08333333333333333
+          },
+          "quantity": {
+            "n": 48,
+            "predicted_mean": 2.3445498531109137,
+            "actual_mean": 4.173333333333333,
+            "bias": -1.8287834802224197,
+            "rmse": 9.906999438118797
+          },
+          "motion": {
+            "n": 48,
+            "predicted_mean": -7.006187088176837,
+            "actual_mean": -17.540000000000003,
+            "bias": 10.533812911823164,
+            "rmse": 57.1946538703998
+          },
+          "focal_wealth": {
+            "n": 48,
+            "predicted_mean": -3.8250665247287317,
+            "actual_mean": -10.765833333333333,
+            "bias": 6.940766808604601,
+            "rmse": 46.96276894955446
+          },
+          "predicted_shares_per_fill": 20.09081998042923,
+          "actual_shares_per_fill": 28.617142857142856,
+          "predicted_fill_weighted_move": -2.988286676387169,
+          "actual_fill_weighted_move": -4.202875399361023,
+          "probability_quantity_incoherent_n": 11
+        },
+        "direct": {
+          "focal_wealth": {
+            "n": 48,
+            "predicted_mean": -4.774055615936807,
+            "actual_mean": -10.765833333333333,
+            "bias": 5.991777717396526,
+            "rmse": 45.77926147558479
+          }
+        }
+      },
+      "phase:('post', 2)": {
+        "full": {
+          "n": 48,
+          "fill": {
+            "n": 48,
+            "positives": 5,
+            "brier": 0.08359183437354871,
+            "logloss": 0.2740809052606112,
+            "auc": 0.827906976744186,
+            "mean_predicted": 0.11942986922983671,
+            "actual_rate": 0.10416666666666667
+          },
+          "tail": {
+            "n": 48,
+            "positives": 2,
+            "brier": 0.03938976695372115,
+            "logloss": 0.14701983947720484,
+            "auc": 0.8478260869565217,
+            "mean_predicted": 0.037428913445500915,
+            "actual_rate": 0.041666666666666664
+          },
+          "quantity": {
+            "n": 48,
+            "predicted_mean": 2.9372331074560196,
+            "actual_mean": 2.7950581395348837,
+            "bias": 0.1421749679211358,
+            "rmse": 8.117128908239412
+          },
+          "motion": {
+            "n": 48,
+            "predicted_mean": -7.694646930031212,
+            "actual_mean": -6.840116279069767,
+            "bias": -0.8545306509614429,
+            "rmse": 20.973542473935282
+          },
+          "focal_wealth": {
+            "n": 48,
+            "predicted_mean": -3.90965087982976,
+            "actual_mean": -2.9425872093023258,
+            "bias": -0.967063670527434,
+            "rmse": 13.05882077495112
+          },
+          "predicted_shares_per_fill": 24.593789865108732,
+          "actual_shares_per_fill": 26.832558139534882,
+          "predicted_fill_weighted_move": -2.6196922915306704,
+          "actual_fill_weighted_move": -2.4472178887155485,
+          "probability_quantity_incoherent_n": 22
+        },
+        "mechanical": {
+          "n": 48,
+          "fill": {
+            "n": 48,
+            "positives": 5,
+            "brier": 0.0948456217660467,
+            "logloss": 0.32267070080929905,
+            "auc": 0.641860465116279,
+            "mean_predicted": 0.1356329288795813,
+            "actual_rate": 0.10416666666666667
+          },
+          "tail": {
+            "n": 48,
+            "positives": 2,
+            "brier": 0.03210022442918368,
+            "logloss": 0.11702488032798619,
+            "auc": 0.9565217391304348,
+            "mean_predicted": 0.04277759270421186,
+            "actual_rate": 0.041666666666666664
+          },
+          "quantity": {
+            "n": 48,
+            "predicted_mean": 2.9592876915653243,
+            "actual_mean": 2.7950581395348837,
+            "bias": 0.16422955203044035,
+            "rmse": 8.491348787088198
+          },
+          "motion": {
+            "n": 48,
+            "predicted_mean": -7.7176190004475815,
+            "actual_mean": -6.840116279069767,
+            "bias": -0.8775027213778143,
+            "rmse": 19.436758829401146
+          },
+          "focal_wealth": {
+            "n": 48,
+            "predicted_mean": -4.282961874773842,
+            "actual_mean": -2.9425872093023258,
+            "bias": -1.3403746654715167,
+            "rmse": 11.618606996921036
+          },
+          "predicted_shares_per_fill": 21.81835720876206,
+          "actual_shares_per_fill": 26.832558139534882,
+          "predicted_fill_weighted_move": -2.6079313013211376,
+          "actual_fill_weighted_move": -2.4472178887155485,
+          "probability_quantity_incoherent_n": 10
+        },
+        "direct": {
+          "focal_wealth": {
+            "n": 48,
+            "predicted_mean": -3.7000933389473487,
+            "actual_mean": -2.9425872093023258,
+            "bias": -0.7575061296450235,
+            "rmse": 13.061263489528026
+          }
+        }
+      },
+      "phase:('post', 3)": {
+        "full": {
+          "n": 48,
+          "fill": {
+            "n": 48,
+            "positives": 3,
+            "brier": 0.05970649640007491,
+            "logloss": 0.2163569459178635,
+            "auc": 0.8,
+            "mean_predicted": 0.11724003677051571,
+            "actual_rate": 0.0625
+          },
+          "tail": {
+            "n": 48,
+            "positives": 1,
+            "brier": 0.025664850001273932,
+            "logloss": 0.13278144863987892,
+            "auc": 0.5319148936170213,
+            "mean_predicted": 0.040349404748845845,
+            "actual_rate": 0.020833333333333332
+          },
+          "quantity": {
+            "n": 48,
+            "predicted_mean": 2.5628630773024157,
+            "actual_mean": 0.7122277401419664,
+            "bias": 1.8506353371604494,
+            "rmse": 5.323357259874908
+          },
+          "motion": {
+            "n": 48,
+            "predicted_mean": -7.985698454739723,
+            "actual_mean": -1.3372277401419665,
+            "bias": -6.6484707145977575,
+            "rmse": 18.327338549571717
+          },
+          "focal_wealth": {
+            "n": 48,
+            "predicted_mean": -3.3778631353602404,
+            "actual_mean": -0.9811138700709833,
+            "bias": -2.3967492652892575,
+            "rmse": 14.563136964776128
+          },
+          "predicted_shares_per_fill": 21.859964802970286,
+          "actual_shares_per_fill": 11.395643842271463,
+          "predicted_fill_weighted_move": -3.1159286367905397,
+          "actual_fill_weighted_move": -1.877528302780541,
+          "probability_quantity_incoherent_n": 18
+        },
+        "mechanical": {
+          "n": 48,
+          "fill": {
+            "n": 48,
+            "positives": 3,
+            "brier": 0.05992092543254208,
+            "logloss": 0.21426481602977263,
+            "auc": 0.8148148148148148,
+            "mean_predicted": 0.11568971086034062,
+            "actual_rate": 0.0625
+          },
+          "tail": {
+            "n": 48,
+            "positives": 1,
+            "brier": 0.02542821181779985,
+            "logloss": 0.1311164439202271,
+            "auc": 0.5319148936170213,
+            "mean_predicted": 0.0457391823999187,
+            "actual_rate": 0.020833333333333332
+          },
+          "quantity": {
+            "n": 48,
+            "predicted_mean": 2.4996905459770624,
+            "actual_mean": 0.7122277401419664,
+            "bias": 1.787462805835096,
+            "rmse": 5.220934504385658
+          },
+          "motion": {
+            "n": 48,
+            "predicted_mean": -6.613807090658931,
+            "actual_mean": -1.3372277401419665,
+            "bias": -5.276579350516964,
+            "rmse": 12.418721139206843
+          },
+          "focal_wealth": {
+            "n": 48,
+            "predicted_mean": -3.30475262865783,
+            "actual_mean": -0.9811138700709833,
+            "bias": -2.3236387585868465,
+            "rmse": 8.308432120327222
+          },
+          "predicted_shares_per_fill": 21.606852739001678,
+          "actual_shares_per_fill": 11.395643842271463,
+          "predicted_fill_weighted_move": -2.6458503438767735,
+          "actual_fill_weighted_move": -1.877528302780541,
+          "probability_quantity_incoherent_n": 9
+        },
+        "direct": {
+          "focal_wealth": {
+            "n": 48,
+            "predicted_mean": -3.593359804499252,
+            "actual_mean": -0.9811138700709833,
+            "bias": -2.6122459344282682,
+            "rmse": 12.273976134830109
+          }
+        }
+      },
+      "phase:('post', 4)": {
+        "full": {
+          "n": 41,
+          "fill": {
+            "n": 41,
+            "positives": 6,
+            "brier": 0.09957772154803944,
+            "logloss": 0.3020933950918985,
+            "auc": 0.8571428571428571,
+            "mean_predicted": 0.12751752264613125,
+            "actual_rate": 0.14634146341463414
+          },
+          "tail": {
+            "n": 41,
+            "positives": 3,
+            "brier": 0.07405284699299346,
+            "logloss": 0.28503686162499076,
+            "auc": 0.7105263157894737,
+            "mean_predicted": 0.052844351231587025,
+            "actual_rate": 0.07317073170731707
+          },
+          "quantity": {
+            "n": 41,
+            "predicted_mean": 2.9030380800652407,
+            "actual_mean": 3.201168848410003,
+            "bias": -0.29813076834476215,
+            "rmse": 7.807904476026013
+          },
+          "motion": {
+            "n": 41,
+            "predicted_mean": -9.622744438525443,
+            "actual_mean": -9.486138252547082,
+            "bias": -0.13660618597836197,
+            "rmse": 26.878043794353236
+          },
+          "focal_wealth": {
+            "n": 41,
+            "predicted_mean": -3.867497311498055,
+            "actual_mean": -5.03589961407842,
+            "bias": 1.1684023025803632,
+            "rmse": 18.43866778662951
+          },
+          "predicted_shares_per_fill": 22.765797357288257,
+          "actual_shares_per_fill": 21.874653797468355,
+          "predicted_fill_weighted_move": -3.314715195988469,
+          "actual_fill_weighted_move": -2.963335800690044,
+          "probability_quantity_incoherent_n": 15
+        },
+        "mechanical": {
+          "n": 41,
+          "fill": {
+            "n": 41,
+            "positives": 6,
+            "brier": 0.09310294007264051,
+            "logloss": 0.2963786434610313,
+            "auc": 0.8857142857142857,
+            "mean_predicted": 0.11247325190145115,
+            "actual_rate": 0.14634146341463414
+          },
+          "tail": {
+            "n": 41,
+            "positives": 3,
+            "brier": 0.07087752310216076,
+            "logloss": 0.25174809823576716,
+            "auc": 0.7631578947368421,
+            "mean_predicted": 0.0573793232216453,
+            "actual_rate": 0.07317073170731707
+          },
+          "quantity": {
+            "n": 41,
+            "predicted_mean": 2.4710457439829763,
+            "actual_mean": 3.201168848410003,
+            "bias": -0.7301231044270265,
+            "rmse": 7.638556696554684
+          },
+          "motion": {
+            "n": 41,
+            "predicted_mean": -8.338853764483089,
+            "actual_mean": -9.486138252547082,
+            "bias": 1.1472844880639927,
+            "rmse": 26.050186972984076
+          },
+          "focal_wealth": {
+            "n": 41,
+            "predicted_mean": -3.992654024006486,
+            "actual_mean": -5.03589961407842,
+            "bias": 1.0432455900719333,
+            "rmse": 17.956763270546308
+          },
+          "predicted_shares_per_fill": 21.97007468182837,
+          "actual_shares_per_fill": 21.874653797468355,
+          "predicted_fill_weighted_move": -3.3746254130617737,
+          "actual_fill_weighted_move": -2.963335800690044,
+          "probability_quantity_incoherent_n": 8
+        },
+        "direct": {
+          "focal_wealth": {
+            "n": 41,
+            "predicted_mean": -4.515700884662772,
+            "actual_mean": -5.03589961407842,
+            "bias": 0.5201987294156474,
+            "rmse": 17.696168031213915
+          }
+        }
+      },
+      "phase:('post', 5)": {
+        "full": {
+          "n": 37,
+          "fill": {
+            "n": 37,
+            "positives": 4,
+            "brier": 0.08551590480053918,
+            "logloss": 0.27448989003062263,
+            "auc": 0.8636363636363636,
+            "mean_predicted": 0.14329400567409253,
+            "actual_rate": 0.10810810810810811
+          },
+          "tail": {
+            "n": 37,
+            "positives": 1,
+            "brier": 0.029138582625412576,
+            "logloss": 0.11301710434001766,
+            "auc": 0.8333333333333334,
+            "mean_predicted": 0.05327798525208163,
+            "actual_rate": 0.02702702702702703
+          },
+          "quantity": {
+            "n": 37,
+            "predicted_mean": 3.2039863614109043,
+            "actual_mean": 2.0837707664839984,
+            "bias": 1.1202155949269055,
+            "rmse": 6.012780156197854
+          },
+          "motion": {
+            "n": 37,
+            "predicted_mean": -13.00674291154139,
+            "actual_mean": -7.3781586961533225,
+            "bias": -5.62858421538807,
+            "rmse": 26.198952941084947
+          },
+          "focal_wealth": {
+            "n": 37,
+            "predicted_mean": -5.919582555532662,
+            "actual_mean": -1.0539310060255527,
+            "bias": -4.86565154950711,
+            "rmse": 13.354377300874361
+          },
+          "predicted_shares_per_fill": 22.359528204536634,
+          "actual_shares_per_fill": 19.274879589976983,
+          "predicted_fill_weighted_move": -4.059550024368317,
+          "actual_fill_weighted_move": -3.5407727254964256,
+          "probability_quantity_incoherent_n": 11
+        },
+        "mechanical": {
+          "n": 37,
+          "fill": {
+            "n": 37,
+            "positives": 4,
+            "brier": 0.10324140287172351,
+            "logloss": 0.3540690339452106,
+            "auc": 0.6287878787878788,
+            "mean_predicted": 0.16982883391411907,
+            "actual_rate": 0.10810810810810811
+          },
+          "tail": {
+            "n": 37,
+            "positives": 1,
+            "brier": 0.031856383918078414,
+            "logloss": 0.12285652946910108,
+            "auc": 0.9166666666666666,
+            "mean_predicted": 0.07983545198679265,
+            "actual_rate": 0.02702702702702703
+          },
+          "quantity": {
+            "n": 37,
+            "predicted_mean": 3.9770690551635464,
+            "actual_mean": 2.0837707664839984,
+            "bias": 1.8932982886795473,
+            "rmse": 7.273652694093272
+          },
+          "motion": {
+            "n": 37,
+            "predicted_mean": -14.845503900005927,
+            "actual_mean": -7.3781586961533225,
+            "bias": -7.467345203852603,
+            "rmse": 31.40435101440474
+          },
+          "focal_wealth": {
+            "n": 37,
+            "predicted_mean": -7.388896883772864,
+            "actual_mean": -1.0539310060255527,
+            "bias": -6.334965877747311,
+            "rmse": 13.677200581537575
+          },
+          "predicted_shares_per_fill": 23.41810258895562,
+          "actual_shares_per_fill": 19.274879589976983,
+          "predicted_fill_weighted_move": -3.7327749893433633,
+          "actual_fill_weighted_move": -3.5407727254964256,
+          "probability_quantity_incoherent_n": 10
+        },
+        "direct": {
+          "focal_wealth": {
+            "n": 37,
+            "predicted_mean": -7.185728898325505,
+            "actual_mean": -1.0539310060255527,
+            "bias": -6.131797892299951,
+            "rmse": 11.99673291865534
+          }
+        }
+      },
+      "depth:('cancel', 'at_or_inside')": {
+        "full": {
+          "n": 64,
+          "fill": {
+            "n": 64,
+            "positives": 15,
+            "brier": 0.11950584376766402,
+            "logloss": 0.36934678234984264,
+            "auc": 0.9197278911564626,
+            "mean_predicted": 0.17855018528435607,
+            "actual_rate": 0.234375
+          },
+          "tail": {
+            "n": 64,
+            "positives": 3,
+            "brier": 0.047700196574257864,
+            "logloss": 0.21196327020360786,
+            "auc": 0.5628415300546448,
+            "mean_predicted": 0.04129816754381538,
+            "actual_rate": 0.046875
+          },
+          "quantity": {
+            "n": 64,
+            "predicted_mean": 3.6282410141371106,
+            "actual_mean": 4.617683133840801,
+            "bias": -0.9894421197036903,
+            "rmse": 8.580745746499222
+          },
+          "motion": {
+            "n": 64,
+            "predicted_mean": -7.070001661990209,
+            "actual_mean": -7.861676589505729,
+            "bias": 0.7916749275155199,
+            "rmse": 52.74031415669639
+          },
+          "focal_wealth": {
+            "n": 64,
+            "predicted_mean": -5.612698501011006,
+            "actual_mean": -5.318460022585327,
+            "bias": -0.29423847842567996,
+            "rmse": 52.05277620449932
+          },
+          "predicted_shares_per_fill": 20.320567062749525,
+          "actual_shares_per_fill": 19.70211470438742,
+          "predicted_fill_weighted_move": -1.9486030929154352,
+          "actual_fill_weighted_move": -1.7025153874009336,
+          "probability_quantity_incoherent_n": 17
+        },
+        "mechanical": {
+          "n": 64,
+          "fill": {
+            "n": 64,
+            "positives": 15,
+            "brier": 0.1252920426936931,
+            "logloss": 0.38563673631262285,
+            "auc": 0.9061224489795918,
+            "mean_predicted": 0.17396056505750151,
+            "actual_rate": 0.234375
+          },
+          "tail": {
+            "n": 64,
+            "positives": 3,
+            "brier": 0.0456523750465922,
+            "logloss": 0.1898110254786885,
+            "auc": 0.6284153005464481,
+            "mean_predicted": 0.04429765510286442,
+            "actual_rate": 0.046875
+          },
+          "quantity": {
+            "n": 64,
+            "predicted_mean": 3.6139333567210246,
+            "actual_mean": 4.617683133840801,
+            "bias": -1.0037497771197763,
+            "rmse": 8.778372348287608
+          },
+          "motion": {
+            "n": 64,
+            "predicted_mean": -7.165367033209046,
+            "actual_mean": -7.861676589505729,
+            "bias": 0.6963095562966815,
+            "rmse": 50.59159009280625
+          },
+          "focal_wealth": {
+            "n": 64,
+            "predicted_mean": -5.9161261268644925,
+            "actual_mean": -5.318460022585327,
+            "bias": -0.5976661042791642,
+            "rmse": 49.91803609259093
+          },
+          "predicted_shares_per_fill": 20.774440204459342,
+          "actual_shares_per_fill": 19.70211470438742,
+          "predicted_fill_weighted_move": -1.982705912349831,
+          "actual_fill_weighted_move": -1.7025153874009336,
+          "probability_quantity_incoherent_n": 15
+        },
+        "direct": {
+          "focal_wealth": {
+            "n": 64,
+            "predicted_mean": -4.348151366559414,
+            "actual_mean": -5.318460022585327,
+            "bias": 0.9703086560259133,
+            "rmse": 49.749301947254814
+          }
+        }
+      },
+      "depth:('cancel', 'deep')": {
+        "full": {
+          "n": 79,
+          "fill": {
+            "n": 79,
+            "positives": 4,
+            "brier": 0.044614772321814336,
+            "logloss": 0.1596738258804324,
+            "auc": 0.8833333333333333,
+            "mean_predicted": 0.03375387644717883,
+            "actual_rate": 0.05063291139240506
+          },
+          "tail": {
+            "n": 79,
+            "positives": 3,
+            "brier": 0.03643281469894477,
+            "logloss": 0.15239923048891652,
+            "auc": 0.881578947368421,
+            "mean_predicted": 0.010479630424252392,
+            "actual_rate": 0.0379746835443038
+          },
+          "quantity": {
+            "n": 79,
+            "predicted_mean": 1.2071994829020918,
+            "actual_mean": 1.3341772151898734,
+            "bias": -0.12697773228778178,
+            "rmse": 5.581680822048582
+          },
+          "motion": {
+            "n": 79,
+            "predicted_mean": -7.992392761103404,
+            "actual_mean": -9.577215189873417,
+            "bias": 1.5848224287700123,
+            "rmse": 42.3522242391155
+          },
+          "focal_wealth": {
+            "n": 79,
+            "predicted_mean": -2.357140915165332,
+            "actual_mean": -4.591139240506329,
+            "bias": 2.233998325340998,
+            "rmse": 22.71736966060089
+          },
+          "predicted_shares_per_fill": 35.764765708946896,
+          "actual_shares_per_fill": 26.35,
+          "predicted_fill_weighted_move": -6.620606514749158,
+          "actual_fill_weighted_move": -7.178368121442125,
+          "probability_quantity_incoherent_n": 43
+        },
+        "mechanical": {
+          "n": 79,
+          "fill": {
+            "n": 79,
+            "positives": 4,
+            "brier": 0.05038717203549884,
+            "logloss": 0.20799992843479292,
+            "auc": 0.75,
+            "mean_predicted": 0.030313381550039768,
+            "actual_rate": 0.05063291139240506
+          },
+          "tail": {
+            "n": 79,
+            "positives": 3,
+            "brier": 0.03838008309688223,
+            "logloss": 0.19892090149962965,
+            "auc": 0.6842105263157895,
+            "mean_predicted": 0.010462713908850226,
+            "actual_rate": 0.0379746835443038
+          },
+          "quantity": {
+            "n": 79,
+            "predicted_mean": 0.7592559591334476,
+            "actual_mean": 1.3341772151898734,
+            "bias": -0.5749212560564259,
+            "rmse": 5.815890169616622
+          },
+          "motion": {
+            "n": 79,
+            "predicted_mean": -5.027433581671351,
+            "actual_mean": -9.577215189873417,
+            "bias": 4.549781608202066,
+            "rmse": 45.041979395744534
+          },
+          "focal_wealth": {
+            "n": 79,
+            "predicted_mean": -1.552764153396724,
+            "actual_mean": -4.591139240506329,
+            "bias": 3.0383750871096056,
+            "rmse": 23.63689699666252
+          },
+          "predicted_shares_per_fill": 25.046890855119774,
+          "actual_shares_per_fill": 26.35,
+          "predicted_fill_weighted_move": -6.6215266685680705,
+          "actual_fill_weighted_move": -7.178368121442125,
+          "probability_quantity_incoherent_n": 28
+        },
+        "direct": {
+          "focal_wealth": {
+            "n": 79,
+            "predicted_mean": -4.046269486819957,
+            "actual_mean": -4.591139240506329,
+            "bias": 0.5448697536863722,
+            "rmse": 22.473628925971166
+          }
+        }
+      },
+      "depth:('cancel', 'near')": {
+        "full": {
+          "n": 78,
+          "fill": {
+            "n": 78,
+            "positives": 8,
+            "brier": 0.08083478116378053,
+            "logloss": 0.2734811046111245,
+            "auc": 0.8,
+            "mean_predicted": 0.09005647354972361,
+            "actual_rate": 0.10256410256410256
+          },
+          "tail": {
+            "n": 78,
+            "positives": 3,
+            "brier": 0.03606059183691573,
+            "logloss": 0.17301695427244998,
+            "auc": 0.5955555555555555,
+            "mean_predicted": 0.02709662868984746,
+            "actual_rate": 0.038461538461538464
+          },
+          "quantity": {
+            "n": 78,
+            "predicted_mean": 2.0060901803515425,
+            "actual_mean": 2.0833625110521665,
+            "bias": -0.07727233070062368,
+            "rmse": 6.519711412993488
+          },
+          "motion": {
+            "n": 78,
+            "predicted_mean": -7.268496870595196,
+            "actual_mean": -6.109725022104333,
+            "bias": -1.1587718484908633,
+            "rmse": 24.355654181492604
+          },
+          "focal_wealth": {
+            "n": 78,
+            "predicted_mean": -3.182829752185453,
+            "actual_mean": -2.023142793987622,
+            "bias": -1.159686958197831,
+            "rmse": 12.698325515337723
+          },
+          "predicted_shares_per_fill": 22.275913116272577,
+          "actual_shares_per_fill": 20.312784482758623,
+          "predicted_fill_weighted_move": -3.623215417624686,
+          "actual_fill_weighted_move": -2.932626938275241,
+          "probability_quantity_incoherent_n": 28
+        },
+        "mechanical": {
+          "n": 78,
+          "fill": {
+            "n": 78,
+            "positives": 8,
+            "brier": 0.08935324180350786,
+            "logloss": 0.30769134564636663,
+            "auc": 0.725,
+            "mean_predicted": 0.08505934302142046,
+            "actual_rate": 0.10256410256410256
+          },
+          "tail": {
+            "n": 78,
+            "positives": 3,
+            "brier": 0.03815552415990828,
+            "logloss": 0.16202214840582202,
+            "auc": 0.7333333333333333,
+            "mean_predicted": 0.030253259953843346,
+            "actual_rate": 0.038461538461538464
+          },
+          "quantity": {
+            "n": 78,
+            "predicted_mean": 2.0581051077315884,
+            "actual_mean": 2.0833625110521665,
+            "bias": -0.025257403320578575,
+            "rmse": 6.757004390546028
+          },
+          "motion": {
+            "n": 78,
+            "predicted_mean": -7.298251017648974,
+            "actual_mean": -6.109725022104333,
+            "bias": -1.1885259955446437,
+            "rmse": 25.83102282800136
+          },
+          "focal_wealth": {
+            "n": 78,
+            "predicted_mean": -3.164106182367348,
+            "actual_mean": -2.023142793987622,
+            "bias": -1.1409633883797266,
+            "rmse": 13.586238792626881
+          },
+          "predicted_shares_per_fill": 24.1961086768951,
+          "actual_shares_per_fill": 20.312784482758623,
+          "predicted_fill_weighted_move": -3.546102184107105,
+          "actual_fill_weighted_move": -2.932626938275241,
+          "probability_quantity_incoherent_n": 23
+        },
+        "direct": {
+          "focal_wealth": {
+            "n": 78,
+            "predicted_mean": -3.3006117254358824,
+            "actual_mean": -2.023142793987622,
+            "bias": -1.2774689314482603,
+            "rmse": 12.595751178419013
+          }
+        }
+      },
+      "depth:('post', 'at_or_inside')": {
+        "full": {
+          "n": 96,
+          "fill": {
+            "n": 96,
+            "positives": 15,
+            "brier": 0.11677511636680765,
+            "logloss": 0.36963946271665016,
+            "auc": 0.7794238683127572,
+            "mean_predicted": 0.17532632284597963,
+            "actual_rate": 0.15625
+          },
+          "tail": {
+            "n": 96,
+            "positives": 8,
+            "brier": 0.08406467123617371,
+            "logloss": 0.32436369654576996,
+            "auc": 0.6164772727272727,
+            "mean_predicted": 0.06444059614901704,
+            "actual_rate": 0.08333333333333333
+          },
+          "quantity": {
+            "n": 96,
+            "predicted_mean": 3.8257192186275346,
+            "actual_mean": 3.0645881041282492,
+            "bias": 0.7611311144992853,
+            "rmse": 8.049269194626445
+          },
+          "motion": {
+            "n": 96,
+            "predicted_mean": -9.65722615814325,
+            "actual_mean": -9.394325278449365,
+            "bias": -0.2629008796938847,
+            "rmse": 38.49285717741937
+          },
+          "focal_wealth": {
+            "n": 96,
+            "predicted_mean": -6.865012116510083,
+            "actual_mean": -7.146153838069442,
+            "bias": 0.28114172155935974,
+            "rmse": 35.09370455468542
+          },
+          "predicted_shares_per_fill": 21.820563829359187,
+          "actual_shares_per_fill": 19.613363866420794,
+          "predicted_fill_weighted_move": -2.5242903637888383,
+          "actual_fill_weighted_move": -3.065444672905454,
+          "probability_quantity_incoherent_n": 23
+        },
+        "mechanical": {
+          "n": 96,
+          "fill": {
+            "n": 96,
+            "positives": 15,
+            "brier": 0.1263459350215623,
+            "logloss": 0.40229891314543936,
+            "auc": 0.6995884773662552,
+            "mean_predicted": 0.2029524008329531,
+            "actual_rate": 0.15625
+          },
+          "tail": {
+            "n": 96,
+            "positives": 8,
+            "brier": 0.08160422200589093,
+            "logloss": 0.30852245944126677,
+            "auc": 0.5724431818181818,
+            "mean_predicted": 0.07846573184155965,
+            "actual_rate": 0.08333333333333333
+          },
+          "quantity": {
+            "n": 96,
+            "predicted_mean": 4.316152605292181,
+            "actual_mean": 3.0645881041282492,
+            "bias": 1.251564501163932,
+            "rmse": 8.444095398326246
+          },
+          "motion": {
+            "n": 96,
+            "predicted_mean": -10.01208145616692,
+            "actual_mean": -9.394325278449365,
+            "bias": -0.617756177717554,
+            "rmse": 37.54762145255736
+          },
+          "focal_wealth": {
+            "n": 96,
+            "predicted_mean": -6.617760936472915,
+            "actual_mean": -7.146153838069442,
+            "bias": 0.528392901596528,
+            "rmse": 34.096845738970266
+          },
+          "predicted_shares_per_fill": 21.266822109903185,
+          "actual_shares_per_fill": 19.613363866420794,
+          "predicted_fill_weighted_move": -2.3196773542925166,
+          "actual_fill_weighted_move": -3.065444672905454,
+          "probability_quantity_incoherent_n": 11
+        },
+        "direct": {
+          "focal_wealth": {
+            "n": 96,
+            "predicted_mean": -6.148144116512228,
+            "actual_mean": -7.146153838069442,
+            "bias": 0.9980097215572158,
+            "rmse": 34.62615341926731
+          }
+        }
+      },
+      "depth:('post', 'deep')": {
+        "full": {
+          "n": 67,
+          "fill": {
+            "n": 67,
+            "positives": 2,
+            "brier": 0.02589030787042006,
+            "logloss": 0.09415092083250369,
+            "auc": 0.9230769230769231,
+            "mean_predicted": 0.044666586380602204,
+            "actual_rate": 0.029850746268656716
+          },
+          "tail": {
+            "n": 67,
+            "positives": 1,
+            "brier": 0.012857268057267614,
+            "logloss": 0.04756578966355827,
+            "auc": 0.9696969696969697,
+            "mean_predicted": 0.01611702421712127,
+            "actual_rate": 0.014925373134328358
+          },
+          "quantity": {
+            "n": 67,
+            "predicted_mean": 1.2649905371113985,
+            "actual_mean": 0.7522388059701492,
+            "bias": 0.5127517311412493,
+            "rmse": 3.9137810763128256
+          },
+          "motion": {
+            "n": 67,
+            "predicted_mean": -7.842394219809904,
+            "actual_mean": -3.680597014925373,
+            "bias": -4.1617972048845315,
+            "rmse": 18.62372945419367
+          },
+          "focal_wealth": {
+            "n": 67,
+            "predicted_mean": -1.5731508734166788,
+            "actual_mean": -0.8238805970149254,
+            "bias": -0.7492702764017535,
+            "rmse": 4.920070418912138
+          },
+          "predicted_shares_per_fill": 28.320734571754926,
+          "actual_shares_per_fill": 25.2,
+          "predicted_fill_weighted_move": -6.199567498518989,
+          "actual_fill_weighted_move": -4.892857142857143,
+          "probability_quantity_incoherent_n": 32
+        },
+        "mechanical": {
+          "n": 67,
+          "fill": {
+            "n": 67,
+            "positives": 2,
+            "brier": 0.027708936802980033,
+            "logloss": 0.10922133298365523,
+            "auc": 0.8769230769230769,
+            "mean_predicted": 0.030700157748136243,
+            "actual_rate": 0.029850746268656716
+          },
+          "tail": {
+            "n": 67,
+            "positives": 1,
+            "brier": 0.01454748016826607,
+            "logloss": 0.06487897723681295,
+            "auc": 0.9090909090909091,
+            "mean_predicted": 0.012713530700427429,
+            "actual_rate": 0.014925373134328358
+          },
+          "quantity": {
+            "n": 67,
+            "predicted_mean": 0.8856775015230334,
+            "actual_mean": 0.7522388059701492,
+            "bias": 0.13343869555288418,
+            "rmse": 4.228805797468652
+          },
+          "motion": {
+            "n": 67,
+            "predicted_mean": -5.2966622177189215,
+            "actual_mean": -3.680597014925373,
+            "bias": -1.616065202793548,
+            "rmse": 22.45521469468411
+          },
+          "focal_wealth": {
+            "n": 67,
+            "predicted_mean": -0.9603971986423598,
+            "actual_mean": -0.8238805970149254,
+            "bias": -0.13651660162743443,
+            "rmse": 6.586913027018492
+          },
+          "predicted_shares_per_fill": 28.84928177858635,
+          "actual_shares_per_fill": 25.2,
+          "predicted_fill_weighted_move": -5.98035087106836,
+          "actual_fill_weighted_move": -4.892857142857143,
+          "probability_quantity_incoherent_n": 24
+        },
+        "direct": {
+          "focal_wealth": {
+            "n": 67,
+            "predicted_mean": -2.936222668938656,
+            "actual_mean": -0.8238805970149254,
+            "bias": -2.1123420719237305,
+            "rmse": 6.3512465139717005
+          }
+        }
+      },
+      "depth:('post', 'near')": {
+        "full": {
+          "n": 59,
+          "fill": {
+            "n": 59,
+            "positives": 8,
+            "brier": 0.09279200869654755,
+            "logloss": 0.29652039866095126,
+            "auc": 0.8774509803921569,
+            "mean_predicted": 0.13517226352448977,
+            "actual_rate": 0.13559322033898305
+          },
+          "tail": {
+            "n": 59,
+            "positives": 2,
+            "brier": 0.02745875776610299,
+            "logloss": 0.10543799864046288,
+            "auc": 0.9298245614035088,
+            "mean_predicted": 0.04997234279037714,
+            "actual_rate": 0.03389830508474576
+          },
+          "quantity": {
+            "n": 59,
+            "predicted_mean": 2.9271718946009857,
+            "actual_mean": 3.939266192760931,
+            "bias": -1.0120942981599457,
+            "rmse": 9.24320836289338
+          },
+          "motion": {
+            "n": 59,
+            "predicted_mean": -9.884982766381261,
+            "actual_mean": -12.676285191578433,
+            "bias": 2.791302425197171,
+            "rmse": 31.586378969433266
+          },
+          "focal_wealth": {
+            "n": 59,
+            "predicted_mean": -3.4205192075110853,
+            "actual_mean": -3.5480375382273386,
+            "bias": 0.1275183307162534,
+            "rmse": 16.18862953124417
+          },
+          "predicted_shares_per_fill": 21.65512227344374,
+          "actual_shares_per_fill": 29.052088171611867,
+          "predicted_fill_weighted_move": -3.3769737898254593,
+          "actual_fill_weighted_move": -3.217930591964883,
+          "probability_quantity_incoherent_n": 18
+        },
+        "mechanical": {
+          "n": 59,
+          "fill": {
+            "n": 59,
+            "positives": 8,
+            "brier": 0.10735773331456609,
+            "logloss": 0.3605947745672164,
+            "auc": 0.7107843137254902,
+            "mean_predicted": 0.11897795183751808,
+            "actual_rate": 0.13559322033898305
+          },
+          "tail": {
+            "n": 59,
+            "positives": 2,
+            "brier": 0.031026069919727846,
+            "logloss": 0.12501052195021692,
+            "auc": 0.8421052631578947,
+            "mean_predicted": 0.049364721067890416,
+            "actual_rate": 0.03389830508474576
+          },
+          "quantity": {
+            "n": 59,
+            "predicted_mean": 2.5312328167054066,
+            "actual_mean": 3.939266192760931,
+            "bias": -1.4080333760555241,
+            "rmse": 9.903801270665907
+          },
+          "motion": {
+            "n": 59,
+            "predicted_mean": -10.158404963905673,
+            "actual_mean": -12.676285191578433,
+            "bias": 2.5178802276727597,
+            "rmse": 36.299679092476886
+          },
+          "focal_wealth": {
+            "n": 59,
+            "predicted_mean": -4.834742827544462,
+            "actual_mean": -3.5480375382273386,
+            "bias": -1.286705289317124,
+            "rmse": 18.99275830542923
+          },
+          "predicted_shares_per_fill": 21.274805773780486,
+          "actual_shares_per_fill": 29.052088171611867,
+          "predicted_fill_weighted_move": -4.013224266398227,
+          "actual_fill_weighted_move": -3.217930591964883,
+          "probability_quantity_incoherent_n": 13
+        },
+        "direct": {
+          "focal_wealth": {
+            "n": 59,
+            "predicted_mean": -4.123853761958596,
+            "actual_mean": -3.5480375382273386,
+            "bias": -0.5758162237312578,
+            "rmse": 16.660116692499827
+          }
+        }
+      }
+    }
+  },
+  "coverage": {
+    "reference": {
+      "('cancel', 0)": {
+        "n": 2381,
+        "queries": 500,
+        "q95": 2.090213523271687
+      },
+      "('cancel', 1)": {
+        "n": 2404,
+        "queries": 500,
+        "q95": 2.119959588327718
+      },
+      "('post', 0)": {
+        "n": 2043,
+        "queries": 500,
+        "q95": 2.2361450825658373
+      },
+      "('post', 1)": {
+        "n": 2110,
+        "queries": 500,
+        "q95": 2.2549710794471434
+      }
+    },
+    "far_n": 27,
+    "empty_cell_n": 0,
+    "median_cell_n": 63.0,
+    "median_cell_severe_n": 2.0
+  },
+  "source_statuses": {
+    "('cancel', 'eligible')": 221,
+    "('post', 'eligible')": 222
+  }
+}

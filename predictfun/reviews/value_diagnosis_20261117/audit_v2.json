@@ -1,0 +1,60 @@
+{
+  "asof": "2026-11-17T02:49:32.332546+00:00",
+  "controls": {
+    "calibration": {
+      "group_calibration_positive": true,
+      "miscalibration_detected": true,
+      "novelty_controls": true,
+      "corrupt_number_refused": true
+    },
+    "controller": {
+      "attribution_positive": true,
+      "incomplete_cube_refused": true,
+      "unchanged_inputs_zero": true,
+      "clock_reversal_detected": true,
+      "good_path_no_false_reversal": true,
+      "complement_value_positive": true,
+      "complement_involution": true,
+      "corrupt_mirror_refused": true
+    },
+    "artifact_corruption_refused": true
+  },
+  "calibration": {
+    "H1": {
+      "training": 8938,
+      "evaluation": 861,
+      "all_saved_heads_values_metrics_coverage_reproduced": true
+    },
+    "H2": {
+      "training": 18197,
+      "evaluation": 861,
+      "all_saved_heads_values_metrics_coverage_reproduced": true
+    },
+    "H3": {
+      "training": 27236,
+      "evaluation": 861,
+      "all_saved_heads_values_metrics_coverage_reproduced": true
+    },
+    "H3_MATCHED_N1": {
+      "training": 8938,
+      "evaluation": 861,
+      "all_saved_heads_values_metrics_coverage_reproduced": true
+    }
+  },
+  "controller": {
+    "entries": 10847,
+    "paired": 10675,
+    "sample": 384,
+    "all_attributions_and_sensitivities_reproduced": true
+  },
+  "source_manifest": "069f9f61dd3ff28e80bf80d72eed2f1775b9d05b7c1d60625817dbb59aaaf35e",
+  "audit_revision_sha256": "dc0932b556720e5409b96293f42aecff77ffe302e61c25bb1a1b6d2432a7c5aa",
+  "limits": [
+    "Consumed Oct23-27 development only; no confidence intervals, protected dates or promotion",
+    "History test spans at most3 days and mixes extra coverage with temporal regime changes; does not resolve longer-history sufficiency",
+    "Single realized outcomes do not reveal conditional means; pooled calibration also has noise and conditional-mixing limits",
+    "Controller hybrid-state sensitivities are not realized economic losses; global RMSE is not a calibrated decision margin",
+    "Symmetry sensitivity cannot establish bid conditioning as the cause of ask losses",
+    "No new strategy P&L, cooldown, minimum age, risk coefficient or continuation model"
+  ]
+}

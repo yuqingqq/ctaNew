@@ -1,0 +1,29 @@
+{
+  "asof": "2026-11-17T02:46:04.352903+00:00",
+  "source_manifest": "069f9f61dd3ff28e80bf80d72eed2f1775b9d05b7c1d60625817dbb59aaaf35e",
+  "pilot_receipt_sha256": "6dc4a29181fa942d22950f14bd7d74ba261e688f582ad575c372cafebd3843d6",
+  "selected_markets": [
+    3853227,
+    3855272,
+    3856795,
+    3861545,
+    3864969,
+    3866949,
+    3868537,
+    3872135,
+    3875576,
+    3878682,
+    3882891,
+    3887697
+  ],
+  "outputs": {
+    "sensitivity.parquet": "b67a4cb64167c80ad5f78c586dd450b1f56f9ce31f06b9cbefb916a88b67dee0",
+    "entries.parquet": "f5926ab8b87fbecb3c7107e0f2b7d2df6cc2f75b673f4eaf1122a43ba7657dec",
+    "report.json": "88aaca7c2e5e1efb8e4c756dbd769d3dd52bfc0bce6c9757edfa9b51106e9150",
+    "pairs.parquet": "8aaae49b1272a3d11fb1a5e3714eddd2c7137955527ed58e2205d3ca370c52ea",
+    "progress.json": "f681ceba4ec5c1bf419b897f93712d6431894cfa9d7ff0f1d2668d3cc6c7e647",
+    "states.pkl": "c5d6bfa5abe59fb557a771eec3a1b82a1c86a05ed6d75eef28ae5c7dc965aee9",
+    "attribution.parquet": "ff3e7d38513c37f4aed7402e522927637f67a4bc3b40b57ec1cfd41c37ed75ac"
+  },
+  "seconds": 730.6253001689911
+}
