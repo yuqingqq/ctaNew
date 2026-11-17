@@ -60,8 +60,12 @@ def selftest():
     changed=copy.deepcopy(ST);changed[0]['cl'][0]['fl'].append((249.,2.));changed[0]['cl'][0]['rem']=1.
     after=J.V.P.snapshot(W,5,250.,changed,5.);y=J.features(W,5,250.,after,0,market,100.)
     C.require(np.array_equal(x,y,equal_nan=True),'unreceived fills entered features')
+    from unittest.mock import patch
+    with patch.object(J.V.PATH,'extract',return_value=(None,'stale_future_book')):
+        unavailable=J.fast_label(W,5,250.,ST,5.,state,0,'cancel','20261023')
+    C.require(unavailable==dict(status='label_unavailable:stale_future_book'),'unavailable label status')
     return dict(joint_target_detects_dependence=True,moment_bounds=True,tail_score_controls=True,
-        latent_state_labels_only=True,unreceived_fill_inputs_invariant=True,
+        latent_state_labels_only=True,unreceived_fill_inputs_invariant=True,unavailable_label_retained_as_status=True,
         leaked_feature_refused=CHECK.refused(lambda:feature_contract(J.FEATURES+['y_m']),'label input'),
         invalid_tail_probability_refused=CHECK.refused(lambda:binary_metrics([0,1],[-1.,2.]),'invalid tail probability'))
 
@@ -182,10 +186,10 @@ def audit():
         value_tail_screen_passed=all(x['value_improved'] and x['tail_no_worse'] for x in screen.values()),
         market_incremental_screen_passed=all(x['market_beats_mechanical'] for x in screen.values()),
         role='Consumed prediction screen only; no controller integration or promotion',source_manifest=C.sha(J.FREEZE))
-    C.dump(J.REVIEW/'audit_v1.json',result)
+    C.dump(J.REVIEW/'audit_v2.json',result)
     for name in files:
         p=J.REVIEW/name;C.require(not p.exists(),'review output exists');p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes((J.OUT/name).read_bytes())
-    C.dump(J.REVIEW/'index.json',dict(asof=C.stamp(),source_manifest=C.sha(J.FREEZE),outputs={p:C.sha(J.REVIEW/p) for p in files+['audit_v1.json']},limits=J.verify()['limits']))
+    C.dump(J.REVIEW/'index.json',dict(asof=C.stamp(),source_manifest=C.sha(J.FREEZE),outputs={p:C.sha(J.REVIEW/p) for p in files+['audit_v2.json']},limits=J.verify()['limits']))
     print(json.dumps(C.clean(result)),flush=True)
 
 
