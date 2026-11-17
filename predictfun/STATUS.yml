@@ -3099,17 +3099,28 @@ stop_ev_design_20261115:
   components: {SWEEP: have (v6), STOP_FLOW: "new, public-trade labels for hypothetical queue positions", VALUES: "1 s / 5 s markouts", QUEUE: "rule-M estimate - the only simulator-dependent piece"}
   next: "USER's go: STOP-FLOW labels + VALUES -> STOP-FLOW head -> EV policy, selectivity check, portfolio replay vs the harm-only baseline"
 
+gain_loss_running_20261117:
+  status: done_descriptive
+  asof: "2026-11-17 04:49Z"
+  session: aea5bfb9
+  user: "test whether recent, fully observed probability and severity errors predict subsequent errors, using past-only folds"
+  code: {script: predictfun/research/pf_gain_loss_running.py, commit: 49d159e5}
+  predicates: {Q1_probability_errors_persist: "PERSIST (fragile to the window)", Q2_severity_errors_persist: NOT-SHOWN, Q3_running_calibration_helps: NOT-SHOWN, G2S_stratified: GL-SELECTS-BETTER-STRATIFIED}
+  clue: {severe_count_ratio: [0.76, 0.84, 0.81, 0.74], excess_per_event_ratio: [1.05, 0.96, 0.91, 0.89]}
+  forward_folds_count_loss_ratio: {"20261024": [1.00, 1.04], "20261025": [0.83, 0.75], "20261026": [0.80, 0.84], "20261027": [0.80, 0.78]}
+  next: "USER: shrunk / pooled level adjustment (new candidate, later days) or the severe-event probability head itself"
+
 gain_loss_diag_20261117:
   status: done_descriptive
   asof: "2026-11-17 04:33Z"
   session: aea5bfb9
   user: "Go"
   code: {script: predictfun/research/pf_gain_loss_diag.py, commit: 9b987f65}
-  predicates: {P1_losses_grew: NOT-SHOWN, P2_next_day_underprediction: YES, P3_coverage_gap: NOT-SHOWN, P4_shortfall_in_familiar_states: YES}
+  predicates: {P1_losses_grew: NOT-SHOWN, P2_cross_day_underprediction: "YES (cross-day: only the Oct25 fold is forward - USER audit)", P3_coverage_gap: "NOT-SHOWN (not a training-support test; coverage open)", P4_shortfall_in_familiar_states: "YES (familiarity ranked within the test set)"}
   held_out_training_day_loss_ratio: {"20261023": 0.83, "20261024": 1.08, "20261025": 0.75}
   separation_auc: 0.927
   separation_driver: "liquidity scale (books ~2x deeper on Oct26-27), then sigma / time / sens"
-  reading: "day-level loss intensity not carried by the 87 inputs; not a coverage gap"
+  reading: "underprediction reproduces; day-level intensity vs coverage vs model error NOT resolved (USER audit)"
   next: "USER: causal recent-loss-intensity input (trailing realized neutral-decision value or tape sweep share) or a causal running loss-scale recalibration"
 
 gain_loss_20261117:
