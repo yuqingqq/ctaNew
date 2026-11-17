@@ -1,5 +1,5 @@
 joint_moment_20261117:
-  status: frozen_data_build_running
+  status: training_data_complete_evaluation_build_running
   source_commit: 5c87a239
   freeze_commit: c659833d
   branch: research/predict-joint-moment-20261117
@@ -12,6 +12,10 @@ joint_moment_20261117:
   new_joint_moment_candidates: 1
   controller_rollout: false
   retained_baseline: SOFT_JOINT
+  training_actions: 27236
+  training_canonical_checked: 232
+  training_label_mismatches: 0
+  training_data_asof: 2026-11-17T01:39:27Z
   running: true
   promotion: false
 

@@ -18,6 +18,11 @@ and deterministic training checks reconcile with full canonical branches.
 Inputs:71 causal market features plus16 order/depth/portfolio features, including
 actual known depth at price, exact expiry, queue and competing own orders.
 
+Training data complete asof2026-11-17T01:39:27Z:27236 eligible actions
+(9039/9259/8938), all232 canonical training checks match. Two selected posts
+have stale future-book labels and3435 are unavailable in client state; statuses
+retained without refill. Evaluation feature builds, fit and scoring are queued.
+
 Pinned LGBM/200 rounds: Q=affected fills, M=affected fills*signed endpoint move,
 direct retained focal wealth, severe full-value event and remaining fraction.
 Mechanical Q/M/tail baselines isolate incremental market information. Remaining
