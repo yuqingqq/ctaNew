@@ -1,3 +1,33 @@
+<!-- LATEST_RESULTS_REVIEW_20261117 -->
+## 2026-11-17 Latest results reviewed: numeric readings reproduce; conclusions narrowed
+
+Source7054cd34; report handoffs/20261117_latest_results_review.md; receipts
+reviews/latest_results_review_20261117/{receipt_v1,interpretation_v2}.json.
+As of07:29:36Z Nov17, saved calibration heads and all acceptance predicates
+reproduce; the unchanged information recipe also reproduces exactly. No new
+candidate/controller. Queue saved-row hashes and readings reconcile; no new
+tape simulation. Dates Oct23-27 consumed, no validation/promotion claim.
+
+Supersedes the interpretation of06:12/06:19/06:46 entries: smoother/calibration
+improve probability scores but fail economic acceptance (n17859, Oct26-27).
+Both improve RMSE in1/4 cells, including CAL's small Oct26-post improvement.
+Information-limit and sole-binding-risk-ranking claims are unproven: one
+in-band recipe/five added inputs failed, with training population/history
+confounds; the info test uses the old independent severe head. Baseline AUC
+.731189 is Oct25-27(n22440,518 severe); four-day Oct24-27 is.713170(n30080,675).
+
+Queue accounting defect:151228 counted causal states versus149174 unique saved
+states leaves2054 without row statuses;60 saved arm rows lack2s values/statuses.
+Path failures are silently skipped in pf_queue_place_test.py:240-248. Fix the
+ledger before a complete-population claim. Eligible means remain negative.
+FIRST/LATE/EARLY change exposure as well as queue priority; EARLY is ex post.
+Common-endpoint values are not fill-plus5s markouts. Structural cancels persist.
+Next: repair statuses, then compare identical neutral resting-order keep/pull
+branches at actual latency, separating foregone gains and avoided ordinary/tail
+losses with matched participation. Queue value and information sufficiency
+remain open; no promotion of another calibration/controller change.
+<!-- /LATEST_RESULTS_REVIEW_20261117 -->
+
 <!-- SEVERE_CANDIDATE_REVIEW_20261117 -->
 ## 2026-11-17 Severe-head options have evidence; independent heads are not always coherent
 

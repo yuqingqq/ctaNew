@@ -1,0 +1,65 @@
+{
+  "asof": "2026-11-17T07:29:36.759294+00:00",
+  "review_source_commit": "7054cd341ec0d58baa931de54d1afdd0a37b3749",
+  "numeric_receipt": "predictfun/reviews/latest_results_review_20261117/receipt_v1.json",
+  "supersedes_interpretations_in": [
+    "83f339df",
+    "ab3d1e42",
+    "12441034"
+  ],
+  "original_numeric_artifacts_preserved": true,
+  "information_limit_established": false,
+  "severe_probability_ranking_is_sole_binding_error_established": false,
+  "queue_priority_alone_isolated": false,
+  "calibration_economic_acceptance": {
+    "SMOOTH": false,
+    "CAL": false
+  },
+  "information_auc_population_correction": {
+    "all_four_days": {
+      "days": [
+        "20261024",
+        "20261025",
+        "20261026",
+        "20261027"
+      ],
+      "n": 30080,
+      "events": 675,
+      "auc": 0.7131697179240114
+    },
+    "three_model_comparison_days": {
+      "days": [
+        "20261025",
+        "20261026",
+        "20261027"
+      ],
+      "n": 22440,
+      "events": 518,
+      "auc": 0.7311890983088867
+    }
+  },
+  "calibration_rmse_improved_cells": {
+    "SMOOTH": 1,
+    "CAL": 1,
+    "total": 4
+  },
+  "queue_causal_population": {
+    "declared_states": 151228,
+    "saved_unique_states": 149174,
+    "unaccounted_states": 2054,
+    "missing_short_horizon_arm_values_without_status": 60
+  },
+  "queue_source_fix_performed": false,
+  "queue_claim_scope": "Saved eligible fixed-common-endpoint values with structural cancels; excludes missing states, is not per-fill markout or a pure queue-priority effect.",
+  "next": "Repair status ledger; matched same-order keep/pull economic attribution at actual latency before another model/controller change.",
+  "consumed_days": [
+    "20261023",
+    "20261024",
+    "20261025",
+    "20261026",
+    "20261027"
+  ],
+  "prospective_validation": false,
+  "promotion": false,
+  "report": "predictfun/handoffs/20261117_latest_results_review.md"
+}
