@@ -1,0 +1,19 @@
+{
+  "asof": "2026-11-17T00:48:01.344938+00:00",
+  "source_manifest": "23166314985a29dd029dadccd232b1406c09f925763bfd4dfb4d28d530cce830",
+  "outputs": {
+    "20261026/receipt.json": "ee3cb8e6eb6259a8b8166ba3fe55e4e4c60bd9a41fb92116dbadd14007c56d8b",
+    "20261026/report.json": "d588456661cd741278c814dd946debf476859325ad22439e4ea27e1e3851c363",
+    "20261026/report_receipt.json": "6b8a4071beef74f89cf13f91e4e11b07a3b8f54ff958a87dfefef64635d3e305",
+    "20261027/receipt.json": "d1692202bdadf39644ed8a4f4333dd002ecb0cd3344fb63d2fec3953cf921558",
+    "20261027/report.json": "0f4ba32f1878de3f2cd5afe385405f9667e9b2750e35d1026c447483f2b7a9db",
+    "20261027/report_receipt.json": "5918758cfc7890152a995278f5f45a3f9effc0795e84a7275912325e868020d6",
+    "audit_v1.json": "dd4a388a7b94242b54c8330bfd4fdf7355c3fa5a58c3f426109a02b240d5b525"
+  },
+  "limits": [
+    "Consumed Oct26/27 development; no intervals, promotion or full-policy P&L",
+    "Future values appear only in labelled diagnostic substitutions, never policy inputs",
+    "Same estimated trade clocks, queue assumptions,1s zero continuation and neutral target",
+    "Decomposition reconciles simulator economics; does not establish learnability or external realism"
+  ]
+}

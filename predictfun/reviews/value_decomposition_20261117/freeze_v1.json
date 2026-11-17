@@ -1,0 +1,60 @@
+{
+  "asof": "2026-11-17T00:38:55.443410+00:00",
+  "source_commit": "f6b59100f80fb54cd88304382b253bd12340149f",
+  "sources": {
+    "predictfun/research/pf_value_decomposition.py": "e10ec34e8ef008604fda7746ed835928a5d50f9bfb7f380e1147865723ee13f3",
+    "predictfun/research/pf_value_decomposition_run.py": "9418aecc82e64ed10c606fe0d0e6056e1f405866dc5d25134f494b8918d4a91d",
+    "predictfun/research/run_value_decomposition.sh": "40bd714bf2bb9e41f41c7ff83e46851b6c743c0873f8fe7e23683008fd8a7d14"
+  },
+  "conditional_map_freeze_sha256": "269bfae3b1903ec375efcba779d3f1f3038373968e6644795f187e9e7d127986",
+  "population": "Exact archived neutral actions:418 Oct26 and443 Oct27,12 fixed markets each; all statuses/no-fill retained. Canonical paired labels re-run and reconciled by generation/time identity.",
+  "estimand": "Action minus keep/wait at common t+1s endpoint; sum_i delta_q_i*side_i*(m0-p_i) + delta_position*(mH-m0) - lambda*(pos_action^2-pos_base^2). Split focal/other orders. Affected focal quantity excludes unavoidable prefix.",
+  "cases": [
+    "SOFT_JOINT",
+    "EXPANDED_JOINT",
+    "STATE_CONDITIONAL"
+  ],
+  "channels": [
+    "ordinary",
+    "true_pair_Oct27_only",
+    "actual_path_client_state"
+  ],
+  "decomposition": [
+    "edge",
+    "motion",
+    "risk"
+  ],
+  "substitutions": [
+    "original",
+    "true_edge",
+    "true_motion",
+    "true_risk",
+    "true_other_wealth",
+    "independent_focal_fill_move",
+    "true_endpoint_all_fills",
+    "true_focal_quantity"
+  ],
+  "null": {
+    "draws": 200,
+    "seed": 20261116,
+    "match": "market/side/action-kind positive-action count; one market per two-hour block",
+    "metric": "actual incremental economic value"
+  },
+  "tails": "Retained exposure value = action value for post, -action value for cancel. severe_loss<-30c; loss[-30,0); zero tolerance1e-9; gain(0,30]; severe_gain>30. Fixed1c/share full-size30 boundary; no loss clipping.",
+  "largest_errors": "Archive10 largest squared-error actions per day/channel/case/kind as descriptive examples only; never a training population or parameter-selection rule.",
+  "error_accounting": "Report per-component RMSE and signed sum(error_component*total_error)/sum(total_error^2), including cross terms. These are accounting contributions, not causal attribution. Component substitutions are future-information diagnostics only.",
+  "quantity_substitution": "Replace focal expected quantity using actual avoidable quantity while keeping model fill-weighted movement; refuse if predicted affected quantity zero and actual positive. All other contributions unchanged.",
+  "multiplicity": {
+    "new_models": 0,
+    "new_policies": 0,
+    "diagnostic_designs": 1,
+    "component_substitutions": 7
+  },
+  "limits": [
+    "Consumed Oct26/27 development; no intervals, promotion or full-policy P&L",
+    "Future values appear only in labelled diagnostic substitutions, never policy inputs",
+    "Same estimated trade clocks, queue assumptions,1s zero continuation and neutral target",
+    "Decomposition reconciles simulator economics; does not establish learnability or external realism"
+  ],
+  "output": "/home/yuqing/ctaNew/data/predict_fun/research/value_decomposition_20261117_v1"
+}
