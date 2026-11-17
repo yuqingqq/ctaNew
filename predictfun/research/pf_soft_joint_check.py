@@ -5,7 +5,7 @@ WHAT: the other session's joint flow/price controller pilots - KEEP_ALL_CAP, EMP
 SOFT_JOINT, its retained baseline (value_bridge_20261116_v1/pilot) - on the 12 preselected Oct27 markets, full five-minute contracts. From
 their own ledgers: where the marked P&L comes from - by contract minute (the inventory ledger's incremental marked P&L), by market, and by
 fill class (order age < 100 ms, cancel pending, WS / E2 source, through / at price, depth, minute) with 1 s / 5 s markouts; the final
-minute's price range per market; minutes 1-4 against minute 5; each fill's 5 s value against the same fill held to the end (carry); bid vs ask fills; decision advantages; depth x trade type.
+minute's price range per market; minutes 1-4 against minute 5; each fill's 5 s value against the same fill held to the end (carry); bid vs ask fills; decision advantages; depth x trade type; on the audited neutral actions, predicted advantage against its scenario standard error.
 CONTROLS (any failure -> no output): per case the fills, markets and inventory ledgers reconcile (shares, terminal and settlement P&L;
 the minute increments sum to each market's terminal P&L) and equal the recorded report rows (shares, orders, pulls, terminal, settlement);
 planted errors (one fill's value, one minute increment, moved by 1 c) must each fail them.
@@ -141,6 +141,17 @@ def main():
         L.append(f'  {g:<12} ' + ' | '.join(f'{"through" if th else "at price"} {y[y.through == th].shares.sum():6,.0f} '
                                             f'({y[y.through == th].shares.sum() / y.shares.sum():5.1%}) {cs(y[y.through == th], "markout_1000_usd"):+.2f}'
                                             for th in (False, True)))
+    AV = pd.concat([pd.read_parquet(f'{IO}/value_bridge_20261116_v1/actions_{d_}/values.parquet') for d_ in ('20261026', '20261027')], ignore_index=True)
+    AV = AV[(AV.case == 'SOFT_JOINT') & AV.predicted.notna() & AV.actual.notna() & AV.scenario_advantage_sd.notna()].copy()
+    AV['z'] = AV.predicted / (AV.scenario_advantage_sd / np.sqrt(AV.effective_paths.clip(lower=1))).replace(0, np.nan)
+    L += ['', f'PART 9: SOFT_JOINT neutral actions (the audited Oct26-27 set, {len(AV)} actions): predicted advantage over its scenario standard error '
+          '(scenario SD / sqrt(effective paths)) and the realized advantage, c per action']
+    for kd, g in AV.groupby('kind'):
+        L.append(f'  {kd:<6} n {len(g):3d} | |predicted| p50 {g.predicted.abs().median():.2f} | scenario SD p50 {g.scenario_advantage_sd.median():.2f} | '
+                 f'|z| < 1 {np.mean(g.z.abs() < 1):.1%}, < 2 {np.mean(g.z.abs() < 2):.1%}')
+        for lo, hi in ((0, 1), (1, 2), (2, np.inf)):
+            b_ = g[(g.z.abs() >= lo) & (g.z.abs() < hi) & (g.predicted > 0)]
+            L.append(f'    predicted > 0 with |z| in [{lo}, {hi}): n {len(b_):3d}' + (f', mean predicted {b_.predicted.mean():+.2f}, mean realized {b_.actual.mean():+.2f}' if len(b_) else ''))
     mk = MK[MK.case == 'SOFT_JOINT']
     L += ['', f'PART 4: SOFT_JOINT activity: orders {mk.orders.sum():,} and guard pulls {mk.pulls.sum():,} over 60 market-minutes '
           f'({mk.orders.sum() / 60:.0f} / {mk.pulls.sum() / 60:.0f} a market-minute)']
