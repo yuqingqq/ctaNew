@@ -1,0 +1,119 @@
+{
+  "asof": "2026-11-17T06:01:01.959689+00:00",
+  "source_results_asof": "2026-11-17T05:01:32Z",
+  "n": 36056,
+  "events": 1310,
+  "folds": {
+    "20261024": {
+      "n": 9259,
+      "events": 292,
+      "expected": 292.57974506670723,
+      "severe_gt_any_loss_n": 640,
+      "train_days": [
+        "20261023"
+      ]
+    },
+    "20261025": {
+      "n": 8938,
+      "events": 301,
+      "expected": 249.59087449973634,
+      "severe_gt_any_loss_n": 566,
+      "train_days": [
+        "20261023",
+        "20261024"
+      ]
+    },
+    "20261026": {
+      "n": 8940,
+      "events": 352,
+      "expected": 280.58183273955586,
+      "severe_gt_any_loss_n": 459,
+      "train_days": [
+        "20261023",
+        "20261024",
+        "20261025"
+      ]
+    },
+    "20261027": {
+      "n": 8919,
+      "events": 365,
+      "expected": 293.6835605114595,
+      "severe_gt_any_loss_n": 603,
+      "train_days": [
+        "20261023",
+        "20261024",
+        "20261025",
+        "20261026"
+      ]
+    }
+  },
+  "bands": {
+    "[0.0, 0.005)": {
+      "n": 5834,
+      "expected": 19.886956873655098,
+      "observed": 28,
+      "observed_over_expected": 1.4079579986967496
+    },
+    "[0.005, 0.01)": {
+      "n": 7955,
+      "expected": 58.21637819922913,
+      "observed": 85,
+      "observed_over_expected": 1.4600702178536678
+    },
+    "[0.01, 0.02)": {
+      "n": 7983,
+      "expected": 114.66468466813632,
+      "observed": 177,
+      "observed_over_expected": 1.5436313326310989
+    },
+    "[0.02, 0.05)": {
+      "n": 8308,
+      "expected": 263.2984429135073,
+      "observed": 385,
+      "observed_over_expected": 1.4622190535569224
+    },
+    "[0.05, 0.1)": {
+      "n": 3761,
+      "expected": 262.5397191073688,
+      "observed": 278,
+      "observed_over_expected": 1.0588873978581066
+    },
+    "[0.1, 0.2)": {
+      "n": 1653,
+      "expected": 225.60468919160218,
+      "observed": 208,
+      "observed_over_expected": 0.9219666521352718
+    },
+    "[0.2, 1.0)": {
+      "n": 562,
+      "expected": 172.22514186396015,
+      "observed": 149,
+      "observed_over_expected": 0.8651466237008207
+    }
+  },
+  "model_hashes": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/running/fold_20261024/full_l1_p.txt": "cd4077a290ddf567fb20626bff341f0424223a82e1f3e13efa935cf8e6bbf3e4",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/running/fold_20261024/full_l2_p.txt": "612aefa3d1cbc08ca5f4fd6e6558b96901acacc41c05e91ccf21faa16eefc5ba",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/running/fold_20261025/full_l1_p.txt": "6401f7b248028210164f6e7a504b434e4833c3e3b94050f8b6817a1d6420e792",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/running/fold_20261025/full_l2_p.txt": "fe6775487b0cf588727ff65a532d526808bae7012d432682ae404b5e171cef1d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/running/fold_20261026/full_l1_p.txt": "e6b7635172d1bc194a58b456a4f526fa37a3890961eda37a1f0370d070d9dacb",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/running/fold_20261026/full_l2_p.txt": "f76b9c7e7c431d37f3d680650b2ee456b55c1319961c0e9aabb3e9f3c6f540dc",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/running/fold_20261027/full_l1_p.txt": "c767e6ba12724a8930f0c87505eb22aeefb83a57b4affe6b1cce930c741597c5",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/running/fold_20261027/full_l2_p.txt": "48e38f7041b27c556e853920e6d2edbddbdcda432a7b41b10e5746610666ec92"
+  },
+  "pinned_params": {
+    "objective": "binary",
+    "learning_rate": 0.05,
+    "num_leaves": 31,
+    "min_data_in_leaf": 200,
+    "feature_fraction": 0.8,
+    "bagging_fraction": 0.8,
+    "bagging_freq": 1,
+    "seed": 1,
+    "num_threads": 1,
+    "verbose": -1,
+    "lambda_l2": 10.0
+  },
+  "current_rounds": 200,
+  "scope": "Saved-head reconstruction; no new calibration fit, regularization candidate, support-distance recomputation or validation."
+}
