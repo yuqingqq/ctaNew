@@ -1,4 +1,4 @@
-SOFT_JOINT CHECK (POST HOC, descriptive; the other session's pilot ledgers, 12 preselected Oct27 markets, full 5-minute contracts); as of 2026-11-17T01:55:48Z
+SOFT_JOINT CHECK (POST HOC, descriptive; the other session's pilot ledgers, 12 preselected Oct27 markets, full 5-minute contracts); as of 2026-11-17T03:06:45Z
 controls: fills / markets / inventory ledgers reconcile with each other and with the recorded report rows for every case
 
 PART 1: marked P&L by contract minute ($, 12 markets) and markouts (c/sh) - minutes 1-4 vs minute 5
@@ -62,5 +62,15 @@ PART 8: SOFT_JOINT fills by depth x trade type (shares, share of the group, +1 s
   inside       at price     84 ( 4.7%) +0.42 | through  1,692 (95.3%) -6.09
   one_to_five  at price  1,481 (40.8%) +1.35 | through  2,152 (59.2%) -2.21
   over_five    at price    129 (43.9%) +16.74 | through    164 (56.1%) +8.18
+
+PART 9: SOFT_JOINT neutral actions (the audited Oct26-27 set, 861 actions): predicted advantage over its scenario standard error (scenario SD / sqrt(effective paths)) and the realized advantage, c per action
+  cancel n 426 | |predicted| p50 1.34 | scenario SD p50 16.23 | |z| < 1 60.3%, < 2 86.2%
+    predicted > 0 with |z| in [0, 1): n 143, mean predicted +1.03, mean realized +3.12
+    predicted > 0 with |z| in [1, 2): n  85, mean predicted +5.91, mean realized +5.54
+    predicted > 0 with |z| in [2, inf): n  35, mean predicted +13.10, mean realized +5.43
+  post   n 435 | |predicted| p50 1.94 | scenario SD p50 17.38 | |z| < 1 48.7%, < 2 75.2%
+    predicted > 0 with |z| in [0, 1): n  81, mean predicted +0.96, mean realized -7.92
+    predicted > 0 with |z| in [1, 2): n  14, mean predicted +3.69, mean realized +0.00
+    predicted > 0 with |z| in [2, inf): n   0
 
 PART 4: SOFT_JOINT activity: orders 10,847 and guard pulls 9,775 over 60 market-minutes (181 / 163 a market-minute)
