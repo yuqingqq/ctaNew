@@ -100,6 +100,9 @@ def run(day,preflight=False):
                         C.require(training,'evaluation availability changed');output.append(dict(base,status=status));continue
                     price=state['orders'][index,2];base.update(status=status,mid=mid,price=price,known_remaining=state['orders'][index,3])
                     label=J.fast_label(W,k,t,ST,kpos,state,index,row['kind'],day)
+                    if 'status' in label:
+                        C.require(training,'evaluation label availability changed')
+                        output.append(dict(base,**label));continue
                     if not training:
                         diff=compare_label(label,row);canonical_checked+=1;canonical_positive+=int(row['actual_affected_quantity']>1e-9)
                         if diff:mismatches.append(dict(uid=row['uid'],kind=row['kind'],difference=diff,label=label,known_remaining=base['known_remaining']))

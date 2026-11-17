@@ -6,9 +6,9 @@ import pf_value_decomposition as D
 import pf_flow_price_data as DATA
 import pf_flow_price_model as FM
 F,C,np,pd,I,A,V,K=D.F,D.C,D.np,D.pd,D.I,D.A,D.V,D.K
-OUT=Path(I.K.IO)/'joint_moment_20261117_v1'
-REVIEW=F.HERE.parent/'reviews/joint_moment_20261117'
-FREEZE=REVIEW/'freeze_v1.json'
+OUT=Path(I.K.IO)/'joint_moment_20261117_v2'
+REVIEW=F.HERE.parent/'reviews/joint_moment_20261117/v2'
+FREEZE=REVIEW/'freeze_v2.json'
 EXTRA=['jm_kind','jm_rung','jm_edge','jm_depth','jm_age','jm_remaining','jm_ahead',
        'jm_scale','jm_seconds_left','jm_known_position','jm_ahead_own','jm_behind_own','jm_opposite_own',
        'jm_shown','jm_unknown_depth','jm_cum_displayed_ahead']
@@ -68,7 +68,7 @@ def label_state(W,k,t,ST,kpos,state):
 
 def fast_label(W,k,t,ST,kpos,state,index,kind,day):
     latent=label_state(W,k,t,ST,kpos,state);path,status=V.PATH.extract(W,t,day)
-    C.require(path is not None,'label path unavailable '+status)
+    if path is None:return dict(status='label_unavailable:'+status)
     j=int(W[0]['jk'][k]);bid=float(W[0]['P5'][j,0]);mid=(bid+float(W[1]['P5'][j,0]))/2.
     packed=K.pack([path],bid,1000.);K.current_book(packed,[W[s]['P5'][j] for s in (0,1)],[W[s]['S5'][j] for s in (0,1)])
     result=D.estimate(latent,index,kind,(packed,np.ones(1),mid,{}));orientation=1. if kind=='post' else -1.
@@ -102,9 +102,10 @@ def freeze():
     D.verify();C.require(not FREEZE.exists(),'moment freeze exists')
     C.dump(FREEZE,dict(asof=C.stamp(),source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=F.ROOT,text=True).strip(),
         sources={str((F.HERE/n).relative_to(F.ROOT)):C.sha(F.HERE/n) for n in SOURCES},inherited_decomposition_sha256=C.sha(D.FREEZE),
+        supersedes=dict(freeze_sha256=C.sha(REVIEW.parent/'freeze_v1.json'),reason='V1 stopped on missing/stale future path during first training day, before fitting or evaluation. V2 retains selected unavailable-label actions as explicit statuses without refill; target/features/models unchanged.'),
         training=list(F.TRAIN),evaluation=[F.CAL,F.TEST],features=FEATURES,mechanical=MECHANICAL,
         parameters=C.V.PARAMS,rounds=200,calibration='No fitted scaling, threshold, temperature or horizon search. Oct26 earlier consumed diagnostic; Oct27 main consumed diagnostic.',
-        population='Capped neutral path. One deterministic probe per cancellable generation plus post opportunities; choose2 per market/side/phase/kind by existing identity hash after coverage checks, BEFORE client availability/reservation checks; unavailable selected actions keep statuses without refill. All selected training markets on Oct23-25; exact418/443 archived eval actions. No outcome sampling or fill-only fitting.',
+        population='Capped neutral path. One deterministic probe per cancellable generation plus post opportunities; choose2 per market/side/phase/kind by existing identity hash after coverage checks, BEFORE client availability/reservation checks; unavailable selected actions keep statuses without refill, including label_unavailable path statuses. All selected training markets on Oct23-25; exact418/443 archived eval actions. No outcome sampling or fill-only fitting.',
         label_checks='Every evaluation action against its exact archived canonical components; train markets m%17==0 plus first market/day, minimum-hash selected action per kind/side, checked by full canonical paired replay. Nonfinite no-cancel clock uses finite1e30 sentinel. Preflight861 actions passed before freezing; failed preliminary sentinel adapter run retained.',
         labels='Same1s paired action target, no later posts. True-state actual-future kernel for labels only, with canonical parity gate on every eval action and deterministic training checks. Never latent inputs. Q=affected focal shares; M=Q*signed endpoint movement; W=known edge*Q+M; severe retained total value<-30c; remaining fraction is actual/known.',
         model='Pinned LGBM regressions on all selected actions for Q/30,M/30,W/30; M is a joint product target, not a product of forecasts. Full and mechanical Q/M and severe heads. Remaining-fraction regression on cancellation exposures only. Explicit finite-payoff moment bounds, no target winsorization.',
