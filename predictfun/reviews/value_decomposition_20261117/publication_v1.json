@@ -1,0 +1,17 @@
+{
+  "asof": "2026-11-17T00:52:08.414651+00:00",
+  "source_commit": "f6b59100",
+  "freeze_commit": "6743804b",
+  "state_check_commit": "ff999de8",
+  "outputs": {
+    "predictfun/handoffs/20261117_value_decomposition_results.md": "fa2cf2e73076f089f146eeaf8e660e3361820052482b2e7e895cd059dadc180a",
+    "predictfun/reviews/value_decomposition_20261117/index.json": "8eaa32b0eed637be315259d217d542c86eec06ab5ddf01a571cd49e1f096dc42",
+    "predictfun/reviews/value_decomposition_20261117/state_check_v1.json": "9c714640998701fae6523d174b94d257f5d49ecb2f4be0a637fa33ff86d56517"
+  },
+  "predicates": {
+    "motion_largest_component_all_four_populations": true,
+    "selected_state_examples": 6,
+    "selected_unreceived_fill_examples": 4,
+    "selected_already_filled_orders": 3
+  }
+}

@@ -1,0 +1,165 @@
+{
+  "asof": "2026-11-17T00:49:56.658860+00:00",
+  "source_commit": "ff999de84e969f70d3c79997ccd3188041ad4f74",
+  "source_sha256": "b99ee121d2f0bfc02fb0449bf5d232c099fa054f7745eb093e5090793dca1efb",
+  "inherited_freeze_sha256": "23166314985a29dd029dadccd232b1406c09f925763bfd4dfb4d28d530cce830",
+  "inputs": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/value_decomposition_20261117_v1/20261026/report_receipt.json": "6b8a4071beef74f89cf13f91e4e11b07a3b8f54ff958a87dfefef64635d3e305",
+    "/home/yuqing/ctaNew/data/predict_fun/research/value_decomposition_20261117_v1/20261027/report_receipt.json": "5918758cfc7890152a995278f5f45a3f9effc0795e84a7275912325e868020d6"
+  },
+  "controls": {
+    "unreceived_fill_detected": true,
+    "overfill_refused": true
+  },
+  "n": 6,
+  "rows": [
+    {
+      "uid": "20261026:3804777:cancel:0:0:3",
+      "day": "20261026",
+      "m": 3804777,
+      "side": 0,
+      "rung": 0,
+      "decision_ms": 1793008819400.0,
+      "actual_remaining": 0.0,
+      "client_known_remaining": 10.0,
+      "unreceived_filled_quantity": 10.0,
+      "unreceived_fills": [
+        {
+          "fill_ms": 1793008819370.0,
+          "quantity": 10.0,
+          "notice_ms": 1793008819470.0
+        }
+      ],
+      "predicted_affected_quantity": 10.0,
+      "actual_affected_quantity": -0.0,
+      "predicted_value": 54.51777777777778,
+      "actual_value": 0.0,
+      "predicted_effect_exceeds_true_remainder": 10.0
+    },
+    {
+      "uid": "20261026:3833192:cancel:1:0:6",
+      "day": "20261026",
+      "m": 3833192,
+      "side": 1,
+      "rung": 0,
+      "decision_ms": 1793037609550.0,
+      "actual_remaining": 0.0,
+      "client_known_remaining": 30.0,
+      "unreceived_filled_quantity": 30.0,
+      "unreceived_fills": [
+        {
+          "fill_ms": 1793037609538.0,
+          "quantity": 30.0,
+          "notice_ms": 1793037609638.0
+        }
+      ],
+      "predicted_affected_quantity": 10.0,
+      "actual_affected_quantity": -0.0,
+      "predicted_value": 52.97226708595388,
+      "actual_value": 0.0,
+      "predicted_effect_exceeds_true_remainder": 10.0
+    },
+    {
+      "uid": "20261026:3833192:cancel:0:0:76",
+      "day": "20261026",
+      "m": 3833192,
+      "side": 0,
+      "rung": 0,
+      "decision_ms": 1793037882650.0,
+      "actual_remaining": 30.0,
+      "client_known_remaining": 30.0,
+      "unreceived_filled_quantity": 0.0,
+      "unreceived_fills": [],
+      "predicted_affected_quantity": 7.081111111111111,
+      "actual_affected_quantity": -0.0,
+      "predicted_value": -16.870467771387332,
+      "actual_value": 0.0,
+      "predicted_effect_exceeds_true_remainder": 0.0
+    },
+    {
+      "uid": "20261027:3853227:cancel:0:1:23",
+      "day": "20261027",
+      "m": 3853227,
+      "side": 0,
+      "rung": 1,
+      "decision_ms": 1793059293100.0,
+      "actual_remaining": 0.0,
+      "client_known_remaining": 30.0,
+      "unreceived_filled_quantity": 30.0,
+      "unreceived_fills": [
+        {
+          "fill_ms": 1793059293091.0,
+          "quantity": 1.5700000000000003,
+          "notice_ms": 1793059293191.0
+        },
+        {
+          "fill_ms": 1793059293091.0,
+          "quantity": 10.0,
+          "notice_ms": 1793059293191.0
+        },
+        {
+          "fill_ms": 1793059293091.0,
+          "quantity": 10.0,
+          "notice_ms": 1793059293191.0
+        },
+        {
+          "fill_ms": 1793059293091.0,
+          "quantity": 8.43,
+          "notice_ms": 1793059293191.0
+        }
+      ],
+      "predicted_affected_quantity": 20.0,
+      "actual_affected_quantity": -0.0,
+      "predicted_value": 15.092195039812996,
+      "actual_value": 0.0,
+      "predicted_effect_exceeds_true_remainder": 20.0
+    },
+    {
+      "uid": "20261027:3853227:cancel:1:1:39",
+      "day": "20261027",
+      "m": 3853227,
+      "side": 1,
+      "rung": 1,
+      "decision_ms": 1793059340500.0,
+      "actual_remaining": 30.0,
+      "client_known_remaining": 30.0,
+      "unreceived_filled_quantity": 0.0,
+      "unreceived_fills": [],
+      "predicted_affected_quantity": 3.4482758620689653,
+      "actual_affected_quantity": 3.4482758620689653,
+      "predicted_value": 3.448275862068954,
+      "actual_value": -0.6511686288306535,
+      "predicted_effect_exceeds_true_remainder": 0.0
+    },
+    {
+      "uid": "20261027:3868537:cancel:0:3:12",
+      "day": "20261027",
+      "m": 3868537,
+      "side": 0,
+      "rung": 3,
+      "decision_ms": 1793102541000.0,
+      "actual_remaining": 18.554000000000002,
+      "client_known_remaining": 30.0,
+      "unreceived_filled_quantity": 11.445999999999998,
+      "unreceived_fills": [
+        {
+          "fill_ms": 1793102540927.0,
+          "quantity": 11.445999999999998,
+          "notice_ms": 1793102541027.0
+        }
+      ],
+      "predicted_affected_quantity": 30.0,
+      "actual_affected_quantity": 18.554000000000002,
+      "predicted_value": 66.13414802955663,
+      "actual_value": 41.49168020690033,
+      "predicted_effect_exceeds_true_remainder": 11.445999999999998
+    }
+  ],
+  "selected_posthoc": true,
+  "selection": "Exactly3 largest squared-error ACTUAL_PATH_CLIENT cancellation residuals per consumed Oct26/27, sorted from frozen largest_errors artifacts",
+  "limits": [
+    "Identity-matched descriptive inspection, not population-wide attribution or new model evidence",
+    "Unreceived fills are unavailable to the client at decision time; using actual remainder in a model would leak",
+    "Residual quantity differences not explained by remainder can involve queue/structural-state approximation; not resolved here"
+  ]
+}
