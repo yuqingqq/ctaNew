@@ -1,0 +1,151 @@
+{
+  "asof": "2026-11-17T02:55:15.500289+00:00",
+  "source_manifest": "069f9f61dd3ff28e80bf80d72eed2f1775b9d05b7c1d60625817dbb59aaaf35e",
+  "source_commit": "726a52670e25aa2f1b601a23f58eb1ad383fd721",
+  "audit_source_commit": "076daf1ade1c57e0edaa09ddf4ed83797c6ab533",
+  "files": {
+    "predictfun/handoffs/20261117_value_diagnosis_results.md": "a4b4fe2fd0bb9aca4220fe25231285c59dc27a132aa11b0464fa5548b485c11f",
+    "predictfun/reviews/value_diagnosis_20261117/audit_revision_v2.json": "dc0932b556720e5409b96293f42aecff77ffe302e61c25bb1a1b6d2432a7c5aa",
+    "predictfun/reviews/value_diagnosis_20261117/audit_v2.json": "22424fb8810254f146615db6e7b53b127dab8dfcad3b9691a179d8213d149598",
+    "predictfun/reviews/value_diagnosis_20261117/calibration/H1/20261026_report.json": "1b490eb936528dc65480f90e64cf3b4a42f6fc7ca9f8b4b69ff616ad56e66511",
+    "predictfun/reviews/value_diagnosis_20261117/calibration/H1/20261027_report.json": "b860a3c64bec991363c54d6d8d7fb4801a20b31e76f94b66fc6b7d9496622ec4",
+    "predictfun/reviews/value_diagnosis_20261117/calibration/H1/receipt.json": "d46b0ffc199ad46bad0d08a0a87d146ccacff4053d3c5f01f3a23856fd4d8159",
+    "predictfun/reviews/value_diagnosis_20261117/calibration/H1/training_calibration.json": "671cc70b3681f2b4889ea1d85ee7b9bb2121a06db66572475da15e2e222381cd",
+    "predictfun/reviews/value_diagnosis_20261117/calibration/H2/20261026_report.json": "cd298aa79b50f6af6b25a309257e9e68eef3b6abdd33d645fbcd2e2227fc6c44",
+    "predictfun/reviews/value_diagnosis_20261117/calibration/H2/20261027_report.json": "085dbc5b7acd1ba2cf9878502fdaf5b7bf0e0fdd2421041b6cc0a9082c98ce62",
+    "predictfun/reviews/value_diagnosis_20261117/calibration/H2/receipt.json": "33c35ef6a1b73d98af9da58c3df2123cd9470c3c5f3094d827ab17d7c976b588",
+    "predictfun/reviews/value_diagnosis_20261117/calibration/H2/training_calibration.json": "a6e43e28b0cbf36a954075c4d4ead3eb7cce4e835827368400021e1a7ddf4006",
+    "predictfun/reviews/value_diagnosis_20261117/calibration/H3/20261026_report.json": "d1e1662825a807ddbcc5828d8206884034990b95b25e3339e176452da921148d",
+    "predictfun/reviews/value_diagnosis_20261117/calibration/H3/20261027_report.json": "944916d12cc39bba0de2e63fcc5fdee8a436c397d1d16dd8dae363ccd56bafd5",
+    "predictfun/reviews/value_diagnosis_20261117/calibration/H3/receipt.json": "0dd4c741c250ad1e5b8d547bb21e636d3f836ef19006afa3cfe7234e90375fe5",
+    "predictfun/reviews/value_diagnosis_20261117/calibration/H3/training_calibration.json": "ac71dd9be327acc5095525efe2c4a2441870089d2aeabcc683bd57f5bb29ace4",
+    "predictfun/reviews/value_diagnosis_20261117/calibration/H3_MATCHED_N1/20261026_report.json": "7c5abb1fb2cf75820721affbdf9cff6f90c37ddc852656d03c2bf85d1bbc8f03",
+    "predictfun/reviews/value_diagnosis_20261117/calibration/H3_MATCHED_N1/20261027_report.json": "d1f95505aa32e03cd77e3ab03bb7e4226fb21200c11449c7aeb84060af4cb661",
+    "predictfun/reviews/value_diagnosis_20261117/calibration/H3_MATCHED_N1/receipt.json": "0afc1f807c4e150b134d92d6b8daaec6353f99a025f4f39eb0e5ad337a6d8f2b",
+    "predictfun/reviews/value_diagnosis_20261117/calibration/H3_MATCHED_N1/training_calibration.json": "b281959e95ca51139401f3b246625e900ebc9468ae3536aa97cc9ef91cd1d6b7",
+    "predictfun/reviews/value_diagnosis_20261117/calibration/receipt.json": "b0718d125a4ed4aecb3475b94a00c331818893b51deea27bc8ac806a4fba4660",
+    "predictfun/reviews/value_diagnosis_20261117/calibration/report.json": "f15f0cf92f37794aebe3535b265963dd724dbec2ad33bfa75de5636077a81041",
+    "predictfun/reviews/value_diagnosis_20261117/controller/receipt.json": "98ffdb20611e14d0dec8398ccbc53cabc35b9a3c7455d8e87ff42aa49b57610c",
+    "predictfun/reviews/value_diagnosis_20261117/controller/report.json": "88aaca7c2e5e1efb8e4c756dbd769d3dd52bfc0bce6c9757edfa9b51106e9150",
+    "predictfun/reviews/value_diagnosis_20261117/freeze_v1.json": "069f9f61dd3ff28e80bf80d72eed2f1775b9d05b7c1d60625817dbb59aaaf35e",
+    "predictfun/reviews/value_diagnosis_20261117/index.json": "feb3599be1340d8d26caefb0c7af0404a6b63cf5683d87154ea77fad0de68ca0"
+  },
+  "logs": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/value_diagnosis_20261117_v1/logs/audit.log": "f69a59d0ff66266eac870a5fd4b41db5c864a924c7b482e0f0d604d6174135b3",
+    "/home/yuqing/ctaNew/data/predict_fun/research/value_diagnosis_20261117_v1/logs/audit_v2.log": "5bcfdc98f6b5764ee5f9982747fb104464ed6c9ad2332f268b4576992a5996b7",
+    "/home/yuqing/ctaNew/data/predict_fun/research/value_diagnosis_20261117_v1/logs/calibration.log": "7e7d97da7428bef194c3854e365e392180369cf834eae9168b31b252c6b6de5c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/value_diagnosis_20261117_v1/logs/controller.log": "0c7bcaf9a2375e44dd5a0a96dba44bfff05711fadf08531d1b8e7afa8fe6b353"
+  },
+  "predicates": {
+    "20261026:cancel": {
+      "asof": "2026-11-17T02:33:42.588068+00:00",
+      "n": 205,
+      "history_rmse_cents": {
+        "H1": 11.849577216116938,
+        "H2": 11.143350296715687,
+        "H3": 10.103988452461618,
+        "H3_MATCHED_N1": 10.278858325070363
+      },
+      "history_monotone_improvement": true,
+      "matched_history_improves_h1": true,
+      "fill_auc_improves": true,
+      "fill_brier_improves": true,
+      "fill_logloss_improves": true,
+      "positive_band_n": {
+        "(5.0, 30.0]": 40,
+        "(0.0, 1.0]": 34,
+        "(1.0, 5.0]": 45,
+        "(30.0, inf]": 3
+      },
+      "all_positive_bands_actual_negative": false
+    },
+    "20261026:post": {
+      "asof": "2026-11-17T02:33:42.588068+00:00",
+      "n": 213,
+      "history_rmse_cents": {
+        "H1": 34.65376685167916,
+        "H2": 36.56935970927161,
+        "H3": 35.89227641964172,
+        "H3_MATCHED_N1": 35.021674626609084
+      },
+      "history_monotone_improvement": false,
+      "matched_history_improves_h1": false,
+      "fill_auc_improves": true,
+      "fill_brier_improves": true,
+      "fill_logloss_improves": true,
+      "positive_band_n": {
+        "(0.0, 1.0]": 23,
+        "(1.0, 5.0]": 34,
+        "(5.0, 30.0]": 11
+      },
+      "all_positive_bands_actual_negative": true
+    },
+    "20261027:cancel": {
+      "asof": "2026-11-17T02:33:43.545170+00:00",
+      "n": 221,
+      "history_rmse_cents": {
+        "H1": 32.95358569034183,
+        "H2": 33.227408489005676,
+        "H3": 32.97538622637393,
+        "H3_MATCHED_N1": 33.01366340110239
+      },
+      "history_monotone_improvement": false,
+      "matched_history_improves_h1": false,
+      "fill_auc_improves": true,
+      "fill_brier_improves": true,
+      "fill_logloss_improves": true,
+      "positive_band_n": {
+        "(0.0, 1.0]": 32,
+        "(1.0, 5.0]": 67,
+        "(5.0, 30.0]": 46,
+        "(30.0, inf]": 2
+      },
+      "all_positive_bands_actual_negative": false
+    },
+    "20261027:post": {
+      "asof": "2026-11-17T02:33:43.545170+00:00",
+      "n": 222,
+      "history_rmse_cents": {
+        "H1": 25.67360082686259,
+        "H2": 25.93365693773484,
+        "H3": 25.499922321870415,
+        "H3_MATCHED_N1": 25.958648783397795
+      },
+      "history_monotone_improvement": false,
+      "matched_history_improves_h1": false,
+      "fill_auc_improves": true,
+      "fill_brier_improves": true,
+      "fill_logloss_improves": true,
+      "positive_band_n": {
+        "(0.0, 1.0]": 41,
+        "(1.0, 5.0]": 35,
+        "(5.0, 30.0]": 10
+      },
+      "all_positive_bands_actual_negative": true
+    },
+    "controller": {
+      "asof": "2026-11-17T02:46:04.233832+00:00",
+      "n": 10675,
+      "sample_n": 384,
+      "mirrored_preference_changed": 175,
+      "sample_cancel_n": 192,
+      "cancellation_sensitivities": {
+        "entry_final_negative": 0,
+        "frozen_entry_keep_negative": 29,
+        "fresh_post_positive": 18,
+        "fresh_post_positive_and_keep_negative": 18,
+        "wealth_only_keep_negative": 147,
+        "fixed_original_endpoint_keep_negative": 170,
+        "h2_keep_negative": 182
+      }
+    }
+  },
+  "recorder_source_sha256": "cfe7d2794126c22192d9c982ee052f62bae2ab688edd9728ff8fba6ac04896fa",
+  "controls": {
+    "matching_hash_positive": true,
+    "corrupt_digest_refused": true
+  },
+  "recorder_source_commit": "9447c94ff602813e82022bd598f0d42737062b1c",
+  "controller_rollout": false,
+  "promotion": false
+}

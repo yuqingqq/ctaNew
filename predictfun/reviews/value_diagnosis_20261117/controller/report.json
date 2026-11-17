@@ -1,0 +1,236 @@
+{
+  "asof": "2026-11-17T02:46:04.233832+00:00",
+  "test_day": "20261027",
+  "markets": 12,
+  "entry_statuses": {
+    "paired_first_review": 10675,
+    "structural_cancel_before_first_review": 118,
+    "activation_rejected": 51,
+    "no_eligible_context_at_first_review": 3
+  },
+  "selected_posts": 10847,
+  "first_review_pairs": 10675,
+  "matched_null": {
+    "n": 10675,
+    "draws": 200,
+    "observed": 0.08247113972462777,
+    "null_mean": 0.0010850846802982084,
+    "null_min": -0.012397249807356236,
+    "null_max": 0.011116077459680795
+  },
+  "groups": {
+    "cancel": {
+      "n": 3838,
+      "sample_n": 192,
+      "best_unchanged": 1887,
+      "depth_unchanged": 53,
+      "probability_l1_mean": 0.4080389874215445,
+      "probability_l1_median": 0.3654226695002344,
+      "inventory_unchanged": 3707,
+      "queue_unchanged": 1671,
+      "structural": 0,
+      "entry_advantage_median": 0.21207874122022485,
+      "means": {
+        "entry_selected": 0.789022690209182,
+        "entry_final": 0.8532376421819309,
+        "entry_fixed_queue": 0.8119008902899427,
+        "entry_active_absence": 0.8773294752807365,
+        "frozen_entry_keep": 0.8365162344969872,
+        "current_keep": -1.3960950881606842,
+        "current_wealth": -1.0496020175627523,
+        "current_risk": -0.34649307059793205,
+        "current_keep_qty": 2.2708639670560395,
+        "current_cancel_qty": 0.07297021740284565,
+        "current_fresh_post": -1.3045952982749769,
+        "fixed_original_endpoint_keep": -1.2415941586352075,
+        "h2_keep": -4.19099396911753,
+        "old_queue": 531.783810550981,
+        "current_queue": 529.2998958289323,
+        "entry_greedy_change": 0.06421495197274894,
+        "entry_queue_assumption_change": -0.04133675189198838,
+        "target_activation_change": 0.06542858499079383,
+        "absent_to_cancel_change": -0.040813240783749344,
+        "shapley_market_paths_book": -1.4022734718160519,
+        "shapley_forecast_probabilities": -0.5592718985381966,
+        "shapley_target_queue": -0.06389337438408345,
+        "shapley_portfolio_inventory": -0.2071725779193395
+      },
+      "counts": {
+        "entry_final_negative": 0,
+        "frozen_entry_keep_negative": 29,
+        "fresh_post_positive": 18,
+        "fresh_post_positive_and_keep_negative": 18,
+        "wealth_only_keep_negative": 147,
+        "fixed_original_endpoint_keep_negative": 170,
+        "h2_keep_negative": 182
+      }
+    },
+    "keep": {
+      "n": 6837,
+      "sample_n": 192,
+      "best_unchanged": 4935,
+      "depth_unchanged": 130,
+      "probability_l1_mean": 0.3255678476969167,
+      "probability_l1_median": 0.2633495403439778,
+      "inventory_unchanged": 6673,
+      "queue_unchanged": 3916,
+      "structural": 116,
+      "entry_advantage_median": 0.36643853200342846,
+      "means": {
+        "entry_selected": 0.8013573822532062,
+        "entry_final": 0.848208740291946,
+        "entry_fixed_queue": 1.0786135479677927,
+        "entry_active_absence": 1.1594974247820158,
+        "frozen_entry_keep": 1.1053983743908482,
+        "current_keep": 1.063542643267937,
+        "current_wealth": 1.2058102194894416,
+        "current_risk": -0.14226757622150474,
+        "current_keep_qty": 1.631620148189062,
+        "current_cancel_qty": 0.0537324458503104,
+        "current_fresh_post": 0.7832480623138447,
+        "fixed_original_endpoint_keep": 0.8335133087490796,
+        "h2_keep": -0.18828744140786946,
+        "old_queue": 420.67644866696884,
+        "current_queue": 419.87856262984565,
+        "entry_greedy_change": 0.04685135803873979,
+        "entry_queue_assumption_change": 0.23040480767584678,
+        "target_activation_change": 0.08088387681422278,
+        "absent_to_cancel_change": -0.05409905039116736,
+        "shapley_market_paths_book": -0.16954002596139353,
+        "shapley_forecast_probabilities": 0.10952143096328719,
+        "shapley_target_queue": 0.00926609605394871,
+        "shapley_portfolio_inventory": 0.008896767821246406
+      },
+      "counts": {
+        "entry_final_negative": 0,
+        "frozen_entry_keep_negative": 4,
+        "fresh_post_positive": 178,
+        "fresh_post_positive_and_keep_negative": 0,
+        "wealth_only_keep_negative": 14,
+        "fixed_original_endpoint_keep_negative": 41,
+        "h2_keep_negative": 109
+      }
+    }
+  },
+  "case": "SOFT_JOINT",
+  "sensitivity": {
+    "(False, 0)": {
+      "n": 96,
+      "mirror_statuses": {
+        "eligible": 96
+      },
+      "bank_changed": 10,
+      "spread_changed": 21,
+      "old_forecast_still_cancel": 6,
+      "old_market_still_cancel": 5,
+      "old_queue_still_cancel": 0,
+      "true_state_still_cancel": 3,
+      "hidden_focal_fill_n": 0,
+      "mean_hidden_state_delta": -0.14770821233559728,
+      "mean_mirror_query_delta": -0.8181664472044653,
+      "mean_abs_mirror_query_delta": 1.5064707573351435,
+      "mirrored_preference_changed": 56
+    },
+    "(False, 1)": {
+      "n": 96,
+      "mirror_statuses": {
+        "eligible": 96
+      },
+      "bank_changed": 9,
+      "spread_changed": 20,
+      "old_forecast_still_cancel": 9,
+      "old_market_still_cancel": 2,
+      "old_queue_still_cancel": 1,
+      "true_state_still_cancel": 2,
+      "hidden_focal_fill_n": 0,
+      "mean_hidden_state_delta": -0.009379740966478402,
+      "mean_mirror_query_delta": -2.0673268688604027,
+      "mean_abs_mirror_query_delta": 2.3326661308655487,
+      "mirrored_preference_changed": 73
+    },
+    "(True, 0)": {
+      "n": 96,
+      "mirror_statuses": {
+        "eligible": 96
+      },
+      "bank_changed": 3,
+      "spread_changed": 21,
+      "old_forecast_still_cancel": 48,
+      "old_market_still_cancel": 78,
+      "old_queue_still_cancel": 93,
+      "true_state_still_cancel": 91,
+      "hidden_focal_fill_n": 1,
+      "mean_hidden_state_delta": 0.04184711679558345,
+      "mean_mirror_query_delta": -0.23632041965114403,
+      "mean_abs_mirror_query_delta": 1.5968386924179174,
+      "mirrored_preference_changed": 29
+    },
+    "(True, 1)": {
+      "n": 96,
+      "mirror_statuses": {
+        "eligible": 96
+      },
+      "bank_changed": 16,
+      "spread_changed": 37,
+      "old_forecast_still_cancel": 61,
+      "old_market_still_cancel": 71,
+      "old_queue_still_cancel": 96,
+      "true_state_still_cancel": 95,
+      "hidden_focal_fill_n": 1,
+      "mean_hidden_state_delta": -0.005373504254489366,
+      "mean_mirror_query_delta": -0.8654351706800808,
+      "mean_abs_mirror_query_delta": 1.8085083472594903,
+      "mirrored_preference_changed": 17
+    }
+  },
+  "by_side": {
+    "(False, 0)": {
+      "n": 3459,
+      "hidden_focal_fill_n": 9,
+      "adverse_mid_n": 297,
+      "unchanged_book_n": 62,
+      "entry_median_cents": 0.35087333041550317
+    },
+    "(False, 1)": {
+      "n": 3378,
+      "hidden_focal_fill_n": 10,
+      "adverse_mid_n": 249,
+      "unchanged_book_n": 68,
+      "entry_median_cents": 0.37915802754190436
+    },
+    "(True, 0)": {
+      "n": 1889,
+      "hidden_focal_fill_n": 10,
+      "adverse_mid_n": 332,
+      "unchanged_book_n": 23,
+      "entry_median_cents": 0.20173881713020592
+    },
+    "(True, 1)": {
+      "n": 1949,
+      "hidden_focal_fill_n": 17,
+      "adverse_mid_n": 365,
+      "unchanged_book_n": 30,
+      "entry_median_cents": 0.22250954962611758
+    }
+  },
+  "controls": {
+    "attribution_positive": true,
+    "incomplete_cube_refused": true,
+    "unchanged_inputs_zero": true,
+    "clock_reversal_detected": true,
+    "good_path_no_false_reversal": true,
+    "complement_value_positive": true,
+    "complement_involution": true,
+    "corrupt_mirror_refused": true,
+    "archived_trace_and_fills_exact": true,
+    "corrupt_ledger_refused": true
+  },
+  "limits": [
+    "Consumed Oct23-27 development only; no confidence intervals, protected dates or promotion",
+    "History test spans at most3 days and mixes extra coverage with temporal regime changes; does not resolve longer-history sufficiency",
+    "Single realized outcomes do not reveal conditional means; pooled calibration also has noise and conditional-mixing limits",
+    "Controller hybrid-state sensitivities are not realized economic losses; global RMSE is not a calibrated decision margin",
+    "Symmetry sensitivity cannot establish bid conditioning as the cause of ask losses",
+    "No new strategy P&L, cooldown, minimum age, risk coefficient or continuation model"
+  ]
+}
