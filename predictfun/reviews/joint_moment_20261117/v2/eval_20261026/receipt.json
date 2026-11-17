@@ -1,0 +1,12 @@
+{
+  "asof": "2026-11-17T01:42:03.295675+00:00",
+  "source_manifest": "b561ad332422b19b6d59b6175b7714108a9f941ebf4de16486ecac9a5fcf7fac",
+  "fit_receipt_sha256": "ee1e617e4f90ff999d1ee025a2fa13e02c1aba3cab66f9f4507826e6033ecce6",
+  "data_receipt_sha256": "bc4d4d30ed376b77465d28e18111391477f4783fd10e02f98b1301742c671c1e",
+  "baseline_receipt_sha256": "ee3cb8e6eb6259a8b8166ba3fe55e4e4c60bd9a41fb92116dbadd14007c56d8b",
+  "outputs": {
+    "heads.parquet": "ec2945f6a006a62fde9321f5281802c73051335b002d4ae22cbb10bc3e8afc71",
+    "values.parquet": "9178761e8fa5fce72820f1c9f9631c1099c03d2c51a041e53dc60b2b04e60a27"
+  },
+  "seconds": 0.11853241920471191
+}

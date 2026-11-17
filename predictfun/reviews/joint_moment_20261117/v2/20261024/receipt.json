@@ -1,0 +1,1188 @@
+{
+  "asof": "2026-11-17T01:33:35.722579+00:00",
+  "source_manifest": "b561ad332422b19b6d59b6175b7714108a9f941ebf4de16486ecac9a5fcf7fac",
+  "day": "20261024",
+  "markets": [
+    3695091,
+    3695173,
+    3695216,
+    3695551,
+    3695564,
+    3695609,
+    3695631,
+    3695636,
+    3695662,
+    3695696,
+    3695833,
+    3695836,
+    3695878,
+    3695955,
+    3695961,
+    3696045,
+    3696187,
+    3696208,
+    3696268,
+    3696270,
+    3696319,
+    3696345,
+    3696353,
+    3696378,
+    3696403,
+    3696471,
+    3696590,
+    3696629,
+    3696635,
+    3696717,
+    3696741,
+    3696745,
+    3696760,
+    3696784,
+    3696786,
+    3696789,
+    3696813,
+    3696816,
+    3696819,
+    3696918,
+    3696967,
+    3696970,
+    3697013,
+    3697028,
+    3697031,
+    3697110,
+    3697114,
+    3697117,
+    3697141,
+    3697305,
+    3697308,
+    3697449,
+    3697453,
+    3697464,
+    3697517,
+    3697899,
+    3697902,
+    3697926,
+    3697929,
+    3698001,
+    3698227,
+    3698437,
+    3698860,
+    3698884,
+    3698886,
+    3699278,
+    3699302,
+    3699304,
+    3699503,
+    3699529,
+    3699612,
+    3699615,
+    3699981,
+    3699983,
+    3699990,
+    3700014,
+    3700016,
+    3700020,
+    3700046,
+    3700048,
+    3700065,
+    3700070,
+    3700131,
+    3700134,
+    3700170,
+    3700204,
+    3700345,
+    3700396,
+    3700398,
+    3700451,
+    3700549,
+    3700553,
+    3700687,
+    3700711,
+    3700897,
+    3700907,
+    3700931,
+    3700958,
+    3701083,
+    3701097,
+    3701154,
+    3701157,
+    3701168,
+    3701189,
+    3701192,
+    3701589,
+    3701603,
+    3701606,
+    3701678,
+    3701680,
+    3701775,
+    3701803,
+    3701805,
+    3701809,
+    3701838,
+    3701843,
+    3701844,
+    3702055,
+    3702057,
+    3702177,
+    3702201,
+    3702203,
+    3702456,
+    3702480,
+    3702702,
+    3702712,
+    3702738,
+    3702740,
+    3702960,
+    3702984,
+    3703254,
+    3703301,
+    3703354,
+    3703356,
+    3703405,
+    3703476,
+    3703650,
+    3703664,
+    3703688,
+    3703701,
+    3703704,
+    3703728,
+    3703730,
+    3703978,
+    3704000,
+    3704004,
+    3704008,
+    3704100,
+    3704101,
+    3704366,
+    3704409,
+    3704410,
+    3704508,
+    3704524,
+    3704697,
+    3704702,
+    3704720,
+    3704983,
+    3705358,
+    3705382,
+    3705397,
+    3705400,
+    3705426,
+    3705433,
+    3705436,
+    3705625,
+    3705815,
+    3705827,
+    3705854,
+    3706447,
+    3706450,
+    3706530,
+    3706557,
+    3706707,
+    3706747,
+    3706749,
+    3706800,
+    3706824,
+    3706912,
+    3707352,
+    3707382,
+    3707385,
+    3707507,
+    3707586,
+    3707645,
+    3707656,
+    3707688,
+    3707696,
+    3707851,
+    3707892,
+    3707894,
+    3707917,
+    3707937,
+    3708011,
+    3708086,
+    3708347,
+    3708389,
+    3708407,
+    3708689,
+    3709000,
+    3709003,
+    3709505,
+    3709536,
+    3709594,
+    3709646,
+    3709821,
+    3709851,
+    3710012,
+    3710325,
+    3710328,
+    3710799,
+    3710802,
+    3711335,
+    3711345,
+    3711651,
+    3711654,
+    3712454,
+    3712658,
+    3712701,
+    3712725,
+    3712727,
+    3714204,
+    3714212,
+    3714232,
+    3714947,
+    3715196,
+    3715215,
+    3715690,
+    3715722,
+    3715730,
+    3716643,
+    3716727,
+    3716917,
+    3717129,
+    3717153,
+    3717163,
+    3717382,
+    3718113,
+    3718114,
+    3718117,
+    3718171,
+    3718173,
+    3718347,
+    3718364,
+    3718400,
+    3718486,
+    3718645,
+    3718697,
+    3718726,
+    3718747,
+    3719139,
+    3719162,
+    3719185,
+    3719312,
+    3719686,
+    3719771,
+    3719782,
+    3719832,
+    3719929,
+    3720220,
+    3720295,
+    3720354,
+    3720356,
+    3720362,
+    3720413,
+    3720417,
+    3720453,
+    3720854,
+    3720866,
+    3721050,
+    3721262,
+    3721555,
+    3721578,
+    3721602,
+    3721759,
+    3721958,
+    3721983,
+    3721985,
+    3722002,
+    3722147,
+    3722149,
+    3722853,
+    3723063,
+    3723064,
+    3723687,
+    3723730,
+    3723743,
+    3723749
+  ],
+  "action_statuses": {
+    "('cancel', 'eligible')": 5036,
+    "('post', 'eligible')": 4223,
+    "('post', 'not_available_in_client_state')": 1144
+  },
+  "candidate_statuses": {
+    "('cancel', 'eligible_estimated_timing')": 88206,
+    "('cancel', 'incomplete_book_coverage')": 3641,
+    "('cancel', 'not_client_resting')": 40566,
+    "('cancel', 'shutdown_horizon')": 1375,
+    "('post', 'eligible_estimated_timing')": 133279,
+    "('cancel', 'eligible')": 791,
+    "('post', 'stale_future_marks')": 249,
+    "('post', 'shutdown_horizon')": 1068,
+    "('cancel', 'stale_future_marks')": 56,
+    "('post', 'incomplete_book_coverage')": 40,
+    "('cancel', 'missing_or_stale_mark')": 1
+  },
+  "controls": {
+    "3695091": {
+      "neutral_replay_equal": true
+    },
+    "3695173": {
+      "neutral_replay_equal": true
+    },
+    "3695216": {
+      "neutral_replay_equal": true
+    },
+    "3695551": {
+      "neutral_replay_equal": true
+    },
+    "3695564": {
+      "neutral_replay_equal": true
+    },
+    "3695609": {
+      "neutral_replay_equal": true
+    },
+    "3695631": {
+      "neutral_replay_equal": true
+    },
+    "3695636": {
+      "neutral_replay_equal": true
+    },
+    "3695662": {
+      "neutral_replay_equal": true
+    },
+    "3695696": {
+      "neutral_replay_equal": true
+    },
+    "3695833": {
+      "neutral_replay_equal": true
+    },
+    "3695836": {
+      "neutral_replay_equal": true
+    },
+    "3695878": {
+      "neutral_replay_equal": true
+    },
+    "3695955": {
+      "neutral_replay_equal": true
+    },
+    "3695961": {
+      "neutral_replay_equal": true
+    },
+    "3696045": {
+      "neutral_replay_equal": true
+    },
+    "3696187": {
+      "neutral_replay_equal": true
+    },
+    "3696208": {
+      "neutral_replay_equal": true
+    },
+    "3696268": {
+      "neutral_replay_equal": true
+    },
+    "3696270": {
+      "neutral_replay_equal": true
+    },
+    "3696319": {
+      "neutral_replay_equal": true
+    },
+    "3696345": {
+      "neutral_replay_equal": true
+    },
+    "3696353": {
+      "neutral_replay_equal": true
+    },
+    "3696378": {
+      "neutral_replay_equal": true
+    },
+    "3696403": {
+      "neutral_replay_equal": true
+    },
+    "3696471": {
+      "neutral_replay_equal": true
+    },
+    "3696590": {
+      "neutral_replay_equal": true
+    },
+    "3696629": {
+      "neutral_replay_equal": true
+    },
+    "3696635": {
+      "neutral_replay_equal": true
+    },
+    "3696717": {
+      "neutral_replay_equal": true
+    },
+    "3696741": {
+      "neutral_replay_equal": true
+    },
+    "3696745": {
+      "neutral_replay_equal": true
+    },
+    "3696760": {
+      "neutral_replay_equal": true
+    },
+    "3696784": {
+      "neutral_replay_equal": true
+    },
+    "3696786": {
+      "neutral_replay_equal": true
+    },
+    "3696789": {
+      "neutral_replay_equal": true
+    },
+    "3696813": {
+      "neutral_replay_equal": true
+    },
+    "3696816": {
+      "neutral_replay_equal": true
+    },
+    "3696819": {
+      "neutral_replay_equal": true
+    },
+    "3696918": {
+      "neutral_replay_equal": true
+    },
+    "3696967": {
+      "neutral_replay_equal": true
+    },
+    "3696970": {
+      "neutral_replay_equal": true
+    },
+    "3697013": {
+      "neutral_replay_equal": true
+    },
+    "3697028": {
+      "neutral_replay_equal": true
+    },
+    "3697031": {
+      "neutral_replay_equal": true
+    },
+    "3697110": {
+      "neutral_replay_equal": true
+    },
+    "3697114": {
+      "neutral_replay_equal": true
+    },
+    "3697117": {
+      "neutral_replay_equal": true
+    },
+    "3697141": {
+      "neutral_replay_equal": true
+    },
+    "3697305": {
+      "neutral_replay_equal": true
+    },
+    "3697308": {
+      "neutral_replay_equal": true
+    },
+    "3697449": {
+      "neutral_replay_equal": true
+    },
+    "3697453": {
+      "neutral_replay_equal": true
+    },
+    "3697464": {
+      "neutral_replay_equal": true
+    },
+    "3697517": {
+      "neutral_replay_equal": true
+    },
+    "3697899": {
+      "neutral_replay_equal": true
+    },
+    "3697902": {
+      "neutral_replay_equal": true
+    },
+    "3697926": {
+      "neutral_replay_equal": true
+    },
+    "3697929": {
+      "neutral_replay_equal": true
+    },
+    "3698001": {
+      "neutral_replay_equal": true
+    },
+    "3698227": {
+      "neutral_replay_equal": true
+    },
+    "3698437": {
+      "neutral_replay_equal": true
+    },
+    "3698860": {
+      "neutral_replay_equal": true
+    },
+    "3698884": {
+      "neutral_replay_equal": true
+    },
+    "3698886": {
+      "neutral_replay_equal": true
+    },
+    "3699278": {
+      "neutral_replay_equal": true
+    },
+    "3699302": {
+      "neutral_replay_equal": true
+    },
+    "3699304": {
+      "neutral_replay_equal": true
+    },
+    "3699503": {
+      "neutral_replay_equal": true
+    },
+    "3699529": {
+      "neutral_replay_equal": true
+    },
+    "3699612": {
+      "neutral_replay_equal": true
+    },
+    "3699615": {
+      "neutral_replay_equal": true
+    },
+    "3699981": {
+      "neutral_replay_equal": true
+    },
+    "3699983": {
+      "neutral_replay_equal": true
+    },
+    "3699990": {
+      "neutral_replay_equal": true
+    },
+    "3700014": {
+      "neutral_replay_equal": true
+    },
+    "3700016": {
+      "neutral_replay_equal": true
+    },
+    "3700020": {
+      "neutral_replay_equal": true
+    },
+    "3700046": {
+      "neutral_replay_equal": true
+    },
+    "3700048": {
+      "neutral_replay_equal": true
+    },
+    "3700065": {
+      "neutral_replay_equal": true
+    },
+    "3700070": {
+      "neutral_replay_equal": true
+    },
+    "3700131": {
+      "neutral_replay_equal": true
+    },
+    "3700134": {
+      "neutral_replay_equal": true
+    },
+    "3700170": {
+      "neutral_replay_equal": true
+    },
+    "3700204": {
+      "neutral_replay_equal": true
+    },
+    "3700345": {
+      "neutral_replay_equal": true
+    },
+    "3700396": {
+      "neutral_replay_equal": true
+    },
+    "3700398": {
+      "neutral_replay_equal": true
+    },
+    "3700451": {
+      "neutral_replay_equal": true
+    },
+    "3700549": {
+      "neutral_replay_equal": true
+    },
+    "3700553": {
+      "neutral_replay_equal": true
+    },
+    "3700687": {
+      "neutral_replay_equal": true
+    },
+    "3700711": {
+      "neutral_replay_equal": true
+    },
+    "3700897": {
+      "neutral_replay_equal": true
+    },
+    "3700907": {
+      "neutral_replay_equal": true
+    },
+    "3700931": {
+      "neutral_replay_equal": true
+    },
+    "3700958": {
+      "neutral_replay_equal": true
+    },
+    "3701083": {
+      "neutral_replay_equal": true
+    },
+    "3701097": {
+      "neutral_replay_equal": true
+    },
+    "3701154": {
+      "neutral_replay_equal": true
+    },
+    "3701157": {
+      "neutral_replay_equal": true
+    },
+    "3701168": {
+      "neutral_replay_equal": true
+    },
+    "3701189": {
+      "neutral_replay_equal": true
+    },
+    "3701192": {
+      "neutral_replay_equal": true
+    },
+    "3701589": {
+      "neutral_replay_equal": true
+    },
+    "3701603": {
+      "neutral_replay_equal": true
+    },
+    "3701606": {
+      "neutral_replay_equal": true
+    },
+    "3701678": {
+      "neutral_replay_equal": true
+    },
+    "3701680": {
+      "neutral_replay_equal": true
+    },
+    "3701775": {
+      "neutral_replay_equal": true
+    },
+    "3701803": {
+      "neutral_replay_equal": true
+    },
+    "3701805": {
+      "neutral_replay_equal": true
+    },
+    "3701809": {
+      "neutral_replay_equal": true
+    },
+    "3701838": {
+      "neutral_replay_equal": true
+    },
+    "3701843": {
+      "neutral_replay_equal": true
+    },
+    "3701844": {
+      "neutral_replay_equal": true
+    },
+    "3702055": {
+      "neutral_replay_equal": true
+    },
+    "3702057": {
+      "neutral_replay_equal": true
+    },
+    "3702177": {
+      "neutral_replay_equal": true
+    },
+    "3702201": {
+      "neutral_replay_equal": true
+    },
+    "3702203": {
+      "neutral_replay_equal": true
+    },
+    "3702456": {
+      "neutral_replay_equal": true
+    },
+    "3702480": {
+      "neutral_replay_equal": true
+    },
+    "3702702": {
+      "neutral_replay_equal": true
+    },
+    "3702712": {
+      "neutral_replay_equal": true
+    },
+    "3702738": {
+      "neutral_replay_equal": true
+    },
+    "3702740": {
+      "neutral_replay_equal": true
+    },
+    "3702960": {
+      "neutral_replay_equal": true
+    },
+    "3702984": {
+      "neutral_replay_equal": true
+    },
+    "3703254": {
+      "neutral_replay_equal": true
+    },
+    "3703301": {
+      "neutral_replay_equal": true
+    },
+    "3703354": {
+      "neutral_replay_equal": true
+    },
+    "3703356": {
+      "neutral_replay_equal": true
+    },
+    "3703405": {
+      "neutral_replay_equal": true
+    },
+    "3703476": {
+      "neutral_replay_equal": true
+    },
+    "3703650": {
+      "neutral_replay_equal": true
+    },
+    "3703664": {
+      "neutral_replay_equal": true
+    },
+    "3703688": {
+      "neutral_replay_equal": true
+    },
+    "3703701": {
+      "neutral_replay_equal": true
+    },
+    "3703704": {
+      "neutral_replay_equal": true
+    },
+    "3703728": {
+      "neutral_replay_equal": true
+    },
+    "3703730": {
+      "neutral_replay_equal": true
+    },
+    "3703978": {
+      "neutral_replay_equal": true
+    },
+    "3704000": {
+      "neutral_replay_equal": true
+    },
+    "3704004": {
+      "neutral_replay_equal": true
+    },
+    "3704008": {
+      "neutral_replay_equal": true
+    },
+    "3704100": {
+      "neutral_replay_equal": true
+    },
+    "3704101": {
+      "neutral_replay_equal": true
+    },
+    "3704366": {
+      "neutral_replay_equal": true
+    },
+    "3704409": {
+      "neutral_replay_equal": true
+    },
+    "3704410": {
+      "neutral_replay_equal": true
+    },
+    "3704508": {
+      "neutral_replay_equal": true
+    },
+    "3704524": {
+      "neutral_replay_equal": true
+    },
+    "3704697": {
+      "neutral_replay_equal": true
+    },
+    "3704702": {
+      "neutral_replay_equal": true
+    },
+    "3704720": {
+      "neutral_replay_equal": true
+    },
+    "3704983": {
+      "neutral_replay_equal": true
+    },
+    "3705358": {
+      "neutral_replay_equal": true
+    },
+    "3705382": {
+      "neutral_replay_equal": true
+    },
+    "3705397": {
+      "neutral_replay_equal": true
+    },
+    "3705400": {
+      "neutral_replay_equal": true
+    },
+    "3705426": {
+      "neutral_replay_equal": true
+    },
+    "3705433": {
+      "neutral_replay_equal": true
+    },
+    "3705436": {
+      "neutral_replay_equal": true
+    },
+    "3705625": {
+      "neutral_replay_equal": true
+    },
+    "3705815": {
+      "neutral_replay_equal": true
+    },
+    "3705827": {
+      "neutral_replay_equal": true
+    },
+    "3705854": {
+      "neutral_replay_equal": true
+    },
+    "3706447": {
+      "neutral_replay_equal": true
+    },
+    "3706450": {
+      "neutral_replay_equal": true
+    },
+    "3706530": {
+      "neutral_replay_equal": true
+    },
+    "3706557": {
+      "neutral_replay_equal": true
+    },
+    "3706707": {
+      "neutral_replay_equal": true
+    },
+    "3706747": {
+      "neutral_replay_equal": true
+    },
+    "3706749": {
+      "neutral_replay_equal": true
+    },
+    "3706800": {
+      "neutral_replay_equal": true
+    },
+    "3706824": {
+      "neutral_replay_equal": true
+    },
+    "3706912": {
+      "neutral_replay_equal": true
+    },
+    "3707352": {
+      "neutral_replay_equal": true
+    },
+    "3707382": {
+      "neutral_replay_equal": true
+    },
+    "3707385": {
+      "neutral_replay_equal": true
+    },
+    "3707507": {
+      "neutral_replay_equal": true
+    },
+    "3707586": {
+      "neutral_replay_equal": true
+    },
+    "3707645": {
+      "neutral_replay_equal": true
+    },
+    "3707656": {
+      "neutral_replay_equal": true
+    },
+    "3707688": {
+      "neutral_replay_equal": true
+    },
+    "3707696": {
+      "neutral_replay_equal": true
+    },
+    "3707851": {
+      "neutral_replay_equal": true
+    },
+    "3707892": {
+      "neutral_replay_equal": true
+    },
+    "3707894": {
+      "neutral_replay_equal": true
+    },
+    "3707917": {
+      "neutral_replay_equal": true
+    },
+    "3707937": {
+      "neutral_replay_equal": true
+    },
+    "3708011": {
+      "neutral_replay_equal": true
+    },
+    "3708086": {
+      "neutral_replay_equal": true
+    },
+    "3708347": {
+      "neutral_replay_equal": true
+    },
+    "3708389": {
+      "neutral_replay_equal": true
+    },
+    "3708407": {
+      "neutral_replay_equal": true
+    },
+    "3708689": {
+      "neutral_replay_equal": true
+    },
+    "3709000": {
+      "neutral_replay_equal": true
+    },
+    "3709003": {
+      "neutral_replay_equal": true
+    },
+    "3709505": {
+      "neutral_replay_equal": true
+    },
+    "3709536": {
+      "neutral_replay_equal": true
+    },
+    "3709594": {
+      "neutral_replay_equal": true
+    },
+    "3709646": {
+      "neutral_replay_equal": true
+    },
+    "3709821": {
+      "neutral_replay_equal": true
+    },
+    "3709851": {
+      "neutral_replay_equal": true
+    },
+    "3710012": {
+      "neutral_replay_equal": true
+    },
+    "3710325": {
+      "neutral_replay_equal": true
+    },
+    "3710328": {
+      "neutral_replay_equal": true
+    },
+    "3710799": {
+      "neutral_replay_equal": true
+    },
+    "3710802": {
+      "neutral_replay_equal": true
+    },
+    "3711335": {
+      "neutral_replay_equal": true
+    },
+    "3711345": {
+      "neutral_replay_equal": true
+    },
+    "3711651": {
+      "neutral_replay_equal": true
+    },
+    "3711654": {
+      "neutral_replay_equal": true
+    },
+    "3712454": {
+      "neutral_replay_equal": true
+    },
+    "3712658": {
+      "neutral_replay_equal": true
+    },
+    "3712701": {
+      "neutral_replay_equal": true
+    },
+    "3712725": {
+      "neutral_replay_equal": true
+    },
+    "3712727": {
+      "neutral_replay_equal": true
+    },
+    "3714204": {
+      "neutral_replay_equal": true
+    },
+    "3714212": {
+      "neutral_replay_equal": true
+    },
+    "3714232": {
+      "neutral_replay_equal": true
+    },
+    "3714947": {
+      "neutral_replay_equal": true
+    },
+    "3715196": {
+      "neutral_replay_equal": true
+    },
+    "3715215": {
+      "neutral_replay_equal": true
+    },
+    "3715690": {
+      "neutral_replay_equal": true
+    },
+    "3715722": {
+      "neutral_replay_equal": true
+    },
+    "3715730": {
+      "neutral_replay_equal": true
+    },
+    "3716643": {
+      "neutral_replay_equal": true
+    },
+    "3716727": {
+      "neutral_replay_equal": true
+    },
+    "3716917": {
+      "neutral_replay_equal": true
+    },
+    "3717129": {
+      "neutral_replay_equal": true
+    },
+    "3717153": {
+      "neutral_replay_equal": true
+    },
+    "3717163": {
+      "neutral_replay_equal": true
+    },
+    "3717382": {
+      "neutral_replay_equal": true
+    },
+    "3718113": {
+      "neutral_replay_equal": true
+    },
+    "3718114": {
+      "neutral_replay_equal": true
+    },
+    "3718117": {
+      "neutral_replay_equal": true
+    },
+    "3718171": {
+      "neutral_replay_equal": true
+    },
+    "3718173": {
+      "neutral_replay_equal": true
+    },
+    "3718347": {
+      "neutral_replay_equal": true
+    },
+    "3718364": {
+      "neutral_replay_equal": true
+    },
+    "3718400": {
+      "neutral_replay_equal": true
+    },
+    "3718486": {
+      "neutral_replay_equal": true
+    },
+    "3718645": {
+      "neutral_replay_equal": true
+    },
+    "3718697": {
+      "neutral_replay_equal": true
+    },
+    "3718726": {
+      "neutral_replay_equal": true
+    },
+    "3718747": {
+      "neutral_replay_equal": true
+    },
+    "3719139": {
+      "neutral_replay_equal": true
+    },
+    "3719162": {
+      "neutral_replay_equal": true
+    },
+    "3719185": {
+      "neutral_replay_equal": true
+    },
+    "3719312": {
+      "neutral_replay_equal": true
+    },
+    "3719686": {
+      "neutral_replay_equal": true
+    },
+    "3719771": {
+      "neutral_replay_equal": true
+    },
+    "3719782": {
+      "neutral_replay_equal": true
+    },
+    "3719832": {
+      "neutral_replay_equal": true
+    },
+    "3719929": {
+      "neutral_replay_equal": true
+    },
+    "3720220": {
+      "neutral_replay_equal": true
+    },
+    "3720295": {
+      "neutral_replay_equal": true
+    },
+    "3720354": {
+      "neutral_replay_equal": true
+    },
+    "3720356": {
+      "neutral_replay_equal": true
+    },
+    "3720362": {
+      "neutral_replay_equal": true
+    },
+    "3720413": {
+      "neutral_replay_equal": true
+    },
+    "3720417": {
+      "neutral_replay_equal": true
+    },
+    "3720453": {
+      "neutral_replay_equal": true
+    },
+    "3720854": {
+      "neutral_replay_equal": true
+    },
+    "3720866": {
+      "neutral_replay_equal": true
+    },
+    "3721050": {
+      "neutral_replay_equal": true
+    },
+    "3721262": {
+      "neutral_replay_equal": true
+    },
+    "3721555": {
+      "neutral_replay_equal": true
+    },
+    "3721578": {
+      "neutral_replay_equal": true
+    },
+    "3721602": {
+      "neutral_replay_equal": true
+    },
+    "3721759": {
+      "neutral_replay_equal": true
+    },
+    "3721958": {
+      "neutral_replay_equal": true
+    },
+    "3721983": {
+      "neutral_replay_equal": true
+    },
+    "3721985": {
+      "neutral_replay_equal": true
+    },
+    "3722002": {
+      "neutral_replay_equal": true
+    },
+    "3722147": {
+      "neutral_replay_equal": true
+    },
+    "3722149": {
+      "neutral_replay_equal": true
+    },
+    "3722853": {
+      "neutral_replay_equal": true
+    },
+    "3723063": {
+      "neutral_replay_equal": true
+    },
+    "3723064": {
+      "neutral_replay_equal": true
+    },
+    "3723687": {
+      "neutral_replay_equal": true
+    },
+    "3723730": {
+      "neutral_replay_equal": true
+    },
+    "3723743": {
+      "neutral_replay_equal": true
+    },
+    "3723749": {
+      "neutral_replay_equal": true
+    }
+  },
+  "canonical_checked": 61,
+  "canonical_positive": 8,
+  "mismatches": [],
+  "raw_receipt_sha256": "d299a7ec72b332f7d3e03c492d5a7f6ed8c900d2682dbb4e576a3446d34fd2e8",
+  "outputs": {
+    "candidates.parquet": "7bf6769deebe96d67fb070b5f6c52b7317e00516c7f4ae6dbd75ae3e45f108f1",
+    "actions.parquet": "58060c2b8246c14590430d5ba917f7381f2b46a7fd14a6ccd89dbe5dfa560f13"
+  },
+  "seconds": 357.86734676361084
+}
