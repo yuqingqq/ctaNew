@@ -1,18 +1,38 @@
 value_diagnosis_20261117:
-  status: calibration_complete_controller_running_audit_pending
+  status: complete_audited_merged_diagnostic_only
+  asof: 2026-11-17T02:49:32Z
   source_commit: 726a5267
   freeze_commit: 8fea0ef3
+  audit_source_commit: 076daf1a
+  audit_revision_commit: ea4fe573
+  publication_source_commit: 9447c94f
+  results_commit: 38c14913
+  merge_commit: 9a9adc97
   branch: research/predict-calibration-controller-20261117
   worktree: /tmp/cta-calibration-controller-20261117
   output: data/predict_fun/research/value_diagnosis_20261117_v1
+  report: predictfun/handoffs/20261117_value_diagnosis_results.md
   evidence_index: predictfun/reviews/value_diagnosis_20261117/index.json
+  publication: predictfun/reviews/value_diagnosis_20261117/publication_v1.json
   histories: [H1, H2, H3, H3_MATCHED_N1]
-  neutral_evaluation_actions: 861
+  training_actions: {H1: 8938, H2: 18197, H3: 27236, H3_MATCHED_N1: 8938}
+  neutral_evaluation_actions: {20261026: 418, 20261027: 443}
+  history_monotone_rmse_improvements: 1
+  history_comparisons: 4
   controller: SOFT_JOINT
   controller_markets: 12
+  controller_entries: 10847
+  controller_first_review_pairs: 10675
+  controller_model_cancels_at_first_review: 3838
+  controller_sample: 384
+  sampled_mirrored_preference_changes: 175
+  audit_passed: true
+  merged_artifacts_verified: true
   new_policies: 0
-  running: true
+  running: false
   promotion: false
+  next: controlled_side_balanced_bank_ablation_and_coherent_value_tail_calibration
+  dates: consumed_Oct23_27_development_only
 
 joint_moment_20261117:
   status: complete_both_prediction_screens_failed
