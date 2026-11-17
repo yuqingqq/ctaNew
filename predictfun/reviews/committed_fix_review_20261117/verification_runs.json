@@ -1,0 +1,12 @@
+{
+  "asof": "2026-11-17T15:07:09Z",
+  "run_light_entries": [
+    "2026-11-17T15:03:37Z tag=committed_fix_ledger_selftest rc=0 peak_rss_mib=242 wall_s=14.50 cpu_user_s=14.24 memavail_start_gib=23 disk_free_gib=461->461 slot=codex",
+    "2026-11-17T15:05:09Z tag=committed_fix_keep_pull_selftest rc=0 peak_rss_mib=298 wall_s=11.60 cpu_user_s=11.28 memavail_start_gib=23 disk_free_gib=461->461 slot=codex",
+    "2026-11-17T15:07:08Z tag=committed_fix_counterexample rc=0 peak_rss_mib=207 wall_s=1.08 cpu_user_s=0.91 memavail_start_gib=23 disk_free_gib=461->461 slot=codex"
+  ],
+  "market_tape_read": false,
+  "candidate_sources_modified": false,
+  "original_selftests_passed": true,
+  "review_counterexample_reproduced": true
+}

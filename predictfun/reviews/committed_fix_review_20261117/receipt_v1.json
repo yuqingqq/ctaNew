@@ -1,0 +1,54 @@
+{
+  "asof": "2026-11-17T15:07:09.382101+00:00",
+  "reviewed_commit": "b6eaa7c2",
+  "review_source_commit": "3cef499302aa6e933a302181af6b4122f3d4531e",
+  "scope": "Synthetic only; no tape read, no candidate modified, no market performance estimate.",
+  "source_hashes": {
+    "pf_keep_pull.py": "2b174de434c8626926ad4b0a0d7ea5d6cedf1bc2a9e5e1f1e978adc3ea2428f0",
+    "pf_queue_place_ledger.py": "8fa16b929b4ae497109a70add4036dd7cd4501102a261c74eba63de0e0b94bb5",
+    "pf_committed_fix_review.py": "20a9d78fec4fbbeb8dc621732d7e3be20fa7113add14437379d8c33957ec14d3"
+  },
+  "fixed_checks": {
+    "legal_payoff_bounds": true,
+    "live_lower_bound": true,
+    "per_step_missing_fair": true,
+    "live_latency_landing": true
+  },
+  "multi_step_case": {
+    "orders": 1200,
+    "synthetic_days": 5,
+    "strata": 100,
+    "orders_per_stratum": 12,
+    "draws": 500,
+    "actual_pulls": 1200,
+    "null_mean_pulls": 899.768,
+    "null_min_pulls": 878.0,
+    "null_max_pulls": 929.0,
+    "unmatched_mean": 300.232,
+    "draws_with_unmatched": 500,
+    "removed_value_per_share": -1.0,
+    "k2": true,
+    "k2_stats": {
+      "imp": 1200.0,
+      "null_mean": 899.768,
+      "null_p95": 914.0,
+      "days_above": 5
+    },
+    "k3": false,
+    "k3_stats": {
+      "per_share": -1.0,
+      "null_mean": -1.0,
+      "null_p5": -1.0,
+      "days_below": 0
+    }
+  },
+  "controls": {
+    "unmatched_comparison_refused": true,
+    "matched_comparison_accepted": true,
+    "matched_control_draws": 200,
+    "matched_control_pulls": 1200,
+    "matched_control_k2": false,
+    "matched_control_k3": false
+  },
+  "conclusion": "Risk-set exhaustion is recorded but not excluded from matched acceptance. Gate/redefine comparison before economic interpretation."
+}

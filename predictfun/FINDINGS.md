@@ -1,3 +1,26 @@
+<!-- COMMITTED_FIX_REVIEW_20261117 -->
+## 2026-11-17 15:07Z Committed fix b6eaa7c2 reviewed: prior repairs pass; unmatched acceptance remains
+
+Review source3cef4993, handoffs/20261117_committed_fix_review.md and
+reviews/committed_fix_review_20261117/receipt_v1.json. Both original synthetic
+selftests pass. Legal payoff bounds, live/pending separation, numeric paired
+latency attribution and per-step missing fair handling address the prior review.
+The initial single-step null counterexample is fixed. No tape read or candidate
+source change; the real2054-state/60-value reconciliation remains pending.
+
+Remaining P1: null_picks tracks shortages, but report sends all unmatched draws
+to K2/K3. In1200 synthetic orders /100 strata /5 days /500 draws, score pulls1200
+vs null mean899.768 (300.232 unmatched); every removed share worth -1c. K2 passes,
+K3 correctly fails. Equal-eligibility positive control matches1200 on200 draws
+and neither passes. Recorded shortages do not establish matched participation.
+
+Next: add explicit UNMATCHED/NOT-EVALUABLE acceptance for unmatched comparisons,
+verify counts/timing per stratum and step; preserve failed draws, no retry-until-
+matched or future-survival conditioning. Ledger smoke/full reconciliation can
+proceed. Keep/pull matched economic claims await this guard or a declared revised
+estimand. No new performance, validation or promotion claim.
+<!-- /COMMITTED_FIX_REVIEW_20261117 -->
+
 <!-- LEDGER_KEEP_PULL_FIX_REVIEW_20261117 -->
 ## 2026-11-17 13:58Z Ledger and keep/pull code reviewed; fix the diagnostic gates before interpretation
 

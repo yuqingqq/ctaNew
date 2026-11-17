@@ -1,3 +1,26 @@
+<!-- COMMITTED_FIX_REVIEW_20261117 -->
+## 2026-11-17 15:07Z Committed fix b6eaa7c2 reviewed: prior repairs pass; unmatched acceptance remains
+
+Review source3cef4993, handoffs/20261117_committed_fix_review.md and
+reviews/committed_fix_review_20261117/receipt_v1.json. Both original synthetic
+selftests pass. Legal payoff bounds, live/pending separation, numeric paired
+latency attribution and per-step missing fair handling address the prior review.
+The initial single-step null counterexample is fixed. No tape read or candidate
+source change; the real2054-state/60-value reconciliation remains pending.
+
+Remaining P1: null_picks tracks shortages, but report sends all unmatched draws
+to K2/K3. In1200 synthetic orders /100 strata /5 days /500 draws, score pulls1200
+vs null mean899.768 (300.232 unmatched); every removed share worth -1c. K2 passes,
+K3 correctly fails. Equal-eligibility positive control matches1200 on200 draws
+and neither passes. Recorded shortages do not establish matched participation.
+
+Next: add explicit UNMATCHED/NOT-EVALUABLE acceptance for unmatched comparisons,
+verify counts/timing per stratum and step; preserve failed draws, no retry-until-
+matched or future-survival conditioning. Ledger smoke/full reconciliation can
+proceed. Keep/pull matched economic claims await this guard or a declared revised
+estimand. No new performance, validation or promotion claim.
+<!-- /COMMITTED_FIX_REVIEW_20261117 -->
+
 ## 2026-11-17 14:35Z (session aea5bfb9) — REVIEW FIXES (USER: "Check my review commit, then do the fix"; review 7008362b / ab597948): ledger L5 and keep / pull null, live decisions, latency readings and fair-input handling corrected in code (b6eaa7c2) + synthetic selftests; no tape read, the runs wait for the USER's go
 
 - Checked the review at the code: all four findings hold. L5 compared a tipping point with the observed extreme; the keep / pull null shuffled raw triggers, so pulls landing on orders already gone were dropped (500 executed vs ~250 null pulls; K2 passed with no ranking); the +50 ms decision was a pending withdrawal (landing 95 ms for L 0 / 25 / 37); the fair path had to be complete to +4.9 s.
