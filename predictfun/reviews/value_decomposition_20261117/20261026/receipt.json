@@ -1,0 +1,75 @@
+{
+  "asof": "2026-11-17T00:43:14.718781+00:00",
+  "source_manifest": "23166314985a29dd029dadccd232b1406c09f925763bfd4dfb4d28d530cce830",
+  "day": "20261026",
+  "selected_markets": [
+    3787215,
+    3790280,
+    3792862,
+    3798874,
+    3803248,
+    3804777,
+    3808371,
+    3817683,
+    3823986,
+    3833192,
+    3841803,
+    3847236
+  ],
+  "input_receipt_sha256": "30523dca5488926d79ae7bdfc25c4bf8ccdf162eaaa7f7256cdb85348845f4ed",
+  "controls": {
+    "3787215": {
+      "canonical_prefixes_reconciled": true,
+      "archived_labels_and_predictions_reproduced": true
+    },
+    "3790280": {
+      "canonical_prefixes_reconciled": true,
+      "archived_labels_and_predictions_reproduced": true
+    },
+    "3792862": {
+      "canonical_prefixes_reconciled": true,
+      "archived_labels_and_predictions_reproduced": true
+    },
+    "3798874": {
+      "canonical_prefixes_reconciled": true,
+      "archived_labels_and_predictions_reproduced": true
+    },
+    "3803248": {
+      "canonical_prefixes_reconciled": true,
+      "archived_labels_and_predictions_reproduced": true
+    },
+    "3804777": {
+      "canonical_prefixes_reconciled": true,
+      "archived_labels_and_predictions_reproduced": true
+    },
+    "3808371": {
+      "canonical_prefixes_reconciled": true,
+      "archived_labels_and_predictions_reproduced": true
+    },
+    "3817683": {
+      "canonical_prefixes_reconciled": true,
+      "archived_labels_and_predictions_reproduced": true
+    },
+    "3823986": {
+      "canonical_prefixes_reconciled": true,
+      "archived_labels_and_predictions_reproduced": true
+    },
+    "3833192": {
+      "canonical_prefixes_reconciled": true,
+      "archived_labels_and_predictions_reproduced": true
+    },
+    "3841803": {
+      "canonical_prefixes_reconciled": true,
+      "archived_labels_and_predictions_reproduced": true
+    },
+    "3847236": {
+      "canonical_prefixes_reconciled": true,
+      "archived_labels_and_predictions_reproduced": true
+    }
+  },
+  "outputs": {
+    "actual.parquet": "00b3e2b6a52da8beaf02053e3d420bb50f750ad343a238249351980ed37003d8",
+    "values.parquet": "cd98c2426966bbbc721eb8b94a708d1400c0d38f31e52bfa19bd5ffdd0e295cd"
+  },
+  "seconds": 254.3025119304657
+}
