@@ -1,0 +1,2 @@
+queue-place selftests passed; planted early-after-birth decision refused
+2026-11-17T06:30:58Z tag=qp_selftest rc=0 peak_rss_mib=191 wall_s=0.90 cpu_user_s=0.75 memavail_start_gib=23 disk_free_gib=467->467 slot=claude

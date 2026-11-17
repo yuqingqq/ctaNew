@@ -1,0 +1,23 @@
+{
+  "asof": "2026-11-17T06:46:18Z",
+  "readings": {
+    "F1 FIRST-BEATS-LATE [v]": false,
+    "F1 FIRST-BEATS-LATE [v_old]": false,
+    "E1 EARLY-BEATS-FIRST (ex post) [v]": false,
+    "E1 EARLY-BEATS-FIRST (ex post) [v_old]": false,
+    "R1 REST1-BEATS-JOIN [v]": false,
+    "R1 REST1-BEATS-JOIN [v_old]": false,
+    "R2 IMPROVE-BEATS-JOIN [v]": true,
+    "R2 IMPROVE-BEATS-JOIN [v_old]": true,
+    "F2 FIRST-PROFITABLE [v]": false,
+    "F2 FIRST-PROFITABLE [v_old]": false,
+    "E2 EARLY-PROFITABLE (ex post) [v]": false,
+    "E2 EARLY-PROFITABLE (ex post) [v_old]": false,
+    "R3 JOIN-PROFITABLE [v]": false,
+    "R3 JOIN-PROFITABLE [v_old]": false,
+    "R3 REST1-PROFITABLE [v]": false,
+    "R3 REST1-PROFITABLE [v_old]": false,
+    "R3 IMPROVE-PROFITABLE [v]": false,
+    "R3 IMPROVE-PROFITABLE [v_old]": false
+  }
+}

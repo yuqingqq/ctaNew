@@ -1,0 +1,41 @@
+QUEUE PLACE TEST (actual tape and book through the validated kernel; one 30 sh order at a time, held to END); as of 2026-11-17T06:45:33Z
+
+PART 1: event study - births of a new best (H = 5 s, M50): arm | n | value c/order (all fills | w/o first-100-ms fills) | filled | c per filled share || H 2 s | M250
+  improve  FIRST  n 58,236 |   -8.79 |   -8.09 | 38.5% |  -1.00 ||   -5.41 |  -12.10
+  improve  LATE   n 58,230 |   -9.00 |   -8.36 | 31.1% |  -1.28 ||   -4.65 |  -11.65
+  deplete  FIRST  n 53,240 |  -16.52 |  -12.76 | 44.2% |  -1.63 ||  -11.82 |  -17.96
+  deplete  LATE   n 53,232 |  -11.04 |   -9.90 | 31.2% |  -1.54 ||   -6.01 |  -13.03
+  deplete  EARLY  n 22,300 |  -18.31 |  -18.19 | 61.7% |  -1.21 ||  -13.96 |  -22.06
+  gone before FIRST (the new best had changed by the first decision step): 3,360
+
+PART 2: causal states (H = 5 s, M50): arm | n | value c/order (all | w/o first-100-ms fills) | filled | c per filled share || H 2 s | M250
+  JOIN     n 149,174 |  -13.05 |  -12.12 | 41.7% |  -1.36 ||    +nan |  -16.21
+  REST1    n 146,483 |  -13.89 |  -13.21 | 33.5% |  -1.76 ||    +nan |  -16.63
+  IMPROVE  n  7,976 |   -7.23 |   -6.23 | 36.1% |  -0.88 ||    +nan |  -10.11
+F1 FIRST-BEATS-LATE [all fills]: NOT-SHOWN (pooled -2.52 c/order; positive on 0 / 5 days)
+F1 FIRST-BEATS-LATE [w/o first-100-ms fills]: NOT-SHOWN (pooled -1.23 c/order; positive on 0 / 5 days)
+E1 EARLY-BEATS-FIRST (ex post) [all fills]: NOT-SHOWN (pooled -3.53 c/order; positive on 0 / 5 days)
+E1 EARLY-BEATS-FIRST (ex post) [w/o first-100-ms fills]: NOT-SHOWN (pooled -6.11 c/order; positive on 0 / 5 days)
+R1 REST1-BEATS-JOIN [all fills]: NOT-SHOWN (pooled -0.57 c/order; positive on 0 / 5 days)
+R1 REST1-BEATS-JOIN [w/o first-100-ms fills]: NOT-SHOWN (pooled -0.84 c/order; positive on 0 / 5 days)
+R2 IMPROVE-BEATS-JOIN [all fills]: YES (pooled +5.61 c/order; positive on 4 / 5 days)
+R2 IMPROVE-BEATS-JOIN [w/o first-100-ms fills]: YES (pooled +4.73 c/order; positive on 4 / 5 days)
+F2 FIRST-PROFITABLE [all fills]: NOT-SHOWN (pooled -12.49 c/order; positive on 0 / 5 days)
+F2 FIRST-PROFITABLE [w/o first-100-ms fills]: NOT-SHOWN (pooled -10.32 c/order; positive on 0 / 5 days)
+E2 EARLY-PROFITABLE (ex post) [all fills]: NOT-SHOWN (pooled -18.31 c/order; positive on 0 / 5 days)
+E2 EARLY-PROFITABLE (ex post) [w/o first-100-ms fills]: NOT-SHOWN (pooled -18.19 c/order; positive on 0 / 5 days)
+R3 JOIN-PROFITABLE [all fills]: NOT-SHOWN (pooled -13.05 c/order; positive on 0 / 5 days)
+R3 JOIN-PROFITABLE [w/o first-100-ms fills]: NOT-SHOWN (pooled -12.12 c/order; positive on 0 / 5 days)
+R3 REST1-PROFITABLE [all fills]: NOT-SHOWN (pooled -13.89 c/order; positive on 0 / 5 days)
+R3 REST1-PROFITABLE [w/o first-100-ms fills]: NOT-SHOWN (pooled -13.21 c/order; positive on 0 / 5 days)
+R3 IMPROVE-PROFITABLE [all fills]: NOT-SHOWN (pooled -7.23 c/order; positive on 0 / 5 days)
+R3 IMPROVE-PROFITABLE [w/o first-100-ms fills]: NOT-SHOWN (pooled -6.23 c/order; positive on 0 / 5 days)
+
+By day (H 5 s, M50, all fills) - event FIRST / LATE / EARLY | states JOIN / REST1 / IMPROVE:
+  20261023: -13.66 / -10.49 / -22.57 | -13.83 / -14.92 /  -9.53
+  20261024: -10.20 /  -8.44 / -13.38 | -11.05 / -11.78 /  -6.02
+  20261025: -10.81 /  -8.52 / -15.23 | -11.33 / -11.88 /  -8.87
+  20261026: -13.02 / -11.12 / -16.44 | -13.97 / -14.91 /  -4.72
+  20261027: -14.71 / -11.28 / -24.11 | -15.10 / -15.99 /  -7.22
+
+LIMITS: consumed days; replay fill model (queue M, counterfactual fills - IMPROVE optimistic); orders held to END (no strategy cancels); one order at a time; EARLY is ex post
