@@ -1,0 +1,338 @@
+{
+  "asof": "2026-11-17T03:48:57.800041+00:00",
+  "reviewed_source_commit": "693960d8",
+  "reviewed_results_commit": "f1d53700",
+  "original_asof": "2026-11-17T03:41:47Z",
+  "source_sha256": "aebefbf87c82384502d28dd8ea7f0dc6457b5544230182004d17ed0344c14b5a",
+  "controls": {
+    "equal_positive": true,
+    "corrupt_number_refused": true,
+    "valid_hash_positive": true,
+    "corrupt_hash_refused": true,
+    "duplicate_paths_same_distribution": true,
+    "duplicate_paths_change_nominal_z": true
+  },
+  "inputs": {
+    "/tmp/cta-bank2-review-20261117/predictfun/reviews/bank_two_sided_20261117/two_sided_bank.json": "e59de67f30e06380a6e68401cc8781df139831ce193c6a1792d61a96d17b4a3a",
+    "/home/yuqing/ctaNew/data/predict_fun/research/bank_two_sided_20261117/actions_20261026/receipt.json": "55ae230e1fa70140651d6e13ea3615106bc8a6a89dca79232094956be2e2446a",
+    "/home/yuqing/ctaNew/data/predict_fun/research/bank_two_sided_20261117/actions_20261026/values.parquet": "9d14ced5989cc965d210767be4d148e9d8ee2acb30cf2abdf70f0e6be9cbe9f3",
+    "/home/yuqing/ctaNew/data/predict_fun/research/value_bridge_20261116_v1/actions_20261026/receipt.json": "34fd1a1260dc50bdc6af8c2776586c590e8052c1ac65d44d600b7a431d2d6297",
+    "/home/yuqing/ctaNew/data/predict_fun/research/value_bridge_20261116_v1/actions_20261026/candidates.parquet": "a24556db88566d59e182946137e07cceeb1aacf38dd0dcc5d339c151612ed49b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/value_bridge_20261116_v1/actions_20261026/values.parquet": "8a475a839c806042dddf0450469bdc62461ee3487aacadb3b831cc91a5db6a79",
+    "/home/yuqing/ctaNew/data/predict_fun/research/flow_control_20261116_v3/bank/paths.pkl": "43c27d13f887cded37f8c479d4e51eb1b29437a68af16f0c4f1cb6aaf520a2ef",
+    "/home/yuqing/ctaNew/data/predict_fun/research/bank_two_sided_20261117/banks/TWO/paths.pkl": "b34b4f5fa3b0858f9e9da32b031742a3fce7e0d8a3a9fc4b92b140ffe0b60974",
+    "/home/yuqing/ctaNew/data/predict_fun/research/bank_two_sided_20261117/banks/BID48/paths.pkl": "3717f58f5f9bf262d9de05d5702ae655a32eb5318c41c1d619ed778b76da1c4c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/bank_two_sided_20261117/actions_20261027/receipt.json": "9af0af76a659d090ac0b8339299d62cd4157a43b7ef21c00b511ba059f619b9b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/bank_two_sided_20261117/actions_20261027/values.parquet": "40394dedced37d359f7ac4a214a35edd4a89416fb762a292fce85fd85aa204f2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/value_bridge_20261116_v1/actions_20261027/receipt.json": "e786ca73f90717892698408cbf5f15c0f9dfddf29aea795e40256249827ee059",
+    "/home/yuqing/ctaNew/data/predict_fun/research/value_bridge_20261116_v1/actions_20261027/candidates.parquet": "bea5cc5fca0351f2970e29f66220ffc2c3759c31de632dad70bc7b8af4f705cd",
+    "/home/yuqing/ctaNew/data/predict_fun/research/value_bridge_20261116_v1/actions_20261027/values.parquet": "b80d856a8d71bb3e23a57e9336640c115e32e47da78fe63533eb4ea98b473928",
+    "/home/yuqing/ctaNew/data/predict_fun/research/bank_two_sided_20261117/pilot/receipt.json": "a36b7fa6bd0d7f91a36c4ec12337387980afb8122f45a46013ceda92d19e09dd",
+    "/home/yuqing/ctaNew/data/predict_fun/research/bank_two_sided_20261117/pilot/markets.parquet": "acb9ccda2f0457d09e79ea88c367bd5c37b076e6979522547121d0448029680f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/bank_two_sided_20261117/pilot/inventory.parquet": "f2592dd1c26d65401261201f948c3e0f32c81f71923a5e2cda67ae54b21ce4c5",
+    "/home/yuqing/ctaNew/data/predict_fun/research/bank_two_sided_20261117/pilot/decisions.parquet": "b8bfa8c3e40983befe64769281e438c121f61ec019ed7fee34ce32db6aa12af9",
+    "/home/yuqing/ctaNew/data/predict_fun/research/bank_two_sided_20261117/pilot/fills.parquet": "c534b30f8f69a531b9425b55f38608802aede555ae3b475ecc9b0d353cce7da8",
+    "/home/yuqing/ctaNew/data/predict_fun/research/value_bridge_20261116_v1/pilot/receipt.json": "6dc4a29181fa942d22950f14bd7d74ba261e688f582ad575c372cafebd3843d6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/value_bridge_20261116_v1/pilot/markets.parquet": "b6290ee478645abaf26d83e35012db84cbdc1190ed46c1f9034a73793c29c6a3",
+    "/home/yuqing/ctaNew/data/predict_fun/research/value_bridge_20261116_v1/pilot/inventory.parquet": "ebd96567de0803f0836e4ef7b4f097c5fdd5fe27a35ce37d2fb0b1a5e7b81dd8",
+    "/home/yuqing/ctaNew/data/predict_fun/research/value_bridge_20261116_v1/pilot/decisions.parquet": "4d6a32f74bdb49fc7de17154531618872fbdbbe3f1893f4baef27144a8029e47",
+    "/home/yuqing/ctaNew/data/predict_fun/research/value_bridge_20261116_v1/pilot/fills.parquet": "6c1201f5633a6ef22188b508c124ed499dc88333cd835ef7767c7a33f20fe321"
+  },
+  "lineage": {
+    "20261026": {
+      "n": 418,
+      "statuses": {
+        "('BID48', 'eligible')": 418,
+        "('OLD', 'eligible')": 418,
+        "('TWO', 'eligible')": 418
+      }
+    },
+    "20261027": {
+      "n": 443,
+      "statuses": {
+        "('BID48', 'eligible')": 443,
+        "('OLD', 'eligible')": 443,
+        "('TWO', 'eligible')": 443
+      }
+    }
+  },
+  "common_actions": 861,
+  "excluded_actions": 0,
+  "readings_reproduced": {
+    "A1": "NOT-SHOWN",
+    "A2": "NONE",
+    "R1": "NOT-SHOWN"
+  },
+  "ask_calibration": {
+    "TWO": {
+      "ask_improves": 1,
+      "bid_within_5pct": 3,
+      "passes": false
+    },
+    "BID48": {
+      "ask_improves": 2,
+      "bid_within_5pct": 4,
+      "passes": false
+    }
+  },
+  "metrics": {
+    "BID48:20261026:0:cancel": {
+      "n": 101,
+      "rmse_cents": 7.430017728520562,
+      "zero_rmse_cents": 7.595113521487683,
+      "relative_to_zero": -0.021737106693670905
+    },
+    "BID48:20261026:0:post": {
+      "n": 106,
+      "rmse_cents": 19.731204172024057,
+      "zero_rmse_cents": 19.85998068240327,
+      "relative_to_zero": -0.006484221331258033
+    },
+    "BID48:20261026:1:cancel": {
+      "n": 104,
+      "rmse_cents": 9.216279996982436,
+      "zero_rmse_cents": 7.19999499749599,
+      "relative_to_zero": 0.2800397778314663
+    },
+    "BID48:20261026:1:post": {
+      "n": 107,
+      "rmse_cents": 47.013001886874086,
+      "zero_rmse_cents": 46.178613624781704,
+      "relative_to_zero": 0.018068716156619535
+    },
+    "BID48:20261027:0:cancel": {
+      "n": 109,
+      "rmse_cents": 38.89150453056076,
+      "zero_rmse_cents": 38.39474297564393,
+      "relative_to_zero": 0.012938270096819027
+    },
+    "BID48:20261027:0:post": {
+      "n": 111,
+      "rmse_cents": 32.09265470760189,
+      "zero_rmse_cents": 33.25448576513049,
+      "relative_to_zero": -0.034937574008341965
+    },
+    "BID48:20261027:1:cancel": {
+      "n": 112,
+      "rmse_cents": 22.970242076852013,
+      "zero_rmse_cents": 23.241517219292565,
+      "relative_to_zero": -0.011672006602708729
+    },
+    "BID48:20261027:1:post": {
+      "n": 111,
+      "rmse_cents": 14.496671470892602,
+      "zero_rmse_cents": 14.689937801483435,
+      "relative_to_zero": -0.013156375010064059
+    },
+    "OLD:20261026:0:cancel": {
+      "n": 101,
+      "rmse_cents": 7.434685916006395,
+      "zero_rmse_cents": 7.595113521487683,
+      "relative_to_zero": -0.021122476316833838
+    },
+    "OLD:20261026:0:post": {
+      "n": 106,
+      "rmse_cents": 19.691421008824353,
+      "zero_rmse_cents": 19.85998068240327,
+      "relative_to_zero": -0.008487403702676644
+    },
+    "OLD:20261026:1:cancel": {
+      "n": 104,
+      "rmse_cents": 9.329043114890505,
+      "zero_rmse_cents": 7.19999499749599,
+      "relative_to_zero": 0.2957013328668914
+    },
+    "OLD:20261026:1:post": {
+      "n": 107,
+      "rmse_cents": 47.029361418183754,
+      "zero_rmse_cents": 46.178613624781704,
+      "relative_to_zero": 0.018422982558867762
+    },
+    "OLD:20261027:0:cancel": {
+      "n": 109,
+      "rmse_cents": 38.88437452724976,
+      "zero_rmse_cents": 38.39474297564393,
+      "relative_to_zero": 0.012752567504265677
+    },
+    "OLD:20261027:0:post": {
+      "n": 111,
+      "rmse_cents": 32.06469694366487,
+      "zero_rmse_cents": 33.25448576513049,
+      "relative_to_zero": -0.035778295592024834
+    },
+    "OLD:20261027:1:cancel": {
+      "n": 112,
+      "rmse_cents": 22.959653540701122,
+      "zero_rmse_cents": 23.241517219292565,
+      "relative_to_zero": -0.012127593733745945
+    },
+    "OLD:20261027:1:post": {
+      "n": 111,
+      "rmse_cents": 14.310437217484365,
+      "zero_rmse_cents": 14.689937801483435,
+      "relative_to_zero": -0.025834049750758425
+    },
+    "TWO:20261026:0:cancel": {
+      "n": 101,
+      "rmse_cents": 8.021392700121343,
+      "zero_rmse_cents": 7.595113521487683,
+      "relative_to_zero": 0.05612545190110119
+    },
+    "TWO:20261026:0:post": {
+      "n": 106,
+      "rmse_cents": 19.82975944129039,
+      "zero_rmse_cents": 19.85998068240327,
+      "relative_to_zero": -0.00152171553417757
+    },
+    "TWO:20261026:1:cancel": {
+      "n": 104,
+      "rmse_cents": 12.72332541154475,
+      "zero_rmse_cents": 7.19999499749599,
+      "relative_to_zero": 0.7671297571692286
+    },
+    "TWO:20261026:1:post": {
+      "n": 107,
+      "rmse_cents": 45.059276672978754,
+      "zero_rmse_cents": 46.178613624781704,
+      "relative_to_zero": -0.024239293125990713
+    },
+    "TWO:20261027:0:cancel": {
+      "n": 109,
+      "rmse_cents": 38.32423875626345,
+      "zero_rmse_cents": 38.39474297564393,
+      "relative_to_zero": -0.00183629877207947
+    },
+    "TWO:20261027:0:post": {
+      "n": 111,
+      "rmse_cents": 32.53588571281116,
+      "zero_rmse_cents": 33.25448576513049,
+      "relative_to_zero": -0.021609116357854785
+    },
+    "TWO:20261027:1:cancel": {
+      "n": 112,
+      "rmse_cents": 23.33548369541488,
+      "zero_rmse_cents": 23.241517219292565,
+      "relative_to_zero": 0.004043043973235738
+    },
+    "TWO:20261027:1:post": {
+      "n": 111,
+      "rmse_cents": 15.088479860886999,
+      "zero_rmse_cents": 14.689937801483435,
+      "relative_to_zero": 0.027130275484442024
+    }
+  },
+  "nominal_z_ge2_posts": 0,
+  "nominal_z_is_calibrated_confidence": false,
+  "all_old_fill_fields_match": true,
+  "pilot_markets": 12,
+  "minutes_1_to_4": {
+    "OLD:all": {
+      "fills": 493,
+      "shares": 4449.082298495363,
+      "markouts_cents_per_share": [
+        -1.193636588296186,
+        -0.9892771767689734
+      ],
+      "mark_statuses": {
+        "1000": {
+          "ok": 493
+        },
+        "5000": {
+          "ok": 493
+        }
+      }
+    },
+    "OLD:0": {
+      "fills": 238,
+      "shares": 2377.454356329616,
+      "markouts_cents_per_share": [
+        -0.3692284684020342,
+        -0.286379666972595
+      ],
+      "mark_statuses": {
+        "1000": {
+          "ok": 238
+        },
+        "5000": {
+          "ok": 238
+        }
+      }
+    },
+    "OLD:1": {
+      "fills": 255,
+      "shares": 2071.6279421657473,
+      "markouts_cents_per_share": [
+        -2.1397488877792767,
+        -1.7959407251335546
+      ],
+      "mark_statuses": {
+        "1000": {
+          "ok": 255
+        },
+        "5000": {
+          "ok": 255
+        }
+      }
+    },
+    "TWO:all": {
+      "fills": 379,
+      "shares": 3126.6257149578437,
+      "markouts_cents_per_share": [
+        -1.133894771548959,
+        -0.4622661344981523
+      ],
+      "mark_statuses": {
+        "1000": {
+          "ok": 379
+        },
+        "5000": {
+          "ok": 379
+        }
+      }
+    },
+    "TWO:0": {
+      "fills": 183,
+      "shares": 1462.7624624654864,
+      "markouts_cents_per_share": [
+        -1.3200616065255955,
+        -0.7575977537692528
+      ],
+      "mark_statuses": {
+        "1000": {
+          "ok": 183
+        },
+        "5000": {
+          "ok": 183
+        }
+      }
+    },
+    "TWO:1": {
+      "fills": 196,
+      "shares": 1663.8632524923578,
+      "markouts_cents_per_share": [
+        -0.9702287626074682,
+        -0.20262940894284787
+      ],
+      "mark_statuses": {
+        "1000": {
+          "ok": 196
+        },
+        "5000": {
+          "ok": 196
+        }
+      }
+    }
+  },
+  "more_than_5pct_worse_than_zero": [
+    "BID48:20261026:1:cancel",
+    "OLD:20261026:1:cancel",
+    "TWO:20261026:0:cancel",
+    "TWO:20261026:1:cancel"
+  ],
+  "limits": [
+    "Consumed Oct26-27; descriptive artifact review, no new strategy or model.",
+    "Scenario dispersion and effective paths are not calibrated forecast confidence.",
+    "A1/R1 retain their original descriptive definitions; no day-cluster intervals.",
+    "Bank correction failure does not identify which new estimator will succeed."
+  ]
+}
