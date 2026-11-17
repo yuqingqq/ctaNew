@@ -1,3 +1,18 @@
+review_fixes_ledger_keep_pull_20261117:
+  status: code_committed_awaiting_go
+  asof: "2026-11-17 14:35Z"
+  session: aea5bfb9
+  user: "Check my review commit, then do the fix"
+  review: {commits: [ef4fc17b, ab597948, 7008362b], report: predictfun/handoffs/20261117_ledger_keep_pull_review.md, findings_confirmed: 4}
+  code_commit: b6eaa7c2
+  ledger: "L5a tipping point = sensitivity (TIP-OUTSIDE / TIP-INSIDE-OBSERVED-RANGE); L5b worst case at legal payoff bounds (SIGN-ROBUST-TO-EXCLUDED / NOT-ROBUST-AT-PAYOFF-BOUNDS); review counterexample + positive control in the selftest"
+  keep_pull: "live decisions from +100 ms; pending withdrawal on its own row; risk-set null matching executed pulls by (day, market, side, minute) and step, unmatched reported; K1 NOT-SHOWN on failure; K4 numeric paired 0 vs 37 ms on the zero-latency oracle's decisions; DELAYS rows; missing fair input -> KEEP at that decision"
+  selftests: passed
+  mutation_checks: {ledger: "unchanged copy passes, 29 / 29 planted code errors fail (incl. 4 on L5)", keep_pull: "unchanged copy passes, 40 / 40 planted code errors fail (incl. 14 on the null, live bound, latency pair and missing inputs; one equivalent mutant by design documented)"}
+  tape_read: false
+  running: false
+  next: "USER go -> run_queue_place_ledger.sh smoke / all, then run_keep_pull.sh smoke / all"
+
 ledger_keep_pull_fix_review_20261117:
   status: complete_remaining_diagnostic_issues_identified
   asof: 2026-11-17T13:58:04Z
@@ -21,6 +36,7 @@ ledger_keep_pull_fix_review_20261117:
   next: fix_diagnostic_claims_and_null_then_ledger_replay_and_same_live_order_keep_pull
 
 keep_pull_20261117:
+  fixed_after_review: "b6eaa7c2 (review 7008362b; see review_fixes_ledger_keep_pull_20261117)"
   status: code_committed_awaiting_go
   asof: "2026-11-17 13:48Z"
   session: aea5bfb9
@@ -38,6 +54,7 @@ keep_pull_20261117:
   next: "USER go -> run_keep_pull.sh smoke, then all (after or independent of the ledger runs)"
 
 queue_place_ledger_20261117_v2:
+  fixed_after_review: "b6eaa7c2 (review 7008362b; see review_fixes_ledger_keep_pull_20261117)"
   status: code_committed_awaiting_go
   asof: "2026-11-17 13:09Z"
   session: aea5bfb9
