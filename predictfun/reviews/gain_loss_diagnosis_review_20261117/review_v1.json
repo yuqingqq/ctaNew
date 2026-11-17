@@ -1,0 +1,312 @@
+{
+  "asof": "2026-11-17T04:38:10.302742+00:00",
+  "original_asof": "2026-11-17T04:32:41.171381+00:00",
+  "source_sha256": "6625671a87ca6103ac49cb9666005333b2c73ccc78cee1e708d510607cf7478f",
+  "controls": {
+    "equality_positive": true,
+    "corrupt_value_refused": true,
+    "chronological_positive": true,
+    "future_fold_refused": true,
+    "relative_familiarity_does_not_imply_overlap": true
+  },
+  "inputs": {
+    "/tmp/cta-gl-diagnosis-review-20261117/predictfun/research/pf_gain_loss.py": "952cc2f291079fbb2e477a306817f42fe7a2beba4aa59a47c012d48d4b995bc9",
+    "/tmp/cta-gl-diagnosis-review-20261117/predictfun/research/pf_gain_loss_diag.py": "d7decde0a533a5a2dd20a972e753e1e57d0154675f6eb7b67dfc4aa1e89ce6fc",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/fit/receipt.json": "735b21f5c3b7195a29935c66fb361543ed9d0c14e97c8594f631ee4f231279a3",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/eval/receipt.json": "b8c39c94ad7c220c43aa15d4023ee95e4762b2432fc7afa89bcd2b7171faf291",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/eval/set_L.parquet": "a657b50b59c0264e287ad8e4616792031dc8846bed9e16f001f527ab149f4138",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/eval/set_S.parquet": "4d49ba6117838ffd9bb9b3ff6465699fb0eef64e08cc244285c85e888cf547b6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/fit/full_g_p.txt": "e4a30d9e04e8c0fc39abe9f5ccd78733e73326de478bb7ad840b9f52393bf258",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/fit/full_g_amt.txt": "cd7e607fa5c95d8df42a7c700b2e7a0c62c54437c451a69cf49d47b681f53557",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/fit/full_l1_p.txt": "e6b7635172d1bc194a58b456a4f526fa37a3890961eda37a1f0370d070d9dacb",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/fit/full_l1_amt.txt": "ce82d4846b26efb0963018e0116cd7b62bbdffa021f3db8c7eaad2effcb3e325",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/fit/full_l2_p.txt": "f76b9c7e7c431d37f3d680650b2ee456b55c1319961c0e9aabb3e9f3c6f540dc",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/fit/full_l2_amt.txt": "60f6d675b5857c994f41bbaf784ed7a8b0e0d6b9f3a99f0db5578fdc30aaafa6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/fit/mechanical_g_p.txt": "d56c4b19db381a27c13cf3ccbe477fc78b1181fefa231e76a3bd70f138210f7e",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/fit/mechanical_g_amt.txt": "c42c6853a6f1619f2c92f157f2533edfcf703725d843ba9634293aa9b28e8729",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/fit/mechanical_l1_p.txt": "6e29e02e19a6787298585810882b962743d3156ccb857658471b83277a7f9d47",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/fit/mechanical_l1_amt.txt": "f70b1a37e830d716af07151b2481f29df4a2a7db7c0ff5f2b63c858867d95e8b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/fit/mechanical_l2_p.txt": "4df632779b46914fcb53a419d3e5e17ecd215e7189e0099a7113fa22746beb3f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/fit/mechanical_l2_amt.txt": "8aadb09256674e0ac09641a5889b722f0422d9eb643f5f45d3f4a00da6984c04",
+    "/tmp/cta-gl-diagnosis-review-20261117/predictfun/reviews/gain_loss_20261117/gain_loss_diag.json": "f0b02e24b5ad8cdb24523b60f156d8860a49e4b59a63ccc255fc46822d35e8e2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/diag/gain_loss_diag.json": "f0b02e24b5ad8cdb24523b60f156d8860a49e4b59a63ccc255fc46822d35e8e2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/diag/fold_20261023/l1_p.txt": "5e90ebb236a469e48613a0740186d8e73988d0a97563bef12129b04dc7a82fdd",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/diag/fold_20261023/l1_amt.txt": "b96bdb603d6a6fbe6ffdb060fcbc14f0bdd01d1aa01549559c0eb9ae678572a4",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/diag/fold_20261023/l2_p.txt": "a327862c52e7f6eef6d68d208e8ff4064fc41f3184f3c3e98a2b2796edbf3aa6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/diag/fold_20261023/l2_amt.txt": "120e8b457e5be0e742052993db57c6e75748ff102c57f0868a9e7d610adba9c5",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/diag/fold_20261024/l1_p.txt": "d109605572a1a4183dec509112d18d6d6754b823733b268cceca1230ee2b1b81",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/diag/fold_20261024/l1_amt.txt": "bad96fce0420f0d6e9b237558ce3ced2ecaeaafd9077a2ccd2162746d045d1f2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/diag/fold_20261024/l2_p.txt": "941169c9df8d70699ef59118d15d8818dd17cdfc93f48fdb61e10407af369efe",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/diag/fold_20261024/l2_amt.txt": "a6eefc7bbc3e41d5477afc427d37a250b60007a257d4d96370d2c57a90929de8",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/diag/fold_20261025/l1_p.txt": "6401f7b248028210164f6e7a504b434e4833c3e3b94050f8b6817a1d6420e792",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/diag/fold_20261025/l1_amt.txt": "56e16963657ec7d6edf9222f97df9a658067daf90110f51378e61df4f9a3603b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/diag/fold_20261025/l2_p.txt": "fe6775487b0cf588727ff65a532d526808bae7012d432682ae404b5e171cef1d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/diag/fold_20261025/l2_amt.txt": "cd90878ea1c39cf7a893d65335a1d1974b536a7d888f2557a7e7718669f838de",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/label_20261026/receipt.json": "4ce26c65889a3c478cdf482e9052f265e041bac893fe7ae9794a45061d49c9e0",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/label_20261026/actions.parquet": "9a1fc05737dc01e091a2423272c552e9e009319931dfc35f14bce9bd76bf2074",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/label_20261027/receipt.json": "1a7dc404ac8e2164629b9d303112af15bb4f4500a24f2a52cc2770ad6a17eb98",
+    "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/label_20261027/actions.parquet": "630c936196db35c38d571cec0c3d0f98ff97224cac44e09e83f01a138ba2d2c6"
+  },
+  "training_n": 27236,
+  "evaluation_n": 17859,
+  "cells": {
+    "20261026:cancel": {
+      "n": 4946,
+      "loss_ratio": 0.8282264127197652,
+      "severe_ratio": 0.7984539236395463,
+      "predicted_loss_event_n": 331.40998420294875,
+      "actual_loss_event_n": 356,
+      "predicted_severe_event_n": 139.42907602292922,
+      "actual_severe_event_n": 183
+    },
+    "20261026:post": {
+      "n": 3994,
+      "loss_ratio": 0.845300151471907,
+      "severe_ratio": 0.7977681988380599,
+      "predicted_loss_event_n": 347.7839384310468,
+      "actual_loss_event_n": 356,
+      "predicted_severe_event_n": 141.1527567166266,
+      "actual_severe_event_n": 169
+    },
+    "20261027:cancel": {
+      "n": 4870,
+      "loss_ratio": 0.7991362923533772,
+      "severe_ratio": 0.7387466774171826,
+      "predicted_loss_event_n": 312.7893271446741,
+      "actual_loss_event_n": 326,
+      "predicted_severe_event_n": 134.30021810409477,
+      "actual_severe_event_n": 166
+    },
+    "20261027:post": {
+      "n": 4049,
+      "loss_ratio": 0.7083070563124818,
+      "severe_ratio": 0.6579618907949688,
+      "predicted_loss_event_n": 339.8490956753835,
+      "actual_loss_event_n": 387,
+      "predicted_severe_event_n": 147.0682472225396,
+      "actual_severe_event_n": 199
+    }
+  },
+  "folds": {
+    "20261023": {
+      "train_days": [
+        "20261024",
+        "20261025"
+      ],
+      "n": 9039,
+      "strictly_forward": false,
+      "loss_ratio": 0.8254223202100398
+    },
+    "20261024": {
+      "train_days": [
+        "20261023",
+        "20261025"
+      ],
+      "n": 9259,
+      "strictly_forward": false,
+      "loss_ratio": 1.0834892078956317
+    },
+    "20261025": {
+      "train_days": [
+        "20261023",
+        "20261024"
+      ],
+      "n": 8938,
+      "strictly_forward": true,
+      "loss_ratio": 0.748408281867888
+    }
+  },
+  "strictly_forward_fold_n": 1,
+  "coverage": {
+    "auc": 0.9272964217977756,
+    "train_scores": {
+      "0": 0.0006117919575618659,
+      "0.1": 0.0031718807623588204,
+      "0.5": 0.03491221443499533,
+      "0.9": 0.62180712410357,
+      "1": 0.9884884325594423
+    },
+    "evaluation_scores": {
+      "0": 0.004926953960039569,
+      "0.1": 0.38376806617043213,
+      "0.5": 0.7943361542111245,
+      "0.9": 0.9589430678487548,
+      "1": 0.9919622075343819
+    },
+    "familiarity": {
+      "Q1": {
+        "n": 3572,
+        "scores": {
+          "0": 0.004926953960039569,
+          "0.1": 0.1378920313006612,
+          "0.5": 0.3837346961268471,
+          "0.9": 0.5081559595624646,
+          "1": 0.5357677181391479
+        },
+        "loss_ratio": 0.7887429479222091
+      },
+      "Q2": {
+        "n": 3572,
+        "scores": {
+          "0": 0.535934442323945,
+          "0.1": 0.5613719148812495,
+          "0.5": 0.6404318271887051,
+          "0.9": 0.7067585874265568,
+          "1": 0.7231075430364525
+        },
+        "loss_ratio": 0.7304852955787596
+      },
+      "Q3": {
+        "n": 3571,
+        "scores": {
+          "0": 0.7231749445330756,
+          "0.1": 0.737468818538455,
+          "0.5": 0.7943361542111245,
+          "0.9": 0.8408569720579836,
+          "1": 0.8522350964153961
+        },
+        "loss_ratio": 0.8618067915893219
+      },
+      "Q4": {
+        "n": 3572,
+        "scores": {
+          "0": 0.8522351438041623,
+          "0.1": 0.8624468708420159,
+          "0.5": 0.8983642095860402,
+          "0.9": 0.927310890317955,
+          "1": 0.9342325138221899
+        },
+        "loss_ratio": 0.7601799468180993
+      },
+      "Q5": {
+        "n": 3572,
+        "scores": {
+          "0": 0.9342495474489071,
+          "0.1": 0.9396349219304989,
+          "0.5": 0.9589449738266269,
+          "0.9": 0.9782572209574267,
+          "1": 0.9919622075343819
+        },
+        "loss_ratio": 0.8318712041799162
+      }
+    },
+    "relative_quintiles_are_not_support_certificates": true
+  },
+  "original_predicates": {
+    "P1": false,
+    "P2": true,
+    "P3": false,
+    "P4": true
+  },
+  "selection_composition": {
+    "20261026:cancel:0.1": {
+      "n_each": 495,
+      "market_side_cells_different": 322,
+      "total_market_side_cells": 425,
+      "count_l1": 426
+    },
+    "20261026:cancel:0.25": {
+      "n_each": 1237,
+      "market_side_cells_different": 406,
+      "total_market_side_cells": 550,
+      "count_l1": 648
+    },
+    "20261026:cancel:0.5": {
+      "n_each": 2473,
+      "market_side_cells_different": 416,
+      "total_market_side_cells": 574,
+      "count_l1": 666
+    },
+    "20261026:post:0.1": {
+      "n_each": 400,
+      "market_side_cells_different": 324,
+      "total_market_side_cells": 393,
+      "count_l1": 470
+    },
+    "20261026:post:0.25": {
+      "n_each": 999,
+      "market_side_cells_different": 407,
+      "total_market_side_cells": 536,
+      "count_l1": 650
+    },
+    "20261026:post:0.5": {
+      "n_each": 1997,
+      "market_side_cells_different": 387,
+      "total_market_side_cells": 570,
+      "count_l1": 582
+    },
+    "20261027:cancel:0.1": {
+      "n_each": 487,
+      "market_side_cells_different": 323,
+      "total_market_side_cells": 419,
+      "count_l1": 430
+    },
+    "20261027:cancel:0.25": {
+      "n_each": 1218,
+      "market_side_cells_different": 410,
+      "total_market_side_cells": 537,
+      "count_l1": 656
+    },
+    "20261027:cancel:0.5": {
+      "n_each": 2435,
+      "market_side_cells_different": 415,
+      "total_market_side_cells": 567,
+      "count_l1": 700
+    },
+    "20261027:post:0.1": {
+      "n_each": 405,
+      "market_side_cells_different": 330,
+      "total_market_side_cells": 395,
+      "count_l1": 448
+    },
+    "20261027:post:0.25": {
+      "n_each": 1013,
+      "market_side_cells_different": 384,
+      "total_market_side_cells": 541,
+      "count_l1": 562
+    },
+    "20261027:post:0.5": {
+      "n_each": 2025,
+      "market_side_cells_different": 394,
+      "total_market_side_cells": 574,
+      "count_l1": 600
+    }
+  },
+  "training_zero_wealth": 23971,
+  "training_zero_quantity": 23896,
+  "training_filled_zero_wealth": 75,
+  "canonical_checks": {
+    "20261026": {
+      "n": 56,
+      "positive_n": 3,
+      "statuses": {
+        "('cancel', 'eligible')": 4946,
+        "('post', 'eligible')": 3994,
+        "('post', 'not_available_in_client_state')": 1270
+      }
+    },
+    "20261027": {
+      "n": 79,
+      "positive_n": 9,
+      "statuses": {
+        "('cancel', 'eligible')": 4870,
+        "('post', 'eligible')": 4049,
+        "('post', 'not_available_in_client_state')": 1163
+      }
+    }
+  },
+  "output_hashes": {
+    "domain_fold_3.txt": "bbf989c8301687415387314f1109923e378ceedcf92bd0f178792cc625834b88",
+    "domain_fold_2.txt": "11e7654a4fa41eea41bcd36070e99346a593518ffc4ab6605f22ae02df3d2543",
+    "domain_scores.parquet": "bcb1ea459b56a6ffd40c1f711b3dbb35e1442c61f7ed8b693dddfe2b1ebbd730",
+    "domain_fold_4.txt": "66f3a249343445820cc01cd5c8ef0ec39d3ff56925e9a81c5b2f3d5f02a2c6d4",
+    "domain_fold_0.txt": "3cb33200ebcd15072c920119df0761278832e49a56d0db22d105071069f79b05",
+    "domain_fold_1.txt": "f3e7af0ce23e69e220f8817586f3fb0282c1202cb6b6b641f65a58f2c2953583"
+  },
+  "limits": [
+    "Descriptive review of consumed dates; no new return model or policy.",
+    "OOF domain scores are distribution diagnostics, not calibrated overlap probabilities.",
+    "No inference that missing day intensity causes the loss shortfall.",
+    "Original G1/G2 PASS is a relative focal-value screen, not successful loss calibration or profitability."
+  ]
+}
