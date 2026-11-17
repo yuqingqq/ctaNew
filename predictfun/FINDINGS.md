@@ -1,3 +1,49 @@
+<!-- VALUE_DIAGNOSIS_RESULTS_20261117 -->
+## 2026-11-17 Value calibration and SOFT controller diagnosis
+
+Results 38c14913, merge 9a9adc97; report
+handoffs/20261117_value_diagnosis_results.md and evidence
+reviews/value_diagnosis_20261117/{index,audit_v2,publication_v1}.json.
+As of 2026-11-17T02:49:32Z, completed independent reconstruction and
+post-merge hash verification. Fixed models/targets/policy, consumed dates only.
+
+Four training histories: Oct25 n8,938; Oct24-25 n18,197; Oct23-25 n27,236;
+three-day sample matched to H1 kind/side/phase n8,938. Evaluation is exact
+418 Oct26/443 Oct27 neutral actions, with original exclusions and no-fill
+mass retained. History improves coverage but full-value RMSE improves
+monotonically in only Oct26 cancel (n205), not post n213 or Oct27 n221/222.
+This does not settle whether substantially longer training helps.
+
+Market features improve affected-fill AUC, Brier and log loss over mechanical
+in all four day/action samples. Posting quantity means are close in aggregate,
+but fill-weighted signed endpoint motion is too optimistic: predicted/actual
+-2.153/-3.123 c/share (n213) and -2.911/-3.286 (n222). Every populated positive
+H3 joint-moment posting score band has negative realized mean on both days.
+Small heavy-tailed samples; no exact conditional-mean or profitability claim.
+Diagnostic fill-probability/quantity heads violate their joint bound on some
+rows; the probability head was never used by the previous policy, so this is
+not a cause of its historical losses. Global outcome RMSE is not uncertainty
+in a conditional mean and must not become an arbitrary decision margin.
+
+SOFT replay reproduces archived decisions/fills on 12 Oct27 markets. Of 10,847
+posts, 10,675 have first-review pairs; other statuses:118 prior structural
+cancels,51 activation rejects,3 missing contexts. Model-cancels3,838, keeps6,837
+(including116 structurally removed at review). For 192 hash-sampled rapid
+cancels, market/scenario and forecast changes dominate predicted-value reversal;
+170 still cancel with original absolute endpoint,182 with two-second horizon,
+189 with old queue. These are sensitivities, not realized economic regret or
+proof the cancellations are justified. Balanced sample also has192 keeps.
+
+All384 paired path/state complement controls preserve kernel value. Query-only
+complement against the original bid-probe bank changes175/384 preferences.
+This supports a fixed-policy bank representation ablation, not a causal claim
+that bid conditioning explains ask losses or that mirroring improves profit.
+Direct-wealth focal prediction bypasses the bank and still fails across dates,
+so the bank is not the whole value-prediction problem. Test side-balanced paths
+and coherent joint value/tail calibration; score markout separately from carry,
+and do not judge success by fewer cancels alone. No new policy or promotion.
+<!-- /VALUE_DIAGNOSIS_RESULTS_20261117 -->
+
 <!-- JOINT_MOMENT_RESULTS_20261117 -->
 ## 2026-11-17 Joint fill/price moment regressions fail the prediction screen
 
