@@ -1,3 +1,27 @@
+<!-- VALUE_DECOMPOSITION_20261117 -->
+## 2026-11-17 Paired economic-value decomposition: frozen diagnostic running
+
+Source f6b59100, freeze6743804b; branch research/predict-value-decomposition-20261117,
+worktree /tmp/cta-value-decomp-20261117. Sequential launcher run_value_decomposition.sh
+uses Codex/core8. All synthetic/inherited controls pass; exact canonical action
+branches are being re-run for418 Oct26 and443 Oct27 actions. Output/logs under
+ data/predict_fun/research/value_decomposition_20261117_v1/; evidence target
+reviews/value_decomposition_20261117/index.json. No model/controller changes.
+
+Value = current-mid edge + endpoint price motion + inventory-risk difference.
+Separate focal vs other resting orders; measure action-affected quantity, which
+excludes unavoidable cancellation-window fills. Reconcile every archived value,
+prediction and neutral prefix. Compare all3 frozen mappings, ordinary and Oct27
+true-pair channels, with actual-future/client-state control. Seven predeclared
+component substitutions remain retrospective diagnostics, never strategy inputs.
+
+Fixed severe retained-exposure tail below-30c; retain no-fill/status rows.
+Report signed error accounting, action count-matched200-draw nulls, both sides
+and ten largest errors per group. Full pipeline frozen before outcomes; no
+fitting, tuning or continuous-policy replay. Consumed dates only, no intervals,
+promotion or protected-date access. SOFT_JOINT remains the retained baseline.
+<!-- /VALUE_DECOMPOSITION_20261117 -->
+
 <!-- CONDITIONAL_MAP_20261117 -->
 ## 2026-11-17 Conditional response mapping complete: gate failed, baseline retained
 
