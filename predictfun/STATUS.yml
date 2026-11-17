@@ -1,3 +1,18 @@
+unmatched_acceptance_fix_20261117:
+  status: code_committed_awaiting_go
+  asof: "2026-11-17 15:25Z"
+  session: aea5bfb9
+  user: "Check the review"
+  review: {commits: [3cef4993, 38de5e66], report: predictfun/handoffs/20261117_committed_fix_review.md, finding_confirmed: true}
+  code_commit: ebd5c6b3
+  fix: "trajectory null with any unmatched draw -> NOT-EVALUABLE-UNMATCHED (per-cell counts checked, draws kept); declared fallback: decision-level matched null (STATES, exact by construction); hierarchy TRAJ if every draw matches else STATES"
+  selftests: passed
+  mutation_check: "unchanged copy passes, 43 / 43 planted code errors fail the selftest (incl. the hierarchy ignoring matching, a decision-level null drawing orders not live, one state short per cell)"
+  synthetic_note: "the synthetic report falls back to STATES (TRAJ short in 499 / 500 draws)"
+  tape_read: false
+  running: false
+  next: "USER go -> run_queue_place_ledger.sh smoke / all, then run_keep_pull.sh smoke / all"
+
 committed_fix_review_20261117:
   status: reviewed_one_remaining_acceptance_issue
   asof: 2026-11-17T15:07:09Z
