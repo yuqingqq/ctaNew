@@ -1,3 +1,21 @@
+severe_candidate_review_20261117:
+  status: complete_proposed_candidates_not_fitted
+  asof: 2026-11-17T06:01:01Z
+  commit: 42ca7966
+  report: predictfun/handoffs/20261117_severe_candidate_review.md
+  receipt: predictfun/reviews/severe_candidate_review_20261117/receipt_v1.json
+  saved_head_bands_reproduced: true
+  evaluation_actions: 36056
+  severe_events: 1310
+  severe_probability_exceeds_any_loss_rows: 2268
+  proposed_smoother_min_data_in_leaf: 400
+  proposed_smoother_rounds: 100
+  candidates_fitted: 0
+  controller_changed: false
+  running: false
+  promotion: false
+  next: declare_calibration_only_and_smoother_only_with_probability_consistency_and_forward_validation
+
 gain_loss_diagnosis_review_20261117:
   status: complete_reproduced_with_material_interpretation_limits
   asof: 2026-11-17T04:38:10Z

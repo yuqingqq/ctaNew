@@ -1,3 +1,31 @@
+<!-- SEVERE_CANDIDATE_REVIEW_20261117 -->
+## 2026-11-17 Severe-head candidate review: calibration and smoothing justified, not yet fitted
+
+User asked whether two directions make sense: a smoother model (flagged change
+from pinned parameters) or an earlier-held-out-day calibration map. Reviewed
+49d159e5/cbf48b89 and a580eed4/2ec3e5c6; review42ca7966. Report
+handoffs/20261117_severe_candidate_review.md; receipt
+reviews/severe_candidate_review_20261117/receipt_v1.json; verifier
+research/pf_severe_candidate_review.py. As of06:01:01Z Nov17, all seven bands
+reproduce from the saved heads:36056 actions,1310 severe events, past-only
+Oct24-27. Probability/model-hash/population controls pass. No new candidate fit.
+
+Recommend baseline + calibration-only + one smoother-only candidate. Proposed
+smoother400 minimum rows/leaf and100 rounds vs current200/200; other parameters
+fixed, explicitly changed. Calibration is the simpler first scale diagnostic:
+small monotone logit map on earlier genuinely held-out scores, same base model
+frozen through evaluation. No tuning or combining after seeing later days.
+Require proper probability scores, band calibration and matched economic value;
+all current dates consumed, at least5 untouched later complete days for validation.
+
+New output constraint: P(severe)>P(any loss) on2268/36056 rows (640/566/459/603
+by day; populations9259/8938/8940/8919). Both directions need declared consistency
+handling; no silent clipping or assumption that severe-head improvement repairs
+joint economics. Keep other heads/controller fixed for the initial probability
+ablation. Support is only in15 selected inputs; pooled kNN calibration does not
+prove absence of distribution shift or superior per-decision prediction.
+<!-- /SEVERE_CANDIDATE_REVIEW_20261117 -->
+
 ## 2026-11-17 05:02Z (session aea5bfb9) — SEVERE-EVENT PROBABILITY: CALIBRATION BY BAND AND TRAINING SUPPORT (USER: "Ok, go"): model error - overconfident low probabilities - not a coverage gap in the inputs the head uses
 
 - What: pf_severe_support.py (a580eed4, declared before the run; no model change), on the past-only fold heads (the Oct26 fold reproduces GAIN-LOSS's P(severe) exactly).
