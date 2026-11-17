@@ -46,9 +46,14 @@ def main():
     active = np.tile(np.r_[np.ones(n_day//2, bool), np.zeros(n_day//2, bool)], 5)
     day = np.repeat(np.arange(5), n_day)
     T = np.where(active, 1, KP.NSTEP+1)
-    V = dict(Vk=np.full(n, -1.), Qk=np.ones(n), Mv=np.zeros((n, KP.NSTEP)),
-             Mq=np.zeros((n, KP.NSTEP)), endj=np.where(active, KP.NSTEP+1, 1),
-             life=np.full(n, 5000.), lat=37.)
+    # Active orders fill at 4,999 ms (after every candidate removal); inactive
+    # orders fill at 70 ms before their structural cancel lands at 95 ms.
+    # Even inaccessible branch values therefore correspond to feasible fills.
+    V = dict(Vk=np.full(n, -1.), Qk=np.ones(n),
+             Mv=np.repeat(np.where(active, 0., -1.)[:,None], KP.NSTEP, axis=1),
+             Mq=np.repeat(np.where(active, 0., 1.)[:,None], KP.NSTEP, axis=1),
+             endj=np.where(active, KP.NSTEP+1, 1),
+             life=np.where(active, 4999., 70.), lat=37.)
     actual = KP.outcome(V, T, day, 5)
     null = KP.nulls(V, T, day, day, 5, 20261117, draws=500)
     k2, k2_stats = KP.k2(actual, null)
@@ -60,7 +65,8 @@ def main():
     require_equal([r['X'].sum()/r['R'].sum() for r in null], np.full(500, -1.))
     # Positive control: without destination eligibility differences, shuffling
     # raw triggers DOES preserve the number of pulls.
-    balanced = dict(V, endj=np.full(n, KP.NSTEP+1))
+    balanced = dict(V, endj=np.full(n, KP.NSTEP+1), Mv=np.zeros((n,KP.NSTEP)),
+                    Mq=np.zeros((n,KP.NSTEP)), life=np.full(n,4999.))
     pos = KP.nulls(balanced, T, day, day, 5, 20261117, draws=200)
     require_equal([r['n'].sum() for r in pos], np.full(200, 500.))
 
@@ -101,8 +107,11 @@ def main():
             null_max_pulls=float(null_pulls.max()),identical_removed_value_per_share=-1.,
             k2_passes_without_value_ranking=k2,k2_stats=k2_stats,k3=k3,k3_stats=k3_stats),
         oracle=dict(n_orders=5,loss_per_order=30.,decision_ms=KP.STEP,activation_ms=KP.PLACE,curves=curves))
-    OUT.mkdir(exist_ok=False)
-    QL.C.dump(OUT/'counterexamples_v1.json',result)
+    result['supersedes'] = 'counterexamples_v1.json'
+    result['revision'] = 'Feasible fill timing also supplied for inaccessible null branches; findings unchanged.'
+    OUT.mkdir(exist_ok=True)
+    assert not (OUT/'counterexamples_v2.json').exists(), 'review output exists'
+    QL.C.dump(OUT/'counterexamples_v2.json',result)
     print(json.dumps(QL.C.clean(result),indent=2))
 
 
