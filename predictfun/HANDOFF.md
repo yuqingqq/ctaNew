@@ -1,3 +1,12 @@
+## 2026-11-17 03:42Z (session aea5bfb9) — TWO-SIDED SCENARIO BANK, CONTROLLED (USER: "Yes can you do the next and validate", after the audit): the bank's one-sidedness shifts quality between sides, but value prediction does not improve and no confident positive post appears
+
+- What: pf_bank_two_sided.py (693960d8, declared before the run). Only SOFT_JOINT's scenario bank changes: OLD (frozen, bid rung-0 probe times, 24 per market) vs TWO (the same rule on the ask probes too: 2,492 paths, 1,234 drawn at ask times) and BID48 (bid rule, 48 per market: more-data control). Classifier, pooling, IPF, controller, risk, clocks and 1 s horizon unchanged. Controls: the OLD rule rebuilt here equals the frozen bank; OLD reproduces the archived predictions on all 861 actions and the archived 12-market pilot; planted errors refused.
+- A1 ASK-CALIBRATION NOT-SHOWN: TWO lowers ask RMSE in 1 of 4 cells (Oct26 posts 47.03 -> 45.06 c; Oct26 cancels 9.33 -> 12.72, Oct27 cancels 22.96 -> 23.34, Oct27 posts 14.31 -> 15.09); BID48 ~ OLD. Every bank's RMSE sits within a few % of predicting zero (OLD beats zero in 5 / 8 cells by <= 4%, loses in 3; TWO 4 / 8).
+- A2 CONFIDENT-POSTS NONE: 0 posts predicted positive beyond 2 SE under TWO (and OLD); TWO's positive ask posts on Oct26 realize -32.1 c (OLD -22.2).
+- R1 ASK-MARKOUT NOT-SHOWN (12 markets, minutes 1-4): asks improve (+1 s -2.14 -> -0.97, +5 s -1.80 -> -0.20) but bids worsen (-0.37 -> -1.32, -0.29 -> -0.76); all fills +1 s -1.19 -> -1.13, +5 s -0.99 -> -0.46 c/sh on 30% fewer shares; terminal $+368 -> $+47 (the final minute), pulls 9,775 -> 8,354, first-review cancels 39% -> 42%.
+- Reading: the bid-only bank explains the side asymmetry, not the poor value prediction; fixing it moves losses between sides. The audit's conclusion stands: economic-value prediction is the gap - in this setup the model barely beats a zero forecast and finds no confidently profitable post.
+- Receipts: reviews/bank_two_sided_20261117/. Next: the USER's call.
+
 <!-- VALUE_DIAGNOSIS_20261117 -->
 ## 2026-11-17 Calibration/history and SOFT controller diagnosis: complete, audited
 

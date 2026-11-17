@@ -1,0 +1,39 @@
+two-sided bank selftests passed; planted errors caught: {'MUT_ASK_FROM_BID': True, 'MUT_BANK_SWAP': True}
+{"stage": "bank", "day": "20261023", "markets": 24, "seconds": 4}
+{"stage": "bank", "day": "20261023", "markets": 48, "seconds": 6}
+{"stage": "bank", "day": "20261023", "markets": 72, "seconds": 8}
+{"stage": "bank", "day": "20261023", "markets": 96, "seconds": 11}
+{"stage": "bank", "day": "20261023", "markets": 120, "seconds": 14}
+{"stage": "bank", "day": "20261023", "markets": 144, "seconds": 16}
+{"stage": "bank", "day": "20261023", "markets": 168, "seconds": 19}
+{"stage": "bank", "day": "20261023", "markets": 192, "seconds": 21}
+{"stage": "bank", "day": "20261023", "markets": 216, "seconds": 24}
+{"stage": "bank", "day": "20261023", "markets": 240, "seconds": 26}
+{"stage": "bank", "day": "20261023", "markets": 264, "seconds": 28}
+{"stage": "bank", "day": "20261023", "markets": 288, "seconds": 30}
+{"stage": "bank", "day": "20261024", "markets": 24, "seconds": 34}
+{"stage": "bank", "day": "20261024", "markets": 48, "seconds": 36}
+{"stage": "bank", "day": "20261024", "markets": 72, "seconds": 38}
+{"stage": "bank", "day": "20261024", "markets": 96, "seconds": 40}
+{"stage": "bank", "day": "20261024", "markets": 120, "seconds": 42}
+{"stage": "bank", "day": "20261024", "markets": 144, "seconds": 44}
+{"stage": "bank", "day": "20261024", "markets": 168, "seconds": 46}
+{"stage": "bank", "day": "20261024", "markets": 192, "seconds": 49}
+{"stage": "bank", "day": "20261024", "markets": 216, "seconds": 51}
+{"stage": "bank", "day": "20261024", "markets": 240, "seconds": 53}
+{"stage": "bank", "day": "20261024", "markets": 264, "seconds": 55}
+{"stage": "bank", "day": "20261024", "markets": 288, "seconds": 56}
+{"stage": "bank", "day": "20261025", "markets": 24, "seconds": 59}
+{"stage": "bank", "day": "20261025", "markets": 48, "seconds": 61}
+{"stage": "bank", "day": "20261025", "markets": 72, "seconds": 63}
+{"stage": "bank", "day": "20261025", "markets": 96, "seconds": 65}
+{"stage": "bank", "day": "20261025", "markets": 120, "seconds": 67}
+{"stage": "bank", "day": "20261025", "markets": 144, "seconds": 69}
+{"stage": "bank", "day": "20261025", "markets": 168, "seconds": 71}
+{"stage": "bank", "day": "20261025", "markets": 192, "seconds": 73}
+{"stage": "bank", "day": "20261025", "markets": 216, "seconds": 75}
+{"stage": "bank", "day": "20261025", "markets": 240, "seconds": 77}
+{"stage": "bank", "day": "20261025", "markets": 264, "seconds": 79}
+{"stage": "bank", "day": "20261025", "markets": 287, "seconds": 81}
+{"stage": "bank done", "paths": {"OLD": 1929, "TWO": 2492, "BID48": 2278}, "cells": {"OLD": 890, "TWO": 1136, "BID48": 1032}, "ask_templates": {"OLD": 0, "TWO": 1234, "BID48": 0}, "seconds": 81}
+2026-11-17T03:14:49Z tag=bank2_build rc=0 peak_rss_mib=1002 wall_s=81.71 cpu_user_s=61.49 memavail_start_gib=23 disk_free_gib=471->470 slot=claude

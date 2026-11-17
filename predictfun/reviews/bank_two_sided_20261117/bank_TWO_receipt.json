@@ -1,0 +1,33 @@
+{
+  "asof": "2026-11-17T03:16:11.037977+00:00",
+  "bank": "TWO",
+  "rule": {
+    "sides": [
+      0,
+      1
+    ],
+    "per_market": 24
+  },
+  "training_days": [
+    "20261023",
+    "20261024",
+    "20261025"
+  ],
+  "drawn_times": {
+    "side0": 19198,
+    "side1": 18970
+  },
+  "statuses": {
+    "eligible": 38168
+  },
+  "paths": 2492,
+  "cells": 1136,
+  "templates_by_event_side": {
+    "side0": 1258,
+    "side1": 1234
+  },
+  "path_sha256": "b34b4f5fa3b0858f9e9da32b031742a3fce7e0d8a3a9fc4b92b140ffe0b60974",
+  "old_sha256": "43c27d13f887cded37f8c479d4e51eb1b29437a68af16f0c4f1cb6aaf520a2ef",
+  "old_rule_rebuilt_equal": true,
+  "seconds": 80.72528433799744
+}

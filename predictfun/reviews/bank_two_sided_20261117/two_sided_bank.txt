@@ -1,0 +1,28 @@
+TWO-SIDED SCENARIO BANK (controlled: only the bank changes; SOFT_JOINT, classifier, controller, clocks fixed); as of 2026-11-17T03:41:47Z
+controls: OLD rule rebuilt = the frozen bank; OLD reproduces the archived action predictions and the archived 12-market pilot; ask draw from ask probes; bank identities by hash; planted errors refused
+
+BANKS: OLD 1929 paths / 890 cells (bid times {'side0': 19198})
+  TWO: 2492 paths / 1136 cells; drawn times {'side0': 19198, 'side1': 18970}; templates by event side {'side0': 1258, 'side1': 1234}
+  BID48: 2278 paths / 1032 cells; drawn times {'side0': 27567}; templates by event side {'side0': 2278}
+
+PART A: the audited neutral actions eligible under every bank (861 of 861): RMSE (predicted - realized) | zero-predictor RMSE | Spearman | positive predictions n, mean predicted / realized | |z| < 1 share | z >= 2 positives n, mean realized
+  20261026 bid cancel n 101 zero   7.60 || OLD   7.43 | sp +0.126 | pos  67  +3.85/ +0.93 | |z|<1  55% | z>=2   7  +6.64 || TWO   8.02 | sp +0.223 | pos  77  +2.89/ +0.91 | |z|<1  62% | z>=2  11  +0.00 || BID48   7.43 | sp +0.117 | pos  66  +3.92/ +0.94 | |z|<1  55% | z>=2   8 +12.28
+  20261026 bid post   n 106 zero  19.86 || OLD  19.69 | sp +0.207 | pos  17  +0.64/ +0.00 | |z|<1  41% | z>=2   0   +nan || TWO  19.83 | sp +0.177 | pos  13  +0.81/ +0.00 | |z|<1  41% | z>=2   0   +nan || BID48  19.73 | sp +0.202 | pos  15  +0.63/ +0.00 | |z|<1  41% | z>=2   0   +nan
+  20261026 ask cancel n 104 zero   7.20 || OLD   9.33 | sp +0.117 | pos  59  +4.82/ +1.51 | |z|<1  62% | z>=2  10  -0.40 || TWO  12.72 | sp +0.078 | pos  70  +6.45/ +1.27 | |z|<1  58% | z>=2  11  -0.36 || BID48   9.22 | sp +0.119 | pos  60  +4.66/ +1.49 | |z|<1  62% | z>=2  10  -0.40
+  20261026 ask post   n 107 zero  46.18 || OLD  47.03 | sp -0.092 | pos  28  +1.43/-22.20 | |z|<1  50% | z>=2   0   +nan || TWO  45.06 | sp -0.091 | pos  21  +0.97/-32.08 | |z|<1  52% | z>=2   0   +nan || BID48  47.01 | sp -0.080 | pos  28  +1.45/-22.20 | |z|<1  46% | z>=2   0   +nan
+  20261027 bid cancel n 109 zero  38.39 || OLD  38.88 | sp +0.388 | pos  74  +4.99/ +7.40 | |z|<1  56% | z>=2  12  +6.41 || TWO  38.32 | sp +0.322 | pos  83  +3.50/ +3.29 | |z|<1  57% | z>=2  11 +14.00 || BID48  38.89 | sp +0.389 | pos  74  +4.92/ +7.40 | |z|<1  55% | z>=2  12  +6.41
+  20261027 bid post   n 111 zero  33.25 || OLD  32.06 | sp +0.264 | pos  24  +1.12/ -0.83 | |z|<1  44% | z>=2   0   +nan || TWO  32.54 | sp +0.225 | pos  19  +0.62/ -6.92 | |z|<1  47% | z>=2   0   +nan || BID48  32.09 | sp +0.256 | pos  24  +1.16/ -0.83 | |z|<1  44% | z>=2   0   +nan
+  20261027 ask cancel n 112 zero  23.24 || OLD  22.96 | sp +0.269 | pos  63  +3.14/ +6.48 | |z|<1  67% | z>=2   6 +11.78 || TWO  23.34 | sp +0.142 | pos  72  +4.05/ +2.95 | |z|<1  69% | z>=2   8 +10.27 || BID48  22.97 | sp +0.271 | pos  63  +3.18/ +6.48 | |z|<1  68% | z>=2   6 +11.78
+  20261027 ask post   n 111 zero  14.69 || OLD  14.31 | sp +0.162 | pos  26  +1.98/ +0.00 | |z|<1  60% | z>=2   0   +nan || TWO  15.09 | sp +0.161 | pos  28  +0.93/ +0.00 | |z|<1  62% | z>=2   0   +nan || BID48  14.50 | sp +0.153 | pos  26  +1.79/ -2.11 | |z|<1  60% | z>=2   0   +nan
+
+A1 ASK-CALIBRATION: TWO ask cells better 1 / 4, bid cells within 5% 3 / 4; BID48 2 / 4, 4 / 4 -> NOT-SHOWN
+A2 CONFIDENT-POSTS (TWO): posts with z >= 2: n 0, mean realized +nan c -> NONE
+
+PART B: 12 Oct27 markets, full contracts - per side, fills in minutes 1-4 and in minute 5: shares | +1 s | +5 s c/sh
+  OLD  bid m1-4  2,377  -0.37  -0.29 | bid m5  1,876  -0.73  +9.91 | ask m1-4  2,072  -2.14  -1.80 | ask m5  1,571  -0.58  +4.65
+       orders 10,847 pulls 9,775 first-review cancels 3,838 of 9,762 | terminal $+367.7 settlement $+354.0 | both quote 32.9%
+  TWO  bid m1-4  1,463  -1.32  -0.76 | bid m5  1,510  +0.67 +10.58 | ask m1-4  1,664  -0.97  -0.20 | ask m5  1,003  -6.64  +4.58
+       orders 9,270 pulls 8,354 first-review cancels 3,501 of 8,339 | terminal $+47.2 settlement $+31.1 | both quote 27.7%
+R1 ASK-MARKOUT (minutes 1-4): ask +1 s -2.14 -> -0.97, +5 s -1.80 -> -0.20; bid +1 s -0.37 -> -1.32 -> NOT-SHOWN
+
+LIMITS: consumed days; 12 markets of one day for the replay; simulated (rule M, queue M, unknown depth 0); exploratory, not profitability validation

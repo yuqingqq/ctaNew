@@ -1,0 +1,16 @@
+{
+  "asof": "2026-11-17T03:16:11.090065+00:00",
+  "old": {
+    "paths": 1929,
+    "cells": 890,
+    "drawn_times": {
+      "side0": 19198
+    },
+    "statuses": {
+      "eligible": 19198
+    },
+    "sha256": "43c27d13f887cded37f8c479d4e51eb1b29437a68af16f0c4f1cb6aaf520a2ef",
+    "rebuilt_equal": true
+  },
+  "seconds": 80.76476836204529
+}

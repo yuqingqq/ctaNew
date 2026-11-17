@@ -1,0 +1,16 @@
+{
+  "asof": "2026-11-17T03:20:35.672984+00:00",
+  "day": "20261027",
+  "actions": 443,
+  "archive_receipt_sha256": "e786ca73f90717892698408cbf5f15c0f9dfddf29aea795e40256249827ee059",
+  "old_reproduced": true,
+  "banks": {
+    "OLD": "43c27d13f887cded37f8c479d4e51eb1b29437a68af16f0c4f1cb6aaf520a2ef",
+    "TWO": "b34b4f5fa3b0858f9e9da32b031742a3fce7e0d8a3a9fc4b92b140ffe0b60974",
+    "BID48": "3717f58f5f9bf262d9de05d5702ae655a32eb5318c41c1d619ed778b76da1c4c"
+  },
+  "outputs": {
+    "values.parquet": "40394dedced37d359f7ac4a214a35edd4a89416fb762a292fce85fd85aa204f2"
+  },
+  "seconds": 125.90632796287537
+}

@@ -3057,6 +3057,20 @@ stop_ev_design_20261115:
   components: {SWEEP: have (v6), STOP_FLOW: "new, public-trade labels for hypothetical queue positions", VALUES: "1 s / 5 s markouts", QUEUE: "rule-M estimate - the only simulator-dependent piece"}
   next: "USER's go: STOP-FLOW labels + VALUES -> STOP-FLOW head -> EV policy, selectivity check, portfolio replay vs the harm-only baseline"
 
+bank_two_sided_20261117:
+  status: done_not_shown
+  asof: "2026-11-17 03:42Z"
+  session: aea5bfb9
+  user: "Yes can you do the next and validate"
+  code: {script: predictfun/research/pf_bank_two_sided.py, driver: predictfun/research/run_bank_two_sided.sh, commit: 693960d8}
+  change: "SOFT_JOINT scenario bank only: OLD (bid rung-0 probe times) vs TWO (bid + ask, 2492 paths) vs BID48 (bid, 48 / market)"
+  controls: "OLD rule rebuilt = frozen bank; OLD reproduces the archived 861 action predictions and the archived 12-market pilot; planted errors refused"
+  readings: {A1: NOT-SHOWN, A2: NONE, R1: NOT-SHOWN}
+  minutes_1_4_markout_c_per_share: {OLD: {bid_1s: -0.37, ask_1s: -2.14, all_1s: -1.19, all_5s: -0.99}, TWO: {bid_1s: -1.32, ask_1s: -0.97, all_1s: -1.13, all_5s: -0.46}}
+  pilot_usd: {OLD: {terminal: 367.7, settlement: 354.0}, TWO: {terminal: 47.2, settlement: 31.1}}
+  reading: "two-sidedness moves quality between sides; value prediction (within a few % of a zero forecast) is the gap; no confident positive post"
+  next: "USER's call"
+
 soft_joint_review_20261117:
   status: done_review
   asof: "2026-11-17 01:56Z"
