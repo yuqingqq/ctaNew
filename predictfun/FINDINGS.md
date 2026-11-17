@@ -1,3 +1,29 @@
+<!-- LEDGER_KEEP_PULL_FIX_REVIEW_20261117 -->
+## 2026-11-17 13:58Z Ledger and keep/pull code reviewed; fix the diagnostic gates before interpretation
+
+Reviewed7905b3c1/360c2362. Report handoffs/20261117_ledger_keep_pull_review.md;
+review source ab597948; synthetic evidence
+reviews/ledger_keep_pull_review_20261117/counterexamples_v2.json (supersedes v1).
+Original ledger and keep/pull synthetic selftests pass. The ledger now retains
+counted states and arm/horizon statuses; real-tape closure of2054/60 gaps is
+still pending. No tape read, no new empirical performance or candidate change.
+
+Remaining issues: L5 compares missing-order tipping points with observed extrema,
+which are not payoff bounds (synthetic feasible missing value reverses its
+claimed robust sign). Keep/pull's raw-trigger shuffle does not match actionable
+pull counts after destination eligibility:1000-order synthetic case,500 draws,
+actual500 vs null249.924 pulls; K2 passes with identical value/share, K3 fails.
+First decision50ms precedes activation58ms; pending landing95ms binds L=0/25/37.
+With a single-price/common-END order the oracle pulls losing orders immediately,
+so these latency curves coincide; K1's failure cannot identify37ms as the cause.
+Full-future fair availability also selects the score population (source finding).
+
+Next: correct L5 claim, match causal eligible pull risk sets, separate pending
+and live decisions, qualify latency labels and handle missing fair per decision.
+Then ledger smoke/full reconciliation, followed by the corrected paired keep/pull
+loss-versus-gain measurement. Model tuning follows that evidence, not beforehand.
+<!-- /LEDGER_KEEP_PULL_FIX_REVIEW_20261117 -->
+
 <!-- LATEST_RESULTS_REVIEW_20261117 -->
 ## 2026-11-17 Latest results reviewed: numeric readings reproduce; conclusions narrowed
 

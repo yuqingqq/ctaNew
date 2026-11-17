@@ -1,3 +1,29 @@
+<!-- LEDGER_KEEP_PULL_FIX_REVIEW_20261117 -->
+## 2026-11-17 13:58Z Ledger and keep/pull code reviewed; fix the diagnostic gates before interpretation
+
+Reviewed7905b3c1/360c2362. Report handoffs/20261117_ledger_keep_pull_review.md;
+review source ab597948; synthetic evidence
+reviews/ledger_keep_pull_review_20261117/counterexamples_v2.json (supersedes v1).
+Original ledger and keep/pull synthetic selftests pass. The ledger now retains
+counted states and arm/horizon statuses; real-tape closure of2054/60 gaps is
+still pending. No tape read, no new empirical performance or candidate change.
+
+Remaining issues: L5 compares missing-order tipping points with observed extrema,
+which are not payoff bounds (synthetic feasible missing value reverses its
+claimed robust sign). Keep/pull's raw-trigger shuffle does not match actionable
+pull counts after destination eligibility:1000-order synthetic case,500 draws,
+actual500 vs null249.924 pulls; K2 passes with identical value/share, K3 fails.
+First decision50ms precedes activation58ms; pending landing95ms binds L=0/25/37.
+With a single-price/common-END order the oracle pulls losing orders immediately,
+so these latency curves coincide; K1's failure cannot identify37ms as the cause.
+Full-future fair availability also selects the score population (source finding).
+
+Next: correct L5 claim, match causal eligible pull risk sets, separate pending
+and live decisions, qualify latency labels and handle missing fair per decision.
+Then ledger smoke/full reconciliation, followed by the corrected paired keep/pull
+loss-versus-gain measurement. Model tuning follows that evidence, not beforehand.
+<!-- /LEDGER_KEEP_PULL_FIX_REVIEW_20261117 -->
+
 ## 2026-11-17 13:48Z (session aea5bfb9) — KEEP OR PULL THE SAME RESTING ORDER AT THE ACTUAL CANCEL LATENCY: CODE + SYNTHETIC SELFTESTS DONE (USER: "compare keeping versus pulling the same resting order at actual cancellation latency, measuring avoided losses against foregone gains"; the latest results review's next priority); no tape read, the run waits for the USER's go
 
 - What: pf_keep_pull.py (360c2362). Orders = the queue place test's JOIN population (every counted causal state: one 30 sh order at the known best, live +58 ms, END +5 s on the actual tape and book, validated kernel; KEEP = v1's JOIN row, reproduced bit for bit). Decisions every 50 ms while the client knows the order is live; a pull decided at d lands at d + 37 ms (measured median; pending rule max(d + 37, 95 ms) before it is live). Exact per-trade fills from the kernel (the same order with earlier removals) give V_pull at every step and any latency. X = V_keep - V_pull = value of keeping: foregone gain G = max(X, 0), avoided L = max(-X, 0) split into ordinary L1 = min(L, 30 c) and severe excess L2 (the gain / loss model's 30 c).

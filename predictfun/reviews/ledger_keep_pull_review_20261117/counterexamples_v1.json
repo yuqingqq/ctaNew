@@ -1,0 +1,79 @@
+{
+  "asof": "2026-11-17T13:54:59.439597+00:00",
+  "review_commit": "ef4fc17bb99b9fe8a8b9766076a3192c30cce2e8",
+  "scope": "Synthetic counterexamples only; no market tape or empirical P&L.",
+  "sources": {
+    "pf_queue_place_ledger.py": "53d34a1c35d0d5812141c019f27f7e1c412c2ec581513bea037ba5f669a763bd",
+    "pf_keep_pull.py": "815a0a4e7237b10c0a50f895823ee506f076f2520f064006a6c344a5ae9915c6",
+    "pf_ledger_keep_pull_review.py": "cadb365637a0e70259297de4e9aad700a28d02783184cc3e90b2d991d257b1cc"
+  },
+  "controls": {
+    "valid_arithmetic_accepted": true,
+    "changed_arithmetic_refused": true,
+    "genuine_payoff_bound_control": true,
+    "equal_eligibility_preserves_pull_counts": true
+  },
+  "ledger_l5": {
+    "n_observed": 2,
+    "n_missing": 1,
+    "observed_total": -2.0,
+    "needed_missing_mean": 2.0,
+    "observed_extreme": -1.0,
+    "reported_robust": true,
+    "feasible_missing_value": 3.0,
+    "resulting_total": 1.0,
+    "legal_missing_gain_bound": 1500.0
+  },
+  "null": {
+    "n_orders": 1000,
+    "synthetic_day_cells": 5,
+    "draws": 500,
+    "actual_pulls": 500,
+    "null_mean_pulls": 249.924,
+    "null_min_pulls": 226.0,
+    "null_max_pulls": 277.0,
+    "identical_removed_value_per_share": -1.0,
+    "k2_passes_without_value_ranking": true,
+    "k2_stats": {
+      "imp": 500.0,
+      "null_mean": 249.924,
+      "null_p95": 263.0,
+      "days_above": 5
+    },
+    "k3": false,
+    "k3_stats": {
+      "per_share": -1.0,
+      "null_mean": -1.0,
+      "null_p5": -1.0,
+      "days_below": 0
+    }
+  },
+  "oracle": {
+    "n_orders": 5,
+    "loss_per_order": 30.0,
+    "decision_ms": 50.0,
+    "activation_ms": 58.0,
+    "curves": {
+      "0.0": {
+        "first_landing_ms": 95.0,
+        "oracle_improvement": 50.0,
+        "k1": false
+      },
+      "25.0": {
+        "first_landing_ms": 95.0,
+        "oracle_improvement": 50.0,
+        "k1": false
+      },
+      "37.0": {
+        "first_landing_ms": 95.0,
+        "oracle_improvement": 50.0,
+        "k1": false
+      },
+      "100.0": {
+        "first_landing_ms": 150.0,
+        "oracle_improvement": 50.0,
+        "k1": false
+      }
+    }
+  }
+}

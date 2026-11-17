@@ -1,3 +1,25 @@
+ledger_keep_pull_fix_review_20261117:
+  status: complete_remaining_diagnostic_issues_identified
+  asof: 2026-11-17T13:58:04Z
+  reviewed_commits: [7905b3c1, 360c2362]
+  review_source_commit: ab597948
+  report: predictfun/handoffs/20261117_ledger_keep_pull_review.md
+  evidence: predictfun/reviews/ledger_keep_pull_review_20261117/counterexamples_v2.json
+  ledger_original_synthetic_selftest: passed
+  keep_pull_original_synthetic_selftest: passed
+  tape_read: false
+  real_gap_reconciliation_complete: false
+  ledger_status_control_flow_repaired: true
+  ledger_L5_valid_worst_case_bound: false
+  keep_pull_null_matches_actionable_counts: false
+  keep_pull_first_decision_precedes_activation: true
+  oracle_0_25_37_landing_ms: 95
+  future_fair_availability_selects_population: true
+  candidate_sources_changed: false
+  running: false
+  promotion: false
+  next: fix_diagnostic_claims_and_null_then_ledger_replay_and_same_live_order_keep_pull
+
 keep_pull_20261117:
   status: code_committed_awaiting_go
   asof: "2026-11-17 13:48Z"
