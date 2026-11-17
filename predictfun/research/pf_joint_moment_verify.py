@@ -90,6 +90,14 @@ def run():
                 rmse_cents=float(np.sqrt(np.mean(error**2))),
                 zero_prediction_rmse_cents=float(np.sqrt(np.mean(z.actual**2))),
                 severe_n=int(severe.sum()), severe_rmse_cents=float(np.sqrt(np.mean(error.to_numpy()[severe]**2))) if severe.any() else None)
+        decisions = {}
+        for (case,kind), z in values.groupby(['case','kind']):
+            selected=z.predicted.to_numpy()>0
+            severe=np.where(z.kind=='post',1.,-1.)*z.actual.to_numpy() < -30.
+            decisions[f'{case}:{kind}']=dict(n=len(z), severe_n=int(severe.sum()),
+                selected_n=int(selected.sum()), selected_severe_n=int((selected&severe).sum()),
+                missed_positive_value_cents=float(z.loc[(~selected)&(z.actual>0),'actual'].sum()),
+                selected_negative_value_cents=float(z.loc[selected&(z.actual<0),'actual'].sum()))
         for kind, z in a.groupby('kind'):
             for variant in ('full','mechanical'):
                 expected_moments = dict(n=len(z), quantity_mae_shares=float((z['q_'+variant]-z.y_q).abs().mean()),
@@ -108,7 +116,7 @@ def run():
                                 above=int((x>hi).sum()) if hi is not None else None)
         C.require(coverage==rep['coverage'], 'coverage metrics')
         result['days'][day]=dict(n=len(a), saved_models_reproduced=True, economic_values_reconstructed=True,
-                                 moment_remaining_coverage_metrics_recomputed=True, by_phase=by_phase,
+                                 moment_remaining_coverage_metrics_recomputed=True, by_phase=by_phase, decisions=decisions,
                                  report_sha256=C.sha(out/'report.json'))
     dest=J.REVIEW/'reconstruction_v1.json';C.require(not dest.exists(), 'reconstruction exists')
     C.dump(dest,result)
