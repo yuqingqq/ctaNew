@@ -5,7 +5,7 @@ WHAT: the other session's joint flow/price controller pilots - KEEP_ALL_CAP, EMP
 SOFT_JOINT, its retained baseline (value_bridge_20261116_v1/pilot) - on the 12 preselected Oct27 markets, full five-minute contracts. From
 their own ledgers: where the marked P&L comes from - by contract minute (the inventory ledger's incremental marked P&L), by market, and by
 fill class (order age < 100 ms, cancel pending, WS / E2 source, through / at price, depth, minute) with 1 s / 5 s markouts; the final
-minute's price range per market; minutes 1-4 against minute 5.
+minute's price range per market; minutes 1-4 against minute 5; each fill's 5 s value against the same fill held to the end (carry).
 CONTROLS (any failure -> no output): per case the fills, markets and inventory ledgers reconcile (shares, terminal and settlement P&L;
 the minute increments sum to each market's terminal P&L) and equal the recorded report rows (shares, orders, pulls, terminal, settlement);
 planted errors (one fill's value, one minute increment, moved by 1 c) must each fail them.
@@ -110,6 +110,15 @@ def main():
         y = x[x.depth_group.astype(str) == g]
         L.append(f'  depth {g:<18} {y.shares.sum():7,.0f} ({y.shares.sum() / x.shares.sum():5.1%}) | {cs(y, "spread_capture_usd"):+.2f} | '
                  f'{cs(y, "markout_1000_usd"):+.2f} | {cs(y, "markout_5000_usd"):+.2f} | {y.terminal_pnl_usd.sum():+7.1f} ({cs(y, "terminal_pnl_usd"):+.2f})')
+    L += ['', 'PART 5: market making vs outcome exposure - each fill\'s spread, its value 1 s / 5 s later, and the same fill held to the end '
+          '(carry after 5 s = end - 5 s value), $ over 12 markets']
+    for c in ('KEEP_ALL_CAP', 'EMPIRICAL', 'JOINT', 'SOFT_JOINT'):
+        x_ = F[F.case == c]; parts = []
+        for nm, y in (('minutes 1-4 fills', x_[x_.minute < 5]), ('minute-5 fills', x_[x_.minute == 5])):
+            m5 = y.markout_5000_usd.fillna(0).sum(); tm = y.terminal_pnl_usd.sum()
+            parts.append(f'{nm}: spread {y.spread_capture_usd.sum():+7.1f}, +1s {y.markout_1000_usd.fillna(0).sum():+7.1f}, +5s {m5:+7.1f}, '
+                         f'held to the end {tm:+7.1f} (carry {tm - m5:+7.1f})')
+        L.append(f'  {c:<13} ' + ' || '.join(parts))
     mk = MK[MK.case == 'SOFT_JOINT']
     L += ['', f'PART 4: SOFT_JOINT activity: orders {mk.orders.sum():,} and guard pulls {mk.pulls.sum():,} over 60 market-minutes '
           f'({mk.orders.sum() / 60:.0f} / {mk.pulls.sum() / 60:.0f} a market-minute)']
