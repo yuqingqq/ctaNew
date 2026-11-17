@@ -1,0 +1,44 @@
+RUNNING ERRORS OF THE GAIN / LOSS MODEL (past-only expanding folds; no controller change); as of 2026-11-17T04:48:25Z
+controls: folds train on earlier days only; the Oct26 fold reproduces GAIN-LOSS exactly; windows end at or before t - lag; selftest controls pass
+
+PART 1: set L, 3-day heads - predicted / observed severe events (count ratio) | predicted / observed excess per event | n
+  20261026 cancel   139.4 /  183 (x0.76) |  78.26 /  74.67 c (x1.05) | 4,946
+  20261026 post     141.2 /  169 (x0.84) |  79.94 /  83.69 c (x0.96) | 3,994
+  20261027 cancel   134.3 /  166 (x0.81) |  79.71 /  87.30 c (x0.91) | 4,870
+  20261027 post     147.1 /  199 (x0.74) |  84.32 /  94.72 c (x0.89) | 4,049
+
+PART 2: persistence (past-only predictions). Blocks = 60-min UTC hours; lag-1 correlation of block log O/E (count | severity, blocks with >= 3 events)
+  pooled: count r = +0.262 (92 pairs) | severity r = +0.057 (92 pairs)
+  by day: 20261024 count +0.25, severity -0.03 | 20261025 count +0.24, severity +0.02 | 20261026 count +0.08, severity +0.03 | 20261027 count +0.19, severity -0.26
+  decision level: forward O/E (observed / predicted severe count) in terciles of the trailing count ratio | forward severity ratio in terciles of the trailing severity ratio
+    lag   300 s, window     60 min: count O/E by tercile x1.07 / x1.21 / x1.24 (top > bottom on 4 / 4 days) | severity x1.03 / x1.17 / x1.04 (top > bottom on 2 / 4 days)
+    lag     2 s, window     60 min: count O/E by tercile x1.09 / x1.13 / x1.31 (top > bottom on 4 / 4 days) | severity x1.09 / x1.07 / x1.08 (top > bottom on 2 / 4 days)
+    lag   300 s, window     30 min: count O/E by tercile x1.18 / x1.16 / x1.17 (top > bottom on 0 / 4 days) | severity x1.12 / x1.06 / x1.06 (top > bottom on 1 / 4 days)
+    lag   300 s, window   1440 min: count O/E by tercile x1.09 / x1.23 / x1.20 (top > bottom on 0 / 4 days) | severity x1.07 / x1.09 / x1.09 (top > bottom on 1 / 4 days)
+
+PART 3: running recalibration (lag 300 s, window 60 min) by day: severe log loss p -> p' | count O/E p -> p' | loss total ratio -> | loss RMSE -> (c)
+  20261024 (train 20261023): 0.1274 -> 0.1285 | x1.00 -> x1.00 | x1.04 -> x1.00 | 24.16 -> 24.29
+  20261025 (train 20261023,20261024): 0.1340 -> 0.1378 | x0.83 -> x1.00 | x0.75 -> x0.99 | 34.09 -> 34.47
+  20261026 (train 20261023,20261024,20261025): 0.1477 -> 0.1489 | x0.80 -> x0.98 | x0.84 -> x0.97 | 26.96 -> 26.97
+  20261027 (train 20261023,20261024,20261025,20261026): 0.1481 -> 0.1530 | x0.80 -> x0.99 | x0.78 -> x0.93 | 35.13 -> 35.00
+
+PART 4: GAIN-LOSS matched participation with selection inside every day x kind x market x side stratum - realized mean W of the selected: GL / DIRECT | random in strata (mean)
+  top 10% 20261026 cancel:  -0.32 /  -1.30 | random  -3.38
+  top 10% 20261026 post  :  +0.26 /  -1.28 | random  -4.30
+  top 10% 20261027 cancel:  -0.32 /  -1.34 | random  -3.29
+  top 10% 20261027 post  :  -2.75 /  -1.12 | random  -5.42
+  top 25% 20261026 cancel:  -0.42 /  -0.97 | random  -3.33
+  top 25% 20261026 post  :  -1.76 /  -1.35 | random  -4.05
+  top 25% 20261027 cancel:  -0.22 /  -1.58 | random  -3.48
+  top 25% 20261027 post  :  -2.29 /  -1.58 | random  -5.48
+  top 50% 20261026 cancel:  -0.61 /  -1.21 | random  -3.28
+  top 50% 20261026 post  :  -2.00 /  -1.85 | random  -4.11
+  top 50% 20261027 cancel:  -0.64 /  -1.49 | random  -3.45
+  top 50% 20261027 post  :  -1.44 /  -1.97 | random  -5.65
+
+Q1 PROBABILITY-ERRORS-PERSIST: PERSIST (block r +0.262; top - bottom tercile O/E +0.17; direction on 4 / 4 days)
+Q2 SEVERITY-ERRORS-PERSIST: NOT-SHOWN (block r +0.057; top - bottom +0.00; direction on 2 / 4 days)
+Q3 RUNNING-CALIBRATION-HELPS: NOT-SHOWN (log loss lower on 0 / 4 days; pooled |log O/E| 0.160 -> 0.006)
+G2S STRATIFIED MATCHED PARTICIPATION: GL-SELECTS-BETTER-STRATIFIED (3 / 4 at 10%, 2 / 4 at 25%, 3 / 4 at 50%)
+
+LIMITS: consumed days; four predicted days, no interval (rule 8); simulated labels; the neutral decision population; coverage and model error remain open

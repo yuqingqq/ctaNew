@@ -1,3 +1,15 @@
+## 2026-11-17 04:49Z (session aea5bfb9) — RUNNING ERRORS (USER: "test whether recent, fully observed probability and severity errors predict subsequent errors, using past-only folds"): severe-event COUNT errors persist hour to hour, severity errors do not; a simple running rescale fixes the level but not the per-decision scores
+
+- What: pf_gain_loss_running.py (49d159e5, declared before the run). Past-only expanding folds (Oct24 <- Oct23, Oct25 <- 23-24, Oct26 <- 23-25 = reproduces GAIN-LOSS exactly, Oct27 <- 23-26); causal running ratios from same-day decisions in [t - 300 s - 60 min, t - 300 s].
+- USER's clue reproduced (set L, 3-day heads): predicted / observed severe events x0.76 / 0.84 / 0.81 / 0.74, excess per event x1.05 / 0.96 / 0.91 / 0.89.
+- Q1 PROBABILITY-ERRORS-PERSIST: PERSIST - 60-min block lag-1 correlation of log O/E +0.26 pooled (+0.25 / +0.24 / +0.08 / +0.19 by day); forward O/E by tercile of the trailing ratio x1.07 / x1.21 / x1.24 (top > bottom 4 / 4 days). Fragile: the 30-min and day-so-far windows show no tercile gradient (0 / 4 days).
+- Q2 SEVERITY-ERRORS-PERSIST: NOT-SHOWN (block r +0.06; terciles x1.03 / x1.17 / x1.04).
+- Q3 RUNNING-CALIBRATION-HELPS: NOT-SHOWN - p' = p x R_cnt fixes the level (count O/E x0.83 -> x1.00 etc.; loss totals x0.75-0.84 -> x0.93-0.99) but severe log loss is worse on 4 / 4 days and loss RMSE is not better (24.16 -> 24.29 ... 35.13 -> 35.00): the hourly ratio is too noisy to scale individual probabilities.
+- Forward folds: Oct24 (trained on Oct23 only) is calibrated (count x1.00, loss x1.04); Oct25 x0.83 / x0.75, Oct26 x0.80 / x0.84, Oct27 x0.80 / x0.78.
+- G2S (stricter control for GAIN-LOSS's G2, selection inside market x side strata): GL >= DIRECT in 3 / 4 cells at 10%, 2 / 4 at 25%, 3 / 4 at 50% -> still GL-SELECTS-BETTER; realized values mostly <= 0.
+- Corrections carried (USER audit of the diagnostic): the leave-one-day-out folds were cross-day, only Oct25 forward; coverage NOT ruled out (familiarity ranked within the test set); GAIN-LOSS's PASS is limited (excludes the failed loss calibration; matched only by day x kind count). FINDINGS / STATUS qualified in place.
+- Next (USER's call): the count bias is partly predictable from recent errors but a raw hourly rescale is too noisy; options are a shrunk / partially pooled level adjustment (a new candidate, to be declared and judged on later days) or working on the severe-event probability head itself (calibration of P(loss > 30 c), coverage of its training support).
+
 <!-- GAIN_LOSS_DIAGNOSIS_REVIEW_20261117 -->
 ## 2026-11-17 Gain/loss diagnosis reviewed: shortfall reproduced, causal conclusion unresolved
 
