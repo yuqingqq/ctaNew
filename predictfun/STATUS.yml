@@ -2991,6 +2991,20 @@ stop_ev_design_20261115:
   components: {SWEEP: have (v6), STOP_FLOW: "new, public-trade labels for hypothetical queue positions", VALUES: "1 s / 5 s markouts", QUEUE: "rule-M estimate - the only simulator-dependent piece"}
   next: "USER's go: STOP-FLOW labels + VALUES -> STOP-FLOW head -> EV policy, selectivity check, portfolio replay vs the harm-only baseline"
 
+soft_joint_check_20261117:
+  status: done_descriptive
+  asof: "2026-11-17 01:01Z"
+  session: aea5bfb9
+  user: "load my codex session's latest progress ... check that"
+  code: {script: predictfun/research/pf_soft_joint_check.py, commit: 3b6c4a8d}
+  population: "the other session's controller pilots: 12 preselected Oct27 markets, full 5-minute contracts (KEEP_ALL_CAP, EMPIRICAL, JOINT, JOINT_H2, SOFT_JOINT)"
+  soft_joint_usd_by_minute: [73.1, 56.3, 1.0, -23.2, 260.5]
+  soft_joint_best_two_markets_usd: [139.2, 118.2]   # final-minute increments; mid ranges 1.5-93.5 and 2.5-71.5 c
+  markouts_minutes_1_4_c_per_share_1s_5s: {SOFT_JOINT: [-1.19, -0.99], JOINT: [-1.76, -1.89], EMPIRICAL: [-2.07, -2.57], KEEP_ALL_CAP: [-2.07, -2.28]}
+  without_best_two_usd: {SOFT_JOINT: 93.9, JOINT: 36.4, EMPIRICAL: -32.7, KEEP_ALL_CAP: -1411.2}
+  reading: "forecasts and per-share fill quality improve; profit is not shown - two final-minute swings, shared with the model-free arm; minutes 1-4 fills lose at 1 s and 5 s"
+  next: "USER: SOFT_JOINT on all markets of the later fitted days (Oct31, Nov1, Nov2), minutes 1-4 vs final minute, M 250, without young fills"
+
 stop_ev_presence_20261116:
   status: done_descriptive
   asof: "2026-11-16 07:57Z"

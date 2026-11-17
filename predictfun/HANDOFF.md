@@ -1,3 +1,12 @@
+## 2026-11-17 01:01Z (session aea5bfb9) — CHECK OF THE JOINT FLOW/PRICE CONTROLLER (USER: "load my codex session's latest progress ... check that"): better forecasts, but the pilot's profit is two markets' final-minute swings that the model-free arm also caught
+
+- What: pf_soft_joint_check.py (3b6c4a8d; POST HOC, descriptive, read-only) on the other session's pilot ledgers (KEEP_ALL_CAP / EMPIRICAL / JOINT / JOINT_H2 and the retained SOFT_JOINT; 12 preselected Oct27 markets, full 5-minute contracts). The ledgers reconcile with each other and with the recorded reports; planted errors caught.
+- SOFT_JOINT +$367.7 marked: by contract minute +73 / +56 / +1 / -23 / +261; the two best markets +$274 (74%; +$139 and +$118 in their final minute), the other ten +$94, median market +$12. Those two markets' final-minute mid ranged 1.5-93.5 and 2.5-71.5 c (BTC crossing the strike); the model-free EMPIRICAL arm also made +$105 / +$36 there.
+- Minutes 1-4: SOFT_JOINT's fills lose at +1 s (-1.19 c/sh) and +5 s (-0.99); EMPIRICAL -2.07 / -2.57, JOINT -1.76 / -1.89, KEEP_ALL_CAP -2.07 / -2.28: the model improves fills per share but they still lose. Without the two markets: SOFT +$94, JOINT +$36, EMPIRICAL -$33, KEEP_ALL_CAP -$1,411 (SOFT above EMPIRICAL in 8 of those 10 markets).
+- Churn: 181 orders and 163 guard pulls a market-minute (STOP_EV first minute: 132 / 122). Young fills 32% of shares, cancel-pending 17%; M 250 not run.
+- Scope: one consumed day (Oct27), the same 12 markets for every variant (SOFT kept as the best there); the controller has not run on any other day (classifier fits exist for Oct31, Nov1, Nov2).
+- Receipts: reviews/soft_joint_check_20261117/. Next: the USER's call (run SOFT_JOINT on all markets of the later fitted days, report minutes 1-4 and the final minute separately, M 250, without young fills).
+
 <!-- VALUE_DECOMPOSITION_20261117 -->
 ## 2026-11-17 Value decomposition complete: joint fill/severity and pending-fill state gaps
 

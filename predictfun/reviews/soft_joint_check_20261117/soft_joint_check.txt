@@ -1,0 +1,43 @@
+SOFT_JOINT CHECK (POST HOC, descriptive; the other session's pilot ledgers, 12 preselected Oct27 markets, full 5-minute contracts); as of 2026-11-17T01:01:07Z
+controls: fills / markets / inventory ledgers reconcile with each other and with the recorded report rows for every case
+
+PART 1: marked P&L by contract minute ($, 12 markets) and markouts (c/sh) - minutes 1-4 vs minute 5
+  KEEP_ALL_CAP  total  -1531.1 | by minute  -395.4  -317.0  -316.6  -291.7  -210.3 | minutes 1-4:  47,818 sh, +1s -2.07, +5s -2.28 | minute 5:  11,868 sh, +1s -3.88, +5s -2.07
+  EMPIRICAL     total   +129.0 | by minute   +48.1    +6.3   -21.5   -36.4  +132.6 | minutes 1-4:   6,466 sh, +1s -2.07, +5s -2.57 | minute 5:   5,404 sh, +1s -3.22, +5s +0.98
+  JOINT         total   +246.8 | by minute   +51.7   +45.9   -11.1   -27.8  +188.1 | minutes 1-4:   4,448 sh, +1s -1.76, +5s -1.89 | minute 5:   3,951 sh, +1s -1.09, +5s +5.88
+  JOINT_H2      total    +98.0 | by minute    +6.8   +14.3   +34.9   -18.9   +60.9 | minutes 1-4:   3,804 sh, +1s -1.77, +5s -2.55 | minute 5:   3,205 sh, +1s +0.37, +5s +3.55
+  SOFT_JOINT    total   +367.7 | by minute   +73.1   +56.3    +1.0   -23.2  +260.5 | minutes 1-4:   4,449 sh, +1s -1.19, +5s -0.99 | minute 5:   3,447 sh, +1s -0.66, +5s +7.54
+
+PART 2: by market - whole contract | minute 5 ($), sorted by SOFT_JOINT; final-minute pre-fill mid range seen by any case, outcome
+  3882891: KEEP_ALL_CAP   -94.5 /   -16.9 | EMPIRICAL   +95.2 /  +105.2 | JOINT  +121.1 /  +111.9 | SOFT_JOINT  +153.5 /  +139.2 | minute-5 mid 1.5-93.5, outcome Up
+  3872135: KEEP_ALL_CAP   -25.4 /    +6.8 | EMPIRICAL   +66.6 /   +36.4 | JOINT   +89.3 /   +81.3 | SOFT_JOINT  +120.3 /  +118.2 | minute-5 mid 2.5-71.5, outcome Down
+  3861545: KEEP_ALL_CAP   -28.9 /    +2.6 | EMPIRICAL   +34.5 /    +2.0 | JOINT   +22.2 /    +0.6 | SOFT_JOINT   +35.7 /    +0.7 | minute-5 mid 1.5-1.5, outcome Down
+  3868537: KEEP_ALL_CAP  -107.3 /    -0.8 | EMPIRICAL    -6.2 /    -1.3 | JOINT   +21.7 /    -0.4 | SOFT_JOINT   +35.4 /    -0.5 | minute-5 mid 1.5-2.5, outcome Down
+  3856795: KEEP_ALL_CAP  -163.8 /   -56.6 | EMPIRICAL   +23.1 /   +17.3 | JOINT   +17.9 /   +21.2 | SOFT_JOINT   +25.3 /   +20.3 | minute-5 mid 2.5-79.5, outcome Down
+  3855272: KEEP_ALL_CAP  -207.5 /   -21.2 | EMPIRICAL    +9.8 /   -17.5 | JOINT   +16.0 /    -7.7 | SOFT_JOINT   +15.8 /   -11.0 | minute-5 mid 1.5-21.0, outcome Down
+  3866949: KEEP_ALL_CAP   -86.5 /    +0.0 | EMPIRICAL   +21.8 /    +0.0 | JOINT    +5.8 /    +0.0 | SOFT_JOINT    +8.8 /    +0.0
+  3875576: KEEP_ALL_CAP   -80.2 /    +2.0 | EMPIRICAL   -19.5 /    +0.6 | JOINT    -7.1 /    +0.8 | SOFT_JOINT    +7.3 /    +0.2 | minute-5 mid 1.5-3.5, outcome Down
+  3887697: KEEP_ALL_CAP  -201.0 /   -51.3 | EMPIRICAL   -20.3 /   -25.1 | JOINT    +7.7 /    +0.8 | SOFT_JOINT    +6.1 /    +3.0 | minute-5 mid 44.0-98.5, outcome Up
+  3878682: KEEP_ALL_CAP  -288.3 /   -74.6 | EMPIRICAL   +28.7 /   +15.3 | JOINT    -9.4 /   -20.7 | SOFT_JOINT    -7.6 /   -10.8 | minute-5 mid 5.5-74.0, outcome Down
+  3864969: KEEP_ALL_CAP   -39.4 /    +0.0 | EMPIRICAL   -36.9 /    +0.0 | JOINT   -18.0 /    +0.0 | SOFT_JOINT   -14.5 /    +0.0
+  3853227: KEEP_ALL_CAP  -208.3 /    -0.2 | EMPIRICAL   -67.8 /    -0.3 | JOINT   -20.4 /    +0.3 | SOFT_JOINT   -18.5 /    +1.2 | minute-5 mid 96.0-98.5, outcome Up
+  SOFT_JOINT: best two markets +273.8 of +367.7 (74%); the other ten +93.9; median market +12.3; positive 9 / 12
+  without the best two SOFT_JOINT markets: KEEP_ALL_CAP -1411.2 | EMPIRICAL -32.7 | JOINT +36.4 | SOFT_JOINT +93.9
+
+PART 3: SOFT_JOINT by fill class: shares (share) | spread | +1s | +5s c/sh | terminal $ (c/sh) | settlement $
+  all                        7,896 (100.0%) | +1.92 | -0.96 | +2.65 |  +367.7 (+4.66) |  +354.0
+  age < 100 ms               2,527 (32.0%) | +0.84 | -3.20 | +4.11 |  +107.9 (+4.27) |  +113.0
+  age >= 100 ms              5,368 (68.0%) | +2.42 | +0.09 | +1.96 |  +259.8 (+4.84) |  +240.9
+  cancel pending             1,332 (16.9%) | +2.01 | -1.19 | +3.86 |   +62.6 (+4.70) |   +60.1
+  not cancel pending         6,564 (83.1%) | +1.90 | -0.92 | +2.40 |  +305.1 (+4.65) |  +293.9
+  WS-timed                   4,641 (58.8%) | +2.34 | -0.25 | +2.59 |  +326.1 (+7.03) |  +318.4
+  E2 / imputed               3,255 (41.2%) | +1.32 | -1.97 | +2.74 |   +41.6 (+1.28) |   +35.5
+  through                    4,822 (61.1%) | +1.67 | -2.78 | +2.88 |  +197.6 (+4.10) |  +191.5
+  at price                   3,074 (38.9%) | +2.31 | +1.89 | +2.29 |  +170.1 (+5.53) |  +162.4
+  WS & age >= 100 & live     2,905 (36.8%) | +2.42 | +0.60 | +2.78 |  +232.5 (+8.00) |  +226.3
+  depth at_best              2,194 (27.8%) | +0.78 | +0.89 | +2.42 |  +141.4 (+6.44)
+  depth inside               1,776 (22.5%) | -1.06 | -5.79 | +2.30 |   +91.0 (+5.12)
+  depth one_to_five          3,633 (46.0%) | +3.51 | -0.76 | +2.10 |   +96.3 (+2.65)
+  depth over_five              293 ( 3.7%) | +8.69 | +11.94 | +13.14 |   +39.0 (+13.31)
+
+PART 4: SOFT_JOINT activity: orders 10,847 and guard pulls 9,775 over 60 market-minutes (181 / 163 a market-minute)
