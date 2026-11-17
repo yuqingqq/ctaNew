@@ -1,0 +1,69 @@
+{
+  "asof": "2026-11-17T00:20:19.158129+00:00",
+  "source_commit": "f60e214408858be3e65ec464523740814799acc1",
+  "sources": {
+    "predictfun/research/pf_conditional_map.py": "ed111d51a81a15f3ceb47510750106a58eb1faec4e2d3c115cf664e33595238d",
+    "predictfun/research/pf_conditional_map_bank.py": "7e2a4367e769a0dd6a3508c4ca3929985d6da82c59b08788966021151b8b75e4",
+    "predictfun/research/pf_conditional_map_eval.py": "072327b8418717a335e58f2d2c9be3b091e61d3c5350d796493855be5ca055ea",
+    "predictfun/research/pf_conditional_map_checks.py": "6779531edff5acdfb1d89e82050afb97e0873fc526ffbeda314e2883fa52fa76",
+    "predictfun/research/run_conditional_map.sh": "abf4cdc5118e9cb39b403ca42c52a938ca3a6c200d3b9b89819b85efa687edcf"
+  },
+  "inherited_bridge_sha256": "10f31bed1ef7c3c402b419f2ade448f761ba389577607954190933bbf9caffa4",
+  "train": [
+    "20261023",
+    "20261024",
+    "20261025"
+  ],
+  "calibration": "20261026",
+  "test": "20261027",
+  "features": [
+    "bid_cum_0",
+    "bid_cum_1",
+    "bid_cum_3",
+    "bid_cum_5",
+    "ask_cum_0",
+    "ask_cum_1",
+    "ask_cum_3",
+    "ask_cum_5",
+    "liquidity_scale",
+    "spread",
+    "mid",
+    "own_mv250",
+    "opp_mv250",
+    "adv_ofi250",
+    "adv_ofi1000",
+    "adv_bn_r100",
+    "adv_bn_r1000"
+  ],
+  "bank": "Reconstruct the SAME 19198 hash-selected neutral bid/rung0/at-best training exposures. Retain every legacy representative, add farthest causal-state representatives up to8 per phase/spread/native joint-pair cell. Assign each training path to nearest representatives, dividing ties equally; weights sum to complete cell population. Raw paired futures unchanged.",
+  "state": "Causal current known depth cumulated at0/1/3/5 ticks on both sides, log1p(shares/30); W30 absolute scale log1p(scale/30), log1p(spread), midpoint/100; six inherited causal book/flow/Binance dynamics. Median/IQR from training states only, missingness indicators; Huber distance transition3 IQR, mean across17 coordinates. Kernel exp(-0.5*distance), one fixed width.",
+  "anchor": "Compute frozen SOFT_JOINT weights on original bank. Preserve its ENTIRE bid/ask coarse class-pair mass exactly, not only marginals. Expanded responses reweight only inside each pair, with inherited soft-spread prior. All legacy paths retained, so anchor support must not disappear.",
+  "cases": [
+    "SOFT_JOINT",
+    "EXPANDED_JOINT",
+    "STATE_CONDITIONAL"
+  ],
+  "unchanged": "No forecast retraining, fine-marginal fusion, kernel volume/price editing, controller changes, thresholds or cooldown. Same size30/nr6/cap180/risk1/360,1s endpoint,58/37/100/50ms clocks.",
+  "tests": "Exact archived Oct26/27 neutral actions and labels; baseline reproduction, same current client states, no-fill retained. On Oct27, additionally supply actual coarse pair ONLY in labelled retrospective branch to isolate conditional response. Gate before continuous policy replay.",
+  "null": {
+    "draws": 200,
+    "match": "market/side/kind count of positive predicted actions",
+    "metric": "actual incremental value"
+  },
+  "replay_gate": "Run the fixed12-market Oct27 full5min candidate only if STATE_CONDITIONAL true-pair RMSE is no worse than SOFT_JOINT for BOTH posting and cancellation on identical support, and strictly better for at least one. Gate is a development compute screen, never validation/promotion. If failed, record skipped_by_frozen_gate.",
+  "multiplicity": {
+    "new_response_mapping": 1,
+    "expanded_unconditional_ablation": 1,
+    "widths": 1,
+    "representative_counts": 1,
+    "new_predictors": 0,
+    "new_controllers": 0
+  },
+  "limits": [
+    "Consumed days; no validation, intervals, promotion or live profitability claim",
+    "Raw donor futures remain approximate, despite causal state conditioning",
+    "Same estimated trade clocks, client queue uncertainty and zero continuation beyond1s",
+    "Keeping event probabilities coherent does not guarantee accurate conditional responses or solve churn"
+  ],
+  "output": "/home/yuqing/ctaNew/data/predict_fun/research/conditional_map_20261117_v1"
+}
