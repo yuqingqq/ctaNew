@@ -1,5 +1,5 @@
 value_diagnosis_20261117:
-  status: frozen_calibration_and_controller_run
+  status: calibration_complete_controller_running_audit_pending
   source_commit: 726a5267
   freeze_commit: 8fea0ef3
   branch: research/predict-calibration-controller-20261117
