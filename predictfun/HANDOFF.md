@@ -1,3 +1,37 @@
+<!-- GAIN_LOSS_DIAGNOSIS_REVIEW_20261117 -->
+## 2026-11-17 Gain/loss diagnosis reviewed: shortfall reproduced, causal conclusion unresolved
+
+Reviewed fe325d18/3b8df784 and9b987f65/347acc7c. Review source09c7a263,
+results37017350. Report handoffs/20261117_gain_loss_diagnosis_review.md;
+evidence reviews/gain_loss_diagnosis_review_20261117/{review_v1,interpretation_v2}.json.
+As of04:38:10Z Nov17, all saved GL components on17,859 Oct26/27 actions,
+three stored leave-day-out loss ratios, domain AUC.927296 and all familiarity
+ratios reproduce. Hashes/positive controls/planted bad-value and future-fold
+refusals pass. No new return model/policy; reconstruction finished on Codex/core8.
+
+Critical qualifications: only Oct25 is a past-only fold; the Oct23/24 leave-day-
+out fits use later days. They are not next-day validation. Evaluation-relative
+familiarity quintiles cannot establish supported training states or rule out
+coverage; Q1 median domain score.384 (n3572) vs training.035 (n27236). Broad
+one-variable strata do not fix all87 inputs. Missing day intensity is therefore
+a hypothesis, not a demonstrated cause; more history is not ruled out.
+
+G2 compares total day/kind counts and its null ignores market/side composition.
+Repair matched controls before claiming within-state selection improvement.
+PASS excludes failed G3 and is only a relative focal-value screen. Canonical
+checks were sampled:56/79 on the two dates,12 positive in total, plus764
+shared audited labels. The stated23971 no-fill training rows are zero-wealth;
+actual zero affected quantity23896 (75 filled zero-wealth rows).
+
+More specific clue: across four day/kind cells (n4946/3994/4870/4049), predicted
+severe-event counts are .739-.835 of observed; excess per expected severe event
+is .890-1.048 of observed. This is aggregate accounting, not causal attribution.
+Next: past-only test of whether fully matured recent probability/severity errors
+predict later errors; compare frozen calibration to one declared causal running
+correction, keep neutral populations and controller fixed. Coverage and model
+error remain open. Consumed dates, no intervals, strategy promotion or new fit.
+<!-- /GAIN_LOSS_DIAGNOSIS_REVIEW_20261117 -->
+
 ## 2026-11-17 04:33Z (session aea5bfb9) — GAIN / LOSS DIAGNOSTIC (USER: "Go"): the loss shortfall is day-level variation the inputs do not capture, not missing coverage
 
 - What: pf_gain_loss_diag.py (9b987f65, declared before the run; no model change): day levels, a leave-one-training-day-out refit of the loss heads, the shortfall by stratum, and a market-grouped classifier separating training from set-L states.

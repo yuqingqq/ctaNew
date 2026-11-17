@@ -1,0 +1,25 @@
+{
+  "asof": "2026-11-17T04:42:27.046597+00:00",
+  "supersedes_interpretation_of": {
+    "path": "predictfun/reviews/gain_loss_20261117/gain_loss_diag.json",
+    "sha256": "f0b02e24b5ad8cdb24523b60f156d8860a49e4b59a63ccc255fc46822d35e8e2",
+    "results_commit": "347acc7c"
+  },
+  "numerical_results_unchanged": true,
+  "review": {
+    "path": "predictfun/reviews/gain_loss_diagnosis_review_20261117/review_v1.json",
+    "sha256": "89b7a1b4d91a791924e830eaf0f04fb8b8261d8970e2354fab4ea8423485e8d7"
+  },
+  "past_only_folds": 1,
+  "total_leave_day_out_folds": 3,
+  "all_folds_are_forward": false,
+  "coverage_ruled_out": false,
+  "missing_day_factor_identified": false,
+  "g2_market_side_composition_identical": false,
+  "limits": [
+    "Descriptive review of consumed dates; no new return model or policy.",
+    "OOF domain scores are distribution diagnostics, not calibrated overlap probabilities.",
+    "No inference that missing day intensity causes the loss shortfall.",
+    "Original G1/G2 PASS is a relative focal-value screen, not successful loss calibration or profitability."
+  ]
+}

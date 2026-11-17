@@ -1,3 +1,26 @@
+gain_loss_diagnosis_review_20261117:
+  status: complete_reproduced_with_material_interpretation_limits
+  asof: 2026-11-17T04:38:10Z
+  reviewed_commits: [fe325d18, 3b8df784, 9b987f65, 347acc7c]
+  review_source_commit: 09c7a263
+  results_commit: '37017350'
+  report: predictfun/handoffs/20261117_gain_loss_diagnosis_review.md
+  evidence: predictfun/reviews/gain_loss_diagnosis_review_20261117/review_v1.json
+  interpretation: predictfun/reviews/gain_loss_diagnosis_review_20261117/interpretation_v2.json
+  evaluation_actions: 17859
+  training_actions: 27236
+  published_predictions_reproduced: true
+  strictly_forward_leave_day_out_folds: 1
+  leave_day_out_folds: 3
+  coverage_ruled_out: false
+  missing_day_intensity_established: false
+  g2_market_side_matched: false
+  new_return_models: 0
+  new_policies: 0
+  running: false
+  promotion: false
+  next: past_only_matured_event_probability_and_severity_residual_persistence_test
+
 bank_two_sided_review_20261117:
   status: complete_artifacts_reconciled
   asof: 2026-11-17T03:48:57Z

@@ -1,3 +1,35 @@
+<!-- GAIN_LOSS_DIAGNOSIS_REVIEW_20261117 -->
+## 2026-11-17 Gain/loss diagnosis: reproduced shortfall, unproven missing-day-factor explanation
+
+Source09c7a263/results37017350; report handoffs/20261117_gain_loss_diagnosis_review.md;
+receipts reviews/gain_loss_diagnosis_review_20261117/{review_v1,interpretation_v2}.json.
+As of2026-11-17T04:38:10Z:17,859 Oct26/27 GL predictions and original diagnostic
+ratios/domain AUC reproduce, inputs/artifacts reconcile, falsifiers pass.
+
+Superseding interpretation of347acc7c: leave-one-training-day-out is not uniformly
+forward (Oct23 trained24/25, Oct24 trained23/25; only Oct25 trained23/24).
+P2 is a cross-day diagnostic, not three next-day tests. P3's failed monotonic
+quintile predicate does not rule out coverage. Q1 is relative to the evaluation
+set (median domain score.384,n3572), not a support certificate; training median
+.035,n27236, separation AUC.927296. No controlled test identifies missing day
+intensity as the cause, or shows more history cannot help. Broad strata do not
+hold the full input state fixed.
+
+G2 equal day/kind action counts do not match market/side allocation or its null;
+its PASS also excludes failed G3 loss calibration. Canonical evaluation checks
+are135 sampled actions (12 with positive quantity), not17,859;764 shared labels
+match earlier audited actions. Training23971 zero-wealth !=23896 zero-fill
+(75 filled zero-wealth rows). These are reporting/control limits, not a found
+numeric mismatch in the saved predictions.
+
+New accounting detail on four day/kind cells (n4946/3994/4870/4049): severe-event
+count forecasts are.739-.835 of actual; excess per expected severe event is
+.890-1.048 of actual. Both event calibration and amounts matter; this is not a
+causal decomposition. Next test lagged, fully observed neutral-action residuals
+with past-only folds and matched controls before adding running recalibration.
+No new policy, protected dates, confidence intervals or promotion.
+<!-- /GAIN_LOSS_DIAGNOSIS_REVIEW_20261117 -->
+
 <!-- BANK_TWO_SIDED_REVIEW_20261117 -->
 ## 2026-11-17 Two-sided bank result survives artifact review; uncertainty interpretation qualified
 
