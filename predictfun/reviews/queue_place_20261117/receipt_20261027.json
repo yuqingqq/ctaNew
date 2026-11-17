@@ -1,0 +1,17 @@
+{
+  "asof": "2026-11-17T06:45:31.992519+00:00",
+  "day": "20261027",
+  "markets": 288,
+  "stat": {
+    "parity_checked": 552,
+    "parity_bad": 0,
+    "mut_checked": 548,
+    "mut_differs": 548,
+    "births": 22449,
+    "states": 29820
+  },
+  "outputs": {
+    "rows.parquet": "b6dee0d36a04460826f54b9784f85117820bf74169ef56f3a602de7c8be1294f"
+  },
+  "seconds": 104.35936307907104
+}

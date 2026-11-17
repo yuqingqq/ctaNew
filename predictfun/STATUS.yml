@@ -3117,6 +3117,18 @@ stop_ev_design_20261115:
   components: {SWEEP: have (v6), STOP_FLOW: "new, public-trade labels for hypothetical queue positions", VALUES: "1 s / 5 s markouts", QUEUE: "rule-M estimate - the only simulator-dependent piece"}
   next: "USER's go: STOP-FLOW labels + VALUES -> STOP-FLOW head -> EV policy, selectivity check, portfolio replay vs the harm-only baseline"
 
+queue_place_20261117:
+  status: done_not_profitable
+  asof: "2026-11-17 06:47Z"
+  session: aea5bfb9
+  user: "Ok go (post first at a new best / rest early at the next level)"
+  code: {script: predictfun/research/pf_queue_place_test.py, driver: predictfun/research/run_queue_place.sh, commits: "bcd77450 / 4de41980 (horizon status) / report fix"}
+  controls: "path parity 2,760 / 0 bad; planted no-shift caught 2,746 / 2,746; first run kept in failed_run_1"
+  c_per_order_5s: {improve_FIRST: -8.79, improve_LATE: -9.00, deplete_FIRST: -16.52, deplete_LATE: -11.04, deplete_EARLY_ex_post: -18.31, JOIN: -13.05, REST1: -13.89, IMPROVE: -7.23}
+  readings: {F1: NOT-SHOWN, F2: NOT-SHOWN, E1: NOT-SHOWN, E2: NOT-SHOWN, R1: NOT-SHOWN, R2: "YES (+5.61, 4/5; optimistic counterfactual fills)", R3: NOT-SHOWN}
+  reading: "queue place alone (no pull rule) does not make resting pay; depletion births are the most dangerous"
+  next: "USER: queue place + a pull rule, or reassess the program"
+
 severe_info_20261117:
   status: done_not_shown
   asof: "2026-11-17 06:19Z"
