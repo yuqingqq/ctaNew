@@ -1,0 +1,10 @@
+{
+  "asof": "2026-11-17T00:29:18.028172+00:00",
+  "role": "publication hashes; immutable evidence index remains unchanged",
+  "source_commit": "f60e214408858be3e65ec464523740814799acc1",
+  "freeze_commit": "62201b95",
+  "outputs": {
+    "predictfun/handoffs/20261117_conditional_map_results.md": "c577e45de871ba97c6af9e1d8fa7d6a8cc3e32c21935950e668bb0a51a7cd492",
+    "predictfun/reviews/conditional_map_20261117/index.json": "74e62cf47ae15c7572451497842b151ba8533844e96b93d1b5126af2dafa1eff"
+  }
+}
