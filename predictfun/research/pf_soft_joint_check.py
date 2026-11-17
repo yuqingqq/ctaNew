@@ -5,7 +5,7 @@ WHAT: the other session's joint flow/price controller pilots - KEEP_ALL_CAP, EMP
 SOFT_JOINT, its retained baseline (value_bridge_20261116_v1/pilot) - on the 12 preselected Oct27 markets, full five-minute contracts. From
 their own ledgers: where the marked P&L comes from - by contract minute (the inventory ledger's incremental marked P&L), by market, and by
 fill class (order age < 100 ms, cancel pending, WS / E2 source, through / at price, depth, minute) with 1 s / 5 s markouts; the final
-minute's price range per market; minutes 1-4 against minute 5; each fill's 5 s value against the same fill held to the end (carry).
+minute's price range per market; minutes 1-4 against minute 5; each fill's 5 s value against the same fill held to the end (carry); bid vs ask fills; decision advantages; depth x trade type.
 CONTROLS (any failure -> no output): per case the fills, markets and inventory ledgers reconcile (shares, terminal and settlement P&L;
 the minute increments sum to each market's terminal P&L) and equal the recorded report rows (shares, orders, pulls, terminal, settlement);
 planted errors (one fill's value, one minute increment, moved by 1 c) must each fail them.
@@ -119,6 +119,28 @@ def main():
             parts.append(f'{nm}: spread {y.spread_capture_usd.sum():+7.1f}, +1s {y.markout_1000_usd.fillna(0).sum():+7.1f}, +5s {m5:+7.1f}, '
                          f'held to the end {tm:+7.1f} (carry {tm - m5:+7.1f})')
         L.append(f'  {c:<13} ' + ' || '.join(parts))
+    L += ['', 'PART 6: bid vs ask fills in minutes 1-4 (+1 s / +5 s c/sh, share through) - the scenario bank is built from BID rung-0 probes only '
+          '(pf_flow_control_paths.build: side == 0)']
+    for c in ('KEEP_ALL_CAP', 'EMPIRICAL', 'JOINT', 'SOFT_JOINT'):
+        x_ = F[(F.case == c) & (F.minute < 5)]
+        L.append(f'  {c:<13} ' + ' | '.join(
+            f'{"bid" if sd == 0 else "ask"} {x_[x_.side == sd].shares.sum():7,.0f} sh {cs(x_[x_.side == sd], "markout_1000_usd"):+.2f} / '
+            f'{cs(x_[x_.side == sd], "markout_5000_usd"):+.2f}, through {x_[(x_.side == sd) & x_.through].shares.sum() / x_[x_.side == sd].shares.sum():.0%}'
+            for sd in (0, 1)))
+    D = pd.read_parquet(f'{IO}/value_bridge_20261116_v1/pilot/decisions.parquet'); D = D[D.case == 'SOFT_JOINT']
+    L += ['', 'PART 7: SOFT_JOINT decision advantages (c per order) - the controller acts on any advantage > 0']
+    for kd in ('post', 'cancel'):
+        a_ = D[D.kind == kd].advantage_cents
+        L.append(f'  {kd:<6} n {len(a_):6,} | p10 / p50 / p90 {a_.quantile(.1):.3f} / {a_.median():.3f} / {a_.quantile(.9):.3f} | < 0.5 c {np.mean(a_ < 0.5):.1%} | '
+                 f'< 1 c {np.mean(a_ < 1):.1%}')
+    L.append(f'  effective scenario paths p10 / p50 / p90 {D.effective_paths.quantile(.1):.1f} / {D.effective_paths.median():.1f} / {D.effective_paths.quantile(.9):.1f}')
+    L += ['', 'PART 8: SOFT_JOINT fills by depth x trade type (shares, share of the group, +1 s c/sh)']
+    x_ = F[F.case == 'SOFT_JOINT']
+    for g in ('at_best', 'inside', 'one_to_five', 'over_five'):
+        y = x_[x_.depth_group.astype(str) == g]
+        L.append(f'  {g:<12} ' + ' | '.join(f'{"through" if th else "at price"} {y[y.through == th].shares.sum():6,.0f} '
+                                            f'({y[y.through == th].shares.sum() / y.shares.sum():5.1%}) {cs(y[y.through == th], "markout_1000_usd"):+.2f}'
+                                            for th in (False, True)))
     mk = MK[MK.case == 'SOFT_JOINT']
     L += ['', f'PART 4: SOFT_JOINT activity: orders {mk.orders.sum():,} and guard pulls {mk.pulls.sum():,} over 60 market-minutes '
           f'({mk.orders.sum() / 60:.0f} / {mk.pulls.sum() / 60:.0f} a market-minute)']

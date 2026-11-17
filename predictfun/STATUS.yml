@@ -3021,6 +3021,17 @@ stop_ev_design_20261115:
   components: {SWEEP: have (v6), STOP_FLOW: "new, public-trade labels for hypothetical queue positions", VALUES: "1 s / 5 s markouts", QUEUE: "rule-M estimate - the only simulator-dependent piece"}
   next: "USER's go: STOP-FLOW labels + VALUES -> STOP-FLOW head -> EV policy, selectivity check, portfolio replay vs the harm-only baseline"
 
+soft_joint_review_20261117:
+  status: done_review
+  asof: "2026-11-17 01:56Z"
+  session: aea5bfb9
+  user: "it still does not perform well, can you review the model structure, check what's the critical issue"
+  read: [pf_flow_control_policy.py, pf_flow_control_paths.py, pf_flow_control_kernel.cpp, pf_value_bridge.py]
+  critical_1: "scenario bank from BID rung-0 probes only -> asks unimproved (minutes 1-4, +1 s c/sh vs keep-all: bids -2.01 -> -0.37, asks -2.13 -> -2.14)"
+  critical_2: "1 s objective with zero continuation + act on any advantage > 0 (median 0.32 c vs 25-36 c value error) -> churn, back of queue, sweep fills (61% through at -2.78 c/sh)"
+  secondary: ["first frame current, rest donor: stop-vs-sweep follows another book's depth", "SOFT bid-anchored translation shifts ask prices / mid for pooled spreads", "1 s inventory penalty ignores expiry swings"]
+  next: "USER: mirror the bank and re-run the 12 markets; then queue-place value + switching cost + uncertainty margin; rest early at the next level / place first"
+
 soft_joint_check_20261117:
   status: done_descriptive
   asof: "2026-11-17 01:01Z"
