@@ -1,3 +1,49 @@
+<!-- JOINT_MOMENT_RESULTS_20261117 -->
+## 2026-11-17 Joint fill/price moment regressions fail the prediction screen
+
+V2 source5c87a239/freezec659833d, resultsb9753963, merge5b7a8520;
+report handoffs/20261117_joint_moment_results.md; receipts and reconstruction
+reviews/joint_moment_20261117/v2/{index,publication_v1,reconstruction_v1}.json.
+No controller rollout. Frozen and published artifacts verify after merge.
+
+Train27236 eligible neutral actions on Oct23-25 from30673 selected (3435
+unavailable client-state posts,2 stale future labels retained as statuses).
+No fill-only selection:23896 zero-affected-fill actions,1054 severe outcomes.
+All232 sampled canonical training checks and all861 eval checks match.
+71 causal market+16 order/depth/portfolio inputs, pinned LGBM/200 rounds.
+Predict Q=affected shares and M=affected shares*signed endpoint move directly;
+M is a joint product target. Replace focal wealth only; SOFT other-order/risk
+terms unchanged. Mechanical and direct-wealth controls; no latent inputs.
+
+Asof2026-11-17T01:42:03.845/01:42:05.464Z, RMSE SOFT->joint (c/action):
+Oct26 cancel8.449->10.104(n205), post36.111->35.892(n213);
+Oct27 cancel31.826->32.975(n221), post24.829->25.500(n222).
+Only1/4 improves; market beats mechanical only1/4. Both frozen screens fail.
+The direct-wealth control also fails across dates. Extra market features do not
+show consistent incremental value here; this does not prove no market signal.
+On Oct27 the zero-threshold posting set expands50->86 of222 actions, selects
+0->2 severe losses out of11, selected local values -19.994->-168.983c. These
+are overlapping counterfactual sums, NOT P&L;200 count-matched nulls accompany
+all action comparisons. Bid/ask and phase results mixed; no post-hoc winner.
+
+Severe-post AUC full/mechanical .707/.684 (12/213 Oct26), .785/.802 (11/222
+Oct27); ranking signal exists but incremental calibration is inconsistent.
+Pending remainder estimation improves fraction RMSE .10064->.08896 and
+.10979->.10813 (n205/221; only3/4 unreceived cases), slightly improves cancel
+value RMSE, changes no decisions. Only1 feature value/date outside training
+min/max; this does not exclude multivariate or conditional distribution shift.
+
+All saved predictions, economic reconstructions, metrics and nulls reconcile;
+positive controls and planted-bad refusals pass. V1 stopped before fitting on
+an unavailable path; V2 preserves the status without changing target/features.
+Keep SOFT_JOINT as comparison. Mean regression still fails economic severity;
+next distributional investigation must retain all actions/no-fill mass and test
+loss calibration against mechanical/direct controls. Shared-volume allocation,
+portfolio moments, 1s continuation and external realism remain unresolved.
+Consumed development dates only; no intervals, promotion, protected-date access
+or new strategy/churn/markout/settlement result. All jobs finished on Codex/core8.
+<!-- /JOINT_MOMENT_RESULTS_20261117 -->
+
 <!-- VALUE_DECOMPOSITION_RESULTS_20261117 -->
 ## 2026-11-17 Severe joint fill/price errors dominate posting; pending-fill state overstates some cancellation exposure
 
