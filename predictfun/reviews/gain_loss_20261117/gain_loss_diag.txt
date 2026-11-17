@@ -1,0 +1,69 @@
+GAIN / LOSS DIAGNOSTIC (no model change); as of 2026-11-17T04:32:14Z
+
+PART 1: realized c per decision by day and kind: loss | severe excess | gain || P(loss > 0) | P(loss > 30 c) | n
+  20261023 cancel   3.66 |   2.29 |  1.13 ||  7.1% |  3.2% | 4,971
+  20261023 post     5.60 |   3.72 |  1.15 ||  9.0% |  4.5% | 4,068
+  20261024 cancel   3.10 |   1.86 |  1.26 ||  6.4% |  2.5% | 5,036
+  20261024 post     4.52 |   2.86 |  2.09 ||  8.5% |  3.9% | 4,223
+  20261025 cancel   3.88 |   2.66 |  1.25 ||  5.9% |  2.9% | 4,785
+  20261025 post     5.86 |   4.28 |  1.15 ||  7.9% |  3.9% | 4,153
+  20261026 cancel   4.29 |   2.76 |  1.00 ||  7.2% |  3.7% | 4,946
+  20261026 post     5.38 |   3.54 |  1.24 ||  8.9% |  4.2% | 3,994
+  20261027 cancel   4.38 |   2.98 |  0.94 ||  6.7% |  3.4% | 4,870
+  20261027 post     6.70 |   4.66 |  1.04 ||  9.6% |  4.9% | 4,049
+
+PART 2: leave one training day out - loss heads refitted on the other two days: predicted / realized (ratio) on the held-out day
+  (reference: the 3-day heads on Oct26 / Oct27 in GAIN-LOSS PART 3)
+  held out 20261023: pooled loss x0.83 | cancel loss x0.88, severe x0.89 | post loss x0.78, severe x0.76 (train 18,197, held out 9,039)
+  held out 20261024: pooled loss x1.08 | cancel loss x1.11, severe x1.22 | post loss x1.06, severe x1.12 (train 17,977, held out 9,259)
+  held out 20261025: pooled loss x0.75 | cancel loss x0.78, severe x0.69 | post loss x0.72, severe x0.62 (train 18,298, held out 8,938)
+
+PART 3: set L by stratum - n | realized loss c/decision | predicted / realized (ratio) | share of the total shortfall (19,162 c) || training in-sample ratio (n)
+  minute          1           n 4,118 |   4.91 | x0.82 |  18.6% || x0.96 (6,226)
+  minute          2           n 3,955 |   4.22 | x0.84 |  14.1% || x1.13 (6,081)
+  minute          3           n 3,919 |   5.12 | x0.70 |  31.6% || x0.95 (5,872)
+  minute          4           n 3,378 |   5.29 | x0.77 |  21.6% || x1.06 (5,224)
+  minute          5           n 2,489 |   6.55 | x0.84 |  14.0% || x0.86 (3,833)
+  price |mid-50|  10-25       n 5,601 |   6.78 | x0.68 |  63.1% || x0.95 (7,989)
+  price |mid-50|  25-40       n 4,258 |   3.97 | x0.91 |   8.1% || x1.11 (7,094)
+  price |mid-50|  <10         n 5,135 |   5.92 | x0.84 |  25.6% || x0.94 (7,532)
+  price |mid-50|  >=40        n 2,865 |   2.03 | x0.89 |   3.2% || x0.99 (4,621)
+  spread          1           n 15,550 |   4.56 | x0.79 |  77.8% || x0.99 (23,057)
+  spread          2           n 1,340 |   6.80 | x0.80 |   9.4% || x1.09 (2,361)
+  spread          3+          n   969 |  11.46 | x0.78 |  12.8% || x0.87 (1,818)
+  scale tercile   high        n 15,507 |   4.85 | x0.78 |  85.6% || x0.99 (9,079)
+  scale tercile   low         n   595 |   7.91 | x0.88 |   3.0% || x1.02 (9,079)
+  scale tercile   mid         n 1,757 |   6.42 | x0.81 |  11.4% || x0.93 (9,078)
+  side            ask         n 8,894 |   5.06 | x0.78 |  50.5% || x0.96 (13,710)
+  side            bid         n 8,965 |   5.15 | x0.79 |  49.5% || x1.00 (13,526)
+  kind            cancel      n 9,816 |   4.33 | x0.81 |  41.4% || x1.02 (14,792)
+  kind            post        n 8,043 |   6.04 | x0.77 |  58.6% || x0.95 (12,444)
+  rung            0           n 6,536 |   6.93 | x0.80 |  48.3% || x1.01 (10,338)
+  rung            1-2         n 5,904 |   5.47 | x0.74 |  44.0% || x0.96 (8,851)
+  rung            3-5         n 5,419 |   2.51 | x0.89 |   7.7% || x0.95 (8,047)
+  queue ahead     0           n 9,583 |   5.65 | x0.80 |  56.2% || x0.96 (14,952)
+  queue ahead     >0          n 8,276 |   4.48 | x0.77 |  43.8% || x1.02 (12,284)
+  own position    flat        n 5,570 |   5.91 | x0.81 |  32.7% || x0.97 (8,792)
+  own position    long side   n 5,304 |   5.35 | x0.86 |  20.4% || x1.03 (8,062)
+  own position    short side  n 6,985 |   4.28 | x0.70 |  46.9% || x0.95 (10,382)
+
+PART 4: separating Oct23-25 from set L on the 87 inputs (5 folds by market): AUC 0.927; inputs carrying it (gain share): jm_scale 44.7%, sigma 14.1%, t_rel 7.1%, jm_seconds_left 6.4%, sens 5.1%, pbn_dist 1.9%, r_ct5 1.8%, jm_shown 1.7%, r_s5 1.6%, bn_ntr1000 1.3%
+    jm_scale               training median     2.299 (p10    1.685, p90    2.845) | set L median     2.869 (p10    2.438, p90    3.117)
+    sigma                  training median     0.000 (p10    0.000, p90    0.000) | set L median     0.000 (p10    0.000, p90    0.000)
+    t_rel                  training median   130.600 (p10   21.475, p90  249.150) | set L median   131.600 (p10   19.200, p90  247.750)
+    jm_seconds_left        training median   169.400 (p10   50.850, p90  278.525) | set L median   168.400 (p10   52.250, p90  280.800)
+    sens                   training median     7.243 (p10    1.513, p90   15.099) | set L median     5.463 (p10    1.751, p90   10.895)
+    pbn_dist               training median    22.330 (p10    3.018, p90   47.900) | set L median    20.982 (p10    3.596, p90   46.670)
+  set L by quintile of the separation score (Q1 most training-like): n | realized loss c/decision | predicted / realized loss | severe ratio
+    Q1 n 3,572 |   5.45 | x0.79 | x0.76
+    Q2 n 3,572 |   5.31 | x0.73 | x0.68
+    Q3 n 3,571 |   4.25 | x0.86 | x0.82
+    Q4 n 3,572 |   5.98 | x0.76 | x0.70
+    Q5 n 3,572 |   4.52 | x0.83 | x0.77
+
+P1 LOSSES-GREW: NOT-SHOWN (Oct26 / Oct27 vs Oct23-25 mean, both kinds, > 1.15x)
+P2 NEXT-DAY-UNDERPREDICTION: YES (held-out training-day ratios 20261023 x0.83, 20261024 x1.08, 20261025 x0.75)
+P3 COVERAGE-GAP: NOT-SHOWN (AUC 0.927; most- vs least-familiar quintile ratio x0.79 vs x0.83)
+P4 SHORTFALL-IN-FAMILIAR-STATES: YES (two most-familiar quintiles x0.76)
+
+LIMITS: consumed days; simulated labels; descriptive - no model change, no selection

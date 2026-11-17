@@ -3076,6 +3076,19 @@ stop_ev_design_20261115:
   components: {SWEEP: have (v6), STOP_FLOW: "new, public-trade labels for hypothetical queue positions", VALUES: "1 s / 5 s markouts", QUEUE: "rule-M estimate - the only simulator-dependent piece"}
   next: "USER's go: STOP-FLOW labels + VALUES -> STOP-FLOW head -> EV policy, selectivity check, portfolio replay vs the harm-only baseline"
 
+gain_loss_diag_20261117:
+  status: done_descriptive
+  asof: "2026-11-17 04:33Z"
+  session: aea5bfb9
+  user: "Go"
+  code: {script: predictfun/research/pf_gain_loss_diag.py, commit: 9b987f65}
+  predicates: {P1_losses_grew: NOT-SHOWN, P2_next_day_underprediction: YES, P3_coverage_gap: NOT-SHOWN, P4_shortfall_in_familiar_states: YES}
+  held_out_training_day_loss_ratio: {"20261023": 0.83, "20261024": 1.08, "20261025": 0.75}
+  separation_auc: 0.927
+  separation_driver: "liquidity scale (books ~2x deeper on Oct26-27), then sigma / time / sens"
+  reading: "day-level loss intensity not carried by the 87 inputs; not a coverage gap"
+  next: "USER: causal recent-loss-intensity input (trailing realized neutral-decision value or tape sweep share) or a causal running loss-scale recalibration"
+
 gain_loss_20261117:
   status: done_pass_loss_not_generalized
   asof: "2026-11-17 04:26Z"
