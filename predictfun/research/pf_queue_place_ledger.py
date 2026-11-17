@@ -36,8 +36,10 @@ SELFTEST (synthetic tape only): v1's own day_run and report run on a synthetic t
  tape; planted silent skip (MUT_SILENT_SKIP) must break conservation and leave exactly v1's saved states; post-only mirror both ways
  against the kernel (also at the start of every day run); every status must occur except the path statuses the walk cannot reach
  (declared with reasons in UNREACH_STATE / UNREACH_EVENT: these must NOT occur); planted states and event arms on the scripted market
- must carry the status, decision time, rung and time to END the script was written for; known-bad inputs refused (changed v1 rows,
- changed ledger file, existing output, undeclared day). MUTATION CHECK of the selftest: pf_queue_place_ledger_mutants.py plants code
+ must carry the status, decision time, rung and time to END the script was written for; L5 on the review's counterexample (two saved
+ -1 c orders, one excluded bid at 50: the tipping point lies outside the observed range, yet the worst case is NOT robust) and its
+ positive control (two -1,000 c orders: robust); known-bad inputs refused (changed v1 rows, changed ledger file, existing output,
+ undeclared day). MUTATION CHECK of the selftest: pf_queue_place_ledger_mutants.py plants code
  errors in a copy of this file one at a time - each must make the selftest fail, the unchanged copy must pass.
 READINGS (declared before the run, computed):
  L1 LEDGER-COMPLETE   every conservation identity holds on all five days.
@@ -45,9 +47,14 @@ READINGS (declared before the run, computed):
  L3 GAP-ACCOUNTED     v1 counter - v1 saved states = states without an eligible 5 s arm on every day, listed by status.
  L4 COVERAGE at 2 s   (the only valuation the excluded states can have) COVERAGE-MATTERS-AT-2S if an arm's 2 s mean moves by >= 0.25 c
                       or changes sign between v1's subset (5 s-eligible) and every 2 s-eligible state; else COVERAGE-IMMATERIAL-AT-2S.
- L5 SIGN-ROBUST       per arm (and for the IMPROVE - JOIN pairs): the mean the excluded units would need for the pooled 5 s mean to change
-                      sign, beside the most extreme saved value; SIGN-ROBUST-TO-EXCLUDED if it lies beyond that value. The excluded
-                      states have no 5 s value by definition: this is a bound, not a measurement.
+ L5 EXCLUDED UNITS    (corrected 2026-11-17 by the ledger / keep-pull review, finding P1: the first version compared the needed mean with
+                      the most extreme OBSERVED value and called that a bound - unobserved units can exceed every observed value) per arm
+                      and for the REST1 - JOIN and IMPROVE - JOIN pairs:
+                      L5a TIPPING POINT - the mean the excluded units would need for the pooled 5 s mean to change sign, beside the
+                          observed range: TIP-OUTSIDE-OBSERVED-RANGE / TIP-INSIDE-OBSERVED-RANGE. A sensitivity, NOT a bound.
+                      L5b WORST CASE - every excluded unit at its legal payoff bound (30 sh, END mark anywhere in 0-100 c: a bid at p in
+                          [-30 p, 30 (100 - p)], an ask in [-30 (100 - p), 30 p]; a pair difference in [lo_x - hi_y, hi_x - lo_y]):
+                          SIGN-ROBUST-TO-EXCLUDED only if the pooled sign survives, else NOT-ROBUST-AT-PAYOFF-BOUNDS.
 LIMITS: unchanged from v1 (consumed days Oct23-27; replay fill model; one order at a time held to END; EARLY ex post; FIRST / LATE / EARLY
  differ in exposure as well as queue place - not a measure of queue priority alone; common-endpoint values, not fill + 5 s markouts).
 Usage (run_light, PF_SLOT=claude): pf_queue_place_ledger.py selftest | day <day> [limit] | report
@@ -504,12 +511,51 @@ def vc(s, order):
     c = s.value_counts(); return ' | '.join(f'{k} {int(c[k]):,}' for k in list(order) + [k for k in c.index if k not in order] if k in c.index) or '-'
 
 
-def bound(inc, n_exc):
-    """The mean the excluded units would need for the pooled mean to reach zero, the most extreme saved value on that side, and whether it lies beyond it."""
+def tip(inc, n_exc):
+    """L5a TIPPING POINT (a sensitivity, NOT a bound): the mean the excluded units would need for the pooled mean to reach zero, the most
+    extreme saved value on that side, and whether the needed mean lies beyond it."""
     if not n_exc or not len(inc):
         return float('nan'), float('nan'), None
     need = -float(inc.sum()) / n_exc; ext = float(inc.max() if need > 0 else inc.min())
     return need, ext, bool(need > ext if need > 0 else need < ext)
+
+
+bound = tip                     # the name the review's counterexample script (ab597948) calls: it is the tipping point, not a bound
+
+
+def payoff(side, p):
+    """Legal value range (c) of one 30 sh order at price p held to END: 0-30 sh filled, the END mark anywhere in 0-100 c."""
+    p = np.asarray(p, float); s = np.asarray(side)
+    return np.where(s == 0, -30. * p, -30. * (100. - p)), np.where(s == 0, 30. * (100. - p), 30. * p)
+
+
+def pair_bounds(side, px, py):
+    """Legal range of a pair difference v_x - v_y (both arms at their own price, same side): [lo_x - hi_y, hi_x - lo_y]."""
+    lx, hx = payoff(side, px); ly, hy = payoff(side, py)
+    return lx - hy, hx - ly
+
+
+def worst(inc_sum, lo, hi):
+    """L5b WORST CASE: does the sign of the pooled sum survive with every excluded unit at its legal payoff bound? None if nothing is excluded."""
+    lo, hi = np.asarray(lo, float), np.asarray(hi, float)
+    if not len(lo):
+        return None
+    return bool(inc_sum + hi.sum() < 0) if inc_sum < 0 else bool(inc_sum + lo.sum() > 0) if inc_sum > 0 else False
+
+
+def _l5_cases():
+    """The review's L5 counterexample and its positive control (P1, handoffs/20261117_ledger_keep_pull_review.md)."""
+    bad = []; lo, hi = payoff(np.array([0]), np.array([50.]))
+    if tip(pd.Series([-1., -1.]), 1) != (2., -1., True) or worst(-2., lo, hi) is not False:
+        bad.append('L5 counterexample: the tipping point must lie outside the observed range AND the worst case must not be robust')
+    if worst(-2000., lo, hi) is not True:
+        bad.append('L5 positive control: two -1,000 c orders and one excluded bid at 50 must be robust')
+    if [x.tolist() for x in payoff(np.array([0, 1]), np.array([50., 52.]))] != [[-1500., -1440.], [1500., 1560.]]:
+        bad.append('L5 payoff bounds of a bid at 50 / an ask at 52')
+    lo2, hi2 = pair_bounds(np.array([0]), np.array([51.]), np.array([50.]))
+    if [lo2.tolist(), hi2.tolist()] != [[-3030.], [2970.]] or worst(-10., lo2, hi2) is not False or worst(-3000., lo2, hi2) is not True:
+        bad.append('L5 pair bounds (IMPROVE bid at 51 - JOIN bid at 50: [-3,030, +2,970])')
+    return bad
 
 
 def report(v1=None, out=None):
@@ -552,14 +598,19 @@ def report(v1=None, out=None):
     for arm in ARMS_S:
         a = SA[SA.arm == arm]; inc = a[a.status == 'eligible']; exc = a[(a.arm_status == 'eligible') & (a.status != 'eligible')]
         s2v = inc[inc.status_2s == 'eligible']; s2a = a[a.status_2s == 'eligible']; ex2 = exc[exc.status_2s == 'eligible']
-        m2v, m2a = float(s2v.v_2s.mean()), float(s2a.v_2s.mean()); need, ext, rob = bound(inc.v, len(exc)); move[arm] = m2a - m2v
-        read[f'L4 {arm}'] = bool(abs(m2a - m2v) >= .25 or (m2a > 0) != (m2v > 0)); read[f'L5 {arm}'] = rob
-        T.append(f'    {arm:<8} {len(inc):,}, {inc.v.mean():+.3f} | {len(exc):,} | {m2v:+.4f}, {len(s2v):,} | {m2a:+.4f}, {len(s2a):,} | {m2a - m2v:+.4f} | {len(ex2):,}, {ex2.v_2s.mean():+.3f} | {need:+,.1f} vs {ext:+,.1f}')
+        m2v, m2a = float(s2v.v_2s.mean()), float(s2a.v_2s.mean()); need, ext, out_ = tip(inc.v, len(exc)); move[arm] = m2a - m2v
+        lo, hi = payoff(exc.side.values, exc.p.values); rob = worst(float(inc.v.sum()), lo, hi)
+        read[f'L4 {arm}'] = bool(abs(m2a - m2v) >= .25 or (m2a > 0) != (m2v > 0)); read[f'L5a {arm}'] = out_; read[f'L5b {arm}'] = rob
+        T.append(f'    {arm:<8} {len(inc):,}, {inc.v.mean():+.3f} | {len(exc):,} | {m2v:+.4f}, {len(s2v):,} | {m2a:+.4f}, {len(s2a):,} | {m2a - m2v:+.4f} | {len(ex2):,}, {ex2.v_2s.mean():+.3f} | '
+                 f'{need:+,.1f} vs observed extreme {ext:+,.1f} (a sensitivity) | worst case: saved sum {inc.v.sum():+,.0f}, excluded at payoff bounds [{lo.sum():+,.0f}, {hi.sum():+,.0f}]')
     for name, x_, y_ in (('R1 REST1 - JOIN', 'REST1', 'JOIN'), ('R2 IMPROVE - JOIN', 'IMPROVE', 'JOIN')):
         x = SA[SA.arm == x_].set_index(kg).sort_index(); y = SA[SA.arm == y_].set_index(kg).sort_index(); C.require(x.index.equals(y.index), 'arm rows not aligned')
         both = (x.arm_status == 'eligible').values & (y.arm_status == 'eligible').values; el = (x.status == 'eligible').values
-        d = (x.v - y.v)[both & el]; n_ex = int((both & ~el).sum()); need, ext, rob = bound(d, n_ex); read[f'L5 {name}'] = rob
-        T.append(f'    {name}: pairs {len(d):,}, mean {d.mean():+.3f} | pairs excluded at 5 s {n_ex:,} | mean they would need {need:+,.1f} vs the most extreme saved difference {ext:+,.1f}')
+        d = (x.v - y.v)[both & el]; ex = both & ~el; n_ex = int(ex.sum()); need, ext, out_ = tip(d, n_ex)
+        lo2, hi2 = pair_bounds(x.index.get_level_values('side').values[ex], x.p.values[ex], y.p.values[ex]); rob = worst(float(d.sum()), lo2, hi2)
+        read[f'L5a {name}'] = out_; read[f'L5b {name}'] = rob
+        T.append(f'    {name}: pairs {len(d):,}, mean {d.mean():+.3f} | pairs excluded at 5 s {n_ex:,} | mean they would need {need:+,.1f} vs the most extreme saved difference {ext:+,.1f} '
+                 f'(a sensitivity) | worst case: saved sum {d.sum():+,.0f}, excluded at payoff bounds [{lo2.sum():+,.0f}, {hi2.sum():+,.0f}]')
     lost = cnt[cnt.path != 'eligible']
     T.append('  counted states without a 5 s path by contract minute: ' + ' | '.join(f'{int(p)}: {int(n):,} of {int((cnt.phase == p).sum()):,}' for p, n in lost.groupby('phase').size().items()))
     T.append('  by day: ' + ' | '.join(f'{d}: {int((lost.day == d).sum()):,} of {int((cnt.day == d).sum()):,}' for d in DAYS))
@@ -569,17 +620,18 @@ def report(v1=None, out=None):
     nm = sum(len(R[d]['reconciliation_mismatches']) for d in DAYS)
     L1 = all(not R[d]['conservation_violations'] and not R[d]['conservation_recomputed'] for d in DAYS); L2 = bool(nm == 0 and impl and same)
     L3 = all(R[d]['reconciliation']['v1_gap'] == R[d]['reconciliation']['states_without_eligible_5s_arm'] for d in DAYS)
-    L4 = any(read[f'L4 {a}'] for a in ARMS_S); L5 = {k[3:]: v for k, v in read.items() if k.startswith('L5 ')}
+    L4 = any(read[f'L4 {a}'] for a in ARMS_S); L5a = {k[4:]: v for k, v in read.items() if k.startswith('L5a ')}; L5b = {k[4:]: v for k, v in read.items() if k.startswith('L5b ')}
     T += ['', 'READINGS (declared before the run)',
           f'  L1 LEDGER-COMPLETE: {"YES" if L1 else "NO"} (conservation identities at the run and recomputed from the saved files, every day)',
           f'  L2 V1-REPRODUCED: {"YES" if L2 else "NO"} (row mismatches {nm}; v1\'s readings re-implemented here equal v1\'s file: {impl}; recomputed from the ledger equal v1\'s: {same})',
           f'  L3 GAP-ACCOUNTED: {"YES" if L3 else "NO"} ({gap:,} states = {tot})',
           f'  L4 {"COVERAGE-MATTERS-AT-2S" if L4 else "COVERAGE-IMMATERIAL-AT-2S"} (move of the 2 s mean, c per order: ' + ', '.join(f'{a} {move[a]:+.4f}' for a in ARMS_S) + ')',
-          '  L5 ' + '; '.join(f'{k}: {"SIGN-ROBUST-TO-EXCLUDED" if v else "NO-EXCLUDED-UNITS" if v is None else "NOT-ROBUST"}' for k, v in L5.items()),
+          '  L5a TIPPING POINT (a sensitivity, not a bound) ' + '; '.join(f'{k}: {"TIP-OUTSIDE-OBSERVED-RANGE" if v else "NO-EXCLUDED-UNITS" if v is None else "TIP-INSIDE-OBSERVED-RANGE"}' for k, v in L5a.items()),
+          '  L5b WORST CASE (excluded units at their legal payoff bounds) ' + '; '.join(f'{k}: {"SIGN-ROBUST-TO-EXCLUDED" if v else "NO-EXCLUDED-UNITS" if v is None else "NOT-ROBUST-AT-PAYOFF-BOUNDS"}' for k, v in L5b.items()),
           '', 'LIMITS: as v1 (consumed days; replay fill model, queue M unvalidated on live; one order held to END; EARLY ex post; FIRST / LATE / EARLY differ in exposure as well as queue place; '
-          'common-endpoint values, not fill + 5 s markouts). L5 is a bound: the excluded states have no 5 s value by definition.']
+          'common-endpoint values, not fill + 5 s markouts). The excluded states have no 5 s value by definition: L5a is a sensitivity against the observed range, L5b the only bound (legal payoffs, 30 sh, mark 0-100 c).']
     (out / 'queue_place_ledger.txt').write_text('\n'.join(T) + '\n')
-    C.dump(out / 'queue_place_ledger.json', dict(asof=asof, L1=L1, L2=L2, L3=L3, L4_coverage_matters_at_2s=L4, L5=L5, gap=gap, gap_by_status=tot, arm_rows_without_2s=tot2,
+    C.dump(out / 'queue_place_ledger.json', dict(asof=asof, L1=L1, L2=L2, L3=L3, L4_coverage_matters_at_2s=L4, L5a_tip_outside_observed_range=L5a, L5b_robust_at_payoff_bounds=L5b, gap=gap, gap_by_status=tot, arm_rows_without_2s=tot2,
                                                  move_2s=move, v1_readings_from_ledger={k: v[0] for k, v in r2.items()}, provenance=provenance()))
     print('\n'.join(T), flush=True)
     return dict(L1=L1, L2=L2, L3=L3)
@@ -792,7 +844,7 @@ def _refused(fn):
 def selftest():
     """Synthetic tape only: v1's own day_run and report, then this file, on the same tape; every reachable status planted; planted errors."""
     import shutil
-    start = time.time(); bad = _selftest_postonly(); src = Syn(); d0 = DAYS[0]; ws = src.day(d0)['ws']; W = src.day(d0)['W']
+    start = time.time(); bad = _selftest_postonly() + _l5_cases(); src = Syn(); d0 = DAYS[0]; ws = src.day(d0)['ws']; W = src.day(d0)['W']
     got = (QP.build_path(W[103], ws + 5000., ws + 10000.)[1], QP.build_path(W[102], ws + 125000., ws + 130000.)[1], QP.build_path(W[102], ws + 294000., ws + 299000.)[1])
     if got != UNREACH_STATE or not set(got) <= set(PATH_ST):
         bad.append(f'the path builder does not return the statuses the walk cannot reach: {got}')

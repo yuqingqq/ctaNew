@@ -38,6 +38,13 @@ MUT = [
     ('LATE place: inside reported as at_or_behind', "'inside' if rung < 0 else 'at_or_behind'", "'at_or_behind'"),
     ('grid spread saved with the wrong sign', "cand_status='counted', best=best, opp=oppb, spread=spread, phase=phase", "cand_status='counted', best=best, opp=oppb, spread=-spread, phase=phase"),
     ('state arm path status from the other valuation', "else pstat['' if tag == '_m250' else tag]", "else pstat['_2s' if tag == '' else '' if tag == '_m250' else tag]"),
+    # --- L5 (corrected after the ledger / keep-pull review): the tipping point and the worst case at legal payoff bounds
+    ('L5a tipping point from the saved mean, not the saved sum', "need = -float(inc.sum()) / n_exc", "need = -float(inc.mean())"),
+    ('L5b worst case without payoff bounds', "return bool(inc_sum + hi.sum() < 0) if inc_sum < 0 else bool(inc_sum + lo.sum() > 0) if inc_sum > 0 else False",
+     "return bool(inc_sum < 0) if inc_sum < 0 else bool(inc_sum > 0) if inc_sum > 0 else False"),
+    ('L5b payoff bounds of bid and ask swapped', "return np.where(s == 0, -30. * p, -30. * (100. - p)), np.where(s == 0, 30. * (100. - p), 30. * p)",
+     "return np.where(s == 1, -30. * p, -30. * (100. - p)), np.where(s == 1, 30. * (100. - p), 30. * p)"),
+    ('L5b pair bounds ignore the JOIN arm', "    return lx - hy, hx - ly\n", "    return lx, hx\n"),
     # --- the controls themselves
     ('conservation: the status predicates are skipped', "    # --- every status equals its declared predicate, recomputed from the saved columns\n", "    return bad\n"),
     ('planted silent skip is not planted', "            if MUT_SILENT_SKIP and pstat[''] != 'eligible':\n                continue", "            if False:\n                continue"),
