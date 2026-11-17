@@ -32,13 +32,25 @@ MUT = [
     ('post-only refusal ignored', "rec.update(status='refused_post_only' if rej else 'eligible',", "rec.update(status='eligible',"),
     # --- scores and nulls
     ('trigger step off by one', "return np.where(mask.any(1), mask.argmax(1) + 1, NSTEP + 1)", "return np.where(mask.any(1), mask.argmax(1), NSTEP + 1)"),
-    ('score A not strict', "out[f'A{th:+g}'] = first(a < th)", "out[f'A{th:+g}'] = first(a <= th)"),
+    ('score A not strict', "out[f'A{th:+g}'] = first((a < th) & live)", "out[f'A{th:+g}'] = first((a <= th) & live)"),
+    ('score triggers before the order is live', "out[f'A{th:+g}'] = first((a < th) & live)", "out[f'A{th:+g}'] = first(a < th)"),
+    ('a missing fair input triggers a pull', "out[f'A{th:+g}'] = first((a < th) & live)", "out[f'A{th:+g}'] = first(~(a >= th) & live)"),
     ('score B baseline one step late', "b = sg * (x - f[:, :1])", "b = sg * (x - f[:, 1:2])"),
     ('score reads the posting-time fair price at every step', "sg = np.where(np.asarray(side) == 0, 1., -1.)[:, None]; x = f[:, 1:]",
      "sg = np.where(np.asarray(side) == 0, 1., -1.)[:, None]; x = np.repeat(f[:, :1], NSTEP, 1)"),
-    ('a missing fair price accepted', "ok = len(tau) > 0 and bool(((tau[i_] == want) & np.isfinite(pv[i_])).all())", "ok = len(tau) > 0 and bool((tau[i_] == want).all())"),
-    ('null cells without the day', "cell = (dayi * 2 + E.side.values.astype(int)) * 5 + (E.phase.values.astype(int) - 1)",
-     "cell = E.side.values.astype(int) * 5 + (E.phase.values.astype(int) - 1)"),
+    ('an order with any missing fair input is dropped from the score (whole-future selection)', "sg = np.where(np.asarray(side) == 0, 1., -1.)[:, None]; x = f[:, 1:]",
+     "sg = np.where(np.asarray(side) == 0, 1., -1.)[:, None]; x = np.where(np.isnan(f).any(1, keepdims=True), np.nan, f)[:, 1:]"),
+    ('live decisions start at the pending step', "J0 = int(np.ceil(PLACE / STEP))", "J0 = 1"),
+    ('outcome without the live lower bound', "ii = np.flatnonzero((P >= j0) & (P <= NSTEP) & (P < V['endj']))", "ii = np.flatnonzero((P <= NSTEP) & (P < V['endj']))"),
+    ('oracle without the live lower bound', "M = np.where((cols >= j0) & (cols < V['endj'][:, None]), V['Mv'], -np.inf)", "M = np.where(cols < V['endj'][:, None], V['Mv'], -np.inf)"),
+    ('null risk set ignores eligibility', "elig = (Es[src] > j) & ~picked[src]", "elig = (Ms[src] >= 0) & ~picked[src]"),
+    ('null does not match the executed counts', "sel = elig & (np.cumsum(elig, 1) <= cnt[r, j][:, None])", "sel = elig"),
+    ('unmatched null pulls not counted', "um += int((cnt[r, j] - sel.sum(1)).sum())", "um += 0"),
+    # (re-choosing the 37 ms side of the latency pair, outcome(V, oracle(V)) for outcome(V, O0), is an EQUIVALENT mutant by design: with one price and
+    #  one END mark the 37 ms oracle's own pulls are worth exactly the zero-latency decisions valued at 37 ms - so it is not listed)
+    ('zero-latency side of the latency pair taken from the 37 ms oracle', "o0 = np.array(R[K0]['oracle_by_day']['imp']); o0at37 = np.array(p['oracle_0ms_decisions']['imp'])",
+     "o0 = np.array(p['oracle_by_day']['imp']); o0at37 = np.array(p['oracle_0ms_decisions']['imp'])"),
+    ('null strata without the market', "cell = E.groupby(['day', 'm', 'side', 'phase'], sort=True).ngroup().values", "cell = E.groupby(['day', 'side', 'phase'], sort=True).ngroup().values"),
     # --- reading predicates
     ('K1 at 40%', "return bool(orc.sum() / max(loss.sum(), 1e-9) >= .5 and", "return bool(orc.sum() / max(loss.sum(), 1e-9) >= .4 and"),
     ('K2 day rule 3 of 5', "return bool(res['imp'].sum() > np.percentile(a, 95) and days >= 4)", "return bool(res['imp'].sum() > np.percentile(a, 95) and days >= 3)"),
@@ -48,7 +60,7 @@ MUT = [
     ('conservation check removed', "                C.require(abs(fq.sum() - qk) <= 1e-9 and abs(val.sum() - vk) <= 1e-7 and (fq >= -1e-12).all(), 'per-trade fills do not sum to the keep branch')\n", ""),
     ('structural landing check removed', "                C.require(not (fq[tt >= land] > 1e-12).any(), 'a fill at or after the structural cancel landed')\n", ""),
     ('invariance check removed', "        C.require(st['invariance_changed'] == 0, f\"a decision changed when only later fair inputs changed ({st['invariance_changed']})\")\n", ""),
-    ('null cell check removed', "        C.require((cell[perm] == cell).all(), 'a null permutation moved an order across cells')\n", ""),
+    ('null stratum check removed', "            C.require(bool((sid[who] == np.repeat(r, sel.sum(1))).all()), 'a null pull left its stratum')\n", ""),
     ('v1 value comparison removed', "    C.require(same('v_1', 'v') and same('q_1', 'q') and same('v_m250_1', 'v_m250'), 'KEEP differs from v1 (value, shares or M250 value)')\n", ""),
     ('v1 hash check removed', "    C.require(C.sha(d / 'rows.parquet') == r['outputs']['rows.parquet'], 'v1 rows changed since its receipt')\n", ""),
 ]
