@@ -1,3 +1,19 @@
+value_diagnosis_20261117:
+  status: frozen_calibration_and_controller_run
+  source_commit: 726a5267
+  freeze_commit: 8fea0ef3
+  branch: research/predict-calibration-controller-20261117
+  worktree: /tmp/cta-calibration-controller-20261117
+  output: data/predict_fun/research/value_diagnosis_20261117_v1
+  evidence_index: predictfun/reviews/value_diagnosis_20261117/index.json
+  histories: [H1, H2, H3, H3_MATCHED_N1]
+  neutral_evaluation_actions: 861
+  controller: SOFT_JOINT
+  controller_markets: 12
+  new_policies: 0
+  running: true
+  promotion: false
+
 joint_moment_20261117:
   status: complete_both_prediction_screens_failed
   source_commit: 5c87a239
