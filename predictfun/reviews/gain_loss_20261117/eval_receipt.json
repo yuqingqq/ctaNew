@@ -1,0 +1,21 @@
+{
+  "asof": "2026-11-17T04:25:48.057348+00:00",
+  "set_L_n": 17859,
+  "set_S_n": 861,
+  "direct_reproduced": true,
+  "overlap": {
+    "20261026": {
+      "audited": 418,
+      "shared": 372
+    },
+    "20261027": {
+      "audited": 443,
+      "shared": 392
+    }
+  },
+  "outputs": {
+    "set_L.parquet": "a657b50b59c0264e287ad8e4616792031dc8846bed9e16f001f527ab149f4138",
+    "set_S.parquet": "4d49ba6117838ffd9bb9b3ff6465699fb0eef64e08cc244285c85e888cf547b6"
+  },
+  "seconds": 2.324983835220337
+}

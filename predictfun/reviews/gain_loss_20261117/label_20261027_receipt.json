@@ -1,0 +1,29 @@
+{
+  "asof": "2026-11-17T04:25:34.322505+00:00",
+  "day": "20261027",
+  "markets": 288,
+  "statuses": {
+    "('cancel', 'eligible')": 4870,
+    "('post', 'eligible')": 4049,
+    "('post', 'not_available_in_client_state')": 1163
+  },
+  "candidate_statuses": {
+    "('cancel', 'eligible_estimated_timing')": 86685,
+    "('cancel', 'not_client_resting')": 37425,
+    "('post', 'eligible_estimated_timing')": 128471,
+    "('post', 'stale_future_marks')": 180,
+    "('cancel', 'eligible')": 335,
+    "('cancel', 'shutdown_horizon')": 912,
+    "('post', 'shutdown_horizon')": 704,
+    "('cancel', 'incomplete_book_coverage')": 3951,
+    "('cancel', 'stale_future_marks')": 101,
+    "('post', 'incomplete_book_coverage')": 56,
+    "('cancel', 'missing_or_stale_mark')": 2
+  },
+  "canonical_checked": 79,
+  "canonical_positive": 9,
+  "outputs": {
+    "actions.parquet": "630c936196db35c38d571cec0c3d0f98ff97224cac44e09e83f01a138ba2d2c6"
+  },
+  "seconds": 365.34548449516296
+}

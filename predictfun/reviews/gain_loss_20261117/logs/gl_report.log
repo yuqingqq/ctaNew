@@ -1,0 +1,56 @@
+gain-loss selftests passed; planted errors caught: {'MUT_FILLS_ONLY': True, 'MUT_TRUNCATE_SEVERE': True, 'MUT_LEAK': True}
+GAIN / LOSS DECOMPOSITION OF ACTION VALUE (prediction screen; target, inputs, latency, controller unchanged); as of 2026-11-17T04:25:49Z
+training Oct23-25: 27,236 eligible decisions (23,971 no-fill, 1,251 gains, 2,014 losses, 933 beyond 30 c)
+set L (every market, Oct26-27): 17,859 eligible actions (764 shared with the audited set, identical labels); set S (audited): 861
+
+PART 1 (set L, focal W c/action): n | realized mean | RMSE  GL / DIRECT / MECH / ZERO | quintile calibration error  GL / DIRECT / MECH | Spearman GL / DIRECT
+  20261026 cancel n 4,946 |  -3.28 |  25.83 /  26.11 /  27.05 /  27.30 |  0.53 /  1.19 /  0.70 | +0.114 / +0.084
+  20261026 post   n 3,994 |  -4.14 |  32.73 /  32.70 /  33.06 /  33.33 |  1.30 /  2.02 /  1.85 | +0.138 / +0.116
+  20261027 cancel n 4,870 |  -3.44 |  29.10 /  29.50 /  30.19 /  30.34 |  0.74 /  1.35 /  1.82 | +0.130 / +0.092
+  20261027 post   n 4,049 |  -5.66 |  43.43 /  44.06 /  45.46 /  46.20 |  2.05 /  1.44 /  1.37 | +0.151 / +0.121
+
+PART 2 (set L): matched participation - realized mean W of the top-ranked share of each cell: GL / DIRECT / MECH | random (200 draws, mean / p95)
+  top 10% 20261026 cancel n  495:  +0.18 /  -0.71 /  -0.05 | random  -3.33 /  -1.48
+  top 10% 20261026 post   n  400:  -0.11 /  -1.08 /  -2.07 | random  -4.22 /  -1.92
+  top 10% 20261027 cancel n  487:  -0.06 /  -2.79 /  -1.98 | random  -3.47 /  -1.49
+  top 10% 20261027 post   n  405:  -4.15 /  -1.75 /  -0.73 | random  -5.56 /  -2.90
+  top 25% 20261026 cancel n 1237:  -0.02 /  -0.79 /  -0.23 | random  -3.20 /  -2.21
+  top 25% 20261026 post   n  999:  -1.00 /  -1.11 /  -1.72 | random  -4.08 /  -2.69
+  top 25% 20261027 cancel n 1218:  +0.03 /  -1.76 /  -1.29 | random  -3.49 /  -2.31
+  top 25% 20261027 post   n 1013:  -1.80 /  -1.34 /  -0.58 | random  -5.77 /  -3.78
+  top 50% 20261026 cancel n 2473:  -0.29 /  -0.70 /  -0.61 | random  -3.29 /  -2.58
+  top 50% 20261026 post   n 1997:  -0.82 /  -1.01 /  -2.00 | random  -4.16 /  -3.26
+  top 50% 20261027 cancel n 2435:  -0.52 /  -1.22 /  -1.50 | random  -3.43 /  -2.79
+  top 50% 20261027 post   n 2025:  -1.53 /  -1.22 /  -1.37 | random  -5.55 /  -4.36
+
+PART 3 (set L): components - predicted / realized totals (c), AUC of P(> 0)
+  20261026 cancel: gain      3927 /      4956 | loss     17557 /     21198 (x0.83) | severe excess     10911 /     13665 (x0.80) | AUC gain 0.793 loss 0.794 severe 0.781 | MECH loss x0.85
+  20261026 post  : gain      3999 /      4937 | loss     18156 /     21478 (x0.85) | severe excess     11284 /     14144 (x0.80) | AUC gain 0.736 loss 0.778 severe 0.773 | MECH loss x1.00
+  20261027 cancel: gain      3927 /      4588 | loss     17051 /     21337 (x0.80) | severe excess     10705 /     14491 (x0.74) | AUC gain 0.819 loss 0.817 severe 0.797 | MECH loss x0.78
+  20261027 post  : gain      3996 /      4218 | loss     19212 /     27124 (x0.71) | severe excess     12402 /     18848 (x0.66) | AUC gain 0.728 loss 0.792 severe 0.782 | MECH loss x0.78
+
+PART 4 (set L): by predicted-W quintile, pooled days, GL: n | predicted W / realized W | predicted loss / realized loss | predicted severe / realized severe (c/action)
+  cancel Q1 n 1,964 |   -9.88 /  -11.85 |  11.33 /  13.93 |   7.47 /   9.79
+  cancel Q2 n 1,963 |   -2.33 /   -2.90 |   3.04 /   3.64 |   1.72 /   2.21
+  cancel Q3 n 1,963 |   -1.06 /   -1.40 |   1.52 /   2.21 |   0.87 /   1.33
+  cancel Q4 n 1,963 |   -0.53 /   -0.67 |   0.80 /   0.90 |   0.47 /   0.55
+  cancel Q5 n 1,963 |   +0.18 /   +0.01 |   0.93 /   0.97 |   0.48 /   0.46
+  post   Q1 n 1,609 |  -14.07 /  -15.71 |  15.76 /  17.86 |  10.86 /  12.74
+  post   Q2 n 1,608 |   -2.95 /   -4.62 |   3.94 /   5.61 |   2.12 /   3.44
+  post   Q3 n 1,609 |   -1.13 /   -1.27 |   1.77 /   2.41 |   0.90 /   1.41
+  post   Q4 n 1,608 |   -0.44 /   -1.22 |   0.87 /   1.64 |   0.44 /   1.07
+  post   Q5 n 1,609 |   +0.32 /   -1.70 |   0.89 /   2.69 |   0.40 /   1.84
+
+PART 5 (set S, the audited 861, full action value c, descriptive): RMSE GL / DIRECT / MECH / SOFT_JOINT / ZERO | calibration error GL / DIRECT / SOFT
+  20261026 cancel n 205 |   8.22 /   8.96 /   9.31 /   8.45 /   7.40 |  2.06 /  3.30 /  2.34
+  20261026 post   n 213 |  35.23 /  35.46 /  34.32 /  36.11 /  35.60 |  3.46 /  5.45 /  5.53
+  20261027 cancel n 221 |  32.21 /  32.25 /  31.33 /  31.83 /  31.64 |  4.88 /  2.83 /  2.78
+  20261027 post   n 222 |  25.20 /  25.79 /  25.70 /  24.83 /  25.71 |  2.71 /  4.90 /  2.09
+
+G1 NET-CALIBRATION: GL RMSE below DIRECT in 3 / 4 cells, calibration error below in 3 / 4 -> GL-CALIBRATES-BETTER
+G2 MATCHED-PARTICIPATION: GL >= DIRECT in 3 / 4 at 10%, 3 / 4 at 25%, 3 / 4 at 50% -> GL-SELECTS-BETTER
+PASS (G1 and G2): PASS
+G3 LOSS-GENERALIZES: NOT-GENERALIZED
+
+LIMITS: consumed days; simulated labels (rule M, queue M, unknown depth 0, E2 / imputed timing); the neutral decision population; 1 s target, zero continuation
+2026-11-17T04:25:48Z tag=gl_report rc=0 peak_rss_mib=288 wall_s=1.47 cpu_user_s=1.28 memavail_start_gib=23 disk_free_gib=469->469 slot=claude
