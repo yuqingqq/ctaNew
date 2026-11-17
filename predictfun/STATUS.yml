@@ -1,3 +1,22 @@
+bank_two_sided_review_20261117:
+  status: complete_artifacts_reconciled
+  asof: 2026-11-17T03:48:57Z
+  reviewed_commits: [693960d8, f1d53700, '40156970']
+  review_source_commit: 607e9cbb
+  results_commit: 987c07bc
+  report: predictfun/handoffs/20261117_two_sided_bank_review.md
+  evidence: predictfun/reviews/bank_two_sided_review_20261117/review_v1.json
+  actions: 861
+  pilot_markets: 12
+  original_readings_reproduced: true
+  all_baseline_fill_fields_match: true
+  nominal_scenario_z_is_calibrated_confidence: false
+  new_models: 0
+  new_policies: 0
+  running: false
+  promotion: false
+  next: expected_gain_loss_amount_and_tail_excess_on_same_action_target
+
 value_diagnosis_20261117:
   status: complete_audited_merged_diagnostic_only
   asof: 2026-11-17T02:49:32Z

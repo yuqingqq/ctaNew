@@ -1,3 +1,31 @@
+<!-- BANK_TWO_SIDED_REVIEW_20261117 -->
+## 2026-11-17 Two-sided bank independently reviewed; next priority is expected loss amount
+
+User requested latest-commit review after the two-sided bank failed. Reviewed
+693960d8 / f1d53700 and uncertainty diagnostic 40156970. Review source607e9cbb,
+results987c07bc. Report handoffs/20261117_two_sided_bank_review.md; evidence
+reviews/bank_two_sided_review_20261117/review_v1.json.
+As of2026-11-17T03:48:57Z, all861 Oct26/27 actions and original A1/A2/R1
+readings reproduce; all OLD pilot fill fields match, not merely aggregate P&L.
+All artifact hashes and positive/planted-bad controls pass. No new model/policy.
+
+The controlled bank change shifts side quality, but combined minutes1-4 markouts
+remain negative on the12 Oct27 markets. Superseding interpretation: scenario
+SD/sqrt(effective paths) is a dispersion diagnostic, not calibrated forecast
+confidence; duplicating paths changes nominal z without new information. No
+posts above2 nominal SE does not prove no confidently profitable opportunities.
+Also the claim that every bank cell is within a few percent of zero is false;
+some cancellation cells are materially worse. Raw results remain unchanged.
+
+Next priority is a controlled gain/loss-amount representation of the same focal
+wealth target, with severe-loss excess retained and all no-fill actions included.
+Compare mechanical/direct-wealth controls, keep other-order/risk terms and policy
+fixed. Require loss/net-value calibration and matched-participation economic
+improvement before replay. This is a proposed test, not demonstrated predictive
+improvement. Continuation/queue value remains open; no new timer or SE threshold.
+All dates consumed; no intervals, promotion or claim of profitable validation.
+<!-- /BANK_TWO_SIDED_REVIEW_20261117 -->
+
 ## 2026-11-17 03:42Z (session aea5bfb9) — TWO-SIDED SCENARIO BANK, CONTROLLED (USER: "Yes can you do the next and validate", after the audit): the bank's one-sidedness shifts quality between sides, but value prediction does not improve and no confident positive post appears
 
 - What: pf_bank_two_sided.py (693960d8, declared before the run). Only SOFT_JOINT's scenario bank changes: OLD (frozen, bid rung-0 probe times, 24 per market) vs TWO (the same rule on the ask probes too: 2,492 paths, 1,234 drawn at ask times) and BID48 (bid rule, 48 per market: more-data control). Classifier, pooling, IPF, controller, risk, clocks and 1 s horizon unchanged. Controls: the OLD rule rebuilt here equals the frozen bank; OLD reproduces the archived predictions on all 861 actions and the archived 12-market pilot; planted errors refused.

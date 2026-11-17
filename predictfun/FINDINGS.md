@@ -1,3 +1,32 @@
+<!-- BANK_TWO_SIDED_REVIEW_20261117 -->
+## 2026-11-17 Two-sided bank result survives artifact review; uncertainty interpretation qualified
+
+Reviewed693960d8/f1d53700 and40156970; source607e9cbb/results987c07bc.
+Report handoffs/20261117_two_sided_bank_review.md, evidence
+reviews/bank_two_sided_review_20261117/review_v1.json. As of03:48:57Z Nov17,
+all861 consumed Oct26/27 actions and original readings reproduce, all OLD pilot
+fill fields match the archive, and hashes plus falsifiers pass. No new model.
+For12 Oct27 markets, minutes1-4 combined markout OLD->TWO: -1.194->-1.134c/sh
+at1s and-.989->-.462 at5s (fills493->379; shares4449->3127; no missing marks).
+Ask improvement accompanies worse bids and reduced participation. The bank
+sampling fix is not sufficient for positive economic value; it does not prove
+bid-only sampling caused the entire side asymmetry.
+
+Superseding interpretation of the new confidence language: weighted scenario
+SD/sqrt(effective paths) is not calibrated forecast uncertainty. A duplication
+control preserves the full outcome distribution but changes nominal z. Zero
+posts beyond2 nominal SE is not proof no profitable opportunities exist. Some
+value cells are also materially worse than zero, contrary to the broad
+within-a-few-percent statement (Oct26 ask cancel n104: TWO12.723c vs zero7.200).
+Original frozen results are retained; the review receipt carries these limits.
+
+Next candidate should test expected gain versus loss amount, including severe
+loss excess, on the same action target and full neutral population. No-fill
+mass/tails retained; controls and policy fixed. Probability/AUC alone is not
+cost calibration, and global outcome RMSE is not an entry margin. This is a
+proposed experiment, not evidence that target decomposition will succeed.
+<!-- /BANK_TWO_SIDED_REVIEW_20261117 -->
+
 <!-- VALUE_DIAGNOSIS_RESULTS_20261117 -->
 ## 2026-11-17 Value calibration and SOFT controller diagnosis
 
