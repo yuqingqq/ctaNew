@@ -1,0 +1,76 @@
+{
+  "asof": "2026-11-17T00:26:39.721505+00:00",
+  "source_manifest": "269bfae3b1903ec375efcba779d3f1f3038373968e6644795f187e9e7d127986",
+  "day": "20261027",
+  "selected_markets": [
+    3853227,
+    3855272,
+    3856795,
+    3861545,
+    3864969,
+    3866949,
+    3868537,
+    3872135,
+    3875576,
+    3878682,
+    3882891,
+    3887697
+  ],
+  "bank_receipt_sha256": "07c1448989cbb456a4493e39b5d87bbef811d35f9604d6eb62b784f1fb9d1484",
+  "old_receipt_sha256": "e786ca73f90717892698408cbf5f15c0f9dfddf29aea795e40256249827ee059",
+  "controls": {
+    "3853227": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3855272": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3856795": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3861545": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3864969": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3866949": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3868537": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3872135": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3875576": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3878682": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3882891": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3887697": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    }
+  },
+  "outputs": {
+    "oracle.parquet": "a8378b3e17e90517510dd6c0d9679f43d8b7bf3e02c65012a65769009b69ac1a",
+    "values.parquet": "d28a1d060a67f8783342695ae664829f540e10e1d98caaf95e5b17650e063d44"
+  },
+  "seconds": 152.97936272621155
+}

@@ -1,0 +1,23 @@
+{
+  "asof": "2026-11-17T00:26:41.196171+00:00",
+  "run_pilot": false,
+  "comparisons": {
+    "cancel": {
+      "n": 208,
+      "baseline_rmse": 25.95090189033658,
+      "candidate_rmse": 28.38470309217855,
+      "no_worse": false,
+      "strictly_better": false
+    },
+    "post": {
+      "n": 212,
+      "baseline_rmse": 23.97128350128617,
+      "candidate_rmse": 26.51401281420276,
+      "no_worse": false,
+      "strictly_better": false
+    }
+  },
+  "source_manifest": "269bfae3b1903ec375efcba779d3f1f3038373968e6644795f187e9e7d127986",
+  "oracle_report_sha256": "48e6463e45ef8883592a9db8d3f6465ba2b195c0a8f829ab829b99bf05ec9258",
+  "role": "Frozen development compute screen, not validation or promotion"
+}
