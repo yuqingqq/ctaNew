@@ -1,9 +1,11 @@
 <!-- JOINT_MOMENT_20261117 -->
 ## 2026-11-17 Joint fill/price moment prediction screen: frozen and running
 
-Source1f6cd68b, freeze898ab667; branch research/predict-joint-moment-20261117,
+V2 source5c87a239, freezec659833d; branch research/predict-joint-moment-20261117,
 worktree /tmp/cta-joint-moment-20261117. Sequential launcher run_joint_moment.sh
-uses Codex/core8 only. Preflight matches all861 archived Oct26/27 canonical
+uses Codex/core8 only. V1 stopped before fitting on a stale future path at market86 of Oct23;
+V2 preserves selected unavailable labels as statuses without refill. The failed
+V1 source/freeze and outputs remain provenance. Preflight matches all861 archived Oct26/27 canonical
 labels; finite no-cancel sentinel adapter repaired before freeze. Failed initial
 preflight retained. Synthetic joint-target, physical-bounds, tail-score, hidden-
 state input invariance and known-bad controls pass.
@@ -25,8 +27,8 @@ or new action threshold; shared-volume/portfolio integration remains necessary.
 
 Exact418/443 evaluation actions, ordinary inputs only,200 matched nulls, separate
 severe-loss metrics and sides. Fit uses training only; no calibration/hyperparameter
-search. Evidence target reviews/joint_moment_20261117/index.json; ignored data/logs
-under data/predict_fun/research/joint_moment_20261117_v1/. Consumed development
+search. Evidence target reviews/joint_moment_20261117/v2/index.json; ignored data/logs
+under data/predict_fun/research/joint_moment_20261117_v2/. Consumed development
 only; no intervals, validation, promotion or protected-date access. SOFT retained.
 <!-- /JOINT_MOMENT_20261117 -->
 
