@@ -1,3 +1,40 @@
+<!-- VALUE_DIAGNOSIS_20261117 -->
+## 2026-11-17 Calibration/history and SOFT controller diagnosis: frozen, running
+
+User authorized the calibration/coverage and controller consistency checks.
+Source726a5267, freeze8fea0ef3; isolated branch
+research/predict-calibration-controller-20261117, worktree
+/tmp/cta-calibration-controller-20261117. Sequential Codex/core8 launcher
+run_value_diagnosis.sh. Output data/predict_fun/research/value_diagnosis_20261117_v1;
+evidence target reviews/value_diagnosis_20261117/index.json. Parent frozen joint
+moment and SOFT sources unchanged. Calibration/miscalibration/novelty controls,
+Shapley/timing-reversal controls and complement kernel invariance controls pass.
+
+Reuses all27236 eligible Oct23-25 neutral training actions and exact861 Oct26/27
+evaluation actions. Fixed histories H1 Oct25, H2 Oct24-25, H3 Oct23-25 plus
+H3_MATCHED_N1 (three days hash-sampled to H1 kind/side/phase counts). Seven
+existing heads/targets/settings fixed; H3 artifacts reused, three history refits.
+Eight binary affected-fill diagnostic heads (full/mechanical per history),
+trained on all actions, never used to change action values. Fixed value/risk
+calibration bins, physical Q/p consistency, fill-weighted motion summaries.
+16-dimensional robust nearest-neighbor coverage and sparse regime cells; no
+label-dependent geometry or filtering. Training calibration is in-sample.
+200 count-matched economic nulls per action comparison. No history winner.
+
+Current SOFT_JOINT pilot replay on the same12 consumed Oct27 markets, with exact
+archived trace/fill identity required. All post statuses retained;8 hash pairs
+per market/side/review-cancel group; SOFT16-cell attribution, horizon/pending-
+state sensitivities, complement-transformed kernel control and original-bank
+mirrored-query sensitivity. Other-session bid-bank and zero-continuation claims
+are hypotheses; symmetry sensitivity alone is not proof of causation/profit.
+No new controller, cooldown, threshold, queue premium or risk coefficient.
+
+Full independent saved-model/metric/coverage/sample/attribution reconstruction
+is queued after both stages. Consumed dates only, max3-day history; no intervals,
+untouched validation, protected dates, promotion or new policy P&L result.
+Global outcome RMSE must not be used as a calibrated decision margin.
+<!-- /VALUE_DIAGNOSIS_20261117 -->
+
 ## 2026-11-17 01:56Z (session aea5bfb9) — MODEL-STRUCTURE REVIEW OF SOFT_JOINT (USER: "it still does not perform well, can you review the model structure, check what's the critical issue")
 
 - Read: pf_flow_control_policy / _paths / _kernel(.cpp) and pf_value_bridge (the controller, scenario bank, branch executor, SOFT pooling); measured on the pilot ledgers (pf_soft_joint_check.py parts 6-8, same controls).
