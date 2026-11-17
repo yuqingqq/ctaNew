@@ -3117,6 +3117,18 @@ stop_ev_design_20261115:
   components: {SWEEP: have (v6), STOP_FLOW: "new, public-trade labels for hypothetical queue positions", VALUES: "1 s / 5 s markouts", QUEUE: "rule-M estimate - the only simulator-dependent piece"}
   next: "USER's go: STOP-FLOW labels + VALUES -> STOP-FLOW head -> EV policy, selectivity check, portfolio replay vs the harm-only baseline"
 
+severe_cal_20261117:
+  status: done_not_shown
+  asof: "2026-11-17 06:12Z"
+  session: aea5bfb9
+  user: "Compare baseline, smoother-only and calibration-only ... explicit consistency handling"
+  code: {script: predictfun/research/pf_severe_cal.py, commit: b08304d2}
+  consistency: "P(severe) = P(any loss) x P(severe | loss) in every arm; independent heads' violations 2,268 / 36,056 reproduced"
+  readings_fold_A: {SMOOTH: {S1: IMPROVES, S2: "YES", S3: NOT-SHOWN, S4: NOT-SHOWN, PASS: NOT-SHOWN}, CAL: {S1: IMPROVES, S2: "YES", S3: NOT-SHOWN, S4: NOT-SHOWN, PASS: NOT-SHOWN}}
+  maps_fold_A: {A: [-0.378, 0.833], B: [0.105, 0.669]}
+  reading: "scale fixable; ranking of severe risk among low-risk decisions binds the value"
+  next: "USER: test for information that separates severe from safe among low-risk states, or return to the order setup (queue place / post first)"
+
 severe_support_20261117:
   status: done_descriptive
   asof: "2026-11-17 05:02Z"
