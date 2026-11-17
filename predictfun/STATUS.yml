@@ -1,22 +1,31 @@
 joint_moment_20261117:
-  status: training_data_complete_evaluation_build_running
+  status: complete_both_prediction_screens_failed
   source_commit: 5c87a239
   freeze_commit: c659833d
+  reconstruction_source_commit: 5924b1a7
+  results_commit: b9753963
+  merge_commit: 5b7a8520
   branch: research/predict-joint-moment-20261117
   worktree: /tmp/cta-joint-moment-20261117
   output: data/predict_fun/research/joint_moment_20261117_v2
+  report: predictfun/handoffs/20261117_joint_moment_results.md
   review_index: predictfun/reviews/joint_moment_20261117/v2/index.json
   train_days: [20261023, 20261024, 20261025]
   evaluation_days: [20261026, 20261027]
-  preflight_canonical_actions_reconciled: 861
+  training_selected_actions: 30673
+  training_eligible_actions: 27236
+  training_canonical_checked: 232
+  evaluation_canonical_checked: 861
+  label_mismatches: 0
+  value_tail_screen_passed: false
+  market_incremental_screen_passed: false
+  value_rmse_improved_comparisons: 1
+  value_comparisons: 4
+  asof: 2026-11-17T01:42:19Z
   new_joint_moment_candidates: 1
   controller_rollout: false
   retained_baseline: SOFT_JOINT
-  training_actions: 27236
-  training_canonical_checked: 232
-  training_label_mismatches: 0
-  training_data_asof: 2026-11-17T01:39:27Z
-  running: true
+  running: false
   promotion: false
 
 value_decomposition_20261117:

@@ -1,40 +1,52 @@
 <!-- JOINT_MOMENT_20261117 -->
-## 2026-11-17 Joint fill/price moment prediction screen: frozen and running
+## 2026-11-17 Joint fill/price moment screen complete: failed; SOFT retained
 
-V2 source5c87a239, freezec659833d; branch research/predict-joint-moment-20261117,
-worktree /tmp/cta-joint-moment-20261117. Sequential launcher run_joint_moment.sh
-uses Codex/core8 only. V1 stopped before fitting on a stale future path at market86 of Oct23;
-V2 preserves selected unavailable labels as statuses without refill. The failed
-V1 source/freeze and outputs remain provenance. Preflight matches all861 archived Oct26/27 canonical
-labels; finite no-cancel sentinel adapter repaired before freeze. Failed initial
-preflight retained. Synthetic joint-target, physical-bounds, tail-score, hidden-
-state input invariance and known-bad controls pass.
+V2 source5c87a239, freezec659833d, reconstruction source5924b1a7,
+resultsb9753963; merged5b7a8520 into mm-research. Frozen inherited source chain,
+15 published files, underlying data/prediction/model artifacts and completed-run
+logs verify after merge. Report handoffs/20261117_joint_moment_results.md;
+evidence reviews/joint_moment_20261117/v2/index.json, audit_v2.json,
+reconstruction_v1.json, publication_v1.json. No numerical job running;
+peak1468MiB, Codex/core8 only. Worktree /tmp/cta-joint-moment-20261117 retained.
 
-Train Oct23-25 across all admitted markets, capped neutral path; hash2 per
-market/side/phase/kind after coverage, before client availability/reservations;
-keep exclusions without replacement and preserve no-fill cases. Labels use
-true current state and actual future path ONLY as outcomes; every eval label
-and deterministic training checks reconcile with full canonical branches.
-Inputs:71 causal market features plus16 order/depth/portfolio features, including
-actual known depth at price, exact expiry, queue and competing own orders.
+Train Oct23-25:27236 eligible actions from30673 selected, asof01:42:02Z Nov17;
+3435 unavailable client-state posts and2 stale future-path labels retain statuses
+without refill. All232 sampled canonical training checks match, including30
+positive affected fills. All418 Oct26/443 Oct27 evaluation labels match exactly.
+V1 stopped before fitting on unavailable path; V2 corrects status handling only;
+old freeze/failed artifacts retained. Same target, inputs and sampling design.
 
-Training data complete asof2026-11-17T01:39:27Z:27236 eligible actions
-(9039/9259/8938), all232 canonical training checks match. Two selected posts
-have stale future-book labels and3435 are unavailable in client state; statuses
-retained without refill. Evaluation feature builds, fit and scoring are queued.
+Pinned LGBM/200 rounds on71 causal market+16 order/depth/portfolio inputs.
+Q=expected affected shares; M=expected affected shares*signed endpoint movement;
+replace focal wealth with edge*Q+M, retaining SOFT other-order/risk terms.
+Mechanical and direct-wealth controls; separate severe-loss and remaining heads.
+No double scaling, hidden-state features, new controller or threshold fitting.
 
-Pinned LGBM/200 rounds: Q=affected fills, M=affected fills*signed endpoint move,
-direct retained focal wealth, severe full-value event and remaining fraction.
-Mechanical Q/M/tail baselines isolate incremental market information. Remaining
-head is separate, never double-scales Q/M. Static action screen replaces focal
-wealth only; keeps SOFT other-order/risk terms. No simultaneous controller rollout
-or new action threshold; shared-volume/portfolio integration remains necessary.
+Asof01:42:03.845/01:42:05.464Z Nov17, ordinary RMSE SOFT->joint:
+Oct26 cancel8.449->10.104c(n205), post36.111->35.892c(n213);
+Oct27 cancel31.826->32.975c(n221), post24.829->25.500c(n222).
+Only1/4 value comparisons improves; market beats mechanical only1/4. Both
+frozen screens fail. Direct wealth also inconsistent. At zero threshold,
+Oct27 posts50->86 actions, selected severe posts0->2 out of11 severe/222;
+selected local value -19.994->-168.983c, NOT strategy P&L;200 matched nulls.
+Phase/side results mixed; no post-hoc winner. Reports include zero predictors.
 
-Exact418/443 evaluation actions, ordinary inputs only,200 matched nulls, separate
-severe-loss metrics and sides. Fit uses training only; no calibration/hyperparameter
-search. Evidence target reviews/joint_moment_20261117/v2/index.json; ignored data/logs
-under data/predict_fun/research/joint_moment_20261117_v2/. Consumed development
-only; no intervals, validation, promotion or protected-date access. SOFT retained.
+Severe-post AUC .707/.785 vs mechanical .684/.802 (12/213,11/222); some ranking
+signal but no consistent incremental economic/calibration result. Remainder
+fraction RMSE .10064->.08896/.10979->.10813 on205/221 cancel exposures (only3/4
+unreceived cases); value error improves slightly but decisions unchanged.
+23896/27236 training actions have zero affected fills,1054 severe outcomes.
+Only1 feature value/date outside train min/max; marginal ranges do not rule
+out conditional shift or insufficient rare-state coverage. All saved outputs,
+economic reconstructions and reported metrics/nulls reconcile; controls pass.
+
+Retain SOFT_JOINT as research comparison. Current mean regressions do not solve
+joint severity calibration. Next investigate an all-action distributional loss
+with no-fill mass and calibrated loss size against mechanical/direct controls;
+no claim that more features alone fix it. Shared-volume/portfolio integration,
+1s continuation, pending-state belief, neutral-to-policy transport and external
+realism remain unresolved. Consumed dates only; no intervals, validation,
+promotion, protected-date access or new strategy/churn/markout/P&L result.
 <!-- /JOINT_MOMENT_20261117 -->
 
 ## 2026-11-17 01:01Z (session aea5bfb9) — CHECK OF THE JOINT FLOW/PRICE CONTROLLER (USER: "load my codex session's latest progress ... check that"): better forecasts, but the pilot's profit is two markets' final-minute swings that the model-free arm also caught
