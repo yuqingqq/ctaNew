@@ -1,3 +1,25 @@
+scheduled_commit_review_20261117:
+  status: enabled_local_user_timer
+  requested_by_user: true
+  interval_minutes: 5
+  branch: mm-research
+  service: predictfun-commit-review.service
+  timer: predictfun-commit-review.timer
+  documentation: predictfun/automation/README.md
+  watcher: predictfun/automation/commit_review_watch.py
+  checkpoint_file: ~/.local/state/predictfun-commit-review/state.json
+  reviewer_role: review_and_next_priority_only
+  development_role: other_session
+  report_directory: predictfun/reviews/automatic/
+  initial_checkpoint: 38de5e66
+  first_queued_fix: ebd5c6b3
+  first_queued_target: 323ddd7d
+  delivery_verified: true
+  watcher_tests_passed: 5
+  one_pending_request: true
+  no_change_thread_messages: false
+  research_code_changed: false
+
 unmatched_acceptance_fix_20261117:
   status: code_committed_awaiting_go
   asof: "2026-11-17 15:25Z"
