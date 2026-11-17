@@ -1,28 +1,45 @@
 <!-- CONDITIONAL_MAP_20261117 -->
-## 2026-11-17 State-conditioned value mapping: frozen comparison running
+## 2026-11-17 Conditional response mapping complete: gate failed, baseline retained
 
-Source f60e2144, freeze 62201b95; isolated branch
-research/predict-conditional-map-20261117 in /tmp/cta-conditional-map-20261117.
-Evidence target reviews/conditional_map_20261117/index.json; ignored data/logs
-under data/predict_fun/research/conditional_map_20261117_v1/. Sequential launcher
-run_conditional_map.sh uses Codex/core8 only. Selftests and bank build complete;
-neutral action checks for Oct26/27 then a frozen replay gate and audit follow.
-No forecast or controller changes; no fixed retry, minimum age or new threshold.
+Source f60e2144, freeze 62201b95, results bf1aacd2; merged f86c70bf into
+mm-research. All5 candidate,5 bridge and59 inherited controller source hashes,
+published reports and underlying action/bank artifacts verify after merge.
+Report handoffs/20261117_conditional_map_results.md; evidence index
+reviews/conditional_map_20261117/index.json, publication_v1.json. Isolated
+worktree /tmp/cta-conditional-map-20261117 retained; no numerical job running.
+Output data/predict_fun/research/conditional_map_20261117_v1/.
 
-One candidate preserves SOFT_JOINT's complete coarse event-pair probability
-exactly while conditioning raw future-path responses on causal book-depth,
-absolute liquidity and six recent market-dynamics features. Expanded-bank-only
-ablation isolates coverage from state conditioning. Same training exposures,
-all original paths retained, maximum eight representatives per original cell.
-One fixed training-only robust state geometry and kernel width; no tuning.
+One fixed STATE_CONDITIONAL mapper and EXPANDED_JOINT coverage ablation against
+SOFT_JOINT. Same19198 selected Oct23-25 training exposures; bank1929->3597,
+all original raw paths preserved, count weights conserved.17 causal dimensions
+(depth, W30 scale, spread, midpoint, six dynamics), one training-only median/IQR
+geometry and fixed kernel. Preserve the full event-pair mass ACHIEVED by the
+original projection, including its residual forecast error. Same predictor,
+controller, size30/nr6/cap180/risk1/360,1s horizon and58/37/100/50ms clocks.
+No fine-marginal fusion, cooldown, minimum age or new action threshold.
 
-Before any continuous replay, the retrospective true-coarse-pair diagnostic
-must improve or match baseline RMSE for BOTH posting and cancellation on the
-same supported Oct27 actions, with strict improvement for at least one. This is
-a development compute screen, not validation. Future coarse labels enter only
-that separate diagnostic, never ordinary predictions or policy. If gate fails,
-record skipped_by_frozen_gate and finish audit without pilot. All dates consumed;
-no intervals, promotion or protected-date access. SOFT_JOINT remains baseline.
+All418 Oct26/443 Oct27 neutral actions supported; exact archived baseline
+predictions/labels and canonical prefixes reproduce. As of00:26:40Z on Nov17,
+Oct27 ordinary RMSE SOFT->conditional: cancel31.826->31.709c (n221),
+post24.829->25.342c (n222); both ranks weaken. Oct26 cancel8.449->8.991c
+(n205), post36.111->36.097c (n213). Positive-score total actual values are
+unchanged on both dates despite action-count changes;200-draw nulls retained.
+
+Retrospective true-pair check, same443 Oct27 actions,420 common supported
+(208 cancel/212 post),23 explicitly unsupported; asof00:26:40Z. RMSE worsens
+25.951->28.385c cancellation and23.971->26.514c posting. Expanded-only already
+worsens to28.245/26.360c; state kernel does not recover it. Fill-quantity MAE
+improves2.528->2.254 and3.875->3.403 shares. Gate fails both action kinds;
+pilot skipped by frozen rule, no new strategy P&L/churn result. Future coarse
+labels never enter ordinary predictions/policy. All identity/accounting/queue/
+probability/metric/falsifier audits pass; peak RSS1086MiB, Codex/core8 only.
+
+Retain SOFT_JOINT. Next response diagnostic: separately reconcile fill shares,
+fill-weighted signed price movement and inventory cost on identical neutral
+actions, including severe tails. This17-coordinate similarity test does not
+establish that features are uninformative; explicit sigma/exact time within
+phase are absent.1s zero continuation and neutral-to-policy transport remain.
+All dates consumed, no intervals, promotion or protected-date access.
 <!-- /CONDITIONAL_MAP_20261117 -->
 
 <!-- RESPONSE_BRIDGE_20261116 -->
