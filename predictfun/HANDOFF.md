@@ -1,3 +1,13 @@
+## 2026-11-17 06:19Z (session aea5bfb9) — SEVERE EVENTS AMONG LOW-RISK DECISIONS (USER: "Yes go"): no tested causal input separates them beyond the model's own ranking
+
+- What: pf_severe_info.py (05cebee6, declared before the run). Band = past-only P(severe) < 0.05 on Oct24-27 (30,080 decisions / 675 severe, = SEVERE-SUPPORT). Sets: P (the model's own ranking), M87 (in-band LightGBM on the 87 inputs + p, trained past-only on earlier forward days), M87+ (adds UTC hour, the market's earlier decisions closed >= 2 s before - optimistic on data delays - and the cross-market running severe O/E).
+- The model already ranks inside the band: P's within-band AUC 0.731 pooled (0.66 / 0.71 / 0.73 / 0.76 by day).
+- New candidates carry nothing on their own: within-band AUC hour 0.482, market history count 0.493, market severe count 0.510, market mean loss 0.525, cross-market running O/E 0.512.
+- I1 EXISTING-INPUTS-UNDERUSED NOT-SHOWN: M87 0.697 < P 0.731 (below on 3 / 3 days) - an in-band specialist on 7.7-22k decisions does not extract more than the global model (training size confounds this one: it does not prove the 87 inputs hold nothing more).
+- I2 NEW-INFORMATION NOT-SHOWN: M87+ 0.700 vs M87 0.697 (+0.003; like-for-like training).
+- Reading: with these candidates and the earlier tape / other-venue result (<= +0.002 AUC), the available causal data show no further information about which low-risk decisions turn severe; the severe-event modelling line is at its information limit on current data.
+- Next (USER's call): back to the order setup - which fills we can get (queue place: rest at the next level before it becomes the best, or post first when a new best forms), where the earlier gap to the top makers sits.
+
 ## 2026-11-17 06:12Z (session aea5bfb9) — SEVERE-EVENT PROBABILITY: BASE vs SMOOTH vs CAL (USER design): both fix the probability scale, neither improves net value or matched participation
 
 - What: pf_severe_cal.py (b08304d2, declared before the run). Explicit consistency in every arm: P(severe) = P(any loss) x P(severe | loss), no clipping (the independent heads' 2,268 / 36,056 violations reproduced). Amount and gain heads identical across arms. SMOOTH = min_data_in_leaf 400 / 100 rounds on the two probability heads; CAL = BASE frozen + sigmoid(a + b logit p) per factor fitted on Oct25 (A: a -0.38, b 0.83; B: a +0.11, b 0.67). Fold A: train Oct23-24, calibrate Oct25, evaluate Oct26-27.

@@ -1,0 +1,22 @@
+SEVERE EVENTS AMONG LOW-RISK DECISIONS (past-only p < 0.05; no model change); as of 2026-11-17T06:18:40Z
+controls: band 30,080 decisions / 675 severe = SEVERE-SUPPORT; histories end at or before t - 3 s; cross-market window at or before t - 300 s; in-band training precedes each test day; planted leak refused
+
+PART 1: univariate within-band AUC of each new causal candidate (oriented: > 0.5 = higher value, more severe), pooled Oct24-27 | by day
+  p           0.713 | 20261024 0.659 20261025 0.707 20261026 0.730 20261027 0.756
+  x_hour      0.482 | 20261024 0.479 20261025 0.518 20261026 0.441 20261027 0.493
+  x_mkt_n     0.493 | 20261024 0.508 20261025 0.480 20261026 0.485 20261027 0.503
+  x_mkt_sev   0.510 | 20261024 0.535 20261025 0.482 20261026 0.502 20261027 0.517
+  x_mkt_loss  0.525 | 20261024 0.536 20261025 0.502 20261026 0.536 20261027 0.524
+  x_day_oe    0.512 | 20261024 0.489 20261025 0.525 20261026 0.523 20261027 0.496
+
+PART 2: within-band AUC and log loss on the test days (in-band models trained past-only on earlier forward days): P | M87 | M87+
+  20261025 (train 20261024; 7,699 decisions, 170 severe): AUC P 0.707 | M87 0.663 | M87+ 0.670 || log loss P 0.1018 | M87 0.1083 | M87+ 0.1079
+  20261026 (train 20261024, 20261025; 7,398 decisions, 175 severe): AUC P 0.730 | M87 0.689 | M87+ 0.694 || log loss P 0.1068 | M87 0.1110 | M87+ 0.1105
+  20261027 (train 20261024, 20261025, 20261026; 7,343 decisions, 173 severe): AUC P 0.756 | M87 0.737 | M87+ 0.733 || log loss P 0.1042 | M87 0.1063 | M87+ 0.1066
+  pooled AUC: P 0.731 | M87 0.697 | M87+ 0.700
+  M87+ top inputs (last fold): p 8%, pbn_dist 3%, pf_mid 2%, x_day_oe 2%, x_mkt_loss 2%, own_d250 2%, jm_shown 2%, jm_known_position 2%
+
+I1 EXISTING-INPUTS-UNDERUSED: NOT-SHOWN (M87 0.697 vs P 0.731; above on 0 / 3 days)
+I2 NEW-INFORMATION: NOT-SHOWN (M87+ 0.700 vs M87 0.697; above on 2 / 3 days)
+
+LIMITS: consumed days; three test days, no interval; the earlier tape / other-venue test (<= +0.002 AUC) not repeated; simulated labels; neutral population
