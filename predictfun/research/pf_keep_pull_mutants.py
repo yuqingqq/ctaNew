@@ -26,7 +26,7 @@ MUT = [
     ('variant ignores its latency', "jmin = np.searchsorted(landing(np.arange(1, NSTEP + 1), lat), f.t.values, side='right')",
      "jmin = np.searchsorted(landing(np.arange(1, NSTEP + 1), CANCEL), f.t.values, side='right')"),
     ('young filter inverted', "ok &= f.t.values >= PLACE + YOUNG", "ok &= f.t.values < PLACE + YOUNG"),
-    ('outcome reads the next step', "jj = P[ii] - 1", "jj = np.minimum(P[ii], NSTEP - 1)"),
+    ('a pull valued at the next step', "    jj = steps - 1\n", "    jj = np.minimum(steps, NSTEP - 1)\n"),
     ('decisions continue at the step the client learns the order is gone', "np.searchsorted(d, lim, side='left') + 1", "np.searchsorted(d, lim, side='right') + 1"),
     ('mixed trade source labelled WS', "cs.pop() if len(cs) == 1 else 3", "cs.pop() if len(cs) == 1 else 0"),
     ('post-only refusal ignored', "rec.update(status='refused_post_only' if rej else 'eligible',", "rec.update(status='eligible',"),
@@ -50,6 +50,9 @@ MUT = [
     #  one END mark the 37 ms oracle's own pulls are worth exactly the zero-latency decisions valued at 37 ms - so it is not listed)
     ('zero-latency side of the latency pair taken from the 37 ms oracle', "o0 = np.array(R[K0]['oracle_by_day']['imp']); o0at37 = np.array(p['oracle_0ms_decisions']['imp'])",
      "o0 = np.array(p['oracle_by_day']['imp']); o0at37 = np.array(p['oracle_0ms_decisions']['imp'])"),
+    ('unmatched trajectory draws still read (hierarchy ignores matching)', "    return 'traj' if evaluable else 'states'\n", "    return 'traj'\n"),
+    ('decision-level null draws orders not live at the step', "r = at[j]; elig = Em[r] > j; k_ = cnt[r, j]", "r = at[j]; elig = Em[r] > 0; k_ = cnt[r, j]"),
+    ('decision-level null one state short per cell', "r = at[j]; elig = Em[r] > j; k_ = cnt[r, j]", "r = at[j]; elig = Em[r] > j; k_ = np.maximum(cnt[r, j] - 1, 0)"),
     ('null strata without the market', "cell = E.groupby(['day', 'm', 'side', 'phase'], sort=True).ngroup().values", "cell = E.groupby(['day', 'side', 'phase'], sort=True).ngroup().values"),
     # --- reading predicates
     ('K1 at 40%', "return bool(orc.sum() / max(loss.sum(), 1e-9) >= .5 and", "return bool(orc.sum() / max(loss.sum(), 1e-9) >= .4 and"),

@@ -9,7 +9,9 @@ CORRECTED BEFORE ANY RUN (2026-11-17, the ledger / keep-pull review, handoffs/20
  from the live risk set and matches EXECUTED pulls (a shuffle of raw triggers lost pulls on orders already gone - false K2 passes); live
  decisions start at the first step after the client knows the order is live (the +50 ms step was a pending-order withdrawal); K1's failure
  reads NOT-SHOWN and K4 is a paired zero- versus actual-latency comparison in numbers; a missing fair input is handled at its decision
- (fallback KEEP) instead of excluding the order for a missing input later in its life.
+ (fallback KEEP) instead of excluding the order for a missing input later in its life. AND AGAIN (2026-11-17 15:07Z, review of b6eaa7c2,
+ handoffs/20261117_committed_fix_review.md): an early null pick can use up the orders a later step needs, so a trajectory draw can be
+ short of the score's pulls - such a comparison is now NOT-EVALUABLE, and a decision-level matched null is declared as the fallback.
 
 ORDERS (neutral: the queue place test's JOIN population): every counted causal state of the queue place grid (every 100th 50 ms decision
  step of every window-side; t >= ws + 2 s, t + 5 s <= ws + 298 s; known two-sided book, spread >= 1) posts one 30 sh order at the known best
@@ -45,17 +47,22 @@ POLICIES (at most one pull per order: every order has one outcome):
            live decision with e_j < theta; theta = 0 primary, +1 / -1 c printed. A missing input never triggers (fallback KEEP).
  SCORE B   printed: the fair move since posting, sg (p_bn(d_j) - p_bn(t)) <= -theta, theta = 0.5 / 1 / 2 c (never triggers when the
            posting-time fair price is missing).
- NULL      for each score policy: at every live decision step, in every (day, market, side, contract minute) stratum, the null pulls as many
-           orders as the score executed there, drawn at random from the stratum's RISK SET - the orders the client knows are live at that
-           step and the null has not pulled yet (only information at that step; no future fills or lifetime). Executed pulls and their
-           timing are matched exactly; a step whose risk set is smaller than the score's count leaves unmatched pulls, reported. 500 draws
-           for the declared policy, 200 for each printed one.
+ NULLS     two matched nulls per score policy (500 draws for the declared one, 200 for each printed one), strata (day, market, side,
+           contract minute), only information known at each step (no future fills or lifetime):
+           TRAJ    at every live step, in every stratum, as many pulls as the score executed there, drawn from the orders the client knows
+                   are live and this draw has not pulled yet (one outcome per order). An early pick can use up the orders a later step
+                   needs: the shortfall is counted, and a comparison with ANY unmatched draw is NOT-EVALUABLE - no matched claim; the draws
+                   are kept, never re-drawn or forced to match.
+           STATES  for every (stratum, live step), the same count of decision states drawn from the orders the client knows are live at
+                   that step on the neutral KEEP path, each valued alone - matched exactly by construction (the score's own pulls are in
+                   that risk set); an order may be drawn at two steps of one draw.
+           Declared hierarchy: K2 / K3 read against TRAJ when every draw matches, else against STATES (the reading then ends in -STATES).
 READINGS (JOIN, M50, L = 37 ms, all fills; computed by report(); the day rule is >= 4 of 5 days):
  K1 ORACLE-BOUND       the live oracle's avoided loss / KEEP's loss (sum of max(-V_keep, 0)) >= 0.5 pooled and by the day rule
                        -> AVOIDABLE-AT-LATENCY, else NOT-SHOWN (a failure does not identify the cause; the DELAYS rows do).
- K2 SCORE-EARNS        (A, theta 0) its improvement over KEEP (sum of V_policy - V_keep) above the null's 95th percentile pooled and above
-                       the null's mean by the day rule -> EARNS-OVER-MATCHED, else NOT-SHOWN. The same predicate is computed at M250, at M0
-                       and without young fills; the reading says which hold (C1, C2).
+ K2 SCORE-EARNS        (A, theta 0) its improvement over KEEP (sum of V_policy - V_keep) above the matched null's 95th percentile pooled and
+                       above its mean by the day rule -> EARNS-OVER-MATCHED (-STATES), else NOT-SHOWN; the null by the declared hierarchy.
+                       The same predicate is computed at M250, at M0 and without young fills; the reading says which hold (C1, C2).
  K3 SCORE-RANKS-VALUE  (A, theta 0) the value of the removed fills per removed filled share below the null's 5th percentile pooled and
                        below the null's mean by the day rule -> RANKS-VALUE (economic ranking beyond fill prediction, at matched
                        participation), else NOT-SHOWN.
@@ -379,17 +386,29 @@ def variant(E, Fl, c, noyoung, lat):
     return dict(Vk=Dv[:, -1], Qk=Dq[:, -1], Mv=Dv[:, :NSTEP], Mq=Dq[:, :NSTEP], endj=endj, life=life, lat=lat)
 
 
-def outcome(V, P, dayi, nd, j0=J0):
-    """Per-day sums for pull steps P (j0..98 executed while the client knows the order is live; 99 = keep): improvement over KEEP, foregone
-    gains, avoided ordinary / severe-excess losses, severe events, removed value X and shares R, live time lost."""
-    ii = np.flatnonzero((P >= j0) & (P <= NSTEP) & (P < V['endj'])); jj = P[ii] - 1
+def _sums(V, ii, steps, dayi, nd):
+    """Per-day sums for pulls of orders ii at decision steps `steps`, each valued against KEEP: improvement, foregone gains, avoided ordinary
+    / severe-excess losses, severe events, removed value X and shares R, live time lost."""
+    jj = steps - 1
     X = V['Vk'][ii] - V['Mv'][ii, jj]; R = V['Qk'][ii] - V['Mq'][ii, jj]; L = np.maximum(-X, 0.)
-    lost = np.maximum(V['life'][ii] - landing(P[ii], V['lat']), 0.)
+    lost = np.maximum(V['life'][ii] - landing(steps, V['lat']), 0.)
 
     def by(w):
         return np.bincount(dayi[ii], weights=w, minlength=nd)
     return dict(n=by(np.ones(len(ii))), imp=by(-X), G=by(np.maximum(X, 0.)), L1=by(np.minimum(L, SEVERE)), L2=by(np.maximum(L - SEVERE, 0.)),
                 sev=by((L > SEVERE).astype(float)), X=by(X), R=by(R), lost=by(lost))
+
+
+def outcome(V, P, dayi, nd, j0=J0):
+    """A policy's per-day sums: pull steps P (j0..98 executed while the client knows the order is live; 99 = keep), one outcome per order."""
+    ii = np.flatnonzero((P >= j0) & (P <= NSTEP) & (P < V['endj']))
+    return _sums(V, ii, P[ii], dayi, nd)
+
+
+def outcome_states(V, oi, oj, dayi, nd):
+    """The decision-level null's per-day sums: decision states (order oi, live step oj), each valued alone against KEEP."""
+    C.require(bool(((oj >= J0) & (oj <= NSTEP) & (oj < V['endj'][oi])).all()), 'a matched decision state is not a live decision')
+    return _sums(V, oi, oj, dayi, nd)
 
 
 def oracle(V, j0=J0):
@@ -398,15 +417,29 @@ def oracle(V, j0=J0):
     return np.where(M.max(1) > V['Vk'] + 1e-9, M.argmax(1) + 1, NSTEP + 1)
 
 
-def null_picks(endj, P, cell, seed, draws):
-    """Risk-set null (control 7): at every live step, in every stratum, as many pulls as P executed there (J0 <= P < endj), drawn at random
-    from the stratum's orders the client knows are live at that step and this draw has not pulled yet. Returns [(pull steps, unmatched)]."""
-    n = len(P); act = (P >= J0) & (P <= NSTEP) & (P < endj); need = int(act.sum())
+def hierarchy(evaluable):
+    """The declared choice of matched null for K2 / K3: TRAJ when every trajectory draw matches, else STATES."""
+    return 'traj' if evaluable else 'states'
+
+
+def _strata(cell, endj, P):
+    """Orders by stratum in a padded (S, W) matrix (-1 = empty slot) with their endj (0 = empty), stratum ids, the executed pulls of P
+    (J0 <= P < endj) counted per (stratum, step), and the steps / strata where P pulls."""
+    n = len(P); act = (P >= J0) & (P <= NSTEP) & (P < endj)
     o = np.argsort(cell, kind='stable'); starts = np.r_[0, np.flatnonzero(np.diff(cell[o])) + 1]; size = np.diff(np.r_[starts, n])
     S, Wd = len(starts), int(size.max()); row = np.repeat(np.arange(S), size); col = np.arange(n) - np.repeat(starts, size)
     M = np.full((S, Wd), -1); M[row, col] = o; Em = np.zeros((S, Wd), int); Em[row, col] = endj[o]; sid = np.empty(n, int); sid[o] = row
     cnt = np.zeros((S, NSTEP + 2), int); np.add.at(cnt, (sid[act], P[act]), 1)
-    steps = [j for j in range(J0, NSTEP + 1) if cnt[:, j].any()]; at = {j: np.flatnonzero(cnt[:, j]) for j in steps}
+    steps = [j for j in range(J0, NSTEP + 1) if cnt[:, j].any()]
+    return M, Em, sid, cnt, int(act.sum()), steps, {j: np.flatnonzero(cnt[:, j]) for j in steps}
+
+
+def null_picks(endj, P, cell, seed, draws):
+    """TRAJECTORY null (control 7): at every live step, in every stratum, as many pulls as P executed there, drawn at random from the
+    stratum's orders the client knows are live at that step and this draw has not pulled yet (one outcome per order). An early pick can use up
+    the orders a later step needs: the shortfall is counted as unmatched and such a draw cannot support a matched reading (report()).
+    Returns [(pull steps, unmatched)]."""
+    n = len(P); M, Em, sid, cnt, need, steps, at = _strata(cell, endj, P); S, Wd = M.shape
     rng = np.random.default_rng(seed); out = []
     for _ in range(draws):
         key = rng.random((S, Wd)); key[M < 0] = 2.; k = np.argsort(key, 1); Ms = np.take_along_axis(M, k, 1); Es = np.take_along_axis(Em, k, 1)
@@ -417,7 +450,28 @@ def null_picks(endj, P, cell, seed, draws):
             C.require(bool((sid[who] == np.repeat(r, sel.sum(1))).all()), 'a null pull left its stratum')
             PN[who] = j; um += int((cnt[r, j] - sel.sum(1)).sum())
         C.require(int((PN <= NSTEP).sum()) + um == need, 'null pulls + unmatched differ from the executed pulls')
+        ok = PN <= NSTEP; c2 = np.zeros_like(cnt); np.add.at(c2, (sid[ok], PN[ok]), 1)
+        C.require(bool((c2 <= cnt).all() and (um > 0 or (c2 == cnt).all())), 'null pulls per (stratum, step) differ from the executed pulls')
         out.append((PN, um))
+    return out
+
+
+def state_picks(endj, P, cell, seed, draws):
+    """DECISION-LEVEL null: for every (stratum, live step) where P executed n pulls, n distinct orders drawn at random from the stratum's
+    orders the client knows are live at that step on the neutral KEEP path - other steps' draws do not use them up; each state is valued alone.
+    Matched exactly by construction: the score's own pulls are in that risk set. Returns [(orders, steps)]."""
+    M, Em, sid, cnt, need, steps, at = _strata(cell, endj, P); S, Wd = M.shape; rng = np.random.default_rng(seed); out = []
+    for _ in range(draws):
+        oi, oj = [np.zeros(0, int)], [np.zeros(0, int)]
+        for j in steps:
+            r = at[j]; elig = Em[r] > j; k_ = cnt[r, j]
+            C.require(bool((elig.sum(1) >= k_).all()), 'a matched decision state is missing from its risk set')
+            k = np.argsort(np.where(elig, rng.random((len(r), Wd)), 2.), 1); who = np.take_along_axis(M[r], k, 1)[np.arange(Wd)[None, :] < k_[:, None]]
+            C.require(bool((sid[who] == np.repeat(r, k_)).all() and (endj[who] > j).all()), 'a matched decision state left its stratum or is not live')
+            oi.append(who); oj.append(np.full(len(who), j))
+        oi, oj = np.concatenate(oi), np.concatenate(oj); c2 = np.zeros_like(cnt); np.add.at(c2, (sid[oi], oj), 1)
+        C.require(bool((c2 == cnt).all()) and len(oi) == need, 'decision-level null not matched per (stratum, step)')
+        out.append((oi, oj))
     return out
 
 
@@ -485,17 +539,25 @@ def report(out=None):
             R[key]['oracle_0ms_decisions'] = byday(outcome(V, O0, dayi, nd))               # the same decisions as the 0 ms oracle, valued at 37 ms
             J['population'].update(live_decisions=int(livem.sum()), live_decisions_fair_missing=int((np.isnan(F[:, 1:]) & livem).sum()))
         if (c, noyoung, lat) in DRAWN:
-            if c not in picks:
-                picks = {c: null_picks(V['endj'], T[DECLARED], cell, SEED, NULL_DRAWS)}   # one clock at a time; reused by its variants
+            if c not in picks:                                                         # one clock at a time; reused by its variants
+                picks = {c: (null_picks(V['endj'], T[DECLARED], cell, SEED, NULL_DRAWS), state_picks(V['endj'], T[DECLARED], cell, SEED + 100, NULL_DRAWS))}
             D[key] = {}
             for i, pol in enumerate(POLICIES if key == K37 else (DECLARED,)):
-                pk = picks[c] if pol == DECLARED else null_picks(V['endj'], T[pol], cell, SEED + i, NULL_DRAWS_PRINTED)
-                res = outcome(V, T[pol], dayi, nd); nul = [outcome(V, PN, dayi, nd) for PN, _ in pk]
+                pk, sk = picks[c] if pol == DECLARED else (null_picks(V['endj'], T[pol], cell, SEED + i, NULL_DRAWS_PRINTED),
+                                                           state_picks(V['endj'], T[pol], cell, SEED + 100 + i, NULL_DRAWS_PRINTED))
+                res = outcome(V, T[pol], dayi, nd); nul = [outcome(V, PN, dayi, nd) for PN, _ in pk]; nus = [outcome_states(V, oi, oj, dayi, nd) for oi, oj in sk]
                 C.require(all(int(round(x['n'].sum())) == int((PN <= NSTEP).sum()) for x, (PN, _) in zip(nul, pk)), 'a null pull was not an eligible live decision')
-                ok2, s2 = k2(res, nul); ok3, s3 = k3(res, nul)
-                D[key][pol] = dict(k2=ok2, k2_stats=s2, k3=ok3, k3_stats=s3, policy=tot(res), policy_by_day=byday(res), draws=len(pk),
-                                   unmatched_mean=float(np.mean([u for _, u in pk])), null_mean={k: float(np.mean([x[k].sum() for x in nul])) for k in res},
-                                   null_by_day_mean={k: np.mean([x[k] for x in nul], 0).tolist() for k in res})
+                C.require(all(np.array_equal(x['n'], res['n']) for x in nus), 'decision-level null not matched on executed pulls by day')
+                um = [u for _, u in pk]; ev = all(u == 0 for u in um); D[key][pol] = d_ = dict(policy=tot(res), policy_by_day=byday(res), draws=len(pk))
+                for nm, nn in (('traj', nul), ('states', nus)):
+                    ok2, s2 = k2(res, nn); ok3, s3 = k3(res, nn)
+                    d_[nm] = dict(k2=ok2, k3=ok3, k2_stats=s2, k3_stats=s3, null_mean={k: float(np.mean([x[k].sum() for x in nn])) for k in res},
+                                  null_by_day_mean={k: np.mean([x[k] for x in nn], 0).tolist() for k in res})
+                d_['traj'].update(evaluable=ev, unmatched_mean=float(np.mean(um)), draws_with_unmatched=int(sum(u > 0 for u in um)))
+                if not ev:                                                                    # an unmatched draw cannot support a matched reading
+                    d_['traj'].update(k2=None, k3=None)
+                use = d_[hierarchy(ev)]; d_['estimand'] = 'trajectory' if hierarchy(ev) == 'traj' else 'decision states'
+                d_.update(k2=use['k2'], k3=use['k3'], k2_stats=use['k2_stats'], k3_stats=use['k3_stats'], null_by_day_mean=use['null_by_day_mean'])
         del V
     p = R[K37]; k1d = np.array(p['oracle_by_day']['imp']) / np.maximum(np.array(p['keep_loss_by_day']), 1e-9)
     K1 = k1(np.array(p['oracle_by_day']['imp']), np.array(p['keep_loss_by_day']))
@@ -507,8 +569,10 @@ def report(out=None):
     C.require(abs(sum(dl.values()) - X_) <= 1e-6 * max(1., abs(X_)), 'delay rows do not add up to KEEP loss')
     K4 = dict(oracle_0ms=float(o0.sum()), oracle_same_decisions_37ms=float(o0at37.sum()), oracle_gap_by_day=(o0 - o0at37).tolist(), oracle_rechosen_37ms=float(o37.sum()),
               score_0ms=float(s0.sum()), score_37ms=float(s37.sum()), score_gap_by_day=(s0 - s37).tolist(), delays=dl)
-    read = {'K1 ORACLE-BOUND': 'AVOIDABLE-AT-LATENCY' if K1 else 'NOT-SHOWN', 'K2 SCORE-EARNS': 'EARNS-OVER-MATCHED' if K2 else 'NOT-SHOWN',
-            'K3 SCORE-RANKS-VALUE': 'RANKS-VALUE' if K3 else 'NOT-SHOWN'}
+    tag = '' if prim['estimand'] == 'trajectory' else '-STATES'
+    read = {'K1 ORACLE-BOUND': 'AVOIDABLE-AT-LATENCY' if K1 else 'NOT-SHOWN', 'K2 SCORE-EARNS': f'EARNS-OVER-MATCHED{tag}' if K2 else 'NOT-SHOWN',
+            'K3 SCORE-RANKS-VALUE': f'RANKS-VALUE{tag}' if K3 else 'NOT-SHOWN', 'estimand': prim['estimand'],
+            'trajectory': 'EVALUABLE' if prim['traj']['evaluable'] else f"NOT-EVALUABLE-UNMATCHED ({prim['traj']['draws_with_unmatched']} / {prim['draws']} draws, mean {prim['traj']['unmatched_mean']:.1f} pulls)"}
     cand = [pol for pol in POLICIES if pol != DECLARED and (D[K37][pol]['k2'] or D[K37][pol]['k3'])]
     L += ['', 'PART 1 - what is at stake (every eligible order, M50, L 37 ms): sums in c over all orders',
           f"  KEEP value {p['keep_value']:,.0f} (loss on losing orders {X_:,.0f})",
@@ -523,17 +587,21 @@ def report(out=None):
     L.append('  K1 by day (live oracle avoided / KEEP loss): ' + ', '.join(f'{d} {v:.0%}' for d, v in zip(DAYS, k1d)))
     for k in (vkey(250., False, CANCEL), vkey(0., False, CANCEL), vkey(50., True, CANCEL)):
         L.append(f"  {k}: KEEP {R[k]['keep_value']:,.0f}, loss {R[k]['keep_loss']:,.0f}, ORACLE {R[k]['oracle']['imp']:,.0f}, PULL-ALL {R[k]['pull_all']['imp']:,.0f}")
-    L += ['', 'PART 2 - declared causal scores against their risk-set nulls (executed pulls matched by stratum and step; 500 draws for the declared policy, 200 for the others)',
-          '  variant          policy | pulls (null, unmatched) | removed sh (null) | improvement | null mean | null p95 | days > null | K2  | per removed share | null p5 | days < null | K3']
+    L += ['', 'PART 2 - declared causal scores against matched nulls (500 draws for the declared policy, 200 for the others). TRAJ = one pull per order, executed pulls matched',
+          '  by (day, market, side, minute) and step, early picks can use up later ones (any unmatched draw -> NOT-EVALUABLE); STATES = the same counts of live decision states per',
+          '  (stratum, step), each valued alone (matched by construction). The reading uses TRAJ when every draw matches, else STATES (declared before the run).',
+          '  variant          policy null   | pulls (null, unmatched) | removed sh (null) | improvement | null mean | null p95 | days > null | K2  | per removed share | null p5 | days < null | K3']
     for k in D:
         for pol in POLICIES if k == K37 else (DECLARED,):
-            x = D[k][pol]; a, b = x['k2_stats'], x['k3_stats']
-            L.append(f"  {k:<16} {pol:>6} | {x['policy']['n']:6,.0f} ({x['null_mean']['n']:6,.0f}, {x['unmatched_mean']:4,.1f}) | {x['policy']['R']:7,.0f} ({x['null_mean']['R']:7,.0f}) | "
-                     f"{a['imp']:11,.0f} | {a['null_mean']:9,.0f} | {a['null_p95']:8,.0f} | {a['days_above']:11d} | {'yes' if x['k2'] else 'no ':3} | "
-                     f"{b['per_share']:17.3f} | {b['null_p5']:7.3f} | {b['days_below']:11d} | {'yes' if x['k3'] else 'no'}")
+            x = D[k][pol]
+            for nm in ('traj', 'states'):
+                y = x[nm]; a, b = y['k2_stats'], y['k3_stats']; um = f"{y['unmatched_mean']:5,.1f}" if nm == 'traj' else '    -'
+                f2 = 'n/e' if y['k2'] is None else 'yes' if y['k2'] else 'no'; f3 = 'n/e' if y['k3'] is None else 'yes' if y['k3'] else 'no'
+                L.append(f"  {k:<16} {pol:>6} {nm.upper():<6} | {x['policy']['n']:6,.0f} ({y['null_mean']['n']:6,.0f}, {um}) | {x['policy']['R']:7,.0f} ({y['null_mean']['R']:7,.0f}) | "
+                         f"{a['imp']:11,.0f} | {a['null_mean']:9,.0f} | {a['null_p95']:8,.0f} | {a['days_above']:11d} | {f2:3} | {b['per_share']:17.3f} | {b['null_p5']:7.3f} | {b['days_below']:11d} | {f3}")
     x = D[K37][DECLARED]
     L += ['', f'PART 3 - by day (M50, L 37 ms): improvement over KEEP = avoided L1 + L2 - foregone G; PULL-ALL and the live ORACLE on every eligible order, '
-          f'{DECLARED} and its null mean', '  day      | KEEP loss | PULL-ALL imp (G / L1 / L2)       | ORACLE imp (L1 / L2, severe) | ' + f'{DECLARED} imp (G / L1 / L2, severe, pulls)          | null imp (pulls)']
+          f"{DECLARED} and the mean of its reading's null ({x['estimand']})", '  day      | KEEP loss | PULL-ALL imp (G / L1 / L2)       | ORACLE imp (L1 / L2, severe) | ' + f'{DECLARED} imp (G / L1 / L2, severe, pulls)          | null imp (pulls)']
     for i, day in enumerate(DAYS):
         a, o, y, nb = p['pull_all_by_day'], p['oracle_by_day'], x['policy_by_day'], x['null_by_day_mean']
         L.append(f"  {day} | {p['keep_loss_by_day'][i]:9,.0f} | {a['imp'][i]:8,.0f} ({a['G'][i]:6,.0f} / {a['L1'][i]:6,.0f} / {a['L2'][i]:6,.0f}) | "
@@ -559,7 +627,8 @@ def report(out=None):
     L += ['', 'READINGS (declared before the run; computed)',
           f"  K1 ORACLE-BOUND (EX POST, NOT DEPLOYABLE; live decisions): {read['K1 ORACLE-BOUND']} - the oracle avoids {o37.sum():,.0f} of KEEP's {X_:,.0f} c of loss "
           f"({o37.sum() / max(X_, 1e-9):.0%}); >= 50% on {int((k1d >= .5).sum())} / {nd} days",
-          f"  K2 SCORE-EARNS ({DECLARED}): {read['K2 SCORE-EARNS']} at M50 / 37 ms; the predicate holds at: {hs}",
+          f"  matched null used for K2 / K3: {read['estimand']} (trajectory comparison {read['trajectory']})",
+          f"  K2 SCORE-EARNS ({DECLARED}): {read['K2 SCORE-EARNS']} at M50 / 37 ms; the predicate (each variant's own reading null) holds at: {hs}",
           f"  K3 SCORE-RANKS-VALUE ({DECLARED}): {read['K3 SCORE-RANKS-VALUE']}",
           f"  K4 LATENCY (numbers, same decisions at 0 and 37 ms): live oracle {o0.sum():,.0f} vs {o0at37.sum():,.0f} (gap by day " + ', '.join(f'{v:,.0f}' for v in o0 - o0at37)
           + f"); {DECLARED} {s0.sum():,.0f} vs {s37.sum():,.0f} (gap by day " + ', '.join(f'{v:,.0f}' for v in s0 - s37) + ')',
@@ -651,6 +720,42 @@ def _predicates():
     return bad
 
 
+def _readings(res, pk, sk, V, dayi, nd):
+    """The declared hierarchy on one policy: (estimand, K2, K3) - TRAJ when every trajectory draw matches, else STATES."""
+    if hierarchy(all(u == 0 for _, u in pk)) == 'traj':
+        nul = [outcome(V, PN, dayi, nd) for PN, _ in pk]; return 'trajectory', k2(res, nul)[0], k3(res, nul)[0]
+    nus = [outcome_states(V, oi, oj, dayi, nd) for oi, oj in sk]; return 'decision states', k2(res, nus)[0], k3(res, nus)[0]
+
+
+def _exhaustion_cases():
+    """The committed-fix review's multi-step exhaustion case (3cef4993): 5 days x 20 markets x 12 orders, six leave at the second live step,
+    every removed share worth -1 c, the score pulls the six short-lived at +100 ms and the rest at +150 ms. The trajectory null runs short and
+    must be NOT-EVALUABLE (K2 passed there before); the STATES null matches every pull and shows no ranking. Positive controls: equal
+    eligibility matches every trajectory draw (no ranking); a score that pulls exactly the losers beats both nulls."""
+    bad = []; day = np.repeat(np.arange(5), 240); cell = day * 20 + np.tile(np.repeat(np.arange(20), 12), 5); short = np.tile(np.r_[np.ones(6, bool), np.zeros(6, bool)], 100)
+    n = len(day); P = np.where(short, J0, J0 + 1)
+    E = pd.DataFrame(dict(day=day.astype(str), oid=np.arange(n), side=np.zeros(n, int), mark=np.full(n, 49.), p=np.full(n, 50.), v=np.full(n, -1.), q=np.ones(n),
+                          g_struct=np.where(short, 150., np.nan), land_struct=np.where(short, 187., np.nan), t_full=np.full(n, np.nan)))
+    Fl = pd.DataFrame(dict(day=day.astype(str), oid=np.arange(n), clock=np.full(n, 50.), t=np.where(short, 170., 300.), q=np.ones(n)))
+    V = variant(E, Fl, 50., False, CANCEL); res = outcome(V, P, day, 5); pk = null_picks(V['endj'], P, cell, SEED, NULL_DRAWS); sk = state_picks(V['endj'], P, cell, SEED + 100, NULL_DRAWS)
+    est, f2, f3 = _readings(res, pk, sk, V, day, 5); nus = [outcome_states(V, oi, oj, day, 5) for oi, oj in sk]
+    if not (res['n'].sum() == n and all(u > 0 for _, u in pk) and est == 'decision states' and not f2 and not f3 and all(x['n'].sum() == n for x in nus)):
+        bad.append(f"exhaustion case: score pulls {res['n'].sum()}, unmatched draws {sum(u > 0 for _, u in pk)}, reading {est} K2 {f2} K3 {f3}")
+    V2 = variant(E.assign(g_struct=np.nan, land_struct=np.nan), Fl.assign(t=300.), 50., False, CANCEL); r2 = outcome(V2, P, day, 5)
+    est, f2, f3 = _readings(r2, null_picks(V2['endj'], P, cell, SEED, 200), state_picks(V2['endj'], P, cell, SEED + 100, 200), V2, day, 5)
+    if (est, f2, f3) != ('trajectory', False, False):
+        bad.append(f'exhaustion positive control (equal eligibility): {est} K2 {f2} K3 {f3}')
+    win = np.tile(np.r_[np.ones(6, bool), np.zeros(6, bool)], 100)                    # half the orders end 1 c above their price, half 1 c below
+    E3 = E.assign(g_struct=np.nan, land_struct=np.nan, mark=np.where(win, 51., 49.), v=np.where(win, 1., -1.)); V3 = variant(E3, Fl.assign(t=300.), 50., False, CANCEL)
+    P3 = np.where(win, NSTEP + 1, J0); r3 = outcome(V3, P3, day, 5)
+    ranks = [_readings(r3, null_picks(V3['endj'], P3, cell, SEED, 200), state_picks(V3['endj'], P3, cell, SEED + 100, 200), V3, day, 5)]
+    ranks.append(('decision states', k2(r3, [outcome_states(V3, oi, oj, day, 5) for oi, oj in state_picks(V3['endj'], P3, cell, SEED + 100, 200)])[0],
+                  k3(r3, [outcome_states(V3, oi, oj, day, 5) for oi, oj in state_picks(V3['endj'], P3, cell, SEED + 100, 200)])[0]))
+    if ranks != [('trajectory', True, True), ('decision states', True, True)]:
+        bad.append(f'ranking positive control (the score pulls exactly the losers): {ranks}')
+    return bad
+
+
 def _review_cases():
     """The ledger / keep-pull review's counterexamples (handoffs/20261117_ledger_keep_pull_review.md) and their positive controls."""
     bad = []; n_day = 200; n = 5 * n_day; day = np.repeat(np.arange(5), n_day)
@@ -676,6 +781,7 @@ def _review_cases():
     V0 = variant(E5, F5, 50., False, 0.); V5 = variant(E5, F5, 50., False, CANCEL); o0 = outcome(V0, oracle(V0), dd, 5)['imp']; o37 = outcome(V5, oracle(V0), dd, 5)['imp']
     if got != {0.: (50., 50.), 25.: (50., 50.), 37.: (50., 50.)} or k1(o37, np.full(5, 30.)) or float((o0 - o37).sum()) != 0.:
         bad.append(f'review oracle counterexample: live / pending oracle by latency {got}, K1 {k1(o37, np.full(5, 30.))}, paired cancel-latency gap {(o0 - o37).sum()} (must be 0: the loss sits in the posting window)')
+    bad += _exhaustion_cases()
     F6 = pd.DataFrame([dict(day=str(i), oid=i, clock=50., t=t, q=q) for i in range(5) for t, q in ((70., 20.), (120., 10.))])      # the cancel window holds a loss
     V0 = variant(E5, F6, 50., False, 0.); V6 = variant(E5, F6, 50., False, CANCEL); g0 = outcome(V0, oracle(V0), dd, 5)['imp']; g37 = outcome(V6, oracle(V0), dd, 5)['imp']
     if float(g0.sum()) != 50. or float(g37.sum()) != 0. or oracle(V6).tolist() != [NSTEP + 1] * 5:
@@ -760,7 +866,7 @@ def selftest():
         with contextlib.redirect_stdout(io.StringIO()):
             read = report(tmp / 'kp')
         J = json.loads((tmp / 'kp' / 'keep_pull.json').read_text())
-        if (set(read) != {'K1 ORACLE-BOUND', 'K2 SCORE-EARNS', 'K3 SCORE-RANKS-VALUE'} or set(J['D']) != {'M50_L37', 'M250_L37', 'M0_L37', 'M50_noyoung_L37', 'M50_L0'}
+        if (set(read) != {'K1 ORACLE-BOUND', 'K2 SCORE-EARNS', 'K3 SCORE-RANKS-VALUE', 'estimand', 'trajectory'} or set(J['D']) != {'M50_L37', 'M250_L37', 'M0_L37', 'M50_noyoung_L37', 'M50_L0'}
                 or 'K4_latency' not in J or J['population']['eligible'] != len(E)):
             bad.append(f'report readings / variants / population {read} {sorted(J["D"])}')
         bad += _predicates() + _review_cases()
@@ -769,6 +875,10 @@ def selftest():
         want_cl = -float((w.q * np.where(w.side == 0, 1., -1.) * (w.mark - w.p)).sum())
         if abs(J['K4_latency']['delays']['cancel_latency'] - want_cl) > 1e-6:
             bad.append(f"cancel-latency row {J['K4_latency']['delays']['cancel_latency']} != the losing orders' fills in [+100, +137) ms {want_cl}")
+        for k_, x_ in J['D'].items():                                                   # the report applies the declared hierarchy
+            y_ = x_[DECLARED]
+            if y_['estimand'] != ('trajectory' if y_['traj']['evaluable'] else 'decision states') or (not y_['traj']['evaluable'] and y_['traj']['k2'] is not None):
+                bad.append(f"{k_}: reading against {y_['estimand']} with the trajectory comparison evaluable = {y_['traj']['evaluable']} (k2 {y_['traj']['k2']})")
         # planted errors: each must be refused
         pl = dict(drop_fill=(_planted('MUT_DROP_FILL', lambda: day_run(d0, 2, src, tmp / 'v1', tmp / 'p1')), 'per-trade fills do not sum to the keep branch'),
                   no_latency=(_planted('MUT_NO_LATENCY', lambda: day_run(d0, 2, src, tmp / 'v1', tmp / 'p2')), 'a fill at or after the structural cancel landed'),
