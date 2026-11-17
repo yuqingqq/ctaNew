@@ -1,17 +1,29 @@
 value_decomposition_20261117:
-  status: frozen_canonical_action_decomposition_running
+  status: complete_audited_merged_diagnostic_only
   source_commit: f6b59100
   freeze_commit: 6743804b
+  supplementary_state_commit: ff999de8
+  results_commit: 4846cf1e
+  merge_commit: 0bbee253
   branch: research/predict-value-decomposition-20261117
   worktree: /tmp/cta-value-decomp-20261117
   output: data/predict_fun/research/value_decomposition_20261117_v1
   review_index: predictfun/reviews/value_decomposition_20261117/index.json
+  publication: predictfun/reviews/value_decomposition_20261117/publication_v1.json
+  report: predictfun/handoffs/20261117_value_decomposition_results.md
   retained_baseline: SOFT_JOINT
   new_models: 0
   new_policies: 0
   retrospective_substitutions: 7
   action_counts: {20261026: 418, 20261027: 443}
-  running: true
+  canonical_labels_and_predictions_reproduced: true
+  audit_passed: true
+  merged_hashes_verified: true
+  selected_state_examples: 6
+  selected_unreceived_fill_examples: 4
+  selected_already_filled_orders: 3
+  next: joint_affected_fill_price_moments_and_causal_pending_fill_belief
+  running: false
   promotion: false
   dates: consumed_Oct26_27_development_only
 
