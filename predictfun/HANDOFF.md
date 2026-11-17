@@ -1,3 +1,12 @@
+## 2026-11-17 01:56Z (session aea5bfb9) — MODEL-STRUCTURE REVIEW OF SOFT_JOINT (USER: "it still does not perform well, can you review the model structure, check what's the critical issue")
+
+- Read: pf_flow_control_policy / _paths / _kernel(.cpp) and pf_value_bridge (the controller, scenario bank, branch executor, SOFT pooling); measured on the pilot ledgers (pf_soft_joint_check.py parts 6-8, same controls).
+- CRITICAL 1 - one-sided scenario bank: the bank is built only from BID rung-0 probes (pf_flow_control_paths.build: side == 0), so ask orders are valued with bid-conditioned paths. Per share in minutes 1-4 at +1 s, against KEEP_ALL_CAP (bid -2.01 / ask -2.13): SOFT_JOINT bid -0.37 / ask -2.14, JOINT -0.87 / -2.71, EMPIRICAL -1.50 / -2.78 - every controller improves bids, none improves asks.
+- CRITICAL 2 - what is valued: the objective is wealth 1 s ahead with zero value for an order still resting then, and the controller acts on any advantage > 0. Advantages are tiny (median 0.32 c per order, 61% of posts < 0.5 c) next to value errors of 25-36 c per order and ~62 effective paths: it posts and pulls on noise (181 orders, 163 pulls a market-minute), never holds queue place, and its fills are mostly sweeps - 61% of shares through (-2.78 c/sh at 1 s) vs at price +1.89; 22.5% are orders left inside the spread (95% through, -6.09). Top makers' at-best fills are ~80% stop fills (BEST-GAP).
+- Secondary: a scenario overwrites only the first book frame with the current book, then plays the donor's trades and later book, so stop-vs-sweep for our queue follows another book's depth (the joint fill x move term carries their value error, 86-88%); SOFT translates both sides by the bid offset, so pooled donors with another spread shift ask prices and the mid by half the difference; the 1 s penalty (1 c/sh at the cap) ignores expiry swings.
+- Why the other session's fixes do not move it: they refine the forecast (response, conditional map, joint moments); the error is in the bank and in the objective.
+- Next (the USER's call): mirror the bank (YES / NO: price -> 100 - price, sides swapped) and re-run the 12 markets (asks should improve like bids); then value queue place (continuation value of a resting order, a switching cost, act only when the advantage beats its uncertainty) and test resting early at the next level / place first.
+
 <!-- JOINT_MOMENT_20261117 -->
 ## 2026-11-17 Joint fill/price moment screen complete: failed; SOFT retained
 

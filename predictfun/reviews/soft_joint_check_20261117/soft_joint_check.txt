@@ -1,4 +1,4 @@
-SOFT_JOINT CHECK (POST HOC, descriptive; the other session's pilot ledgers, 12 preselected Oct27 markets, full 5-minute contracts); as of 2026-11-17T01:30:43Z
+SOFT_JOINT CHECK (POST HOC, descriptive; the other session's pilot ledgers, 12 preselected Oct27 markets, full 5-minute contracts); as of 2026-11-17T01:55:48Z
 controls: fills / markets / inventory ledgers reconcile with each other and with the recorded report rows for every case
 
 PART 1: marked P&L by contract minute ($, 12 markets) and markouts (c/sh) - minutes 1-4 vs minute 5
@@ -45,5 +45,22 @@ PART 5: market making vs outcome exposure - each fill's spread, its value 1 s / 
   EMPIRICAL     minutes 1-4 fills: spread   +95.6, +1s  -133.9, +5s  -166.3, held to the end  +101.2 (carry  +267.5) || minute-5 fills: spread   +37.3, +1s  -173.9, +5s   +51.5, held to the end   +27.8 (carry   -23.7)
   JOINT         minutes 1-4 fills: spread   +85.9, +1s   -78.1, +5s   -84.0, held to the end   +82.4 (carry  +166.4) || minute-5 fills: spread   +57.1, +1s   -42.9, +5s  +221.5, held to the end  +164.3 (carry   -57.2)
   SOFT_JOINT    minutes 1-4 fills: spread   +88.6, +1s   -53.1, +5s   -44.0, held to the end  +150.5 (carry  +194.5) || minute-5 fills: spread   +62.7, +1s   -22.8, +5s  +249.8, held to the end  +217.1 (carry   -32.6)
+
+PART 6: bid vs ask fills in minutes 1-4 (+1 s / +5 s c/sh, share through) - the scenario bank is built from BID rung-0 probes only (pf_flow_control_paths.build: side == 0)
+  KEEP_ALL_CAP  bid  24,103 sh -2.01 / -2.09, through 62% | ask  23,715 sh -2.13 / -2.47, through 57%
+  EMPIRICAL     bid   3,588 sh -1.50 / -2.19, through 59% | ask   2,878 sh -2.78 / -3.05, through 69%
+  JOINT         bid   2,312 sh -0.87 / -0.75, through 60% | ask   2,135 sh -2.71 / -3.12, through 63%
+  SOFT_JOINT    bid   2,377 sh -0.37 / -0.29, through 51% | ask   2,072 sh -2.14 / -1.80, through 61%
+
+PART 7: SOFT_JOINT decision advantages (c per order) - the controller acts on any advantage > 0
+  post   n 10,847 | p10 / p50 / p90 0.029 / 0.316 / 2.575 | < 0.5 c 61.3% | < 1 c 76.4%
+  cancel n  9,762 | p10 / p50 / p90 0.021 / 0.343 / 3.361 | < 0.5 c 57.8% | < 1 c 72.2%
+  effective scenario paths p10 / p50 / p90 19.2 / 62.3 / 99.9
+
+PART 8: SOFT_JOINT fills by depth x trade type (shares, share of the group, +1 s c/sh)
+  at_best      at price  1,380 (62.9%) +1.18 | through    814 (37.1%) +0.40
+  inside       at price     84 ( 4.7%) +0.42 | through  1,692 (95.3%) -6.09
+  one_to_five  at price  1,481 (40.8%) +1.35 | through  2,152 (59.2%) -2.21
+  over_five    at price    129 (43.9%) +16.74 | through    164 (56.1%) +8.18
 
 PART 4: SOFT_JOINT activity: orders 10,847 and guard pulls 9,775 over 60 market-minutes (181 / 163 a market-minute)
