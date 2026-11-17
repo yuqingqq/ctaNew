@@ -1,3 +1,20 @@
+keep_pull_20261117:
+  status: code_committed_awaiting_go
+  asof: "2026-11-17 13:48Z"
+  session: aea5bfb9
+  user: "compare keeping versus pulling the same resting order at actual cancellation latency, measuring avoided losses against foregone gains (latest results review, next priority)"
+  code: {script: predictfun/research/pf_keep_pull.py, mutation_check: predictfun/research/pf_keep_pull_mutants.py, driver: predictfun/research/run_keep_pull.sh, commit: 360c2362}
+  population: "queue place JOIN orders (every counted causal state; 30 sh at the known best, +58 ms live, END +5 s); KEEP = v1's JOIN row"
+  clocks: {decision_step_ms: 50, cancel_ms: 37, pending_cancel_ms: 95, own_fill_known_ms: 100, fill_clocks: [M50, M250, M0]}
+  readings_declared: [K1 ORACLE-BOUND, K2 SCORE-EARNS, K3 SCORE-RANKS-VALUE, K4 LATENCY]
+  declared_score: "A+0: fair edge sg (p_bn(d) - p) < 0, fair_fix's p_bn; 500 within-cell permutations"
+  multiplicity: {score_policies: 6, declared: 1}
+  selftest: "synthetic tape only: v1 reproduced bit for bit; scripted fills / latency / structural causes / sources / triggers / decomposition / oracle; planted pull values = the kernel's own; predicates on constructed inputs; 4 planted errors and 4 known-bad inputs refused"
+  mutation_check: "unchanged copy passes; 31 / 31 planted code errors fail the selftest"
+  tape_read: false
+  running: false
+  next: "USER go -> run_keep_pull.sh smoke, then all (after or independent of the ledger runs)"
+
 queue_place_ledger_20261117_v2:
   status: code_committed_awaiting_go
   asof: "2026-11-17 13:09Z"
