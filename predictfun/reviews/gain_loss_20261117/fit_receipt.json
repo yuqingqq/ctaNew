@@ -1,0 +1,113 @@
+{
+  "asof": "2026-11-17T04:25:44.778175+00:00",
+  "training_days": [
+    "20261023",
+    "20261024",
+    "20261025"
+  ],
+  "n": 27236,
+  "no_fill_rows": 23971,
+  "gains": 1251,
+  "losses": 2014,
+  "severe": 933,
+  "joint_moment_fit_receipt_sha256": "ee1e617e4f90ff999d1ee025a2fa13e02c1aba3cab66f9f4507826e6033ecce6",
+  "artifacts": {
+    "full_g_p": {
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/fit/full_g_p.txt",
+      "sha256": "e4a30d9e04e8c0fc39abe9f5ccd78733e73326de478bb7ad840b9f52393bf258",
+      "n": 27236,
+      "positives": 1251,
+      "objective": "binary",
+      "features": "full"
+    },
+    "full_g_amt": {
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/fit/full_g_amt.txt",
+      "sha256": "cd7e607fa5c95d8df42a7c700b2e7a0c62c54437c451a69cf49d47b681f53557",
+      "n": 1251,
+      "positives": 1251,
+      "objective": "regression",
+      "features": "full"
+    },
+    "full_l1_p": {
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/fit/full_l1_p.txt",
+      "sha256": "e6b7635172d1bc194a58b456a4f526fa37a3890961eda37a1f0370d070d9dacb",
+      "n": 27236,
+      "positives": 2014,
+      "objective": "binary",
+      "features": "full"
+    },
+    "full_l1_amt": {
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/fit/full_l1_amt.txt",
+      "sha256": "ce82d4846b26efb0963018e0116cd7b62bbdffa021f3db8c7eaad2effcb3e325",
+      "n": 2014,
+      "positives": 2014,
+      "objective": "regression",
+      "features": "full"
+    },
+    "full_l2_p": {
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/fit/full_l2_p.txt",
+      "sha256": "f76b9c7e7c431d37f3d680650b2ee456b55c1319961c0e9aabb3e9f3c6f540dc",
+      "n": 27236,
+      "positives": 933,
+      "objective": "binary",
+      "features": "full"
+    },
+    "full_l2_amt": {
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/fit/full_l2_amt.txt",
+      "sha256": "60f6d675b5857c994f41bbaf784ed7a8b0e0d6b9f3a99f0db5578fdc30aaafa6",
+      "n": 933,
+      "positives": 933,
+      "objective": "regression",
+      "features": "full"
+    },
+    "mechanical_g_p": {
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/fit/mechanical_g_p.txt",
+      "sha256": "d56c4b19db381a27c13cf3ccbe477fc78b1181fefa231e76a3bd70f138210f7e",
+      "n": 27236,
+      "positives": 1251,
+      "objective": "binary",
+      "features": "mechanical"
+    },
+    "mechanical_g_amt": {
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/fit/mechanical_g_amt.txt",
+      "sha256": "c42c6853a6f1619f2c92f157f2533edfcf703725d843ba9634293aa9b28e8729",
+      "n": 1251,
+      "positives": 1251,
+      "objective": "regression",
+      "features": "mechanical"
+    },
+    "mechanical_l1_p": {
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/fit/mechanical_l1_p.txt",
+      "sha256": "6e29e02e19a6787298585810882b962743d3156ccb857658471b83277a7f9d47",
+      "n": 27236,
+      "positives": 2014,
+      "objective": "binary",
+      "features": "mechanical"
+    },
+    "mechanical_l1_amt": {
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/fit/mechanical_l1_amt.txt",
+      "sha256": "f70b1a37e830d716af07151b2481f29df4a2a7db7c0ff5f2b63c858867d95e8b",
+      "n": 2014,
+      "positives": 2014,
+      "objective": "regression",
+      "features": "mechanical"
+    },
+    "mechanical_l2_p": {
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/fit/mechanical_l2_p.txt",
+      "sha256": "4df632779b46914fcb53a419d3e5e17ecd215e7189e0099a7113fa22746beb3f",
+      "n": 27236,
+      "positives": 933,
+      "objective": "binary",
+      "features": "mechanical"
+    },
+    "mechanical_l2_amt": {
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/gain_loss_20261117/fit/mechanical_l2_amt.txt",
+      "sha256": "8aadb09256674e0ac09641a5889b722f0422d9eb643f5f45d3f4a00da6984c04",
+      "n": 933,
+      "positives": 933,
+      "objective": "regression",
+      "features": "mechanical"
+    }
+  },
+  "seconds": 9.389995336532593
+}
