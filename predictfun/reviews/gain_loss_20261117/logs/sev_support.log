@@ -1,0 +1,46 @@
+running-errors selftests passed; planted future leak caught
+{"stage": "support", "day": "20261024", "kind": "cancel", "train": 4971, "test": 5036, "ref_median": 2.540415799869545, "ref_naive_median": 2.538398961346907, "test_median": 2.806928294382043, "beyond_p99": 0.015885623510722795, "seconds": 2}
+{"stage": "support", "day": "20261024", "kind": "post", "train": 4068, "test": 4223, "ref_median": 2.6684611625196153, "ref_naive_median": 2.6668479270410925, "test_median": 2.9365472260179177, "beyond_p99": 0.015628699976320153, "seconds": 3}
+{"stage": "support", "day": "20261025", "kind": "cancel", "train": 10007, "test": 4785, "ref_median": 2.165543718183459, "ref_naive_median": 2.1624105057626655, "test_median": 2.1496145118737413, "beyond_p99": 0.010867293625914315, "seconds": 9}
+{"stage": "support", "day": "20261025", "kind": "post", "train": 8291, "test": 4153, "ref_median": 2.2915146359054788, "ref_naive_median": 2.2864105108200783, "test_median": 2.2259534855399443, "beyond_p99": 0.012521069106669877, "seconds": 13}
+{"stage": "support", "day": "20261026", "kind": "cancel", "train": 14792, "test": 4946, "ref_median": 1.9234248436807007, "ref_naive_median": 1.9210203332949425, "test_median": 2.0066450999028054, "beyond_p99": 0.011120097048119693, "seconds": 22}
+{"stage": "support", "day": "20261026", "kind": "post", "train": 12444, "test": 3994, "ref_median": 1.833408580725555, "ref_naive_median": 1.8308710687287482, "test_median": 1.9941550564758181, "beyond_p99": 0.004757135703555333, "seconds": 29}
+{"stage": "support", "day": "20261027", "kind": "cancel", "train": 19738, "test": 4870, "ref_median": 1.6189105691626733, "ref_naive_median": 1.617308351928562, "test_median": 1.5604700866820331, "beyond_p99": 0.005749486652977412, "seconds": 45}
+{"stage": "support", "day": "20261027", "kind": "post", "train": 16438, "test": 4049, "ref_median": 1.7204583255101604, "ref_naive_median": 1.7181494819445007, "test_median": 1.6687137197012865, "beyond_p99": 0.0079031859718449, "seconds": 57}
+SEVERE-EVENT PROBABILITY: calibration by band and training support (past-only folds; no model change); as of 2026-11-17T05:01:32Z
+controls: fold heads = RUNNING-ERRORS; Oct26 fold reproduces GAIN-LOSS P(severe); reference neighbours exclude own market (checked); planted no-exclusion reference smaller
+
+PART 1: by band of predicted P(severe) - forward days pooled: n | expected | observed | O/E || in-sample (training days of each fold) O/E
+  [0.0, 0.005)     n  5,834 |    19.9 |    28 | x1.41 || x0.00 (n 15,772)
+  [0.005, 0.01)    n  7,955 |    58.2 |    85 | x1.46 || x0.01 (n 20,246)
+  [0.01, 0.02)     n  7,983 |   114.7 |   177 | x1.54 || x0.03 (n 20,677)
+  [0.02, 0.05)     n  8,308 |   263.3 |   385 | x1.46 || x0.18 (n 19,868)
+  [0.05, 0.1)      n  3,761 |   262.5 |   278 | x1.06 || x0.44 (n 8,243)
+  [0.1, 0.2)       n  1,653 |   225.6 |   208 | x0.92 || x1.37 (n 3,248)
+  [0.2, 1.0)       n    562 |   172.2 |   149 | x0.87 || x2.22 (n 2,695)
+  by kind and day (O/E): cancel 20261024 x0.94 | cancel 20261025 x1.25 | cancel 20261026 x1.31 | cancel 20261027 x1.18 | post 20261024 x1.05 | post 20261025 x1.17 | post 20261026 x1.20 | post 20261027 x1.30
+  p < 0.02: O/E x1.50 (n 21,772, 290 events) | p >= 0.05: x0.96 (n 5,976, 635 events)
+
+PART 2: training support - bins by the training reference distance (50th neighbour, other markets): share of test decisions | observed rate | model mean p | kNN rate | model O/E | kNN O/E
+  <= p50   share 44.8% | 0.0273 | 0.0229 | 0.0250 | x1.19 | x1.09 (n 16,164, events 442)
+  p50-p90  share 44.3% | 0.0374 | 0.0319 | 0.0351 | x1.17 | x1.07 (n 15,981, events 598)
+  p90-p99  share  9.8% | 0.0638 | 0.0561 | 0.0540 | x1.14 | x1.18 (n 3,527, events 225)
+  > p99    share  1.1% | 0.1172 | 0.0986 | 0.0878 | x1.19 | x1.33 (n 384, events 45)
+    20261024 cancel: beyond p99  1.6% | model O/E x0.94 | kNN O/E x0.78
+    20261024 post  : beyond p99  1.6% | model O/E x1.05 | kNN O/E x0.77
+    20261025 cancel: beyond p99  1.1% | model O/E x1.25 | kNN O/E x1.22
+    20261025 post  : beyond p99  1.3% | model O/E x1.17 | kNN O/E x1.03
+    20261026 cancel: beyond p99  1.1% | model O/E x1.31 | kNN O/E x1.35
+    20261026 post  : beyond p99  0.5% | model O/E x1.20 | kNN O/E x1.18
+    20261027 cancel: beyond p99  0.6% | model O/E x1.18 | kNN O/E x1.33
+    20261027 post  : beyond p99  0.8% | model O/E x1.30 | kNN O/E x1.44
+
+  well-supported (<= p90) pooled: model O/E x1.18, kNN O/E x1.08 (n 32,145)
+
+B1 LOW-P-SHORTFALL: YES (p < 0.02 x1.50 vs p >= 0.05 x0.96)
+C1 COVERAGE-GAP: NOT-SHOWN (beyond training p99: 1.1% of test decisions; model O/E there x1.19 vs <= p50 x1.19)
+C2 MODEL-ERROR: YES (well-supported: kNN O/E x1.08 vs model O/E x1.18)
+C3 SHIFT: NOT-SHOWN (well-supported: kNN O/E x1.08, model O/E x1.18; both > 1.15 required)
+
+LIMITS: consumed days; four predicted days, no interval; kNN support in 15 standardized inputs is a support measure, not a density; simulated labels; the neutral population
+2026-11-17T05:00:34Z tag=sev_support rc=0 peak_rss_mib=704 wall_s=58.51 cpu_user_s=57.42 memavail_start_gib=23 disk_free_gib=468->468 slot=claude

@@ -3099,6 +3099,21 @@ stop_ev_design_20261115:
   components: {SWEEP: have (v6), STOP_FLOW: "new, public-trade labels for hypothetical queue positions", VALUES: "1 s / 5 s markouts", QUEUE: "rule-M estimate - the only simulator-dependent piece"}
   next: "USER's go: STOP-FLOW labels + VALUES -> STOP-FLOW head -> EV policy, selectivity check, portfolio replay vs the harm-only baseline"
 
+severe_support_20261117:
+  status: done_descriptive
+  asof: "2026-11-17 05:02Z"
+  session: aea5bfb9
+  user: "Ok, go"
+  code: {script: predictfun/research/pf_severe_support.py, commit: a580eed4}
+  predicates: {B1_low_p_shortfall: YES, C1_coverage_gap: NOT-SHOWN, C2_model_error: YES, C3_shift: NOT-SHOWN}
+  band_oe_forward: {"<0.005": 1.41, "0.005-0.01": 1.46, "0.01-0.02": 1.54, "0.02-0.05": 1.46, "0.05-0.1": 1.06, "0.1-0.2": 0.92, ">=0.2": 0.87}
+  band_oe_in_sample: {"<0.005": 0.00, "0.005-0.01": 0.01, "0.01-0.02": 0.03, "0.02-0.05": 0.18, "0.05-0.1": 0.44, "0.1-0.2": 1.37, ">=0.2": 2.22}
+  support_bins_share: [0.448, 0.443, 0.098, 0.011]
+  model_oe_by_support: [1.19, 1.17, 1.14, 1.19]
+  well_supported: {model_oe: 1.18, knn_oe: 1.08}
+  caveat: "support in the head's top-15 inputs only (liquidity scale rank 10 / 19)"
+  next: "USER: regularize / calibrate the P(severe) head as a declared new candidate, judged forward on later days"
+
 gain_loss_running_20261117:
   status: done_descriptive
   asof: "2026-11-17 04:49Z"
