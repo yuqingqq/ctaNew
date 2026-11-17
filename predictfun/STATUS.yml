@@ -1,20 +1,34 @@
 conditional_map_20261117:
-  status: frozen_action_checks_running
+  status: complete_audited_merged_gate_failed
   source_commit: f60e2144
   freeze_commit: 62201b95
+  results_commit: bf1aacd2
+  merge_commit: f86c70bf
   branch: research/predict-conditional-map-20261117
   worktree: /tmp/cta-conditional-map-20261117
   output: data/predict_fun/research/conditional_map_20261117_v1
   review_index: predictfun/reviews/conditional_map_20261117/index.json
+  report: predictfun/handoffs/20261117_conditional_map_results.md
   candidate: STATE_CONDITIONAL
   ablation: EXPANDED_JOINT
   retained_baseline: SOFT_JOINT
   forecast_unchanged: true
   controller_unchanged: true
-  coarse_pair_probability_preserved: true
+  achieved_coarse_pair_probability_preserved: true
   candidates: 1
   kernel_widths: 1
-  running: true
+  selected_training_exposures: 19198
+  legacy_paths_retained: 1929
+  expanded_paths: 3597
+  action_counts: {20261026: 418, 20261027: 443}
+  true_pair_common_actions: 420
+  true_pair_unsupported_actions: 23
+  run_pilot: false
+  pilot_status: skipped_by_frozen_gate
+  audit_passed: true
+  merged_hashes_verified: true
+  next: conditional_fill_weighted_price_severity_and_inventory_value_decomposition
+  running: false
   dates: consumed_Oct23_27_development_only
   promotion: false
 

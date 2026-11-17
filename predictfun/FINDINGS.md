@@ -1,3 +1,45 @@
+<!-- CONDITIONAL_MAP_RESULTS_20261117 -->
+## 2026-11-17 Expanded state-conditioned responses fail the economic mapping gate
+
+One STATE_CONDITIONAL candidate, source f60e2144/freeze62201b95, resultsbf1aacd2
+mergedf86c70bf into mm-research; report handoffs/20261117_conditional_map_results.md,
+evidence reviews/conditional_map_20261117/index.json. Keep SOFT_JOINT. No job
+running; no candidate full-policy replay or new P&L/churn result.
+
+Same19198 training exposures, bank1929->3597 paired raw futures, all originals
+retained, weighted exposure mass preserved.17 causal book/scale/dynamics state
+coordinates, fixed training-only robust geometry and kernel. Expanded-only arm
+isolates coverage. Both maps exactly preserve baseline ACHIEVED coarse pair
+mass, including the inherited projection's errors. Predictor/controller,
+execution clocks,1s endpoint,30-share ladder and risk unchanged; no timer.
+
+As of2026-11-17T00:24:05Z Oct26 and00:26:40Z Oct27, all418/443 selected
+neutral actions supported, baseline predictions/labels/reference prefixes exact.
+Oct27 ordinary SOFT->conditional RMSE: cancel31.826->31.709c (n221),
+post24.829->25.342c (n222); rank.339->.287 and.224->.207. Oct26 cancel
+8.449->8.991c (n205), post36.111->36.097c (n213). Positive-score realized
+totals unchanged on both dates; candidate Oct27 posts48/222 total-19.994c
+and cancels136/221 total+955.681c, both within their200 count-matched null
+ranges. These are one-action values in cents, not portfolio returns.
+
+True-coarse-pair diagnostic asof00:26:40Z:420 common Oct27 actions (208 cancel,
+212 post),23 unsupported retained. SOFT->expanded->conditional RMSE:
+cancel25.951->28.245->28.385c; post23.971->26.360->26.514c. Both fail the
+frozen gate; no pilot was run. Conditional fill-quantity MAE improves2.528
+->2.254 /3.875->3.403 shares, but value errors worsen. Thus greater coverage
+and this generic similarity kernel do not repair conditional economics. This
+does not establish that the market features lack predictive information.
+
+Next: measure fill-weighted signed price severity and inventory cost on the
+same actions, with severe-tail accounting, before another response revision.
+Explicit volatility/exact within-phase expiry and queue continuation remain
+unmodeled in this mapper; neutral labels omit later learned actions. All source/
+artifact, causal-input, probability, queue, accounting and falsifier checks pass;
+24 nonempty compiled/canonical paths pass. Peak RSS1086MiB on Codex/core8.
+Consumed days only; no confidence intervals, validation or promotion. Protected
+dates unopened. All raw results and failed gate retained, shared edits preserved.
+<!-- /CONDITIONAL_MAP_RESULTS_20261117 -->
+
 <!-- RESPONSE_BRIDGE_RESULTS_20261116 -->
 ## 2026-11-16 Richer forecasts improve fill markout but worsen quoting; response mapping is still the bottleneck
 
