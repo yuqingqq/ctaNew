@@ -1,0 +1,49 @@
+SEVERE-EVENT PROBABILITY: BASE vs SMOOTH vs CAL (explicit chain P(severe) = P(any) x P(severe | loss); past-only folds); as of 2026-11-17T06:11:47Z
+controls: independent heads exceed P(any) on 2,268 / 36,056 forward decisions (reproduced); P(severe) <= P(any) in every arm by construction; maps fit on the calibration day only; CAL base = BASE; planted errors refused
+
+FOLD A: train 20261023+20261024 | calibration 20261025 | evaluation 20261026, 20261027; maps: A a -0.378 b 0.833, B a +0.105 b 0.669
+  day      kind   arm    | P(sev) log loss | O/E sev | P(any) log loss | O/E any | RMSE(W) | calib err | top 10 / 25 / 50% realized W (stratified)
+  20261025 cancel BASE   | 0.1171 | x1.09 | 0.1914 | x0.97 |  33.89 |  0.81 |  -0.25 /  -0.78 /  -1.33 (calibration day)
+  20261025 cancel SMOOTH | 0.1166 | x1.01 | 0.1898 | x0.90 |  33.94 |  0.57 |  +0.54 /  -1.37 /  -1.18 (calibration day)
+  20261025 cancel CAL    | 0.1168 | x0.99 | 0.1914 | x0.96 |  33.95 |  0.97 |  +0.14 /  -1.07 /  -1.41 (calibration day)
+  20261025 post   BASE   | 0.1487 | x1.06 | 0.2527 | x1.00 |  37.69 |  1.62 |  -1.18 /  -2.06 /  -2.72 (calibration day)
+  20261025 post   SMOOTH | 0.1469 | x1.00 | 0.2504 | x0.94 |  37.74 |  1.48 |  -1.72 /  -1.28 /  -2.53 (calibration day)
+  20261025 post   CAL    | 0.1476 | x1.02 | 0.2505 | x1.03 |  37.78 |  1.63 |  -1.32 /  -1.74 /  -2.51 (calibration day)
+  20261026 cancel BASE   | 0.1382 | x1.22 | 0.2230 | x1.03 |  26.17 |  0.63 |  +0.14 /  -0.50 /  -0.79
+  20261026 cancel SMOOTH | 0.1376 | x1.18 | 0.2203 | x1.01 |  26.28 |  0.82 |  -0.36 /  -0.19 /  -0.71
+  20261026 cancel CAL    | 0.1375 | x1.13 | 0.2217 | x1.06 |  26.28 |  0.84 |  +0.17 /  -0.49 /  -0.78
+  20261026 post   BASE   | 0.1575 | x1.08 | 0.2666 | x1.04 |  32.59 |  0.81 |  -1.02 /  -1.52 /  -1.77
+  20261026 post   SMOOTH | 0.1546 | x1.01 | 0.2627 | x0.98 |  32.58 |  0.95 |  -0.92 /  -1.05 /  -1.89
+  20261026 post   CAL    | 0.1562 | x1.05 | 0.2646 | x1.09 |  32.59 |  0.88 |  -0.98 /  -1.60 /  -1.80
+  20261027 cancel BASE   | 0.1246 | x1.13 | 0.2027 | x0.99 |  29.24 |  0.68 |  +0.20 /  -0.45 /  -0.71
+  20261027 cancel SMOOTH | 0.1253 | x1.11 | 0.2038 | x0.97 |  29.35 |  0.99 |  -0.68 /  -0.56 /  -0.79
+  20261027 cancel CAL    | 0.1253 | x1.05 | 0.2031 | x1.01 |  29.38 |  0.95 |  +0.16 /  -0.58 /  -0.83
+  20261027 post   BASE   | 0.1707 | x1.25 | 0.2706 | x1.13 |  44.25 |  2.08 |  -0.98 /  -1.31 /  -1.46
+  20261027 post   SMOOTH | 0.1698 | x1.21 | 0.2687 | x1.08 |  44.58 |  1.96 |  -1.15 /  -1.17 /  -2.55
+  20261027 post   CAL    | 0.1696 | x1.23 | 0.2702 | x1.19 |  44.57 |  2.19 |  -1.23 /  -1.30 /  -1.45
+  band O/E of P(severe), evaluation days pooled, BASE: 0-0.005 x1.12 (n 3,600) | 0.005-0.01 x1.28 (n 3,341) | 0.01-0.02 x1.76 (n 3,267) | 0.02-0.05 x1.38 (n 3,993) | 0.05-0.1 x0.99 (n 2,153) | 0.1-0.2 x1.09 (n 1,175) | 0.2-1 x0.96 (n 330)
+  band O/E of P(severe), evaluation days pooled, SMOOTH: 0-0.005 x0.67 (n 1,962) | 0.005-0.01 x0.70 (n 3,550) | 0.01-0.02 x1.24 (n 3,577) | 0.02-0.05 x1.32 (n 4,757) | 0.05-0.1 x0.96 (n 2,619) | 0.1-0.2 x1.15 (n 1,184) | 0.2-1 x1.26 (n 210)
+  band O/E of P(severe), evaluation days pooled, CAL: 0-0.005 x0.74 (n 1,365) | 0.005-0.01 x0.42 (n 3,547) | 0.01-0.02 x1.21 (n 3,918) | 0.02-0.05 x1.25 (n 4,960) | 0.05-0.1 x1.02 (n 2,673) | 0.1-0.2 x1.13 (n 1,229) | 0.2-1 x1.33 (n 167)
+
+FOLD B: train 20261023+20261024+20261025 | calibration 20261026 | evaluation 20261027; maps: A a -0.238 b 0.851, B a +0.088 b 0.628
+  day      kind   arm    | P(sev) log loss | O/E sev | P(any) log loss | O/E any | RMSE(W) | calib err | top 10 / 25 / 50% realized W (stratified)
+  20261026 cancel BASE   | 0.1366 | x1.21 | 0.2207 | x1.07 |  25.93 |  0.37 |  -0.18 /  -0.12 /  -0.56 (calibration day)
+  20261026 cancel SMOOTH | 0.1379 | x1.21 | 0.2211 | x1.06 |  26.22 |  0.82 |  -0.70 /  -0.38 /  -0.64 (calibration day)
+  20261026 cancel CAL    | 0.1358 | x1.05 | 0.2195 | x1.01 |  26.06 |  0.40 |  -0.01 /  -0.11 /  -0.68 (calibration day)
+  20261026 post   BASE   | 0.1547 | x1.08 | 0.2597 | x1.02 |  32.65 |  1.86 |  -1.85 /  -1.64 /  -2.14 (calibration day)
+  20261026 post   SMOOTH | 0.1551 | x1.02 | 0.2614 | x0.98 |  32.70 |  1.25 |  -0.50 /  -1.80 /  -1.95 (calibration day)
+  20261026 post   CAL    | 0.1539 | x0.97 | 0.2588 | x0.99 |  32.60 |  1.43 |  -0.08 /  -1.56 /  -2.03 (calibration day)
+  20261027 cancel BASE   | 0.1241 | x1.14 | 0.2017 | x1.04 |  29.15 |  0.59 |  -0.28 /  -0.54 /  -0.89
+  20261027 cancel SMOOTH | 0.1239 | x1.16 | 0.2027 | x1.04 |  29.30 |  0.91 |  -0.72 /  -0.40 /  -0.75
+  20261027 cancel CAL    | 0.1246 | x0.99 | 0.2023 | x0.97 |  29.24 |  0.61 |  -0.21 /  -0.51 /  -0.77
+  20261027 post   BASE   | 0.1704 | x1.26 | 0.2682 | x1.14 |  43.65 |  1.71 |  -1.23 /  -1.90 /  -1.23
+  20261027 post   SMOOTH | 0.1687 | x1.22 | 0.2666 | x1.10 |  44.04 |  1.70 |  -1.22 /  -1.75 /  -1.64
+  20261027 post   CAL    | 0.1683 | x1.14 | 0.2672 | x1.09 |  43.95 |  1.50 |  -1.26 /  -1.90 /  -1.26
+  band O/E of P(severe), evaluation days pooled, BASE: 0-0.005 x0.89 (n 1,724) | 0.005-0.01 x1.09 (n 1,764) | 0.01-0.02 x1.76 (n 1,693) | 0.02-0.05 x1.42 (n 1,929) | 0.05-0.1 x1.09 (n 1,077) | 0.1-0.2 x1.07 (n 581) | 0.2-1 x1.09 (n 151)
+  band O/E of P(severe), evaluation days pooled, SMOOTH: 0-0.005 x0.27 (n 968) | 0.005-0.01 x0.51 (n 1,874) | 0.01-0.02 x1.31 (n 1,903) | 0.02-0.05 x1.25 (n 2,238) | 0.05-0.1 x1.12 (n 1,264) | 0.1-0.2 x1.28 (n 581) | 0.2-1 x1.33 (n 91)
+  band O/E of P(severe), evaluation days pooled, CAL: 0-0.005 x0.00 (n 522) | 0.005-0.01 x0.41 (n 1,665) | 0.01-0.02 x0.82 (n 2,112) | 0.02-0.05 x1.18 (n 2,431) | 0.05-0.1 x1.03 (n 1,404) | 0.1-0.2 x1.13 (n 673) | 0.2-1 x1.28 (n 112)
+
+SMOOTH vs BASE (fold A): S1 SEVERE-CALIBRATION IMPROVES | S2 LOW-BAND YES (p < .05 O/E x1.21 vs BASE x1.44) | S3 NET-VALUE NOT-SHOWN | S4 MATCHED-PARTICIPATION NOT-SHOWN -> NOT-SHOWN
+CAL vs BASE (fold A): S1 SEVERE-CALIBRATION IMPROVES | S2 LOW-BAND YES (p < .05 O/E x1.14 vs BASE x1.44) | S3 NET-VALUE NOT-SHOWN | S4 MATCHED-PARTICIPATION NOT-SHOWN -> NOT-SHOWN
+
+LIMITS: consumed days; two evaluation days in fold A (no interval, rule 8); simulated labels; the neutral decision population

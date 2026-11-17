@@ -1,0 +1,28 @@
+{
+  "asof": "2026-11-17T06:12:40.572830+00:00",
+  "readings": {
+    "SMOOTH": {
+      "S1": true,
+      "S2": true,
+      "S3": false,
+      "S4": false,
+      "PASS": false,
+      "low_oe": 1.2147178333537543,
+      "base_low_oe": 1.4416863355783702
+    },
+    "CAL": {
+      "S1": true,
+      "S2": true,
+      "S3": false,
+      "S4": false,
+      "PASS": false,
+      "low_oe": 1.1433575007845505,
+      "base_low_oe": 1.4416863355783702
+    }
+  },
+  "independent_violations": [
+    2268,
+    36056
+  ],
+  "seconds": 54.3560585975647
+}

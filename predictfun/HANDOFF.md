@@ -1,3 +1,12 @@
+## 2026-11-17 06:12Z (session aea5bfb9) — SEVERE-EVENT PROBABILITY: BASE vs SMOOTH vs CAL (USER design): both fix the probability scale, neither improves net value or matched participation
+
+- What: pf_severe_cal.py (b08304d2, declared before the run). Explicit consistency in every arm: P(severe) = P(any loss) x P(severe | loss), no clipping (the independent heads' 2,268 / 36,056 violations reproduced). Amount and gain heads identical across arms. SMOOTH = min_data_in_leaf 400 / 100 rounds on the two probability heads; CAL = BASE frozen + sigmoid(a + b logit p) per factor fitted on Oct25 (A: a -0.38, b 0.83; B: a +0.11, b 0.67). Fold A: train Oct23-24, calibrate Oct25, evaluate Oct26-27.
+- S1 SEVERE-CALIBRATION IMPROVES for both: severe log loss lower in 3 / 4 cells (SMOOTH) and 3 / 4 (CAL), O/E closer to 1 in 4 / 4 (BASE x1.22 / 1.08 / 1.13 / 1.25 -> SMOOTH x1.18 / 1.01 / 1.11 / 1.21, CAL x1.13 / 1.05 / 1.05 / 1.23). S2 LOW-BAND YES (p < .05 O/E x1.44 -> x1.21 / x1.14).
+- S3 NET-VALUE NOT-SHOWN for both: RMSE(W) not lower (SMOOTH better in 1 / 4, CAL 0 / 4 beyond ties; e.g. Oct27 posts 44.25 -> 44.58 / 44.57). S4 MATCHED-PARTICIPATION NOT-SHOWN for both. -> neither PASSES.
+- Why: the bands show weak ranking among low-risk decisions - after rescaling, the lowest bands flip to over-prediction (CAL 0.005-0.01 x0.42, SMOOTH x0.70) while 0.01-0.05 stays under-predicted (x1.2-1.3): a monotone map or a smoother fit corrects the scale, not which low-risk decisions turn severe. Fold B (printed) the same: CAL fixes Oct27 O/E (x1.14 -> x0.99 cancels) but RMSE(W) slightly worse.
+- Reading: the severe-event frequency level is fixable; the binding error for value is the ranking of severe risk inside the 'low-risk' states (AUC ~0.78) - new information, not rescaling, would be needed.
+- Next (USER's call): inputs that separate severe from safe among low-risk states (a check for whether any available causal source carries that information), or return to the order setup (queue place / posting first at a new best), where the earlier queue-place findings sit.
+
 <!-- SEVERE_CANDIDATE_REVIEW_20261117 -->
 ## 2026-11-17 Severe-head candidate review: calibration and smoothing justified, not yet fitted
 
