@@ -3119,7 +3119,7 @@ stop_ev_design_20261115:
 
 queue_place_20261117:
   status: done_not_profitable
-  asof: "2026-11-17 06:47Z"
+  asof: "2026-11-17 06:46Z"
   session: aea5bfb9
   user: "Ok go (post first at a new best / rest early at the next level)"
   code: {script: predictfun/research/pf_queue_place_test.py, driver: predictfun/research/run_queue_place.sh, commits: "bcd77450 / 4de41980 (horizon status) / report fix"}
