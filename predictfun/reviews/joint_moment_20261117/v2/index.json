@@ -1,0 +1,23 @@
+{
+  "asof": "2026-11-17T01:42:07.622860+00:00",
+  "source_manifest": "b561ad332422b19b6d59b6175b7714108a9f941ebf4de16486ecac9a5fcf7fac",
+  "outputs": {
+    "fit/receipt.json": "ee1e617e4f90ff999d1ee025a2fa13e02c1aba3cab66f9f4507826e6033ecce6",
+    "20261023/receipt.json": "b32f2959fb73e1c535546a86351fe5faf21b60b103af0d86b971518cd25fd4af",
+    "20261024/receipt.json": "93e5880f90b64369f44ee6a296867c088203ccb93b39941fde7668236305b937",
+    "20261025/receipt.json": "1c6970bf71c90afc83b5d69c9f6e830bf23d6170afa7e387e7aed2db310389ae",
+    "20261026/receipt.json": "bc4d4d30ed376b77465d28e18111391477f4783fd10e02f98b1301742c671c1e",
+    "20261027/receipt.json": "dd658a3ed32f74f9bae3adf110f5f55ae035a209df44dce475ade2db61837f09",
+    "eval_20261026/receipt.json": "a9ad4cbc600080981b3f7e3807499f94d1889de46603ffa610e715403afd5fff",
+    "eval_20261026/report.json": "b40c5d552fecb6fd3a035988c47dcf613bce27356fbeb56b6683f929b0a32833",
+    "eval_20261027/receipt.json": "e2e6a33115c76c8cb62f5796da391b168f1d30ba14c6aee950a2162f05dd8456",
+    "eval_20261027/report.json": "26129de4d0aead750207fc952658aa3429562b27ce93b435cac6af7e87b111b4",
+    "audit_v2.json": "0e9135e759e580705e66b3cf78dac73b8ce26af71df676c5e487c72ff4eadbd2"
+  },
+  "limits": [
+    "Consumed days only; no untouched validation, intervals, promotion or strategy P&L",
+    "Separate Q/M regressions estimate joint moments but are not a joint scenario generator or a simultaneous multi-order allocator",
+    "Pending-state head is evaluated separately; Q/M labels already include latent remainder uncertainty, no double scaling",
+    "Unchanged estimated clocks, queue assumptions,1s zero continuation and neutral-to-policy transport"
+  ]
+}
