@@ -1,0 +1,31 @@
+{
+  "asof": "2026-11-17T00:48:01.344031+00:00",
+  "source_manifest": "23166314985a29dd029dadccd232b1406c09f925763bfd4dfb4d28d530cce830",
+  "controls": {
+    "joint_fill_price_dependence_detected": true,
+    "unavoidable_quantity_excluded": true,
+    "other_order_redistribution_accounted": true,
+    "no_fill_included": true,
+    "corrupt_component_refused": true,
+    "negative_weight_refused": true,
+    "reversed_action_refused": true,
+    "component_substitutions_reconciled": true,
+    "missing_fill_support_reported": true,
+    "unknown_substitution_refused": true,
+    "corrupt_artifact_refused_20261026": true,
+    "corrupt_artifact_refused_20261027": true
+  },
+  "counts": {
+    "20261026": {
+      "actions": 418,
+      "prediction_rows": 1672,
+      "eligible_rows": 1672
+    },
+    "20261027": {
+      "actions": 443,
+      "prediction_rows": 3101,
+      "eligible_rows": 3032
+    }
+  },
+  "canonical_replays_and_original_predictions_reproduced": true
+}

@@ -1,0 +1,8 @@
+{
+  "asof": "2026-11-17T00:43:16.845225+00:00",
+  "source_manifest": "23166314985a29dd029dadccd232b1406c09f925763bfd4dfb4d28d530cce830",
+  "outputs": {
+    "report.json": "d588456661cd741278c814dd946debf476859325ad22439e4ea27e1e3851c363",
+    "largest_errors.parquet": "6f2644ee542d1a292229ce7d2afe33358de1d1cc89f04aff361b15632d7f61f4"
+  }
+}
