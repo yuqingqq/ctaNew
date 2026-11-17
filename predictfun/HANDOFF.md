@@ -4,7 +4,8 @@
 User authorized the calibration/coverage and controller consistency checks.
 Source726a5267, freeze8fea0ef3; isolated branch
 research/predict-calibration-controller-20261117, worktree
-/tmp/cta-calibration-controller-20261117. Sequential Codex/core8 launcher
+/tmp/cta-calibration-controller-20261117. Calibration/history completed asof2026-11-17T02:33:52Z; current-controller
+replay is running, independent audit pending. Sequential Codex/core8 launcher
 run_value_diagnosis.sh. Output data/predict_fun/research/value_diagnosis_20261117_v1;
 evidence target reviews/value_diagnosis_20261117/index.json. Parent frozen joint
 moment and SOFT sources unchanged. Calibration/miscalibration/novelty controls,
@@ -28,6 +29,11 @@ state sensitivities, complement-transformed kernel control and original-bank
 mirrored-query sensitivity. Other-session bid-bank and zero-continuation claims
 are hypotheses; symmetry sensitivity alone is not proof of causation/profit.
 No new controller, cooldown, threshold, queue premium or risk coefficient.
+
+Preliminary history result: only Oct26 cancel RMSE improves monotonically
+H1->H2->H3 (n205); the other213/221/222-action comparisons do not. H3 reduces
+coverage-outlier counts from75->45 of418 and42->25 of443. These are diagnostic
+reference-distance flags, not eligibility filters. Await audit before publication.
 
 Full independent saved-model/metric/coverage/sample/attribution reconstruction
 is queued after both stages. Consumed dates only, max3-day history; no intervals,
