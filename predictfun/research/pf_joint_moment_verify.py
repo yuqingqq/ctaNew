@@ -9,7 +9,8 @@ C, np, pd = J.C, J.np, J.pd
 
 
 def equal(left, right, name):
-    C.require(np.allclose(left, right, rtol=0, atol=1e-9, equal_nan=True), name)
+    C.require(np.allclose(np.asarray(left,float), np.asarray(right,float),
+                          rtol=0, atol=1e-9, equal_nan=True), name)
 
 
 def controls():
