@@ -1,0 +1,13 @@
+{
+  "asof": "2026-11-17T13:58:04Z",
+  "run_light_entries": [
+    "2026-11-17T13:51:45Z tag=ledger_fix_review_selftest rc=0 peak_rss_mib=241 wall_s=14.36 cpu_user_s=14.10 memavail_start_gib=23 disk_free_gib=462->462 slot=codex",
+    "2026-11-17T13:52:22Z tag=keep_pull_fix_review_selftest rc=0 peak_rss_mib=281 wall_s=15.68 cpu_user_s=15.38 memavail_start_gib=23 disk_free_gib=462->462 slot=codex",
+    "2026-11-17T13:54:58Z tag=ledger_keep_pull_counterexamples rc=0 peak_rss_mib=200 wall_s=1.00 cpu_user_s=0.85 memavail_start_gib=23 disk_free_gib=461->461 slot=codex",
+    "2026-11-17T13:58:03Z tag=ledger_keep_pull_counterexamples_v2 rc=0 peak_rss_mib=198 wall_s=0.97 cpu_user_s=0.84 memavail_start_gib=23 disk_free_gib=461->461 slot=codex"
+  ],
+  "market_tape_read": false,
+  "original_selftests_passed": true,
+  "counterexamples_passed": true,
+  "mutation_suites_rerun": false
+}
