@@ -1,3 +1,23 @@
+committed_fix_review_20261117:
+  status: reviewed_one_remaining_acceptance_issue
+  asof: 2026-11-17T15:07:09Z
+  reviewed_commit: b6eaa7c2
+  review_source_commit: 3cef4993
+  report: predictfun/handoffs/20261117_committed_fix_review.md
+  evidence: predictfun/reviews/committed_fix_review_20261117/receipt_v1.json
+  original_selftests: passed
+  payoff_bounds_fixed: true
+  live_pending_separation_fixed: true
+  latency_attribution_fixed: true
+  missing_fair_selection_fixed: true
+  initial_single_step_null_fixed: true
+  multistep_unmatched_draws_gate_acceptance: false
+  tape_read: false
+  candidate_sources_modified: false
+  running: false
+  promotion: false
+  next: unmatched_acceptance_guard_and_ledger_real_data_reconciliation
+
 review_fixes_ledger_keep_pull_20261117:
   status: code_committed_awaiting_go
   asof: "2026-11-17 14:35Z"
