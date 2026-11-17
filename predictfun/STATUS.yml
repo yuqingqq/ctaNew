@@ -1,3 +1,20 @@
+joint_moment_20261117:
+  status: frozen_data_build_running
+  source_commit: 1f6cd68b
+  freeze_commit: 898ab667
+  branch: research/predict-joint-moment-20261117
+  worktree: /tmp/cta-joint-moment-20261117
+  output: data/predict_fun/research/joint_moment_20261117_v1
+  review_index: predictfun/reviews/joint_moment_20261117/index.json
+  train_days: [20261023, 20261024, 20261025]
+  evaluation_days: [20261026, 20261027]
+  preflight_canonical_actions_reconciled: 861
+  new_joint_moment_candidates: 1
+  controller_rollout: false
+  retained_baseline: SOFT_JOINT
+  running: true
+  promotion: false
+
 value_decomposition_20261117:
   status: complete_audited_merged_diagnostic_only
   source_commit: f6b59100

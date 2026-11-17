@@ -1,3 +1,35 @@
+<!-- JOINT_MOMENT_20261117 -->
+## 2026-11-17 Joint fill/price moment prediction screen: frozen and running
+
+Source1f6cd68b, freeze898ab667; branch research/predict-joint-moment-20261117,
+worktree /tmp/cta-joint-moment-20261117. Sequential launcher run_joint_moment.sh
+uses Codex/core8 only. Preflight matches all861 archived Oct26/27 canonical
+labels; finite no-cancel sentinel adapter repaired before freeze. Failed initial
+preflight retained. Synthetic joint-target, physical-bounds, tail-score, hidden-
+state input invariance and known-bad controls pass.
+
+Train Oct23-25 across all admitted markets, capped neutral path; hash2 per
+market/side/phase/kind after coverage, before client availability/reservations;
+keep exclusions without replacement and preserve no-fill cases. Labels use
+true current state and actual future path ONLY as outcomes; every eval label
+and deterministic training checks reconcile with full canonical branches.
+Inputs:71 causal market features plus16 order/depth/portfolio features, including
+actual known depth at price, exact expiry, queue and competing own orders.
+
+Pinned LGBM/200 rounds: Q=affected fills, M=affected fills*signed endpoint move,
+direct retained focal wealth, severe full-value event and remaining fraction.
+Mechanical Q/M/tail baselines isolate incremental market information. Remaining
+head is separate, never double-scales Q/M. Static action screen replaces focal
+wealth only; keeps SOFT other-order/risk terms. No simultaneous controller rollout
+or new action threshold; shared-volume/portfolio integration remains necessary.
+
+Exact418/443 evaluation actions, ordinary inputs only,200 matched nulls, separate
+severe-loss metrics and sides. Fit uses training only; no calibration/hyperparameter
+search. Evidence target reviews/joint_moment_20261117/index.json; ignored data/logs
+under data/predict_fun/research/joint_moment_20261117_v1/. Consumed development
+only; no intervals, validation, promotion or protected-date access. SOFT retained.
+<!-- /JOINT_MOMENT_20261117 -->
+
 ## 2026-11-17 01:01Z (session aea5bfb9) — CHECK OF THE JOINT FLOW/PRICE CONTROLLER (USER: "load my codex session's latest progress ... check that"): better forecasts, but the pilot's profit is two markets' final-minute swings that the model-free arm also caught
 
 - What: pf_soft_joint_check.py (3b6c4a8d; POST HOC, descriptive, read-only) on the other session's pilot ledgers (KEEP_ALL_CAP / EMPIRICAL / JOINT / JOINT_H2 and the retained SOFT_JOINT; 12 preselected Oct27 markets, full 5-minute contracts). The ledgers reconcile with each other and with the recorded reports; planted errors caught.
