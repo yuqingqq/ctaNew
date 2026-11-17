@@ -31,6 +31,8 @@ CONTROLS (any failure -> no output): the path builder reproduces pf_flow_control
  states (planted error: trades without the 50 ms shift must differ); kernel cash / position reconciliation (inside evaluate); young + old
  = total by construction, young fills <= total fills; EARLY's decision precedes b - 58 ms (planted error: a decision after the birth
  refused); FIRST's p is the known best at its decision step.
+FIRST RUN 06:30Z stopped on Oct25 (kernel refused a horizon <= 0: a birth received > 1.7 s late leaves the 2 s LATE arm no time before
+ END); such arms now carry status no_time_before_end; the partial run is kept as provenance (failed_run_1) and every day re-run.
 LIMITS: consumed days; replay fill model (queue M unvalidated on live, counterfactual fills for orders that change the book - IMPROVE
  especially); no strategy cancels (orders held to END); a single order at a time (no ladder, no inventory limit); births are ex post for
  EARLY. Usage (run_light, PF_SLOT=claude): pf_queue_place_test.py selftest | day <day> | report
@@ -199,6 +201,8 @@ def day_run(day, limit=None):
                             rung = int(round(sgn * (P5[ja, 0] - p))) if ja >= 0 and P5[ja, 0] >= 0 else 0
                             rung = max(rung, 0)
                         for H, tag in ((H_MAIN, ''), (H_SHORT, '_2s')):
+                            if b + H - t_a < 50.:                       # seen too late: no decision time before END (a status, not a crash)
+                                rec['status' + tag] = 'no_time_before_end'; continue
                             pth, status = build_path(W, t_a, b + H)
                             if pth is None:
                                 rec['status' + tag] = status; continue
