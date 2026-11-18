@@ -1,0 +1,194 @@
+{
+  "target": "541aeca9ad9cefddd6b6346146072ea05692e1ed",
+  "asof": "2026-11-18T16:40:30.433584+00:00",
+  "consumed_days": [
+    "20261108",
+    "20261023"
+  ],
+  "untouched_validation_read": false,
+  "full_tape_replayed": false,
+  "training_run": false,
+  "verified_hashes": {
+    "/tmp/predictfun-review-541aeca9/predictfun/research/pf_known_clock_census.py": "f57f911337d78abdf56394ad5082e5983ff5903b20e3eec513e2ff9024587e7e",
+    "/tmp/predictfun-review-541aeca9/predictfun/research/pf_known_clock_census_mutants.py": "814354bc9d01e003bba8b6fd6be72fe65a74b84cc33f315a12237b703e7ca0ff",
+    "/tmp/predictfun-review-541aeca9/predictfun/research/pf_timing_case_audit.py": "0a836234bd3250b002f51fd8c570f857d69b53446cddb8139a6fdbfe146148b6",
+    "/tmp/predictfun-review-541aeca9/predictfun/research/pf_timing_case_audit_mutants.py": "50dea134f676997c235aff1c21742c7aa5357d3a5fdab43fc85750dc08964de1",
+    "/tmp/predictfun-review-541aeca9/predictfun/research/pf_keep_pull_exec_windows.py": "719528a10e31e1a5d6c24e151a5a80994171918efc37b223ae9e58b60f64f74f",
+    "/tmp/predictfun-review-541aeca9/predictfun/research/pf_keep_pull_exec_windows_mutants.py": "08deed89ddfadaff5c4e9bf25c51844e0d4cd5520a5efcce3bd0d41c275702d7",
+    "/tmp/predictfun-review-541aeca9/predictfun/research/run_keep_pull_scenarios.sh": "c69c403fca894722d0062d219a4bf40d49ba1f200ffa5a1bb8534bfcd046c85f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/known_clock_census_v3_20261118/census.json": "dd5cf5fae861e4f21d05733d3f396fbf7c222471c2f2c4ea17a49f4ca912a507",
+    "/home/yuqing/ctaNew/data/predict_fun/research/known_clock_census_v3_20261118/census.txt": "a62cfa44143e2091c4302dc4830caa97d762843af0593af0c4926ffd520a4096",
+    "/home/yuqing/ctaNew/data/predict_fun/research/known_clock_census_v3_20261118/legs.parquet": "af74cc3de7ddfb7ba792ab48ff8c4be324891ec495541a1fbdac69eb6c889ff0",
+    "/home/yuqing/ctaNew/data/predict_fun/research/known_clock_census_v3_20261118/orders.parquet": "983414cf139c3cc73248bd2f2ab172b62d5d9c8a567ac8fa42cf945a7ef6e383",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_known_v6_20261118/known.json": "8c3295cb75eed13ceccd8584fc041ae2e92c56dabe22d1edce5114ecc6ea86ea",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_known_v6_20261118/known.txt": "18dd5de0b243d74f6d2ec75c9ae846d5775f332dd8ae48e9faa873264b43d51c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_known_v6_20261118/known_case_rows.parquet": "3e6f10eb6dd4e84eaf7994097ecac8c97d74f5d91e65dadcf4a0d11185e41d96",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_known_v6_20261118/known_cases.parquet": "599d733bbdac84c657af85354ce0b3719e1a04706d6fd9a213e8674c04ec1cac",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_known_v6_20261118/known_orders.parquet": "28da34783b018b28eed8ec8063e904e6f2e9952605d1de0e8f1d22d05bf7518d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_known_v6_20261118/known_schema.json": "6972149d3288db4bc244b5539ca23a569e2fdaad8bf4ca9209bfa604c22aaa4d"
+  },
+  "synthetic_suites": "three pinned selftests passed",
+  "saved_reproduction": {
+    "census": true,
+    "known": true,
+    "census_asof": "2026-11-18T16:16:08.017348+00:00",
+    "known_asof": "2026-11-18T16:16:26.283013+00:00",
+    "legs": 99,
+    "orders": 86,
+    "candidate_rows": 131,
+    "census_readings": {
+      "N0 REPRODUCES-THE-CASE-AUDIT": "YES",
+      "N1 RECORDS-REPRODUCE": "99 of 99 legs",
+      "N2 BOOK-BOUND": "IDENTIFIED on 88 of 88 legs with a cancel confirmation",
+      "N3 CANCEL-ANSWER-ORDERS-FILLS": "NO: 63 orders acknowledged Canceled then filled in full",
+      "N4 TERMINAL-SNAPSHOT-UNDERSTATES-FILLS": "74 orders (62 with the snapshot received after the first fill notice)",
+      "N5 PF-EXEC-ALERTS": "73 orders named in a late-fill or quantity-conflict alert"
+    },
+    "per_domain": {
+      "S1": {
+        "legs": 99,
+        "false_cancel_first": {
+          "at_offset_0": 4,
+          "some_offset_per_domain": 5
+        },
+        "legs_with_a_book_lower_end": 77,
+        "of_them_book_bound_unidentified": 0
+      },
+      "S2": {
+        "legs": 99,
+        "false_cancel_first": {
+          "at_offset_0": 5,
+          "some_offset_per_domain": 5
+        },
+        "legs_with_a_book_lower_end": 79,
+        "of_them_book_bound_unidentified": 0
+      },
+      "S3": {
+        "legs": 99,
+        "false_cancel_first": {
+          "at_offset_0": 0,
+          "some_offset_per_domain": 0
+        },
+        "legs_with_a_book_lower_end": 44,
+        "of_them_book_bound_unidentified": 0
+      },
+      "ST": {
+        "legs": 99,
+        "false_cancel_first": {
+          "at_offset_0": 0,
+          "some_offset_per_domain": 0
+        },
+        "legs_with_a_book_lower_end": 0,
+        "of_them_book_bound_unidentified": 0
+      },
+      "EV": {
+        "legs": 99,
+        "false_cancel_first": {
+          "at_offset_0": 0,
+          "some_offset_per_domain": 0
+        },
+        "legs_with_a_book_lower_end": 0,
+        "of_them_book_bound_unidentified": 0
+      },
+      "M50": {
+        "legs": 99,
+        "false_cancel_first": {
+          "at_offset_0": 5,
+          "some_offset_per_domain": 15
+        },
+        "legs_with_a_book_lower_end": 87,
+        "of_them_book_bound_unidentified": 0
+      }
+    }
+  },
+  "cancel_semantics": {
+    "synthetic_notice_before_answer": "NO: 1 orders acknowledged Canceled then filled in full",
+    "synthetic_notice_after_answer": "NO: 1 orders acknowledged Canceled then filled in full",
+    "no_cancel_control": "NOT-CONTRADICTED",
+    "receipt_bound_contradictions": [
+      {
+        "leg": 20,
+        "premise": "NOT-ORDERED-BY-THE-ANSWER",
+        "bound": {
+          "name": "match <= cancel answer receipt (c_hi)",
+          "value": 1794124542214.3494,
+          "clock": "B",
+          "type": "EVIDENCE",
+          "premise": "the venue answered the cancel (CANCELED) after processing it, and the leg had matched by then"
+        }
+      },
+      {
+        "leg": 45,
+        "premise": "NOT-ORDERED-BY-THE-ANSWER",
+        "bound": {
+          "name": "match <= cancel answer receipt (c_hi)",
+          "value": 1794132021814.82,
+          "clock": "B",
+          "type": "EVIDENCE",
+          "premise": "the venue answered the cancel (CANCELED) after processing it, and the leg had matched by then"
+        }
+      },
+      {
+        "leg": 73,
+        "premise": "NOT-ORDERED-BY-THE-ANSWER",
+        "bound": {
+          "name": "match <= cancel answer receipt (c_hi)",
+          "value": 1794163251268.7527,
+          "clock": "B",
+          "type": "EVIDENCE",
+          "premise": "the venue answered the cancel (CANCELED) after processing it, and the leg had matched by then"
+        }
+      }
+    ],
+    "actual_canceled_full_orders": 63,
+    "actual_notice_before_first_answer": 0,
+    "actual_notice_after_first_answer": 63
+  },
+  "endpoint_tolerance": {
+    "clean_verdict": "CONTRADICTION-REMOVED-BY-INDEPENDENT-BOOK-CLOCK-BOUND",
+    "shift_ms": 5000.0,
+    "corrupted_reproduces": true,
+    "corrupted_verdict": "CONTRADICTION-REMOVED-BY-INDEPENDENT-BOOK-CLOCK-BOUND",
+    "larger_shift_control_refused": true,
+    "default_relative_tolerance_ms": 17941245.42004
+  },
+  "domain_split": {
+    "raw_book_lower": 90050.0,
+    "raw_status_lower": 90000.0,
+    "book_offset": 0.0,
+    "status_offset": -200.0,
+    "cancel_ack": 90100.0,
+    "expected_mapped_lower": 90200.0,
+    "current_false_avoidance_count": 0,
+    "retained_bounds_control_count": 1
+  },
+  "archived_raw_lifecycles": [
+    {
+      "leg": 20,
+      "records": 30,
+      "input_records": 4,
+      "A0": true,
+      "answer": "CANCELED",
+      "answer_ms": 1794124542214.3494,
+      "first_fill_notice_ms": 1794124542702.6802
+    },
+    {
+      "leg": 45,
+      "records": 30,
+      "input_records": 4,
+      "A0": true,
+      "answer": "CANCELED",
+      "answer_ms": 1794132021814.82,
+      "first_fill_notice_ms": 1794132022241.4492
+    },
+    {
+      "leg": 73,
+      "records": 30,
+      "input_records": 4,
+      "A0": true,
+      "answer": "CANCELED",
+      "answer_ms": 1794163251268.7527,
+      "first_fill_notice_ms": 1794163251592.6013
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "target": "541aeca9ad9cefddd6b6346146072ea05692e1ed",
+  "asof": "2026-11-18T16:42:16.268647+00:00",
+  "consumed_days": [
+    "20261108",
+    "20261023"
+  ],
+  "untouched_validation_read": false,
+  "full_tape_replayed": false,
+  "inputs": {
+    "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/research/step1/20261108/legs_timed2.parquet": "60e512c6f2307214fd718286082ff4b1d9f735bd220be44c6a7bac54747c230b",
+    "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/research/step1/20261108/legs_tk.parquet": "80d4c2c072d7fbd58213457062c72f53b69f1306cc0bb699ed8ff848ea189c95",
+    "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/research/step1/20261108/pend_inc.parquet": "6ecaac3aeb68ef50e7cbd5629ab0df19f97cefa985e0e006309da6479a415984"
+  },
+  "exact_three_cases": [
+    {
+      "leg": 20,
+      "endpoint_exact": true,
+      "identity_exact": true,
+      "clock_bound_above_critical": true
+    },
+    {
+      "leg": 45,
+      "endpoint_exact": true,
+      "identity_exact": true,
+      "clock_bound_above_critical": true
+    },
+    {
+      "leg": 73,
+      "endpoint_exact": true,
+      "identity_exact": true,
+      "clock_bound_above_critical": true
+    }
+  ],
+  "restored_REST_lower_bounds": {
+    "candidate_rows": 131,
+    "rows_with_changed_status_bound": 47,
+    "original": {
+      "S3": {
+        "legs": 99,
+        "false_cancel_first": {
+          "at_offset_0": 0,
+          "some_offset_per_domain": 0
+        },
+        "legs_with_a_book_lower_end": 44,
+        "of_them_book_bound_unidentified": 0
+      }
+    },
+    "restored": {
+      "S3": {
+        "legs": 99,
+        "false_cancel_first": {
+          "at_offset_0": 0,
+          "some_offset_per_domain": 0
+        },
+        "legs_with_a_book_lower_end": 44,
+        "of_them_book_bound_unidentified": 0
+      }
+    },
+    "scope": "fixed saved candidate set; no candidate search or upper-bound remapping"
+  },
+  "identity_tolerance": {
+    "shift_seconds": 1.0,
+    "A2": "SAME-SETTLEMENT",
+    "A5": "CONTRADICTION-REMOVED-BY-INDEPENDENT-BOOK-CLOCK-BOUND",
+    "large_wrong_second_refused": true
+  },
+  "evidence_tiers": {
+    "reproduced": true,
+    "rows": 67,
+    "cancel_first_evidence_backed": 0,
+    "inputs": {
+      "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_v5_20261118_20261023/ledger_fills.parquet": "44dac620dd8816462f5d13590d7d86d92d146eff47ce789d1cec880db0a32156",
+      "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_v5_20261118_20261023/ledger_fill_events.parquet": "b356e2d0d229d125edf77ac62743be109f5dd0dcf61b434b07b741069115dbd2",
+      "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_v5_20261118_20261023/ledger_events.parquet": "ec23ec9a9b87792a46c7631f138140edb39a4c6463107e6ae57c217cee3c6bb2",
+      "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_v5_20261118_20261023/ledger_legs.parquet": "1d0bc32b079b5a76cda53ec545143571e1cb74c0ad7da0bf0c5c68fc4beb5d16"
+    }
+  }
+}
