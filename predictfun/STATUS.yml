@@ -1,3 +1,19 @@
+keep_pull_timing_audit_20261118:
+  status: done_sign_not_identified
+  asof: "2026-11-18 04:21Z"
+  session: aea5bfb9
+  user: "Check new review and proceed next priority"
+  review: {commit: f0d75fc1, report: predictfun/reviews/automatic/20261118_1a1abbaa/report.md}
+  script: predictfun/research/pf_keep_pull_timing_audit.py
+  linked: {fills: 86904, legs: 446622, unlinked: 0, by_evidence: {WS: 49315, E2: 20551, imputed: 249, mixed: 16789}}
+  readings: {T0: "YES", T1: SIGN-NOT-IDENTIFIED, T2: SIGN-NOT-IDENTIFIED}
+  removed_order_c: {replay: {removed: 1169671, kept: 182779}, S1: {after: 684314, before: 32996, ambiguous: 635139}, S2: {after: 503138, before: 5456, ambiguous: 843856}}
+  E_bounds_c: {replay: 234279, S1: [-426829, 613334], S2: [-638264, 813718]}
+  missing_evidence: "the venue match instant per fill (order-level timing from live, C10)"
+  receipts: predictfun/reviews/keep_pull_timing_audit_20261118
+  running: false
+  next: "USER: live order-level fill timing for the neutral orders, or entry / exposure"
+
 manual_review_20261118_1a1abbaa:
   status: complete_paired_audit_verified_fill_clock_identification_open
   asof: "2026-11-18T04:03:01.454329+00:00"
