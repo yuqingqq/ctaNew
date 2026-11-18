@@ -41,6 +41,10 @@ delay is retained only as a conditional diagnostic. No sample-derived maximum is
 default (creation after match and aligned clocks are still premises); an explicit finite lag is a labelled sensitivity assumption.
 K5S and notice bounds use the full admissible known-lifecycle intervals. An upper-only ST gate is UNIDENTIFIED, not evidence of acceptance.
 Earlier v4/v3 receipts remain provenance and must not be read as corrected timing evidence.
+K6 BASIS (known v5; check of 9a114cc1): K6's declared gate stays at K7's offsets (its own premises). The K8 shared clock is narrower -
+the first notice carrying each UUID and the placements bound it - but holds only if the UUID clock is the windows' clock (REST status /
+WS book); its gate is a separate, conditional reading (_clk), like the zero-lag settlement offsets (_set). v4's "K6 GATE S3: PASS" was
+read at the K8 clock under the K7 key; at K7's offsets S3 calls 3 known fills avoided (FAIL), as in v3.
 
 WHAT CHANGES FROM v1 (the review / addendum item each answers)
  1 Population (P2-1, item 4): v1 split ALL fills of the score's pulled orders and called it removed value. Now a cross-tab: replay ordering
@@ -165,7 +169,7 @@ import pf_settlement_times as SETT                        # noqa: E402  the sett
 
 C, pd, I = KP.C, KP.pd, KP.I
 OUT = Path(I.K.IO) / 'keep_pull_exec_windows_v5_20261118'  # v5: event-specific creation lag; earlier receipts stay as provenance
-OUT_K = Path(I.K.IO) / 'keep_pull_exec_windows_known_v4_20261118'
+OUT_K = Path(I.K.IO) / 'keep_pull_exec_windows_known_v5_20261118'   # v5: K6's declared gate back at K7's offsets; v4 stays as provenance
 SETTLEMENT_MODEL = 'shared_clock_event_specific_nonnegative_lag_v2'
 FC = Path(I.K.IO) / 'fill_clock_20261109'                 # the 11-09 fill-clock audit (own legs, lifecycles, status stamps)
 LIVE = Path('/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/live_vs_replay')
@@ -949,7 +953,8 @@ CASE_SCHEMA = {
                          act_hi_set='activation - place, upper bound with the settlement times (<= its first match), ms', act_status_set='against the declared activation range',
                          cancel_lo_set='cancel effect - request, lower bound with the settlement times (after its latest match), ms', cancel_status_set='against the declared cancel range')}
 CASE_PREFIX = {'known_cases': {**{f'{k}_': f'{k}: the leg\'s verdict (VERD) at offset 0 and at every admissible offset, its cause (CAUSES), false CANCEL_FIRST at offset 0 / '
-                                            'at some admissible offset' for k in KSC},
+                                            'at some admissible offset (no suffix: K7\'s offsets, the declared gate; _clk: the K8 shared clock, conditional on the UUID clock '
+                                            'being the windows\' clock; _set: the zero-lag settlement premise)' for k in KSC},
                                'K4_': 'K4 (v1\'s proxy: the engine anchor Z +- 250 / 600 ms): missed / CANCEL_FIRST per width; Z - place and Z - upper, ms (venue vs bot clock at '
                                       'offset 0; NaN: no anchor)',
                                'K8_': 'K8 under event-specific nonnegative creation lag: match_lo/hi_bot from lifecycle plus shared clock bounds; creation_lag_lo/hi for this identified leg only, ms (not transferable)'},
@@ -1236,29 +1241,38 @@ def known_checks(K, ref, KE=None, draws=200, seed=20261118):
         hi_ = np.minimum(tl, KE.EV_hi.values.astype(float))
         KE = KE.assign(ST_lo=-np.inf, ST_hi=hi_, ST_st=0, own_ST_lo=-np.inf, own_ST_hi=hi_)
     scen_ = tuple(k for k in KSC if k != 'ST' or st_ok)
-    off_eval = k8['clock_offset'] if k8 is not None and k8['consistent'] else off
-    k6, cols = window_checks(K, KE, off_eval, scen_) if KE is not None else (None, {})
+    # The declared gate stays at K7's offsets (its own premises). K8's shared clock is narrower (the first notice carrying each UUID, the
+    # placements) but holds only if the UUID clock is the windows' clock (REST status / WS book): a separate, conditional reading.
+    clk = k8['clock_offset'] if k8 is not None and k8['consistent'] else dict(exists=False)
+    k6, cols = window_checks(K, KE, off, scen_) if KE is not None else (None, {})
+    k6c, cols_c = window_checks(K, KE, clk, scen_, tag='_clk') if KE is not None and clk['exists'] else (None, {})
     k6s, cols_s = window_checks(K, KE, off8, scen_, tag='_set') if KE is not None and off8['exists'] else (None, {})
     if k6 is not None:
         for k in GATE:
             read[f'K6 GATE {k}'] = ('PASS' if k6[k]['false_cancel_first']['some_offset'] == 0 else 'FAIL') if k in k6 else 'NOT-RUN'
+            if k6c is not None:
+                read[f'K6 GATE {k} (K8 shared clock)'] = ('PASS' if k6c[k]['false_cancel_first']['some_offset'] == 0 else 'FAIL') if k in k6c else 'NOT-RUN'
             if k6s is not None:
                 read[f'K6 GATE {k} (settlement offsets)'] = ('PASS' if k6s[k]['false_cancel_first']['some_offset'] == 0 else 'FAIL') if k in k6s else 'NOT-RUN'
         if st_ok:
             read['K6 GATE ST'] = 'UNIDENTIFIED-UPPER-BOUND-ONLY'
+            if k6c is not None:
+                read['K6 GATE ST (K8 shared clock)'] = 'UNIDENTIFIED-UPPER-BOUND-ONLY'
             if k6s is not None:
                 read['K6 GATE ST (settlement offsets)'] = 'UNIDENTIFIED-UPPER-BOUND-ONLY'
         m = k6['M50']; read['K6 REPLAY POINT M50'] = ('CONSISTENT' if m['false_cancel_first']['at_offset_0'] == 0 and m['verdict_at_offset_0']['missed_before']
                                                       + m['verdict_at_offset_0']['missed_after'] == 0 else 'CONTRADICTED')
     inst = all(read[x] == 'YES' for x in ('K0 REPRODUCES 11-09', 'K1 CLASSIFIER-CONSISTENCY', 'K2 DELAYED-STATUS-REFUSED', 'K3 IDENTITY-CHECK-FIRES'))
     gate = ', '.join(f"{k} {read[f'K6 GATE {k}']}" for k in GATE) if k6 is not None else 'NOT-RUN'
+    gate_c = ', '.join(f"{k} {read[f'K6 GATE {k} (K8 shared clock)']}" for k in GATE) if k6c is not None else 'NOT-RUN'
     gate_s = ', '.join(f"{k} {read[f'K6 GATE {k} (settlement offsets)']}" for k in GATE) if k6s is not None else 'NOT-RUN'
     read['KNOWN VERDICT'] = (('INSTRUMENT-CHECKS-PASS' if inst else 'INSTRUMENT-CHECK-FAILED') + '; REPLAY-ANCHOR-' + read['K4 REPLAY-ANCHOR-VS-LIFECYCLE']
-                             + '; SETTLEMENT-TIME ' + read.get('K8 SETTLEMENT TIME', 'NOT-RUN') + '; LEDGER-WINDOW GATE ' + gate + ' (settlement offsets: ' + gate_s + ')'
+                             + '; SETTLEMENT-TIME ' + read.get('K8 SETTLEMENT TIME', 'NOT-RUN') + '; LEDGER-WINDOW GATE ' + gate + ' (K7 offsets; conditional - K8 shared clock: ' + gate_c
+                             + '; settlement offsets: ' + gate_s + ')'
                              + '; ORDER-PATH RANGES ' + read['K5 ORDER-PATH INTERVALS vs DECLARED RANGES'] + '; NOT A VENUE-ENGINE ACCEPTANCE')
     k8c = dict(K8_match_lo_bot=mlo, K8_match_hi_bot=mhi, K8_creation_lag_lo=k8['known_leg_lag_ms']['lo'], K8_creation_lag_hi=k8['known_leg_lag_ms']['hi']) if mlo is not None else {}
     R = dict(legs=len(K), orders=int(K.drop_duplicates(['run', 'cid']).shape[0]), cancelled=int(can.sum()), K0=k0, K0_ref=ref, K1=k1, K2=k2, K3=k3, K4=k4, K5=k5, K6=k6,
-             K6_settlement_offsets=k6s, K7=off, K8=k8, _orders=PO, _legs=dict(k4c, **cols, **cols_s, **k8c), _KE=KE)
+             K6_settlement_offsets=k6s, K6_shared_clock=k6c, K7=off, K8=k8, _orders=PO, _legs=dict(k4c, **cols, **cols_c, **cols_s, **k8c), _KE=KE)
     if KE is not None:
         R['linkage'] = dict(candidate_rows=int(len(KE)), legs_with_several=int((np.bincount(KE.i.values, minlength=len(K)) > 1).sum()),
                             anchor_rule_reproduced=int(KE.anchor_rule_ok.sum()), origin={str(x): int(y) for x, y in KE.origin.value_counts().items()},
@@ -1268,7 +1282,7 @@ def known_checks(K, ref, KE=None, draws=200, seed=20261118):
 
 
 def known_report(R, read, KC=None):
-    L = ['KNOWN-ORDER CASE LEDGER v4 (pf_keep_pull_exec_windows.py known; the 11-09 fill-clock audit\'s confirmed own maker legs, consumed Nov 8; review of 1fd77004 + settlement times)',
+    L = ['KNOWN-ORDER CASE LEDGER v5 (pf_keep_pull_exec_windows.py known; the 11-09 fill-clock audit\'s confirmed own maker legs, consumed Nov 8; review of 1fd77004 + settlement times)',
          f"  {R['legs']} legs of {R['orders']} orders: {R['K4']['S1']['anchored']} with an engine anchor, {R['K4']['S1']['no_anchor']} without (ambiguous leg clocks); "
          f"{R['cancelled']} legs on orders with a cancel confirmation. Bot clock: lifecycle, cancel request / confirmation, notice receipts; venue clocks: REST / Matched / "
          'Confirmed stamps, WS / E2 times and the windows',
@@ -1303,6 +1317,9 @@ def known_report(R, read, KC=None):
         for k, v in R['K6'].items():
             L.append(f"  K6 {k}: at offset 0 {v['verdict_at_offset_0']}; at every admissible offset {v['verdict_every_offset']}; known fills called CANCEL_FIRST {v['false_cancel_first']}; "
                      f"causes {v['causes']}")
+        for k, v in (R.get('K6_shared_clock') or {}).items():
+            L.append(f"  K6 {k} at the K8 shared-clock offsets (conditional: the UUID clock is the windows' clock): every admissible offset {v['verdict_every_offset']}; "
+                     f"known fills called CANCEL_FIRST {v['false_cancel_first']}")
         for k, v in (R.get('K6_settlement_offsets') or {}).items():
             L.append(f"  K6 {k} at the settlement-premise offsets: every admissible offset {v['verdict_every_offset']}; known fills called CANCEL_FIRST {v['false_cancel_first']}")
     if KC is not None and 'K4_S1_missed' in KC:
@@ -1315,7 +1332,7 @@ def known_report(R, read, KC=None):
     L += ['', 'READINGS (declared before the data was read)'] + [f'  {k}: {v}' for k, v in read.items()] + [
           '', 'LIMITS: one consumed partial day; filled orders only (an outcome-selected sample); the premises of K5 (activation before the Accepted answer; the cancel '
           'effect before its confirmation) and of K7 (notices after their status; floor-second stamps) are stated, not proven; book-to-status clock alignment not '
-          'established; UUID creation after matching and a shared UUID/status clock are premises; upper-only ST cannot certify match-vs-cancel ordering; development evidence - Nov 8 is not untouched validation.']
+          'established; UUID creation after matching and a shared UUID/status clock are premises; K6\'s declared gate is at K7\'s offsets, its K8 shared-clock and settlement-offset readings hold only under those premises; upper-only ST cannot certify match-vs-cancel ordering; development evidence - Nov 8 is not untouched validation.']
     return L
 
 
@@ -1573,6 +1590,19 @@ def _k6_selftest():
             and np.allclose(Rt['_legs']['K8_match_hi_bot'] - B_, [200., 10250., 10260., 20250., 31100., 40100.])
             and np.array_equal(Rt['_legs']['K8_match_lo_bot'], Kt.place.values)):
         bad.append(f"K8 on planted settlement times: {k8} {k5.get('cancel_with_settlement')} {rt}")
+    # K6 basis (check of 9a114cc1): leg 0's first notice 20 ms after its UUID lifts the K8 shared clock's lower end above K7's (-20 vs -100 ms);
+    # leg 3's S3 window starts 30 ms before its cancel confirmation - called avoided only below -30 ms. The declared gate (K7) must FAIL on it,
+    # the K8 shared-clock and settlement-offset readings (conditional) PASS, each under its own key.
+    Kc = Kt.assign(notice=Kt.notice.values - np.r_[180., np.zeros(5)], upper=Kt.upper.values - np.r_[180., np.zeros(5)])
+    KEc = KE.copy(); KEc.loc[4, ['S3_lo', 'own_S3_lo']] = B_ + 20230.
+    Rc, rc = known_checks(Kc, ref_t, KEc, draws=10)
+    if not (rc.get('K6 GATE S3') == 'FAIL' and rc.get('K6 GATE S3 (K8 shared clock)') == 'PASS' and rc.get('K6 GATE S3 (settlement offsets)') == 'PASS'
+            and Rc['K7']['lo'] == -100. and Rc['K8']['clock_offset']['lo'] == -20. and Rc['K6']['S3']['false_cancel_first']['some_offset'] == 1
+            and Rc['K6_shared_clock']['S3']['false_cancel_first']['some_offset'] == 0 and rc.get('K6 GATE ST (K8 shared clock)') == 'UNIDENTIFIED-UPPER-BOUND-ONLY'
+            and 'LEDGER-WINDOW GATE S1 FAIL, S2 FAIL, S3 FAIL, ST UNIDENTIFIED-UPPER-BOUND-ONLY, EV PASS (K7 offsets; conditional - K8 shared clock: S1 FAIL, S2 FAIL, S3 PASS'
+            in rc['KNOWN VERDICT'] and list(Rc['_legs']['S3_false_cf_some_offset']) == [False, False, False, True, False, False]
+            and not any(Rc['_legs']['S3_false_cf_some_offset_clk'])):
+        bad.append(f"K6 basis (the declared K7 gate vs the conditional K8 shared clock): {rc}")
     for nm_, kt in (('creation after its containing notice at every admissible clock', Kt.assign(t_set=ts_ + np.r_[5000., np.zeros(5)])),
                     ('creation before placement at every admissible clock', Kt.assign(t_set=ts_ - np.r_[5000., np.zeros(5)]))):
         if known_checks(kt, ref_t, KE, draws=10)[1].get('K8 SETTLEMENT TIME') != 'CONTRADICTED':
@@ -1764,8 +1794,8 @@ def selftest(rehearse=True):
     Rk, rk = known_checks(Kk, ref, draws=50)
     inst_ = ('K0 REPRODUCES 11-09', 'K1 CLASSIFIER-CONSISTENCY', 'K2 DELAYED-STATUS-REFUSED', 'K3 IDENTITY-CHECK-FIRES')
     if not (all(rk[x] == 'YES' for x in inst_) and rk['K4 REPLAY-ANCHOR-VS-LIFECYCLE'] == 'CONTRADICTED'
-            and rk['KNOWN VERDICT'] == ('INSTRUMENT-CHECKS-PASS; REPLAY-ANCHOR-CONTRADICTED; SETTLEMENT-TIME NOT-RUN; LEDGER-WINDOW GATE NOT-RUN (settlement offsets: '
-                                        'NOT-RUN); ORDER-PATH RANGES NOT-CONTRADICTED; NOT A VENUE-ENGINE ACCEPTANCE')
+            and rk['KNOWN VERDICT'] == ('INSTRUMENT-CHECKS-PASS; REPLAY-ANCHOR-CONTRADICTED; SETTLEMENT-TIME NOT-RUN; LEDGER-WINDOW GATE NOT-RUN (K7 offsets; conditional - '
+                                        'K8 shared clock: NOT-RUN; settlement offsets: NOT-RUN); ORDER-PATH RANGES NOT-CONTRADICTED; NOT A VENUE-ENGINE ACCEPTANCE')
             and Rk['K1']['MATCH_FIRST'] == 1 and Rk['K1']['AMBIGUOUS'] == 6 and Rk['K1']['CANCEL_FIRST'] == 0 and Rk['K2']['point_contradictions'] == 1
             and Rk['K4']['S1']['missed'] == 2 and Rk['K4']['S1']['cancel_first'] == 1 and not Rk['K4']['S1']['constant_offset']['a']['exists'] and Rk['K4']['S1']['anchored'] == 8):
         bad.append(f'known checks on planted cases: {rk} {Rk}')
@@ -1848,6 +1878,22 @@ def selftest(rehearse=True):
                     bad.append(f"rehearsal S3 / causes: {sorted(R['V3'])} {s3d} {R['disagreement']}")
             except (SystemExit, ValueError) as e:
                 bad.append(f'rehearsal refused: {e}')
+            # check of 9a114cc1: the PRODUCTION default - no lag passed, the corrected known receipt read, ST upper-only - rehearsed end to end
+            global OUT_K
+            kk = Path(tmp) / 'k5'; kk.mkdir(); (kk / 'known.json').write_text(json.dumps(dict(R=dict(K8=dict(model=SETTLEMENT_MODEL, consistent=True, lag_bound_ms=None)))))
+            old_k = OUT_K; OUT_K = kk
+            try:
+                Ru, ru = run(out=Path(tmp) / 'u', **dict(base, st_lag=None))
+                LGu = pd.read_parquet(Path(tmp) / 'u' / 'ledger_legs.parquet'); EVu = pd.read_parquet(Path(tmp) / 'u' / 'ledger_events.parquet'); mu = np.isfinite(LGu.t_set_ms.values)
+                if not (ru['V0 CONTROLS'] == 'YES' and Ru['st_lag_ms'] is None and Ru['st_lag_role'] == 'UNIDENTIFIED' and mu.any() and (~mu).any()
+                        and np.isneginf(LGu.ST_llo.values[mu]).all() and np.array_equal(LGu.ST_llo.values[~mu], LGu.S3_llo.values[~mu])
+                        and (EVu.ST_lo_type == 'unknown').any() and f'ST|{KP.CANCEL:g}' in Ru['bounds'] and 'V1 SIGN ST' in ru
+                        and Ru['V3']['ST']['fills']['all'] == 0 and causes_reconcile(Ru['V3'])):
+                    bad.append(f"upper-only production rehearsal: lag {Ru['st_lag_ms']} role {Ru['st_lag_role']} mapped legs {int(mu.sum())} of {len(mu)}")
+            except (SystemExit, ValueError) as e:
+                bad.append(f'upper-only production rehearsal refused: {e}')
+            finally:
+                OUT_K = old_k
             # review of c23e6f29: every candidate window contradicted and every replay time after its cap - ALL fills count, multi-event ones too
             Lc = Ls.copy(); Lc['how'] = 1; Lc['t_ms'] = Lc.anc; Lc['t_e2'] = np.nan; Lc['exec_s'] = np.floor(Lc.anc / 1000.) - 10.
             Lc_rows = Lc[RAW_COLS + ['tk', 'tk_status']].reset_index(drop=True); v1c, ec_, sc_, _ = _v1_expect(O, Fl, Lc)

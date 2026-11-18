@@ -1,0 +1,41 @@
+K8 fields identical to known v4: status, consistent, clock_offset, offset_settlement_premise, lag_bound_ms, universal_lag_status, notice_delay_ms
+READINGS v4 -> corrected (K6 declared at K7's offsets; K8 shared clock and settlement offsets as separate conditional readings):
+          K0 REPRODUCES 11-09: YES
+          K1 CLASSIFIER-CONSISTENCY: YES
+          K2 DELAYED-STATUS-REFUSED: YES
+          K3 IDENTITY-CHECK-FIRES: YES
+          K4 REPLAY-ANCHOR-VS-LIFECYCLE: CONTRADICTED
+          K7 CLOCK OFFSET (venue status - bot): [-226.4, +49.3] ms, CONTAINS 0
+          K5 ORDER-PATH INTERVALS vs DECLARED RANGES: CONTRADICTED
+          K8 SETTLEMENT TIME: COMPATIBLE
+          K8 CLOCK OFFSET (settlement premise: the id stamped at the match): CONDITIONAL {'lo': 14.474853515625, 'hi': 32.641357421875, 'exists': True, 'includes_zero': False, 'premise': 'CONDITIONAL: zero UUID creation lag on every leg'}
+          K8 UNIVERSAL CREATION-LAG BOUND: UNIDENTIFIED
+          K8 FILL-NOTICE DELAY vs the replay 100 ms: CONTRADICTED on 87 of 99 fills
+          K5S ORDER PATH WITH SETTLEMENT TIMES: CONTRADICTED
+          K6 GATE S1: FAIL
+          K6 GATE S1 (settlement offsets): FAIL
+          K6 GATE S2: FAIL
+          K6 GATE S2 (settlement offsets): FAIL
+  CHANGED K6 GATE S3: PASS  ->  FAIL
+          K6 GATE S3 (settlement offsets): PASS
+          K6 GATE ST: UNIDENTIFIED-UPPER-BOUND-ONLY
+          K6 GATE ST (settlement offsets): UNIDENTIFIED-UPPER-BOUND-ONLY
+          K6 GATE EV: PASS
+          K6 GATE EV (settlement offsets): PASS
+          K6 REPLAY POINT M50: CONTRADICTED
+  CHANGED KNOWN VERDICT: INSTRUMENT-CHECKS-PASS; REPLAY-ANCHOR-CONTRADICTED; SETTLEMENT-TIME COMPATIBLE; LEDGER-WINDOW GATE S1 FAIL, S2 FAIL, S3 PASS, ST UNIDENTIFIED-UPPER-BOUND-ONLY, EV PASS (settlement offsets: S1 FAIL, S2 FAIL, S3 PASS, ST UNIDENTIFIED-UPPER-BOUND-ONLY, EV PASS); ORDER-PATH RANGES CONTRADICTED; NOT A VENUE-ENGINE ACCEPTANCE  ->  INSTRUMENT-CHECKS-PASS; REPLAY-ANCHOR-CONTRADICTED; SETTLEMENT-TIME COMPATIBLE; LEDGER-WINDOW GATE S1 FAIL, S2 FAIL, S3 FAIL, ST UNIDENTIFIED-UPPER-BOUND-ONLY, EV PASS (K7 offsets; conditional - K8 shared clock: S1 FAIL, S2 FAIL, S3 PASS, ST UNIDENTIFIED-UPPER-BOUND-ONLY, EV PASS; settlement offsets: S1 FAIL, S2 FAIL, S3 PASS, ST UNIDENTIFIED-UPPER-BOUND-ONLY, EV PASS); ORDER-PATH RANGES CONTRADICTED; NOT A VENUE-ENGINE ACCEPTANCE
+  CHANGED K6 GATE S1 (K8 shared clock): (absent)  ->  FAIL
+  CHANGED K6 GATE S2 (K8 shared clock): (absent)  ->  FAIL
+  CHANGED K6 GATE S3 (K8 shared clock): (absent)  ->  PASS
+  CHANGED K6 GATE ST (K8 shared clock): (absent)  ->  UNIDENTIFIED-UPPER-BOUND-ONLY
+  CHANGED K6 GATE EV (K8 shared clock): (absent)  ->  PASS
+  known fills called CANCEL_FIRST at some offset, K7 (declared) [-226.4, +49.3] ms: {'S1': 9, 'S2': 5, 'S3': 3, 'EV': 0, 'M50': 65}
+  known fills called CANCEL_FIRST at some offset, K8 shared clock (conditional) [-147.8, +32.6] ms: {'S1': 5, 'S2': 5, 'S3': 0, 'EV': 0, 'M50': 55}
+  known fills called CANCEL_FIRST at some offset, K7 lo .. K8 lo only [-226.4, -147.8] ms: {'S1': 9, 'S2': 5, 'S3': 3, 'EV': 0, 'M50': 65}
+  known fills called CANCEL_FIRST at some offset, zero-lag settlement (conditional) [+14.5, +32.6] ms: {'S1': 4, 'S2': 5, 'S3': 0, 'EV': 0, 'M50': 5}
+  S3 leg 20 (run v6, cid 1794108465179877): called avoided when the lowest offset < -210.3 ms; S3 code ['rest_range_e2_unsupported']
+  S3 leg 45 (run v6, cid 1794108465184298): called avoided when the lowest offset < -224.8 ms; S3 code ['rest_range_e2_unsupported']
+  S3 leg 73 (run basis, cid 1794147344744648): called avoided when the lowest offset < -218.8 ms; S3 code ['rest_range_e2_unsupported']
+  K8 shared-clock lower end = max(t_set - first notice) = -147.8 ms (next -148.0): it binds above K7's -226.4 ms only if the UUID clock is the clock of the S3 windows (REST status seconds for these legs)
+  K8 per-leg creation lag: lower bound > 0 on 0 of 99 legs; upper bounds min 180.5 / median 318.2 / max 5895.3 ms
+PREDICATES: {"s3_fails_at_k7": true, "s3_passes_at_k8_clock": true, "flip_from_lower_end_only": true, "k6_gate_s3_reading": "FAIL", "k6_gate_s3_k8_clock_reading": "PASS", "s3_legs": 3}

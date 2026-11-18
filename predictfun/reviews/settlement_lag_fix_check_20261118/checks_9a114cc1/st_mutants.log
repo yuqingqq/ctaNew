@@ -1,0 +1,13 @@
+ 0 none (must pass): rc 0 -> passed
+ 1 the UUID time from 44 bits: rc 1 -> SETTLEMENT SELFTEST FAILED: the UUIDv7 time | times: [112050000025.0, 112050000025.0, nan, nan, nan, nan, 112050000631.0, 112050000631.0] | accepted ids later than their REST second | a refused run wr
+ 2 the version nibble not checked: rc 1 -> SETTLEMENT SELFTEST FAILED: the UUIDv7 time | statuses: [0, 0, 2, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 3 the latest receipt kept, not the first: rc 1 -> SETTLEMENT SELFTEST FAILED: page legs: 66 {'h0': 36} 0
+ 4 equal-content legs with different ids not marked: rc 1 -> SETTLEMENT SELFTEST FAILED: statuses: [0, 0, 2, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 5 a count mismatch not marked: rc 1 -> SETTLEMENT SELFTEST FAILED: statuses: [0, 0, 0, 3, 3, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 6 C1 threshold ignored: rc 1 -> SETTLEMENT SELFTEST FAILED: accepted two settlement ids in one taker order | a refused run wrote output (two settlement ids in one taker order)
+ 7 C1 shuffled control ignored: rc 1 -> SETTLEMENT SELFTEST FAILED: accepted one id on every leg | a refused run wrote output (one id on every leg)
+ 8 C3 ignored: rc 1 -> SETTLEMENT SELFTEST FAILED: accepted ids later than their REST second | a refused run wrote output (ids later than their REST second)
+ 9 the shuffle not applied: rc 1 -> SETTLEMENT SELFTEST FAILED: one settlement per taker order: 0.0 / shuffled 0.0 / 62 | rehearsal refused: SETTLEMENT TIMES FAILED -> no output: {'C1': False, 'C2': True, 'C3': True, 'C4': True} {"statu
+10 a refused day still writes: rc 1 -> SETTLEMENT SELFTEST FAILED: accepted ids later than their REST second | a refused run wrote output (ids later than their REST second) | accepted one id on every leg | a refused run wrote output (one i
+settlement mutation check passed: the unchanged copy passes its selftest, 10 / 10 planted code errors fail it
+2026-11-18T11:53:28Z tag=v9a_st_mutants rc=0 peak_rss_mib=204 wall_s=10.94 cpu_user_s=9.01 memavail_start_gib=23 disk_free_gib=442->442 slot=claude

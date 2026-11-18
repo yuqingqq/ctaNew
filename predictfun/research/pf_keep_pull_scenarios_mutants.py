@@ -55,6 +55,9 @@ MUT = [
     ('the mixture ignored in the outcome', "lf = np.where(slow_order(E.oid.values[ri], sc['X'][0]), sc['X'][1], sc['L']) if sc.get('X') else np.full(len(ri), float(sc['L']))",
      "lf = np.full(len(ri), float(sc['L']))"),
     ('every order slow', "    return ((np.asarray(oid, np.int64) * 2654435761) % 2 ** 32) / 2. ** 32 < share", "    return np.ones(np.shape(oid), bool) | (share < 0)"),
+    # --- check of 9a114cc1: the production (upper-only) default path
+    ('the production day ignores the corrected known receipt', "        st_lag, lag_in = X.known_lag()", "        st_lag, lag_in = 259.034, {}"),
+    ('an upper-only ST window replayed as STlo', "del tau['STlo'], hl['STlo']", "pass"),
 ]
 STALE = 97                                                # exit code of a replacement target that does not occur as declared
 
