@@ -1,0 +1,17 @@
+ 0 none (must pass): rc 0 -> passed
+ 1 bound ignores the one-bot-clock check: rc 1 -> caught: - bound status (False, 0.1) n 40: IDENTIFIED [] / - leg_row: a second bot clock must leave the bound unidentified: IDENTIFIED
+ 2 bound ignores a stepped bot clock: rc 1 -> caught: - bound status (True, 5.0) n 40: IDENTIFIED []
+ 3 bound ignores the pair count: rc 1 -> caught: - bound status (True, 0.1) n 19: IDENTIFIED []
+ 4 the local window centred on the first notice: rc 1 -> caught: - leg_row: the window centres on the cancel confirmation, and only alerts naming the order count: 0 []
+ 5 alerts of other orders counted: rc 1 -> caught: - leg_row: the window centres on the cancel confirmation, and only alerts naming the order count: 31 ["late_fill_beyond_cancel_bound:0xdeadbeef: another order"]
+ 6 every order read as filled in full: rc 1 -> caught: - order census ('v6', 2): {'legs': 1, 'cls': 'CANCELED', 'acknowledged': True, 'size': 5.0, 'filled': 2.0, 'full': True, 'snapshots': 1, 'understating': 0, 'und
+ 7 every snapshot read as understating: rc 1 -> caught: - order census ('v6', 2): {'legs': 1, 'cls': 'CANCELED', 'acknowledged': True, 'size': 5.0, 'filled': 2.0, 'full': False, 'snapshots': 1, 'understating': 1, 'un
+ 8 understating snapshots all read as after the notice: rc 1 -> caught: - order census ('basis', 4): {'legs': 1, 'cls': 'NO-ANSWER', 'acknowledged': True, 'size': 5.0, 'filled': 5.0, 'full': True, 'snapshots': 1, 'understating': 1, 
+ 9 the first notice taken as the latest leg's: rc 1 -> caught: - order census ('v6', 1): {'legs': 2, 'cls': 'CANCELED', 'acknowledged': True, 'size': 5.0, 'filled': 5.0, 'full': True, 'snapshots': 1, 'understating': 1, 'und
+10 any alert read as a late-fill alert: rc 1 -> caught: - order census ('v6', 3): {'legs': 1, 'cls': 'MATCHED-OR-GONE', 'acknowledged': False, 'size': 5.0, 'filled': 5.0, 'full': True, 'snapshots': 0, 'understating':
+11 a partial fill after Canceled counted as a race: rc 1 -> caught: - readings: a partial fill after Canceled is not a race / a different B must not reproduce: {'N0 REPRODUCES-THE-CASE-AUDIT': 'NO', 'N1 RECORDS-REPRODUCE': '2 of
+12 the case-audit reproduction never checked: rc 1 -> caught: - readings: a partial fill after Canceled is not a race / a different B must not reproduce: {'N0 REPRODUCES-THE-CASE-AUDIT': 'YES', 'N1 RECORDS-REPRODUCE': '2 o
+13 every order read as acknowledged (v2 descriptive): rc 1 -> caught: - order census: the acknowledgement flag
+14 legs without a cancel confirmation counted in N2: rc 1 -> caught: - readings on planted counts: {'N0 REPRODUCES-THE-CASE-AUDIT': 'YES', 'N1 RECORDS-REPRODUCE': '2 of 3 legs', 'N2 BOOK-BOUND': 'IDENTIFIED on 1 of 3 legs with a 
+known clock census mutation check passed: the unchanged copy passes its selftest, 14 / 14 planted code errors are caught by a check
+2026-11-18T16:14:23Z tag=kcc_mutants rc=0 peak_rss_mib=215 wall_s=14.18 cpu_user_s=11.70 memavail_start_gib=23 disk_free_gib=438->438 slot=claude

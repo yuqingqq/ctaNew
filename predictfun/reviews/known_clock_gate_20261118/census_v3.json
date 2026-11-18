@@ -1,0 +1,104 @@
+{
+  "asof": "2026-11-18T16:16:08.017348+00:00",
+  "readings": {
+    "N0 REPRODUCES-THE-CASE-AUDIT": "YES",
+    "N1 RECORDS-REPRODUCE": "99 of 99 legs",
+    "N2 BOOK-BOUND": "IDENTIFIED on 88 of 88 legs with a cancel confirmation",
+    "N3 CANCEL-ANSWER-ORDERS-FILLS": "NO: 63 orders acknowledged Canceled then filled in full",
+    "N4 TERMINAL-SNAPSHOT-UNDERSTATES-FILLS": "74 orders (62 with the snapshot received after the first fill notice)",
+    "N5 PF-EXEC-ALERTS": "73 orders named in a late-fill or quantity-conflict alert"
+  },
+  "R": {
+    "N1_failed": [],
+    "N2_B_ms": {
+      "min": -65.12255859375,
+      "p50": -55.26806640625,
+      "max": -44.741943359375
+    },
+    "N2_unidentified": [],
+    "N3_class_x_fill": {
+      "MATCHED-OR-GONE|full": 1,
+      "MATCHED-OR-GONE|partial": 0,
+      "CANCELED|full": 63,
+      "CANCELED|partial": 6,
+      "NO-EFFECT|full": 14,
+      "NO-EFFECT|partial": 1,
+      "NO-ANSWER|full": 1,
+      "NO-ANSWER|partial": 0
+    },
+    "N3b_any_acknowledgement_x_fill": {
+      "acknowledged|full": 71,
+      "acknowledged|partial": 6,
+      "never acknowledged|full": 8,
+      "never acknowledged|partial": 1
+    },
+    "N5_alerts": {
+      "cancel_quantity_conflict": 61,
+      "late_fill_beyond_cancel_bound": 12
+    }
+  },
+  "readers": {
+    "kernel_basis": {
+      "steps": 462823,
+      "stopped_at_cutoff": true,
+      "last_at_ms": 1794178919910.5066
+    },
+    "inputs_basis": {
+      "lines": 13077281,
+      "stopped_at_cutoff": true
+    },
+    "kernel_v6": {
+      "steps": 557747,
+      "stopped_at_cutoff": false,
+      "last_at_ms": 1794147252139.3745
+    },
+    "inputs_v6": {
+      "lines": 6254147,
+      "stopped_at_cutoff": false
+    }
+  },
+  "cutoff_ms": 1794178920000.0,
+  "params": {
+    "W_LOCAL": 10000.0,
+    "W_ID": 5000.0,
+    "N_MIN": 20,
+    "DP": 4,
+    "CLOCK_STEP_MS": 1.0
+  },
+  "outputs": {
+    "legs.parquet": "af74cc3de7ddfb7ba792ab48ff8c4be324891ec495541a1fbdac69eb6c889ff0",
+    "orders.parquet": "983414cf139c3cc73248bd2f2ab172b62d5d9c8a567ac8fa42cf945a7ef6e383"
+  },
+  "inputs": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_known_v5_20261118/known.json": "095cbb564e433d4c2b5888dc0181ba2b8c473b050315f3813cb664ffbee2aff1",
+    "/home/yuqing/ctaNew/data/predict_fun/research/timing_case_audit_v2_20261118/audit.json": "b7d45d5634545612c03cbce11b158e9975cac7b42382ee420423338b7af83bb3",
+    "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/live_vs_replay/core_orders_v6.parquet": "35aa1f49ae67b32138f7fc4eb315fb95ac7b5016fbc823fe6fe3cbaa113e3a9e",
+    "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/live_vs_replay/core_orders_basis.parquet": "5b08d5f43c5fc427a7bd0268c88ae98871eca9b62e9c1bc71700a969320514e1",
+    "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108-kernel/basis.kernel.jsonl": "b3e4460dfca0148988f4f86aaa6328698ea2b4dda8e272156bfdcb5be31d43c5",
+    "/home/yuqing/pmmm-data/tokyo-live-data-20261109/tokyo-live-20261109/basis/run-1794147344737/inputs.jsonl.gz": "d127a5344aa45e9801800c7c23fc690a86c2d57c68799321475aac769d16fcf1",
+    "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108-kernel/v6.kernel.jsonl": "f8e74d54b278843ed79d8b45fa42435b2a60bfd7c6ccdbdf62c75a5067b962fb",
+    "/home/yuqing/pmmm-data/tokyo-live-data-20261109/tokyo-live-20261109/v6/run-1794108465172/inputs.jsonl.gz": "2d99d629fc1c8855c3ed87c898a2b1726618deae2987b95c0a94b17059bf7a99",
+    "/home/yuqing/ctaNew/data/predict_fun/runs/20261021T162823Z_0dd45f2d5a/predict_ws/20261108_04.jsonl.gz": "1239eea9e239539b483efc682c40148f0a7b86d26be28f8f02866b149c47ef83",
+    "/home/yuqing/ctaNew/data/predict_fun/runs/20261021T162823Z_0dd45f2d5a/predict_ws/20261108_05.jsonl.gz": "5b3ae0441771bdc870cb265488840665c3162545e2d8f039c64ad765c2a28c85",
+    "/home/yuqing/ctaNew/data/predict_fun/runs/20261021T162823Z_0dd45f2d5a/predict_ws/20261108_06.jsonl.gz": "69fec0cb958caed43d01dd4c712c245406176a03b2134b5df5134dace443d1e7",
+    "/home/yuqing/ctaNew/data/predict_fun/runs/20261021T162823Z_0dd45f2d5a/predict_ws/20261108_07.jsonl.gz": "65d98a2afc57f626711690649f4b8b94fe794b008834528a22534fb6cf338617",
+    "/home/yuqing/ctaNew/data/predict_fun/runs/20261021T162823Z_0dd45f2d5a/predict_ws/20261108_08.jsonl.gz": "4ca968fe3817aa1da3c57d0e5dc128908d0e508520a17e3bd7a0ec9be28ea7e6",
+    "/home/yuqing/ctaNew/data/predict_fun/runs/20261021T162823Z_0dd45f2d5a/predict_ws/20261108_09.jsonl.gz": "505f537443aafa8301eb5d549e17c378ce63db13b902b1b92b89de94a3699c14",
+    "/home/yuqing/ctaNew/data/predict_fun/runs/20261021T162823Z_0dd45f2d5a/predict_ws/20261108_10.jsonl.gz": "cd0001e93d38925b93b084abdc3aa913192493f663247656d4ce0c8d4e5281c0",
+    "/home/yuqing/ctaNew/data/predict_fun/runs/20261021T162823Z_0dd45f2d5a/predict_ws/20261108_11.jsonl.gz": "d6a6a87933f2ab62cd8dbde204e281ac92caff769838303322f08dcb60064b53",
+    "/home/yuqing/ctaNew/data/predict_fun/runs/20261021T162823Z_0dd45f2d5a/predict_ws/20261108_12.jsonl.gz": "7c69332a500f561e246846968bd90e5575e33a214f2cb19314ddfca372bf5eb5",
+    "/home/yuqing/ctaNew/data/predict_fun/runs/20261021T162823Z_0dd45f2d5a/predict_ws/20261108_13.jsonl.gz": "8ef56ad9b3204734d3d6cf0638012a534a35b27769e6a98791112a7d0e331b52",
+    "/home/yuqing/ctaNew/data/predict_fun/runs/20261021T162823Z_0dd45f2d5a/predict_ws/20261108_14.jsonl.gz": "6deb8843cac56483cf6d98a687c5366ed11717c5803f85ea904441b5ce0821b4",
+    "/home/yuqing/ctaNew/data/predict_fun/runs/20261021T162823Z_0dd45f2d5a/predict_ws/20261108_15.jsonl.gz": "5772208b5f11248fb8e1316e9b814ff50ab1fc75522fc8de59ab96a192851c95",
+    "/home/yuqing/ctaNew/data/predict_fun/runs/20261021T162823Z_0dd45f2d5a/predict_ws/20261108_16.jsonl.gz": "786a34cad2e9c132d94616a8e22b354fe948ade21237438499047fe50ea342d4",
+    "/home/yuqing/ctaNew/data/predict_fun/runs/20261021T162823Z_0dd45f2d5a/predict_ws/20261108_17.jsonl.gz": "eac035b6e0f4d375e6dc5581c662d4919c80dbf32e78b7ba28e44b08da2b3e5c",
+    "/home/yuqing/ctaNew/data/predict_fun/runs/20261021T162823Z_0dd45f2d5a/predict_ws/20261108_18.jsonl.gz": "30bea0dcae086242dde9d50876246e5300473afe51e239da0960eb4e30bf951e",
+    "/home/yuqing/ctaNew/data/predict_fun/runs/20261021T162823Z_0dd45f2d5a/predict_ws/20261108_19.jsonl.gz": "e98801ebababbff99814246dad02c84fbff45e8ac61c5843b44a1cfcef18de44",
+    "/home/yuqing/ctaNew/data/predict_fun/runs/20261021T162823Z_0dd45f2d5a/predict_ws/20261108_20.jsonl.gz": "f5db1e5c2dc4163e3679557f5a2b86fbab8f9e2c38c6d4933fdda29f30ebb841",
+    "/home/yuqing/ctaNew/data/predict_fun/runs/20261021T162823Z_0dd45f2d5a/predict_ws/20261108_21.jsonl.gz": "b8e1d77bd6f04add0b824e63f832a641371f2a618f293398a0adacaf4067e19d",
+    "/home/yuqing/ctaNew/data/predict_fun/runs/20261021T162823Z_0dd45f2d5a/predict_ws/20261108_22.jsonl.gz": "e8a40bce038bfe9b6d91b6edfbd38f4260223a05894ac056829bca7a81523c33"
+  },
+  "source_sha256": "f57f911337d78abdf56394ad5082e5983ff5903b20e3eec513e2ff9024587e7e",
+  "audit_source_sha256": "0a836234bd3250b002f51fd8c570f857d69b53446cddb8139a6fdbfe146148b6",
+  "seconds": 89.07901120185852
+}

@@ -1,4 +1,4 @@
-"""MUTATION CHECK of the timing case audit's selftest (2026-11-18, session aea5bfb9; the review of 3bf8f3a9; v2: the input-journal key): a checker that cannot fail proves
+"""MUTATION CHECK of the timing case audit's selftest (2026-11-18, session aea5bfb9; the review of 3bf8f3a9; v2: the input-journal key; v3 / v4: the census reuse and its lifecycle fixes): a checker that cannot fail proves
 nothing. Each entry plants one code error in a COPY of pf_timing_case_audit.py (text replacement, executed in a subprocess; the repo file is never
 touched) and runs the copy's selftest (synthetic only). Required: the unchanged copy passes; every mutant is caught BY A CHECK (rc 1 and
 'SELFTEST FAIL' printed - a crash is an unexpected outcome, not a kill); every replacement target occurs exactly as often as declared (a stale
@@ -43,10 +43,19 @@ MUT = [
     ('any NotCanceled read as matched', "        return 'MATCHED-OR-GONE' if (\"can't be found\" in t and 'matched' in t) else 'NO-EFFECT'", "        return 'MATCHED-OR-GONE'"),
     ('a pending audit read as no answer', "        return 'CANCELED' if pending_audit else 'NO-ANSWER'", "        return 'NO-ANSWER'"),
     # --- the per-leg evaluation
-    ('pairs outside the local window counted', "    loc = P_[np.abs(P_.t_bot.values.astype(float) - float(r.ack)) <= W_LOCAL] if len(P_) else P_", "    loc = P_"),
-    ('A0 ignores the bot-clock identity of the two journals', "one_bot_clock=len(acc_in) == 1 and near(acc_in[0], k_acc)", "one_bot_clock=True"),
+    ('pairs outside the local window counted', "    loc = P_[np.abs(P_.t_bot.values.astype(float) - center) <= W_LOCAL] if len(P_) else P_", "    loc = P_"),
+    ('A0 ignores the bot-clock identity of the two journals', "one_bot_clock=len(acc_in) == 1 and np.isfinite(k_acc) and abs(acc_in[0] - k_acc) <= BOT_CLOCK_TOL_MS,", "one_bot_clock=True,"),
     ('A2 reads any settlement as the same', "          else 'SAME-SETTLEMENT' if ids == set(own_ids) else 'DIFFERENT')", "          else 'SAME-SETTLEMENT')"),
     ('the bot clock step never measured', "float((ck[:, 0] - ck[:, 1]).max() - (ck[:, 0] - ck[:, 1]).min()) / 1e6", "0."),
+    # --- v3 (the census reuse): the generalized cancel-confirmation field and the reader speed-ups
+    ('a leg without a cancel confirmation fails A0', "if pa else not np.isfinite(float(r.ack)))   # the case table's ack", "if pa else False)   # the case table's ack"),
+    ("a sibling order's fills in the same settlement counted", "and x['Exec']['Fill']['trade_id'] == r.trade_id and x['Exec']['Fill']['order_id'] == oid]", "and x['Exec']['Fill']['trade_id'] == r.trade_id]"),
+    ('the confirmed cancel compared with a refused first answer', "cancel_confirmation=near(min(t for t, _ in pa), r.ack) if pa", "cancel_confirmation=near(a1_at, r.ack) if pa"),
+    ('one bot clock read to 1 us', "BOT_CLOCK_TOL_MS = 0.1 ", "BOT_CLOCK_TOL_MS = 0.001 "),
+    ('kernel needle gate never opens', "                for k, nd in (need.items() if rx is not None and rx.search(line) else ()):", "                for k, nd in ():"),
+    ('clock windows found from their start only', "                for j in range(bisect.bisect_left(wlo, t_ - span), bisect.bisect_right(wlo, t_)):",
+     "                for j in range(bisect.bisect_left(wlo, t_), bisect.bisect_right(wlo, t_)):"),
+    ('input reader never parses a market', "            mid = int(line[19:j]) if j > 19 and line[19:j].isdigit() else None", "            mid = None"),
     # --- A6
     ('A6: an EV CANCEL_FIRST accepted', "            C.require(not (ev == 0).any(), 'EV (evidence only) certified a CANCEL_FIRST')", "            pass"),
     ('A6: the cross-tab reproduction not checked', "                ok &= int(m.sum()) == int(x.get('fills', 0)) and", "                ok &= True or"),

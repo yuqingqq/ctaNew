@@ -10,8 +10,10 @@ the missing observation ... distinguish evidence-backed match windows from assum
 - **Code:** [pf_timing_case_audit.py](../../research/pf_timing_case_audit.py). Readings A0–A6 were declared before any data was read.
   Mutation check 29 / 29, each mutant caught by a check rather than a crash ([log](logs/mutants.log)).
 - **Runs:** slot claude, rc 0.
-  - v1, 15:10:03–15:11:01Z ([log](logs/run_v1.log)).
-  - v2, 15:14:22–15:15:19Z ([log](logs/run_v2.log)). Peak 437 MiB.
+  - v1, 15:11:01–15:11:59Z ([log](logs/run_v1.log)).
+  - v2, 15:15:19–15:16:17Z ([log](logs/run_v2.log)). Peak 437 MiB.
+  - Run windows corrected in place (d7591cb9 printed them shifted back by the wall time): run_light's stamp is the job's start, not
+    its end.
 - **Data:** consumed only.
   - Nov 8, read to 23:02Z. The basis readers stopped at the cutoff; no Nov 9 record was parsed.
   - The saved Oct 23 ledger v5 tables, for A6.

@@ -45,6 +45,13 @@ K6 BASIS (known v5; check of 9a114cc1): K6's declared gate stays at K7's offsets
 the first notice carrying each UUID and the placements bound it - but holds only if the UUID clock is the windows' clock (REST status /
 WS book); its gate is a separate, conditional reading (_clk), like the zero-lag settlement offsets (_set). v4's "K6 GATE S3: PASS" was
 read at the K8 clock under the K7 key; at K7's offsets S3 calls 3 known fills avoided (FAIL), as in v3.
+K6 PER CLOCK DOMAIN (known v6; USER "Go" after the timing case audit, reviews/timing_case_audit_20261118/report.md): K7 bounds the REST
+STATUS clock (floor seconds, notices); S3's three false avoidances bind on WS BOOK stamps of their own settlement, a clock K7 does not bound.
+The gate of record is now 'K6 GATE {k} (per clock domain)': each window's start is split by the clock of the legs that set it (case_linkage:
+WS / E2 legs on V_book, imputed legs and REST ranges on V_status; M50 by its anchor's origin) and each end is mapped with the lowest admissible
+offset of its own clock - book ends with the leg's book-clock bound B from the bot's own frame receipts (pf_known_clock_census.py; an
+unidentified bound fails closed), status ends with K7. 'K6 GATE {k}' keeps its v5 meaning (K7 on every end) as provenance, beside the K8
+shared-clock and settlement-offset readings. Known v6 (OUT_K); v5 stays as provenance.
 
 WHAT CHANGES FROM v1 (the review / addendum item each answers)
  1 Population (P2-1, item 4): v1 split ALL fills of the score's pulled orders and called it removed value. Now a cross-tab: replay ordering
@@ -169,7 +176,8 @@ import pf_settlement_times as SETT                        # noqa: E402  the sett
 
 C, pd, I = KP.C, KP.pd, KP.I
 OUT = Path(I.K.IO) / 'keep_pull_exec_windows_v5_20261118'  # v5: event-specific creation lag; earlier receipts stay as provenance
-OUT_K = Path(I.K.IO) / 'keep_pull_exec_windows_known_v5_20261118'   # v5: K6's declared gate back at K7's offsets; v4 stays as provenance
+OUT_K = Path(I.K.IO) / 'keep_pull_exec_windows_known_v6_20261118'   # v6: K6's gate of record per clock domain (v5, v4 stay as provenance)
+OUT_CENSUS = Path(I.K.IO) / 'known_clock_census_v3_20261118'           # the book-clock bound per known leg (pf_known_clock_census.py v3)
 SETTLEMENT_MODEL = 'shared_clock_event_specific_nonnegative_lag_v2'
 FC = Path(I.K.IO) / 'fill_clock_20261109'                 # the 11-09 fill-clock audit (own legs, lifecycles, status stamps)
 LIVE = Path('/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/live_vs_replay')
@@ -954,11 +962,13 @@ CASE_SCHEMA = {
                          cancel_lo_set='cancel effect - request, lower bound with the settlement times (after its latest match), ms', cancel_status_set='against the declared cancel range')}
 CASE_PREFIX = {'known_cases': {**{f'{k}_': f'{k}: the leg\'s verdict (VERD) at offset 0 and at every admissible offset, its cause (CAUSES), false CANCEL_FIRST at offset 0 / '
                                             'at some admissible offset (no suffix: K7\'s offsets, the declared gate; _clk: the K8 shared clock, conditional on the UUID clock '
-                                            'being the windows\' clock; _set: the zero-lag settlement premise)' for k in KSC},
+                                            'being the windows\' clock; _set: the zero-lag settlement premise; _dom: per clock domain - the gate of record, v6)' for k in KSC},
                                'K4_': 'K4 (v1\'s proxy: the engine anchor Z +- 250 / 600 ms): missed / CANCEL_FIRST per width; Z - place and Z - upper, ms (venue vs bot clock at '
                                       'offset 0; NaN: no anchor)',
-                               'K8_': 'K8 under event-specific nonnegative creation lag: match_lo/hi_bot from lifecycle plus shared clock bounds; creation_lag_lo/hi for this identified leg only, ms (not transferable)'},
-               'known_case_rows': {**{f'{k}_': f'{k}: the event window (lo / hi, venue ms) and status (st)' for k in KSC},
+                               'K8_': 'K8 under event-specific nonnegative creation lag: match_lo/hi_bot from lifecycle plus shared clock bounds; creation_lag_lo/hi for this identified leg only, ms (not transferable)',
+                               'K6D_': 'K6 per clock domain (v6): the leg\'s book-clock lower bound B, venue book - bot ms, from pf_known_clock_census (NaN: unidentified - its book ends fail closed)'},
+               'known_case_rows': {**{f'{k}_': f'{k}: the event window (lo / hi, venue ms) and status (st); lo_book / lo_status: its start split by the clock domain of the legs '
+                                             'that set it (v6; -inf: none on that clock)' for k in KSC},
                                    'own_': 'the row\'s own window per scenario (its own source alone, capped by its own REST second), venue ms'}}
 
 
@@ -1036,6 +1046,16 @@ def case_linkage(K, L8, P8, env, day='20261108'):
         KE[f'own_{k}_lo'], KE[f'own_{k}_hi'] = W[k][0], np.minimum(W[k][1], cap)
     KE['EV_lo'], KE['EV_hi'], KE['EV_st'], KE['own_EV_lo'], KE['own_EV_hi'] = -np.inf, EVT.EV_hi.values[e], 0, -np.inf, cap
     KE['M50_lo'] = KE['M50_hi'] = Zr - SHIFT; KE['M50_st'] = 0; KE['own_M50_lo'] = KE['own_M50_hi'] = ownt - SHIFT
+    # v6: the event's lower end split by the clock domain of the legs that set it (True: V_book - WS pending / E2 book-drop times; else V_status -
+    # REST seconds); its max reproduces the event's start exactly
+    cls_le, W_le = leg_windows(LE); lo0_le = rest_range(LE.exec_s.values)[0]
+    dom = {'S1': cls_le < 2, 'S2': cls_le < 2, 'S3': LE.S3_code.isin([0, 1]).values & (LE.S3_llo.values > lo0_le)}
+    ie = pd.MultiIndex.from_frame(EVT[['day', 'group']]).get_indexer(pd.MultiIndex.from_frame(LE[['day', 'group']])); C.require(bool((ie >= 0).all()), 'a leg without its event')
+    for k, bk in dom.items():
+        lo_ = np.asarray(W_le[k][0], float); lb = np.full(len(EVT), -np.inf); ls = np.full(len(EVT), -np.inf)
+        np.maximum.at(lb, ie[bk], lo_[bk]); np.maximum.at(ls, ie[~bk], lo_[~bk])
+        C.require(bool(np.array_equal(np.maximum(lb, ls), EVT[f'{k}_lo'].values.astype(float))), f'{k}: the domain split does not reproduce the event start')
+        KE[f'{k}_lo_book'], KE[f'{k}_lo_status'] = lb[e], ls[e]
     return KE
 
 
@@ -1180,7 +1200,42 @@ def window_checks(K, KE, off, scen=KSC, tag=''):
     return out, cols
 
 
-def known_checks(K, ref, KE=None, draws=200, seed=20261118):
+def window_checks_dom(K, KE, dlb, dls, scen=KSC, tag='_dom'):
+    """K6 PER CLOCK DOMAIN (known v6, the gate of record; USER "Go" after the timing case audit): a known fill is called CANCEL_FIRST at some
+    admissible offset iff its cancel confirmation c_hi (bot clock) precedes max(lo_book - dlb, lo_status - dls) on every candidate row - each
+    lower end mapped with the lowest admissible offset OF ITS OWN CLOCK: dlb the leg's book-clock bound B (venue book - bot, from the bot's own
+    frame receipts; NaN: unidentified, so a finite book end reads +inf - fail-closed), dls K7's status-clock lower end. A row's lower ends by
+    domain: S1 / S2 / S3 from case_linkage (WS and E2 legs on V_book; imputed legs and REST ranges on V_status); M50 by its anchor's origin;
+    ST / EV have none. -> (per scenario counts, per-leg columns)."""
+    n = len(K); i = KE.i.values.astype(np.int64); nk = np.bincount(i, minlength=n); has = nk > 0
+    c_hi = K.ack.values[i].astype(float); can = np.isfinite(c_hi); db = np.asarray(dlb, float)[i]
+
+    def every(b):                                             # every candidate row of the leg (a leg without one: False)
+        cnt = np.bincount(i, weights=np.asarray(b, float), minlength=n); return has & (cnt == nk)
+
+    def any_(b):
+        return np.bincount(i, weights=np.asarray(b, float), minlength=n) > 0
+    out, cols = {}, {}
+    for k in scen:
+        lo, st = KE[f'{k}_lo'].values.astype(float), KE[f'{k}_st'].values.astype(int)
+        if f'{k}_lo_book' in KE:
+            lb, ls = KE[f'{k}_lo_book'].values.astype(float), KE[f'{k}_lo_status'].values.astype(float)
+        elif k == 'M50':
+            bk = KE.origin.values != 'REST_second'; lb, ls = np.where(bk, lo, -np.inf), np.where(bk, -np.inf, lo)
+        else:
+            C.require(bool(np.isneginf(lo).all()), f'{k}: a lower end without a clock domain'); lb = ls = lo
+        C.require(bool(np.array_equal(np.maximum(lb, ls), lo)), f'{k}: the domain split does not reproduce the window start')
+        mb = np.where(np.isneginf(lb), -np.inf, np.where(np.isfinite(db), lb - np.nan_to_num(db), np.inf))
+        ms = np.where(np.isneginf(ls), -np.inf, ls - dls)
+        ok = can & (st < 2); f0 = every(ok & (c_hi < lo)); fd = every(ok & (c_hi < np.maximum(mb, ms)))
+        bo = any_(ok & np.isfinite(lb))
+        out[k] = dict(legs=n, false_cancel_first=dict(at_offset_0=int(f0.sum()), some_offset_per_domain=int(fd.sum())),
+                      legs_with_a_book_lower_end=int(bo.sum()), of_them_book_bound_unidentified=int((bo & ~np.isfinite(np.asarray(dlb, float))).sum()))
+        cols[f'{k}_false_cf{tag}'] = fd
+    return out, cols
+
+
+def known_checks(K, ref, KE=None, draws=200, seed=20261118, book=None):
     """K0-K7 on known own legs (K: run, cid, place, accepted, upper, notice, ack, req, S, M, Z, signed, ucancel, cdone, thr, rM, rC, Cs; KE: the
     case rows of case_linkage, or None - K6 not run; ref: the 11-09 counts) -> (R, readings); R carries the per-order and per-leg frames."""
     lo, hi = window_from('lifecycle', (K.place.values, K.upper.values)); can = np.isfinite(K.ack.values)
@@ -1247,6 +1302,8 @@ def known_checks(K, ref, KE=None, draws=200, seed=20261118):
     k6, cols = window_checks(K, KE, off, scen_) if KE is not None else (None, {})
     k6c, cols_c = window_checks(K, KE, clk, scen_, tag='_clk') if KE is not None and clk['exists'] else (None, {})
     k6s, cols_s = window_checks(K, KE, off8, scen_, tag='_set') if KE is not None and off8['exists'] else (None, {})
+    # v6: the gate of record per clock domain - book endpoints at the leg's own book-clock bound (the census), status endpoints at K7
+    k6d, cols_d = (window_checks_dom(K, KE, book, off['lo'] if off['exists'] else 0., scen_) if KE is not None and book is not None else (None, {}))
     if k6 is not None:
         for k in GATE:
             read[f'K6 GATE {k}'] = ('PASS' if k6[k]['false_cancel_first']['some_offset'] == 0 else 'FAIL') if k in k6 else 'NOT-RUN'
@@ -1254,6 +1311,10 @@ def known_checks(K, ref, KE=None, draws=200, seed=20261118):
                 read[f'K6 GATE {k} (K8 shared clock)'] = ('PASS' if k6c[k]['false_cancel_first']['some_offset'] == 0 else 'FAIL') if k in k6c else 'NOT-RUN'
             if k6s is not None:
                 read[f'K6 GATE {k} (settlement offsets)'] = ('PASS' if k6s[k]['false_cancel_first']['some_offset'] == 0 else 'FAIL') if k in k6s else 'NOT-RUN'
+        if k6d is not None:
+            for k in GATE:
+                read[f'K6 GATE {k} (per clock domain)'] = ('UNIDENTIFIED-UPPER-BOUND-ONLY' if k == 'ST' and st_ok else 'NOT-RUN' if k not in k6d
+                                                           else 'PASS' if k6d[k]['false_cancel_first']['some_offset_per_domain'] == 0 else 'FAIL')
         if st_ok:
             read['K6 GATE ST'] = 'UNIDENTIFIED-UPPER-BOUND-ONLY'
             if k6c is not None:
@@ -1266,13 +1327,19 @@ def known_checks(K, ref, KE=None, draws=200, seed=20261118):
     gate = ', '.join(f"{k} {read[f'K6 GATE {k}']}" for k in GATE) if k6 is not None else 'NOT-RUN'
     gate_c = ', '.join(f"{k} {read[f'K6 GATE {k} (K8 shared clock)']}" for k in GATE) if k6c is not None else 'NOT-RUN'
     gate_s = ', '.join(f"{k} {read[f'K6 GATE {k} (settlement offsets)']}" for k in GATE) if k6s is not None else 'NOT-RUN'
+    if k6d is not None:                                       # v6: the gate of record per clock domain; K7 on every endpoint is v5's reading
+        gate_d = ', '.join(f"{k} {read[f'K6 GATE {k} (per clock domain)']}" for k in GATE)
+        win = ('; LEDGER-WINDOW GATE OF RECORD (per clock domain: book ends at the leg\'s own book-clock bound, status ends at K7) ' + gate_d
+               + '; v5 basis - K7 offsets on every end: ' + gate + '; conditional - K8 shared clock: ' + gate_c + '; settlement offsets: ' + gate_s)
+    else:
+        win = '; LEDGER-WINDOW GATE ' + gate + ' (K7 offsets; conditional - K8 shared clock: ' + gate_c + '; settlement offsets: ' + gate_s + ')'
     read['KNOWN VERDICT'] = (('INSTRUMENT-CHECKS-PASS' if inst else 'INSTRUMENT-CHECK-FAILED') + '; REPLAY-ANCHOR-' + read['K4 REPLAY-ANCHOR-VS-LIFECYCLE']
-                             + '; SETTLEMENT-TIME ' + read.get('K8 SETTLEMENT TIME', 'NOT-RUN') + '; LEDGER-WINDOW GATE ' + gate + ' (K7 offsets; conditional - K8 shared clock: ' + gate_c
-                             + '; settlement offsets: ' + gate_s + ')'
+                             + '; SETTLEMENT-TIME ' + read.get('K8 SETTLEMENT TIME', 'NOT-RUN') + win
                              + '; ORDER-PATH RANGES ' + read['K5 ORDER-PATH INTERVALS vs DECLARED RANGES'] + '; NOT A VENUE-ENGINE ACCEPTANCE')
     k8c = dict(K8_match_lo_bot=mlo, K8_match_hi_bot=mhi, K8_creation_lag_lo=k8['known_leg_lag_ms']['lo'], K8_creation_lag_hi=k8['known_leg_lag_ms']['hi']) if mlo is not None else {}
     R = dict(legs=len(K), orders=int(K.drop_duplicates(['run', 'cid']).shape[0]), cancelled=int(can.sum()), K0=k0, K0_ref=ref, K1=k1, K2=k2, K3=k3, K4=k4, K5=k5, K6=k6,
-             K6_settlement_offsets=k6s, K6_shared_clock=k6c, K7=off, K8=k8, _orders=PO, _legs=dict(k4c, **cols, **cols_c, **cols_s, **k8c), _KE=KE)
+             K6_settlement_offsets=k6s, K6_shared_clock=k6c, K6_per_domain=k6d, K7=off, K8=k8, _orders=PO,
+             _legs=dict(k4c, **cols, **cols_c, **cols_s, **cols_d, **({'K6D_book_bound_ms': np.asarray(book, float)} if book is not None else {}), **k8c), _KE=KE)
     if KE is not None:
         R['linkage'] = dict(candidate_rows=int(len(KE)), legs_with_several=int((np.bincount(KE.i.values, minlength=len(K)) > 1).sum()),
                             anchor_rule_reproduced=int(KE.anchor_rule_ok.sum()), origin={str(x): int(y) for x, y in KE.origin.value_counts().items()},
@@ -1282,7 +1349,9 @@ def known_checks(K, ref, KE=None, draws=200, seed=20261118):
 
 
 def known_report(R, read, KC=None):
-    L = ['KNOWN-ORDER CASE LEDGER v5 (pf_keep_pull_exec_windows.py known; the 11-09 fill-clock audit\'s confirmed own maker legs, consumed Nov 8; review of 1fd77004 + settlement times)',
+    L = [('KNOWN-ORDER CASE LEDGER v6 (pf_keep_pull_exec_windows.py known; the 11-09 fill-clock audit\'s confirmed own maker legs, consumed Nov 8; the gate of record per clock '
+          'domain after the timing case audit)' if R.get('K6_per_domain') is not None else 'KNOWN-ORDER CASE LEDGER v5 (pf_keep_pull_exec_windows.py known; the 11-09 '
+          'fill-clock audit\'s confirmed own maker legs, consumed Nov 8; review of 1fd77004 + settlement times)'),
          f"  {R['legs']} legs of {R['orders']} orders: {R['K4']['S1']['anchored']} with an engine anchor, {R['K4']['S1']['no_anchor']} without (ambiguous leg clocks); "
          f"{R['cancelled']} legs on orders with a cancel confirmation. Bot clock: lifecycle, cancel request / confirmation, notice receipts; venue clocks: REST / Matched / "
          'Confirmed stamps, WS / E2 times and the windows',
@@ -1322,6 +1391,10 @@ def known_report(R, read, KC=None):
                      f"known fills called CANCEL_FIRST {v['false_cancel_first']}")
         for k, v in (R.get('K6_settlement_offsets') or {}).items():
             L.append(f"  K6 {k} at the settlement-premise offsets: every admissible offset {v['verdict_every_offset']}; known fills called CANCEL_FIRST {v['false_cancel_first']}")
+        for k, v in (R.get('K6_per_domain') or {}).items():
+            L.append(f"  K6 {k} PER CLOCK DOMAIN (the gate of record, v6: book ends at the leg's book-clock bound, status ends at K7): known fills called CANCEL_FIRST "
+                     f"{v['false_cancel_first']}; legs with a book lower end {v['legs_with_a_book_lower_end']}, of them without an identified bound (fail-closed) "
+                     f"{v['of_them_book_bound_unidentified']}")
     if KC is not None and 'K4_S1_missed' in KC:
         T_ = KC[KC.K4_S1_missed.values.astype(bool)].to_dict('records'); f_ = lambda r, c, fmt='{}': fmt.format(r[c]) if c in r and r[c] == r[c] else '-'
         L.append(f'  K4 S1 failures traced ({len(T_)}; identity, the anchor against the lifecycle, its origin, the ledger windows\' verdicts and causes):')
@@ -1360,9 +1433,22 @@ def known_write(out, K, KE, R, read, meta):
     return L
 
 
+def book_bounds(K, path=None):
+    """v6: the book-clock lower bound per known leg from the census receipt (pf_known_clock_census.py; outputs hash-checked, its N0 reproduction
+    YES, exactly K's legs) -> (array aligned with K: B where IDENTIFIED, NaN otherwise; the receipt's hash)."""
+    d = Path(path or OUT_CENSUS); j = json.loads((d / 'census.json').read_text())
+    C.require(C.sha(d / 'legs.parquet') == j['outputs']['legs.parquet'], 'census legs differ from their receipt')
+    C.require(j['readings'].get('N0 REPRODUCES-THE-CASE-AUDIT') == 'YES', 'the census does not reproduce the timing case audit: no book-clock bound')
+    L = pd.read_parquet(d / 'legs.parquet'); key = ['run', 'cid', 'trade_id']
+    C.require(not L.duplicated(key).any() and len(L) == len(K), 'census legs are not one per known leg')
+    m = K[key].reset_index(drop=True).merge(L[key + ['B', 'bound_status']], on=key, how='left', validate='one_to_one')
+    C.require(bool(m.bound_status.notna().all()), 'a known leg without its census row')
+    return np.where(m.bound_status.values == 'IDENTIFIED', m.B.values.astype(float), np.nan), {str(d / 'census.json'): C.sha(d / 'census.json')}
+
+
 def known(out=OUT_K):
     start = time.time(); out = Path(out); C.require(not out.exists(), 'known-lifecycle output exists'); selftest()
-    K, KE, ref, meta = known_frame(); R, read = known_checks(K, ref, KE)
+    K, KE, ref, meta = known_frame(); book, hb = book_bounds(K); meta['inputs'].update(hb); R, read = known_checks(K, ref, KE, book=book)
     if read['K0 REPRODUCES 11-09'] != 'YES':
         sys.exit(f"KNOWN-LIFECYCLE CHECK FAILED -> no output: K0 {R['K0']} != the 11-09 counts {ref}")
     L = known_write(out, K, KE, R, read, dict(meta, provenance=KP.provenance(), source_sha256=C.sha(Path(__file__).resolve()), seconds=time.time() - start))
@@ -1610,6 +1696,95 @@ def _k6_selftest():
     return bad
 
 
+def _k6_domain_selftest():
+    """v6, the gate of record per clock domain (synthetic): leg 3's S3 window starts 30 ms before its cancel confirmation. K7 (-100 ms) calls it
+    avoided (the v5 basis FAILs); its book end at the leg's own book bound (-20 ms) does not (PASS); an unidentified book bound fails closed; the
+    same end on the status clock is read at K7 (FAIL); M50 by its anchor's origin; the case linkage's split reproduces the event start; the
+    census reader refuses a changed table, an unreproduced audit and a missing leg."""
+    bad = []; B_ = 1.79e12 + 7.2e6; pl = B_ + np.array([0., 10000., 10000., 20000., 30940., 40000.])
+    K = pd.DataFrame(dict(run='w', cid=[0, 1, 1, 2, 3, 4], trade_id=[f't{x}' for x in range(6)], place=pl, accepted=pl + 30.,
+                          upper=B_ + np.array([300., 10260., 10260., 20300., 31240., 40300.]), notice=B_ + np.array([300., 10400., 10400., 20500., 31240., 40300.]),
+                          ack=B_ + np.array([np.nan, 10260., 10260., 20260., 31240., np.nan]), req=B_ + np.array([np.nan, 10200., 10200., 20200., 31100., np.nan]),
+                          M=np.floor(pl / 1000.), Z=pl + 100., signed=pl + 5., ucancel=np.nan, cdone=np.nan, thr=np.nan, rM=pl + 150., rC=pl + 1100.))
+    K['S'] = K.M + 1.; K['Cs'] = K.M + 1.
+    i_ = np.array([0, 1, 2, 3, 4, 5]); up = K.upper.values
+    KE = pd.DataFrame(dict(i=i_, src=0, origin=['pending_increment'] * 5 + ['REST_second'], anchor_own=True, anchor_rule_ok=True, S3_code=0, link_late=False))
+    for k in ('S1', 'S2', 'S3'):
+        KE[f'{k}_lo'], KE[f'{k}_hi'], KE[f'{k}_st'] = pl - 50., up, 0
+        KE[f'own_{k}_lo'], KE[f'own_{k}_hi'] = pl - 50., up
+        KE[f'{k}_lo_book'], KE[f'{k}_lo_status'] = pl - 50., -np.inf
+    KE.loc[3, ['S3_lo', 'own_S3_lo', 'S3_lo_book']] = B_ + 20230.                               # c_hi 20260: avoided only below -30 ms
+    KE['EV_lo'], KE['EV_hi'], KE['EV_st'], KE['own_EV_lo'], KE['own_EV_hi'] = -np.inf, up + 500., 0, -np.inf, up + 500.
+    KE['M50_lo'] = KE['M50_hi'] = K.place.values + 60.; KE['M50_st'] = 0; KE['own_M50_lo'] = KE['own_M50_hi'] = KE.M50_lo
+    KE.loc[3, ['M50_lo', 'M50_hi', 'own_M50_lo', 'own_M50_hi']] = B_ + 20280.                  # the replay point after c_hi: avoided at offset 0 already
+    ref = dict(rest_floor_nonoverlap=int(miss(K.S.values * 1000., K.S.values * 1000. + 999.999, K).sum()),
+               matched_floor_nonoverlap=int(miss(*window_from('matched_status_s', K.M.values), K).sum()))
+    book = np.full(6, -20.)
+    try:
+        R, r = known_checks(K, ref, KE, draws=10, book=book); d = R['K6_per_domain']
+        if not (r.get('K6 GATE S3') == 'FAIL' and r.get('K6 GATE S3 (per clock domain)') == 'PASS' and R['K7']['lo'] == -100.
+                and d['S3']['false_cancel_first'] == dict(at_offset_0=0, some_offset_per_domain=0) and d['S3']['legs_with_a_book_lower_end'] == 4
+                and d['M50']['false_cancel_first']['at_offset_0'] == 1 and r.get('K6 GATE EV (per clock domain)') == 'PASS'
+                and 'LEDGER-WINDOW GATE OF RECORD (per clock domain' in r['KNOWN VERDICT'] and 'S3 PASS' in r['KNOWN VERDICT'].split('; v5 basis')[0]
+                and 'v5 basis - K7 offsets on every end: S1 PASS, S2 PASS, S3 FAIL' in r['KNOWN VERDICT'] and list(R['_legs']['K6D_book_bound_ms']) == [-20.] * 6):
+            bad.append(f"K6 per clock domain on planted legs: {d} {r}")
+        R2, r2 = known_checks(K, ref, KE, draws=10, book=np.where(np.arange(6) == 3, np.nan, -20.))
+        if not (r2.get('K6 GATE S3 (per clock domain)') == 'FAIL' and R2['K6_per_domain']['S3']['of_them_book_bound_unidentified'] == 1):
+            bad.append(f"K6 per clock domain: an unidentified book bound must fail closed: {R2['K6_per_domain']['S3']}")
+        KEs = KE.copy(); KEs.loc[3, 'S3_lo_book'], KEs.loc[3, 'S3_lo_status'] = -np.inf, B_ + 20230.
+        R3, r3 = known_checks(K, ref, KEs, draws=10, book=book)
+        if r3.get('K6 GATE S3 (per clock domain)') != 'FAIL':
+            bad.append('K6 per clock domain: a status-clock end must be read at K7')
+        KEm = KE.copy(); KEm.loc[3, ['M50_lo', 'M50_hi', 'own_M50_lo', 'own_M50_hi']] = B_ + 20240.; KEm.loc[3, 'origin'] = 'REST_second'
+        KEb = KEm.copy(); KEb.loc[3, 'origin'] = 'book_drop'
+        m_s = known_checks(K, ref, KEm, draws=10, book=book)[0]['K6_per_domain']['M50']['false_cancel_first']['some_offset_per_domain']
+        m_b = known_checks(K, ref, KEb, draws=10, book=book)[0]['K6_per_domain']['M50']['false_cancel_first']['some_offset_per_domain']
+        if (m_s, m_b) != (1, 0):
+            bad.append(f'K6 per clock domain: M50 by its origin (status {m_s}, book {m_b})')
+        KEx = KE.copy(); KEx.loc[3, 'S3_lo_book'] = B_ + 20200.
+        try:
+            known_checks(K, ref, KEx, draws=10, book=book); bad.append('K6 per clock domain accepted a split that does not reproduce the window start')
+        except ValueError:
+            pass
+    except (SystemExit, ValueError, KeyError) as e:
+        bad.append(f'K6 per clock domain raised {type(e).__name__}: {e}')
+    # the case linkage's split on a planted day (WS, E2 and REST-second legs)
+    L8 = pd.DataFrame(dict(mid=5, exec_s=[100, 100, 101, 102, 102], first_recv_ns=[1, 2, 3, 4, 4], side=[0, 0, 1, 0, 0], ptick=[50, 51, 48, 47, 47], shares=[10., 4., 2., 3., 3.],
+                           price_executed=[.5, .51, .48, .47, .47], taker_index=1, taker_quote=0, how=[1, 1, 0, 0, 1], t_ms=[100200., 99100., np.nan, np.nan, 102400.],
+                           t_e2=[np.nan, np.nan, 101300., np.nan, np.nan], tk=[7, 7, -1, 9, 11], Zr=[99100., 99100., 101300., 102000., 102400.]))
+    P8 = pd.DataFrame(dict(mid=5, t_ms=[100200., 99100.], ptick=[50, 51], inc=[5., 2.04]))
+    Kl = L8.iloc[[0, 2, 3]][CKEY].reset_index(drop=True).assign(candidate_legs=[1, 1, 2])
+    try:
+        E8 = case_linkage(Kl, L8, P8, dict(h=600., q01=-900., q99=1050.), day='20990101')
+        if not (list(np.isneginf(E8.S1_lo_status.values)) == [True, True, False, True] and list(np.isneginf(E8.S1_lo_book.values)) == [False, False, True, False]
+                and np.array_equal(np.maximum(E8.S3_lo_book.values, E8.S3_lo_status.values), E8.S3_lo.values.astype(float))
+                and np.isneginf(E8.S3_lo_book.values[2]) and E8.S3_lo_status.values[2] == E8.S3_lo.values[2]):
+            bad.append(f"case linkage split: {E8[['S1_lo', 'S1_lo_book', 'S1_lo_status', 'S3_lo', 'S3_lo_book', 'S3_lo_status']].to_dict('records')}")
+    except (SystemExit, ValueError) as e:
+        bad.append(f'case linkage split refused: {e}')
+    # the census reader
+    with tempfile.TemporaryDirectory(dir=str(I.K.IO)) as tmp:
+        d = Path(tmp); Lc = pd.DataFrame(dict(run='w', cid=K.cid.values, trade_id=K.trade_id.values, B=-20., bound_status=['IDENTIFIED'] * 5 + ['UNIDENTIFIED']))
+        Lc.to_parquet(d / 'legs.parquet', index=False)
+        put = lambda n0='YES', h=None: (d / 'census.json').write_text(json.dumps(dict(readings={'N0 REPRODUCES-THE-CASE-AUDIT': n0}, outputs={'legs.parquet': h or C.sha(d / 'legs.parquet')})))
+        put()
+        try:
+            b_, hb = book_bounds(K, d)
+            if not (np.array_equal(b_[:5], np.full(5, -20.)) and np.isnan(b_[5]) and list(hb) == [str(d / 'census.json')]):
+                bad.append(f'census reader: {b_}')
+        except ValueError as e:
+            bad.append(f'census reader refused a valid receipt: {e}')
+        for nm_, setup in (('a changed table', lambda: put(h='0' * 64)), ('an unreproduced audit', lambda: put(n0='NO')),
+                           ('a missing leg', lambda: (Lc.iloc[:5].to_parquet(d / 'legs.parquet', index=False), put()))):
+            setup()
+            try:
+                book_bounds(K, d); bad.append(f'census reader accepted {nm_}')
+            except ValueError:
+                pass
+            Lc.to_parquet(d / 'legs.parquet', index=False); put()
+    return bad
+
+
 def _settlement_selftest():
     """Independent variable-lag worlds, invalid clocks/receipts, non-transferability, and order-path propagation."""
     bad = []; b = 1_800_000_000_000.
@@ -1837,7 +2012,7 @@ def selftest(rehearse=True):
         bad.append('a wrong identity passes K3')
     if case_gaps({'known_cases': ['run', 'S3_verdict', 'zzz'], 'known_orders': ['cid', 'act_lo']}) != ['known_cases.zzz']:
         bad.append('the case-ledger column check: an undocumented column must be named, the documented ones accepted')
-    bad += _k6_selftest() + _s3_selftest() + _settlement_selftest()
+    bad += _k6_selftest() + _s3_selftest() + _settlement_selftest() + _k6_domain_selftest()
     if rehearse and not bad:
         O, Fl, Ls, Ps = _synthetic(rng); day = '20990101'; Ls_rows = Ls[RAW_COLS + ['tk', 'tk_status']].reset_index(drop=True)
         env = dict(h=600., q01=-900., q99=1050., inputs={}); v1, e_, s_, aux = _v1_expect(O, Fl, Ls); ri_, t_, val_, act_, r_ = (aux[k] for k in ('ri', 't', 'val', 'act', 'r'))
@@ -1930,7 +2105,8 @@ def selftest(rehearse=True):
           'conservation (and its falsifier); K0-K3 instrument checks and K4 CONTRADICTED / CONSISTENT on planted cases (a wrong identity refused); '
           'run() rehearsed end to end, the all-contradictory case counting every fill, four bad inputs refused; S3 windows on planted increments; the '
           'contradiction causes reconciled (and their falsifier); binding pairs; K5 per order on the review\'s cases; K6 / K7 on planted lifecycles; the '
-          'case linkage and the case ledger (an undocumented column refused)', flush=True)
+          'case linkage and the case ledger (an undocumented column refused); K6 per clock domain (fail-closed, status ends at K7, M50 by origin, the '
+          'split reproduced) and the census reader\'s refusals', flush=True)
 
 
 if __name__ == '__main__':
