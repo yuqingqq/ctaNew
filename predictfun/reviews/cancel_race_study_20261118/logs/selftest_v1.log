@@ -1,0 +1,2 @@
+cancel race study selftests passed (synthetic only): every fill and order class incl. the priority rule; retries in order; a confirmation by CancelPendingAudit; no answer; censoring; a sibling order in the same trade; records at / after the cutoff unread; an unplaced request as a status; K9 consistent and contradictory; C1-C5 on planted tables, C5 refusing a moved receipt; refusals: an empty or missing K7, a regressing clock
+2026-11-18T18:30:22Z tag=crs_selftest rc=0 peak_rss_mib=199 wall_s=0.98 cpu_user_s=0.83 memavail_start_gib=23 disk_free_gib=436->436 slot=claude

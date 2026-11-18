@@ -1,0 +1,23 @@
+PER-CANCEL RACE STUDY (Nov 8 to 23:02Z, runs v6, basis; K7 [-226.4, +49.3] ms; censored below 60 s of horizon)
+
+  C0 POPULATION: v6: 16,575 cancelled orders of 21,661 placed, 16,575 requests, 29 with re-sent cancels (16,608 sends; 2 cancel-all sends); basis: 14,284 cancelled orders of 20,966 placed, 14,284 requests, 45 with re-sent cancels (14,225 sends; 1 cancel-all sends)
+  C1 RESPONSE: first confirmation after the first request: p50 19 ms, p90 40 ms, above 1 s 14 and above 4 s 8 of 30,584 answered; no answer 275
+  C2 RACE: AFTER-ANSWER 14, AFTER-REQUEST 3, UNORDERED 68, BEFORE-REQUEST 1, NO-FILL 30,757, CENSORED 0 of 30,843 uncensored cancelled orders
+  C3b MATCH-AFTER-A-CANCELED-CONFIRMATION: NO (CONDITIONAL on K7): none of 30,563 orders with a Canceled confirmation
+  C3 MATCH-AFTER-ANSWER: YES (CONDITIONAL on K7): 14 cancelled orders matched after the venue answered their cancel (14 of 30,843 uncensored; 0 of 30,473 first answered Canceled)
+  C4 BOOK-EVIDENCE: CONSISTENT on 98 known fills (0 contradictory)
+  C5 REPRODUCES-THE-CENSUS: YES (86 of 86 census orders; 85 with a cancel request in the case table)
+
+  C1 by first confirmation: orders, latency p10 / p50 / p90 / p99 / max (ms), above 100 ms / 1 s / 4 s
+    MATCHED-OR-GONE       24   11 / 17 / 98 / 6,163 / 7,971   3 / 1 / 1
+    CANCELED          30,473   15 / 19 / 40 / 131 / 6,992   558 / 13 / 7
+    NO-EFFECT             87   8 / 12 / 54 / 318 / 328   2 / 0 / 0
+    NO-ANSWER            275   - / - / - / - / -   0 / 0 / 0
+
+  C2 order class by first confirmation (all cancelled orders): AFTER-ANSWER | AFTER-REQUEST | UNORDERED | BEFORE-REQUEST | NO-FILL | CENSORED
+    MATCHED-OR-GONE  0 | 1 | 0 | 0 | 23 | 0
+    CANCELED         0 | 2 | 67 | 1 | 30,387 | 16
+    NO-EFFECT        14 | 0 | 1 | 0 | 72 | 0
+    NO-ANSWER        0 | 0 | 0 | 0 | 275 | 0
+
+  NOT A CANCEL-FAILURE MODEL: classes bound the match against the request and the answer; the cancel's effect time is not observed.
