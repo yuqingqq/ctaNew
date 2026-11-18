@@ -33,6 +33,13 @@ request/answer/match-window/notice times, no-fill orders, retries and censoring;
 never turn notice-after-answer into a measured failure probability. Review-only;
 development changes preserved; scheduler remains off.
 
+## 2026-11-18 18:38Z (session aea5bfb9) — PER-CANCEL RACE STUDY (readiness loop item 4; review 8e63f178's next priority)
+- New instrument pf_cancel_race_study.py v2 (selftest; 25 / 25 mutants caught by checks): every cancelled order on Nov 8 (to 23:02Z, runs v6 + basis; 30,859 orders, no-fill orders and pf-exec re-sends included, censoring as status), request / response / match bounds (first notice = evidence; Matched second via K7 = conditional) / notices kept apart. [report](reviews/cancel_race_study_20261118/report.md)
+- Gates: C5 reproduces census v4 86 / 86 (85 with a request in the case table); C4 consistent with K9 on 98 known fills.
+- Readings: C3b NO - no match provably after a Canceled confirmation (30,563 orders; one-sided, ~1.3 s unorderable); C3 YES - 14 orders matched after a first REFUSAL (87 refusals, 0.28% of answered; the simulator lands every pull, so it credits these as avoided); responses p50 19 / p90 40 / p99 131 ms on Canceled, 8 of 30,584 above 4 s - the 13% x 4 s mixture is a stress case; 275 unanswered cancels were never sent.
+- v1 (kept as provenance) counted retries from Control/Cancel (always 1) and compared C5 on a population with a never-cancelled order; v2 fixes both (FINDINGS P66) and adds C3b.
+- Watch out: a response is not the cancel's effect; nothing here is a failure probability or a training target; one consumed partial day of the live strategy.
+
 ## 2026-11-18 18:05Z (session aea5bfb9) — REVIEW 8e63f178 FIXED; SIMULATOR READINESS LOOP RUNNING (USER: "check the issues, together with the issues you have found, proceed to fix. Then check if the simulator is reliable to run now"; then "launch a loop to achieve this")
 - Review 8e63f178's three P2s all held and are fixed: [report](reviews/review_8e63f178_fixes_20261118/report.md). P2-1 known v7 keeps every window constraint per clock with feasibility (two exact LPs per row); P2-2 the case audit compares identity fields exactly and endpoints within 1e-6 ms; P2-3 the c_hi bound typed by the answer's premise, census N3 / N4 restated, the known ledger's lifecycle evidence-only (first notice; K0 on the 11-09 definition) and K5's cancel effect unbounded by the acknowledgement; K9 declared.
 - Found and fixed along the way: the scenario replay lacked FINDINGS C1 / C3 (v5 computes them, control (i)); the case audit read its population from a moving path (pinned to known v5); two mutants were crash kills (now caught by checks); a K9 test case restored. Suites: case audit 40/40, census 17/17, exec-windows 127/127, scenarios 37/37.

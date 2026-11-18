@@ -20,6 +20,17 @@ manual_result_review_20261118_541aeca9:
   next_priority: repair_and_supersede_timing_evidence_receipt_before_per_cancel_expansion
   scheduler: disabled_by_user
 
+cancel_race_study_20261118:
+  status: done_v2_gates_pass
+  asof: "2026-11-18 18:38Z"
+  user: ["launch a loop to achieve this"]
+  report: predictfun/reviews/cancel_race_study_20261118/report.md
+  module: predictfun/research/pf_cancel_race_study.py
+  mutation_suite: 25/25
+  gates: {C5_reproduces_census_v4: "86 of 86", C4_book_evidence: CONSISTENT}
+  readings: {C3b_match_after_canceled_confirmation: NO, C3_match_after_first_answer: "14 orders, all after a refusal", refusals_first: 87, answered: 30584, response_ms_canceled: {p50: 19, p90: 40, p99: 131}, above_4s: 8, filled_cancelled_orders: 85}
+  limits: [one consumed partial day, live strategy not the keep/pull rule, K7 premises, one-sided bound, no cancel-effect time observed]
+
 review_8e63f178_fixes_20261118:
   status: done_all_p2_fixed_reruns_reproduce_loop_running
   asof: "2026-11-18 18:05Z"

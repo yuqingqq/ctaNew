@@ -1,0 +1,249 @@
+{
+ "asof": "2026-11-18T18:35:02.945504+00:00",
+ "readings": {
+  "C0 POPULATION": "v6: 16,575 cancelled orders of 21,661 placed, 16,575 requests, 29 with re-sent cancels (16,608 sends; 2 cancel-all sends); basis: 14,284 cancelled orders of 20,966 placed, 14,284 requests, 45 with re-sent cancels (14,225 sends; 1 cancel-all sends)",
+  "C1 RESPONSE": "first confirmation after the first request: p50 19 ms, p90 40 ms, above 1 s 14 and above 4 s 8 of 30,584 answered; no answer 275",
+  "C2 RACE": "AFTER-ANSWER 14, AFTER-REQUEST 3, UNORDERED 68, BEFORE-REQUEST 1, NO-FILL 30,757, CENSORED 0 of 30,843 uncensored cancelled orders",
+  "C3b MATCH-AFTER-A-CANCELED-CONFIRMATION": "NO (CONDITIONAL on K7): none of 30,563 orders with a Canceled confirmation",
+  "C3 MATCH-AFTER-ANSWER": "YES (CONDITIONAL on K7): 14 cancelled orders matched after the venue answered their cancel (14 of 30,843 uncensored; 0 of 30,473 first answered Canceled)",
+  "C4 BOOK-EVIDENCE": "CONSISTENT on 98 known fills (0 contradictory)",
+  "C5 REPRODUCES-THE-CENSUS": "YES (86 of 86 census orders; 85 with a cancel request in the case table)"
+ },
+ "R": {
+  "C0": {
+   "v6": {
+    "steps": 557747,
+    "last_at_ms": 1794147252139.3745,
+    "stopped_at_cutoff": false,
+    "cancel_all_sends": 2,
+    "cancelled_order_never_signed": 79,
+    "first_confirmation_before_the_first_request": 2,
+    "orders_placed": 21661,
+    "orders_signed": 16585,
+    "cancelled_orders": 16575,
+    "requests": 16575,
+    "sends": 16608,
+    "orders_with_retries": 29,
+    "orders_with_several_answers": 37
+   },
+   "basis": {
+    "steps": 462823,
+    "last_at_ms": 1794178919910.5066,
+    "stopped_at_cutoff": true,
+    "cancel_all_sends": 1,
+    "cancelled_order_never_signed": 201,
+    "orders_placed": 20966,
+    "orders_signed": 14150,
+    "cancelled_orders": 14284,
+    "requests": 14284,
+    "sends": 14225,
+    "orders_with_retries": 45,
+    "orders_with_several_answers": 19
+   }
+  },
+  "C1": {
+   "MATCHED-OR-GONE": {
+    "orders": 24,
+    "latency_ms": {
+     "p10": 10.8069091796875,
+     "p50": 17.2889404296875,
+     "p90": 98.02397460937499,
+     "p99": 6163.041062011715,
+     "max": 7971.362548828125
+    },
+    "above_ms": {
+     "100": 3,
+     "1000": 1,
+     "4000": 1
+    }
+   },
+   "CANCELED": {
+    "orders": 30473,
+    "latency_ms": {
+     "p10": 14.576611328125,
+     "p50": 19.214111328125,
+     "p90": 40.28090820312498,
+     "p99": 131.24039062499926,
+     "max": 6992.3251953125
+    },
+    "above_ms": {
+     "100": 558,
+     "1000": 13,
+     "4000": 7
+    }
+   },
+   "NO-EFFECT": {
+    "orders": 87,
+    "latency_ms": {
+     "p10": 8.30673828125,
+     "p50": 11.754150390625,
+     "p90": 53.703076171875026,
+     "p99": 317.98557128906253,
+     "max": 328.1865234375
+    },
+    "above_ms": {
+     "100": 2,
+     "1000": 0,
+     "4000": 0
+    }
+   },
+   "NO-ANSWER": {
+    "orders": 275,
+    "latency_ms": {
+     "p10": null,
+     "p50": null,
+     "p90": null,
+     "p99": null,
+     "max": null
+    },
+    "above_ms": {
+     "100": 0,
+     "1000": 0,
+     "4000": 0
+    }
+   }
+  },
+  "C2": {
+   "uncensored": {
+    "AFTER-ANSWER": 14,
+    "AFTER-REQUEST": 3,
+    "UNORDERED": 68,
+    "BEFORE-REQUEST": 1,
+    "NO-FILL": 30757,
+    "CENSORED": 0
+   },
+   "censored": {
+    "AFTER-ANSWER": 0,
+    "AFTER-REQUEST": 0,
+    "UNORDERED": 0,
+    "BEFORE-REQUEST": 0,
+    "NO-FILL": 0,
+    "CENSORED": 16
+   },
+   "by_first_confirmation": {
+    "MATCHED-OR-GONE": {
+     "AFTER-ANSWER": 0,
+     "AFTER-REQUEST": 1,
+     "UNORDERED": 0,
+     "BEFORE-REQUEST": 0,
+     "NO-FILL": 23,
+     "CENSORED": 0
+    },
+    "CANCELED": {
+     "AFTER-ANSWER": 0,
+     "AFTER-REQUEST": 2,
+     "UNORDERED": 67,
+     "BEFORE-REQUEST": 1,
+     "NO-FILL": 30387,
+     "CENSORED": 16
+    },
+    "NO-EFFECT": {
+     "AFTER-ANSWER": 14,
+     "AFTER-REQUEST": 0,
+     "UNORDERED": 1,
+     "BEFORE-REQUEST": 0,
+     "NO-FILL": 72,
+     "CENSORED": 0
+    },
+    "NO-ANSWER": {
+     "AFTER-ANSWER": 0,
+     "AFTER-REQUEST": 0,
+     "UNORDERED": 0,
+     "BEFORE-REQUEST": 0,
+     "NO-FILL": 275,
+     "CENSORED": 0
+    }
+   },
+   "fills": {
+    "AFTER-ANSWER": {
+     "EVIDENCE": 0,
+     "CONDITIONAL": 18,
+     "NONE": 0
+    },
+    "AFTER-REQUEST": {
+     "EVIDENCE": 0,
+     "CONDITIONAL": 3,
+     "NONE": 0
+    },
+    "UNORDERED": {
+     "EVIDENCE": 0,
+     "CONDITIONAL": 0,
+     "NONE": 77
+    },
+    "BEFORE-REQUEST": {
+     "EVIDENCE": 0,
+     "CONDITIONAL": 1,
+     "NONE": 0
+    }
+   }
+  },
+  "C3": {
+   "orders": 14,
+   "uncensored": 14,
+   "of_uncensored": 30843,
+   "canceled_first": 0,
+   "of_canceled_first": 30473,
+   "by_first_confirmation": {
+    "MATCHED-OR-GONE": 0,
+    "CANCELED": 0,
+    "NO-EFFECT": 14,
+    "NO-ANSWER": 0
+   }
+  },
+  "C3b": {
+   "orders": 0,
+   "of_with_canceled_confirmation": 30563,
+   "by_first_confirmation": {
+    "MATCHED-OR-GONE": 0,
+    "CANCELED": 0,
+    "NO-EFFECT": 0,
+    "NO-ANSWER": 0
+   }
+  },
+  "C4": {
+   "known_fills": 98,
+   "by_class": {
+    "AFTER-ANSWER": {
+     "k9_before": 0,
+     "k9_not": 18
+    },
+    "AFTER-REQUEST": {
+     "k9_before": 0,
+     "k9_not": 2
+    },
+    "UNORDERED": {
+     "k9_before": 24,
+     "k9_not": 53
+    },
+    "BEFORE-REQUEST": {
+     "k9_before": 1,
+     "k9_not": 0
+    }
+   },
+   "contradictory": 0
+  },
+  "C5_mismatches": []
+ },
+ "k7": {
+  "lo": -226.392822265625,
+  "hi": 49.336669921875,
+  "exists": true,
+  "includes_zero": true,
+  "receipt_bounds": 198,
+  "placement_bounds": 99
+ },
+ "h_min_ms": 60000.0,
+ "cutoff_ms": 1794178920000.0,
+ "inputs": {
+  "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_known_v7_20261118/known.json": "c1b6b38c4962d6c5b2b0d5efb35081b6b130ca866150eedd34ba45e8a9b28495",
+  "/home/yuqing/ctaNew/data/predict_fun/research/known_clock_census_v4_20261118/census.json": "3ceb51b9a1d22bdefcaaeafbbf2ba5e75a176b28184ba072aa6db677d911fa40",
+  "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108-kernel/v6.kernel.jsonl": "f8e74d54b278843ed79d8b45fa42435b2a60bfd7c6ccdbdf62c75a5067b962fb",
+  "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108-kernel/basis.kernel.jsonl": "b3e4460dfca0148988f4f86aaa6328698ea2b4dda8e272156bfdcb5be31d43c5"
+ },
+ "outputs": {
+  "orders.parquet": "8b81dc785194751dcb7638a41a627b07116e36bdbe3263726a2354876edc667c",
+  "fills.parquet": "5a19c3f088abafc4cd922af6e2dbbafc14f21bf1a90ec8bf732638192efd442e"
+ },
+ "source_sha256": "ef6e934d38985a92b0b8a03213f20dd38db9776749f18df9fa2f5d8042311f0c",
+ "seconds": 5
+}
