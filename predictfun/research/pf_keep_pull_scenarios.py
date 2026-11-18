@@ -17,6 +17,12 @@ trade-clock shift (M0 / M250: every trade stamp moved uniformly), activation del
 no scenario is called "zero latency"; (3) the held contradictory events get their denominator (every event per family and day) and their
 economic weight (the fills, shares and value at held trade instants per scenario); v1's outputs (keep_pull_scenarios_20261118) stay as
 provenance.
+SETTLEMENT TIMES (v3, USER: "Can you clear the issues"): every trade's settlementId is a UUIDv7 carrying the venue's creation time in ms; on
+live's 99 own legs it sits inside the Matched second, after placement and before the notice, one constant offset fitting all (K8). (4) The ST
+timelines place each event at its settlement time (SThi) and at the lag bound before it (STlo) - the evidence-based re-timing of every trade;
+(5) the ranges follow the own orders' evidence, chosen after seeing it (development days): activation 15 / 100 ms (live within 18 ms), notice
+160 / 660 ms (162-655 ms measured; the replay's 100 ms is below all 99), and a cancel-latency MIXTURE - 13% of the orders' cancels at 4 s, the
+rest 37 ms (10 of 77 confirmed own cancels took effect 0.13-5.7 s after the request; an outcome-selected rate).
 
 SCENARIOS (one factor at a time around the replay's baseline B = M50 trade times, activation +58 ms, cancel latency 37 ms, fill notice
  +100 ms; every value is an assumption range, not a measured distribution: "stable in tested scenarios" is the strongest claim)
@@ -30,13 +36,14 @@ SCENARIOS (one factor at a time around the replay's baseline B = M50 trade times
             shares, value) are printed.
  TRADE-CLOCK SHIFT M0 / M250   the committed uniform shifts of every trade stamp (a constant offset between the trade stamps' clock and the
                    book's; M50 is the baseline's), from the committed replay - not an order latency.
- ACTIVATION the order goes live at +25 / +100 ms instead of +58: post-only refusal and queue place at the activation frame, no fill before
+ ACTIVATION the order goes live at +15 / +100 ms instead of +58: post-only refusal and queue place at the activation frame, no fill before
             it. The client's decision schedule stays on its receipt clock (first live decision +100 ms, J0 = 2).
  CANCEL     every cancel - the score's and the null's pulls, the structural cancels and the pending landing (activation + latency) - takes
-            effect 0 / 100 ms after its decision instead of 37. The kernel orders a grid instant as its trades up to it, then its decisions:
+            effect 0 / 100 ms after its decision instead of 37, or by the mixture (a fixed 13% of the orders at 4 s). The kernel orders a grid
+            instant as its trades up to it, then its decisions:
             a structural cancel decided at g never stops a trade at g (at zero latency it acts just after g); the pulls keep the replay's
             at-or-after rule - a tie convention at one instant, not evidence (C20).
- NOTICE     the client learns of a full fill 0 / 250 ms after it instead of 100 (its eligibility for later decisions; fills unchanged).
+ NOTICE     the client learns of a full fill 160 / 660 ms after it instead of 100 (its eligibility for later decisions; fills unchanged).
  INFORMATION never moves with a latent execution time: the fair inputs and the book frames (receipt clock) are the committed ones in every
             scenario; only the trades' execution times, the order's activation and the cancels' effects move.
 VALUES per scenario: KEEP (the orders' END values summed), the score's improvement over KEEP, the exact STATES-null expectation, E = their
@@ -87,24 +94,39 @@ import pf_queue_place_ledger as QL                        # noqa: E402
 import pf_flow_control_kernel as FK                       # noqa: E402
 
 C, pd, I = KP.C, KP.pd, KP.I
-OUT = Path(I.K.IO) / 'keep_pull_scenarios_v2_20261118'      # v2 (review of 1fd77004); v1's outputs stay as provenance
+OUT = Path(I.K.IO) / 'keep_pull_scenarios_v3_20261118'      # v3 (settlement times); v1 / v2 outputs stay as provenance
 SHIFT = 50.
-B0 = dict(tl='M50', A=KP.PLACE, L=KP.CANCEL, N=KP.NOTICE)
-TIMELINES = ('M50', 'S1lo', 'S1mid', 'S1hi', 'S2lo', 'S2hi', 'S3lo', 'S3hi', 'EVhi')
+B0 = dict(tl='M50', A=KP.PLACE, L=KP.CANCEL, N=KP.NOTICE, X=None)
+TIMELINES = ('M50', 'S1lo', 'S1mid', 'S1hi', 'S2lo', 'S2hi', 'S3lo', 'S3hi', 'STlo', 'SThi', 'EVhi')
 TIMELINE_RULES = dict(M50='anchor - 50 ms (the committed replay)', S1lo='start of the admissible S1 window', S1mid='middle of the admissible S1 window',
                       S1hi='end of the admissible S1 window', S2lo='start of the admissible S2 window', S2hi='end of the admissible S2 window',
                       S3lo='start of the admissible S3 (semantics) window', S3hi='end of the admissible S3 (semantics) window',
+                      STlo='start of the admissible ST window (the settlement time - the lag bound)', SThi='end of the admissible ST window (the settlement time)',
                       EVhi='the REST evidence cap (the latest admissible instant)', held='an event without an admissible window keeps its M50 time')
-NOTICE_RANGE = (0., 250.)
-SCEN = ([dict(B0, tl=x) for x in TIMELINES] + [dict(B0, A=a) for a in X.ACT_RANGE] + [dict(B0, L=x) for x in X.CANCEL_RANGE] + [dict(B0, N=x) for x in NOTICE_RANGE]
-        + [dict(B0, tl='M0'), dict(B0, tl='M250')])
-HOLD_FAMILIES = ('S1', 'S2', 'S3')                        # the timelines whose contradictory events are held at M50
+NOTICE_RANGE = (160., 660.)                               # the own fills' notice delays, 162-655 ms (K8; the replay's 100 ms is below all 99)
+ACT_TEST = (15., 100.)                                    # activation tested at 15 / 100 ms: own orders live within 18 / 21 ms (K5S, chosen after seeing them)
+CANCEL_MIX = (0.13, 4000.)                                # 13% of the orders' cancels at 4 s, the rest 37 ms: 10 of 77 confirmed own cancels took effect
+                                                          # 0.13-5.7 s after the request (K5S; filled orders only - an outcome-selected rate)
+SCEN = ([dict(B0, tl=x) for x in TIMELINES] + [dict(B0, A=a) for a in ACT_TEST] + [dict(B0, L=x) for x in X.CANCEL_RANGE] + [dict(B0, N=x) for x in NOTICE_RANGE]
+        + [dict(B0, X=CANCEL_MIX), dict(B0, tl='M0'), dict(B0, tl='M250')])
+HOLD_FAMILIES = ('S1', 'S2', 'S3', 'ST')                  # the timelines whose contradictory events are held at M50
 FAMILIES = ('baseline', 'timeline', 'trade-clock shift', 'activation delay', 'cancel latency', 'fill-notice delay')
 PEND_OFFSET = MIRROR_OFFSET = 0.                          # planted-error switches (selftest only): the pending clock / the mirror's landing moved
 
 
 def name(sc):
-    return f"{sc['tl']}|A{sc['A']:g}|L{sc['L']:g}|N{sc['N']:g}"
+    x = f"+{100 * sc['X'][0]:g}%x{sc['X'][1]:g}" if sc.get('X') else ''
+    return f"{sc['tl']}|A{sc['A']:g}|L{sc['L']:g}{x}|N{sc['N']:g}"
+
+
+def slow_order(oid, share):
+    """The mixture's slow orders: a fixed hash of the order id below `share` (deterministic, independent of the order's state)."""
+    return ((np.asarray(oid, np.int64) * 2654435761) % 2 ** 32) / 2. ** 32 < share
+
+
+def lat_of(sc, oid):
+    """An order's cancel latency in scenario sc (the mixture's slow orders take its slow latency)."""
+    return float(sc['X'][1]) if sc.get('X') and bool(slow_order(oid, sc['X'][0])) else float(sc['L'])
 
 
 def family(sc):
@@ -115,6 +137,9 @@ def family(sc):
         return 'trade-clock shift', f"every trade stamp {sc['tl'][1:]} ms before its anchor (B: 50 ms) - a uniform clock offset, not an order latency"
     if sc['tl'] != 'M50':
         return 'timeline', f"every trade at the {TIMELINE_RULES[sc['tl']]}; contradictory events held at M50"
+    if sc.get('X'):
+        return 'cancel latency', (f"{100 * sc['X'][0]:g}% of the orders' cancels take effect {sc['X'][1]:g} ms after their decision, the rest {sc['L']:g} ms (own "
+                                  'orders: 10 of 77 confirmed cancels took effect 0.13-5.7 s after the request)')
     if sc['A'] != B0['A']:
         return 'activation delay', f"the order goes live {sc['A']:g} ms after posting (B: 58)"
     if sc['L'] != B0['L']:
@@ -196,7 +221,7 @@ def loader_timing(data, m, W):
     return out
 
 
-def timelines(legs, W, env, day, sem=None):
+def timelines(legs, W, env, day, sem=None, tset=None, lag=None):
     """Per timeline, per side: every leg's execution time in the tape's order - one time per event; an event without an admissible window
     is held at its M50 time. S3 leg windows come with the legs (S3_llo / S3_lhi) or from the day's sem_windows by row_id. -> (times, held
     events per family, events, per timeline and side the sorted held / free leg times)."""
@@ -209,6 +234,9 @@ def timelines(legs, W, env, day, sem=None):
     if 'S3_llo' not in L:
         C.require(sem is not None and bool(np.isin(L.row_id.values, sem.index.values).all()), 'legs without their S3 windows')
         L['S3_llo'], L['S3_lhi'] = sem.S3_llo.reindex(L.row_id.values).values, sem.S3_lhi.reindex(L.row_id.values).values
+    if 'ST_llo' not in L:
+        C.require(tset is not None and lag is not None and bool(np.isin(L.row_id.values, tset.index.values).all()), 'legs without their settlement times')
+        L['ST_llo'], L['ST_lhi'], _ = X.st_windows(tset.t_set_ms.reindex(L.row_id.values).values, L.S3_llo.values, L.S3_lhi.values, lag)
     L = L.assign(day=day, h=env['h'], q01=env['q01'], q99=env['q99']); EVT = X.events_of(L)
     e = pd.MultiIndex.from_frame(EVT[['day', 'group']]).get_indexer(pd.MultiIndex.from_arrays([L.day.values, L.group.values])); C.require(bool((e >= 0).all()), 'a leg without an event')
     m50 = L.anc.values - SHIFT; tau = {'M50': m50}; hl = {'M50': np.zeros(len(L), bool)}
@@ -253,7 +281,7 @@ def scen_order(W, o, tau, fc, rows, frows, st, hm):
     for sc in KSCEN:
         Wk = [dict(W[0], anc=tau[sc['tl']][0]), dict(W[1], anc=tau[sc['tl']][1])]; pk, _ = QP.build_path(Wk, t, t + KP.H, shift=0.)
         C.require(pk is not None and np.array_equal(pk['frames'], base['frames']) and pk['mark'] == base['mark'], 'a scenario moved more than the trades')
-        a_, l_ = sc['A'], sc['L']; rej = postonly_at(pk, s, p, a_); vk, qk, tt, fq = fills_g(pk, s, p, a_, l_, a_ + l_ + PEND_OFFSET)
+        a_, l_ = sc['A'], lat_of(sc, int(o.oid)); rej = postonly_at(pk, s, p, a_); vk, qk, tt, fq = fills_g(pk, s, p, a_, l_, a_ + l_ + PEND_OFFSET)
         lnd = eff_landing(g, a_, l_) + MIRROR_OFFSET if np.isfinite(g) else np.nan
         C.require(abs(fq.sum() - qk) <= 1e-9 and (fq >= -1e-12).all(), 'per-trade fills do not sum to the keep branch')
         C.require(not (fq[tt < a_] > 1e-12).any() and not (np.isfinite(lnd) and (fq[tt >= lnd] > 1e-12).any()), 'a fill before activation or at / after the structural landing')
@@ -275,7 +303,7 @@ def _day_sem(day):
     rows = X.day_rows(day); sem, h = X.day_sem(day, rows); del rows; return sem, h
 
 
-def day_run(day, src=None, timing=None, kp=None, out=None, env_of=None, sem_of=None):
+def day_run(day, src=None, timing=None, kp=None, out=None, env_of=None, sem_of=None, set_of=None, st_lag=None):
     """One day: every committed state with a path, in every kernel scenario -> orders.parquet (order x scenario) + fills.parquet."""
     start = time.time(); C.require(day in KP.DAYS, 'undeclared day'); src = src or KP.Tape(); timing = timing or loader_timing
     kp = Path(kp or KP.OUT); out = Path(out or OUT); d = out / day; C.require(not d.exists(), 'day output exists')
@@ -283,6 +311,9 @@ def day_run(day, src=None, timing=None, kp=None, out=None, env_of=None, sem_of=N
     O = pd.read_parquet(kp / day / 'orders.parquet'); Fl = pd.read_parquet(kp / day / 'fills.parquet'); F50 = Fl[Fl.clock == SHIFT]
     fc = {int(k): (g.t.values.astype(float), g.q.values.astype(float)) for k, g in F50.groupby('oid')}; none = (np.zeros(0), np.zeros(0))
     env = (env_of or X.day_env)(day); markets = src.markets(day); offset = src.offset(day); sem, sem_in = (sem_of or _day_sem)(day)
+    tset, ts_in = (set_of or X.set_of)(day); lag_in = {}
+    if st_lag is None:
+        st_lag, lag_in = X.known_lag()
     Om = O[O.status.isin(('eligible', 'refused_post_only'))]; by_m = {int(m): g for m, g in Om.groupby('m')}
     rows, frows = [], []; st = dict(windows=0, orders=0, base_matched=0, kernel_checked=0, events=0, **{f'held_events_{k}': 0 for k in HOLD_FAMILIES})
     for begin in range(0, len(markets), 24):
@@ -291,7 +322,7 @@ def day_run(day, src=None, timing=None, kp=None, out=None, env_of=None, sem_of=N
             m = int(W[0]['m']); st['windows'] += 1
             if m not in by_m:
                 continue
-            tau, held, nev, hm = timelines(timing(data, m, W), W, env, day, sem); st['events'] += nev
+            tau, held, nev, hm = timelines(timing(data, m, W), W, env, day, sem, tset, st_lag); st['events'] += nev
             for k in HOLD_FAMILIES:
                 st[f'held_events_{k}'] += held[k]
             for o in by_m[m].itertuples():
@@ -303,7 +334,8 @@ def day_run(day, src=None, timing=None, kp=None, out=None, env_of=None, sem_of=N
     S = pd.DataFrame(rows, columns=['oid', 'scen', 'refused', 'v', 'q', 't_full', 'land']); SF = pd.DataFrame(frows, columns=['oid', 'scen', 't', 'q', 'held'])
     d.mkdir(parents=True); S.to_parquet(d / 'orders.parquet', index=False); SF.to_parquet(d / 'fills.parquet', index=False)
     C.dump(d / 'receipt.json', dict(asof=C.stamp(), day=day, stat=st, scenarios=[name(sc) for sc in KSCEN], families={name(sc): family(sc) for sc in SCEN},
-                                    timeline_rules=TIMELINE_RULES, env=env, s3_inputs=sem_in, keep_pull_receipt=C.sha(kp / day / 'receipt.json'),
+                                    timeline_rules=TIMELINE_RULES, env=env, s3_inputs=sem_in, settlement_inputs=dict(ts_in, **lag_in), st_lag_ms=st_lag,
+                                    keep_pull_receipt=C.sha(kp / day / 'receipt.json'),
                                     keep_pull_outputs=r['outputs'], provenance=KP.provenance(), source_sha256=C.sha(Path(__file__).resolve()),
                                     dependencies={p_.name: C.sha(p_) for p_ in (Path(X.__file__), Path(QP.__file__), Path(FK.__file__), HERE / 'pf_flow_control_kernel.cpp')},
                                     outputs={x: C.sha(d / x) for x in ('orders.parquet', 'fills.parquet')}, seconds=time.time() - start))
@@ -324,14 +356,16 @@ def outcome(O, Os, Fs, sc):
     ri = ri.astype(int); sg = np.where(E.side.values == 0, 1., -1.); val = Fs.q.values * sg[ri] * (E.mark.values[ri] - E.p.values[ri]); t = Fs.t.values.astype(float)
     lend = np.where(np.isnan(E.land_s.values[ri]), np.inf, E.land_s.values[ri])
     F = dict(val=val, pulled=act[ri], T=T[ri], s=cell[ri], endj=endj[ri], lend=lend)
-    e = float(X.contrib(t, F, CW, sc['L']).sum()); r = KP.landing(np.clip(T[ri], 1, KP.NSTEP), sc['L']); score = float(-(val * (act[ri] & (t >= r))).sum())
-    j0 = KP.landing(np.full(len(ri), KP.J0), sc['L']); pa = float(-(val * ((KP.J0 < endj[ri]) & (t >= j0))).sum())
+    lf = np.where(slow_order(E.oid.values[ri], sc['X'][0]), sc['X'][1], sc['L']) if sc.get('X') else np.full(len(ri), float(sc['L']))   # per-fill latency
+    groups = [(lf == x, float(x)) for x in np.unique(lf)]
+    con = lambda m: sum(float(X.contrib(t[g & m], {k: v[g & m] for k, v in F.items()}, CW, x).sum()) for g, x in groups)
+    e = con(np.ones(len(ri), bool)); r = KP.landing(np.clip(T[ri], 1, KP.NSTEP), lf); score = float(-(val * (act[ri] & (t >= r))).sum())
+    j0 = KP.landing(np.full(len(ri), KP.J0), lf); pa = float(-(val * ((KP.J0 < endj[ri]) & (t >= j0))).sum())
     filled = np.bincount(ri, minlength=len(E)) > 0; hv = np.isin(Fs.held.values, (1, 3)) if 'held' in Fs else np.zeros(len(Fs), bool)
     return dict(KEEP=float(E.v_s.sum()), score=score, null=score - e, E=e, PULLALL=pa, fills=int(len(Fs)), shares=float(Fs.q.sum()), eligible=int(len(E)),
                 held=dict(fills=int(hv.sum()), shares=float(Fs.q.values[hv].sum()), value=float(val[hv].sum()), gross=float(np.abs(val[hv]).sum()),
                           share_of_gross=float(np.abs(val[hv]).sum() / max(float(np.abs(val).sum()), 1e-12))),
-                orders_filled=int(filled.sum()), pulls=int(act.sum()), by_day={str(d_): float(X.contrib(t[E.day.values[ri] == d_], {k: v[E.day.values[ri] == d_] for k, v in F.items()}, CW,
-                                                                                                    sc['L']).sum()) for d_ in sorted(set(E.day))},
+                orders_filled=int(filled.sum()), pulls=int(act.sum()), by_day={str(d_): con(E.day.values[ri] == d_) for d_ in sorted(set(E.day))},
                 _filled=set(zip(E.day.values[filled], E.oid.values[filled])))
 
 
@@ -420,7 +454,7 @@ class SynTiming:
             ex = anc / 1000. - np.array([2. if (m, s, a - d['ws']) in self.contra else 0. for a in anc])
             r0, r1 = X.rest_range(ex)
             out.append(pd.DataFrame(dict(side=s, mid=m, group=g, how=(c == 0).astype(int), t_ms=np.where(c == 0, anc, np.nan), t_e2=np.where(c == 1, anc, np.nan), exec_s=ex, anc=anc,
-                                         S3_llo=np.where(c == 0, anc - 250., r0), S3_lhi=np.where(c == 0, anc, r1))))
+                                         S3_llo=np.where(c == 0, anc - 250., r0), S3_lhi=np.where(c == 0, anc, r1), ST_llo=anc - 170., ST_lhi=anc - 20.)))
         return out
 
 
@@ -428,6 +462,7 @@ def selftest():
     """Synthetic tape only: the keep / pull run on it is the committed baseline; planted scenario fills and landings; the report; refusals."""
     global PEND_OFFSET, MIRROR_OFFSET
     bad = []; src = KP.Syn(); days = KP.DAYS[:2]; env = lambda d_: dict(h=600., q01=-900., q99=1050., inputs={})
+    syn_set = lambda d_: (pd.DataFrame(dict(t_set_ms=np.zeros(0), set_status=np.zeros(0, int))), {})   # SynTiming carries its ST windows
     if not (np.array_equal(endj_n(np.array([1000., np.nan, 1000.]), np.array([np.nan, np.nan, 600.]), KP.NOTICE), A.endj_of(np.array([1000., np.nan, 1000.]), np.array([np.nan, np.nan, 600.])))
             and endj_n(np.full(3, 1000.), np.full(3, np.nan), np.array([0., 100., 250.])).tolist() == [20, 22, 25]):
         bad.append('the notice rule (endj) at 0 / 100 / 250 ms')
@@ -447,20 +482,27 @@ def selftest():
           pd.DataFrame(dict(side=1, mid=7, group=[3], how=[1], t_ms=[2000.], t_e2=np.nan, exec_s=[2.], anc=[2000.], row_id=[0]))]
     sem_ = pd.DataFrame(dict(S3_llo=np.zeros(10), S3_lhi=np.full(10, 1e9))); sem_.loc[[5, 3, 9, 0], ['S3_llo', 'S3_lhi']] = [[800., 1000.], [900., 1100.], [-7000., 4000.], [1750., 2000.]]
     Wt = [dict(anc=lg[0].anc.values), dict(anc=lg[1].anc.values)]; env1 = dict(h=600., q01=-900., q99=1050.)
+    tset_ = pd.DataFrame(dict(t_set_ms=np.full(10, np.nan), set_status=1)); tset_.loc[[5, 3, 0], 't_set_ms'] = [950., 950., 1900.]; tset_.loc[[5, 3, 0], 'set_status'] = 0
     try:
-        tt_, hh_, nev_, hm_ = timelines(lg, Wt, env1, 'd', sem_)
+        tt_, hh_, nev_, hm_ = timelines(lg, Wt, env1, 'd', sem_, tset_, 100.)
         if not (tt_['S3lo'][0].tolist() == [900., 900., -7000.] and tt_['S3hi'][0].tolist() == [1000., 1000., 4000.] and tt_['S3lo'][1].tolist() == [1750.] and nev_ == 3
-                and hh_ == dict(S1=0, S2=0, S3=0) and hm_['S3lo'][0][0].size == 0 and hm_['S3lo'][0][1].tolist() == [-7000., 900., 900.]):
-            bad.append(f"timelines with S3 by row id: {tt_['S3lo']} {tt_['S3hi']} {hh_} {nev_}")
+                and hh_ == dict(S1=0, S2=0, S3=0, ST=0) and hm_['S3lo'][0][0].size == 0 and hm_['S3lo'][0][1].tolist() == [-7000., 900., 900.]
+                and tt_['STlo'][0].tolist() == [850., 850., -7000.] and tt_['SThi'][0].tolist() == [950., 950., 4000.] and tt_['STlo'][1].tolist() == [1800.]
+                and tt_['SThi'][1].tolist() == [1900.]):
+            bad.append(f"timelines with S3 / ST by row id: {tt_['S3lo']} {tt_['S3hi']} {tt_['STlo']} {tt_['SThi']} {hh_} {nev_}")
     except (SystemExit, ValueError) as e:
         bad.append(f'timelines with S3 by row id refused: {e}')
     try:
-        timelines(lg, Wt, env1, 'd', sem_.drop(index=9)); bad.append('timelines accepted a leg without its S3 window')
+        timelines(lg, Wt, env1, 'd', sem_.drop(index=9), tset_, 100.); bad.append('timelines accepted a leg without its S3 window')
+    except ValueError:
+        pass
+    try:
+        timelines(lg, Wt, env1, 'd', sem_, tset_.drop(index=9), 100.); bad.append('timelines accepted a leg without its settlement row')
     except ValueError:
         pass
     fam = {name(sc): family(sc)[0] for sc in SCEN}; n0 = lambda **kw: name(dict(B0, **kw))
     if not (set(fam.values()) == set(FAMILIES) and fam[n0(tl='M0')] == fam[n0(tl='M250')] == 'trade-clock shift' and fam[n0(L=0.)] == fam[n0(L=100.)] == 'cancel latency'
-            and fam[n0()] == 'baseline' and fam[n0(tl='S3lo')] == 'timeline' and fam[n0(A=25.)] == 'activation delay' and fam[n0(N=0.)] == 'fill-notice delay'
+            and fam[n0()] == 'baseline' and fam[n0(tl='S3lo')] == 'timeline' and fam[n0(A=15.)] == 'activation delay' and fam[n0(X=CANCEL_MIX)] == 'cancel latency' and fam[n0(N=160.)] == 'fill-notice delay'
             and not any('zero latency' in family(sc)[1] for sc in SCEN)):
         bad.append(f'scenario families: {fam}')
     with tempfile.TemporaryDirectory(dir=str(I.K.IO)) as tmp:
@@ -475,7 +517,7 @@ def selftest():
         try:
             with contextlib.redirect_stdout(io.StringIO()):
                 for d in days:
-                    day_run(d, src=src, timing=tim, kp=tmp / 'kp', out=tmp / 'sc', env_of=env)
+                    day_run(d, src=src, timing=tim, kp=tmp / 'kp', out=tmp / 'sc', env_of=env, set_of=syn_set, st_lag=150.)
         except (SystemExit, ValueError) as e:
             bad.append(f'synthetic scenario days refused: {e}')
         if not bad:
@@ -491,18 +533,21 @@ def selftest():
             n_ = lambda **kw: name(dict(B0, **kw)); bfill = [(950., 20.), (1070., 10.)]
             exp = {'108 50 000 bid at B': (fl(50000., n_()), bfill), 'S1lo (both trades earlier)': (fl(50000., n_(tl='S1lo')), [(750., 20.), (870., 10.)]),
                    'S1hi (both after the cross cancel)': (fl(50000., n_(tl='S1hi')), []), 'S2lo': (fl(50000., n_(tl='S2lo')), [(400., 20.), (520., 10.)]),
-                   'S2hi': (fl(50000., n_(tl='S2hi')), []), 'EVhi': (fl(50000., n_(tl='EVhi')), []), 'activation 25': (fl(50000., n_(A=25.)), bfill),
+                   'S2hi': (fl(50000., n_(tl='S2hi')), []), 'EVhi': (fl(50000., n_(tl='EVhi')), []), 'activation 15': (fl(50000., n_(A=15.)), bfill),
                    'activation 100': (fl(50000., n_(A=100.)), bfill), 'cancel 0 ms (the 1 070 fill after the landing)': (fl(50000., n_(L=0.)), [(950., 20.)]),
                    'cancel 100 ms': (fl(50000., n_(L=100.)), bfill),
                    'landings 1 087 / just after 1 050 / 1 150 / 1 087': ([ld(50000., n_()), ld(50000., n_(L=0.)), ld(50000., n_(L=100.)), ld(50000., n_(A=100.))],
                                                                          [1087., float(np.nextafter(1050., np.inf)), 1150., 1087.]),
-                   '200 000 pending-cancel fill at B': (fl(200000., n_()), [(90., 30.)]), '200 000 activation 25 (landing 87)': (fl(200000., n_(A=25.)), []),
+                   '200 000 pending-cancel fill at B': (fl(200000., n_()), [(90., 30.)]), '200 000 activation 15 (landing 87)': (fl(200000., n_(A=15.)), []),
                    '200 000 activation 100 (live after the trade)': (fl(200000., n_(A=100.)), []), '200 000 cancel 0 (pending landing 58)': (fl(200000., n_(L=0.)), []),
                    '200 000 cancel 100 (pending landing 158)': (fl(200000., n_(L=100.)), [(90., 30.)]),
-                   '200 000 pending landings 95 / 87 / 137 / 58 / 158': ([ld(200000., n_()), ld(200000., n_(A=25.)), ld(200000., n_(A=100.)), ld(200000., n_(L=0.)), ld(200000., n_(L=100.))],
+                   '200 000 pending landings 95 / 87 / 137 / 58 / 158': ([ld(200000., n_()), ld(200000., n_(A=15.)), ld(200000., n_(A=100.)), ld(200000., n_(L=0.)), ld(200000., n_(L=100.))],
                                                                          [95., 87., 137., 58., 158.]),
                    '200 000 S1lo (before posting) / S1mid (before activation) / S1hi (after landing)': ([fl(200000., n_(tl=x)) for x in ('S1lo', 'S1mid', 'S1hi')], [[], [], []]),
-                   '150 000 contradictory event held at M50': ([fl(150000., n_(tl=x)) for x in ('S1lo', 'S1hi', 'S2lo', 'S2hi', 'S3lo', 'S3hi')], [[(450., 30.)]] * 6),
+                   '150 000 contradictory event held at M50': ([fl(150000., n_(tl=x)) for x in ('S1lo', 'S1hi', 'S2lo', 'S2hi', 'S3lo', 'S3hi', 'STlo', 'SThi')], [[(450., 30.)]] * 8),
+                   'STlo (both trades 120 ms before M50)': (fl(50000., n_(tl='STlo')), [(830., 20.), (950., 10.)]),
+                   'SThi (the sweep 30 ms after M50 fills; the WS trade lands after the cross cancel)': (fl(50000., n_(tl='SThi')), [(980., 20.)]),
+                   '200 000 STlo (before posting) / SThi (after the pending landing)': ([fl(200000., n_(tl=x)) for x in ('STlo', 'SThi')], [[], []]),
                    'S3lo (the E2 sweep moves before posting - its REST range starts 10 s early - so the 50 sh at 50 at 870 ms meet the queue ahead: no fill)':
                        (fl(50000., n_(tl='S3lo')), []),
                    'S3hi (both after the cross cancel)': (fl(50000., n_(tl='S3hi')), []),
@@ -524,7 +569,7 @@ def selftest():
                     bad.append('the one-day report')
                 if not (read['Z0 CONTROLS'] == 'YES' and len(R) == len(SCEN) and all(k in read for k in ('Z1 E ACROSS TESTED SCENARIOS', 'Z2 KEEP VALUE ACROSS TESTED SCENARIOS'))
                         and (tmp / 'sc' / f"scenarios_{'_'.join(days)}.json").exists() and R[n_()]['eligible'] > 0 and R[n_(tl='M250')]['fills'] == n250 > 0
-                        and R[n_(N=0.)]['fills'] == R[n_()]['fills'] and R[n_(N=0.)]['null'] != R[n_()]['null']
+                        and R[n_(N=660.)]['fills'] == R[n_()]['fills'] and R[n_(N=660.)]['null'] != R[n_()]['null']
                         and R[n_()]['held']['fills'] == 0 and R[n_(tl='S1lo')]['held']['fills'] >= 1 and R[n_(tl='S1lo')]['held']['gross'] > 0):
                     bad.append(f'report: {read}')
             except (SystemExit, ValueError) as e:
@@ -539,6 +584,15 @@ def selftest():
             O1 = pd.DataFrame(dict(day='d', oid=[0], m=[1], side=[0], phase=[1], p=[50.], mark=[45.], g_struct=[np.nan], **{f'f{j:02d}': [51. if j < 5 else 49.] for j in range(KP.NSTEP + 1)}))
             Os1 = pd.DataFrame(dict(day='d', oid=[0], refused=[False], v=[-150.], q=[30.], t_full=[300.], land=[np.nan])); Fs1 = pd.DataFrame(dict(day='d', oid=[0], t=[300.], q=[30.]))
             o37, o100 = outcome(O1, Os1, Fs1, B0), outcome(O1, Os1, Fs1, dict(B0, L=100.))
+            omx0 = outcome(O1, Os1, Fs1, dict(B0, X=CANCEL_MIX)); omx1 = outcome(O1.assign(oid=[1]), Os1.assign(oid=[1]), Fs1.assign(oid=[1]), dict(B0, X=CANCEL_MIX))
+            shr = float(slow_order(np.arange(20000), CANCEL_MIX[0]).mean())
+            if not (bool(slow_order(0, CANCEL_MIX[0])) and not bool(slow_order(1, CANCEL_MIX[0])) and omx0['score'] == 0. and omx1['score'] == 150.
+                    and abs(shr - CANCEL_MIX[0]) < .01 and lat_of(dict(B0, X=CANCEL_MIX), 0) == CANCEL_MIX[1] and lat_of(dict(B0, X=CANCEL_MIX), 1) == KP.CANCEL):
+                bad.append(f"cancel-latency mixture: score slow {omx0['score']} / fast {omx1['score']}, share {shr}")
+            nmx = name(dict(B0, X=CANCEL_MIX)); Sm = S[S.scen == nmx].merge(O[['oid', 'g_struct']], on='oid'); gm_ = np.isfinite(Sm.g_struct.values)
+            want_l = np.array([eff_landing(g_, KP.PLACE, lat_of(dict(B0, X=CANCEL_MIX), o_)) for g_, o_ in zip(Sm.g_struct.values[gm_], Sm.oid.values[gm_])])
+            if not (gm_.sum() > 0 and np.allclose(Sm.land.values[gm_], want_l) and bool(slow_order(Sm.oid.values[gm_], CANCEL_MIX[0]).any())):
+                bad.append(f'the mixture\'s per-order structural landings: {int(gm_.sum())} orders, slow among them {int(slow_order(Sm.oid.values[gm_], CANCEL_MIX[0]).sum())}')
             if not (o37['score'] == 150. and o37['pulls'] == 1 and o100['score'] == 0. and o37['KEEP'] == -150.):
                 bad.append(f"one-order outcome: score {o37['score']} / {o100['score']} at 37 / 100 ms (want 150 / 0)")
             # refusals: a misaligned timing source, a committed fill changed under a matching receipt, a perturbed pending clock
@@ -556,7 +610,7 @@ def selftest():
                 o_ = tmp / ('z' + str(abs(hash(nm_)) % 1000)); PEND_OFFSET = pend; MIRROR_OFFSET = mo
                 try:
                     with contextlib.redirect_stdout(io.StringIO()):
-                        day_run(days[0], src=src, out=o_, env_of=env, **kw)
+                        day_run(days[0], src=src, out=o_, env_of=env, set_of=syn_set, st_lag=150., **kw)
                     bad.append(f'scenario day accepted {nm_}')
                 except (SystemExit, ValueError) as e:
                     if msg not in str(e):
@@ -570,8 +624,9 @@ def selftest():
     print('keep-pull scenario selftests passed (synthetic only): the notice and landing rules; the keep / pull run on its synthetic tape reproduced at B; planted fills '
           'and landings under timelines S1 / S2 / EV, activation 25 / 100 ms and cancel latency 0 / 100 ms; a contradictory event held at M50; a one-order outcome at '
           '37 / 100 ms; the report end to end and refused on a wrong baseline expectation; a misaligned timing source, a changed committed fill, a perturbed pending clock '
-          'and an early landing mirror each refused by its own control with no output; S3 timelines (and the S3 join by row id, a leg without its '
-          'window refused); held fills marked and valued; event denominators; every scenario\'s family (no "zero latency")', flush=True)
+          'and an early landing mirror each refused by its own control with no output; S3 / ST timelines (and their joins by row id, a leg without its '
+          'window refused); held fills marked and valued; event denominators; every scenario\'s family (no "zero latency"); the cancel-latency '
+          'mixture (its slow share, per-order landings, one-order outcomes)', flush=True)
 
 
 if __name__ == '__main__':

@@ -28,7 +28,7 @@ MUT = [
     ('notice ignored in eligibility', "lim = np.fmin(g_struct, t_full + notice)", "lim = np.fmin(g_struct, t_full + KP.NOTICE)"),
     ('zero-latency tie order ignored (a cancel stops the trade at its own instant)', "    return x if x > g else float(np.nextafter(g, np.inf))", "    return x"),
     # --- the outcome
-    ('the score lands at the baseline latency in every scenario', "r = KP.landing(np.clip(T[ri], 1, KP.NSTEP), sc['L'])", "r = KP.landing(np.clip(T[ri], 1, KP.NSTEP))"),
+    ('the score lands at the baseline latency in every scenario', "r = KP.landing(np.clip(T[ri], 1, KP.NSTEP), lf)", "r = KP.landing(np.clip(T[ri], 1, KP.NSTEP))"),
     ('the uniform shifts read the baseline fills', "Fs = Fl[Fl.clock == float(sc['tl'][1:])][['day', 'oid', 't', 'q']]", "Fs = Fl[Fl.clock == SHIFT][['day', 'oid', 't', 'q']]"),
     ('notice scenarios re-use the baseline eligibility', "endj = endj_n(E.t_full_s.values, E.g_struct.values, sc['N'])", "endj = endj_n(E.t_full_s.values, E.g_struct.values, KP.NOTICE)"),
     # --- the controls
@@ -48,6 +48,13 @@ MUT = [
     ('the event denominator not counted', "st['events'] += nev", "st['events'] += 0"),
     ('held events of a family not counted', "st[f'held_events_{k}'] += held[k]", "st[f'held_events_{k}'] += 0"),
     ('a trade-clock shift labelled a cancel latency', "return 'trade-clock shift', f\"every trade stamp", "return 'cancel latency', f\"every trade stamp"),
+    # --- settlement times: ST timelines, the cancel-latency mixture
+    ('ST timelines read the S3 windows', "L['ST_llo'], L['ST_lhi'], _ = X.st_windows(tset.t_set_ms.reindex(L.row_id.values).values, L.S3_llo.values, L.S3_lhi.values, lag)",
+     "L['ST_llo'], L['ST_lhi'] = L.S3_llo.values, L.S3_lhi.values"),
+    ('the mixture ignored in the kernel', "a_, l_ = sc['A'], lat_of(sc, int(o.oid));", "a_, l_ = sc['A'], sc['L'];"),
+    ('the mixture ignored in the outcome', "lf = np.where(slow_order(E.oid.values[ri], sc['X'][0]), sc['X'][1], sc['L']) if sc.get('X') else np.full(len(ri), float(sc['L']))",
+     "lf = np.full(len(ri), float(sc['L']))"),
+    ('every order slow', "    return ((np.asarray(oid, np.int64) * 2654435761) % 2 ** 32) / 2. ** 32 < share", "    return np.ones(np.shape(oid), bool) | (share < 0)"),
 ]
 STALE = 97                                                # exit code of a replacement target that does not occur as declared
 

@@ -1,0 +1,295 @@
+{
+  "tables": {
+    "ledger_events": {
+      "day": "UTC day",
+      "group": "event id: the taker order (pf_txmap tk), else -1 - its legs_timed2 row (a leg without a taker identity)",
+      "m": "market",
+      "sides": "number of sides its legs are on",
+      "side": "its lowest side (0 bid / 1 ask of the Up book)",
+      "anc": "the replay loader anchor, venue_ms",
+      "legs": "its legs in the candidate markets",
+      "EV_hi": "EV window (evidence only), venue_ms: lo (-inf: unknown) / hi (the REST cap) / st / types / bases",
+      "S1_lo": "S1 window (the program declared range AND the REST cap), venue_ms: lo / hi (capped) / rhi (before the cap) / st (WST) / lo_type, hi_type (BOUND_TYPES) / lo_basis, hi_basis (the observation each endpoint comes from)",
+      "S1_hi": "S1 window (the program declared range AND the REST cap), venue_ms: lo / hi (capped) / rhi (before the cap) / st (WST) / lo_type, hi_type (BOUND_TYPES) / lo_basis, hi_basis (the observation each endpoint comes from)",
+      "S2_lo": "S2 window (measured envelopes AND the REST cap): the same fields as S1_",
+      "S2_hi": "S2 window (measured envelopes AND the REST cap): the same fields as S1_",
+      "S3_lo": "S3 window (the semantics windows: REST range, value-consistent WS increments, AND the REST cap): the same fields as S1_",
+      "S3_hi": "S3 window (the semantics windows: REST range, value-consistent WS increments, AND the REST cap): the same fields as S1_",
+      "ST_lo": "ST window (the settlement time - the lag bound .. the settlement time, AND the REST cap): the same fields as S1_",
+      "ST_hi": "ST window (the settlement time - the lag bound .. the settlement time, AND the REST cap): the same fields as S1_",
+      "cls": "evidence class 0 WS / 1 E2 / 2 imputed / 3 mixed",
+      "ws_span": "spread of its legs' WS pending times, ms",
+      "EV_lo": "EV window (evidence only), venue_ms: lo (-inf: unknown) / hi (the REST cap) / st / types / bases",
+      "EV_st": "EV window (evidence only), venue_ms: lo (-inf: unknown) / hi (the REST cap) / st / types / bases",
+      "S1_rhi": "S1 window (the program declared range AND the REST cap), venue_ms: lo / hi (capped) / rhi (before the cap) / st (WST) / lo_type, hi_type (BOUND_TYPES) / lo_basis, hi_basis (the observation each endpoint comes from)",
+      "S1_st": "S1 window (the program declared range AND the REST cap), venue_ms: lo / hi (capped) / rhi (before the cap) / st (WST) / lo_type, hi_type (BOUND_TYPES) / lo_basis, hi_basis (the observation each endpoint comes from)",
+      "S2_rhi": "S2 window (measured envelopes AND the REST cap): the same fields as S1_",
+      "S2_st": "S2 window (measured envelopes AND the REST cap): the same fields as S1_",
+      "S3_rhi": "S3 window (the semantics windows: REST range, value-consistent WS increments, AND the REST cap): the same fields as S1_",
+      "S3_st": "S3 window (the semantics windows: REST range, value-consistent WS increments, AND the REST cap): the same fields as S1_",
+      "ST_rhi": "ST window (the settlement time - the lag bound .. the settlement time, AND the REST cap): the same fields as S1_",
+      "ST_st": "ST window (the settlement time - the lag bound .. the settlement time, AND the REST cap): the same fields as S1_",
+      "S1_lo_type": "S1 window (the program declared range AND the REST cap), venue_ms: lo / hi (capped) / rhi (before the cap) / st (WST) / lo_type, hi_type (BOUND_TYPES) / lo_basis, hi_basis (the observation each endpoint comes from)",
+      "S1_hi_type": "S1 window (the program declared range AND the REST cap), venue_ms: lo / hi (capped) / rhi (before the cap) / st (WST) / lo_type, hi_type (BOUND_TYPES) / lo_basis, hi_basis (the observation each endpoint comes from)",
+      "S1_lo_basis": "S1 window (the program declared range AND the REST cap), venue_ms: lo / hi (capped) / rhi (before the cap) / st (WST) / lo_type, hi_type (BOUND_TYPES) / lo_basis, hi_basis (the observation each endpoint comes from)",
+      "S1_hi_basis": "S1 window (the program declared range AND the REST cap), venue_ms: lo / hi (capped) / rhi (before the cap) / st (WST) / lo_type, hi_type (BOUND_TYPES) / lo_basis, hi_basis (the observation each endpoint comes from)",
+      "S2_lo_type": "S2 window (measured envelopes AND the REST cap): the same fields as S1_",
+      "S2_hi_type": "S2 window (measured envelopes AND the REST cap): the same fields as S1_",
+      "S2_lo_basis": "S2 window (measured envelopes AND the REST cap): the same fields as S1_",
+      "S2_hi_basis": "S2 window (measured envelopes AND the REST cap): the same fields as S1_",
+      "S3_lo_type": "S3 window (the semantics windows: REST range, value-consistent WS increments, AND the REST cap): the same fields as S1_",
+      "S3_hi_type": "S3 window (the semantics windows: REST range, value-consistent WS increments, AND the REST cap): the same fields as S1_",
+      "S3_lo_basis": "S3 window (the semantics windows: REST range, value-consistent WS increments, AND the REST cap): the same fields as S1_",
+      "S3_hi_basis": "S3 window (the semantics windows: REST range, value-consistent WS increments, AND the REST cap): the same fields as S1_",
+      "ST_lo_type": "ST window (the settlement time - the lag bound .. the settlement time, AND the REST cap): the same fields as S1_",
+      "ST_hi_type": "ST window (the settlement time - the lag bound .. the settlement time, AND the REST cap): the same fields as S1_",
+      "ST_lo_basis": "ST window (the settlement time - the lag bound .. the settlement time, AND the REST cap): the same fields as S1_",
+      "ST_hi_basis": "ST window (the settlement time - the lag bound .. the settlement time, AND the REST cap): the same fields as S1_",
+      "EV_lo_type": "EV window (evidence only), venue_ms: lo (-inf: unknown) / hi (the REST cap) / st / types / bases",
+      "EV_hi_type": "EV window (evidence only), venue_ms: lo (-inf: unknown) / hi (the REST cap) / st / types / bases",
+      "EV_lo_basis": "EV window (evidence only), venue_ms: lo (-inf: unknown) / hi (the REST cap) / st / types / bases",
+      "EV_hi_basis": "EV window (evidence only), venue_ms: lo (-inf: unknown) / hi (the REST cap) / st / types / bases",
+      "rep_time": "representative execution time, venue_ms (see rep_rule)",
+      "rep_rule": "the rule that chose rep_time",
+      "e": "event index (ledger_fill_events.e)"
+    },
+    "ledger_legs": {
+      "mid": "market",
+      "side": "side (0 bid / 1 ask)",
+      "anc": "the replay loader anchor, venue_ms",
+      "ptick": "price tick",
+      "shares": "shares",
+      "how": "WS link: 0 none / 1 leg / 2 cell",
+      "t_ms": "WS settlementsPending source time linked by value (no signed identity), venue_ms",
+      "t_e2": "E2 book-drop estimate (inferred), venue_ms",
+      "exec_s": "REST executedAt second = the Confirmed status, venue clock s (an upper bound on the match)",
+      "row_id": "its legs_timed2 row (stable identity with the file hash)",
+      "group": "its event (ledger_events.group)",
+      "first_recv_ns": "first receipt of the REST leg, local_ns",
+      "price_executed": "REST execution price",
+      "signer": "maker signer address",
+      "taker_index": "taker index in the match",
+      "taker_quote": "taker quote flag",
+      "tk": "taker-order id (pf_txmap), -1 none",
+      "tk_status": "pf_txmap status 0 mapped / 1 absent / 2 count mismatch / 3 ambiguous / 4 no taker hash / 5 refined by signer",
+      "S3_llo": "the leg's S3 window start, venue_ms",
+      "S3_lhi": "the leg's S3 window end, venue_ms",
+      "S3_code": "its S3 basis (SEM_CODES)",
+      "S3_ncand": "value-consistent pending increments in its REST range (a WS leg)",
+      "link_late": "its linked WS increment is later than its REST cap + 250 ms (the link contradicts S3's premises)",
+      "t_set_ms": "its settlement time (the settlementId's UUIDv7 ms, pf_settlement_times), venue settlement clock",
+      "set_status": "its settlement status (pf_settlement_times.STATUS)",
+      "ST_llo": "its ST window start (t_set - the lag bound; no settlement time: its S3 start), venue_ms",
+      "ST_lhi": "its ST window end (t_set, else its S3 end)",
+      "ST_code": "0 its settlement time, 1 its S3 window (no settlement time)",
+      "day": "UTC day"
+    },
+    "ledger_fill_events": {
+      "fid": "fill (ledger_fills.fid)",
+      "day": "UTC day",
+      "group": "candidate event (ledger_events.group)",
+      "e": "candidate event index"
+    },
+    "ledger_fills": {
+      "fid": "fill id",
+      "day": "UTC day",
+      "oid": "order (ledger_orders.oid)",
+      "m": "market",
+      "side": "side",
+      "p": "order price",
+      "t0": "order posting time, venue_ms",
+      "t_replay": "the replay M50 fill time, replay_ms",
+      "anchor": "its trade anchor, venue_ms",
+      "q": "filled shares (M50)",
+      "value": "fill value at END, c",
+      "src": "the replay source code 0 WS / 1 E2 / 2 imputed / 3 mixed",
+      "pulled": "the declared score executed a pull on its order",
+      "T": "the score decision step (99 never)",
+      "landing37": "the score pull landing at 37 ms, replay_ms",
+      "replay_removed": "removed by the pull in the replay",
+      "link": "unlinked / unique_event / multi_event",
+      "n_events": "candidate events",
+      "event": "its event index if unique, else -1",
+      "activation_assumed": "the replay activation (configured point), ms",
+      "notice_assumed": "the replay own-fill notice delay (configured point), ms",
+      "contra_S1": "per-fill status over ALL its candidate events (CST): S1 / S2 / S3 contradictory timing assumptions (any; _cap the evidence cap; _legs the leg intersection), replay time after the evidence cap",
+      "contra_S1_cap": "per-fill status over ALL its candidate events (CST): S1 / S2 / S3 contradictory timing assumptions (any; _cap the evidence cap; _legs the leg intersection), replay time after the evidence cap",
+      "contra_S1_legs": "per-fill status over ALL its candidate events (CST): S1 / S2 / S3 contradictory timing assumptions (any; _cap the evidence cap; _legs the leg intersection), replay time after the evidence cap",
+      "contra_S2": "per-fill status over ALL its candidate events (CST): S1 / S2 / S3 contradictory timing assumptions (any; _cap the evidence cap; _legs the leg intersection), replay time after the evidence cap",
+      "contra_S2_cap": "per-fill status over ALL its candidate events (CST): S1 / S2 / S3 contradictory timing assumptions (any; _cap the evidence cap; _legs the leg intersection), replay time after the evidence cap",
+      "contra_S2_legs": "per-fill status over ALL its candidate events (CST): S1 / S2 / S3 contradictory timing assumptions (any; _cap the evidence cap; _legs the leg intersection), replay time after the evidence cap",
+      "contra_S3": "per-fill status over ALL its candidate events (CST): S1 / S2 / S3 contradictory timing assumptions (any; _cap the evidence cap; _legs the leg intersection), replay time after the evidence cap",
+      "contra_S3_cap": "per-fill status over ALL its candidate events (CST): S1 / S2 / S3 contradictory timing assumptions (any; _cap the evidence cap; _legs the leg intersection), replay time after the evidence cap",
+      "contra_S3_legs": "per-fill status over ALL its candidate events (CST): S1 / S2 / S3 contradictory timing assumptions (any; _cap the evidence cap; _legs the leg intersection), replay time after the evidence cap",
+      "contra_ST": "per-fill status over ALL its candidate events (CST): S1 / S2 / S3 contradictory timing assumptions (any; _cap the evidence cap; _legs the leg intersection), replay time after the evidence cap",
+      "contra_ST_cap": "per-fill status over ALL its candidate events (CST): S1 / S2 / S3 contradictory timing assumptions (any; _cap the evidence cap; _legs the leg intersection), replay time after the evidence cap",
+      "contra_ST_legs": "per-fill status over ALL its candidate events (CST): S1 / S2 / S3 contradictory timing assumptions (any; _cap the evidence cap; _legs the leg intersection), replay time after the evidence cap",
+      "contra_after_evidence": "per-fill status over ALL its candidate events (CST): S1 / S2 / S3 contradictory timing assumptions (any; _cap the evidence cap; _legs the leg intersection), replay time after the evidence cap",
+      "cls_S1_CP": "ordering class (ORD) per scenario and cancel window (CP / CR), -1 not pulled",
+      "cls_S1_CR": "ordering class (ORD) per scenario and cancel window (CP / CR), -1 not pulled",
+      "cls_S2_CP": "ordering class (ORD) per scenario and cancel window (CP / CR), -1 not pulled",
+      "cls_S2_CR": "ordering class (ORD) per scenario and cancel window (CP / CR), -1 not pulled",
+      "cls_S3_CP": "ordering class (ORD) per scenario and cancel window (CP / CR), -1 not pulled",
+      "cls_S3_CR": "ordering class (ORD) per scenario and cancel window (CP / CR), -1 not pulled",
+      "cls_ST_CP": "ordering class (ORD) per scenario and cancel window (CP / CR), -1 not pulled",
+      "cls_ST_CR": "ordering class (ORD) per scenario and cancel window (CP / CR), -1 not pulled",
+      "cls_EV_CP": "ordering class (ORD) per scenario and cancel window (CP / CR), -1 not pulled",
+      "cls_EV_CR": "ordering class (ORD) per scenario and cancel window (CP / CR), -1 not pulled"
+    },
+    "ledger_orders": {
+      "day": "UTC day",
+      "oid": "order",
+      "m": "market",
+      "side": "side",
+      "t": "posting time, venue_ms",
+      "status": "ledger status (exclusions are statuses)",
+      "T": "the score decision step",
+      "pulled": "the score executed a pull",
+      "endj": "the client last decision step + 1",
+      "m50_fills": "its M50 fills",
+      "m50_value": "its M50 fill value at END, c",
+      "decision_S1": "decision evaluability per scenario: not_pulled / no_m50_fill / evaluable / not_evaluable / not_eligible",
+      "decision_S2": "decision evaluability per scenario: not_pulled / no_m50_fill / evaluable / not_evaluable / not_eligible",
+      "decision_S3": "decision evaluability per scenario: not_pulled / no_m50_fill / evaluable / not_evaluable / not_eligible",
+      "decision_ST": "decision evaluability per scenario: not_pulled / no_m50_fill / evaluable / not_evaluable / not_eligible",
+      "decision_EV": "decision evaluability per scenario: not_pulled / no_m50_fill / evaluable / not_evaluable / not_eligible"
+    }
+  },
+  "bound_types": [
+    "evidence_bound",
+    "assumption_range",
+    "unknown",
+    "contradictory"
+  ],
+  "window_status": [
+    "ok",
+    "truncated_by_evidence",
+    "contradictory_evidence",
+    "contradictory_legs"
+  ],
+  "contradiction_status": [
+    "unlinked",
+    "none",
+    "some",
+    "all"
+  ],
+  "ordering": [
+    "CANCEL_FIRST",
+    "MATCH_FIRST",
+    "AMBIGUOUS",
+    "TIE",
+    "UNKNOWN",
+    "CONTRADICTORY"
+  ],
+  "link": [
+    "unlinked",
+    "unique_event",
+    "multi_event"
+  ],
+  "evidence_class": [
+    "WS",
+    "E2",
+    "imputed",
+    "mixed"
+  ],
+  "basis": {
+    "S1|WS": [
+      "latest WS pending source time over the legs - 250 ms",
+      "earliest WS pending source time over the legs"
+    ],
+    "S1|E2": [
+      "latest E2 book-drop estimate over the legs - 250 ms",
+      "earliest E2 book-drop estimate over the legs + 250 ms"
+    ],
+    "S1|imputed": [
+      "latest REST second over the legs - 500 ms (status-centred assumption)",
+      "earliest REST second over the legs + 500 ms (status-centred assumption)"
+    ],
+    "S1|mixed": [
+      "the latest start of its WS and E2 legs' windows",
+      "the earliest end of its WS and E2 legs' windows"
+    ],
+    "S2|WS": [
+      "latest WS pending source time over the legs - h",
+      "earliest WS pending source time over the legs + h"
+    ],
+    "S2|E2": [
+      "latest E2 book-drop estimate over the legs - h",
+      "earliest E2 book-drop estimate over the legs + h"
+    ],
+    "S2|imputed": [
+      "latest REST second over the legs + q01 (status-centred assumption)",
+      "earliest REST second over the legs + q99 (status-centred assumption)"
+    ],
+    "S2|mixed": [
+      "the latest start of its WS and E2 legs' windows",
+      "the earliest end of its WS and E2 legs' windows"
+    ],
+    "ST|WS": [
+      "the latest start over its legs' ST windows (a leg with a settlement time: t_set - the lag bound; otherwise its S3 window)",
+      "the earliest end over its legs' ST windows (t_set, else the S3 end)"
+    ],
+    "ST|E2": [
+      "the latest start over its legs' ST windows (a leg with a settlement time: t_set - the lag bound; otherwise its S3 window)",
+      "the earliest end over its legs' ST windows (t_set, else the S3 end)"
+    ],
+    "ST|imputed": [
+      "the latest start over its legs' ST windows (a leg with a settlement time: t_set - the lag bound; otherwise its S3 window)",
+      "the earliest end over its legs' ST windows (t_set, else the S3 end)"
+    ],
+    "ST|mixed": [
+      "the latest start over its legs' ST windows (a leg with a settlement time: t_set - the lag bound; otherwise its S3 window)",
+      "the earliest end over its legs' ST windows (t_set, else the S3 end)"
+    ],
+    "S3|WS": [
+      "the latest start over its legs' S3 windows (a WS leg: its earliest value-consistent pending increment - 250 ms; otherwise its REST Confirmed second - REST_LAG)",
+      "the earliest end over its legs' S3 windows (a WS leg: its latest value-consistent increment; otherwise its REST second end)"
+    ],
+    "S3|E2": [
+      "the latest start over its legs' S3 windows (a WS leg: its earliest value-consistent pending increment - 250 ms; otherwise its REST Confirmed second - REST_LAG)",
+      "the earliest end over its legs' S3 windows (a WS leg: its latest value-consistent increment; otherwise its REST second end)"
+    ],
+    "S3|imputed": [
+      "the latest start over its legs' S3 windows (a WS leg: its earliest value-consistent pending increment - 250 ms; otherwise its REST Confirmed second - REST_LAG)",
+      "the earliest end over its legs' S3 windows (a WS leg: its latest value-consistent increment; otherwise its REST second end)"
+    ],
+    "S3|mixed": [
+      "the latest start over its legs' S3 windows (a WS leg: its earliest value-consistent pending increment - 250 ms; otherwise its REST Confirmed second - REST_LAG)",
+      "the earliest end over its legs' S3 windows (a WS leg: its latest value-consistent increment; otherwise its REST second end)"
+    ]
+  },
+  "cap_basis": "REST executedAt (the Confirmed status) second end, earliest over the legs",
+  "rep_rule": "M50: the replay anchor - 50 ms (the replay assumption, not a match time)",
+  "clocks": {
+    "venue_ms": "REST executedAt, WS settlementsPending source and book frame times: venue clocks, ms; their mutual alignment is NOT established",
+    "local_ns": "first_recv_ns: the collector local receipt clock, ns; not aligned to the venue clocks",
+    "replay_ms": "ms after the order posting time t0 on the venue axis (the replay axis)"
+  },
+  "timestamp_semantics": {
+    "exec_s": "REST executedAt: venue status clock, whole second (floor) of the CONFIRMED status, 0 / 1 / 10 s after Matched on own legs; the match ends before (S + 1) * 1000 (evidence); S3 assumes it is at most REST_LAG earlier",
+    "t_ms": "WS settlementsPending: the venue book clock (updateTimestampMs) of the first frame whose aggregated pending amount at the price rose by the leg's (how 1) or its cell's (how 2) value; linked by value within +-1.5 s of the Confirmed second (no signed identity)",
+    "t_e2": "E2: the venue book clock of the displayed-size drop closest to the cell volume within [S * 1000 - 600, S * 1000 + 600) - a search centred on the Confirmed second; S3 does not use it",
+    "first_recv_ns": "the collector's local receipt clock (ns) of the first REST page carrying the leg; not aligned to the venue clocks",
+    "place / signed / accepted": "the bot (kernel) clock: Control Place, Exec Signed, the Accepted answer received",
+    "cancel request": "the bot (core) clock: Request::Cancel t",
+    "cancel confirmation": "the bot (kernel) clock: CancelPendingAudit - the first HTTP Canceled answer or user-stream cancel received (an upper bound on the effect)",
+    "fill notice": "the bot (kernel) clock: the first Matched / Confirmed fill notice received",
+    "Matched / Confirmed stamps": "the venue status clock, whole seconds (the notice's match_time per status)",
+    "replay axis": "venue time in ms after the order posting; the replay treats the book, WS and REST stamps as one clock (not established)"
+  },
+  "s3": {
+    "codes": [
+      "ws_unique",
+      "ws_multi",
+      "rest_range_no_ws_candidate",
+      "rest_range_e2_unsupported",
+      "rest_range_rest_only"
+    ],
+    "rest_lag_ms": 10000.0,
+    "ws_delay_ms": 250.0,
+    "value_tolerance": [
+      0.011,
+      0.01
+    ]
+  }
+}

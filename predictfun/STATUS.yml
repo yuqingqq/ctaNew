@@ -1,3 +1,17 @@
+clear_issues_settlement_20261023:
+  status: done_one_day_timing_issues_cleared_sign_not_identified
+  asof: "2026-11-18 11:16Z"
+  user: "Can you clear the issues"
+  evidence: settlementId_UUIDv7_ms_per_trade
+  settlement_20261023: {legs: 802157, mapped: 682499, ambiguous_content: 119658, C1_violation_share: 0.0, C1_shuffled: 0.99998, C3_within_rest_cap: 1.0, peak_gib_first: 2.67, peak_gib_lean: 0.95, lean_reproduces_first: true}
+  known_v3: {K8: CONSISTENT, d_ms: [14.5, 32.6], st_lag_ms: 259.0, offset_settlement_premise_ms: [14.5, 32.6], gate_settlement_offsets: {S1: FAIL, S2: FAIL, S3: PASS, ST: PASS, EV: PASS}, notice_delay_ms: [162, 655], notice_100ms_contradicted: 99, K5S: {activation_contradicted: 2, cancel_contradicted: 10, matched_after_request: 16, largest_cancel_lower_bound_ms: 5700}}
+  ledger_v4_20261023: {ST_contradictory_fills: 12, S1: 748, S2: 129, S3: 139, ST_bounds_37ms_c: [-81591, 105739], sign: SIGN-NOT-IDENTIFIED, ws_minus_t_set_p50_ms: 14, e2_minus_t_set_p50_ms: 14, windows_hold_t_set: {S1: 0.806, S2: 0.928, S3: 0.975}, replay_point_outside_st: 0.207}
+  scenarios_v3_20261023: {E_B: 34948, E_SThi: 40692, E_STlo: -8757, E_cancel_mixture: 30475, E_notice_160: 34664, E_notice_660: 34689, E_activation_15: 33971, E_range: [-13342, 40692], Z1: NOT-STABLE}
+  issues: {ws_disagreements: cleared, clock_offset: cleared_under_settlement_premise, replay_trade_times: measured_and_retimed_by_SThi, activation: tested_15ms, cancel: slow_tail_measured_and_tested, notice: measured_and_tested, book_vs_settlement_clock: cleared}
+  still_open: [sign_not_identified, st_lag_bound_259ms_from_K7, settlement_ids_ambiguous_14.9pct, own_evidence_one_partial_day_filled_orders, ranges_chosen_after_seeing, oct24_27_not_run]
+  checks: {selftests: pass, mutants: {exec_windows: 102/102, scenarios: 31/31, settlement: 10/10}}
+  receipts: predictfun/reviews/keep_pull_settlement_day20261023
+
 one_day_test_20261023_v3:
   status: done_one_day_issues_remain
   asof: "2026-11-18 09:48Z"
