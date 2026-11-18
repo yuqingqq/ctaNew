@@ -1,0 +1,75 @@
+KEEP OR PULL THE SAME RESTING ORDER AT THE ACTUAL CANCEL LATENCY (pf_keep_pull.py; replay, consumed days Oct23-27, development only)
+JOIN orders (30 sh at the known best, live at +58 ms, END +5 s, valued at the END mid); LIVE pulls decided every 50 ms from +100 ms land after L ms; c per order
+
+population: 151,228 counted states, 143,134 eligible resting orders (all in the score population); 17 orders miss a causal fair price at some step (1,327 steps; such a decision falls back to KEEP)
+  20261023: eligible 28,799, refused_post_only 1,289, missing_endpoint 354, stale_future_book 24
+  20261024: eligible 29,302, refused_post_only 1,056, missing_endpoint 334, stale_future_book 12
+  20261025: eligible 28,553, refused_post_only 1,005, missing_endpoint 398, stale_future_book 40
+  20261026: eligible 28,442, refused_post_only 1,390, missing_endpoint 374, stale_future_book 36
+  20261027: eligible 28,038, refused_post_only 1,300, missing_endpoint 460, stale_future_book 22
+
+PART 1 - what is at stake (every eligible order, M50, L 37 ms): sums in c over all orders
+  KEEP value -1,946,163 (loss on losing orders 3,504,309)
+  arm                 | improvement | foregone G | avoided L1 | avoided L2 (severe excess) | severe events | removed shares | live time lost (s)
+  PULL-ALL (live)     |   1,841,243 |  1,459,634 |    816,895 |                  2,483,982 |        21,192 |      1,372,850 | 341,816
+  ORACLE (live)       |   3,300,877 |          0 |    816,895 |                  2,483,982 |        21,192 |        820,540 | 56,617
+  ORACLE-PENDING      |   3,408,954 |          0 |    836,739 |                  2,572,215 |        21,753 |        839,770 | 58,210
+  ORACLE (EX POST, NOT DEPLOYABLE; live decisions) by latency: L 0 ms 3,392,432 (97%) | L 25 ms 3,330,588 (95%) | L 37 ms 3,300,877 (94%) | L 100 ms 3,136,136 (89%) | L 250 ms 2,790,893 (80%) | L 500 ms 2,253,697 (64%)
+  DELAYS of KEEP's 3,504,309 c loss: posting window (before a +50 ms withdrawal lands, +95 ms) 95,356 | pending-to-live gap (+95 to +100 ms; orders gone before +100 ms) 16,521 | cancel latency (the zero-latency oracle's decisions valued at 0 vs 37 ms) 91,555 | avoidable at 37 ms by those decisions 3,300,877 (re-chosen at 37 ms 3,300,877)
+  K1 by day (live oracle avoided / KEEP loss): 20261023 94%, 20261024 95%, 20261025 94%, 20261026 94%, 20261027 94%
+  M250_L37: KEEP -2,418,587, loss 3,961,921, ORACLE 3,659,162, PULL-ALL 2,234,353
+  M0_L37: KEEP -1,730,285, loss 3,257,354, ORACLE 3,091,171, PULL-ALL 1,646,780
+  M50_noyoung_L37: KEEP -1,807,899, loss 3,241,820, ORACLE 3,241,820, PULL-ALL 1,807,899
+
+PART 2 - declared causal scores against matched nulls (500 draws for the declared policy, 200 for the others). TRAJ = one pull per order, executed pulls matched
+  by (day, market, side, minute) and step, early picks can use up later ones (any unmatched draw -> NOT-EVALUABLE); STATES = the same counts of live decision states per
+  (stratum, step), each valued alone (matched by construction). The reading uses TRAJ when every draw matches, else STATES (declared before the run).
+  variant          policy null   | pulls (null, unmatched) | removed sh (null) | improvement | null mean | null p95 | days > null | K2  | per removed share | null p5 | days < null | K3
+  M50_L0              A+0 TRAJ   | 70,373 (70,008, 365.1) | 705,737 (668,860) |   1,232,982 |   953,684 |  974,522 |           5 | n/e |            -1.747 |  -1.455 |           5 | n/e
+  M50_L0              A+0 STATES | 70,373 (70,373,     -) | 705,737 (672,536) |   1,232,982 |   966,980 |  990,768 |           5 | yes |            -1.747 |  -1.472 |           5 | yes
+  M50_L37             A+0 TRAJ   | 70,373 (70,008, 365.1) | 684,837 (654,467) |   1,169,671 |   925,069 |  945,277 |           5 | n/e |            -1.708 |  -1.442 |           5 | n/e
+  M50_L37             A+0 STATES | 70,373 (70,373,     -) | 684,837 (657,954) |   1,169,671 |   936,736 |  959,438 |           5 | yes |            -1.708 |  -1.456 |           5 | yes
+  M50_L37             A+1 TRAJ   | 81,016 (80,615, 401.1) | 785,196 (754,719) |   1,266,825 | 1,053,207 | 1,074,051 |           5 | n/e |            -1.613 |  -1.422 |           5 | n/e
+  M50_L37             A+1 STATES | 81,016 (81,016,     -) | 785,196 (758,282) |   1,266,825 | 1,067,299 | 1,090,426 |           5 | yes |            -1.613 |  -1.438 |           5 | yes
+  M50_L37             A-1 TRAJ   | 58,127 (57,840, 287.2) | 580,288 (544,399) |   1,063,250 |   784,208 |  803,702 |           5 | n/e |            -1.832 |  -1.476 |           5 | n/e
+  M50_L37             A-1 STATES | 58,127 (58,127,     -) | 580,288 (547,282) |   1,063,250 |   791,880 |  819,937 |           5 | yes |            -1.832 |  -1.492 |           5 | yes
+  M50_L37            B0.5 TRAJ   | 23,343 (22,931, 412.0) | 280,712 (199,811) |     981,530 |   370,316 |  388,180 |           5 | n/e |            -3.497 |  -1.937 |           5 | n/e
+  M50_L37            B0.5 STATES | 23,343 (23,343,     -) | 280,712 (203,237) |     981,530 |   380,334 |  401,515 |           5 | yes |            -3.497 |  -1.970 |           5 | yes
+  M50_L37              B1 TRAJ   | 17,141 (16,946, 194.6) | 224,063 (152,372) |     919,683 |   317,684 |  332,861 |           5 | n/e |            -4.105 |  -2.190 |           5 | n/e
+  M50_L37              B1 STATES | 17,141 (17,141,     -) | 224,063 (154,354) |     919,683 |   325,754 |  343,286 |           5 | yes |            -4.105 |  -2.222 |           5 | yes
+  M50_L37              B2 TRAJ   | 11,291 (11,204,  86.8) | 162,347 (103,795) |     815,862 |   253,017 |  266,910 |           5 | n/e |            -5.025 |  -2.561 |           5 | n/e
+  M50_L37              B2 STATES | 11,291 (11,291,     -) | 162,347 (104,981) |     815,862 |   257,929 |  275,851 |           5 | yes |            -5.025 |  -2.603 |           5 | yes
+  M50_noyoung_L37     A+0 TRAJ   | 70,373 (70,008, 365.1) | 675,808 (646,521) |   1,152,118 |   911,102 |  930,773 |           5 | n/e |            -1.705 |  -1.437 |           5 | n/e
+  M50_noyoung_L37     A+0 STATES | 70,373 (70,373,     -) | 675,808 (650,024) |   1,152,118 |   922,901 |  945,288 |           5 | yes |            -1.705 |  -1.453 |           5 | yes
+  M250_L37            A+0 TRAJ   | 69,462 (69,146, 315.5) | 680,286 (686,188) |   1,024,796 | 1,049,088 | 1,071,514 |           1 | n/e |            -1.506 |  -1.559 |           1 | n/e
+  M250_L37            A+0 STATES | 69,462 (69,462,     -) | 680,286 (688,182) |   1,024,796 | 1,051,187 | 1,074,824 |           1 | no  |            -1.506 |  -1.560 |           1 | no
+  M0_L37              A+0 TRAJ   | 70,431 (70,061, 369.9) | 660,003 (628,321) |   1,083,811 |   830,119 |  849,737 |           5 | n/e |            -1.642 |  -1.351 |           5 | n/e
+  M0_L37              A+0 STATES | 70,431 (70,431,     -) | 660,003 (631,471) |   1,083,811 |   839,338 |  863,979 |           5 | yes |            -1.642 |  -1.368 |           5 | yes
+
+PART 3 - by day (M50, L 37 ms): improvement over KEEP = avoided L1 + L2 - foregone G; PULL-ALL and the live ORACLE on every eligible order, A+0 and the mean of its reading's null (decision states)
+  day      | KEEP loss | PULL-ALL imp (G / L1 / L2)       | ORACLE imp (L1 / L2, severe) | A+0 imp (G / L1 / L2, severe, pulls)          | null imp (pulls)
+  20261023 |   749,161 |  389,554 (311,414 / 172,480 / 528,489) |  700,968 (172,480 / 528,489, 4,546) | 241,282 (143,606 / 95,064 / 289,824, 2,480, 14,155) | 206,508 (14,155)
+  20261024 |   661,634 |  321,715 (306,508 / 162,628 / 465,594) |  628,222 (162,628 / 465,594, 4,054) | 206,321 (147,330 / 87,407 / 266,244, 2,194, 14,290) | 169,832 (14,290)
+  20261025 |   616,633 |  317,352 (265,337 / 150,284 / 432,405) |  582,689 (150,284 / 432,405, 3,769) | 196,644 (127,308 / 77,047 / 246,905, 1,971, 13,961) | 152,224 (13,961)
+  20261026 |   743,686 |  392,930 (305,042 / 167,791 / 530,181) |  697,973 (167,791 / 530,181, 4,497) | 264,208 (142,597 / 90,706 / 316,099, 2,447, 14,106) | 206,098 (14,106)
+  20261027 |   733,195 |  419,692 (271,333 / 163,712 / 527,313) |  691,025 (163,712 / 527,313, 4,326) | 261,216 (135,485 / 88,955 / 307,745, 2,354, 13,861) | 202,073 (13,861)
+
+PART 4 - splits (M50, L 37 ms): KEEP fills by trade source and by age after live; what A+0 removes
+  ws      : KEEP   -842,049 c on    808,211 sh | removed by A+0  -534,944 c on   386,832 sh
+  e2      : KEEP   -573,065 c on    401,406 sh | removed by A+0  -288,993 c on   186,127 sh
+  imputed : KEEP    -25,824 c on      4,409 sh | removed by A+0   -13,520 c on     2,144 sh
+  mixed   : KEEP   -505,225 c on    217,693 sh | removed by A+0  -332,213 c on   109,734 sh
+  age_0_100   : KEEP   -138,264 c on     76,920 sh | removed   -17,553 c
+  age_100_500 : KEEP   -469,834 c on    295,175 sh | removed  -309,271 c
+  age_500_END : KEEP -1,338,065 c on  1,059,624 sh | removed  -842,847 c
+  structural-cancel triggers of eligible orders (the kernel rule on the known book) by side and cause (P47: an empty ask side cancels a bid; an empty bid side never cancels an ask): ask:behind 12,815, ask:cross 37,355, ask:none 21,302, ask:own_side_empty 87, bid:behind 12,666, bid:cross 37,437, bid:cross_opp_empty 102, bid:none 21,277, bid:own_side_empty 93
+
+READINGS (declared before the run; computed)
+  K1 ORACLE-BOUND (EX POST, NOT DEPLOYABLE; live decisions): AVOIDABLE-AT-LATENCY - the oracle avoids 3,300,877 of KEEP's 3,504,309 c of loss (94%); >= 50% on 5 / 5 days
+  matched null used for K2 / K3: decision states (trajectory comparison NOT-EVALUABLE-UNMATCHED (500 / 500 draws, mean 365.1 pulls))
+  K2 SCORE-EARNS (A+0): EARNS-OVER-MATCHED-STATES at M50 / 37 ms; the predicate (each variant's own reading null) holds at: M50_L0, M50_L37, M50_noyoung_L37, M0_L37
+  K3 SCORE-RANKS-VALUE (A+0): RANKS-VALUE-STATES
+  K4 LATENCY (numbers, same decisions at 0 and 37 ms): live oracle 3,392,432 vs 3,300,877 (gap by day 21,004, 13,215, 16,686, 19,949, 20,701); A+0 1,232,982 vs 1,169,671 (gap by day 14,244, 7,984, 10,219, 16,945, 13,918)
+  live decisions 6,935,675, of which without a causal fair price 579 (fallback KEEP)
+  multiplicity: 6 score policies; passes outside A+0 (candidates only, never readings): A+1, A-1, B0.5, B1, B2
+2026-11-18T03:01:24Z tag=kp_report rc=0 peak_rss_mib=3322 wall_s=115.83 cpu_user_s=104.21 memavail_start_gib=23 disk_free_gib=453->453 slot=claude

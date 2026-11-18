@@ -1,0 +1,50 @@
+{
+  "asof": "2026-11-18T02:53:31.517340+00:00",
+  "day": "20261023",
+  "limit": null,
+  "stat": {
+    "markets": 288,
+    "windows": 288,
+    "orders": 30466,
+    "kernel_checks": 2448,
+    "grid_before_start_margin": 576,
+    "grid_counted": 30466,
+    "grid_one_sided_book": 2934,
+    "grid_expiry_censored": 576,
+    "grid_locked_or_crossed": 8,
+    "invariance_checked": 2724,
+    "invariance_changed": 0
+  },
+  "reconciliation": {
+    "v1_join_rows": 30088,
+    "matched": 30088,
+    "v1_counted": 30466,
+    "counted": 30466
+  },
+  "provenance": {
+    "commit": "532d2a79fd0a825a0727c98ed203c6d944ae13e2",
+    "source": {
+      "pf_keep_pull.py": "58b972f92bda06fbc847c43d2ace8db9d7b12f4daaf67bcfaa14e92deb475835",
+      "pf_queue_place_test.py": "188c1495ce35db80ce8b79cbc50541964d0d32d9da38fee4b925e951eec01a1f",
+      "pf_queue_place_ledger.py": "8fa16b929b4ae497109a70add4036dd7cd4501102a261c74eba63de0e0b94bb5",
+      "pf_flow_control_kernel.cpp": "fb1ff31cdcf2a97783283f927fb2d56333a0760e877cb0b93348528138886612",
+      "pf_flow_control_kernel.py": "2460567474f28318f5d09df8ce0977e15748bb9263bc501471cf6a649b334379"
+    },
+    "uncommitted": ""
+  },
+  "status": {
+    "eligible": 28799,
+    "refused_post_only": 1289,
+    "missing_endpoint": 354,
+    "stale_future_book": 24
+  },
+  "fair_missing": {
+    "orders_with_any": 18,
+    "steps": 1414
+  },
+  "outputs": {
+    "orders.parquet": "3313ea65d73ccbfee64669758efd0f7581f73470b49dc2b7752866258a5d142b",
+    "fills.parquet": "ba1b1448b353928c27850e4e19f073ebb6d9cf9235a51dd07d691eab2f9f2513"
+  },
+  "seconds": 107.25929999351501
+}
