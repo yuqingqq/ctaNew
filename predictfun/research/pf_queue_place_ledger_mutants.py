@@ -14,15 +14,14 @@ MUT = [
     ('none (must pass)', None, None),
     # --- the walk against v1 (caught by the reconciliation and / or the conservation predicates)
     ('IMPROVE allowed only at spread >= 3', "not spread >= 2 else", "not spread >= 3 else"),
-    ('2 s status copies the 5 s path status', "else pstat['' if tag == '_m250' else tag]", "else pstat['']"),
+    ('2 s status copies the 5 s path status (well-formed: no value read where none exists)', "                    rec['status' + tag] = ast[arm] if n_ is None else pstat['' if tag == '_m250' else tag]\n                    if rec['status' + tag] == 'eligible':\n                        put(rec, tag, n_, vals[tag])", "                    rec['status' + tag] = ast[arm] if n_ is None else pstat['']\n                    if rec['status' + tag] == 'eligible' and tag in vals:\n                        put(rec, tag, n_, vals[tag])"),
     ('post-only mirror at 0 ms, not 58 ms', "PLACE_MS = 58.", "PLACE_MS = 0."),
     ('LATE row dropped for gone_before_first', "skip('FIRST', 'gone_before_first', t=t_f); skip('LATE', 'gone_before_first');", "skip('FIRST', 'gone_before_first', t=t_f);"),
     ('one-sided book called locked', "else 'one_sided_book' if best < 0 or oppb < 0", "else 'locked_or_crossed' if best < 0 or oppb < 0"),
     ('sampled / not_sampled codes swapped', "np.where(np.isin(bj, sorted(chosen)), 3, 2)", "np.where(np.isin(bj, sorted(chosen)), 2, 3)"),
     ('value comparison skipped in the reconciliation', "            x, y = x.values.astype(float), y.values.astype(float); eq = (x == y) | (np.isnan(x) & np.isnan(y))",
      "            eq = np.ones(len(x), bool)"),
-    ('state with a failed 5 s path keeps no 2 s value', "                if pth is None or not live:\n                    continue\n                vals[tag] = valued(pth, s, o, [c[2] for c in live], H)",
-     "                if pth is None or not live or pstat.get('', 'eligible') != 'eligible':\n                    continue\n                vals[tag] = valued(pth, s, o, [c[2] for c in live], H)"),
+    ('state with a failed 5 s path keeps no 2 s value (well-formed)', "                if pth is None or not live:\n                    continue\n                vals[tag] = valued(pth, s, o, [c[2] for c in live], H)\n                if H == H_MAIN:\n                    p250, s250 = QP.build_path(W, t, t + H, shift=250.)\n                    C.require(p250 is not None and s250 == 'eligible', 'M250 path status differs from the M50 status')\n                    vals['_m250'] = QP.evaluate(p250, o, H)\n            if MUT_SILENT_SKIP and pstat[''] != 'eligible':\n                continue                                               # planted: v1's silent skip\n            sink['grid'].append(dict(g, cand_status='counted', best=best, opp=oppb, spread=spread, phase=phase, path=pstat[''], path_2s=pstat['_2s']))\n            for arm, r, pr in cands:\n                rec = dict(g, arm=arm, rung=r, p=pr, spread=spread, phase=phase, arm_status=ast[arm])\n                n_ = [c[0] for c in live].index(arm) if ast[arm] == 'eligible' else None\n                for tag in TAGS:\n                    rec['status' + tag] = ast[arm] if n_ is None else pstat['' if tag == '_m250' else tag]\n                    if rec['status' + tag] == 'eligible':\n                        put(rec, tag, n_, vals[tag])", "                if pth is None or not live or pstat.get('', 'eligible') != 'eligible':\n                    continue\n                vals[tag] = valued(pth, s, o, [c[2] for c in live], H)\n                if H == H_MAIN:\n                    p250, s250 = QP.build_path(W, t, t + H, shift=250.)\n                    C.require(p250 is not None and s250 == 'eligible', 'M250 path status differs from the M50 status')\n                    vals['_m250'] = QP.evaluate(p250, o, H)\n            if MUT_SILENT_SKIP and pstat[''] != 'eligible':\n                continue                                               # planted: v1's silent skip\n            sink['grid'].append(dict(g, cand_status='counted', best=best, opp=oppb, spread=spread, phase=phase, path=pstat[''], path_2s=pstat['_2s']))\n            for arm, r, pr in cands:\n                rec = dict(g, arm=arm, rung=r, p=pr, spread=spread, phase=phase, arm_status=ast[arm])\n                n_ = [c[0] for c in live].index(arm) if ast[arm] == 'eligible' else None\n                for tag in TAGS:\n                    rec['status' + tag] = ast[arm] if n_ is None else pstat['' if tag == '_m250' else tag]\n                    if rec['status' + tag] == 'eligible' and tag in vals:\n                        put(rec, tag, n_, vals[tag])"),
     ('EARLY allowed up to 5 ticks behind', "'early_too_far' if dist > 3 else None", "'early_too_far' if dist > 5 else None"),
     ('start margin of the grid 0 s, not 2 s', "'before_start_margin' if t < ws + 2000. else", "'before_start_margin' if t < ws + 0. else"),
     ('births sampled 39 per side', "[:PER_SIDE]; chosen", "[:PER_SIDE - 1]; chosen"),
@@ -37,7 +36,7 @@ MUT = [
     ('REST1 rung 0', "('REST1', 1, best - sgn)", "('REST1', 0, best - sgn)"),
     ('LATE place: inside reported as at_or_behind', "'inside' if rung < 0 else 'at_or_behind'", "'at_or_behind'"),
     ('grid spread saved with the wrong sign', "cand_status='counted', best=best, opp=oppb, spread=spread, phase=phase", "cand_status='counted', best=best, opp=oppb, spread=-spread, phase=phase"),
-    ('state arm path status from the other valuation', "else pstat['' if tag == '_m250' else tag]", "else pstat['_2s' if tag == '' else '' if tag == '_m250' else tag]"),
+    ('state arm path status from the other valuation (well-formed)', "                    rec['status' + tag] = ast[arm] if n_ is None else pstat['' if tag == '_m250' else tag]\n                    if rec['status' + tag] == 'eligible':\n                        put(rec, tag, n_, vals[tag])", "                    rec['status' + tag] = ast[arm] if n_ is None else pstat['_2s' if tag == '' else '' if tag == '_m250' else tag]\n                    if rec['status' + tag] == 'eligible' and tag in vals:\n                        put(rec, tag, n_, vals[tag])"),
     # --- L5 (corrected after the ledger / keep-pull review): the tipping point and the worst case at legal payoff bounds
     ('L5a tipping point from the saved mean, not the saved sum', "need = -float(inc.sum()) / n_exc", "need = -float(inc.mean())"),
     ('L5b worst case without payoff bounds', "return bool(inc_sum + hi.sum() < 0) if inc_sum < 0 else bool(inc_sum + lo.sum() > 0) if inc_sum > 0 else False",
@@ -62,17 +61,33 @@ def one(i):
     g = dict(__name__='pf_queue_place_ledger_mutant', __file__=str(SRC)); exec(compile(s, str(SRC), 'exec'), g); g['selftest']()
 
 
+def check_kill(r, marks):
+    """A kill counts only when a CHECK refused: the selftest's or the run's own exit message (marks), or a named control - C.require's
+    ValueError with the control's message (the traceback's last frame is `require`). Any other exception is a crash, not a kill (2026-11-18)."""
+    if r.returncode != 1:
+        return False, ''
+    lines = r.stderr.strip().splitlines()
+    for m in marks:
+        x = next((l for l in lines if m in l), None)
+        if x is not None:
+            return True, x.strip()
+    req = len(lines) >= 3 and lines[-1].startswith('ValueError: ') and any(l.strip().startswith('File ') and l.rstrip().endswith(', in require') for l in lines[-4:-1])
+    return req, (lines[-1].strip() if req else '')
+
+
 def main():
     bad = 0
     for i, (name, *_) in enumerate(MUT):
         r = subprocess.run([sys.executable, __file__, str(i)], capture_output=True, text=True)
         tail = r.stderr.strip().splitlines() or r.stdout.strip().splitlines() or ['']
-        ok = (r.returncode == 0) if i == 0 else (r.returncode not in (0, STALE))
+        caught, why = check_kill(r, ('QUEUE-PLACE LEDGER SELFTEST FAILED', 'QUEUE-PLACE LEDGER FAILED'))
+        ok = (r.returncode == 0) if i == 0 else caught
         bad += not ok
-        print(f'{i:2d} {name}: rc {r.returncode} -> {"passed" if r.returncode == 0 else " / ".join(x.strip()[:200] for x in tail[-2:])}{"" if ok else "   <<< UNEXPECTED"}', flush=True)
+        how = 'passed' if r.returncode == 0 else ('caught: ' + why[:200]) if caught else ' / '.join(x.strip()[:200] for x in tail[-2:])
+        print(f'{i:2d} {name}: rc {r.returncode} -> {how}{"" if ok else "   <<< UNEXPECTED"}', flush=True)
     if bad:
         sys.exit(f'QUEUE-PLACE LEDGER MUTATION CHECK FAILED: {bad} unexpected outcomes of {len(MUT)}')
-    print(f'queue-place ledger mutation check passed: the unchanged copy passes its selftest, {len(MUT) - 1} / {len(MUT) - 1} planted code errors fail it', flush=True)
+    print(f'queue-place ledger mutation check passed: the unchanged copy passes its selftest, {len(MUT) - 1} / {len(MUT) - 1} planted code errors are caught by a check', flush=True)
 
 
 if __name__ == '__main__':

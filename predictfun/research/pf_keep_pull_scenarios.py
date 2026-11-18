@@ -17,13 +17,21 @@ trade-clock shift (M0 / M250: every trade stamp moved uniformly), activation del
 no scenario is called "zero latency"; (3) the held contradictory events get their denominator (every event per family and day) and their
 economic weight (the fills, shares and value at held trade instants per scenario); v1's outputs (keep_pull_scenarios_20261118) stay as
 provenance.
+C1 B1a-WEIGHTED (v6, the readiness loop, added after v5's age bins were read - a checklist report item, not a test): FINDINGS C1 asks
+for the headline B1a-weighted beside it. Per scenario E weighted by bin with FV3's B1a precision weights (pf_fv3_check.B1A: the share of
+replay fills that were real on live's own orders by age bin, at M 0 and at M 50; one day of live's orders), both weight sets as the earlier
+modules print them; reading C1 B1a-WEIGHTED E AT B: HOLDS-SIGN iff both weighted values have B's sign (non-zero), else SIGN-DIFFERS.
+C12 / C2 (v6, the readiness loop; declared before v6 ran): every fill carries its trade-anchor source as the committed run assigns it
+(KP.trade_index + KP.window's rule: the codes of the candidate trades at the fill's instant, 3 when several), the age table is split by it
+(C12), control (j): at B the sources equal the committed fills' exactly; reading C2 E AT M250 vs M50 and C2 KEEP + SCORE AT M250 vs M50:
+HOLDS-AT-M250 iff the sign at M250 equals B's, else SIGN-DIFFERS-AT-M250.
 C1 / C3 (v5, USER "proceed to fix" with review 8e63f178; declared before v5 ran): the replay reported neither FINDINGS C1 (value split by the
 order's age at the fill; the headline without fills on orders < 100 ms old, which were 8-12% real on live's own orders - B1a) nor C3 (the
 cancel-pending share). Per scenario now: E, the score's improvement and the fills' value by age bin (< 100 / 100-500 / >= 500 ms after the
 scenario's activation; E is additive over fills), the headline without the < 100 ms fills, and the fills landing between the score's pull
 decision and its landing (count, shares, value, share of the fills' gross). Control (i): KEEP equals the sum of its fills' values in every
 scenario, else no output. Readings Z1-NY / Z3-NY: E and KEEP + score without the < 100 ms fills, STABLE-* / NOT-STABLE as Z1 / Z3. B1a-
-weighted values are not computed (B1a's per-bucket precision is one day of live's orders). Scenario values are otherwise unchanged from v4.
+weighted values were not computed in v5; v6 computes them (below). Scenario values are otherwise unchanged from v4.
 SETTLEMENT-LAG CORRECTION (v4, review 52c45d57): UUID creation lag is event-specific, not a constant offset. The default ST window
 has no finite lower bound. STlo is omitted from the default scenario bank, and no -infinity endpoint may enter a replay. SThi remains
 an upper-endpoint sensitivity scenario, conditional on creation after matching and aligned clocks; it is not a measured match instant.
@@ -91,6 +99,7 @@ import numpy as np
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
+import pf_fv3_check as FV                                # noqa: E402  FINDINGS C1's B1a precision weights by age bin (M 0 / M 50)
 import pf_keep_pull as KP                                 # noqa: E402
 import pf_keep_pull_clock_audit as A                      # noqa: E402
 import pf_keep_pull_timing_audit as V1                    # noqa: E402
@@ -100,7 +109,8 @@ import pf_queue_place_ledger as QL                        # noqa: E402
 import pf_flow_control_kernel as FK                       # noqa: E402
 
 C, pd, I = KP.C, KP.pd, KP.I
-OUT = Path(I.K.IO) / 'keep_pull_scenarios_v5_20261118'      # v5: the C1 age split and the C3 cancel-pending share (v4 and earlier stay as provenance)
+OUT = Path(I.K.IO) / 'keep_pull_scenarios_v6_20261118'      # v6: C12 (age by trade-anchor source) and the C2 reading at M250; v5 and earlier stay as provenance
+SRC_LABELS = ('WS', 'E2', 'imputed', 'mixed')              # KP.window's trade-source codes 0 / 1 / 2 / 3 (several sources at one instant)
 AGE_EDGES, AGE_LABELS = (KP.YOUNG, 500.), ('lt100', '100to500', 'ge500')   # FINDINGS C1: the order's age at the fill (fill - activation), ms
 SHIFT = 50.
 B0 = dict(tl='M50', A=KP.PLACE, L=KP.CANCEL, N=KP.NOTICE, X=None)
@@ -277,7 +287,7 @@ def held_code(x, times):
     return at(times[0]).astype(np.int8) + 2 * at(times[1]).astype(np.int8)
 
 
-def scen_order(W, o, tau, fc, rows, frows, st, hm):
+def scen_order(W, o, tau, fc, rows, frows, st, hm, codes):
     """One committed state in every kernel scenario; B against the committed row and fills (control a); sampled kernel checks (control b);
     each fill marked by the trades at its instant: held (contradictory events kept at M50) / free / both."""
     s, t, p = int(o.side), float(o.t), float(o.p)
@@ -299,11 +309,16 @@ def scen_order(W, o, tau, fc, rows, frows, st, hm):
         full = np.flatnonzero(np.cumsum(fq) >= KP.SIZE - 1e-9); tf = float(tt[full[0]]) if len(full) else np.nan
         rows.append((int(o.oid), name(sc), rej, vk, qk, tf, lnd))
         mine = fq > 1e-12; hc = held_code(tt[mine] + t, hm[sc['tl']][s])
-        frows.extend((int(o.oid), name(sc), float(x), float(q_), int(c_)) for x, q_, c_ in zip(tt[mine], fq[mine], hc))
-        if sc == B0:                                                           # control (a)
-            ct, cq = fc; mine = fq > 1e-12
+        trs, ix_ = KP.trade_index(Wk, t, t + KP.H, 0.); C.require(np.array_equal(trs, pk['trades']), 'the trade index differs from the scenario path')
+        thru = trs[:, 2] < p if s == 0 else trs[:, 2] > p; can = np.flatnonzero((trs[:, 1] == s) & ((trs[:, 2] == p) | thru))
+        sx = []                                                                # C12: each fill's trade-anchor source, as KP.window assigns it
+        for x in tt[mine]:
+            cs = {int(codes[s][0][ix_[r_][1]]) for r_ in can if trs[r_, 0] == x}; sx.append(cs.pop() if len(cs) == 1 else 3)
+        frows.extend((int(o.oid), name(sc), float(x), float(q_), int(c_), int(c2)) for x, q_, c_, c2 in zip(tt[mine], fq[mine], hc, sx))
+        if sc == B0:                                                           # control (a); v6 (j): the fills' sources equal the committed ones
+            ct, cq, cs_ = fc; mine = fq > 1e-12
             same = (vk == o.v and qk == o.q and (tf == o.t_full or (np.isnan(tf) and np.isnan(o.t_full))) and rej == (o.status == 'refused_post_only')
-                    and np.array_equal(tt[mine], ct) and np.array_equal(fq[mine], cq))
+                    and np.array_equal(tt[mine], ct) and np.array_equal(fq[mine], cq) and np.array_equal(np.asarray(sx, np.int64), cs_))
             C.require(same, f'the baseline scenario differs from the committed replay (order {int(o.oid)})'); st['base_matched'] += 1
     st['orders'] += 1
 
@@ -319,7 +334,8 @@ def day_run(day, src=None, timing=None, kp=None, out=None, env_of=None, sem_of=N
     kp = Path(kp or KP.OUT); out = Path(out or OUT); d = out / day; C.require(not d.exists(), 'day output exists')
     r = json.loads((kp / day / 'receipt.json').read_text()); C.require(all(C.sha(kp / day / x) == h for x, h in r['outputs'].items()), 'keep-pull outputs changed since their receipt')
     O = pd.read_parquet(kp / day / 'orders.parquet'); Fl = pd.read_parquet(kp / day / 'fills.parquet'); F50 = Fl[Fl.clock == SHIFT]
-    fc = {int(k): (g.t.values.astype(float), g.q.values.astype(float)) for k, g in F50.groupby('oid')}; none = (np.zeros(0), np.zeros(0))
+    fc = {int(k): (g.t.values.astype(float), g.q.values.astype(float), g.src.values.astype(np.int64)) for k, g in F50.groupby('oid')}
+    none = (np.zeros(0), np.zeros(0), np.zeros(0, np.int64))
     env = (env_of or X.day_env)(day); markets = src.markets(day); offset = src.offset(day); sem, sem_in = (sem_of or _day_sem)(day)
     tset, ts_in = (set_of or X.set_of)(day); lag_in = {}
     if st_lag is None:
@@ -335,13 +351,14 @@ def day_run(day, src=None, timing=None, kp=None, out=None, env_of=None, sem_of=N
             tau, held, nev, hm = timelines(timing(data, m, W), W, env, day, sem, tset, st_lag); st['events'] += nev
             for k in HOLD_FAMILIES:
                 st[f'held_events_{k}'] += held[k]
+            cd = src.sources(data, m)                                         # the committed run's per-trade source codes, the tape's order
             for o in by_m[m].itertuples():
-                scen_order(W, o, tau, fc.get(int(o.oid), none), rows, frows, st, hm)
+                scen_order(W, o, tau, fc.get(int(o.oid), none), rows, frows, st, hm, cd)
         del data; C.guard('keep-pull scenarios day')
         print(json.dumps(dict(stage='scenarios', day=day, markets=min(begin + 24, len(markets)), orders=st['orders'], seconds=round(time.time() - start), rss=round(I.K.rss_mib()))), flush=True)
     C.require(st['orders'] == len(Om) == st['base_matched'], f"re-simulated {st['orders']} / baseline-matched {st['base_matched']} of {len(Om)} committed states with a path")
     C.require(st['kernel_checked'] > 0 or not len(Om), 'no kernel clock check ran')
-    S = pd.DataFrame(rows, columns=['oid', 'scen', 'refused', 'v', 'q', 't_full', 'land']); SF = pd.DataFrame(frows, columns=['oid', 'scen', 't', 'q', 'held'])
+    S = pd.DataFrame(rows, columns=['oid', 'scen', 'refused', 'v', 'q', 't_full', 'land']); SF = pd.DataFrame(frows, columns=['oid', 'scen', 't', 'q', 'held', 'src'])
     d.mkdir(parents=True); S.to_parquet(d / 'orders.parquet', index=False); SF.to_parquet(d / 'fills.parquet', index=False)
     C.dump(d / 'receipt.json', dict(asof=C.stamp(), day=day, stat=st, scenarios=[name(sc) for sc in KSCEN], families={name(sc): family(sc) for sc in SCEN},
                                     timeline_rules=TIMELINE_RULES, env=env, s3_inputs=sem_in, settlement_inputs=dict(ts_in, **lag_in), st_lag_ms=st_lag, settlement_model=X.SETTLEMENT_MODEL, st_lag_role='UNIDENTIFIED' if st_lag is None else 'EXPLICIT_SCENARIO_ASSUMPTION',
@@ -377,8 +394,12 @@ def outcome(O, Os, Fs, sc):
     by_age = {lab: dict(E=con(yb == b), score=float(-(val * (rm & (yb == b))).sum()), fills_value=float(val[yb == b].sum()), fills=int((yb == b).sum()),
                         shares=float(Fs.q.values[yb == b].sum())) for b, lab in enumerate(AGE_LABELS)}
     gross = max(float(np.abs(val).sum()), 1e-12)
+    sc_ = Fs.src.values.astype(np.int64) if 'src' in Fs else np.full(len(Fs), -1)                       # C12 (v6): the age table by trade-anchor source
+    by_age_src = {lab: {sl: dict(E=con((yb == b) & (sc_ == c)), fills=int(((yb == b) & (sc_ == c)).sum())) for c, sl in enumerate(SRC_LABELS)}
+                  for b, lab in enumerate(AGE_LABELS)}
     return dict(KEEP=float(E.v_s.sum()), score=score, null=score - e, E=e, PULLALL=pa, fills=int(len(Fs)), shares=float(Fs.q.sum()), eligible=int(len(E)),
-                fills_value=float(val.sum()), by_age=by_age,
+                fills_value=float(val.sum()), by_age=by_age, by_age_src=by_age_src,
+                b1a_E=b1a_of(by_age),
                 no_young=dict(E=e - by_age['lt100']['E'], score=score - by_age['lt100']['score'], fills_value=float(val.sum()) - by_age['lt100']['fills_value']),
                 cancel_pending=dict(fills=int(pend.sum()), shares=float(Fs.q.values[pend].sum()), value=float(val[pend].sum()),
                                     share_of_fills=float(pend.mean()) if len(pend) else 0., share_of_gross=float(np.abs(val[pend]).sum()) / gross),
@@ -391,6 +412,21 @@ def outcome(O, Os, Fs, sc):
 def keep_not_fills(res):
     """Control (i) of v5: the scenarios whose KEEP is not the sum of their fills' values (the C1 split would then be incomplete)."""
     return [nm for nm, v in res.items() if abs(v['KEEP'] - v['fills_value']) > 1e-6 * max(1., abs(v['KEEP']))]
+
+
+def b1a_of(by_age):
+    """FINDINGS C1: E weighted by age bin with FV3's B1a precision weights, per weight set (M 0 / M 50)."""
+    return {k: float(sum(by_age[lab]['E'] * w for lab, w in zip(AGE_LABELS, wt))) for k, wt in FV.B1A.items()}
+
+
+def b1a_sign(e, w):
+    """FINDINGS C1: does B's E keep its sign under every B1a weight set?"""
+    return 'HOLDS-SIGN' if e != 0 and all(np.sign(x) == np.sign(e) for x in w.values()) and len(w) > 0 else 'SIGN-DIFFERS'
+
+
+def at_m250(v50, v250):
+    """FINDINGS C2: does a value's sign at the M50 baseline hold at the M250 trade clock?"""
+    return 'HOLDS-AT-M250' if np.sign(v50) == np.sign(v250) and v50 != 0 else 'SIGN-DIFFERS-AT-M250'
 
 
 def stable(lo, hi):
@@ -414,10 +450,10 @@ def report(out=None, kp=None, days=KP.DAYS, expect='committed', tol=1.):
             tag = KP.CTAG[float(sc['tl'][1:])]
             Os = pd.DataFrame(dict(day=Op.day.values, oid=Op.oid.values, refused=(Op.status == 'refused_post_only').values, v=Op['v' + tag].values, q=Op['q' + tag].values,
                                    t_full=Op['t_full' + tag].values, land=Op.land_struct.values))
-            Fs = Fl[Fl.clock == float(sc['tl'][1:])][['day', 'oid', 't', 'q']]
+            Fs = Fl[Fl.clock == float(sc['tl'][1:])][['day', 'oid', 't', 'q', 'src']]
         else:
             key = name(dict(sc, N=KP.NOTICE)); Os = S[S.scen == key][['day', 'oid', 'refused', 'v', 'q', 't_full', 'land']]
-            Fs = SF[SF.scen == key][['day', 'oid', 't', 'q', 'held']]
+            Fs = SF[SF.scen == key][['day', 'oid', 't', 'q', 'held', 'src']]
         C.require(len(Os) == len(Op), f'{nm}: {len(Os)} order rows for {len(Op)} committed states with a path')
         res[nm] = outcome(O, Os, Fs, sc)
     b = res[name(B0)]; Ee = O[O.status == 'eligible'].reset_index(drop=True); cell = Ee.groupby(['day', 'm', 'side', 'phase'], sort=True).ngroup().values
@@ -439,6 +475,9 @@ def report(out=None, kp=None, days=KP.DAYS, expect='committed', tol=1.):
     read = {'TIMING EVIDENCE': 'EXPLICIT-LAG-SCENARIO-ONLY' if timing_identified else 'LOWER-MATCH-BOUND-UNIDENTIFIED', 'Z0 CONTROLS': 'YES', 'Z1 E ACROSS TESTED SCENARIOS': stable(min(Es), max(Es)), 'Z2 KEEP VALUE ACROSS TESTED SCENARIOS': stable(min(Ks), max(Ks)),
             'Z3 THE SCORE\'S VALUE ACROSS TESTED SCENARIOS': stable(min(Ss), max(Ss)),
             'Z1-NY E WITHOUT FILLS ON ORDERS < 100 MS OLD ACROSS TESTED SCENARIOS': stable(min(Ey), max(Ey)),
+            'C2 E AT M250 vs M50': at_m250(b['E'], res[name(dict(B0, tl='M250'))]['E']),
+            'C1 B1a-WEIGHTED E AT B': b1a_sign(b['E'], b['b1a_E']),
+            'C2 KEEP + SCORE AT M250 vs M50': at_m250(b['KEEP'] + b['score'], res[name(dict(B0, tl='M250'))]['KEEP'] + res[name(dict(B0, tl='M250'))]['score']),
             'Z3-NY THE SCORE\'S VALUE WITHOUT FILLS ON ORDERS < 100 MS OLD ACROSS TESTED SCENARIOS': stable(min(Sy), max(Sy))}
     L = ['QUEUE-AWARE SCENARIO REPLAY of the keep / pull selection, declared score A+0 - the fair-edge rule, not a learned model (pf_keep_pull_scenarios.py; every '
          'committed state with a path re-simulated '
@@ -454,11 +493,15 @@ def report(out=None, kp=None, days=KP.DAYS, expect='committed', tol=1.):
                  f"{v['eligible']:>9,} {v['fills']:>8,} {v['orders_filled']:>7,} {v['discovered']:>7,} {v['lost']:>6,}")
     L += ['', '  C1 / C3 (FINDINGS checklist): E by the order\'s age at the fill (< 100 / 100-500 / >= 500 ms after activation), the headline without fills on '
           'orders < 100 ms old (live\'s were 8-12% real, B1a), and the fills that land while the score\'s pull is in flight (cancel-pending):',
-          f"  {'scenario':<24} {'E <100':>9} {'E 100-500':>10} {'E >=500':>9} {'E w/o <100':>11} {'K+s w/o <100':>13} {'fills <100':>10} {'pending fills / c / gross':>28}"]
+          f"  {'scenario':<24} {'E <100':>9} {'E 100-500':>10} {'E >=500':>9} {'E w/o <100':>11} {'E B1a M0/M50':>17} {'K+s w/o <100':>13} {'fills <100':>10} {'pending fills / c / gross':>28}"]
     for nm, v in res.items():
         a_, ny, cp = v['by_age'], v['no_young'], v['cancel_pending']
-        L.append(f"  {nm:<24} {a_['lt100']['E']:>+9,.0f} {a_['100to500']['E']:>+10,.0f} {a_['ge500']['E']:>+9,.0f} {ny['E']:>+11,.0f} {ny['fills_value'] + ny['score']:>+13,.0f} "
+        L.append(f"  {nm:<24} {a_['lt100']['E']:>+9,.0f} {a_['100to500']['E']:>+10,.0f} {a_['ge500']['E']:>+9,.0f} {ny['E']:>+11,.0f} "
+                 f"{v['b1a_E']['M0']:>+8,.0f}/{v['b1a_E']['M50']:<+8,.0f} {ny['fills_value'] + ny['score']:>+13,.0f} "
                  f"{100 * a_['lt100']['fills'] / max(v['fills'], 1):>9.1f}% {cp['fills']:>9,} / {cp['value']:>+9,.0f} / {100 * cp['share_of_gross']:>4.1f}%")
+    ba = b['by_age_src']
+    L += ['', f"  C12 (FINDINGS checklist): B's E by age (rows) and trade-anchor source (columns: {' / '.join(SRC_LABELS)}; E2 anchors are uncertain by ~+-250 ms), "
+          'c (fills):'] + [f"  {lab:<10} " + ' | '.join(f"{sl} {ba[lab][sl]['E']:+,.0f} ({ba[lab][sl]['fills']:,})" for sl in SRC_LABELS) for lab in AGE_LABELS]
     L += ['', '  scenario families (one factor moved from B; none of them is an order latency unless named so) and the fills at held instants (trades of '
           'contradictory events kept at M50: count / shares / value c / share of the scenario\'s fill gross):']
     for sc in SCEN:
@@ -600,6 +643,10 @@ def selftest():
                 if got != want:
                     bad.append(f'{k}: {got} != {want}')
             o150 = int(O[(O.m == 108) & (O.side == 0) & (O.t == ws + 150000.)].oid.iloc[0]); hcode = lambda sc: SF[(SF.oid == o150) & (SF.scen == sc)].held.tolist()
+            K50 = pd.read_parquet(tmp / 'kp' / days[0] / 'fills.parquet'); K50 = K50[K50.clock == SHIFT][['oid', 't', 'src']]   # C12: B's sources = the committed ones
+            SB = SF[SF.scen == n_()][['oid', 't', 'src']].merge(K50, on=['oid', 't'], how='outer', suffixes=('', '_c'), indicator=True)
+            if not (len(SB) > 0 and (SB._merge == 'both').all() and np.array_equal(SB.src.values.astype(int), SB.src_c.values.astype(int)) and SB.src.nunique() >= 2):
+                bad.append(f"C12: B's fill sources differ from the committed fills' ({int((SB._merge != 'both').sum())} unmatched, {SB.src.value_counts().to_dict()})")
             st0 = json.loads((tmp / 'sc' / days[0] / 'receipt.json').read_text())['stat']
             if not (hcode(n_()) == [2] and hcode(n_(tl='S1lo')) == [1] and hcode(n_(tl='S3hi')) == [1] and st0['events'] > 0 and st0['held_events_S3'] >= 1
                     and st0['held_events_S1'] >= 1):
@@ -612,6 +659,16 @@ def selftest():
                 R1_, _ = report(out=tmp / 'sc', kp=tmp / 'kp', days=days[:1], expect=None)                 # one day first: its own report files
                 if not ((tmp / 'sc' / f'scenarios_{days[0]}.json').exists() and R1_[n_()]['eligible'] < R[n_()]['eligible']):
                     bad.append('the one-day report')
+                pl = b1a_of({'lt100': dict(E=1.), '100to500': dict(E=10.), 'ge500': dict(E=100.)})
+                if not (all(abs(pl[k] - (w[0] + 10. * w[1] + 100. * w[2])) <= 1e-9 for k, w in FV.B1A.items()) and set(pl) == {'M0', 'M50'}
+                        and all(R[nm]['b1a_E'] == b1a_of(R[nm]['by_age']) for nm in R)
+                        and (b1a_sign(5., dict(M0=1., M50=2.)), b1a_sign(5., dict(M0=1., M50=-2.)), b1a_sign(0., dict(M0=0., M50=0.))) == ('HOLDS-SIGN', 'SIGN-DIFFERS', 'SIGN-DIFFERS')
+                        and read.get('C1 B1a-WEIGHTED E AT B') in ('HOLDS-SIGN', 'SIGN-DIFFERS') and FV.B1A['M50'][0] < .2):
+                    bad.append(f"C1 B1a-weighted: {({nm: R[nm]['b1a_E'] for nm in list(R)[:2]})} {read.get('C1 B1a-WEIGHTED E AT B')}")
+                if not (all(sum(x['fills'] for x in R[nm]['by_age_src'][lab].values()) == R[nm]['by_age'][lab]['fills'] for nm in R for lab in AGE_LABELS)
+                        and read.get('C2 E AT M250 vs M50') in ('HOLDS-AT-M250', 'SIGN-DIFFERS-AT-M250')
+                        and (at_m250(5., 3.), at_m250(5., -1.), at_m250(0., 0.)) == ('HOLDS-AT-M250', 'SIGN-DIFFERS-AT-M250', 'SIGN-DIFFERS-AT-M250')):
+                    bad.append(f"C12 / C2: the age-by-source table does not partition the fills, or the M250 reading: {read.get('C2 E AT M250 vs M50')}")
                 if not (read['Z0 CONTROLS'] == 'YES' and len(R) == len(SCEN) and all(k in read for k in ('Z1 E ACROSS TESTED SCENARIOS', 'Z2 KEEP VALUE ACROSS TESTED SCENARIOS'))
                         and (tmp / 'sc' / f"scenarios_{'_'.join(days)}.json").exists() and R[n_()]['eligible'] > 0 and R[n_(tl='M250')]['fills'] == n250 > 0
                         and R[n_(N=660.)]['fills'] == R[n_()]['fills'] and R[n_(N=660.)]['null'] != R[n_()]['null']
@@ -671,8 +728,14 @@ def selftest():
             fb.loc[fb.index[j_], 'q'] = fb.q.iloc[j_] - 1.; fb.to_parquet(tmp / 'kpb' / days[0] / 'fills.parquet', index=False)
             rb = json.loads((tmp / 'kpb' / days[0] / 'receipt.json').read_text()); rb['outputs']['fills.parquet'] = C.sha(tmp / 'kpb' / days[0] / 'fills.parquet')
             (tmp / 'kpb' / days[0] / 'receipt.json').write_text(json.dumps(rb))
+            shutil.copytree(tmp / 'kp', tmp / 'kpc'); fc_ = pd.read_parquet(tmp / 'kpc' / days[0] / 'fills.parquet'); j_ = int(np.flatnonzero(fc_.clock.values == SHIFT)[0])
+            fc_.loc[fc_.index[j_], 'src'] = (int(fc_.src.iloc[j_]) + 1) % 3; fc_.to_parquet(tmp / 'kpc' / days[0] / 'fills.parquet', index=False)   # C12's control (j)
+            rc_ = json.loads((tmp / 'kpc' / days[0] / 'receipt.json').read_text()); rc_['outputs']['fills.parquet'] = C.sha(tmp / 'kpc' / days[0] / 'fills.parquet')
+            (tmp / 'kpc' / days[0] / 'receipt.json').write_text(json.dumps(rc_))
             for nm_, kw, pend, mo, msg in (('a timing source misaligned with the tape', dict(timing=mis, kp=tmp / 'kp'), 0., 0., 'timing legs not aligned'),
                                            ('a committed fill changed under a matching receipt', dict(timing=tim, kp=tmp / 'kpb'), 0., 0., 'the baseline scenario differs'),
+                                           ("a committed fill's trade source changed under a matching receipt", dict(timing=tim, kp=tmp / 'kpc'), 0., 0.,
+                                            'the baseline scenario differs'),
                                            ('a pending clock 10 ms off activation + latency', dict(timing=tim, kp=tmp / 'kp'), -10., 0., 'the baseline scenario differs'),
                                            ('a structural landing mirror 10 ms early (a kernel fill after it)', dict(timing=tim, kp=tmp / 'kp'), 0., -10.,
                                             'at / after the structural landing')):
@@ -692,7 +755,7 @@ def selftest():
         sys.exit('KEEP-PULL SCENARIOS SELFTEST FAILED: ' + ' | '.join(bad))
     print('keep-pull scenario selftests passed (synthetic only): the notice and landing rules; the keep / pull run on its synthetic tape reproduced at B; planted fills '
           'and landings under timelines S1 / S2 / EV, activation 25 / 100 ms and cancel latency 0 / 100 ms; a contradictory event held at M50; a one-order outcome at '
-          '37 / 100 ms; the report end to end and refused on a wrong baseline expectation; a misaligned timing source, a changed committed fill, a perturbed pending clock '
+          '37 / 100 ms; the report end to end and refused on a wrong baseline expectation; a misaligned timing source, a changed committed fill, a changed committed trade source (C12), a perturbed pending clock '
           'and an early landing mirror each refused by its own control with no output; S3 / ST timelines (and their joins by row id, a leg without its '
           'window refused); held fills marked and valued; event denominators; every scenario\'s family (no "zero latency"); the cancel-latency '
           'mixture (its slow share, per-order landings, one-order outcomes)', flush=True)

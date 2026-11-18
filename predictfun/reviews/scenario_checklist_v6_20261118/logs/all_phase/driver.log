@@ -1,0 +1,16 @@
+19:47:52Z start sc_selftest
+19:48:14Z start st_day_20261023
+19:55:03Z start st_day_20261024
+20:01:11Z start st_day_20261025
+20:07:16Z start st_day_20261026
+20:14:26Z start st_day_20261027
+20:20:55Z skip census (output exists)
+20:20:55Z skip xw_known (output exists)
+20:20:55Z start xw_run
+20:23:53Z start sc_day_20261023
+20:28:18Z start sc_day_20261024
+20:32:37Z start sc_day_20261025
+20:36:48Z start sc_day_20261026
+20:41:18Z start sc_day_20261027
+20:45:42Z start sc_report
+20:46:28Z SCENARIOS all  DONE

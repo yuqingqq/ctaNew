@@ -83,17 +83,33 @@ def one(i):
     g = dict(__name__='pf_keep_pull_mutant', __file__=str(SRC)); exec(compile(source(i), str(SRC), 'exec'), g); g['selftest']()
 
 
+def check_kill(r, marks):
+    """A kill counts only when a CHECK refused: the selftest's or the run's own exit message (marks), or a named control - C.require's
+    ValueError with the control's message (the traceback's last frame is `require`). Any other exception is a crash, not a kill (2026-11-18)."""
+    if r.returncode != 1:
+        return False, ''
+    lines = r.stderr.strip().splitlines()
+    for m in marks:
+        x = next((l for l in lines if m in l), None)
+        if x is not None:
+            return True, x.strip()
+    req = len(lines) >= 3 and lines[-1].startswith('ValueError: ') and any(l.strip().startswith('File ') and l.rstrip().endswith(', in require') for l in lines[-4:-1])
+    return req, (lines[-1].strip() if req else '')
+
+
 def main():
     bad = 0
     for i, (name, *_) in enumerate(MUT):
         r = subprocess.run([sys.executable, __file__, str(i)], capture_output=True, text=True)
         tail = r.stderr.strip().splitlines() or r.stdout.strip().splitlines() or ['']
-        ok = (r.returncode == 0) if i == 0 else (r.returncode not in (0, STALE))
+        caught, why = check_kill(r, ('KEEP-PULL SELFTEST FAILED',))
+        ok = (r.returncode == 0) if i == 0 else caught
         bad += not ok
-        print(f'{i:2d} {name}: rc {r.returncode} -> {"passed" if r.returncode == 0 else " / ".join(x.strip()[:200] for x in tail[-2:])}{"" if ok else "   <<< UNEXPECTED"}', flush=True)
+        how = 'passed' if r.returncode == 0 else ('caught: ' + why[:200]) if caught else ' / '.join(x.strip()[:200] for x in tail[-2:])
+        print(f'{i:2d} {name}: rc {r.returncode} -> {how}{"" if ok else "   <<< UNEXPECTED"}', flush=True)
     if bad:
         sys.exit(f'KEEP-PULL MUTATION CHECK FAILED: {bad} unexpected outcomes of {len(MUT)}')
-    print(f'keep-pull mutation check passed: the unchanged copy passes its selftest, {len(MUT) - 1} / {len(MUT) - 1} planted code errors fail it', flush=True)
+    print(f'keep-pull mutation check passed: the unchanged copy passes its selftest, {len(MUT) - 1} / {len(MUT) - 1} planted code errors are caught by a check', flush=True)
 
 
 if __name__ == '__main__':

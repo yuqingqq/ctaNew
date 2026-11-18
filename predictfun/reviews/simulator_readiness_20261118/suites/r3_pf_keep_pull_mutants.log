@@ -1,0 +1,46 @@
+ 0 none (must pass): rc 0 -> passed
+ 1 pending-cancel rule dropped: rc 1 -> caught: ValueError: a fill at or after the structural cancel landed
+ 2 cancel latency 25 ms: rc 1 -> caught: ValueError: a fill at or after the structural cancel landed
+ 3 cancel latency 50 ms: rc 1 -> caught: KEEP-PULL SELFTEST FAILED -> no output:
+ 4 own fills known at once: rc 1 -> caught: KEEP-PULL SELFTEST FAILED -> no output:
+ 5 young window 50 ms: rc 1 -> caught: ValueError: first-100-ms fills differ from v1
+ 6 severe threshold 20 c: rc 1 -> caught: KEEP-PULL SELFTEST FAILED -> no output:
+ 7 structural drift limit 2 ticks: rc 1 -> caught: ValueError: a fill at or after the structural cancel landed
+ 8 cuts at the trade times (each trade left out of its own branch): rc 1 -> caught: ValueError: per-trade fills do not sum to the keep branch
+ 9 a fill at a landing time counted as before it: rc 1 -> caught: KEEP-PULL SELFTEST FAILED -> no output:
+10 variant ignores its latency: rc 1 -> caught: KEEP-PULL SELFTEST FAILED -> no output:
+11 young filter inverted: rc 1 -> caught: KEEP-PULL SELFTEST FAILED -> no output:
+12 a pull valued at the next step: rc 1 -> caught: KEEP-PULL SELFTEST FAILED -> no output:
+13 decisions continue at the step the client learns the order is gone: rc 1 -> caught: KEEP-PULL SELFTEST FAILED -> no output:
+14 mixed trade source labelled WS: rc 1 -> caught: KEEP-PULL SELFTEST FAILED -> no output:
+15 post-only refusal ignored: rc 1 -> caught: KEEP-PULL SELFTEST FAILED -> no output:
+16 trigger step off by one: rc 1 -> caught: ValueError: a decision changed when only later fair inputs changed (292)
+17 score A not strict: rc 1 -> caught: KEEP-PULL SELFTEST FAILED -> no output:
+18 score triggers before the order is live: rc 1 -> caught: KEEP-PULL SELFTEST FAILED -> no output:
+19 a missing fair input triggers a pull: rc 1 -> caught: KEEP-PULL SELFTEST FAILED -> no output:
+20 score B baseline one step late: rc 1 -> caught: KEEP-PULL SELFTEST FAILED -> no output:
+21 score reads the posting-time fair price at every step: rc 1 -> caught: KEEP-PULL SELFTEST FAILED -> no output:
+22 an order with any missing fair input is dropped from the score (whole-future selection): rc 1 -> caught: ValueError: a decision changed when only later fair inputs changed (4)
+23 live decisions start at the pending step: rc 1 -> caught: KEEP-PULL SELFTEST FAILED -> no output:
+24 outcome without the live lower bound: rc 1 -> caught: KEEP-PULL SELFTEST FAILED -> no output:
+25 oracle without the live lower bound: rc 1 -> caught: KEEP-PULL SELFTEST FAILED -> no output:
+26 null risk set ignores eligibility: rc 1 -> caught: ValueError: a null pull was not an eligible live decision
+27 null does not match the executed counts: rc 1 -> caught: ValueError: null pulls per (stratum, step) differ from the executed pulls
+28 unmatched null pulls not counted: rc 1 -> caught: ValueError: null pulls + unmatched differ from the executed pulls
+29 zero-latency side of the latency pair taken from the 37 ms oracle: rc 1 -> caught: KEEP-PULL SELFTEST FAILED -> no output:
+30 unmatched trajectory draws still read (hierarchy ignores matching): rc 1 -> caught: KEEP-PULL SELFTEST FAILED -> no output:
+31 decision-level null draws orders not live at the step: rc 1 -> caught: ValueError: a matched decision state left its stratum or is not live
+32 decision-level null one state short per cell: rc 1 -> caught: ValueError: decision-level null not matched per (stratum, step)
+33 null strata without the market: rc 1 -> caught: ValueError: null strata are not (day, market, side, minute)
+34 K1 at 40%: rc 1 -> caught: KEEP-PULL SELFTEST FAILED -> no output:
+35 K2 day rule 3 of 5: rc 1 -> caught: KEEP-PULL SELFTEST FAILED -> no output:
+36 K2 against the null median: rc 1 -> caught: KEEP-PULL SELFTEST FAILED -> no output:
+37 K3 against the null median: rc 1 -> caught: KEEP-PULL SELFTEST FAILED -> no output:
+38 conservation check removed: rc 1 -> caught: KEEP-PULL SELFTEST FAILED -> no output:
+39 structural landing check removed: rc 1 -> caught: KEEP-PULL SELFTEST FAILED -> no output:
+40 invariance check removed: rc 1 -> caught: KEEP-PULL SELFTEST FAILED -> no output:
+41 null stratum check removed: rc 1 -> caught: KEEP-PULL SELFTEST FAILED -> no output:
+42 v1 value comparison removed: rc 1 -> caught: KEEP-PULL SELFTEST FAILED -> no output:
+43 v1 hash check removed: rc 1 -> caught: KEEP-PULL SELFTEST FAILED -> no output:
+keep-pull mutation check passed: the unchanged copy passes its selftest, 43 / 43 planted code errors are caught by a check
+2026-11-18T21:47:20Z tag=fs3_pf_keep_pull_mutants rc=0 peak_rss_mib=297 wall_s=524.24 cpu_user_s=509.89 memavail_start_gib=23 disk_free_gib=433->433 slot=claude

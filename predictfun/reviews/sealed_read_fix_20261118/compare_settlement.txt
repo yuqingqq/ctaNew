@@ -1,0 +1,118 @@
+{
+ "S1": true,
+ "S2": true,
+ "S3": true,
+ "ALL": true,
+ "days": {
+  "20261023": {
+   "day": "20261023",
+   "controls": true,
+   "hours_v1": 27,
+   "hours_v2": 27,
+   "excluded": [],
+   "rows": [
+    802157,
+    802157
+   ],
+   "identical": true,
+   "status_v2": {
+    "mapped": 682499,
+    "absent": 0,
+    "count_mismatch": 0,
+    "ambiguous_content": 119658,
+    "no_v7_id": 0,
+    "absent_boundary_hour_excluded": 0
+   }
+  },
+  "20261024": {
+   "day": "20261024",
+   "controls": true,
+   "hours_v1": 27,
+   "hours_v2": 27,
+   "excluded": [],
+   "rows": [
+    681400,
+    681400
+   ],
+   "identical": true,
+   "status_v2": {
+    "mapped": 613080,
+    "absent": 0,
+    "count_mismatch": 0,
+    "ambiguous_content": 68320,
+    "no_v7_id": 0,
+    "absent_boundary_hour_excluded": 0
+   }
+  },
+  "20261025": {
+   "day": "20261025",
+   "controls": true,
+   "hours_v1": 27,
+   "hours_v2": 27,
+   "excluded": [],
+   "rows": [
+    689852,
+    689852
+   ],
+   "identical": true,
+   "status_v2": {
+    "mapped": 613198,
+    "absent": 0,
+    "count_mismatch": 0,
+    "ambiguous_content": 76654,
+    "no_v7_id": 0,
+    "absent_boundary_hour_excluded": 0
+   }
+  },
+  "20261026": {
+   "day": "20261026",
+   "controls": true,
+   "hours_v1": 27,
+   "hours_v2": 27,
+   "excluded": [],
+   "rows": [
+    818939,
+    818939
+   ],
+   "identical": true,
+   "status_v2": {
+    "mapped": 697120,
+    "absent": 0,
+    "count_mismatch": 0,
+    "ambiguous_content": 121819,
+    "no_v7_id": 0,
+    "absent_boundary_hour_excluded": 0
+   }
+  },
+  "20261027": {
+   "day": "20261027",
+   "controls": true,
+   "hours_v1": 27,
+   "hours_v2": 25,
+   "excluded": [
+    "20261028_00",
+    "20261028_01"
+   ],
+   "rows": [
+    824671,
+    824671
+   ],
+   "identical": false,
+   "status_v2": {
+    "mapped": 686404,
+    "absent": 0,
+    "count_mismatch": 0,
+    "ambiguous_content": 138249,
+    "no_v7_id": 0,
+    "absent_boundary_hour_excluded": 18
+   },
+   "outside_status5_identical": true,
+   "status5": 18,
+   "status5_within_2h": true,
+   "v1_status_of_status5": {
+    "0": 18
+   },
+   "reads_every_other_v1_hour": true
+  }
+ }
+}

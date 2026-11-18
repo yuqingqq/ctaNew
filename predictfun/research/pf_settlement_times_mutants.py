@@ -1,7 +1,8 @@
 """MUTATION CHECK of the settlement-time extraction's selftest (2026-11-18, session aea5bfb9): a checker that cannot fail proves nothing.
 Each entry plants one code error in a COPY of pf_settlement_times.py (text replacement, executed in a subprocess; the repo file is never
-touched) and runs the copy's selftest (synthetic only). Required: the unchanged copy passes, every mutant fails, every target occurs as
-declared (a stale target is a failure). No market data is read.
+touched) and runs the copy's selftest (synthetic only). Required: the unchanged copy passes, every mutant is caught BY A CHECK (rc 1 and
+'SETTLEMENT SELFTEST FAILED' in its exit message - v2: a crash was counted as a kill before), every target occurs as declared (a stale
+target is a failure). No market data is read.
 Usage (run_light, PF_SLOT=claude): pf_settlement_times_mutants.py [index | targets]
 """
 import subprocess
@@ -21,6 +22,13 @@ MUT = [
     ('C3 ignored', "C3=capok >= MIN_CAP,", "C3=True,"),
     ('the shuffle not applied', "return share(s), share(rng.permutation(s)), int(ok.sum())", "return share(s), share(s), int(ok.sum())"),
     ('a refused day still writes', "    if not all(ok.values()):\n        sys.exit(", "    if False:\n        sys.exit("),
+    # --- v2: sealed / forward hours never opened, boundary legs marked
+    ('the page reader opens a sealed hour', "        C.require(hour_allowed(h), f'sealed or forward hour {h}: never opened')", "        pass"),
+    ('day_run keeps the sealed hours in its padded list', "excluded = [h for h in hours if not hour_allowed(h)]; hours = [h for h in hours if hour_allowed(h)]",
+     "excluded = [h for h in hours if not hour_allowed(h)]"),
+    ('boundary legs keep status absent', "        st = np.where((st == 1) & near, 5, st)", "        st = st"),
+    ('the forward boundary ignored', "    return not (I.SEAL_MS[0] <= h0 < I.SEAL_MS[1]) and h0 < I.FWD_MS", "    return not (I.SEAL_MS[0] <= h0 < I.SEAL_MS[1])"),
+    ('the boundary window 4 h wide', "near |= (ex >= h0 - EXTRA_AFTER_H * 3600000.)", "near |= (ex >= h0 - 4 * 3600000.)"),
 ]
 STALE = 97
 
@@ -43,12 +51,12 @@ def main():
     for i, (name, *_) in enumerate(MUT):
         r = subprocess.run([sys.executable, __file__, str(i)], capture_output=True, text=True)
         tail = r.stderr.strip().splitlines() or r.stdout.strip().splitlines() or ['']
-        ok = (r.returncode == 0) if i == 0 else (r.returncode not in (0, STALE))
+        ok = (r.returncode == 0) if i == 0 else (r.returncode == 1 and 'SETTLEMENT SELFTEST FAILED' in r.stderr)
         bad += not ok
         print(f'{i:2d} {name}: rc {r.returncode} -> {"passed" if r.returncode == 0 else " / ".join(x.strip()[:200] for x in tail[-2:])}{"" if ok else "   <<< UNEXPECTED"}', flush=True)
     if bad:
         sys.exit(f'SETTLEMENT MUTATION CHECK FAILED: {bad} unexpected outcomes of {len(MUT)}')
-    print(f'settlement mutation check passed: the unchanged copy passes its selftest, {len(MUT) - 1} / {len(MUT) - 1} planted code errors fail it', flush=True)
+    print(f'settlement mutation check passed: the unchanged copy passes its selftest, {len(MUT) - 1} / {len(MUT) - 1} planted code errors are caught by a check', flush=True)
 
 
 if __name__ == '__main__':

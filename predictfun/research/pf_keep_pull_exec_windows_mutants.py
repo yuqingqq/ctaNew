@@ -199,12 +199,15 @@ def main():
     for i, (name, *_) in enumerate(MUT):
         r = subprocess.run([sys.executable, __file__, str(i)], capture_output=True, text=True)
         tail = r.stderr.strip().splitlines() or r.stdout.strip().splitlines() or ['']
-        ok = (r.returncode == 0) if i == 0 else (r.returncode not in (0, STALE))
+        caught = r.returncode == 1 and 'EXEC-WINDOW SELFTEST FAILED' in r.stderr       # caught BY A CHECK (the selftest's own exit message); a crash is unexpected
+        ok = (r.returncode == 0) if i == 0 else caught
         bad += not ok
-        print(f'{i:2d} {name}: rc {r.returncode} -> {"passed" if r.returncode == 0 else " / ".join(x.strip()[:200] for x in tail[-2:])}{"" if ok else "   <<< UNEXPECTED"}', flush=True)
+        first = next((x for x in r.stderr.splitlines() if 'SELFTEST FAILED' in x), None)
+        how = 'passed' if r.returncode == 0 else ('caught: ' + first.strip()[:200]) if caught and first else ' / '.join(x.strip()[:200] for x in tail[-2:])
+        print(f'{i:2d} {name}: rc {r.returncode} -> {how}{"" if ok else "   <<< UNEXPECTED"}', flush=True)
     if bad:
         sys.exit(f'EXEC-WINDOW MUTATION CHECK FAILED: {bad} unexpected outcomes of {len(MUT)}')
-    print(f'exec-window mutation check passed: the unchanged copy passes its selftest, {len(MUT) - 1} / {len(MUT) - 1} planted code errors fail it', flush=True)
+    print(f'exec-window mutation check passed: the unchanged copy passes its selftest, {len(MUT) - 1} / {len(MUT) - 1} planted code errors are caught by a check', flush=True)
 
 
 if __name__ == '__main__':

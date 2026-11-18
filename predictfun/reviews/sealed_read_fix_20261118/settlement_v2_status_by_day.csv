@@ -1,0 +1,6 @@
+day,legs,hours_read,hours_excluded,mapped,absent,count_mismatch,ambiguous_content,no_v7_id,absent_boundary_hour_excluded,controls
+20261023,802157,27,-,682499,0,0,119658,0,0,True
+20261024,681400,27,-,613080,0,0,68320,0,0,True
+20261025,689852,27,-,613198,0,0,76654,0,0,True
+20261026,818939,27,-,697120,0,0,121819,0,0,True
+20261027,824671,25,20261028_00 20261028_01,686404,0,0,138249,0,18,True

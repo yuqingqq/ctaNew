@@ -1,0 +1,43 @@
+ 0 none (must pass): rc 0 -> passed
+ 1 B is the largest pair (every pair must be right): rc 1 -> caught: - bound order statistic: {'n': 5, 'B': 10.0, 'B_max': 10.0, 'B_min': -50.0}
+ 2 identity: several research twins accepted: rc 1 -> caught: - identity rule (unique / several research / none): [{'ib': 0, 'iu': 0, 't_bot': 1000.0, 'u': 1010.0, 'x': 10.0}, {'ib': 1, 'iu': 1, 't_bot': 2000.0, 'u': 1990.
+ 3 identity: several bot twins accepted: rc 1 -> caught: - identity rule (two bot twins of one research frame): {'paired': 2}
+ 4 content key ignores pending amounts: rc 1 -> caught: - content key: a different size or pending amount gave the same key
+ 5 content key rounds sizes to whole shares: rc 1 -> caught: - content key: a different size or pending amount gave the same key
+ 6 verdict ignores the clock domain: rc 1 -> caught: - verdict (True, 'SAME-SETTLEMENT', True, 'V_status', 0.1) B -5.0 n 40: CONTRADICTION-REMOVED-BY-INDEPENDENT-BOOK-CLOCK-BOUND []
+ 7 verdict ignores a stepped bot clock: rc 1 -> caught: - verdict (True, 'SAME-SETTLEMENT', True, 'V_book', 5.0) B -5.0 n 40: CONTRADICTION-REMOVED-BY-INDEPENDENT-BOOK-CLOCK-BOUND [] / - leg_eval {'step_ms': 5.0}: CONTRADICTION-REMOVED-BY-INDEPENDENT-BOOK-CLOCK-BOUND []
+ 8 verdict needs B strictly above the critical offset: rc 1 -> caught: - verdict (True, 'SAME-SETTLEMENT', True, 'V_book', 0.1) B -210.0 n 40: CONTRADICTION-RETAINED ["a tighter book-clock bound: the venue's updateTimestampMs recor
+ 9 verdict accepts an ambiguous settlement: rc 1 -> caught: - verdict (True, 'AMBIGUOUS', True, 'V_book', 0.1) B -5.0 n 40: CONTRADICTION-REMOVED-BY-INDEPENDENT-BOOK-CLOCK-BOUND [] / - leg_eval accepted a mismatch at the operational resolution {'bind_exec': 1}: CONTRADICTION-REMOVED-BY-INDEPENDENT-BOOK-CLOCK-BOUND ABSENT True
+10 verdict ignores the pair count: rc 1 -> caught: - verdict (True, 'SAME-SETTLEMENT', True, 'V_book', 0.1) B -5.0 n 19: CONTRADICTION-REMOVED-BY-INDEPENDENT-BOOK-CLOCK-BOUND []
+11 kernel reader does not stop at the cutoff: rc 1 -> caught: - kernel reader: ['step:Control/Place', 'outbox', 'step:Exec/Signed', 'step:Exec/Fill'] {'steps': 5, 'stopped_at_cutoff': False, 'last_at_ms': 1794178920000.0} 
+12 input reader does not stop at the cutoff: rc 1 -> caught: - input reader: {} {} {'stopped_at_cutoff': 'raised Expecting property name enclosed in double quotes: line 1 column 23 (char 22)'}
+13 an hour outside Nov 8 accepted: rc 1 -> caught: - hours: a Nov 9 hour was accepted
+14 kernel outbox not joined by its step seq: rc 1 -> caught: - kernel reader: ['step:Control/Place', 'step:Exec/Signed', 'step:Exec/Fill'] {'steps': 4, 'stopped_at_cutoff': True, 'last_at_ms': 1794178910003.0} 4
+15 input reader keeps another order id: rc 1 -> caught: - input reader: {7: [(1794178915000.0, (((49, 1.0),), ((51, 2.0),), ()))]} {(7, 146): ['{"Accepted":{"market":7,"known_ms":1794178916000.000,"id":146}}', '{"Acc
+16 input reader ignores the market of an order id (v1 defect): rc 1 -> caught: - input reader: {7: [(1794178915000.0, (((49, 1.0),), ((51, 2.0),), ()))]} {(7, 146): ['{"Accepted":{"market":7,"known_ms":1794178916000.000,"id":146}}', '{"Acc
+17 kernel clock regression accepted: rc 1 -> caught: - kernel reader: a clock regression was accepted
+18 binding increment without the previous frame: rc 1 -> caught: - binding increment recomputation
+19 binding endpoint always on the book clock: rc 1 -> caught: - binding endpoint (REST ranges only): V_book 990000.0 990250.0
+20 any NotCanceled read as matched: rc 1 -> caught: - cancel answer classes
+21 a pending audit read as no answer: rc 1 -> caught: - cancel answer classes / - leg_eval on the planted leg: CONTRADICTION-REMOVED-BY-INDEPENDENT-BOOK-CLOCK-BOUND A0 {'place': True, 'signed': True, 'accepted': True, 'notice': True, 'rM': 
+22 pairs outside the local window counted: rc 1 -> caught: - leg_eval: pairs outside the local window counted: {'n': 41, 'B': -3.0, 'B_max': 500.0, 'B_min': -3.0, 'statuses': {'paired': 41}, 'local_window_ms': 10000.0, 
+23 A0 ignores the bot-clock identity of the two journals: rc 1 -> caught: - leg_eval {'acc_shift': 0.5}: CONTRADICTION-REMOVED-BY-INDEPENDENT-BOOK-CLOCK-BOUND []
+24 A2 reads any settlement as the same: rc 1 -> caught: - leg_eval {'bind_tx': '0xdef'}: CONTRADICTION-REMOVED-BY-INDEPENDENT-BOOK-CLOCK-BOUND []
+25 the bot clock step never measured: rc 1 -> caught: - leg_eval {'step_ms': 5.0}: CONTRADICTION-REMOVED-BY-INDEPENDENT-BOOK-CLOCK-BOUND []
+26 a leg without a cancel confirmation fails A0: rc 1 -> caught: - lifecycle without a cancel confirmation: {'place': True, 'signed': True, 'accepted': True, 'notice': True, 'rM': True, 'rC': True, 'M': True, 'Cs': True, 'ord
+27 a sibling order's fills in the same settlement counted: rc 1 -> caught: - lifecycle: a sibling order's fill in the same settlement was counted: {'place': True, 'signed': True, 'accepted': True, 'notice': False, 'rM': False, 'rC': Tr
+28 the confirmed cancel compared with a refused first answer: rc 1 -> caught: - lifecycle: a refused first answer before the confirmed cancel: NO-EFFECT {'place': True, 'signed': True, 'accepted': True, 'notice': True, 'rM': True, 'rC': T / - leg_eval with a matched-or-gone answer: MATCHED-OR-GONE EVIDENCE CONTRADICTION-RETAINED
+29 one bot clock read to 1 us: rc 1 -> caught: - lifecycle: two reads 5 us apart of the one bot clock were refused
+30 kernel needle gate never opens: rc 1 -> caught: - kernel reader: [] {'steps': 4, 'stopped_at_cutoff': True, 'last_at_ms': 1794178910003.0} 4
+31 clock windows found from their start only: rc 1 -> caught: - kernel reader: ['step:Control/Place', 'outbox', 'step:Exec/Signed', 'step:Exec/Fill'] {'steps': 4, 'stopped_at_cutoff': True, 'last_at_ms': 1794178910003.0} 0
+32 input reader never parses a market: rc 1 -> caught: - input reader: {} {(7, 146): ['{"Accepted":{"market":7,"known_ms":1794178916000.000,"id":146}}']} {'lines': 7, 'stopped_at_cutoff': True}
+33 A3 endpoint compared with a relative tolerance: rc 1 -> caught: - leg_eval accepted a mismatch at the operational resolution {'lo_shift': 1.0}: CONTRADICTION-REMOVED-BY-INDEPENDENT-BOOK-CLOCK-BOUND SAME-SETTLEMENT True
+34 A2 discrete fields compared with a relative tolerance: rc 1 -> caught: - leg_eval accepted a mismatch at the operational resolution {'bind_exec': 1}: CONTRADICTION-REMOVED-BY-INDEPENDENT-BOOK-CLOCK-BOUND SAME-SETTLEMENT True
+35 A2 quantities compared with a relative tolerance: rc 1 -> caught: - leg_eval accepted a mismatch at the operational resolution {'bind_shares': 0.001}: CONTRADICTION-REMOVED-BY-INDEPENDENT-BOOK-CLOCK-BOUND SAME-SETTLEMENT True
+36 a Canceled answer bounds the match as evidence: rc 1 -> caught: - leg_eval on the planted leg: CONTRADICTION-REMOVED-BY-INDEPENDENT-BOOK-CLOCK-BOUND A0 {'place': True, 'signed': True, 'accepted': True, 'notice': True, 'rM': 
+37 A6: an EV CANCEL_FIRST accepted: rc 1 -> caught: - A6: an EV CANCEL_FIRST was accepted
+38 A6: the cross-tab reproduction not checked: rc 1 -> caught: - A6: a cross-tab that does not reproduce was accepted
+39 A6: a clipped WS leg read as WS_DELAY: rc 1 -> caught: - A6 tiers on a planted ledger: ok True {('S1', 'CP', 'CANCEL_FIRST', 'BEYOND-EVIDENCE', 's1lo'): (1, 10.0), ('S1', 'CP', 'MATCH_FIRST', 'EVIDENCE', 'EV: REST s
+40 A6: every certified fill read as evidence: rc 1 -> caught: - A6 tiers on a planted ledger: ok raised S1|CP CANCEL_FIRST: the tiers do not partition the class {} / - A6 on a non-reproducing cross-tab raised S1|CP CANCEL_FIRST: the tiers do not partition the class
+timing case audit mutation check passed: the unchanged copy passes its selftest, 40 / 40 planted code errors are caught by a check
+2026-11-18T21:07:07Z tag=fs_pf_timing_case_audit_mutants rc=0 peak_rss_mib=198 wall_s=42.75 cpu_user_s=35.97 memavail_start_gib=23 disk_free_gib=434->434 slot=claude

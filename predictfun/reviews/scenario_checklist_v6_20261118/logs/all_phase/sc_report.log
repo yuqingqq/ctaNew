@@ -1,0 +1,90 @@
+QUEUE-AWARE SCENARIO REPLAY of the keep / pull selection, declared score A+0 - the fair-edge rule, not a learned model (pf_keep_pull_scenarios.py; every committed state with a path re-simulated through the branch kernel; days 20261023, 20261024, 20261025, 20261026, 20261027; c summed)
+  149,174 states re-simulated (143,134 eligible at B); events (taker orders) by day 20261023 560,819, 20261024 453,163, 20261025 441,726, 20261026 580,259, 20261027 573,373; held contradictory events (kept at M50) of them: S1 20261023 9,576 (1.7%), 20261024 8,655 (1.9%), 20261025 8,495 (1.9%), 20261026 9,300 (1.6%), 20261027 9,748 (1.7%); S2 20261023 1,412 (0.3%), 20261024 1,462 (0.3%), 20261025 1,544 (0.3%), 20261026 1,269 (0.2%), 20261027 1,385 (0.2%); S3 20261023 1,363 (0.2%), 20261024 1,442 (0.3%), 20261025 1,339 (0.3%), 20261026 1,301 (0.2%), 20261027 1,302 (0.2%); ST 20261023 73 (0.0%), 20261024 43 (0.0%), 20261025 64 (0.0%), 20261026 74 (0.0%), 20261027 69 (0.0%)
+  Z0 (h): B's E +234,279 and score improvement 1,169,671 = the clock audit's per-fill values on the committed tables
+
+  scenario                           E       score        null         KEEP   KEEP+score    PULL-ALL  eligible    fills  filled discov.   lost
+  M50|A58|L37|N100            +234,279  +1,169,671    +935,392   -1,946,163     -776,492  +1,841,243   143,134   86,904  62,179       0      0
+  S1lo|A58|L37|N100            -23,167  +1,029,565  +1,052,732   -2,417,888   -1,388,323  +2,235,340   143,134   98,932  66,597   8,808  4,390
+  S1mid|A58|L37|N100          +170,868  +1,151,379    +980,511   -2,079,430     -928,051  +1,956,974   143,134   96,873  64,228   3,779  1,730
+  S1hi|A58|L37|N100           +224,690    +883,884    +659,194   -1,364,647     -480,763  +1,291,513   143,134   82,764  59,329   4,782  7,632
+  S2lo|A58|L37|N100               +329  +1,063,285  +1,062,955   -2,641,091   -1,577,806  +2,291,196   143,134  108,031  68,215  14,760  8,724
+  S2hi|A58|L37|N100            +32,467     -22,638     -55,105     +152,420     +129,782    -150,525   143,134   67,384  45,495  13,105 29,789
+  S3lo|A58|L37|N100            +19,702    +876,562    +856,860   -1,961,982   -1,085,421  +1,824,864   143,134  103,794  71,386  19,432 10,225
+  S3hi|A58|L37|N100           +232,299    +769,272    +536,973   -1,082,635     -313,363  +1,028,009   143,134   74,304  55,285   4,304 11,198
+  SThi|A58|L37|N100           +283,895  +1,118,756    +834,861   -1,693,508     -574,752  +1,597,303   143,134  100,582  59,663   3,253  5,769
+  EVhi|A58|L37|N100            +18,962    -183,445    -202,407     +450,979     +267,534    -450,979   143,134   39,997  33,619  10,058 38,618
+  M50|A15|L37|N100            +231,732  +1,157,453    +925,721   -1,996,613     -839,160  +1,816,454   145,446   89,877  64,195   2,029     13
+  M50|A100|L37|N100           +238,012  +1,178,012    +940,000   -1,897,400     -719,389  +1,858,022   140,868   84,002  60,294      23  1,908
+  M50|A58|L0|N100             +241,635  +1,114,090    +872,455   -1,774,487     -660,397  +1,710,194   143,134   82,233  59,620       0  2,559
+  M50|A58|L100|N100           +152,191  +1,141,538    +989,347   -2,175,398   -1,033,860  +1,985,276   143,134   93,690  65,523   3,344      0
+  M50|A58|L37|N160            +233,543  +1,169,671    +936,129   -1,946,163     -776,492  +1,841,243   143,134   86,904  62,179       0      0
+  M50|A58|L37|N660            +234,060  +1,169,671    +935,611   -1,946,163     -776,492  +1,841,243   143,134   86,904  62,179       0      0
+  M50|A58|L37+13%x4000|N100    +200,385  +1,026,888    +826,503   -2,194,664   -1,167,776  +1,629,369   143,134   99,940  65,452   3,273      0
+  M0|A58|L37|N100             +243,587  +1,083,811    +840,224   -1,730,285     -646,474  +1,646,780   143,134   81,821  59,555   1,070  3,694
+  M250|A58|L37|N100            -27,124  +1,024,796  +1,051,920   -2,418,587   -1,393,791  +2,234,353   143,134   98,318  66,493   8,977  4,663
+
+  C1 / C3 (FINDINGS checklist): E by the order's age at the fill (< 100 / 100-500 / >= 500 ms after activation), the headline without fills on orders < 100 ms old (live's were 8-12% real, B1a), and the fills that land while the score's pull is in flight (cancel-pending):
+  scenario                    E <100  E 100-500   E >=500  E w/o <100      E B1a M0/M50  K+s w/o <100 fills <100    pending fills / c / gross
+  M50|A58|L37|N100            +3,664    +81,588  +149,027    +230,615 +114,705/+94,810       -655,781       5.1%     1,258 /   -63,310 /  2.5%
+  S1lo|A58|L37|N100           -1,206    +16,721   -38,683     -21,961   -9,041/-13,807     -1,177,704       6.3%     1,474 /   -65,410 /  2.2%
+  S1mid|A58|L37|N100          +6,455    +62,671  +101,741    +164,413  +82,455/+67,207       -788,576       5.7%     2,069 /  -143,953 /  3.9%
+  S1hi|A58|L37|N100             +375    +71,181  +153,135    +224,316 +110,655/+93,387       -390,502       4.7%       862 /   -40,225 /  1.7%
+  S2lo|A58|L37|N100             -321    +31,074   -30,424        +651   +2,756/-5,659      -1,194,544       7.8%     1,720 /   -86,825 /  2.5%
+  S2hi|A58|L37|N100             -293    +11,916   +20,844     +32,760  +16,253/+13,306       +129,894       4.8%       694 /   -13,915 /  1.7%
+  S3lo|A58|L37|N100           -1,352    +19,381    +1,673     +21,054  +11,284/+6,171        -927,107       4.9%     1,332 /   -53,237 /  1.8%
+  S3hi|A58|L37|N100             +504    +69,801  +161,995    +231,796 +114,056/+97,231       -246,245       3.4%       603 /   -33,227 /  1.4%
+  SThi|A58|L37|N100           +1,406    +82,409  +200,079    +282,488 +138,853/+119,100      -471,060       4.3%     1,144 /   -53,837 /  1.9%
+  EVhi|A58|L37|N100               +0         +0   +18,962     +18,962   +8,871/+9,038        +267,534       0.0%        61 /    -5,437 /  0.4%
+  M50|A15|L37|N100                +0    +77,122  +154,610    +231,732 +114,568/+95,742       -681,871       5.1%     1,278 /   -60,682 /  2.4%
+  M50|A100|L37|N100           +9,318    +80,733  +147,960    +228,694 +114,207/+94,754       -649,188       5.1%     1,145 /   -64,153 /  2.5%
+  M50|A58|L0|N100             +5,327    +83,095  +153,213    +236,309 +117,627/+97,441       -564,140       5.3%         0 /        +0 /  0.0%
+  M50|A58|L100|N100               +0    +60,983   +91,208    +152,191  +76,067/+60,908       -895,316       4.8%     4,083 /  -246,520 /  7.5%
+  M50|A58|L37|N160            +3,664    +81,630  +148,248    +229,878 +114,364/+94,450       -655,781       5.1%     1,258 /   -63,310 /  2.5%
+  M50|A58|L37|N660            +3,664    +81,659  +148,737    +230,396 +114,608/+94,692       -655,781       5.1%     1,258 /   -63,310 /  2.5%
+  M50|A58|L37+13%x4000|N100    +1,328    +71,461  +127,596    +199,057  +98,939/+81,411     -1,044,052       4.4%    12,949 /  -353,960 / 12.4%
+  M0|A58|L37|N100             +2,361    +82,836  +158,390    +241,226 +119,661/+99,469       -548,796       4.4%       882 /   -44,978 /  1.8%
+  M250|A58|L37|N100           -1,563    +14,090   -39,651     -25,561  -10,964/-15,065     -1,181,596       6.4%     1,493 /   -65,568 /  2.2%
+
+  C12 (FINDINGS checklist): B's E by age (rows) and trade-anchor source (columns: WS / E2 / imputed / mixed; E2 anchors are uncertain by ~+-250 ms), c (fills):
+  lt100      WS +2,880 (2,906) | E2 +892 (979) | imputed +0 (0) | mixed -107 (562)
+  100to500   WS +44,023 (11,178) | E2 +14,674 (4,519) | imputed +0 (0) | mixed +22,891 (2,130)
+  ge500      WS +83,393 (42,679) | E2 +5,814 (14,816) | imputed -428 (249) | mixed +60,248 (6,886)
+
+  scenario families (one factor moved from B; none of them is an order latency unless named so) and the fills at held instants (trades of contradictory events kept at M50: count / shares / value c / share of the scenario's fill gross):
+  M50|A58|L37|N100         baseline           B: trades at anchor - 50 ms, activation +58 ms, cancel latency 37 ms, fill notice +100 ms; held 0 / 0 sh / +0 c / 0.0%
+  S1lo|A58|L37|N100        timeline           every trade at the start of the admissible S1 window; contradictory events held at M50; held 4,869 / 100,269 sh / -35,395 c / 5.2%
+  S1mid|A58|L37|N100       timeline           every trade at the middle of the admissible S1 window; contradictory events held at M50; held 5,096 / 107,113 sh / -47,066 c / 5.8%
+  S1hi|A58|L37|N100        timeline           every trade at the end of the admissible S1 window; contradictory events held at M50; held 5,240 / 111,000 sh / -70,895 c / 7.3%
+  S2lo|A58|L37|N100        timeline           every trade at the start of the admissible S2 window; contradictory events held at M50; held 915 / 20,885 sh / -7,440 c / 0.9%
+  S2hi|A58|L37|N100        timeline           every trade at the end of the admissible S2 window; contradictory events held at M50; held 1,002 / 23,826 sh / -15,689 c / 1.9%
+  S3lo|A58|L37|N100        timeline           every trade at the start of the admissible S3 (semantics) window; contradictory events held at M50; held 1,059 / 25,580 sh / -14,355 c / 1.2%
+  S3hi|A58|L37|N100        timeline           every trade at the end of the admissible S3 (semantics) window; contradictory events held at M50; held 1,216 / 31,349 sh / -20,167 c / 2.1%
+  SThi|A58|L37|N100        timeline           every trade at the UUID-creation upper endpoint under the after-match/aligned-clock premises; no finite earliest endpoint is identified; contradictory events held at M50; held 19 / 298 sh / -378 c / 0.0%
+  EVhi|A58|L37|N100        timeline           every trade at the the REST evidence cap (the latest admissible instant); contradictory events held at M50; held 0 / 0 sh / +0 c / 0.0%
+  M50|A15|L37|N100         activation delay   the order goes live 15 ms after posting (B: 58); held 0 / 0 sh / +0 c / 0.0%
+  M50|A100|L37|N100        activation delay   the order goes live 100 ms after posting (B: 58); held 0 / 0 sh / +0 c / 0.0%
+  M50|A58|L0|N100          cancel latency     every cancel takes effect 0 ms after its decision (B: 37); held 0 / 0 sh / +0 c / 0.0%
+  M50|A58|L100|N100        cancel latency     every cancel takes effect 100 ms after its decision (B: 37); held 0 / 0 sh / +0 c / 0.0%
+  M50|A58|L37|N160         fill-notice delay  the client learns of a full fill 160 ms after it (B: 100); held 0 / 0 sh / +0 c / 0.0%
+  M50|A58|L37|N660         fill-notice delay  the client learns of a full fill 660 ms after it (B: 100); held 0 / 0 sh / +0 c / 0.0%
+  M50|A58|L37+13%x4000|N100 cancel latency     13% of the orders' cancels take effect 4000 ms after their decision, the rest 37 ms (own assumed mixture; the former K8-based measured-tail interpretation is withdrawn); held 0 / 0 sh / +0 c / 0.0%
+  M0|A58|L37|N100          trade-clock shift  every trade stamp 0 ms before its anchor (B: 50 ms) - a uniform clock offset, not an order latency; held 0 / 0 sh / +0 c / 0.0%
+  M250|A58|L37|N100        trade-clock shift  every trade stamp 250 ms before its anchor (B: 50 ms) - a uniform clock offset, not an order latency; held 0 / 0 sh / +0 c / 0.0%
+
+  E by day: M50|A58|L37|N100 20261023 +34,948, 20261024 +36,557, 20261025 +44,955, 20261026 +58,348, 20261027 +59,472 | S1lo|A58|L37|N100 20261023 -11,098, 20261024 -7,886, 20261025 -2,835, 20261026 +1,381, 20261027 -2,730 | S1mid|A58|L37|N100 20261023 +25,288, 20261024 +25,643, 20261025 +29,587, 20261026 +46,335, 20261027 +44,015 | S1hi|A58|L37|N100 20261023 +34,161, 20261024 +31,367, 20261025 +51,222, 20261026 +51,246, 20261027 +56,693 | S2lo|A58|L37|N100 20261023 -2,848, 20261024 -3,247, 20261025 -1,549, 20261026 +3,149, 20261027 +4,823 | S2hi|A58|L37|N100 20261023 +6,496, 20261024 -960, 20261025 +10,372, 20261026 +11,192, 20261027 +5,367 | S3lo|A58|L37|N100 20261023 +814, 20261024 -1,197, 20261025 +2,086, 20261026 +8,873, 20261027 +9,126 | S3hi|A58|L37|N100 20261023 +36,029, 20261024 +35,174, 20261025 +51,048, 20261026 +56,826, 20261027 +53,222 | SThi|A58|L37|N100 20261023 +40,687, 20261024 +44,396, 20261025 +52,249, 20261026 +70,406, 20261027 +76,157 | EVhi|A58|L37|N100 20261023 +2,338, 20261024 -2,170, 20261025 +6,785, 20261026 +9,917, 20261027 +2,092 | M50|A15|L37|N100 20261023 +33,971, 20261024 +36,382, 20261025 +44,089, 20261026 +57,534, 20261027 +59,755 | M50|A100|L37|N100 20261023 +35,834, 20261024 +38,168, 20261025 +44,769, 20261026 +58,282, 20261027 +60,958 | M50|A58|L0|N100 20261023 +38,255, 20261024 +36,654, 20261025 +45,576, 20261026 +62,344, 20261027 +58,807 | M50|A58|L100|N100 20261023 +17,964, 20261024 +25,951, 20261025 +32,369, 20261026 +38,006, 20261027 +37,900 | M50|A58|L37|N160 20261023 +34,664, 20261024 +36,679, 20261025 +44,982, 20261026 +58,163, 20261027 +59,055 | M50|A58|L37|N660 20261023 +34,689, 20261024 +37,042, 20261025 +45,155, 20261026 +58,107, 20261027 +59,067 | M50|A58|L37+13%x4000|N100 20261023 +30,475, 20261024 +34,216, 20261025 +38,775, 20261026 +47,747, 20261027 +49,171 | M0|A58|L37|N100 20261023 +39,834, 20261024 +36,482, 20261025 +47,694, 20261026 +64,183, 20261027 +55,394 | M250|A58|L37|N100 20261023 -13,342, 20261024 -7,988, 20261025 -3,839, 20261026 +1,320, 20261027 -3,275
+
+READINGS (declared before any data was read)
+  TIMING EVIDENCE: LOWER-MATCH-BOUND-UNIDENTIFIED
+  Z0 CONTROLS: YES
+  Z1 E ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+  Z2 KEEP VALUE ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+  Z3 THE SCORE'S VALUE ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+  Z1-NY E WITHOUT FILLS ON ORDERS < 100 MS OLD ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+  C2 E AT M250 vs M50: SIGN-DIFFERS-AT-M250
+  C1 B1a-WEIGHTED E AT B: HOLDS-SIGN
+  C2 KEEP + SCORE AT M250 vs M50: HOLDS-AT-M250
+  Z3-NY THE SCORE'S VALUE WITHOUT FILLS ON ORDERS < 100 MS OLD ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+  E ranges over [-27,124, +283,895], KEEP over [-2,641,091, +450,979], KEEP + score over [-1,577,806, +267,534] in the 19 tested scenarios; without fills on orders < 100 ms old E over [-25,561, +282,488], KEEP + score over [-1,194,544, +267,534]
+
+LIMITS: consumed days; one declared rule; one-factor-at-a-time scenarios and timelines (no joint extreme search); assumption ranges, not measured distributions; queue rule M unvalidated on live orders; STATES is local selection; one order at a time, no re-post after a pull.
+2026-11-18T20:45:43Z tag=sc_report rc=0 peak_rss_mib=1866 wall_s=45.44 cpu_user_s=13.10 memavail_start_gib=23 disk_free_gib=434->434 slot=claude
