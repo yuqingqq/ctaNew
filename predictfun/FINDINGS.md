@@ -1,3 +1,19 @@
+<!-- MANUAL_REVIEW_20261118_C23E6F29 -->
+## Manual review finding — execution-window fix, 2026-11-18
+
+Target **c23e6f297c9b822cb3af8247da0b5e1ea99148f5**;
+[report/evidence](reviews/automatic/20261118_c23e6f29/report.md).
+Prior population and persistence findings are fixed in code, with real-data
+receipts pending. Synthetic self-test passes, but independent controls expose
+P2 omissions in multi-event contradiction/cap totals and an exactness overclaim:
+multi-event extrema use independent times and are outer relaxations. In the
+planted cases, totals are 43/59 despite all candidates contradicting; relaxed
+bounds [-10,20] contain coherent bounds [0,10] (synthetic cents, no market P&L).
+Next priority is candidate-event diagnostic accounting and truthful bound
+metadata before the empirical ledger gate. Fixed M50 quantities and unvalidated
+clock/windows still prevent an engine-validity or model-performance conclusion.
+Consumed Oct23–27 / Nov8 remain development evidence; no validation day read.
+
 <!-- EXECUTION_WINDOWS_REVIEW_20261118 -->
 ## 2026-11-18 User-directed review addendum: execution windows before new capture
 

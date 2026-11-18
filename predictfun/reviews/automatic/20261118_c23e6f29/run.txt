@@ -1,0 +1,5 @@
+Pinned target: c23e6f297c9b822cb3af8247da0b5e1ea99148f5
+Command: PF_SLOT=codex /home/yuqing/ctaNew/predictfun/research/run_light.sh review_c23e6f29 -- /home/yuqing/pricer-sol/venv/bin/python3 /home/yuqing/ctaNew/predictfun/reviews/automatic/20261118_c23e6f29/reproduce.py /tmp/predictfun-review-c23e6f29
+Exit: 0
+Guard record from predictfun/research/run_light.log:
+2026-11-18T06:00:06Z tag=review_c23e6f29 rc=0 peak_rss_mib=212 wall_s=2.63 cpu_user_s=2.41 memavail_start_gib=23 disk_free_gib=448->448 slot=codex
