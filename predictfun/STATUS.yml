@@ -1,3 +1,17 @@
+exec_windows_ledger_20261118:
+  status: code_fixed_awaiting_go
+  asof: "2026-11-18 05:47Z"
+  session: aea5bfb9
+  user: "New review commit there, check it, we have some issues for simulator, need to correct these issues first"
+  review: {commits: [35c095ce, 24db60f1], target: d1de7504, report: predictfun/reviews/automatic/20261118_d1de7504/report.md, addendum: predictfun/reviews/automatic/20261118_d1de7504/execution_windows_addendum.md}
+  findings: {P2_population: holds_fixed, P2_retention: holds_fixed, addendum_1_point_latencies: cancel_windows_added_activation_notice_recorded_as_assumed, addendum_2_fills_held: next_gate_scenario_replay, addendum_3_linkage: holds_fixed, addendum_4_headline: holds_fixed, addendum_5_selection: statuses_and_coverage_kept}
+  script: predictfun/research/pf_keep_pull_exec_windows.py
+  mutants: {file: predictfun/research/pf_keep_pull_exec_windows_mutants.py, planted: 33, caught: 33}
+  data_read: false
+  running: false
+  launch: {ledger: "PF_SLOT=claude predictfun/research/run_light.sh xw_run -- python3 predictfun/research/pf_keep_pull_exec_windows.py run", known: "PF_SLOT=claude predictfun/research/run_light.sh xw_known -- python3 predictfun/research/pf_keep_pull_exec_windows.py known"}
+  next: "USER's go: the ledger (Oct 23-27) and the known-lifecycle check (Nov 8 own legs); then the queue-aware scenario replay"
+
 execution_windows_review_20261118:
   status: documented_user_requested_interval_approach_and_remaining_gates
   target_commit: d1de75049fdf5a2477e279ca108114b5aef09b27
@@ -48,7 +62,8 @@ keep_pull_timing_audit_20261118:
   script: predictfun/research/pf_keep_pull_timing_audit.py
   linked: {fills: 86904, legs: 446622, unlinked: 0, by_evidence: {WS: 49315, E2: 20551, imputed: 249, mixed: 16789}}
   readings: {T0: "YES", T1: SIGN-NOT-IDENTIFIED, T2: SIGN-NOT-IDENTIFIED}
-  removed_order_c: {replay: {removed: 1169671, kept: 182779}, S1: {after: 684314, before: 32996, ambiguous: 635139}, S2: {after: 503138, before: 5456, ambiguous: 843856}}
+  pulled_order_fills_c: {replay: {removed: 1169671, kept: 182779}, S1: {after: 684314, before: 32996, ambiguous: 635139}, S2: {after: 503138, before: 5456, ambiguous: 843856}}
+  qualified: "review of d1de7504 P2 (2026-11-18): the S1 / S2 split covers ALL 45,698 fills of the pulled orders (net +1,352,450 c), not the removed value; the REMOVED / KEPT cross-tab is exec_windows_ledger_20261118's"
   E_bounds_c: {replay: 234279, S1: [-426829, 613334], S2: [-638264, 813718]}
   missing_evidence: "the venue match instant per fill (order-level timing from live, C10)"
   receipts: predictfun/reviews/keep_pull_timing_audit_20261118
