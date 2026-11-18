@@ -1,3 +1,32 @@
+<!-- MANUAL_REVIEW_20261118_717A1A49 -->
+## 2026-11-18 Manual review: keep/pull result reproduced; clock robustness unresolved
+
+Pinned result commit: 717a1a49f27320def34cb466ca73b7325daf8ea3.
+Report and evidence: reviews/automatic/20261118_717a1a49/ (receipt_v2.json).
+No new accounting or implementation discrepancy found. The ledger and unmatched
+trajectory safeguards remain fixed. Bounded saved-table verification passed
+(6.00 s / 507 MiB, codex slot); no raw tape, training or untouched validation.
+
+Population: 143,134 eligible orders from 151,228 counted states, consumed Oct
+23–27; result as of 2026-11-18 03:01:27 UTC. A+0 is a fixed fair-edge rule, not a
+new trained model. M50 / 37 ms absolute five-second marked sums are KEEP
+-$19,461.63, A+0 -$7,764.92, PULL-ALL -$1,049.20. Positive reported improvements
+are not profit, and these isolated-order sums are not portfolio P&L.
+
+M250 is a trade-timestamp assumption, not cancellation latency. The score's
+excess over the analytical expected STATES comparison reverses from +234,279 c
+at M50 to -27,124 c at M250. The WS component also falls (+130,295 to +20,298 c),
+so this is not confined to E2-estimated fills. This source split is descriptive,
+not forward validation. The 94% oracle ceiling always pulls losing orders at
+the first live decision; it does not measure when a causal warning arrives.
+
+ONE next priority: paired M50/M250 fill-clock and eligibility audit on the same
+saved orders/decision opportunities. Separate changes to fill timing/quantity
+from changes to client eligibility and state-null weights, by side/source,
+retaining all sources in totals. Establish target/control robustness before
+model tuning. Development owns the next diagnostic. Schedule remains removed.
+<!-- /MANUAL_REVIEW_20261118_717A1A49 -->
+
 ## 2026-11-18 03:05Z (session aea5bfb9) — KEEP OR PULL RUN (USER: "Check next priority" - the review's next priority: the corrected keep-versus-pull measurement): loss avoidable in principle (oracle 94% at 37 ms, cancel latency ~3% of the loss); the declared fair-edge score beats matched decision states at M50 / M0 / without young fills but NOT at M250; trajectory comparison not evaluable; pulling every order at its first live decision beats the score on total value
 
 - What: run_keep_pull.sh smoke (day 20261023, 12 markets: KEEP = v1's 1,242 JOIN rows bit for bit, fair price complete) then all (selftest, mutation check 43 / 43, Oct23-27 every market, report), claude slot, code ebd5c6b3 (provenance clean). 143,134 eligible resting JOIN orders (151,228 counted; 6,040 refused post-only; the ledger's 2,054 path statuses); 6.94 M live decisions, 579 without a causal fair price (-> KEEP). ~2 min and ~1.25 GiB a day; the report peaked at 3.3 GiB of the 4 GiB cap - reduce before any rerun.

@@ -1,0 +1,179 @@
+20261023: hashes, ledger/original reconciliation and policy/oracle arithmetic pass
+20261024: hashes, ledger/original reconciliation and policy/oracle arithmetic pass
+20261025: hashes, ledger/original reconciliation and policy/oracle arithmetic pass
+20261026: hashes, ledger/original reconciliation and policy/oracle arithmetic pass
+20261027: hashes, ledger/original reconciliation and policy/oracle arithmetic pass
+{
+  "absolute_values": {
+    "M50_L0": {
+      "keep": -1946163.261630351,
+      "pull_all_improvement": 1879641.2010759357,
+      "oracle_improvement": 3392432.12288722,
+      "score_improvement": 1232981.5761143446,
+      "pull_all_absolute_value_c": -66522.06055441522,
+      "oracle_absolute_value_c": 1446268.8612568688,
+      "score_absolute_value_c": -713181.6855160063
+    },
+    "M50_L37": {
+      "keep": -1946163.261630351,
+      "pull_all_improvement": 1841243.3004277858,
+      "oracle_improvement": 3300877.205155483,
+      "score_improvement": 1169671.1699022553,
+      "pull_all_absolute_value_c": -104919.96120256511,
+      "oracle_absolute_value_c": 1354713.943525132,
+      "score_absolute_value_c": -776492.0917280957
+    },
+    "M50_L25": {
+      "keep": -1946163.261630351,
+      "pull_all_improvement": 1853529.2927109483,
+      "oracle_improvement": 3330587.7820379166,
+      "pull_all_absolute_value_c": -92633.96891940269,
+      "oracle_absolute_value_c": 1384424.5204075656
+    },
+    "M50_L100": {
+      "keep": -1946163.261630351,
+      "pull_all_improvement": 1760806.1543774433,
+      "oracle_improvement": 3136136.4849612573,
+      "pull_all_absolute_value_c": -185357.1072529077,
+      "oracle_absolute_value_c": 1189973.2233309064
+    },
+    "M50_L250": {
+      "keep": -1946163.261630351,
+      "pull_all_improvement": 1589789.4972231174,
+      "oracle_improvement": 2790893.035164831,
+      "pull_all_absolute_value_c": -356373.76440723357,
+      "oracle_absolute_value_c": 844729.7735344802
+    },
+    "M50_L500": {
+      "keep": -1946163.261630351,
+      "pull_all_improvement": 1300937.580861581,
+      "oracle_improvement": 2253697.4786752537,
+      "pull_all_absolute_value_c": -645225.6807687699,
+      "oracle_absolute_value_c": 307534.21704490273
+    },
+    "M50_noyoung_L37": {
+      "keep": -1807899.026691685,
+      "pull_all_improvement": 1807899.026691685,
+      "oracle_improvement": 3241819.7497854875,
+      "score_improvement": 1152118.148784138,
+      "pull_all_absolute_value_c": 0.0,
+      "oracle_absolute_value_c": 1433920.7230938026,
+      "score_absolute_value_c": -655780.8779075469
+    },
+    "M250_L37": {
+      "keep": -2418587.030517405,
+      "pull_all_improvement": 2234352.851576806,
+      "oracle_improvement": 3659162.3620502353,
+      "score_improvement": 1024796.0355224402,
+      "pull_all_absolute_value_c": -184234.17894059885,
+      "oracle_absolute_value_c": 1240575.3315328304,
+      "score_absolute_value_c": -1393790.9949949647
+    },
+    "M0_L37": {
+      "keep": -1730285.4946681191,
+      "pull_all_improvement": 1646779.534838385,
+      "oracle_improvement": 3091171.057616817,
+      "score_improvement": 1083811.1724129342,
+      "pull_all_absolute_value_c": -83505.95982973417,
+      "oracle_absolute_value_c": 1360885.5629486977,
+      "score_absolute_value_c": -646474.3222551849
+    }
+  },
+  "source_clock": {
+    "50": {
+      "pulled_orders": 70373,
+      "score_improvement_c": 1169671.169902255,
+      "exact_expected_states_improvement_c": 935391.863799225,
+      "monte_carlo_states_mean_c": 936735.8425328231,
+      "excess_over_exact_state_mean_c": 234279.3061030301,
+      "sources": {
+        "ws": {
+          "keep_value_c": -842048.5398598537,
+          "score_improvement_c": 534944.0658484226,
+          "expected_states_improvement_c": 404648.6215709392,
+          "excess_c": 130295.44427748342,
+          "removed_shares": 386831.5006672129
+        },
+        "e2": {
+          "keep_value_c": -573064.8736948363,
+          "score_improvement_c": 288993.26052267646,
+          "expected_states_improvement_c": 267612.8962285601,
+          "excess_c": 21380.364294116393,
+          "removed_shares": 186126.9907705671
+        },
+        "imputed": {
+          "keep_value_c": -25824.39963752782,
+          "score_improvement_c": 13520.434481909135,
+          "expected_states_improvement_c": 13948.370468779774,
+          "excess_c": -427.93598687063945,
+          "removed_shares": 2144.1593792874028
+        },
+        "mixed": {
+          "keep_value_c": -505225.44843813346,
+          "score_improvement_c": 332213.40904924687,
+          "expected_states_improvement_c": 249181.975530946,
+          "excess_c": 83031.43351830088,
+          "removed_shares": 109734.41438685279
+        },
+        "bid": {
+          "score_improvement_c": 591774.7810204664,
+          "expected_states_improvement_c": 471512.19588400825,
+          "excess_c": 120262.58513645807
+        },
+        "ask": {
+          "score_improvement_c": 577896.3888817887,
+          "expected_states_improvement_c": 463879.66791521676,
+          "excess_c": 114016.72096657196
+        }
+      }
+    },
+    "250": {
+      "pulled_orders": 69462,
+      "score_improvement_c": 1024796.0355224415,
+      "exact_expected_states_improvement_c": 1051919.8063452847,
+      "monte_carlo_states_mean_c": 1051186.54332706,
+      "excess_over_exact_state_mean_c": -27123.770822843187,
+      "sources": {
+        "ws": {
+          "keep_value_c": -1106801.5117960996,
+          "score_improvement_c": 497297.63493649923,
+          "expected_states_improvement_c": 476999.2687433406,
+          "excess_c": 20298.36619315861,
+          "removed_shares": 401998.1516089269
+        },
+        "e2": {
+          "keep_value_c": -699058.2100011774,
+          "score_improvement_c": 276286.92504106753,
+          "expected_states_improvement_c": 303580.849761743,
+          "excess_c": -27293.924720675444,
+          "removed_shares": 184184.2466990255
+        },
+        "imputed": {
+          "keep_value_c": -27325.78896763384,
+          "score_improvement_c": 12409.803479659206,
+          "expected_states_improvement_c": 13836.31564199577,
+          "excess_c": -1426.5121623365649,
+          "removed_shares": 2280.121697522588
+        },
+        "mixed": {
+          "keep_value_c": -585401.5197524941,
+          "score_improvement_c": 238801.67206521545,
+          "expected_states_improvement_c": 257503.3721982053,
+          "excess_c": -18701.70013298985,
+          "removed_shares": 91823.3502183081
+        },
+        "bid": {
+          "score_improvement_c": 526857.2257277768,
+          "expected_states_improvement_c": 534382.2904279095,
+          "excess_c": -7525.064700132643
+        },
+        "ask": {
+          "score_improvement_c": 497938.8097946646,
+          "expected_states_improvement_c": 517537.51591737516,
+          "excess_c": -19598.706122710588
+        }
+      }
+    }
+  }
+}
+2026-11-18T03:11:36Z tag=review_717a1a49_results_v2 rc=0 peak_rss_mib=507 wall_s=6.00 cpu_user_s=5.52 memavail_start_gib=23 disk_free_gib=452->452 slot=codex

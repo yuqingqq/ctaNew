@@ -1,3 +1,26 @@
+<!-- MANUAL_REVIEW_20261118_717A1A49 -->
+## 2026-11-18 Keep/pull results: arithmetic holds; clock sensitivity is the next gate
+
+Reviewed 717a1a49f27320def34cb466ca73b7325daf8ea3 on consumed Oct 23–27
+(143,134 eligible / 151,228 counted; result as of 2026-11-18 03:01:27 UTC).
+Report: reviews/automatic/20261118_717a1a49/report.md; receipt_v2.json supersedes
+v1 only to omit uncomputed review fields. Bounded checks found no new accounting
+or implementation discrepancy; prior ledger and unmatched-acceptance fixes hold.
+
+A+0's positive M50 improvement is still an absolute -$7,764.92 five-second marked
+sum, versus -$1,049.20 for first-live PULL-ALL. These are isolated-order sums,
+not portfolio/settlement P&L. M250 fails the declared selection gates; the exact
+STATES-mean excess changes +234,279 to -27,124 c and weakens for WS-timed fills
+as well as E2/mixed. The source split is post-hoc descriptive evidence. All
+oracle pulls occur at the earliest live decision, so 94% avoidability is a
+perfect-foresight ceiling, not proof of timely causal risk detection.
+
+ONE next priority: pair M50/M250 orders and decision opportunities, attribute
+changed fills versus changed client eligibility/state-null weights by side and
+source, and establish target/control robustness before model tuning. No model
+changes or untouched validation in this review. Schedule remains removed.
+<!-- /MANUAL_REVIEW_20261118_717A1A49 -->
+
 <!-- SCHEDULE_REMOVED_20261118 -->
 ## 2026-11-18 Scheduled reviews removed at the user's request
 
