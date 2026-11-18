@@ -1,0 +1,36 @@
+keep-pull clock audit selftests passed (synthetic only): analytic STATES expectation 40.18 = sampler mean 40.57 +- 1.18 (20,000 draws); brute force and explicit score sums equal; planted FILL and ELIGIBILITY cases attributed to the cent; A1 / A2 labels
+PAIRED M50 / M250 FILL-CLOCK AND ELIGIBILITY AUDIT of the declared score A+0 (pf_keep_pull_clock_audit.py; saved tables of the committed keep / pull run, consumed Oct23-27; c summed over orders; STATES = local selection, not a portfolio)
+  143,134 eligible resting orders; A0 control: the review's E(50, 50) +234,279, E(250, 250) -27,124, null 935,392 / 1,051,920 and the report's score 1,169,671 / 1,024,796 reproduced to 1 c
+
+PART 1 - E(F, G) = score improvement - exact STATES-null expectation; F = fill clock, G = eligibility (COMMON = live at both clocks)
+  fills  eligibility | pulls  | score improvement | null expectation | excess E   | of which fills < 200 ms after the landing
+  M50    M50         | 70,373 |         1,169,671 |          935,392 |   +234,279 |   +306,434
+  M50    M250        | 69,462 |         1,083,928 |          912,478 |   +171,450 |   +237,401
+  M50    COMMON      | 69,421 |         1,083,928 |          912,512 |   +171,416 |   +237,121
+  M250   M50         | 70,373 |         1,024,498 |        1,059,908 |    -35,410 |    +27,926
+  M250   M250        | 69,462 |         1,024,796 |        1,051,920 |    -27,124 |    +29,560
+  M250   COMMON      | 69,421 |         1,024,498 |        1,051,651 |    -27,154 |    +29,379
+
+PART 2 - E(250, 250) - E(50, 50) split (Shapley; one-sided paths in brackets: fills first / eligibility first)
+  pooled: total -261,403 = FILL -234,132 + ELIGIBILITY -27,271   [-269,690 / -62,830]
+  bid     : total -127,788 = FILL -115,078 + ELIGIBILITY -12,710 | E(50, COMMON) +90,942, E(250, COMMON) -7,359
+  ask     : total -133,615 = FILL -119,054 + ELIGIBILITY -14,562 | E(50, COMMON) +80,474, E(250, COMMON) -19,794
+  ws      : total -109,997 = FILL -100,911 + ELIGIBILITY -9,086 | E(50, COMMON) +108,337, E(250, COMMON) +19,968
+  e2      : total -48,674 = FILL -41,347 + ELIGIBILITY -7,327 | E(50, COMMON) +4,624, E(250, COMMON) -26,968
+  imputed : total -999 = FILL -643 + ELIGIBILITY -355 | E(50, COMMON) -1,099, E(250, COMMON) -1,385
+  mixed   : total -101,733 = FILL -91,230 + ELIGIBILITY -10,503 | E(50, COMMON) +59,555, E(250, COMMON) -18,769
+
+PART 3 - the same opportunities (COMMON eligibility) by day: E(50, COMMON) | E(250, COMMON)
+  20261023:    +23,494 |    -13,414
+  20261024:    +24,850 |     -8,175
+  20261025:    +32,662 |     -3,811
+  20261026:    +45,050 |     +1,197
+  20261027:    +45,360 |     -2,951
+
+READINGS (declared before computing)
+  A0 REPRODUCED: YES
+  A1 ATTRIBUTION: FILL-TIMING-DOMINATES (FILL -234,132 vs ELIGIBILITY -27,271 of the -261,403 change)
+  A2 SAME-OPPORTUNITY STABILITY: TARGET-CLOCK-SENSITIVE (E(50, COMMON) +171,416, E(250, COMMON) -27,154)
+
+LIMITS: consumed days; one declared rule; STATES is local selection, not a portfolio; the replay's fills (queue M, trade anchors); a diagnostic, not acceptance.
+2026-11-18T03:40:31Z tag=kpa_run rc=0 peak_rss_mib=876 wall_s=19.73 cpu_user_s=17.70 memavail_start_gib=23 disk_free_gib=451->451 slot=claude
