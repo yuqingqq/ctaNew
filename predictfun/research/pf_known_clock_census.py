@@ -22,10 +22,10 @@ READINGS (declared; evaluated in code):
   N1 RECORDS-REPRODUCE: legs whose every A0 field holds, of 99 (an instrument check; each failing leg is named with its fields).
   N2 BOOK-BOUND: legs with a cancel confirmation whose bound is IDENTIFIED, of those legs; B's distribution (min / p50 / max); every
      UNIDENTIFIED leg with its causes.
-  N3 CANCEL-ANSWER-ORDERS-FILLS: NO iff some order whose first cancel confirmation is CANCELED ended filled IN FULL - the venue acknowledged
-     a cancel of an order that then filled completely; else NOT-CONTRADICTED. Counts: class x (full / partial fill).
-  N4 TERMINAL-SNAPSHOT-UNDERSTATES-FILLS: orders with a post-cancel terminal snapshot whose size_matched is below the order's final filled
-     size; of them, those whose snapshot was received after the first fill notice.
+  N3 CANCEL-ANSWER-ORDERS-FILLS (v1-v3; superseded in v4 by N3 CANCELED-ANSWER-ORDERS-MATCH-AND-CANCEL): NO iff some order whose first cancel
+     confirmation is CANCELED ended filled IN FULL; else NOT-CONTRADICTED. Counts: class x (full / partial fill).
+  N4 TERMINAL-SNAPSHOT-UNDERSTATES-FILLS (v1-v3; superseded in v4 by N4 TERMINAL-SNAPSHOT-VS-FILLS): orders with a post-cancel terminal
+     snapshot whose size_matched is below the order's final filled size; of them, those received after the first fill notice.
   N5 PF-EXEC-ALERTS: orders named in a late-fill or quantity-conflict alert.
 Exclusions are statuses: a leg without kernel records, an order without any cancel confirmation (class NO-ANSWER), a leg without bot frames.
 SELFTEST (synthetic, no data): the bound status rule (identified; too few pairs; a stepped or unmeasured clock; one bot clock failing); the
@@ -41,6 +41,14 @@ V2 (2026-11-18, after v1's output was read; v1's receipt known_clock_census_2026
  compared with the FIRST answer, a refusal on 10 legs whose cancel was confirmed on a retry; the one-bot-clock tolerance was 1 us, while the two
  journals' stamps are separate reads of the host clock (4.4 us apart on 1 leg; now 0.1 ms). Every declared reading and threshold is unchanged;
  added, descriptive only: the orders with any venue acknowledgement of the cancel (a retry's included) by fill.
+V4 (review 8e63f178, P2-3; declared before v4 ran): "acknowledged Canceled then filled" claimed an order the evidence does not give - a
+ notice after the answer is a delayed observation, and a match before the cancel's processing followed by a late notice is equally
+ compatible. N3 CANCELED-ANSWER-ORDERS-MATCH-AND-CANCEL: NO (the answer is uninformative) iff some order answered CANCELED ended filled in full
+ - it then matched either before its cancel was processed (the answer ignored the match) or after the cancel took effect (the answer did not
+ stop it), so a Canceled answer orders neither; else NOT-CONTRADICTED. Each order carries its first answer and first fill notice times; the
+ notice-after-answer count is printed as delayed observation, never as the match order. N4 TERMINAL-SNAPSHOT-VS-FILLS compares each snapshot
+ with the eventual fill AND with the fills the bot had already observed (its positive notices, per trade) by the snapshot's receipt. Neither
+ is a cancel-failure probability; nothing here may train one.
 V3 (after v2's output was read): v2 compared the case table's confirmed cancel with the first answer showing the order no longer live, a
  "can't be found" answer included; the fill-clock audit defines it as the order's first CancelPendingAudit only (orders.parquet
  t_CancelPendingAudit), so v2 failed A0 on 10 legs without one. The comparison now mirrors that definition; nothing else changes.
@@ -61,13 +69,13 @@ import pf_keep_pull_exec_windows as X                     # noqa: E402  the Nov 
 import pf_timing_case_audit as TCA                        # noqa: E402  the readers, lifecycle, book_pairs, the identity rule
 
 C, pd, I = KP.C, KP.pd, KP.I
-OUT = Path(I.K.IO) / 'known_clock_census_v3_20261118'   # v3: the lifecycle fixes in pf_timing_case_audit (v1 / v2 stay as provenance)
+OUT = Path(I.K.IO) / 'known_clock_census_v4_20261118'   # v4: review 8e63f178 (N3 / N4 semantics); v1-v3 stay as provenance
 KNOWN = Path(I.K.IO) / 'keep_pull_exec_windows_known_v5_20261118'   # the case table (K6 is not read here)
 AUDIT = Path(I.K.IO) / 'timing_case_audit_v2_20261118' / 'audit.json'
 ALERT_KEYS = ('late_fill', 'cancel_quantity_conflict')
 LEG_COLS = ['run', 'cid', 'mid', 'trade_id', 'order_hash', 'ack', 'center', 'B', 'n', 'B_max', 'B_min', 'statuses', 'clock_step_ms', 'clock_samples',
-            'one_bot_clock', 'A0', 'A0_failed', 'A1', 'A1_at', 'A1_source', 'acknowledged', 'snapshots', 'alerts', 'first_notice', 'size', 'filled', 'bound_status',
-            'bound_missing']
+            'one_bot_clock', 'A0', 'A0_failed', 'A1', 'A1_at', 'A1_source', 'acknowledged', 'snapshots', 'order_fills', 'alerts', 'first_notice', 'size', 'filled',
+            'bound_status', 'bound_missing']
 
 
 def bound_status(one_bot_clock, step, b):
@@ -91,6 +99,7 @@ def leg_row(r, rec, br, Fm, bf, ck, size, filled):
                 one_bot_clock=bool(L_['a0f']['one_bot_clock']), A0=bool(L_['a0']), A0_failed=json.dumps(sorted(k for k, v in L_['a0f'].items() if not v)),
                 A1=L_['a1'], A1_at=float(L_['a1_at']), A1_source=L_['a1_src'], acknowledged=bool(L_['pa']),
                 snapshots=json.dumps([dict(at=t, size_matched=int(x['size_matched'])) for t, x in L_['cq']]),
+                order_fills=json.dumps([dict(at=a, size=int(q)) for a, q in L_['ofills']]),
                 alerts=json.dumps(sorted({a for t, k, line in L_['rec'] if k == 'outbox' and r.order_hash.lower() in line for a in json.loads(line)['frame']['alerts']})),
                 first_notice=float(min(L_['pos'])) if L_['pos'] else np.nan, size=float(size), filled=float(filled), bound_status=bs, bound_missing=json.dumps(miss))
 
@@ -103,9 +112,13 @@ def order_census(L):
         x = g.iloc[0]; snaps = json.loads(x['snapshots']); alerts = json.loads(x['alerts'])
         fn = g.first_notice.values.astype(float); fn = float(np.nanmin(fn)) if np.isfinite(fn).any() else np.nan
         under = [s for s in snaps if s['size_matched'] < round(float(x['filled']) * 1e6)]
+        of = json.loads(x['order_fills']); seen = lambda t: sum(f['size'] for f in of if f['at'] <= t)   # fills the bot had observed by t (8e63f178)
+        ans = float(x['A1_at'])
         rows.append(dict(run=run, cid=int(cid), legs=int(len(g)), cls=x['A1'], acknowledged=bool(g.acknowledged.any()), size=float(x['size']), filled=float(x['filled']),
-                         full=bool(float(x['filled']) >= float(x['size']) - 1e-9), snapshots=len(snaps), understating=len(under),
+                         full=bool(float(x['filled']) >= float(x['size']) - 1e-9), answer_at=ans, first_notice=fn,
+                         notice_after_answer=bool(np.isfinite(ans) and np.isfinite(fn) and fn > ans), snapshots=len(snaps), understating=len(under),
                          understating_after_notice=sum(1 for s in under if np.isfinite(fn) and s['at'] >= fn),
+                         below_observed=sum(1 for s in snaps if s['size_matched'] < seen(s['at'])),
                          alerts=json.dumps(sorted({a.split(':')[0] for a in alerts})), alerted=any(any(k in a for k in ALERT_KEYS) for a in alerts)))
     return pd.DataFrame(rows)
 
@@ -125,10 +138,14 @@ def readings(L, O, audit_legs):
     R['N2_B_ms'] = dict(min=float(Bv.min()), p50=float(np.median(Bv)), max=float(Bv.max())) if len(Bv) else {}
     R['N2_unidentified'] = [dict(run=r.run, cid=int(r.cid), trade_id=r.trade_id, n=int(r.n), missing=json.loads(r.bound_missing)) for r in L[can & ~idf].itertuples()]
     xt = {f'{c}|{"full" if f else "partial"}': int(((O.cls == c) & (O.full == f)).sum()) for c in TCA.ANSWER for f in (True, False)}
-    race = int(((O.cls == 'CANCELED') & O.full).sum())
-    read['N3 CANCEL-ANSWER-ORDERS-FILLS'] = (f'NO: {race} orders acknowledged Canceled then filled in full' if race else 'NOT-CONTRADICTED'); R['N3_class_x_fill'] = xt
-    u = int((O.understating > 0).sum()); ua = int((O.understating_after_notice > 0).sum())
-    read['N4 TERMINAL-SNAPSHOT-UNDERSTATES-FILLS'] = f'{u} orders ({ua} with the snapshot received after the first fill notice)'
+    rc_ = (O.cls == 'CANCELED') & O.full; race = int(rc_.sum())
+    read['N3 CANCELED-ANSWER-ORDERS-MATCH-AND-CANCEL'] = (f'NO (the answer is uninformative): {race} orders answered Canceled ended filled in full - each matched before '
+                                                          'its cancel was processed or after the cancel took effect; which one is unidentified' if race else 'NOT-CONTRADICTED')
+    R['N3_class_x_fill'] = xt
+    R['N3_first_notice_after_the_answer'] = dict(orders=int((rc_ & O.notice_after_answer).sum()), of=race, meaning='delayed observation, not the match order')
+    u = int((O.understating > 0).sum()); ua = int((O.understating_after_notice > 0).sum()); uo = int((O.below_observed > 0).sum())
+    read['N4 TERMINAL-SNAPSHOT-VS-FILLS'] = (f'{u} orders below the eventual fill ({ua} received after the first fill notice); {uo} below the fills the bot had '
+                                             'already observed at its receipt')
     read['N5 PF-EXEC-ALERTS'] = f"{int(O.alerted.sum())} orders named in a late-fill or quantity-conflict alert"
     # v2, descriptive (added after v1's output was read; no reading uses it): any venue acknowledgement of the cancel, a retry's included
     R['N3b_any_acknowledgement_x_fill'] = {f'{"acknowledged" if a else "never acknowledged"}|{"full" if f else "partial"}': int(((O.acknowledged == a) & (O.full == f)).sum())
@@ -186,11 +203,12 @@ def report(J, L, O):
     for r in L.itertuples():
         o.append(f"  {r.run} cid {r.cid} trade {r.trade_id}: bound {r.bound_status} B {r.B} (n {r.n}, max {r.B_max}, min {r.B_min}, step {r.clock_step_ms}) "
                  f"{'' if r.bound_status == 'IDENTIFIED' else json.loads(r.bound_missing)}; A0 {r.A0} {'' if r.A0 else json.loads(r.A0_failed)}; A1 {r.A1}")
-    o.append('  orders: ' + '; '.join(f"{r.run} {r.cid} {r.cls} {r.filled:g}/{r.size:g} snaps {r.snapshots} under {r.understating} (after notice {r.understating_after_notice}) "
-                                    f"{json.loads(r.alerts)}" for r in O.itertuples()))
+    o.append('  orders: ' + '; '.join(f"{r.run} {r.cid} {r.cls} {r.filled:g}/{r.size:g} answer {r.answer_at} first notice {r.first_notice} snaps {r.snapshots} under {r.understating} "
+                                    f"(after notice {r.understating_after_notice}; below observed {r.below_observed}) {json.loads(r.alerts)}" for r in O.itertuples()))
     o += ['READINGS (declared before the data was read)'] + [f'  {k}: {v}' for k, v in J['readings'].items()]
     o += [f"  N1 failing legs: {J['R']['N1_failed']}", f"  N2 B (ms): {J['R']['N2_B_ms']}; unidentified: {J['R']['N2_unidentified']}",
-          f"  N3 class x fill: {J['R']['N3_class_x_fill']}; descriptive (v2): any acknowledgement x fill {J['R']['N3b_any_acknowledgement_x_fill']}",
+          f"  N3 class x fill: {J['R']['N3_class_x_fill']}; descriptive (v2): any acknowledgement x fill {J['R']['N3b_any_acknowledgement_x_fill']}; "
+          f"first fill notice after the answer (delayed observation, not the match order) {J['R']['N3_first_notice_after_the_answer']}",
           f"  N5 alerts: {J['R']['N5_alerts']}",
           'LIMITS: one consumed partial day; filled own orders only (outcome-selected); the book-clock premise (stamp before receipt; one stamp per update across '
           'subscribers); a one-sided bound; development evidence - Nov 8 is not untouched validation.']
@@ -229,15 +247,18 @@ def selftest():
         bad.append(f'leg_row: the window centres on the cancel confirmation, and only alerts naming the order count: {g4.get("n")} {g4.get("alerts")}')
     # the order census on planted orders
     snap = lambda *x: json.dumps([dict(at=a, size_matched=m) for a, m in x])
-    L = pd.DataFrame([dict(run='v6', cid=1, A1='CANCELED', acknowledged=True, size=5., filled=5., snapshots=snap((45., 0)), alerts=json.dumps(['late_fill_beyond_cancel_bound:0x1: x']), first_notice=50.),
-                      dict(run='v6', cid=1, A1='CANCELED', acknowledged=True, size=5., filled=5., snapshots=snap((45., 0)), alerts=json.dumps(['late_fill_beyond_cancel_bound:0x1: x']), first_notice=40.),
-                      dict(run='v6', cid=2, A1='CANCELED', acknowledged=True, size=5., filled=2., snapshots=snap((100., 2000000)), alerts='[]', first_notice=150.),
-                      dict(run='v6', cid=3, A1='MATCHED-OR-GONE', acknowledged=False, size=5., filled=5., snapshots='[]', alerts=json.dumps(['order_reopened:0x3: z']), first_notice=10.),
-                      dict(run='basis', cid=4, A1='NO-ANSWER', acknowledged=True, size=5., filled=5., snapshots=snap((200., 1000000)), alerts=json.dumps(['cancel_quantity_conflict:0x4: y']), first_notice=300.)])
+    fl = lambda *x: json.dumps([dict(at=a, size=q) for a, q in x])
+    L = pd.DataFrame([dict(run='v6', cid=1, A1='CANCELED', A1_at=30., acknowledged=True, size=5., filled=5., order_fills=fl((40., 5000000)), snapshots=snap((45., 0)), alerts=json.dumps(['late_fill_beyond_cancel_bound:0x1: x']), first_notice=50.),
+                      dict(run='v6', cid=1, A1='CANCELED', A1_at=30., acknowledged=True, size=5., filled=5., order_fills=fl((40., 5000000)), snapshots=snap((45., 0)), alerts=json.dumps(['late_fill_beyond_cancel_bound:0x1: x']), first_notice=40.),
+                      dict(run='v6', cid=2, A1='CANCELED', A1_at=200., acknowledged=True, size=5., filled=2., order_fills=fl((150., 2000000)), snapshots=snap((100., 2000000)), alerts='[]', first_notice=150.),
+                      dict(run='v6', cid=3, A1='MATCHED-OR-GONE', A1_at=5., acknowledged=False, size=5., filled=5., order_fills=fl((10., 5000000)), snapshots='[]', alerts=json.dumps(['order_reopened:0x3: z']), first_notice=10.),
+                      dict(run='basis', cid=4, A1='NO-ANSWER', A1_at=np.nan, acknowledged=True, size=5., filled=5., order_fills=fl((300., 5000000)), snapshots=snap((200., 1000000)), alerts=json.dumps(['cancel_quantity_conflict:0x4: y']), first_notice=300.)])
     O = order_census(L).set_index(['run', 'cid'])
     want = {('v6', 1): (True, 1, 1, True), ('v6', 2): (False, 0, 0, False), ('v6', 3): (True, 0, 0, False), ('basis', 4): (True, 1, 0, True)}
     if [bool(O.loc[k].acknowledged) for k in want] != [True, True, False, True]:
         bad.append('order census: the acknowledgement flag')
+    if [int(O.loc[k].below_observed) for k in want] != [1, 0, 0, 0] or [bool(O.loc[k].notice_after_answer) for k in want] != [True, False, True, False]:
+        bad.append(f'order census: snapshots vs observed fills / notice after the answer: {O[["below_observed", "notice_after_answer"]].to_dict("records")}')
     for k, (full, under, after, alerted) in want.items():
         x = O.loc[k]
         if (bool(x.full), int(x.understating), int(x.understating_after_notice), bool(x.alerted)) != (full, under, after, alerted) or (k == ('v6', 1) and int(x.legs) != 2):
@@ -247,16 +268,20 @@ def selftest():
                        dict(run='v6', cid=2, trade_id='t2', A0=False, A0_failed='["one_bot_clock"]', ack=20., bound_status='UNIDENTIFIED', B=-9., n=30, clock_step_ms=0.1,
                             bound_missing='["one bot clock"]'),
                        dict(run='v6', cid=3, trade_id='t3', A0=True, A0_failed='[]', ack=np.nan, bound_status='UNIDENTIFIED', B=None, n=0, clock_step_ms=0.1, bound_missing='[]')])
-    Or = pd.DataFrame([dict(cls='CANCELED', acknowledged=True, full=True, understating=1, understating_after_notice=1, alerted=True, alerts='["late_fill_beyond_cancel_bound"]'),
-                       dict(cls='MATCHED-OR-GONE', acknowledged=False, full=True, understating=0, understating_after_notice=0, alerted=False, alerts='[]')])
+    Or = pd.DataFrame([dict(cls='CANCELED', acknowledged=True, full=True, notice_after_answer=True, understating=1, understating_after_notice=1, below_observed=1, alerted=True,
+                            alerts='["late_fill_beyond_cancel_bound"]'),
+                       dict(cls='MATCHED-OR-GONE', acknowledged=False, full=True, notice_after_answer=False, understating=0, understating_after_notice=0, below_observed=0,
+                            alerted=False, alerts='[]')])
     rd, Rr = readings(Lr, Or, [dict(run='v6', cid=1, trade_id='t1', A4=dict(B=-5., n=30, clock_step_ms=0.1))])
     if not (rd['N0 REPRODUCES-THE-CASE-AUDIT'] == 'YES' and rd['N1 RECORDS-REPRODUCE'] == '2 of 3 legs' and rd['N2 BOOK-BOUND'] == 'IDENTIFIED on 1 of 2 legs with a cancel confirmation'
-            and rd['N3 CANCEL-ANSWER-ORDERS-FILLS'].startswith('NO: 1 ') and rd['N4 TERMINAL-SNAPSHOT-UNDERSTATES-FILLS'].startswith('1 orders (1 ') and Rr['N2_B_ms'] == dict(min=-5., p50=-5., max=-5.)
+            and rd['N3 CANCELED-ANSWER-ORDERS-MATCH-AND-CANCEL'].startswith('NO (the answer is uninformative): 1 ') and ' then ' not in rd['N3 CANCELED-ANSWER-ORDERS-MATCH-AND-CANCEL']
+            and rd['N4 TERMINAL-SNAPSHOT-VS-FILLS'] == '1 orders below the eventual fill (1 received after the first fill notice); 1 below the fills the bot had already observed at its receipt'
+            and Rr['N3_first_notice_after_the_answer']['orders'] == 1 and Rr['N2_B_ms'] == dict(min=-5., p50=-5., max=-5.)
             and len(Rr['N2_unidentified']) == 1 and Rr['N3_class_x_fill']['CANCELED|full'] == 1
             and Rr['N3b_any_acknowledgement_x_fill'] == {'acknowledged|full': 1, 'acknowledged|partial': 0, 'never acknowledged|full': 1, 'never acknowledged|partial': 0}):
         bad.append(f'readings on planted counts: {rd} {Rr}')
     rd2, _ = readings(Lr, Or.assign(cls=['MATCHED-OR-GONE', 'CANCELED'], full=[True, False]), [dict(run='v6', cid=1, trade_id='t1', A4=dict(B=-4., n=30, clock_step_ms=0.1))])
-    if rd2['N3 CANCEL-ANSWER-ORDERS-FILLS'] != 'NOT-CONTRADICTED' or rd2['N0 REPRODUCES-THE-CASE-AUDIT'] != 'NO':
+    if rd2['N3 CANCELED-ANSWER-ORDERS-MATCH-AND-CANCEL'] != 'NOT-CONTRADICTED' or rd2['N0 REPRODUCES-THE-CASE-AUDIT'] != 'NO':
         bad.append(f'readings: a partial fill after Canceled is not a race / a different B must not reproduce: {rd2}')
     print('SELFTEST', 'PASS' if not bad else 'FAIL')
     for b_ in bad:

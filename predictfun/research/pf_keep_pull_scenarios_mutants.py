@@ -58,6 +58,11 @@ MUT = [
     # --- check of 9a114cc1: the production (upper-only) default path
     ('the production day ignores the corrected known receipt', "        st_lag, lag_in = X.known_lag()", "        st_lag, lag_in = 259.034, {}"),
     ('an upper-only ST window replayed as STlo', "del tau['STlo'], hl['STlo']", "pass"),
+    # --- v5: the C1 age split and the C3 cancel-pending share
+    ('the age taken from posting, not activation', "yb = np.digitize(t - float(sc['A']), AGE_EDGES)", "yb = np.digitize(t, AGE_EDGES)"),
+    ('removed fills counted as cancel-pending', "pend = act[ri] & (t >= KP.STEP * T[ri]) & (t < r)", "pend = act[ri] & (t >= KP.STEP * T[ri])"),
+    ('the headline without young fills keeps them', "no_young=dict(E=e - by_age['lt100']['E'], score=score - by_age['lt100']['score'],", "no_young=dict(E=e, score=score,"),
+    ('control (i) never fires', "    return [nm for nm, v in res.items() if abs(v['KEEP'] - v['fills_value']) > 1e-6 * max(1., abs(v['KEEP']))]", "    return []"),
 ]
 STALE = 97                                                # exit code of a replacement target that does not occur as declared
 

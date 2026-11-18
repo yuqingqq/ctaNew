@@ -20,6 +20,19 @@ manual_result_review_20261118_541aeca9:
   next_priority: repair_and_supersede_timing_evidence_receipt_before_per_cancel_expansion
   scheduler: disabled_by_user
 
+review_8e63f178_fixes_20261118:
+  status: done_all_p2_fixed_reruns_reproduce_loop_running
+  asof: "2026-11-18 18:05Z"
+  user: ["check the issues, together with the issues you have found, proceed to fix. Then check if the simulator is reliable to run now", "launch a loop to achieve this"]
+  report: predictfun/reviews/review_8e63f178_fixes_20261118/report.md
+  plan: predictfun/reviews/simulator_readiness_20261118/plan.md
+  fixes: {P2-1: "known v7 window constituents per clock + feasibility", P2-2: "case audit exact identity / endpoint comparisons", P2-3: "c_hi typed by premise; N3 / N4 restated; evidence-only lifecycle; K5 unbounded; K9"}
+  also_fixed: [scenario replay v5 C1 age split and C3 cancel-pending, case audit population pinned to known v5, two crash-killed mutants, a K9 test case]
+  mutation_suites: {case_audit: 40/40, census: 17/17, exec_windows: 127/127, scenarios: 37/37}
+  reproduction: {compare_all: true, scenarios_identical_to_v4: 19}
+  readings: {gate_of_record_per_domain: {S1: FAIL, S2: FAIL, S3: PASS, ST: UNIDENTIFIED-UPPER-BOUND-ONLY, EV: PASS}, K9_before_request: "25 of 88 cancelled legs; 24 of 72 Canceled-and-full legs", E_young_c: -769, E_c: 34948, pending_share_gross_baseline: 0.023}
+  next: [C2 reading at M250, C12 age split by anchor source, per-cancel race study, Oct 24-27, test-run protocol]
+
 clock_gate_and_cancel_census_20261118:
   status: done_s3_passes_per_domain_gate_cancel_answer_does_not_stop_fills
   asof: "2026-11-18 16:24Z"

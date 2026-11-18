@@ -17,6 +17,13 @@ trade-clock shift (M0 / M250: every trade stamp moved uniformly), activation del
 no scenario is called "zero latency"; (3) the held contradictory events get their denominator (every event per family and day) and their
 economic weight (the fills, shares and value at held trade instants per scenario); v1's outputs (keep_pull_scenarios_20261118) stay as
 provenance.
+C1 / C3 (v5, USER "proceed to fix" with review 8e63f178; declared before v5 ran): the replay reported neither FINDINGS C1 (value split by the
+order's age at the fill; the headline without fills on orders < 100 ms old, which were 8-12% real on live's own orders - B1a) nor C3 (the
+cancel-pending share). Per scenario now: E, the score's improvement and the fills' value by age bin (< 100 / 100-500 / >= 500 ms after the
+scenario's activation; E is additive over fills), the headline without the < 100 ms fills, and the fills landing between the score's pull
+decision and its landing (count, shares, value, share of the fills' gross). Control (i): KEEP equals the sum of its fills' values in every
+scenario, else no output. Readings Z1-NY / Z3-NY: E and KEEP + score without the < 100 ms fills, STABLE-* / NOT-STABLE as Z1 / Z3. B1a-
+weighted values are not computed (B1a's per-bucket precision is one day of live's orders). Scenario values are otherwise unchanged from v4.
 SETTLEMENT-LAG CORRECTION (v4, review 52c45d57): UUID creation lag is event-specific, not a constant offset. The default ST window
 has no finite lower bound. STlo is omitted from the default scenario bank, and no -infinity endpoint may enter a replay. SThi remains
 an upper-endpoint sensitivity scenario, conditional on creation after matching and aligned clocks; it is not a measured match instant.
@@ -93,7 +100,8 @@ import pf_queue_place_ledger as QL                        # noqa: E402
 import pf_flow_control_kernel as FK                       # noqa: E402
 
 C, pd, I = KP.C, KP.pd, KP.I
-OUT = Path(I.K.IO) / 'keep_pull_scenarios_v4_20261118'      # v4: corrected creation-lag semantics; earlier outputs stay as provenance
+OUT = Path(I.K.IO) / 'keep_pull_scenarios_v5_20261118'      # v5: the C1 age split and the C3 cancel-pending share (v4 and earlier stay as provenance)
+AGE_EDGES, AGE_LABELS = (KP.YOUNG, 500.), ('lt100', '100to500', 'ge500')   # FINDINGS C1: the order's age at the fill (fill - activation), ms
 SHIFT = 50.
 B0 = dict(tl='M50', A=KP.PLACE, L=KP.CANCEL, N=KP.NOTICE, X=None)
 TIMELINES = ('M50', 'S1lo', 'S1mid', 'S1hi', 'S2lo', 'S2hi', 'S3lo', 'S3hi', 'SThi', 'EVhi')
@@ -364,11 +372,25 @@ def outcome(O, Os, Fs, sc):
     e = con(np.ones(len(ri), bool)); r = KP.landing(np.clip(T[ri], 1, KP.NSTEP), lf); score = float(-(val * (act[ri] & (t >= r))).sum())
     j0 = KP.landing(np.full(len(ri), KP.J0), lf); pa = float(-(val * ((KP.J0 < endj[ri]) & (t >= j0))).sum())
     filled = np.bincount(ri, minlength=len(E)) > 0; hv = np.isin(Fs.held.values, (1, 3)) if 'held' in Fs else np.zeros(len(Fs), bool)
+    # v5 (FINDINGS C1 / C3): every value split by the order's age at the fill, and the fills that land while the score's pull is in flight
+    yb = np.digitize(t - float(sc['A']), AGE_EDGES); rm = act[ri] & (t >= r); pend = act[ri] & (t >= KP.STEP * T[ri]) & (t < r)
+    by_age = {lab: dict(E=con(yb == b), score=float(-(val * (rm & (yb == b))).sum()), fills_value=float(val[yb == b].sum()), fills=int((yb == b).sum()),
+                        shares=float(Fs.q.values[yb == b].sum())) for b, lab in enumerate(AGE_LABELS)}
+    gross = max(float(np.abs(val).sum()), 1e-12)
     return dict(KEEP=float(E.v_s.sum()), score=score, null=score - e, E=e, PULLALL=pa, fills=int(len(Fs)), shares=float(Fs.q.sum()), eligible=int(len(E)),
+                fills_value=float(val.sum()), by_age=by_age,
+                no_young=dict(E=e - by_age['lt100']['E'], score=score - by_age['lt100']['score'], fills_value=float(val.sum()) - by_age['lt100']['fills_value']),
+                cancel_pending=dict(fills=int(pend.sum()), shares=float(Fs.q.values[pend].sum()), value=float(val[pend].sum()),
+                                    share_of_fills=float(pend.mean()) if len(pend) else 0., share_of_gross=float(np.abs(val[pend]).sum()) / gross),
                 held=dict(fills=int(hv.sum()), shares=float(Fs.q.values[hv].sum()), value=float(val[hv].sum()), gross=float(np.abs(val[hv]).sum()),
                           share_of_gross=float(np.abs(val[hv]).sum() / max(float(np.abs(val).sum()), 1e-12))),
                 orders_filled=int(filled.sum()), pulls=int(act.sum()), by_day={str(d_): con(E.day.values[ri] == d_) for d_ in sorted(set(E.day))},
                 _filled=set(zip(E.day.values[filled], E.oid.values[filled])))
+
+
+def keep_not_fills(res):
+    """Control (i) of v5: the scenarios whose KEEP is not the sum of their fills' values (the C1 split would then be incomplete)."""
+    return [nm for nm, v in res.items() if abs(v['KEEP'] - v['fills_value']) > 1e-6 * max(1., abs(v['KEEP']))]
 
 
 def stable(lo, hi):
@@ -409,9 +431,15 @@ def report(out=None, kp=None, days=KP.DAYS, expect='committed', tol=1.):
     for nm, v in res.items():
         v['discovered'] = len(v['_filled'] - bf); v['lost'] = len(bf - v['_filled'])
     Es = [v['E'] for v in res.values()]; Ks = [v['KEEP'] for v in res.values()]; Ss = [v['KEEP'] + v['score'] for v in res.values()]
+    bad_k = keep_not_fills(res)                                                           # control (i): KEEP is the sum of its fills
+    if bad_k:
+        sys.exit(f'KEEP-PULL SCENARIOS FAILED -> no output: KEEP is not the sum of its fills\' values in {bad_k} (the C1 split would be incomplete)')
+    Ey = [v['no_young']['E'] for v in res.values()]; Sy = [v['no_young']['fills_value'] + v['no_young']['score'] for v in res.values()]
     timing_identified = all(json.loads((out / d / 'receipt.json').read_text()).get('st_lag_ms') is not None for d in days)
     read = {'TIMING EVIDENCE': 'EXPLICIT-LAG-SCENARIO-ONLY' if timing_identified else 'LOWER-MATCH-BOUND-UNIDENTIFIED', 'Z0 CONTROLS': 'YES', 'Z1 E ACROSS TESTED SCENARIOS': stable(min(Es), max(Es)), 'Z2 KEEP VALUE ACROSS TESTED SCENARIOS': stable(min(Ks), max(Ks)),
-            'Z3 THE SCORE\'S VALUE ACROSS TESTED SCENARIOS': stable(min(Ss), max(Ss))}
+            'Z3 THE SCORE\'S VALUE ACROSS TESTED SCENARIOS': stable(min(Ss), max(Ss)),
+            'Z1-NY E WITHOUT FILLS ON ORDERS < 100 MS OLD ACROSS TESTED SCENARIOS': stable(min(Ey), max(Ey)),
+            'Z3-NY THE SCORE\'S VALUE WITHOUT FILLS ON ORDERS < 100 MS OLD ACROSS TESTED SCENARIOS': stable(min(Sy), max(Sy))}
     L = ['QUEUE-AWARE SCENARIO REPLAY of the keep / pull selection, declared score A+0 - the fair-edge rule, not a learned model (pf_keep_pull_scenarios.py; every '
          'committed state with a path re-simulated '
          f'through the branch kernel; days {", ".join(days)}; c summed)',
@@ -424,6 +452,13 @@ def report(out=None, kp=None, days=KP.DAYS, expect='committed', tol=1.):
     for nm, v in res.items():
         L.append(f"  {nm:<24} {v['E']:>+11,.0f} {v['score']:>+11,.0f} {v['null']:>+11,.0f} {v['KEEP']:>+12,.0f} {v['KEEP'] + v['score']:>+12,.0f} {v['PULLALL']:>+11,.0f} "
                  f"{v['eligible']:>9,} {v['fills']:>8,} {v['orders_filled']:>7,} {v['discovered']:>7,} {v['lost']:>6,}")
+    L += ['', '  C1 / C3 (FINDINGS checklist): E by the order\'s age at the fill (< 100 / 100-500 / >= 500 ms after activation), the headline without fills on '
+          'orders < 100 ms old (live\'s were 8-12% real, B1a), and the fills that land while the score\'s pull is in flight (cancel-pending):',
+          f"  {'scenario':<24} {'E <100':>9} {'E 100-500':>10} {'E >=500':>9} {'E w/o <100':>11} {'K+s w/o <100':>13} {'fills <100':>10} {'pending fills / c / gross':>28}"]
+    for nm, v in res.items():
+        a_, ny, cp = v['by_age'], v['no_young'], v['cancel_pending']
+        L.append(f"  {nm:<24} {a_['lt100']['E']:>+9,.0f} {a_['100to500']['E']:>+10,.0f} {a_['ge500']['E']:>+9,.0f} {ny['E']:>+11,.0f} {ny['fills_value'] + ny['score']:>+13,.0f} "
+                 f"{100 * a_['lt100']['fills'] / max(v['fills'], 1):>9.1f}% {cp['fills']:>9,} / {cp['value']:>+9,.0f} / {100 * cp['share_of_gross']:>4.1f}%")
     L += ['', '  scenario families (one factor moved from B; none of them is an order latency unless named so) and the fills at held instants (trades of '
           'contradictory events kept at M50: count / shares / value c / share of the scenario\'s fill gross):']
     for sc in SCEN:
@@ -432,7 +467,7 @@ def report(out=None, kp=None, days=KP.DAYS, expect='committed', tol=1.):
     L += ['', '  E by day: ' + ' | '.join(f"{nm} " + ', '.join(f'{d} {x:+,.0f}' for d, x in v['by_day'].items()) for nm, v in res.items()), '',
           'READINGS (declared before any data was read)'] + [f'  {k}: {v}' for k, v in read.items()] + [
           f"  E ranges over [{min(Es):+,.0f}, {max(Es):+,.0f}], KEEP over [{min(Ks):+,.0f}, {max(Ks):+,.0f}], KEEP + score over [{min(Ss):+,.0f}, {max(Ss):+,.0f}] in the "
-          f'{len(res)} tested scenarios', '',
+          f'{len(res)} tested scenarios; without fills on orders < 100 ms old E over [{min(Ey):+,.0f}, {max(Ey):+,.0f}], KEEP + score over [{min(Sy):+,.0f}, {max(Sy):+,.0f}]', '',
           'LIMITS: consumed days; one declared rule; one-factor-at-a-time scenarios and timelines (no joint extreme search); assumption ranges, not measured '
           'distributions; queue rule M unvalidated on live orders; STATES is local selection; one order at a time, no re-post after a pull.']
     R = {k: {x: y for x, y in v.items() if not x.startswith('_')} for k, v in res.items()}
@@ -569,6 +604,7 @@ def selftest():
             if not (hcode(n_()) == [2] and hcode(n_(tl='S1lo')) == [1] and hcode(n_(tl='S3hi')) == [1] and st0['events'] > 0 and st0['held_events_S3'] >= 1
                     and st0['held_events_S1'] >= 1):
                 bad.append(f"held fills / denominators: B {hcode(n_())}, S1lo {hcode(n_(tl='S1lo'))}, S3hi {hcode(n_(tl='S3hi'))}, stat {st0}")
+            R = None
             try:
                 with contextlib.redirect_stdout(io.StringIO()):
                     R, read = report(out=tmp / 'sc', kp=tmp / 'kp', days=days, expect=None)
@@ -584,6 +620,8 @@ def selftest():
             except (SystemExit, ValueError) as e:
                 bad.append(f'synthetic report refused: {e}')
             try:                                                               # control (h) must refuse a baseline that is not the committed one
+                if R is None:
+                    raise ValueError('no synthetic report to perturb (refused above)')
                 with contextlib.redirect_stdout(io.StringIO()):
                     report(out=tmp / 'sc', kp=tmp / 'kp', days=days, expect=(R[n_()]['E'] + 1., R[n_()]['score']), tol=1e-6)
                 bad.append('report accepted a baseline E that differs from the expectation')
@@ -604,6 +642,13 @@ def selftest():
                 bad.append(f'the mixture\'s per-order structural landings: {int(gm_.sum())} orders, slow among them {int(slow_order(Sm.oid.values[gm_], CANCEL_MIX[0]).sum())}')
             if not (o37['score'] == 150. and o37['pulls'] == 1 and o100['score'] == 0. and o37['KEEP'] == -150.):
                 bad.append(f"one-order outcome: score {o37['score']} / {o100['score']} at 37 / 100 ms (want 150 / 0)")
+            ox = outcome(O1, Os1, Fs1, dict(B0, A=250.))                  # the fill at 300 ms: 242 ms old at activation 58, 50 ms old at 250
+            if not (o37['by_age']['100to500']['fills'] == 1 and o37['by_age']['lt100']['fills'] == 0 and ox['by_age']['lt100']['fills'] == 1
+                    and abs(sum(a['E'] for a in o37['by_age'].values()) - o37['E']) < 1e-9 and o37['no_young']['E'] == o37['E'] and ox['no_young']['fills_value'] == 0.
+                    and o37['cancel_pending']['fills'] == 0 and o100['cancel_pending'] == dict(fills=1, shares=30., value=-150., share_of_fills=1., share_of_gross=1.)
+                    and o37['fills_value'] == o37['KEEP'] and ox['no_young']['E'] == 0. and ox['no_young']['score'] == 0.
+                    and keep_not_fills({'a': o37, 'b': dict(o37, KEEP=o37['KEEP'] + 1.)}) == ['b']):
+                bad.append(f"C1 / C3 on the one-order case: {o37['by_age']} {ox['by_age']} pending {o37['cancel_pending']} / {o100['cancel_pending']}")
             # check of 9a114cc1: the PRODUCTION default - no lag passed, the corrected known receipt read, ST upper-only, no STlo - rehearsed end to end
             kk = tmp / 'k5'; kk.mkdir(); (kk / 'known.json').write_text(json.dumps(dict(R=dict(K8=dict(model=X.SETTLEMENT_MODEL, consistent=True, lag_bound_ms=None)))))
             old_k = X.OUT_K; X.OUT_K = kk

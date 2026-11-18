@@ -33,6 +33,13 @@ request/answer/match-window/notice times, no-fill orders, retries and censoring;
 never turn notice-after-answer into a measured failure probability. Review-only;
 development changes preserved; scheduler remains off.
 
+## 2026-11-18 18:05Z (session aea5bfb9) — REVIEW 8e63f178 FIXED; SIMULATOR READINESS LOOP RUNNING (USER: "check the issues, together with the issues you have found, proceed to fix. Then check if the simulator is reliable to run now"; then "launch a loop to achieve this")
+- Review 8e63f178's three P2s all held and are fixed: [report](reviews/review_8e63f178_fixes_20261118/report.md). P2-1 known v7 keeps every window constraint per clock with feasibility (two exact LPs per row); P2-2 the case audit compares identity fields exactly and endpoints within 1e-6 ms; P2-3 the c_hi bound typed by the answer's premise, census N3 / N4 restated, the known ledger's lifecycle evidence-only (first notice; K0 on the 11-09 definition) and K5's cancel effect unbounded by the acknowledgement; K9 declared.
+- Found and fixed along the way: the scenario replay lacked FINDINGS C1 / C3 (v5 computes them, control (i)); the case audit read its population from a moving path (pinned to known v5); two mutants were crash kills (now caught by checks); a K9 test case restored. Suites: case audit 40/40, census 17/17, exec-windows 127/127, scenarios 37/37.
+- Reruns on consumed data (case audit v3; driver day 20261023: census v4, known v7, scenario v5): compare.py ALL true - everything outside the fixes reproduces exactly. Gate of record per clock domain: S3 PASS, S1 / S2 FAIL. K9: 24 of the 72 legs of Canceled-and-full orders matched before the cancel request. C1: E +34,948 c of which -769 c on young fills; cancel-pending 2.3% of fill gross.
+- Loop: predictfun/reviews/simulator_readiness_20261118/plan.md (items 1-2 DONE; next C2 / C12, the per-cancel race study, Oct 24-27, the test-run protocol; items 7-8 are the USER's: live validation, untouched days).
+- Watch out: compare.py is the reproduction gate for these versions; known v7 is the gate of record (v6 holds the acknowledgement-premise readings).
+
 ## 2026-11-18 16:24Z (session aea5bfb9) — CLOCK GATE PER DOMAIN + CANCEL-ANSWER CENSUS (USER: "Go")
 - Done, both next steps of the timing case audit: [report](reviews/known_clock_gate_20261118/report.md). New `pf_known_clock_census.py` (14/14 mutants); `pf_timing_case_audit.py` reused (36/36); `pf_keep_pull_exec_windows.py` known v6 (120/120); the driver runs the census before the known ledger. Consumed Nov 8 only, read to 23:02Z.
 - Census v3: every known leg's book clock bounded from the bot's own frame receipts - 88/88 legs with a cancel, B -65.1..-44.7 ms (median -55.3); N0 reproduces the audit's three exactly; records 99/99.

@@ -1,4 +1,4 @@
-"""MUTATION CHECK of the timing case audit's selftest (2026-11-18, session aea5bfb9; the review of 3bf8f3a9; v2: the input-journal key; v3 / v4: the census reuse and its lifecycle fixes): a checker that cannot fail proves
+"""MUTATION CHECK of the timing case audit's selftest (2026-11-18, session aea5bfb9; the review of 3bf8f3a9; v2: the input-journal key; v3 / v4: the census reuse and its lifecycle fixes; v4: review 8e63f178): a checker that cannot fail proves
 nothing. Each entry plants one code error in a COPY of pf_timing_case_audit.py (text replacement, executed in a subprocess; the repo file is never
 touched) and runs the copy's selftest (synthetic only). Required: the unchanged copy passes; every mutant is caught BY A CHECK (rc 1 and
 'SELFTEST FAIL' printed - a crash is an unexpected outcome, not a kill); every replacement target occurs exactly as often as declared (a stale
@@ -56,6 +56,12 @@ MUT = [
     ('clock windows found from their start only', "                for j in range(bisect.bisect_left(wlo, t_ - span), bisect.bisect_right(wlo, t_)):",
      "                for j in range(bisect.bisect_left(wlo, t_), bisect.bisect_right(wlo, t_)):"),
     ('input reader never parses a market', "            mid = int(line[19:j]) if j > 19 and line[19:j].isdigit() else None", "            mid = None"),
+    # --- review 8e63f178: exact identity / endpoint comparisons, the c_hi bound typed by the answer's premise
+    ('A3 endpoint compared with a relative tolerance', "a3_ok = bool(abs(float(v['lo']) - float(r.S3_lo)) <= MS_ATOL)", "a3_ok = bool(np.isclose(v['lo'], r.S3_lo))"),
+    ('A2 discrete fields compared with a relative tolerance', "        ok &= MR[c].values.astype(np.int64) == int(b[c])", "        ok &= np.isclose(MR[c].values.astype(float), float(b[c]))"),
+    ('A2 quantities compared with a relative tolerance', "        ok &= np.abs(MR[c].values.astype(float) - float(b[c])) <= QTY_ATOL", "        ok &= np.isclose(MR[c].values.astype(float), float(b[c]), rtol=1e-3)"),
+    ('a Canceled answer bounds the match as evidence', "BOUND_TYPE = {'EVIDENCE': 'EVIDENCE', 'NOT-ORDERED-BY-THE-ANSWER': 'CONDITIONAL', 'NONE': 'NONE'}",
+     "BOUND_TYPE = {'EVIDENCE': 'EVIDENCE', 'NOT-ORDERED-BY-THE-ANSWER': 'EVIDENCE', 'NONE': 'NONE'}"),
     # --- A6
     ('A6: an EV CANCEL_FIRST accepted', "            C.require(not (ev == 0).any(), 'EV (evidence only) certified a CANCEL_FIRST')", "            pass"),
     ('A6: the cross-tab reproduction not checked', "                ok &= int(m.sum()) == int(x.get('fills', 0)) and", "                ok &= True or"),

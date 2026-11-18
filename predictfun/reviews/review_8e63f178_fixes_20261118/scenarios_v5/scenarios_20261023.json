@@ -1,0 +1,1265 @@
+{
+  "asof": "2026-11-18T17:44:14.795941+00:00",
+  "readings": {
+    "TIMING EVIDENCE": "LOWER-MATCH-BOUND-UNIDENTIFIED",
+    "Z0 CONTROLS": "YES",
+    "Z1 E ACROSS TESTED SCENARIOS": "NOT-STABLE-IN-TESTED-SCENARIOS",
+    "Z2 KEEP VALUE ACROSS TESTED SCENARIOS": "NOT-STABLE-IN-TESTED-SCENARIOS",
+    "Z3 THE SCORE'S VALUE ACROSS TESTED SCENARIOS": "NOT-STABLE-IN-TESTED-SCENARIOS",
+    "Z1-NY E WITHOUT FILLS ON ORDERS < 100 MS OLD ACROSS TESTED SCENARIOS": "NOT-STABLE-IN-TESTED-SCENARIOS",
+    "Z3-NY THE SCORE'S VALUE WITHOUT FILLS ON ORDERS < 100 MS OLD ACROSS TESTED SCENARIOS": "NOT-STABLE-IN-TESTED-SCENARIOS"
+  },
+  "scenarios": {
+    "M50|A58|L37|N100": {
+      "KEEP": -416242.9431569632,
+      "score": 241282.39479053902,
+      "null": 206334.37112279775,
+      "E": 34948.02366774128,
+      "PULLALL": 389554.04602332297,
+      "fills": 17670,
+      "shares": 292256.4573183326,
+      "eligible": 28799,
+      "fills_value": -416242.9431569632,
+      "by_age": {
+        "lt100": {
+          "E": -768.5819193806346,
+          "score": 1784.3545217513868,
+          "fills_value": -31266.221225028894,
+          "fills": 929,
+          "shares": 15786.30529072035
+        },
+        "100to500": {
+          "E": 18089.767019357423,
+          "score": 74206.63747239266,
+          "fills_value": -98308.22165705086,
+          "fills": 3795,
+          "shares": 62004.82766397136
+        },
+        "ge500": {
+          "E": 17626.838567764495,
+          "score": 165291.40279639495,
+          "fills_value": -286668.50027488347,
+          "fills": 12946,
+          "shares": 214465.32436364098
+        }
+      },
+      "no_young": {
+        "E": 35716.605587121914,
+        "score": 239498.04026878765,
+        "fills_value": -384976.7219319343
+      },
+      "cancel_pending": {
+        "fills": 237,
+        "shares": 4009.2158416738985,
+        "value": -14244.10313459743,
+        "share_of_fills": 0.013412563667232598,
+        "share_of_gross": 0.022815247412420938
+      },
+      "held": {
+        "fills": 0,
+        "shares": 0.0,
+        "value": 0.0,
+        "gross": 0.0,
+        "share_of_gross": 0.0
+      },
+      "orders_filled": 12753,
+      "pulls": 14155,
+      "by_day": {
+        "20261023": 34948.02366774128
+      },
+      "discovered": 0,
+      "lost": 0
+    },
+    "S1lo|A58|L37|N100": {
+      "KEEP": -521881.24935525574,
+      "score": 225126.5487503002,
+      "null": 236224.6490273523,
+      "E": -11098.100277052119,
+      "PULLALL": 484534.8592936191,
+      "fills": 20186,
+      "shares": 315219.3363180982,
+      "eligible": 28799,
+      "fills_value": -521881.24935525574,
+      "by_age": {
+        "lt100": {
+          "E": -86.22711216032725,
+          "score": 6829.754787210638,
+          "fills_value": -50466.33730803514,
+          "fills": 1323,
+          "shares": 19897.716512135325
+        },
+        "100to500": {
+          "E": 3447.7159234393885,
+          "score": 76863.79815683435,
+          "fills_value": -149263.6364661901,
+          "fills": 4572,
+          "shares": 71273.57836254984
+        },
+        "ge500": {
+          "E": -14459.58908833118,
+          "score": 141432.99580625517,
+          "fills_value": -322151.2755810305,
+          "fills": 14291,
+          "shares": 224048.041443413
+        }
+      },
+      "no_young": {
+        "E": -11011.873164891791,
+        "score": 218296.79396308956,
+        "fills_value": -471414.9120472206
+      },
+      "cancel_pending": {
+        "fills": 299,
+        "shares": 4298.508282456807,
+        "value": -14905.013627080956,
+        "share_of_fills": 0.014812246111166156,
+        "share_of_gross": 0.02099330140908104
+      },
+      "held": {
+        "fills": 1007,
+        "shares": 20279.846912785455,
+        "value": -10981.425221568574,
+        "gross": 63035.263445478966,
+        "share_of_gross": 0.05326266098121319
+      },
+      "orders_filled": 13615,
+      "pulls": 13976,
+      "by_day": {
+        "20261023": -11098.100277052119
+      },
+      "discovered": 1830,
+      "lost": 968
+    },
+    "S1mid|A58|L37|N100": {
+      "KEEP": -445028.53753984295,
+      "score": 242256.93934833363,
+      "null": 216968.94688712963,
+      "E": 25287.992461204005,
+      "PULLALL": 419540.2324071924,
+      "fills": 19745,
+      "shares": 302121.5154001962,
+      "eligible": 28799,
+      "fills_value": -445028.53753984295,
+      "by_age": {
+        "lt100": {
+          "E": 900.4573461662902,
+          "score": 6925.395815961678,
+          "fills_value": -35842.25903321776,
+          "fills": 1145,
+          "shares": 18038.101689646748
+        },
+        "100to500": {
+          "E": 15153.684028050091,
+          "score": 72429.21204906175,
+          "fills_value": -107728.17792522372,
+          "fills": 4233,
+          "shares": 63019.75586187838
+        },
+        "ge500": {
+          "E": 9233.851086987626,
+          "score": 162902.3314833102,
+          "fills_value": -301458.1005814015,
+          "fills": 14367,
+          "shares": 221063.65784867108
+        }
+      },
+      "no_young": {
+        "E": 24387.535115037714,
+        "score": 235331.54353237196,
+        "fills_value": -409186.2785066252
+      },
+      "cancel_pending": {
+        "fills": 430,
+        "shares": 6783.052506171936,
+        "value": -26671.676303319648,
+        "share_of_fills": 0.02177766523170423,
+        "share_of_gross": 0.03691171665192834
+      },
+      "held": {
+        "fills": 1052,
+        "shares": 21754.02923044998,
+        "value": -13100.42646521333,
+        "gross": 67501.12426225189,
+        "share_of_gross": 0.06022790757233642
+      },
+      "orders_filled": 13131,
+      "pulls": 14165,
+      "by_day": {
+        "20261023": 25287.992461204005
+      },
+      "discovered": 794,
+      "lost": 416
+    },
+    "S1hi|A58|L37|N100": {
+      "KEEP": -290698.40240863455,
+      "score": 180557.46680961744,
+      "null": 146396.46655429935,
+      "E": 34161.00025531809,
+      "PULLALL": 270365.0981122674,
+      "fills": 16717,
+      "shares": 275262.87889261934,
+      "eligible": 28799,
+      "fills_value": -290698.4024086346,
+      "by_age": {
+        "lt100": {
+          "E": -196.52589455571473,
+          "score": 2444.1838859038535,
+          "fills_value": -27795.61133269588,
+          "fills": 795,
+          "shares": 14369.742942990462
+        },
+        "100to500": {
+          "E": 15338.699631888816,
+          "score": 50428.38887505635,
+          "fills_value": -60824.56123669679,
+          "fills": 3543,
+          "shares": 57492.80050886553
+        },
+        "ge500": {
+          "E": 19018.82651798499,
+          "score": 127684.89404865728,
+          "fills_value": -202078.2298392419,
+          "fills": 12379,
+          "shares": 203400.33544076333
+        }
+      },
+      "no_young": {
+        "E": 34357.526149873804,
+        "score": 178113.2829237136,
+        "fills_value": -262902.79107593873
+      },
+      "cancel_pending": {
+        "fills": 177,
+        "shares": 3083.171145532673,
+        "value": -6565.929407900886,
+        "share_of_fills": 0.010588024167015613,
+        "share_of_gross": 0.01362970421493885
+      },
+      "held": {
+        "fills": 1062,
+        "shares": 22394.088267826537,
+        "value": -13873.445652121556,
+        "gross": 71652.417939914,
+        "share_of_gross": 0.07277217513783234
+      },
+      "orders_filled": 12082,
+      "pulls": 14193,
+      "by_day": {
+        "20261023": 34161.00025531809
+      },
+      "discovered": 982,
+      "lost": 1653
+    },
+    "S2lo|A58|L37|N100": {
+      "KEEP": -569913.5102651073,
+      "score": 233556.31848872578,
+      "null": 236404.10144380986,
+      "E": -2847.7829550840743,
+      "PULLALL": 492701.7110597106,
+      "fills": 21961,
+      "shares": 325249.01642777317,
+      "eligible": 28799,
+      "fills_value": -569913.5102651073,
+      "by_age": {
+        "lt100": {
+          "E": 941.8878583224296,
+          "score": 6843.443730363486,
+          "fills_value": -88406.2658833376,
+          "fills": 1757,
+          "shares": 27939.5208017846
+        },
+        "100to500": {
+          "E": 1331.3290872955656,
+          "score": 72348.05012604842,
+          "fills_value": -147348.61072569725,
+          "fills": 4936,
+          "shares": 71153.09043642576
+        },
+        "ge500": {
+          "E": -5120.9999007020715,
+          "score": 154364.82463231386,
+          "fills_value": -334158.63365607243,
+          "fills": 15268,
+          "shares": 226156.40518956288
+        }
+      },
+      "no_young": {
+        "E": -3789.670813406504,
+        "score": 226712.8747583623,
+        "fills_value": -481507.2443817697
+      },
+      "cancel_pending": {
+        "fills": 368,
+        "shares": 5706.46695884879,
+        "value": -23734.5843179769,
+        "share_of_fills": 0.01675697827967761,
+        "share_of_gross": 0.029509278030067795
+      },
+      "held": {
+        "fills": 183,
+        "shares": 4142.023787898157,
+        "value": -1690.0389159179508,
+        "gross": 9639.965467189533,
+        "share_of_gross": 0.008132476963844573
+      },
+      "orders_filled": 13903,
+      "pulls": 13734,
+      "by_day": {
+        "20261023": -2847.7829550840743
+      },
+      "discovered": 3044,
+      "lost": 1894
+    },
+    "S2hi|A58|L37|N100": {
+      "KEEP": 20351.719803687985,
+      "score": 12075.35148409556,
+      "null": 5578.994706566328,
+      "E": 6496.356777529231,
+      "PULLALL": -17278.68764165534,
+      "fills": 13722,
+      "shares": 208604.7216981388,
+      "eligible": 28799,
+      "fills_value": 20351.71980368798,
+      "by_age": {
+        "lt100": {
+          "E": 312.45728562139595,
+          "score": 2986.928953713681,
+          "fills_value": 1941.4115761246303,
+          "fills": 659,
+          "shares": 10927.836292982485
+        },
+        "100to500": {
+          "E": 710.146092450231,
+          "score": 7562.823607045322,
+          "fills_value": 1999.9829304652712,
+          "fills": 3327,
+          "shares": 49685.93236726588
+        },
+        "ge500": {
+          "E": 5473.753399457602,
+          "score": 1525.59892333656,
+          "fills_value": 16410.325297098076,
+          "fills": 9736,
+          "shares": 147990.95303789043
+        }
+      },
+      "no_young": {
+        "E": 6183.899491907835,
+        "score": 9088.422530381878,
+        "fills_value": 18410.30822756335
+      },
+      "cancel_pending": {
+        "fills": 140,
+        "shares": 2133.9958566573514,
+        "value": -2391.612843310111,
+        "share_of_fills": 0.01020259437399796,
+        "share_of_gross": 0.013208954294862822
+      },
+      "held": {
+        "fills": 207,
+        "shares": 4986.505616871664,
+        "value": -3365.1201239764496,
+        "gross": 11980.319370992496,
+        "share_of_gross": 0.01741358317425693
+      },
+      "orders_filled": 9298,
+      "pulls": 14174,
+      "by_day": {
+        "20261023": 6496.356777529231
+      },
+      "discovered": 2729,
+      "lost": 6184
+    },
+    "S3lo|A58|L37|N100": {
+      "KEEP": -407636.68275374454,
+      "score": 191222.9282192256,
+      "null": 190408.71768125318,
+      "E": 814.2105379724326,
+      "PULLALL": 381871.59408675786,
+      "fills": 21258,
+      "shares": 339655.21278915514,
+      "eligible": 28799,
+      "fills_value": -407636.68275374454,
+      "by_age": {
+        "lt100": {
+          "E": 302.23420830711643,
+          "score": 5646.499182048098,
+          "fills_value": -35188.90976188984,
+          "fills": 1088,
+          "shares": 16063.919139272202
+        },
+        "100to500": {
+          "E": 3354.116556764902,
+          "score": 60358.32540252617,
+          "fills_value": -110983.57378921747,
+          "fills": 3425,
+          "shares": 49327.66496636956
+        },
+        "ge500": {
+          "E": -2842.1402270995854,
+          "score": 125218.10363465134,
+          "fills_value": -261464.1992026372,
+          "fills": 16745,
+          "shares": 274263.6286835133
+        }
+      },
+      "no_young": {
+        "E": 511.97632966531614,
+        "score": 185576.4290371775,
+        "fills_value": -372447.7729918547
+      },
+      "cancel_pending": {
+        "fills": 275,
+        "shares": 3955.5712222992674,
+        "value": -11722.469264762527,
+        "share_of_fills": 0.012936306331733935,
+        "share_of_gross": 0.017995024925963075
+      },
+      "held": {
+        "fills": 199,
+        "shares": 4772.998447363436,
+        "value": -2064.546778316265,
+        "gross": 13758.368489680557,
+        "share_of_gross": 0.0120001208743581
+      },
+      "orders_filled": 14570,
+      "pulls": 14005,
+      "by_day": {
+        "20261023": 814.2105379724326
+      },
+      "discovered": 4010,
+      "lost": 2193
+    },
+    "S3hi|A58|L37|N100": {
+      "KEEP": -234947.09247164312,
+      "score": 155850.9014865562,
+      "null": 119821.77524341951,
+      "E": 36029.12624313667,
+      "PULLALL": 221943.23749831732,
+      "fills": 14883,
+      "shares": 245962.70701868244,
+      "eligible": 28799,
+      "fills_value": -234947.09247164312,
+      "by_age": {
+        "lt100": {
+          "E": 369.312091219365,
+          "score": 3032.4662994205437,
+          "fills_value": -19045.379067269365,
+          "fills": 535,
+          "shares": 9363.124617342679
+        },
+        "100to500": {
+          "E": 16151.625317098047,
+          "score": 47190.09953378125,
+          "fills_value": -59028.49663244003,
+          "fills": 2448,
+          "shares": 37952.81486671236
+        },
+        "ge500": {
+          "E": 19508.18883481926,
+          "score": 105628.3356533544,
+          "fills_value": -156873.21677193372,
+          "fills": 11900,
+          "shares": 198646.7675346274
+        }
+      },
+      "no_young": {
+        "E": 35659.81415191731,
+        "score": 152818.43518713565,
+        "fills_value": -215901.71340437376
+      },
+      "cancel_pending": {
+        "fills": 138,
+        "shares": 2253.900272191823,
+        "value": -6703.389513292383,
+        "share_of_fills": 0.00927232412819996,
+        "share_of_gross": 0.012979869567852029
+      },
+      "held": {
+        "fills": 231,
+        "shares": 5779.800501134251,
+        "value": -1980.5638747930038,
+        "gross": 18053.68165858504,
+        "share_of_gross": 0.020716632999924437
+      },
+      "orders_filled": 11183,
+      "pulls": 14208,
+      "by_day": {
+        "20261023": 36029.12624313667
+      },
+      "discovered": 856,
+      "lost": 2426
+    },
+    "SThi|A58|L37|N100": {
+      "KEEP": -353877.7931088303,
+      "score": 218834.65705254395,
+      "null": 178148.02091239713,
+      "E": 40686.63614014681,
+      "PULLALL": 331763.55826216587,
+      "fills": 20364,
+      "shares": 274681.0858567321,
+      "eligible": 28799,
+      "fills_value": -353877.7931088304,
+      "by_age": {
+        "lt100": {
+          "E": 616.6681140098112,
+          "score": 3623.6868517675093,
+          "fills_value": -28489.591231881863,
+          "fills": 917,
+          "shares": 12915.056724549477
+        },
+        "100to500": {
+          "E": 14082.594303131551,
+          "score": 59178.196508655135,
+          "fills_value": -83189.40992914484,
+          "fills": 4070,
+          "shares": 53802.361576509764
+        },
+        "ge500": {
+          "E": 25987.373723005447,
+          "score": 156032.7736921213,
+          "fills_value": -242198.79194780363,
+          "fills": 15377,
+          "shares": 207963.66755567282
+        }
+      },
+      "no_young": {
+        "E": 40069.968026137,
+        "score": 215210.97020077644,
+        "fills_value": -325388.20187694853
+      },
+      "cancel_pending": {
+        "fills": 244,
+        "shares": 3210.3403544764815,
+        "value": -13881.897308649915,
+        "share_of_fills": 0.01198192889412689,
+        "share_of_gross": 0.019012753358526705
+      },
+      "held": {
+        "fills": 3,
+        "shares": 30.19037886340977,
+        "value": 95.09518943170488,
+        "gross": 145.09518943170488,
+        "share_of_gross": 0.00014501128937915593
+      },
+      "orders_filled": 12110,
+      "pulls": 14223,
+      "by_day": {
+        "20261023": 40686.63614014681
+      },
+      "discovered": 657,
+      "lost": 1300
+    },
+    "EVhi|A58|L37|N100": {
+      "KEEP": 97346.47554548798,
+      "score": -38650.13095450382,
+      "null": -40988.59411203123,
+      "E": 2338.463157527414,
+      "PULLALL": -97346.47554548798,
+      "fills": 7834,
+      "shares": 164247.6409878884,
+      "eligible": 28799,
+      "fills_value": 97346.47554548798,
+      "by_age": {
+        "lt100": {
+          "E": 0.0,
+          "score": -0.0,
+          "fills_value": 0.0,
+          "fills": 0,
+          "shares": 0.0
+        },
+        "100to500": {
+          "E": 0.0,
+          "score": -0.0,
+          "fills_value": 0.0,
+          "fills": 0,
+          "shares": 0.0
+        },
+        "ge500": {
+          "E": 2338.463157527414,
+          "score": -38650.13095450382,
+          "fills_value": 97346.47554548798,
+          "fills": 7834,
+          "shares": 164247.6409878884
+        }
+      },
+      "no_young": {
+        "E": 2338.463157527414,
+        "score": -38650.13095450382,
+        "fills_value": 97346.47554548798
+      },
+      "cancel_pending": {
+        "fills": 16,
+        "shares": 382.41644234693877,
+        "value": -2909.8938757653063,
+        "share_of_fills": 0.0020423793719683433,
+        "share_of_gross": 0.0067297155861363684
+      },
+      "held": {
+        "fills": 0,
+        "shares": 0.0,
+        "value": 0.0,
+        "gross": 0.0,
+        "share_of_gross": 0.0
+      },
+      "orders_filled": 6713,
+      "pulls": 14196,
+      "by_day": {
+        "20261023": 2338.463157527414
+      },
+      "discovered": 2010,
+      "lost": 8050
+    },
+    "M50|A15|L37|N100": {
+      "KEEP": -427614.66480756324,
+      "score": 237607.58549628485,
+      "null": 203636.67018709535,
+      "E": 33970.9153091895,
+      "PULLALL": 382433.68031820277,
+      "fills": 18314,
+      "shares": 302326.1128552352,
+      "eligible": 29296,
+      "fills_value": -427614.6648075632,
+      "by_age": {
+        "lt100": {
+          "E": 0.0,
+          "score": -0.0,
+          "fills_value": -39488.26022521971,
+          "fills": 975,
+          "shares": 17176.21571312919
+        },
+        "100to500": {
+          "E": 15189.848513473284,
+          "score": 68805.96585921617,
+          "fills_value": -99081.38825124604,
+          "fills": 3982,
+          "shares": 64132.510315330546
+        },
+        "ge500": {
+          "E": 18781.06679571622,
+          "score": 168801.61963706868,
+          "fills_value": -289045.01633109746,
+          "fills": 13357,
+          "shares": 221017.3868267754
+        }
+      },
+      "no_young": {
+        "E": 33970.9153091895,
+        "score": 237607.58549628485,
+        "fills_value": -388126.4045823435
+      },
+      "cancel_pending": {
+        "fills": 237,
+        "shares": 3981.8222432124016,
+        "value": -14119.445839960661,
+        "share_of_fills": 0.01294091951512504,
+        "share_of_gross": 0.022500857530924075
+      },
+      "held": {
+        "fills": 0,
+        "shares": 0.0,
+        "value": 0.0,
+        "gross": 0.0,
+        "share_of_gross": 0.0
+      },
+      "orders_filled": 13181,
+      "pulls": 14223,
+      "by_day": {
+        "20261023": 33970.9153091895
+      },
+      "discovered": 433,
+      "lost": 5
+    },
+    "M50|A100|L37|N100": {
+      "KEEP": -406879.3633857086,
+      "score": 242839.86522391668,
+      "null": 207005.81703971035,
+      "E": 35834.04818420633,
+      "PULLALL": 396476.3833814087,
+      "fills": 17119,
+      "shares": 283605.32760689344,
+      "eligible": 28322,
+      "fills_value": -406879.3633857086,
+      "by_age": {
+        "lt100": {
+          "E": 820.41801239197,
+          "score": 9496.006598281427,
+          "fills_value": -21200.099796477807,
+          "fills": 866,
+          "shares": 14543.133059064136
+        },
+        "100to500": {
+          "E": 16909.32410657277,
+          "score": 72271.56584833386,
+          "fills_value": -107778.25567809085,
+          "fills": 3666,
+          "shares": 60402.644409641754
+        },
+        "ge500": {
+          "E": 18104.306065241588,
+          "score": 161072.29277730137,
+          "fills_value": -277901.00791114,
+          "fills": 12587,
+          "shares": 208659.55013818754
+        }
+      },
+      "no_young": {
+        "E": 35013.63017181436,
+        "score": 233343.85862563527,
+        "fills_value": -385679.2635892308
+      },
+      "cancel_pending": {
+        "fills": 220,
+        "shares": 3902.5285008157493,
+        "value": -14135.547051878148,
+        "share_of_fills": 0.01285121794497342,
+        "share_of_gross": 0.02312757491950296
+      },
+      "held": {
+        "fills": 0,
+        "shares": 0.0,
+        "value": 0.0,
+        "gross": 0.0,
+        "share_of_gross": 0.0
+      },
+      "orders_filled": 12363,
+      "pulls": 13919,
+      "by_day": {
+        "20261023": 35834.04818420633
+      },
+      "discovered": 8,
+      "lost": 398
+    },
+    "M50|A58|L0|N100": {
+      "KEEP": -376843.91070623556,
+      "score": 230426.59898244002,
+      "null": 192171.3927539583,
+      "E": 38255.20622848172,
+      "PULLALL": 362461.684586371,
+      "fills": 16689,
+      "shares": 279313.73987094813,
+      "eligible": 28799,
+      "fills_value": -376843.91070623556,
+      "by_age": {
+        "lt100": {
+          "E": -359.84640808275117,
+          "score": 6382.871742154409,
+          "fills_value": -29469.197330508345,
+          "fills": 907,
+          "shares": 15403.139561039981
+        },
+        "100to500": {
+          "E": 18526.902560930725,
+          "score": 68046.35921727095,
+          "fills_value": -87118.78198095717,
+          "fills": 3481,
+          "shares": 57987.98036475789
+        },
+        "ge500": {
+          "E": 20088.15007563375,
+          "score": 155997.36802301466,
+          "fills_value": -260255.93139477004,
+          "fills": 12301,
+          "shares": 205922.61994515028
+        }
+      },
+      "no_young": {
+        "E": 38615.05263656448,
+        "score": 224043.7272402856,
+        "fills_value": -347374.71337572724
+      },
+      "cancel_pending": {
+        "fills": 0,
+        "shares": 0.0,
+        "value": 0.0,
+        "share_of_fills": 0.0,
+        "share_of_gross": 0.0
+      },
+      "held": {
+        "fills": 0,
+        "shares": 0.0,
+        "value": 0.0,
+        "gross": 0.0,
+        "share_of_gross": 0.0
+      },
+      "orders_filled": 12200,
+      "pulls": 14155,
+      "by_day": {
+        "20261023": 38255.20622848172
+      },
+      "discovered": 0,
+      "lost": 553
+    },
+    "M50|A58|L100|N100": {
+      "KEEP": -465714.8605097781,
+      "score": 234873.84423897127,
+      "null": 216909.54763529735,
+      "E": 17964.296603673927,
+      "PULLALL": 425284.1050442132,
+      "fills": 19165,
+      "shares": 310723.64118501585,
+      "eligible": 28799,
+      "fills_value": -465714.8605097781,
+      "by_age": {
+        "lt100": {
+          "E": 0.0,
+          "score": -0.0,
+          "fills_value": -32095.775510139385,
+          "fills": 933,
+          "shares": 15902.661480794011
+        },
+        "100to500": {
+          "E": 13639.874525624757,
+          "score": 68558.69853625819,
+          "fills_value": -113841.38569442448,
+          "fills": 4245,
+          "shares": 67639.38398286767
+        },
+        "ge500": {
+          "E": 4324.422078049173,
+          "score": 166315.14570271314,
+          "fills_value": -319777.6993052142,
+          "fills": 13987,
+          "shares": 227181.59572135418
+        }
+      },
+      "no_young": {
+        "E": 17964.296603673927,
+        "score": 234873.84423897127,
+        "fills_value": -433619.0849996387
+      },
+      "cancel_pending": {
+        "fills": 831,
+        "shares": 13624.41729379059,
+        "value": -52053.945662313665,
+        "share_of_fills": 0.04336029219932168,
+        "share_of_gross": 0.06992002500657214
+      },
+      "held": {
+        "fills": 0,
+        "shares": 0.0,
+        "value": 0.0,
+        "gross": 0.0,
+        "share_of_gross": 0.0
+      },
+      "orders_filled": 13482,
+      "pulls": 14155,
+      "by_day": {
+        "20261023": 17964.296603673927
+      },
+      "discovered": 729,
+      "lost": 0
+    },
+    "M50|A58|L37|N160": {
+      "KEEP": -416242.9431569632,
+      "score": 241282.39479053902,
+      "null": 206618.2314713323,
+      "E": 34664.163319206724,
+      "PULLALL": 389554.04602332297,
+      "fills": 17670,
+      "shares": 292256.4573183326,
+      "eligible": 28799,
+      "fills_value": -416242.9431569632,
+      "by_age": {
+        "lt100": {
+          "E": -768.5819193806346,
+          "score": 1784.3545217513868,
+          "fills_value": -31266.221225028894,
+          "fills": 929,
+          "shares": 15786.30529072035
+        },
+        "100to500": {
+          "E": 18089.915588380994,
+          "score": 74206.63747239266,
+          "fills_value": -98308.22165705086,
+          "fills": 3795,
+          "shares": 62004.82766397136
+        },
+        "ge500": {
+          "E": 17342.829650206364,
+          "score": 165291.40279639495,
+          "fills_value": -286668.50027488347,
+          "fills": 12946,
+          "shares": 214465.32436364098
+        }
+      },
+      "no_young": {
+        "E": 35432.74523858736,
+        "score": 239498.04026878765,
+        "fills_value": -384976.7219319343
+      },
+      "cancel_pending": {
+        "fills": 237,
+        "shares": 4009.2158416738985,
+        "value": -14244.10313459743,
+        "share_of_fills": 0.013412563667232598,
+        "share_of_gross": 0.022815247412420938
+      },
+      "held": {
+        "fills": 0,
+        "shares": 0.0,
+        "value": 0.0,
+        "gross": 0.0,
+        "share_of_gross": 0.0
+      },
+      "orders_filled": 12753,
+      "pulls": 14186,
+      "by_day": {
+        "20261023": 34664.163319206724
+      },
+      "discovered": 0,
+      "lost": 0
+    },
+    "M50|A58|L37|N660": {
+      "KEEP": -416242.9431569632,
+      "score": 241282.39479053902,
+      "null": 206593.47925388516,
+      "E": 34688.91553665385,
+      "PULLALL": 389554.04602332297,
+      "fills": 17670,
+      "shares": 292256.4573183326,
+      "eligible": 28799,
+      "fills_value": -416242.9431569632,
+      "by_age": {
+        "lt100": {
+          "E": -768.5819193806346,
+          "score": 1784.3545217513868,
+          "fills_value": -31266.221225028894,
+          "fills": 929,
+          "shares": 15786.30529072035
+        },
+        "100to500": {
+          "E": 18080.907463463664,
+          "score": 74206.63747239266,
+          "fills_value": -98308.22165705086,
+          "fills": 3795,
+          "shares": 62004.82766397136
+        },
+        "ge500": {
+          "E": 17376.589992570818,
+          "score": 165291.40279639495,
+          "fills_value": -286668.50027488347,
+          "fills": 12946,
+          "shares": 214465.32436364098
+        }
+      },
+      "no_young": {
+        "E": 35457.497456034485,
+        "score": 239498.04026878765,
+        "fills_value": -384976.7219319343
+      },
+      "cancel_pending": {
+        "fills": 237,
+        "shares": 4009.2158416738985,
+        "value": -14244.10313459743,
+        "share_of_fills": 0.013412563667232598,
+        "share_of_gross": 0.022815247412420938
+      },
+      "held": {
+        "fills": 0,
+        "shares": 0.0,
+        "value": 0.0,
+        "gross": 0.0,
+        "share_of_gross": 0.0
+      },
+      "orders_filled": 12753,
+      "pulls": 14245,
+      "by_day": {
+        "20261023": 34688.91553665385
+      },
+      "discovered": 0,
+      "lost": 0
+    },
+    "M50|A58|L37+13%x4000|N100": {
+      "KEEP": -466751.13788180513,
+      "score": 208242.99635054806,
+      "null": 177767.86139323332,
+      "E": 30475.134957314734,
+      "PULLALL": 340415.3283612285,
+      "fills": 20495,
+      "shares": 320146.69339878706,
+      "eligible": 28799,
+      "fills_value": -466751.1378818052,
+      "by_age": {
+        "lt100": {
+          "E": -1013.0530221269328,
+          "score": 1871.3709514050665,
+          "fills_value": -31266.221225028894,
+          "fills": 929,
+          "shares": 15786.30529072035
+        },
+        "100to500": {
+          "E": 15581.049951132281,
+          "score": 60454.563485273764,
+          "fills_value": -104932.83303435515,
+          "fills": 3991,
+          "shares": 64406.42069056971
+        },
+        "ge500": {
+          "E": 15907.138028309386,
+          "score": 145917.06191386926,
+          "fills_value": -330552.08362242114,
+          "fills": 15575,
+          "shares": 239953.96741749707
+        }
+      },
+      "no_young": {
+        "E": 31488.187979441667,
+        "score": 206371.625399143,
+        "fills_value": -435484.9166567763
+      },
+      "cancel_pending": {
+        "fills": 2838,
+        "shares": 35798.47606630152,
+        "value": -77687.06837609576,
+        "share_of_fills": 0.13847279824347403,
+        "share_of_gross": 0.12575693411771624
+      },
+      "held": {
+        "fills": 0,
+        "shares": 0.0,
+        "value": 0.0,
+        "gross": 0.0,
+        "share_of_gross": 0.0
+      },
+      "orders_filled": 13451,
+      "pulls": 14155,
+      "by_day": {
+        "20261023": 30475.134957314734
+      },
+      "discovered": 698,
+      "lost": 0
+    },
+    "M0|A58|L37|N100": {
+      "KEEP": -368042.92187950073,
+      "score": 224826.397628511,
+      "null": 184991.94657722593,
+      "E": 39834.45105128509,
+      "PULLALL": 349180.38814754534,
+      "fills": 16565,
+      "shares": 278820.3413747959,
+      "eligible": 28799,
+      "fills_value": -368042.92187950073,
+      "by_age": {
+        "lt100": {
+          "E": -145.97994128718256,
+          "score": 5685.937106663635,
+          "fills_value": -29706.400093824646,
+          "fills": 778,
+          "shares": 14017.906526733339
+        },
+        "100to500": {
+          "E": 18652.409269886128,
+          "score": 64186.76541348927,
+          "fills_value": -82893.90077225101,
+          "fills": 3438,
+          "shares": 56751.177018572605
+        },
+        "ge500": {
+          "E": 21328.02172268615,
+          "score": 154953.6951083581,
+          "fills_value": -255442.62101342506,
+          "fills": 12349,
+          "shares": 208051.25782948997
+        }
+      },
+      "no_young": {
+        "E": 39980.43099257227,
+        "score": 219140.4605218474,
+        "fills_value": -338336.5217856761
+      },
+      "cancel_pending": {
+        "fills": 183,
+        "shares": 3112.444703461023,
+        "value": -7496.748058818276,
+        "share_of_fills": 0.01104738907334742,
+        "share_of_gross": 0.01729453281952922
+      },
+      "held": {
+        "fills": 0,
+        "shares": 0.0,
+        "value": 0.0,
+        "gross": 0.0,
+        "share_of_gross": 0.0
+      },
+      "orders_filled": 12157,
+      "pulls": 14181,
+      "by_day": {
+        "20261023": 39834.45105128509
+      },
+      "discovered": 212,
+      "lost": 808
+    },
+    "M250|A58|L37|N100": {
+      "KEEP": -518337.10253212077,
+      "score": 220534.27583550793,
+      "null": 233875.99268488024,
+      "E": -13341.716849372304,
+      "PULLALL": 481253.9222852902,
+      "fills": 20040,
+      "shares": 315210.155156922,
+      "eligible": 28799,
+      "fills_value": -518337.10253212077,
+      "by_age": {
+        "lt100": {
+          "E": 234.02344181604107,
+          "score": 7955.83023283593,
+          "fills_value": -50694.49027194747,
+          "fills": 1359,
+          "shares": 20705.20524426161
+        },
+        "100to500": {
+          "E": 362.0814902303355,
+          "score": 69655.68009945209,
+          "fills_value": -142380.89070290152,
+          "fills": 4472,
+          "shares": 70478.01119914764
+        },
+        "ge500": {
+          "E": -13937.82178141868,
+          "score": 142922.7655032199,
+          "fills_value": -325261.7215572718,
+          "fills": 14209,
+          "shares": 224026.93871351273
+        }
+      },
+      "no_young": {
+        "E": -13575.740291188346,
+        "score": 212578.445602672,
+        "fills_value": -467642.6122601733
+      },
+      "cancel_pending": {
+        "fills": 307,
+        "shares": 4399.584065665938,
+        "value": -15523.97702797667,
+        "share_of_fills": 0.01531936127744511,
+        "share_of_gross": 0.021885721813635833
+      },
+      "held": {
+        "fills": 0,
+        "shares": 0.0,
+        "value": 0.0,
+        "gross": 0.0,
+        "share_of_gross": 0.0
+      },
+      "orders_filled": 13617,
+      "pulls": 13973,
+      "by_day": {
+        "20261023": -13341.716849372304
+      },
+      "discovered": 1871,
+      "lost": 1007
+    }
+  },
+  "families": {
+    "M50|A58|L37|N100": [
+      "baseline",
+      "B: trades at anchor - 50 ms, activation +58 ms, cancel latency 37 ms, fill notice +100 ms"
+    ],
+    "S1lo|A58|L37|N100": [
+      "timeline",
+      "every trade at the start of the admissible S1 window; contradictory events held at M50"
+    ],
+    "S1mid|A58|L37|N100": [
+      "timeline",
+      "every trade at the middle of the admissible S1 window; contradictory events held at M50"
+    ],
+    "S1hi|A58|L37|N100": [
+      "timeline",
+      "every trade at the end of the admissible S1 window; contradictory events held at M50"
+    ],
+    "S2lo|A58|L37|N100": [
+      "timeline",
+      "every trade at the start of the admissible S2 window; contradictory events held at M50"
+    ],
+    "S2hi|A58|L37|N100": [
+      "timeline",
+      "every trade at the end of the admissible S2 window; contradictory events held at M50"
+    ],
+    "S3lo|A58|L37|N100": [
+      "timeline",
+      "every trade at the start of the admissible S3 (semantics) window; contradictory events held at M50"
+    ],
+    "S3hi|A58|L37|N100": [
+      "timeline",
+      "every trade at the end of the admissible S3 (semantics) window; contradictory events held at M50"
+    ],
+    "SThi|A58|L37|N100": [
+      "timeline",
+      "every trade at the UUID-creation upper endpoint under the after-match/aligned-clock premises; no finite earliest endpoint is identified; contradictory events held at M50"
+    ],
+    "EVhi|A58|L37|N100": [
+      "timeline",
+      "every trade at the the REST evidence cap (the latest admissible instant); contradictory events held at M50"
+    ],
+    "M50|A15|L37|N100": [
+      "activation delay",
+      "the order goes live 15 ms after posting (B: 58)"
+    ],
+    "M50|A100|L37|N100": [
+      "activation delay",
+      "the order goes live 100 ms after posting (B: 58)"
+    ],
+    "M50|A58|L0|N100": [
+      "cancel latency",
+      "every cancel takes effect 0 ms after its decision (B: 37)"
+    ],
+    "M50|A58|L100|N100": [
+      "cancel latency",
+      "every cancel takes effect 100 ms after its decision (B: 37)"
+    ],
+    "M50|A58|L37|N160": [
+      "fill-notice delay",
+      "the client learns of a full fill 160 ms after it (B: 100)"
+    ],
+    "M50|A58|L37|N660": [
+      "fill-notice delay",
+      "the client learns of a full fill 660 ms after it (B: 100)"
+    ],
+    "M50|A58|L37+13%x4000|N100": [
+      "cancel latency",
+      "13% of the orders' cancels take effect 4000 ms after their decision, the rest 37 ms (own assumed mixture; the former K8-based measured-tail interpretation is withdrawn)"
+    ],
+    "M0|A58|L37|N100": [
+      "trade-clock shift",
+      "every trade stamp 0 ms before its anchor (B: 50 ms) - a uniform clock offset, not an order latency"
+    ],
+    "M250|A58|L37|N100": [
+      "trade-clock shift",
+      "every trade stamp 250 ms before its anchor (B: 50 ms) - a uniform clock offset, not an order latency"
+    ]
+  },
+  "stat": {
+    "20261023": {
+      "windows": 288,
+      "orders": 30088,
+      "base_matched": 30088,
+      "kernel_checked": 816,
+      "events": 560819,
+      "held_events_S1": 9576,
+      "held_events_S2": 1412,
+      "held_events_S3": 1363,
+      "held_events_ST": 73
+    }
+  },
+  "days": [
+    "20261023"
+  ],
+  "settlement_model": "shared_clock_event_specific_nonnegative_lag_v2",
+  "omitted_scenarios": {
+    "STlo": "no finite lower bound from UUID creation"
+  },
+  "provenance": {
+    "commit": "8e63f178003ab98916f3467121c5d1d148344af4",
+    "source": {
+      "pf_keep_pull.py": "58b972f92bda06fbc847c43d2ace8db9d7b12f4daaf67bcfaa14e92deb475835",
+      "pf_queue_place_test.py": "188c1495ce35db80ce8b79cbc50541964d0d32d9da38fee4b925e951eec01a1f",
+      "pf_queue_place_ledger.py": "8fa16b929b4ae497109a70add4036dd7cd4501102a261c74eba63de0e0b94bb5",
+      "pf_flow_control_kernel.cpp": "fb1ff31cdcf2a97783283f927fb2d56333a0760e877cb0b93348528138886612",
+      "pf_flow_control_kernel.py": "2460567474f28318f5d09df8ce0977e15748bb9263bc501471cf6a649b334379"
+    },
+    "uncommitted": ""
+  },
+  "source_sha256": "bbefb3b47c3da66e757886f308cb68e923622f701321952d7fc82d44a6b1d241",
+  "seconds": 2.667748212814331
+}
