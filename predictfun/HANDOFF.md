@@ -1,3 +1,30 @@
+<!-- EXECUTION_WINDOWS_REVIEW_20261118 -->
+## 2026-11-18 User-directed review addendum: execution windows before new capture
+
+Review target remains d1de75049fdf5a2477e279ca108114b5aef09b27. Added the agreed
+window approach and remaining issues to:
+reviews/automatic/20261118_d1de7504/execution_windows_addendum.md (linked from report.md).
+Exact match times are not required for every event when supported windows make
+the economic decision stable. Preserve earliest/latest, evidence versus assumed
+range, optional estimated time, source/receipt clocks, identities and input hashes.
+Cancellation can have a window too; overlapping or touching intervals remain
+uncertain unless a supported tie-order rule resolves them.
+
+ONE refined next priority: persist an evidence-backed execution-window/identity
+ledger and validate ordering on known actual-order lifecycles. Retain unknowns
+and contradictions; never clip a public trade to a hypothetical order to make
+it fill. Additional capture is conditional on unresolved evidence, not a blanket
+prerequisite. Full scenario replay must preserve shared-event consistency and
+client information availability while recomputing queues, fills and eligibility.
+
+Other open issues: point placement/cancel/notice assumptions; fixed M50 fills in
+the current interval audit; missing linked evidence/provenance; removed-versus-
+all-pulled-order-fills headline; selection bias if ambiguous actions are dropped.
+These are documented limits/required gates, not newly reproduced accounting
+bugs. Review docs only; no new results, data read, model/simulator changes, live
+actions or test reruns. Development owns implementation. Schedule remains removed.
+<!-- /EXECUTION_WINDOWS_REVIEW_20261118 -->
+
 <!-- MANUAL_REVIEW_20261118_D1DE7504 -->
 ## 2026-11-18 Manual timing review: execution ground truth is the critical block
 
