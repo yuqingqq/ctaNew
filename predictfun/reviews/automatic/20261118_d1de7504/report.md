@@ -5,6 +5,12 @@ Reviewed the complete change from f0d75fc12ed3e4eef99983c8ab2228a76fcd6133 in
 `/tmp/predictfun-review-d1de7504`, including source, result artifacts and state.
 Another session owns development; scheduled reviews remain removed.
 
+User-directed follow-up, 2026-11-18: [execution windows and remaining issues](execution_windows_addendum.md)
+refines the next priority below. Exact timestamps are not required for every
+trade when evidence-backed windows support stable decisions. Build and retain
+the interval/identity ledger first; obtain additional timing evidence where
+the decision remains unresolved. The original findings and receipt are unchanged.
+
 **The critical research block is execution ground truth: whether cancellation
 could actually precede the fills it is credited with avoiding.** The audit
 exposes sensitivity to that missing timing evidence. It does not establish

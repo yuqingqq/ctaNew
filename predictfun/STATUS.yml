@@ -1,3 +1,20 @@
+execution_windows_review_20261118:
+  status: documented_user_requested_interval_approach_and_remaining_gates
+  target_commit: d1de75049fdf5a2477e279ca108114b5aef09b27
+  report: predictfun/reviews/automatic/20261118_d1de7504/report.md
+  addendum: predictfun/reviews/automatic/20261118_d1de7504/execution_windows_addendum.md
+  refines: manual_review_20261118_d1de7504
+  exact_timestamp_required_for_every_trade: false
+  interval_requirements: [provenance, evidence_vs_assumption, unknown_endpoints, event_identity, cancel_uncertainty, aligned_clocks]
+  scenario_requirements: [shared_event_consistency, causal_information_availability, recompute_queues_fills_and_eligibility]
+  other_open_issues: [point_latency_assumptions, fixed_M50_fill_population, missing_linked_evidence, headline_population_mismatch, ambiguous_subset_selection_bias]
+  next_priority: persist_evidence_backed_execution_windows_and_validate_ordering_on_known_lifecycles
+  new_capture: only_where_existing_evidence_cannot_support_the_claim
+  new_empirical_results: false
+  development_sources_modified: false
+  schedule_remains_removed: true
+  development_owner: other_session
+
 manual_review_20261118_d1de7504:
   status: complete_timing_ground_truth_block_with_two_P2_reporting_evidence_findings
   asof: "2026-11-18T04:42:10Z"
