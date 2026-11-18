@@ -17,12 +17,11 @@ trade-clock shift (M0 / M250: every trade stamp moved uniformly), activation del
 no scenario is called "zero latency"; (3) the held contradictory events get their denominator (every event per family and day) and their
 economic weight (the fills, shares and value at held trade instants per scenario); v1's outputs (keep_pull_scenarios_20261118) stay as
 provenance.
-SETTLEMENT TIMES (v3, USER: "Can you clear the issues"): every trade's settlementId is a UUIDv7 carrying the venue's creation time in ms; on
-live's 99 own legs it sits inside the Matched second, after placement and before the notice, one constant offset fitting all (K8). (4) The ST
-timelines place each event at its settlement time (SThi) and at the lag bound before it (STlo) - the evidence-based re-timing of every trade;
-(5) the ranges follow the own orders' evidence, chosen after seeing it (development days): activation 15 / 100 ms (live within 18 ms), notice
-160 / 660 ms (162-655 ms measured; the replay's 100 ms is below all 99), and a cancel-latency MIXTURE - 13% of the orders' cancels at 4 s, the
-rest 37 ms (10 of 77 confirmed own cancels took effect 0.13-5.7 s after the request; an outcome-selected rate).
+SETTLEMENT-LAG CORRECTION (v4, review 52c45d57): UUID creation lag is event-specific, not a constant offset. The default ST window
+has no finite lower bound. STlo is omitted from the default scenario bank, and no -infinity endpoint may enter a replay. SThi remains
+an upper-endpoint sensitivity scenario, conditional on creation after matching and aligned clocks; it is not a measured match instant.
+The activation / notice / cancel-mixture values inherited from v3 remain explicit, posthoc sensitivity choices; their previous description
+as measured latency distributions is withdrawn. Earlier scenario receipts are refused by the new reporter until re-simulated.
 
 SCENARIOS (one factor at a time around the replay's baseline B = M50 trade times, activation +58 ms, cancel latency 37 ms, fill notice
  +100 ms; every value is an assumption range, not a measured distribution: "stable in tested scenarios" is the strongest claim)
@@ -94,19 +93,18 @@ import pf_queue_place_ledger as QL                        # noqa: E402
 import pf_flow_control_kernel as FK                       # noqa: E402
 
 C, pd, I = KP.C, KP.pd, KP.I
-OUT = Path(I.K.IO) / 'keep_pull_scenarios_v3_20261118'      # v3 (settlement times); v1 / v2 outputs stay as provenance
+OUT = Path(I.K.IO) / 'keep_pull_scenarios_v4_20261118'      # v4: corrected creation-lag semantics; earlier outputs stay as provenance
 SHIFT = 50.
 B0 = dict(tl='M50', A=KP.PLACE, L=KP.CANCEL, N=KP.NOTICE, X=None)
-TIMELINES = ('M50', 'S1lo', 'S1mid', 'S1hi', 'S2lo', 'S2hi', 'S3lo', 'S3hi', 'STlo', 'SThi', 'EVhi')
+TIMELINES = ('M50', 'S1lo', 'S1mid', 'S1hi', 'S2lo', 'S2hi', 'S3lo', 'S3hi', 'SThi', 'EVhi')
 TIMELINE_RULES = dict(M50='anchor - 50 ms (the committed replay)', S1lo='start of the admissible S1 window', S1mid='middle of the admissible S1 window',
                       S1hi='end of the admissible S1 window', S2lo='start of the admissible S2 window', S2hi='end of the admissible S2 window',
                       S3lo='start of the admissible S3 (semantics) window', S3hi='end of the admissible S3 (semantics) window',
-                      STlo='start of the admissible ST window (the settlement time - the lag bound)', SThi='end of the admissible ST window (the settlement time)',
+                      SThi='UUID-creation upper endpoint under the after-match/aligned-clock premises; no finite earliest endpoint is identified',
                       EVhi='the REST evidence cap (the latest admissible instant)', held='an event without an admissible window keeps its M50 time')
-NOTICE_RANGE = (160., 660.)                               # the own fills' notice delays, 162-655 ms (K8; the replay's 100 ms is below all 99)
-ACT_TEST = (15., 100.)                                    # activation tested at 15 / 100 ms: own orders live within 18 / 21 ms (K5S, chosen after seeing them)
-CANCEL_MIX = (0.13, 4000.)                                # 13% of the orders' cancels at 4 s, the rest 37 ms: 10 of 77 confirmed own cancels took effect
-                                                          # 0.13-5.7 s after the request (K5S; filled orders only - an outcome-selected rate)
+NOTICE_RANGE = (160., 660.)                               # explicit sensitivity values inherited from v3; not measured notice bounds
+ACT_TEST = (15., 100.)                                    # explicit sensitivity values; base acknowledgment evidence only establishes <=21 ms for one order
+CANCEL_MIX = (0.13, 4000.)                                # explicit sensitivity mixture inherited from v3, not an estimated frequency or latency
 SCEN = ([dict(B0, tl=x) for x in TIMELINES] + [dict(B0, A=a) for a in ACT_TEST] + [dict(B0, L=x) for x in X.CANCEL_RANGE] + [dict(B0, N=x) for x in NOTICE_RANGE]
         + [dict(B0, X=CANCEL_MIX), dict(B0, tl='M0'), dict(B0, tl='M250')])
 HOLD_FAMILIES = ('S1', 'S2', 'S3', 'ST')                  # the timelines whose contradictory events are held at M50
@@ -139,7 +137,7 @@ def family(sc):
         return 'timeline', f"every trade at the {TIMELINE_RULES[sc['tl']]}; contradictory events held at M50"
     if sc.get('X'):
         return 'cancel latency', (f"{100 * sc['X'][0]:g}% of the orders' cancels take effect {sc['X'][1]:g} ms after their decision, the rest {sc['L']:g} ms (own "
-                                  'orders: 10 of 77 confirmed cancels took effect 0.13-5.7 s after the request)')
+                                  'assumed mixture; the former K8-based measured-tail interpretation is withdrawn)')
     if sc['A'] != B0['A']:
         return 'activation delay', f"the order goes live {sc['A']:g} ms after posting (B: 58)"
     if sc['L'] != B0['L']:
@@ -147,7 +145,7 @@ def family(sc):
     return 'fill-notice delay', f"the client learns of a full fill {sc['N']:g} ms after it (B: 100)"
 
 
-KSCEN = [sc for sc in SCEN if sc['tl'] in TIMELINES and sc['N'] == KP.NOTICE]          # re-simulated by the kernel (11)
+KSCEN = [sc for sc in SCEN if sc['tl'] in TIMELINES and sc['N'] == KP.NOTICE]          # re-simulated by the kernel
 
 
 def landing_s(d, act, lat):
@@ -235,7 +233,7 @@ def timelines(legs, W, env, day, sem=None, tset=None, lag=None):
         C.require(sem is not None and bool(np.isin(L.row_id.values, sem.index.values).all()), 'legs without their S3 windows')
         L['S3_llo'], L['S3_lhi'] = sem.S3_llo.reindex(L.row_id.values).values, sem.S3_lhi.reindex(L.row_id.values).values
     if 'ST_llo' not in L:
-        C.require(tset is not None and lag is not None and bool(np.isin(L.row_id.values, tset.index.values).all()), 'legs without their settlement times')
+        C.require(tset is not None and bool(np.isin(L.row_id.values, tset.index.values).all()), 'legs without their settlement times')
         L['ST_llo'], L['ST_lhi'], _ = X.st_windows(tset.t_set_ms.reindex(L.row_id.values).values, L.S3_llo.values, L.S3_lhi.values, lag)
     L = L.assign(day=day, h=env['h'], q01=env['q01'], q99=env['q99']); EVT = X.events_of(L)
     e = pd.MultiIndex.from_frame(EVT[['day', 'group']]).get_indexer(pd.MultiIndex.from_arrays([L.day.values, L.group.values])); C.require(bool((e >= 0).all()), 'a leg without an event')
@@ -243,12 +241,16 @@ def timelines(legs, W, env, day, sem=None, tset=None, lag=None):
     for k in HOLD_FAMILIES:
         hold = EVT[f'{k}_st'].values >= 2; lo, hi = EVT[f'{k}_lo'].values, EVT[f'{k}_hi'].values; held[k] = int(hold.sum())
         tau[k + 'lo'] = np.where(hold[e], m50, lo[e]); tau[k + 'hi'] = np.where(hold[e], m50, hi[e]); hl[k + 'lo'] = hl[k + 'hi'] = hold[e]
+        if k == 'ST' and not np.isfinite(lo).all():
+            del tau['STlo'], hl['STlo']  # No earliest execution can be manufactured from an upper-only window.
         if k == 'S1':
             tau['S1mid'] = np.where(hold[e], m50, (lo[e] + hi[e]) / 2.); hl['S1mid'] = hold[e]
-        ok = hold[e] | ((tau[k + 'lo'] >= lo[e] - 1e-9) & (tau[k + 'hi'] <= hi[e] + 1e-9) & (tau[k + 'lo'] <= tau[k + 'hi'] + 1e-9))
+        lower = tau.get(k + 'lo', lo[e])
+        ok = hold[e] | ((lower >= lo[e] - 1e-9) & (tau[k + 'hi'] <= hi[e] + 1e-9) & (lower <= tau[k + 'hi'] + 1e-9))
         C.require(bool(ok.all()), f'a {k} time outside its admissible window')
     tau['EVhi'] = EVT.EV_hi.values[e]; hl['EVhi'] = np.zeros(len(L), bool)
     for tl, x in tau.items():                                                  # control (c): one time per event
+        C.require(bool(np.isfinite(x).all()), f'{tl}: no finite execution endpoint is identified')
         g = pd.Series(x).groupby(e); C.require(bool(((g.max() - g.min()).abs() <= 1e-9).all()), f'{tl}: legs of one event at different times')
     out, hm = {}, {}
     for tl, x in tau.items():
@@ -334,7 +336,7 @@ def day_run(day, src=None, timing=None, kp=None, out=None, env_of=None, sem_of=N
     S = pd.DataFrame(rows, columns=['oid', 'scen', 'refused', 'v', 'q', 't_full', 'land']); SF = pd.DataFrame(frows, columns=['oid', 'scen', 't', 'q', 'held'])
     d.mkdir(parents=True); S.to_parquet(d / 'orders.parquet', index=False); SF.to_parquet(d / 'fills.parquet', index=False)
     C.dump(d / 'receipt.json', dict(asof=C.stamp(), day=day, stat=st, scenarios=[name(sc) for sc in KSCEN], families={name(sc): family(sc) for sc in SCEN},
-                                    timeline_rules=TIMELINE_RULES, env=env, s3_inputs=sem_in, settlement_inputs=dict(ts_in, **lag_in), st_lag_ms=st_lag,
+                                    timeline_rules=TIMELINE_RULES, env=env, s3_inputs=sem_in, settlement_inputs=dict(ts_in, **lag_in), st_lag_ms=st_lag, settlement_model=X.SETTLEMENT_MODEL, st_lag_role='UNIDENTIFIED' if st_lag is None else 'EXPLICIT_SCENARIO_ASSUMPTION',
                                     keep_pull_receipt=C.sha(kp / day / 'receipt.json'),
                                     keep_pull_outputs=r['outputs'], provenance=KP.provenance(), source_sha256=C.sha(Path(__file__).resolve()),
                                     dependencies={p_.name: C.sha(p_) for p_ in (Path(X.__file__), Path(QP.__file__), Path(FK.__file__), HERE / 'pf_flow_control_kernel.cpp')},
@@ -378,7 +380,8 @@ def report(out=None, kp=None, days=KP.DAYS, expect='committed', tol=1.):
     start = time.time(); out = Path(out or OUT); kp = Path(kp or KP.OUT); O, Fl, S, SF, st = [], [], [], [], {}; days = list(days)
     expect = X.collapsed_reference(days) if expect == 'committed' else expect; stem = 'scenarios' if days == list(KP.DAYS) else 'scenarios_' + '_'.join(days)
     for d in days:
-        r = json.loads((out / d / 'receipt.json').read_text()); C.require(all(C.sha(out / d / x) == h for x, h in r['outputs'].items()), f'{d}: scenario outputs changed since their receipt')
+        r = json.loads((out / d / 'receipt.json').read_text()); C.require(r.get('settlement_model') == X.SETTLEMENT_MODEL, 'legacy settlement timing receipt: rebuild scenarios before reporting')
+        C.require(all(C.sha(out / d / x) == h for x, h in r['outputs'].items()), f'{d}: scenario outputs changed since their receipt')
         rk = json.loads((kp / d / 'receipt.json').read_text()); C.require(r['keep_pull_outputs'] == rk['outputs'], f'{d}: scenario day built on other keep-pull outputs')
         O.append(pd.read_parquet(kp / d / 'orders.parquet')); f = pd.read_parquet(kp / d / 'fills.parquet'); f['day'] = d; Fl.append(f)
         s_ = pd.read_parquet(out / d / 'orders.parquet'); s_['day'] = d; S.append(s_); f_ = pd.read_parquet(out / d / 'fills.parquet'); f_['day'] = d; SF.append(f_); st[d] = r['stat']
@@ -406,7 +409,8 @@ def report(out=None, kp=None, days=KP.DAYS, expect='committed', tol=1.):
     for nm, v in res.items():
         v['discovered'] = len(v['_filled'] - bf); v['lost'] = len(bf - v['_filled'])
     Es = [v['E'] for v in res.values()]; Ks = [v['KEEP'] for v in res.values()]; Ss = [v['KEEP'] + v['score'] for v in res.values()]
-    read = {'Z0 CONTROLS': 'YES', 'Z1 E ACROSS TESTED SCENARIOS': stable(min(Es), max(Es)), 'Z2 KEEP VALUE ACROSS TESTED SCENARIOS': stable(min(Ks), max(Ks)),
+    timing_identified = all(json.loads((out / d / 'receipt.json').read_text()).get('st_lag_ms') is not None for d in days)
+    read = {'TIMING EVIDENCE': 'EXPLICIT-LAG-SCENARIO-ONLY' if timing_identified else 'LOWER-MATCH-BOUND-UNIDENTIFIED', 'Z0 CONTROLS': 'YES', 'Z1 E ACROSS TESTED SCENARIOS': stable(min(Es), max(Es)), 'Z2 KEEP VALUE ACROSS TESTED SCENARIOS': stable(min(Ks), max(Ks)),
             'Z3 THE SCORE\'S VALUE ACROSS TESTED SCENARIOS': stable(min(Ss), max(Ss))}
     L = ['QUEUE-AWARE SCENARIO REPLAY of the keep / pull selection, declared score A+0 - the fair-edge rule, not a learned model (pf_keep_pull_scenarios.py; every '
          'committed state with a path re-simulated '
@@ -433,7 +437,7 @@ def report(out=None, kp=None, days=KP.DAYS, expect='committed', tol=1.):
           'distributions; queue rule M unvalidated on live orders; STATES is local selection; one order at a time, no re-post after a pull.']
     R = {k: {x: y for x, y in v.items() if not x.startswith('_')} for k, v in res.items()}
     (out / f'{stem}.txt').write_text('\n'.join(L) + '\n')
-    C.dump(out / f'{stem}.json', dict(asof=C.stamp(), readings=read, scenarios=R, families={name(sc): family(sc) for sc in SCEN}, stat=st, days=list(days), provenance=KP.provenance(),
+    C.dump(out / f'{stem}.json', dict(asof=C.stamp(), readings=read, scenarios=R, families={name(sc): family(sc) for sc in SCEN}, stat=st, days=list(days), settlement_model=X.SETTLEMENT_MODEL, omitted_scenarios={'STlo': 'no finite lower bound from UUID creation'}, provenance=KP.provenance(),
                                         source_sha256=C.sha(Path(__file__).resolve()), seconds=time.time() - start))
     print('\n'.join(L), flush=True)
     return R, read
@@ -500,6 +504,9 @@ def selftest():
         timelines(lg, Wt, env1, 'd', sem_, tset_.drop(index=9), 100.); bad.append('timelines accepted a leg without its settlement row')
     except ValueError:
         pass
+    upper_only, _, _, _ = timelines(lg, Wt, env1, 'd', sem_, tset_, None)
+    if 'STlo' in upper_only or 'STlo' in TIMELINES or not all(np.isfinite(x).all() for x in upper_only['SThi']):
+        bad.append('an unidentified earliest match was replayed or the finite upper endpoint was lost')
     fam = {name(sc): family(sc)[0] for sc in SCEN}; n0 = lambda **kw: name(dict(B0, **kw))
     if not (set(fam.values()) == set(FAMILIES) and fam[n0(tl='M0')] == fam[n0(tl='M250')] == 'trade-clock shift' and fam[n0(L=0.)] == fam[n0(L=100.)] == 'cancel latency'
             and fam[n0()] == 'baseline' and fam[n0(tl='S3lo')] == 'timeline' and fam[n0(A=15.)] == 'activation delay' and fam[n0(X=CANCEL_MIX)] == 'cancel latency' and fam[n0(N=160.)] == 'fill-notice delay'
@@ -544,10 +551,9 @@ def selftest():
                    '200 000 pending landings 95 / 87 / 137 / 58 / 158': ([ld(200000., n_()), ld(200000., n_(A=15.)), ld(200000., n_(A=100.)), ld(200000., n_(L=0.)), ld(200000., n_(L=100.))],
                                                                          [95., 87., 137., 58., 158.]),
                    '200 000 S1lo (before posting) / S1mid (before activation) / S1hi (after landing)': ([fl(200000., n_(tl=x)) for x in ('S1lo', 'S1mid', 'S1hi')], [[], [], []]),
-                   '150 000 contradictory event held at M50': ([fl(150000., n_(tl=x)) for x in ('S1lo', 'S1hi', 'S2lo', 'S2hi', 'S3lo', 'S3hi', 'STlo', 'SThi')], [[(450., 30.)]] * 8),
-                   'STlo (both trades 120 ms before M50)': (fl(50000., n_(tl='STlo')), [(830., 20.), (950., 10.)]),
+                   '150 000 contradictory event held at M50': ([fl(150000., n_(tl=x)) for x in ('S1lo', 'S1hi', 'S2lo', 'S2hi', 'S3lo', 'S3hi', 'SThi')], [[(450., 30.)]] * 7),
                    'SThi (the sweep 30 ms after M50 fills; the WS trade lands after the cross cancel)': (fl(50000., n_(tl='SThi')), [(980., 20.)]),
-                   '200 000 STlo (before posting) / SThi (after the pending landing)': ([fl(200000., n_(tl=x)) for x in ('STlo', 'SThi')], [[], []]),
+                   '200 000 SThi (after the pending landing)': (fl(200000., n_(tl='SThi')), []),
                    'S3lo (the E2 sweep moves before posting - its REST range starts 10 s early - so the 50 sh at 50 at 870 ms meet the queue ahead: no fill)':
                        (fl(50000., n_(tl='S3lo')), []),
                    'S3hi (both after the cross cancel)': (fl(50000., n_(tl='S3hi')), []),

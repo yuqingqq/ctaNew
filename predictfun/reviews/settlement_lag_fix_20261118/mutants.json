@@ -1,0 +1,75 @@
+{
+  "asof": "2026-11-18T11:44:29.078295+00:00",
+  "cases": [
+    {
+      "index": 90,
+      "name": "K8 floor test not applied",
+      "rejected": true,
+      "returncode": 1,
+      "last_output": "EXEC-WINDOW SELFTEST FAILED: later-second creation discarded or floor disagreement hidden\n"
+    },
+    {
+      "index": 91,
+      "name": "K8 inconsistent shared clock accepted",
+      "rejected": true,
+      "returncode": 1,
+      "last_output": "EXEC-WINDOW SELFTEST FAILED: K8 accepted creation after its containing notice at every admissible clock | K8 accepted creation before placement at every admissible clock | impossible creation/lifecycle/receipt accepted | impossible creation/lifecycle/receipt accepted | inconsistent or unidentified clock accepted\n"
+    },
+    {
+      "index": 92,
+      "name": "K8 common fit promoted to universal lag",
+      "rejected": true,
+      "returncode": 1,
+      "last_output": "econd': 2, 'after_place_at_0': 2, 'before_notice_at_0': 2, 'inside_lifecycle_at_0': 2, 'd': {'lo': -10.0, 'hi': 30.0, 'exists': True}, 'd_per_run': {'r': {'lo': -10.0, 'hi': 30.0, 'exists': True, 'legs': 2}}, 'common_d_role': 'conditional constant-total-delay fit, not the event-lag model or an acceptance gate', 'consistent': True, 'status': 'COMPATIBLE', 'clock_offset': {'lo': 0.0, 'hi': 0.0, 'exists': True, 'includes_zero': True}, 'lag_bound_ms': 30.0, 'universal_lag_status': 'UNIDENTIFIED', 'assumptions': ['UUID creation at or after matching', 'UUID and status stamps share a clock', 'the identity-linked first notice already contains this UUID', 'K7 clock and lifecycle premises'], 'evidence_gate': 'NOT_ESTABLISHED_BY_SAME_SAMPLE_COMPATIBILITY', 'known_leg_lag_ms': {'lo': [0.0, 0.0], 'hi': [30.0, 800.0], 'scope': 'these identified lifecycles only; not a public-trade bound'}, 'offset_settlement_premise': {'lo': 0.0, 'hi': 0.0, 'exists': True, 'includes_zero': True, 'premise': 'CONDITIONAL: zero UUID creation lag on every leg'}, 'notice_delay_ms': {'lo_min': 200.0, 'lo_p50': 585.0, 'hi_p50': 1000.0, 'hi_max': 1000.0, 'vs_replay_point': {'CONTRADICTED': 2}, 'replay_point_ms': 100.0}}\n"
+    },
+    {
+      "index": 93,
+      "name": "K8 common fit replaces independent lag bounds",
+      "rejected": true,
+      "returncode": 1,
+      "last_output": "'inside_lifecycle_at_0': 2, 'd': {'lo': -10.0, 'hi': 30.0, 'exists': True}, 'd_per_run': {'r': {'lo': -10.0, 'hi': 30.0, 'exists': True, 'legs': 2}}, 'common_d_role': 'conditional constant-total-delay fit, not the event-lag model or an acceptance gate', 'consistent': True, 'status': 'COMPATIBLE', 'clock_offset': {'lo': 0.0, 'hi': 0.0, 'exists': True, 'includes_zero': True}, 'lag_bound_ms': None, 'universal_lag_status': 'UNIDENTIFIED', 'assumptions': ['UUID creation at or after matching', 'UUID and status stamps share a clock', 'the identity-linked first notice already contains this UUID', 'K7 clock and lifecycle premises'], 'evidence_gate': 'NOT_ESTABLISHED_BY_SAME_SAMPLE_COMPATIBILITY', 'known_leg_lag_ms': {'lo': [0.0, 0.0], 'hi': [30.0, 800.0], 'scope': 'these identified lifecycles only; not a public-trade bound'}, 'offset_settlement_premise': {'lo': 0.0, 'hi': 0.0, 'exists': True, 'includes_zero': True, 'premise': 'CONDITIONAL: zero UUID creation lag on every leg'}, 'notice_delay_ms': {'lo_min': 190.0, 'lo_p50': 575.0, 'hi_p50': 615.0, 'hi_max': 1000.0, 'vs_replay_point': {'CONTRADICTED': 2}, 'replay_point_ms': 100.0}} | common-d nonexistence rejected a valid variable-lag world\n"
+    },
+    {
+      "index": 94,
+      "name": "K5S cancel bound from the earliest match",
+      "rejected": true,
+      "returncode": 1,
+      "last_output": "EXEC-WINDOW SELFTEST FAILED: per-order cancellation must follow its latest tranche\n"
+    },
+    {
+      "index": 95,
+      "name": "K5S activation ignores the first match",
+      "rejected": true,
+      "returncode": 1,
+      "last_output": "EXEC-WINDOW SELFTEST FAILED: independently justified first match must bound activation\n"
+    },
+    {
+      "index": 96,
+      "name": "ST windows without the lag (a point)",
+      "rejected": true,
+      "returncode": 1,
+      "last_output": "EXEC-WINDOW SELFTEST FAILED: public UUID window invented a lower bound or lost labelled fallback\n"
+    },
+    {
+      "index": 102,
+      "name": "an inconsistent K8 receipt accepted",
+      "rejected": true,
+      "returncode": 1,
+      "last_output": "EXEC-WINDOW SELFTEST FAILED: settlement file / lag bound readers: True True True True True\n"
+    },
+    {
+      "index": 103,
+      "name": "ST upper-only window becomes a point",
+      "rejected": true,
+      "returncode": 1,
+      "last_output": "EXEC-WINDOW SELFTEST FAILED: public UUID window invented a lower bound or lost labelled fallback\n"
+    },
+    {
+      "index": 104,
+      "name": "same-sample upper-only gate falsely passes",
+      "rejected": true,
+      "returncode": 1,
+      "last_output": "ATH INTERVALS vs DECLARED RANGES': 'NOT-CONTRADICTED', 'K8 SETTLEMENT TIME': 'COMPATIBLE', 'K8 CLOCK OFFSET (settlement premise: the id stamped at the match)': \"CONDITIONAL {'lo': -10.0, 'hi': 0.0, 'exists': True, 'includes_zero': True, 'premise': 'CONDITIONAL: zero UUID creation lag on every leg'}\", 'K8 UNIVERSAL CREATION-LAG BOUND': 'UNIDENTIFIED', 'K8 FILL-NOTICE DELAY vs the replay 100 ms': 'CONTRADICTED on 5 of 6 fills', 'K5S ORDER PATH WITH SETTLEMENT TIMES': 'NOT-CONTRADICTED', 'K6 GATE S1': 'FAIL', 'K6 GATE S1 (settlement offsets)': 'FAIL', 'K6 GATE S2': 'FAIL', 'K6 GATE S2 (settlement offsets)': 'FAIL', 'K6 GATE S3': 'PASS', 'K6 GATE S3 (settlement offsets)': 'PASS', 'K6 GATE ST': 'PASS', 'K6 GATE ST (settlement offsets)': 'UNIDENTIFIED-UPPER-BOUND-ONLY', 'K6 GATE EV': 'PASS', 'K6 GATE EV (settlement offsets)': 'PASS', 'K6 REPLAY POINT M50': 'CONTRADICTED', 'KNOWN VERDICT': 'INSTRUMENT-CHECKS-PASS; REPLAY-ANCHOR-CONTRADICTED; SETTLEMENT-TIME COMPATIBLE; LEDGER-WINDOW GATE S1 FAIL, S2 FAIL, S3 PASS, ST PASS, EV PASS (settlement offsets: S1 FAIL, S2 FAIL, S3 PASS, ST UNIDENTIFIED-UPPER-BOUND-ONLY, EV PASS); ORDER-PATH RANGES NOT-CONTRADICTED; NOT A VENUE-ENGINE ACCEPTANCE'}\n"
+    }
+  ]
+}

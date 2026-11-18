@@ -1,0 +1,17 @@
+{
+  "asof": "2026-11-18T11:43:12.720410+00:00",
+  "model": "shared_clock_event_specific_nonnegative_lag_v2",
+  "complete_selftests": 2,
+  "variable_lag_worlds": 200,
+  "legs_per_world": 8,
+  "full_upper_only_ledger_rehearsal": true,
+  "legacy_scenario_refused": true,
+  "mutation_targets_valid": {
+    "exec_windows": 104,
+    "scenarios": 31
+  },
+  "source_sha256": {
+    "pf_keep_pull_exec_windows.py": "951354dd71883e827ed74180939ca78c19596c9ef11067c90141caabfca9f20f",
+    "pf_keep_pull_scenarios.py": "9480aab789595e6155e5e4e67f4459ceac5a0519dc0efb05fd31f2692438a600"
+  }
+}

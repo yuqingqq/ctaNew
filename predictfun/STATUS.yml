@@ -1,3 +1,30 @@
+settlement_lag_correction_20261118:
+  status: implemented_inference_bug_fixed_execution_timing_still_unidentified
+  asof: "2026-11-18T11:47:56Z"
+  user_authorization: "Can we fix this issue"
+  supersedes_review: 52c45d57537fd152380112adef0393b43e258653
+  report: predictfun/reviews/settlement_lag_fix_20261118/report.md
+  supersession_receipt: predictfun/reviews/settlement_lag_fix_20261118/supersession.json
+  known_receipt: predictfun/reviews/settlement_lag_fix_20261118/known.json
+  model: shared_clock_event_specific_nonnegative_lag_v2
+  universal_creation_lag_bound_ms: null
+  public_match_lower_bound: unidentified
+  ST_gate: UNIDENTIFIED-UPPER-BOUND-ONLY
+  removed_default_scenario: STlo
+  receipt_versions: {exec_windows: 5, known: 4, scenarios: 4}
+  legacy_receipts_refused: true
+  known_population: {day: "20261108", legs: 99, orders: 86, candidates: 131, asof: "2026-11-18T11:43:28.451761Z"}
+  cancellation_within_100ms: {certified: 65, compatible_unidentified: 12, contradicted: 0, no_confirmation: 9}
+  activation_range_contradicted_orders: 1
+  notice_100ms: {contradicted_legs: 87, compatible_unidentified: 12}
+  conditional_clock_ms: [-147.837890625, 32.641357421875]
+  verification: {synthetic_suites: 2_pass, variable_lag_worlds: 200, upper_only_ledger: pass, targeted_mutants: 10_of_10, exact_notice_identities: 99_of_99, slot: codex}
+  full_tape_or_training_run: false
+  untouched_validation_read: false
+  execution_timing_validated: false
+  next_priority: independently_justify_match_creation_delay_or_clock_bounds_before_narrower_economic_labels
+  scheduler: disabled_by_user
+
 manual_fix_review_20261118_084d5a19:
   status: complete_previous_P2_fixed_new_P1_timestamp_inference_gate_not_cleared
   asof: "2026-11-18T11:29:42Z"
