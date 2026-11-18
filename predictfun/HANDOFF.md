@@ -1,3 +1,30 @@
+<!-- AUTOMATIC_REVIEW_20261118_656F322F -->
+## 2026-11-18 02:18 UTC Ledger results reviewed: accounting gate verified
+
+Reviewed pinned target 656f322fab161354f26032a43a2b917138c33a0e. Report and
+machine-readable evidence: reviews/automatic/20261118_656f322f/. No new blocking
+finding. The prior real-data accounting gap is closed for consumed Oct 23–27:
+2,054 excluded states = 1,920 missing_endpoint + 134 stale_future_book; all 60
+missing two-second arm values have missing_endpoint status.
+
+Checked all committed result copies, 30 ledger parquet hashes, five original
+row-table hashes, source provenance and complete 288-market UTC days. Recomputed
+conservation and original-row reconciliation on all five days, all 18 original
+readings/means, L4 coverage shifts and L5 payoff bounds. Ten planted artifact
+corruptions are refused. Codex check passed in 16.12 s / 1,279 MiB. Only saved
+derived tables were read; no raw-tape replay, training or validation run.
+
+Eligible-row losses are unchanged. REST1's robust sign is negative; JOIN and
+IMPROVE bounds span zero. Small coverage shifts at two seconds do not establish
+small exclusion bias at five seconds. Accounting closure does not validate the
+fill model or establish profitability.
+
+ONE next priority: the corrected keep-versus-pull smoke/full measurement on the
+five consumed days, retaining KEEP reconciliation, explicit exclusions, separate
+trajectory/STATES readings and same-decision latency attribution. Development
+owns that run under its existing authorization boundary.
+<!-- /AUTOMATIC_REVIEW_20261118_656F322F -->
+
 ## 2026-11-18 02:13Z (session aea5bfb9) — QUEUE PLACE LEDGER v2 RUN (USER: "Stop the monitor, do the next priority" - the review's next priority: the ledger's real-data reconciliation gate): L1 / L2 / L3 all YES; the 2,054 states and 60 rows accounted by status
 
 - What: run_queue_place_ledger.sh smoke (day 20261023, 12 markets: gap 12 = v1's there, 0 mismatches, 9 / 9 planted) then all (selftest, mutation check 29 / 29, Oct23-27 every market, report) on the claude slot; code b6eaa7c2 (provenance clean); ~118 s and ~1.05 GiB a day, report 11 s / 1.5 GiB. The relay cron job was stopped first (USER).
