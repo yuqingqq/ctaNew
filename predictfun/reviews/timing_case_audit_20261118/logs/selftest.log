@@ -1,0 +1,2 @@
+SELFTEST PASS
+2026-11-18T15:17:46Z tag=tca_selftest_receipt rc=0 peak_rss_mib=201 wall_s=1.01 cpu_user_s=0.85 memavail_start_gib=23 disk_free_gib=439->439 slot=claude

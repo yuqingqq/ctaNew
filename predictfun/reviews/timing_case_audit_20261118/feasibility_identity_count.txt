@@ -1,0 +1,7 @@
+Feasibility count of the frame identity rule (feasibility_identity_count.py, run 2026-11-18T14:47:57Z through run_light, slot claude), taken BEFORE
+the audit's readings were declared: bot frames within +-60 s of each leg's cancel confirmation, and the number with one / several / no content
+twin in the research tape within +-5 s. Counts only; no time difference was computed or printed. Its basis scan passed the input journal's
+Nov 9 lines through a byte-prefix filter for one Nov 8 market without parsing any; the audit module stops every reader at Nov 8 23:02Z.
+4335911 v6 bot frames 1890 research frames 1998 distinct research keys 1748 {'one': 1306, 'several': 372, 'none': 212}
+4337531 v6 bot frames 1596 research frames 1688 distinct research keys 1380 {'several': 445, 'one': 1020, 'none': 131}
+4365071 basis bot frames 2054 research frames 2165 distinct research keys 1945 {'several': 348, 'one': 1403, 'none': 303}

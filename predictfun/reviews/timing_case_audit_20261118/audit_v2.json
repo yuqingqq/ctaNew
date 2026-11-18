@@ -1,0 +1,1336 @@
+{
+  "asof": "2026-11-18T15:16:16.711385+00:00",
+  "legs": [
+    {
+      "leg": 20,
+      "run": "v6",
+      "cid": 1794108465179877,
+      "mid": 4335911,
+      "order_hash": "0x06320f7cd9c29fdb3cba6fa9ef17ee49a7fe1accf9cc4459b32084f95a3d3d70",
+      "trade_id": "01a1ba27-f105-72b0-83dc-9e674f56ae84",
+      "tx": "0x61fb739c67f58a4d16fa330ec5f726c1e63ae6f33992843cd16971d000f3aa3c",
+      "group": 52869,
+      "critical_ms": -210.349365234375,
+      "S3_lo": 1794124542004.0,
+      "c_hi": 1794124542214.3494,
+      "cancel_decision_minus_req": 0.464111328125,
+      "A0": true,
+      "A0_fields": {
+        "place": true,
+        "signed": true,
+        "accepted": true,
+        "notice": true,
+        "rM": true,
+        "rC": true,
+        "M": true,
+        "Cs": true,
+        "order_hash": true,
+        "trade_id": true,
+        "one_bot_clock": true,
+        "cancel_confirmation": true
+      },
+      "A1": "CANCELED",
+      "A1_answer": null,
+      "A1_answer_at": 1794124542214.3494,
+      "A1_source": "CancelPendingAudit: the HTTP Canceled answer (a user-stream cancel follows)",
+      "A1_premise": "NOT-ORDERED-BY-THE-ANSWER",
+      "A1_user_cancel_at": [
+        1794124542291.9673,
+        1794124542715.7957
+      ],
+      "A1_terminal_snapshot": [
+        {
+          "at": 1794124542240.4434,
+          "size_matched": 0
+        }
+      ],
+      "order_size": 5.0,
+      "order_filled": 5.0,
+      "A1_filled_after_canceled_answer": true,
+      "A1_zero_snapshot_after_fill_notice": false,
+      "A1_alerts": [
+        [
+          "late_fill_beyond_cancel_bound:0x06320f7cd9c29fdb3cba6fa9ef17ee49a7fe1accf9cc4459b32084f95a3d3d70: booked fill exceeds terminal bound; exposure held until its cancel audit"
+        ]
+      ],
+      "A2": "SAME-SETTLEMENT",
+      "A2_binding_ids": [
+        [
+          "0x61fb739c67f58a4d16fa330ec5f726c1e63ae6f33992843cd16971d000f3aa3c",
+          "01a1ba27-f105-72b0-83dc-9e674f56ae84"
+        ]
+      ],
+      "A2_own_ids": [
+        [
+          "0x61fb739c67f58a4d16fa330ec5f726c1e63ae6f33992843cd16971d000f3aa3c",
+          "01a1ba27-f105-72b0-83dc-9e674f56ae84"
+        ]
+      ],
+      "A3_reproduces": true,
+      "A3_domain": "V_book",
+      "A3_u": 1794124542254.0,
+      "A3_binding_legs": 6,
+      "A3_event_legs": 24,
+      "A3_increments": [
+        [
+          [
+            0,
+            24,
+            56.5813532173913
+          ]
+        ],
+        [
+          [
+            0,
+            24,
+            56.5813532173913
+          ]
+        ],
+        [
+          [
+            0,
+            24,
+            56.5813532173913
+          ]
+        ],
+        [
+          [
+            0,
+            24,
+            56.5813532173913
+          ]
+        ],
+        [
+          [
+            0,
+            24,
+            56.5813532173913
+          ]
+        ],
+        [
+          [
+            0,
+            24,
+            56.5813532173913
+          ]
+        ]
+      ],
+      "A4": {
+        "n": 121,
+        "B": -62.03173828125,
+        "B_max": -21.891845703125,
+        "B_min": -134.40869140625,
+        "statuses": {
+          "paired": 363,
+          "several_research": 153,
+          "none": 144,
+          "several_bot": 13
+        },
+        "local_window_ms": 10000.0,
+        "clock_step_ms": 0.00256,
+        "clock_samples": 861,
+        "binding_pair_x": [
+          -64.159912109375
+        ],
+        "binding_receipt_minus_c_hi": [
+          103.810546875
+        ]
+      },
+      "A5": "CONTRADICTION-REMOVED-BY-INDEPENDENT-BOOK-CLOCK-BOUND",
+      "A5_missing": [],
+      "K7": {
+        "lo": -226.392822265625,
+        "hi": 49.336669921875,
+        "exists": true,
+        "includes_zero": true,
+        "receipt_bounds": 198,
+        "placement_bounds": 99
+      },
+      "bounds": [
+        {
+          "name": "match >= placement decision",
+          "value": 1794124542150.844,
+          "clock": "B",
+          "type": "EVIDENCE",
+          "premise": "an order cannot trade before the engine decided to place it"
+        },
+        {
+          "name": "match <= cancel answer receipt (c_hi)",
+          "value": 1794124542214.3494,
+          "clock": "B",
+          "type": "EVIDENCE",
+          "premise": "the venue answered the cancel (CANCELED) after processing it, and the leg had matched by then"
+        },
+        {
+          "name": "match <= first fill notice",
+          "value": 1794124542702.6802,
+          "clock": "B",
+          "type": "EVIDENCE",
+          "premise": "a notice follows its match"
+        },
+        {
+          "name": "match within its Matched second",
+          "value": 1794124542000.0,
+          "clock": "V_status",
+          "type": "ASSUMPTION",
+          "premise": "pf-exec rounds match_time to the second (floor premise)"
+        },
+        {
+          "name": "match <= Confirmed second end",
+          "value": 1794124543000.0,
+          "clock": "V_status",
+          "type": "EVIDENCE",
+          "premise": "executedAt is the Confirmed second, floored"
+        },
+        {
+          "name": "match <= settlement id creation",
+          "value": 1794124542213.0,
+          "clock": "V_uuid",
+          "type": "CONDITIONAL",
+          "premise": "the UUID is created at or after the match"
+        },
+        {
+          "name": "match <= binding frame stamp u*",
+          "value": 1794124542254.0,
+          "clock": "V_book",
+          "type": "EVIDENCE",
+          "premise": "the frame showing the pending increment follows the match; the increment is a leg of the same settlement (A2)"
+        },
+        {
+          "name": "match >= u* - WS_DELAY",
+          "value": 1794124542004.0,
+          "clock": "V_book",
+          "type": "ASSUMPTION",
+          "premise": "S3: the first frame showing a pending increment is at most 250 ms after the match"
+        },
+        {
+          "name": "match <= the bot's receipt of the binding frame",
+          "value": 1794124542318.16,
+          "clock": "B",
+          "type": "EVIDENCE",
+          "premise": "the bot received the frame showing the increment after the match (content identity)"
+        }
+      ]
+    },
+    {
+      "leg": 45,
+      "run": "v6",
+      "cid": 1794108465184298,
+      "mid": 4337531,
+      "order_hash": "0x5583a7b9a6dd5e517e5dcf7bfc85fb676961cd0e32d254299ae2f6c2e0da59fb",
+      "trade_id": "01a1ba9a-1239-7e33-8cdd-1579491bb013",
+      "tx": "0x6de43954684db3d0a70afda240b49fc87e6c3dad1454752f40a82e22f55ad0f6",
+      "group": 85002,
+      "critical_ms": -224.820068359375,
+      "S3_lo": 1794132021590.0,
+      "c_hi": 1794132021814.82,
+      "cancel_decision_minus_req": 0.20263671875,
+      "A0": true,
+      "A0_fields": {
+        "place": true,
+        "signed": true,
+        "accepted": true,
+        "notice": true,
+        "rM": true,
+        "rC": true,
+        "M": true,
+        "Cs": true,
+        "order_hash": true,
+        "trade_id": true,
+        "one_bot_clock": true,
+        "cancel_confirmation": true
+      },
+      "A1": "CANCELED",
+      "A1_answer": null,
+      "A1_answer_at": 1794132021814.82,
+      "A1_source": "CancelPendingAudit: the HTTP Canceled answer (a user-stream cancel follows)",
+      "A1_premise": "NOT-ORDERED-BY-THE-ANSWER",
+      "A1_user_cancel_at": [
+        1794132021927.576,
+        1794132022257.281
+      ],
+      "A1_terminal_snapshot": [
+        {
+          "at": 1794132022257.2354,
+          "size_matched": 0
+        }
+      ],
+      "order_size": 5.0,
+      "order_filled": 5.0,
+      "A1_filled_after_canceled_answer": true,
+      "A1_zero_snapshot_after_fill_notice": true,
+      "A1_alerts": [
+        [
+          "cancel_quantity_conflict:0x5583a7b9a6dd5e517e5dcf7bfc85fb676961cd0e32d254299ae2f6c2e0da59fb: terminal quantity conflicts with known fills"
+        ]
+      ],
+      "A2": "SAME-SETTLEMENT",
+      "A2_binding_ids": [
+        [
+          "0x6de43954684db3d0a70afda240b49fc87e6c3dad1454752f40a82e22f55ad0f6",
+          "01a1ba9a-1239-7e33-8cdd-1579491bb013"
+        ]
+      ],
+      "A2_own_ids": [
+        [
+          "0x6de43954684db3d0a70afda240b49fc87e6c3dad1454752f40a82e22f55ad0f6",
+          "01a1ba9a-1239-7e33-8cdd-1579491bb013"
+        ]
+      ],
+      "A3_reproduces": true,
+      "A3_domain": "V_book",
+      "A3_u": 1794132021840.0,
+      "A3_binding_legs": 7,
+      "A3_event_legs": 18,
+      "A3_increments": [
+        [
+          [
+            0,
+            75,
+            79.0234090909091
+          ]
+        ],
+        [
+          [
+            0,
+            76,
+            40.28
+          ]
+        ],
+        [
+          [
+            0,
+            75,
+            79.0234090909091
+          ]
+        ],
+        [
+          [
+            0,
+            76,
+            40.28
+          ]
+        ],
+        [
+          [
+            0,
+            76,
+            40.28
+          ]
+        ],
+        [
+          [
+            0,
+            78,
+            40.985454545454544
+          ],
+          [
+            1,
+            78,
+            80.0046
+          ]
+        ],
+        [
+          [
+            0,
+            76,
+            40.28
+          ]
+        ]
+      ],
+      "A4": {
+        "n": 172,
+        "B": -59.330078125,
+        "B_max": 36.1220703125,
+        "B_min": -150.1611328125,
+        "statuses": {
+          "paired": 391,
+          "several_research": 175,
+          "none": 119,
+          "several_bot": 2
+        },
+        "local_window_ms": 10000.0,
+        "clock_step_ms": 0.001024,
+        "clock_samples": 560,
+        "binding_pair_x": [
+          -49.06103515625
+        ],
+        "binding_receipt_minus_c_hi": [
+          74.240966796875
+        ]
+      },
+      "A5": "CONTRADICTION-REMOVED-BY-INDEPENDENT-BOOK-CLOCK-BOUND",
+      "A5_missing": [],
+      "K7": {
+        "lo": -226.392822265625,
+        "hi": 49.336669921875,
+        "exists": true,
+        "includes_zero": true,
+        "receipt_bounds": 198,
+        "placement_bounds": 99
+      },
+      "bounds": [
+        {
+          "name": "match >= placement decision",
+          "value": 1794132021250.7993,
+          "clock": "B",
+          "type": "EVIDENCE",
+          "premise": "an order cannot trade before the engine decided to place it"
+        },
+        {
+          "name": "match <= cancel answer receipt (c_hi)",
+          "value": 1794132021814.82,
+          "clock": "B",
+          "type": "EVIDENCE",
+          "premise": "the venue answered the cancel (CANCELED) after processing it, and the leg had matched by then"
+        },
+        {
+          "name": "match <= first fill notice",
+          "value": 1794132022241.4492,
+          "clock": "B",
+          "type": "EVIDENCE",
+          "premise": "a notice follows its match"
+        },
+        {
+          "name": "match within its Matched second",
+          "value": 1794132021000.0,
+          "clock": "V_status",
+          "type": "ASSUMPTION",
+          "premise": "pf-exec rounds match_time to the second (floor premise)"
+        },
+        {
+          "name": "match <= Confirmed second end",
+          "value": 1794132023000.0,
+          "clock": "V_status",
+          "type": "EVIDENCE",
+          "premise": "executedAt is the Confirmed second, floored"
+        },
+        {
+          "name": "match <= settlement id creation",
+          "value": 1794132021817.0,
+          "clock": "V_uuid",
+          "type": "CONDITIONAL",
+          "premise": "the UUID is created at or after the match"
+        },
+        {
+          "name": "match <= binding frame stamp u*",
+          "value": 1794132021840.0,
+          "clock": "V_book",
+          "type": "EVIDENCE",
+          "premise": "the frame showing the pending increment follows the match; the increment is a leg of the same settlement (A2)"
+        },
+        {
+          "name": "match >= u* - WS_DELAY",
+          "value": 1794132021590.0,
+          "clock": "V_book",
+          "type": "ASSUMPTION",
+          "premise": "S3: the first frame showing a pending increment is at most 250 ms after the match"
+        },
+        {
+          "name": "match <= the bot's receipt of the binding frame",
+          "value": 1794132021889.061,
+          "clock": "B",
+          "type": "EVIDENCE",
+          "premise": "the bot received the frame showing the increment after the match (content identity)"
+        }
+      ]
+    },
+    {
+      "leg": 73,
+      "run": "basis",
+      "cid": 1794147344744648,
+      "mid": 4365071,
+      "order_hash": "0xc4afb988c0bb2791ff7f41f519bdee8e51e9b992699f077a08a02914207aff8f",
+      "trade_id": "01a1bc76-9845-7dd1-88a2-12fb9bcdda8d",
+      "tx": "0xac3c84cdfbc72c41c8b369e2ccb87e9819e5124316e074515376c3200a1868ca",
+      "group": 199086,
+      "critical_ms": -218.752685546875,
+      "S3_lo": 1794163251050.0,
+      "c_hi": 1794163251268.7527,
+      "cancel_decision_minus_req": 0.390380859375,
+      "A0": true,
+      "A0_fields": {
+        "place": true,
+        "signed": true,
+        "accepted": true,
+        "notice": true,
+        "rM": true,
+        "rC": true,
+        "M": true,
+        "Cs": true,
+        "order_hash": true,
+        "trade_id": true,
+        "one_bot_clock": true,
+        "cancel_confirmation": true
+      },
+      "A1": "CANCELED",
+      "A1_answer": null,
+      "A1_answer_at": 1794163251268.7527,
+      "A1_source": "CancelPendingAudit: the HTTP Canceled answer (a user-stream cancel follows)",
+      "A1_premise": "NOT-ORDERED-BY-THE-ANSWER",
+      "A1_user_cancel_at": [
+        1794163251362.604,
+        1794163251606.2507
+      ],
+      "A1_terminal_snapshot": [
+        {
+          "at": 1794163251606.2124,
+          "size_matched": 0
+        }
+      ],
+      "order_size": 5.0,
+      "order_filled": 5.0,
+      "A1_filled_after_canceled_answer": true,
+      "A1_zero_snapshot_after_fill_notice": true,
+      "A1_alerts": [
+        [
+          "cancel_quantity_conflict:0xc4afb988c0bb2791ff7f41f519bdee8e51e9b992699f077a08a02914207aff8f: terminal quantity conflicts with known fills"
+        ]
+      ],
+      "A2": "SAME-SETTLEMENT",
+      "A2_binding_ids": [
+        [
+          "0xac3c84cdfbc72c41c8b369e2ccb87e9819e5124316e074515376c3200a1868ca",
+          "01a1bc76-9845-7dd1-88a2-12fb9bcdda8d"
+        ]
+      ],
+      "A2_own_ids": [
+        [
+          "0xac3c84cdfbc72c41c8b369e2ccb87e9819e5124316e074515376c3200a1868ca",
+          "01a1bc76-9845-7dd1-88a2-12fb9bcdda8d"
+        ]
+      ],
+      "A3_reproduces": true,
+      "A3_domain": "V_book",
+      "A3_u": 1794163251300.0,
+      "A3_binding_legs": 5,
+      "A3_event_legs": 20,
+      "A3_increments": [
+        [
+          [
+            0,
+            74,
+            116.77911538461537
+          ],
+          [
+            1,
+            74,
+            2.96
+          ]
+        ],
+        [
+          [
+            0,
+            74,
+            116.77911538461537
+          ],
+          [
+            1,
+            74,
+            2.96
+          ]
+        ],
+        [
+          [
+            0,
+            73,
+            253.8283
+          ],
+          [
+            1,
+            73,
+            2.92
+          ]
+        ],
+        [
+          [
+            0,
+            74,
+            116.77911538461537
+          ],
+          [
+            1,
+            74,
+            2.96
+          ]
+        ],
+        [
+          [
+            0,
+            74,
+            116.77911538461537
+          ],
+          [
+            1,
+            74,
+            2.96
+          ]
+        ]
+      ],
+      "A4": {
+        "n": 214,
+        "B": -55.954833984375,
+        "B_max": -20.9609375,
+        "B_min": -130.66162109375,
+        "statuses": {
+          "paired": 469,
+          "several_research": 82,
+          "none": 186,
+          "several_bot": 4
+        },
+        "local_window_ms": 10000.0,
+        "clock_step_ms": 0.000768,
+        "clock_samples": 891,
+        "binding_pair_x": [],
+        "binding_receipt_minus_c_hi": []
+      },
+      "A5": "CONTRADICTION-REMOVED-BY-INDEPENDENT-BOOK-CLOCK-BOUND",
+      "A5_missing": [],
+      "K7": {
+        "lo": -226.392822265625,
+        "hi": 49.336669921875,
+        "exists": true,
+        "includes_zero": true,
+        "receipt_bounds": 198,
+        "placement_bounds": 99
+      },
+      "bounds": [
+        {
+          "name": "match >= placement decision",
+          "value": 1794163251151.267,
+          "clock": "B",
+          "type": "EVIDENCE",
+          "premise": "an order cannot trade before the engine decided to place it"
+        },
+        {
+          "name": "match <= cancel answer receipt (c_hi)",
+          "value": 1794163251268.7527,
+          "clock": "B",
+          "type": "EVIDENCE",
+          "premise": "the venue answered the cancel (CANCELED) after processing it, and the leg had matched by then"
+        },
+        {
+          "name": "match <= first fill notice",
+          "value": 1794163251592.6013,
+          "clock": "B",
+          "type": "EVIDENCE",
+          "premise": "a notice follows its match"
+        },
+        {
+          "name": "match within its Matched second",
+          "value": 1794163251000.0,
+          "clock": "V_status",
+          "type": "ASSUMPTION",
+          "premise": "pf-exec rounds match_time to the second (floor premise)"
+        },
+        {
+          "name": "match <= Confirmed second end",
+          "value": 1794163252000.0,
+          "clock": "V_status",
+          "type": "EVIDENCE",
+          "premise": "executedAt is the Confirmed second, floored"
+        },
+        {
+          "name": "match <= settlement id creation",
+          "value": 1794163251269.0,
+          "clock": "V_uuid",
+          "type": "CONDITIONAL",
+          "premise": "the UUID is created at or after the match"
+        },
+        {
+          "name": "match <= binding frame stamp u*",
+          "value": 1794163251300.0,
+          "clock": "V_book",
+          "type": "EVIDENCE",
+          "premise": "the frame showing the pending increment follows the match; the increment is a leg of the same settlement (A2)"
+        },
+        {
+          "name": "match >= u* - WS_DELAY",
+          "value": 1794163251050.0,
+          "clock": "V_book",
+          "type": "ASSUMPTION",
+          "premise": "S3: the first frame showing a pending increment is at most 250 ms after the match"
+        }
+      ]
+    }
+  ],
+  "clocks": {
+    "B": "bot host wall clock (Tokyo): kernel step `at` (ns) and the pfmm input journal `known_ms` - one clock (A0: the order's Accepted in both)",
+    "B_mono": "bot host monotonic clock: kernel `mono` (ns); used only to check that B did not step (at - mono spread)",
+    "V_book": "venue book stamp: predictOrderbook `updateTimestampMs` (ms); S3 WS windows and pend_inc t_ms are on it",
+    "V_status": "venue status seconds: pf-exec Fill `match_time` (rounded to the second by pf-exec), REST `executedAt` (the Confirmed second)",
+    "V_uuid": "venue settlement id: settlementId UUIDv7 creation ms",
+    "R": "research collector host clock: `recv_ns` of the research WS / REST rows; file selection only"
+  },
+  "readers": {
+    "kernel": {
+      "basis": {
+        "steps": 462823,
+        "stopped_at_cutoff": true,
+        "last_at_ms": 1794178919910.5066
+      },
+      "v6": {
+        "steps": 557747,
+        "stopped_at_cutoff": false,
+        "last_at_ms": 1794147252139.3745
+      }
+    },
+    "inputs": {
+      "basis": {
+        "lines": 13077281,
+        "stopped_at_cutoff": true
+      },
+      "v6": {
+        "lines": 6254147,
+        "stopped_at_cutoff": false
+      }
+    }
+  },
+  "cutoff_ms": 1794178920000.0,
+  "params": {
+    "W_LOCAL": 10000.0,
+    "W_ID": 5000.0,
+    "N_MIN": 20,
+    "DP": 4,
+    "CLOCK_STEP_MS": 1.0,
+    "WS_DELAY": 250.0,
+    "REST_LAG": 10000.0
+  },
+  "A6": [
+    {
+      "scenario": "S1",
+      "cancel": "CP",
+      "cls": "CANCEL_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "latest E2 book-drop estimate over the legs - 250 ms",
+      "fills": 1825,
+      "gross": 113732.88274129711
+    },
+    {
+      "scenario": "S1",
+      "cancel": "CP",
+      "cls": "CANCEL_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "latest REST second over the legs - 500 ms (status-centred assumption)",
+      "fills": 18,
+      "gross": 4068.5162084939643
+    },
+    {
+      "scenario": "S1",
+      "cancel": "CP",
+      "cls": "CANCEL_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "latest WS pending source time over the legs - 250 ms",
+      "fills": 3985,
+      "gross": 156146.1307496127
+    },
+    {
+      "scenario": "S1",
+      "cancel": "CP",
+      "cls": "CANCEL_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "mixed over candidates",
+      "fills": 682,
+      "gross": 58514.73731891767
+    },
+    {
+      "scenario": "S1",
+      "cancel": "CP",
+      "cls": "CANCEL_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "the latest start of its WS and E2 legs' windows",
+      "fills": 259,
+      "gross": 16787.784371178266
+    },
+    {
+      "scenario": "S1",
+      "cancel": "CP",
+      "cls": "MATCH_FIRST",
+      "tier": "EVIDENCE",
+      "basis": "EV: REST second end (V_status)",
+      "fills": 3,
+      "gross": 174.54360720968737
+    },
+    {
+      "scenario": "S1",
+      "cancel": "CP",
+      "cls": "MATCH_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "the earliest end of its WS and E2 legs' windows",
+      "fills": 5,
+      "gross": 322.5
+    },
+    {
+      "scenario": "S1",
+      "cancel": "CP",
+      "cls": "AMBIGUOUS",
+      "tier": "UNCERTIFIED",
+      "basis": "",
+      "fills": 1743,
+      "gross": 154470.4984007259
+    },
+    {
+      "scenario": "S1",
+      "cancel": "CP",
+      "cls": "TIE",
+      "tier": "UNCERTIFIED",
+      "basis": "",
+      "fills": 6,
+      "gross": 175.68303055555558
+    },
+    {
+      "scenario": "S1",
+      "cancel": "CP",
+      "cls": "CONTRADICTORY",
+      "tier": "UNCERTIFIED",
+      "basis": "",
+      "fills": 336,
+      "gross": 24100.197061834886
+    },
+    {
+      "scenario": "S1",
+      "cancel": "CR",
+      "cls": "CANCEL_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "latest E2 book-drop estimate over the legs - 250 ms",
+      "fills": 1708,
+      "gross": 104099.88140196513
+    },
+    {
+      "scenario": "S1",
+      "cancel": "CR",
+      "cls": "CANCEL_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "latest REST second over the legs - 500 ms (status-centred assumption)",
+      "fills": 18,
+      "gross": 4068.5162084939643
+    },
+    {
+      "scenario": "S1",
+      "cancel": "CR",
+      "cls": "CANCEL_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "latest WS pending source time over the legs - 250 ms",
+      "fills": 3816,
+      "gross": 146684.1911536171
+    },
+    {
+      "scenario": "S1",
+      "cancel": "CR",
+      "cls": "CANCEL_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "mixed over candidates",
+      "fills": 652,
+      "gross": 56516.41869003768
+    },
+    {
+      "scenario": "S1",
+      "cancel": "CR",
+      "cls": "CANCEL_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "the latest start of its WS and E2 legs' windows",
+      "fills": 242,
+      "gross": 15626.201821716375
+    },
+    {
+      "scenario": "S1",
+      "cancel": "CR",
+      "cls": "MATCH_FIRST",
+      "tier": "EVIDENCE",
+      "basis": "EV: REST second end (V_status)",
+      "fills": 2,
+      "gross": 60.09557236120252
+    },
+    {
+      "scenario": "S1",
+      "cancel": "CR",
+      "cls": "MATCH_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "the earliest end of its WS and E2 legs' windows",
+      "fills": 3,
+      "gross": 52.5
+    },
+    {
+      "scenario": "S1",
+      "cancel": "CR",
+      "cls": "AMBIGUOUS",
+      "tier": "UNCERTIFIED",
+      "basis": "",
+      "fills": 2080,
+      "gross": 176751.05320450675
+    },
+    {
+      "scenario": "S1",
+      "cancel": "CR",
+      "cls": "TIE",
+      "tier": "UNCERTIFIED",
+      "basis": "",
+      "fills": 5,
+      "gross": 534.4183752926696
+    },
+    {
+      "scenario": "S1",
+      "cancel": "CR",
+      "cls": "CONTRADICTORY",
+      "tier": "UNCERTIFIED",
+      "basis": "",
+      "fills": 336,
+      "gross": 24100.197061834886
+    },
+    {
+      "scenario": "S2",
+      "cancel": "CP",
+      "cls": "CANCEL_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "latest E2 book-drop estimate over the legs - h",
+      "fills": 1418,
+      "gross": 79105.19766325466
+    },
+    {
+      "scenario": "S2",
+      "cancel": "CP",
+      "cls": "CANCEL_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "latest REST second over the legs + q01 (status-centred assumption)",
+      "fills": 12,
+      "gross": 1714.701675490196
+    },
+    {
+      "scenario": "S2",
+      "cancel": "CP",
+      "cls": "CANCEL_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "latest WS pending source time over the legs - h",
+      "fills": 3338,
+      "gross": 120114.71436629978
+    },
+    {
+      "scenario": "S2",
+      "cancel": "CP",
+      "cls": "CANCEL_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "mixed over candidates",
+      "fills": 604,
+      "gross": 47819.01027864928
+    },
+    {
+      "scenario": "S2",
+      "cancel": "CP",
+      "cls": "CANCEL_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "the latest start of its WS and E2 legs' windows",
+      "fills": 420,
+      "gross": 28736.639221472382
+    },
+    {
+      "scenario": "S2",
+      "cancel": "CP",
+      "cls": "MATCH_FIRST",
+      "tier": "EVIDENCE",
+      "basis": "EV: REST second end (V_status)",
+      "fills": 15,
+      "gross": 334.99922714687193
+    },
+    {
+      "scenario": "S2",
+      "cancel": "CP",
+      "cls": "MATCH_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "mixed over candidates",
+      "fills": 1,
+      "gross": 1043.0405207561987
+    },
+    {
+      "scenario": "S2",
+      "cancel": "CP",
+      "cls": "MATCH_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "the earliest end of its WS and E2 legs' windows",
+      "fills": 6,
+      "gross": 301.44791341719065
+    },
+    {
+      "scenario": "S2",
+      "cancel": "CP",
+      "cls": "AMBIGUOUS",
+      "tier": "UNCERTIFIED",
+      "basis": "",
+      "fills": 2996,
+      "gross": 246387.46391558746
+    },
+    {
+      "scenario": "S2",
+      "cancel": "CP",
+      "cls": "TIE",
+      "tier": "UNCERTIFIED",
+      "basis": "",
+      "fills": 5,
+      "gross": 133.55144337320513
+    },
+    {
+      "scenario": "S2",
+      "cancel": "CP",
+      "cls": "CONTRADICTORY",
+      "tier": "UNCERTIFIED",
+      "basis": "",
+      "fills": 47,
+      "gross": 2802.707264378519
+    },
+    {
+      "scenario": "S2",
+      "cancel": "CR",
+      "cls": "CANCEL_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "latest E2 book-drop estimate over the legs - h",
+      "fills": 1374,
+      "gross": 74942.69206671965
+    },
+    {
+      "scenario": "S2",
+      "cancel": "CR",
+      "cls": "CANCEL_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "latest REST second over the legs + q01 (status-centred assumption)",
+      "fills": 12,
+      "gross": 1714.701675490196
+    },
+    {
+      "scenario": "S2",
+      "cancel": "CR",
+      "cls": "CANCEL_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "latest WS pending source time over the legs - h",
+      "fills": 3238,
+      "gross": 114741.7280286827
+    },
+    {
+      "scenario": "S2",
+      "cancel": "CR",
+      "cls": "CANCEL_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "mixed over candidates",
+      "fills": 591,
+      "gross": 47311.106384640065
+    },
+    {
+      "scenario": "S2",
+      "cancel": "CR",
+      "cls": "CANCEL_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "the latest start of its WS and E2 legs' windows",
+      "fills": 409,
+      "gross": 27742.800541924073
+    },
+    {
+      "scenario": "S2",
+      "cancel": "CR",
+      "cls": "MATCH_FIRST",
+      "tier": "EVIDENCE",
+      "basis": "EV: REST second end (V_status)",
+      "fills": 14,
+      "gross": 220.5511922983871
+    },
+    {
+      "scenario": "S2",
+      "cancel": "CR",
+      "cls": "MATCH_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "mixed over candidates",
+      "fills": 1,
+      "gross": 1043.0405207561987
+    },
+    {
+      "scenario": "S2",
+      "cancel": "CR",
+      "cls": "MATCH_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "the earliest end of its WS and E2 legs' windows",
+      "fills": 4,
+      "gross": 205.0
+    },
+    {
+      "scenario": "S2",
+      "cancel": "CR",
+      "cls": "AMBIGUOUS",
+      "tier": "UNCERTIFIED",
+      "basis": "",
+      "fills": 3168,
+      "gross": 257493.87969675416
+    },
+    {
+      "scenario": "S2",
+      "cancel": "CR",
+      "cls": "TIE",
+      "tier": "UNCERTIFIED",
+      "basis": "",
+      "fills": 4,
+      "gross": 275.2661181818182
+    },
+    {
+      "scenario": "S2",
+      "cancel": "CR",
+      "cls": "CONTRADICTORY",
+      "tier": "UNCERTIFIED",
+      "basis": "",
+      "fills": 47,
+      "gross": 2802.707264378519
+    },
+    {
+      "scenario": "S3",
+      "cancel": "CP",
+      "cls": "CANCEL_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "WS pending - WS_DELAY (V_book)",
+      "fills": 3947,
+      "gross": 175441.85745036925
+    },
+    {
+      "scenario": "S3",
+      "cancel": "CP",
+      "cls": "MATCH_FIRST",
+      "tier": "EVIDENCE",
+      "basis": "EV: REST second end (V_status)",
+      "fills": 18,
+      "gross": 387.79440786976346
+    },
+    {
+      "scenario": "S3",
+      "cancel": "CP",
+      "cls": "MATCH_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "WS pending (V_book)",
+      "fills": 6,
+      "gross": 476.1823860824743
+    },
+    {
+      "scenario": "S3",
+      "cancel": "CP",
+      "cls": "AMBIGUOUS",
+      "tier": "UNCERTIFIED",
+      "basis": "",
+      "fills": 4825,
+      "gross": 346367.86197646393
+    },
+    {
+      "scenario": "S3",
+      "cancel": "CP",
+      "cls": "TIE",
+      "tier": "UNCERTIFIED",
+      "basis": "",
+      "fills": 3,
+      "gross": 64.52333333333334
+    },
+    {
+      "scenario": "S3",
+      "cancel": "CP",
+      "cls": "CONTRADICTORY",
+      "tier": "UNCERTIFIED",
+      "basis": "",
+      "fills": 63,
+      "gross": 5755.253935707007
+    },
+    {
+      "scenario": "S3",
+      "cancel": "CR",
+      "cls": "CANCEL_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "WS pending - WS_DELAY (V_book)",
+      "fills": 3761,
+      "gross": 163661.09356366104
+    },
+    {
+      "scenario": "S3",
+      "cancel": "CR",
+      "cls": "MATCH_FIRST",
+      "tier": "EVIDENCE",
+      "basis": "EV: REST second end (V_status)",
+      "fills": 17,
+      "gross": 273.3463730212786
+    },
+    {
+      "scenario": "S3",
+      "cancel": "CR",
+      "cls": "MATCH_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "WS pending (V_book)",
+      "fills": 6,
+      "gross": 476.1823860824743
+    },
+    {
+      "scenario": "S3",
+      "cancel": "CR",
+      "cls": "AMBIGUOUS",
+      "tier": "UNCERTIFIED",
+      "basis": "",
+      "fills": 5013,
+      "gross": 358210.1491965055
+    },
+    {
+      "scenario": "S3",
+      "cancel": "CR",
+      "cls": "TIE",
+      "tier": "UNCERTIFIED",
+      "basis": "",
+      "fills": 2,
+      "gross": 117.44803484848485
+    },
+    {
+      "scenario": "S3",
+      "cancel": "CR",
+      "cls": "CONTRADICTORY",
+      "tier": "UNCERTIFIED",
+      "basis": "",
+      "fills": 63,
+      "gross": 5755.253935707007
+    },
+    {
+      "scenario": "ST",
+      "cancel": "CP",
+      "cls": "CANCEL_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "S3 fallback: WS pending - WS_DELAY (V_book)",
+      "fills": 214,
+      "gross": 7934.25966359371
+    },
+    {
+      "scenario": "ST",
+      "cancel": "CP",
+      "cls": "MATCH_FIRST",
+      "tier": "EVIDENCE",
+      "basis": "EV: REST second end (V_status)",
+      "fills": 18,
+      "gross": 387.79440786976346
+    },
+    {
+      "scenario": "ST",
+      "cancel": "CP",
+      "cls": "MATCH_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "t_set (V_uuid, conditional)",
+      "fills": 99,
+      "gross": 7948.926167806882
+    },
+    {
+      "scenario": "ST",
+      "cancel": "CP",
+      "cls": "AMBIGUOUS",
+      "tier": "UNCERTIFIED",
+      "basis": "",
+      "fills": 1638,
+      "gross": 134169.63288141467
+    },
+    {
+      "scenario": "ST",
+      "cancel": "CP",
+      "cls": "UNKNOWN",
+      "tier": "UNCERTIFIED",
+      "basis": "",
+      "fills": 6889,
+      "gross": 377915.94480340666
+    },
+    {
+      "scenario": "ST",
+      "cancel": "CP",
+      "cls": "CONTRADICTORY",
+      "tier": "UNCERTIFIED",
+      "basis": "",
+      "fills": 4,
+      "gross": 136.91556573403554
+    },
+    {
+      "scenario": "ST",
+      "cancel": "CR",
+      "cls": "CANCEL_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "S3 fallback: WS pending - WS_DELAY (V_book)",
+      "fills": 204,
+      "gross": 7253.397740516786
+    },
+    {
+      "scenario": "ST",
+      "cancel": "CR",
+      "cls": "MATCH_FIRST",
+      "tier": "EVIDENCE",
+      "basis": "EV: REST second end (V_status)",
+      "fills": 17,
+      "gross": 273.3463730212786
+    },
+    {
+      "scenario": "ST",
+      "cancel": "CR",
+      "cls": "MATCH_FIRST",
+      "tier": "BEYOND-EVIDENCE",
+      "basis": "t_set (V_uuid, conditional)",
+      "fills": 95,
+      "gross": 7880.839841692301
+    },
+    {
+      "scenario": "ST",
+      "cancel": "CR",
+      "cls": "AMBIGUOUS",
+      "tier": "UNCERTIFIED",
+      "basis": "",
+      "fills": 1640,
+      "gross": 134262.01784425997
+    },
+    {
+      "scenario": "ST",
+      "cancel": "CR",
+      "cls": "TIE",
+      "tier": "UNCERTIFIED",
+      "basis": "",
+      "fills": 1,
+      "gross": 3.0
+    },
+    {
+      "scenario": "ST",
+      "cancel": "CR",
+      "cls": "UNKNOWN",
+      "tier": "UNCERTIFIED",
+      "basis": "",
+      "fills": 6901,
+      "gross": 378683.9561246014
+    },
+    {
+      "scenario": "ST",
+      "cancel": "CR",
+      "cls": "CONTRADICTORY",
+      "tier": "UNCERTIFIED",
+      "basis": "",
+      "fills": 4,
+      "gross": 136.91556573403554
+    }
+  ],
+  "readings": {
+    "A5 LEG 20 (v6 cid 1794108465179877)": "CONTRADICTION-REMOVED-BY-INDEPENDENT-BOOK-CLOCK-BOUND",
+    "A5 LEG 45 (v6 cid 1794108465184298)": "CONTRADICTION-REMOVED-BY-INDEPENDENT-BOOK-CLOCK-BOUND",
+    "A5 LEG 73 (basis cid 1794147344744648)": "CONTRADICTION-REMOVED-BY-INDEPENDENT-BOOK-CLOCK-BOUND",
+    "AUDIT VERDICT": "REMOVED: every audited S3 false avoidance needs a book-clock offset below the independent bound",
+    "A6 REPRODUCES THE LEDGER CROSS-TAB": "YES"
+  },
+  "inputs": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_known_v5_20261118/known.json": "095cbb564e433d4c2b5888dc0181ba2b8c473b050315f3813cb664ffbee2aff1",
+    "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/research/step1/20261108/legs_timed2.parquet": "60e512c6f2307214fd718286082ff4b1d9f735bd220be44c6a7bac54747c230b",
+    "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/research/step1/20261108/legs_tk.parquet": "80d4c2c072d7fbd58213457062c72f53b69f1306cc0bb699ed8ff848ea189c95",
+    "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/research/step1/20261108/pend_inc.parquet": "6ecaac3aeb68ef50e7cbd5629ab0df19f97cefa985e0e006309da6479a415984",
+    "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/live_vs_replay/core_orders_v6.parquet": "35aa1f49ae67b32138f7fc4eb315fb95ac7b5016fbc823fe6fe3cbaa113e3a9e",
+    "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/live_vs_replay/core_orders_basis.parquet": "5b08d5f43c5fc427a7bd0268c88ae98871eca9b62e9c1bc71700a969320514e1",
+    "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108-kernel/basis.kernel.jsonl": "b3e4460dfca0148988f4f86aaa6328698ea2b4dda8e272156bfdcb5be31d43c5",
+    "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108-kernel/v6.kernel.jsonl": "f8e74d54b278843ed79d8b45fa42435b2a60bfd7c6ccdbdf62c75a5067b962fb",
+    "/home/yuqing/pmmm-data/tokyo-live-data-20261109/tokyo-live-20261109/basis/run-1794147344737/inputs.jsonl.gz": "d127a5344aa45e9801800c7c23fc690a86c2d57c68799321475aac769d16fcf1",
+    "/home/yuqing/pmmm-data/tokyo-live-data-20261109/tokyo-live-20261109/v6/run-1794108465172/inputs.jsonl.gz": "2d99d629fc1c8855c3ed87c898a2b1726618deae2987b95c0a94b17059bf7a99",
+    "/home/yuqing/ctaNew/data/predict_fun/runs/20261021T162823Z_0dd45f2d5a/predict_ws/20261108_07.jsonl.gz": "65d98a2afc57f626711690649f4b8b94fe794b008834528a22534fb6cf338617",
+    "/home/yuqing/ctaNew/data/predict_fun/runs/20261021T162823Z_0dd45f2d5a/predict_ws/20261108_09.jsonl.gz": "505f537443aafa8301eb5d549e17c378ce63db13b902b1b92b89de94a3699c14",
+    "/home/yuqing/ctaNew/data/predict_fun/runs/20261021T162823Z_0dd45f2d5a/predict_ws/20261108_10.jsonl.gz": "cd0001e93d38925b93b084abdc3aa913192493f663247656d4ce0c8d4e5281c0",
+    "/home/yuqing/ctaNew/data/predict_fun/runs/20261021T162823Z_0dd45f2d5a/predict_ws/20261108_18.jsonl.gz": "30bea0dcae086242dde9d50876246e5300473afe51e239da0960eb4e30bf951e",
+    "/home/yuqing/ctaNew/data/predict_fun/runs/20261021T162823Z_0dd45f2d5a/rest/20261108_07.jsonl.gz": "22cb3849b76c878b5ba7d45806350db5df7065943b9c79915868ce6797607a8d",
+    "/home/yuqing/ctaNew/data/predict_fun/runs/20261021T162823Z_0dd45f2d5a/rest/20261108_10.jsonl.gz": "674de904a954862ea72f25ab51917c990d2d911ba72f6bd1fa630e58da22cda5",
+    "/home/yuqing/ctaNew/data/predict_fun/runs/20261021T162823Z_0dd45f2d5a/rest/20261108_18.jsonl.gz": "36b52a25f1b46d832f65d2ff979a6fbbcc805642061b14a89f4b31d0d8b1ba1b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_v5_20261118_20261023/ledger_fills.parquet": "44dac620dd8816462f5d13590d7d86d92d146eff47ce789d1cec880db0a32156",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_v5_20261118_20261023/ledger_fill_events.parquet": "b356e2d0d229d125edf77ac62743be109f5dd0dcf61b434b07b741069115dbd2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_v5_20261118_20261023/ledger_events.parquet": "ec23ec9a9b87792a46c7631f138140edb39a4c6463107e6ae57c217cee3c6bb2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_v5_20261118_20261023/ledger_legs.parquet": "1d0bc32b079b5a76cda53ec545143571e1cb74c0ad7da0bf0c5c68fc4beb5d16"
+  },
+  "source_sha256": "ba2254ca1dbd6d62494739cc5e7c2e8d0a1addfa391013b6336199fdfdf19981",
+  "seconds": 56.34514045715332
+}

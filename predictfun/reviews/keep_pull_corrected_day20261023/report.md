@@ -6,6 +6,8 @@ of 9a114cc1).
 - **Code:** 0e20fa8d (the USER's settlement-lag fix plus the check's K6-basis and rehearsal fixes).
 - **Run:** 12:54:53–12:59:49Z, slot claude. Every step rc 0; peak 1.1 GiB.
 - **Data:** consumed days only — Oct 23, and Nov 8 for the known ledger.
+- **Denominators corrected in place** (review a50bc529's reporting note): the 50,553 events are the candidate events linked to the
+  baseline fills, and the 10.1% rate is over the fills' 77,557 UUID-mapped candidate-event legs; no number changed.
 
 | Step | Wall | Output |
 |---|---:|---|
@@ -42,12 +44,13 @@ under creation at/after the match and aligned clocks, and no lower bound is iden
 | UNKNOWN / AMBIGUOUS share of removed gross | 0% / 42.6% | 71.5% / 25.4% |
 | fills contradictory on every candidate | 12 | 5 |
 | exact joint bounds on the score's excess at 37 ms (c) | [-81,591, +105,739] | [-145,038, +168,157] |
-| replay trade times at or before the creation time | — | 89.9% (10.1% after it; p95 +352 ms) |
+| replay trade times (anchor - 50 ms) at or before the creation time, on the fills' 77,557 UUID-mapped candidate-event legs (of 90,682) | — | 89.9% (10.1% after it; p95 +352 ms) |
 
 - **Where ST's 214 CANCEL_FIRST fills come from.** All lie on events with a finite lower end from the S3 fallback
   of legs without a unique settlement id ([st_cancel_first.txt](st_cancel_first.txt), computed). No mapped leg can
   certify one.
-- **Unknown lower ends.** 38,581 of the day's 50,553 events have an unknown (-inf) ST lower end.
+- **Unknown lower ends.** 38,581 of the 50,553 candidate events linked to the baseline fills have an unknown (-inf) ST lower end (the
+  scenario replay itself has 560,819 events).
 - **Sign.** V1 SIGN is SIGN-NOT-IDENTIFIED under every scenario (S1, S2, S3, ST, EV).
 - **Unchanged.** S1 / S2 / S3 / EV are identical to v4: CANCEL_FIRST 66.1% / 52.5% / 33.2% / 0% of the removed
   gross.
@@ -68,7 +71,8 @@ STATES null, not earnings).**
 - **ST no longer certifies the score's removals.** Under the withdrawn 259 ms bound it certified 55.8% of the
   removed gross. Upper-only, it certifies 1.5%, and only through legs without a settlement id.
 - **The sign is still not identified.** The ST bounds on the score's excess widened to [-145k, +168k] c at 37 ms.
-- **The replay's own trade times sit after the latest admissible match on 10.1% of legs** (under the premises).
+- **The replay's own trade times sit after the latest admissible match on 10.1% of the 77,557 UUID-mapped candidate-event legs** (under
+  the premises; not all public legs or all baseline fills).
 - **What remains open.**
   - An independent creation-delay or clock bound: none exists, so no lower ST scenario can be stated.
   - Oct 24–27, not run.
