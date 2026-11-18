@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-# SETTLEMENT TIMES + EXECUTION-WINDOW LEDGER v5 + KNOWN-ORDER CASE LEDGER v5 (K6 declared at K7's offsets; check of 9a114cc1) + QUEUE-AWARE SCENARIO REPLAY v4 driver (2026-11-18, session aea5bfb9;
+# SETTLEMENT TIMES + EXECUTION-WINDOW LEDGER v5 + KNOWN-ORDER CASE LEDGER v6 (K6 gate of record per clock domain; timing case audit) + QUEUE-AWARE SCENARIO REPLAY v4 driver (2026-11-18, session aea5bfb9;
 # USER: "Can you clear the issues" - the settlementId's UUIDv7 time; before: the review of 1fd77004 and earlier reviews):
 #   run_keep_pull_scenarios.sh selftest   synthetic only (no market data is read): the three selftests and mutation checks
-#   run_keep_pull_scenarios.sh known      the known-order case ledger only - the review's next priority: the 11-09 audit's 99 own legs traced on
+#   run_keep_pull_scenarios.sh known      the known-leg clock census (pf_known_clock_census.py: each leg's book-clock bound, the cancel-answer
+#                                         census) and the known-order case ledger v6 (K6's gate of record per clock domain) - the 11-09 audit's 99 own legs traced on
 #                                         Nov 8's own tables, K5 per order, K6 gate, K7 clock offset (seconds; reads consumed data: only on the
 #                                         USER's go)
 #   run_keep_pull_scenarios.sh day <d>    one consumed day: the scenario selftest, <d>'s settlement times, the known case ledger (K8 keeps the ST
@@ -37,19 +38,22 @@ case "$PHASE" in
     job sc_selftest python3 $SC selftest || exit 1
     job sc_mutants python3 predictfun/research/pf_keep_pull_scenarios_mutants.py || exit 1;;
   known)
-    done_ $R/keep_pull_exec_windows_known_v5_20261118 xw_known || job xw_known python3 $XW known || exit 1;;
+    done_ $R/known_clock_census_v3_20261118/census.json census || job census python3 predictfun/research/pf_known_clock_census.py run || exit 1
+    done_ $R/keep_pull_exec_windows_known_v6_20261118 xw_known || job xw_known python3 $XW known || exit 1;;
   day)
     case "$D" in 20261023|20261024|20261025|20261026|20261027) ;; *) echo "undeclared day '$D'" >&2; exit 1;; esac
     job sc_selftest python3 $SC selftest || exit 1
     done_ $R/settlement_times_20261118/$D st_day_$D || job st_day_$D python3 $ST day $D || exit 1
-    done_ $R/keep_pull_exec_windows_known_v5_20261118 xw_known || job xw_known python3 $XW known || exit 1
+    done_ $R/known_clock_census_v3_20261118/census.json census || job census python3 predictfun/research/pf_known_clock_census.py run || exit 1
+    done_ $R/keep_pull_exec_windows_known_v6_20261118 xw_known || job xw_known python3 $XW known || exit 1
     done_ $R/keep_pull_exec_windows_v5_20261118_$D xw_run_$D || job xw_run_$D python3 $XW run $D || exit 1
     done_ $OUT/$D sc_day_$D || job sc_day_$D python3 $SC day $D || exit 1
     job sc_report_$D python3 $SC report $D || exit 1;;
   all)
     job sc_selftest python3 $SC selftest || exit 1
     for d in 20261023 20261024 20261025 20261026 20261027; do done_ $R/settlement_times_20261118/$d st_day_$d || job st_day_$d python3 $ST day $d || exit 1; done
-    done_ $R/keep_pull_exec_windows_known_v5_20261118 xw_known || job xw_known python3 $XW known || exit 1
+    done_ $R/known_clock_census_v3_20261118/census.json census || job census python3 predictfun/research/pf_known_clock_census.py run || exit 1
+    done_ $R/keep_pull_exec_windows_known_v6_20261118 xw_known || job xw_known python3 $XW known || exit 1
     done_ $R/keep_pull_exec_windows_v5_20261118 xw_run || job xw_run python3 $XW run || exit 1
     for d in 20261023 20261024 20261025 20261026 20261027; do done_ $OUT/$d sc_day_$d || job sc_day_$d python3 $SC day $d || exit 1; done
     job sc_report python3 $SC report || exit 1;;

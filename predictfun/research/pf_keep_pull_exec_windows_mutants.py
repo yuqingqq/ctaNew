@@ -157,6 +157,18 @@ MUT = [
     ('the corrected known receipt yields a transferable lag', "    return None, {str(p): C.sha(p)}", "    return 259.034, {str(p): C.sha(p)}"),
     ('the upper-only production run labelled an explicit lag assumption', "st_lag_role='UNIDENTIFIED' if st_lag is None else 'EXPLICIT_SCENARIO_ASSUMPTION'",
      "st_lag_role='EXPLICIT_SCENARIO_ASSUMPTION'"),
+    # --- known v6: the gate of record per clock domain (USER "Go" after the timing case audit)
+    ('per domain: book ends read at K7', "mb = np.where(np.isneginf(lb), -np.inf, np.where(np.isfinite(db), lb - np.nan_to_num(db), np.inf))", "mb = np.where(np.isneginf(lb), -np.inf, lb - dls)"),
+    ('per domain: an unidentified book bound passes', "np.where(np.isfinite(db), lb - np.nan_to_num(db), np.inf))", "np.where(np.isfinite(db), lb - np.nan_to_num(db), -np.inf))"),
+    ('per domain: status ends read at offset 0', "ms = np.where(np.isneginf(ls), -np.inf, ls - dls)", "ms = np.where(np.isneginf(ls), -np.inf, ls)"),
+    ('per domain: imputed legs read as book-clock legs', "dom = {'S1': cls_le < 2, 'S2': cls_le < 2,", "dom = {'S1': cls_le < 3, 'S2': cls_le < 3,"),
+    ('per domain: S3 REST ranges read as book-clock ends', "'S3': LE.S3_code.isin([0, 1]).values & (LE.S3_llo.values > lo0_le)}", "'S3': LE.S3_code.isin([0, 1, 2, 3, 4]).values}"),
+    ('per domain: M50 origin ignored', "bk = KE.origin.values != 'REST_second'; lb, ls = np.where(bk, lo, -np.inf), np.where(bk, -np.inf, lo)", "bk = np.ones(len(KE), bool); lb, ls = np.where(bk, lo, -np.inf), np.where(bk, -np.inf, lo)"),
+    ('per domain: the split never checked against the window start', "        C.require(bool(np.array_equal(np.maximum(lb, ls), lo)), f'{k}: the domain split does not reproduce the window start')", "        pass"),
+    ('per domain: the gate of record read from the v5 basis', "else 'PASS' if k6d[k]['false_cancel_first']['some_offset_per_domain'] == 0 else 'FAIL')", "else 'PASS' if k6[k]['false_cancel_first']['some_offset'] == 0 else 'FAIL')"),
+    ('census reader: the reproduction reading not required', "    C.require(j['readings'].get('N0 REPRODUCES-THE-CASE-AUDIT') == 'YES', 'the census does not reproduce the timing case audit: no book-clock bound')", "    pass"),
+    ('census reader: the table hash not checked', "    C.require(C.sha(d / 'legs.parquet') == j['outputs']['legs.parquet'], 'census legs differ from their receipt')", "    pass"),
+    ('census reader: an unidentified bound read as its B', "    return np.where(m.bound_status.values == 'IDENTIFIED', m.B.values.astype(float), np.nan), {str(d / 'census.json'): C.sha(d / 'census.json')}", "    return m.B.values.astype(float), {str(d / 'census.json'): C.sha(d / 'census.json')}"),
 ]
 STALE = 97                                                # exit code of a replacement target that does not occur as declared
 
