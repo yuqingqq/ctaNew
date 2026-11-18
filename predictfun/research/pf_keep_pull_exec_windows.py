@@ -45,6 +45,10 @@ WINDOWS (venue clock; the replay axis is venue time; the client's feed delay is 
  (the match can precede it by up to 10 s). Bound types: EV lo unknown, hi evidence_bound; S1 / S2 lo / hi assumption_range.
  per event: S1 / S2 = the intersection over its legs, capped by EV (admissible = assumption AND evidence): ok / truncated_by_evidence /
  contradictory_evidence / contradictory_legs. A contradictory event's instant is unknown: in the value bounds it moves over the whole axis.
+ Every event row carries, per scenario and endpoint, its BOUND TYPE (evidence_bound / assumption_range / unknown / contradictory) and its
+ BASIS (the observation it comes from), and a representative time with the rule that chose it (M50: anchor - 50 ms, an assumption).
+ ledger_schema.json documents every column of every ledger table with its clock domain (venue clocks whose mutual alignment is not
+ established; the collector's local receipt clock; the replay axis); an undocumented column refuses the output.
 ORDERING classify(match window, cancel window): CANCEL_FIRST (cancel_hi < match_lo: the pull avoids the fill), MATCH_FIRST (match_hi <
  cancel_lo: too late), TIE (separated except at a touching endpoint), UNKNOWN (overlap with an open endpoint), AMBIGUOUS (bounded overlap),
  CONTRADICTORY (an empty match window).
@@ -128,6 +132,62 @@ EVC = ('WS', 'E2', 'imputed', 'mixed')
 WST = ('ok', 'truncated_by_evidence', 'contradictory_evidence', 'contradictory_legs')
 LINK = ('unlinked', 'unique_event', 'multi_event')
 CST = ('unlinked', 'none', 'some', 'all')                 # of a fill's candidate events: none / some / all flagged
+BOUND_TYPES = ('evidence_bound', 'assumption_range', 'unknown', 'contradictory')
+BASIS = {('S1', 0): ('latest WS pending source time over the legs - 250 ms', 'earliest WS pending source time over the legs'),
+         ('S1', 1): ('latest E2 book-drop estimate over the legs - 250 ms', 'earliest E2 book-drop estimate over the legs + 250 ms'),
+         ('S1', 2): ('latest REST second over the legs - 500 ms (status-centred assumption)', 'earliest REST second over the legs + 500 ms (status-centred assumption)'),
+         ('S1', 3): ('the latest start of its WS and E2 legs\' windows', 'the earliest end of its WS and E2 legs\' windows'),
+         ('S2', 0): ('latest WS pending source time over the legs - h', 'earliest WS pending source time over the legs + h'),
+         ('S2', 1): ('latest E2 book-drop estimate over the legs - h', 'earliest E2 book-drop estimate over the legs + h'),
+         ('S2', 2): ('latest REST second over the legs + q01 (status-centred assumption)', 'earliest REST second over the legs + q99 (status-centred assumption)'),
+         ('S2', 3): ('the latest start of its WS and E2 legs\' windows', 'the earliest end of its WS and E2 legs\' windows')}
+CAP_BASIS = 'REST executedAt (the Confirmed status) second end, earliest over the legs'
+REP_RULE = 'M50: the replay anchor - 50 ms (the replay assumption, not a match time)'
+CLOCKS = {'venue_ms': 'REST executedAt, WS settlementsPending source and book frame times: venue clocks, ms; their mutual alignment is NOT established',
+          'local_ns': 'first_recv_ns: the collector local receipt clock, ns; not aligned to the venue clocks',
+          'replay_ms': 'ms after the order posting time t0 on the venue axis (the replay axis)'}
+SCHEMA = {
+    'ledger_events': dict(day='UTC day', group='event id: the taker order (pf_txmap tk), else -1 - its legs_timed2 row (a leg without a taker identity)', m='market',
+                          sides='number of sides its legs are on', side='its lowest side (0 bid / 1 ask of the Up book)', anc='the replay loader anchor, venue_ms',
+                          legs='its legs in the candidate markets', cls='evidence class 0 WS / 1 E2 / 2 imputed / 3 mixed', ws_span='spread of its legs\' WS pending times, ms',
+                          e='event index (ledger_fill_events.e)', rep_time='representative execution time, venue_ms (see rep_rule)', rep_rule='the rule that chose rep_time'),
+    'ledger_legs': dict(mid='market', side='side (0 bid / 1 ask)', anc='the replay loader anchor, venue_ms', ptick='price tick', shares='shares', how='WS link: 0 none / 1 leg / 2 cell',
+                        t_ms='WS settlementsPending source time linked by value (no signed identity), venue_ms', t_e2='E2 book-drop estimate (inferred), venue_ms',
+                        exec_s='REST executedAt second = the Confirmed status, venue clock s (an upper bound on the match)', row_id='its legs_timed2 row (stable identity with the file hash)',
+                        group='its event (ledger_events.group)', first_recv_ns='first receipt of the REST leg, local_ns', price_executed='REST execution price',
+                        signer='maker signer address', taker_index='taker index in the match', taker_quote='taker quote flag', tk='taker-order id (pf_txmap), -1 none',
+                        tk_status='pf_txmap status 0 mapped / 1 absent / 2 count mismatch / 3 ambiguous / 4 no taker hash / 5 refined by signer', day='UTC day'),
+    'ledger_fill_events': dict(fid='fill (ledger_fills.fid)', day='UTC day', group='candidate event (ledger_events.group)', e='candidate event index'),
+    'ledger_fills': dict(fid='fill id', day='UTC day', oid='order (ledger_orders.oid)', m='market', side='side', p='order price', t0='order posting time, venue_ms',
+                         t_replay='the replay M50 fill time, replay_ms', anchor='its trade anchor, venue_ms', q='filled shares (M50)', value='fill value at END, c',
+                         src='the replay source code 0 WS / 1 E2 / 2 imputed / 3 mixed', pulled='the declared score executed a pull on its order',
+                         T='the score decision step (99 never)', landing37='the score pull landing at 37 ms, replay_ms', replay_removed='removed by the pull in the replay',
+                         link='unlinked / unique_event / multi_event', n_events='candidate events', event='its event index if unique, else -1',
+                         activation_assumed='the replay activation (configured point), ms', notice_assumed='the replay own-fill notice delay (configured point), ms'),
+    'ledger_orders': dict(day='UTC day', oid='order', m='market', side='side', t='posting time, venue_ms', status='ledger status (exclusions are statuses)',
+                          T='the score decision step', pulled='the score executed a pull', endj='the client last decision step + 1', m50_fills='its M50 fills',
+                          m50_value='its M50 fill value at END, c')}
+SCHEMA_PREFIX = {'ledger_events': {'S1_': 'S1 window (the program declared range AND the REST cap), venue_ms: lo / hi (capped) / rhi (before the cap) / st (WST) / lo_type, hi_type '
+                                          '(BOUND_TYPES) / lo_basis, hi_basis (the observation each endpoint comes from)',
+                                   'S2_': 'S2 window (measured envelopes AND the REST cap): the same fields as S1_',
+                                   'EV_': 'EV window (evidence only), venue_ms: lo (-inf: unknown) / hi (the REST cap) / st / types / bases'},
+                 'ledger_fills': {'cls_': 'ordering class (ORD) per scenario and cancel window (CP / CR), -1 not pulled',
+                                  'contra_': 'per-fill status over ALL its candidate events (CST): S1 / S2 contradicted, replay time after the evidence cap'},
+                 'ledger_orders': {'decision_': 'decision evaluability per scenario: not_pulled / no_m50_fill / evaluable / not_evaluable / not_eligible'}}
+
+
+def schema_gaps(tables):
+    """Columns of the ledger tables ({table: columns}) without a description in SCHEMA / SCHEMA_PREFIX."""
+    return [f'{t}.{c}' for t, cols in tables.items() for c in cols if c not in SCHEMA.get(t, {}) and not any(c.startswith(x) for x in SCHEMA_PREFIX.get(t, {}))]
+
+
+def schema_doc(tables):
+    """ledger_schema.json: every column described, the bound-type and status vocabularies, the endpoint bases, the clocks, the rule of rep_time."""
+    def d(t, c):
+        return SCHEMA.get(t, {}).get(c) or next(v for x, v in SCHEMA_PREFIX.get(t, {}).items() if c.startswith(x))
+    return dict(tables={t: {c: d(t, c) for c in cols} for t, cols in tables.items()}, bound_types=list(BOUND_TYPES), window_status=list(WST), contradiction_status=list(CST),
+                ordering=list(ORD), link=list(LINK), evidence_class=list(EVC), basis={f'{k}|{EVC[c]}': list(v) for (k, c), v in BASIS.items()}, cap_basis=CAP_BASIS,
+                rep_rule=REP_RULE, clocks=CLOCKS)
 JCAP = 256                                                # identity assignments enumerated per component; above it the labelled outer relaxation
 LEG_COLS = ['mid', 'side', 'anc', 'ptick', 'shares', 'how', 't_ms', 't_e2', 'exec_s', 'row_id', 'group']
 V1_COLS = ['mid', 'side', 'anc', 'ptick', 'how', 't_ms', 't_e2', 'exec_s']
@@ -189,6 +249,16 @@ def events_of(L):
         legs_empty = (E[f'{k}_lo'] > E[f'{k}_hi']).values; cap = E.EV_hi.values < E[f'{k}_hi'].values
         E[f'{k}_rhi'] = E[f'{k}_hi']; E[f'{k}_hi'] = np.minimum(E[f'{k}_hi'], E.EV_hi)
         E[f'{k}_st'] = np.where(legs_empty, 3, np.where(E[f'{k}_lo'].values > E[f'{k}_hi'].values, 2, np.where(cap, 1, 0)))
+    c_ = E.cls.values.astype(int)
+    for k in ('S1', 'S2'):
+        st = E[f'{k}_st'].values
+        E[f'{k}_lo_type'] = np.where(st >= 2, 'contradictory', 'assumption_range')
+        E[f'{k}_hi_type'] = np.where(st >= 2, 'contradictory', np.where(st == 1, 'evidence_bound', 'assumption_range'))
+        E[f'{k}_lo_basis'] = np.array([BASIS[k, x][0] for x in c_], dtype=object)
+        E[f'{k}_hi_basis'] = np.where(st == 1, CAP_BASIS, np.array([BASIS[k, x][1] for x in c_], dtype=object))
+    E['EV_lo_type'], E['EV_hi_type'] = 'unknown', 'evidence_bound'
+    E['EV_lo_basis'], E['EV_hi_basis'] = 'none: no public evidence bounds the match from below', CAP_BASIS
+    E['rep_time'], E['rep_rule'] = E.anc - SHIFT, REP_RULE
     return E.drop(columns=['anc_max', 'cmin', 'cmax', 'ws_lo', 'ws_hi'])
 
 
@@ -487,11 +557,7 @@ def run(out=OUT, src=None, tables=None, rows_of=None, env_of=None, v1=None, days
              legs=len(LG), legs_tk_status={str(s): int(v) for s, v in LG.tk_status.value_counts().items()}, env=env, collapsed_E=e0, score=s0, v1_regression=reg,
              xtab=X, bounds={f'{k}|{lat:g}': v for (k, lat), v in B.items()}, coverage=cov, decisions=dec, V3=V3, sim_removed=float(-val[pl & removed].sum()),
              sim_kept=float(-val[pl & ~removed].sum()))
-    # the ledger tables
-    out.mkdir(parents=True); files = {}
-    EVT.to_parquet(out / 'ledger_events.parquet', index=False)
-    LG.drop(columns=['h', 'q01', 'q99']).to_parquet(out / 'ledger_legs.parquet', index=False)
-    P[['fid', 'day', 'group', 'e']].to_parquet(out / 'ledger_fill_events.parquet', index=False)
+    # the ledger tables (all built, documented and checked before anything is written)
     ix = pd.Series(np.arange(len(E)), index=pd.MultiIndex.from_arrays([E.day.values, E.oid.values])); f50 = Fl[Fl.clock == SHIFT]
     q50 = f50.q.values[~np.isnan(ix.reindex(pd.MultiIndex.from_arrays([f50.day.values, f50.oid.values])).values)]; C.require(len(q50) == n, 'fill quantities misaligned')
     FL = pd.DataFrame(dict(fid=np.arange(n), day=Fd.day.values, oid=E.oid.values[ri], m=Fd.m.values, side=Fd.side.values, p=Fd.p.values, t0=t0, t_replay=t, anchor=Fd.a.values,
@@ -499,7 +565,6 @@ def run(out=OUT, src=None, tables=None, rows_of=None, env_of=None, v1=None, days
                            event=np.where(link_st == 1, e_u, -1), activation_assumed=KP.PLACE, notice_assumed=KP.NOTICE,
                            **{f'contra_{k}': np.array(CST)[cst[k]] for k in cst},
                            **{f'cls_{k}_{c}': cls[k, c] for k in SCEN for c in CWIN}))
-    FL.to_parquet(out / 'ledger_fills.parquet', index=False)
     OL = O[['day', 'oid', 'm', 'side', 't', 'status']].copy(); ix = pd.MultiIndex.from_arrays([E.day.values, E.oid.values])
     for nm, v in (('T', T), ('pulled', act), ('endj', endj), ('m50_fills', nf), ('m50_value', np.bincount(ri, weights=val, minlength=len(E)))):
         OL[nm] = pd.Series(v, index=ix).reindex(pd.MultiIndex.from_arrays([OL.day.values, OL.oid.values])).values
@@ -507,9 +572,14 @@ def run(out=OUT, src=None, tables=None, rows_of=None, env_of=None, v1=None, days
         unev = np.bincount(ri[pl & ~np.isin(cls[k, 'CP'], (0, 1))], minlength=len(E))
         ev_ = np.where(~act, 'not_pulled', np.where(nf == 0, 'no_m50_fill', np.where(unev == 0, 'evaluable', 'not_evaluable')))
         OL[f'decision_{k}'] = pd.Series(ev_, index=ix).reindex(pd.MultiIndex.from_arrays([OL.day.values, OL.oid.values])).fillna('not_eligible').values
-    OL.to_parquet(out / 'ledger_orders.parquet', index=False)
-    for f in sorted(out.glob('*.parquet')):
-        files[f.name] = C.sha(f)
+    TB = dict(ledger_events=EVT, ledger_legs=LG.drop(columns=['h', 'q01', 'q99']), ledger_fill_events=P[['fid', 'day', 'group', 'e']], ledger_fills=FL, ledger_orders=OL)
+    cols = {k: list(v.columns) for k, v in TB.items()}; gaps = schema_gaps(cols)
+    if gaps:
+        sys.exit(f'EXEC-WINDOW LEDGER FAILED -> no output: undocumented ledger columns {gaps}')
+    out.mkdir(parents=True); files = {}
+    for k, v in TB.items():
+        v.to_parquet(out / f'{k}.parquet', index=False); files[f'{k}.parquet'] = C.sha(out / f'{k}.parquet')
+    C.dump(out / 'ledger_schema.json', schema_doc(cols)); files['ledger_schema.json'] = C.sha(out / 'ledger_schema.json')
     L = report(R, read, days)
     (out / 'exec_windows.txt').write_text('\n'.join(L) + '\n')
     deps = [Path(__file__).resolve(), Path(KP.__file__).resolve(), Path(A.__file__).resolve(), Path(V1.__file__).resolve(), Path(I.__file__).resolve()]
@@ -748,6 +818,13 @@ def selftest(rehearse=True):
     got = {g: (int(r.cls), float(r.S1_lo), float(r.S1_hi), int(r.S1_st)) for g, r in EV.iterrows()}
     if got != want:
         bad.append(f'events_of: {got} != {want}')
+    lab = {g: (r.S1_lo_type, r.S1_hi_type, r.EV_lo_type, r.EV_hi_type) for g, r in EV.iterrows()}
+    if not (lab[1] == ('assumption_range', 'assumption_range', 'unknown', 'evidence_bound') and lab[2][1] == 'evidence_bound' and EV.S1_hi_basis[2] == CAP_BASIS
+            and lab[4][:2] == ('contradictory', 'contradictory') and EV.S1_lo_basis[5].startswith('latest REST second') and EV.S1_lo_basis[1].startswith('latest WS pending')
+            and float(EV.rep_time[1]) == 950. and EV.rep_rule[1] == REP_RULE):
+        bad.append(f'explicit bound types / bases / representative time: {lab} {EV[["S1_lo_basis", "S1_hi_basis", "rep_time"]].to_dict("index")}')
+    if schema_gaps({'ledger_fills': ['fid', 'cls_S1_CP', 'zzz']}) != ['ledger_fills.zzz'] or schema_gaps({'ledger_events': list(EV.reset_index().columns) + ['e']}):
+        bad.append('the column dictionary check: an undocumented column must be named, every events column documented')
     L2 = L.copy(); L2.loc[L2.group == 3, 'exec_s'] = -1.                                      # evidence cap at 0 ms < the window's start
     if int(events_of(L2).set_index('group').S1_st[3]) != 2:
         bad.append('an evidence-contradicted event not marked contradictory_evidence')
@@ -861,7 +938,9 @@ def selftest(rehearse=True):
                 outs = sorted(p.name for p in (Path(tmp) / 'x').iterdir()); FLx = pd.read_parquet(Path(tmp) / 'x' / 'ledger_fills.parquet')
                 OLx = pd.read_parquet(Path(tmp) / 'x' / 'ledger_orders.parquet')
                 if not (read['V0 CONTROLS'] == 'YES' and len(FLx) == len(ri_) and len(OLx) == len(O) and R['link']['unlinked'] == 0 and R['link']['multi_event'] > 0
-                        and 'ledger_legs.parquet' in outs and 'exec_windows.json' in outs and (FLx.link != 'unlinked').all()):
+                        and 'ledger_legs.parquet' in outs and 'exec_windows.json' in outs and (FLx.link != 'unlinked').all() and 'ledger_schema.json' in outs
+                        and all(set(pd.read_parquet(Path(tmp) / 'x' / f'{t}.parquet').columns) == set(json.loads((Path(tmp) / 'x' / 'ledger_schema.json').read_text())['tables'][t])
+                                for t in SCHEMA)):
                     bad.append(f'rehearsal outputs: {outs} {R["link"]}')
                 Xs = R['xtab']['S1|CP']; npl = int(act_[ri_].sum())
                 if not (Xs['REMOVED']['_total']['fills'] + Xs['KEPT']['_total']['fills'] == npl < len(ri_)

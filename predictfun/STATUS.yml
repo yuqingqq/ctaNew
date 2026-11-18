@@ -1,3 +1,16 @@
+ledger_labels_20261118:
+  status: code_done_awaiting_go
+  asof: "2026-11-18 07:02Z"
+  session: aea5bfb9
+  user: "Yes (the optional explicit labels)"
+  what: "per event and endpoint: bound type (evidence_bound / assumption_range / unknown / contradictory) and basis; rep_time + rep_rule; ledger_schema.json (every column, clock domains); scenario timeline rules in the receipts"
+  mutants: {exec_windows: "49/49", scenarios: "18/18"}
+  receipts: [predictfun/reviews/keep_pull_exec_windows_20261118_v3, predictfun/reviews/keep_pull_scenarios_20261118_v2]
+  data_read: false
+  running: false
+  launch: "predictfun/research/run_keep_pull_scenarios.sh all"
+  next: "USER's explicit go for the runs; the reviewer's review of 0529a820 / this commit"
+
 review_fixes_20261118_de084f8a:
   status: code_fixed_awaiting_go
   asof: "2026-11-18 06:36Z"
