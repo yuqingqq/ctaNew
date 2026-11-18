@@ -148,6 +148,15 @@ MUT = [
     ('an inconsistent K8 receipt accepted', "and bool(k8.get('consistent')) and k8.get('lag_bound_ms') is None", "and k8.get('lag_bound_ms') is None"),
     ('ST upper-only window becomes a point', "lower = np.full(t.shape, -np.inf) if lag is None else t - lag", "lower = t.copy() if lag is None else t - lag"),
     ('same-sample upper-only gate falsely passes', "read['K6 GATE ST'] = 'UNIDENTIFIED-UPPER-BOUND-ONLY'", "read['K6 GATE ST'] = 'PASS'"),
+    # --- check of 9a114cc1: K6's declared basis, the conditional K8 shared clock, the production (upper-only) path
+    ('the declared K6 gate moved to the K8 shared clock', "k6, cols = window_checks(K, KE, off, scen_) if KE is not None else (None, {})",
+     "k6, cols = window_checks(K, KE, clk if clk['exists'] else off, scen_) if KE is not None else (None, {})"),
+    ('the K8 shared-clock gate never evaluated', "k6c, cols_c = window_checks(K, KE, clk, scen_, tag='_clk') if KE is not None and clk['exists'] else (None, {})",
+     "k6c, cols_c = (None, {})"),
+    ('the shared-clock gate read from the declared one', "read[f'K6 GATE {k} (K8 shared clock)'] = ('PASS' if k6c[k]", "read[f'K6 GATE {k} (K8 shared clock)'] = ('PASS' if k6[k]"),
+    ('the corrected known receipt yields a transferable lag', "    return None, {str(p): C.sha(p)}", "    return 259.034, {str(p): C.sha(p)}"),
+    ('the upper-only production run labelled an explicit lag assumption', "st_lag_role='UNIDENTIFIED' if st_lag is None else 'EXPLICIT_SCENARIO_ASSUMPTION'",
+     "st_lag_role='EXPLICIT_SCENARIO_ASSUMPTION'"),
 ]
 STALE = 97                                                # exit code of a replacement target that does not occur as declared
 

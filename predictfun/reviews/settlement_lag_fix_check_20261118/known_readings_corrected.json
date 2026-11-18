@@ -1,0 +1,81 @@
+{
+ "asof": "2026-11-18T12:27:58.408025+00:00",
+ "inputs": {
+  "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_known_v4_20261118/known_cases.parquet": "2a503676c564a652a759d95252f413e83347758aa9fa6b077a3851b669b9692c",
+  "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_known_v4_20261118/known_orders.parquet": "28da34783b018b28eed8ec8063e904e6f2e9952605d1de0e8f1d22d05bf7518d",
+  "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_known_v4_20261118/known_case_rows.parquet": "7a40826770302f4ccadf97d55e0727974fca26cdc3f2a341934a4a89dce2e70e",
+  "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_known_v4_20261118/known_schema.json": "7cf0a73ae92344fed3ba5bae7e99c95bf4ad4ccf09ae4747897c68cec6aa9468"
+ },
+ "readings": {
+  "K0 REPRODUCES 11-09": "YES",
+  "K1 CLASSIFIER-CONSISTENCY": "YES",
+  "K2 DELAYED-STATUS-REFUSED": "YES",
+  "K3 IDENTITY-CHECK-FIRES": "YES",
+  "K4 REPLAY-ANCHOR-VS-LIFECYCLE": "CONTRADICTED",
+  "K7 CLOCK OFFSET (venue status - bot)": "[-226.4, +49.3] ms, CONTAINS 0",
+  "K5 ORDER-PATH INTERVALS vs DECLARED RANGES": "CONTRADICTED",
+  "K8 SETTLEMENT TIME": "COMPATIBLE",
+  "K8 CLOCK OFFSET (settlement premise: the id stamped at the match)": "CONDITIONAL {'lo': 14.474853515625, 'hi': 32.641357421875, 'exists': True, 'includes_zero': False, 'premise': 'CONDITIONAL: zero UUID creation lag on every leg'}",
+  "K8 UNIVERSAL CREATION-LAG BOUND": "UNIDENTIFIED",
+  "K8 FILL-NOTICE DELAY vs the replay 100 ms": "CONTRADICTED on 87 of 99 fills",
+  "K5S ORDER PATH WITH SETTLEMENT TIMES": "CONTRADICTED",
+  "K6 GATE S1": "FAIL",
+  "K6 GATE S1 (K8 shared clock)": "FAIL",
+  "K6 GATE S1 (settlement offsets)": "FAIL",
+  "K6 GATE S2": "FAIL",
+  "K6 GATE S2 (K8 shared clock)": "FAIL",
+  "K6 GATE S2 (settlement offsets)": "FAIL",
+  "K6 GATE S3": "FAIL",
+  "K6 GATE S3 (K8 shared clock)": "PASS",
+  "K6 GATE S3 (settlement offsets)": "PASS",
+  "K6 GATE ST": "UNIDENTIFIED-UPPER-BOUND-ONLY",
+  "K6 GATE ST (K8 shared clock)": "UNIDENTIFIED-UPPER-BOUND-ONLY",
+  "K6 GATE ST (settlement offsets)": "UNIDENTIFIED-UPPER-BOUND-ONLY",
+  "K6 GATE EV": "PASS",
+  "K6 GATE EV (K8 shared clock)": "PASS",
+  "K6 GATE EV (settlement offsets)": "PASS",
+  "K6 REPLAY POINT M50": "CONTRADICTED",
+  "KNOWN VERDICT": "INSTRUMENT-CHECKS-PASS; REPLAY-ANCHOR-CONTRADICTED; SETTLEMENT-TIME COMPATIBLE; LEDGER-WINDOW GATE S1 FAIL, S2 FAIL, S3 FAIL, ST UNIDENTIFIED-UPPER-BOUND-ONLY, EV PASS (K7 offsets; conditional - K8 shared clock: S1 FAIL, S2 FAIL, S3 PASS, ST UNIDENTIFIED-UPPER-BOUND-ONLY, EV PASS; settlement offsets: S1 FAIL, S2 FAIL, S3 PASS, ST UNIDENTIFIED-UPPER-BOUND-ONLY, EV PASS); ORDER-PATH RANGES CONTRADICTED; NOT A VENUE-ENGINE ACCEPTANCE"
+ },
+ "false_cancel_first_some_offset": {
+  "K7 (declared)": {
+   "S1": 9,
+   "S2": 5,
+   "S3": 3,
+   "EV": 0,
+   "M50": 65
+  },
+  "K8 shared clock (conditional)": {
+   "S1": 5,
+   "S2": 5,
+   "S3": 0,
+   "EV": 0,
+   "M50": 55
+  },
+  "K7 lo .. K8 lo only": {
+   "S1": 9,
+   "S2": 5,
+   "S3": 3,
+   "EV": 0,
+   "M50": 65
+  },
+  "zero-lag settlement (conditional)": {
+   "S1": 4,
+   "S2": 5,
+   "S3": 0,
+   "EV": 0,
+   "M50": 5
+  }
+ },
+ "predicates": {
+  "s3_fails_at_k7": true,
+  "s3_passes_at_k8_clock": true,
+  "flip_from_lower_end_only": true,
+  "k6_gate_s3_reading": "FAIL",
+  "k6_gate_s3_k8_clock_reading": "PASS",
+  "s3_legs": 3
+ },
+ "source_sha256": "d7e7222a882d231850c714b3a80356e22ff111f3a3bd817aca68739b69400c96",
+ "raw_tape_read": false,
+ "data_dir_written": false
+}

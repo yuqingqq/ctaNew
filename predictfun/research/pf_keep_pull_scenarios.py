@@ -504,8 +504,11 @@ def selftest():
         timelines(lg, Wt, env1, 'd', sem_, tset_.drop(index=9), 100.); bad.append('timelines accepted a leg without its settlement row')
     except ValueError:
         pass
-    upper_only, _, _, _ = timelines(lg, Wt, env1, 'd', sem_, tset_, None)
-    if 'STlo' in upper_only or 'STlo' in TIMELINES or not all(np.isfinite(x).all() for x in upper_only['SThi']):
+    try:
+        upper_only = timelines(lg, Wt, env1, 'd', sem_, tset_, None)[0]
+    except (SystemExit, ValueError) as e:
+        upper_only = None; bad.append(f'upper-only timelines refused: {e}')
+    if upper_only is not None and ('STlo' in upper_only or 'STlo' in TIMELINES or not all(np.isfinite(x).all() for x in upper_only['SThi'])):
         bad.append('an unidentified earliest match was replayed or the finite upper endpoint was lost')
     fam = {name(sc): family(sc)[0] for sc in SCEN}; n0 = lambda **kw: name(dict(B0, **kw))
     if not (set(fam.values()) == set(FAMILIES) and fam[n0(tl='M0')] == fam[n0(tl='M250')] == 'trade-clock shift' and fam[n0(L=0.)] == fam[n0(L=100.)] == 'cancel latency'
@@ -601,6 +604,21 @@ def selftest():
                 bad.append(f'the mixture\'s per-order structural landings: {int(gm_.sum())} orders, slow among them {int(slow_order(Sm.oid.values[gm_], CANCEL_MIX[0]).sum())}')
             if not (o37['score'] == 150. and o37['pulls'] == 1 and o100['score'] == 0. and o37['KEEP'] == -150.):
                 bad.append(f"one-order outcome: score {o37['score']} / {o100['score']} at 37 / 100 ms (want 150 / 0)")
+            # check of 9a114cc1: the PRODUCTION default - no lag passed, the corrected known receipt read, ST upper-only, no STlo - rehearsed end to end
+            kk = tmp / 'k5'; kk.mkdir(); (kk / 'known.json').write_text(json.dumps(dict(R=dict(K8=dict(model=X.SETTLEMENT_MODEL, consistent=True, lag_bound_ms=None)))))
+            old_k = X.OUT_K; X.OUT_K = kk
+            try:
+                with contextlib.redirect_stdout(io.StringIO()):
+                    day_run(days[0], src=src, timing=tim, kp=tmp / 'kp', out=tmp / 'scu', env_of=env, set_of=syn_set)
+                ru = json.loads((tmp / 'scu' / days[0] / 'receipt.json').read_text()); Su = pd.read_parquet(tmp / 'scu' / days[0] / 'orders.parquet')
+                if not (ru['st_lag_ms'] is None and ru['st_lag_role'] == 'UNIDENTIFIED' and ru['scenarios'] == [name(sc) for sc in KSCEN]
+                        and not any(x.startswith('STlo') for x in ru['scenarios']) and name(dict(B0, tl='SThi')) in set(Su.scen)
+                        and str(kk / 'known.json') in ru['settlement_inputs']):
+                    bad.append(f"upper-only production day: lag {ru['st_lag_ms']} role {ru['st_lag_role']} scenarios {ru['scenarios']}")
+            except (SystemExit, ValueError) as e:
+                bad.append(f'upper-only production day refused: {e}')
+            finally:
+                X.OUT_K = old_k
             # refusals: a misaligned timing source, a committed fill changed under a matching receipt, a perturbed pending clock
             def mis(data, m, W):
                 x = tim(data, m, W); x[0] = x[0].assign(anc=x[0].anc + 1.) if len(x[0]) else x[0].iloc[:0]; return x

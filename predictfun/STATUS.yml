@@ -1,3 +1,15 @@
+check_settlement_lag_fix_20261118:
+  status: fix_verified_two_gaps_fixed_in_code_known_v5_and_day_run_need_go
+  asof: "2026-11-18 12:33Z"
+  user: "Check latest commit, I have fixed the issues"
+  checked: {review: 52c45d57, fix: 9a114cc1, p1_fixed: true}
+  at_9a114cc1: {selftests: 3_pass, mutants: {settlement: 10/10, exec_windows: 104/104, scenarios: 31/31}, known_v4_source_hash_is_head: true}
+  gap_k6_basis: {v4_gate_read_at: K8_shared_clock_under_K7_key, k7_ms: [-226.4, 49.3], k8_clock_ms: [-147.8, 32.6], false_cancel_first_k7: {S1: 9, S2: 5, S3: 3, M50: 65}, false_cancel_first_k8_clock: {S1: 5, S2: 5, S3: 0, M50: 55}, s3_thresholds_ms: [-210.3, -218.8, -224.8], s3_pass_needs: UUID_clock_is_REST_status_clock, fix: declared_K7_gate_plus_conditional_K8_clock_reading, known_version: 5}
+  gap_production_path: {was: st_lag_150_only, fix: upper_only_rehearsal_in_both_selftests}
+  after_fix: {selftests: pass, mutants: {exec_windows: 109/109, scenarios: 33/33}, readings_changed_vs_v4: [K6_GATE_S3_PASS_to_FAIL, KNOWN_VERDICT, new_K8_shared_clock_keys]}
+  in_band: [FINDINGS_C23, FINDINGS_P60, FINDINGS_P61_new, FINDINGS_rows_settlement_known_scenario_ledger, STATUS_clear_issues_settlement_20261023, HANDOFF_1116Z]
+  receipts: predictfun/reviews/settlement_lag_fix_check_20261118
+  next: USER_go_run_keep_pull_scenarios_day_20261023
 settlement_lag_correction_20261118:
   status: implemented_inference_bug_fixed_execution_timing_still_unidentified
   asof: "2026-11-18T11:47:56Z"
@@ -45,7 +57,9 @@ manual_fix_review_20261118_084d5a19:
   scheduler: disabled_by_user
 
 clear_issues_settlement_20261023:
-  status: done_one_day_timing_issues_cleared_sign_not_identified
+  status: superseded_timing_not_cleared  # was done_one_day_timing_issues_cleared_sign_not_identified (marked 2026-11-18 12:15Z)
+  superseded_by: [settlement_lag_correction_20261118, check_settlement_lag_fix_20261118]  # review 52c45d57, USER fix 9a114cc1
+  withdrawn: [st_lag_ms_259_and_STlo, clock_offset_cleared, notice_delay_measured_162_655, slow_cancels_10_of_77, issues_cleared, K6_gate_S3_PASS_at_UUID_clock]
   asof: "2026-11-18 11:16Z"
   user: "Can you clear the issues"
   evidence: settlementId_UUIDv7_ms_per_trade

@@ -1,0 +1,59 @@
+QUEUE-AWARE SCENARIO REPLAY of the keep / pull selection, declared score A+0 - the fair-edge rule, not a learned model (pf_keep_pull_scenarios.py; every committed state with a path re-simulated through the branch kernel; days 20261023; c summed)
+  640 states re-simulated (631 eligible at B); events (taker orders) by day 20261023 518; held contradictory events (kept at M50) of them: S1 20261023 1 (0.2%); S2 20261023 1 (0.2%); S3 20261023 1 (0.2%); ST 20261023 1 (0.2%)
+  Z0 (h): B's E +356 and score improvement -135 = the clock audit's per-fill values on the committed tables
+
+  scenario                           E       score        null         KEEP   KEEP+score    PULL-ALL  eligible    fills  filled discov.   lost
+  M50|A58|L37|N100                +356        -135        -491       +2,632       +2,498      -2,380       631      105      97       0      0
+  S1lo|A58|L37|N100               +140        -368        -508       +2,588       +2,220      -2,438       631      106      99       7      5
+  S1mid|A58|L37|N100              +142        -440        -582       +2,728       +2,288      -2,554       631      103      96       1      2
+  S1hi|A58|L37|N100                +79        -570        -649       +2,904       +2,334      -2,798       631      104      97       4      4
+  S2lo|A58|L37|N100                +46        -477        -523       +2,108       +1,630      -2,092       631      106     100      14     11
+  S2hi|A58|L37|N100               +287        -352        -640       +2,780       +2,428      -2,546       631      110     102      15     10
+  S3lo|A58|L37|N100               +254        -225        -479       +2,090       +1,865      -2,060       631      102      95      16     18
+  S3hi|A58|L37|N100               +166        -420        -586       +2,716       +2,296      -2,461       631      104      95       5      7
+  SThi|A58|L37|N100               +316        -215        -531       +2,698       +2,482      -2,430       631      102      95       0      2
+  EVhi|A58|L37|N100               +104        -548        -652       +3,000       +2,452      -2,748       631      108      98      14     13
+  M50|A15|L37|N100                +346        -135        -481       +2,602       +2,468      -2,336       631      104      96       0      1
+  M50|A100|L37|N100               +175        -360        -535       +2,602       +2,242      -2,606       631      104      96       0      1
+  M50|A58|L0|N100                 +326        -215        -541       +2,698       +2,482      -2,472       631      102      95       0      2
+  M50|A58|L100|N100               +377         -75        -452       +2,662       +2,588      -2,072       631      106      98       1      0
+  M50|A58|L37|N160                +331        -135        -466       +2,632       +2,498      -2,380       631      105      97       0      0
+  M50|A58|L37|N660                +385        -135        -520       +2,632       +2,498      -2,380       631      105      97       0      0
+  M50|A58|L37+13%x4000|N100        +320        -150        -470       +2,558       +2,408      -2,230       631      111     102       5      0
+  M0|A58|L37|N100                 +207        -335        -542       +2,698       +2,362      -2,548       631      102      95       0      2
+  M250|A58|L37|N100               +228        -330        -558       +2,588       +2,258      -2,536       631      103      97       4      4
+
+  scenario families (one factor moved from B; none of them is an order latency unless named so) and the fills at held instants (trades of contradictory events kept at M50: count / shares / value c / share of the scenario's fill gross):
+  M50|A58|L37|N100         baseline           B: trades at anchor - 50 ms, activation +58 ms, cancel latency 37 ms, fill notice +100 ms; held 0 / 0 sh / +0 c / 0.0%
+  S1lo|A58|L37|N100        timeline           every trade at the start of the admissible S1 window; contradictory events held at M50; held 1 / 30 sh / +30 c / 0.7%
+  S1mid|A58|L37|N100       timeline           every trade at the middle of the admissible S1 window; contradictory events held at M50; held 1 / 30 sh / +30 c / 0.8%
+  S1hi|A58|L37|N100        timeline           every trade at the end of the admissible S1 window; contradictory events held at M50; held 1 / 30 sh / +30 c / 0.8%
+  S2lo|A58|L37|N100        timeline           every trade at the start of the admissible S2 window; contradictory events held at M50; held 1 / 30 sh / +30 c / 0.7%
+  S2hi|A58|L37|N100        timeline           every trade at the end of the admissible S2 window; contradictory events held at M50; held 1 / 30 sh / +30 c / 0.7%
+  S3lo|A58|L37|N100        timeline           every trade at the start of the admissible S3 (semantics) window; contradictory events held at M50; held 1 / 30 sh / +30 c / 0.9%
+  S3hi|A58|L37|N100        timeline           every trade at the end of the admissible S3 (semantics) window; contradictory events held at M50; held 1 / 30 sh / +30 c / 0.8%
+  SThi|A58|L37|N100        timeline           every trade at the UUID-creation upper endpoint under the after-match/aligned-clock premises; no finite earliest endpoint is identified; contradictory events held at M50; held 1 / 30 sh / +30 c / 0.8%
+  EVhi|A58|L37|N100        timeline           every trade at the the REST evidence cap (the latest admissible instant); contradictory events held at M50; held 0 / 0 sh / +0 c / 0.0%
+  M50|A15|L37|N100         activation delay   the order goes live 15 ms after posting (B: 58); held 0 / 0 sh / +0 c / 0.0%
+  M50|A100|L37|N100        activation delay   the order goes live 100 ms after posting (B: 58); held 0 / 0 sh / +0 c / 0.0%
+  M50|A58|L0|N100          cancel latency     every cancel takes effect 0 ms after its decision (B: 37); held 0 / 0 sh / +0 c / 0.0%
+  M50|A58|L100|N100        cancel latency     every cancel takes effect 100 ms after its decision (B: 37); held 0 / 0 sh / +0 c / 0.0%
+  M50|A58|L37|N160         fill-notice delay  the client learns of a full fill 160 ms after it (B: 100); held 0 / 0 sh / +0 c / 0.0%
+  M50|A58|L37|N660         fill-notice delay  the client learns of a full fill 660 ms after it (B: 100); held 0 / 0 sh / +0 c / 0.0%
+  M50|A58|L37+13%x4000|N100 cancel latency     13% of the orders' cancels take effect 4000 ms after their decision, the rest 37 ms (own assumed mixture; the former K8-based measured-tail interpretation is withdrawn); held 0 / 0 sh / +0 c / 0.0%
+  M0|A58|L37|N100          trade-clock shift  every trade stamp 0 ms before its anchor (B: 50 ms) - a uniform clock offset, not an order latency; held 0 / 0 sh / +0 c / 0.0%
+  M250|A58|L37|N100        trade-clock shift  every trade stamp 250 ms before its anchor (B: 50 ms) - a uniform clock offset, not an order latency; held 0 / 0 sh / +0 c / 0.0%
+
+  E by day: M50|A58|L37|N100 20261023 +356 | S1lo|A58|L37|N100 20261023 +140 | S1mid|A58|L37|N100 20261023 +142 | S1hi|A58|L37|N100 20261023 +79 | S2lo|A58|L37|N100 20261023 +46 | S2hi|A58|L37|N100 20261023 +287 | S3lo|A58|L37|N100 20261023 +254 | S3hi|A58|L37|N100 20261023 +166 | SThi|A58|L37|N100 20261023 +316 | EVhi|A58|L37|N100 20261023 +104 | M50|A15|L37|N100 20261023 +346 | M50|A100|L37|N100 20261023 +175 | M50|A58|L0|N100 20261023 +326 | M50|A58|L100|N100 20261023 +377 | M50|A58|L37|N160 20261023 +331 | M50|A58|L37|N660 20261023 +385 | M50|A58|L37+13%x4000|N100 20261023 +320 | M0|A58|L37|N100 20261023 +207 | M250|A58|L37|N100 20261023 +228
+
+READINGS (declared before any data was read)
+  TIMING EVIDENCE: EXPLICIT-LAG-SCENARIO-ONLY
+  Z0 CONTROLS: YES
+  Z1 E ACROSS TESTED SCENARIOS: STABLE-POSITIVE-IN-TESTED-SCENARIOS
+  Z2 KEEP VALUE ACROSS TESTED SCENARIOS: STABLE-POSITIVE-IN-TESTED-SCENARIOS
+  Z3 THE SCORE'S VALUE ACROSS TESTED SCENARIOS: STABLE-POSITIVE-IN-TESTED-SCENARIOS
+  E ranges over [+46, +385], KEEP over [+2,090, +3,000], KEEP + score over [+1,630, +2,588] in the 19 tested scenarios
+
+LIMITS: consumed days; one declared rule; one-factor-at-a-time scenarios and timelines (no joint extreme search); assumption ranges, not measured distributions; queue rule M unvalidated on live orders; STATES is local selection; one order at a time, no re-post after a pull.
+keep-pull scenario selftests passed (synthetic only): the notice and landing rules; the keep / pull run on its synthetic tape reproduced at B; planted fills and landings under timelines S1 / S2 / EV, activation 25 / 100 ms and cancel latency 0 / 100 ms; a contradictory event held at M50; a one-order outcome at 37 / 100 ms; the report end to end and refused on a wrong baseline expectation; a misaligned timing source, a changed committed fill, a perturbed pending clock and an early landing mirror each refused by its own control with no output; S3 / ST timelines (and their joins by row id, a leg without its window refused); held fills marked and valued; event denominators; every scenario's family (no "zero latency"); the cancel-latency mixture (its slow share, per-order landings, one-order outcomes)
+2026-11-18T11:50:55Z tag=v_sc_selftest rc=0 peak_rss_mib=712 wall_s=17.91 cpu_user_s=14.96 memavail_start_gib=23 disk_free_gib=442->442 slot=claude
