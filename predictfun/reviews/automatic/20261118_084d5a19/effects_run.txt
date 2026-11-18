@@ -1,0 +1,40 @@
+{
+  "target": "084d5a1921460a9a74ba47bef8bb41ff38921676",
+  "asof": "2026-11-18T11:27:12.666983+00:00",
+  "synthetic": true,
+  "inferred_second_order": {
+    "cancel_interval_ms": [
+      570,
+      700
+    ],
+    "status": "CONTRADICTED",
+    "notice_interval_ms": [
+      190,
+      230
+    ]
+  },
+  "compatible_worlds": [
+    {
+      "name": "constant_lag_positive",
+      "match": 780.0,
+      "uuid": 800.0,
+      "lag": 20.0,
+      "effect": 800.0,
+      "cancel_latency_ms": 600.0,
+      "notice_delay_ms": 220.0
+    },
+    {
+      "name": "variable_lag_counterexample",
+      "match": 100.0,
+      "uuid": 800.0,
+      "lag": 700.0,
+      "effect": 250.0,
+      "cancel_latency_ms": 50.0,
+      "notice_delay_ms": 900.0
+    }
+  ],
+  "positive_control": true,
+  "variable_lag_false_inference_reproduced": true,
+  "same_sample_st_gate_follows_from_common_fit": true
+}
+2026-11-18T11:27:11Z tag=review_084d5a19_effects rc=0 peak_rss_mib=196 wall_s=0.94 cpu_user_s=0.76 memavail_start_gib=23 disk_free_gib=443->443 slot=codex

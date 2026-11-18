@@ -1,3 +1,24 @@
+<!-- MANUAL_REVIEW_20261118_084D5A19 -->
+## Manual fix review — timestamp inference, 2026-11-18
+
+Target **084d5a1921460a9a74ba47bef8bb41ff38921676**;
+[report](reviews/automatic/20261118_084d5a19/report.md).
+Prior K5 interval/unit and contradiction-attribution findings are resolved;
+three synthetic self-tests and all 20 saved scenario rows reproduce.
+**P1:** K8's feasible common d = UUID time - match time does not bound each
+creation lag under a shared clock and merely nonnegative event-specific lags.
+A synthetic known-compatible 700 ms lag passes with a claimed 30 ms bound;
+the inferred match window and slow-cancel diagnosis exclude compatible truth.
+C23 and the unconditional timing/slow-cancel clearance claims below are
+therefore not established by K8. UUID creation times remain useful observations;
+ST's 259 ms bound and derived notice/cancel ranges are conditional scenarios.
+The same-sample ST gate follows from the fitted lifecycle constraints, not
+independent confirmation of timestamp semantics. See the report for source
+lines, positive/refusal controls, populations and as-of times. No new validation,
+training or full tape run. Next priority: separate clock and per-event lag in
+K8, preserve admissible uncertainty, and supersede the derived receipts before
+further economic/model evaluation.
+
 <!-- MANUAL_REVIEW_20261118_1FD77004 -->
 ## Manual result review — execution evidence, 2026-11-18
 

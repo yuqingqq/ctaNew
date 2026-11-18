@@ -1,3 +1,22 @@
+manual_fix_review_20261118_084d5a19:
+  status: complete_previous_P2_fixed_new_P1_timestamp_inference_gate_not_cleared
+  asof: "2026-11-18T11:29:42Z"
+  target_commit: 084d5a1921460a9a74ba47bef8bb41ff38921676
+  report: predictfun/reviews/automatic/20261118_084d5a19/report.md
+  evidence: predictfun/reviews/automatic/20261118_084d5a19/receipt.json
+  propagation_falsifier: predictfun/reviews/automatic/20261118_084d5a19/effects.json
+  resolved: [K5_unique_order_intervals_both_endpoints, contradiction_cause_reconciliation, known_identity_case_ledger]
+  P1: common_offset_feasibility_does_not_bound_event_specific_UUID_creation_lag
+  counterexample_ms: {claimed_lag_bound: 30, compatible_actual_lag: 700, falsely_excluded_cancel_latency: 50}
+  conditional_only: [ST_259ms_bound, K8_notice_range, K5S_slow_cancel_counts, settlement_premise_clock_alignment]
+  verification: {pinned_selftests: 3_pass, saved_scenario_rows: 20_exact, hash_checks: 35_pass, known_readings: reproduced, falsifier: reproduced, corrupt_hash: refused, slot: codex}
+  consumed_days: [20261023, 20261108]
+  untouched_validation_read: false
+  full_tape_or_training_run: false
+  next_priority: separate_clock_offset_and_per_event_creation_lag_in_K8_then_supersede_downstream_receipts_and_clearance_claims
+  implementation_modified: false
+  scheduler: disabled_by_user
+
 clear_issues_settlement_20261023:
   status: done_one_day_timing_issues_cleared_sign_not_identified
   asof: "2026-11-18 11:16Z"
