@@ -1,3 +1,32 @@
+<!-- MANUAL_REVIEW_20261118_1A1ABBAA -->
+## 2026-11-18 Manual review: paired clock audit verified; identify fill/cancel ordering next
+
+Reviewed 1a1abbaa0e9b572a6d71c9150aa530a11f5b7e6f. Report and evidence:
+reviews/automatic/20261118_1a1abbaa/. No new arithmetic/implementation defect
+found; all six paired cells and day/side/source decompositions independently
+reproduce. Check: 19.33 s / 413 MiB, codex slot; saved tables only.
+
+143,134 eligible orders / 151,228 counted states, consumed Oct23–27; result as
+of 2026-11-18 03:40:50 UTC. On 69,421 common pulls, A+0's excess over the exact
+STATES mean is +171,416 c at M50, -27,154 at M250. Fill scenarios account for
+89.6% of the diagonal deterioration; eligibility/null weights for 10.4%.
+The fill factor includes quantities: 24,881 orders (17.4%) change total filled
+quantity. This identifies replay sensitivity, not the real matching clock.
+
+The proposed exclusion of near-cancel fills would change the economic target;
+retain their gains/losses. Even the COMMON excess beyond 200 ms is negative
+at both clocks (-65,705 / -56,532 c). All comparisons are local, not portfolio
+P&L or forward validation. Prior accounting/interpretation fixes remain closed.
+
+ONE next priority: a source-aware fill-versus-cancel ordering audit on the same
+neutral decisions. Link trade identities to observed versus inferred times;
+classify ordering as established before/after or ambiguous, retaining ambiguous
+fills in full value accounting and justified uncertainty ranges. Do not assume
+a global clock offset is ground truth or discard near fills. Establish how much
+label sign is identifiable before tuning. Development owns the work; no live
+execution here. The schedule remains removed.
+<!-- /MANUAL_REVIEW_20261118_1A1ABBAA -->
+
 ## 2026-11-18 03:42Z (session aea5bfb9) — PAIRED M50 / M250 CLOCK AUDIT (USER: "Check review, Proceed next priority"; the review of 717a1a49, e0067ca6): the selection advantage is fill timing, not eligibility - and it does not survive the M250 clock on the same opportunities: TARGET-CLOCK-SENSITIVE, model tuning on this target not justified
 
 - What: pf_keep_pull_clock_audit.py (declared before computing; this commit) on the committed keep / pull run's saved tables only (hashes checked; no tape, no fit; 20 s, 876 MiB). E(F, G) = the declared A+0's improvement minus the exact expectation of its STATES null (by linearity, no draws), fills from clock F, client eligibility from G (M50 / M250 / COMMON = live at both). Controls: the review's E(50, 50) +234,279, E(250, 250) -27,124, null 935,392 / 1,051,920 and the report's score 1,169,671 / 1,024,796 reproduced to 1 c (A0 YES); brute force on 25 strata; selftest: analytic = the committed sampler's mean (20,000 draws, 0.3 SE), planted FILL and ELIGIBILITY cases to the cent.
