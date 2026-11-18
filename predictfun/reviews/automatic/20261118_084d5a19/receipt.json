@@ -1,0 +1,443 @@
+{
+  "target": "084d5a1921460a9a74ba47bef8bb41ff38921676",
+  "asof": "2026-11-18T11:25:46.056030+00:00",
+  "consumed_days": [
+    "20261023",
+    "20261108"
+  ],
+  "untouched_validation_read": false,
+  "tape_replayed": false,
+  "training_run": false,
+  "synthetic_instruments": "three complete pinned selftests passed",
+  "variable_lag_counterexample": {
+    "synthetic": true,
+    "common_clock_offset_ms": 0,
+    "place_ms": [
+      0,
+      0
+    ],
+    "upper_ms": [
+      40,
+      900
+    ],
+    "uuid_times_ms": [
+      30,
+      800
+    ],
+    "common_d_fit_ms": [
+      -10,
+      30
+    ],
+    "claimed_lag_bound_ms": 30,
+    "positive_constant_lag_matches_ms": [
+      10.0,
+      780.0
+    ],
+    "true_variable_lag_matches_ms": [
+      20.0,
+      100.0
+    ],
+    "true_variable_lags_ms": [
+      10,
+      700
+    ],
+    "claimed_match_windows_ms": [
+      [
+        0.0,
+        40.0
+      ],
+      [
+        770.0,
+        810.0
+      ]
+    ],
+    "both_worlds_satisfy_observations_and_nonnegative_lag": true,
+    "variable_lag_world_excluded_by_claimed_bounds": true,
+    "incompatible_common_offset_control_refused": true
+  },
+  "ledger": {
+    "counted_orders": 30466,
+    "status": {
+      "eligible": 28799,
+      "refused_post_only": 1289,
+      "missing_endpoint": 354,
+      "stale_future_book": 24
+    },
+    "fills": 17670,
+    "events": 50553,
+    "contradiction_causes": {
+      "S1": {
+        "all_contradictory": 748,
+        "evidence_cap": 37,
+        "leg_intersection": 708
+      },
+      "S2": {
+        "all_contradictory": 129,
+        "evidence_cap": 0,
+        "leg_intersection": 129
+      },
+      "S3": {
+        "all_contradictory": 139,
+        "evidence_cap": 0,
+        "leg_intersection": 139
+      },
+      "ST": {
+        "all_contradictory": 12,
+        "evidence_cap": 0,
+        "leg_intersection": 12
+      }
+    },
+    "contradiction_accounting_reconciled": true,
+    "saved_st_lag_ms": 259.0341796875
+  },
+  "scenarios": {
+    "rows_exactly_reproduced": 20,
+    "corrupt_hash_refused": true,
+    "result_asof": "2026-11-18T11:00:51.886418+00:00",
+    "population": {
+      "windows": 288,
+      "orders": 30088,
+      "base_matched": 30088,
+      "kernel_checked": 816,
+      "events": 560819,
+      "held_events_S1": 9576,
+      "held_events_S2": 1412,
+      "held_events_S3": 1363,
+      "held_events_ST": 255
+    },
+    "readings": {
+      "Z0 CONTROLS": "YES",
+      "Z1 E ACROSS TESTED SCENARIOS": "NOT-STABLE-IN-TESTED-SCENARIOS",
+      "Z2 KEEP VALUE ACROSS TESTED SCENARIOS": "NOT-STABLE-IN-TESTED-SCENARIOS",
+      "Z3 THE SCORE'S VALUE ACROSS TESTED SCENARIOS": "NOT-STABLE-IN-TESTED-SCENARIOS"
+    },
+    "metrics": {
+      "M50|A58|L37|N100": {
+        "E": 34948.02366774128,
+        "score": 241282.39479053902,
+        "null": 206334.37112279775,
+        "KEEP": -416242.9431569632,
+        "fills": 17670,
+        "eligible": 28799
+      },
+      "S1lo|A58|L37|N100": {
+        "E": -11098.100277052119,
+        "score": 225126.5487503002,
+        "null": 236224.6490273523,
+        "KEEP": -521881.24935525574,
+        "fills": 20186,
+        "eligible": 28799
+      },
+      "S1mid|A58|L37|N100": {
+        "E": 25287.992461204005,
+        "score": 242256.93934833363,
+        "null": 216968.94688712963,
+        "KEEP": -445028.53753984295,
+        "fills": 19745,
+        "eligible": 28799
+      },
+      "S1hi|A58|L37|N100": {
+        "E": 34161.00025531809,
+        "score": 180557.46680961744,
+        "null": 146396.46655429935,
+        "KEEP": -290698.40240863455,
+        "fills": 16717,
+        "eligible": 28799
+      },
+      "S2lo|A58|L37|N100": {
+        "E": -2847.7829550840743,
+        "score": 233556.31848872578,
+        "null": 236404.10144380986,
+        "KEEP": -569913.5102651073,
+        "fills": 21961,
+        "eligible": 28799
+      },
+      "S2hi|A58|L37|N100": {
+        "E": 6496.356777529231,
+        "score": 12075.35148409556,
+        "null": 5578.994706566328,
+        "KEEP": 20351.719803687985,
+        "fills": 13722,
+        "eligible": 28799
+      },
+      "S3lo|A58|L37|N100": {
+        "E": 814.2105379724326,
+        "score": 191222.9282192256,
+        "null": 190408.71768125318,
+        "KEEP": -407636.68275374454,
+        "fills": 21258,
+        "eligible": 28799
+      },
+      "S3hi|A58|L37|N100": {
+        "E": 36029.12624313667,
+        "score": 155850.9014865562,
+        "null": 119821.77524341951,
+        "KEEP": -234947.09247164312,
+        "fills": 14883,
+        "eligible": 28799
+      },
+      "STlo|A58|L37|N100": {
+        "E": -8756.982035579538,
+        "score": 208651.1604260886,
+        "null": 217408.14246166815,
+        "KEEP": -503550.37879530754,
+        "fills": 26580,
+        "eligible": 28799
+      },
+      "SThi|A58|L37|N100": {
+        "E": 40692.06606438923,
+        "score": 218893.38205254395,
+        "null": 178201.31598815473,
+        "KEEP": -353953.184775497,
+        "fills": 20362,
+        "eligible": 28799
+      },
+      "EVhi|A58|L37|N100": {
+        "E": 2338.463157527414,
+        "score": -38650.13095450382,
+        "null": -40988.59411203123,
+        "KEEP": 97346.47554548798,
+        "fills": 7834,
+        "eligible": 28799
+      },
+      "M50|A15|L37|N100": {
+        "E": 33970.9153091895,
+        "score": 237607.58549628485,
+        "null": 203636.67018709535,
+        "KEEP": -427614.66480756324,
+        "fills": 18314,
+        "eligible": 29296
+      },
+      "M50|A100|L37|N100": {
+        "E": 35834.04818420633,
+        "score": 242839.86522391668,
+        "null": 207005.81703971035,
+        "KEEP": -406879.3633857086,
+        "fills": 17119,
+        "eligible": 28322
+      },
+      "M50|A58|L0|N100": {
+        "E": 38255.20622848172,
+        "score": 230426.59898244002,
+        "null": 192171.3927539583,
+        "KEEP": -376843.91070623556,
+        "fills": 16689,
+        "eligible": 28799
+      },
+      "M50|A58|L100|N100": {
+        "E": 17964.296603673927,
+        "score": 234873.84423897127,
+        "null": 216909.54763529735,
+        "KEEP": -465714.8605097781,
+        "fills": 19165,
+        "eligible": 28799
+      },
+      "M50|A58|L37|N160": {
+        "E": 34664.163319206724,
+        "score": 241282.39479053902,
+        "null": 206618.2314713323,
+        "KEEP": -416242.9431569632,
+        "fills": 17670,
+        "eligible": 28799
+      },
+      "M50|A58|L37|N660": {
+        "E": 34688.91553665385,
+        "score": 241282.39479053902,
+        "null": 206593.47925388516,
+        "KEEP": -416242.9431569632,
+        "fills": 17670,
+        "eligible": 28799
+      },
+      "M50|A58|L37+13%x4000|N100": {
+        "E": 30475.134957314734,
+        "score": 208242.99635054806,
+        "null": 177767.86139323332,
+        "KEEP": -466751.13788180513,
+        "fills": 20495,
+        "eligible": 28799
+      },
+      "M0|A58|L37|N100": {
+        "E": 39834.45105128509,
+        "score": 224826.397628511,
+        "null": 184991.94657722593,
+        "KEEP": -368042.92187950073,
+        "fills": 16565,
+        "eligible": 28799
+      },
+      "M250|A58|L37|N100": {
+        "E": -13341.716849372304,
+        "score": 220534.27583550793,
+        "null": 233875.99268488024,
+        "KEEP": -518337.10253212077,
+        "fills": 20040,
+        "eligible": 28799
+      }
+    }
+  },
+  "known": {
+    "asof": "2026-11-18T10:56:10.677848+00:00",
+    "legs": 99,
+    "unique_orders": 86,
+    "candidate_rows": 131,
+    "anchored_legs": 93,
+    "read": {
+      "K0 REPRODUCES 11-09": "YES",
+      "K1 CLASSIFIER-CONSISTENCY": "YES",
+      "K2 DELAYED-STATUS-REFUSED": "YES",
+      "K3 IDENTITY-CHECK-FIRES": "YES",
+      "K4 REPLAY-ANCHOR-VS-LIFECYCLE": "CONTRADICTED",
+      "K7 CLOCK OFFSET (venue status - bot)": "[-226.4, +49.3] ms, CONTAINS 0",
+      "K5 ORDER-PATH INTERVALS vs DECLARED RANGES": "CONTRADICTED",
+      "K8 SETTLEMENT TIME": "CONSISTENT",
+      "K8 CLOCK OFFSET (settlement premise: the id stamped at the match)": "[+14.5, +32.6] ms, EXCLUDES 0",
+      "K8 FILL-NOTICE DELAY vs the replay 100 ms": "CONTRADICTED on 99 of 99 fills",
+      "K5S ORDER PATH WITH SETTLEMENT TIMES": "CONTRADICTED",
+      "K6 GATE S1": "FAIL",
+      "K6 GATE S1 (settlement offsets)": "FAIL",
+      "K6 GATE S2": "FAIL",
+      "K6 GATE S2 (settlement offsets)": "FAIL",
+      "K6 GATE S3": "FAIL",
+      "K6 GATE S3 (settlement offsets)": "PASS",
+      "K6 GATE ST": "PASS",
+      "K6 GATE ST (settlement offsets)": "PASS",
+      "K6 GATE EV": "PASS",
+      "K6 GATE EV (settlement offsets)": "PASS",
+      "K6 REPLAY POINT M50": "CONTRADICTED",
+      "KNOWN VERDICT": "INSTRUMENT-CHECKS-PASS; REPLAY-ANCHOR-CONTRADICTED; SETTLEMENT-TIME CONSISTENT; LEDGER-WINDOW GATE S1 FAIL, S2 FAIL, S3 FAIL, ST PASS, EV PASS (settlement offsets: S1 FAIL, S2 FAIL, S3 PASS, ST PASS, EV PASS); ORDER-PATH RANGES CONTRADICTED; NOT A VENUE-ENGINE ACCEPTANCE"
+    },
+    "K5": {
+      "orders": 86,
+      "legs": 99,
+      "activation": {
+        "COMPATIBLE-UNIDENTIFIED": 85,
+        "CONTRADICTED": 1
+      },
+      "cancel": {
+        "CERTIFIED": 65,
+        "COMPATIBLE-UNIDENTIFIED": 12,
+        "NO-CANCEL-CONFIRMATION": 9
+      },
+      "declared_activation": [
+        25.0,
+        100.0
+      ],
+      "declared_cancel": [
+        0.0,
+        100.0
+      ],
+      "confirmation_after_request_ms": {
+        "n": 77,
+        "p50": 20.981201171875,
+        "p95": 5030.6515625,
+        "max": 6030.1494140625
+      },
+      "confirmation_source": {
+        "http_answer": 77
+      },
+      "throttled": 0,
+      "smallest_activation_upper_ms": 21.1650390625,
+      "activation_with_settlement": {
+        "COMPATIBLE-UNIDENTIFIED": 84,
+        "CONTRADICTED": 2
+      },
+      "cancel_with_settlement": {
+        "CERTIFIED": 65,
+        "COMPATIBLE-UNIDENTIFIED": 2,
+        "CONTRADICTED": 10,
+        "NO-CANCEL-CONFIRMATION": 9
+      },
+      "orders_with_a_match_after_the_request": 16,
+      "largest_cancel_lower_bound_ms": 5700.358642578125,
+      "smallest_activation_upper_with_settlement_ms": 18.16650390625
+    },
+    "K7": {
+      "lo": -226.392822265625,
+      "hi": 49.336669921875,
+      "exists": true,
+      "includes_zero": true,
+      "receipt_bounds": 198,
+      "placement_bounds": 99
+    },
+    "K8": {
+      "legs": 99,
+      "v7": 99,
+      "floor_is_matched_second": 99,
+      "after_place_at_0": 99,
+      "before_notice_at_0": 99,
+      "inside_lifecycle_at_0": 94,
+      "d": {
+        "lo": 14.474853515625,
+        "hi": 32.641357421875,
+        "exists": true
+      },
+      "d_per_run": {
+        "basis": {
+          "lo": 14.474853515625,
+          "hi": 65.72265625,
+          "exists": true,
+          "legs": 36
+        },
+        "v6": {
+          "lo": 4.41943359375,
+          "hi": 32.641357421875,
+          "exists": true,
+          "legs": 63
+        }
+      },
+      "consistent": true,
+      "lag_bound_ms": 259.0341796875,
+      "offset_settlement_premise": {
+        "lo": 14.474853515625,
+        "hi": 32.641357421875,
+        "includes_zero": false
+      },
+      "notice_delay_ms": {
+        "lo_min": 162.312744140625,
+        "lo_p50": 332.654052734375,
+        "hi_p50": 350.820556640625,
+        "hi_max": 655.047119140625,
+        "vs_replay_point": {
+          "CONTRADICTED": 99
+        },
+        "replay_point_ms": 100.0
+      }
+    }
+  },
+  "verified_hashes": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_v4_20261118_20261023/exec_windows.json": "99040535b855931a41b634d4c2719286e358a3e47660b4acb1e47b7f3e226778",
+    "/tmp/predictfun-review-084d5a19/predictfun/research/pf_keep_pull_exec_windows.py": "3d1c44a0dea01bb4a069ad990b8b3965235f64791c8cc1f7cf3387f0532876f1",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_v4_20261118_20261023/ledger_events.parquet": "96d8292fce2c2b35a7c90bcd500498bcc2b409938b7ad8b047ff3988ab0dd52f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_v4_20261118_20261023/ledger_legs.parquet": "07f886559c46ed3c2fdaa9403b6770523f760383a57e2b1db9aacb5a77da2b4c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_v4_20261118_20261023/ledger_fill_events.parquet": "b356e2d0d229d125edf77ac62743be109f5dd0dcf61b434b07b741069115dbd2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_v4_20261118_20261023/ledger_fills.parquet": "51ceba11035df508044bf9315fad7a9f4c9733e3b4383c9ad48325439dee615f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_v4_20261118_20261023/ledger_orders.parquet": "a725884b1e607fbd390f5266eb503953e3b672fdc9b7b407d5d3e33428a5a7a7",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_v4_20261118_20261023/ledger_schema.json": "cffa5d68353625503533049c842a9319424273976b6e09e18a78d0249470e661",
+    "/tmp/predictfun-review-084d5a19/predictfun/research/pf_keep_pull.py": "58b972f92bda06fbc847c43d2ace8db9d7b12f4daaf67bcfaa14e92deb475835",
+    "/tmp/predictfun-review-084d5a19/predictfun/research/pf_keep_pull_clock_audit.py": "20f5a0365bbc24235cf1943e5729f50ce8de24db7307f50aa75860798ffe4ec1",
+    "/tmp/predictfun-review-084d5a19/predictfun/research/pf_keep_pull_timing_audit.py": "a8ca7f3c73b7770d6c2ec662b40cb0e9ef10a074b0a220628ef438d46bc4aba6",
+    "/tmp/predictfun-review-084d5a19/predictfun/research/pf_stop_ev_minutes_inputs.py": "bbec0ff5d8f14a617b1ef83cfcdda659de1b4998ab25a9b05e098140316de7b6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_known_v3_20261118/known.json": "812696c8434d421a1700d6e239050745ac18eb73a532061083c756da315d6407",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_known_v3_20261118/known_cases.parquet": "c4f6f5d1ce5e44805e58cf0e82ea060410b70cd77f5c61989caa4d8ebf36528d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_known_v3_20261118/known_orders.parquet": "3783566d38b40b0e747029889ac5871f7450c999a8221e521e94b256203c7211",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_known_v3_20261118/known_case_rows.parquet": "9118903e92e44e7af933496b8383d8d3e6de207a0ef61d05debcd3c3d0eb7ad1",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_known_v3_20261118/known_schema.json": "70016b9ca50403b5b1ac1b44326f9c666f4fa3975116b51ab3bea9e745517a71",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_scenarios_v3_20261118/scenarios_20261023.json": "7faf5d8759247bf8ebebad86afce6a8510efe298e57e11ad9b7b4aaf34592a2f",
+    "/tmp/predictfun-review-084d5a19/predictfun/research/pf_keep_pull_scenarios.py": "1634c95e6186ff8fc089423bfc1162b722d5d7e55dab490b7d175a02a012a274",
+    "/home/yuqing/ctaNew/data/predict_fun/research/settlement_times_20261118/20261023/settlement.json": "9e943dfa2e9c54f8081f5b277cd93142859df19c2caa0a952ab637b36b22d1e2",
+    "/tmp/predictfun-review-084d5a19/predictfun/research/pf_settlement_times.py": "ee240a258d2ddb96a97f6348103a09a8308bc382e2e5b074d4373e5e8e6aecd1",
+    "/home/yuqing/ctaNew/data/predict_fun/research/settlement_times_20261118/20261023/legs_set.parquet": "ed58338f71cd35e8d23aca544995e64863b2060100096ef0c67e90ab4c5904a6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_scenarios_v3_20261118/20261023/receipt.json": "22d387ac0c4fb327a98cf5dd09bbb62ae345924f9922c8415b596fbce987a4e6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_scenarios_v3_20261118/20261023/orders.parquet": "64bcc227b76dd91252442c64e8319c47d629a916840785d81af606ccfde4e340",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_scenarios_v3_20261118/20261023/fills.parquet": "4e499fb79a417cd71d6b5a7577b2d9d0b7950aebdc260b9ef70fbd9c060c5542",
+    "/tmp/predictfun-review-084d5a19/predictfun/research/pf_queue_place_test.py": "188c1495ce35db80ce8b79cbc50541964d0d32d9da38fee4b925e951eec01a1f",
+    "/tmp/predictfun-review-084d5a19/predictfun/research/pf_flow_control_kernel.py": "2460567474f28318f5d09df8ce0977e15748bb9263bc501471cf6a649b334379",
+    "/tmp/predictfun-review-084d5a19/predictfun/research/pf_flow_control_kernel.cpp": "fb1ff31cdcf2a97783283f927fb2d56333a0760e877cb0b93348528138886612",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_20261117/20261023/receipt.json": "5de91ce5a4dbddbc9789ac549e2965016d97967bc7762035e7b8db51b5f5bc44",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_20261117/20261023/orders.parquet": "3313ea65d73ccbfee64669758efd0f7581f73470b49dc2b7752866258a5d142b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_20261117/20261023/fills.parquet": "ba1b1448b353928c27850e4e19f073ebb6d9cf9235a51dd07d691eab2f9f2513",
+    "/tmp/predictfun-review-084d5a19/predictfun/research/pf_settlement_times_mutants.py": "a474e72aaf76089574a9b1d836d05857b6b06708dc67ec8f13db84f605d78512",
+    "/tmp/predictfun-review-084d5a19/predictfun/research/pf_keep_pull_exec_windows_mutants.py": "8f42c515410a75aa294485f9f08ae9bc6068c1f516fcb22f1c42e2ac0e258ab9",
+    "/tmp/predictfun-review-084d5a19/predictfun/research/pf_keep_pull_scenarios_mutants.py": "72eccff9dee13500bd2538edc67c67bc95e80d13dc4832cece149f35ecf895df",
+    "/tmp/predictfun-review-084d5a19/predictfun/research/run_keep_pull_scenarios.sh": "797ee12cab3446dae6f73b4faaf5d395cb5275421cd93590c812202addc8174a"
+  }
+}

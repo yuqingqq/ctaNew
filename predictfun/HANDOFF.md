@@ -1,3 +1,27 @@
+<!-- MANUAL_REVIEW_20261118_084D5A19 -->
+## Manual fix review — 2026-11-18 (084d5a19)
+
+Reviewed **084d5a1921460a9a74ba47bef8bb41ff38921676**, including 1a9258bb,
+291b8f40 and 2d025c35. [Report](reviews/automatic/20261118_084d5a19/report.md),
+[evidence](reviews/automatic/20261118_084d5a19/receipt.json),
+[propagation falsifier](reviews/automatic/20261118_084d5a19/effects.json).
+Previous K5 endpoint/unit and contradiction-attribution findings are fixed.
+Three pinned self-tests and all 20 saved scenario metrics reproduce; no tape
+replay or training. **P1: timing is not cleared.** K8 treats a feasible common
+UUID-to-match offset as a maximum delay for every event. Shared clock offset
+plus nonnegative, event-dependent creation lag does not imply common total
+offset. The synthetic counterexample passes K8 with a 30 ms bound despite a
+compatible 700 ms lag; downstream K5S falsely excludes a compatible 50 ms
+cancel. Thus the 259 ms ST bound, notice range and slow-cancel counts need
+conditional labels; this supersedes the unconditional clearance claims below.
+Consumed Oct23/Nov8 only. The saved local END +5 s values still have timing-
+sensitive E (+40,692 c SThi, -8,757 STlo) and negative KEEP+score in both.
+**One next priority:** repair K8 with separate clock offset and event-specific
+creation lags, retain unknown/admissible ranges, add the falsifier, and
+supersede the downstream receipts before more days or model tuning. Independent
+semantics/evidence must justify any narrower match bound. Review-only; scheduler
+off; development remains with the other session.
+
 ## 2026-11-18 11:16Z (session aea5bfb9) — THE TIMESTAMP ISSUES CLEARED WITH THE VENUE'S OWN TRADE TIME (USER: "Can you clear the issues"): every REST match record's settlementId is a UUIDv7 carrying the venue's creation time in ms; on live's 99 own legs it sits inside the Matched second, after placement and before the notice, one constant offset fitting all (K8); one settlement per taker order on Oct 23 (0 violations in 682,499 legs); the ST windows built on it pass the known-fill gate and remove the leg disagreements (748 -> 12 fills); evidence-based ranges for notice, activation and cancel; the score's sign is still not identified
 
 - New: research/pf_settlement_times.py (+ mutants 10 / 10): per leg of a day its settlement time, row-aligned with legs_timed2 (content + rank join as pf_txmap); controls C1 one settlement per taker order (and its shuffled control), C2 UUIDv7, C3 before the REST second ends, C4 pages read. Oct 23: 682,499 of 802,157 legs mapped (85.1%; 119,658 equal-content legs with different ids are a status, S3 stands in for them), C1 0 violations (shuffled 99.998%), C3 100%. The first extraction peaked at 2.67 GiB - above the 2 GiB self-guard (the reader held id strings and never called the guard); rewritten with id hashes and a guard per hour, it reproduced every row exactly (times and statuses) at 0.95 GiB, and the first output was deleted.

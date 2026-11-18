@@ -1,0 +1,90 @@
+Pinned sources and saved output hashes verified.
+Three pinned synthetic selftests passed.
+Reproduced K8 variable-lag counterexample; constant-lag and refusal controls passed.
+{
+  "target": "084d5a1921460a9a74ba47bef8bb41ff38921676",
+  "asof": "2026-11-18T11:25:46.056030+00:00",
+  "variable_lag_counterexample": {
+    "synthetic": true,
+    "common_clock_offset_ms": 0,
+    "place_ms": [
+      0,
+      0
+    ],
+    "upper_ms": [
+      40,
+      900
+    ],
+    "uuid_times_ms": [
+      30,
+      800
+    ],
+    "common_d_fit_ms": [
+      -10,
+      30
+    ],
+    "claimed_lag_bound_ms": 30,
+    "positive_constant_lag_matches_ms": [
+      10.0,
+      780.0
+    ],
+    "true_variable_lag_matches_ms": [
+      20.0,
+      100.0
+    ],
+    "true_variable_lags_ms": [
+      10,
+      700
+    ],
+    "claimed_match_windows_ms": [
+      [
+        0.0,
+        40.0
+      ],
+      [
+        770.0,
+        810.0
+      ]
+    ],
+    "both_worlds_satisfy_observations_and_nonnegative_lag": true,
+    "variable_lag_world_excluded_by_claimed_bounds": true,
+    "incompatible_common_offset_control_refused": true
+  },
+  "ledger": {
+    "counted_orders": 30466,
+    "status": {
+      "eligible": 28799,
+      "refused_post_only": 1289,
+      "missing_endpoint": 354,
+      "stale_future_book": 24
+    },
+    "fills": 17670,
+    "events": 50553,
+    "contradiction_causes": {
+      "S1": {
+        "all_contradictory": 748,
+        "evidence_cap": 37,
+        "leg_intersection": 708
+      },
+      "S2": {
+        "all_contradictory": 129,
+        "evidence_cap": 0,
+        "leg_intersection": 129
+      },
+      "S3": {
+        "all_contradictory": 139,
+        "evidence_cap": 0,
+        "leg_intersection": 139
+      },
+      "ST": {
+        "all_contradictory": 12,
+        "evidence_cap": 0,
+        "leg_intersection": 12
+      }
+    },
+    "contradiction_accounting_reconciled": true,
+    "saved_st_lag_ms": 259.0341796875
+  }
+}
+All 20 saved scenario rows and known-case readings reproduced.
+2026-11-18T11:25:44Z tag=review_084d5a19_verify rc=0 peak_rss_mib=715 wall_s=27.24 cpu_user_s=21.95 memavail_start_gib=23 disk_free_gib=443->443 slot=codex
