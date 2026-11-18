@@ -1,3 +1,19 @@
+keep_pull_clock_audit_20261118:
+  status: done_target_clock_sensitive
+  asof: "2026-11-18 03:42Z"
+  session: aea5bfb9
+  user: "Check review, Proceed next priority"
+  review: {commit: e0067ca6, report: predictfun/reviews/automatic/20261118_717a1a49/report.md}
+  script: predictfun/research/pf_keep_pull_clock_audit.py
+  source_tables: "data/predict_fun/research/keep_pull_20261117 (hashes checked); no tape, no fit"
+  readings: {A0: "YES (review / report numbers to 1 c)", A1: "FILL-TIMING-DOMINATES", A2: "TARGET-CLOCK-SENSITIVE"}
+  excess_c: {M50_M50: 234279, M50_M250: 171450, M50_common: 171416, M250_M50: -35410, M250_M250: -27124, M250_common: -27154}
+  shapley_c: {total: -261403, fill: -234132, eligibility: -27271}
+  near_200ms_c: {M50_M50: 306434, M250_M250: 29560}
+  receipts: predictfun/reviews/keep_pull_clock_audit_20261118
+  running: false
+  next: "USER: resolve the fill clock near the decision (live order-level timing, or a clock-robust target) before any tuning; or entry / exposure"
+
 manual_review_20261118_717a1a49:
   status: complete_no_new_accounting_discrepancy_clock_robustness_unresolved
   asof: "2026-11-18T03:12:00Z"
@@ -31,7 +47,7 @@ keep_pull_20261117_run:
   code: ebd5c6b3
   population: {counted: 151228, eligible: 143134, refused_post_only: 6040, path_excluded: 2054, live_decisions: 6935675, live_decisions_fair_missing: 579}
   readings: {K1: "AVOIDABLE-AT-LATENCY (94%)", K2: "EARNS-OVER-MATCHED-STATES", K3: "RANKS-VALUE-STATES", estimand: "decision states", trajectory: "NOT-EVALUABLE-UNMATCHED (500 / 500 draws, mean 365.1 pulls)", K2_holds_at: [M50_L0, M50_L37, M50_noyoung_L37, M0_L37], K2_fails_at: [M250_L37]}
-  stakes_c: {keep: -1946163, keep_loss: 3504309, pull_all: 1841243, oracle_37ms: 3300877, score_A0: 1169671, score_A0_null_mean: 936736}
+  stakes_c: {keep_absolute: -1946163, keep_loss: 3504309, improvement_over_keep: {pull_all: 1841243, oracle_37ms: 3300877, score_A0: 1169671, score_A0_null_mean: 936736}, absolute_value: {score_A0: -776492, pull_all: -104920, oracle_37ms: 1354714}}
   delays_c: {posting_window: 95356, pending_to_live: 16521, cancel_latency: 91555, avoidable_37ms: 3300877}
   multiplicity: {score_policies: 6, candidates_passing: ["A+1", "A-1", "B0.5", "B1", "B2"]}
   receipts: predictfun/reviews/keep_pull_20261117

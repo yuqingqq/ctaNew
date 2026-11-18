@@ -1,3 +1,13 @@
+## 2026-11-18 03:42Z (session aea5bfb9) — PAIRED M50 / M250 CLOCK AUDIT (USER: "Check review, Proceed next priority"; the review of 717a1a49, e0067ca6): the selection advantage is fill timing, not eligibility - and it does not survive the M250 clock on the same opportunities: TARGET-CLOCK-SENSITIVE, model tuning on this target not justified
+
+- What: pf_keep_pull_clock_audit.py (declared before computing; this commit) on the committed keep / pull run's saved tables only (hashes checked; no tape, no fit; 20 s, 876 MiB). E(F, G) = the declared A+0's improvement minus the exact expectation of its STATES null (by linearity, no draws), fills from clock F, client eligibility from G (M50 / M250 / COMMON = live at both). Controls: the review's E(50, 50) +234,279, E(250, 250) -27,124, null 935,392 / 1,051,920 and the report's score 1,169,671 / 1,024,796 reproduced to 1 c (A0 YES); brute force on 25 strata; selftest: analytic = the committed sampler's mean (20,000 draws, 0.3 SE), planted FILL and ELIGIBILITY cases to the cent.
+- E (c): M50 fills x M50 / M250 / COMMON eligibility +234,279 / +171,450 / +171,416; M250 fills x the same -35,410 / -27,124 / -27,154. Shapley split of the -261,403 change: FILL -234,132, ELIGIBILITY -27,271 -> A1 FILL-TIMING-DOMINATES (both sides: bid -115,078 / -12,710, ask -119,054 / -14,562).
+- A2 (the gate): on the same opportunities E(50, COMMON) +171,416 (positive on 5 / 5 days, +23k to +45k) vs E(250, COMMON) -27,154 (negative on 4 / 5) -> TARGET-CLOCK-SENSITIVE.
+- Mechanism: at M50 the whole advantage sits in fills within 200 ms after the pull lands (+306,434 of +234,279; later fills -72,155) - the window a 200 ms earlier trade clock moves before the landing. By source on the same opportunities: WS-timed +108,337 -> +19,968, E2 +4,624 -> -26,968, mixed +59,555 -> -18,769, imputed -1,099 -> -1,385 (WS keeps a smaller positive part; not a policy subset - the review's caution).
+- Reading: the fair-edge score's apparent pull skill is the timing of fills in the first ~200 ms after its decision relative to the trade anchors - exactly the uncertain part of the trade clock. The economic target (value of keeping from a decision) is not stable enough across plausible fill clocks to tune a model on.
+- Scope corrections from the review (e0067ca6), for the 03:05Z entry: the latency reading holds for that fixed setup only (the oracle pulls every loser at the first live decision; it does not measure how soon a usable signal becomes observable); its stakes are improvements over KEEP - absolute marked values KEEP -$19,462, A+0 -$7,765, PULL-ALL -$1,049, oracle +$13,547 (sums of isolated simulated orders; STATUS relabelled).
+- Next (USER's call): resolve the fill clock near the decision before any tuning - order-level fill timing from live (C10, only live can answer), or a clock-robust target that values only fills beyond the clock's uncertainty after the pull lands; or turn to entry / exposure (resting these JOIN orders loses at every clock).
+
 <!-- MANUAL_REVIEW_20261118_717A1A49 -->
 ## 2026-11-18 Manual review: keep/pull result reproduced; clock robustness unresolved
 
@@ -38,6 +48,7 @@ model tuning. Development owns the next diagnostic. Schedule remains removed.
 - Splits: KEEP by trade source WS -842,049 c (808,211 sh) / E2 -573,065 (401,406) / imputed -25,824 (4,409) / mixed -505,225 (217,693); by age after live < 100 ms -138,264, 100-500 ms -469,834, >= 500 ms -1,338,065. P47 measured: 102 bids cancelled on an empty ask side (0.14% of bids).
 - Receipts: reviews/keep_pull_20261117 (report, JSON, per-day receipts, logs); orders / fills tables in data/predict_fun/research/keep_pull_20261117 (hashes in the receipts).
 - Next (USER's call): the M250 failure first - the score's removed value by trade source (WS-timed vs E2-estimated) at M50 and M250 (E2 anchors +-250 ms, C12) before reading anything into the score; then risk / value prediction for the pull, or entry / exposure.
+- SCOPED 2026-11-18 03:12Z by the review of 717a1a49 (e0067ca6): the latency reading holds for this fixed setup only; the stakes above are improvements over KEEP (absolute marked values: KEEP -$19,462, A+0 -$7,765, PULL-ALL -$1,049, oracle +$13,547); the M250 audit followed (03:42Z entry).
 
 <!-- SCHEDULE_REMOVED_20261118 -->
 ## 2026-11-18 Scheduled reviews removed at the user's request
