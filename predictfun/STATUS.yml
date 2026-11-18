@@ -1,3 +1,24 @@
+review_fixes_20261118_1fd77004:
+  status: fixed_in_code_runs_wait_for_go
+  asof: "2026-11-18 09:25Z"
+  review: predictfun/reviews/automatic/20261118_1fd77004/report.md
+  user: "Check the new review, it still has time disagreements, and the issues are still there, resolve these issues, all timestamp related issues, correct these ambiguity"
+  root_cause: [rest_executedAt_is_the_confirmed_second_0_1_10s_after_matched, ws_link_e2_search_s1_imputed_centred_on_it, engine_anchor_is_a_taker_orders_earliest_ws_time]
+  fixed:
+    P2_K5: per_unique_order_intervals_both_endpoints_contradicted_compatible_certified
+    P2_contradiction_attribution: contradictory_timing_assumptions_evidence_cap_leg_intersection_mixed_reconciled
+    next_priority: known_v2_case_ledger_99_legs_K6_gate_on_the_ledgers_own_windows_K7_clock_offset
+    timestamp_semantics: S3_semantics_windows_in_ledger_and_scenarios
+    ambiguity: [scenario_families_named, population_93_anchored_plus_6, held_event_denominators_and_value]
+  withdrawn: ["07:25Z the declared cancel range does not cover live's cancel acks", "748 fills contradicted by the REST evidence"]
+  checks: {xw_selftest: pass, xw_mutants: 89/89, sc_selftest: pass, sc_mutants: 27/27, slot: claude}
+  data_read: false
+  runs_waiting_for_go: ["predictfun/research/run_keep_pull_scenarios.sh known", "predictfun/research/run_keep_pull_scenarios.sh day 20261023"]
+  outputs_planned: [keep_pull_exec_windows_known_v2_20261118, keep_pull_exec_windows_v3_20261118_20261023, keep_pull_scenarios_v2_20261118]
+  still_open_not_timestamp: [live_queue_rule_validation, portfolio_repost_inventory_evaluation]
+  still_open_timestamp: book_to_rest_clock_alignment_needs_own_order_book_appearance_or_a_venue_match_stamp
+  receipts: [predictfun/reviews/keep_pull_exec_windows_20261118_v4, predictfun/reviews/keep_pull_scenarios_20261118_v3]
+
 manual_result_review_20261118_1fd77004:
   status: complete_previous_findings_fixed_execution_evidence_gate_failed_two_P2_diagnostic_findings
   asof: "2026-11-18T08:11:43Z"

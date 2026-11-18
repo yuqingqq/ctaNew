@@ -1,4 +1,4 @@
-"""MUTATION CHECK of the execution-window ledger's selftest (2026-11-18, session aea5bfb9): a checker that cannot fail proves nothing. Each
+"""MUTATION CHECK of the execution-window ledger's selftest (2026-11-18, session aea5bfb9; v3 + the case ledger: the review of 1fd77004): a checker that cannot fail proves nothing. Each
 entry plants one code error in a COPY of pf_keep_pull_exec_windows.py (text replacement, executed in a subprocess; the repo file is never
 touched) and runs the copy's selftest (synthetic only). Required: the unchanged copy passes, every mutant fails, and every replacement
 target occurs exactly as often as declared (a stale target is a failure, never a silent pass). No market data is read.
@@ -62,9 +62,7 @@ MUT = [
     ('relaxed bounds labelled exact', "bounds='outer' if rel.any() else 'exact'", "bounds='exact'"),
     ('ambiguous fills moved independently even when enumerable (no joint solve)', "        if na > cap:\n", "        if na > -1:\n"),
     ('K4 always consistent', "'CONSISTENT' if all(v['missed'] == 0 and v['cancel_first'] == 0 for v in k4.values()) else 'CONTRADICTED'", "'CONSISTENT'"),
-    ('known verdict ignores K4', "'; RESEARCH-WINDOWS-' + read['K4 RESEARCH-WINDOWS-VS-LIFECYCLE']", "'; RESEARCH-WINDOWS-CONSISTENT'"),
-    ('K5 always covered', "('COVERED' if len(ab) and len(cb) and k5['activation_upper_ms']['p95'] <= ACT_RANGE[1]", "('COVERED' if True or len(ab) and len(cb) and k5['activation_upper_ms']['p95'] <= ACT_RANGE[1]"),
-    ('K5 cancel bound not measured from the request', "cb = (K.ack.values - K.req.values)", "cb = (K.ack.values - K.ack.values)"),
+    ('known verdict ignores K4', "'; REPLAY-ANCHOR-' + read['K4 REPLAY-ANCHOR-VS-LIFECYCLE']", "'; REPLAY-ANCHOR-CONSISTENT'"),
     # --- explicit bound types, bases, representative time, the column dictionary
     ('an evidence-capped upper bound labelled an assumption', "np.where(st == 1, 'evidence_bound', 'assumption_range')", "np.where(st == 1, 'assumption_range', 'assumption_range')"),
     ('contradictory endpoints labelled assumptions', "E[f'{k}_lo_type'] = np.where(st >= 2, 'contradictory', 'assumption_range')", "E[f'{k}_lo_type'] = np.where(st >= 9, 'contradictory', 'assumption_range')"),
@@ -79,6 +77,60 @@ MUT = [
     ('K1 cancel window from the ack alone', "c_lo = np.where(np.isfinite(K.req.values), K.req.values, K.place.values); c_hi", "c_lo = K.ack.values; c_hi"),
     ('K2 evidence use never tested', "evidence_contradictions=int(miss(*rest_ev, K).sum())", "evidence_contradictions=0"),
     ('K3 permutation not applied', "Kp.loc[Kp.index[ix], ['place', 'upper']] = K[['place', 'upper']].values[pm]", "Kp = Kp"),
+    # --- the review of 1fd77004: S3 semantics windows
+    ('S3 candidates without the +250 ms frame delay', "np.where(has, iq * span + (hi0[q] + WS_DELAY - base), -np.inf)", "np.where(has, iq * span + (hi0[q] - base), -np.inf)"),
+    ('S3 REST range centred on the Confirmed second again', "S = np.asarray(exec_s, float) * 1000.; return S - REST_LAG, S + 1000.", "S = np.asarray(exec_s, float) * 1000.; return S - 500., S + 500."),
+    ('S3 chunked candidate pairs lose their chunk offset', "qi = a_ + np.repeat(np.arange(b_ - a_), c_);", "qi = np.repeat(np.arange(b_ - a_), c_);"),
+    ('S3 value tolerance ignored', "ok = np.abs(inc[pi] - vq) <= np.maximum(VAL_TOL[0] * vq, VAL_TOL[1])", "ok = np.ones(len(pi), bool)"),
+    ('S3 cell-linked legs valued by their own shares', "v[c2] = g.groupby(['m', 's', 'd', 'p']).q.transform('sum').values * pt[c2] / 100.", "v[c2] = v[c2]"),
+    ('S3 E2 legs keep their drop point', "lo, hi = lo0.copy(), hi0.copy(); nc = np.zeros(n, np.int64)",
+     "e2_ = R.t_e2.values.astype(float); lo, hi = np.where(np.isfinite(e2_), e2_ - 250., lo0), np.where(np.isfinite(e2_), e2_ + 250., hi0); nc = np.zeros(n, np.int64)"),
+    ('S3 hull from the latest candidate only', "lo[j] = np.maximum(mn[g_] - WS_DELAY, lo0[j])", "lo[j] = np.maximum(mx[g_] - WS_DELAY, lo0[j])"),
+    ('S3 window not clipped to the REST range', "hi[j] = np.minimum(mx[g_], hi0[j])", "hi[j] = mx[g_]"),
+    ('S3 late links not marked', "late = (how > 0) & (R.t_ms.values.astype(float) > hi0 + WS_DELAY)", "late = np.zeros(n, bool)"),
+    ('S3 events built from the S1 leg windows', "S3_lo=W['S3'][0], S3_hi=W['S3'][1]))", "S3_lo=W['S1'][0], S3_hi=W['S1'][1]))"),
+    ('the ledger legs take another row\'s S3 window', "lg = pd.concat([lg, sem.iloc[lg.row_id.values.astype(np.int64)].reset_index(drop=True)], axis=1)",
+     "lg = pd.concat([lg, sem.iloc[np.zeros(len(lg), np.int64)].reset_index(drop=True)], axis=1)"),
+    # --- contradictory timing assumptions by cause
+    ('evidence-cap and leg-intersection causes merged', "flags[k + '_cap'] = st == 2; flags[k + '_legs'] = st == 3", "flags[k + '_cap'] = st >= 2; flags[k + '_legs'] = st == 3"),
+    ('mixed causes not counted', "mixed = (cst[k] == 3) & (cst[k + '_cap'] != 3) & (cst[k + '_legs'] != 3)", "mixed = (cst[k] == 3) & False"),
+    ('the cause reconciliation always passes', "    return all(V3[k]['fills']['all'] == V3[k + '_cap']['fills']['all']", "    return True or all(V3[k]['fills']['all'] == V3[k + '_cap']['fills']['all']"),
+    ('binding pair from the earliest start', "a = D.src.values[g.lo.idxmax().values]", "a = D.src.values[g.lo.idxmin().values]"),
+    ('leg disagreements over every event', "bad = (EVT[f'{k}_st'].values == 3)[e]", "bad = (EVT[f'{k}_st'].values >= 0)[e]"),
+    # --- K5 per order, both endpoints
+    ('K5 ignores the range\'s lower end (the review\'s finding)', "return np.where((hi < R[0]) | (lo > R[1]), 'CONTRADICTED',", "return np.where((lo > R[1]), 'CONTRADICTED',"),
+    ('K5 certified and compatible not distinguished', "np.where((lo >= R[0]) & (hi <= R[1]), 'CERTIFIED', 'COMPATIBLE-UNIDENTIFIED')", "np.where(hi <= R[1], 'CERTIFIED', 'COMPATIBLE-UNIDENTIFIED')"),
+    ('K5 per leg, not per order', "U = K.drop_duplicates(['run', 'cid']).reset_index(drop=True); pl = U.place.values.astype(float)", "U = K.reset_index(drop=True); pl = U.place.values.astype(float)"),
+    ('a late confirmation read as a slow cancel effect', "interval_status(np.zeros(len(U)), c_hi, CANCEL_RANGE)", "interval_status(c_hi, c_hi, CANCEL_RANGE)"),
+    ('K5 reading ignores contradictions', "read['K5 ORDER-PATH INTERVALS vs DECLARED RANGES'] = ('CONTRADICTED' if k5", "read['K5 ORDER-PATH INTERVALS vs DECLARED RANGES'] = ('CONTRADICTED' if False and k5"),
+    ('the confirmation source not kept apart', "np.where(~np.isfinite(uc) | (ack < uc - 1e-6), 'http_answer', 'user_stream')", "np.where(True, 'http_answer', 'user_stream')"),
+    # --- K7 clock offset
+    ('K7 without the receipt bounds of the Matched notices', "a = np.r_[K.M.values.astype(float) * 1000. - K.rM.values.astype(float), K.Cs.values.astype(float) * 1000. - K.rC.values.astype(float)]",
+     "a = np.r_[K.Cs.values.astype(float) * 1000. - K.rC.values.astype(float)]"),
+    ('K7 without the placement bounds', "b = (K.M.values.astype(float) + 1.) * 1000. - K.place.values.astype(float); a, b = a[np.isfinite(a)], b[np.isfinite(b)]",
+     "b = np.array([np.inf]); a = a[np.isfinite(a)]"),
+    # --- K6 the ledger's own windows and the gate
+    ('K6 worst case at the latest offset', "cf0, cfw, cfr = ok & (c_hi < lo), ok & (c_hi < lo - dl), ok & (c_hi < lo - dh)", "cf0, cfw, cfr = ok & (c_hi < lo), ok & (c_hi < lo - dh), ok & (c_hi < lo - dh)"),
+    ('K6 a leg certified avoided when one candidate is', "return has & (np.bincount(i, weights=np.asarray(b, float), minlength=n) == nk)", "return has & (np.bincount(i, weights=np.asarray(b, float), minlength=n) > 0)"),
+    ('K6 disagreeing candidates take the first verdict', "return np.where(~has, -9, np.where(lo_ == hi_, lo_, fill))", "return np.where(~has, -9, lo_)"),
+    ('K6 every miss blamed on the own source', "np.where(own, 0, 1 + KE.src.values.astype(int))", "np.where(False, 0, 1 + KE.src.values.astype(int))"),
+    ('K6 gate always passes', "read[f'K6 GATE {k}'] = 'PASS' if k6[k]['false_cancel_first']['some_offset'] == 0 else 'FAIL'", "read[f'K6 GATE {k}'] = 'PASS'"),
+    ('K6 every-offset verdict read at offset 0', "vr = np.where(st >= 2, v0, np.where(hi - dl < place, 1, np.where(lo - dh > upper, 2, 0)))", "vr = v0"),
+    ('K6 a contradictory event classified as a window', "ok = can & (st < 2); cf0", "ok = can & (st < 9); cf0"),
+    # --- the case linkage and the case ledger
+    ('the anchor counted as the own row\'s whenever it is a pending time', "a_own = np.where(origin == 'pending_increment', (how > 0) & (t_ms == wmin),",
+     "a_own = np.where(origin == 'pending_increment', how > 0,"),
+    ('a pinned anchor the rule does not reproduce not marked', "anchor_rule_ok=rule == Zr,", "anchor_rule_ok=np.ones(len(r), bool),"),
+    ('candidate rows not checked against the audit\'s counts', "C.require(np.array_equal(np.bincount(M_.i.values, minlength=len(K)), K.candidate_legs.values.astype(int)),",
+     "C.require(True or np.array_equal(np.bincount(M_.i.values, minlength=len(K)), K.candidate_legs.values.astype(int)),"),
+    ('own-row windows not capped by the row\'s REST second', "KE[f'own_{k}_lo'], KE[f'own_{k}_hi'] = W[k][0], np.minimum(W[k][1], cap)", "KE[f'own_{k}_lo'], KE[f'own_{k}_hi'] = W[k][0], W[k][1]"),
+    ('the case rows carry the own row\'s window instead of the event\'s',
+     "KE[f'{k}_lo'], KE[f'{k}_hi'], KE[f'{k}_st'] = EVT[f'{k}_lo'].values[e], EVT[f'{k}_hi'].values[e], EVT[f'{k}_st'].values[e]",
+     "KE[f'{k}_lo'], KE[f'{k}_hi'], KE[f'{k}_st'] = W[k][0], W[k][1], 0"),
+    ('K4 per-leg misses not written to the case ledger', "k4c.update({f'K4_{nm}_missed': mi, f'K4_{nm}_cancel_first': cf_})",
+     "k4c.update({f'K4_{nm}_missed': np.zeros(len(K), bool), f'K4_{nm}_cancel_first': cf_})"),
+    ('the K4 failures not traced in the report', "T_ = KC[KC.K4_S1_missed.values.astype(bool)].to_dict('records')", "T_ = KC[KC.K4_S1_missed.values.astype(bool)].to_dict('records')[:0]"),
+    ('the case ledger accepts undocumented columns', "if c not in CASE_SCHEMA.get(t, {}) and not any(", "if False and c not in CASE_SCHEMA.get(t, {}) and not any("),
 ]
 STALE = 97                                                # exit code of a replacement target that does not occur as declared
 
