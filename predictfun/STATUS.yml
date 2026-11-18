@@ -1,3 +1,28 @@
+manual_review_20261118_717a1a49:
+  status: complete_no_new_accounting_discrepancy_clock_robustness_unresolved
+  asof: "2026-11-18T03:12:00Z"
+  target_commit: 717a1a49f27320def34cb466ca73b7325daf8ea3
+  report: predictfun/reviews/automatic/20261118_717a1a49/report.md
+  evidence: predictfun/reviews/automatic/20261118_717a1a49/receipt_v2.json
+  result_asof: "2026-11-18T03:01:27.440309+00:00"
+  population: {counted: 151228, eligible: 143134, refused_post_only: 6040, path_excluded: 2054}
+  consumed_days: [20261023, 20261024, 20261025, 20261026, 20261027]
+  M50_L37_absolute_marked_value_usd: {KEEP: -19461.63, A0: -7764.92, PULL_ALL: -1049.20}
+  exact_states_mean_excess_c: {M50: 234279.3061030301, M250: -27123.770822843187}
+  clock_failure_confined_to_estimated_timestamps: false
+  source_split_scope: post_hoc_descriptive_local_state_comparison
+  oracle_executed_steps: [2]
+  absolute_values_scope: isolated_order_common_endpoint_sums_not_portfolio_pnl
+  prior_ledger_and_unmatched_acceptance_fixes: verified_at_stated_scope
+  bounded_saved_artifact_check: {passed: true, seconds: 6.00, peak_rss_mib: 507, slot: codex}
+  raw_tape_read: false
+  derived_tables_read: true
+  untouched_validation_days_read: false
+  development_sources_modified: false
+  schedule_remains_removed: true
+  next_priority: paired_M50_M250_fill_clock_and_eligibility_attribution_before_model_tuning
+  development_owner: other_session
+
 keep_pull_20261117_run:
   status: done_readings_computed
   asof: "2026-11-18 03:05Z"
