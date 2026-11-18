@@ -1,0 +1,101 @@
+TIMING CASE AUDIT (pf_timing_case_audit.py run; consumed Nov 8 to 23:02Z; A6 on the saved Oct 23 ledger v5)
+  clock domains: B: bot host wall clock (Tokyo): kernel step `at` (ns) and the pfmm input journal `known_ms` - one clock (A0: the order's Accepted in both); B_mono: bot host monotonic clock: kernel `mono` (ns); used only to check that B did not step (at - mono spread); V_book: venue book stamp: predictOrderbook `updateTimestampMs` (ms); S3 WS windows and pend_inc t_ms are on it; V_status: venue status seconds: pf-exec Fill `match_time` (rounded to the second by pf-exec), REST `executedAt` (the Confirmed second); V_uuid: venue settlement id: settlementId UUIDv7 creation ms; R: research collector host clock: `recv_ns` of the research WS / REST rows; file selection only
+  LEG 20 v6 cid 1794108465179877 market 4335911 trade 01a1ba27-f105-72b0-83dc-9e674f56ae84 tx 0x61fb739c67: S3 lower end 1794124542004 (venue), c_hi 1794124542214.349 (bot), critical offset -210.3 ms (K7 [-226.4, +49.3])
+    A0 records reproduce: True {'place': True, 'signed': True, 'accepted': True, 'notice': True, 'rM': True, 'rC': True, 'M': True, 'Cs': True, 'order_hash': True, 'trade_id': True, 'one_bot_clock': True, 'cancel_confirmation': True}
+    A1 cancel answer: CANCELED (CancelPendingAudit: the HTTP Canceled answer (a user-stream cancel follows); null) at 1794124542214.3494; match <= c_hi: NOT-ORDERED-BY-THE-ANSWER; user-stream cancel at [1794124542291.9673, 1794124542715.7957]; post-cancel terminal snapshot [{'at': 1794124542240.4434, 'size_matched': 0}]; order 5 of 5 filled; filled after a Canceled answer True; a 0-matched snapshot received after the fill notice False; pf-exec alerts naming the order [['late_fill_beyond_cancel_bound:0x06320f7cd9c29fdb3cba6fa9ef17ee49a7fe1accf9cc4459b32084f95a3d3d70: booked fill exceeds terminal bound; exposure held until its cancel audit']]
+    A2 event identity: SAME-SETTLEMENT (binding [('0x61fb739c67f58a4d16fa330ec5f726c1e63ae6f33992843cd16971d000f3aa3c', '01a1ba27-f105-72b0-83dc-9e674f56ae84')], own [('0x61fb739c67f58a4d16fa330ec5f726c1e63ae6f33992843cd16971d000f3aa3c', '01a1ba27-f105-72b0-83dc-9e674f56ae84')])
+    A3 binding endpoint: reproduces True, domain V_book, u* 1794124542254.0, binding legs 6 of 24, increments [[(0, 24, 56.5813532173913)], [(0, 24, 56.5813532173913)], [(0, 24, 56.5813532173913)], [(0, 24, 56.5813532173913)], [(0, 24, 56.5813532173913)], [(0, 24, 56.5813532173913)]]
+    A4 book-clock bound (+-10 s): n 121, B -62.03173828125, B_max -21.891845703125, B_min -134.40869140625, statuses {'paired': 363, 'several_research': 153, 'none': 144, 'several_bot': 13}; clock step 0.00256 ms over 861 steps; binding frame pair x [-64.159912109375], its bot receipt - c_hi [103.810546875]
+    A5 CONTRADICTION-REMOVED-BY-INDEPENDENT-BOOK-CLOCK-BOUND
+    bounds: match >= placement decision = 1794124542150.844 [B, EVIDENCE] | match <= cancel answer receipt (c_hi) = 1794124542214.3494 [B, EVIDENCE] | match <= first fill notice = 1794124542702.6802 [B, EVIDENCE] | match within its Matched second = 1794124542000.0 [V_status, ASSUMPTION] | match <= Confirmed second end = 1794124543000.0 [V_status, EVIDENCE] | match <= settlement id creation = 1794124542213.0 [V_uuid, CONDITIONAL] | match <= binding frame stamp u* = 1794124542254.0 [V_book, EVIDENCE] | match >= u* - WS_DELAY = 1794124542004.0 [V_book, ASSUMPTION] | match <= the bot's receipt of the binding frame = 1794124542318.16 [B, EVIDENCE]
+  LEG 45 v6 cid 1794108465184298 market 4337531 trade 01a1ba9a-1239-7e33-8cdd-1579491bb013 tx 0x6de4395468: S3 lower end 1794132021590 (venue), c_hi 1794132021814.820 (bot), critical offset -224.8 ms (K7 [-226.4, +49.3])
+    A0 records reproduce: True {'place': True, 'signed': True, 'accepted': True, 'notice': True, 'rM': True, 'rC': True, 'M': True, 'Cs': True, 'order_hash': True, 'trade_id': True, 'one_bot_clock': True, 'cancel_confirmation': True}
+    A1 cancel answer: CANCELED (CancelPendingAudit: the HTTP Canceled answer (a user-stream cancel follows); null) at 1794132021814.82; match <= c_hi: NOT-ORDERED-BY-THE-ANSWER; user-stream cancel at [1794132021927.576, 1794132022257.281]; post-cancel terminal snapshot [{'at': 1794132022257.2354, 'size_matched': 0}]; order 5 of 5 filled; filled after a Canceled answer True; a 0-matched snapshot received after the fill notice True; pf-exec alerts naming the order [['cancel_quantity_conflict:0x5583a7b9a6dd5e517e5dcf7bfc85fb676961cd0e32d254299ae2f6c2e0da59fb: terminal quantity conflicts with known fills']]
+    A2 event identity: SAME-SETTLEMENT (binding [('0x6de43954684db3d0a70afda240b49fc87e6c3dad1454752f40a82e22f55ad0f6', '01a1ba9a-1239-7e33-8cdd-1579491bb013')], own [('0x6de43954684db3d0a70afda240b49fc87e6c3dad1454752f40a82e22f55ad0f6', '01a1ba9a-1239-7e33-8cdd-1579491bb013')])
+    A3 binding endpoint: reproduces True, domain V_book, u* 1794132021840.0, binding legs 7 of 18, increments [[(0, 75, 79.0234090909091)], [(0, 76, 40.28)], [(0, 75, 79.0234090909091)], [(0, 76, 40.28)], [(0, 76, 40.28)], [(0, 78, 40.985454545454544), (1, 78, 80.0046)], [(0, 76, 40.28)]]
+    A4 book-clock bound (+-10 s): n 172, B -59.330078125, B_max 36.1220703125, B_min -150.1611328125, statuses {'paired': 391, 'several_research': 175, 'none': 119, 'several_bot': 2}; clock step 0.001024 ms over 560 steps; binding frame pair x [-49.06103515625], its bot receipt - c_hi [74.240966796875]
+    A5 CONTRADICTION-REMOVED-BY-INDEPENDENT-BOOK-CLOCK-BOUND
+    bounds: match >= placement decision = 1794132021250.7993 [B, EVIDENCE] | match <= cancel answer receipt (c_hi) = 1794132021814.82 [B, EVIDENCE] | match <= first fill notice = 1794132022241.4492 [B, EVIDENCE] | match within its Matched second = 1794132021000.0 [V_status, ASSUMPTION] | match <= Confirmed second end = 1794132023000.0 [V_status, EVIDENCE] | match <= settlement id creation = 1794132021817.0 [V_uuid, CONDITIONAL] | match <= binding frame stamp u* = 1794132021840.0 [V_book, EVIDENCE] | match >= u* - WS_DELAY = 1794132021590.0 [V_book, ASSUMPTION] | match <= the bot's receipt of the binding frame = 1794132021889.061 [B, EVIDENCE]
+  LEG 73 basis cid 1794147344744648 market 4365071 trade 01a1bc76-9845-7dd1-88a2-12fb9bcdda8d tx 0xac3c84cdfb: S3 lower end 1794163251050 (venue), c_hi 1794163251268.753 (bot), critical offset -218.8 ms (K7 [-226.4, +49.3])
+    A0 records reproduce: True {'place': True, 'signed': True, 'accepted': True, 'notice': True, 'rM': True, 'rC': True, 'M': True, 'Cs': True, 'order_hash': True, 'trade_id': True, 'one_bot_clock': True, 'cancel_confirmation': True}
+    A1 cancel answer: CANCELED (CancelPendingAudit: the HTTP Canceled answer (a user-stream cancel follows); null) at 1794163251268.7527; match <= c_hi: NOT-ORDERED-BY-THE-ANSWER; user-stream cancel at [1794163251362.604, 1794163251606.2507]; post-cancel terminal snapshot [{'at': 1794163251606.2124, 'size_matched': 0}]; order 5 of 5 filled; filled after a Canceled answer True; a 0-matched snapshot received after the fill notice True; pf-exec alerts naming the order [['cancel_quantity_conflict:0xc4afb988c0bb2791ff7f41f519bdee8e51e9b992699f077a08a02914207aff8f: terminal quantity conflicts with known fills']]
+    A2 event identity: SAME-SETTLEMENT (binding [('0xac3c84cdfbc72c41c8b369e2ccb87e9819e5124316e074515376c3200a1868ca', '01a1bc76-9845-7dd1-88a2-12fb9bcdda8d')], own [('0xac3c84cdfbc72c41c8b369e2ccb87e9819e5124316e074515376c3200a1868ca', '01a1bc76-9845-7dd1-88a2-12fb9bcdda8d')])
+    A3 binding endpoint: reproduces True, domain V_book, u* 1794163251300.0, binding legs 5 of 20, increments [[(0, 74, 116.77911538461537), (1, 74, 2.96)], [(0, 74, 116.77911538461537), (1, 74, 2.96)], [(0, 73, 253.8283), (1, 73, 2.92)], [(0, 74, 116.77911538461537), (1, 74, 2.96)], [(0, 74, 116.77911538461537), (1, 74, 2.96)]]
+    A4 book-clock bound (+-10 s): n 214, B -55.954833984375, B_max -20.9609375, B_min -130.66162109375, statuses {'paired': 469, 'several_research': 82, 'none': 186, 'several_bot': 4}; clock step 0.000768 ms over 891 steps; binding frame pair x [], its bot receipt - c_hi []
+    A5 CONTRADICTION-REMOVED-BY-INDEPENDENT-BOOK-CLOCK-BOUND
+    bounds: match >= placement decision = 1794163251151.267 [B, EVIDENCE] | match <= cancel answer receipt (c_hi) = 1794163251268.7527 [B, EVIDENCE] | match <= first fill notice = 1794163251592.6013 [B, EVIDENCE] | match within its Matched second = 1794163251000.0 [V_status, ASSUMPTION] | match <= Confirmed second end = 1794163252000.0 [V_status, EVIDENCE] | match <= settlement id creation = 1794163251269.0 [V_uuid, CONDITIONAL] | match <= binding frame stamp u* = 1794163251300.0 [V_book, EVIDENCE] | match >= u* - WS_DELAY = 1794163251050.0 [V_book, ASSUMPTION]
+  A6 evidence tiers on the Oct 23 ledger v5 (REMOVED fills; gross c):
+    S1|CP CANCEL_FIRST  BEYOND-EVIDENCE   1,825 fills      113,733 c  latest E2 book-drop estimate over the legs - 250 ms
+    S1|CP CANCEL_FIRST  BEYOND-EVIDENCE      18 fills        4,069 c  latest REST second over the legs - 500 ms (status-centred assumption)
+    S1|CP CANCEL_FIRST  BEYOND-EVIDENCE   3,985 fills      156,146 c  latest WS pending source time over the legs - 250 ms
+    S1|CP CANCEL_FIRST  BEYOND-EVIDENCE     682 fills       58,515 c  mixed over candidates
+    S1|CP CANCEL_FIRST  BEYOND-EVIDENCE     259 fills       16,788 c  the latest start of its WS and E2 legs' windows
+    S1|CP MATCH_FIRST   EVIDENCE              3 fills          175 c  EV: REST second end (V_status)
+    S1|CP MATCH_FIRST   BEYOND-EVIDENCE       5 fills          322 c  the earliest end of its WS and E2 legs' windows
+    S1|CP AMBIGUOUS     UNCERTIFIED       1,743 fills      154,470 c  
+    S1|CP TIE           UNCERTIFIED           6 fills          176 c  
+    S1|CP CONTRADICTORY UNCERTIFIED         336 fills       24,100 c  
+    S1|CR CANCEL_FIRST  BEYOND-EVIDENCE   1,708 fills      104,100 c  latest E2 book-drop estimate over the legs - 250 ms
+    S1|CR CANCEL_FIRST  BEYOND-EVIDENCE      18 fills        4,069 c  latest REST second over the legs - 500 ms (status-centred assumption)
+    S1|CR CANCEL_FIRST  BEYOND-EVIDENCE   3,816 fills      146,684 c  latest WS pending source time over the legs - 250 ms
+    S1|CR CANCEL_FIRST  BEYOND-EVIDENCE     652 fills       56,516 c  mixed over candidates
+    S1|CR CANCEL_FIRST  BEYOND-EVIDENCE     242 fills       15,626 c  the latest start of its WS and E2 legs' windows
+    S1|CR MATCH_FIRST   EVIDENCE              2 fills           60 c  EV: REST second end (V_status)
+    S1|CR MATCH_FIRST   BEYOND-EVIDENCE       3 fills           52 c  the earliest end of its WS and E2 legs' windows
+    S1|CR AMBIGUOUS     UNCERTIFIED       2,080 fills      176,751 c  
+    S1|CR TIE           UNCERTIFIED           5 fills          534 c  
+    S1|CR CONTRADICTORY UNCERTIFIED         336 fills       24,100 c  
+    S2|CP CANCEL_FIRST  BEYOND-EVIDENCE   1,418 fills       79,105 c  latest E2 book-drop estimate over the legs - h
+    S2|CP CANCEL_FIRST  BEYOND-EVIDENCE      12 fills        1,715 c  latest REST second over the legs + q01 (status-centred assumption)
+    S2|CP CANCEL_FIRST  BEYOND-EVIDENCE   3,338 fills      120,115 c  latest WS pending source time over the legs - h
+    S2|CP CANCEL_FIRST  BEYOND-EVIDENCE     604 fills       47,819 c  mixed over candidates
+    S2|CP CANCEL_FIRST  BEYOND-EVIDENCE     420 fills       28,737 c  the latest start of its WS and E2 legs' windows
+    S2|CP MATCH_FIRST   EVIDENCE             15 fills          335 c  EV: REST second end (V_status)
+    S2|CP MATCH_FIRST   BEYOND-EVIDENCE       1 fills        1,043 c  mixed over candidates
+    S2|CP MATCH_FIRST   BEYOND-EVIDENCE       6 fills          301 c  the earliest end of its WS and E2 legs' windows
+    S2|CP AMBIGUOUS     UNCERTIFIED       2,996 fills      246,387 c  
+    S2|CP TIE           UNCERTIFIED           5 fills          134 c  
+    S2|CP CONTRADICTORY UNCERTIFIED          47 fills        2,803 c  
+    S2|CR CANCEL_FIRST  BEYOND-EVIDENCE   1,374 fills       74,943 c  latest E2 book-drop estimate over the legs - h
+    S2|CR CANCEL_FIRST  BEYOND-EVIDENCE      12 fills        1,715 c  latest REST second over the legs + q01 (status-centred assumption)
+    S2|CR CANCEL_FIRST  BEYOND-EVIDENCE   3,238 fills      114,742 c  latest WS pending source time over the legs - h
+    S2|CR CANCEL_FIRST  BEYOND-EVIDENCE     591 fills       47,311 c  mixed over candidates
+    S2|CR CANCEL_FIRST  BEYOND-EVIDENCE     409 fills       27,743 c  the latest start of its WS and E2 legs' windows
+    S2|CR MATCH_FIRST   EVIDENCE             14 fills          221 c  EV: REST second end (V_status)
+    S2|CR MATCH_FIRST   BEYOND-EVIDENCE       1 fills        1,043 c  mixed over candidates
+    S2|CR MATCH_FIRST   BEYOND-EVIDENCE       4 fills          205 c  the earliest end of its WS and E2 legs' windows
+    S2|CR AMBIGUOUS     UNCERTIFIED       3,168 fills      257,494 c  
+    S2|CR TIE           UNCERTIFIED           4 fills          275 c  
+    S2|CR CONTRADICTORY UNCERTIFIED          47 fills        2,803 c  
+    S3|CP CANCEL_FIRST  BEYOND-EVIDENCE   3,947 fills      175,442 c  WS pending - WS_DELAY (V_book)
+    S3|CP MATCH_FIRST   EVIDENCE             18 fills          388 c  EV: REST second end (V_status)
+    S3|CP MATCH_FIRST   BEYOND-EVIDENCE       6 fills          476 c  WS pending (V_book)
+    S3|CP AMBIGUOUS     UNCERTIFIED       4,825 fills      346,368 c  
+    S3|CP TIE           UNCERTIFIED           3 fills           65 c  
+    S3|CP CONTRADICTORY UNCERTIFIED          63 fills        5,755 c  
+    S3|CR CANCEL_FIRST  BEYOND-EVIDENCE   3,761 fills      163,661 c  WS pending - WS_DELAY (V_book)
+    S3|CR MATCH_FIRST   EVIDENCE             17 fills          273 c  EV: REST second end (V_status)
+    S3|CR MATCH_FIRST   BEYOND-EVIDENCE       6 fills          476 c  WS pending (V_book)
+    S3|CR AMBIGUOUS     UNCERTIFIED       5,013 fills      358,210 c  
+    S3|CR TIE           UNCERTIFIED           2 fills          117 c  
+    S3|CR CONTRADICTORY UNCERTIFIED          63 fills        5,755 c  
+    ST|CP CANCEL_FIRST  BEYOND-EVIDENCE     214 fills        7,934 c  S3 fallback: WS pending - WS_DELAY (V_book)
+    ST|CP MATCH_FIRST   EVIDENCE             18 fills          388 c  EV: REST second end (V_status)
+    ST|CP MATCH_FIRST   BEYOND-EVIDENCE      99 fills        7,949 c  t_set (V_uuid, conditional)
+    ST|CP AMBIGUOUS     UNCERTIFIED       1,638 fills      134,170 c  
+    ST|CP UNKNOWN       UNCERTIFIED       6,889 fills      377,916 c  
+    ST|CP CONTRADICTORY UNCERTIFIED           4 fills          137 c  
+    ST|CR CANCEL_FIRST  BEYOND-EVIDENCE     204 fills        7,253 c  S3 fallback: WS pending - WS_DELAY (V_book)
+    ST|CR MATCH_FIRST   EVIDENCE             17 fills          273 c  EV: REST second end (V_status)
+    ST|CR MATCH_FIRST   BEYOND-EVIDENCE      95 fills        7,881 c  t_set (V_uuid, conditional)
+    ST|CR AMBIGUOUS     UNCERTIFIED       1,640 fills      134,262 c  
+    ST|CR TIE           UNCERTIFIED           1 fills            3 c  
+    ST|CR UNKNOWN       UNCERTIFIED       6,901 fills      378,684 c  
+    ST|CR CONTRADICTORY UNCERTIFIED           4 fills          137 c  
+READINGS (declared before the data was read)
+  A5 LEG 20 (v6 cid 1794108465179877): CONTRADICTION-REMOVED-BY-INDEPENDENT-BOOK-CLOCK-BOUND
+  A5 LEG 45 (v6 cid 1794108465184298): CONTRADICTION-REMOVED-BY-INDEPENDENT-BOOK-CLOCK-BOUND
+  A5 LEG 73 (basis cid 1794147344744648): CONTRADICTION-REMOVED-BY-INDEPENDENT-BOOK-CLOCK-BOUND
+  AUDIT VERDICT: REMOVED: every audited S3 false avoidance needs a book-clock offset below the independent bound
+  A6 REPRODUCES THE LEDGER CROSS-TAB: YES
+LIMITS: three legs of one consumed partial day; the book-clock premise (stamp before receipt; one stamp per update across subscribers) is stated, not proven; content identity can pair a repeated book state (the uniqueness rule and the declared order statistic bound it); one-sided bound; WS_DELAY and REST_LAG remain assumptions; development evidence - Nov 8 is not untouched validation.

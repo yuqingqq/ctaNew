@@ -1,3 +1,19 @@
+timing_case_audit_20261118:
+  status: done_s3_false_avoidances_removed_by_book_clock_bound_gate_of_record_unchanged
+  asof: "2026-11-18 15:20Z"
+  user: "Check review and next priority, proceed next"
+  review: a50bc529 (of 3bf8f3a9) - no new blocking defect; reporting note (denominators) corrected in place; next priority done here
+  code: predictfun/research/pf_timing_case_audit.py (selftest PASS; mutants 29/29 caught by a check)
+  report: predictfun/reviews/timing_case_audit_20261118/report.md
+  data: {consumed: ["20261108 (read to 23:02Z, no Nov 9 record parsed)", "20261023 (saved ledger v5 tables only)"], new_capture: false}
+  runs: {v1: "15:10:03-15:11:01Z rc 0, verdict RETAINED x3 from an instrument defect (pfmm order id keyed without its market)", v2: "15:14:22-15:15:19Z rc 0"}
+  legs: {20: {critical_ms: -210.3, B_ms: -62.0, pairs: 121, verdict: REMOVED}, 45: {critical_ms: -224.8, B_ms: -59.3, pairs: 172, verdict: REMOVED}, 73: {critical_ms: -218.8, B_ms: -56.0, pairs: 214, verdict: REMOVED}}
+  cause: "each binds on a WS book stamp (u* - 250 ms) of its own settlement; K7 bounds the status clock and was applied to it"
+  cancel_answer_A1: "all three Canceled, then filled 5/5; post-cancel snapshots 0 matched (45, 73 after the fill notice); pf-exec alerted live; the answer does not order cancel vs match"
+  evidence_tiers_A6_oct23_CP: {removed_fills: 8862, removed_gross_c: 528493, cancel_first_evidence_backed: 0, S3_cancel_first_ws_delay: [3947, 175442], ST_cancel_first_s3_fallback: [214, 7934], match_first_evidence: [18, 388], reproduces_cross_tab: true}
+  gate_of_record: K6 at K7 offsets, S3 FAIL until endpoints are evaluated per clock domain
+  next_on_user_go: [known ledger with per-domain clock bounds on all 99 legs (book clock from the bot's frame receipts), cancel-race census on every known leg]
+
 manual_commit_review_20261118_3bf8f3a9:
   status: complete_no_new_blocking_bug_timing_gate_still_open
   asof: "2026-11-18T14:06:53.006590+00:00"
