@@ -1,5 +1,10 @@
 # Scheduled commit review
 
+**Removed at the user's request on 2026-11-18.** Both installed systemd units
+were stopped and removed. No scheduled reviews remain. The source files and
+checkpoint history are retained as records; the instructions below describe
+the former setup. Reinstallation requires a new explicit user request.
+
 User-authorized on 2026-11-17: this session reviews new fixes and identifies the
 next priority; another session owns fixes and development.
 
