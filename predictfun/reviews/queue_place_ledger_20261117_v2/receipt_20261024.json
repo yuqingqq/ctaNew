@@ -1,0 +1,83 @@
+{
+  "asof": "2026-11-18T02:03:44.633122+00:00",
+  "day": "20261024",
+  "limit": null,
+  "markets": 288,
+  "stat": {
+    "markets": 288,
+    "windows": 288,
+    "loader_selected": 288,
+    "loader_no_frames": 0,
+    "grid": 34560,
+    "counted": 30704,
+    "births_all": 220693,
+    "sampled": 23040,
+    "first_ok": 22311,
+    "parity_checked": 553,
+    "parity_bad": 0,
+    "mut_checked": 551,
+    "mut_differs": 551
+  },
+  "conservation_violations": [],
+  "reconciliation_mismatches": [],
+  "reconciliation": {
+    "state_rows": 62489,
+    "event_rows": 49252,
+    "gone_rows": 729,
+    "states_without_eligible_5s_arm": 346,
+    "states_without_eligible_5s_arm_by_status": {
+      "missing_endpoint": 334,
+      "stale_future_book": 12
+    },
+    "v1_saved_states": 30358,
+    "arm_rows_5s_eligible_2s_not": 14,
+    "arm_rows_5s_eligible_2s_not_by_status": {
+      "missing_endpoint": 14
+    },
+    "v1_state_rows_without_2s_value": 14,
+    "v1_counter_states": 30704,
+    "v1_gap": 346
+  },
+  "planted_errors_flagged": {
+    "v1_value_moved_1e-9": true,
+    "v1_row_dropped": true,
+    "v1_counter_plus_1": true,
+    "ledger_arm_row_dropped": true,
+    "ledger_grid_row_dropped": true,
+    "ledger_status_without_value": true,
+    "ledger_grid_status_swapped": true,
+    "ledger_birth_status_swapped": true,
+    "ledger_arm_price_moved": true,
+    "ledger_time_to_end_moved": true
+  },
+  "v1": {
+    "receipt_asof": "2026-11-17T06:40:15.030946+00:00",
+    "rows": "5a3bb7d0b701d49d035f2ee9ad98b496f171db615db056923bd1858de5c4b25e",
+    "stat": {
+      "parity_checked": 553,
+      "parity_bad": 0,
+      "mut_checked": 551,
+      "mut_differs": 551,
+      "births": 22311,
+      "states": 30704
+    }
+  },
+  "provenance": {
+    "commit": "99d17541e05e8f6cdc7a2d1bd31c28bd64da5fe5",
+    "source": {
+      "pf_queue_place_ledger.py": "8fa16b929b4ae497109a70add4036dd7cd4501102a261c74eba63de0e0b94bb5",
+      "pf_queue_place_test.py": "188c1495ce35db80ce8b79cbc50541964d0d32d9da38fee4b925e951eec01a1f",
+      "pf_flow_control_kernel.cpp": "fb1ff31cdcf2a97783283f927fb2d56333a0760e877cb0b93348528138886612",
+      "pf_flow_control_kernel.py": "2460567474f28318f5d09df8ce0977e15748bb9263bc501471cf6a649b334379"
+    },
+    "uncommitted": ""
+  },
+  "outputs": {
+    "markets.parquet": "1f7dd90bac564f2cd0215d4bf167befca08be884b7340d03a4e13c48203cd645",
+    "grid.parquet": "b620bbdf8447eb67e8bdadb59181e7dc244c0dfd90cf4b6a185e0a0160e61bf4",
+    "state_arms.parquet": "515a790874b5c0d475e9cccb49dc6c361ced0824faa87320e13e3d22215e2545",
+    "births.parquet": "7666a8677bd0b5f3326506225131dee89e8f7cea590f3d1f585031a3bae2372f",
+    "event_arms.parquet": "cd35c8d71e01975d09d37e7403432dcbd9407b3400e0bf56ccd54fcf68a1f53d"
+  },
+  "seconds": 116.6175765991211
+}

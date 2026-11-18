@@ -1,0 +1,64 @@
+{
+  "asof": "2026-11-18T02:09:46Z",
+  "L1": true,
+  "L2": true,
+  "L3": true,
+  "L4_coverage_matters_at_2s": false,
+  "L5a_tip_outside_observed_range": {
+    "JOIN": false,
+    "REST1": false,
+    "IMPROVE": false,
+    "R1 REST1 - JOIN": false,
+    "R2 IMPROVE - JOIN": false
+  },
+  "L5b_robust_at_payoff_bounds": {
+    "JOIN": false,
+    "REST1": true,
+    "IMPROVE": false,
+    "R1 REST1 - JOIN": false,
+    "R2 IMPROVE - JOIN": false
+  },
+  "gap": 2054,
+  "gap_by_status": {
+    "missing_endpoint": 1920,
+    "stale_future_book": 134
+  },
+  "arm_rows_without_2s": {
+    "missing_endpoint": 60
+  },
+  "move_2s": {
+    "JOIN": 0.08705911823778756,
+    "REST1": 0.04569012691893093,
+    "IMPROVE": 0.013448035527908075
+  },
+  "v1_readings_from_ledger": {
+    "F1 FIRST-BEATS-LATE [v]": false,
+    "F1 FIRST-BEATS-LATE [v_old]": false,
+    "E1 EARLY-BEATS-FIRST (ex post) [v]": false,
+    "E1 EARLY-BEATS-FIRST (ex post) [v_old]": false,
+    "R1 REST1-BEATS-JOIN [v]": false,
+    "R1 REST1-BEATS-JOIN [v_old]": false,
+    "R2 IMPROVE-BEATS-JOIN [v]": true,
+    "R2 IMPROVE-BEATS-JOIN [v_old]": true,
+    "F2 FIRST-PROFITABLE [v]": false,
+    "F2 FIRST-PROFITABLE [v_old]": false,
+    "E2 EARLY-PROFITABLE (ex post) [v]": false,
+    "E2 EARLY-PROFITABLE (ex post) [v_old]": false,
+    "R3 JOIN-PROFITABLE [v]": false,
+    "R3 JOIN-PROFITABLE [v_old]": false,
+    "R3 REST1-PROFITABLE [v]": false,
+    "R3 REST1-PROFITABLE [v_old]": false,
+    "R3 IMPROVE-PROFITABLE [v]": false,
+    "R3 IMPROVE-PROFITABLE [v_old]": false
+  },
+  "provenance": {
+    "commit": "99d17541e05e8f6cdc7a2d1bd31c28bd64da5fe5",
+    "source": {
+      "pf_queue_place_ledger.py": "8fa16b929b4ae497109a70add4036dd7cd4501102a261c74eba63de0e0b94bb5",
+      "pf_queue_place_test.py": "188c1495ce35db80ce8b79cbc50541964d0d32d9da38fee4b925e951eec01a1f",
+      "pf_flow_control_kernel.cpp": "fb1ff31cdcf2a97783283f927fb2d56333a0760e877cb0b93348528138886612",
+      "pf_flow_control_kernel.py": "2460567474f28318f5d09df8ce0977e15748bb9263bc501471cf6a649b334379"
+    },
+    "uncommitted": ""
+  }
+}
