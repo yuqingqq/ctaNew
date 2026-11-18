@@ -1,3 +1,27 @@
+manual_review_20261118_d1de7504:
+  status: complete_timing_ground_truth_block_with_two_P2_reporting_evidence_findings
+  asof: "2026-11-18T04:42:10Z"
+  target_commit: d1de75049fdf5a2477e279ca108114b5aef09b27
+  report: predictfun/reviews/automatic/20261118_d1de7504/report.md
+  evidence: predictfun/reviews/automatic/20261118_d1de7504/receipt_v1.json
+  result_asof: "2026-11-18T04:19:44.800261+00:00"
+  population: {counted: 151228, eligible: 143134, refused_post_only: 6040, path_excluded: 2054, M50_fills: 86904, pulled_order_fills: 45698}
+  consumed_days: [20261023, 20261024, 20261025, 20261026, 20261027]
+  verified: synthetic_instruments_and_saved_baseline_and_aggregate_conservation
+  real_linked_interval_ledger_recomputed: false
+  P2_findings: [removed_value_headline_population_mismatch, unpersisted_linked_identity_interval_evidence_and_input_hashes]
+  S1_ambiguous_pulled_order_fill_fraction: 0.23399273491181233
+  S1_ambiguous_pulled_order_gross_fraction: 0.36568491214905036
+  critical_block: match_versus_effective_cancel_ordering_and_execution_ground_truth
+  actual_match_clock_calibrated: false
+  check: {passed: true, seconds: 2.32, peak_rss_mib: 383, slot: codex}
+  raw_tape_read: false
+  untouched_validation_days_read: false
+  development_sources_modified: false
+  schedule_remains_removed: true
+  next_priority: verify_capture_event_semantics_then_same_order_execution_reconciliation
+  development_owner: other_session
+
 keep_pull_timing_audit_20261118:
   status: done_sign_not_identified
   asof: "2026-11-18 04:21Z"

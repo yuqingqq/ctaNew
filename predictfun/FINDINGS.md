@@ -1,3 +1,35 @@
+<!-- MANUAL_REVIEW_20261118_D1DE7504 -->
+## 2026-11-18 Manual timing review: execution ground truth is the critical block
+
+Pinned target d1de75049fdf5a2477e279ca108114b5aef09b27. Report/evidence:
+reviews/automatic/20261118_d1de7504/. Synthetic instruments and saved-baseline
+accounting pass (2.32 s / 383 MiB, codex slot); no full source-leg/tape rerun.
+The real per-fill interval ledger is not retained, so this review does not
+claim independent reproduction of real S1/S2 extrema.
+
+Consumed Oct23–27; result as of 2026-11-18 04:19:44 UTC: 143,134 eligible orders,
+151,228 counted, 86,904 M50 fill rows. Reported scenario excess ranges span zero;
+they hold M50 quantities/eligibility fixed and are not calibrated live bounds.
+They show failure to certify selection under those assumptions, not absence of
+all causal skill. Exact match-versus-effective-cancel ordering remains unknown.
+
+P2 findings: (1) the removed-value headline mixes populations: AFTER/BEFORE/
+AMBIGUOUS covers all 45,698 fills on pulled orders, including baseline-kept
+182,779 c, not just replay-removed 1,169,671 c. S1 ambiguity is 23.4% of those
+fills / 36.6% of gross value; an exact removed-value share needs a cross-tab.
+(2) candidate leg identities, linked intervals and hashes of new timing/leg
+inputs are not persisted. Candidate-anchor coverage is not a unique match ID.
+The prior quantity qualification and withdrawal of near-fill exclusion stand.
+
+ONE next priority: verify the proposed capture's event semantics and establish
+an order-level execution-ground-truth acceptance test. Require matching-event
+identity or tight ordering bounds, source/receipt times and order lifecycle;
+reject a delayed status timestamp masquerading as match time, then reconcile
+actual fills/remaining quantities with replay on the same orders. Millisecond
+precision alone is insufficient. Development/execution owners handle capture;
+no live action, model tuning or untouched validation here. Schedule removed.
+<!-- /MANUAL_REVIEW_20261118_D1DE7504 -->
+
 <!-- MANUAL_REVIEW_20261118_1A1ABBAA -->
 ## 2026-11-18 Paired clock audit reviewed: attribution resolved, timing validity still open
 

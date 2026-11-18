@@ -1,0 +1,26 @@
+keep-pull timing audit selftests passed (synthetic only): ordering classes; collapsed intervals = the clock audit per fill; breakpoint bounds = a dense grid; link (anchor, can-fill price, mixed class, unlinked fill) and leg intervals as planted
+20261023: saved-table identity, collapsed fill contributions and envelope summaries pass
+20261024: saved-table identity, collapsed fill contributions and envelope summaries pass
+20261025: saved-table identity, collapsed fill contributions and envelope summaries pass
+20261026: saved-table identity, collapsed fill contributions and envelope summaries pass
+20261027: saved-table identity, collapsed fill contributions and envelope summaries pass
+{
+  "totals": {
+    "counted": 151228,
+    "eligible": 143134,
+    "fills": 86904,
+    "pulled_order_fills": 45698,
+    "collapsed_E": 234279.30610303005,
+    "score": 1169671.169902255,
+    "kept": 182779.01747456638,
+    "gross": 2870168.503643756
+  },
+  "headline_population_correction": {
+    "all_fills_on_pulled_orders": 45698,
+    "all_fills_net_c": 1352450.1873768214,
+    "replay_removed_net_c": 1169671.169902255,
+    "S1_ambiguous_fill_fraction": 0.23399273491181233,
+    "S1_ambiguous_gross_fraction": 0.36568491214905036
+  }
+}
+2026-11-18T04:42:10Z tag=review_d1de7504_timing rc=0 peak_rss_mib=383 wall_s=2.32 cpu_user_s=1.95 memavail_start_gib=23 disk_free_gib=450->450 slot=codex

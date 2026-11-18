@@ -1,3 +1,35 @@
+<!-- MANUAL_REVIEW_20261118_D1DE7504 -->
+## 2026-11-18 Manual timing review: execution ground truth is the critical block
+
+Pinned target d1de75049fdf5a2477e279ca108114b5aef09b27. Report/evidence:
+reviews/automatic/20261118_d1de7504/. Synthetic instruments and saved-baseline
+accounting pass (2.32 s / 383 MiB, codex slot); no full source-leg/tape rerun.
+The real per-fill interval ledger is not retained, so this review does not
+claim independent reproduction of real S1/S2 extrema.
+
+Consumed Oct23–27; result as of 2026-11-18 04:19:44 UTC: 143,134 eligible orders,
+151,228 counted, 86,904 M50 fill rows. Reported scenario excess ranges span zero;
+they hold M50 quantities/eligibility fixed and are not calibrated live bounds.
+They show failure to certify selection under those assumptions, not absence of
+all causal skill. Exact match-versus-effective-cancel ordering remains unknown.
+
+P2 findings: (1) the removed-value headline mixes populations: AFTER/BEFORE/
+AMBIGUOUS covers all 45,698 fills on pulled orders, including baseline-kept
+182,779 c, not just replay-removed 1,169,671 c. S1 ambiguity is 23.4% of those
+fills / 36.6% of gross value; an exact removed-value share needs a cross-tab.
+(2) candidate leg identities, linked intervals and hashes of new timing/leg
+inputs are not persisted. Candidate-anchor coverage is not a unique match ID.
+The prior quantity qualification and withdrawal of near-fill exclusion stand.
+
+ONE next priority: verify the proposed capture's event semantics and establish
+an order-level execution-ground-truth acceptance test. Require matching-event
+identity or tight ordering bounds, source/receipt times and order lifecycle;
+reject a delayed status timestamp masquerading as match time, then reconcile
+actual fills/remaining quantities with replay on the same orders. Millisecond
+precision alone is insufficient. Development/execution owners handle capture;
+no live action, model tuning or untouched validation here. Schedule removed.
+<!-- /MANUAL_REVIEW_20261118_D1DE7504 -->
+
 ## 2026-11-18 04:21Z (session aea5bfb9) — FILL-VERSUS-CANCEL ORDERING AUDIT (USER: "Check new review and proceed next priority"; the review of 1a1abbaa, f0d75fc1): the timing evidence does not identify the sign of the score's selection advantage - under the program's own declared ranges about half of the removed value's ordering is ambiguous and the bounds span zero
 
 - What: pf_keep_pull_timing_audit.py (declared before computing; this commit). The committed keep / pull run's 86,904 M50 fills on 143,134 eligible orders, each linked through the replay's own loader to the legs at its anchor that can fill the order (446,622 legs; every fill linked): WS 49,315 / E2 20,551 / imputed 249 / mixed 16,789 fills. Observed vs inferred: WS legs carry the venue's settlementsPending source time (the match precedes it by an unmeasured lag), E2 a book-drop estimate, imputed only the REST executedAt second; the simulated cancel landing is decision + 37 ms on the replay axis. Match-time intervals: S1 = the program's declared ranges (WS [t - 250, t] = M0..M250, E2 +-250 ms, imputed +-500 ms around the second); S2 = measured disagreement envelopes (the day's p90 |E2 - WS| 551-600 ms; WS - executedAt p01 / p99 about -900 / +1,050 ms). No offset fitted. 73 s, 1.2 GiB.
