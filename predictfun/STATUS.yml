@@ -1,3 +1,16 @@
+one_day_test_20261023_v3:
+  status: done_one_day_issues_remain
+  asof: "2026-11-18 09:48Z"
+  user: "We run a one day test, check if issues remain,"
+  runs: {known: {seconds: 5, peak_gib: 0.42}, ledger_v3_20261023: {seconds: 33, peak_gib: 1.05}, scenarios_v2_20261023: {seconds: 200, peak_gib: 1.08}, report: {seconds: 3}, slot: claude}
+  controls: {K0_K3: YES, V0: YES, Z0: YES}
+  known: {legs: 99, anchored: 93, no_anchor: 6, candidate_rows: 131, anchor_rule_reproduced: 131, K7_offset_ms: [-226.4, 49.3], gate: {S1: FAIL, S2: FAIL, S3: FAIL_3_fills_only_below_minus_210ms, EV: PASS}, false_cancel_first_offset0: {S1: 4, S2: 5, S3: 0, EV: 0}, S3_contradictory_legs: 9, replay_point_misses_offset0: 23, K5: {activation: {compatible_unidentified: 85, contradicted: 1}, cancel: {certified: 65, compatible_unidentified: 12, no_confirmation: 9}}}
+  oct23_ledger: {fills_contradictory_all_candidates: {S1: 748, S2: 129, S3: 139}, S1_split: {leg_intersection: 708, evidence_cap: 37, mixed: 3}, S3_contradictory_events: 232, S3_bounds_37ms_c: [-107520, 135926], sign_all: SIGN-NOT-IDENTIFIED}
+  oct23_scenarios: {E_B: 34948, E_S3lo: 814, E_S3hi: 36029, E_range: [-13342, 39834], Z1: NOT-STABLE, events: 560819, held_events: {S1: 9576, S2: 1412, S3: 1363}}
+  remaining_issues: [taker_order_ws_times_disagree, clock_offset_bound_276ms, replay_own_trade_times_miss_23_of_99, activation_below_25ms, slow_cancel_effect_unknown_12_orders, fill_notice_delay_untested, book_vs_rest_clock_assumed]
+  receipts: predictfun/reviews/keep_pull_scenarios_v2_day20261023
+  other_days: not_run
+
 review_fixes_20261118_1fd77004:
   status: fixed_in_code_runs_wait_for_go
   asof: "2026-11-18 09:25Z"

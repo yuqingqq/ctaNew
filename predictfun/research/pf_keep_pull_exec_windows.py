@@ -900,6 +900,7 @@ def known_frame():
     C.require(core.cid.is_unique and not OR.duplicated(['run', 'cid']).any(), 'an order id twice')
     k = CC.merge(SC[['run', 'cid', 'order_hash', 'trade_id', 'matched_reported_ms', 'rest_raw', 'rest_minus_matched_ms']], on=['run', 'cid', 'order_hash', 'trade_id'],
                  how='left', validate='one_to_one').merge(core, on='cid', how='left', validate='many_to_one').merge(OR, on=['run', 'cid'], how='left', validate='many_to_one')
+    FE = FE.merge(CC[['order_hash', 'trade_id']].drop_duplicates(), on=['order_hash', 'trade_id'], how='inner')     # the 99 legs' own trades only
     rc = FE.groupby(['order_hash', 'trade_id', 'status'])['at'].min().unstack(); cf = FE[FE.status == 'Confirmed'].groupby(['order_hash', 'trade_id']).reported_match_ms.agg(['min', 'max'])
     C.require(bool((cf['min'] == cf['max']).all()), 'a trade with two Confirmed stamps'); ix = pd.MultiIndex.from_arrays([k.order_hash.values, k.trade_id.values])
     K = pd.DataFrame(dict(run=k.run.values, cid=k.cid.values, place=k.place.values, accepted=k.accepted.values, upper=k.upper.values, notice=k.first_positive_notice.values,
