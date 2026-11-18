@@ -1,3 +1,24 @@
+manual_review_20261118_c23e6f29:
+  status: complete_two_P2_candidate_event_diagnostic_findings
+  asof: "2026-11-18T06:00:08Z"
+  target_commit: c23e6f297c9b822cb3af8247da0b5e1ea99148f5
+  report: predictfun/reviews/automatic/20261118_c23e6f29/report.md
+  evidence: predictfun/reviews/automatic/20261118_c23e6f29/receipt.json
+  previous_findings: {population: fixed_in_code, persisted_evidence: fixed_in_code_real_receipt_pending}
+  checks: {pinned_selftest: passed, independent_synthetic_reproductions: passed, wall_s: 2.63, peak_rss_mib: 212, slot: codex}
+  findings: [P2_multi_event_contradictions_omitted, P2_relaxed_bounds_called_exact]
+  synthetic_contradictions: {counted_orders: 40, eligible_orders: 38, fills: 59, reported: 43, omitted_multi_event_fills: 16}
+  synthetic_value_bounds: {current_relaxation: [-10, 20], coherent: [0, 10], units: synthetic_cents}
+  next_priority: close_candidate_event_diagnostic_accounting_and_bound_metadata_before_real_ledger_run
+  engine_validated: false
+  real_ledger_run: false
+  real_known_order_run: false
+  empirical_data_read: false
+  untouched_validation_read: false
+  development_sources_modified: false
+  schedule_remains_removed: true
+  development_owner: other_session
+
 exec_windows_ledger_20261118:
   status: code_fixed_awaiting_go
   asof: "2026-11-18 05:47Z"

@@ -1,0 +1,61 @@
+{"stage": "link", "day": "20990101", "fills": 61, "linked": 61, "legs": 103, "identity_mismatches": 0, "seconds": 0, "rss": 202}
+EXECUTION-WINDOW LEDGER of the keep / pull selection, declared score A+0 (pf_keep_pull_exec_windows.py; the committed keep / pull run, M50 fills, consumed Oct23-27; c summed; v2 of the ordering audit - supersedes v1's headline)
+  40 counted states (eligible 38, refused_post_only 2); 61 M50 fills; links unlinked 0, unique_event 50, multi_event 11
+  72 events (taker orders; WS 22, E2 23, imputed 27, mixed 0; 0 with legs on both sides); 103 legs (tk_status {'0': 92, '1': 11})
+  V0 controls: collapsed E +354 / score 346; v1 regression S1 [+145, +533] {'AFTER': 30, 'BEFORE': 0, 'AMBIGUOUS': 2}; S2 [-27, +574] {'AFTER': 28, 'BEFORE': 0, 'AMBIGUOUS': 4}
+
+PART 1 - the score's pulled orders' fills: replay ordering (row) x window class (cell: fills / net c = what removing them avoids)
+  replay: REMOVED +346 c, KEPT +67 c
+  S1|CP:
+    REMOVED (31 fills, +346 c): CANCEL_FIRST 30 / +147 c (85.9% of the row's gross) | AMBIGUOUS 1 / +198 c (14.1% of the row's gross)
+    KEPT    (1 fills, +67 c): AMBIGUOUS 1 / +67 c (100.0% of the row's gross)
+  S1|CR:
+    REMOVED (31 fills, +346 c): CANCEL_FIRST 30 / +147 c (85.9% of the row's gross) | AMBIGUOUS 1 / +198 c (14.1% of the row's gross)
+    KEPT    (1 fills, +67 c): AMBIGUOUS 1 / +67 c (100.0% of the row's gross)
+  S2|CP:
+    REMOVED (31 fills, +346 c): CANCEL_FIRST 28 / +173 c (81.5% of the row's gross) | AMBIGUOUS 3 / +173 c (18.5% of the row's gross)
+    KEPT    (1 fills, +67 c): AMBIGUOUS 1 / +67 c (100.0% of the row's gross)
+  S2|CR:
+    REMOVED (31 fills, +346 c): CANCEL_FIRST 28 / +173 c (81.5% of the row's gross) | AMBIGUOUS 3 / +173 c (18.5% of the row's gross)
+    KEPT    (1 fills, +67 c): AMBIGUOUS 1 / +67 c (100.0% of the row's gross)
+  EV|CP:
+    REMOVED (31 fills, +346 c): UNKNOWN 31 / +346 c (100.0% of the row's gross)
+    KEPT    (1 fills, +67 c): UNKNOWN 1 / +67 c (100.0% of the row's gross)
+  EV|CR:
+    REMOVED (31 fills, +346 c): UNKNOWN 31 / +346 c (100.0% of the row's gross)
+    KEPT    (1 fills, +67 c): UNKNOWN 1 / +67 c (100.0% of the row's gross)
+
+PART 2 - coverage: share of the pulled orders' fill value (gross) whose ordering is identified (CANCEL_FIRST or MATCH_FIRST) against the replay's cancel point
+  S1: day 20990101 81.9% | side ask 78.8%, bid 87.4% | cls E2 60.8%, WS 100.0%, imputed 100.0%, multi 100.0% | link multi_event 100.0%, unique_event 78.4%
+  S2: day 20990101 77.8% | side ask 72.3%, bid 87.4% | cls E2 60.8%, WS 100.0%, imputed 90.7%, multi 81.9% | link multi_event 81.9%, unique_event 77.0%
+  EV: day 20990101 0.0% | side ask 0.0%, bid 0.0% | cls E2 0.0%, WS 0.0%, imputed 0.0%, multi 0.0% | link multi_event 0.0%, unique_event 0.0%
+  decisions (pulled orders): S1 evaluable 15 / not 2 / no M50 fill 8 of 25 | S2 evaluable 13 / not 4 / no M50 fill 8 of 25 | EV evaluable 0 / not 17 / no M50 fill 8 of 25
+
+PART 3 - bounds on E = score improvement - exact STATES-null expectation (one shared instant per event in its admissible window; M50 quantities held)
+  S1|0 ms: [+153, +533] | side ask [+259, +494], bid [-106, +39] | cls E2 [+56, +214], WS [+35, +59], imputed [-0, +116], multi [+62, +145] | day 20990101 [+153, +533]
+  S1|37 ms: [+152, +533] | side ask [+258, +494], bid [-106, +39] | cls E2 [+56, +214], WS [+34, +59], imputed [-0, +116], multi [+62, +145] | day 20990101 [+152, +533]
+  S1|100 ms: [+151, +532] | side ask [+257, +493], bid [-106, +39] | cls E2 [+56, +214], WS [+33, +57], imputed [-0, +116], multi [+62, +145] | day 20990101 [+151, +532]
+  S2|0 ms: [+87, +574] | side ask [+231, +535], bid [-144, +39] | cls E2 [+18, +227], WS [+27, +59], imputed [-7, +121], multi [+49, +168] | day 20990101 [+87, +574]
+  S2|37 ms: [+87, +574] | side ask [+231, +535], bid [-144, +39] | cls E2 [+18, +227], WS [+27, +59], imputed [-7, +121], multi [+49, +168] | day 20990101 [+87, +574]
+  S2|100 ms: [+87, +574] | side ask [+231, +535], bid [-144, +39] | cls E2 [+18, +227], WS [+27, +59], imputed [-7, +121], multi [+49, +168] | day 20990101 [+87, +574]
+  EV|0 ms: [-733, +1,044] | side ask [-360, +696], bid [-373, +348] | cls E2 [-253, +379], WS [-197, +189], imputed [-122, +231], multi [-161, +246] | day 20990101 [-733, +1,044]
+  EV|37 ms: [-733, +1,044] | side ask [-360, +696], bid [-373, +348] | cls E2 [-253, +379], WS [-197, +189], imputed [-122, +231], multi [-161, +246] | day 20990101 [-733, +1,044]
+  EV|100 ms: [-733, +1,044] | side ask [-360, +696], bid [-373, +348] | cls E2 [-253, +379], WS [-197, +189], imputed [-122, +231], multi [-161, +246] | day 20990101 [-733, +1,044]
+
+PART 4 - contradictions (kept, never repaired)
+  S1: events {'ok': 68, 'truncated_by_evidence': 4, 'contradictory_evidence': 0, 'contradictory_legs': 0}; contradictory fills 0 (0 c gross); by class {'WS': {'ok': 22, 'truncated_by_evidence': 0, 'contradictory_evidence': 0, 'contradictory_legs': 0}, 'E2': {'ok': 19, 'truncated_by_evidence': 4, 'contradictory_evidence': 0, 'contradictory_legs': 0}, 'imputed': {'ok': 27, 'truncated_by_evidence': 0, 'contradictory_evidence': 0, 'contradictory_legs': 0}, 'mixed': {'ok': 0, 'truncated_by_evidence': 0, 'contradictory_evidence': 0, 'contradictory_legs': 0}}
+  S2: events {'ok': 34, 'truncated_by_evidence': 38, 'contradictory_evidence': 0, 'contradictory_legs': 0}; contradictory fills 0 (0 c gross); by class {'WS': {'ok': 18, 'truncated_by_evidence': 4, 'contradictory_evidence': 0, 'contradictory_legs': 0}, 'E2': {'ok': 16, 'truncated_by_evidence': 7, 'contradictory_evidence': 0, 'contradictory_legs': 0}, 'imputed': {'ok': 0, 'truncated_by_evidence': 27, 'contradictory_evidence': 0, 'contradictory_legs': 0}, 'mixed': {'ok': 0, 'truncated_by_evidence': 0, 'contradictory_evidence': 0, 'contradictory_legs': 0}}
+  replay times after the REST evidence cap: 0 fills (0 c gross; 0 on pulled orders)
+
+READINGS (declared before any data was read)
+  V0 CONTROLS: YES
+  V1 SIGN S1: EXCESS-POSITIVE-IDENTIFIED
+  V1 SIGN S2: EXCESS-POSITIVE-IDENTIFIED
+  V1 SIGN EV: SIGN-NOT-IDENTIFIED
+
+MISSING EVIDENCE: no public capture bounds the match instant from below; the REST executedAt is a delayed status (an upper bound only); the WS pending link is by value; cancel effect and activation are configured points. Order-level match identity and timing (own orders, A4b) is the evidence that would identify the ordering.
+LIMITS: consumed days; one declared rule; STATES is local selection; M50 quantities held; S1 / S2 / CR are assumption ranges; clock alignment between REST, WS and book stamps not established.
+{"stage": "link", "day": "20990101", "fills": 61, "linked": 61, "legs": 103, "identity_mismatches": 0, "seconds": 0, "rss": 210}
+{"stage": "link", "day": "20990101", "fills": 61, "linked": 61, "legs": 103, "identity_mismatches": 1, "seconds": 0, "rss": 210}
+{"stage": "link", "day": "20990101", "fills": 61, "linked": 61, "legs": 103, "identity_mismatches": 1, "seconds": 0, "rss": 210}
+exec-window selftests passed (synthetic only): classes incl. TIE / UNKNOWN / CONTRADICTORY; status timestamps refused as points; event intersection, evidence cap and statuses; link candidates; the event sweep = a dense grid (3 latencies) and v1 on singletons; collapsed = the clock audit; cross-tab conservation (and its falsifier); K0-K4 on planted cases (and a wrong identity refused); run() rehearsed end to end on a synthetic source

@@ -1,3 +1,25 @@
+<!-- MANUAL_REVIEW_20261118_C23E6F29 -->
+## Manual fix review — 2026-11-18 (c23e6f29)
+
+Reviewed **c23e6f297c9b822cb3af8247da0b5e1ea99148f5** in an isolated checkout.
+[Report](reviews/automatic/20261118_c23e6f29/report.md),
+[synthetic evidence](reviews/automatic/20261118_c23e6f29/receipt.json).
+The prior removed/kept population and retained-evidence findings are fixed in
+code; empirical ledger output is still pending. The pinned self-test passes.
+Two P2 findings remain: contradiction/cap-violation totals omit multi-event
+fills (43 of 59 counted in a planted all-contradictory case), and multi-event
+value ranges relax shared event times despite the exact-extrema headline
+(planted current [-10,20] vs coherent [0,10], synthetic cents only).
+
+**Next priority:** close candidate-event diagnostic accounting before the real
+ledger run: reconcile all/some/unknown candidate contradictions and identify
+outer-relaxed versus jointly exact bounds in the receipt, with these controls.
+The real known-order/window checks and queue-aware scenario replay remain gates
+before model tuning. This commit adds an audit, not a validated queue engine;
+K0–K3 YES is insufficient when K4 still finds false avoidance. No market data,
+training, full tape experiment or untouched validation was run in this review.
+Another session owns fixes; the schedule remains removed.
+
 ## 2026-11-18 05:47Z (session aea5bfb9) — SIMULATOR ISSUES CORRECTED IN CODE: execution-window ledger and window ordering classifier (USER: "New review commit there, check it, we have some issues for simulator, need to correct these issues first"; review 35c095ce of d1de7504 and its addendum 24db60f1); synthetic selftests and 33 / 33 mutants pass; NO data read - both runs wait for the USER's go
 
 - Verified at the code: both review findings HOLD. P2-1: v1's AFTER / BEFORE / AMBIGUOUS split (pf_keep_pull_timing_audit.py run(): `o = np.where(pl, order_of(lo, hi, F['r']), -1)`) covers ALL 45,698 fills of the score's pulled orders (net +1,352,450 c = the replay's removed +1,169,671 + kept +182,779), so the 04:21Z headline "about half its removed value ... is unidentified" mixed populations; the sign readings T1 / T2 stand for v1's per-fill hull. P2-2: link() collapsed the legs to a per-fill hull and run() saved aggregates only - no leg identity, no input hashes. The addendum's issues hold as stated: point placement / cancel / notice assumptions; M50 fills held; linkage and provenance; the headline; dropping ambiguous actions.

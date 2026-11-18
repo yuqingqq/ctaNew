@@ -1,0 +1,48 @@
+{
+  "target": "c23e6f297c9b822cb3af8247da0b5e1ea99148f5",
+  "asof": "2026-11-18T06:00:08.047041+00:00",
+  "synthetic_only": true,
+  "empirical_data_read": false,
+  "source_sha256": "82906f5e2a38e587662b7e1229a5b92a47ba751072e0eddd1626e8f599fbb78e",
+  "pinned_selftest": "PASS",
+  "multi_event_exactness": {
+    "fills": 3,
+    "events": 2,
+    "candidate_assignments": 2,
+    "shared_event_control": [
+      0.0,
+      0.0
+    ],
+    "current_relaxation": [
+      -10.0,
+      20.0
+    ],
+    "exhaustive_joint_bounds": [
+      0.0,
+      10.0
+    ],
+    "meaning": "outer bounds, not exact joint extrema"
+  },
+  "contradiction_accounting": {
+    "counted_orders": 40,
+    "eligible_orders": 38,
+    "fills": 59,
+    "events": 73,
+    "unique_fills": 43,
+    "multi_event_fills": 16,
+    "all_candidate_windows_contradictory": true,
+    "reported_contradictory": 43,
+    "expected_all_candidate_contradictory": 59,
+    "reported_replay_after_evidence": 43,
+    "expected_replay_after_evidence": 59,
+    "omitted_gross": 523.9003838066046,
+    "V0": {
+      "a_collapsed": true,
+      "b_v1_regression": true,
+      "c_linked": true,
+      "d_identity": true,
+      "e_conservation": true
+    },
+    "corrupt_cross_tab_refused": true
+  }
+}
