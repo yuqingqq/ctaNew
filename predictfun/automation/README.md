@@ -9,6 +9,13 @@ existing review thread only when new relevant Predict.fun commits appear.
 The local host and Codex session/daemon must be available. This is a local
 schedule, not a hosted ChatGPT automation.
 
+The watched ref is the **local** branch. The watcher does not fetch remote
+changes or watch other repositories/branches. A fix must reach this ref to
+trigger a review; remote-only work requires fetching and reviewing its pinned
+commit separately. `last_scan_at` records every completed commit scan, including
+unchanged branches; it is not the time of the last review. While a request is
+pending, further scans wait for acknowledgement and the timer remains active.
+
 The initial checkpoint is the completed review commit `38de5e66`. New commits
 are batched through a pinned target SHA, including relevant fixes/results even
 if their messages do not contain the word "fix". Shared state-only updates,

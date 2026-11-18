@@ -1,3 +1,20 @@
+review_monitor_diagnosis_20261118:
+  status: scan_timestamp_fixed_newer_target_not_visible
+  asof: "2026-11-18T01:51:06Z"
+  report: predictfun/reviews/automatic/20261118_monitor_status.md
+  timer_running: true
+  monitor_tests_passed: 6
+  real_service_check: passed
+  last_scan_refreshes_on_unchanged_branch: true
+  watched_ref: refs/heads/mm-research
+  fetched_remote_target: 323ddd7d224b7b155b0f8873271b0fdc8346cddb
+  latest_visible_implementation: ebd5c6b333558d40c8202c908b100edbbe7970ef
+  current_source_matches_prior_review: true
+  newer_target: awaiting_user_sha_branch_or_repository
+  next_research_priority: ledger_smoke_then_full_consumed_day_L1_L2_L3_reconciliation
+  market_tape_read: false
+  development_implementation_changed: false
+
 automatic_review_20261117_323ddd7d:
   status: complete_no_new_blocking_defect
   asof: "2026-11-17T15:38:00Z"
