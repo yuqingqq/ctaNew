@@ -23,7 +23,9 @@ SCENARIOS (one factor at a time around the replay's baseline B = M50 trade times
  ACTIVATION the order goes live at +25 / +100 ms instead of +58: post-only refusal and queue place at the activation frame, no fill before
             it. The client's decision schedule stays on its receipt clock (first live decision +100 ms, J0 = 2).
  CANCEL     every cancel - the score's and the null's pulls, the structural cancels and the pending landing (activation + latency) - takes
-            effect 0 / 100 ms after its decision instead of 37.
+            effect 0 / 100 ms after its decision instead of 37. The kernel orders a grid instant as its trades up to it, then its decisions:
+            a structural cancel decided at g never stops a trade at g (at zero latency it acts just after g); the pulls keep the replay's
+            at-or-after rule - a tie convention at one instant, not evidence (C20).
  NOTICE     the client learns of a full fill 0 / 250 ms after it instead of 100 (its eligibility for later decisions; fills unchanged).
  INFORMATION never moves with a latent execution time: the fair inputs and the book frames (receipt clock) are the committed ones in every
             scenario; only the trades' execution times, the order's activation and the cancels' effects move.
@@ -47,9 +49,10 @@ SELFTEST (synthetic tape, no data): the keep / pull run on its synthetic tape is
  the report end to end; a misaligned timing source, a committed fill changed under a matching receipt and a perturbed pending clock each
  refused with no output. Mutations: pf_keep_pull_scenarios_mutants.py.
 LIMITS: consumed days; one declared rule; one-factor-at-a-time scenarios plus timelines - no search for the joint extreme (value is not
- monotone in timing); assumption ranges, not measured distributions; the queue rule M stays unvalidated on live orders (B1a); STATES is
+ monotone in timing); assumption ranges, not measured distributions (K5 on live's own orders found cancel acks up to ~6 s); the tie order at
+ one instant (trades before decisions in the kernel, at-or-after for the pulls) is a convention; the queue rule M stays unvalidated on live orders (B1a); STATES is
  local selection; one order at a time, no re-post after a pull.
-Usage (run_light, PF_SLOT=claude): pf_keep_pull_scenarios.py selftest | day <day> | report
+Usage (run_light, PF_SLOT=claude): pf_keep_pull_scenarios.py selftest | day <day> | report [day]
 """
 import contextlib
 import ctypes
@@ -98,6 +101,13 @@ def landing_s(d, act, lat):
     """The kernel's landing of a cancel decided d ms after posting: d + lat, or activation + lat if decided before the order is live."""
     d = np.asarray(d, float)
     return np.where(d < act, np.maximum(d + lat, act + lat + PEND_OFFSET), d + lat)
+
+
+def eff_landing(g, act, lat):
+    """A structural cancel's effect on fills in the kernel's order of a grid instant (its trades up to it first, then its decisions): a cancel
+    decided at g never stops a trade at g, so a landing at or before g (zero latency) acts just after g."""
+    x = float(landing_s(g, act, lat))
+    return x if x > g else float(np.nextafter(g, np.inf))
 
 
 def endj_n(t_full, g_struct, notice):
@@ -199,7 +209,7 @@ def scen_order(W, o, tau, fc, rows, frows, st):
         Wk = [dict(W[0], anc=tau[sc['tl']][0]), dict(W[1], anc=tau[sc['tl']][1])]; pk, _ = QP.build_path(Wk, t, t + KP.H, shift=0.)
         C.require(pk is not None and np.array_equal(pk['frames'], base['frames']) and pk['mark'] == base['mark'], 'a scenario moved more than the trades')
         a_, l_ = sc['A'], sc['L']; rej = postonly_at(pk, s, p, a_); vk, qk, tt, fq = fills_g(pk, s, p, a_, l_, a_ + l_ + PEND_OFFSET)
-        lnd = float(landing_s(g, a_, l_)) + MIRROR_OFFSET if np.isfinite(g) else np.nan
+        lnd = eff_landing(g, a_, l_) + MIRROR_OFFSET if np.isfinite(g) else np.nan
         C.require(abs(fq.sum() - qk) <= 1e-9 and (fq >= -1e-12).all(), 'per-trade fills do not sum to the keep branch')
         C.require(not (fq[tt < a_] > 1e-12).any() and not (np.isfinite(lnd) and (fq[tt >= lnd] > 1e-12).any()), 'a fill before activation or at / after the structural landing')
         C.require(not rej or (qk == 0 and vk == 0), 'post-only: a refused order filled')
@@ -273,9 +283,10 @@ def stable(lo, hi):
     return 'STABLE-POSITIVE-IN-TESTED-SCENARIOS' if lo > 0 else 'STABLE-NEGATIVE-IN-TESTED-SCENARIOS' if hi < 0 else 'NOT-STABLE-IN-TESTED-SCENARIOS'
 
 
-def report(out=None, kp=None, days=KP.DAYS, expect=(234279., 1169671.), tol=1.):
+def report(out=None, kp=None, days=KP.DAYS, expect='committed', tol=1.):
     """Every scenario's values pooled over the days -> scenarios.txt / scenarios.json; controls (g, h); readings Z1-Z3."""
-    start = time.time(); out = Path(out or OUT); kp = Path(kp or KP.OUT); O, Fl, S, SF, st = [], [], [], [], {}
+    start = time.time(); out = Path(out or OUT); kp = Path(kp or KP.OUT); O, Fl, S, SF, st = [], [], [], [], {}; days = list(days)
+    expect = X.collapsed_reference(days) if expect == 'committed' else expect; stem = 'scenarios' if days == list(KP.DAYS) else 'scenarios_' + '_'.join(days)
     for d in days:
         r = json.loads((out / d / 'receipt.json').read_text()); C.require(all(C.sha(out / d / x) == h for x, h in r['outputs'].items()), f'{d}: scenario outputs changed since their receipt')
         rk = json.loads((kp / d / 'receipt.json').read_text()); C.require(r['keep_pull_outputs'] == rk['outputs'], f'{d}: scenario day built on other keep-pull outputs')
@@ -322,8 +333,8 @@ def report(out=None, kp=None, days=KP.DAYS, expect=(234279., 1169671.), tol=1.):
           'LIMITS: consumed days; one declared rule; one-factor-at-a-time scenarios and timelines (no joint extreme search); assumption ranges, not measured '
           'distributions; queue rule M unvalidated on live orders; STATES is local selection; one order at a time, no re-post after a pull.']
     R = {k: {x: y for x, y in v.items() if not x.startswith('_')} for k, v in res.items()}
-    (out / 'scenarios.txt').write_text('\n'.join(L) + '\n')
-    C.dump(out / 'scenarios.json', dict(asof=C.stamp(), readings=read, scenarios=R, stat=st, days=list(days), provenance=KP.provenance(),
+    (out / f'{stem}.txt').write_text('\n'.join(L) + '\n')
+    C.dump(out / f'{stem}.json', dict(asof=C.stamp(), readings=read, scenarios=R, stat=st, days=list(days), provenance=KP.provenance(),
                                         source_sha256=C.sha(Path(__file__).resolve()), seconds=time.time() - start))
     print('\n'.join(L), flush=True)
     return R, read
@@ -354,6 +365,16 @@ def selftest():
         bad.append('the notice rule (endj) at 0 / 100 / 250 ms')
     if not (np.array_equal(landing_s(np.arange(1, 99) * 50., KP.PLACE, KP.CANCEL), KP.landing(np.arange(1, 99))) and landing_s(np.array([50., 1050.]), 100., 0.).tolist() == [100., 1050.]):
         bad.append('the scenario landing rule')
+    fr = np.array([[0., 0., 50, 49, 48, 47, 46] + [100.] * 5 + [52, 53, 54, 55, 56] + [100.] * 5,
+                   [1000., 1000., 47, 46, 45, 44, 43] + [100.] * 5 + [49, 50, 51, 52, 53] + [100.] * 5], float)       # a cross for the 50 bid known at 1 000 ms
+    p0 = dict(frames=fr, trades=np.array([[1000., 0., 48., 20.], [1020., 0., 48., 20.]]), mark=49., mid=51.)
+    g0 = KP.struct_cancel(p0, 0, 50.)[0]; f0, f37 = fills_g(p0, 0, 50., 58., 0., 58.), fills_g(p0, 0, 50., 58., 37., 95.)
+    pick = lambda f: [(float(a), float(b)) for a, b in zip(f[2], f[3]) if b > 1e-12]
+    if not (g0 == 1000. and pick(f0) == [(1000., 20.)] and pick(f37) == [(1000., 20.), (1020., 10.)] and eff_landing(g0, 58., 0.) == float(np.nextafter(1000., np.inf))
+            and eff_landing(g0, 58., 37.) == 1037.):
+        bad.append(f'the kernel tie order at zero latency: g {g0}, fills {pick(f0)} / {pick(f37)}, landings {eff_landing(g0, 58., 0.)} / {eff_landing(g0, 58., 37.)}')
+    if not all(eff_landing(g_, KP.PLACE, l_) == float(X.struct_landing(np.array([g_]), l_)[0]) for g_ in (50., 100., 1050.) for l_ in (0., KP.CANCEL, 100.)):
+        bad.append('the scenario landing rule differs from the ledger\'s struct_landing')
     with tempfile.TemporaryDirectory(dir=str(I.K.IO)) as tmp:
         tmp = Path(tmp)
         with QL._v1_on(src, tmp):
@@ -385,7 +406,8 @@ def selftest():
                    'S2hi': (fl(50000., n_(tl='S2hi')), []), 'EVhi': (fl(50000., n_(tl='EVhi')), []), 'activation 25': (fl(50000., n_(A=25.)), bfill),
                    'activation 100': (fl(50000., n_(A=100.)), bfill), 'cancel 0 ms (the 1 070 fill after the landing)': (fl(50000., n_(L=0.)), [(950., 20.)]),
                    'cancel 100 ms': (fl(50000., n_(L=100.)), bfill),
-                   'landings 1 087 / 1 050 / 1 150 / 1 087': ([ld(50000., n_()), ld(50000., n_(L=0.)), ld(50000., n_(L=100.)), ld(50000., n_(A=100.))], [1087., 1050., 1150., 1087.]),
+                   'landings 1 087 / just after 1 050 / 1 150 / 1 087': ([ld(50000., n_()), ld(50000., n_(L=0.)), ld(50000., n_(L=100.)), ld(50000., n_(A=100.))],
+                                                                         [1087., float(np.nextafter(1050., np.inf)), 1150., 1087.]),
                    '200 000 pending-cancel fill at B': (fl(200000., n_()), [(90., 30.)]), '200 000 activation 25 (landing 87)': (fl(200000., n_(A=25.)), []),
                    '200 000 activation 100 (live after the trade)': (fl(200000., n_(A=100.)), []), '200 000 cancel 0 (pending landing 58)': (fl(200000., n_(L=0.)), []),
                    '200 000 cancel 100 (pending landing 158)': (fl(200000., n_(L=100.)), [(90., 30.)]),
@@ -400,8 +422,11 @@ def selftest():
                 with contextlib.redirect_stdout(io.StringIO()):
                     R, read = report(out=tmp / 'sc', kp=tmp / 'kp', days=days, expect=None)
                 n250 = sum(int((pd.read_parquet(tmp / 'kp' / d / 'fills.parquet').clock == 250.).sum()) for d in days)
+                R1_, _ = report(out=tmp / 'sc', kp=tmp / 'kp', days=days[:1], expect=None)                 # one day first: its own report files
+                if not ((tmp / 'sc' / f'scenarios_{days[0]}.json').exists() and R1_[n_()]['eligible'] < R[n_()]['eligible']):
+                    bad.append('the one-day report')
                 if not (read['Z0 CONTROLS'] == 'YES' and len(R) == len(SCEN) and all(k in read for k in ('Z1 E ACROSS TESTED SCENARIOS', 'Z2 KEEP VALUE ACROSS TESTED SCENARIOS'))
-                        and (tmp / 'sc' / 'scenarios.json').exists() and R[n_()]['eligible'] > 0 and R[n_(tl='M250')]['fills'] == n250 > 0
+                        and (tmp / 'sc' / f"scenarios_{'_'.join(days)}.json").exists() and R[n_()]['eligible'] > 0 and R[n_(tl='M250')]['fills'] == n250 > 0
                         and R[n_(N=0.)]['fills'] == R[n_()]['fills'] and R[n_(N=0.)]['null'] != R[n_()]['null']):
                     bad.append(f'report: {read}')
             except (SystemExit, ValueError) as e:
@@ -458,5 +483,7 @@ if __name__ == '__main__':
         day_run(a[1])
     elif a == ['report']:
         report()
+    elif len(a) == 2 and a[0] == 'report':                                  # one day first: scenarios_<day>.txt / .json
+        C.require(a[1] in KP.DAYS, 'undeclared day'); report(days=[a[1]])
     else:
         sys.exit('usage: pf_keep_pull_scenarios.py selftest | day <day> | report')

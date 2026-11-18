@@ -1,0 +1,33 @@
+QUEUE-AWARE SCENARIO REPLAY of the keep / pull selection, declared score A+0 (pf_keep_pull_scenarios.py; every committed state with a path re-simulated through the branch kernel; days 20261023; c summed)
+  640 states re-simulated (631 eligible at B); held contradictory events by day S1 20261023 1; S2 20261023 1
+  Z0 (h): B's E +356 and score improvement -135 = the clock audit's per-fill values on the committed tables
+
+  scenario                           E       score        null         KEEP   KEEP+score    PULL-ALL  eligible    fills  filled discov.   lost
+  M50|A58|L37|N100                +356        -135        -491       +2,632       +2,498      -2,380       631      105      97       0      0
+  S1lo|A58|L37|N100               +140        -368        -508       +2,588       +2,220      -2,438       631      106      99       7      5
+  S1mid|A58|L37|N100              +142        -440        -582       +2,728       +2,288      -2,554       631      103      96       1      2
+  S1hi|A58|L37|N100                +79        -570        -649       +2,904       +2,334      -2,798       631      104      97       4      4
+  S2lo|A58|L37|N100                +46        -477        -523       +2,108       +1,630      -2,092       631      106     100      14     11
+  S2hi|A58|L37|N100               +287        -352        -640       +2,780       +2,428      -2,546       631      110     102      15     10
+  EVhi|A58|L37|N100               +104        -548        -652       +3,000       +2,452      -2,748       631      108      98      14     13
+  M50|A25|L37|N100                +346        -135        -481       +2,602       +2,468      -2,350       631      104      96       0      1
+  M50|A100|L37|N100               +175        -360        -535       +2,602       +2,242      -2,606       631      104      96       0      1
+  M50|A58|L0|N100                 +326        -215        -541       +2,698       +2,482      -2,472       631      102      95       0      2
+  M50|A58|L100|N100               +377         -75        -452       +2,662       +2,588      -2,072       631      106      98       1      0
+  M50|A58|L37|N0                  +311        -135        -446       +2,632       +2,498      -2,380       631      105      97       0      0
+  M50|A58|L37|N250                +350        -135        -485       +2,632       +2,498      -2,380       631      105      97       0      0
+  M0|A58|L37|N100                 +207        -335        -542       +2,698       +2,362      -2,548       631      102      95       0      2
+  M250|A58|L37|N100               +228        -330        -558       +2,588       +2,258      -2,536       631      103      97       4      4
+
+  E by day: M50|A58|L37|N100 20261023 +356 | S1lo|A58|L37|N100 20261023 +140 | S1mid|A58|L37|N100 20261023 +142 | S1hi|A58|L37|N100 20261023 +79 | S2lo|A58|L37|N100 20261023 +46 | S2hi|A58|L37|N100 20261023 +287 | EVhi|A58|L37|N100 20261023 +104 | M50|A25|L37|N100 20261023 +346 | M50|A100|L37|N100 20261023 +175 | M50|A58|L0|N100 20261023 +326 | M50|A58|L100|N100 20261023 +377 | M50|A58|L37|N0 20261023 +311 | M50|A58|L37|N250 20261023 +350 | M0|A58|L37|N100 20261023 +207 | M250|A58|L37|N100 20261023 +228
+
+READINGS (declared before any data was read)
+  Z0 CONTROLS: YES
+  Z1 E ACROSS TESTED SCENARIOS: STABLE-POSITIVE-IN-TESTED-SCENARIOS
+  Z2 KEEP VALUE ACROSS TESTED SCENARIOS: STABLE-POSITIVE-IN-TESTED-SCENARIOS
+  Z3 THE SCORE'S VALUE ACROSS TESTED SCENARIOS: STABLE-POSITIVE-IN-TESTED-SCENARIOS
+  E ranges over [+46, +377], KEEP over [+2,108, +3,000], KEEP + score over [+1,630, +2,588] in the 15 tested scenarios
+
+LIMITS: consumed days; one declared rule; one-factor-at-a-time scenarios and timelines (no joint extreme search); assumption ranges, not measured distributions; queue rule M unvalidated on live orders; STATES is local selection; one order at a time, no re-post after a pull.
+keep-pull scenario selftests passed (synthetic only): the notice and landing rules; the keep / pull run on its synthetic tape reproduced at B; planted fills and landings under timelines S1 / S2 / EV, activation 25 / 100 ms and cancel latency 0 / 100 ms; a contradictory event held at M50; a one-order outcome at 37 / 100 ms; the report end to end and refused on a wrong baseline expectation; a misaligned timing source, a changed committed fill, a perturbed pending clock and an early landing mirror each refused by its own control with no output
+2026-11-18T07:20:32Z tag=sc_selftest rc=0 peak_rss_mib=232 wall_s=10.61 cpu_user_s=10.25 memavail_start_gib=23 disk_free_gib=448->448 slot=claude

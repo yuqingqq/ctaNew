@@ -50,7 +50,7 @@ MUT = [
     ('an ambiguous fill counted as identified in a decision', "~np.isin(cls[k, 'CP'], (0, 1))", "~np.isin(cls[k, 'CP'], (0, 1, 2))", 2),
     # --- the run's controls
     ('V0a collapsed control ignored', "ok_a = abs(e0 - float(pf['score'].sum() - pf['null'].sum())) < 1e-6 and abs(e0 - expect[0]) <= tol and abs(s0 - expect[1]) <= tol", "ok_a = True"),
-    ('V0b v1 regression ignored', "ok_b = all(abs(reg[k][x] - v1[k][x]) <= tol for k in reg for x in ('E_min', 'E_max')) and all(reg[k]['order'] == v1[k]['order'] for k in reg)",
+    ('V0b v1 regression ignored', "ok_b = all(abs(reg[k][x] - v1[k][x]) <= tol for k in reg for x in ('E_min', 'E_max')) and all(v1[k]['order'] is None or reg[k]['order'] == v1[k]['order'] for k in reg)",
      "ok_b = True"),
     ('V0d identity control ignored', "ok_d = sum(recon.values()) == 0", "ok_d = True"),
     # --- the review of c23e6f29: contradictions over all candidates, exact joint bounds, the K4 reading
@@ -71,6 +71,10 @@ MUT = [
     ('the evidence cap basis dropped', "E[f'{k}_hi_basis'] = np.where(st == 1, CAP_BASIS,", "E[f'{k}_hi_basis'] = np.where(st == 99, CAP_BASIS,"),
     ('representative time without its rule shift', "E['rep_time'], E['rep_rule'] = E.anc - SHIFT, REP_RULE", "E['rep_time'], E['rep_rule'] = E.anc, REP_RULE"),
     ('undocumented columns accepted', "if c not in SCHEMA.get(t, {}) and not any(", "if False and c not in SCHEMA.get(t, {}) and not any("),
+    ('the structural landing kept at 37 ms in the latency bounds', "    return dict(F, lend=struct_landing(gs, lat))", "    return dict(F)"),
+    ('zero-latency structural cancel stops the trade at its own instant', "return np.where(np.isnan(g), np.inf, np.where(x > g, x, np.nextafter(g, np.inf)))",
+     "return np.where(np.isnan(g), np.inf, x)"),
+    ('K4 offset over legs without an anchor', "ok = np.isfinite(K.Z.values)  ", "ok = np.ones(len(K), bool)  "),
     # --- the known-lifecycle checks
     ('K1 cancel window from the ack alone', "c_lo = np.where(np.isfinite(K.req.values), K.req.values, K.place.values); c_hi", "c_lo = K.ack.values; c_hi"),
     ('K2 evidence use never tested', "evidence_contradictions=int(miss(*rest_ev, K).sum())", "evidence_contradictions=0"),

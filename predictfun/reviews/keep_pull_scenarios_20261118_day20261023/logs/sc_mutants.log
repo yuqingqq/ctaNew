@@ -1,0 +1,22 @@
+ 0 none (must pass): rc 0 -> passed
+ 1 a contradictory event moved to its (empty) window: rc 1 -> KEEP-PULL SCENARIOS SELFTEST FAILED: 150 000 contradictory event held at M50: [[(250.0, 30.0)], [(450.0, 30.0)], [], [(450.0, 30.0)]] != [[(450.0, 30.0)], [(450.0, 30.0)], [(450.0, 30.0)], [(450.0, 30
+ 2 window end replaced by its start: rc 1 -> KEEP-PULL SCENARIOS SELFTEST FAILED: S1hi (both after the cross cancel): [(750.0, 20.0), (870.0, 10.0)] != [] | S2hi: [(400.0, 20.0), (520.0, 10.0)] != []
+ 3 a contradictory event held at M0 instead of M50: rc 1 -> KEEP-PULL SCENARIOS SELFTEST FAILED: 150 000 contradictory event held at M50: [[(500.0, 30.0)], [(500.0, 30.0)], [(500.0, 30.0)], [(500.0, 30.0)]] != [[(450.0, 30.0)], [(450.0, 30.0)], [(450.0, 30.0)]
+ 4 the evidence timeline at the window start: rc 1 -> KEEP-PULL SCENARIOS SELFTEST FAILED: EVhi: [(750.0, 20.0), (870.0, 10.0)] != []
+ 5 every scenario re-uses the baseline path: rc 1 -> KEEP-PULL SCENARIOS SELFTEST FAILED: S1lo (both trades earlier): [(950.0, 20.0), (1070.0, 10.0)] != [(750.0, 20.0), (870.0, 10.0)] | S1hi (both after the cross cancel): [(950.0, 20.0), (1070.0, 10.0)]
+ 6 timing alignment check removed: rc 1 -> KEEP-PULL SCENARIOS SELFTEST FAILED: a timing source misaligned with the tape refused by another control: the baseline scenario differs from the committed replay (order 3)
+ 7 activation ignored (always +58 ms): rc 1 -> KEEP-PULL SCENARIOS SELFTEST FAILED: synthetic scenario days refused: a fill before activation or at / after the structural landing
+ 8 pending landing fixed at 95 ms: rc 1 -> KEEP-PULL SCENARIOS SELFTEST FAILED: synthetic scenario days refused: a fill before activation or at / after the structural landing
+ 9 kernel structural cancels at 37 ms in every scenario: rc 1 -> KEEP-PULL SCENARIOS SELFTEST FAILED: the kernel tie order at zero latency: g 1000.0, fills [(1000.0, 20.0), (1020.0, 10.0)] / [(1000.0, 20.0), (1020.0, 10.0)], landings 1000.0000000000001 / 1037.0 | s
+10 structural landing recorded at the baseline latency: rc 1 -> KEEP-PULL SCENARIOS SELFTEST FAILED: synthetic scenario days refused: a fill before activation or at / after the structural landing
+11 pending landing from the baseline activation: rc 1 -> KEEP-PULL SCENARIOS SELFTEST FAILED: the scenario landing rule
+12 notice ignored in eligibility: rc 1 -> KEEP-PULL SCENARIOS SELFTEST FAILED: the notice rule (endj) at 0 / 100 / 250 ms
+13 zero-latency tie order ignored (a cancel stops the trade at its own instant): rc 1 -> KEEP-PULL SCENARIOS SELFTEST FAILED: the kernel tie order at zero latency: g 1000.0, fills [(1000.0, 20.0)] / [(1000.0, 20.0), (1020.0, 10.0)], landings 1000.0 / 1037.0 | the scenario landing rule dif
+14 the score lands at the baseline latency in every scenario: rc 1 -> KEEP-PULL SCENARIOS SELFTEST FAILED: one-order outcome: score 150.0 / 150.0 at 37 / 100 ms (want 150 / 0)
+15 the uniform shifts read the baseline fills: rc 1 -> KEEP-PULL SCENARIOS SELFTEST FAILED: report: {'Z0 CONTROLS': 'YES', 'Z1 E ACROSS TESTED SCENARIOS': 'NOT-STABLE-IN-TESTED-SCENARIOS', 'Z2 KEEP VALUE ACROSS TESTED SCENARIOS': 'STABLE-POSITIVE-IN-TESTE
+16 notice scenarios re-use the baseline eligibility: rc 1 -> KEEP-PULL SCENARIOS SELFTEST FAILED: report: {'Z0 CONTROLS': 'YES', 'Z1 E ACROSS TESTED SCENARIOS': 'NOT-STABLE-IN-TESTED-SCENARIOS', 'Z2 KEEP VALUE ACROSS TESTED SCENARIOS': 'STABLE-POSITIVE-IN-TESTE
+17 baseline control removed: rc 1 -> KEEP-PULL SCENARIOS SELFTEST FAILED: scenario day accepted a committed fill changed under a matching receipt | a refused scenario day wrote output (a committed fill changed under a matching receipt) |
+18 a fill at / after the structural landing accepted: rc 1 -> KEEP-PULL SCENARIOS SELFTEST FAILED: scenario day accepted a structural landing mirror 10 ms early (a kernel fill after it) | a refused scenario day wrote output (a structural landing mirror 10 ms ear
+19 B checked against the clock audit removed: rc 1 -> KEEP-PULL SCENARIOS SELFTEST FAILED: report accepted a baseline E that differs from the expectation
+keep-pull scenario mutation check passed: the unchanged copy passes its selftest, 19 / 19 planted code errors fail it
+2026-11-18T07:17:30Z tag=sc_mutants rc=0 peak_rss_mib=231 wall_s=182.00 cpu_user_s=175.73 memavail_start_gib=23 disk_free_gib=448->448 slot=claude
