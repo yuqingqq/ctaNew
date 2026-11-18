@@ -1,0 +1,16 @@
+{
+  "request_id": "435567ff-031d-461b-8bf2-d182dcd666af",
+  "target_commit": "656f322fab161354f26032a43a2b917138c33a0e",
+  "command": "PF_SLOT=codex /home/yuqing/ctaNew/predictfun/research/run_light.sh auto_review_656f322f_artifacts -- /home/yuqing/pricer-sol/venv/bin/python3 /home/yuqing/ctaNew/predictfun/reviews/automatic/20261118_656f322f/verify_artifacts.py /tmp/predictfun-review-656f322f",
+  "exit_code": 0,
+  "run_light_entry": "2026-11-18T02:17:39Z tag=auto_review_656f322f_artifacts rc=0 peak_rss_mib=1279 wall_s=16.12 cpu_user_s=14.11 memavail_start_gib=23 disk_free_gib=453->453 slot=codex",
+  "raw_tape_read": false,
+  "derived_tables_read": true,
+  "consumed_days": ["20261023", "20261024", "20261025", "20261026", "20261027"],
+  "untouched_validation_days_read": false,
+  "training_or_replay_launched": false,
+  "development_sources_changed": false,
+  "full_synthetic_mutation_suite_rerun": false,
+  "saved_artifact_falsifiers_rerun": 10,
+  "evidence": "receipt_v1.json"
+}

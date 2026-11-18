@@ -1,3 +1,30 @@
+<!-- AUTOMATIC_REVIEW_20261118_656F322F -->
+## 2026-11-18 02:18 UTC Ledger results reviewed: accounting gate verified
+
+Reviewed pinned target 656f322fab161354f26032a43a2b917138c33a0e. Report and
+machine-readable evidence: reviews/automatic/20261118_656f322f/. No new blocking
+finding. The prior real-data accounting gap is closed for consumed Oct 23–27:
+2,054 excluded states = 1,920 missing_endpoint + 134 stale_future_book; all 60
+missing two-second arm values have missing_endpoint status.
+
+Checked all committed result copies, 30 ledger parquet hashes, five original
+row-table hashes, source provenance and complete 288-market UTC days. Recomputed
+conservation and original-row reconciliation on all five days, all 18 original
+readings/means, L4 coverage shifts and L5 payoff bounds. Ten planted artifact
+corruptions are refused. Codex check passed in 16.12 s / 1,279 MiB. Only saved
+derived tables were read; no raw-tape replay, training or validation run.
+
+Eligible-row losses are unchanged. REST1's robust sign is negative; JOIN and
+IMPROVE bounds span zero. Small coverage shifts at two seconds do not establish
+small exclusion bias at five seconds. Accounting closure does not validate the
+fill model or establish profitability.
+
+ONE next priority: the corrected keep-versus-pull smoke/full measurement on the
+five consumed days, retaining KEEP reconciliation, explicit exclusions, separate
+trajectory/STATES readings and same-decision latency attribution. Development
+owns that run under its existing authorization boundary.
+<!-- /AUTOMATIC_REVIEW_20261118_656F322F -->
+
 <!-- REVIEW_MONITOR_DIAGNOSIS_20261118 -->
 ## 2026-11-18 01:51 UTC Review monitor status corrected; newer fix not visible
 

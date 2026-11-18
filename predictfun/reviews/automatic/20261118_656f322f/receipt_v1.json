@@ -1,0 +1,213 @@
+{
+  "target_commit": "656f322fab161354f26032a43a2b917138c33a0e",
+  "review_asof": "2026-11-18T02:17:40.345981+00:00",
+  "result_asof": "2026-11-18T02:09:46Z",
+  "scope": "Existing derived tables on consumed Oct23-27 only; no raw tape, replay, training or forward validation.",
+  "review_script_sha256": "2c14ec338785d3002d654e87d7a6ab0386b7cb8ac02dfefe30560025358f60f5",
+  "committed_artifacts": {
+    "logs/driver.log": "968e119267aa3fa22a0db90123780ae21d8df1a26c0f0380a90e7dbf6c4b2c89",
+    "logs/qpl_day_20261023.log": "1de0fe7515e9166092158ef3bdc1361e75c2faa83357d5740751db518e10eaff",
+    "logs/qpl_day_20261024.log": "b66ee8ffd4ac2b8c9b9a2b23cc5e5288d8250b861d0c1de276328e3a3eea29c1",
+    "logs/qpl_day_20261025.log": "b48cae9455da2822b13603518d06f0999dc498dcdd9c5109b61f5630d1bdc519",
+    "logs/qpl_day_20261026.log": "d887313eb128622cfc0193838d511b68d799c67187b89125e041ec3114d94751",
+    "logs/qpl_day_20261027.log": "40923eef881e89cc1aa00edfafa85b6d490be992a8fd55e583c6c50405624621",
+    "logs/qpl_mutants.log": "491613bb8b43f531b22f007b43543166b20eb5ade4f42b6afc2184fb85f2ae83",
+    "logs/qpl_report.log": "30dbc7f8a81a6f195f12c55fb761b94cb1c6d680d021d8ce2358773759b949cb",
+    "logs/qpl_selftest.log": "942770e88d5e280c6f8a436672bd2522de30dad66db07f5178812aa7493cdeb7",
+    "logs/qpl_smoke.log": "f12dd596fefb43f118e49a688017667b89b8b16fab8c2b3256fbfb4269e434ff",
+    "queue_place_ledger.json": "b542e6c73e1faa5fb63ff9e2c5cc1f01833417bc4e743c6e84d8c8169112e938",
+    "queue_place_ledger.txt": "779b79d9467485475901d29bea424627d4858e114c600712778d9281f355207f",
+    "receipt_20261023.json": "faa74223d052be618016e49b8e5f4a539669a9e104a794183cb260ff4f89b2fd",
+    "receipt_20261024.json": "15ee9ded98a848cf07d7b413ed358baf091614dab8af5318abf89747c966e3e4",
+    "receipt_20261025.json": "a55790089d138a6f6348c0b1951ef5fdeb5fcf94ecd6fde2e3cc5224da100f5f",
+    "receipt_20261026.json": "e0475269cdb5716629c6e88ebb5dfbd892f366222600c5ed7ecf135d25d9730c",
+    "receipt_20261027.json": "43d5213f45f35ad3a01d907f480b358cd7e95699fac8739e21bdf11301cff6f9",
+    "receipt_smoke_20261023.json": "8a928e5a76e18ece3567dc6fa43c4161fe38b1ad59ad779bac9d51804dff2ce8"
+  },
+  "per_day": {
+    "20261023": {
+      "asof": "2026-11-18T02:01:46.881414+00:00",
+      "counted": 30466,
+      "saved_states": 30088,
+      "gap": 378,
+      "gap_by_status": {
+        "missing_endpoint": 354,
+        "stale_future_book": 24
+      },
+      "missing_2s_arm_rows": 9,
+      "complete_288_market_UTC_day": true,
+      "conservation_violations": [],
+      "reconciliation_mismatches": [],
+      "output_hashes": {
+        "markets.parquet": "d3fd10534312d8e718911d3edd9cc43662a458666eaf2392aa08e10b12305061",
+        "grid.parquet": "12be8826fbb83bf853427f8d5150a05d8a56bf58c079f173c5e02b39c1383108",
+        "state_arms.parquet": "20f0b1a52639ae6201591655a3a4727e889a6eba7b37b3f547c0383b2aa202a4",
+        "births.parquet": "52bd5848323c9496532c83e5c30b001d5a738865884fda5ff66651356974d7d8",
+        "event_arms.parquet": "a8454a91d0b8a1eb2c6d9c6f2b163307db651dcde76649c027027a4c81118448"
+      }
+    },
+    "20261024": {
+      "asof": "2026-11-18T02:03:44.633122+00:00",
+      "counted": 30704,
+      "saved_states": 30358,
+      "gap": 346,
+      "gap_by_status": {
+        "missing_endpoint": 334,
+        "stale_future_book": 12
+      },
+      "missing_2s_arm_rows": 14,
+      "complete_288_market_UTC_day": true,
+      "conservation_violations": [],
+      "reconciliation_mismatches": [],
+      "output_hashes": {
+        "markets.parquet": "1f7dd90bac564f2cd0215d4bf167befca08be884b7340d03a4e13c48203cd645",
+        "grid.parquet": "b620bbdf8447eb67e8bdadb59181e7dc244c0dfd90cf4b6a185e0a0160e61bf4",
+        "state_arms.parquet": "515a790874b5c0d475e9cccb49dc6c361ced0824faa87320e13e3d22215e2545",
+        "births.parquet": "7666a8677bd0b5f3326506225131dee89e8f7cea590f3d1f585031a3bae2372f",
+        "event_arms.parquet": "cd35c8d71e01975d09d37e7403432dcbd9407b3400e0bf56ccd54fcf68a1f53d"
+      }
+    },
+    "20261025": {
+      "asof": "2026-11-18T02:05:40.089289+00:00",
+      "counted": 29996,
+      "saved_states": 29558,
+      "gap": 438,
+      "gap_by_status": {
+        "missing_endpoint": 398,
+        "stale_future_book": 40
+      },
+      "missing_2s_arm_rows": 19,
+      "complete_288_market_UTC_day": true,
+      "conservation_violations": [],
+      "reconciliation_mismatches": [],
+      "output_hashes": {
+        "markets.parquet": "d65faa7e94c7f7c3305f8a945def9ce877bf24d61b54ecfca40c17c40c55bba5",
+        "grid.parquet": "96ecde2bb6457c8feedf8161302f2eb7f7a035a8c40e7d45f63896de3e360cfb",
+        "state_arms.parquet": "dbb86df23bd92da5f967273fd15b9c63ff985cee8448b2be84d8973553df94bf",
+        "births.parquet": "7fc77ee2a2643567b3711273d60dad93b2b8017c5defedfceac21a12865140aa",
+        "event_arms.parquet": "2546996b3fc01b58b3fa5da6b9e29357deebf1fff5efe0e504456401bc07b1ff"
+      }
+    },
+    "20261026": {
+      "asof": "2026-11-18T02:07:41.061974+00:00",
+      "counted": 30242,
+      "saved_states": 29832,
+      "gap": 410,
+      "gap_by_status": {
+        "missing_endpoint": 374,
+        "stale_future_book": 36
+      },
+      "missing_2s_arm_rows": 14,
+      "complete_288_market_UTC_day": true,
+      "conservation_violations": [],
+      "reconciliation_mismatches": [],
+      "output_hashes": {
+        "markets.parquet": "49b17af01c9ea5f7439ec92ff50928408644535c27d4316c6819c8dac208f43c",
+        "grid.parquet": "e486e2402e458c7f2178b560482710f5d775d859bfbc9574da7f0507bb6f4e8f",
+        "state_arms.parquet": "5d2f1b420c75b8a405f3c1e9ff2fc7868a1842154a678f5d94aa7fc9c3730a3a",
+        "births.parquet": "9accd84ce84dcb53df28aa3736abbc906d3d852e5bfc1b62313c847ebcdd0898",
+        "event_arms.parquet": "4510b6bdf7ad735cd23ed0d871b87ab66a36f33e0620570fa75636cf2c1b4f0b"
+      }
+    },
+    "20261027": {
+      "asof": "2026-11-18T02:09:40.150958+00:00",
+      "counted": 29820,
+      "saved_states": 29338,
+      "gap": 482,
+      "gap_by_status": {
+        "missing_endpoint": 460,
+        "stale_future_book": 22
+      },
+      "missing_2s_arm_rows": 4,
+      "complete_288_market_UTC_day": true,
+      "conservation_violations": [],
+      "reconciliation_mismatches": [],
+      "output_hashes": {
+        "markets.parquet": "60f1bb42b5f4e8bf33517951f03daa24d2a5aa28eb3a35ede5e3155ec697274e",
+        "grid.parquet": "7e690ef89f16db9b33f51a6bb8573426b57516ad12949cc3a01efe0b851e692e",
+        "state_arms.parquet": "7a468b540249328aa6f6324b723f37da68a7351f346c0b18dcdc7e2f0dee0953",
+        "births.parquet": "16e8652ec8af74ef60384ff5e579ba4c637b38ce0137fea19e66c7fdc747e25e",
+        "event_arms.parquet": "8e3dc7e22944e099be40cb68c9797ab4ed1d25156a3b366d41028cb2b7e65394"
+      }
+    }
+  },
+  "counted_states": 151228,
+  "gap": 2054,
+  "gap_by_status": {
+    "missing_endpoint": 1920,
+    "stale_future_book": 134
+  },
+  "gap_by_contract_minute": {
+    "1": 24,
+    "2": 26,
+    "3": 128,
+    "4": 562,
+    "5": 1314
+  },
+  "missing_2s_arm_rows": 60,
+  "original_readings_reproduced": 18,
+  "arms": {
+    "JOIN": {
+      "eligible_5s": 149174,
+      "mean_5s_c": -13.046263166707007,
+      "excluded_feasible_5s": 2054,
+      "eligible_2s": 150568,
+      "mean_2s_c": -8.518683603568224,
+      "coverage_shift_2s_c": 0.08705911823778756,
+      "excluded_but_2s_eligible": 1430,
+      "excluded_mean_2s_c": 0.5609127431080968,
+      "worst_case_total_value_c": [
+        -4994073.261630351,
+        1167926.7383696488
+      ],
+      "sign_robust_at_bounds": false
+    },
+    "REST1": {
+      "eligible_5s": 146483,
+      "mean_5s_c": -13.888985590384827,
+      "excluded_feasible_5s": 1225,
+      "eligible_2s": 147323,
+      "mean_2s_c": -7.800499138758308,
+      "coverage_shift_2s_c": 0.04569012691893093,
+      "excluded_but_2s_eligible": 864,
+      "excluded_mean_2s_c": -0.05544092299467575,
+      "worst_case_total_value_c": [
+        -5020790.27623634,
+        -1345790.2762363406
+      ],
+      "sign_robust_at_bounds": true
+    },
+    "IMPROVE": {
+      "eligible_5s": 7976,
+      "mean_5s_c": -7.229030122020796,
+      "excluded_feasible_5s": 106,
+      "eligible_2s": 8048,
+      "mean_2s_c": -5.018422672526857,
+      "coverage_shift_2s_c": 0.013448035527908075,
+      "excluded_but_2s_eligible": 72,
+      "excluded_mean_2s_c": -3.5286791812684797,
+      "worst_case_total_value_c": [
+        -215968.74425323788,
+        102031.25574676212
+      ],
+      "sign_robust_at_bounds": false
+    }
+  },
+  "controls": {
+    "clean_artifacts_pass": true,
+    "ten_planted_corruptions_refused": {
+      "v1_value_moved_1e-9": true,
+      "v1_row_dropped": true,
+      "v1_counter_plus_1": true,
+      "ledger_arm_row_dropped": true,
+      "ledger_grid_row_dropped": true,
+      "ledger_status_without_value": true,
+      "ledger_grid_status_swapped": true,
+      "ledger_birth_status_swapped": true,
+      "ledger_arm_price_moved": true,
+      "ledger_time_to_end_moved": true
+    },
+    "legal_payoff_controls_pass": true
+  },
+  "verdict": "No discrepancy found in saved-table reconciliation. Accounting gaps are explained; profitability and fill-model validity are not established."
+}
