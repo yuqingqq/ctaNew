@@ -1,3 +1,26 @@
+<!-- MANUAL_REVIEW_20261118_1A1ABBAA -->
+## 2026-11-18 Paired clock audit reviewed: attribution resolved, timing validity still open
+
+Target 1a1abbaa0e9b572a6d71c9150aa530a11f5b7e6f; report and receipt_v1.json:
+reviews/automatic/20261118_1a1abbaa/. Bounded independent checks reproduce every
+paired cell, per-fill contribution and day/side/source total. No new arithmetic
+or implementation discrepancy found; the prior attribution task is complete.
+
+Population: 143,134 eligible / 151,228 counted orders, consumed Oct23–27, result
+as of 2026-11-18 03:40:50 UTC. On common opportunities, excess over the exact
+STATES mean changes +171,416 to -27,154 c. 89.6% of the full deterioration is
+the fill scenario; 10.4% is eligibility. Fill quantities also change for 24,881
+orders (17.4%): this is not a pure timestamp perturbation of fixed executions.
+Discarding the first 200 ms is not a target repair: it omits real costs/gains,
+and the COMMON later-fill excess is negative at both clocks (-65,705/-56,532 c).
+
+ONE next priority: identify or explicitly qualify fill-versus-cancel ordering
+by original trade identity and timestamp provenance. Retain ambiguous fills
+in full value accounting with justified uncertainty; measure identifiable
+label signs before model tuning. No calibrated clock, live-profit claim,
+untouched validation or model change follows from this review. Schedule removed.
+<!-- /MANUAL_REVIEW_20261118_1A1ABBAA -->
+
 <!-- MANUAL_REVIEW_20261118_717A1A49 -->
 ## 2026-11-18 Keep/pull results: arithmetic holds; clock sensitivity is the next gate
 

@@ -1,3 +1,27 @@
+manual_review_20261118_1a1abbaa:
+  status: complete_paired_audit_verified_fill_clock_identification_open
+  asof: "2026-11-18T04:03:01.454329+00:00"
+  target_commit: 1a1abbaa0e9b572a6d71c9150aa530a11f5b7e6f
+  report: predictfun/reviews/automatic/20261118_1a1abbaa/report.md
+  evidence: predictfun/reviews/automatic/20261118_1a1abbaa/receipt_v1.json
+  result_asof: "2026-11-18T03:40:50.672573+00:00"
+  population: {counted: 151228, eligible: 143134, refused_post_only: 6040, path_excluded: 2054, common_pulls: 69421}
+  consumed_days: [20261023, 20261024, 20261025, 20261026, 20261027]
+  common_excess_c: {M50: 171416.4150546448, M250: -27153.613780966}
+  fill_factor_fraction_of_change: 0.8956729907735871
+  changed_total_fill_quantity_orders: 24881
+  excess_beyond_200ms_common_c: {M50: -65704.70136853552, M250: -56532.172765370284}
+  prior_paired_attribution_priority: completed_and_independently_verified
+  actual_match_clock_calibrated: false
+  scope: consumed_data_local_decision_states_not_portfolio_value
+  check: {passed: true, seconds: 19.33, peak_rss_mib: 413, slot: codex}
+  raw_tape_read: false
+  untouched_validation_days_read: false
+  development_sources_modified: false
+  schedule_remains_removed: true
+  next_priority: source_aware_fill_cancel_ordering_and_label_identification_retaining_ambiguous_fills
+  development_owner: other_session
+
 keep_pull_clock_audit_20261118:
   status: done_target_clock_sensitive
   asof: "2026-11-18 03:42Z"

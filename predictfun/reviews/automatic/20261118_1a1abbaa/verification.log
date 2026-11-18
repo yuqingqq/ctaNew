@@ -1,0 +1,48 @@
+keep-pull clock audit selftests passed (synthetic only): analytic STATES expectation 40.18 = sampler mean 40.57 +- 1.18 (20,000 draws); brute force and explicit score sums equal; planted FILL and ELIGIBILITY cases attributed to the cent; A1 / A2 labels
+20261023: source hashes, all six paired cells and per-fill/near contributions pass
+20261024: source hashes, all six paired cells and per-fill/near contributions pass
+20261025: source hashes, all six paired cells and per-fill/near contributions pass
+20261026: source hashes, all six paired cells and per-fill/near contributions pass
+20261027: source hashes, all six paired cells and per-fill/near contributions pass
+{
+  "shapley": {
+    "total": -261403.0769258733,
+    "fill": -234131.67570761498,
+    "eligibility": -27271.40121825831,
+    "fill_first": -269689.7818976382,
+    "eligibility_first": -62829.507408281555
+  },
+  "quantity_diagnostic": {
+    "20261023": {
+      "eligible": 28799,
+      "orders_with_changed_total_fill_quantity": 5226,
+      "shares_M50": 292256.4573183327,
+      "shares_M250": 315210.155156922
+    },
+    "20261024": {
+      "eligible": 29302,
+      "orders_with_changed_total_fill_quantity": 5089,
+      "shares_M50": 305963.5889086898,
+      "shares_M250": 323442.203332186
+    },
+    "20261025": {
+      "eligible": 28553,
+      "orders_with_changed_total_fill_quantity": 4498,
+      "shares_M50": 279602.4716675777,
+      "shares_M250": 296151.78807593364
+    },
+    "20261026": {
+      "eligible": 28442,
+      "orders_with_changed_total_fill_quantity": 5407,
+      "shares_M50": 276715.67532596184,
+      "shares_M250": 305108.9160286772
+    },
+    "20261027": {
+      "eligible": 28038,
+      "orders_with_changed_total_fill_quantity": 4661,
+      "shares_M50": 277181.6214289883,
+      "shares_M250": 299130.9614338775
+    }
+  }
+}
+2026-11-18T04:03:00Z tag=review_1a1abbaa_audit_v1 rc=0 peak_rss_mib=413 wall_s=19.33 cpu_user_s=18.99 memavail_start_gib=23 disk_free_gib=451->451 slot=codex
