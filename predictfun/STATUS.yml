@@ -1,3 +1,19 @@
+keep_pull_20261117_run:
+  status: done_readings_computed
+  asof: "2026-11-18 03:05Z"
+  session: aea5bfb9
+  user: "Check next priority"
+  code: ebd5c6b3
+  population: {counted: 151228, eligible: 143134, refused_post_only: 6040, path_excluded: 2054, live_decisions: 6935675, live_decisions_fair_missing: 579}
+  readings: {K1: "AVOIDABLE-AT-LATENCY (94%)", K2: "EARNS-OVER-MATCHED-STATES", K3: "RANKS-VALUE-STATES", estimand: "decision states", trajectory: "NOT-EVALUABLE-UNMATCHED (500 / 500 draws, mean 365.1 pulls)", K2_holds_at: [M50_L0, M50_L37, M50_noyoung_L37, M0_L37], K2_fails_at: [M250_L37]}
+  stakes_c: {keep: -1946163, keep_loss: 3504309, pull_all: 1841243, oracle_37ms: 3300877, score_A0: 1169671, score_A0_null_mean: 936736}
+  delays_c: {posting_window: 95356, pending_to_live: 16521, cancel_latency: 91555, avoidable_37ms: 3300877}
+  multiplicity: {score_policies: 6, candidates_passing: ["A+1", "A-1", "B0.5", "B1", "B2"]}
+  receipts: predictfun/reviews/keep_pull_20261117
+  resources: "~2 min and ~1.25 GiB a day; report 116 s, 3.3 GiB peak of the 4 GiB cap - reduce before any rerun"
+  running: false
+  next: "USER: M250 failure first (the score's removed value by trade source at M50 / M250), then risk / value prediction for the pull or entry / exposure"
+
 automatic_review_20261118_656f322f:
   status: complete_no_new_blocking_finding
   asof: "2026-11-18T02:18:00Z"
@@ -166,6 +182,7 @@ ledger_keep_pull_fix_review_20261117:
   next: fix_diagnostic_claims_and_null_then_ledger_replay_and_same_live_order_keep_pull
 
 keep_pull_20261117:
+  run: "2026-11-18 03:05Z done (see keep_pull_20261117_run)"
   fixed_after_review: "b6eaa7c2 (review 7008362b; see review_fixes_ledger_keep_pull_20261117)"
   status: code_committed_awaiting_go
   asof: "2026-11-17 13:48Z"

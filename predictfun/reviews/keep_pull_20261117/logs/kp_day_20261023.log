@@ -1,0 +1,15 @@
+keep-pull selftests passed (synthetic tape only; v1 reproduced on it bit for bit; planted fills, latency, structural causes, scores, decomposition and oracle as scripted; planted errors and known-bad inputs each refused by its own control): {"orders": 3440, "eligible": 3151, "fills": 1351, "status": {"eligible": 3151, "missing_future_book": 190, "refused_post_only": 49, "stale_future_book": 30, "missing_endpoint": 20}, "kernel_checks": 270, "invariance_checked": 290, "planted": {"drop_fill": true, "no_latency": true, "lookahead": true, "null_cross": true}, "known_bad": {"v1_rows_changed": true, "v1_value_moved_hash_updated": true, "day_output_exists": true, "undeclared_day": true}, "readings": {"K1 ORACLE-BOUND": "AVOIDABLE-AT-LATENCY", "K2 SCORE-EARNS": "NOT-SHOWN", "K3 SCORE-RANKS-VALUE": "RANKS-VALUE-STATES", "estimand": "decision states", "trajectory": "NOT-EVALUABLE-UNMATCHED (499 / 500 draws, mean 4.3 pulls)"}, "seconds": 13}
+{"stage": "day", "day": "20261023", "markets": 24, "orders": 2392, "seconds": 48, "rss": 395}
+{"stage": "day", "day": "20261023", "markets": 48, "orders": 5010, "seconds": 54, "rss": 355}
+{"stage": "day", "day": "20261023", "markets": 72, "orders": 7480, "seconds": 59, "rss": 375}
+{"stage": "day", "day": "20261023", "markets": 96, "orders": 10010, "seconds": 64, "rss": 405}
+{"stage": "day", "day": "20261023", "markets": 120, "orders": 12644, "seconds": 69, "rss": 438}
+{"stage": "day", "day": "20261023", "markets": 144, "orders": 15256, "seconds": 75, "rss": 470}
+{"stage": "day", "day": "20261023", "markets": 168, "orders": 17802, "seconds": 80, "rss": 501}
+{"stage": "day", "day": "20261023", "markets": 192, "orders": 20228, "seconds": 85, "rss": 530}
+{"stage": "day", "day": "20261023", "markets": 216, "orders": 22794, "seconds": 91, "rss": 609}
+{"stage": "day", "day": "20261023", "markets": 240, "orders": 25424, "seconds": 96, "rss": 580}
+{"stage": "day", "day": "20261023", "markets": 264, "orders": 28058, "seconds": 102, "rss": 613}
+{"stage": "day", "day": "20261023", "markets": 288, "orders": 30466, "seconds": 106, "rss": 644}
+{"day": "20261023", "stat": {"markets": 288, "windows": 288, "orders": 30466, "kernel_checks": 2448, "grid_before_start_margin": 576, "grid_counted": 30466, "grid_one_sided_book": 2934, "grid_expiry_censored": 576, "grid_locked_or_crossed": 8, "invariance_checked": 2724, "invariance_changed": 0}, "reconciliation": {"v1_join_rows": 30088, "matched": 30088, "v1_counted": 30466, "counted": 30466}, "seconds": 107}
+2026-11-18T02:51:30Z tag=kp_day_20261023 rc=0 peak_rss_mib=1298 wall_s=121.67 cpu_user_s=113.75 memavail_start_gib=23 disk_free_gib=452->452 slot=claude
