@@ -1,3 +1,24 @@
+manual_result_review_20261118_1fd77004:
+  status: complete_previous_findings_fixed_execution_evidence_gate_failed_two_P2_diagnostic_findings
+  asof: "2026-11-18T08:11:43Z"
+  target_commit: 1fd77004be70f436119c9eaf8079a94fe322099f
+  report: predictfun/reviews/automatic/20261118_1fd77004/report.md
+  evidence: predictfun/reviews/automatic/20261118_1fd77004/receipt.json
+  diagnostics: predictfun/reviews/automatic/20261118_1fd77004/diagnostics.json
+  prior_findings: {multi_event_contradictions: resolved, exact_vs_relaxed_bounds: resolved}
+  checks: {pinned_selftests: both_passed, saved_scenario_rows: 15, rows_reproduced_exactly: true, known_readings_reproduced: true, ledger_totals_reconciled: true, slot: codex}
+  new_findings: [P2_K5_endpoint_and_ack_bound_semantics, P2_leg_window_disagreement_labelled_REST_conflict]
+  population: {day: "20261023", counted: 30466, eligible: 28799, post_only_refused: 1289, path_excluded: 378, replayed_states: 30088, baseline_fills: 17670}
+  known_population: {day: "20261108", legs: 99, orders: 86, anchored_legs: 93, no_anchor: 6, S1_misses: 12, S2_misses: 6, orders_with_cancel_ack: 77}
+  next_priority: reconcile_failed_known_order_cases_to_raw_identities_clocks_and_lifecycle_intervals
+  engine_validated: false
+  tape_replayed_in_review: false
+  training_run: false
+  untouched_validation_read: false
+  development_sources_modified: false
+  schedule_remains_removed: true
+  development_owner: other_session
+
 scenarios_day_20261023:
   status: done_one_day
   asof: "2026-11-18 07:25Z"

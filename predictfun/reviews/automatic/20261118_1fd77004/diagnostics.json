@@ -1,0 +1,68 @@
+{
+  "target": "1fd77004be70f436119c9eaf8079a94fe322099f",
+  "asof": "2026-11-18T08:11:43.330172+00:00",
+  "market_day": "20261023",
+  "fills": 17670,
+  "events": 50553,
+  "causes": {
+    "S1": {
+      "any_contradiction": {
+        "all_fills": 748,
+        "some_fills": 383,
+        "all_gross": 49763.677090816025,
+        "events": 1166
+      },
+      "evidence_cap_status": {
+        "all_fills": 37,
+        "some_fills": 35,
+        "all_gross": 1404.8590410973038,
+        "events": 79
+      },
+      "leg_intersection_status": {
+        "all_fills": 708,
+        "some_fills": 355,
+        "all_gross": 47285.97725658401,
+        "events": 1087
+      }
+    },
+    "S2": {
+      "any_contradiction": {
+        "all_fills": 129,
+        "some_fills": 95,
+        "all_gross": 6944.434271927339,
+        "events": 225
+      },
+      "evidence_cap_status": {
+        "all_fills": 0,
+        "some_fills": 0,
+        "all_gross": 0.0,
+        "events": 0
+      },
+      "leg_intersection_status": {
+        "all_fills": 129,
+        "some_fills": 95,
+        "all_gross": 6944.434271927339,
+        "events": 225
+      }
+    }
+  },
+  "activation_lower_endpoint": {
+    "orders": 86,
+    "assumed_min_ms": 25.0,
+    "acknowledgment_upper_below_assumed_min": 1,
+    "minimum_upper_ms": 21.1650390625
+  },
+  "synthetic_K5": {
+    "activation_range": [
+      25.0,
+      100.0
+    ],
+    "cancel_ack_delay": 20.0,
+    "compatible_acceptance_ack_delay": 40.0,
+    "contradictory_acceptance_ack_delay": 1.0,
+    "readings": {
+      "compatible_upper": "COVERED",
+      "lower_endpoint_contradiction": "COVERED"
+    }
+  }
+}
