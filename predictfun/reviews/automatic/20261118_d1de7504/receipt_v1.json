@@ -1,0 +1,149 @@
+{
+  "target_commit": "d1de75049fdf5a2477e279ca108114b5aef09b27",
+  "asof": "2026-11-18T04:42:11.581677+00:00",
+  "result_asof": "2026-11-18T04:19:44.800261+00:00",
+  "script_sha256": "4456fe0907356222238406505d1fb22af5d19f719da6c9216de1c1203f388cda",
+  "saved_artifacts": {
+    "timing_audit.json": "b49070e2d4077c038ce7ec3e876eec0dc78c1e2c4f6c43cbdb1ae7c9e1c7807f",
+    "timing_audit.txt": "0701bee80afb583212a5e041b0c2ceea5883c77f41d3fdd7d0247e9e0cfa43d0",
+    "run.log": "9b2af890164ed314b315b550be59164634addbc446d6cb06cebd9bf908c1bc34"
+  },
+  "per_day": {
+    "20261023": {
+      "counted": 30466,
+      "eligible": 28799,
+      "fills": 17670,
+      "pulled_order_fills": 9509,
+      "collapsed_E": 34948.02366774128,
+      "score": 241282.39479053902,
+      "kept": 35937.07191358405,
+      "gross": 590143.9134779619,
+      "statuses": {
+        "eligible": 28799,
+        "refused_post_only": 1289,
+        "missing_endpoint": 354,
+        "stale_future_book": 24
+      },
+      "current_envelope_input_hashes": {
+        "booktime.json": "493cc919c5e6b0c58ce379c3a67413f36137d4133a71cd1ea619de9105ba1433",
+        "timing.json": "c10b79df500d98fd9af47b8168513d5959b692a5b1f61a87c642bf2636d1b8b3"
+      }
+    },
+    "20261024": {
+      "counted": 30704,
+      "eligible": 29302,
+      "fills": 19199,
+      "pulled_order_fills": 9912,
+      "collapsed_E": 36557.20514169048,
+      "score": 206321.31573580235,
+      "kept": 29693.9152621352,
+      "gross": 556243.5960661771,
+      "statuses": {
+        "eligible": 29302,
+        "refused_post_only": 1056,
+        "missing_endpoint": 334,
+        "stale_future_book": 12
+      },
+      "current_envelope_input_hashes": {
+        "booktime.json": "a0a611ffccd8c587c61f24fccf8edd88c77a57ee46b33c49ecd891461e44b129",
+        "timing.json": "937f3a3fd5a0785f5f230fd559d4475d3a47cbfe38d3cad6565c466d952dcf59"
+      }
+    },
+    "20261025": {
+      "counted": 29996,
+      "eligible": 28553,
+      "fills": 16967,
+      "pulled_order_fills": 8463,
+      "collapsed_E": 44954.846170706856,
+      "score": 196643.96798833204,
+      "kept": 29569.164300669716,
+      "gross": 498239.6278891749,
+      "statuses": {
+        "eligible": 28553,
+        "refused_post_only": 1005,
+        "missing_endpoint": 398,
+        "stale_future_book": 40
+      },
+      "current_envelope_input_hashes": {
+        "booktime.json": "d4dcf59ff4a49fd087a8f4463e05d9d34376b14968ff66ec892b92e8ff625b17",
+        "timing.json": "c3806327a2a57bb584e5d33ae93bd485f48a7f267d062e996a9ad3e8841ebd78"
+      }
+    },
+    "20261026": {
+      "counted": 30242,
+      "eligible": 28442,
+      "fills": 16766,
+      "pulled_order_fills": 8972,
+      "collapsed_E": 58347.64234622069,
+      "score": 264207.9499435127,
+      "kept": 46275.737359709936,
+      "gross": 624908.8838908264,
+      "statuses": {
+        "eligible": 28442,
+        "refused_post_only": 1390,
+        "missing_endpoint": 374,
+        "stale_future_book": 36
+      },
+      "current_envelope_input_hashes": {
+        "booktime.json": "aa58fd6e1d9e943cc5a90bcbd792b39e2e3840ba71753b60a75f2547fee0362e",
+        "timing.json": "21355ab6cad46e51151126e103048d46f51aec2a2d5d0308b86af1ffbbf7bd19"
+      }
+    },
+    "20261027": {
+      "counted": 29820,
+      "eligible": 28038,
+      "fills": 16302,
+      "pulled_order_fills": 8842,
+      "collapsed_E": 59471.58877667074,
+      "score": 261215.541444069,
+      "kept": 41303.12863846749,
+      "gross": 600632.4823196154,
+      "statuses": {
+        "eligible": 28038,
+        "refused_post_only": 1300,
+        "missing_endpoint": 460,
+        "stale_future_book": 22
+      },
+      "current_envelope_input_hashes": {
+        "booktime.json": "554fdbbf9bfb3ed1072874f5cb0f95d23e758da02b14e3dbb38fa8201dc36a12",
+        "timing.json": "de41605526c7717a067adff4ea86686e888a12a4020a93b419f503c77b2d8d5b"
+      }
+    }
+  },
+  "controls": {
+    "pinned_selftest_passed": true,
+    "independent_boundary_and_bounds": true,
+    "known_bad_END_refused": true
+  },
+  "limitations": [
+    "No full tape/source-leg linking rerun.",
+    "Per-fill linked intervals and source identities not persisted in the result artifact.",
+    "Real S1/S2 extrema checked for aggregation consistency, not independently rebuilt.",
+    "Scenario intervals are not calibrated confidence or venue-time bounds; M50 quantities and eligibility fixed."
+  ],
+  "totals": {
+    "counted": 151228,
+    "eligible": 143134,
+    "fills": 86904,
+    "pulled_order_fills": 45698,
+    "collapsed_E": 234279.30610303005,
+    "score": 1169671.169902255,
+    "kept": 182779.01747456638,
+    "gross": 2870168.503643756
+  },
+  "scenario_readings": {
+    "T0 CONTROLS": "YES",
+    "T1 SIGN UNDER S1": "SIGN-NOT-IDENTIFIED",
+    "T2 SIGN UNDER S2": "SIGN-NOT-IDENTIFIED"
+  },
+  "headline_population_correction": {
+    "all_fills_on_pulled_orders": 45698,
+    "all_fills_net_c": 1352450.1873768214,
+    "replay_removed_net_c": 1169671.169902255,
+    "S1_ambiguous_fill_fraction": 0.23399273491181233,
+    "S1_ambiguous_gross_fraction": 0.36568491214905036
+  },
+  "raw_tape_read": false,
+  "real_interval_ledger_recomputed": false,
+  "untouched_validation": false
+}
