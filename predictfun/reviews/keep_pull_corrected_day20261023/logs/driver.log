@@ -1,0 +1,7 @@
+12:54:53Z start sc_selftest
+12:55:13Z skip st_day_20261023 (output exists)
+12:55:13Z start xw_known
+12:55:18Z start xw_run_20261023
+12:55:55Z start sc_day_20261023
+12:59:45Z start sc_report_20261023
+12:59:49Z SCENARIOS day 20261023 DONE

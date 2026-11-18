@@ -1,0 +1,72 @@
+{
+ "predicates": {
+  "a_known_v5_reproduces_preview": true,
+  "b_ledger_non_st_identical": true,
+  "b_v0_controls": "YES",
+  "c_stlo_absent": true,
+  "c_scenarios_v4": 19,
+  "c_only_st_timeline_changed": true,
+  "c_new_names": [],
+  "c_dropped_names": [
+   "STlo|A58|L37|N100"
+  ]
+ },
+ "known_diff": {},
+ "ledger_non_st_diff": [],
+ "scenario_changes": {
+  "SThi|A58|L37|N100": {
+   "KEEP": [
+    -353953.184775497,
+    -353877.7931088303
+   ],
+   "score": [
+    218893.38205254395,
+    218834.65705254395
+   ],
+   "null": [
+    178201.31598815473,
+    178148.02091239713
+   ],
+   "E": [
+    40692.06606438923,
+    40686.63614014681
+   ],
+   "PULLALL": [
+    331822.2832621659,
+    331763.55826216587
+   ],
+   "fills": [
+    20362,
+    20364
+   ],
+   "shares": [
+    274722.38474562095,
+    274681.0858567321
+   ],
+   "held": [
+    {
+     "fills": 14,
+     "shares": 226.72054342641093,
+     "value": 113.19898139062482,
+     "gross": 482.23123945514095,
+     "share_of_gross": 0.0004819205287417138
+    },
+    {
+     "fills": 3,
+     "shares": 30.19037886340977,
+     "value": 95.09518943170488,
+     "gross": 145.09518943170488,
+     "share_of_gross": 0.00014501128937915593
+    }
+   ],
+   "orders_filled": [
+    12109,
+    12110
+   ],
+   "discovered": [
+    656,
+    657
+   ]
+  }
+ }
+}

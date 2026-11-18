@@ -1,0 +1,1167 @@
+{
+  "asof": "2026-11-18T12:55:18.229011+00:00",
+  "readings": {
+    "K0 REPRODUCES 11-09": "YES",
+    "K1 CLASSIFIER-CONSISTENCY": "YES",
+    "K2 DELAYED-STATUS-REFUSED": "YES",
+    "K3 IDENTITY-CHECK-FIRES": "YES",
+    "K4 REPLAY-ANCHOR-VS-LIFECYCLE": "CONTRADICTED",
+    "K7 CLOCK OFFSET (venue status - bot)": "[-226.4, +49.3] ms, CONTAINS 0",
+    "K5 ORDER-PATH INTERVALS vs DECLARED RANGES": "CONTRADICTED",
+    "K8 SETTLEMENT TIME": "COMPATIBLE",
+    "K8 CLOCK OFFSET (settlement premise: the id stamped at the match)": "CONDITIONAL {'lo': 14.474853515625, 'hi': 32.641357421875, 'exists': True, 'includes_zero': False, 'premise': 'CONDITIONAL: zero UUID creation lag on every leg'}",
+    "K8 UNIVERSAL CREATION-LAG BOUND": "UNIDENTIFIED",
+    "K8 FILL-NOTICE DELAY vs the replay 100 ms": "CONTRADICTED on 87 of 99 fills",
+    "K5S ORDER PATH WITH SETTLEMENT TIMES": "CONTRADICTED",
+    "K6 GATE S1": "FAIL",
+    "K6 GATE S1 (K8 shared clock)": "FAIL",
+    "K6 GATE S1 (settlement offsets)": "FAIL",
+    "K6 GATE S2": "FAIL",
+    "K6 GATE S2 (K8 shared clock)": "FAIL",
+    "K6 GATE S2 (settlement offsets)": "FAIL",
+    "K6 GATE S3": "FAIL",
+    "K6 GATE S3 (K8 shared clock)": "PASS",
+    "K6 GATE S3 (settlement offsets)": "PASS",
+    "K6 GATE ST": "UNIDENTIFIED-UPPER-BOUND-ONLY",
+    "K6 GATE ST (K8 shared clock)": "UNIDENTIFIED-UPPER-BOUND-ONLY",
+    "K6 GATE ST (settlement offsets)": "UNIDENTIFIED-UPPER-BOUND-ONLY",
+    "K6 GATE EV": "PASS",
+    "K6 GATE EV (K8 shared clock)": "PASS",
+    "K6 GATE EV (settlement offsets)": "PASS",
+    "K6 REPLAY POINT M50": "CONTRADICTED",
+    "KNOWN VERDICT": "INSTRUMENT-CHECKS-PASS; REPLAY-ANCHOR-CONTRADICTED; SETTLEMENT-TIME COMPATIBLE; LEDGER-WINDOW GATE S1 FAIL, S2 FAIL, S3 FAIL, ST UNIDENTIFIED-UPPER-BOUND-ONLY, EV PASS (K7 offsets; conditional - K8 shared clock: S1 FAIL, S2 FAIL, S3 PASS, ST UNIDENTIFIED-UPPER-BOUND-ONLY, EV PASS; settlement offsets: S1 FAIL, S2 FAIL, S3 PASS, ST UNIDENTIFIED-UPPER-BOUND-ONLY, EV PASS); ORDER-PATH RANGES CONTRADICTED; NOT A VENUE-ENGINE ACCEPTANCE"
+  },
+  "R": {
+    "legs": 99,
+    "orders": 86,
+    "cancelled": 88,
+    "K0": {
+      "rest_floor_nonoverlap": 39,
+      "matched_floor_nonoverlap": 0
+    },
+    "K0_ref": {
+      "rest_floor_nonoverlap": 39,
+      "matched_floor_nonoverlap": 0
+    },
+    "K1": {
+      "CANCEL_FIRST": 0,
+      "MATCH_FIRST": 0,
+      "AMBIGUOUS": 88,
+      "TIE": 0,
+      "UNKNOWN": 0,
+      "CONTRADICTORY": 0
+    },
+    "K2": {
+      "point_contradictions": 39,
+      "evidence_contradictions": 0,
+      "point_refused": true,
+      "point_cancel_first": 36,
+      "evidence_classes": {
+        "CANCEL_FIRST": 0,
+        "MATCH_FIRST": 0,
+        "AMBIGUOUS": 0,
+        "TIE": 0,
+        "UNKNOWN": 88,
+        "CONTRADICTORY": 0
+      }
+    },
+    "K3": {
+      "true_contradictions": 0,
+      "draws": 200,
+      "share_draws_firing": 1.0,
+      "median_hits": 96.0
+    },
+    "K4": {
+      "S1": {
+        "anchored": 93,
+        "missed": 12,
+        "cancel_first": 3,
+        "no_anchor": 6,
+        "constant_offset": {
+          "basis": {
+            "lo": 673.62060546875,
+            "hi": -9888.40771484375,
+            "exists": false,
+            "legs": 35
+          },
+          "v6": {
+            "lo": 725.231689453125,
+            "hi": -306.223388671875,
+            "exists": false,
+            "legs": 58
+          }
+        }
+      },
+      "S2": {
+        "anchored": 93,
+        "missed": 6,
+        "cancel_first": 1,
+        "no_anchor": 6,
+        "constant_offset": {
+          "basis": {
+            "lo": 323.62060546875,
+            "hi": -9538.40771484375,
+            "exists": false,
+            "legs": 35
+          },
+          "v6": {
+            "lo": 375.231689453125,
+            "hi": 43.776611328125,
+            "exists": false,
+            "legs": 58
+          }
+        }
+      }
+    },
+    "K5": {
+      "orders": 86,
+      "legs": 99,
+      "activation": {
+        "COMPATIBLE-UNIDENTIFIED": 85,
+        "CONTRADICTED": 1
+      },
+      "cancel": {
+        "CERTIFIED": 65,
+        "COMPATIBLE-UNIDENTIFIED": 12,
+        "NO-CANCEL-CONFIRMATION": 9
+      },
+      "declared_activation": [
+        25.0,
+        100.0
+      ],
+      "declared_cancel": [
+        0.0,
+        100.0
+      ],
+      "confirmation_after_request_ms": {
+        "n": 77,
+        "p50": 20.981201171875,
+        "p95": 5030.6515625,
+        "max": 6030.1494140625
+      },
+      "confirmation_source": {
+        "http_answer": 77
+      },
+      "throttled": 0,
+      "smallest_activation_upper_ms": 21.1650390625,
+      "activation_with_settlement": {
+        "COMPATIBLE-UNIDENTIFIED": 85,
+        "CONTRADICTED": 1
+      },
+      "cancel_with_settlement": {
+        "CERTIFIED": 65,
+        "COMPATIBLE-UNIDENTIFIED": 12,
+        "NO-CANCEL-CONFIRMATION": 9
+      },
+      "orders_with_a_match_after_the_request": 1,
+      "largest_cancel_lower_bound_ms": 7.717041015625,
+      "smallest_activation_upper_with_settlement_ms": 21.1650390625
+    },
+    "K6": {
+      "S1": {
+        "legs": 99,
+        "verdict_at_offset_0": {
+          "compatible": 77,
+          "missed_before": 7,
+          "missed_after": 4,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 11,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "verdict_every_offset": {
+          "compatible": 82,
+          "missed_before": 2,
+          "missed_after": 4,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 11,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "false_cancel_first": {
+          "at_offset_0": 4,
+          "some_offset": 9,
+          "every_offset": 4
+        },
+        "causes": {
+          "event_proxy": 0,
+          "own_ws_leg_link": 0,
+          "own_ws_cell_link": 0,
+          "own_e2_drop": 10,
+          "own_rest_second": 1,
+          "contradictory_evidence_cap": 0,
+          "contradictory_leg_intersection": 11,
+          "unresolved_linkage": 0
+        },
+        "cancelled_legs": 88
+      },
+      "S2": {
+        "legs": 99,
+        "verdict_at_offset_0": {
+          "compatible": 83,
+          "missed_before": 3,
+          "missed_after": 5,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 8,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "verdict_every_offset": {
+          "compatible": 84,
+          "missed_before": 2,
+          "missed_after": 5,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 8,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "false_cancel_first": {
+          "at_offset_0": 5,
+          "some_offset": 5,
+          "every_offset": 5
+        },
+        "causes": {
+          "event_proxy": 0,
+          "own_ws_leg_link": 1,
+          "own_ws_cell_link": 0,
+          "own_e2_drop": 6,
+          "own_rest_second": 0,
+          "contradictory_evidence_cap": 0,
+          "contradictory_leg_intersection": 8,
+          "unresolved_linkage": 1
+        },
+        "cancelled_legs": 88
+      },
+      "S3": {
+        "legs": 99,
+        "verdict_at_offset_0": {
+          "compatible": 90,
+          "missed_before": 0,
+          "missed_after": 0,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 9,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "verdict_every_offset": {
+          "compatible": 90,
+          "missed_before": 0,
+          "missed_after": 0,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 9,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "false_cancel_first": {
+          "at_offset_0": 0,
+          "some_offset": 3,
+          "every_offset": 0
+        },
+        "causes": {
+          "event_proxy": 0,
+          "own_ws_leg_link": 0,
+          "own_ws_cell_link": 0,
+          "own_e2_drop": 0,
+          "own_rest_second": 0,
+          "contradictory_evidence_cap": 0,
+          "contradictory_leg_intersection": 9,
+          "unresolved_linkage": 0
+        },
+        "cancelled_legs": 88
+      },
+      "ST": {
+        "legs": 99,
+        "verdict_at_offset_0": {
+          "compatible": 99,
+          "missed_before": 0,
+          "missed_after": 0,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 0,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "verdict_every_offset": {
+          "compatible": 99,
+          "missed_before": 0,
+          "missed_after": 0,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 0,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "false_cancel_first": {
+          "at_offset_0": 0,
+          "some_offset": 0,
+          "every_offset": 0
+        },
+        "causes": {
+          "event_proxy": 0,
+          "own_ws_leg_link": 0,
+          "own_ws_cell_link": 0,
+          "own_e2_drop": 0,
+          "own_rest_second": 0,
+          "contradictory_evidence_cap": 0,
+          "contradictory_leg_intersection": 0,
+          "unresolved_linkage": 0
+        },
+        "cancelled_legs": 88
+      },
+      "EV": {
+        "legs": 99,
+        "verdict_at_offset_0": {
+          "compatible": 99,
+          "missed_before": 0,
+          "missed_after": 0,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 0,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "verdict_every_offset": {
+          "compatible": 99,
+          "missed_before": 0,
+          "missed_after": 0,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 0,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "false_cancel_first": {
+          "at_offset_0": 0,
+          "some_offset": 0,
+          "every_offset": 0
+        },
+        "causes": {
+          "event_proxy": 0,
+          "own_ws_leg_link": 0,
+          "own_ws_cell_link": 0,
+          "own_e2_drop": 0,
+          "own_rest_second": 0,
+          "contradictory_evidence_cap": 0,
+          "contradictory_leg_intersection": 0,
+          "unresolved_linkage": 0
+        },
+        "cancelled_legs": 88
+      },
+      "M50": {
+        "legs": 99,
+        "verdict_at_offset_0": {
+          "compatible": 76,
+          "missed_before": 18,
+          "missed_after": 5,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 0,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "verdict_every_offset": {
+          "compatible": 85,
+          "missed_before": 9,
+          "missed_after": 5,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 0,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "false_cancel_first": {
+          "at_offset_0": 5,
+          "some_offset": 65,
+          "every_offset": 5
+        },
+        "causes": {
+          "event_proxy": 1,
+          "own_ws_leg_link": 1,
+          "own_ws_cell_link": 3,
+          "own_e2_drop": 16,
+          "own_rest_second": 1,
+          "contradictory_evidence_cap": 0,
+          "contradictory_leg_intersection": 0,
+          "unresolved_linkage": 1
+        },
+        "cancelled_legs": 88
+      }
+    },
+    "K6_settlement_offsets": {
+      "S1": {
+        "legs": 99,
+        "verdict_at_offset_0": {
+          "compatible": 77,
+          "missed_before": 7,
+          "missed_after": 4,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 11,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "verdict_every_offset": {
+          "compatible": 77,
+          "missed_before": 7,
+          "missed_after": 4,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 11,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "false_cancel_first": {
+          "at_offset_0": 4,
+          "some_offset": 4,
+          "every_offset": 4
+        },
+        "causes": {
+          "event_proxy": 0,
+          "own_ws_leg_link": 0,
+          "own_ws_cell_link": 0,
+          "own_e2_drop": 10,
+          "own_rest_second": 1,
+          "contradictory_evidence_cap": 0,
+          "contradictory_leg_intersection": 11,
+          "unresolved_linkage": 0
+        },
+        "cancelled_legs": 88
+      },
+      "S2": {
+        "legs": 99,
+        "verdict_at_offset_0": {
+          "compatible": 83,
+          "missed_before": 3,
+          "missed_after": 5,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 8,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "verdict_every_offset": {
+          "compatible": 83,
+          "missed_before": 3,
+          "missed_after": 5,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 8,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "false_cancel_first": {
+          "at_offset_0": 5,
+          "some_offset": 5,
+          "every_offset": 5
+        },
+        "causes": {
+          "event_proxy": 0,
+          "own_ws_leg_link": 1,
+          "own_ws_cell_link": 0,
+          "own_e2_drop": 6,
+          "own_rest_second": 0,
+          "contradictory_evidence_cap": 0,
+          "contradictory_leg_intersection": 8,
+          "unresolved_linkage": 1
+        },
+        "cancelled_legs": 88
+      },
+      "S3": {
+        "legs": 99,
+        "verdict_at_offset_0": {
+          "compatible": 90,
+          "missed_before": 0,
+          "missed_after": 0,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 9,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "verdict_every_offset": {
+          "compatible": 90,
+          "missed_before": 0,
+          "missed_after": 0,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 9,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "false_cancel_first": {
+          "at_offset_0": 0,
+          "some_offset": 0,
+          "every_offset": 0
+        },
+        "causes": {
+          "event_proxy": 0,
+          "own_ws_leg_link": 0,
+          "own_ws_cell_link": 0,
+          "own_e2_drop": 0,
+          "own_rest_second": 0,
+          "contradictory_evidence_cap": 0,
+          "contradictory_leg_intersection": 9,
+          "unresolved_linkage": 0
+        },
+        "cancelled_legs": 88
+      },
+      "ST": {
+        "legs": 99,
+        "verdict_at_offset_0": {
+          "compatible": 99,
+          "missed_before": 0,
+          "missed_after": 0,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 0,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "verdict_every_offset": {
+          "compatible": 99,
+          "missed_before": 0,
+          "missed_after": 0,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 0,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "false_cancel_first": {
+          "at_offset_0": 0,
+          "some_offset": 0,
+          "every_offset": 0
+        },
+        "causes": {
+          "event_proxy": 0,
+          "own_ws_leg_link": 0,
+          "own_ws_cell_link": 0,
+          "own_e2_drop": 0,
+          "own_rest_second": 0,
+          "contradictory_evidence_cap": 0,
+          "contradictory_leg_intersection": 0,
+          "unresolved_linkage": 0
+        },
+        "cancelled_legs": 88
+      },
+      "EV": {
+        "legs": 99,
+        "verdict_at_offset_0": {
+          "compatible": 99,
+          "missed_before": 0,
+          "missed_after": 0,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 0,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "verdict_every_offset": {
+          "compatible": 99,
+          "missed_before": 0,
+          "missed_after": 0,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 0,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "false_cancel_first": {
+          "at_offset_0": 0,
+          "some_offset": 0,
+          "every_offset": 0
+        },
+        "causes": {
+          "event_proxy": 0,
+          "own_ws_leg_link": 0,
+          "own_ws_cell_link": 0,
+          "own_e2_drop": 0,
+          "own_rest_second": 0,
+          "contradictory_evidence_cap": 0,
+          "contradictory_leg_intersection": 0,
+          "unresolved_linkage": 0
+        },
+        "cancelled_legs": 88
+      },
+      "M50": {
+        "legs": 99,
+        "verdict_at_offset_0": {
+          "compatible": 76,
+          "missed_before": 18,
+          "missed_after": 5,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 0,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "verdict_every_offset": {
+          "compatible": 74,
+          "missed_before": 20,
+          "missed_after": 5,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 0,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "false_cancel_first": {
+          "at_offset_0": 5,
+          "some_offset": 5,
+          "every_offset": 5
+        },
+        "causes": {
+          "event_proxy": 1,
+          "own_ws_leg_link": 1,
+          "own_ws_cell_link": 3,
+          "own_e2_drop": 16,
+          "own_rest_second": 1,
+          "contradictory_evidence_cap": 0,
+          "contradictory_leg_intersection": 0,
+          "unresolved_linkage": 1
+        },
+        "cancelled_legs": 88
+      }
+    },
+    "K6_shared_clock": {
+      "S1": {
+        "legs": 99,
+        "verdict_at_offset_0": {
+          "compatible": 77,
+          "missed_before": 7,
+          "missed_after": 4,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 11,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "verdict_every_offset": {
+          "compatible": 81,
+          "missed_before": 3,
+          "missed_after": 4,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 11,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "false_cancel_first": {
+          "at_offset_0": 4,
+          "some_offset": 5,
+          "every_offset": 4
+        },
+        "causes": {
+          "event_proxy": 0,
+          "own_ws_leg_link": 0,
+          "own_ws_cell_link": 0,
+          "own_e2_drop": 10,
+          "own_rest_second": 1,
+          "contradictory_evidence_cap": 0,
+          "contradictory_leg_intersection": 11,
+          "unresolved_linkage": 0
+        },
+        "cancelled_legs": 88
+      },
+      "S2": {
+        "legs": 99,
+        "verdict_at_offset_0": {
+          "compatible": 83,
+          "missed_before": 3,
+          "missed_after": 5,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 8,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "verdict_every_offset": {
+          "compatible": 84,
+          "missed_before": 2,
+          "missed_after": 5,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 8,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "false_cancel_first": {
+          "at_offset_0": 5,
+          "some_offset": 5,
+          "every_offset": 5
+        },
+        "causes": {
+          "event_proxy": 0,
+          "own_ws_leg_link": 1,
+          "own_ws_cell_link": 0,
+          "own_e2_drop": 6,
+          "own_rest_second": 0,
+          "contradictory_evidence_cap": 0,
+          "contradictory_leg_intersection": 8,
+          "unresolved_linkage": 1
+        },
+        "cancelled_legs": 88
+      },
+      "S3": {
+        "legs": 99,
+        "verdict_at_offset_0": {
+          "compatible": 90,
+          "missed_before": 0,
+          "missed_after": 0,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 9,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "verdict_every_offset": {
+          "compatible": 90,
+          "missed_before": 0,
+          "missed_after": 0,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 9,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "false_cancel_first": {
+          "at_offset_0": 0,
+          "some_offset": 0,
+          "every_offset": 0
+        },
+        "causes": {
+          "event_proxy": 0,
+          "own_ws_leg_link": 0,
+          "own_ws_cell_link": 0,
+          "own_e2_drop": 0,
+          "own_rest_second": 0,
+          "contradictory_evidence_cap": 0,
+          "contradictory_leg_intersection": 9,
+          "unresolved_linkage": 0
+        },
+        "cancelled_legs": 88
+      },
+      "ST": {
+        "legs": 99,
+        "verdict_at_offset_0": {
+          "compatible": 99,
+          "missed_before": 0,
+          "missed_after": 0,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 0,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "verdict_every_offset": {
+          "compatible": 99,
+          "missed_before": 0,
+          "missed_after": 0,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 0,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "false_cancel_first": {
+          "at_offset_0": 0,
+          "some_offset": 0,
+          "every_offset": 0
+        },
+        "causes": {
+          "event_proxy": 0,
+          "own_ws_leg_link": 0,
+          "own_ws_cell_link": 0,
+          "own_e2_drop": 0,
+          "own_rest_second": 0,
+          "contradictory_evidence_cap": 0,
+          "contradictory_leg_intersection": 0,
+          "unresolved_linkage": 0
+        },
+        "cancelled_legs": 88
+      },
+      "EV": {
+        "legs": 99,
+        "verdict_at_offset_0": {
+          "compatible": 99,
+          "missed_before": 0,
+          "missed_after": 0,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 0,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "verdict_every_offset": {
+          "compatible": 99,
+          "missed_before": 0,
+          "missed_after": 0,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 0,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "false_cancel_first": {
+          "at_offset_0": 0,
+          "some_offset": 0,
+          "every_offset": 0
+        },
+        "causes": {
+          "event_proxy": 0,
+          "own_ws_leg_link": 0,
+          "own_ws_cell_link": 0,
+          "own_e2_drop": 0,
+          "own_rest_second": 0,
+          "contradictory_evidence_cap": 0,
+          "contradictory_leg_intersection": 0,
+          "unresolved_linkage": 0
+        },
+        "cancelled_legs": 88
+      },
+      "M50": {
+        "legs": 99,
+        "verdict_at_offset_0": {
+          "compatible": 76,
+          "missed_before": 18,
+          "missed_after": 5,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 0,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "verdict_every_offset": {
+          "compatible": 85,
+          "missed_before": 9,
+          "missed_after": 5,
+          "contradictory_evidence": 0,
+          "contradictory_legs": 0,
+          "ambiguous": 0,
+          "unlinked": 0
+        },
+        "false_cancel_first": {
+          "at_offset_0": 5,
+          "some_offset": 55,
+          "every_offset": 5
+        },
+        "causes": {
+          "event_proxy": 1,
+          "own_ws_leg_link": 1,
+          "own_ws_cell_link": 3,
+          "own_e2_drop": 16,
+          "own_rest_second": 1,
+          "contradictory_evidence_cap": 0,
+          "contradictory_leg_intersection": 0,
+          "unresolved_linkage": 1
+        },
+        "cancelled_legs": 88
+      }
+    },
+    "K7": {
+      "lo": -226.392822265625,
+      "hi": 49.336669921875,
+      "exists": true,
+      "includes_zero": true,
+      "receipt_bounds": 198,
+      "placement_bounds": 99
+    },
+    "K8": {
+      "model": "shared_clock_event_specific_nonnegative_lag_v2",
+      "legs": 99,
+      "v7": 99,
+      "floor_is_matched_second": 99,
+      "after_place_at_0": 99,
+      "before_notice_at_0": 99,
+      "inside_lifecycle_at_0": 94,
+      "d": {
+        "lo": 14.474853515625,
+        "hi": 32.641357421875,
+        "exists": true
+      },
+      "d_per_run": {
+        "basis": {
+          "lo": 14.474853515625,
+          "hi": 65.72265625,
+          "exists": true,
+          "legs": 36
+        },
+        "v6": {
+          "lo": 4.41943359375,
+          "hi": 32.641357421875,
+          "exists": true,
+          "legs": 63
+        }
+      },
+      "common_d_role": "conditional constant-total-delay fit, not the event-lag model or an acceptance gate",
+      "consistent": true,
+      "status": "COMPATIBLE",
+      "clock_offset": {
+        "lo": -147.837890625,
+        "hi": 32.641357421875,
+        "exists": true,
+        "includes_zero": true
+      },
+      "lag_bound_ms": null,
+      "universal_lag_status": "UNIDENTIFIED",
+      "assumptions": [
+        "UUID creation at or after matching",
+        "UUID and status stamps share a clock",
+        "the identity-linked first notice already contains this UUID",
+        "K7 clock and lifecycle premises"
+      ],
+      "evidence_gate": "NOT_ESTABLISHED_BY_SAME_SAMPLE_COMPATIBILITY",
+      "known_leg_lag_ms": {
+        "lo": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "hi": [
+          192.609130859375,
+          192.63037109375,
+          291.59814453125,
+          291.629638671875,
+          195.5009765625,
+          195.47216796875,
+          497.41162109375,
+          303.324951171875,
+          203.09033203125,
+          354.027099609375,
+          259.076904296875,
+          233.076904296875,
+          4346.362548828125,
+          269.606201171875,
+          269.632568359375,
+          271.57421875,
+          318.19580078125,
+          207.588623046875,
+          297.4677734375,
+          837.242431640625,
+          209.993896484375,
+          634.831787109375,
+          953.06298828125,
+          1737.47314453125,
+          270.3583984375,
+          219.424560546875,
+          205.703369140625,
+          4863.527099609375,
+          3142.283935546875,
+          3126.283935546875,
+          217.640869140625,
+          212.640869140625,
+          209.640869140625,
+          4755.786376953125,
+          213.08544921875,
+          213.125,
+          214.08544921875,
+          209.125,
+          338.4599609375,
+          911.996826171875,
+          201.652587890625,
+          206.174560546875,
+          204.174560546875,
+          192.174560546875,
+          227.17333984375,
+          714.03857421875,
+          635.79833984375,
+          281.2568359375,
+          555.18359375,
+          505.607666015625,
+          505.607666015625,
+          180.479248046875,
+          206.598876953125,
+          4681.98095703125,
+          4517.721923828125,
+          1736.547607421875,
+          1387.547607421875,
+          284.986328125,
+          285.030029296875,
+          297.580078125,
+          979.0,
+          358.486083984375,
+          358.44140625,
+          1102.404052734375,
+          227.217041015625,
+          5163.4951171875,
+          5154.4951171875,
+          546.369384765625,
+          3041.00244140625,
+          358.422607421875,
+          249.04296875,
+          243.53662109375,
+          1473.438720703125,
+          265.57080078125,
+          293.64404296875,
+          818.567626953125,
+          269.34765625,
+          2862.426025390625,
+          1571.173583984375,
+          1342.64990234375,
+          1342.60693359375,
+          1321.26171875,
+          5895.28173828125,
+          584.040771484375,
+          583.977294921875,
+          398.443115234375,
+          593.542236328125,
+          593.595703125,
+          3743.490966796875,
+          577.162353515625,
+          269.966796875,
+          3412.740478515625,
+          226.919189453125,
+          287.942138671875,
+          1239.66064453125,
+          1236.66064453125,
+          306.21728515625,
+          303.21728515625,
+          213.560546875
+        ],
+        "scope": "these identified lifecycles only; not a public-trade bound"
+      },
+      "offset_settlement_premise": {
+        "lo": 14.474853515625,
+        "hi": 32.641357421875,
+        "exists": true,
+        "includes_zero": false,
+        "premise": "CONDITIONAL: zero UUID creation lag on every leg"
+      },
+      "notice_delay_ms": {
+        "lo_min": 0.0,
+        "lo_p50": 261.41357421875,
+        "hi_p50": 660.090087890625,
+        "hi_max": 5952.7646484375,
+        "vs_replay_point": {
+          "COMPATIBLE-UNIDENTIFIED": 12,
+          "CONTRADICTED": 87
+        },
+        "replay_point_ms": 100.0
+      }
+    },
+    "linkage": {
+      "candidate_rows": 131,
+      "legs_with_several": 27,
+      "anchor_rule_reproduced": 131,
+      "origin": {
+        "pending_increment": 85,
+        "book_drop": 45,
+        "REST_second": 1
+      },
+      "anchor_from_own_row": 106,
+      "s3_codes": {
+        "ws_unique": 59,
+        "ws_multi": 5,
+        "rest_range_no_ws_candidate": 0,
+        "rest_range_e2_unsupported": 66,
+        "rest_range_rest_only": 1
+      },
+      "link_late": 0
+    }
+  },
+  "outputs": {
+    "known_cases.parquet": "235058d9ceae2a7cc6b5dc0871c92316f0c79b8d2e0c2179665a92f8109753f5",
+    "known_orders.parquet": "28da34783b018b28eed8ec8063e904e6f2e9952605d1de0e8f1d22d05bf7518d",
+    "known_case_rows.parquet": "7a40826770302f4ccadf97d55e0727974fca26cdc3f2a341934a4a89dce2e70e",
+    "known_schema.json": "dd154c57aa9661020a9c16adb95ddb08a7a2af67bca14251599e40bab52b3e72"
+  },
+  "inputs": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/fill_clock_20261109/clock_cases.parquet": "2f1a580bb6bb3689bf39b52ddbf5a7a443ea004e0d281274510f1193eb108a19",
+    "/home/yuqing/ctaNew/data/predict_fun/research/fill_clock_20261109/status_clock_cases.parquet": "048d5527c524f27724f3915d956e2cde6bb626534cfc8b28a07a5b5b1cda1fe6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/fill_clock_20261109/fill_events.parquet": "3b82661b26a6255612b106807843609dd2e6719fd4c4f56c795f72562c2f9675",
+    "/home/yuqing/ctaNew/data/predict_fun/research/fill_clock_20261109/orders.parquet": "88f2d667a7e81212f3667c4c733599f4c681e263dc203b1ec704c95751f03e3e",
+    "/home/yuqing/ctaNew/data/predict_fun/research/fill_clock_20261109/engine_anchors.parquet": "ffc3caa22578c5ef66b3af0a96a564abc2d6fb7a2da7f9b4f23e06f9fc3d07b0",
+    "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/live_vs_replay/core_orders_v6.parquet": "35aa1f49ae67b32138f7fc4eb315fb95ac7b5016fbc823fe6fe3cbaa113e3a9e",
+    "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/live_vs_replay/core_orders_basis.parquet": "5b08d5f43c5fc427a7bd0268c88ae98871eca9b62e9c1bc71700a969320514e1",
+    "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/research/step1/20261108/legs_timed2.parquet": "60e512c6f2307214fd718286082ff4b1d9f735bd220be44c6a7bac54747c230b",
+    "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/research/step1/20261108/legs_tk.parquet": "80d4c2c072d7fbd58213457062c72f53b69f1306cc0bb699ed8ff848ea189c95",
+    "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/research/step1/20261108/pend_inc.parquet": "6ecaac3aeb68ef50e7cbd5629ab0df19f97cefa985e0e006309da6479a415984",
+    "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/research/step1/20261108/booktime.json": "9f3c6909c02563e321fea50e3f79ad45136eeadaed6ff3c7b6f44d727b98274f",
+    "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/research/step1/20261108/timing.json": "fcd56cff430747e06b2df4b4140029f5e5aa74cc693ba5355601eda8da2f8732"
+  },
+  "env": {
+    "h": 500.0,
+    "q01": -734.0,
+    "q99": 881.0
+  },
+  "provenance": {
+    "commit": "0e20fa8da48f7f7492722829ff534866132cd180",
+    "source": {
+      "pf_keep_pull.py": "58b972f92bda06fbc847c43d2ace8db9d7b12f4daaf67bcfaa14e92deb475835",
+      "pf_queue_place_test.py": "188c1495ce35db80ce8b79cbc50541964d0d32d9da38fee4b925e951eec01a1f",
+      "pf_queue_place_ledger.py": "8fa16b929b4ae497109a70add4036dd7cd4501102a261c74eba63de0e0b94bb5",
+      "pf_flow_control_kernel.cpp": "fb1ff31cdcf2a97783283f927fb2d56333a0760e877cb0b93348528138886612",
+      "pf_flow_control_kernel.py": "2460567474f28318f5d09df8ce0977e15748bb9263bc501471cf6a649b334379"
+    },
+    "uncommitted": ""
+  },
+  "source_sha256": "d7e7222a882d231850c714b3a80356e22ff111f3a3bd817aca68739b69400c96",
+  "seconds": 4.2857019901275635
+}
