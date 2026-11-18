@@ -1,0 +1,26 @@
+SOURCE-AWARE FILL-VERSUS-CANCEL ORDERING AUDIT of the declared score A+0 (pf_keep_pull_timing_audit.py; the committed keep / pull run, M50 fills, consumed Oct23-27; c summed)
+  143,134 eligible orders; 86,904 M50 fills, every one linked (446,622 legs at the fill's anchor that can fill the order); fills by evidence: WS 49,315, E2 20,551, imputed 249, mixed 16,789
+  T0 control: collapsed to the replay's own M50 times, E = +234,279 and the score improvement 1,169,671 (the committed numbers)
+
+OBSERVED vs INFERRED (venue clock): WS legs observe the settlementsPending source time (match precedes it by an unmeasured lag); E2 legs a book-drop estimate; imputed legs only the REST executedAt second. Simulated cancel landing = decision + 37 ms on the replay axis.
+  S1 (the program's declared ranges): WS [t - 250, t], E2 [t - 250, t + 250], imputed [S - 500, S + 500].  S2 (measured envelopes) by day: 20261023 h 589, q01 -887, q99 +1049 | 20261024 h 551, q01 -803, q99 +981 | 20261025 h 552, q01 -878, q99 +1002 | 20261026 h 600, q01 -885, q99 +1050 | 20261027 h 600, q01 -963, q99 +1058
+
+PART 1 - the score's pulled orders: their fills against the pull's landing (removed c = value avoided if AFTER)
+  replay M50 times: removed +1,169,671 c by the pulls (fills after the landing), kept +182,779 c (before)
+  S1 (median interval 250 ms): AFTER 34,161 fills, +684,314 c (gross 1,769,146) | BEFORE 844 fills, +32,996 c (gross 51,445) | AMBIGUOUS 10,693 fills, +635,139 c (gross 1,049,577)
+  S2 (median interval 1178 ms): AFTER 27,854 fills, +503,138 c (gross 1,313,736) | BEFORE 177 fills, +5,456 c (gross 7,073) | AMBIGUOUS 17,667 fills, +843,856 c (gross 1,549,359)
+
+PART 2 - bounds on E = score improvement - exact STATES-null expectation (each fill's match time free in its interval; M50 quantities held)
+  replay M50 (collapsed): +234,279
+  S1: [-426,829, +613,334] | by side bid [-207,380, +307,380], ask [-219,449, +305,954] | by evidence WS [-102,103, +212,292], E2 [-145,270, +162,590], imputed [-4,735, +4,740], mixed [-174,721, +233,713]
+       by day 20261023 [-91,914, +114,710] (replay +34,948), 20261024 [-80,554, +106,216] (replay +36,557), 20261025 [-65,133, +103,731] (replay +44,955), 20261026 [-92,635, +146,262] (replay +58,348), 20261027 [-96,594, +142,415] (replay +59,472)
+  S2: [-638,264, +813,718] | by side bid [-315,147, +410,029], ask [-323,117, +403,689] | by evidence WS [-257,524, +348,063], E2 [-182,629, +204,575], imputed [-6,470, +7,067], mixed [-191,641, +254,014]
+       by day 20261023 [-136,082, +161,098] (replay +34,948), 20261024 [-120,328, +146,290] (replay +36,557), 20261025 [-103,095, +134,884] (replay +44,955), 20261026 [-139,476, +189,828] (replay +58,348), 20261027 [-139,284, +181,617] (replay +59,472)
+
+READINGS (declared before computing)
+  T0 CONTROLS: YES
+  T1 SIGN UNDER S1: SIGN-NOT-IDENTIFIED
+  T2 SIGN UNDER S2: SIGN-NOT-IDENTIFIED
+
+MISSING EVIDENCE: no capture records the venue match instant; the WS settlementsPending lag after the match is unmeasured; about 10% of WS-timed legs lie outside +-500 ms of their executedAt second (timing.json), so even the second does not bound every leg; E2 |error| against WS is ~550-600 ms at p90 (booktime.json). Order-level fill timing from live (C10) is the evidence that would identify the ordering.
+LIMITS: consumed days; one declared rule; STATES is local selection; quantities held at the M50 replay; S1 / S2 are scenario ranges, not calibrated bounds.
