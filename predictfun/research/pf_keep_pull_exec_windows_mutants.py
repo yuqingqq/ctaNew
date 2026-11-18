@@ -53,6 +53,18 @@ MUT = [
     ('V0b v1 regression ignored', "ok_b = all(abs(reg[k][x] - v1[k][x]) <= tol for k in reg for x in ('E_min', 'E_max')) and all(reg[k]['order'] == v1[k]['order'] for k in reg)",
      "ok_b = True"),
     ('V0d identity control ignored', "ok_d = sum(recon.values()) == 0", "ok_d = True"),
+    # --- the review of c23e6f29: contradictions over all candidates, exact joint bounds, the K4 reading
+    ('contradictions counted on unique-event fills only', "cst[k] = cs = candidate_status(pf_, flag, n)", "cst[k] = cs = np.where(link_st == 1, candidate_status(pf_, flag, n), 1)"),
+    ('some candidates counted as all', "np.where(h < k, 2, 3)", "np.where(h < k, 3, 3)"),
+    ('contradiction accounting check always passes', "    return all(sum(v['fills'].values()) == n and abs(", "    return True or all(sum(v['fills'].values()) == n and abs("),
+    ('joint solver takes the first identity assignment', ".groupby(level=0).agg(mn=('mn', 'min'), mx=('mx', 'max'))", ".groupby(level=0).agg(mn=('mn', 'first'), mx=('mx', 'first'))"),
+    ('enumeration cap ignored (never relaxed)', "        if na > cap:\n", "        if False:\n"),
+    ('relaxed bounds labelled exact', "bounds='outer' if rel.any() else 'exact'", "bounds='exact'"),
+    ('ambiguous fills moved independently even when enumerable (no joint solve)', "        if na > cap:\n", "        if na > -1:\n"),
+    ('K4 always consistent', "'CONSISTENT' if all(v['missed'] == 0 and v['cancel_first'] == 0 for v in k4.values()) else 'CONTRADICTED'", "'CONSISTENT'"),
+    ('known verdict ignores K4', "'; RESEARCH-WINDOWS-' + read['K4 RESEARCH-WINDOWS-VS-LIFECYCLE']", "'; RESEARCH-WINDOWS-CONSISTENT'"),
+    ('K5 always covered', "('COVERED' if len(ab) and len(cb) and k5['activation_upper_ms']['p95'] <= ACT_RANGE[1]", "('COVERED' if True or len(ab) and len(cb) and k5['activation_upper_ms']['p95'] <= ACT_RANGE[1]"),
+    ('K5 cancel bound not measured from the request', "cb = (K.ack.values - K.req.values)", "cb = (K.ack.values - K.ack.values)"),
     # --- the known-lifecycle checks
     ('K1 cancel window from the ack alone', "c_lo = np.where(np.isfinite(K.req.values), K.req.values, K.place.values); c_hi", "c_lo = K.ack.values; c_hi"),
     ('K2 evidence use never tested', "evidence_contradictions=int(miss(*rest_ev, K).sum())", "evidence_contradictions=0"),

@@ -1,3 +1,18 @@
+review_fixes_20261118_de084f8a:
+  status: code_fixed_awaiting_go
+  asof: "2026-11-18 06:36Z"
+  session: aea5bfb9
+  user: "Still have not cleared all issues, check the review, make sure you clear all issues"
+  review: {commit: de084f8a, target: c23e6f29, report: predictfun/reviews/automatic/20261118_c23e6f29/report.md}
+  findings: {P2_multi_event_contradictions: fixed_per_fill_over_all_candidates, P2_relaxed_bounds_called_exact: fixed_exact_joint_with_labelled_outer, K0_K3_not_acceptance: fixed_K4_reading_and_verdict, requeue_refill_eligibility: scenario_replay_built, orders_without_m50_fill: scenario_replay_built, activation_notice_points: scenario_ranges_and_K5, known_calibration: known_run_pending_go, clock_alignment: K4_offset_and_M0_M250_pending_go}
+  scripts: [predictfun/research/pf_keep_pull_exec_windows.py, predictfun/research/pf_keep_pull_scenarios.py, predictfun/research/run_keep_pull_scenarios.sh]
+  mutants: {exec_windows: "44/44", scenarios: "18/18"}
+  receipts: [predictfun/reviews/keep_pull_exec_windows_20261118_v2, predictfun/reviews/keep_pull_scenarios_20261118]
+  data_read: false
+  running: false
+  launch: "predictfun/research/run_keep_pull_scenarios.sh all"
+  next: "USER's go: the ledger, the known-lifecycle check and the scenario replay (consumed data only)"
+
 manual_review_20261118_c23e6f29:
   status: complete_two_P2_candidate_event_diagnostic_findings
   asof: "2026-11-18T06:00:08Z"

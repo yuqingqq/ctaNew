@@ -6,6 +6,13 @@ and preserve an evidence-backed execution-window ledger, then validate the order
 separated windows, mark overlap / unknowns explicitly, and refuse wrong identities, contradictory windows or a delayed status timestamp
 substituted for a match. Include cancellation / clock uncertainty and preserve original observations." Declared before any data is read.
 The v1 audit (pf_keep_pull_timing_audit.py, d1de7504) and its receipt stay unchanged as provenance; this ledger supersedes its headline.
+REVIEW OF c23e6f29 (reviews/automatic/20261118_c23e6f29/report.md; USER: "make sure you clear all issues"), corrected before any data is
+read: (P2) contradictions and evidence-cap violations are aggregated per fill over ALL its candidate events - all / some / none /
+unlinked - and reconcile to every fill and its gross (control f); (P2) the value bounds are EXACT joint extremes - one instant per event and
+one identity per ambiguous fill, solved per component by enumerating identity assignments - and only a component with more than JCAP
+assignments gets the outer relaxation, labelled in the receipt and the report with its fills and gross; (limit) K0-K3 are instrument checks,
+not a venue-engine acceptance: K4 is now a computed reading and the known verdict carries it. The re-simulation of queues / fills /
+eligibility under these windows is pf_keep_pull_scenarios.py.
 
 WHAT CHANGES FROM v1 (the review / addendum item each answers)
  1 Population (P2-1, item 4): v1 split ALL fills of the score's pulled orders and called it removed value. Now a cross-tab: replay ordering
@@ -41,9 +48,12 @@ WINDOWS (venue clock; the replay axis is venue time; the client's feed delay is 
 ORDERING classify(match window, cancel window): CANCEL_FIRST (cancel_hi < match_lo: the pull avoids the fill), MATCH_FIRST (match_hi <
  cancel_lo: too late), TIE (separated except at a touching endpoint), UNKNOWN (overlap with an open endpoint), AMBIGUOUS (bounded overlap),
  CONTRADICTORY (an empty match window).
-VALUE: E = score improvement - exact STATES-null expectation (pf_keep_pull_clock_audit), quantities held at M50 (a stated limit: no fill
- absent at M50 is discovered, no queue re-simulated). E_min / E_max = exact extremes over each event's shared instant in its admissible
- window: the sum of its fills' step functions swept over their breakpoints.
+VALUE: E = score improvement - exact STATES-null expectation (pf_keep_pull_clock_audit), quantities held at M50 (a stated limit here: no fill
+ absent at M50 is discovered, no queue re-simulated - pf_keep_pull_scenarios.py re-simulates them). E_min / E_max = exact joint extremes:
+ one instant per event in its admissible window and one identity per ambiguous fill (at the extremes this also covers any split of its
+ shares between its candidates, the value being linear in them). Events tied by an ambiguous fill form a component solved by enumerating
+ its identity assignments (each decouples into one-instant sweeps); above JCAP assignments the component is bounded by the outer relaxation
+ (pairs moved independently) and the bounds are labelled OUTER with that component's fills and gross.
 
 READINGS (computed; declared before any data is read)
  V0 CONTROLS, else no output: (a) collapsed to the replay's own times E = +234,279 c and the score improvement 1,169,671 c (to 1 c); (b) v1's
@@ -54,19 +64,28 @@ READINGS (computed; declared before any data is read)
     EXCESS-NEGATIVE-IDENTIFIED (E_max < 0) or SIGN-NOT-IDENTIFIED; the same predicate at 0 and 100 ms printed beside it.
  V2 EVIDENCE COVERAGE (EV x CP): the share of the replay's removed / kept value (gross) and of the pulled orders whose ordering the evidence
     identifies - printed. Under EV only MATCH_FIRST is identifiable (no evidence bounds the match from below).
- V3 CONTRADICTIONS: events / fills / c whose S1 / S2 window the REST evidence contradicts; fills whose replay time lies after the evidence cap
-    - printed by class and day.
+ V3 CONTRADICTIONS: per fill over ALL its candidate events (all / some / none / unlinked), of every fill and its gross, by link, day and
+    pulled: S1 / S2 windows the REST evidence contradicts, and replay times after the evidence cap; events by status and class - printed.
+    Control (f): each split sums to every fill and its gross.
  KNOWN (mode known: the 11-09 fill-clock audit's 99 confirmed own maker legs, 86 orders, consumed Nov 8, hash-pinned; lifecycle on the
     bot's clock, REST / Matched / the research anchor Z on the venue clock, offset 0 where they meet - as the 11-09 audits did):
   K0 the 11-09 counts reproduce (REST floor-second non-overlap, Matched floor-second non-overlap), else no output.
-  K1 NO-FALSE-AVOIDANCE: match [place, min(first fill notice, cancel ack)] vs cancel effect [cancel request, cancel ack]: YES iff no known
-     fill is CANCEL_FIRST and no window is empty.
+  K1 CLASSIFIER-CONSISTENCY (a consistency check, not an acceptance: its match upper bound already includes the cancel ack): match
+     [place, min(first fill notice, cancel ack)] vs cancel effect [cancel request, cancel ack]: YES iff no known fill is CANCEL_FIRST and no
+     window is empty.
   K2 DELAYED-STATUS-REFUSED: YES iff REST executedAt used as the match second contradicts >= 1 known lifecycle while its evidence use
      (-inf, (S + 1) * 1000] contradicts none, and window_from refuses it as a point.
   K3 IDENTITY-CHECK-FIRES: the Matched status second against the order's lifecycle: YES iff the true identity contradicts none and >= 95% of
      200 within-run permutations contradict >= 1.
-  K4 (printed) the research anchor Z with the S1 / S2 widths (+-250 / +-600 ms, the widest class): legs it misses, known fills such a window
-     calls CANCEL_FIRST, and whether one constant clock offset per run reconciles every leg (not fitted, not used).
+  K4 RESEARCH-WINDOWS-VS-LIFECYCLE: the research anchor Z with the S1 / S2 widths (+-250 / +-600 ms, the widest class): CONSISTENT iff no
+     lifecycle is missed and no known fill is called CANCEL_FIRST under either width, else CONTRADICTED (counts, and whether one constant
+     clock offset per run reconciles every leg - not fitted, not used).
+  K5 DECLARED RANGES vs MEASURED ORDER PATH: on live's own orders the venue activation precedes the ack receipt (activation <= accepted -
+     place) and a cancel takes effect before its ack (effect <= ack - request): COVERED iff the scenario replay's activation range reaches the
+     95th percentile of the first and its cancel range that of the second, else NOT-COVERED (percentiles printed; the notice delay has no
+     bound in these records without the match instant).
+  KNOWN VERDICT: K0-K3 are instrument checks (the classifier and the refusals behave); K4 is the evidence about the research windows. The
+     verdict names both; no reading here validates the venue engine.
 SELFTEST (synthetic, no data): every class incl. TIE / UNKNOWN / CONTRADICTORY; window_from refusals; event intersection, evidence cap and
  statuses; link statuses; the event sweep = a dense grid of the shared instant, and on singletons v1's bounds; the collapsed control =
  pf_keep_pull_clock_audit.per_fill; K0-K4 on planted cases; an end-to-end rehearsal of run() on a synthetic source into a temporary dir.
@@ -76,6 +95,7 @@ LIMITS: consumed days; one declared rule; STATES is local selection; M50 quantit
  lifecycles; only same-side legs at the fill's market join an event.
 Usage (run_light, PF_SLOT=claude): pf_keep_pull_exec_windows.py selftest | run | known
 """
+import itertools
 import json
 import sys
 import tempfile
@@ -98,6 +118,7 @@ LIVE = Path('/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/live
 CC_SHA = '2f1a580bb6bb3689bf39b52ddbf5a7a443ea004e0d281274510f1193eb108a19'   # clock_cases.parquet (as pinned by pf_b1a_live_orders)
 SHIFT = 50.                                               # the primary replay's trade shift (M50)
 CANCEL_RANGE = (0., 100.)                                 # CR: the cancel takes effect between the decision and +100 ms (assumption)
+ACT_RANGE = (25., 100.)                                   # the scenario replay's activation range (+58 ms the replay's point; assumption)
 LATS = (0., KP.CANCEL, 100.)
 MATCH_SOURCES = ()                                        # sources with established match-instant semantics: none
 SCEN = ('S1', 'S2', 'EV')
@@ -106,6 +127,8 @@ ORD = ('CANCEL_FIRST', 'MATCH_FIRST', 'AMBIGUOUS', 'TIE', 'UNKNOWN', 'CONTRADICT
 EVC = ('WS', 'E2', 'imputed', 'mixed')
 WST = ('ok', 'truncated_by_evidence', 'contradictory_evidence', 'contradictory_legs')
 LINK = ('unlinked', 'unique_event', 'multi_event')
+CST = ('unlinked', 'none', 'some', 'all')                 # of a fill's candidate events: none / some / all flagged
+JCAP = 256                                                # identity assignments enumerated per component; above it the labelled outer relaxation
 LEG_COLS = ['mid', 'side', 'anc', 'ptick', 'shares', 'how', 't_ms', 't_e2', 'exec_s', 'row_id', 'group']
 V1_COLS = ['mid', 'side', 'anc', 'ptick', 'how', 't_ms', 't_e2', 'exec_s']
 RAW_COLS = ['mid', 'exec_s', 'first_recv_ns', 'side', 'ptick', 'shares', 'price_executed', 'signer', 'taker_index', 'taker_quote', 't_ms', 'how', 't_e2']
@@ -258,6 +281,76 @@ def event_axis_windows(EVT, k):
     return np.where(bad, -np.inf, EVT[f'{k}_lo'].values - anc), np.where(bad, np.inf, EVT[f'{k}_hi'].values - anc)
 
 
+def candidate_status(fid, flag, n):
+    """Per fill, over its candidate events (pairs fid / flag): 0 unlinked (no candidate), 1 none, 2 some, 3 all of them flagged (index into CST)."""
+    k = np.bincount(fid, minlength=n); h = np.bincount(fid, weights=np.asarray(flag, float), minlength=n)
+    return np.where(k == 0, 0, np.where(h == 0, 1, np.where(h < k, 2, 3)))
+
+
+def joint_bounds(pf_, pe, n, wl, wh, anc, t0, F, CW, lat, cap=JCAP):
+    """Extremes of E with ONE instant per event (window wl / wh on the event's own axis, anchor anc) and ONE identity per ambiguous fill (a
+    fill with several candidate events takes one of them). Events tied by an ambiguous fill form a component: exact by enumerating its
+    identity assignments (each one decouples the events into one-instant sweeps; min / max over assignments); above `cap` assignments the
+    component gets the outer relaxation (its unique events swept, each ambiguous fill / candidate pair moved independently). -> one row per
+    unit: kind event (an untied event, exact) / joint (a component, exact) / relaxed (a component, outer), e (an event of it), fills, gross, mn, mx."""
+    nE = len(wl); nc = np.bincount(pf_, minlength=n); amb = nc[pf_] > 1; par = np.arange(nE); aval = np.abs(F['val'])
+
+    def find(x):
+        while par[x] != x:
+            par[x] = par[par[x]]; x = par[x]
+        return x
+    cand = {}
+    for f, e in zip(pf_[amb].tolist(), pe[amb].tolist()):
+        cand.setdefault(f, []).append(e)
+    for es in cand.values():
+        for e in es[1:]:
+            a, b = find(es[0]), find(e)
+            if a != b:
+                par[b] = a
+    root = np.array([find(e) for e in range(nE)], np.int64); croot = np.array(sorted({int(root[es[0]]) for es in cand.values()}), np.int64)
+    uf, ue = pf_[~amb], pe[~amb]; iso = ~np.isin(root[ue], croot); out = []
+    if iso.any():
+        ids, ix = np.unique(ue[iso], return_inverse=True)
+        mn, mx = sweep(ix, wl[ids], wh[ids], t0[uf[iso]] - anc[ue[iso]], {k: v[uf[iso]] for k, v in F.items()}, CW, lat)
+        out.append(pd.DataFrame(dict(kind='event', e=ids, fills=np.bincount(ix), gross=np.bincount(ix, weights=aval[uf[iso]]), mn=mn, mx=mx)))
+    comp = {}
+    for f, es in cand.items():
+        comp.setdefault(int(root[es[0]]), dict(multi=[], unique={}))['multi'].append((f, es))
+    for f, e in zip(uf[~iso].tolist(), ue[~iso].tolist()):
+        comp[int(root[e])]['unique'].setdefault(e, []).append(f)
+    key, vf, ve, vid, relax = [], [], [], [], []
+    for r, c in comp.items():
+        evs = sorted({e for _, es in c['multi'] for e in es} | set(c['unique'])); na = float(np.prod([float(len(es)) for _, es in c['multi']]))
+        if na > cap:
+            relax.append(r); continue
+        for a, asg in enumerate(itertools.product(*[es for _, es in c['multi']])):
+            for e in evs:
+                fl = c['unique'].get(e, []) + [f for (f, _), x in zip(c['multi'], asg) if x == e]
+                v = len(key); key.append((r, a, e)); vf += fl; ve += [e] * len(fl); vid += [v] * len(fl)
+    rows = []
+    if key:
+        K_ = pd.DataFrame(key, columns=['r', 'a', 'e']); vf, ve, vid = (np.array(x, np.int64) for x in (vf, ve, vid))
+        K_['mn'], K_['mx'] = sweep(vid, wl[K_.e.values], wh[K_.e.values], t0[vf] - anc[ve], {k: v[vf] for k, v in F.items()}, CW, lat)
+        S = K_.groupby(['r', 'a']).agg(mn=('mn', 'sum'), mx=('mx', 'sum')).groupby(level=0).agg(mn=('mn', 'min'), mx=('mx', 'max'))
+        for r, x in S.iterrows():
+            c = comp[r]; fl = sorted({f for f, _ in c['multi']} | {f for v in c['unique'].values() for f in v})
+            rows.append(('joint', min(e for _, es in c['multi'] for e in es), len(fl), float(aval[fl].sum()), float(x.mn), float(x.mx)))
+    for r in relax:
+        c = comp[r]; ue_ = [e for e, fs in c['unique'].items() for _ in fs]; uf_ = [f for fs in c['unique'].values() for f in fs]
+        mf_ = [f for f, es in c['multi'] for _ in es]; me_ = [e for _, es in c['multi'] for e in es]; lo_ = hi_ = 0.
+        if uf_:
+            ids, ix = np.unique(np.array(ue_, np.int64), return_inverse=True); uf_ = np.array(uf_, np.int64)
+            a1, b1 = sweep(ix, wl[ids], wh[ids], t0[uf_] - anc[np.array(ue_, np.int64)], {k: v[uf_] for k, v in F.items()}, CW, lat); lo_, hi_ = float(a1.sum()), float(b1.sum())
+        mf_, me_ = np.array(mf_, np.int64), np.array(me_, np.int64)
+        a2, b2 = sweep(np.arange(len(mf_)), wl[me_], wh[me_], t0[mf_] - anc[me_], {k: v[mf_] for k, v in F.items()}, CW, lat)
+        fm = pd.DataFrame(dict(f=mf_, mn=a2, mx=b2)).groupby('f').agg(mn=('mn', 'min'), mx=('mx', 'max'))
+        fl = sorted(set(mf_.tolist()) | set(np.asarray(uf_, np.int64).tolist()))
+        rows.append(('relaxed', int(min(me_)), len(fl), float(aval[fl].sum()), lo_ + float(fm.mn.sum()), hi_ + float(fm.mx.sum())))
+    if rows:
+        out.append(pd.DataFrame(rows, columns=['kind', 'e', 'fills', 'gross', 'mn', 'mx']))
+    return pd.concat(out, ignore_index=True) if out else pd.DataFrame(columns=['kind', 'e', 'fills', 'gross', 'mn', 'mx'])
+
+
 def combine(fid, cls, n):
     """Per fill: the class every candidate event agrees on, else AMBIGUOUS (identity unknown among candidates that disagree); -1 if none."""
     lo = np.full(n, 99); hi = np.full(n, -1); np.minimum.at(lo, fid, cls); np.maximum.at(hi, fid, cls)
@@ -294,7 +387,12 @@ def v1_reference():
     return {k: dict(E_min=R[k]['E_min'], E_max=R[k]['E_max'], order={nm: R[k]['order'][nm]['fills'] for nm in ('AFTER', 'BEFORE', 'AMBIGUOUS')}) for k in ('S1', 'S2')}
 
 
-def run(out=OUT, src=None, tables=None, rows_of=None, env_of=None, v1=None, days=None, expect=(234279., 1169671.), tol=1.):
+def accounted(V3, n, total):
+    """Control (f): every contradiction split covers every fill once and the whole gross."""
+    return all(sum(v['fills'].values()) == n and abs(sum(v['gross'].values()) - total) <= 1e-6 * max(1., total) for v in V3.values())
+
+
+def run(out=OUT, src=None, tables=None, rows_of=None, env_of=None, v1=None, days=None, expect=(234279., 1169671.), tol=1., jcap=JCAP):
     """The ledger on the committed keep / pull run (or, in the selftest's rehearsal, on synthetic tables, source and output dir)."""
     start = time.time(); out = Path(out); C.require(not out.exists(), 'ledger output exists')
     if tables is None:
@@ -339,29 +437,39 @@ def run(out=OUT, src=None, tables=None, rows_of=None, env_of=None, v1=None, days
         for c in CWIN:
             cls[k, c] = np.where(pl, combine(pf_, classify(lo, hi, cw[c][0][pf_], cw[c][1][pf_]), n), -1)
     removed = t >= r37; X = {f'{k}|{c}': xtab(cls[k, c], removed, val, pl) for k in SCEN for c in CWIN}; ok_e = all(conserved(x) for x in X.values())
-    V0 = dict(a_collapsed=ok_a, b_v1_regression=ok_b, c_linked=ok_c, d_identity=ok_d, e_conservation=ok_e)
+    gross = np.abs(val); V3 = {}; cst = {}                    # per fill over ALL its candidate events, every fill and link status in the split
+    for k, flag in (('S1', EVT.S1_st.values[pe] >= 2), ('S2', EVT.S2_st.values[pe] >= 2), ('after_evidence', (t + t0)[pf_] > EVT.EV_hi.values[pe])):
+        cst[k] = cs = candidate_status(pf_, flag, n)
+        V3[k] = dict(fills={CST[c]: int((cs == c).sum()) for c in range(4)}, gross={CST[c]: float(gross[cs == c].sum()) for c in range(4)},
+                     pulled={CST[c]: int(((cs == c) & pl).sum()) for c in range(4)}, by_link={LINK[l]: {CST[c]: int(((cs == c) & (link_st == l)).sum()) for c in range(4)}
+                                                                                            for l in range(3)},
+                     by_day={d: {CST[c]: int(((cs == c) & (Fd.day.values == d)).sum()) for c in range(4)} for d in days}, of_fills=n, of_gross=float(gross.sum()))
+    for k in ('S1', 'S2'):
+        st = EVT[f'{k}_st'].values
+        V3[k].update(events={WST[s_]: int((st == s_).sum()) for s_ in range(4)},
+                     events_by_cls={EVC[c]: {WST[s_]: int(((st == s_) & (EVT.cls.values == c)).sum()) for s_ in range(4)} for c in range(4)})
+    ok_f = accounted(V3, n, float(gross.sum()))
+    V0 = dict(a_collapsed=ok_a, b_v1_regression=ok_b, c_linked=ok_c, d_identity=ok_d, e_conservation=ok_e, f_contradiction_accounting=ok_f)
     if not all(V0.values()):
         sys.exit(f'EXEC-WINDOW LEDGER FAILED -> no output: V0 {V0} (v1 regression {reg} vs {v1}; unlinked {unl}; identity mismatches {recon})')
-    # value bounds: one shared instant per event (unique fills), each candidate window independently (multi fills)
-    uf = np.flatnonzero(link_st == 1); mf = np.flatnonzero(link_st == 2); e_u = np.zeros(n, np.int64); e_u[pf_[ncand[pf_] == 1]] = pe[ncand[pf_] == 1]
-    ue, ev_u = np.unique(e_u[uf], return_inverse=True); anc = EVT.anc.values; mp = np.flatnonzero(ncand[pf_] > 1)
-    B = {}
+    # value bounds: ONE instant per event and ONE identity per ambiguous fill - exact by component where enumerable, else labelled OUTER
+    e_u = np.zeros(n, np.int64); e_u[pf_[ncand[pf_] == 1]] = pe[ncand[pf_] == 1]; anc = EVT.anc.values; B = {}
+    ev_key = dict(side=np.where(EVT.side.values == 0, 'bid', 'ask'), day=EVT.day.values.astype(str), cls=np.array(EVC)[EVT.cls.values])
     for k in SCEN:
         wl, wh = event_axis_windows(EVT, k)
         for lat in LATS:
-            mn_e, mx_e = sweep(ev_u, wl[ue], wh[ue], t0[uf] - anc[e_u[uf]], {x: v[uf] for x, v in F.items()}, CW, lat)
-            mn_p, mx_p = sweep(np.arange(len(mp)), wl[pe[mp]], wh[pe[mp]], t0[pf_[mp]] - anc[pe[mp]], {x: v[pf_[mp]] for x, v in F.items()}, CW, lat)
-            fmn = np.full(n, np.inf); fmx = np.full(n, -np.inf); np.minimum.at(fmn, pf_[mp], mn_p); np.maximum.at(fmx, pf_[mp], mx_p)
-            ev_side, ev_day, ev_cls = EVT.side.values[ue], EVT.day.values[ue], np.array(EVC)[EVT.cls.values[ue]]
-            br = dict(side={}, cls={}, day={})
-            for nm, key_e, key_f in (('side', np.where(ev_side == 0, 'bid', 'ask'), np.where(Fd.side.values == 0, 'bid', 'ask')), ('cls', ev_cls, np.full(n, 'multi')),
-                                     ('day', ev_day, Fd.day.values)):
-                for g in sorted(set(key_e) | set(key_f[mf])):
-                    br[nm][str(g)] = [float(mn_e[key_e == g].sum() + fmn[mf][key_f[mf] == g].sum()), float(mx_e[key_e == g].sum() + fmx[mf][key_f[mf] == g].sum())]
-            B[k, lat] = dict(E_min=float(mn_e.sum() + fmn[mf].sum()), E_max=float(mx_e.sum() + fmx[mf].sum()), by=br)
+            U = joint_bounds(pf_, pe, n, wl, wh, anc, t0, F, CW, lat, cap=jcap); kd = U.kind.values.astype(str); ev_ = U.e.values.astype(np.int64)
+            C.require(int(U.fills.sum()) == int((ncand > 0).sum()), 'a linked fill missing from the bounds'); br = {}
+            for nm, ke in ev_key.items():
+                g = np.where((kd == 'event') | (nm != 'cls'), ke[ev_], kd)
+                br[nm] = {str(x): [float(U.mn.values[g == x].sum()), float(U.mx.values[g == x].sum())] for x in sorted(set(g.tolist()))}
+            rel = kd == 'relaxed'
+            B[k, lat] = dict(E_min=float(U.mn.sum()), E_max=float(U.mx.sum()), by=br, bounds='outer' if rel.any() else 'exact',
+                             units={x: int((kd == x).sum()) for x in ('event', 'joint', 'relaxed')}, fills={x: int(U.fills.values[kd == x].sum()) for x in ('event', 'joint', 'relaxed')},
+                             relaxed_gross=float(U.gross.values[rel].sum()), of_fills=int((ncand > 0).sum()))
     # coverage, decisions, contradictions
     cls_name = np.array(EVC + ('multi', 'unlinked'))[np.where(link_st == 1, EVT.cls.values[e_u], np.where(link_st == 2, 4, 5))]
-    side_nm = np.where(Fd.side.values == 0, 'bid', 'ask'); gross = np.abs(val); cov = {}
+    side_nm = np.where(Fd.side.values == 0, 'bid', 'ask'); cov = {}
     for k in SCEN:
         ident = np.isin(cls[k, 'CP'], (0, 1)) & pl; cov[k] = {nm: {str(g): float(gross[ident & (key == g)].sum() / max(gross[pl & (key == g)].sum(), 1e-12))
                                                                   for g in sorted(set(key[pl]))} for nm, key in (('day', Fd.day.values), ('side', side_nm), ('cls', cls_name),
@@ -371,17 +479,9 @@ def run(out=OUT, src=None, tables=None, rows_of=None, env_of=None, v1=None, days
         unev = np.bincount(ri[pl & ~np.isin(cls[k, 'CP'], (0, 1))], minlength=len(E))
         dec[k] = dict(pulled_orders=int(len(po)), no_m50_fill=int((nf[po] == 0).sum()), evaluable=int(((nf[po] > 0) & (unev[po] == 0)).sum()),
                       not_evaluable=int((unev[po] > 0).sum()))
-    V3 = {}
-    for k in ('S1', 'S2'):
-        st = EVT[f'{k}_st'].values; bad_f = (link_st == 1) & (st[e_u] >= 2)
-        V3[k] = dict(events={WST[s]: int((st == s).sum()) for s in range(4)}, events_by_cls={EVC[c]: {WST[s]: int(((st == s) & (EVT.cls.values == c)).sum()) for s in range(4)} for c in range(4)},
-                     fills_contradictory=int(bad_f.sum()), gross_contradictory=float(gross[bad_f].sum()),
-                     by_day={d: int((bad_f & (Fd.day.values == d)).sum()) for d in days})
-    late = (link_st == 1) & (t + t0 > EVT.EV_hi.values[e_u]); V3['replay_after_evidence'] = dict(fills=int(late.sum()), gross=float(gross[late].sum()),
-                                                                                                 pulled_fills=int((late & pl).sum()))
     read = {'V0 CONTROLS': 'YES'}
     for k in SCEN:
-        read[f'V1 SIGN {k}'] = sign(B[k, KP.CANCEL]['E_min'], B[k, KP.CANCEL]['E_max'])
+        read[f'V1 SIGN {k}'] = sign(B[k, KP.CANCEL]['E_min'], B[k, KP.CANCEL]['E_max']) + ('' if B[k, KP.CANCEL]['bounds'] == 'exact' else ' (OUTER BOUNDS)')
     R = dict(fills=n, eligible=len(E), counted=len(O), status={str(s): int(v) for s, v in O.status.value_counts().items()}, link={LINK[s]: int((link_st == s).sum()) for s in range(3)},
              events=len(EVT), events_by_cls={EVC[c]: int((EVT.cls == c).sum()) for c in range(4)}, events_multi_side=int((EVT.sides > 1).sum()),
              legs=len(LG), legs_tk_status={str(s): int(v) for s, v in LG.tk_status.value_counts().items()}, env=env, collapsed_E=e0, score=s0, v1_regression=reg,
@@ -397,6 +497,7 @@ def run(out=OUT, src=None, tables=None, rows_of=None, env_of=None, v1=None, days
     FL = pd.DataFrame(dict(fid=np.arange(n), day=Fd.day.values, oid=E.oid.values[ri], m=Fd.m.values, side=Fd.side.values, p=Fd.p.values, t0=t0, t_replay=t, anchor=Fd.a.values,
                            q=q50, value=val, src=srcc, pulled=pl, T=T[ri], landing37=r37, replay_removed=removed & pl, link=np.array(LINK)[link_st], n_events=ncand,
                            event=np.where(link_st == 1, e_u, -1), activation_assumed=KP.PLACE, notice_assumed=KP.NOTICE,
+                           **{f'contra_{k}': np.array(CST)[cst[k]] for k in cst},
                            **{f'cls_{k}_{c}': cls[k, c] for k in SCEN for c in CWIN}))
     FL.to_parquet(out / 'ledger_fills.parquet', index=False)
     OL = O[['day', 'oid', 'm', 'side', 't', 'status']].copy(); ix = pd.MultiIndex.from_arrays([E.day.values, E.oid.values])
@@ -444,12 +545,14 @@ def report(R, read, days):
                                                          for k, v in R['decisions'].items()))
     L += ['', 'PART 3 - bounds on E = score improvement - exact STATES-null expectation (one shared instant per event in its admissible window; M50 quantities held)']
     for key, v in R['bounds'].items():
-        L.append(f"  {key} ms: [{v['E_min']:+,.0f}, {v['E_max']:+,.0f}] | " + ' | '.join(f'{nm} ' + ', '.join(f'{g} [{a:+,.0f}, {b:+,.0f}]' for g, (a, b) in d.items())
-                                                                              for nm, d in v['by'].items()))
-    L += ['', 'PART 4 - contradictions (kept, never repaired)']
-    for k in ('S1', 'S2'):
-        v = R['V3'][k]; L.append(f"  {k}: events {v['events']}; contradictory fills {v['fills_contradictory']:,} ({v['gross_contradictory']:,.0f} c gross); by class {v['events_by_cls']}")
-    v = R['V3']['replay_after_evidence']; L.append(f"  replay times after the REST evidence cap: {v['fills']:,} fills ({v['gross']:,.0f} c gross; {v['pulled_fills']:,} on pulled orders)")
+        L.append(f"  {key} ms: [{v['E_min']:+,.0f}, {v['E_max']:+,.0f}] {v['bounds'].upper()} (of {v['of_fills']:,} linked fills: untied events {v['fills']['event']:,}, "
+                 f"joint components {v['units']['joint']:,} / {v['fills']['joint']:,} fills exact, relaxed {v['units']['relaxed']:,} / {v['fills']['relaxed']:,} fills / "
+                 f"{v['relaxed_gross']:,.0f} c gross) | " + ' | '.join(f'{nm} ' + ', '.join(f'{g} [{a:+,.0f}, {b:+,.0f}]' for g, (a, b) in d.items()) for nm, d in v['by'].items()))
+    L += ['', 'PART 4 - contradictions per fill over ALL its candidate events (kept, never repaired; denominators: every fill and its gross)']
+    for k, nm in (('S1', 'S1 window contradicted by the REST evidence'), ('S2', 'S2 window contradicted by the REST evidence'), ('after_evidence', 'replay time after the evidence cap')):
+        v = R['V3'][k]; L.append(f"  {nm}: of {v['of_fills']:,} fills / {v['of_gross']:,.0f} c gross - " + ', '.join(f"{c} candidates {v['fills'][c]:,} / {v['gross'][c]:,.0f} c"
+                                                                                                                for c in ('all', 'some', 'none', 'unlinked'))
+                 + f"; on pulled orders {v['pulled']}; by link {v['by_link']}" + (f"; events {v['events']}; by class {v['events_by_cls']}" if 'events' in v else ''))
     L += ['', 'READINGS (declared before any data was read)'] + [f'  {k}: {v}' for k, v in read.items()] + [
           '', 'MISSING EVIDENCE: no public capture bounds the match instant from below; the REST executedAt is a delayed status (an upper bound only); the WS '
           'pending link is by value; cancel effect and activation are configured points. Order-level match identity and timing (own orders, A4b) is the evidence that '
@@ -471,7 +574,7 @@ def known_frame():
     C.require(core.cid.is_unique, 'a core order id twice')
     k = CC.merge(SC[['run', 'cid', 'order_hash', 'trade_id', 'matched_reported_ms']], on=['run', 'cid', 'order_hash', 'trade_id'], how='left', validate='one_to_one')
     k = k.merge(core, on='cid', how='left', validate='many_to_one')
-    K = pd.DataFrame(dict(run=k.run.values, cid=k.cid.values, place=k.place.values, upper=k.upper.values, notice=k.first_positive_notice.values, ack=k.cancel.values,
+    K = pd.DataFrame(dict(run=k.run.values, cid=k.cid.values, place=k.place.values, accepted=k.accepted.values, upper=k.upper.values, notice=k.first_positive_notice.values, ack=k.cancel.values,
                           req=k.t_cancel.values, S=k.exec_s.values.astype(float), M=k.matched_reported_ms.values / 1000., Z=k.Z.values))
     return K, dict(rest_floor_nonoverlap=rep['timestamp_checks']['rest_floor_nonoverlap'], matched_floor_nonoverlap=rep['timestamp_checks']['matched_floor_nonoverlap'])
 
@@ -512,10 +615,19 @@ def known_checks(K, ref, draws=200, seed=20261118):
             feas[str(r)] = dict(lo=dlo, hi=dhi, exists=bool(dlo <= dhi))
         k4[nm] = dict(missed=int(miss(zl, zh, K).sum()), cancel_first=int((c4 == 0).sum()), constant_offset=feas)
     read = {'K0 REPRODUCES 11-09': 'YES' if k0 == ref else 'NO',
-            'K1 NO-FALSE-AVOIDANCE': 'YES' if k1['CANCEL_FIRST'] == 0 and k1['CONTRADICTORY'] == 0 and bool(np.all(lo <= hi)) else 'NO',
+            'K1 CLASSIFIER-CONSISTENCY': 'YES' if k1['CANCEL_FIRST'] == 0 and k1['CONTRADICTORY'] == 0 and bool(np.all(lo <= hi)) else 'NO',
             'K2 DELAYED-STATUS-REFUSED': 'YES' if k2['point_contradictions'] >= 1 and k2['evidence_contradictions'] == 0 and refused else 'NO',
-            'K3 IDENTITY-CHECK-FIRES': 'YES' if k3['true_contradictions'] == 0 and k3['share_draws_firing'] >= .95 else 'NO'}
-    return dict(legs=len(K), orders=int(K.cid.nunique()), cancelled=int(can.sum()), K0=k0, K0_ref=ref, K1=k1, K2=k2, K3=k3, K4=k4), read
+            'K3 IDENTITY-CHECK-FIRES': 'YES' if k3['true_contradictions'] == 0 and k3['share_draws_firing'] >= .95 else 'NO',
+            'K4 RESEARCH-WINDOWS-VS-LIFECYCLE': 'CONSISTENT' if all(v['missed'] == 0 and v['cancel_first'] == 0 for v in k4.values()) else 'CONTRADICTED'}
+    ab = (K.accepted.values - K.place.values); ab = ab[np.isfinite(ab)]; cb = (K.ack.values - K.req.values); cb = cb[np.isfinite(cb)]
+    pct = lambda x: dict(n=int(len(x)), **({f'p{q}': float(np.percentile(x, q)) for q in (5, 50, 95)} if len(x) else {}), **({'max': float(x.max())} if len(x) else {}))
+    k5 = dict(activation_upper_ms=pct(ab), cancel_effect_upper_ms=pct(cb), declared_activation=list(ACT_RANGE), declared_cancel=list(CANCEL_RANGE))
+    read['K5 DECLARED RANGES vs MEASURED ORDER PATH'] = ('COVERED' if len(ab) and len(cb) and k5['activation_upper_ms']['p95'] <= ACT_RANGE[1]
+                                                        and k5['cancel_effect_upper_ms']['p95'] <= CANCEL_RANGE[1] else 'NOT-COVERED')
+    inst = all(read[x] == 'YES' for x in ('K0 REPRODUCES 11-09', 'K1 CLASSIFIER-CONSISTENCY', 'K2 DELAYED-STATUS-REFUSED', 'K3 IDENTITY-CHECK-FIRES'))
+    read['KNOWN VERDICT'] = (('INSTRUMENT-CHECKS-PASS' if inst else 'INSTRUMENT-CHECK-FAILED') + '; RESEARCH-WINDOWS-' + read['K4 RESEARCH-WINDOWS-VS-LIFECYCLE']
+                             + '; NOT A VENUE-ENGINE ACCEPTANCE')
+    return dict(legs=len(K), orders=int(K.cid.nunique()), cancelled=int(can.sum()), K0=k0, K0_ref=ref, K1=k1, K2=k2, K3=k3, K4=k4, K5=k5), read
 
 
 def known(out=OUT_K):
@@ -534,6 +646,8 @@ def known(out=OUT_K):
     for nm, v in R['K4'].items():
         L.append(f"  K4 research anchor Z +-{250 if nm == 'S1' else 600} ms ({nm} width): misses {v['missed']} lifecycles; would call {v['cancel_first']} known fills CANCEL_FIRST; "
                  f"constant offset per run {v['constant_offset']}")
+    L.append(f"  K5 measured order path (ms): activation <= ack - place {R['K5']['activation_upper_ms']}; cancel effect <= ack - request {R['K5']['cancel_effect_upper_ms']}; "
+             f"declared activation {list(ACT_RANGE)}, cancel {list(CANCEL_RANGE)}")
     L += ['', 'READINGS (declared before any data was read)'] + [f'  {k}: {v}' for k, v in read.items()]
     out.mkdir(parents=True); (out / 'known.txt').write_text('\n'.join(L) + '\n'); K.to_parquet(out / 'known_cases.parquet', index=False)
     C.dump(out / 'known.json', dict(asof=C.stamp(), readings=read, R=R, inputs={p: C.sha(FC / p) for p in ('clock_cases.parquet', 'status_clock_cases.parquet')},
@@ -580,6 +694,21 @@ def _synthetic(rng, day='20990101'):
                                      first_recv_ns=0, price_executed=p[o] / 100., signer='x', taker_index=0, taker_quote=0))
     Fl = pd.DataFrame(fl, columns=['day', 'oid', 'clock', 't', 'q', 'src']); L = pd.DataFrame(legs); L['row_id'] = np.arange(len(L))
     L['group'] = np.where(L.tk.values >= 0, L.tk.values, -1 - L.row_id.values); return O, Fl, L
+
+
+def _v1_expect(O, Fl, L, h=600., q01=-900., q99=1050.):
+    """v1's own functions on a synthetic day (the rehearsal's reference): S1 / S2 bounds and ordering counts, the collapsed E and score."""
+    La = KP.landing(np.arange(1, KP.NSTEP + 1)); E = O[O.status == 'eligible'].reset_index(drop=True); cell = E.groupby(['day', 'm', 'side', 'phase'], sort=True).ngroup().values
+    T = KP.score_steps(E[[f'f{j:02d}' for j in range(KP.NSTEP + 1)]].values, E.side.values, E.p.values)[KP.DECLARED]
+    endj = A.endj_of(E.t_full.values, E.g_struct.values); act, CW = V1.null_weights(T, cell, endj); ri, t, val, src = A.fills_of(E, Fl, SHIFT)
+    pf = A.per_fill(T, cell, endj, (ri, t, val, src)); lend = np.where(np.isnan(E.land_struct.values[ri]), np.inf, E.land_struct.values[ri])
+    Fd = pd.DataFrame(dict(fid=np.arange(len(ri)), m=E.m.values[ri], side=E.side.values[ri], a=t + SHIFT + E.t.values[ri], p=E.p.values[ri]))
+    H = V1.link(Fd, L[V1_COLS], h, q01, q99).reindex(np.arange(len(ri))); r = La[np.clip(T[ri], 1, KP.NSTEP) - 1]
+    F1 = dict(val=val, pulled=act[ri], r=r, s=cell[ri], endj=endj[ri], lend=lend); v1 = {}
+    for k, (a_, b_) in (('S1', ('lo1', 'hi1')), ('S2', ('lo2', 'hi2'))):
+        lo, hi = H[a_].values - E.t.values[ri], H[b_].values - E.t.values[ri]; mn, mx = V1.bounds(lo, hi, F1, CW); o = np.where(act[ri], V1.order_of(lo, hi, r), -1)
+        v1[k] = dict(E_min=float(mn.sum()), E_max=float(mx.sum()), order={nm: int(((o == c) & act[ri]).sum()) for c, nm in enumerate(('AFTER', 'BEFORE', 'AMBIGUOUS'))})
+    return v1, float(pf['score'].sum() - pf['null'].sum()), float(pf['score'].sum()), dict(ri=ri, t=t, val=val, act=act, r=r)
 
 
 class _Src:
@@ -660,6 +789,34 @@ def selftest(rehearse=True):
     mz, xz = sweep(np.array([0, 0]), np.array([0.]), np.array([1000.]), np.zeros(2), Fz, np.zeros((1, KP.NSTEP + 2)), KP.CANCEL)
     if not (mz[0] == 0. and xz[0] == 0.):
         bad.append('two jumps of one event at one instant must be summed before the state is read (true sum 0 everywhere)')
+    if candidate_status(np.array([0, 0, 1, 1, 2]), np.array([True, False, True, True, False]), 4).tolist() != [2, 3, 1, 0]:
+        bad.append('candidate status: some / all / none / unlinked')
+    Fj = dict(val=np.array([-10., -10., 10.]), pulled=np.ones(3, bool), T=np.full(3, 5), s=np.zeros(3, int), endj=np.full(3, 99), lend=np.full(3, np.inf))
+    args_j = (np.array([0, 1, 2, 2]), np.array([0, 1, 0, 1]), 3, np.full(2, 100.), np.full(2, 400.), np.zeros(2), np.zeros(3), Fj, np.zeros((1, KP.NSTEP + 2)), KP.CANCEL)
+    Uj, Ur = joint_bounds(*args_j), joint_bounds(*args_j, cap=1)                               # review of c23e6f29: coherent [0, 10]; relaxed [-10, 20]
+    if not ([float(Uj.mn.sum()), float(Uj.mx.sum())] == [0., 10.] and Uj.kind.tolist() == ['joint'] and int(Uj.fills.sum()) == 3
+            and [float(Ur.mn.sum()), float(Ur.mx.sum())] == [-10., 20.] and Ur.kind.tolist() == ['relaxed']):
+        bad.append(f'joint bounds: exact {Uj.to_dict("records")}, relaxed {Ur.to_dict("records")} (want [0, 10] joint, [-10, 20] relaxed)')
+    Uc = joint_bounds(np.array([0, 1]), np.array([0, 0]), 2, np.array([100.]), np.array([400.]), np.zeros(1), np.zeros(2),
+                      {k: v[[0, 2]] for k, v in Fj.items()}, np.zeros((1, KP.NSTEP + 2)), KP.CANCEL)
+    if not ([float(Uc.mn.sum()), float(Uc.mx.sum())] == [0., 0.] and Uc.kind.tolist() == ['event']):
+        bad.append('joint bounds: two opposite fills of one event must give [0, 0]')
+    for trial in range(4):                                                                     # the joint solver against an independent brute force
+        nf_ = 6; Fr = dict(val=rng.normal(0., 10., nf_), pulled=rng.random(nf_) < .7, T=rng.integers(KP.J0, 8, nf_), s=np.zeros(nf_, int), endj=np.full(nf_, 99),
+                           lend=np.where(rng.random(nf_) < .3, rng.integers(150, 450, nf_).astype(float), np.inf))
+        CWr = np.zeros((1, KP.NSTEP + 2)); CWr[0, 3:] = .3; CWr[0, 6:] = .6; wl_r = rng.integers(0, 200, 2).astype(float); wh_r = wl_r + rng.integers(0, 160, 2)
+        pf_r = np.array([0, 1, 2, 3, 3, 4, 4, 5]); pe_r = np.array([0, 1, 1, 0, 1, 0, 1, 0]); d_r = rng.integers(-60, 60, nf_).astype(float); an_r = np.zeros(2)
+        Ub = joint_bounds(pf_r, pe_r, nf_, wl_r, wh_r, an_r, d_r, Fr, CWr, KP.CANCEL)
+        g0_, g1_ = (np.arange(wl_r[e], wh_r[e] + 1e-9, .5) for e in (0, 1)); T0, T1 = np.meshgrid(g0_, g1_, indexing='ij'); best = [np.inf, -np.inf]
+        cand_ = {f: pe_r[pf_r == f].tolist() for f in range(nf_)}
+        for asg in itertools.product(*[cand_[f] for f in range(nf_)]):
+            tot = sum(contrib(np.where(e == 0, T0, T1).ravel() - d_r[f], {k: np.full(T0.size, v[f]) for k, v in Fr.items()}, CWr) for f, e in enumerate(asg))
+            best = [min(best[0], float(tot.min())), max(best[1], float(tot.max()))]
+        if not (abs(float(Ub.mn.sum()) - best[0]) < 1e-9 and abs(float(Ub.mx.sum()) - best[1]) < 1e-9 and set(Ub.kind) == {'joint'}):
+            bad.append(f'joint bounds trial {trial}: {float(Ub.mn.sum()):.6f} / {float(Ub.mx.sum()):.6f} != brute force {best}')
+        Uo = joint_bounds(pf_r, pe_r, nf_, wl_r, wh_r, an_r, d_r, Fr, CWr, KP.CANCEL, cap=0)
+        if not (float(Uo.mn.sum()) <= best[0] + 1e-9 and float(Uo.mx.sum()) >= best[1] - 1e-9 and set(Uo.kind) == {'relaxed'}):
+            bad.append(f'outer relaxation trial {trial} does not contain the exact bounds')
     X = xtab(np.array([0, 1, 2, 2, 4, -1]), np.array([True, True, False, False, True, True]), np.array([-5., 3., 2., -1., 4., 9.]), np.array([True] * 5 + [False]))
     if not (conserved(X) and X['REMOVED']['CANCEL_FIRST']['net'] == 5. and X['KEPT']['AMBIGUOUS']['fills'] == 2 and X['REMOVED']['_total']['fills'] == 3):
         bad.append('cross-tab cells / conservation')
@@ -667,16 +824,27 @@ def selftest(rehearse=True):
     if conserved(X):
         bad.append('conservation check does not fire on a lost fill')
     base = 1.79e12; pl_ = base + 1000. * np.arange(8) * 60.
-    Kk = pd.DataFrame(dict(run=['a'] * 4 + ['b'] * 4, cid=np.arange(8), place=pl_, upper=pl_ + 160., notice=pl_ + 600., ack=np.r_[pl_[:7] + 160., np.nan],
+    Kk = pd.DataFrame(dict(run=['a'] * 4 + ['b'] * 4, cid=np.arange(8), place=pl_, accepted=pl_ + 30., upper=pl_ + 160., notice=pl_ + 600., ack=np.r_[pl_[:7] + 160., np.nan],
                            req=pl_ + 100., S=np.floor((pl_ + 80.) / 1000.), M=np.floor((pl_ + 80.) / 1000.), Z=pl_ + 70.))
     Kk.loc[1, 'notice'] = pl_[1] + 90.; Kk.loc[1, 'upper'] = pl_[1] + 90.                      # notice before the cancel request: MATCH_FIRST
     Kk.loc[2, 'S'] = np.floor((pl_[2] + 80.) / 1000.) + 10.                                     # Confirmed 10 s late: the substitution must fire
     Kk.loc[3, 'Z'] = pl_[3] + 10070.; Kk.loc[6, 'Z'] = pl_[6] - 5000.                           # research anchors outside their lifecycles
     ref = dict(rest_floor_nonoverlap=int(miss(Kk.S.values * 1000., Kk.S.values * 1000. + 999.999, Kk).sum()), matched_floor_nonoverlap=0)
     Rk, rk = known_checks(Kk, ref, draws=50)
-    if not (all(v == 'YES' for v in rk.values()) and Rk['K1']['MATCH_FIRST'] == 1 and Rk['K1']['AMBIGUOUS'] == 6 and Rk['K1']['CANCEL_FIRST'] == 0 and Rk['K2']['point_contradictions'] == 1
+    inst_ = ('K0 REPRODUCES 11-09', 'K1 CLASSIFIER-CONSISTENCY', 'K2 DELAYED-STATUS-REFUSED', 'K3 IDENTITY-CHECK-FIRES')
+    if not (all(rk[x] == 'YES' for x in inst_) and rk['K4 RESEARCH-WINDOWS-VS-LIFECYCLE'] == 'CONTRADICTED'
+            and rk['KNOWN VERDICT'] == 'INSTRUMENT-CHECKS-PASS; RESEARCH-WINDOWS-CONTRADICTED; NOT A VENUE-ENGINE ACCEPTANCE'
+            and Rk['K1']['MATCH_FIRST'] == 1 and Rk['K1']['AMBIGUOUS'] == 6 and Rk['K1']['CANCEL_FIRST'] == 0 and Rk['K2']['point_contradictions'] == 1
             and Rk['K4']['S1']['missed'] == 2 and Rk['K4']['S1']['cancel_first'] == 1 and not Rk['K4']['S1']['constant_offset']['a']['exists']):
         bad.append(f'known checks on planted cases: {rk} {Rk}')
+    if not (rk['K5 DECLARED RANGES vs MEASURED ORDER PATH'] == 'COVERED' and Rk['K5']['cancel_effect_upper_ms']['p95'] == 60. and Rk['K5']['activation_upper_ms']['max'] == 30.):
+        bad.append(f"K5 on planted cases: {rk['K5 DECLARED RANGES vs MEASURED ORDER PATH']} {Rk['K5']}")
+    Ks = Kk.copy(); Ks['ack'] = Ks.req + 300.; Ks['upper'] = np.minimum(Ks.notice, Ks.ack)                 # cancel acks 300 ms after the request
+    if known_checks(Ks, dict(ref, rest_floor_nonoverlap=int(miss(Ks.S.values * 1000., Ks.S.values * 1000. + 999.999, Ks).sum())), draws=50)[1]['K5 DECLARED RANGES vs MEASURED ORDER PATH'] != 'NOT-COVERED':
+        bad.append('a cancel path slower than the declared range read COVERED by K5')
+    Kg = Kk.copy(); Kg.loc[3, 'Z'] = pl_[3] + 70.; Kg.loc[6, 'Z'] = pl_[6] + 70.                 # every research anchor inside its lifecycle
+    if known_checks(Kg, ref, draws=50)[1]['K4 RESEARCH-WINDOWS-VS-LIFECYCLE'] != 'CONSISTENT':
+        bad.append('consistent research anchors not read CONSISTENT by K4')
     Kc = Kk.copy(); Kc.loc[5, 'S'] = np.floor(Kc.place[5] / 1000.) - 5.                       # a REST second ending before the order existed
     if known_checks(Kc, dict(ref, rest_floor_nonoverlap=ref['rest_floor_nonoverlap'] + 1), draws=50)[1]['K2 DELAYED-STATUS-REFUSED'] != 'NO':
         bad.append('an evidence bound that contradicts its lifecycle passes K2')
@@ -685,21 +853,11 @@ def selftest(rehearse=True):
         bad.append('a wrong identity passes K3')
     if rehearse and not bad:
         O, Fl, Ls = _synthetic(rng); day = '20990101'; Ls_rows = Ls[RAW_COLS + ['tk', 'tk_status']].reset_index(drop=True)
-        env = dict(h=600., q01=-900., q99=1050., inputs={})
-        E = O[O.status == 'eligible'].reset_index(drop=True); cell = E.groupby(['day', 'm', 'side', 'phase'], sort=True).ngroup().values
-        T_ = KP.score_steps(E[[f'f{j:02d}' for j in range(KP.NSTEP + 1)]].values, E.side.values, E.p.values)[KP.DECLARED]
-        endj_ = A.endj_of(E.t_full.values, E.g_struct.values); act_, CW_ = V1.null_weights(T_, cell, endj_); ri_, t_, val_, src_ = A.fills_of(E, Fl, SHIFT)
-        pf_ = A.per_fill(T_, cell, endj_, (ri_, t_, val_, src_)); lend_ = np.where(np.isnan(E.land_struct.values[ri_]), np.inf, E.land_struct.values[ri_])
-        Fd_ = pd.DataFrame(dict(fid=np.arange(len(ri_)), m=E.m.values[ri_], side=E.side.values[ri_], a=t_ + SHIFT + E.t.values[ri_], p=E.p.values[ri_]))
-        H = V1.link(Fd_, Ls[V1_COLS], 600., -900., 1050.).reindex(np.arange(len(ri_))); r_ = La[np.clip(T_[ri_], 1, KP.NSTEP) - 1]
-        F1_ = dict(val=val_, pulled=act_[ri_], r=r_, s=cell[ri_], endj=endj_[ri_], lend=lend_); v1 = {}
-        for k, (a_, b_) in (('S1', ('lo1', 'hi1')), ('S2', ('lo2', 'hi2'))):
-            lo_, hi_ = H[a_].values - E.t.values[ri_], H[b_].values - E.t.values[ri_]; mn_, mx_ = V1.bounds(lo_, hi_, F1_, CW_); o_ = np.where(act_[ri_], V1.order_of(lo_, hi_, r_), -1)
-            v1[k] = dict(E_min=float(mn_.sum()), E_max=float(mx_.sum()), order={nm: int(((o_ == c_) & act_[ri_]).sum()) for c_, nm in enumerate(('AFTER', 'BEFORE', 'AMBIGUOUS'))})
+        env = dict(h=600., q01=-900., q99=1050., inputs={}); v1, e_, s_, aux = _v1_expect(O, Fl, Ls); ri_, t_, val_, act_, r_ = (aux[k] for k in ('ri', 't', 'val', 'act', 'r'))
+        base = dict(src=_Src(Ls[LEG_COLS]), tables=(O, Fl), rows_of=lambda d_: Ls_rows, env_of=lambda d_: env, v1=v1, days=[day], expect=(e_, s_), tol=1e-6)
         with tempfile.TemporaryDirectory(dir=str(I.K.IO)) as tmp:
             try:
-                R, read = run(out=Path(tmp) / 'x', src=_Src(Ls[LEG_COLS]), tables=(O, Fl), rows_of=lambda d_: Ls_rows, env_of=lambda d_: env, v1=v1, days=[day],
-                              expect=(float(pf_['score'].sum() - pf_['null'].sum()), float(pf_['score'].sum())), tol=1e-6)
+                R, read = run(out=Path(tmp) / 'x', **base)
                 outs = sorted(p.name for p in (Path(tmp) / 'x').iterdir()); FLx = pd.read_parquet(Path(tmp) / 'x' / 'ledger_fills.parquet')
                 OLx = pd.read_parquet(Path(tmp) / 'x' / 'ledger_orders.parquet')
                 if not (read['V0 CONTROLS'] == 'YES' and len(FLx) == len(ri_) and len(OLx) == len(O) and R['link']['unlinked'] == 0 and R['link']['multi_event'] > 0
@@ -714,16 +872,34 @@ def selftest(rehearse=True):
                 want_ = np.where(P_.m50_fills.values == 0, 'no_m50_fill', np.where(g_.reindex(P_.oid.values).fillna(False).values.astype(bool), 'evaluable', 'not_evaluable'))
                 if not ((P_.decision_S1.values == want_).all() and R['decisions']['S1']['evaluable'] == int((OLx.decision_S1 == 'evaluable').sum()) > 0):
                     bad.append('rehearsal decisions differ from the ledger fills\' classes')
+                b37 = R['bounds'][f'S1|{KP.CANCEL:g}']
+                if not (b37['bounds'] in ('exact', 'outer') and sum(b37['fills'].values()) == b37['of_fills'] == len(ri_) and b37['units']['joint'] > 0):
+                    bad.append(f'rehearsal bounds metadata: {b37["bounds"]} {b37["units"]} {b37["fills"]}')
             except (SystemExit, ValueError) as e:
                 bad.append(f'rehearsal refused: {e}')
+            # review of c23e6f29: every candidate window contradicted and every replay time after its cap - ALL fills count, multi-event ones too
+            Lc = Ls.copy(); Lc['how'] = 1; Lc['t_ms'] = Lc.anc; Lc['t_e2'] = np.nan; Lc['exec_s'] = np.floor(Lc.anc / 1000.) - 10.
+            Lc_rows = Lc[RAW_COLS + ['tk', 'tk_status']].reset_index(drop=True); v1c, ec_, sc_, _ = _v1_expect(O, Fl, Lc)
+            try:
+                Rc, _ = run(out=Path(tmp) / 'c', **dict(base, src=_Src(Lc[LEG_COLS]), rows_of=lambda d_: Lc_rows, v1=v1c, expect=(ec_, sc_)))
+                if not (Rc['link']['multi_event'] > 0 and all(Rc['V3'][k]['fills']['all'] == len(ri_) and abs(Rc['V3'][k]['gross']['all'] - Rc['V3'][k]['of_gross']) < 1e-9
+                                                              for k in ('S1', 'S2', 'after_evidence'))):
+                    bad.append(f"all-contradictory case: {[(k, Rc['V3'][k]['fills']) for k in ('S1', 'S2', 'after_evidence')]} of {len(ri_)} fills")
+                if accounted({'x': dict(Rc['V3']['S1'], fills=dict(Rc['V3']['S1']['fills'], all=Rc['V3']['S1']['fills']['all'] - 1))}, len(ri_), Rc['V3']['S1']['of_gross']):
+                    bad.append('the contradiction accounting check does not fire on a lost fill')
+                Ro, ro = run(out=Path(tmp) / 'o', **dict(base, jcap=0))                       # every component forced to the outer relaxation
+                if not (Ro['bounds'][f'S1|{KP.CANCEL:g}']['bounds'] == 'outer' and Ro['bounds'][f'S1|{KP.CANCEL:g}']['units']['relaxed'] > 0
+                        and ro['V1 SIGN S1'].endswith('(OUTER BOUNDS)') and Ro['bounds'][f'S1|{KP.CANCEL:g}']['E_min'] <= R['bounds'][f'S1|{KP.CANCEL:g}']['E_min'] + 1e-9):
+                    bad.append('outer-relaxed bounds not labelled OUTER (or not containing the exact ones)')
+            except (SystemExit, ValueError) as e:
+                bad.append(f'all-contradictory / outer case refused: {e}')
             rb1 = Ls_rows.copy(); rb1.loc[0, 'shares'] += 1.; rb2 = Ls_rows.copy(); rb2.loc[0, 'tk'] = rb2.tk[0] + 1000 if rb2.tk[0] >= 0 else 7
-            v1b = {k: dict(v, E_min=v['E_min'] - 1.) for k, v in v1.items()}; e_ = float(pf_['score'].sum() - pf_['null'].sum()); s_ = float(pf_['score'].sum())
+            v1b = {k: dict(v, E_min=v['E_min'] - 1.) for k, v in v1.items()}
             for nm_, kw in (('a wrong collapsed expectation', dict(expect=(e_ + 1., s_))), ('a wrong v1 reference', dict(v1=v1b)),
                             ('a leg field that differs from its legs_timed2 row', dict(rows_of=lambda d_: rb1)), ('a leg whose event id breaks the taker-order rule', dict(rows_of=lambda d_: rb2))):
-                args = dict(src=_Src(Ls[LEG_COLS]), tables=(O, Fl), rows_of=lambda d_: Ls_rows, env_of=lambda d_: env, v1=v1, days=[day], expect=(e_, s_), tol=1e-6); args.update(kw)
                 o_ = Path(tmp) / ('y' + str(abs(hash(nm_)) % 1000))
                 try:
-                    run(out=o_, **args); bad.append(f'run accepted {nm_}')
+                    run(out=o_, **dict(base, **kw)); bad.append(f'run accepted {nm_}')
                 except SystemExit:
                     pass
                 if o_.exists():
@@ -731,8 +907,10 @@ def selftest(rehearse=True):
     if bad:
         sys.exit('EXEC-WINDOW SELFTEST FAILED: ' + ' | '.join(bad))
     print('exec-window selftests passed (synthetic only): classes incl. TIE / UNKNOWN / CONTRADICTORY; status timestamps refused as points; event intersection, '
-          'evidence cap and statuses; link candidates; the event sweep = a dense grid (3 latencies) and v1 on singletons; collapsed = the clock audit; cross-tab '
-          'conservation (and its falsifier); K0-K4 on planted cases (and a wrong identity refused); run() rehearsed end to end on a synthetic source', flush=True)
+          'evidence cap and statuses; link candidates; the event sweep = a dense grid (3 latencies) and v1 on singletons; the joint bounds = the review\'s '
+          'coherent [0, 10] (outer relaxation [-10, 20] labelled) and [0, 0]; per-fill contradiction status; collapsed = the clock audit; cross-tab '
+          'conservation (and its falsifier); K0-K3 instrument checks and K4 CONTRADICTED / CONSISTENT on planted cases (a wrong identity refused); '
+          'run() rehearsed end to end, the all-contradictory case counting every fill, four bad inputs refused', flush=True)
 
 
 if __name__ == '__main__':
