@@ -1,0 +1,8 @@
+09:36:41Z start xw_known
+09:36:46Z SCENARIOS known  DONE
+09:38:21Z start sc_selftest
+09:38:37Z start xw_run_20261023
+09:39:10Z skip xw_known (output exists)
+09:39:10Z start sc_day_20261023
+09:42:31Z start sc_report_20261023
+09:42:34Z SCENARIOS day 20261023 DONE
