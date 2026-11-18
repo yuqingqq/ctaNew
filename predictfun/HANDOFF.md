@@ -1,3 +1,11 @@
+## 2026-11-18 02:13Z (session aea5bfb9) — QUEUE PLACE LEDGER v2 RUN (USER: "Stop the monitor, do the next priority" - the review's next priority: the ledger's real-data reconciliation gate): L1 / L2 / L3 all YES; the 2,054 states and 60 rows accounted by status
+
+- What: run_queue_place_ledger.sh smoke (day 20261023, 12 markets: gap 12 = v1's there, 0 mismatches, 9 / 9 planted) then all (selftest, mutation check 29 / 29, Oct23-27 every market, report) on the claude slot; code b6eaa7c2 (provenance clean); ~118 s and ~1.05 GiB a day, report 11 s / 1.5 GiB. The relay cron job was stopped first (USER).
+- Readings: L1 LEDGER-COMPLETE YES; L2 V1-REPRODUCED YES (0 row mismatches; v1's eighteen readings re-derived from the ledger equal v1's file); L3 GAP-ACCOUNTED YES - the 2,054 counted states v1 skipped are missing_endpoint 1,920 + stale_future_book 134, by day 378 / 346 / 438 / 410 / 482, by contract minute 24 / 26 / 128 / 562 / 1,314 (near expiry the 5 s END mark has no valid quote); the 60 arm rows without a 2 s value are missing_endpoint. L4 COVERAGE-IMMATERIAL-AT-2S (2 s means move +0.087 / +0.046 / +0.013 c for JOIN / REST1 / IMPROVE); L5a tipping points inside the observed range (a sensitivity); L5b worst case at legal payoff bounds: REST1 SIGN-ROBUST-TO-EXCLUDED, JOIN / IMPROVE / REST1 - JOIN / IMPROVE - JOIN NOT-ROBUST-AT-PAYOFF-BOUNDS.
+- Reading: v1's saved-row means stand for the population they cover; the excluded states are expiry-heavy and, valued at 2 s, average +0.56 c (JOIN, 1,430 states) - including them moves the 2 s means by under 0.1 c. A complete-population sign claim at 5 s holds only for REST1; for JOIN and IMPROVE the excluded units could reverse it at their legal bounds (they have no 5 s value by definition).
+- Receipts: reviews/queue_place_ledger_20261117_v2 (report, per-day receipts, logs); tables in data/predict_fun/research/queue_place_20261117_v2 (hashes in the receipts). v1's files untouched.
+- Next: the corrected keep / pull measurement (run_keep_pull.sh smoke, then all) - on the USER's go.
+
 <!-- REVIEW_MONITOR_DIAGNOSIS_20261118 -->
 ## 2026-11-18 01:51 UTC Review monitor status corrected; newer fix not visible
 

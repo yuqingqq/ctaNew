@@ -1,0 +1,50 @@
+QUEUE PLACE LEDGER v2 (every counted unit has a row and a status; values are v1's, reconciled bit for bit); as of 2026-11-18T02:09:46Z
+
+PART A: the ledger (all five days)
+  markets selected 1,440: window 1,440
+  grid steps (every 100th decision step x side) 172,800: before_start_margin 2,880 | expiry_censored 2,880 | one_sided_book 15,786 | locked_or_crossed 26 | counted 151,228
+  counted states 151,228: 5 s path eligible 149,174 | stale_future_book 134 | missing_endpoint 1,920 || 2 s path eligible 150,568 | stale_future_book 74 | missing_endpoint 586
+    5 s eligible x 2 s missing_endpoint: 36
+    5 s missing_endpoint x 2 s eligible: 1,382
+    5 s missing_endpoint x 2 s missing_endpoint: 538
+    5 s stale_future_book x 2 s eligible: 48
+    5 s stale_future_book x 2 s missing_endpoint: 12
+    5 s stale_future_book x 2 s stale_future_book: 74
+  state arms (one row per arm per counted state): arm | 5 s status | 2 s status | eligible at 5 s but refused as post-only crossing (valued 0)
+    JOIN     eligible 149,174 | stale_future_book 134 | missing_endpoint 1,920 || eligible 150,568 | stale_future_book 74 | missing_endpoint 586 || refused 6,040
+    REST1    eligible 146,483 | stale_future_book 120 | missing_endpoint 1,105 | price_out_of_range 3,520 || eligible 147,323 | stale_future_book 73 | missing_endpoint 312 | price_out_of_range 3,520 || refused 1,603
+    IMPROVE  eligible 7,976 | stale_future_book 20 | missing_endpoint 86 | spread_lt_2 143,146 || eligible 8,048 | stale_future_book 12 | missing_endpoint 22 | spread_lt_2 143,146 || refused 2,526
+  births of a new best 1,012,121: before_start_margin 33,429 | expiry_censored 16,943 | not_sampled 846,549 | sampled 115,200; sampled by kind: improve 60,065 | deplete 55,135
+  event arms (one row per arm per sampled birth): arm | 5 s status | 2 s status | refused as post-only crossing | eligible with < 58 ms to END (never live)
+    FIRST  eligible 111,476 | stale_future_book 20 | missing_endpoint 343 | no_time_before_end 1 | gone_before_first 3,360 || eligible 111,762 | stale_future_book 3 | missing_endpoint 72 | no_time_before_end 3 | gone_before_first 3,360 || refused 10,473 | never live 0
+    LATE   eligible 111,462 | invalid_known_book 31 | stale_future_book 20 | missing_endpoint 326 | no_time_before_end 1 | gone_before_first 3,360 || eligible 111,749 | invalid_known_book 31 | stale_future_book 3 | missing_endpoint 54 | no_time_before_end 3 | gone_before_first 3,360 || refused 23,646 | never live 0
+    EARLY  eligible 22,300 | invalid_known_book 22 | stale_future_book 8 | missing_endpoint 90 | gone_before_first 1,722 | not_applicable_improve_birth 60,065 | early_no_known_book 13 | early_not_behind 16,398 | early_too_far 14,582 || eligible 22,367 | invalid_known_book 22 | stale_future_book 6 | missing_endpoint 25 | gone_before_first 1,722 | not_applicable_improve_birth 60,065 | early_no_known_book 13 | early_not_behind 16,398 | early_too_far 14,582 || refused 59 | never live 0
+    LATE price against the known best at its decision: at_or_behind 88,475 | inside 23,356 | no_known_book 9
+
+PART B: reconciliation with v1 by day: rows matched state / event / gone | mismatches | v1 counter - v1 saved states = gap | ledger states without an eligible 5 s arm (by status) | 5 s-eligible arm rows not eligible at 2 s | planted errors flagged
+  20261023: 61,202 / 48,947 / 735 | 0 | 30,466 - 30,088 = 378 | 378 ({'missing_endpoint': 354, 'stale_future_book': 24}) | 9 | 10 / 10
+  20261024: 62,489 / 49,252 / 729 | 0 | 30,704 - 30,358 = 346 | 346 ({'missing_endpoint': 334, 'stale_future_book': 12}) | 14 | 10 / 10
+  20261025: 60,102 / 49,314 / 708 | 0 | 29,996 - 29,558 = 438 | 438 ({'missing_endpoint': 398, 'stale_future_book': 40}) | 19 | 10 / 10
+  20261026: 60,539 / 49,128 / 597 | 0 | 30,242 - 29,832 = 410 | 410 ({'missing_endpoint': 374, 'stale_future_book': 36}) | 14 | 10 / 10
+  20261027: 59,301 / 49,459 / 591 | 0 | 29,820 - 29,338 = 482 | 482 ({'missing_endpoint': 460, 'stale_future_book': 22}) | 4 | 10 / 10
+  all days: gap 2,054 = {'missing_endpoint': 1920, 'stale_future_book': 134}; 5 s-eligible arm rows without a 2 s value 60 = {'missing_endpoint': 60}
+
+PART C: what the excluded states can change (c per order, M50)
+  arm | 5 s eligible n, mean | feasible arm excluded at 5 s n | 2 s mean on v1's subset (5 s-eligible), n | 2 s mean on every 2 s-eligible state, n | moved | states excluded at 5 s valued at 2 s n, mean | mean the excluded would need for a zero pooled 5 s mean vs the most extreme saved value
+    JOIN     149,174, -13.046 | 2,054 | -8.6057, 149,138 | -8.5187, 150,568 | +0.0871 | 1,430, +0.561 | +947.5 vs observed extreme +2,445.0 (a sensitivity) | worst case: saved sum -1,946,163, excluded at payoff bounds [-3,047,910, +3,114,090]
+    REST1    146,483, -13.889 | 1,225 | -7.8462, 146,459 | -7.8005, 147,323 | +0.0457 | 864, -0.055 | +1,660.8 vs observed extreme +2,475.0 (a sensitivity) | worst case: saved sum -2,034,500, excluded at payoff bounds [-2,986,290, +688,710]
+    IMPROVE  7,976, -7.229 | 106 | -5.0319, 7,976 | -5.0184, 8,048 | +0.0134 | 72, -3.529 | +544.0 vs observed extreme +2,415.0 (a sensitivity) | worst case: saved sum -57,659, excluded at payoff bounds [-158,310, +159,690]
+    R1 REST1 - JOIN: pairs 146,483, mean -0.568 | pairs excluded at 5 s 1,225 | mean they would need +67.9 vs the most extreme saved difference +1,545.0 (a sensitivity) | worst case: saved sum -83,172, excluded at payoff bounds [-3,638,250, +3,711,750]
+    R2 IMPROVE - JOIN: pairs 7,976, mean +5.613 | pairs excluded at 5 s 106 | mean they would need -422.3 vs the most extreme saved difference -1,938.9 (a sensitivity) | worst case: saved sum +44,767, excluded at payoff bounds [-321,180, +314,820]
+  counted states without a 5 s path by contract minute: 1: 24 of 31,666 | 2: 26 of 34,550 | 3: 128 of 34,156 | 4: 562 of 30,900 | 5: 1,314 of 19,956
+  by day: 20261023: 378 of 30,466 | 20261024: 346 of 30,704 | 20261025: 438 of 29,996 | 20261026: 410 of 30,242 | 20261027: 482 of 29,820
+
+READINGS (declared before the run)
+  L1 LEDGER-COMPLETE: YES (conservation identities at the run and recomputed from the saved files, every day)
+  L2 V1-REPRODUCED: YES (row mismatches 0; v1's readings re-implemented here equal v1's file: True; recomputed from the ledger equal v1's: True)
+  L3 GAP-ACCOUNTED: YES (2,054 states = {'missing_endpoint': 1920, 'stale_future_book': 134})
+  L4 COVERAGE-IMMATERIAL-AT-2S (move of the 2 s mean, c per order: JOIN +0.0871, REST1 +0.0457, IMPROVE +0.0134)
+  L5a TIPPING POINT (a sensitivity, not a bound) JOIN: TIP-INSIDE-OBSERVED-RANGE; REST1: TIP-INSIDE-OBSERVED-RANGE; IMPROVE: TIP-INSIDE-OBSERVED-RANGE; R1 REST1 - JOIN: TIP-INSIDE-OBSERVED-RANGE; R2 IMPROVE - JOIN: TIP-INSIDE-OBSERVED-RANGE
+  L5b WORST CASE (excluded units at their legal payoff bounds) JOIN: NOT-ROBUST-AT-PAYOFF-BOUNDS; REST1: SIGN-ROBUST-TO-EXCLUDED; IMPROVE: NOT-ROBUST-AT-PAYOFF-BOUNDS; R1 REST1 - JOIN: NOT-ROBUST-AT-PAYOFF-BOUNDS; R2 IMPROVE - JOIN: NOT-ROBUST-AT-PAYOFF-BOUNDS
+
+LIMITS: as v1 (consumed days; replay fill model, queue M unvalidated on live; one order held to END; EARLY ex post; FIRST / LATE / EARLY differ in exposure as well as queue place; common-endpoint values, not fill + 5 s markouts). The excluded states have no 5 s value by definition: L5a is a sensitivity against the observed range, L5b the only bound (legal payoffs, 30 sh, mark 0-100 c).

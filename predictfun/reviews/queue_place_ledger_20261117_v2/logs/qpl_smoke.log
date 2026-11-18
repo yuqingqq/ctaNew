@@ -1,0 +1,14 @@
+{"stage": "day", "day": "20261023", "m": 3655838, "state_arms": 300, "event_arms": 240, "seconds": 5, "rss": 641}
+{"stage": "day", "day": "20261023", "m": 3655842, "state_arms": 648, "event_arms": 480, "seconds": 5, "rss": 642}
+{"stage": "day", "day": "20261023", "m": 3656708, "state_arms": 912, "event_arms": 720, "seconds": 5, "rss": 642}
+{"stage": "day", "day": "20261023", "m": 3656744, "state_arms": 1260, "event_arms": 960, "seconds": 6, "rss": 643}
+{"stage": "day", "day": "20261023", "m": 3656746, "state_arms": 1608, "event_arms": 1200, "seconds": 6, "rss": 643}
+{"stage": "day", "day": "20261023", "m": 3656785, "state_arms": 1944, "event_arms": 1440, "seconds": 6, "rss": 644}
+{"stage": "day", "day": "20261023", "m": 3658167, "state_arms": 2166, "event_arms": 1680, "seconds": 7, "rss": 644}
+{"stage": "day", "day": "20261023", "m": 3658290, "state_arms": 2514, "event_arms": 1920, "seconds": 7, "rss": 645}
+{"stage": "day", "day": "20261023", "m": 3658348, "state_arms": 2784, "event_arms": 2160, "seconds": 7, "rss": 645}
+{"stage": "day", "day": "20261023", "m": 3658378, "state_arms": 3132, "event_arms": 2400, "seconds": 7, "rss": 645}
+{"stage": "day", "day": "20261023", "m": 3658556, "state_arms": 3480, "event_arms": 2640, "seconds": 8, "rss": 646}
+{"stage": "day", "day": "20261023", "m": 3658559, "state_arms": 3762, "event_arms": 2880, "seconds": 8, "rss": 646}
+{"day": "20261023", "stat": {"markets": 12, "windows": 12, "loader_selected": 12, "loader_no_frames": 0, "grid": 1440, "counted": 1254, "births_all": 9137, "sampled": 960, "first_ok": 919, "parity_checked": 23, "parity_bad": 0, "mut_checked": 23, "mut_differs": 23}, "reconciliation": {"state_rows": 2539, "event_rows": 2023, "gone_rows": 41, "states_without_eligible_5s_arm": 12, "states_without_eligible_5s_arm_by_status": {"missing_endpoint": 12}, "v1_saved_states": 1242, "arm_rows_5s_eligible_2s_not": 0, "arm_rows_5s_eligible_2s_not_by_status": {}, "v1_state_rows_without_2s_value": 0}, "planted": {"v1_value_moved_1e-9": true, "v1_row_dropped": true, "ledger_arm_row_dropped": true, "ledger_grid_row_dropped": true, "ledger_status_without_value": true, "ledger_grid_status_swapped": true, "ledger_birth_status_swapped": true, "ledger_arm_price_moved": true, "ledger_time_to_end_moved": true}, "seconds": 9}
+2026-11-18T01:55:25Z tag=qpl_smoke rc=0 peak_rss_mib=782 wall_s=9.81 cpu_user_s=6.43 memavail_start_gib=23 disk_free_gib=453->453 slot=claude

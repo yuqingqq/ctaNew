@@ -1,3 +1,16 @@
+queue_place_ledger_20261117_v2_run:
+  status: done_gate_passed
+  asof: "2026-11-18 02:13Z"
+  session: aea5bfb9
+  user: "Stop the monitor, do the next priority"
+  code: b6eaa7c2
+  readings: {L1: "YES", L2: "YES", L3: "YES", L4: COVERAGE-IMMATERIAL-AT-2S, L5a: "TIP-INSIDE-OBSERVED-RANGE (all)", L5b: "REST1 SIGN-ROBUST-TO-EXCLUDED; JOIN, IMPROVE, REST1 - JOIN, IMPROVE - JOIN NOT-ROBUST-AT-PAYOFF-BOUNDS"}
+  gap: {states: 2054, missing_endpoint: 1920, stale_future_book: 134, arm_rows_without_2s: 60, by_minute: [24, 26, 128, 562, 1314]}
+  receipts: predictfun/reviews/queue_place_ledger_20261117_v2
+  resources: "~118 s and ~1.05 GiB a day; report 11 s / 1.5 GiB; claude slot"
+  running: false
+  next: "keep / pull measurement (run_keep_pull.sh smoke, then all) on the USER's go"
+
 review_monitor_diagnosis_20261118:
   status: scan_timestamp_fixed_newer_target_not_visible
   asof: "2026-11-18T01:51:06Z"
@@ -147,6 +160,7 @@ keep_pull_20261117:
   next: "USER go -> run_keep_pull.sh smoke, then all (after or independent of the ledger runs)"
 
 queue_place_ledger_20261117_v2:
+  run: "2026-11-18 02:13Z done_gate_passed (see queue_place_ledger_20261117_v2_run)"
   fixed_after_review: "b6eaa7c2 (review 7008362b; see review_fixes_ledger_keep_pull_20261117)"
   status: code_committed_awaiting_go
   asof: "2026-11-17 13:09Z"

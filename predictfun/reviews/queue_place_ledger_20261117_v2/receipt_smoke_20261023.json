@@ -1,0 +1,77 @@
+{
+  "asof": "2026-11-18T01:55:35.485066+00:00",
+  "day": "20261023",
+  "limit": 12,
+  "markets": 12,
+  "stat": {
+    "markets": 12,
+    "windows": 12,
+    "loader_selected": 12,
+    "loader_no_frames": 0,
+    "grid": 1440,
+    "counted": 1254,
+    "births_all": 9137,
+    "sampled": 960,
+    "first_ok": 919,
+    "parity_checked": 23,
+    "parity_bad": 0,
+    "mut_checked": 23,
+    "mut_differs": 23
+  },
+  "conservation_violations": [],
+  "reconciliation_mismatches": [],
+  "reconciliation": {
+    "state_rows": 2539,
+    "event_rows": 2023,
+    "gone_rows": 41,
+    "states_without_eligible_5s_arm": 12,
+    "states_without_eligible_5s_arm_by_status": {
+      "missing_endpoint": 12
+    },
+    "v1_saved_states": 1242,
+    "arm_rows_5s_eligible_2s_not": 0,
+    "arm_rows_5s_eligible_2s_not_by_status": {},
+    "v1_state_rows_without_2s_value": 0
+  },
+  "planted_errors_flagged": {
+    "v1_value_moved_1e-9": true,
+    "v1_row_dropped": true,
+    "ledger_arm_row_dropped": true,
+    "ledger_grid_row_dropped": true,
+    "ledger_status_without_value": true,
+    "ledger_grid_status_swapped": true,
+    "ledger_birth_status_swapped": true,
+    "ledger_arm_price_moved": true,
+    "ledger_time_to_end_moved": true
+  },
+  "v1": {
+    "receipt_asof": "2026-11-17T06:38:30.882612+00:00",
+    "rows": "bdabb4e619e34e11aa6334649e38c8e9be91ce905956c3859f27e62024170192",
+    "stat": {
+      "parity_checked": 556,
+      "parity_bad": 0,
+      "mut_checked": 555,
+      "mut_differs": 555,
+      "births": 22305,
+      "states": 30466
+    }
+  },
+  "provenance": {
+    "commit": "99d17541e05e8f6cdc7a2d1bd31c28bd64da5fe5",
+    "source": {
+      "pf_queue_place_ledger.py": "8fa16b929b4ae497109a70add4036dd7cd4501102a261c74eba63de0e0b94bb5",
+      "pf_queue_place_test.py": "188c1495ce35db80ce8b79cbc50541964d0d32d9da38fee4b925e951eec01a1f",
+      "pf_flow_control_kernel.cpp": "fb1ff31cdcf2a97783283f927fb2d56333a0760e877cb0b93348528138886612",
+      "pf_flow_control_kernel.py": "2460567474f28318f5d09df8ce0977e15748bb9263bc501471cf6a649b334379"
+    },
+    "uncommitted": ""
+  },
+  "outputs": {
+    "markets.parquet": "55ef2a53a6de4714af604ddf9f81d8b1c9e8ea62182dff4f400f5f301095906c",
+    "grid.parquet": "b8274350f4797ad6b43bef975e339a767d4995227044e1d6af0c094921d4a33e",
+    "state_arms.parquet": "38c3ec09094e757c4c72f1bb46b9d3b20482bcf05316b287e915e4f5f89472be",
+    "births.parquet": "735e5651a1092cc0eb8f6f81eb35b2ddb8b4cd2ba0eff7cc0eaba40f40da35fc",
+    "event_arms.parquet": "29c32a8295b293d3c4d368576eacf8ffcffa689b6102c2d118dd3241adae3428"
+  },
+  "seconds": 8.863373279571533
+}
