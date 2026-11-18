@@ -34,14 +34,13 @@ v2 of the known-order check (the earlier outputs stay as provenance):
    10 s, (S + 1) * 1000]; a WS leg's window is the hull over EVERY value-consistent pending increment in that range (the link's identity is
    by value, not signed); E2 and REST-only legs keep the REST range (the drop search could not reach the match). S1 / S2 stay as the
    program's declared ranges and measured envelopes - their contradictions are findings, not repaired.
-SETTLEMENT TIMES (v4 / known v3; USER: "Can you clear the issues"): every REST match record's settlementId is a UUIDv7 whose first 48 bits are
-the venue's creation time in ms (pf_settlement_times extracts it per leg; one settlement per taker order). K8 tests it on the known legs (the
-kernel's trade id IS the settlementId): inside the Matched second, after placement, before the first notice, and one constant d = t_set -
-match (bot clock) fitting every leg of each run (the research anchor fails this test). From K8: the ST windows [t_set - L, t_set] with L =
-d_hi - K7 lo (premise-light: the id is created at or after the match); the clock offset venue - bot = d if the id is stamped at the match (a
-second offset basis for K6); per fill the notice delay; per order the cancel effect after every match and the activation before the first
-(K5S). The ledger adds ST (bounds, classes, contradictions) and PART 5: the timing sources and the declared windows against the venue's own
-timestamp on every public leg of the day, and the replay's own point against it.
+SETTLEMENT-LAG CORRECTION (v5 / known v4; review 52c45d57, USER: "Can we fix this issue"):
+UUIDv7 records ID creation, whose delay after matching can differ per event. K8 keeps one shared clock offset and a nonnegative lag for
+EACH leg. The identity-linked first notice bounds creation from above; the known lifecycle bounds matching. A feasible constant total
+delay is retained only as a conditional diagnostic. No sample-derived maximum is transferred to public trades. ST is upper-only by
+default (creation after match and aligned clocks are still premises); an explicit finite lag is a labelled sensitivity assumption.
+K5S and notice bounds use the full admissible known-lifecycle intervals. An upper-only ST gate is UNIDENTIFIED, not evidence of acceptance.
+Earlier v4/v3 receipts remain provenance and must not be read as corrected timing evidence.
 
 WHAT CHANGES FROM v1 (the review / addendum item each answers)
  1 Population (P2-1, item 4): v1 split ALL fills of the score's pulled orders and called it removed value. Now a cross-tab: replay ordering
@@ -165,8 +164,9 @@ import pf_keep_pull_timing_audit as V1                    # noqa: E402  v1 (d1de
 import pf_settlement_times as SETT                        # noqa: E402  the settlementId's UUIDv7 time per leg (11-18)
 
 C, pd, I = KP.C, KP.pd, KP.I
-OUT = Path(I.K.IO) / 'keep_pull_exec_windows_v4_20261118'  # v4 (settlement times); v2 / v3 outputs stay as provenance
-OUT_K = Path(I.K.IO) / 'keep_pull_exec_windows_known_v3_20261118'
+OUT = Path(I.K.IO) / 'keep_pull_exec_windows_v5_20261118'  # v5: event-specific creation lag; earlier receipts stay as provenance
+OUT_K = Path(I.K.IO) / 'keep_pull_exec_windows_known_v4_20261118'
+SETTLEMENT_MODEL = 'shared_clock_event_specific_nonnegative_lag_v2'
 FC = Path(I.K.IO) / 'fill_clock_20261109'                 # the 11-09 fill-clock audit (own legs, lifecycles, status stamps)
 LIVE = Path('/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/live_vs_replay')
 NOV8 = LIVE.parent / 'research' / 'step1' / '20261108'     # Nov 8's own research tables (legs_timed2 / legs_tk pinned by the 11-09 declaration)
@@ -213,7 +213,7 @@ BASIS = {('S1', 0): ('latest WS pending source time over the legs - 250 ms', 'ea
          ('S2', 1): ('latest E2 book-drop estimate over the legs - h', 'earliest E2 book-drop estimate over the legs + h'),
          ('S2', 2): ('latest REST second over the legs + q01 (status-centred assumption)', 'earliest REST second over the legs + q99 (status-centred assumption)'),
          ('S2', 3): ('the latest start of its WS and E2 legs\' windows', 'the earliest end of its WS and E2 legs\' windows'),
-         **{('ST', c): ('the latest start over its legs\' ST windows (a leg with a settlement time: t_set - the lag bound; otherwise its S3 window)',
+         **{('ST', c): ('latest leg lower bound: mapped UUID has none unless an explicit lag scenario is supplied; unmapped legs retain S3 assumptions',
                         'the earliest end over its legs\' ST windows (t_set, else the S3 end)') for c in range(4)},
          **{('S3', c): ('the latest start over its legs\' S3 windows (a WS leg: its earliest value-consistent pending increment - 250 ms; otherwise its REST '
                         'Confirmed second - REST_LAG)', 'the earliest end over its legs\' S3 windows (a WS leg: its latest value-consistent increment; otherwise its '
@@ -238,7 +238,7 @@ SCHEMA = {
                         S3_ncand='value-consistent pending increments in its REST range (a WS leg)',
                         link_late='its linked WS increment is later than its REST cap + 250 ms (the link contradicts S3\'s premises)',
                         t_set_ms='its settlement time (the settlementId\'s UUIDv7 ms, pf_settlement_times), venue settlement clock', set_status='its settlement status (pf_settlement_times.STATUS)',
-                        ST_llo='its ST window start (t_set - the lag bound; no settlement time: its S3 start), venue_ms', ST_lhi='its ST window end (t_set, else its S3 end)',
+                        ST_llo='ST lower endpoint: -inf (unidentified) for mapped UUID by default; finite only for an explicit lag scenario or S3 fallback, venue_ms', ST_lhi='its ST window end (t_set, else its S3 end)',
                         ST_code='0 its settlement time, 1 its S3 window (no settlement time)'),
     'ledger_fill_events': dict(fid='fill (ledger_fills.fid)', day='UTC day', group='candidate event (ledger_events.group)', e='candidate event index'),
     'ledger_fills': dict(fid='fill id', day='UTC day', oid='order (ledger_orders.oid)', m='market', side='side', p='order price', t0='order posting time, venue_ms',
@@ -254,7 +254,7 @@ SCHEMA_PREFIX = {'ledger_events': {'S1_': 'S1 window (the program declared range
                                           '(BOUND_TYPES) / lo_basis, hi_basis (the observation each endpoint comes from)',
                                    'S2_': 'S2 window (measured envelopes AND the REST cap): the same fields as S1_',
                                    'S3_': 'S3 window (the semantics windows: REST range, value-consistent WS increments, AND the REST cap): the same fields as S1_',
-                                   'ST_': 'ST window (the settlement time - the lag bound .. the settlement time, AND the REST cap): the same fields as S1_',
+                                   'ST_': 'ST window (upper-only UUID by default, or explicit lag assumption; S3 fallback; AND the REST cap): same fields as S1_',
                                    'EV_': 'EV window (evidence only), venue_ms: lo (-inf: unknown) / hi (the REST cap) / st / types / bases'},
                  'ledger_fills': {'cls_': 'ordering class (ORD) per scenario and cancel window (CP / CR), -1 not pulled',
                                   'contra_': 'per-fill status over ALL its candidate events (CST): S1 / S2 / S3 contradictory timing assumptions (any; _cap the '
@@ -273,7 +273,8 @@ def schema_doc(tables):
         return SCHEMA.get(t, {}).get(c) or next(v for x, v in SCHEMA_PREFIX.get(t, {}).items() if c.startswith(x))
     return dict(tables={t: {c: d(t, c) for c in cols} for t, cols in tables.items()}, bound_types=list(BOUND_TYPES), window_status=list(WST), contradiction_status=list(CST),
                 ordering=list(ORD), link=list(LINK), evidence_class=list(EVC), basis={f'{k}|{EVC[c]}': list(v) for (k, c), v in BASIS.items()}, cap_basis=CAP_BASIS,
-                rep_rule=REP_RULE, clocks=CLOCKS, timestamp_semantics=TS_SEM, s3=dict(codes=list(SEM_CODES), rest_lag_ms=REST_LAG, ws_delay_ms=WS_DELAY,
+                rep_rule=REP_RULE, clocks=CLOCKS, timestamp_semantics=TS_SEM, settlement_model=SETTLEMENT_MODEL,
+                settlement_premises=['UUID created at/after matching', 'UUID and book/status clocks aligned'], s3=dict(codes=list(SEM_CODES), rest_lag_ms=REST_LAG, ws_delay_ms=WS_DELAY,
                                                                                        value_tolerance=list(VAL_TOL)))
 JCAP = 256                                                # identity assignments enumerated per component; above it the labelled outer relaxation
 LEG_COLS = ['mid', 'side', 'anc', 'ptick', 'shares', 'how', 't_ms', 't_e2', 'exec_s', 'row_id', 'group']
@@ -370,10 +371,13 @@ def day_sem(day, rows):
 
 
 def st_windows(t_set, s3lo, s3hi, lag):
-    """ST per leg: [t_set - lag, t_set] where the leg has a settlement time (the id is created at or after the match, at most `lag` ms after:
-    K8's bound), else its S3 window. -> (lo, hi, code 0 settlement / 1 S3)."""
+    """UUID creation gives an upper bound only, conditional on creation after matching and aligned venue clocks.
+    A finite lag is an explicitly supplied scenario assumption, never inferred from K8. Missing IDs retain S3's labelled assumptions.
+    -> (lo, hi, code 0 UUID / 1 S3). No mapped leg has a finite lower bound by default."""
+    C.require(lag is None or (np.isfinite(lag) and lag >= 0.), 'ST lag must be an explicit finite nonnegative scenario assumption or None')
     t = np.asarray(t_set, float); f = np.isfinite(t)
-    return np.where(f, t - lag, s3lo), np.where(f, t, s3hi), np.where(f, 0, 1).astype(np.int8)
+    lower = np.full(t.shape, -np.inf) if lag is None else t - lag
+    return np.where(f, lower, s3lo), np.where(f, t, s3hi), np.where(f, 0, 1).astype(np.int8)
 
 
 def set_of(day):
@@ -384,27 +388,29 @@ def set_of(day):
 
 
 def known_lag(out=None):
-    """ST's lag bound from the known-order check (K8 consistent), and its receipt hash."""
+    """Read the corrected known receipt; no sampled per-leg bound is transferable to public trades.
+    Refuse the old common-offset receipt instead of silently reusing its 259 ms bound. -> (None, receipt hash)."""
     p = Path(out or OUT_K) / 'known.json'; j = json.loads(p.read_text()); k8 = j['R'].get('K8') or {}
-    C.require(bool(k8.get('consistent')) and k8.get('lag_bound_ms') is not None, 'no consistent settlement-time check (K8) to bound the ST lag')
-    return float(k8['lag_bound_ms']), {str(p): C.sha(p)}
+    C.require(k8.get('model') == SETTLEMENT_MODEL and bool(k8.get('consistent')) and k8.get('lag_bound_ms') is None,
+              'legacy or inconsistent K8 receipt: no transferable ST lag bound; rebuild the known ledger')
+    return None, {str(p): C.sha(p)}
 
 
 def settlement_diag(R_, t, lag, env):
     """On the day's legs (R_: day_rows + their S3 / ST windows) with a settlement time t: the REST cap and the Confirmed lag; the WS pending delay
-    t_ms - t_set per link type and the E2 estimate's error; per scenario the share of legs whose window holds the settlement time (lag 0) or
-    meets [t_set - lag, t_set] - S1's, S2's and S3's premises tested on public trades."""
+    t_ms - t_set per link type and E2-minus-creation differences; window overlap with ST. These differences mix clock offset and
+    event delays; they do not independently establish clock alignment, match-time error, or link correctness."""
     m = np.isfinite(t); how = R_.how.values; tms = R_.t_ms.values.astype(float); te2 = R_.t_e2.values.astype(float); S = R_.exec_s.values.astype(float) * 1000.
     pct = lambda x: {f'p{q}': float(np.percentile(x, q)) for q in (1, 5, 50, 95, 99)} if len(x) else {}
     out = dict(legs=int(len(R_)), with_t_set=int(m.sum()), rest_cap_violations=int((t[m] > S[m] + 1000.).sum()), rest_second_minus_t_set_ms=pct((S - t)[m]))
     for nm, mk in (('ws_leg_link', how == 1), ('ws_cell_link', how == 2)):
         x = (tms - t)[m & mk & np.isfinite(tms)]
-        out[f'{nm}_minus_t_set_ms'] = dict(n=int(len(x)), **pct(x), below_minus_lag=float((x < -lag).mean()) if len(x) else None, over_250=float((x > 250.).mean()) if len(x) else None,
+        out[f'{nm}_minus_t_set_ms'] = dict(n=int(len(x)), **pct(x), below_minus_lag=float((x < -lag).mean()) if len(x) and lag is not None else None, over_250=float((x > 250.).mean()) if len(x) else None,
                                            over_1000=float((x > 1000.).mean()) if len(x) else None)
     x = (te2 - t)[m & (how == 0) & np.isfinite(te2)]; out['e2_minus_t_set_ms'] = dict(n=int(len(x)), **pct(x), abs_over_600=float((np.abs(x) > 600.).mean()) if len(x) else None)
     _, W = leg_windows(R_.assign(h=env['h'], q01=env['q01'], q99=env['q99'])); hold = {}
     for k in ('S1', 'S2', 'S3'):
-        lo, hi = W[k]; hold[k] = dict(holds_t_set=float(((lo <= t) & (t <= hi))[m].mean()), meets_st=float(((lo <= t) & (hi >= t - lag))[m].mean()))
+        lo, hi = W[k]; hold[k] = dict(holds_t_set=float(((lo <= t) & (t <= hi))[m].mean()), meets_st=float(((lo <= t) & (hi >= R_.ST_llo.values))[m].mean()))
     out['windows_vs_settlement'] = hold
     return out
 
@@ -430,7 +436,7 @@ def events_of(L):
     c_ = E.cls.values.astype(int)
     for k in ('S1', 'S2', 'S3', 'ST'):
         st = E[f'{k}_st'].values
-        E[f'{k}_lo_type'] = np.where(st >= 2, 'contradictory', 'assumption_range')
+        E[f'{k}_lo_type'] = np.where(st >= 2, 'contradictory', np.where(np.isneginf(E[f'{k}_lo']), 'unknown', 'assumption_range'))
         E[f'{k}_hi_type'] = np.where(st >= 2, 'contradictory', np.where(st == 1, 'evidence_bound', 'assumption_range'))
         E[f'{k}_lo_basis'] = np.array([BASIS[k, x][0] for x in c_], dtype=object)
         E[f'{k}_hi_basis'] = np.where(st == 1, CAP_BASIS, np.array([BASIS[k, x][1] for x in c_], dtype=object))
@@ -817,10 +823,10 @@ def run(out=OUT, src=None, tables=None, rows_of=None, env_of=None, v1=None, days
              events=len(EVT), events_by_cls={EVC[c]: int((EVT.cls == c).sum()) for c in range(4)}, events_multi_side=int((EVT.sides > 1).sum()),
              legs=len(LG), legs_tk_status={str(s): int(v) for s, v in LG.tk_status.value_counts().items()}, env=env, collapsed_E=e0, score=s0, v1_regression=reg,
              xtab=X, bounds={f'{k}|{lat:g}': v for (k, lat), v in B.items()}, coverage=cov, decisions=dec, V3=V3, sim_removed=float(-val[pl & removed].sum()),
-             sim_kept=float(-val[pl & ~removed].sum()), disagreement=DIS, s3=dict(semst, rest_lag_ms=REST_LAG, ws_delay_ms=WS_DELAY), st_lag_ms=st_lag, settlement=sdiag)
+             sim_kept=float(-val[pl & ~removed].sum()), disagreement=DIS, s3=dict(semst, rest_lag_ms=REST_LAG, ws_delay_ms=WS_DELAY), st_lag_ms=st_lag, settlement_model=SETTLEMENT_MODEL, st_lag_role='UNIDENTIFIED' if st_lag is None else 'EXPLICIT_SCENARIO_ASSUMPTION', settlement=sdiag)
     mt = np.isfinite(LG.t_set_ms.values); x = (LG.anc.values - SHIFT - LG.t_set_ms.values)[mt]                   # the replay's own point against the settlement time
     R['replay_point_minus_t_set_ms'] = dict(legs=int(mt.sum()), **({f'p{q}': float(np.percentile(x, q)) for q in (1, 5, 50, 95, 99)} if len(x) else {}),
-                                            inside_st=float(((x >= -st_lag) & (x <= 0.)).mean()) if len(x) else None, beyond_1s=float((np.abs(x) > 1000.).mean()) if len(x) else None)
+                                            inside_st=float(((x >= (-st_lag if st_lag is not None else -np.inf)) & (x <= 0.)).mean()) if len(x) else None, beyond_1s=float((np.abs(x) > 1000.).mean()) if len(x) else None)
     # the ledger tables (all built, documented and checked before anything is written)
     ix = pd.Series(np.arange(len(E)), index=pd.MultiIndex.from_arrays([E.day.values, E.oid.values])); f50 = Fl[Fl.clock == SHIFT]
     q50 = f50.q.values[~np.isnan(ix.reindex(pd.MultiIndex.from_arrays([f50.day.values, f50.oid.values])).values)]; C.require(len(q50) == n, 'fill quantities misaligned')
@@ -898,14 +904,14 @@ def report(R, read, days):
         f"admissible under S3 {v['admissible_under_S3']:,}" for k, v in R['disagreement'].items()))
     L.append('  S3 leg bases ' + ' | '.join(f"{d}: day {v['day_legs']} (links later than the REST cap + 250 ms {v['day_link_late']:,}); event legs {v['event_legs']}"
                                            for d, v in R['s3'].items() if isinstance(v, dict)))
-    L += ['', f"PART 5 - SETTLEMENT TIMES (the settlementId's UUIDv7 ms; ST lag bound {R['st_lag_ms']:.1f} ms from the known check's K8): the timing sources and the "
+    L += ['', f"PART 5 - SETTLEMENT TIMES (the settlementId's UUIDv7 ms; ST lag {R['st_lag_ms']} ms, role {R['st_lag_role']}): the timing sources and the "
           'declared windows against the venue\'s own timestamp']
     for d, v in R['settlement'].items():
         L.append(f'  {d}: ' + json.dumps(v))
     L.append(f"  the replay's own point (anchor - 50 ms) minus the settlement time, on the fills' event legs: {R['replay_point_minus_t_set_ms']}")
     L += ['', 'READINGS (declared before any data was read)'] + [f'  {k}: {v}' for k, v in read.items()] + [
-          '', 'EVIDENCE: the settlementId\'s UUIDv7 time is the venue\'s own timestamp of each trade (K8: inside the Matched second, after placement and before the '
-          'notice on every own leg); ST places the match at most the lag bound before it. The REST executedAt is the Confirmed status (an upper bound only); the WS '
+          '', 'EVIDENCE: the settlementId\'s UUIDv7 time records ID creation, not a proven match instant. ST has no lower bound unless an explicit scenario lag is supplied. '
+          'Creation at/after matching and clock alignment remain premises. The REST executedAt is the Confirmed status (an upper bound only); the WS '
           'pending link is by value; cancel effect and activation are configured points.', 'LIMITS: consumed days; one declared rule; STATES is local selection; M50 quantities held; S1 / S2 / S3 / CR are assumption '
           f'ranges (S3: the match within {REST_LAG / 1000:g} s of its Confirmed second, a WS leg\'s increment carries its value, book and REST stamps on one clock); '
           'the REST-to-book clock alignment is not established.']
@@ -946,7 +952,7 @@ CASE_PREFIX = {'known_cases': {**{f'{k}_': f'{k}: the leg\'s verdict (VERD) at o
                                             'at some admissible offset' for k in KSC},
                                'K4_': 'K4 (v1\'s proxy: the engine anchor Z +- 250 / 600 ms): missed / CANCEL_FIRST per width; Z - place and Z - upper, ms (venue vs bot clock at '
                                       'offset 0; NaN: no anchor)',
-                               'K8_': 'K8: the match on the bot clock from the settlement time, [t_set - d_hi, t_set - d_lo], ms'},
+                               'K8_': 'K8 under event-specific nonnegative creation lag: match_lo/hi_bot from lifecycle plus shared clock bounds; creation_lag_lo/hi for this identified leg only, ms (not transferable)'},
                'known_case_rows': {**{f'{k}_': f'{k}: the event window (lo / hi, venue ms) and status (st)' for k in KSC},
                                    'own_': 'the row\'s own window per scenario (its own source alone, capped by its own REST second), venue ms'}}
 
@@ -1045,7 +1051,7 @@ def order_path(K, mlo=None, mhi=None):
     (premise: the effect precedes its first confirmation - the HTTP Canceled answer or the user-stream cancel - being received) against
     CANCEL_RANGE. A confirmation bounds the effect from above only: a late one is not a slow effect. Its source, the user-stream receipt, the
     core's CancelDone and a throttle are kept apart; a confirmation before its request (core and kernel clocks disagree) is a status. With the
-    fills' match bounds on the bot clock (mlo / mhi per leg, K8): activation <= its first match, and the cancel takes effect after every match
+    fills' match bounds on the bot clock (mlo / mhi per leg, K8's lifecycle plus shared-clock constraints): activation <= its first match, and the cancel takes effect after every match
     of the order (a cancelled order cannot fill) - the _set columns and counts."""
     U = K.drop_duplicates(['run', 'cid']).reset_index(drop=True); pl = U.place.values.astype(float)
     a_lo = np.where(np.isfinite(U.signed.values.astype(float)), np.maximum(U.signed.values.astype(float) - pl, 0.), 0.); a_hi = U.accepted.values.astype(float) - pl
@@ -1086,30 +1092,51 @@ def offset_interval(K):
 
 
 def settlement_checks(K, off):
-    """K8 on the known legs' settlement times (t_set: the settlementId's UUIDv7 ms; the kernel's trade id IS the settlementId): version 7 on
-    every leg; floor(t_set / 1000) = its Matched stamp; d = t_set - match (bot clock) lies per leg in [t_set - upper, t_set - place], and ONE
-    constant d must fit every leg of each run and of both (the research anchor fails this test, K4). CONSISTENT -> the bounds it gives: the
-    match on the bot clock in [t_set - d_hi, t_set - d_lo] per leg; the settlement lag bound L = d_hi - K7 lo (the id is created at most L ms
-    after the match, given K7's offset bound and a lag >= 0 - premise-light, used by the ST windows); the clock offset venue - bot = d if the
-    id is stamped at the match (the settlement premise); the fill-notice delay per fill against the replay's 100 ms. -> (R, mlo, mhi, off8)."""
-    t = K.t_set.values.astype(float); v7 = np.isfinite(t); fl = v7 & (np.floor(t / 1000.) == K.M.values.astype(float))
-    lo_, hi_ = t - K.upper.values.astype(float), t - K.place.values.astype(float)
+    """K8: t_set_i = match_i_bot + delta + lag_i, with one clock delta and independent lag_i >= 0.
+    Premises: UUID created at/after matching; UUID/status clock aligned; K7 bounds delta. A feasible common total delay is only a
+    diagnostic/conditional scenario. It cannot bound individual lags. Known matches retain their lifecycle lower bounds; public matches
+    acquire no lower bound. Return (R, known match lows, known match highs, conditional zero-lag clock interval).
+    """
+    t = K.t_set.values.astype(float); place = K.place.values.astype(float); upper = K.upper.values.astype(float)
+    v7 = np.isfinite(t); fl = v7 & (np.floor(t / 1000.) == K.M.values.astype(float))
+    lo_, hi_ = t - upper, t - place
     per_run = {}
     for r in sorted(K.run.unique()):
         m = (K.run.values == r) & v7
         per_run[str(r)] = dict(lo=float(lo_[m].max()), hi=float(hi_[m].min()), exists=bool(lo_[m].max() <= hi_[m].min()), legs=int(m.sum())) if m.any() else dict(exists=False, legs=0)
     d_lo, d_hi = (float(np.nanmax(lo_)), float(np.nanmin(hi_))) if v7.any() else (np.inf, -np.inf)
-    ok = bool(v7.all() and fl.all() and d_lo <= d_hi and all(v['exists'] for v in per_run.values()))
-    R = dict(legs=len(K), v7=int(v7.sum()), floor_is_matched_second=int(fl.sum()), after_place_at_0=int((t > K.place.values).sum()), before_notice_at_0=int((t < K.notice.values).sum()),
-             inside_lifecycle_at_0=int(((t >= K.place.values) & (t <= K.upper.values)).sum()), d=dict(lo=d_lo, hi=d_hi, exists=bool(d_lo <= d_hi)), d_per_run=per_run, consistent=ok)
+    notice = K.notice.values.astype(float)
+    complete = bool(v7.all() and len(K) and np.isfinite(place).all() and np.isfinite(upper).all() and np.isfinite(notice).all())
+    # The identity-linked first notice already contains this UUID: creation precedes receipt.
+    clock_lo = max(float(off['lo']), float(np.nanmax(t - notice))) if off['exists'] and complete else np.nan
+    clock_hi = min(float(off['hi']), d_hi) if off['exists'] else np.nan
+    ok = bool(complete and off['exists'] and np.isfinite(clock_lo) and np.isfinite(clock_hi)
+              and clock_lo <= clock_hi and np.all(place <= upper))
+    clock = dict(lo=clock_lo, hi=clock_hi, exists=ok, includes_zero=bool(ok and clock_lo <= 0. <= clock_hi))
+    R = dict(model=SETTLEMENT_MODEL, legs=len(K), v7=int(v7.sum()), floor_is_matched_second=int(fl.sum()),
+             after_place_at_0=int((t > place).sum()), before_notice_at_0=int((t < K.notice.values).sum()),
+             inside_lifecycle_at_0=int(((t >= place) & (t <= upper)).sum()),
+             d=dict(lo=d_lo, hi=d_hi, exists=bool(d_lo <= d_hi)), d_per_run=per_run,
+             common_d_role='conditional constant-total-delay fit, not the event-lag model or an acceptance gate',
+             consistent=ok, status='COMPATIBLE' if ok else ('CONTRADICTED' if complete and off['exists'] else 'UNIDENTIFIED'),
+             clock_offset=clock, lag_bound_ms=None, universal_lag_status='UNIDENTIFIED',
+             assumptions=['UUID creation at or after matching', 'UUID and status stamps share a clock',
+                          'the identity-linked first notice already contains this UUID', 'K7 clock and lifecycle premises'],
+             evidence_gate='NOT_ESTABLISHED_BY_SAME_SAMPLE_COMPATIBILITY')
+    off8 = dict(lo=np.nan, hi=np.nan, exists=False, includes_zero=False)
     if not ok:
-        return R, None, None, dict(lo=np.nan, hi=np.nan, exists=False, includes_zero=False)
-    mlo, mhi = t - d_hi, t - d_lo; nd_lo, nd_hi = K.notice.values.astype(float) - mhi, K.notice.values.astype(float) - mlo
+        return R, None, None, off8
+    mlo, mhi = place.copy(), np.minimum(upper, t - clock_lo)
+    lag_lo = np.maximum(0., t - clock_hi - upper); lag_hi = t - clock_lo - place
+    nd_lo, nd_hi = K.notice.values.astype(float) - mhi, K.notice.values.astype(float) - mlo
     ns = interval_status(nd_lo, nd_hi, (KP.NOTICE, KP.NOTICE))
-    R.update(lag_bound_ms=float(d_hi - off['lo']) if off['exists'] else None, offset_settlement_premise=dict(lo=d_lo, hi=d_hi, includes_zero=bool(d_lo <= 0. <= d_hi)),
+    zlo, zhi = max(d_lo, clock_lo), min(d_hi, clock_hi)
+    off8 = dict(lo=zlo, hi=zhi, exists=bool(zlo <= zhi), includes_zero=bool(zlo <= 0. <= zhi))
+    R.update(known_leg_lag_ms=dict(lo=lag_lo.tolist(), hi=lag_hi.tolist(), scope='these identified lifecycles only; not a public-trade bound'),
+             offset_settlement_premise=dict(off8, premise='CONDITIONAL: zero UUID creation lag on every leg'),
              notice_delay_ms=dict(lo_min=float(nd_lo.min()), lo_p50=float(np.median(nd_lo)), hi_p50=float(np.median(nd_hi)), hi_max=float(nd_hi.max()),
                                   vs_replay_point={str(x): int((ns == x).sum()) for x in sorted(set(ns.tolist()))}, replay_point_ms=KP.NOTICE))
-    return R, mlo, mhi, dict(lo=d_lo, hi=d_hi, exists=True, includes_zero=bool(d_lo <= 0. <= d_hi))
+    return R, mlo, mhi, off8
 
 
 def window_checks(K, KE, off, scen=KSC, tag=''):
@@ -1195,25 +1222,32 @@ def known_checks(K, ref, KE=None, draws=200, seed=20261118):
     read['K5 ORDER-PATH INTERVALS vs DECLARED RANGES'] = ('CONTRADICTED' if k5['activation'].get('CONTRADICTED', 0) + k5['cancel'].get('CONTRADICTED', 0) > 0
                                                           else 'NOT-CONTRADICTED')
     if k8 is not None:
-        read['K8 SETTLEMENT TIME'] = 'CONSISTENT' if k8['consistent'] else 'CONTRADICTED'
+        read['K8 SETTLEMENT TIME'] = k8['status']
         if k8['consistent']:
             o8 = k8['offset_settlement_premise']; nd = k8['notice_delay_ms']['vs_replay_point']
-            read['K8 CLOCK OFFSET (settlement premise: the id stamped at the match)'] = f"[{o8['lo']:+.1f}, {o8['hi']:+.1f}] ms, " + ('CONTAINS 0' if o8['includes_zero'] else 'EXCLUDES 0')
+            read['K8 CLOCK OFFSET (settlement premise: the id stamped at the match)'] = ('CONDITIONAL ' + str(o8))
+            read['K8 UNIVERSAL CREATION-LAG BOUND'] = k8['universal_lag_status']
             read['K8 FILL-NOTICE DELAY vs the replay 100 ms'] = (f"CONTRADICTED on {nd.get('CONTRADICTED', 0)} of {k8['legs']} fills" if nd.get('CONTRADICTED', 0) else 'NOT-CONTRADICTED')
             read['K5S ORDER PATH WITH SETTLEMENT TIMES'] = ('CONTRADICTED' if k5['activation_with_settlement'].get('CONTRADICTED', 0) + k5['cancel_with_settlement'].get('CONTRADICTED', 0) > 0
                                                          else 'NOT-CONTRADICTED')
-    st_ok = KE is not None and k8 is not None and k8['consistent'] and k8.get('lag_bound_ms') is not None
-    if st_ok:                                                 # ST on the known legs: [t_set - L, t_set] of the leg's own settlement (one per taker order)
-        tl = K.t_set.values.astype(float)[KE.i.values.astype(np.int64)]; L_ = k8['lag_bound_ms']
-        KE = KE.assign(ST_lo=tl - L_, ST_hi=tl, ST_st=0, own_ST_lo=tl - L_, own_ST_hi=tl)
+    st_ok = KE is not None and k8 is not None and k8['consistent']
+    if st_ok:                                                 # Upper-only UUID windows; do not fit a public lower bound to these lifecycles.
+        tl = K.t_set.values.astype(float)[KE.i.values.astype(np.int64)]
+        hi_ = np.minimum(tl, KE.EV_hi.values.astype(float))
+        KE = KE.assign(ST_lo=-np.inf, ST_hi=hi_, ST_st=0, own_ST_lo=-np.inf, own_ST_hi=hi_)
     scen_ = tuple(k for k in KSC if k != 'ST' or st_ok)
-    k6, cols = window_checks(K, KE, off, scen_) if KE is not None else (None, {})
+    off_eval = k8['clock_offset'] if k8 is not None and k8['consistent'] else off
+    k6, cols = window_checks(K, KE, off_eval, scen_) if KE is not None else (None, {})
     k6s, cols_s = window_checks(K, KE, off8, scen_, tag='_set') if KE is not None and off8['exists'] else (None, {})
     if k6 is not None:
         for k in GATE:
             read[f'K6 GATE {k}'] = ('PASS' if k6[k]['false_cancel_first']['some_offset'] == 0 else 'FAIL') if k in k6 else 'NOT-RUN'
             if k6s is not None:
                 read[f'K6 GATE {k} (settlement offsets)'] = ('PASS' if k6s[k]['false_cancel_first']['some_offset'] == 0 else 'FAIL') if k in k6s else 'NOT-RUN'
+        if st_ok:
+            read['K6 GATE ST'] = 'UNIDENTIFIED-UPPER-BOUND-ONLY'
+            if k6s is not None:
+                read['K6 GATE ST (settlement offsets)'] = 'UNIDENTIFIED-UPPER-BOUND-ONLY'
         m = k6['M50']; read['K6 REPLAY POINT M50'] = ('CONSISTENT' if m['false_cancel_first']['at_offset_0'] == 0 and m['verdict_at_offset_0']['missed_before']
                                                       + m['verdict_at_offset_0']['missed_after'] == 0 else 'CONTRADICTED')
     inst = all(read[x] == 'YES' for x in ('K0 REPRODUCES 11-09', 'K1 CLASSIFIER-CONSISTENCY', 'K2 DELAYED-STATUS-REFUSED', 'K3 IDENTITY-CHECK-FIRES'))
@@ -1222,7 +1256,7 @@ def known_checks(K, ref, KE=None, draws=200, seed=20261118):
     read['KNOWN VERDICT'] = (('INSTRUMENT-CHECKS-PASS' if inst else 'INSTRUMENT-CHECK-FAILED') + '; REPLAY-ANCHOR-' + read['K4 REPLAY-ANCHOR-VS-LIFECYCLE']
                              + '; SETTLEMENT-TIME ' + read.get('K8 SETTLEMENT TIME', 'NOT-RUN') + '; LEDGER-WINDOW GATE ' + gate + ' (settlement offsets: ' + gate_s + ')'
                              + '; ORDER-PATH RANGES ' + read['K5 ORDER-PATH INTERVALS vs DECLARED RANGES'] + '; NOT A VENUE-ENGINE ACCEPTANCE')
-    k8c = dict(K8_match_lo_bot=mlo, K8_match_hi_bot=mhi) if mlo is not None else {}
+    k8c = dict(K8_match_lo_bot=mlo, K8_match_hi_bot=mhi, K8_creation_lag_lo=k8['known_leg_lag_ms']['lo'], K8_creation_lag_hi=k8['known_leg_lag_ms']['hi']) if mlo is not None else {}
     R = dict(legs=len(K), orders=int(K.drop_duplicates(['run', 'cid']).shape[0]), cancelled=int(can.sum()), K0=k0, K0_ref=ref, K1=k1, K2=k2, K3=k3, K4=k4, K5=k5, K6=k6,
              K6_settlement_offsets=k6s, K7=off, K8=k8, _orders=PO, _legs=dict(k4c, **cols, **cols_s, **k8c), _KE=KE)
     if KE is not None:
@@ -1234,7 +1268,7 @@ def known_checks(K, ref, KE=None, draws=200, seed=20261118):
 
 
 def known_report(R, read, KC=None):
-    L = ['KNOWN-ORDER CASE LEDGER v3 (pf_keep_pull_exec_windows.py known; the 11-09 fill-clock audit\'s confirmed own maker legs, consumed Nov 8; review of 1fd77004 + settlement times)',
+    L = ['KNOWN-ORDER CASE LEDGER v4 (pf_keep_pull_exec_windows.py known; the 11-09 fill-clock audit\'s confirmed own maker legs, consumed Nov 8; review of 1fd77004 + settlement times)',
          f"  {R['legs']} legs of {R['orders']} orders: {R['K4']['S1']['anchored']} with an engine anchor, {R['K4']['S1']['no_anchor']} without (ambiguous leg clocks); "
          f"{R['cancelled']} legs on orders with a cancel confirmation. Bot clock: lifecycle, cancel request / confirmation, notice receipts; venue clocks: REST / Matched / "
          'Confirmed stamps, WS / E2 times and the windows',
@@ -1257,11 +1291,11 @@ def known_report(R, read, KC=None):
     if k8 is not None:
         L.append(f"  K8 settlement time (the trade id's UUIDv7 ms) on {k8['legs']} legs: version 7 {k8['v7']}; floor = the Matched second {k8['floor_is_matched_second']}; "
                  f"after placement {k8['after_place_at_0']}, before the first notice {k8['before_notice_at_0']}, inside the lifecycle {k8['inside_lifecycle_at_0']} (offset 0); "
-                 f"one constant d = t_set - match (bot) {k8['d']} (per run {k8['d_per_run']}); consistent {k8['consistent']}")
+                 f"conditional constant-d fit {k8['d']} (per run {k8['d_per_run']}); independent-lag model {k8['status']}")
         if k8['consistent']:
-            L.append(f"    -> lag bound (premise-light, K7) {k8['lag_bound_ms']} ms; clock offset if the id is stamped at the match {k8['offset_settlement_premise']}; "
+            L.append(f"    -> universal lag bound UNIDENTIFIED; shared clock {k8['clock_offset']}; conditional zero-lag clock {k8['offset_settlement_premise']}; "
                      f"fill-notice delay {k8['notice_delay_ms']}")
-            L.append(f"    -> K5 with the settlement times: activation {k5.get('activation_with_settlement')} (smallest upper bound {k5.get('smallest_activation_upper_with_settlement_ms')} ms); "
+            L.append(f"    -> K5 with lifecycle/clock/independent-lag bounds: activation {k5.get('activation_with_settlement')} (smallest upper bound {k5.get('smallest_activation_upper_with_settlement_ms')} ms); "
                      f"cancel {k5.get('cancel_with_settlement')} ({k5.get('orders_with_a_match_after_the_request')} orders matched after their request, largest lower bound "
                      f"{k5.get('largest_cancel_lower_bound_ms')} ms)")
     if R.get('K6') is not None:
@@ -1281,7 +1315,7 @@ def known_report(R, read, KC=None):
     L += ['', 'READINGS (declared before the data was read)'] + [f'  {k}: {v}' for k, v in read.items()] + [
           '', 'LIMITS: one consumed partial day; filled orders only (an outcome-selected sample); the premises of K5 (activation before the Accepted answer; the cancel '
           'effect before its confirmation) and of K7 (notices after their status; floor-second stamps) are stated, not proven; book-to-status clock alignment not '
-          'established; development evidence - Nov 8 is not untouched validation.']
+          'established; UUID creation after matching and a shared UUID/status clock are premises; upper-only ST cannot certify match-vs-cancel ordering; development evidence - Nov 8 is not untouched validation.']
     return L
 
 
@@ -1435,11 +1469,12 @@ def _s3_selftest():
             (d0 / 'settlement.json').write_text(json.dumps(dict(rec, R=dict(controls=dict(C1=False))))); r1 = _refused_v(lambda: set_of('20990101'))
             (d0 / 'settlement.json').write_text(json.dumps(rec)); pd.DataFrame(dict(t_set_ms=[2., np.nan], set_status=[0, 1])).to_parquet(d0 / 'legs_set.parquet', index=False)
             r2 = _refused_v(lambda: set_of('20990101'))
-            (Path(tmp) / 'known.json').write_text(json.dumps(dict(R=dict(K8=dict(consistent=True, lag_bound_ms=100.))))); ok2 = known_lag(tmp)[0] == 100.
-            (Path(tmp) / 'known.json').write_text(json.dumps(dict(R=dict(K8=dict(consistent=False, lag_bound_ms=100.))))); r3 = _refused_v(lambda: known_lag(tmp))
+            (Path(tmp) / 'known.json').write_text(json.dumps(dict(R=dict(K8=dict(model=SETTLEMENT_MODEL, consistent=True, lag_bound_ms=None))))); ok2 = known_lag(tmp)[0] is None
+            (Path(tmp) / 'known.json').write_text(json.dumps(dict(R=dict(K8=dict(consistent=True, lag_bound_ms=100.))))); r3 = _refused_v(lambda: known_lag(tmp))
+            (Path(tmp) / 'known.json').write_text(json.dumps(dict(R=dict(K8=dict(model=SETTLEMENT_MODEL, consistent=False, lag_bound_ms=None))))); r4 = _refused_v(lambda: known_lag(tmp))
         finally:
             SETT.OUT = old
-        if not (ok1 and r1 and r2 and ok2 and r3):
+        if not (ok1 and r1 and r2 and ok2 and r3 and r4):
             bad.append(f'settlement file / lag bound readers: {ok1} {r1} {r2} {ok2} {r3}')
     Dd = disagreement(Ld, events_of(Ld), 'S1')
     if Dd != dict(events=2, binding_pair={'rest_second|ws_leg_link': 1, 'ws_cell_link|ws_leg_link': 1}, different_rest_seconds=1,
@@ -1530,16 +1565,73 @@ def _k6_selftest():
     ref_t = dict(rest_floor_nonoverlap=int(miss(Kt.S.values * 1000., Kt.S.values * 1000. + 999.999, Kt).sum()),
                  matched_floor_nonoverlap=int(miss(*window_from('matched_status_s', Kt.M.values), Kt).sum()))
     Rt, rt = known_checks(Kt, ref_t, KE, draws=10); k8 = Rt['K8']; k5 = Rt['K5']
-    if not (k8['consistent'] and k8['d'] == dict(lo=-10., hi=0., exists=True) and rt['K8 SETTLEMENT TIME'] == 'CONSISTENT'
-            and k8['lag_bound_ms'] == 0. - Rt['K7']['lo'] and k8['notice_delay_ms']['lo_min'] == 140. and 'K8 FILL-NOTICE DELAY vs the replay 100 ms' in rt
-            and k5['orders_with_a_match_after_the_request'] == 1 and k5['largest_cancel_lower_bound_ms'] == 50. and Rt['_orders'].cancel_status_set.tolist()[1] == 'CERTIFIED'
-            and k5['smallest_activation_upper_with_settlement_ms'] == 10. and 'ST' in Rt['K6'] and rt['K6 GATE ST'] == 'PASS' and Rt['K6']['ST']['false_cancel_first']['at_offset_0'] == 0
-            and 'K6 GATE S1 (settlement offsets)' in rt and np.allclose(Rt['_legs']['K8_match_hi_bot'], ts_ + 10.)):
+    if not (k8['consistent'] and k8['d'] == dict(lo=-10., hi=0., exists=True) and rt['K8 SETTLEMENT TIME'] == 'COMPATIBLE'
+            and k8['lag_bound_ms'] is None and k8['universal_lag_status'] == 'UNIDENTIFIED' and k8['notice_delay_ms']['lo_min'] == 100.
+            and k5['orders_with_a_match_after_the_request'] == 0 and k5['largest_cancel_lower_bound_ms'] == 0.
+            and k5['smallest_activation_upper_with_settlement_ms'] == 30. and rt['K6 GATE ST'] == 'UNIDENTIFIED-UPPER-BOUND-ONLY'
+            and Rt['K6']['ST']['false_cancel_first']['at_offset_0'] == 0 and 'K6 GATE S1 (settlement offsets)' in rt
+            and np.allclose(Rt['_legs']['K8_match_hi_bot'] - B_, [200., 10250., 10260., 20250., 31100., 40100.])
+            and np.array_equal(Rt['_legs']['K8_match_lo_bot'], Kt.place.values)):
         bad.append(f"K8 on planted settlement times: {k8} {k5.get('cancel_with_settlement')} {rt}")
-    for nm_, kt in (('a settlement time far after its lifecycle', Kt.assign(t_set=ts_ + np.r_[5000., np.zeros(5)], M=np.floor((ts_ + np.r_[5000., np.zeros(5)]) / 1000.))),
-                    ('a settlement time outside its Matched second', Kt.assign(M=Kt.M + np.r_[1., np.zeros(5)]))):
+    for nm_, kt in (('creation after its containing notice at every admissible clock', Kt.assign(t_set=ts_ + np.r_[5000., np.zeros(5)])),
+                    ('creation before placement at every admissible clock', Kt.assign(t_set=ts_ - np.r_[5000., np.zeros(5)]))):
         if known_checks(kt, ref_t, KE, draws=10)[1].get('K8 SETTLEMENT TIME') != 'CONTRADICTED':
             bad.append(f'K8 accepted {nm_}')
+    return bad
+
+
+def _settlement_selftest():
+    """Independent variable-lag worlds, invalid clocks/receipts, non-transferability, and order-path propagation."""
+    bad = []; b = 1_800_000_000_000.
+    K = pd.DataFrame(dict(run='r', cid=['a', 'b'], place=b, upper=b + np.array([40., 900.]),
+                          t_set=b + np.array([30., 800.]), M=b / 1000., notice=b + 1000.,
+                          signed=b + 1., accepted=b + 30., req=[np.nan, b + 200.], ack=[np.nan, b + 900.],
+                          ucancel=np.nan, cdone=np.nan, thr=np.nan))
+    off = dict(lo=0., hi=0., exists=True)
+    R, lo, hi, z = settlement_checks(K, off)
+    if not (R['consistent'] and R['lag_bound_ms'] is None and R['known_leg_lag_ms']['hi'] == [30., 800.]
+            and np.array_equal(lo - b, [0., 0.]) and np.array_equal(hi - b, [30., 800.])):
+        bad.append(f'variable-lag bounds: {R}')
+    else:
+        for matches in ([10., 780.], [20., 100.]):  # constant 20 ms lag, or independent 10/700 ms lags
+            m = b + np.array(matches)
+            if not np.all((lo <= m) & (m <= hi)):
+                bad.append(f'compatible true matches excluded: {matches}')
+        P, _ = order_path(K, lo, hi)
+        if not (P.cancel_lo_set.iloc[1] == 0. and P.cancel_hi.iloc[1] == 700.
+                and P.cancel_status_set.iloc[1] == 'COMPATIBLE-UNIDENTIFIED'
+                and R['notice_delay_ms']['hi_max'] == 1000.):
+            bad.append('variable creation lag falsely certifies slow cancellation or bounds notice to 230 ms')
+    # No common total-delay fit, yet both observations allow independent nonnegative delays.
+    delayed = K.copy(); delayed.loc[1, 'upper'] = b + 110.
+    rr, ll, hh, zz = settlement_checks(delayed, off)
+    if not (rr['consistent'] and not rr['d']['exists'] and not zz['exists'] and ll[1] <= b + 100. <= hh[1]):
+        bad.append('common-d nonexistence rejected a valid variable-lag world')
+    # Matched-second equality is descriptive, not a premise of nonnegative variable lag.
+    later = K.copy(); later.loc[1, 't_set'] = b + 1800.; later.loc[1, 'notice'] = b + 2000.
+    rr, _, _, _ = settlement_checks(later, off)
+    if not (rr['consistent'] and rr['floor_is_matched_second'] == 1):
+        bad.append('later-second creation discarded or floor disagreement hidden')
+    for case in (K.assign(t_set=[b - 1., b + 800.]), K.assign(notice=[b + 10., b + 1000.]), K.assign(upper=[b - 1., b + 900.])):
+        if settlement_checks(case, off)[0]['consistent']:
+            bad.append('impossible creation/lifecycle/receipt accepted')
+    for clock in (dict(lo=1., hi=0., exists=True), dict(lo=0., hi=0., exists=False)):
+        if settlement_checks(K, clock)[0]['consistent']:
+            bad.append('inconsistent or unidentified clock accepted')
+    # Distinguish the order of two tranches when provided independently justified match intervals.
+    tranches = pd.concat([K.iloc[[1]], K.iloc[[1]]], ignore_index=True)
+    P, _ = order_path(tranches, b + np.array([230., 350.]), b + np.array([240., 360.]))
+    if P.cancel_lo_set.iloc[0] != 150.:
+        bad.append('per-order cancellation must follow its latest tranche')
+    P, _ = order_path(K, b + np.array([10., 100.]), b + np.array([15., 110.]))
+    if P.act_hi_set.iloc[0] != 15.:
+        bad.append('independently justified first match must bound activation')
+    low, high, _ = st_windows([800., np.nan], [50., 60.], [900., 1000.], None)
+    if not (np.isneginf(low[0]) and high[0] == 800. and low[1] == 60. and high[1] == 1000.):
+        bad.append('public UUID window invented a lower bound or lost labelled fallback')
+    for lag in (-1., np.nan, np.inf):
+        if not _refused_v(lambda: st_windows([800.], [0.], [900.], lag)):
+            bad.append('invalid explicit lag assumption accepted')
     return bad
 
 
@@ -1715,7 +1807,7 @@ def selftest(rehearse=True):
         bad.append('a wrong identity passes K3')
     if case_gaps({'known_cases': ['run', 'S3_verdict', 'zzz'], 'known_orders': ['cid', 'act_lo']}) != ['known_cases.zzz']:
         bad.append('the case-ledger column check: an undocumented column must be named, the documented ones accepted')
-    bad += _k6_selftest() + _s3_selftest()
+    bad += _k6_selftest() + _s3_selftest() + _settlement_selftest()
     if rehearse and not bad:
         O, Fl, Ls, Ps = _synthetic(rng); day = '20990101'; Ls_rows = Ls[RAW_COLS + ['tk', 'tk_status']].reset_index(drop=True)
         env = dict(h=600., q01=-900., q99=1050., inputs={}); v1, e_, s_, aux = _v1_expect(O, Fl, Ls); ri_, t_, val_, act_, r_ = (aux[k] for k in ('ri', 't', 'val', 'act', 'r'))

@@ -65,7 +65,7 @@ MUT = [
     ('known verdict ignores K4', "'; REPLAY-ANCHOR-' + read['K4 REPLAY-ANCHOR-VS-LIFECYCLE']", "'; REPLAY-ANCHOR-CONSISTENT'"),
     # --- explicit bound types, bases, representative time, the column dictionary
     ('an evidence-capped upper bound labelled an assumption', "np.where(st == 1, 'evidence_bound', 'assumption_range')", "np.where(st == 1, 'assumption_range', 'assumption_range')"),
-    ('contradictory endpoints labelled assumptions', "E[f'{k}_lo_type'] = np.where(st >= 2, 'contradictory', 'assumption_range')", "E[f'{k}_lo_type'] = np.where(st >= 9, 'contradictory', 'assumption_range')"),
+    ('contradictory endpoints labelled assumptions', "E[f'{k}_lo_type'] = np.where(st >= 2, 'contradictory', np.where(np.isneginf(E[f'{k}_lo']), 'unknown', 'assumption_range'))", "E[f'{k}_lo_type'] = np.where(st >= 9, 'contradictory', 'assumption_range')"),
     ('the evidence cap basis dropped', "E[f'{k}_hi_basis'] = np.where(st == 1, CAP_BASIS,", "E[f'{k}_hi_basis'] = np.where(st == 99, CAP_BASIS,"),
     ('representative time without its rule shift', "E['rep_time'], E['rep_rule'] = E.anc - SHIFT, REP_RULE", "E['rep_time'], E['rep_rule'] = E.anc, REP_RULE"),
     ('undocumented columns accepted', "if c not in SCHEMA.get(t, {}) and not any(", "if False and c not in SCHEMA.get(t, {}) and not any("),
@@ -133,19 +133,21 @@ MUT = [
     ('the case ledger accepts undocumented columns', "if c not in CASE_SCHEMA.get(t, {}) and not any(", "if False and c not in CASE_SCHEMA.get(t, {}) and not any("),
     # --- settlement times: K8, K5S, ST, the readers, PART 5
     ('K8 floor test not applied', "fl = v7 & (np.floor(t / 1000.) == K.M.values.astype(float))", "fl = v7"),
-    ('K8 constant offset not required', "ok = bool(v7.all() and fl.all() and d_lo <= d_hi and all(v['exists'] for v in per_run.values()))", "ok = bool(v7.all() and fl.all())"),
-    ('K8 lag bound without the K7 lower bound', "R.update(lag_bound_ms=float(d_hi - off['lo']) if off['exists'] else None,", "R.update(lag_bound_ms=float(d_hi) if off['exists'] else None,"),
-    ('K8 match bounds swapped', "mlo, mhi = t - d_hi, t - d_lo;", "mlo, mhi = t - d_lo, t - d_hi;"),
+    ('K8 inconsistent shared clock accepted', "and clock_lo <= clock_hi and np.all(place <= upper)", "and np.all(place <= upper)"),
+    ('K8 common fit promoted to universal lag', "clock_offset=clock, lag_bound_ms=None", "clock_offset=clock, lag_bound_ms=d_hi - clock_lo"),
+    ('K8 common fit replaces independent lag bounds', "mlo, mhi = place.copy(), np.minimum(upper, t - clock_lo)", "mlo, mhi = t - d_hi, t - d_lo"),
     ('K5S cancel bound from the earliest match', "last_lo = g.mlo.max().reindex(key).values", "last_lo = g.mlo.min().reindex(key).values"),
     ('K5S activation ignores the first match', "a_hi_s = np.fmin(a_hi, first_hi - pl)", "a_hi_s = a_hi"),
-    ('ST windows without the lag (a point)', "    return np.where(f, t - lag, s3lo), np.where(f, t, s3hi), np.where(f, 0, 1).astype(np.int8)",
+    ('ST windows without the lag (a point)', "    return np.where(f, lower, s3lo), np.where(f, t, s3hi), np.where(f, 0, 1).astype(np.int8)",
      "    return np.where(f, t, s3lo), np.where(f, t, s3hi), np.where(f, 0, 1).astype(np.int8)"),
     ('the settlement-premise offsets never evaluated', "k6s, cols_s = window_checks(K, KE, off8, scen_, tag='_set') if KE is not None and off8['exists'] else (None, {})", "k6s, cols_s = (None, {})"),
     ('the replay point against the settlement time without its shift', "x = (LG.anc.values - SHIFT - LG.t_set_ms.values)[mt]", "x = (LG.anc.values - LG.t_set_ms.values)[mt]"),
     ('the WS delay measured from the REST second', "x = (tms - t)[m & mk & np.isfinite(tms)]", "x = (tms - S)[m & mk & np.isfinite(tms)]"),
     ('the settlement file read without its receipt', "C.require(C.sha(d / 'legs_set.parquet') == r['outputs']['legs_set.parquet'], 'settlement times changed since their receipt')", "pass"),
     ('settlement controls not required', "C.require(all(r['R']['controls'].values()), 'settlement times without passed controls')", "pass"),
-    ('the ST lag taken from an inconsistent K8', "C.require(bool(k8.get('consistent')) and k8.get('lag_bound_ms') is not None,", "C.require(k8.get('lag_bound_ms') is not None,"),
+    ('an inconsistent K8 receipt accepted', "and bool(k8.get('consistent')) and k8.get('lag_bound_ms') is None", "and k8.get('lag_bound_ms') is None"),
+    ('ST upper-only window becomes a point', "lower = np.full(t.shape, -np.inf) if lag is None else t - lag", "lower = t.copy() if lag is None else t - lag"),
+    ('same-sample upper-only gate falsely passes', "read['K6 GATE ST'] = 'UNIDENTIFIED-UPPER-BOUND-ONLY'", "read['K6 GATE ST'] = 'PASS'"),
 ]
 STALE = 97                                                # exit code of a replacement target that does not occur as declared
 

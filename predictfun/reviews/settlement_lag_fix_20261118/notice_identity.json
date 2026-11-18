@@ -1,0 +1,12 @@
+{
+  "asof": "2026-11-18T11:45:22.434257+00:00",
+  "known_legs": 99,
+  "matched_rows": 99,
+  "input_sha256": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/fill_clock_20261109/fill_events.parquet": "3b82661b26a6255612b106807843609dd2e6719fd4c4f56c795f72562c2f9675",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_known_v3_20261118/known_cases.parquet": "c4f6f5d1ce5e44805e58cf0e82ea060410b70cd77f5c61989caa4d8ebf36528d"
+  },
+  "all_first_notice_times_present_on_exact_order_and_trade_identity": true,
+  "source_asof": "2026-11-18T10:56:10.677848+00:00",
+  "consumed_day": "20261108"
+}

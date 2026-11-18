@@ -1,0 +1,32 @@
+{
+  "asof": "2026-11-18T11:43:28.467662+00:00",
+  "model": "shared_clock_event_specific_nonnegative_lag_v2",
+  "source_sha256": "951354dd71883e827ed74180939ca78c19596c9ef11067c90141caabfca9f20f",
+  "known_receipt": {
+    "path": "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_known_v4_20261118/known.json",
+    "sha256": "740f8d65354c61b0c2817355c5834685ddb9f514b710d9692b330df766e937f8"
+  },
+  "superseded": {
+    "predictfun/reviews/keep_pull_settlement_day20261023/known.json": {
+      "sha256": "812696c8434d421a1700d6e239050745ac18eb73a532061083c756da315d6407",
+      "status": "LEGACY_TIMING_PREMISE_WITHDRAWN; saved values remain conditional scenarios; not corrected economic evidence"
+    },
+    "predictfun/reviews/keep_pull_settlement_day20261023/exec_windows.json": {
+      "sha256": "99040535b855931a41b634d4c2719286e358a3e47660b4acb1e47b7f3e226778",
+      "status": "LEGACY_TIMING_PREMISE_WITHDRAWN; saved values remain conditional scenarios; not corrected economic evidence"
+    },
+    "predictfun/reviews/keep_pull_settlement_day20261023/scenarios_20261023.json": {
+      "sha256": "7faf5d8759247bf8ebebad86afce6a8510efe298e57e11ad9b7b4aaf34592a2f",
+      "status": "LEGACY_TIMING_PREMISE_WITHDRAWN; saved values remain conditional scenarios; not corrected economic evidence"
+    },
+    "predictfun/reviews/keep_pull_settlement_day20261023/scenario_day_receipt.json": {
+      "sha256": "22d387ac0c4fb327a98cf5dd09bbb62ae345924f9922c8415b596fbce987a4e6",
+      "status": "LEGACY_TIMING_PREMISE_WITHDRAWN; saved values remain conditional scenarios; not corrected economic evidence"
+    }
+  },
+  "claimed_259ms_bound": "WITHDRAWN",
+  "default_public_match_lower_bound": "UNIDENTIFIED",
+  "simulation_timing_validated": false,
+  "full_tape_or_training_run": false,
+  "untouched_validation_read": false
+}

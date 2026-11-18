@@ -1,3 +1,25 @@
+<!-- SETTLEMENT_LAG_CORRECTION_20261118 -->
+## Correction — variable settlement creation lag, 2026-11-18
+
+User-authorized fix of review 52c45d57's P1 is implemented. [Report and checks](reviews/settlement_lag_fix_20261118/report.md);
+[supersession receipt](reviews/settlement_lag_fix_20261118/supersession.json).
+K8 uses one clock offset plus an independent nonnegative creation lag per leg.
+The first identity-linked notice bounds UUID creation; known lifecycles bound
+matching. Common-d feasibility is only a conditional diagnostic. Public UUID
+windows have no finite lower endpoint by default: the 259 ms transferable
+maximum and “10 definite slow cancels” inference are withdrawn. C23's earlier
+assertion of validated match-time semantics is not established. The timestamp
+is retained as creation evidence under explicit event/clock premises.
+Known v4 (consumed Nov8, 99 legs / 86 orders, as of 2026-11-18T11:43:28.451761Z):
+65 of 77 confirmed cancels bounded within 100 ms, 12 compatible-unidentified;
+zero slow-cancel contradictions from the corrected bounds. The remaining
+nine orders have no confirmation. ST's gate now says UNIDENTIFIED-UPPER-BOUND-ONLY;
+STlo is omitted; finite lag inputs are explicit sensitivity assumptions.
+Two full synthetic suites, 200 variable-lag worlds and 10/10 targeted mutants
+pass; no new economic replay, training or validation. Code inference fixed;
+venue timing/queue behavior and profitability remain unvalidated. Next gate:
+independent timestamp/clock evidence before narrower economic labels.
+
 <!-- MANUAL_REVIEW_20261118_084D5A19 -->
 ## Manual fix review — timestamp inference, 2026-11-18
 

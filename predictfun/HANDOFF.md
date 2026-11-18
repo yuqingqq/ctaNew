@@ -1,3 +1,35 @@
+<!-- SETTLEMENT_LAG_CORRECTION_20261118 -->
+## Settlement-lag inference fixed — 2026-11-18 (user: “Can we fix this issue”)
+
+The user authorized implementation after review 52c45d57. K8 now separates
+shared clock offset from event-specific nonnegative UUID-creation lag; the
+common-d fit remains conditional, and no sampled maximum becomes a public-trade
+bound. [Correction report](reviews/settlement_lag_fix_20261118/report.md),
+[superseding receipt](reviews/settlement_lag_fix_20261118/supersession.json),
+[known v4](reviews/settlement_lag_fix_20261118/known.json).
+The 259 ms universal bound and the claim of 10 definite slow cancels are
+withdrawn. ST is upper-only by default; its known gate is UNIDENTIFIED, and
+STlo is omitted from the default replay. Legacy K8/scenario receipts refuse;
+new output paths: exec_windows_v5, known_v4, scenarios_v4 (20261118).
+
+Consumed Nov8, 99 legs / 86 orders, as of 2026-11-18T11:43:28.451761Z:
+65 of 77 confirmed cancellations are bounded within 100 ms; 12 remain
+compatible-unidentified, none contradicted; nine orders lack confirmations.
+One activation-range contradiction remains (+21.165 ms acceptance); the
+100 ms notice point is excluded on 87 legs, unidentified on 12. The shared
+clock interval is [-147.838,+32.641] ms under the stated premises, with the
+lower bound using the exact first notice carrying each UUID (99/99 verified).
+These are interval constraints on a selected partial-day sample, not measured
+latency distributions. The simulation timing remains unvalidated.
+
+Verification: two full synthetic suites, 200 planted variable-lag worlds,
+full upper-only synthetic ledger, 10/10 targeted mutations, stale-receipt
+refusals, exact identity/notice reconciliation, shell syntax. Codex slot only;
+no full tape replay, training or untouched validation. Original artifacts and
+other-session changes preserved. **Next priority:** independently justify a
+match/creation-delay or clock bound, then replay economics with the corrected
+timing assumptions; keep unresolved ordering explicit until then. Schedule off.
+
 <!-- MANUAL_REVIEW_20261118_084D5A19 -->
 ## Manual fix review — 2026-11-18 (084d5a19)
 
