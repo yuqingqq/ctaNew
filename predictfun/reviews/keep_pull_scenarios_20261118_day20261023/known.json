@@ -1,0 +1,137 @@
+{
+  "asof": "2026-11-18T07:21:12.820661+00:00",
+  "readings": {
+    "K0 REPRODUCES 11-09": "YES",
+    "K1 CLASSIFIER-CONSISTENCY": "YES",
+    "K2 DELAYED-STATUS-REFUSED": "YES",
+    "K3 IDENTITY-CHECK-FIRES": "YES",
+    "K4 RESEARCH-WINDOWS-VS-LIFECYCLE": "CONTRADICTED",
+    "K5 DECLARED RANGES vs MEASURED ORDER PATH": "NOT-COVERED",
+    "KNOWN VERDICT": "INSTRUMENT-CHECKS-PASS; RESEARCH-WINDOWS-CONTRADICTED; NOT A VENUE-ENGINE ACCEPTANCE"
+  },
+  "R": {
+    "legs": 99,
+    "orders": 86,
+    "cancelled": 88,
+    "K0": {
+      "rest_floor_nonoverlap": 39,
+      "matched_floor_nonoverlap": 0
+    },
+    "K0_ref": {
+      "rest_floor_nonoverlap": 39,
+      "matched_floor_nonoverlap": 0
+    },
+    "K1": {
+      "CANCEL_FIRST": 0,
+      "MATCH_FIRST": 0,
+      "AMBIGUOUS": 88,
+      "TIE": 0,
+      "UNKNOWN": 0,
+      "CONTRADICTORY": 0
+    },
+    "K2": {
+      "point_contradictions": 39,
+      "evidence_contradictions": 0,
+      "point_refused": true,
+      "point_cancel_first": 36,
+      "evidence_classes": {
+        "CANCEL_FIRST": 0,
+        "MATCH_FIRST": 0,
+        "AMBIGUOUS": 0,
+        "TIE": 0,
+        "UNKNOWN": 88,
+        "CONTRADICTORY": 0
+      }
+    },
+    "K3": {
+      "true_contradictions": 0,
+      "draws": 200,
+      "share_draws_firing": 1.0,
+      "median_hits": 96.0
+    },
+    "K4": {
+      "S1": {
+        "missed": 12,
+        "cancel_first": 3,
+        "no_anchor": 6,
+        "constant_offset": {
+          "basis": {
+            "lo": 673.62060546875,
+            "hi": -9888.40771484375,
+            "exists": false,
+            "legs": 35
+          },
+          "v6": {
+            "lo": 725.231689453125,
+            "hi": -306.223388671875,
+            "exists": false,
+            "legs": 58
+          }
+        }
+      },
+      "S2": {
+        "missed": 6,
+        "cancel_first": 1,
+        "no_anchor": 6,
+        "constant_offset": {
+          "basis": {
+            "lo": 323.62060546875,
+            "hi": -9538.40771484375,
+            "exists": false,
+            "legs": 35
+          },
+          "v6": {
+            "lo": 375.231689453125,
+            "hi": 43.776611328125,
+            "exists": false,
+            "legs": 58
+          }
+        }
+      }
+    },
+    "K5": {
+      "activation_upper_ms": {
+        "n": 99,
+        "p5": 26.23388671875,
+        "p50": 33.502197265625,
+        "p95": 66.04350585937497,
+        "max": 311.027099609375
+      },
+      "cancel_effect_upper_ms": {
+        "n": 88,
+        "p5": 14.3211181640625,
+        "p50": 21.34228515625,
+        "p95": 5032.708642578125,
+        "max": 6030.1494140625
+      },
+      "declared_activation": [
+        25.0,
+        100.0
+      ],
+      "declared_cancel": [
+        0.0,
+        100.0
+      ]
+    }
+  },
+  "inputs": {
+    "clock_cases.parquet": "2f1a580bb6bb3689bf39b52ddbf5a7a443ea004e0d281274510f1193eb108a19",
+    "status_clock_cases.parquet": "048d5527c524f27724f3915d956e2cde6bb626534cfc8b28a07a5b5b1cda1fe6"
+  },
+  "outputs": {
+    "known_cases.parquet": "24df798b22c53d97f00b45237cda132f0f3a7d5f6a00b40cd796752f74230824"
+  },
+  "provenance": {
+    "commit": "d0088e90632a3220eb3dbd9a0096dd8f4349ef3d",
+    "source": {
+      "pf_keep_pull.py": "58b972f92bda06fbc847c43d2ace8db9d7b12f4daaf67bcfaa14e92deb475835",
+      "pf_queue_place_test.py": "188c1495ce35db80ce8b79cbc50541964d0d32d9da38fee4b925e951eec01a1f",
+      "pf_queue_place_ledger.py": "8fa16b929b4ae497109a70add4036dd7cd4501102a261c74eba63de0e0b94bb5",
+      "pf_flow_control_kernel.cpp": "fb1ff31cdcf2a97783283f927fb2d56333a0760e877cb0b93348528138886612",
+      "pf_flow_control_kernel.py": "2460567474f28318f5d09df8ce0977e15748bb9263bc501471cf6a649b334379"
+    },
+    "uncommitted": ""
+  },
+  "source_sha256": "a670b6a2bfe1971272fd2a1ab310fa2095b2da62ea8448f84f8d775c704f2766",
+  "seconds": 2.6011908054351807
+}

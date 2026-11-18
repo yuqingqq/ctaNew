@@ -1,0 +1,18 @@
+KNOWN-ORDER LIFECYCLE CHECK of the window classifier (pf_keep_pull_exec_windows.py known; the 11-09 fill-clock audit's confirmed own maker legs, consumed Nov 8)
+  99 legs, 86 orders, 88 legs on orders with a cancel ack; lifecycle on the bot's clock, REST / Matched / Z on the venue clock (offset 0)
+  K0 the 11-09 counts: {'rest_floor_nonoverlap': 39, 'matched_floor_nonoverlap': 0} (11-09: {'rest_floor_nonoverlap': 39, 'matched_floor_nonoverlap': 0})
+  K1 lifecycle match window vs the actual cancel-effect window: {'CANCEL_FIRST': 0, 'MATCH_FIRST': 0, 'AMBIGUOUS': 88, 'TIE': 0, 'UNKNOWN': 0, 'CONTRADICTORY': 0}
+  K2 REST executedAt as the match second: 39 lifecycles contradicted, 36 known fills it would call CANCEL_FIRST; as the evidence bound: 0 contradicted, classes {'CANCEL_FIRST': 0, 'MATCH_FIRST': 0, 'AMBIGUOUS': 0, 'TIE': 0, 'UNKNOWN': 88, 'CONTRADICTORY': 0}; refused as a point: True
+  K3 Matched second vs lifecycle: true identity 0 contradicted; 100.0% of 200 within-run permutations contradict >= 1 (median 96)
+  K4 research anchor Z +-250 ms (S1 width): misses 12 lifecycles; would call 3 known fills CANCEL_FIRST; constant offset per run {'basis': {'lo': 673.62060546875, 'hi': -9888.40771484375, 'exists': False, 'legs': 35}, 'v6': {'lo': 725.231689453125, 'hi': -306.223388671875, 'exists': False, 'legs': 58}}
+  K4 research anchor Z +-600 ms (S2 width): misses 6 lifecycles; would call 1 known fills CANCEL_FIRST; constant offset per run {'basis': {'lo': 323.62060546875, 'hi': -9538.40771484375, 'exists': False, 'legs': 35}, 'v6': {'lo': 375.231689453125, 'hi': 43.776611328125, 'exists': False, 'legs': 58}}
+  K5 measured order path (ms): activation <= ack - place {'n': 99, 'p5': 26.23388671875, 'p50': 33.502197265625, 'p95': 66.04350585937497, 'max': 311.027099609375}; cancel effect <= ack - request {'n': 88, 'p5': 14.3211181640625, 'p50': 21.34228515625, 'p95': 5032.708642578125, 'max': 6030.1494140625}; declared activation [25.0, 100.0], cancel [0.0, 100.0]
+
+READINGS (declared before any data was read)
+  K0 REPRODUCES 11-09: YES
+  K1 CLASSIFIER-CONSISTENCY: YES
+  K2 DELAYED-STATUS-REFUSED: YES
+  K3 IDENTITY-CHECK-FIRES: YES
+  K4 RESEARCH-WINDOWS-VS-LIFECYCLE: CONTRADICTED
+  K5 DECLARED RANGES vs MEASURED ORDER PATH: NOT-COVERED
+  KNOWN VERDICT: INSTRUMENT-CHECKS-PASS; RESEARCH-WINDOWS-CONTRADICTED; NOT A VENUE-ENGINE ACCEPTANCE

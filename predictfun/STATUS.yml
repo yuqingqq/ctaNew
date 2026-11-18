@@ -1,3 +1,18 @@
+scenarios_day_20261023:
+  status: done_one_day
+  asof: "2026-11-18 07:25Z"
+  session: aea5bfb9
+  user: ["Go", "Can we run on one day first, don't have to run on all days yet"]
+  runs: {ledger: {seconds: 26, peak_gib: 0.99}, known: {seconds: 3.5}, scenario_day: {seconds: 161, peak_gib: 1.0}, report: {seconds: 3}}
+  fixed_before_the_run: [zero_latency_tie_order_trades_before_decisions, ledger_latency_bounds_move_structural_landings, K4_offset_skips_legs_without_anchor]
+  mutants: {exec_windows: "52/52", scenarios: "19/19"}
+  ledger: {V0: "YES", fills: 17670, unique_event: 9689, multi_event: 7981, removed_gross_share: {S1_cancel_first: 0.661, S1_ambiguous: 0.292, S2_cancel_first: 0.525, EV_unknown: 0.995}, E_bounds_lat37: {S1: [-91533, 113454], S2: [-133724, 158497], EV: [-151999, 181192]}, V1: SIGN-NOT-IDENTIFIED}
+  known: {K0_K3: "YES", K4: CONTRADICTED, K5: NOT-COVERED, cancel_ack_ms: {p50: 21, p95: 5033}, activation_ack_ms_p95: 66}
+  scenarios: {Z0: "YES", Z1: NOT-STABLE-IN-TESTED-SCENARIOS, Z2: NOT-STABLE-IN-TESTED-SCENARIOS, Z3: NOT-STABLE-IN-TESTED-SCENARIOS, E_range_c: [-13342, 39834], KEEP_range_c: [-569914, 97346]}
+  receipts: predictfun/reviews/keep_pull_scenarios_20261118_day20261023
+  running: false
+  next: "USER: the remaining four days; first record the scenario day's total event count"
+
 ledger_labels_20261118:
   status: code_done_awaiting_go
   asof: "2026-11-18 07:02Z"

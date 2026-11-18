@@ -97,7 +97,8 @@ SELFTEST (synthetic, no data): every class incl. TIE / UNKNOWN / CONTRADICTORY; 
 LIMITS: consumed days; one declared rule; STATES is local selection; M50 quantities held (no queue / fill / eligibility re-simulation - the
  next gate); S1 / S2 / CR are assumption ranges; the alignment of the REST, WS and book clocks is not established; one partial day of known
  lifecycles; only same-side legs at the fill's market join an event.
-Usage (run_light, PF_SLOT=claude): pf_keep_pull_exec_windows.py selftest | run | known
+Usage (run_light, PF_SLOT=claude): pf_keep_pull_exec_windows.py selftest | run [day] | known  (one day: its own output dir; V0 (a) / (b) against the
+ committed per-day values - the clock audit's E and score, v1's per-day bounds; v1 kept its ordering counts pooled only)
 """
 import itertools
 import json
@@ -351,6 +352,19 @@ def event_axis_windows(EVT, k):
     return np.where(bad, -np.inf, EVT[f'{k}_lo'].values - anc), np.where(bad, np.inf, EVT[f'{k}_hi'].values - anc)
 
 
+def struct_landing(g, lat):
+    """A structural cancel's effect on fills at cancel latency lat - the kernel's order of a grid instant (its trades first, then its decisions:
+    at zero latency it acts just after g) and the pending rule (decided before the +58 ms activation: lands at activation + lat); inf where
+    none. Equals the committed landing at 37 ms (checked) and pf_keep_pull_scenarios.eff_landing."""
+    g = np.asarray(g, float); x = np.where(g < KP.PLACE, np.maximum(g + lat, KP.PLACE + lat), g + lat)
+    return np.where(np.isnan(g), np.inf, np.where(x > g, x, np.nextafter(g, np.inf)))
+
+
+def at_latency(F, gs, lat):
+    """The per-fill inputs at cancel latency lat: every cancel moves - the structural landing too (fills held at M50)."""
+    return dict(F, lend=struct_landing(gs, lat))
+
+
 def candidate_status(fid, flag, n):
     """Per fill, over its candidate events (pairs fid / flag): 0 unlinked (no candidate), 1 none, 2 some, 3 all of them flagged (index into CST)."""
     k = np.bincount(fid, minlength=n); h = np.bincount(fid, weights=np.asarray(flag, float), minlength=n)
@@ -450,11 +464,24 @@ def sign(mn, mx):
     return 'EXCESS-POSITIVE-IDENTIFIED' if mn > 0 else 'EXCESS-NEGATIVE-IDENTIFIED' if mx < 0 else 'SIGN-NOT-IDENTIFIED'
 
 
-def v1_reference():
-    """v1's committed numbers (its output JSON, hash-equal to the copy committed in d1de7504)."""
+def v1_reference(days=KP.DAYS):
+    """v1's committed numbers (its output JSON, hash-equal to the copy committed in d1de7504): on the full run its pooled S1 / S2 bounds and
+    ordering counts; on a subset of days its per-day bounds (v1 kept no per-day ordering counts: order None, not compared)."""
     p = V1.OUT / 'timing_audit.json'; q = HERE.parent / 'reviews' / 'keep_pull_timing_audit_20261118' / 'timing_audit.json'
     C.require(C.sha(p) == C.sha(q), 'v1 output differs from its committed copy'); R = json.loads(p.read_text())['R']
-    return {k: dict(E_min=R[k]['E_min'], E_max=R[k]['E_max'], order={nm: R[k]['order'][nm]['fills'] for nm in ('AFTER', 'BEFORE', 'AMBIGUOUS')}) for k in ('S1', 'S2')}
+    if list(days) == list(KP.DAYS):
+        return {k: dict(E_min=R[k]['E_min'], E_max=R[k]['E_max'], order={nm: R[k]['order'][nm]['fills'] for nm in ('AFTER', 'BEFORE', 'AMBIGUOUS')}) for k in ('S1', 'S2')}
+    return {k: dict(E_min=float(sum(R[k]['by_day'][d]['E_min'] for d in days)), E_max=float(sum(R[k]['by_day'][d]['E_max'] for d in days)), order=None) for k in ('S1', 'S2')}
+
+
+def collapsed_reference(days=KP.DAYS):
+    """The committed collapsed E and score improvement: pooled +234,279 / 1,169,671 c; on a subset of days the clock audit's per-day values for
+    M50 fills at M50 eligibility (its JSON, hash-equal to the copy committed in 1a1abbaa)."""
+    if list(days) == list(KP.DAYS):
+        return 234279., 1169671.
+    p = Path(I.K.IO) / 'keep_pull_clock_audit_20261118' / 'clock_audit.json'; q = HERE.parent / 'reviews' / 'keep_pull_clock_audit_20261118' / 'clock_audit.json'
+    C.require(C.sha(p) == C.sha(q), 'clock audit output differs from its committed copy'); D = json.loads(p.read_text())['R']['M50_M50']['day']
+    return float(sum(D[d]['excess'] for d in days)), float(sum(D[d]['score'] for d in days))
 
 
 def accounted(V3, n, total):
@@ -462,19 +489,21 @@ def accounted(V3, n, total):
     return all(sum(v['fills'].values()) == n and abs(sum(v['gross'].values()) - total) <= 1e-6 * max(1., total) for v in V3.values())
 
 
-def run(out=OUT, src=None, tables=None, rows_of=None, env_of=None, v1=None, days=None, expect=(234279., 1169671.), tol=1., jcap=JCAP):
+def run(out=OUT, src=None, tables=None, rows_of=None, env_of=None, v1=None, days=None, expect=None, tol=1., jcap=JCAP):
     """The ledger on the committed keep / pull run (or, in the selftest's rehearsal, on synthetic tables, source and output dir)."""
     start = time.time(); out = Path(out); C.require(not out.exists(), 'ledger output exists')
     if tables is None:
         selftest()
-    O, Fl = tables if tables is not None else KP.load(KP.OUT); days = list(days or KP.DAYS); src = src or KP.Tape()
-    rows_of = rows_of or day_rows; env_of = env_of or day_env; v1 = v1 or v1_reference(); La = KP.landing(np.arange(1, KP.NSTEP + 1))
+    days = list(days or KP.DAYS); C.require(tables is not None or set(days) <= set(KP.DAYS), 'undeclared day')
+    O, Fl = tables if tables is not None else KP.load(KP.OUT, days=days); src = src or KP.Tape(); expect = expect or collapsed_reference(days)
+    rows_of = rows_of or day_rows; env_of = env_of or day_env; v1 = v1 or v1_reference(days); La = KP.landing(np.arange(1, KP.NSTEP + 1))
     E = O[O.status == 'eligible'].reset_index(drop=True); cell = E.groupby(['day', 'm', 'side', 'phase'], sort=True).ngroup().values
     T = KP.score_steps(E[[f'f{j:02d}' for j in range(KP.NSTEP + 1)]].values, E.side.values, E.p.values)[KP.DECLARED]
     endj = A.endj_of(E.t_full.values, E.g_struct.values); act, CW = V1.null_weights(T, cell, endj); ri, t, val, srcc = A.fills_of(E, Fl, SHIFT)
     n = len(ri); lend = np.where(np.isnan(E.land_struct.values[ri]), np.inf, E.land_struct.values[ri]); t0 = E.t.values[ri]
     F = dict(val=val, pulled=act[ri], T=T[ri], s=cell[ri], endj=endj[ri], lend=lend); r37 = La[np.clip(T[ri], 1, KP.NSTEP) - 1]
-    F1 = dict(val=val, pulled=act[ri], r=r37, s=cell[ri], endj=endj[ri], lend=lend)
+    F1 = dict(val=val, pulled=act[ri], r=r37, s=cell[ri], endj=endj[ri], lend=lend); gs = E.g_struct.values[ri]
+    C.require(np.array_equal(struct_landing(gs, KP.CANCEL), lend), 'the structural landing rule differs from the committed landing at 37 ms')
     pf = A.per_fill(T, cell, endj, (ri, t, val, srcc)); e0 = float(contrib(t, F, CW).sum()); s0 = float(pf['score'].sum())
     ok_a = abs(e0 - float(pf['score'].sum() - pf['null'].sum())) < 1e-6 and abs(e0 - expect[0]) <= tol and abs(s0 - expect[1]) <= tol
     if not ok_a:
@@ -494,7 +523,7 @@ def run(out=OUT, src=None, tables=None, rows_of=None, env_of=None, v1=None, days
     for k, (a_, b_) in (('S1', ('lo1', 'hi1')), ('S2', ('lo2', 'hi2'))):
         lo, hi = H1[a_].values - t0, H1[b_].values - t0; mn, mx = V1.bounds(lo, hi, F1, CW); o = np.where(pl, V1.order_of(lo, hi, r37), -1)
         reg[k] = dict(E_min=float(mn.sum()), E_max=float(mx.sum()), order={nm: int(((o == c) & pl).sum()) for c, nm in enumerate(('AFTER', 'BEFORE', 'AMBIGUOUS'))})
-    ok_b = all(abs(reg[k][x] - v1[k][x]) <= tol for k in reg for x in ('E_min', 'E_max')) and all(reg[k]['order'] == v1[k]['order'] for k in reg)
+    ok_b = all(abs(reg[k][x] - v1[k][x]) <= tol for k in reg for x in ('E_min', 'E_max')) and all(v1[k]['order'] is None or reg[k]['order'] == v1[k]['order'] for k in reg)
     ok_d = sum(recon.values()) == 0
     # events, candidate windows, classes
     EVT = events_of(LG); EVT['e'] = np.arange(len(EVT)); P = P.merge(EVT[['day', 'group', 'e']], on=['day', 'group'], how='left', validate='many_to_one')
@@ -528,7 +557,7 @@ def run(out=OUT, src=None, tables=None, rows_of=None, env_of=None, v1=None, days
     for k in SCEN:
         wl, wh = event_axis_windows(EVT, k)
         for lat in LATS:
-            U = joint_bounds(pf_, pe, n, wl, wh, anc, t0, F, CW, lat, cap=jcap); kd = U.kind.values.astype(str); ev_ = U.e.values.astype(np.int64)
+            U = joint_bounds(pf_, pe, n, wl, wh, anc, t0, at_latency(F, gs, lat), CW, lat, cap=jcap); kd = U.kind.values.astype(str); ev_ = U.e.values.astype(np.int64)
             C.require(int(U.fills.sum()) == int((ncand > 0).sum()), 'a linked fill missing from the bounds'); br = {}
             for nm, ke in ev_key.items():
                 g = np.where((kd == 'event') | (nm != 'cls'), ke[ev_], kd)
@@ -594,7 +623,7 @@ def report(R, read, days):
     def cell(x, tot):
         return f"{x['fills']:,} / {x['net']:+,.0f} c ({100 * x['gross'] / max(tot, 1e-12):.1f}% of the row's gross)"
     L = ['EXECUTION-WINDOW LEDGER of the keep / pull selection, declared score A+0 (pf_keep_pull_exec_windows.py; the committed keep / pull run, M50 fills, '
-         'consumed Oct23-27; c summed; v2 of the ordering audit - supersedes v1\'s headline)',
+         f'days {", ".join(days)} (consumed); c summed; v2 of the ordering audit - supersedes v1\'s headline)',
          f"  {R['counted']:,} counted states ({', '.join(f'{k} {v:,}' for k, v in R['status'].items())}); {R['fills']:,} M50 fills; links "
          + ', '.join(f'{k} {v:,}' for k, v in R['link'].items()),
          f"  {R['events']:,} events (taker orders; {', '.join(f'{k} {v:,}' for k, v in R['events_by_cls'].items())}; {R['events_multi_side']:,} with legs on both sides); "
@@ -677,13 +706,14 @@ def known_checks(K, ref, draws=200, seed=20261118):
         hits.append(int(miss(*mt, Kp).sum()))
     hits = np.array(hits); k3 = dict(true_contradictions=k0['matched_floor_nonoverlap'], draws=draws, share_draws_firing=float((hits >= 1).mean()), median_hits=float(np.median(hits)))
     k4 = {}
+    ok = np.isfinite(K.Z.values)                                                  # legs without a research anchor are a status, not a test
     for nm, w in (('S1', 250.), ('S2', 600.)):
-        zl, zh = K.Z.values - w, K.Z.values + w; c4 = classify(zl[can], zh[can], c_lo[can], c_hi[can])
+        zl, zh = K.Z.values - w, K.Z.values + w; c4 = classify(zl[can & ok], zh[can & ok], c_lo[can & ok], c_hi[can & ok])
         feas = {}
         for r in sorted(K.run.unique()):
-            x = K.run.values == r; dlo = float((K.place.values[x] - zh[x]).max()); dhi = float((K.upper.values[x] - zl[x]).min())
-            feas[str(r)] = dict(lo=dlo, hi=dhi, exists=bool(dlo <= dhi))
-        k4[nm] = dict(missed=int(miss(zl, zh, K).sum()), cancel_first=int((c4 == 0).sum()), constant_offset=feas)
+            x = (K.run.values == r) & ok; dlo = float((K.place.values[x] - zh[x]).max()); dhi = float((K.upper.values[x] - zl[x]).min())
+            feas[str(r)] = dict(lo=dlo, hi=dhi, exists=bool(dlo <= dhi), legs=int(x.sum()))
+        k4[nm] = dict(missed=int(miss(zl, zh, K)[ok].sum()), cancel_first=int((c4 == 0).sum()), no_anchor=int((~ok).sum()), constant_offset=feas)
     read = {'K0 REPRODUCES 11-09': 'YES' if k0 == ref else 'NO',
             'K1 CLASSIFIER-CONSISTENCY': 'YES' if k1['CANCEL_FIRST'] == 0 and k1['CONTRADICTORY'] == 0 and bool(np.all(lo <= hi)) else 'NO',
             'K2 DELAYED-STATUS-REFUSED': 'YES' if k2['point_contradictions'] >= 1 and k2['evidence_contradictions'] == 0 and refused else 'NO',
@@ -746,8 +776,9 @@ def _synthetic(rng, day='20990101'):
     n = 40; side = rng.integers(0, 2, n); p = rng.integers(30, 70, n).astype(float); t = 1.0e6 + 1000. * np.arange(n) + rng.integers(0, 50, n)
     f = p[:, None] + rng.normal(0., 2., (n, KP.NSTEP + 1)); st = np.where(np.arange(n) < 38, 'eligible', 'refused_post_only')
     keep = np.arange(n) % 3 == 0; f[keep] = p[keep, None] + np.where(side[keep] == 0, 1., -1.)[:, None] * (1. + np.abs(rng.normal(0., 2., (int(keep.sum()), KP.NSTEP + 1))))
+    gst = np.where(rng.random(n) < .1, 3000., np.nan); rng.random(n)                                 # (the second draw keeps the stream as before)
     O = pd.DataFrame(dict(day=day, oid=np.arange(n), m=np.where(np.arange(n) % 2, 11, 12), side=side, t=t, ws=0., phase=0, p=p, status=st, mark=p + rng.normal(0., 3., n),
-                          g_struct=np.where(rng.random(n) < .1, 3000., np.nan), land_struct=np.where(rng.random(n) < .1, 3500., np.nan),
+                          g_struct=gst, land_struct=np.where(np.isnan(gst), np.nan, gst + KP.CANCEL),                 # the landing of its own decision
                           t_full=np.where(rng.random(n) < .2, 2500., np.nan), **{f'f{j:02d}': f[:, j] for j in range(KP.NSTEP + 1)}))
     fl, legs, g = [], [], 100
     for o in range(n):
@@ -919,6 +950,13 @@ def selftest(rehearse=True):
     Ks = Kk.copy(); Ks['ack'] = Ks.req + 300.; Ks['upper'] = np.minimum(Ks.notice, Ks.ack)                 # cancel acks 300 ms after the request
     if known_checks(Ks, dict(ref, rest_floor_nonoverlap=int(miss(Ks.S.values * 1000., Ks.S.values * 1000. + 999.999, Ks).sum())), draws=50)[1]['K5 DECLARED RANGES vs MEASURED ORDER PATH'] != 'NOT-COVERED':
         bad.append('a cancel path slower than the declared range read COVERED by K5')
+    Kn = Kk.copy(); Kn.loc[2, 'Z'] = np.nan; R_n = known_checks(Kn, ref, draws=50)[0]['K4']['S1']              # a leg without a research anchor
+    if not (R_n['no_anchor'] == 1 and all(np.isfinite(v['lo']) and np.isfinite(v['hi']) for v in R_n['constant_offset'].values()) and R_n['missed'] == 2):
+        bad.append(f'K4 with a leg without an anchor: {R_n}')
+    if not (np.array_equal(struct_landing(np.array([1050., np.nan, 50.]), 0.), np.array([np.nextafter(1050., np.inf), np.inf, 58.]))
+            and np.array_equal(struct_landing(np.array([1050., np.nan, 50.]), KP.CANCEL), np.array([1087., np.inf, 95.]))
+            and np.array_equal(at_latency(dict(val=np.zeros(3)), np.array([1050., np.nan, 50.]), 100.)['lend'], np.array([1150., np.inf, 158.]))):
+        bad.append('the structural landing at latency 0 / 37 / 100 ms')
     Kg = Kk.copy(); Kg.loc[3, 'Z'] = pl_[3] + 70.; Kg.loc[6, 'Z'] = pl_[6] + 70.                 # every research anchor inside its lifecycle
     if known_checks(Kg, ref, draws=50)[1]['K4 RESEARCH-WINDOWS-VS-LIFECYCLE'] != 'CONSISTENT':
         bad.append('consistent research anchors not read CONSISTENT by K4')
@@ -998,6 +1036,8 @@ if __name__ == '__main__':
         selftest()
     elif a == ['run']:
         run()
+    elif len(a) == 2 and a[0] == 'run':                                     # one consumed day first (its own output dir, the per-day committed controls)
+        C.require(a[1] in KP.DAYS, 'undeclared day'); run(out=Path(I.K.IO) / f'keep_pull_exec_windows_20261118_{a[1]}', days=[a[1]])
     elif a == ['known']:
         known()
     else:

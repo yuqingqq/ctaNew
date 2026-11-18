@@ -23,9 +23,10 @@ MUT = [
     ('activation ignored (always +58 ms)', "QP.order(side, 0, price, act=act)", "QP.order(side, 0, price, act=KP.PLACE)"),
     ('pending landing fixed at 95 ms', "fills_g(pk, s, p, a_, l_, a_ + l_ + PEND_OFFSET)", "fills_g(pk, s, p, a_, l_, KP.PENDING)"),
     ('kernel structural cancels at 37 ms in every scenario', "kernel_eval(p, o[a:a + 72], KP.H, cancel, pending)", "kernel_eval(p, o[a:a + 72], KP.H, KP.CANCEL, pending)"),
-    ('structural landing recorded at the baseline latency', "lnd = float(landing_s(g, a_, l_))", "lnd = float(KP.landing(g / KP.STEP))"),
+    ('structural landing recorded at the baseline latency', "lnd = eff_landing(g, a_, l_) + MIRROR_OFFSET", "lnd = float(KP.landing(g / KP.STEP)) + MIRROR_OFFSET"),
     ('pending landing from the baseline activation', "np.maximum(d + lat, act + lat + PEND_OFFSET)", "np.maximum(d + lat, KP.PLACE + lat + PEND_OFFSET)"),
     ('notice ignored in eligibility', "lim = np.fmin(g_struct, t_full + notice)", "lim = np.fmin(g_struct, t_full + KP.NOTICE)"),
+    ('zero-latency tie order ignored (a cancel stops the trade at its own instant)', "    return x if x > g else float(np.nextafter(g, np.inf))", "    return x"),
     # --- the outcome
     ('the score lands at the baseline latency in every scenario', "r = KP.landing(np.clip(T[ri], 1, KP.NSTEP), sc['L'])", "r = KP.landing(np.clip(T[ri], 1, KP.NSTEP))"),
     ('the uniform shifts read the baseline fills', "Fs = Fl[Fl.clock == float(sc['tl'][1:])][['day', 'oid', 't', 'q']]", "Fs = Fl[Fl.clock == SHIFT][['day', 'oid', 't', 'q']]"),
