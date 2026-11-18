@@ -1,0 +1,2 @@
+ST|CP CANCEL_FIRST fills (pulled): 214; their candidate events 346, every one with a finite ST lower end: True (214 of 214 fills); lower-end types {'assumption_range': 346}
+events on the day with an unknown (-inf) ST lower end: 38581 of 50553

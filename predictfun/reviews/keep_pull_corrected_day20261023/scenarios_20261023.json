@@ -1,0 +1,579 @@
+{
+  "asof": "2026-11-18T12:59:49.027151+00:00",
+  "readings": {
+    "TIMING EVIDENCE": "LOWER-MATCH-BOUND-UNIDENTIFIED",
+    "Z0 CONTROLS": "YES",
+    "Z1 E ACROSS TESTED SCENARIOS": "NOT-STABLE-IN-TESTED-SCENARIOS",
+    "Z2 KEEP VALUE ACROSS TESTED SCENARIOS": "NOT-STABLE-IN-TESTED-SCENARIOS",
+    "Z3 THE SCORE'S VALUE ACROSS TESTED SCENARIOS": "NOT-STABLE-IN-TESTED-SCENARIOS"
+  },
+  "scenarios": {
+    "M50|A58|L37|N100": {
+      "KEEP": -416242.9431569632,
+      "score": 241282.39479053902,
+      "null": 206334.37112279775,
+      "E": 34948.02366774128,
+      "PULLALL": 389554.04602332297,
+      "fills": 17670,
+      "shares": 292256.4573183326,
+      "eligible": 28799,
+      "held": {
+        "fills": 0,
+        "shares": 0.0,
+        "value": 0.0,
+        "gross": 0.0,
+        "share_of_gross": 0.0
+      },
+      "orders_filled": 12753,
+      "pulls": 14155,
+      "by_day": {
+        "20261023": 34948.02366774128
+      },
+      "discovered": 0,
+      "lost": 0
+    },
+    "S1lo|A58|L37|N100": {
+      "KEEP": -521881.24935525574,
+      "score": 225126.5487503002,
+      "null": 236224.6490273523,
+      "E": -11098.100277052119,
+      "PULLALL": 484534.8592936191,
+      "fills": 20186,
+      "shares": 315219.3363180982,
+      "eligible": 28799,
+      "held": {
+        "fills": 1007,
+        "shares": 20279.846912785455,
+        "value": -10981.425221568574,
+        "gross": 63035.263445478966,
+        "share_of_gross": 0.05326266098121319
+      },
+      "orders_filled": 13615,
+      "pulls": 13976,
+      "by_day": {
+        "20261023": -11098.100277052119
+      },
+      "discovered": 1830,
+      "lost": 968
+    },
+    "S1mid|A58|L37|N100": {
+      "KEEP": -445028.53753984295,
+      "score": 242256.93934833363,
+      "null": 216968.94688712963,
+      "E": 25287.992461204005,
+      "PULLALL": 419540.2324071924,
+      "fills": 19745,
+      "shares": 302121.5154001962,
+      "eligible": 28799,
+      "held": {
+        "fills": 1052,
+        "shares": 21754.02923044998,
+        "value": -13100.42646521333,
+        "gross": 67501.12426225189,
+        "share_of_gross": 0.06022790757233642
+      },
+      "orders_filled": 13131,
+      "pulls": 14165,
+      "by_day": {
+        "20261023": 25287.992461204005
+      },
+      "discovered": 794,
+      "lost": 416
+    },
+    "S1hi|A58|L37|N100": {
+      "KEEP": -290698.40240863455,
+      "score": 180557.46680961744,
+      "null": 146396.46655429935,
+      "E": 34161.00025531809,
+      "PULLALL": 270365.0981122674,
+      "fills": 16717,
+      "shares": 275262.87889261934,
+      "eligible": 28799,
+      "held": {
+        "fills": 1062,
+        "shares": 22394.088267826537,
+        "value": -13873.445652121556,
+        "gross": 71652.417939914,
+        "share_of_gross": 0.07277217513783234
+      },
+      "orders_filled": 12082,
+      "pulls": 14193,
+      "by_day": {
+        "20261023": 34161.00025531809
+      },
+      "discovered": 982,
+      "lost": 1653
+    },
+    "S2lo|A58|L37|N100": {
+      "KEEP": -569913.5102651073,
+      "score": 233556.31848872578,
+      "null": 236404.10144380986,
+      "E": -2847.7829550840743,
+      "PULLALL": 492701.7110597106,
+      "fills": 21961,
+      "shares": 325249.01642777317,
+      "eligible": 28799,
+      "held": {
+        "fills": 183,
+        "shares": 4142.023787898157,
+        "value": -1690.0389159179508,
+        "gross": 9639.965467189533,
+        "share_of_gross": 0.008132476963844573
+      },
+      "orders_filled": 13903,
+      "pulls": 13734,
+      "by_day": {
+        "20261023": -2847.7829550840743
+      },
+      "discovered": 3044,
+      "lost": 1894
+    },
+    "S2hi|A58|L37|N100": {
+      "KEEP": 20351.719803687985,
+      "score": 12075.35148409556,
+      "null": 5578.994706566328,
+      "E": 6496.356777529231,
+      "PULLALL": -17278.68764165534,
+      "fills": 13722,
+      "shares": 208604.7216981388,
+      "eligible": 28799,
+      "held": {
+        "fills": 207,
+        "shares": 4986.505616871664,
+        "value": -3365.1201239764496,
+        "gross": 11980.319370992496,
+        "share_of_gross": 0.01741358317425693
+      },
+      "orders_filled": 9298,
+      "pulls": 14174,
+      "by_day": {
+        "20261023": 6496.356777529231
+      },
+      "discovered": 2729,
+      "lost": 6184
+    },
+    "S3lo|A58|L37|N100": {
+      "KEEP": -407636.68275374454,
+      "score": 191222.9282192256,
+      "null": 190408.71768125318,
+      "E": 814.2105379724326,
+      "PULLALL": 381871.59408675786,
+      "fills": 21258,
+      "shares": 339655.21278915514,
+      "eligible": 28799,
+      "held": {
+        "fills": 199,
+        "shares": 4772.998447363436,
+        "value": -2064.546778316265,
+        "gross": 13758.368489680557,
+        "share_of_gross": 0.0120001208743581
+      },
+      "orders_filled": 14570,
+      "pulls": 14005,
+      "by_day": {
+        "20261023": 814.2105379724326
+      },
+      "discovered": 4010,
+      "lost": 2193
+    },
+    "S3hi|A58|L37|N100": {
+      "KEEP": -234947.09247164312,
+      "score": 155850.9014865562,
+      "null": 119821.77524341951,
+      "E": 36029.12624313667,
+      "PULLALL": 221943.23749831732,
+      "fills": 14883,
+      "shares": 245962.70701868244,
+      "eligible": 28799,
+      "held": {
+        "fills": 231,
+        "shares": 5779.800501134251,
+        "value": -1980.5638747930038,
+        "gross": 18053.68165858504,
+        "share_of_gross": 0.020716632999924437
+      },
+      "orders_filled": 11183,
+      "pulls": 14208,
+      "by_day": {
+        "20261023": 36029.12624313667
+      },
+      "discovered": 856,
+      "lost": 2426
+    },
+    "SThi|A58|L37|N100": {
+      "KEEP": -353877.7931088303,
+      "score": 218834.65705254395,
+      "null": 178148.02091239713,
+      "E": 40686.63614014681,
+      "PULLALL": 331763.55826216587,
+      "fills": 20364,
+      "shares": 274681.0858567321,
+      "eligible": 28799,
+      "held": {
+        "fills": 3,
+        "shares": 30.19037886340977,
+        "value": 95.09518943170488,
+        "gross": 145.09518943170488,
+        "share_of_gross": 0.00014501128937915593
+      },
+      "orders_filled": 12110,
+      "pulls": 14223,
+      "by_day": {
+        "20261023": 40686.63614014681
+      },
+      "discovered": 657,
+      "lost": 1300
+    },
+    "EVhi|A58|L37|N100": {
+      "KEEP": 97346.47554548798,
+      "score": -38650.13095450382,
+      "null": -40988.59411203123,
+      "E": 2338.463157527414,
+      "PULLALL": -97346.47554548798,
+      "fills": 7834,
+      "shares": 164247.6409878884,
+      "eligible": 28799,
+      "held": {
+        "fills": 0,
+        "shares": 0.0,
+        "value": 0.0,
+        "gross": 0.0,
+        "share_of_gross": 0.0
+      },
+      "orders_filled": 6713,
+      "pulls": 14196,
+      "by_day": {
+        "20261023": 2338.463157527414
+      },
+      "discovered": 2010,
+      "lost": 8050
+    },
+    "M50|A15|L37|N100": {
+      "KEEP": -427614.66480756324,
+      "score": 237607.58549628485,
+      "null": 203636.67018709535,
+      "E": 33970.9153091895,
+      "PULLALL": 382433.68031820277,
+      "fills": 18314,
+      "shares": 302326.1128552352,
+      "eligible": 29296,
+      "held": {
+        "fills": 0,
+        "shares": 0.0,
+        "value": 0.0,
+        "gross": 0.0,
+        "share_of_gross": 0.0
+      },
+      "orders_filled": 13181,
+      "pulls": 14223,
+      "by_day": {
+        "20261023": 33970.9153091895
+      },
+      "discovered": 433,
+      "lost": 5
+    },
+    "M50|A100|L37|N100": {
+      "KEEP": -406879.3633857086,
+      "score": 242839.86522391668,
+      "null": 207005.81703971035,
+      "E": 35834.04818420633,
+      "PULLALL": 396476.3833814087,
+      "fills": 17119,
+      "shares": 283605.32760689344,
+      "eligible": 28322,
+      "held": {
+        "fills": 0,
+        "shares": 0.0,
+        "value": 0.0,
+        "gross": 0.0,
+        "share_of_gross": 0.0
+      },
+      "orders_filled": 12363,
+      "pulls": 13919,
+      "by_day": {
+        "20261023": 35834.04818420633
+      },
+      "discovered": 8,
+      "lost": 398
+    },
+    "M50|A58|L0|N100": {
+      "KEEP": -376843.91070623556,
+      "score": 230426.59898244002,
+      "null": 192171.3927539583,
+      "E": 38255.20622848172,
+      "PULLALL": 362461.684586371,
+      "fills": 16689,
+      "shares": 279313.73987094813,
+      "eligible": 28799,
+      "held": {
+        "fills": 0,
+        "shares": 0.0,
+        "value": 0.0,
+        "gross": 0.0,
+        "share_of_gross": 0.0
+      },
+      "orders_filled": 12200,
+      "pulls": 14155,
+      "by_day": {
+        "20261023": 38255.20622848172
+      },
+      "discovered": 0,
+      "lost": 553
+    },
+    "M50|A58|L100|N100": {
+      "KEEP": -465714.8605097781,
+      "score": 234873.84423897127,
+      "null": 216909.54763529735,
+      "E": 17964.296603673927,
+      "PULLALL": 425284.1050442132,
+      "fills": 19165,
+      "shares": 310723.64118501585,
+      "eligible": 28799,
+      "held": {
+        "fills": 0,
+        "shares": 0.0,
+        "value": 0.0,
+        "gross": 0.0,
+        "share_of_gross": 0.0
+      },
+      "orders_filled": 13482,
+      "pulls": 14155,
+      "by_day": {
+        "20261023": 17964.296603673927
+      },
+      "discovered": 729,
+      "lost": 0
+    },
+    "M50|A58|L37|N160": {
+      "KEEP": -416242.9431569632,
+      "score": 241282.39479053902,
+      "null": 206618.2314713323,
+      "E": 34664.163319206724,
+      "PULLALL": 389554.04602332297,
+      "fills": 17670,
+      "shares": 292256.4573183326,
+      "eligible": 28799,
+      "held": {
+        "fills": 0,
+        "shares": 0.0,
+        "value": 0.0,
+        "gross": 0.0,
+        "share_of_gross": 0.0
+      },
+      "orders_filled": 12753,
+      "pulls": 14186,
+      "by_day": {
+        "20261023": 34664.163319206724
+      },
+      "discovered": 0,
+      "lost": 0
+    },
+    "M50|A58|L37|N660": {
+      "KEEP": -416242.9431569632,
+      "score": 241282.39479053902,
+      "null": 206593.47925388516,
+      "E": 34688.91553665385,
+      "PULLALL": 389554.04602332297,
+      "fills": 17670,
+      "shares": 292256.4573183326,
+      "eligible": 28799,
+      "held": {
+        "fills": 0,
+        "shares": 0.0,
+        "value": 0.0,
+        "gross": 0.0,
+        "share_of_gross": 0.0
+      },
+      "orders_filled": 12753,
+      "pulls": 14245,
+      "by_day": {
+        "20261023": 34688.91553665385
+      },
+      "discovered": 0,
+      "lost": 0
+    },
+    "M50|A58|L37+13%x4000|N100": {
+      "KEEP": -466751.13788180513,
+      "score": 208242.99635054806,
+      "null": 177767.86139323332,
+      "E": 30475.134957314734,
+      "PULLALL": 340415.3283612285,
+      "fills": 20495,
+      "shares": 320146.69339878706,
+      "eligible": 28799,
+      "held": {
+        "fills": 0,
+        "shares": 0.0,
+        "value": 0.0,
+        "gross": 0.0,
+        "share_of_gross": 0.0
+      },
+      "orders_filled": 13451,
+      "pulls": 14155,
+      "by_day": {
+        "20261023": 30475.134957314734
+      },
+      "discovered": 698,
+      "lost": 0
+    },
+    "M0|A58|L37|N100": {
+      "KEEP": -368042.92187950073,
+      "score": 224826.397628511,
+      "null": 184991.94657722593,
+      "E": 39834.45105128509,
+      "PULLALL": 349180.38814754534,
+      "fills": 16565,
+      "shares": 278820.3413747959,
+      "eligible": 28799,
+      "held": {
+        "fills": 0,
+        "shares": 0.0,
+        "value": 0.0,
+        "gross": 0.0,
+        "share_of_gross": 0.0
+      },
+      "orders_filled": 12157,
+      "pulls": 14181,
+      "by_day": {
+        "20261023": 39834.45105128509
+      },
+      "discovered": 212,
+      "lost": 808
+    },
+    "M250|A58|L37|N100": {
+      "KEEP": -518337.10253212077,
+      "score": 220534.27583550793,
+      "null": 233875.99268488024,
+      "E": -13341.716849372304,
+      "PULLALL": 481253.9222852902,
+      "fills": 20040,
+      "shares": 315210.155156922,
+      "eligible": 28799,
+      "held": {
+        "fills": 0,
+        "shares": 0.0,
+        "value": 0.0,
+        "gross": 0.0,
+        "share_of_gross": 0.0
+      },
+      "orders_filled": 13617,
+      "pulls": 13973,
+      "by_day": {
+        "20261023": -13341.716849372304
+      },
+      "discovered": 1871,
+      "lost": 1007
+    }
+  },
+  "families": {
+    "M50|A58|L37|N100": [
+      "baseline",
+      "B: trades at anchor - 50 ms, activation +58 ms, cancel latency 37 ms, fill notice +100 ms"
+    ],
+    "S1lo|A58|L37|N100": [
+      "timeline",
+      "every trade at the start of the admissible S1 window; contradictory events held at M50"
+    ],
+    "S1mid|A58|L37|N100": [
+      "timeline",
+      "every trade at the middle of the admissible S1 window; contradictory events held at M50"
+    ],
+    "S1hi|A58|L37|N100": [
+      "timeline",
+      "every trade at the end of the admissible S1 window; contradictory events held at M50"
+    ],
+    "S2lo|A58|L37|N100": [
+      "timeline",
+      "every trade at the start of the admissible S2 window; contradictory events held at M50"
+    ],
+    "S2hi|A58|L37|N100": [
+      "timeline",
+      "every trade at the end of the admissible S2 window; contradictory events held at M50"
+    ],
+    "S3lo|A58|L37|N100": [
+      "timeline",
+      "every trade at the start of the admissible S3 (semantics) window; contradictory events held at M50"
+    ],
+    "S3hi|A58|L37|N100": [
+      "timeline",
+      "every trade at the end of the admissible S3 (semantics) window; contradictory events held at M50"
+    ],
+    "SThi|A58|L37|N100": [
+      "timeline",
+      "every trade at the UUID-creation upper endpoint under the after-match/aligned-clock premises; no finite earliest endpoint is identified; contradictory events held at M50"
+    ],
+    "EVhi|A58|L37|N100": [
+      "timeline",
+      "every trade at the the REST evidence cap (the latest admissible instant); contradictory events held at M50"
+    ],
+    "M50|A15|L37|N100": [
+      "activation delay",
+      "the order goes live 15 ms after posting (B: 58)"
+    ],
+    "M50|A100|L37|N100": [
+      "activation delay",
+      "the order goes live 100 ms after posting (B: 58)"
+    ],
+    "M50|A58|L0|N100": [
+      "cancel latency",
+      "every cancel takes effect 0 ms after its decision (B: 37)"
+    ],
+    "M50|A58|L100|N100": [
+      "cancel latency",
+      "every cancel takes effect 100 ms after its decision (B: 37)"
+    ],
+    "M50|A58|L37|N160": [
+      "fill-notice delay",
+      "the client learns of a full fill 160 ms after it (B: 100)"
+    ],
+    "M50|A58|L37|N660": [
+      "fill-notice delay",
+      "the client learns of a full fill 660 ms after it (B: 100)"
+    ],
+    "M50|A58|L37+13%x4000|N100": [
+      "cancel latency",
+      "13% of the orders' cancels take effect 4000 ms after their decision, the rest 37 ms (own assumed mixture; the former K8-based measured-tail interpretation is withdrawn)"
+    ],
+    "M0|A58|L37|N100": [
+      "trade-clock shift",
+      "every trade stamp 0 ms before its anchor (B: 50 ms) - a uniform clock offset, not an order latency"
+    ],
+    "M250|A58|L37|N100": [
+      "trade-clock shift",
+      "every trade stamp 250 ms before its anchor (B: 50 ms) - a uniform clock offset, not an order latency"
+    ]
+  },
+  "stat": {
+    "20261023": {
+      "windows": 288,
+      "orders": 30088,
+      "base_matched": 30088,
+      "kernel_checked": 816,
+      "events": 560819,
+      "held_events_S1": 9576,
+      "held_events_S2": 1412,
+      "held_events_S3": 1363,
+      "held_events_ST": 73
+    }
+  },
+  "days": [
+    "20261023"
+  ],
+  "settlement_model": "shared_clock_event_specific_nonnegative_lag_v2",
+  "omitted_scenarios": {
+    "STlo": "no finite lower bound from UUID creation"
+  },
+  "provenance": {
+    "commit": "0e20fa8da48f7f7492722829ff534866132cd180",
+    "source": {
+      "pf_keep_pull.py": "58b972f92bda06fbc847c43d2ace8db9d7b12f4daaf67bcfaa14e92deb475835",
+      "pf_queue_place_test.py": "188c1495ce35db80ce8b79cbc50541964d0d32d9da38fee4b925e951eec01a1f",
+      "pf_queue_place_ledger.py": "8fa16b929b4ae497109a70add4036dd7cd4501102a261c74eba63de0e0b94bb5",
+      "pf_flow_control_kernel.cpp": "fb1ff31cdcf2a97783283f927fb2d56333a0760e877cb0b93348528138886612",
+      "pf_flow_control_kernel.py": "2460567474f28318f5d09df8ce0977e15748bb9263bc501471cf6a649b334379"
+    },
+    "uncommitted": ""
+  },
+  "source_sha256": "cf062704392ca98cf5bb033c03894fd4d9d1f75c13426d2738b89e447556299e",
+  "seconds": 2.5347940921783447
+}

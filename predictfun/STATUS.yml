@@ -1,3 +1,14 @@
+corrected_one_day_20261023:
+  status: done_sign_not_identified_st_certifies_1p5pct
+  asof: "2026-11-18 13:01Z"
+  user: "Ok, go run one day test right?"
+  code: 0e20fa8d
+  run: {driver: "run_keep_pull_scenarios.sh day 20261023", start: "12:54:53Z", end: "12:59:49Z", rc: 0, peak_gib: 1.1, slot: claude}
+  reproduction: {known_v5_equals_preview: true, ledger_non_st_equal_v4: true, v0: "YES", scenarios_equal_v3: 18, stlo_dropped: true, changed: [SThi]}
+  ledger_v5_st: {cancel_first_share_removed_gross: 0.015, cancel_first_fills: 214, via_s3_fallback: 214, unknown_share: 0.715, contradictory_all: 5, bounds_37ms_c: [-145038, 168157], sign: SIGN-NOT-IDENTIFIED, replay_after_t_set: 0.101, events_unknown_lower: 38581, events: 50553}
+  scenarios_v4: {n: 19, E_SThi: 40687, E_B: 34948, held_SThi_fills: 3, KEEP_SThi: -353878, E_range: [-13342, 40687], Z1: NOT-STABLE, timing_evidence: LOWER-MATCH-BOUND-UNIDENTIFIED}
+  receipts: predictfun/reviews/keep_pull_corrected_day20261023
+  next: [USER_go_oct24_27, or_independent_creation_delay_or_clock_bound_first]
 check_settlement_lag_fix_20261118:
   status: fix_verified_two_gaps_fixed_in_code_known_v5_and_day_run_need_go
   asof: "2026-11-18 12:33Z"
