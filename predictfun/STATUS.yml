@@ -1,3 +1,26 @@
+manual_commit_review_20261118_3bf8f3a9:
+  status: complete_no_new_blocking_bug_timing_gate_still_open
+  asof: "2026-11-18T14:06:53.006590+00:00"
+  target_commit: 3bf8f3a9332de737514142bdf63b0b59ab272bb5
+  reviewed_implementation: 0e20fa8da48f7f7492722829ff534866132cd180
+  report: predictfun/reviews/automatic/20261118_3bf8f3a9/report.md
+  evidence: predictfun/reviews/automatic/20261118_3bf8f3a9/receipt.json
+  resolved: [K6_declared_K7_basis_restored, conditional_K8_keys_separate, default_upper_only_rehearsals, stale_claims_superseded_in_place, corrected_one_day_receipts]
+  verification: {pinned_selftests: 2_pass, scenario_rows_reproduced: 19, known_readings_reproduced: true, hashes_verified: 33, slot: codex, wall_s: 28.70, peak_mib: 720}
+  consumed_days: ["20261023", "20261108"]
+  known_population: {legs: 99, orders: 86, candidates: 131, asof: "2026-11-18T12:55:18.229011Z"}
+  original_S3_gate: {basis: K7, result: FAIL, known_false_avoidances: 3, K8_conditional_result: PASS}
+  ledger_population: {fills: 17670, removed_fills: 8862, candidate_events: 50553, mapped_candidate_legs: 77557, asof: "2026-11-18T12:55:54.945415Z"}
+  ST_cancel_first: {removed_fills: 214, share_removed_gross: 0.01501297567820666, all_require_unmapped_S3_fallback: true}
+  scenario_population: {days: 1, windows: 288, order_paths: 30088, events: 560819, asof: "2026-11-18T12:59:49.027151Z"}
+  SThi_local_cents: {E: 40686.63614014681, KEEP_plus_score: -135043.13605628635, portfolio_or_settlement_pnl: false}
+  strategy_under_test: A_plus_0_fair_edge_rule_not_learned_model
+  execution_timing_validated: false
+  full_tape_or_training_run: false
+  untouched_validation_read: false
+  next_priority: independent_clock_and_identity_audit_of_three_S3_false_avoidance_legs
+  scheduler: disabled_by_user
+
 corrected_one_day_20261023:
   status: done_sign_not_identified_st_certifies_1p5pct
   asof: "2026-11-18 13:01Z"

@@ -1,3 +1,32 @@
+<!-- MANUAL_REVIEW_20261118_3BF8F3A9 -->
+## Manual commit review — 2026-11-18 (3bf8f3a9)
+
+Reviewed **3bf8f3a9332de737514142bdf63b0b59ab272bb5**, including 0e20fa8d.
+[Report](reviews/automatic/20261118_3bf8f3a9/report.md),
+[evidence](reviews/automatic/20261118_3bf8f3a9/receipt.json).
+No new blocking implementation/accounting defect found. K6's original K7 gate
+and conditional K8 gates are separated correctly; both default upper-only paths
+are tested. Two pinned selftests pass; all 19 saved scenario rows and known-case
+readings reproduce, with source/output hashes checked. No tape replay/training.
+
+Execution timing remains unvalidated. Known Nov8 (99 legs / 86 orders, as of
+2026-11-18T12:55:18.229011Z): S3 FAIL at K7 (3 known fills called avoided), PASS
+only under the conditional K8 clock; ST UNIDENTIFIED. Consumed Oct23 ledger
+(as of 12:55:54.945415Z): 214 of 8,862 removed fills are ST CANCEL_FIRST, 1.5013%
+of removed gross, all via assumed S3 fallback for unmapped legs. No mapped UUID
+leg supplies a lower endpoint. The 50,553 events are fill-linked candidates;
+the 10.1% replay-after-UUID rate uses 77,557 mapped candidate legs, not all trades.
+One-day SThi E +40,687 c but KEEP+score -135,043 c (as of 12:59:49.027151Z);
+these are local END+5s values, not settlement/portfolio profit. A+0 is a fair-edge
+rule, not the learned prediction/value-mapping/controller pipeline.
+
+**One next priority:** independently audit the clock domains and identity-linked
+raw lifecycle evidence for the three S3 false-avoidance legs. Justify any tighter
+constraint independently or retain the ambiguity and specify the missing
+observation; do not fit the clock to pass the gate. More days do not resolve this
+identifiability issue. Model tuning remains premature. Review-only; scheduler off;
+other-session development changes preserved.
+
 ## 2026-11-18 13:01Z (session aea5bfb9) — CORRECTED ONE-DAY TEST, OCT 23 (USER: "Ok, go run one day test right?")
 - Run: `run_keep_pull_scenarios.sh day 20261023` at 0e20fa8d, 12:54:53-12:59:49Z, slot claude, every step rc 0, peak 1.1 GiB; consumed days only (Oct 23; Nov 8 for known v5). [Report](reviews/keep_pull_corrected_day20261023/report.md).
 - Reproduction (declared before reading, compare.py): known v5 (module pipeline) = the saved-table preview; ledger v5's non-ST parts = v4 (42 parts, V0 YES); 18 of 19 scenarios = v3, STlo dropped, only SThi changed.
