@@ -88,9 +88,9 @@ MUT = [
     ('S3 hull from the latest candidate only', "lo[j] = np.maximum(mn[g_] - WS_DELAY, lo0[j])", "lo[j] = np.maximum(mx[g_] - WS_DELAY, lo0[j])"),
     ('S3 window not clipped to the REST range', "hi[j] = np.minimum(mx[g_], hi0[j])", "hi[j] = mx[g_]"),
     ('S3 late links not marked', "late = (how > 0) & (R.t_ms.values.astype(float) > hi0 + WS_DELAY)", "late = np.zeros(n, bool)"),
-    ('S3 events built from the S1 leg windows', "S3_lo=W['S3'][0], S3_hi=W['S3'][1]))", "S3_lo=W['S1'][0], S3_hi=W['S1'][1]))"),
-    ('the ledger legs take another row\'s S3 window', "lg = pd.concat([lg, sem.iloc[lg.row_id.values.astype(np.int64)].reset_index(drop=True)], axis=1)",
-     "lg = pd.concat([lg, sem.iloc[np.zeros(len(lg), np.int64)].reset_index(drop=True)], axis=1)"),
+    ('S3 events built from the S1 leg windows', "S3_lo=W['S3'][0], S3_hi=W['S3'][1], ST_lo=", "S3_lo=W['S1'][0], S3_hi=W['S1'][1], ST_lo="),
+    ('the ledger legs take another row\'s S3 window', "lg = pd.concat([lg, sem.iloc[lg.row_id.values.astype(np.int64)].reset_index(drop=True), stw",
+     "lg = pd.concat([lg, sem.iloc[np.zeros(len(lg), np.int64)].reset_index(drop=True), stw"),
     # --- contradictory timing assumptions by cause
     ('evidence-cap and leg-intersection causes merged', "flags[k + '_cap'] = st == 2; flags[k + '_legs'] = st == 3", "flags[k + '_cap'] = st >= 2; flags[k + '_legs'] = st == 3"),
     ('mixed causes not counted', "mixed = (cst[k] == 3) & (cst[k + '_cap'] != 3) & (cst[k + '_legs'] != 3)", "mixed = (cst[k] == 3) & False"),
@@ -114,7 +114,7 @@ MUT = [
     ('K6 a leg certified avoided when one candidate is', "return has & (np.bincount(i, weights=np.asarray(b, float), minlength=n) == nk)", "return has & (np.bincount(i, weights=np.asarray(b, float), minlength=n) > 0)"),
     ('K6 disagreeing candidates take the first verdict', "return np.where(~has, -9, np.where(lo_ == hi_, lo_, fill))", "return np.where(~has, -9, lo_)"),
     ('K6 every miss blamed on the own source', "np.where(own, 0, 1 + KE.src.values.astype(int))", "np.where(False, 0, 1 + KE.src.values.astype(int))"),
-    ('K6 gate always passes', "read[f'K6 GATE {k}'] = 'PASS' if k6[k]['false_cancel_first']['some_offset'] == 0 else 'FAIL'", "read[f'K6 GATE {k}'] = 'PASS'"),
+    ('K6 gate always passes', "read[f'K6 GATE {k}'] = ('PASS' if k6[k]['false_cancel_first']['some_offset'] == 0 else 'FAIL') if k in k6 else 'NOT-RUN'", "read[f'K6 GATE {k}'] = 'PASS'"),
     ('K6 every-offset verdict read at offset 0', "vr = np.where(st >= 2, v0, np.where(hi - dl < place, 1, np.where(lo - dh > upper, 2, 0)))", "vr = v0"),
     ('K6 a contradictory event classified as a window', "ok = can & (st < 2); cf0", "ok = can & (st < 9); cf0"),
     # --- the case linkage and the case ledger
@@ -131,6 +131,21 @@ MUT = [
      "k4c.update({f'K4_{nm}_missed': np.zeros(len(K), bool), f'K4_{nm}_cancel_first': cf_})"),
     ('the K4 failures not traced in the report', "T_ = KC[KC.K4_S1_missed.values.astype(bool)].to_dict('records')", "T_ = KC[KC.K4_S1_missed.values.astype(bool)].to_dict('records')[:0]"),
     ('the case ledger accepts undocumented columns', "if c not in CASE_SCHEMA.get(t, {}) and not any(", "if False and c not in CASE_SCHEMA.get(t, {}) and not any("),
+    # --- settlement times: K8, K5S, ST, the readers, PART 5
+    ('K8 floor test not applied', "fl = v7 & (np.floor(t / 1000.) == K.M.values.astype(float))", "fl = v7"),
+    ('K8 constant offset not required', "ok = bool(v7.all() and fl.all() and d_lo <= d_hi and all(v['exists'] for v in per_run.values()))", "ok = bool(v7.all() and fl.all())"),
+    ('K8 lag bound without the K7 lower bound', "R.update(lag_bound_ms=float(d_hi - off['lo']) if off['exists'] else None,", "R.update(lag_bound_ms=float(d_hi) if off['exists'] else None,"),
+    ('K8 match bounds swapped', "mlo, mhi = t - d_hi, t - d_lo;", "mlo, mhi = t - d_lo, t - d_hi;"),
+    ('K5S cancel bound from the earliest match', "last_lo = g.mlo.max().reindex(key).values", "last_lo = g.mlo.min().reindex(key).values"),
+    ('K5S activation ignores the first match', "a_hi_s = np.fmin(a_hi, first_hi - pl)", "a_hi_s = a_hi"),
+    ('ST windows without the lag (a point)', "    return np.where(f, t - lag, s3lo), np.where(f, t, s3hi), np.where(f, 0, 1).astype(np.int8)",
+     "    return np.where(f, t, s3lo), np.where(f, t, s3hi), np.where(f, 0, 1).astype(np.int8)"),
+    ('the settlement-premise offsets never evaluated', "k6s, cols_s = window_checks(K, KE, off8, scen_, tag='_set') if KE is not None and off8['exists'] else (None, {})", "k6s, cols_s = (None, {})"),
+    ('the replay point against the settlement time without its shift', "x = (LG.anc.values - SHIFT - LG.t_set_ms.values)[mt]", "x = (LG.anc.values - LG.t_set_ms.values)[mt]"),
+    ('the WS delay measured from the REST second', "x = (tms - t)[m & mk & np.isfinite(tms)]", "x = (tms - S)[m & mk & np.isfinite(tms)]"),
+    ('the settlement file read without its receipt', "C.require(C.sha(d / 'legs_set.parquet') == r['outputs']['legs_set.parquet'], 'settlement times changed since their receipt')", "pass"),
+    ('settlement controls not required', "C.require(all(r['R']['controls'].values()), 'settlement times without passed controls')", "pass"),
+    ('the ST lag taken from an inconsistent K8', "C.require(bool(k8.get('consistent')) and k8.get('lag_bound_ms') is not None,", "C.require(k8.get('lag_bound_ms') is not None,"),
 ]
 STALE = 97                                                # exit code of a replacement target that does not occur as declared
 

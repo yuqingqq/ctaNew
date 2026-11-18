@@ -34,6 +34,14 @@ v2 of the known-order check (the earlier outputs stay as provenance):
    10 s, (S + 1) * 1000]; a WS leg's window is the hull over EVERY value-consistent pending increment in that range (the link's identity is
    by value, not signed); E2 and REST-only legs keep the REST range (the drop search could not reach the match). S1 / S2 stay as the
    program's declared ranges and measured envelopes - their contradictions are findings, not repaired.
+SETTLEMENT TIMES (v4 / known v3; USER: "Can you clear the issues"): every REST match record's settlementId is a UUIDv7 whose first 48 bits are
+the venue's creation time in ms (pf_settlement_times extracts it per leg; one settlement per taker order). K8 tests it on the known legs (the
+kernel's trade id IS the settlementId): inside the Matched second, after placement, before the first notice, and one constant d = t_set -
+match (bot clock) fitting every leg of each run (the research anchor fails this test). From K8: the ST windows [t_set - L, t_set] with L =
+d_hi - K7 lo (premise-light: the id is created at or after the match); the clock offset venue - bot = d if the id is stamped at the match (a
+second offset basis for K6); per fill the notice delay; per order the cancel effect after every match and the activation before the first
+(K5S). The ledger adds ST (bounds, classes, contradictions) and PART 5: the timing sources and the declared windows against the venue's own
+timestamp on every public leg of the day, and the replay's own point against it.
 
 WHAT CHANGES FROM v1 (the review / addendum item each answers)
  1 Population (P2-1, item 4): v1 split ALL fills of the score's pulled orders and called it removed value. Now a cross-tab: replay ordering
@@ -154,10 +162,11 @@ sys.path.insert(0, str(HERE))
 import pf_keep_pull as KP                                 # noqa: E402
 import pf_keep_pull_clock_audit as A                      # noqa: E402
 import pf_keep_pull_timing_audit as V1                    # noqa: E402  v1 (d1de7504): its own functions run the regression control
+import pf_settlement_times as SETT                        # noqa: E402  the settlementId's UUIDv7 time per leg (11-18)
 
 C, pd, I = KP.C, KP.pd, KP.I
-OUT = Path(I.K.IO) / 'keep_pull_exec_windows_v3_20261118'  # v3 (review of 1fd77004); v2's outputs (keep_pull_exec_windows_20261118*) stay as provenance
-OUT_K = Path(I.K.IO) / 'keep_pull_exec_windows_known_v2_20261118'
+OUT = Path(I.K.IO) / 'keep_pull_exec_windows_v4_20261118'  # v4 (settlement times); v2 / v3 outputs stay as provenance
+OUT_K = Path(I.K.IO) / 'keep_pull_exec_windows_known_v3_20261118'
 FC = Path(I.K.IO) / 'fill_clock_20261109'                 # the 11-09 fill-clock audit (own legs, lifecycles, status stamps)
 LIVE = Path('/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/live_vs_replay')
 NOV8 = LIVE.parent / 'research' / 'step1' / '20261108'     # Nov 8's own research tables (legs_timed2 / legs_tk pinned by the 11-09 declaration)
@@ -170,8 +179,8 @@ CKEY = ['mid', 'exec_s', 'first_recv_ns', 'side', 'ptick', 'shares', 'price_exec
 VERD = ('compatible', 'missed_before', 'missed_after', 'contradictory_evidence', 'contradictory_legs', 'ambiguous', 'unlinked')
 CAUSES = ('event_proxy', 'own_ws_leg_link', 'own_ws_cell_link', 'own_e2_drop', 'own_rest_second', 'contradictory_evidence_cap', 'contradictory_leg_intersection',
           'unresolved_linkage')
-KSC = ('S1', 'S2', 'S3', 'EV', 'M50')                     # K6: the ledger's windows and the replay's own point (anchor - 50 ms)
-GATE = ('S1', 'S2', 'S3', 'EV')                           # the acceptance gate: the ledger's windows
+KSC = ('S1', 'S2', 'S3', 'ST', 'EV', 'M50')               # K6: the ledger's windows and the replay's own point (anchor - 50 ms)
+GATE = ('S1', 'S2', 'S3', 'ST', 'EV')                     # the acceptance gate: the ledger's windows
 TS_SEM = {'exec_s': 'REST executedAt: venue status clock, whole second (floor) of the CONFIRMED status, 0 / 1 / 10 s after Matched on own legs; the match ends before (S + 1) * 1000 (evidence); S3 assumes it is at most REST_LAG earlier',
           't_ms': 'WS settlementsPending: the venue book clock (updateTimestampMs) of the first frame whose aggregated pending amount at the price rose by the leg\'s (how 1) or its cell\'s (how 2) value; linked by value within +-1.5 s of the Confirmed second (no signed identity)',
           't_e2': 'E2: the venue book clock of the displayed-size drop closest to the cell volume within [S * 1000 - 600, S * 1000 + 600) - a search centred on the Confirmed second; S3 does not use it',
@@ -188,7 +197,7 @@ CANCEL_RANGE = (0., 100.)                                 # CR: the cancel takes
 ACT_RANGE = (25., 100.)                                   # the scenario replay's activation range (+58 ms the replay's point; assumption)
 LATS = (0., KP.CANCEL, 100.)
 MATCH_SOURCES = ()                                        # sources with established match-instant semantics: none
-SCEN = ('S1', 'S2', 'S3', 'EV')
+SCEN = ('S1', 'S2', 'S3', 'ST', 'EV')
 CWIN = ('CP', 'CR')
 ORD = ('CANCEL_FIRST', 'MATCH_FIRST', 'AMBIGUOUS', 'TIE', 'UNKNOWN', 'CONTRADICTORY')
 EVC = ('WS', 'E2', 'imputed', 'mixed')
@@ -204,6 +213,8 @@ BASIS = {('S1', 0): ('latest WS pending source time over the legs - 250 ms', 'ea
          ('S2', 1): ('latest E2 book-drop estimate over the legs - h', 'earliest E2 book-drop estimate over the legs + h'),
          ('S2', 2): ('latest REST second over the legs + q01 (status-centred assumption)', 'earliest REST second over the legs + q99 (status-centred assumption)'),
          ('S2', 3): ('the latest start of its WS and E2 legs\' windows', 'the earliest end of its WS and E2 legs\' windows'),
+         **{('ST', c): ('the latest start over its legs\' ST windows (a leg with a settlement time: t_set - the lag bound; otherwise its S3 window)',
+                        'the earliest end over its legs\' ST windows (t_set, else the S3 end)') for c in range(4)},
          **{('S3', c): ('the latest start over its legs\' S3 windows (a WS leg: its earliest value-consistent pending increment - 250 ms; otherwise its REST '
                         'Confirmed second - REST_LAG)', 'the earliest end over its legs\' S3 windows (a WS leg: its latest value-consistent increment; otherwise its '
                         'REST second end)') for c in range(4)}}
@@ -225,7 +236,10 @@ SCHEMA = {
                         tk_status='pf_txmap status 0 mapped / 1 absent / 2 count mismatch / 3 ambiguous / 4 no taker hash / 5 refined by signer', day='UTC day',
                         S3_llo='the leg\'s S3 window start, venue_ms', S3_lhi='the leg\'s S3 window end, venue_ms', S3_code='its S3 basis (SEM_CODES)',
                         S3_ncand='value-consistent pending increments in its REST range (a WS leg)',
-                        link_late='its linked WS increment is later than its REST cap + 250 ms (the link contradicts S3\'s premises)'),
+                        link_late='its linked WS increment is later than its REST cap + 250 ms (the link contradicts S3\'s premises)',
+                        t_set_ms='its settlement time (the settlementId\'s UUIDv7 ms, pf_settlement_times), venue settlement clock', set_status='its settlement status (pf_settlement_times.STATUS)',
+                        ST_llo='its ST window start (t_set - the lag bound; no settlement time: its S3 start), venue_ms', ST_lhi='its ST window end (t_set, else its S3 end)',
+                        ST_code='0 its settlement time, 1 its S3 window (no settlement time)'),
     'ledger_fill_events': dict(fid='fill (ledger_fills.fid)', day='UTC day', group='candidate event (ledger_events.group)', e='candidate event index'),
     'ledger_fills': dict(fid='fill id', day='UTC day', oid='order (ledger_orders.oid)', m='market', side='side', p='order price', t0='order posting time, venue_ms',
                          t_replay='the replay M50 fill time, replay_ms', anchor='its trade anchor, venue_ms', q='filled shares (M50)', value='fill value at END, c',
@@ -240,6 +254,7 @@ SCHEMA_PREFIX = {'ledger_events': {'S1_': 'S1 window (the program declared range
                                           '(BOUND_TYPES) / lo_basis, hi_basis (the observation each endpoint comes from)',
                                    'S2_': 'S2 window (measured envelopes AND the REST cap): the same fields as S1_',
                                    'S3_': 'S3 window (the semantics windows: REST range, value-consistent WS increments, AND the REST cap): the same fields as S1_',
+                                   'ST_': 'ST window (the settlement time - the lag bound .. the settlement time, AND the REST cap): the same fields as S1_',
                                    'EV_': 'EV window (evidence only), venue_ms: lo (-inf: unknown) / hi (the REST cap) / st / types / bases'},
                  'ledger_fills': {'cls_': 'ordering class (ORD) per scenario and cancel window (CP / CR), -1 not pulled',
                                   'contra_': 'per-fill status over ALL its candidate events (CST): S1 / S2 / S3 contradictory timing assumptions (any; _cap the '
@@ -298,12 +313,13 @@ def window_from(kind, x, point=False):
 def leg_windows(L):
     """Per leg (columns how, t_ms, t_e2, exec_s, its day's h, q01, q99 and its S3 window S3_llo / S3_lhi from sem_windows): class (0 WS, 1 E2,
     2 imputed) and {scenario: (lo, hi)}."""
-    C.require('S3_llo' in L and 'S3_lhi' in L, 'legs without their S3 windows (sem_windows)')
+    C.require('S3_llo' in L and 'S3_lhi' in L and 'ST_llo' in L and 'ST_lhi' in L, 'legs without their S3 / ST windows (sem_windows / st_windows)')
     ws = (L.how.values > 0) & np.isfinite(L.t_ms.values); e2 = ~ws & np.isfinite(L.t_e2.values); S = L.exec_s.values * 1000.
     cls = np.where(ws, 0, np.where(e2, 1, 2)); x = np.where(ws, L.t_ms.values, np.where(e2, L.t_e2.values, S))
     h, q01, q99 = L.h.values, L.q01.values, L.q99.values
     return cls, dict(S1=(np.where(cls < 2, x - 250., x - 500.), np.where(ws, x, np.where(e2, x + 250., x + 500.))),
                      S2=(np.where(cls < 2, x - h, x + q01), np.where(cls < 2, x + h, x + q99)), S3=(L.S3_llo.values.astype(float), L.S3_lhi.values.astype(float)),
+                     ST=(L.ST_llo.values.astype(float), L.ST_lhi.values.astype(float)),
                      EV=window_from('rest_confirmed_s', L.exec_s.values))
 
 
@@ -353,26 +369,66 @@ def day_sem(day, rows):
     return sem_windows(rows, pd.read_parquet(p, columns=['mid', 't_ms', 'ptick', 'inc'])), {str(p): C.sha(p)}
 
 
+def st_windows(t_set, s3lo, s3hi, lag):
+    """ST per leg: [t_set - lag, t_set] where the leg has a settlement time (the id is created at or after the match, at most `lag` ms after:
+    K8's bound), else its S3 window. -> (lo, hi, code 0 settlement / 1 S3)."""
+    t = np.asarray(t_set, float); f = np.isfinite(t)
+    return np.where(f, t - lag, s3lo), np.where(f, t, s3hi), np.where(f, 0, 1).astype(np.int8)
+
+
+def set_of(day):
+    """The day's settlement times (pf_settlement_times, row-aligned with legs_timed2), its controls passed and its hash as its receipt states."""
+    d = SETT.OUT / day; r = json.loads((d / 'settlement.json').read_text()); C.require(C.sha(d / 'legs_set.parquet') == r['outputs']['legs_set.parquet'], 'settlement times changed since their receipt')
+    C.require(all(r['R']['controls'].values()), 'settlement times without passed controls')
+    return pd.read_parquet(d / 'legs_set.parquet', columns=['t_set_ms', 'set_status']), {str(d / 'legs_set.parquet'): r['outputs']['legs_set.parquet']}
+
+
+def known_lag(out=None):
+    """ST's lag bound from the known-order check (K8 consistent), and its receipt hash."""
+    p = Path(out or OUT_K) / 'known.json'; j = json.loads(p.read_text()); k8 = j['R'].get('K8') or {}
+    C.require(bool(k8.get('consistent')) and k8.get('lag_bound_ms') is not None, 'no consistent settlement-time check (K8) to bound the ST lag')
+    return float(k8['lag_bound_ms']), {str(p): C.sha(p)}
+
+
+def settlement_diag(R_, t, lag, env):
+    """On the day's legs (R_: day_rows + their S3 / ST windows) with a settlement time t: the REST cap and the Confirmed lag; the WS pending delay
+    t_ms - t_set per link type and the E2 estimate's error; per scenario the share of legs whose window holds the settlement time (lag 0) or
+    meets [t_set - lag, t_set] - S1's, S2's and S3's premises tested on public trades."""
+    m = np.isfinite(t); how = R_.how.values; tms = R_.t_ms.values.astype(float); te2 = R_.t_e2.values.astype(float); S = R_.exec_s.values.astype(float) * 1000.
+    pct = lambda x: {f'p{q}': float(np.percentile(x, q)) for q in (1, 5, 50, 95, 99)} if len(x) else {}
+    out = dict(legs=int(len(R_)), with_t_set=int(m.sum()), rest_cap_violations=int((t[m] > S[m] + 1000.).sum()), rest_second_minus_t_set_ms=pct((S - t)[m]))
+    for nm, mk in (('ws_leg_link', how == 1), ('ws_cell_link', how == 2)):
+        x = (tms - t)[m & mk & np.isfinite(tms)]
+        out[f'{nm}_minus_t_set_ms'] = dict(n=int(len(x)), **pct(x), below_minus_lag=float((x < -lag).mean()) if len(x) else None, over_250=float((x > 250.).mean()) if len(x) else None,
+                                           over_1000=float((x > 1000.).mean()) if len(x) else None)
+    x = (te2 - t)[m & (how == 0) & np.isfinite(te2)]; out['e2_minus_t_set_ms'] = dict(n=int(len(x)), **pct(x), abs_over_600=float((np.abs(x) > 600.).mean()) if len(x) else None)
+    _, W = leg_windows(R_.assign(h=env['h'], q01=env['q01'], q99=env['q99'])); hold = {}
+    for k in ('S1', 'S2', 'S3'):
+        lo, hi = W[k]; hold[k] = dict(holds_t_set=float(((lo <= t) & (t <= hi))[m].mean()), meets_st=float(((lo <= t) & (hi >= t - lag))[m].mean()))
+    out['windows_vs_settlement'] = hold
+    return out
+
+
 def events_of(L):
     """Per event (day, group): market, side(s), the loader's anchor, legs, class, WS span and per scenario the intersection of its legs'
     windows capped by the evidence, with its status (WST)."""
     cls, W = leg_windows(L)
     g = pd.DataFrame(dict(day=L.day.values, group=L.group.values, m=L.mid.values, side=L.side.values, anc=L.anc.values, cls=cls,
                           wst=np.where(cls == 0, L.t_ms.values, np.nan), EV_hi=W['EV'][1], S1_lo=W['S1'][0], S1_hi=W['S1'][1],
-                          S2_lo=W['S2'][0], S2_hi=W['S2'][1], S3_lo=W['S3'][0], S3_hi=W['S3'][1]))
+                          S2_lo=W['S2'][0], S2_hi=W['S2'][1], S3_lo=W['S3'][0], S3_hi=W['S3'][1], ST_lo=W['ST'][0], ST_hi=W['ST'][1]))
     E = g.groupby(['day', 'group'], sort=True).agg(m=('m', 'first'), sides=('side', 'nunique'), side=('side', 'min'), anc=('anc', 'min'),
                                                    anc_max=('anc', 'max'), legs=('cls', 'size'), cmin=('cls', 'min'), cmax=('cls', 'max'),
                                                    ws_lo=('wst', 'min'), ws_hi=('wst', 'max'), EV_hi=('EV_hi', 'min'), S1_lo=('S1_lo', 'max'),
                                                    S1_hi=('S1_hi', 'min'), S2_lo=('S2_lo', 'max'), S2_hi=('S2_hi', 'min'), S3_lo=('S3_lo', 'max'),
-                                                   S3_hi=('S3_hi', 'min')).reset_index()
+                                                   S3_hi=('S3_hi', 'min'), ST_lo=('ST_lo', 'max'), ST_hi=('ST_hi', 'min')).reset_index()
     C.require(bool((E.anc == E.anc_max).all()), 'an event with two loader anchors')
     E['cls'] = np.where(E.cmin == E.cmax, E.cmin, 3); E['ws_span'] = E.ws_hi - E.ws_lo; E['EV_lo'] = -np.inf; E['EV_st'] = 0
-    for k in ('S1', 'S2', 'S3'):
+    for k in ('S1', 'S2', 'S3', 'ST'):
         legs_empty = (E[f'{k}_lo'] > E[f'{k}_hi']).values; cap = E.EV_hi.values < E[f'{k}_hi'].values
         E[f'{k}_rhi'] = E[f'{k}_hi']; E[f'{k}_hi'] = np.minimum(E[f'{k}_hi'], E.EV_hi)
         E[f'{k}_st'] = np.where(legs_empty, 3, np.where(E[f'{k}_lo'].values > E[f'{k}_hi'].values, 2, np.where(cap, 1, 0)))
     c_ = E.cls.values.astype(int)
-    for k in ('S1', 'S2', 'S3'):
+    for k in ('S1', 'S2', 'S3', 'ST'):
         st = E[f'{k}_st'].values
         E[f'{k}_lo_type'] = np.where(st >= 2, 'contradictory', 'assumption_range')
         E[f'{k}_hi_type'] = np.where(st >= 2, 'contradictory', np.where(st == 1, 'evidence_bound', 'assumption_range'))
@@ -497,7 +553,7 @@ def contradiction_accounting(pf_, pe, EVT, n, gross, pulled, link_st, fday, days
     contradictory timing assumption of any cause (event status >= 2), the evidence cap (2) and the leg intersection (3) - mixed: all candidates
     contradictory, not all of one cause - and `after` (per pair: the replay time after the evidence cap). -> (V3, per-fill CST codes)."""
     flags = {}
-    for k in ('S1', 'S2', 'S3'):
+    for k in ('S1', 'S2', 'S3', 'ST'):
         st = EVT[f'{k}_st'].values[pe]; flags[k] = st >= 2; flags[k + '_cap'] = st == 2; flags[k + '_legs'] = st == 3
     flags['after_evidence'] = after; V3, cst = {}, {}
     for k, flag in flags.items():
@@ -506,7 +562,7 @@ def contradiction_accounting(pf_, pe, EVT, n, gross, pulled, link_st, fday, days
                      pulled={CST[c]: int(((cs == c) & pulled).sum()) for c in range(4)}, by_link={LINK[l]: {CST[c]: int(((cs == c) & (link_st == l)).sum()) for c in range(4)}
                                                                                               for l in range(3)},
                      by_day={d: {CST[c]: int(((cs == c) & (fday == d)).sum()) for c in range(4)} for d in days}, of_fills=n, of_gross=float(gross.sum()))
-    for k in ('S1', 'S2', 'S3'):
+    for k in ('S1', 'S2', 'S3', 'ST'):
         mixed = (cst[k] == 3) & (cst[k + '_cap'] != 3) & (cst[k + '_legs'] != 3); st = EVT[f'{k}_st'].values
         V3[k].update(mixed_all=dict(fills=int(mixed.sum()), gross=float(gross[mixed].sum())), events={WST[s_]: int((st == s_).sum()) for s_ in range(4)},
                      events_by_cls={EVC[c]: {WST[s_]: int(((st == s_) & (EVT.cls.values == c)).sum()) for s_ in range(4)} for c in range(4)})
@@ -517,7 +573,7 @@ def causes_reconcile(V3):
     """Every fill contradictory on all its candidates is all-evidence-cap, all-leg-intersection or mixed - exactly once (fills and gross)."""
     return all(V3[k]['fills']['all'] == V3[k + '_cap']['fills']['all'] + V3[k + '_legs']['fills']['all'] + V3[k]['mixed_all']['fills']
                and abs(V3[k]['gross']['all'] - V3[k + '_cap']['gross']['all'] - V3[k + '_legs']['gross']['all'] - V3[k]['mixed_all']['gross'])
-               <= 1e-6 * max(1., V3[k]['gross']['all']) for k in ('S1', 'S2', 'S3'))
+               <= 1e-6 * max(1., V3[k]['gross']['all']) for k in ('S1', 'S2', 'S3', 'ST'))
 
 
 def leg_source(how, t_e2):
@@ -661,7 +717,7 @@ def accounted(V3, n, total):
     return all(sum(v['fills'].values()) == n and abs(sum(v['gross'].values()) - total) <= 1e-6 * max(1., total) for v in V3.values())
 
 
-def run(out=OUT, src=None, tables=None, rows_of=None, env_of=None, v1=None, days=None, expect=None, tol=1., jcap=JCAP, sem_of=None):
+def run(out=OUT, src=None, tables=None, rows_of=None, env_of=None, v1=None, days=None, expect=None, tol=1., jcap=JCAP, sem_of=None, set_of_=None, st_lag=None):
     """The ledger on the committed keep / pull run (or, in the selftest's rehearsal, on synthetic tables, source and output dir)."""
     start = time.time(); out = Path(out); C.require(not out.exists(), 'ledger output exists')
     if tables is None:
@@ -669,6 +725,9 @@ def run(out=OUT, src=None, tables=None, rows_of=None, env_of=None, v1=None, days
     days = list(days or KP.DAYS); C.require(tables is not None or set(days) <= set(KP.DAYS), 'undeclared day')
     O, Fl = tables if tables is not None else KP.load(KP.OUT, days=days); src = src or KP.Tape(); expect = expect or collapsed_reference(days)
     rows_of = rows_of or day_rows; env_of = env_of or day_env; sem_of = sem_of or day_sem; v1 = v1 or v1_reference(days); La = KP.landing(np.arange(1, KP.NSTEP + 1))
+    set_of_ = set_of_ or set_of; lag_in = {}
+    if st_lag is None:
+        st_lag, lag_in = known_lag()
     E = O[O.status == 'eligible'].reset_index(drop=True); cell = E.groupby(['day', 'm', 'side', 'phase'], sort=True).ngroup().values
     T = KP.score_steps(E[[f'f{j:02d}' for j in range(KP.NSTEP + 1)]].values, E.side.values, E.p.values)[KP.DECLARED]
     endj = A.endj_of(E.t_full.values, E.g_struct.values); act, CW = V1.null_weights(T, cell, endj); ri, t, val, srcc = A.fills_of(E, Fl, SHIFT)
@@ -681,13 +740,18 @@ def run(out=OUT, src=None, tables=None, rows_of=None, env_of=None, v1=None, days
     if not ok_a:
         sys.exit(f'EXEC-WINDOW LEDGER FAILED -> no output: collapsed E {e0:,.1f} / score {s0:,.1f}, not {expect[0]:+,.0f} / {expect[1]:,.0f}')
     Fd = pd.DataFrame(dict(fid=np.arange(n), day=E.day.values[ri], m=E.m.values[ri], side=E.side.values[ri], a=t + SHIFT + t0, p=E.p.values[ri]))
-    H1, P, LG, env, recon, semst = [], [], [], {}, {}, {}
+    H1, P, LG, env, recon, semst, sdiag = [], [], [], {}, {}, {}, {}
     for d in days:
-        env[d] = dict(env_of(d)); rows = rows_of(d); sem, sem_in = sem_of(d, rows); C.require(len(sem) == len(rows), f'{d}: S3 windows not row-aligned')
-        env[d]['inputs'] = dict(env[d].get('inputs', {}), **sem_in); h_, p_, lg, recon[d] = link_day(d, Fd[Fd.day == d], src, env[d], rows); del rows
-        lg = pd.concat([lg, sem.iloc[lg.row_id.values.astype(np.int64)].reset_index(drop=True)], axis=1)
+        env[d] = dict(env_of(d)); rows = rows_of(d); sem, sem_in = sem_of(d, rows); ts, ts_in = set_of_(d)
+        C.require(len(sem) == len(rows) == len(ts), f'{d}: S3 windows or settlement times not row-aligned')
+        lo_, hi_, cd_ = st_windows(ts.t_set_ms.values, sem.S3_llo.values, sem.S3_lhi.values, st_lag)
+        stw = pd.DataFrame(dict(t_set_ms=ts.t_set_ms.values.astype(float), set_status=ts.set_status.values, ST_llo=lo_, ST_lhi=hi_, ST_code=cd_)); del ts
+        env[d]['inputs'] = dict(env[d].get('inputs', {}), **sem_in, **ts_in, **lag_in)
+        sdiag[d] = settlement_diag(pd.concat([rows.reset_index(drop=True), sem[['S3_llo', 'S3_lhi']], stw[['ST_llo', 'ST_lhi']]], axis=1), stw.t_set_ms.values, st_lag, env[d])
+        h_, p_, lg, recon[d] = link_day(d, Fd[Fd.day == d], src, env[d], rows); del rows
+        lg = pd.concat([lg, sem.iloc[lg.row_id.values.astype(np.int64)].reset_index(drop=True), stw.iloc[lg.row_id.values.astype(np.int64)].reset_index(drop=True)], axis=1)
         semst[d] = dict(day_legs={SEM_CODES[c]: int((sem.S3_code.values == c).sum()) for c in range(len(SEM_CODES))}, day_link_late=int(sem.link_late.sum()),
-                        event_legs={SEM_CODES[c]: int((lg.S3_code.values == c).sum()) for c in range(len(SEM_CODES))}, event_link_late=int(lg.link_late.sum())); del sem
+                        event_legs={SEM_CODES[c]: int((lg.S3_code.values == c).sum()) for c in range(len(SEM_CODES))}, event_link_late=int(lg.link_late.sum())); del sem, stw
         H1.append(h_); P.append(p_.assign(day=d)); LG.append(lg.assign(day=d, h=env[d]['h'], q01=env[d]['q01'], q99=env[d]['q99']))
         print(json.dumps(dict(stage='link', day=d, fills=int((Fd.day == d).sum()), linked=int(p_.fid.nunique()), legs=len(lg), identity_mismatches=recon[d],
                               seconds=round(time.time() - start), rss=round(I.K.rss_mib()))), flush=True)
@@ -715,7 +779,7 @@ def run(out=OUT, src=None, tables=None, rows_of=None, env_of=None, v1=None, days
     gross = np.abs(val)                                       # per fill over ALL its candidate events, every fill and link status in the split, by cause
     V3, cst = contradiction_accounting(pf_, pe, EVT, n, gross, pl, link_st, Fd.day.values, days, (t + t0)[pf_] > EVT.EV_hi.values[pe])
     ok_f = accounted(V3, n, float(gross.sum())) and causes_reconcile(V3)
-    DIS = {k: disagreement(LG, EVT, k) for k in ('S1', 'S2', 'S3')}
+    DIS = {k: disagreement(LG, EVT, k) for k in ('S1', 'S2', 'S3', 'ST')}
     V0 = dict(a_collapsed=ok_a, b_v1_regression=ok_b, c_linked=ok_c, d_identity=ok_d, e_conservation=ok_e, f_contradiction_accounting=ok_f)
     if not all(V0.values()):
         sys.exit(f'EXEC-WINDOW LEDGER FAILED -> no output: V0 {V0} (v1 regression {reg} vs {v1}; unlinked {unl}; identity mismatches {recon})')
@@ -753,7 +817,10 @@ def run(out=OUT, src=None, tables=None, rows_of=None, env_of=None, v1=None, days
              events=len(EVT), events_by_cls={EVC[c]: int((EVT.cls == c).sum()) for c in range(4)}, events_multi_side=int((EVT.sides > 1).sum()),
              legs=len(LG), legs_tk_status={str(s): int(v) for s, v in LG.tk_status.value_counts().items()}, env=env, collapsed_E=e0, score=s0, v1_regression=reg,
              xtab=X, bounds={f'{k}|{lat:g}': v for (k, lat), v in B.items()}, coverage=cov, decisions=dec, V3=V3, sim_removed=float(-val[pl & removed].sum()),
-             sim_kept=float(-val[pl & ~removed].sum()), disagreement=DIS, s3=dict(semst, rest_lag_ms=REST_LAG, ws_delay_ms=WS_DELAY))
+             sim_kept=float(-val[pl & ~removed].sum()), disagreement=DIS, s3=dict(semst, rest_lag_ms=REST_LAG, ws_delay_ms=WS_DELAY), st_lag_ms=st_lag, settlement=sdiag)
+    mt = np.isfinite(LG.t_set_ms.values); x = (LG.anc.values - SHIFT - LG.t_set_ms.values)[mt]                   # the replay's own point against the settlement time
+    R['replay_point_minus_t_set_ms'] = dict(legs=int(mt.sum()), **({f'p{q}': float(np.percentile(x, q)) for q in (1, 5, 50, 95, 99)} if len(x) else {}),
+                                            inside_st=float(((x >= -st_lag) & (x <= 0.)).mean()) if len(x) else None, beyond_1s=float((np.abs(x) > 1000.).mean()) if len(x) else None)
     # the ledger tables (all built, documented and checked before anything is written)
     ix = pd.Series(np.arange(len(E)), index=pd.MultiIndex.from_arrays([E.day.values, E.oid.values])); f50 = Fl[Fl.clock == SHIFT]
     q50 = f50.q.values[~np.isnan(ix.reindex(pd.MultiIndex.from_arrays([f50.day.values, f50.oid.values])).values)]; C.require(len(q50) == n, 'fill quantities misaligned')
@@ -819,7 +886,7 @@ def report(R, read, days):
     L += ['', 'PART 4 - CONTRADICTORY TIMING ASSUMPTIONS per fill over ALL its candidate events: the scenario\'s own windows cannot all hold - evidence_cap '
           '(its window lies beyond the REST cap) or leg_intersection (its legs\' windows cannot share one instant); not a REST refutation of a match time; kept, '
           'never repaired; denominators: every fill and its gross']
-    nm_ = dict(after_evidence='replay time after the evidence cap', **{k + x: f'{k} {y}' for k in ('S1', 'S2', 'S3') for x, y in
+    nm_ = dict(after_evidence='replay time after the evidence cap', **{k + x: f'{k} {y}' for k in ('S1', 'S2', 'S3', 'ST') for x, y in
                                                                        (('', 'any cause'), ('_cap', 'evidence_cap'), ('_legs', 'leg_intersection'))})
     for k, nm in nm_.items():
         v = R['V3'][k]; L.append(f"  {nm}: of {v['of_fills']:,} fills / {v['of_gross']:,.0f} c gross - " + ', '.join(f"{c} candidates {v['fills'][c]:,} / {v['gross'][c]:,.0f} c"
@@ -831,10 +898,15 @@ def report(R, read, days):
         f"admissible under S3 {v['admissible_under_S3']:,}" for k, v in R['disagreement'].items()))
     L.append('  S3 leg bases ' + ' | '.join(f"{d}: day {v['day_legs']} (links later than the REST cap + 250 ms {v['day_link_late']:,}); event legs {v['event_legs']}"
                                            for d, v in R['s3'].items() if isinstance(v, dict)))
+    L += ['', f"PART 5 - SETTLEMENT TIMES (the settlementId's UUIDv7 ms; ST lag bound {R['st_lag_ms']:.1f} ms from the known check's K8): the timing sources and the "
+          'declared windows against the venue\'s own timestamp']
+    for d, v in R['settlement'].items():
+        L.append(f'  {d}: ' + json.dumps(v))
+    L.append(f"  the replay's own point (anchor - 50 ms) minus the settlement time, on the fills' event legs: {R['replay_point_minus_t_set_ms']}")
     L += ['', 'READINGS (declared before any data was read)'] + [f'  {k}: {v}' for k, v in read.items()] + [
-          '', 'MISSING EVIDENCE: no public capture bounds the match instant from below; the REST executedAt is the Confirmed status (an upper bound only); the WS '
-          'pending link is by value; cancel effect and activation are configured points. Order-level match identity and timing (own orders, A4b) is the evidence that '
-          'would identify the ordering.', 'LIMITS: consumed days; one declared rule; STATES is local selection; M50 quantities held; S1 / S2 / S3 / CR are assumption '
+          '', 'EVIDENCE: the settlementId\'s UUIDv7 time is the venue\'s own timestamp of each trade (K8: inside the Matched second, after placement and before the '
+          'notice on every own leg); ST places the match at most the lag bound before it. The REST executedAt is the Confirmed status (an upper bound only); the WS '
+          'pending link is by value; cancel effect and activation are configured points.', 'LIMITS: consumed days; one declared rule; STATES is local selection; M50 quantities held; S1 / S2 / S3 / CR are assumption '
           f'ranges (S3: the match within {REST_LAG / 1000:g} s of its Confirmed second, a WS leg\'s increment carries its value, book and REST stamps on one clock); '
           'the REST-to-book clock alignment is not established.']
     return L
@@ -855,7 +927,8 @@ CASE_SCHEMA = {
                         anchor_origin='the engine anchor\'s origin over the leg\'s candidate rows (pending_increment / book_drop / REST_second; ambiguous: they differ)',
                         anchor_own_row='the anchor comes from the leg\'s own row (yes / no; ambiguous: its candidate rows differ)',
                         mid='market', exec_s='REST executedAt second (as S)', first_recv_ns='first REST receipt, collector local clock ns', side='side (0 bid / 1 ask of the Up book)',
-                        ptick='price tick', shares='shares', price_executed='REST execution price', taker_index='taker index', taker_quote='taker quote flag'),
+                        ptick='price tick', shares='shares', price_executed='REST execution price', taker_index='taker index', taker_quote='taker quote flag',
+                        t_set='the settlement time: the trade id\'s (= settlementId) UUIDv7 ms, venue settlement clock'),
     'known_case_rows': dict(i='the leg (known_cases row)', row_id='its candidate row in Nov 8\'s legs_timed2', group='the row\'s event: taker order tk, else -1 - row',
                             e='event index in this ledger', src='the row\'s own timing source (SRC4)', Zr='the pinned engine anchor of the row, venue ms',
                             origin='the anchor\'s origin by the engine rule (pending_increment / book_drop / REST_second)', anchor_own='the anchor comes from this row',
@@ -866,11 +939,14 @@ CASE_SCHEMA = {
                          act_status='against the declared activation range', cancel_lo='cancel effect - request, lower bound (0), ms',
                          cancel_hi='cancel effect - request, upper bound (confirmation - request; premise: the effect precedes it), ms', cancel_status='against the declared cancel range',
                          confirm_source='the first confirmation: http_answer / user_stream', user_stream_after_req='user-stream cancel received - request, ms',
-                         core_done_after_req='core CancelDone known - request, ms', throttled='a core Throttled event on the order')}
+                         core_done_after_req='core CancelDone known - request, ms', throttled='a core Throttled event on the order',
+                         act_hi_set='activation - place, upper bound with the settlement times (<= its first match), ms', act_status_set='against the declared activation range',
+                         cancel_lo_set='cancel effect - request, lower bound with the settlement times (after its latest match), ms', cancel_status_set='against the declared cancel range')}
 CASE_PREFIX = {'known_cases': {**{f'{k}_': f'{k}: the leg\'s verdict (VERD) at offset 0 and at every admissible offset, its cause (CAUSES), false CANCEL_FIRST at offset 0 / '
                                             'at some admissible offset' for k in KSC},
                                'K4_': 'K4 (v1\'s proxy: the engine anchor Z +- 250 / 600 ms): missed / CANCEL_FIRST per width; Z - place and Z - upper, ms (venue vs bot clock at '
-                                      'offset 0; NaN: no anchor)'},
+                                      'offset 0; NaN: no anchor)',
+                               'K8_': 'K8: the match on the bot clock from the settlement time, [t_set - d_hi, t_set - d_lo], ms'},
                'known_case_rows': {**{f'{k}_': f'{k}: the event window (lo / hi, venue ms) and status (st)' for k in KSC},
                                    'own_': 'the row\'s own window per scenario (its own source alone, capped by its own REST second), venue ms'}}
 
@@ -907,6 +983,7 @@ def known_frame():
                           ack=k.cancel.values, req=k.t_cancel.values, S=k.exec_s.values.astype(float), M=k.matched_reported_ms.values / 1000., Z=k.Z.values,
                           signed=k.t_signed.values, ucancel=k.t_UserCancel.values, cdone=k.t_CancelDone.values, thr=k.t_Throttled.values,
                           rM=rc['Matched'].reindex(ix).values, rC=rc['Confirmed'].reindex(ix).values, Cs=cf['min'].reindex(ix).values / 1000., lag=k.rest_minus_matched_ms.values,
+                          t_set=np.array([SETT.uuid7_ms(x) for x in k.trade_id.values]),
                           order_hash=k.order_hash.values, trade_id=k.trade_id.values, tx=k.tx.values, maker=k.maker.values, rest_raw=k.rest_raw.values,
                           leg_clock_status=k.leg_clock_status.values, candidate_legs=k.candidate_legs.values, **{c: k[c].values for c in CKEY}))
     L8 = pd.read_parquet(NOV8 / 'legs_timed2.parquet', columns=CKEY + ['how', 't_ms', 't_e2']); tk = pd.read_parquet(NOV8 / 'legs_tk.parquet', columns=['tk'])
@@ -929,6 +1006,7 @@ def case_linkage(K, L8, P8, env, day='20261108'):
     M_ = K.reset_index(drop=True).assign(i=np.arange(len(K)))[['i'] + CKEY].merge(L8[CKEY + ['row_id']], on=CKEY, how='inner').sort_values(['i', 'row_id']).reset_index(drop=True)
     C.require(np.array_equal(np.bincount(M_.i.values, minlength=len(K)), K.candidate_legs.values.astype(int)), 'candidate rows differ from the 11-09 audit\'s counts')
     A_ = pd.concat([L8, sem_windows(L8, P8)], axis=1).assign(day=day, h=env['h'], q01=env['q01'], q99=env['q99']); grp = A_.group.values; r = M_.row_id.values
+    A_['ST_llo'], A_['ST_lhi'] = A_.S3_llo, A_.S3_lhi                                  # (unused here: K8 gives each known leg its own settlement window)
     LE = A_[np.isin(grp, np.unique(grp[r]))].copy(); LE['anc'] = LE.groupby('group').Zr.transform('min').fillna(-1.)
     EVT = events_of(LE); own = A_.iloc[r]; _, W = leg_windows(own); cap = (own.exec_s.values.astype(float) + 1.) * 1000.
     e = pd.MultiIndex.from_frame(EVT[['day', 'group']]).get_indexer(pd.MultiIndex.from_arrays([np.full(len(r), day), grp[r]])); C.require(bool((e >= 0).all()), 'a candidate row without its event')
@@ -961,12 +1039,14 @@ def interval_status(lo, hi, R):
     return np.where((hi < R[0]) | (lo > R[1]), 'CONTRADICTED', np.where((lo >= R[0]) & (hi <= R[1]), 'CERTIFIED', 'COMPATIBLE-UNIDENTIFIED'))
 
 
-def order_path(K):
+def order_path(K, mlo=None, mhi=None):
     """K5 per UNIQUE order (run, cid; a leg is not the unit): activation - place in [signed - place, accepted - place] (live after signing;
     premise: live before its Accepted answer is received) against ACT_RANGE, the cancel effect - request in [0, confirmation - request]
     (premise: the effect precedes its first confirmation - the HTTP Canceled answer or the user-stream cancel - being received) against
     CANCEL_RANGE. A confirmation bounds the effect from above only: a late one is not a slow effect. Its source, the user-stream receipt, the
-    core's CancelDone and a throttle are kept apart; a confirmation before its request (core and kernel clocks disagree) is a status."""
+    core's CancelDone and a throttle are kept apart; a confirmation before its request (core and kernel clocks disagree) is a status. With the
+    fills' match bounds on the bot clock (mlo / mhi per leg, K8): activation <= its first match, and the cancel takes effect after every match
+    of the order (a cancelled order cannot fill) - the _set columns and counts."""
     U = K.drop_duplicates(['run', 'cid']).reset_index(drop=True); pl = U.place.values.astype(float)
     a_lo = np.where(np.isfinite(U.signed.values.astype(float)), np.maximum(U.signed.values.astype(float) - pl, 0.), 0.); a_hi = U.accepted.values.astype(float) - pl
     act = np.where(np.isfinite(a_hi), interval_status(a_lo, a_hi, ACT_RANGE), 'NO-ACCEPTED-ANSWER')
@@ -977,10 +1057,21 @@ def order_path(K):
     P = pd.DataFrame(dict(run=U.run.values, cid=U.cid.values, act_lo=a_lo, act_hi=a_hi, act_status=act, cancel_lo=np.where(has, 0., np.nan), cancel_hi=c_hi, cancel_status=can,
                           confirm_source=src, user_stream_after_req=uc - req, core_done_after_req=U.cdone.values.astype(float) - req, throttled=np.isfinite(U.thr.values.astype(float))))
     cnt = lambda x: {str(s): int((x == s).sum()) for s in sorted(set(x.tolist()))}
+    if mlo is not None:                                       # the settlement bounds: per order the earliest match's upper end, the latest match's lower end
+        g = pd.DataFrame(dict(run=K.run.values, cid=K.cid.values, mlo=np.asarray(mlo, float), mhi=np.asarray(mhi, float))).groupby(['run', 'cid'])
+        key = pd.MultiIndex.from_arrays([U.run.values, U.cid.values]); first_hi = g.mhi.min().reindex(key).values; last_lo = g.mlo.max().reindex(key).values
+        a_hi_s = np.fmin(a_hi, first_hi - pl); c_lo_s = np.where(has, np.maximum(0., last_lo - req), np.nan)
+        P['act_hi_set'] = a_hi_s; P['act_status_set'] = np.where(np.isfinite(a_hi_s), interval_status(a_lo, a_hi_s, ACT_RANGE), 'NO-BOUND')
+        P['cancel_lo_set'] = c_lo_s; P['cancel_status_set'] = np.where(has & (c_hi >= 0), interval_status(np.nan_to_num(c_lo_s), c_hi, CANCEL_RANGE), can)
     ch = c_hi[has & (c_hi >= 0)]; pc = {f'p{q}': float(np.percentile(ch, q)) for q in (50, 95)} if len(ch) else {}
     k5 = dict(orders=len(P), legs=len(K), activation=cnt(act), cancel=cnt(can), declared_activation=list(ACT_RANGE), declared_cancel=list(CANCEL_RANGE),
               confirmation_after_request_ms=dict(n=int(len(ch)), **pc, **({'max': float(ch.max())} if len(ch) else {})), confirmation_source=cnt(src[has]),
               throttled=int(P.throttled.sum()), smallest_activation_upper_ms=float(np.nanmin(a_hi)) if np.isfinite(a_hi).any() else None)
+    if mlo is not None:
+        cl = P.cancel_lo_set.values[np.isfinite(P.cancel_lo_set.values)]
+        k5.update(activation_with_settlement=cnt(P.act_status_set.values), cancel_with_settlement=cnt(P.cancel_status_set.values),
+                  orders_with_a_match_after_the_request=int((cl > 0).sum()), largest_cancel_lower_bound_ms=float(cl.max()) if len(cl) else None,
+                  smallest_activation_upper_with_settlement_ms=float(np.nanmin(P.act_hi_set.values)) if np.isfinite(P.act_hi_set.values).any() else None)
     return P, k5
 
 
@@ -994,7 +1085,34 @@ def offset_interval(K):
     return dict(lo=lo, hi=hi, exists=bool(lo <= hi), includes_zero=bool(lo <= 0. <= hi), receipt_bounds=int(len(a)), placement_bounds=int(len(b)))
 
 
-def window_checks(K, KE, off):
+def settlement_checks(K, off):
+    """K8 on the known legs' settlement times (t_set: the settlementId's UUIDv7 ms; the kernel's trade id IS the settlementId): version 7 on
+    every leg; floor(t_set / 1000) = its Matched stamp; d = t_set - match (bot clock) lies per leg in [t_set - upper, t_set - place], and ONE
+    constant d must fit every leg of each run and of both (the research anchor fails this test, K4). CONSISTENT -> the bounds it gives: the
+    match on the bot clock in [t_set - d_hi, t_set - d_lo] per leg; the settlement lag bound L = d_hi - K7 lo (the id is created at most L ms
+    after the match, given K7's offset bound and a lag >= 0 - premise-light, used by the ST windows); the clock offset venue - bot = d if the
+    id is stamped at the match (the settlement premise); the fill-notice delay per fill against the replay's 100 ms. -> (R, mlo, mhi, off8)."""
+    t = K.t_set.values.astype(float); v7 = np.isfinite(t); fl = v7 & (np.floor(t / 1000.) == K.M.values.astype(float))
+    lo_, hi_ = t - K.upper.values.astype(float), t - K.place.values.astype(float)
+    per_run = {}
+    for r in sorted(K.run.unique()):
+        m = (K.run.values == r) & v7
+        per_run[str(r)] = dict(lo=float(lo_[m].max()), hi=float(hi_[m].min()), exists=bool(lo_[m].max() <= hi_[m].min()), legs=int(m.sum())) if m.any() else dict(exists=False, legs=0)
+    d_lo, d_hi = (float(np.nanmax(lo_)), float(np.nanmin(hi_))) if v7.any() else (np.inf, -np.inf)
+    ok = bool(v7.all() and fl.all() and d_lo <= d_hi and all(v['exists'] for v in per_run.values()))
+    R = dict(legs=len(K), v7=int(v7.sum()), floor_is_matched_second=int(fl.sum()), after_place_at_0=int((t > K.place.values).sum()), before_notice_at_0=int((t < K.notice.values).sum()),
+             inside_lifecycle_at_0=int(((t >= K.place.values) & (t <= K.upper.values)).sum()), d=dict(lo=d_lo, hi=d_hi, exists=bool(d_lo <= d_hi)), d_per_run=per_run, consistent=ok)
+    if not ok:
+        return R, None, None, dict(lo=np.nan, hi=np.nan, exists=False, includes_zero=False)
+    mlo, mhi = t - d_hi, t - d_lo; nd_lo, nd_hi = K.notice.values.astype(float) - mhi, K.notice.values.astype(float) - mlo
+    ns = interval_status(nd_lo, nd_hi, (KP.NOTICE, KP.NOTICE))
+    R.update(lag_bound_ms=float(d_hi - off['lo']) if off['exists'] else None, offset_settlement_premise=dict(lo=d_lo, hi=d_hi, includes_zero=bool(d_lo <= 0. <= d_hi)),
+             notice_delay_ms=dict(lo_min=float(nd_lo.min()), lo_p50=float(np.median(nd_lo)), hi_p50=float(np.median(nd_hi)), hi_max=float(nd_hi.max()),
+                                  vs_replay_point={str(x): int((ns == x).sum()) for x in sorted(set(ns.tolist()))}, replay_point_ms=KP.NOTICE))
+    return R, mlo, mhi, dict(lo=d_lo, hi=d_hi, exists=True, includes_zero=bool(d_lo <= 0. <= d_hi))
+
+
+def window_checks(K, KE, off, scen=KSC, tag=''):
     """K6 on every candidate row of every known leg: the ledger's windows (S1 / S2 / S3 / EV) and the replay's own point (M50) against the
     leg's lifecycle [place, upper] and its actual cancel window (confirmation c_hi; bot clock), at offset 0 and over the admissible offsets
     off (venue - bot, K7). Per leg over its candidates: the verdict they agree on, else ambiguous; CANCEL_FIRST only if every candidate is
@@ -1012,7 +1130,7 @@ def window_checks(K, KE, off):
     def every(b):
         return has & (np.bincount(i, weights=np.asarray(b, float), minlength=n) == nk)
     out, cols = {}, {}
-    for k in KSC:
+    for k in scen:
         lo, hi, st = KE[f'{k}_lo'].values.astype(float), KE[f'{k}_hi'].values.astype(float), KE[f'{k}_st'].values.astype(int)
         v0 = np.where(st == 2, 3, np.where(st == 3, 4, np.where(hi < place, 1, np.where(lo > upper, 2, 0))))
         vr = np.where(st >= 2, v0, np.where(hi - dl < place, 1, np.where(lo - dh > upper, 2, 0)))           # missed at EVERY admissible offset
@@ -1025,8 +1143,8 @@ def window_checks(K, KE, off):
                       verdict_every_offset={VERD[x]: int((vrl == x).sum()) for x in range(len(VERD))},
                       false_cancel_first=dict(at_offset_0=int(f0.sum()), some_offset=int(fw.sum()), every_offset=int(fr.sum())),
                       causes={CAUSES[c]: int((czl == c).sum()) for c in range(len(CAUSES))}, cancelled_legs=int(np.isfinite(K.ack.values.astype(float)).sum()))
-        cols.update({f'{k}_verdict': np.array(VERD)[v0l], f'{k}_verdict_every_offset': np.array(VERD)[vrl],
-                     f'{k}_cause': np.where(czl >= 0, np.array(CAUSES)[np.clip(czl, 0, None)], ''), f'{k}_false_cf_0': f0, f'{k}_false_cf_some_offset': fw})
+        cols.update({f'{k}_verdict{tag}': np.array(VERD)[v0l], f'{k}_verdict_every_offset{tag}': np.array(VERD)[vrl],
+                     f'{k}_cause{tag}': np.where(czl >= 0, np.array(CAUSES)[np.clip(czl, 0, None)], ''), f'{k}_false_cf_0{tag}': f0, f'{k}_false_cf_some_offset{tag}': fw})
     return out, cols
 
 
@@ -1070,23 +1188,43 @@ def known_checks(K, ref, KE=None, draws=200, seed=20261118):
             'K2 DELAYED-STATUS-REFUSED': 'YES' if k2['point_contradictions'] >= 1 and k2['evidence_contradictions'] == 0 and refused else 'NO',
             'K3 IDENTITY-CHECK-FIRES': 'YES' if k3['true_contradictions'] == 0 and k3['share_draws_firing'] >= .95 else 'NO',
             'K4 REPLAY-ANCHOR-VS-LIFECYCLE': 'CONSISTENT' if all(v['missed'] == 0 and v['cancel_first'] == 0 for v in k4.values()) else 'CONTRADICTED'}
-    PO, k5 = order_path(K)
-    read['K5 ORDER-PATH INTERVALS vs DECLARED RANGES'] = ('CONTRADICTED' if k5['activation'].get('CONTRADICTED', 0) + k5['cancel'].get('CONTRADICTED', 0) > 0
-                                                          else 'NOT-CONTRADICTED')
     off = offset_interval(K); read['K7 CLOCK OFFSET (venue status - bot)'] = (f"[{off['lo']:+.1f}, {off['hi']:+.1f}] ms, " + ('CONTAINS 0' if off['includes_zero'] else 'EXCLUDES 0')
                                                                              if off['exists'] else 'EMPTY')
-    k6, cols = window_checks(K, KE, off) if KE is not None else (None, {})
+    k8, mlo, mhi, off8 = settlement_checks(K, off) if 't_set' in K else (None, None, None, dict(exists=False))
+    PO, k5 = order_path(K, mlo, mhi)
+    read['K5 ORDER-PATH INTERVALS vs DECLARED RANGES'] = ('CONTRADICTED' if k5['activation'].get('CONTRADICTED', 0) + k5['cancel'].get('CONTRADICTED', 0) > 0
+                                                          else 'NOT-CONTRADICTED')
+    if k8 is not None:
+        read['K8 SETTLEMENT TIME'] = 'CONSISTENT' if k8['consistent'] else 'CONTRADICTED'
+        if k8['consistent']:
+            o8 = k8['offset_settlement_premise']; nd = k8['notice_delay_ms']['vs_replay_point']
+            read['K8 CLOCK OFFSET (settlement premise: the id stamped at the match)'] = f"[{o8['lo']:+.1f}, {o8['hi']:+.1f}] ms, " + ('CONTAINS 0' if o8['includes_zero'] else 'EXCLUDES 0')
+            read['K8 FILL-NOTICE DELAY vs the replay 100 ms'] = (f"CONTRADICTED on {nd.get('CONTRADICTED', 0)} of {k8['legs']} fills" if nd.get('CONTRADICTED', 0) else 'NOT-CONTRADICTED')
+            read['K5S ORDER PATH WITH SETTLEMENT TIMES'] = ('CONTRADICTED' if k5['activation_with_settlement'].get('CONTRADICTED', 0) + k5['cancel_with_settlement'].get('CONTRADICTED', 0) > 0
+                                                         else 'NOT-CONTRADICTED')
+    st_ok = KE is not None and k8 is not None and k8['consistent'] and k8.get('lag_bound_ms') is not None
+    if st_ok:                                                 # ST on the known legs: [t_set - L, t_set] of the leg's own settlement (one per taker order)
+        tl = K.t_set.values.astype(float)[KE.i.values.astype(np.int64)]; L_ = k8['lag_bound_ms']
+        KE = KE.assign(ST_lo=tl - L_, ST_hi=tl, ST_st=0, own_ST_lo=tl - L_, own_ST_hi=tl)
+    scen_ = tuple(k for k in KSC if k != 'ST' or st_ok)
+    k6, cols = window_checks(K, KE, off, scen_) if KE is not None else (None, {})
+    k6s, cols_s = window_checks(K, KE, off8, scen_, tag='_set') if KE is not None and off8['exists'] else (None, {})
     if k6 is not None:
         for k in GATE:
-            read[f'K6 GATE {k}'] = 'PASS' if k6[k]['false_cancel_first']['some_offset'] == 0 else 'FAIL'
+            read[f'K6 GATE {k}'] = ('PASS' if k6[k]['false_cancel_first']['some_offset'] == 0 else 'FAIL') if k in k6 else 'NOT-RUN'
+            if k6s is not None:
+                read[f'K6 GATE {k} (settlement offsets)'] = ('PASS' if k6s[k]['false_cancel_first']['some_offset'] == 0 else 'FAIL') if k in k6s else 'NOT-RUN'
         m = k6['M50']; read['K6 REPLAY POINT M50'] = ('CONSISTENT' if m['false_cancel_first']['at_offset_0'] == 0 and m['verdict_at_offset_0']['missed_before']
                                                       + m['verdict_at_offset_0']['missed_after'] == 0 else 'CONTRADICTED')
     inst = all(read[x] == 'YES' for x in ('K0 REPRODUCES 11-09', 'K1 CLASSIFIER-CONSISTENCY', 'K2 DELAYED-STATUS-REFUSED', 'K3 IDENTITY-CHECK-FIRES'))
     gate = ', '.join(f"{k} {read[f'K6 GATE {k}']}" for k in GATE) if k6 is not None else 'NOT-RUN'
+    gate_s = ', '.join(f"{k} {read[f'K6 GATE {k} (settlement offsets)']}" for k in GATE) if k6s is not None else 'NOT-RUN'
     read['KNOWN VERDICT'] = (('INSTRUMENT-CHECKS-PASS' if inst else 'INSTRUMENT-CHECK-FAILED') + '; REPLAY-ANCHOR-' + read['K4 REPLAY-ANCHOR-VS-LIFECYCLE']
-                             + '; LEDGER-WINDOW GATE ' + gate + '; ORDER-PATH RANGES ' + read['K5 ORDER-PATH INTERVALS vs DECLARED RANGES'] + '; NOT A VENUE-ENGINE ACCEPTANCE')
-    R = dict(legs=len(K), orders=int(K.drop_duplicates(['run', 'cid']).shape[0]), cancelled=int(can.sum()), K0=k0, K0_ref=ref, K1=k1, K2=k2, K3=k3, K4=k4, K5=k5, K6=k6, K7=off,
-             _orders=PO, _legs=dict(k4c, **cols))
+                             + '; SETTLEMENT-TIME ' + read.get('K8 SETTLEMENT TIME', 'NOT-RUN') + '; LEDGER-WINDOW GATE ' + gate + ' (settlement offsets: ' + gate_s + ')'
+                             + '; ORDER-PATH RANGES ' + read['K5 ORDER-PATH INTERVALS vs DECLARED RANGES'] + '; NOT A VENUE-ENGINE ACCEPTANCE')
+    k8c = dict(K8_match_lo_bot=mlo, K8_match_hi_bot=mhi) if mlo is not None else {}
+    R = dict(legs=len(K), orders=int(K.drop_duplicates(['run', 'cid']).shape[0]), cancelled=int(can.sum()), K0=k0, K0_ref=ref, K1=k1, K2=k2, K3=k3, K4=k4, K5=k5, K6=k6,
+             K6_settlement_offsets=k6s, K7=off, K8=k8, _orders=PO, _legs=dict(k4c, **cols, **cols_s, **k8c), _KE=KE)
     if KE is not None:
         R['linkage'] = dict(candidate_rows=int(len(KE)), legs_with_several=int((np.bincount(KE.i.values, minlength=len(K)) > 1).sum()),
                             anchor_rule_reproduced=int(KE.anchor_rule_ok.sum()), origin={str(x): int(y) for x, y in KE.origin.value_counts().items()},
@@ -1096,7 +1234,7 @@ def known_checks(K, ref, KE=None, draws=200, seed=20261118):
 
 
 def known_report(R, read, KC=None):
-    L = ['KNOWN-ORDER CASE LEDGER v2 (pf_keep_pull_exec_windows.py known; the 11-09 fill-clock audit\'s confirmed own maker legs, consumed Nov 8; review of 1fd77004)',
+    L = ['KNOWN-ORDER CASE LEDGER v3 (pf_keep_pull_exec_windows.py known; the 11-09 fill-clock audit\'s confirmed own maker legs, consumed Nov 8; review of 1fd77004 + settlement times)',
          f"  {R['legs']} legs of {R['orders']} orders: {R['K4']['S1']['anchored']} with an engine anchor, {R['K4']['S1']['no_anchor']} without (ambiguous leg clocks); "
          f"{R['cancelled']} legs on orders with a cancel confirmation. Bot clock: lifecycle, cancel request / confirmation, notice receipts; venue clocks: REST / Matched / "
          'Confirmed stamps, WS / E2 times and the windows',
@@ -1114,12 +1252,25 @@ def known_report(R, read, KC=None):
              f"{k5['activation']} (smallest upper bound {k5['smallest_activation_upper_ms']} ms); cancel effect in [0, confirmation - request] vs {k5['declared_cancel']} ms: "
              f"{k5['cancel']}; confirmation after the request {k5['confirmation_after_request_ms']} (an upper bound on the effect, not its latency); first confirmation "
              f"{k5['confirmation_source']}; throttled orders {k5['throttled']}")
-    o = R['K7']; L.append(f"  K7 clock offset venue status - bot (own notices and placements): [{o['lo']:+.1f}, {o['hi']:+.1f}] ms, exists {o['exists']}, contains 0 {o['includes_zero']}")
+    k5 = R['K5']; o = R['K7']; L.append(f"  K7 clock offset venue status - bot (own notices and placements): [{o['lo']:+.1f}, {o['hi']:+.1f}] ms, exists {o['exists']}, contains 0 {o['includes_zero']}")
+    k8 = R.get('K8')
+    if k8 is not None:
+        L.append(f"  K8 settlement time (the trade id's UUIDv7 ms) on {k8['legs']} legs: version 7 {k8['v7']}; floor = the Matched second {k8['floor_is_matched_second']}; "
+                 f"after placement {k8['after_place_at_0']}, before the first notice {k8['before_notice_at_0']}, inside the lifecycle {k8['inside_lifecycle_at_0']} (offset 0); "
+                 f"one constant d = t_set - match (bot) {k8['d']} (per run {k8['d_per_run']}); consistent {k8['consistent']}")
+        if k8['consistent']:
+            L.append(f"    -> lag bound (premise-light, K7) {k8['lag_bound_ms']} ms; clock offset if the id is stamped at the match {k8['offset_settlement_premise']}; "
+                     f"fill-notice delay {k8['notice_delay_ms']}")
+            L.append(f"    -> K5 with the settlement times: activation {k5.get('activation_with_settlement')} (smallest upper bound {k5.get('smallest_activation_upper_with_settlement_ms')} ms); "
+                     f"cancel {k5.get('cancel_with_settlement')} ({k5.get('orders_with_a_match_after_the_request')} orders matched after their request, largest lower bound "
+                     f"{k5.get('largest_cancel_lower_bound_ms')} ms)")
     if R.get('K6') is not None:
         L.append(f"  case linkage: {R['linkage']}")
         for k, v in R['K6'].items():
             L.append(f"  K6 {k}: at offset 0 {v['verdict_at_offset_0']}; at every admissible offset {v['verdict_every_offset']}; known fills called CANCEL_FIRST {v['false_cancel_first']}; "
                      f"causes {v['causes']}")
+        for k, v in (R.get('K6_settlement_offsets') or {}).items():
+            L.append(f"  K6 {k} at the settlement-premise offsets: every admissible offset {v['verdict_every_offset']}; known fills called CANCEL_FIRST {v['false_cancel_first']}")
     if KC is not None and 'K4_S1_missed' in KC:
         T_ = KC[KC.K4_S1_missed.values.astype(bool)].to_dict('records'); f_ = lambda r, c, fmt='{}': fmt.format(r[c]) if c in r and r[c] == r[c] else '-'
         L.append(f'  K4 S1 failures traced ({len(T_)}; identity, the anchor against the lifecycle, its origin, the ledger windows\' verdicts and causes):')
@@ -1137,7 +1288,7 @@ def known_report(R, read, KC=None):
 def known_write(out, K, KE, R, read, meta):
     """The case ledger: known_cases (per leg), known_case_rows (per candidate row), known_orders (per unique order), every column documented
     (known_schema.json; an undocumented column refuses the output), known.txt / known.json."""
-    PO = R.pop('_orders'); cols = R.pop('_legs'); extra = {}
+    PO = R.pop('_orders'); cols = R.pop('_legs'); KE = R.pop('_KE', KE); extra = {}
     if KE is not None:
         g = KE.groupby('i'); one = lambda x, f: f(x.iloc[0]) if x.nunique() == 1 else 'ambiguous'
         extra = dict(n_candidates=np.bincount(KE.i.values, minlength=len(K)), anchor_origin=g.origin.agg(lambda x: one(x, str)).reindex(range(len(K))).fillna('unlinked').values,
@@ -1237,6 +1388,15 @@ class _Src:
         return dict(LT=self.L[self.L.mid.isin(batch)].copy())
 
 
+def _refused_v(fn):
+    """True if fn refuses (ValueError from C.require)."""
+    try:
+        fn()
+    except ValueError:
+        return True
+    return False
+
+
 def _s3_selftest():
     """sem_windows on planted increments (two candidates and a near miss in value, one late but within + 250 ms, a late link, a cell value, out
     of range, E2 / REST-only legs, no increments); the contradiction accounting by cause and its falsifier; the leg disagreements' binding pairs."""
@@ -1252,7 +1412,7 @@ def _s3_selftest():
         bad.append(f'S3 windows: {got} != {want}')
     if not sem_windows(R, P, chunk=1).equals(sem_windows(R, P)):
         bad.append('S3 windows differ when the candidate pairs are chunked')
-    EVc = pd.DataFrame(dict(S1_st=[2, 3, 0], S2_st=0, S3_st=0, cls=0)); gr = np.array([1., 2., 4., 8., 16.])
+    EVc = pd.DataFrame(dict(S1_st=[2, 3, 0], S2_st=0, S3_st=0, ST_st=[0, 0, 2], cls=0)); gr = np.array([1., 2., 4., 8., 16.])
     V3c, _ = contradiction_accounting(np.array([0, 1, 2, 2, 3, 3]), np.array([0, 1, 0, 1, 0, 2]), EVc, 5, gr, np.ones(5, bool), np.array([1, 1, 2, 2, 0]), np.full(5, 'd'), ['d'],
                                       np.zeros(6, bool))
     if not ((V3c['S1']['fills']['all'], V3c['S1']['fills']['some'], V3c['S1']['fills']['unlinked'], V3c['S1_cap']['fills']['all'], V3c['S1_cap']['fills']['some'],
@@ -1263,7 +1423,24 @@ def _s3_selftest():
     if causes_reconcile(V3x):
         bad.append('the cause reconciliation does not fire on a fill counted under two causes')
     Ld = pd.DataFrame(dict(day='d', group=[1, 1, 2, 2, 3], mid=7, side=0, anc=0., how=[1, 0, 1, 2, 1], t_ms=[1000., np.nan, 2000., 2600., 5000.], t_e2=np.nan,
-                           exec_s=[1., 3., 2., 2., 5.], h=600., q01=-900., q99=1050., S3_llo=[750., -7000., 1750., 2350., 4750.], S3_lhi=[1000., 4000., 2000., 2600., 5000.]))
+                           exec_s=[1., 3., 2., 2., 5.], h=600., q01=-900., q99=1050., S3_llo=[750., -7000., 1750., 2350., 4750.], S3_lhi=[1000., 4000., 2000., 2600., 5000.],
+                           ST_llo=[700., 700., 1800., 1800., 4800.], ST_hi=0.))
+    Ld['ST_lhi'] = [950., 950., 2000., 2000., 5000.]; Ld = Ld.drop(columns='ST_hi')
+    with tempfile.TemporaryDirectory(dir=str(I.K.IO)) as tmp:                                   # the settlement file and the lag bound: receipts and refusals
+        old = SETT.OUT; SETT.OUT = Path(tmp); d0 = Path(tmp) / '20990101'; d0.mkdir()
+        try:
+            pd.DataFrame(dict(t_set_ms=[1., np.nan], set_status=[0, 1])).to_parquet(d0 / 'legs_set.parquet', index=False)
+            rec = dict(outputs={'legs_set.parquet': C.sha(d0 / 'legs_set.parquet')}, R=dict(controls=dict(C1=True, C2=True, C3=True, C4=True)))
+            (d0 / 'settlement.json').write_text(json.dumps(rec)); ok1 = len(set_of('20990101')[0]) == 2
+            (d0 / 'settlement.json').write_text(json.dumps(dict(rec, R=dict(controls=dict(C1=False))))); r1 = _refused_v(lambda: set_of('20990101'))
+            (d0 / 'settlement.json').write_text(json.dumps(rec)); pd.DataFrame(dict(t_set_ms=[2., np.nan], set_status=[0, 1])).to_parquet(d0 / 'legs_set.parquet', index=False)
+            r2 = _refused_v(lambda: set_of('20990101'))
+            (Path(tmp) / 'known.json').write_text(json.dumps(dict(R=dict(K8=dict(consistent=True, lag_bound_ms=100.))))); ok2 = known_lag(tmp)[0] == 100.
+            (Path(tmp) / 'known.json').write_text(json.dumps(dict(R=dict(K8=dict(consistent=False, lag_bound_ms=100.))))); r3 = _refused_v(lambda: known_lag(tmp))
+        finally:
+            SETT.OUT = old
+        if not (ok1 and r1 and r2 and ok2 and r3):
+            bad.append(f'settlement file / lag bound readers: {ok1} {r1} {r2} {ok2} {r3}')
     Dd = disagreement(Ld, events_of(Ld), 'S1')
     if Dd != dict(events=2, binding_pair={'rest_second|ws_leg_link': 1, 'ws_cell_link|ws_leg_link': 1}, different_rest_seconds=1,
                   ws_spread_ms={'events': 1, 'p50': 600., 'p90': 600., 'max': 600.}, admissible_under_S3=1):
@@ -1299,9 +1476,9 @@ def _k6_selftest():
             and s1['verdict_every_offset'] == dict(compatible=3, missed_before=0, missed_after=1, contradictory_evidence=0, contradictory_legs=1, ambiguous=1, unlinked=0)
             and s1['false_cancel_first'] == dict(at_offset_0=1, some_offset=2, every_offset=1)
             and {k: v for k, v in s1['causes'].items() if v} == dict(event_proxy=1, own_ws_leg_link=1, contradictory_leg_intersection=1, unresolved_linkage=1)
-            and [rw[f'K6 GATE {k}'] for k in GATE] == ['FAIL', 'FAIL', 'PASS', 'PASS'] and rw['K6 REPLAY POINT M50'] == 'CONTRADICTED'
+            and [rw[f'K6 GATE {k}'] for k in GATE] == ['FAIL', 'FAIL', 'PASS', 'NOT-RUN', 'PASS'] and rw['K6 REPLAY POINT M50'] == 'CONTRADICTED'
             and {k: v for k, v in m5['causes'].items() if v} == dict(event_proxy=1, own_e2_drop=1, unresolved_linkage=1) and m5['false_cancel_first']['at_offset_0'] == 1
-            and 'LEDGER-WINDOW GATE S1 FAIL, S2 FAIL, S3 PASS, EV PASS' in rw['KNOWN VERDICT'] and list(Rw['_legs']['S1_verdict']) == ['compatible', 'missed_after', 'ambiguous',
+            and 'LEDGER-WINDOW GATE S1 FAIL, S2 FAIL, S3 PASS, ST NOT-RUN, EV PASS' in rw['KNOWN VERDICT'] and list(Rw['_legs']['S1_verdict']) == ['compatible', 'missed_after', 'ambiguous',
                                                                                                                                       'compatible', 'contradictory_legs', 'missed_after']):
         bad.append(f"K6 / K7 on planted lifecycles: {Rw['K7']} {Rw['K6']} {rw}")
     Kz = Kw.copy(); Kz['rM'] = Kz.rM - 2000.                                                       # inconsistent receipts: no admissible offset -> offset 0
@@ -1347,6 +1524,22 @@ def _k6_selftest():
             pass
         if (Path(tmp) / 'z').exists():
             bad.append('a refused case ledger wrote output')
+    ts_ = B_ + np.array([100., 10150., 10250., 20150., 31000., 40000.])                       # K8: settlement times inside their lifecycles
+    Kt = Kw.assign(t_set=ts_, M=np.floor(ts_ / 1000.))
+    Kt['S'] = Kt.M + 1.; Kt['Cs'] = Kt.M + 1.; Kt['rM'] = Kt.M * 1000. + 150.; Kt['rC'] = Kt.Cs * 1000. + 100.
+    ref_t = dict(rest_floor_nonoverlap=int(miss(Kt.S.values * 1000., Kt.S.values * 1000. + 999.999, Kt).sum()),
+                 matched_floor_nonoverlap=int(miss(*window_from('matched_status_s', Kt.M.values), Kt).sum()))
+    Rt, rt = known_checks(Kt, ref_t, KE, draws=10); k8 = Rt['K8']; k5 = Rt['K5']
+    if not (k8['consistent'] and k8['d'] == dict(lo=-10., hi=0., exists=True) and rt['K8 SETTLEMENT TIME'] == 'CONSISTENT'
+            and k8['lag_bound_ms'] == 0. - Rt['K7']['lo'] and k8['notice_delay_ms']['lo_min'] == 140. and 'K8 FILL-NOTICE DELAY vs the replay 100 ms' in rt
+            and k5['orders_with_a_match_after_the_request'] == 1 and k5['largest_cancel_lower_bound_ms'] == 50. and Rt['_orders'].cancel_status_set.tolist()[1] == 'CERTIFIED'
+            and k5['smallest_activation_upper_with_settlement_ms'] == 10. and 'ST' in Rt['K6'] and rt['K6 GATE ST'] == 'PASS' and Rt['K6']['ST']['false_cancel_first']['at_offset_0'] == 0
+            and 'K6 GATE S1 (settlement offsets)' in rt and np.allclose(Rt['_legs']['K8_match_hi_bot'], ts_ + 10.)):
+        bad.append(f"K8 on planted settlement times: {k8} {k5.get('cancel_with_settlement')} {rt}")
+    for nm_, kt in (('a settlement time far after its lifecycle', Kt.assign(t_set=ts_ + np.r_[5000., np.zeros(5)], M=np.floor((ts_ + np.r_[5000., np.zeros(5)]) / 1000.))),
+                    ('a settlement time outside its Matched second', Kt.assign(M=Kt.M + np.r_[1., np.zeros(5)]))):
+        if known_checks(kt, ref_t, KE, draws=10)[1].get('K8 SETTLEMENT TIME') != 'CONTRADICTED':
+            bad.append(f'K8 accepted {nm_}')
     return bad
 
 
@@ -1372,13 +1565,15 @@ def selftest(rehearse=True):
     L = pd.DataFrame(dict(day='d', group=[1, 1, 2, 3, 4, 4, 5, 6], mid=7, side=0, anc=1000., how=[1, 1, 0, 1, 1, 1, 0, 0], t_ms=[1000., 1100., np.nan, 1000., 1000., 1300., np.nan, np.nan],
                           t_e2=[np.nan, np.nan, 1010., np.nan, np.nan, np.nan, np.nan, 1200.], exec_s=[2., 2., 0., 0., 2., 2., 3., 2.], h=600., q01=-900., q99=1050.))
     L['S3_llo'], L['S3_lhi'] = rest_range(L.exec_s.values); L.loc[L.group == 1, ['S3_llo', 'S3_lhi']] = [[750., 1000.], [850., 1100.]]
+    L['ST_llo'], L['ST_lhi'] = L.S3_llo - 0., L.S3_lhi - 0.; L.loc[L.group == 2, ['ST_llo', 'ST_lhi']] = [[1500., 1700.]]   # group 2: a settlement after its cap
     try:
         leg_windows(L.drop(columns=['S3_llo'])); bad.append('legs without their S3 windows accepted')
     except ValueError:
         pass
     EV = events_of(L).set_index('group')
     if not ((EV.S3_lo[1], EV.S3_hi[1], EV.S3_st[1]) == (850., 1000., 0) and (EV.S3_lo[5], EV.S3_hi[5], EV.S3_st[5]) == (-7000., 4000., 0)
-            and EV.S3_lo_basis[5].startswith('the latest start over its legs\' S3') and EV.S3_st[2] == 0 and EV.S3_hi[2] == 1000.):
+            and EV.S3_lo_basis[5].startswith('the latest start over its legs\' S3') and EV.S3_st[2] == 0 and EV.S3_hi[2] == 1000.
+            and EV.ST_st[2] == 2 and EV.ST_lo[1] == 850. and EV.ST_hi[1] == 1000.):
         bad.append(f'events_of S3: {EV[["S3_lo", "S3_hi", "S3_st"]].to_dict("index")}')
     want = {1: (0, 850., 1000., 0), 2: (1, 760., 1000., 1), 3: (0, 750., 1000., 0), 4: (0, 1050., 1000., 3), 5: (2, 2500., 3500., 0), 6: (1, 950., 1450., 0)}
     got = {g: (int(r.cls), float(r.S1_lo), float(r.S1_hi), int(r.S1_st)) for g, r in EV.iterrows()}
@@ -1477,8 +1672,8 @@ def selftest(rehearse=True):
     Rk, rk = known_checks(Kk, ref, draws=50)
     inst_ = ('K0 REPRODUCES 11-09', 'K1 CLASSIFIER-CONSISTENCY', 'K2 DELAYED-STATUS-REFUSED', 'K3 IDENTITY-CHECK-FIRES')
     if not (all(rk[x] == 'YES' for x in inst_) and rk['K4 REPLAY-ANCHOR-VS-LIFECYCLE'] == 'CONTRADICTED'
-            and rk['KNOWN VERDICT'] == ('INSTRUMENT-CHECKS-PASS; REPLAY-ANCHOR-CONTRADICTED; LEDGER-WINDOW GATE NOT-RUN; ORDER-PATH RANGES NOT-CONTRADICTED; '
-                                        'NOT A VENUE-ENGINE ACCEPTANCE')
+            and rk['KNOWN VERDICT'] == ('INSTRUMENT-CHECKS-PASS; REPLAY-ANCHOR-CONTRADICTED; SETTLEMENT-TIME NOT-RUN; LEDGER-WINDOW GATE NOT-RUN (settlement offsets: '
+                                        'NOT-RUN); ORDER-PATH RANGES NOT-CONTRADICTED; NOT A VENUE-ENGINE ACCEPTANCE')
             and Rk['K1']['MATCH_FIRST'] == 1 and Rk['K1']['AMBIGUOUS'] == 6 and Rk['K1']['CANCEL_FIRST'] == 0 and Rk['K2']['point_contradictions'] == 1
             and Rk['K4']['S1']['missed'] == 2 and Rk['K4']['S1']['cancel_first'] == 1 and not Rk['K4']['S1']['constant_offset']['a']['exists'] and Rk['K4']['S1']['anchored'] == 8):
         bad.append(f'known checks on planted cases: {rk} {Rk}')
@@ -1524,8 +1719,9 @@ def selftest(rehearse=True):
     if rehearse and not bad:
         O, Fl, Ls, Ps = _synthetic(rng); day = '20990101'; Ls_rows = Ls[RAW_COLS + ['tk', 'tk_status']].reset_index(drop=True)
         env = dict(h=600., q01=-900., q99=1050., inputs={}); v1, e_, s_, aux = _v1_expect(O, Fl, Ls); ri_, t_, val_, act_, r_ = (aux[k] for k in ('ri', 't', 'val', 'act', 'r'))
+        tset = pd.DataFrame(dict(t_set_ms=np.where(Ls.tk.values >= 0, Ls.anc.values - 20., np.nan), set_status=np.where(Ls.tk.values >= 0, 0, 1)))   # synthetic settlement times
         base = dict(src=_Src(Ls[LEG_COLS]), tables=(O, Fl), rows_of=lambda d_: Ls_rows, env_of=lambda d_: env, v1=v1, days=[day], expect=(e_, s_), tol=1e-6,
-                    sem_of=lambda d_, rows: (sem_windows(rows, Ps), {}))
+                    sem_of=lambda d_, rows: (sem_windows(rows, Ps), {}), set_of_=lambda d_: (tset, {}), st_lag=150.)
         with tempfile.TemporaryDirectory(dir=str(I.K.IO)) as tmp:
             try:
                 R, read = run(out=Path(tmp) / 'x', **base)
@@ -1549,8 +1745,12 @@ def selftest(rehearse=True):
                 if not (b37['bounds'] in ('exact', 'outer') and sum(b37['fills'].values()) == b37['of_fills'] == len(ri_) and b37['units']['joint'] > 0):
                     bad.append(f'rehearsal bounds metadata: {b37["bounds"]} {b37["units"]} {b37["fills"]}')
                 s3d = R['s3'][day]; LGx = pd.read_parquet(Path(tmp) / 'x' / 'ledger_legs.parquet')
-                if not (set(R['V3']) == {'S1', 'S1_cap', 'S1_legs', 'S2', 'S2_cap', 'S2_legs', 'S3', 'S3_cap', 'S3_legs', 'after_evidence'} and causes_reconcile(R['V3'])
-                        and set(R['disagreement']) == {'S1', 'S2', 'S3'} and s3d['day_legs']['ws_multi'] > 0 and s3d['day_legs']['ws_unique'] > 0
+                if not (set(R['V3']) == {'S1', 'S1_cap', 'S1_legs', 'S2', 'S2_cap', 'S2_legs', 'S3', 'S3_cap', 'S3_legs', 'ST', 'ST_cap', 'ST_legs', 'after_evidence'}
+                        and causes_reconcile(R['V3']) and set(R['disagreement']) == {'S1', 'S2', 'S3', 'ST'} and s3d['day_legs']['ws_multi'] > 0 and s3d['day_legs']['ws_unique'] > 0
+                        and R['st_lag_ms'] == 150. and R['settlement'][day]['with_t_set'] == int((Ls.tk >= 0).sum()) and f'ST|{KP.CANCEL:g}' in R['bounds'] and 'V1 SIGN ST' in read
+                        and R['replay_point_minus_t_set_ms']['p50'] == -30. and R['V3']['ST']['fills']['all'] == 0
+                        and R['settlement'][day]['ws_leg_link_minus_t_set_ms']['p1'] >= 20. and R['settlement'][day]['ws_leg_link_minus_t_set_ms']['below_minus_lag'] == 0.
+                        and np.array_equal(LGx.ST_llo.values, np.where(np.isfinite(LGx.t_set_ms.values), LGx.t_set_ms.values - 150., LGx.S3_llo.values))
                         and s3d['day_legs']['rest_range_e2_unsupported'] > 0 and f'S3|{KP.CANCEL:g}' in R['bounds'] and 'V1 SIGN S3' in read
                         and np.array_equal(LGx.S3_llo.values, sem_windows(Ls_rows, Ps).S3_llo.values[LGx.row_id.values.astype(int)])):
                     bad.append(f"rehearsal S3 / causes: {sorted(R['V3'])} {s3d} {R['disagreement']}")

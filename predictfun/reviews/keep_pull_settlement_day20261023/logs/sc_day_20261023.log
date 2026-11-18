@@ -1,0 +1,14 @@
+{"stage": "scenarios", "day": "20261023", "markets": 24, "orders": 2366, "seconds": 20, "rss": 345}
+{"stage": "scenarios", "day": "20261023", "markets": 48, "orders": 4960, "seconds": 40, "rss": 421}
+{"stage": "scenarios", "day": "20261023", "markets": 72, "orders": 7392, "seconds": 59, "rss": 377}
+{"stage": "scenarios", "day": "20261023", "markets": 96, "orders": 9886, "seconds": 79, "rss": 392}
+{"stage": "scenarios", "day": "20261023", "markets": 120, "orders": 12492, "seconds": 100, "rss": 408}
+{"stage": "scenarios", "day": "20261023", "markets": 144, "orders": 15078, "seconds": 120, "rss": 425}
+{"stage": "scenarios", "day": "20261023", "markets": 168, "orders": 17590, "seconds": 141, "rss": 440}
+{"stage": "scenarios", "day": "20261023", "markets": 192, "orders": 19972, "seconds": 161, "rss": 455}
+{"stage": "scenarios", "day": "20261023", "markets": 216, "orders": 22508, "seconds": 181, "rss": 471}
+{"stage": "scenarios", "day": "20261023", "markets": 240, "orders": 25108, "seconds": 202, "rss": 487}
+{"stage": "scenarios", "day": "20261023", "markets": 264, "orders": 27718, "seconds": 222, "rss": 503}
+{"stage": "scenarios", "day": "20261023", "markets": 288, "orders": 30088, "seconds": 239, "rss": 517}
+{"day": "20261023", "stat": {"windows": 288, "orders": 30088, "base_matched": 30088, "kernel_checked": 816, "events": 560819, "held_events_S1": 9576, "held_events_S2": 1412, "held_events_S3": 1363, "held_events_ST": 255}, "seconds": 240}
+2026-11-18T10:56:47Z tag=sc_day_20261023 rc=0 peak_rss_mib=1124 wall_s=241.15 cpu_user_s=234.97 memavail_start_gib=23 disk_free_gib=444->444 slot=claude
