@@ -1,4 +1,4 @@
-"""MUTATION CHECK of the keep / pull scenario replay's selftest (2026-11-18, session aea5bfb9): a checker that cannot fail proves nothing.
+"""MUTATION CHECK of the keep / pull scenario replay's selftest (2026-11-18, session aea5bfb9; v2: the review of 1fd77004): a checker that cannot fail proves nothing.
 Each entry plants one code error in a COPY of pf_keep_pull_scenarios.py (text replacement, executed in a subprocess; the repo file is never
 touched) and runs the copy's selftest (synthetic tape only). Required: the unchanged copy passes, every mutant fails, and every replacement
 target occurs exactly as often as declared (a stale target is a failure, never a silent pass). No market data is read.
@@ -37,6 +37,17 @@ MUT = [
     ('a fill at / after the structural landing accepted', "C.require(not (fq[tt < a_] > 1e-12).any() and not (np.isfinite(lnd) and (fq[tt >= lnd] > 1e-12).any()),",
      "C.require(True or not (fq[tt < a_] > 1e-12).any() and not (np.isfinite(lnd) and (fq[tt >= lnd] > 1e-12).any()),"),
     ('B checked against the clock audit removed', "    if not ok_h:\n", "    if False:\n"),
+    # --- the review of 1fd77004: S3 timelines, held fills and denominators, families
+    ('S3 timelines read the S1 windows', "hold = EVT[f'{k}_st'].values >= 2; lo, hi = EVT[f'{k}_lo'].values, EVT[f'{k}_hi'].values; held[k] = int(hold.sum())",
+     "hold = EVT[f'{k}_st'].values >= 2; lo, hi = EVT['S1_lo'].values, EVT['S1_hi'].values; held[k] = int(hold.sum())"),
+    ('S3 legs joined by position, not by row id', "L['S3_llo'], L['S3_lhi'] = sem.S3_llo.reindex(L.row_id.values).values, sem.S3_lhi.reindex(L.row_id.values).values",
+     "L['S3_llo'], L['S3_lhi'] = sem.S3_llo.values[:len(L)], sem.S3_lhi.values[:len(L)]"),
+    ('held fills not marked', "mine = fq > 1e-12; hc = held_code(tt[mine] + t, hm[sc['tl']][s])", "mine = fq > 1e-12; hc = np.full(int(mine.sum()), 2, np.int8)"),
+    ('held legs left out of the hold map', "hl[k + 'lo'] = hl[k + 'hi'] = hold[e]", "hl[k + 'lo'] = hl[k + 'hi'] = np.zeros(len(L), bool)"),
+    ('held value counted over every fill', "hv = np.isin(Fs.held.values, (1, 3)) if 'held' in Fs else np.zeros(len(Fs), bool)", "hv = np.ones(len(Fs), bool)"),
+    ('the event denominator not counted', "st['events'] += nev", "st['events'] += 0"),
+    ('held events of a family not counted', "st[f'held_events_{k}'] += held[k]", "st[f'held_events_{k}'] += 0"),
+    ('a trade-clock shift labelled a cancel latency', "return 'trade-clock shift', f\"every trade stamp", "return 'cancel latency', f\"every trade stamp"),
 ]
 STALE = 97                                                # exit code of a replacement target that does not occur as declared
 
