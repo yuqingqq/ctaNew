@@ -1,3 +1,38 @@
+<!-- MANUAL_REVIEW_20261118_541AECA9 -->
+## Manual result review — 2026-11-18 (541aeca9)
+
+Reviewed **541aeca9ad9cefddd6b6346146072ea05692e1ed**, including d7591cb9.
+[Report](reviews/automatic/20261118_541aeca9/report.md),
+[checks](reviews/automatic/20261118_541aeca9/receipt.json),
+[scope checks](reviews/automatic/20261118_541aeca9/followup.json).
+Saved census and known-v6 readings reproduce; three pinned selftests pass.
+Exact independent endpoint/identity checks support the three original cases'
+book-clock explanation. No profitability or venue-engine acceptance follows.
+
+Three P2 gaps: (1) the per-domain builder drops losing REST/book constraints
+before conversion; a synthetic false PASS becomes FAIL when both are retained;
+(2) default np.isclose accepts a 5 s endpoint error and a 1 s identity-key error;
+(3) N3 tests response class plus final fill, not match ordering, and all three
+saved audit cases label match<=Canceled receipt EVIDENCE despite declaring that
+ordering unknown. Superseding receipts are needed, not only prose corrections.
+Scope: restoring REST lower bounds changes 47/131 saved candidate rows but keeps
+S3 at zero false avoidances on the 99 known legs. The actual three identities and
+endpoints are exact; these instrument gaps do not establish a reversal of them.
+
+Consumed Nov8, 99 legs / 86 filled orders, census as of 16:16:08.017348Z and known
+v6 16:16:26.283013Z on Nov18: 63 CANCELED/full orders and all 63 first notices after
+the answer reproduce. Later notices do not establish later matches or cancel
+failure. The Oct23 evidence-tier counts reproduce (8,862 removed fills; ledger
+as of Nov18 12:55:54.945415Z); no evidence-only CANCEL_FIRST. No untouched
+validation, training or full tape replay; codex checks 6.09 s and 3.00 s.
+
+**One next priority:** repair the timing-evidence builder and issue a superseding
+receipt that handles the three review counterexamples correctly while preserving
+the exact saved-case checks. Then expand to per-cancel journals with separate
+request/answer/match-window/notice times, no-fill orders, retries and censoring;
+never turn notice-after-answer into a measured failure probability. Review-only;
+development changes preserved; scheduler remains off.
+
 ## 2026-11-18 16:24Z (session aea5bfb9) — CLOCK GATE PER DOMAIN + CANCEL-ANSWER CENSUS (USER: "Go")
 - Done, both next steps of the timing case audit: [report](reviews/known_clock_gate_20261118/report.md). New `pf_known_clock_census.py` (14/14 mutants); `pf_timing_case_audit.py` reused (36/36); `pf_keep_pull_exec_windows.py` known v6 (120/120); the driver runs the census before the known ledger. Consumed Nov 8 only, read to 23:02Z.
 - Census v3: every known leg's book clock bounded from the bot's own frame receipts - 88/88 legs with a cancel, B -65.1..-44.7 ms (median -55.3); N0 reproduces the audit's three exactly; records 99/99.

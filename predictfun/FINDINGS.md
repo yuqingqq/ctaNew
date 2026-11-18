@@ -1,3 +1,36 @@
+<!-- MANUAL_REVIEW_20261118_541AECA9 -->
+## 2026-11-18 Review: clock progress supported; three timing-instrument gaps
+
+Target **541aeca9ad9cefddd6b6346146072ea05692e1ed** (also d7591cb9).
+[Report](reviews/automatic/20261118_541aeca9/report.md),
+[evidence](reviews/automatic/20261118_541aeca9/receipt.json),
+[scope](reviews/automatic/20261118_541aeca9/followup.json).
+Three pinned selftests and all saved census/known-v6 readings reproduce. The
+original three cases pass exact endpoint and REST identity checks; their book
+clock explanation is supported under its stated premises. Synthetic checks
+expose three P2 gaps: per-domain split drops constraints before clock conversion
+(false PASS); default np.isclose accepts 5,000 ms endpoint / 1 s identity errors;
+and cancel-ordering labels contradict the evidence (N3 uses final quantity,
+while three saved NOT-ORDERED cases still emit match<=answer as EVIDENCE).
+Restoring omitted REST bounds changes 47/131 candidate rows without changing
+S3's zero false avoidances on the 99 saved known legs; no observed reversal of
+the three original case conclusions is demonstrated.
+
+Consumed Nov8 (99 legs / 86 filled orders, census as of Nov18 16:16:08.017348Z;
+known v6 16:16:26.283013Z): the 63 CANCELED/full count and 63 later first notices
+are correct. Notice-after-answer does not prove match-after-cancel-effect; these
+outcome-selected counts are neither a failure rate per cancel nor a latency
+measurement. The three raw lifecycles reconcile. Consumed Oct23 A6 also
+reproduces (8,862 removed fills, ledger as of Nov18 12:55:54.945415Z): no
+CANCEL_FIRST is certified by the evidence-only window. No new strategy result,
+full tape replay, training or untouched validation.
+
+**Next priority:** repair and supersede the timing-evidence receipt using the
+review counterexamples, preserving the exact case checks, before the all-cancel
+census. That census must distinguish requests/answers/match windows/notices and
+retain no-fill orders, retries and censoring. Passing this implementation gate
+will not by itself validate assumed lower match bounds or strategy economics.
+
 <!-- MANUAL_REVIEW_20261118_3BF8F3A9 -->
 ## 2026-11-18 Review: corrected timing receipts reproduce; timing gate remains open
 

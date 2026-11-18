@@ -1,3 +1,25 @@
+manual_result_review_20261118_541aeca9:
+  status: complete_three_P2_instrument_gaps_original_clock_cases_supported
+  asof: "2026-11-18T16:44:37.383169+00:00"
+  target_commit: 541aeca9ad9cefddd6b6346146072ea05692e1ed
+  prior_review: a50bc5292c14c2d26539fec7d0572198a7aef487
+  report: predictfun/reviews/automatic/20261118_541aeca9/report.md
+  evidence: predictfun/reviews/automatic/20261118_541aeca9/receipt.json
+  scope_checks: predictfun/reviews/automatic/20261118_541aeca9/followup.json
+  findings: [P2_discarded_clock_constraints_can_false_pass, P2_relative_timestamp_and_identity_tolerance, P2_cancel_ordering_labels_exceed_evidence]
+  verified: {pinned_selftests: 3_pass, census_readings_reproduce: true, known_v6_readings_reproduce: true, exact_original_cases: 3, A6_reproduces: true}
+  scope: {restored_REST_bounds_changed_rows: 47, candidate_rows: 131, S3_false_avoidances_before: 0, S3_false_avoidances_after: 0}
+  counterexamples: {endpoint_error_accepted_ms: 5000, identity_second_error_accepted: 1, domain_false_pass_reproduced: true}
+  population: {consumed_day: "20261108", legs: 99, filled_orders: 86, census_asof: "2026-11-18T16:16:08.017348Z", known_asof: "2026-11-18T16:16:26.283013Z"}
+  cancel_census: {canceled_full_orders: 63, first_notice_after_first_answer: 63, proves_match_after_cancel_effect: false, contradictory_EVIDENCE_bounds_in_saved_cases: 3}
+  additional_consumed_artifact: {day: "20261023", removed_fills: 8862, ledger_asof: "2026-11-18T12:55:54.945415Z", evidence_only_CANCEL_FIRST: 0}
+  slot: codex
+  checks: ["6.09 s / 215 MiB", "3.00 s / 434 MiB"]
+  full_tape_or_training_run: false
+  untouched_validation_read: false
+  next_priority: repair_and_supersede_timing_evidence_receipt_before_per_cancel_expansion
+  scheduler: disabled_by_user
+
 clock_gate_and_cancel_census_20261118:
   status: done_s3_passes_per_domain_gate_cancel_answer_does_not_stop_fills
   asof: "2026-11-18 16:24Z"
