@@ -1,0 +1,52 @@
+ 0 none (must pass): rc 0 -> passed
+ 1 touching endpoints read as separated (the replay convention taken as evidence): rc 1 -> EXEC-WINDOW SELFTEST FAILED: classify: [0, 1, 2, 0, 1, 1, 4, 5, 1, 0, 2, 2, 1, 0, 0]
+ 2 an open endpoint read as a bounded overlap: rc 1 -> EXEC-WINDOW SELFTEST FAILED: classify: [0, 1, 2, 3, 3, 1, 2, 5, 1, 0, 2, 2, 1, 0, 3]
+ 3 an empty match window not contradictory: rc 1 -> EXEC-WINDOW SELFTEST FAILED: classify: [0, 1, 2, 3, 3, 1, 4, 0, 1, 0, 2, 2, 1, 0, 3]
+ 4 REST executedAt accepted as a point: rc 1 -> EXEC-WINDOW SELFTEST FAILED: window_from rest_confirmed_s {'point': True} not refused | known checks on planted cases: {'K0 REPRODUCES 11-09': 'YES', 'K1 CLASSIFIER-CONSISTENCY': 'YES', 'K2 DELAYED-ST
+ 5 REST executedAt second substituted for the match (no longer an upper bound only): rc 1 -> EXEC-WINDOW SELFTEST FAILED: REST executedAt evidence window | events_of: {1: (0, 850.0, 1000.0, 0), 2: (1, 760.0, 999.999, 1), 3: (0, 750.0, 999.999, 1), 4: (0, 1050.0, 1000.0, 3), 5: (2, 2500.0, 350
+ 6 a match instant accepted without an established source: rc 1 -> EXEC-WINDOW SELFTEST FAILED: window_from match_instant {} not refused
+ 7 WS window centred on the pending time: rc 1 -> EXEC-WINDOW SELFTEST FAILED: events_of: {1: (0, 850.0, 1250.0, 0), 2: (1, 760.0, 1000.0, 1), 3: (0, 750.0, 1000.0, 1), 4: (0, 1050.0, 1250.0, 0), 5: (2, 2500.0, 3500.0, 0), 6: (1, 950.0, 1450.0, 0)} !
+ 8 event legs as a hull, not an intersection: rc 1 -> EXEC-WINDOW SELFTEST FAILED: events_of: {1: (0, 750.0, 1000.0, 0), 2: (1, 760.0, 1000.0, 1), 3: (0, 750.0, 1000.0, 0), 4: (0, 750.0, 1000.0, 0), 5: (2, 2500.0, 3500.0, 0), 6: (1, 950.0, 1450.0, 0)} !=
+ 9 evidence cap dropped: rc 1 -> EXEC-WINDOW SELFTEST FAILED: events_of: {1: (0, 850.0, 1000.0, 0), 2: (1, 760.0, 1260.0, 1), 3: (0, 750.0, 1000.0, 0), 4: (0, 1050.0, 1000.0, 3), 5: (2, 2500.0, 3500.0, 0), 6: (1, 950.0, 1450.0, 0)} !
+10 an evidence-contradicted event not marked: rc 1 -> EXEC-WINDOW SELFTEST FAILED: an evidence-contradicted event not marked contradictory_evidence
+11 legs that disagree not marked: rc 1 -> EXEC-WINDOW SELFTEST FAILED: events_of: {1: (0, 850.0, 1000.0, 0), 2: (1, 760.0, 1000.0, 1), 3: (0, 750.0, 1000.0, 0), 4: (0, 1050.0, 1000.0, 2), 5: (2, 2500.0, 3500.0, 0), 6: (1, 950.0, 1450.0, 0)} !
+12 a contradictory event keeps its empty window in the bounds: rc 1 -> EXEC-WINDOW SELFTEST FAILED: event-axis windows: a contradictory event must move over the whole axis
+13 a leg that cannot fill names an event: rc 1 -> EXEC-WINDOW SELFTEST FAILED: link: [[0, 9], [0, 4], [0, 8], [1, 3]] / [3, 4, 8, 9]
+14 anchor tolerance 1 s (a wrong identity): rc 1 -> EXEC-WINDOW SELFTEST FAILED: link: [[0, 9], [0, 4], [1, 3], [2, 5]] / [3, 4, 5, 9]
+15 event legs cut to one per event: rc 1 -> EXEC-WINDOW SELFTEST FAILED: link: [[0, 9], [0, 4], [1, 3]] / [3, 4, 9]
+16 leg fields not reconciled with legs_timed2: rc 1 -> EXEC-WINDOW SELFTEST FAILED: run accepted a leg field that differs from its legs_timed2 row | a refused run wrote output (a leg field that differs from its legs_timed2 row)
+17 event id not checked against the taker-order rule: rc 1 -> EXEC-WINDOW SELFTEST FAILED: run accepted a leg whose event id breaks the taker-order rule | a refused run wrote output (a leg whose event id breaks the taker-order rule)
+18 disagreeing candidates take the first class: rc 1 -> EXEC-WINDOW SELFTEST FAILED: combine: disagreeing candidates must be AMBIGUOUS, none = -1
+19 score landing ignores the cancel latency: rc 1 -> EXEC-WINDOW SELFTEST FAILED: contrib at cancel latencies 0 / 37 / 100: [5.0, 5.0, 10.0] != [5, 5, 0] (score and null landings move with the latency) | event sweep differs from the dense grid at lat 0:
+20 null landings ignore the cancel latency: rc 1 -> EXEC-WINDOW SELFTEST FAILED: contrib at cancel latencies 0 / 37 / 100: [5.0, 5.0, -5.0] != [5, 5, 0] (score and null landings move with the latency) | event sweep differs from the dense grid at lat 0:
+21 a breakpoint repeated for one fill counted twice: rc 1 -> EXEC-WINDOW SELFTEST FAILED: singleton sweep differs from v1 bounds | event sweep differs from the dense grid at lat 0: 1 minima, 0 maxima | event sweep differs from the dense grid at lat 100: 1 minim
+22 equal instants of an event not aggregated: rc 1 -> EXEC-WINDOW SELFTEST FAILED: two jumps of one event at one instant must be summed before the state is read (true sum 0 everywhere) | joint bounds: exact [{'kind': 'joint', 'e': 0, 'fills': 3, 'gross':
+23 the window start value omitted: rc 1 -> EXEC-WINDOW SELFTEST FAILED: singleton sweep differs from v1 bounds | event sweep differs from the dense grid at lat 0: 23 minima, 23 maxima | event sweep differs from the dense grid at lat 37: 23 min
+24 a breakpoint at the window end excluded: rc 1 -> EXEC-WINDOW SELFTEST FAILED: singleton sweep differs from v1 bounds | event sweep differs from the dense grid at lat 37: 0 minima, 1 maxima
+25 cross-tab over all fills (v1's population): rc 1 -> EXEC-WINDOW SELFTEST FAILED: rehearsal refused: EXEC-WINDOW LEDGER FAILED -> no output: V0 {'a_collapsed': True, 'b_v1_regression': True, 'c_linked': True, 'd_identity': True, 'e_conservation': False,
+26 conservation check on fills disabled: rc 1 -> EXEC-WINDOW SELFTEST FAILED: conservation check does not fire on a lost fill
+27 an ambiguous fill counted as identified in a decision: rc 1 -> EXEC-WINDOW SELFTEST FAILED: rehearsal decisions differ from the ledger fills' classes
+28 V0a collapsed control ignored: rc 1 -> EXEC-WINDOW SELFTEST FAILED: run accepted a wrong collapsed expectation | a refused run wrote output (a wrong collapsed expectation)
+29 V0b v1 regression ignored: rc 1 -> EXEC-WINDOW SELFTEST FAILED: run accepted a wrong v1 reference | a refused run wrote output (a wrong v1 reference)
+30 V0d identity control ignored: rc 1 -> EXEC-WINDOW SELFTEST FAILED: run accepted a leg field that differs from its legs_timed2 row | a refused run wrote output (a leg field that differs from its legs_timed2 row) | run accepted a leg whose 
+31 contradictions counted on unique-event fills only: rc 1 -> EXEC-WINDOW SELFTEST FAILED: all-contradictory case: [('S1', {'unlinked': 0, 'none': 3, 'some': 0, 'all': 59}), ('S2', {'unlinked': 0, 'none': 3, 'some': 0, 'all': 59}), ('after_evidence', {'unlinked'
+32 some candidates counted as all: rc 1 -> EXEC-WINDOW SELFTEST FAILED: candidate status: some / all / none / unlinked
+33 contradiction accounting check always passes: rc 1 -> EXEC-WINDOW SELFTEST FAILED: the contradiction accounting check does not fire on a lost fill
+34 joint solver takes the first identity assignment: rc 1 -> EXEC-WINDOW SELFTEST FAILED: joint bounds trial 0: -8.687879 / 1.057906 != brute force [-8.687879016751594, 3.6788671179661727] | joint bounds trial 1: -2.352340 / 1.205814 != brute force [-4.43441717
+35 enumeration cap ignored (never relaxed): rc 1 -> EXEC-WINDOW SELFTEST FAILED: joint bounds: exact [{'kind': 'joint', 'e': 0, 'fills': 3, 'gross': 30.0, 'mn': 0.0, 'mx': 10.0}], relaxed [{'kind': 'joint', 'e': 0, 'fills': 3, 'gross': 30.0, 'mn': 0.0,
+36 relaxed bounds labelled exact: rc 1 -> EXEC-WINDOW SELFTEST FAILED: outer-relaxed bounds not labelled OUTER (or not containing the exact ones)
+37 ambiguous fills moved independently even when enumerable (no joint solve): rc 1 -> EXEC-WINDOW SELFTEST FAILED: joint bounds: exact [{'kind': 'relaxed', 'e': 0, 'fills': 3, 'gross': 30.0, 'mn': -10.0, 'mx': 20.0}], relaxed [{'kind': 'relaxed', 'e': 0, 'fills': 3, 'gross': 30.0, 'mn'
+38 K4 always consistent: rc 1 -> EXEC-WINDOW SELFTEST FAILED: known checks on planted cases: {'K0 REPRODUCES 11-09': 'YES', 'K1 CLASSIFIER-CONSISTENCY': 'YES', 'K2 DELAYED-STATUS-REFUSED': 'YES', 'K3 IDENTITY-CHECK-FIRES': 'YES', 'K4
+39 known verdict ignores K4: rc 1 -> EXEC-WINDOW SELFTEST FAILED: known checks on planted cases: {'K0 REPRODUCES 11-09': 'YES', 'K1 CLASSIFIER-CONSISTENCY': 'YES', 'K2 DELAYED-STATUS-REFUSED': 'YES', 'K3 IDENTITY-CHECK-FIRES': 'YES', 'K4
+40 K5 always covered: rc 1 -> EXEC-WINDOW SELFTEST FAILED: a cancel path slower than the declared range read COVERED by K5
+41 K5 cancel bound not measured from the request: rc 1 -> EXEC-WINDOW SELFTEST FAILED: K5 on planted cases: COVERED {'activation_upper_ms': {'n': 8, 'p5': 30.0, 'p50': 30.0, 'p95': 30.0, 'max': 30.0}, 'cancel_effect_upper_ms': {'n': 7, 'p5': 0.0, 'p50': 0.0,
+42 an evidence-capped upper bound labelled an assumption: rc 1 -> EXEC-WINDOW SELFTEST FAILED: explicit bound types / bases / representative time: {1: ('assumption_range', 'assumption_range', 'unknown', 'evidence_bound'), 2: ('assumption_range', 'assumption_range', 
+43 contradictory endpoints labelled assumptions: rc 1 -> EXEC-WINDOW SELFTEST FAILED: explicit bound types / bases / representative time: {1: ('assumption_range', 'assumption_range', 'unknown', 'evidence_bound'), 2: ('assumption_range', 'evidence_bound', 'u
+44 the evidence cap basis dropped: rc 1 -> EXEC-WINDOW SELFTEST FAILED: explicit bound types / bases / representative time: {1: ('assumption_range', 'assumption_range', 'unknown', 'evidence_bound'), 2: ('assumption_range', 'evidence_bound', 'u
+45 representative time without its rule shift: rc 1 -> EXEC-WINDOW SELFTEST FAILED: explicit bound types / bases / representative time: {1: ('assumption_range', 'assumption_range', 'unknown', 'evidence_bound'), 2: ('assumption_range', 'evidence_bound', 'u
+46 undocumented columns accepted: rc 1 -> EXEC-WINDOW SELFTEST FAILED: the column dictionary check: an undocumented column must be named, every events column documented
+47 K1 cancel window from the ack alone: rc 1 -> EXEC-WINDOW SELFTEST FAILED: known checks on planted cases: {'K0 REPRODUCES 11-09': 'YES', 'K1 CLASSIFIER-CONSISTENCY': 'YES', 'K2 DELAYED-STATUS-REFUSED': 'YES', 'K3 IDENTITY-CHECK-FIRES': 'YES', 'K4
+48 K2 evidence use never tested: rc 1 -> EXEC-WINDOW SELFTEST FAILED: an evidence bound that contradicts its lifecycle passes K2
+49 K3 permutation not applied: rc 1 -> EXEC-WINDOW SELFTEST FAILED: known checks on planted cases: {'K0 REPRODUCES 11-09': 'YES', 'K1 CLASSIFIER-CONSISTENCY': 'YES', 'K2 DELAYED-STATUS-REFUSED': 'YES', 'K3 IDENTITY-CHECK-FIRES': 'NO', 'K4 
+exec-window mutation check passed: the unchanged copy passes its selftest, 49 / 49 planted code errors fail it
+2026-11-18T06:57:38Z tag=xw_mutants rc=0 peak_rss_mib=209 wall_s=108.14 cpu_user_s=97.71 memavail_start_gib=23 disk_free_gib=448->447 slot=claude

@@ -65,6 +65,12 @@ MUT = [
     ('known verdict ignores K4', "'; RESEARCH-WINDOWS-' + read['K4 RESEARCH-WINDOWS-VS-LIFECYCLE']", "'; RESEARCH-WINDOWS-CONSISTENT'"),
     ('K5 always covered', "('COVERED' if len(ab) and len(cb) and k5['activation_upper_ms']['p95'] <= ACT_RANGE[1]", "('COVERED' if True or len(ab) and len(cb) and k5['activation_upper_ms']['p95'] <= ACT_RANGE[1]"),
     ('K5 cancel bound not measured from the request', "cb = (K.ack.values - K.req.values)", "cb = (K.ack.values - K.ack.values)"),
+    # --- explicit bound types, bases, representative time, the column dictionary
+    ('an evidence-capped upper bound labelled an assumption', "np.where(st == 1, 'evidence_bound', 'assumption_range')", "np.where(st == 1, 'assumption_range', 'assumption_range')"),
+    ('contradictory endpoints labelled assumptions', "E[f'{k}_lo_type'] = np.where(st >= 2, 'contradictory', 'assumption_range')", "E[f'{k}_lo_type'] = np.where(st >= 9, 'contradictory', 'assumption_range')"),
+    ('the evidence cap basis dropped', "E[f'{k}_hi_basis'] = np.where(st == 1, CAP_BASIS,", "E[f'{k}_hi_basis'] = np.where(st == 99, CAP_BASIS,"),
+    ('representative time without its rule shift', "E['rep_time'], E['rep_rule'] = E.anc - SHIFT, REP_RULE", "E['rep_time'], E['rep_rule'] = E.anc, REP_RULE"),
+    ('undocumented columns accepted', "if c not in SCHEMA.get(t, {}) and not any(", "if False and c not in SCHEMA.get(t, {}) and not any("),
     # --- the known-lifecycle checks
     ('K1 cancel window from the ack alone', "c_lo = np.where(np.isfinite(K.req.values), K.req.values, K.place.values); c_hi", "c_lo = K.ack.values; c_hi"),
     ('K2 evidence use never tested', "evidence_contradictions=int(miss(*rest_ev, K).sum())", "evidence_contradictions=0"),

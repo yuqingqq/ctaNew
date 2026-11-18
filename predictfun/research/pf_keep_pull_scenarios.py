@@ -78,6 +78,9 @@ OUT = Path(I.K.IO) / 'keep_pull_scenarios_20261118'
 SHIFT = 50.
 B0 = dict(tl='M50', A=KP.PLACE, L=KP.CANCEL, N=KP.NOTICE)
 TIMELINES = ('M50', 'S1lo', 'S1mid', 'S1hi', 'S2lo', 'S2hi', 'EVhi')
+TIMELINE_RULES = dict(M50='anchor - 50 ms (the committed replay)', S1lo='start of the admissible S1 window', S1mid='middle of the admissible S1 window',
+                      S1hi='end of the admissible S1 window', S2lo='start of the admissible S2 window', S2hi='end of the admissible S2 window',
+                      EVhi='the REST evidence cap (the latest admissible instant)', held='an event without an admissible window keeps its M50 time')
 NOTICE_RANGE = (0., 250.)
 SCEN = ([dict(B0, tl=x) for x in TIMELINES] + [dict(B0, A=a) for a in X.ACT_RANGE] + [dict(B0, L=x) for x in X.CANCEL_RANGE] + [dict(B0, N=x) for x in NOTICE_RANGE]
         + [dict(B0, tl='M0'), dict(B0, tl='M250')])
@@ -236,7 +239,7 @@ def day_run(day, src=None, timing=None, kp=None, out=None, env_of=None):
     C.require(st['kernel_checked'] > 0 or not len(Om), 'no kernel clock check ran')
     S = pd.DataFrame(rows, columns=['oid', 'scen', 'refused', 'v', 'q', 't_full', 'land']); SF = pd.DataFrame(frows, columns=['oid', 'scen', 't', 'q'])
     d.mkdir(parents=True); S.to_parquet(d / 'orders.parquet', index=False); SF.to_parquet(d / 'fills.parquet', index=False)
-    C.dump(d / 'receipt.json', dict(asof=C.stamp(), day=day, stat=st, scenarios=[name(sc) for sc in KSCEN], env=env, keep_pull_receipt=C.sha(kp / day / 'receipt.json'),
+    C.dump(d / 'receipt.json', dict(asof=C.stamp(), day=day, stat=st, scenarios=[name(sc) for sc in KSCEN], timeline_rules=TIMELINE_RULES, env=env, keep_pull_receipt=C.sha(kp / day / 'receipt.json'),
                                     keep_pull_outputs=r['outputs'], provenance=KP.provenance(), source_sha256=C.sha(Path(__file__).resolve()),
                                     dependencies={p_.name: C.sha(p_) for p_ in (Path(X.__file__), Path(QP.__file__), Path(FK.__file__), HERE / 'pf_flow_control_kernel.cpp')},
                                     outputs={x: C.sha(d / x) for x in ('orders.parquet', 'fills.parquet')}, seconds=time.time() - start))
