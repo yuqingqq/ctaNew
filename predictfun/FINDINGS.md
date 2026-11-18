@@ -1,3 +1,22 @@
+<!-- MANUAL_REVIEW_20261118_1FD77004 -->
+## Manual result review — execution evidence, 2026-11-18
+
+Target **1fd77004be70f436119c9eaf8079a94fe322099f**;
+[report](reviews/automatic/20261118_1fd77004/report.md).
+Prior multi-event omissions and false exactness labels are fixed; saved Oct23
+scenario values and known-order checks reproduce. The gate remains failed:
+E changes sign across timing scenarios, while K4 misses 12 / 6 of 93 anchored
+known legs (six others have no anchor). This does not isolate model quality.
+P2 corrections: K5's p95 ack-bound test ignores the activation lower endpoint
+and cannot infer cancellation-effect latency from a long acknowledgment;
+use unique orders and distinguish contradiction from insufficient bounds.
+The reported REST contradiction totals also include inconsistent leg windows:
+S1 all-candidate counts 708 leg-intersection / 37 evidence-cap / three mixed;
+S2 all 129 are leg-intersection. Preserve these causal distinctions.
+Next priority is raw-identity/clock reconciliation of the known failed cases,
+with unknown statuses retained, before more scenario days or model tuning.
+No full tape replay, training or untouched validation in this review.
+
 <!-- MANUAL_REVIEW_20261118_C23E6F29 -->
 ## Manual review finding — execution-window fix, 2026-11-18
 

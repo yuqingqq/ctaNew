@@ -1,3 +1,35 @@
+<!-- MANUAL_REVIEW_20261118_1FD77004 -->
+## Manual result review — 2026-11-18 (1fd77004)
+
+Reviewed **1fd77004be70f436119c9eaf8079a94fe322099f**, including 0529a820
+and d0088e90. [Report](reviews/automatic/20261118_1fd77004/report.md),
+[evidence](reviews/automatic/20261118_1fd77004/receipt.json),
+[diagnostic checks](reviews/automatic/20261118_1fd77004/diagnostics.json).
+Prior multi-event accounting and exact/relaxed-bound findings are resolved.
+Both pinned synthetic self-tests pass; source/output hashes, all 15 saved
+scenario metric rows, real candidate contradiction totals and K0–K5 reproduce.
+No full tape replay or training in this review. One consumed Oct23 day only:
+E +34,948 c at M50, -11,098 S1lo, -13,342 M250; these are local 5 s values.
+K4 tests 93 anchored legs (six unknown of 99), with 12 / 6 lifecycle misses.
+
+Two P2 diagnostic findings remain: K5 ignores the activation range's lower
+endpoint (one unique order acknowledged at +21.165 ms, before assumed +25),
+and a slow ack upper bound cannot establish a slow cancellation effect. Its
+order-path percentiles are currently leg-weighted (86 / 77 distinct orders
+for activation / cancellation). Also, the REST-contradiction headline combines
+leg-window disagreement with evidence-cap contradictions: S1's 748 all-bad
+fills comprise 708 all-leg-intersection, 37 all-evidence-cap and three mixed;
+all 129 S2 all-bad fills are leg-intersection contradictions.
+
+**Next priority:** reconcile the 12 failed S1 known-order cases to raw leg/order
+identities, source/receipt clocks and lifecycle bounds; retain all 93 anchored
+legs plus six unknowns, separate contradiction causes, and use per-order
+activation/cancel intervals with correct K5 semantics. Require no false
+certified avoidance; unresolved cases remain unknown. Do this before expanding
+the scenario run or tuning the model. Held-event denominators remain useful
+but do not resolve the known-lifecycle failures. Development owns fixes;
+schedule remains removed. No untouched validation read.
+
 ## 2026-11-18 07:25Z (session aea5bfb9) — FIRST DAY (Oct 23) OF THE EXECUTION-WINDOW LEDGER, THE KNOWN-ORDER CHECK AND THE SCENARIO REPLAY (USER: "Go", then "Can we run on one day first, don't have to run on all days yet"): every control passes; the score's edge and KEEP's value are NOT stable across the 15 tested execution scenarios; the research windows are CONTRADICTED by live's known lifecycles; the declared cancel range does not cover live's cancel acks
 
 - Runs (claude slot, consumed data only; the five-day driver was stopped 54 s into the ledger at the USER's request, nothing written): the ledger on Oct 23 (26 s, 0.99 GiB), the known-order check (the 11-09 audit's 99 own legs, 3.5 s), the scenario replay of Oct 23 (161 s, 1.0 GiB), its report (3 s). The first attempt's scenario day was refused by its own landing guard: at zero cancel latency the kernel fills a trade at the very instant a structural cancel is decided (it takes an instant's trades before its decisions) - the guard's mirror was wrong, not the kernel. Fixed: a zero-latency structural cancel acts just after its decision instant; the ledger's latency bounds now move structural landings too; the known check's offset test skips the 6 legs without a research anchor (it returned nan). The two outputs this superseded were deleted, and both mutation checks re-ran (52 / 52, 19 / 19) before the day re-ran.

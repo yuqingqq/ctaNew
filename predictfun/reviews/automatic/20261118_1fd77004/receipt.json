@@ -1,0 +1,315 @@
+{
+  "target": "1fd77004be70f436119c9eaf8079a94fe322099f",
+  "asof": "2026-11-18T08:10:29.617920+00:00",
+  "consumed_days": [
+    "20261023",
+    "20261108"
+  ],
+  "untouched_validation_read": false,
+  "tape_replayed": false,
+  "training_run": false,
+  "synthetic_instruments": "both complete selftests passed, including their known-bad refusals",
+  "prior_joint_case": {
+    "exact": [
+      0,
+      10
+    ],
+    "labelled_outer": [
+      -10,
+      20
+    ]
+  },
+  "ledger": {
+    "counted_orders": 30466,
+    "status": {
+      "eligible": 28799,
+      "refused_post_only": 1289,
+      "missing_endpoint": 354,
+      "stale_future_book": 24
+    },
+    "fills": 17670,
+    "events": 50553,
+    "all_candidate_contradictions": {
+      "S1": {
+        "unlinked": 0,
+        "none": 16539,
+        "some": 383,
+        "all": 748
+      },
+      "S2": {
+        "unlinked": 0,
+        "none": 17446,
+        "some": 95,
+        "all": 129
+      }
+    },
+    "saved_bounds_all_labelled_exact": true,
+    "contradiction_accounting_reconciled": true
+  },
+  "scenarios": {
+    "all_15_rows_exactly_reproduced": true,
+    "corrupt_hash_refused": true,
+    "result_asof": "2026-11-18T07:23:56.848599+00:00",
+    "population": {
+      "windows": 288,
+      "orders": 30088,
+      "base_matched": 30088,
+      "kernel_checked": 816,
+      "held_events_S1": 9576,
+      "held_events_S2": 1412
+    },
+    "readings": {
+      "Z0 CONTROLS": "YES",
+      "Z1 E ACROSS TESTED SCENARIOS": "NOT-STABLE-IN-TESTED-SCENARIOS",
+      "Z2 KEEP VALUE ACROSS TESTED SCENARIOS": "NOT-STABLE-IN-TESTED-SCENARIOS",
+      "Z3 THE SCORE'S VALUE ACROSS TESTED SCENARIOS": "NOT-STABLE-IN-TESTED-SCENARIOS"
+    },
+    "metrics": {
+      "M50|A58|L37|N100": {
+        "E": 34948.02366774128,
+        "score": 241282.39479053902,
+        "null": 206334.37112279775,
+        "KEEP": -416242.9431569632,
+        "fills": 17670,
+        "eligible": 28799
+      },
+      "S1lo|A58|L37|N100": {
+        "E": -11098.100277052119,
+        "score": 225126.5487503002,
+        "null": 236224.6490273523,
+        "KEEP": -521881.24935525574,
+        "fills": 20186,
+        "eligible": 28799
+      },
+      "S1mid|A58|L37|N100": {
+        "E": 25287.992461204005,
+        "score": 242256.93934833363,
+        "null": 216968.94688712963,
+        "KEEP": -445028.53753984295,
+        "fills": 19745,
+        "eligible": 28799
+      },
+      "S1hi|A58|L37|N100": {
+        "E": 34161.00025531809,
+        "score": 180557.46680961744,
+        "null": 146396.46655429935,
+        "KEEP": -290698.40240863455,
+        "fills": 16717,
+        "eligible": 28799
+      },
+      "S2lo|A58|L37|N100": {
+        "E": -2847.7829550840743,
+        "score": 233556.31848872578,
+        "null": 236404.10144380986,
+        "KEEP": -569913.5102651073,
+        "fills": 21961,
+        "eligible": 28799
+      },
+      "S2hi|A58|L37|N100": {
+        "E": 6496.356777529231,
+        "score": 12075.35148409556,
+        "null": 5578.994706566328,
+        "KEEP": 20351.719803687985,
+        "fills": 13722,
+        "eligible": 28799
+      },
+      "EVhi|A58|L37|N100": {
+        "E": 2338.463157527414,
+        "score": -38650.13095450382,
+        "null": -40988.59411203123,
+        "KEEP": 97346.47554548798,
+        "fills": 7834,
+        "eligible": 28799
+      },
+      "M50|A25|L37|N100": {
+        "E": 33842.68179783633,
+        "score": 237873.08317967784,
+        "null": 204030.4013818415,
+        "KEEP": -421144.34397610114,
+        "fills": 18146,
+        "eligible": 29172
+      },
+      "M50|A100|L37|N100": {
+        "E": 35834.04818420633,
+        "score": 242839.86522391668,
+        "null": 207005.81703971035,
+        "KEEP": -406879.3633857086,
+        "fills": 17119,
+        "eligible": 28322
+      },
+      "M50|A58|L0|N100": {
+        "E": 38255.20622848172,
+        "score": 230426.59898244002,
+        "null": 192171.3927539583,
+        "KEEP": -376843.91070623556,
+        "fills": 16689,
+        "eligible": 28799
+      },
+      "M50|A58|L100|N100": {
+        "E": 17964.296603673927,
+        "score": 234873.84423897127,
+        "null": 216909.54763529735,
+        "KEEP": -465714.8605097781,
+        "fills": 19165,
+        "eligible": 28799
+      },
+      "M50|A58|L37|N0": {
+        "E": 35655.35896487371,
+        "score": 241282.39479053902,
+        "null": 205627.0358256653,
+        "KEEP": -416242.9431569632,
+        "fills": 17670,
+        "eligible": 28799
+      },
+      "M50|A58|L37|N250": {
+        "E": 34471.28404133005,
+        "score": 241282.39479053902,
+        "null": 206811.11074920898,
+        "KEEP": -416242.9431569632,
+        "fills": 17670,
+        "eligible": 28799
+      },
+      "M0|A58|L37|N100": {
+        "E": 39834.45105128509,
+        "score": 224826.397628511,
+        "null": 184991.94657722593,
+        "KEEP": -368042.92187950073,
+        "fills": 16565,
+        "eligible": 28799
+      },
+      "M250|A58|L37|N100": {
+        "E": -13341.716849372304,
+        "score": 220534.27583550793,
+        "null": 233875.99268488024,
+        "KEEP": -518337.10253212077,
+        "fills": 20040,
+        "eligible": 28799
+      }
+    }
+  },
+  "known": {
+    "asof": "2026-11-18T07:21:12.820661+00:00",
+    "legs": 99,
+    "unique_orders": 86,
+    "anchored_legs": 93,
+    "no_anchor": 6,
+    "read": {
+      "K0 REPRODUCES 11-09": "YES",
+      "K1 CLASSIFIER-CONSISTENCY": "YES",
+      "K2 DELAYED-STATUS-REFUSED": "YES",
+      "K3 IDENTITY-CHECK-FIRES": "YES",
+      "K4 RESEARCH-WINDOWS-VS-LIFECYCLE": "CONTRADICTED",
+      "K5 DECLARED RANGES vs MEASURED ORDER PATH": "NOT-COVERED",
+      "KNOWN VERDICT": "INSTRUMENT-CHECKS-PASS; RESEARCH-WINDOWS-CONTRADICTED; NOT A VENUE-ENGINE ACCEPTANCE"
+    },
+    "K4": {
+      "S1": {
+        "missed": 12,
+        "cancel_first": 3,
+        "no_anchor": 6,
+        "constant_offset": {
+          "basis": {
+            "lo": 673.62060546875,
+            "hi": -9888.40771484375,
+            "exists": false,
+            "legs": 35
+          },
+          "v6": {
+            "lo": 725.231689453125,
+            "hi": -306.223388671875,
+            "exists": false,
+            "legs": 58
+          }
+        }
+      },
+      "S2": {
+        "missed": 6,
+        "cancel_first": 1,
+        "no_anchor": 6,
+        "constant_offset": {
+          "basis": {
+            "lo": 323.62060546875,
+            "hi": -9538.40771484375,
+            "exists": false,
+            "legs": 35
+          },
+          "v6": {
+            "lo": 375.231689453125,
+            "hi": 43.776611328125,
+            "exists": false,
+            "legs": 58
+          }
+        }
+      }
+    },
+    "K5_leg_weighted": {
+      "activation_upper_ms": {
+        "n": 99,
+        "p5": 26.23388671875,
+        "p50": 33.502197265625,
+        "p95": 66.04350585937497,
+        "max": 311.027099609375
+      },
+      "cancel_effect_upper_ms": {
+        "n": 88,
+        "p5": 14.3211181640625,
+        "p50": 21.34228515625,
+        "p95": 5032.708642578125,
+        "max": 6030.1494140625
+      },
+      "declared_activation": [
+        25.0,
+        100.0
+      ],
+      "declared_cancel": [
+        0.0,
+        100.0
+      ]
+    },
+    "unique_order_ack_bounds": {
+      "activation_n": 86,
+      "activation_p95": 64.71466064453125,
+      "cancel_n": 77,
+      "cancel_p95": 5030.6515625
+    }
+  },
+  "ack_bound_counterexample": {
+    "request_ms": 0,
+    "ack_ms": 5033,
+    "compatible_effect_ms": [
+      20,
+      2000
+    ],
+    "same_observations_do_not_identify_100ms_coverage": true
+  },
+  "verified_hashes": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_20261118_20261023/exec_windows.json": "0536f1de00ae06d1d20a49e5395694ebab38f05589c7e47e4cac207f7b4ca755",
+    "/tmp/predictfun-review-1fd77004/predictfun/research/pf_keep_pull_exec_windows.py": "a670b6a2bfe1971272fd2a1ab310fa2095b2da62ea8448f84f8d775c704f2766",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_20261118_20261023/ledger_events.parquet": "ed2163f464d7944d42d2a1768dd9488e0c021868d31ad2d1284a2963e9aea686",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_20261118_20261023/ledger_legs.parquet": "0f5e0c2a5da263a915f6d44c37883d9125d9bd65679ca4e07afcc0ffe80a1a05",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_20261118_20261023/ledger_fill_events.parquet": "b356e2d0d229d125edf77ac62743be109f5dd0dcf61b434b07b741069115dbd2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_20261118_20261023/ledger_fills.parquet": "ef0d4f57b09f8f1eba75ace723ea48e9791c8f1de27233519208eb2ce32a5f7b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_20261118_20261023/ledger_orders.parquet": "4cb20c0ac30698b21993765e9b04c6cabb188a80720f7ba587e7a4a422af5504",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_20261118_20261023/ledger_schema.json": "3086319829ee86da95ce30148809bf7188e9b4cb410d69f98905be5749c23e4e",
+    "/tmp/predictfun-review-1fd77004/predictfun/research/pf_keep_pull.py": "58b972f92bda06fbc847c43d2ace8db9d7b12f4daaf67bcfaa14e92deb475835",
+    "/tmp/predictfun-review-1fd77004/predictfun/research/pf_keep_pull_clock_audit.py": "20f5a0365bbc24235cf1943e5729f50ce8de24db7307f50aa75860798ffe4ec1",
+    "/tmp/predictfun-review-1fd77004/predictfun/research/pf_keep_pull_timing_audit.py": "a8ca7f3c73b7770d6c2ec662b40cb0e9ef10a074b0a220628ef438d46bc4aba6",
+    "/tmp/predictfun-review-1fd77004/predictfun/research/pf_stop_ev_minutes_inputs.py": "bbec0ff5d8f14a617b1ef83cfcdda659de1b4998ab25a9b05e098140316de7b6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_known_20261118/known.json": "5257733f51ab27cdf423e271efaf52a4d93b59a7fd23aa402c37985c560eed76",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_known_20261118/known_cases.parquet": "24df798b22c53d97f00b45237cda132f0f3a7d5f6a00b40cd796752f74230824",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_scenarios_20261118/scenarios_20261023.json": "cf55a7bf54dd6c22756f0007c18f637e0fc7ad6df3675ec3fb214c04ec678d0f",
+    "/tmp/predictfun-review-1fd77004/predictfun/research/pf_keep_pull_scenarios.py": "961653c16ddb1cbf8df102a684c77e7bfad218514de755538189eb75c3e4adcd",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_scenarios_20261118/20261023/receipt.json": "ac3efcd189c37573d941082e8c368b397a3b5d5d6b6ab4c2820e5bd6c79b4b69",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_scenarios_20261118/20261023/orders.parquet": "d1f5c58272ee47e575aa617730c55b9aa1d2997a8c05b30e0d66c8edddac48e1",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_scenarios_20261118/20261023/fills.parquet": "bf6531229ed68d8347cc7ccdd3a20996a77626626d768154caaa3f92820432cf",
+    "/tmp/predictfun-review-1fd77004/predictfun/research/pf_queue_place_test.py": "188c1495ce35db80ce8b79cbc50541964d0d32d9da38fee4b925e951eec01a1f",
+    "/tmp/predictfun-review-1fd77004/predictfun/research/pf_flow_control_kernel.py": "2460567474f28318f5d09df8ce0977e15748bb9263bc501471cf6a649b334379",
+    "/tmp/predictfun-review-1fd77004/predictfun/research/pf_flow_control_kernel.cpp": "fb1ff31cdcf2a97783283f927fb2d56333a0760e877cb0b93348528138886612",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_20261117/20261023/receipt.json": "5de91ce5a4dbddbc9789ac549e2965016d97967bc7762035e7b8db51b5f5bc44",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_20261117/20261023/orders.parquet": "3313ea65d73ccbfee64669758efd0f7581f73470b49dc2b7752866258a5d142b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_20261117/20261023/fills.parquet": "ba1b1448b353928c27850e4e19f073ebb6d9cf9235a51dd07d691eab2f9f2513",
+    "/tmp/predictfun-review-1fd77004/predictfun/research/pf_keep_pull_exec_windows_mutants.py": "ffa624026f05a6e4225ada2e5b16f71f2d87af8eede8dd4f7953b7f7a102070b",
+    "/tmp/predictfun-review-1fd77004/predictfun/research/pf_keep_pull_scenarios_mutants.py": "c90cb70228ad078c9ef2b9092de6fc8c7b67670161a662c62b21e304925acad6",
+    "/tmp/predictfun-review-1fd77004/predictfun/research/run_keep_pull_scenarios.sh": "367f40c67e3edce4db0a0aa16f0a6b175d88bc8ed5c4bf2c2a27a397cd4f7034"
+  }
+}

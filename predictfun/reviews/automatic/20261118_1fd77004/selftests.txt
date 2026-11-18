@@ -1,0 +1,207 @@
+{"stage": "link", "day": "20990101", "fills": 62, "linked": 62, "legs": 94, "identity_mismatches": 0, "seconds": 0, "rss": 198}
+EXECUTION-WINDOW LEDGER of the keep / pull selection, declared score A+0 (pf_keep_pull_exec_windows.py; the committed keep / pull run, M50 fills, days 20990101 (consumed); c summed; v2 of the ordering audit - supersedes v1's headline)
+  40 counted states (eligible 38, refused_post_only 2); 62 M50 fills; links unlinked 0, unique_event 59, multi_event 3
+  65 events (taker orders; WS 28, E2 15, imputed 22, mixed 0; 0 with legs on both sides); 94 legs (tk_status {'0': 86, '1': 8})
+  V0 controls: collapsed E -231 / score -494; v1 regression S1 [-323, -85] {'AFTER': 33, 'BEFORE': 1, 'AMBIGUOUS': 5}; S2 [-462, +36] {'AFTER': 29, 'BEFORE': 0, 'AMBIGUOUS': 10}
+
+PART 1 - the score's pulled orders' fills: replay ordering (row) x window class (cell: fills / net c = what removing them avoids)
+  replay: REMOVED -494 c, KEPT +102 c
+  S1|CP:
+    REMOVED (36 fills, -494 c): CANCEL_FIRST 31 / -362 c (85.7% of the row's gross) | AMBIGUOUS 4 / -136 c (14.0% of the row's gross) | CONTRADICTORY 1 / +4 c (0.2% of the row's gross)
+    KEPT    (3 fills, +102 c): CANCEL_FIRST 1 / +27 c (27.0% of the row's gross) | MATCH_FIRST 1 / +17 c (16.5% of the row's gross) | AMBIGUOUS 1 / +57 c (56.5% of the row's gross)
+  S1|CR:
+    REMOVED (36 fills, -494 c): CANCEL_FIRST 31 / -362 c (85.7% of the row's gross) | AMBIGUOUS 4 / -136 c (14.0% of the row's gross) | CONTRADICTORY 1 / +4 c (0.2% of the row's gross)
+    KEPT    (3 fills, +102 c): CANCEL_FIRST 1 / +27 c (27.0% of the row's gross) | MATCH_FIRST 1 / +17 c (16.5% of the row's gross) | AMBIGUOUS 1 / +57 c (56.5% of the row's gross)
+  S2|CP:
+    REMOVED (36 fills, -494 c): CANCEL_FIRST 29 / -452 c (76.5% of the row's gross) | AMBIGUOUS 7 / -42 c (23.5% of the row's gross)
+    KEPT    (3 fills, +102 c): AMBIGUOUS 3 / +102 c (100.0% of the row's gross)
+  S2|CR:
+    REMOVED (36 fills, -494 c): CANCEL_FIRST 29 / -452 c (76.5% of the row's gross) | AMBIGUOUS 7 / -42 c (23.5% of the row's gross)
+    KEPT    (3 fills, +102 c): AMBIGUOUS 3 / +102 c (100.0% of the row's gross)
+  EV|CP:
+    REMOVED (36 fills, -494 c): UNKNOWN 36 / -494 c (100.0% of the row's gross)
+    KEPT    (3 fills, +102 c): UNKNOWN 3 / +102 c (100.0% of the row's gross)
+  EV|CR:
+    REMOVED (36 fills, -494 c): UNKNOWN 36 / -494 c (100.0% of the row's gross)
+    KEPT    (3 fills, +102 c): UNKNOWN 3 / +102 c (100.0% of the row's gross)
+
+PART 2 - coverage: share of the pulled orders' fill value (gross) whose ordering is identified (CANCEL_FIRST or MATCH_FIRST) against the replay's cancel point
+  S1: day 20990101 83.2% | side ask 83.3%, bid 83.1% | cls E2 100.0%, WS 91.2%, imputed 52.4%, multi 100.0% | link multi_event 100.0%, unique_event 81.9%
+  S2: day 20990101 71.9% | side ask 83.3%, bid 62.2% | cls E2 92.9%, WS 72.4%, imputed 45.7%, multi 100.0% | link multi_event 100.0%, unique_event 69.8%
+  EV: day 20990101 0.0% | side ask 0.0%, bid 0.0% | cls E2 0.0%, WS 0.0%, imputed 0.0%, multi 0.0% | link multi_event 0.0%, unique_event 0.0%
+  decisions (pulled orders): S1 evaluable 13 / not 5 / no M50 fill 7 of 25 | S2 evaluable 9 / not 9 / no M50 fill 7 of 25 | EV evaluable 0 / not 18 / no M50 fill 7 of 25
+
+PART 3 - bounds on E = score improvement - exact STATES-null expectation (one shared instant per event in its admissible window; M50 quantities held)
+  S1|0 ms: [-325, -90] EXACT (of 62 linked fills: untied events 59, joint components 3 / 3 fills exact, relaxed 0 / 0 fills / 0 c gross) | side ask [-315, -243], bid [-10, +152] | day 20990101 [-325, -90] | cls E2 [-47, -47], WS [-75, -31], imputed [-156, +34], joint [-47, -47]
+  S1|37 ms: [-325, -90] EXACT (of 62 linked fills: untied events 59, joint components 3 / 3 fills exact, relaxed 0 / 0 fills / 0 c gross) | side ask [-315, -243], bid [-10, +152] | day 20990101 [-325, -90] | cls E2 [-47, -47], WS [-75, -31], imputed [-156, +34], joint [-47, -47]
+  S1|100 ms: [-316, -117] EXACT (of 62 linked fills: untied events 59, joint components 3 / 3 fills exact, relaxed 0 / 0 fills / 0 c gross) | side ask [-315, -243], bid [-1, +126] | day 20990101 [-316, -117] | cls E2 [-47, -47], WS [-67, -57], imputed [-156, +34], joint [-47, -47]
+  S2|0 ms: [-462, +23] EXACT (of 62 linked fills: untied events 59, joint components 3 / 3 fills exact, relaxed 0 / 0 fills / 0 c gross) | side ask [-379, -195], bid [-83, +218] | day 20990101 [-462, +23] | cls E2 [-54, -38], WS [-184, +22], imputed [-178, +85], joint [-47, -47]
+  S2|37 ms: [-462, +23] EXACT (of 62 linked fills: untied events 59, joint components 3 / 3 fills exact, relaxed 0 / 0 fills / 0 c gross) | side ask [-379, -195], bid [-83, +218] | day 20990101 [-462, +23] | cls E2 [-54, -38], WS [-184, +22], imputed [-178, +85], joint [-47, -47]
+  S2|100 ms: [-462, +23] EXACT (of 62 linked fills: untied events 59, joint components 3 / 3 fills exact, relaxed 0 / 0 fills / 0 c gross) | side ask [-379, -195], bid [-83, +218] | day 20990101 [-462, +23] | cls E2 [-54, -38], WS [-184, +22], imputed [-178, +85], joint [-47, -47]
+  EV|0 ms: [-783, +676] EXACT (of 62 linked fills: untied events 59, joint components 3 / 3 fills exact, relaxed 0 / 0 fills / 0 c gross) | side ask [-477, +164], bid [-305, +512] | day 20990101 [-783, +676] | cls E2 [-187, +150], WS [-283, +306], imputed [-262, +218], joint [-50, +1]
+  EV|37 ms: [-783, +676] EXACT (of 62 linked fills: untied events 59, joint components 3 / 3 fills exact, relaxed 0 / 0 fills / 0 c gross) | side ask [-477, +164], bid [-305, +512] | day 20990101 [-783, +676] | cls E2 [-187, +150], WS [-283, +306], imputed [-262, +218], joint [-50, +1]
+  EV|100 ms: [-783, +676] EXACT (of 62 linked fills: untied events 59, joint components 3 / 3 fills exact, relaxed 0 / 0 fills / 0 c gross) | side ask [-477, +164], bid [-305, +512] | day 20990101 [-783, +676] | cls E2 [-187, +150], WS [-283, +306], imputed [-262, +218], joint [-50, +1]
+
+PART 4 - contradictions per fill over ALL its candidate events (kept, never repaired; denominators: every fill and its gross)
+  S1 window contradicted by the REST evidence: of 62 fills / 2,495 c gross - all candidates 1 / 4 c, some candidates 0 / 0 c, none candidates 61 / 2,491 c, unlinked candidates 0 / 0 c; on pulled orders {'unlinked': 0, 'none': 38, 'some': 0, 'all': 1}; by link {'unlinked': {'unlinked': 0, 'none': 0, 'some': 0, 'all': 0}, 'unique_event': {'unlinked': 0, 'none': 58, 'some': 0, 'all': 1}, 'multi_event': {'unlinked': 0, 'none': 3, 'some': 0, 'all': 0}}; events {'ok': 63, 'truncated_by_evidence': 1, 'contradictory_evidence': 0, 'contradictory_legs': 1}; by class {'WS': {'ok': 27, 'truncated_by_evidence': 0, 'contradictory_evidence': 0, 'contradictory_legs': 1}, 'E2': {'ok': 14, 'truncated_by_evidence': 1, 'contradictory_evidence': 0, 'contradictory_legs': 0}, 'imputed': {'ok': 22, 'truncated_by_evidence': 0, 'contradictory_evidence': 0, 'contradictory_legs': 0}, 'mixed': {'ok': 0, 'truncated_by_evidence': 0, 'contradictory_evidence': 0, 'contradictory_legs': 0}}
+  S2 window contradicted by the REST evidence: of 62 fills / 2,495 c gross - all candidates 0 / 0 c, some candidates 0 / 0 c, none candidates 62 / 2,495 c, unlinked candidates 0 / 0 c; on pulled orders {'unlinked': 0, 'none': 39, 'some': 0, 'all': 0}; by link {'unlinked': {'unlinked': 0, 'none': 0, 'some': 0, 'all': 0}, 'unique_event': {'unlinked': 0, 'none': 59, 'some': 0, 'all': 0}, 'multi_event': {'unlinked': 0, 'none': 3, 'some': 0, 'all': 0}}; events {'ok': 27, 'truncated_by_evidence': 38, 'contradictory_evidence': 0, 'contradictory_legs': 0}; by class {'WS': {'ok': 18, 'truncated_by_evidence': 10, 'contradictory_evidence': 0, 'contradictory_legs': 0}, 'E2': {'ok': 9, 'truncated_by_evidence': 6, 'contradictory_evidence': 0, 'contradictory_legs': 0}, 'imputed': {'ok': 0, 'truncated_by_evidence': 22, 'contradictory_evidence': 0, 'contradictory_legs': 0}, 'mixed': {'ok': 0, 'truncated_by_evidence': 0, 'contradictory_evidence': 0, 'contradictory_legs': 0}}
+  replay time after the evidence cap: of 62 fills / 2,495 c gross - all candidates 0 / 0 c, some candidates 0 / 0 c, none candidates 62 / 2,495 c, unlinked candidates 0 / 0 c; on pulled orders {'unlinked': 0, 'none': 39, 'some': 0, 'all': 0}; by link {'unlinked': {'unlinked': 0, 'none': 0, 'some': 0, 'all': 0}, 'unique_event': {'unlinked': 0, 'none': 59, 'some': 0, 'all': 0}, 'multi_event': {'unlinked': 0, 'none': 3, 'some': 0, 'all': 0}}
+
+READINGS (declared before any data was read)
+  V0 CONTROLS: YES
+  V1 SIGN S1: EXCESS-NEGATIVE-IDENTIFIED
+  V1 SIGN S2: SIGN-NOT-IDENTIFIED
+  V1 SIGN EV: SIGN-NOT-IDENTIFIED
+
+MISSING EVIDENCE: no public capture bounds the match instant from below; the REST executedAt is a delayed status (an upper bound only); the WS pending link is by value; cancel effect and activation are configured points. Order-level match identity and timing (own orders, A4b) is the evidence that would identify the ordering.
+LIMITS: consumed days; one declared rule; STATES is local selection; M50 quantities held; S1 / S2 / CR are assumption ranges; clock alignment between REST, WS and book stamps not established.
+{"stage": "link", "day": "20990101", "fills": 62, "linked": 62, "legs": 94, "identity_mismatches": 0, "seconds": 0, "rss": 206}
+EXECUTION-WINDOW LEDGER of the keep / pull selection, declared score A+0 (pf_keep_pull_exec_windows.py; the committed keep / pull run, M50 fills, days 20990101 (consumed); c summed; v2 of the ordering audit - supersedes v1's headline)
+  40 counted states (eligible 38, refused_post_only 2); 62 M50 fills; links unlinked 0, unique_event 59, multi_event 3
+  65 events (taker orders; WS 65, E2 0, imputed 0, mixed 0; 0 with legs on both sides); 94 legs (tk_status {'0': 86, '1': 8})
+  V0 controls: collapsed E -231 / score -494; v1 regression S1 [-302, -167] {'AFTER': 35, 'BEFORE': 1, 'AMBIGUOUS': 3}; S2 [-461, +11] {'AFTER': 30, 'BEFORE': 0, 'AMBIGUOUS': 9}
+
+PART 1 - the score's pulled orders' fills: replay ordering (row) x window class (cell: fills / net c = what removing them avoids)
+  replay: REMOVED -494 c, KEPT +102 c
+  S1|CP:
+    REMOVED (36 fills, -494 c): CONTRADICTORY 36 / -494 c (100.0% of the row's gross)
+    KEPT    (3 fills, +102 c): CONTRADICTORY 3 / +102 c (100.0% of the row's gross)
+  S1|CR:
+    REMOVED (36 fills, -494 c): CONTRADICTORY 36 / -494 c (100.0% of the row's gross)
+    KEPT    (3 fills, +102 c): CONTRADICTORY 3 / +102 c (100.0% of the row's gross)
+  S2|CP:
+    REMOVED (36 fills, -494 c): CONTRADICTORY 36 / -494 c (100.0% of the row's gross)
+    KEPT    (3 fills, +102 c): CONTRADICTORY 3 / +102 c (100.0% of the row's gross)
+  S2|CR:
+    REMOVED (36 fills, -494 c): CONTRADICTORY 36 / -494 c (100.0% of the row's gross)
+    KEPT    (3 fills, +102 c): CONTRADICTORY 3 / +102 c (100.0% of the row's gross)
+  EV|CP:
+    REMOVED (36 fills, -494 c): MATCH_FIRST 36 / -494 c (100.0% of the row's gross)
+    KEPT    (3 fills, +102 c): MATCH_FIRST 3 / +102 c (100.0% of the row's gross)
+  EV|CR:
+    REMOVED (36 fills, -494 c): MATCH_FIRST 36 / -494 c (100.0% of the row's gross)
+    KEPT    (3 fills, +102 c): MATCH_FIRST 3 / +102 c (100.0% of the row's gross)
+
+PART 2 - coverage: share of the pulled orders' fill value (gross) whose ordering is identified (CANCEL_FIRST or MATCH_FIRST) against the replay's cancel point
+  S1: day 20990101 0.0% | side ask 0.0%, bid 0.0% | cls WS 0.0%, multi 0.0% | link multi_event 0.0%, unique_event 0.0%
+  S2: day 20990101 0.0% | side ask 0.0%, bid 0.0% | cls WS 0.0%, multi 0.0% | link multi_event 0.0%, unique_event 0.0%
+  EV: day 20990101 100.0% | side ask 100.0%, bid 100.0% | cls WS 100.0%, multi 100.0% | link multi_event 100.0%, unique_event 100.0%
+  decisions (pulled orders): S1 evaluable 0 / not 18 / no M50 fill 7 of 25 | S2 evaluable 0 / not 18 / no M50 fill 7 of 25 | EV evaluable 18 / not 0 / no M50 fill 7 of 25
+
+PART 3 - bounds on E = score improvement - exact STATES-null expectation (one shared instant per event in its admissible window; M50 quantities held)
+  S1|0 ms: [-783, +676] EXACT (of 62 linked fills: untied events 59, joint components 3 / 3 fills exact, relaxed 0 / 0 fills / 0 c gross) | side ask [-477, +164], bid [-305, +512] | day 20990101 [-783, +676] | cls WS [-733, +675], joint [-50, +1]
+  S1|37 ms: [-783, +676] EXACT (of 62 linked fills: untied events 59, joint components 3 / 3 fills exact, relaxed 0 / 0 fills / 0 c gross) | side ask [-477, +164], bid [-305, +512] | day 20990101 [-783, +676] | cls WS [-733, +675], joint [-50, +1]
+  S1|100 ms: [-783, +676] EXACT (of 62 linked fills: untied events 59, joint components 3 / 3 fills exact, relaxed 0 / 0 fills / 0 c gross) | side ask [-477, +164], bid [-305, +512] | day 20990101 [-783, +676] | cls WS [-733, +675], joint [-50, +1]
+  S2|0 ms: [-783, +676] EXACT (of 62 linked fills: untied events 59, joint components 3 / 3 fills exact, relaxed 0 / 0 fills / 0 c gross) | side ask [-477, +164], bid [-305, +512] | day 20990101 [-783, +676] | cls WS [-733, +675], joint [-50, +1]
+  S2|37 ms: [-783, +676] EXACT (of 62 linked fills: untied events 59, joint components 3 / 3 fills exact, relaxed 0 / 0 fills / 0 c gross) | side ask [-477, +164], bid [-305, +512] | day 20990101 [-783, +676] | cls WS [-733, +675], joint [-50, +1]
+  S2|100 ms: [-783, +676] EXACT (of 62 linked fills: untied events 59, joint components 3 / 3 fills exact, relaxed 0 / 0 fills / 0 c gross) | side ask [-477, +164], bid [-305, +512] | day 20990101 [-783, +676] | cls WS [-733, +675], joint [-50, +1]
+  EV|0 ms: [+0, +0] EXACT (of 62 linked fills: untied events 59, joint components 3 / 3 fills exact, relaxed 0 / 0 fills / 0 c gross) | side ask [+0, +0], bid [+0, +0] | day 20990101 [+0, +0] | cls WS [+0, +0], joint [+0, +0]
+  EV|37 ms: [+0, +0] EXACT (of 62 linked fills: untied events 59, joint components 3 / 3 fills exact, relaxed 0 / 0 fills / 0 c gross) | side ask [+0, +0], bid [+0, +0] | day 20990101 [+0, +0] | cls WS [+0, +0], joint [+0, +0]
+  EV|100 ms: [+0, +0] EXACT (of 62 linked fills: untied events 59, joint components 3 / 3 fills exact, relaxed 0 / 0 fills / 0 c gross) | side ask [+0, +0], bid [+0, +0] | day 20990101 [+0, +0] | cls WS [+0, +0], joint [+0, +0]
+
+PART 4 - contradictions per fill over ALL its candidate events (kept, never repaired; denominators: every fill and its gross)
+  S1 window contradicted by the REST evidence: of 62 fills / 2,495 c gross - all candidates 62 / 2,495 c, some candidates 0 / 0 c, none candidates 0 / 0 c, unlinked candidates 0 / 0 c; on pulled orders {'unlinked': 0, 'none': 0, 'some': 0, 'all': 39}; by link {'unlinked': {'unlinked': 0, 'none': 0, 'some': 0, 'all': 0}, 'unique_event': {'unlinked': 0, 'none': 0, 'some': 0, 'all': 59}, 'multi_event': {'unlinked': 0, 'none': 0, 'some': 0, 'all': 3}}; events {'ok': 0, 'truncated_by_evidence': 0, 'contradictory_evidence': 65, 'contradictory_legs': 0}; by class {'WS': {'ok': 0, 'truncated_by_evidence': 0, 'contradictory_evidence': 65, 'contradictory_legs': 0}, 'E2': {'ok': 0, 'truncated_by_evidence': 0, 'contradictory_evidence': 0, 'contradictory_legs': 0}, 'imputed': {'ok': 0, 'truncated_by_evidence': 0, 'contradictory_evidence': 0, 'contradictory_legs': 0}, 'mixed': {'ok': 0, 'truncated_by_evidence': 0, 'contradictory_evidence': 0, 'contradictory_legs': 0}}
+  S2 window contradicted by the REST evidence: of 62 fills / 2,495 c gross - all candidates 62 / 2,495 c, some candidates 0 / 0 c, none candidates 0 / 0 c, unlinked candidates 0 / 0 c; on pulled orders {'unlinked': 0, 'none': 0, 'some': 0, 'all': 39}; by link {'unlinked': {'unlinked': 0, 'none': 0, 'some': 0, 'all': 0}, 'unique_event': {'unlinked': 0, 'none': 0, 'some': 0, 'all': 59}, 'multi_event': {'unlinked': 0, 'none': 0, 'some': 0, 'all': 3}}; events {'ok': 0, 'truncated_by_evidence': 0, 'contradictory_evidence': 65, 'contradictory_legs': 0}; by class {'WS': {'ok': 0, 'truncated_by_evidence': 0, 'contradictory_evidence': 65, 'contradictory_legs': 0}, 'E2': {'ok': 0, 'truncated_by_evidence': 0, 'contradictory_evidence': 0, 'contradictory_legs': 0}, 'imputed': {'ok': 0, 'truncated_by_evidence': 0, 'contradictory_evidence': 0, 'contradictory_legs': 0}, 'mixed': {'ok': 0, 'truncated_by_evidence': 0, 'contradictory_evidence': 0, 'contradictory_legs': 0}}
+  replay time after the evidence cap: of 62 fills / 2,495 c gross - all candidates 62 / 2,495 c, some candidates 0 / 0 c, none candidates 0 / 0 c, unlinked candidates 0 / 0 c; on pulled orders {'unlinked': 0, 'none': 0, 'some': 0, 'all': 39}; by link {'unlinked': {'unlinked': 0, 'none': 0, 'some': 0, 'all': 0}, 'unique_event': {'unlinked': 0, 'none': 0, 'some': 0, 'all': 59}, 'multi_event': {'unlinked': 0, 'none': 0, 'some': 0, 'all': 3}}
+
+READINGS (declared before any data was read)
+  V0 CONTROLS: YES
+  V1 SIGN S1: SIGN-NOT-IDENTIFIED
+  V1 SIGN S2: SIGN-NOT-IDENTIFIED
+  V1 SIGN EV: SIGN-NOT-IDENTIFIED
+
+MISSING EVIDENCE: no public capture bounds the match instant from below; the REST executedAt is a delayed status (an upper bound only); the WS pending link is by value; cancel effect and activation are configured points. Order-level match identity and timing (own orders, A4b) is the evidence that would identify the ordering.
+LIMITS: consumed days; one declared rule; STATES is local selection; M50 quantities held; S1 / S2 / CR are assumption ranges; clock alignment between REST, WS and book stamps not established.
+{"stage": "link", "day": "20990101", "fills": 62, "linked": 62, "legs": 94, "identity_mismatches": 0, "seconds": 0, "rss": 207}
+EXECUTION-WINDOW LEDGER of the keep / pull selection, declared score A+0 (pf_keep_pull_exec_windows.py; the committed keep / pull run, M50 fills, days 20990101 (consumed); c summed; v2 of the ordering audit - supersedes v1's headline)
+  40 counted states (eligible 38, refused_post_only 2); 62 M50 fills; links unlinked 0, unique_event 59, multi_event 3
+  65 events (taker orders; WS 28, E2 15, imputed 22, mixed 0; 0 with legs on both sides); 94 legs (tk_status {'0': 86, '1': 8})
+  V0 controls: collapsed E -231 / score -494; v1 regression S1 [-323, -85] {'AFTER': 33, 'BEFORE': 1, 'AMBIGUOUS': 5}; S2 [-462, +36] {'AFTER': 29, 'BEFORE': 0, 'AMBIGUOUS': 10}
+
+PART 1 - the score's pulled orders' fills: replay ordering (row) x window class (cell: fills / net c = what removing them avoids)
+  replay: REMOVED -494 c, KEPT +102 c
+  S1|CP:
+    REMOVED (36 fills, -494 c): CANCEL_FIRST 31 / -362 c (85.7% of the row's gross) | AMBIGUOUS 4 / -136 c (14.0% of the row's gross) | CONTRADICTORY 1 / +4 c (0.2% of the row's gross)
+    KEPT    (3 fills, +102 c): CANCEL_FIRST 1 / +27 c (27.0% of the row's gross) | MATCH_FIRST 1 / +17 c (16.5% of the row's gross) | AMBIGUOUS 1 / +57 c (56.5% of the row's gross)
+  S1|CR:
+    REMOVED (36 fills, -494 c): CANCEL_FIRST 31 / -362 c (85.7% of the row's gross) | AMBIGUOUS 4 / -136 c (14.0% of the row's gross) | CONTRADICTORY 1 / +4 c (0.2% of the row's gross)
+    KEPT    (3 fills, +102 c): CANCEL_FIRST 1 / +27 c (27.0% of the row's gross) | MATCH_FIRST 1 / +17 c (16.5% of the row's gross) | AMBIGUOUS 1 / +57 c (56.5% of the row's gross)
+  S2|CP:
+    REMOVED (36 fills, -494 c): CANCEL_FIRST 29 / -452 c (76.5% of the row's gross) | AMBIGUOUS 7 / -42 c (23.5% of the row's gross)
+    KEPT    (3 fills, +102 c): AMBIGUOUS 3 / +102 c (100.0% of the row's gross)
+  S2|CR:
+    REMOVED (36 fills, -494 c): CANCEL_FIRST 29 / -452 c (76.5% of the row's gross) | AMBIGUOUS 7 / -42 c (23.5% of the row's gross)
+    KEPT    (3 fills, +102 c): AMBIGUOUS 3 / +102 c (100.0% of the row's gross)
+  EV|CP:
+    REMOVED (36 fills, -494 c): UNKNOWN 36 / -494 c (100.0% of the row's gross)
+    KEPT    (3 fills, +102 c): UNKNOWN 3 / +102 c (100.0% of the row's gross)
+  EV|CR:
+    REMOVED (36 fills, -494 c): UNKNOWN 36 / -494 c (100.0% of the row's gross)
+    KEPT    (3 fills, +102 c): UNKNOWN 3 / +102 c (100.0% of the row's gross)
+
+PART 2 - coverage: share of the pulled orders' fill value (gross) whose ordering is identified (CANCEL_FIRST or MATCH_FIRST) against the replay's cancel point
+  S1: day 20990101 83.2% | side ask 83.3%, bid 83.1% | cls E2 100.0%, WS 91.2%, imputed 52.4%, multi 100.0% | link multi_event 100.0%, unique_event 81.9%
+  S2: day 20990101 71.9% | side ask 83.3%, bid 62.2% | cls E2 92.9%, WS 72.4%, imputed 45.7%, multi 100.0% | link multi_event 100.0%, unique_event 69.8%
+  EV: day 20990101 0.0% | side ask 0.0%, bid 0.0% | cls E2 0.0%, WS 0.0%, imputed 0.0%, multi 0.0% | link multi_event 0.0%, unique_event 0.0%
+  decisions (pulled orders): S1 evaluable 13 / not 5 / no M50 fill 7 of 25 | S2 evaluable 9 / not 9 / no M50 fill 7 of 25 | EV evaluable 0 / not 18 / no M50 fill 7 of 25
+
+PART 3 - bounds on E = score improvement - exact STATES-null expectation (one shared instant per event in its admissible window; M50 quantities held)
+  S1|0 ms: [-325, -90] OUTER (of 62 linked fills: untied events 59, joint components 0 / 0 fills exact, relaxed 3 / 3 fills / 122 c gross) | side ask [-315, -243], bid [-10, +152] | day 20990101 [-325, -90] | cls E2 [-47, -47], WS [-75, -31], imputed [-156, +34], relaxed [-47, -47]
+  S1|37 ms: [-325, -90] OUTER (of 62 linked fills: untied events 59, joint components 0 / 0 fills exact, relaxed 3 / 3 fills / 122 c gross) | side ask [-315, -243], bid [-10, +152] | day 20990101 [-325, -90] | cls E2 [-47, -47], WS [-75, -31], imputed [-156, +34], relaxed [-47, -47]
+  S1|100 ms: [-316, -117] OUTER (of 62 linked fills: untied events 59, joint components 0 / 0 fills exact, relaxed 3 / 3 fills / 122 c gross) | side ask [-315, -243], bid [-1, +126] | day 20990101 [-316, -117] | cls E2 [-47, -47], WS [-67, -57], imputed [-156, +34], relaxed [-47, -47]
+  S2|0 ms: [-462, +23] OUTER (of 62 linked fills: untied events 59, joint components 0 / 0 fills exact, relaxed 3 / 3 fills / 122 c gross) | side ask [-379, -195], bid [-83, +218] | day 20990101 [-462, +23] | cls E2 [-54, -38], WS [-184, +22], imputed [-178, +85], relaxed [-47, -47]
+  S2|37 ms: [-462, +23] OUTER (of 62 linked fills: untied events 59, joint components 0 / 0 fills exact, relaxed 3 / 3 fills / 122 c gross) | side ask [-379, -195], bid [-83, +218] | day 20990101 [-462, +23] | cls E2 [-54, -38], WS [-184, +22], imputed [-178, +85], relaxed [-47, -47]
+  S2|100 ms: [-462, +23] OUTER (of 62 linked fills: untied events 59, joint components 0 / 0 fills exact, relaxed 3 / 3 fills / 122 c gross) | side ask [-379, -195], bid [-83, +218] | day 20990101 [-462, +23] | cls E2 [-54, -38], WS [-184, +22], imputed [-178, +85], relaxed [-47, -47]
+  EV|0 ms: [-783, +676] OUTER (of 62 linked fills: untied events 59, joint components 0 / 0 fills exact, relaxed 3 / 3 fills / 122 c gross) | side ask [-477, +164], bid [-305, +512] | day 20990101 [-783, +676] | cls E2 [-187, +150], WS [-283, +306], imputed [-262, +218], relaxed [-50, +1]
+  EV|37 ms: [-783, +676] OUTER (of 62 linked fills: untied events 59, joint components 0 / 0 fills exact, relaxed 3 / 3 fills / 122 c gross) | side ask [-477, +164], bid [-305, +512] | day 20990101 [-783, +676] | cls E2 [-187, +150], WS [-283, +306], imputed [-262, +218], relaxed [-50, +1]
+  EV|100 ms: [-783, +676] OUTER (of 62 linked fills: untied events 59, joint components 0 / 0 fills exact, relaxed 3 / 3 fills / 122 c gross) | side ask [-477, +164], bid [-305, +512] | day 20990101 [-783, +676] | cls E2 [-187, +150], WS [-283, +306], imputed [-262, +218], relaxed [-50, +1]
+
+PART 4 - contradictions per fill over ALL its candidate events (kept, never repaired; denominators: every fill and its gross)
+  S1 window contradicted by the REST evidence: of 62 fills / 2,495 c gross - all candidates 1 / 4 c, some candidates 0 / 0 c, none candidates 61 / 2,491 c, unlinked candidates 0 / 0 c; on pulled orders {'unlinked': 0, 'none': 38, 'some': 0, 'all': 1}; by link {'unlinked': {'unlinked': 0, 'none': 0, 'some': 0, 'all': 0}, 'unique_event': {'unlinked': 0, 'none': 58, 'some': 0, 'all': 1}, 'multi_event': {'unlinked': 0, 'none': 3, 'some': 0, 'all': 0}}; events {'ok': 63, 'truncated_by_evidence': 1, 'contradictory_evidence': 0, 'contradictory_legs': 1}; by class {'WS': {'ok': 27, 'truncated_by_evidence': 0, 'contradictory_evidence': 0, 'contradictory_legs': 1}, 'E2': {'ok': 14, 'truncated_by_evidence': 1, 'contradictory_evidence': 0, 'contradictory_legs': 0}, 'imputed': {'ok': 22, 'truncated_by_evidence': 0, 'contradictory_evidence': 0, 'contradictory_legs': 0}, 'mixed': {'ok': 0, 'truncated_by_evidence': 0, 'contradictory_evidence': 0, 'contradictory_legs': 0}}
+  S2 window contradicted by the REST evidence: of 62 fills / 2,495 c gross - all candidates 0 / 0 c, some candidates 0 / 0 c, none candidates 62 / 2,495 c, unlinked candidates 0 / 0 c; on pulled orders {'unlinked': 0, 'none': 39, 'some': 0, 'all': 0}; by link {'unlinked': {'unlinked': 0, 'none': 0, 'some': 0, 'all': 0}, 'unique_event': {'unlinked': 0, 'none': 59, 'some': 0, 'all': 0}, 'multi_event': {'unlinked': 0, 'none': 3, 'some': 0, 'all': 0}}; events {'ok': 27, 'truncated_by_evidence': 38, 'contradictory_evidence': 0, 'contradictory_legs': 0}; by class {'WS': {'ok': 18, 'truncated_by_evidence': 10, 'contradictory_evidence': 0, 'contradictory_legs': 0}, 'E2': {'ok': 9, 'truncated_by_evidence': 6, 'contradictory_evidence': 0, 'contradictory_legs': 0}, 'imputed': {'ok': 0, 'truncated_by_evidence': 22, 'contradictory_evidence': 0, 'contradictory_legs': 0}, 'mixed': {'ok': 0, 'truncated_by_evidence': 0, 'contradictory_evidence': 0, 'contradictory_legs': 0}}
+  replay time after the evidence cap: of 62 fills / 2,495 c gross - all candidates 0 / 0 c, some candidates 0 / 0 c, none candidates 62 / 2,495 c, unlinked candidates 0 / 0 c; on pulled orders {'unlinked': 0, 'none': 39, 'some': 0, 'all': 0}; by link {'unlinked': {'unlinked': 0, 'none': 0, 'some': 0, 'all': 0}, 'unique_event': {'unlinked': 0, 'none': 59, 'some': 0, 'all': 0}, 'multi_event': {'unlinked': 0, 'none': 3, 'some': 0, 'all': 0}}
+
+READINGS (declared before any data was read)
+  V0 CONTROLS: YES
+  V1 SIGN S1: EXCESS-NEGATIVE-IDENTIFIED (OUTER BOUNDS)
+  V1 SIGN S2: SIGN-NOT-IDENTIFIED (OUTER BOUNDS)
+  V1 SIGN EV: SIGN-NOT-IDENTIFIED (OUTER BOUNDS)
+
+MISSING EVIDENCE: no public capture bounds the match instant from below; the REST executedAt is a delayed status (an upper bound only); the WS pending link is by value; cancel effect and activation are configured points. Order-level match identity and timing (own orders, A4b) is the evidence that would identify the ordering.
+LIMITS: consumed days; one declared rule; STATES is local selection; M50 quantities held; S1 / S2 / CR are assumption ranges; clock alignment between REST, WS and book stamps not established.
+{"stage": "link", "day": "20990101", "fills": 62, "linked": 62, "legs": 94, "identity_mismatches": 0, "seconds": 0, "rss": 207}
+{"stage": "link", "day": "20990101", "fills": 62, "linked": 62, "legs": 94, "identity_mismatches": 1, "seconds": 0, "rss": 207}
+{"stage": "link", "day": "20990101", "fills": 62, "linked": 62, "legs": 94, "identity_mismatches": 1, "seconds": 0, "rss": 207}
+exec-window selftests passed (synthetic only): classes incl. TIE / UNKNOWN / CONTRADICTORY; status timestamps refused as points; event intersection, evidence cap and statuses; link candidates; the event sweep = a dense grid (3 latencies) and v1 on singletons; the joint bounds = the review's coherent [0, 10] (outer relaxation [-10, 20] labelled) and [0, 0]; per-fill contradiction status; collapsed = the clock audit; cross-tab conservation (and its falsifier); K0-K3 instrument checks and K4 CONTRADICTED / CONSISTENT on planted cases (a wrong identity refused); run() rehearsed end to end, the all-contradictory case counting every fill, four bad inputs refused
+QUEUE-AWARE SCENARIO REPLAY of the keep / pull selection, declared score A+0 (pf_keep_pull_scenarios.py; every committed state with a path re-simulated through the branch kernel; days 20261023; c summed)
+  640 states re-simulated (631 eligible at B); held contradictory events by day S1 20261023 1; S2 20261023 1
+  Z0 (h): B's E +356 and score improvement -135 = the clock audit's per-fill values on the committed tables
+
+  scenario                           E       score        null         KEEP   KEEP+score    PULL-ALL  eligible    fills  filled discov.   lost
+  M50|A58|L37|N100                +356        -135        -491       +2,632       +2,498      -2,380       631      105      97       0      0
+  S1lo|A58|L37|N100               +140        -368        -508       +2,588       +2,220      -2,438       631      106      99       7      5
+  S1mid|A58|L37|N100              +142        -440        -582       +2,728       +2,288      -2,554       631      103      96       1      2
+  S1hi|A58|L37|N100                +79        -570        -649       +2,904       +2,334      -2,798       631      104      97       4      4
+  S2lo|A58|L37|N100                +46        -477        -523       +2,108       +1,630      -2,092       631      106     100      14     11
+  S2hi|A58|L37|N100               +287        -352        -640       +2,780       +2,428      -2,546       631      110     102      15     10
+  EVhi|A58|L37|N100               +104        -548        -652       +3,000       +2,452      -2,748       631      108      98      14     13
+  M50|A25|L37|N100                +346        -135        -481       +2,602       +2,468      -2,350       631      104      96       0      1
+  M50|A100|L37|N100               +175        -360        -535       +2,602       +2,242      -2,606       631      104      96       0      1
+  M50|A58|L0|N100                 +326        -215        -541       +2,698       +2,482      -2,472       631      102      95       0      2
+  M50|A58|L100|N100               +377         -75        -452       +2,662       +2,588      -2,072       631      106      98       1      0
+  M50|A58|L37|N0                  +311        -135        -446       +2,632       +2,498      -2,380       631      105      97       0      0
+  M50|A58|L37|N250                +350        -135        -485       +2,632       +2,498      -2,380       631      105      97       0      0
+  M0|A58|L37|N100                 +207        -335        -542       +2,698       +2,362      -2,548       631      102      95       0      2
+  M250|A58|L37|N100               +228        -330        -558       +2,588       +2,258      -2,536       631      103      97       4      4
+
+  E by day: M50|A58|L37|N100 20261023 +356 | S1lo|A58|L37|N100 20261023 +140 | S1mid|A58|L37|N100 20261023 +142 | S1hi|A58|L37|N100 20261023 +79 | S2lo|A58|L37|N100 20261023 +46 | S2hi|A58|L37|N100 20261023 +287 | EVhi|A58|L37|N100 20261023 +104 | M50|A25|L37|N100 20261023 +346 | M50|A100|L37|N100 20261023 +175 | M50|A58|L0|N100 20261023 +326 | M50|A58|L100|N100 20261023 +377 | M50|A58|L37|N0 20261023 +311 | M50|A58|L37|N250 20261023 +350 | M0|A58|L37|N100 20261023 +207 | M250|A58|L37|N100 20261023 +228
+
+READINGS (declared before any data was read)
+  Z0 CONTROLS: YES
+  Z1 E ACROSS TESTED SCENARIOS: STABLE-POSITIVE-IN-TESTED-SCENARIOS
+  Z2 KEEP VALUE ACROSS TESTED SCENARIOS: STABLE-POSITIVE-IN-TESTED-SCENARIOS
+  Z3 THE SCORE'S VALUE ACROSS TESTED SCENARIOS: STABLE-POSITIVE-IN-TESTED-SCENARIOS
+  E ranges over [+46, +377], KEEP over [+2,108, +3,000], KEEP + score over [+1,630, +2,588] in the 15 tested scenarios
+
+LIMITS: consumed days; one declared rule; one-factor-at-a-time scenarios and timelines (no joint extreme search); assumption ranges, not measured distributions; queue rule M unvalidated on live orders; STATES is local selection; one order at a time, no re-post after a pull.
+keep-pull scenario selftests passed (synthetic only): the notice and landing rules; the keep / pull run on its synthetic tape reproduced at B; planted fills and landings under timelines S1 / S2 / EV, activation 25 / 100 ms and cancel latency 0 / 100 ms; a contradictory event held at M50; a one-order outcome at 37 / 100 ms; the report end to end and refused on a wrong baseline expectation; a misaligned timing source, a changed committed fill, a perturbed pending clock and an early landing mirror each refused by its own control with no output

@@ -1,0 +1,8 @@
+Pinned target: 1fd77004be70f436119c9eaf8079a94fe322099f
+Command prefix: PF_SLOT=codex /home/yuqing/ctaNew/predictfun/research/run_light.sh TAG -- /home/yuqing/pricer-sol/venv/bin/python3 SCRIPT /tmp/predictfun-review-1fd77004
+SCRIPT for first two runs: /home/yuqing/ctaNew/predictfun/reviews/automatic/20261118_1fd77004/verify.py
+2026-11-18T08:09:52Z tag=review_1fd77004 rc=1 peak_rss_mib=578 wall_s=15.10 cpu_user_s=14.47 memavail_start_gib=23 disk_free_gib=447->447 slot=codex
+First-run harness issue: corrupt-output control correctly raised ValueError; the harness caught only SystemExit. Corrected the harness, not development code.
+2026-11-18T08:10:28Z tag=review_1fd77004_v2 rc=0 peak_rss_mib=573 wall_s=15.27 cpu_user_s=14.68 memavail_start_gib=23 disk_free_gib=447->447 slot=codex
+SCRIPT for diagnostics run: /home/yuqing/ctaNew/predictfun/reviews/automatic/20261118_1fd77004/check_diagnostics.py
+2026-11-18T08:11:42Z tag=review_1fd77004_diagnostics rc=0 peak_rss_mib=260 wall_s=2.23 cpu_user_s=2.03 memavail_start_gib=23 disk_free_gib=447->447 slot=codex
