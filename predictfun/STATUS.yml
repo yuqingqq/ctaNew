@@ -68,7 +68,11 @@ automatic_review_20261117_323ddd7d:
   development_owner: other_session
 
 scheduled_commit_review_20261117:
-  status: enabled_local_user_timer
+  status: removed_by_user
+  removed_at: "2026-11-18T02:40:28.330717+00:00"
+  installed_units_removed: true
+  pending_request: false
+  restart_requires_explicit_user_request: true
   requested_by_user: true
   interval_minutes: 5
   branch: mm-research

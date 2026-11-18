@@ -1,3 +1,13 @@
+<!-- SCHEDULE_REMOVED_20261118 -->
+## 2026-11-18 Scheduled reviews removed at the user's request
+
+Stopped and disabled predictfun-commit-review.timer, stopped its service, and
+removed both installed user-systemd units. Verified both units are not found
+and inactive, with no timer listed and no pending review request. Prior review
+reports and checkpoint history are retained. Do not reinstall or re-enable the
+schedule without a new explicit user request. Manual reviews remain available.
+<!-- /SCHEDULE_REMOVED_20261118 -->
+
 <!-- AUTOMATIC_REVIEW_20261118_656F322F -->
 ## 2026-11-18 02:18 UTC Ledger results reviewed: accounting gate verified
 
