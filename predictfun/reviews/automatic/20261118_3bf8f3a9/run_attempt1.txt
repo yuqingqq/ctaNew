@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261118_3bf8f3a9/verify.py", line 67, in <module>
+    check_hash(root / 'predictfun/research' / name, h)
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261118_3bf8f3a9/verify.py", line 34, in check_hash
+    actual = sha(p)
+             ^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261118_3bf8f3a9/verify.py", line 30, in <lambda>
+    sha = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
+                                   ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1021, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1015, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/predictfun-review-3bf8f3a9/predictfun/research/predictfun/research/pf_keep_pull_exec_windows.py'
+2026-11-18T14:00:45Z tag=review_3bf8f3a9_verify rc=1 peak_rss_mib=220 wall_s=1.39 cpu_user_s=1.12 memavail_start_gib=23 disk_free_gib=440->440 slot=codex

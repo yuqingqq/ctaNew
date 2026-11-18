@@ -1,0 +1,79 @@
+Pinned sources and saved output hashes verified.
+Both pinned synthetic selftests passed.
+{
+  "target": "3bf8f3a9332de737514142bdf63b0b59ab272bb5",
+  "asof": "2026-11-18T14:01:26.591174+00:00",
+  "prior_counterexample": {
+    "constant_and_variable_lag_worlds_retained": true,
+    "no_universal_bound": true,
+    "impossible_creation_refused": true
+  },
+  "ledger": {
+    "counted_orders": 30466,
+    "status": {
+      "eligible": 28799,
+      "refused_post_only": 1289,
+      "missing_endpoint": 354,
+      "stale_future_book": 24
+    },
+    "fills": 17670,
+    "events": 50553,
+    "contradiction_causes": {
+      "S1": {
+        "all_contradictory": 748,
+        "evidence_cap": 37,
+        "leg_intersection": 708
+      },
+      "S2": {
+        "all_contradictory": 129,
+        "evidence_cap": 0,
+        "leg_intersection": 129
+      },
+      "S3": {
+        "all_contradictory": 139,
+        "evidence_cap": 0,
+        "leg_intersection": 139
+      },
+      "ST": {
+        "all_contradictory": 5,
+        "evidence_cap": 0,
+        "leg_intersection": 5
+      }
+    },
+    "contradiction_accounting_reconciled": true,
+    "saved_st_lag_ms": null
+  },
+  "ST_population": {
+    "all_pulled_cancel_first_fills": 214,
+    "removed_cancel_first_fills": 214,
+    "kept_cancel_first_fills": 0,
+    "candidate_links": 346,
+    "every_candidate_lower_bound_requires_unmapped_leg_fallback": true,
+    "removed_fills": 8862,
+    "removed_gross": 528493.4734898257,
+    "cancel_first_removed_gross": 7934.25966359371,
+    "cancel_first_share_removed_gross": 0.01501297567820666,
+    "candidate_event_population": 50553,
+    "candidate_events_unknown_lower": 38581,
+    "candidate_event_legs": 90682,
+    "replay_vs_uuid_population": {
+      "legs": 77557,
+      "p1": -1021.0,
+      "p5": -568.0,
+      "p50": -38.0,
+      "p95": 352.1999999999971,
+      "p99": 1023.0,
+      "inside_st": 0.899261188545199,
+      "beyond_1s": 0.021906468790695875
+    },
+    "scenario_event_population": 560819,
+    "ledger_asof": "2026-11-18T12:55:54.945415+00:00"
+  },
+  "comparison": {
+    "non_ST_ledger_parts_unchanged": true,
+    "non_ST_scenario_rows_unchanged": 18,
+    "dropped": "STlo|A58|L37|N100"
+  }
+}
+All 19 saved scenario rows and known-case readings reproduced.
+2026-11-18T14:01:25Z tag=review_3bf8f3a9_verify rc=0 peak_rss_mib=720 wall_s=28.70 cpu_user_s=24.17 memavail_start_gib=23 disk_free_gib=440->441 slot=codex

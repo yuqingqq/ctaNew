@@ -1,3 +1,32 @@
+<!-- MANUAL_REVIEW_20261118_3BF8F3A9 -->
+## 2026-11-18 Review: corrected timing receipts reproduce; timing gate remains open
+
+Target **3bf8f3a9332de737514142bdf63b0b59ab272bb5**, including 0e20fa8d.
+[Review](reviews/automatic/20261118_3bf8f3a9/report.md) and
+[checks](reviews/automatic/20261118_3bf8f3a9/receipt.json). No new blocking
+implementation/accounting issue found. Original K7 and conditional K8 gates are
+now distinct; default upper-only production paths are rehearsed. Both pinned
+selftests, all 19 saved scenario rows and known readings reproduce; no tape replay,
+training or untouched validation. The variable-lag inference fix is retained.
+
+Known Nov8 (99 legs / 86 orders; as of 2026-11-18T12:55:18.229011Z): S3 still
+fails at K7 on 3 known fills; K8-clock PASS remains conditional on clock alignment.
+Consumed Oct23 ledger (17,670 baseline fills / 8,862 removed; as of
+2026-11-18T12:55:54.945415Z): ST's 214 CANCEL_FIRST fills account for 1.5013% of
+removed gross, all dependent on S3 fallback lower bounds for unmapped legs.
+The mapped UUID legs themselves certify none. Public lower match bounds remain
+unknown; fixed-fill/identity E bounds [-145,038,+168,157] c are not queue-path or
+portfolio bounds. Clarified populations: 50,553 fill-linked candidate events,
+90,682 candidate legs / 77,557 UUID-mapped; the latter is the denominator for the
+10.1% replay-after-UUID rate. Scenario population is 560,819 events / 30,088 paths.
+
+One consumed day's 19 scenarios (as of 2026-11-18T12:59:49.027151Z): SThi E
++40,687 c versus the matched null, KEEP+score -135,043 c, local END+5s marks;
+no profit or generalization conclusion. This evaluates the A+0 fair-edge rule,
+not a learned flow/price-to-value controller. **Next priority:** independent
+clock/identity lifecycle audit of the three S3 false-avoidance legs, retaining
+unknowns and naming missing evidence where necessary, before model tuning.
+
 <!-- SETTLEMENT_LAG_CORRECTION_20261118 -->
 ## Correction — variable settlement creation lag, 2026-11-18
 
