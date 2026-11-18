@@ -120,9 +120,9 @@ def check(path, send=dispatch):
             raise ValueError('branch no longer descends from checkpoint; manual reconciliation required')
         commits=git(c['repo'],'rev-list','--reverse','--first-parent',s['cursor']+'..'+target).splitlines()
         selected=[x for x in commits if relevant(c['repo'],x)]
+        s['last_scan_at']=stamp()
         if not selected:
-            if s['cursor']!=target:
-                s['cursor']=target; s['last_scan_at']=stamp(); save(path,s)
+            s['cursor']=target; save(path,s)
             return dict(status='no_new_relevant_commits',cursor=target)
         request=dict(id=str(uuid.uuid4()),base=s['cursor'],target=target,commits=selected,
                      queued_at=stamp(),delivery='in_progress')

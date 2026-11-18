@@ -4,6 +4,7 @@ from pathlib import Path
 import subprocess
 import tempfile
 import unittest
+from unittest import mock
 import commit_review_watch as W
 
 
@@ -42,9 +43,22 @@ class WatcherTest(unittest.TestCase):
         r=W.check(self.state,self.send)
         self.assertEqual(r['status'],'no_new_relevant_commits');self.assertEqual(self.sent,[])
 
+    def test_idle_scan_refreshes_timestamp_without_moving_checkpoint(self):
+        for at in ('2026-11-18T01:45:00+00:00', '2026-11-18T01:50:00+00:00'):
+            with mock.patch.object(W, 'stamp', return_value=at):
+                result=W.check(self.state,self.send)
+            state=json.loads(self.state.read_text())
+            self.assertEqual(result['status'],'no_new_relevant_commits')
+            self.assertEqual(state['last_scan_at'],at)
+            self.assertEqual(state['cursor'],self.base)
+            self.assertIsNone(state['last_reviewed'])
+            self.assertIsNone(state['pending'])
+        self.assertEqual(self.sent,[])
+
     def test_dispatch_deduplicate_ack_then_new_commit(self):
         first=self.commit('predictfun/research/model.py','fixed','fix matching')
         r=W.check(self.state,self.send);self.assertEqual(r['status'],'queued')
+        self.assertIn('last_scan_at',json.loads(self.state.read_text()))
         self.assertIn(first,self.sent[0]);self.assertIn('Do not implement fixes',self.sent[0])
         second=self.commit('predictfun/research/model.py','fixed again','another fix')
         self.assertEqual(W.check(self.state,self.send)['status'],'pending');self.assertEqual(len(self.sent),1)

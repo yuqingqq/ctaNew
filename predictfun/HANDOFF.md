@@ -1,3 +1,23 @@
+<!-- REVIEW_MONITOR_DIAGNOSIS_20261118 -->
+## 2026-11-18 01:51 UTC Review monitor status corrected; newer fix not visible
+
+The timer has continued successful five-minute checks. Fixed its stale
+last_scan_at field: unchanged branches now refresh the timestamp. Six monitor
+tests pass; a real service check succeeded and refreshed status at 01:51:06 UTC.
+No pending request or delivery error was found. The watcher observes the local
+mm-research branch; it does not fetch or scan other repositories.
+
+After fetching, origin/mm-research remains at 323ddd7d; the latest visible
+implementation is ebd5c6b3, already reviewed. Its current source and saved evidence
+hashes still match that review. User was asked for the newer SHA/branch/path;
+no claim is made to have reviewed an unseen fix. Report:
+reviews/automatic/20261118_monitor_status.md.
+
+Next research priority remains the ledger smoke/full consumed Oct 23–27
+reconciliation, accounting for 2,054 states and 60 missing horizon values.
+No market tape read or development implementation changed in this follow-up.
+<!-- /REVIEW_MONITOR_DIAGNOSIS_20261118 -->
+
 <!-- AUTOMATIC_REVIEW_20261117_323DDD7D -->
 ## 2026-11-17 15:38 UTC Scheduled review: unmatched-acceptance fix verified
 
