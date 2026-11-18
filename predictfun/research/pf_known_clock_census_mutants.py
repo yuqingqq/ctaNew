@@ -22,7 +22,11 @@ MUT = [
      "understating_after_notice=len(under)"),
     ("the first notice taken as the latest leg's", "fn = float(np.nanmin(fn)) if np.isfinite(fn).any() else np.nan", "fn = float(np.nanmax(fn)) if np.isfinite(fn).any() else np.nan"),
     ('any alert read as a late-fill alert', "alerted=any(any(k in a for k in ALERT_KEYS) for a in alerts)", "alerted=bool(alerts)"),
-    ('a partial fill after Canceled counted as a race', "race = int(((O.cls == 'CANCELED') & O.full).sum())", "race = int((O.cls == 'CANCELED').sum())"),
+    ('a partial fill after Canceled counted as a race', "rc_ = (O.cls == 'CANCELED') & O.full;", "rc_ = (O.cls == 'CANCELED');"),
+    # --- v4 (review 8e63f178): snapshots against the fills already observed; the answer / notice times
+    ('snapshots compared with the eventual fill only', "below_observed=sum(1 for s in snaps if s['size_matched'] < seen(s['at'])),", "below_observed=len(under),"),
+    ('observed fills counted from the eventual total', "seen = lambda t: sum(f['size'] for f in of if f['at'] <= t)", "seen = lambda t: sum(f['size'] for f in of)"),
+    ('notice after the answer reversed', "notice_after_answer=bool(np.isfinite(ans) and np.isfinite(fn) and fn > ans)", "notice_after_answer=bool(np.isfinite(ans) and np.isfinite(fn) and fn < ans)"),
     ('the case-audit reproduction never checked', "    read['N0 REPRODUCES-THE-CASE-AUDIT'] = 'YES' if same else 'NO'", "    read['N0 REPRODUCES-THE-CASE-AUDIT'] = 'YES'"),
     ('every order read as acknowledged (v2 descriptive)', "acknowledged=bool(g.acknowledged.any())", "acknowledged=True"),
     ('legs without a cancel confirmation counted in N2', "can = np.isfinite(L.ack.values.astype(float)); idf = can & (L.bound_status.values == 'IDENTIFIED')",

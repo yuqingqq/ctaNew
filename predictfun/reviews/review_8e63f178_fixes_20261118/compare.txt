@@ -1,0 +1,85 @@
+{
+ "R1": {
+  "R1": true,
+  "legs": [
+   {
+    "leg": 20,
+    "all_same": true,
+    "differ": [],
+    "c_hi_type": [
+     "CONDITIONAL"
+    ],
+    "A1": "CANCELED"
+   },
+   {
+    "leg": 45,
+    "all_same": true,
+    "differ": [],
+    "c_hi_type": [
+     "CONDITIONAL"
+    ],
+    "A1": "CANCELED"
+   },
+   {
+    "leg": 73,
+    "all_same": true,
+    "differ": [],
+    "c_hi_type": [
+     "CONDITIONAL"
+    ],
+    "A1": "CANCELED"
+   }
+  ]
+ },
+ "R2": {
+  "R2": true,
+  "same": {
+   "B": true,
+   "n": true,
+   "bound_status": true,
+   "A0": true,
+   "A1": true
+  },
+  "canceled_full_same": true,
+  "readings": {
+   "N0 REPRODUCES-THE-CASE-AUDIT": "YES",
+   "N1 RECORDS-REPRODUCE": "99 of 99 legs",
+   "N2 BOOK-BOUND": "IDENTIFIED on 88 of 88 legs with a cancel confirmation",
+   "N3 CANCELED-ANSWER-ORDERS-MATCH-AND-CANCEL": "NO (the answer is uninformative): 63 orders answered Canceled ended filled in full - each matched before its cancel was processed or after the cancel took effect; which one is unidentified",
+   "N4 TERMINAL-SNAPSHOT-VS-FILLS": "74 orders below the eventual fill (62 received after the first fill notice); 62 below the fills the bot had already observed at its receipt",
+   "N5 PF-EXEC-ALERTS": "73 orders named in a late-fill or quantity-conflict alert"
+  },
+  "first_notice_after_answer": {
+   "orders": 63,
+   "of": 63,
+   "meaning": "delayed observation, not the match order"
+  }
+ },
+ "R3": {
+  "R3": true,
+  "moved_readings": {
+   "K8 CLOCK OFFSET (settlement premise: the id stamped at the match)": [
+    "CONDITIONAL {'lo': 14.474853515625, 'hi': 32.641357421875, 'exists': True, 'includes_zero': False, 'premise': 'CONDITIONAL: zero UUID creation lag on every leg'}",
+    "CONDITIONAL {'lo': -147.837890625, 'hi': 32.641357421875, 'exists': True, 'includes_zero': True, 'premise': 'CONDITIONAL: zero UUID creation lag on every leg'}"
+   ],
+   "K8 FILL-NOTICE DELAY vs the replay 100 ms": [
+    "CONTRADICTED on 87 of 99 fills",
+    "CONTRADICTED on 67 of 99 fills"
+   ],
+   "K9 MATCH BEFORE THE CANCEL REQUEST (book evidence, S3)": [
+    null,
+    "25 of 88 cancelled legs; of the 72 legs of orders answered Canceled and filled in full 24"
+   ],
+   "KNOWN VERDICT": [
+    "INSTRUMENT-CHECKS-PASS; REPLAY-ANCHOR-CONTRADICTED; SETTLEMENT-TIME COMPATIBLE; LEDGER-WINDOW GATE OF RECORD (per clock domain: book ends at the leg's own book-clock bound, status ends at K7) S1 FAIL, S2 FAIL, S3 PASS, ST UNIDENTIFIED-UPPER-BOUND-ONLY, EV PASS; v5 basis - K7 offsets on every end: S1 FAIL, S2 FAIL, S3 FAIL, ST UNIDENTIFIED-UPPER-BOUND-ONLY, EV PASS; conditional - K8 shared clock: S1 FAIL, S2 FAIL, S3 PASS, ST UNIDENTIFIED-UPPER-BOUND-ONLY, EV PASS; settlement offsets: S1 FAIL, S2 FAIL, S3 PASS, ST UNIDENTIFIED-UPPER-BOUND-ONLY, EV PASS; ORDER-PATH RANGES CONTRADICTED; NOT A VENUE-ENGINE ACCEPTANCE",
+    "INSTRUMENT-CHECKS-PASS; REPLAY-ANCHOR-CONTRADICTED; SETTLEMENT-TIME COMPATIBLE; LEDGER-WINDOW GATE OF RECORD (per clock domain, constituents kept: book ends at the leg's own book-clock bound, status ends in K7, the window non-empty) S1 FAIL, S2 FAIL, S3 PASS, ST UNIDENTIFIED-UPPER-BOUND-ONLY, EV PASS; v5 basis - K7 offsets on every end: S1 FAIL, S2 FAIL, S3 FAIL, ST UNIDENTIFIED-UPPER-BOUND-ONLY, EV PASS; conditional - K8 shared clock: S1 FAIL, S2 FAIL, S3 PASS, ST UNIDENTIFIED-UPPER-BOUND-ONLY, EV PASS; settlement offsets: S1 FAIL, S2 FAIL, S3 PASS, ST UNIDENTIFIED-UPPER-BOUND-ONLY, EV PASS; LIFECYCLE UPPER BOUND the first fill notice (a Canceled acknowledgement does not order the match; known v6 holds the readings under that premise); ORDER-PATH RANGES CONTRADICTED; NOT A VENUE-ENGINE ACCEPTANCE"
+   ]
+  }
+ },
+ "R4": {
+  "R4": true,
+  "differences": [],
+  "scenarios": 19
+ },
+ "ALL": true
+}

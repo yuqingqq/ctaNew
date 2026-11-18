@@ -1,0 +1,173 @@
+{
+  "asof": "2026-11-18T17:44:10.981597+00:00",
+  "day": "20261023",
+  "stat": {
+    "windows": 288,
+    "orders": 30088,
+    "base_matched": 30088,
+    "kernel_checked": 816,
+    "events": 560819,
+    "held_events_S1": 9576,
+    "held_events_S2": 1412,
+    "held_events_S3": 1363,
+    "held_events_ST": 73
+  },
+  "scenarios": [
+    "M50|A58|L37|N100",
+    "S1lo|A58|L37|N100",
+    "S1mid|A58|L37|N100",
+    "S1hi|A58|L37|N100",
+    "S2lo|A58|L37|N100",
+    "S2hi|A58|L37|N100",
+    "S3lo|A58|L37|N100",
+    "S3hi|A58|L37|N100",
+    "SThi|A58|L37|N100",
+    "EVhi|A58|L37|N100",
+    "M50|A15|L37|N100",
+    "M50|A100|L37|N100",
+    "M50|A58|L0|N100",
+    "M50|A58|L100|N100",
+    "M50|A58|L37+13%x4000|N100"
+  ],
+  "families": {
+    "M50|A58|L37|N100": [
+      "baseline",
+      "B: trades at anchor - 50 ms, activation +58 ms, cancel latency 37 ms, fill notice +100 ms"
+    ],
+    "S1lo|A58|L37|N100": [
+      "timeline",
+      "every trade at the start of the admissible S1 window; contradictory events held at M50"
+    ],
+    "S1mid|A58|L37|N100": [
+      "timeline",
+      "every trade at the middle of the admissible S1 window; contradictory events held at M50"
+    ],
+    "S1hi|A58|L37|N100": [
+      "timeline",
+      "every trade at the end of the admissible S1 window; contradictory events held at M50"
+    ],
+    "S2lo|A58|L37|N100": [
+      "timeline",
+      "every trade at the start of the admissible S2 window; contradictory events held at M50"
+    ],
+    "S2hi|A58|L37|N100": [
+      "timeline",
+      "every trade at the end of the admissible S2 window; contradictory events held at M50"
+    ],
+    "S3lo|A58|L37|N100": [
+      "timeline",
+      "every trade at the start of the admissible S3 (semantics) window; contradictory events held at M50"
+    ],
+    "S3hi|A58|L37|N100": [
+      "timeline",
+      "every trade at the end of the admissible S3 (semantics) window; contradictory events held at M50"
+    ],
+    "SThi|A58|L37|N100": [
+      "timeline",
+      "every trade at the UUID-creation upper endpoint under the after-match/aligned-clock premises; no finite earliest endpoint is identified; contradictory events held at M50"
+    ],
+    "EVhi|A58|L37|N100": [
+      "timeline",
+      "every trade at the the REST evidence cap (the latest admissible instant); contradictory events held at M50"
+    ],
+    "M50|A15|L37|N100": [
+      "activation delay",
+      "the order goes live 15 ms after posting (B: 58)"
+    ],
+    "M50|A100|L37|N100": [
+      "activation delay",
+      "the order goes live 100 ms after posting (B: 58)"
+    ],
+    "M50|A58|L0|N100": [
+      "cancel latency",
+      "every cancel takes effect 0 ms after its decision (B: 37)"
+    ],
+    "M50|A58|L100|N100": [
+      "cancel latency",
+      "every cancel takes effect 100 ms after its decision (B: 37)"
+    ],
+    "M50|A58|L37|N160": [
+      "fill-notice delay",
+      "the client learns of a full fill 160 ms after it (B: 100)"
+    ],
+    "M50|A58|L37|N660": [
+      "fill-notice delay",
+      "the client learns of a full fill 660 ms after it (B: 100)"
+    ],
+    "M50|A58|L37+13%x4000|N100": [
+      "cancel latency",
+      "13% of the orders' cancels take effect 4000 ms after their decision, the rest 37 ms (own assumed mixture; the former K8-based measured-tail interpretation is withdrawn)"
+    ],
+    "M0|A58|L37|N100": [
+      "trade-clock shift",
+      "every trade stamp 0 ms before its anchor (B: 50 ms) - a uniform clock offset, not an order latency"
+    ],
+    "M250|A58|L37|N100": [
+      "trade-clock shift",
+      "every trade stamp 250 ms before its anchor (B: 50 ms) - a uniform clock offset, not an order latency"
+    ]
+  },
+  "timeline_rules": {
+    "M50": "anchor - 50 ms (the committed replay)",
+    "S1lo": "start of the admissible S1 window",
+    "S1mid": "middle of the admissible S1 window",
+    "S1hi": "end of the admissible S1 window",
+    "S2lo": "start of the admissible S2 window",
+    "S2hi": "end of the admissible S2 window",
+    "S3lo": "start of the admissible S3 (semantics) window",
+    "S3hi": "end of the admissible S3 (semantics) window",
+    "SThi": "UUID-creation upper endpoint under the after-match/aligned-clock premises; no finite earliest endpoint is identified",
+    "EVhi": "the REST evidence cap (the latest admissible instant)",
+    "held": "an event without an admissible window keeps its M50 time"
+  },
+  "env": {
+    "h": 589.0,
+    "q01": -887.0,
+    "q99": 1049.0,
+    "inputs": {
+      "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261023/legs_timed2.parquet": "182edffe2eecb773f9b84769e550bf403e5d77389cde0ceba1582e01bddaa982",
+      "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261023/legs_tk.parquet": "e4feb92877f7fcfdd43975ba683cc6ebcef1aeb58d984ce2890d1ee6173f0e62",
+      "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261023/booktime.json": "493cc919c5e6b0c58ce379c3a67413f36137d4133a71cd1ea619de9105ba1433",
+      "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261023/timing.json": "c10b79df500d98fd9af47b8168513d5959b692a5b1f61a87c642bf2636d1b8b3",
+      "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_20261115/day_20261023_imp.json": "7e8a14179024808dfc86974459712a3fe972ba6195d369952c8af66068082054"
+    }
+  },
+  "s3_inputs": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261023/pend_inc.parquet": "23f0370d8eed362bf9feae354ab0dfa16246f572dd3225005e4be87ee1dad720"
+  },
+  "settlement_inputs": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/settlement_times_20261118/20261023/legs_set.parquet": "ed58338f71cd35e8d23aca544995e64863b2060100096ef0c67e90ab4c5904a6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_exec_windows_known_v7_20261118/known.json": "c1b6b38c4962d6c5b2b0d5efb35081b6b130ca866150eedd34ba45e8a9b28495"
+  },
+  "st_lag_ms": null,
+  "settlement_model": "shared_clock_event_specific_nonnegative_lag_v2",
+  "st_lag_role": "UNIDENTIFIED",
+  "keep_pull_receipt": "5de91ce5a4dbddbc9789ac549e2965016d97967bc7762035e7b8db51b5f5bc44",
+  "keep_pull_outputs": {
+    "orders.parquet": "3313ea65d73ccbfee64669758efd0f7581f73470b49dc2b7752866258a5d142b",
+    "fills.parquet": "ba1b1448b353928c27850e4e19f073ebb6d9cf9235a51dd07d691eab2f9f2513"
+  },
+  "provenance": {
+    "commit": "8e63f178003ab98916f3467121c5d1d148344af4",
+    "source": {
+      "pf_keep_pull.py": "58b972f92bda06fbc847c43d2ace8db9d7b12f4daaf67bcfaa14e92deb475835",
+      "pf_queue_place_test.py": "188c1495ce35db80ce8b79cbc50541964d0d32d9da38fee4b925e951eec01a1f",
+      "pf_queue_place_ledger.py": "8fa16b929b4ae497109a70add4036dd7cd4501102a261c74eba63de0e0b94bb5",
+      "pf_flow_control_kernel.cpp": "fb1ff31cdcf2a97783283f927fb2d56333a0760e877cb0b93348528138886612",
+      "pf_flow_control_kernel.py": "2460567474f28318f5d09df8ce0977e15748bb9263bc501471cf6a649b334379"
+    },
+    "uncommitted": ""
+  },
+  "source_sha256": "bbefb3b47c3da66e757886f308cb68e923622f701321952d7fc82d44a6b1d241",
+  "dependencies": {
+    "pf_keep_pull_exec_windows.py": "af3f643c86021f3f491c12a251c0fbf24510b4677cabac42f11bdb3e74e33165",
+    "pf_queue_place_test.py": "188c1495ce35db80ce8b79cbc50541964d0d32d9da38fee4b925e951eec01a1f",
+    "pf_flow_control_kernel.py": "2460567474f28318f5d09df8ce0977e15748bb9263bc501471cf6a649b334379",
+    "pf_flow_control_kernel.cpp": "fb1ff31cdcf2a97783283f927fb2d56333a0760e877cb0b93348528138886612"
+  },
+  "outputs": {
+    "orders.parquet": "a55375ccaedcc1f92399da0e7b5a278b4aeb40b18241c86b823edc5eb8c8daaf",
+    "fills.parquet": "1d5ec9d424664af02ab51d40dad63d6cb7e40aaa6339c242b90f6512c7e7d34e"
+  },
+  "seconds": 231.5612666606903
+}

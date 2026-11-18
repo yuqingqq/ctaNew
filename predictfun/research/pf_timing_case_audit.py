@@ -86,6 +86,12 @@ V2 (2026-11-18, after v1's output was seen; v1's receipt timing_case_audit_20261
  alerts naming the order by its hex hash are retained as raw records, and two descriptive A1 fields are printed (the order filled after a
  Canceled answer; a 0-matched terminal snapshot received after the fill notice). Every declared reading, statistic, threshold and window is
  unchanged.
+V4 (review 8e63f178, USER: "proceed to fix"; the audit's own legs and verdicts unchanged - its receipt is superseded by v3's rerun): A2's
+ content identity compares discrete fields exactly and wei-parsed decimals within 1e-9 (default np.isclose accepted a whole second of exec_s);
+ A3 compares the recomputed endpoint within 1e-6 ms (rtol 0; default np.isclose accepted 5,000 ms); the bound "match <= c_hi" takes its type
+ from the first answer's premise - EVIDENCE only for MATCHED-OR-GONE, CONDITIONAL for CANCELED (the answer does not order the match and the
+ cancel effect), none for a refusal - where v3 wrote EVIDENCE beside a NOT-ORDERED premise; the flag A1_filled_after_canceled_answer is now
+ A1_canceled_answer_and_filled (no temporal claim). Negative controls: a 1 ms endpoint shift, a 1 s exec_s shift, a 0.001 sh shares shift.
 Usage (run_light, PF_SLOT=claude): pf_timing_case_audit.py selftest | run
 """
 import bisect
@@ -110,15 +116,18 @@ import pf_settlement_times as SETT                        # noqa: E402  uuid7_ms
 from predictfun.research import pf_io as io               # noqa: E402
 
 C, pd, I = KP.C, KP.pd, KP.I
-OUT = Path(I.K.IO) / 'timing_case_audit_v2_20261118'      # v2: the input-journal key fix (v1, timing_case_audit_20261118, stays as provenance)
+OUT = Path(I.K.IO) / 'timing_case_audit_v3_20261118'      # v3 receipt (module v4: review 8e63f178's fixes); v1 / v2 stay as provenance
 KX = Path('/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108-kernel')
 TL = Path('/home/yuqing/pmmm-data/tokyo-live-data-20261109/tokyo-live-20261109')
 INPUTS = {'v6': TL / 'v6/run-1794108465172/inputs.jsonl.gz', 'basis': TL / 'basis/run-1794147344737/inputs.jsonl.gz'}
 LEDGER = Path(I.K.IO) / 'keep_pull_exec_windows_v5_20261118_20261023'
+KNOWN = Path(I.K.IO) / 'keep_pull_exec_windows_known_v5_20261118'   # the declared population's receipt, pinned (the ledger's OUT_K moves with each version)
 DAY = '20261108'
 CUTOFF_MS = 1794178920000.                                # Nov 8 23:02Z: no record at or after it is parsed (Nov 9 is protected)
 W_LOCAL, W_ID, N_MIN, DP, CLOCK_STEP_MS = 10_000., 5_000., 20, 4, 1.
 BOT_CLOCK_TOL_MS = 0.1                                    # one bot clock: the two journals' stamps of one event are separate reads of the host clock (v3)
+EXACT_KEYS = ('mid', 'exec_s', 'side', 'ptick', 'taker_index', 'taker_quote')   # discrete identity fields: compared exactly (review 8e63f178 P2-2)
+QTY_KEYS, QTY_ATOL, MS_ATOL = ('shares', 'price_executed'), 1e-9, 1e-6           # decimals parsed from wei: absolute tolerance, rtol 0; endpoints in ms
 CLOCKS = {'B': "bot host wall clock (Tokyo): kernel step `at` (ns) and the pfmm input journal `known_ms` - one clock (A0: the order's Accepted in both)",
           'B_mono': 'bot host monotonic clock: kernel `mono` (ns); used only to check that B did not step (at - mono spread)',
           'V_book': 'venue book stamp: predictOrderbook `updateTimestampMs` (ms); S3 WS windows and pend_inc t_ms are on it',
@@ -127,6 +136,11 @@ CLOCKS = {'B': "bot host wall clock (Tokyo): kernel step `at` (ns) and the pfmm 
           'R': 'research collector host clock: `recv_ns` of the research WS / REST rows; file selection only'}
 ANSWER = ('MATCHED-OR-GONE', 'CANCELED', 'NO-EFFECT', 'NO-ANSWER')
 PREMISE = {'MATCHED-OR-GONE': 'EVIDENCE', 'CANCELED': 'NOT-ORDERED-BY-THE-ANSWER', 'NO-EFFECT': 'NONE', 'NO-ANSWER': 'NONE'}
+BOUND_TYPE = {'EVIDENCE': 'EVIDENCE', 'NOT-ORDERED-BY-THE-ANSWER': 'CONDITIONAL', 'NONE': 'NONE'}      # one source for A1 and the c_hi bound (8e63f178 P2-3)
+CHI_PREMISE = {'EVIDENCE': 'the venue found the order gone ({a1}) when it processed the cancel: the match came first',
+               'NOT-ORDERED-BY-THE-ANSWER': 'CONDITIONAL on the venue acknowledging a cancel ({a1}) only after every match of the order - not established: '
+                                            'the answer does not order the match and the cancel effect',
+               'NONE': 'no bound: the cancel was refused or unanswered ({a1})'}
 VERDICT_OK = 'CONTRADICTION-REMOVED-BY-INDEPENDENT-BOOK-CLOCK-BOUND'
 STEP_RE = re.compile(rb'^\{"frame":\{"at":([0-9]+),')
 MONO_RE = re.compile(rb'"mono":([0-9]+)')
@@ -215,6 +229,16 @@ def pairs(tb, kb, tu, ku):
                 st['several_bot'] += 1; continue
             st['paired'] += 1; out.append((i, j, tb[i], tu[j], tu[j] - tb[i]))
     return pd.DataFrame(out, columns=['ib', 'iu', 't_bot', 'u', 'x']), dict(st)
+
+
+def same_content(MR, b):
+    """REST maker rows whose content equals a leg's: discrete fields exactly, wei-parsed decimals within QTY_ATOL (rtol 0)."""
+    ok = np.ones(len(MR), bool)
+    for c in EXACT_KEYS:
+        ok &= MR[c].values.astype(np.int64) == int(b[c])
+    for c in QTY_KEYS:
+        ok &= np.abs(MR[c].values.astype(float) - float(b[c])) <= QTY_ATOL
+    return ok
 
 
 def bound(x):
@@ -394,10 +418,10 @@ def maker_rows(elems):
 # ------------------------------------------------------------------ the case audit
 def known_legs():
     """The legs known v5 marks S3_false_cf_some_offset, with their candidate rows' event windows and critical offsets (hash-checked)."""
-    j = json.loads((X.OUT_K / 'known.json').read_text())
+    j = json.loads((KNOWN / 'known.json').read_text())
     for f in ('known_cases.parquet', 'known_case_rows.parquet'):
-        C.require(C.sha(X.OUT_K / f) == j['outputs'][f], f'{f} differs from its known v5 receipt')
-    K = pd.read_parquet(X.OUT_K / 'known_cases.parquet'); KE = pd.read_parquet(X.OUT_K / 'known_case_rows.parquet')
+        C.require(C.sha(KNOWN / f) == j['outputs'][f], f'{f} differs from its known v5 receipt')
+    K = pd.read_parquet(KNOWN / 'known_cases.parquet'); KE = pd.read_parquet(KNOWN / 'known_case_rows.parquet')
     sel = np.flatnonzero(K.S3_false_cf_some_offset.values.astype(bool))
     rows = []
     for i in sel:
@@ -407,7 +431,7 @@ def known_legs():
                                                                                   'side', 'ptick', 'shares')},
                                                 group=int(e.group.iloc[0]), groups=sorted(set(e.group.astype(int))), S3_lo=lo, S3_hi=float(e.S3_hi.min()),
                                                 critical=lo - float(r['ack'])))
-    return pd.DataFrame(rows), j['R']['K7'], {str(X.OUT_K / 'known.json'): C.sha(X.OUT_K / 'known.json')}
+    return pd.DataFrame(rows), j['R']['K7'], {str(KNOWN / 'known.json'): C.sha(KNOWN / 'known.json')}
 
 
 def event_binding(group, L8, P8):
@@ -489,7 +513,7 @@ def run(out=OUT):
     out.mkdir(parents=True, exist_ok=True)
     L, K7, hs = known_legs(); C.require(len(L) > 0, 'no leg to audit'); inputs = dict(hs)
     # Nov 8's tables (pinned by the known ledger's inputs)
-    kj = json.loads((X.OUT_K / 'known.json').read_text())['inputs']
+    kj = json.loads((KNOWN / 'known.json').read_text())['inputs']
     for f in ('legs_timed2.parquet', 'legs_tk.parquet', 'pend_inc.parquet'):
         p = X.NOV8 / f; C.require(kj.get(str(p)) == C.sha(p), f'{f} differs from the known ledger inputs'); inputs[str(p)] = kj[str(p)]
     L8 = pd.read_parquet(X.NOV8 / 'legs_timed2.parquet', columns=X.CKEY + ['how', 't_ms', 't_e2']).assign(tk=pd.read_parquet(X.NOV8 / 'legs_tk.parquet', columns=['tk']).tk.values)
@@ -572,14 +596,14 @@ def leg_eval(i, v, rec, br, Fm, bf, MR, ck, K7):
     # A2: the binding legs' REST makers, by content, against the leg's own transaction / settlement
     own = MR[MR.order_hash == r.order_hash.lower()] if len(MR) else MR
     own_ids = sorted(set(zip(own.tx, own.sid))) if len(own) else []
-    bk = ['mid', 'exec_s', 'side', 'ptick', 'shares', 'price_executed', 'taker_index', 'taker_quote']; ids = set()
+    ids = set()
     for _, b in v['bind'].iterrows():
-        m = MR[np.logical_and.reduce([np.isclose(MR[c].values.astype(float), float(b[c])) for c in bk])] if len(MR) else MR
+        m = MR[same_content(MR, b)] if len(MR) else MR
         ids |= set(zip(m.tx, m.sid)) if len(m) else {('', '')}
     a2 = ('ABSENT' if not own_ids or not ids or ('', '') in ids else 'AMBIGUOUS' if len(ids) > 1 or len(own_ids) > 1
           else 'SAME-SETTLEMENT' if ids == set(own_ids) else 'DIFFERENT')
     # A3
-    a3_ok = bool(np.isclose(v['lo'], r.S3_lo)) and len(r.groups) == 1
+    a3_ok = bool(abs(float(v['lo']) - float(r.S3_lo)) <= MS_ATOL) and len(r.groups) == 1
     inc = [binding_increment(Fm, b, v['u']) for _, b in v['bind'].iterrows()] if v['dom'] == 'V_book' and len(Fm) else []
     # A4
     P_, st, b, step = book_pairs(float(r.ack), Fm, bf, ck)
@@ -589,7 +613,7 @@ def leg_eval(i, v, rec, br, Fm, bf, MR, ck, K7):
                 critical_ms=float(r.critical), S3_lo=float(r.S3_lo), c_hi=float(r.ack), cancel_decision_minus_req=float(k_cancel - r.req), A0=a0, A0_fields=a0f,
                 A1=a1, A1_answer=a1_ans, A1_answer_at=a1_at, A1_source=a1_src, A1_premise=PREMISE[a1], A1_user_cancel_at=[t for t, _ in uc],
                 A1_terminal_snapshot=[dict(at=t, size_matched=x['size_matched']) for t, x in cq], order_size=v['size'], order_filled=v['filled'],
-                A1_filled_after_canceled_answer=bool(a1 == 'CANCELED' and v['filled'] > 0),
+                A1_canceled_answer_and_filled=bool(a1 == 'CANCELED' and v['filled'] > 0),
                 A1_zero_snapshot_after_fill_notice=bool(pos) and any(x['size_matched'] == 0 and t >= min(pos) for t, x in cq),
                 A1_alerts=[json.loads(line)['frame']['alerts'] for t, k, line in rec if k == 'outbox' and r.order_hash.lower() in line],
                 A2=a2, A2_binding_ids=sorted(ids), A2_own_ids=own_ids, A3_reproduces=a3_ok, A3_domain=v['dom'], A3_u=v['u'], A3_binding_legs=int(len(v['bind'])),
@@ -611,6 +635,10 @@ def lifecycle(r, rec, br):
     oid = list(bytes.fromhex(r.order_hash[2:]))             # a settlement can fill two own orders: its fills are the order's own (v3)
     fills = [(t, x['Exec']['Fill']) for t, k, x in steps if k == 'step:Exec/Fill' and x['Exec']['Fill']['trade_id'] == r.trade_id and x['Exec']['Fill']['order_id'] == oid]
     pos = [t for t, f in fills if f['status'] in ('Matched', 'Confirmed')]
+    ofl = {}                                                  # the ORDER's positive fill notices per trade: (first receipt, size micros)
+    for t, k, x in steps:
+        if k == 'step:Exec/Fill' and x['Exec']['Fill']['order_id'] == oid and x['Exec']['Fill']['status'] in ('Matched', 'Confirmed'):
+            f_ = x['Exec']['Fill']; a_, q_ = ofl.get(f_['trade_id'], (np.inf, 0)); ofl[f_['trade_id']] = (min(a_, t), max(q_, int(f_['size'])))
     mt = {s: [f['match_time'] / 1e9 for t, f in fills if f['status'] == s] for s in ('Matched', 'Confirmed')}
     k_place = first('step:Control/Place', lambda x: x['Control']['Place']['cid'] == r.cid); k_signed = first('step:Exec/Signed', lambda x: x['Exec']['Signed']['cid'] == r.cid)
     k_acc = first('step:Exec/Accepted', lambda x: x['Exec']['Accepted']['cid'] == r.cid); k_cancel = first('step:Control/Cancel', lambda x: x['Control']['Cancel']['cid'] == r.cid)
@@ -631,7 +659,8 @@ def lifecycle(r, rec, br):
                order_hash=sig_hash == [r.order_hash], trade_id=bool(fills),
                one_bot_clock=len(acc_in) == 1 and np.isfinite(k_acc) and abs(acc_in[0] - k_acc) <= BOT_CLOCK_TOL_MS,
                cancel_confirmation=near(min(t for t, _ in pa), r.ack) if pa else not np.isfinite(float(r.ack)))   # the case table's ack: the first CancelPendingAudit
-    return dict(rec=rec, steps=steps, a0=all(a0f.values()), a0f=a0f, a1=a1, a1_ans=a1_ans, a1_at=a1_at, a1_src=a1_src, uc=uc, cq=cq, pos=pos, k_cancel=k_cancel, pa=pa)
+    return dict(rec=rec, steps=steps, a0=all(a0f.values()), a0f=a0f, a1=a1, a1_ans=a1_ans, a1_at=a1_at, a1_src=a1_src, uc=uc, cq=cq, pos=pos, k_cancel=k_cancel, pa=pa,
+                ofills=sorted(ofl.values()))
 
 
 def book_pairs(center, Fm, bf, ck):
@@ -649,8 +678,7 @@ def leg_bounds(r, a1, a2, v, bp):
     """The typed bounds of one leg (name, value, clock, type, premise)."""
     t = lambda n, x, c, k, p: dict(name=n, value=None if x is None or not np.isfinite(x) else float(x), clock=c, type=k, premise=p)
     out = [t('match >= placement decision', r.place, 'B', 'EVIDENCE', 'an order cannot trade before the engine decided to place it'),
-           t('match <= cancel answer receipt (c_hi)', r.ack, 'B', 'EVIDENCE' if a1 not in ('NO-EFFECT', 'NO-ANSWER') else 'NONE',
-             f'the venue answered the cancel ({a1}) after processing it, and the leg had matched by then'),
+           t('match <= cancel answer receipt (c_hi)', r.ack, 'B', BOUND_TYPE[PREMISE[a1]], CHI_PREMISE[PREMISE[a1]].format(a1=a1)),
            t('match <= first fill notice', r.notice, 'B', 'EVIDENCE', 'a notice follows its match'),
            t('match within its Matched second', r.M * 1000., 'V_status', 'ASSUMPTION', 'pf-exec rounds match_time to the second (floor premise)'),
            t('match <= Confirmed second end', (r.S + 1.) * 1000., 'V_status', 'EVIDENCE', 'executedAt is the Confirmed second, floored'),
@@ -688,7 +716,7 @@ def report(R):
               f"    A0 records reproduce: {x['A0']} {x['A0_fields']}",
               f"    A1 cancel answer: {x['A1']} ({x['A1_source']}; {json.dumps(x['A1_answer'])}) at {x['A1_answer_at']}; match <= c_hi: {x['A1_premise']}; "
               f"user-stream cancel at {x['A1_user_cancel_at']}; post-cancel terminal snapshot {x['A1_terminal_snapshot']}; order {x['order_filled']:g} of {x['order_size']:g} filled; "
-              f"filled after a Canceled answer {x['A1_filled_after_canceled_answer']}; a 0-matched snapshot received after the fill notice {x['A1_zero_snapshot_after_fill_notice']}; "
+              f"a Canceled answer and a fill (order not identified) {x['A1_canceled_answer_and_filled']}; a 0-matched snapshot received after the fill notice {x['A1_zero_snapshot_after_fill_notice']}; "
               f"pf-exec alerts naming the order {x['A1_alerts']}",
               f"    A2 event identity: {x['A2']} (binding {x['A2_binding_ids']}, own {x['A2_own_ids']})",
               f"    A3 binding endpoint: reproduces {x['A3_reproduces']}, domain {x['A3_domain']}, u* {x['A3_u']}, binding legs {x['A3_binding_legs']} of {x['A3_event_legs']}, increments {x['A3_increments']}",
@@ -707,7 +735,7 @@ def report(R):
     return '\n'.join(L) + '\n'
 
 
-def _planted_leg(x_bot=-3., bind_tx='0xabc', acc_shift=0., step_ms=0., answer=None, far=False, snap=(5000000, 15.)):
+def _planted_leg(x_bot=-3., bind_tx='0xabc', acc_shift=0., step_ms=0., answer=None, far=False, snap=(5000000, 15.), lo_shift=0., bind_exec=0, bind_shares=0.):
     """A synthetic leg for leg_eval: the first S3 false avoidance's shape (critical -210.3 ms), its kernel / input records, 31 identity pairs
     (x = x_bot ms, one the binding frame), the REST makers and the clock samples. far: 10 extra pairs 20 s away with x = +500 ms."""
     base = 1794124542000.; cid = 1794108465179877; oid = list(range(32)); tid = '01a1ba27-f105-72b0-83dc-9e674f56ae84'
@@ -716,7 +744,7 @@ def _planted_leg(x_bot=-3., bind_tx='0xabc', acc_shift=0., step_ms=0., answer=No
                        rM=base + 702.7, rC=base + 2432.7, M=1794124542., Cs=1794124542., S=1794124542., t_set=base + 213., exec_s=1794124542, first_recv_ns=0, side=1,
                        ptick=23, shares=5., group=5, groups=[5], S3_lo=base + 4., S3_hi=base + 254., critical=4. - 214.3))
     bind = pd.DataFrame([dict(mid=7, exec_s=1794124542, side=1, ptick=60, shares=3., price_executed=.6, taker_index=1, taker_quote=0, first_recv_ns=0)])
-    v = dict(row=r, ev=pd.concat([bind, bind]), lo=base + 4., bind=bind, dom='V_book', u=base + 254., eid=146, size=5., filled=5.)
+    v = dict(row=r, ev=pd.concat([bind, bind]), lo=base + 4. + lo_shift, bind=bind, dom='V_book', u=base + 254., eid=146, size=5., filled=5.)
     ns = lambda ms: int(round(ms * 1e6))
     st_ = lambda ms, inp, q: (ms, 'step:' + next(iter(inp)) + '/' + next(iter(inp[next(iter(inp))])),
                               json.dumps({"frame": {"at": ns(ms), "input": inp, "mono": ns(ms) - 10 ** 12, "seq": q}, "i": q, "type": "step", "version": 1}, separators=(',', ':')))
@@ -738,7 +766,8 @@ def _planted_leg(x_bot=-3., bind_tx='0xabc', acc_shift=0., step_ms=0., answer=No
     Fm = pd.DataFrame(dict(u=u, recv_ns=0, key=keys, pend=pend))
     bf = [(uu - x_bot if not (far and k[0] == 'f') else uu - 500., k) for uu, k in zip(u, keys) if k != ('kp',)]
     MR = pd.DataFrame([dict(mid=7, exec_s=1794124542, side=1, ptick=23, shares=5., price_executed=.23, taker_index=1, taker_quote=0, tx='0xabc', sid=tid, order_hash=r.order_hash),
-                       dict(mid=7, exec_s=1794124542, side=1, ptick=60, shares=3., price_executed=.6, taker_index=1, taker_quote=0, tx=bind_tx, sid=tid if bind_tx == '0xabc' else 'x',
+                       dict(mid=7, exec_s=1794124542 + bind_exec, side=1, ptick=60, shares=3. + bind_shares, price_executed=.6, taker_index=1, taker_quote=0, tx=bind_tx,
+                            sid=tid if bind_tx == '0xabc' else 'x',
                             order_hash='0x' + '11' * 32)])
     t_ = np.arange(r.ack - 9000., r.ack + 9000., 500.) * 1e6; ck = np.c_[t_, t_ - 1e12 - np.where(np.arange(len(t_)) >= len(t_) // 2, step_ms * 1e6, 0.)]
     return v, rec, br, Fm, bf, MR, ck, dict(lo=-226.4, hi=49.3)
@@ -800,12 +829,22 @@ def selftest():
             and g0['A2'] == 'SAME-SETTLEMENT' and g0['A3_reproduces'] and g0['A4']['n'] == 31 and g0['A4']['B'] == -3. and g0['A4']['clock_step_ms'] == 0.
             and g0['A4']['binding_pair_x'] == [-3.] and abs(g0['A4']['binding_receipt_minus_c_hi'][0] - 42.7) < 1e-3 and g0['A3_increments'] == [[(1, 60, 1.8)]]
             and g0['A1_terminal_snapshot'][0]['size_matched'] == 5000000 and abs(g0['cancel_decision_minus_req'] - 0.4) < 1e-3
-            and g0['A1_filled_after_canceled_answer'] is True and g0['A1_zero_snapshot_after_fill_notice'] is False):
+            and g0['A1_canceled_answer_and_filled'] is True and g0['A1_zero_snapshot_after_fill_notice'] is False
+            and [b['type'] for b in g0['bounds'] if b['name'] == 'match <= cancel answer receipt (c_hi)'] == [BOUND_TYPE[g0['A1_premise']]] == ['CONDITIONAL']):
         bad.append(f"leg_eval on the planted leg: {g0.get('A5')} A0 {g0.get('A0_fields')} A1 {g0.get('A1')} A2 {g0.get('A2')} A4 {g0.get('A4')} inc {g0.get('A3_increments')}")
     for kw, want in ((dict(x_bot=-300.), MISSING['bound']), (dict(bind_tx='0xdef'), MISSING['A2']), (dict(acc_shift=0.5), MISSING['A0']), (dict(step_ms=5.), MISSING['clock'])):
         g = ev_(**kw)
         if g['A5'] == VERDICT_OK or want not in g['A5_missing']:
             bad.append(f'leg_eval {kw}: {g["A5"]} {g["A5_missing"]}')
+    for kw, want in ((dict(lo_shift=1.), MISSING['A3']), (dict(bind_exec=1), MISSING['A2']), (dict(bind_shares=0.001), MISSING['A2'])):
+        g = ev_(**kw)                                         # 1 ms / 1 s / 0.001 sh off: refused at the operational resolution (8e63f178 P2-2)
+        if g['A5'] == VERDICT_OK or want not in g['A5_missing']:
+            bad.append(f'leg_eval accepted a mismatch at the operational resolution {kw}: {g["A5"]} {g.get("A2")} {g.get("A3_reproduces")}')
+    for ans_, typ in (({'NotCanceled': "order can't be found - already canceled or matched (predict noop)"}, 'EVIDENCE'), ({'Http': 429}, 'NONE')):
+        g = ev_(answer=ans_)                                  # the c_hi bound's type follows the first answer's premise, never a constant
+        cb = [b['type'] for b in g.get('bounds', []) if b['name'] == 'match <= cancel answer receipt (c_hi)']
+        if cb != [BOUND_TYPE[g.get('A1_premise', 'NONE')]] or cb != [typ]:
+            bad.append(f'the c_hi bound typed inconsistently with A1: {g.get("A1")} {g.get("A1_premise")} {cb}')
     g = ev_(far=True)
     if not (g['A5'] == VERDICT_OK and g['A4']['n'] == 31 and g['A4']['B'] == -3.):
         bad.append(f'leg_eval: pairs outside the local window counted: {g["A4"]}')
