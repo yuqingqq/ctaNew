@@ -29,7 +29,7 @@ MUT = [
     ('zero-latency tie order ignored (a cancel stops the trade at its own instant)', "    return x if x > g else float(np.nextafter(g, np.inf))", "    return x"),
     # --- the outcome
     ('the score lands at the baseline latency in every scenario', "r = KP.landing(np.clip(T[ri], 1, KP.NSTEP), lf)", "r = KP.landing(np.clip(T[ri], 1, KP.NSTEP))"),
-    ('the uniform shifts read the baseline fills', "Fs = Fl[Fl.clock == float(sc['tl'][1:])][['day', 'oid', 't', 'q']]", "Fs = Fl[Fl.clock == SHIFT][['day', 'oid', 't', 'q']]"),
+    ('the uniform shifts read the baseline fills', "Fs = Fl[Fl.clock == float(sc['tl'][1:])][['day', 'oid', 't', 'q', 'src']]", "Fs = Fl[Fl.clock == SHIFT][['day', 'oid', 't', 'q', 'src']]"),
     ('notice scenarios re-use the baseline eligibility', "endj = endj_n(E.t_full_s.values, E.g_struct.values, sc['N'])", "endj = endj_n(E.t_full_s.values, E.g_struct.values, KP.NOTICE)"),
     # --- the controls
     ('baseline control removed', "C.require(same, f'the baseline scenario differs from the committed replay (order {int(o.oid)})')",
@@ -63,6 +63,17 @@ MUT = [
     ('removed fills counted as cancel-pending', "pend = act[ri] & (t >= KP.STEP * T[ri]) & (t < r)", "pend = act[ri] & (t >= KP.STEP * T[ri])"),
     ('the headline without young fills keeps them', "no_young=dict(E=e - by_age['lt100']['E'], score=score - by_age['lt100']['score'],", "no_young=dict(E=e, score=score,"),
     ('control (i) never fires', "    return [nm for nm, v in res.items() if abs(v['KEEP'] - v['fills_value']) > 1e-6 * max(1., abs(v['KEEP']))]", "    return []"),
+    # --- v6: C12 trade-anchor sources, control (j), the C2 reading
+    ('every fill labelled mixed', "sx.append(cs.pop() if len(cs) == 1 else 3)", "sx.append(3)"),
+    ('control (j) never compares the sources', "and np.array_equal(np.asarray(sx, np.int64), cs_))", "and True)"),
+    ('the age-by-source table not a partition', "E=con((yb == b) & (sc_ == c)), fills=int(((yb == b) & (sc_ == c)).sum())", "E=con((yb == b) & (sc_ >= c)), fills=int(((yb == b) & (sc_ >= c)).sum())"),
+    ('the M250 reading always holds', "    return 'HOLDS-AT-M250' if np.sign(v50) == np.sign(v250) and v50 != 0 else 'SIGN-DIFFERS-AT-M250'", "    return 'HOLDS-AT-M250'"),
+    # --- v6: C1 B1a-weighted headline
+    ('B1a weights applied in reverse bin order', "    return {k: float(sum(by_age[lab]['E'] * w for lab, w in zip(AGE_LABELS, wt))) for k, wt in FV.B1A.items()}",
+     "    return {k: float(sum(by_age[lab]['E'] * w for lab, w in zip(AGE_LABELS, wt[::-1]))) for k, wt in FV.B1A.items()}"),
+    ('the report not given the B1a values', "                b1a_E=b1a_of(by_age),", "                b1a_E=dict(M0=0., M50=0.),"),
+    ('the B1a reading ignores a sign change', "    return 'HOLDS-SIGN' if e != 0 and all(np.sign(x) == np.sign(e) for x in w.values()) and len(w) > 0 else 'SIGN-DIFFERS'",
+     "    return 'HOLDS-SIGN' if e != 0 and len(w) > 0 else 'SIGN-DIFFERS'"),
 ]
 STALE = 97                                                # exit code of a replacement target that does not occur as declared
 
@@ -85,12 +96,15 @@ def main():
     for i, (name, *_) in enumerate(MUT):
         r = subprocess.run([sys.executable, __file__, str(i)], capture_output=True, text=True)
         tail = r.stderr.strip().splitlines() or r.stdout.strip().splitlines() or ['']
-        ok = (r.returncode == 0) if i == 0 else (r.returncode not in (0, STALE))
+        caught = r.returncode == 1 and 'KEEP-PULL SCENARIOS SELFTEST FAILED' in r.stderr   # caught BY A CHECK (the selftest's own exit message); a crash is unexpected
+        ok = (r.returncode == 0) if i == 0 else caught
         bad += not ok
-        print(f'{i:2d} {name}: rc {r.returncode} -> {"passed" if r.returncode == 0 else " / ".join(x.strip()[:200] for x in tail[-2:])}{"" if ok else "   <<< UNEXPECTED"}', flush=True)
+        first = next((x for x in r.stderr.splitlines() if 'SELFTEST FAILED' in x), None)
+        how = 'passed' if r.returncode == 0 else ('caught: ' + first.strip()[:200]) if caught and first else ' / '.join(x.strip()[:200] for x in tail[-2:])
+        print(f'{i:2d} {name}: rc {r.returncode} -> {how}{"" if ok else "   <<< UNEXPECTED"}', flush=True)
     if bad:
         sys.exit(f'KEEP-PULL SCENARIO MUTATION CHECK FAILED: {bad} unexpected outcomes of {len(MUT)}')
-    print(f'keep-pull scenario mutation check passed: the unchanged copy passes its selftest, {len(MUT) - 1} / {len(MUT) - 1} planted code errors fail it', flush=True)
+    print(f'keep-pull scenario mutation check passed: the unchanged copy passes its selftest, {len(MUT) - 1} / {len(MUT) - 1} planted code errors are caught by a check', flush=True)
 
 
 if __name__ == '__main__':

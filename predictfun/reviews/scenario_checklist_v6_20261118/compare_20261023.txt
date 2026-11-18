@@ -1,0 +1,34 @@
+{
+ "day": "20261023",
+ "R5a": true,
+ "differences": [],
+ "reading_differences": [],
+ "R5b": true,
+ "partition_failures": [],
+ "R5c": true,
+ "orders": [
+  30088,
+  30088,
+  30088
+ ],
+ "R5d": true,
+ "c2": {
+  "C2 E AT M250 vs M50": [
+   "SIGN-DIFFERS-AT-M250",
+   "SIGN-DIFFERS-AT-M250",
+   [
+    34948.02366774128,
+    -13341.716849372304
+   ]
+  ],
+  "C2 KEEP + SCORE AT M250 vs M50": [
+   "HOLDS-AT-M250",
+   "HOLDS-AT-M250",
+   [
+    -174960.5483664242,
+    -297802.8266966129
+   ]
+  ]
+ },
+ "ALL": true
+}

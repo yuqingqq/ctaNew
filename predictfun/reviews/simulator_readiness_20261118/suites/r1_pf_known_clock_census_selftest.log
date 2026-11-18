@@ -1,0 +1,2 @@
+SELFTEST PASS
+2026-11-18T21:07:50Z tag=fs_pf_known_clock_census_selftest rc=0 peak_rss_mib=198 wall_s=0.91 cpu_user_s=0.76 memavail_start_gib=23 disk_free_gib=434->434 slot=claude

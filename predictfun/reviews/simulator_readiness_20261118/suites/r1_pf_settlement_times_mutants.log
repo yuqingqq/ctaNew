@@ -1,0 +1,18 @@
+ 0 none (must pass): rc 0 -> passed
+ 1 the UUID time from 44 bits: rc 1 -> SETTLEMENT SELFTEST FAILED: the UUIDv7 time | times: [112050000025.0, 112050000025.0, nan, nan, nan, nan, 112050000631.0, 112050000631.0] | accepted ids later than their REST second | a refused run wr
+ 2 the version nibble not checked: rc 1 -> SETTLEMENT SELFTEST FAILED: the UUIDv7 time | statuses: [0, 0, 2, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 3 the latest receipt kept, not the first: rc 1 -> SETTLEMENT SELFTEST FAILED: page legs: 66 {'20261023_05': 36} 0
+ 4 equal-content legs with different ids not marked: rc 1 -> SETTLEMENT SELFTEST FAILED: statuses: [0, 0, 2, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 5 a count mismatch not marked: rc 1 -> SETTLEMENT SELFTEST FAILED: statuses: [0, 0, 0, 3, 3, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 6 C1 threshold ignored: rc 1 -> SETTLEMENT SELFTEST FAILED: accepted two settlement ids in one taker order | a refused run wrote output (two settlement ids in one taker order)
+ 7 C1 shuffled control ignored: rc 1 -> SETTLEMENT SELFTEST FAILED: accepted one id on every leg | a refused run wrote output (one id on every leg)
+ 8 C3 ignored: rc 1 -> SETTLEMENT SELFTEST FAILED: accepted ids later than their REST second | a refused run wrote output (ids later than their REST second)
+ 9 the shuffle not applied: rc 1 -> SETTLEMENT SELFTEST FAILED: one settlement per taker order: 0.0 / shuffled 0.0 / 62 | rehearsal refused: SETTLEMENT TIMES FAILED -> no output: {'C1': False, 'C2': True, 'C3': True, 'C4': True} {"statu
+10 a refused day still writes: rc 1 -> SETTLEMENT SELFTEST FAILED: accepted ids later than their REST second | a refused run wrote output (ids later than their REST second) | accepted one id on every leg | a refused run wrote output (one i
+11 the page reader opens a sealed hour: rc 1 -> SETTLEMENT SELFTEST FAILED: a sealed hour was read | the reader was called for ['20261028_00'] | sealed boundary: hours ['20261023_05'] / excluded ['20261028_00'] / asked ['20261023_05', '20261028_00'
+12 day_run keeps the sealed hours in its padded list: rc 1 -> SETTLEMENT SELFTEST FAILED: the sealed-boundary rehearsal refused: sealed or forward hour 20261028_00: never opened
+13 boundary legs keep status absent: rc 1 -> SETTLEMENT SELFTEST FAILED: sealed boundary: hours ['20261023_05'] / excluded ['20261028_00'] / asked ['20261023_05'] / statuses [1, 1, 1]
+14 the forward boundary ignored: rc 1 -> SETTLEMENT SELFTEST FAILED: the sealed / forward hour rule
+15 the boundary window 4 h wide: rc 1 -> SETTLEMENT SELFTEST FAILED: sealed boundary: hours ['20261023_05'] / excluded ['20261028_00'] / asked ['20261023_05'] / statuses [1, 5, 5]
+settlement mutation check passed: the unchanged copy passes its selftest, 15 / 15 planted code errors are caught by a check
+2026-11-18T20:47:01Z tag=st_mutants rc=0 peak_rss_mib=204 wall_s=16.27 cpu_user_s=13.42 memavail_start_gib=23 disk_free_gib=434->434 slot=claude
