@@ -1,3 +1,31 @@
+<!-- ENTRY_RETENTION_PRIORITY_20261119_CODEX -->
+## 2026-11-19 User-directed next-priority plan: value and useful quoting must improve together
+
+[Plan and metric definitions](handoffs/20261119_entry_retention_priority.md),
+based on reviewed result 37e8b373 and review 1adf6a33. This is a prospective plan,
+not new results. The user rejects near-immediate cancellation of nearly all
+orders as a practical strategy. The key symptom is the first-review reversal;
+eventual cancellation rate alone is not an adequate performance objective.
+
+Next deliverable: coherence repair and a five-policy, no-fit entry/cancellation
+comparison on the same consumed opportunities, preserving zero/no-fill/refusal
+outcomes. Distinguish NO_ENTRY from true WAIT. Follow with paired POST/WAIT and
+KEEP/PULL targets under a frozen causal continuation, identical absolute END,
+branch-local queue/pending/inventory state, and chronological teacher labels.
+Retain queue priority through KEEP; model later cancellation explicitly; do not
+reward resting with an artificial bonus or enforce a fixed minimum-rest timer.
+
+Success requires economics and useful quoting together: value at matched
+participation, two-sided at-best availability, lifetime/first-review reversals,
+churn and queue resets, early/pending loss, boundary movement/continuation
+calibration, markouts, tail loss and inventory. Counts/statuses/as-of and day/side
+splits are mandatory; repeated decision labels are not strategy returns. No
+threshold/size/horizon sweep to force a development PASS. Both consumed days
+remain consumed; forward validation needs the full pipeline frozen and at least
+five later untouched complete days. The other session owns implementation;
+this session committed only planning/handoff material.
+<!-- /ENTRY_RETENTION_PRIORITY_20261119_CODEX -->
+
 <!-- PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
 ## 2026-11-19 Corrected pipeline: values verified; positive-selection movement error remains
 

@@ -1,3 +1,39 @@
+<!-- ENTRY_RETENTION_PRIORITY_20261119_CODEX -->
+## 2026-11-19 — USER next priority committed: consistent entry/retention and useful quoting
+
+User: "generate the next priority, clear next steps, and the evaluation metrics,
+then process to commit". [Implementation and evaluation plan](handoffs/20261119_entry_retention_priority.md).
+This supersedes suggestions to start size/price tuning immediately. Development
+remains with the other session; no implementation or experiment was run here.
+
+**Immediate deliverable:** close the remaining zero-quantity/nonzero-movement
+coherence hole, then publish the five-policy entry-plus-cancellation diagnostic
+on consumed Oct26/27: N0 no entry; A0 all entry + PULL-ALL; A1 all entry + MODEL-J;
+E0 positive POST admission + PULL-ALL; E1 the same admission + MODEL-J. Keep
+weights, 30-share best JOIN, thresholds and timing fixed. This stage compares
+POST with NO_ENTRY, not adaptive WAIT, and carries full population/ledger metrics.
+
+**Then:** freeze a complete causal continuation policy and compare POST now with
+WAIT one review, and KEEP one review with PULL now. Both branches continue from
+their own queue/pending/inventory states to the same absolute endpoint; KEEP
+retains queue priority, pending cancels retain exposure. Use chronological
+teacher weights, paired labels and one primary learned candidate with fixed
+fair/mechanical controls. No fixed cooldown, minimum-rest timer or queue bonus.
+
+**Evaluation:** common-END value versus zero/PULL-ALL/reference at matched
+participation; bid/ask/both at-best quote availability; lifetime, first-review
+reversals, churn per hour/filled shares, queue resets, early/pending-fill loss,
+movement/continuation calibration, markouts, tail loss and inventory. Publish
+counts/as-of/statuses by day/side. Economic and practical quoting gates must pass
+together; reduced cancellation alone cannot pass. A research episode gate is
+not a continuous-market-making or profitability claim. Require a committed full
+pipeline and at least five later untouched complete days for forward validation.
+
+The plan contains ordered G0-G3 prerequisites, exact metric denominators,
+chronology, matched controls and stop rules. Other-session dirty files preserved;
+no schedule restart, push, merge or training from this documentation task.
+<!-- /ENTRY_RETENTION_PRIORITY_20261119_CODEX -->
+
 <!-- PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
 ## 2026-11-19 — Corrected pipeline results reviewed: values reproduce; attribution corrected
 

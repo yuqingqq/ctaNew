@@ -1,3 +1,24 @@
+entry_retention_priority_20261119_codex:
+  status: plan_committed_implementation_owned_by_development_session
+  request: "generate next priority, clear next steps and evaluation metrics, then commit"
+  plan: predictfun/handoffs/20261119_entry_retention_priority.md
+  basis_result_commit: 37e8b373d5ef29beb605573c82d0842dba320a89
+  basis_review_commit: 1adf6a334306623bbd9d1af2332d21a9e0adcc55
+  priority: consistent_entry_retention_economics_with_useful_resting_quotes
+  immediate_deliverable: G0_coherence_fix_then_G1_five_policy_entry_cancellation_ledger
+  diagnostic_policies: [N0_no_entry, A0_all_entry_pull_all, A1_all_entry_MODEL_J, E0_positive_admission_pull_all, E1_positive_admission_MODEL_J]
+  adaptive_targets: [POST_now_minus_WAIT_one_review_with_common_continuation, KEEP_one_review_minus_PULL_now_with_common_continuation]
+  frozen_diagnostic_settings: {shares: 30, price: best_JOIN, review_ms: 50, activation_ms: 58, cancel_ms: 37, notice_ms: 100}
+  diagnostics_days: ["20261026", "20261027"]
+  diagnostics_status: consumed_not_validation
+  adaptive_development_chronology: {reference_warmup: "20261023", paired_training: ["20261024", "20261025"], evaluation: ["20261026", "20261027"]}
+  model_design: one_primary_paired_advantage_candidate_with_fixed_fair_and_mechanical_controls
+  required_metrics: [absolute_and_relative_value, participation, both_side_at_best_uptime, lifetime, first_review_reversals, churn, queue_preservation, early_pending_fill_loss, action_calibration, markouts, tail_loss, inventory]
+  gates: [correctness, prediction_calibration, positive_value_at_matched_participation, useful_quoting, full_pipeline_freeze_before_forward_validation]
+  new_training_or_tape_run: false
+  implementation_changed_by_this_session: false
+  scheduler: remains_disabled
+
 pipeline_v2_result_review_20261119_codex:
   status: baseline_values_reproduce_residual_P2_coherence_and_two_P2_interpretation_findings
   target_commit: 37e8b373d5ef29beb605573c82d0842dba320a89
