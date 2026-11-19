@@ -25,8 +25,9 @@ Statuses: OPEN, IN-PROGRESS, DONE (with receipt), USER (needs a decision or data
 |---|---|---|---|
 | pf_settlement_times.py (v2) | pass | 15 / 15 | r1_pf_settlement_times_* |
 | pf_keep_pull_exec_windows.py (known v7) | pass | 127 / 127 | r2_pf_keep_pull_exec_windows_* |
-| pf_keep_pull_scenarios.py (v6.1, 2026-11-19: the policy parameter) | pass | 46 / 46 | ../keep_pull_variants_20261119/logs/sc61_* (v6: 44 / 44, r2_pf_keep_pull_scenarios_*) |
-| pf_keep_pull_variants.py (2026-11-19: policy comparisons) | pass | 30 / 30 | ../keep_pull_variants_20261119/logs/var_* |
+| pf_keep_pull_scenarios.py (v6.2, 2026-11-19: the policy parameter and external triggers) | pass | 49 / 49 | ../keep_pull_variants_20261119/v2/logs/sc62_* (v6.1: 46 / 46, ../keep_pull_variants_20261119/logs/sc61_*) |
+| pf_keep_pull_variants.py (v2, 2026-11-19: policy comparisons; review e96321df's PULL-ALL label) | pass | 31 / 31 | ../keep_pull_variants_20261119/v2/logs/vr2_* (v1: 30 / 30) |
+| pf_pipeline_export.py (v1, 2026-11-19: the pipeline's causal export) | pass | 26 / 26 | ../pipeline_export_20261119/logs/px_* - review 89caa74c P1 (POST inputs use a future arrival) OPEN: v2 next |
 | pf_keep_pull.py (the committed base replay) | pass | 43 / 43 | r2_pf_keep_pull_selftest, r3_pf_keep_pull_mutants |
 | pf_queue_place_ledger.py (loader, post-only mirror) | pass | 29 / 29 | r2_pf_queue_place_ledger_selftest, r3_pf_queue_place_ledger_mutants |
 | pf_timing_case_audit.py | pass | 40 / 40 | r1_pf_timing_case_audit_* |
@@ -68,3 +69,5 @@ queue-place mutants that could only crash plant well-formed wrong output instead
 - 2026-11-19 02:49Z — the USER's one-day test ("Score variants vs A+0", Oct 23) through `pf_keep_pull_variants.py`: controls V0a-V0e YES; no
   variant survives the timing scenarios or is above A+0 in every one ([receipt](../keep_pull_variants_20261119/report.md)). The protocol's
   order description corrected (30-sh JOIN orders, not 5-sh). Next, the USER: the learned prediction + value-mapping pipeline.
+- 2026-11-19 05:52Z — variants v2 closes review e96321df P2; the pipeline's first-day benchmark and keep / pull test ran, but review 89caa74c
+  (P1 POST future-arrival inputs, P2 contract-refused forecasts acting, P2 a gate blind to the value's sign) holds: NOT ACCEPTED, fixes next.

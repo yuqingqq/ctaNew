@@ -1,0 +1,303 @@
+BASELINE VERSUS CANDIDATE: THE SIX DECLARED SCORE POLICIES THROUGH THE SCENARIO BANK (pf_keep_pull_variants.py; days 20261023; c summed; baseline A+0, candidates A+1, A-1, B0.5, B1, B2; one 30 sh JOIN order per counted state, pulls decided every 50 ms from +100 ms; local marks at END, not P&L)
+  30,088 states with a path (28,799 eligible at B); scenario day outputs as of 20261023 2026-11-18T20:28:18.245546+00:00
+  CONTROLS: YES (V0a A+0 = the committed scenario report in every value of every scenario; V0b pulls and improvement at B = the committed keep / pull run, M50 / 37 ms, for every policy; V0c E, improvement and pulls at B = the clock audit's per-fill values for every policy; V0d KEEP / PULL-ALL / fills / eligible the same for every policy, KEEP = its fills; V0e receipts)
+
+  policy-free: scenario                   KEEP value  PULL-ALL improvement  PULL-ALL value    fills  eligible   (PULL-ALL value = KEEP + its improvement)
+               M50|A58|L37|N100             -416,243              +389,554         -26,689   17,670    28,799
+               S1lo|A58|L37|N100            -521,881              +484,535         -37,346   20,186    28,799
+               S1mid|A58|L37|N100           -445,029              +419,540         -25,488   19,745    28,799
+               S1hi|A58|L37|N100            -290,698              +270,365         -20,333   16,717    28,799
+               S2lo|A58|L37|N100            -569,914              +492,702         -77,212   21,961    28,799
+               S2hi|A58|L37|N100             +20,352               -17,279          +3,073   13,722    28,799
+               S3lo|A58|L37|N100            -407,637              +381,872         -25,765   21,258    28,799
+               S3hi|A58|L37|N100            -234,947              +221,943         -13,004   14,883    28,799
+               SThi|A58|L37|N100            -353,878              +331,764         -22,114   20,364    28,799
+               EVhi|A58|L37|N100             +97,346               -97,346              +0    7,834    28,799
+               M50|A15|L37|N100             -427,615              +382,434         -45,181   18,314    29,296
+               M50|A100|L37|N100            -406,879              +396,476         -10,403   17,119    28,322
+               M50|A58|L0|N100              -376,844              +362,462         -14,382   16,689    28,799
+               M50|A58|L100|N100            -465,715              +425,284         -40,431   19,165    28,799
+               M50|A58|L37|N160             -416,243              +389,554         -26,689   17,670    28,799
+               M50|A58|L37|N660             -416,243              +389,554         -26,689   17,670    28,799
+               M50|A58|L37+13%x4000|N100     -466,751              +340,415        -126,336   20,495    28,799
+               M0|A58|L37|N100              -368,043              +349,180         -18,863   16,565    28,799
+               M250|A58|L37|N100            -518,337              +481,254         -37,083   20,040    28,799
+
+  E: each policy's improvement over its own matched STATES null (c)
+  scenario                  A+0 (base)         A+1         A-1        B0.5          B1          B2
+  M50|A58|L37|N100             +34,948     +29,847     +41,921    +101,575    +102,767     +94,977
+  S1lo|A58|L37|N100            -11,098      -8,543      -5,383      -6,858      -3,612        -202
+  S1mid|A58|L37|N100           +25,288     +23,170     +32,435     +76,571     +77,418     +68,834
+  S1hi|A58|L37|N100            +34,161     +33,283     +39,527     +92,177     +93,026     +85,207
+  S2lo|A58|L37|N100             -2,848      -2,841      +3,319      -8,689      -6,215      -3,856
+  S2hi|A58|L37|N100             +6,496      +8,866     +12,571     +18,929     +22,117     +16,702
+  S3lo|A58|L37|N100               +814      +2,763      +6,107      +5,915      +6,136      +6,762
+  S3hi|A58|L37|N100            +36,029     +34,838     +40,361     +90,207     +91,100     +84,764
+  SThi|A58|L37|N100            +40,687     +36,098     +49,665    +122,165    +123,015    +115,526
+  EVhi|A58|L37|N100             +2,338      +6,138      +7,006      +9,643     +13,177      +9,537
+  M50|A15|L37|N100             +33,971     +29,176     +40,665     +99,704     +99,949     +92,210
+  M50|A100|L37|N100            +35,834     +30,932     +43,040    +102,241    +104,277     +96,744
+  M50|A58|L0|N100              +38,255     +32,322     +42,880    +100,985    +101,782     +94,644
+  M50|A58|L100|N100            +17,964     +18,644     +25,073     +72,135     +72,491     +65,237
+  M50|A58|L37|N160             +34,664     +29,705     +41,807    +101,225    +102,421     +94,613
+  M50|A58|L37|N660             +34,689     +29,586     +41,627    +101,133    +102,007     +94,384
+  M50|A58|L37+13%x4000|N100     +30,475     +25,949     +36,203     +84,277     +84,835     +79,197
+  M0|A58|L37|N100              +39,834     +36,046     +45,403     +96,960     +96,980     +90,320
+  M250|A58|L37|N100            -13,342     -10,786      -7,599      -6,740      -4,199        -381
+
+  V = KEEP + the policy's improvement over KEEP (the rule's own local value, c)
+  scenario                  A+0 (base)         A+1         A-1        B0.5          B1          B2
+  M50|A58|L37|N100            -174,961    -153,379    -198,680    -233,504    -244,914    -267,883
+  S1lo|A58|L37|N100           -296,755    -260,989    -328,825    -469,156    -481,365    -492,875
+  S1mid|A58|L37|N100          -202,772    -177,211    -228,472    -289,014    -302,968    -326,848
+  S1hi|A58|L37|N100           -110,141     -94,153    -125,798    -136,725    -143,909    -163,362
+  S2lo|A58|L37|N100           -336,357    -301,612    -367,421    -529,951    -543,018    -554,015
+  S2hi|A58|L37|N100            +32,427     +33,860     +36,444     +42,320     +46,120     +40,546
+  S3lo|A58|L37|N100           -216,414    -189,523    -241,400    -358,757    -368,819    -377,743
+  S3hi|A58|L37|N100            -79,096     -66,596     -91,801     -91,411     -96,942    -112,274
+  SThi|A58|L37|N100           -135,043    -117,189    -152,625    -154,295    -162,225    -183,182
+  EVhi|A58|L37|N100            +58,696     +56,371     +69,367     +97,095    +104,423    +102,794
+  M50|A15|L37|N100            -190,007    -168,545    -213,589    -247,363    -259,737    -282,523
+  M50|A100|L37|N100           -164,039    -141,861    -188,144    -222,702    -233,499    -256,431
+  M50|A58|L0|N100             -146,417    -128,995    -170,624    -199,899    -210,242    -231,391
+  M50|A58|L100|N100           -230,841    -200,755    -258,103    -311,764    -326,479    -350,803
+  M50|A58|L37|N160            -174,961    -153,379    -198,680    -233,504    -244,914    -267,883
+  M50|A58|L37|N660            -174,961    -153,379    -198,680    -233,504    -244,914    -267,883
+  M50|A58|L37+13%x4000|N100    -258,508    -239,340    -279,495    -313,554    -324,417    -343,161
+  M0|A58|L37|N100             -143,217    -124,388    -164,933    -198,117    -208,938    -228,898
+  M250|A58|L37|N100           -297,803    -261,854    -329,775    -466,035    -478,384    -489,607
+
+  pulls executed
+  scenario                  A+0 (base)         A+1         A-1        B0.5          B1          B2
+  M50|A58|L37|N100             +14,155     +16,187     +11,738      +4,782      +3,420      +2,217
+  S1lo|A58|L37|N100            +13,976     +16,009     +11,569      +4,294      +2,953      +1,800
+  S1mid|A58|L37|N100           +14,165     +16,199     +11,740      +4,790      +3,436      +2,231
+  S1hi|A58|L37|N100            +14,193     +16,223     +11,775      +4,821      +3,486      +2,292
+  S2lo|A58|L37|N100            +13,734     +15,769     +11,334      +3,480      +2,232      +1,228
+  S2hi|A58|L37|N100            +14,174     +16,215     +11,759      +4,718      +3,414      +2,249
+  S3lo|A58|L37|N100            +14,005     +16,036     +11,588      +4,186      +2,965      +1,870
+  S3hi|A58|L37|N100            +14,208     +16,242     +11,784      +4,897      +3,544      +2,337
+  SThi|A58|L37|N100            +14,223     +16,248     +11,799      +4,947      +3,587      +2,367
+  EVhi|A58|L37|N100            +14,196     +16,230     +11,766      +4,800      +3,463      +2,287
+  M50|A15|L37|N100             +14,223     +16,264     +11,794      +4,757      +3,399      +2,204
+  M50|A100|L37|N100            +13,919     +15,916     +11,531      +4,769      +3,411      +2,212
+  M50|A58|L0|N100              +14,155     +16,187     +11,738      +4,782      +3,420      +2,217
+  M50|A58|L100|N100            +14,155     +16,187     +11,738      +4,782      +3,420      +2,217
+  M50|A58|L37|N160             +14,186     +16,216     +11,761      +4,840      +3,479      +2,277
+  M50|A58|L37|N660             +14,245     +16,270     +11,820      +5,018      +3,637      +2,398
+  M50|A58|L37+13%x4000|N100     +14,155     +16,187     +11,738      +4,782      +3,420      +2,217
+  M0|A58|L37|N100              +14,181     +16,209     +11,757      +4,818      +3,462      +2,262
+  M250|A58|L37|N100            +13,973     +16,001     +11,565      +4,277      +2,942      +1,787
+
+  E without fills on orders < 100 ms old (c)
+  scenario                  A+0 (base)         A+1         A-1        B0.5          B1          B2
+  M50|A58|L37|N100             +35,717     +31,118     +42,248    +100,079    +101,730     +93,894
+  S1lo|A58|L37|N100            -11,012      -8,262      -4,088      -6,936      -3,713        -379
+  S1mid|A58|L37|N100           +24,388     +21,830     +31,006     +73,955     +75,444     +67,569
+  S1hi|A58|L37|N100            +34,358     +33,102     +39,273     +91,222     +92,303     +84,558
+  S2lo|A58|L37|N100             -3,790      -3,452      +2,463      -9,468      -6,819      -4,085
+  S2hi|A58|L37|N100             +6,184      +8,394     +12,039     +18,378     +21,937     +16,530
+  S3lo|A58|L37|N100               +512      +2,767      +6,195      +5,923      +6,148      +6,754
+  S3hi|A58|L37|N100            +35,660     +34,255     +39,759     +89,342     +90,457     +84,107
+  SThi|A58|L37|N100            +40,070     +35,622     +50,035    +121,456    +122,725    +115,289
+  EVhi|A58|L37|N100             +2,338      +6,138      +7,006      +9,643     +13,177      +9,537
+  M50|A15|L37|N100             +33,971     +29,176     +40,665     +99,704     +99,949     +92,210
+  M50|A100|L37|N100            +35,014     +30,720     +42,251     +97,236     +99,477     +92,775
+  M50|A58|L0|N100              +38,615     +34,094     +44,090     +97,595     +99,223     +92,715
+  M50|A58|L100|N100            +17,964     +18,644     +25,073     +72,135     +72,491     +65,237
+  M50|A58|L37|N160             +35,433     +30,976     +42,134     +99,729    +101,384     +93,530
+  M50|A58|L37|N660             +35,457     +30,857     +41,954     +99,637    +100,970     +93,301
+  M50|A58|L37+13%x4000|N100     +31,488     +27,472     +36,672     +82,769     +83,786     +78,099
+  M0|A58|L37|N100              +39,980     +35,545     +45,242     +95,313     +95,924     +89,288
+  M250|A58|L37|N100            -13,576     -10,776      -6,359      -6,872      -4,366        -540
+
+  V without fills on orders < 100 ms old (c)
+  scenario                  A+0 (base)         A+1         A-1        B0.5          B1          B2
+  M50|A58|L37|N100            -145,479    -123,808    -169,307    -203,920    -214,804    -237,774
+  S1lo|A58|L37|N100           -253,118    -217,768    -283,182    -419,072    -431,266    -442,747
+  S1mid|A58|L37|N100          -173,855    -149,488    -199,291    -256,336    -269,550    -292,482
+  S1hi|A58|L37|N100            -84,790     -69,527    -100,378    -110,036    -116,936    -136,283
+  S2lo|A58|L37|N100           -254,794    -220,406    -285,045    -442,524    -455,390    -465,955
+  S2hi|A58|L37|N100            +27,499     +28,942     +31,345     +39,693     +43,907     +38,348
+  S3lo|A58|L37|N100           -186,871    -160,323    -210,901    -323,833    -333,895    -342,746
+  S3hi|A58|L37|N100            -63,083     -51,044     -75,618     -73,356     -78,602     -93,934
+  SThi|A58|L37|N100           -110,177     -92,495    -126,359    -126,757    -134,211    -154,983
+  EVhi|A58|L37|N100            +58,696     +56,371     +69,367     +97,095    +104,423    +102,794
+  M50|A15|L37|N100            -150,519    -129,056    -174,101    -207,875    -220,249    -243,034
+  M50|A100|L37|N100           -152,335    -129,976    -175,926    -207,227    -217,732    -239,752
+  M50|A58|L0|N100             -123,331    -105,562    -145,654    -174,508    -183,887    -204,172
+  M50|A58|L100|N100           -198,745    -168,659    -226,007    -279,668    -294,384    -318,707
+  M50|A58|L37|N160            -145,479    -123,808    -169,307    -203,920    -214,804    -237,774
+  M50|A58|L37|N660            -145,479    -123,808    -169,307    -203,920    -214,804    -237,774
+  M50|A58|L37+13%x4000|N100    -229,113    -209,836    -250,209    -283,970    -294,308    -313,051
+  M0|A58|L37|N100             -119,196    -101,520    -140,421    -170,427    -180,554    -200,355
+  M250|A58|L37|N100           -255,064    -219,568    -284,694    -415,814    -428,147    -439,251
+
+  dV = V(candidate) - V(A+0) (c)
+  scenario                         A+1         A-1        B0.5          B1          B2
+  M50|A58|L37|N100             +21,582     -23,719     -58,544     -69,953     -92,923
+  S1lo|A58|L37|N100            +35,766     -32,071    -172,401    -184,611    -196,120
+  S1mid|A58|L37|N100           +25,561     -25,701     -86,242    -100,196    -124,077
+  S1hi|A58|L37|N100            +15,988     -15,657     -26,584     -33,768     -53,221
+  S2lo|A58|L37|N100            +34,745     -31,064    -193,594    -206,661    -217,658
+  S2hi|A58|L37|N100             +1,433      +4,017      +9,893     +13,693      +8,119
+  S3lo|A58|L37|N100            +26,891     -24,987    -142,343    -152,405    -161,330
+  S3hi|A58|L37|N100            +12,500     -12,705     -12,315     -17,846     -33,178
+  SThi|A58|L37|N100            +17,854     -17,582     -19,252     -27,182     -48,139
+  EVhi|A58|L37|N100             -2,325     +10,671     +38,398     +45,726     +44,097
+  M50|A15|L37|N100             +21,462     -23,582     -57,356     -69,730     -92,515
+  M50|A100|L37|N100            +22,179     -24,105     -58,662     -69,459     -92,391
+  M50|A58|L0|N100              +17,422     -24,207     -53,481     -63,825     -84,974
+  M50|A58|L100|N100            +30,086     -27,262     -80,923     -95,638    -119,962
+  M50|A58|L37|N160             +21,582     -23,719     -58,544     -69,953     -92,923
+  M50|A58|L37|N660             +21,582     -23,719     -58,544     -69,953     -92,923
+  M50|A58|L37+13%x4000|N100     +19,169     -20,987     -55,046     -65,909     -84,652
+  M0|A58|L37|N100              +18,828     -21,716     -54,900     -65,721     -85,681
+  M250|A58|L37|N100            +35,949     -31,973    -168,232    -180,581    -191,804
+
+  dE = E(candidate) - E(A+0) (c)
+  scenario                         A+1         A-1        B0.5          B1          B2
+  M50|A58|L37|N100              -5,101      +6,973     +66,627     +67,819     +60,029
+  S1lo|A58|L37|N100             +2,555      +5,715      +4,240      +7,486     +10,896
+  S1mid|A58|L37|N100            -2,118      +7,147     +51,283     +52,130     +43,546
+  S1hi|A58|L37|N100               -878      +5,366     +58,016     +58,865     +51,046
+  S2lo|A58|L37|N100                 +7      +6,167      -5,841      -3,368      -1,008
+  S2hi|A58|L37|N100             +2,370      +6,075     +12,433     +15,620     +10,205
+  S3lo|A58|L37|N100             +1,949      +5,293      +5,100      +5,322      +5,948
+  S3hi|A58|L37|N100             -1,191      +4,332     +54,178     +55,071     +48,735
+  SThi|A58|L37|N100             -4,589      +8,978     +81,478     +82,328     +74,839
+  EVhi|A58|L37|N100             +3,799      +4,668      +7,305     +10,839      +7,199
+  M50|A15|L37|N100              -4,795      +6,694     +65,733     +65,978     +58,239
+  M50|A100|L37|N100             -4,902      +7,206     +66,407     +68,443     +60,910
+  M50|A58|L0|N100               -5,933      +4,625     +62,730     +63,527     +56,389
+  M50|A58|L100|N100               +680      +7,109     +54,171     +54,526     +47,273
+  M50|A58|L37|N160              -4,959      +7,142     +66,561     +67,757     +59,949
+  M50|A58|L37|N660              -5,103      +6,938     +66,444     +67,319     +59,695
+  M50|A58|L37+13%x4000|N100      -4,526      +5,728     +53,802     +54,360     +48,722
+  M0|A58|L37|N100               -3,789      +5,569     +57,125     +57,146     +50,485
+  M250|A58|L37|N100             +2,555      +5,742      +6,601      +9,143     +12,961
+
+  dV without fills on orders < 100 ms old (c)
+  scenario                         A+1         A-1        B0.5          B1          B2
+  M50|A58|L37|N100             +21,671     -23,829     -58,441     -69,326     -92,295
+  S1lo|A58|L37|N100            +35,351     -30,064    -165,954    -178,148    -189,629
+  S1mid|A58|L37|N100           +24,367     -25,436     -82,481     -95,695    -118,627
+  S1hi|A58|L37|N100            +15,263     -15,588     -25,247     -32,146     -51,494
+  S2lo|A58|L37|N100            +34,389     -30,250    -187,730    -200,596    -211,161
+  S2hi|A58|L37|N100             +1,443      +3,846     +12,194     +16,408     +10,849
+  S3lo|A58|L37|N100            +26,549     -24,029    -136,962    -147,024    -155,874
+  S3hi|A58|L37|N100            +12,039     -12,534     -10,273     -15,519     -30,851
+  SThi|A58|L37|N100            +17,682     -16,182     -16,580     -24,034     -44,806
+  EVhi|A58|L37|N100             -2,325     +10,671     +38,398     +45,726     +44,097
+  M50|A15|L37|N100             +21,462     -23,582     -57,356     -69,730     -92,515
+  M50|A100|L37|N100            +22,359     -23,590     -54,892     -65,397     -87,417
+  M50|A58|L0|N100              +17,769     -22,323     -51,177     -60,556     -80,841
+  M50|A58|L100|N100            +30,086     -27,262     -80,923     -95,638    -119,962
+  M50|A58|L37|N160             +21,671     -23,829     -58,441     -69,326     -92,295
+  M50|A58|L37|N660             +21,671     -23,829     -58,441     -69,326     -92,295
+  M50|A58|L37+13%x4000|N100     +19,278     -21,096     -54,857     -65,194     -83,938
+  M0|A58|L37|N100              +17,676     -21,225     -51,231     -61,358     -81,159
+  M250|A58|L37|N100            +35,496     -29,630    -160,749    -173,083    -184,187
+
+  C1 / C3 at B per policy: E by the order's age at the fill (< 100 / 100-500 / >= 500 ms after activation), B1a-weighted (M 0 / M 50 weights), and the fills landing while the pull is in flight (count / value c / share of the fills' gross) at B, L100 and the slow mixture:
+  A+0   E -769 / +18,090 / +17,627; B1a +18,089 / +13,478; pending 237 / -14,244 / 2.3% | 831 / -52,054 / 7.0% | 2,838 / -77,687 / 12.6%
+  A+1   E -1,271 / +14,351 / +16,768; B1a +15,598 / +11,938; pending 268 / -12,833 / 2.4% | 882 / -46,166 / 6.9% | 3,176 / -83,060 / 14.1%
+  A-1   E -328 / +17,960 / +24,288; B1a +21,171 / +16,671; pending 207 / -10,922 / 1.9% | 741 / -47,027 / 6.4% | 2,476 / -67,636 / 11.1%
+  B0.5  E +1,496 / +34,337 / +65,742; B1a +49,685 / +41,336; pending 240 / -14,910 / 2.0% | 1,076 / -68,330 / 8.4% | 1,215 / -56,022 / 6.7%
+  B1    E +1,037 / +33,583 / +68,147; B1a +50,359 / +42,211; pending 214 / -14,834 / 1.8% | 1,002 / -70,006 / 7.9% | 971 / -54,094 / 5.9%
+  B2    E +1,083 / +29,073 / +64,821; B1a +46,337 / +39,342; pending 184 / -14,487 / 1.7% | 845 / -68,498 / 7.3% | 685 / -48,323 / 4.9%
+
+  C12 at B per policy: E by trade-anchor source (WS / E2 / imputed / mixed; E2 anchors are uncertain by ~+-250 ms), c (fills):
+  A+0   WS +20,957 (11,311) | E2 +3,158 (4,312) | imputed -156 (44) | mixed +10,989 (2,003)
+  A+1   WS +18,873 (11,311) | E2 +3,099 (4,312) | imputed -322 (44) | mixed +8,196 (2,003)
+  A-1   WS +25,430 (11,311) | E2 +3,548 (4,312) | imputed -479 (44) | mixed +13,421 (2,003)
+  B0.5  WS +52,320 (11,311) | E2 +17,847 (4,312) | imputed -233 (44) | mixed +31,640 (2,003)
+  B1    WS +53,322 (11,311) | E2 +16,070 (4,312) | imputed -106 (44) | mixed +33,481 (2,003)
+  B2    WS +50,343 (11,311) | E2 +13,650 (4,312) | imputed +217 (44) | mixed +30,767 (2,003)
+
+READINGS (declared before any variant was valued in the scenario bank)
+  A+0 (baseline):
+    P1 E ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    P3 V ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    P1-NY E WITHOUT FILLS ON ORDERS < 100 MS OLD ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    P3-NY V WITHOUT FILLS ON ORDERS < 100 MS OLD ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    P4 V - KEEP ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    P5 V - V(PULL-ALL) ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    C2 E AT M250 vs M50: SIGN-DIFFERS-AT-M250
+    C2 V AT M250 vs M50: HOLDS-AT-M250
+    C1 B1a-WEIGHTED E AT B: HOLDS-SIGN
+  A+1:
+    P1 E ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    P3 V ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    P1-NY E WITHOUT FILLS ON ORDERS < 100 MS OLD ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    P3-NY V WITHOUT FILLS ON ORDERS < 100 MS OLD ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    P4 V - KEEP ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    P5 V - V(PULL-ALL) ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    C2 E AT M250 vs M50: SIGN-DIFFERS-AT-M250
+    C2 V AT M250 vs M50: HOLDS-AT-M250
+    C1 B1a-WEIGHTED E AT B: HOLDS-SIGN
+    D1 V - V(A+0) ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    D2 E - E(A+0) ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    D1-NY V - V(A+0) WITHOUT FILLS ON ORDERS < 100 MS OLD ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    D1 AT M250 vs M50: HOLDS-AT-M250
+  A-1:
+    P1 E ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    P3 V ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    P1-NY E WITHOUT FILLS ON ORDERS < 100 MS OLD ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    P3-NY V WITHOUT FILLS ON ORDERS < 100 MS OLD ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    P4 V - KEEP ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    P5 V - V(PULL-ALL) ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    C2 E AT M250 vs M50: SIGN-DIFFERS-AT-M250
+    C2 V AT M250 vs M50: HOLDS-AT-M250
+    C1 B1a-WEIGHTED E AT B: HOLDS-SIGN
+    D1 V - V(A+0) ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    D2 E - E(A+0) ACROSS TESTED SCENARIOS: ABOVE-BASELINE-IN-TESTED-SCENARIOS
+    D1-NY V - V(A+0) WITHOUT FILLS ON ORDERS < 100 MS OLD ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    D1 AT M250 vs M50: HOLDS-AT-M250
+  B0.5:
+    P1 E ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    P3 V ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    P1-NY E WITHOUT FILLS ON ORDERS < 100 MS OLD ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    P3-NY V WITHOUT FILLS ON ORDERS < 100 MS OLD ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    P4 V - KEEP ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    P5 V - V(PULL-ALL) ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    C2 E AT M250 vs M50: SIGN-DIFFERS-AT-M250
+    C2 V AT M250 vs M50: HOLDS-AT-M250
+    C1 B1a-WEIGHTED E AT B: HOLDS-SIGN
+    D1 V - V(A+0) ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    D2 E - E(A+0) ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    D1-NY V - V(A+0) WITHOUT FILLS ON ORDERS < 100 MS OLD ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    D1 AT M250 vs M50: HOLDS-AT-M250
+  B1:
+    P1 E ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    P3 V ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    P1-NY E WITHOUT FILLS ON ORDERS < 100 MS OLD ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    P3-NY V WITHOUT FILLS ON ORDERS < 100 MS OLD ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    P4 V - KEEP ACROSS TESTED SCENARIOS: ABOVE-KEEP-IN-TESTED-SCENARIOS
+    P5 V - V(PULL-ALL) ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    C2 E AT M250 vs M50: SIGN-DIFFERS-AT-M250
+    C2 V AT M250 vs M50: HOLDS-AT-M250
+    C1 B1a-WEIGHTED E AT B: HOLDS-SIGN
+    D1 V - V(A+0) ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    D2 E - E(A+0) ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    D1-NY V - V(A+0) WITHOUT FILLS ON ORDERS < 100 MS OLD ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    D1 AT M250 vs M50: HOLDS-AT-M250
+  B2:
+    P1 E ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    P3 V ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    P1-NY E WITHOUT FILLS ON ORDERS < 100 MS OLD ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    P3-NY V WITHOUT FILLS ON ORDERS < 100 MS OLD ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    P4 V - KEEP ACROSS TESTED SCENARIOS: ABOVE-KEEP-IN-TESTED-SCENARIOS
+    P5 V - V(PULL-ALL) ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    C2 E AT M250 vs M50: SIGN-DIFFERS-AT-M250
+    C2 V AT M250 vs M50: HOLDS-AT-M250
+    C1 B1a-WEIGHTED E AT B: HOLDS-SIGN
+    D1 V - V(A+0) ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    D2 E - E(A+0) ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    D1-NY V - V(A+0) WITHOUT FILLS ON ORDERS < 100 MS OLD ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+    D1 AT M250 vs M50: HOLDS-AT-M250
+  SUMMARY:
+    SURVIVES-TIMING (P1 STABLE-POSITIVE-IN-TESTED-SCENARIOS): none
+    ABOVE THE BASELINE IN EVERY TESTED SCENARIO (D1): none
+
+LIMITS: consumed day(s) 20261023 (G = 1: point values, no interval); multiplicity 6 - a reading above the baseline is a candidate, never a validation (C8 / C16); the candidates' M50 / 37 ms values were seen in the keep / pull run; local marks at END, not P&L; queue rule M only (C5); one order at a time, no re-post after a pull; the bank's assumption ranges, one factor at a time.
