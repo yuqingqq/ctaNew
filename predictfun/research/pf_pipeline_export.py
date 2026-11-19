@@ -73,7 +73,7 @@ import pf_queue_place_test as QP                          # noqa: E402
 import pf_queue_place_ledger as QL                        # noqa: E402
 
 C, pd, I = KP.C, KP.pd, KP.I
-OUT = Path(I.K.IO) / 'pipeline_export_20261119'
+OUT = Path(I.K.IO) / 'pipeline_export_v2_20261119'       # v2 (review 89caa74c P1): pre-activation POST state from the decision's frame; v1 stays as provenance
 MARK = 'PIPELINE EXPORT'
 END = KP.H                                                # the common endpoint, ms after posting
 SETTINGS = replace(FC.SETTINGS, exposure_ms=END)          # the contract: horizon to the common endpoint, not the old 1 s exposure
@@ -87,11 +87,15 @@ VCOL = {'m50': ('q', 'v', 't_full'), 'm0': ('q_m0', 'v_m0', 't_full_m0'), 'm250'
 LANDING_OFFSET = 0.                                       # planted-error switches (selftest only)
 DROP_ONE = False
 NO_MINUPDATE = False
+V1_POST_STATE = False                                     # the v1 pre-activation state (from the activation frame): a planted leak
+FREEZE_POST = False                                       # a POST vector that ignores every input (X5b's control cannot fire)
 
 
 def known_steps(w, side, ta, pt, fl, d, terminal, notice=SETTINGS.notification_ms, exposure=SETTINGS.exposure_ms):
     """AC.known_state for one order at many decision times d (absolute ms), vectorised: fl = (times, quantities) absolute; the queue ahead
-    is the minimum of the shown sizes at the price over the frames known from activation to the decision (rule M as the client sees it)."""
+    is the minimum of the shown sizes at the price over the frames known from activation to the decision (rule M as the client sees it).
+    v2: a decision BEFORE activation (the POST row) uses only the frame known at the decision - the initial queue and the queue ahead are the
+    size shown at the price then (known_state's activation-frame convention there reads a future arrival, review 89caa74c P1)."""
     clock = np.asarray(w['kf'], float); d = np.asarray(d, float); ft, fq = (np.asarray(x, float) for x in fl)
     C.require(bool(np.isfinite(clock).all() and (np.diff(clock) >= 0).all()), 'nonmonotone known frame clock')
     ja = int(np.searchsorted(clock, ta, side='right') - 1); jt = (np.searchsorted(clock, d, side='right') - 1).astype(int)
@@ -105,6 +109,9 @@ def known_steps(w, side, ta, pt, fl, d, terminal, notice=SETTINGS.notification_m
     initial = np.where(ok, sh[0] if len(sh) else np.nan, np.nan)
     ahead = np.where(ok, np.array([run[j - lo] if (o_ and 0 <= j - lo < len(run)) else np.inf for j, o_ in zip(jt, ok)]), np.nan)
     ahead = np.where(np.isfinite(ahead), ahead, np.nan)
+    pre = d < ta                                                                          # v2: before activation the order is not live - its queue is
+    if not V1_POST_STATE:                                                                 # the size shown at its price in the frame known at the decision,
+        initial, ahead = np.where(pre, shown, initial), np.where(pre, shown, ahead)      # never the (future) activation frame (review 89caa74c P1)
     best = np.array([float(w['P5'][j][0]) if j >= 0 else np.nan for j in jt])
     return dict(side=np.full(len(d), float(side)), price=np.full(len(d), float(pt)), rung=np.zeros(len(d)),
                 depth=(best - pt) if side == 0 else (pt - best), age_ms=d - ta, submitted_quantity=np.full(len(d), float(KP.SIZE)),
@@ -201,18 +208,63 @@ def order_block(day, o, js, d, k, on, path, w, F, fills, none, trig, pol, fails)
 
 
 def known_parity(w, s, o, fl, st):
-    """X5: the vectorised known state = AC.known_state on sampled steps of an order."""
+    """X5: the vectorised known state = AC.known_state on sampled live steps of an order (after activation)."""
     bad = []; t = float(o.t); endj = int(A.endj_of(np.array([o.t_full]), np.array([o.g_struct]))[0]); js = np.arange(KP.J0, max(endj, KP.J0))
     d = np.r_[t, t + KP.STEP * js]; order = dict(ta=t + KP.PLACE, pt=float(o.p), fl=[(a + t, b) for a, b in zip(fl[0], fl[1])])
     vec = known_steps(w, s, t + KP.PLACE, float(o.p), (fl[0] + t, fl[1]), d, t + END)
     eq = lambda x, y: (np.isnan(x) and np.isnan(y)) or x == y
-    for i in sorted({0, 1 if len(d) > 1 else 0, len(d) // 2, len(d) - 1}):
+    for i in sorted({1 if len(d) > 1 else 0, len(d) // 2, len(d) - 1}):
+        if d[i] < t + KP.PLACE:                                                            # v2: pre-activation decisions follow their own rule (X5b)
+            continue
         ref = AC.known_state({s: w}, order, (s, 0, int(o.oid)), float(d[i]), KP.SIZE, terminal_ms=t + END, settings=SETTINGS)
         if not all(eq(float(ref[a]), float(vec[a][i])) for a in KNOWN):
             bad.append(f'X5 order {int(o.oid)} decision {i}: the vectorised known state differs from known_state '
                        + str({a: (float(ref[a]), float(vec[a][i])) for a in KNOWN if not eq(float(ref[a]), float(vec[a][i]))}))
         st['known_checked'] += 1
     return bad
+
+
+def post_vector(W, s, o, fl, fair, depth, feat_fn, k):
+    """The POST row's complete input vector at its decision (step k): market features, the known state and the order inputs."""
+    if FREEZE_POST:
+        return np.zeros(len(FC.MARKET) + 1 + len(KNOWN) + len(FC.ORDER))
+    t = float(o.t); chosen = {0: [], 1: []}; chosen[s] = [k]; x, scale = feat_fn(W, fair, depth, chosen)[s][k]
+    kn = known_steps(W[s], s, t + KP.PLACE, float(o.p), (fl[0] + t, fl[1]), np.array([t]), t + END); ref = float(x[FC.MARKET.index('pf_mid')])
+    oi = FC.V.order_inputs(pd.DataFrame({f'x_{a}': kn[a] for a in KNOWN}), [scale], [ref])
+    return np.r_[np.asarray(x, float), float(scale), [float(kn[a][0]) for a in KNOWN], [float(oi[nm][0]) for nm in FC.ORDER]]
+
+
+def arrive_later(W, k, t, rng, values=True):
+    """X5b's perturbation: every frame received after the decision gets a new receipt time in (t, t + 150 ms] (monotone; some cross the
+    activation) and, with values, randomised book values; the known-frame index per step is rebuilt from the new receipt clock."""
+    out = {}
+    for a, w in W.items():
+        w2 = dict(w); kf = np.array(w['kf'], float, copy=True); tg = np.asarray(w['tg'], float); j0 = int(np.searchsorted(kf, t, side='right'))
+        C.require(np.array_equal(np.searchsorted(kf, tg, side='right') - 1, np.asarray(w['jk'], int)), 'X5b: the known-frame index is not the receipt clock search')
+        n = len(kf) - j0
+        if n > 0:
+            kf[j0:] = np.maximum.accumulate(np.r_[t + np.sort(rng.uniform(1., 150., min(n, 4))), kf[j0 + min(n, 4):]])
+            w2['kf'] = kf; w2['jk'] = (np.searchsorted(kf, tg, side='right') - 1).astype(np.asarray(w['jk']).dtype)
+            if values:
+                for key in ('P5', 'S5', 'opp'):
+                    v = np.array(w[key], float, copy=True); v[j0:] = v[j0:] + rng.integers(1, 4, v[j0:].shape) if key != 'S5' else v[j0:] * rng.uniform(.2, 3., v[j0:].shape)
+                    w2[key] = v
+                if 'X' in w:
+                    X2 = np.array(w['X'], float, copy=True); X2[k + 1:] = X2[k + 1:] * rng.uniform(.5, 1.5, X2[k + 1:].shape); w2['X'] = X2
+                w2['cache'] = {}
+        out[a] = w2
+    return out
+
+
+def post_causal(W, s, o, fl, fair, depth, feat_fn, k, rng):
+    """X5b: the complete POST vector is unchanged when later frames arrive at other times with other values, and changes when the size shown
+    at the price in the decision's own frame changes (the same-time positive control)."""
+    base = post_vector(W, s, o, fl, fair, depth, feat_fn, k); t = float(o.t)
+    same = np.array_equal(post_vector(arrive_later(W, k, t, rng), s, o, fl, fair, depth, feat_fn, k), base, equal_nan=True)
+    w = dict(W[s]); jt = int(np.searchsorted(np.asarray(w['kf'], float), t, side='right') - 1); S5 = np.array(w['S5'], float, copy=True); P5 = np.asarray(w['P5'])
+    hit = np.flatnonzero(P5[jt] == float(o.p)); S5[jt, hit[0] if len(hit) else 0] += 7.; w['S5'] = S5; w['cache'] = {}; W2 = dict(W); W2[s] = w
+    fired = not np.array_equal(post_vector(W2, s, o, fl, fair, depth, feat_fn, k), base, equal_nan=True)
+    return same, fired
 
 
 def controls(day, O, st, counts, pol, kp, full):
@@ -310,13 +362,19 @@ def day_run(day, src=None, kp=None, out=None, feat_fn=None, inputs=None, markets
                 if not (np.array_equal(tt[mine], fl[0]) and np.array_equal(fq[mine], fl[1])):
                     bad.append(f'X4 order {int(o.oid)}: the kernel gives other fills than the exported B fills')
                 st['kernel_checked'] += 1; bad += known_parity(W[s], s, o, fl, st)
+                kp_ = int(np.searchsorted(np.asarray(W[s]['tg'], float), t))                            # X5b: the complete POST vector
+                same, fired = post_causal(W, s, o, fl, fair.get(m) if fair is not None else None, depth, feat_fn, kp_, np.random.default_rng(int(o.oid)))
+                if not (same and fired):
+                    bad.append(f'X5b order {int(o.oid)}: ' + ' and '.join(x for x, y in (('a future arrival changed the POST inputs', not same),
+                                                                                            ('the same-time POST control did not fire', not fired)) if y))
+                st['post_checked'] = st.get('post_checked', 0) + 1
         if blocks:
             pd.concat(blocks, ignore_index=True).to_parquet(part / f'rows_{begin // 24:03d}.parquet', index=False)
         del data, blocks; C.guard('pipeline export')
         print(json.dumps(dict(stage='export', day=day, markets=min(begin + 24, len(mk)), post=st['post_rows'], retain=st['retain_rows'],
                               seconds=round(time.time() - start), rss=round(I.K.rss_mib()))), flush=True)
     bad += controls(day, O, st, counts, pol, kp, markets is None)
-    if not (st['kernel_checked'] and st['known_checked'] and st['causal_checked']) and len(E):
+    if not (st['kernel_checked'] and st['known_checked'] and st['causal_checked'] and st.get('post_checked', 0)) and len(E):
         bad.append(f"X4 / X5: a sampled check never ran ({st['kernel_checked']} kernel, {st['known_checked']} known-state, {st['causal_checked']} causal)")
     if bad:
         shutil.rmtree(part); sys.exit(f'{MARK} FAILED -> no output: ' + ' | '.join(bad[:12]) + (f' (+{len(bad) - 12} more)' if len(bad) > 12 else ''))
@@ -370,7 +428,7 @@ def syn_fire(W, s, k):
 
 def selftest():
     """Synthetic tape only (see the module's SELFTEST)."""
-    global LANDING_OFFSET, DROP_ONE, NO_MINUPDATE
+    global LANDING_OFFSET, DROP_ONE, NO_MINUPDATE, V1_POST_STATE, FREEZE_POST
     bad = []; src = KP.Syn(); days = list(KP.DAYS); d0 = days[0]
     q_, v_ = affected(np.array([100., 137., 136.9, 500.]), np.array([5., 3., 2., 4.]), np.array([1., -2., 4., -8.]), np.array([58., 137., 137.1, 501.]))
     if not (q_.tolist() == [14., 7., 4., 0.] and v_.tolist() == [-5., -10., -8., 0.]):
@@ -378,6 +436,19 @@ def selftest():
     if (hour_ok('20261027_23'), hour_ok('20261028_00'), hour_ok('20261030_23'), hour_ok('20261031_00'), hour_ok('20261103_23'), hour_ok('20261104_00')) != (
             True, False, False, True, True, False):
         bad.append('the sealed / forward hour rule')
+    def win(nxt):                                                                         # review 89caa74c P1: identical history and values,
+        P5 = np.tile([50., 49., 48., 47., 46.], (4, 1)); S5 = np.tile([12., 5., 5., 5., 5.], (4, 1))   # the next book receipt at +30 / +80 ms
+        return dict(kf=np.array([0., 990., 1000. + nxt, 1200.]), P5=P5, S5=S5)
+    kq = lambda w_, d_: known_steps(w_, 0, 1058., 50., (np.zeros(0), np.zeros(0)), np.array([d_]), 6000.)
+    eqd = lambda a_, b_: all((np.isnan(a_[x][0]) and np.isnan(b_[x][0])) or a_[x][0] == b_[x][0] for x in KNOWN)
+    post_same, live_same, post_q = eqd(kq(win(30.), 1000.), kq(win(80.), 1000.)), eqd(kq(win(30.), 1100.), kq(win(80.), 1100.)), kq(win(30.), 1000.)['queue_ahead_known'][0]
+    V1_POST_STATE = True
+    try:
+        v1_same = eqd(kq(win(30.), 1000.), kq(win(80.), 1000.))
+    finally:
+        V1_POST_STATE = False
+    if not (post_same and live_same and post_q == 12. and not v1_same):
+        bad.append(f'the POST state against a future arrival: identical at submission {post_same} (queue {post_q}), at +100 ms {live_same}, v1 differs {not v1_same}')
     with tempfile.TemporaryDirectory(dir=str(I.K.IO)) as tmp:
         tmp = Path(tmp)
         with QL._v1_on(src, tmp):
@@ -402,6 +473,8 @@ def selftest():
                 vec = known_steps(W[s], s, t + KP.PLACE, float(o.p), fl, d, t + END)
                 order = dict(ta=t + KP.PLACE, pt=float(o.p), fl=list(zip(fl[0], fl[1])))
                 for i, x in enumerate(d):
+                    if x < t + KP.PLACE:                                                       # v2: pre-activation decisions follow their own rule
+                        continue
                     ref = AC.known_state({s: W[s]}, order, (s, 0, int(o.oid)), float(x), KP.SIZE, terminal_ms=t + END, settings=SETTINGS); n_kn += 1
                     diff += int(not all((np.isnan(float(ref[a])) and np.isnan(vec[a][i])) or float(ref[a]) == float(vec[a][i]) for a in KNOWN))
                 ln = known_steps(W[s], s, t + KP.PLACE, float(o.p), (np.r_[fl[0], d[-1] - SETTINGS.notification_ms + 1.], np.r_[fl[1], .01]), d[-1:], t + END)
@@ -469,12 +542,14 @@ def selftest():
         refused('a sealed hour', 'X6 hour', inputs=lambda day, mk: ({}, None, ['20261028_00'], {}))
         refused('no order sampled for the kernel / known-state checks', 'never ran', sample_k=None)
         for flag, name, msg in (('LANDING_OFFSET', 'a landing moved by 37 ms', 'X3'), ('DROP_ONE', 'a dropped RETAIN row', 'X1'),
-                                ('NO_MINUPDATE', 'the queue ahead not min-updated', 'X5 order')):
+                                ('NO_MINUPDATE', 'the queue ahead not min-updated', 'X5 order'),
+                                ('V1_POST_STATE', 'the v1 POST state (a future arrival)', 'a future arrival changed the POST inputs'),
+                                ('FREEZE_POST', 'a POST vector that ignores its inputs', 'the same-time POST control did not fire')):
             globals()[flag] = -37. if flag == 'LANDING_OFFSET' else True
             try:
                 refused(name, msg)
             finally:
-                LANDING_OFFSET, DROP_ONE, NO_MINUPDATE = 0., False, False
+                LANDING_OFFSET, DROP_ONE, NO_MINUPDATE, V1_POST_STATE, FREEZE_POST = 0., False, False, False, False
         if fin is not None:
             try:
                 run(tmp / 'ex'); bad.append('the export overwrote a published day')
@@ -487,7 +562,9 @@ def selftest():
           'decision of every eligible synthetic order, a fill not yet notified ignored; the production path end to end with a causal feature stub (rows, '
           'statuses, every control passing) and a brute recomputation of every label and own input; refusals by their own control with no output: a leaky '
           'stub (X5), a stub that ignores the book (X5), a committed value (X2) and fill time (X4) changed under a matching receipt, a sealed hour (X6), no '
-          'sampled order (X4 / X5), a landing moved by 37 ms (X3), a dropped RETAIN row (X1), the queue ahead not min-updated (X5), and a published day', flush=True)
+          'sampled order (X4 / X5), a landing moved by 37 ms (X3), a dropped RETAIN row (X1), the queue ahead not min-updated (X5), the v1 POST '
+          'state (X5b: a future arrival) and a frozen POST vector (X5b\'s control), and a published day; the POST state against a future arrival '
+          '(review 89caa74c P1: identical at submission and at +100 ms, the v1 rule differs)', flush=True)
 
 
 if __name__ == '__main__':

@@ -54,6 +54,21 @@ prediction_pipeline_contract_20261119_codex:
   scheduler: remains_disabled
   next_priority: rich_causal_feature_label_export_on_corrected_neutral_actions_then_frozen_prediction_benchmark
 
+pipeline_one_day_v2_20261119:
+  status: done_checks_first_rule_beats_a0_not_pull_all_consistently_post_gate_fails
+  asof: "2026-11-19T07:42:42Z"
+  user: ["We run the whole pipeline for one day test first", "Have we fixed the post issues, etc", "Run the checks first"]
+  receipt: predictfun/reviews/pipeline_one_day_v2_20261119/report.md
+  review_89caa74c: {P1_post_future_arrival: fixed_export_v2_x5b, P2_refused_forecasts_act: fixed_accepted_path_p0f_p0g, P2_gate_blind_to_sign: fixed_economic_gate_declared_before_v2, scope: accepted_fixed_decisions_keep_pull_only}
+  suites_by_checks: {export_v2: 30/30, bench_v2: 24/24, policy_v2: 15/15}
+  export_v2_vs_v1: {retain_rows_identical: true, post_changed_columns: [fp_queue, o_q_rel, o_q0_rel, o_q_frac, o_qunk], post_rows_changed: 130714}
+  gate_day: "20261026"
+  economic_gate: {retain: PASS, post: FAIL}
+  rule_at_B_c: {"20261026": {MODEL_J: -21781, PULL_ALL: -23731, A0: -152453, KEEP: -416661}, "20261027": {MODEL_J: -23916, PULL_ALL: -23346, A0: -181823, KEEP: -443038}}
+  above_pull_all: {"20261026": "15 of 19", "20261027": "3 of 19"}
+  pulled_share: {"20261026": 0.990, "20261027": 0.991}
+  void_first_day_outputs_kept: [pipeline_bench_20261119, pipeline_policy_20261119, pipeline_policy_20261119_run1, "predictfun/reviews/pipeline_one_day_20261119 (untracked)"]
+  next: entry_decision_or_order_design_and_more_days_users_call
 review_89caa74c_first_day_pipeline_20261119:
   status: findings_hold_fixes_in_progress_first_day_results_not_accepted
   asof: "2026-11-19T05:55:25Z"

@@ -24,7 +24,7 @@ MUT = [
     ('X5 known-state parity never refuses', "        if not all(eq(float(ref[a]), float(vec[a][i])) for a in KNOWN):", "        if False:"),
     ('X6 never refuses', "    bad = [f'X6 hour {h} is sealed or forward' for h in hrs if not hour_ok(h)]", "    bad = []"),
     ('the hour rule lets sealed hours through', "    return not (I.SEAL_MS[0] <= h0 < I.SEAL_MS[1]) and h0 < I.FWD_MS", "    return h0 < I.FWD_MS"),
-    ('a sampled check that never ran is accepted', "    if not (st['kernel_checked'] and st['known_checked'] and st['causal_checked']) and len(E):", "    if False:"),
+    ('a sampled check that never ran is accepted', "    if not (st['kernel_checked'] and st['known_checked'] and st['causal_checked'] and st.get('post_checked', 0)) and len(E):", "    if False:"),
     ('a refused day leaves its partial output', "        shutil.rmtree(part); sys.exit(f'{MARK} FAILED -> no output: '", "        sys.exit(f'{MARK} FAILED -> no output: '"),
     # --- the labels
     ('fill value with the wrong sign', "val = fq * sg * (float(o.mark) - p); q_, v_ = affected(ft, fq, val, eff)", "val = fq * sg * (p - float(o.mark)); q_, v_ = affected(ft, fq, val, eff)"),
@@ -43,6 +43,11 @@ MUT = [
     ('order inputs given the mid as the scale', "oi = FC.V.order_inputs(pd.DataFrame({f'x_{a}': kn[a] for a in KNOWN}), scale, ref)",
      "oi = FC.V.order_inputs(pd.DataFrame({f'x_{a}': kn[a] for a in KNOWN}), ref, ref)"),
     ('a refused post labelled eligible', "        st[0] = 'refused_post_only'", "        pass"),
+    # --- v2: review 89caa74c P1 (the pre-activation POST state) and X5b
+    ('the pre-activation state from the activation frame (v1)', "    if not V1_POST_STATE:", "    if False:"),
+    ('X5b never refuses', "                if not (same and fired):\n                    bad.append(f'X5b order", "                if False:\n                    bad.append(f'X5b order"),
+    ('X5b moves no receipt time', "            kf[j0:] = np.maximum.accumulate(", "            kf[j0:] = kf[j0:] if True else np.maximum.accumulate("),
+    ('X5b positive control always fires', "    fired = not np.array_equal(post_vector(W2, s, o, fl, fair, depth, feat_fn, k), base, equal_nan=True)", "    fired = True"),
 ]
 STALE = 97                                                # exit code of a replacement target that does not occur as declared
 

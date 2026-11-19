@@ -1,0 +1,2 @@
+RETAIN ROWS IDENTICAL AND POST CHANGES ONLY IN THE QUEUE INPUTS: True; POST columns that changed ['fp_queue', 'o_q0_rel', 'o_q_frac', 'o_q_rel', 'o_qunk']; POST rows with a changed fp_queue 130,714
+2026-11-19T07:41:11Z tag=px_compare_v1_v2 rc=0 peak_rss_mib=639 wall_s=24.09 cpu_user_s=19.26 memavail_start_gib=23 disk_free_gib=432->432 slot=claude

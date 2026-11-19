@@ -1,0 +1,19 @@
+ 0 none (must pass): rc 0 -> passed
+ 1 P0a never refuses: rc 1 -> caught: PIPELINE POLICY SELFTEST FAILED: the policy run accepted a changed committed report value | a refused policy run wrote output (a changed committed report value)
+ 2 P0b never refuses: rc 1 -> caught: PIPELINE POLICY SELFTEST FAILED: the policy run accepted a changed committed keep / pull value | a refused policy run wrote output (a changed committed keep / pull value)
+ 3 P0c never refuses: rc 1 -> caught: PIPELINE POLICY SELFTEST FAILED: the policy run accepted the model rule valued as A+0 | a refused policy run wrote output (the model rule valued as A+0)
+ 4 P0d never refuses: rc 1 -> caught: PIPELINE POLICY SELFTEST FAILED: a KEEP drift in the model rule refused by another control: PIPELINE POLICY FAILED -> no output: P0d MODEL-J: KEEP is not the sum of its fills in ['M50|A58|L37|N100']
+ 5 P0e never refuses: rc 1 -> caught: PIPELINE POLICY SELFTEST FAILED: the policy run accepted a prediction for a row the export does not have | a refused policy run wrote output (a prediction for a row the export does not have) | the pol
+ 6 P0f never refuses: rc 1 -> caught: PIPELINE POLICY SELFTEST FAILED: the policy run accepted the rule with its sign reversed | a refused policy run wrote output (the rule with its sign reversed)
+ 7 the rule pulls at the last predicted loss: rc 1 -> caught: PIPELINE POLICY SELFTEST FAILED: planted triggers: 209 found, 209 planted | the synthetic policy run refused: PIPELINE POLICY FAILED -> no output: P0g: the executed pull steps differ from the first co
+ 8 an order without a predicted loss pulled at once: rc 1 -> caught: PIPELINE POLICY SELFTEST FAILED: synthetic policy run: {'P1 E ACROSS TESTED SCENARIOS': 'NOT-STABLE-IN-TESTED-SCENARIOS', 'P3 V ACROSS TESTED SCENARIOS': 'STABLE-POSITIVE-IN-TESTED-SCENARIOS', 'P1-NY 
+ 9 the differences against A+0 reversed: rc 1 -> caught: PIPELINE POLICY SELFTEST FAILED: synthetic policy run: {'P1 E ACROSS TESTED SCENARIOS': 'NOT-STABLE-IN-TESTED-SCENARIOS', 'P3 V ACROSS TESTED SCENARIOS': 'STABLE-POSITIVE-IN-TESTED-SCENARIOS', 'P1-NY 
+10 the PULL-ALL value column holds the improvement: rc 1 -> caught: PIPELINE POLICY SELFTEST FAILED: PULL-ALL: its value is not KEEP + its improvement in the CSV (review e96321df P2)
+11 the rule acts on refused forecasts: rc 1 -> caught: PIPELINE POLICY SELFTEST FAILED: planted triggers: 293 found, 209 planted | the synthetic policy run refused: PIPELINE POLICY FAILED -> no output: P0g: the executed pull steps differ from the first co
+12 P0g never refuses: rc 1 -> caught: PIPELINE POLICY SELFTEST FAILED: the policy run accepted the rule acting on forecasts the contract refuses | a refused policy run wrote output (the rule acting on forecasts the contract refuses)
+13 the parity samples coherent forecasts only: rc 1 -> caught: PIPELINE POLICY SELFTEST FAILED: synthetic policy run: {'P1 E ACROSS TESTED SCENARIOS': 'NOT-STABLE-IN-TESTED-SCENARIOS', 'P3 V ACROSS TESTED SCENARIOS': 'STABLE-POSITIVE-IN-TESTED-SCENARIOS', 'P1-NY 
+14 the parity ignores the contract verdict: rc 0 -> passed   <<< UNEXPECTED
+15 no row sampled for the contract parity: rc 1 -> caught: PIPELINE POLICY SELFTEST FAILED: the synthetic policy run refused: PIPELINE POLICY FAILED -> no output: P0f: the rule agrees with the contract's decide_one on 0 of 0 comparable rows (0 atoms refused)
+PIPELINE POLICY MUTATION CHECK FAILED: 1 unexpected outcomes of 16
+2026-11-19T07:04:17Z tag=pp2_mutants rc=1 peak_rss_mib=719 wall_s=341.13 cpu_user_s=328.17 memavail_start_gib=23 disk_free_gib=434->434 slot=claude
+FAILED pp2_mutants
