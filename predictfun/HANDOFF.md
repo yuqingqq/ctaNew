@@ -1,3 +1,36 @@
+<!-- FIRST_DAY_PIPELINE_REVIEW_20261119_CODEX -->
+## 2026-11-19 — First-day pipeline review: fix POST causality before accepting fits
+
+Reviewed exporter **8e57fd8969ed6a57194b0487c3fb51b584a6e36b** and the
+04:42 UTC benchmark/policy WIP snapshot based on e96321df. [Report](reviews/automatic/20261119_first_day_pipeline/report.md),
+[evidence](reviews/automatic/20261119_first_day_pipeline/receipt.json),
+[source follow-up](reviews/automatic/20261119_first_day_pipeline/source_followup.json).
+**One P1 and two P2 findings:** POST queue inputs reveal whether an update arrives
+before the future +58 ms activation; contract-rejected forecasts can still drive
+pulls while P0f passes; the mapping gate can pass a value predictor with every
+zero-threshold decision's sign wrong. Bounded synthetic counterexamples reproduce
+all three; exporter and policy selftests still pass. No completed benchmark or
+policy result at the 04:47:42 UTC source check; no model-performance verdict.
+
+The saved Oct27 export matches the tested source: 29,820 POST rows (28,038
+eligible / 1,300 refused / 460 missing endpoint / 22 stale future book), as-of
+04:40:00.751625Z. Its eligible POST unknown-queue flag varies (3,936 zero /
+24,102 one); this confirms exposure to the faulty input, not measured model gain.
+Codex 70.34 s / 728 MiB; saved-column scan and synthetic checks only. No raw tape,
+training or untouched-day access. RETAIN outcome labels are not invalidated by
+this POST causality finding alone.
+
+**One next priority:** repair fresh/pending POST features so the complete vector
+is invariant to future update arrivals/values, then publish superseding export
+receipts and rebuild affected POST fits. The development session owns fixes.
+Also correct forecast acceptance/parity and the economic mapping gate before
+claiming a calibrated controller. Current policy is cancellation-only, with
+baseline decisions held fixed across scenarios; POST admission and scenario-local
+state-dependent replay remain unconnected. The prior PULL-ALL label fix is in
+working source; artifact-level closure awaits superseding outputs.
+Review-only; other-session changes preserved; scheduler remains off.
+<!-- /FIRST_DAY_PIPELINE_REVIEW_20261119_CODEX -->
+
 ## 2026-11-19 04:42Z (session aea5bfb9) — PIPELINE STEP 1 DONE: CAUSAL FEATURE / LABEL EXPORT ON THE SIMULATOR'S JOIN ORDERS, OCT 23-27 (USER: "Can you check the new commit, proceed our pipeline model"; then "We run the whole pipeline for one day test first")
 - The new commit c2717dc8 (Codex: the prediction -> value -> controller contract) checks out: reproduced bit for bit on the claude slot (16 synthetic tests; 176,214 Oct 23 accounting identities within 9.1e-13 c); no defect found in the code.
 - NEW pf_pipeline_export.py (selftest pass; mutants 26 / 26 caught by checks - the first run found two selftest defects, fixed): a POST row and one RETAIN row per live 50 ms step for every JOIN order, with the pipeline's 91 causal inputs and M50 / M0 / M250 labels (q, value, the contract's q * move term, severe, no-fill, live). Controls X1-X6 pass on all five days: every state accounted for; POST = the committed values; the RETAIN labels at every declared policy's pulls = the committed keep / pull improvements (all six policies, every day); kernel parity; the causality falsifier; no sealed / forward hour (Oct 27 read Oct 26 23Z .. Oct 27 23Z). 1.27-1.49 M RETAIN rows a day, ~340 s and <= 1.45 GiB a day, 1.7 GB in all. [Receipt](reviews/pipeline_export_20261119/report.md).

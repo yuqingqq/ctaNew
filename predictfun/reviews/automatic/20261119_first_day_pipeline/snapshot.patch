@@ -1,0 +1,1469 @@
+--- /dev/null
++++ b/predictfun/research/pf_pipeline_export.py
+@@ -0,0 +1,502 @@
++"""CAUSAL FEATURE / LABEL EXPORT ON THE CORRECTED NEUTRAL JOIN ORDERS (2026-11-19, session aea5bfb9). USER: "Can you check the new commit,
++proceed our pipeline model" (after "We should work on the pipeline, a prediction model + value mapping one"). Step 1 of the pipeline plan
++committed with the contract c2717dc8 (handoffs/20261119_prediction_pipeline.md): "Export causal market/order inputs on these exact neutral
++identities, with timestamps and status completeness; reconcile sampled labels to the kernel. Reuse the richer market representation ...
++Record queue age/ahead, remaining quantity, depth/rung, pending operations, inventory and time to the common endpoint. Audit every raw-data
++hour boundary." The contract's interfaces (pf_pipeline_contract.py) are imported, never edited. Declared before any data is read; consumed
++days Oct 23-27 only; nothing is fitted, chosen or evaluated as a policy.
++
++POPULATION: every committed state of the keep / pull run (pf_keep_pull, keep_pull_20261117 - the scenario replay's identities): one 30 sh
++ JOIN order at the known best at t, live at t + 58 ms, the common absolute endpoint END = t + 5000 ms, valued at the END mark; queue rule M.
++ROWS (the contract's targets; one row per action, never a sum of overlapping rows):
++ POST    one per order: decision t, effective t + 58 (activation), endpoint END; affected = every fill.
++ RETAIN  one per live decision step j = J0..98 (d_j = t + 50 j, every 50 ms from +100 ms) while the client knows the order is live at B
++         (a full fill is known 100 ms after it; a structural cancel when the client decides it): KEEP versus PULL at d_j; effective = the
++         pull's landing d_j + 37 ms; affected = the fills a pull at j can still remove (at or after the landing - the simulator's convention).
++ STATUSES (rows are never dropped): the keep / pull run's own (refused_post_only: a POST row with zero value and no RETAIN row;
++  missing_endpoint, stale_future_book, price_out_of_range: no labels), off_grid (a decision not on the engine grid) and feature_unavailable
++  (no finite causal mid at the decision); counted per day and kind.
++INPUTS (known at the decision; the pipeline's own builders, not re-implemented):
++ the 71 market features (pf_flow_price_data.feature_rows: book / flow changes, W30 scale, volatility, fair-price response, Binance and
++ depth inputs); the 12 order inputs (pf_stop_ev_model.order_inputs of pf_stop_ev_accounting.known_state - rung, depth from the best, price,
++ age, known remaining, queue ahead / shown / initial as the client sees them (min-updated shown sizes, rule M), edge to the mid, horizon to
++ the common endpoint: the contract's Settings with exposure = END, not the old 1 s); the 6 extras (size, remaining, queue, shown, scale,
++ phase); and fair_edge = s * (f_j - p) (A+0's input), t_to_end. known_state is computed vectorised per order (known_steps) and must equal
++ the reference function on sampled rows (X5). Pending operations: none in JOIN beyond the structural cancel (a status); inventory: none.
++LABELS per row at B (M50) and at the trade-clock shifts M0 / M250 (the keep / pull run's re-simulated branches): affected quantity q,
++ value = sum q * s * (mark - p) (the fills' value at the END mark), qm = value - s * (ref - p) * q with ref = the causal mid pf_mid at the
++ decision (the contract's E[q * move] term), severe excess max(-value - 30, 0), no-fill; at B q by trade-anchor source (WS / E2 / imputed /
++ mixed); live_<clock> (whether the client would still decide at that clock). Realized labels are oracle accounting, never inputs.
++CONTROLS (any failure -> no output for the day; parts are written to a partial directory and published only when every control passes):
++ X1 every committed state has exactly one POST row; every eligible state has one RETAIN row per live step; no duplicated identity
++ X2 POST q / value = the committed order's at B, M0 and M250 (every RETAIN label is recomputed by brute force in the selftest; on real
++    data X3 ties the RETAIN labels to the simulator)
++ X3 for every declared score policy (A+0 and its five variants) the RETAIN values at the policy's executed pull steps sum to minus the
++    committed keep / pull run's improvement of that day, and the pulls count matches (keep_pull.json, M50 / 37 ms): the labels are the
++    simulator's valuation of a policy, exactly
++ X4 kernel parity: sampled orders (oid % 97 == 0) re-simulated through the kernel (pf_keep_pull_scenarios.fills_g on the window's path) give
++    the exported B fills exactly
++ X5 causality: on sampled windows (m % 17 == 0) the features at a decision are unchanged when every input after it is perturbed
++    (perturb_future / perturb_pb / later depth) and change when same-time information changes (the builder's own falsifier pair); the
++    vectorised known state equals known_state on sampled rows (and ignores a fill not yet notified: a selftest unit check); a sampled
++    check that never ran is a failure
++ X6 hours: every raw hour stem the day's builders read is listed; none is sealed (10-28..30) or forward (>= 11-04)
++SELFTEST (synthetic tape, no data): the keep / pull synthetic chain with a causal stub for the market features; known_steps = known_state at
++ every synthetic decision; every control passing and a brute recomputation of every label and own input; refusals, each by its own control
++ with no output: a leaky feature stub (X5), a stub that ignores the book (X5's positive control), a committed order value (X2) and fill time
++ (X4) changed under a matching receipt, a sealed hour (X6), no sampled order (X4 / X5), a landing moved by 37 ms (X3), a dropped RETAIN row
++ (X1), the queue ahead not min-updated (X5), a published day. Mutations: pf_pipeline_export_mutants.py.
++LIMITS: consumed days; queue rule M only (C5); the replay's fills are not validated on live orders (C10); timing scenarios beyond M0 / M250
++ are evaluated by the scenario bank, not labelled here; one order at a time (JOIN), no continuation after END.
++Usage (run_light, PF_SLOT=claude): pf_pipeline_export.py selftest | smoke <day> | day <day>
++"""
++import contextlib
++import io
++import json
++import shutil
++import sys
++import tempfile
++import time
++from dataclasses import replace
++from pathlib import Path
++
++import numpy as np
++
++HERE = Path(__file__).resolve().parent
++sys.path.insert(0, str(HERE))
++import pf_keep_pull as KP                                 # noqa: E402
++import pf_keep_pull_clock_audit as A                      # noqa: E402
++import pf_keep_pull_scenarios as SC                       # noqa: E402
++import pf_flow_price_common as FC                         # noqa: E402  the pipeline's feature lists and settings
++import pf_stop_ev_accounting as AC                        # noqa: E402  known_state (the reference)
++import pf_queue_place_test as QP                          # noqa: E402
++import pf_queue_place_ledger as QL                        # noqa: E402
++
++C, pd, I = KP.C, KP.pd, KP.I
++OUT = Path(I.K.IO) / 'pipeline_export_20261119'
++MARK = 'PIPELINE EXPORT'
++END = KP.H                                                # the common endpoint, ms after posting
++SETTINGS = replace(FC.SETTINGS, exposure_ms=END)          # the contract: horizon to the common endpoint, not the old 1 s exposure
++CLOCKS = (('m50', 50.), ('m0', 0.), ('m250', 250.))
++SRC = ('ws', 'e2', 'imp', 'mixed')                        # the fills' trade-anchor source codes 0 / 1 / 2 / 3
++OWN = ['fair_edge', 't_to_end']
++INPUTS = list(FC.MARKET) + list(FC.ORDER) + list(FC.EXTRA) + OWN
++KNOWN = ('side', 'price', 'rung', 'depth', 'age_ms', 'submitted_quantity', 'known_remaining', 'known_filled', 'queue_initial_known',
++         'queue_ahead_known', 'shown_known', 'queue_initial_unknown', 'effective_horizon_ms')
++VCOL = {'m50': ('q', 'v', 't_full'), 'm0': ('q_m0', 'v_m0', 't_full_m0'), 'm250': ('q_m250', 'v_m250', 't_full_m250')}   # the committed columns
++LANDING_OFFSET = 0.                                       # planted-error switches (selftest only)
++DROP_ONE = False
++NO_MINUPDATE = False
++
++
++def known_steps(w, side, ta, pt, fl, d, terminal, notice=SETTINGS.notification_ms, exposure=SETTINGS.exposure_ms):
++    """AC.known_state for one order at many decision times d (absolute ms), vectorised: fl = (times, quantities) absolute; the queue ahead
++    is the minimum of the shown sizes at the price over the frames known from activation to the decision (rule M as the client sees it)."""
++    clock = np.asarray(w['kf'], float); d = np.asarray(d, float); ft, fq = (np.asarray(x, float) for x in fl)
++    C.require(bool(np.isfinite(clock).all() and (np.diff(clock) >= 0).all()), 'nonmonotone known frame clock')
++    ja = int(np.searchsorted(clock, ta, side='right') - 1); jt = (np.searchsorted(clock, d, side='right') - 1).astype(int)
++    filled = np.array([sum(float(b) for a, b in zip(ft, fq) if a + notice <= x) for x in d], float)    # AC's sequential sum, exactly
++    lo, hi = max(ja, 0), int(jt.max()) if len(jt) else -1
++    sh = np.array([AC.shown_at(w, f, side, pt) for f in range(lo, hi + 1)], float) if hi >= lo else np.zeros(0)
++    fin = np.where(np.isfinite(sh), sh, np.inf)
++    run = fin if NO_MINUPDATE else (np.minimum.accumulate(fin) if len(fin) else fin)
++    shown = np.array([(sh[j - lo] if j >= lo else AC.shown_at(w, j, side, pt)) if j >= 0 else np.nan for j in jt], float)
++    ok = (ja >= 0) & (ja <= jt)
++    initial = np.where(ok, sh[0] if len(sh) else np.nan, np.nan)
++    ahead = np.where(ok, np.array([run[j - lo] if (o_ and 0 <= j - lo < len(run)) else np.inf for j, o_ in zip(jt, ok)]), np.nan)
++    ahead = np.where(np.isfinite(ahead), ahead, np.nan)
++    best = np.array([float(w['P5'][j][0]) if j >= 0 else np.nan for j in jt])
++    return dict(side=np.full(len(d), float(side)), price=np.full(len(d), float(pt)), rung=np.zeros(len(d)),
++                depth=(best - pt) if side == 0 else (pt - best), age_ms=d - ta, submitted_quantity=np.full(len(d), float(KP.SIZE)),
++                known_remaining=np.maximum(0., float(KP.SIZE) - filled), known_filled=filled, queue_initial_known=initial,
++                queue_ahead_known=ahead, shown_known=shown, queue_initial_unknown=(~np.isfinite(initial)).astype(float),
++                effective_horizon_ms=np.minimum(exposure, terminal - d))
++
++
++def affected(ft, fq, val, eff):
++    """Per effective time (ms after posting): the quantity and value of the fills at or after it (removable / all fills)."""
++    o = np.argsort(ft, kind='stable'); ft, fq, val = ft[o], fq[o], val[o]
++    cq = np.r_[np.cumsum(fq[::-1])[::-1], 0.]; cv = np.r_[np.cumsum(val[::-1])[::-1], 0.]; i = np.searchsorted(ft, eff, side='left')
++    return cq[i], cv[i]
++
++
++def hour_ok(h):
++    """X6: a raw hour stem (YYYYMMDD_HH) a builder reads is neither sealed nor forward."""
++    h0 = I._ms(f'{h[:4]}-{h[4:6]}-{h[6:8]}') + int(h[9:11]) * 3600000
++    return not (I.SEAL_MS[0] <= h0 < I.SEAL_MS[1]) and h0 < I.FWD_MS
++
++
++def real_features(W, fair, depth, chosen):
++    """The pipeline's own market-feature builder (imported here: it reads the day's step-5 / depth inputs)."""
++    import pf_flow_price_data as FD
++    return FD.feature_rows(W, fair, depth, chosen)
++
++
++def real_perturb(W, fair, depth, k, t, rng):
++    """The builder's own future perturbation (pf_flow_price_data.build_window): frames / steps after the decision, fair prices stamped
++    after it, and the later depth rows."""
++    mut = {a: I.M.perturb_future(w, int(w['jk'][k]), k, rng) for a, w in W.items()}
++    dep = {a: v.copy() for a, v in depth.items()}; fut = depth['k'] > t
++    for a in dep:
++        if a != 'k':
++            dep[a][fut] += rng.uniform(1, 5, int(fut.sum()))
++    return mut, I.M.perturb_pb(fair, t, rng), dep
++
++
++def real_fire(W, s, k):
++    """The builder's same-time positive control: the step row at the decision changed."""
++    ch = dict(W[s]); ch['X'] = np.array(W[s]['X'], copy=True); ch['X'][k, 0] += 10.; out = dict(W); out[s] = ch; return out
++
++
++def causal_check(W, fair, depth, feat_fn, k, s, rng, perturb, fire):
++    """X5 on one decision: inputs after it perturbed -> its features unchanged; a same-time change -> they change."""
++    chosen = {0: [], 1: []}; chosen[s] = [k]; before = feat_fn(W, fair, depth, chosen)[s][k]; t = float(W[s]['tg'][k])
++    mut, fair2, dep2 = perturb(W, fair, depth, k, t, rng); after = feat_fn(mut, fair2, dep2, chosen)[s][k]
++    same = bool(np.array_equal(after[0], before[0], equal_nan=True) and np.isclose(after[1], before[1], equal_nan=True))
++    fired = not np.array_equal(feat_fn(fire(W, s, k), fair, depth, chosen)[s][k][0], before[0], equal_nan=True)
++    return same, fired
++
++
++def order_block(day, o, js, d, k, on, path, w, F, fills, none, trig, pol, fails):
++    """One order's rows as columns: its POST row, then one RETAIN row per live step; identities, statuses, causal inputs, labels."""
++    s, t, p, oid = int(o.side), float(o.t), float(o.p), int(o.oid); sg = 1. if s == 0 else -1.; n = 1 + len(js)
++    jj = np.r_[0, js].astype(int); eff = np.r_[KP.PLACE, KP.landing(js) + LANDING_OFFSET] if len(js) else np.array([KP.PLACE])
++    B = dict(day=np.full(n, day), oid=np.full(n, oid), m=np.full(n, int(o.m)), side=np.full(n, s), t=np.full(n, t), p=np.full(n, p),
++             phase=np.full(n, int(o.phase)), mark=np.full(n, float(o.mark)), kind=np.array(['post'] + ['retain'] * len(js)), j=jj,
++             decision_ms=d, effective_ms=t + eff, endpoint_ms=np.full(n, t + END))
++    if not path:                                                                           # no path: the keep / pull run's status, no labels
++        return pd.DataFrame(dict(B, status=np.full(n, str(o.status))))
++    for c, _ in CLOCKS:
++        ft, fq, fs = fills[c].get(oid, none); val = fq * sg * (float(o.mark) - p); q_, v_ = affected(ft, fq, val, eff)
++        qc, vc, tc = VCOL[c]
++        if not (abs(q_[0] - float(getattr(o, qc))) < 1e-7 and abs(v_[0] - float(getattr(o, vc))) < 1e-7):     # X2: POST = the committed order
++            fails.append(f'X2 order {oid} {c}: POST q / value {q_[0]:.6f} / {v_[0]:.6f} vs the committed {float(getattr(o, qc)):.6f} / {float(getattr(o, vc)):.6f}')
++        endc = int(A.endj_of(np.array([float(getattr(o, tc))]), np.array([o.g_struct]))[0])
++        B.update({f'q_{c}': q_, f'value_{c}': v_, f'severe_{c}': np.maximum(-v_ - KP.SEVERE, 0.), f'nofill_{c}': (q_ <= 1e-12).astype(float),
++                  f'live_{c}': np.r_[True, js < endc]})
++        if c == 'm50':
++            for i_, nm in enumerate(SRC):
++                B[f'q_m50_{nm}'] = affected(ft[fs == i_], fq[fs == i_], val[fs == i_], eff)[0]
++            v50 = v_
++    st = np.where(on, 'eligible', 'off_grid').astype(object)
++    X = np.full((n, len(FC.MARKET)), np.nan, np.float32); scale = np.full(n, np.nan)
++    for i_ in np.flatnonzero(on):
++        X[i_], scale[i_] = F[s][int(k[i_])][0], F[s][int(k[i_])][1]
++    ref = X[:, FC.MARKET.index('pf_mid')].astype(float); st[on & ~np.isfinite(ref)] = 'feature_unavailable'
++    if o.status == 'refused_post_only':
++        st[0] = 'refused_post_only'
++    ft, fq, _ = fills['m50'].get(oid, none); kn = known_steps(w, s, t + KP.PLACE, p, (ft + t, fq), d, t + END)
++    oi = FC.V.order_inputs(pd.DataFrame({f'x_{a}': kn[a] for a in KNOWN}), scale, ref)
++    B.update(status=st, **{nm: X[:, i_] for i_, nm in enumerate(FC.MARKET)}, **{nm: np.asarray(oi[nm], float) for nm in FC.ORDER},
++             fp_size=np.full(n, float(KP.SIZE)), fp_remaining=kn['known_remaining'], fp_queue=kn['queue_ahead_known'], fp_shown=kn['shown_known'],
++             fp_scale=scale, fp_phase=np.full(n, float(o.phase)), fair_edge=sg * (np.array([float(getattr(o, f'f{x:02d}')) for x in jj]) - p),
++             t_to_end=END - (d - t))
++    for c, _ in CLOCKS:
++        B[f'qm_{c}'] = B[f'value_{c}'] - sg * (ref - p) * B[f'q_{c}']
++    for pp in KP.POLICIES:                                                                 # X3: the policy's executed pull at a live step
++        T = trig[pp].get(oid)
++        if T is not None and len(js) and js[0] <= T <= js[-1]:
++            pol[pp][0] += float(v50[1 + int(T) - int(js[0])]); pol[pp][1] += 1
++    return pd.DataFrame(B)
++
++
++def known_parity(w, s, o, fl, st):
++    """X5: the vectorised known state = AC.known_state on sampled steps of an order."""
++    bad = []; t = float(o.t); endj = int(A.endj_of(np.array([o.t_full]), np.array([o.g_struct]))[0]); js = np.arange(KP.J0, max(endj, KP.J0))
++    d = np.r_[t, t + KP.STEP * js]; order = dict(ta=t + KP.PLACE, pt=float(o.p), fl=[(a + t, b) for a, b in zip(fl[0], fl[1])])
++    vec = known_steps(w, s, t + KP.PLACE, float(o.p), (fl[0] + t, fl[1]), d, t + END)
++    eq = lambda x, y: (np.isnan(x) and np.isnan(y)) or x == y
++    for i in sorted({0, 1 if len(d) > 1 else 0, len(d) // 2, len(d) - 1}):
++        ref = AC.known_state({s: w}, order, (s, 0, int(o.oid)), float(d[i]), KP.SIZE, terminal_ms=t + END, settings=SETTINGS)
++        if not all(eq(float(ref[a]), float(vec[a][i])) for a in KNOWN):
++            bad.append(f'X5 order {int(o.oid)} decision {i}: the vectorised known state differs from known_state '
++                       + str({a: (float(ref[a]), float(vec[a][i])) for a in KNOWN if not eq(float(ref[a]), float(vec[a][i]))}))
++        st['known_checked'] += 1
++    return bad
++
++
++def controls(day, O, st, counts, pol, kp, full):
++    """X1 and X3 after the day (X2, X4, X5 run per order / window, X6 before any file opens)."""
++    bad = []; el = O[O.status == 'eligible']
++    want = int(np.maximum(A.endj_of(el.t_full.values, el.g_struct.values) - KP.J0, 0).sum())
++    if not (st['post_rows'] == len(O) and st['retain_rows'] == want and st['ids_unique']):
++        bad.append(f"X1: {st['post_rows']:,} POST rows for {len(O):,} states, {st['retain_rows']:,} RETAIN rows for {want:,} live steps, unique ids {st['ids_unique']}")
++    if full:
++        D = json.loads((kp / 'keep_pull.json').read_text())['D']['M50_L37']; i = KP.DAYS.index(day)
++        for p_, (v, n) in pol.items():
++            imp, n_ = float(D[p_]['policy_by_day']['imp'][i]), int(round(D[p_]['policy_by_day']['n'][i]))
++            if not (n == n_ and abs(-v - imp) <= 1e-6 * max(1., abs(imp))):
++                bad.append(f'X3 {p_}: RETAIN values at the executed pulls sum to {-v:,.3f} over {n:,} pulls, the committed keep / pull run {imp:,.3f} over {n_:,}')
++    return bad
++
++
++def real_inputs(day, markets):
++    """The day's fair price, depth arrays and the raw hours they read (as pf_flow_price_data.run builds them), with their hashes."""
++    import pf_io as IO
++    s1 = Path(I.K.IO) / 'step1' / day; tracked = {}
++    reg = QP.JD.metadata(day, True)[1]; W0 = {int(x.mid): float(x.ws) * 1000. for x in reg.itertuples() if int(x.mid) in set(markets)}
++    C.require(bool(W0) and not (I.SEAL_MS[0] <= min(W0.values()) < I.SEAL_MS[1]) and max(W0.values()) < I.FWD_MS, 'protected date')
++    hours = I.X5.depth_hours(day); C.require(all(hour_ok(h) for h in hours), 'X6: a sealed or forward hour in the day\'s builders')   # before any file opens
++    fair, _ = I.fair_fix(day, W0)
++    for h in hours:
++        for p_ in (Path(IO.BN_DIR) / (h + '.csv.gz'), Path(IO.REF_RUN) / 'reference_prices' / (h + '.jsonl.gz'), Path(I.X5.DEPTH_DIR) / (h + '.csv.gz')):
++            if p_.exists():
++                tracked[str(p_)] = C.sha(p_)
++    ck = json.loads((s1 / 'clock_rl_d2.json').read_text()); depth, _ = I.X5.depth_arrays(hours, float(ck['bn_in']) + float(ck['d_dec']))
++    C.require(depth is not None, 'depth unavailable')
++    return {int(k_): v for k_, v in fair.items()}, depth, hours, tracked
++
++
++def day_run(day, src=None, kp=None, out=None, feat_fn=None, inputs=None, markets=None, sample_k=97, sample_w=17, perturb=None, fire=None):
++    """One day -> out/<day>/rows_<batch>.parquet + receipt.json, published only after X1-X6 pass (written to <day>.partial first)."""
++    start = time.time(); C.require(day in KP.DAYS, 'undeclared day'); src = src or KP.Tape(); kp = Path(kp or KP.OUT); out = Path(out or OUT)
++    feat_fn, perturb, fire = feat_fn or real_features, perturb or real_perturb, fire or real_fire
++    fin, part = out / day, out / (day + '.partial'); C.require(not fin.exists(), 'day output exists')
++    r = json.loads((kp / day / 'receipt.json').read_text()); C.require(all(C.sha(kp / day / x) == h for x, h in r['outputs'].items()), 'keep-pull outputs changed since their receipt')
++    mk = src.markets(day) if markets is None else list(markets)
++    fair, depth, hrs, tracked = (inputs or real_inputs)(day, mk)
++    bad = [f'X6 hour {h} is sealed or forward' for h in hrs if not hour_ok(h)]
++    if bad:
++        sys.exit(f'{MARK} FAILED -> no output: ' + ' | '.join(bad))
++    O = pd.read_parquet(kp / day / 'orders.parquet'); Fl = pd.read_parquet(kp / day / 'fills.parquet'); O = O[O.m.isin(mk)].reset_index(drop=True)
++    fills = {c: {int(o_): (g.t.values.astype(float), g.q.values.astype(float), g.src.values.astype(int)) for o_, g in Fl[Fl.clock == x].groupby('oid')} for c, x in CLOCKS}
++    none = (np.zeros(0), np.zeros(0), np.zeros(0, int)); E = O[O.status == 'eligible']
++    T = KP.score_steps(E[[f'f{j:02d}' for j in range(KP.NSTEP + 1)]].values, E.side.values, E.p.values)
++    trig = {p_: dict(zip(E.oid.values.astype(int).tolist(), np.asarray(T[p_]).astype(int).tolist())) for p_ in KP.POLICIES}; pol = {p_: [0., 0] for p_ in KP.POLICIES}
++    by_m = {int(m): g for m, g in O.groupby('m')}; offset = src.offset(day)
++    if part.exists():
++        shutil.rmtree(part)
++    part.mkdir(parents=True); st = dict(states=len(O), post_rows=0, retain_rows=0, kernel_checked=0, causal_checked=0, known_checked=0, ids_unique=True)
++    counts, seen = {}, set()
++    for begin in range(0, len(mk), 24):
++        data = src.load(day, mk[begin:begin + 24], offset); blocks = []
++        for W in src.pairs(data):
++            m = int(W[0]['m'])
++            if m not in by_m:
++                continue
++            plan, chosen = [], {0: [], 1: []}
++            for o in by_m[m].itertuples():
++                s, t = int(o.side), float(o.t); tg = np.asarray(W[s]['tg'], float); path = o.status in ('eligible', 'refused_post_only')
++                endj = int(A.endj_of(np.array([o.t_full]), np.array([o.g_struct]))[0]) if o.status == 'eligible' else KP.J0
++                js = np.arange(KP.J0, max(endj, KP.J0)) if o.status == 'eligible' else np.zeros(0, int)
++                if DROP_ONE and len(js) > 1 and int(o.oid) % 2 == 0:
++                    js = js[:-1]
++                d = np.r_[t, t + KP.STEP * js]; k = np.searchsorted(tg, d); kk = np.minimum(k, len(tg) - 1); on = (k < len(tg)) & (np.abs(tg[kk] - d) <= 1e-6)
++                if path:
++                    chosen[s].extend(k[on].tolist())
++                plan.append((o, js, d, k, on, path))
++            chosen = {a: sorted(set(v)) for a, v in chosen.items()}
++            F = feat_fn(W, fair.get(m) if fair is not None else None, depth, chosen); fails = []
++            for o, js, d, k, on, path in plan:
++                b = order_block(day, o, js, d, k, on, path, W[int(o.side)], F, fills, none, trig, pol, fails); blocks.append(b)
++                ids = set(zip(b.oid.tolist(), b.kind.tolist(), b.j.tolist())); st['ids_unique'] &= not (ids & seen) and len(ids) == len(b); seen |= ids
++                st['post_rows'] += int((b.kind == 'post').sum()); st['retain_rows'] += int((b.kind == 'retain').sum())
++                for (kd, sx), n_ in b.groupby(['kind', 'status']).size().items():
++                    counts[f'{kd}:{sx}'] = counts.get(f'{kd}:{sx}', 0) + int(n_)
++            bad += fails
++            if m % sample_w == 0:                                                         # X5 on a sampled window
++                s_ = 0 if chosen[0] else 1
++                if chosen[s_]:
++                    same, fired = causal_check(W, fair.get(m) if fair is not None else None, depth, feat_fn, chosen[s_][len(chosen[s_]) // 2], s_,
++                                               np.random.default_rng(m), perturb, fire)
++                    if not (same and fired):
++                        bad.append(f'X5 window {m}: ' + ' and '.join(x for x, y in (('future inputs changed a feature', not same), ('the same-time control did not fire', not fired)) if y))
++                    st['causal_checked'] += 1
++            for o in by_m[m].itertuples():                                                # X4 kernel parity and X5 known-state parity, sampled
++                if o.status != 'eligible' or not sample_k or int(o.oid) % sample_k:
++                    continue
++                s, t, p = int(o.side), float(o.t), float(o.p); base, _ = QP.build_path(W, t, t + KP.H); fl = fills['m50'].get(int(o.oid), none)
++                vk, qk, tt, fq = SC.fills_g(base, s, p, KP.PLACE, KP.CANCEL, KP.PENDING); mine = fq > 1e-12
++                if not (np.array_equal(tt[mine], fl[0]) and np.array_equal(fq[mine], fl[1])):
++                    bad.append(f'X4 order {int(o.oid)}: the kernel gives other fills than the exported B fills')
++                st['kernel_checked'] += 1; bad += known_parity(W[s], s, o, fl, st)
++        if blocks:
++            pd.concat(blocks, ignore_index=True).to_parquet(part / f'rows_{begin // 24:03d}.parquet', index=False)
++        del data, blocks; C.guard('pipeline export')
++        print(json.dumps(dict(stage='export', day=day, markets=min(begin + 24, len(mk)), post=st['post_rows'], retain=st['retain_rows'],
++                              seconds=round(time.time() - start), rss=round(I.K.rss_mib()))), flush=True)
++    bad += controls(day, O, st, counts, pol, kp, markets is None)
++    if not (st['kernel_checked'] and st['known_checked'] and st['causal_checked']) and len(E):
++        bad.append(f"X4 / X5: a sampled check never ran ({st['kernel_checked']} kernel, {st['known_checked']} known-state, {st['causal_checked']} causal)")
++    if bad:
++        shutil.rmtree(part); sys.exit(f'{MARK} FAILED -> no output: ' + ' | '.join(bad[:12]) + (f' (+{len(bad) - 12} more)' if len(bad) > 12 else ''))
++    parts = sorted(x.name for x in part.glob('rows_*.parquet'))
++    C.dump(part / 'receipt.json', dict(asof=C.stamp(), day=day, stat=st, statuses=counts, policies={p_: dict(retain_sum=v[0], pulls=v[1]) for p_, v in pol.items()},
++                                       hours=hrs, inputs=tracked, keep_pull_receipt=C.sha(kp / day / 'receipt.json'), keep_pull_outputs=r['outputs'],
++                                       settings=dict(exposure_ms=SETTINGS.exposure_ms, notification_ms=SETTINGS.notification_ms, cancel_ms=KP.CANCEL, end_ms=END),
++                                       input_columns=INPUTS, markets=len(mk), full_day=markets is None, provenance=KP.provenance(),
++                                       source_sha256=C.sha(Path(__file__).resolve()), outputs={x: C.sha(part / x) for x in parts}, seconds=time.time() - start))
++    part.rename(fin); print(json.dumps(dict(day=day, stat=st, statuses=counts, seconds=round(time.time() - start))), flush=True)
++    return fin
++
++
++def syn_inputs(day, markets):
++    """The selftest's inputs: no fair price or depth (the stub ignores them); the day's own 24 hours."""
++    return {}, None, [f'{day}_{h:02d}' for h in range(24)], {}
++
++
++def syn_features(leak=0, const=False):
++    """A causal stub of the market-feature builder on the synthetic tape: at step k the book of the frame known at tg[k] (jk[k]) gives pf_mid
++    and the first inputs. leak = 1 also reads the next frame (a planted look-ahead that still responds to same-time information); const ignores
++    the book (a check that cannot fire)."""
++    def f(W, fair, depth, chosen):
++        out = {}
++        for s, w in W.items():
++            P5, S5, opp, jk = (np.asarray(w[x], float) for x in ('P5', 'S5', 'opp', 'jk')); res = {}
++            for k in chosen.get(s, []):
++                j = int(jk[k]); jl = min(j + leak, len(P5) - 1); x = np.full(len(FC.MARKET), np.nan, np.float32)
++                bid, ask = (P5[j, 0], opp[j]) if s == 0 else (opp[j], P5[j, 0])
++                x[FC.MARKET.index('pf_mid')] = 50. if const else ((bid + ask) / 2. if bid >= 0 and ask >= 0 else np.nan)
++                x[0], x[1], x[2] = (1., 1., 1.) if const else (P5[j, 0], S5[jl, 0], float(k)); res[k] = (x, 10.)   # leak: input 1 from the next frame
++            out[s] = res
++        return out
++    return f
++
++
++def syn_perturb(W, fair, depth, k, t, rng):
++    """The selftest's future perturbation: every frame after the one known at the decision randomised (P5 / S5 / opp)."""
++    out = {}
++    for a, w in W.items():
++        jk = int(np.asarray(w['jk'])[k]); w2 = dict(w); P5, S5, opp = (np.array(w[x], float, copy=True) for x in ('P5', 'S5', 'opp'))
++        P5[jk + 1:] += rng.integers(1, 4, P5[jk + 1:].shape); S5[jk + 1:] *= rng.uniform(.2, 3., S5[jk + 1:].shape); opp[jk + 1:] += rng.integers(1, 4, opp[jk + 1:].shape)
++        w2.update(P5=P5, S5=S5, opp=opp); out[a] = w2
++    return out, fair, depth
++
++
++def syn_fire(W, s, k):
++    """The selftest's same-time control: the frame known at the decision changed."""
++    w = dict(W[s]); jk = int(np.asarray(w['jk'])[k]); P5 = np.array(w['P5'], float, copy=True); P5[jk, 0] += 1.; w['P5'] = P5; out = dict(W); out[s] = w; return out
++
++
++def selftest():
++    """Synthetic tape only (see the module's SELFTEST)."""
++    global LANDING_OFFSET, DROP_ONE, NO_MINUPDATE
++    bad = []; src = KP.Syn(); days = list(KP.DAYS); d0 = days[0]
++    q_, v_ = affected(np.array([100., 137., 136.9, 500.]), np.array([5., 3., 2., 4.]), np.array([1., -2., 4., -8.]), np.array([58., 137., 137.1, 501.]))
++    if not (q_.tolist() == [14., 7., 4., 0.] and v_.tolist() == [-5., -10., -8., 0.]):
++        bad.append(f'affected: {q_.tolist()} {v_.tolist()}')
++    if (hour_ok('20261027_23'), hour_ok('20261028_00'), hour_ok('20261030_23'), hour_ok('20261031_00'), hour_ok('20261103_23'), hour_ok('20261104_00')) != (
++            True, False, False, True, True, False):
++        bad.append('the sealed / forward hour rule')
++    with tempfile.TemporaryDirectory(dir=str(I.K.IO)) as tmp:
++        tmp = Path(tmp)
++        with QL._v1_on(src, tmp):
++            for d in days:
++                QP.day_run(d)
++        with contextlib.redirect_stdout(io.StringIO()):
++            for d in days:
++                KP.day_run(d, src=src, v1=tmp / 'v1', out=tmp / 'kp')
++            KP.report(tmp / 'kp')
++        O = pd.read_parquet(tmp / 'kp' / d0 / 'orders.parquet'); Fl = pd.read_parquet(tmp / 'kp' / d0 / 'fills.parquet'); Oi = O.set_index('oid')
++
++        def run(out_, **kw):
++            with contextlib.redirect_stdout(io.StringIO()):
++                return day_run(d0, src=src, kp=kw.pop('kp', tmp / 'kp'), out=out_, feat_fn=kw.pop('feat_fn', syn_features()), inputs=kw.pop('inputs', syn_inputs),
++                               sample_k=kw.pop('sample_k', 1), sample_w=1, perturb=syn_perturb, fire=syn_fire, **kw)
++        # known_steps = AC.known_state at every decision of every eligible synthetic order, and a fill not yet notified changes nothing
++        data = src.load(d0, src.markets(d0), src.offset(d0)); n_kn = diff = late = 0
++        for W in src.pairs(data):
++            for o in O[(O.m == int(W[0]['m'])) & (O.status == 'eligible')].itertuples():
++                s, t = int(o.side), float(o.t); f = Fl[(Fl.oid == o.oid) & (Fl.clock == 50.)]; fl = (f.t.values + t, f.q.values)
++                endj = int(A.endj_of(np.array([o.t_full]), np.array([o.g_struct]))[0]); d = np.r_[t, t + KP.STEP * np.arange(KP.J0, max(endj, KP.J0))]
++                vec = known_steps(W[s], s, t + KP.PLACE, float(o.p), fl, d, t + END)
++                order = dict(ta=t + KP.PLACE, pt=float(o.p), fl=list(zip(fl[0], fl[1])))
++                for i, x in enumerate(d):
++                    ref = AC.known_state({s: W[s]}, order, (s, 0, int(o.oid)), float(x), KP.SIZE, terminal_ms=t + END, settings=SETTINGS); n_kn += 1
++                    diff += int(not all((np.isnan(float(ref[a])) and np.isnan(vec[a][i])) or float(ref[a]) == float(vec[a][i]) for a in KNOWN))
++                ln = known_steps(W[s], s, t + KP.PLACE, float(o.p), (np.r_[fl[0], d[-1] - SETTINGS.notification_ms + 1.], np.r_[fl[1], .01]), d[-1:], t + END)
++                late += int(not all((np.isnan(ln[a][0]) and np.isnan(vec[a][-1])) or ln[a][0] == vec[a][-1] for a in KNOWN))
++        if not (n_kn > 1000 and diff == 0 and late == 0):
++            bad.append(f'known_steps vs known_state: {diff} of {n_kn} decisions differ, {late} orders moved by a fill not yet notified')
++        del data
++        fin = None
++        try:
++            fin = run(tmp / 'ex')
++        except (SystemExit, ValueError) as e:
++            bad.append(f'the synthetic export refused: {str(e)[:400]}')
++        if fin is not None:
++            R = pd.concat([pd.read_parquet(x) for x in sorted(fin.glob('rows_*.parquet'))], ignore_index=True); rec = json.loads((fin / 'receipt.json').read_text())
++            el = O[O.status == 'eligible']; want_r = int(np.maximum(A.endj_of(el.t_full.values, el.g_struct.values) - KP.J0, 0).sum())
++            ok_counts = (len(R[R.kind == 'post']) == len(O) and len(R[R.kind == 'retain']) == want_r and not R.duplicated(['oid', 'kind', 'j']).any()
++                         and int((R[R.kind == 'post'].status == 'refused_post_only').sum()) == int((O.status == 'refused_post_only').sum())
++                         and sum(rec['statuses'].values()) == len(R) and rec['stat']['kernel_checked'] > 0 and rec['stat']['known_checked'] > 0
++                         and rec['stat']['causal_checked'] > 0 and (R.status == 'eligible').sum() > 0)
++            if not ok_counts:
++                bad.append(f"rows / statuses: {len(R):,} rows, {rec['statuses']}, stat {rec['stat']}")
++            errs = n = 0; P = R[R.kind.isin(['post', 'retain']) & R.oid.isin(O[O.status.isin(['eligible', 'refused_post_only'])].oid)]
++            for oid, g in P.groupby('oid'):                                                  # brute recomputation of every label and own input
++                o = Oi.loc[oid]; sg = 1. if o.side == 0 else -1.; eff = np.where(g.kind == 'post', KP.PLACE, KP.STEP * g.j + KP.CANCEL); ref = g.pf_mid.values.astype(float)
++                for c, x in CLOCKS:
++                    f = Fl[(Fl.oid == oid) & (Fl.clock == x)]; ft, fq = f.t.values, f.q.values; val = fq * sg * (o.mark - o.p)
++                    qb = np.array([fq[ft >= e].sum() for e in eff]); vb = np.array([val[ft >= e].sum() for e in eff])
++                    tc = VCOL[c][2]; endc = int(A.endj_of(np.array([float(o[tc])]), np.array([float(o.g_struct)]))[0]); liveb = np.where(g.kind == 'post', True, g.j < endc)
++                    errs += int((np.abs(qb - g[f'q_{c}']) > 1e-9).sum() + (np.abs(vb - g[f'value_{c}']) > 1e-9).sum()
++                                + (~np.isclose(vb - sg * (ref - o.p) * qb, g[f'qm_{c}'], atol=1e-6, equal_nan=True)).sum()
++                                + (np.abs(np.maximum(-vb - KP.SEVERE, 0.) - g[f'severe_{c}']) > 1e-9).sum() + (liveb != g[f'live_{c}'].values.astype(bool)).sum())
++                fe = sg * (np.array([float(o[f'f{int(j):02d}']) for j in g.j]) - o.p); hz = (o.t + END - g.decision_ms.values) / 1000.
++                el_ = g.status.values == 'eligible'
++                errs += int((~np.isclose(fe, g.fair_edge, equal_nan=True)).sum() + (np.abs(END - (g.decision_ms - o.t) - g.t_to_end) > 1e-9).sum()
++                            + (~np.isclose(hz[el_], g.o_horizon.values[el_], equal_nan=True)).sum()
++                            + (~np.isclose(g.fp_remaining.values[el_] / KP.SIZE, g.o_rem.values[el_], equal_nan=True)).sum()
++                            + (~np.isclose(g.fp_queue.values[el_] / g.fp_scale.values[el_], g.o_q_rel.values[el_], equal_nan=True)).sum())
++                n += len(g)
++            if not (n > 0 and errs == 0):
++                bad.append(f'brute recomputation: {errs} differences over {n:,} rows')
++        def refused(name, msg, **kw):
++            o_ = tmp / ('z' + str(abs(hash(name)) % 100000))
++            try:
++                run(o_, **kw); bad.append(f'the export accepted {name}')
++            except (SystemExit, ValueError) as e:
++                if msg not in str(e):
++                    bad.append(f'{name} refused by another control: {str(e)[:300]}')
++            if (o_ / d0).exists() or (o_ / (d0 + '.partial')).exists():
++                bad.append(f'a refused export left output ({name})')
++        def kp_copy(name, change):
++            d_ = tmp / name; shutil.copytree(tmp / 'kp', d_); change(d_ / d0)
++            r_ = json.loads((d_ / d0 / 'receipt.json').read_text()); r_['outputs'] = {x: C.sha(d_ / d0 / x) for x in r_['outputs']}
++            (d_ / d0 / 'receipt.json').write_text(json.dumps(r_)); return d_
++        def bump_v(dd):
++            o2 = pd.read_parquet(dd / 'orders.parquet'); i_ = int(np.flatnonzero((o2.status == 'eligible').values & (o2.q.values > 0))[0])
++            o2.loc[o2.index[i_], 'v'] = o2.v.iloc[i_] + 1.; o2.to_parquet(dd / 'orders.parquet', index=False)
++        def move_fill(dd):
++            f2 = pd.read_parquet(dd / 'fills.parquet'); e_ = set(O[O.status == 'eligible'].oid)
++            i_ = int(np.flatnonzero((f2.clock.values == 50.) & f2.oid.isin(e_).values & (f2.t.values < 4000.))[0]); f2.loc[f2.index[i_], 't'] = f2.t.iloc[i_] + 7.
++            f2.to_parquet(dd / 'fills.parquet', index=False)
++        refused('a leaky feature stub', 'future inputs changed a feature', feat_fn=syn_features(leak=1))
++        refused('a feature stub that ignores the book (the same-time control cannot fire)', 'the same-time control did not fire', feat_fn=syn_features(const=True))
++        refused('a committed order value changed under a matching receipt', 'X2 order', kp=kp_copy('kpv', bump_v))
++        refused('a committed fill time changed under a matching receipt', 'X4 order', kp=kp_copy('kpt', move_fill))
++        refused('a sealed hour', 'X6 hour', inputs=lambda day, mk: ({}, None, ['20261028_00'], {}))
++        refused('no order sampled for the kernel / known-state checks', 'never ran', sample_k=None)
++        for flag, name, msg in (('LANDING_OFFSET', 'a landing moved by 37 ms', 'X3'), ('DROP_ONE', 'a dropped RETAIN row', 'X1'),
++                                ('NO_MINUPDATE', 'the queue ahead not min-updated', 'X5 order')):
++            globals()[flag] = -37. if flag == 'LANDING_OFFSET' else True
++            try:
++                refused(name, msg)
++            finally:
++                LANDING_OFFSET, DROP_ONE, NO_MINUPDATE = 0., False, False
++        if fin is not None:
++            try:
++                run(tmp / 'ex'); bad.append('the export overwrote a published day')
++            except (SystemExit, ValueError) as e:
++                if 'day output exists' not in str(e):
++                    bad.append(f'a published day refused by another check: {str(e)[:300]}')
++    if bad:
++        sys.exit(f'{MARK} SELFTEST FAILED: ' + ' | '.join(bad))
++    print('pipeline export selftests passed (synthetic only): affected-fill arithmetic; the sealed / forward hour rule; known_steps = known_state at every '
++          'decision of every eligible synthetic order, a fill not yet notified ignored; the production path end to end with a causal feature stub (rows, '
++          'statuses, every control passing) and a brute recomputation of every label and own input; refusals by their own control with no output: a leaky '
++          'stub (X5), a stub that ignores the book (X5), a committed value (X2) and fill time (X4) changed under a matching receipt, a sealed hour (X6), no '
++          'sampled order (X4 / X5), a landing moved by 37 ms (X3), a dropped RETAIN row (X1), the queue ahead not min-updated (X5), and a published day', flush=True)
++
++
++if __name__ == '__main__':
++    a = sys.argv[1:]
++    if a == ['selftest']:
++        selftest()
++    elif len(a) == 2 and a[0] == 'smoke':
++        C.require(a[1] in KP.DAYS, 'undeclared day'); day_run(a[1], out=OUT / 'smoke', markets=KP.Tape().markets(a[1])[:2], sample_w=1)   # the smoke checks every window
++    elif len(a) == 2 and a[0] == 'day':
++        day_run(a[1])
++    else:
++        sys.exit('usage: pf_pipeline_export.py selftest | smoke <day> | day <day>')
+--- /dev/null
++++ b/predictfun/research/pf_pipeline_export_mutants.py
+@@ -0,0 +1,85 @@
++"""MUTATION CHECK of the pipeline export's selftest (2026-11-19, session aea5bfb9): a checker that cannot fail proves nothing. Each entry plants one
++code error in a COPY of pf_pipeline_export.py (text replacement, executed in a subprocess; the repo file is never touched) and runs the copy's
++selftest (synthetic tape only). Required: the unchanged copy passes, every mutant is caught BY A CHECK (the selftest's own failure message; a
++crash is unexpected), and every replacement target occurs exactly as often as declared (a stale target is a failure). No market data is read.
++Usage (run_light, PF_SLOT=claude): pf_pipeline_export_mutants.py [index | targets]
++"""
++import subprocess
++import sys
++from pathlib import Path
++
++SRC = Path(__file__).resolve().parent / 'pf_pipeline_export.py'
++# (name, text in the source, replacement[, occurrences]) - entry 0 is the unchanged copy
++MUT = [
++    ('none (must pass)', None, None),
++    # --- the controls
++    ('X1 never refuses', "    if not (st['post_rows'] == len(O) and st['retain_rows'] == want and st['ids_unique']):", "    if False:"),
++    ('X2 never refuses', "        if not (abs(q_[0] - float(getattr(o, qc))) < 1e-7 and abs(v_[0] - float(getattr(o, vc))) < 1e-7):", "        if False:"),
++    ('X3 never refuses', "            if not (n == n_ and abs(-v - imp) <= 1e-6 * max(1., abs(imp))):", "            if False:"),
++    ('X3 compares the pull counts only', " and abs(-v - imp) <= 1e-6 * max(1., abs(imp))):", "):"),
++    ('X4 never refuses', "                if not (np.array_equal(tt[mine], fl[0]) and np.array_equal(fq[mine], fl[1])):", "                if False:"),
++    ('X5 causality never refuses', "                    if not (same and fired):", "                    if False:"),
++    ('X5 positive control always fires', "    fired = not np.array_equal(feat_fn(fire(W, s, k), fair, depth, chosen)[s][k][0], before[0], equal_nan=True)", "    fired = True"),
++    ('X5 future perturbation not applied', "    mut, fair2, dep2 = perturb(W, fair, depth, k, t, rng); after = feat_fn(mut, fair2, dep2, chosen)[s][k]", "    after = before"),
++    ('X5 known-state parity never refuses', "        if not all(eq(float(ref[a]), float(vec[a][i])) for a in KNOWN):", "        if False:"),
++    ('X6 never refuses', "    bad = [f'X6 hour {h} is sealed or forward' for h in hrs if not hour_ok(h)]", "    bad = []"),
++    ('the hour rule lets sealed hours through', "    return not (I.SEAL_MS[0] <= h0 < I.SEAL_MS[1]) and h0 < I.FWD_MS", "    return h0 < I.FWD_MS"),
++    ('a sampled check that never ran is accepted', "    if not (st['kernel_checked'] and st['known_checked'] and st['causal_checked']) and len(E):", "    if False:"),
++    ('a refused day leaves its partial output', "        shutil.rmtree(part); sys.exit(f'{MARK} FAILED -> no output: '", "        sys.exit(f'{MARK} FAILED -> no output: '"),
++    # --- the labels
++    ('fill value with the wrong sign', "val = fq * sg * (float(o.mark) - p); q_, v_ = affected(ft, fq, val, eff)", "val = fq * sg * (p - float(o.mark)); q_, v_ = affected(ft, fq, val, eff)"),
++    ('qm from the END mark instead of the causal mid', "        B[f'qm_{c}'] = B[f'value_{c}'] - sg * (ref - p) * B[f'q_{c}']", "        B[f'qm_{c}'] = B[f'value_{c}'] - sg * (B['mark'] - p) * B[f'q_{c}']"),
++    ('severe excess without its threshold', "np.maximum(-v_ - KP.SEVERE, 0.)", "np.maximum(-v_, 0.)"),
++    ('live flags of every clock from M50', "        endc = int(A.endj_of(np.array([float(getattr(o, tc))]), np.array([o.g_struct]))[0])",
++     "        endc = int(A.endj_of(np.array([float(o.t_full)]), np.array([o.g_struct]))[0])"),
++    ('RETAIN landing without the cancel latency', "KP.landing(js) + LANDING_OFFSET", "KP.STEP * js + LANDING_OFFSET"),
++    ('a fill at the landing instant counted as unremovable', "i = np.searchsorted(ft, eff, side='left')", "i = np.searchsorted(ft, eff, side='right')"),
++    # --- the inputs
++    ('the fair edge from the posting fair price at every step', "getattr(o, f'f{x:02d}')", "getattr(o, 'f00')"),
++    ('time to END from the absolute clock', "             t_to_end=END - (d - t))", "             t_to_end=END - d)"),
++    ('known fills without the notice delay', "if a + notice <= x) for x in d], float)", "if a <= x) for x in d], float)"),
++    ('the old 1 s exposure as the horizon', "SETTINGS = replace(FC.SETTINGS, exposure_ms=END)", "SETTINGS = FC.SETTINGS"),
++    ('the queue ahead not min-updated', "    run = fin if NO_MINUPDATE else (np.minimum.accumulate(fin) if len(fin) else fin)", "    run = fin"),
++    ('order inputs given the mid as the scale', "oi = FC.V.order_inputs(pd.DataFrame({f'x_{a}': kn[a] for a in KNOWN}), scale, ref)",
++     "oi = FC.V.order_inputs(pd.DataFrame({f'x_{a}': kn[a] for a in KNOWN}), ref, ref)"),
++    ('a refused post labelled eligible', "        st[0] = 'refused_post_only'", "        pass"),
++]
++STALE = 97                                                # exit code of a replacement target that does not occur as declared
++
++
++def source(i):
++    name, a, b = MUT[i][:3]; n = (MUT[i] + (1,))[3]; s = SRC.read_text()
++    if a is not None:
++        if s.count(a) != n:
++            print(f'mutation target occurs {s.count(a)} times, declared {n}: {name}', file=sys.stderr); sys.exit(STALE)
++        s = s.replace(a, b)
++    return s
++
++
++def one(i):
++    g = dict(__name__='pf_pipeline_export_mutant', __file__=str(SRC)); exec(compile(source(i), str(SRC), 'exec'), g); g['selftest']()
++
++
++def main():
++    bad = 0
++    for i, (name, *_) in enumerate(MUT):
++        r = subprocess.run([sys.executable, __file__, str(i)], capture_output=True, text=True)
++        tail = r.stderr.strip().splitlines() or r.stdout.strip().splitlines() or ['']
++        caught = r.returncode == 1 and 'PIPELINE EXPORT SELFTEST FAILED' in r.stderr   # caught BY A CHECK (the selftest's own exit message); a crash is unexpected
++        ok = (r.returncode == 0) if i == 0 else caught
++        bad += not ok
++        first = next((x for x in r.stderr.splitlines() if 'SELFTEST FAILED' in x), None)
++        how = 'passed' if r.returncode == 0 else ('caught: ' + first.strip()[:200]) if caught and first else ' / '.join(x.strip()[:200] for x in tail[-2:])
++        print(f'{i:2d} {name}: rc {r.returncode} -> {how}{"" if ok else "   <<< UNEXPECTED"}', flush=True)
++    if bad:
++        sys.exit(f'PIPELINE EXPORT MUTATION CHECK FAILED: {bad} unexpected outcomes of {len(MUT)}')
++    print(f'pipeline export mutation check passed: the unchanged copy passes its selftest, {len(MUT) - 1} / {len(MUT) - 1} planted code errors are caught by a check', flush=True)
++
++
++if __name__ == '__main__':
++    if sys.argv[1:] == ['targets']:
++        [source(i) for i in range(len(MUT))]; print(f'all {len(MUT) - 1} mutation targets occur as declared')
++    elif len(sys.argv) > 1:
++        one(int(sys.argv[1]))
++    else:
++        main()
+--- /dev/null
++++ b/predictfun/research/pf_pipeline_bench.py
+@@ -0,0 +1,354 @@
++"""CHRONOLOGICAL PREDICTION BENCHMARK ON THE EXPORTED JOIN DECISIONS (2026-11-19, session aea5bfb9). USER: "proceed our pipeline model".
++Steps 2-3 of the pipeline plan (handoffs/20261119_prediction_pipeline.md): "Freeze a chronological consumed-day benchmark (Oct23-25 train;
++Oct26 calibration only when required by a declared candidate; Oct27 development evaluation). Separate bid/ask estimates, pinned LightGBM
++parameters, explicit feature-only/mechanical and direct-value controls. Count all candidates. ... Judge fill/quantity calibration,
++fill-weighted movement, severe loss amounts and net value separately, by side/day ... Gate mapping on amount calibration and economic
++ranking, not fill AUC alone." Declared before any exported label is read; consumed days only; no economic cutoff is fitted.
++
++DATA: pf_pipeline_export's days (every part's hash checked against its receipt). Rows: POST (status eligible or refused_post_only: a refusal
++ is a zero-value outcome of posting) and RETAIN (status eligible: live at B). Training days Oct 23-25, every POST row and every 5th live step
++ of each order's RETAIN rows ((j - J0) % 5 == 0: rows of one order overlap, so the thinning keeps the fit tractable and less redundant);
++ evaluation day Oct 27 (the development evaluation), every row. ONE-DAY TEST (USER: "We run the whole pipeline for one day test first",
++ declared before any exported label was read): Oct 27 is the only evaluation day; Oct 26 is neither fitted, calibrated nor read (no declared
++ candidate needs a calibration step).
++TARGETS at B (M50): q (affected quantity), qm (the fill-weighted signed move from the causal mid), value = s * (ref - p) * q + qm (exact,
++ ref = pf_mid at the decision), severe excess (reported). M0 / M250 labels are never trained on.
++CANDIDATES (per kind and side - separate bid / ask models; pinned pf_stop_ev_model.PARAMS, 200 rounds, objective binary or regression):
++ J  JOINT TWO-PART (primary): P(fill) x E[q | fill], E[qm | fill] -> E[q] = P * E[q | fill] (E[q | fill] clipped to [0, the known remaining]),
++    E[qm] = P * E[qm | fill]; mapped value = s * (ref - p) * E[q] + E[qm] (the contract's mapping: never E[q] * E[move]); plus a severe head
++    (E[severe excess], reported only)
++ D  DIRECT VALUE (control): one regression of value on J's inputs
++ M  MECHANICAL (control): J on the mechanical inputs only (pf_flow_price_common.MECHANICAL: order / queue / time / book scalars)
++ F  FAIR EDGE (the baseline's information): J on fair_edge and t_to_end only (A+0's input)
++ Multiplicity: 4 candidates x 2 kinds.
++READINGS (computed; per kind, side, evaluation day and candidate)
++ Q1 AMOUNT: sum E[q] / sum q in [0.9, 1.1] -> CALIBRATED-IN-AMOUNT, else MISCALIBRATED-IN-AMOUNT (D has no quantity head: NOT-APPLICABLE)
++ Q2 MOVE TERM: Spearman(E[qm], qm) > 0 and sum E[qm] / sum qm in [0.5, 2] -> MOVE-TERM-INFORMATIVE, else MOVE-TERM-NOT-SHOWN
++ Q3 VALUE RANKING: Spearman(mapped value, value) above F's on the same rows -> RANKS-BEYOND-FAIR-EDGE, else NOT-BEYOND-FAIR-EDGE (F: BASELINE)
++ Q4 LOSING DECILE: the realized mean value of the lowest predicted-value decile < 0 -> LOSING-DECILE-IDENTIFIED, else NOT-IDENTIFIED
++ printed: P(fill) AUC, the severe amount ratio, value deciles (predicted vs realized means), counts
++ MAPPING GATE (per kind, J): Q1 CALIBRATED-IN-AMOUNT and Q3 RANKS-BEYOND-FAIR-EDGE for both sides on the evaluation day -> PASS, else FAIL.
++ The keep / pull policy test (pf_pipeline_policy.py, through the simulator's scenario bank) uses the rule declared here: pull at the first live
++ step whose predicted RETAIN value (J) is below 0 - no threshold fitted. For the one-day test it runs whatever the gate reads (the USER asked
++ for the whole pipeline end to end) and carries the gate's reading: under a FAIL its values are not attributable to a calibrated mapping.
++CONTROLS (any failure -> no output): B1 chronology (training rows only from the training days, evaluation rows only from the evaluation
++ days, every export part matching its receipt); B2 no label among the inputs (no q_ / value_ / qm_ / severe_ / nofill_ / live_ column, no
++ mark / effective / endpoint field); B3 the mapping identity recomputed on every evaluation row; B4 every saved model reloads and reproduces
++ its predictions on sampled rows; B5 bounds (0 <= P <= 1, 0 <= E[q] <= known remaining).
++LIMITS: consumed days - development evidence, not validation (C8 / C16); per-decision statistics: the rows of one order overlap, so the
++ calibration and ranking tables are per decision, not per action, and economic value is judged only through the simulator (one action per
++ order); queue rule M (C5); replay fills not validated on live orders (C10); one order at a time.
++SELFTEST (synthetic, no data): planted relationships recovered (J ranks value beyond an uninformative F; amounts calibrated), every reading
++ on planted predictions (and edge cases), the gate on planted readings, the mapping identity; refusals by their own control with no output:
++ an evaluation day in training (B1), a changed export part (B1), a label among the inputs (B2), the mapping replaced by a product of means
++ (B3), a model file changed after fitting (B4), an expected quantity above the known remaining (B5).
++ Mutations: pf_pipeline_bench_mutants.py.
++Usage (run_light, PF_SLOT=claude): pf_pipeline_bench.py selftest | run
++"""
++import contextlib
++import io
++import json
++import shutil
++import sys
++import tempfile
++import time
++from pathlib import Path
++
++import numpy as np
++
++HERE = Path(__file__).resolve().parent
++sys.path.insert(0, str(HERE))
++import pf_keep_pull as KP                                 # noqa: E402
++import pf_flow_price_common as FC                         # noqa: E402
++import pf_pipeline_export as EX                           # noqa: E402
++
++C, pd, I = KP.C, KP.pd, KP.I
++OUT = Path(I.K.IO) / 'pipeline_bench_20261119'
++MARK = 'PIPELINE BENCH'
++TRAIN, EVAL = ('20261023', '20261024', '20261025'), ('20261027',)            # the one-day test (USER 2026-11-19); Oct 26 is not read
++KINDS, THIN = ('post', 'retain'), 5
++SETS = {'J': list(EX.INPUTS), 'D': list(EX.INPUTS), 'M': list(FC.MECHANICAL), 'F': ['fair_edge', 't_to_end']}
++LABELS = ('q_', 'value_', 'qm_', 'severe_', 'nofill_', 'live_')
++FORBIDDEN = ('mark', 'effective_ms', 'endpoint_ms', 'decision_ms', 'oid', 't', 'status')
++ROUNDS = 200
++PARAMS = dict(KP.C.V.PARAMS)                              # the pipeline's pinned LightGBM parameters (pf_stop_ev_model.PARAMS)
++MAP_PRODUCT = False                                       # planted-error switches (selftest only): the mapping as a product of means;
++SWAP_SAVED = False                                        # a saved model file replaced after fitting
++NO_CLIP = False                                           # E[q | fill] not clipped to the known remaining
++
++
++def rows_of(exp, days, kind, train):
++    """The exported rows of a kind on the given days (their parts verified by verify_exports); training rows are thinned."""
++    out = []
++    for d in days:
++        r = json.loads((exp / d / 'receipt.json').read_text())
++        for x in r['outputs']:                                                              # (hashes verified once, before anything is written)
++            g = pd.read_parquet(exp / d / x); g = g[g.kind == kind]
++            g = g[g.status.isin(('eligible', 'refused_post_only'))] if kind == 'post' else g[g.status == 'eligible']
++            if train and kind == 'retain':
++                g = g[(g.j - KP.J0) % THIN == 0]
++            out.append(g)
++    df = pd.concat(out, ignore_index=True) if out else pd.DataFrame()
++    C.require(len(df) > 0 and set(df.day.astype(str)) <= set(days), f'B1: {kind} rows outside the declared days {days}')
++    return df
++
++
++def verify_exports(exp, days):
++    """B1: every export part of the days matches its receipt - checked before the benchmark writes anything."""
++    for d in days:
++        r = json.loads((exp / d / 'receipt.json').read_text())
++        for x, h in r['outputs'].items():
++            C.require(C.sha(exp / d / x) == h, f'B1 {d}: export part {x} changed since its receipt')
++
++
++def fit_one(X, y, objective, feats, rounds=None):
++    import lightgbm as lgb
++    return lgb.train({**PARAMS, 'objective': objective}, lgb.Dataset(np.asarray(X, np.float32), label=np.asarray(y, float), feature_name=feats), num_boost_round=rounds or ROUNDS)
++
++
++def fit(df, cand, rounds=None):
++    """One candidate on one kind and side's training rows -> {head: booster}."""
++    feats = SETS[cand]; X = df[feats].to_numpy(np.float32); q = df.q_m50.to_numpy(float); filled = q > 1e-12
++    if cand == 'D':
++        return {'value': fit_one(X, df.value_m50, 'regression', feats, rounds)}
++    heads = {'p': fit_one(X, filled.astype(float), 'binary', feats, rounds), 'q': fit_one(X[filled], q[filled], 'regression', feats, rounds),
++             'qm': fit_one(X[filled], df.qm_m50.to_numpy(float)[filled], 'regression', feats, rounds)}
++    if cand == 'J':
++        heads['severe'] = fit_one(X, df.severe_m50, 'regression', feats, rounds)
++    return heads
++
++
++def predict(models, df, cand):
++    """Predicted moments and the mapped value on rows of one kind and side."""
++    X = df[SETS[cand]].to_numpy(np.float32); sg = np.where(df.side.values == 0, 1., -1.); edge = sg * (df.pf_mid.values.astype(float) - df.p.values)
++    if cand == 'D':
++        v = models['value'].predict(X, num_threads=1); return dict(V=v)
++    P = models['p'].predict(X, num_threads=1); qr = models['q'].predict(X, num_threads=1); qf = qr if NO_CLIP else np.clip(qr, 0., df.fp_remaining.values.astype(float))
++    Eq = P * qf; Eqm = P * models['qm'].predict(X, num_threads=1)
++    if MAP_PRODUCT:                                                                         # planted error: the product of marginal means
++        Eqm = Eq * (models['qm'].predict(X, num_threads=1) / np.maximum(qf, 1e-9)) * P
++    out = dict(P=P, Eq=Eq, Eqm=Eqm, V=edge * Eq + Eqm)
++    if 'severe' in models:
++        out['S'] = models['severe'].predict(X, num_threads=1)
++    return out
++
++
++def spearman(a, b):
++    a, b = pd.Series(np.asarray(a, float)), pd.Series(np.asarray(b, float)); return float(a.rank().corr(b.rank())) if len(a) > 2 else float('nan')
++
++
++def auc(y, p):
++    y = np.asarray(y, bool); r = pd.Series(np.asarray(p, float)).rank().values; n1, n0 = int(y.sum()), int((~y).sum())
++    return float((r[y].sum() - n1 * (n1 + 1) / 2) / (n1 * n0)) if n1 and n0 else float('nan')
++
++
++def read_one(df, pr, base):
++    """The readings of one candidate on one kind / side / day (base: F's predicted value on the same rows)."""
++    q, qm, v = df.q_m50.values.astype(float), df.qm_m50.values.astype(float), df.value_m50.values.astype(float); out = {}
++    if 'Eq' in pr:
++        ratio = float(pr['Eq'].sum() / max(q.sum(), 1e-12)); out['Q1 AMOUNT'] = 'CALIBRATED-IN-AMOUNT' if .9 <= ratio <= 1.1 else 'MISCALIBRATED-IN-AMOUNT'
++        sq = float(qm.sum()); rq = float(pr['Eqm'].sum() / sq) if abs(sq) > 1e-12 else float('nan'); rho_m = spearman(pr['Eqm'], qm)
++        out['Q2 MOVE TERM'] = 'MOVE-TERM-INFORMATIVE' if rho_m > 0 and .5 <= rq <= 2. else 'MOVE-TERM-NOT-SHOWN'
++        out.update(amount_ratio=ratio, move_ratio=rq, move_rank=rho_m, fill_auc=auc(q > 1e-12, pr['P']))
++    else:
++        out['Q1 AMOUNT'] = out['Q2 MOVE TERM'] = 'NOT-APPLICABLE'
++    rho = spearman(pr['V'], v); rho_f = spearman(base, v)
++    out['Q3 VALUE RANKING'] = 'BASELINE' if base is pr['V'] else ('RANKS-BEYOND-FAIR-EDGE' if rho > rho_f else 'NOT-BEYOND-FAIR-EDGE')
++    dec = pd.qcut(pd.Series(pr['V']).rank(method='first'), 10, labels=False) if len(v) >= 10 else pd.Series(np.zeros(len(v), int))
++    tab = pd.DataFrame(dict(d=dec.values, pv=pr['V'], rv=v)).groupby('d').agg(pv=('pv', 'mean'), rv=('rv', 'mean'), n=('rv', 'size'))
++    out['Q4 LOSING DECILE'] = 'LOSING-DECILE-IDENTIFIED' if float(tab.rv.iloc[0]) < 0 else 'NOT-IDENTIFIED'
++    out.update(value_rank=rho, fair_edge_rank=rho_f, deciles=tab.reset_index().to_dict('list'), n=int(len(v)),
++               severe_ratio=float(pr['S'].sum() / max(df.severe_m50.sum(), 1e-12)) if 'S' in pr else None)
++    return out
++
++
++def bench(exp=None, out=None, rounds=None):
++    """Fit on the training days, predict and read on the evaluation days -> out/bench.json / bench.txt / models / pred_<day>.parquet."""
++    start = time.time(); exp = Path(exp or EX.OUT); out = Path(out or OUT); C.require(not (out / 'bench.json').exists(), 'bench output exists')
++    bad = [f'B2 {c}: label or identity column {x} among the inputs' for c, fs in SETS.items() for x in fs if x.startswith(LABELS) or x in FORBIDDEN]
++    bad += [f'B1: training day {d} is not before every evaluation day' for d in TRAIN if not all(d < e for e in EVAL)]
++    if bad:
++        sys.exit(f'{MARK} FAILED -> no output: ' + ' | '.join(bad))
++    verify_exports(exp, TRAIN + EVAL); part = out.parent / (out.name + '.partial')
++    if part.exists():
++        shutil.rmtree(part)
++    (part / 'models').mkdir(parents=True); R = {}; preds = {d: [] for d in EVAL}; files = {}
++    for kind in KINDS:
++        tr = rows_of(exp, TRAIN, kind, True); ev = {d: rows_of(exp, (d,), kind, False) for d in EVAL}; R[kind] = {}
++        for s in (0, 1):
++            trs = tr[tr.side == s]; models = {}
++            for cand in SETS:
++                models[cand] = fit(trs, cand, rounds)
++                for h, b in models[cand].items():
++                    f = part / 'models' / f'{kind}_{s}_{cand}_{h}.txt'; b.save_model(str(f)); files[f.name] = f
++                if SWAP_SAVED and cand == 'J':
++                    models[cand]['qm'].save_model(str(part / 'models' / f'{kind}_{s}_J_q.txt'))
++            for d in EVAL:
++                e = ev[d][ev[d].side == s].reset_index(drop=True); pr = {cand: predict(models[cand], e, cand) for cand in SETS}
++                sg = np.where(e.side.values == 0, 1., -1.); edge = sg * (e.pf_mid.values.astype(float) - e.p.values)
++                for cand in ('J', 'M', 'F'):                                               # B3 the mapping re-derived from the raw heads; B5 bounds
++                    p_ = pr[cand]; Xc = e[SETS[cand]].to_numpy(np.float32); m_ = models[cand]; P_ = m_['p'].predict(Xc, num_threads=1)
++                    qf_ = np.clip(m_['q'].predict(Xc, num_threads=1), 0., e.fp_remaining.values.astype(float))
++                    if not np.allclose(p_['V'], edge * P_ * qf_ + P_ * m_['qm'].predict(Xc, num_threads=1), rtol=0, atol=1e-9):
++                        bad.append(f'B3 {kind} {s} {d} {cand}: the mapped value is not s * (ref - p) * E[q] + E[q * move] of its heads')
++                    if not ((p_['P'] >= 0).all() and (p_['P'] <= 1).all() and (p_['Eq'] >= -1e-12).all() and (p_['Eq'] <= e.fp_remaining.values + 1e-9).all()):
++                        bad.append(f'B5 {kind} {s} {d} {cand}: a probability or expected quantity out of bounds')
++                R[kind].setdefault(s, {})[d] = {cand: read_one(e, pr[cand], pr['F']['V']) for cand in SETS}
++                keep = e[['day', 'oid', 'kind', 'j', 'side', 't', 'decision_ms', 'p', 'pf_mid', 'fp_remaining', 'q_m50', 'qm_m50', 'value_m50']].copy()
++                for cand in SETS:
++                    for k_, v_ in pr[cand].items():
++                        keep[f'{cand}_{k_}'] = v_
++                preds[d].append(keep)
++                ix = np.linspace(0, len(e) - 1, min(256, len(e)), dtype=int)                 # B4 saved models reload and reproduce
++                for cand in SETS:
++                    for h in models[cand]:
++                        import lightgbm as lgb
++                        b = lgb.Booster(model_file=str(part / 'models' / f'{kind}_{s}_{cand}_{h}.txt'))
++                        if not np.allclose(b.predict(e[SETS[cand]].to_numpy(np.float32)[ix], num_threads=1), models[cand][h].predict(e[SETS[cand]].to_numpy(np.float32)[ix], num_threads=1), rtol=0, atol=1e-10):
++                            bad.append(f'B4 {kind} {s} {cand} {h}: the saved model does not reproduce its predictions')
++            del trs; C.guard('pipeline bench')
++        print(json.dumps(dict(stage='bench', kind=kind, seconds=round(time.time() - start), rss=round(I.K.rss_mib()))), flush=True)
++    if bad:
++        shutil.rmtree(part); sys.exit(f'{MARK} FAILED -> no output: ' + ' | '.join(bad[:12]))
++    gate = gate_of(R)
++    for d in EVAL:
++        pd.concat(preds[d], ignore_index=True).to_parquet(part / f'pred_{d}.parquet', index=False)
++    L = report_lines(R, gate)
++    (part / 'bench.txt').write_text('\n'.join(L) + '\n')
++    C.dump(part / 'bench.json', dict(asof=C.stamp(), readings=R, gate=gate, train=list(TRAIN), eval=list(EVAL), thin=THIN, params=PARAMS, rounds=ROUNDS,
++                                     sets={k: v for k, v in SETS.items()}, multiplicity=len(SETS) * len(KINDS),
++                                     exports={d: C.sha(exp / d / 'receipt.json') for d in TRAIN + EVAL}, models={k: C.sha(v) for k, v in files.items()},
++                                     outputs={x: C.sha(part / x) for x in ['bench.txt'] + [f'pred_{d}.parquet' for d in EVAL]},
++                                     source_sha256=C.sha(Path(__file__).resolve()), provenance=KP.provenance(), seconds=time.time() - start))
++    part.rename(out); print('\n'.join(L), flush=True)
++    return R, gate
++
++
++def gate_of(R):
++    """The mapping gate per kind: J calibrated in amount and ranking beyond the fair edge, for both sides on every evaluation day."""
++    return {kind: 'PASS' if all(R[kind][s][d]['J']['Q1 AMOUNT'] == 'CALIBRATED-IN-AMOUNT' and R[kind][s][d]['J']['Q3 VALUE RANKING'] == 'RANKS-BEYOND-FAIR-EDGE'
++                                for s in (0, 1) for d in EVAL) else 'FAIL' for kind in KINDS}
++
++
++def report_lines(R, gate):
++    L = ['CHRONOLOGICAL PREDICTION BENCHMARK (pf_pipeline_bench.py): train ' + ', '.join(TRAIN) + '; evaluate ' + ', '.join(EVAL) + ' (consumed; per decision, not per action)']
++    for kind in KINDS:
++        L.append(f'  {kind.upper()} - MAPPING GATE (J): {gate[kind]}')
++        for s in (0, 1):
++            for d in EVAL:
++                for cand, x in R[kind][s][d].items():
++                    L.append(f"    side {s} {d} {cand}: {x['Q1 AMOUNT']}, {x['Q2 MOVE TERM']}, {x['Q3 VALUE RANKING']}, {x['Q4 LOSING DECILE']}; value rank {x['value_rank']:+.4f} "
++                             f"(fair edge {x['fair_edge_rank']:+.4f}); amount {x.get('amount_ratio', float('nan')):.3f}, move {x.get('move_ratio', float('nan')):.3f}, "
++                             f"fill AUC {x.get('fill_auc', float('nan')):.3f}, n {x['n']:,}")
++                dj = R[kind][s][d]['J']['deciles']
++                L.append(f"    side {s} {d} J value deciles (predicted / realized mean c): " + ' | '.join(f'{a:+.2f}/{b:+.2f}' for a, b in zip(dj['pv'], dj['rv'])))
++    L.append('LIMITS: consumed days; per-decision tables (rows of one order overlap); economic value only through the simulator; queue rule M; no live validation.')
++    return L
++
++
++def synthetic(exp, n=2000, seed=7):
++    """Export-format parts for the five days with planted structure: P(fill) rises with input 0, the fill size with input 1, the move per
++    share falls with input 2 (adverse); the fair edge and t_to_end are noise (an uninformative baseline)."""
++    rng = np.random.default_rng(seed); names = list(EX.INPUTS)
++    for d in TRAIN + EVAL:
++        rows = []
++        for kind in KINDS:
++            X = rng.normal(0., 1., (n, len(names))).astype(np.float32); side = rng.integers(0, 2, n); sg = np.where(side == 0, 1., -1.)
++            df = pd.DataFrame(X, columns=names); df['pf_mid'] = 50. + rng.normal(0., .2, n); p = df.pf_mid.values - sg * .5
++            fill = rng.random(n) < 1. / (1. + np.exp(-2. * X[:, 0])); q = np.where(fill, np.where(X[:, 1] > 0, 20., 8.), 0.)
++            move = -2. * X[:, 2] + rng.normal(0., .5, n); qm = q * move; value = sg * (df.pf_mid.values - p) * q + qm
++            df = df.assign(day=d, oid=np.arange(n) + (0 if kind == 'post' else n), m=1, side=side, t=0., p=p, phase=1, mark=50., kind=kind,
++                           j=np.where(kind == 'post', 0, KP.J0 + THIN * rng.integers(0, 19, n)), decision_ms=0., effective_ms=0., endpoint_ms=0.,
++                           status='eligible', fp_remaining=30., q_m50=q, qm_m50=qm, value_m50=value, severe_m50=np.maximum(-value - KP.SEVERE, 0.),
++                           nofill_m50=(q == 0).astype(float), live_m50=True)
++            rows.append(df)
++        (exp / d).mkdir(parents=True); pd.concat(rows, ignore_index=True).to_parquet(exp / d / 'rows_000.parquet', index=False)
++        C.dump(exp / d / 'receipt.json', dict(outputs={'rows_000.parquet': C.sha(exp / d / 'rows_000.parquet')}))
++
++
++def selftest():
++    """Synthetic only (see the module's SELFTEST)."""
++    global TRAIN, MAP_PRODUCT, SWAP_SAVED, NO_CLIP
++    bad = []
++    q = np.array([0., 10., 20., 0., 30.] * 20); qm = np.array([0., -5., 8., 0., -40.] * 20); v = qm + .5 * q
++    df = pd.DataFrame(dict(q_m50=q, qm_m50=qm, value_m50=v, severe_m50=np.maximum(-v - 30., 0.)))
++    good = read_one(df, dict(P=(q > 0) * .9 + .05, Eq=1.05 * q, Eqm=qm, V=v), np.random.default_rng(1).normal(0, 1, len(v)))
++    poor = read_one(df, dict(P=np.full(len(q), .5), Eq=2. * q, Eqm=-qm, V=-v), v)
++    if not ((good['Q1 AMOUNT'], good['Q2 MOVE TERM'], good['Q3 VALUE RANKING'], good['Q4 LOSING DECILE']) == ('CALIBRATED-IN-AMOUNT', 'MOVE-TERM-INFORMATIVE', 'RANKS-BEYOND-FAIR-EDGE', 'LOSING-DECILE-IDENTIFIED')
++            and (poor['Q1 AMOUNT'], poor['Q2 MOVE TERM'], poor['Q3 VALUE RANKING'], poor['Q4 LOSING DECILE']) == ('MISCALIBRATED-IN-AMOUNT', 'MOVE-TERM-NOT-SHOWN', 'NOT-BEYOND-FAIR-EDGE', 'NOT-IDENTIFIED')
++            and read_one(df, dict(V=v), v)['Q1 AMOUNT'] == 'NOT-APPLICABLE' and abs(auc(np.r_[0, 0, 1, 1], np.r_[.1, .2, .3, .4]) - 1.) < 1e-12):
++        bad.append(f'planted readings: {good} / {poor}')
++    up = np.arange(1., 101.); d2 = pd.DataFrame(dict(q_m50=np.ones(100), qm_m50=up, value_m50=np.r_[np.zeros(10), up[10:]], severe_m50=np.zeros(100)))
++    base = np.r_[np.zeros(10), up[10:]]; tie = read_one(d2, dict(P=np.ones(100), Eq=np.ones(100), Eqm=3. * up, V=base.copy()), base)
++    rev = read_one(d2, dict(P=np.ones(100), Eq=np.ones(100), Eqm=up[::-1].copy(), V=np.arange(100.)), base)
++    if not (tie['Q2 MOVE TERM'] == 'MOVE-TERM-NOT-SHOWN' and rev['Q2 MOVE TERM'] == 'MOVE-TERM-NOT-SHOWN' and tie['Q3 VALUE RANKING'] == 'NOT-BEYOND-FAIR-EDGE'
++            and rev['Q4 LOSING DECILE'] == 'NOT-IDENTIFIED'):
++        bad.append(f"planted edge cases: Q2 {tie['Q2 MOVE TERM']} / {rev['Q2 MOVE TERM']}, Q3 tie {tie['Q3 VALUE RANKING']}, Q4 zero {rev['Q4 LOSING DECILE']}")
++    ok_ = dict(J={'Q1 AMOUNT': 'CALIBRATED-IN-AMOUNT', 'Q3 VALUE RANKING': 'RANKS-BEYOND-FAIR-EDGE'})
++    Rp = {k: {s_: {d: dict(ok_) for d in EVAL} for s_ in (0, 1)} for k in KINDS}
++    g1 = gate_of(Rp); Rp['post'][1][EVAL[0]] = dict(J={'Q1 AMOUNT': 'MISCALIBRATED-IN-AMOUNT', 'Q3 VALUE RANKING': 'RANKS-BEYOND-FAIR-EDGE'})
++    Rp['retain'][0][EVAL[-1]] = dict(J={'Q1 AMOUNT': 'CALIBRATED-IN-AMOUNT', 'Q3 VALUE RANKING': 'NOT-BEYOND-FAIR-EDGE'})
++    if not (g1 == dict(post='PASS', retain='PASS') and gate_of(Rp) == dict(post='FAIL', retain='FAIL')):
++        bad.append(f'the mapping gate on planted readings: {g1} / {gate_of(Rp)}')
++    with tempfile.TemporaryDirectory(dir=str(I.K.IO)) as tmp:
++        tmp = Path(tmp); exp = tmp / 'exp'; synthetic(exp)
++        def run(out_):
++            with contextlib.redirect_stdout(io.StringIO()):
++                return bench(exp=exp, out=out_, rounds=30)
++        R = None
++        try:
++            R, gate = run(tmp / 'b')
++        except (SystemExit, ValueError) as e:
++            bad.append(f'the synthetic benchmark refused: {str(e)[:300]}')
++        if R is not None:
++            J = json.loads((tmp / 'b' / 'bench.json').read_text()); pr = pd.read_parquet(tmp / 'b' / 'pred_20261027.parquet')
++            if not (gate == dict(post='PASS', retain='PASS') and all(R[k][s][d]['J']['Q3 VALUE RANKING'] == 'RANKS-BEYOND-FAIR-EDGE' for k in KINDS for s in (0, 1) for d in EVAL)
++                    and all(R[k][s][d]['F']['Q3 VALUE RANKING'] == 'BASELINE' for k in KINDS for s in (0, 1) for d in EVAL)
++                    and J['multiplicity'] == 8 and len(J['models']) == 2 * 2 * (4 + 1 + 3 + 3) and len(pr) == 2 * 2000
++                    and all(R[k][s][d]['J']['fill_auc'] > .6 for k in KINDS for s in (0, 1) for d in EVAL)
++                    and np.allclose(pr.J_V, np.where(pr.side == 0, 1., -1.) * (pr.pf_mid - pr.p) * pr.J_Eq + pr.J_Eqm, rtol=0, atol=1e-9)):
++                bad.append(f'synthetic recovery: gate {gate}')
++        def refused(name, msg, change, undo):
++            o_ = tmp / ('z' + str(abs(hash(name)) % 100000)); change()
++            try:
++                run(o_); bad.append(f'the benchmark accepted {name}')
++            except (SystemExit, ValueError) as e:
++                if msg not in str(e):
++                    bad.append(f'{name} refused by another control: {str(e)[:300]}')
++            finally:
++                undo()
++            if o_.exists() or (o_.parent / (o_.name + '.partial')).exists():
++                bad.append(f'a refused benchmark left output ({name})')
++        keep_train, keep_m = TRAIN, list(SETS['M'])
++        refused('an evaluation day in training', 'B1', lambda: globals().update(TRAIN=TRAIN + (EVAL[-1],)), lambda: globals().update(TRAIN=keep_train))
++        refused('a label among the inputs', 'B2 M', lambda: SETS['M'].append('q_m50'), lambda: SETS.update(M=keep_m))
++        refused('the mapping as a product of means', 'B3', lambda: globals().update(MAP_PRODUCT=True), lambda: globals().update(MAP_PRODUCT=False))
++        refused('a saved model replaced after fitting', 'B4', lambda: globals().update(SWAP_SAVED=True), lambda: globals().update(SWAP_SAVED=False))
++        f0 = exp / TRAIN[0] / 'rows_000.parquet'; raw = f0.read_bytes()
++        def corrupt():
++            g = pd.read_parquet(f0); g.loc[g.index[0], 'q_m50'] = g.q_m50.iloc[0] + 1.; g.to_parquet(f0, index=False)
++        refused('an export part changed after its receipt', 'B1 20261023', corrupt, lambda: f0.write_bytes(raw))
++        e0 = exp / EVAL[0] / 'rows_000.parquet'; raw_e = e0.read_bytes(); rec_e = (exp / EVAL[0] / 'receipt.json').read_bytes()
++        def small_remaining():
++            g = pd.read_parquet(e0); g.loc[g.index[:40], 'fp_remaining'] = 1.; g.to_parquet(e0, index=False)
++            C.dump(exp / EVAL[0] / 'receipt.json', dict(outputs={'rows_000.parquet': C.sha(e0)})); globals().update(NO_CLIP=True)
++        def restore_remaining():
++            e0.write_bytes(raw_e); (exp / EVAL[0] / 'receipt.json').write_bytes(rec_e); globals().update(NO_CLIP=False)
++        refused('an expected quantity above the known remaining (no clip)', 'B5', small_remaining, restore_remaining)
++    if bad:
++        sys.exit(f'{MARK} SELFTEST FAILED: ' + ' | '.join(bad))
++    print('pipeline bench selftests passed (synthetic only): every reading on planted predictions; the planted structure recovered end to end (both '
++          'mapping gates PASS, J ranks value beyond the uninformative fair-edge baseline, models / predictions / multiplicity recorded); refusals by their '
++          'own control with no output: an evaluation day in training (B1), a label among the inputs (B2), the mapping as a product of means (B3), a '
++          'saved model replaced (B4), an export part changed after its receipt (B1), an expected quantity above the known remaining (B5); the gate on '
++          'planted readings', flush=True)
++
++
++if __name__ == '__main__':
++    a = sys.argv[1:]
++    if a == ['selftest']:
++        selftest()
++    elif a == ['run']:
++        bench()
++    else:
++        sys.exit('usage: pf_pipeline_bench.py selftest | run')
+--- /dev/null
++++ b/predictfun/research/pf_pipeline_bench_mutants.py
+@@ -0,0 +1,76 @@
++"""MUTATION CHECK of the pipeline benchmark's selftest (2026-11-19, session aea5bfb9): a checker that cannot fail proves nothing. Each entry plants one
++code error in a COPY of pf_pipeline_bench.py (text replacement, executed in a subprocess; the repo file is never touched) and runs the copy's
++selftest (synthetic tape only). Required: the unchanged copy passes, every mutant is caught BY A CHECK (the selftest's own failure message; a
++crash is unexpected), and every replacement target occurs exactly as often as declared (a stale target is a failure). No market data is read.
++Usage (run_light, PF_SLOT=claude): pf_pipeline_bench_mutants.py [index | targets]
++"""
++import subprocess
++import sys
++from pathlib import Path
++
++SRC = Path(__file__).resolve().parent / 'pf_pipeline_bench.py'
++# (name, text in the source, replacement[, occurrences]) - entry 0 is the unchanged copy
++MUT = [
++    ('none (must pass)', None, None),
++    # --- the controls
++    ('B1 export parts never checked against their receipt', "            C.require(C.sha(exp / d / x) == h, f'B1 {d}: export part {x} changed since its receipt')", "            pass"),
++    ('B1 chronology never refuses', "    bad += [f'B1: training day {d} is not before every evaluation day' for d in TRAIN if not all(d < e for e in EVAL)]", "    bad += []"),
++    ('B2 never refuses', "    bad = [f'B2 {c}: label or identity column {x} among the inputs' for c, fs in SETS.items() for x in fs if x.startswith(LABELS) or x in FORBIDDEN]", "    bad = []"),
++    ('B3 never refuses', "                    if not np.allclose(p_['V'], edge * P_ * qf_ + P_ * m_['qm'].predict(Xc, num_threads=1), rtol=0, atol=1e-9):", "                    if False:"),
++    ('B4 never refuses', "                        if not np.allclose(b.predict(", "                        if False and not np.allclose(b.predict("),
++    ('B5 never refuses', "                    if not ((p_['P'] >= 0).all() and (p_['P'] <= 1).all() and (p_['Eq'] >= -1e-12).all() and (p_['Eq'] <= e.fp_remaining.values + 1e-9).all()):", "                    if False:"),
++    ('a refused benchmark leaves its partial output', "        shutil.rmtree(part); sys.exit(f'{MARK} FAILED -> no output: '", "        sys.exit(f'{MARK} FAILED -> no output: '"),
++    # --- the model and the mapping
++    ('the mapping without the edge term', "    out = dict(P=P, Eq=Eq, Eqm=Eqm, V=edge * Eq + Eqm)", "    out = dict(P=P, Eq=Eq, Eqm=Eqm, V=Eq + Eqm)"),
++    ('E[q] without the fill probability', "    Eq = P * qf; Eqm = P * models['qm'].predict(X, num_threads=1)", "    Eq = qf; Eqm = P * models['qm'].predict(X, num_threads=1)"),
++    ('every row counted as filled', "filled = q > 1e-12", "filled = q >= 0."),
++    # --- the readings
++    ('Q1 band widened to [0.5, 2]', "if .9 <= ratio <= 1.1 else 'MISCALIBRATED-IN-AMOUNT'", "if .5 <= ratio <= 2. else 'MISCALIBRATED-IN-AMOUNT'"),
++    ('Q2 ignores the rank', "'MOVE-TERM-INFORMATIVE' if rho_m > 0 and .5 <= rq <= 2. else", "'MOVE-TERM-INFORMATIVE' if .5 <= rq <= 2. else"),
++    ('Q2 ignores the amount', "'MOVE-TERM-INFORMATIVE' if rho_m > 0 and .5 <= rq <= 2. else", "'MOVE-TERM-INFORMATIVE' if rho_m > 0 else"),
++    ('Q3 a tie counts as beyond', "'RANKS-BEYOND-FAIR-EDGE' if rho > rho_f else", "'RANKS-BEYOND-FAIR-EDGE' if rho >= rho_f else"),
++    ('Q4 a zero decile counts as losing', "'LOSING-DECILE-IDENTIFIED' if float(tab.rv.iloc[0]) < 0 else", "'LOSING-DECILE-IDENTIFIED' if float(tab.rv.iloc[0]) <= 0 else"),
++    ('the gate ignores the amount calibration', "    return {kind: 'PASS' if all(R[kind][s][d]['J']['Q1 AMOUNT'] == 'CALIBRATED-IN-AMOUNT' and R[kind][s][d]['J']['Q3 VALUE RANKING'] == 'RANKS-BEYOND-FAIR-EDGE'",
++     "    return {kind: 'PASS' if all(R[kind][s][d]['J']['Q3 VALUE RANKING'] == 'RANKS-BEYOND-FAIR-EDGE'"),
++    ('the gate ignores the ranking', "    return {kind: 'PASS' if all(R[kind][s][d]['J']['Q1 AMOUNT'] == 'CALIBRATED-IN-AMOUNT' and R[kind][s][d]['J']['Q3 VALUE RANKING'] == 'RANKS-BEYOND-FAIR-EDGE'",
++     "    return {kind: 'PASS' if all(R[kind][s][d]['J']['Q1 AMOUNT'] == 'CALIBRATED-IN-AMOUNT'"),
++]
++STALE = 97                                                # exit code of a replacement target that does not occur as declared
++
++
++def source(i):
++    name, a, b = MUT[i][:3]; n = (MUT[i] + (1,))[3]; s = SRC.read_text()
++    if a is not None:
++        if s.count(a) != n:
++            print(f'mutation target occurs {s.count(a)} times, declared {n}: {name}', file=sys.stderr); sys.exit(STALE)
++        s = s.replace(a, b)
++    return s
++
++
++def one(i):
++    g = dict(__name__='pf_pipeline_bench_mutant', __file__=str(SRC)); exec(compile(source(i), str(SRC), 'exec'), g); g['selftest']()
++
++
++def main():
++    bad = 0
++    for i, (name, *_) in enumerate(MUT):
++        r = subprocess.run([sys.executable, __file__, str(i)], capture_output=True, text=True)
++        tail = r.stderr.strip().splitlines() or r.stdout.strip().splitlines() or ['']
++        caught = r.returncode == 1 and 'PIPELINE BENCH SELFTEST FAILED' in r.stderr   # caught BY A CHECK (the selftest's own exit message); a crash is unexpected
++        ok = (r.returncode == 0) if i == 0 else caught
++        bad += not ok
++        first = next((x for x in r.stderr.splitlines() if 'SELFTEST FAILED' in x), None)
++        how = 'passed' if r.returncode == 0 else ('caught: ' + first.strip()[:200]) if caught and first else ' / '.join(x.strip()[:200] for x in tail[-2:])
++        print(f'{i:2d} {name}: rc {r.returncode} -> {how}{"" if ok else "   <<< UNEXPECTED"}', flush=True)
++    if bad:
++        sys.exit(f'PIPELINE BENCH MUTATION CHECK FAILED: {bad} unexpected outcomes of {len(MUT)}')
++    print(f'pipeline bench mutation check passed: the unchanged copy passes its selftest, {len(MUT) - 1} / {len(MUT) - 1} planted code errors are caught by a check', flush=True)
++
++
++if __name__ == '__main__':
++    if sys.argv[1:] == ['targets']:
++        [source(i) for i in range(len(MUT))]; print(f'all {len(MUT) - 1} mutation targets occur as declared')
++    elif len(sys.argv) > 1:
++        one(int(sys.argv[1]))
++    else:
++        main()
+--- /dev/null
++++ b/predictfun/research/pf_pipeline_policy.py
+@@ -0,0 +1,294 @@
++"""THE LEARNED KEEP / PULL RULE THROUGH THE SCENARIO BANK - THE ONE-DAY TEST OF THE WHOLE PIPELINE (2026-11-19, session aea5bfb9). USER: "We
++run the whole pipeline for one day test first". The pipeline: pf_pipeline_export (causal inputs and labels on the simulator's JOIN orders) ->
++pf_pipeline_bench (the joint two-part prediction model J, trained Oct 23-25, and the contract's value mapping) -> this module: the rule
++declared in pf_pipeline_bench - "pull at the first live step whose predicted RETAIN value (J) is below 0", no threshold fitted - valued
++through the simulator's 19-scenario bank (pf_keep_pull_scenarios.outcome with external triggers) on the evaluation day Oct 27, against the
++declared fair-edge rule A+0, KEEP and PULL-ALL. Declared before the benchmark's predictions are read; one consumed day; nothing fitted here.
++
++RULE (MODEL-J): per eligible order, T = the first live RETAIN step j (J0..98) whose predicted value V_J < 0, else never (NSTEP + 1). Every
++ exported RETAIN row with status eligible (live at B) has a prediction; a step without one (off_grid / feature_unavailable) keeps - the
++ contract's fallback (no forecast -> keep). The same decisions are evaluated in every scenario: information never moves with an execution
++ time. LIMIT: the model's inputs that depend on the order's own fills (known remaining) are B's in every scenario.
++CONTRACT PARITY: on sampled rows the rule's action equals pf_pipeline_contract.decide_one on the equivalent two-atom forecast (P at
++ (E[q | fill], E[qm] / E[q] per share), 1 - P at no fill; client state live, no economic terms) -> pull iff V_J < 0. Rows whose atom the
++ contract refuses (an endpoint mid outside [0, 100]) or whose |V_J| < 1e-6 (a sign set by rounding) are counted, not compared.
++VALUES per scenario (as pf_keep_pull_variants): E (the improvement over the rule's own exact STATES null), V = KEEP + the improvement, pulls,
++ C1 (by age, without < 100 ms fills, B1a-weighted), C3 (cancel-pending), C12 (by trade-anchor source); differences against A+0.
++CONTROLS (any failure -> no output):
++ P0a A+0's E in every scenario equals the committed five-day scenario report's value for the day (keep_pull_scenarios_v6 scenarios.json by_day)
++ P0b at B A+0's pulls and improvement equal the committed keep / pull run's for the day (keep_pull.json, M50 / 37 ms)
++ P0c at B MODEL-J's E, improvement and pulls equal the clock audit's per-fill values for its trigger steps (a second code path)
++ P0d KEEP, PULL-ALL, fills and eligible orders agree between the rules in every scenario; KEEP is the sum of its fills
++ P0e provenance: the prediction file matches the benchmark's recorded hash and covers exactly the export's eligible RETAIN rows of the day
++ P0f contract parity (above) on the sampled rows, with at least one comparable row
++READINGS (computed): MODEL-J P1 E / P3 V / P1-NY / P3-NY ACROSS TESTED SCENARIOS (STABLE-POSITIVE- / STABLE-NEGATIVE- / NOT-STABLE-), P4 V - KEEP,
++ P5 V - V(PULL-ALL) (ABOVE- / BELOW-<ref>- / NOT-STABLE-IN-TESTED-SCENARIOS), C2 E / V AT M250 vs M50, C1 B1a-WEIGHTED E AT B; against A+0: D1 V,
++ D2 E, D1-NY (ABOVE- / BELOW-BASELINE- / NOT-STABLE-), D1 AT M250; carried: the benchmark's RETAIN mapping gate (a FAIL means the values are
++ not attributable to a calibrated mapping).
++LIMITS: one consumed day (G = 1, point values); the model was chosen by nothing here but is one of the benchmark's 8 candidates; local marks
++ at END, not P&L; queue rule M only (C5); replay fills not validated on live orders (C10); one order at a time, no re-post after a pull.
++SELFTEST (synthetic tape, no data): planted predictions give the planted trigger steps; the bank values them; every control passes; refusals
++ by their own control with no output: a prediction for a row the export does not have and a missing prediction (P0e), a changed committed
++ report value (P0a) and keep / pull value (P0b), the model rule valued as A+0 (P0c), a KEEP drift (P0d), the rule's sign reversed (P0f). Mutations: pf_pipeline_policy_mutants.py.
++Usage (run_light, PF_SLOT=claude): pf_pipeline_policy.py selftest | day <day>
++"""
++import contextlib
++import io
++import json
++import shutil
++import sys
++import tempfile
++import time
++from pathlib import Path
++
++import numpy as np
++
++HERE = Path(__file__).resolve().parent
++sys.path.insert(0, str(HERE))
++import pf_keep_pull as KP                                 # noqa: E402
++import pf_keep_pull_clock_audit as A                      # noqa: E402
++import pf_keep_pull_scenarios as SC                       # noqa: E402
++import pf_keep_pull_variants as V                         # noqa: E402
++import pf_pipeline_contract as PC                         # noqa: E402  the shared contract (imported, never edited)
++import pf_queue_place_test as QP                          # noqa: E402
++import pf_queue_place_ledger as QL                        # noqa: E402
++
++C, pd, I = KP.C, KP.pd, KP.I
++OUT = Path(I.K.IO) / 'pipeline_policy_20261119'
++BENCH = Path(I.K.IO) / 'pipeline_bench_20261119'
++EXPORT = Path(I.K.IO) / 'pipeline_export_20261119'
++MARK = 'PIPELINE POLICY'
++RULE = 'MODEL-J'
++B_NAME, M250_NAME = V.B_NAME, V.M250_NAME
++FLIP = False                                              # planted-error switches (selftest only): pull iff the predicted value is above 0;
++MISS_TRIGGERS = False                                     # the model rule valued as A+0;
++KEEP_SHIFT = 0.                                           # a drift in the model rule's KEEP at B
++
++
++def triggers_of(pred):
++    """MODEL-J's first pull step per order: the first predicted RETAIN value below 0 (pull iff V_J < 0), else never."""
++    p = pred[pred.kind == 'retain'][['day', 'oid', 'j', 'J_V']].sort_values(['day', 'oid', 'j'], kind='stable')
++    hit = p[(p.J_V > 0) if FLIP else (p.J_V < 0)].groupby(['day', 'oid']).j.min()
++    return hit
++
++
++def trigger_fn(hit):
++    """outcome()'s callable: each eligible order's step (never when no predicted value is below 0)."""
++    def f(E):
++        ix = pd.MultiIndex.from_arrays([E.day.astype(str).values, E.oid.values.astype(int)])
++        return hit.reindex(ix).fillna(KP.NSTEP + 1).astype(int).values
++    return f
++
++
++def contract_parity(pred, trained, n=2000, seed=11):
++    """P0f: on sampled RETAIN rows, decide_one on the two-atom forecast equals the rule's action -> (compared, refused atoms, agreements)."""
++    p = pred[pred.kind == 'retain']; p = p.iloc[np.random.default_rng(seed).choice(len(p), min(n, len(p)), replace=False)] if len(p) else p
++    comp = ref = agree = 0
++    for r in p.itertuples():
++        if abs(r.J_V) < 1e-6:
++            continue
++        side = 'bid' if r.side == 0 else 'ask'; sg = 1. if r.side == 0 else -1.; rem = float(r.fp_remaining); t = float(r.t); d = float(r.decision_ms)
++        tg = PC.Target(f'{r.day}:{int(r.oid)}', side, 'retain', d, t + float(KP.landing(int(r.j))), t + KP.H, float(r.pf_mid), float(r.p), rem,
++                       B_NAME, 'no_repost_to_common_END;zero_continuation_after_END', 'JOIN30/END=birth+5000/queueM/structuralKeeper/scenarios-v6')
++        try:
++            qf = float(r.J_Eq / r.J_P) if r.J_P > 0 else 0.; mv = float(r.J_Eqm / r.J_Eq) if r.J_Eq > 0 else 0.
++            atoms = (PC.Atom(float(r.J_P), qf, mv), PC.Atom(1. - float(r.J_P), 0., 0.)) if 0. < r.J_P < 1. else (PC.Atom(1., qf if r.J_P >= 1 else 0., mv),)
++            fc = PC.Forecast(tg, atoms, d, trained, 'learned', 'pf_pipeline_bench:J')
++            st = PC.ClientState(tg.order_id, side, d, 'live', rem, 0., rem if side == 'bid' else 0., rem if side == 'ask' else 0., 1e9)
++            dec = PC.decide_one(tg, fc, st, PC.Economics(tg, 0., 0., 0., 0.))
++        except ValueError:
++            ref += 1; continue
++        comp += 1; agree += int((dec.action == 'pull') == bool((r.J_V > 0) if FLIP else (r.J_V < 0)))
++    return comp, ref, agree
++
++
++def rule_readings(res, name):
++    """The declared readings of one rule (res[name][scenario] = outcome) and against A+0 (res['A+0'])."""
++    x = {nm: V.numbers(v) for nm, v in res[name].items()}; lo = {k: min(y[k] for y in x.values()) for k in x[B_NAME]}; hi = {k: max(y[k] for y in x.values()) for k in x[B_NAME]}
++    R = dict(zip(V.P_KEYS, (SC.stable(lo['E'], hi['E']), SC.stable(lo['V'], hi['V']), SC.stable(lo['E_ny'], hi['E_ny']), SC.stable(lo['V_ny'], hi['V_ny']),
++                            V.above(lo['score'], hi['score'], 'KEEP'), V.above(lo['vs_pullall'], hi['vs_pullall'], 'PULL-ALL'),
++                            SC.at_m250(x[B_NAME]['E'], x[M250_NAME]['E']), SC.at_m250(x[B_NAME]['V'], x[M250_NAME]['V']),
++                            SC.b1a_sign(res[name][B_NAME]['E'], res[name][B_NAME]['b1a_E']))))
++    d = {}
++    for nm in res[name]:
++        a, b = V.numbers(res[name][nm]), V.numbers(res['A+0'][nm]); d[nm] = dict(dV=a['V'] - b['V'], dE=a['E'] - b['E'], dV_ny=a['V_ny'] - b['V_ny'])
++    lo = {k: min(y[k] for y in d.values()) for k in d[B_NAME]}; hi = {k: max(y[k] for y in d.values()) for k in d[B_NAME]}
++    R.update(zip(V.D_KEYS, (V.above(lo['dV'], hi['dV'], 'BASELINE'), V.above(lo['dE'], hi['dE'], 'BASELINE'), V.above(lo['dV_ny'], hi['dV_ny'], 'BASELINE'),
++                            SC.at_m250(d[B_NAME]['dV'], d[M250_NAME]['dV']))))
++    return R, d
++
++
++def controls(res, day, O, Fl, hit, report, kp_json, pred, exp_rows, parity):
++    """P0a-P0f -> the failures (none: pass)."""
++    bad = []; J = json.loads(Path(report).read_text())
++    for nm, v in res['A+0'].items():                                                        # P0a
++        ref = J['scenarios'].get(nm, {}).get('by_day', {}).get(day)
++        if ref is None or abs(v['E'] - float(ref)) > 1e-6 * max(1., abs(float(ref))):
++            bad.append(f'P0a {nm}: A+0 E {v["E"]:,.3f} vs the committed report {ref}')
++    D = json.loads(Path(kp_json).read_text())['D']['M50_L37']['A+0']['policy_by_day']; i = KP.DAYS.index(day); b = res['A+0'][B_NAME]   # P0b
++    if not (int(round(D['n'][i])) == b['pulls'] and abs(D['imp'][i] - b['score']) <= 1e-6 * max(1., abs(D['imp'][i]))):
++        bad.append(f"P0b: A+0 at B {b['pulls']:,} pulls / {b['score']:,.3f} vs the committed keep / pull run {D['n'][i]:,.0f} / {D['imp'][i]:,.3f}")
++    Ee = O[O.status == 'eligible'].reset_index(drop=True); cell = Ee.groupby(['day', 'm', 'side', 'phase'], sort=True).ngroup().values   # P0c
++    T = trigger_fn(hit)(Ee); pf = A.per_fill(T, cell, A.endj_of(Ee.t_full.values, Ee.g_struct.values), A.fills_of(Ee, Fl, SC.SHIFT)); m = res[RULE][B_NAME]
++    e_, s_ = float(pf['score'].sum() - pf['null'].sum()), float(pf['score'].sum())
++    if not (abs(m['E'] - e_) < 1e-6 and abs(m['score'] - s_) < 1e-6 and pf['pulls'] == m['pulls']):
++        bad.append(f"P0c: {RULE} at B E {m['E']:,.3f} / improvement {m['score']:,.3f} / pulls {m['pulls']:,}, the clock audit {e_:,.3f} / {s_:,.3f} / {pf['pulls']:,}")
++    for nm in res['A+0']:                                                                   # P0d
++        if len({(res[r][nm]['KEEP'], res[r][nm]['PULLALL'], res[r][nm]['fills'], res[r][nm]['eligible']) for r in res}) != 1:
++            bad.append(f'P0d {nm}: KEEP / PULL-ALL / fills / eligible differ between the rules')
++    bad += [f'P0d {r}: KEEP is not the sum of its fills in {k}' for r in res for k in [SC.keep_not_fills(res[r])] if k]
++    pr = pred[pred.kind == 'retain']; got = set(zip(pr.oid.astype(int), pr.j.astype(int)))   # P0e
++    if got != exp_rows:
++        bad.append(f'P0e: {len(got - exp_rows):,} predictions for rows the export does not have, {len(exp_rows - got):,} exported eligible RETAIN rows without one')
++    comp, refd, agree = parity                                                              # P0f
++    if not (comp > 0 and agree == comp):
++        bad.append(f'P0f: the rule agrees with the contract\'s decide_one on {agree:,} of {comp:,} comparable rows ({refd:,} atoms refused)')
++    return bad
++
++
++def run(day, out=None, sc_out=None, kp=None, bench=None, export=None, report=None, pred=None):  # noqa: C901
++    """MODEL-J and A+0 in every scenario of the bank on one day -> policy_<day>.json / .txt / .csv."""
++    start = time.time(); C.require(day in KP.DAYS, 'undeclared day'); out = Path(out or OUT); sc_out = Path(sc_out or SC.OUT); kp = Path(kp or KP.OUT)
++    bench = Path(bench or BENCH); export = Path(export or EXPORT); report = Path(report or sc_out / 'scenarios.json'); C.require(not (out / f'policy_{day}.json').exists(), 'output exists')
++    bj = json.loads((bench / 'bench.json').read_text()); pf_ = bench / f'pred_{day}.parquet'
++    C.require(pred is not None or bj['outputs'].get(pf_.name) == C.sha(pf_), f'P0e: the prediction file {pf_.name} does not match the benchmark receipt')
++    pred = pd.read_parquet(pf_) if pred is None else pred; pred = pred[pred.day.astype(str) == day]
++    er = json.loads((export / day / 'receipt.json').read_text()); exp_rows = set()
++    for x, h in er['outputs'].items():
++        C.require(C.sha(export / day / x) == h, f'P0e: export part {x} changed since its receipt')
++        g = pd.read_parquet(export / day / x, columns=['oid', 'kind', 'j', 'status']); g = g[(g.kind == 'retain') & (g.status == 'eligible')]
++        exp_rows |= set(zip(g.oid.astype(int), g.j.astype(int)))
++    O, Fl, S, SF, Op, rec = V.load([day], sc_out, kp); hit = triggers_of(pred); fn = trigger_fn(hit); res = {'A+0': {}, RULE: {}}
++    for sc in SC.SCEN:
++        Os, Fs = V.scen_inputs(sc, Op, Fl, S, SF); nm = SC.name(sc)
++        res['A+0'][nm] = SC.outcome(O, Os, Fs, sc); res[RULE][nm] = SC.outcome(O, Os, Fs, sc) if MISS_TRIGGERS else SC.outcome(O, Os, Fs, sc, triggers=fn)
++    res[RULE][B_NAME]['KEEP'] += KEEP_SHIFT
++    tr = bj.get('train'); C.require(bool(tr), 'P0e: the benchmark records no training days')
++    trained = float(I._ms(f'{max(tr)[:4]}-{max(tr)[4:6]}-{max(tr)[6:]}') + 86400000)             # the end of the last training day
++    C.guard('pipeline policy'); parity = contract_parity(pred, trained)
++    bad = controls(res, day, O, Fl, hit, report, kp / 'keep_pull.json', pred, exp_rows, parity)
++    if bad:
++        sys.exit(f'{MARK} FAILED -> no output: ' + ' | '.join(bad[:12]))
++    R, d = rule_readings(res, RULE); gate = bj.get('gate', {}).get('retain', 'MISSING'); R['BENCH RETAIN MAPPING GATE'] = gate; R['CONTROLS'] = 'YES'
++    nms = list(res['A+0']); P = pd.DataFrame([dict(rule=r, scenario=nm, E=res[r][nm]['E'], score=res[r][nm]['score'], V=res[r][nm]['KEEP'] + res[r][nm]['score'],
++                                                    KEEP=res[r][nm]['KEEP'], PULLALL=res[r][nm]['PULLALL'], pulls=res[r][nm]['pulls'], E_noyoung=res[r][nm]['no_young']['E'],
++                                                    V_noyoung=res[r][nm]['no_young']['fills_value'] + res[r][nm]['no_young']['score'],
++                                                    E_b1a_M50=res[r][nm]['b1a_E']['M50'], pending_share_of_gross=res[r][nm]['cancel_pending']['share_of_gross'])
++                                               for r in res for nm in nms])
++    L = [f'THE LEARNED KEEP / PULL RULE {RULE} THROUGH THE SCENARIO BANK (pf_pipeline_policy.py; {day}; c summed; pull at the first live step whose predicted '
++         f'RETAIN value is below 0; the benchmark\'s RETAIN mapping gate: {gate}; local marks at END, not P&L)',
++         f"  {len(Op):,} states with a path ({int((Op.status == 'eligible').sum()):,} eligible); MODEL-J pulls {int(len(hit)):,} orders at a predicted loss; contract parity "
++         f'{parity[2]:,} / {parity[0]:,} ({parity[1]:,} atoms refused); CONTROLS: YES (P0a-P0f)', '',
++         f"  {'scenario':<24} {'E A+0':>11} {'E MODEL-J':>11} {'V A+0':>12} {'V MODEL-J':>12} {'dV':>11} {'pulls A+0':>10} {'pulls J':>9} {'KEEP':>12} {'PULL-ALL':>11}"]
++    for nm in nms:
++        a, m = res['A+0'][nm], res[RULE][nm]
++        L.append(f"  {nm:<24} {a['E']:>+11,.0f} {m['E']:>+11,.0f} {a['KEEP'] + a['score']:>+12,.0f} {m['KEEP'] + m['score']:>+12,.0f} {d[nm]['dV']:>+11,.0f} "
++                 f"{a['pulls']:>10,} {m['pulls']:>9,} {a['KEEP']:>+12,.0f} {a['PULLALL']:>+11,.0f}")
++    mb = res[RULE][B_NAME]; ab = mb['by_age']
++    L += ['', f"  C1 / C3 / C12 at B ({RULE}): E by age {ab['lt100']['E']:+,.0f} / {ab['100to500']['E']:+,.0f} / {ab['ge500']['E']:+,.0f}; B1a {mb['b1a_E']['M0']:+,.0f} / "
++          f"{mb['b1a_E']['M50']:+,.0f}; cancel-pending {mb['cancel_pending']['fills']:,} fills / {mb['cancel_pending']['value']:+,.0f} c / {100 * mb['cancel_pending']['share_of_gross']:.1f}%; "
++          'by source ' + ' | '.join(f"{sl} {sum(mb['by_age_src'][lab][sl]['E'] for lab in SC.AGE_LABELS):+,.0f}" for sl in SC.SRC_LABELS), '',
++          'READINGS (declared before the predictions were read)'] + [f'  {k}: {v}' for k, v in R.items()]
++    L += ['', 'LIMITS: one consumed day (G = 1); the model is one of the benchmark\'s 8 candidates; the model\'s own-fill inputs are B\'s in every scenario; local marks, not '
++          'P&L; queue rule M only (C5); no order-level validation (C10).']
++    out.mkdir(parents=True, exist_ok=True); P.to_csv(out / f'policy_{day}.csv', index=False); (out / f'policy_{day}.txt').write_text('\n'.join(L) + '\n')
++    C.dump(out / f'policy_{day}.json', dict(asof=C.stamp(), day=day, readings=R, diffs=d, values={r: {nm: {k: x for k, x in v.items() if not k.startswith('_')} for nm, v in res[r].items()} for r in res},
++                                            pulled_orders=int(len(hit)), parity=dict(compared=parity[0], refused=parity[1], agree=parity[2]),
++                                            inputs=dict(bench=C.sha(bench / 'bench.json'), predictions=C.sha(pf_) if pf_.exists() else None, export_receipt=C.sha(export / day / 'receipt.json'),
++                                                        report=C.sha(report), keep_pull=C.sha(kp / 'keep_pull.json'), days=rec),
++                                            outputs={x: C.sha(out / x) for x in (f'policy_{day}.txt', f'policy_{day}.csv')},
++                                            source_sha256=C.sha(Path(__file__).resolve()), provenance=KP.provenance(), seconds=time.time() - start))
++    print('\n'.join(L), flush=True)
++    return res, R
++
++
++def selftest():
++    """Synthetic tape only (see the module's SELFTEST)."""
++    global FLIP, MISS_TRIGGERS, KEEP_SHIFT
++    bad = []; src = KP.Syn(); days = list(KP.DAYS); d0 = days[0]
++    env = lambda d_: dict(h=600., q01=-900., q99=1050., inputs={}); syn_set = lambda d_: (pd.DataFrame(dict(t_set_ms=np.zeros(0), set_status=np.zeros(0, int))), {})
++    with tempfile.TemporaryDirectory(dir=str(I.K.IO)) as tmp:
++        tmp = Path(tmp)
++        with QL._v1_on(src, tmp):
++            for d in days:
++                QP.day_run(d)
++        tim = SC.SynTiming(src, contra=((108, 0, 150500.),))
++        with contextlib.redirect_stdout(io.StringIO()):
++            for d in days:
++                KP.day_run(d, src=src, v1=tmp / 'v1', out=tmp / 'kp')
++            KP.report(tmp / 'kp')
++            SC.day_run(d0, src=src, timing=tim, kp=tmp / 'kp', out=tmp / 'sc', env_of=env, set_of=syn_set, st_lag=150.)
++            SC.report(out=tmp / 'sc', kp=tmp / 'kp', days=[d0], expect=None)
++        O = pd.read_parquet(tmp / 'kp' / d0 / 'orders.parquet'); el = O[O.status == 'eligible']
++        endj = A.endj_of(el.t_full.values, el.g_struct.values); rows = []; want = {}
++        for o, e in zip(el.itertuples(), endj):                                              # planted predictions: negative from a chosen step
++            js = np.arange(KP.J0, max(int(e), KP.J0))
++            if not len(js):
++                continue
++            k = js[len(js) // 2] if int(o.oid) % 3 == 0 else None
++            for j in js:
++                rows.append(dict(day=d0, oid=int(o.oid), kind='retain', j=int(j), side=int(o.side), t=float(o.t), decision_ms=float(o.t) + KP.STEP * j, p=float(o.p),
++                                 pf_mid=float(o.p) + (.5 if o.side == 0 else -.5), fp_remaining=30., J_P=.4, J_Eq=4., J_Eqm=(-6. if k is not None and j >= k else 6.),
++                                 J_V=(.5 * 4. + (-6. if k is not None and j >= k else 6.))))
++            if k is not None:
++                want[(d0, int(o.oid))] = int(k)
++        pred = pd.DataFrame(rows); hit = triggers_of(pred)
++        if not (dict(hit.items()) == want and len(want) > 0):
++            bad.append(f'planted triggers: {len(hit)} found, {len(want)} planted')
++        exp = tmp / 'exp' / d0; exp.mkdir(parents=True); pred[['oid', 'kind', 'j']].assign(status='eligible').to_parquet(exp / 'rows_000.parquet', index=False)
++        C.dump(exp / 'receipt.json', dict(outputs={'rows_000.parquet': C.sha(exp / 'rows_000.parquet')})); bj = tmp / 'bench'; bj.mkdir(); C.dump(bj / 'bench.json', dict(outputs={}, gate=dict(retain='PASS'), train=['20231206']))   # the synthetic tape's clock starts 2023-12-07
++        rep = tmp / 'sc' / f'scenarios_{d0}.json'
++        def go(out_, **kw):
++            with contextlib.redirect_stdout(io.StringIO()):
++                return run(d0, out=out_, sc_out=tmp / 'sc', kp=kw.pop('kp', tmp / 'kp'), bench=bj, export=tmp / 'exp', report=kw.pop('report', rep), pred=kw.pop('pred', pred))
++        R = None
++        try:
++            res, R = go(tmp / 'p')
++        except (SystemExit, ValueError) as e:
++            bad.append(f'the synthetic policy run refused: {str(e)[:400]}')
++        if R is not None:
++            Jp = json.loads((tmp / 'p' / f'policy_{d0}.json').read_text())
++            if not (R['CONTROLS'] == 'YES' and R['BENCH RETAIN MAPPING GATE'] == 'PASS' and Jp['pulled_orders'] == len(want) and Jp['parity']['compared'] > 0
++                    and all(k in R for k in V.P_KEYS + V.D_KEYS) and res[RULE][B_NAME]['pulls'] == len(want) and res[RULE][B_NAME]['pulls'] != res['A+0'][B_NAME]['pulls']
++                    and all(abs(Jp['diffs'][nm]['dV'] - ((res[RULE][nm]['KEEP'] + res[RULE][nm]['score']) - (res['A+0'][nm]['KEEP'] + res['A+0'][nm]['score']))) < 1e-6 for nm in res[RULE])):
++                bad.append(f"synthetic policy run: {R}, pulled {Jp['pulled_orders']} of {len(want)}")
++        def refused(name, msg, **kw):
++            o_ = tmp / ('z' + str(abs(hash(name)) % 100000))
++            try:
++                go(o_, **kw); bad.append(f'the policy run accepted {name}')
++            except (SystemExit, ValueError) as e:
++                if msg not in str(e):
++                    bad.append(f'{name} refused by another control: {str(e)[:300]}')
++            if (o_ / f'policy_{d0}.json').exists():
++                bad.append(f'a refused policy run wrote output ({name})')
++        extra = pd.concat([pred, pred.iloc[:1].assign(j=KP.NSTEP + 5)], ignore_index=True)
++        refused('a prediction for a row the export does not have', 'P0e', pred=extra)
++        refused('an exported row without a prediction', 'P0e', pred=pred.iloc[1:])
++        J0 = json.loads(rep.read_text()); J0['scenarios'][B_NAME]['by_day'][d0] += 1.; bad_rep = tmp / 'rep_bad.json'; bad_rep.write_text(json.dumps(J0))
++        refused('a changed committed report value', 'P0a', report=bad_rep)
++        kpb = tmp / 'kpb'; shutil.copytree(tmp / 'kp', kpb); Jk = json.loads((kpb / 'keep_pull.json').read_text())
++        Jk['D']['M50_L37']['A+0']['policy_by_day']['imp'][KP.DAYS.index(d0)] += 1.; (kpb / 'keep_pull.json').write_text(json.dumps(Jk))
++        refused('a changed committed keep / pull value', 'P0b', kp=kpb)
++        for flag, val, name, msg in (('FLIP', True, 'the rule with its sign reversed', 'P0f'), ('MISS_TRIGGERS', True, 'the model rule valued as A+0', 'P0c'),
++                                     ('KEEP_SHIFT', 1., 'a KEEP drift in the model rule', 'P0d')):
++            globals()[flag] = val
++            try:
++                refused(name, msg)
++            finally:
++                FLIP, MISS_TRIGGERS, KEEP_SHIFT = False, False, 0.
++    if bad:
++        sys.exit(f'{MARK} SELFTEST FAILED: ' + ' | '.join(bad))
++    print('pipeline policy selftests passed (synthetic only): planted predictions give the planted trigger steps; MODEL-J and A+0 valued through the bank '
++          'with every control passing (A+0 = the committed report and keep / pull run, MODEL-J = the clock audit, contract parity); refusals by their own '
++          'control with no output: a prediction for a row the export lacks and a missing prediction (P0e), a changed committed report value (P0a) and '
++          'keep / pull value (P0b), the model rule valued as A+0 (P0c), a KEEP drift (P0d), the rule with its sign reversed (P0f)', flush=True)
++
++
++if __name__ == '__main__':
++    a = sys.argv[1:]
++    if a == ['selftest']:
++        selftest()
++    elif len(a) == 2 and a[0] == 'day':
++        run(a[1])
++    else:
++        sys.exit('usage: pf_pipeline_policy.py selftest | day <day>')
+--- /dev/null
++++ b/predictfun/research/pf_pipeline_policy_mutants.py
+@@ -0,0 +1,64 @@
++"""MUTATION CHECK of the pipeline policy test's selftest (2026-11-19, session aea5bfb9): a checker that cannot fail proves nothing. Each entry plants one
++code error in a COPY of pf_pipeline_policy.py (text replacement, executed in a subprocess; the repo file is never touched) and runs the copy's
++selftest (synthetic tape only). Required: the unchanged copy passes, every mutant is caught BY A CHECK (the selftest's own failure message; a
++crash is unexpected), and every replacement target occurs exactly as often as declared (a stale target is a failure). No market data is read.
++Usage (run_light, PF_SLOT=claude): pf_pipeline_policy_mutants.py [index | targets]
++"""
++import subprocess
++import sys
++from pathlib import Path
++
++SRC = Path(__file__).resolve().parent / 'pf_pipeline_policy.py'
++# (name, text in the source, replacement[, occurrences]) - entry 0 is the unchanged copy
++MUT = [
++    ('none (must pass)', None, None),
++    ('P0a never refuses', "        if ref is None or abs(v['E'] - float(ref)) > 1e-6 * max(1., abs(float(ref))):", "        if False:"),
++    ('P0b never refuses', "    if not (int(round(D['n'][i])) == b['pulls'] and abs(D['imp'][i] - b['score']) <= 1e-6 * max(1., abs(D['imp'][i]))):", "    if False:"),
++    ('P0c never refuses', "    if not (abs(m['E'] - e_) < 1e-6 and abs(m['score'] - s_) < 1e-6 and pf['pulls'] == m['pulls']):", "    if False:"),
++    ('P0d never refuses', "        if len({(res[r][nm]['KEEP'], res[r][nm]['PULLALL'], res[r][nm]['fills'], res[r][nm]['eligible']) for r in res}) != 1:", "        if False:"),
++    ('P0e never refuses', "    if got != exp_rows:", "    if False:"),
++    ('P0f never refuses', "    if not (comp > 0 and agree == comp):", "    if False:"),
++    ('the rule pulls at the last predicted loss', "    hit = p[(p.J_V > 0) if FLIP else (p.J_V < 0)].groupby(['day', 'oid']).j.min()", "    hit = p[(p.J_V > 0) if FLIP else (p.J_V < 0)].groupby(['day', 'oid']).j.max()"),
++    ('an order without a predicted loss pulled at once', ".fillna(KP.NSTEP + 1)", ".fillna(KP.J0)"),
++    ('the differences against A+0 reversed', "d[nm] = dict(dV=a['V'] - b['V'], dE=a['E'] - b['E'], dV_ny=a['V_ny'] - b['V_ny'])", "d[nm] = dict(dV=b['V'] - a['V'], dE=a['E'] - b['E'], dV_ny=a['V_ny'] - b['V_ny'])"),
++    ('no row sampled for the contract parity', "def contract_parity(pred, trained, n=2000, seed=11):", "def contract_parity(pred, trained, n=0, seed=11):"),
++]
++STALE = 97                                                # exit code of a replacement target that does not occur as declared
++
++
++def source(i):
++    name, a, b = MUT[i][:3]; n = (MUT[i] + (1,))[3]; s = SRC.read_text()
++    if a is not None:
++        if s.count(a) != n:
++            print(f'mutation target occurs {s.count(a)} times, declared {n}: {name}', file=sys.stderr); sys.exit(STALE)
++        s = s.replace(a, b)
++    return s
++
++
++def one(i):
++    g = dict(__name__='pf_pipeline_policy_mutant', __file__=str(SRC)); exec(compile(source(i), str(SRC), 'exec'), g); g['selftest']()
++
++
++def main():
++    bad = 0
++    for i, (name, *_) in enumerate(MUT):
++        r = subprocess.run([sys.executable, __file__, str(i)], capture_output=True, text=True)
++        tail = r.stderr.strip().splitlines() or r.stdout.strip().splitlines() or ['']
++        caught = r.returncode == 1 and 'PIPELINE POLICY SELFTEST FAILED' in r.stderr   # caught BY A CHECK (the selftest's own exit message); a crash is unexpected
++        ok = (r.returncode == 0) if i == 0 else caught
++        bad += not ok
++        first = next((x for x in r.stderr.splitlines() if 'SELFTEST FAILED' in x), None)
++        how = 'passed' if r.returncode == 0 else ('caught: ' + first.strip()[:200]) if caught and first else ' / '.join(x.strip()[:200] for x in tail[-2:])
++        print(f'{i:2d} {name}: rc {r.returncode} -> {how}{"" if ok else "   <<< UNEXPECTED"}', flush=True)
++    if bad:
++        sys.exit(f'PIPELINE POLICY MUTATION CHECK FAILED: {bad} unexpected outcomes of {len(MUT)}')
++    print(f'pipeline policy mutation check passed: the unchanged copy passes its selftest, {len(MUT) - 1} / {len(MUT) - 1} planted code errors are caught by a check', flush=True)
++
++
++if __name__ == '__main__':
++    if sys.argv[1:] == ['targets']:
++        [source(i) for i in range(len(MUT))]; print(f'all {len(MUT) - 1} mutation targets occur as declared')
++    elif len(sys.argv) > 1:
++        one(int(sys.argv[1]))
++    else:
++        main()
+--- a/predictfun/research/pf_keep_pull_scenarios.py
++++ b/predictfun/research/pf_keep_pull_scenarios.py
+@@ -17,6 +17,8 @@
+ no scenario is called "zero latency"; (3) the held contradictory events get their denominator (every event per family and day) and their
+ economic weight (the fills, shares and value at held trade instants per scenario); v1's outputs (keep_pull_scenarios_20261118) stay as
+ provenance.
++v6.2 (2026-11-19, USER "We run the whole pipeline for one day test first"): outcome() also takes an external rule's pull steps (triggers),
++so a learned keep / pull rule goes through the same bank (pf_pipeline_policy.py); A+0's values are unchanged.
+ v6.1 (2026-11-19, USER "can we run the one day test now" -> the score variants against A+0): outcome() takes the score policy as a parameter
+ (default the declared A+0; any other of KP.POLICIES; an undeclared one is refused) so pf_keep_pull_variants.py can value every declared policy
+ from the same day outputs. Day outputs, report and A+0 values are unchanged (the variants module checks A+0 against this report's output).
+@@ -373,15 +375,18 @@
+     return d
+ 
+ 
+-def outcome(O, Os, Fs, sc, policy=None):
+-    """One scenario's values for one score policy (default the declared A+0; v6.1: any of KP.POLICIES, for pf_keep_pull_variants.py). O: the
+-    committed orders (states, fair inputs, side, price, mark, structural decision); Os: per order of O the scenario's refused / v / q / t_full /
+-    land; Fs: its fills (day, oid, t, q)."""
++def outcome(O, Os, Fs, sc, policy=None, triggers=None):
++    """One scenario's values for one score policy (default the declared A+0; v6.1: any of KP.POLICIES, for pf_keep_pull_variants.py) or, v6.2,
++    for an external rule (triggers: a callable of the eligible orders E returning each one's first pull step, NSTEP + 1 = never; for
++    pf_pipeline_policy.py). O: the committed orders (states, fair inputs, side, price, mark, structural decision); Os: per order of O the
++    scenario's refused / v / q / t_full / land; Fs: its fills (day, oid, t, q)."""
+     pol = KP.DECLARED if policy is None else policy; C.require(pol in KP.POLICIES, f'undeclared score policy {pol}')
++    C.require(policy is None or triggers is None, 'a score policy and external triggers given together')
+     Os = Os.rename(columns={c: c + '_s' for c in ('refused', 'v', 'q', 't_full', 'land')})
+     M = O.merge(Os, on=['day', 'oid'], how='inner', validate='one_to_one'); E = M[~M.refused_s.astype(bool)].reset_index(drop=True)
+     cell = E.groupby(['day', 'm', 'side', 'phase'], sort=True).ngroup().values
+-    T = KP.score_steps(E[[f'f{j:02d}' for j in range(KP.NSTEP + 1)]].values, E.side.values, E.p.values)[pol]
++    T = KP.score_steps(E[[f'f{j:02d}' for j in range(KP.NSTEP + 1)]].values, E.side.values, E.p.values)[pol] if triggers is None else np.asarray(triggers(E), int)
++    C.require(len(T) == len(E) and bool(((T >= 0) & (T <= KP.NSTEP + 1)).all()), 'external triggers: one step per eligible order in 0..99')
+     endj = endj_n(E.t_full_s.values, E.g_struct.values, sc['N']); act, CW = V1.null_weights(T, cell, endj)
+     ix = pd.Series(np.arange(len(E)), index=pd.MultiIndex.from_arrays([E.day.values, E.oid.values]))
+     ri = ix.reindex(pd.MultiIndex.from_arrays([Fs.day.values, Fs.oid.values])).values; C.require(not np.isnan(ri).any(), 'a fill of an order outside the eligible set')
+@@ -715,6 +720,17 @@
+                     bad.append(f'the undeclared policy refused by another check: {e}')
+             except KeyError as e:
+                 bad.append(f'an undeclared policy reached the score lookup: {e}')
++            ot = outcome(O1, Os1, Fs1, B0, triggers=lambda E_: np.full(len(E_), 5)); on_ = outcome(O1, Os1, Fs1, B0, triggers=lambda E_: np.full(len(E_), KP.NSTEP + 1))
++            if not (ot['score'] == o37['score'] == 150. and ot['pulls'] == 1 and on_['score'] == 0. and on_['pulls'] == 0 and on_['E'] == 0.):   # v6.2
++                bad.append(f"external triggers: step 5 score {ot['score']} / pulls {ot['pulls']}, never {on_['score']} / {on_['pulls']}")
++            for nm_, kw_, msg_ in (('a policy and triggers together', dict(policy='A+0', triggers=lambda E_: np.full(len(E_), 5)), 'given together'),
++                                   ('triggers of the wrong length', dict(triggers=lambda E_: np.full(len(E_) + 1, 5)), 'one step per eligible order'),
++                                   ('a trigger step out of range', dict(triggers=lambda E_: np.full(len(E_), KP.NSTEP + 2)), 'one step per eligible order')):
++                try:
++                    outcome(O1, Os1, Fs1, B0, **kw_); bad.append(f'outcome accepted {nm_}')
++                except ValueError as e:
++                    if msg_ not in str(e):
++                        bad.append(f'{nm_} refused by another check: {e}')
+             ox = outcome(O1, Os1, Fs1, dict(B0, A=250.))                  # the fill at 300 ms: 242 ms old at activation 58, 50 ms old at 250
+             if not (o37['by_age']['100to500']['fills'] == 1 and o37['by_age']['lt100']['fills'] == 0 and ox['by_age']['lt100']['fills'] == 1
+                     and abs(sum(a['E'] for a in o37['by_age'].values()) - o37['E']) < 1e-9 and o37['no_young']['E'] == o37['E'] and ox['no_young']['fills_value'] == 0.
+@@ -775,7 +791,8 @@
+           'and an early landing mirror each refused by its own control with no output; S3 / ST timelines (and their joins by row id, a leg without its '
+           'window refused); held fills marked and valued; event denominators; every scenario\'s family (no "zero latency"); the cancel-latency '
+           'mixture (its slow share, per-order landings, one-order outcomes); the policy parameter (A-1 never pulls the one-order case, an undeclared policy '
+-          'refused)', flush=True)
++          'refused); external triggers (step 5 = A+0 on the one-order case, never = no pull; a policy given with them, a wrong length and an '
++          'out-of-range step refused)', flush=True)
+ 
+ 
+ if __name__ == '__main__':
+--- a/predictfun/research/pf_keep_pull_scenarios_mutants.py
++++ b/predictfun/research/pf_keep_pull_scenarios_mutants.py
+@@ -77,6 +77,10 @@
+     # --- v6.1: the score policy as a parameter (pf_keep_pull_variants.py)
+     ('the policy parameter ignored (every policy valued as A+0)', "E.side.values, E.p.values)[pol]", "E.side.values, E.p.values)[KP.DECLARED]"),
+     ('an undeclared policy accepted', "C.require(pol in KP.POLICIES, f'undeclared score policy {pol}')", "pass"),
++    # --- v6.2: external triggers (pf_pipeline_policy.py)
++    ('external triggers ignored', "[pol] if triggers is None else np.asarray(triggers(E), int)", "[pol]"),
++    ('a policy and triggers accepted together', "C.require(policy is None or triggers is None, 'a score policy and external triggers given together')", "pass"),
++    ('malformed triggers accepted', "C.require(len(T) == len(E) and bool(((T >= 0) & (T <= KP.NSTEP + 1)).all()), 'external triggers: one step per eligible order in 0..99')", "pass"),
+ ]
+ STALE = 97                                                # exit code of a replacement target that does not occur as declared
+ 

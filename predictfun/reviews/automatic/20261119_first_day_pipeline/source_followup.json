@@ -1,0 +1,45 @@
+{
+  "asof": "2026-11-19T04:47:42.445756+00:00",
+  "head_after_probe": "8e57fd8969ed6a57194b0487c3fb51b584a6e36b",
+  "snapshot_base_commit": "e96321df503662ae5b15844a5a090c1df2242043",
+  "current_working_source_hashes": {
+    "predictfun/research/pf_pipeline_export.py": "0fc0b314f590d38c9302f7923afd5fe07a2b21b6d191715b517d6ca2d5523a9e",
+    "predictfun/research/pf_pipeline_export_mutants.py": "917032f964fa3b103119271ad422f740388eb9373bc251c7323f07fa1c5fed12",
+    "predictfun/research/pf_pipeline_bench.py": "6bcaee624659ed8cda7792f9203bce8feba281119822ed9862d7ef1bbc0bbe67",
+    "predictfun/research/pf_pipeline_bench_mutants.py": "1b7f3a6b3a3b54cd5914576c5206be89d10d52201cff6c897ce752b53968fc4e",
+    "predictfun/research/pf_pipeline_policy.py": "c82d5ddbfb54d98c3fddb91bc06edab20d8666b4d65dbc38d04d21abe51d2aea",
+    "predictfun/research/pf_pipeline_policy_mutants.py": "994866ad3bfaebca5a622938a1fd2b5f824e53d5543003b914b56d5755df390f",
+    "predictfun/research/pf_keep_pull_scenarios.py": "d2995931c0b11352f10f0cf8830db79bb9775e8664e27327e5b6085755cf3dc5",
+    "predictfun/research/pf_keep_pull_scenarios_mutants.py": "6e4f1cb8af16f3b7073eb2c205fb15eb792f5f111cf22670663eb7144390f2e6"
+  },
+  "matching_snapshot": {
+    "predictfun/research/pf_pipeline_export.py": true,
+    "predictfun/research/pf_pipeline_export_mutants.py": true,
+    "predictfun/research/pf_pipeline_bench.py": false,
+    "predictfun/research/pf_pipeline_bench_mutants.py": true,
+    "predictfun/research/pf_pipeline_policy.py": false,
+    "predictfun/research/pf_pipeline_policy_mutants.py": false,
+    "predictfun/research/pf_keep_pull_scenarios.py": true,
+    "predictfun/research/pf_keep_pull_scenarios_mutants.py": true
+  },
+  "committed_export_source_hashes": {
+    "predictfun/research/pf_pipeline_export.py": "0fc0b314f590d38c9302f7923afd5fe07a2b21b6d191715b517d6ca2d5523a9e",
+    "predictfun/research/pf_pipeline_export_mutants.py": "917032f964fa3b103119271ad422f740388eb9373bc251c7323f07fa1c5fed12"
+  },
+  "bench_result_present": false,
+  "policy_result_present": false,
+  "finding_functions_unchanged": {
+    "predictfun/research/pf_pipeline_bench.py": {
+      "predict": true,
+      "read_one": true,
+      "gate_of": true
+    },
+    "predictfun/research/pf_pipeline_policy.py": {
+      "triggers_of": true,
+      "contract_parity": true,
+      "controls": true
+    }
+  },
+  "followup_patch_sha256": "dc23b4435c0cd4487368578bd257abff821f275e8d879a10182cecb20ddccdb9",
+  "followup_interpretation": "Exporter is now committed unchanged; later benchmark changes reduce memory use and policy changes correct PULL-ALL labels. Counterexample functions unchanged. The latest memory path and revised policy selftest were not rerun."
+}

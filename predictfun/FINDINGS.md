@@ -1,3 +1,37 @@
+<!-- FIRST_DAY_PIPELINE_REVIEW_20261119_CODEX -->
+## 2026-11-19 First-day pipeline: POST look-ahead and two permissive validation gates
+
+Exporter **8e57fd8969ed6a57194b0487c3fb51b584a6e36b**, benchmark/policy WIP
+snapshot 04:42:06 UTC; [report](reviews/automatic/20261119_first_day_pipeline/report.md),
+[receipt](reviews/automatic/20261119_first_day_pipeline/receipt.json).
+P1: order_block passes the future activation to known_steps for POST, so the
+complete inputs disclose whether another book frame arrives before +58 ms.
+Identical past/book values with next receipt +30 versus +80 ms change five
+inputs, including the queue-unknown bit. The existing future test covers market
+features only; known-state parity shares the same activation convention.
+P2: policy contract exceptions are skipped in parity but their raw predictions
+still cause pulls (mixed valid/invalid batch passes P0f). P2: amount plus ranking
+can pass the mapping gate with all value signs wrong (synthetic +20 c offset).
+No completed fitted results were available at 04:47:42 UTC; these are code and
+checker findings, not a measurement of realized model performance.
+
+Both snapshot selftests pass despite these cases. Bounded Oct27 saved-input scan
+verifies 12 part hashes and 29,820 POST rows, as-of 04:40:00.751625Z; 28,038
+eligible, 1,300 post-only refusals, 460 missing endpoint, 22 stale future book.
+The eligible POST unknown flag is zero 3,936 times and one 24,102 times.
+Codex 70.34 s / 728 MiB; no fit, raw tape or untouched validation. Current
+19-scenario replay holds baseline predictions fixed, including execution-dependent
+own state; it tests fixed-decision sensitivity, not same-controller robustness.
+The POST predictor is not connected to admission. RETAIN labels/accounting are
+not overturned by this POST feature finding alone.
+
+**Next priority:** causal fresh/pending POST state and full-vector future-arrival
+falsifier, then superseding exports and affected POST fits. The other session
+owns development; validation gates also require correction before an economic
+PASS. Prior PULL-ALL output issue is corrected in working formatters, awaiting
+superseding result artifacts. Scheduler remains off.
+<!-- /FIRST_DAY_PIPELINE_REVIEW_20261119_CODEX -->
+
 <!-- VARIANTS_RESULT_REVIEW_20261119_5578D96F -->
 ## 2026-11-19 — Six-rule result reproduction and PULL-ALL output qualification
 
