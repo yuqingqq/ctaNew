@@ -315,6 +315,22 @@ pulls and bid/ask; judge movement calibration on selected actions before changin
 order design. Other session owns fixes; scheduler remains off.
 <!-- /PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
 
+## 2026-11-19 19:51Z (session aea5bfb9) — R2-A: THE SHADOW-PROBE / FEATURE / SUPPORT ADAPTER, MANIFEST r2_shadow_sampling_v1, THE OCT 23 CENSUS (review 7d59bde7's next priority; no teacher fit) (USER: "... continue the implementing and next priority loop")
+- [Receipt](reviews/r2a_shadow_census_20261119/report.md); [`pf_r2_shadow.py`](research/pf_r2_shadow.py).
+- Population: Oct 23, the first 128 originals per side of any status (256), with an ID hash; a SHA-256 phase manifest.
+- Sources: entry / retain / joint shadows.
+- Targets: neutral J targets via the unchanged builders.
+- Inputs and context: the 91 inputs plus 14 client-context fields; ident and absolute times on rows.
+- Weights: equal per episode x side x head.
+- Costs: explicit zeros.
+- Checks: selftest; mutation suite 25 / 25 (an equivalent byte-order mutant replaced: 256 = 1 mod 5).
+- Census v3 (canonical order; v3 = canonical(v2) exact; v1 / v2 positional compare FAILED on row order only, content identical):
+  - 213,349 rows, 44,959 sampled ok;
+  - labels reconciled 44,959 / 0 failures; causality 2,765 / 0 failures; outcomes kept: 32,902 no-fill, 312 refusals;
+  - peak RSS 1,466 MiB (v1 was 2,001: memory fixed);
+  - support: 0 / 28 cells SUPPORTED, as expected at this size; floors not lowered.
+- Next: the Codex review; then (c68a072c) the full Oct 23 teacher data and support before the pi0-50 fit.
+
 ## 2026-11-19 18:27Z (session aea5bfb9) — R1 PREFLIGHT: THE ENGINE-STATE GUARDS AND MISSING MARKS (review efac0452 answered) (USER: "... continue the implementing and next priority loop")
 - [Receipt](reviews/branch_engine_r1_preflight_20261119/report.md).
 - efac0452 P2 holds and is fixed: the fingerprint inventory (`FINGERPRINT_FIELDS`) now includes E.end / E.client / E.nf and the fallback / constraint logs, and `validate_ctx` checks them and the supported SETTINGS. The late-fill control is Y = 10 c, and each corruption is refused before the arms.

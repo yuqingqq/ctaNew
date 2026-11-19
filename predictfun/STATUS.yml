@@ -322,6 +322,18 @@ pipeline_one_day_v3_20261119:
   values_equal_v2: {cells_per_day: 190, differing: 0}
   attribution_vs_pull_all_c: {"20261026": {first_step: 0.0, later: 954.33, never: 995.36, no_prediction: 0.0}, "20261027": {first_step: 0.0, later: -821.85, never: 251.74, no_prediction: 0.0}}
 
+r2a_shadow_census_20261119:
+  status: done_r2a_adapter_manifest_oct23_census_no_fit
+  asof: "2026-11-19 19:51Z"
+  receipt: predictfun/reviews/r2a_shadow_census_20261119/report.md
+  manifest: r2_shadow_sampling_v1
+  population: {day: "20261023", per_side: 128, selected: 256, eligible: 240, refused_post_only: 14, missing_endpoint: 2, ids_sha256: 4538b694c92c5b6581f357396cb02e43c557b10c494efa08cd5780f0d6f4f501}
+  census_v3: {rows: 213349, sampled_ok: 44959, labels_reconciled_failures: 0, causality_checked: 2765, causality_failures: 0, no_fill: 32902, refused: 312, peak_rss_mib: 1466}
+  support: {cells: 28, supported: 0, reason: slice_below_200_episode_floor_reported_not_lowered}
+  suites: {selftest: pass, mutants: 25/25}
+  costs: explicit_zeros_gross_convention
+  next: codex_review_then_full_oct23_teacher_data_and_support
+
 branch_engine_r1_preflight_20261119:
   status: done_engine_state_guards_and_missing_marks
   asof: "2026-11-19 18:27Z"

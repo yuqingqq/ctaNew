@@ -1,0 +1,40 @@
+{
+ "population": {
+  "per_side": 128,
+  "selected": 256,
+  "by_status": {
+   "eligible": 240,
+   "refused_post_only": 14,
+   "missing_endpoint": 2
+  }
+ },
+ "census_rows": 213349,
+ "sampled_ok_rows": 44959,
+ "by_source_head_status": {
+  "entry post near_end": 55,
+  "entry post ok": 5235,
+  "joint_chase post cap_blocked": 7013,
+  "joint_chase post near_end": 113,
+  "joint_chase post ok": 192,
+  "joint_chase post unsampled": 767,
+  "joint_chase retain cancel_pending": 1456,
+  "joint_chase retain ok": 2981,
+  "joint_chase retain post_pending": 959,
+  "joint_chase retain unsampled": 11919,
+  "joint_post_keep post cap_blocked": 6826,
+  "joint_post_keep post near_end": 108,
+  "joint_post_keep post ok": 97,
+  "joint_post_keep post unsampled": 412,
+  "joint_post_keep retain cancel_pending": 709,
+  "joint_post_keep retain ok": 3351,
+  "joint_post_keep retain post_pending": 509,
+  "joint_post_keep retain unsampled": 13388,
+  "original post no_path:missing_endpoint": 2,
+  "retain retain cancel_pending": 5755,
+  "retain retain ok": 33103,
+  "retain retain post_pending": 5235,
+  "retain retain unsampled": 113164
+ },
+ "peak_rss_mib": 949.6328125
+}
+2026-11-19T18:40:48Z tag=pr2_census_20261023 rc=0 peak_rss_mib=2001 wall_s=158.75 cpu_user_s=143.64 memavail_start_gib=23 disk_free_gib=468->468 slot=claude
