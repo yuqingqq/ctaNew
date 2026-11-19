@@ -1,0 +1,24 @@
+{
+  "request": "Check my latest commits, what's the next priority",
+  "target_commit": "0528e1a614d582d92cf3efbcd26d6afdf7ee8686",
+  "base_commit": "1785003084c8c17d64e6f89860ca42c35609e290",
+  "reviewed_commits": [
+    "dbe77f9c1cfac5c259d7408683539c0ad3758eca",
+    "6775eabd910488be3b3ca975fa41ec183f3c3097",
+    "0528e1a614d582d92cf3efbcd26d6afdf7ee8686"
+  ],
+  "worktree": "/tmp/pf-review-0528e1a6",
+  "mode": "manual_review_only",
+  "scheduler": "remains_disabled",
+  "implementation_owner": "development_session",
+  "raw_tape_training_or_untouched_validation": false,
+  "slot": "codex",
+  "preexisting_unstaged_state_numstat": {
+    "predictfun/FINDINGS.md": [568, 0],
+    "predictfun/HANDOFF.md": [468, 7],
+    "predictfun/STATUS.yml": [263, 0],
+    "predictfun/handoffs/20261109_TODO.md": [2, 1],
+    "predictfun/research/run_light.log": [2907, 0]
+  },
+  "unrelated_preexisting_tracked_data_deletions_preserved": true
+}

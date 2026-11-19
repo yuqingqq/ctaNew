@@ -1,3 +1,40 @@
+<!-- R0_CLOSURE_REVIEW_20261119_CODEX -->
+## 2026-11-19 R0 closure and four-part review audited; adaptive branch engine is next
+
+Target **0528e1a614d582d92cf3efbcd26d6afdf7ee8686** (range after plan 17850030).
+[Report](reviews/automatic/20261119_0528e1a6/report.md),
+[evidence](reviews/automatic/20261119_0528e1a6/receipt.json),
+[synthetic reproduction](reviews/automatic/20261119_0528e1a6/synthetic.json).
+Prior pair_qm and reached-population findings are resolved. All 5,723,835 saved
+label identities finite and correct; other label columns, 44 model pairs and
+predictions unchanged. Independent A fill accounting and new ledger/null/tail
+arithmetic reproduce. New review-module synthetic selftest passes; no fitting.
+
+One P2 checker defect: screen() returns NOT_EVALUABLE on zero raw label sum even
+when the episode-balanced label is nonzero and correctly predicted. 200-episode
+positive control/counterexample confirms; no saved group affected. Two P2 report
+interpretations need narrowing: fixed-admission nesting does not carry over to
+plan v2's own-state ENTRY-PA with re-entry; historical B1a age weighting does not
+identify this candidate's actual live loss. P3: V3's default relative tolerance
+accepts END+0.01 ms; K7 already rejects NaN despite the report saying otherwise.
+These do not reverse the current failed candidate or call for a new R0 model fit.
+
+At B A -2032.12 / -11865.45 c; additional retention -979.11 / -4921.64 c. Null
+mean -11025.73 / -13431.47 c, sd 2691.74 / 3055.50 c, 1000 draws p 0.000999 /
+0.304695. These are conditional random-selection diagnostics on consumed dates,
+not day-unit intervals or forward performance. Severe episodes 167 / 182;
+largest negative severe-episode component is after earliest cancel effect.
+No causal rule to reject a spread/phase is established by these associations.
+
+Populations Oct26/27: 30242 / 29820 originals, 29832 / 29338 with a path,
+67776 / 76731 reached rows. Review artifacts as-of Nov19 16:15:22 / 16:15:59 UTC;
+independent artifact audit 16:43:38 UTC. Three bounded checks, ~44 seconds,
+878 MiB peak; no raw tape, training or untouched dates. R0 closed. Next is R1:
+genuine 50 ms WAIT/re-entry branch engine with causal state and common END,
+including the small screen correction before later gating. Other-session
+implementation and unrelated data deletions preserved; scheduler disabled.
+<!-- /R0_CLOSURE_REVIEW_20261119_CODEX -->
+
 <!-- ADAPTIVE_MM_PLAN_V2_20261119_CODEX -->
 ## 2026-11-19 Prospective plan revision 2; no new experimental result
 
