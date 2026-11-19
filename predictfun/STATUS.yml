@@ -202,6 +202,18 @@ pipeline_one_day_v3_20261119:
   values_equal_v2: {cells_per_day: 190, differing: 0}
   attribution_vs_pull_all_c: {"20261026": {first_step: 0.0, later: 954.33, never: 995.36, no_prediction: 0.0}, "20261027": {first_step: 0.0, later: -821.85, never: 251.74, no_prediction: 0.0}}
 
+branch_engine_r1_20261119:
+  status: done_r1_engine_synthetic_controls_and_consumed_slice_pass_design_questions_with_codex
+  asof: "2026-11-19 17:34Z"
+  user: ["Check my latest commit, next, can you ask codex research session for next priority. continue the implementing and next priority loop"]
+  receipt: predictfun/reviews/branch_engine_r1_20261119/report.md
+  contract: paired_continuation_v2
+  controls: {p1_kernel_parity: pass, p2_incremental_equals_batch: pass, f1_to_f9: pass, mutants: 33/33}
+  slice_20261024: {v1_200: FAIL_row_unit_48_orders_all_equal_per_trade_time, v2_1000: PASS_439_with_fills}
+  declared_assumptions: {ack_ms: 100, post_known_at_activation_ms: 58, structural_rule_after_submission: true, cap: 30, costs_in_RT: false}
+  pending_codex: [ack_timing, stand_in_policies_until_R2, structural_departure, cap_one_sided_blocking, slice_sufficiency, next_priority]
+  next: R2_supported_pi0_50_teacher_and_labels_when_codex_names_it
+
 pipeline_paired_review_v2_20261119:
   status: done_review_92d8e52f_fixed_values_and_verdicts_unchanged
   asof: "2026-11-19T17:28Z"

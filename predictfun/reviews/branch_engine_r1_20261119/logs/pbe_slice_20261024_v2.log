@@ -1,0 +1,19 @@
+{
+ "orders": 1000,
+ "with a path": 1000,
+ "with fills": 439,
+ "price_equal: all": true,
+ "price_equal: false count": 0,
+ "mark_equal: all": true,
+ "mark_equal: false count": 0,
+ "keep_fills_equal: all": true,
+ "keep_fills_equal: false count": 0,
+ "pull_fills_equal: all": true,
+ "pull_fills_equal: false count": 0,
+ "keep_value_equal: all": true,
+ "keep_value_equal: false count": 0,
+ "p1_equal: all": true,
+ "p1_equal: false count": 0,
+ "SLICE (every check true on every order with a path, at least one order with fills)": "PASS"
+}
+2026-11-19T17:32:49Z tag=pbe_slice_20261024_v2 rc=0 peak_rss_mib=808 wall_s=5.90 cpu_user_s=5.07 memavail_start_gib=23 disk_free_gib=470->470 slot=claude

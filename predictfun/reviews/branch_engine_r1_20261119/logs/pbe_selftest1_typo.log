@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/research/pf_branch_engine.py", line 658, in <module>
+    selftest()
+  File "/home/yuqing/ctaNew/predictfun/research/pf_branch_engine.py", line 608, in selftest
+    if not (Bp.E.o and Bp.E.o[0]['refused'] and ('refused', 100.) in Bp.closed.values()):
+            ^^
+NameError: name 'Bp' is not defined. Did you mean: 'p'?
+2026-11-19T17:26:57Z tag=pbe_selftest1 rc=1 peak_rss_mib=196 wall_s=1.22 cpu_user_s=1.02 memavail_start_gib=23 disk_free_gib=471->471 slot=claude

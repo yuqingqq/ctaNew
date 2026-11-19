@@ -1,0 +1,34 @@
+ 0 none (must pass): rc 0 -> passed
+ 1 the queue ahead never shrinks to later shown sizes (no rule M): rc 1 -> caught: BRANCH ENGINE SELFTEST FAILED: P1: the port differs from the C kernel on 2 of 40 random tapes
+ 2 a trade at the price skips the queue ahead: rc 1 -> caught: BRANCH ENGINE SELFTEST FAILED: P1: the port differs from the C kernel on 1 of 40 random tapes | F3: queue priority not preserved (kept order at 400: []; the replacement filled before the 500-share trade: [(400.0, 1, 0, 1
+ 3 a trade through the price fills nothing: rc 1 -> caught: BRANCH ENGINE SELFTEST FAILED: P1: the port differs from the C kernel on 8 of 40 random tapes
+ 4 the removal is inclusive (a match at the effect fills): rc 1 -> caught: BRANCH ENGINE SELFTEST FAILED: F7: the match around the cancel effect (fills [136.9, 137.0], want only 136.9)
+ 5 the activation is exclusive: rc 1 -> caught: BRANCH ENGINE SELFTEST FAILED: F7: a match exactly at activation does not fill (activation is inclusive)
+ 6 no post-only refusal at activation: rc 1 -> caught: BRANCH ENGINE SELFTEST FAILED: F7: a post-only refusal at activation (known at the first tick after it)
+ 7 the queue ahead from the first frame, not the one at activation: rc 1 -> caught: BRANCH ENGINE SELFTEST FAILED: P1: the port differs from the C kernel on 1 of 40 random tapes | F7: a post-only refusal at activation (known at the first tick after it)
+ 8 the structural rule before the submission (no guard): rc 1 -> caught: BRANCH ENGINE SELFTEST FAILED: P2: the adaptive run differs from its batch replay on random tape 0 | P2: a generation submitted at 600 ms (5 ticks behind the best at 100 ms) differs between the run and its replay ([(1500
+ 9 the structural rule never fires: rc 1 -> caught: BRANCH ENGINE SELFTEST FAILED: P1: the port differs from the C kernel on 9 of 40 random tapes
+10 a removal without the cancel latency: rc 1 -> caught: BRANCH ENGINE SELFTEST FAILED: P1: the port differs from the C kernel on 1 of 40 random tapes | F2: no re-entry after the acknowledgement at a new price with a cancel-pending fill (generations [(0.0, 50.0), (200.0, 49.0)
+11 no pending-cancel clock before activation: rc 1 -> caught: BRANCH ENGINE SELFTEST FAILED: P1: the port differs from the C kernel on 6 of 40 random tapes
+12 price priority reversed between own orders: rc 0 -> passed   <<< UNEXPECTED
+13 a fill known at once (no notice delay): rc 1 -> raise ValueError(message) / ValueError: position check at 2300.0: engine -4.0 outside [-30.0, -26.0]   <<< UNEXPECTED
+14 a removal acknowledged at its effect: rc 1 -> raise ValueError(message) / ValueError: position check at 300.0: engine 60.0 outside [0.0, 30.0]   <<< UNEXPECTED
+15 a pulled generation closed at its request (switch): rc 1 -> raise ValueError(message) / ValueError: position check at 1200.0: engine -4.0 outside [26.0, 26.0]   <<< UNEXPECTED
+16 WAIT never posts later (switch): rc 1 -> caught: BRANCH ENGINE SELFTEST FAILED: F1: WAIT does not post later with a different history (WAIT posts [], POST posts [(0.0, 0, 'absent', 'POST', 0)])
+17 the second side sees a stale view (switch): rc 1 -> caught: BRANCH ENGINE SELFTEST FAILED: F9: the shared book (position 0.0, value 60.0, first ask post 0.0)
+18 the sides always in the same order: rc 1 -> caught: BRANCH ENGINE SELFTEST FAILED: F9: the sides are not processed in the alternating order
+19 the cap ignored: rc 1 -> caught: BRANCH ENGINE SELFTEST FAILED: F7: cap saturation (a long 30 must stop a second bid; constraints [])
+20 a post at or after END - 58 ms allowed: rc 1 -> caught: BRANCH ENGINE SELFTEST FAILED: F7: a near-END post is not refused
+21 a JOIN at the opposite best: rc 1 -> caught: BRANCH ENGINE SELFTEST FAILED: P2: a generation submitted at 600 ms (5 ticks behind the best at 100 ms) differs between the run and its replay ([] vs []) | F2: no re-entry after the acknowledgement at a new price with a 
+22 the view reads the last frame of the tape: rc 1 -> caught: BRANCH ENGINE SELFTEST FAILED: F2: no re-entry after the acknowledgement at a new price with a cancel-pending fill (generations [(0.0, 49.0), (250.0, 49.0)], pending fills []) | F6: causality (future-perturbed view equal
+23 the position check never fails: rc 1 -> caught: BRANCH ENGINE SELFTEST FAILED: F7: the position check accepts a released reservation with an unacknowledged fill
+24 a fallback not counted: rc 1 -> caught: BRANCH ENGINE SELFTEST FAILED: F7: an unavailable book is not a counted fallback
+25 the policy horizon not checked: rc 1 -> caught: BRANCH ENGINE SELFTEST FAILED: F8: a policy horizon other than END was not refused
+26 a branch END other than 5,000 ms accepted: rc 1 -> caught: BRANCH ENGINE SELFTEST FAILED: F8: a branch END other than 5,000 ms was not refused
+27 a stale generation accepted: rc 1 -> caught: BRANCH ENGINE SELFTEST FAILED: F8: a PULL for a stale generation was not refused
+28 a missing mark valued at 0: rc 1 -> caught: BRANCH ENGINE SELFTEST FAILED: F7: a missing mark is not censored (ok)
+29 the pair difference reversed: rc 1 -> caught: BRANCH ENGINE SELFTEST FAILED: F4: the pair difference or its common pre-fork fills
+30 the pre-fork comparison always true: rc 1 -> caught: BRANCH ENGINE SELFTEST FAILED: F4: the pre-fork comparison accepts a common fill counted twice (or rejects a post-fork difference)
+31 the END value from the start mid: rc 1 -> caught: BRANCH ENGINE SELFTEST FAILED: F4: F1 POST fill ledger 60.0 vs value 0.0 | F4: F1 WAIT fill ledger 30.0 vs value -30.0
+BRANCH ENGINE MUTATION CHECK FAILED: 4 unexpected outcomes of 32
+2026-11-19T17:28:10Z tag=pbe_mutants1 rc=1 peak_rss_mib=193 wall_s=41.61 cpu_user_s=35.73 memavail_start_gib=23 disk_free_gib=471->471 slot=claude

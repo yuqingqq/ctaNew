@@ -1,0 +1,55 @@
+{
+  "asof": "2026-11-19T17:32:54.733004+00:00",
+  "day": "20261024",
+  "n": 1000,
+  "readings": {
+    "orders": 1000,
+    "with a path": 1000,
+    "with fills": 439,
+    "price_equal: all": true,
+    "price_equal: false count": 0,
+    "mark_equal: all": true,
+    "mark_equal: false count": 0,
+    "keep_fills_equal: all": true,
+    "keep_fills_equal: false count": 0,
+    "pull_fills_equal: all": true,
+    "pull_fills_equal: false count": 0,
+    "keep_value_equal: all": true,
+    "keep_value_equal: false count": 0,
+    "p1_equal: all": true,
+    "p1_equal: false count": 0,
+    "SLICE (every check true on every order with a path, at least one order with fills)": "PASS"
+  },
+  "settings": {
+    "contract": "paired_continuation_v2",
+    "place": 58.0,
+    "cancel": 37.0,
+    "pending": 95.0,
+    "notice": 100.0,
+    "ack": 100.0,
+    "step": 50.0,
+    "end": 5000.0,
+    "size": 30.0,
+    "cap": 30.0,
+    "hold": 3.0
+  },
+  "inputs": {
+    "kp_receipt": "14dbf7193dca0c9f6817d8f8f8c84734fbd202f97adf44bd32ee7954875a9535"
+  },
+  "outputs": {
+    "slice_20261024_v2.csv": "42519dd663fff456093dab08cb3bbbf1aa8a8889149608a5c32c7aeae9989e15"
+  },
+  "source_sha256": "7d9470f0e272f336628572b482f8750297a0edf0a28533797d1a94b50486a402",
+  "provenance": {
+    "commit": "1d72986ffa9cee8285bcef838fe2d054b16b2486",
+    "source": {
+      "pf_keep_pull.py": "58b972f92bda06fbc847c43d2ace8db9d7b12f4daaf67bcfaa14e92deb475835",
+      "pf_queue_place_test.py": "188c1495ce35db80ce8b79cbc50541964d0d32d9da38fee4b925e951eec01a1f",
+      "pf_queue_place_ledger.py": "8fa16b929b4ae497109a70add4036dd7cd4501102a261c74eba63de0e0b94bb5",
+      "pf_flow_control_kernel.cpp": "fb1ff31cdcf2a97783283f927fb2d56333a0760e877cb0b93348528138886612",
+      "pf_flow_control_kernel.py": "2460567474f28318f5d09df8ce0977e15748bb9263bc501471cf6a649b334379"
+    },
+    "uncommitted": ""
+  },
+  "seconds": 4.955224275588989
+}
