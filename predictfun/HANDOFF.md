@@ -134,6 +134,19 @@ pulls and bid/ask; judge movement calibration on selected actions before changin
 order design. Other session owns fixes; scheduler remains off.
 <!-- /PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
 
+## 2026-11-19 16:14Z (session aea5bfb9) — THE FOUR-PART REVIEW MODULE DECLARED (committed before its data run); the independent reviewer's items built in
+- [`pf_pipeline_paired_review.py`](research/pf_pipeline_paired_review.py) ([declaration](reviews/pipeline_paired_review_20261119/DECLARATION.md)):
+  - selftest passes;
+  - mutation suite 38 / 38 (the first run had one escape, the first-window boundary; fixed with a planted-fill ledger test).
+- The independent read-only reviewer (USER: "launch a separate agent to check if there are remaining issues") found no defect that changes a published number or verdict. Its points, each checked at the code and handled in the module:
+  - P2: the practical gate against A-PA is nested by construction;
+  - P2: the matched control was compared with the null's mean only;
+  - P2: C1 / C3 / C12 were missing from the paired evaluation;
+  - P3: NaN rows passed V1 / V2;
+  - P3: V4 held a tautology and counted no fallback steps;
+  - P3: the evaluation's provenance was unchecked.
+- Next: the review on Oct 26 and Oct 27; its receipt with computed tables ([tables.py](reviews/pipeline_paired_review_20261119/tables.py)); any validity defect cleared.
+
 ## 2026-11-19 15:04Z (session aea5bfb9) — PLAN v2 R0 DONE: THE CORRECTED PAIRED-DIAGNOSTIC RECEIPT (REVIEW 0026ab85 FIXED, NO REFIT) (USER: "Check my commit, fix the issues, do the pipeline run and evaluation"); a four-part review loop is running
 - Fixes ([receipt](reviews/pipeline_paired_v2_20261119/report.md)):
   - reached rows require the head's own POST admission; the all-posted population is kept under its own name;

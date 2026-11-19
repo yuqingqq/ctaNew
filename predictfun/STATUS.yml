@@ -170,6 +170,16 @@ pipeline_one_day_v3_20261119:
   values_equal_v2: {cells_per_day: 190, differing: 0}
   attribution_vs_pull_all_c: {"20261026": {first_step: 0.0, later: 954.33, never: 995.36, no_prediction: 0.0}, "20261027": {first_step: 0.0, later: -821.85, never: 251.74, no_prediction: 0.0}}
 
+pipeline_paired_review_20261119:
+  status: declared_committed_before_data_run
+  asof: "2026-11-19T16:14Z"
+  user: ["After the run, Launch a loop: diagnosis first, if there are issues, clear the issues. After the run, we review: Validity / Prediction / Controller / Risk", "Can you also launch a separate agent to check if there are remaining issues in the pipeline"]
+  module: predictfun/research/pf_pipeline_paired_review.py
+  declaration: predictfun/reviews/pipeline_paired_review_20261119/DECLARATION.md
+  suites: {selftest: pass, mutants: 38/38, first_run_escape: first_window_boundary_fixed_by_planted_fill_ledger_test}
+  reviewer_items: {p2_practical_nested: labelled_IMPLIED_BY_NESTING_plus_non_nested_quoting_vs_PI0_NEU_E1, p2_null_mean_only: exact_variance_plus_1000_seeded_draws, p2_c1_c3_c12_missing: per_policy_tables, p3_nan_v1_v2: fail_closed, p3_v4_tautology_fallbacks: two_source_counts_and_no_forecast_steps, p3_eval_provenance: input_hashes_and_source_in_V5}
+  next: day_runs_oct26_oct27_then_receipt
+
 pipeline_paired_v2_20261119:
   status: done_r0_corrected_diagnostics_no_refit_values_and_verdicts_unchanged
   asof: "2026-11-19T15:04Z"
