@@ -170,6 +170,17 @@ pulls and bid/ask; judge movement calibration on selected actions before changin
 order design. Other session owns fixes; scheduler remains off.
 <!-- /PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
 
+## 2026-11-19 17:28Z (session aea5bfb9) — REVIEW 92d8e52f ANSWERED: THE FOUR-PART REVIEW v2 (screen zero in the episode-balanced unit; V3 absolute 1 us; receipt corrections) (USER: "Check my latest commit, next, can you ask codex research session for next priority. continue the implementing and next priority loop")
+- [Receipt v2](reviews/pipeline_paired_review_v2_20261119/report.md). Every finding of 92d8e52f holds at the code:
+  - P2: the screen now decides zero, sign and amount on the episode-balanced label mean (the counterexample is a test);
+  - P3: V3 uses an absolute 1 us with no relative term (falsifier: END moved 0.01 ms);
+  - P2 nesting: the receipt's extension to plan v2's ENTRY-PA is withdrawn; nesting holds for the same-admission A-PA only and is a computed predicate in R1 / R4;
+  - P2 B1a: the weighted values are a sensitivity result;
+  - the two matched-control estimands stay separate: the mean-only PASS stands on both days, and the spread reading is PASS / FAIL;
+  - P3 K7: my statement was wrong; line 309 rejects NaN.
+- Checks: selftest; mutation suite 41 / 41. The declared v1 / v2 comparison on Oct 26 and 27: every reading, value and screen verdict identical (0 differences). Peak RSS 1,796 / 1,916 MiB.
+- Next: R1, the branch engine ([pf_branch_engine.py](research/pf_branch_engine.py), uncommitted until its checks pass); one review request goes to the Codex research thread with the R1 design questions.
+
 ## 2026-11-19T16:19Z (session aea5bfb9) — THE FOUR-PART REVIEW DONE: VALIDITY PASS (no open defect), PREDICTION FAIL, CONTROLLER FAIL, RISK LOCATED; the matched control holds with its spread on Oct 26 only (USER: "After the run, Launch a loop ... we review: Validity ... Prediction ... Controller ... Risk")
 - [Receipt](reviews/pipeline_paired_review_20261119/report.md); every table is computed by [tables.py](reviews/pipeline_paired_review_20261119/tables.py). The module was declared before its data run (6775eabd, 38 / 38 mutants).
 - **Validity, both days: PASS.**
