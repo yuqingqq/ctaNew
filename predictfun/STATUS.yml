@@ -1,3 +1,21 @@
+prediction_pipeline_contract_20261119_codex:
+  status: interface_and_saved_accounting_gate_complete_predictor_not_fitted
+  asof: "2026-11-19T02:59:01.372286+00:00"
+  request: "work on prediction, value mapping and controller pipeline"
+  plan: predictfun/handoffs/20261119_prediction_pipeline.md
+  report: predictfun/reviews/pipeline_contract_20261119/report.md
+  receipt: predictfun/reviews/pipeline_contract_20261119/saved_check_v3.json
+  code: [predictfun/research/pf_pipeline_contract.py, predictfun/research/pf_pipeline_contract_check.py]
+  engine_source: a2f13f37d58d546b949bb4919725739978a47c76
+  tests: {synthetic: 16, saved_day: "20261023", original_orders: 30466, scenarios: 3, accounting_identities: 176214, all_within_1e_7_cents: true}
+  scope: oracle_accounting_and_synthetic_controller_only
+  fitted_predictor: false
+  sequential_policy_replay: false
+  untouched_validation_read: false
+  simulator_changed: false
+  scheduler: remains_disabled
+  next_priority: rich_causal_feature_label_export_on_corrected_neutral_actions_then_frozen_prediction_benchmark
+
 keep_pull_variants_20261119:
   status: done_one_day_no_variant_survives_timing_or_beats_baseline_everywhere
   asof: "2026-11-19T02:49:13Z"

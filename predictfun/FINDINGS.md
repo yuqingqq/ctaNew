@@ -1,3 +1,29 @@
+<!-- PIPELINE_CONTRACT_20261119_CODEX -->
+## 2026-11-19 — Prediction/value/controller integration gate (implementation only)
+
+**HOLDS (bounded accounting):** the new `pf_pipeline_contract` maps joint
+quantity/movement forecasts to per-order retained value, keeps severe excess
+whole, and applies the opposite sign for a pull. Exact target matching includes
+order, side, decision/effect/endpoint times, execution scenario, reference price
+and continuation; economic adjustments carry the same target. Pending pulls
+release no capacity. Realized accounting inputs cannot enter policy decisions.
+
+As of Nov19 02:59:01.372286Z, 16 synthetic tests including planted bad inputs pass;
+176,214 value identities across M0/M50/M250 reconcile to saved Oct23 outputs,
+with 30,466 original orders/statuses accounted in each scenario. Underlying
+as-of Nov18 20:28:18.245546Z / 02:53:31.517340Z. These are paired label checks,
+not independent return samples or forecast-quality evidence. [Receipt](reviews/pipeline_contract_20261119/saved_check_v3.json),
+[report](reviews/pipeline_contract_20261119/report.md).
+
+**OPEN:** rich causal feature export on corrected identities, trained prediction,
+full sequential integration, common post/wait continuation, queue value and
+portfolio risk, churn and quote availability. The older one-second/six-rung
+models are not calibrated predictions for five-second JOIN. No claim that a
+common endpoint eliminates churn, or that a passing accounting gate implies
+profit. Consumed data only; simulator limitations remain. Next: export aligned
+features/labels with sampled kernel parity before another fit.
+<!-- /PIPELINE_CONTRACT_20261119_CODEX -->
+
 <!-- READINESS_REVIEW_20261119_A2F13F37 -->
 ## 2026-11-19 Targeted readiness review: previous three P2 findings closed
 
