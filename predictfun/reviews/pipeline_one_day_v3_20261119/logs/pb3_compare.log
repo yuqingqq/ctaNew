@@ -1,0 +1,17 @@
+MODELS IDENTICAL (byte for byte, 44 files): True
+20261026: 30 shared columns, 28 identical; differing ['J_ok', 'M_ok']; new ['F_zq', 'J_zq', 'M_zq']; ONLY THE COHERENCE FLAGS DIFFER: True
+   J_ok(v3) = J_ok(v2) AND NOT J_zq ON EVERY ROW: True; J_zq EXACTLY WHERE E[q] = 0 WITH E[q * move] != 0 (and v2 accepted): True
+   post side 0: 0 rows changed, 0 orders, max |E[q * move]| 0.0000 c
+   post side 1: 0 rows changed, 0 orders, max |E[q * move]| 0.0000 c
+   retain side 0: 5 rows changed, 3 orders, max |E[q * move]| 6.8835 c
+   retain side 1: 18 rows changed, 6 orders, max |E[q * move]| 36.5011 c
+   RETAIN rows / orders / max changed (23, 9, 36.5011), the review (23, 9, 36.5011): SAME AS THE REVIEW: True (POST rows changed: 0)
+20261027: 30 shared columns, 28 identical; differing ['J_ok', 'M_ok']; new ['F_zq', 'J_zq', 'M_zq']; ONLY THE COHERENCE FLAGS DIFFER: True
+   J_ok(v3) = J_ok(v2) AND NOT J_zq ON EVERY ROW: True; J_zq EXACTLY WHERE E[q] = 0 WITH E[q * move] != 0 (and v2 accepted): True
+   post side 0: 0 rows changed, 0 orders, max |E[q * move]| 0.0000 c
+   post side 1: 0 rows changed, 0 orders, max |E[q * move]| 0.0000 c
+   retain side 0: 3 rows changed, 1 orders, max |E[q * move]| 1.4478 c
+   retain side 1: 12 rows changed, 5 orders, max |E[q * move]| 5.2075 c
+   RETAIN rows / orders / max changed (15, 6, 5.2075), the review (15, 6, 5.2075): SAME AS THE REVIEW: True (POST rows changed: 0)
+BENCH v3 = v2 EXCEPT THE ROUND-TRIP COHERENCE FLAG: True
+2026-11-19T10:25:08Z tag=pb3_compare rc=0 peak_rss_mib=448 wall_s=2.85 cpu_user_s=1.99 memavail_start_gib=23 disk_free_gib=430->430 slot=claude

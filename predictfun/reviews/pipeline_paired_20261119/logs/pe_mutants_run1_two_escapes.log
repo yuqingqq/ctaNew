@@ -1,0 +1,25 @@
+ 0 none (must pass): rc 0 -> passed
+ 1 Q0a never refuses: rc 1 -> caught: PIPELINE ENTRY SELFTEST FAILED: the entry run accepted a changed committed policy value | a refused entry run wrote output (a changed committed policy value)
+ 2 Q0a ignores the prediction file: rc 1 -> caught: PIPELINE ENTRY SELFTEST FAILED: the entry run accepted a policy output computed on another prediction file | a refused entry run wrote output (a policy output computed on another prediction file)
+ 3 Q0b never refuses: rc 1 -> caught: PIPELINE ENTRY SELFTEST FAILED: the entry run accepted the MODEL-J landing moved by 1 ms | a refused entry run wrote output (the MODEL-J landing moved by 1 ms)
+ 4 Q0c never refuses: rc 1 -> caught: PIPELINE ENTRY SELFTEST FAILED: the entry run accepted every executed pull in the first-step group | a refused entry run wrote output (every executed pull in the first-step group)
+ 5 Q0d never refuses: rc 1 -> caught: PIPELINE ENTRY SELFTEST FAILED: the entry run accepted a zero-quantity POST forecast with E[q * move] -50 c flagged coherent | a refused entry run wrote output (a zero-quantity POST forecast with E[q 
+ 6 Q0d ignores the round trip: rc 1 -> caught: PIPELINE ENTRY SELFTEST FAILED: the entry run accepted a zero-quantity POST forecast with E[q * move] -50 c flagged coherent | a refused entry run wrote output (a zero-quantity POST forecast with E[q 
+ 7 Q0d compares the verdicts only: rc 1 -> caught: PIPELINE ENTRY SELFTEST FAILED: the entry run accepted the entry sign reversed | a refused entry run wrote output (the entry sign reversed) | the entry run accepted the rule posting on refused forecas
+ 8 Q0e never refuses (the POST rows): rc 1 -> caught: PIPELINE ENTRY SELFTEST FAILED: the entry run accepted a POST prediction for a state the export lacks | a refused entry run wrote output (a POST prediction for a state the export lacks)
+ 9 Q0e never refuses (the labels): rc 1 -> caught: PIPELINE ENTRY SELFTEST FAILED: the entry run accepted a POST label that is not the bank's value at B | a refused entry run wrote output (a POST label that is not the bank's value at B)
+10 the rule posts on refused forecasts: rc 1 -> caught: PIPELINE ENTRY SELFTEST FAILED: planted entry set / triggers: 160 of 139 / 293 of 293 | the synthetic entry run refused: PIPELINE ENTRY FAILED -> no output: Q0d: on 640 POST forecasts the contract's v
+11 the matched null is global: rc 1 -> caught: PIPELINE ENTRY SELFTEST FAILED: the matched null on the hand example: -2.0 (want 1; a global null gives -2) | the exact matched null 356.296 vs the mean of 400 matched draws 297.540 (se 6.687)
+12 the null weight over all opportunities: rc 1 -> caught: PIPELINE ENTRY SELFTEST FAILED: the matched null on the hand example: -1.0 (want 1; a global null gives -2) | the exact matched null 5.491 vs the mean of 400 matched draws 297.540 (se 6.687)
+13 MODEL-J removal from the decision, not its landing: rc 1 -> caught: PIPELINE ENTRY SELFTEST FAILED: the synthetic entry run refused: PIPELINE ENTRY FAILED -> no output: Q0b M50|A58|L37|N100 POST-ALL MODEL-J: the bank 1,640.500 vs the per-opportunity path 1,565.500 | Q
+14 PULL-ALL from the second live step: rc 1 -> caught: PIPELINE ENTRY SELFTEST FAILED: the synthetic entry run refused: PIPELINE ENTRY FAILED -> no output: Q0b M50|A58|L37|N100 POST-ALL PULL-ALL: the bank 252.000 vs the per-opportunity path 530.000 | Q0b 
+15 MODEL-J pulls that do not execute counted: rc 0 -> passed   <<< UNEXPECTED
+16 the first window ends at step 1: rc 1 -> caught: PIPELINE ENTRY SELFTEST FAILED: by a per-fill loop: the windows [0.0, 252.0, 2380.5] vs [255.0, -3.0, 2380.5], no-young 142.500 vs 142.500
+17 the age from submission, not activation: rc 1 -> caught: PIPELINE ENTRY SELFTEST FAILED: by a per-fill loop: the windows [255.0, -3.0, 2380.5] vs [255.0, -3.0, 2380.5], no-young 262.500 vs 142.500
+18 N1 read on POST-ALL: rc 0 -> passed   <<< UNEXPECTED
+19 N2 read under KEEP: rc 1 -> caught: PIPELINE ENTRY SELFTEST FAILED: readings recomputed from the CSV {'N1 V(MODEL-POST, MODEL-J) vs NO-ENTRY': 'ABOVE-NO-ENTRY-IN-TESTED-SCENARIOS', 'N5 V(MODEL-POST, MODEL-J) - V(POST-ALL, MODEL-J)': 'BE
+20 N5 without the reference: rc 1 -> caught: PIPELINE ENTRY SELFTEST FAILED: readings recomputed from the CSV {'N1 V(MODEL-POST, MODEL-J) vs NO-ENTRY': 'ABOVE-NO-ENTRY-IN-TESTED-SCENARIOS', 'N5 V(MODEL-POST, MODEL-J) - V(POST-ALL, MODEL-J)': 'BE
+21 E_entry against zero instead of the null: rc 1 -> caught: PIPELINE ENTRY SELFTEST FAILED: readings recomputed from the CSV {'N1 V(MODEL-POST, MODEL-J) vs NO-ENTRY': 'ABOVE-NO-ENTRY-IN-TESTED-SCENARIOS', 'N5 V(MODEL-POST, MODEL-J) - V(POST-ALL, MODEL-J)': 'BE
+22 the error split without the spread: rc 1 -> caught: PIPELINE ENTRY SELFTEST FAILED: readings recomputed from the CSV {'N1 V(MODEL-POST, MODEL-J) vs NO-ENTRY': 'ABOVE-NO-ENTRY-IN-TESTED-SCENARIOS', 'N5 V(MODEL-POST, MODEL-J) - V(POST-ALL, MODEL-J)': 'BE
+PIPELINE ENTRY MUTATION CHECK FAILED: 2 unexpected outcomes of 23
+2026-11-19T09:49:05Z tag=pe_mutants rc=1 peak_rss_mib=727 wall_s=682.04 cpu_user_s=654.23 memavail_start_gib=23 disk_free_gib=430->431 slot=claude

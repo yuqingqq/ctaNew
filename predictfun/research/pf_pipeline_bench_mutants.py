@@ -42,6 +42,8 @@ MUT = [
     ('the gate ignores E2', "for k in ('E1 VALUE LEVEL', 'E2 BOUNDARY SIGN', 'E3 LOSS AMOUNT'))", "for k in ('E1 VALUE LEVEL', 'E3 LOSS AMOUNT'))"),
     ('the gate ignores the ranking', "    return {kind: 'PASS' if all(R[kind][s][d]['J']['Q1 AMOUNT'] == 'CALIBRATED-IN-AMOUNT' and R[kind][s][d]['J']['Q3 VALUE RANKING'] == 'RANKS-BEYOND-FAIR-EDGE'",
      "    return {kind: 'PASS' if all(R[kind][s][d]['J']['Q1 AMOUNT'] == 'CALIBRATED-IN-AMOUNT'"),
+    # --- v3 (review 1adf6a33 P2): zero-quantity moments
+    ('zero-quantity moments accepted (v2 coherence, no round trip)', "    if not V2_COHERENCE:\n        out['ok'] = out['ok'] & rt", "    if False:\n        out['ok'] = out['ok'] & rt"),
 ]
 STALE = 97                                                # exit code of a replacement target that does not occur as declared
 

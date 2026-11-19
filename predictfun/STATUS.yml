@@ -96,6 +96,35 @@ prediction_pipeline_contract_20261119_codex:
   scheduler: remains_disabled
   next_priority: rich_causal_feature_label_export_on_corrected_neutral_actions_then_frozen_prediction_benchmark
 
+pipeline_one_day_v3_20261119:
+  status: done_g0_review_1adf6a33_fixed_values_unchanged_attribution_computed
+  asof: "2026-11-19T12:56Z"
+  user: ["Can you check the commit and proceed the next priority", "Check the new commit about the testing plan"]
+  receipt: predictfun/reviews/pipeline_one_day_v3_20261119/report.md
+  review_1adf6a33: {P2_zero_quantity_coherence: fixed_bench_v3_round_trip_policy_v3_every_row, P2_attribution: computed_counts_py, P2_entry_conclusion: narrowed}
+  suites: {bench_v3: 25/25, policy_v3_1: 19/19, g0_cases: 12/12}
+  bench_v3_vs_v2: {models_identical: true, flag_changes: {"20261026": 23, "20261027": 15}, post_rows_changed: 0}
+  parity_clip_defect: {rows_oct26: 451, cause: rebuilt_conditional_quantity_one_ulp_above_remaining, fix: snap_within_declared_tolerance}
+  values_equal_v2: {cells_per_day: 190, differing: 0}
+  attribution_vs_pull_all_c: {"20261026": {first_step: 0.0, later: 954.33, never: 995.36, no_prediction: 0.0}, "20261027": {first_step: 0.0, later: -821.85, never: 251.74, no_prediction: 0.0}}
+
+pipeline_paired_20261119:
+  status: done_candidate_fails_gates_no_policy_beats_never_posting_on_both_days
+  asof: "2026-11-19T12:56Z"
+  user: ["Build the new model and get the numbers"]
+  receipt: predictfun/reviews/pipeline_paired_20261119/report.md
+  plan: 0c3d2523_steps_2_3_step_1_skipped_by_user
+  pi0: {model: J_fitted_on_20261023, rule: E1, reentry: none_before_common_END}
+  candidate: {name: A, heads: direct_paired_advantage_regression, inputs: 91, controls: [AF, AM, PI0, NEU, E1], multiplicity: {candidate_heads: 12, control_heads: 32}}
+  suites: {paired: 20/20, eval: 17/17, entry: 32/32}
+  labels_mean_post_c: {paired: {"20261024": -0.645, "20261025": -0.594, "20261026": -0.835, "20261027": -0.887}, neutral: {"20261024": -11.046, "20261025": -11.330, "20261026": -13.967, "20261027": -15.101}}
+  prediction_gate: FAIL
+  value_at_B_c: {"20261026": {A: -2032, A_PA: -1053, PI0: 478, NEU: 3540, E1: 277, PA: -23731}, "20261027": {A: -11865, A_PA: -6944, PI0: -2608, NEU: -2827, E1: -824, PA: -23346}}
+  economic_gate: {"20261026": FAIL, "20261027": FAIL}
+  matched_control: {"20261026": PASS, "20261027": PASS}
+  practical_gate: {"20261026": FAIL, "20261027": FAIL}
+  memory_note: eval_20261027_peak_rss_2075_mib_above_the_guard_level_checked_at_fixed_points
+
 pipeline_one_day_v2_20261119:
   status: done_checks_first_rule_beats_a0_not_pull_all_consistently_post_gate_fails
   asof: "2026-11-19T07:42:42Z"

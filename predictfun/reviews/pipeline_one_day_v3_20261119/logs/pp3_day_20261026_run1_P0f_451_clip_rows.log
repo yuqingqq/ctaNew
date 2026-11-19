@@ -1,0 +1,2 @@
+PIPELINE POLICY FAILED -> no output: P0f: the coherence flag and the rule agree with the contract on 1,269,287 of 1,269,738 rows (1,513 atoms refused, 23 accepted without giving back the moments, 0 compared on the verdict only)
+2026-11-19T10:25:10Z tag=pp3_day_20261026 rc=1 peak_rss_mib=1737 wall_s=60.95 cpu_user_s=58.51 memavail_start_gib=23 disk_free_gib=430->430 slot=claude

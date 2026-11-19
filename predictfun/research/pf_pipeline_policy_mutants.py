@@ -25,9 +25,15 @@ MUT = [
     # --- v2 (review 89caa74c P2): one accepted-forecast path
     ('the rule acts on refused forecasts', "hit = p[acts if RAW_TRIGGERS else (acts & p.J_ok.astype(bool))]", "hit = p[acts]"),
     ('P0g never refuses', "    if off:\n        bad.append(f'P0g", "    if False:\n        bad.append(f'P0g"),
-    ('the parity samples coherent forecasts only', "    for flag in (True, False):", "    for flag in (True,):"),
-    ('the parity ignores the contract verdict', "agree += int(accepted == bool(r.J_ok) and action == rule)", "agree += int(action == rule)"),
-    ('no row sampled for the contract parity', "def contract_parity(pred, trained, n=2000, seed=11):", "def contract_parity(pred, trained, n=0, seed=11):"),
+    ('the parity ignores the contract verdict', "agree += int(coherent == bool(r.J_ok) and action == rule)", "agree += int(action == rule)"),
+    # --- v3 (review 1adf6a33 P2): the parity on every row, with the moments' round trip
+    ('the parity compares actions only (no round trip)', "        coherent = accepted and rt", "        coherent = accepted"),
+    ('the round-trip tolerance widened', "tol = lambda x: 1e-9 * max(1., abs(x))", "tol = lambda x: 1e3 * max(1., abs(x))"),
+    ('the parity skips zero-quantity rows', "    for r in p.itertuples():", "    for r in p[p.J_Eq > 0].itertuples():"),
+    ('no row compared by the parity', "    p = pred[pred.kind == 'retain']; comp = ref = agree = rtbad = tiny = 0", "    p = pred[pred.kind == 'retain'].iloc[:0]; comp = ref = agree = rtbad = tiny = 0"),
+    ('near-zero values skip the verdict', "            tiny += 1; agree += int(coherent == bool(r.J_ok))", "            tiny += 1; agree += 1"),
+    # --- v3.1: the rebuilt quantity at the remaining-size clip
+    ('the rebuilt quantity not set back to the remaining', "            qf = rem if rem < qf <= rem + tol(rem) else qf ", "            qf = qf "),
 ]
 STALE = 97                                                # exit code of a replacement target that does not occur as declared
 

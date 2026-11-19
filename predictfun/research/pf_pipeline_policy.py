@@ -14,6 +14,15 @@ v2 (review 89caa74c P2, declared before v2 ran): the rule acts only on contract-
  contract's verdict = J_ok and its action (or fallback) = the rule's; P0g recomputes the executed pull steps by a second code path. Days: Oct 26
  (the benchmark's economic gate of record) and Oct 27 (post hoc). This is a prediction -> keep / pull test with decisions FIXED across the
  scenarios (an execution sensitivity), not a replay of a state-dependent controller and not POST / WAIT.
+v3 (review 1adf6a33 P2, declared before v3 ran): P0f runs on EVERY RETAIN row (v2 sampled 2,000 and never met the zero-quantity boundary).
+ The contract's verdict is: it accepts the rebuilt two-atom forecast AND its map_value gives back the row's E[q], E[q * move] and mapped value
+ (within 1e-9, relative above 1); it must equal the coherence flag on every row, and the action (decide_one on an accepted forecast, else the
+ fallback keep) must equal the rule's on every row with |V_J| >= 1e-6. An action-only parity misses an impossible positive value (both keep).
+ v3.1 (the first v3 run refused, 451 of 1,269,738 Oct 26 rows): the benchmark clips E[q | fill] at the known remaining, and the rebuilt
+ E[q] / P can land one rounding step above it (30 + 3.6e-15), which the contract refuses; the rebuilt quantity is set to the remaining when it
+ exceeds it by no more than the same 1e-9 tolerance (beyond it the contract refuses and the round trip decides). Falsifiers: a forecast at
+ that boundary (accepted), nonfinite moments and E[q * move] 5e-9 c at E[q] = 0 flagged coherent (refused), 5e-10 c (inside the tolerance) accepted.
+ Reads the benchmark v3 predictions (coherence by the same round trip); no other change.
 CONTRACT PARITY: on sampled rows the rule's action equals pf_pipeline_contract.decide_one on the equivalent two-atom forecast (P at
  (E[q | fill], E[qm] / E[q] per share), 1 - P at no fill; client state live, no economic terms) -> pull iff V_J < 0. Rows whose atom the
  contract refuses (an endpoint mid outside [0, 100]) or whose |V_J| < 1e-6 (a sign set by rounding) are counted, not compared.
@@ -34,7 +43,8 @@ LIMITS: one consumed day (G = 1, point values); the model was chosen by nothing 
  at END, not P&L; queue rule M only (C5); replay fills not validated on live orders (C10); one order at a time, no re-post after a pull.
 SELFTEST (synthetic tape, no data): planted predictions give the planted trigger steps; the bank values them; every control passes; refusals
  by their own control with no output: a prediction for a row the export does not have and a missing prediction (P0e), a changed committed
- report value (P0a) and keep / pull value (P0b), the model rule valued as A+0 (P0c), a KEEP drift (P0d), the rule's sign reversed (P0f). Mutations: pf_pipeline_policy_mutants.py.
+ report value (P0a) and keep / pull value (P0b), the model rule valued as A+0 (P0c), a KEEP drift (P0d), the rule's sign reversed (P0f); v3:
+ zero-quantity forecasts with E[q * move] -50 / +50 c flagged coherent (P0f). Mutations: pf_pipeline_policy_mutants.py.
 Usage (run_light, PF_SLOT=claude): pf_pipeline_policy.py selftest | day <day>
 """
 import contextlib
@@ -59,8 +69,8 @@ import pf_queue_place_test as QP                          # noqa: E402
 import pf_queue_place_ledger as QL                        # noqa: E402
 
 C, pd, I = KP.C, KP.pd, KP.I
-OUT = Path(I.K.IO) / 'pipeline_policy_v2_20261119'       # v2 (review 89caa74c): one accepted-forecast path for the rule and the parity
-BENCH = Path(I.K.IO) / 'pipeline_bench_v2_20261119'
+OUT = Path(I.K.IO) / 'pipeline_policy_v3_20261119'       # v3 (review 1adf6a33 P2): the parity on every row, with the moments' round trip
+BENCH = Path(I.K.IO) / 'pipeline_bench_v3_20261119'
 EXPORT = Path(I.K.IO) / 'pipeline_export_v2_20261119'
 MARK = 'PIPELINE POLICY'
 RULE = 'MODEL-J'
@@ -88,30 +98,34 @@ def trigger_fn(hit):
     return f
 
 
-def contract_parity(pred, trained, n=2000, seed=11):
-    """P0f: on RETAIN rows sampled from both the coherent and the incoherent forecasts, the contract's verdict equals the coherence flag and its
-    action (decide_one, or the fallback keep when it refuses) equals the rule's -> (compared, refused atoms, agreements)."""
-    rng = np.random.default_rng(seed); p = pred[pred.kind == 'retain']; parts = []
-    for flag in (True, False):
-        g = p[p.J_ok.astype(bool) == flag]; parts.append(g.iloc[rng.choice(len(g), min(n // 2, len(g)), replace=False)] if len(g) else g)
-    p = pd.concat(parts); comp = ref = agree = 0
+def contract_parity(pred, trained):
+    """P0f (v3): on every RETAIN row the contract's verdict (it accepts the two-atom forecast rebuilt from the row's moments and its map_value
+    gives them back with the mapped value) equals the coherence flag, and its action (decide_one, or the fallback keep when the verdict is no)
+    equals the rule's -> (compared, refused atoms, agreements, accepted without the round trip, rows with |V_J| < 1e-6 compared on the verdict only)."""
+    p = pred[pred.kind == 'retain']; comp = ref = agree = rtbad = tiny = 0; tol = lambda x: 1e-9 * max(1., abs(x))
     for r in p.itertuples():
-        if abs(r.J_V) < 1e-6:
-            continue
-        side = 'bid' if r.side == 0 else 'ask'; sg = 1. if r.side == 0 else -1.; rem = float(r.fp_remaining); t = float(r.t); d = float(r.decision_ms)
+        side = 'bid' if r.side == 0 else 'ask'; rem = float(r.fp_remaining); t = float(r.t); d = float(r.decision_ms); val = None
         tg = PC.Target(f'{r.day}:{int(r.oid)}', side, 'retain', d, t + float(KP.landing(int(r.j))), t + KP.H, float(r.pf_mid), float(r.p), rem,
                        B_NAME, 'no_repost_to_common_END;zero_continuation_after_END', 'JOIN30/END=birth+5000/queueM/structuralKeeper/scenarios-v6')
         try:
             qf = float(r.J_Eq / r.J_P) if r.J_P > 0 else 0.; mv = float(r.J_Eqm / r.J_Eq) if r.J_Eq > 0 else 0.
+            qf = rem if rem < qf <= rem + tol(rem) else qf                                       # v3.1: E[q | fill] clipped at the remaining, rounded above it by E[q] / P
             atoms = (PC.Atom(float(r.J_P), qf, mv), PC.Atom(1. - float(r.J_P), 0., 0.)) if 0. < r.J_P < 1. else (PC.Atom(1., qf if r.J_P >= 1 else 0., mv),)
-            fc = PC.Forecast(tg, atoms, d, trained, 'learned', 'pf_pipeline_bench:J')
+            fc = PC.Forecast(tg, atoms, d, trained, 'learned', 'pf_pipeline_bench:J'); val = PC.map_value(tg, fc)
             st = PC.ClientState(tg.order_id, side, d, 'live', rem, 0., rem if side == 'bid' else 0., rem if side == 'ask' else 0., 1e9)
             dec = PC.decide_one(tg, fc, st, PC.Economics(tg, 0., 0., 0., 0.)); accepted, action = True, dec.action
         except ValueError:
             ref += 1; accepted, action = False, 'keep'                                          # the contract's fallback: no usable forecast -> keep
+        rt = val is not None and abs(val.quantity - r.J_Eq) <= tol(r.J_Eq) and abs(val.movement - r.J_Eqm) <= tol(r.J_Eqm) and abs(val.retained - r.J_V) <= tol(r.J_V)
+        coherent = accepted and rt                                                              # v3: the forecast handed over is the model's
+        rtbad += int(accepted and not rt); action = action if coherent else 'keep'
         rule = 'pull' if (bool(r.J_ok) and bool((r.J_V > 0) if FLIP else (r.J_V < 0))) else 'keep'
-        comp += 1; agree += int(accepted == bool(r.J_ok) and action == rule)
-    return comp, ref, agree
+        comp += 1
+        if abs(r.J_V) < 1e-6:
+            tiny += 1; agree += int(coherent == bool(r.J_ok))
+        else:
+            agree += int(coherent == bool(r.J_ok) and action == rule)
+    return comp, ref, agree, rtbad, tiny
 
 
 def rule_readings(res, name):
@@ -160,9 +174,10 @@ def controls(res, day, O, Fl, hit, report, kp_json, pred, exp_rows, parity):
     hitd = {(str(k[0]), int(k[1])): int(v) for k, v in hit.items()}; off = {k for k in set(want) | set(hitd) if want.get(k) != hitd.get(k)}
     if off:
         bad.append(f'P0g: the executed pull steps differ from the first coherent predicted loss on {len(off):,} orders')
-    comp, refd, agree = parity                                                              # P0f
+    comp, refd, agree, rtbad, tiny = parity                                                 # P0f
     if not (comp > refd and agree == comp):
-        bad.append(f'P0f: the rule agrees with the contract\'s decide_one on {agree:,} of {comp:,} comparable rows ({refd:,} atoms refused)')
+        bad.append(f'P0f: the coherence flag and the rule agree with the contract on {agree:,} of {comp:,} rows ({refd:,} atoms refused, {rtbad:,} accepted '
+                   f'without giving back the moments, {tiny:,} compared on the verdict only)')
     return bad
 
 
@@ -198,10 +213,10 @@ def run(day, out=None, sc_out=None, kp=None, bench=None, export=None, report=Non
                                                     V_noyoung=res[r][nm]['no_young']['fills_value'] + res[r][nm]['no_young']['score'],
                                                     E_b1a_M50=res[r][nm]['b1a_E']['M50'], pending_share_of_gross=res[r][nm]['cancel_pending']['share_of_gross'])
                                                for r in res for nm in nms])
-    L = [f'THE LEARNED KEEP / PULL RULE {RULE} THROUGH THE SCENARIO BANK, DECISIONS FIXED ACROSS SCENARIOS (pf_pipeline_policy.py v2; {day}; c summed; pull at the first '
+    L = [f'THE LEARNED KEEP / PULL RULE {RULE} THROUGH THE SCENARIO BANK, DECISIONS FIXED ACROSS SCENARIOS (pf_pipeline_policy.py v3; {day}; c summed; pull at the first '
          f'live step whose contract-coherent predicted RETAIN value is below 0; the benchmark\'s RETAIN economic gate: {gate}; local marks at END, not P&L)',
          f"  {len(Op):,} states with a path ({int((Op.status == 'eligible').sum()):,} eligible); MODEL-J pulls {int(len(hit)):,} orders at a predicted loss; contract parity "
-         f'{parity[2]:,} / {parity[0]:,} ({parity[1]:,} atoms refused); CONTROLS: YES (P0a-P0f)', '',
+         f'{parity[2]:,} / {parity[0]:,} rows ({parity[1]:,} atoms refused, {parity[3]:,} accepted without the round trip, {parity[4]:,} on the verdict only); CONTROLS: YES (P0a-P0g)', '',
          f"  {'scenario':<24} {'E A+0':>11} {'E MODEL-J':>11} {'V A+0':>12} {'V MODEL-J':>12} {'dV':>11} {'pulls A+0':>10} {'pulls J':>9} {'V KEEP':>12} {'V PULL-ALL':>11}   (V = value; PULL-ALL value = KEEP + its improvement)"]
     for nm in nms:
         a, m = res['A+0'][nm], res[RULE][nm]
@@ -216,7 +231,7 @@ def run(day, out=None, sc_out=None, kp=None, bench=None, export=None, report=Non
           'P&L; queue rule M only (C5); no order-level validation (C10).']
     out.mkdir(parents=True, exist_ok=True); P.to_csv(out / f'policy_{day}.csv', index=False); (out / f'policy_{day}.txt').write_text('\n'.join(L) + '\n')
     C.dump(out / f'policy_{day}.json', dict(asof=C.stamp(), day=day, readings=R, diffs=d, values={r: {nm: {k: x for k, x in v.items() if not k.startswith('_')} for nm, v in res[r].items()} for r in res},
-                                            pulled_orders=int(len(hit)), parity=dict(compared=parity[0], refused=parity[1], agree=parity[2]),
+                                            pulled_orders=int(len(hit)), parity=dict(compared=parity[0], refused=parity[1], agree=parity[2], accepted_without_round_trip=parity[3], verdict_only=parity[4]),
                                             inputs=dict(bench=C.sha(bench / 'bench.json'), predictions=C.sha(pf_) if pf_.exists() else None, export_receipt=C.sha(export / day / 'receipt.json'),
                                                         report=C.sha(report), keep_pull=C.sha(kp / 'keep_pull.json'), days=rec),
                                             outputs={x: C.sha(out / x) for x in (f'policy_{day}.txt', f'policy_{day}.csv')},
@@ -256,7 +271,13 @@ def selftest():
                                  pf_mid=float(o.p) + (.5 if o.side == 0 else -.5), fp_remaining=30., J_P=.4, J_Eq=4., J_Eqm=qm_, J_V=.5 * 4. + qm_, J_ok=not bad_))
             if k is not None:
                 want[(d0, int(o.oid))] = int(k)
-        pred = pd.DataFrame(rows); hit = triggers_of(pred)
+        pred = pd.DataFrame(rows)
+        nf = pred.index[(pred.J_V > 0) & pred.J_ok.astype(bool)][0]; pred.loc[nf, ['J_P', 'J_Eq', 'J_Eqm', 'J_V']] = 0.   # v3: a certain no-fill, coherent at E[q] = 0
+        pos = pred.index[(pred.J_V > 0) & pred.J_ok.astype(bool)]; pb = next(x for x in np.linspace(.05, .95, 9001) if (x * 30.) / x > 30.)   # v3.1 accepted cases:
+        pred.loc[pos[3], ['J_P', 'J_Eq', 'J_Eqm']] = [pb, pb * 30., .1 * pb * 30.]; pred.loc[pos[3], 'J_V'] = .5 * pb * 30. + .1 * pb * 30.   # E[q | fill] at the
+        pred.loc[pos[4], ['J_Eq', 'J_Eqm', 'J_V']] = [0., 5e-10, 5e-10]                            # remaining (E[q] / P rounds above it); a tiny move inside the
+        pred.loc[pos[5], ['J_Eqm', 'J_V', 'J_ok']] = [np.nan, np.nan, False]                       # tolerance; a nonfinite forecast flagged incoherent
+        hit = triggers_of(pred)
         if not (dict(hit.items()) == want and len(want) > 0):
             bad.append(f'planted triggers: {len(hit)} found, {len(want)} planted')
         exp = tmp / 'exp' / d0; exp.mkdir(parents=True); pred[['oid', 'kind', 'j']].assign(status='eligible').to_parquet(exp / 'rows_000.parquet', index=False)
@@ -293,6 +314,17 @@ def selftest():
         refused('an exported row without a prediction', 'P0e', pred=pred.iloc[1:])
         flip = pred.copy(); i_ = flip.index[flip.J_ok.astype(bool) & (flip.J_V > 0)][0]; flip.loc[i_, 'J_ok'] = False   # the contract accepts it, the flag
         refused('a coherence flag that disagrees with the contract (the action alike)', 'P0f', pred=flip)                # says refused: only the verdict differs
+        zc = pred.index[pred.J_ok.astype(bool) & (pred.J_V > 0) & (pred.J_P > 0)]                     # v3 (review 1adf6a33 P2): zero expected quantity with a
+        zn = pred.copy(); zn.loc[zc[1], ['J_Eq', 'J_Eqm', 'J_V']] = [0., -50., -50.]                   # nonzero E[q * move], flagged coherent as v2 did
+        refused('a zero-quantity forecast with E[q * move] -50 c flagged coherent (the rule pulls, the contract keeps)', 'P0f', pred=zn)
+        zp = pred.copy(); zp.loc[zc[2], ['J_Eq', 'J_Eqm', 'J_V']] = [0., 50., 50.]
+        refused('a zero-quantity forecast with E[q * move] +50 c flagged coherent (both keep: only the round trip differs)', 'P0f', pred=zp)
+        zf = pred.copy(); zf.loc[nf, 'J_ok'] = False                                                   # the certain no-fill (V 0: compared on the verdict only)
+        refused('a coherence flag that disagrees with the contract on a zero-value forecast', 'P0f', pred=zf)
+        zt = pred.copy(); zt.loc[pos[6], ['J_Eq', 'J_Eqm', 'J_V']] = [0., 5e-9, 5e-9]                 # v3.1: beyond the tolerance, flagged coherent
+        refused('E[q * move] 5e-9 c at E[q] = 0 flagged coherent', 'P0f', pred=zt)
+        zn2 = pred.copy(); zn2.loc[pos[5], 'J_ok'] = True
+        refused('a nonfinite forecast flagged coherent', 'P0f', pred=zn2)
         J0 = json.loads(rep.read_text()); J0['scenarios'][B_NAME]['by_day'][d0] += 1.; bad_rep = tmp / 'rep_bad.json'; bad_rep.write_text(json.dumps(J0))
         refused('a changed committed report value', 'P0a', report=bad_rep)
         kpb = tmp / 'kpb'; shutil.copytree(tmp / 'kp', kpb); Jk = json.loads((kpb / 'keep_pull.json').read_text())
@@ -312,7 +344,9 @@ def selftest():
           'with every control passing (A+0 = the committed report and keep / pull run, MODEL-J = the clock audit, contract parity); refusals by their own '
           'control with no output: a prediction for a row the export lacks and a missing prediction (P0e), a changed committed report value (P0a) and '
           'keep / pull value (P0b), the model rule valued as A+0 (P0c), a KEEP drift (P0d), the rule with its sign reversed (P0f), a coherence flag that '
-          'disagrees with the contract (P0f), the rule acting on refused forecasts (P0g)', flush=True)
+          'disagrees with the contract (P0f), the rule acting on refused forecasts (P0g); v3: zero-quantity forecasts with E[q * move] -50 / +50 c flagged '
+          'coherent (P0f, the positive one by the round trip alone), a certain no-fill accepted; v3.1: a forecast at the remaining-size clip '
+          '(E[q] / P rounding above it) and a move of 5e-10 c at E[q] = 0 accepted, 5e-9 c and a nonfinite forecast flagged coherent refused (P0f)', flush=True)
 
 
 if __name__ == '__main__':

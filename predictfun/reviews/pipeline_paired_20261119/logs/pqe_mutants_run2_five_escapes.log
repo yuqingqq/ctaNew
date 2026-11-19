@@ -1,0 +1,19 @@
+ 0 none (must pass): rc 0 -> passed
+ 1 R0a never refuses: rc 1 -> caught: PIPELINE PAIRED EVAL SELFTEST FAILED: the run accepted a missing prediction | a refused run wrote output (a missing prediction)
+ 2 R0b never refuses (values): rc 1 -> caught: PIPELINE PAIRED EVAL SELFTEST FAILED: the run accepted the per-opportunity landing moved by 1 ms | a refused run wrote output (the per-opportunity landing moved by 1 ms)
+ 3 R0c never refuses: rc 1 -> caught: PIPELINE PAIRED EVAL SELFTEST FAILED: the run accepted a POST label that is not the order's value under pi0 | a refused run wrote output (a POST label that is not the order's value under pi0)
+ 4 R0d never refuses: rc 1 -> caught: PIPELINE PAIRED EVAL SELFTEST FAILED: the landing at the decision refused by another control: PIPELINE PAIRED EVAL FAILED -> no output: R0b (59 failures; first: M50|A58|L37|N100 ALL/A MODEL-J: the ban
+ 5 R0e never refuses: rc 1 -> caught: PIPELINE PAIRED EVAL SELFTEST FAILED: the run accepted refused posts kept as activated | a refused run wrote output (refused posts kept as activated)
+ 6 R0f never refuses: rc 1 -> caught: PIPELINE PAIRED EVAL SELFTEST FAILED: the last instead of the first pull step refused by another control: PIPELINE PAIRED EVAL FAILED -> no output: R0c (1 failures; first: at B the POST labels sum to 
+ 7 admissions without the coherence flag: rc 1 -> caught: PIPELINE PAIRED EVAL SELFTEST FAILED: the synthetic run refused: PIPELINE PAIRED EVAL FAILED -> no output: R0f (1 failures; first: E1: 64 admissions and 0 pull steps differ from a per-order loop)
+ 8 A posts on a predicted loss: rc 1 -> caught: PIPELINE PAIRED EVAL SELFTEST FAILED: planted admissions / pull steps of A | the synthetic run refused: PIPELINE PAIRED EVAL FAILED -> no output: R0f (6 failures; first: A: 640 admissions and 0 pull s
+ 9 the matched null over all opportunities: rc 0 -> passed   <<< UNEXPECTED
+10 the matched control against zero: rc 0 -> passed   <<< UNEXPECTED
+11 the economic gate against PULL-ALL of every opportunity: rc 0 -> passed   <<< UNEXPECTED
+12 the economic gate ignores pi0: rc 1 -> caught: PIPELINE PAIRED EVAL SELFTEST FAILED: readings recomputed from the CSV / metrics {'A - N0 ACROSS TESTED SCENARIOS': 'ABOVE-N0-IN-TESTED-SCENARIOS', 'A - PI0 ACROSS TESTED SCENARIOS': 'BELOW-PI0-IN-TES
+13 the practical gate ignores the economic gate: rc 0 -> passed   <<< UNEXPECTED
+14 the practical predicates reversed (lifetime): rc 1 -> caught: PIPELINE PAIRED EVAL SELFTEST FAILED: readings recomputed from the CSV / metrics {'A - N0 ACROSS TESTED SCENARIOS': 'ABOVE-N0-IN-TESTED-SCENARIOS', 'A - PI0 ACROSS TESTED SCENARIOS': 'BELOW-PI0-IN-TES
+15 first-review reversals over every admitted order: rc 0 -> passed   <<< UNEXPECTED
+16 the scenario reading against PI0 without PI0: rc 1 -> caught: PIPELINE PAIRED EVAL SELFTEST FAILED: readings recomputed from the CSV / metrics {'A - N0 ACROSS TESTED SCENARIOS': 'ABOVE-N0-IN-TESTED-SCENARIOS', 'A - PI0 ACROSS TESTED SCENARIOS': 'BELOW-PI0-IN-TES
+PIPELINE PAIRED EVAL MUTATION CHECK FAILED: 5 unexpected outcomes of 17
+2026-11-19T12:23:22Z tag=pqe_mutants rc=1 peak_rss_mib=733 wall_s=644.47 cpu_user_s=618.16 memavail_start_gib=23 disk_free_gib=428->428 slot=claude
