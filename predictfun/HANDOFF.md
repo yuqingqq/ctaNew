@@ -1,3 +1,39 @@
+<!-- R0_CLOSURE_REVIEW_20261119_CODEX -->
+## 2026-11-19 — Latest commits verified: R0 closed; next is R1, genuine WAIT/re-entry
+
+Reviewed **0528e1a614d582d92cf3efbcd26d6afdf7ee8686**, including dbe77f9c and
+6775eabd. [Report / next priority](reviews/automatic/20261119_0528e1a6/report.md),
+[artifact audit](reviews/automatic/20261119_0528e1a6/receipt.json),
+[counterexamples](reviews/automatic/20261119_0528e1a6/synthetic.json).
+This advances the previous review-owned R0 priority; the pipeline plan remains
+[revision 2](handoffs/20261119_adaptive_mm_plan_v2.md).
+
+R0 is verified: current-mid movement identity holds on all 5,723,835 label rows;
+reached rows require admissions (67,776 / 76,731); all 44 model pairs identical,
+predictions and values unchanged. A still marks -2032.12 / -11865.45 c at B and
+extra retention versus identical-admission first-pull loses -979.11 / -4921.64 c.
+New matched-null moments/draw counts reproduce: p 0.000999 / 0.304695 (conditional
+selection on consumed Oct26/27, not forward validation). The new commits review
+the old restricted POST-versus-NO_ENTRY candidate; R1 is not implemented.
+
+Remaining P2 instrument bug: the episode-balanced screen checks raw-row total
+zero first, so unequal row counts can change its verdict without changing any
+episode mean. Synthetic case confirmed; zero saved groups affected. Correct it
+before reuse. Report interpretation fixes: static A/A-PA nesting does not prove
+adaptive ENTRY-PA is nested; B1a is a historical sensitivity, not A's measured
+live loss. Minor timing-tolerance/stale-K7 documentation points are in the report.
+No new result-changing fill-accounting defect found.
+
+**ONE next deliverable: R1 code plus synthetic branch/event ledgers** showing
+WAIT enters later, PULL respects pending exposure and can re-enter, KEEP retains
+queue priority, common END stays fixed, and both-side cash/inventory/reservations
+reconcile. Include the small screen correction in preflight; no further R0 refit.
+Then R2 supported teacher/labels, R3 fit, R4 own-state replay. Existing user
+direction covers proceeding; no new permission round is needed merely to start
+R1. Development belongs to the other session. This review ran bounded codex-slot
+checks only and preserved other edits/deletions; scheduler stays disabled.
+<!-- /R0_CLOSURE_REVIEW_20261119_CODEX -->
+
 <!-- ADAPTIVE_MM_PLAN_V2_20261119_CODEX -->
 ## 2026-11-19 — Complete adaptive entry/retention plan, revision 2
 

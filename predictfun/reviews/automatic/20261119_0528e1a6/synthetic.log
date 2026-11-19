@@ -1,0 +1,2 @@
+R0 fixes pass; episode-balanced screen counterexample and timing tolerance limitation reproduced.
+2026-11-19T16:43:21Z tag=review-0528e1a6-synthetic rc=0 peak_rss_mib=218 wall_s=1.36 cpu_user_s=1.21 memavail_start_gib=23 disk_free_gib=472->472 slot=codex

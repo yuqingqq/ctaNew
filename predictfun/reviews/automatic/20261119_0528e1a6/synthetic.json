@@ -1,0 +1,45 @@
+{
+  "R0_counterexamples_fixed": true,
+  "episode_screen": {
+    "observed": [
+      "NOT_EVALUABLE",
+      200,
+      200
+    ],
+    "equal_episode_control": [
+      "PASS",
+      200,
+      200
+    ],
+    "raw_sum": 0.0,
+    "episode_mean_label": -0.5,
+    "episode_mean_prediction": -0.5,
+    "expected": "PASS",
+    "zero_control": "NOT_EVALUABLE"
+  },
+  "timing": {
+    "clean": [
+      0,
+      0,
+      0
+    ],
+    "endpoint_shift_0_01_ms": [
+      0,
+      0,
+      0
+    ],
+    "endpoint_shift_1_ms": [
+      1,
+      0,
+      0
+    ]
+  },
+  "exact_null_control": {
+    "mean": 11.0,
+    "variance": 5.666666666666666,
+    "enumeration_outcomes": 6
+  },
+  "target_commit": "0528e1a614d582d92cf3efbcd26d6afdf7ee8686",
+  "asof": "2026-11-19T16:43:22.257928+00:00",
+  "script_sha256": "5eb2e619b26abd0236aa044ebbf11b0ce81c0686dc70f571e34e0bb617d242a4"
+}

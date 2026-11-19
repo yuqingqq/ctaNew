@@ -1,3 +1,35 @@
+r0_closure_review_20261119_codex:
+  status: R0_verified_complete_R1_branch_engine_next
+  target_commit: 0528e1a614d582d92cf3efbcd26d6afdf7ee8686
+  reviewed_commits: [dbe77f9c1cfac5c259d7408683539c0ad3758eca, 6775eabd910488be3b3ca975fa41ec183f3c3097, 0528e1a614d582d92cf3efbcd26d6afdf7ee8686]
+  report: predictfun/reviews/automatic/20261119_0528e1a6/report.md
+  receipt: predictfun/reviews/automatic/20261119_0528e1a6/receipt.json
+  synthetic: predictfun/reviews/automatic/20261119_0528e1a6/synthetic.json
+  prior_findings: {pair_qm_reference: fixed, reached_POST_admission: fixed, restricted_alternative_naming: fixed}
+  saved_label_identities_checked: 5723835
+  model_pairs_identical: 44
+  unchanged_prediction_fields_and_policy_values: true
+  P2_instrument: episode_balanced_screen_uses_raw_row_zero_test
+  instrument_defect_saved_groups_affected: 0
+  P2_interpretations: [static_nesting_overgeneralized_to_adaptive_ENTRY_PA, B1a_weights_presented_as_actual_loss_correction]
+  P3: [timing_isclose_relative_tolerance, stale_K7_NaN_description]
+  baseline_A_value_cents: {Oct26: -2032.1236860387228, Oct27: -11865.445403350106}
+  matched_null_draws: 1000
+  matched_null_conditional_p: {Oct26: 0.000999000999000999, Oct27: 0.3046953046953047}
+  result_scope: restricted_POST_vs_NO_ENTRY_single_order_END_marks
+  adaptive_WAIT_reentry_implemented: false
+  consumed_evaluation_days: ["20261026", "20261027"]
+  original_opportunities: {Oct26: 30242, Oct27: 29820}
+  path_opportunities: {Oct26: 29832, Oct27: 29338}
+  artifact_audit_asof: "2026-11-19T16:43:38.702823+00:00"
+  checks: {bounded_runs: 3, slot: codex, peak_rss_mib: 878, raw_tape_training_untouched_validation: false}
+  immediate_priority: R1_genuine_WAIT_reentry_engine_and_synthetic_branch_ledgers
+  preflight: correct_weighted_zero_screen_and_report_scope_without_refit
+  development_owner: other_session
+  user_direction_to_proceed: already_established
+  implementation_changed_by_review: false
+  scheduler: remains_disabled
+
 adaptive_mm_plan_v2_20261119_codex:
   status: complete_prospective_plan_implementation_pending
   request: generate_complete_plan_after_metric_review
