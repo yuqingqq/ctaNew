@@ -134,6 +134,31 @@ pulls and bid/ask; judge movement calibration on selected actions before changin
 order design. Other session owns fixes; scheduler remains off.
 <!-- /PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
 
+## 2026-11-19T16:19Z (session aea5bfb9) — THE FOUR-PART REVIEW DONE: VALIDITY PASS (no open defect), PREDICTION FAIL, CONTROLLER FAIL, RISK LOCATED; the matched control holds with its spread on Oct 26 only (USER: "After the run, Launch a loop ... we review: Validity ... Prediction ... Controller ... Risk")
+- [Receipt](reviews/pipeline_paired_review_20261119/report.md); every table is computed by [tables.py](reviews/pipeline_paired_review_20261119/tables.py). The module was declared before its data run (6775eabd, 38 / 38 mutants).
+- **Validity, both days: PASS.**
+  - V1 labels = the engine fills;
+  - V2 identity holds on every row;
+  - V3 timing correct;
+  - V4 two-source populations agree, statuses complete;
+  - V5 ledger = evaluation to 1e-6 c, 0 of 53 checks differ.
+- **Prediction: FAIL.** 23 of 24 of A's old-gate groups fail.
+- **Controller: FAIL.**
+  - A is below N0, PI0, NEU, E1 and A-PA on both days.
+  - **Correction:** the matched control holds with its spread on Oct 26 only (p 0.001 / 0.30).
+  - The practical predicates against A-PA are implied by nesting.
+- **Risk:**
+  - severe loss is largest in the continuation window;
+  - loss per episode is highest in the last minute;
+  - 86-88% of the loss is at spreads of at most 1 c;
+  - the movement component is negative;
+  - young fills carry 91% / 56% of A's net value; A stays below PI0, NEU and E1 under each B1a weighting.
+- Watch-out: peak RSS 1,898 MiB against the 2,048 guard; chunk the export read before any larger run.
+- **Needs the USER:**
+  - R1 (the 50 ms WAIT / re-entry branch engine);
+  - the gate design (a matched control with its spread; a quoting comparator that is not nested);
+  - a new candidate declaration and untouched days.
+
 ## 2026-11-19 16:14Z (session aea5bfb9) — THE FOUR-PART REVIEW MODULE DECLARED (committed before its data run); the independent reviewer's items built in
 - [`pf_pipeline_paired_review.py`](research/pf_pipeline_paired_review.py) ([declaration](reviews/pipeline_paired_review_20261119/DECLARATION.md)):
   - selftest passes;
