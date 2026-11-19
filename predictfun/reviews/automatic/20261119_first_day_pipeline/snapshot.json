@@ -1,0 +1,16 @@
+{
+  "asof": "2026-11-19T04:42:06.387947+00:00",
+  "base_commit": "e96321df503662ae5b15844a5a090c1df2242043",
+  "reviewed_working_sources": {
+    "predictfun/research/pf_pipeline_export.py": "0fc0b314f590d38c9302f7923afd5fe07a2b21b6d191715b517d6ca2d5523a9e",
+    "predictfun/research/pf_pipeline_export_mutants.py": "917032f964fa3b103119271ad422f740388eb9373bc251c7323f07fa1c5fed12",
+    "predictfun/research/pf_pipeline_bench.py": "a34a21c031f06d392c6a976efb064c12e7e19a0bee048fbfc038ebabba752018",
+    "predictfun/research/pf_pipeline_bench_mutants.py": "1b7f3a6b3a3b54cd5914576c5206be89d10d52201cff6c897ce752b53968fc4e",
+    "predictfun/research/pf_pipeline_policy.py": "fbb604891a24b94b6e6da9f75dae1e7d52bb927398bbfe36100e5c0df2ce8de1",
+    "predictfun/research/pf_pipeline_policy_mutants.py": "848d682b23a76723422cd998bb71446e01a7136b7276dac1955a2f163dadf2ad",
+    "predictfun/research/pf_keep_pull_scenarios.py": "d2995931c0b11352f10f0cf8830db79bb9775e8664e27327e5b6085755cf3dc5",
+    "predictfun/research/pf_keep_pull_scenarios_mutants.py": "6e4f1cb8af16f3b7073eb2c205fb15eb792f5f111cf22670663eb7144390f2e6"
+  },
+  "isolated_checkout": "/tmp/pf-first-day-review-20261119-y1bv4irv/tree",
+  "scope": "uncommitted first-day pipeline snapshot, not a committed freeze"
+}

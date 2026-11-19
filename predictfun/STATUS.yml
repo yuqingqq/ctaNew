@@ -1,3 +1,26 @@
+first_day_pipeline_review_20261119_codex:
+  status: blocked_POST_causality_one_P1_two_P2
+  exporter_commit: 8e57fd8969ed6a57194b0487c3fb51b584a6e36b
+  snapshot_base_commit: e96321df503662ae5b15844a5a090c1df2242043
+  snapshot_asof: "2026-11-19T04:42:06.387947+00:00"
+  source_followup_asof: "2026-11-19T04:47:42.445756+00:00"
+  report: predictfun/reviews/automatic/20261119_first_day_pipeline/report.md
+  receipt: predictfun/reviews/automatic/20261119_first_day_pipeline/receipt.json
+  scope: committed_exporter_plus_hash_pinned_benchmark_policy_WIP
+  findings:
+    P1: POST_queue_inputs_depend_on_future_receipt_before_activation
+    P2_contract: refused_forecasts_still_trade_and_parity_can_pass
+    P2_mapping: quantity_and_rank_gate_can_pass_wrong_value_sign
+  checks: {independent_cases: 5, snapshot_selftests: 2, saved_export_parts_hash_verified: 12, slot: codex, seconds: 70.34, peak_rss_mib: 728}
+  population: {consumed_day: "20261027", POST_rows: 29820, eligible_POST: 28038, export_asof: "2026-11-19T04:40:00.751625+00:00"}
+  completed_model_results_at_source_check: false
+  policy_scope: cancellation_only_baseline_triggers_fixed_across_scenarios
+  raw_tape_training_or_untouched_validation: false
+  prior_PULLALL_label_finding: working_source_changed_superseding_artifact_pending
+  next_priority: repair_POST_feature_causality_then_supersede_exports_and_affected_fits
+  fixes_owner: other_development_session
+  scheduler: remains_disabled
+
 score_variants_result_review_20261119_codex:
   status: numbers_reproduce_one_P2_reporting_issue_no_new_accounting_blocker
   target_commit: 5578d96f684d472b04ed25325295a9a2a6989b2e
