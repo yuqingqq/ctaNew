@@ -48,8 +48,9 @@ simulator_readiness_20261118:
   reference_run: predictfun/reviews/scenario_checklist_v6_20261118/report.md
   suites_by_checks: {settlement_times: 15/15, exec_windows: 127/127, scenarios: 44/44, keep_pull_base: 43/43, queue_place_ledger: 29/29, timing_case_audit: 40/40, clock_census: 17/17, cancel_race: 25/25}
   reference_readings: {E_B_c: 234279, E_B_days_positive: "5 of 5", E_B1a_M50_c: 94810, C2_E_at_M250: SIGN-DIFFERS-AT-M250, Z1_Z3: NOT-STABLE, Z0: YES, ledger_V0: YES}
-  sealed_read: {what: "settlement times v1 opened the sealed 10-28 00Z and 01Z REST hours for day 10-27", when: "2026-11-18 19:08-19:16Z", fixed: settlement_times_v2, void: [keep_pull_exec_windows_v5_20261118_VOID_sealed_read, keep_pull_scenarios_v6_20261118_VOID_sealed_read, settlement_times_20261118/20261027], report: predictfun/reviews/sealed_read_fix_20261118/report.md}
-  user_decisions: ["does 10-28 stay sealed after the 2-hour read", "delete the VOID outputs", "C10 live run with capture", "C8 / C16 freeze + >= 5 untouched days", "C5 queue rule L", "C17 quote availability"]
+  sealed_read: {what: "settlement times v1 opened the sealed 10-28 00Z and 01Z REST hours for day 10-27", when: "2026-11-18 19:08-19:16Z", fixed: settlement_times_v2, void: [keep_pull_exec_windows_v5_20261118_VOID_sealed_read, keep_pull_scenarios_v6_20261118_VOID_sealed_read, settlement_times_20261118/20261027], void_deleted: "2026-11-19 02:12:23Z (USER: Delete void outputs; 42 files, 61256089 bytes)", deletion_manifest: predictfun/reviews/sealed_read_fix_20261118/void_deleted_20261119.csv, report: predictfun/reviews/sealed_read_fix_20261118/report.md}
+  user_decisions: ["does 10-28 stay sealed after the 2-hour read (review a159116e: keep the access history, exclude Oct 28 from untouched-validation claims)", "C10 live run with capture", "C8 / C16 freeze + >= 5 untouched days", "C5 queue rule L", "C17 quote availability"]
+  user_decided: {delete_void_outputs: "2026-11-19 02:12:23Z deleted"}
 
 cancel_race_study_20261118:
   status: done_v2_gates_pass

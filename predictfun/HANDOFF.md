@@ -1,3 +1,8 @@
+## 2026-11-19 02:12Z (session aea5bfb9) — VOID OUTPUTS DELETED (USER: "Delete void outputs, can we run the one day test now")
+- Deleted 02:12:23Z: the three outputs of the sealed-read run - `settlement_times_20261118/20261027` (v1), `keep_pull_exec_windows_v5_20261118_VOID_sealed_read`, `keep_pull_scenarios_v6_20261118_VOID_sealed_read`; 42 files, 61,256,089 bytes; every file's path / size / mtime / sha256 in [void_deleted_20261119.csv](reviews/sealed_read_fix_20261118/void_deleted_20261119.csv). Checked first: nothing else was written in the VOID run's window (19:05-19:46Z Nov 18, by mtime); no code or output references them. Kept: v1's 10-23..26 (provenance), settlement v2, exec windows v5, scenarios v6 (the reference run).
+- Review a159116e (readiness of a2f13f37): no new finding; ready for scenario-conditional research tests on consumed days; keep Oct 28's access history and exclude Oct 28 from untouched-validation claims (the never-read rule stands). Its next priority: a predeclared baseline-versus-candidate comparison through the same protocol and scenario bank.
+- Next: the one-day test; its candidate is declared before any data is read (the USER's choice).
+
 <!-- READINESS_REVIEW_20261119_A2F13F37 -->
 ## Testing-readiness review — 2026-11-19 (a2f13f37)
 

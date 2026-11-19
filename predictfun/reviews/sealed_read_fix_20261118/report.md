@@ -39,7 +39,7 @@ when it checked the five-day run's receipts.
 **v2 output:** `settlement_times_v2_20261118`, all five days. v1 (`settlement_times_20261118`) stays as provenance; its 20261027 output
 is VOID.
 
-## Void outputs (set aside or left in place, never deleted)
+## Void outputs (deleted 2026-11-19 02:12:23Z on the USER's instruction)
 
 | Output | Why |
 |---|---|
@@ -47,7 +47,12 @@ is VOID.
 | `data/predict_fun/research/keep_pull_exec_windows_v5_20261118_VOID_sealed_read` | The five-day ledger built on it |
 | `data/predict_fun/research/keep_pull_scenarios_v6_20261118_VOID_sealed_read` | The five-day scenario replay built on it |
 
-**Deleting them is the USER's choice.**
+**Deleted 2026-11-19 02:12:23Z** (USER: "Delete void outputs"): all three, 42 files, 61,256,089 bytes. The path, size, mtime and sha256
+of every deleted file are in [void_deleted_20261119.csv](void_deleted_20261119.csv). Before deleting:
+- nothing else was written during the VOID run (19:05-19:46Z Nov 18, by mtime);
+- no code or output references these paths.
+
+v1's 10-23..26 outputs stay as provenance.
 
 ## Reruns (declared before they read data)
 
@@ -81,4 +86,4 @@ module is in the readiness plan.
 
 1. **Does 10-28 stay sealed?** Two hours (00Z-01Z) of its REST match records were read and filtered to 10-27's markets. No 10-28 market's
    data entered any output. Under rule 34a a read consumes; the date is recorded here and in HANDOFF either way.
-2. **Delete the three VOID outputs?** They are set aside under VOID names above.
+2. **Delete the three VOID outputs?** Decided 2026-11-19: deleted (above).
