@@ -1,0 +1,2 @@
+BRANCH ENGINE SELFTEST FAILED: F11: a saved context with the engine frame count changed (print kept) was not refused | F11: a saved context with the engine frame count changed (print recomputed) was not refused
+2026-11-19T18:23:13Z tag=pbe4_selftest2 rc=1 peak_rss_mib=198 wall_s=1.39 cpu_user_s=1.18 memavail_start_gib=23 disk_free_gib=469->469 slot=claude

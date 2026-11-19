@@ -232,7 +232,9 @@ class Branch:
         C.require(float(end) == END, 'a branch END other than the contract\'s common END')
         C.require(settings is None or all(SETTINGS.get(k_) == v_ for k_, v_ in settings.items()), 'a timing / contract setting other than the declared scenario')
         C.require(CANCEL_ACK >= FILL_NOTICE, 'a cancel ACK that can overtake fill notices needs a cumulative-fill watermark (not in this contract)')
-        self.E = Engine(path, end, client=True); self.counts = {}; self.ident = dict(ident or {}); self.acted = set(); self.episode = int(episode); self.end = float(end); self.mark = path.get('mark')
+        self.E = Engine(path, end, client=True); self.counts = {}; self.ident = dict(ident or {}); self.acted = set()
+        self.mark = canon_mark(path.get('mark'))                                                # review efac0452 P3: None / NaN / inf -> None (missing_mark)
+        self.episode = int(episode); self.end = float(end)
         self.settings = dict(SETTINGS, **(settings or {})); self.open = {0: None, 1: None}; self.closed = {}
         self.decisions = []; self.fallbacks = []; self.constraints = []; self.k = 0
 
@@ -349,19 +351,32 @@ def pre_tick(B, g):
     B.E.advance(g); B.acted = set(); B.status(0, g); B.status(1, g); B.check_position(g); B.structural(g)
 
 
+def canon_mark(m):
+    """The declared missing-mark representation: None for None, NaN or an infinite mark; a finite mark as a float (review efac0452 P3)."""
+    try:
+        return float(m) if (m is not None and np.isfinite(float(m))) else None
+    except (TypeError, ValueError):
+        return None
+
+
 def tape_id(frames, trades, mark):
     """The identity of an episode tape: SHA-256 of its frames, its trades and its END mark (review c68a072c: the mark is part of the valuation)."""
     h = hashlib.sha256(); h.update(np.ascontiguousarray(np.asarray(frames, float)).tobytes()); h.update(np.ascontiguousarray(np.asarray(trades, float).reshape(-1, 4)).tobytes())
-    h.update(repr(None if mark is None else float(mark)).encode()); return h.hexdigest()
+    h.update(repr(canon_mark(mark)).encode()); return h.hexdigest()
+
+
+FINGERPRINT_FIELDS = ('E.o', 'E.fills', 'E.events', 'E.it', 'E.known', 'E.end', 'E.client', 'E.nf', 'tape id (E.f, E.tr, mark)', 'decisions', 'closed',
+                      'open', 'counts', 'fallbacks', 'constraints', 'end', 'settings', 'ident', 'k', 'episode', 'acted')   # review efac0452: the inventory, once
 
 
 def fingerprint(B):
-    """A hash of a branch's complete state AND its identity (review c68a072c): orders, fills, events, decisions, closures, counters, engine
-    cursors, the tape id recomputed from the engine's own arrays and mark, END, the settings actually used, the identity fields, the tick,
-    the episode and the sides already processed at that tick."""
-    return hashlib.sha256(json.dumps([B.E.o, B.E.fills, B.E.events, B.decisions, sorted(B.closed.items()), B.open, B.counts, B.E.it, B.E.known,
-                                      tape_id(B.E.f, B.E.tr, B.mark), B.end, B.settings, B.ident, B.k, B.episode, sorted(B.acted)],
-                                     sort_keys=True, default=str).encode()).hexdigest()
+    """A hash of a branch's complete state AND its identity (reviews c68a072c, efac0452): every field of FINGERPRINT_FIELDS - the engine's orders,
+    fills, events, cursors and its EXECUTION clock / mode / frame count (E.end, E.client, E.nf), the tape id recomputed from the engine's own
+    arrays and the mark, the client's decisions, closures, open generations, counters, fallbacks and constraints, END, the settings actually
+    used, the identity fields, the tick, the episode and the sides already processed at that tick."""
+    return hashlib.sha256(json.dumps([B.E.o, B.E.fills, B.E.events, B.E.it, B.E.known, B.E.end, B.E.client, B.E.nf, tape_id(B.E.f, B.E.tr, B.mark),
+                                      B.decisions, sorted(B.closed.items()), B.open, B.counts, B.fallbacks, B.constraints, B.end, B.settings, B.ident,
+                                      B.k, B.episode, sorted(B.acted)], sort_keys=True, default=str).encode()).hexdigest()
 
 
 def step(B, k, policy, forced=None):
@@ -412,8 +427,10 @@ def validate_ctx(ctx, path, k, side, episode, settings):
     C.require(isinstance(ctx, dict) and ctx.get('contract') == CONTRACT and isinstance(ctx.get('state'), Branch), 'not a saved paired_continuation_v2 fork context')
     B = ctx['state']
     C.require(fingerprint(B) == ctx['fingerprint'], 'the saved fork state changed after it was saved (its fingerprint)')
-    C.require(tape_id(B.E.f, B.E.tr, B.mark) == ctx['tape_id'] and B.end == ctx['end'] == END and B.mark == ctx['mark'] and B.settings == ctx['settings']
-              and B.ident == ctx['ident'], 'a saved fork whose tape / END / mark / settings / identity disagree with its own record')
+    C.require(tape_id(B.E.f, B.E.tr, B.mark) == ctx['tape_id'] and B.end == ctx['end'] == END and canon_mark(B.mark) == canon_mark(ctx['mark'])
+              and B.settings == ctx['settings'] and B.ident == ctx['ident'], 'a saved fork whose tape / END / mark / settings / identity disagree with its own record')
+    C.require(B.E.end == B.end == END and B.E.client is True and B.E.nf == len(B.E.f) and B.settings == SETTINGS == ctx['settings'],
+              'a saved fork whose engine END / client mode / frame count or scenario disagree with the supported contract (review efac0452)')
     C.require(path is None or tape_id(path['frames'], path['trades'], path.get('mark')) == ctx['tape_id'], 'a tape other than the saved fork\'s')
     C.require(settings is None or all(ctx['settings'].get(k_) == v_ for k_, v_ in settings.items()), 'a scenario other than the saved fork\'s')
     C.require(ctx['k'] == k == B.k and ctx['episode'] == episode == B.episode and ctx['side'] == side, 'a saved fork of another tick / episode / focal side')
@@ -914,10 +931,40 @@ def _controls(bad):  # noqa: C901
     fp0 = fingerprint(c11['state'])                                                         # the identity fields are inside the integrity print
     for nm_, fn_ in (('mark', lambda B_: setattr(B_, 'mark', 61.)), ('END', lambda B_: setattr(B_, 'end', 4000.)), ('settings', lambda B_: B_.settings.update(cancel_effect_ms=50.)),
                      ('identity fields', lambda B_: B_.ident.update(day='x')), ('tick', lambda B_: setattr(B_, 'k', 5)), ('episode', lambda B_: setattr(B_, 'episode', 1)),
-                     ('processed sides', lambda B_: B_.acted.add(1))):
+                     ('processed sides', lambda B_: B_.acted.add(1)), ('engine END', lambda B_: setattr(B_.E, 'end', 4000.)),
+                     ('engine client mode', lambda B_: setattr(B_.E, 'client', False)), ('engine frame count', lambda B_: setattr(B_.E, 'nf', 0)),
+                     ('fallback log', lambda B_: B_.fallbacks.append((0., 0, 'absent', 'x'))), ('constraint log', lambda B_: B_.constraints.append((0., 0, 'cap')))):
         B_ = pickle.loads(pickle.dumps(c11['state'])); fn_(B_)
         if fingerprint(B_) == fp0:
             bad.append(f'F11: the fingerprint ignores the {nm_}')
+    pl = tape([frame(0, 0, 50, 52, 0, 0), frame(2000, 2005, 50, 52, 0, 0)], [(4500, 0, 50, 10)], 51.); cl = fork_state(pl, HOLD_ONCE, 4, 0)   # efac0452: a late fill; 2 frames
+    rl = pair(pl, HOLD_ONCE, 4, 0, 'keep', ctx=cl); rlp = pair(pl, HOLD_ONCE, 4, 0, 'keep', ctx=pickle.loads(pickle.dumps(cl)))
+    if not (rl['status'] == 'ok' and abs(rl['Y'] - 10.) < 1e-12 and rlp['Y'] == rl['Y'] and rlp['arms']['KEEP']['fills'] == rl['arms']['KEEP']['fills']):
+        bad.append(f"F11: the late-fill positive control (Y {rl.get('Y')}, want 10 c; pickle {rlp.get('Y')})")
+    def tamper_l(fn_, refp):
+        c_ = pickle.loads(pickle.dumps(cl)); fn_(c_)
+        if refp:
+            c_['fingerprint'] = fingerprint(c_['state'])
+        return c_
+    for nm_, fn_ in (('the engine END', lambda c_: setattr(c_['state'].E, 'end', 4000.)), ('the engine client mode', lambda c_: setattr(c_['state'].E, 'client', False)),
+                     ('the engine frame count', lambda c_: setattr(c_['state'].E, 'nf', 1)),
+                     ('the settings record and state', lambda c_: (c_['state'].settings.update(cancel_effect_ms=50.), c_['settings'].update(cancel_effect_ms=50.))),
+                     ('a logged fallback', lambda c_: c_['state'].fallbacks.append((0., 0, 'absent', 'feature_unavailable'))),
+                     ('a logged constraint', lambda c_: c_['state'].constraints.append((0., 0, 'cap')))):
+        for refp in (False, True):
+            if nm_.startswith('a logged') and refp:
+                continue                                                                    # ledger logs: bound by the print only
+            try:
+                pair(pl, HOLD_ONCE, 4, 0, 'keep', ctx=tamper_l(fn_, refp)); bad.append(f"F11: a saved context with {nm_} changed ({'print recomputed' if refp else 'print kept'}) was not refused")
+            except ValueError:
+                pass
+    for mk_ in (None, float('nan'), float('inf')):                                          # review efac0452 P3: missing marks are a status, never an error
+        try:
+            rm_ = pair(tape([frame(0, 0, 50, 52, 0)], [(500, 0, 50, 5)], mk_), POST_KEEP, 0, 0, 'post')
+            if rm_['status'] != 'missing_mark':
+                bad.append(f'F7: a {mk_} mark gives status {rm_["status"]}, not missing_mark')
+        except ValueError as e:
+            bad.append(f'F7: a {mk_} mark raised instead of the missing_mark status ({str(e)[:80]})')
     o_s = dict(why='structural', req=50., act=58., submit=0., remove=95.); o_p = dict(why='policy', req=100., act=58., submit=0., remove=137.)
     if not (pull_effect_ok(o_s) and not pull_effect_ok(dict(o_s, remove=87.)) and pull_effect_ok(o_p) and not pull_effect_ok(dict(o_p, remove=138.))
             and pull_effect_ok(dict(o_s, req=100., remove=137.)) and not pull_effect_ok(dict(o_s, req=150., remove=187.)) and not pull_effect_ok(dict(o_p, why=None))):

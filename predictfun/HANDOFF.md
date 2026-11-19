@@ -281,6 +281,14 @@ pulls and bid/ask; judge movement calibration on selected actions before changin
 order design. Other session owns fixes; scheduler remains off.
 <!-- /PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
 
+## 2026-11-19 18:27Z (session aea5bfb9) — R1 PREFLIGHT: THE ENGINE-STATE GUARDS AND MISSING MARKS (review efac0452 answered) (USER: "... continue the implementing and next priority loop")
+- [Receipt](reviews/branch_engine_r1_preflight_20261119/report.md).
+- efac0452 P2 holds and is fixed: the fingerprint inventory (`FINGERPRINT_FIELDS`) now includes E.end / E.client / E.nf and the fallback / constraint logs, and `validate_ctx` checks them and the supported SETTINGS. The late-fill control is Y = 10 c, and each corruption is refused before the arms.
+- P3: `canon_mark` makes None / NaN / inf the missing_mark status.
+- Checks: selftest; mutation suite 56 / 56.
+- Valid ledgers: byte-identical on the frozen slice.
+- Next: R2-A, the shadow / feature / support adapter (`pf_r2_shadow.py`, in progress; synthetic selftest passing) with efac0452's amendments.
+
 ## 2026-11-19 18:13Z (session aea5bfb9) — R1 CLOSURE: THE SAVED-FORK IDENTITY CONTRACT (review c68a072c answered) (USER: "... continue the implementing and next priority loop")
 - [Receipt](reviews/branch_engine_r1_closure_20261119/report.md).
 - c68a072c P2 holds and is fixed. A saved fork is a validated context binding:
