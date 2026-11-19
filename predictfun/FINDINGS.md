@@ -1,3 +1,35 @@
+<!-- ADAPTIVE_MM_PLAN_V2_20261119_CODEX -->
+## 2026-11-19 Prospective plan revision 2; no new experimental result
+
+[Complete plan](handoffs/20261119_adaptive_mm_plan_v2.md) and
+[declared parameters](handoffs/20261119_adaptive_mm_plan_v2.yml), requested by the
+user. Basis: result edfeda22dd72aacaee0c758e96e6e29fe2667422 and review
+0026ab85a124df2aa360e2cb647294a4eca8f6f9. Old candidate verdicts remain failed;
+new metric definitions do not retroactively pass them.
+
+The plan closes gaps beyond naming WAIT: supported remaining-horizon probes for
+later generations, separate pi0-conditional prediction and own-policy return,
+actual admission-aware reach, same-reference movement components, and re-entry
+controls that respect different future order histories. Correction receipt
+comes first, followed by engine/target verification, one fixed candidate and
+conditional diagnosis-driven model changes. G0 is resolved; G1 remains skipped.
+
+New settings/gates are explicitly prospective: 30-share bounded inventory cap;
+episode-balanced sampled training; >=200 distinct episodes and >=20 nonzero
+label episodes per selected day/side/action group; mean calibration bias within
+0.05 c + 20% of absolute mean label. These are engineering screens, not confidence
+guarantees. Median lifetime increase is removed as a hard requirement. Report
+lifetimes by exit cause, unconditional severe cost and conditional filled/loss
+tails with counts. The relative quoting screen does not establish an absolute
+venue service level. A continuous extension needs its own state/target support.
+
+Forward evaluation requires the complete executable pipeline frozen and later
+untouched complete days, with the interval/multiplicity and stop rules committed
+before access. No training, tape, protected data, implementation edits or new
+performance numbers in this planning session. YAML/local links verified; other
+session changes preserved; scheduler remains disabled.
+<!-- /ADAPTIVE_MM_PLAN_V2_20261119_CODEX -->
+
 <!-- PAIRED_RESULT_REVIEW_20261119_CODEX -->
 ## 2026-11-19 Paired-model review: valid direct values, invalid reached population and movement decomposition
 

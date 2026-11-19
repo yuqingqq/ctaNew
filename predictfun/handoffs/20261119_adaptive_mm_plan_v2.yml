@@ -1,0 +1,146 @@
+plan_id: predictfun_adaptive_mm_20261119_v2
+status: prospective_plan_not_model_freeze
+document: predictfun/handoffs/20261119_adaptive_mm_plan_v2.md
+supersedes_future_plan: predictfun/handoffs/20261119_entry_retention_priority.md
+basis_result_commit: edfeda22dd72aacaee0c758e96e6e29fe2667422
+basis_review_commit: 0026ab85a124df2aa360e2cb647294a4eca8f6f9
+prior_result_verdicts: unchanged
+implementation_owner: development_session
+review_owner: codex_review_session
+immediate_priority: R0_superseding_diagnostic_receipt_no_refit
+stages: [R0_receipt_repair, R1_branch_engine, R2_supported_teacher_and_labels, R3_prediction, R4_own_state_replay, R5_conditional_revision, R6_continuous_and_forward]
+historical_G0: resolved
+historical_G1: skipped_by_user_do_not_reinstate
+settings:
+  size_shares: 30
+  price: decision_time_best_JOIN_post_only
+  max_generations_live_or_pending_per_side: 1
+  decision_grid_ms: 50
+  activation_ms: 58
+  cancellation_ms: 37
+  fill_notice_ms: 100
+  execution_clock: M50_existing_engine_definition
+  queue_rule: M_corrected
+  common_episode_end_ms: 5000
+  endpoint_resets_on_reentry: false
+  initial_inventory_shares: 0
+  absolute_inventory_cap_shares: 30
+  risk_setting_is_new_experiment: true
+  auto_resize_to_cap: false
+  costs: unchanged_current_predictfun_convention_exact_hash_required
+  fixed_cooldown_or_minimum_rest_or_queue_bonus: false
+  numerical_value_identity_atol_cents: 0.000001
+  moment_coherence_tolerance: existing_1e_minus_9_absolute_relative_above_one
+targets:
+  contract: paired_continuation_v2
+  post: R_POST_then_pi0_50_minus_R_WAIT_one_tick_then_pi0_50
+  keep: R_KEEP_one_tick_then_pi0_50_minus_R_PULL_then_pi0_50
+  unit: marginal_branch_cash_plus_inventory_value_cents_to_common_END
+  both_branches_own_state: true
+  WAIT_can_later_POST: true
+  PULL_can_reenter_after_ack: true
+  no_entry_is_separate_control: true
+chronology:
+  teacher_warmup: ["20261023"]
+  candidate_training: ["20261024", "20261025"]
+  consumed_development: ["20261026", "20261027"]
+  already_seen_not_forward_validation: ["20261023", "20261024", "20261025", "20261026", "20261027", "20261028"]
+  protected_dates_opened_by_plan: false
+teacher:
+  name: PI0_50
+  rule: E1_convention_on_supported_grid_time_neutral_targets_plus_state_constraints
+  legacy_POST_head_on_shorter_horizon: forbidden_without_supported_rebuild
+  freeze_before_candidate_label_days: true
+  unsupported_fallback: WAIT_or_KEEP_counted
+sampling:
+  before_labels_commit_manifest: true
+  training_grid_stride: 5
+  phase: fixed_episode_hash_rotating
+  retain_all_original_time_POST_probes: true
+  evaluation_grid_stride: 1
+  weights: equal_total_per_original_episode_side_head
+  outcomes_used_for_sampling: false
+models:
+  primary: ADV2_RICH
+  fixed_input_controls: [ADV2_FAIR, ADV2_MECH]
+  heads_per_candidate: 4
+  candidate_heads_first_run: 12
+  teacher_and_reference_heads: recorded_separately_at_freeze
+  objective: direct_paired_advantage_regression
+  parameters: resolve_and_hash_current_pinned_LightGBM_dictionary
+  rounds: 200
+  thresholds: {post: positive, pull: negative, tie: preserve_current_state}
+  required_state_context_change: explicitly_version_before_fit
+controls:
+  full_policy: [N0, PI0_50, NEU2, ADV2_FAIR, ADV2_MECH, ENTRY_ONLY, RETAIN_ONLY, ENTRY_PA]
+  ENTRY_PA_has_same_future_admissions: false
+  local_retention: same_fork_state_common_pi0_50_continuation
+  matched_null_estimand: disjoint_anchor_local_action_information_not_continuous_policy_PnL
+  anchor_limit: one_per_original_episode_side_action_pair
+  anchor_time: deterministic_schedule_declared_before_labels
+  strata: [day, side, market_window, minute]
+  draws_minimum: 200
+  exact_expectation_alternative: only_with_additive_disjoint_anchor_proof
+prediction_screen:
+  version: v2_prospective_only
+  unit: episode_balanced_mean_cents_per_action_group
+  selected_groups: [POST, WAIT, KEEP, PULL]
+  support_distinct_episodes_per_day_side_group: 200
+  support_nonzero_label_episodes_per_day_side_group: 20
+  support_floors_are_confidence_guarantees: false
+  required_sign: {POST: positive, WAIT: negative, KEEP: positive, PULL: negative}
+  mean_bias_absolute_tolerance_cents: 0.05
+  mean_bias_relative_tolerance: 0.20
+  formula: abs_mean_bias_le_absolute_tolerance_plus_relative_tolerance_times_abs_mean_label
+  legacy_ratio_range_diagnostic_only: [0.8, 1.25]
+  fixed_bin_edges_cents: [negative_infinity, -10, -5, -2, -1, -0.5, 0, 0.5, 1, 2, 5, 10, positive_infinity]
+  exact_zero_bin_separate: true
+  empty_or_zero_label_group: NOT_EVALUABLE
+  insufficient_support: INSUFFICIENT_SUPPORT
+economic_screen:
+  development_days_each: ["20261026", "20261027"]
+  baseline_timing: true
+  require_positive_absolute_value: true
+  require_positive_full_policy_difference_vs: [PI0_50, ENTRY_PA]
+  local_information_lift_above_matched_mean_each_day: true
+  remove_negative_side_post_hoc: false
+quoting_screen:
+  scope: relative_research_improvement_only
+  requires_economic_screen: true
+  admitted_distinct_episode_floor_per_day_side: 200
+  versus_ENTRY_PA: [higher_joint_at_best_time, lower_first_review_reversal, lower_cancels_per_100_filled_shares]
+  median_lifetime_must_increase: false
+  lifetime_by_exit_cause: true
+  absolute_venue_service_level_claim: not_established_by_this_screen
+tail_metrics:
+  severe_episode_loss_threshold_cents: 30
+  unconditional: [mean_loss, loss_probability, severe_probability, severe_excess_mean, total_loss_contribution]
+  conditional_diagnostics: [filled_episode_loss_p95_p99, loss_episode_loss_p95_p99, largest_losses, worst_one_percent_loss_share]
+  clip_or_winsorize_realized_losses: false
+  severe_predictions: not_claimed_without_explicit_output_and_support
+forward:
+  full_executable_pipeline_commit_required: true
+  untouched_complete_days_minimum: 5
+  default_registered_days: 5
+  eligible_date_selection: consecutive_under_predeclared_integrity_only_rule
+  statistical_cluster: UTC_day
+  interval_method: Student_t_Bonferroni_over_three_daily_value_series
+  primary_daily_series: [absolute_value, difference_vs_PI0_50, difference_vs_ENTRY_PA]
+  simultaneous_confidence_level: 0.95
+  per_interval_two_sided_level: one_minus_0_05_divided_by_3
+  degrees_of_freedom: G_minus_1
+  lower_bounds_all_positive_required: true
+  design_change: version_and_commit_before_forward_data_access
+  arbitrary_extension_after_failure: false
+  continuous_inventory_resets: forbidden
+  continuous_endpoint: calendar_anchored_5s_grid_independent_of_reposts
+  continuous_state_support_and_contract: separately_versioned_before_continuous_forward_claim
+  live_trading_authorized: false
+execution:
+  documentation_session_runs_experiments: false
+  routine_review_full_training_or_raw_tape: false
+  wrapper: /home/yuqing/ctaNew/predictfun/research/run_light.sh
+  review_slot: codex
+  busy_slot: defer_do_not_use_other_session_slot
+  working_set_target_mib: 2048
+  scheduler: remains_disabled
