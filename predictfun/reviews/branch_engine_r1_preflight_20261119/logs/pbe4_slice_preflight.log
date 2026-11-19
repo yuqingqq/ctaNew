@@ -1,0 +1,98 @@
+{
+ "(1) single generation: false counts": {
+  "price_equal": 0,
+  "activation_equal": 0,
+  "mark_equal": 0,
+  "keep_fills_equal": 0,
+  "pull_fills_equal": 0,
+  "keep_cash_equal": 0,
+  "pull_cash_equal": 0,
+  "keep_inventory_equal": 0,
+  "pull_inventory_equal": 0,
+  "keep_value_equal": 0,
+  "pull_value_equal": 0,
+  "keep_value_equal_archive_v": 0,
+  "pull_effect_equal": 0
+ },
+ "(1) single generation (every check on every order with a path)": "PASS",
+ "(2) C-compatibility aggregate parity": "PASS",
+ "(3) adaptive invariants (P2 base and arms, pre-fork history, value identity, no invariant refusal, causality to 200 ms)": "PASS",
+ "(3) counts": {
+  "tapes": 138,
+  "base_runs": 276,
+  "refused": 0,
+  "forks_ok": 1066,
+  "p2_false": 0,
+  "causality_false": 0,
+  "prefork_false": 0,
+  "identity_false": 0
+ },
+ "(4) coverage: fork statuses, later posts (POST / WAIT forks), re-entries (KEEP / PULL forks), per policy and side": {
+  "chase keep bid": {
+   "statuses": {
+    "ok": 119,
+    "not_keep_state": 19
+   },
+   "later_post": 0,
+   "re_entry": 116
+  },
+  "chase keep ask": {
+   "statuses": {
+    "ok": 127,
+    "not_keep_state": 11
+   },
+   "later_post": 0,
+   "re_entry": 124
+  },
+  "chase post bid": {
+   "statuses": {
+    "ok": 138
+   },
+   "later_post": 138,
+   "re_entry": 0
+  },
+  "chase post ask": {
+   "statuses": {
+    "ok": 138
+   },
+   "later_post": 138,
+   "re_entry": 0
+  },
+  "post_keep keep bid": {
+   "statuses": {
+    "ok": 132,
+    "not_keep_state": 6
+   },
+   "later_post": 0,
+   "re_entry": 127
+  },
+  "post_keep keep ask": {
+   "statuses": {
+    "ok": 136,
+    "not_keep_state": 2
+   },
+   "later_post": 0,
+   "re_entry": 132
+  },
+  "post_keep post bid": {
+   "statuses": {
+    "ok": 138
+   },
+   "later_post": 138,
+   "re_entry": 0
+  },
+  "post_keep post ask": {
+   "statuses": {
+    "ok": 138
+   },
+   "later_post": 138,
+   "re_entry": 0
+  }
+ },
+ "(4) selected orders per side (with a path)": {
+  "bid": 128,
+  "ask": 128
+ },
+ "SLICE v3 (1), (2) and (3) all PASS": "PASS"
+}
+2026-11-19T18:26:29Z tag=pbe4_slice_preflight rc=0 peak_rss_mib=804 wall_s=15.68 cpu_user_s=14.81 memavail_start_gib=23 disk_free_gib=469->469 slot=claude

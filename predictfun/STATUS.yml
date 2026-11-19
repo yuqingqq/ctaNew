@@ -292,6 +292,15 @@ pipeline_one_day_v3_20261119:
   values_equal_v2: {cells_per_day: 190, differing: 0}
   attribution_vs_pull_all_c: {"20261026": {first_step: 0.0, later: 954.33, never: 995.36, no_prediction: 0.0}, "20261027": {first_step: 0.0, later: -821.85, never: 251.74, no_prediction: 0.0}}
 
+branch_engine_r1_preflight_20261119:
+  status: done_engine_state_guards_and_missing_marks
+  asof: "2026-11-19 18:27Z"
+  receipt: predictfun/reviews/branch_engine_r1_preflight_20261119/report.md
+  review_efac0452: {p2_engine_end_outside_fingerprint: fixed_inventory_and_validation, p3_nan_mark_error: fixed_canon_mark_missing_status}
+  suites: {selftest: pass, mutants: 56/56}
+  valid_ledgers_byte_identical: true
+  next: R2A_shadow_feature_support_adapter_oct23_first128_per_side_no_fit
+
 branch_engine_r1_closure_20261119:
   status: done_saved_fork_context_contract_closed
   asof: "2026-11-19 18:13Z"
