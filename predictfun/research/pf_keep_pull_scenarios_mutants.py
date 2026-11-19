@@ -74,6 +74,9 @@ MUT = [
     ('the report not given the B1a values', "                b1a_E=b1a_of(by_age),", "                b1a_E=dict(M0=0., M50=0.),"),
     ('the B1a reading ignores a sign change', "    return 'HOLDS-SIGN' if e != 0 and all(np.sign(x) == np.sign(e) for x in w.values()) and len(w) > 0 else 'SIGN-DIFFERS'",
      "    return 'HOLDS-SIGN' if e != 0 and len(w) > 0 else 'SIGN-DIFFERS'"),
+    # --- v6.1: the score policy as a parameter (pf_keep_pull_variants.py)
+    ('the policy parameter ignored (every policy valued as A+0)', "E.side.values, E.p.values)[pol]", "E.side.values, E.p.values)[KP.DECLARED]"),
+    ('an undeclared policy accepted', "C.require(pol in KP.POLICIES, f'undeclared score policy {pol}')", "pass"),
 ]
 STALE = 97                                                # exit code of a replacement target that does not occur as declared
 

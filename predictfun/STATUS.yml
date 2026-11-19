@@ -1,3 +1,15 @@
+keep_pull_variants_20261119:
+  status: done_one_day_no_variant_survives_timing_or_beats_baseline_everywhere
+  asof: "2026-11-19T02:49:13Z"
+  user: ["Delete void outputs, can we run the one day test now", "Score variants vs A+0 (chosen in the dialog)", "We should work on the pipeline, a prediction model + value mapping one"]
+  receipt: predictfun/reviews/keep_pull_variants_20261119/report.md
+  code: {variants: predictfun/research/pf_keep_pull_variants.py, scenarios: "pf_keep_pull_scenarios.py v6.1 (policy parameter)"}
+  suites_by_checks: {scenarios_v6_1: 46/46, variants: 30/30}
+  controls: {V0a: YES, V0b: YES, V0c: YES, V0d: YES, V0e: YES}
+  day: "20261023"
+  readings: {SURVIVES_TIMING: none, ABOVE_BASELINE_EVERY_SCENARIO: none, A_plus_1_dV_above: "18 of 19", PULL_ALL_beats_every_policy: "17 of 19"}
+  protocol_fix: "order description corrected: one 30-sh JOIN order every 5 s per window-side (was: one 5-sh order per side)"
+  next: learned_prediction_model_plus_value_mapping_pipeline_through_the_simulator_plan_first
 testing_readiness_review_20261119_a2f13f37:
   status: ready_for_scenario_conditional_research_tests_only
   asof: "2026-11-19T02:01:26.022026+00:00"

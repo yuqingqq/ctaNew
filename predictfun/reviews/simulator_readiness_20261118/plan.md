@@ -25,7 +25,8 @@ Statuses: OPEN, IN-PROGRESS, DONE (with receipt), USER (needs a decision or data
 |---|---|---|---|
 | pf_settlement_times.py (v2) | pass | 15 / 15 | r1_pf_settlement_times_* |
 | pf_keep_pull_exec_windows.py (known v7) | pass | 127 / 127 | r2_pf_keep_pull_exec_windows_* |
-| pf_keep_pull_scenarios.py (v6) | pass | 44 / 44 | r2_pf_keep_pull_scenarios_* |
+| pf_keep_pull_scenarios.py (v6.1, 2026-11-19: the policy parameter) | pass | 46 / 46 | ../keep_pull_variants_20261119/logs/sc61_* (v6: 44 / 44, r2_pf_keep_pull_scenarios_*) |
+| pf_keep_pull_variants.py (2026-11-19: policy comparisons) | pass | 30 / 30 | ../keep_pull_variants_20261119/logs/var_* |
 | pf_keep_pull.py (the committed base replay) | pass | 43 / 43 | r2_pf_keep_pull_selftest, r3_pf_keep_pull_mutants |
 | pf_queue_place_ledger.py (loader, post-only mirror) | pass | 29 / 29 | r2_pf_queue_place_ledger_selftest, r3_pf_queue_place_ledger_mutants |
 | pf_timing_case_audit.py | pass | 40 / 40 | r1_pf_timing_case_audit_* |
@@ -62,3 +63,8 @@ queue-place mutants that could only crash plant well-formed wrong output instead
 - 2026-11-18 21:56Z — STOP conditions met: review findings closed; every module's selftest and mutation suite pass with kills by checks (the suite
   of record above); the scenario replay meets every checklist item code can meet and reproduces its baselines; the protocol committed.
   What remains is the USER's: items 7, 8 and 9's decisions, plus C5 (rule L) and C17 (quote availability) if wanted.
+- 2026-11-19 02:12Z — after the loop: the three VOID outputs deleted on the USER's instruction (item 9's second decision; manifest in
+  sealed_read_fix_20261118/void_deleted_20261119.csv).
+- 2026-11-19 02:49Z — the USER's one-day test ("Score variants vs A+0", Oct 23) through `pf_keep_pull_variants.py`: controls V0a-V0e YES; no
+  variant survives the timing scenarios or is above A+0 in every one ([receipt](../keep_pull_variants_20261119/report.md)). The protocol's
+  order description corrected (30-sh JOIN orders, not 5-sh). Next, the USER: the learned prediction + value-mapping pipeline.

@@ -1,7 +1,8 @@
 # Test-run protocol — P-2026-005 keep/pull simulator
 
 This protocol says what a test run of the keep/pull simulator must produce, and what its results may and may not claim. It applies to
-every run through `predictfun/research/run_keep_pull_scenarios.sh`. The chain is:
+every run through `predictfun/research/run_keep_pull_scenarios.sh`, and to every policy comparison through
+`predictfun/research/pf_keep_pull_variants.py` (added 2026-11-19). The chain is:
 
 - settlement times;
 - the execution-window ledger;
@@ -18,8 +19,15 @@ it only through the same driver, sources and scenario bank.
 ## 1. What the simulator is
 
 - **It re-simulates.** It replays one declared keep/pull rule through the validated queue / fill kernel (`pf_flow_control_kernel`,
-  queue rule M), on consumed days, under declared execution scenarios. The rule is lane A+0, the fair-edge score: `pf_keep_pull.py`
-  DECLARED; one 5-sh order per side; states every 50 ms.
+  queue rule M), on consumed days, under declared execution scenarios.
+  - The rule is the score policy A+0, the fair-edge score (`pf_keep_pull.py` DECLARED).
+  - The orders are the neutral JOIN population. At every counted state (every 5 s per window-side), one 30-sh order is posted at the known
+    best, live at +58 ms and held to END = +5 s. Keep / pull decisions are taken every 50 ms from +100 ms.
+  - *Corrected 2026-11-19:* this line said "one 5-sh order per side; states every 50 ms". That describes lane J-v3, not this harness
+    (`pf_keep_pull.py` SIZE = 30).
+- **Policy comparisons** (2026-11-19) run through `pf_keep_pull_variants.py`. It values the five score variants declared beside A+0
+  (`pf_keep_pull.POLICIES`, multiplicity 6) from the same scenario day outputs: a pull only removes the keep branch's fills after its
+  landing, so no kernel re-simulation is needed.
 - **Scenarios are assumption ranges, not measurements.** They cover:
   - match-time timelines S1 / S2 / S3 / ST / EV;
   - trade-clock shifts M0 / M50 / M250;
@@ -45,6 +53,7 @@ it only through the same driver, sources and scenario bank.
 | C5: the cancel race study reproduces census v4 on its 86 filled orders | cancel race study | YES, for any claim about cancels |
 | Memory: peak RSS per job under the 2 GiB self-guard (run_light's receipt line) | job logs | under 2 GiB |
 | Reproduction of the previous version on the same day (`compare.py` in each step's receipt) | step receipts | ALL true |
+| Policy comparisons: V0a (A+0 = the committed scenario report), V0b (every policy's pulls and value at B = the committed keep / pull run), V0c (= the clock audit), V0d (policy-free values agree), V0e (receipts) | variants report | YES (else no output) |
 
 ## 3. What a run must report (FINDINGS checklist)
 
@@ -60,13 +69,15 @@ it only through the same driver, sources and scenario bank.
 | Exclusions | As statuses with counts (eligible, refused post-only, censored, missing path) |
 | C8 days | Named; consumed days only |
 | C9 | "Ours simulated, theirs real" wherever a replay is set beside live or public data |
-| C11 strategy | Named: lane A+0, not the frozen pm_ladder v3 |
+| C11 strategy | Named: score policy A+0 of the keep / pull harness (30-sh JOIN orders), or the named variant; not lane J-v3, not the frozen pm_ladder v3 |
 
 ## 4. What a run MAY claim
 
 - **Scenario-conditional values.** For example: "under the S3 windows, a 37 ms cancel and M50, E = … c; without the < 100 ms fills …;
   B1a-weighted …".
 - **The strongest stability claim is "stable in tested scenarios"** (readings Z1-Z3, Z1-NY / Z3-NY). A NOT-STABLE reading is reported as such.
+- **For a policy comparison, the strongest claim is "above the baseline in every tested scenario"** (reading D1), on the named days. It is
+  a candidate under multiplicity 6, not a better policy.
 - **Instrument facts:** the gates above.
 - **On the known legs (Nov 8, one consumed partial day):**
   - clock-domain bounds and the gate of record per scenario;
