@@ -31,6 +31,18 @@ prediction_pipeline_contract_20261119_codex:
   scheduler: remains_disabled
   next_priority: rich_causal_feature_label_export_on_corrected_neutral_actions_then_frozen_prediction_benchmark
 
+pipeline_export_20261119:
+  status: done_five_days_every_control_passes
+  asof: "2026-11-19T04:40:00.751625+00:00"
+  user: ["Can you check the new commit, proceed our pipeline model", "We run the whole pipeline for one day test first"]
+  contract_c2717dc8_check: {reproduced: true, synthetic_tests: 16, accounting_identities: 176214, max_error_cents: 9.1e-13, defects_found: 0}
+  code: predictfun/research/pf_pipeline_export.py
+  suites: {selftest: pass, mutants: 26/26, first_run_selftest_defects_fixed: 2}
+  receipt: predictfun/reviews/pipeline_export_20261119/report.md
+  days: {"20261023": 1328957, "20261024": 1439916, "20261025": 1491674, "20261026": 1270256, "20261027": 1404872}
+  controls: {X1: pass, X2: pass, X3: pass_all_six_policies_every_day, X4: pass, X5: pass, X6: pass_no_sealed_or_forward_hour}
+  watch: "pf_keep_pull_scenarios.py edited to v6.2 at 04:22:23Z during the run (Oct 23-24 v6.1, Oct 25-27 v6.2; only the unchanged fills_g is used)"
+  next: one_day_pipeline_test_bench_then_policy_on_20261027
 keep_pull_variants_20261119:
   status: done_one_day_no_variant_survives_timing_or_beats_baseline_everywhere
   asof: "2026-11-19T02:49:13Z"

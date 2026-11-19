@@ -1,0 +1,3 @@
+{"stage": "export", "day": "20261023", "markets": 2, "post": 216, "retain": 9550, "seconds": 70, "rss": 302}
+{"day": "20261023", "stat": {"states": 216, "post_rows": 216, "retain_rows": 9550, "kernel_checked": 3, "causal_checked": 2, "known_checked": 12, "ids_unique": true}, "statuses": {"post:eligible": 203, "retain:eligible": 9550, "post:refused_post_only": 11, "post:missing_endpoint": 2}, "seconds": 70}
+2026-11-19T03:22:16Z tag=px_smoke_prof rc=0 peak_rss_mib=1104 wall_s=72.21 cpu_user_s=65.54 memavail_start_gib=23 disk_free_gib=431->431 slot=claude
