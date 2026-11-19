@@ -17,6 +17,8 @@ trade-clock shift (M0 / M250: every trade stamp moved uniformly), activation del
 no scenario is called "zero latency"; (3) the held contradictory events get their denominator (every event per family and day) and their
 economic weight (the fills, shares and value at held trade instants per scenario); v1's outputs (keep_pull_scenarios_20261118) stay as
 provenance.
+v6.2 (2026-11-19, USER "We run the whole pipeline for one day test first"): outcome() also takes an external rule's pull steps (triggers),
+so a learned keep / pull rule goes through the same bank (pf_pipeline_policy.py); A+0's values are unchanged.
 v6.1 (2026-11-19, USER "can we run the one day test now" -> the score variants against A+0): outcome() takes the score policy as a parameter
 (default the declared A+0; any other of KP.POLICIES; an undeclared one is refused) so pf_keep_pull_variants.py can value every declared policy
 from the same day outputs. Day outputs, report and A+0 values are unchanged (the variants module checks A+0 against this report's output).
@@ -373,15 +375,18 @@ def day_run(day, src=None, timing=None, kp=None, out=None, env_of=None, sem_of=N
     return d
 
 
-def outcome(O, Os, Fs, sc, policy=None):
-    """One scenario's values for one score policy (default the declared A+0; v6.1: any of KP.POLICIES, for pf_keep_pull_variants.py). O: the
-    committed orders (states, fair inputs, side, price, mark, structural decision); Os: per order of O the scenario's refused / v / q / t_full /
-    land; Fs: its fills (day, oid, t, q)."""
+def outcome(O, Os, Fs, sc, policy=None, triggers=None):
+    """One scenario's values for one score policy (default the declared A+0; v6.1: any of KP.POLICIES, for pf_keep_pull_variants.py) or, v6.2,
+    for an external rule (triggers: a callable of the eligible orders E returning each one's first pull step, NSTEP + 1 = never; for
+    pf_pipeline_policy.py). O: the committed orders (states, fair inputs, side, price, mark, structural decision); Os: per order of O the
+    scenario's refused / v / q / t_full / land; Fs: its fills (day, oid, t, q)."""
     pol = KP.DECLARED if policy is None else policy; C.require(pol in KP.POLICIES, f'undeclared score policy {pol}')
+    C.require(policy is None or triggers is None, 'a score policy and external triggers given together')
     Os = Os.rename(columns={c: c + '_s' for c in ('refused', 'v', 'q', 't_full', 'land')})
     M = O.merge(Os, on=['day', 'oid'], how='inner', validate='one_to_one'); E = M[~M.refused_s.astype(bool)].reset_index(drop=True)
     cell = E.groupby(['day', 'm', 'side', 'phase'], sort=True).ngroup().values
-    T = KP.score_steps(E[[f'f{j:02d}' for j in range(KP.NSTEP + 1)]].values, E.side.values, E.p.values)[pol]
+    T = KP.score_steps(E[[f'f{j:02d}' for j in range(KP.NSTEP + 1)]].values, E.side.values, E.p.values)[pol] if triggers is None else np.asarray(triggers(E), int)
+    C.require(len(T) == len(E) and bool(((T >= 0) & (T <= KP.NSTEP + 1)).all()), 'external triggers: one step per eligible order in 0..99')
     endj = endj_n(E.t_full_s.values, E.g_struct.values, sc['N']); act, CW = V1.null_weights(T, cell, endj)
     ix = pd.Series(np.arange(len(E)), index=pd.MultiIndex.from_arrays([E.day.values, E.oid.values]))
     ri = ix.reindex(pd.MultiIndex.from_arrays([Fs.day.values, Fs.oid.values])).values; C.require(not np.isnan(ri).any(), 'a fill of an order outside the eligible set')
@@ -715,6 +720,19 @@ def selftest():
                     bad.append(f'the undeclared policy refused by another check: {e}')
             except KeyError as e:
                 bad.append(f'an undeclared policy reached the score lookup: {e}')
+            ot = outcome(O1, Os1, Fs1, B0, triggers=lambda E_: np.full(len(E_), 5)); on_ = outcome(O1, Os1, Fs1, B0, triggers=lambda E_: np.full(len(E_), KP.NSTEP + 1))
+            if not (ot['score'] == o37['score'] == 150. and ot['pulls'] == 1 and on_['score'] == 0. and on_['pulls'] == 0 and on_['E'] == 0.):   # v6.2
+                bad.append(f"external triggers: step 5 score {ot['score']} / pulls {ot['pulls']}, never {on_['score']} / {on_['pulls']}")
+            for nm_, kw_, msg_ in (('a policy and triggers together', dict(policy='A+0', triggers=lambda E_: np.full(len(E_), 5)), 'given together'),
+                                   ('triggers of the wrong length', dict(triggers=lambda E_: np.full(len(E_) + 1, 5)), 'one step per eligible order'),
+                                   ('a trigger step out of range', dict(triggers=lambda E_: np.full(len(E_), KP.NSTEP + 2)), 'one step per eligible order')):
+                try:
+                    outcome(O1, Os1, Fs1, B0, **kw_); bad.append(f'outcome accepted {nm_}')
+                except ValueError as e:
+                    if msg_ not in str(e):
+                        bad.append(f'{nm_} refused by another check: {e}')
+                except (IndexError, KeyError) as e:                            # unrefused, it reached the valuation
+                    bad.append(f'{nm_} reached the valuation unrefused: {e!r}')
             ox = outcome(O1, Os1, Fs1, dict(B0, A=250.))                  # the fill at 300 ms: 242 ms old at activation 58, 50 ms old at 250
             if not (o37['by_age']['100to500']['fills'] == 1 and o37['by_age']['lt100']['fills'] == 0 and ox['by_age']['lt100']['fills'] == 1
                     and abs(sum(a['E'] for a in o37['by_age'].values()) - o37['E']) < 1e-9 and o37['no_young']['E'] == o37['E'] and ox['no_young']['fills_value'] == 0.
@@ -775,7 +793,8 @@ def selftest():
           'and an early landing mirror each refused by its own control with no output; S3 / ST timelines (and their joins by row id, a leg without its '
           'window refused); held fills marked and valued; event denominators; every scenario\'s family (no "zero latency"); the cancel-latency '
           'mixture (its slow share, per-order landings, one-order outcomes); the policy parameter (A-1 never pulls the one-order case, an undeclared policy '
-          'refused)', flush=True)
+          'refused); external triggers (step 5 = A+0 on the one-order case, never = no pull; a policy given with them, a wrong length and an '
+          'out-of-range step refused)', flush=True)
 
 
 if __name__ == '__main__':

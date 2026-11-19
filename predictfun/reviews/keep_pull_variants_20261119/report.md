@@ -1,5 +1,9 @@
 # One-day test: the five declared score variants against A+0 through the scenario bank — Oct 23, 2026-11-19
 
+> **Superseded in part by v2 (2026-11-19, review e96321df P2), below.** The v1 table and CSV printed PULL-ALL's *improvement* over KEEP under a
+> bare "PULL-ALL" header beside KEEP's absolute *value*. At B that read -416,243 beside +389,554; PULL-ALL's own value is -26,688.9 c. Every
+> comparison was right (score - PULL-ALL; KEEP is common). v2 prints both and changes no value.
+
 **USER:** "Delete void outputs, can we run the one day test now". Asked what the test should compare, the USER chose "Score variants vs
 A+0". This is review a159116e's next priority: "a predeclared baseline-versus-candidate research comparison through the same consumed-day
 protocol and scenario bank".
@@ -92,3 +96,24 @@ The CSV tables are [variants_20261023_policies.csv](variants_20261023_policies.c
 - **Logs:** [logs/](logs/): scenario v6.1 selftest and mutants, variants selftest and mutants, the Oct 23 run.
 - **Protocol:** [test_run_protocol.md](../simulator_readiness_20261118/test_run_protocol.md) was updated for policy comparisons (gate V0a-V0e,
   the strongest comparison claim). Its order description was corrected: it is 30-sh JOIN orders every 5 s, not "one 5-sh order per side".
+
+## v2 — review e96321df P2: PULL-ALL as both its improvement and its value
+
+**The review's finding holds.** `pf_keep_pull_variants.py` v1's policy-free table and CSV printed PULL-ALL's improvement over KEEP under a bare
+"PULL-ALL" header, beside KEEP's absolute value.
+
+**What v2 prints.** The policy-free table now has "KEEP value", "PULL-ALL improvement" and "PULL-ALL value" (= KEEP + its improvement). The CSV
+has `PULLALL_improvement` and `PULLALL_value`.
+
+**Checks.**
+- A new selftest falsifier checks that the exported value equals KEEP + the improvement, and a new mutant (the value column holding the
+  improvement) must be caught.
+- Selftest pass; mutation suite **31 / 31** ([v2/logs/](v2/logs/)).
+
+**The Oct 23 rerun** ([v2/variants_20261023.txt](v2/variants_20261023.txt), CSVs beside it) reproduces v1 exactly in every value, reading and
+difference. At B the CSV reads KEEP -416,242.9432, PULL-ALL improvement +389,554.0460 and PULL-ALL value -26,688.8971 c, matching the review.
+
+v1's files stay in this folder as provenance.
+
+The same labeling was corrected in `pf_pipeline_policy.py` before its first run. Its table prints "V PULL-ALL", and its CSV has both columns,
+with the same falsifier and mutant.

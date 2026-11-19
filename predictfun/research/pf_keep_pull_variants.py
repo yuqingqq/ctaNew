@@ -3,6 +3,8 @@ USER: "Delete void outputs, can we run the one day test now"; asked what the tes
 first: Oct 23). Review a159116e's one next priority: "a predeclared baseline-versus-candidate research comparison through the same
 consumed-day protocol and scenario bank. Preserve by-day values, fill populations, age/source splits and timing sensitivity."
 Declared before any variant is valued in the scenario bank; consumed days only; nothing is fitted, chosen or promoted.
+v2 (2026-11-19, review e96321df P2): the policy-free table and the CSV printed PULL-ALL's improvement over KEEP under a bare "PULL-ALL" beside
+KEEP's absolute value; both now show PULL-ALL's improvement and its value (KEEP + improvement). The comparisons (score - PULL-ALL) were right.
 
 POLICIES (pf_keep_pull.POLICIES, declared 2026-11-17 before the keep / pull run; multiplicity 6). Each decides at the order's live steps
  (every 50 ms from +100 ms) from the causal fair price f_j and pulls at its first trigger (at B the pull lands 37 ms later):
@@ -77,7 +79,7 @@ import pf_queue_place_test as QP                          # noqa: E402
 import pf_queue_place_ledger as QL                        # noqa: E402
 
 C, pd, I = KP.C, KP.pd, KP.I
-OUT = Path(I.K.IO) / 'keep_pull_variants_20261119'
+OUT = Path(I.K.IO) / 'keep_pull_variants_v2_20261119'     # v2 (review e96321df P2): PULL-ALL as both its improvement and its value; v1 stays as provenance
 BASE = KP.DECLARED                                        # the baseline: the declared fair-edge rule A+0
 CANDIDATES = tuple(p for p in KP.POLICIES if p != BASE)   # A+1, A-1, B0.5, B1, B2
 KP_CELL = 'M50_L37'                                       # the committed keep / pull run's cell of the bank's baseline B
@@ -215,7 +217,7 @@ def tables(res, R, days, Op, rec):
         for nm, v in res[p].items():
             n_, a_, cp = numbers(v), v['by_age'], v['cancel_pending']
             rows.append(dict(policy=p, role='baseline' if p == BASE else 'candidate', scenario=nm, family=fam[nm], E=v['E'], score=v['score'], null=v['null'], V=n_['V'],
-                             KEEP=v['KEEP'], PULLALL=v['PULLALL'], pulls=v['pulls'], eligible=v['eligible'], fills=v['fills'], shares=v['shares'],
+                             KEEP=v['KEEP'], PULLALL_improvement=v['PULLALL'], PULLALL_value=v['KEEP'] + v['PULLALL'], pulls=v['pulls'], eligible=v['eligible'], fills=v['fills'], shares=v['shares'],
                              E_lt100=a_['lt100']['E'], E_100to500=a_['100to500']['E'], E_ge500=a_['ge500']['E'], E_noyoung=n_['E_ny'], V_noyoung=n_['V_ny'],
                              E_b1a_M0=v['b1a_E']['M0'], E_b1a_M50=v['b1a_E']['M50'], pending_fills=cp['fills'], pending_value=cp['value'],
                              pending_share_of_gross=cp['share_of_gross']))
@@ -231,8 +233,9 @@ def tables(res, R, days, Op, rec):
          f"  CONTROLS: {R['CONTROLS']} (V0a A+0 = the committed scenario report in every value of every scenario; V0b pulls and improvement at B = the committed "
          'keep / pull run, M50 / 37 ms, for every policy; V0c E, improvement and pulls at B = the clock audit\'s per-fill values for every policy; V0d KEEP / '
          'PULL-ALL / fills / eligible the same for every policy, KEEP = its fills; V0e receipts)', '',
-         f"  policy-free: {'scenario':<24} {'KEEP':>12} {'PULL-ALL':>11} {'fills':>8} {'eligible':>9}"]
-    L += [f"               {nm:<24} {res[BASE][nm]['KEEP']:>+12,.0f} {res[BASE][nm]['PULLALL']:>+11,.0f} {res[BASE][nm]['fills']:>8,} {res[BASE][nm]['eligible']:>9,}" for nm in nms]
+         f"  policy-free: {'scenario':<24} {'KEEP value':>12} {'PULL-ALL improvement':>21} {'PULL-ALL value':>15} {'fills':>8} {'eligible':>9}   (PULL-ALL value = KEEP + its improvement)"]
+    L += [f"               {nm:<24} {res[BASE][nm]['KEEP']:>+12,.0f} {res[BASE][nm]['PULLALL']:>+21,.0f} {res[BASE][nm]['KEEP'] + res[BASE][nm]['PULLALL']:>+15,.0f} "
+          f"{res[BASE][nm]['fills']:>8,} {res[BASE][nm]['eligible']:>9,}" for nm in nms]
     L += tab('  E: each policy\'s improvement over its own matched STATES null (c)', lambda v: v['E'])
     L += tab('  V = KEEP + the policy\'s improvement over KEEP (the rule\'s own local value, c)', lambda v: v['KEEP'] + v['score'])
     L += tab('  pulls executed', lambda v: v['pulls'])
@@ -381,6 +384,9 @@ def selftest():
                 bad.append('the CSV tables differ from the saved values')
             if not all(f'{k}: {v}' in txt for p in KP.POLICIES for k, v in J['readings'][p].items()):
                 bad.append('the text report lacks a reading')
+            if not (np.allclose(P.PULLALL_value, P.KEEP + P.PULLALL_improvement, rtol=0, atol=1e-6) and 'PULL-ALL value' in txt
+                    and np.allclose(P[P.policy == BASE].PULLALL_value.values, [J['values'][BASE][nm]['KEEP'] + J['values'][BASE][nm]['PULLALL'] for nm in nms], rtol=0, atol=1e-6)):
+                bad.append('PULL-ALL: its value is not KEEP + its improvement in the CSV / text (review e96321df P2)')
             if len({res[p][B_NAME]['pulls'] for p in KP.POLICIES}) < 2:
                 bad.append('the synthetic policies do not differ at B (the comparison would be vacuous)')
             O, Fl, _, _, _, _ = load([d0], tmp / 'sc', tmp / 'kp'); ref = tmp / 'sc' / f'scenarios_{d0}.json'

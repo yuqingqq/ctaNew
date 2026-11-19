@@ -39,6 +39,7 @@ MUT = [
     ('V without young fills keeps them', "V_ny=ny['fills_value'] + ny['score'])", "V_ny=v['KEEP'] + v['score'])"),
     ('dV with the wrong sign', "out[nm] = dict(dV=a['V'] - b['V'],", "out[nm] = dict(dV=b['V'] - a['V'],"),
     ('the candidate compared with itself', "a, b = numbers(res[c][nm]), numbers(res[BASE][nm])", "a, b = numbers(res[c][nm]), numbers(res[c][nm])"),
+    ('the PULL-ALL value column holds the improvement (review e96321df P2)', "PULLALL_value=v['KEEP'] + v['PULLALL']", "PULLALL_value=v['PULLALL']"),
     ('the CSV E column holds the improvement', "scenario=nm, family=fam[nm], E=v['E'], score=v['score']", "scenario=nm, family=fam[nm], E=v['score'], score=v['score']"),
     # --- the readings
     ('above: zero counts as above', "if lo > 0 else f'BELOW", "if lo >= 0 else f'BELOW"),

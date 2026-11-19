@@ -54,6 +54,13 @@ prediction_pipeline_contract_20261119_codex:
   scheduler: remains_disabled
   next_priority: rich_causal_feature_label_export_on_corrected_neutral_actions_then_frozen_prediction_benchmark
 
+review_89caa74c_first_day_pipeline_20261119:
+  status: findings_hold_fixes_in_progress_first_day_results_not_accepted
+  asof: "2026-11-19T05:55:25Z"
+  findings: {P1_post_future_arrival_inputs: holds, P2_contract_refused_forecasts_act: holds, P2_gate_blind_to_value_sign: holds, scope_fixed_decisions: accepted}
+  fix_plan: [export_v2_pre_activation_state_from_the_decision_frame_with_complete_vector_falsifier, bench_v2_coherence_count_and_economic_gate_declared_before_oct26, policy_v2_accepted_forecast_path_with_keep_fallback_and_mixed_falsifier]
+  first_day_results: void_until_rerun_not_committed
+  committed: {scenarios: "v6.2 49/49", variants: "v2 31/31 (review e96321df P2 closed)"}
 pipeline_export_20261119:
   status: done_five_days_every_control_passes
   asof: "2026-11-19T04:40:00.751625+00:00"

@@ -77,6 +77,10 @@ MUT = [
     # --- v6.1: the score policy as a parameter (pf_keep_pull_variants.py)
     ('the policy parameter ignored (every policy valued as A+0)', "E.side.values, E.p.values)[pol]", "E.side.values, E.p.values)[KP.DECLARED]"),
     ('an undeclared policy accepted', "C.require(pol in KP.POLICIES, f'undeclared score policy {pol}')", "pass"),
+    # --- v6.2: external triggers (pf_pipeline_policy.py)
+    ('external triggers ignored', "[pol] if triggers is None else np.asarray(triggers(E), int)", "[pol]"),
+    ('a policy and triggers accepted together', "C.require(policy is None or triggers is None, 'a score policy and external triggers given together')", "pass"),
+    ('malformed triggers accepted', "C.require(len(T) == len(E) and bool(((T >= 0) & (T <= KP.NSTEP + 1)).all()), 'external triggers: one step per eligible order in 0..99')", "pass"),
 ]
 STALE = 97                                                # exit code of a replacement target that does not occur as declared
 
