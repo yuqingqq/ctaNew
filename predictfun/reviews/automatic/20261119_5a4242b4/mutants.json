@@ -1,0 +1,72 @@
+{
+  "selected_results": [
+    {
+      "index": 0,
+      "name": "none (must pass)",
+      "rc": 0,
+      "stdout": "branch engine selftests passed (synthetic only): P1 the port = the C kernel on 40 random tapes / order lists / actions; P2 adaptive runs = their batch replays; F1 WAIT posts later with a different history; F2 re-entry after the acknowledgement at a new price, with a cancel-pending fill; F3 queue priority kept, replacement behind; F4 fill ledger = cash + inventory value, pair difference, common pre-fork fills; F5 from one saved fork state the continuation reverses the keep advantage both ways; F6 causality; F10 unnoticed fills (zero / partial / full, both sides) leave views, structural requests and reservations unchanged before their notice; F11 a saved fork context (and its round trip) reproduces the direct pair, and each identity disagreement is refused by its own check; F7 cancel-effect boundary, delayed notice, cap, post-only refusal, near-END post, missing mark, unavailable book; F8 wrong horizon / action / state / pair kind refused; F9 shared book\n",
+      "stderr": ""
+    },
+    {
+      "index": 27,
+      "name": "the engine END not validated (efac0452)",
+      "rc": 1,
+      "stdout": "",
+      "stderr": "BRANCH ENGINE SELFTEST FAILED: F11: a saved context with the engine END changed (print recomputed) was not refused\n"
+    },
+    {
+      "index": 28,
+      "name": "the engine execution fields outside the fingerprint (efac0452)",
+      "rc": 1,
+      "stdout": "",
+      "stderr": "BRANCH ENGINE SELFTEST FAILED: F11: the fingerprint ignores the engine END | F11: the fingerprint ignores the engine client mode | F11: the fingerprint ignores the engine frame count\n"
+    },
+    {
+      "index": 29,
+      "name": "the client mode not validated (efac0452)",
+      "rc": 1,
+      "stdout": "",
+      "stderr": "BRANCH ENGINE SELFTEST FAILED: F11: a saved context with the engine client mode changed (print recomputed) was not refused\n"
+    },
+    {
+      "index": 30,
+      "name": "the frame count not validated (efac0452)",
+      "rc": 1,
+      "stdout": "",
+      "stderr": "BRANCH ENGINE SELFTEST FAILED: F11: a saved context with the engine frame count changed (print recomputed) was not refused\n"
+    },
+    {
+      "index": 31,
+      "name": "the scenario checked against its own record only (efac0452)",
+      "rc": 1,
+      "stdout": "",
+      "stderr": "BRANCH ENGINE SELFTEST FAILED: F11: a saved context with the settings record and state changed (print recomputed) was not refused\n"
+    },
+    {
+      "index": 32,
+      "name": "the ledger logs outside the fingerprint (efac0452)",
+      "rc": 1,
+      "stdout": "",
+      "stderr": "BRANCH ENGINE SELFTEST FAILED: F11: the fingerprint ignores the fallback log | F11: the fingerprint ignores the constraint log | F11: a saved context with a logged fallback changed (print kept) was not refused | F11: a saved context with a logged constraint changed (print kept) was not refused\n"
+    },
+    {
+      "index": 33,
+      "name": "a NaN mark not canonical (efac0452 P3)",
+      "rc": 1,
+      "stdout": "",
+      "stderr": "BRANCH ENGINE SELFTEST FAILED: F7: a nan mark raised instead of the missing_mark status (a saved fork whose tape / END / mark / settings / identity disagree with its own)\n"
+    },
+    {
+      "index": 34,
+      "name": "the structural pull effect time not validated",
+      "rc": 1,
+      "stdout": "",
+      "stderr": "BRANCH ENGINE SELFTEST FAILED: the slice pull-effect predicate (a structural request must land at its declared time)\n"
+    }
+  ],
+  "all_checks_pass": true,
+  "target_commit": "5a4242b4a0613523707a3c8c17507a32491de125",
+  "asof": "2026-11-19T18:39:42.158246+00:00",
+  "script_sha256": "60b1f33b9b5287fb66a005a36e975bbf222f5786a915b0bf7dd4ee0f37388276",
+  "module_sha256": "8b7960ef4bbbc178b281e57d92d4795d7678436c0ca875e7199e24a6626af3a8"
+}

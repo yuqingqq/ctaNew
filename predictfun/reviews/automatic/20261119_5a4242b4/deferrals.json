@@ -1,0 +1,17 @@
+{
+  "target_commit": "5a4242b4a0613523707a3c8c17507a32491de125",
+  "reason": "2 predictfun research processes already running (cap 2)",
+  "refused_launches_by_log": {
+    "synthetic.log": 1,
+    "synthetic2.log": 1,
+    "synthetic3.log": 1,
+    "synthetic4.log": 1,
+    "artifacts.log": 1,
+    "deferred.log": 12,
+    "deferred_final.log": 36
+  },
+  "total_refused": 53,
+  "research_process_started_by_refused_launches": false,
+  "retry_used_slot": "codex",
+  "bypass": false
+}

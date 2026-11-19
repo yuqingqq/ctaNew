@@ -1,3 +1,37 @@
+<!-- R1_PREFLIGHT_REVIEW_20261119_CODEX -->
+## 2026-11-19 — R1 preflight accepted; next is R2-A adapter and census
+
+Reviewed **5a4242b4a0613523707a3c8c17507a32491de125** after efac0452.
+[Report / next gate](reviews/automatic/20261119_5a4242b4/report.md),
+[independent cases](reviews/automatic/20261119_5a4242b4/synthetic.json),
+[artifact audit](reviews/automatic/20261119_5a4242b4/artifacts.json).
+**Clean within scope. P2 and P3 closed.** Effective engine END/client/frame count
+are fingerprinted and validated; supported SETTINGS and ledger logs are bound.
+Both-side late-fill controls retain Y=10 cents and direct/context/pickle identity;
+20 corrupt contexts refuse before arms. None/NaN/positive and negative infinity
+preserve missing_mark on both sides. Earlier timing and hidden-fill fixes stand.
+
+The pinned selftest and 8 selected mutation checks pass (mutants caught as
+intended); developer 56/56 log verified. Frozen Oct24 ledger files are byte-
+identical: 256 orders, 138 tapes, 276 base runs, 1066 valid forks, 38 not-live
+anchors. No learned-skill/profitability conclusion. Slice as-of18:26:45Z;
+independent audit18:39:29Z Nov19. R1 research preflight accepted.
+
+**ONE next priority: deliver R2-A's shadow-probe / feature / support adapter,
+r2_shadow_sampling_v1 manifest and fixed first128 original Oct23 opportunities
+per side, all statuses, plus synthetic/causality/per-fill checks; no teacher fit.**
+c68a072c contract and efac0452 amendments unchanged: real identities and absolute
+END; causal known-state inputs; deterministic selection/weights; neutral moments
+separate from paired targets; sparse support explicit. The bounded slice cannot
+meet the 200-episode floor; assess support on full Oct23 after the preparation
+gate. Cost convention stays fixed before teacher/targets. No new model tuning.
+
+R2-A work in progress remains outside this pinned review. Two successful codex
+invocations (14.89 s, peak210 MiB), after capacity deferrals; no bypass. No fit,
+full labels, raw tape experiment or untouched day. Other-session edits preserved;
+review-only, no push, external messaging or scheduler action.
+<!-- /R1_PREFLIGHT_REVIEW_20261119_CODEX -->
+
 <!-- R1_CLOSURE_REVIEW_20261119_CODEX -->
 ## 2026-11-19 — R1 closure reviewed: valid ledgers unchanged; bind effective engine state before R2 acceptance
 

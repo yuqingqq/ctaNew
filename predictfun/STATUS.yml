@@ -1,3 +1,33 @@
+r1_preflight_review_20261119_codex:
+  status: clean_R1_preflight_accepted_R2A_next
+  target_commit: 5a4242b4a0613523707a3c8c17507a32491de125
+  range_base: efac04521d7aa643efaeda1ad8cfe0fa987759b7
+  report: predictfun/reviews/automatic/20261119_5a4242b4/report.md
+  artifact_audit: predictfun/reviews/automatic/20261119_5a4242b4/artifacts.json
+  synthetic: predictfun/reviews/automatic/20261119_5a4242b4/synthetic.json
+  prior_P2_effective_engine_state: closed
+  prior_P3_missing_mark: closed
+  earlier_hidden_fill_and_structural_timing: remain_closed
+  new_findings: none_in_reviewed_scope
+  corrupt_context_refusals_before_arms: 20
+  late_fill_positive_controls: both_sides_exact_direct_context_pickle
+  missing_mark_encodings: [None, NaN, positive_infinity, negative_infinity]
+  saved_ledger_files: byte_identical
+  population: {day: "20261024", orders: 256, tapes: 138, base_runs: 276, valid_forks: 1066, not_live_anchors: 38}
+  saved_asof: "2026-11-19T18:26:45.455460+00:00"
+  audit_asof: "2026-11-19T18:39:29.912749+00:00"
+  immediate_priority: R2A_shadow_feature_support_adapter_manifest_and_Oct23_census_no_fit
+  R2_contract: c68a072c_with_efac0452_amendments_unchanged
+  R2_work_in_progress_reviewed: false
+  checks: {successful_runs: 2, wall_seconds: 14.89, peak_rss_mib: 210, unchanged_selftest: pass, selected_mutants_caught: 8, full_developer_log_checked: 56}
+  capacity_deferrals: 53
+  slot: codex
+  full_mutation_suite_rerun: false
+  fit_full_labels_new_raw_tape_untouched_day: false
+  implementation_changed_by_review: false
+  development_owner: other_session
+  scheduler: remains_disabled
+
 r1_closure_review_20261119_codex:
   status: named_fixes_verified_effective_engine_state_P2_open
   target_commit: c70a5db491075e4e65526ed23b41b65d0618d0e0

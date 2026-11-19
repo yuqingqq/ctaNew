@@ -1,0 +1,274 @@
+{
+  "positive_controls": [
+    {
+      "side": 0,
+      "Y_cents": 10.0,
+      "late_fill_ms": 4500,
+      "direct_context_pickle_exact": true
+    },
+    {
+      "side": 1,
+      "Y_cents": 10.0,
+      "late_fill_ms": 4500,
+      "direct_context_pickle_exact": true
+    }
+  ],
+  "corrupt_contexts_refused": [
+    {
+      "side": 0,
+      "field": "engine_end",
+      "fingerprint_recomputed": false,
+      "arm_decisions": 0,
+      "error": "the saved fork state changed after it was saved (its fingerprint)"
+    },
+    {
+      "side": 0,
+      "field": "engine_end",
+      "fingerprint_recomputed": true,
+      "arm_decisions": 0,
+      "error": "a saved fork whose engine END / client mode / frame count or scenario disagree with the supported contract (review efac0452)"
+    },
+    {
+      "side": 0,
+      "field": "engine_client",
+      "fingerprint_recomputed": false,
+      "arm_decisions": 0,
+      "error": "the saved fork state changed after it was saved (its fingerprint)"
+    },
+    {
+      "side": 0,
+      "field": "engine_client",
+      "fingerprint_recomputed": true,
+      "arm_decisions": 0,
+      "error": "a saved fork whose engine END / client mode / frame count or scenario disagree with the supported contract (review efac0452)"
+    },
+    {
+      "side": 0,
+      "field": "engine_nf",
+      "fingerprint_recomputed": false,
+      "arm_decisions": 0,
+      "error": "the saved fork state changed after it was saved (its fingerprint)"
+    },
+    {
+      "side": 0,
+      "field": "engine_nf",
+      "fingerprint_recomputed": true,
+      "arm_decisions": 0,
+      "error": "a saved fork whose engine END / client mode / frame count or scenario disagree with the supported contract (review efac0452)"
+    },
+    {
+      "side": 0,
+      "field": "scenario_record_and_state",
+      "fingerprint_recomputed": false,
+      "arm_decisions": 0,
+      "error": "the saved fork state changed after it was saved (its fingerprint)"
+    },
+    {
+      "side": 0,
+      "field": "scenario_record_and_state",
+      "fingerprint_recomputed": true,
+      "arm_decisions": 0,
+      "error": "a saved fork whose engine END / client mode / frame count or scenario disagree with the supported contract (review efac0452)"
+    },
+    {
+      "side": 0,
+      "field": "fallback_log",
+      "fingerprint_recomputed": false,
+      "arm_decisions": 0,
+      "error": "the saved fork state changed after it was saved (its fingerprint)"
+    },
+    {
+      "side": 0,
+      "field": "constraint_log",
+      "fingerprint_recomputed": false,
+      "arm_decisions": 0,
+      "error": "the saved fork state changed after it was saved (its fingerprint)"
+    },
+    {
+      "side": 1,
+      "field": "engine_end",
+      "fingerprint_recomputed": false,
+      "arm_decisions": 0,
+      "error": "the saved fork state changed after it was saved (its fingerprint)"
+    },
+    {
+      "side": 1,
+      "field": "engine_end",
+      "fingerprint_recomputed": true,
+      "arm_decisions": 0,
+      "error": "a saved fork whose engine END / client mode / frame count or scenario disagree with the supported contract (review efac0452)"
+    },
+    {
+      "side": 1,
+      "field": "engine_client",
+      "fingerprint_recomputed": false,
+      "arm_decisions": 0,
+      "error": "the saved fork state changed after it was saved (its fingerprint)"
+    },
+    {
+      "side": 1,
+      "field": "engine_client",
+      "fingerprint_recomputed": true,
+      "arm_decisions": 0,
+      "error": "a saved fork whose engine END / client mode / frame count or scenario disagree with the supported contract (review efac0452)"
+    },
+    {
+      "side": 1,
+      "field": "engine_nf",
+      "fingerprint_recomputed": false,
+      "arm_decisions": 0,
+      "error": "the saved fork state changed after it was saved (its fingerprint)"
+    },
+    {
+      "side": 1,
+      "field": "engine_nf",
+      "fingerprint_recomputed": true,
+      "arm_decisions": 0,
+      "error": "a saved fork whose engine END / client mode / frame count or scenario disagree with the supported contract (review efac0452)"
+    },
+    {
+      "side": 1,
+      "field": "scenario_record_and_state",
+      "fingerprint_recomputed": false,
+      "arm_decisions": 0,
+      "error": "the saved fork state changed after it was saved (its fingerprint)"
+    },
+    {
+      "side": 1,
+      "field": "scenario_record_and_state",
+      "fingerprint_recomputed": true,
+      "arm_decisions": 0,
+      "error": "a saved fork whose engine END / client mode / frame count or scenario disagree with the supported contract (review efac0452)"
+    },
+    {
+      "side": 1,
+      "field": "fallback_log",
+      "fingerprint_recomputed": false,
+      "arm_decisions": 0,
+      "error": "the saved fork state changed after it was saved (its fingerprint)"
+    },
+    {
+      "side": 1,
+      "field": "constraint_log",
+      "fingerprint_recomputed": false,
+      "arm_decisions": 0,
+      "error": "the saved fork state changed after it was saved (its fingerprint)"
+    }
+  ],
+  "missing_mark_controls": [
+    {
+      "mark": "None",
+      "side": 0,
+      "status": "missing_mark",
+      "direct_pickle_exact": true,
+      "no_fabricated_value": true
+    },
+    {
+      "mark": "None",
+      "side": 1,
+      "status": "missing_mark",
+      "direct_pickle_exact": true,
+      "no_fabricated_value": true
+    },
+    {
+      "mark": "NaN",
+      "side": 0,
+      "status": "missing_mark",
+      "direct_pickle_exact": true,
+      "no_fabricated_value": true
+    },
+    {
+      "mark": "NaN",
+      "side": 1,
+      "status": "missing_mark",
+      "direct_pickle_exact": true,
+      "no_fabricated_value": true
+    },
+    {
+      "mark": "+inf",
+      "side": 0,
+      "status": "missing_mark",
+      "direct_pickle_exact": true,
+      "no_fabricated_value": true
+    },
+    {
+      "mark": "+inf",
+      "side": 1,
+      "status": "missing_mark",
+      "direct_pickle_exact": true,
+      "no_fabricated_value": true
+    },
+    {
+      "mark": "-inf",
+      "side": 0,
+      "status": "missing_mark",
+      "direct_pickle_exact": true,
+      "no_fabricated_value": true
+    },
+    {
+      "mark": "-inf",
+      "side": 1,
+      "status": "missing_mark",
+      "direct_pickle_exact": true,
+      "no_fabricated_value": true
+    }
+  ],
+  "field_inventory": {
+    "branch_fields": [
+      "E",
+      "acted",
+      "closed",
+      "constraints",
+      "counts",
+      "decisions",
+      "end",
+      "episode",
+      "fallbacks",
+      "ident",
+      "k",
+      "mark",
+      "open",
+      "settings"
+    ],
+    "engine_fields": [
+      "client",
+      "end",
+      "events",
+      "f",
+      "fills",
+      "it",
+      "known",
+      "nf",
+      "o",
+      "tr"
+    ],
+    "declared": [
+      "E.o",
+      "E.fills",
+      "E.events",
+      "E.it",
+      "E.known",
+      "E.end",
+      "E.client",
+      "E.nf",
+      "tape id (E.f, E.tr, mark)",
+      "decisions",
+      "closed",
+      "open",
+      "counts",
+      "fallbacks",
+      "constraints",
+      "end",
+      "settings",
+      "ident",
+      "k",
+      "episode",
+      "acted"
+    ]
+  },
+  "all_checks_pass": true,
+  "target_commit": "5a4242b4a0613523707a3c8c17507a32491de125",
+  "asof": "2026-11-19T18:39:29.836841+00:00",
+  "script_sha256": "60b1f33b9b5287fb66a005a36e975bbf222f5786a915b0bf7dd4ee0f37388276",
+  "module_sha256": "8b7960ef4bbbc178b281e57d92d4795d7678436c0ca875e7199e24a6626af3a8"
+}
