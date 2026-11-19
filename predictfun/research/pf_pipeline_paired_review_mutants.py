@@ -19,7 +19,7 @@ MUT = [
     ('V2 lets NaN pass', "(~(np.abs(lab.pair_v.values - (sg * (lab.pf_mid.values.astype(float) - lab.p.values.astype(float)) * lab.pair_q.values + lab.pair_qm.values)) <= 1e-6)).sum()",
      "(np.abs(lab.pair_v.values - (sg * (lab.pf_mid.values.astype(float) - lab.p.values.astype(float)) * lab.pair_q.values + lab.pair_qm.values)) > 1e-6).sum()"),
     ('V2 never fails', "failures=n2, verdict='PASS' if n2 == 0 else 'FAIL')", "failures=n2, verdict='PASS')"),
-    ('V3 ignores the effective time', " & np.isclose(ex.effective_ms.values - t, eff, atol=1e-6)", ""),
+    ('V3 ignores the effective time', " & np.isclose(ex.effective_ms.values - t, eff, **tol)", ""),
     ('V4 ignores reached rows of unposted orders', " and pop['A_reached_orders_not_admitted'] == 0)", ")"),
     ('V4 drops the two-source original count', "v4 = (two_orig and two_path and labp", "v4 = (two_path and labp"),
     ('V4 drops the two-source with-path count', "v4 = (two_orig and two_path and labp", "v4 = (two_orig and labp"),
@@ -51,6 +51,9 @@ MUT = [
     # --- the prediction groups and screens
     ('the episode-balanced mean is the raw mean', "return float(pd.Series(np.asarray(x, float)).groupby(np.asarray(oid)).mean().mean()) if len(x) else float('nan')", "return float(np.mean(x)) if len(x) else float('nan')"),
     ('the screen without its support floor', "    if n_ep < 200 or nz < 20:", "    if False:"),
+    ('the screen tests zero on the raw row sum (v1)', "    if ml == 0.:", "    if float(np.sum(lab)) == 0.:"),
+    ('the screen admits nonfinite inputs', "if not len(lab) or not (np.isfinite(pred).all() and np.isfinite(lab).all()):", "if not len(lab):"),
+    ('V3 with a relative tolerance (v1)', "    tol = dict(rtol=0, atol=1e-3)", "    tol = dict(atol=1e-3)"),
     ('the screen ignores the label sign', "ok = (ml > 0 if want_pos else ml < 0) and abs(mp - ml) <= .05 + .20 * abs(ml)", "ok = abs(mp - ml) <= .05 + .20 * abs(ml)"),
     ('NO_ENTRY counts the ties', "'NO_ENTRY (pred < 0)': (po, pp, pl, np.isfinite(pp) & (pp < 0), False)", "'NO_ENTRY (pred < 0)': (po, pp, pl, np.isfinite(pp) & (pp <= 0), False)"),
     # --- the tails

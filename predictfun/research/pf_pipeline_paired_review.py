@@ -49,6 +49,10 @@ ADDED BEFORE THE FIRST RUN (an independent read-only review of the pipeline, 202
  keep: fallback decisions); V5 compares at 1e-6 c absolute, reproduces the evaluation's matched-null mean and checks the evaluation's input hashes;
  pi0's (and A's) first-review share over every eligible opportunity and over its own admissions is computed (the latter = the evaluation's,
  V5); the export's RETAIN steps without a forecast (off_grid / feature_unavailable) on A's reached path and at its first review are counted.
+V2 (review 92d8e52f, before the v2 run): plan v2's screen decides zero, sign and amount on the episode-balanced label mean (v1 tested zero on
+ the raw row sum: 100 episodes of two +1 c rows and 100 of one -2 c row sum to 0 but have an episode-balanced mean of -0.5 c); nonfinite inputs ->
+ NOT_EVALUABLE; V3's timing fields are compared at an explicit absolute 1e-3 ms (1 us; the float64 ulp at epoch-ms magnitude is 2.4e-4 ms) with no
+ relative term (v1's default rtol gave END a 0.05 ms tolerance).
 LIMITS: consumed days; single-order episodes; the ledger at B only (the evaluation carries the 19 scenarios); the movement component runs from the
  posting mid to the END mark (no mid is stored per fill); a restricted experiment (POST vs NO_ENTRY to END).
 SELFTEST (synthetic tape, no data): the ledger against the bank on planted policies; every validity predicate PASS on clean inputs and FAIL on its
@@ -81,7 +85,7 @@ import pf_queue_place_test as QP                          # noqa: E402
 import pf_queue_place_ledger as QL                        # noqa: E402
 
 C, pd, I = KP.C, KP.pd, KP.I
-OUT = Path(I.K.IO) / 'pipeline_paired_review_20261119'
+OUT = Path(I.K.IO) / 'pipeline_paired_review_v2_20261119'      # v2: review 92d8e52f (screen zero in the episode-balanced unit; V3 absolute tolerance)
 MARK = 'PIPELINE PAIRED REVIEW'
 B_NAME = V.B_NAME
 POLICIES = {'PA': ('ALL', None), 'PI0-ALL': ('ALL', 'PI0'), 'A-ALL': ('ALL', 'A')}
@@ -163,7 +167,8 @@ def v3_timing(ex, lab, kept_t):
     """V3: (export rows with a timing field off, labelled rows whose pi0 step is not after j or lands after END, kept fills outside [activation, END])."""
     post = ex.kind.astype(str).values == 'post'; j = ex.j.values.astype(float); t = ex.t.values.astype(float)
     dec = np.where(post, 0., KP.STEP * j); eff = np.where(post, KP.PLACE, KP.landing(np.maximum(j, 1).astype(int)))
-    off = ~(np.isclose(ex.decision_ms.values - t, dec, atol=1e-6) & np.isclose(ex.effective_ms.values - t, eff, atol=1e-6) & np.isclose(ex.endpoint_ms.values - t, KP.H, atol=1e-6)
+    tol = dict(rtol=0, atol=1e-3)                                                          # an absolute 1 us: no relative term (v1's default rtol let END move 0.05 ms)
+    off = ~(np.isclose(ex.decision_ms.values - t, dec, **tol) & np.isclose(ex.effective_ms.values - t, eff, **tol) & np.isclose(ex.endpoint_ms.values - t, KP.H, **tol)
             & (ex.decision_ms.values <= ex.effective_ms.values) & (ex.effective_ms.values < ex.endpoint_ms.values))
     r = lab[lab.kind.astype(str) == 'retain']; ts = r.tstar.values.astype(float); has = np.isfinite(ts)
     bad_t = int((has & ~((ts > r.j.values) & (KP.landing(np.nan_to_num(ts, nan=KP.J0).astype(int)) <= KP.H))).sum())
@@ -235,13 +240,17 @@ def episode_mean(oid, x):
 
 
 def screen(oid, pred, lab, want_pos):
-    """Plan v2's amount screen (a diagnostic here): support, then the sign of the episode-balanced label and |bias| <= 0.05 + 0.20 |label|."""
-    n_ep = len(set(np.asarray(oid).tolist())); nz = len(set(np.asarray(oid)[np.asarray(lab) != 0].tolist()))
-    if not len(lab) or float(np.sum(lab)) == 0.:
+    """Plan v2's amount screen (a diagnostic here), every decision on the episode-balanced means: empty, nonfinite or a zero episode-balanced
+    label -> NOT_EVALUABLE; then support (>= 200 episodes, >= 20 with a nonzero label); then the label's sign and |bias| <= 0.05 + 0.20 |label|."""
+    oid, pred, lab = np.asarray(oid), np.asarray(pred, float), np.asarray(lab, float)
+    n_ep = len(set(oid.tolist())); nz = len(set(oid[lab != 0].tolist()))
+    if not len(lab) or not (np.isfinite(pred).all() and np.isfinite(lab).all()):
+        return 'NOT_EVALUABLE', n_ep, nz
+    mp, ml = episode_mean(oid, pred), episode_mean(oid, lab)
+    if ml == 0.:
         return 'NOT_EVALUABLE', n_ep, nz
     if n_ep < 200 or nz < 20:
         return 'INSUFFICIENT_SUPPORT', n_ep, nz
-    mp, ml = episode_mean(oid, pred), episode_mean(oid, lab)
     ok = (ml > 0 if want_pos else ml < 0) and abs(mp - ml) <= .05 + .20 * abs(ml)
     return ('PASS' if ok else 'FAIL'), n_ep, nz
 
@@ -502,6 +511,13 @@ def selftest():  # noqa: C901
             and screen(np.arange(300), np.full(300, 3.), np.full(300, 2.), True)[0] == 'FAIL' and screen(np.arange(10), np.ones(10), np.ones(10), True)[0] == 'INSUFFICIENT_SUPPORT'
             and screen(np.arange(300), np.ones(300), np.zeros(300), True)[0] == 'NOT_EVALUABLE' and screen(np.arange(300), np.full(300, -1.), np.full(300, -1.), True)[0] == 'FAIL'):
         bad.append('the episode-balanced mean or the plan v2 screen on planted values')
+    o2 = np.r_[np.repeat(np.arange(100), 2), np.arange(100, 200)]; l2 = np.r_[np.ones(200), np.full(100, -2.)]      # review 92d8e52f: raw sum 0, eb mean -0.5
+    o1 = np.arange(200); l1 = np.r_[np.ones(100), np.full(100, -2.)]                                                # one row per episode: the same episode means
+    z2 = np.r_[np.ones(200), np.full(100, -2.)] * 0.; zm = np.r_[np.full(100, 1.), np.full(100, -1.)]               # genuine zeros: all-zero, and eb mean exactly 0
+    got_ = (screen(o2, np.full(300, -.5), l2, False)[0], screen(o1, np.full(200, -.5), l1, False)[0], screen(o2, np.full(300, -.5), z2, False)[0],
+            screen(np.arange(200), np.zeros(200), zm, False)[0], screen(np.arange(300), np.r_[np.full(299, -1.), np.nan], np.full(300, -1.), False)[0])
+    if got_ != ('PASS', 'PASS', 'NOT_EVALUABLE', 'NOT_EVALUABLE', 'NOT_EVALUABLE'):
+        bad.append(f'the screen in the episode-balanced unit (two rows / one row per episode, all-zero, zero eb mean, a NaN prediction): {got_}')
     P_ = pd.DataFrame(dict(oid=[1, 2, 3, 4], A_V=[1., -1., 0., np.nan], pair_v=[1., -1., 0., 0.]))
     R_ = pd.DataFrame(dict(oid=[1, 1, 2, 2], j=[2, 3, 2, 3], A_V=[1., -1., -1., 1.], pair_v=[.5, -.5, -1., 1.]))
     g_, rch_, adm_ = groups_of(P_, R_, 'A')
@@ -668,13 +684,15 @@ def selftest():  # noqa: C901
         flips('a sampled paired quantity off by 1 share', 'V1 LABELS (sampled orders, a per-row loop over the fills)', labels=lq)
         l2 = labs.copy(); l2.loc[l2.index[(l2.oid.astype(int) % SAMPLE != 0)][0], 'pair_qm'] += 1.
         flips('a broken value identity', 'V2 VALUE IDENTITY (every label row)', labels=l2)
-        e3 = tmp / 'exp3' / d0; e3.mkdir(parents=True); g3 = pd.read_parquet(exp / 'rows_000.parquet'); g3.loc[g3.index[5], 'effective_ms'] += 1.; g3.to_parquet(e3 / 'rows_000.parquet', index=False)
-        C.dump(e3 / 'receipt.json', dict(outputs={'rows_000.parquet': C.sha(e3 / 'rows_000.parquet')}))
-        flips('an export timing field off by 1 ms', 'V3 TIMING', export=tmp / 'exp3')
-        V4N, V5N = 'V4 POPULATIONS', 'V5 ACCOUNTING (the ledger vs the evaluation at B; the labels vs PI0-ALL)'
         def exp_with(name_, g_):
             e_ = tmp / name_ / d0; e_.mkdir(parents=True); g_.to_parquet(e_ / 'rows_000.parquet', index=False); C.dump(e_ / 'receipt.json', dict(outputs={'rows_000.parquet': C.sha(e_ / 'rows_000.parquet')}))
             return tmp / name_
+        e3 = tmp / 'exp3' / d0; e3.mkdir(parents=True); g3 = pd.read_parquet(exp / 'rows_000.parquet'); g3.loc[g3.index[5], 'effective_ms'] += 1.; g3.to_parquet(e3 / 'rows_000.parquet', index=False)
+        C.dump(e3 / 'receipt.json', dict(outputs={'rows_000.parquet': C.sha(e3 / 'rows_000.parquet')}))
+        flips('an export timing field off by 1 ms', 'V3 TIMING', export=tmp / 'exp3')
+        g5 = pd.read_parquet(exp / 'rows_000.parquet'); g5.loc[g5.index[7], 'endpoint_ms'] += .01
+        flips('an export END off by 0.01 ms', 'V3 TIMING', export=exp_with('exp3b', g5))
+        V4N, V5N = 'V4 POPULATIONS', 'V5 ACCOUNTING (the ledger vs the evaluation at B; the labels vs PI0-ALL)'
         g4 = pd.read_parquet(exp / 'rows_000.parquet'); x4 = g4[g4.kind == 'post'].iloc[[0]].assign(oid=int(O.oid.max()) + 7, status='missing_endpoint')
         flips('an extra export POST row of no opportunity', V4N, export=exp_with('exp4a', pd.concat([g4, x4], ignore_index=True)))
         nop = g4.index[(g4.kind == 'post') & ~g4.status.isin(PATH_EXPORT)]
@@ -706,6 +724,7 @@ def selftest():  # noqa: C901
     print('pipeline paired review selftests passed (synthetic only): the tails, the episode-balanced means, the plan v2 screen, the prediction groups and the '
           'value identity on planted values; a clean synthetic run passes all five validity predicates, its ledger windows, components and strata add up; each '
           'planted defect fails only its own predicate: a sampled label off by 1 c (V1), a broken identity (V2), an export timing field off by 1 ms (V3), '
+          'an export END off by 0.01 ms (V3), the screen in the episode-balanced unit (review 92d8e52f), '
           'reached rows of unposted orders, an extra export row and a path-status disagreement between the two sources (V4), the ledger landing moved, '
           'a 1e-5 c nudge, a changed evaluation input hash / null mean / source (V5); NaN fails V1 / V2; the matched null against enumeration and its '
           'draws; the first-review share, nesting and FINDINGS C1 / C3 / C12 on planted orders and by a per-fill loop; the ledger on planted fill times '

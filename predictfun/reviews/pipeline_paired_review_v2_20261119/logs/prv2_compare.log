@@ -1,0 +1,4 @@
+20261026: differences outside the module's own hash / outputs: 0 []; plan v2 screen verdicts changed: 0 []; module source changed: True
+20261027: differences outside the module's own hash / outputs: 0 []; plan v2 screen verdicts changed: 0 []; module source changed: True
+REVIEW v2 = v1 ON EVERY READING, VALUE AND SCREEN VERDICT: True
+2026-11-19T17:26:45Z tag=prv2_compare rc=0 peak_rss_mib=11 wall_s=0.02 cpu_user_s=0.01 memavail_start_gib=23 disk_free_gib=471->471 slot=claude

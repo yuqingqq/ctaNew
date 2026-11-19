@@ -202,6 +202,16 @@ pipeline_one_day_v3_20261119:
   values_equal_v2: {cells_per_day: 190, differing: 0}
   attribution_vs_pull_all_c: {"20261026": {first_step: 0.0, later: 954.33, never: 995.36, no_prediction: 0.0}, "20261027": {first_step: 0.0, later: -821.85, never: 251.74, no_prediction: 0.0}}
 
+pipeline_paired_review_v2_20261119:
+  status: done_review_92d8e52f_fixed_values_and_verdicts_unchanged
+  asof: "2026-11-19T17:28Z"
+  user: ["Check my latest commit, next, can you ask codex research session for next priority. continue the implementing and next priority loop"]
+  receipt: predictfun/reviews/pipeline_paired_review_v2_20261119/report.md
+  review_92d8e52f: {p2_screen_zero_raw_sum: fixed_episode_balanced, p2_nesting_to_entry_pa: withdrawn, p2_b1a_level: narrowed_to_sensitivity, p3_v3_rtol: fixed_absolute_1us, p3_k7_nan_statement: corrected}
+  suites: {selftest: pass, mutants: 41/41}
+  compare_v1_v2: {readings_values_screen_verdicts_identical: true}
+  next: R1_branch_engine
+
 pipeline_paired_review_20261119:
   status: done_validity_pass_prediction_fail_controller_fail_risk_located
   receipt: predictfun/reviews/pipeline_paired_review_20261119/report.md

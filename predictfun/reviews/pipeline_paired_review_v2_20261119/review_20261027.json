@@ -1,0 +1,3478 @@
+{
+  "asof": "2026-11-19T17:26:44.403780+00:00",
+  "day": "20261027",
+  "readings": {
+    "V1 LABELS (sampled orders, a per-row loop over the fills)": {
+      "rows_checked": 56366,
+      "mismatches": 0,
+      "verdict": "PASS"
+    },
+    "V2 VALUE IDENTITY (every label row)": {
+      "rows": 1433878,
+      "failures": 0,
+      "verdict": "PASS"
+    },
+    "V3 TIMING": {
+      "export_rows": 1434692,
+      "export_rows_off": 0,
+      "pi0_steps_off": 0,
+      "kept_fills_outside": 0,
+      "verdict": "PASS"
+    },
+    "V4 POPULATIONS": {
+      "original": 29820,
+      "export_post_rows": 29820,
+      "original_two_sources": true,
+      "with_path": 29338,
+      "with_path_two_sources": true,
+      "statuses": {
+        "eligible": 28038,
+        "refused_post_only": 1300,
+        "missing_endpoint": 460,
+        "stale_future_book": 22
+      },
+      "export_post_statuses": {
+        "eligible": 28038,
+        "refused_post_only": 1300,
+        "missing_endpoint": 460,
+        "stale_future_book": 22
+      },
+      "export_retain_statuses": {
+        "eligible": 1404540,
+        "feature_unavailable": 332
+      },
+      "fallback_retain_steps": 332,
+      "fallback_steps_on_A_reached_path": 0,
+      "fallback_steps_at_A_first_review": 0,
+      "no_path": 482,
+      "labelled_post": 29338,
+      "labelled_retain": 1404540,
+      "eligible_retain": 1404540,
+      "admitted": {
+        "ALL": 29338,
+        "A": 13319,
+        "AF": 10051,
+        "AM": 9539,
+        "PI0": 2978,
+        "NEU": 2692,
+        "E1": 1975
+      },
+      "fallbacks": {
+        "A": 0,
+        "AF": 0,
+        "AM": 0,
+        "pi0": 0,
+        "NEU": 0
+      },
+      "refused_nonzero_labels": 0,
+      "A_reached_rows": 76731,
+      "A_reached_orders_not_admitted": 0,
+      "verdict": "PASS"
+    },
+    "V5 ACCOUNTING (the ledger vs the evaluation at B; the labels vs PI0-ALL)": {
+      "compared": 53,
+      "mismatches": 0,
+      "verdict": "PASS",
+      "first_mismatches": {}
+    },
+    "VALIDITY (all five)": "PASS",
+    "PREDICTION: A old gate groups": {
+      "A bid": {
+        "POST (pred > 0)": "FAIL",
+        "NO_ENTRY (pred < 0)": "FAIL",
+        "KEEP reached (pred > 0)": "FAIL",
+        "PULL reached (pred < 0)": "FAIL",
+        "KEEP neutral (pred > 0)": "FAIL",
+        "PULL neutral (pred < 0)": "FAIL"
+      },
+      "A ask": {
+        "POST (pred > 0)": "FAIL",
+        "NO_ENTRY (pred < 0)": "FAIL",
+        "KEEP reached (pred > 0)": "FAIL",
+        "PULL reached (pred < 0)": "PASS",
+        "KEEP neutral (pred > 0)": "FAIL",
+        "PULL neutral (pred < 0)": "FAIL"
+      }
+    },
+    "PREDICTION: A plan v2 screen groups (diagnostic)": {
+      "A bid": {
+        "POST (pred > 0)": "FAIL",
+        "NO_ENTRY (pred < 0)": "FAIL",
+        "KEEP reached (pred > 0)": "FAIL",
+        "PULL reached (pred < 0)": "FAIL",
+        "KEEP neutral (pred > 0)": "FAIL",
+        "PULL neutral (pred < 0)": "FAIL"
+      },
+      "A ask": {
+        "POST (pred > 0)": "FAIL",
+        "NO_ENTRY (pred < 0)": "FAIL",
+        "KEEP reached (pred > 0)": "FAIL",
+        "PULL reached (pred < 0)": "PASS",
+        "KEEP neutral (pred > 0)": "FAIL",
+        "PULL neutral (pred < 0)": "PASS"
+      }
+    },
+    "CONTROLLER: A above N0 / PI0 / NEU / E1 / A-PA at B (both sides)": [
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "CONTROLLER: scenarios with A above 0 / above PI0": [
+      3,
+      3,
+      19
+    ],
+    "CONTROLLER: evaluation readings (carried)": {
+      "ECONOMIC GATE (this day, both sides)": "FAIL",
+      "MATCHED CONTROL AT B: A above the matched null of its admissions": "PASS",
+      "PRACTICAL PREDICATES AT B (A vs A-PA): at-best both sides / median lifetime / first-review reversals / cancels per filled share": [
+        true,
+        false,
+        true,
+        true
+      ],
+      "PRACTICAL GATE (this day)": "FAIL"
+    },
+    "CONTROLLER: A vs A-PA nested on every admitted order (at least A-PA's shares, the same fills before the first effect)": true,
+    "CONTROLLER: the practical predicates vs A-PA": "IMPLIED-BY-NESTING (not evidence)",
+    "CONTROLLER: MATCHED CONTROL WITH ITS SPREAD (draws, one-sided p <= 0.05)": {
+      "both": "FAIL",
+      "bid": "FAIL",
+      "ask": "FAIL"
+    },
+    "CONTROLLER: quoting, A vs PI0 / NEU / E1 (not nested): more resting / more at-best both sides / longer median life / fewer first-review pulls / fewer cancels per filled share": {
+      "PI0": [
+        true,
+        true,
+        false,
+        true,
+        false
+      ],
+      "NEU": [
+        true,
+        true,
+        false,
+        true,
+        false
+      ],
+      "E1": [
+        true,
+        true,
+        false,
+        true,
+        false
+      ]
+    },
+    "CONTROLLER: pulled at the first review (share of the orders live then)": {
+      "PI0, every eligible opportunity": 0.9171478784835551,
+      "PI0, its admissions": 0.7294703163881977,
+      "A, every eligible opportunity": 0.6199921093217603,
+      "A, its admissions": 0.5735778091208275
+    },
+    "FINDINGS C1 (A, both): value / without fills on orders < 100 ms old / B1a-weighted sign": [
+      -11865.445403350106,
+      -5279.277210925192,
+      "HOLDS-SIGN"
+    ],
+    "FINDINGS C1: A minus A-PA by fill age (both)": {
+      "lt100": 357.64067542476005,
+      "100to500": -4055.8221822439473,
+      "ge500": -1223.4550286812473
+    },
+    "RISK: the window carrying most of A's severe-episode loss": "after the earliest effect",
+    "RISK: A movement component per filled share (c)": -1.7789447169607202,
+    "OPEN DEFECTS (validity)": {}
+  },
+  "prediction": {
+    "A bid": {
+      "POST (pred > 0)": {
+        "rows": 5866,
+        "episodes": 5866,
+        "nonzero_label_episodes": 196,
+        "mean_pred": 2.6181867856856704,
+        "mean_label": -1.138700678539919,
+        "eb_pred": 2.6181867856856704,
+        "eb_label": -1.138700678539919,
+        "bias": 3.756887464225589,
+        "mae": 5.5867612954859025,
+        "sum_pred": 15358.283684832142,
+        "sum_label": -6679.618180315165,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "FAIL"
+      },
+      "NO_ENTRY (pred < 0)": {
+        "rows": 8803,
+        "episodes": 8803,
+        "nonzero_label_episodes": 296,
+        "mean_pred": -2.9316377680762815,
+        "mean_label": -1.0648066970470231,
+        "eb_pred": -2.9316377680762815,
+        "eb_label": -1.0648066970470231,
+        "bias": -1.866831071029258,
+        "mae": 5.773306883414091,
+        "sum_pred": -25807.207272375505,
+        "sum_label": -9373.493354104945,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "FAIL"
+      },
+      "POST tie (pred = 0)": {
+        "rows": 0,
+        "episodes": 0,
+        "nonzero_label_episodes": 0
+      },
+      "POST fallback (nonfinite)": {
+        "rows": 0,
+        "episodes": 0,
+        "nonzero_label_episodes": 0
+      },
+      "KEEP reached (pred > 0)": {
+        "rows": 20815,
+        "episodes": 2044,
+        "nonzero_label_episodes": 161,
+        "mean_pred": 1.1078985219612232,
+        "mean_label": -0.0022124840846832715,
+        "eb_pred": 0.9642927720187973,
+        "eb_label": 0.026993384123766416,
+        "bias": 1.1101110060459063,
+        "mae": 3.3086863903685293,
+        "sum_pred": 23060.90773462286,
+        "sum_label": -46.052856222682294,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "FAIL"
+      },
+      "PULL reached (pred < 0)": {
+        "rows": 5323,
+        "episodes": 5323,
+        "nonzero_label_episodes": 161,
+        "mean_pred": -1.0485951770247386,
+        "mean_label": -0.21270796065555286,
+        "eb_pred": -1.0485951770247386,
+        "eb_label": -0.21270796065555286,
+        "bias": -0.8358872163691857,
+        "mae": 3.3786066285165783,
+        "sum_pred": -5581.672127302683,
+        "sum_label": -1132.244474569508,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "FAIL"
+      },
+      "KEEP tie reached (pred = 0)": {
+        "rows": 0,
+        "episodes": 0,
+        "nonzero_label_episodes": 0
+      },
+      "KEEP neutral (pred > 0)": {
+        "rows": 280619,
+        "episodes": 11133,
+        "nonzero_label_episodes": 1864,
+        "mean_pred": 0.4991784505154117,
+        "mean_label": 0.1507814116496499,
+        "eb_pred": 0.680257437860303,
+        "eb_label": -0.23857282456227305,
+        "bias": 0.34839703886576184,
+        "mae": 1.6331951620848344,
+        "sum_pred": 140078.95760518432,
+        "sum_label": 42312.1289557131,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "FAIL"
+      },
+      "PULL neutral (pred < 0)": {
+        "rows": 422901,
+        "episodes": 13424,
+        "nonzero_label_episodes": 4538,
+        "mean_pred": -0.9009588142987823,
+        "mean_label": -0.4086252985248575,
+        "eb_pred": -1.8405671943095945,
+        "eb_label": -1.3818002557970488,
+        "bias": -0.4923335157739246,
+        "mae": 2.2354261928610537,
+        "sum_pred": -381016.38352576934,
+        "sum_label": -172808.04737146077,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "FAIL"
+      },
+      "RETAIN fallback (nonfinite)": {
+        "rows": 0,
+        "episodes": 0,
+        "nonzero_label_episodes": 0
+      }
+    },
+    "A ask": {
+      "POST (pred > 0)": {
+        "rows": 7453,
+        "episodes": 7453,
+        "nonzero_label_episodes": 146,
+        "mean_pred": 1.6919398867704434,
+        "mean_label": -0.23982376087415555,
+        "eb_pred": 1.6919398867704434,
+        "eb_label": -0.23982376087415555,
+        "bias": 1.9317636476445987,
+        "mae": 3.1399420128001885,
+        "sum_pred": 12610.027976100115,
+        "sum_label": -1787.4064897950814,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "FAIL"
+      },
+      "NO_ENTRY (pred < 0)": {
+        "rows": 7216,
+        "episodes": 7216,
+        "nonzero_label_episodes": 257,
+        "mean_pred": -2.543848264468945,
+        "mean_label": -1.1330732017300218,
+        "eb_pred": -2.543848264468945,
+        "eb_label": -1.1330732017300218,
+        "bias": -1.4107750627389233,
+        "mae": 5.684181332374874,
+        "sum_pred": -18356.40907640791,
+        "sum_label": -8176.256223683838,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "FAIL"
+      },
+      "POST tie (pred = 0)": {
+        "rows": 0,
+        "episodes": 0,
+        "nonzero_label_episodes": 0
+      },
+      "POST fallback (nonfinite)": {
+        "rows": 0,
+        "episodes": 0,
+        "nonzero_label_episodes": 0
+      },
+      "KEEP reached (pred > 0)": {
+        "rows": 43752,
+        "episodes": 3398,
+        "nonzero_label_episodes": 175,
+        "mean_pred": 0.40111484709700834,
+        "mean_label": -0.10770940588444723,
+        "eb_pred": 0.5370953166813984,
+        "eb_label": -0.09899996027537576,
+        "bias": 0.5088242529814555,
+        "mae": 1.1400648139858214,
+        "sum_pred": 17549.57679018831,
+        "sum_label": -4712.5019262563355,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "FAIL"
+      },
+      "PULL reached (pred < 0)": {
+        "rows": 6841,
+        "episodes": 6841,
+        "nonzero_label_episodes": 182,
+        "mean_pred": -0.7655306034206235,
+        "mean_label": -0.8586355789153111,
+        "eb_pred": -0.7655306034206235,
+        "eb_label": -0.8586355789153111,
+        "bias": 0.0931049754946876,
+        "mae": 2.471425074802775,
+        "sum_pred": -5236.994858000486,
+        "sum_label": -5873.925995359643,
+        "old_gate": "PASS",
+        "plan_v2_screen": "PASS"
+      },
+      "KEEP tie reached (pred = 0)": {
+        "rows": 0,
+        "episodes": 0,
+        "nonzero_label_episodes": 0
+      },
+      "KEEP neutral (pred > 0)": {
+        "rows": 391039,
+        "episodes": 11924,
+        "nonzero_label_episodes": 2074,
+        "mean_pred": 0.2950753201941435,
+        "mean_label": 0.0014827301746547863,
+        "eb_pred": 0.5465587828466041,
+        "eb_label": -0.3468767302876435,
+        "bias": 0.2935925900194887,
+        "mae": 1.0051813353216348,
+        "sum_pred": 115385.95813339768,
+        "sum_label": 579.805324766833,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "FAIL"
+      },
+      "PULL neutral (pred < 0)": {
+        "rows": 309981,
+        "episodes": 13379,
+        "nonzero_label_episodes": 4237,
+        "mean_pred": -0.8853322213013458,
+        "mean_label": -0.6550599719808982,
+        "eb_pred": -1.5878644614683777,
+        "eb_label": -1.7788955940210007,
+        "bias": -0.2302722493204477,
+        "mae": 2.3395428843536106,
+        "sum_pred": -274436.1672912125,
+        "sum_label": -203056.14517461078,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "PASS"
+      },
+      "RETAIN fallback (nonfinite)": {
+        "rows": 0,
+        "episodes": 0,
+        "nonzero_label_episodes": 0
+      }
+    },
+    "AF bid": {
+      "POST (pred > 0)": {
+        "rows": 5352,
+        "episodes": 5352,
+        "nonzero_label_episodes": 165,
+        "mean_pred": 1.5608948023233489,
+        "mean_label": -0.18127250906812134,
+        "eb_pred": 1.5608948023233489,
+        "eb_label": -0.18127250906812134,
+        "bias": 1.7421673113914706,
+        "mae": 4.5254365568977795,
+        "sum_pred": 8353.908982034563,
+        "sum_label": -970.1704685325853,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "FAIL"
+      },
+      "NO_ENTRY (pred < 0)": {
+        "rows": 9317,
+        "episodes": 9317,
+        "nonzero_label_episodes": 327,
+        "mean_pred": -1.8830051779201606,
+        "mean_label": -1.6188624091325023,
+        "eb_pred": -1.8830051779201606,
+        "eb_label": -1.6188624091325023,
+        "bias": -0.264142768787658,
+        "mae": 5.016503728751243,
+        "sum_pred": -17543.959242682136,
+        "sum_label": -15082.941065887524,
+        "old_gate": "PASS",
+        "plan_v2_screen": "PASS"
+      },
+      "POST tie (pred = 0)": {
+        "rows": 0,
+        "episodes": 0,
+        "nonzero_label_episodes": 0
+      },
+      "POST fallback (nonfinite)": {
+        "rows": 0,
+        "episodes": 0,
+        "nonzero_label_episodes": 0
+      },
+      "KEEP reached (pred > 0)": {
+        "rows": 37505,
+        "episodes": 2394,
+        "nonzero_label_episodes": 345,
+        "mean_pred": 0.6117913532334783,
+        "mean_label": -0.2526568006105277,
+        "eb_pred": 0.8151308420412259,
+        "eb_label": -0.6379119535275147,
+        "bias": 0.864448153844006,
+        "mae": 1.964744262394744,
+        "sum_pred": 22945.234703021604,
+        "sum_label": -9475.89330689784,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "FAIL"
+      },
+      "PULL reached (pred < 0)": {
+        "rows": 4525,
+        "episodes": 4525,
+        "nonzero_label_episodes": 126,
+        "mean_pred": -0.6375402059723215,
+        "mean_label": -0.6123781954783144,
+        "eb_pred": -0.6375402059723215,
+        "eb_label": -0.6123781954783144,
+        "bias": -0.02516201049400695,
+        "mae": 3.672999934016804,
+        "sum_pred": -2884.869432024755,
+        "sum_label": -2771.011334539373,
+        "old_gate": "PASS",
+        "plan_v2_screen": "PASS"
+      },
+      "KEEP tie reached (pred = 0)": {
+        "rows": 0,
+        "episodes": 0,
+        "nonzero_label_episodes": 0
+      },
+      "KEEP neutral (pred > 0)": {
+        "rows": 237758,
+        "episodes": 9818,
+        "nonzero_label_episodes": 2049,
+        "mean_pred": 0.3398272907209952,
+        "mean_label": -0.16027471449306605,
+        "eb_pred": 0.4330367183399124,
+        "eb_label": -1.0475181015595352,
+        "bias": 0.5001020052140615,
+        "mae": 1.4807552422859407,
+        "sum_pred": 80796.65698724239,
+        "sum_label": -38106.5955684424,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "FAIL"
+      },
+      "PULL neutral (pred < 0)": {
+        "rows": 465762,
+        "episodes": 13085,
+        "nonzero_label_episodes": 4094,
+        "mean_pred": -0.616857650719158,
+        "mean_label": -0.19836165863102898,
+        "eb_pred": -0.7621507140977226,
+        "eb_label": -1.161429571276691,
+        "bias": -0.418495992088129,
+        "mae": 2.105369797830318,
+        "sum_pred": -287308.85311425646,
+        "sum_label": -92389.32284730532,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "FAIL"
+      },
+      "RETAIN fallback (nonfinite)": {
+        "rows": 0,
+        "episodes": 0,
+        "nonzero_label_episodes": 0
+      }
+    },
+    "AF ask": {
+      "POST (pred > 0)": {
+        "rows": 4699,
+        "episodes": 4699,
+        "nonzero_label_episodes": 131,
+        "mean_pred": 1.3431426757974663,
+        "mean_label": -0.7279712063801309,
+        "eb_pred": 1.3431426757974663,
+        "eb_label": -0.7279712063801309,
+        "bias": 2.071113882177597,
+        "mae": 3.763035090865844,
+        "sum_pred": 6311.427433572294,
+        "sum_label": -3420.736698780235,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "FAIL"
+      },
+      "NO_ENTRY (pred < 0)": {
+        "rows": 9970,
+        "episodes": 9970,
+        "nonzero_label_episodes": 272,
+        "mean_pred": -1.3131871613151813,
+        "mean_label": -0.6562613856267486,
+        "eb_pred": -1.3131871613151813,
+        "eb_label": -0.6562613856267486,
+        "bias": -0.6569257756884331,
+        "mae": 3.751183659373461,
+        "sum_pred": -13092.475998312359,
+        "sum_label": -6542.9260146986835,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "FAIL"
+      },
+      "POST tie (pred = 0)": {
+        "rows": 0,
+        "episodes": 0,
+        "nonzero_label_episodes": 0
+      },
+      "POST fallback (nonfinite)": {
+        "rows": 0,
+        "episodes": 0,
+        "nonzero_label_episodes": 0
+      },
+      "KEEP reached (pred > 0)": {
+        "rows": 21237,
+        "episodes": 1970,
+        "nonzero_label_episodes": 233,
+        "mean_pred": 0.7343082194120628,
+        "mean_label": -0.3415238832207688,
+        "eb_pred": 0.799190645479038,
+        "eb_label": -0.7924062953526511,
+        "bias": 1.0758321026328317,
+        "mae": 2.449080400488596,
+        "sum_pred": 15594.503655653978,
+        "sum_label": -7252.942707959467,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "FAIL"
+      },
+      "PULL reached (pred < 0)": {
+        "rows": 4186,
+        "episodes": 4186,
+        "nonzero_label_episodes": 114,
+        "mean_pred": -0.4321166068280909,
+        "mean_label": -0.895669668633198,
+        "eb_pred": -0.4321166068280909,
+        "eb_label": -0.895669668633198,
+        "bias": 0.46355306180510725,
+        "mae": 2.4476882057613714,
+        "sum_pred": -1808.8401161823886,
+        "sum_label": -3749.2732328985667,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "FAIL"
+      },
+      "KEEP tie reached (pred = 0)": {
+        "rows": 0,
+        "episodes": 0,
+        "nonzero_label_episodes": 0
+      },
+      "KEEP neutral (pred > 0)": {
+        "rows": 207119,
+        "episodes": 8596,
+        "nonzero_label_episodes": 1836,
+        "mean_pred": 0.30337189941875026,
+        "mean_label": -0.24230836012804124,
+        "eb_pred": 0.43916168005114853,
+        "eb_label": -1.505584120059943,
+        "bias": 0.5456802595467916,
+        "mae": 1.3356159455849592,
+        "sum_pred": 62834.08443571214,
+        "sum_label": -50186.66524135978,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "FAIL"
+      },
+      "PULL neutral (pred < 0)": {
+        "rows": 493901,
+        "episodes": 13374,
+        "nonzero_label_episodes": 4151,
+        "mean_pred": -0.38851534376483793,
+        "mean_label": -0.3083404864709407,
+        "eb_pred": -0.5098246671179386,
+        "eb_label": -1.3023701225239617,
+        "bias": -0.08017485729389716,
+        "mae": 1.5688613351824385,
+        "sum_pred": -191888.11680079723,
+        "sum_label": -152289.67460848409,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "FAIL"
+      },
+      "RETAIN fallback (nonfinite)": {
+        "rows": 0,
+        "episodes": 0,
+        "nonzero_label_episodes": 0
+      }
+    },
+    "AM bid": {
+      "POST (pred > 0)": {
+        "rows": 4212,
+        "episodes": 4212,
+        "nonzero_label_episodes": 177,
+        "mean_pred": 2.0061788022407763,
+        "mean_label": -1.9410906271240564,
+        "eb_pred": 2.0061788022407763,
+        "eb_label": -1.9410906271240564,
+        "bias": 3.9472694293648325,
+        "mae": 5.888864678992761,
+        "sum_pred": 8450.02511503815,
+        "sum_label": -8175.873721446525,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "FAIL"
+      },
+      "NO_ENTRY (pred < 0)": {
+        "rows": 10457,
+        "episodes": 10457,
+        "nonzero_label_episodes": 315,
+        "mean_pred": -1.621248806260914,
+        "mean_label": -0.7532980599573096,
+        "eb_pred": -1.621248806260914,
+        "eb_label": -0.7532980599573096,
+        "bias": -0.8679507463036047,
+        "mae": 4.300520981855514,
+        "sum_pred": -16953.39876707038,
+        "sum_label": -7877.237812973586,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "FAIL"
+      },
+      "POST tie (pred = 0)": {
+        "rows": 0,
+        "episodes": 0,
+        "nonzero_label_episodes": 0
+      },
+      "POST fallback (nonfinite)": {
+        "rows": 0,
+        "episodes": 0,
+        "nonzero_label_episodes": 0
+      },
+      "KEEP reached (pred > 0)": {
+        "rows": 13070,
+        "episodes": 650,
+        "nonzero_label_episodes": 110,
+        "mean_pred": 1.5050300399867511,
+        "mean_label": 0.43711278587638464,
+        "eb_pred": 1.591877194609328,
+        "eb_label": 0.09240481382348435,
+        "bias": 1.0679172541103665,
+        "mae": 3.3690431110194066,
+        "sum_pred": 19670.742622626836,
+        "sum_label": 5713.064111404347,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "FAIL"
+      },
+      "PULL reached (pred < 0)": {
+        "rows": 3756,
+        "episodes": 3756,
+        "nonzero_label_episodes": 132,
+        "mean_pred": -0.9782876791942822,
+        "mean_label": -0.14395001593554516,
+        "eb_pred": -0.9782876791942822,
+        "eb_label": -0.14395001593554516,
+        "bias": -0.8343376632587371,
+        "mae": 4.038919476057586,
+        "sum_pred": -3674.448523053724,
+        "sum_label": -540.6762598539076,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "FAIL"
+      },
+      "KEEP tie reached (pred = 0)": {
+        "rows": 0,
+        "episodes": 0,
+        "nonzero_label_episodes": 0
+      },
+      "KEEP neutral (pred > 0)": {
+        "rows": 117435,
+        "episodes": 5874,
+        "nonzero_label_episodes": 1275,
+        "mean_pred": 0.8365022865637564,
+        "mean_label": 0.2223960909323804,
+        "eb_pred": 0.7824320748027422,
+        "eb_label": -0.4524650369046881,
+        "bias": 0.614106195631376,
+        "mae": 2.529144239665429,
+        "sum_pred": 98234.64602261473,
+        "sum_label": 26117.084938644093,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "FAIL"
+      },
+      "PULL neutral (pred < 0)": {
+        "rows": 586085,
+        "episodes": 13619,
+        "nonzero_label_episodes": 4891,
+        "mean_pred": -0.5361773220251783,
+        "mean_label": -0.267218924480906,
+        "eb_pred": -0.9342301225131409,
+        "eb_label": -1.2070664465477778,
+        "bias": -0.2689583975442724,
+        "mae": 1.8022640899264384,
+        "sum_pred": -314245.48577912664,
+        "sum_label": -156613.0033543918,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "PASS"
+      },
+      "RETAIN fallback (nonfinite)": {
+        "rows": 0,
+        "episodes": 0,
+        "nonzero_label_episodes": 0
+      }
+    },
+    "AM ask": {
+      "POST (pred > 0)": {
+        "rows": 5327,
+        "episodes": 5327,
+        "nonzero_label_episodes": 158,
+        "mean_pred": 1.3793328765982105,
+        "mean_label": -0.017236472681158233,
+        "eb_pred": 1.3793328765982105,
+        "eb_label": -0.017236472681158233,
+        "bias": 1.3965693492793687,
+        "mae": 3.8573173037038755,
+        "sum_pred": 7347.706233638667,
+        "sum_label": -91.81868997252991,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "FAIL"
+      },
+      "NO_ENTRY (pred < 0)": {
+        "rows": 9342,
+        "episodes": 9342,
+        "nonzero_label_episodes": 245,
+        "mean_pred": -1.571789105676669,
+        "mean_label": -1.056716337348147,
+        "eb_pred": -1.571789105676669,
+        "eb_label": -1.056716337348147,
+        "bias": -0.5150727683285221,
+        "mae": 3.91166671124903,
+        "sum_pred": -14683.653825231442,
+        "sum_label": -9871.844023506388,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "FAIL"
+      },
+      "POST tie (pred = 0)": {
+        "rows": 0,
+        "episodes": 0,
+        "nonzero_label_episodes": 0
+      },
+      "POST fallback (nonfinite)": {
+        "rows": 0,
+        "episodes": 0,
+        "nonzero_label_episodes": 0
+      },
+      "KEEP reached (pred > 0)": {
+        "rows": 30023,
+        "episodes": 1177,
+        "nonzero_label_episodes": 204,
+        "mean_pred": 0.5253700088983643,
+        "mean_label": -0.15489089385561758,
+        "eb_pred": 0.7745889123382336,
+        "eb_label": -1.2288369940558237,
+        "bias": 0.6802609027539821,
+        "mae": 1.2787287420733262,
+        "sum_pred": 15773.183777155591,
+        "sum_label": -4650.289306227207,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "FAIL"
+      },
+      "PULL reached (pred < 0)": {
+        "rows": 4630,
+        "episodes": 4630,
+        "nonzero_label_episodes": 156,
+        "mean_pred": -0.5884828466148071,
+        "mean_label": -0.9073616980440055,
+        "eb_pred": -0.5884828466148071,
+        "eb_label": -0.9073616980440055,
+        "bias": 0.31887885142919836,
+        "mae": 3.374377542223907,
+        "sum_pred": -2724.6755798265567,
+        "sum_label": -4201.084661943745,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "FAIL"
+      },
+      "KEEP tie reached (pred = 0)": {
+        "rows": 0,
+        "episodes": 0,
+        "nonzero_label_episodes": 0
+      },
+      "KEEP neutral (pred > 0)": {
+        "rows": 190455,
+        "episodes": 9487,
+        "nonzero_label_episodes": 1997,
+        "mean_pred": 0.4390527841916209,
+        "mean_label": -0.10306296916598195,
+        "eb_pred": 0.4777812036195232,
+        "eb_label": -0.8246214837881418,
+        "bias": 0.5421157533576029,
+        "mae": 1.7141909799900998,
+        "sum_pred": 83619.79801321516,
+        "sum_label": -19628.857792507093,
+        "old_gate": "FAIL",
+        "plan_v2_screen": "FAIL"
+      },
+      "PULL neutral (pred < 0)": {
+        "rows": 510565,
+        "episodes": 13273,
+        "nonzero_label_episodes": 4263,
+        "mean_pred": -0.34620027896684297,
+        "mean_label": -0.3581277252795175,
+        "eb_pred": -0.6888883872394647,
+        "eb_label": -1.4292390434741804,
+        "bias": 0.011927446312674578,
+        "mae": 1.3988462537078103,
+        "sum_pred": -176757.74543070619,
+        "sum_label": -182847.48205733683,
+        "old_gate": "PASS",
+        "plan_v2_screen": "FAIL"
+      },
+      "RETAIN fallback (nonfinite)": {
+        "rows": 0,
+        "episodes": 0,
+        "nonzero_label_episodes": 0
+      }
+    }
+  },
+  "controller": {
+    "A both": {
+      "value": -11865.445403350106,
+      "per_opportunity": -0.3979022603403791,
+      "vs_PI0": -9257.746305578996,
+      "vs_same_admission_PULL_ALL": -4921.636535500433,
+      "resting": 0.02873679869111732,
+      "at_best": 0.020025223259935918,
+      "lifetime": [
+        79.0,
+        79.0,
+        779.0
+      ],
+      "first_review_of_live": 0.5735778091208275,
+      "cancels_per_100_filled_shares": 121.30068865945302,
+      "attempts": 13319,
+      "accepted": 12835,
+      "filled": 477
+    },
+    "A bid": {
+      "value": -9064.306998758808,
+      "per_opportunity": -0.607934741700792,
+      "vs_PI0": -7036.099762237704,
+      "vs_same_admission_PULL_ALL": -3434.371440204458,
+      "resting": 0.02010325175540255,
+      "at_best": 0.012998159383734406,
+      "lifetime": [
+        79.0,
+        79.0,
+        579.0
+      ],
+      "first_review_of_live": 0.6353256021409456,
+      "cancels_per_100_filled_shares": 115.95134431972542,
+      "attempts": 5866,
+      "accepted": 5642,
+      "filled": 230
+    },
+    "A ask": {
+      "value": -2801.1384045913005,
+      "per_opportunity": -0.1878697789799665,
+      "vs_PI0": -2221.6465433412936,
+      "vs_same_admission_PULL_ALL": -1487.2650952959775,
+      "resting": 0.03737034562683209,
+      "at_best": 0.027052287136137432,
+      "lifetime": [
+        79.0,
+        79.0,
+        979.0
+      ],
+      "first_review_of_live": 0.5252200642727399,
+      "cancels_per_100_filled_shares": 125.81532732466455,
+      "attempts": 7453,
+      "accepted": 7193,
+      "filled": 247
+    },
+    "A pairs": {
+      "either": 0.053473583748040086,
+      "both": 0.00400001363419456,
+      "at_best_both": 0.0028222782739109687
+    },
+    "A-PA both": {
+      "value": -6943.808867849673,
+      "per_opportunity": -0.23285744023640756,
+      "vs_PI0": -4336.109770078563,
+      "vs_same_admission_PULL_ALL": 0.0,
+      "resting": 0.006883713954598132,
+      "at_best": 0.004054809462131025,
+      "lifetime": [
+        79.0,
+        79.0,
+        79.0
+      ],
+      "first_review_of_live": 1.0,
+      "cancels_per_100_filled_shares": 337.60876224609973,
+      "attempts": 13319,
+      "accepted": 12835,
+      "filled": 208
+    },
+    "A-PA bid": {
+      "value": -5629.93555855435,
+      "per_opportunity": -0.3775946048661536,
+      "vs_PI0": -3601.7283220332465,
+      "vs_same_admission_PULL_ALL": 0.0,
+      "resting": 0.006046533506033131,
+      "at_best": 0.003517622196468744,
+      "lifetime": [
+        79.0,
+        79.0,
+        79.0
+      ],
+      "first_review_of_live": 1.0,
+      "cancels_per_100_filled_shares": 291.1175100659932,
+      "attempts": 5866,
+      "accepted": 5642,
+      "filled": 109
+    },
+    "A-PA ask": {
+      "value": -1313.873309295323,
+      "per_opportunity": -0.0881202756066615,
+      "vs_PI0": -734.381448045316,
+      "vs_same_admission_PULL_ALL": 0.0,
+      "resting": 0.007720894403163133,
+      "at_best": 0.004591996727793306,
+      "lifetime": [
+        79.0,
+        79.0,
+        79.0
+      ],
+      "first_review_of_live": 1.0,
+      "cancels_per_100_filled_shares": 385.7498385977978,
+      "attempts": 7453,
+      "accepted": 7193,
+      "filled": 99
+    },
+    "A-PA pairs": {
+      "either": 0.010903810757379508,
+      "both": 0.0028636171518167564,
+      "at_best_both": 0.0017526757106823914
+    },
+    "PI0 both": {
+      "value": -2607.6990977711102,
+      "per_opportunity": -0.08744799120627465,
+      "vs_PI0": 0.0,
+      "vs_same_admission_PULL_ALL": 605.2812706649379,
+      "resting": 0.006734978526143568,
+      "at_best": 0.005767264298861545,
+      "lifetime": [
+        79.0,
+        79.0,
+        779.0
+      ],
+      "first_review_of_live": 0.7294703163881977,
+      "cancels_per_100_filled_shares": 64.26191251966374,
+      "attempts": 2978,
+      "accepted": 2842,
+      "filled": 182
+    },
+    "PI0 bid": {
+      "value": -2028.2072365211036,
+      "per_opportunity": -0.13602999574252875,
+      "vs_PI0": 0.0,
+      "vs_same_admission_PULL_ALL": -81.2151992580159,
+      "resting": 0.009195991546799372,
+      "at_best": 0.007992364851046424,
+      "lifetime": [
+        79.0,
+        79.0,
+        1029.0
+      ],
+      "first_review_of_live": 0.6959302325581396,
+      "cancels_per_100_filled_shares": 63.545387089123366,
+      "attempts": 1776,
+      "accepted": 1734,
+      "filled": 114
+    },
+    "PI0 ask": {
+      "value": -579.491861250007,
+      "per_opportunity": -0.03886598667002059,
+      "vs_PI0": 0.0,
+      "vs_same_admission_PULL_ALL": 686.4964699229535,
+      "resting": 0.004273965505487763,
+      "at_best": 0.003542163746676665,
+      "lifetime": [
+        79.0,
+        79.0,
+        429.0
+      ],
+      "first_review_of_live": 0.7822506861848124,
+      "cancels_per_100_filled_shares": 65.41217830176839,
+      "attempts": 1202,
+      "accepted": 1108,
+      "filled": 68
+    },
+    "PI0 pairs": {
+      "either": 0.013251360010907355,
+      "both": 0.0002185970413797805,
+      "at_best_both": 0.00016701888335946555
+    },
+    "NEU both": {
+      "value": -2826.523048280987,
+      "per_opportunity": -0.0947861518538225,
+      "vs_PI0": -218.8239505098768,
+      "vs_same_admission_PULL_ALL": 718.2629326064625,
+      "resting": 0.0042832367577885335,
+      "at_best": 0.00319994546322176,
+      "lifetime": [
+        79.0,
+        79.0,
+        359.0
+      ],
+      "first_review_of_live": 0.8094683740783857,
+      "cancels_per_100_filled_shares": 117.6791201167881,
+      "attempts": 2692,
+      "accepted": 2621,
+      "filled": 99
+    },
+    "NEU bid": {
+      "value": -3343.577450546467,
+      "per_opportunity": -0.2242506673740085,
+      "vs_PI0": -1315.3702140253633,
+      "vs_same_admission_PULL_ALL": -69.66640322580679,
+      "resting": 0.003038707478355716,
+      "at_best": 0.00226872997477674,
+      "lifetime": [
+        79.0,
+        79.0,
+        129.0
+      ],
+      "first_review_of_live": 0.8686956521739131,
+      "cancels_per_100_filled_shares": 132.88123217724456,
+      "attempts": 1210,
+      "accepted": 1172,
+      "filled": 38
+    },
+    "NEU ask": {
+      "value": 517.0544022654798,
+      "per_opportunity": 0.0346783636663635,
+      "vs_PI0": 1096.5462635154868,
+      "vs_same_admission_PULL_ALL": 787.9293358322685,
+      "resting": 0.005527766037221351,
+      "at_best": 0.00413116095166678,
+      "lifetime": [
+        79.0,
+        79.0,
+        579.0
+      ],
+      "first_review_of_live": 0.7617379117028732,
+      "cancels_per_100_filled_shares": 107.81351817513115,
+      "attempts": 1482,
+      "accepted": 1449,
+      "filled": 61
+    },
+    "NEU pairs": {
+      "either": 0.008476378757924875,
+      "both": 9.00947576521917e-05,
+      "at_best_both": 4.9083100415842936e-05
+    },
+    "E1 both": {
+      "value": -823.5334604608256,
+      "per_opportunity": -0.027616816246171214,
+      "vs_PI0": 1784.1656373102846,
+      "vs_same_admission_PULL_ALL": 105.98131434247739,
+      "resting": 0.004539532347126594,
+      "at_best": 0.0038864271593155634,
+      "lifetime": [
+        79.0,
+        79.0,
+        589.1999999999985
+      ],
+      "first_review_of_live": 0.777422790202343,
+      "cancels_per_100_filled_shares": 82.08921460774393,
+      "attempts": 1975,
+      "accepted": 1908,
+      "filled": 89
+    },
+    "E1 bid": {
+      "value": -361.7610734171226,
+      "per_opportunity": -0.024262982791222173,
+      "vs_PI0": 1666.446163103981,
+      "vs_same_admission_PULL_ALL": 303.16045983424044,
+      "resting": 0.005817042743199946,
+      "at_best": 0.005077374054127753,
+      "lifetime": [
+        79.0,
+        79.0,
+        829.0
+      ],
+      "first_review_of_live": 0.774288518155054,
+      "cancels_per_100_filled_shares": 73.67587948767488,
+      "attempts": 1065,
+      "accepted": 1034,
+      "filled": 54
+    },
+    "E1 ask": {
+      "value": -461.7723870437031,
+      "per_opportunity": -0.03097064970112026,
+      "vs_PI0": 117.71947420630391,
+      "vs_same_admission_PULL_ALL": -197.17914549176317,
+      "resting": 0.0032620219510532417,
+      "at_best": 0.0026954802645033746,
+      "lifetime": [
+        79.0,
+        79.0,
+        429.0
+      ],
+      "first_review_of_live": 0.7811408614668219,
+      "cancels_per_100_filled_shares": 94.32795285374063,
+      "attempts": 910,
+      "accepted": 874,
+      "filled": 35
+    },
+    "E1 pairs": {
+      "either": 0.008951066875724317,
+      "both": 0.00012799781852887042,
+      "at_best_both": 6.544413388779058e-05
+    },
+    "PA both": {
+      "value": -23345.991108506503,
+      "per_opportunity": -0.7828970861336856,
+      "vs_PI0": -20738.292010735393,
+      "vs_same_admission_PULL_ALL": 0.0,
+      "resting": 0.01501850841911514,
+      "at_best": 0.008941304792419388,
+      "lifetime": [
+        79.0,
+        79.0,
+        79.0
+      ],
+      "first_review_of_live": 1.0,
+      "cancels_per_100_filled_shares": 250.23068210686458,
+      "attempts": 29338,
+      "accepted": 28038,
+      "filled": 597
+    },
+    "PA bid": {
+      "value": -13902.366024600999,
+      "per_opportunity": -0.9324189151308517,
+      "vs_PI0": -11874.158788079894,
+      "vs_same_admission_PULL_ALL": 0.0,
+      "resting": 0.015006530779194218,
+      "at_best": 0.008921535210307452,
+      "lifetime": [
+        79.0,
+        79.0,
+        79.0
+      ],
+      "first_review_of_live": 1.0,
+      "cancels_per_100_filled_shares": 237.3016726604047,
+      "attempts": 14669,
+      "accepted": 14012,
+      "filled": 314
+    },
+    "PA ask": {
+      "value": -9443.625083905501,
+      "per_opportunity": -0.6333752571365192,
+      "vs_PI0": -8864.133222655493,
+      "vs_same_admission_PULL_ALL": 0.0,
+      "resting": 0.015030486059036062,
+      "at_best": 0.008961074374531324,
+      "lifetime": [
+        79.0,
+        79.0,
+        79.0
+      ],
+      "first_review_of_live": 1.0,
+      "cancels_per_100_filled_shares": 264.60672476521995,
+      "attempts": 14669,
+      "accepted": 14026,
+      "filled": 283
+    },
+    "PA pairs": {
+      "either": 0.015780107710137024,
+      "both": 0.014256909128093258,
+      "at_best_both": 0.008735428454564046
+    }
+  },
+  "risk": {
+    "A": {
+      "both": {
+        "episodes": 29338,
+        "mean_loss": 1.096858342130655,
+        "p_loss": 0.009271252300770331,
+        "p_severe": 0.006203558524780149,
+        "mean_severe_excess": 0.8747543385244836,
+        "total_loss": 32179.630041429158,
+        "total_severe_excess": 25663.5427836313,
+        "severe_episodes": 182,
+        "p95_loss_filled": 285.335321991958,
+        "p99_loss_filled": 736.0000000000011,
+        "p95_loss_loss": 388.49999999999966,
+        "p99_loss_loss": 1039.8000000000025,
+        "worst_1pct_share_of_loss": 1.0,
+        "largest_loss": 1395.0
+      },
+      "bid": {
+        "episodes": 14669,
+        "mean_loss": 1.1663167869994047,
+        "p_loss": 0.009543936191969459,
+        "p_severe": 0.0063399004703797125,
+        "mean_severe_excess": 0.9383498104198132,
+        "total_loss": 17108.70094849427,
+        "total_severe_excess": 13764.653369048241,
+        "severe_episodes": 93,
+        "p95_loss_filled": 302.2544744819049,
+        "p99_loss_filled": 918.0000000000024,
+        "p95_loss_loss": 375.0,
+        "p99_loss_loss": 1078.1999999999982,
+        "worst_1pct_share_of_loss": 1.0,
+        "largest_loss": 1395.0
+      },
+      "ask": {
+        "episodes": 14669,
+        "mean_loss": 1.0273998972619054,
+        "p_loss": 0.008998568409571205,
+        "p_severe": 0.006067216579180585,
+        "mean_severe_excess": 0.811158866629154,
+        "total_loss": 15070.929092934892,
+        "total_severe_excess": 11898.88941458306,
+        "severe_episodes": 89,
+        "p95_loss_filled": 285.0,
+        "p99_loss_filled": 635.9999999999989,
+        "p95_loss_loss": 418.49999999999966,
+        "p99_loss_loss": 794.1249999999997,
+        "worst_1pct_share_of_loss": 0.9999999999999999,
+        "largest_loss": 1365.0
+      },
+      "where": {
+        "side": {
+          "ask": {
+            "episodes": 14669,
+            "total_loss": 15070.929092934892,
+            "severe_episodes": 89,
+            "severe_excess": 11898.88941458306,
+            "value": -2801.1384045913005
+          },
+          "bid": {
+            "episodes": 14669,
+            "total_loss": 17108.70094849427,
+            "severe_episodes": 93,
+            "severe_excess": 13764.653369048241,
+            "value": -9064.306998758806
+          }
+        },
+        "phase": {
+          "1": {
+            "episodes": 6328,
+            "total_loss": 6346.739522064242,
+            "severe_episodes": 49,
+            "severe_excess": 4617.7401046517,
+            "value": -3553.2066556067157
+          },
+          "2": {
+            "episodes": 6898,
+            "total_loss": 4482.37304465986,
+            "severe_episodes": 31,
+            "severe_excess": 3302.0910345149787,
+            "value": -2290.709349321616
+          },
+          "3": {
+            "episodes": 6798,
+            "total_loss": 5541.9405292259235,
+            "severe_episodes": 31,
+            "severe_excess": 4465.792786395265,
+            "value": -2915.0410110967905
+          },
+          "4": {
+            "episodes": 5910,
+            "total_loss": 6730.890206569924,
+            "severe_episodes": 33,
+            "severe_excess": 5542.669446356886,
+            "value": -2168.807834291078
+          },
+          "5": {
+            "episodes": 3404,
+            "total_loss": 9077.686738909211,
+            "severe_episodes": 38,
+            "severe_excess": 7735.2494117124725,
+            "value": -937.680553033907
+          }
+        },
+        "spread": {
+          "(0, 1]": {
+            "episodes": 28180,
+            "total_loss": 27748.464899598624,
+            "severe_episodes": 166,
+            "severe_excess": 21776.372749597547,
+            "value": -9663.073543039452
+          },
+          "(1, 2]": {
+            "episodes": 722,
+            "total_loss": 911.8722787645202,
+            "severe_episodes": 7,
+            "severe_excess": 647.8771709677419,
+            "value": -451.2389972446423
+          },
+          "(2, 5]": {
+            "episodes": 370,
+            "total_loss": 3189.2928630660117,
+            "severe_episodes": 8,
+            "severe_excess": 2939.2928630660117,
+            "value": -1421.132863066012
+          },
+          "(5, inf]": {
+            "episodes": 66,
+            "total_loss": 330.0,
+            "severe_episodes": 1,
+            "severe_excess": 300.0,
+            "value": -330.0
+          }
+        },
+        "sigma tercile": {
+          "high": {
+            "episodes": 9740,
+            "total_loss": 7941.109542274529,
+            "severe_episodes": 52,
+            "severe_excess": 6092.69316653944,
+            "value": 766.3150688167989
+          },
+          "low": {
+            "episodes": 9792,
+            "total_loss": 10955.759987601137,
+            "severe_episodes": 60,
+            "severe_excess": 8821.068041435194,
+            "value": -4383.147058138247
+          },
+          "mid": {
+            "episodes": 9806,
+            "total_loss": 13282.76051155349,
+            "severe_episodes": 70,
+            "severe_excess": 10749.781575656669,
+            "value": -8248.61341402866
+          }
+        },
+        "window (all episodes)": {
+          "before the first review": -5006.007835159766,
+          "earliest-effect delay": -1937.8010326899068,
+          "after the earliest effect": -4921.636535500435
+        },
+        "window (severe episodes)": {
+          "before the first review": -6643.571788475193,
+          "earliest-effect delay": -6095.215427387244,
+          "after the earliest effect": -18384.755567768865
+        },
+        "components": {
+          "spread": 5816.842050608126,
+          "movement": -17682.287453958234,
+          "severe_spread": 2610.5752598961794,
+          "severe_movement": -33734.11804352748
+        },
+        "inventory": {
+          "time_integrated_share_s": 44932.97985701218,
+          "mean_abs_terminal": 0.746284420770135,
+          "peak_abs_terminal": 30.000000000000007,
+          "filled_episodes": 477,
+          "movement_per_filled_share": -1.7789447169607202
+        }
+      }
+    },
+    "A-PA": {
+      "both": {
+        "episodes": 29338,
+        "mean_loss": 0.4519082800842484,
+        "p_loss": 0.004226600313586475,
+        "p_severe": 0.0026927534255913833,
+        "mean_severe_excess": 0.35269279320984265,
+        "total_loss": 13258.085121111679,
+        "total_severe_excess": 10347.301167190364,
+        "severe_episodes": 79,
+        "p95_loss_filled": 255.0,
+        "p99_loss_filled": 634.4646000000013,
+        "p95_loss_loss": 373.85249999999996,
+        "p99_loss_loss": 1015.1105999999982,
+        "worst_1pct_share_of_loss": 1.0000000000000002,
+        "largest_loss": 1395.0
+      },
+      "bid": {
+        "episodes": 14669,
+        "mean_loss": 0.5791067655178792,
+        "p_loss": 0.004431113231985821,
+        "p_severe": 0.0028631808575908376,
+        "mean_severe_excess": 0.4735354582773868,
+        "total_loss": 8494.91714338177,
+        "total_severe_excess": 6946.291637470987,
+        "severe_episodes": 42,
+        "p95_loss_filled": 322.40999999999934,
+        "p99_loss_filled": 1086.7776000000008,
+        "p95_loss_loss": 459.49999999999994,
+        "p99_loss_loss": 1222.1999999999998,
+        "worst_1pct_share_of_loss": 1.0,
+        "largest_loss": 1395.0
+      },
+      "ask": {
+        "episodes": 14669,
+        "mean_loss": 0.32470979465061756,
+        "p_loss": 0.004022087395187129,
+        "p_severe": 0.0025223259935919285,
+        "mean_severe_excess": 0.23185012814229855,
+        "total_loss": 4763.167977729909,
+        "total_severe_excess": 3401.0095297193775,
+        "severe_episodes": 37,
+        "p95_loss_filled": 214.52298449776777,
+        "p99_loss_filled": 376.78124999999966,
+        "p95_loss_loss": 290.2499999999997,
+        "p99_loss_loss": 412.40625000000017,
+        "worst_1pct_share_of_loss": 1.0,
+        "largest_loss": 464.0625
+      },
+      "where": {
+        "side": {
+          "ask": {
+            "episodes": 14669,
+            "total_loss": 4763.167977729909,
+            "severe_episodes": 37,
+            "severe_excess": 3401.0095297193775,
+            "value": -1313.873309295323
+          },
+          "bid": {
+            "episodes": 14669,
+            "total_loss": 8494.91714338177,
+            "severe_episodes": 42,
+            "severe_excess": 6946.291637470987,
+            "value": -5629.935558554351
+          }
+        },
+        "phase": {
+          "1": {
+            "episodes": 6328,
+            "total_loss": 2840.012159517805,
+            "severe_episodes": 20,
+            "severe_excess": 2052.656242105263,
+            "value": -1965.6023869433197
+          },
+          "2": {
+            "episodes": 6898,
+            "total_loss": 1446.3516873567607,
+            "severe_episodes": 12,
+            "severe_excess": 940.0746635472369,
+            "value": -471.21284315808197
+          },
+          "3": {
+            "episodes": 6798,
+            "total_loss": 2740.572247169205,
+            "severe_episodes": 16,
+            "severe_excess": 2232.67415630899,
+            "value": -1692.5289340378922
+          },
+          "4": {
+            "episodes": 5910,
+            "total_loss": 2692.9239803929795,
+            "severe_episodes": 17,
+            "severe_excess": 2058.715072031793,
+            "value": -239.9405152464933
+          },
+          "5": {
+            "episodes": 3404,
+            "total_loss": 3538.2250466749288,
+            "severe_episodes": 14,
+            "severe_excess": 3063.18103319708,
+            "value": -2574.5241884638854
+          }
+        },
+        "spread": {
+          "(0, 1]": {
+            "episodes": 28180,
+            "total_loss": 12988.299761596407,
+            "severe_episodes": 77,
+            "severe_excess": 10185.440367190364,
+            "value": -6878.027030393226
+          },
+          "(1, 2]": {
+            "episodes": 722,
+            "total_loss": 219.1251631159272,
+            "severe_episodes": 1,
+            "severe_excess": 146.86079999999998,
+            "value": -170.78164105710363
+          },
+          "(2, 5]": {
+            "episodes": 370,
+            "total_loss": 50.66019639934534,
+            "severe_episodes": 1,
+            "severe_excess": 15.0,
+            "value": 104.99980360065466
+          },
+          "(5, inf]": {
+            "episodes": 66,
+            "total_loss": 0.0,
+            "severe_episodes": 0,
+            "severe_excess": 0.0,
+            "value": 0.0
+          }
+        },
+        "sigma tercile": {
+          "high": {
+            "episodes": 9740,
+            "total_loss": 3126.3642659382654,
+            "severe_episodes": 25,
+            "severe_excess": 2222.8931773699765,
+            "value": -113.0994781276172
+          },
+          "low": {
+            "episodes": 9792,
+            "total_loss": 3096.0839313919887,
+            "severe_episodes": 19,
+            "severe_excess": 2361.9631549975197,
+            "value": -1033.9493963734485
+          },
+          "mid": {
+            "episodes": 9806,
+            "total_loss": 7035.636923781425,
+            "severe_episodes": 35,
+            "severe_excess": 5762.444834822868,
+            "value": -5796.759993348608
+          }
+        },
+        "window (all episodes)": {
+          "before the first review": -5006.007835159766,
+          "earliest-effect delay": -1937.8010326899068,
+          "after the earliest effect": 0.0
+        },
+        "window (severe episodes)": {
+          "before the first review": -6632.770936202466,
+          "earliest-effect delay": -6084.530230987898,
+          "after the earliest effect": 0.0
+        },
+        "components": {
+          "spread": 2012.0583229777765,
+          "movement": -8955.86719082745,
+          "severe_spread": 953.9736011827524,
+          "severe_movement": -13671.274768373118
+        },
+        "inventory": {
+          "time_integrated_share_s": 18414.013151287312,
+          "mean_abs_terminal": 0.28207909702738565,
+          "peak_abs_terminal": 30.000000000000004,
+          "filled_episodes": 208,
+          "movement_per_filled_share": -2.3837742329988254
+        }
+      }
+    },
+    "PI0": {
+      "both": {
+        "episodes": 29338,
+        "mean_loss": 0.2532036037493593,
+        "p_loss": 0.00368123253118822,
+        "p_severe": 0.0020792146703933465,
+        "mean_severe_excess": 0.16979224774867327,
+        "total_loss": 7428.487326798702,
+        "total_severe_excess": 4981.364964450577,
+        "severe_episodes": 61,
+        "p95_loss_filled": 223.49999999999966,
+        "p99_loss_filled": 362.84999999999997,
+        "p95_loss_loss": 285.0,
+        "p99_loss_loss": 373.9499999999999,
+        "worst_1pct_share_of_loss": 1.0,
+        "largest_loss": 465.0
+      },
+      "bid": {
+        "episodes": 14669,
+        "mean_loss": 0.31064395443479853,
+        "p_loss": 0.004840139068784511,
+        "p_severe": 0.0025223259935919285,
+        "mean_severe_excess": 0.2078830976122111,
+        "total_loss": 4556.8361676040595,
+        "total_severe_excess": 3049.437158873525,
+        "severe_episodes": 37,
+        "p95_loss_filled": 195.74999999999974,
+        "p99_loss_filled": 356.10000000000014,
+        "p95_loss_loss": 285.0,
+        "p99_loss_loss": 391.4999999999997,
+        "worst_1pct_share_of_loss": 1.0,
+        "largest_loss": 465.0
+      },
+      "ask": {
+        "episodes": 14669,
+        "mean_loss": 0.19576325306391995,
+        "p_loss": 0.0025223259935919285,
+        "p_severe": 0.0016361033471947646,
+        "mean_severe_excess": 0.13170139788513543,
+        "total_loss": 2871.651159194642,
+        "total_severe_excess": 1931.9278055770517,
+        "severe_episodes": 24,
+        "p95_loss_filled": 214.49999999999994,
+        "p99_loss_filled": 354.9,
+        "p95_loss_loss": 248.9999999999995,
+        "p99_loss_loss": 364.20000000000005,
+        "worst_1pct_share_of_loss": 1.0000000000000002,
+        "largest_loss": 375.0
+      },
+      "where": {
+        "side": {
+          "ask": {
+            "episodes": 14669,
+            "total_loss": 2871.651159194642,
+            "severe_episodes": 24,
+            "severe_excess": 1931.9278055770517,
+            "value": -579.4918612500069
+          },
+          "bid": {
+            "episodes": 14669,
+            "total_loss": 4556.8361676040595,
+            "severe_episodes": 37,
+            "severe_excess": 3049.437158873525,
+            "value": -2028.2072365211036
+          }
+        },
+        "phase": {
+          "1": {
+            "episodes": 6328,
+            "total_loss": 2024.77066876546,
+            "severe_episodes": 16,
+            "severe_excess": 1469.0580343891402,
+            "value": -871.8694777009705
+          },
+          "2": {
+            "episodes": 6898,
+            "total_loss": 472.9687,
+            "severe_episodes": 6,
+            "severe_excess": 292.9687,
+            "value": 208.95083671763518
+          },
+          "3": {
+            "episodes": 6798,
+            "total_loss": 917.8732126374828,
+            "severe_episodes": 8,
+            "severe_excess": 540.8799370993805,
+            "value": -22.3586406884846
+          },
+          "4": {
+            "episodes": 5910,
+            "total_loss": 515.1132078700557,
+            "severe_episodes": 6,
+            "severe_excess": 228.36840536512668,
+            "value": -143.75908151536197
+          },
+          "5": {
+            "episodes": 3404,
+            "total_loss": 3497.7615375257037,
+            "severe_episodes": 25,
+            "severe_excess": 2450.0898875969287,
+            "value": -1778.6627345839288
+          }
+        },
+        "spread": {
+          "(0, 1]": {
+            "episodes": 28180,
+            "total_loss": 5691.038014457328,
+            "severe_episodes": 53,
+            "severe_excess": 3554.2387680512315,
+            "value": -1067.7497854297362
+          },
+          "(1, 2]": {
+            "episodes": 722,
+            "total_loss": 1270.323115942029,
+            "severe_episodes": 5,
+            "severe_excess": 1065.0,
+            "value": -1120.323115942029
+          },
+          "(2, 5]": {
+            "episodes": 370,
+            "total_loss": 137.12619639934533,
+            "severe_episodes": 2,
+            "severe_excess": 62.12619639934533,
+            "value": -89.62619639934533
+          },
+          "(5, inf]": {
+            "episodes": 66,
+            "total_loss": 330.0,
+            "severe_episodes": 1,
+            "severe_excess": 300.0,
+            "value": -330.0
+          }
+        },
+        "sigma tercile": {
+          "high": {
+            "episodes": 9740,
+            "total_loss": 2121.9750056811577,
+            "severe_episodes": 21,
+            "severe_excess": 1338.2281904915262,
+            "value": -108.73797690037614
+          },
+          "low": {
+            "episodes": 9792,
+            "total_loss": 1936.4328612077459,
+            "severe_episodes": 16,
+            "severe_excess": 1235.0948963993453,
+            "value": -558.5555763143497
+          },
+          "mid": {
+            "episodes": 9806,
+            "total_loss": 3370.0794599097985,
+            "severe_episodes": 24,
+            "severe_excess": 2408.0418775597045,
+            "value": -1940.4055445563845
+          }
+        },
+        "window (all episodes)": {
+          "before the first review": -1351.4595805151826,
+          "earliest-effect delay": -1861.520787920865,
+          "after the earliest effect": 605.2812706649372
+        },
+        "window (severe episodes)": {
+          "before the first review": -1913.361461976631,
+          "earliest-effect delay": -1919.6151112763619,
+          "after the earliest effect": -2978.388391197583
+        },
+        "components": {
+          "spread": 2344.423226296523,
+          "movement": -4952.122324067633,
+          "severe_spread": 992.8276896201095,
+          "severe_movement": -7804.192654070685
+        },
+        "inventory": {
+          "time_integrated_share_s": 16446.683174948736,
+          "mean_abs_terminal": 1.3481597780870773,
+          "peak_abs_terminal": 30.000000000000004,
+          "filled_episodes": 182,
+          "movement_per_filled_share": -1.2334606650228996
+        }
+      }
+    },
+    "NEU": {
+      "both": {
+        "episodes": 29338,
+        "mean_loss": 0.19579717212201925,
+        "p_loss": 0.0018065307791942191,
+        "p_severe": 0.0011248210511964007,
+        "mean_severe_excess": 0.15439373554936386,
+        "total_loss": 5744.297435715801,
+        "total_severe_excess": 4529.603413547237,
+        "severe_episodes": 33,
+        "p95_loss_filled": 227.99999999999983,
+        "p99_loss_filled": 456.64999999999617,
+        "p95_loss_loss": 338.9999999999999,
+        "p99_loss_loss": 897.099999999997,
+        "worst_1pct_share_of_loss": 0.9999999999999999,
+        "largest_loss": 1395.0
+      },
+      "bid": {
+        "episodes": 14669,
+        "mean_loss": 0.2663798005187427,
+        "p_loss": 0.0015679323743949826,
+        "p_severe": 0.0011589065375962914,
+        "mean_severe_excess": 0.22779398732019907,
+        "total_loss": 3907.5252938094372,
+        "total_severe_excess": 3341.51,
+        "severe_episodes": 17,
+        "p95_loss_filled": 333.37499999999983,
+        "p99_loss_filled": 1040.7250000000024,
+        "p95_loss_loss": 425.24999999999983,
+        "p99_loss_loss": 1184.350000000001,
+        "worst_1pct_share_of_loss": 1.0,
+        "largest_loss": 1395.0
+      },
+      "ask": {
+        "episodes": 14669,
+        "mean_loss": 0.12521454372529575,
+        "p_loss": 0.0020451291839934556,
+        "p_severe": 0.0010907355647965097,
+        "mean_severe_excess": 0.08099348377852868,
+        "total_loss": 1836.7721419063632,
+        "total_severe_excess": 1188.093413547237,
+        "severe_episodes": 16,
+        "p95_loss_filled": 135.0,
+        "p99_loss_filled": 284.9999999999998,
+        "p95_loss_loss": 211.4999999999999,
+        "p99_loss_loss": 331.5000000000001,
+        "worst_1pct_share_of_loss": 1.0,
+        "largest_loss": 375.0
+      },
+      "where": {
+        "side": {
+          "ask": {
+            "episodes": 14669,
+            "total_loss": 1836.7721419063632,
+            "severe_episodes": 16,
+            "severe_excess": 1188.093413547237,
+            "value": 517.0544022654798
+          },
+          "bid": {
+            "episodes": 14669,
+            "total_loss": 3907.5252938094372,
+            "severe_episodes": 17,
+            "severe_excess": 3341.51,
+            "value": -3343.577450546467
+          }
+        },
+        "phase": {
+          "1": {
+            "episodes": 6328,
+            "total_loss": 1439.6519180225282,
+            "severe_episodes": 9,
+            "severe_excess": 1125.0,
+            "value": -1000.7584677407247
+          },
+          "2": {
+            "episodes": 6898,
+            "total_loss": 493.6637706900942,
+            "severe_episodes": 6,
+            "severe_excess": 272.1034135472371,
+            "value": 770.2792056049013
+          },
+          "3": {
+            "episodes": 6798,
+            "total_loss": 897.1661538461537,
+            "severe_episodes": 5,
+            "severe_excess": 712.5,
+            "value": -683.6772531823268
+          },
+          "4": {
+            "episodes": 5910,
+            "total_loss": 646.6491899312178,
+            "severe_episodes": 5,
+            "severe_excess": 425.0,
+            "value": -293.76600811303604
+          },
+          "5": {
+            "episodes": 3404,
+            "total_loss": 2267.1664032258063,
+            "severe_episodes": 8,
+            "severe_excess": 1995.0,
+            "value": -1618.6005248498009
+          }
+        },
+        "spread": {
+          "(0, 1]": {
+            "episodes": 28180,
+            "total_loss": 5408.1165791179155,
+            "severe_episodes": 32,
+            "severe_excess": 4244.603413547237,
+            "value": -2600.6172461493334
+          },
+          "(1, 2]": {
+            "episodes": 722,
+            "total_loss": 20.54794520547945,
+            "severe_episodes": 0,
+            "severe_excess": 0.0,
+            "value": 13.56970185334408
+          },
+          "(2, 5]": {
+            "episodes": 370,
+            "total_loss": 0.6329113924050633,
+            "severe_episodes": 0,
+            "severe_excess": 0.0,
+            "value": 75.52449601500234
+          },
+          "(5, inf]": {
+            "episodes": 66,
+            "total_loss": 315.0,
+            "severe_episodes": 1,
+            "severe_excess": 285.0,
+            "value": -315.0
+          }
+        },
+        "sigma tercile": {
+          "high": {
+            "episodes": 9740,
+            "total_loss": 2039.1513864868934,
+            "severe_episodes": 14,
+            "severe_excess": 1560.0,
+            "value": -828.51381393747
+          },
+          "low": {
+            "episodes": 9792,
+            "total_loss": 921.3488571428571,
+            "severe_episodes": 9,
+            "severe_excess": 546.51,
+            "value": 333.3144678617318
+          },
+          "mid": {
+            "episodes": 9806,
+            "total_loss": 2783.79719208605,
+            "severe_episodes": 10,
+            "severe_excess": 2423.093413547237,
+            "value": -2331.3237022052494
+          }
+        },
+        "window (all episodes)": {
+          "before the first review": -2898.2441961483773,
+          "earliest-effect delay": -646.5417847390722,
+          "after the earliest effect": 718.2629326064621
+        },
+        "window (severe episodes)": {
+          "before the first review": -2987.1160606060607,
+          "earliest-effect delay": -1649.9873529411766,
+          "after the earliest effect": -882.5
+        },
+        "components": {
+          "spread": 1240.736354837109,
+          "movement": -4067.259403118096,
+          "severe_spread": 540.213092691622,
+          "severe_movement": -6059.81650623886
+        },
+        "inventory": {
+          "time_integrated_share_s": 8931.955908826954,
+          "mean_abs_terminal": 0.7721149910742826,
+          "peak_abs_terminal": 30.000000000000004,
+          "filled_episodes": 99,
+          "movement_per_filled_share": -1.9567927548882678
+        }
+      }
+    },
+    "E1": {
+      "both": {
+        "episodes": 29338,
+        "mean_loss": 0.1261999286124599,
+        "p_loss": 0.0017042743199945462,
+        "p_severe": 0.0010907355647965097,
+        "mean_severe_excess": 0.08481660707859956,
+        "total_loss": 3702.453505632349,
+        "total_severe_excess": 2488.349618471954,
+        "severe_episodes": 32,
+        "p95_loss_filled": 143.99999999999991,
+        "p99_loss_filled": 348.60000000000014,
+        "p95_loss_loss": 204.7499999999999,
+        "p99_loss_loss": 360.29999999999995,
+        "worst_1pct_share_of_loss": 1.0,
+        "largest_loss": 375.0
+      },
+      "bid": {
+        "episodes": 14669,
+        "mean_loss": 0.14915638120582106,
+        "p_loss": 0.0019769582111936737,
+        "p_severe": 0.0012952484831958552,
+        "mean_severe_excess": 0.10174499596050725,
+        "total_loss": 2187.9749559081893,
+        "total_severe_excess": 1492.4973457446808,
+        "severe_episodes": 19,
+        "p95_loss_filled": 160.49999999999983,
+        "p99_loss_filled": 281.39999999999986,
+        "p95_loss_loss": 206.99999999999991,
+        "p99_loss_loss": 311.39999999999986,
+        "worst_1pct_share_of_loss": 0.9999999999999998,
+        "largest_loss": 345.0
+      },
+      "ask": {
+        "episodes": 14669,
+        "mean_loss": 0.10324347601909876,
+        "p_loss": 0.0014315904287954188,
+        "p_severe": 0.0008862226463971641,
+        "mean_severe_excess": 0.06788821819669184,
+        "total_loss": 1514.4785497241598,
+        "total_severe_excess": 995.8522727272727,
+        "severe_episodes": 13,
+        "p95_loss_filled": 135.0,
+        "p99_loss_filled": 293.3999999999992,
+        "p95_loss_loss": 135.0,
+        "p99_loss_loss": 327.00000000000017,
+        "worst_1pct_share_of_loss": 1.0,
+        "largest_loss": 375.0
+      },
+      "where": {
+        "side": {
+          "ask": {
+            "episodes": 14669,
+            "total_loss": 1514.4785497241598,
+            "severe_episodes": 13,
+            "severe_excess": 995.8522727272727,
+            "value": -461.77238704370313
+          },
+          "bid": {
+            "episodes": 14669,
+            "total_loss": 2187.9749559081893,
+            "severe_episodes": 19,
+            "severe_excess": 1492.4973457446808,
+            "value": -361.76107341712265
+          }
+        },
+        "phase": {
+          "1": {
+            "episodes": 6328,
+            "total_loss": 794.6559652321813,
+            "severe_episodes": 5,
+            "severe_excess": 589.5591,
+            "value": -557.2762699078977
+          },
+          "2": {
+            "episodes": 6898,
+            "total_loss": 280.85227272727275,
+            "severe_episodes": 4,
+            "severe_excess": 160.85227272727272,
+            "value": 65.6183155080214
+          },
+          "3": {
+            "episodes": 6798,
+            "total_loss": 432.77867127659573,
+            "severe_episodes": 5,
+            "severe_excess": 207.77867127659573,
+            "value": 212.22132872340427
+          },
+          "4": {
+            "episodes": 5910,
+            "total_loss": 688.0479452054794,
+            "severe_episodes": 5,
+            "severe_excess": 457.5,
+            "value": -538.6914437670445
+          },
+          "5": {
+            "episodes": 3404,
+            "total_loss": 1506.11865119082,
+            "severe_episodes": 13,
+            "severe_excess": 1072.659574468085,
+            "value": -5.405391017309057
+          }
+        },
+        "spread": {
+          "(0, 1]": {
+            "episodes": 28180,
+            "total_loss": 3513.8159859587845,
+            "severe_episodes": 30,
+            "severe_excess": 2390.6900440038685,
+            "value": -1055.315940787261
+          },
+          "(1, 2]": {
+            "episodes": 722,
+            "total_loss": 188.63751967356455,
+            "severe_episodes": 2,
+            "severe_excess": 97.65957446808511,
+            "value": 231.78248032643546
+          },
+          "(2, 5]": {
+            "episodes": 370,
+            "total_loss": 0.0,
+            "severe_episodes": 0,
+            "severe_excess": 0.0,
+            "value": 0.0
+          },
+          "(5, inf]": {
+            "episodes": 66,
+            "total_loss": 0.0,
+            "severe_episodes": 0,
+            "severe_excess": 0.0,
+            "value": 0.0
+          }
+        },
+        "sigma tercile": {
+          "high": {
+            "episodes": 9740,
+            "total_loss": 1734.0725862705176,
+            "severe_episodes": 15,
+            "severe_excess": 1235.5709471953578,
+            "value": -278.77289094623404
+          },
+          "low": {
+            "episodes": 9792,
+            "total_loss": 927.5475,
+            "severe_episodes": 8,
+            "severe_excess": 590.0,
+            "value": -217.15643838805434
+          },
+          "mid": {
+            "episodes": 9806,
+            "total_loss": 1040.8334193618314,
+            "severe_episodes": 9,
+            "severe_excess": 662.7786712765958,
+            "value": -327.60413112653725
+          }
+        },
+        "window (all episodes)": {
+          "before the first review": -1248.2787255852263,
+          "earliest-effect delay": 318.76395078192337,
+          "after the earliest effect": 105.98131434247748
+        },
+        "window (severe episodes)": {
+          "before the first review": -1734.5591,
+          "earliest-effect delay": -360.27867127659573,
+          "after the earliest effect": -1353.5118471953579
+        },
+        "components": {
+          "spread": 1217.2785437509156,
+          "movement": -2040.812004211741,
+          "severe_spread": 446.0380066731141,
+          "severe_movement": -3894.3876251450674
+        },
+        "inventory": {
+          "time_integrated_share_s": 9354.915819756818,
+          "mean_abs_terminal": 1.0738548194839395,
+          "peak_abs_terminal": 30.0,
+          "filled_episodes": 89,
+          "movement_per_filled_share": -0.962255339389992
+        }
+      }
+    },
+    "PA": {
+      "both": {
+        "episodes": 29338,
+        "mean_loss": 1.4373865266030248,
+        "p_loss": 0.01288431385915877,
+        "p_severe": 0.008078260276774149,
+        "mean_severe_excess": 1.1384808299008704,
+        "total_loss": 42170.04591747954,
+        "total_severe_excess": 33400.75058763174,
+        "severe_episodes": 237,
+        "p95_loss_filled": 315.0,
+        "p99_loss_filled": 587.1199999999981,
+        "p95_loss_loss": 424.9067872183097,
+        "p99_loss_loss": 645.5106000000001,
+        "worst_1pct_share_of_loss": 0.9867511910556755,
+        "largest_loss": 1395.0
+      },
+      "bid": {
+        "episodes": 14669,
+        "mean_loss": 1.643201350231977,
+        "p_loss": 0.013770536505555934,
+        "p_severe": 0.008521371599972731,
+        "mean_severe_excess": 1.3286352424543462,
+        "total_loss": 24104.12060655287,
+        "total_severe_excess": 19489.750371562805,
+        "severe_episodes": 125,
+        "p95_loss_filled": 330.74999999999847,
+        "p99_loss_filled": 646.9314,
+        "p95_loss_loss": 449.3749999999999,
+        "p99_loss_loss": 942.0222000000027,
+        "worst_1pct_share_of_loss": 0.9819534994526671,
+        "largest_loss": 1395.0
+      },
+      "ask": {
+        "episodes": 14669,
+        "mean_loss": 1.231571702974073,
+        "p_loss": 0.011998091212761606,
+        "p_severe": 0.007635148953575568,
+        "mean_severe_excess": 0.9483264173473949,
+        "total_loss": 18065.925310926676,
+        "total_severe_excess": 13911.000216068935,
+        "severe_episodes": 112,
+        "p95_loss_filled": 311.9999999999993,
+        "p99_loss_filled": 470.4000000000002,
+        "p95_loss_loss": 382.5,
+        "p99_loss_loss": 508.125,
+        "worst_1pct_share_of_loss": 0.9924902587733586,
+        "largest_loss": 638.0
+      },
+      "where": {
+        "side": {
+          "ask": {
+            "episodes": 14669,
+            "total_loss": 18065.925310926676,
+            "severe_episodes": 112,
+            "severe_excess": 13911.000216068935,
+            "value": -9443.625083905501
+          },
+          "bid": {
+            "episodes": 14669,
+            "total_loss": 24104.12060655287,
+            "severe_episodes": 125,
+            "severe_excess": 19489.750371562805,
+            "value": -13902.366024600999
+          }
+        },
+        "phase": {
+          "1": {
+            "episodes": 6328,
+            "total_loss": 8829.496375953742,
+            "severe_episodes": 60,
+            "severe_excess": 6482.650475645381,
+            "value": -5600.426417629164
+          },
+          "2": {
+            "episodes": 6898,
+            "total_loss": 6941.592683968848,
+            "severe_episodes": 44,
+            "severe_excess": 5248.958832778006,
+            "value": -3153.918812117303
+          },
+          "3": {
+            "episodes": 6798,
+            "total_loss": 7962.936532666479,
+            "severe_episodes": 42,
+            "severe_excess": 6402.14704654299,
+            "value": -5002.27700877043
+          },
+          "4": {
+            "episodes": 5910,
+            "total_loss": 8075.674718137645,
+            "severe_episodes": 49,
+            "severe_excess": 6331.236522031793,
+            "value": -3728.653447562178
+          },
+          "5": {
+            "episodes": 3404,
+            "total_loss": 10360.345606752828,
+            "severe_episodes": 42,
+            "severe_excess": 8935.757710633567,
+            "value": -5860.715422427425
+          }
+        },
+        "spread": {
+          "(0, 1]": {
+            "episodes": 28180,
+            "total_loss": 38452.16947011481,
+            "severe_episodes": 219,
+            "severe_excess": 30375.18856610066,
+            "value": -20635.578724664003
+          },
+          "(1, 2]": {
+            "episodes": 722,
+            "total_loss": 1087.1405331975534,
+            "severe_episodes": 7,
+            "severe_excess": 767.7257845201239,
+            "value": -621.6506696753152
+          },
+          "(2, 5]": {
+            "episodes": 370,
+            "total_loss": 1312.3536771562285,
+            "severe_episodes": 7,
+            "severe_excess": 1059.454,
+            "value": -901.0779771562287
+          },
+          "(5, inf]": {
+            "episodes": 66,
+            "total_loss": 1318.3822370109547,
+            "severe_episodes": 4,
+            "severe_excess": 1198.3822370109547,
+            "value": -1187.6837370109547
+          }
+        },
+        "sigma tercile": {
+          "high": {
+            "episodes": 9740,
+            "total_loss": 13140.171353296697,
+            "severe_episodes": 81,
+            "severe_excess": 10253.180472408521,
+            "value": -4276.826995591995
+          },
+          "low": {
+            "episodes": 9792,
+            "total_loss": 12085.441666971466,
+            "severe_episodes": 61,
+            "severe_excess": 9675.298563233604,
+            "value": -6252.376485918702
+          },
+          "mid": {
+            "episodes": 9806,
+            "total_loss": 16944.43289721138,
+            "severe_episodes": 95,
+            "severe_excess": 13472.271551989612,
+            "value": -12816.787626995801
+          }
+        },
+        "window (all episodes)": {
+          "before the first review": -13988.060110553532,
+          "earliest-effect delay": -9357.930997952972,
+          "after the earliest effect": 0.0
+        },
+        "window (severe episodes)": {
+          "before the first review": -20324.803676993964,
+          "earliest-effect delay": -20185.946910637773,
+          "after the earliest effect": 0.0
+        },
+        "components": {
+          "spread": 6470.611007528835,
+          "movement": -29816.602116035334,
+          "severe_spread": 3420.8943264610443,
+          "severe_movement": -43931.64491409279
+        },
+        "inventory": {
+          "time_integrated_share_s": 54125.14341638082,
+          "mean_abs_terminal": 0.37637913415956326,
+          "peak_abs_terminal": 30.000000000000004,
+          "filled_episodes": 597,
+          "movement_per_filled_share": -2.7002383864516317
+        }
+      }
+    },
+    "PI0-ALL": {
+      "both": {
+        "episodes": 29338,
+        "mean_loss": 1.8485173019781362,
+        "p_loss": 0.01881518849273979,
+        "p_severe": 0.011180039539164225,
+        "mean_severe_excess": 1.4182077694885646,
+        "total_loss": 54231.80060543456,
+        "total_severe_excess": 41607.37954125551,
+        "severe_episodes": 328,
+        "p95_loss_filled": 300.0,
+        "p99_loss_filled": 495.00000000000006,
+        "p95_loss_loss": 363.3074999999995,
+        "p99_loss_loss": 610.9700000000005,
+        "worst_1pct_share_of_loss": 0.9242130261890462,
+        "largest_loss": 1395.0
+      },
+      "bid": {
+        "episodes": 14669,
+        "mean_loss": 2.1184581765521893,
+        "p_loss": 0.021064830595132592,
+        "p_severe": 0.012066262185561389,
+        "mean_severe_excess": 1.649347196606289,
+        "total_loss": 31075.662991844067,
+        "total_severe_excess": 24194.27402701765,
+        "severe_episodes": 177,
+        "p95_loss_filled": 315.0,
+        "p99_loss_filled": 589.1999999999996,
+        "p95_loss_loss": 375.0,
+        "p99_loss_loss": 647.0424,
+        "worst_1pct_share_of_loss": 0.9091368364322717,
+        "largest_loss": 1395.0
+      },
+      "ask": {
+        "episodes": 14669,
+        "mean_loss": 1.5785764274040825,
+        "p_loss": 0.01656554639034699,
+        "p_severe": 0.010293816892767059,
+        "mean_severe_excess": 1.1870683423708406,
+        "total_loss": 23156.137613590487,
+        "total_severe_excess": 17413.10551423786,
+        "severe_episodes": 151,
+        "p95_loss_filled": 285.0,
+        "p99_loss_filled": 461.99339788732385,
+        "p95_loss_loss": 335.2499999999995,
+        "p99_loss_loss": 482.3999999999995,
+        "worst_1pct_share_of_loss": 0.9417041338292811,
+        "largest_loss": 638.0
+      },
+      "where": {
+        "side": {
+          "ask": {
+            "episodes": 14669,
+            "total_loss": 23156.137613590487,
+            "severe_episodes": 151,
+            "severe_excess": 17413.10551423786,
+            "value": -9963.66271347892
+          },
+          "bid": {
+            "episodes": 14669,
+            "total_loss": 31075.662991844067,
+            "severe_episodes": 177,
+            "severe_excess": 24194.27402701765,
+            "value": -16053.111534420108
+          }
+        },
+        "phase": {
+          "1": {
+            "episodes": 6328,
+            "total_loss": 11559.658258231368,
+            "severe_episodes": 81,
+            "severe_excess": 8457.240412890947,
+            "value": -6960.233801576087
+          },
+          "2": {
+            "episodes": 6898,
+            "total_loss": 7545.878202078991,
+            "severe_episodes": 52,
+            "severe_excess": 5599.704882116805,
+            "value": -2745.41845859931
+          },
+          "3": {
+            "episodes": 6798,
+            "total_loss": 9287.023351306616,
+            "severe_episodes": 54,
+            "severe_excess": 7184.163164724809,
+            "value": -4773.378061017123
+          },
+          "4": {
+            "episodes": 5910,
+            "total_loss": 10168.972341591401,
+            "severe_episodes": 63,
+            "severe_excess": 7735.456703027269,
+            "value": -4396.389871974615
+          },
+          "5": {
+            "episodes": 3404,
+            "total_loss": 15670.268452226184,
+            "severe_episodes": 78,
+            "severe_excess": 12630.814378495683,
+            "value": -7141.3540547318935
+          }
+        },
+        "spread": {
+          "(0, 1]": {
+            "episodes": 28180,
+            "total_loss": 48494.84482763372,
+            "severe_episodes": 300,
+            "severe_excess": 36898.94277549768,
+            "value": -22957.29931168165
+          },
+          "(1, 2]": {
+            "episodes": 722,
+            "total_loss": 2344.7538636336585,
+            "severe_episodes": 13,
+            "severe_excess": 1818.4743323475332,
+            "value": -1484.6398751114202
+          },
+          "(2, 5]": {
+            "episodes": 370,
+            "total_loss": 1743.8196771562286,
+            "severe_episodes": 10,
+            "severe_excess": 1391.5801963993454,
+            "value": -265.9113240950043
+          },
+          "(5, inf]": {
+            "episodes": 66,
+            "total_loss": 1648.3822370109547,
+            "severe_episodes": 5,
+            "severe_excess": 1498.3822370109547,
+            "value": -1308.9237370109545
+          }
+        },
+        "sigma tercile": {
+          "high": {
+            "episodes": 9740,
+            "total_loss": 15997.95771193396,
+            "severe_episodes": 104,
+            "severe_excess": 12066.02535331123,
+            "value": -2875.2737113830754
+          },
+          "low": {
+            "episodes": 9792,
+            "total_loss": 18085.001095648684,
+            "severe_episodes": 104,
+            "severe_excess": 13989.67279532746,
+            "value": -9513.469588792299
+          },
+          "mid": {
+            "episodes": 9806,
+            "total_loss": 20148.841797851914,
+            "severe_episodes": 120,
+            "severe_excess": 15551.68139261682,
+            "value": -13628.030947723653
+          }
+        },
+        "window (all episodes)": {
+          "before the first review": -13988.060110553532,
+          "earliest-effect delay": -9357.930997952972,
+          "after the earliest effect": -2670.7831393925308
+        },
+        "window (severe episodes)": {
+          "before the first review": -20342.992726993965,
+          "earliest-effect delay": -20196.63210703712,
+          "after the earliest effect": -10907.754707224429
+        },
+        "components": {
+          "spread": 10862.27370458741,
+          "movement": -36879.047952486435,
+          "severe_spread": 4873.338520162761,
+          "severe_movement": -56320.71806141827
+        },
+        "inventory": {
+          "time_integrated_share_s": 83783.36764675671,
+          "mean_abs_terminal": 0.6359235831947955,
+          "peak_abs_terminal": 30.000000000000004,
+          "filled_episodes": 901,
+          "movement_per_filled_share": -1.9767159461364816
+        }
+      }
+    }
+  },
+  "sigma_terciles": [
+    3.245186962885782e-05,
+    4.27470586146228e-05
+  ],
+  "matched_null": {
+    "both": {
+      "value": -11865.445403350106,
+      "null_mean": -13431.473484527145,
+      "null_sd": 3055.5045467998702,
+      "z": 0.5125268371199746,
+      "p_normal_one_sided": 0.3041411714000303,
+      "draws": 1000,
+      "draws_mean": -13531.248616427567,
+      "draws_sd": 3165.9323078541393,
+      "p_draws_one_sided": 0.3046953046953047,
+      "moments_agree": true
+    },
+    "bid": {
+      "value": -9064.306998758806,
+      "null_mean": -7779.580081903125,
+      "null_sd": 2234.2607563217102,
+      "z": -0.5750120764644957,
+      "p_normal_one_sided": 0.7173584352049639,
+      "draws": 1000,
+      "draws_mean": -7901.400302429877,
+      "draws_sd": 2350.155943140947,
+      "p_draws_one_sided": 0.6853146853146853,
+      "moments_agree": true
+    },
+    "ask": {
+      "value": -2801.1384045913005,
+      "null_mean": -5651.893402624021,
+      "null_sd": 2084.2713134991377,
+      "z": 1.3677465978490042,
+      "p_normal_one_sided": 0.08569570429760866,
+      "draws": 1000,
+      "draws_mean": -5629.848313997691,
+      "draws_sd": 2076.6542165110295,
+      "p_draws_one_sided": 0.08491508491508491,
+      "moments_agree": true
+    }
+  },
+  "quoting": {
+    "A": {
+      "resting": 0.02873679869111732,
+      "at_best": 0.020025223259935918,
+      "at_best_both": 0.0028222782739109687,
+      "median_lifetime": 79.0,
+      "first_review_of_live": 0.5735778091208275,
+      "cancels_per_100_filled_shares": 121.30068865945302,
+      "attempts": 13319,
+      "filled": 477
+    },
+    "PI0": {
+      "resting": 0.006734978526143568,
+      "at_best": 0.005767264298861545,
+      "at_best_both": 0.00016701888335946555,
+      "median_lifetime": 79.0,
+      "first_review_of_live": 0.7294703163881977,
+      "cancels_per_100_filled_shares": 64.26191251966374,
+      "attempts": 2978,
+      "filled": 182
+    },
+    "NEU": {
+      "resting": 0.0042832367577885335,
+      "at_best": 0.00319994546322176,
+      "at_best_both": 4.9083100415842936e-05,
+      "median_lifetime": 79.0,
+      "first_review_of_live": 0.8094683740783857,
+      "cancels_per_100_filled_shares": 117.6791201167881,
+      "attempts": 2692,
+      "filled": 99
+    },
+    "E1": {
+      "resting": 0.004539532347126594,
+      "at_best": 0.0038864271593155634,
+      "at_best_both": 6.544413388779058e-05,
+      "median_lifetime": 79.0,
+      "first_review_of_live": 0.777422790202343,
+      "cancels_per_100_filled_shares": 82.08921460774393,
+      "attempts": 1975,
+      "filled": 89
+    },
+    "A-PA": {
+      "resting": 0.006883713954598132,
+      "at_best": 0.004054809462131025,
+      "at_best_both": 0.0017526757106823914,
+      "median_lifetime": 79.0,
+      "first_review_of_live": 1.0,
+      "cancels_per_100_filled_shares": 337.60876224609973,
+      "attempts": 13319,
+      "filled": 208
+    }
+  },
+  "findings_c1_c3_c12": {
+    "A": {
+      "both": {
+        "C1": {
+          "by_age": {
+            "lt100": -6586.168192424914,
+            "100to500": -4055.8221822439473,
+            "ge500": -1223.4550286812473
+          },
+          "without_young": -5279.277210925192,
+          "b1a_weighted": {
+            "M0": -3339.2984208889507,
+            "M50": -2555.14579692392
+          },
+          "b1a_sign": "HOLDS-SIGN"
+        },
+        "C3": {
+          "fills": 121,
+          "value": -2306.8214504886664,
+          "share_of_gross": 0.24465937157268736
+        },
+        "C12": {
+          "WS": -4485.382772721461,
+          "E2": -8304.54513577565,
+          "imputed": 209.0,
+          "mixed": 715.4825051470046,
+          "unknown": 0.0
+        }
+      },
+      "bid": {
+        "C1": {
+          "by_age": {
+            "lt100": -4859.251525986733,
+            "100to500": -4622.752276501071,
+            "ge500": 417.69680372899666
+          },
+          "without_young": -4205.055472772073,
+          "b1a_weighted": {
+            "M0": -2738.8046190122,
+            "M50": -1721.8737569202208
+          },
+          "b1a_sign": "HOLDS-SIGN"
+        },
+        "C3": {
+          "fills": 59,
+          "value": -1493.6772126847022,
+          "share_of_gross": 0.25900372605210636
+        },
+        "C12": {
+          "WS": -5797.823409503771,
+          "E2": -5045.584040889001,
+          "imputed": 209.0,
+          "mixed": 1570.1004516339651,
+          "unknown": 0.0
+        }
+      },
+      "ask": {
+        "C1": {
+          "by_age": {
+            "lt100": -1726.91666643818,
+            "100to500": 566.9300942571235,
+            "ge500": -1641.151832410244
+          },
+          "without_young": -1074.2217381531204,
+          "b1a_weighted": {
+            "M0": -600.4938018767506,
+            "M50": -833.272040003699
+          },
+          "b1a_sign": "HOLDS-SIGN"
+        },
+        "C3": {
+          "fills": 62,
+          "value": -813.1442378039643,
+          "share_of_gross": 0.2314627581564694
+        },
+        "C12": {
+          "WS": 1312.4406367823103,
+          "E2": -3258.96109488665,
+          "imputed": 0.0,
+          "mixed": -854.6179464869607,
+          "unknown": 0.0
+        }
+      }
+    },
+    "A-PA": {
+      "both": {
+        "C1": {
+          "by_age": {
+            "lt100": -6943.808867849674,
+            "100to500": 0.0,
+            "ge500": 0.0
+          },
+          "without_young": 0.0,
+          "b1a_weighted": {
+            "M0": -575.5227758721682,
+            "M50": -856.7147071825697
+          },
+          "b1a_sign": "HOLDS-SIGN"
+        },
+        "C3": {
+          "fills": 110,
+          "value": -1915.3010326899068,
+          "share_of_gross": 0.5429081755537309
+        },
+        "C12": {
+          "WS": -3729.3271429357956,
+          "E2": -2501.204062823337,
+          "imputed": 0.0,
+          "mixed": -713.2776620905412,
+          "unknown": 0.0
+        }
+      },
+      "bid": {
+        "C1": {
+          "by_age": {
+            "lt100": -5629.935558554351,
+            "100to500": 0.0,
+            "ge500": 0.0
+          },
+          "without_young": 0.0,
+          "b1a_weighted": {
+            "M0": -466.6251912034586,
+            "M50": -694.6113704015687
+          },
+          "b1a_sign": "HOLDS-SIGN"
+        },
+        "C3": {
+          "fills": 59,
+          "value": -1967.2590421766686,
+          "share_of_gross": 0.5392071977522254
+        },
+        "C12": {
+          "WS": -2878.1543255845836,
+          "E2": -2656.480389030373,
+          "imputed": 0.0,
+          "mixed": -95.30084393939394,
+          "unknown": 0.0
+        }
+      },
+      "ask": {
+        "C1": {
+          "by_age": {
+            "lt100": -1313.873309295323,
+            "100to500": 0.0,
+            "ge500": 0.0
+          },
+          "without_young": 0.0,
+          "b1a_weighted": {
+            "M0": -108.89758466870954,
+            "M50": -162.1033367810009
+          },
+          "b1a_sign": "HOLDS-SIGN"
+        },
+        "C3": {
+          "fills": 51,
+          "value": 51.95800948676174,
+          "share_of_gross": 0.5480275575018596
+        },
+        "C12": {
+          "WS": -851.1728173512117,
+          "E2": 155.27632620703574,
+          "imputed": 0.0,
+          "mixed": -617.9768181511471,
+          "unknown": 0.0
+        }
+      }
+    },
+    "PI0": {
+      "both": {
+        "C1": {
+          "by_age": {
+            "lt100": -3267.7774716618537,
+            "100to500": 49.30757064874396,
+            "ge500": 610.7708032419999
+          },
+          "without_young": 660.078373890743,
+          "b1a_weighted": {
+            "M0": 41.91046744313506,
+            "M50": -97.94844239052881
+          },
+          "b1a_sign": "SIGN-DIFFERS"
+        },
+        "C3": {
+          "fills": 35,
+          "value": -2365.280584532373,
+          "share_of_gross": 0.22947489949632613
+        },
+        "C12": {
+          "WS": -1809.0121926322904,
+          "E2": 46.49922733387268,
+          "imputed": 0.0,
+          "mixed": -845.1861324726924,
+          "unknown": 0.0
+        }
+      },
+      "bid": {
+        "C1": {
+          "by_age": {
+            "lt100": -2001.789140488894,
+            "100to500": -256.1669790780544,
+            "ge500": 229.74888304584456
+          },
+          "without_young": -26.418096032209633,
+          "b1a_weighted": {
+            "M0": -198.70525810181766,
+            "M50": -210.692536439322
+          },
+          "b1a_sign": "HOLDS-SIGN"
+        },
+        "C3": {
+          "fills": 23,
+          "value": -2062.289831020424,
+          "share_of_gross": 0.3162016529450573
+        },
+        "C12": {
+          "WS": -800.5412127434997,
+          "E2": -804.7800876210138,
+          "imputed": 0.0,
+          "mixed": -422.8859361565901,
+          "unknown": 0.0
+        }
+      },
+      "ask": {
+        "C1": {
+          "by_age": {
+            "lt100": -1265.9883311729604,
+            "100to500": 305.47454972679816,
+            "ge500": 381.0219201961554
+          },
+          "without_young": 686.4964699229536,
+          "b1a_weighted": {
+            "M0": 240.61572554495257,
+            "M50": 112.74409404879307
+          },
+          "b1a_sign": "SIGN-DIFFERS"
+        },
+        "C3": {
+          "fills": 12,
+          "value": -302.9907535119484,
+          "share_of_gross": 0.11047374912802874
+        },
+        "C12": {
+          "WS": -1008.4709798887909,
+          "E2": 851.2793149548863,
+          "imputed": 0.0,
+          "mixed": -422.30019631610224,
+          "unknown": 0.0
+        }
+      }
+    },
+    "PI0-PA": {
+      "both": {
+        "C1": {
+          "by_age": {
+            "lt100": -3212.9803684360472,
+            "100to500": 0.0,
+            "ge500": 0.0
+          },
+          "without_young": 0.0,
+          "b1a_weighted": {
+            "M0": -266.3010194630731,
+            "M50": -396.4117659218416
+          },
+          "b1a_sign": "HOLDS-SIGN"
+        },
+        "C3": {
+          "fills": 37,
+          "value": -1861.520787920865,
+          "share_of_gross": 0.47340827149530323
+        },
+        "C12": {
+          "WS": -1296.4128646592994,
+          "E2": -1420.0777299353938,
+          "imputed": 0.0,
+          "mixed": -496.4897738413548,
+          "unknown": 0.0
+        }
+      },
+      "bid": {
+        "C1": {
+          "by_age": {
+            "lt100": -1946.9920372630877,
+            "100to500": 0.0,
+            "ge500": 0.0
+          },
+          "without_young": 0.0,
+          "b1a_weighted": {
+            "M0": -161.3722789915534,
+            "M50": -240.21639201702055
+          },
+          "b1a_sign": "HOLDS-SIGN"
+        },
+        "C3": {
+          "fills": 23,
+          "value": -1500.3952613165472,
+          "share_of_gross": 0.5608410631811117
+        },
+        "C12": {
+          "WS": -651.2012050549665,
+          "E2": -1312.4899799353936,
+          "imputed": 0.0,
+          "mixed": 16.699147727272727,
+          "unknown": 0.0
+        }
+      },
+      "ask": {
+        "C1": {
+          "by_age": {
+            "lt100": -1265.9883311729604,
+            "100to500": 0.0,
+            "ge500": 0.0
+          },
+          "without_young": 0.0,
+          "b1a_weighted": {
+            "M0": -104.92874047151976,
+            "M50": -156.19537390482117
+          },
+          "b1a_sign": "HOLDS-SIGN"
+        },
+        "C3": {
+          "fills": 14,
+          "value": -361.1255266043179,
+          "share_of_gross": 0.32592493323405086
+        },
+        "C12": {
+          "WS": -645.2116596043329,
+          "E2": -107.58775,
+          "imputed": 0.0,
+          "mixed": -513.1889215686275,
+          "unknown": 0.0
+        }
+      }
+    },
+    "NEU": {
+      "both": {
+        "C1": {
+          "by_age": {
+            "lt100": -3207.8917412561127,
+            "100to500": -139.09826916199336,
+            "ge500": 520.466962137119
+          },
+          "without_young": 381.3686929751252,
+          "b1a_weighted": {
+            "M0": -98.54848125136724,
+            "M50": -187.461109021174
+          },
+          "b1a_sign": "HOLDS-SIGN"
+        },
+        "C3": {
+          "fills": 26,
+          "value": -806.5483394654403,
+          "share_of_gross": 0.24831827033681797
+        },
+        "C12": {
+          "WS": -1757.1559449241502,
+          "E2": -435.18587703803115,
+          "imputed": 0.0,
+          "mixed": -634.1812263188061,
+          "unknown": 0.0
+        }
+      },
+      "bid": {
+        "C1": {
+          "by_age": {
+            "lt100": -3325.523950546467,
+            "100to500": -378.0535,
+            "ge500": 360.0
+          },
+          "without_young": -18.053499999999985,
+          "b1a_weighted": {
+            "M0": -314.22822882877495,
+            "M50": -346.7693827634258
+          },
+          "b1a_sign": "HOLDS-SIGN"
+        },
+        "C3": {
+          "fills": 11,
+          "value": -845.2188234036964,
+          "share_of_gross": 0.23477300308319043
+        },
+        "C12": {
+          "WS": -2427.0699570616184,
+          "E2": -836.5555555555555,
+          "imputed": 0.0,
+          "mixed": -79.95193792929295,
+          "unknown": 0.0
+        }
+      },
+      "ask": {
+        "C1": {
+          "by_age": {
+            "lt100": 117.63220929035404,
+            "100to500": 238.95523083800657,
+            "ge500": 160.46696213711908
+          },
+          "without_young": 399.42219297512577,
+          "b1a_weighted": {
+            "M0": 215.67974757740774,
+            "M50": 159.3082737422518
+          },
+          "b1a_sign": "HOLDS-SIGN"
+        },
+        "C3": {
+          "fills": 15,
+          "value": 38.670483938256154,
+          "share_of_gross": 0.26277140775135377
+        },
+        "C12": {
+          "WS": 669.9140121374683,
+          "E2": 401.36967851752445,
+          "imputed": 0.0,
+          "mixed": -554.229288389513,
+          "unknown": 0.0
+        }
+      }
+    },
+    "E1": {
+      "both": {
+        "C1": {
+          "by_age": {
+            "lt100": -1004.5147748033029,
+            "100to500": 167.4117903627182,
+            "ge500": 13.569523979759161
+          },
+          "without_young": 180.98131434247716,
+          "b1a_weighted": {
+            "M0": 14.768296827995162,
+            "M50": -69.61134688647628
+          },
+          "b1a_sign": "SIGN-DIFFERS"
+        },
+        "C3": {
+          "fills": 20,
+          "value": 78.3752850842489,
+          "share_of_gross": 0.15454500991409967
+        },
+        "C12": {
+          "WS": -296.25893692564523,
+          "E2": -138.6947737911025,
+          "imputed": 0.0,
+          "mixed": -388.5797497440779,
+          "unknown": 0.0
+        }
+      },
+      "bid": {
+        "C1": {
+          "by_age": {
+            "lt100": -739.9215332513629,
+            "100to500": 281.90818396911186,
+            "ge500": 96.25227586512867
+          },
+          "without_young": 378.16045983424027,
+          "b1a_weighted": {
+            "M0": 138.08169177097727,
+            "M50": 35.17475294085772
+          },
+          "b1a_sign": "SIGN-DIFFERS"
+        },
+        "C3": {
+          "fills": 14,
+          "value": -125.56088512851701,
+          "share_of_gross": 0.13976786679868214
+        },
+        "C12": {
+          "WS": -431.40265239644896,
+          "E2": 8.22132872340427,
+          "imputed": 0.0,
+          "mixed": 61.42025025592213,
+          "unknown": 0.0
+        }
+      },
+      "ask": {
+        "C1": {
+          "by_age": {
+            "lt100": -264.5932415519399,
+            "100to500": -114.49639360639361,
+            "ge500": -82.68275188536954
+          },
+          "without_young": -197.17914549176322,
+          "b1a_weighted": {
+            "M0": -123.31339494298209,
+            "M50": -104.786099827334
+          },
+          "b1a_sign": "HOLDS-SIGN"
+        },
+        "C3": {
+          "fills": 6,
+          "value": 203.93617021276594,
+          "share_of_gross": 0.1776513499724181
+        },
+        "C12": {
+          "WS": 135.14371547080376,
+          "E2": -146.91610251450678,
+          "imputed": 0.0,
+          "mixed": -450.0,
+          "unknown": 0.0
+        }
+      }
+    },
+    "PA": {
+      "both": {
+        "C1": {
+          "by_age": {
+            "lt100": -23345.9911085065,
+            "100to500": 0.0,
+            "ge500": 0.0
+          },
+          "without_young": 0.0,
+          "b1a_weighted": {
+            "M0": -1934.982639062106,
+            "M50": -2880.3865885503255
+          },
+          "b1a_sign": "HOLDS-SIGN"
+        },
+        "C3": {
+          "fills": 315,
+          "value": -9027.831336325062,
+          "share_of_gross": 0.5307791494922095
+        },
+        "C12": {
+          "WS": -12874.662896356771,
+          "E2": -6372.723583965452,
+          "imputed": 0.0,
+          "mixed": -4098.604628184275,
+          "unknown": 0.0
+        }
+      },
+      "bid": {
+        "C1": {
+          "by_age": {
+            "lt100": -13902.366024600999,
+            "100to500": 0.0,
+            "ge500": 0.0
+          },
+          "without_young": 0.0,
+          "b1a_weighted": {
+            "M0": -1152.2679321884962,
+            "M50": -1715.2490318471703
+          },
+          "b1a_sign": "HOLDS-SIGN"
+        },
+        "C3": {
+          "fills": 165,
+          "value": -5495.604693977319,
+          "share_of_gross": 0.5321041507755709
+        },
+        "C12": {
+          "WS": -6675.81199306941,
+          "E2": -4335.454842189896,
+          "imputed": 0.0,
+          "mixed": -2891.0991893416926,
+          "unknown": 0.0
+        }
+      },
+      "ask": {
+        "C1": {
+          "by_age": {
+            "lt100": -9443.625083905501,
+            "100to500": 0.0,
+            "ge500": 0.0
+          },
+          "without_young": 0.0,
+          "b1a_weighted": {
+            "M0": -782.7147068736099,
+            "M50": -1165.137556703155
+          },
+          "b1a_sign": "HOLDS-SIGN"
+        },
+        "C3": {
+          "fills": 150,
+          "value": -3532.226642347744,
+          "share_of_gross": 0.5290759516311542
+        },
+        "C12": {
+          "WS": -6198.850903287363,
+          "E2": -2037.2687417755565,
+          "imputed": 0.0,
+          "mixed": -1207.5054388425815,
+          "unknown": 0.0
+        }
+      }
+    }
+  },
+  "accounting": {
+    "PA both": [
+      -23345.9911085065,
+      -23345.991108506503,
+      true
+    ],
+    "PA bid": [
+      -13902.366024600999,
+      -13902.366024600999,
+      true
+    ],
+    "PA ask": [
+      -9443.625083905501,
+      -9443.625083905501,
+      true
+    ],
+    "A both": [
+      -11865.445403350106,
+      -11865.445403350106,
+      true
+    ],
+    "A bid": [
+      -9064.306998758806,
+      -9064.306998758808,
+      true
+    ],
+    "A ask": [
+      -2801.1384045913005,
+      -2801.1384045913005,
+      true
+    ],
+    "A-PA both": [
+      -6943.808867849674,
+      -6943.808867849673,
+      true
+    ],
+    "A-PA bid": [
+      -5629.935558554351,
+      -5629.93555855435,
+      true
+    ],
+    "A-PA ask": [
+      -1313.873309295323,
+      -1313.873309295323,
+      true
+    ],
+    "AF both": [
+      -18588.314420335275,
+      -18588.31442033527,
+      true
+    ],
+    "AF bid": [
+      -10348.668844741971,
+      -10348.668844741971,
+      true
+    ],
+    "AF ask": [
+      -8239.645575593302,
+      -8239.645575593302,
+      true
+    ],
+    "AF-PA both": [
+      -3216.686686131492,
+      -3216.6866861314916,
+      true
+    ],
+    "AF-PA bid": [
+      -944.7873978072594,
+      -944.7873978072594,
+      true
+    ],
+    "AF-PA ask": [
+      -2271.899288324232,
+      -2271.8992883242327,
+      true
+    ],
+    "AM both": [
+      -16600.557168727006,
+      -16600.557168727006,
+      true
+    ],
+    "AM bid": [
+      -8619.029863217842,
+      -8619.029863217842,
+      true
+    ],
+    "AM ask": [
+      -7981.527305509162,
+      -7981.527305509163,
+      true
+    ],
+    "AM-PA both": [
+      -8878.216576625466,
+      -8878.216576625467,
+      true
+    ],
+    "AM-PA bid": [
+      -7489.303994846392,
+      -7489.303994846392,
+      true
+    ],
+    "AM-PA ask": [
+      -1388.9125817790755,
+      -1388.9125817790755,
+      true
+    ],
+    "PI0 both": [
+      -2607.6990977711107,
+      -2607.6990977711102,
+      true
+    ],
+    "PI0 bid": [
+      -2028.2072365211036,
+      -2028.2072365211036,
+      true
+    ],
+    "PI0 ask": [
+      -579.4918612500069,
+      -579.491861250007,
+      true
+    ],
+    "PI0-PA both": [
+      -3212.9803684360472,
+      -3212.980368436048,
+      true
+    ],
+    "PI0-PA bid": [
+      -1946.9920372630877,
+      -1946.9920372630877,
+      true
+    ],
+    "PI0-PA ask": [
+      -1265.9883311729604,
+      -1265.9883311729604,
+      true
+    ],
+    "NEU both": [
+      -2826.5230482809875,
+      -2826.523048280987,
+      true
+    ],
+    "NEU bid": [
+      -3343.577450546467,
+      -3343.577450546467,
+      true
+    ],
+    "NEU ask": [
+      517.0544022654798,
+      517.0544022654798,
+      true
+    ],
+    "NEU-PA both": [
+      -3544.785980887449,
+      -3544.7859808874496,
+      true
+    ],
+    "NEU-PA bid": [
+      -3273.91104732066,
+      -3273.91104732066,
+      true
+    ],
+    "NEU-PA ask": [
+      -270.8749335667888,
+      -270.87493356678874,
+      true
+    ],
+    "E1 both": [
+      -823.5334604608257,
+      -823.5334604608256,
+      true
+    ],
+    "E1 bid": [
+      -361.76107341712265,
+      -361.7610734171226,
+      true
+    ],
+    "E1 ask": [
+      -461.77238704370313,
+      -461.7723870437031,
+      true
+    ],
+    "E1-PA both": [
+      -929.5147748033028,
+      -929.514774803303,
+      true
+    ],
+    "E1-PA bid": [
+      -664.9215332513629,
+      -664.921533251363,
+      true
+    ],
+    "E1-PA ask": [
+      -264.5932415519399,
+      -264.5932415519399,
+      true
+    ],
+    "POST labels = PI0-ALL": [
+      -26016.774247899026,
+      -26016.774247899033,
+      true
+    ],
+    "A = the A-ALL ledger on its admissions": [
+      -11865.445403350106,
+      -11865.445403350106,
+      true
+    ],
+    "matched null draws = the exact moments (both)": [
+      -13531.248616427567,
+      -13431.473484527145,
+      true
+    ],
+    "matched null draws = the exact moments (bid)": [
+      -7901.400302429877,
+      -7779.580081903125,
+      true
+    ],
+    "matched null draws = the exact moments (ask)": [
+      -5629.848313997691,
+      -5651.893402624021,
+      true
+    ],
+    "matched null mean (A, both) = the evaluation": [
+      -13431.473484527145,
+      -13431.473484527145,
+      true
+    ],
+    "A first-review share on its admissions = the evaluation": [
+      0.5735778091208275,
+      0.5735778091208275,
+      true
+    ],
+    "PI0 first-review share on its admissions = the evaluation": [
+      0.7294703163881977,
+      0.7294703163881977,
+      true
+    ],
+    "evaluation input paired": [
+      "cbe71033377038bc3dace6bca097d54ce092403d140237b5d24a54c7b9bf0927",
+      "cbe71033377038bc3dace6bca097d54ce092403d140237b5d24a54c7b9bf0927",
+      true
+    ],
+    "evaluation input predictions": [
+      "b2e72a016bad2874ca62eac5882ad997975ff659363c3e7e0245787c1738be50",
+      "b2e72a016bad2874ca62eac5882ad997975ff659363c3e7e0245787c1738be50",
+      true
+    ],
+    "evaluation input bench": [
+      "6e568b33d30c863af21121443bc9e9f90883733ce29c2fe7aa106c810b8a7b10",
+      "6e568b33d30c863af21121443bc9e9f90883733ce29c2fe7aa106c810b8a7b10",
+      true
+    ],
+    "evaluation input bench_predictions": [
+      "87adde5ddecac8b04bba0c658d7eefe870bae162537fc892547906b7d1d082fa",
+      "87adde5ddecac8b04bba0c658d7eefe870bae162537fc892547906b7d1d082fa",
+      true
+    ],
+    "evaluation input export_receipt": [
+      "b4ec7fc635579a1309b11f6fcf8c6ff3d136c7ce71356c5c761631364835947a",
+      "b4ec7fc635579a1309b11f6fcf8c6ff3d136c7ce71356c5c761631364835947a",
+      true
+    ],
+    "evaluation source = pf_pipeline_paired_eval.py": [
+      "f09fd1aa3b429caffcb99bd8aadef948d31482b61dc131b3c13da6ef7ea53ff5",
+      "f09fd1aa3b429caffcb99bd8aadef948d31482b61dc131b3c13da6ef7ea53ff5",
+      true
+    ]
+  },
+  "inputs": {
+    "paired": "cbe71033377038bc3dace6bca097d54ce092403d140237b5d24a54c7b9bf0927",
+    "evaluation": "b0187ad8e97c7da3c18e497355f327c40e54fafb185278b514bdaf190b47c537",
+    "parts": {
+      "labels_20261027.parquet": "f0366028a5b2ebf66449fd55815afc1212f31f7e641b3baced98f97668bd86bd",
+      "pred_20261027.parquet": "b2e72a016bad2874ca62eac5882ad997975ff659363c3e7e0245787c1738be50"
+    },
+    "export_receipt": "b4ec7fc635579a1309b11f6fcf8c6ff3d136c7ce71356c5c761631364835947a",
+    "days": {
+      "20261027": {
+        "scenario_receipt": "c3c6aa983150fed7f918f0383f1bc4fc1128d311c05aa12dacabd9229ec30f54",
+        "scenario_asof": "2026-11-18T20:45:42.627031+00:00",
+        "keep_pull_receipt": "5b4c34b0f86cf53248c2d6c21c1b05d8c4620178ab8597cdbcc2e8783a644d2e",
+        "stat": {
+          "windows": 288,
+          "orders": 29338,
+          "base_matched": 29338,
+          "kernel_checked": 790,
+          "events": 573373,
+          "held_events_S1": 9748,
+          "held_events_S2": 1385,
+          "held_events_S3": 1302,
+          "held_events_ST": 69
+        }
+      }
+    }
+  },
+  "outputs": {
+    "review_20261027.txt": "b3de8d408cf0a7088d7e04bd20db617539b2a1701e1bd89b5920699f0ecfed93",
+    "review_20261027.csv": "229a99a0d904bb5f120475d4a7ffbcbeadc3ff8c4ce9bfb3cb9f61fa11f3fb17",
+    "review_null_draws_20261027.csv": "dd030e6fca0ca69f57bfd885f564e2222b761e6138d66e7ace8eb22174f97f50",
+    "review_findings_20261027.csv": "3d9043f7ac117dfa677cb0e825fb4ca0a61e6f7fab309215441e3c85afff3627",
+    "ledger_20261027.parquet": "e7b64c71f8307e9d62766c2ab19c69617bba1ae51e0fc18070fba92f373d2faa"
+  },
+  "source_sha256": "5c419f1794096bb9255cf76b42e544ad0571aae3226d15c7bb0c9b020bf9543d",
+  "provenance": {
+    "commit": "92d8e52fa35ad3d074e2a872b4842d6d98113287",
+    "source": {
+      "pf_keep_pull.py": "58b972f92bda06fbc847c43d2ace8db9d7b12f4daaf67bcfaa14e92deb475835",
+      "pf_queue_place_test.py": "188c1495ce35db80ce8b79cbc50541964d0d32d9da38fee4b925e951eec01a1f",
+      "pf_queue_place_ledger.py": "8fa16b929b4ae497109a70add4036dd7cd4501102a261c74eba63de0e0b94bb5",
+      "pf_flow_control_kernel.cpp": "fb1ff31cdcf2a97783283f927fb2d56333a0760e877cb0b93348528138886612",
+      "pf_flow_control_kernel.py": "2460567474f28318f5d09df8ce0977e15748bb9263bc501471cf6a649b334379"
+    },
+    "uncommitted": ""
+  },
+  "seconds": 35.09924387931824
+}
