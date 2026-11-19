@@ -1,3 +1,40 @@
+<!-- PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
+## 2026-11-19 — Corrected pipeline results reviewed: values reproduce; attribution corrected
+
+Target **37e8b373d5ef29beb605573c82d0842dba320a89**. [Report](reviews/automatic/20261119_37e8b373/report.md),
+[checks](reviews/automatic/20261119_37e8b373/receipt.json),
+[impact and attribution](reviews/automatic/20261119_37e8b373/followup.json).
+Original POST future-arrival, mixed contract-refusal and shifted-value cases now
+behave correctly. Two pinned selftests pass; 44 model hashes and both saved
+prediction artifacts match. Both baseline values reproduce from individual fills;
+76 scenario/policy CSV rows and J's eight diagnostic cells reconcile. Codex
+98.75 s / 1605 MiB plus 5.91 s / 1595 MiB; no fit, raw tape or untouched days.
+
+**Remaining P2 coherence hole:** Eq=0 can carry nonzero Eqm and be flagged valid.
+23 Oct26 / 15 Oct27 RETAIN rows; all after the first model pull. Refusing them
+changes zero first triggers and zero value. Repair this boundary before a new
+candidate, but it does not explain these losses.
+**P2 report attribution:** the +1950 / -570 c versus PULL-ALL is later pulls
+(+954 / -822) plus never-pulled orders (+995 / +252), not all the roughly 1%
+never pulled. **P2 entry conclusion:** POST labels omit model cancellation;
+the same positive POST selections with frozen MODEL-J give +277 / -824 c versus
+-14866 / -11642 c under the neutral continuation. This is post-hoc accounting,
+not a validated admission strategy or portfolio replay.
+
+At B, MODEL-J -21781 / -23916 c, PULL-ALL -23731 / -23346 c; most loss precedes
+the earliest +137 ms pull effect. Favoured POSTs predict about +4 c and realize
+about -6 c under their neutral target; the forecast error is predominantly the
+joint movement term. The new gate passes on consumed Oct26 but fails its
+boundary-sign check post hoc on Oct27. Fixed decisions across scenarios remain
+a sensitivity test; no robust profitability or top-maker comparison follows.
+
+**One next priority:** after the coherence repair, evaluate entry versus no entry
+with a frozen cancellation policy and common target, preserving size/price and
+thresholds for this diagnostic. Split pre-cancel loss, continuation, later/never
+pulls and bid/ask; judge movement calibration on selected actions before changing
+order design. Other session owns fixes; scheduler remains off.
+<!-- /PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
+
 ## 2026-11-19 07:42Z (session aea5bfb9) — REVIEW 89caa74c FIXED, CHECKS FIRST, THEN THE CORRECTED PIPELINE (USER: "Have we fixed the post issues, etc", "Run the checks first"): the learned keep / pull rule beats A+0 but not PULL-ALL consistently (+1,950 c on Oct 26, -570 on Oct 27 at B); posting loses even where the model favours it
 - Fixes (all checked before any result): export v2 - the pre-activation POST state from the decision's own frame, X5b on the complete POST vector against future arrivals / values, the reviewer's counterexample in the selftest (30 / 30); benchmark v2 - the contract's coherence check on every forecast and an economic gate (value level, the realized sign of what the rule keeps / pulls, loss amount) declared before v2 ran, gate day Oct 26 (24 / 24); policy v2 - only coherent forecasts act, refused ones keep, parity over valid and refused rows, P0g recomputes the pulls (15 / 15; one escape on the way - the parity's contract verdict - fixed with a falsifier). Export v2 = v1 on every RETAIN row; POST rows changed only in the five queue inputs (130,714 rows).
 - Results (v2; Oct 26 gate day, Oct 27 post hoc): KEEP / PULL economic gate PASS on Oct 26 (kept decisions +0.75 / +0.37 c, pulled -9.2 / -10.1 c), fails post hoc on Oct 27 (kept -0.07 / -0.92 c); POST gate FAIL (favoured posts still about -5.9 c). Rule at B: Oct 26 MODEL-J -21,781 vs PULL-ALL -23,731 (+1,950; 15 / 19 scenarios; E > 0 in 19 / 19), Oct 27 -23,916 vs -23,346 (-570; 3 / 19); A+0 far behind both days. [Receipt](reviews/pipeline_one_day_v2_20261119/report.md); export v2 in [the export receipt](reviews/pipeline_export_20261119/report.md).

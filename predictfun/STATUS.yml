@@ -1,3 +1,24 @@
+pipeline_v2_result_review_20261119_codex:
+  status: baseline_values_reproduce_residual_P2_coherence_and_two_P2_interpretation_findings
+  target_commit: 37e8b373d5ef29beb605573c82d0842dba320a89
+  asof: "2026-11-19T08:53:28+00:00"
+  report: predictfun/reviews/automatic/20261119_37e8b373/report.md
+  receipt: predictfun/reviews/automatic/20261119_37e8b373/receipt.json
+  followup: predictfun/reviews/automatic/20261119_37e8b373/followup.json
+  prior_counterexamples: {POST_future_arrival: fixed, mixed_contract_refusal: fixed, shifted_value_gate: fixed}
+  residual_coherence: {zero_quantity_nonzero_movement_rows_Oct26: 23, rows_Oct27: 15, changed_executed_triggers: 0, baseline_value_impact_cents: 0}
+  reporting_findings: [delta_vs_pull_all_misattributed_to_never_pulled_orders, neutral_POST_value_overgeneralized_to_entry_with_cancellation]
+  baseline_value_cents:
+    Oct26: {MODEL_J: -21780.814929709362, PULL_ALL: -23730.503209026007, delta: 1949.6882793166442}
+    Oct27: {MODEL_J: -23916.100037386, PULL_ALL: -23345.99110850651, delta: -570.1089288794901}
+  checks: {pinned_selftests: 2, model_hashes: 44, policy_scenario_rows: 76, J_diagnostic_cells: 8, baseline_per_fill_days: 2}
+  population: {consumed_days: ["20261026", "20261027"], original_orders: [30242, 29820], benchmark_asof: "2026-11-19T07:39:08.652623+00:00"}
+  scope: fixed_decision_execution_sensitivity_local_END_values_not_portfolio_PnL
+  raw_tape_training_or_untouched_validation: false
+  next_priority: entry_no_entry_evaluation_with_frozen_cancellation_and_aligned_early_fill_continuation_values
+  fixes_owner: other_development_session
+  scheduler: remains_disabled
+
 first_day_pipeline_review_20261119_codex:
   status: blocked_POST_causality_one_P1_two_P2
   exporter_commit: 8e57fd8969ed6a57194b0487c3fb51b584a6e36b

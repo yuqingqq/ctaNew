@@ -1,3 +1,39 @@
+<!-- PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
+## 2026-11-19 Corrected pipeline: values verified; positive-selection movement error remains
+
+Review target **37e8b373d5ef29beb605573c82d0842dba320a89**. [Report](reviews/automatic/20261119_37e8b373/report.md),
+[receipt](reviews/automatic/20261119_37e8b373/receipt.json),
+[follow-up](reviews/automatic/20261119_37e8b373/followup.json). Original three
+counterexamples are repaired. Remaining P2: quantity clipped to zero can coexist
+with nonzero Eqm and J_ok=True (23 / 15 RETAIN rows, Oct26 / Oct27). All occur
+after the first model pull: correcting this case changes zero executed triggers
+or cents in these runs. It is a real coherence gap, not the measured loss cause.
+
+Baseline MODEL-J values -21780.81 / -23916.10 c reproduce independently from saved
+fills. Difference from PULL-ALL +1949.69 / -570.11 c consists of later pulls
++954.33 / -821.85 plus never-pulled orders +995.36 / +251.74. The report wrongly
+attributes the whole difference to the never-pulled subset. Most loss is before
+the first +137 ms effective cancellation. POST's positive selection predicts
+roughly +4 c per order but realizes -5.94 / -5.89 c under the neutral target;
+error is predominantly joint fill/movement value, not quantity-spread value.
+
+The report's entry conclusion exceeds this target: the identical positive POST
+selections with frozen MODEL-J cancellation mark +276.93 / -823.53 c, versus
+-14865.52 / -11642.45 without model cancellation. This post-hoc conditional join
+is neither a validated strategy nor a portfolio replay, but demonstrates the
+continuation mismatch. Next: entry/no-entry evaluation with frozen cancellation,
+common targets and explicit pre-cancel/continuation decomposition, after the
+coherence repair; do not infer that larger size or different quote level is
+already the required fix.
+
+Both days consumed, 30242 / 29820 original opportunities; benchmark as-of
+Nov19 07:39:08.652623Z. Two pinned synthetic selftests, 44 model hashes, 76
+policy/scenario rows and eight J diagnostic cells verified; no fit, raw tape or
+untouched validation. Gate PASS on Oct26 is not robust generalization (Oct27's
+boundary sign fails). Fixed decisions across scenarios; local END marks, not
+settlement/portfolio P&L. Other-session development preserved; scheduler off.
+<!-- /PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
+
 <!-- FIRST_DAY_PIPELINE_REVIEW_20261119_CODEX -->
 ## 2026-11-19 First-day pipeline: POST look-ahead and two permissive validation gates
 

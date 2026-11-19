@@ -1,0 +1,318 @@
+{
+  "target_commit": "37e8b373d5ef29beb605573c82d0842dba320a89",
+  "asof": "2026-11-19T08:50:11.123963+00:00",
+  "synthetic": {
+    "prior_POST_case_fixed": true,
+    "prior_mixed_refusal_case_fixed": true,
+    "prior_shifted_value_case_fixed": true,
+    "positive_and_known_bad_controls": true,
+    "zero_quantity_nonzero_moment": {
+      "accepted_by_benchmark": true,
+      "Eq": 0.0,
+      "Eqm": -100.0,
+      "parity": [
+        1,
+        0,
+        0
+      ],
+      "rule": "pull",
+      "contract": "keep"
+    }
+  },
+  "selftests": {
+    "export": "pass",
+    "policy": "pass",
+    "benchmark": "not rerun; would fit synthetic models"
+  },
+  "days": {
+    "20261026": {
+      "asof": "2026-11-19T07:39:21.127033+00:00",
+      "benchmark_asof": "2026-11-19T07:39:08.652623+00:00",
+      "export_asof": "2026-11-19T07:23:49.445752+00:00",
+      "original_orders": 30242,
+      "statuses": {
+        "eligible": 28442,
+        "refused_post_only": 1390,
+        "missing_endpoint": 374,
+        "stale_future_book": 36
+      },
+      "baseline": {
+        "KEEP_c": -416660.8349675208,
+        "MODEL_J_c": -21780.814929709362,
+        "PULL_ALL_c": -23730.503209026007,
+        "A0_c": -152452.8850240081,
+        "delta_pull_all_c": 1949.6882793166442,
+        "scenarios_above_pull_all": 15,
+        "scenarios_above_A0": 17,
+        "total_eligible": 28442,
+        "predicted_orders": 28274,
+        "pulled_orders": 27982,
+        "first_step_pulls": 26942
+      },
+      "economic": {
+        "post": {
+          "0": {
+            "E1 VALUE LEVEL": "PASS",
+            "E2 BOUNDARY SIGN": "FAIL",
+            "E3 LOSS AMOUNT": "PASS",
+            "acting": 1408,
+            "resting": 13498,
+            "incoherent": 10,
+            "loss_side_realized_mean": -14.640300780408213,
+            "gain_side_realized_mean": -3.9577791219662415,
+            "value_level_ratio": 0.9799535292706488,
+            "value_rank": 0.05552557787760872,
+            "fair_rank": 0.006879873457633057,
+            "fill_auc": 0.6293149903413441
+          },
+          "1": {
+            "E1 VALUE LEVEL": "PASS",
+            "E2 BOUNDARY SIGN": "FAIL",
+            "E3 LOSS AMOUNT": "PASS",
+            "acting": 1094,
+            "resting": 13788,
+            "incoherent": 34,
+            "loss_side_realized_mean": -14.81944694356079,
+            "gain_side_realized_mean": -8.494485897647232,
+            "value_level_ratio": 0.9753669734865693,
+            "value_rank": 0.05374416440017377,
+            "fair_rank": -0.0030540648874643524,
+            "fill_auc": 0.6344683679766041
+          }
+        },
+        "retain": {
+          "0": {
+            "E1 VALUE LEVEL": "PASS",
+            "E2 BOUNDARY SIGN": "PASS",
+            "E3 LOSS AMOUNT": "PASS",
+            "acting": 569984,
+            "resting": 54210,
+            "incoherent": 392,
+            "loss_side_realized_mean": -9.203227558240574,
+            "gain_side_realized_mean": 0.753057418614504,
+            "value_level_ratio": 0.9336889473254296,
+            "value_rank": 0.11436283886117822,
+            "fair_rank": 0.061560319758484194,
+            "fill_auc": 0.7638115688644679
+          },
+          "1": {
+            "E1 VALUE LEVEL": "PASS",
+            "E2 BOUNDARY SIGN": "PASS",
+            "E3 LOSS AMOUNT": "PASS",
+            "acting": 593466,
+            "resting": 51016,
+            "incoherent": 670,
+            "loss_side_realized_mean": -10.104612754307537,
+            "gain_side_realized_mean": 0.3700060362648542,
+            "value_level_ratio": 0.9519605861321241,
+            "value_rank": 0.1144593132787683,
+            "fair_rank": 0.043841406922150904,
+            "fill_auc": 0.7793506094199375
+          }
+        }
+      },
+      "reachable_decisions": {
+        "0": {
+          "rows": 27011,
+          "kept_rows": 12981,
+          "kept_orders": 562,
+          "kept_value_mean": 2.1876407725472338
+        },
+        "1": {
+          "rows": 25402,
+          "kept_rows": 11335,
+          "kept_orders": 759,
+          "kept_value_mean": 3.125079640542643
+        }
+      },
+      "attribution": {
+        "first_step": {
+          "orders": 26942,
+          "model_c": -22671.569081851132,
+          "pull_all_c": -22671.569081851132,
+          "delta_c": 0.0
+        },
+        "later_pull": {
+          "orders": 1040,
+          "model_c": 1094.2554202895617,
+          "pull_all_c": 139.92616206989013,
+          "delta_c": 954.3292582196716
+        },
+        "never_model_pull": {
+          "orders": 460,
+          "model_c": -203.50126814775007,
+          "pull_all_c": -1198.8602892447407,
+          "delta_c": 995.3590210969905
+        }
+      },
+      "timing_value": {
+        "before_first_decision_c": -15892.564940169172,
+        "first_cancel_latency_c": -7837.938268856809,
+        "after_first_possible_cancel_c": 1949.688279316662
+      },
+      "post_selection": {
+        "rows": 29832,
+        "coherent_positive": 2502,
+        "positive_share": 0.083869670152856,
+        "realized_no_model_pull_c": -14865.520575754541,
+        "realized_no_model_pull_mean_c": -5.9414550662488175,
+        "same_orders_with_MODEL_J_c": 276.9342184127623,
+        "same_orders_with_PULL_ALL_c": -745.55500003015
+      },
+      "accepted_zero_quantity_nonzero_moment": {
+        "post": 0,
+        "retain": 23
+      },
+      "prediction_hash": "d121b7cf70f8d31197d849ba82ad52c7eb3bb71431d1a4bd39dd5c29c258f105",
+      "prediction_rows": 1299570,
+      "verified_policy_rows": 38,
+      "source_engine_asof": "2026-11-18T02:59:27.356546+00:00"
+    },
+    "20261027": {
+      "asof": "2026-11-19T07:39:33.598761+00:00",
+      "benchmark_asof": "2026-11-19T07:39:08.652623+00:00",
+      "export_asof": "2026-11-19T07:30:44.484555+00:00",
+      "original_orders": 29820,
+      "statuses": {
+        "eligible": 28038,
+        "refused_post_only": 1300,
+        "missing_endpoint": 460,
+        "stale_future_book": 22
+      },
+      "baseline": {
+        "KEEP_c": -443038.446840497,
+        "MODEL_J_c": -23916.100037386,
+        "PULL_ALL_c": -23345.99110850651,
+        "A0_c": -181822.905396428,
+        "delta_pull_all_c": -570.1089288794901,
+        "scenarios_above_pull_all": 3,
+        "scenarios_above_A0": 17,
+        "total_eligible": 28038,
+        "predicted_orders": 27881,
+        "pulled_orders": 27626,
+        "first_step_pulls": 26795
+      },
+      "economic": {
+        "post": {
+          "0": {
+            "E1 VALUE LEVEL": "PASS",
+            "E2 BOUNDARY SIGN": "FAIL",
+            "E3 LOSS AMOUNT": "PASS",
+            "acting": 1065,
+            "resting": 13595,
+            "incoherent": 9,
+            "loss_side_realized_mean": -15.685643480226396,
+            "gain_side_realized_mean": -5.655357227708776,
+            "value_level_ratio": 0.9230307891588588,
+            "value_rank": 0.050023380602960944,
+            "fair_rank": 0.023151074233918198,
+            "fill_auc": 0.6495468065461177
+          },
+          "1": {
+            "E1 VALUE LEVEL": "PASS",
+            "E2 BOUNDARY SIGN": "FAIL",
+            "E3 LOSS AMOUNT": "PASS",
+            "acting": 910,
+            "resting": 13723,
+            "incoherent": 36,
+            "loss_side_realized_mean": -15.903204507542899,
+            "gain_side_realized_mean": -6.175266837690246,
+            "value_level_ratio": 0.9152002255701613,
+            "value_rank": 0.05639881830624207,
+            "fair_rank": -0.014821253131409022,
+            "fill_auc": 0.6447817643146784
+          }
+        },
+        "retain": {
+          "0": {
+            "E1 VALUE LEVEL": "PASS",
+            "E2 BOUNDARY SIGN": "FAIL",
+            "E3 LOSS AMOUNT": "PASS",
+            "acting": 652615,
+            "resting": 50318,
+            "incoherent": 587,
+            "loss_side_realized_mean": -9.465757000453323,
+            "gain_side_realized_mean": -0.07282237068684282,
+            "value_level_ratio": 0.8545170851627205,
+            "value_rank": 0.12000317618318701,
+            "fair_rank": 0.04737850028704259,
+            "fill_auc": 0.7757962588164425
+          },
+          "1": {
+            "E1 VALUE LEVEL": "PASS",
+            "E2 BOUNDARY SIGN": "FAIL",
+            "E3 LOSS AMOUNT": "PASS",
+            "acting": 654481,
+            "resting": 44980,
+            "incoherent": 1559,
+            "loss_side_realized_mean": -9.132387734639028,
+            "gain_side_realized_mean": -0.9192971381237574,
+            "value_level_ratio": 1.0195925280191673,
+            "value_rank": 0.12005860685334752,
+            "fair_rank": 0.054254295237621215,
+            "fill_auc": 0.7803485032820693
+          }
+        }
+      },
+      "reachable_decisions": {
+        "0": {
+          "rows": 26539,
+          "kept_rows": 12710,
+          "kept_orders": 529,
+          "kept_value_mean": 1.4119057061245384
+        },
+        "1": {
+          "rows": 23266,
+          "kept_rows": 9112,
+          "kept_orders": 539,
+          "kept_value_mean": -6.380099489464321
+        }
+      },
+      "attribution": {
+        "first_step": {
+          "orders": 26795,
+          "model_c": -19028.418009841156,
+          "pull_all_c": -19028.418009841156,
+          "delta_c": 0.0
+        },
+        "later_pull": {
+          "orders": 831,
+          "model_c": -1756.0148847507958,
+          "pull_all_c": -934.1679591503269,
+          "delta_c": -821.8469256004688
+        },
+        "never_model_pull": {
+          "orders": 412,
+          "model_c": -3131.6671427940655,
+          "pull_all_c": -3383.4051395150163,
+          "delta_c": 251.73799672095092
+        }
+      },
+      "timing_value": {
+        "before_first_decision_c": -13988.06011055353,
+        "first_cancel_latency_c": -9357.93099795297,
+        "after_first_possible_cancel_c": -570.1089288795179
+      },
+      "post_selection": {
+        "rows": 29338,
+        "coherent_positive": 1975,
+        "positive_share": 0.06731883563978458,
+        "realized_no_model_pull_c": -11642.448269807972,
+        "realized_no_model_pull_mean_c": -5.8949105163584665,
+        "same_orders_with_MODEL_J_c": -823.5334604608255,
+        "same_orders_with_PULL_ALL_c": -929.5147748033028
+      },
+      "accepted_zero_quantity_nonzero_moment": {
+        "post": 0,
+        "retain": 15
+      },
+      "prediction_hash": "ec3477e898051c7640b8efa50ffb159a8c09ad50f1078a2933dd81694b348102",
+      "prediction_rows": 1433878,
+      "verified_policy_rows": 38,
+      "source_engine_asof": "2026-11-18T03:01:23.638978+00:00"
+    }
+  },
+  "models_hash_verified": 44,
+  "new_tape_training_untouched_days": false,
+  "completed_asof": "2026-11-19T08:51:48.538568+00:00"
+}

@@ -1,0 +1,143 @@
+{
+  "target_commit": "37e8b373d5ef29beb605573c82d0842dba320a89",
+  "asof": "2026-11-19T08:53:23.098330+00:00",
+  "days": {
+    "20261026": {
+      "prediction_asof": "2026-11-19T07:39:08.652623+00:00",
+      "bad_moment_rows": 23,
+      "bad_moment_orders": 9,
+      "bad_moment_abs_max_c": 36.50112064585418,
+      "bad_moment_positive": 3,
+      "bad_moment_negative": 20,
+      "bad_moment_rows_reached": 0,
+      "parity_on_all_bad_rows": [
+        23,
+        0,
+        3
+      ],
+      "changed_first_trigger_orders": 0,
+      "original_model_value_c": -21780.814929709322,
+      "reject_zero_moment_model_value_c": -21780.814929709322,
+      "action_value_impact_c": 0.0,
+      "attribution": {
+        "first_step": {
+          "orders": 26942,
+          "model_c": -22671.569081851132,
+          "pullall_c": -22671.569081851132,
+          "delta_c": 0.0
+        },
+        "later_pull": {
+          "orders": 1040,
+          "model_c": 1094.2554202895617,
+          "pullall_c": 139.92616206989013,
+          "delta_c": 954.3292582196716
+        },
+        "never_model_pull_with_predictions": {
+          "orders": 292,
+          "model_c": 599.5413277142382,
+          "pullall_c": -395.81769338275245,
+          "delta_c": 995.3590210969905
+        },
+        "no_RETAIN_prediction": {
+          "orders": 168,
+          "model_c": -803.0425958619883,
+          "pullall_c": -803.0425958619883,
+          "delta_c": 0.0
+        }
+      },
+      "positive_POST_components": {
+        "0": {
+          "n": 1408,
+          "predicted_value_mean": 4.383027399380754,
+          "actual_value_mean": -3.9577791219662415,
+          "predicted_quantity": 12375.042388856604,
+          "actual_quantity": 12758.651385193914,
+          "edge_prediction_error_c": 205.0481276247721,
+          "movement_prediction_error_c": 11538.807454431797,
+          "with_MODEL_J_c": -82.3446657116703,
+          "with_PULL_ALL_c": -223.35453227591086
+        },
+        "1": {
+          "n": 1094,
+          "predicted_value_mean": 4.093183124341199,
+          "actual_value_mean": -8.494485897647232,
+          "predicted_quantity": 9697.62249787193,
+          "actual_quantity": 10354.977396767134,
+          "edge_prediction_error_c": -26.184528768667448,
+          "movement_prediction_error_c": 13797.094438824015,
+          "with_MODEL_J_c": 359.2788841244326,
+          "with_PULL_ALL_c": -522.2004677542394
+        }
+      }
+    },
+    "20261027": {
+      "prediction_asof": "2026-11-19T07:39:08.652623+00:00",
+      "bad_moment_rows": 15,
+      "bad_moment_orders": 6,
+      "bad_moment_abs_max_c": 5.207542890693616,
+      "bad_moment_positive": 7,
+      "bad_moment_negative": 8,
+      "bad_moment_rows_reached": 0,
+      "parity_on_all_bad_rows": [
+        15,
+        0,
+        7
+      ],
+      "changed_first_trigger_orders": 0,
+      "original_model_value_c": -23916.100037386022,
+      "reject_zero_moment_model_value_c": -23916.100037386022,
+      "action_value_impact_c": 0.0,
+      "attribution": {
+        "first_step": {
+          "orders": 26795,
+          "model_c": -19028.418009841156,
+          "pullall_c": -19028.418009841156,
+          "delta_c": 0.0
+        },
+        "later_pull": {
+          "orders": 831,
+          "model_c": -1756.0148847507958,
+          "pullall_c": -934.1679591503269,
+          "delta_c": -821.8469256004688
+        },
+        "never_model_pull_with_predictions": {
+          "orders": 255,
+          "model_c": -1992.8415705600978,
+          "pullall_c": -2244.5795672810486,
+          "delta_c": 251.73799672095092
+        },
+        "no_RETAIN_prediction": {
+          "orders": 157,
+          "model_c": -1138.8255722339677,
+          "pullall_c": -1138.8255722339677,
+          "delta_c": 0.0
+        }
+      },
+      "positive_POST_components": {
+        "0": {
+          "n": 1065,
+          "predicted_value_mean": 4.042785710199579,
+          "actual_value_mean": -5.655357227708776,
+          "predicted_quantity": 9077.372048777783,
+          "actual_quantity": 10231.689723589474,
+          "edge_prediction_error_c": -274.25987562061914,
+          "movement_prediction_error_c": 10602.782104493019,
+          "with_MODEL_J_c": -361.7610734171226,
+          "with_PULL_ALL_c": -664.9215332513629
+        },
+        "1": {
+          "n": 910,
+          "predicted_value_mean": 3.8677354090556775,
+          "actual_value_mean": -6.175266837690246,
+          "predicted_quantity": 7925.571373644916,
+          "actual_quantity": 7878.932230396143,
+          "edge_prediction_error_c": 195.56614312767312,
+          "movement_prediction_error_c": 8943.565901411117,
+          "with_MODEL_J_c": -461.77238704370313,
+          "with_PULL_ALL_c": -264.5932415519399
+        }
+      }
+    }
+  },
+  "completed_asof": "2026-11-19T08:53:28.054535+00:00"
+}

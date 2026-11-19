@@ -1,0 +1,5 @@
+{
+  "target_commit": "37e8b373d5ef29beb605573c82d0842dba320a89",
+  "isolated_checkout": "/tmp/pf-pipeline-v2-review-agboocsv/tree",
+  "scope": "pinned corrected pipeline v2 results and previous finding closure; no development changes"
+}
