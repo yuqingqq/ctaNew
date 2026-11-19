@@ -1,0 +1,9 @@
+{
+  "asof": "2026-11-19T02:56:50Z",
+  "tag": "pipeline_contract_saved_20261119",
+  "exit_code": 1,
+  "synthetic_tests_passed": 14,
+  "failure": "scenario population changed",
+  "cause": "The new checker initially expected M0/M250 rows in the scenario parquet. The scenario report instead reads these already re-simulated branches from the original KEEP/PULL ledger. No economic output was produced.",
+  "correction": "Read M0/M250 fills and per-order values from the receipt-verified KEEP/PULL ledger, matching the existing scenario-report source mapping. Keep all populations and checks unchanged."
+}

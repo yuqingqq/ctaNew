@@ -1,0 +1,12 @@
+{
+  "asof": "2026-11-19T02:56:41.873126+00:00",
+  "source_commit": "5578d96f684d472b04ed25325295a9a2a6989b2e",
+  "sources": {
+    "predictfun/research/pf_pipeline_contract.py": "1c3879cba24ea2106850497788ad0655969d5c1bdfb656f3beaf84b0c2aff191",
+    "predictfun/research/pf_pipeline_contract_check.py": "e822514a2ebef98e547e9c4880a2716b784900468598c9593f432c4b677adac6"
+  },
+  "synthetic_tests": 14,
+  "passed": true,
+  "scope": "interface/accounting checks only; no forecast skill, policy acceptance or profitability",
+  "completed_asof": "2026-11-19T02:56:41.875429+00:00"
+}

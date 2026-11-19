@@ -1,3 +1,33 @@
+<!-- PIPELINE_CONTRACT_20261119_CODEX -->
+## 2026-11-19 — Prediction/value/controller interface implemented (Codex)
+
+User: "Can we work on the prediction, value mapping, and controller pipeline".
+New isolated modules `pf_pipeline_contract.py` and `_check.py`; existing simulator
+and other-session development unchanged. Joint affected-fill/movement forecasts
+map to local economics with exact target identities, common endpoints and
+unclipped severe excess; a per-order controller separates post/wait from
+pull/keep, with explicit portfolio/continuation costs, pending reservations and
+no fixed cooldown. This is the shared interface, not a fitted predictor or an
+integrated sequential policy. Old one-second/six-rung learned artifacts cannot be
+silently substituted for the corrected five-second JOIN target.
+
+[Plan](handoffs/20261119_prediction_pipeline.md),
+[report](reviews/pipeline_contract_20261119/report.md),
+[primary receipt](reviews/pipeline_contract_20261119/saved_check_v3.json).
+As of 2026-11-19T02:59:01.372286Z: 16 synthetic tests pass; saved Oct23 ledger
+checks cover all 30,466 neutral orders with statuses, 58,738 mapped labels per
+M0/M50/M250 scenario (176,214 identities), each within 1e-7 cents of the saved
+engine. Source as-of Nov18 20:28:18.245546Z (scenario v6) and 02:53:31.517340Z
+(original clock branches). Codex 17.62 s / 317 MiB. Realized inputs are accounting
+only and cannot enter controller decisions. No fit, policy replay, raw tape,
+untouched-day access, profit claim or schedule restart.
+
+**Next priority:** causal rich-feature/label export on the corrected neutral
+identities with sampled engine parity, then a frozen chronological prediction
+benchmark. Full sequential continuation, shared-volume interaction, inventory
+valuation and controller churn/uptime evaluation remain open.
+<!-- /PIPELINE_CONTRACT_20261119_CODEX -->
+
 ## 2026-11-19 02:51Z (session aea5bfb9) — ONE-DAY TEST: THE FIVE DECLARED SCORE VARIANTS AGAINST A+0 THROUGH THE SCENARIO BANK, OCT 23 (USER: "can we run the one day test now" -> "Score variants vs A+0"); then the USER: "We should work on the pipeline, a prediction model + value mapping one"
 - Instrument: NEW pf_keep_pull_variants.py values every declared score policy (KP.POLICIES) from the committed v6 day outputs - a pull only removes the keep branch's fills after its landing, no kernel re-run; pf_keep_pull_scenarios v6.1 takes the policy as a parameter (A+0 values unchanged). Selftests pass; mutants 46 / 46 (scenarios) and 30 / 30 (variants) caught by checks; V0a-V0e YES (A+0 = the committed report; every policy's pulls / value at B = the committed keep / pull run and the clock audit). [Receipt](reviews/keep_pull_variants_20261119/report.md).
 - Result (Oct 23, one consumed day): SURVIVES-TIMING none, ABOVE THE BASELINE IN EVERY SCENARIO none. A+1's value is above A+0's in 18 / 19 scenarios (not EVhi); the B rules have ~3x A+0's E at B but a lower value (they pull 2-5k orders vs 14k); PULL-ALL's value beats every policy's in 17 / 19. Raw threshold rules, not a learned model; multiplicity 6; local marks.
