@@ -48,7 +48,11 @@ CONTROLS (selftest on synthetic tapes; plan v2 section 4's table; each a valid c
  F1 actual WAIT; F2 re-entry; F3 queue preservation; F4 economic identity; F5 continuation matters (both directions, from ONE saved fork state,
  only the continuation varied); F6 causality; F7 boundaries and capacity (incl. the reservation inequality and released reservations);
  F8 identity / support; F9 shared book; F10 unnoticed fills (zero / partial / full, both sides, a pending-sensitive other side) cannot change
- views, structural requests or reservations before their notice. Mutations: pf_branch_engine_mutants.py.
+ views, structural requests or reservations before their notice; F11 (review c68a072c P2) a saved fork CONTEXT binds the contract, tape id
+ (frames, trades and END mark), END, the settings actually used, the identity fields, episode, tick, focal side and the sides already
+ processed, all inside its fingerprint; each disagreement (a state changed after saving, a changed mark or END, another tape or scenario,
+ another focal side, a relabelled side, a raw branch) is refused before either arm runs, a pickle round trip reproduces the direct pair.
+ Mutations: pf_branch_engine_mutants.py.
 SLICE (bounded, consumed day; slice <day> <n>): the first n eligible opportunities of the day, the engine under two degenerate policies (POST at
  0 then KEEP; POST at 0 then PULL at the first review) against the committed keep / pull run's M50 fills of the same orders (exact), plus P1 on
  every slice tape.
@@ -59,7 +63,9 @@ Usage (run_light, PF_SLOT=claude): pf_branch_engine.py selftest | traces | slice
 """
 import copy
 import ctypes
+import hashlib
 import json
+import pickle
 import sys
 import time
 from pathlib import Path
@@ -222,11 +228,11 @@ def ckernel(path, orders9, actions, horizon=END):
 class Branch:
     """One branch: the engine plus the client's known state, its reservations, decisions, fallbacks and constraints."""
 
-    def __init__(self, path, episode=0, end=END, settings=None):
+    def __init__(self, path, episode=0, end=END, settings=None, ident=None):
         C.require(float(end) == END, 'a branch END other than the contract\'s common END')
         C.require(settings is None or all(SETTINGS.get(k_) == v_ for k_, v_ in settings.items()), 'a timing / contract setting other than the declared scenario')
         C.require(CANCEL_ACK >= FILL_NOTICE, 'a cancel ACK that can overtake fill notices needs a cumulative-fill watermark (not in this contract)')
-        self.E = Engine(path, end, client=True); self.counts = {}; self.episode = int(episode); self.end = float(end); self.mark = path.get('mark')
+        self.E = Engine(path, end, client=True); self.counts = {}; self.ident = dict(ident or {}); self.acted = set(); self.episode = int(episode); self.end = float(end); self.mark = path.get('mark')
         self.settings = dict(SETTINGS, **(settings or {})); self.open = {0: None, 1: None}; self.closed = {}
         self.decisions = []; self.fallbacks = []; self.constraints = []; self.k = 0
 
@@ -332,20 +338,29 @@ def decide(B, g, s, policy, forced=None, v=None):
     """One side's decision at g: none in a pending / terminal state; else the forced action (a fork), a fallback when the view has no valid book,
     or the policy's action on the view."""
     v = v if v is not None else B.view(g, s)
+    C.require(s not in B.acted, f'side {s} already processed at {g}')
     a = None if v['state'] in ('post_pending', 'cancel_pending', 'terminal') else forced if forced is not None else 'FALLBACK' if not book_ok(v, s) else policy(v)
-    return B.act(g, s, a, v)
+    r_ = B.act(g, s, a, v); B.acted.add(s); return r_
 
 
 def pre_tick(B, g):
     """The declared tie order before the decisions at tick g: the engine's trades up to g, the notices due by g (statuses), the invariants, then
-    the client's structural requests."""
-    B.E.advance(g); B.status(0, g); B.status(1, g); B.check_position(g); B.structural(g)
+    the client's structural requests; no side has acted at the new tick yet."""
+    B.E.advance(g); B.acted = set(); B.status(0, g); B.status(1, g); B.check_position(g); B.structural(g)
+
+
+def tape_id(frames, trades, mark):
+    """The identity of an episode tape: SHA-256 of its frames, its trades and its END mark (review c68a072c: the mark is part of the valuation)."""
+    h = hashlib.sha256(); h.update(np.ascontiguousarray(np.asarray(frames, float)).tobytes()); h.update(np.ascontiguousarray(np.asarray(trades, float).reshape(-1, 4)).tobytes())
+    h.update(repr(None if mark is None else float(mark)).encode()); return h.hexdigest()
 
 
 def fingerprint(B):
-    """A hash of a branch's complete state (orders, fills, events, client decisions / closures / counters): equal forks have equal prints."""
-    import hashlib
-    return hashlib.sha256(json.dumps([B.E.o, B.E.fills, B.E.events, B.decisions, sorted(B.closed.items()), B.open, B.counts, B.E.it, B.E.known],
+    """A hash of a branch's complete state AND its identity (review c68a072c): orders, fills, events, decisions, closures, counters, engine
+    cursors, the tape id recomputed from the engine's own arrays and mark, END, the settings actually used, the identity fields, the tick,
+    the episode and the sides already processed at that tick."""
+    return hashlib.sha256(json.dumps([B.E.o, B.E.fills, B.E.events, B.decisions, sorted(B.closed.items()), B.open, B.counts, B.E.it, B.E.known,
+                                      tape_id(B.E.f, B.E.tr, B.mark), B.end, B.settings, B.ident, B.k, B.episode, sorted(B.acted)],
                                      sort_keys=True, default=str).encode()).hexdigest()
 
 
@@ -380,23 +395,41 @@ def run(path, policy, episode=0, k0=0, B=None, until=None):
     return B
 
 
-def fork_state(path, rollin, k, side, episode=0, settings=None):
-    """The state at tick k just before `side` decides, reached under the roll-in policy (pre_tick applied; the other side decides first when
-    the alternating order puts it first)."""
+def fork_state(path, rollin, k, side, episode=0, settings=None, ident=None):
+    """The saved fork CONTEXT (review c68a072c) at tick k just before `side` decides, reached under the roll-in policy (pre_tick applied; the
+    other side decides first when the alternating order puts it first): the branch state plus its bound identity - contract, tape id, END,
+    END mark, settings actually used, identity fields, episode, tick, focal side, the sides already processed - and their fingerprint."""
     C.require(getattr(rollin, 'horizon', None) == END, 'the policy does not declare the common END horizon')
-    B0 = run(path, rollin, episode, 0, Branch(path, episode, settings=settings), until=k); g = k * STEP; pre_tick(B0, g); B0.k = k
+    B0 = run(path, rollin, episode, 0, Branch(path, episode, settings=settings, ident=ident), until=k); g = k * STEP; pre_tick(B0, g); B0.k = k
     if (episode + k) % 2 != side:
         decide(B0, g, 1 - side, rollin)
-    return B0
+    return dict(contract=CONTRACT, state=B0, k=int(k), episode=int(episode), side=int(side), acted=sorted(B0.acted), tape_id=tape_id(B0.E.f, B0.E.tr, B0.mark),
+                end=B0.end, mark=B0.mark, settings=dict(B0.settings), ident=dict(B0.ident), fingerprint=fingerprint(B0))
 
 
-def pair(path, policy, k, side, kind, episode=0, settings=None, rollin=None, state=None):
-    """paired_continuation_v2 at tick k and side: the fork state (a saved `state`, or the roll-in policy's - default: the continuation policy)
-    is copied; POST / WAIT or KEEP / PULL is applied in the two copies; both continue under the policy to the same END -> dict(Y, the two
-    ledgers, checks, the fork state's fingerprint)."""
+def validate_ctx(ctx, path, k, side, episode, settings):
+    """Refuse a saved fork context that disagrees with itself or with the call (review c68a072c), before either arm runs."""
+    C.require(isinstance(ctx, dict) and ctx.get('contract') == CONTRACT and isinstance(ctx.get('state'), Branch), 'not a saved paired_continuation_v2 fork context')
+    B = ctx['state']
+    C.require(fingerprint(B) == ctx['fingerprint'], 'the saved fork state changed after it was saved (its fingerprint)')
+    C.require(tape_id(B.E.f, B.E.tr, B.mark) == ctx['tape_id'] and B.end == ctx['end'] == END and B.mark == ctx['mark'] and B.settings == ctx['settings']
+              and B.ident == ctx['ident'], 'a saved fork whose tape / END / mark / settings / identity disagree with its own record')
+    C.require(path is None or tape_id(path['frames'], path['trades'], path.get('mark')) == ctx['tape_id'], 'a tape other than the saved fork\'s')
+    C.require(settings is None or all(ctx['settings'].get(k_) == v_ for k_, v_ in settings.items()), 'a scenario other than the saved fork\'s')
+    C.require(ctx['k'] == k == B.k and ctx['episode'] == episode == B.episode and ctx['side'] == side, 'a saved fork of another tick / episode / focal side')
+    want = set() if (episode + k) % 2 == side else {1 - side}
+    C.require(set(ctx['acted']) == want == B.acted, 'a saved fork with the wrong sides already processed at its tick')
+
+
+def pair(path, policy, k, side, kind, episode=0, settings=None, rollin=None, ctx=None):
+    """paired_continuation_v2 at tick k and side: the fork context (a saved, validated `ctx`, or the roll-in policy's - default: the
+    continuation policy) is copied; POST / WAIT or KEEP / PULL is applied in the two copies; both continue under the policy to the same END
+    -> dict(Y, the two ledgers, checks, and the metadata of the EXECUTED context)."""
     C.require(kind in ('post', 'keep'), 'undeclared pair kind'); C.require(getattr(policy, 'horizon', None) == END, 'the policy does not declare the common END horizon')
-    Bv = copy.deepcopy(state) if state is not None else fork_state(path, rollin or policy, k, side, episode, settings)
-    C.require(Bv.k == k and Bv.episode == episode, 'a saved fork state of another tick / episode'); g = k * STEP; first = (episode + k) % 2; fp = fingerprint(Bv)
+    if ctx is None:
+        ctx = fork_state(path, rollin or policy, k, side, episode, settings)
+    validate_ctx(ctx, path, k, side, episode, settings)
+    Bv = copy.deepcopy(ctx['state']); g = k * STEP; first = (episode + k) % 2; fp = ctx['fingerprint']
     v = Bv.view(g, side)
     if v['state'] != ('absent' if kind == 'post' else 'live'):
         return dict(status=f'not_{kind}_state', state=v['state'])
@@ -417,7 +450,7 @@ def pair(path, policy, k, side, kind, episode=0, settings=None, rollin=None, sta
         return dict(status='missing_mark', arms=arms, fork_fingerprint=fp)
     common = prefork_identical(arms[na]['fills'], arms[nb]['fills'], g)
     return dict(status='ok', kind=kind, k=k, side=side, Y=arms[na]['value'] - arms[nb]['value'], arms=arms, common_prefork_identical=common,
-                settings=dict(SETTINGS, **(settings or {})), fork_fingerprint=fp)
+                settings=dict(ctx['settings']), mark=ctx['mark'], end=ctx['end'], tape_id=ctx['tape_id'], ident=dict(ctx['ident']), fork_fingerprint=fp)
 
 
 def prefork_identical(fa, fb, g):
@@ -464,6 +497,18 @@ def side_policy(side, mode):
             return 'POST' if (v['t'] == 0 and v['side'] == side) else 'WAIT'
         return 'PULL' if mode == 'pull' else 'KEEP'
     return Policy(fn, f'side{side}_{mode}')
+
+
+def pull_effect_ok(o, land0=None):
+    """The single-generation pull's request and effect (review c68a072c): the policy pull at the first review (100 ms) landing at 137 ms, or a
+    structural request at or before it landing at ITS declared time (pending clock before activation) - a reason string alone is not enough."""
+    land0 = float(KP.landing(KP.J0)) if land0 is None else land0
+    if o.get('why') == 'policy':
+        return o['req'] == KP.J0 * STEP and o['remove'] == land0
+    if o.get('why') == 'structural':
+        want = max(o['req'] + CANCEL, o['submit'] + PENDING) if o['req'] < o['act'] else o['req'] + CANCEL
+        return o['req'] <= KP.J0 * STEP and o['remove'] == want
+    return False
 
 
 def fills_equal(ef, kt, kq):
@@ -535,7 +580,7 @@ def slice_check(day, n, out=None, tag=''):
 ANCHORS = (('post', 0), ('keep', 4))                     # review 043ca403 (e): entry fork at 0 ms, retention fork at 200 ms (tick 4)
 
 
-def slice_v3(day, per_side=128, out=None):
+def slice_v3(day, per_side=128, out=None, tag=''):
     """Review 043ca403 (e), selection frozen before any result: the first `per_side` eligible archived opportunities per side by oid of a
     consumed day. (1) single generation: POST at 0 then KEEP, and POST at 0 then PULL at the first review, reconciled to the archive - JOIN
     price, activation, the pull's request / effect, fills per trade time, END mark, cash, inventory and BOTH END values; (2) C-compatibility
@@ -545,7 +590,7 @@ def slice_v3(day, per_side=128, out=None):
     equal on the tape truncated after 200 ms); (4) statuses, histories, later-post / re-entry counts, pending / cap counters, per-side coverage.
     -> slice_v3_<day>.json, _orders.csv, _forks.csv, _histories.json. Invariant checks only: no profitability threshold, no policy selection."""
     C.require(day in SLICE_DAYS, 'slice: consumed days only (Oct 23-27)'); start = time.time(); out = Path(out or OUT); kpd = Path(KP.OUT) / day
-    C.require(not (out / f'slice_v3_{day}.json').exists(), 'output exists')
+    C.require(not (out / f'slice_v3_{day}{tag}.json').exists(), 'output exists')
     O = pd.read_parquet(kpd / 'orders.parquet', columns=['oid', 'm', 'side', 't', 'p', 'status', 'mark', 'v', 'q']); E_ = O[O.status == 'eligible']
     sel = pd.concat([E_[E_.side == s_].sort_values('oid').head(int(per_side)) for s_ in (0, 1)], ignore_index=True)
     F = pd.read_parquet(kpd / 'fills.parquet'); F = F[(F.clock == 50.) & F.oid.isin(sel.oid)]; fg = {int(k_): g_.sort_values('t') for k_, g_ in F.groupby('oid')}
@@ -574,7 +619,7 @@ def slice_v3(day, per_side=128, out=None):
                 r['price_equal'] = G['keep']['price'] == float(o.p) == G['pull']['price']; r['activation_equal'] = G['keep']['act'] == PLACE == G['pull']['act']
                 r['mark_equal'] = abs(path['mark'] - float(o.mark)) <= 1e-9; r['pull_request'] = G['pull']['why']; r['pull_request_ms'] = G['pull']['req']
                 r['pull_effect_ms'] = G['pull']['remove'] if G['pull']['req'] is not None else None
-                r['pull_effect_equal'] = (G['pull']['why'] == 'policy' and G['pull']['req'] == KP.J0 * STEP and G['pull']['remove'] == land0) or G['pull']['why'] == 'structural'
+                r['pull_effect_equal'] = pull_effect_ok(G['pull'], land0)
                 global KERNEL_MODE
                 old = KERNEL_MODE; KERNEL_MODE = True
                 try:
@@ -641,11 +686,11 @@ def slice_v3(day, per_side=128, out=None):
     R['(4) coverage: fork statuses, later posts (POST / WAIT forks), re-entries (KEEP / PULL forks), per policy and side'] = cov
     R['(4) selected orders per side (with a path)'] = {('bid' if s_ == 0 else 'ask'): int((ok.side == s_).sum()) for s_ in (0, 1)}
     R['SLICE v3 (1), (2) and (3) all PASS'] = 'PASS' if all(R[k_] == 'PASS' for k_ in R if k_.startswith(('(1) single generation (', '(2)', '(3) adaptive'))) else 'FAIL'
-    out.mkdir(parents=True, exist_ok=True); D.to_csv(out / f'slice_v3_{day}_orders.csv', index=False); Fk.to_csv(out / f'slice_v3_{day}_forks.csv', index=False)
-    C.dump(out / f'slice_v3_{day}_histories.json', hist)
-    C.dump(out / f'slice_v3_{day}.json', dict(asof=C.stamp(), day=day, per_side=int(per_side), selection='the first per_side eligible archived opportunities per side by oid (review 043ca403 (e))',
+    out.mkdir(parents=True, exist_ok=True); D.to_csv(out / f'slice_v3_{day}{tag}_orders.csv', index=False); Fk.to_csv(out / f'slice_v3_{day}{tag}_forks.csv', index=False)
+    C.dump(out / f'slice_v3_{day}{tag}_histories.json', hist)
+    C.dump(out / f'slice_v3_{day}{tag}.json', dict(asof=C.stamp(), day=day, per_side=int(per_side), selection='the first per_side eligible archived opportunities per side by oid (review 043ca403 (e))',
                                              readings=R, settings=SETTINGS, p1_tolerances=P1_TOL, anchors=ANCHORS, inputs=dict(kp_receipt=C.sha(kpd / 'receipt.json')),
-                                             outputs={x: C.sha(out / x) for x in (f'slice_v3_{day}_orders.csv', f'slice_v3_{day}_forks.csv', f'slice_v3_{day}_histories.json')},
+                                             outputs={x: C.sha(out / x) for x in (f'slice_v3_{day}{tag}_orders.csv', f'slice_v3_{day}{tag}_forks.csv', f'slice_v3_{day}{tag}_histories.json')},
                                              source_sha256=C.sha(Path(__file__).resolve()), provenance=KP.provenance(), seconds=time.time() - start))
     print(json.dumps(R, indent=1, default=str), flush=True)
     return R
@@ -802,9 +847,9 @@ def _controls(bad):  # noqa: C901
     # ---- F5 continuation matters, both directions, engine-generated: Y_keep under a hold continuation vs a chase continuation (seeded tapes)
     found = {}; r5 = np.random.default_rng(55)
     for i_ in range(200):
-        p5 = rand_tape(r5); S5 = fork_state(p5, HOLD_ONCE, 4, 0)                                 # ONE saved fork state; only the continuation varies
-        a_ = pair(p5, HOLD_ONCE, 4, 0, 'keep', state=S5); b_ = pair(p5, CHASE, 4, 0, 'keep', state=S5)
-        if a_['status'] == 'ok' and b_['status'] == 'ok' and a_['fork_fingerprint'] == b_['fork_fingerprint'] == fingerprint(S5):
+        p5 = rand_tape(r5); S5 = fork_state(p5, HOLD_ONCE, 4, 0)                                 # ONE saved fork context; only the continuation varies
+        a_ = pair(p5, HOLD_ONCE, 4, 0, 'keep', ctx=S5); b_ = pair(p5, CHASE, 4, 0, 'keep', ctx=S5)
+        if a_['status'] == 'ok' and b_['status'] == 'ok' and a_['fork_fingerprint'] == b_['fork_fingerprint'] == S5['fingerprint'] == fingerprint(S5['state']):
             if a_['Y'] > 0 > b_['Y']:
                 found.setdefault('hold > 0 > chase', (i_, a_['Y'], b_['Y']))
             if a_['Y'] < 0 < b_['Y']:
@@ -836,6 +881,47 @@ def _controls(bad):  # noqa: C901
         late = {nm_: views_until(tape(fr10, ([(80, side10, px, q_)] if q_ else []), 51.), pend, 5)[-2][1][side10]['position'] for nm_, q_ in (('none', 0.), ('full', 30.))}
         if not (late['none'] == 0. and late['full'] == (30. if side10 == 0 else -30.)):                    # the known position after the notice
             bad.append(f'F10 side {side10}: the notice at 180 ms does not reach the client by 200 ms ({late})')
+    # ---- F11 (review c68a072c P2) a saved fork context binds its identity; each disagreement is refused (by its own check) before either arm runs
+    p11 = tape([frame(0, 0, 50, 52, 0, 0)], [(150, 0, 50, 10), (400, 1, 52, 5)], 51.); c11 = fork_state(p11, POST_KEEP, 4, 0)
+    r_ref = pair(p11, POST_KEEP, 4, 0, 'keep'); r_ctx = pair(p11, POST_KEEP, 4, 0, 'keep', ctx=c11)
+    r_rt = pair(p11, POST_KEEP, 4, 0, 'keep', ctx=pickle.loads(pickle.dumps(c11)))                 # a serialisation round trip (positive control)
+    same_ = lambda a_, b_: a_['status'] == b_['status'] == 'ok' and abs(a_['Y'] - b_['Y']) < 1e-12 and all(a_['arms'][n_]['fills'] == b_['arms'][n_]['fills'] for n_ in a_['arms'])
+    if not (same_(r_ref, r_ctx) and same_(r_ref, r_rt) and r_ctx['settings'] == SETTINGS and r_ctx['mark'] == 51. and r_ctx['tape_id'] == tape_id(p11['frames'], p11['trades'], 51.)):
+        bad.append('F11: a valid saved context (direct / after a serialisation round trip) does not reproduce the direct pair with its own metadata')
+    def tamper(fn_, refp=True):
+        c_ = pickle.loads(pickle.dumps(c11)); fn_(c_)
+        if refp:
+            c_['fingerprint'] = fingerprint(c_['state'])                                    # an attacker recomputes the print: the identity checks must catch it
+        return c_
+    c_ask = fork_state(p11, POST_KEEP, 4, 1)                                                 # prepared for the ask at 200 ms: the bid already processed
+    def reset_acted(c_):
+        c_['state'].acted = set(); c_['acted'] = []; c_['fingerprint'] = fingerprint(c_['state']); return c_
+    for nm_, fn_ in (('a saved state changed after saving (a planted fill)', lambda: pair(p11, POST_KEEP, 4, 0, 'keep', ctx=tamper(lambda c_: c_['state'].E.fills.append((10., 0, 0, 1., 50., -1)), False))),
+                     ('a saved mark changed (print recomputed)', lambda: pair(p11, POST_KEEP, 4, 0, 'keep', ctx=tamper(lambda c_: setattr(c_['state'], 'mark', 61.)))),
+                     ('a saved END changed (print recomputed)', lambda: pair(p11, POST_KEEP, 4, 0, 'keep', ctx=tamper(lambda c_: setattr(c_['state'], 'end', 4000.)))),
+                     ('a tape other than the saved context\'s', lambda: pair(tape([frame(0, 0, 50, 52, 0, 0)], [(150, 0, 50, 10)], 51.), POST_KEEP, 4, 0, 'keep', ctx=c11)),
+                     ('a scenario other than the saved context\'s', lambda: pair(p11, POST_KEEP, 4, 0, 'keep', settings=dict(cancel_effect_ms=50.), ctx=c11)),
+                     ('a saved context of the other focal side', lambda: pair(p11, POST_KEEP, 4, 0, 'keep', ctx=c_ask)),
+                     ('a context relabelled to the other side (its processed sides disagree)', lambda: pair(p11, POST_KEEP, 4, 0, 'keep', ctx=dict(c_ask, side=0))),
+                     ('a raw branch instead of a context', lambda: pair(p11, POST_KEEP, 4, 0, 'keep', ctx=c11['state'])),
+                     ('a context whose first side never acted (processed sides reset at 250 ms)', lambda: pair(p11, POST_KEEP, 5, 0, 'keep', ctx=reset_acted(fork_state(p11, POST_KEEP, 5, 0))))):
+        try:
+            fn_(); bad.append(f'F11: {nm_} was not refused')
+        except ValueError:
+            pass
+        except Exception as e:                                                              # a missing guard that crashes is not a refusal
+            bad.append(f'F11: {nm_} crashed ({type(e).__name__}) instead of being refused by a check')
+    fp0 = fingerprint(c11['state'])                                                         # the identity fields are inside the integrity print
+    for nm_, fn_ in (('mark', lambda B_: setattr(B_, 'mark', 61.)), ('END', lambda B_: setattr(B_, 'end', 4000.)), ('settings', lambda B_: B_.settings.update(cancel_effect_ms=50.)),
+                     ('identity fields', lambda B_: B_.ident.update(day='x')), ('tick', lambda B_: setattr(B_, 'k', 5)), ('episode', lambda B_: setattr(B_, 'episode', 1)),
+                     ('processed sides', lambda B_: B_.acted.add(1))):
+        B_ = pickle.loads(pickle.dumps(c11['state'])); fn_(B_)
+        if fingerprint(B_) == fp0:
+            bad.append(f'F11: the fingerprint ignores the {nm_}')
+    o_s = dict(why='structural', req=50., act=58., submit=0., remove=95.); o_p = dict(why='policy', req=100., act=58., submit=0., remove=137.)
+    if not (pull_effect_ok(o_s) and not pull_effect_ok(dict(o_s, remove=87.)) and pull_effect_ok(o_p) and not pull_effect_ok(dict(o_p, remove=138.))
+            and pull_effect_ok(dict(o_s, req=100., remove=137.)) and not pull_effect_ok(dict(o_s, req=150., remove=187.)) and not pull_effect_ok(dict(o_p, why=None))):
+        bad.append('the slice pull-effect predicate (a structural request must land at its declared time)')
     # ---- F7 boundaries and capacity
     pb = tape([frame(0, 0, 50, 52, 0)], [(137, 0, 50, 5), (136.9, 0, 50, 5)][::-1], 51.)          # a match just before and at the cancel effect (137)
     Eb = batch(pb, [[0, 0, 50, 30, 0, 58, 137, 0, 1]])
@@ -881,7 +967,8 @@ def _controls(bad):  # noqa: C901
                      ('a POST while post-pending', lambda: (lambda B_: (B_.act(0., 0, 'POST', B_.view(0., 0)), B_.act(50., 0, 'POST', B_.view(50., 0))))(Branch(pe))),
                      ('an undeclared pair kind', lambda: pair(pe, POST_KEEP, 0, 0, 'hold')),
                      ('a branch END other than 5,000 ms', lambda: Branch(pe, end=4000.)),
-                     ('a saved fork state of another tick', lambda: pair(pe, POST_KEEP, 1, 0, 'post', state=fork_state(pe, POST_KEEP, 0, 0))),
+                     ('a saved fork context of another tick (same side order)', lambda: pair(pe, POST_KEEP, 6, 0, 'post', ctx=fork_state(pe, POST_KEEP, 4, 0))),
+                     ('a side processed twice at one tick', lambda: (lambda B_: (pre_tick(B_, 0.), decide(B_, 0., 0, POST_KEEP), decide(B_, 0., 0, POST_KEEP)))(Branch(pe))),
                      ('a timing scenario other than the declared one', lambda: Branch(pe, settings=dict(cancel=50.))),
                      ('a PULL for a stale generation', lambda: (lambda B_: (B_.act(0., 0, 'POST', B_.view(0., 0)), B_.E.advance(100.),
                                                                            B_.act(100., 0, 'PULL', dict(B_.view(100., 0), gid=7))))(Branch(pe)))):
@@ -916,7 +1003,8 @@ def selftest():
           'their batch replays; F1 WAIT posts later with a different history; F2 re-entry after the acknowledgement at a new price, with a cancel-'
           'pending fill; F3 queue priority kept, replacement behind; F4 fill ledger = cash + inventory value, pair difference, common pre-fork fills; '
           'F5 from one saved fork state the continuation reverses the keep advantage both ways; F6 causality; F10 unnoticed fills (zero / '
-          'partial / full, both sides) leave views, structural requests and reservations unchanged before their notice; F7 cancel-effect boundary, delayed notice, cap, post-only refusal, near-END '
+          'partial / full, both sides) leave views, structural requests and reservations unchanged before their notice; F11 a saved fork context '
+          '(and its round trip) reproduces the direct pair, and each identity disagreement is refused by its own check; F7 cancel-effect boundary, delayed notice, cap, post-only refusal, near-END '
           'post, missing mark, unavailable book; F8 wrong horizon / action / state / pair kind refused; F9 shared book', flush=True)
 
 
@@ -926,8 +1014,8 @@ if __name__ == '__main__':
         selftest()
     elif a == ['traces']:
         traces()
-    elif len(a) == 2 and a[0] == 'slice_v3':
-        slice_v3(a[1])
+    elif len(a) in (2, 3) and a[0] == 'slice_v3':
+        slice_v3(a[1], tag=a[2] if len(a) == 3 else '')
     elif len(a) in (3, 4) and a[0] == 'slice':
         slice_check(a[1], int(a[2]), tag=a[3] if len(a) == 4 else '')
     else:

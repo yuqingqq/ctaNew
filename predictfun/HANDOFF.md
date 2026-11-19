@@ -243,6 +243,17 @@ pulls and bid/ask; judge movement calibration on selected actions before changin
 order design. Other session owns fixes; scheduler remains off.
 <!-- /PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
 
+## 2026-11-19 18:13Z (session aea5bfb9) — R1 CLOSURE: THE SAVED-FORK IDENTITY CONTRACT (review c68a072c answered) (USER: "... continue the implementing and next priority loop")
+- [Receipt](reviews/branch_engine_r1_closure_20261119/report.md).
+- c68a072c P2 holds and is fixed. A saved fork is a validated context binding:
+  - contract, tape id (frames, trades, mark), END, mark, settings, identity, episode, tick, focal side and processed sides, all inside the fingerprint;
+  - `validate_ctx` refuses each disagreement before either arm runs (10 falsifiers, each refused by its own check);
+  - a pickle round trip reproduces the direct pair.
+- P3: the structural pull effect is time-validated.
+- Checks: selftest; mutation suite 49 / 49 (a pickle harness defect and two masked mutants fixed first).
+- Valid-path ledgers unchanged: the slice v3 rerun is identical in orders / forks / histories / readings.
+- Next, per c68a072c: R2's first deliverable, the r2_shadow_sampling_v1 manifest plus the shadow-probe / feature / support adapter on synthetic fixtures and the fixed Oct 23 first 128 per side, with no teacher fit.
+
 ## 2026-11-19 17:51Z (session aea5bfb9) — R1 v2: THE CAUSAL CLIENT BOUNDARY AND THE ENGINE-GATE RECEIPT (review 043ca403 answered; R1 gate met) (USER: "... continue the implementing and next priority loop")
 - [Receipt](reviews/branch_engine_r1_v2_20261119/report.md).
 - 043ca403 P1 (an unacknowledged fill changed client structural state) holds and is fixed: the client issues structural requests on client-known state, and the C-compatibility path keeps the kernel's form. F10 covers zero / partial / full hidden fills on both sides with a pending-sensitive other side.

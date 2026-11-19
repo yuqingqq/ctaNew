@@ -1,0 +1,155 @@
+{
+  "asof": "2026-11-19T18:12:39.646391+00:00",
+  "day": "20261024",
+  "per_side": 128,
+  "selection": "the first per_side eligible archived opportunities per side by oid (review 043ca403 (e))",
+  "readings": {
+    "(1) single generation: false counts": {
+      "price_equal": 0,
+      "activation_equal": 0,
+      "mark_equal": 0,
+      "keep_fills_equal": 0,
+      "pull_fills_equal": 0,
+      "keep_cash_equal": 0,
+      "pull_cash_equal": 0,
+      "keep_inventory_equal": 0,
+      "pull_inventory_equal": 0,
+      "keep_value_equal": 0,
+      "pull_value_equal": 0,
+      "keep_value_equal_archive_v": 0,
+      "pull_effect_equal": 0
+    },
+    "(1) single generation (every check on every order with a path)": "PASS",
+    "(2) C-compatibility aggregate parity": "PASS",
+    "(3) adaptive invariants (P2 base and arms, pre-fork history, value identity, no invariant refusal, causality to 200 ms)": "PASS",
+    "(3) counts": {
+      "tapes": 138,
+      "base_runs": 276,
+      "refused": 0,
+      "forks_ok": 1066,
+      "p2_false": 0,
+      "causality_false": 0,
+      "prefork_false": 0,
+      "identity_false": 0
+    },
+    "(4) coverage: fork statuses, later posts (POST / WAIT forks), re-entries (KEEP / PULL forks), per policy and side": {
+      "chase keep bid": {
+        "statuses": {
+          "ok": 119,
+          "not_keep_state": 19
+        },
+        "later_post": 0,
+        "re_entry": 116
+      },
+      "chase keep ask": {
+        "statuses": {
+          "ok": 127,
+          "not_keep_state": 11
+        },
+        "later_post": 0,
+        "re_entry": 124
+      },
+      "chase post bid": {
+        "statuses": {
+          "ok": 138
+        },
+        "later_post": 138,
+        "re_entry": 0
+      },
+      "chase post ask": {
+        "statuses": {
+          "ok": 138
+        },
+        "later_post": 138,
+        "re_entry": 0
+      },
+      "post_keep keep bid": {
+        "statuses": {
+          "ok": 132,
+          "not_keep_state": 6
+        },
+        "later_post": 0,
+        "re_entry": 127
+      },
+      "post_keep keep ask": {
+        "statuses": {
+          "ok": 136,
+          "not_keep_state": 2
+        },
+        "later_post": 0,
+        "re_entry": 132
+      },
+      "post_keep post bid": {
+        "statuses": {
+          "ok": 138
+        },
+        "later_post": 138,
+        "re_entry": 0
+      },
+      "post_keep post ask": {
+        "statuses": {
+          "ok": 138
+        },
+        "later_post": 138,
+        "re_entry": 0
+      }
+    },
+    "(4) selected orders per side (with a path)": {
+      "bid": 128,
+      "ask": 128
+    },
+    "SLICE v3 (1), (2) and (3) all PASS": "PASS"
+  },
+  "settings": {
+    "contract": "paired_continuation_v2",
+    "activation_ms": 58.0,
+    "cancel_effect_ms": 37.0,
+    "pending_cancel_ms": 95.0,
+    "post_notice_ms": 0.0,
+    "fill_notice_ms": 100.0,
+    "cancel_ack_ms": 100.0,
+    "step_ms": 50.0,
+    "end_ms": 5000.0,
+    "size": 30.0,
+    "cap": 30.0,
+    "hold_ticks": 3.0,
+    "tie_order": "trades <= tick; notices due by the tick; client structural requests; policy decisions in the alternating side order"
+  },
+  "p1_tolerances": {
+    "shares": 1e-09,
+    "cash": 1e-07,
+    "position": 1e-09,
+    "value": 1e-07
+  },
+  "anchors": [
+    [
+      "post",
+      0
+    ],
+    [
+      "keep",
+      4
+    ]
+  ],
+  "inputs": {
+    "kp_receipt": "14dbf7193dca0c9f6817d8f8f8c84734fbd202f97adf44bd32ee7954875a9535"
+  },
+  "outputs": {
+    "slice_v3_20261024_closure_orders.csv": "7f24ac5853cca61c8300625247739dae8e79024507ce998a1ff05aae34cffe8b",
+    "slice_v3_20261024_closure_forks.csv": "7faca4a3d4b8b519544b6d07db0576e24d23da6c7b71c63c2c7416f0211d1b86",
+    "slice_v3_20261024_closure_histories.json": "1f0ebde121a0438b6fb5ad2e43edd5ec2193aa8c570a6bad1513aa09a357f496"
+  },
+  "source_sha256": "98e3824bbfbf3d02a7eaee69d1b4b7c274d3c93a1878ce808253d2c6ff946abe",
+  "provenance": {
+    "commit": "c68a072cd191c83a7a98919cacfa58e3b3365d6e",
+    "source": {
+      "pf_keep_pull.py": "58b972f92bda06fbc847c43d2ace8db9d7b12f4daaf67bcfaa14e92deb475835",
+      "pf_queue_place_test.py": "188c1495ce35db80ce8b79cbc50541964d0d32d9da38fee4b925e951eec01a1f",
+      "pf_queue_place_ledger.py": "8fa16b929b4ae497109a70add4036dd7cd4501102a261c74eba63de0e0b94bb5",
+      "pf_flow_control_kernel.cpp": "fb1ff31cdcf2a97783283f927fb2d56333a0760e877cb0b93348528138886612",
+      "pf_flow_control_kernel.py": "2460567474f28318f5d09df8ce0977e15748bb9263bc501471cf6a649b334379"
+    },
+    "uncommitted": ""
+  },
+  "seconds": 14.6125807762146
+}
