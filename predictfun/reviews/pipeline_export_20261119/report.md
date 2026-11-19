@@ -1,5 +1,8 @@
 # Pipeline step 1: causal feature / label export on the simulator's JOIN orders — 2026-11-19
 
+> **v1's POST rows are superseded by v2 (review 89caa74c P1), below.** v1's pre-activation queue inputs encoded whether a book update arrived
+> in the 58 ms before activation, a future arrival. v1's RETAIN rows and labels are unchanged in v2 (checked column by column).
+
 **USER:** "Can you check the new commit, proceed our pipeline model", after "We should work on the pipeline, a prediction model + value
 mapping one".
 
@@ -98,3 +101,32 @@ never inputs. These are consumed days, queue rule M only (C5), with no order-lev
 
 The chronological prediction benchmark (`pf_pipeline_bench.py`): train Oct 23-25, evaluate Oct 27, with the mapping gate. Then the learned
 keep / pull rule through the scenario bank on Oct 27 (`pf_pipeline_policy.py`): the USER's one-day test of the whole pipeline.
+
+## v2 — review 89caa74c P1: the pre-activation POST state
+
+**The finding holds** (FINDINGS P68). `known_steps` gave a POST row queue values only when no book update arrived between the decision and
+activation (+58 ms). That convention comes from `pf_stop_ev_accounting.known_state`. The run's X5 perturbed only the market-feature builder,
+and the parity check compared against the same convention, so both passed.
+
+**Fix (`pf_pipeline_export.py` v2).** A decision before activation uses only the frame known at the decision: its initial queue and queue ahead
+are the size shown at its price then. Decisions after activation, all RETAIN rows, are unchanged and are still compared with `known_state`.
+
+**New check X5b.** On sampled orders (about 300 a day), the complete POST input vector (the 71 market features, the scale, the known state and
+the 12 order inputs) is rebuilt on a window where every later frame arrives at another time (some across the activation) with other values. It
+must be unchanged, and a change to the size shown at the price in the decision's own frame must change it.
+
+**Selftest.**
+- The reviewer's counterexample: identical history, the next update at +30 vs +80 ms. The POST state is identical at submission and at
+  +100 ms, while the v1 rule differs.
+- Refusals: the v1 rule (X5b: a future arrival) and a frozen vector (X5b's control).
+
+**Mutation suite: 30 / 30** (four new mutants) ([v2/logs/](v2/logs/)).
+
+**Five days re-exported** to `pipeline_export_v2_20261119` ([v2/days.csv](v2/days.csv), [v2/receipts/](v2/receipts/)):
+- every control passes, including X5b on 284-304 orders a day;
+- each day read only its previous day's 23Z hour and its own hours.
+
+**[v2/compare_v1_v2.py](v2/compare_v1_v2.py), declared before it ran → [v2/compare_v1_v2.txt](v2/compare_v1_v2.txt):** RETAIN rows are
+identical in every column; POST rows changed only in the five queue inputs the review named, on 130,714 rows. v1 stays as provenance.
+
+The POST fits were rebuilt on v2 ([the corrected pipeline test](../pipeline_one_day_v2_20261119/report.md)).
