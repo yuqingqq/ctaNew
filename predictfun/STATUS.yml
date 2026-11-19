@@ -170,6 +170,19 @@ pipeline_one_day_v3_20261119:
   values_equal_v2: {cells_per_day: 190, differing: 0}
   attribution_vs_pull_all_c: {"20261026": {first_step: 0.0, later: 954.33, never: 995.36, no_prediction: 0.0}, "20261027": {first_step: 0.0, later: -821.85, never: 251.74, no_prediction: 0.0}}
 
+pipeline_paired_v2_20261119:
+  status: done_r0_corrected_diagnostics_no_refit_values_and_verdicts_unchanged
+  asof: "2026-11-19T15:04Z"
+  user: ["Check my commit, fix the issues, do the pipeline run and evaluation"]
+  receipt: predictfun/reviews/pipeline_paired_v2_20261119/report.md
+  review_0026ab85: {P2_reached_without_admission: fixed_admission_aware_reached, P2_pair_qm_two_mids: fixed_rebased_k7_identity_every_row, gate_wait_never_posts: renamed_NO_ENTRY_to_END_r1_open}
+  suites: {paired_v2: 28/28, eval_v2: 18/18, g0_cases: 12/12}
+  rerun: {models_reused_byte_identical: 44, labels_identical_except_pair_qm: true, predictions_identical: true, evaluation_values_identical: true}
+  v1_identity_failures_post_retain: {"20261024": [1338, 22626], "20261025": [957, 16793], "20261026": [942, 13808], "20261027": [747, 10568]}
+  A_reached_rows_v1_v2: {"20261026": [126063, 67776], "20261027": [144060, 76731]}
+  verdicts: {prediction_gate: FAIL, economic_gate: FAIL, practical_gate: FAIL, matched_control: PASS}
+  next: four_part_review_loop_running_then_R1_needs_user_go
+
 pipeline_paired_20261119:
   status: done_candidate_fails_gates_no_policy_beats_never_posting_on_both_days
   asof: "2026-11-19T12:56Z"

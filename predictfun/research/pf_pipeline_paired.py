@@ -55,7 +55,20 @@ SELFTEST (a synthetic world whose export rows, removable values and fills come f
  with no output: the neutral continuation as the RETAIN and as the POST label, T* from the current step, pi0 fitted with an evaluation day and
  the candidates trained with one, a label among the inputs, a changed export part, a saved model replaced, a row left unlabelled (a crash in place
  of a refusal is a failure); the gate groups, reached rows and fixed bins on planted values. Mutations: pf_pipeline_paired_mutants.py.
-Usage (run_light, PF_SLOT=claude): pf_pipeline_paired.py selftest | run
+v2 (review 0026ab85 / plan v2 stage R0, declared before v2 ran; USER: "Check my commit, fix the issues, do the pipeline run and evaluation"):
+ - NAMES: this restricted experiment's POST alternative is NO_ENTRY to END (under pi0 a WAIT can never post before END); it is not evidence
+   about an adaptive WAIT or later entry. Delta_post = R(POST now, then pi0) - R(NO_ENTRY to END).
+ - pair_qm is rebased to the current decision's mid: pair_qm = pair_v - side_sign * (pf_mid_now - price) * pair_q (v1 subtracted movement
+   terms referenced to two different mids). K7: on every saved row pair_v = side_sign * (pf_mid - p) * pair_q + pair_qm within 1e-6 c;
+   K4 now reconciles pair_q with the fills as well as pair_v.
+ - the reached rows of a head require that head's own usable POST admission (finite prediction > 0, same day / order) and stop at its first
+   pull; the all-posted counterfactual population is kept under its own name (reached_if_all_posted).
+ - NO REFIT: `run(reuse=<v1 output>)` loads the v1 model files (K8: each byte-identical to the v1 receipt's hash) and recomputes the labels,
+   predictions and diagnostics; pair_v, pair_q, the predictions and the evaluation values must reproduce v1 exactly (compare script).
+ Falsifiers (the review's): the pair_qm counterexample (bid price 50, END mark 51, mids 50 then 60, removable 10 then 5 sh: paired value
+ and quantity 5, rebased move 5, the raw difference 55) with its identical-mid positive control; two orders of which one POST is refused
+ (one reached row, not two) with its all-admitted positive control; K7 refuses the v1 raw difference; K8 refuses a changed reused model.
+Usage (run_light, PF_SLOT=claude): pf_pipeline_paired.py selftest | run | rerun
 """
 import contextlib
 import gc
@@ -77,7 +90,8 @@ import pf_pipeline_bench as BX                            # noqa: E402  rows, th
 import pf_pipeline_export as EX                           # noqa: E402
 
 C, pd, I = KP.C, KP.pd, KP.I
-OUT = Path(I.K.IO) / 'pipeline_paired_20261119'
+OUT = Path(I.K.IO) / 'pipeline_paired_v2_20261119'          # v2: review 0026ab85 (R0); v1 stays as provenance
+V1 = Path(I.K.IO) / 'pipeline_paired_20261119'
 EXPORT = Path(I.K.IO) / 'pipeline_export_v2_20261119'
 KPOUT = KP.OUT
 MARK = 'PIPELINE PAIRED'
@@ -87,6 +101,8 @@ EDGES = (-10., -5., -2., -1., -.5, 0., .5, 1., 2., 5., 10.)
 LAB = ('v', 'q', 'qm')                                    # the paired label's value, quantity and fill-weighted move parts
 NEUTRAL_LABEL = NEUTRAL_POST = TSTAR_SAME = False        # planted-error switches (selftest only): the RETAIN / POST label of the neutral hold;
 SWAP_SAVED = DROP_ROW = TRAIN_EVAL = False                # T* from the current step; a saved model replaced after fitting; a labelled row dropped;
+RAW_QM = REACH_ALL = QSHIFT = False                       # v2: pair_qm as v1's raw difference; reached rows without admissions; pair_q shifted (K4);
+VSHIFT = VSHIFT_POST = False                              # a RETAIN / POST paired value shifted by 1 c with the identity kept (K4's value check alone)
                                                           # the candidates trained with an evaluation day
 
 
@@ -109,7 +125,15 @@ def label_retain(df):
     for x, col in zip(LAB, ('value_m50', 'q_m50', 'qm_m50')):
         rv = df[col].values.astype(float); later = np.where(has, rv[np.nan_to_num(at, nan=0).astype(int)], 0.)
         out[f'pair_{x}'] = rv if NEUTRAL_LABEL else rv - later
+    out['pair_q'] = out['pair_q'] + (1. if QSHIFT else 0.); out['pair_v'] = out['pair_v'] + (1. if VSHIFT else 0.)
+    if not RAW_QM:                                                                          # v2: the move at the current decision's mid
+        out['pair_qm'] = rebase(out['pair_v'], out['pair_q'], df)
     return out, ts, first
+
+
+def rebase(v, q, df):
+    """v2 (review 0026ab85 P2): the paired move at the current decision's mid, pair_qm = pair_v - side_sign * (pf_mid_now - price) * pair_q."""
+    sg = np.where(df.side.values == 0, 1., -1.); return np.asarray(v, float) - sg * (df.pf_mid.values.astype(float) - df.p.values.astype(float)) * np.asarray(q, float)
 
 
 def label_post(dp, first, r):
@@ -123,6 +147,9 @@ def label_post(dp, first, r):
     for x, col in zip(LAB, ('value_m50', 'q_m50', 'qm_m50')):
         later = np.where(has, m[col].values, 0.)
         out[f'pair_{x}'] = np.where(dp.status.values == 'refused_post_only', 0., dp[col].values.astype(float) - (0. if NEUTRAL_POST else later))
+    out['pair_v'] = out['pair_v'] + (1. if VSHIFT_POST else 0.)
+    if not RAW_QM:                                                                          # v2: the move at the POST decision's mid
+        out['pair_qm'] = rebase(out['pair_v'], out['pair_q'], dp)
     return out, f
 
 
@@ -140,10 +167,11 @@ def groups(oid, j=None):
     return [g for g in np.split(o, np.flatnonzero(np.diff(oid[o])) + 1) if len(g)]
 
 
-def window_sums(f, oid, lo, hi):
-    """Per query: the value of the order's fills with lo <= t < hi (hi NaN: no upper bound), by a per-order search (K4's second path)."""
+def window_sums(f, oid, lo, hi, col='v'):
+    """Per query: the value (col 'v') or quantity ('q') of the order's fills with lo <= t < hi (hi NaN: no upper bound), by a per-order search
+    (K4's second path)."""
     out = np.zeros(len(oid)); oid = np.asarray(oid).astype(int); lo = np.asarray(lo, float); hi = np.asarray(hi, float)
-    g = {k: (v.t.values.astype(float), np.r_[0., np.cumsum(v.v.values)]) for k, v in f.groupby('oid', sort=False)}
+    g = {k: (v.t.values.astype(float), np.r_[0., np.cumsum(v[col].values.astype(float))]) for k, v in f.groupby('oid', sort=False)}
     for ix in groups(oid):
         t, cs = g.get(int(oid[ix[0]]), (np.zeros(0), np.zeros(1)))
         ia = np.searchsorted(t, lo[ix], 'left'); ib = np.where(np.isfinite(hi[ix]), np.searchsorted(t, np.nan_to_num(hi[ix], nan=0.), 'left'), len(t))
@@ -189,18 +217,26 @@ def gate_group(pred, real, want_pos):
     return 'PASS' if ok else 'FAIL'
 
 
-def reached(oid, j, pred):
-    """The rows the candidate's own rule reaches: up to and including its first pull (pred < 0), per order."""
+def reached(oid, j, pred, admitted=None):
+    """The rows a head's own rule reaches: of the orders it posts (admitted: a set of order ids; None = every order, the all-posted counterfactual),
+    up to and including its first pull (pred < 0); later rows are cancel-pending observations, not decisions."""
     d = pd.DataFrame(dict(oid=oid, j=j, s=np.where(np.asarray(pred, float) < 0, j, np.inf))); first = d.groupby('oid').s.transform('min').values
-    return d.j.values <= first
+    m = d.j.values <= first
+    return m if (admitted is None or REACH_ALL) else m & d.oid.isin(admitted).values
 
 
 def diag(Pq, Rq):
     """G3 diagnostics on one evaluation day and side: per head, the fixed bins (neutral and reached rows), ranks and the prediction gate."""
     out = {}
     for h in ADV:
-        pp, pr = Pq[f'{h}_V'].values, Pq.pair_v.values; kr, kv = Rq[f'{h}_V'].values, Rq.pair_v.values; rch = reached(Rq.oid.values, Rq.j.values, kr)
-        x = dict(post_rank=spearman(pp, pr), keep_rank=spearman(kr, kv), keep_rank_reached=spearman(kr[rch], kv[rch]), reached_rows=int(rch.sum()), rows=int(len(kr)))
+        pp, pr = Pq[f'{h}_V'].values, Pq.pair_v.values; kr, kv = Rq[f'{h}_V'].values, Rq.pair_v.values
+        adm = set(Pq.oid.values[np.isfinite(pp) & (pp > 0)].astype(int)); rch = reached(Rq.oid.values, Rq.j.values, kr, adm)   # v2: its own admissions
+        rall = reached(Rq.oid.values, Rq.j.values, kr)                                                   # the all-posted counterfactual
+        x = dict(post_rank=spearman(pp, pr), keep_rank=spearman(kr, kv), keep_rank_reached=spearman(kr[rch], kv[rch]), reached_rows=int(rch.sum()), rows=int(len(kr)),
+                 admitted_orders=len(adm), reached_rows_if_all_posted=int(rall.sum()), reached_mean_pred=float(kr[rch].mean()) if rch.any() else None,
+                 reached_mean_label=float(kv[rch].mean()) if rch.any() else None,
+                 groups_if_all_posted={k: dict(n=int(m_.sum()), predicted=float(kr[m_].sum()), realized=float(kv[m_].sum())) for k, m_ in
+                                       (('KEEP selected', rall & (kr > 0)), ('PULL selected', rall & (kr < 0)))})
         g = {'POST selected (pred > 0)': gate_group(pp[pp > 0], pr[pp > 0], True), 'KEEP selected (pred > 0)': gate_group(kr[rch & (kr > 0)], kv[rch & (kr > 0)], True),
              'PULL selected (pred < 0)': gate_group(kr[rch & (kr < 0)], kv[rch & (kr < 0)], False)}
         x['gate_groups'] = g; x['gate'] = 'PASS' if all(v == 'PASS' for v in g.values()) else ('NOT-EVALUABLE' if any(v == 'NOT-EVALUABLE' for v in g.values()) and
@@ -218,18 +254,18 @@ def diag(Pq, Rq):
     return out
 
 
-def run(exp=None, kp=None, out=None, rounds=None):
-    """The whole pipeline; a refusal at any point leaves no output (the partial folder is removed)."""
+def run(exp=None, kp=None, out=None, rounds=None, reuse=None):
+    """The whole pipeline (reuse: a prior output whose model files are loaded, not refitted); a refusal at any point leaves no output."""
     part = Path(out or OUT); part = part.parent / (part.name + '.partial')
     try:
-        return _run(exp, kp, out, rounds)
+        return _run(exp, kp, out, rounds, reuse)
     except BaseException:
         if part.exists():
             shutil.rmtree(part)
         raise
 
 
-def _run(exp=None, kp=None, out=None, rounds=None):  # noqa: C901
+def _run(exp=None, kp=None, out=None, rounds=None, reuse=None):  # noqa: C901
     """pi0 on Oct 23 -> labels on Oct 24-27 -> A / AF / AM and NEU on Oct 24-25 -> predictions and diagnostics on Oct 26-27."""
     start = time.time(); exp = Path(exp or EXPORT); kp = Path(kp or KPOUT); out = Path(out or OUT); C.require(not (out / 'paired.json').exists(), 'output exists')
     bad = [f'K2 {k}: label, identity or endpoint field {x} among the inputs' for k, fs in list(ADV.items()) + [('J', BX.SETS['J'])] for x in fs
@@ -242,7 +278,7 @@ def _run(exp=None, kp=None, out=None, rounds=None):  # noqa: C901
     if part.exists():
         shutil.rmtree(part)
     (part / 'models').mkdir(parents=True); files = {}; D = {}; st = {d: {} for d in LABEL + EVAL}; fills = {}
-    keepc = ['day', 'oid', 'kind', 'j', 'side', 'status', 'value_m50', 'q_m50', 'qm_m50', 'pi0_V', 'pi0_ok', 'tstar'] + [f'pair_{x}' for x in LAB]
+    keepc = ['day', 'oid', 'kind', 'j', 'side', 'status', 'p', 'pf_mid', 'value_m50', 'q_m50', 'qm_m50', 'pi0_V', 'pi0_ok', 'tstar'] + [f'pair_{x}' for x in LAB]
     def compact(df):                                                                        # memory: small types; values stay float64 (K4's tolerance)
         x = df[keepc].copy(); x['oid'] = x.oid.astype(np.int32); x['j'] = x.j.astype(np.int16); x['side'] = x.side.astype(np.int8); x['pi0_V'] = x.pi0_V.astype(np.float32)
         for c_ in ('day', 'kind', 'status'):
@@ -264,15 +300,37 @@ def _run(exp=None, kp=None, out=None, rounds=None):  # noqa: C901
         nx, fst = tstar_search(r.oid.values, r.j.values, r.pi0_ok.values.astype(bool) & (r.pi0_V.values < 0))     # pi0's steps by a second path
         lo = KP.landing(r.j.values.astype(int)); hi = np.where(np.isfinite(nx), KP.landing(np.nan_to_num(nx, nan=KP.J0).astype(int)), np.nan)
         w = window_sums(f, r.oid.values, lo, hi); off_r = int((~np.isclose(w, r.pair_v.values, rtol=0, atol=1e-6)).sum())
+        off_r += int((~np.isclose(window_sums(f, r.oid.values, lo, hi, 'q'), r.pair_q.values, rtol=0, atol=1e-6)).sum())   # v2: the quantity too
         fp_ = np.array([fst.get(int(o), np.nan) for o in p.oid.values]); hp = np.where(np.isfinite(fp_), KP.landing(np.nan_to_num(fp_, nan=KP.J0).astype(int)), np.nan)
         wp = np.where(p.status.values == 'refused_post_only', 0., window_sums(f, p.oid.values, np.zeros(len(p)), hp)); off_p = int((~np.isclose(wp, p.pair_v.values, rtol=0, atol=1e-6)).sum())
+        wq = np.where(p.status.values == 'refused_post_only', 0., window_sums(f, p.oid.values, np.zeros(len(p)), hp, 'q')); off_p += int((~np.isclose(wq, p.pair_q.values, rtol=0, atol=1e-6)).sum())
+        for nm_, x_ in (('RETAIN', r), ('POST', p)):                                        # K7 (v2): every saved row's value identity
+            sg_ = np.where(x_.side.values == 0, 1., -1.); idn = x_.pair_v.values - (sg_ * (x_.pf_mid.values.astype(np.float32).astype(float) - x_.p.values.astype(float)) * x_.pair_q.values + x_.pair_qm.values)
+            if not (np.abs(idn) <= 1e-6).all():
+                bad.append(f'K7 {d} side {s}: {int((np.abs(idn) > 1e-6).sum()):,} {nm_} rows where pair_v != sign * (pf_mid - p) * pair_q + pair_qm')
         off_t = int((~((r.tstar.values == nx) | (np.isnan(r.tstar.values) & np.isnan(nx)))).sum())
         if off_r or off_p or off_t:
             bad.append(f'K4 {d} side {s}: {off_r:,} RETAIN and {off_p:,} POST labels differ from the keep / pull run\'s fills ({off_t:,} pi0 steps differ from the second path)')
     def save(name, b):
-        f = part / 'models' / f'{name}.txt'; b.save_model(str(f)); files[f.name] = f
+        f = part / 'models' / f'{name}.txt'
+        if reuse is not None:                                                               # v2: the reused file itself, byte for byte
+            shutil.copyfile(reuse / 'models' / f'{name}.txt', f)
+        else:
+            b.save_model(str(f))
+        files[f.name] = f
+    if reuse is not None:                                                                   # K8 (v2): the reused models are the receipt's
+        reuse = Path(reuse); rj = json.loads((reuse / 'paired.json').read_text())
+        off = [k for k, h in rj['models'].items() if C.sha(reuse / 'models' / k) != h]
+        if off or not rj['models']:
+            sys.exit(f'{MARK} FAILED -> no output: K8: {len(off)} reused model files differ from the receipt {reuse.name}')
+    import lightgbm as lgb
+    load = lambda name: lgb.Booster(model_file=str(reuse / 'models' / f'{name}.txt'))
+    J_HEADS = ('p', 'q', 'qm', 'severe')
     for s in (0, 1):                                                                        # one side at a time (memory: RSS self-guard)
-        pi0 = {k: BX.fit(BX.rows_of(exp, WARM, k, True, side=s), 'J', rounds) for k in ('retain', 'post')}
+        if reuse is None:
+            pi0 = {k: BX.fit(BX.rows_of(exp, WARM, k, True, side=s), 'J', rounds) for k in ('retain', 'post')}
+        else:
+            pi0 = {k: {h: load(f'pi0_{k}_{s}_{h}') for h in J_HEADS} for k in ('retain', 'post')}
         for k, m in pi0.items():
             for h, b in m.items():
                 save(f'pi0_{k}_{s}_{h}', b)
@@ -286,16 +344,21 @@ def _run(exp=None, kp=None, out=None, rounds=None):  # noqa: C901
                 r = r.iloc[1:].reset_index(drop=True)
             check(d, s, r, p); refuse_now(); rc_, pc_ = compact(r), compact(p)
             pd.concat([rc_, pc_], ignore_index=True).to_parquet(part / f'labels_{d}_s{s}.parquet', index=False)
-            if d in LABEL or (TRAIN_EVAL and d == EVAL[0]):
+            if reuse is None and (d in LABEL or (TRAIN_EVAL and d == EVAL[0])):
                 trn['retain'].append(r[(r.j - KP.J0) % BX.THIN == 0].copy()); trn['post'].append(p)
             if d in EVAL:
                 D[(d, s)] = (rc_, pc_)
             del r, p, pr, pp; gc.collect(); C.guard('pipeline paired labels')
-        tr = {k: pd.concat(v, ignore_index=True) for k, v in trn.items()}; del trn
-        for k in ('retain', 'post'):
-            C.require(set(tr[k].day.astype(str)) <= set(LABEL), f'K1: {k} training rows outside {LABEL}')
-        heads = {(h, k): fit_adv(tr[k], 'pair_v', fs, rounds) for h, fs in ADV.items() for k in ('retain', 'post')}
-        neu = {k: BX.fit(tr[k], 'J', rounds) for k in ('retain', 'post')}
+        if reuse is None:
+            tr = {k: pd.concat(v, ignore_index=True) for k, v in trn.items()}; del trn
+            for k in ('retain', 'post'):
+                C.require(set(tr[k].day.astype(str)) <= set(LABEL), f'K1: {k} training rows outside {LABEL}')
+            heads = {(h, k): fit_adv(tr[k], 'pair_v', fs, rounds) for h, fs in ADV.items() for k in ('retain', 'post')}
+            neu = {k: BX.fit(tr[k], 'J', rounds) for k in ('retain', 'post')}
+            del tr
+        else:
+            heads = {(h, k): load(f'{h}_{"keep" if k == "retain" else "post"}_{s}') for h in ADV for k in ('retain', 'post')}
+            neu = {k: {h: load(f'NEU_{k}_{s}_{h}') for h in J_HEADS} for k in ('retain', 'post')}
         for (h, k), b in heads.items():
             save(f'{h}_{"keep" if k == "retain" else "post"}_{s}', b)
         if SWAP_SAVED:                                                                      # planted: the POST head saved as the KEEP head
@@ -303,7 +366,7 @@ def _run(exp=None, kp=None, out=None, rounds=None):  # noqa: C901
         for k, m in neu.items():
             for h, b in m.items():
                 save(f'NEU_{k}_{s}_{h}', b)
-        del tr; gc.collect()
+        gc.collect()
         for d in EVAL:
             qs = []
             for k in ('retain', 'post'):
@@ -341,7 +404,7 @@ def _run(exp=None, kp=None, out=None, rounds=None):  # noqa: C901
     gate = {d: {s: G[d][s]['A']['gate'] for s in (0, 1)} for d in EVAL}
     R = {'PREDICTION GATE (A, per day and side)': gate, 'PREDICTION GATE (A, all)': 'PASS' if all(v == 'PASS' for x in gate.values() for v in x.values()) else
          ('FAIL' if any(v == 'FAIL' for x in gate.values() for v in x.values()) else 'NOT-EVALUABLE'), 'CONTROLS': 'YES'}
-    Lt = [f'THE PAIRED ACTION-VALUE CANDIDATE (pf_pipeline_paired.py; pi0 fitted on {", ".join(WARM)}, labels {", ".join(LABEL + EVAL)}, candidates on {", ".join(LABEL)}, '
+    Lt = [f'THE PAIRED ACTION-VALUE CANDIDATE, RESTRICTED EXPERIMENT: POST vs NO_ENTRY to END (pf_pipeline_paired.py v2{"; models reused from " + Path(reuse).name if reuse is not None else ""}; pi0 fitted on {", ".join(WARM)}, labels {", ".join(LABEL + EVAL)}, candidates on {", ".join(LABEL)}, '
           f'evaluated {", ".join(EVAL)}; c; local marks at END, not P&L; CONTROLS: YES (K1-K6))']
     for d in lsum:
         Lt.append(f"  labels {d}: " + '; '.join(f"{k} {v['rows']:,} rows, mean paired {v['mean_adv']:+.3f} c (neutral {v['mean_neutral']:+.3f}), sum {v['sum_adv']:+,.0f}"
@@ -350,12 +413,13 @@ def _run(exp=None, kp=None, out=None, rounds=None):  # noqa: C901
         for s in (0, 1):
             for h, x in G[d][s].items():
                 gg = x['groups']
-                Lt.append(f"  {d} side {s} {h:<2}: POST rank {x['post_rank']:+.3f}, KEEP rank {x['keep_rank']:+.3f} (reached {x['keep_rank_reached']:+.3f}, {x['reached_rows']:,} of {x['rows']:,} rows); "
+                Lt.append(f"  {d} side {s} {h:<2}: POST rank {x['post_rank']:+.3f}, KEEP rank {x['keep_rank']:+.3f} (reached {x['keep_rank_reached']:+.3f}: {x['reached_rows']:,} rows of its {x['admitted_orders']:,} admitted orders, of {x['rows']:,}; "
+                          f"{x['reached_rows_if_all_posted']:,} if every order were posted); "
                           f"gate {x['gate']} {x['gate_groups']}; " + '; '.join(f"{k} n {v['n']:,} predicted {v['predicted']:+,.1f} realized {v['realized']:+,.1f}" for k, v in gg.items()))
     Lt += ['', 'READINGS (declared before this module\'s outputs were read)'] + [f'  {k}: {v}' for k, v in R.items()]
     Lt += ['', 'LIMITS: consumed days (G = 2); single-order episodes; no grid-time re-entry in pi0 (a WAIT carries no exposure before END); labels at B; queue rule M; no live validation.']
     (part / 'paired.txt').write_text('\n'.join(Lt) + '\n')
-    C.dump(part / 'paired.json', dict(asof=C.stamp(), readings=R, diagnostics=G, labels=lsum, statuses={d: {str(k): v for k, v in x.items()} for d, x in st.items()}, warm=list(WARM), label_days=list(LABEL), eval=list(EVAL),
+    C.dump(part / 'paired.json', dict(asof=C.stamp(), reuse=dict(path=str(reuse), receipt=C.sha(reuse / 'paired.json')) if reuse is not None else None, readings=R, diagnostics=G, labels=lsum, statuses={d: {str(k): v for k, v in x.items()} for d, x in st.items()}, warm=list(WARM), label_days=list(LABEL), eval=list(EVAL),
                                       sets={k: v for k, v in ADV.items()}, multiplicity=dict(candidate_heads=len(ADV) * 4, control_heads=len(files) - len(ADV) * 4),
                                       params=BX.PARAMS, rounds=rounds or BX.ROUNDS, thin=BX.THIN, exports={d: C.sha(exp / d / 'receipt.json') for d in WARM + LABEL + EVAL},
                                       keep_pull={d: C.sha(kp / d / 'receipt.json') for d in LABEL + EVAL if (kp / d / 'receipt.json').exists()},
@@ -380,15 +444,17 @@ def syn_world(exp, kp, n=640, seed=3):
         ref = o % 25 == 0; u = np.where(X[:, iu] > 0, -3., 2.); early = X[:, it] > 0; endj = rng.integers(30, 62, n); mark = p + sg * u
         ft = np.sort(np.where(early[:, None], rng.uniform(60., 400., (n, 2)), rng.uniform(1000., 4500., (n, 2))), axis=1)
         ok = (ft < KP.STEP * endj[:, None]) & ~ref[:, None]                                   # fills while live; none for a refusal
-        def lab(mask):                                                                      # labels of the fills selected by mask (n_rows x 2)
-            q = (mask * 5.).sum(1); v = q * u_r; return dict(q_m50=q, value_m50=v, qm_m50=v - .5 * q, severe_m50=np.maximum(-v - KP.SEVERE, 0.), nofill_m50=(q == 0).astype(float), live_m50=True)
+        def lab(mask, edge=.5):                                                             # labels of the fills selected by mask (n_rows x 2); qm at the row's mid
+            q = (mask * 5.).sum(1); v = q * u_r; return dict(q_m50=q, value_m50=v, qm_m50=v - edge * q, severe_m50=np.maximum(-v - KP.SEVERE, 0.), nofill_m50=(q == 0).astype(float), live_m50=True)
         cols = {k: X[:, i_] for i_, k in enumerate(names)}; cols.update(pf_mid=p + .5 * sg, fp_remaining=np.full(n, 30.))
         u_r = u; post = pd.DataFrame(dict(cols, day=d, oid=o, m=o // 2, side=side, t=5000. * o, p=p, phase=1, mark=mark, kind='post', j=0, decision_ms=5000. * o,
                                           effective_ms=5000. * o + KP.PLACE, endpoint_ms=5000. * o + KP.H, status=np.where(ref, 'refused_post_only', 'eligible'), **lab(ok)))
         nr = np.where(ref, 0, endj - KP.J0); oi = np.repeat(o, nr); jj = np.concatenate([np.arange(KP.J0, e) for e, r_ in zip(endj, ref) if not r_]).astype(int)
         u_r = u[oi]; rc = {k: v[oi] for k, v in cols.items()}; rc['t_to_end'] = (KP.H - KP.STEP * jj).astype(np.float32)
+        er = (.5 + .02 * (jj - KP.J0)).astype(np.float32); rc['pf_mid'] = (p[oi] + sg[oi] * er).astype(np.float32)    # v2: the mid drifts along the order
         ret = pd.DataFrame(dict(rc, day=d, oid=oi, m=oi // 2, side=side[oi], t=5000. * oi, p=p[oi], phase=1, mark=mark[oi], kind='retain', j=jj, decision_ms=5000. * oi + KP.STEP * jj,
-                                effective_ms=5000. * oi + KP.landing(jj), endpoint_ms=5000. * oi + KP.H, status='eligible', **lab(ok[oi] & (ft[oi] >= KP.landing(jj)[:, None]))))
+                                effective_ms=5000. * oi + KP.landing(jj), endpoint_ms=5000. * oi + KP.H, status='eligible',
+                                **lab(ok[oi] & (ft[oi] >= KP.landing(jj)[:, None]), sg[oi] * (rc['pf_mid'].astype(float) - p[oi]))))
         (exp / d).mkdir(parents=True); pd.concat([post, ret], ignore_index=True).to_parquet(exp / d / 'rows_000.parquet', index=False)
         C.dump(exp / d / 'receipt.json', dict(outputs={'rows_000.parquet': C.sha(exp / d / 'rows_000.parquet')}))
         (kp / d).mkdir(parents=True); pd.DataFrame(dict(oid=o, side=side, p=p, mark=mark, status=np.where(ref, 'refused_post_only', 'eligible'))).to_parquet(kp / d / 'orders.parquet', index=False)
@@ -397,13 +463,24 @@ def syn_world(exp, kp, n=640, seed=3):
 
 def selftest():  # noqa: C901
     """Synthetic only (see the module's SELFTEST)."""
-    global WARM, NEUTRAL_LABEL, NEUTRAL_POST, TSTAR_SAME, SWAP_SAVED, DROP_ROW, TRAIN_EVAL
+    global WARM, NEUTRAL_LABEL, NEUTRAL_POST, TSTAR_SAME, SWAP_SAVED, DROP_ROW, TRAIN_EVAL, RAW_QM, QSHIFT, REACH_ALL, VSHIFT, VSHIFT_POST
     bad = []; C.require(SIG_U not in ADV['AM'] + ADV['AF'] and SIG_T not in ADV['AM'] + ADV['AF'], 'the synthetic signals must be outside AF / AM')
     t3 = pd.DataFrame(dict(oid=[1, 1, 1, 2, 2, 2], j=[2, 3, 4, 2, 3, 4], value_m50=[-15., -20., -20., 15., 20., 20.], q_m50=[3., 4., 4., 3., 4., 4.], qm_m50=[0.] * 6,
+                           side=[0] * 6, p=[50.] * 6, pf_mid=[50.] * 6,
                            pi0_V=[1., -1., 1., 1., -1., 1.], pi0_ok=[True] * 6))                  # the plan's counterexample and its converse
     lr, ts, first = label_retain(t3)
     if not (np.allclose(lr['pair_v'], [5., -20., -20., -5., 20., 20.]) and list(np.nan_to_num(ts, nan=-1)) == [3., -1., -1., 3., -1., -1.] and list(first.values) == [3., 3.]):
         bad.append(f"the label function on the counterexample: {lr['pair_v']} / T* {ts} (want +5 where the neutral hold loses -15, and -5 where it gains +15)")
+    for later_mid, want_qm in ((60., 5.), (50., 5.)):                                     # review 0026ab85: bid at 50, END mark 51, mids 50 then 60 (and the
+        r2 = pd.DataFrame(dict(oid=[7, 7], j=[2, 3], side=[0, 0], p=[50., 50.], pf_mid=[50., later_mid], q_m50=[10., 5.], value_m50=[10., 5.],   # identical-mid control)
+                               qm_m50=[10. - (50. - 50.) * 10., 5. - (later_mid - 50.) * 5.], pi0_V=[1., -1.], pi0_ok=[True, True]))
+        l2, _, f2 = label_retain(r2); p2 = pd.DataFrame(dict(oid=[7], j=[0], side=[0], p=[50.], pf_mid=[50.], status=['eligible'], value_m50=[10.], q_m50=[10.], qm_m50=[10.]))
+        lp2, _ = label_post(p2, f2, r2)
+        if not (abs(l2['pair_v'][0] - 5.) < 1e-12 and abs(l2['pair_q'][0] - 5.) < 1e-12 and abs(l2['pair_qm'][0] - want_qm) < 1e-12 and abs(lp2['pair_qm'][0] - want_qm) < 1e-12):
+            bad.append(f"the paired move (later mid {later_mid}): RETAIN {l2['pair_qm'][0]}, POST {lp2['pair_qm'][0]} (want {want_qm}; the raw difference gives 55)")
+    for adm_, want_n in (({1}, 1), ({1, 2}, 2)):                                            # review 0026ab85: one POST refused -> one reached row (all admitted: two)
+        if int(reached(np.r_[1, 2], np.r_[2, 2], np.r_[-1., -1.], adm_).sum()) != want_n:
+            bad.append(f'reached rows with admissions {adm_}: {int(reached(np.r_[1, 2], np.r_[2, 2], np.r_[-1., -1.], adm_).sum())} (want {want_n})')
     gg = (gate_group(np.r_[1., 1.], np.r_[.9, 1.1], True), gate_group(np.r_[1., 1.], np.r_[-1., -1.], True), gate_group(np.r_[3., 3.], np.r_[1., 1.], True),
           gate_group(np.zeros(0), np.zeros(0), True), gate_group(np.r_[1.], np.r_[0.], True), gate_group(np.r_[-1., -1.], np.r_[-1., -1.1], False),
           gate_group(np.r_[-1., -1.], np.r_[1., 1.], False), gate_group(np.r_[-1., -1.], np.r_[-1., -1.], True))   # the prediction gate on planted groups
@@ -414,9 +491,9 @@ def selftest():  # noqa: C901
         bad.append(f'the reached rows {rch.tolist()} or the fixed bins {bins_of(np.r_[0., -10., -9.9, .5, .51, 11.]).tolist()}')
     with tempfile.TemporaryDirectory(dir=str(I.K.IO)) as tmp:
         tmp = Path(tmp); exp, kp = tmp / 'exp', tmp / 'kp'; syn_world(exp, kp)
-        def go(out_):
+        def go(out_, reuse=None):
             with contextlib.redirect_stdout(io.StringIO()):
-                return run(exp=exp, kp=kp, out=out_, rounds=30)
+                return run(exp=exp, kp=kp, out=out_, rounds=30, reuse=reuse)
         R = None
         try:
             R, G, lsum = go(tmp / 'o')
@@ -437,14 +514,37 @@ def selftest():  # noqa: C901
             if off:
                 bad.append(f'{off} labels differ from a per-order loop over the fills')
             Q = pd.concat([pd.read_parquet(tmp / 'o' / f'pred_{d}.parquet') for d in EVAL]); qr = Q[Q.kind == 'retain']; qp = Q[Q.kind == 'post']
+            for d in EVAL:                                                                  # v2: A's reached rows by a loop - admitted orders, up to the first pull
+                Qd = pd.read_parquet(tmp / 'o' / f'pred_{d}.parquet')
+                for s_ in (0, 1):
+                    adm_ = set(Qd[(Qd.kind == 'post') & (Qd.side == s_) & (Qd.A_V > 0)].oid.astype(int)); n_ = 0
+                    for o, g in Qd[(Qd.kind == 'retain') & (Qd.side == s_)].sort_values(['oid', 'j']).groupby('oid'):
+                        if int(o) in adm_:
+                            for v in g.A_V.values:
+                                n_ += 1
+                                if v < 0:
+                                    break
+                    if n_ != G[d][s_]['A']['reached_rows']:
+                        bad.append(f"A's reached rows {d} side {s_}: the run {G[d][s_]['A']['reached_rows']:,}, a loop over its admitted orders {n_:,}")
             if not (R['CONTROLS'] == 'YES' and spearman(qr.A_V, qr.pair_v) > spearman(qr.AF_V, qr.pair_v) + .05 and spearman(qp.A_V, qp.pair_v) > .2
                     and {'pi0_V', 'NEU_V', 'A_V', 'AF_V', 'AM_V', 'pair_v', 'value_m50'} <= set(Q.columns) and (qp.status == 'refused_post_only').any()
                     and (qp[qp.status == 'refused_post_only'].pair_v == 0).all()):
                 bad.append(f'synthetic recovery: keep rank A {spearman(qr.A_V, qr.pair_v):+.3f} / AF {spearman(qr.AF_V, qr.pair_v):+.3f}, post rank A {spearman(qp.A_V, qp.pair_v):+.3f}')
-        def refused(name, msg, change, undo):
+        if R is not None:                                                                   # v2: a rerun from the saved models reproduces the run
+            try:
+                with contextlib.redirect_stdout(io.StringIO()):
+                    run(exp=exp, kp=kp, out=tmp / 'o2', rounds=30, reuse=tmp / 'o')
+                same = all(pd.read_parquet(tmp / 'o' / f'{x}_{d}.parquet').drop(columns=['pair_qm']).equals(pd.read_parquet(tmp / 'o2' / f'{x}_{d}.parquet').drop(columns=['pair_qm']))
+                           for x, ds in (('labels', LABEL + EVAL), ('pred', EVAL)) for d in ds)
+                j1, j2 = json.loads((tmp / 'o' / 'paired.json').read_text()), json.loads((tmp / 'o2' / 'paired.json').read_text())
+                if not (same and j1['models'] == j2['models'] and j1['diagnostics'] == j2['diagnostics']):
+                    bad.append('the rerun from the saved models does not reproduce the run')
+            except (SystemExit, ValueError) as e:
+                bad.append(f'the rerun from the saved models refused: {str(e)[:300]}')
+        def refused(name, msg, change, undo, *kw_):
             o_ = tmp / ('z' + str(abs(hash(name)) % 100000)); change()
             try:
-                go(o_); bad.append(f'the run accepted {name}')
+                go(o_, **kw_[0]) if kw_ else go(o_); bad.append(f'the run accepted {name}')
             except (SystemExit, ValueError) as e:
                 if msg not in str(e):
                     bad.append(f'{name} refused by another control: {str(e)[:300]}')
@@ -460,6 +560,13 @@ def selftest():  # noqa: C901
         refused('T* from the current step', 'K4', sw('TSTAR_SAME', True), sw('TSTAR_SAME', False))
         refused('a saved model replaced', 'K6', sw('SWAP_SAVED', True), sw('SWAP_SAVED', False))
         refused('a labelled row dropped', 'K5', sw('DROP_ROW', True), sw('DROP_ROW', False))
+        refused('pair_qm as the raw difference of differently referenced moves', 'K7', sw('RAW_QM', True), sw('RAW_QM', False))
+        refused('a paired quantity shifted by one share', 'K4', sw('QSHIFT', True), sw('QSHIFT', False))
+        refused('a RETAIN paired value shifted by 1 c (identity kept)', 'K4', sw('VSHIFT', True), sw('VSHIFT', False))
+        refused('a POST paired value shifted by 1 c (identity kept)', 'K4', sw('VSHIFT_POST', True), sw('VSHIFT_POST', False))
+        if (tmp / 'o').exists():
+            mf = sorted((tmp / 'o' / 'models').glob('A_keep_*.txt'))[0]; raw_m = mf.read_bytes()
+            refused('a reused model file changed after its receipt', 'K8', lambda: mf.write_bytes(raw_m + b'\n'), lambda: mf.write_bytes(raw_m), dict(reuse=tmp / 'o'))
         keep_w, keep_am = WARM, list(ADV['AM'])
         refused('pi0 fitted with an evaluation day', 'K1', sw('WARM', WARM + (EVAL[0],)), sw('WARM', keep_w))
         refused('the candidates trained with an evaluation day', 'K1', sw('TRAIN_EVAL', True), sw('TRAIN_EVAL', False))
@@ -475,7 +582,9 @@ def selftest():  # noqa: C901
           'per-order loop from the fills and pi0\'s saved forecasts; the planted advantage recovered by A (KEEP rank above AF\'s, POST rank positive); refused posts '
           'labelled 0; refusals by their own control with no output: the neutral hold as the RETAIN and as the POST label and T* from the current step (K4), a saved model replaced (K6), '
           'a labelled row dropped (K5), pi0 fitted with an evaluation day and the candidates trained with one (K1), a label among the inputs (K2), an export part '
-          'changed after its receipt; a crash in place of a refusal is a failure', flush=True)
+          'changed after its receipt; a crash in place of a refusal is a failure; v2: the review\'s paired-move counterexample (5, not 55) and its identical-mid '
+          'control, one refused POST -> one reached row (all admitted: two), a rerun from the saved models reproduces the run, the raw move difference (K7), '
+          'a shifted paired quantity and RETAIN / POST paired values shifted with the identity kept (K4) and a changed reused model (K8) refused', flush=True)
 
 
 if __name__ == '__main__':
@@ -484,5 +593,7 @@ if __name__ == '__main__':
         selftest()
     elif a == ['run']:
         run()
+    elif a == ['rerun']:
+        run(reuse=V1)
     else:
-        sys.exit('usage: pf_pipeline_paired.py selftest | run')
+        sys.exit('usage: pf_pipeline_paired.py selftest | run | rerun')
