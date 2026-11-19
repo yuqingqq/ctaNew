@@ -1,0 +1,2 @@
+BRANCH ENGINE SELFTEST FAILED: F10 side 0: the notice at 180 ms does not reach the client by 200 ms ({'none': 0, 'full': 0.0}) | F10 side 1: the notice at 180 ms does not reach the client by 200 ms ({'none': 0, 'full': 0.0})
+2026-11-19T17:42:13Z tag=pbe2_selftest2 rc=1 peak_rss_mib=196 wall_s=1.29 cpu_user_s=1.12 memavail_start_gib=23 disk_free_gib=470->470 slot=claude
