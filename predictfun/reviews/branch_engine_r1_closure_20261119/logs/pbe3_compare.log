@@ -1,0 +1,3 @@
+orders table identical: True (256 rows); forks table identical: True (1380 rows); histories identical: True; readings identical: True; module changed: True
+VALID-PATH LEDGERS UNCHANGED (orders, forks, histories, readings): True
+2026-11-19T18:12:39Z tag=pbe3_compare rc=0 peak_rss_mib=129 wall_s=0.39 cpu_user_s=0.30 memavail_start_gib=23 disk_free_gib=470->470 slot=claude

@@ -35,7 +35,16 @@ MUT = [
     # --- the client
     ('a post known before its activation', "POST_NOTICE = 0. ", "POST_NOTICE = -58. "),
     ('the reservation inequality never checked', "        C.require(Ik + Bk <= CAP + 1e-9 and -Ik + Ak <= CAP + 1e-9,", "        C.require(True,"),
-    ('a saved fork state of another tick accepted', "C.require(Bv.k == k and Bv.episode == episode, 'a saved fork state of another tick / episode');", "C.require(True, '');"),
+    ('a saved fork context of another tick accepted', "C.require(ctx['k'] == k == B.k and ctx['episode'] == episode == B.episode and ctx['side'] == side,", "C.require(ctx['side'] == side,"),
+    ('the context fingerprint not checked', "C.require(fingerprint(B) == ctx['fingerprint'], 'the saved fork state changed after it was saved (its fingerprint)')", "C.require(True, '')"),
+    ('the context identity not checked', "C.require(tape_id(B.E.f, B.E.tr, B.mark) == ctx['tape_id'] and", "C.require(True or tape_id(B.E.f, B.E.tr, B.mark) == ctx['tape_id'] and"),
+    ('another tape accepted with a saved context', "C.require(path is None or tape_id(path['frames'], path['trades'], path.get('mark')) == ctx['tape_id'],", "C.require(True,"),
+    ('another scenario accepted with a saved context', "C.require(settings is None or all(ctx['settings'].get(k_) == v_ for k_, v_ in settings.items()), 'a scenario", "C.require(True, 'a scenario"),
+    ('the processed sides of a context not checked', "C.require(set(ctx['acted']) == want == B.acted, 'a saved fork with the wrong sides already processed at its tick')", "C.require(True, '')"),
+    ('a raw branch accepted as a context', "C.require(isinstance(ctx, dict) and ctx.get('contract') == CONTRACT and isinstance(ctx.get('state'), Branch), 'not a saved paired_continuation_v2 fork context')", "C.require(True, '')"),
+    ('the fingerprint ignores the identity fields', "tape_id(B.E.f, B.E.tr, B.mark), B.end, B.settings, B.ident, B.k, B.episode, sorted(B.acted)],", "],"),
+    ('a side processed twice at one tick', "    C.require(s not in B.acted, f'side {s} already processed at {g}')\n", ""),
+    ('the structural pull effect time not validated', "        return o['req'] <= KP.J0 * STEP and o['remove'] == want", "        return True"),
     ('cap-blocked opportunities counted as feasible', "self.tally(s, 'absent cap-blocked' if v['room'] < -1e-9 else", "self.tally(s, 'absent feasible, POST' if v['room'] < -1e-9 else"),
     ('a fill known at once (no notice delay)', "return sum(q for t, i, _, q, _, _ in self.E.fills if i == gid and t + FILL_NOTICE <= g)", "return sum(q for t, i, _, q, _, _ in self.E.fills if i == gid and t <= g)"),
     ('a removal acknowledged at its effect', "ack = o['remove'] + CANCEL_ACK if o['req'] is not None else np.inf", "ack = o['remove'] if o['req'] is not None else np.inf"),
@@ -73,7 +82,9 @@ def source(i):
 
 
 def one(i):
-    g = dict(__name__='pf_branch_engine_mutant', __file__=str(SRC)); exec(compile(source(i), str(SRC), 'exec'), g); g['selftest']()
+    import types
+    mod = types.ModuleType('pf_branch_engine_mutant'); mod.__file__ = str(SRC); sys.modules['pf_branch_engine_mutant'] = mod   # importable: the selftest pickles contexts
+    exec(compile(source(i), str(SRC), 'exec'), mod.__dict__); mod.selftest()
 
 
 def main():
