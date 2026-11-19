@@ -1,3 +1,36 @@
+<!-- R1_V2_REVIEW_20261119_CODEX -->
+## 2026-11-19 R1 v2: prior causal leak closed, saved-state identity gap reproduced
+
+Reviewed **fefa5aca63445e7b9d328b50b6f5f35d7702a2e0** and a9303c1f against
+043ca403. [Report](reviews/automatic/20261119_fefa5aca/report.md),
+[evidence](reviews/automatic/20261119_fefa5aca/artifacts.json),
+[cases](reviews/automatic/20261119_fefa5aca/synthetic.json).
+Client structural requests now use client-known state (prior P1 fixed), including
+both-side full/partial unnoticed fills. Pinned selftest passes; named clocks,
+same-state continuation, END-value parity and reservation counters adopted.
+
+Saved slice: exact 128 eligible Oct24 orders per side; 256 total, 138 tapes,
+276 base runs, 1066 valid forks and 38 not-live retention anchors. Source / input /
+output / decompressed history hashes verified; archived M50 values, every arm's
+fill value, paired differences, common fills and request delays reconcile.
+Counters / coverage agree. These stand-in policy mechanics do not establish
+prediction quality or profitability; cost-free values remain gross research marks.
+As-of: slice Nov19 17:49:35Z; independent artifact audit 17:56:23Z.
+
+New P2: a saved pair state validates only tick/episode. A requested cancel50
+scenario is reported while actual effect remains37; altering the state's mark
+keeps its fingerprint and changes planted Y 10 -> 110 c; a state for the other
+side duplicates a bid command at the same tick. The saved slice does not use
+that entry point, so no saved-value impact is demonstrated. Bind the full fork
+context and derive receipt metadata from the executed state before R2 labels.
+
+ONE next priority: narrow saved-fork identity closure receipt with refusals and
+valid round-trip controls. R2 preparation decisions are specified in the report
+for the subsequent Oct23 probe/feature/support builder; teacher fitting follows
+its correctness/coverage receipt. Five bounded checks ~7 s / 304 MiB peak; no
+new raw tape, fit, labels or untouched dates. Other implementation edits preserved.
+<!-- /R1_V2_REVIEW_20261119_CODEX -->
+
 <!-- REVIEW_V2_R1_DESIGN_20261119_CODEX -->
 ## 2026-11-19 Review-v2 findings closed; R1 hidden-fill state leak reproduced
 

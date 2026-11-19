@@ -1,0 +1,118 @@
+{
+  "saved_asof": "2026-11-19T17:49:35.155977+00:00",
+  "orders": 256,
+  "tapes": 138,
+  "base_runs": 276,
+  "forks_ok": 1066,
+  "forks_not_live": 38,
+  "coverage": {
+    "chase keep bid": {
+      "statuses": {
+        "ok": 119,
+        "not_keep_state": 19
+      },
+      "later_post": 0,
+      "re_entry": 116
+    },
+    "chase keep ask": {
+      "statuses": {
+        "ok": 127,
+        "not_keep_state": 11
+      },
+      "later_post": 0,
+      "re_entry": 124
+    },
+    "chase post bid": {
+      "statuses": {
+        "ok": 138
+      },
+      "later_post": 138,
+      "re_entry": 0
+    },
+    "chase post ask": {
+      "statuses": {
+        "ok": 138
+      },
+      "later_post": 138,
+      "re_entry": 0
+    },
+    "post_keep keep bid": {
+      "statuses": {
+        "ok": 132,
+        "not_keep_state": 6
+      },
+      "later_post": 0,
+      "re_entry": 127
+    },
+    "post_keep keep ask": {
+      "statuses": {
+        "ok": 136,
+        "not_keep_state": 2
+      },
+      "later_post": 0,
+      "re_entry": 132
+    },
+    "post_keep post bid": {
+      "statuses": {
+        "ok": 138
+      },
+      "later_post": 138,
+      "re_entry": 0
+    },
+    "post_keep post ask": {
+      "statuses": {
+        "ok": 138
+      },
+      "later_post": 138,
+      "re_entry": 0
+    }
+  },
+  "counters": {
+    "chase": {
+      "count bid absent feasible, POST": 457,
+      "count ask absent feasible, POST": 462,
+      "count ask post_pending ticks": 462,
+      "count bid post_pending ticks": 457,
+      "count bid live, KEEP": 8121,
+      "count ask live, KEEP": 8420,
+      "count bid cancel_pending ticks": 725,
+      "count bid absent cap-blocked": 3817,
+      "count ask cancel_pending ticks": 700,
+      "count ask live, PULL": 257,
+      "count ask absent cap-blocked": 3496,
+      "count bid live, PULL": 220,
+      "count ask absent near-END": 3,
+      "count bid absent near-END": 3
+    },
+    "post_keep": {
+      "count bid absent feasible, POST": 264,
+      "count ask absent feasible, POST": 245,
+      "count ask post_pending ticks": 245,
+      "count bid post_pending ticks": 264,
+      "count bid live, KEEP": 8837,
+      "count ask live, KEEP": 9962,
+      "count bid cancel_pending ticks": 398,
+      "count bid absent cap-blocked": 4037,
+      "count ask cancel_pending ticks": 302,
+      "count ask live, PULL": 0,
+      "count ask absent cap-blocked": 3044,
+      "count bid live, PULL": 0,
+      "count ask absent near-END": 2,
+      "count bid absent near-END": 0
+    }
+  },
+  "all_saved_ledger_values_and_request_delays_reconciled": true,
+  "selection_exact": true,
+  "verified_hashes": {
+    "predictfun/research/pf_branch_engine.py": "13239a24bf5a7437621ea5d61d537595952f74c1a6138cd70120e1fc23f620bd",
+    "predictfun/research/pf_branch_engine_mutants.py": "e5cd13fe9da3e1516d6457c7cb53ee74adde888ef42732627bb0846c545a5534",
+    "data/predict_fun/research/branch_engine_20261119/slice_v3_20261024.json": "df8796b1f1baabbf3e5d0a9ae1d1d820e2d2f538fefb968f883ccf7532555908",
+    "data/predict_fun/research/branch_engine_20261119/slice_v3_20261024_forks.csv": "7faca4a3d4b8b519544b6d07db0576e24d23da6c7b71c63c2c7416f0211d1b86",
+    "data/predict_fun/research/branch_engine_20261119/slice_v3_20261024_histories.json": "1f0ebde121a0438b6fb5ad2e43edd5ec2193aa8c570a6bad1513aa09a357f496",
+    "data/predict_fun/research/branch_engine_20261119/slice_v3_20261024_orders.csv": "7f24ac5853cca61c8300625247739dae8e79024507ce998a1ff05aae34cffe8b"
+  },
+  "target_commit": "fefa5aca63445e7b9d328b50b6f5f35d7702a2e0",
+  "asof": "2026-11-19T17:56:23.264059+00:00",
+  "script_sha256": "73a1a24ec37ca287b6dfe7e7fbd8866594920a3c91a94051d38d8434ec0a6f17",
+  "module_sha256": "13239a24bf5a7437621ea5d61d537595952f74c1a6138cd70120e1fc23f620bd"
+}

@@ -1,0 +1,49 @@
+{
+  "prior_hidden_fill_fix": {
+    "0": {
+      "before_notice_equal": true,
+      "request_ms": 100
+    },
+    "1": {
+      "before_notice_equal": true,
+      "request_ms": 100
+    }
+  },
+  "saved_state_boundary": {
+    "direct_wrong_scenario_refused": true,
+    "saved_wrong_scenario_accepted": "ok",
+    "declared_cancel_ms": 50.0,
+    "executed_cancel_ms": 37.0,
+    "wrong_mark_same_fingerprint": true,
+    "clean_value": 10.0,
+    "wrong_mark_value": 110.0,
+    "wrong_side_tick_commands": [
+      [
+        200.0,
+        0,
+        "live",
+        "KEEP",
+        0
+      ],
+      [
+        200.0,
+        0,
+        "live",
+        "KEEP",
+        0
+      ],
+      [
+        200.0,
+        1,
+        "live",
+        "KEEP",
+        1
+      ]
+    ],
+    "wrong_tick_refused": true
+  },
+  "target_commit": "fefa5aca63445e7b9d328b50b6f5f35d7702a2e0",
+  "asof": "2026-11-19T17:56:21.603890+00:00",
+  "script_sha256": "73a1a24ec37ca287b6dfe7e7fbd8866594920a3c91a94051d38d8434ec0a6f17",
+  "module_sha256": "13239a24bf5a7437621ea5d61d537595952f74c1a6138cd70120e1fc23f620bd"
+}
