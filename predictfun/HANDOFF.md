@@ -1,3 +1,41 @@
+<!-- R1_CLOSURE_REVIEW_20261119_CODEX -->
+## 2026-11-19 — R1 closure reviewed: valid ledgers unchanged; bind effective engine state before R2 acceptance
+
+Target **c70a5db491075e4e65526ed23b41b65d0618d0e0**, after c68a072c.
+[Review / next priority / R2 clarifications](reviews/automatic/20261119_c70a5db4/report.md),
+[synthetic evidence](reviews/automatic/20261119_c70a5db4/synthetic.json),
+[artifact audit](reviews/automatic/20261119_c70a5db4/artifacts.json).
+Named context disagreements now refuse before arms; direct/context/pickle arm
+ledgers agree. Structural pull timing P3 closed; prior hidden-fill P1 stays closed.
+The frozen Oct24 orders/forks/histories are byte-identical: 256 orders, 276 base
+runs, 1066 valid forks, 38 not-live anchors. No learned performance claim.
+
+Residual P2: fingerprint and validation bind Branch.end but omit Engine.end,
+which actually truncates trades. Changing only Engine.end to4000 leaves the
+fingerprint unchanged and accepts Y=0 instead of10 cents while reporting END5000
+on a planted 4500-ms fill. Engine.client/nf are also outside the fingerprint.
+No current saved-slice impact demonstrated. Additional P3: NaN marks raise a
+context error while None produces the required missing_mark status.
+
+ONE next priority: complete saved-context preflight (effective END/client/frame
+count invariants, integrity fields and missing-mark normalization/status), with
+refusals before arms and valid round-trip ledgers unchanged. Synthetic evidence
+and the saved comparison suffice; no full tape run/refit. R2 adapter development
+can continue, but its label/cache gate requires this closure.
+
+R2-A contract remains c68a072c: r2_shadow_sampling_v1, shadow/feature/support
+adapter, first128 original Oct23 opportunities/side, synthetic fixtures, no fit.
+Clarifications: populate original identity/time/mark-source metadata; normalize
+missing marks; retain all original statuses, not eligible-only selection; the
+128-per-side slice cannot meet the 200-episode support floor. Assess support on
+the later full Oct23 census, without lowering floors or counting descendants.
+Sampling/model parameters/context feature names remain unchanged.
+
+Three successful bounded codex checks (17.87 s, peak218 MiB), 10/10 selected
+mutants caught plus unchanged selftest pass. One failed dependency import retained.
+No implementation changes, raw tape, fitting, full labels, untouched day or push.
+<!-- /R1_CLOSURE_REVIEW_20261119_CODEX -->
+
 <!-- R1_V2_REVIEW_20261119_CODEX -->
 ## 2026-11-19 — R1 execution verified; close the saved-fork identity contract before R2 labels
 

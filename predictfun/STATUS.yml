@@ -1,3 +1,33 @@
+r1_closure_review_20261119_codex:
+  status: named_fixes_verified_effective_engine_state_P2_open
+  target_commit: c70a5db491075e4e65526ed23b41b65d0618d0e0
+  range_base: c68a072cd191c83a7a98919cacfa58e3b3365d6e
+  report: predictfun/reviews/automatic/20261119_c70a5db4/report.md
+  artifact_audit: predictfun/reviews/automatic/20261119_c70a5db4/artifacts.json
+  synthetic: predictfun/reviews/automatic/20261119_c70a5db4/synthetic.json
+  prior_P1_hidden_fill: remains_closed
+  named_context_refusals_before_arms: verified
+  direct_context_pickle_complete_arms: identical
+  prior_P3_structural_pull_timing: closed
+  residual_P2: Engine_end_client_nf_not_bound_by_fingerprint
+  counterexample: Engine_end4000_accepted_reports5000_Y10_to0_cents
+  new_P3: NaN_mark_raises_context_error_instead_of_missing_mark_status
+  saved_valid_path_ledger_files: byte_identical
+  saved_slice_affected_by_findings: not_demonstrated
+  population: {day: "20261024", orders: 256, tapes: 138, base_runs: 276, valid_forks: 1066, not_live_anchors: 38, table_rows: 1380}
+  slice_asof: "2026-11-19T18:12:39.646391+00:00"
+  audit_asof: "2026-11-19T18:16:19.207972+00:00"
+  immediate_priority: complete_saved_context_engine_state_and_missing_mark_preflight
+  R2_adapter_development_can_continue: true
+  R2_preparation_contract: c68a072c_unchanged_sampling_and_model
+  R2_clarifications: [populate_original_identity, canonical_missing_mark_status, original_all_status_slice, slice_below_support_floor_is_expected]
+  checks: {successful_runs: 3, dependency_import_failures: 1, slot: codex, wall_seconds_success: 17.87, peak_rss_mib: 218, selected_mutants_caught: 10, unchanged_selftest: pass}
+  full_mutation_suite_rerun: false
+  raw_tape_fit_full_labels_untouched_day: false
+  implementation_changed_by_review: false
+  development_owner: other_session
+  scheduler: remains_disabled
+
 r1_v2_review_20261119_codex:
   status: prior_P1_fixed_slice_supported_saved_fork_identity_P2_open
   target_commit: fefa5aca63445e7b9d328b50b6f5f35d7702a2e0

@@ -1,0 +1,2 @@
+Named context refusals and round trip pass; unbound Engine.end changes Y 10 -> 0 with unchanged fingerprint; timing controls pass.
+2026-11-19T18:16:09Z tag=review-c70a5db4-synthetic2 rc=0 peak_rss_mib=210 wall_s=1.35 cpu_user_s=1.15 memavail_start_gib=23 disk_free_gib=469->469 slot=codex

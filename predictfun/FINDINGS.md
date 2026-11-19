@@ -1,3 +1,32 @@
+<!-- R1_CLOSURE_REVIEW_20261119_CODEX -->
+## 2026-11-19 R1 closure: named fixes pass; effective engine END still unbound
+
+Target **c70a5db491075e4e65526ed23b41b65d0618d0e0**.
+[Report](reviews/automatic/20261119_c70a5db4/report.md),
+[cases](reviews/automatic/20261119_c70a5db4/synthetic.json),
+[audit](reviews/automatic/20261119_c70a5db4/artifacts.json).
+Nine named identity disagreements refuse before either arm; direct/context/pickle
+complete arms agree. Timed structural pull predicate fixed, prior P1 stays closed.
+All three saved ledger artifacts are byte-identical to v2: 256 Oct24 orders /
+138 tapes, 276 base runs, 1066 valid forks, 38 not-live anchors; 1380 table rows.
+Saved as-of18:12:39Z, audit18:16:19Z Nov19. Implementation evidence only.
+
+P2 residual: Engine.end controls trade processing but is absent from fingerprint
+and validation (only Branch.end checked). A saved4000-ms engine with reported
+END5000 is accepted; a planted4500-ms fill disappears, paired Y10->0 cents,
+fingerprint unchanged. Engine.client/nf also omitted. No saved-slice effect shown.
+P3 boundary: NaN END mark raises context ValueError; None yields missing_mark.
+Canonicalize invalid marks and retain statuses, not silently discarded rows.
+
+ONE next priority: finish the saved-context preflight with effective engine-state
+invariants and missing-mark handling; narrow refusal/round-trip closure receipt.
+R2 preparation can continue under c68a072c with original-identity metadata,
+all-status first128-per-side Oct23 census, and explicit insufficient support
+where its200-episode floor cannot be met by the bounded slice. No model/sampling
+change; no fit before the preparation gate. Three successful bounded checks,
+10 closure mutants caught and unchanged selftest pass; no raw tape/fit/new labels.
+<!-- /R1_CLOSURE_REVIEW_20261119_CODEX -->
+
 <!-- R1_V2_REVIEW_20261119_CODEX -->
 ## 2026-11-19 R1 v2: prior causal leak closed, saved-state identity gap reproduced
 

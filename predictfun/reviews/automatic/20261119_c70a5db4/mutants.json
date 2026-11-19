@@ -1,0 +1,74 @@
+{
+  "selected_results": [
+    {
+      "index": 0,
+      "rc": 0,
+      "stdout": "branch engine selftests passed (synthetic only): P1 the port = the C kernel on 40 random tapes / order lists / actions; P2 adaptive runs = their batch replays; F1 WAIT posts later with a different history; F2 re-entry after the acknowledgement at a new price, with a cancel-pending fill; F3 queue priority kept, replacement behind; F4 fill ledger = cash + inventory value, pair difference, common pre-fork fills; F5 from one saved fork state the continuation reverses the keep advantage both ways; F6 causality; F10 unnoticed fills (zero / partial / full, both sides) leave views, structural requests and reservations unchanged before their notice; F11 a saved fork context (and its round trip) reproduces the direct pair, and each identity disagreement is refused by its own check; F7 cancel-effect boundary, delayed notice, cap, post-only refusal, near-END post, missing mark, unavailable book; F8 wrong horizon / action / state / pair kind refused; F9 shared book\n",
+      "stderr": ""
+    },
+    {
+      "index": 18,
+      "rc": 1,
+      "stdout": "",
+      "stderr": "BRANCH ENGINE SELFTEST FAILED: F8: a saved fork context of another tick (same side order) was not refused\n"
+    },
+    {
+      "index": 19,
+      "rc": 1,
+      "stdout": "",
+      "stderr": "BRANCH ENGINE SELFTEST FAILED: F11: a saved state changed after saving (a planted fill) was not refused\n"
+    },
+    {
+      "index": 20,
+      "rc": 1,
+      "stdout": "",
+      "stderr": "BRANCH ENGINE SELFTEST FAILED: F11: a saved mark changed (print recomputed) was not refused | F11: a saved END changed (print recomputed) was not refused\n"
+    },
+    {
+      "index": 21,
+      "rc": 1,
+      "stdout": "",
+      "stderr": "BRANCH ENGINE SELFTEST FAILED: F11: a tape other than the saved context's was not refused\n"
+    },
+    {
+      "index": 22,
+      "rc": 1,
+      "stdout": "",
+      "stderr": "BRANCH ENGINE SELFTEST FAILED: F11: a scenario other than the saved context's was not refused\n"
+    },
+    {
+      "index": 23,
+      "rc": 1,
+      "stdout": "",
+      "stderr": "BRANCH ENGINE SELFTEST FAILED: F11: a context whose first side never acted (processed sides reset at 250 ms) was not refused\n"
+    },
+    {
+      "index": 24,
+      "rc": 1,
+      "stdout": "",
+      "stderr": "BRANCH ENGINE SELFTEST FAILED: F11: a raw branch instead of a context crashed (TypeError) instead of being refused by a check\n"
+    },
+    {
+      "index": 25,
+      "rc": 1,
+      "stdout": "",
+      "stderr": "BRANCH ENGINE SELFTEST FAILED: F11: the fingerprint ignores the mark | F11: the fingerprint ignores the END | F11: the fingerprint ignores the settings | F11: the fingerprint ignores the identity fields | F11: the fingerprint ignores the tick | F11: the fingerprint ignores the episode | F11: the fingerprint ignores the processed sides\n"
+    },
+    {
+      "index": 26,
+      "rc": 1,
+      "stdout": "",
+      "stderr": "BRANCH ENGINE SELFTEST FAILED: F8: a side processed twice at one tick was not refused\n"
+    },
+    {
+      "index": 27,
+      "rc": 1,
+      "stdout": "",
+      "stderr": "BRANCH ENGINE SELFTEST FAILED: the slice pull-effect predicate (a structural request must land at its declared time)\n"
+    }
+  ],
+  "target_commit": "c70a5db491075e4e65526ed23b41b65d0618d0e0",
+  "asof": "2026-11-19T18:16:55.652404+00:00",
+  "script_sha256": "8e38f921e4affd51bb1ec620d297d01cf626cbb99259c6b04fa9ffd300a02fb4",
+  "module_sha256": "98e3824bbfbf3d02a7eaee69d1b4b7c274d3c93a1878ce808253d2c6ff946abe"
+}
