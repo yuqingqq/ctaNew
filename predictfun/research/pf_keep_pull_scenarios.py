@@ -17,6 +17,9 @@ trade-clock shift (M0 / M250: every trade stamp moved uniformly), activation del
 no scenario is called "zero latency"; (3) the held contradictory events get their denominator (every event per family and day) and their
 economic weight (the fills, shares and value at held trade instants per scenario); v1's outputs (keep_pull_scenarios_20261118) stay as
 provenance.
+v6.1 (2026-11-19, USER "can we run the one day test now" -> the score variants against A+0): outcome() takes the score policy as a parameter
+(default the declared A+0; any other of KP.POLICIES; an undeclared one is refused) so pf_keep_pull_variants.py can value every declared policy
+from the same day outputs. Day outputs, report and A+0 values are unchanged (the variants module checks A+0 against this report's output).
 C1 B1a-WEIGHTED (v6, the readiness loop, added after v5's age bins were read - a checklist report item, not a test): FINDINGS C1 asks
 for the headline B1a-weighted beside it. Per scenario E weighted by bin with FV3's B1a precision weights (pf_fv3_check.B1A: the share of
 replay fills that were real on live's own orders by age bin, at M 0 and at M 50; one day of live's orders), both weight sets as the earlier
@@ -370,13 +373,15 @@ def day_run(day, src=None, timing=None, kp=None, out=None, env_of=None, sem_of=N
     return d
 
 
-def outcome(O, Os, Fs, sc):
-    """One scenario's values. O: the committed orders (states, fair inputs, side, price, mark, structural decision); Os: per order of O the
-    scenario's refused / v / q / t_full / land; Fs: its fills (day, oid, t, q)."""
+def outcome(O, Os, Fs, sc, policy=None):
+    """One scenario's values for one score policy (default the declared A+0; v6.1: any of KP.POLICIES, for pf_keep_pull_variants.py). O: the
+    committed orders (states, fair inputs, side, price, mark, structural decision); Os: per order of O the scenario's refused / v / q / t_full /
+    land; Fs: its fills (day, oid, t, q)."""
+    pol = KP.DECLARED if policy is None else policy; C.require(pol in KP.POLICIES, f'undeclared score policy {pol}')
     Os = Os.rename(columns={c: c + '_s' for c in ('refused', 'v', 'q', 't_full', 'land')})
     M = O.merge(Os, on=['day', 'oid'], how='inner', validate='one_to_one'); E = M[~M.refused_s.astype(bool)].reset_index(drop=True)
     cell = E.groupby(['day', 'm', 'side', 'phase'], sort=True).ngroup().values
-    T = KP.score_steps(E[[f'f{j:02d}' for j in range(KP.NSTEP + 1)]].values, E.side.values, E.p.values)[KP.DECLARED]
+    T = KP.score_steps(E[[f'f{j:02d}' for j in range(KP.NSTEP + 1)]].values, E.side.values, E.p.values)[pol]
     endj = endj_n(E.t_full_s.values, E.g_struct.values, sc['N']); act, CW = V1.null_weights(T, cell, endj)
     ix = pd.Series(np.arange(len(E)), index=pd.MultiIndex.from_arrays([E.day.values, E.oid.values]))
     ri = ix.reindex(pd.MultiIndex.from_arrays([Fs.day.values, Fs.oid.values])).values; C.require(not np.isnan(ri).any(), 'a fill of an order outside the eligible set')
@@ -699,6 +704,17 @@ def selftest():
                 bad.append(f'the mixture\'s per-order structural landings: {int(gm_.sum())} orders, slow among them {int(slow_order(Sm.oid.values[gm_], CANCEL_MIX[0]).sum())}')
             if not (o37['score'] == 150. and o37['pulls'] == 1 and o100['score'] == 0. and o37['KEEP'] == -150.):
                 bad.append(f"one-order outcome: score {o37['score']} / {o100['score']} at 37 / 100 ms (want 150 / 0)")
+            oa1, oa0 = outcome(O1, Os1, Fs1, B0, policy='A-1'), outcome(O1, Os1, Fs1, B0, policy=KP.DECLARED)   # v6.1: the edge never falls below -1 c
+            if not (oa1['pulls'] == 0 and oa1['score'] == 0. and oa1['E'] == 0. and oa1['KEEP'] == o37['KEEP'] and oa0['score'] == o37['score'] == 150.
+                    and oa0['pulls'] == o37['pulls'] == 1):
+                bad.append(f"the policy parameter: A-1 pulls {oa1['pulls']} / score {oa1['score']}, A+0 {oa0['score']}, default {o37['score']}")
+            try:
+                outcome(O1, Os1, Fs1, B0, policy='A+2'); bad.append('outcome accepted an undeclared score policy')
+            except ValueError as e:
+                if 'undeclared score policy' not in str(e):
+                    bad.append(f'the undeclared policy refused by another check: {e}')
+            except KeyError as e:
+                bad.append(f'an undeclared policy reached the score lookup: {e}')
             ox = outcome(O1, Os1, Fs1, dict(B0, A=250.))                  # the fill at 300 ms: 242 ms old at activation 58, 50 ms old at 250
             if not (o37['by_age']['100to500']['fills'] == 1 and o37['by_age']['lt100']['fills'] == 0 and ox['by_age']['lt100']['fills'] == 1
                     and abs(sum(a['E'] for a in o37['by_age'].values()) - o37['E']) < 1e-9 and o37['no_young']['E'] == o37['E'] and ox['no_young']['fills_value'] == 0.
@@ -758,7 +774,8 @@ def selftest():
           '37 / 100 ms; the report end to end and refused on a wrong baseline expectation; a misaligned timing source, a changed committed fill, a changed committed trade source (C12), a perturbed pending clock '
           'and an early landing mirror each refused by its own control with no output; S3 / ST timelines (and their joins by row id, a leg without its '
           'window refused); held fills marked and valued; event denominators; every scenario\'s family (no "zero latency"); the cancel-latency '
-          'mixture (its slow share, per-order landings, one-order outcomes)', flush=True)
+          'mixture (its slow share, per-order landings, one-order outcomes); the policy parameter (A-1 never pulls the one-order case, an undeclared policy '
+          'refused)', flush=True)
 
 
 if __name__ == '__main__':
