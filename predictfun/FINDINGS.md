@@ -1,3 +1,27 @@
+<!-- READINESS_REVIEW_20261119_A2F13F37 -->
+## 2026-11-19 Targeted readiness review: previous three P2 findings closed
+
+Target **a2f13f37d58d546b949bb4919725739978a47c76**;
+[report](reviews/automatic/20261119_a2f13f37/report.md),
+[evidence](reviews/automatic/20261119_a2f13f37/receipt.json).
+The three previous P2 findings are fixed: the original dropped-bound and
+permissive-comparison counterexamples now behave correctly; cancellation
+acknowledgement bounds remain conditional and dependent K5/lifecycle inferences
+no longer assume the acknowledgement dates the effect. Six pinned selftests
+pass; known-v7 readings reproduce; the final 19 scenario CSV rows and by-day sums
+reconcile, and the final five-day inputs reference settlement v2.
+
+Ready for scenario-conditional research testing, with no new blocker established
+in this targeted scope. Known-v7: 99 legs / 86 orders, consumed Nov8, as of Nov18
+17:40:18.469938Z; S3 still PASS. Five consumed days Oct23-27 / 149,174 paths,
+as of Nov18 20:46:28.060651Z: E changes sign between M50 and M250; no robust
+profitability or order-level fill validation. The per-cancel study keeps response
+and match order distinct; no cancellation-effect distribution is established.
+Oct28's prior access prevents an untouched-validation claim even after rerunning
+with guarded readers. **Next:** predeclare a baseline/candidate comparison on
+consumed days under the same scenario bank. No full tape/training/validation run
+in this review; no implementation changes.
+
 <!-- MANUAL_REVIEW_20261118_541AECA9 -->
 ## 2026-11-18 Review: clock progress supported; three timing-instrument gaps
 

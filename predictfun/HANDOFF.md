@@ -1,3 +1,30 @@
+<!-- READINESS_REVIEW_20261119_A2F13F37 -->
+## Testing-readiness review — 2026-11-19 (a2f13f37)
+
+Target **a2f13f37d58d546b949bb4919725739978a47c76**.
+[Report](reviews/automatic/20261119_a2f13f37/report.md),
+[evidence](reviews/automatic/20261119_a2f13f37/receipt.json).
+**Ready for controlled, scenario-conditional research tests on consumed days.**
+The three previous P2 findings are fixed: the original dropped-bound and
+permissive-comparison counterexamples now behave correctly; cancellation
+acknowledgement bounds remain conditional and dependent K5/lifecycle inferences
+no longer assume the acknowledgement dates the effect. Six pinned selftests
+pass; known-v7 readings reproduce; the final 19 scenario CSV rows and by-day sums
+reconcile, and the final five-day inputs reference settlement v2.
+
+The economic gate remains open: five consumed days / 149,174 order paths, as of
+Nov18 20:46:28.060651Z, E +234,279 c at M50 versus -27,124 c at M250;
+NOT-STABLE. Values are local marks, not portfolio/settlement P&L. Order-level
+fill validity, refusal handling and queue-rule robustness remain limits. The
+Oct28 access history is retained; exclude it from untouched-validation claims.
+No new tape replay, training or validation was run by this review.
+
+**One next priority:** a predeclared baseline-versus-candidate comparison under
+the committed consumed-day protocol and full scenario bank, reporting timing
+sensitivity before an economic-improvement claim. This readiness applies to the
+A+0 keep/pull harness; model/controller integration needs its own reconciliation.
+Review-only; other-session edits preserved; scheduler off.
+
 <!-- MANUAL_REVIEW_20261118_541AECA9 -->
 ## Manual result review — 2026-11-18 (541aeca9)
 
