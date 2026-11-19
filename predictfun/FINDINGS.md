@@ -1,3 +1,27 @@
+<!-- VARIANTS_RESULT_REVIEW_20261119_5578D96F -->
+## 2026-11-19 — Six-rule result reproduction and PULL-ALL output qualification
+
+**HOLDS:** result commit 5578d96f684d472b04ed25325295a9a2a6989b2e, all 114
+policy/scenario rows and readings reproduce; independent calculations reproduce
+18 rule/clock cells. Oct23 consumed, 30,466 neutral opportunities / 28,799
+baseline eligible, result as of Nov19 02:49:13.598345Z; check completed Nov19
+03:07:28.637278Z. [Evidence](reviews/automatic/20261119_5578d96f/receipt.json).
+
+**QUALIFIED / P2 reporting:** the raw PULL-ALL column is improvement over KEEP,
+not absolute value. At B, +389,554 c improvement means -26,689 c total local
+value. Existing policy comparisons subtract improvements correctly. Publish both
+explicitly in superseding output. [Review](reviews/automatic/20261119_5578d96f/report.md).
+
+**OPEN economic gate:** B rules' larger excess over their own matched controls
+coexists with worse absolute value. First-live PULL-ALL beats each score rule in
+17/19 scenarios but remains negative at M0/M50/M250. This supports testing entry
+and removable retention value together, not concluding that every order is bad,
+that market information cannot predict value, or that the new learned model
+failed. These were unlearned threshold rules. Next: rich causal features on
+corrected neutral action labels, then a chronological economic benchmark before
+controller tuning. No new tape/fit/validation; original simulator limits stand.
+<!-- /VARIANTS_RESULT_REVIEW_20261119_5578D96F -->
+
 <!-- PIPELINE_CONTRACT_20261119_CODEX -->
 ## 2026-11-19 — Prediction/value/controller integration gate (implementation only)
 

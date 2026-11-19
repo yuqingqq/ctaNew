@@ -1,0 +1,285 @@
+{
+  "target_commit": "5578d96f684d472b04ed25325295a9a2a6989b2e",
+  "asof": "2026-11-19T03:07:07.251833+00:00",
+  "controls": {
+    "independent_positive_control": true,
+    "delta_as_total_refused": true
+  },
+  "source_hashes": {
+    "pf_keep_pull_variants.py": "f2c52dd10252097bc88947428e6accfe12b52e12bcfb13cffc447a2f51602a1a",
+    "pf_keep_pull_variants_mutants.py": "1557854df8ed059d0fecbcf6b4fd96f6ea304985e82167d2abc140b30101cfa2",
+    "pf_keep_pull_scenarios.py": "7b8f0a6292af5ba51917e63ef5ce84934ac6462c960647614c1f098ed17e4ba2",
+    "pf_keep_pull_scenarios_mutants.py": "a957e293b74a14fbd0283b9f51986d8d1ddb70631ae9651b34f08e877c2191b5",
+    "pf_keep_pull.py": "58b972f92bda06fbc847c43d2ace8db9d7b12f4daaf67bcfaa14e92deb475835",
+    "pf_keep_pull_clock_audit.py": "20f5a0365bbc24235cf1943e5729f50ce8de24db7307f50aa75860798ffe4ec1",
+    "pf_keep_pull_exec_windows.py": "af3f643c86021f3f491c12a251c0fbf24510b4677cabac42f11bdb3e74e33165"
+  },
+  "variants_selftest": "passed",
+  "result_asof": "2026-11-19T02:49:13.598345+00:00",
+  "input_asof": "2026-11-18T20:28:18.245546+00:00",
+  "consumed_day": "20261023",
+  "original_orders": 30466,
+  "path_orders": 30088,
+  "original_statuses": {
+    "eligible": 28799,
+    "refused_post_only": 1289,
+    "missing_endpoint": 354,
+    "stale_future_book": 24
+  },
+  "saved_readings_and_all_tables_reproduced": true,
+  "policy_scenario_rows": 114,
+  "independent": {
+    "M0|A58|L37|N100": {
+      "A+0": {
+        "KEEP": -368042.92187950073,
+        "score": 224826.39762851098,
+        "null": 184991.94657722593,
+        "E": 39834.451051285054,
+        "PULLALL": 349180.3881475454,
+        "V": -143216.52425098975,
+        "V_pullall": -18862.533731955336,
+        "pulls": 14181,
+        "eligible": 28799
+      },
+      "A+1": {
+        "KEEP": -368042.92187950073,
+        "score": 243654.78099124908,
+        "null": 207609.2436886024,
+        "E": 36045.53730264667,
+        "PULLALL": 349180.3881475454,
+        "V": -124388.14088825166,
+        "V_pullall": -18862.533731955336,
+        "pulls": 16209,
+        "eligible": 28799
+      },
+      "A-1": {
+        "KEEP": -368042.92187950073,
+        "score": 203109.91543409356,
+        "null": 157706.8228219012,
+        "E": 45403.092612192355,
+        "PULLALL": 349180.3881475454,
+        "V": -164933.00644540717,
+        "V_pullall": -18862.533731955336,
+        "pulls": 11757,
+        "eligible": 28799
+      },
+      "B0.5": {
+        "KEEP": -368042.92187950073,
+        "score": 169926.2306636829,
+        "null": 72966.56113657512,
+        "E": 96959.66952710776,
+        "PULLALL": 349180.3881475454,
+        "V": -198116.69121581785,
+        "V_pullall": -18862.533731955336,
+        "pulls": 4818,
+        "eligible": 28799
+      },
+      "B1": {
+        "KEEP": -368042.92187950073,
+        "score": 159104.92895574745,
+        "null": 62124.63577623383,
+        "E": 96980.29317951362,
+        "PULLALL": 349180.3881475454,
+        "V": -208937.99292375328,
+        "V_pullall": -18862.533731955336,
+        "pulls": 3462,
+        "eligible": 28799
+      },
+      "B2": {
+        "KEEP": -368042.92187950073,
+        "score": 139144.93343428068,
+        "null": 48825.23362606081,
+        "E": 90319.69980821987,
+        "PULLALL": 349180.3881475454,
+        "V": -228897.98844522005,
+        "V_pullall": -18862.533731955336,
+        "pulls": 2262,
+        "eligible": 28799
+      }
+    },
+    "M50|A58|L37|N100": {
+      "A+0": {
+        "KEEP": -416242.9431569632,
+        "score": 241282.39479053902,
+        "null": 206334.37112279783,
+        "E": 34948.02366774119,
+        "PULLALL": 389554.04602332297,
+        "V": -174960.5483664242,
+        "V_pullall": -26688.897133640246,
+        "pulls": 14155,
+        "eligible": 28799
+      },
+      "A+1": {
+        "KEEP": -416242.9431569632,
+        "score": 262864.2619740729,
+        "null": 233017.0109201331,
+        "E": 29847.251053939806,
+        "PULLALL": 389554.04602332297,
+        "V": -153378.68118289032,
+        "V_pullall": -26688.897133640246,
+        "pulls": 16187,
+        "eligible": 28799
+      },
+      "A-1": {
+        "KEEP": -416242.9431569632,
+        "score": 217563.0301194365,
+        "null": 175642.09968636802,
+        "E": 41920.93043306848,
+        "PULLALL": 389554.04602332297,
+        "V": -198679.9130375267,
+        "V_pullall": -26688.897133640246,
+        "pulls": 11738,
+        "eligible": 28799
+      },
+      "B0.5": {
+        "KEEP": -416242.9431569632,
+        "score": 182738.73629385282,
+        "null": 81164.05147510995,
+        "E": 101574.68481874287,
+        "PULLALL": 389554.04602332297,
+        "V": -233504.2068631104,
+        "V_pullall": -26688.897133640246,
+        "pulls": 4782,
+        "eligible": 28799
+      },
+      "B1": {
+        "KEEP": -416242.9431569632,
+        "score": 171329.15614222956,
+        "null": 68562.0159216012,
+        "E": 102767.14022062837,
+        "PULLALL": 389554.04602332297,
+        "V": -244913.78701473365,
+        "V_pullall": -26688.897133640246,
+        "pulls": 3420,
+        "eligible": 28799
+      },
+      "B2": {
+        "KEEP": -416242.9431569632,
+        "score": 148359.51463018556,
+        "null": 53382.57257122832,
+        "E": 94976.94205895724,
+        "PULLALL": 389554.04602332297,
+        "V": -267883.42852677766,
+        "V_pullall": -26688.897133640246,
+        "pulls": 2217,
+        "eligible": 28799
+      }
+    },
+    "M250|A58|L37|N100": {
+      "A+0": {
+        "KEEP": -518337.10253212077,
+        "score": 220534.27583550793,
+        "null": 233875.9926848802,
+        "E": -13341.716849372286,
+        "PULLALL": 481253.92228529026,
+        "V": -297802.8266966129,
+        "V_pullall": -37083.18024683051,
+        "pulls": 13973,
+        "eligible": 28799
+      },
+      "A+1": {
+        "KEEP": -518337.10253212077,
+        "score": 256483.07063722835,
+        "null": 267269.51315294445,
+        "E": -10786.442515716102,
+        "PULLALL": 481253.92228529026,
+        "V": -261854.03189489243,
+        "V_pullall": -37083.18024683051,
+        "pulls": 16001,
+        "eligible": 28799
+      },
+      "A-1": {
+        "KEEP": -518337.10253212077,
+        "score": 188561.7400965925,
+        "null": 196161.20781304003,
+        "E": -7599.467716447543,
+        "PULLALL": 481253.92228529026,
+        "V": -329775.3624355283,
+        "V_pullall": -37083.18024683051,
+        "pulls": 11565,
+        "eligible": 28799
+      },
+      "B0.5": {
+        "KEEP": -518337.10253212077,
+        "score": 52302.03582187265,
+        "null": 59042.27553824367,
+        "E": -6740.239716371027,
+        "PULLALL": 481253.92228529026,
+        "V": -466035.0667102481,
+        "V_pullall": -37083.18024683051,
+        "pulls": 4277,
+        "eligible": 28799
+      },
+      "B1": {
+        "KEEP": -518337.10253212077,
+        "score": 39953.19938678968,
+        "null": 44152.09975882933,
+        "E": -4198.90037203965,
+        "PULLALL": 481253.92228529026,
+        "V": -478383.9031453311,
+        "V_pullall": -37083.18024683051,
+        "pulls": 2942,
+        "eligible": 28799
+      },
+      "B2": {
+        "KEEP": -518337.10253212077,
+        "score": 28729.850245095382,
+        "null": 29110.91698622325,
+        "E": -381.0667411278664,
+        "PULLALL": 481253.92228529026,
+        "V": -489607.2522870254,
+        "V_pullall": -37083.18024683051,
+        "pulls": 1787,
+        "eligible": 28799
+      }
+    }
+  },
+  "summary": {
+    "SURVIVES-TIMING (P1 STABLE-POSITIVE-IN-TESTED-SCENARIOS)": "none",
+    "ABOVE THE BASELINE IN EVERY TESTED SCENARIO (D1)": "none"
+  },
+  "candidate_counts": {
+    "A+0": {
+      "positive_E": 16,
+      "positive_V": 2,
+      "above_pullall": 2,
+      "scenarios": 19
+    },
+    "A+1": {
+      "positive_E": 16,
+      "positive_V": 2,
+      "above_pullall": 2,
+      "scenarios": 19
+    },
+    "A-1": {
+      "positive_E": 17,
+      "positive_V": 2,
+      "above_pullall": 2,
+      "scenarios": 19
+    },
+    "B0.5": {
+      "positive_E": 16,
+      "positive_V": 2,
+      "above_pullall": 2,
+      "scenarios": 19
+    },
+    "B1": {
+      "positive_E": 16,
+      "positive_V": 2,
+      "above_pullall": 2,
+      "scenarios": 19
+    },
+    "B2": {
+      "positive_E": 16,
+      "positive_V": 2,
+      "above_pullall": 2,
+      "scenarios": 19
+    }
+  },
+  "never_post_value": 0.0,
+  "never_post_role": "mechanical no-exposure control only, no quote provision",
+  "raw_tape_read": false,
+  "training": false,
+  "untouched_validation": false,
+  "checks_finished_asof": "2026-11-19T03:07:28.637278+00:00"
+}

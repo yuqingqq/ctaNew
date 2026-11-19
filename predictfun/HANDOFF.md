@@ -1,3 +1,32 @@
+<!-- VARIANTS_RESULT_REVIEW_20261119_5578D96F -->
+## 2026-11-19 — Score-variant results reviewed (5578d96f)
+
+Target **5578d96f684d472b04ed25325295a9a2a6989b2e**. [Review](reviews/automatic/20261119_5578d96f/report.md),
+[evidence](reviews/automatic/20261119_5578d96f/receipt.json). All 114 saved
+policy/scenario rows and readings reproduce; independent per-fill/risk-set
+calculations reproduce 18 cells (six rules x M0/M50/M250). Synthetic selftest
+passes, source/artifact hashes match. Codex 21.80 s / 679 MiB; no new tape/fit.
+
+One P2 reporting issue: the PULL-ALL column prints improvement over KEEP beside
+KEEP's absolute value. At B, +389,554 c is improvement; absolute PULL-ALL value is
+-26,689 c. Candidate comparisons are numerically correct. Superseding output
+should name both fields explicitly; no new accounting blocker found.
+
+Oct23 consumed, 30,466 original orders / 28,799 baseline eligible; result as of
+Nov19 02:49:13.598345Z, inputs Nov18 20:28:18.245546Z. A+1 improves A+0's local
+value in 18/19 scenarios, but no variant survives all timing scenarios. Larger E
+for the B rules does not mean better total value (each has its own matched
+control). First-live PULL-ALL beats every rule in 17/19 yet still loses at
+M0/M50/M250. These six unlearned rules do not test the new prediction pipeline.
+
+**Next priority:** corrected neutral-action rich-feature/label export and a
+chronological economic benchmark for entry and removable retention value,
+including no-entry/first-live-pull controls. Preserve status/clock sensitivity;
+require amount/value calibration before controller tuning. Interface work at
+c2717dc8 remains a foundation, not a fitted model or sequential strategy.
+Review-only; other-session changes preserved; scheduler remains off.
+<!-- /VARIANTS_RESULT_REVIEW_20261119_5578D96F -->
+
 <!-- PIPELINE_CONTRACT_20261119_CODEX -->
 ## 2026-11-19 — Prediction/value/controller interface implemented (Codex)
 
