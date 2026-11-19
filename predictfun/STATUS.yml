@@ -1,3 +1,22 @@
+testing_readiness_review_20261119_a2f13f37:
+  status: ready_for_scenario_conditional_research_tests_only
+  asof: "2026-11-19T02:01:26.022026+00:00"
+  target_commit: a2f13f37d58d546b949bb4919725739978a47c76
+  scope: targeted_prior_findings_and_testing_readiness_not_exhaustive_new_code_audit
+  report: predictfun/reviews/automatic/20261119_a2f13f37/report.md
+  evidence: predictfun/reviews/automatic/20261119_a2f13f37/receipt.json
+  previous_review_findings: {P2_1: fixed, P2_2: fixed, P2_3: fixed}
+  checked: {pinned_selftests: 6_pass, known_v7_readings: reproduced, scenario_csv_rows: 19, five_day_settlement_v2_provenance: verified}
+  reference_population: {consumed_days: ["20261023", "20261024", "20261025", "20261026", "20261027"], order_paths: 149174, asof: "2026-11-18T20:46:28.060651Z"}
+  local_values_c: {baseline_E: 234279.30610303002, M250_E: -27123.77082284323, baseline_KEEP_plus_score: -776492.0917280964}
+  timing_stability: NOT_STABLE
+  execution_or_profitability_validated: false
+  full_tape_or_training_run: false
+  untouched_validation_read: false
+  October_28_prior_access: excludes_untouched_validation_claim
+  next_priority: predeclared_baseline_candidate_comparison_under_same_consumed_day_scenario_protocol
+  scheduler: disabled_by_user
+
 manual_result_review_20261118_541aeca9:
   status: complete_three_P2_instrument_gaps_original_clock_cases_supported
   asof: "2026-11-18T16:44:37.383169+00:00"

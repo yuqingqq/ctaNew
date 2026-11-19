@@ -1,0 +1,299 @@
+{
+  "target": "a2f13f37d58d546b949bb4919725739978a47c76",
+  "asof": "2026-11-19T01:59:56.919369+00:00",
+  "scope": "targeted testing-readiness review",
+  "full_tape_replayed": false,
+  "training_run": false,
+  "untouched_validation_read": false,
+  "selftests_reused": "unchanged pinned source; six suites passed before attempt 2 receipt-path assertion",
+  "selftests": [
+    "pf_timing_case_audit",
+    "pf_known_clock_census",
+    "pf_keep_pull_exec_windows",
+    "pf_keep_pull_scenarios",
+    "pf_settlement_times",
+    "pf_cancel_race_study"
+  ],
+  "prior_findings": {
+    "P2_1_constituent_constraints": "fixed",
+    "P2_2_exact_timestamp_identity": "fixed",
+    "P2_3_cancel_bound": "conditional; dependent inference checked below"
+  },
+  "suite_source_hashes": {
+    "predictfun/research/pf_settlement_times.py": "903dba3b2c163f9577caf2de40a4fed4b6645ae0207c872ea679b299db6af7ff",
+    "predictfun/research/pf_settlement_times_mutants.py": "d2e51329fbf5ca6e1beac3f00e3f184c0176d0ea706346cb7ebe710c693e0a98",
+    "predictfun/research/pf_keep_pull_exec_windows.py": "af3f643c86021f3f491c12a251c0fbf24510b4677cabac42f11bdb3e74e33165",
+    "predictfun/research/pf_keep_pull_exec_windows_mutants.py": "0873c2fc8d46800718c3e0671ce14fa583899e0f59f28296126806590ede78d9",
+    "predictfun/research/pf_keep_pull_scenarios.py": "64717cdacfa76620b6c95a288e9b2229b272c092c6a741a85960dcd7f06d27da",
+    "predictfun/research/pf_keep_pull_scenarios_mutants.py": "860cfa6938bc16589006b9bba4947cac7dadb85f256b2a1f0363c97d3d818c66",
+    "predictfun/research/pf_timing_case_audit.py": "def64c9298d3bed5256a47a86267e89f7d7471a0f08b939b6c8a16e8a1be6efc",
+    "predictfun/research/pf_timing_case_audit_mutants.py": "83db479c4ab471e4438f35e93badc1f5ee6d0202df3037970c6ab991b47a76ca",
+    "predictfun/research/pf_known_clock_census.py": "5c0ae45aba4d8167d1077319ea0d705bf5ff87d1e36db50acbf07d0317767250",
+    "predictfun/research/pf_known_clock_census_mutants.py": "8813738bbb3d16418bf4f7b3ecc2aa03c172cbc19558803c819f9ebe75a1dbec",
+    "predictfun/research/pf_cancel_race_study.py": "ef6e934d38985a92b0b8a03213f20dd38db9776749f18df9fa2f5d8042311f0c",
+    "predictfun/research/pf_cancel_race_study_mutants.py": "d48117f5dcfef8cc142c39f593d0f5cd9aee36c0e818160b18f86ab3f2cd631b",
+    "predictfun/research/run_keep_pull_scenarios.sh": "401c9f140a9339873a152388da3ce10149ece01d7f3562b67f8d427f00573b04",
+    "predictfun/research/pf_keep_pull.py": "58b972f92bda06fbc847c43d2ace8db9d7b12f4daaf67bcfaa14e92deb475835",
+    "predictfun/research/pf_keep_pull_mutants.py": "899faa27b2867705b2f9c27b6cbea2ffea9b98eb8ef4ce2f83dca8036102c6b1",
+    "predictfun/research/pf_queue_place_ledger.py": "8fa16b929b4ae497109a70add4036dd7cd4501102a261c74eba63de0e0b94bb5",
+    "predictfun/research/pf_queue_place_ledger_mutants.py": "5c36f035373bef6d889fdc46127c2fb3d04204bd1d4557513d318cb2ef7650ed"
+  },
+  "known": {
+    "asof": "2026-11-18T17:40:18.469938+00:00",
+    "legs": 99,
+    "orders": 86,
+    "candidate_rows": 131,
+    "readings": {
+      "K0 REPRODUCES 11-09": "YES",
+      "K1 CLASSIFIER-CONSISTENCY": "YES",
+      "K2 DELAYED-STATUS-REFUSED": "YES",
+      "K3 IDENTITY-CHECK-FIRES": "YES",
+      "K4 REPLAY-ANCHOR-VS-LIFECYCLE": "CONTRADICTED",
+      "K7 CLOCK OFFSET (venue status - bot)": "[-226.4, +49.3] ms, CONTAINS 0",
+      "K5 ORDER-PATH INTERVALS vs DECLARED RANGES": "CONTRADICTED",
+      "K8 SETTLEMENT TIME": "COMPATIBLE",
+      "K8 CLOCK OFFSET (settlement premise: the id stamped at the match)": "CONDITIONAL {'lo': -147.837890625, 'hi': 32.641357421875, 'exists': True, 'includes_zero': True, 'premise': 'CONDITIONAL: zero UUID creation lag on every leg'}",
+      "K8 UNIVERSAL CREATION-LAG BOUND": "UNIDENTIFIED",
+      "K8 FILL-NOTICE DELAY vs the replay 100 ms": "CONTRADICTED on 67 of 99 fills",
+      "K5S ORDER PATH WITH SETTLEMENT TIMES": "CONTRADICTED",
+      "K9 MATCH BEFORE THE CANCEL REQUEST (book evidence, S3)": "25 of 88 cancelled legs; of the 72 legs of orders answered Canceled and filled in full 24",
+      "K6 GATE S1": "FAIL",
+      "K6 GATE S1 (K8 shared clock)": "FAIL",
+      "K6 GATE S1 (settlement offsets)": "FAIL",
+      "K6 GATE S2": "FAIL",
+      "K6 GATE S2 (K8 shared clock)": "FAIL",
+      "K6 GATE S2 (settlement offsets)": "FAIL",
+      "K6 GATE S3": "FAIL",
+      "K6 GATE S3 (K8 shared clock)": "PASS",
+      "K6 GATE S3 (settlement offsets)": "PASS",
+      "K6 GATE ST": "UNIDENTIFIED-UPPER-BOUND-ONLY",
+      "K6 GATE ST (K8 shared clock)": "UNIDENTIFIED-UPPER-BOUND-ONLY",
+      "K6 GATE ST (settlement offsets)": "UNIDENTIFIED-UPPER-BOUND-ONLY",
+      "K6 GATE EV": "PASS",
+      "K6 GATE EV (K8 shared clock)": "PASS",
+      "K6 GATE EV (settlement offsets)": "PASS",
+      "K6 GATE S1 (per clock domain)": "FAIL",
+      "K6 GATE S2 (per clock domain)": "FAIL",
+      "K6 GATE S3 (per clock domain)": "PASS",
+      "K6 GATE ST (per clock domain)": "UNIDENTIFIED-UPPER-BOUND-ONLY",
+      "K6 GATE EV (per clock domain)": "PASS",
+      "K6 REPLAY POINT M50": "CONTRADICTED",
+      "KNOWN VERDICT": "INSTRUMENT-CHECKS-PASS; REPLAY-ANCHOR-CONTRADICTED; SETTLEMENT-TIME COMPATIBLE; LEDGER-WINDOW GATE OF RECORD (per clock domain, constituents kept: book ends at the leg's own book-clock bound, status ends in K7, the window non-empty) S1 FAIL, S2 FAIL, S3 PASS, ST UNIDENTIFIED-UPPER-BOUND-ONLY, EV PASS; v5 basis - K7 offsets on every end: S1 FAIL, S2 FAIL, S3 FAIL, ST UNIDENTIFIED-UPPER-BOUND-ONLY, EV PASS; conditional - K8 shared clock: S1 FAIL, S2 FAIL, S3 PASS, ST UNIDENTIFIED-UPPER-BOUND-ONLY, EV PASS; settlement offsets: S1 FAIL, S2 FAIL, S3 PASS, ST UNIDENTIFIED-UPPER-BOUND-ONLY, EV PASS; LIFECYCLE UPPER BOUND the first fill notice (a Canceled acknowledgement does not order the match; known v6 holds the readings under that premise); ORDER-PATH RANGES CONTRADICTED; NOT A VENUE-ENGINE ACCEPTANCE"
+    },
+    "K5": {
+      "orders": 86,
+      "legs": 99,
+      "activation": {
+        "COMPATIBLE-UNIDENTIFIED": 85,
+        "CONTRADICTED": 1
+      },
+      "cancel": {
+        "COMPATIBLE-UNIDENTIFIED": 77,
+        "NO-CANCEL-CONFIRMATION": 9
+      },
+      "declared_activation": [
+        25.0,
+        100.0
+      ],
+      "declared_cancel": [
+        0.0,
+        100.0
+      ],
+      "confirmation_after_request_ms": {
+        "n": 77,
+        "p50": 20.981201171875,
+        "p95": 5030.6515625,
+        "max": 6030.1494140625
+      },
+      "confirmation_source": {
+        "http_answer": 77
+      },
+      "throttled": 0,
+      "smallest_activation_upper_ms": 21.1650390625,
+      "activation_with_settlement": {
+        "COMPATIBLE-UNIDENTIFIED": 85,
+        "CONTRADICTED": 1
+      },
+      "cancel_with_settlement": {
+        "COMPATIBLE-UNIDENTIFIED": 77,
+        "NO-CANCEL-CONFIRMATION": 9
+      },
+      "orders_with_a_match_after_the_request": 1,
+      "largest_cancel_lower_bound_ms": 7.717041015625,
+      "smallest_activation_upper_with_settlement_ms": 21.1650390625
+    },
+    "K9": {
+      "cancelled": 88,
+      "before": 25,
+      "canceled_full_legs": 72,
+      "canceled_full_before": 24,
+      "premise": "the true increment among the value-consistent candidates; a frame stamped before the bot receives it"
+    }
+  },
+  "scenarios": {
+    "asof": "2026-11-18T20:46:28.060651+00:00",
+    "days": {
+      "20261023": {
+        "asof": "2026-11-18T20:28:18.245546+00:00",
+        "population": {
+          "windows": 288,
+          "orders": 30088,
+          "base_matched": 30088,
+          "kernel_checked": 816,
+          "events": 560819,
+          "held_events_S1": 9576,
+          "held_events_S2": 1412,
+          "held_events_S3": 1363,
+          "held_events_ST": 73
+        },
+        "excluded_hours": []
+      },
+      "20261024": {
+        "asof": "2026-11-18T20:32:36.792226+00:00",
+        "population": {
+          "windows": 288,
+          "orders": 30358,
+          "base_matched": 30358,
+          "kernel_checked": 820,
+          "events": 453163,
+          "held_events_S1": 8655,
+          "held_events_S2": 1462,
+          "held_events_S3": 1442,
+          "held_events_ST": 43
+        },
+        "excluded_hours": []
+      },
+      "20261025": {
+        "asof": "2026-11-18T20:36:48.369024+00:00",
+        "population": {
+          "windows": 288,
+          "orders": 29558,
+          "base_matched": 29558,
+          "kernel_checked": 797,
+          "events": 441726,
+          "held_events_S1": 8495,
+          "held_events_S2": 1544,
+          "held_events_S3": 1339,
+          "held_events_ST": 64
+        },
+        "excluded_hours": []
+      },
+      "20261026": {
+        "asof": "2026-11-18T20:41:18.112410+00:00",
+        "population": {
+          "windows": 288,
+          "orders": 29832,
+          "base_matched": 29832,
+          "kernel_checked": 809,
+          "events": 580259,
+          "held_events_S1": 9300,
+          "held_events_S2": 1269,
+          "held_events_S3": 1301,
+          "held_events_ST": 74
+        },
+        "excluded_hours": []
+      },
+      "20261027": {
+        "asof": "2026-11-18T20:45:42.627031+00:00",
+        "population": {
+          "windows": 288,
+          "orders": 29338,
+          "base_matched": 29338,
+          "kernel_checked": 790,
+          "events": 573373,
+          "held_events_S1": 9748,
+          "held_events_S2": 1385,
+          "held_events_S3": 1302,
+          "held_events_ST": 69
+        },
+        "excluded_hours": [
+          "20261028_00",
+          "20261028_01"
+        ]
+      }
+    },
+    "readings": {
+      "TIMING EVIDENCE": "LOWER-MATCH-BOUND-UNIDENTIFIED",
+      "Z0 CONTROLS": "YES",
+      "Z1 E ACROSS TESTED SCENARIOS": "NOT-STABLE-IN-TESTED-SCENARIOS",
+      "Z2 KEEP VALUE ACROSS TESTED SCENARIOS": "NOT-STABLE-IN-TESTED-SCENARIOS",
+      "Z3 THE SCORE'S VALUE ACROSS TESTED SCENARIOS": "NOT-STABLE-IN-TESTED-SCENARIOS",
+      "Z1-NY E WITHOUT FILLS ON ORDERS < 100 MS OLD ACROSS TESTED SCENARIOS": "NOT-STABLE-IN-TESTED-SCENARIOS",
+      "C2 E AT M250 vs M50": "SIGN-DIFFERS-AT-M250",
+      "C1 B1a-WEIGHTED E AT B": "HOLDS-SIGN",
+      "C2 KEEP + SCORE AT M250 vs M50": "HOLDS-AT-M250",
+      "Z3-NY THE SCORE'S VALUE WITHOUT FILLS ON ORDERS < 100 MS OLD ACROSS TESTED SCENARIOS": "NOT-STABLE-IN-TESTED-SCENARIOS"
+    },
+    "scenario_rows": 19,
+    "baseline_E": 234279.30610303002,
+    "M250_E": -27123.77082284323,
+    "baseline_KEEP_plus_score": -776492.0917280964
+  },
+  "cancel_race": {
+    "asof": "2026-11-18T18:35:02.945504+00:00",
+    "readings": {
+      "C0 POPULATION": "v6: 16,575 cancelled orders of 21,661 placed, 16,575 requests, 29 with re-sent cancels (16,608 sends; 2 cancel-all sends); basis: 14,284 cancelled orders of 20,966 placed, 14,284 requests, 45 with re-sent cancels (14,225 sends; 1 cancel-all sends)",
+      "C1 RESPONSE": "first confirmation after the first request: p50 19 ms, p90 40 ms, above 1 s 14 and above 4 s 8 of 30,584 answered; no answer 275",
+      "C2 RACE": "AFTER-ANSWER 14, AFTER-REQUEST 3, UNORDERED 68, BEFORE-REQUEST 1, NO-FILL 30,757, CENSORED 0 of 30,843 uncensored cancelled orders",
+      "C3b MATCH-AFTER-A-CANCELED-CONFIRMATION": "NO (CONDITIONAL on K7): none of 30,563 orders with a Canceled confirmation",
+      "C3 MATCH-AFTER-ANSWER": "YES (CONDITIONAL on K7): 14 cancelled orders matched after the venue answered their cancel (14 of 30,843 uncensored; 0 of 30,473 first answered Canceled)",
+      "C4 BOOK-EVIDENCE": "CONSISTENT on 98 known fills (0 contradictory)",
+      "C5 REPRODUCES-THE-CENSUS": "YES (86 of 86 census orders; 85 with a cancel request in the case table)"
+    },
+    "C0": {
+      "v6": {
+        "steps": 557747,
+        "last_at_ms": 1794147252139.3745,
+        "stopped_at_cutoff": false,
+        "cancel_all_sends": 2,
+        "cancelled_order_never_signed": 79,
+        "first_confirmation_before_the_first_request": 2,
+        "orders_placed": 21661,
+        "orders_signed": 16585,
+        "cancelled_orders": 16575,
+        "requests": 16575,
+        "sends": 16608,
+        "orders_with_retries": 29,
+        "orders_with_several_answers": 37
+      },
+      "basis": {
+        "steps": 462823,
+        "last_at_ms": 1794178919910.5066,
+        "stopped_at_cutoff": true,
+        "cancel_all_sends": 1,
+        "cancelled_order_never_signed": 201,
+        "orders_placed": 20966,
+        "orders_signed": 14150,
+        "cancelled_orders": 14284,
+        "requests": 14284,
+        "sends": 14225,
+        "orders_with_retries": 45,
+        "orders_with_several_answers": 19
+      }
+    },
+    "C3": {
+      "orders": 14,
+      "uncensored": 14,
+      "of_uncensored": 30843,
+      "canceled_first": 0,
+      "of_canceled_first": 30473,
+      "by_first_confirmation": {
+        "MATCHED-OR-GONE": 0,
+        "CANCELED": 0,
+        "NO-EFFECT": 14,
+        "NO-ANSWER": 0
+      }
+    },
+    "C3b": {
+      "orders": 0,
+      "of_with_canceled_confirmation": 30563,
+      "by_first_confirmation": {
+        "MATCHED-OR-GONE": 0,
+        "CANCELED": 0,
+        "NO-EFFECT": 0,
+        "NO-ANSWER": 0
+      }
+    }
+  },
+  "readiness": "ready for scenario-conditional research tests on consumed days; execution/profitability validation not established"
+}

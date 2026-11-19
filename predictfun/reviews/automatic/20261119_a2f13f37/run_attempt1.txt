@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261119_a2f13f37/verify.py", line 96, in <module>
+    assert all(ST.hour_allowed(h) for h in st['hours'])
+                                           ~~^^^^^^^^^
+KeyError: 'hours'
+2026-11-19T01:58:00Z tag=review_a2f13f37_ready rc=1 peak_rss_mib=729 wall_s=26.23 cpu_user_s=24.58 memavail_start_gib=23 disk_free_gib=431->431 slot=codex

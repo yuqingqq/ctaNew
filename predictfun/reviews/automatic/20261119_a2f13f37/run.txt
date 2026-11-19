@@ -1,0 +1,20 @@
+{
+  "target": "a2f13f37d58d546b949bb4919725739978a47c76",
+  "asof": "2026-11-19T01:59:56.919369+00:00",
+  "selftests": [
+    "pf_timing_case_audit",
+    "pf_known_clock_census",
+    "pf_keep_pull_exec_windows",
+    "pf_keep_pull_scenarios",
+    "pf_settlement_times",
+    "pf_cancel_race_study"
+  ],
+  "prior_findings": {
+    "P2_1_constituent_constraints": "fixed",
+    "P2_2_exact_timestamp_identity": "fixed",
+    "P2_3_cancel_bound": "conditional; dependent inference checked below"
+  },
+  "readiness": "ready for scenario-conditional research tests on consumed days; execution/profitability validation not established"
+}
+Known-v7 readings reproduce; 19 pooled scenario CSV rows reconcile; corrected settlement-v2 inputs verified.
+2026-11-19T01:59:56Z tag=review_a2f13f37_ready rc=0 peak_rss_mib=211 wall_s=1.85 cpu_user_s=1.64 memavail_start_gib=23 disk_free_gib=431->431 slot=codex
