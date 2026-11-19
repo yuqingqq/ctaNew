@@ -1,3 +1,33 @@
+adaptive_mm_plan_v2_20261119_codex:
+  status: complete_prospective_plan_implementation_pending
+  request: generate_complete_plan_after_metric_review
+  plan: predictfun/handoffs/20261119_adaptive_mm_plan_v2.md
+  parameter_manifest: predictfun/handoffs/20261119_adaptive_mm_plan_v2.yml
+  basis_result_commit: edfeda22dd72aacaee0c758e96e6e29fe2667422
+  basis_review_commit: 0026ab85a124df2aa360e2cb647294a4eca8f6f9
+  historical_result_verdicts: unchanged
+  historical_G0: resolved
+  historical_G1: skipped_by_user
+  stages: [R0_corrected_receipt, R1_branch_engine, R2_supported_teacher_labels, R3_prediction, R4_own_state_replay, R5_conditional_revision, R6_continuous_forward]
+  immediate_priority: R0_superseding_paired_diagnostic_receipt_without_refit
+  mandatory_target: genuine_50ms_WAIT_delayed_entry_and_reentry_common_END
+  new_bounded_inventory_cap_shares: 30
+  first_candidate: ADV2_RICH_pinned_LightGBM_separate_side_action_heads
+  input_controls: [ADV2_FAIR, ADV2_MECH]
+  training_weights: equal_total_per_original_episode_side_head
+  prediction_screen: {absolute_mean_bias_tolerance_cents: 0.05, relative_tolerance: 0.20, distinct_episode_floor: 200, nonzero_label_episode_floor: 20}
+  median_lifetime_increase_required: false
+  early_pull_control_future_admissions: recomputed_on_own_state_not_forced_equal
+  tail_metrics: unconditional_loss_cost_plus_conditional_tails_with_counts
+  continuous_extension: separate_contract_and_state_support_no_inventory_resets
+  forward_default: five_untouched_days_daily_t_intervals_Bonferroni_three_primary_series
+  validation: YAML_unique_keys_and_local_links_checked
+  research_run_or_new_results: false
+  protected_data_opened: false
+  implementation_changed: false
+  fixes_and_development_owner: other_session
+  scheduler: remains_disabled
+
 paired_result_review_20261119_codex:
   status: headline_values_reproduced_two_P2_diagnostics_and_open_adaptive_target_gate
   target_commit: edfeda22dd72aacaee0c758e96e6e29fe2667422

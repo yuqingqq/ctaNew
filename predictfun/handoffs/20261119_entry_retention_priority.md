@@ -1,5 +1,12 @@
 # Next priority: economically consistent entry and retention
 
+**Prospective plan superseded on 2026-11-19:** use the complete
+[revision 2 plan](20261119_adaptive_mm_plan_v2.md) and its
+[parameter manifest](20261119_adaptive_mm_plan_v2.yml). The earlier result
+verdicts and this historical plan are preserved. G0 is resolved; the user
+skipped G1. The current next deliverable is the corrected diagnostic receipt,
+followed by genuine adaptive WAIT branches and a supported continuation.
+
 User request, 2026-11-19: write clear next steps and evaluation metrics, then
 commit them. The development session owns implementation. This commit is a plan,
 not a model freeze, completed experiment or authorization to restart scheduling.

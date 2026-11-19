@@ -1,3 +1,32 @@
+<!-- ADAPTIVE_MM_PLAN_V2_20261119_CODEX -->
+## 2026-11-19 — Complete adaptive entry/retention plan, revision 2
+
+User requested the complete plan after the latest review and metric discussion.
+Use the [complete plan](handoffs/20261119_adaptive_mm_plan_v2.md) and
+[parameter manifest](handoffs/20261119_adaptive_mm_plan_v2.yml). This is the
+prospective working plan; older result verdicts remain unchanged. Development
+and experiments remain with the other session. G0 is resolved; G1 stays skipped.
+
+Sequence: R0 corrected receipt without refit -> R1 genuine WAIT/re-entry branch
+engine -> R2 supported chronological pi0-50 and representative paired labels ->
+R3 one pinned candidate -> R4 own-state replay/controls -> R5 one evidence-selected
+revision if needed -> R6 continuous and untouched forward evaluation.
+
+Explicit new design choices include the bounded 30-share inventory cap,
+remaining-horizon/state support for later posts, episode-balanced training,
+admission-aware diagnostics, local matched action controls distinct from full
+policy returns, and prospective calibration/support gates. Longer median quote
+lifetime is no longer required: report exit cause, useful uptime and economics.
+Tail costs retain all zero/no-fill episodes, with conditional tail diagnostics.
+A future-admission schedule cannot be forced onto an earlier-pull control after
+re-entry changes its state. The plan specifies valid local and full-policy tests.
+
+**Next deliverable remains R0:** correct pair_qm/reached populations and NO_ENTRY
+naming, issue a superseding receipt, and show unchanged direct-value baselines.
+Do not tune model parameters first. This session changed planning/handoff only;
+YAML and document links checked; no research run, protected data or scheduler use.
+<!-- /ADAPTIVE_MM_PLAN_V2_20261119_CODEX -->
+
 <!-- PAIRED_RESULT_REVIEW_20261119_CODEX -->
 ## 2026-11-19 — Latest paired result reviewed: losses real, two diagnostic defects, adaptive WAIT still open
 
