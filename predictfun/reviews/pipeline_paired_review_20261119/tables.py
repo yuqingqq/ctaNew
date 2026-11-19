@@ -106,10 +106,11 @@ for d in DAYS:
         out.append(row(f'Oct {d[-2:]} {sd}', f(x['value'], 0), f(x['null_mean'], 0), f(x['null_sd'], 0, False), f(x['z'], 2), f(x['p_normal_one_sided'], 4, False),
                        f(x['p_draws_one_sided'], 4, False), x['moments_agree']))
 out += ['', '**Quoting (both sides; A vs PI0 / NEU / E1 is not nested)**', '']
-out += head('Day, policy', 'Resting', 'At best', 'At best both sides', 'Median life (ms)', 'Pulled at first review', 'Cancels / 100 filled sh', 'Attempts', 'Filled')
+out += head('Day, policy', 'Resting', 'At best', 'At best both sides', 'Median / p90 life (ms)', 'Pulled at first review', 'Cancels / 100 filled sh', 'Attempts', 'Filled')
 for d in DAYS:
     for p_, x in J[d]['quoting'].items():
-        out.append(row(f'Oct {d[-2:]} {p_}', pc(x['resting']), pc(x['at_best']), pc(x['at_best_both']), f(x['median_lifetime'], 0, False), pc(x['first_review_of_live']),
+        lt = J[d]['controller'][f'{p_} both']['lifetime'] or [None] * 3
+        out.append(row(f'Oct {d[-2:]} {p_}', pc(x['resting']), pc(x['at_best']), pc(x['at_best_both']), f"{f(lt[1], 0, False)} / {f(lt[2], 0, False)}", pc(x['first_review_of_live']),
                        f(x['cancels_per_100_filled_shares'], 2, False), f"{x['attempts']:,}", f"{x['filled']:,}"))
 qk = next(k for k in V[DAYS[0]] if k.startswith('CONTROLLER: quoting'))
 out += ['', row('A vs', *[f'Oct {d[-2:]}: more resting / more both-sides at best / longer median life / fewer first-review pulls / fewer cancels per filled share' for d in DAYS]),
@@ -155,5 +156,43 @@ for d in DAYS:
 out.append('')
 for d in DAYS:
     out.append(f"- Oct {d[-2:]}: A minus A-PA by fill age: " + ', '.join(f'{k} {f(v, 0)} c' for k, v in V[d]['FINDINGS C1: A minus A-PA by fill age (both)'].items()))
+# ---- computed statements: every sentence of the receipt's verdicts is one of these predicates (descriptive; computed after the run from its outputs)
+ST = {}
+ag = [J[d]['prediction'][f'A {sd}'][g].get('old_gate') for d in DAYS for sd in ('bid', 'ask') for g in GR if J[d]['prediction'][f'A {sd}'][g]['rows']]
+ST["A's old-gate groups failing (of those with rows)"] = f"{sum(x == 'FAIL' for x in ag)} of {len(ag)}"
+ST['A POST: mean prediction above 0 and realized label at most +0.02 c per row, every day and side'] = all(
+    J[d]['prediction'][f'A {sd}']['POST (pred > 0)']['mean_pred'] > 0 and J[d]['prediction'][f'A {sd}']['POST (pred > 0)']['mean_label'] <= .02 for d in DAYS for sd in ('bid', 'ask'))
+ST['Validity PASS (V1-V5) with no open defect, both days'] = all(V[d]['VALIDITY (all five)'] == 'PASS' and not V[d]['OPEN DEFECTS (validity)'] for d in DAYS)
+ST['A below N0, PI0, NEU, E1 and A-PA at B (both sides), both days'] = all(not any(V[d][CK]) for d in DAYS)
+ST['Matched control with its spread (both sides): Oct 26 / Oct 27'] = ' / '.join(V[d]['CONTROLLER: MATCHED CONTROL WITH ITS SPREAD (draws, one-sided p <= 0.05)']['both'] for d in DAYS)
+ST['Evaluation matched control vs the null mean only: Oct 26 / Oct 27'] = ' / '.join(str(ev[d]['MATCHED CONTROL AT B: A above the matched null of its admissions']) for d in DAYS)
+ST['A rests longer and is pulled at the first review less often than PI0, NEU and E1, but cancels more per filled share, both days'] = all(
+    V[d][qk][x][0] and V[d][qk][x][3] and not V[d][qk][x][4] for d in DAYS for x in ('PI0', 'NEU', 'E1'))
+ST['Every policy pulls more than half of its live orders at the first review (median life = the first-review landing), both days'] = all(
+    J[d]['quoting'][p_]['first_review_of_live'] > .5 for d in DAYS for p_ in J[d]['quoting'])
+ST['Fewer than 1% of A\'s episodes lose (the worst-1% share is then 100% by construction), both days'] = all(J[d]['risk']['A']['both']['p_loss'] < .01 for d in DAYS)
+sw = {d: J[d]['risk']['A']['where']['window (severe episodes)'] for d in DAYS}
+ST["A's severe-episode loss is largest after the earliest effect (the continuation window), both days"] = all(min(sw[d], key=sw[d].get) == 'after the earliest effect' for d in DAYS)
+ph = {d: {u: x['total_loss'] / x['episodes'] for u, x in J[d]['risk']['A']['where']['phase'].items()} for d in DAYS}
+ST["A's loss per episode is highest in the market window's last minute (phase 5), both days"] = all(max(ph[d], key=ph[d].get) == '5' for d in DAYS)
+ST["A's loss per episode in phase 5 / the other phases' mean (c)"] = ' ; '.join(f"Oct {d[-2:]} {ph[d]['5']:.2f} / {sum(v for u, v in ph[d].items() if u != '5') / 4:.2f}" for d in DAYS)
+sp = {d: J[d]['risk']['A']['where']['spread'] for d in DAYS}
+ST["Share of A's loss at a spread of at most 1 c"] = ' ; '.join(f"Oct {d[-2:]} {pc(sp[d]['(0, 1]']['total_loss'] / sum(x['total_loss'] for x in sp[d].values()))}" for d in DAYS)
+cm = {d: J[d]['risk']['A']['where']['components'] for d in DAYS}
+ST["A's spread component positive and movement component negative, both days"] = all(cm[d]['spread'] > 0 and cm[d]['movement'] < 0 for d in DAYS)
+tg = {d: {u: x['total_loss'] for u, x in J[d]['risk']['A']['where']['sigma tercile'].items()} for d in DAYS}
+ST["The sigma tercile carrying A's largest loss: Oct 26 / Oct 27"] = ' / '.join(max(tg[d], key=tg[d].get) for d in DAYS)
+ST["A's time-integrated inventory above PI0's, NEU's and E1's, both days"] = all(
+    J[d]['risk']['A']['where']['inventory']['time_integrated_share_s'] > J[d]['risk'][x]['where']['inventory']['time_integrated_share_s'] for d in DAYS for x in ('PI0', 'NEU', 'E1'))
+fc_ = {d: J[d]['findings_c1_c3_c12'] for d in DAYS}
+ST["Share of A's value from fills under 100 ms old"] = ' ; '.join(f"Oct {d[-2:]} {pc(fc_[d]['A']['both']['C1']['by_age']['lt100'] / sum(fc_[d]['A']['both']['C1']['by_age'].values()))}" for d in DAYS)
+ST['A below PI0, NEU and E1 under each B1a age weighting (FINDINGS C1), both days'] = all(
+    fc_[d]['A']['both']['C1']['b1a_weighted'][k] < fc_[d][x]['both']['C1']['b1a_weighted'][k] for d in DAYS for x in ('PI0', 'NEU', 'E1') for k in fc_[d]['A']['both']['C1']['b1a_weighted'])
+ST['A without fills under 100 ms old below 0, both days'] = all(fc_[d]['A']['both']['C1']['without_young'] < 0 for d in DAYS)
+ST["A's E2-timed trade value below its WS-timed, Oct 27 (FINDINGS C12)"] = fc_['20261027']['A']['both']['C12']['E2'] < fc_['20261027']['A']['both']['C12']['WS']
+out += ['', '### Computed statements (descriptive; each sentence of the verdicts below is one of these)', '']
+out += head('Statement', 'Value', align=['---', '---'])
+for k, v in ST.items():
+    out.append(row(k, v))
 print('\n'.join(out))
 sys.exit(0)
