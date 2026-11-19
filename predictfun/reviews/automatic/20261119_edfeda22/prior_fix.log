@@ -1,0 +1,43 @@
+{
+  "model_files_identical_and_hash_verified": 44,
+  "days": {
+    "20261026": {
+      "rows": 1299570,
+      "changed_flags": 23,
+      "changed_orders": 9,
+      "incoherent_zero_quantity_accepted": 0,
+      "first_triggers_changed": 0,
+      "policy_csv_unchanged": true,
+      "policy_csv_rows": 38,
+      "policy_contract_parity": {
+        "compared": 1269738,
+        "refused": 1062,
+        "agree": 1269738,
+        "accepted_without_round_trip": 23,
+        "verdict_only": 0
+      }
+    },
+    "20261027": {
+      "rows": 1433878,
+      "changed_flags": 15,
+      "changed_orders": 6,
+      "incoherent_zero_quantity_accepted": 0,
+      "first_triggers_changed": 0,
+      "policy_csv_unchanged": true,
+      "policy_csv_rows": 38,
+      "policy_contract_parity": {
+        "compared": 1404540,
+        "refused": 2146,
+        "agree": 1404540,
+        "accepted_without_round_trip": 15,
+        "verdict_only": 0
+      }
+    }
+  },
+  "committed_result_copies_match_data": 8,
+  "prior_fix_script_sha256": "04ee5f46df351c9e83fd8088e7bef0d0c86afc7408962e7961aa53215da7f17f",
+  "review_asof": "2026-11-19T13:30:56.108750+00:00",
+  "target_commit": "edfeda22dd72aacaee0c758e96e6e29fe2667422",
+  "review_script_sha256": "1e238228bba646b6a25c27eb112edc32d018e114052024495814ff581bd26eda"
+}
+2026-11-19T13:30:54Z tag=review-edfeda22-prior-fix-provenance rc=0 peak_rss_mib=546 wall_s=1.96 cpu_user_s=1.52 memavail_start_gib=23 disk_free_gib=431->431 slot=codex

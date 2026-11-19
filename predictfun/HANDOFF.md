@@ -1,3 +1,37 @@
+<!-- PAIRED_RESULT_REVIEW_20261119_CODEX -->
+## 2026-11-19 — Latest paired result reviewed: losses real, two diagnostic defects, adaptive WAIT still open
+
+Target **edfeda22dd72aacaee0c758e96e6e29fe2667422**.
+[Review and next priority](reviews/automatic/20261119_edfeda22/report.md),
+[artifact evidence](reviews/automatic/20261119_edfeda22/receipt.json),
+[prior-fix verification](reviews/automatic/20261119_edfeda22/prior_fix.json).
+This supersedes the earlier review-owned immediate G0/G1 priority: G0 is fixed;
+the user explicitly skipped G1. Development remains with the other session.
+
+**Two P2 findings:** reached-state/gate diagnostics include orders never POSTed
+(58,287 / 67,329 rows on Oct26/27); pair_qm subtracts movement labels based on
+different mids, so it cannot map back to paired value at the current reference.
+Corrected reached counts are 67,776 / 76,731. KEEP subgroup attribution changes,
+but the primary prediction gate still fails. The movement bug does not affect A:
+it fits pair_v directly; independent fills reproduce pair_v and pair_q on all
+four label days. The prior 23 / 15 incoherent flags are fixed with zero changes
+to first triggers or historical values; 44 v2/v3 model files hash-identical.
+
+A's baseline value is -2032.12 / -11865.45 c versus -1053.02 / -6943.81 c for
+the identical admissions pulled at the first review. First-review pulls fall to
+57.05% / 57.36%, but median live lifetime stays 79 ms. Values are local END marks,
+not portfolio P&L; Oct26/27 are consumed (G=2). No training/raw tape/validation
+was run by this review. The current WAIT has zero exposure until END: it tests
+POST versus NO_ENTRY, not G2's adaptive 50 ms WAIT/delayed entry.
+
+**ONE next deliverable:** publish a corrected paired-diagnostic receipt without
+refitting: rebase/retire pair_qm, intersect each head's reached diagnostics with
+its own admissions, name NO_ENTRY accurately, pass the independent falsifiers,
+and show unchanged direct-value baselines beside corrected groups/gates. Then
+complete genuine G2 branch-local WAIT/re-entry before another full-model claim.
+Review-only changes; other-session work preserved; scheduler remains disabled.
+<!-- /PAIRED_RESULT_REVIEW_20261119_CODEX -->
+
 <!-- ENTRY_RETENTION_PRIORITY_20261119_CODEX -->
 ## 2026-11-19 — USER next priority committed: consistent entry/retention and useful quoting
 

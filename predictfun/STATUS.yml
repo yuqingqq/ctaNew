@@ -1,3 +1,35 @@
+paired_result_review_20261119_codex:
+  status: headline_values_reproduced_two_P2_diagnostics_and_open_adaptive_target_gate
+  target_commit: edfeda22dd72aacaee0c758e96e6e29fe2667422
+  report: predictfun/reviews/automatic/20261119_edfeda22/report.md
+  receipt: predictfun/reviews/automatic/20261119_edfeda22/receipt.json
+  prior_fix_receipt: predictfun/reviews/automatic/20261119_edfeda22/prior_fix.json
+  review_asof: "2026-11-19T13:26:50.267821+00:00"
+  prior_findings: {zero_quantity_coherence: resolved, loss_attribution: resolved, overbroad_entry_conclusion: resolved}
+  P2_findings: [reached_diagnostics_omit_POST_admission, pair_qm_mixes_mid_references]
+  current_candidate_uses_pair_qm: false
+  direct_value_and_quantity_labels_reconciled: 5723835
+  current_experiment: POST_vs_NO_ENTRY_with_pi0_cancellation_single_order_END_marks
+  open_target_gate: G2_adaptive_50ms_WAIT_delayed_entry_and_reentry_not_implemented
+  G1: skipped_by_user
+  candidate_A_value_cents: {Oct26: -2032.1236860387226, Oct27: -11865.445403350106}
+  same_admissions_pull_all_value_cents: {Oct26: -1053.0159863780996, Oct27: -6943.808867849673}
+  reached_rows_corrected: {Oct26: 67776, Oct27: 76731}
+  reached_rows_never_posted_removed: {Oct26: 58287, Oct27: 67329}
+  first_review_pull_fraction: {Oct26: 0.5704847450077946, Oct27: 0.5735778091208275}
+  median_live_lifetime_ms: {Oct26: 79, Oct27: 79}
+  consumed_evaluation_days: ["20261026", "20261027"]
+  paired_artifacts_asof: "2026-11-19T11:54:21.167313+00:00"
+  original_opportunities: {Oct26: 30242, Oct27: 29820}
+  path_opportunities: {Oct26: 29832, Oct27: 29338}
+  checks: {slot: codex, peak_rss_mib: 688, G0_boundary_cases: 12, paired_models_hash_verified: 44, old_new_models_identical: 44, committed_result_copies_match: 8}
+  raw_tape_training_or_untouched_validation: false
+  next_priority: superseding_paired_diagnostic_receipt_common_reference_movement_and_admission_aware_populations_no_refit
+  subsequent_gate: genuine_branch_local_WAIT_before_full_model_claim
+  fixes_owner: other_development_session
+  implementation_changed_by_review: false
+  scheduler: remains_disabled
+
 entry_retention_priority_20261119_codex:
   status: plan_committed_implementation_owned_by_development_session
   request: "generate next priority, clear next steps and evaluation metrics, then commit"
