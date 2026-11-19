@@ -1,0 +1,2 @@
+2026-11-19T08:50:09Z tag=pipeline_v2_result_review rc=0 peak_rss_mib=1605 wall_s=98.75 cpu_user_s=94.19 memavail_start_gib=23 disk_free_gib=431->431 slot=codex
+2026-11-19T08:53:22Z tag=pipeline_v2_result_followup rc=0 peak_rss_mib=1595 wall_s=5.91 cpu_user_s=2.48 memavail_start_gib=23 disk_free_gib=431->431 slot=codex
