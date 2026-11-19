@@ -1,0 +1,93 @@
+{
+  "asof": "2026-11-19T03:04:58.327362+00:00",
+  "source_commit": "c2717dc86fc637548c8e90275227cabeb99a476b",
+  "sources": {
+    "predictfun/research/pf_pipeline_contract.py": "0005bc697887d28df474cbf2fc62c939e3f1a4012d2b23100327dcfb9ee88b8d",
+    "predictfun/research/pf_pipeline_contract_check.py": "93d4389078ca18558b3c59ce6ea645df9704bb9478f63c1bda4a7645f747c4a2"
+  },
+  "synthetic_tests": 16,
+  "passed": true,
+  "scope": "interface/accounting checks only; no forecast skill, policy acceptance or profitability",
+  "saved_check": {
+    "day": "20261023",
+    "consumed": true,
+    "source_asof": "2026-11-18T20:28:18.245546+00:00",
+    "base_asof": "2026-11-18T02:53:31.517340+00:00",
+    "pinned_engine": "a2f13f37d58d546b949bb4919725739978a47c76",
+    "receipts": {
+      "data/predict_fun/research/keep_pull_20261117/20261023/receipt.json": "5de91ce5a4dbddbc9789ac549e2965016d97967bc7762035e7b8db51b5f5bc44",
+      "data/predict_fun/research/keep_pull_scenarios_v6_20261118/20261023/receipt.json": "e443b8eca7c228bdff439fcbedee658b9ecdd3db688f959ef120b358be684919"
+    },
+    "inputs": {
+      "data/predict_fun/research/keep_pull_20261117/20261023/orders.parquet": "3313ea65d73ccbfee64669758efd0f7581f73470b49dc2b7752866258a5d142b",
+      "data/predict_fun/research/keep_pull_20261117/20261023/fills.parquet": "ba1b1448b353928c27850e4e19f073ebb6d9cf9235a51dd07d691eab2f9f2513",
+      "data/predict_fun/research/keep_pull_scenarios_v6_20261118/20261023/orders.parquet": "a55375ccaedcc1f92399da0e7b5a278b4aeb40b18241c86b823edc5eb8c8daaf",
+      "data/predict_fun/research/keep_pull_scenarios_v6_20261118/20261023/fills.parquet": "3f59128aceb9ff2698cacf3cbde48470517f641d870470c7764b57f4d8ad98da"
+    },
+    "scenarios": {
+      "M0|A58|L37|N100": {
+        "statuses": {
+          "post:eligible": 28799,
+          "post:checked": 30088,
+          "retain:eligible": 28650,
+          "retain:checked": 28650,
+          "post:refused_post_zero": 1289,
+          "retain:refused_post_only": 1289,
+          "post:missing_endpoint": 354,
+          "retain:missing_endpoint": 354,
+          "retain:structural_cancel_already_requested": 149,
+          "post:stale_future_book": 24,
+          "retain:stale_future_book": 24
+        },
+        "original_orders": 30466,
+        "accounting_checks": 58738,
+        "nonzero_severe_excess_labels": 8733,
+        "max_reconciliation_error_cents": 9.094947017729282e-13
+      },
+      "M50|A58|L37|N100": {
+        "statuses": {
+          "post:eligible": 28799,
+          "post:checked": 30088,
+          "retain:eligible": 28650,
+          "retain:checked": 28650,
+          "post:refused_post_zero": 1289,
+          "retain:refused_post_only": 1289,
+          "post:missing_endpoint": 354,
+          "retain:missing_endpoint": 354,
+          "retain:structural_cancel_already_requested": 149,
+          "post:stale_future_book": 24,
+          "retain:stale_future_book": 24
+        },
+        "original_orders": 30466,
+        "accounting_checks": 58738,
+        "nonzero_severe_excess_labels": 9312,
+        "max_reconciliation_error_cents": 9.094947017729282e-13
+      },
+      "M250|A58|L37|N100": {
+        "statuses": {
+          "post:eligible": 28799,
+          "post:checked": 30088,
+          "retain:eligible": 28650,
+          "retain:checked": 28650,
+          "post:refused_post_zero": 1289,
+          "retain:refused_post_only": 1289,
+          "post:missing_endpoint": 354,
+          "retain:missing_endpoint": 354,
+          "retain:structural_cancel_already_requested": 149,
+          "post:stale_future_book": 24,
+          "retain:stale_future_book": 24
+        },
+        "original_orders": 30466,
+        "accounting_checks": 58738,
+        "nonzero_severe_excess_labels": 10226,
+        "max_reconciliation_error_cents": 9.094947017729282e-13
+      }
+    },
+    "predictor_fitted": false,
+    "policy_evaluated": false,
+    "realized_values_used_only_for_accounting": true,
+    "raw_tape_read": false,
+    "untouched_days_read": false
+  },
+  "completed_asof": "2026-11-19T03:05:16.599252+00:00"
+}

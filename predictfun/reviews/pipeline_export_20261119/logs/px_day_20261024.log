@@ -1,0 +1,14 @@
+{"stage": "export", "day": "20261024", "markets": 24, "post": 2532, "retain": 109485, "seconds": 96, "rss": 551}
+{"stage": "export", "day": "20261024", "markets": 48, "post": 5104, "retain": 247580, "seconds": 119, "rss": 626}
+{"stage": "export", "day": "20261024", "markets": 72, "post": 7710, "retain": 373860, "seconds": 143, "rss": 654}
+{"stage": "export", "day": "20261024", "markets": 96, "post": 10252, "retain": 488652, "seconds": 164, "rss": 669}
+{"stage": "export", "day": "20261024", "markets": 120, "post": 12868, "retain": 598911, "seconds": 186, "rss": 666}
+{"stage": "export", "day": "20261024", "markets": 144, "post": 15500, "retain": 725698, "seconds": 209, "rss": 720}
+{"stage": "export", "day": "20261024", "markets": 168, "post": 18052, "retain": 847926, "seconds": 231, "rss": 741}
+{"stage": "export", "day": "20261024", "markets": 192, "post": 20472, "retain": 933972, "seconds": 249, "rss": 746}
+{"stage": "export", "day": "20261024", "markets": 216, "post": 23056, "retain": 1042831, "seconds": 271, "rss": 766}
+{"stage": "export", "day": "20261024", "markets": 240, "post": 25678, "retain": 1168046, "seconds": 294, "rss": 788}
+{"stage": "export", "day": "20261024", "markets": 264, "post": 28124, "retain": 1298849, "seconds": 316, "rss": 833}
+{"stage": "export", "day": "20261024", "markets": 288, "post": 30704, "retain": 1439916, "seconds": 340, "rss": 855}
+{"day": "20261024", "stat": {"states": 30704, "post_rows": 30704, "retain_rows": 1439916, "kernel_checked": 304, "causal_checked": 17, "known_checked": 1191, "ids_unique": true}, "statuses": {"post:eligible": 29302, "retain:eligible": 1439399, "post:refused_post_only": 1056, "post:missing_endpoint": 334, "retain:feature_unavailable": 517, "post:stale_future_book": 12}, "seconds": 340}
+2026-11-19T04:17:24Z tag=px_day_20261024 rc=0 peak_rss_mib=1384 wall_s=341.36 cpu_user_s=320.50 memavail_start_gib=23 disk_free_gib=439->438 slot=claude

@@ -1,0 +1,30 @@
+ 0 none (must pass): rc 0 -> passed
+ 1 X1 never refuses: rc 1 -> caught: PIPELINE EXPORT SELFTEST FAILED: a dropped RETAIN row refused by another control: PIPELINE EXPORT FAILED -> no output: X3 A+1: RETAIN values at the executed pulls sum to -1,402.500 over 328 pulls, the
+ 2 X2 never refuses: rc 1 -> caught: PIPELINE EXPORT SELFTEST FAILED: the export accepted a committed order value changed under a matching receipt | a refused export left output (a committed order value changed under a matching receipt)
+ 3 X3 never refuses: rc 1 -> caught: PIPELINE EXPORT SELFTEST FAILED: the export accepted a landing moved by 37 ms | a refused export left output (a landing moved by 37 ms)
+ 4 X3 compares the pull counts only: rc 1 -> caught: PIPELINE EXPORT SELFTEST FAILED: the export accepted a landing moved by 37 ms | a refused export left output (a landing moved by 37 ms)
+ 5 X4 never refuses: rc 1 -> caught: PIPELINE EXPORT SELFTEST FAILED: the export accepted a committed fill time changed under a matching receipt | a refused export left output (a committed fill time changed under a matching receipt)
+ 6 X5 causality never refuses: rc 1 -> caught: PIPELINE EXPORT SELFTEST FAILED: the export accepted a leaky feature stub | a refused export left output (a leaky feature stub) | the export accepted a feature stub that ignores the book (the same-tim
+ 7 X5 positive control always fires: rc 1 -> caught: PIPELINE EXPORT SELFTEST FAILED: the export accepted a feature stub that ignores the book (the same-time control cannot fire) | a refused export left output (a feature stub that ignores the book (the 
+ 8 X5 future perturbation not applied: rc 0 -> passed   <<< UNEXPECTED
+ 9 X5 known-state parity never refuses: rc 1 -> caught: PIPELINE EXPORT SELFTEST FAILED: the export accepted the queue ahead not min-updated | a refused export left output (the queue ahead not min-updated)
+10 X6 never refuses: rc 1 -> caught: PIPELINE EXPORT SELFTEST FAILED: the export accepted a sealed hour | a refused export left output (a sealed hour)
+11 the hour rule lets sealed hours through: rc 1 -> caught: PIPELINE EXPORT SELFTEST FAILED: the sealed / forward hour rule | the export accepted a sealed hour | a refused export left output (a sealed hour)
+12 a sampled check that never ran is accepted: rc 1 -> caught: PIPELINE EXPORT SELFTEST FAILED: the export accepted no order sampled for the kernel / known-state checks | a refused export left output (no order sampled for the kernel / known-state checks)
+13 a refused day leaves its partial output: rc 1 -> caught: PIPELINE EXPORT SELFTEST FAILED: a refused export left output (a leaky feature stub) | a refused export left output (a feature stub that ignores the book (the same-time control cannot fire)) | a refus
+14 fill value with the wrong sign: rc 1 -> PIPELINE EXPORT FAILED -> no output: X2 order 3 m50: POST q / value 30.000000 / -135.000000 vs the committed 30.000000 / 135.000000 | X2 order 3 m0: POST q / value 30.000000 / -135.000000 vs the commi   <<< UNEXPECTED
+15 qm from the END mark instead of the causal mid: rc 1 -> caught: PIPELINE EXPORT SELFTEST FAILED: brute recomputation: 4924 differences over 53,124 rows
+16 severe excess without its threshold: rc 1 -> caught: PIPELINE EXPORT SELFTEST FAILED: brute recomputation: 786 differences over 53,124 rows
+17 live flags of every clock from M50: rc 1 -> caught: PIPELINE EXPORT SELFTEST FAILED: brute recomputation: 316 differences over 53,124 rows
+18 RETAIN landing without the cancel latency: rc 1 -> PIPELINE EXPORT FAILED -> no output: X3 A+0: RETAIN values at the executed pulls sum to -120.000 over 45 pulls, the committed keep / pull run -135.000 over 45 | X3 B0.5: RETAIN values at the executed    <<< UNEXPECTED
+19 a fill at the landing instant counted as unremovable: rc 1 -> caught: PIPELINE EXPORT SELFTEST FAILED: affected: [14.0, 4.0, 4.0, 0.0] [-5.0, -8.0, -8.0, 0.0] | brute recomputation: 10 differences over 53,124 rows
+20 the fair edge from the posting fair price at every step: rc 1 -> caught: PIPELINE EXPORT SELFTEST FAILED: brute recomputation: 42445 differences over 53,124 rows
+21 time to END from the absolute clock: rc 1 -> caught: PIPELINE EXPORT SELFTEST FAILED: brute recomputation: 53124 differences over 53,124 rows
+22 known fills without the notice delay: rc 1 -> PIPELINE EXPORT FAILED -> no output: X5 order 3 decision 11: the vectorised known state differs from known_state {'known_remaining': (30.0, 0.0), 'known_filled': (0.0, 30.0)} | X5 order 5 decision 1:    <<< UNEXPECTED
+23 the old 1 s exposure as the horizon: rc 1 -> caught: PIPELINE EXPORT SELFTEST FAILED: brute recomputation: 43426 differences over 53,124 rows
+24 the queue ahead not min-updated: rc 1 -> PIPELINE EXPORT FAILED -> no output: X5 order 6 decision 49: the vectorised known state differs from known_state {'queue_ahead_known': (0.0, 100.0)} | X5 order 6 decision 97: the vectorised known stat   <<< UNEXPECTED
+25 order inputs given the mid as the scale: rc 1 -> caught: PIPELINE EXPORT SELFTEST FAILED: brute recomputation: 50925 differences over 53,124 rows
+26 a refused post labelled eligible: rc 1 -> caught: PIPELINE EXPORT SELFTEST FAILED: rows / statuses: 53,172 rows, {'post:eligible': 640, 'retain:eligible': 52460, 'post:missing_endpoint': 4, 'post:stale_future_book': 6, 'retain:feature_unavailable': 2
+PIPELINE EXPORT MUTATION CHECK FAILED: 5 unexpected outcomes of 27
+2026-11-19T03:25:03Z tag=px_mutants rc=1 peak_rss_mib=457 wall_s=1351.33 cpu_user_s=1313.42 memavail_start_gib=23 disk_free_gib=430->439 slot=claude
+FAILED px_mutants

@@ -1,0 +1,23 @@
+test_bad_fill_ledger_refused (__main__.ContractTests.test_bad_fill_ledger_refused) ... ok
+test_cancel_boundary_and_unavoidable_prefix (__main__.ContractTests.test_cancel_boundary_and_unavoidable_prefix) ... ok
+test_cancel_never_releases_reservation (__main__.ContractTests.test_cancel_never_releases_reservation) ... ok
+test_complement_and_separate_sides (__main__.ContractTests.test_complement_and_separate_sides) ... ok
+test_economic_and_client_identity (__main__.ContractTests.test_economic_and_client_identity) ... ok
+test_future_information_and_oracle_refused (__main__.ContractTests.test_future_information_and_oracle_refused) ... ok
+test_invalid_distribution_refused (__main__.ContractTests.test_invalid_distribution_refused) ... ok
+test_inventory_and_explicit_action_cost (__main__.ContractTests.test_inventory_and_explicit_action_cost) ... ok
+test_joint_dependence (__main__.ContractTests.test_joint_dependence) ... ok
+test_missing_forecast_and_pending_actions (__main__.ContractTests.test_missing_forecast_and_pending_actions) ... ok
+test_no_fill_and_unclipped_tail (__main__.ContractTests.test_no_fill_and_unclipped_tail) ... ok
+test_reference_price_invariance (__main__.ContractTests.test_reference_price_invariance) ... ok
+test_saved_hash_guard (__main__.ContractTests.test_saved_hash_guard) ... ok
+test_two_posts_share_capacity (__main__.ContractTests.test_two_posts_share_capacity) ... ok
+test_wrong_target_refused (__main__.ContractTests.test_wrong_target_refused) ... ok
+test_zero_advantage_preserves_state (__main__.ContractTests.test_zero_advantage_preserves_state) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.004s
+
+OK
+{"receipt": "/tmp/claude-1001/-home-yuqing-ctaNew/aea5bfb9-4ea4-41d0-bf73-bb98d818e3d4/scratchpad/pipe/contract_check_repro.json", "passed": true, "synthetic_tests": 16}
+2026-11-19T03:04:58Z tag=pc_check_repro rc=0 peak_rss_mib=301 wall_s=18.38 cpu_user_s=17.91 memavail_start_gib=23 disk_free_gib=431->431 slot=claude
