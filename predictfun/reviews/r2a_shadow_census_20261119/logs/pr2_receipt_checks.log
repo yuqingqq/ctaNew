@@ -1,0 +1,3 @@
+weights one per episode x side x head (508 groups), zero elsewhere: True; absolute times and mark source on every episode row: True; the 91 inputs (export order) and 14 context columns present: True; context on every sampled ok row: True; support cells 28, SUPPORTED 0
+RECEIPT CHECKS ALL TRUE: True
+2026-11-19T19:50:15Z tag=pr2_receipt_checks rc=0 peak_rss_mib=673 wall_s=1.56 cpu_user_s=1.03 memavail_start_gib=23 disk_free_gib=467->467 slot=claude

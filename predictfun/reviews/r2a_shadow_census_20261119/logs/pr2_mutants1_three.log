@@ -1,0 +1,22 @@
+ 0 none (must pass): rc 0 -> passed
+ 1 the phase from the last 8 digest bytes: rc 1 -> caught: R2 SHADOW SELFTEST FAILED: M1: the phase of ('20261023', 7, 11, 0, 'post') differs from an independent hex-digest computation | M1: the phase of ('20261023', 7, 11, 0, 'retain') differs from an independent hex-digest com
+ 2 the phase mod 4: rc 1 -> ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ / StopIteration   <<< UNEXPECTED
+ 3 the phase little-endian: rc 0 -> passed   <<< UNEXPECTED
+ 4 the entry offsets ignore the phase: rc 1 -> caught: R2 SHADOW SELFTEST FAILED: M1: the entry offsets or the phase range | short horizon: the last entry offsets (4900.0, ok), (4950.0, near_end)
+ 5 the 4,950 ms offset run, not near_end: rc 1 -> caught: R2 SHADOW SELFTEST FAILED: short horizon: the last entry offsets (4700.0, ok), (4950.0, cap_blocked)
+ 6 the context from Engine truth (switch): rc 1 -> caught: R2 SHADOW SELFTEST FAILED: hidden notice / context: a fill at 200 ms (notice 300) - context at 250 {'ctx_has_generation': 1.0, 'ctx_generation_age_ms': 250.0, 'ctx_generation_ordinal': 1.0, 'ctx_inventory_shares': 10.0, 
+ 7 the reservations swapped: rc 1 -> caught: R2 SHADOW SELFTEST FAILED: hidden notice / context: a fill at 200 ms (notice 300) - context at 250 {'ctx_has_generation': 1.0, 'ctx_generation_age_ms': 250.0, 'ctx_generation_ordinal': 1.0, 'ctx_inventory_shares': 0.0, '
+ 8 the generation age from activation: rc 1 -> caught: R2 SHADOW SELFTEST FAILED: hidden notice / context: a fill at 200 ms (notice 300) - context at 250 {'ctx_has_generation': 1.0, 'ctx_generation_age_ms': 192.0, 'ctx_generation_ordinal': 1.0, 'ctx_inventory_shares': 0.0, '
+ 9 the generation ordinal off by one: rc 1 -> caught: R2 SHADOW SELFTEST FAILED: hidden notice / context: a fill at 200 ms (notice 300) - context at 250 {'ctx_has_generation': 1.0, 'ctx_generation_age_ms': 250.0, 'ctx_generation_ordinal': 2.0, 'ctx_inventory_shares': 0.0, '
+10 the branches without the episode identity: rc 1 -> caught: R2 SHADOW SELFTEST FAILED: identity: a branch without the episode identity ([{}])
+11 the retain sampling with the post phase: rc 1 -> caught: R2 SHADOW SELFTEST FAILED: labels: the retained target at 1,000 ms must exclude the fill at 1,010 ms (before its landing at 1,037) ([{'day': '20261023', 'instrument_id': 7, 'original_episode_id': 14, 'side': 0, 't0': 0.0
+12 the first live review not sampled: rc 1 -> caught: R2 SHADOW SELFTEST FAILED: sampling: the first live review of the probe at 200.0 ms is not sampled
+13 unsampled retained rows dropped: rc 1 -> caught: R2 SHADOW SELFTEST FAILED: census: 21 retained candidate rows of the 0 ms probe, an independent count of its open ticks 99
+14 a missing mark aborts the probes: rc 1 -> caught: R2 SHADOW SELFTEST FAILED: missing mark nan: the probes raised (missing mark) | missing mark None: the probes raised (missing mark)
+15 the retained target without the cancel latency: rc 1 -> caught: R2 SHADOW SELFTEST FAILED: labels: the retained target at 1,000 ms must exclude the fill at 1,010 ms (before its landing at 1,037) ([{'day': '20261023', 'instrument_id': 7, 'original_episode_id': 14, 'side': 0, 't0': 0.0
+16 qm against the reversed reference: rc 1 -> caught: R2 SHADOW SELFTEST FAILED: labels: value != s (ref - p) q + qm on a sampled row
+17 t_to_end restarted at the generation: rc 1 -> caught: R2 SHADOW SELFTEST FAILED: inputs: t_to_end / o_horizon not measured to the ORIGINAL END
+18 the order inputs with a restarted terminal: rc 1 -> caught: R2 SHADOW SELFTEST FAILED: inputs: t_to_end / o_horizon not measured to the ORIGINAL END
+19 the severe excess without its threshold: rc 0 -> passed   <<< UNEXPECTED
+R2 SHADOW MUTATION CHECK FAILED: 3 unexpected outcomes of 20
+2026-11-19T18:28:37Z tag=pr2_mutants1 rc=1 peak_rss_mib=362 wall_s=210.98 cpu_user_s=201.67 memavail_start_gib=23 disk_free_gib=469->469 slot=claude
