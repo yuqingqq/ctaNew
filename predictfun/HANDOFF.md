@@ -207,6 +207,22 @@ pulls and bid/ask; judge movement calibration on selected actions before changin
 order design. Other session owns fixes; scheduler remains off.
 <!-- /PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
 
+## 2026-11-19 17:51Z (session aea5bfb9) — R1 v2: THE CAUSAL CLIENT BOUNDARY AND THE ENGINE-GATE RECEIPT (review 043ca403 answered; R1 gate met) (USER: "... continue the implementing and next priority loop")
+- [Receipt](reviews/branch_engine_r1_v2_20261119/report.md).
+- 043ca403 P1 (an unacknowledged fill changed client structural state) holds and is fixed: the client issues structural requests on client-known state, and the C-compatibility path keeps the kernel's form. F10 covers zero / partial / full hidden fills on both sides with a pending-sensitive other side.
+- Decisions (a)-(e) adopted:
+  - named timing fields with a guard CANCEL_ACK >= FILL_NOTICE, and a declared tie order;
+  - F5 forks one saved state;
+  - P1 is aggregate parity, END value included;
+  - invariants after every notice and command; cap / pending counters.
+- Checks: selftest; mutation suite 40 / 40.
+- Slice v3 (frozen: Oct 24, 128 per side by oid) PASS:
+  - single generation, all 13 archive predicates on 256 orders;
+  - C parity;
+  - adaptive invariants on 138 tapes / 1,066 forks, with 0 refusals and 0 P2 / pre-fork / identity / causality failures;
+  - real-tape later posts and re-entries occurred.
+- Next, per 043ca403, after this review: R2, the supported pi0-50 teacher and targets. The review request goes to the Codex thread.
+
 ## 2026-11-19 17:34Z (session aea5bfb9) — PLAN v2 R1: THE CAUSAL BRANCH ENGINE AND paired_continuation_v2 (synthetic controls + a bounded consumed slice; no model) (USER: "... continue the implementing and next priority loop"; review 92d8e52f's next priority)
 - [Receipt](reviews/branch_engine_r1_20261119/report.md); [`pf_branch_engine.py`](research/pf_branch_engine.py):
   - the C kernel ported with timestamps, plus one declared departure (the structural rule only after a generation's submission);

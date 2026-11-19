@@ -236,6 +236,15 @@ pipeline_one_day_v3_20261119:
   values_equal_v2: {cells_per_day: 190, differing: 0}
   attribution_vs_pull_all_c: {"20261026": {first_step: 0.0, later: 954.33, never: 995.36, no_prediction: 0.0}, "20261027": {first_step: 0.0, later: -821.85, never: 251.74, no_prediction: 0.0}}
 
+branch_engine_r1_v2_20261119:
+  status: done_r1_gate_met_client_boundary_fixed_slice_v3_pass
+  asof: "2026-11-19 17:51Z"
+  receipt: predictfun/reviews/branch_engine_r1_v2_20261119/report.md
+  review_043ca403: {p1_unnoticed_fill_structural_leak: fixed_client_structural_rule_F10, a_named_timing_fields: adopted, b_one_fork_state_F5: adopted, c_aggregate_parity_with_value: adopted, d_cap_counters_invariants: adopted, e_slice_v3: pass}
+  suites: {selftest: pass, mutants: 40/40}
+  slice_v3_20261024: {orders: 256, single_generation: PASS, c_parity: PASS, adaptive_invariants: PASS, tapes: 138, forks_ok: 1066, refused: 0}
+  next: R2_supported_pi0_50_teacher_after_codex_review
+
 branch_engine_r1_20261119:
   status: done_r1_engine_synthetic_controls_and_consumed_slice_pass_design_questions_with_codex
   asof: "2026-11-19 17:34Z"

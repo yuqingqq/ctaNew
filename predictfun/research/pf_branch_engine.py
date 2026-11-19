@@ -10,16 +10,21 @@ ENGINE (one branch of one episode; times in ms from the episode start; one commo
  - each public trade is applied ONCE to the whole portfolio in price / activation priority: a trade at the order's price consumes the queue
    ahead first, a trade through it fills up to the remainder; the queue ahead only shrinks to later shown sizes with venue time before the trade
    (rule M); an order fills from its activation (inclusive) to its removal (exclusive); trades at END count;
- - on the 50 ms grid, after the trades up to the grid and with the frames received by then, the client's structural rule (no book, more than
-   3 ticks + rung behind the best, or at / through the opposite best) requests a removal that lands after the cancel latency (37 ms; before
-   activation max(request + 37, submit + 95));
- - ONE DEPARTURE, for generations submitted after the episode start: the structural rule applies to an order only after its submission tick
-   (the kernel checks every order of its list at every grid - for a later submission that acts before the order exists; for orders submitted
-   at 0, the kernel's only use, the two agree since the kernel skips a new order at grid 0). KERNEL_MODE reproduces the kernel exactly (P1).
+ - on the 50 ms grid, after the trades up to the grid and with the frames received by then, the structural rule (no book, more than 3 ticks
+   + rung behind the best, or at / through the opposite best) requests a removal that lands after the cancel latency (37 ms; before activation
+   max(request + 37, submit + 95));
+ - TWO PATHS for that rule. Without a client (batch, the C-compatibility path): the kernel's form, skipping orders whose engine remainder is 0,
+   applied after an order's submission tick (KERNEL_MODE: the kernel exactly, for P1). With a client (Branch): the CLIENT issues it on
+   client-known state - every open generation without a request, after its submission tick - including an order the engine has already filled
+   but the client has not heard of (no execution effect; review 043ca403 P1: hidden fills must not change client state). Single-generation fills
+   and values are the same on both paths; client traces differ where the kernel's form would leak a hidden fill.
 CLIENT (decides on the grid g = 0, 50, ..., < END from client-known state only):
- - a post's acceptance or post-only refusal is known at its activation (+58 ms); a fill is known NOTICE = 100 ms after it; a removal's effect is
-   acknowledged ACK = 100 ms after it (DECLARED ASSUMPTION: the same private feed as the fill notice); a generation closes when its full fill or
-   its removal is acknowledged, or its refusal is known;
+ - named timing fields (review 043ca403 (a); simulation assumptions, not exchange measurements): activation 58 ms after the submission;
+   POST_NOTICE 0 ms (acceptance / post-only refusal known at activation); FILL_NOTICE 100 ms after a match; cancel effect 37 ms after a request
+   (pre-activation max(c + 37, d + 95)); CANCEL_ACK 100 ms after the effect (CANCEL_ACK >= FILL_NOTICE is required: every pre-removal fill is
+   known before the ACK); a generation closes when its full fill is known, its removal acknowledged, or its refusal known;
+ - the tie order at a tick: the trades up to the tick; the notices due by it (statuses); the reservation / position invariants; the client's
+   structural requests; then the policy decisions in the alternating side order, the invariants checked after every command;
  - per side at most one open generation; states absent / post_pending / live / cancel_pending / terminal (at END); POST or WAIT when absent; KEEP
    or PULL when live; no action in a pending state;
  - reservations (plan v2 section 2): client-known position I; bid / ask exposure B / A = the known remaining of every open bid / ask generation
@@ -37,16 +42,20 @@ VALUE CONTRACT paired_continuation_v2 (plan v2 section 4): at a fork tick k and 
  then the policy); R_T = cash + inventory x the END mark over every generation and both sides of the branch; the common pre-fork fills are
  checked identical and cancel; each branch keeps its fills (time, generation, side, shares, price), cash, inventory, open exposure at END
  (disclosed: never cancelled or liquidated for free) and its event trace. A missing END mark censors the pair (status missing_mark), never 0.
-CONTROLS (selftest on synthetic tapes; plan v2 section 4's table; each a valid case and a known-bad one it must reject): P1 kernel parity
- (KERNEL_MODE = the C kernel bit for bit on random tapes, order lists and actions); P2 incremental = batch (an adaptive run replayed from its
- final order list); F1 actual WAIT; F2 re-entry; F3 queue preservation; F4 economic identity; F5 continuation matters (both directions,
- engine-generated); F6 causality; F7 boundaries and capacity; F8 identity / support; F9 shared book. Mutations: pf_branch_engine_mutants.py.
+CONTROLS (selftest on synthetic tapes; plan v2 section 4's table; each a valid case and a known-bad one it must reject): P1 numerical
+ AGGREGATE parity (KERNEL_MODE against the C library: per-order shares, cash, position and END value within P1_TOL - not event parity, the C
+ interface returns no fill times; plus own-order price priority); P2 incremental = batch (an adaptive run replayed from its final order list);
+ F1 actual WAIT; F2 re-entry; F3 queue preservation; F4 economic identity; F5 continuation matters (both directions, from ONE saved fork state,
+ only the continuation varied); F6 causality; F7 boundaries and capacity (incl. the reservation inequality and released reservations);
+ F8 identity / support; F9 shared book; F10 unnoticed fills (zero / partial / full, both sides, a pending-sensitive other side) cannot change
+ views, structural requests or reservations before their notice. Mutations: pf_branch_engine_mutants.py.
 SLICE (bounded, consumed day; slice <day> <n>): the first n eligible opportunities of the day, the engine under two degenerate policies (POST at
  0 then KEEP; POST at 0 then PULL at the first review) against the committed keep / pull run's M50 fills of the same orders (exact), plus P1 on
  every slice tape.
  The keep / pull run records one fill row per distinct trade time; the engine one per public trade: fills are compared summed per time
  (fills_equal; slice v1 compared rows and failed on 47 + 1 orders whose fills are all equal per time - kept as provenance).
-Usage (run_light, PF_SLOT=claude): pf_branch_engine.py selftest | traces | slice <day> <n> [tag]
+SLICE v3 (review 043ca403 (e); slice_v3 <day>): the first 128 eligible archived opportunities per side by oid - see slice_v3.
+Usage (run_light, PF_SLOT=claude): pf_branch_engine.py selftest | traces | slice <day> <n> [tag] | slice_v3 <day>
 """
 import copy
 import ctypes
@@ -66,11 +75,16 @@ import pf_queue_place_test as QP                          # noqa: E402
 
 C, pd, I = KP.C, KP.pd, KP.I
 CONTRACT = 'paired_continuation_v2'
-PLACE, CANCEL, PENDING, NOTICE, STEP, END, SIZE, HOLD = KP.PLACE, KP.CANCEL, KP.PENDING, KP.NOTICE, KP.STEP, KP.H, KP.SIZE, 3.
-ACK = KP.NOTICE                                            # declared: a removal's effect is acknowledged 100 ms after it
+PLACE, CANCEL, PENDING, STEP, END, SIZE, HOLD = KP.PLACE, KP.CANCEL, KP.PENDING, KP.STEP, KP.H, KP.SIZE, 3.
+POST_NOTICE = 0.                                           # review 043ca403 (a): post acceptance / refusal known at activation + 0 ms (assumption)
+FILL_NOTICE = KP.NOTICE                                    # a fill is known 100 ms after its match
+CANCEL_ACK = KP.NOTICE                                     # a removal's effect is acknowledged 100 ms after it (assumption; not a measurement)
 CAP = 30.                                                  # plan v2: absolute position cap per instrument (shares)
 EPS = 1e-12
-SETTINGS = dict(contract=CONTRACT, place=PLACE, cancel=CANCEL, pending=PENDING, notice=NOTICE, ack=ACK, step=STEP, end=END, size=SIZE, cap=CAP, hold=HOLD)
+SETTINGS = dict(contract=CONTRACT, activation_ms=PLACE, cancel_effect_ms=CANCEL, pending_cancel_ms=PENDING, post_notice_ms=POST_NOTICE,
+                fill_notice_ms=FILL_NOTICE, cancel_ack_ms=CANCEL_ACK, step_ms=STEP, end_ms=END, size=SIZE, cap=CAP, hold_ticks=HOLD,
+                tie_order='trades <= tick; notices due by the tick; client structural requests; policy decisions in the alternating side order')
+P1_TOL = dict(shares=1e-9, cash=1e-7, position=1e-9, value=1e-7)   # numerical aggregate parity with the C library (not event parity)
 OUT = Path(I.K.IO) / 'branch_engine_20261119'
 MARK = 'BRANCH ENGINE'
 KERNEL_MODE = False                                        # True: the kernel's structural rule for every listed order (parity P1 only)
@@ -83,7 +97,8 @@ STALE_VIEW = False                                         # planted-error switc
 class Engine:
     """The execution side of one branch: orders, public trades applied once in priority, the structural rule, every fill and request."""
 
-    def __init__(self, path, end=END):
+    def __init__(self, path, end=END, client=False):
+        self.client = bool(client)                                                          # a client issues the structural requests (Branch)
         self.f = np.asarray(path['frames'], float); self.tr = np.asarray(path['trades'], float).reshape(-1, 4); self.end = float(end)
         C.require(self.f.ndim == 2 and self.f.shape[1] == 22 and len(self.f) > 0, 'engine: frame schema')
         C.require((np.diff(self.f[:, 0]) >= 0).all() and (np.diff(self.f[:, 1]) >= 0).all() and (np.diff(self.tr[:, 0]) >= 0).all(), 'engine: chronology')
@@ -156,6 +171,8 @@ class Engine:
             return
         while self.known + 1 < self.nf and self.f[self.known + 1, 1] <= grid:
             self.known += 1
+        if self.client:
+            return
         fk = self.f[self.known]
         for o in self.o:
             if o['rem'] <= EPS or o['remove'] <= grid or (grid == 0 and o['new']) or (not KERNEL_MODE and grid <= o['submit']):
@@ -208,12 +225,13 @@ class Branch:
     def __init__(self, path, episode=0, end=END, settings=None):
         C.require(float(end) == END, 'a branch END other than the contract\'s common END')
         C.require(settings is None or all(SETTINGS.get(k_) == v_ for k_, v_ in settings.items()), 'a timing / contract setting other than the declared scenario')
-        self.E = Engine(path, end); self.episode = int(episode); self.end = float(end); self.mark = path.get('mark')
+        C.require(CANCEL_ACK >= FILL_NOTICE, 'a cancel ACK that can overtake fill notices needs a cumulative-fill watermark (not in this contract)')
+        self.E = Engine(path, end, client=True); self.counts = {}; self.episode = int(episode); self.end = float(end); self.mark = path.get('mark')
         self.settings = dict(SETTINGS, **(settings or {})); self.open = {0: None, 1: None}; self.closed = {}
         self.decisions = []; self.fallbacks = []; self.constraints = []; self.k = 0
 
     def known_filled(self, gid, g):
-        return sum(q for t, i, _, q, _, _ in self.E.fills if i == gid and t + NOTICE <= g)
+        return sum(q for t, i, _, q, _, _ in self.E.fills if i == gid and t + FILL_NOTICE <= g)
 
     def status(self, s, g):
         """The client-known state of side s at g (closing a generation whose refusal / full fill / removal is known)."""
@@ -223,9 +241,9 @@ class Branch:
         if gid is None:
             return 'absent'
         o = self.E.o[gid]
-        if g < o['act']:
+        if g < o['act'] + POST_NOTICE:
             return 'post_pending'
-        kf = self.known_filled(gid, g); ack = o['remove'] + ACK if o['req'] is not None else np.inf
+        kf = self.known_filled(gid, g); ack = o['remove'] + CANCEL_ACK if o['req'] is not None else np.inf
         why = 'refused' if o['refused'] else 'filled' if kf >= o['size'] - 1e-9 else 'removed' if (ack <= g or (REENTER_EARLY and o['req'] is not None)) else None
         if why:
             self.closed[gid] = (why, float(g)); self.open[s] = None; self.E.events.append((float(g), f'closed_{why}', gid, {}))
@@ -235,16 +253,39 @@ class Branch:
     def reserve(self, g):
         """(I, B, A): the client-known position and the known remaining of the open bid / ask generations."""
         sg = lambda s: 1. if s == 0 else -1.
-        Ik = sum(sg(s) * q for t, _, s, q, _, _ in self.E.fills if t + NOTICE <= g); res = {0: 0., 1: 0.}
+        Ik = sum(sg(s) * q for t, _, s, q, _, _ in self.E.fills if t + FILL_NOTICE <= g); res = {0: 0., 1: 0.}
         for s in (0, 1):
             if self.open[s] is not None:
                 res[s] = self.E.o[self.open[s]]['size'] - self.known_filled(self.open[s], g)
         return Ik, res[0], res[1]
 
     def check_position(self, g):
-        """The independent engine-position check: the engine's position within [I - A, I + B] (unknown fills are reserved)."""
+        """The worst-case reservation inequalities I + B <= cap and -I + A <= cap, and the independent engine-position check: the engine's
+        position within [I - A, I + B] (unknown fills are reserved); after every notice and command."""
         Ik, Bk, Ak = self.reserve(g); P = sum((1. if s == 0 else -1.) * q for t, _, s, q, _, _ in self.E.fills if t <= g)
+        C.require(Ik + Bk <= CAP + 1e-9 and -Ik + Ak <= CAP + 1e-9, f'reservation inequality at {g}: I {Ik}, B {Bk}, A {Ak}, cap {CAP}')
         C.require(Ik - Ak - 1e-9 <= P <= Ik + Bk + 1e-9, f'position check at {g}: engine {P} outside [{Ik - Ak}, {Ik + Bk}]')
+
+    def structural(self, g):
+        """The client's structural rule at tick g on CLIENT-KNOWN state (review 043ca403 P1): every open generation without a request, after
+        its submission tick, more than 3 ticks + rung behind the best / at or through the opposite best / without a book in the last received
+        frame -> a request (no execution effect if the order is already filled - the client does not know that yet)."""
+        fk = self.E.f[self.E.known]
+        for s in (0, 1):
+            gid = self.open[s]
+            if gid is None:
+                continue
+            o = self.E.o[gid]
+            if o['req'] is not None or g <= o['submit']:
+                continue
+            best, opp = fk[2 + s * 10], fk[2 + (1 - s) * 10]
+            behind = best - o['price'] if s == 0 else o['price'] - best
+            cross = o['price'] >= opp if s == 0 else o['price'] <= opp
+            if best < 0 or behind > HOLD + o['rung'] or cross:
+                self.E.request(gid, g, 'structural')
+
+    def tally(self, s, key):
+        self.counts[f'{"bid" if s == 0 else "ask"} {key}'] = self.counts.get(f'{"bid" if s == 0 else "ask"} {key}', 0) + 1
 
     def view(self, g, s):
         """The client view of side s at g: nothing an engine event after g could change."""
@@ -259,9 +300,13 @@ class Branch:
         """Apply one decision: POST / WAIT when absent, KEEP / PULL when live; constraints and fallbacks logged."""
         st = v['state']
         if st in ('post_pending', 'cancel_pending', 'terminal'):
-            C.require(action is None, f'an action in state {st}'); return None
+            C.require(action is None, f'an action in state {st}'); self.tally(s, f'{st} ticks'); return None
         if action == 'FALLBACK':
-            action = 'WAIT' if st == 'absent' else 'KEEP'; self.fallbacks.append((float(g), s, st, 'feature_unavailable'))
+            action = 'WAIT' if st == 'absent' else 'KEEP'; self.fallbacks.append((float(g), s, st, 'feature_unavailable')); self.tally(s, f'{st} fallback')
+        elif st == 'absent':
+            self.tally(s, 'absent cap-blocked' if v['room'] < -1e-9 else 'absent near-END' if g + PLACE >= self.end else f'absent feasible, {action}')
+        else:
+            self.tally(s, f'live, {action}')
         C.require(action in (('POST', 'WAIT') if st == 'absent' else ('KEEP', 'PULL')), f'action {action} in state {st}')
         if action == 'POST':
             if not book_ok(v, s):
@@ -275,7 +320,7 @@ class Branch:
         elif action == 'PULL':
             C.require(v['gid'] is not None and v['gid'] == self.open[s], 'a PULL for a generation that is not the open one')
             self.E.request(self.open[s], g, 'policy')
-        self.decisions.append((float(g), s, st, action, self.open[s])); return action
+        self.decisions.append((float(g), s, st, action, self.open[s])); self.check_position(g); return action
 
 
 def book_ok(v, s):
@@ -291,9 +336,22 @@ def decide(B, g, s, policy, forced=None, v=None):
     return B.act(g, s, a, v)
 
 
+def pre_tick(B, g):
+    """The declared tie order before the decisions at tick g: the engine's trades up to g, the notices due by g (statuses), the invariants, then
+    the client's structural requests."""
+    B.E.advance(g); B.status(0, g); B.status(1, g); B.check_position(g); B.structural(g)
+
+
+def fingerprint(B):
+    """A hash of a branch's complete state (orders, fills, events, client decisions / closures / counters): equal forks have equal prints."""
+    import hashlib
+    return hashlib.sha256(json.dumps([B.E.o, B.E.fills, B.E.events, B.decisions, sorted(B.closed.items()), B.open, B.counts, B.E.it, B.E.known],
+                                     sort_keys=True, default=str).encode()).hexdigest()
+
+
 def step(B, k, policy, forced=None):
-    """One grid tick k of branch B: the engine to the tick, then both sides in the alternating order (forced: {side: action})."""
-    g = k * STEP; B.E.advance(g); B.k = k; order = ((B.episode + k) % 2, 1 - (B.episode + k) % 2)
+    """One grid tick k of branch B: pre_tick, then both sides in the alternating order (forced: {side: action})."""
+    g = k * STEP; pre_tick(B, g); B.k = k; order = ((B.episode + k) % 2, 1 - (B.episode + k) % 2)
     v0 = {s: B.view(g, s) for s in order} if STALE_VIEW else {}
     for s in order:
         decide(B, g, s, policy, (forced or {}).get(s), v0.get(s))
@@ -308,7 +366,9 @@ def finish(B):
     cash, pos, val = B.E.value(B.mark)
     open_x = {s: float(B.E.o[B.open[s]]['rem']) if (B.open[s] is not None and B.E.o[B.open[s]]['remove'] > B.end) else 0. for s in (0, 1)}
     return dict(status='ok', cash=cash, position=pos, value=val, fills=list(B.E.fills), open_at_end=open_x, generations=len(B.E.o),
-                fallbacks=list(B.fallbacks), constraints=list(B.constraints), decisions=list(B.decisions))
+                fallbacks=list(B.fallbacks), constraints=list(B.constraints), decisions=list(B.decisions), counts=dict(B.counts),
+                requests=[e_ for e_ in B.E.events if e_[1].endswith('_request')],
+                orders9=[[o['side'], o['rung'], o['price'], o['size'], 0., o['act'], o['remove'] if o['why'] == 'policy' else 1e30, o['submit'], 1.] for o in B.E.o])
 
 
 def run(path, policy, episode=0, k0=0, B=None, until=None):
@@ -320,14 +380,23 @@ def run(path, policy, episode=0, k0=0, B=None, until=None):
     return B
 
 
-def pair(path, policy, k, side, kind, episode=0, settings=None):
-    """paired_continuation_v2 at tick k and side: the state reached under the policy is copied; POST / WAIT or KEEP / PULL is applied in the two
-    copies; both continue under the policy to the same END -> dict(Y, the two ledgers, checks)."""
+def fork_state(path, rollin, k, side, episode=0, settings=None):
+    """The state at tick k just before `side` decides, reached under the roll-in policy (pre_tick applied; the other side decides first when
+    the alternating order puts it first)."""
+    C.require(getattr(rollin, 'horizon', None) == END, 'the policy does not declare the common END horizon')
+    B0 = run(path, rollin, episode, 0, Branch(path, episode, settings=settings), until=k); g = k * STEP; pre_tick(B0, g); B0.k = k
+    if (episode + k) % 2 != side:
+        decide(B0, g, 1 - side, rollin)
+    return B0
+
+
+def pair(path, policy, k, side, kind, episode=0, settings=None, rollin=None, state=None):
+    """paired_continuation_v2 at tick k and side: the fork state (a saved `state`, or the roll-in policy's - default: the continuation policy)
+    is copied; POST / WAIT or KEEP / PULL is applied in the two copies; both continue under the policy to the same END -> dict(Y, the two
+    ledgers, checks, the fork state's fingerprint)."""
     C.require(kind in ('post', 'keep'), 'undeclared pair kind'); C.require(getattr(policy, 'horizon', None) == END, 'the policy does not declare the common END horizon')
-    B0 = run(path, policy, episode, 0, Branch(path, episode, settings=settings), until=k); g = k * STEP
-    Bv = copy.deepcopy(B0); Bv.E.advance(g); Bv.k = k; first = (episode + k) % 2
-    if first != side:                                                                       # the other side decides first: common to both branches
-        decide(Bv, g, first, policy)
+    Bv = copy.deepcopy(state) if state is not None else fork_state(path, rollin or policy, k, side, episode, settings)
+    C.require(Bv.k == k and Bv.episode == episode, 'a saved fork state of another tick / episode'); g = k * STEP; first = (episode + k) % 2; fp = fingerprint(Bv)
     v = Bv.view(g, side)
     if v['state'] != ('absent' if kind == 'post' else 'live'):
         return dict(status=f'not_{kind}_state', state=v['state'])
@@ -345,10 +414,10 @@ def pair(path, policy, k, side, kind, episode=0, settings=None):
         arms[name] = finish(Bx)
     na, nb = list(arms)
     if any(x['status'] != 'ok' for x in arms.values()):
-        return dict(status='missing_mark', arms=arms)
+        return dict(status='missing_mark', arms=arms, fork_fingerprint=fp)
     common = prefork_identical(arms[na]['fills'], arms[nb]['fills'], g)
     return dict(status='ok', kind=kind, k=k, side=side, Y=arms[na]['value'] - arms[nb]['value'], arms=arms, common_prefork_identical=common,
-                settings=dict(SETTINGS, **(settings or {})))
+                settings=dict(SETTINGS, **(settings or {})), fork_fingerprint=fp)
 
 
 def prefork_identical(fa, fb, g):
@@ -409,6 +478,7 @@ def fills_equal(ef, kt, kq):
     return sorted(ea) == sorted(ka) and all(abs(ea[t_] - ka[t_]) <= 1e-9 for t_ in ea)
 
 
+SIDE10 = [0]                                               # F10's side (selftest only)
 SLICE_DAYS = ('20261023', '20261024', '20261025', '20261026', '20261027')   # consumed: never a held-out or untouched day
 
 
@@ -462,6 +532,125 @@ def slice_check(day, n, out=None, tag=''):
     return R
 
 
+ANCHORS = (('post', 0), ('keep', 4))                     # review 043ca403 (e): entry fork at 0 ms, retention fork at 200 ms (tick 4)
+
+
+def slice_v3(day, per_side=128, out=None):
+    """Review 043ca403 (e), selection frozen before any result: the first `per_side` eligible archived opportunities per side by oid of a
+    consumed day. (1) single generation: POST at 0 then KEEP, and POST at 0 then PULL at the first review, reconciled to the archive - JOIN
+    price, activation, the pull's request / effect, fills per trade time, END mark, cash, inventory and BOTH END values; (2) C-compatibility
+    aggregate parity (shares, cash, position, END value within P1_TOL); (3) on the deduplicated (market, start) tapes, POST_KEEP and CHASE on
+    both sides with POST / WAIT at 0 ms and KEEP / PULL at 200 ms per side: incremental = batch fill tuples (base run and every arm), the common
+    pre-fork history, value identity per arm, no invariant refusal, client causality (views, reservations, requests and decisions up to 200 ms
+    equal on the tape truncated after 200 ms); (4) statuses, histories, later-post / re-entry counts, pending / cap counters, per-side coverage.
+    -> slice_v3_<day>.json, _orders.csv, _forks.csv, _histories.json. Invariant checks only: no profitability threshold, no policy selection."""
+    C.require(day in SLICE_DAYS, 'slice: consumed days only (Oct 23-27)'); start = time.time(); out = Path(out or OUT); kpd = Path(KP.OUT) / day
+    C.require(not (out / f'slice_v3_{day}.json').exists(), 'output exists')
+    O = pd.read_parquet(kpd / 'orders.parquet', columns=['oid', 'm', 'side', 't', 'p', 'status', 'mark', 'v', 'q']); E_ = O[O.status == 'eligible']
+    sel = pd.concat([E_[E_.side == s_].sort_values('oid').head(int(per_side)) for s_ in (0, 1)], ignore_index=True)
+    F = pd.read_parquet(kpd / 'fills.parquet'); F = F[(F.clock == 50.) & F.oid.isin(sel.oid)]; fg = {int(k_): g_.sort_values('t') for k_, g_ in F.groupby('oid')}
+    src = KP.Tape(); want = set(sel.m.astype(int).tolist()); markets = [m for m in src.markets(day) if int(m) in want]; off = src.offset(day)
+    land0 = float(KP.landing(KP.J0)); orows, frows, hist = [], [], {}
+    for b in range(0, len(markets), 24):
+        data = src.load(day, markets[b:b + 24], off)
+        for W in src.pairs(data):
+            m = int(W[0]['m']); sm = sel[sel.m.astype(int) == m]
+            for o in sm.itertuples():                                                       # (1) and (2): every selected order
+                s_, t = int(o.side), float(o.t); path, pst = QP.build_path(W, t, t + END); r = dict(oid=int(o.oid), m=m, side=s_, t=t, path_status=pst)
+                if path is None:
+                    orows.append(r); continue
+                kf = fg.get(int(o.oid)); kt = kf.t.values.astype(float) if kf is not None else np.zeros(0); kq = kf.q.values.astype(float) if kf is not None else np.zeros(0)
+                sg = 1. if s_ == 0 else -1.; pm = kt < land0; L = {}; G = {}
+                for mode in ('keep', 'pull'):
+                    Bm = run(path, side_policy(s_, mode)); L[mode] = finish(Bm); G[mode] = Bm.E.o[0]
+                ark = {'keep': (kt, kq), 'pull': (kt[pm], kq[pm])}
+                for mode, (tt, qq) in ark.items():
+                    ef = [(f_[0], f_[3]) for f_ in L[mode]['fills'] if f_[1] == 0]
+                    r[f'{mode}_fills_equal'] = fills_equal(ef, tt, qq); cash_a = -sg * float(o.p) * float(qq.sum()); inv_a = sg * float(qq.sum())
+                    r[f'{mode}_cash_equal'] = abs(L[mode]['cash'] - cash_a) <= 1e-7; r[f'{mode}_inventory_equal'] = abs(L[mode]['position'] - inv_a) <= 1e-9
+                    r[f'{mode}_value_archive'] = cash_a + inv_a * float(o.mark); r[f'{mode}_value_engine'] = L[mode]['value']
+                    r[f'{mode}_value_equal'] = abs(L[mode]['value'] - r[f'{mode}_value_archive']) <= 1e-7
+                r['keep_value_equal_archive_v'] = abs(L['keep']['value'] - float(o.v)) <= 1e-7
+                r['price_equal'] = G['keep']['price'] == float(o.p) == G['pull']['price']; r['activation_equal'] = G['keep']['act'] == PLACE == G['pull']['act']
+                r['mark_equal'] = abs(path['mark'] - float(o.mark)) <= 1e-9; r['pull_request'] = G['pull']['why']; r['pull_request_ms'] = G['pull']['req']
+                r['pull_effect_ms'] = G['pull']['remove'] if G['pull']['req'] is not None else None
+                r['pull_effect_equal'] = (G['pull']['why'] == 'policy' and G['pull']['req'] == KP.J0 * STEP and G['pull']['remove'] == land0) or G['pull']['why'] == 'structural'
+                global KERNEL_MODE
+                old = KERNEL_MODE; KERNEL_MODE = True
+                try:
+                    o9 = [[s_, 0., float(o.p), SIZE, 0., PLACE, 1e30, 0., 1.]]; qc, cc, pc, vc = ckernel(path, o9, [1]); Eb = batch(path, o9, [1]); cp, pp, vp = Eb.value(path['mark'])
+                finally:
+                    KERNEL_MODE = old
+                r['c_parity'] = (abs(float(qc[0]) - sum(f_[3] for f_ in Eb.fills)) <= P1_TOL['shares'] and abs(cc - cp) <= P1_TOL['cash'] and abs(pc - pp) <= P1_TOL['position']
+                                 and abs(vc - vp) <= P1_TOL['value']); r['n_fills'] = len(kt); orows.append(r)
+            for t in sorted(set(sm.t.astype(float).tolist())):                              # (3) and (4): the deduplicated tapes, both sides jointly
+                path, pst = QP.build_path(W, t, t + END)
+                if path is None:
+                    frows.append(dict(m=m, t=t, status=pst)); continue
+                for pol in (POST_KEEP, CHASE):
+                    base = dict(m=m, t=t, policy=pol.name)
+                    try:
+                        Bb = run(path, pol); Lb = finish(Bb); p2 = replay9(path, Lb['orders9']) == [f_[:5] for f_ in Lb['fills']]
+                        caus = views_until(path, pol, 5) == views_until(truncate(path, 4 * STEP), pol, 5)
+                        frows.append(dict(base, fork='base run', side=-1, status='ok', p2=p2, causality=caus, value=Lb['value'], generations=Lb['generations'],
+                                          **{f'count {k_}': v_ for k_, v_ in Lb['counts'].items()}))
+                    except ValueError as e:
+                        frows.append(dict(base, fork='base run', side=-1, status=f'refused: {str(e)[:120]}')); continue
+                    for kind, k_ in ANCHORS:
+                        for s_ in (0, 1):
+                            row = dict(base, fork=kind, side=s_, k=k_)
+                            try:
+                                rp_ = pair(path, pol, k_, s_, kind)
+                            except ValueError as e:
+                                frows.append(dict(row, status=f'refused: {str(e)[:120]}')); continue
+                            row['status'] = rp_['status']
+                            if rp_['status'] == 'ok':
+                                A1, A2 = list(rp_['arms']); a1, a2 = rp_['arms'][A1], rp_['arms'][A2]
+                                ident = all(abs(sum((1. if f_[2] == 0 else -1.) * f_[3] * (path['mark'] - f_[4]) for f_ in a_['fills']) - a_['value']) <= 1e-7
+                                            and abs(a_['cash'] + a_['position'] * path['mark'] - a_['value']) <= 1e-7 for a_ in (a1, a2))
+                                p2a = all(replay9(path, a_['orders9']) == [f_[:5] for f_ in a_['fills']] for a_ in (a1, a2))
+                                gens = lambda a_: [d_ for d_ in a_['decisions'] if d_[1] == s_ and d_[3] == 'POST']
+                                later = any(d_[0] > k_ * STEP for d_ in gens(a2)) if kind == 'post' else None
+                                reent = any(d_[0] > k_ * STEP for d_ in gens(a2)) if kind == 'keep' else None
+                                row.update(Y=rp_['Y'], prefork_identical=rp_['common_prefork_identical'], value_identity=ident, p2_arms=p2a, later_post=later, re_entry=reent,
+                                           **{f'{A1} {k2}': v2 for k2, v2 in a1['counts'].items()}, **{f'{A2} {k2}': v2 for k2, v2 in a2['counts'].items()})
+                                hist[f'{m}|{t:.0f}|{pol.name}|{kind}|{s_}'] = {nm_: dict(value=a_['value'], fills=[f_[:5] for f_ in a_['fills']],
+                                                                                         commands=[d_ for d_ in a_['decisions'] if d_[3] in ('POST', 'PULL')],
+                                                                                         requests=a_['requests'], open_at_end=a_['open_at_end']) for nm_, a_ in rp_['arms'].items()}
+                            frows.append(row)
+        del data; C.guard('branch engine slice v3')
+    D = pd.DataFrame(orows); Fk = pd.DataFrame(frows); ok = D[D.path_status == 'eligible']; R = {}
+    single = ['price_equal', 'activation_equal', 'mark_equal', 'keep_fills_equal', 'pull_fills_equal', 'keep_cash_equal', 'pull_cash_equal', 'keep_inventory_equal',
+              'pull_inventory_equal', 'keep_value_equal', 'pull_value_equal', 'keep_value_equal_archive_v', 'pull_effect_equal']
+    R['(1) single generation: false counts'] = {c: int((~ok[c].astype(bool)).sum()) for c in single}
+    R['(1) single generation (every check on every order with a path)'] = 'PASS' if len(ok) and all(v_ == 0 for v_ in R['(1) single generation: false counts'].values()) else 'FAIL'
+    R['(2) C-compatibility aggregate parity'] = 'PASS' if len(ok) and ok.c_parity.astype(bool).all() else 'FAIL'
+    br = Fk[Fk.get('fork', pd.Series(dtype=str)) == 'base run'] if len(Fk) else Fk; fo = Fk[(Fk.get('fork', pd.Series(dtype=str)) != 'base run') & (Fk.get('status', pd.Series(dtype=str)) == 'ok')] if len(Fk) else Fk
+    refused = int(Fk.status.astype(str).str.startswith('refused').sum()) if len(Fk) else 0
+    adapt_ok = (len(br) > 0 and refused == 0 and br.p2.astype(bool).all() and br.causality.astype(bool).all() and len(fo) > 0 and fo.prefork_identical.astype(bool).all()
+                and fo.value_identity.astype(bool).all() and fo.p2_arms.astype(bool).all())
+    R['(3) adaptive invariants (P2 base and arms, pre-fork history, value identity, no invariant refusal, causality to 200 ms)'] = 'PASS' if adapt_ok else 'FAIL'
+    R['(3) counts'] = dict(tapes=int(len(br) // 2) if len(br) else 0, base_runs=int(len(br)), refused=refused, forks_ok=int(len(fo)),
+                           p2_false=int((~br.p2.astype(bool)).sum()) if len(br) else 0, causality_false=int((~br.causality.astype(bool)).sum()) if len(br) else 0,
+                           prefork_false=int((~fo.prefork_identical.astype(bool)).sum()) if len(fo) else 0, identity_false=int((~fo.value_identity.astype(bool)).sum()) if len(fo) else 0)
+    cov = {}
+    if len(Fk):
+        for (pol, kind, s_), g_ in Fk[Fk.fork != 'base run'].groupby(['policy', 'fork', 'side']):
+            cov[f'{pol} {kind} {"bid" if s_ == 0 else "ask"}'] = dict(statuses=g_.status.value_counts().to_dict(), later_post=int(g_.later_post.fillna(False).astype(bool).sum()),
+                                                                      re_entry=int(g_.re_entry.fillna(False).astype(bool).sum()))
+    R['(4) coverage: fork statuses, later posts (POST / WAIT forks), re-entries (KEEP / PULL forks), per policy and side'] = cov
+    R['(4) selected orders per side (with a path)'] = {('bid' if s_ == 0 else 'ask'): int((ok.side == s_).sum()) for s_ in (0, 1)}
+    R['SLICE v3 (1), (2) and (3) all PASS'] = 'PASS' if all(R[k_] == 'PASS' for k_ in R if k_.startswith(('(1) single generation (', '(2)', '(3) adaptive'))) else 'FAIL'
+    out.mkdir(parents=True, exist_ok=True); D.to_csv(out / f'slice_v3_{day}_orders.csv', index=False); Fk.to_csv(out / f'slice_v3_{day}_forks.csv', index=False)
+    C.dump(out / f'slice_v3_{day}_histories.json', hist)
+    C.dump(out / f'slice_v3_{day}.json', dict(asof=C.stamp(), day=day, per_side=int(per_side), selection='the first per_side eligible archived opportunities per side by oid (review 043ca403 (e))',
+                                             readings=R, settings=SETTINGS, p1_tolerances=P1_TOL, anchors=ANCHORS, inputs=dict(kp_receipt=C.sha(kpd / 'receipt.json')),
+                                             outputs={x: C.sha(out / x) for x in (f'slice_v3_{day}_orders.csv', f'slice_v3_{day}_forks.csv', f'slice_v3_{day}_histories.json')},
+                                             source_sha256=C.sha(Path(__file__).resolve()), provenance=KP.provenance(), seconds=time.time() - start))
+    print(json.dumps(R, indent=1, default=str), flush=True)
+    return R
+
+
 # ---------------------------------------------------------------------------------------------------------------------- synthetic tapes
 def frame(venue, recv, bid, ask, bsz=100., asz=100., bid2=None, ask2=None):
     """One 22-column frame: venue / received time, five bid levels (prices, sizes), five ask levels; empty levels -1 / 0."""
@@ -490,7 +679,8 @@ def rand_tape(rng, n_frames=40, n_trades=60, end=END):
 
 # ---------------------------------------------------------------------------------------------------------------------- the controls
 def p1_parity(rng, n=40):
-    """P1: KERNEL_MODE = the C kernel (filled shares per order, cash, position) on random tapes, order lists and actions -> mismatches."""
+    """P1, numerical AGGREGATE parity (not event parity: the C interface returns no fill times): KERNEL_MODE against the C library on random
+    tapes, order lists and actions - per-order shares, cash, position and END value within P1_TOL -> mismatches."""
     global KERNEL_MODE
     bad = 0; old = KERNEL_MODE; KERNEL_MODE = True
     try:
@@ -505,9 +695,10 @@ def p1_parity(rng, n=40):
                 best = p['frames'][0, 2] if s == 0 else p['frames'][0, 12]
                 o.append([s, float(rng.integers(0, 2)), best + float(rng.choice([-1., 0., 0., 1.])) * (1 if s == 1 else -1), float(rng.integers(5, 40)),
                           float(rng.choice([0., 50., np.inf])), act, float(rng.choice([1e30, rng.uniform(act, 5000.)])), sub, float(rng.integers(0, 2))])
-            o = np.nan_to_num(np.asarray(o), posinf=0.); ac = rng.integers(0, 3, no); qc, cc, pc, _ = ckernel(p, o, ac)
-            E = batch(p, o, ac); qp = np.array([sum(q for _, i, _, q, _, _ in E.fills if i == g_) for g_ in range(no)]); cp, pp, _ = E.value(50.)
-            bad += not (np.allclose(qc, qp, rtol=0, atol=1e-9) and abs(cc - cp) <= 1e-7 and abs(pc - pp) <= 1e-9)
+            o = np.nan_to_num(np.asarray(o), posinf=0.); ac = rng.integers(0, 3, no); qc, cc, pc, vc = ckernel(p, o, ac)
+            E = batch(p, o, ac); qp = np.array([sum(q for _, i, _, q, _, _ in E.fills if i == g_) for g_ in range(no)]); cp, pp, vp = E.value(p['mark'])
+            bad += not (np.allclose(qc, qp, rtol=0, atol=P1_TOL['shares']) and abs(cc - cp) <= P1_TOL['cash'] and abs(pc - pp) <= P1_TOL['position']
+                        and abs(vc - vp) <= P1_TOL['value'])
     finally:
         KERNEL_MODE = old
     return bad
@@ -517,6 +708,29 @@ def replay(path, B):
     """P2: the adaptive branch's final order list replayed as a batch (engine mode) -> its fills."""
     o9 = [[o['side'], o['rung'], o['price'], o['size'], 0., o['act'], o['remove'] if o['why'] == 'policy' else 1e30, o['submit'], 1.] for o in B.E.o]
     return batch(path, o9, horizon=B.end).fills if o9 else []
+
+
+def replay9(path, orders9, end=END):
+    """P2 for a finished ledger: its final order list replayed as a batch (engine mode) -> fill tuples (t, gid, side, shares, price)."""
+    return [f_[:5] for f_ in batch(path, orders9, horizon=end).fills] if orders9 else []
+
+
+def views_until(path_, pol, kmax):
+    """Per tick up to kmax: the client views of both sides after pre_tick, the reservations and the requests so far, then the decisions."""
+    B_ = Branch(path_); out_ = []
+    for kk in range(kmax):
+        g_ = kk * STEP; pre_tick(B_, g_); B_.k = kk
+        out_.append((g_, [B_.view(g_, s_) for s_ in (0, 1)], B_.reserve(g_), [e_ for e_ in B_.E.events if e_[1].endswith('_request')]))
+        for s_ in ((B_.episode + kk) % 2, 1 - (B_.episode + kk) % 2):
+            decide(B_, g_, s_, pol)
+        out_.append(('decisions', list(B_.decisions)))
+    return out_
+
+
+def truncate(path, g):
+    """The same tape with every frame of venue time after g and every trade after g removed (events a decision at g cannot know)."""
+    q = dict(path); q['frames'] = path['frames'][path['frames'][:, 0] <= g]; q['trades'] = path['trades'][path['trades'][:, 0] <= g]
+    return q
 
 
 def traces(out=None):
@@ -588,8 +802,9 @@ def _controls(bad):  # noqa: C901
     # ---- F5 continuation matters, both directions, engine-generated: Y_keep under a hold continuation vs a chase continuation (seeded tapes)
     found = {}; r5 = np.random.default_rng(55)
     for i_ in range(200):
-        p5 = rand_tape(r5); a_ = pair(p5, HOLD_ONCE, 4, 0, 'keep'); b_ = pair(p5, CHASE, 4, 0, 'keep')
-        if a_['status'] == 'ok' and b_['status'] == 'ok':
+        p5 = rand_tape(r5); S5 = fork_state(p5, HOLD_ONCE, 4, 0)                                 # ONE saved fork state; only the continuation varies
+        a_ = pair(p5, HOLD_ONCE, 4, 0, 'keep', state=S5); b_ = pair(p5, CHASE, 4, 0, 'keep', state=S5)
+        if a_['status'] == 'ok' and b_['status'] == 'ok' and a_['fork_fingerprint'] == b_['fork_fingerprint'] == fingerprint(S5):
             if a_['Y'] > 0 > b_['Y']:
                 found.setdefault('hold > 0 > chase', (i_, a_['Y'], b_['Y']))
             if a_['Y'] < 0 < b_['Y']:
@@ -597,7 +812,7 @@ def _controls(bad):  # noqa: C901
         if len(found) == 2:
             break
     if len(found) != 2:
-        bad.append(f'F5: the continuation never reverses the keep advantage in both directions on 200 seeded tapes: {found}')
+        bad.append(f'F5: from one saved fork state, the continuation never reverses the keep advantage in both directions on 200 seeded tapes: {found}')
     # ---- F6 causality: events after g cannot change the view or action at g; a known one can
     base = rand_tape(np.random.default_rng(5)); k6 = 30; g6 = k6 * STEP
     B6 = run(base, reactive(1.), until=k6); B6.E.advance(g6); v6 = B6.view(g6, 0)
@@ -607,6 +822,20 @@ def _controls(bad):  # noqa: C901
     B6k = run(known_, reactive(1.), until=k6); B6k.E.advance(g6); v6k = B6k.view(g6, 0)
     if not (v6 == v6f and v6 != v6k):
         bad.append(f'F6: causality (future-perturbed view equal: {v6 == v6f}; known-perturbed view different: {v6 != v6k})')
+    # ---- F10 (review 043ca403 P1) an unnoticed fill cannot change the client's views, structural requests or reservations before its notice
+    pend = Policy(lambda v: (('POST' if v['t'] == 0 else 'WAIT') if v['side'] == SIDE10[0] else ('POST' if v['other'] == 'cancel_pending' else 'WAIT'))
+                  if v['state'] == 'absent' else 'KEEP', 'post_once_and_other_side_on_pending')
+    for side10, jump, px in ((0, (55., 57.), 50.), (1, (45., 47.), 52.)):
+        SIDE10[0] = side10; fr10 = [frame(0, 0, 50, 52, 0, 0), frame(90, 95, jump[0], jump[1], 0, 0)]
+        runs = {nm_: views_until(tape(fr10, ([(80, side10, px, q_)] if q_ else []), 51.), pend, 4) for nm_, q_ in (('none', 0.), ('partial', 10.), ('full', 30.))}
+        req_ = [e_ for e_ in runs['none'][-2][3] if e_[2] == 0 and e_[1] == 'structural_request']
+        if not (runs['none'] == runs['partial'] == runs['full'] and req_ and req_[0][0] == 100.):
+            diff_ = next((i_ for i_, (a_, b_) in enumerate(zip(runs['none'], runs['full'])) if a_ != b_), None)
+            bad.append(f"F10 side {side10}: an unnoticed fill changed the client state before its notice at 180 ms (first differing record {diff_}; "
+                       f"structural request at 100 ms: {req_[:1]})")
+        late = {nm_: views_until(tape(fr10, ([(80, side10, px, q_)] if q_ else []), 51.), pend, 5)[-2][1][side10]['position'] for nm_, q_ in (('none', 0.), ('full', 30.))}
+        if not (late['none'] == 0. and late['full'] == (30. if side10 == 0 else -30.)):                    # the known position after the notice
+            bad.append(f'F10 side {side10}: the notice at 180 ms does not reach the client by 200 ms ({late})')
     # ---- F7 boundaries and capacity
     pb = tape([frame(0, 0, 50, 52, 0)], [(137, 0, 50, 5), (136.9, 0, 50, 5)][::-1], 51.)          # a match just before and at the cancel effect (137)
     Eb = batch(pb, [[0, 0, 50, 30, 0, 58, 137, 0, 1]])
@@ -618,13 +847,19 @@ def _controls(bad):  # noqa: C901
     pn = tape([frame(0, 0, 50, 52, 0)], [(160, 0, 50, 10)], 51.); Bn = run(pn, POST_KEEP, until=6)
     if not (Bn.known_filled(0, 250) == 0 and Bn.known_filled(0, 260) == 10):
         bad.append('F7: the fill notice is not delayed 100 ms')
+    Bq = Branch(tape([frame(0, 0, 50, 52, 0)], [], 51.)); Bq.act(0., 0, 'POST', Bq.view(0., 0)); Bq.E.fills.append((0., 99, 0, 10., 50., -1))      # planted: I = 10 beside an open 30-share bid
+    try:
+        Bq.check_position(200.); bad.append('F7: the reservation inequality accepts I + B = 40 > 30')
+    except ValueError:
+        pass
     Bd = copy.deepcopy(Bn); Bd.open[0] = None                                               # a planted double allocation: the reservation released early
     try:
         Bd.check_position(250.); bad.append('F7: the position check accepts a released reservation with an unacknowledged fill')
     except ValueError:
         pass
     pc = tape([frame(0, 0, 50, 52, 0)], [(70, 0, 50, 30)], 51.); Bc = run(pc, POST_KEEP); Lc = finish(Bc)
-    if not (('cap' in [c_[2] for c_ in Lc['constraints'] if c_[1] == 0]) and len([o_ for o_ in Bc.E.o if o_['side'] == 0]) == 1):
+    if not (('cap' in [c_[2] for c_ in Lc['constraints'] if c_[1] == 0]) and len([o_ for o_ in Bc.E.o if o_['side'] == 0]) == 1
+            and Lc['counts'].get('bid absent cap-blocked', 0) > 0 and Lc['counts'].get('bid absent feasible, POST', 0) == 1):
         bad.append(f"F7: cap saturation (a long 30 must stop a second bid; constraints {Lc['constraints'][:3]})")
     pp_ = tape([frame(0, 0, 50, 52, 0), frame(40, 41, 49, 50)], [], 51.); Bp = run(pp_, POST_KEEP, until=3)   # the ask falls to the bid's price before activation
     if not (Bp.E.o and Bp.E.o[0]['refused'] and ('refused', 100.) in Bp.closed.values()):
@@ -646,6 +881,7 @@ def _controls(bad):  # noqa: C901
                      ('a POST while post-pending', lambda: (lambda B_: (B_.act(0., 0, 'POST', B_.view(0., 0)), B_.act(50., 0, 'POST', B_.view(50., 0))))(Branch(pe))),
                      ('an undeclared pair kind', lambda: pair(pe, POST_KEEP, 0, 0, 'hold')),
                      ('a branch END other than 5,000 ms', lambda: Branch(pe, end=4000.)),
+                     ('a saved fork state of another tick', lambda: pair(pe, POST_KEEP, 1, 0, 'post', state=fork_state(pe, POST_KEEP, 0, 0))),
                      ('a timing scenario other than the declared one', lambda: Branch(pe, settings=dict(cancel=50.))),
                      ('a PULL for a stale generation', lambda: (lambda B_: (B_.act(0., 0, 'POST', B_.view(0., 0)), B_.E.advance(100.),
                                                                            B_.act(100., 0, 'PULL', dict(B_.view(100., 0), gid=7))))(Branch(pe)))):
@@ -679,7 +915,8 @@ def selftest():
     print('branch engine selftests passed (synthetic only): P1 the port = the C kernel on 40 random tapes / order lists / actions; P2 adaptive runs = '
           'their batch replays; F1 WAIT posts later with a different history; F2 re-entry after the acknowledgement at a new price, with a cancel-'
           'pending fill; F3 queue priority kept, replacement behind; F4 fill ledger = cash + inventory value, pair difference, common pre-fork fills; '
-          'F5 the continuation changes the keep advantage; F6 causality; F7 cancel-effect boundary, delayed notice, cap, post-only refusal, near-END '
+          'F5 from one saved fork state the continuation reverses the keep advantage both ways; F6 causality; F10 unnoticed fills (zero / '
+          'partial / full, both sides) leave views, structural requests and reservations unchanged before their notice; F7 cancel-effect boundary, delayed notice, cap, post-only refusal, near-END '
           'post, missing mark, unavailable book; F8 wrong horizon / action / state / pair kind refused; F9 shared book', flush=True)
 
 
@@ -689,7 +926,9 @@ if __name__ == '__main__':
         selftest()
     elif a == ['traces']:
         traces()
+    elif len(a) == 2 and a[0] == 'slice_v3':
+        slice_v3(a[1])
     elif len(a) in (3, 4) and a[0] == 'slice':
         slice_check(a[1], int(a[2]), tag=a[3] if len(a) == 4 else '')
     else:
-        sys.exit('usage: pf_branch_engine.py selftest | traces | slice <day> <n> [tag]')
+        sys.exit('usage: pf_branch_engine.py selftest | traces | slice <day> <n> [tag] | slice_v3 <day>')
