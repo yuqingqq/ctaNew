@@ -1,3 +1,34 @@
+r2a_review_20261119_codex:
+  status: core_values_verified_acceptance_and_scale_gaps_open
+  target_commit: 5432f636c63c11e7e04d59be35320589b2cfcf64
+  range_base: 7d59bde798d5f1e0399bdad44819f2d324b939b0
+  report: predictfun/reviews/automatic/20261119_5432f636/report.md
+  artifact_audit: predictfun/reviews/automatic/20261119_5432f636/artifacts.json
+  synthetic: predictfun/reviews/automatic/20261119_5432f636/synthetic.json
+  prior_R1_preflight: remains_closed
+  core_neutral_target_and_saved_algebra: verified
+  canonical_v2_v3_exact: true
+  selected_originals_missing_in_saved_slice: 0
+  population: {day: "20261023", originals: 256, rows: 213349, sampled_ok: 44959, weight_groups: 508, coarse_support_cells: 28, supported_cells: 0}
+  input_count: {export: 91, context: 16, total: 107}
+  P2: [stored_vector_not_checked_by_causality, missing_source_window_drops_selected_original, unbounded_parts_concat_sort]
+  P3: [joint_post_refusal_flag_omitted, receipt_context_count_and_terminal_coverage]
+  saved_input_leakage_or_target_reversal_demonstrated: false
+  immediate_priority: R2A_superseding_acceptance_and_partition_closure_on_same256
+  full_day_or_teacher_fit_next_now: false
+  subsequent_full_population: {originals: 30466, bid: 15233, ask: 15233, all_statuses: true}
+  linear_full_day_estimates: {one_core_hours: 33.744, frame_only_gib: 18.554, measured_full_day: false}
+  resource_plan: {partition_originals_max: 64, target_peak_gib: 1.5, rss_must_be_below_gib: 2, address_space_gib: 4, partition_profile_trigger_minutes: 15}
+  support_floor: {distinct_originals: 200, nonzero_originals: 20, per_side_head_horizon: true, fallback_required: true}
+  cost_decision: explicit_zero_fee_rebate_gross_research_engine_latency_effects_retained
+  saved_asof: "2026-11-19T19:49:42.100912+00:00"
+  audit_asof: "2026-11-19T20:00:05.498612+00:00"
+  checks: {successful_runs: 6, wall_seconds: 24.59, peak_rss_mib: 783, pinned_selftest: pass, developer_mutant_log_checked: 25, full_mutation_rerun: false}
+  fit_full_labels_new_real_tape_untouched_day: false
+  implementation_changed_by_review: false
+  development_owner: other_session
+  scheduler: remains_disabled
+
 r1_preflight_review_20261119_codex:
   status: clean_R1_preflight_accepted_R2A_next
   target_commit: 5a4242b4a0613523707a3c8c17507a32491de125

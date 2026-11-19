@@ -1,0 +1,2 @@
+Stored-input corruptions escape causal checks; missing window drops a selected original; joint POST refusal flag is lost. Positive and firing controls pass.
+2026-11-19T19:59:46Z tag=review-5432f636-synthetic-final rc=0 peak_rss_mib=214 wall_s=1.30 cpu_user_s=1.10 memavail_start_gib=23 disk_free_gib=466->466 slot=codex

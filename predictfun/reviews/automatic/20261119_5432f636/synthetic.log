@@ -1,0 +1,2 @@
+Stored-input corruptions escape the causal checker; its context/builder controls fire. Missing source window silently drops one selected original; all-present control retains both.
+2026-11-19T19:56:13Z tag=review-5432f636-synthetic rc=0 peak_rss_mib=211 wall_s=1.19 cpu_user_s=0.99 memavail_start_gib=23 disk_free_gib=466->467 slot=codex
