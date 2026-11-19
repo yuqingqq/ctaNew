@@ -1,3 +1,29 @@
+r1_v2_review_20261119_codex:
+  status: prior_P1_fixed_slice_supported_saved_fork_identity_P2_open
+  target_commit: fefa5aca63445e7b9d328b50b6f5f35d7702a2e0
+  reviewed_development_commits: [a9303c1f8b21054f3c90f0f22888a349c69deb02, fefa5aca63445e7b9d328b50b6f5f35d7702a2e0]
+  report: predictfun/reviews/automatic/20261119_fefa5aca/report.md
+  artifact_audit: predictfun/reviews/automatic/20261119_fefa5aca/artifacts.json
+  synthetic: predictfun/reviews/automatic/20261119_fefa5aca/synthetic.json
+  prior_P1_hidden_fill_client_state: fixed_independently_verified_both_sides
+  decisions_a_to_e: adopted_on_valid_execution_path
+  saved_slice_supported: true
+  saved_state_P2: missing_scenario_mark_endpoint_tape_and_focal_side_phase_binding
+  counterexamples: [declared_cancel50_executes37, changed_mark_same_fingerprint_Y10_to110, wrong_side_duplicate_tick_command]
+  saved_slice_affected_by_P2: not_demonstrated_internal_state_construction
+  immediate_priority: close_saved_fork_identity_contract_and_narrow_R1_receipt
+  subsequent_deliverable: R2_A_Oct23_shadow_probe_feature_support_builder_and_manifest_before_fit
+  R2_preparation_decisions: in_review_report_sampling_support_context_fields_and_builder_reuse
+  slice_population: {day: "20261024", orders: 256, tapes: 138, base_runs: 276, valid_forks: 1066, not_live_anchors: 38}
+  slice_asof: "2026-11-19T17:49:35.155977+00:00"
+  audit_asof: "2026-11-19T17:56:23.264059+00:00"
+  checks: {bounded_invocations: 5, slot: codex, wall_seconds_approx: 7, peak_rss_mib: 304, pinned_selftest: pass}
+  full_mutation_suite_rerun: false
+  raw_tape_fit_label_build_untouched_day: false
+  implementation_changed_by_review: false
+  development_owner: other_session
+  scheduler: remains_disabled
+
 review_v2_r1_design_20261119_codex:
   status: committed_v2_fixes_accepted_R1_causal_client_boundary_blocked
   target_commit: 1d72986ffa9cee8285bcef838fe2d054b16b2486

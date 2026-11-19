@@ -1,3 +1,39 @@
+<!-- R1_V2_REVIEW_20261119_CODEX -->
+## 2026-11-19 — R1 execution verified; close the saved-fork identity contract before R2 labels
+
+Reviewed **fefa5aca63445e7b9d328b50b6f5f35d7702a2e0**, including original R1
+**a9303c1f8b21054f3c90f0f22888a349c69deb02**.
+[Full review / next priority / R2 preparation decisions](reviews/automatic/20261119_fefa5aca/report.md),
+[artifact audit](reviews/automatic/20261119_fefa5aca/artifacts.json),
+[independent cases](reviews/automatic/20261119_fefa5aca/synthetic.json).
+Prior hidden-fill P1 fixed: client structural commands no longer read hidden
+remaining quantity. Named timing, same-state F5, aggregate parity with END value,
+cap counters and expanded slice adopted. Pinned selftest passes. Exact 256-order
+selection and saved accounting support 138 tapes / 276 base runs / 1066 valid
+forks; 38 not-live retention anchors retained. No predictive/profitability claim.
+
+**One P2 remains:** pair(state=...) checks only tick/episode, bypassing scenario
+validation and failing to bind tape/mark/END/focal-side decision phase. Independent
+synthetics: reported cancel50 executes37; a changed mark keeps the same fingerprint
+and changes Y 10 -> 110 c; wrong-side state executes two bid KEEP commands at
+200 ms. Direct wrong-scenario and wrong-tick guards work. The saved slice creates
+its own states and is not shown affected; this is a label/cache boundary to fix.
+
+**ONE next deliverable:** validated saved-fork context/fingerprint, refusal of
+mismatched scenario, tape, mark, END, side/phase and generation, correct executed
+metadata, valid serialization round-trip and unchanged valid-path ledgers. A
+small synthetic guard/receipt update suffices; no full engine restart or refit.
+Then R2-A: deterministic Oct23 shadow-probe/feature/support builder and manifest,
+with a fixed consumed slice before teacher fitting. The report settles entry /
+retained-state sampling, source populations, support statuses, exact context
+names/units and builder reuse. Preserve J architecture/params/rounds and causal
+real_features/known_steps; explicitly version weights/new context and resolve
+cost convention before targets, not only at R4.
+
+Five bounded codex checks (~7 s, 304 MiB peak), no raw tape/fit/label build or
+untouched day. Other-session edits preserved; review-only, no push/scheduling.
+<!-- /R1_V2_REVIEW_20261119_CODEX -->
+
 <!-- REVIEW_V2_R1_DESIGN_20261119_CODEX -->
 ## 2026-11-19 — Review v2 accepted; R1 client-state causality must be corrected before R2
 
