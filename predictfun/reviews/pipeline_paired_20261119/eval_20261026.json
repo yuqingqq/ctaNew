@@ -1,0 +1,2578 @@
+{
+  "asof": "2026-11-19T12:52:32.105731+00:00",
+  "day": "20261026",
+  "readings": {
+    "A - N0 ACROSS TESTED SCENARIOS": "NOT-STABLE-IN-TESTED-SCENARIOS",
+    "A - A-PA ACROSS TESTED SCENARIOS": "NOT-STABLE-IN-TESTED-SCENARIOS",
+    "A - PI0 ACROSS TESTED SCENARIOS": "NOT-STABLE-IN-TESTED-SCENARIOS",
+    "A - NEU ACROSS TESTED SCENARIOS": "NOT-STABLE-IN-TESTED-SCENARIOS",
+    "A - E1 ACROSS TESTED SCENARIOS": "NOT-STABLE-IN-TESTED-SCENARIOS",
+    "ECONOMIC PREDICATES AT B (both): A > N0 / A > A-PA / A > PI0": [
+      false,
+      false,
+      false
+    ],
+    "ECONOMIC PREDICATES AT B (bid): A > N0 / A > A-PA / A > PI0": [
+      false,
+      true,
+      false
+    ],
+    "ECONOMIC PREDICATES AT B (ask): A > N0 / A > A-PA / A > PI0": [
+      false,
+      false,
+      false
+    ],
+    "ECONOMIC GATE (this day, both sides)": "FAIL",
+    "MATCHED CONTROL AT B: A above the matched null of its admissions": "PASS",
+    "C2 A AT M250 vs M50": "HOLDS-AT-M250",
+    "C1 A AT B, B1a-WEIGHTED BY AGE": "HOLDS-SIGN",
+    "PREDICTION GATE (carried from pf_pipeline_paired)": {
+      "0": "FAIL",
+      "1": "FAIL"
+    },
+    "PRACTICAL PREDICATES AT B (A vs A-PA): at-best both sides / median lifetime / first-review reversals / cancels per filled share": [
+      true,
+      false,
+      true,
+      true
+    ],
+    "PRACTICAL GATE (this day)": "FAIL",
+    "CONTROLS": "YES"
+  },
+  "metrics": {
+    "PA": {
+      "both": {
+        "value": -23730.503209025985,
+        "attempts": 29832,
+        "accepted": 28442,
+        "filled": 670,
+        "shares_filled": 12552.544694076878,
+        "shares_submitted": 894960.0,
+        "resting": 0.014973230088495576,
+        "at_best": 0.008867658889782784,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          79.0
+        ],
+        "causes": {
+          "full fill": 284,
+          "structural": 161,
+          "policy cancel": 27997,
+          "END (censored)": 0
+        },
+        "first_review_of_live": 1.0,
+        "first_review_of_pulls": 1.0,
+        "cancels_per_hour": 675.7119871279164,
+        "cancels_per_100_filled_shares": 223.03844106773695,
+        "p_loss": 0.014145883614910164,
+        "p_severe": 0.009117725931885224,
+        "loss_p95": 0.0,
+        "loss_p99": 16.36533104761736,
+        "per_original_opportunity": -0.7846869654462663,
+        "vs_N0": -23730.503209025985,
+        "vs_same_admission_PULL_ALL": 0.0,
+        "vs_PI0": -24208.696076193533,
+        "scenario_range": [
+          -133408.39235484507,
+          0.0
+        ]
+      },
+      "bid": {
+        "value": -9324.42068042429,
+        "attempts": 14916,
+        "accepted": 14209,
+        "filled": 311,
+        "shares_filled": 5738.38532275714,
+        "shares_submitted": 447480.0,
+        "resting": 0.014969549477071601,
+        "at_best": 0.0088710109949048,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          79.0
+        ],
+        "causes": {
+          "full fill": 124,
+          "structural": 76,
+          "policy cancel": 14009,
+          "END (censored)": 0
+        },
+        "first_review_of_live": 1.0,
+        "first_review_of_pulls": 1.0,
+        "cancels_per_hour": 676.2188254223653,
+        "cancels_per_100_filled_shares": 244.12790727808868,
+        "p_loss": 0.01246983105390185,
+        "p_severe": 0.008246178600160902,
+        "loss_p95": 0.0,
+        "loss_p99": 10.986764705882385,
+        "per_original_opportunity": -0.6166537054708213,
+        "vs_N0": -9324.42068042429,
+        "vs_same_admission_PULL_ALL": 0.0,
+        "vs_PI0": -9450.58548513178,
+        "scenario_range": [
+          -67207.19379308082,
+          0.0
+        ]
+      },
+      "ask": {
+        "value": -14406.082528601692,
+        "attempts": 14916,
+        "accepted": 14233,
+        "filled": 359,
+        "shares_filled": 6814.159371319738,
+        "shares_submitted": 447480.0,
+        "resting": 0.014976910699919549,
+        "at_best": 0.008864306784660768,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          79.0
+        ],
+        "causes": {
+          "full fill": 160,
+          "structural": 85,
+          "policy cancel": 13988,
+          "END (censored)": 0
+        },
+        "first_review_of_live": 1.0,
+        "first_review_of_pulls": 1.0,
+        "cancels_per_hour": 675.2051488334674,
+        "cancels_per_100_filled_shares": 205.27843916997884,
+        "p_loss": 0.015821936175918476,
+        "p_severe": 0.009989273263609547,
+        "loss_p95": 0.0,
+        "loss_p99": 29.117872482201083,
+        "per_original_opportunity": -0.952720225421711,
+        "vs_N0": -14406.082528601692,
+        "vs_same_admission_PULL_ALL": 0.0,
+        "vs_PI0": -14758.11059106175,
+        "scenario_range": [
+          -66201.19856176425,
+          943.405579687901
+        ]
+      },
+      "pairs": {
+        "either": 0.015780557790292304,
+        "both": 0.014165902386698848,
+        "at_best_both": 0.008620273531777956
+      }
+    },
+    "A": {
+      "both": {
+        "value": -2032.1236860387226,
+        "attempts": 14126,
+        "accepted": 13564,
+        "filled": 490,
+        "shares_filled": 10086.716856670066,
+        "shares_submitted": 423780.0,
+        "resting": 0.025409949048002145,
+        "at_best": 0.01725630195762939,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          679.0
+        ],
+        "causes": {
+          "full fill": 247,
+          "structural": 502,
+          "policy cancel": 12791,
+          "END (censored)": 24
+        },
+        "first_review_of_live": 0.5704847450077946,
+        "first_review_of_pulls": 0.5952749806351665,
+        "cancels_per_hour": 308.7127916331456,
+        "cancels_per_100_filled_shares": 126.8103405871026,
+        "p_loss": 0.018476568030581907,
+        "p_severe": 0.011822171881636699,
+        "loss_p95": -0.0,
+        "loss_p99": 45.0,
+        "per_original_opportunity": -0.06719541320146559,
+        "vs_N0": -2032.1236860387226,
+        "vs_same_admission_PULL_ALL": -979.1076996606232,
+        "vs_PI0": -2510.316553206271,
+        "scenario_range": [
+          -60998.61815759807,
+          9654.296642696117
+        ]
+      },
+      "bid": {
+        "value": -979.8511797109486,
+        "attempts": 6319,
+        "accepted": 6059,
+        "filled": 222,
+        "shares_filled": 4372.085748116907,
+        "shares_submitted": 189570.0,
+        "resting": 0.019741780638240815,
+        "at_best": 0.012671627782247251,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          529.0
+        ],
+        "causes": {
+          "full fill": 104,
+          "structural": 259,
+          "policy cancel": 5687,
+          "END (censored)": 9
+        },
+        "first_review_of_live": 0.61846921797005,
+        "first_review_of_pulls": 0.6482385769096617,
+        "cancels_per_hour": 274.5132743362832,
+        "cancels_per_100_filled_shares": 130.0752164444496,
+        "p_loss": 0.01851558790947935,
+        "p_severe": 0.011077702168064568,
+        "loss_p95": 0.0,
+        "loss_p99": 43.969089999998694,
+        "per_original_opportunity": -0.06480068644341966,
+        "vs_N0": -979.8511797109486,
+        "vs_same_admission_PULL_ALL": 180.4571952602205,
+        "vs_PI0": -1106.0159844184395,
+        "scenario_range": [
+          -31439.570201488383,
+          2738.9078126639993
+        ]
+      },
+      "ask": {
+        "value": -1052.2725063277735,
+        "attempts": 7807,
+        "accepted": 7505,
+        "filled": 268,
+        "shares_filled": 5714.63110855316,
+        "shares_submitted": 234210.0,
+        "resting": 0.031078117457763475,
+        "at_best": 0.02184097613301153,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          779.0
+        ],
+        "causes": {
+          "full fill": 143,
+          "structural": 243,
+          "policy cancel": 7104,
+          "END (censored)": 15
+        },
+        "first_review_of_live": 0.5318321940758611,
+        "first_review_of_pulls": 0.5529542920847269,
+        "cancels_per_hour": 342.91230893000807,
+        "cancels_per_100_filled_shares": 124.31248605649023,
+        "p_loss": 0.01844498526962982,
+        "p_severe": 0.01242474702190342,
+        "loss_p95": -0.0,
+        "loss_p99": 45.0,
+        "per_original_opportunity": -0.06959013995951151,
+        "vs_N0": -1052.2725063277735,
+        "vs_same_admission_PULL_ALL": -1159.5648949208428,
+        "vs_PI0": -1404.3005687878315,
+        "scenario_range": [
+          -29559.047956109694,
+          7371.755933305778
+        ]
+      },
+      "pairs": {
+        "either": 0.04670998927326361,
+        "both": 0.004109908822740681,
+        "at_best_both": 0.0027788951461517834
+      }
+    },
+    "A-PA": {
+      "both": {
+        "value": -1053.0159863780993,
+        "attempts": 14126,
+        "accepted": 13564,
+        "filled": 222,
+        "shares_filled": 4168.62305468611,
+        "shares_submitted": 423780.0,
+        "resting": 0.007151796728345401,
+        "at_best": 0.004201193349423438,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          79.0
+        ],
+        "causes": {
+          "full fill": 95,
+          "structural": 91,
+          "policy cancel": 13378,
+          "END (censored)": 0
+        },
+        "first_review_of_live": 1.0,
+        "first_review_of_pulls": 1.0,
+        "cancels_per_hour": 322.8801287208367,
+        "cancels_per_100_filled_shares": 320.92131681134555,
+        "p_loss": 0.008707348152343197,
+        "p_severe": 0.0055217329746566615,
+        "loss_p95": -0.0,
+        "loss_p99": -0.0,
+        "per_original_opportunity": -0.034819654334306574,
+        "vs_N0": -1053.0159863780993,
+        "vs_same_admission_PULL_ALL": 0.0,
+        "vs_PI0": -1531.2088535456476,
+        "scenario_range": [
+          -51711.07481908577,
+          463.9472363144432
+        ]
+      },
+      "bid": {
+        "value": -1160.308374971169,
+        "attempts": 6319,
+        "accepted": 6059,
+        "filled": 100,
+        "shares_filled": 1777.795003223795,
+        "shares_submitted": 189570.0,
+        "resting": 0.006388884419415393,
+        "at_best": 0.0037355859479753285,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          79.0
+        ],
+        "causes": {
+          "full fill": 38,
+          "structural": 48,
+          "policy cancel": 5973,
+          "END (censored)": 0
+        },
+        "first_review_of_live": 1.0,
+        "first_review_of_pulls": 1.0,
+        "cancels_per_hour": 288.3185840707965,
+        "cancels_per_100_filled_shares": 335.9779946039199,
+        "p_loss": 0.008229150181990821,
+        "p_severe": 0.005380598195917075,
+        "loss_p95": 0.0,
+        "loss_p99": -0.0,
+        "per_original_opportunity": -0.07673489683031341,
+        "vs_N0": -1160.308374971169,
+        "vs_same_admission_PULL_ALL": 0.0,
+        "vs_PI0": -1286.47317967866,
+        "scenario_range": [
+          -26767.52381475826,
+          1514.2664568908474
+        ]
+      },
+      "ask": {
+        "value": 107.29238859306929,
+        "attempts": 7807,
+        "accepted": 7505,
+        "filled": 122,
+        "shares_filled": 2390.828051462315,
+        "shares_submitted": 234210.0,
+        "resting": 0.007914709037275409,
+        "at_best": 0.004666800750871548,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          79.0
+        ],
+        "causes": {
+          "full fill": 57,
+          "structural": 43,
+          "policy cancel": 7405,
+          "END (censored)": 0
+        },
+        "first_review_of_live": 1.0,
+        "first_review_of_pulls": 1.0,
+        "cancels_per_hour": 357.4416733708769,
+        "cancels_per_100_filled_shares": 309.72532698329513,
+        "p_loss": 0.00909440245933137,
+        "p_severe": 0.005635967721275778,
+        "loss_p95": -0.0,
+        "loss_p99": -0.0,
+        "per_original_opportunity": 0.007095588161700237,
+        "vs_N0": 107.29238859306929,
+        "vs_same_admission_PULL_ALL": 0.0,
+        "vs_PI0": -244.73567386698875,
+        "scenario_range": [
+          -24943.551004327506,
+          1203.9184636141026
+        ]
+      },
+      "pairs": {
+        "either": 0.011163904532046125,
+        "both": 0.0031396889246446767,
+        "at_best_both": 0.0019046661303298471
+      }
+    },
+    "AF": {
+      "both": {
+        "value": -18950.63622697559,
+        "attempts": 10381,
+        "accepted": 9899,
+        "filled": 735,
+        "shares_filled": 14567.749651769787,
+        "shares_submitted": 311430.0,
+        "resting": 0.021820917135961383,
+        "at_best": 0.015905738803968894,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          779.0
+        ],
+        "causes": {
+          "full fill": 345,
+          "structural": 626,
+          "policy cancel": 8875,
+          "END (censored)": 53
+        },
+        "first_review_of_live": 0.5474956822107081,
+        "first_review_of_pulls": 0.5996439301212863,
+        "cancels_per_hour": 214.19951729686244,
+        "cancels_per_100_filled_shares": 60.922244081273085,
+        "p_loss": 0.044504383007417395,
+        "p_severe": 0.026683363837780562,
+        "loss_p95": 0.0,
+        "loss_p99": 150.20781000000076,
+        "per_original_opportunity": -0.6266330344215193,
+        "vs_N0": -18950.63622697559,
+        "vs_same_admission_PULL_ALL": -11594.72267942646,
+        "vs_PI0": -19428.829094143137,
+        "scenario_range": [
+          -57790.14773568511,
+          2238.591394966955
+        ]
+      },
+      "bid": {
+        "value": -10679.460521869816,
+        "attempts": 5611,
+        "accepted": 5361,
+        "filled": 426,
+        "shares_filled": 8302.954377680675,
+        "shares_submitted": 168330.0,
+        "resting": 0.026176307320997586,
+        "at_best": 0.018783856261732366,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          948.0
+        ],
+        "causes": {
+          "full fill": 189,
+          "structural": 396,
+          "policy cancel": 4743,
+          "END (censored)": 33
+        },
+        "first_review_of_live": 0.5387640449438202,
+        "first_review_of_pulls": 0.6006263048016701,
+        "cancels_per_hour": 228.946098149638,
+        "cancels_per_100_filled_shares": 57.12424498862412,
+        "p_loss": 0.04776332204598111,
+        "p_severe": 0.029050080199607912,
+        "loss_p95": -0.0,
+        "loss_p99": 148.49999999999454,
+        "per_original_opportunity": -0.7062668158104501,
+        "vs_N0": -10679.460521869816,
+        "vs_same_admission_PULL_ALL": -6951.975244843182,
+        "vs_PI0": -10805.625326577307,
+        "scenario_range": [
+          -35591.15600006008,
+          1263.0258459463487
+        ]
+      },
+      "ask": {
+        "value": -8271.175705105776,
+        "attempts": 4770,
+        "accepted": 4538,
+        "filled": 309,
+        "shares_filled": 6264.7952740891105,
+        "shares_submitted": 143100.0,
+        "resting": 0.01746552695092518,
+        "at_best": 0.013027621346205416,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          729.0
+        ],
+        "causes": {
+          "full fill": 156,
+          "structural": 230,
+          "policy cancel": 4132,
+          "END (censored)": 20
+        },
+        "first_review_of_live": 0.5578503220075505,
+        "first_review_of_pulls": 0.598522754348344,
+        "cancels_per_hour": 199.4529364440869,
+        "cancels_per_100_filled_shares": 65.95586638065815,
+        "p_loss": 0.04067085953878407,
+        "p_severe": 0.02389937106918239,
+        "loss_p95": -0.0,
+        "loss_p99": 151.86676550000107,
+        "per_original_opportunity": -0.5469992530325888,
+        "vs_N0": -8271.175705105776,
+        "vs_same_admission_PULL_ALL": -4642.7474345832825,
+        "vs_PI0": -8623.203767565834,
+        "scenario_range": [
+          -26405.238783237874,
+          2396.8119153704747
+        ]
+      },
+      "pairs": {
+        "either": 0.041580316438723515,
+        "both": 0.0020615178331992493,
+        "at_best_both": 0.0013777152051488335
+      }
+    },
+    "AF-PA": {
+      "both": {
+        "value": -7355.9135475491275,
+        "attempts": 10381,
+        "accepted": 9899,
+        "filled": 226,
+        "shares_filled": 4071.797636371232,
+        "shares_submitted": 311430.0,
+        "resting": 0.005215533655135425,
+        "at_best": 0.0031006972378653797,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          79.0
+        ],
+        "causes": {
+          "full fill": 90,
+          "structural": 54,
+          "policy cancel": 9755,
+          "END (censored)": 0
+        },
+        "first_review_of_live": 1.0,
+        "first_review_of_pulls": 1.0,
+        "cancels_per_hour": 235.43845534995978,
+        "cancels_per_100_filled_shares": 239.57477436657715,
+        "p_loss": 0.01425681533570947,
+        "p_severe": 0.00915133416819189,
+        "loss_p95": 0.0,
+        "loss_p99": 15.035714285714418,
+        "per_original_opportunity": -0.24323502240424336,
+        "vs_N0": -7355.9135475491275,
+        "vs_same_admission_PULL_ALL": 0.0,
+        "vs_PI0": -7834.106414716676,
+        "scenario_range": [
+          -45930.946801131446,
+          0.0
+        ]
+      },
+      "bid": {
+        "value": -3727.4852770266343,
+        "attempts": 5611,
+        "accepted": 5361,
+        "filled": 109,
+        "shares_filled": 1954.162816510092,
+        "shares_submitted": 168330.0,
+        "resting": 0.00565728077232502,
+        "at_best": 0.0033655135425046927,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          79.0
+        ],
+        "causes": {
+          "full fill": 40,
+          "structural": 19,
+          "policy cancel": 5302,
+          "END (censored)": 0
+        },
+        "first_review_of_live": 1.0,
+        "first_review_of_pulls": 1.0,
+        "cancels_per_hour": 255.92920353982302,
+        "cancels_per_100_filled_shares": 271.3182317872958,
+        "p_loss": 0.012475494564248797,
+        "p_severe": 0.008376403493138477,
+        "loss_p95": -0.0,
+        "loss_p99": 10.798849104858924,
+        "per_original_opportunity": -0.24651050043162717,
+        "vs_N0": -3727.4852770266343,
+        "vs_same_admission_PULL_ALL": 0.0,
+        "vs_PI0": -3853.6500817341253,
+        "scenario_range": [
+          -24365.83116493078,
+          0.0
+        ]
+      },
+      "ask": {
+        "value": -3628.428270522493,
+        "attempts": 4770,
+        "accepted": 4538,
+        "filled": 117,
+        "shares_filled": 2117.63481986114,
+        "shares_submitted": 143100.0,
+        "resting": 0.00477378653794583,
+        "at_best": 0.002835880933226066,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          79.0
+        ],
+        "causes": {
+          "full fill": 50,
+          "structural": 35,
+          "policy cancel": 4453,
+          "END (censored)": 0
+        },
+        "first_review_of_live": 1.0,
+        "first_review_of_pulls": 1.0,
+        "cancels_per_hour": 214.94770716009657,
+        "cancels_per_100_filled_shares": 210.2817708811568,
+        "p_loss": 0.016352201257861635,
+        "p_severe": 0.010062893081761006,
+        "loss_p95": -0.0,
+        "loss_p99": 29.24690300000081,
+        "per_original_opportunity": -0.23995954437685954,
+        "vs_N0": -3628.428270522493,
+        "vs_same_admission_PULL_ALL": 0.0,
+        "vs_PI0": -3980.4563329825514,
+        "scenario_range": [
+          -21565.115636200666,
+          560.6105020794616
+        ]
+      },
+      "pairs": {
+        "either": 0.00893482166800751,
+        "both": 0.0014962456422633415,
+        "at_best_both": 0.0008976937516760525
+      }
+    },
+    "AM": {
+      "both": {
+        "value": -17771.892493861647,
+        "attempts": 9834,
+        "accepted": 9263,
+        "filled": 546,
+        "shares_filled": 11269.949988996548,
+        "shares_submitted": 295020.0,
+        "resting": 0.01602340439796192,
+        "at_best": 0.011277822472512739,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          279.0
+        ],
+        "causes": {
+          "full fill": 285,
+          "structural": 329,
+          "policy cancel": 8506,
+          "END (censored)": 143
+        },
+        "first_review_of_live": 0.8109961894393032,
+        "first_review_of_pulls": 0.8626519976838448,
+        "cancels_per_hour": 205.29364440868866,
+        "cancels_per_100_filled_shares": 75.47504654683348,
+        "p_loss": 0.03315029489526134,
+        "p_severe": 0.020032540166768354,
+        "loss_p95": 0.0,
+        "loss_p99": 105.0,
+        "per_original_opportunity": -0.5876559914642433,
+        "vs_N0": -17771.892493861647,
+        "vs_same_admission_PULL_ALL": -8723.520727315325,
+        "vs_PI0": -18250.085361029196,
+        "scenario_range": [
+          -54249.322761021125,
+          5579.2277202854475
+        ]
+      },
+      "bid": {
+        "value": -7462.3835742866795,
+        "attempts": 4441,
+        "accepted": 4186,
+        "filled": 205,
+        "shares_filled": 3841.7610726415096,
+        "shares_submitted": 133230.0,
+        "resting": 0.011357562349155269,
+        "at_best": 0.007306248323947439,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          229.0
+        ],
+        "causes": {
+          "full fill": 88,
+          "structural": 150,
+          "policy cancel": 3924,
+          "END (censored)": 24
+        },
+        "first_review_of_live": 0.849047504219918,
+        "first_review_of_pulls": 0.8869017632241813,
+        "cancels_per_hour": 189.4127111826227,
+        "cancels_per_100_filled_shares": 102.14065700087758,
+        "p_loss": 0.028822337311416348,
+        "p_severe": 0.015987390227426256,
+        "loss_p95": 0.0,
+        "loss_p99": 75.0,
+        "per_original_opportunity": -0.49351124755549763,
+        "vs_N0": -7462.3835742866795,
+        "vs_same_admission_PULL_ALL": -4724.827320433473,
+        "vs_PI0": -7588.54837899417,
+        "scenario_range": [
+          -26098.295228917348,
+          584.2478895143438
+        ]
+      },
+      "ask": {
+        "value": -10309.508919574968,
+        "attempts": 5393,
+        "accepted": 5077,
+        "filled": 341,
+        "shares_filled": 7428.1889163550395,
+        "shares_submitted": 161790.0,
+        "resting": 0.02068924644676857,
+        "at_best": 0.015249396621078036,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          357.8000000000011
+        ],
+        "causes": {
+          "full fill": 197,
+          "structural": 179,
+          "policy cancel": 4582,
+          "END (censored)": 119
+        },
+        "first_review_of_live": 0.7796744739976181,
+        "first_review_of_pulls": 0.8420150053590568,
+        "cancels_per_hour": 221.17457763475466,
+        "cancels_per_100_filled_shares": 61.683945462285784,
+        "p_loss": 0.03671425922492119,
+        "p_severe": 0.023363619506768032,
+        "loss_p95": 0.0,
+        "loss_p99": 135.04845581395344,
+        "per_original_opportunity": -0.6818007353729891,
+        "vs_N0": -10309.508919574968,
+        "vs_same_admission_PULL_ALL": -3998.69340688185,
+        "vs_PI0": -10661.536982035026,
+        "scenario_range": [
+          -28151.02753210377,
+          4994.979830771104
+        ]
+      },
+      "pairs": {
+        "either": 0.03012579780101904,
+        "both": 0.0019210109949048002,
+        "at_best_both": 0.0012764816304639314
+      }
+    },
+    "AM-PA": {
+      "both": {
+        "value": -9048.371766546323,
+        "attempts": 9834,
+        "accepted": 9263,
+        "filled": 257,
+        "shares_filled": 4752.751046105488,
+        "shares_submitted": 295020.0,
+        "resting": 0.004870219898096004,
+        "at_best": 0.0028677259318852237,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          79.0
+        ],
+        "causes": {
+          "full fill": 105,
+          "structural": 74,
+          "policy cancel": 9084,
+          "END (censored)": 0
+        },
+        "first_review_of_live": 1.0,
+        "first_review_of_pulls": 1.0,
+        "cancels_per_hour": 219.24376508447307,
+        "cancels_per_100_filled_shares": 191.13140814399767,
+        "p_loss": 0.016676835468781778,
+        "p_severe": 0.01016880211511084,
+        "loss_p95": 0.0,
+        "loss_p99": 31.5,
+        "per_original_opportunity": -0.29919885478957486,
+        "vs_N0": -9048.371766546323,
+        "vs_same_admission_PULL_ALL": 0.0,
+        "vs_PI0": -9526.564633713871,
+        "scenario_range": [
+          -47237.9250030613,
+          0.0
+        ]
+      },
+      "bid": {
+        "value": -2737.556253853207,
+        "attempts": 4441,
+        "accepted": 4186,
+        "filled": 109,
+        "shares_filled": 1916.9105083345512,
+        "shares_submitted": 133230.0,
+        "resting": 0.004405457227138643,
+        "at_best": 0.0025650308393671225,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          79.0
+        ],
+        "causes": {
+          "full fill": 38,
+          "structural": 37,
+          "policy cancel": 4111,
+          "END (censored)": 0
+        },
+        "first_review_of_live": 1.0,
+        "first_review_of_pulls": 1.0,
+        "cancels_per_hour": 198.43925985518908,
+        "cancels_per_100_filled_shares": 214.45967258908274,
+        "p_loss": 0.014411168655708174,
+        "p_severe": 0.008781805899572169,
+        "loss_p95": 0.0,
+        "loss_p99": 14.600000000000362,
+        "per_original_opportunity": -0.18104333402904618,
+        "vs_N0": -2737.556253853207,
+        "vs_same_admission_PULL_ALL": 0.0,
+        "vs_PI0": -2863.721058560698,
+        "scenario_range": [
+          -21438.340943271178,
+          0.0
+        ]
+      },
+      "ask": {
+        "value": -6310.815512693118,
+        "attempts": 5393,
+        "accepted": 5077,
+        "filled": 148,
+        "shares_filled": 2835.840537770936,
+        "shares_submitted": 161790.0,
+        "resting": 0.0053349825690533655,
+        "at_best": 0.0031704210244033254,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          79.0
+        ],
+        "causes": {
+          "full fill": 67,
+          "structural": 37,
+          "policy cancel": 4973,
+          "END (censored)": 0
+        },
+        "first_review_of_live": 1.0,
+        "first_review_of_pulls": 1.0,
+        "cancels_per_hour": 240.04827031375706,
+        "cancels_per_100_filled_shares": 175.36246956639323,
+        "p_loss": 0.018542555164101613,
+        "p_severe": 0.011310958650101984,
+        "loss_p95": 0.0,
+        "loss_p99": 45.0,
+        "per_original_opportunity": -0.4173543755501037,
+        "vs_N0": -6310.815512693118,
+        "vs_same_admission_PULL_ALL": 0.0,
+        "vs_PI0": -6662.843575153176,
+        "scenario_range": [
+          -25799.584059790122,
+          0.0
+        ]
+      },
+      "pairs": {
+        "either": 0.008245602038079914,
+        "both": 0.0014948377581120943,
+        "at_best_both": 0.0008755698578707428
+      }
+    },
+    "PI0": {
+      "both": {
+        "value": 478.19286716754823,
+        "attempts": 3364,
+        "accepted": 3195,
+        "filled": 219,
+        "shares_filled": 4649.477574022958,
+        "shares_submitted": 100920.0,
+        "resting": 0.006519603110753554,
+        "at_best": 0.0054639313488871015,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          579.0
+        ],
+        "causes": {
+          "full fill": 120,
+          "structural": 98,
+          "policy cancel": 2937,
+          "END (censored)": 40
+        },
+        "first_review_of_live": 0.742974423744869,
+        "first_review_of_pulls": 0.7895973154362416,
+        "cancels_per_hour": 70.88495575221239,
+        "cancels_per_100_filled_shares": 63.16838727020168,
+        "p_loss": 0.03596908442330559,
+        "p_severe": 0.01991676575505351,
+        "loss_p95": -0.0,
+        "loss_p99": 78.1280265723903,
+        "per_original_opportunity": 0.01581221040829139,
+        "vs_N0": 478.19286716754823,
+        "vs_same_admission_PULL_ALL": 552.1206247793183,
+        "vs_PI0": 0.0,
+        "scenario_range": [
+          -7440.813822752494,
+          5603.606224662248
+        ]
+      },
+      "bid": {
+        "value": 126.16480470749082,
+        "attempts": 2108,
+        "accepted": 2035,
+        "filled": 124,
+        "shares_filled": 2603.791174891979,
+        "shares_submitted": 63240.0,
+        "resting": 0.009055497452400108,
+        "at_best": 0.007751407884151247,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          679.0
+        ],
+        "causes": {
+          "full fill": 63,
+          "structural": 70,
+          "policy cancel": 1872,
+          "END (censored)": 30
+        },
+        "first_review_of_live": 0.7366071428571429,
+        "first_review_of_pulls": 0.7832278481012658,
+        "cancels_per_hour": 90.36202735317781,
+        "cancels_per_100_filled_shares": 71.89516648076287,
+        "p_loss": 0.033681214421252374,
+        "p_severe": 0.016603415559772294,
+        "loss_p95": -0.0,
+        "loss_p99": 72.63360052794654,
+        "per_original_opportunity": 0.008343681284801984,
+        "vs_N0": 126.16480470749082,
+        "vs_same_admission_PULL_ALL": -139.24276153813793,
+        "vs_PI0": 0.0,
+        "scenario_range": [
+          -4588.632346838146,
+          1231.8611975901258
+        ]
+      },
+      "ask": {
+        "value": 352.02806246005804,
+        "attempts": 1256,
+        "accepted": 1160,
+        "filled": 95,
+        "shares_filled": 2045.6863991309785,
+        "shares_submitted": 37680.0,
+        "resting": 0.003983708769106999,
+        "at_best": 0.003176454813622955,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          434.200000000003
+        ],
+        "causes": {
+          "full fill": 57,
+          "structural": 28,
+          "policy cancel": 1065,
+          "END (censored)": 10
+        },
+        "first_review_of_live": 0.7541268462206777,
+        "first_review_of_pulls": 0.8007380073800738,
+        "cancels_per_hour": 51.40788415124699,
+        "cancels_per_100_filled_shares": 52.060765543165324,
+        "p_loss": 0.03980891719745223,
+        "p_severe": 0.025477707006369428,
+        "loss_p95": 0.0,
+        "loss_p99": 108.37500000000034,
+        "per_original_opportunity": 0.023280739531780836,
+        "vs_N0": 352.02806246005804,
+        "vs_same_admission_PULL_ALL": 691.3633863174568,
+        "vs_PI0": 0.0,
+        "scenario_range": [
+          -2852.181475914349,
+          4371.745027072122
+        ]
+      },
+      "pairs": {
+        "either": 0.012815593993027622,
+        "both": 0.00022361222847948513,
+        "at_best_both": 0.00015821936175918478
+      }
+    },
+    "PI0-PA": {
+      "both": {
+        "value": -73.92775761177006,
+        "attempts": 3364,
+        "accepted": 3195,
+        "filled": 98,
+        "shares_filled": 1839.7290432033888,
+        "shares_submitted": 100920.0,
+        "resting": 0.0016775475998927326,
+        "at_best": 0.000985518905872888,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          79.0
+        ],
+        "causes": {
+          "full fill": 41,
+          "structural": 27,
+          "policy cancel": 3127,
+          "END (censored)": 0
+        },
+        "first_review_of_live": 1.0,
+        "first_review_of_pulls": 1.0,
+        "cancels_per_hour": 75.47063555913114,
+        "cancels_per_100_filled_shares": 169.97068190841725,
+        "p_loss": 0.016349583828775268,
+        "p_severe": 0.009512485136741973,
+        "loss_p95": -0.0,
+        "loss_p99": 15.885031898733969,
+        "per_original_opportunity": -0.0024445393033453496,
+        "vs_N0": -73.92775761177006,
+        "vs_same_admission_PULL_ALL": 0.0,
+        "vs_PI0": -552.1206247793183,
+        "scenario_range": [
+          -8229.999345837768,
+          3597.2934888896457
+        ]
+      },
+      "bid": {
+        "value": 265.40756624562874,
+        "attempts": 2108,
+        "accepted": 2035,
+        "filled": 59,
+        "shares_filled": 1082.434411732902,
+        "shares_submitted": 63240.0,
+        "resting": 0.0021406677393403057,
+        "at_best": 0.0012550281576830249,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          79.0
+        ],
+        "causes": {
+          "full fill": 21,
+          "structural": 18,
+          "policy cancel": 1996,
+          "END (censored)": 0
+        },
+        "first_review_of_live": 1.0,
+        "first_review_of_pulls": 1.0,
+        "cancels_per_hour": 96.34754625905069,
+        "cancels_per_100_filled_shares": 184.3991634379531,
+        "p_loss": 0.015654648956356737,
+        "p_severe": 0.008538899430740038,
+        "loss_p95": -0.0,
+        "loss_p99": 14.719999999999345,
+        "per_original_opportunity": 0.01755224960291176,
+        "vs_N0": 265.40756624562874,
+        "vs_same_admission_PULL_ALL": 0.0,
+        "vs_PI0": 139.24276153813793,
+        "scenario_range": [
+          -4673.635415597628,
+          1850.9212665224954
+        ]
+      },
+      "ask": {
+        "value": -339.33532385739886,
+        "attempts": 1256,
+        "accepted": 1160,
+        "filled": 39,
+        "shares_filled": 757.2946314704868,
+        "shares_submitted": 37680.0,
+        "resting": 0.0012144274604451596,
+        "at_best": 0.0007160096540627514,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          79.0
+        ],
+        "causes": {
+          "full fill": 20,
+          "structural": 9,
+          "policy cancel": 1131,
+          "END (censored)": 0
+        },
+        "first_review_of_live": 1.0,
+        "first_review_of_pulls": 1.0,
+        "cancels_per_hour": 54.59372485921159,
+        "cancels_per_100_filled_shares": 149.34742080554116,
+        "p_loss": 0.01751592356687898,
+        "p_severe": 0.011146496815286623,
+        "loss_p95": 0.0,
+        "loss_p99": 40.87500000000035,
+        "per_original_opportunity": -0.022441328209602464,
+        "vs_N0": -339.33532385739886,
+        "vs_same_admission_PULL_ALL": 0.0,
+        "vs_PI0": -691.3633863174568,
+        "scenario_range": [
+          -3556.363930240141,
+          1746.3722223671502
+        ]
+      },
+      "pairs": {
+        "either": 0.0032126039152587825,
+        "both": 0.00014249128452668275,
+        "at_best_both": 8.112094395280235e-05
+      }
+    },
+    "NEU": {
+      "both": {
+        "value": 3540.1761190818866,
+        "attempts": 3520,
+        "accepted": 3416,
+        "filled": 131,
+        "shares_filled": 2658.1001184102297,
+        "shares_submitted": 105600.0,
+        "resting": 0.005472586484312148,
+        "at_best": 0.0036712255296326092,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          379.0
+        ],
+        "causes": {
+          "full fill": 66,
+          "structural": 129,
+          "policy cancel": 3194,
+          "END (censored)": 27
+        },
+        "first_review_of_live": 0.7830609212481426,
+        "first_review_of_pulls": 0.8173076923076923,
+        "cancels_per_hour": 77.08769106999196,
+        "cancels_per_100_filled_shares": 120.16101191516759,
+        "p_loss": 0.017045454545454544,
+        "p_severe": 0.009375,
+        "loss_p95": 0.0,
+        "loss_p99": 22.310155782578683,
+        "per_original_opportunity": 0.11706157393961665,
+        "vs_N0": 3540.1761190818866,
+        "vs_same_admission_PULL_ALL": 2278.9813682127347,
+        "vs_PI0": 3061.9832519143383,
+        "scenario_range": [
+          -7529.981230132872,
+          6205.975887220056
+        ]
+      },
+      "bid": {
+        "value": 912.1933801932006,
+        "attempts": 1561,
+        "accepted": 1509,
+        "filled": 41,
+        "shares_filled": 805.4711511154591,
+        "shares_submitted": 46830.0,
+        "resting": 0.0037495441137034057,
+        "at_best": 0.0027319656744435507,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          179.0
+        ],
+        "causes": {
+          "full fill": 18,
+          "structural": 50,
+          "policy cancel": 1430,
+          "END (censored)": 11
+        },
+        "first_review_of_live": 0.8489548213081591,
+        "first_review_of_pulls": 0.8767409470752089,
+        "cancels_per_hour": 69.02654867256638,
+        "cancels_per_100_filled_shares": 177.53584321668882,
+        "p_loss": 0.014093529788597053,
+        "p_severe": 0.008327994875080076,
+        "loss_p95": 0.0,
+        "loss_p99": 15.0,
+        "per_original_opportunity": 0.06032626018075528,
+        "vs_N0": 912.1933801932006,
+        "vs_same_admission_PULL_ALL": 903.5340873229806,
+        "vs_PI0": 786.0285754857098,
+        "scenario_range": [
+          -5692.502234075256,
+          3113.9471312695505
+        ]
+      },
+      "ask": {
+        "value": 2627.9827388886865,
+        "attempts": 1959,
+        "accepted": 1907,
+        "filled": 90,
+        "shares_filled": 1852.6289672947705,
+        "shares_submitted": 58770.0,
+        "resting": 0.00719562885492089,
+        "at_best": 0.004610485384821668,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          579.0
+        ],
+        "causes": {
+          "full fill": 48,
+          "structural": 79,
+          "policy cancel": 1764,
+          "END (censored)": 16
+        },
+        "first_review_of_live": 0.7311370882040382,
+        "first_review_of_pulls": 0.7695749440715883,
+        "cancels_per_hour": 85.14883346741755,
+        "cancels_per_100_filled_shares": 95.21604331685542,
+        "p_loss": 0.019397651863195507,
+        "p_severe": 0.010209290454313425,
+        "loss_p95": 0.0,
+        "loss_p99": 30.44000000000051,
+        "per_original_opportunity": 0.17379688769847804,
+        "vs_N0": 2627.9827388886865,
+        "vs_same_admission_PULL_ALL": 1375.4472808897542,
+        "vs_PI0": 2275.9546764286283,
+        "scenario_range": [
+          -3382.4700359095614,
+          3092.028755950507
+        ]
+      },
+      "pairs": {
+        "either": 0.010797170823277018,
+        "both": 0.0001480021453472781,
+        "at_best_both": 8.782515419683562e-05
+      }
+    },
+    "NEU-PA": {
+      "both": {
+        "value": 1261.194750869152,
+        "attempts": 3520,
+        "accepted": 3416,
+        "filled": 69,
+        "shares_filled": 1197.739977838789,
+        "shares_submitted": 105600.0,
+        "resting": 0.0017949249128452669,
+        "at_best": 0.0009794851166532582,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          79.0
+        ],
+        "causes": {
+          "full fill": 27,
+          "structural": 51,
+          "policy cancel": 3338,
+          "END (censored)": 0
+        },
+        "first_review_of_live": 1.0,
+        "first_review_of_pulls": 1.0,
+        "cancels_per_hour": 80.5631536604988,
+        "cancels_per_100_filled_shares": 278.69154088211303,
+        "p_loss": 0.008522727272727272,
+        "p_severe": 0.004829545454545454,
+        "loss_p95": 0.0,
+        "loss_p99": -0.0,
+        "per_original_opportunity": 0.04170341746144937,
+        "vs_N0": 1261.194750869152,
+        "vs_same_admission_PULL_ALL": 0.0,
+        "vs_PI0": 783.0018837016037,
+        "scenario_range": [
+          -7717.180766741274,
+          2037.4805707449327
+        ]
+      },
+      "bid": {
+        "value": 8.659292870220014,
+        "attempts": 1561,
+        "accepted": 1509,
+        "filled": 22,
+        "shares_filled": 389.9782369767245,
+        "shares_submitted": 46830.0,
+        "resting": 0.0015859345669080181,
+        "at_best": 0.0008681952266023062,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          79.0
+        ],
+        "causes": {
+          "full fill": 8,
+          "structural": 26,
+          "policy cancel": 1475,
+          "END (censored)": 0
+        },
+        "first_review_of_live": 1.0,
+        "first_review_of_pulls": 1.0,
+        "cancels_per_hour": 71.19871279163316,
+        "cancels_per_100_filled_shares": 378.22623422138145,
+        "p_loss": 0.005765534913516977,
+        "p_severe": 0.003843689942344651,
+        "loss_p95": 0.0,
+        "loss_p99": 0.0,
+        "per_original_opportunity": 0.0005726666801282993,
+        "vs_N0": 8.659292870220014,
+        "vs_same_admission_PULL_ALL": 0.0,
+        "vs_PI0": -117.5055118372708,
+        "scenario_range": [
+          -6560.309829334745,
+          1256.8291475488577
+        ]
+      },
+      "ask": {
+        "value": 1252.5354579989323,
+        "attempts": 1959,
+        "accepted": 1907,
+        "filled": 47,
+        "shares_filled": 807.7617408620646,
+        "shares_submitted": 58770.0,
+        "resting": 0.0020039152587825156,
+        "at_best": 0.0010907750067042103,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          79.0
+        ],
+        "causes": {
+          "full fill": 19,
+          "structural": 25,
+          "policy cancel": 1863,
+          "END (censored)": 0
+        },
+        "first_review_of_live": 1.0,
+        "first_review_of_pulls": 1.0,
+        "cancels_per_hour": 89.92759452936444,
+        "cancels_per_100_filled_shares": 230.637316148665,
+        "p_loss": 0.010719754977029096,
+        "p_severe": 0.005615109749872384,
+        "loss_p95": 0.0,
+        "loss_p99": 1.0793974008208793,
+        "per_original_opportunity": 0.08283416824277047,
+        "vs_N0": 1252.5354579989323,
+        "vs_same_admission_PULL_ALL": 0.0,
+        "vs_PI0": 900.5073955388743,
+        "scenario_range": [
+          -2794.9888793087166,
+          1277.540371793786
+        ]
+      },
+      "pairs": {
+        "either": 0.003459278626977742,
+        "both": 0.00013057119871279164,
+        "at_best_both": 7.374631268436578e-05
+      }
+    },
+    "E1": {
+      "both": {
+        "value": 276.93421841276233,
+        "attempts": 2502,
+        "accepted": 2385,
+        "filled": 99,
+        "shares_filled": 2055.2479238711776,
+        "shares_submitted": 75060.0,
+        "resting": 0.004972633413783856,
+        "at_best": 0.004100294985250738,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          479.0
+        ],
+        "causes": {
+          "full fill": 53,
+          "structural": 69,
+          "policy cancel": 2212,
+          "END (censored)": 51
+        },
+        "first_review_of_live": 0.7923566878980892,
+        "first_review_of_pulls": 0.8356471115091805,
+        "cancels_per_hour": 53.386967015285606,
+        "cancels_per_100_filled_shares": 107.62691811086084,
+        "p_loss": 0.02038369304556355,
+        "p_severe": 0.012789768185451638,
+        "loss_p95": -0.0,
+        "loss_p99": 45.0,
+        "per_original_opportunity": 0.009157271953335175,
+        "vs_N0": 276.93421841276233,
+        "vs_same_admission_PULL_ALL": 1022.4892184429123,
+        "vs_PI0": -201.2586487547859,
+        "scenario_range": [
+          -8535.89445624984,
+          2586.611791242736
+        ]
+      },
+      "bid": {
+        "value": -82.34466571167025,
+        "attempts": 1408,
+        "accepted": 1350,
+        "filled": 56,
+        "shares_filled": 1084.2185872808168,
+        "shares_submitted": 42240.0,
+        "resting": 0.0054502279431482975,
+        "at_best": 0.0044945025475998926,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          384.0000000000068
+        ],
+        "causes": {
+          "full fill": 25,
+          "structural": 35,
+          "policy cancel": 1260,
+          "END (censored)": 30
+        },
+        "first_review_of_live": 0.8221225710014948,
+        "first_review_of_pulls": 0.8661417322834646,
+        "cancels_per_hour": 60.820595333869676,
+        "cancels_per_100_filled_shares": 116.21272820640688,
+        "p_loss": 0.020596590909090908,
+        "p_severe": 0.014914772727272728,
+        "loss_p95": -0.0,
+        "loss_p99": 45.0,
+        "per_original_opportunity": -0.005445715608205161,
+        "vs_N0": -82.34466571167025,
+        "vs_same_admission_PULL_ALL": 141.0098665642406,
+        "vs_PI0": -208.50947041916106,
+        "scenario_range": [
+          -5136.66724323798,
+          2460.428453180688
+        ]
+      },
+      "ask": {
+        "value": 359.27888412443264,
+        "attempts": 1094,
+        "accepted": 1035,
+        "filled": 43,
+        "shares_filled": 971.029336590361,
+        "shares_submitted": 32820.0,
+        "resting": 0.004495038884419415,
+        "at_best": 0.003706087422901582,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          579.0
+        ],
+        "causes": {
+          "full fill": 28,
+          "structural": 34,
+          "policy cancel": 952,
+          "END (censored)": 21
+        },
+        "first_review_of_live": 0.7531956735496559,
+        "first_review_of_pulls": 0.7954309449636553,
+        "cancels_per_hour": 45.95333869670153,
+        "cancels_per_100_filled_shares": 98.04029230906865,
+        "p_loss": 0.02010968921389397,
+        "p_severe": 0.010054844606946984,
+        "loss_p95": 0.0,
+        "loss_p99": 22.584737630658175,
+        "per_original_opportunity": 0.023760259514875513,
+        "vs_N0": 359.27888412443264,
+        "vs_same_admission_PULL_ALL": 881.4793518786721,
+        "vs_PI0": 7.250821664374598,
+        "scenario_range": [
+          -3399.2272130118613,
+          1285.0339738241594
+        ]
+      },
+      "pairs": {
+        "either": 0.009793081255028157,
+        "both": 0.00015218557253955485,
+        "at_best_both": 9.587020648967551e-05
+      }
+    },
+    "E1-PA": {
+      "both": {
+        "value": -745.5550000301499,
+        "attempts": 2502,
+        "accepted": 2385,
+        "filled": 58,
+        "shares_filled": 1090.2937216223897,
+        "shares_submitted": 75060.0,
+        "resting": 0.001252641458836149,
+        "at_best": 0.0007009251810136766,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          79.0
+        ],
+        "causes": {
+          "full fill": 23,
+          "structural": 30,
+          "policy cancel": 2332,
+          "END (censored)": 0
+        },
+        "first_review_of_live": 1.0,
+        "first_review_of_pulls": 1.0,
+        "cancels_per_hour": 56.28318584070797,
+        "cancels_per_100_filled_shares": 213.88731804581192,
+        "p_loss": 0.012789768185451638,
+        "p_severe": 0.008792965627498001,
+        "loss_p95": -0.0,
+        "loss_p99": 15.0,
+        "per_original_opportunity": -0.02465296607466933,
+        "vs_N0": -745.5550000301499,
+        "vs_same_admission_PULL_ALL": 0.0,
+        "vs_PI0": -1223.7478671976983,
+        "scenario_range": [
+          -9576.438682629261,
+          1439.1431266584218
+        ]
+      },
+      "bid": {
+        "value": -223.35453227591086,
+        "attempts": 1408,
+        "accepted": 1350,
+        "filled": 37,
+        "shares_filled": 699.3941024301561,
+        "shares_submitted": 42240.0,
+        "resting": 0.0014191874497184232,
+        "at_best": 0.0008091981764548137,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          79.0
+        ],
+        "causes": {
+          "full fill": 14,
+          "structural": 12,
+          "policy cancel": 1324,
+          "END (censored)": 0
+        },
+        "first_review_of_live": 1.0,
+        "first_review_of_pulls": 1.0,
+        "cancels_per_hour": 63.9098954143202,
+        "cancels_per_100_filled_shares": 189.3067149693644,
+        "p_loss": 0.014204545454545454,
+        "p_severe": 0.009943181818181818,
+        "loss_p95": -0.0,
+        "loss_p99": 24.156481071429173,
+        "per_original_opportunity": -0.014771148222730696,
+        "vs_N0": -223.35453227591086,
+        "vs_same_admission_PULL_ALL": 0.0,
+        "vs_PI0": -349.5193369834017,
+        "scenario_range": [
+          -5489.775617738728,
+          2247.8596624066768
+        ]
+      },
+      "ask": {
+        "value": -522.2004677542394,
+        "attempts": 1094,
+        "accepted": 1035,
+        "filled": 21,
+        "shares_filled": 390.8996191922337,
+        "shares_submitted": 32820.0,
+        "resting": 0.0010860954679538751,
+        "at_best": 0.0005926521855725396,
+        "lifetime_p10_p50_p90": [
+          79.0,
+          79.0,
+          79.0
+        ],
+        "causes": {
+          "full fill": 9,
+          "structural": 18,
+          "policy cancel": 1008,
+          "END (censored)": 0
+        },
+        "first_review_of_live": 1.0,
+        "first_review_of_pulls": 1.0,
+        "cancels_per_hour": 48.65647626709574,
+        "cancels_per_100_filled_shares": 257.8667132198697,
+        "p_loss": 0.010968921389396709,
+        "p_severe": 0.007312614259597806,
+        "loss_p95": 0.0,
+        "loss_p99": 6.985327791750307,
+        "per_original_opportunity": -0.03453478392660799,
+        "vs_N0": -522.2004677542394,
+        "vs_same_admission_PULL_ALL": 0.0,
+        "vs_PI0": -874.2285302142975,
+        "scenario_range": [
+          -4086.663064890533,
+          474.63840051310467
+        ]
+      },
+      "pairs": {
+        "either": 0.002402038079914186,
+        "both": 0.0001032448377581121,
+        "at_best_both": 5.698578707428265e-05
+      }
+    }
+  },
+  "null_A": {
+    "M50|A58|L37|N100": -11025.729928939287,
+    "S1lo|A58|L37|N100": -31391.104083531933,
+    "S1mid|A58|L37|N100": -15188.206655918239,
+    "S1hi|A58|L37|N100": -6616.298412179956,
+    "S2lo|A58|L37|N100": -62760.06286846012,
+    "S2hi|A58|L37|N100": 6984.336663365812,
+    "S3lo|A58|L37|N100": -23606.97679635856,
+    "S3hi|A58|L37|N100": -3672.2459896796554,
+    "SThi|A58|L37|N100": -9941.86582709678,
+    "EVhi|A58|L37|N100": 4383.814461277913,
+    "M50|A15|L37|N100": -17842.61195378651,
+    "M50|A100|L37|N100": -6395.914824178148,
+    "M50|A58|L0|N100": -7711.897120524899,
+    "M50|A58|L100|N100": -21761.411406978936,
+    "M50|A58|L37|N160": -11025.729928939287,
+    "M50|A58|L37|N660": -11025.729928939287,
+    "M50|A58|L37+13%x4000|N100": -61699.85655743044,
+    "M0|A58|L37|N100": -8816.032919762501,
+    "M250|A58|L37|N100": -31241.36669920953
+  },
+  "shift": {
+    "neutral_rows": 1269738,
+    "reached_rows": 126063,
+    "neutral_mean_pred": -0.3378126595991191,
+    "reached_mean_pred": 0.3476759367320148,
+    "neutral_mean_label": -0.3512160345420533,
+    "reached_mean_label": -0.22818679528610672
+  },
+  "admissions": {
+    "ALL": 29832,
+    "A": 14126,
+    "AF": 10381,
+    "AM": 9834,
+    "PI0": 3364,
+    "NEU": 3520,
+    "E1": 2502
+  },
+  "pulled": {
+    "A": 27247,
+    "AF": 26854,
+    "AM": 27294,
+    "PI0": 27774,
+    "NEU": 27870,
+    "E1": 27982
+  },
+  "values": {
+    "N0": {
+      "both": {
+        "M50|A58|L37|N100": 0.0,
+        "S1lo|A58|L37|N100": 0.0,
+        "S1mid|A58|L37|N100": 0.0,
+        "S1hi|A58|L37|N100": 0.0,
+        "S2lo|A58|L37|N100": 0.0,
+        "S2hi|A58|L37|N100": 0.0,
+        "S3lo|A58|L37|N100": 0.0,
+        "S3hi|A58|L37|N100": 0.0,
+        "SThi|A58|L37|N100": 0.0,
+        "EVhi|A58|L37|N100": 0.0,
+        "M50|A15|L37|N100": 0.0,
+        "M50|A100|L37|N100": 0.0,
+        "M50|A58|L0|N100": 0.0,
+        "M50|A58|L100|N100": 0.0,
+        "M50|A58|L37|N160": 0.0,
+        "M50|A58|L37|N660": 0.0,
+        "M50|A58|L37+13%x4000|N100": 0.0,
+        "M0|A58|L37|N100": 0.0,
+        "M250|A58|L37|N100": 0.0
+      },
+      "bid": {
+        "M50|A58|L37|N100": 0.0,
+        "S1lo|A58|L37|N100": 0.0,
+        "S1mid|A58|L37|N100": 0.0,
+        "S1hi|A58|L37|N100": 0.0,
+        "S2lo|A58|L37|N100": 0.0,
+        "S2hi|A58|L37|N100": 0.0,
+        "S3lo|A58|L37|N100": 0.0,
+        "S3hi|A58|L37|N100": 0.0,
+        "SThi|A58|L37|N100": 0.0,
+        "EVhi|A58|L37|N100": 0.0,
+        "M50|A15|L37|N100": 0.0,
+        "M50|A100|L37|N100": 0.0,
+        "M50|A58|L0|N100": 0.0,
+        "M50|A58|L100|N100": 0.0,
+        "M50|A58|L37|N160": 0.0,
+        "M50|A58|L37|N660": 0.0,
+        "M50|A58|L37+13%x4000|N100": 0.0,
+        "M0|A58|L37|N100": 0.0,
+        "M250|A58|L37|N100": 0.0
+      },
+      "ask": {
+        "M50|A58|L37|N100": 0.0,
+        "S1lo|A58|L37|N100": 0.0,
+        "S1mid|A58|L37|N100": 0.0,
+        "S1hi|A58|L37|N100": 0.0,
+        "S2lo|A58|L37|N100": 0.0,
+        "S2hi|A58|L37|N100": 0.0,
+        "S3lo|A58|L37|N100": 0.0,
+        "S3hi|A58|L37|N100": 0.0,
+        "SThi|A58|L37|N100": 0.0,
+        "EVhi|A58|L37|N100": 0.0,
+        "M50|A15|L37|N100": 0.0,
+        "M50|A100|L37|N100": 0.0,
+        "M50|A58|L0|N100": 0.0,
+        "M50|A58|L100|N100": 0.0,
+        "M50|A58|L37|N160": 0.0,
+        "M50|A58|L37|N660": 0.0,
+        "M50|A58|L37+13%x4000|N100": 0.0,
+        "M0|A58|L37|N100": 0.0,
+        "M250|A58|L37|N100": 0.0
+      }
+    },
+    "PA": {
+      "both": {
+        "M50|A58|L37|N100": -23730.503209025985,
+        "S1lo|A58|L37|N100": -36380.06695373689,
+        "S1mid|A58|L37|N100": -26737.62477877581,
+        "S1hi|A58|L37|N100": -12782.693817409581,
+        "S2lo|A58|L37|N100": -89730.83437325356,
+        "S2hi|A58|L37|N100": -1217.5611251125606,
+        "S3lo|A58|L37|N100": -27527.726740906364,
+        "S3hi|A58|L37|N100": -11639.004683375388,
+        "SThi|A58|L37|N100": -21224.370369094828,
+        "EVhi|A58|L37|N100": 0.0,
+        "M50|A15|L37|N100": -39580.390463338204,
+        "M50|A100|L37|N100": -12085.98828807077,
+        "M50|A58|L0|N100": -15879.244940169174,
+        "M50|A58|L100|N100": -39385.760862742114,
+        "M50|A58|L37|N160": -23730.503209025985,
+        "M50|A58|L37|N660": -23730.503209025985,
+        "M50|A58|L37+13%x4000|N100": -133408.39235484507,
+        "M0|A58|L37|N100": -17954.216830592133,
+        "M250|A58|L37|N100": -37192.72214279698
+      },
+      "bid": {
+        "M50|A58|L37|N100": -9324.42068042429,
+        "S1lo|A58|L37|N100": -16204.21836598792,
+        "S1mid|A58|L37|N100": -15011.807985630385,
+        "S1hi|A58|L37|N100": -4317.252869346078,
+        "S2lo|A58|L37|N100": -46252.0706104945,
+        "S2hi|A58|L37|N100": -2160.966704800462,
+        "S3lo|A58|L37|N100": -12150.564091896773,
+        "S3hi|A58|L37|N100": -3613.9970999363927,
+        "SThi|A58|L37|N100": -9119.520572666612,
+        "EVhi|A58|L37|N100": 0.0,
+        "M50|A15|L37|N100": -18459.884222450466,
+        "M50|A100|L37|N100": -7018.157664661984,
+        "M50|A58|L0|N100": -3520.6617374156967,
+        "M50|A58|L100|N100": -18258.632946120466,
+        "M50|A58|L37|N160": -9324.42068042429,
+        "M50|A58|L37|N660": -9324.42068042429,
+        "M50|A58|L37+13%x4000|N100": -67207.19379308082,
+        "M0|A58|L37|N100": -7387.6736958783795,
+        "M250|A58|L37|N100": -16324.118875744387
+      },
+      "ask": {
+        "M50|A58|L37|N100": -14406.082528601692,
+        "S1lo|A58|L37|N100": -20175.848587748973,
+        "S1mid|A58|L37|N100": -11725.816793145426,
+        "S1hi|A58|L37|N100": -8465.440948063502,
+        "S2lo|A58|L37|N100": -43478.76376275906,
+        "S2hi|A58|L37|N100": 943.405579687901,
+        "S3lo|A58|L37|N100": -15377.162649009591,
+        "S3hi|A58|L37|N100": -8025.007583438995,
+        "SThi|A58|L37|N100": -12104.849796428221,
+        "EVhi|A58|L37|N100": 0.0,
+        "M50|A15|L37|N100": -21120.506240887735,
+        "M50|A100|L37|N100": -5067.830623408787,
+        "M50|A58|L0|N100": -12358.583202753474,
+        "M50|A58|L100|N100": -21127.12791662165,
+        "M50|A58|L37|N160": -14406.082528601692,
+        "M50|A58|L37|N660": -14406.082528601692,
+        "M50|A58|L37+13%x4000|N100": -66201.19856176425,
+        "M0|A58|L37|N100": -10566.543134713755,
+        "M250|A58|L37|N100": -20868.6032670526
+      }
+    },
+    "A": {
+      "both": {
+        "M50|A58|L37|N100": -2032.1236860387226,
+        "S1lo|A58|L37|N100": -31307.945137853327,
+        "S1mid|A58|L37|N100": -11425.17678547639,
+        "S1hi|A58|L37|N100": 559.6670324165182,
+        "S2lo|A58|L37|N100": -60998.61815759807,
+        "S2hi|A58|L37|N100": 9654.296642696117,
+        "S3lo|A58|L37|N100": -18436.667552361694,
+        "S3hi|A58|L37|N100": 1983.7570430822725,
+        "SThi|A58|L37|N100": -2960.4974720552113,
+        "EVhi|A58|L37|N100": 4854.313190582063,
+        "M50|A15|L37|N100": -3062.459840669366,
+        "M50|A100|L37|N100": -2124.2072947225015,
+        "M50|A58|L0|N100": -3211.226123474354,
+        "M50|A58|L100|N100": -11873.36527460098,
+        "M50|A58|L37|N160": -2032.1236860387226,
+        "M50|A58|L37|N660": -2032.1236860387226,
+        "M50|A58|L37+13%x4000|N100": -52114.21937280042,
+        "M0|A58|L37|N100": -3585.219505803462,
+        "M250|A58|L37|N100": -29780.32998099124
+      },
+      "bid": {
+        "M50|A58|L37|N100": -979.8511797109486,
+        "S1lo|A58|L37|N100": -14475.655410426813,
+        "S1mid|A58|L37|N100": -4738.616788921699,
+        "S1hi|A58|L37|N100": 2738.9078126639993,
+        "S2lo|A58|L37|N100": -31439.570201488383,
+        "S2hi|A58|L37|N100": 2282.5407093903386,
+        "S3lo|A58|L37|N100": -8243.642132728095,
+        "S3hi|A58|L37|N100": 1969.4258749571268,
+        "SThi|A58|L37|N100": -1378.5549893471702,
+        "EVhi|A58|L37|N100": 1502.2556183142174,
+        "M50|A15|L37|N100": -1863.8395892280087,
+        "M50|A100|L37|N100": -1597.1180549085043,
+        "M50|A58|L0|N100": -513.6451248273249,
+        "M50|A58|L100|N100": -6297.42177875187,
+        "M50|A58|L37|N160": -979.8511797109486,
+        "M50|A58|L37|N660": -979.8511797109486,
+        "M50|A58|L37+13%x4000|N100": -27324.8458374788,
+        "M0|A58|L37|N100": -1070.2100145308618,
+        "M250|A58|L37|N100": -13129.688364744427
+      },
+      "ask": {
+        "M50|A58|L37|N100": -1052.2725063277735,
+        "S1lo|A58|L37|N100": -16832.289727426512,
+        "S1mid|A58|L37|N100": -6686.559996554688,
+        "S1hi|A58|L37|N100": -2179.2407802474813,
+        "S2lo|A58|L37|N100": -29559.047956109694,
+        "S2hi|A58|L37|N100": 7371.755933305778,
+        "S3lo|A58|L37|N100": -10193.0254196336,
+        "S3hi|A58|L37|N100": 14.33116812514595,
+        "SThi|A58|L37|N100": -1581.9424827080413,
+        "EVhi|A58|L37|N100": 3352.057572267845,
+        "M50|A15|L37|N100": -1198.6202514413562,
+        "M50|A100|L37|N100": -527.089239813997,
+        "M50|A58|L0|N100": -2697.580998647029,
+        "M50|A58|L100|N100": -5575.943495849107,
+        "M50|A58|L37|N160": -1052.2725063277735,
+        "M50|A58|L37|N660": -1052.2725063277735,
+        "M50|A58|L37+13%x4000|N100": -24789.373535321633,
+        "M0|A58|L37|N100": -2515.0094912725995,
+        "M250|A58|L37|N100": -16650.641616246812
+      }
+    },
+    "A-PA": {
+      "both": {
+        "M50|A58|L37|N100": -1053.0159863780993,
+        "S1lo|A58|L37|N100": -15763.06691860787,
+        "S1mid|A58|L37|N100": -8642.113663199501,
+        "S1hi|A58|L37|N100": -269.5924348333899,
+        "S2lo|A58|L37|N100": -38439.58359596743,
+        "S2hi|A58|L37|N100": 463.9472363144432,
+        "S3lo|A58|L37|N100": -8753.488040972352,
+        "S3hi|A58|L37|N100": -393.01911181976584,
+        "SThi|A58|L37|N100": -1721.4397718972723,
+        "EVhi|A58|L37|N100": 0.0,
+        "M50|A15|L37|N100": -2569.4676793889207,
+        "M50|A100|L37|N100": -697.3197432954771,
+        "M50|A58|L0|N100": -2654.1243698394464,
+        "M50|A58|L100|N100": -6631.767501536224,
+        "M50|A58|L37|N160": -1053.0159863780993,
+        "M50|A58|L37|N660": -1053.0159863780993,
+        "M50|A58|L37+13%x4000|N100": -51711.07481908577,
+        "M0|A58|L37|N100": -3343.5573849126467,
+        "M250|A58|L37|N100": -14811.342250361107
+      },
+      "bid": {
+        "M50|A58|L37|N100": -1160.308374971169,
+        "S1lo|A58|L37|N100": -6212.768891112519,
+        "S1mid|A58|L37|N100": -4415.0329441506265,
+        "S1hi|A58|L37|N100": 1514.2664568908474,
+        "S2lo|A58|L37|N100": -21859.497218404606,
+        "S2hi|A58|L37|N100": -739.9712272996588,
+        "S3lo|A58|L37|N100": -2683.3373601587737,
+        "S3hi|A58|L37|N100": 674.8765154083609,
+        "SThi|A58|L37|N100": -1221.7280077808398,
+        "EVhi|A58|L37|N100": 0.0,
+        "M50|A15|L37|N100": -1690.9229635849294,
+        "M50|A100|L37|N100": -1856.2021857435052,
+        "M50|A58|L0|N100": -23.001468908389143,
+        "M50|A58|L100|N100": -4993.832326053071,
+        "M50|A58|L37|N160": -1160.308374971169,
+        "M50|A58|L37|N660": -1160.308374971169,
+        "M50|A58|L37+13%x4000|N100": -26767.52381475826,
+        "M0|A58|L37|N100": -1238.880141965544,
+        "M250|A58|L37|N100": -5524.297578420999
+      },
+      "ask": {
+        "M50|A58|L37|N100": 107.29238859306929,
+        "S1lo|A58|L37|N100": -9550.298027495352,
+        "S1mid|A58|L37|N100": -4227.080719048876,
+        "S1hi|A58|L37|N100": -1783.8588917242373,
+        "S2lo|A58|L37|N100": -16580.086377562824,
+        "S2hi|A58|L37|N100": 1203.9184636141026,
+        "S3lo|A58|L37|N100": -6070.150680813577,
+        "S3hi|A58|L37|N100": -1067.8956272281264,
+        "SThi|A58|L37|N100": -499.7117641164326,
+        "EVhi|A58|L37|N100": 0.0,
+        "M50|A15|L37|N100": -878.544715803991,
+        "M50|A100|L37|N100": 1158.882442448028,
+        "M50|A58|L0|N100": -2631.122900931057,
+        "M50|A58|L100|N100": -1637.9351754831534,
+        "M50|A58|L37|N160": 107.29238859306929,
+        "M50|A58|L37|N660": 107.29238859306929,
+        "M50|A58|L37+13%x4000|N100": -24943.551004327506,
+        "M0|A58|L37|N100": -2104.677242947102,
+        "M250|A58|L37|N100": -9287.044671940108
+      }
+    },
+    "AF": {
+      "both": {
+        "M50|A58|L37|N100": -18950.63622697559,
+        "S1lo|A58|L37|N100": -41643.246104136,
+        "S1mid|A58|L37|N100": -27657.47183484872,
+        "S1hi|A58|L37|N100": -12518.350124438282,
+        "S2lo|A58|L37|N100": -56181.307482207485,
+        "S2hi|A58|L37|N100": 558.6223280563786,
+        "S3lo|A58|L37|N100": -38050.53092004513,
+        "S3hi|A58|L37|N100": -4409.5113050096725,
+        "SThi|A58|L37|N100": -15525.04182084758,
+        "EVhi|A58|L37|N100": 2238.591394966955,
+        "M50|A15|L37|N100": -22903.54552649088,
+        "M50|A100|L37|N100": -14864.674682378834,
+        "M50|A58|L0|N100": -13143.732446841492,
+        "M50|A58|L100|N100": -31169.45283127438,
+        "M50|A58|L37|N160": -18950.63622697559,
+        "M50|A58|L37|N660": -18950.63622697559,
+        "M50|A58|L37+13%x4000|N100": -57790.14773568511,
+        "M0|A58|L37|N100": -13132.39773792062,
+        "M250|A58|L37|N100": -42500.45438883889
+      },
+      "bid": {
+        "M50|A58|L37|N100": -10679.460521869816,
+        "S1lo|A58|L37|N100": -26070.218834511805,
+        "S1mid|A58|L37|N100": -18565.433083477503,
+        "S1hi|A58|L37|N100": -7737.191184258399,
+        "S2lo|A58|L37|N100": -35591.15600006008,
+        "S2hi|A58|L37|N100": -1838.1895873140957,
+        "S3lo|A58|L37|N100": -22792.852847217706,
+        "S3hi|A58|L37|N100": -2127.34899808633,
+        "SThi|A58|L37|N100": -8989.202567473429,
+        "EVhi|A58|L37|N100": 1263.0258459463487,
+        "M50|A15|L37|N100": -12265.840418023428,
+        "M50|A100|L37|N100": -9158.635781418361,
+        "M50|A58|L0|N100": -6955.403007374799,
+        "M50|A58|L100|N100": -18251.124034774224,
+        "M50|A58|L37|N160": -10679.460521869816,
+        "M50|A58|L37|N660": -10679.460521869816,
+        "M50|A58|L37+13%x4000|N100": -31384.908952447244,
+        "M0|A58|L37|N100": -8408.895930588305,
+        "M250|A58|L37|N100": -27159.27320551982
+      },
+      "ask": {
+        "M50|A58|L37|N100": -8271.175705105776,
+        "S1lo|A58|L37|N100": -15573.0272696242,
+        "S1mid|A58|L37|N100": -9092.038751371221,
+        "S1hi|A58|L37|N100": -4781.158940179886,
+        "S2lo|A58|L37|N100": -20590.151482147412,
+        "S2hi|A58|L37|N100": 2396.8119153704747,
+        "S3lo|A58|L37|N100": -15257.678072827428,
+        "S3hi|A58|L37|N100": -2282.1623069233424,
+        "SThi|A58|L37|N100": -6535.839253374151,
+        "EVhi|A58|L37|N100": 975.565549020606,
+        "M50|A15|L37|N100": -10637.70510846745,
+        "M50|A100|L37|N100": -5706.038900960471,
+        "M50|A58|L0|N100": -6188.329439466694,
+        "M50|A58|L100|N100": -12918.328796500158,
+        "M50|A58|L37|N160": -8271.175705105776,
+        "M50|A58|L37|N660": -8271.175705105776,
+        "M50|A58|L37+13%x4000|N100": -26405.238783237874,
+        "M0|A58|L37|N100": -4723.501807332317,
+        "M250|A58|L37|N100": -15341.181183319062
+      }
+    },
+    "AF-PA": {
+      "both": {
+        "M50|A58|L37|N100": -7355.9135475491275,
+        "S1lo|A58|L37|N100": -9702.858382179256,
+        "S1mid|A58|L37|N100": -10570.507187834952,
+        "S1hi|A58|L37|N100": -3108.861987662822,
+        "S2lo|A58|L37|N100": -24864.72287060318,
+        "S2hi|A58|L37|N100": -904.3919382752925,
+        "S3lo|A58|L37|N100": -9746.217950245988,
+        "S3hi|A58|L37|N100": -1219.1829334189383,
+        "SThi|A58|L37|N100": -5896.266450188496,
+        "EVhi|A58|L37|N100": 0.0,
+        "M50|A15|L37|N100": -11926.030731141585,
+        "M50|A100|L37|N100": -3739.927036662665,
+        "M50|A58|L0|N100": -4421.82339678895,
+        "M50|A58|L100|N100": -14642.727580873952,
+        "M50|A58|L37|N160": -7355.9135475491275,
+        "M50|A58|L37|N660": -7355.9135475491275,
+        "M50|A58|L37+13%x4000|N100": -45930.946801131446,
+        "M0|A58|L37|N100": -3254.9936218249622,
+        "M250|A58|L37|N100": -10787.125654077186
+      },
+      "bid": {
+        "M50|A58|L37|N100": -3727.4852770266343,
+        "S1lo|A58|L37|N100": -6578.54334753842,
+        "S1mid|A58|L37|N100": -8338.087921750819,
+        "S1hi|A58|L37|N100": -1519.835221258933,
+        "S2lo|A58|L37|N100": -14616.000065097689,
+        "S2hi|A58|L37|N100": -1465.0024403547545,
+        "S3lo|A58|L37|N100": -5295.147172894656,
+        "S3hi|A58|L37|N100": -200.55436589019394,
+        "SThi|A58|L37|N100": -3409.8949366804827,
+        "EVhi|A58|L37|N100": 0.0,
+        "M50|A15|L37|N100": -5537.506635591266,
+        "M50|A100|L37|N100": -2683.5915227110754,
+        "M50|A58|L0|N100": -1389.5420478146114,
+        "M50|A58|L100|N100": -8371.726847961734,
+        "M50|A58|L37|N160": -3727.4852770266343,
+        "M50|A58|L37|N660": -3727.4852770266343,
+        "M50|A58|L37+13%x4000|N100": -24365.83116493078,
+        "M0|A58|L37|N100": -2390.8629549689285,
+        "M250|A58|L37|N100": -7037.4641496687445
+      },
+      "ask": {
+        "M50|A58|L37|N100": -3628.428270522493,
+        "S1lo|A58|L37|N100": -3124.3150346408365,
+        "S1mid|A58|L37|N100": -2232.4192660841345,
+        "S1hi|A58|L37|N100": -1589.0267664038893,
+        "S2lo|A58|L37|N100": -10248.72280550549,
+        "S2hi|A58|L37|N100": 560.6105020794616,
+        "S3lo|A58|L37|N100": -4451.070777351331,
+        "S3hi|A58|L37|N100": -1018.628567528745,
+        "SThi|A58|L37|N100": -2486.3715135080133,
+        "EVhi|A58|L37|N100": 0.0,
+        "M50|A15|L37|N100": -6388.524095550318,
+        "M50|A100|L37|N100": -1056.335513951589,
+        "M50|A58|L0|N100": -3032.2813489743385,
+        "M50|A58|L100|N100": -6271.000732912215,
+        "M50|A58|L37|N160": -3628.428270522493,
+        "M50|A58|L37|N660": -3628.428270522493,
+        "M50|A58|L37+13%x4000|N100": -21565.115636200666,
+        "M0|A58|L37|N100": -864.1306668560337,
+        "M250|A58|L37|N100": -3749.661504408441
+      }
+    },
+    "AM": {
+      "both": {
+        "M50|A58|L37|N100": -17771.892493861647,
+        "S1lo|A58|L37|N100": -25961.052580507272,
+        "S1mid|A58|L37|N100": -19826.321685465886,
+        "S1hi|A58|L37|N100": -10238.197440699973,
+        "S2lo|A58|L37|N100": -46387.1444307374,
+        "S2hi|A58|L37|N100": 225.11624824665438,
+        "S3lo|A58|L37|N100": -19548.842034544694,
+        "S3hi|A58|L37|N100": -8004.923513196574,
+        "SThi|A58|L37|N100": -13770.254221214253,
+        "EVhi|A58|L37|N100": 5579.2277202854475,
+        "M50|A15|L37|N100": -22922.877965530348,
+        "M50|A100|L37|N100": -14562.834990165393,
+        "M50|A58|L0|N100": -13157.19807433494,
+        "M50|A58|L100|N100": -25860.076736573243,
+        "M50|A58|L37|N160": -17771.892493861647,
+        "M50|A58|L37|N660": -17771.892493861647,
+        "M50|A58|L37+13%x4000|N100": -54249.322761021125,
+        "M0|A58|L37|N100": -15050.768922231882,
+        "M250|A58|L37|N100": -26457.8827419964
+      },
+      "bid": {
+        "M50|A58|L37|N100": -7462.3835742866795,
+        "S1lo|A58|L37|N100": -12188.54612702363,
+        "S1mid|A58|L37|N100": -8351.338428151983,
+        "S1hi|A58|L37|N100": -3414.9839507767547,
+        "S2lo|A58|L37|N100": -25862.605175210156,
+        "S2hi|A58|L37|N100": -672.4906598056181,
+        "S3lo|A58|L37|N100": -9231.505415447537,
+        "S3hi|A58|L37|N100": -3744.714140529457,
+        "SThi|A58|L37|N100": -6848.707544718887,
+        "EVhi|A58|L37|N100": 584.2478895143438,
+        "M50|A15|L37|N100": -10004.862718373282,
+        "M50|A100|L37|N100": -6676.896908336948,
+        "M50|A58|L0|N100": -5014.110888512904,
+        "M50|A58|L100|N100": -11444.276699572678,
+        "M50|A58|L37|N160": -7462.3835742866795,
+        "M50|A58|L37|N660": -7462.3835742866795,
+        "M50|A58|L37+13%x4000|N100": -26098.295228917348,
+        "M0|A58|L37|N100": -5561.225805278123,
+        "M250|A58|L37|N100": -12394.208628779026
+      },
+      "ask": {
+        "M50|A58|L37|N100": -10309.508919574968,
+        "S1lo|A58|L37|N100": -13772.506453483638,
+        "S1mid|A58|L37|N100": -11474.983257313901,
+        "S1hi|A58|L37|N100": -6823.213489923217,
+        "S2lo|A58|L37|N100": -20524.53925552724,
+        "S2hi|A58|L37|N100": 897.6069080522728,
+        "S3lo|A58|L37|N100": -10317.336619097157,
+        "S3hi|A58|L37|N100": -4260.209372667117,
+        "SThi|A58|L37|N100": -6921.546676495365,
+        "EVhi|A58|L37|N100": 4994.979830771104,
+        "M50|A15|L37|N100": -12918.015247157065,
+        "M50|A100|L37|N100": -7885.938081828444,
+        "M50|A58|L0|N100": -8143.087185822034,
+        "M50|A58|L100|N100": -14415.800037000567,
+        "M50|A58|L37|N160": -10309.508919574968,
+        "M50|A58|L37|N660": -10309.508919574968,
+        "M50|A58|L37+13%x4000|N100": -28151.02753210377,
+        "M0|A58|L37|N100": -9489.54311695376,
+        "M250|A58|L37|N100": -14063.674113217374
+      }
+    },
+    "AM-PA": {
+      "both": {
+        "M50|A58|L37|N100": -9048.371766546323,
+        "S1lo|A58|L37|N100": -11977.95200077585,
+        "S1mid|A58|L37|N100": -11351.932017774501,
+        "S1hi|A58|L37|N100": -6413.700418977593,
+        "S2lo|A58|L37|N100": -34907.687915678354,
+        "S2hi|A58|L37|N100": -2726.310208466594,
+        "S3lo|A58|L37|N100": -9048.413700101215,
+        "S3hi|A58|L37|N100": -5223.731719433501,
+        "SThi|A58|L37|N100": -7384.509901692442,
+        "EVhi|A58|L37|N100": 0.0,
+        "M50|A15|L37|N100": -15054.109060739935,
+        "M50|A100|L37|N100": -5028.094771221488,
+        "M50|A58|L0|N100": -5512.638111363587,
+        "M50|A58|L100|N100": -17881.781595745448,
+        "M50|A58|L37|N160": -9048.371766546323,
+        "M50|A58|L37|N660": -9048.371766546323,
+        "M50|A58|L37+13%x4000|N100": -47237.9250030613,
+        "M0|A58|L37|N100": -7342.912112804904,
+        "M250|A58|L37|N100": -12451.066833699993
+      },
+      "bid": {
+        "M50|A58|L37|N100": -2737.556253853207,
+        "S1lo|A58|L37|N100": -6758.915964760978,
+        "S1mid|A58|L37|N100": -3636.9740419473164,
+        "S1hi|A58|L37|N100": -724.2773415047652,
+        "S2lo|A58|L37|N100": -19384.219466295686,
+        "S2hi|A58|L37|N100": -1241.734095041214,
+        "S3lo|A58|L37|N100": -4435.877422062034,
+        "S3hi|A58|L37|N100": -864.3337200550277,
+        "SThi|A58|L37|N100": -2644.448639494016,
+        "EVhi|A58|L37|N100": 0.0,
+        "M50|A15|L37|N100": -5002.8981331287105,
+        "M50|A100|L37|N100": -1879.2685899559724,
+        "M50|A58|L0|N100": -812.1451369418786,
+        "M50|A58|L100|N100": -6694.4479287204485,
+        "M50|A58|L37|N160": -2737.556253853207,
+        "M50|A58|L37|N660": -2737.556253853207,
+        "M50|A58|L37+13%x4000|N100": -21438.340943271178,
+        "M0|A58|L37|N100": -1877.4634644547934,
+        "M250|A58|L37|N100": -6698.348746642378
+      },
+      "ask": {
+        "M50|A58|L37|N100": -6310.815512693118,
+        "S1lo|A58|L37|N100": -5219.036036014872,
+        "S1mid|A58|L37|N100": -7714.957975827186,
+        "S1hi|A58|L37|N100": -5689.423077472828,
+        "S2lo|A58|L37|N100": -15523.468449382673,
+        "S2hi|A58|L37|N100": -1484.5761134253798,
+        "S3lo|A58|L37|N100": -4612.53627803918,
+        "S3hi|A58|L37|N100": -4359.397999378473,
+        "SThi|A58|L37|N100": -4740.0612621984255,
+        "EVhi|A58|L37|N100": 0.0,
+        "M50|A15|L37|N100": -10051.21092761122,
+        "M50|A100|L37|N100": -3148.8261812655164,
+        "M50|A58|L0|N100": -4700.492974421708,
+        "M50|A58|L100|N100": -11187.333667024997,
+        "M50|A58|L37|N160": -6310.815512693118,
+        "M50|A58|L37|N660": -6310.815512693118,
+        "M50|A58|L37+13%x4000|N100": -25799.584059790122,
+        "M0|A58|L37|N100": -5465.44864835011,
+        "M250|A58|L37|N100": -5752.718087057616
+      }
+    },
+    "PI0": {
+      "both": {
+        "M50|A58|L37|N100": 478.19286716754823,
+        "S1lo|A58|L37|N100": -2185.3144041015416,
+        "S1mid|A58|L37|N100": -3191.056791861539,
+        "S1hi|A58|L37|N100": -526.5139122530192,
+        "S2lo|A58|L37|N100": -3313.9427965800132,
+        "S2hi|A58|L37|N100": 5603.606224662248,
+        "S3lo|A58|L37|N100": -213.52571602956573,
+        "S3hi|A58|L37|N100": 1464.9106531539426,
+        "SThi|A58|L37|N100": 357.274948452712,
+        "EVhi|A58|L37|N100": 1581.4267095194361,
+        "M50|A15|L37|N100": -2650.4869139446855,
+        "M50|A100|L37|N100": 880.2046252530388,
+        "M50|A58|L0|N100": 477.52403433223594,
+        "M50|A58|L100|N100": -1525.2025986632973,
+        "M50|A58|L37|N160": 478.19286716754823,
+        "M50|A58|L37|N660": 478.19286716754823,
+        "M50|A58|L37+13%x4000|N100": -7440.813822752494,
+        "M0|A58|L37|N100": -1547.2655322820199,
+        "M250|A58|L37|N100": -1992.3035805288284
+      },
+      "bid": {
+        "M50|A58|L37|N100": 126.16480470749082,
+        "S1lo|A58|L37|N100": -1985.6618862377586,
+        "S1mid|A58|L37|N100": -2651.0702422744034,
+        "S1hi|A58|L37|N100": 26.51118108826884,
+        "S2lo|A58|L37|N100": -3816.779190224515,
+        "S2hi|A58|L37|N100": 1231.8611975901258,
+        "S3lo|A58|L37|N100": -495.2836095627142,
+        "S3hi|A58|L37|N100": 217.69241078499402,
+        "SThi|A58|L37|N100": 186.8020864702997,
+        "EVhi|A58|L37|N100": 545.6371586920129,
+        "M50|A15|L37|N100": -1392.362469075827,
+        "M50|A100|L37|N100": -381.04329539324874,
+        "M50|A58|L0|N100": 457.7265778107318,
+        "M50|A58|L100|N100": -1262.7120240502961,
+        "M50|A58|L37|N160": 126.16480470749082,
+        "M50|A58|L37|N660": 126.16480470749082,
+        "M50|A58|L37+13%x4000|N100": -4588.632346838146,
+        "M0|A58|L37|N100": -1312.4706980826295,
+        "M250|A58|L37|N100": -2090.0704211890657
+      },
+      "ask": {
+        "M50|A58|L37|N100": 352.02806246005804,
+        "S1lo|A58|L37|N100": -199.6525178637832,
+        "S1mid|A58|L37|N100": -539.9865495871354,
+        "S1hi|A58|L37|N100": -553.0250933412882,
+        "S2lo|A58|L37|N100": 502.83639364450187,
+        "S2hi|A58|L37|N100": 4371.745027072122,
+        "S3lo|A58|L37|N100": 281.7578935331484,
+        "S3hi|A58|L37|N100": 1247.2182423689487,
+        "SThi|A58|L37|N100": 170.47286198241227,
+        "EVhi|A58|L37|N100": 1035.7895508274232,
+        "M50|A15|L37|N100": -1258.1244448688585,
+        "M50|A100|L37|N100": 1261.2479206462876,
+        "M50|A58|L0|N100": 19.79745652150416,
+        "M50|A58|L100|N100": -262.49057461300094,
+        "M50|A58|L37|N160": 352.02806246005804,
+        "M50|A58|L37|N660": 352.02806246005804,
+        "M50|A58|L37+13%x4000|N100": -2852.181475914349,
+        "M0|A58|L37|N100": -234.79483419939015,
+        "M250|A58|L37|N100": 97.76684066023745
+      }
+    },
+    "PI0-PA": {
+      "both": {
+        "M50|A58|L37|N100": -73.92775761177006,
+        "S1lo|A58|L37|N100": -553.391562630628,
+        "S1mid|A58|L37|N100": -2668.8245540476273,
+        "S1hi|A58|L37|N100": -266.5937321637541,
+        "S2lo|A58|L37|N100": -3729.412390772819,
+        "S2hi|A58|L37|N100": 3597.2934888896457,
+        "S3lo|A58|L37|N100": 606.0336156181181,
+        "S3hi|A58|L37|N100": -223.7371604763315,
+        "SThi|A58|L37|N100": -352.9618828481614,
+        "EVhi|A58|L37|N100": 0.0,
+        "M50|A15|L37|N100": -2527.1024687118743,
+        "M50|A100|L37|N100": 122.6913762702709,
+        "M50|A58|L0|N100": -853.5693598348464,
+        "M50|A58|L100|N100": -1476.3214204997146,
+        "M50|A58|L37|N160": -73.92775761177006,
+        "M50|A58|L37|N660": -73.92775761177006,
+        "M50|A58|L37+13%x4000|N100": -8229.999345837768,
+        "M0|A58|L37|N100": -1941.5713150391966,
+        "M250|A58|L37|N100": -484.5291478331617
+      },
+      "bid": {
+        "M50|A58|L37|N100": 265.40756624562874,
+        "S1lo|A58|L37|N100": -870.2640405306217,
+        "S1mid|A58|L37|N100": -1411.809339894472,
+        "S1hi|A58|L37|N100": 662.9773951831775,
+        "S2lo|A58|L37|N100": -2085.327475273747,
+        "S2hi|A58|L37|N100": 1850.9212665224954,
+        "S3lo|A58|L37|N100": 782.463346714312,
+        "S3hi|A58|L37|N100": 189.62908347575538,
+        "SThi|A58|L37|N100": 290.48731154092025,
+        "EVhi|A58|L37|N100": 0.0,
+        "M50|A15|L37|N100": -697.1527687755593,
+        "M50|A100|L37|N100": -223.2249392854631,
+        "M50|A58|L0|N100": 195.894347738884,
+        "M50|A58|L100|N100": -310.58635977410745,
+        "M50|A58|L37|N160": 265.40756624562874,
+        "M50|A58|L37|N660": 265.40756624562874,
+        "M50|A58|L37+13%x4000|N100": -4673.635415597628,
+        "M0|A58|L37|N100": -898.3030053213442,
+        "M250|A58|L37|N100": -470.303078367932
+      },
+      "ask": {
+        "M50|A58|L37|N100": -339.33532385739886,
+        "S1lo|A58|L37|N100": 316.87247789999367,
+        "S1mid|A58|L37|N100": -1257.0152141531548,
+        "S1hi|A58|L37|N100": -929.5711273469318,
+        "S2lo|A58|L37|N100": -1644.0849154990724,
+        "S2hi|A58|L37|N100": 1746.3722223671502,
+        "S3lo|A58|L37|N100": -176.42973109619402,
+        "S3hi|A58|L37|N100": -413.3662439520867,
+        "SThi|A58|L37|N100": -643.4491943890812,
+        "EVhi|A58|L37|N100": 0.0,
+        "M50|A15|L37|N100": -1829.9496999363153,
+        "M50|A100|L37|N100": 345.9163155557341,
+        "M50|A58|L0|N100": -1049.4637075737305,
+        "M50|A58|L100|N100": -1165.7350607256067,
+        "M50|A58|L37|N160": -339.33532385739886,
+        "M50|A58|L37|N660": -339.33532385739886,
+        "M50|A58|L37+13%x4000|N100": -3556.363930240141,
+        "M0|A58|L37|N100": -1043.2683097178524,
+        "M250|A58|L37|N100": -14.22606946522967
+      }
+    },
+    "NEU": {
+      "both": {
+        "M50|A58|L37|N100": 3540.1761190818866,
+        "S1lo|A58|L37|N100": -3279.3135522016755,
+        "S1mid|A58|L37|N100": 447.794297019288,
+        "S1hi|A58|L37|N100": 4990.350797300591,
+        "S2lo|A58|L37|N100": -7529.981230132872,
+        "S2hi|A58|L37|N100": 6205.975887220056,
+        "S3lo|A58|L37|N100": -1813.4688636727492,
+        "S3hi|A58|L37|N100": 3925.000751616408,
+        "SThi|A58|L37|N100": 2834.153168467578,
+        "EVhi|A58|L37|N100": 2649.0191125052033,
+        "M50|A15|L37|N100": 3387.2056295383836,
+        "M50|A100|L37|N100": 2659.2362784806683,
+        "M50|A58|L0|N100": 2963.0149206718593,
+        "M50|A58|L100|N100": 1817.1923385256812,
+        "M50|A58|L37|N160": 3540.1761190818866,
+        "M50|A58|L37|N660": 3540.1761190818866,
+        "M50|A58|L37+13%x4000|N100": -5658.358152854841,
+        "M0|A58|L37|N100": 3252.3221945535197,
+        "M250|A58|L37|N100": -3387.6507610566982
+      },
+      "bid": {
+        "M50|A58|L37|N100": 912.1933801932006,
+        "S1lo|A58|L37|N100": -1412.3781863211038,
+        "S1mid|A58|L37|N100": -1179.8207330025848,
+        "S1hi|A58|L37|N100": 2378.692659652696,
+        "S2lo|A58|L37|N100": -4147.511194223311,
+        "S2hi|A58|L37|N100": 3113.9471312695505,
+        "S3lo|A58|L37|N100": -590.1540101148929,
+        "S3hi|A58|L37|N100": 1437.9747369416393,
+        "SThi|A58|L37|N100": 1294.0746498912158,
+        "EVhi|A58|L37|N100": 1408.29121654563,
+        "M50|A15|L37|N100": 881.9061578576907,
+        "M50|A100|L37|N100": 623.6836548475785,
+        "M50|A58|L0|N100": 864.9009555257456,
+        "M50|A58|L100|N100": 498.9982443652032,
+        "M50|A58|L37|N160": 912.1933801932006,
+        "M50|A58|L37|N660": 912.1933801932006,
+        "M50|A58|L37+13%x4000|N100": -5692.502234075256,
+        "M0|A58|L37|N100": 718.2565879847621,
+        "M250|A58|L37|N100": -1274.9849309281847
+      },
+      "ask": {
+        "M50|A58|L37|N100": 2627.9827388886865,
+        "S1lo|A58|L37|N100": -1866.9353658805717,
+        "S1mid|A58|L37|N100": 1627.6150300218726,
+        "S1hi|A58|L37|N100": 2611.6581376478953,
+        "S2lo|A58|L37|N100": -3382.4700359095614,
+        "S2hi|A58|L37|N100": 3092.028755950507,
+        "S3lo|A58|L37|N100": -1223.3148535578564,
+        "S3hi|A58|L37|N100": 2487.0260146747682,
+        "SThi|A58|L37|N100": 1540.078518576362,
+        "EVhi|A58|L37|N100": 1240.7278959595733,
+        "M50|A15|L37|N100": 2505.299471680693,
+        "M50|A100|L37|N100": 2035.5526236330898,
+        "M50|A58|L0|N100": 2098.1139651461144,
+        "M50|A58|L100|N100": 1318.194094160478,
+        "M50|A58|L37|N160": 2627.9827388886865,
+        "M50|A58|L37|N660": 2627.9827388886865,
+        "M50|A58|L37+13%x4000|N100": 34.14408122041459,
+        "M0|A58|L37|N100": 2534.065606568758,
+        "M250|A58|L37|N100": -2112.6658301285133
+      }
+    },
+    "NEU-PA": {
+      "both": {
+        "M50|A58|L37|N100": 1261.194750869152,
+        "S1lo|A58|L37|N100": -2800.9786297704086,
+        "S1mid|A58|L37|N100": -709.939047285739,
+        "S1hi|A58|L37|N100": 1966.8914009892133,
+        "S2lo|A58|L37|N100": -7616.328646386287,
+        "S2hi|A58|L37|N100": 2037.4805707449327,
+        "S3lo|A58|L37|N100": -2441.214838005467,
+        "S3hi|A58|L37|N100": 739.4724810431667,
+        "SThi|A58|L37|N100": 1693.2150505571972,
+        "EVhi|A58|L37|N100": 0.0,
+        "M50|A15|L37|N100": 612.5193272567707,
+        "M50|A100|L37|N100": 471.4799361027577,
+        "M50|A58|L0|N100": 723.6234363351824,
+        "M50|A58|L100|N100": 837.4736665007308,
+        "M50|A58|L37|N160": 1261.194750869152,
+        "M50|A58|L37|N660": 1261.194750869152,
+        "M50|A58|L37+13%x4000|N100": -7717.180766741274,
+        "M0|A58|L37|N100": 789.2454459694045,
+        "M250|A58|L37|N100": -2840.8713025671736
+      },
+      "bid": {
+        "M50|A58|L37|N100": 8.659292870220014,
+        "S1lo|A58|L37|N100": -1879.1288581837302,
+        "S1mid|A58|L37|N100": -1987.479419079525,
+        "S1hi|A58|L37|N100": 1256.8291475488577,
+        "S2lo|A58|L37|N100": -4821.33976707757,
+        "S2hi|A58|L37|N100": 999.0748097440487,
+        "S3lo|A58|L37|N100": -1194.8160007708009,
+        "S3hi|A58|L37|N100": 561.3383920960089,
+        "SThi|A58|L37|N100": 618.5858744409556,
+        "EVhi|A58|L37|N100": 0.0,
+        "M50|A15|L37|N100": 8.37207053471019,
+        "M50|A100|L37|N100": -84.8504324754021,
+        "M50|A58|L0|N100": 41.64525000000002,
+        "M50|A58|L100|N100": -389.111981105344,
+        "M50|A58|L37|N160": 8.659292870220014,
+        "M50|A58|L37|N660": 8.659292870220014,
+        "M50|A58|L37+13%x4000|N100": -6560.309829334745,
+        "M0|A58|L37|N100": -269.99911754098355,
+        "M250|A58|L37|N100": -1726.061066732554
+      },
+      "ask": {
+        "M50|A58|L37|N100": 1252.5354579989323,
+        "S1lo|A58|L37|N100": -921.8497715866779,
+        "S1mid|A58|L37|N100": 1277.540371793786,
+        "S1hi|A58|L37|N100": 710.062253440356,
+        "S2lo|A58|L37|N100": -2794.9888793087166,
+        "S2hi|A58|L37|N100": 1038.4057610008838,
+        "S3lo|A58|L37|N100": -1246.3988372346655,
+        "S3hi|A58|L37|N100": 178.13408894715766,
+        "SThi|A58|L37|N100": 1074.6291761162415,
+        "EVhi|A58|L37|N100": 0.0,
+        "M50|A15|L37|N100": 604.1472567220603,
+        "M50|A100|L37|N100": 556.3303685781598,
+        "M50|A58|L0|N100": 681.9781863351823,
+        "M50|A58|L100|N100": 1226.585647606075,
+        "M50|A58|L37|N160": 1252.5354579989323,
+        "M50|A58|L37|N660": 1252.5354579989323,
+        "M50|A58|L37+13%x4000|N100": -1156.8709374065295,
+        "M0|A58|L37|N100": 1059.244563510388,
+        "M250|A58|L37|N100": -1114.8102358346196
+      }
+    },
+    "E1": {
+      "both": {
+        "M50|A58|L37|N100": 276.93421841276233,
+        "S1lo|A58|L37|N100": 2013.9447356377293,
+        "S1mid|A58|L37|N100": -1087.9358946507152,
+        "S1hi|A58|L37|N100": 1751.7363654061999,
+        "S2lo|A58|L37|N100": -7531.60828924842,
+        "S2hi|A58|L37|N100": 2586.611791242736,
+        "S3lo|A58|L37|N100": 997.7565847412693,
+        "S3hi|A58|L37|N100": 1176.4478516570562,
+        "SThi|A58|L37|N100": 402.6008789300902,
+        "EVhi|A58|L37|N100": 831.7518975939308,
+        "M50|A15|L37|N100": 599.851518143051,
+        "M50|A100|L37|N100": 823.0940905476476,
+        "M50|A58|L0|N100": -174.11249798337064,
+        "M50|A58|L100|N100": -1220.840459105424,
+        "M50|A58|L37|N160": 276.93421841276233,
+        "M50|A58|L37|N660": 276.93421841276233,
+        "M50|A58|L37+13%x4000|N100": -8535.89445624984,
+        "M0|A58|L37|N100": 945.1233195998793,
+        "M250|A58|L37|N100": 1575.0827105182534
+      },
+      "bid": {
+        "M50|A58|L37|N100": -82.34466571167025,
+        "S1lo|A58|L37|N100": 2460.428453180688,
+        "S1mid|A58|L37|N100": -922.1750195334015,
+        "S1hi|A58|L37|N100": 1457.0805271444815,
+        "S2lo|A58|L37|N100": -4590.0328932481625,
+        "S2hi|A58|L37|N100": 1589.123311584748,
+        "S3lo|A58|L37|N100": 973.7904227056564,
+        "S3hi|A58|L37|N100": 1051.7828024732037,
+        "SThi|A58|L37|N100": 203.79055636371663,
+        "EVhi|A58|L37|N100": 261.7518975939309,
+        "M50|A15|L37|N100": 727.3851887338933,
+        "M50|A100|L37|N100": -461.9398832765117,
+        "M50|A58|L0|N100": 334.3210159168848,
+        "M50|A58|L100|N100": -544.0237351881569,
+        "M50|A58|L37|N160": -82.34466571167025,
+        "M50|A58|L37|N660": -82.34466571167025,
+        "M50|A58|L37+13%x4000|N100": -5136.66724323798,
+        "M0|A58|L37|N100": 1115.9326500923244,
+        "M250|A58|L37|N100": 2208.683169615514
+      },
+      "ask": {
+        "M50|A58|L37|N100": 359.27888412443264,
+        "S1lo|A58|L37|N100": -446.4837175429585,
+        "S1mid|A58|L37|N100": -165.76087511731373,
+        "S1hi|A58|L37|N100": 294.6558382617186,
+        "S2lo|A58|L37|N100": -2941.5753960002576,
+        "S2hi|A58|L37|N100": 997.4884796579879,
+        "S3lo|A58|L37|N100": 23.966162035613223,
+        "S3hi|A58|L37|N100": 124.66504918385272,
+        "SThi|A58|L37|N100": 198.81032256637354,
+        "EVhi|A58|L37|N100": 570.0,
+        "M50|A15|L37|N100": -127.53367059084258,
+        "M50|A100|L37|N100": 1285.0339738241594,
+        "M50|A58|L0|N100": -508.43351390025555,
+        "M50|A58|L100|N100": -676.8167239172669,
+        "M50|A58|L37|N160": 359.27888412443264,
+        "M50|A58|L37|N660": 359.27888412443264,
+        "M50|A58|L37+13%x4000|N100": -3399.2272130118613,
+        "M0|A58|L37|N100": -170.80933049244504,
+        "M250|A58|L37|N100": -633.6004590972606
+      }
+    },
+    "E1-PA": {
+      "both": {
+        "M50|A58|L37|N100": -745.5550000301499,
+        "S1lo|A58|L37|N100": 1331.137714817065,
+        "S1mid|A58|L37|N100": -2055.691362504787,
+        "S1hi|A58|L37|N100": 825.9563097404198,
+        "S2lo|A58|L37|N100": -6815.697015736906,
+        "S2hi|A58|L37|N100": 1409.5429506037049,
+        "S3lo|A58|L37|N100": 1051.9660188044488,
+        "S3hi|A58|L37|N100": 665.3630959463213,
+        "SThi|A58|L37|N100": 652.310275332782,
+        "EVhi|A58|L37|N100": 0.0,
+        "M50|A15|L37|N100": -485.73117381698773,
+        "M50|A100|L37|N100": -236.8836061437317,
+        "M50|A58|L0|N100": -513.688566426283,
+        "M50|A58|L100|N100": -1641.7121723210525,
+        "M50|A58|L37|N160": -745.5550000301499,
+        "M50|A58|L37|N660": -745.5550000301499,
+        "M50|A58|L37+13%x4000|N100": -9576.438682629261,
+        "M0|A58|L37|N100": 131.1201197418959,
+        "M250|A58|L37|N100": 1439.1431266584218
+      },
+      "bid": {
+        "M50|A58|L37|N100": -223.35453227591086,
+        "S1lo|A58|L37|N100": 2247.8596624066768,
+        "S1mid|A58|L37|N100": -1485.743903083633,
+        "S1hi|A58|L37|N100": 962.908604499951,
+        "S2lo|A58|L37|N100": -4401.071063136001,
+        "S2hi|A58|L37|N100": 934.9045500906002,
+        "S3lo|A58|L37|N100": 1253.1703344841922,
+        "S3hi|A58|L37|N100": 960.278012748863,
+        "SThi|A58|L37|N100": 312.10187967717286,
+        "EVhi|A58|L37|N100": 0.0,
+        "M50|A15|L37|N100": 595.0303221696529,
+        "M50|A100|L37|N100": -573.7977030571265,
+        "M50|A58|L0|N100": 300.2161493526443,
+        "M50|A58|L100|N100": -1163.102512008808,
+        "M50|A58|L37|N160": -223.35453227591086,
+        "M50|A58|L37|N660": -223.35453227591086,
+        "M50|A58|L37+13%x4000|N100": -5489.775617738728,
+        "M0|A58|L37|N100": 631.827783528084,
+        "M250|A58|L37|N100": 2161.6368158023356
+      },
+      "ask": {
+        "M50|A58|L37|N100": -522.2004677542394,
+        "S1lo|A58|L37|N100": -916.7219475896112,
+        "S1mid|A58|L37|N100": -569.9474594211534,
+        "S1hi|A58|L37|N100": -136.95229475953113,
+        "S2lo|A58|L37|N100": -2414.625952600905,
+        "S2hi|A58|L37|N100": 474.63840051310467,
+        "S3lo|A58|L37|N100": -201.2043156797434,
+        "S3hi|A58|L37|N100": -294.9149168025419,
+        "SThi|A58|L37|N100": 340.2083956556092,
+        "EVhi|A58|L37|N100": 0.0,
+        "M50|A15|L37|N100": -1080.7614959866405,
+        "M50|A100|L37|N100": 336.9140969133948,
+        "M50|A58|L0|N100": -813.9047157789273,
+        "M50|A58|L100|N100": -478.6096603122447,
+        "M50|A58|L37|N160": -522.2004677542394,
+        "M50|A58|L37|N660": -522.2004677542394,
+        "M50|A58|L37+13%x4000|N100": -4086.663064890533,
+        "M0|A58|L37|N100": -500.70766378618805,
+        "M250|A58|L37|N100": -722.4936891439133
+      }
+    }
+  },
+  "inputs": {
+    "paired": "61210f2b86c4e7f8c4533d3cb7cdcb5ef808cf6f2c77c5f62ed3656925257029",
+    "predictions": "aa15a0e58ea6ebf30c74a824753c9ae15f08b848190bcf2600eab0ba9893851d",
+    "bench": "6e568b33d30c863af21121443bc9e9f90883733ce29c2fe7aa106c810b8a7b10",
+    "bench_predictions": "f98d026ca483ada34d13500052bdab1e12b51324def069d6fbb46c60a5bab35e",
+    "export_receipt": "d8f1f8034c1f9799e894aa020a8282268c3f6dd9e1e2fb8663a0d35edf6e7c00",
+    "days": {
+      "20261026": {
+        "scenario_receipt": "c338f598601c0dd63dea4d1c57ab5ded307a8451426b978097850850195d6d00",
+        "scenario_asof": "2026-11-18T20:41:18.112410+00:00",
+        "keep_pull_receipt": "b004af6470fd480371f75e5d831a4596fa72899214d58525331d8ca061f63587",
+        "stat": {
+          "windows": 288,
+          "orders": 29832,
+          "base_matched": 29832,
+          "kernel_checked": 809,
+          "events": 580259,
+          "held_events_S1": 9300,
+          "held_events_S2": 1269,
+          "held_events_S3": 1301,
+          "held_events_ST": 74
+        }
+      }
+    }
+  },
+  "outputs": {
+    "eval_20261026.txt": "45e395b679b81487e360de2daa77abadf0a65c0b0fa156c5cc80d47efcba7cab",
+    "eval_20261026.csv": "1b91a4f59e26b4dc81e89a073afdf03a23b3b1455b5055fe976140e94234c24a"
+  },
+  "source_sha256": "87c502e7bfcb61a157f1cf7b579af51216134852a3f7cc67e1eec92124d1589a",
+  "provenance": {
+    "commit": "0c3d2523168a20afc235518f8bb452f56d33d8ec",
+    "source": {
+      "pf_keep_pull.py": "58b972f92bda06fbc847c43d2ace8db9d7b12f4daaf67bcfaa14e92deb475835",
+      "pf_queue_place_test.py": "188c1495ce35db80ce8b79cbc50541964d0d32d9da38fee4b925e951eec01a1f",
+      "pf_queue_place_ledger.py": "8fa16b929b4ae497109a70add4036dd7cd4501102a261c74eba63de0e0b94bb5",
+      "pf_flow_control_kernel.cpp": "fb1ff31cdcf2a97783283f927fb2d56333a0760e877cb0b93348528138886612",
+      "pf_flow_control_kernel.py": "2460567474f28318f5d09df8ce0977e15748bb9263bc501471cf6a649b334379"
+    },
+    "uncommitted": ""
+  },
+  "seconds": 39.50202465057373
+}

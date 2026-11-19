@@ -1,0 +1,19 @@
+ 0 none (must pass): rc 1 -> ~~~~~~~~~~~^^^^^^^^^^ / KeyError: 'pf_pipeline_paired_eval_mutant'   <<< UNEXPECTED
+ 1 R0a never refuses: rc 1 -> ~~~~~~~~~~~^^^^^^^^^^ / KeyError: 'pf_pipeline_paired_eval_mutant'   <<< UNEXPECTED
+ 2 R0b never refuses (values): rc 1 -> ~~~~~~~~~~~^^^^^^^^^^ / KeyError: 'pf_pipeline_paired_eval_mutant'   <<< UNEXPECTED
+ 3 R0c never refuses: rc 1 -> ~~~~~~~~~~~^^^^^^^^^^ / KeyError: 'pf_pipeline_paired_eval_mutant'   <<< UNEXPECTED
+ 4 R0d never refuses: rc 1 -> ~~~~~~~~~~~^^^^^^^^^^ / KeyError: 'pf_pipeline_paired_eval_mutant'   <<< UNEXPECTED
+ 5 R0e never refuses: rc 1 -> ~~~~~~~~~~~^^^^^^^^^^ / KeyError: 'pf_pipeline_paired_eval_mutant'   <<< UNEXPECTED
+ 6 R0f never refuses: rc 1 -> ~~~~~~~~~~~^^^^^^^^^^ / KeyError: 'pf_pipeline_paired_eval_mutant'   <<< UNEXPECTED
+ 7 admissions without the coherence flag: rc 1 -> ~~~~~~~~~~~^^^^^^^^^^ / KeyError: 'pf_pipeline_paired_eval_mutant'   <<< UNEXPECTED
+ 8 A posts on a predicted loss: rc 1 -> ~~~~~~~~~~~^^^^^^^^^^ / KeyError: 'pf_pipeline_paired_eval_mutant'   <<< UNEXPECTED
+ 9 the matched null over all opportunities: rc 1 -> ~~~~~~~~~~~^^^^^^^^^^ / KeyError: 'pf_pipeline_paired_eval_mutant'   <<< UNEXPECTED
+10 the matched control against zero: rc 1 -> ~~~~~~~~~~~^^^^^^^^^^ / KeyError: 'pf_pipeline_paired_eval_mutant'   <<< UNEXPECTED
+11 the economic gate against PULL-ALL of every opportunity: rc 1 -> ~~~~~~~~~~~^^^^^^^^^^ / KeyError: 'pf_pipeline_paired_eval_mutant'   <<< UNEXPECTED
+12 the economic gate ignores pi0: rc 1 -> ~~~~~~~~~~~^^^^^^^^^^ / KeyError: 'pf_pipeline_paired_eval_mutant'   <<< UNEXPECTED
+13 the practical gate ignores the economic gate: rc 1 -> ~~~~~~~~~~~^^^^^^^^^^ / KeyError: 'pf_pipeline_paired_eval_mutant'   <<< UNEXPECTED
+14 the practical predicates reversed (lifetime): rc 1 -> ~~~~~~~~~~~^^^^^^^^^^ / KeyError: 'pf_pipeline_paired_eval_mutant'   <<< UNEXPECTED
+15 first-review reversals over every admitted order: rc 1 -> ~~~~~~~~~~~^^^^^^^^^^ / KeyError: 'pf_pipeline_paired_eval_mutant'   <<< UNEXPECTED
+16 the scenario reading against PI0 without PI0: rc 1 -> ~~~~~~~~~~~^^^^^^^^^^ / KeyError: 'pf_pipeline_paired_eval_mutant'   <<< UNEXPECTED
+PIPELINE PAIRED EVAL MUTATION CHECK FAILED: 17 unexpected outcomes of 17
+2026-11-19T12:14:06Z tag=pqe_mutants rc=1 peak_rss_mib=726 wall_s=439.50 cpu_user_s=420.83 memavail_start_gib=23 disk_free_gib=429->428 slot=claude

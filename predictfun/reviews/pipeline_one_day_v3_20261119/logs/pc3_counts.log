@@ -1,0 +1,38 @@
+BENCH v3: economic gate {'post': 'FAIL', 'retain': 'PASS'}, rank / quantity diagnostic {'post': 'PASS', 'retain': 'PASS'}
+  retain side 0 20261026: PASS / PASS / PASS; acting 569,982, resting 54,207, incoherent 397 (zero quantity 5); value level 0.9336902311996151
+  retain side 0 20261027: PASS / FAIL / PASS; acting 652,612, resting 50,318, incoherent 590 (zero quantity 3); value level 0.8545165245267026
+  retain side 1 20261026: PASS / PASS / PASS; acting 593,448, resting 51,016, incoherent 688 (zero quantity 18); value level 0.9519294865969773
+  retain side 1 20261027: PASS / FAIL / PASS; acting 654,476, resting 44,973, incoherent 1,571 (zero quantity 12); value level 1.0195982116914248
+  post side 0 20261026: PASS / FAIL / PASS; acting 1,408, resting 13,498, incoherent 10 (zero quantity 0); value level 0.9799535292706488
+  post side 0 20261027: PASS / FAIL / PASS; acting 1,065, resting 13,595, incoherent 9 (zero quantity 0); value level 0.9230307891588588
+  post side 1 20261026: PASS / FAIL / PASS; acting 1,094, resting 13,788, incoherent 34 (zero quantity 0); value level 0.9753669734865693
+  post side 1 20261027: PASS / FAIL / PASS; acting 910, resting 13,723, incoherent 36 (zero quantity 0); value level 0.9152002255701613
+POLICY v3.1 20261026: at B MODEL-J -21,780.81, PULL-ALL -23,730.50, difference +1,949.69; pulls 27,982; parity {'compared': 1269738, 'refused': 1062, 'agree': 1269738, 'accepted_without_round_trip': 23, 'verdict_only': 0}; VALUES EQUAL v2 IN ALL 190 CELLS: True; readings that differ: {"INCOHERENT RETAIN FORECASTS (KEPT, THE CONTRACT'S FALLBACK)": (1062, 1085)}
+  ATTRIBUTION 20261026 (MODEL-J - PULL-ALL at B; totals reconcile with the committed policy v3.1 values: True)
+    both pulled at the first live step          orders 26,942  MODEL-J  -22,671.57  PULL-ALL  -22,671.57  difference      +0.00
+    both pulled later                           orders  1,040  MODEL-J   +1,094.26  PULL-ALL     +139.93  difference    +954.33
+    both never pulled, with RETAIN predictions  orders    292  MODEL-J     +599.54  PULL-ALL     -395.82  difference    +995.36
+    both no RETAIN prediction                   orders    168  MODEL-J     -803.04  PULL-ALL     -803.04  difference      +0.00
+    bid  pulled at the first live step          orders 13,561  MODEL-J   -9,095.51  PULL-ALL   -9,095.51  difference      +0.00
+    bid  pulled later                           orders    401  MODEL-J     +281.17  PULL-ALL     +146.38  difference    +134.79
+    bid  never pulled, with RETAIN predictions  orders    166  MODEL-J     -332.26  PULL-ALL       +5.53  difference    -337.79
+    bid  no RETAIN prediction                   orders     81  MODEL-J     -380.82  PULL-ALL     -380.82  difference      +0.00
+    ask  pulled at the first live step          orders 13,381  MODEL-J  -13,576.06  PULL-ALL  -13,576.06  difference      +0.00
+    ask  pulled later                           orders    639  MODEL-J     +813.08  PULL-ALL       -6.45  difference    +819.53
+    ask  never pulled, with RETAIN predictions  orders    126  MODEL-J     +931.80  PULL-ALL     -401.35  difference  +1,333.15
+    ask  no RETAIN prediction                   orders     87  MODEL-J     -422.22  PULL-ALL     -422.22  difference      +0.00
+POLICY v3.1 20261027: at B MODEL-J -23,916.10, PULL-ALL -23,345.99, difference -570.11; pulls 27,626; parity {'compared': 1404540, 'refused': 2146, 'agree': 1404540, 'accepted_without_round_trip': 15, 'verdict_only': 0}; VALUES EQUAL v2 IN ALL 190 CELLS: True; readings that differ: {"INCOHERENT RETAIN FORECASTS (KEPT, THE CONTRACT'S FALLBACK)": (2146, 2161)}
+  ATTRIBUTION 20261027 (MODEL-J - PULL-ALL at B; totals reconcile with the committed policy v3.1 values: True)
+    both pulled at the first live step          orders 26,795  MODEL-J  -19,028.42  PULL-ALL  -19,028.42  difference      +0.00
+    both pulled later                           orders    831  MODEL-J   -1,756.01  PULL-ALL     -934.17  difference    -821.85
+    both never pulled, with RETAIN predictions  orders    255  MODEL-J   -1,992.84  PULL-ALL   -2,244.58  difference    +251.74
+    both no RETAIN prediction                   orders    157  MODEL-J   -1,138.83  PULL-ALL   -1,138.83  difference      +0.00
+    bid  pulled at the first live step          orders 13,398  MODEL-J  -10,782.94  PULL-ALL  -10,782.94  difference      +0.00
+    bid  pulled later                           orders    372  MODEL-J   -1,191.25  PULL-ALL     -510.88  difference    -680.37
+    bid  never pulled, with RETAIN predictions  orders    162  MODEL-J   -1,553.53  PULL-ALL   -1,751.05  difference    +197.52
+    bid  no RETAIN prediction                   orders     80  MODEL-J     -857.50  PULL-ALL     -857.50  difference      +0.00
+    ask  pulled at the first live step          orders 13,397  MODEL-J   -8,245.48  PULL-ALL   -8,245.48  difference      +0.00
+    ask  pulled later                           orders    459  MODEL-J     -564.77  PULL-ALL     -423.29  difference    -141.48
+    ask  never pulled, with RETAIN predictions  orders     93  MODEL-J     -439.31  PULL-ALL     -493.53  difference     +54.22
+    ask  no RETAIN prediction                   orders     77  MODEL-J     -281.33  PULL-ALL     -281.33  difference      +0.00
+2026-11-19T11:37:37Z tag=pc3_counts rc=0 peak_rss_mib=459 wall_s=1.58 cpu_user_s=1.23 memavail_start_gib=23 disk_free_gib=429->429 slot=claude

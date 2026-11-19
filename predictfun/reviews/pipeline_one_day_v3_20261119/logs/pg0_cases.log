@@ -1,0 +1,16 @@
+/home/yuqing/ctaNew/predictfun/research/pf_pipeline_bench.py:151: RuntimeWarning: invalid value encountered in subtract
+  rt = (np.abs(rq - Eq) <= tol(Eq)) & (np.abs(rqm - Eqm) <= tol(Eqm)) & (np.abs(edge * rq + rqm - out['V']) <= tol(out['V']))
+ok  valid                                                    E[q]          5 E[q*move]         0.5 flag True  expected True  contract True 
+ok  implied endpoint mid below 0                             E[q]          5 E[q*move]        -500 flag False expected False contract False
+ok  E[q] = 0, E[q * move] -100 c                             E[q]          0 E[q*move]        -100 flag False expected False contract False
+ok  E[q] = 0, E[q * move] +100 c                             E[q]          0 E[q*move]         100 flag False expected False contract False
+ok  E[q] = 0, E[q * move] 0                                  E[q]          0 E[q*move]           0 flag True  expected True  contract True 
+ok  certain no-fill (P = 0)                                  E[q]          0 E[q*move]           0 flag True  expected True  contract True 
+ok  certain fill (P = 1)                                     E[q]         10 E[q*move]           1 flag True  expected True  contract True 
+ok  E[q | fill] clipped at the remaining, E[q] / P above it  E[q]      1.524 E[q*move]      0.1524 flag True  expected True  contract True 
+ok  nonfinite E[q * move] head (NaN)                         E[q]          5 E[q*move]         nan flag False expected False contract False
+ok  nonfinite E[q * move] head (inf)                         E[q]          5 E[q*move]         inf flag False expected False contract False
+ok  E[q] = 0, E[q * move] 5e-10 c (inside the tolerance)     E[q]          0 E[q*move]       5e-10 flag True  expected True  contract True 
+ok  E[q] = 0, E[q * move] 5e-9 c (beyond it)                 E[q]          0 E[q*move]       5e-09 flag False expected False contract False
+G0 COHERENCE CASES (flag = expected = the contract on all 12): PASS
+2026-11-19T10:51:46Z tag=pg0_cases rc=0 peak_rss_mib=195 wall_s=0.96 cpu_user_s=0.76 memavail_start_gib=23 disk_free_gib=429->429 slot=claude

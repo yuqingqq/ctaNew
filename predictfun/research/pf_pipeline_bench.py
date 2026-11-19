@@ -43,6 +43,12 @@ SELFTEST (synthetic, no data): planted relationships recovered (J ranks value be
  an evaluation day in training (B1), a changed export part (B1), a label among the inputs (B2), the mapping replaced by a product of means
  (B3), a model file changed after fitting (B4), an expected quantity above the known remaining (B5).
  Mutations: pf_pipeline_bench_mutants.py.
+v3 (review 1adf6a33 P2, declared before v3 ran): a forecast is coherent only if the two-atom forecast rebuilt from its moments - (P, E[q] / P,
+ E[q * move] / E[q]) and (1 - P, 0, 0) - gives back E[q], E[q * move] and the mapped value. v2 set the move to 0 when E[q] = 0 and accepted a
+ nonzero E[q * move] there (an impossible joint distribution acting on its value). Nothing else changes: the same exports, training rows,
+ pinned parameters, seed and single thread, so the refit must reproduce v2's model files byte for byte (checked by
+ reviews/pipeline_one_day_v3_20261119/compare_bench_v2_v3.py, declared before v3 ran). Counted per kind / side / day: the rows refused by the
+ round trip alone (zero_quantity_refused). The selftest plants both signs (E[q * move] -100 and +100 c at E[q] = 0) and a coherent no-fill.
 Usage (run_light, PF_SLOT=claude): pf_pipeline_bench.py selftest | run
 """
 import contextlib
@@ -64,7 +70,7 @@ import pf_flow_price_common as FC                         # noqa: E402
 import pf_pipeline_export as EX                           # noqa: E402
 
 C, pd, I = KP.C, KP.pd, KP.I
-OUT = Path(I.K.IO) / 'pipeline_bench_v2_20261119'        # v2 (review 89caa74c): export v2's POST rows, moment coherence, an economic gate
+OUT = Path(I.K.IO) / 'pipeline_bench_v3_20261119'        # v3 (review 1adf6a33 P2): coherence by the moments' round trip; v2 stays as provenance
 MARK = 'PIPELINE BENCH'
 TRAIN, EVAL = ('20261023', '20261024', '20261025'), ('20261026', '20261027')   # v2: Oct 26 is the economic gate's day of record (never evaluated
 GATE_DAY = '20261026'                                                           # before); Oct 27 was seen in v1, so it is reported post hoc
@@ -76,7 +82,8 @@ ROUNDS = 200
 PARAMS = dict(KP.C.V.PARAMS)                              # the pipeline's pinned LightGBM parameters (pf_stop_ev_model.PARAMS)
 MAP_PRODUCT = False                                       # planted-error switches (selftest only): the mapping as a product of means;
 SWAP_SAVED = False                                        # a saved model file replaced after fitting
-NO_CLIP = False                                           # E[q | fill] not clipped to the known remaining
+NO_CLIP = False                                           # E[q | fill] not clipped to the known remaining;
+V2_COHERENCE = False                                      # v2's coherence flag, without the round trip (review 1adf6a33 P2)
 
 
 COLS = ['day', 'oid', 'kind', 'j', 'side', 't', 'decision_ms', 'p', 'status', 'q_m50', 'qm_m50', 'value_m50', 'severe_m50']   # + every input
@@ -138,6 +145,13 @@ def predict(models, df, cand):
     mv = np.where(Eq > 0, Eqm / np.where(Eq > 0, Eq, 1.), 0.); end = df.pf_mid.values.astype(float) + sg * mv      # v2: the contract's two-atom check
     out['ok'] = ((P >= 0) & (P <= 1) & (qf >= 0) & (qf <= df.fp_remaining.values.astype(float)) & (end >= -1e-9) & (end <= 100. + 1e-9)
                  & np.isfinite(Eq) & np.isfinite(Eqm) & (df.pf_mid.values >= 0) & (df.pf_mid.values <= 100) & (df.fp_remaining.values > 0))
+    # v3 (review 1adf6a33 P2): the two-atom forecast rebuilt from the moments - (P, E[q] / P, the move per share), (1 - P, 0, 0) - must give back
+    # E[q], E[q * move] and the mapped value; a zero expected quantity therefore carries a zero E[q * move] (zq: the rows refused for that alone)
+    rq = P * np.where(P > 0, Eq / np.where(P > 0, P, 1.), 0.); rqm = rq * mv; tol = lambda x: 1e-9 * np.maximum(1., np.abs(x))
+    rt = (np.abs(rq - Eq) <= tol(Eq)) & (np.abs(rqm - Eqm) <= tol(Eqm)) & (np.abs(edge * rq + rqm - out['V']) <= tol(out['V']))
+    out['zq'] = out['ok'] & ~rt
+    if not V2_COHERENCE:
+        out['ok'] = out['ok'] & rt
     if 'severe' in models:
         out['S'] = models['severe'].predict(X, num_threads=1)
     return out
@@ -263,6 +277,7 @@ def econ_one(kind, df, pr):
     return {'E1 VALUE LEVEL': 'PASS' if ratio_in(V[ok].sum(), v[ok].sum()) else 'FAIL', 'E2 BOUNDARY SIGN': e2,
             'E3 LOSS AMOUNT': 'PASS' if loss.any() and ratio_in(V[loss].sum(), v[loss].sum()) else 'FAIL',
             'acting': int(act.sum()), 'resting': int(rest.sum()), 'incoherent': int((~ok).sum()),
+            'zero_quantity_refused': int(np.asarray(pr.get('zq', np.zeros(len(V), bool)), bool).sum()),   # v3: refused by the round trip alone
             'loss_side_realized_mean': float(v[loss].mean()) if loss.any() else None, 'gain_side_realized_mean': float(v[gain].mean()) if gain.any() else None,
             'value_level_ratio': float(V[ok].sum() / v[ok].sum()) if v[ok].sum() != 0 else None}
 
@@ -274,7 +289,7 @@ def gate_of(E):
 
 
 def report_lines(R, gate, diag, Ec):
-    L = ['CHRONOLOGICAL PREDICTION BENCHMARK v2 (pf_pipeline_bench.py): train ' + ', '.join(TRAIN) + '; evaluate ' + ', '.join(EVAL) + f' (consumed; per decision, not per action); '
+    L = ['CHRONOLOGICAL PREDICTION BENCHMARK v3 (pf_pipeline_bench.py): train ' + ', '.join(TRAIN) + '; evaluate ' + ', '.join(EVAL) + f' (consumed; per decision, not per action); '
          f'the economic gate\'s day of record {GATE_DAY}, the other day post hoc']
     for kind in KINDS:
         L.append(f'  {kind.upper()} - ECONOMIC MAPPING GATE (J, {GATE_DAY}): {gate[kind]}; rank / quantity diagnostic (v1\'s gate): {diag[kind]}')
@@ -282,7 +297,7 @@ def report_lines(R, gate, diag, Ec):
             for d in EVAL:
                 e = Ec[kind][s][d]
                 L.append(f"    side {s} {d} J economic{' (gate day)' if d == GATE_DAY else ' (post hoc)'}: {e['E1 VALUE LEVEL']} / {e['E2 BOUNDARY SIGN']} / {e['E3 LOSS AMOUNT']}; "
-                         f"acting {e['acting']:,}, resting {e['resting']:,}, incoherent {e['incoherent']:,}; realized mean loss side "
+                         f"acting {e['acting']:,}, resting {e['resting']:,}, incoherent {e['incoherent']:,} (zero quantity {e['zero_quantity_refused']:,}); realized mean loss side "
                          f"{e['loss_side_realized_mean'] if e['loss_side_realized_mean'] is None else round(e['loss_side_realized_mean'], 3)}, gain side "
                          f"{e['gain_side_realized_mean'] if e['gain_side_realized_mean'] is None else round(e['gain_side_realized_mean'], 3)}; value level "
                          f"{e['value_level_ratio'] if e['value_level_ratio'] is None else round(e['value_level_ratio'], 3)}")
@@ -365,6 +380,14 @@ def selftest():
     co = predict(dict(p=Stub([.5, .5]), q=Stub([10., 10.]), qm=Stub([1., -1000.])), cdf, 'J')['ok']
     if co.tolist() != [True, False]:
         bad.append(f'moment coherence: {co.tolist()} (an implied endpoint mid of -50 c must be refused)')
+    # v3 (review 1adf6a33 P2): E[q | fill] -1 clips to 0 (E[q] = 0) with E[q * move] -100 c (the raw rule would pull) and +100 c (it would keep, the
+    # value still impossible) - both refused, by the round trip alone; a certain no-fill (P = 0, E[q * move] = 0) and a valid row accepted
+    c5 = pd.DataFrame({x: [0.] * 5 for x in SETS['J']}).assign(side=[0, 1, 0, 1, 0], p=[49.5, 50.5, 49.5, 50.5, 49.5], pf_mid=[50.] * 5, fp_remaining=[30.] * 5)
+    pz = predict(dict(p=Stub([.5, .5, .5, 0., .5]), q=Stub([-1., -1., -1., 10., 10.]), qm=Stub([-200., 200., 0., 5., 1.])), c5, 'J')
+    if not (pz['ok'].tolist() == [False, False, True, True, True] and pz['zq'].tolist() == [True, True, False, False, False]
+            and np.allclose(pz['V'][:2], [-100., 100.], rtol=0, atol=1e-12)):
+        bad.append(f"zero-quantity coherence: ok {pz['ok'].tolist()}, refused by the round trip alone {pz['zq'].tolist()} (E[q] = 0 with E[q * move] -100 / +100 c "
+                   'must be refused; a zero-quantity zero-move forecast, a certain no-fill and a valid row accepted)')
     with tempfile.TemporaryDirectory(dir=str(I.K.IO)) as tmp:
         tmp = Path(tmp); exp = tmp / 'exp'; synthetic(exp)
         def run(out_):
@@ -417,7 +440,7 @@ def selftest():
           'mapping gates PASS, J ranks value beyond the uninformative fair-edge baseline, models / predictions / multiplicity recorded); refusals by their '
           'own control with no output: an evaluation day in training (B1), a label among the inputs (B2), the mapping as a product of means (B3), a '
           'saved model replaced (B4), an export part changed after its receipt (B1), an expected quantity above the known remaining (B5); the gate on '
-          'planted readings', flush=True)
+          'planted readings; v3: zero-quantity moments with E[q * move] -100 / +100 c refused by the round trip, a certain no-fill accepted', flush=True)
 
 
 if __name__ == '__main__':

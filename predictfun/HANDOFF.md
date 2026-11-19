@@ -71,6 +71,34 @@ pulls and bid/ask; judge movement calibration on selected actions before changin
 order design. Other session owns fixes; scheduler remains off.
 <!-- /PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
 
+## 2026-11-19 12:56Z (session aea5bfb9) — REVIEW 1adf6a33 FIXED (PLAN 0c3d2523 STEP 0) AND THE NEW MODEL (STEPS 2-3: PAIRED POST / KEEP ADVANTAGES UNDER A FROZEN pi0) (USER: "Can you check the commit and proceed the next priority", "Check the new commit about the testing plan", "Build the new model and get the numbers"): the candidate fails its gates and loses on both days; no policy beats never posting on both days
+- Step 0 ([receipt](reviews/pipeline_one_day_v3_20261119/report.md)):
+  - benchmark v3: coherence is the moments' round trip; the refit is byte-identical to v2, and the flag changes only on the review's 23 / 15 rows;
+  - keep / pull test v3.1: parity on every row with the round trip. It found 451 Oct 26 rows where the parity's own rebuild of E[q | fill] at the remaining-size cap rounded one ulp above it; fixed with the declared tolerance;
+  - checks: 25 / 25 and 19 / 19 mutants, 12 / 12 boundary cases;
+  - every v2 value is unchanged (190 / 190 cells per day);
+  - the attribution against PULL-ALL is computed (later pulls +954 / -822 c, never pulled +995 / +252 c), and the v2 entry conclusion is narrowed.
+- Step 1 (the five-policy no-fit baseline) was skipped by the USER. pf_pipeline_entry.py carries its G1 metric schema, which the evaluation's per-order path uses; it is checked (32 / 32) but its day runs were not made.
+- Steps 2-3 ([receipt](reviews/pipeline_paired_20261119/report.md)):
+  - pi0 = the E1 rule with a J fitted on Oct 23 only;
+  - paired labels: Delta_keep = KEEP one tick, then pi0, minus PULL now; Delta_post = POST now, then pi0, minus WAIT. WAIT carries no exposure under pi0's 5 s entry grid;
+  - candidate A = direct paired-advantage regression on the 91 inputs; controls AF and AM, NEU = neutral J on the same history, PI0, E1; fitted Oct 24-25, evaluated Oct 26-27 through the bank;
+  - suites 20 / 20 and 17 / 17. The first runs found 4 selftest gaps, 1 harness defect and 5 more selftest gaps, all fixed; logs kept.
+- Results (B, c):
+  - labels: posting under pi0's cancellation costs -0.6 to -0.9 c per opportunity (the neutral label says -11 to -15);
+  - A's prediction gate fails everywhere: its heads are noise-dominated and overconfident;
+  - value: A -2,032 / -11,865; PI0 +478 / -2,608; NEU +3,540 / -2,827; E1 +277 / -824; PULL-ALL of every opportunity -23,731 / -23,346;
+  - economic and practical gates FAIL; the matched control PASSES (A's admissions beat random selection of the same size).
+- Next (USER's call):
+  - a decomposed paired head (P(fill in the window) x E[value | fill], the J structure on the new target), declared as a new counted candidate;
+  - more label days;
+  - the grid-time re-entry pi0, which needs a new-order simulator;
+  - a joint bid / ask replay;
+  - >= 5 untouched days, only after a freeze.
+- Watch out:
+  - the Oct 27 evaluation peaked at 2,075 MiB; the guard is checked only at fixed points. Reduce the metrics section's merges before the next run;
+  - under END-mark valuation an order's paired and neutral labels share their sign.
+
 ## 2026-11-19 07:42Z (session aea5bfb9) — REVIEW 89caa74c FIXED, CHECKS FIRST, THEN THE CORRECTED PIPELINE (USER: "Have we fixed the post issues, etc", "Run the checks first"): the learned keep / pull rule beats A+0 but not PULL-ALL consistently (+1,950 c on Oct 26, -570 on Oct 27 at B); posting loses even where the model favours it
 - Fixes (all checked before any result): export v2 - the pre-activation POST state from the decision's own frame, X5b on the complete POST vector against future arrivals / values, the reviewer's counterexample in the selftest (30 / 30); benchmark v2 - the contract's coherence check on every forecast and an economic gate (value level, the realized sign of what the rule keeps / pulls, loss amount) declared before v2 ran, gate day Oct 26 (24 / 24); policy v2 - only coherent forecasts act, refused ones keep, parity over valid and refused rows, P0g recomputes the pulls (15 / 15; one escape on the way - the parity's contract verdict - fixed with a falsifier). Export v2 = v1 on every RETAIN row; POST rows changed only in the five queue inputs (130,714 rows).
 - Results (v2; Oct 26 gate day, Oct 27 post hoc): KEEP / PULL economic gate PASS on Oct 26 (kept decisions +0.75 / +0.37 c, pulled -9.2 / -10.1 c), fails post hoc on Oct 27 (kept -0.07 / -0.92 c); POST gate FAIL (favoured posts still about -5.9 c). Rule at B: Oct 26 MODEL-J -21,781 vs PULL-ALL -23,731 (+1,950; 15 / 19 scenarios; E > 0 in 19 / 19), Oct 27 -23,916 vs -23,346 (-570; 3 / 19); A+0 far behind both days. [Receipt](reviews/pipeline_one_day_v2_20261119/report.md); export v2 in [the export receipt](reviews/pipeline_export_20261119/report.md).
