@@ -1,0 +1,43 @@
+{
+  "saved_asof": "2026-11-19T18:26:45.455460+00:00",
+  "orders": 256,
+  "tapes": 138,
+  "base_runs": 276,
+  "valid_forks": 1066,
+  "not_live_anchors": 38,
+  "exact_artifacts": {
+    "orders.csv": {
+      "exact_bytes": true,
+      "sha256": "7f24ac5853cca61c8300625247739dae8e79024507ce998a1ff05aae34cffe8b",
+      "changed_byte_refused": true
+    },
+    "forks.csv": {
+      "exact_bytes": true,
+      "sha256": "7faca4a3d4b8b519544b6d07db0576e24d23da6c7b71c63c2c7416f0211d1b86",
+      "changed_byte_refused": true
+    },
+    "histories.json": {
+      "exact_bytes": true,
+      "sha256": "1f0ebde121a0438b6fb5ad2e43edd5ec2193aa8c570a6bad1513aa09a357f496",
+      "changed_byte_refused": true
+    }
+  },
+  "readings_settings_inputs_identical": true,
+  "source_changed": true,
+  "committed_comparison_stdout": "orders.csv: True | forks.csv: True | histories.json: True | readings: True | module changed: True\nVALID LEDGERS BYTE-IDENTICAL AFTER THE ENGINE-STATE GUARDS: True\n",
+  "full_developer_mutant_log_verified": 56,
+  "verified_hashes": {
+    "predictfun/research/pf_branch_engine.py": "8b7960ef4bbbc178b281e57d92d4795d7678436c0ca875e7199e24a6626af3a8",
+    "predictfun/research/pf_branch_engine_mutants.py": "bbb31ec9546b8798f0a02031b9e471053f93619c408d51a55427281342c9eeb9",
+    "predictfun/reviews/branch_engine_r1_preflight_20261119/compare_bytes.py": "177b876b2e7231465a3cf3013340d33620613ead99d5c239411419a5d5a450a4",
+    "data/predict_fun/research/branch_engine_20261119/slice_v3_20261024_preflight.json": "75833d83d9e150f4038e77051608633f7eddf6708fdf5c48c47fa3d89f5ba9cf",
+    "data/predict_fun/research/branch_engine_20261119/slice_v3_20261024_preflight_forks.csv": "7faca4a3d4b8b519544b6d07db0576e24d23da6c7b71c63c2c7416f0211d1b86",
+    "data/predict_fun/research/branch_engine_20261119/slice_v3_20261024_preflight_histories.json": "1f0ebde121a0438b6fb5ad2e43edd5ec2193aa8c570a6bad1513aa09a357f496",
+    "data/predict_fun/research/branch_engine_20261119/slice_v3_20261024_preflight_orders.csv": "7f24ac5853cca61c8300625247739dae8e79024507ce998a1ff05aae34cffe8b"
+  },
+  "all_checks_pass": true,
+  "target_commit": "5a4242b4a0613523707a3c8c17507a32491de125",
+  "asof": "2026-11-19T18:39:29.912749+00:00",
+  "script_sha256": "60b1f33b9b5287fb66a005a36e975bbf222f5786a915b0bf7dd4ee0f37388276",
+  "module_sha256": "8b7960ef4bbbc178b281e57d92d4795d7678436c0ca875e7199e24a6626af3a8"
+}

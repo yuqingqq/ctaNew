@@ -1,0 +1,31 @@
+{
+  "target_commit": "5a4242b4a0613523707a3c8c17507a32491de125",
+  "range_base": "efac04521d7aa643efaeda1ad8cfe0fa987759b7",
+  "state_base_head": "5a4242b4a0613523707a3c8c17507a32491de125",
+  "state_backup": "/tmp/pf-review-5a4242b4-state-0q5d1c07",
+  "asof": "2026-11-19T18:41:46.809751+00:00",
+  "mode": "review_only",
+  "unrelated_deleted_tracked_files": [
+    "data/pm_5min/derived/be133_forward_population_era_split.json",
+    "data/pm_5min/derived/be_tape_v2_builder_binding_proof_v1.json",
+    "data/pm_5min/derived/be_validation_review_v1.json",
+    "data/pm_5min/derived/p003_de_gate1_run_journal_de145day07__20260908T032816Z.json",
+    "data/pm_5min/derived/p003_de_gate1_run_journal_deRR20260903__20260907T195646Z.json",
+    "data/pm_5min/derived/p003_de_gate1_run_journal_deRR20260904__20260907T225517Z.json",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run__20260906T062115Z.json",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v2__20260906T064720Z.json",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v3__20260906T071214Z.json",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v4__20260906T074712Z.json",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v5__20260906T075707Z.json",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v6__20260906T081252Z.json",
+    "data/pm_5min/derived/p003_de_launch_form_probe__20260906T121813Z.json",
+    "data/pm_5min/derived/p003_de_r608_resolver_agreement__20260906T104000Z.json",
+    "data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/README",
+    "data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/linear_btc.json",
+    "data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/linear_eth.json"
+  ],
+  "protected_untracked_R2_file": "predictfun/research/pf_r2_shadow.py",
+  "R2_implementation_read_or_modified": false,
+  "implementation_changed": false,
+  "fit_full_labels_new_raw_tape_untouched_day": false
+}

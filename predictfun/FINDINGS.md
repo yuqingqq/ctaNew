@@ -1,3 +1,30 @@
+<!-- R1_PREFLIGHT_REVIEW_20261119_CODEX -->
+## 2026-11-19 R1 preflight accepted: effective-state and missing-mark findings closed
+
+Target **5a4242b4a0613523707a3c8c17507a32491de125**.
+[Review](reviews/automatic/20261119_5a4242b4/report.md),
+[evidence](reviews/automatic/20261119_5a4242b4/synthetic.json),
+[artifact audit](reviews/automatic/20261119_5a4242b4/artifacts.json).
+No new finding in scope. Prior P2 closed: effective engine END/client/frame count,
+supported scenario and ledger logs bound; 20 corrupt contexts refused before any
+arm decision. Valid late-fill controls retain Y=10 cents on both sides and exact
+direct/context/pickle results. P3 closed: None/NaN/±inf retain missing_mark; no
+fabricated zero values. Previous structural-timing and hidden-fill fixes stand.
+
+Pinned unchanged selftest passes; all8 selected mutants caught; developer56/56
+log verified. Old/new saved orders, forks and histories byte-identical. Population:
+256 orders /138 consumed Oct24 tapes,276 base runs,1066 valid forks,38 not-live
+anchors. Saved18:26:45Z/audit18:39:29Z Nov19. These are implementation controls,
+not learned timing, net P&L or forward validation.
+
+ONE next priority: R2-A adapter/manifest + all-status first128 original Oct23
+opportunities/side census and causal/per-fill fixtures, no teacher fit. Existing
+sampling/features/support contract unchanged. Report insufficient support at the
+bounded size; never count descendants toward the200-episode floor. R2-A itself
+has not been reviewed here. Two successful bounded codex runs,14.89 s,210 MiB;
+no fit, full labels, new raw tape or untouched day. Other-session changes preserved.
+<!-- /R1_PREFLIGHT_REVIEW_20261119_CODEX -->
+
 <!-- R1_CLOSURE_REVIEW_20261119_CODEX -->
 ## 2026-11-19 R1 closure: named fixes pass; effective engine END still unbound
 
