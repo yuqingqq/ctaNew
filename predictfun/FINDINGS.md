@@ -1,3 +1,38 @@
+<!-- R2A_REVIEW_20261119_CODEX -->
+## 2026-11-19 R2-A: numerical receipt supported; acceptance and scaling remain open
+
+Target **5432f636c63c11e7e04d59be35320589b2cfcf64**.
+[Report](reviews/automatic/20261119_5432f636/report.md),
+[artifacts](reviews/automatic/20261119_5432f636/artifacts.json),
+[cases](reviews/automatic/20261119_5432f636/synthetic.json).
+Core neutral targets and saved values reconcile. All 256 originals represented,
+213,349 rows / 44,959 sampled ok / 508 equal-total weight groups. Canonical v2/v3
+comparison exact; labels/clocks/selection and coarse support counts reproduce.
+No saved leakage, missing original or target-sign reversal demonstrated.
+R1 accepted source unchanged; this is preparation evidence, not model performance.
+
+P2 acceptance gap: causal_rows tests fresh market/known-state builders but does
+not compare the actual stored 91-input vector. Four stored-input corruptions
+escape; its context and leaking-builder controls fire. P2 population gap: an
+original whose source pair is absent disappears without a status (synthetic
+2 selected, 1 represented; all-present control 2). P2 scaling: every episode frame
+stays in parts then concat/sort; proportional full-day frame size 18.55 GiB exceeds
+the existing limits. Full Oct23 is 30,466 originals, not the bounded 256.
+P3: joint POST flags omit engine refusal, so receipt's 312 refusals is incomplete
+as an all-source claim; zero labels remain correct. P3 wording: 16 context fields,
+not 14; no sampled other-side terminal state. Do not manufacture terminal rows.
+
+ONE next priority: R2-A superseding acceptance/partition closure on the same 256,
+no full day or fit yet. Complete support diagnostics and keep 200/20 floors.
+Then full Oct23 with all statuses and unchanged sampling, bounded partitions,
+per-head support and explicit fallback masks. Gross zero fee/rebate accepted;
+engine latency remains modeled. Runtime estimate 33.7 core-hours, not a measured
+full-day guarantee. All detailed bounds and support gates are in the report.
+
+As-of saved 19:49:42Z / audit 20:00:05Z on Nov 19. Six bounded runs 24.59 s/783 MiB,
+selftest pass; developer 25/25 mutants inspected. No new real tape or untouched day.
+<!-- /R2A_REVIEW_20261119_CODEX -->
+
 <!-- R1_PREFLIGHT_REVIEW_20261119_CODEX -->
 ## 2026-11-19 R1 preflight accepted: effective-state and missing-mark findings closed
 

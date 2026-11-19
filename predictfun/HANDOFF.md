@@ -1,3 +1,45 @@
+<!-- R2A_REVIEW_20261119_CODEX -->
+## 2026-11-19 — R2-A values reconcile; close acceptance and scale gaps before the full teacher day
+
+Target **5432f636c63c11e7e04d59be35320589b2cfcf64** after 7d59bde7.
+[Review / next priority / full-day contract](reviews/automatic/20261119_5432f636/report.md),
+[artifact audit](reviews/automatic/20261119_5432f636/artifacts.json),
+[counterexamples](reviews/automatic/20261119_5432f636/synthetic.json).
+Core neutral J construction, source worlds, deterministic sampling, builder
+reuse and weights are consistent. All 256 originals represented in saved v3;
+213,349 rows / 44,959 sampled ok / 508 weight groups. v3 = canonical(v2) exactly;
+clocks and q/value/qm/severe algebra reconcile. Coarse support 0/28 correctly
+reflects the 200-original floor. R1 preflight stays closed; no model was fitted.
+
+Three P2 items before scaling: (1) causal_rows checks fresh builders but not the
+actual stored 91 inputs: corrupted bn_age, fp_remaining, fair_edge and t_to_end
+all escape, while its context/builder controls fire; (2) missing loader windows
+silently drop selected originals (synthetic 2 selected / 1 represented; none
+missing in the saved slice); (3) parts accumulation/concat/global sort is not
+bounded for a full day. Two P3 points: joint POST refusal flags are omitted, so
+312 is not an established all-source total; context has 16 fields (107 inputs),
+not 14, and the sampled other-side terminal state is absent, not covered.
+
+**ONE next priority: R2-A superseding closure receipt** with actual-row causal
+checks, exact original/status accounting, joint refusal flags and partitioned
+output on the same frozen 256 originals. Preserve valid labels/inputs/weights;
+complete support diagnostics. No full-day run or teacher fit before this gate.
+Existing model/feature/sampling design unchanged.
+
+Subsequent full day: all 30,466 Oct23 originals (15,233/side), every status,
+original END and deterministic manifest. Support needs per-side/head ranges,
+category distinct/nonzero counts and finer cross-cells; preserve 200/20 floors
+and WAIT/KEEP fallbacks. Full-day linear estimates: 33.7 core-hours and 18.55 GiB
+for the current frame alone. Partition <=64 originals, target <=1.5 GiB peak,
+keep RSS <2 GiB and AS 4 GiB; checkpoint/profile if >15 min per partition.
+Accept explicit zero fee/rebate for the gross teacher; latency effects remain
+in engine clocks. Detailed gates/bounds in report. No profitability claim.
+
+Saved as-of Nov 19 19:49:42Z, audit 20:00:05Z. Six bounded codex runs (24.59 s,
+peak 783 MiB), pinned selftest passes; 25/25 developer mutation log inspected.
+No implementation edits, fit, full labels, real tape rerun, untouched day or push.
+<!-- /R2A_REVIEW_20261119_CODEX -->
+
 <!-- R1_PREFLIGHT_REVIEW_20261119_CODEX -->
 ## 2026-11-19 — R1 preflight accepted; next is R2-A adapter and census
 
