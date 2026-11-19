@@ -1,0 +1,2 @@
+traces written: ['F1 actual WAIT (POST vs WAIT at 0 ms, bid; then post_keep)', 'F2 re-entry (bid pull at 100 ms, a fill while cancel-pending, an ask fill offsets it, the acknowledgement, a new generation at the new best)', 'F9 shared book (a bid fill, then an ask fill; the ask waits while the bid is post-pending)']
+2026-11-19T17:32:54Z tag=pbe_traces rc=0 peak_rss_mib=196 wall_s=0.95 cpu_user_s=0.79 memavail_start_gib=23 disk_free_gib=470->470 slot=claude

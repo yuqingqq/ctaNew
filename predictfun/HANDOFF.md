@@ -170,6 +170,19 @@ pulls and bid/ask; judge movement calibration on selected actions before changin
 order design. Other session owns fixes; scheduler remains off.
 <!-- /PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
 
+## 2026-11-19 17:34Z (session aea5bfb9) — PLAN v2 R1: THE CAUSAL BRANCH ENGINE AND paired_continuation_v2 (synthetic controls + a bounded consumed slice; no model) (USER: "... continue the implementing and next priority loop"; review 92d8e52f's next priority)
+- [Receipt](reviews/branch_engine_r1_20261119/report.md); [`pf_branch_engine.py`](research/pf_branch_engine.py):
+  - the C kernel ported with timestamps, plus one declared departure (the structural rule only after a generation's submission);
+  - a causal client: notice 100 ms, acknowledgement 100 ms (declared), cap 30 with reservations and an independent position check;
+  - POST / WAIT and KEEP / PULL forks continued by a frozen policy to the common END.
+- Controls:
+  - P1 parity with the C library, P2 incremental = batch, F1-F9 of plan v2's falsifier table;
+  - mutation suite 33 / 33 (the first run: an own-priority escape and 3 invariant crashes, fixed).
+- Consumed slice (Oct 24):
+  - v1 (200 orders) FAILED as declared: rows differ on 48 orders, all equal per trade time; the keep / pull table has one row per trade time;
+  - v2 (1,000 orders, 439 with fills): fills, values, prices, marks and C parity all exact.
+- Pending with the Codex research thread (queued 17:29 UTC): design decisions (a) acknowledgement timing, (b) stand-in policies until R2, (c) the structural-rule departure, (d) the cap's one-sided blocking, (e) slice sufficiency; plus its next priority (R2 by plan v2).
+
 ## 2026-11-19 17:28Z (session aea5bfb9) — REVIEW 92d8e52f ANSWERED: THE FOUR-PART REVIEW v2 (screen zero in the episode-balanced unit; V3 absolute 1 us; receipt corrections) (USER: "Check my latest commit, next, can you ask codex research session for next priority. continue the implementing and next priority loop")
 - [Receipt v2](reviews/pipeline_paired_review_v2_20261119/report.md). Every finding of 92d8e52f holds at the code:
   - P2: the screen now decides zero, sign and amount on the episode-balanced label mean (the counterexample is a test);

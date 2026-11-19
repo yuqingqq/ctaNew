@@ -1,0 +1,2 @@
+BRANCH ENGINE SELFTEST FAILED: F2: no re-entry after the acknowledgement at a new price with a cancel-pending fill (generations [(0.0, 50.0)], pending fills [(120.0, 0, 0, 10.0, 50.0, 0)])
+2026-11-19T17:27:29Z tag=pbe_selftest3 rc=1 peak_rss_mib=196 wall_s=1.23 cpu_user_s=1.04 memavail_start_gib=23 disk_free_gib=471->471 slot=claude
