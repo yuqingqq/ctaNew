@@ -1,0 +1,31 @@
+{
+  "movement": {
+    "p": 50,
+    "mid_now": 50,
+    "mid_future": 60,
+    "END_mark": 51,
+    "current_q": 10,
+    "future_q": 5,
+    "pair_v": 5,
+    "pair_q": 5,
+    "observed_pair_qm": 55,
+    "expected_pair_qm": 5,
+    "same_mid_control": true,
+    "POST_and_RETAIN_reproduced": true
+  },
+  "reach": {
+    "reported": [
+      true,
+      true
+    ],
+    "actual": [
+      false,
+      true
+    ],
+    "all_admitted_control": true
+  },
+  "G0_boundary_cases_passed": 12,
+  "review_asof": "2026-11-19T13:26:04.072655+00:00",
+  "target_commit": "edfeda22dd72aacaee0c758e96e6e29fe2667422",
+  "review_script_sha256": "1e238228bba646b6a25c27eb112edc32d018e114052024495814ff581bd26eda"
+}

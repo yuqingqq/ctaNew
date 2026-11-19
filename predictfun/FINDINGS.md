@@ -1,3 +1,41 @@
+<!-- PAIRED_RESULT_REVIEW_20261119_CODEX -->
+## 2026-11-19 Paired-model review: valid direct values, invalid reached population and movement decomposition
+
+Target **edfeda22dd72aacaee0c758e96e6e29fe2667422**;
+[review](reviews/automatic/20261119_edfeda22/report.md),
+[reproduction](reviews/automatic/20261119_edfeda22/verify.py),
+[evidence](reviews/automatic/20261119_edfeda22/receipt.json).
+Two P2 defects: (1) reached-state masks stop at first pull but omit POST admissions,
+including 58,287 / 67,329 never-posted rows among 126,063 / 144,060 reported reached
+rows (Oct26/27); (2) pair_qm subtracts later/current movement labels with different
+mid references. Mismatches POST/RETAIN by day Oct24..27: 1338/22626, 957/16793,
+942/13808, 747/10568. Synthetic positive controls and falsifiers confirm both.
+
+Corrected reached population is 67,776 / 76,731 rows. A's KEEP-selected combined
+label totals change to +1112.48 / -4758.55 c, reversing the original aggregate
+sign on each day; these repeated decision labels are not strategy returns.
+Primary calibration still fails. Independent fill accounting verifies 5,723,835
+pair_v/pair_q labels and baseline A -2032.12 / -11865.45 c; direct A uses pair_v,
+so the unused movement decomposition defect does not explain its losses. Same
+admission first-pull values -1053.02 / -6943.81 c establish worse value from A's
+extra retention. 57.05% / 57.36% first-review pulls, median live lifetime 79 ms.
+
+Prior review 1adf6a33's coherence and attribution findings are resolved: 12 G0
+boundary cases pass; 23 / 15 saved flags corrected, first triggers unchanged;
+44 old/new model files hash-identical. The current restricted continuation has
+NO_ENTRY after WAIT to END; it does not implement the approved adaptive G2.
+G1 was skipped by the user, not reopened by this review.
+
+Next priority: corrected paired-diagnostic receipt, without refit, with common
+reference movement components, admission-aware populations, and honest NO_ENTRY
+naming. Thereafter genuine 50 ms WAIT/delayed-entry branch continuation is the
+unmet target gate. Two consumed evaluation days, point estimates only; pi0
+Oct23, training Oct24–25; paired artifact as-of Nov19 11:54:21Z, eval as-of
+12:52:32/12:53:15Z, review as-of 13:26:50Z (provenance follow-up 13:30:56Z).
+Single-order END marks, no shared inventory; no training, raw tape or untouched
+validation in this review. Other-session fixes/development untouched; scheduler off.
+<!-- /PAIRED_RESULT_REVIEW_20261119_CODEX -->
+
 <!-- ENTRY_RETENTION_PRIORITY_20261119_CODEX -->
 ## 2026-11-19 User-directed next-priority plan: value and useful quoting must improve together
 

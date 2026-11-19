@@ -1,0 +1,20 @@
+{
+  "target_commit": "edfeda22dd72aacaee0c758e96e6e29fe2667422",
+  "base_commit": "0c3d2523168a20afc235518f8bb452f56d33d8ec",
+  "worktree": "/tmp/pf-review-edfeda22",
+  "branch": "mm-research",
+  "request": "Check my latest results, any issues",
+  "mode": "manual_review_only",
+  "scheduler": "remains_disabled",
+  "implementation_owner": "other_development_session",
+  "checks": ["synthetic counterexamples and G0 boundaries", "saved artifact hashes", "paired value and quantity from fills", "admission-aware diagnostics", "baseline per-fill accounting", "prior fix invariance"],
+  "raw_tape_or_training_or_untouched_validation": false,
+  "slot": "codex",
+  "other_session_unstaged_numstat_before_review": {
+    "predictfun/FINDINGS.md": [568, 0],
+    "predictfun/HANDOFF.md": [468, 7],
+    "predictfun/STATUS.yml": [263, 0],
+    "predictfun/handoffs/20261109_TODO.md": [2, 1],
+    "predictfun/research/run_light.log": [2877, 0]
+  }
+}
