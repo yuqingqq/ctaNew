@@ -1,0 +1,17 @@
+{
+  "asof": "2026-11-19T17:30:52.060737+00:00",
+  "sources": {
+    "pf_branch_engine.py": {
+      "sha256": "b7e7b5b979213f8885a70458da4851d5d44801c51c2c2340f4d02fa2d2412ce6",
+      "bytes": 50086,
+      "snapshot": "/tmp/pf-review-1d72986f-wip/pf_branch_engine.py",
+      "scope": "uncommitted design evidence, not part of pinned target"
+    },
+    "pf_branch_engine_mutants.py": {
+      "sha256": "11bfd8abb9ed40e5890ec4af32adba8f3b35e410fd0899ad3ea5a3aef8b2f764",
+      "bytes": 7633,
+      "snapshot": "/tmp/pf-review-1d72986f-wip/pf_branch_engine_mutants.py",
+      "scope": "uncommitted design evidence, not part of pinned target"
+    }
+  }
+}

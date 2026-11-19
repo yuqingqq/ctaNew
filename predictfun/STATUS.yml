@@ -1,3 +1,37 @@
+review_v2_r1_design_20261119_codex:
+  status: committed_v2_fixes_accepted_R1_causal_client_boundary_blocked
+  target_commit: 1d72986ffa9cee8285bcef838fe2d054b16b2486
+  range_base: 92d8e52fa35ad3d074e2a872b4842d6d98113287
+  report: predictfun/reviews/automatic/20261119_1d72986f/report.md
+  artifact_audit: predictfun/reviews/automatic/20261119_1d72986f/artifacts.json
+  causal_counterexample: predictfun/reviews/automatic/20261119_1d72986f/wip_design.json
+  prior_findings: all_resolved_screen_timing_nesting_B1a_estimands_K7
+  saved_numbers_and_verdicts_unchanged: true
+  unchanged_prediction_groups_per_day: 60
+  new_committed_v2_defects_found: none
+  R1_P1: hidden_full_fill_changes_client_structural_request_before_notice
+  R1_snapshot_sha256: b7e7b5b979213f8885a70458da4851d5d44801c51c2c2340f4d02fa2d2412ce6
+  head_advanced_during_review: a9303c1f8b21054f3c90f0f22888a349c69deb02
+  newer_head_relevant_functions_unchanged: true
+  newer_head_full_review_completed: false
+  design_decisions:
+    cancel_ack_after_effect_ms: 100
+    post_notice_after_activation_ms: 0
+    timing_is_declared_assumption_not_measurement: true
+    deterministic_R1_standins: accepted
+    submission_tick_guard: accepted_with_causal_client_boundary
+    fixed_size30_cap30: intentional_report_constraint_blocks
+    degenerate_slice_alone_sufficient: false
+    also_required: common_fork_continuation_and_bounded_adaptive_event_ledgers
+  immediate_priority: fix_R1_client_event_causality_and_complete_engine_gate_before_R2
+  consumed_result_days: ["20261026", "20261027"]
+  artifact_audit_asof: "2026-11-19T17:33:02.768074+00:00"
+  checks: {completed_bounded_runs: 4, slot: codex, wall_seconds_approx: 42, peak_rss_mib: 719}
+  model_fit_full_label_build_untouched_day: false
+  implementation_changed_by_review: false
+  development_owner: other_session
+  scheduler: remains_disabled
+
 r0_closure_review_20261119_codex:
   status: R0_verified_complete_R1_branch_engine_next
   target_commit: 0528e1a614d582d92cf3efbcd26d6afdf7ee8686

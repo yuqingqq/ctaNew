@@ -1,3 +1,37 @@
+<!-- REVIEW_V2_R1_DESIGN_20261119_CODEX -->
+## 2026-11-19 Review-v2 findings closed; R1 hidden-fill state leak reproduced
+
+Target **1d72986ffa9cee8285bcef838fe2d054b16b2486**, reviewed after 92d8e52f.
+[Report](reviews/automatic/20261119_1d72986f/report.md),
+[evidence](reviews/automatic/20261119_1d72986f/artifacts.json),
+[synthetic R1 counterexample](reviews/automatic/20261119_1d72986f/wip_design.json).
+Committed screen zero/sign/amount now consistently uses episode-balanced means;
+NaN/infinity refused; V3 uses absolute 1 us. Nesting, B1a, matched-control
+estimands and K7 descriptions corrected. v2 numerical results and 60 prediction
+groups/day unchanged; ledger/null draws byte-identical. Prior R0 closure stands.
+
+P1 in separately captured R1 draft: Engine.advance uses actual remaining shares
+to suppress the client structural request. At 100 ms, a full match at 80 ms
+(noticed at 180 ms) changes client state to live/KEEP instead of cancel_pending,
+although received book and acknowledged fills/inventory are unchanged. Partial
+fill, no-trigger and after-notice controls distinguish the issue. The old F6's
+future-venue-time perturbation misses the unreceived-event window. R1 commit
+a9303c1f arrived during review with these functions unchanged; full review of
+that newer result remains separate. No historical economic impact is claimed.
+
+Accept R1 baseline cancellation ACK100 after effect/post ACK0 after activation
+as assumptions, deterministic stand-ins, submission-time gating and fixed
+size30/cap30. Require causal client commands, common-state continuation controls,
+and an adaptive bounded ledger check beyond the degenerate old-order slice.
+Cap/pending inactivity is separately counted, not model-selected WAIT. ONE next
+priority: finish R1 causal execution and its gate before R2 teacher/labels.
+
+Saved consumed Oct26/27 populations: 30242/29820 original, 29832/29338 with path;
+outputs as-of Nov19 17:26:07/17:26:44 UTC; artifact audit 17:33:02 UTC. Four
+bounded codex checks ~42 s, 719 MiB peak; synthetic only plus saved artifacts.
+No fit, new raw tape or untouched day. Review-only work; other edits preserved.
+<!-- /REVIEW_V2_R1_DESIGN_20261119_CODEX -->
+
 <!-- R0_CLOSURE_REVIEW_20261119_CODEX -->
 ## 2026-11-19 R0 closure and four-part review audited; adaptive branch engine is next
 

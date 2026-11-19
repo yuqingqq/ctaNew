@@ -1,0 +1,15 @@
+{
+  "asof": "2026-11-19T17:36:30.825994+00:00",
+  "pinned_review_target": "1d72986ffa9cee8285bcef838fe2d054b16b2486",
+  "new_head": "a9303c1f8b21054f3c90f0f22888a349c69deb02",
+  "new_engine_sha256": "7d9470f0e272f336628572b482f8750297a0edf0a28533797d1a94b50486a402",
+  "snapshot_engine_sha256": "b7e7b5b979213f8885a70458da4851d5d44801c51c2c2340f4d02fa2d2412ce6",
+  "unchanged_relevant_function_AST": {
+    "Engine.advance": true,
+    "Branch.status": true,
+    "Branch.known_filled": true,
+    "Branch.view": true,
+    "Branch.reserve": true
+  },
+  "scope": "static identity check only; newer R1 commit and result artifacts not fully reviewed"
+}
