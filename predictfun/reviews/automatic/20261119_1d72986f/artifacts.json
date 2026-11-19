@@ -1,0 +1,139 @@
+{
+  "days": {
+    "20261026": {
+      "asof": "2026-11-19T17:26:07.376524+00:00",
+      "populations": {
+        "original": 30242,
+        "export_post_rows": 30242,
+        "original_two_sources": true,
+        "with_path": 29832,
+        "with_path_two_sources": true,
+        "statuses": {
+          "eligible": 28442,
+          "refused_post_only": 1390,
+          "missing_endpoint": 374,
+          "stale_future_book": 36
+        },
+        "export_post_statuses": {
+          "eligible": 28442,
+          "refused_post_only": 1390,
+          "missing_endpoint": 374,
+          "stale_future_book": 36
+        },
+        "export_retain_statuses": {
+          "eligible": 1269738,
+          "feature_unavailable": 518
+        },
+        "fallback_retain_steps": 518,
+        "fallback_steps_on_A_reached_path": 27,
+        "fallback_steps_at_A_first_review": 0,
+        "no_path": 410,
+        "labelled_post": 29832,
+        "labelled_retain": 1269738,
+        "eligible_retain": 1269738,
+        "admitted": {
+          "ALL": 29832,
+          "A": 14126,
+          "AF": 10381,
+          "AM": 9834,
+          "PI0": 3364,
+          "NEU": 3520,
+          "E1": 2502
+        },
+        "fallbacks": {
+          "A": 0,
+          "AF": 0,
+          "AM": 0,
+          "pi0": 0,
+          "NEU": 0
+        },
+        "refused_nonzero_labels": 0,
+        "A_reached_rows": 67776,
+        "A_reached_orders_not_admitted": 0,
+        "verdict": "PASS"
+      },
+      "verdicts_and_numbers_unchanged": true,
+      "ledger_identical": true,
+      "null_draws_identical": true,
+      "saved_prediction_groups": 60
+    },
+    "20261027": {
+      "asof": "2026-11-19T17:26:44.403780+00:00",
+      "populations": {
+        "original": 29820,
+        "export_post_rows": 29820,
+        "original_two_sources": true,
+        "with_path": 29338,
+        "with_path_two_sources": true,
+        "statuses": {
+          "eligible": 28038,
+          "refused_post_only": 1300,
+          "missing_endpoint": 460,
+          "stale_future_book": 22
+        },
+        "export_post_statuses": {
+          "eligible": 28038,
+          "refused_post_only": 1300,
+          "missing_endpoint": 460,
+          "stale_future_book": 22
+        },
+        "export_retain_statuses": {
+          "eligible": 1404540,
+          "feature_unavailable": 332
+        },
+        "fallback_retain_steps": 332,
+        "fallback_steps_on_A_reached_path": 0,
+        "fallback_steps_at_A_first_review": 0,
+        "no_path": 482,
+        "labelled_post": 29338,
+        "labelled_retain": 1404540,
+        "eligible_retain": 1404540,
+        "admitted": {
+          "ALL": 29338,
+          "A": 13319,
+          "AF": 10051,
+          "AM": 9539,
+          "PI0": 2978,
+          "NEU": 2692,
+          "E1": 1975
+        },
+        "fallbacks": {
+          "A": 0,
+          "AF": 0,
+          "AM": 0,
+          "pi0": 0,
+          "NEU": 0
+        },
+        "refused_nonzero_labels": 0,
+        "A_reached_rows": 76731,
+        "A_reached_orders_not_admitted": 0,
+        "verdict": "PASS"
+      },
+      "verdicts_and_numbers_unchanged": true,
+      "ledger_identical": true,
+      "null_draws_identical": true,
+      "saved_prediction_groups": 60
+    }
+  },
+  "verified_manifest": {
+    "predictfun/research/pf_pipeline_paired_review.py": "5c419f1794096bb9255cf76b42e544ad0571aae3226d15c7bb0c9b020bf9543d",
+    "predictfun/research/pf_pipeline_paired_review_mutants.py": "098bb8b6d7e24acf571b336cb18b59177efbd2d3db67d35893ba3239425a7b51",
+    "predictfun/reviews/pipeline_paired_review_v2_20261119/compare_v1_v2.py": "b40abc7323c61a10ea20a5cdb954f06a86bc772021866e1820c768f17439b142",
+    "data/predict_fun/research/pipeline_paired_review_v2_20261119/ledger_20261026.parquet": "68f72f50eb94fc14088a52652fdc8d0d1300c573d5c70f499e818fe0aaf6c26d",
+    "data/predict_fun/research/pipeline_paired_review_v2_20261119/ledger_20261027.parquet": "e7b64c71f8307e9d62766c2ab19c69617bba1ae51e0fc18070fba92f373d2faa",
+    "data/predict_fun/research/pipeline_paired_review_v2_20261119/review_20261026.csv": "e06a2364f96ca7f5f4951d53e078101668e06d8428a22241f93a9e8910c129d8",
+    "data/predict_fun/research/pipeline_paired_review_v2_20261119/review_20261026.json": "5d1c7ea6837701bdd0f140ab11a4d1bfcf6f07782b4068b8bbbc003ab625573b",
+    "data/predict_fun/research/pipeline_paired_review_v2_20261119/review_20261026.txt": "ee6d2fdf936c39804851e82c0de1de765bfc001fe5089d799c48b270c00736de",
+    "data/predict_fun/research/pipeline_paired_review_v2_20261119/review_20261027.csv": "229a99a0d904bb5f120475d4a7ffbcbeadc3ff8c4ce9bfb3cb9f61fa11f3fb17",
+    "data/predict_fun/research/pipeline_paired_review_v2_20261119/review_20261027.json": "9037d5f1e67681f89e3d67e727c848d6385e920f3adbe1c6e2fc5144e55096ff",
+    "data/predict_fun/research/pipeline_paired_review_v2_20261119/review_20261027.txt": "b3de8d408cf0a7088d7e04bd20db617539b2a1701e1bd89b5920699f0ecfed93",
+    "data/predict_fun/research/pipeline_paired_review_v2_20261119/review_findings_20261026.csv": "60acd86ee884756dfe2cf3d06dfeb54c75e19a74c42ecd9f65c04cbea1183872",
+    "data/predict_fun/research/pipeline_paired_review_v2_20261119/review_findings_20261027.csv": "3d9043f7ac117dfa677cb0e825fb4ca0a61e6f7fab309215441e3c85afff3627",
+    "data/predict_fun/research/pipeline_paired_review_v2_20261119/review_null_draws_20261026.csv": "0b59ad57160652219fc403ef670eb3c771dbf03ef95175791dc8a498eb67675f",
+    "data/predict_fun/research/pipeline_paired_review_v2_20261119/review_null_draws_20261027.csv": "dd030e6fca0ca69f57bfd885f564e2222b761e6138d66e7ace8eb22174f97f50"
+  },
+  "scope": "saved consumed Oct26/27, no raw tape or experiment",
+  "target_commit": "1d72986ffa9cee8285bcef838fe2d054b16b2486",
+  "asof": "2026-11-19T17:33:02.768074+00:00",
+  "script_sha256": "1eb87321db3752f9601db24ae15eff43ceb0c1ab4303c21adc1987832e7a4fd2"
+}

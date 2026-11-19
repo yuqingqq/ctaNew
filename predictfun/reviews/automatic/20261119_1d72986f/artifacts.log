@@ -1,0 +1,3 @@
+REFUSED: 2 predictfun research processes already running (cap 2)
+Pinned source, receipt/input/output hashes, committed copies and all saved numerical readings verified.
+2026-11-19T17:33:01Z tag=review-1d72986f-artifacts rc=0 peak_rss_mib=194 wall_s=0.99 cpu_user_s=0.81 memavail_start_gib=23 disk_free_gib=470->470 slot=codex

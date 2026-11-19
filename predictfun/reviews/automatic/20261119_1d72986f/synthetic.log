@@ -1,0 +1,2 @@
+Pinned v2 fixes: weighted-zero/sign/amount/support and nonfinite cases pass; absolute timing checks pass.
+2026-11-19T17:32:05Z tag=review-1d72986f-synthetic rc=0 peak_rss_mib=214 wall_s=1.44 cpu_user_s=1.27 memavail_start_gib=23 disk_free_gib=470->470 slot=codex

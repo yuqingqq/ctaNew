@@ -1,0 +1,162 @@
+{
+  "screen": {
+    "unequal_rows": "PASS",
+    "one_row_per_episode": "PASS",
+    "wrong_sign": "FAIL",
+    "wrong_amount": "FAIL",
+    "all_zero": "NOT_EVALUABLE",
+    "weighted_zero_raw_nonzero": "NOT_EVALUABLE",
+    "insufficient": "INSUFFICIENT_SUPPORT"
+  },
+  "nonfinite_refusals": 6,
+  "timing": [
+    {
+      "origin": 0.0,
+      "field": "decision_ms",
+      "delta_ms": 0.0005,
+      "refused": false
+    },
+    {
+      "origin": 0.0,
+      "field": "decision_ms",
+      "delta_ms": 0.002,
+      "refused": true
+    },
+    {
+      "origin": 0.0,
+      "field": "decision_ms",
+      "delta_ms": 0.01,
+      "refused": true
+    },
+    {
+      "origin": 0.0,
+      "field": "decision_ms",
+      "delta_ms": -0.01,
+      "refused": true
+    },
+    {
+      "origin": 0.0,
+      "field": "effective_ms",
+      "delta_ms": 0.0005,
+      "refused": false
+    },
+    {
+      "origin": 0.0,
+      "field": "effective_ms",
+      "delta_ms": 0.002,
+      "refused": true
+    },
+    {
+      "origin": 0.0,
+      "field": "effective_ms",
+      "delta_ms": 0.01,
+      "refused": true
+    },
+    {
+      "origin": 0.0,
+      "field": "effective_ms",
+      "delta_ms": -0.01,
+      "refused": true
+    },
+    {
+      "origin": 0.0,
+      "field": "endpoint_ms",
+      "delta_ms": 0.0005,
+      "refused": false
+    },
+    {
+      "origin": 0.0,
+      "field": "endpoint_ms",
+      "delta_ms": 0.002,
+      "refused": true
+    },
+    {
+      "origin": 0.0,
+      "field": "endpoint_ms",
+      "delta_ms": 0.01,
+      "refused": true
+    },
+    {
+      "origin": 0.0,
+      "field": "endpoint_ms",
+      "delta_ms": -0.01,
+      "refused": true
+    },
+    {
+      "origin": 1790000000000.0,
+      "field": "decision_ms",
+      "delta_ms": 0.0005,
+      "refused": false
+    },
+    {
+      "origin": 1790000000000.0,
+      "field": "decision_ms",
+      "delta_ms": 0.002,
+      "refused": true
+    },
+    {
+      "origin": 1790000000000.0,
+      "field": "decision_ms",
+      "delta_ms": 0.01,
+      "refused": true
+    },
+    {
+      "origin": 1790000000000.0,
+      "field": "decision_ms",
+      "delta_ms": -0.01,
+      "refused": true
+    },
+    {
+      "origin": 1790000000000.0,
+      "field": "effective_ms",
+      "delta_ms": 0.0005,
+      "refused": false
+    },
+    {
+      "origin": 1790000000000.0,
+      "field": "effective_ms",
+      "delta_ms": 0.002,
+      "refused": true
+    },
+    {
+      "origin": 1790000000000.0,
+      "field": "effective_ms",
+      "delta_ms": 0.01,
+      "refused": true
+    },
+    {
+      "origin": 1790000000000.0,
+      "field": "effective_ms",
+      "delta_ms": -0.01,
+      "refused": true
+    },
+    {
+      "origin": 1790000000000.0,
+      "field": "endpoint_ms",
+      "delta_ms": 0.0005,
+      "refused": false
+    },
+    {
+      "origin": 1790000000000.0,
+      "field": "endpoint_ms",
+      "delta_ms": 0.002,
+      "refused": true
+    },
+    {
+      "origin": 1790000000000.0,
+      "field": "endpoint_ms",
+      "delta_ms": 0.01,
+      "refused": true
+    },
+    {
+      "origin": 1790000000000.0,
+      "field": "endpoint_ms",
+      "delta_ms": -0.01,
+      "refused": true
+    }
+  ],
+  "module_sha256": "5c419f1794096bb9255cf76b42e544ad0571aae3226d15c7bb0c9b020bf9543d",
+  "target_commit": "1d72986ffa9cee8285bcef838fe2d054b16b2486",
+  "asof": "2026-11-19T17:32:06.520023+00:00",
+  "script_sha256": "1eb87321db3752f9601db24ae15eff43ceb0c1ab4303c21adc1987832e7a4fd2"
+}

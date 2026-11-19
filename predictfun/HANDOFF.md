@@ -1,3 +1,40 @@
+<!-- REVIEW_V2_R1_DESIGN_20261119_CODEX -->
+## 2026-11-19 — Review v2 accepted; R1 client-state causality must be corrected before R2
+
+Reviewed target **1d72986ffa9cee8285bcef838fe2d054b16b2486** after 92d8e52f.
+[Review and all five R1 design decisions](reviews/automatic/20261119_1d72986f/report.md),
+[artifact audit](reviews/automatic/20261119_1d72986f/artifacts.json),
+[causality reproduction](reviews/automatic/20261119_1d72986f/wip_design.json).
+All prior screen/timing/report findings are closed. Saved numerical readings,
+60 prediction groups per day, ledger and null draws unchanged; no refit.
+
+**P1 R1 blocker:** the draft's Engine.advance suppresses structural requests on
+actual rem==0 before the fill notice. A match at 80 ms is unknown until 180 ms,
+but changes live/KEEP versus cancel_pending at 100 ms under the same received
+book and acknowledged quantities. Structural commands must use client-known
+state; hidden engine remainder may determine fills, not whether the client
+issues a command. Add both-side zero/partial/full-fill notice-window controls.
+Snapshot hash b7e7b5b979213f8885a70458da4851d5d44801c51c2c2340f4d02fa2d2412ce6.
+R1 commit a9303c1f landed during review: relevant functions are unchanged; this
+finding applies there, but that newer commit's whole result is not yet reviewed.
+
+R1 decisions: accept cancel ACK=effect+100 ms and post acceptance/refusal known
+at activation+0 additional ms as explicit baseline assumptions, with separate
+named clocks. Accept deterministic stand-ins for mechanics; R2 supplies the
+supported teacher. Accept submission-tick guard, with the client causality fix;
+C aggregate parity alone is insufficient. Size30/cap30 intentionally blocks
+same-side full-size re-entry after positive inventory; log cap blocks separately.
+The old-order slice is a regression component: also verify adaptive branches,
+common-fork continuation, event/ledger identity and complete cash/position/value
+parity. The report specifies bounded coverage and preserves already-run slices.
+
+**ONE next priority:** correct the R1 client/event boundary and publish the
+completed synthetic + bounded adaptive engine-gate receipt for review. Do not
+start teacher fitting or full labels before this gate. Four bounded codex checks
+pass (~42 s, peak 719 MiB); full R1/mutation/tape runs not repeated. No untouched
+dates, implementation edits, push, external message or scheduler action.
+<!-- /REVIEW_V2_R1_DESIGN_20261119_CODEX -->
+
 <!-- R0_CLOSURE_REVIEW_20261119_CODEX -->
 ## 2026-11-19 — Latest commits verified: R0 closed; next is R1, genuine WAIT/re-entry
 
