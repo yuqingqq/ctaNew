@@ -1,0 +1,31 @@
+ 0 none (must pass): rc 0 -> passed
+ 1 K1 never refuses (warm-up order): rc 1 -> caught: PIPELINE PAIRED SELFTEST FAILED: the run accepted pi0 fitted with an evaluation day | a refused run left output (pi0 fitted with an evaluation day)
+ 2 K1 training rows outside the label days accepted: rc 1 -> caught: PIPELINE PAIRED SELFTEST FAILED: the run accepted the candidates trained with an evaluation day | a refused run left output (the candidates trained with an evaluation day)
+ 3 candidates trained on every labelled day: rc 1 -> caught: PIPELINE PAIRED SELFTEST FAILED: the synthetic run refused: K1: retain training rows outside ('20261024', '20261025') | a saved model replaced refused by another control: K1: retain training rows outs
+ 4 K2 never refuses: rc 1 -> caught: PIPELINE PAIRED SELFTEST FAILED: a label among the inputs crashed instead of being refused by a control: KeyError: "['pair_v'] not in index"
+ 5 K3 export parts never checked: rc 1 -> caught: PIPELINE PAIRED SELFTEST FAILED: the run accepted an export part changed after its receipt | a refused run left output (an export part changed after its receipt)
+ 6 K4 never refuses: rc 1 -> caught: PIPELINE PAIRED SELFTEST FAILED: the run accepted the neutral hold as the RETAIN label | a refused run left output (the neutral hold as the RETAIN label) | the run accepted the neutral hold as the POS
+ 7 K4 ignores the RETAIN windows: rc 0 -> passed   <<< UNEXPECTED
+ 8 K4 ignores the POST windows: rc 0 -> passed   <<< UNEXPECTED
+ 9 K5 never refuses: rc 1 -> caught: PIPELINE PAIRED SELFTEST FAILED: a labelled row dropped refused by another control: PIPELINE PAIRED FAILED -> no output: K4 20261024 side 1: 0 RETAIN and 2 POST labels differ from the keep / pull run'
+10 K6 never refuses: rc 1 -> caught: PIPELINE PAIRED SELFTEST FAILED: the run accepted a saved model replaced | a refused run left output (a saved model replaced)
+11 a refused run leaves its partial output: rc 1 -> caught: PIPELINE PAIRED SELFTEST FAILED: a refused run left output (the neutral hold as the RETAIN label) | a refused run left output (the neutral hold as the POST label) | a refused run left output (T* from 
+12 T* from the current step: rc 1 -> caught: PIPELINE PAIRED SELFTEST FAILED: the label function on the counterexample: [  5.   0. -20.  -5.   0.  20.] / T* [ 3.  3. nan  3.  3. nan] (want +5 where the neutral hold loses -15, and -5 where it gai
+13 the POST label at pi0's last pull: rc 1 -> caught: PIPELINE PAIRED SELFTEST FAILED: the label function on the counterexample: [  5. -20. -20.  -5.  20.  20.] / T* [ 3. nan nan  3. nan nan] (want +5 where the neutral hold loses -15, and -5 where it gai
+14 the RETAIN label without pi0's later pull: rc 1 -> caught: PIPELINE PAIRED SELFTEST FAILED: the label function on the counterexample: [-15. -20. -20.  15.  20.  20.] / T* [ 3. nan nan  3. nan nan] (want +5 where the neutral hold loses -15, and -5 where it gai
+15 the POST label without pi0's pull: rc 1 -> caught: PIPELINE PAIRED SELFTEST FAILED: the paired move (later mid 60.0): RETAIN 5.0, POST 10.0 (want 5.0; the raw difference gives 55) | the paired move (later mid 50.0): RETAIN 5.0, POST 10.0 (want 5.0; th
+16 the gate ignores the realized sign: rc 1 -> caught: PIPELINE PAIRED SELFTEST FAILED: the prediction-gate groups on planted values: ('PASS', 'FAIL', 'FAIL', 'NOT-EVALUABLE', 'NOT-EVALUABLE', 'PASS', 'FAIL', 'PASS')
+17 the gate ratio band widened: rc 1 -> caught: PIPELINE PAIRED SELFTEST FAILED: the prediction-gate groups on planted values: ('PASS', 'FAIL', 'PASS', 'NOT-EVALUABLE', 'NOT-EVALUABLE', 'PASS', 'FAIL', 'FAIL')
+18 an empty group passes: rc 1 -> caught: PIPELINE PAIRED SELFTEST FAILED: the prediction-gate groups on planted values: ('PASS', 'FAIL', 'FAIL', 'PASS', 'PASS', 'PASS', 'FAIL', 'FAIL')
+19 reached rows past the pull: rc 1 -> caught: PIPELINE PAIRED SELFTEST FAILED: the reached rows [True, True, True, False, True, True] or the fixed bins [-1, 0, 1, 6, 7, 11] | A's reached rows 20261026 side 0: the run 6,978, a loop over its admitt
+20 pair_qm as the raw difference (RETAIN): rc 1 -> caught: PIPELINE PAIRED SELFTEST FAILED: the paired move (later mid 60.0): RETAIN 55.0, POST 5.0 (want 5.0; the raw difference gives 55) | the synthetic run refused: PIPELINE PAIRED FAILED -> no output: K7 20
+21 pair_qm as the raw difference (POST): rc 1 -> caught: PIPELINE PAIRED SELFTEST FAILED: the paired move (later mid 60.0): RETAIN 5.0, POST 55.0 (want 5.0; the raw difference gives 55)
+22 the rebased move without the spread term: rc 1 -> caught: PIPELINE PAIRED SELFTEST FAILED: the synthetic run refused: PIPELINE PAIRED FAILED -> no output: K7 20261024 side 0: 1,933 RETAIN rows where pair_v != sign * (pf_mid - p) * pair_q + pair_qm | K7 20261
+23 K7 never refuses: rc 1 -> caught: PIPELINE PAIRED SELFTEST FAILED: the run accepted pair_qm as the raw difference of differently referenced moves | a refused run left output (pair_qm as the raw difference of differently referenced mov
+24 K4 ignores the paired quantity: rc 1 -> caught: PIPELINE PAIRED SELFTEST FAILED: the run accepted a paired quantity shifted by one share | a refused run left output (a paired quantity shifted by one share)
+25 reached rows ignore admissions: rc 1 -> caught: PIPELINE PAIRED SELFTEST FAILED: reached rows with admissions {1}: 2 (want 1) | A's reached rows 20261026 side 0: the run 7,073, a loop over its admitted orders 6,953 | A's reached rows 20261026 side 
+26 the diagnostics on the all-posted population: rc 1 -> caught: PIPELINE PAIRED SELFTEST FAILED: A's reached rows 20261026 side 0: the run 7,073, a loop over its admitted orders 6,953 | A's reached rows 20261026 side 1: the run 6,874, a loop over its admitted orde
+27 K8 never refuses: rc 1 -> caught: PIPELINE PAIRED SELFTEST FAILED: the run accepted a reused model file changed after its receipt | a refused run left output (a reused model file changed after its receipt)
+28 zero joins the negative bin: rc 1 -> caught: PIPELINE PAIRED SELFTEST FAILED: the reached rows [True, True, False, False, True, True] or the fixed bins [5, 0, 1, 6, 7, 11]
+PIPELINE PAIRED MUTATION CHECK FAILED: 2 unexpected outcomes of 29
+2026-11-19T14:10:46Z tag=pq2_mutants rc=1 peak_rss_mib=294 wall_s=863.67 cpu_user_s=829.70 memavail_start_gib=23 disk_free_gib=431->430 slot=claude

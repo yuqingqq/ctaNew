@@ -134,6 +134,27 @@ pulls and bid/ask; judge movement calibration on selected actions before changin
 order design. Other session owns fixes; scheduler remains off.
 <!-- /PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
 
+## 2026-11-19 15:04Z (session aea5bfb9) — PLAN v2 R0 DONE: THE CORRECTED PAIRED-DIAGNOSTIC RECEIPT (REVIEW 0026ab85 FIXED, NO REFIT) (USER: "Check my commit, fix the issues, do the pipeline run and evaluation"); a four-part review loop is running
+- Fixes ([receipt](reviews/pipeline_paired_v2_20261119/report.md)):
+  - reached rows require the head's own POST admission; the all-posted population is kept under its own name;
+  - `pair_qm` is rebased to the current mid. K7 checks the value identity on every saved row, and K4 now also reconciles `pair_q`;
+  - the restricted alternative is named NO_ENTRY to END.
+- Rerun from the v1 models (K8: all 44 files byte-identical). compare_v1_v2.py, all True:
+  - labels identical except `pair_qm`; the v1 identity failures equal the review's counts;
+  - predictions and every evaluation value identical;
+  - A's reached rows 126,063 -> 67,776 (Oct 26) and 144,060 -> 76,731 (Oct 27);
+  - the corrected KEEP / PULL groups are published. All verdicts stand: prediction, economic and practical gates FAIL; matched control PASS.
+- Checks:
+  - suites: paired 28 / 28 (2 selftest gaps found first: value-only falsifiers added) and evaluation 18 / 18;
+  - G0 cases 12 / 12 again;
+  - evaluation peaks 1,475 / 1,535 MiB, after a memory fix.
+- Running:
+  - the USER's four-part review loop (validity / prediction / controller / risk) through pf_pipeline_paired_review.py: selftest passes, mutation suite running;
+  - an independent read-only reviewer agent checking the whole pipeline.
+- Next:
+  - the four-part review results;
+  - plan v2 R1 (the genuine 50 ms WAIT / re-entry branch engine) needs the USER's go.
+
 ## 2026-11-19 12:56Z (session aea5bfb9) — REVIEW 1adf6a33 FIXED (PLAN 0c3d2523 STEP 0) AND THE NEW MODEL (STEPS 2-3: PAIRED POST / KEEP ADVANTAGES UNDER A FROZEN pi0) (USER: "Can you check the commit and proceed the next priority", "Check the new commit about the testing plan", "Build the new model and get the numbers"): the candidate fails its gates and loses on both days; no policy beats never posting on both days
 - Step 0 ([receipt](reviews/pipeline_one_day_v3_20261119/report.md)):
   - benchmark v3: coherence is the moments' round trip; the refit is byte-identical to v2, and the flag changes only on the review's 23 / 15 rows;

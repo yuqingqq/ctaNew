@@ -15,7 +15,7 @@ MUT = [
     # --- the controls
     ('K1 never refuses (warm-up order)', "    bad += [f'K1: the warm-up day {w} is not before {d}' for w in WARM for d in LABEL + EVAL if not w < d]", "    bad += []"),
     ('K1 training rows outside the label days accepted', "            C.require(set(tr[k].day.astype(str)) <= set(LABEL), f'K1: {k} training rows outside {LABEL}')", "            pass"),
-    ('candidates trained on every labelled day', "            if d in LABEL or (TRAIN_EVAL and d == EVAL[0]):\n                trn['retain']", "            if True:\n                trn['retain']"),
+    ('candidates trained on every labelled day', "            if reuse is None and (d in LABEL or (TRAIN_EVAL and d == EVAL[0])):\n                trn['retain']", "            if reuse is None:\n                trn['retain']"),
     ('K2 never refuses', "if x.startswith(BX.LABELS) or x.startswith('pair_') or x in BX.FORBIDDEN]", "if False]"),
     ('K3 export parts never checked', "    BX.verify_exports(exp, WARM + LABEL + EVAL); part", "    part"),
     ('K4 never refuses', "        if off_r or off_p or off_t:", "        if False:"),
@@ -33,7 +33,16 @@ MUT = [
     ('the gate ignores the realized sign', "ok = (m > 0 if want_pos else m < 0) and ratio_ok(", "ok = True and ratio_ok("),
     ('the gate ratio band widened', "    return bool(r != 0 and np.sign(p) == np.sign(r) and .8 <= p / r <= 1.25)", "    return bool(r != 0 and np.sign(p) == np.sign(r) and .1 <= p / r <= 10.)"),
     ('an empty group passes', "    if not len(real) or float(np.sum(real)) == 0.:\n        return 'NOT-EVALUABLE'", "    if not len(real) or float(np.sum(real)) == 0.:\n        return 'PASS'"),
-    ('reached rows past the pull', "    return d.j.values <= first", "    return d.j.values <= first + 1"),
+    ('reached rows past the pull', "    m = d.j.values <= first", "    m = d.j.values <= first + 1"),
+    # --- v2 (review 0026ab85 / plan v2 R0)
+    ('pair_qm as the raw difference (RETAIN)', "    if not RAW_QM:                                                                          # v2: the move at the current decision's mid", "    if False:"),
+    ('pair_qm as the raw difference (POST)', "    if not RAW_QM:                                                                          # v2: the move at the POST decision's mid", "    if False:"),
+    ('the rebased move without the spread term', "return np.asarray(v, float) - sg * (df.pf_mid.values.astype(float) - df.p.values.astype(float)) * np.asarray(q, float)", "return np.asarray(v, float)"),
+    ('K7 never refuses', "            if not (np.abs(idn) <= 1e-6).all():", "            if False:"),
+    ('K4 ignores the paired quantity', "        off_r += int((~np.isclose(window_sums(f, r.oid.values, lo, hi, 'q'), r.pair_q.values, rtol=0, atol=1e-6)).sum())", "        off_r += 0"),
+    ('reached rows ignore admissions', "    return m if (admitted is None or REACH_ALL) else m & d.oid.isin(admitted).values", "    return m"),
+    ('the diagnostics on the all-posted population', "rch = reached(Rq.oid.values, Rq.j.values, kr, adm)", "rch = reached(Rq.oid.values, Rq.j.values, kr)"),
+    ('K8 never refuses', "        if off or not rj['models']:", "        if False:"),
     ('zero joins the negative bin', "    v = np.asarray(v, float); return np.where(v == 0., -1, np.digitize(v, EDGES, right=True))", "    v = np.asarray(v, float); return np.digitize(v, EDGES, right=True)"),
 ]
 STALE = 97                                                # exit code of a replacement target that does not occur as declared

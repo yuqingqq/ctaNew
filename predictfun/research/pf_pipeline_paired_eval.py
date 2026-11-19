@@ -46,9 +46,14 @@ SELFTEST (synthetic tape, no data): planted predictions give the planted admissi
  A, A-PA and PI0 recomputed by a per-fill loop; the readings recomputed from the CSV; refusals by their own control with no output: a missing
  prediction (R0a), the per-opportunity landing moved (R0b), a POST label that is not the order's value under pi0 (R0c), the landing at the decision
  (R0d), refused posts kept (R0e), the last instead of the first pull step (R0f). Mutations: pf_pipeline_paired_eval_mutants.py.
+v2 (review 0026ab85 / plan v2 stage R0, declared before v2 ran): the predictions are pf_pipeline_paired v2's (the v1 models reused, not
+ refitted); every value must reproduce v1 (compare script). The reached-state shift counts only A's own admitted orders (up to the first pull);
+ the all-posted counterfactual is reported under its own name. This restricted experiment's POST alternative is NO_ENTRY to END: its zero
+ is not evidence about an adaptive WAIT or later entry, which no policy here can do.
 Usage (run_light, PF_SLOT=claude): pf_pipeline_paired_eval.py selftest | day <day>
 """
 import contextlib
+import gc
 import io
 import json
 import sys
@@ -71,7 +76,7 @@ import pf_queue_place_test as QP                          # noqa: E402
 import pf_queue_place_ledger as QL                        # noqa: E402
 
 C, pd, I = KP.C, KP.pd, KP.I
-OUT = Path(I.K.IO) / 'pipeline_paired_eval_20261119'
+OUT = Path(I.K.IO) / 'pipeline_paired_eval_v2_20261119'   # v2: review 0026ab85 (R0); v1 stays as provenance
 MARK = 'PIPELINE PAIRED EVAL'
 B_NAME, M250_NAME = V.B_NAME, V.M250_NAME
 RULES = {'A': ('A_V', None), 'AF': ('AF_V', None), 'AM': ('AM_V', None), 'PI0': ('pi0_V', 'pi0_ok'), 'NEU': ('NEU_V', 'NEU_ok'), 'E1': ('J_V', 'J_ok')}
@@ -151,26 +156,30 @@ def run(day, out=None, sc_out=None, kp=None, paired=None, bench=None, export=Non
         C.require(bj['outputs'].get(jf_.name) == C.sha(jf_), f'R0a: {jf_.name} does not match the benchmark receipt'); jpred = pd.read_parquet(jf_, columns=['day', 'oid', 'kind', 'j', 'J_V', 'J_ok'])
     pred = pred[pred.day.astype(str) == day].assign(day=day, oid=lambda z: z.oid.astype(int), j=lambda z: z.j.astype(int))
     jpred = jpred[jpred.day.astype(str) == day].assign(day=day, oid=lambda z: z.oid.astype(int), j=lambda z: z.j.astype(int))
-    pred = pred.merge(jpred, on=['day', 'oid', 'kind', 'j'], how='left', validate='one_to_one')
+    pred = pred.merge(jpred, on=['day', 'oid', 'kind', 'j'], how='left', validate='one_to_one'); del jpred      # memory (v2): small types, no copies kept
+    for c_ in ('day', 'kind', 'status'):
+        pred[c_] = pred[c_].astype(str).astype('category')
     er = json.loads((export / day / 'receipt.json').read_text()); ex = []
     for x, h in er['outputs'].items():
         C.require(C.sha(export / day / x) == h, f'R0a: export part {x} changed since its receipt'); ex.append(pd.read_parquet(export / day / x, columns=['oid', 'kind', 'j', 'status', 'o_depth']))
-    ex = pd.concat(ex, ignore_index=True); ex['oid'] = ex.oid.astype(int); ex['j'] = ex.j.astype(int)
+    ex = pd.concat(ex, ignore_index=True); ex['oid'] = ex.oid.astype(int); ex['j'] = ex.j.astype(int); ex['kind'] = ex.kind.astype(str).astype('category')
+    ex['status'] = ex.status.astype(str).astype('category')
     want = set(zip(ex.oid[(ex.kind == 'post') & ex.status.isin(('eligible', 'refused_post_only'))], ex.kind[(ex.kind == 'post') & ex.status.isin(('eligible', 'refused_post_only'))],
                    ex.j[(ex.kind == 'post') & ex.status.isin(('eligible', 'refused_post_only'))])) | set(zip(ex.oid[(ex.kind == 'retain') & (ex.status == 'eligible')], ex.kind[(ex.kind == 'retain') & (ex.status == 'eligible')], ex.j[(ex.kind == 'retain') & (ex.status == 'eligible')]))
     got = set(zip(pred.oid, pred.kind.astype(str), pred.j))
     if got != want or len(got) != len(pred) or pred.J_V.isna().any():
         fail('R0a', f'{len(want - got):,} exported rows without a prediction, {len(got - want):,} predictions for rows the export does not have, {int(pred.J_V.isna().sum()):,} without the benchmark\'s')
-    post, ret = pred[pred.kind == 'post'], pred[pred.kind == 'retain']
+    post, ret = pred[pred.kind == 'post'].copy(), pred[pred.kind == 'retain'].copy(); del pred; gc.collect()
     O, Fl, S, SF, Op, rec = V.load([day], sc_out, kp); O['day'] = O.day.astype(str); Op = Op.assign(day=Op.day.astype(str))
     allk = set(zip(Op.day, Op.oid.astype(int))); adm = {'ALL': allk}; adm.update({r: admissions(post, r) for r in RULES}); hit = {r: triggers(ret, r) for r in RULES}
     fns = {r: P.trigger_fn(hit[r]) for r in RULES}
     for r in RULES:                                                                         # R0f: admissions and first pull steps by a per-order loop
         a2 = {(day, int(o)) for o, v, *ok in zip(post.oid, post[RULES[r][0]], *( [post[RULES[r][1]]] if RULES[r][1] else [])) if np.isfinite(v) and v > 0 and (not ok or bool(ok[0]))}
         h2 = {}
-        for (o, jj, v, *ok) in sorted(zip(ret.oid, ret.j, ret[RULES[r][0]], *([ret[RULES[r][1]]] if RULES[r][1] else []))):
-            if (day, int(o)) not in h2 and np.isfinite(v) and v < 0 and (not ok or bool(ok[0])):
-                h2[(day, int(o))] = int(jj)
+        ro, rj_, rv_ = ret.oid.values, ret.j.values, ret[RULES[r][0]].values.astype(float); rk = ret[RULES[r][1]].values.astype(bool) if RULES[r][1] else np.ones(len(ret), bool)
+        for i in np.lexsort((rj_, ro)):                                                     # (arrays, not a list of tuples: memory)
+            if (day, int(ro[i])) not in h2 and np.isfinite(rv_[i]) and rv_[i] < 0 and rk[i]:
+                h2[(day, int(ro[i]))] = int(rj_[i])
         hd = {(str(k[0]), int(k[1])): int(v) for k, v in hit[r].items()}
         if a2 != adm[r] or h2 != hd:
             fail('R0f', f'{r}: {len(a2 ^ adm[r]):,} admissions and {len(set(h2.items()) ^ set(hd.items())):,} pull steps differ from a per-order loop')
@@ -227,7 +236,7 @@ def run(day, out=None, sc_out=None, kp=None, paired=None, bench=None, export=Non
     npath = {sd: int(((Op.side == s) if s is not None else np.ones(len(Op), bool)).sum()) for sd, s in (('both', None), ('bid', 0), ('ask', 1))}
     norig = {sd: int(((O.side == s) if s is not None else np.ones(len(O), bool)).sum()) for sd, s in (('both', None), ('bid', 0), ('ask', 1))}
     pairs = Op[Op.side == 0][['m', 't']].merge(Op[Op.side == 1][['m', 't']], on=['m', 't']); M = {}
-    rr = ex[(ex.kind == 'retain') & (ex.status == 'eligible')][['oid', 'j', 'o_depth']]
+    rr = ex[(ex.kind == 'retain') & (ex.status == 'eligible')][['oid', 'j', 'o_depth']]; del ex; gc.collect()
     for p_, spec in pol.items():
         if spec is None:
             continue
@@ -247,7 +256,7 @@ def run(day, out=None, sc_out=None, kp=None, paired=None, bench=None, export=Non
             x[sd]['per_original_opportunity'] = x[sd]['value'] / norig[sd] if norig[sd] else None; x[sd]['vs_N0'] = x[sd]['value']
             x[sd]['vs_same_admission_PULL_ALL'] = x[sd]['value'] - val(f'{ent}-PA' if ent != 'ALL' else 'PA', sd) if ent != 'ALL' else 0.
             x[sd]['vs_PI0'] = x[sd]['value'] - val('PI0', sd); x[sd]['scenario_range'] = list(stable_vs({nm: val(p_, sd, nm) for nm in nul}, 'N0')[1])
-        M[p_] = x
+        M[p_] = x; del R_, lb, pl, gab, D; gc.collect()
     for sd, s in (('bid', 0), ('ask', 1)):
         if M['A'][sd]['attempts'] < SUPPORT:
             R[f'PRACTICAL GATE SUPPORT ({sd})'] = 'INSUFFICIENT-SUPPORT'
@@ -260,13 +269,14 @@ def run(day, out=None, sc_out=None, kp=None, paired=None, bench=None, export=Non
     R['PRACTICAL PREDICATES AT B (A vs A-PA): at-best both sides / median lifetime / first-review reversals / cancels per filled share'] = prac
     R['PRACTICAL GATE (this day)'] = practical_gate(prac, R['ECONOMIC GATE (this day, both sides)'], not any(k.startswith('PRACTICAL GATE SUPPORT') for k in R))
     R['CONTROLS'] = 'YES'
-    ra = ret.assign(key=list(zip(ret.day, ret.oid))); fa = ra.key.map({(str(k[0]), int(k[1])): int(v) for k, v in hit['A'].items()}).fillna(10 ** 6).values
-    reach = ra.j.values <= fa                                                               # the reached-state shift (A's KEEP decisions)
-    shift = dict(neutral_rows=int(len(ra)), reached_rows=int(reach.sum()), neutral_mean_pred=float(ra.A_V.mean()), reached_mean_pred=float(ra.A_V.values[reach].mean()) if reach.any() else None,
+    ra = ret; kix = pd.MultiIndex.from_arrays([ra.day.astype(str).values, ra.oid.astype(int).values])
+    fa = pd.Series({(str(k[0]), int(k[1])): int(v) for k, v in hit['A'].items()}, dtype=float).reindex(kix).fillna(10 ** 6).values if len(hit['A']) else np.full(len(ra), 1e6)
+    reach_all = ra.j.values <= fa; reach = reach_all & kix.isin(pd.MultiIndex.from_tuples(sorted(adm['A']))) if adm['A'] else np.zeros(len(ra), bool)   # A's own admitted orders (v2)
+    shift = dict(neutral_rows=int(len(ra)), reached_rows=int(reach.sum()), reached_rows_if_all_posted=int(reach_all.sum()), neutral_mean_pred=float(ra.A_V.mean()), reached_mean_pred=float(ra.A_V.values[reach].mean()) if reach.any() else None,
                  neutral_mean_label=float(ra.pair_v.mean()), reached_mean_label=float(ra.pair_v.values[reach].mean()) if reach.any() else None)
     rows = [dict(policy=p_, side=sd, scenario=nm, V=val(p_, sd, nm), null_A=nul[nm] if (p_ == 'A' and sd == 'both') else None) for p_ in pol for sd in ('both', 'bid', 'ask') for nm in nul]
     pc_ = lambda z: 'n/a' if z is None else f'{100 * z:.2f}%'; nz = lambda z, k=1: 'n/a' if z is None else f'{z:,.{k}f}'
-    L = [f'THE PAIRED CANDIDATE AND ITS CONTROLS THROUGH THE BANK (pf_pipeline_paired_eval.py; {day}; c; local marks at END, not P&L; single-order episodes; decisions '
+    L = [f'THE PAIRED CANDIDATE AND ITS CONTROLS THROUGH THE BANK, RESTRICTED EXPERIMENT: POST vs NO_ENTRY to END (pf_pipeline_paired_eval.py v2; {day}; c; local marks at END, not P&L; single-order episodes; decisions '
          f'fixed across the 19 scenarios); CONTROLS: YES (R0a-R0f)', f"  {len(O):,} original opportunities, {npath['both']:,} with a path; admissions: "
          + ', '.join(f'{k} {len(v):,}' for k, v in adm.items()) + '; orders with a pull step: ' + ', '.join(f'{r} {len(hit[r]):,}' for r in RULES), '',
          f"  {'scenario':<24} " + ' '.join(f'{p_:>9}' for p_ in pol if p_ != 'N0') + f" {'null A':>9}"]
@@ -391,6 +401,15 @@ def selftest():  # noqa: C901
             got = {k_: M[k_]['both']['value'] for k_ in br}
             if not all(E.close(br[k_], got[k_]) for k_ in br):
                 bad.append(f'B by a per-fill loop {br} vs the run {got}')
+            sh_ = json.loads((tmp / 'e' / f'eval_{d0}.json').read_text())['shift']; n_ = 0                      # v2: the shift over A's admitted orders, by a loop
+            for o, g_ in pp[pp.kind == 'retain'].sort_values(['oid', 'j']).groupby('oid'):
+                if (d0, int(o)) in want_a:
+                    for v_ in g_.A_V.values:
+                        n_ += 1
+                        if v_ < 0:
+                            break
+            if sh_['reached_rows'] != n_ or not sh_['reached_rows_if_all_posted'] >= n_:
+                bad.append(f"the reached-state shift: {sh_['reached_rows']:,} rows, a loop over A's admitted orders {n_:,}")
             cv = pd.read_csv(tmp / 'e' / f'eval_{d0}.csv'); g = lambda p_: cv[(cv.policy == p_) & (cv.side == 'both')].set_index('scenario').V
             again = {'A - N0 ACROSS TESTED SCENARIOS': V.above(float(g('A').min()), float(g('A').max()), 'N0'),
                      'A - PI0 ACROSS TESTED SCENARIOS': V.above(float((g('A') - g('PI0')).min()), float((g('A') - g('PI0')).max()), 'PI0')}

@@ -31,6 +31,7 @@ MUT = [
     ('the practical gate ignores the support floor', "    return 'INSUFFICIENT-SUPPORT' if not support_ok else", "    return 'INSUFFICIENT-SUPPORT' if False else"),
     ('the practical predicates reversed (lifetime)', "lt(a['both']) is not None and lt(b['both']) is not None and lt(a['both']) > lt(b['both'])", "lt(a['both']) is not None and lt(b['both']) is not None and lt(a['both']) < lt(b['both'])"),
     ('first-review reversals over every admitted order', "        live0 = ms & (D.endj.values > KP.J0); pol_c", "        live0 = ms.copy(); pol_c"),
+    ('the reached-state shift ignores admissions', "reach = reach_all & kix.isin(pd.MultiIndex.from_tuples(sorted(adm['A']))) if adm['A'] else np.zeros(len(ra), bool)", "reach = reach_all"),
     ('the scenario reading against PI0 without PI0', "        x = {nm: val('A', 'both', nm) - val(ref, 'both', nm) for nm in nul}", "        x = {nm: val('A', 'both', nm) - (0. if ref == 'PI0' else val(ref, 'both', nm)) for nm in nul}"),
 ]
 STALE = 97                                                # exit code of a replacement target that does not occur as declared
