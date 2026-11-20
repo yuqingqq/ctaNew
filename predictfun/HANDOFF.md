@@ -1,3 +1,39 @@
+<!-- R2D_REVIEW_20261120_CODEX -->
+## 2026-11-20 — R2-D arm binding accepted; production acceptance and sampled launch gate next
+
+Reviewed **f96c38d01a7f27ed4fd39ddf2ddadeecf162b84b**.
+[Report, findings and complete sampling contract](reviews/automatic/20261120_f96c38d0/report.md),
+[artifact audit](reviews/automatic/20261120_f96c38d0/records.json),
+[independent reproductions](reviews/automatic/20261120_f96c38d0/controls.json).
+**The saved 128 pairs reconcile and prior arm-binding P1 is closed. Two P1s
+BLOCK production acceptance/resume:** the new adapter's source hashes and
+label-day feature/input identities are not enforced; persisted records are
+accepted on manifest hash/key alone, and finalization exports changed Y, wrong
+forks and failed checks. No such corruption was found in the delivered A/B.
+Fix shared preflight/record validation before accepted production outputs.
+
+NONBLOCKING operational work: event-bound dispositions fix the old filename
+waiver, but the watchdog can overwrite an unarchived stop; census retains a
+live prior-day depth reference and lacks its own resource guard. Gate D remains
+FAIL (1,652/1,631 MiB vs 1,536 checkpoint). Fix the known census print KeyError.
+Diag2 closes the mixed-denominator finding without changing the teacher freeze.
+All 129,868 census rows and 128 A/B pairs checked; 40,374 bound callbacks, zero
+bad; saved causality/parity counters reconcile. Only four nonzero Y rows from
+two original opportunities, one market/day near midnight: no learning/skill
+conclusion. Six bounded checks pass, 181.38 s total, peak 396 MiB.
+
+**ONE next priority: production launch gate for r2_label_sample_v2.** Keep frozen
+pi0_50_v1 and paired END economics; repair acceptance, then freeze a deterministic
+hour-stratified sample (up to 64 worlds/hour/day, 3,072 worlds, 18,432 pairs).
+Per world/side: mandatory eligible neutral POST at zero, one other POST, one
+KEEP; outcome-independent sampling with original/head inclusion weights.
+First deliver the nested one-world/hour/day gate (at most 48 worlds/288 pairs),
+synthetic inclusion/corruption controls, process-isolated resource checks and
+measured full-sample cost. Full details/weights/budget in report. Review that
+launch gate before the remaining sample. No candidate fit, teacher refit,
+untouched-day access or new USER approval; four existing development slots only.
+<!-- /R2D_REVIEW_20261120_CODEX -->
+
 <!-- R2C_REVIEW_20261120_CODEX -->
 ## 2026-11-20 — R2-C teacher accepted; bind each paired arm before candidate labels
 

@@ -1,0 +1,17 @@
+{
+  "cells": 28,
+  "all_groups": 4,
+  "unchanged_columns_max_absolute_error": 2.9103830456733704e-10,
+  "corrected_denominators_equal_old_numerators": true,
+  "full_population_realized_means_from_actual_training_arrays": {
+    "0_post": -9.347679999344622,
+    "0_retain": -10.121962944595012,
+    "1_post": -9.761841943439524,
+    "1_retain": -10.784606938128634
+  },
+  "source_selftest_pass": true,
+  "target": "f96c38d01a7f27ed4fd39ddf2ddadeecf162b84b",
+  "asof": "2026-11-20T15:11:56.443584+00:00",
+  "script_sha256": "842aaea915f6118334e10e1508fb709176ae11188d5ee3e9093d4517992edf0b",
+  "mode": "diagnostics"
+}

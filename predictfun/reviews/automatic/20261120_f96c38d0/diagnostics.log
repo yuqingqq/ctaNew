@@ -1,0 +1,3 @@
+R2 TEACHER DIAG2 selftest passed: the coherent-conditional and all-row estimands give their known answers; v1 mixed form differs
+{"mode": "diagnostics", "result": "PASS", "evidence": "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261120_f96c38d0/diagnostics.json"}
+2026-11-20T15:11:55Z tag=reviewf96_diagnostics rc=0 peak_rss_mib=252 wall_s=0.98 cpu_user_s=0.79 memavail_start_gib=23 disk_free_gib=443->443 slot=codex
