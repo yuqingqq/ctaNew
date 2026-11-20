@@ -1,3 +1,40 @@
+<!-- R2C_REVIEW_20261120_CODEX -->
+## 2026-11-20 — R2-C teacher accepted; bind each paired arm before candidate labels
+
+Reviewed **4584a3c2696625d27cf87f193a6260997348f85e**.
+[Report and next deliverable](reviews/automatic/20261120_4584a3c2/report.md),
+[artifact audit](reviews/automatic/20261120_4584a3c2/metadata.json),
+[paired-interface reproduction](reviews/automatic/20261120_4584a3c2/pair_binding.json).
+**Accept the Oct23 training artifacts/freeze and single-branch rollout. One P1
+BLOCKS direct paired candidate-label production:** Teacher.fn reads self.B,
+while BE.pair executes copied arms without rebinding it. Actual-interface
+synthetic control: 98 generation disagreements / 397 callbacks; correctly bound
+single branch: 0 / 198. The saved rollout binds its actual branch and is valid;
+no teacher refit is needed. No real candidate labels were generated here.
+
+All 96 training-file hashes, 16 models, 76 sources and libraries match; fixed
+20-part extraction sample (219,999 rows) and all conditional label/weight subsets
+pass. The saved 128-world / 127-episode / 24,541-decision readings reconcile:
+55/70 delayed bid/ask first entries, 202 later generations, 20 fills, no support
+fallback. In-sample calibration is not forward skill. Recomputed <=100 ms
+predictions on 137,738 rows confirm the declared short-horizon overprediction.
+
+NONBLOCKING: runner dispositions clear a new stop sharing the old filename;
+value means divide coherent-only sums by all-row weight. Source preflight and
+watchdog coverage are fixed; resource-history handling is improved but needs
+an event-bound disposition. Historical v1/v2 snapshot bytes now compare equal.
+Eight bounded successful checks, 82.17 s, peak 1,068 MiB; one review-harness
+schema assumption corrected and its failed evidence retained.
+
+**ONE next priority: R2-D arm-bound paired-label adapter plus bounded Oct24–25
+integration receipt**, preserving pi0_50_v1 and the existing economic contract.
+First synthetic controls, then first 32 worlds/day and at most 16 sampled pairs
+per side/head/day (128 total); full specification in report. Review the adapter
+before full label production. Keep explicit fork/arm identities, all statuses,
+whole-portfolio accounting and frozen feature/support rules. No extra USER
+approval; no teacher tuning, candidate fit or untouched-day test in this step.
+<!-- /R2C_REVIEW_20261120_CODEX -->
+
 <!-- R2B_REVIEW_20261120_CODEX -->
 ## 2026-11-20 — R2-B data accepted; fit and freeze the supported pi0-50 teacher
 

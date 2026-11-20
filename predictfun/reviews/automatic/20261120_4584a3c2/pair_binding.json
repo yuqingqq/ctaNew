@@ -1,0 +1,36 @@
+{
+  "target": "4584a3c2696625d27cf87f193a6260997348f85e",
+  "asof": "2026-11-20T12:12:58.648456+00:00",
+  "script_sha256": "f4b044c82a2ff6d92f9bdda41227e61fa408fe2818c2692bcbb1a8131bfd4319",
+  "synthetic_only": true,
+  "positive_single_branch": {
+    "calls": 198,
+    "mismatches": 0
+  },
+  "direct_pair": {
+    "status": "ok",
+    "calls": 397,
+    "mismatches": 98,
+    "first_mismatches": [
+      {
+        "t": 100.0,
+        "side": 0,
+        "view_gid": 0,
+        "bound_gid": null
+      },
+      {
+        "t": 150.0,
+        "side": 0,
+        "view_gid": 0,
+        "bound_gid": null
+      },
+      {
+        "t": 200.0,
+        "side": 0,
+        "view_gid": 0,
+        "bound_gid": null
+      }
+    ]
+  },
+  "interpretation": "The ordinary Teacher callback is not rebound by pair to the copied arm; single-branch rollout remains valid."
+}

@@ -1,0 +1,105 @@
+{
+  "target": "4584a3c2696625d27cf87f193a6260997348f85e",
+  "asof": "2026-11-20T12:18:41.016146+00:00",
+  "backup": "/tmp/pf-review-4584a3c2-state-backup",
+  "preexisting_tracked_status": " D data/pm_5min/derived/be133_forward_population_era_split.json\n D data/pm_5min/derived/be_tape_v2_builder_binding_proof_v1.json\n D data/pm_5min/derived/be_validation_review_v1.json\n D data/pm_5min/derived/p003_de_gate1_run_journal_de145day07__20260908T032816Z.json\n D data/pm_5min/derived/p003_de_gate1_run_journal_deRR20260903__20260907T195646Z.json\n D data/pm_5min/derived/p003_de_gate1_run_journal_deRR20260904__20260907T225517Z.json\n D data/pm_5min/derived/p003_de_gate1_synthetic_day_run__20260906T062115Z.json\n D data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v2__20260906T064720Z.json\n D data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v3__20260906T071214Z.json\n D data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v4__20260906T074712Z.json\n D data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v5__20260906T075707Z.json\n D data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v6__20260906T081252Z.json\n D data/pm_5min/derived/p003_de_launch_form_probe__20260906T121813Z.json\n D data/pm_5min/derived/p003_de_r608_resolver_agreement__20260906T104000Z.json\n D data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/README\n D data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/linear_btc.json\n D data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/linear_eth.json\n M predictfun/FINDINGS.md\n M predictfun/HANDOFF.md\n M predictfun/STATUS.yml\n M predictfun/handoffs/20261109_TODO.md\n M predictfun/research/run_light.log\n",
+  "state": {
+    "predictfun/HANDOFF.md": {
+      "before_sha256": "4112c9a7b1f94e9a2ff59baba436b94dbcff756dd53ca9f0e52e6f349d5ab0c8",
+      "head_sha256": "84a08ba8f451bf93b731d4f662f80f5654cb4255322e7d38806eacb11e871b8a",
+      "prefix_sha256": "546c9891f340c4ed10744c1e953be69fca57e48fdea15a94b7f8fe1805ca7e23"
+    },
+    "predictfun/FINDINGS.md": {
+      "before_sha256": "be9d87d66bff8d8aeeab9965f927da7481c3e9f187b7b8d9aeddacff158e1b56",
+      "head_sha256": "c446f6b94cac57da9e3a24a627e19f4f3c84ab4574f174d7004275b555da9ef6",
+      "prefix_sha256": "fb9570282041af33929be5e1d806947a4490cf0e7cb0a4e8578423cfe024730d"
+    },
+    "predictfun/STATUS.yml": {
+      "before_sha256": "fab020fb47acab02403b8f60a03a6669e3cf1c73752d72d67e3747d036aa88a6",
+      "head_sha256": "c99a021c8077c78b37bca7bdd5d6e97c3fd8754dcbcb276eb02001284cea0ba3",
+      "prefix_sha256": "7107d4e3b07677af510e9f82c60f226f1d1e41906c78015a96fa910297ee9588"
+    }
+  },
+  "review_files": [
+    {
+      "path": "predictfun/reviews/automatic/20261120_4584a3c2/controls.json",
+      "sha256": "86100f0a95fe861936fd64e7c14d24cca79daaac2d0b9878057333f8262309be"
+    },
+    {
+      "path": "predictfun/reviews/automatic/20261120_4584a3c2/controls.log",
+      "sha256": "698970f00324753950d85771ea032239fd3a84c58158de57310addcfd10e273c"
+    },
+    {
+      "path": "predictfun/reviews/automatic/20261120_4584a3c2/metadata.json",
+      "sha256": "96cd2583789c2ca9c50e026cbcbac22bf0f87e657941a49c6e6e066198e426be"
+    },
+    {
+      "path": "predictfun/reviews/automatic/20261120_4584a3c2/metadata.log",
+      "sha256": "59d5c0066e26431d102cfcd64ec287ad9281d8b16256196ecb4bb3756329af40"
+    },
+    {
+      "path": "predictfun/reviews/automatic/20261120_4584a3c2/metadata_v1.log",
+      "sha256": "e0863e1ab7a690f260d3362193d531a355bfef121be55bcfbf38b3f563bd7c9f"
+    },
+    {
+      "path": "predictfun/reviews/automatic/20261120_4584a3c2/outputs.json",
+      "sha256": "2466b0e7b46f200bbd1ffaf96ecbbe88ae53ec1f54db0a1277fd4ba9b6180f8e"
+    },
+    {
+      "path": "predictfun/reviews/automatic/20261120_4584a3c2/outputs.log",
+      "sha256": "da6858d2df057456806fb1fe939d6c32ade83b9223298f4d12bf8527463957b2"
+    },
+    {
+      "path": "predictfun/reviews/automatic/20261120_4584a3c2/pair_binding.json",
+      "sha256": "37a0d4c58f14f21e0ef171d14b502ea38c65ce74d69b47d3bbfb31f406cc1cd5"
+    },
+    {
+      "path": "predictfun/reviews/automatic/20261120_4584a3c2/pair_binding.log",
+      "sha256": "a6b4c3f3b7328777e4ec9f8700429447736e44c85f7ebb4dc369b3cbad70e1b0"
+    },
+    {
+      "path": "predictfun/reviews/automatic/20261120_4584a3c2/pair_binding.py",
+      "sha256": "f4b044c82a2ff6d92f9bdda41227e61fa408fe2818c2692bcbb1a8131bfd4319"
+    },
+    {
+      "path": "predictfun/reviews/automatic/20261120_4584a3c2/report.md",
+      "sha256": "9ad8165145263dd86f300af7d4392aeb85170d2c362dcd77c41f94bcb158be02"
+    },
+    {
+      "path": "predictfun/reviews/automatic/20261120_4584a3c2/runner_selftest.log",
+      "sha256": "b3bb6df1dd393d4374091fdf8c810b27285885096bf1924dd5a72d7564d81e72"
+    },
+    {
+      "path": "predictfun/reviews/automatic/20261120_4584a3c2/samples.json",
+      "sha256": "eb62af028540cf8194871f76b811e3bbb508f4547095848f3dfcc1bdeac1e486"
+    },
+    {
+      "path": "predictfun/reviews/automatic/20261120_4584a3c2/samples.log",
+      "sha256": "47c96bfeebb1b50377c6001b45c00e94c27d09990544238e759bf318d2068fe0"
+    },
+    {
+      "path": "predictfun/reviews/automatic/20261120_4584a3c2/short_diagnostic.json",
+      "sha256": "10d904d76a65cb86c628a2cbc8a4fe222cb1bbef994573cd8ca7026920295c00"
+    },
+    {
+      "path": "predictfun/reviews/automatic/20261120_4584a3c2/short_diagnostic.log",
+      "sha256": "af2a4133ed21922244b80d88f200179b6f9c33f8033080153c4fed1a88edfd1e"
+    },
+    {
+      "path": "predictfun/reviews/automatic/20261120_4584a3c2/short_diagnostic.py",
+      "sha256": "6b894ab8e86284bc500b3b657e82ce784ced9fb14f54899af2d2dc081778f623"
+    },
+    {
+      "path": "predictfun/reviews/automatic/20261120_4584a3c2/teacher_selftest.log",
+      "sha256": "b88274e18dee302af602949ddd76e77da4b04201ec3e5f5e0ef4d33b6e91e529"
+    },
+    {
+      "path": "predictfun/reviews/automatic/20261120_4584a3c2/verify.py",
+      "sha256": "20e8df687b642f73a51400d9240e72ef6927089953125a8c236129f39a3ad7cf"
+    },
+    {
+      "path": "predictfun/reviews/automatic/20261120_4584a3c2/verify_v1.py",
+      "sha256": "adb64ea9211eab1800d0a4c1e4e57042fe5057702ecdcafdcd0f2a6608516e59"
+    }
+  ]
+}

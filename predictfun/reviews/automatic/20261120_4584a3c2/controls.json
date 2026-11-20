@@ -1,0 +1,58 @@
+{
+  "resource_disposition": {
+    "before": {
+      "parts": [],
+      "statuses": [
+        "run_status.json"
+      ],
+      "undisposed": [
+        "run_status.json"
+      ],
+      "disposition": null
+    },
+    "approved": {
+      "parts": [],
+      "statuses": [
+        "run_status.json"
+      ],
+      "undisposed": [],
+      "disposition": {
+        "parts": [],
+        "statuses": [
+          "run_status.json"
+        ],
+        "reason": "first stop investigated"
+      }
+    },
+    "new_stop": {
+      "parts": [],
+      "statuses": [
+        "run_status.json"
+      ],
+      "undisposed": [],
+      "disposition": {
+        "parts": [],
+        "statuses": [
+          "run_status.json"
+        ],
+        "reason": "first stop investigated"
+      }
+    },
+    "old_hash": "a3f03fae54110af1deec898ff540e16b4ec0f6ca71fd49b3c97e2cd3bea5bcee",
+    "new_hash": "3e920bebcf3f56f8f703cf33a4b3655313b6bf2fa6633b76b829fdf9e52906cb",
+    "new_stop_inherits_clearance": true
+  },
+  "value_diagnostic": {
+    "reported": 1.0,
+    "coherent_mean": 10.0,
+    "all_row_mean": -17.0
+  },
+  "callback_binding": {
+    "stale_callback_observed": "prefork",
+    "explicit_binding_observed": "post_arm"
+  },
+  "target": "4584a3c2696625d27cf87f193a6260997348f85e",
+  "asof": "2026-11-20T12:12:25.074592+00:00",
+  "script_sha256": "20e8df687b642f73a51400d9240e72ef6927089953125a8c236129f39a3ad7cf",
+  "mode": "controls"
+}
