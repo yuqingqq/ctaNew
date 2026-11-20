@@ -170,6 +170,17 @@ checkable requirements, not style.
 in each round. Repeated rounds fixing one issue at a time waste too much time.
 This is a standing workflow requirement for reviewer and development sessions.
 
+- **Priority clarification from USER, 2026-11-20:** spend effort on making test
+  results reliable and capable of revealing model issues. Collect minor issues
+  without making their repair a prerequisite for useful experiments. Include
+  them when cheap; otherwise record and defer them.
+- A blocking finding must explain how it could materially invalidate or obscure
+  the result: wrong labels/populations, leakage or timing, accounting errors,
+  mismatched artifacts, unfair comparisons or inadequate coverage for the claim.
+  Cosmetic issues, general hardening and hypothetical failure paths do not
+  justify delaying a valid bounded test. A documented workaround with checked
+  inputs/outputs and positive/known-bad controls can be sufficient for that test;
+  state its limits and do not imply broader production acceptance.
 - Review the affected pipeline and its integration boundaries before finalizing
   the handoff. Continue inspecting after the first defect; collect all known
   actionable issues, prior unresolved findings and likely related failure paths
@@ -196,6 +207,12 @@ This is a standing workflow requirement for reviewer and development sessions.
   Do not expand it into unrelated refactors, new models or an indefinite search
   for hypothetical issues. Existing reliability rules, declared experiment
   boundaries, resource limits and session ownership remain binding.
+- Once the relevant reliability checks pass, proceed to the authorized
+  experiment. Report actual prediction quality and economic diagnostics when
+  the stage permits, separating model, value-mapping and controller limitations
+  with appropriate comparisons. An implementation or label-only test must state
+  that it has not yet measured model skill. Do not prolong engineering cleanup
+  merely because it is easier to verify than the scientific question.
 
 For Predict.fun, maintain the consolidated checklist and next measurement in
 `predictfun/HANDOFF.md`; development owns fixes and the research session owns

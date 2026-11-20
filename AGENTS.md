@@ -15,6 +15,10 @@ review at the first finding or require review after each individual repair.
 Nonblocking cleanup must not automatically restart the cycle. Follow the full
 [batching rule in CLAUDE.md](CLAUDE.md#standing-rule-batch-review-and-fixes);
 existing reliability, freeze and resource requirements still apply.
+Prioritize reliable experiments that reveal model limitations. Collect minor
+issues in the same review, but defer fixes that do not affect result validity
+or interpretation. A batch is not a requirement to finish every cleanup before
+testing; use a documented, verified bounded workaround when sufficient.
 
 ## What this repo is
 

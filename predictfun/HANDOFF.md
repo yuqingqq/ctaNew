@@ -6,6 +6,17 @@ Review the affected pipeline/integration boundaries, collect one ranked issue
 list, and bundle fixes, bounded checks and the authorized measurement. Submit
 one combined code/result receipt; no review after each individual repair.
 Nonblocking cleanup must not automatically restart a fix-only cycle.
+
+**USER priority clarification:** the objective is reliable tests that reveal
+model limitations. Collect minor issues, but fix them only when cheap or needed
+for valid results; otherwise defer them. This applies to the current B1-B7
+package: closing every operational cleanup is not a prerequisite for the bounded
+run. Proceed once result-critical checks or explicitly documented, independently
+verified workarounds protect its labels, populations, timing, accounting and
+artifact identity. Keep resource limits. Record deferred items and the limited
+scope of any workaround; do not imply full production acceptance. The current
+label-only run measures target variation/readiness, not prediction skill. Move
+toward the authorized model/value/controller measurements once their gates pass.
 [Persistent rule for both sessions](../CLAUDE.md#standing-rule-batch-review-and-fixes),
 [AGENTS.md](../AGENTS.md#standing-rule-batch-review-and-fixes),
 [current consolidated package](reviews/automatic/20261120_r2d_bundled_round/plan.md).
