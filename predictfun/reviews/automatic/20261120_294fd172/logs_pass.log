@@ -1,0 +1,2 @@
+v1-to-v2 data predicates identical; sole old failure is own unfinished log. All 17 build logs, 11 controls and archived suites verified.
+2026-11-20T10:30:47Z tag=review_294fd172_logs2 rc=0 peak_rss_mib=194 wall_s=0.92 cpu_user_s=0.75 memavail_start_gib=23 disk_free_gib=454->454 slot=codex

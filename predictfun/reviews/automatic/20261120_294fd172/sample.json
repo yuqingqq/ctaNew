@@ -1,0 +1,399 @@
+{
+  "all_checks_pass": true,
+  "parts": [
+    {
+      "part": 0,
+      "rows": 58490,
+      "sampled_ok": 12524,
+      "originals": 64,
+      "audits": 419,
+      "checks": {
+        "population": true,
+        "multiplicity": true,
+        "identity": true,
+        "rows": true,
+        "weights": true,
+        "labels": true,
+        "clocks": true,
+        "inputs": true,
+        "support": true,
+        "audit": true
+      }
+    },
+    {
+      "part": 1,
+      "rows": 60369,
+      "sampled_ok": 12967,
+      "originals": 64,
+      "audits": 413,
+      "checks": {
+        "population": true,
+        "multiplicity": true,
+        "identity": true,
+        "rows": true,
+        "weights": true,
+        "labels": true,
+        "clocks": true,
+        "inputs": true,
+        "support": true,
+        "audit": true
+      }
+    },
+    {
+      "part": 2,
+      "rows": 49083,
+      "sampled_ok": 10100,
+      "originals": 64,
+      "audits": 382,
+      "checks": {
+        "population": true,
+        "multiplicity": true,
+        "identity": true,
+        "rows": true,
+        "weights": true,
+        "labels": true,
+        "clocks": true,
+        "inputs": true,
+        "support": true,
+        "audit": true
+      }
+    },
+    {
+      "part": 3,
+      "rows": 47905,
+      "sampled_ok": 9862,
+      "originals": 64,
+      "audits": 387,
+      "checks": {
+        "population": true,
+        "multiplicity": true,
+        "identity": true,
+        "rows": true,
+        "weights": true,
+        "labels": true,
+        "clocks": true,
+        "inputs": true,
+        "support": true,
+        "audit": true
+      }
+    },
+    {
+      "part": 116,
+      "rows": 48658,
+      "sampled_ok": 10084,
+      "originals": 64,
+      "audits": 381,
+      "checks": {
+        "population": true,
+        "multiplicity": true,
+        "identity": true,
+        "rows": true,
+        "weights": true,
+        "labels": true,
+        "clocks": true,
+        "inputs": true,
+        "support": true,
+        "audit": true
+      }
+    },
+    {
+      "part": 117,
+      "rows": 61719,
+      "sampled_ok": 13165,
+      "originals": 64,
+      "audits": 416,
+      "checks": {
+        "population": true,
+        "multiplicity": true,
+        "identity": true,
+        "rows": true,
+        "weights": true,
+        "labels": true,
+        "clocks": true,
+        "inputs": true,
+        "support": true,
+        "audit": true
+      }
+    },
+    {
+      "part": 118,
+      "rows": 58475,
+      "sampled_ok": 12604,
+      "originals": 64,
+      "audits": 423,
+      "checks": {
+        "population": true,
+        "multiplicity": true,
+        "identity": true,
+        "rows": true,
+        "weights": true,
+        "labels": true,
+        "clocks": true,
+        "inputs": true,
+        "support": true,
+        "audit": true
+      }
+    },
+    {
+      "part": 119,
+      "rows": 49971,
+      "sampled_ok": 10430,
+      "originals": 64,
+      "audits": 392,
+      "checks": {
+        "population": true,
+        "multiplicity": true,
+        "identity": true,
+        "rows": true,
+        "weights": true,
+        "labels": true,
+        "clocks": true,
+        "inputs": true,
+        "support": true,
+        "audit": true
+      }
+    },
+    {
+      "part": 236,
+      "rows": 53933,
+      "sampled_ok": 11432,
+      "originals": 64,
+      "audits": 413,
+      "checks": {
+        "population": true,
+        "multiplicity": true,
+        "identity": true,
+        "rows": true,
+        "weights": true,
+        "labels": true,
+        "clocks": true,
+        "inputs": true,
+        "support": true,
+        "audit": true
+      }
+    },
+    {
+      "part": 237,
+      "rows": 44969,
+      "sampled_ok": 9251,
+      "originals": 64,
+      "audits": 394,
+      "checks": {
+        "population": true,
+        "multiplicity": true,
+        "identity": true,
+        "rows": true,
+        "weights": true,
+        "labels": true,
+        "clocks": true,
+        "inputs": true,
+        "support": true,
+        "audit": true
+      }
+    },
+    {
+      "part": 238,
+      "rows": 51343,
+      "sampled_ok": 10781,
+      "originals": 64,
+      "audits": 404,
+      "checks": {
+        "population": true,
+        "multiplicity": true,
+        "identity": true,
+        "rows": true,
+        "weights": true,
+        "labels": true,
+        "clocks": true,
+        "inputs": true,
+        "support": true,
+        "audit": true
+      }
+    },
+    {
+      "part": 239,
+      "rows": 55678,
+      "sampled_ok": 11793,
+      "originals": 64,
+      "audits": 407,
+      "checks": {
+        "population": true,
+        "multiplicity": true,
+        "identity": true,
+        "rows": true,
+        "weights": true,
+        "labels": true,
+        "clocks": true,
+        "inputs": true,
+        "support": true,
+        "audit": true
+      }
+    },
+    {
+      "part": 356,
+      "rows": 53524,
+      "sampled_ok": 11459,
+      "originals": 64,
+      "audits": 402,
+      "checks": {
+        "population": true,
+        "multiplicity": true,
+        "identity": true,
+        "rows": true,
+        "weights": true,
+        "labels": true,
+        "clocks": true,
+        "inputs": true,
+        "support": true,
+        "audit": true
+      }
+    },
+    {
+      "part": 357,
+      "rows": 57602,
+      "sampled_ok": 12247,
+      "originals": 64,
+      "audits": 416,
+      "checks": {
+        "population": true,
+        "multiplicity": true,
+        "identity": true,
+        "rows": true,
+        "weights": true,
+        "labels": true,
+        "clocks": true,
+        "inputs": true,
+        "support": true,
+        "audit": true
+      }
+    },
+    {
+      "part": 358,
+      "rows": 50720,
+      "sampled_ok": 10722,
+      "originals": 64,
+      "audits": 401,
+      "checks": {
+        "population": true,
+        "multiplicity": true,
+        "identity": true,
+        "rows": true,
+        "weights": true,
+        "labels": true,
+        "clocks": true,
+        "inputs": true,
+        "support": true,
+        "audit": true
+      }
+    },
+    {
+      "part": 359,
+      "rows": 57015,
+      "sampled_ok": 12050,
+      "originals": 64,
+      "audits": 410,
+      "checks": {
+        "population": true,
+        "multiplicity": true,
+        "identity": true,
+        "rows": true,
+        "weights": true,
+        "labels": true,
+        "clocks": true,
+        "inputs": true,
+        "support": true,
+        "audit": true
+      }
+    },
+    {
+      "part": 473,
+      "rows": 60856,
+      "sampled_ok": 13029,
+      "originals": 64,
+      "audits": 428,
+      "checks": {
+        "population": true,
+        "multiplicity": true,
+        "identity": true,
+        "rows": true,
+        "weights": true,
+        "labels": true,
+        "clocks": true,
+        "inputs": true,
+        "support": true,
+        "audit": true
+      }
+    },
+    {
+      "part": 474,
+      "rows": 59536,
+      "sampled_ok": 12607,
+      "originals": 64,
+      "audits": 407,
+      "checks": {
+        "population": true,
+        "multiplicity": true,
+        "identity": true,
+        "rows": true,
+        "weights": true,
+        "labels": true,
+        "clocks": true,
+        "inputs": true,
+        "support": true,
+        "audit": true
+      }
+    },
+    {
+      "part": 475,
+      "rows": 59486,
+      "sampled_ok": 12714,
+      "originals": 64,
+      "audits": 423,
+      "checks": {
+        "population": true,
+        "multiplicity": true,
+        "identity": true,
+        "rows": true,
+        "weights": true,
+        "labels": true,
+        "clocks": true,
+        "inputs": true,
+        "support": true,
+        "audit": true
+      }
+    },
+    {
+      "part": 476,
+      "rows": 950,
+      "sampled_ok": 178,
+      "originals": 2,
+      "audits": 10,
+      "checks": {
+        "population": true,
+        "multiplicity": true,
+        "identity": true,
+        "rows": true,
+        "weights": true,
+        "labels": true,
+        "clocks": true,
+        "inputs": true,
+        "support": true,
+        "audit": true
+      }
+    }
+  ],
+  "controls": {
+    "wrong_value_refused": true,
+    "duplicate_identity_refused": true,
+    "missing_audit_refused": true
+  },
+  "rows": 1040282,
+  "sampled_ok": 219999,
+  "originals": 1218,
+  "audits": 7728,
+  "target_commit": "294fd172d7712bdfeb4c776a33ba63eaf1b7fc0a",
+  "asof": "2026-11-20T10:29:43.409819+00:00",
+  "script_sha256": "2c125678cc3d856101a4fbc4dda846251f7a2c0147f1806d3e6240341f52b60b",
+  "runner_sha256": "65293187d9f7e4f81e9d8bb5ca1503d68b204a5712d753897a40ed6b6decd488",
+  "shadow_sha256": "962cf7b42c1a8ff78b7a4cb46f111036c824270ff8fa91d95c1c42558f098ab9"
+}

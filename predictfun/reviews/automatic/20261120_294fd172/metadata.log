@@ -1,0 +1,2 @@
+All 477 records and parquet hashes, population, source preflight, aggregates, audit seeds, support and gate3 identities pass.
+2026-11-20T10:28:20Z tag=review_294fd172_meta rc=0 peak_rss_mib=737 wall_s=4.74 cpu_user_s=4.10 memavail_start_gib=23 disk_free_gib=454->454 slot=codex

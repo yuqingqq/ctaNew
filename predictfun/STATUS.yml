@@ -1,3 +1,42 @@
+r2b_review_20261120_codex:
+  status: full_Oct23_teacher_data_accepted_for_supported_pi0_50_fit
+  target_commit: 294fd172d7712bdfeb4c776a33ba63eaf1b7fc0a
+  range_base: e6b0efa481d203e8d9fca2397b930d606c0c378a
+  report: predictfun/reviews/automatic/20261120_294fd172/report.md
+  metadata: predictfun/reviews/automatic/20261120_294fd172/metadata.json
+  sample: predictfun/reviews/automatic/20261120_294fd172/sample.json
+  acceptance_logs: predictfun/reviews/automatic/20261120_294fd172/logs.json
+  blocking_findings: []
+  new_source_defects_demonstrated: false
+  prior_nonblocking_P2: [resource_latch_not_carried_across_resume_finalize, standalone_finalize_omits_source_preflight]
+  prior_workarounds_verified: [all_record_breaches_limits_and_stop_logs, actual_finalizer_source_map_matches_plan]
+  prepared_runner_v3_reviewed: false
+  sharded_runner: reviewed_gate3_actual_parts_byte_identical_to_gate2A
+  four_development_slots: user_authorized_one_core_each_codex_slot_preserved
+  plan_sha256: 249161127c39d5a51cc7c374262073af4f38c9245ef08fb505f0ec3e646dd56b
+  all_actual_records_and_parts_hashed: 477
+  saved_population: {day: "20261023", originals: 30466, per_side: 15233, partitions: 477, rows: 25463127, sampled_ok: 5384015, weight_groups: 60176}
+  saved_labels: {checked: 5384015, failed: 0, no_fill: 4036595}
+  saved_causality: {checked: 191620, failed: 0, not_evaluable: 0, retried: 83}
+  independent_row_sample: {parts: 20, originals: 1218, rows: 1040282, sampled_ok: 219999, audit_keys: 7728, pass: true}
+  acceptance_v2_change: log_instrument_only_data_predicates_1_to_5_byte_identical
+  saved_v1_only_failed_log: accept_full.log
+  support: {coarse_cells: 28, supported: 28, min_originals: 2945, min_nonzero_originals: 39, diagnostic_cross_cells: 559, cross_below_200: 62, cross_below_20_nonzero: 88}
+  support_contract: coarse_floors_plus_category_presence_numeric_ranges_coherence_and_explicit_fallbacks
+  immediate_priority: supported_pi0_50_fit_and_freeze_on_accepted_Oct23_with_bounded_teacher_policy_receipt
+  additional_USER_approval_needed: false
+  candidate_paired_labels_now: false
+  data_rebuild_required: false
+  teacher: {architecture: pinned_J, rounds: 200, features: 107, model_heads: 16, weights: equal_per_original_side_head_conditional_subsets_unchanged}
+  census_asof: "2026-11-20T09:43:15.569062+00:00"
+  development_acceptance_asof: "2026-11-20T10:21:00.689582+00:00"
+  metadata_audit_asof: "2026-11-20T10:28:25.209555+00:00"
+  sample_audit_asof: "2026-11-20T10:29:43.409819+00:00"
+  verification: {successful_bounded_runs: 6, wall_seconds: 83.47, peak_rss_mib: 737, runner_selftest: pass, log_cases: 11, log_mutants_rerun: 9, saved_runner_mutants: 20, saved_shadow_mutants: 56, source_targets_resolve: true, corrected_review_filename_expectation: 1}
+  review_fit_new_labels_raw_tape_untouched_day: false
+  implementation_changed_by_review: false
+  development_owner: other_session
+
 r2_launch_review_20261120_codex:
   status: pinned_launch_gate_pass_no_blocking_findings
   target_commit: c8d8fc8d52faeacb9413b33a679f99de451b3624

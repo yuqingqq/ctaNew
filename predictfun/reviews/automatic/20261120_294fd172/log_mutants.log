@@ -1,0 +1,12 @@
+unchanged copy: 11 / 11 cases as expected: True
+  no exclusion of the acceptance logs: caught by ['a footerless acceptance log is excluded', 'a failing acceptance log is excluded']
+  no declared-presence check: caught by ['a declared log missing']
+  first footer only: caught by ['a failing second footer']
+  a footer not required: caught by ['a footerless build log']
+  rc not checked: caught by ['rc 1', 'rc 10', 'a failing second footer']
+  strict cap: caught by ['peak 1536 = the cap']
+  cap 1537: caught by ['peak 1537']
+  exclusion of every log: caught by ['clean', 'a second clean footer (resume)', 'peak 1536 = the cap', 'a footerless acceptance log is excluded', 'a failing acceptance log is excluded']
+  missing logs do not fail: caught by ['a declared log missing']
+accept_logs mutation check passed: the unchanged copy passes, 9 / 9 planted errors are caught by a check
+2026-11-20T10:31:22Z tag=review_294fd172_logmutants rc=0 peak_rss_mib=13 wall_s=0.07 cpu_user_s=0.04 memavail_start_gib=23 disk_free_gib=454->454 slot=codex
