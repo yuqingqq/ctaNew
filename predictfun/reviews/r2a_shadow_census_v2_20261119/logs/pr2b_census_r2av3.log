@@ -1,0 +1,90 @@
+{"partition": 0, "originals": 64, "rows": 58490, "seconds": 326.8, "rss_mib": 308}
+{"partition": 1, "originals": 64, "rows": 60369, "seconds": 352.7, "rss_mib": 309}
+{"partition": 2, "originals": 64, "rows": 49083, "seconds": 303.9, "rss_mib": 308}
+{"partition": 3, "originals": 64, "rows": 45407, "seconds": 252.6, "rss_mib": 309}
+{
+ "partitions": {
+  "count": 4,
+  "size": 64,
+  "seconds": [
+   326.8487787246704,
+   352.7292249202728,
+   303.8952398300171,
+   252.56761074066162
+  ],
+  "rss_mib_after": [
+   307.69921875,
+   308.83984375,
+   308.4140625,
+   308.796875
+  ]
+ },
+ "labels": {
+  "checked": 44959,
+  "failed": 0,
+  "no_fill": 32902,
+  "verdict": "PASS"
+ },
+ "refusals_by_source": {
+  "entry": 312,
+  "joint_post_keep": 6,
+  "joint_chase": 12
+ },
+ "causality": {
+  "checked": 2765,
+  "failed": 0,
+  "every": 17,
+  "details": [],
+  "components": {
+   "stored_vs_rebuild": 0,
+   "stored_vs_perturbed": 0,
+   "firing": 0,
+   "not_evaluable": 0
+  },
+  "retried": 2,
+  "draws": 8,
+  "verdict": "PASS"
+ },
+ "census_rows": 213349,
+ "sampled_ok_rows": 44959,
+ "by_source_head_status": {
+  "entry post near_end": 55,
+  "entry post ok": 5235,
+  "joint_chase post cap_blocked": 7013,
+  "joint_chase post near_end": 113,
+  "joint_chase post ok": 192,
+  "joint_chase post unsampled": 767,
+  "joint_chase retain cancel_pending": 1456,
+  "joint_chase retain ok": 2981,
+  "joint_chase retain post_pending": 959,
+  "joint_chase retain unsampled": 11919,
+  "joint_post_keep post cap_blocked": 6826,
+  "joint_post_keep post near_end": 108,
+  "joint_post_keep post ok": 97,
+  "joint_post_keep post unsampled": 412,
+  "joint_post_keep retain cancel_pending": 709,
+  "joint_post_keep retain ok": 3351,
+  "joint_post_keep retain post_pending": 509,
+  "joint_post_keep retain unsampled": 13388,
+  "original post no_path:missing_endpoint": 2,
+  "retain retain cancel_pending": 5755,
+  "retain retain ok": 33103,
+  "retain retain post_pending": 5235,
+  "retain retain unsampled": 113164
+ },
+ "peak_rss_mib": 308.83984375,
+ "population": {
+  "kind": "first_per_side",
+  "per_side": 128,
+  "selected": 256,
+  "by_status": {
+   "eligible": 240,
+   "refused_post_only": 14,
+   "missing_endpoint": 2
+  },
+  "selected_ids_sha256": "4538b694c92c5b6581f357396cb02e43c557b10c494efa08cd5780f0d6f4f501",
+  "represented": 256,
+  "reconciliation": "EXACT"
+ }
+}
+2026-11-19T22:46:33Z tag=pr2b_census_r2av3 rc=0 peak_rss_mib=1246 wall_s=1296.53 cpu_user_s=1274.99 memavail_start_gib=23 disk_free_gib=465->465 slot=claude

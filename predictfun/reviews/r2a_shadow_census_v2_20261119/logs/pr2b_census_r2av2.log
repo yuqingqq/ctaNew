@@ -1,0 +1,114 @@
+{"partition": 0, "originals": 64, "rows": 58490, "seconds": 330.8, "rss_mib": 365}
+{"partition": 1, "originals": 64, "rows": 60369, "seconds": 355.3, "rss_mib": 306}
+{"partition": 2, "originals": 64, "rows": 49083, "seconds": 303.7, "rss_mib": 307}
+{"partition": 3, "originals": 64, "rows": 45407, "seconds": 252.0, "rss_mib": 307}
+{
+ "partitions": {
+  "count": 4,
+  "size": 64,
+  "seconds": [
+   330.83631110191345,
+   355.26984882354736,
+   303.7421360015869,
+   251.95629930496216
+  ],
+  "rss_mib_after": [
+   365.26171875,
+   306.41796875,
+   306.92578125,
+   307.38671875
+  ]
+ },
+ "labels": {
+  "checked": 44959,
+  "failed": 0,
+  "no_fill": 32902,
+  "verdict": "PASS"
+ },
+ "refusals_by_source": {
+  "entry": 312,
+  "joint_post_keep": 6,
+  "joint_chase": 12
+ },
+ "causality": {
+  "checked": 2765,
+  "failed": 2,
+  "every": 17,
+  "details": [
+   {
+    "oid": 98,
+    "side": 1,
+    "source": "retain",
+    "decision_ms": 1600.0,
+    "stored_vs_rebuild": [],
+    "stored_vs_perturbed": [
+     "perturbed tape without a path"
+    ],
+    "fires_market": true,
+    "fires_fair": true,
+    "fires_notified_fill": true
+   },
+   {
+    "oid": 98,
+    "side": 1,
+    "source": "retain",
+    "decision_ms": 1600.0,
+    "stored_vs_rebuild": [],
+    "stored_vs_perturbed": [
+     "perturbed tape without a path"
+    ],
+    "fires_market": true,
+    "fires_fair": true,
+    "fires_notified_fill": true
+   }
+  ],
+  "components": {
+   "stored_vs_rebuild": 0,
+   "stored_vs_perturbed": 2,
+   "firing": 0
+  },
+  "verdict": "FAIL"
+ },
+ "census_rows": 213349,
+ "sampled_ok_rows": 44959,
+ "by_source_head_status": {
+  "entry post near_end": 55,
+  "entry post ok": 5235,
+  "joint_chase post cap_blocked": 7013,
+  "joint_chase post near_end": 113,
+  "joint_chase post ok": 192,
+  "joint_chase post unsampled": 767,
+  "joint_chase retain cancel_pending": 1456,
+  "joint_chase retain ok": 2981,
+  "joint_chase retain post_pending": 959,
+  "joint_chase retain unsampled": 11919,
+  "joint_post_keep post cap_blocked": 6826,
+  "joint_post_keep post near_end": 108,
+  "joint_post_keep post ok": 97,
+  "joint_post_keep post unsampled": 412,
+  "joint_post_keep retain cancel_pending": 709,
+  "joint_post_keep retain ok": 3351,
+  "joint_post_keep retain post_pending": 509,
+  "joint_post_keep retain unsampled": 13388,
+  "original post no_path:missing_endpoint": 2,
+  "retain retain cancel_pending": 5755,
+  "retain retain ok": 33103,
+  "retain retain post_pending": 5235,
+  "retain retain unsampled": 113164
+ },
+ "peak_rss_mib": 365.26171875,
+ "population": {
+  "kind": "first_per_side",
+  "per_side": 128,
+  "selected": 256,
+  "by_status": {
+   "eligible": 240,
+   "refused_post_only": 14,
+   "missing_endpoint": 2
+  },
+  "selected_ids_sha256": "4538b694c92c5b6581f357396cb02e43c557b10c494efa08cd5780f0d6f4f501",
+  "represented": 256,
+  "reconciliation": "EXACT"
+ }
+}
+2026-11-19T22:15:53Z tag=pr2b_census_r2av2 rc=0 peak_rss_mib=1217 wall_s=1302.27 cpu_user_s=1284.73 memavail_start_gib=23 disk_free_gib=465->465 slot=claude

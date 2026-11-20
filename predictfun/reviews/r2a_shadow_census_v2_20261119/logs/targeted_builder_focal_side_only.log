@@ -1,0 +1,2 @@
+R2 SHADOW SELFTEST FAILED: features: the builder called without both sides' keys (the real builder reads both): [[0], [0], [0]]
+2026-11-19T21:38:38Z tag=pr2b_mut27b rc=1 peak_rss_mib=263 wall_s=49.51 cpu_user_s=48.14 memavail_start_gib=23 disk_free_gib=465->465 slot=claude

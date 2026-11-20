@@ -1,0 +1,25 @@
+side_head,field,lo,hi
+ask post,ctx_generation_age_ms,0.0,0.0
+ask post,ctx_generation_ordinal,1.0,9.0
+ask post,ctx_inventory_shares,-3.9968028886505635e-15,30.0
+ask post,ctx_bid_reserved_shares,0.0,30.0
+ask post,ctx_ask_reserved_shares,0.0,0.0
+ask post,t_to_end,100.0,5000.0
+ask retain,ctx_generation_age_ms,100.0,4950.0
+ask retain,ctx_generation_ordinal,1.0,11.0
+ask retain,ctx_inventory_shares,-28.970367431640625,30.0
+ask retain,ctx_bid_reserved_shares,0.0,30.0
+ask retain,ctx_ask_reserved_shares,1.0296332836151123,30.0
+ask retain,t_to_end,50.0,4900.0
+bid post,ctx_generation_age_ms,0.0,0.0
+bid post,ctx_generation_ordinal,1.0,13.0
+bid post,ctx_inventory_shares,-30.0,3.1086244689504383e-15
+bid post,ctx_bid_reserved_shares,0.0,0.0
+bid post,ctx_ask_reserved_shares,0.0,30.0
+bid post,t_to_end,100.0,5000.0
+bid retain,ctx_generation_age_ms,100.0,4950.0
+bid retain,ctx_generation_ordinal,1.0,13.0
+bid retain,ctx_inventory_shares,-30.0,29.861738204956055
+bid retain,ctx_bid_reserved_shares,0.1382608711719513,30.0
+bid retain,ctx_ask_reserved_shares,0.0,30.0
+bid retain,t_to_end,50.0,4900.0

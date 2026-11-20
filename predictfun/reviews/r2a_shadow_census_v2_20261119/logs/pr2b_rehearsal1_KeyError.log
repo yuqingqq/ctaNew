@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "/tmp/claude-1001/-home-yuqing-ctaNew/aea5bfb9-4ea4-41d0-bf73-bb98d818e3d4/scratchpad/smoke_r2av2.py", line 6, in <module>
+    R2.census('20261023', per_side=4, out='/tmp/claude-1001/-home-yuqing-ctaNew/aea5bfb9-4ea4-41d0-bf73-bb98d818e3d4/scratchpad/smoke_r2av2', causal_every=1,
+  File "/home/yuqing/ctaNew/predictfun/research/pf_r2_shadow.py", line 527, in census
+    nc_, nb_, dt_, cp_ = causal_rows(er, path, o, day, W, fair.get(m), depth, fv, every=causal_every, feat=causal_feat,
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/research/pf_r2_shadow.py", line 364, in causal_rows
+    base = rebuild_row(path, W, fv, o, day, r, fair_m, depth, feat); bad_i = same_f32(r, base, cols) if base is not None else ['no grid index']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/research/pf_r2_shadow.py", line 338, in rebuild_row
+    xm, scale = feat_fn(W_, fair_m, depth, {s: [kk]})[s][kk]; ref = float(xm[FC.MARKET.index('pf_mid')])
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/research/pf_pipeline_export.py", line 139, in real_features
+    return FD.feature_rows(W, fair, depth, chosen)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/research/pf_flow_price_data.py", line 20, in feature_rows
+    ks = np.array(sorted(set(chosen[s])), int)
+                             ~~~~~~^^^
+KeyError: 1
+2026-11-19T21:35:40Z tag=pr2b_smoke rc=1 peak_rss_mib=1139 wall_s=65.79 cpu_user_s=54.15 memavail_start_gib=23 disk_free_gib=465->465 slot=claude

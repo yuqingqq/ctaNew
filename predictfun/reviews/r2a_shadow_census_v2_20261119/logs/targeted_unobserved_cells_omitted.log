@@ -1,0 +1,2 @@
+R2 SHADOW SELFTEST FAILED: support: the declared cells / fallbacks / unsupported categories (2, ['c_rem=0', 'c_rem=(0,10]', 'c_rem=(10,20]', 'c_queue=unknown', 'c_queue=0', 'c_queue=(30,150]', 'c_queue=>150', 'c_gen=2', 'c_gen=>=3', 'c_inv=short', 'c_other=post_pending', 'c_other=live', 'c_other=cancel_pending', 'c_other=terminal', 'c_price=[1,5]', 'c_price=(5,20]', 'c_price=(80,95]', 'c_price=(95,99]'])
+2026-11-19T20:59:46Z tag=pr2b_mut31 rc=1 peak_rss_mib=263 wall_s=49.04 cpu_user_s=47.68 memavail_start_gib=23 disk_free_gib=465->467 slot=claude
