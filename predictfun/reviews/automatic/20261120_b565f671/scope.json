@@ -1,0 +1,29 @@
+{
+  "target_commit": "b565f6714ddf37216ab7061f4bf8a1f64eb08efe",
+  "range_base": "d10d36983b2f2baa358ea4ee0b170162984272c6",
+  "state_base_head": "b565f6714ddf37216ab7061f4bf8a1f64eb08efe",
+  "state_backup": "/tmp/pf-review-b565f671-state-fc_9v8lw",
+  "asof": "2026-11-20T00:17:14.315867+00:00",
+  "unrelated_deleted_tracked_files": [
+    "data/pm_5min/derived/be133_forward_population_era_split.json",
+    "data/pm_5min/derived/be_tape_v2_builder_binding_proof_v1.json",
+    "data/pm_5min/derived/be_validation_review_v1.json",
+    "data/pm_5min/derived/p003_de_gate1_run_journal_de145day07__20260908T032816Z.json",
+    "data/pm_5min/derived/p003_de_gate1_run_journal_deRR20260903__20260907T195646Z.json",
+    "data/pm_5min/derived/p003_de_gate1_run_journal_deRR20260904__20260907T225517Z.json",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run__20260906T062115Z.json",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v2__20260906T064720Z.json",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v3__20260906T071214Z.json",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v4__20260906T074712Z.json",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v5__20260906T075707Z.json",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v6__20260906T081252Z.json",
+    "data/pm_5min/derived/p003_de_launch_form_probe__20260906T121813Z.json",
+    "data/pm_5min/derived/p003_de_r608_resolver_agreement__20260906T104000Z.json",
+    "data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/README",
+    "data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/linear_btc.json",
+    "data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/linear_eth.json"
+  ],
+  "mode": "review_only",
+  "implementation_changed": false,
+  "fit_full_labels_new_real_tape_untouched_day": false
+}

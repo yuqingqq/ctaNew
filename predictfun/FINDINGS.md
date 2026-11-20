@@ -1,3 +1,38 @@
+<!-- R2AV2_REVIEW_20261120_CODEX -->
+## 2026-11-20 R2-A v2: saved results pass; full-day finalization and visibility gaps
+
+Target **b565f6714ddf37216ab7061f4bf8a1f64eb08efe**.
+[Full review](reviews/automatic/20261120_b565f671/report.md),
+[artifact evidence](reviews/automatic/20261120_b565f671/artifacts.json),
+[synthetic cases](reviews/automatic/20261120_b565f671/synthetic.json).
+Saved Oct23: 256 originals / 213,349 rows / 44,959 sampled ok / 508 weight groups.
+All columns/dtypes equal v3 except 289 joint POST refusal flags; every original
+represented without duplicate canonical keys. Nine receipt predicates and support
+counts reconcile. Stored-vector rebuild, missing-source statuses, refusal flags,
+16-context wording, terminal disclosure and support diagnostics fixed. R1 unchanged.
+
+P2: the partitioned census calls read_parts after writing its receipt, loading
+all parts into one frame again. Sentinel proves the route is reached. Current
+slice peak 1,246 MiB does not establish a bounded full-day return; frame alone
+scales to 18.55 GiB. P2: venue-clock preservation is correct for execution, but
+leaves unreceived venue-past book fields unchanged in the context's engine path.
+A planted direct read at venue 0 / receive 500 / decision 0 passes all causal
+components, whereas changing that hidden field changes the input. This is an
+instrument blind spot, not a demonstrated current source leak. P2: repeated
+source pair within one partition gives 3 status rows for 2 originals but reports
+EXACT; sets erase multiplicity. Saved artifacts have no such duplicate.
+
+ONE next priority: full-day launch gate with streaming finalization, restart
+contract, client-visibility control and within-partition uniqueness, using the
+same frozen slice. The report freezes the prospective audit sample and resource
+stops; all-day build/support assessment follows closure, before any teacher fit.
+Gross zero fee/rebate convention and 58/37/100 ms engine clocks unchanged.
+
+As-of saved Nov19 23:08:09Z / audit Nov20 00:14:01Z. Synthetic selftest passes;
+46 mutation targets/log verified. Five bounded successes (77.95 s, 694 MiB peak),
+one interpreter dependency failure. No full-day/tape rerun, fit or validation claim.
+<!-- /R2AV2_REVIEW_20261120_CODEX -->
+
 <!-- R2A_REVIEW_20261119_CODEX -->
 ## 2026-11-19 R2-A: numerical receipt supported; acceptance and scaling remain open
 
