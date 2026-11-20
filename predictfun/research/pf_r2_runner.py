@@ -21,7 +21,12 @@ STOP RULE: after each part, partition elapsed > limits.partition_seconds or the 
 FINALIZE: from the records alone - never all parts in memory: every part accepted and its file re-hashed, the population exactly once, the
  readings and the support summed. The support and census JSONs are written last; the state is COMPLETE only if every part passed, the label
  and causal verdicts pass and finalization stayed within the memory limit.
-Usage (run_light, PF_SLOT=claude): pf_r2_runner.py selftest | plan <day> <tag> [all|<per_side>] | run <day> <tag> | finalize <day> <tag>
+SHARDS (USER 2026-11-20: "Yea 4 cores to make it faster"): run(shard=(k, n)) processes only the parts i with i % n == k, loads only their
+ markets' inputs (the day's input hours and their hashes do not depend on the markets) and keeps its own status file; n shards of one plan
+ run in parallel processes, one per research slot, and finalize runs once after all of them. Records, parts and readings do not depend on
+ the shard that produced them.
+Usage (run_light, PF_SLOT=claude..claude4): pf_r2_runner.py selftest | plan <day> <tag> [all|<per_side>] | run <day> <tag> [k/n] |
+ finalize <day> <tag>
 """
 import contextlib
 import hashlib
@@ -151,16 +156,19 @@ def accept(d, plan, psha, i):
     return rec
 
 
-def run(d, mod=None, src=None, inputs=None, loaded=None, feat_fn=None, causal_feat=None, causal_perturb=None):
-    """Process every pending part of the plan in directory d (resume: accepted parts are kept, unfinished ones rerun) -> the state: PARTS_DONE,
-    STOPPED (a planted interruption), STOP_RESOURCE (a latched breach); refusals raise."""
+def run(d, mod=None, src=None, inputs=None, loaded=None, feat_fn=None, causal_feat=None, causal_perturb=None, shard=None):
+    """Process every pending part of the plan in directory d (resume: accepted parts are kept, unfinished ones rerun); shard=(k, n): only the
+    parts i with i % n == k, with only their markets' inputs -> the state of those parts: PARTS_DONE, STOPPED (a planted interruption),
+    STOP_RESOURCE (a latched breach); refusals raise."""
     mod = mod or R2; d = Path(d); plan = json.loads((d / 'plan.json').read_text()); psha = C.sha(d / 'plan.json'); lim = plan['limits']; day = plan['day']
     C.require(sources(mod) == plan['sources'], 'stale source: a module or a dependency changed since the plan')
     kp = Path(plan['inputs']['kp_dir'])
     C.require(C.sha(kp / day / 'receipt.json') == plan['inputs']['kp_receipt'] and all(C.sha(kp / day / x) == h for x, h in plan['inputs']['kp_outputs'].items()),
               'changed input: the keep-pull receipt or its outputs differ from the plan')
     src = src or KP.Tape(); C.require(canon(src.offset(day)) == canon(plan['inputs']['offset']), 'changed input: the tape offset differs from the plan')
-    listed = set(plan['inputs']['listed']); need = sorted(set(m for p in plan['partitions'] for m in p['markets']) & listed)
+    C.require(shard is None or (len(shard) == 2 and 0 <= int(shard[0]) < int(shard[1])), f'an invalid shard {shard}')
+    mine = [i for i in range(len(plan['partitions'])) if shard is None or i % int(shard[1]) == int(shard[0])]
+    listed = set(plan['inputs']['listed']); need = sorted(set(m for i in mine for m in plan['partitions'][i]['markets']) & listed)
     fair, depth, hrs, tracked = loaded if loaded is not None else ((inputs or X.real_inputs)(day, need) if need else ({}, None, [], {}))
     C.require(list(hrs) == plan['inputs']['hours'] and canon(tracked) == canon(plan['inputs']['tracked']), 'changed input: the day\'s input hours or their hashes differ from the plan')
     O = pd.read_parquet(kp / day / 'orders.parquet'); O['_k'] = O.side.astype(np.int64) * 10 ** 12 + O.oid.astype(np.int64)   # integer member keys
@@ -170,8 +178,9 @@ def run(d, mod=None, src=None, inputs=None, loaded=None, feat_fn=None, causal_fe
         rec = accept(d, plan, psha, i)
         if rec is not None:
             mem = set(map(tuple, rec['members'])); C.require(not (mem & seen), f'part {i}: an original already in another accepted part'); seen |= mem; accepted[i] = rec
-    pending = [i for i in range(len(plan['partitions'])) if i not in accepted]
-    status = d / 'run_status.json'; mon = Sampler(status, lim['guard_rss_mib']); mon.start(); latch = None; state = 'RUNNING'; n_run = 0
+    pending = [i for i in mine if i not in accepted]
+    status = d / ('run_status.json' if shard is None else f'run_status_{int(shard[0])}of{int(shard[1])}.json')
+    mon = Sampler(status, lim['guard_rss_mib']); mon.start(); latch = None; state = 'RUNNING'; n_run = 0
     try:
         hw0 = rss()[1]
         if pending and hw0 > lim['peak_rss_mib']:
@@ -209,10 +218,11 @@ def run(d, mod=None, src=None, inputs=None, loaded=None, feat_fn=None, causal_fe
                 latch = dict(part=i, elapsed_s=el, hwm_mib=hw, **breach); state = 'STOP_RESOURCE'; break
     finally:
         mon.live = False
-    left = [i for i in range(len(plan['partitions'])) if i not in accepted]
+    left = [i for i in mine if i not in accepted]
     if state == 'RUNNING':
         state = 'PARTS_DONE' if not left else 'STOPPED'
-    atomic_json(status, dict(state=state, plan_sha256=psha, done=sorted(accepted), pending=left, latch=latch, hwm_mib=rss()[1], asof=C.stamp()))
+    atomic_json(status, dict(state=state, plan_sha256=psha, shard=list(shard) if shard is not None else None, done=sorted(i for i in accepted if i in mine),
+                             pending=left, latch=latch, hwm_mib=rss()[1], asof=C.stamp()))
     return state
 
 
@@ -427,6 +437,17 @@ def selftest():  # noqa: C901
             R2.LABEL_NUDGE = 0.
         if not f_ok:
             bad.append(f'failure records: a failed part was COMPLETE, rerun or refused ({f_why})')
+        with contextlib.redirect_stdout(q):                                                 # two shards of one plan, run in turn: each only its parts
+            make_plan(tmp / 'SH' / f'census_{d0}', R2, d0, 2, 'first_per_side', 1, tmp / 'kp', src, None, X.syn_inputs, True, None, False, None, '')
+            st0 = run(tmp / 'SH' / f'census_{d0}', src=src, inputs=X.syn_inputs, feat_fn=X.syn_features(), causal_feat=X.syn_features(),
+                      causal_perturb=(X.syn_perturb, X.syn_fire), shard=(0, 2))
+            after0 = sorted(p.name for p in (tmp / 'SH' / f'census_{d0}' / 'parts').glob('part_*.json'))
+            st1 = run(tmp / 'SH' / f'census_{d0}', src=src, inputs=X.syn_inputs, feat_fn=X.syn_features(), causal_feat=X.syn_features(),
+                      causal_perturb=(X.syn_perturb, X.syn_fire), shard=(1, 2))
+            Sh = finalize(tmp / 'SH' / f'census_{d0}')
+        if not (st0 == st1 == 'PARTS_DONE' and after0 == ['part_0000.json', 'part_0002.json'] and parts(Sh[0]) == parts(A[0]) and strip(Sh[2]) == strip(A[2])
+                and Sh[1] == A[1] and (Sh[0] / 'run_status_0of2.json').exists() and (Sh[0] / 'run_status_1of2.json').exists()):
+            bad.append(f'shards: two shards did not process only their parts, or their union differs from the unsharded run ({st0}, {st1}, {after0})')
         with contextlib.redirect_stdout(q):                                                 # the audit sample does not depend on the partitioning
             One = census(day=d0, per_side=2, out=tmp / 'O', part_size=999, **kw)
         ka = sorted(x['key'] for p in sorted((A[0] / 'parts').glob('part_*.json')) for x in json.loads(p.read_text())['causal']['audit'])
@@ -469,9 +490,10 @@ if __name__ == '__main__':
     elif len(a) in (3, 4) and a[0] == 'plan':
         pop = 'all' if (len(a) == 4 and a[3] == 'all') else 'first_per_side'; ps = int(a[3]) if (len(a) == 4 and a[3] != 'all') else R2.PER_SIDE
         make_plan(Path(R2.OUT) / f'census_{a[1]}{a[2]}', R2, a[1], ps, pop, R2.PART_SIZE, None, None, None, None, True, None, False, None, a[2])
-    elif len(a) == 3 and a[0] == 'run':
-        print(run(Path(R2.OUT) / f'census_{a[1]}{a[2]}'), flush=True)
+    elif len(a) in (3, 4) and a[0] == 'run':
+        sh_ = tuple(int(x) for x in a[3].split('/')) if len(a) == 4 else None
+        print(run(Path(R2.OUT) / f'census_{a[1]}{a[2]}', shard=sh_), flush=True)
     elif len(a) == 3 and a[0] == 'finalize':
         finalize(Path(R2.OUT) / f'census_{a[1]}{a[2]}')
     else:
-        sys.exit('usage: pf_r2_runner.py selftest | plan <day> <tag> [all|<per_side>] | run <day> <tag> | finalize <day> <tag>')
+        sys.exit('usage: pf_r2_runner.py selftest | plan <day> <tag> [all|<per_side>] | run <day> <tag> [k/n] | finalize <day> <tag>')

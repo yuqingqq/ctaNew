@@ -1,0 +1,51 @@
+--- /home/yuqing/ctaNew/predictfun/reviews/r2b_full_day_20261120/accept_full_v1.py	2026-11-20 10:03:48.692276476 +0000
++++ /home/yuqing/ctaNew/predictfun/reviews/r2b_full_day_20261120/accept_full.py	2026-11-20 10:04:03.922439414 +0000
+@@ -20,8 +20,12 @@
+     the categories (partial fills, queue states, pending and other-side states), cross-cells, per side / head ranges, delayed entry and later
+     generations; the supported teacher states and those that need the absent-WAIT / live-KEEP fallback.
+ (6) Run disposition: every record PASS with its elapsed time and high-water; no breach flag, and independently elapsed <= 900 s and
+-    high-water <= 1,536 MiB. Every shard status PARTS_DONE with no latch. Every run log in logs/ rc 0 with its peak <= 1,536 MiB. The shadow
+-    mutation suite of c8d8fc8d archived as passed.
++    high-water <= 1,536 MiB. Every shard status PARTS_DONE with no latch. Every declared run log of the build present, and every log in logs/
++    except the acceptance's own (accept*.log) rc 0 with its peak <= 1,536 MiB, by accept_logs.disposition, whose falsifier cases must all
++    hold in the same run. The shadow mutation suite of c8d8fc8d archived as passed.
++v2, 2026-11-20 10:03 UTC (v1 = accept_full_v1.py, kept): only check (6)'s log predicate changed. v1 globbed every log in logs/, including
++its own: the production run redirected into logs/, so it read its own unfinished log, which had no footer, and (6) failed on the instrument,
++not the build. The dry run had written its log elsewhere.
+ Usage: accept_full.py [tag]   (default _full); writes accept<tag>.json and the CSV copies beside this script."""
+ import hashlib
+ import json
+@@ -35,6 +39,7 @@
+ 
+ sys.path.insert(0, '/home/yuqing/ctaNew/predictfun/research')
+ import pf_r2_shadow as R2                                  # noqa: E402
++import accept_logs as AL                                   # noqa: E402  (beside this script)
+ 
+ TAG = sys.argv[1] if len(sys.argv) > 1 else '_full'; DAY = '20261023'; HERE = Path(__file__).resolve().parent; OUT = Path(R2.OUT)
+ d = OUT / f'census_{DAY}{TAG}'; plan = json.loads((d / 'plan.json').read_text()); psha = R2.C.sha(d / 'plan.json')
+@@ -163,8 +168,14 @@
+ # ---- (6) run disposition
+ el = [r['elapsed_s'] for r in recs]; hw = [r['hwm_mib'] for r in recs]
+ stt = {p.name: json.loads(p.read_text()) for p in sorted(d.glob('run_status*.json'))}
+-logs = {p.name: (re.findall(r' rc=(\d+) peak_rss_mib=(\d+)', p.read_text())) for p in sorted((HERE / 'logs').glob('*.log'))}
+-logs_ok = all(len(v) >= 1 and all(int(a) == 0 and int(b) <= 1536 for a, b in v) for v in logs.values())
++BUILD = {'_full': 'r2full', '_shard4': 'shard4'}[TAG]
++DECL = [f'{BUILD}_{x}.log' for x in ('plan', 'run_0', 'run_1', 'run_2', 'run_3', 'preflight', 'finalize')]
++if TAG == '_full':                                         # the launch chain's gates before the full day
++    DECL += ['runner_selftest.log', 'runner_mutants.log', 'shard4_check.log'] + [f'shard4_{x}.log' for x in ('plan', 'run_0', 'run_1', 'run_2', 'run_3', 'preflight', 'finalize')]
++fals = AL.cases(); fals_ok = all(w == g for _, w, g in fals); LD = AL.disposition(HERE / 'logs', DECL); logs = LD['logs']
++logs_ok = bool(fals_ok and LD['ok'])
++print(f"    logs: {len(logs)} checked, {len(DECL)} declared, missing {LD['missing']}, failing {LD['bad']}, excluded (own) {LD['excluded']}; "
++      f"falsifier cases {sum(w == g for _, w, g in fals)} / {len(fals)} as expected")
+ sh_ok = all(v['state'] == 'PARTS_DONE' and v.get('latch') is None for k, v in stt.items() if k.startswith('run_status_')) and sum(k.startswith('run_status_') for k in stt) == 4
+ suite = (HERE.parent / 'r2a_launch_gate_20261120' / 'logs' / 'shadow_mutants_final.log').read_text()
+ res['6_run_disposition'] = bool(all(r['status'] == 'PASS' for r in recs) and not any(any(r['breach'].values()) for r in recs) and max(el) <= 900. and max(hw) <= 1536.
+@@ -174,6 +185,7 @@
+ pd.DataFrame([dict(part=r['part'], rows=r['rows'], sampled_ok=r['sampled_ok'], elapsed_s=r['elapsed_s'], hwm_mib=r['hwm_mib'], part_peak_rss_mib=r['part_peak_rss_mib'],
+                    audited=len(r['causal'].get('audit', [])), retried=r['causal'].get('retried', 0), status=r['status']) for r in recs]).to_csv(HERE / f'parts{TAG}.csv', index=False)
+ (HERE / f'accept{TAG}.json').write_text(json.dumps(dict(asof=R2.C.stamp(), census=str(d), plan_sha256=psha, results=res, notes=notes, failing_parts=why,
+-                                                       logs=logs), indent=1, default=str))
++                                                       logs=logs, logs_declared=DECL, logs_missing=LD['missing'], logs_failing=LD['bad'],
++                                                       logs_excluded=LD['excluded'], log_falsifiers=fals), indent=1, default=str))
+ print(f'FULL-DAY ACCEPTANCE: {res}; ALL TRUE: {all(res.values())}')
+ sys.exit(0 if all(res.values()) else 1)

@@ -444,6 +444,30 @@ pulls and bid/ask; judge movement calibration on selected actions before changin
 order design. Other session owns fixes; scheduler remains off.
 <!-- /PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
 
+## 2026-11-20 10:22Z (session aea5bfb9) — R2-B: THE FULL OCT 23 TEACHER-DATA BUILD ON 4 CORES, ACCEPTED ALL TRUE; 28 / 28 SUPPORT CELLS (review e6b0efa4's next priority; no fit) (USER: "... continue the implementing and next priority loop"; "Yea 4 cores to make it faster")
+- [Receipt](reviews/r2b_full_day_20261120/report.md); [`pf_r2_runner.py`](research/pf_r2_runner.py) `65293187` (sharded: `run(shard=(k, n))`, shard-local markets); [`run_light.sh`](research/run_light.sh) `e53f7f23` (slots claude2 / claude3 / claude4 on cores 10 / 13 / 14, cap 5).
+- Gated launch ([launch5.sh](reviews/r2b_full_day_20261120/launch5.sh), every gate computed):
+  - shadow suite 56 / 56;
+  - sharded runner selftest + 20 / 20 mutants;
+  - the frozen 256 as 4 shards reproduces gate2A (parts byte-identical).
+- Full day: plan `24916112` (30,466 originals, 477 partitions); 4 shards 04:35-09:43 UTC (5.1 h; peaks 1,124 / 1,421 / 1,265 / 1,210 MiB; 64-original parts 112.6-171.5 s); finalize preflight equal; finalize COMPLETE from the records.
+- Acceptance (declared before the outputs): v2 ALL TRUE. v1 failed (6) on the instrument: it read its own unfinished log (FINDINGS P79).
+  - v2 changes only that predicate: declared build logs required, own logs excluded; 11 falsifiers in every run; 9 / 9 mutants caught.
+  - v1 / v2 outputs are byte-identical; planted rc 1 / missing-log dry runs give (6) FALSE.
+- Readings:
+  - 25,463,127 rows, 5,384,015 sampled ok;
+  - labels 5,384,015 / 0;
+  - causality 191,620 / 0 (83 retried, 0 not evaluable);
+  - 60,176 weight groups, each summing to one;
+  - refusals: entry 27,532, joint_post_keep 871, joint_chase 1,478.
+- Support: 28 / 28 cells SUPPORTED (200 / 20; on the 256 slice none were). The unobserved categories fall back:
+  - structural, verified in `pf_branch_engine.py`: POST remaining < 30, the inventory sign at POST, the other side terminal;
+  - observed absent: queue unknown, POST queue 0.
+- e6b0efa4's P2s:
+  - the workarounds held (no breach, no stop; preflight equal);
+  - runner v3 (held breaches + disposition; watchdog over load / run / finalize; finalize source preflight; 25 / 25 mutants) is prepared and lands next round, because this build's plan binds the sharded runner.
+- Next: Codex review of this receipt, the sharded runner and the slots; then the supported pi0-50 fit and freeze (its sequence).
+
 ## 2026-11-20 02:53Z (session aea5bfb9) — R2-A FULL-DAY LAUNCH GATE: THE BOUNDED, RESUMABLE RUNNER; THE THREE FINDINGS CLOSED (review 4cd7b45f answered; no full-day run, no fit) (USER: "... continue the implementing and next priority loop")
 - [Receipt](reviews/r2a_launch_gate_20261120/report.md); [`pf_r2_runner.py`](research/pf_r2_runner.py) `5499248b` (new); [`pf_r2_shadow.py`](research/pf_r2_shadow.py) `962cf7b4`.
 - 4cd7b45f's three P2s hold; each fixed:

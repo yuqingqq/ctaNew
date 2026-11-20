@@ -1,0 +1,265 @@
+{
+ "asof": "2026-11-20T10:21:00.689582+00:00",
+ "census": "/home/yuqing/ctaNew/data/predict_fun/research/r2_shadow_20261119/census_20261023_full",
+ "plan_sha256": "249161127c39d5a51cc7c374262073af4f38c9245ef08fb505f0ec3e646dd56b",
+ "results": {
+  "1_population_identity": true,
+  "2_streaming_reconciliation": true,
+  "3_labels_clocks": true,
+  "4_inputs_audit": true,
+  "5_support_reported": true,
+  "6_run_disposition": true
+ },
+ "notes": {
+  "supported_cells": [
+   "ask post (0.0, 100.0]",
+   "ask post (100.0, 250.0]",
+   "ask post (1000.0, 2000.0]",
+   "ask post (2000.0, 3500.0]",
+   "ask post (250.0, 500.0]",
+   "ask post (3500.0, 5000.0]",
+   "ask post (500.0, 1000.0]",
+   "ask retain (0.0, 100.0]",
+   "ask retain (100.0, 250.0]",
+   "ask retain (1000.0, 2000.0]",
+   "ask retain (2000.0, 3500.0]",
+   "ask retain (250.0, 500.0]",
+   "ask retain (3500.0, 5000.0]",
+   "ask retain (500.0, 1000.0]",
+   "bid post (0.0, 100.0]",
+   "bid post (100.0, 250.0]",
+   "bid post (1000.0, 2000.0]",
+   "bid post (2000.0, 3500.0]",
+   "bid post (250.0, 500.0]",
+   "bid post (3500.0, 5000.0]",
+   "bid post (500.0, 1000.0]",
+   "bid retain (0.0, 100.0]",
+   "bid retain (100.0, 250.0]",
+   "bid retain (1000.0, 2000.0]",
+   "bid retain (2000.0, 3500.0]",
+   "bid retain (250.0, 500.0]",
+   "bid retain (3500.0, 5000.0]",
+   "bid retain (500.0, 1000.0]"
+  ],
+  "fallback_cells": {},
+  "unsupported_state_category": {
+   "bid post": [
+    "c_rem=0",
+    "c_rem=(0,10]",
+    "c_rem=(10,20]",
+    "c_queue=unknown",
+    "c_queue=0",
+    "c_inv=long",
+    "c_other=terminal"
+   ],
+   "bid retain": [
+    "c_rem=0",
+    "c_queue=unknown",
+    "c_other=terminal"
+   ],
+   "ask post": [
+    "c_rem=0",
+    "c_rem=(0,10]",
+    "c_rem=(10,20]",
+    "c_queue=unknown",
+    "c_queue=0",
+    "c_inv=short",
+    "c_other=terminal"
+   ],
+   "ask retain": [
+    "c_rem=0",
+    "c_queue=unknown",
+    "c_other=terminal"
+   ]
+  }
+ },
+ "failing_parts": {},
+ "logs": {
+  "r2full_finalize.log": [
+   [
+    "0",
+    "510"
+   ]
+  ],
+  "r2full_plan.log": [
+   [
+    "0",
+    "1289"
+   ]
+  ],
+  "r2full_preflight.log": [
+   [
+    "0",
+    "196"
+   ]
+  ],
+  "r2full_run_0.log": [
+   [
+    "0",
+    "1124"
+   ]
+  ],
+  "r2full_run_1.log": [
+   [
+    "0",
+    "1421"
+   ]
+  ],
+  "r2full_run_2.log": [
+   [
+    "0",
+    "1265"
+   ]
+  ],
+  "r2full_run_3.log": [
+   [
+    "0",
+    "1210"
+   ]
+  ],
+  "runner_mutants.log": [
+   [
+    "0",
+    "399"
+   ]
+  ],
+  "runner_selftest.log": [
+   [
+    "0",
+    "399"
+   ]
+  ],
+  "shard4_check.log": [
+   [
+    "0",
+    "197"
+   ]
+  ],
+  "shard4_finalize.log": [
+   [
+    "0",
+    "203"
+   ]
+  ],
+  "shard4_plan.log": [
+   [
+    "0",
+    "1188"
+   ]
+  ],
+  "shard4_preflight.log": [
+   [
+    "0",
+    "193"
+   ]
+  ],
+  "shard4_run_0.log": [
+   [
+    "0",
+    "1241"
+   ]
+  ],
+  "shard4_run_1.log": [
+   [
+    "0",
+    "1143"
+   ]
+  ],
+  "shard4_run_2.log": [
+   [
+    "0",
+    "1086"
+   ]
+  ],
+  "shard4_run_3.log": [
+   [
+    "0",
+    "1281"
+   ]
+  ]
+ },
+ "logs_declared": [
+  "r2full_plan.log",
+  "r2full_run_0.log",
+  "r2full_run_1.log",
+  "r2full_run_2.log",
+  "r2full_run_3.log",
+  "r2full_preflight.log",
+  "r2full_finalize.log",
+  "runner_selftest.log",
+  "runner_mutants.log",
+  "shard4_check.log",
+  "shard4_plan.log",
+  "shard4_run_0.log",
+  "shard4_run_1.log",
+  "shard4_run_2.log",
+  "shard4_run_3.log",
+  "shard4_preflight.log",
+  "shard4_finalize.log"
+ ],
+ "logs_missing": [],
+ "logs_failing": [],
+ "logs_excluded": [
+  "accept_full_v1.log",
+  "accept_full_v2.log",
+  "accept_logs_mutants.log",
+  "accept_logs_selftest.log"
+ ],
+ "log_falsifiers": [
+  [
+   "clean",
+   true,
+   true
+  ],
+  [
+   "a second clean footer (resume)",
+   true,
+   true
+  ],
+  [
+   "peak 1536 = the cap",
+   true,
+   true
+  ],
+  [
+   "rc 1",
+   false,
+   false
+  ],
+  [
+   "rc 10",
+   false,
+   false
+  ],
+  [
+   "peak 1537",
+   false,
+   false
+  ],
+  [
+   "a declared log missing",
+   false,
+   false
+  ],
+  [
+   "a footerless build log",
+   false,
+   false
+  ],
+  [
+   "a failing second footer",
+   false,
+   false
+  ],
+  [
+   "a footerless acceptance log is excluded",
+   true,
+   true
+  ],
+  [
+   "a failing acceptance log is excluded",
+   true,
+   true
+  ]
+ ]
+}

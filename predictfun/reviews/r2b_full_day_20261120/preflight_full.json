@@ -1,0 +1,29 @@
+{
+ "asof": "2026-11-20T09:43:07.199075+00:00",
+ "census": "/home/yuqing/ctaNew/data/predict_fun/research/r2_shadow_20261119/census_20261023_full",
+ "plan_sha256": "249161127c39d5a51cc7c374262073af4f38c9245ef08fb505f0ec3e646dd56b",
+ "equal": true,
+ "plan_sources": {
+  "pf_r2_shadow.py": "962cf7b42c1a8ff78b7a4cb46f111036c824270ff8fa91d95c1c42558f098ab9",
+  "pf_r2_runner.py": "65293187d9f7e4f81e9d8bb5ca1503d68b204a5712d753897a40ed6b6decd488",
+  "pf_branch_engine.py": "8b7960ef4bbbc178b281e57d92d4795d7678436c0ca875e7199e24a6626af3a8",
+  "pf_pipeline_export.py": "ee2953fd00f70a7d12607abd4b418471b2208b8f9728009c7e538ccb55733931",
+  "pf_keep_pull.py": "58b972f92bda06fbc847c43d2ace8db9d7b12f4daaf67bcfaa14e92deb475835",
+  "pf_queue_place_test.py": "188c1495ce35db80ce8b79cbc50541964d0d32d9da38fee4b925e951eec01a1f",
+  "pf_flow_price_data.py": "fa9112d1147e955b4ff4ff2c09d2c8c23e37418b3e2957cb2f47deaf9a907a4e",
+  "pf_stop_model.py": "e2a857ddb6c4e76af40080e753942e1e0bef3bd42a34ed2929f378fe869df0ed",
+  "pf_flow_price_common.py": "beac0d747ec5dc84874fdee2f8e08057c1a47c819cfc648a762ea8950b0d1993"
+ },
+ "actual_sources": {
+  "pf_r2_shadow.py": "962cf7b42c1a8ff78b7a4cb46f111036c824270ff8fa91d95c1c42558f098ab9",
+  "pf_r2_runner.py": "65293187d9f7e4f81e9d8bb5ca1503d68b204a5712d753897a40ed6b6decd488",
+  "pf_branch_engine.py": "8b7960ef4bbbc178b281e57d92d4795d7678436c0ca875e7199e24a6626af3a8",
+  "pf_pipeline_export.py": "ee2953fd00f70a7d12607abd4b418471b2208b8f9728009c7e538ccb55733931",
+  "pf_keep_pull.py": "58b972f92bda06fbc847c43d2ace8db9d7b12f4daaf67bcfaa14e92deb475835",
+  "pf_queue_place_test.py": "188c1495ce35db80ce8b79cbc50541964d0d32d9da38fee4b925e951eec01a1f",
+  "pf_flow_price_data.py": "fa9112d1147e955b4ff4ff2c09d2c8c23e37418b3e2957cb2f47deaf9a907a4e",
+  "pf_stop_model.py": "e2a857ddb6c4e76af40080e753942e1e0bef3bd42a34ed2929f378fe869df0ed",
+  "pf_flow_price_common.py": "beac0d747ec5dc84874fdee2f8e08057c1a47c819cfc648a762ea8950b0d1993"
+ },
+ "differing": []
+}

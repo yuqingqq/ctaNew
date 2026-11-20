@@ -1,0 +1,7 @@
+(1) sharded COMPLETE: COMPLETE; shards [(0, 'PARTS_DONE', [0]), (1, 'PARTS_DONE', [1]), (2, 'PARTS_DONE', [2]), (3, 'PARTS_DONE', [3])]: True
+(2) the plans differ only in ['sources'] / ['pf_r2_runner.py']: True
+(3) parts byte-identical and records identical except timing: True
+(4) the same support and readings: True
+(5) shard peaks {0: [1241], 1: [1143], 2: [1086], 3: [1281]} MiB (<= 1,536): True
+SHARD CHECK: {'states': True, 'plan': True, 'parts_records': True, 'support_readings': True, 'memory': True}; ALL TRUE: True
+2026-11-20T04:33:54Z tag=shard4_check rc=0 peak_rss_mib=197 wall_s=0.92 cpu_user_s=0.75 memavail_start_gib=23 disk_free_gib=460->460 slot=claude

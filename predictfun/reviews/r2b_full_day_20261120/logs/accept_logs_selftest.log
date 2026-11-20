@@ -1,0 +1,13 @@
+  clean: expected True, got True
+  a second clean footer (resume): expected True, got True
+  peak 1536 = the cap: expected True, got True
+  rc 1: expected False, got False
+  rc 10: expected False, got False
+  peak 1537: expected False, got False
+  a declared log missing: expected False, got False
+  a footerless build log: expected False, got False
+  a failing second footer: expected False, got False
+  a footerless acceptance log is excluded: expected True, got True
+  a failing acceptance log is excluded: expected True, got True
+accept_logs selftest: 11 / 11 cases as expected
+2026-11-20T10:04:14Z tag=accept_logs_selftest rc=0 peak_rss_mib=12 wall_s=0.02 cpu_user_s=0.02 memavail_start_gib=23 disk_free_gib=455->455 slot=claude

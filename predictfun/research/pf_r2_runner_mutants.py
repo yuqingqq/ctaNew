@@ -23,6 +23,10 @@ MUT = [
      "atomic_json(pp, plan)"),
     ('the plan binds the output location', "    plan = dict(version=PLAN_VERSION, day=day, manifest=mod.MANIFEST,",
      "    plan = dict(version=PLAN_VERSION, day=day, tag=d.name, manifest=mod.MANIFEST,"),
+    ('a shard runs every part', "mine = [i for i in range(len(plan['partitions'])) if shard is None or i % int(shard[1]) == int(shard[0])]",
+     "mine = [i for i in range(len(plan['partitions']))]"),
+    ('a shard runs the other parts', "mine = [i for i in range(len(plan['partitions'])) if shard is None or i % int(shard[1]) == int(shard[0])]",
+     "mine = [i for i in range(len(plan['partitions'])) if shard is None or i % int(shard[1]) != int(shard[0])]"),
     ('a failed part rerun on resume', "    return rec\n\n\ndef run(", "    return rec if rec.get('status') == 'PASS' else None\n\n\ndef run("),
     # --- the stop rule and the watchdog
     ('the stop rule reads the current RSS', "el = time.time() - t0; hw = rss()[1]", "el = time.time() - t0; hw = rss()[0]"),

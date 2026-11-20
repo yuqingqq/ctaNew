@@ -1,0 +1,2 @@
+{"equal": true, "differing": []}
+2026-11-20T09:43:04Z tag=r2full_preflight rc=0 peak_rss_mib=196 wall_s=2.81 cpu_user_s=0.85 memavail_start_gib=23 disk_free_gib=455->455 slot=claude
