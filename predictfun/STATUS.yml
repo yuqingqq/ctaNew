@@ -1,3 +1,21 @@
+r2d_bundled_round_20261120_codex:
+  status: single_development_round_requested_by_user
+  basis_review_commit: 4393ad19d97f35e07b476cb93670fb7fbe4f614f
+  reviewed_source_commit: f96c38d01a7f27ed4fd39ddf2ddadeecf162b84b
+  plan: predictfun/reviews/automatic/20261120_r2d_bundled_round/plan.md
+  development_owner: Claude_aea5bfb9
+  work_items: [B1_execution_input_provenance, B2_record_finalization_integrity, B3_durable_stop_history, B4_memory_and_census_guards, B5_census_CLI, B6_bounded_tests, B7_sampling_and_distributed_receipt]
+  known_reliability_blockers: [B1, B2]
+  deliverable: combined_fix_and_distributed_label_receipt
+  intermediate_review_required: false
+  source_and_plan_commit_before_results: true
+  integration: {max_worlds: 48, max_pairs: 288, days: ["20261024", "20261025"], hourly_distributed: true}
+  full_sample_and_candidate_fit_after_combined_review: true
+  frozen_teacher_target_and_weight_contract: unchanged
+  nonblocking_cleanup_requires_automatic_extra_round: false
+  additional_user_approval_required: false
+  new_research_run_or_implementation_review_this_update: false
+
 r2d_review_20261120_codex:
   status: bounded_labels_accepted_production_acceptance_blocked
   target_commit: f96c38d01a7f27ed4fd39ddf2ddadeecf162b84b
