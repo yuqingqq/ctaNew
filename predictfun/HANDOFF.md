@@ -1,3 +1,17 @@
+<!-- STANDING_BATCH_RULE_20261120_USER -->
+## Standing USER rule — comprehensive batches, one combined review
+
+Include as many known actionable issues as possible in each development round.
+Review the affected pipeline/integration boundaries, collect one ranked issue
+list, and bundle fixes, bounded checks and the authorized measurement. Submit
+one combined code/result receipt; no review after each individual repair.
+Nonblocking cleanup must not automatically restart a fix-only cycle.
+[Persistent rule for both sessions](../CLAUDE.md#standing-rule-batch-review-and-fixes),
+[AGENTS.md](../AGENTS.md#standing-rule-batch-review-and-fixes),
+[current consolidated package](reviews/automatic/20261120_r2d_bundled_round/plan.md).
+Reliability, experiment freezes, resource limits and ownership remain in force.
+<!-- /STANDING_BATCH_RULE_20261120_USER -->
+
 <!-- R2D_BUNDLED_ROUND_20261120_CODEX -->
 ## 2026-11-20 — USER: bundle all known issues into one development round
 

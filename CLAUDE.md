@@ -164,6 +164,44 @@ checkable requirements, not style.
     report. Grep hits on vocabulary are not references; match identity
     (Type.field), and know what KIND of document you are reading.
 
+## Standing rule: batch review and fixes
+
+**USER instruction, 2026-11-20:** include as many actionable issues as possible
+in each round. Repeated rounds fixing one issue at a time waste too much time.
+This is a standing workflow requirement for reviewer and development sessions.
+
+- Review the affected pipeline and its integration boundaries before finalizing
+  the handoff. Continue inspecting after the first defect; collect all known
+  actionable issues, prior unresolved findings and likely related failure paths
+  into one ranked checklist with evidence and acceptance criteria.
+- Bundle the fixes and their necessary operational/test-harness corrections
+  into one coherent development round. Incorporate additional related issues
+  found during that round where feasible. Share urgent findings early while
+  continuing the rest of the review.
+- Use one combined acceptance gate for the batch. The development session
+  proceeds through fixes, bounded final-source checks and the already-authorized
+  measurement without a separate review after each item. Preserve any required
+  source/plan freeze before results. Submit code, closure evidence and measured
+  results together; a round may contain multiple Git commits.
+- Keep verification bounded and reusable. Detect mutations on small fixtures;
+  avoid accidental full workloads, and repeat broader suites only when changed
+  code or failures justify it. Passing implementation tests does not establish
+  economic performance.
+- Separate result-invalidating blockers from nonblocking cleanup. Nonblocking
+  issues go into the batch or its documented backlog and must not automatically
+  create another fix-only round. A necessary follow-up must explain the concrete
+  correctness risk, missing evidence or dependency preventing closure in the
+  current round.
+- Keep the batch focused on the current objective and get to its measurement.
+  Do not expand it into unrelated refactors, new models or an indefinite search
+  for hypothetical issues. Existing reliability rules, declared experiment
+  boundaries, resource limits and session ownership remain binding.
+
+For Predict.fun, maintain the consolidated checklist and next measurement in
+`predictfun/HANDOFF.md`; development owns fixes and the research session owns
+the combined review. The current package is
+`predictfun/reviews/automatic/20261120_r2d_bundled_round/plan.md`.
+
 ## What's in/out of scope
 
 **In scope** (free to edit):

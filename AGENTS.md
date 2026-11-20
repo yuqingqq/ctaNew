@@ -4,6 +4,18 @@ Fast-path orientation for AI assistants and human collaborators working in
 this repo. Read this once, then read `docs/HANDOFF.md` for the current
 research state and where to pick up.
 
+## Standing rule: batch review and fixes
+
+USER, 2026-11-20: include as many actionable issues as possible in each round;
+repeated one-issue fix/review cycles waste time. Review the affected pipeline
+and its integration boundaries before handing off a consolidated issue list.
+Bundle fixes, bounded verification and the next authorized measurement into
+one development round with one combined acceptance review. Do not stop the
+review at the first finding or require review after each individual repair.
+Nonblocking cleanup must not automatically restart the cycle. Follow the full
+[batching rule in CLAUDE.md](CLAUDE.md#standing-rule-batch-review-and-fixes);
+existing reliability, freeze and resource requirements still apply.
+
 ## What this repo is
 
 **Research code, not production.** Alpha-residual ML prediction on Binance
