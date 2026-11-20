@@ -1,0 +1,2 @@
+R2 SHADOW SELFTEST FAILED: refusals: a POST refused at activation must carry its outcome in every source ({'entry': (True, 0.0), 'joint_post_keep': (False, 0.0), 'joint_chase': (False, 0.0)})
+2026-11-19T20:56:32Z tag=pr2b_mut27 rc=1 peak_rss_mib=262 wall_s=48.62 cpu_user_s=47.51 memavail_start_gib=23 disk_free_gib=466->466 slot=claude

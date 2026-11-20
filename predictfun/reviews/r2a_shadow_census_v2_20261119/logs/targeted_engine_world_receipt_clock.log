@@ -1,0 +1,2 @@
+R2 SHADOW SELFTEST FAILED: causality: the engine world must keep every frame at the venue by the decision (received after it or not) and move later ones (False, True)
+2026-11-19T22:02:16Z tag=pr2b_mut28c rc=1 peak_rss_mib=263 wall_s=57.77 cpu_user_s=56.65 memavail_start_gib=23 disk_free_gib=466->466 slot=claude

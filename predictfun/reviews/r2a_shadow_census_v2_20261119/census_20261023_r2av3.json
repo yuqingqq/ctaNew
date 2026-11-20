@@ -1,0 +1,1256 @@
+{
+  "asof": "2026-11-19T23:08:09.597010+00:00",
+  "day": "20261023",
+  "manifest": "r2_shadow_sampling_v1",
+  "costs": {
+    "convention": "gross research value at the END mark",
+    "fee_bps": 0.0,
+    "rebate_bps": 0.0,
+    "unmodelled": [
+      "fees",
+      "rebates",
+      "latency costs"
+    ]
+  },
+  "readings": {
+    "population": {
+      "kind": "first_per_side",
+      "per_side": 128,
+      "selected": 256,
+      "by_status": {
+        "eligible": 240,
+        "refused_post_only": 14,
+        "missing_endpoint": 2
+      },
+      "selected_ids_sha256": "4538b694c92c5b6581f357396cb02e43c557b10c494efa08cd5780f0d6f4f501",
+      "selected_ids": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          0,
+          5
+        ],
+        [
+          0,
+          6
+        ],
+        [
+          0,
+          7
+        ],
+        [
+          0,
+          8
+        ],
+        [
+          0,
+          9
+        ],
+        [
+          0,
+          10
+        ],
+        [
+          0,
+          11
+        ],
+        [
+          0,
+          12
+        ],
+        [
+          0,
+          13
+        ],
+        [
+          0,
+          14
+        ],
+        [
+          0,
+          15
+        ],
+        [
+          0,
+          16
+        ],
+        [
+          0,
+          17
+        ],
+        [
+          0,
+          18
+        ],
+        [
+          0,
+          19
+        ],
+        [
+          0,
+          20
+        ],
+        [
+          0,
+          21
+        ],
+        [
+          0,
+          22
+        ],
+        [
+          0,
+          23
+        ],
+        [
+          0,
+          24
+        ],
+        [
+          0,
+          25
+        ],
+        [
+          0,
+          26
+        ],
+        [
+          0,
+          27
+        ],
+        [
+          0,
+          28
+        ],
+        [
+          0,
+          29
+        ],
+        [
+          0,
+          30
+        ],
+        [
+          0,
+          31
+        ],
+        [
+          0,
+          32
+        ],
+        [
+          0,
+          33
+        ],
+        [
+          0,
+          34
+        ],
+        [
+          0,
+          35
+        ],
+        [
+          0,
+          36
+        ],
+        [
+          0,
+          37
+        ],
+        [
+          0,
+          38
+        ],
+        [
+          0,
+          39
+        ],
+        [
+          0,
+          40
+        ],
+        [
+          0,
+          41
+        ],
+        [
+          0,
+          42
+        ],
+        [
+          0,
+          43
+        ],
+        [
+          0,
+          44
+        ],
+        [
+          0,
+          45
+        ],
+        [
+          0,
+          46
+        ],
+        [
+          0,
+          47
+        ],
+        [
+          0,
+          48
+        ],
+        [
+          0,
+          49
+        ],
+        [
+          0,
+          100
+        ],
+        [
+          0,
+          101
+        ],
+        [
+          0,
+          102
+        ],
+        [
+          0,
+          103
+        ],
+        [
+          0,
+          104
+        ],
+        [
+          0,
+          105
+        ],
+        [
+          0,
+          106
+        ],
+        [
+          0,
+          107
+        ],
+        [
+          0,
+          108
+        ],
+        [
+          0,
+          109
+        ],
+        [
+          0,
+          110
+        ],
+        [
+          0,
+          111
+        ],
+        [
+          0,
+          112
+        ],
+        [
+          0,
+          113
+        ],
+        [
+          0,
+          114
+        ],
+        [
+          0,
+          115
+        ],
+        [
+          0,
+          116
+        ],
+        [
+          0,
+          117
+        ],
+        [
+          0,
+          118
+        ],
+        [
+          0,
+          119
+        ],
+        [
+          0,
+          120
+        ],
+        [
+          0,
+          121
+        ],
+        [
+          0,
+          122
+        ],
+        [
+          0,
+          123
+        ],
+        [
+          0,
+          124
+        ],
+        [
+          0,
+          125
+        ],
+        [
+          0,
+          126
+        ],
+        [
+          0,
+          127
+        ],
+        [
+          0,
+          128
+        ],
+        [
+          0,
+          129
+        ],
+        [
+          0,
+          130
+        ],
+        [
+          0,
+          131
+        ],
+        [
+          0,
+          132
+        ],
+        [
+          0,
+          133
+        ],
+        [
+          0,
+          134
+        ],
+        [
+          0,
+          135
+        ],
+        [
+          0,
+          136
+        ],
+        [
+          0,
+          137
+        ],
+        [
+          0,
+          138
+        ],
+        [
+          0,
+          139
+        ],
+        [
+          0,
+          140
+        ],
+        [
+          0,
+          141
+        ],
+        [
+          0,
+          142
+        ],
+        [
+          0,
+          143
+        ],
+        [
+          0,
+          144
+        ],
+        [
+          0,
+          145
+        ],
+        [
+          0,
+          146
+        ],
+        [
+          0,
+          147
+        ],
+        [
+          0,
+          148
+        ],
+        [
+          0,
+          149
+        ],
+        [
+          0,
+          150
+        ],
+        [
+          0,
+          151
+        ],
+        [
+          0,
+          152
+        ],
+        [
+          0,
+          153
+        ],
+        [
+          0,
+          154
+        ],
+        [
+          0,
+          155
+        ],
+        [
+          0,
+          156
+        ],
+        [
+          0,
+          157
+        ],
+        [
+          0,
+          216
+        ],
+        [
+          0,
+          217
+        ],
+        [
+          0,
+          218
+        ],
+        [
+          0,
+          219
+        ],
+        [
+          0,
+          220
+        ],
+        [
+          0,
+          221
+        ],
+        [
+          0,
+          222
+        ],
+        [
+          0,
+          223
+        ],
+        [
+          0,
+          224
+        ],
+        [
+          0,
+          225
+        ],
+        [
+          0,
+          226
+        ],
+        [
+          0,
+          227
+        ],
+        [
+          0,
+          228
+        ],
+        [
+          0,
+          229
+        ],
+        [
+          0,
+          230
+        ],
+        [
+          0,
+          231
+        ],
+        [
+          0,
+          232
+        ],
+        [
+          0,
+          233
+        ],
+        [
+          0,
+          234
+        ],
+        [
+          0,
+          235
+        ],
+        [
+          1,
+          50
+        ],
+        [
+          1,
+          51
+        ],
+        [
+          1,
+          52
+        ],
+        [
+          1,
+          53
+        ],
+        [
+          1,
+          54
+        ],
+        [
+          1,
+          55
+        ],
+        [
+          1,
+          56
+        ],
+        [
+          1,
+          57
+        ],
+        [
+          1,
+          58
+        ],
+        [
+          1,
+          59
+        ],
+        [
+          1,
+          60
+        ],
+        [
+          1,
+          61
+        ],
+        [
+          1,
+          62
+        ],
+        [
+          1,
+          63
+        ],
+        [
+          1,
+          64
+        ],
+        [
+          1,
+          65
+        ],
+        [
+          1,
+          66
+        ],
+        [
+          1,
+          67
+        ],
+        [
+          1,
+          68
+        ],
+        [
+          1,
+          69
+        ],
+        [
+          1,
+          70
+        ],
+        [
+          1,
+          71
+        ],
+        [
+          1,
+          72
+        ],
+        [
+          1,
+          73
+        ],
+        [
+          1,
+          74
+        ],
+        [
+          1,
+          75
+        ],
+        [
+          1,
+          76
+        ],
+        [
+          1,
+          77
+        ],
+        [
+          1,
+          78
+        ],
+        [
+          1,
+          79
+        ],
+        [
+          1,
+          80
+        ],
+        [
+          1,
+          81
+        ],
+        [
+          1,
+          82
+        ],
+        [
+          1,
+          83
+        ],
+        [
+          1,
+          84
+        ],
+        [
+          1,
+          85
+        ],
+        [
+          1,
+          86
+        ],
+        [
+          1,
+          87
+        ],
+        [
+          1,
+          88
+        ],
+        [
+          1,
+          89
+        ],
+        [
+          1,
+          90
+        ],
+        [
+          1,
+          91
+        ],
+        [
+          1,
+          92
+        ],
+        [
+          1,
+          93
+        ],
+        [
+          1,
+          94
+        ],
+        [
+          1,
+          95
+        ],
+        [
+          1,
+          96
+        ],
+        [
+          1,
+          97
+        ],
+        [
+          1,
+          98
+        ],
+        [
+          1,
+          99
+        ],
+        [
+          1,
+          158
+        ],
+        [
+          1,
+          159
+        ],
+        [
+          1,
+          160
+        ],
+        [
+          1,
+          161
+        ],
+        [
+          1,
+          162
+        ],
+        [
+          1,
+          163
+        ],
+        [
+          1,
+          164
+        ],
+        [
+          1,
+          165
+        ],
+        [
+          1,
+          166
+        ],
+        [
+          1,
+          167
+        ],
+        [
+          1,
+          168
+        ],
+        [
+          1,
+          169
+        ],
+        [
+          1,
+          170
+        ],
+        [
+          1,
+          171
+        ],
+        [
+          1,
+          172
+        ],
+        [
+          1,
+          173
+        ],
+        [
+          1,
+          174
+        ],
+        [
+          1,
+          175
+        ],
+        [
+          1,
+          176
+        ],
+        [
+          1,
+          177
+        ],
+        [
+          1,
+          178
+        ],
+        [
+          1,
+          179
+        ],
+        [
+          1,
+          180
+        ],
+        [
+          1,
+          181
+        ],
+        [
+          1,
+          182
+        ],
+        [
+          1,
+          183
+        ],
+        [
+          1,
+          184
+        ],
+        [
+          1,
+          185
+        ],
+        [
+          1,
+          186
+        ],
+        [
+          1,
+          187
+        ],
+        [
+          1,
+          188
+        ],
+        [
+          1,
+          189
+        ],
+        [
+          1,
+          190
+        ],
+        [
+          1,
+          191
+        ],
+        [
+          1,
+          192
+        ],
+        [
+          1,
+          193
+        ],
+        [
+          1,
+          194
+        ],
+        [
+          1,
+          195
+        ],
+        [
+          1,
+          196
+        ],
+        [
+          1,
+          197
+        ],
+        [
+          1,
+          198
+        ],
+        [
+          1,
+          199
+        ],
+        [
+          1,
+          200
+        ],
+        [
+          1,
+          201
+        ],
+        [
+          1,
+          202
+        ],
+        [
+          1,
+          203
+        ],
+        [
+          1,
+          204
+        ],
+        [
+          1,
+          205
+        ],
+        [
+          1,
+          206
+        ],
+        [
+          1,
+          207
+        ],
+        [
+          1,
+          208
+        ],
+        [
+          1,
+          209
+        ],
+        [
+          1,
+          210
+        ],
+        [
+          1,
+          211
+        ],
+        [
+          1,
+          212
+        ],
+        [
+          1,
+          213
+        ],
+        [
+          1,
+          214
+        ],
+        [
+          1,
+          215
+        ],
+        [
+          1,
+          260
+        ],
+        [
+          1,
+          261
+        ],
+        [
+          1,
+          262
+        ],
+        [
+          1,
+          263
+        ],
+        [
+          1,
+          264
+        ],
+        [
+          1,
+          265
+        ],
+        [
+          1,
+          266
+        ],
+        [
+          1,
+          267
+        ],
+        [
+          1,
+          268
+        ],
+        [
+          1,
+          269
+        ],
+        [
+          1,
+          270
+        ],
+        [
+          1,
+          271
+        ],
+        [
+          1,
+          272
+        ],
+        [
+          1,
+          273
+        ],
+        [
+          1,
+          274
+        ],
+        [
+          1,
+          275
+        ],
+        [
+          1,
+          276
+        ],
+        [
+          1,
+          277
+        ],
+        [
+          1,
+          278
+        ],
+        [
+          1,
+          279
+        ]
+      ],
+      "represented": 256,
+      "reconciliation": "EXACT"
+    },
+    "partitions": {
+      "count": 4,
+      "size": 64,
+      "seconds": [
+        326.8487787246704,
+        352.7292249202728,
+        303.8952398300171,
+        252.56761074066162
+      ],
+      "rss_mib_after": [
+        307.69921875,
+        308.83984375,
+        308.4140625,
+        308.796875
+      ]
+    },
+    "labels": {
+      "checked": 44959,
+      "failed": 0,
+      "no_fill": 32902,
+      "verdict": "PASS"
+    },
+    "refusals_by_source": {
+      "entry": 312,
+      "joint_post_keep": 6,
+      "joint_chase": 12
+    },
+    "causality": {
+      "checked": 2765,
+      "failed": 0,
+      "every": 17,
+      "details": [],
+      "components": {
+        "stored_vs_rebuild": 0,
+        "stored_vs_perturbed": 0,
+        "firing": 0,
+        "not_evaluable": 0
+      },
+      "retried": 2,
+      "draws": 8,
+      "verdict": "PASS"
+    },
+    "census_rows": 213349,
+    "sampled_ok_rows": 44959,
+    "by_source_head_status": {
+      "entry post near_end": 55,
+      "entry post ok": 5235,
+      "joint_chase post cap_blocked": 7013,
+      "joint_chase post near_end": 113,
+      "joint_chase post ok": 192,
+      "joint_chase post unsampled": 767,
+      "joint_chase retain cancel_pending": 1456,
+      "joint_chase retain ok": 2981,
+      "joint_chase retain post_pending": 959,
+      "joint_chase retain unsampled": 11919,
+      "joint_post_keep post cap_blocked": 6826,
+      "joint_post_keep post near_end": 108,
+      "joint_post_keep post ok": 97,
+      "joint_post_keep post unsampled": 412,
+      "joint_post_keep retain cancel_pending": 709,
+      "joint_post_keep retain ok": 3351,
+      "joint_post_keep retain post_pending": 509,
+      "joint_post_keep retain unsampled": 13388,
+      "original post no_path:missing_endpoint": 2,
+      "retain retain cancel_pending": 5755,
+      "retain retain ok": 33103,
+      "retain retain post_pending": 5235,
+      "retain retain unsampled": 113164
+    },
+    "peak_rss_mib": 308.83984375
+  },
+  "inputs_list_sha256": "a540a6f79cb48acc36cf3d93270f7fe29a61f981f978567ff76207afbd2aa20d",
+  "inputs": {
+    "kp_receipt": "5de91ce5a4dbddbc9789ac549e2965016d97967bc7762035e7b8db51b5f5bc44",
+    "hours": [
+      "20261022_23",
+      "20261023_00",
+      "20261023_01",
+      "20261023_02",
+      "20261023_03",
+      "20261023_04",
+      "20261023_05",
+      "20261023_06",
+      "20261023_07",
+      "20261023_08",
+      "20261023_09",
+      "20261023_10",
+      "20261023_11",
+      "20261023_12",
+      "20261023_13",
+      "20261023_14",
+      "20261023_15",
+      "20261023_16",
+      "20261023_17",
+      "20261023_18",
+      "20261023_19",
+      "20261023_20",
+      "20261023_21",
+      "20261023_22",
+      "20261023_23"
+    ],
+    "tracked": {
+      "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261022_23.csv.gz": "10e48aaf2cbe907493457482c59cee9cd1dca379a2bc984c137ee6347034fff6",
+      "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261022_23.jsonl.gz": "6045ec9c9d77d715ae84ac3b2102bbb4eae60ef793206637cbde24382f1a896d",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261022_23.csv.gz": "6c11e70486cab78444e26c53b6c55e43e72a05785c7ee426d8008402104d3997",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_00.csv.gz": "20087cc14ff83bb3778585742caa22e7815f7a1ffd48d5758dd116ff0e91de40",
+      "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261023_00.jsonl.gz": "262f140902adce4c650a16113b3c083f152cfd0f7a101c499d9a46030ef6c337",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261023_00.csv.gz": "1f5ea3a23d95d3aec773ff6e258907266f9dc7fc62f919acd9320d0f54282868",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_01.csv.gz": "550aa36cfda985ad7f2b49675e3190fac20beed80b03176d2108c1dadf1c1781",
+      "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261023_01.jsonl.gz": "1874e0201ba163daf58c32ce50eedabb6a5bddf4bf3b0ba15e4928febfe71be3",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261023_01.csv.gz": "03a23ee8c27f42a83802e47ec1e9313428dcb4ef99c8aa320a86a9e3b987252a",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_02.csv.gz": "24f92bd7e2f124654bc0cb8d82cd1144e209a8a85f8e9c16e33a46f1810de15a",
+      "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261023_02.jsonl.gz": "acbe30cbbcf7f8cb20f6d20c492d81662d8d09b31074258f60158e38a06cf17e",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261023_02.csv.gz": "b2ab78c9567be72097f5170340226a56ac4de246e41cc4af67bb3dc4acaab3a4",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_03.csv.gz": "6129759850d5ba48688792bf1a5bafc22c9326ece79330a260a8a01803f37500",
+      "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261023_03.jsonl.gz": "215c8cd551c2ec4bb00bea6d36596150c2b10abb33e77de3a7398d6b9d8b7979",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261023_03.csv.gz": "eb03b6f114eb1b44efe7e4b7c4c9a4ac876a55c30300a30456631cd84559ad81",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_04.csv.gz": "98b1f9b62bcd308fb7d7cc57ed40eadf136e5d80013c0591fb93a2a61af9c33e",
+      "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261023_04.jsonl.gz": "163b680e35c8e996d4a4dc4d232d33a97525a86095cb6c90d5ae37f6a18a053e",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261023_04.csv.gz": "fda1eb30cc50cdd5014f01f91ef5bc70625b06d97ef5c021df55a63189410306",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_05.csv.gz": "7346913c03fba539c8c874840f0856abae185681d2142f93ef98474aae960cb3",
+      "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261023_05.jsonl.gz": "66a4c8ea2add53447363d207bbb20b30027198194c2c8b6adbe66af8435f7975",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261023_05.csv.gz": "49f83c9392f96cefab528170793c0411567260c351b15402cb54b110947b4a01",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_06.csv.gz": "bc2b21508f07cf427931626f0fcc7fc3a4e17afe02ee32cf5899089a1729624a",
+      "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261023_06.jsonl.gz": "a94d6cdae2a561b80fd7cb7cb67cf7bc4526036fcee3908d37c6ac4c1698dfa6",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261023_06.csv.gz": "daa9a2bdac0221b724a07c7a3f72a5c96dafb506ac649770b2c31efef3db1906",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_07.csv.gz": "8906d710f5a0905f40b5eebe01a8195d00c42e02ab4fea7054b65f6bcfc66f7c",
+      "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261023_07.jsonl.gz": "dd9ee33ee899e380165ba99e080709735ad2193bbbd1b6ca936433b5538ef947",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261023_07.csv.gz": "3f2a5a5d13a4d0da70c7e246a1c3ea6e4f0ba148e5d77498d682f1272ce7cc18",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_08.csv.gz": "0654d6729e1a5441904efe3bf22c7c06f15d1313fdd6f3e96b3ddc8f2cd3d7d0",
+      "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261023_08.jsonl.gz": "86640e5664376470ef3ca9dcb0b226dbf452bbe826a3201bf162d299b49b5a36",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261023_08.csv.gz": "d7757e763221430c22b1e972b155ceafa2ad18f3481eb654718d5e7d3a356703",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_09.csv.gz": "593c70a016673ec06831f1fd01b0f1c1d4bfa7ed488916cddd69349c3b1d64dc",
+      "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261023_09.jsonl.gz": "1da756458823934bae790b6e79e5fc1c7df729403358c1706dc7183ae31a9ef3",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261023_09.csv.gz": "a2e0fe6f27c85684f192a1672cbbb4b0f479c2ab0c6d34f2bc98ca19d3382f51",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_10.csv.gz": "7d60fd0cf94368c23ca1dd0ced73e779ba224646154c6396e2b3c8dc82f4e580",
+      "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261023_10.jsonl.gz": "d129518e66520a2855cf1936d3ca255b932bb52c9fc0e479187d7a260711330a",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261023_10.csv.gz": "8f77184fa0df691a176f74b59c120a8568ed824302c92545375c86cdeedc2dd8",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_11.csv.gz": "dd7f780d9789ac8394f87967bccd3e57533b441565eb7ed07522eb21ace6cbf6",
+      "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261023_11.jsonl.gz": "93bb725c554ac5c705ddbf27a1bbfda77b52c97ee81d4dc0222ed26b8b5e9ea0",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261023_11.csv.gz": "fd50c12196082c221aaa5fb4191b6b23708f841120628be9bf60187a7226aa4a",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_12.csv.gz": "793dcfee006891259ebcd5ad0984b7b393e50c90f0beb907681f05bb83f78f93",
+      "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261023_12.jsonl.gz": "53bdab9adad519688725ecef977911b82c8d7bc583f59f80d568fa58bbcc76d6",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261023_12.csv.gz": "a4c7217bfe8bb7592e6e3dc0318efa6e217c1411a4f1e4c4a71068afb0067e7f",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_13.csv.gz": "f89e75d08941761f9d08646b68c44678c6296434373b1a01caa8692a8d85c1c1",
+      "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261023_13.jsonl.gz": "c487453759bc4554efc4d575de209f05e799b4047c4f3fc8072983a200289a40",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261023_13.csv.gz": "0135b905d6fad79166f81c94e5ba518fa43bc4bf8ac675886e3bc3a96697b786",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_14.csv.gz": "5000a8b9d6e7a3304f126e7cb37aab0f0657210ddf2df3366e358d0378a5f55c",
+      "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261023_14.jsonl.gz": "b6855e2306fe9aa9546efd4a4e277fccf22138ec64a072f9e4d50c389a4462b5",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261023_14.csv.gz": "fccecfe31ff0bb84a42ad7f8d569869dc8abb4e72e5e4d60809d991dcadfa4c9",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_15.csv.gz": "8a442666e2b21cac72fb5abb051a7f7ce854a9f25ba34b96ad398fe8b0ec3af4",
+      "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261023_15.jsonl.gz": "fb3b7e0a4193ebbe7979cea44a5e2ea3190724e766df0ea6fb70ae170e55c69c",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261023_15.csv.gz": "3218105ef95864332d26557ba59d6b6c3e62fd5b65da0023db295de4b98d3e37",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_16.csv.gz": "04afe737f12f9b1a2cc7e540021d2fb7ff94a8c81ebf2bebbea5a7a1b13271b0",
+      "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261023_16.jsonl.gz": "3cb8e92c0d2c6c8b8f249cf40559830d9445f7342adc42759eafeb5ee33d31f1",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261023_16.csv.gz": "8db57802ce8316feee70329fd4acfe93297c2e494f19d0e960e4f906d3c5533e",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_17.csv.gz": "80731e6660683c6be1f7e0b75cfd9be55c6c2430f8dbdb6a4db76bb7f02c6c82",
+      "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261023_17.jsonl.gz": "b38b4a5c8636550f7b76ededff3dbfb11d44f0d026d8969edb6f8d8e982e4bea",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261023_17.csv.gz": "3bd259319706456fbc265819023b02c5910f6c882058d4c56aab97591dfe053f",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_18.csv.gz": "1a4d08a0e485c1e06b8a6f2acd32e4540ea55ed078f5d4f54bac63e562492cc1",
+      "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261023_18.jsonl.gz": "d2d68de28bfceb45e97813279c6ab9c9143dca853722e119f7d73b717523cf32",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261023_18.csv.gz": "141953490a0aab7fb00240d50ec5928afa050cea04bdfac85faaa5f117c8cfa9",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_19.csv.gz": "17a42e053869b44ad3d1d673cea591e36f1f39ce2f663612ecc8af472da9d4d6",
+      "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261023_19.jsonl.gz": "e6b36bea9d807cb73566621a40593ef49db3dfe9b3889875801f96d75b19106f",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261023_19.csv.gz": "bf0ce6e05b282405172a0d1cd88e8190608210d1bc23f62f8af675507b62999f",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_20.csv.gz": "78f604017c964bd447ae417b1fc288eff90b0d3c789c711c107f6a0b3539edd5",
+      "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261023_20.jsonl.gz": "0162eca198cef959129229e171b65867d215653b7a29441f5b32cf87fc4dd652",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261023_20.csv.gz": "0cb306e1425a94af38b94c3108efa96edd9f5157cb7701671319d534806a4bda",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_21.csv.gz": "66ac687eb9e8aab2785c5e389119a5cac26399a749842046477904e74feacd46",
+      "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261023_21.jsonl.gz": "9266e0605b8cb8c9ae346c1a3f30f314d386d177c45ea827255d3844e97824d6",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261023_21.csv.gz": "11031e25398c9437f26e358411e5cd6ed4292665843d2ca25b9badf643472510",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_22.csv.gz": "1563097e9428f011a66e4feae285c99aa2fb2d43af564a065782e4bbb26c28d8",
+      "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261023_22.jsonl.gz": "377586ebd16f9a42ed4ac021283a69c12b1030d2574c4636463055481421c35b",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261023_22.csv.gz": "fb008d89b20fd5599b75425d6018931fefdeb1045a66309e3b8d2f2c7b70cf00",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_23.csv.gz": "4548530c4a10e5c6e2fc3b52e714b297832dc3401e8e7c1e582c365fa7d4edab",
+      "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261023_23.jsonl.gz": "abaf79c7499be613dd73ee63c619e0a21e953ff142a2929d59be046a6aa91e8a",
+      "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261023_23.csv.gz": "b2f962bc438b160c7d7c92ef320791532d317a7df6b4c69cdfad97b4219eca00"
+    }
+  },
+  "outputs": {
+    "census_20261023_r2av3/part_0000.parquet": "277efb3bc126ba450873638082a4f57036cbcc4aa9225ecdbbd903793cfa0399",
+    "census_20261023_r2av3/part_0001.parquet": "b1dc53eeff858018419ead5d3c8e66c5556882b19ff3db75ab76a4467974cacf",
+    "census_20261023_r2av3/part_0002.parquet": "ba364fc59046bdc3194d711eece15292d37c0cf9ade7b9a3be79bbf1df3951d5",
+    "census_20261023_r2av3/part_0003.parquet": "83e11917aa08840d51781bef98add90558a5c8a3e3c52be137d84eed8d384949",
+    "census_20261023_r2av3/manifest.json": "b3e59e569f269b9113eecbce983e8aa4b10992391eda5df57cd55768994f8eb7",
+    "support_20261023_r2av3.json": "ebe385f12faa2f2d5070eb38bc55bc8f7dfa3c12be0e8cf4764475515d7e1cc1"
+  },
+  "source_sha256": "bbff8b196df3031fab333dbf0225a9b9bee341873a4677be235a0dd4738ca4de",
+  "engine_sha256": "8b7960ef4bbbc178b281e57d92d4795d7678436c0ca875e7199e24a6626af3a8",
+  "provenance": {
+    "commit": "d10d36983b2f2baa358ea4ee0b170162984272c6",
+    "source": {
+      "pf_keep_pull.py": "58b972f92bda06fbc847c43d2ace8db9d7b12f4daaf67bcfaa14e92deb475835",
+      "pf_queue_place_test.py": "188c1495ce35db80ce8b79cbc50541964d0d32d9da38fee4b925e951eec01a1f",
+      "pf_queue_place_ledger.py": "8fa16b929b4ae497109a70add4036dd7cd4501102a261c74eba63de0e0b94bb5",
+      "pf_flow_control_kernel.cpp": "fb1ff31cdcf2a97783283f927fb2d56333a0760e877cb0b93348528138886612",
+      "pf_flow_control_kernel.py": "2460567474f28318f5d09df8ce0977e15748bb9263bc501471cf6a649b334379"
+    },
+    "uncommitted": ""
+  },
+  "seconds": 1295.1996102333069
+}

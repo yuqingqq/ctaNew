@@ -1,0 +1,13 @@
+sh,cov,rows,originals,nonzero_originals
+ask post,delayed entry,2494,127,86
+ask post,later generation,100,50,20
+ask post,offset-zero entry,127,127,58
+ask post,other,40,20,9
+ask retain,later generation,1408,96,50
+ask retain,other,18303,127,87
+bid post,delayed entry,2487,127,95
+bid post,later generation,101,49,20
+bid post,offset-zero entry,127,127,56
+bid post,other,48,24,9
+bid retain,later generation,1465,91,53
+bid retain,other,18259,127,95

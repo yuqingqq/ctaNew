@@ -1,0 +1,2 @@
+R2 SHADOW SELFTEST FAILED: causality: a shared future-fair leak is not exposed by the perturbed rebuild ({'stored_vs_rebuild': 0, 'stored_vs_perturbed': 0, 'firing': 547})
+2026-11-19T20:40:55Z tag=pr2b_mut22 rc=1 peak_rss_mib=263 wall_s=49.00 cpu_user_s=47.72 memavail_start_gib=23 disk_free_gib=466->466 slot=claude

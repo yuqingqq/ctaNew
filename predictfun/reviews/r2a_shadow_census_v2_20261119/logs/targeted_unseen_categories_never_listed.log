@@ -1,0 +1,2 @@
+R2 SHADOW SELFTEST FAILED: support: the declared cells / fallbacks / unsupported categories (28, [])
+2026-11-19T20:58:09Z tag=pr2b_mut29 rc=1 peak_rss_mib=263 wall_s=48.12 cpu_user_s=47.17 memavail_start_gib=23 disk_free_gib=466->466 slot=claude

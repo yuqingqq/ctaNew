@@ -1,0 +1,25 @@
+(1) manifest: 4 parts, sizes [64, 64, 64, 64], union = selected True, duplicate False, hashes True: True
+(2) population: 256 represented of 256; status rows {'no_path:missing_endpoint': 2}; an original with both kinds: 0: True
+(3) weights: 508 original x side x head groups sum to 1, 0 elsewhere: True
+(4) inputs: 91 + 16 in the export's order, float32, context on every sampled ok row: True
+(5) refusals by source {'entry': 312, 'joint_chase': 12, 'joint_post_keep': 6} = the census reading {'entry': 312, 'joint_post_keep': 6, 'joint_chase': 12}; retain rows carry none: True
+(6) causality: FAIL, checked 2765 (every 17th: 2765), components {'stored_vs_rebuild': 0, 'stored_vs_perturbed': 2, 'firing': 0}, draws retried None: False
+(7) labels: {'checked': 44959, 'failed': 0, 'no_fill': 32902, 'verdict': 'PASS'} on 44959 sampled ok rows: True
+(8) resources: measured peak [1217] MiB (<= 1,536), partition seconds [331, 355, 304, 252] (<= 900): True
+(9) support: 28 cells (0 supported), fallbacks on the insufficient ones True, presence and per side / head ranges complete: True; terminal other-side originals per side / head {'bid post': 0, 'bid retain': 0, 'ask post': 0, 'ask retain': 0}
+coverage (rows / distinct originals / nonzero originals):
+        sh               cov  rows  originals  nonzero_originals
+  ask post     delayed entry  2494        127                 86
+  ask post  later generation   100         50                 20
+  ask post offset-zero entry   127        127                 58
+  ask post             other    40         20                  9
+ask retain  later generation  1408         96                 50
+ask retain             other 18303        127                 87
+  bid post     delayed entry  2487        127                 95
+  bid post  later generation   101         49                 20
+  bid post offset-zero entry   127        127                 56
+  bid post             other    48         24                  9
+bid retain  later generation  1465         91                 53
+bid retain             other 18259        127                 95
+RECEIPT CHECKS: {'manifest': True, 'population': True, 'weights': True, 'inputs': True, 'refusals': True, 'causality': False, 'labels': True, 'resources': True, 'support': True}; all: False
+2026-11-19T22:40:35Z tag=pr2b_receipt_r2av2 rc=1 peak_rss_mib=615 wall_s=1.56 cpu_user_s=1.17 memavail_start_gib=23 disk_free_gib=465->465 slot=claude

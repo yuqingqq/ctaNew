@@ -1,0 +1,236 @@
+{"partition": 0, "originals": 2, "rows": 1535, "seconds": 139.5, "rss_mib": 295}
+{"partition": 1, "originals": 2, "rows": 1724, "seconds": 145.1, "rss_mib": 296}
+{"partition": 2, "originals": 2, "rows": 1331, "seconds": 112.8, "rss_mib": 301}
+{"partition": 3, "originals": 2, "rows": 1887, "seconds": 167.6, "rss_mib": 301}
+{
+ "partitions": {
+  "count": 4,
+  "size": 2,
+  "seconds": [
+   139.53349781036377,
+   145.14236569404602,
+   112.76497411727905,
+   167.58010578155518
+  ],
+  "rss_mib_after": [
+   295.25390625,
+   295.5625,
+   300.87890625,
+   301.08203125
+  ]
+ },
+ "labels": {
+  "checked": 1372,
+  "failed": 0,
+  "no_fill": 999,
+  "verdict": "PASS"
+ },
+ "refusals_by_source": {
+  "entry": 8,
+  "joint_post_keep": 0,
+  "joint_chase": 0
+ },
+ "causality": {
+  "checked": 1372,
+  "failed": 51,
+  "every": 1,
+  "details": [
+   {
+    "source": "retain",
+    "decision_ms": 100.0,
+    "stored_vs_rebuild": [],
+    "stored_vs_perturbed": [
+     "o_age",
+     "o_q_rel",
+     "o_q0_rel",
+     "o_q_frac",
+     "fp_queue"
+    ],
+    "fires_market": true,
+    "fires_fair": true,
+    "fires_notified_fill": true
+   },
+   {
+    "source": "retain",
+    "decision_ms": 2500.0,
+    "stored_vs_rebuild": [],
+    "stored_vs_perturbed": [
+     "o_age",
+     "ctx_has_generation",
+     "ctx_generation_age_ms",
+     "ctx_generation_ordinal",
+     "ctx_bid_reserved_shares"
+    ],
+    "fires_market": true,
+    "fires_fair": true,
+    "fires_notified_fill": true
+   },
+   {
+    "source": "retain",
+    "decision_ms": 3250.0,
+    "stored_vs_rebuild": [],
+    "stored_vs_perturbed": [
+     "o_age",
+     "o_q0_rel",
+     "ctx_has_generation",
+     "ctx_generation_age_ms",
+     "ctx_generation_ordinal"
+    ],
+    "fires_market": true,
+    "fires_fair": true,
+    "fires_notified_fill": true
+   },
+   {
+    "source": "retain",
+    "decision_ms": 200.0,
+    "stored_vs_rebuild": [],
+    "stored_vs_perturbed": [
+     "o_age",
+     "o_q0_rel",
+     "ctx_has_generation",
+     "ctx_generation_age_ms",
+     "ctx_generation_ordinal"
+    ],
+    "fires_market": true,
+    "fires_fair": true,
+    "fires_notified_fill": true
+   },
+   {
+    "source": "retain",
+    "decision_ms": 450.0,
+    "stored_vs_rebuild": [],
+    "stored_vs_perturbed": [
+     "o_age",
+     "o_q_rel",
+     "o_q0_rel",
+     "o_q_frac",
+     "fp_queue"
+    ],
+    "fires_market": true,
+    "fires_fair": true,
+    "fires_notified_fill": true
+   },
+   {
+    "source": "retain",
+    "decision_ms": 950.0,
+    "stored_vs_rebuild": [],
+    "stored_vs_perturbed": [
+     "o_age",
+     "ctx_has_generation",
+     "ctx_generation_age_ms",
+     "ctx_generation_ordinal",
+     "ctx_bid_reserved_shares"
+    ],
+    "fires_market": true,
+    "fires_fair": true,
+    "fires_notified_fill": true
+   },
+   {
+    "source": "retain",
+    "decision_ms": 2800.0,
+    "stored_vs_rebuild": [],
+    "stored_vs_perturbed": [
+     "o_age",
+     "ctx_has_generation",
+     "ctx_generation_age_ms",
+     "ctx_generation_ordinal",
+     "ctx_bid_reserved_shares"
+    ],
+    "fires_market": true,
+    "fires_fair": true,
+    "fires_notified_fill": true
+   },
+   {
+    "source": "retain",
+    "decision_ms": 3100.0,
+    "stored_vs_rebuild": [],
+    "stored_vs_perturbed": [
+     "o_age",
+     "o_q_rel",
+     "o_q0_rel",
+     "o_q_frac",
+     "fp_queue"
+    ],
+    "fires_market": true,
+    "fires_fair": true,
+    "fires_notified_fill": true
+   },
+   {
+    "source": "retain",
+    "decision_ms": 3600.0,
+    "stored_vs_rebuild": [],
+    "stored_vs_perturbed": [
+     "o_age",
+     "o_q_rel",
+     "o_q0_rel",
+     "o_q_frac",
+     "fp_queue"
+    ],
+    "fires_market": true,
+    "fires_fair": true,
+    "fires_notified_fill": true
+   },
+   {
+    "source": "retain",
+    "decision_ms": 1400.0,
+    "stored_vs_rebuild": [],
+    "stored_vs_perturbed": [
+     "o_age",
+     "ctx_has_generation",
+     "ctx_generation_age_ms",
+     "ctx_generation_ordinal",
+     "ctx_bid_reserved_shares"
+    ],
+    "fires_market": true,
+    "fires_fair": true,
+    "fires_notified_fill": true
+   }
+  ],
+  "components": {
+   "stored_vs_rebuild": 0,
+   "stored_vs_perturbed": 51,
+   "firing": 0
+  },
+  "verdict": "FAIL"
+ },
+ "census_rows": 6477,
+ "sampled_ok_rows": 1372,
+ "by_source_head_status": {
+  "entry post ok": 166,
+  "joint_chase post cap_blocked": 135,
+  "joint_chase post near_end": 3,
+  "joint_chase post ok": 6,
+  "joint_chase post unsampled": 32,
+  "joint_chase retain cancel_pending": 48,
+  "joint_chase retain ok": 110,
+  "joint_chase retain post_pending": 38,
+  "joint_chase retain unsampled": 428,
+  "joint_post_keep post cap_blocked": 163,
+  "joint_post_keep post near_end": 2,
+  "joint_post_keep post ok": 4,
+  "joint_post_keep post unsampled": 16,
+  "joint_post_keep retain cancel_pending": 17,
+  "joint_post_keep retain ok": 115,
+  "joint_post_keep retain post_pending": 20,
+  "joint_post_keep retain unsampled": 463,
+  "retain retain cancel_pending": 206,
+  "retain retain ok": 971,
+  "retain retain post_pending": 166,
+  "retain retain unsampled": 3366,
+  "entry post near_end": 2
+ },
+ "peak_rss_mib": 301.08203125,
+ "population": {
+  "kind": "first_per_side",
+  "per_side": 4,
+  "selected": 8,
+  "by_status": {
+   "eligible": 7,
+   "refused_post_only": 1
+  },
+  "selected_ids_sha256": "687afcc43fa5386db7c641cbe9064a144696c6b8a922d0dd52654da57eff7b67",
+  "represented": 8,
+  "reconciliation": "EXACT"
+ }
+}
+2026-11-19T21:39:35Z tag=pr2b_smoke2 rc=0 peak_rss_mib=1147 wall_s=626.32 cpu_user_s=610.47 memavail_start_gib=23 disk_free_gib=465->465 slot=claude

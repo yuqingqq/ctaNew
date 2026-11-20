@@ -1,0 +1,5627 @@
+{
+  "cells": {
+    "bid post (0.0, 100.0]": {
+      "rows": 36,
+      "episodes": 33,
+      "nonzero_episodes": 0,
+      "support": "INSUFFICIENT_TRAINING_SUPPORT",
+      "fallback": "WAIT"
+    },
+    "bid post (100.0, 250.0]": {
+      "rows": 67,
+      "episodes": 65,
+      "nonzero_episodes": 2,
+      "support": "INSUFFICIENT_TRAINING_SUPPORT",
+      "fallback": "WAIT"
+    },
+    "bid post (250.0, 500.0]": {
+      "rows": 132,
+      "episodes": 127,
+      "nonzero_episodes": 8,
+      "support": "INSUFFICIENT_TRAINING_SUPPORT",
+      "fallback": "WAIT"
+    },
+    "bid post (500.0, 1000.0]": {
+      "rows": 258,
+      "episodes": 127,
+      "nonzero_episodes": 24,
+      "support": "INSUFFICIENT_TRAINING_SUPPORT",
+      "fallback": "WAIT"
+    },
+    "bid post (1000.0, 2000.0]": {
+      "rows": 523,
+      "episodes": 127,
+      "nonzero_episodes": 46,
+      "support": "INSUFFICIENT_TRAINING_SUPPORT",
+      "fallback": "WAIT"
+    },
+    "bid post (2000.0, 3500.0]": {
+      "rows": 798,
+      "episodes": 127,
+      "nonzero_episodes": 71,
+      "support": "INSUFFICIENT_TRAINING_SUPPORT",
+      "fallback": "WAIT"
+    },
+    "bid post (3500.0, 5000.0]": {
+      "rows": 949,
+      "episodes": 127,
+      "nonzero_episodes": 84,
+      "support": "INSUFFICIENT_TRAINING_SUPPORT",
+      "fallback": "WAIT"
+    },
+    "bid retain (0.0, 100.0]": {
+      "rows": 557,
+      "episodes": 75,
+      "nonzero_episodes": 1,
+      "support": "INSUFFICIENT_TRAINING_SUPPORT",
+      "fallback": "KEEP"
+    },
+    "bid retain (100.0, 250.0]": {
+      "rows": 763,
+      "episodes": 104,
+      "nonzero_episodes": 6,
+      "support": "INSUFFICIENT_TRAINING_SUPPORT",
+      "fallback": "KEEP"
+    },
+    "bid retain (250.0, 500.0]": {
+      "rows": 1254,
+      "episodes": 119,
+      "nonzero_episodes": 18,
+      "support": "INSUFFICIENT_TRAINING_SUPPORT",
+      "fallback": "KEEP"
+    },
+    "bid retain (500.0, 1000.0]": {
+      "rows": 2501,
+      "episodes": 125,
+      "nonzero_episodes": 35,
+      "support": "INSUFFICIENT_TRAINING_SUPPORT",
+      "fallback": "KEEP"
+    },
+    "bid retain (1000.0, 2000.0]": {
+      "rows": 4755,
+      "episodes": 127,
+      "nonzero_episodes": 55,
+      "support": "INSUFFICIENT_TRAINING_SUPPORT",
+      "fallback": "KEEP"
+    },
+    "bid retain (2000.0, 3500.0]": {
+      "rows": 6266,
+      "episodes": 127,
+      "nonzero_episodes": 78,
+      "support": "INSUFFICIENT_TRAINING_SUPPORT",
+      "fallback": "KEEP"
+    },
+    "bid retain (3500.0, 5000.0]": {
+      "rows": 3628,
+      "episodes": 127,
+      "nonzero_episodes": 83,
+      "support": "INSUFFICIENT_TRAINING_SUPPORT",
+      "fallback": "KEEP"
+    },
+    "ask post (0.0, 100.0]": {
+      "rows": 26,
+      "episodes": 25,
+      "nonzero_episodes": 1,
+      "support": "INSUFFICIENT_TRAINING_SUPPORT",
+      "fallback": "WAIT"
+    },
+    "ask post (100.0, 250.0]": {
+      "rows": 78,
+      "episodes": 76,
+      "nonzero_episodes": 3,
+      "support": "INSUFFICIENT_TRAINING_SUPPORT",
+      "fallback": "WAIT"
+    },
+    "ask post (250.0, 500.0]": {
+      "rows": 129,
+      "episodes": 127,
+      "nonzero_episodes": 7,
+      "support": "INSUFFICIENT_TRAINING_SUPPORT",
+      "fallback": "WAIT"
+    },
+    "ask post (500.0, 1000.0]": {
+      "rows": 265,
+      "episodes": 127,
+      "nonzero_episodes": 17,
+      "support": "INSUFFICIENT_TRAINING_SUPPORT",
+      "fallback": "WAIT"
+    },
+    "ask post (1000.0, 2000.0]": {
+      "rows": 534,
+      "episodes": 127,
+      "nonzero_episodes": 36,
+      "support": "INSUFFICIENT_TRAINING_SUPPORT",
+      "fallback": "WAIT"
+    },
+    "ask post (2000.0, 3500.0]": {
+      "rows": 784,
+      "episodes": 127,
+      "nonzero_episodes": 65,
+      "support": "INSUFFICIENT_TRAINING_SUPPORT",
+      "fallback": "WAIT"
+    },
+    "ask post (3500.0, 5000.0]": {
+      "rows": 945,
+      "episodes": 127,
+      "nonzero_episodes": 79,
+      "support": "INSUFFICIENT_TRAINING_SUPPORT",
+      "fallback": "WAIT"
+    },
+    "ask retain (0.0, 100.0]": {
+      "rows": 522,
+      "episodes": 79,
+      "nonzero_episodes": 1,
+      "support": "INSUFFICIENT_TRAINING_SUPPORT",
+      "fallback": "KEEP"
+    },
+    "ask retain (100.0, 250.0]": {
+      "rows": 832,
+      "episodes": 97,
+      "nonzero_episodes": 6,
+      "support": "INSUFFICIENT_TRAINING_SUPPORT",
+      "fallback": "KEEP"
+    },
+    "ask retain (250.0, 500.0]": {
+      "rows": 1301,
+      "episodes": 121,
+      "nonzero_episodes": 11,
+      "support": "INSUFFICIENT_TRAINING_SUPPORT",
+      "fallback": "KEEP"
+    },
+    "ask retain (500.0, 1000.0]": {
+      "rows": 2512,
+      "episodes": 126,
+      "nonzero_episodes": 23,
+      "support": "INSUFFICIENT_TRAINING_SUPPORT",
+      "fallback": "KEEP"
+    },
+    "ask retain (1000.0, 2000.0]": {
+      "rows": 4809,
+      "episodes": 127,
+      "nonzero_episodes": 45,
+      "support": "INSUFFICIENT_TRAINING_SUPPORT",
+      "fallback": "KEEP"
+    },
+    "ask retain (2000.0, 3500.0]": {
+      "rows": 5949,
+      "episodes": 127,
+      "nonzero_episodes": 70,
+      "support": "INSUFFICIENT_TRAINING_SUPPORT",
+      "fallback": "KEEP"
+    },
+    "ask retain (3500.0, 5000.0]": {
+      "rows": 3786,
+      "episodes": 127,
+      "nonzero_episodes": 79,
+      "support": "INSUFFICIENT_TRAINING_SUPPORT",
+      "fallback": "KEEP"
+    }
+  },
+  "categories": [
+    {
+      "sh": "ask post",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 2661,
+      "originals": 127,
+      "nonzero_originals": 87
+    },
+    {
+      "sh": "ask post",
+      "dim": "c_gen",
+      "value": "2",
+      "rows": 43,
+      "originals": 31,
+      "nonzero_originals": 14
+    },
+    {
+      "sh": "ask post",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 57,
+      "originals": 35,
+      "nonzero_originals": 9
+    },
+    {
+      "sh": "ask post",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 2709,
+      "originals": 127,
+      "nonzero_originals": 87
+    },
+    {
+      "sh": "ask post",
+      "dim": "c_inv",
+      "value": "long",
+      "rows": 52,
+      "originals": 30,
+      "nonzero_originals": 8
+    },
+    {
+      "sh": "ask post",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 2675,
+      "originals": 127,
+      "nonzero_originals": 87
+    },
+    {
+      "sh": "ask post",
+      "dim": "c_other",
+      "value": "cancel_pending",
+      "rows": 6,
+      "originals": 6,
+      "nonzero_originals": 3
+    },
+    {
+      "sh": "ask post",
+      "dim": "c_other",
+      "value": "live",
+      "rows": 23,
+      "originals": 20,
+      "nonzero_originals": 8
+    },
+    {
+      "sh": "ask post",
+      "dim": "c_other",
+      "value": "post_pending",
+      "rows": 57,
+      "originals": 32,
+      "nonzero_originals": 16
+    },
+    {
+      "sh": "ask post",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 1339,
+      "originals": 70,
+      "nonzero_originals": 55
+    },
+    {
+      "sh": "ask post",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 1026,
+      "originals": 52,
+      "nonzero_originals": 27
+    },
+    {
+      "sh": "ask post",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 293,
+      "originals": 21,
+      "nonzero_originals": 10
+    },
+    {
+      "sh": "ask post",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 103,
+      "originals": 6,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask post",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 321,
+      "originals": 92,
+      "nonzero_originals": 48
+    },
+    {
+      "sh": "ask post",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 551,
+      "originals": 111,
+      "nonzero_originals": 66
+    },
+    {
+      "sh": "ask post",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 1889,
+      "originals": 126,
+      "nonzero_originals": 78
+    },
+    {
+      "sh": "ask post",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 2761,
+      "originals": 127,
+      "nonzero_originals": 87
+    },
+    {
+      "sh": "ask retain",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 18303,
+      "originals": 127,
+      "nonzero_originals": 87
+    },
+    {
+      "sh": "ask retain",
+      "dim": "c_gen",
+      "value": "2",
+      "rows": 615,
+      "originals": 88,
+      "nonzero_originals": 32
+    },
+    {
+      "sh": "ask retain",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 793,
+      "originals": 73,
+      "nonzero_originals": 32
+    },
+    {
+      "sh": "ask retain",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 18002,
+      "originals": 127,
+      "nonzero_originals": 87
+    },
+    {
+      "sh": "ask retain",
+      "dim": "c_inv",
+      "value": "long",
+      "rows": 1265,
+      "originals": 81,
+      "nonzero_originals": 34
+    },
+    {
+      "sh": "ask retain",
+      "dim": "c_inv",
+      "value": "short",
+      "rows": 444,
+      "originals": 34,
+      "nonzero_originals": 19
+    },
+    {
+      "sh": "ask retain",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 17725,
+      "originals": 127,
+      "nonzero_originals": 87
+    },
+    {
+      "sh": "ask retain",
+      "dim": "c_other",
+      "value": "cancel_pending",
+      "rows": 59,
+      "originals": 44,
+      "nonzero_originals": 11
+    },
+    {
+      "sh": "ask retain",
+      "dim": "c_other",
+      "value": "live",
+      "rows": 1910,
+      "originals": 123,
+      "nonzero_originals": 68
+    },
+    {
+      "sh": "ask retain",
+      "dim": "c_other",
+      "value": "post_pending",
+      "rows": 17,
+      "originals": 15,
+      "nonzero_originals": 6
+    },
+    {
+      "sh": "ask retain",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 7586,
+      "originals": 71,
+      "nonzero_originals": 55
+    },
+    {
+      "sh": "ask retain",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 9152,
+      "originals": 52,
+      "nonzero_originals": 27
+    },
+    {
+      "sh": "ask retain",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 1799,
+      "originals": 21,
+      "nonzero_originals": 10
+    },
+    {
+      "sh": "ask retain",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 1174,
+      "originals": 6,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask retain",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 2548,
+      "originals": 90,
+      "nonzero_originals": 53
+    },
+    {
+      "sh": "ask retain",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 3886,
+      "originals": 114,
+      "nonzero_originals": 73
+    },
+    {
+      "sh": "ask retain",
+      "dim": "c_queue",
+      "value": "0",
+      "rows": 419,
+      "originals": 40,
+      "nonzero_originals": 15
+    },
+    {
+      "sh": "ask retain",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 12858,
+      "originals": 125,
+      "nonzero_originals": 75
+    },
+    {
+      "sh": "ask retain",
+      "dim": "c_rem",
+      "value": "(0,10]",
+      "rows": 104,
+      "originals": 12,
+      "nonzero_originals": 6
+    },
+    {
+      "sh": "ask retain",
+      "dim": "c_rem",
+      "value": "(10,20]",
+      "rows": 212,
+      "originals": 15,
+      "nonzero_originals": 10
+    },
+    {
+      "sh": "ask retain",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 19395,
+      "originals": 127,
+      "nonzero_originals": 87
+    },
+    {
+      "sh": "bid post",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 2662,
+      "originals": 127,
+      "nonzero_originals": 97
+    },
+    {
+      "sh": "bid post",
+      "dim": "c_gen",
+      "value": "2",
+      "rows": 31,
+      "originals": 23,
+      "nonzero_originals": 8
+    },
+    {
+      "sh": "bid post",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 70,
+      "originals": 40,
+      "nonzero_originals": 14
+    },
+    {
+      "sh": "bid post",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 2695,
+      "originals": 127,
+      "nonzero_originals": 97
+    },
+    {
+      "sh": "bid post",
+      "dim": "c_inv",
+      "value": "short",
+      "rows": 68,
+      "originals": 34,
+      "nonzero_originals": 13
+    },
+    {
+      "sh": "bid post",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 2734,
+      "originals": 127,
+      "nonzero_originals": 97
+    },
+    {
+      "sh": "bid post",
+      "dim": "c_other",
+      "value": "cancel_pending",
+      "rows": 5,
+      "originals": 5,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "bid post",
+      "dim": "c_other",
+      "value": "live",
+      "rows": 16,
+      "originals": 14,
+      "nonzero_originals": 5
+    },
+    {
+      "sh": "bid post",
+      "dim": "c_other",
+      "value": "post_pending",
+      "rows": 8,
+      "originals": 8,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "bid post",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 1337,
+      "originals": 70,
+      "nonzero_originals": 53
+    },
+    {
+      "sh": "bid post",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 1019,
+      "originals": 52,
+      "nonzero_originals": 34
+    },
+    {
+      "sh": "bid post",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 257,
+      "originals": 18,
+      "nonzero_originals": 16
+    },
+    {
+      "sh": "bid post",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 150,
+      "originals": 10,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid post",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 324,
+      "originals": 100,
+      "nonzero_originals": 48
+    },
+    {
+      "sh": "bid post",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 524,
+      "originals": 107,
+      "nonzero_originals": 65
+    },
+    {
+      "sh": "bid post",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 1915,
+      "originals": 126,
+      "nonzero_originals": 82
+    },
+    {
+      "sh": "bid post",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 2763,
+      "originals": 127,
+      "nonzero_originals": 97
+    },
+    {
+      "sh": "bid retain",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 18259,
+      "originals": 127,
+      "nonzero_originals": 95
+    },
+    {
+      "sh": "bid retain",
+      "dim": "c_gen",
+      "value": "2",
+      "rows": 641,
+      "originals": 84,
+      "nonzero_originals": 33
+    },
+    {
+      "sh": "bid retain",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 824,
+      "originals": 74,
+      "nonzero_originals": 36
+    },
+    {
+      "sh": "bid retain",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 18143,
+      "originals": 127,
+      "nonzero_originals": 96
+    },
+    {
+      "sh": "bid retain",
+      "dim": "c_inv",
+      "value": "long",
+      "rows": 364,
+      "originals": 45,
+      "nonzero_originals": 20
+    },
+    {
+      "sh": "bid retain",
+      "dim": "c_inv",
+      "value": "short",
+      "rows": 1217,
+      "originals": 74,
+      "nonzero_originals": 44
+    },
+    {
+      "sh": "bid retain",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 17735,
+      "originals": 127,
+      "nonzero_originals": 95
+    },
+    {
+      "sh": "bid retain",
+      "dim": "c_other",
+      "value": "cancel_pending",
+      "rows": 48,
+      "originals": 38,
+      "nonzero_originals": 14
+    },
+    {
+      "sh": "bid retain",
+      "dim": "c_other",
+      "value": "live",
+      "rows": 1916,
+      "originals": 123,
+      "nonzero_originals": 68
+    },
+    {
+      "sh": "bid retain",
+      "dim": "c_other",
+      "value": "post_pending",
+      "rows": 25,
+      "originals": 20,
+      "nonzero_originals": 3
+    },
+    {
+      "sh": "bid retain",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 8512,
+      "originals": 70,
+      "nonzero_originals": 54
+    },
+    {
+      "sh": "bid retain",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 8015,
+      "originals": 52,
+      "nonzero_originals": 33
+    },
+    {
+      "sh": "bid retain",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 1717,
+      "originals": 18,
+      "nonzero_originals": 15
+    },
+    {
+      "sh": "bid retain",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 1480,
+      "originals": 10,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid retain",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 2435,
+      "originals": 98,
+      "nonzero_originals": 56
+    },
+    {
+      "sh": "bid retain",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 4266,
+      "originals": 112,
+      "nonzero_originals": 75
+    },
+    {
+      "sh": "bid retain",
+      "dim": "c_queue",
+      "value": "0",
+      "rows": 296,
+      "originals": 43,
+      "nonzero_originals": 17
+    },
+    {
+      "sh": "bid retain",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 12727,
+      "originals": 126,
+      "nonzero_originals": 79
+    },
+    {
+      "sh": "bid retain",
+      "dim": "c_rem",
+      "value": "(0,10]",
+      "rows": 90,
+      "originals": 19,
+      "nonzero_originals": 9
+    },
+    {
+      "sh": "bid retain",
+      "dim": "c_rem",
+      "value": "(10,20]",
+      "rows": 118,
+      "originals": 21,
+      "nonzero_originals": 9
+    },
+    {
+      "sh": "bid retain",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 19516,
+      "originals": 127,
+      "nonzero_originals": 96
+    }
+  ],
+  "cross_cells": [
+    {
+      "sh": "ask post",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 25,
+      "originals": 25,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_gen",
+      "value": "2",
+      "rows": 1,
+      "originals": 1,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 26,
+      "originals": 25,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 25,
+      "originals": 25,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_other",
+      "value": "post_pending",
+      "rows": 1,
+      "originals": 1,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 10,
+      "originals": 10,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 10,
+      "originals": 10,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 5,
+      "originals": 4,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 1,
+      "originals": 1,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 1,
+      "originals": 1,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 5,
+      "originals": 5,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 20,
+      "originals": 19,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 26,
+      "originals": 25,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 76,
+      "originals": 76,
+      "nonzero_originals": 3
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 2,
+      "originals": 2,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 76,
+      "originals": 76,
+      "nonzero_originals": 3
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_inv",
+      "value": "long",
+      "rows": 2,
+      "originals": 2,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 78,
+      "originals": 76,
+      "nonzero_originals": 3
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 41,
+      "originals": 40,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 29,
+      "originals": 28,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 7,
+      "originals": 7,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 1,
+      "originals": 1,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 7,
+      "originals": 7,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 18,
+      "originals": 18,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 53,
+      "originals": 51,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 78,
+      "originals": 76,
+      "nonzero_originals": 3
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 508,
+      "originals": 127,
+      "nonzero_originals": 36
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_gen",
+      "value": "2",
+      "rows": 4,
+      "originals": 4,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 22,
+      "originals": 20,
+      "nonzero_originals": 4
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 519,
+      "originals": 127,
+      "nonzero_originals": 36
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_inv",
+      "value": "long",
+      "rows": 15,
+      "originals": 13,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 523,
+      "originals": 127,
+      "nonzero_originals": 36
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_other",
+      "value": "live",
+      "rows": 4,
+      "originals": 4,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_other",
+      "value": "post_pending",
+      "rows": 7,
+      "originals": 6,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 266,
+      "originals": 63,
+      "nonzero_originals": 24
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 197,
+      "originals": 48,
+      "nonzero_originals": 12
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 51,
+      "originals": 13,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 20,
+      "originals": 5,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 69,
+      "originals": 43,
+      "nonzero_originals": 13
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 118,
+      "originals": 62,
+      "nonzero_originals": 15
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 347,
+      "originals": 117,
+      "nonzero_originals": 24
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 534,
+      "originals": 127,
+      "nonzero_originals": 36
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 762,
+      "originals": 127,
+      "nonzero_originals": 65
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_gen",
+      "value": "2",
+      "rows": 8,
+      "originals": 6,
+      "nonzero_originals": 4
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 14,
+      "originals": 10,
+      "nonzero_originals": 3
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 767,
+      "originals": 127,
+      "nonzero_originals": 65
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_inv",
+      "value": "long",
+      "rows": 17,
+      "originals": 12,
+      "nonzero_originals": 4
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 780,
+      "originals": 127,
+      "nonzero_originals": 65
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_other",
+      "value": "cancel_pending",
+      "rows": 1,
+      "originals": 1,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_other",
+      "value": "live",
+      "rows": 2,
+      "originals": 2,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_other",
+      "value": "post_pending",
+      "rows": 1,
+      "originals": 1,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 374,
+      "originals": 62,
+      "nonzero_originals": 41
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 297,
+      "originals": 50,
+      "nonzero_originals": 21
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 83,
+      "originals": 17,
+      "nonzero_originals": 4
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 30,
+      "originals": 5,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 90,
+      "originals": 49,
+      "nonzero_originals": 20
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 154,
+      "originals": 72,
+      "nonzero_originals": 32
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 540,
+      "originals": 121,
+      "nonzero_originals": 55
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 784,
+      "originals": 127,
+      "nonzero_originals": 65
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 127,
+      "originals": 127,
+      "nonzero_originals": 7
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 2,
+      "originals": 2,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 128,
+      "originals": 127,
+      "nonzero_originals": 7
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_inv",
+      "value": "long",
+      "rows": 1,
+      "originals": 1,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 128,
+      "originals": 127,
+      "nonzero_originals": 7
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_other",
+      "value": "post_pending",
+      "rows": 1,
+      "originals": 1,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 62,
+      "originals": 61,
+      "nonzero_originals": 5
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 49,
+      "originals": 48,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 13,
+      "originals": 13,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 5,
+      "originals": 5,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 14,
+      "originals": 14,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 24,
+      "originals": 22,
+      "nonzero_originals": 4
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 91,
+      "originals": 91,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 129,
+      "originals": 127,
+      "nonzero_originals": 7
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 909,
+      "originals": 127,
+      "nonzero_originals": 79
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_gen",
+      "value": "2",
+      "rows": 29,
+      "originals": 20,
+      "nonzero_originals": 10
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 7,
+      "originals": 6,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 936,
+      "originals": 127,
+      "nonzero_originals": 79
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_inv",
+      "value": "long",
+      "rows": 9,
+      "originals": 6,
+      "nonzero_originals": 3
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 879,
+      "originals": 127,
+      "nonzero_originals": 79
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_other",
+      "value": "cancel_pending",
+      "rows": 5,
+      "originals": 5,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_other",
+      "value": "live",
+      "rows": 15,
+      "originals": 14,
+      "nonzero_originals": 6
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_other",
+      "value": "post_pending",
+      "rows": 46,
+      "originals": 26,
+      "nonzero_originals": 13
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 457,
+      "originals": 64,
+      "nonzero_originals": 48
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 343,
+      "originals": 49,
+      "nonzero_originals": 24
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 109,
+      "originals": 17,
+      "nonzero_originals": 8
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 36,
+      "originals": 6,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 113,
+      "originals": 55,
+      "nonzero_originals": 24
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 183,
+      "originals": 76,
+      "nonzero_originals": 39
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 649,
+      "originals": 123,
+      "nonzero_originals": 67
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 945,
+      "originals": 127,
+      "nonzero_originals": 79
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 254,
+      "originals": 127,
+      "nonzero_originals": 17
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_gen",
+      "value": "2",
+      "rows": 1,
+      "originals": 1,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 10,
+      "originals": 9,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 257,
+      "originals": 127,
+      "nonzero_originals": 17
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_inv",
+      "value": "long",
+      "rows": 8,
+      "originals": 6,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 262,
+      "originals": 127,
+      "nonzero_originals": 17
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_other",
+      "value": "live",
+      "rows": 2,
+      "originals": 2,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_other",
+      "value": "post_pending",
+      "rows": 1,
+      "originals": 1,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 129,
+      "originals": 62,
+      "nonzero_originals": 12
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 101,
+      "originals": 48,
+      "nonzero_originals": 4
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 25,
+      "originals": 13,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 10,
+      "originals": 5,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 27,
+      "originals": 18,
+      "nonzero_originals": 4
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 49,
+      "originals": 36,
+      "nonzero_originals": 8
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 189,
+      "originals": 103,
+      "nonzero_originals": 8
+    },
+    {
+      "sh": "ask post",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 265,
+      "originals": 127,
+      "nonzero_originals": 17
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 481,
+      "originals": 78,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_gen",
+      "value": "2",
+      "rows": 13,
+      "originals": 12,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 28,
+      "originals": 20,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 471,
+      "originals": 78,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_inv",
+      "value": "long",
+      "rows": 40,
+      "originals": 25,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_inv",
+      "value": "short",
+      "rows": 11,
+      "originals": 3,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 507,
+      "originals": 78,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_other",
+      "value": "cancel_pending",
+      "rows": 1,
+      "originals": 1,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_other",
+      "value": "live",
+      "rows": 14,
+      "originals": 9,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 196,
+      "originals": 39,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 274,
+      "originals": 31,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 30,
+      "originals": 9,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 22,
+      "originals": 1,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 65,
+      "originals": 17,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 154,
+      "originals": 38,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_queue",
+      "value": "0",
+      "rows": 36,
+      "originals": 5,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 267,
+      "originals": 56,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_rem",
+      "value": "(0,10]",
+      "rows": 3,
+      "originals": 1,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 519,
+      "originals": 79,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 781,
+      "originals": 97,
+      "nonzero_originals": 6
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_gen",
+      "value": "2",
+      "rows": 14,
+      "originals": 14,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 37,
+      "originals": 29,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 752,
+      "originals": 97,
+      "nonzero_originals": 5
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_inv",
+      "value": "long",
+      "rows": 62,
+      "originals": 36,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_inv",
+      "value": "short",
+      "rows": 18,
+      "originals": 4,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 811,
+      "originals": 97,
+      "nonzero_originals": 6
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_other",
+      "value": "live",
+      "rows": 21,
+      "originals": 13,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 253,
+      "originals": 50,
+      "nonzero_originals": 4
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 394,
+      "originals": 36,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 101,
+      "originals": 10,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 84,
+      "originals": 5,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 60,
+      "originals": 19,
+      "nonzero_originals": 3
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 180,
+      "originals": 52,
+      "nonzero_originals": 3
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_queue",
+      "value": "0",
+      "rows": 2,
+      "originals": 2,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 590,
+      "originals": 74,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_rem",
+      "value": "(0,10]",
+      "rows": 8,
+      "originals": 1,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_rem",
+      "value": "(10,20]",
+      "rows": 5,
+      "originals": 1,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 819,
+      "originals": 97,
+      "nonzero_originals": 5
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 4453,
+      "originals": 127,
+      "nonzero_originals": 45
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_gen",
+      "value": "2",
+      "rows": 122,
+      "originals": 41,
+      "nonzero_originals": 9
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 234,
+      "originals": 59,
+      "nonzero_originals": 16
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 4315,
+      "originals": 127,
+      "nonzero_originals": 42
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_inv",
+      "value": "long",
+      "rows": 335,
+      "originals": 61,
+      "nonzero_originals": 17
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_inv",
+      "value": "short",
+      "rows": 159,
+      "originals": 17,
+      "nonzero_originals": 9
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 4546,
+      "originals": 127,
+      "nonzero_originals": 45
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_other",
+      "value": "cancel_pending",
+      "rows": 7,
+      "originals": 6,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_other",
+      "value": "live",
+      "rows": 254,
+      "originals": 51,
+      "nonzero_originals": 14
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_other",
+      "value": "post_pending",
+      "rows": 2,
+      "originals": 2,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 1786,
+      "originals": 66,
+      "nonzero_originals": 33
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 2308,
+      "originals": 50,
+      "nonzero_originals": 13
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 405,
+      "originals": 17,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 310,
+      "originals": 5,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 695,
+      "originals": 56,
+      "nonzero_originals": 23
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 941,
+      "originals": 92,
+      "nonzero_originals": 23
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_queue",
+      "value": "0",
+      "rows": 70,
+      "originals": 16,
+      "nonzero_originals": 7
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 3103,
+      "originals": 117,
+      "nonzero_originals": 28
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_rem",
+      "value": "(0,10]",
+      "rows": 30,
+      "originals": 5,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_rem",
+      "value": "(10,20]",
+      "rows": 88,
+      "originals": 9,
+      "nonzero_originals": 4
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 4691,
+      "originals": 127,
+      "nonzero_originals": 43
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 5510,
+      "originals": 127,
+      "nonzero_originals": 70
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_gen",
+      "value": "2",
+      "rows": 202,
+      "originals": 54,
+      "nonzero_originals": 16
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 237,
+      "originals": 52,
+      "nonzero_originals": 25
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 5422,
+      "originals": 127,
+      "nonzero_originals": 69
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_inv",
+      "value": "long",
+      "rows": 374,
+      "originals": 53,
+      "nonzero_originals": 26
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_inv",
+      "value": "short",
+      "rows": 153,
+      "originals": 20,
+      "nonzero_originals": 13
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 5354,
+      "originals": 127,
+      "nonzero_originals": 70
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_other",
+      "value": "cancel_pending",
+      "rows": 11,
+      "originals": 9,
+      "nonzero_originals": 4
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_other",
+      "value": "live",
+      "rows": 580,
+      "originals": 74,
+      "nonzero_originals": 29
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_other",
+      "value": "post_pending",
+      "rows": 4,
+      "originals": 3,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 2361,
+      "originals": 65,
+      "nonzero_originals": 45
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 2721,
+      "originals": 52,
+      "nonzero_originals": 22
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 558,
+      "originals": 17,
+      "nonzero_originals": 5
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 309,
+      "originals": 5,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 923,
+      "originals": 64,
+      "nonzero_originals": 35
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 1125,
+      "originals": 96,
+      "nonzero_originals": 49
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_queue",
+      "value": "0",
+      "rows": 121,
+      "originals": 21,
+      "nonzero_originals": 7
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 3780,
+      "originals": 121,
+      "nonzero_originals": 54
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_rem",
+      "value": "(0,10]",
+      "rows": 43,
+      "originals": 6,
+      "nonzero_originals": 4
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_rem",
+      "value": "(10,20]",
+      "rows": 80,
+      "originals": 9,
+      "nonzero_originals": 5
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 5826,
+      "originals": 127,
+      "nonzero_originals": 70
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 1210,
+      "originals": 121,
+      "nonzero_originals": 11
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_gen",
+      "value": "2",
+      "rows": 27,
+      "originals": 26,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 64,
+      "originals": 48,
+      "nonzero_originals": 3
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 1179,
+      "originals": 121,
+      "nonzero_originals": 9
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_inv",
+      "value": "long",
+      "rows": 105,
+      "originals": 63,
+      "nonzero_originals": 6
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_inv",
+      "value": "short",
+      "rows": 17,
+      "originals": 4,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 1265,
+      "originals": 121,
+      "nonzero_originals": 11
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_other",
+      "value": "cancel_pending",
+      "rows": 3,
+      "originals": 3,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_other",
+      "value": "live",
+      "rows": 33,
+      "originals": 21,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 436,
+      "originals": 60,
+      "nonzero_originals": 9
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 644,
+      "originals": 47,
+      "nonzero_originals": 3
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 120,
+      "originals": 14,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 101,
+      "originals": 5,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 105,
+      "originals": 29,
+      "nonzero_originals": 5
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 305,
+      "originals": 72,
+      "nonzero_originals": 5
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_queue",
+      "value": "0",
+      "rows": 43,
+      "originals": 8,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 848,
+      "originals": 100,
+      "nonzero_originals": 3
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_rem",
+      "value": "(10,20]",
+      "rows": 8,
+      "originals": 1,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 1293,
+      "originals": 121,
+      "nonzero_originals": 10
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 3539,
+      "originals": 127,
+      "nonzero_originals": 79
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_gen",
+      "value": "2",
+      "rows": 190,
+      "originals": 54,
+      "nonzero_originals": 24
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 57,
+      "originals": 19,
+      "nonzero_originals": 8
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 3588,
+      "originals": 127,
+      "nonzero_originals": 79
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_inv",
+      "value": "long",
+      "rows": 158,
+      "originals": 35,
+      "nonzero_originals": 18
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_inv",
+      "value": "short",
+      "rows": 40,
+      "originals": 9,
+      "nonzero_originals": 4
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 2828,
+      "originals": 127,
+      "nonzero_originals": 79
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_other",
+      "value": "cancel_pending",
+      "rows": 36,
+      "originals": 27,
+      "nonzero_originals": 7
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_other",
+      "value": "live",
+      "rows": 911,
+      "originals": 121,
+      "nonzero_originals": 58
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_other",
+      "value": "post_pending",
+      "rows": 11,
+      "originals": 10,
+      "nonzero_originals": 4
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 1722,
+      "originals": 65,
+      "nonzero_originals": 48
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 1527,
+      "originals": 49,
+      "nonzero_originals": 24
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 373,
+      "originals": 17,
+      "nonzero_originals": 8
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 164,
+      "originals": 6,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 421,
+      "originals": 43,
+      "nonzero_originals": 27
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 672,
+      "originals": 77,
+      "nonzero_originals": 43
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_queue",
+      "value": "0",
+      "rows": 94,
+      "originals": 19,
+      "nonzero_originals": 7
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 2599,
+      "originals": 119,
+      "nonzero_originals": 64
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_rem",
+      "value": "(0,10]",
+      "rows": 5,
+      "originals": 2,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_rem",
+      "value": "(10,20]",
+      "rows": 13,
+      "originals": 3,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 3768,
+      "originals": 127,
+      "nonzero_originals": 79
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 2329,
+      "originals": 126,
+      "nonzero_originals": 22
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_gen",
+      "value": "2",
+      "rows": 47,
+      "originals": 27,
+      "nonzero_originals": 4
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 136,
+      "originals": 56,
+      "nonzero_originals": 7
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 2275,
+      "originals": 126,
+      "nonzero_originals": 20
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_inv",
+      "value": "long",
+      "rows": 191,
+      "originals": 63,
+      "nonzero_originals": 10
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_inv",
+      "value": "short",
+      "rows": 46,
+      "originals": 8,
+      "nonzero_originals": 5
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 2414,
+      "originals": 126,
+      "nonzero_originals": 23
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_other",
+      "value": "cancel_pending",
+      "rows": 1,
+      "originals": 1,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_other",
+      "value": "live",
+      "rows": 97,
+      "originals": 35,
+      "nonzero_originals": 7
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 832,
+      "originals": 65,
+      "nonzero_originals": 16
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 1284,
+      "originals": 50,
+      "nonzero_originals": 7
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 212,
+      "originals": 13,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 184,
+      "originals": 5,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 279,
+      "originals": 39,
+      "nonzero_originals": 12
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 509,
+      "originals": 82,
+      "nonzero_originals": 14
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_queue",
+      "value": "0",
+      "rows": 53,
+      "originals": 14,
+      "nonzero_originals": 3
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 1671,
+      "originals": 109,
+      "nonzero_originals": 10
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_rem",
+      "value": "(0,10]",
+      "rows": 15,
+      "originals": 3,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_rem",
+      "value": "(10,20]",
+      "rows": 18,
+      "originals": 2,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "ask retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 2479,
+      "originals": 126,
+      "nonzero_originals": 22
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 33,
+      "originals": 33,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 3,
+      "originals": 3,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 33,
+      "originals": 33,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_inv",
+      "value": "short",
+      "rows": 3,
+      "originals": 3,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 36,
+      "originals": 33,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 16,
+      "originals": 14,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 14,
+      "originals": 13,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 5,
+      "originals": 5,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 1,
+      "originals": 1,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 4,
+      "originals": 3,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 7,
+      "originals": 6,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 25,
+      "originals": 24,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 36,
+      "originals": 33,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 65,
+      "originals": 65,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 2,
+      "originals": 2,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 65,
+      "originals": 65,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_inv",
+      "value": "short",
+      "rows": 2,
+      "originals": 2,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 67,
+      "originals": 65,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 33,
+      "originals": 31,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 24,
+      "originals": 24,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 4,
+      "originals": 4,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 6,
+      "originals": 6,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 9,
+      "originals": 9,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 10,
+      "originals": 9,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 48,
+      "originals": 47,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 67,
+      "originals": 65,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 508,
+      "originals": 127,
+      "nonzero_originals": 46
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_gen",
+      "value": "2",
+      "rows": 2,
+      "originals": 1,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 13,
+      "originals": 11,
+      "nonzero_originals": 5
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 511,
+      "originals": 127,
+      "nonzero_originals": 46
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_inv",
+      "value": "short",
+      "rows": 12,
+      "originals": 11,
+      "nonzero_originals": 5
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 520,
+      "originals": 127,
+      "nonzero_originals": 46
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_other",
+      "value": "cancel_pending",
+      "rows": 2,
+      "originals": 2,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_other",
+      "value": "post_pending",
+      "rows": 1,
+      "originals": 1,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 256,
+      "originals": 64,
+      "nonzero_originals": 26
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 196,
+      "originals": 49,
+      "nonzero_originals": 13
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 42,
+      "originals": 10,
+      "nonzero_originals": 6
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 29,
+      "originals": 8,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 66,
+      "originals": 38,
+      "nonzero_originals": 9
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 88,
+      "originals": 55,
+      "nonzero_originals": 17
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 369,
+      "originals": 117,
+      "nonzero_originals": 33
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 523,
+      "originals": 127,
+      "nonzero_originals": 46
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 762,
+      "originals": 127,
+      "nonzero_originals": 71
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_gen",
+      "value": "2",
+      "rows": 6,
+      "originals": 6,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 30,
+      "originals": 21,
+      "nonzero_originals": 6
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 767,
+      "originals": 127,
+      "nonzero_originals": 71
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_inv",
+      "value": "short",
+      "rows": 31,
+      "originals": 20,
+      "nonzero_originals": 6
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 793,
+      "originals": 127,
+      "nonzero_originals": 71
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_other",
+      "value": "live",
+      "rows": 4,
+      "originals": 3,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_other",
+      "value": "post_pending",
+      "rows": 1,
+      "originals": 1,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 384,
+      "originals": 63,
+      "nonzero_originals": 35
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 297,
+      "originals": 49,
+      "nonzero_originals": 23
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 79,
+      "originals": 14,
+      "nonzero_originals": 12
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 38,
+      "originals": 8,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 104,
+      "originals": 50,
+      "nonzero_originals": 20
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 146,
+      "originals": 66,
+      "nonzero_originals": 31
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 548,
+      "originals": 118,
+      "nonzero_originals": 53
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 798,
+      "originals": 127,
+      "nonzero_originals": 71
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 127,
+      "originals": 127,
+      "nonzero_originals": 8
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 5,
+      "originals": 3,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 130,
+      "originals": 127,
+      "nonzero_originals": 8
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_inv",
+      "value": "short",
+      "rows": 2,
+      "originals": 1,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 130,
+      "originals": 127,
+      "nonzero_originals": 8
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_other",
+      "value": "cancel_pending",
+      "rows": 1,
+      "originals": 1,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_other",
+      "value": "live",
+      "rows": 1,
+      "originals": 1,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 67,
+      "originals": 63,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 46,
+      "originals": 46,
+      "nonzero_originals": 5
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 11,
+      "originals": 10,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 8,
+      "originals": 8,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 11,
+      "originals": 11,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 27,
+      "originals": 25,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 94,
+      "originals": 91,
+      "nonzero_originals": 6
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 132,
+      "originals": 127,
+      "nonzero_originals": 8
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 913,
+      "originals": 127,
+      "nonzero_originals": 84
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_gen",
+      "value": "2",
+      "rows": 23,
+      "originals": 18,
+      "nonzero_originals": 7
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 13,
+      "originals": 10,
+      "nonzero_originals": 4
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 935,
+      "originals": 127,
+      "nonzero_originals": 84
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_inv",
+      "value": "short",
+      "rows": 14,
+      "originals": 9,
+      "nonzero_originals": 4
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 930,
+      "originals": 127,
+      "nonzero_originals": 84
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_other",
+      "value": "cancel_pending",
+      "rows": 2,
+      "originals": 2,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_other",
+      "value": "live",
+      "rows": 11,
+      "originals": 10,
+      "nonzero_originals": 4
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_other",
+      "value": "post_pending",
+      "rows": 6,
+      "originals": 6,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 451,
+      "originals": 65,
+      "nonzero_originals": 43
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 351,
+      "originals": 48,
+      "nonzero_originals": 29
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 95,
+      "originals": 17,
+      "nonzero_originals": 14
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 52,
+      "originals": 8,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 106,
+      "originals": 54,
+      "nonzero_originals": 27
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 197,
+      "originals": 81,
+      "nonzero_originals": 42
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 646,
+      "originals": 124,
+      "nonzero_originals": 69
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 949,
+      "originals": 127,
+      "nonzero_originals": 84
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 254,
+      "originals": 127,
+      "nonzero_originals": 24
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 4,
+      "originals": 4,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 254,
+      "originals": 127,
+      "nonzero_originals": 24
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_inv",
+      "value": "short",
+      "rows": 4,
+      "originals": 4,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 258,
+      "originals": 127,
+      "nonzero_originals": 24
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 130,
+      "originals": 64,
+      "nonzero_originals": 13
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 91,
+      "originals": 45,
+      "nonzero_originals": 8
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 21,
+      "originals": 10,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 16,
+      "originals": 8,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 24,
+      "originals": 18,
+      "nonzero_originals": 6
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 49,
+      "originals": 37,
+      "nonzero_originals": 11
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 185,
+      "originals": 107,
+      "nonzero_originals": 12
+    },
+    {
+      "sh": "bid post",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 258,
+      "originals": 127,
+      "nonzero_originals": 24
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 511,
+      "originals": 75,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_gen",
+      "value": "2",
+      "rows": 9,
+      "originals": 9,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 37,
+      "originals": 27,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 481,
+      "originals": 75,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_inv",
+      "value": "long",
+      "rows": 29,
+      "originals": 5,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_inv",
+      "value": "short",
+      "rows": 47,
+      "originals": 29,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 544,
+      "originals": 75,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_other",
+      "value": "cancel_pending",
+      "rows": 1,
+      "originals": 1,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_other",
+      "value": "live",
+      "rows": 12,
+      "originals": 8,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 295,
+      "originals": 39,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 189,
+      "originals": 26,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 37,
+      "originals": 7,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 36,
+      "originals": 4,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 84,
+      "originals": 18,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 154,
+      "originals": 28,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_queue",
+      "value": "0",
+      "rows": 4,
+      "originals": 2,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 315,
+      "originals": 63,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_rem",
+      "value": "(0,10]",
+      "rows": 19,
+      "originals": 1,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_rem",
+      "value": "(10,20]",
+      "rows": 3,
+      "originals": 2,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(0.0, 100.0]",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 535,
+      "originals": 75,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 718,
+      "originals": 104,
+      "nonzero_originals": 6
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_gen",
+      "value": "2",
+      "rows": 14,
+      "originals": 14,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 31,
+      "originals": 25,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 704,
+      "originals": 103,
+      "nonzero_originals": 6
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_inv",
+      "value": "long",
+      "rows": 19,
+      "originals": 9,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_inv",
+      "value": "short",
+      "rows": 40,
+      "originals": 25,
+      "nonzero_originals": 4
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 740,
+      "originals": 104,
+      "nonzero_originals": 6
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_other",
+      "value": "live",
+      "rows": 23,
+      "originals": 15,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 273,
+      "originals": 51,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 366,
+      "originals": 42,
+      "nonzero_originals": 5
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 38,
+      "originals": 8,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 86,
+      "originals": 8,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 81,
+      "originals": 20,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 154,
+      "originals": 42,
+      "nonzero_originals": 3
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_queue",
+      "value": "0",
+      "rows": 5,
+      "originals": 3,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 523,
+      "originals": 86,
+      "nonzero_originals": 5
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_rem",
+      "value": "(0,10]",
+      "rows": 10,
+      "originals": 4,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_rem",
+      "value": "(10,20]",
+      "rows": 4,
+      "originals": 3,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(100.0, 250.0]",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 749,
+      "originals": 103,
+      "nonzero_originals": 6
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 4390,
+      "originals": 127,
+      "nonzero_originals": 55
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_gen",
+      "value": "2",
+      "rows": 117,
+      "originals": 34,
+      "nonzero_originals": 9
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 248,
+      "originals": 57,
+      "nonzero_originals": 18
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 4359,
+      "originals": 127,
+      "nonzero_originals": 54
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_inv",
+      "value": "long",
+      "rows": 81,
+      "originals": 16,
+      "nonzero_originals": 6
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_inv",
+      "value": "short",
+      "rows": 315,
+      "originals": 61,
+      "nonzero_originals": 17
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 4487,
+      "originals": 127,
+      "nonzero_originals": 55
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_other",
+      "value": "cancel_pending",
+      "rows": 10,
+      "originals": 8,
+      "nonzero_originals": 3
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_other",
+      "value": "live",
+      "rows": 252,
+      "originals": 50,
+      "nonzero_originals": 21
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_other",
+      "value": "post_pending",
+      "rows": 6,
+      "originals": 6,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 1985,
+      "originals": 66,
+      "nonzero_originals": 26
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 2011,
+      "originals": 49,
+      "nonzero_originals": 21
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 359,
+      "originals": 10,
+      "nonzero_originals": 7
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 400,
+      "originals": 10,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 647,
+      "originals": 55,
+      "nonzero_originals": 26
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 1004,
+      "originals": 84,
+      "nonzero_originals": 27
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_queue",
+      "value": "0",
+      "rows": 72,
+      "originals": 17,
+      "nonzero_originals": 5
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 3032,
+      "originals": 118,
+      "nonzero_originals": 34
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_rem",
+      "value": "(0,10]",
+      "rows": 12,
+      "originals": 6,
+      "nonzero_originals": 3
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_rem",
+      "value": "(10,20]",
+      "rows": 53,
+      "originals": 11,
+      "nonzero_originals": 4
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(1000.0, 2000.0]",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 4690,
+      "originals": 127,
+      "nonzero_originals": 54
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 5764,
+      "originals": 127,
+      "nonzero_originals": 78
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_gen",
+      "value": "2",
+      "rows": 251,
+      "originals": 52,
+      "nonzero_originals": 23
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 251,
+      "originals": 53,
+      "nonzero_originals": 27
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 5759,
+      "originals": 127,
+      "nonzero_originals": 77
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_inv",
+      "value": "long",
+      "rows": 93,
+      "originals": 16,
+      "nonzero_originals": 10
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_inv",
+      "value": "short",
+      "rows": 414,
+      "originals": 58,
+      "nonzero_originals": 30
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 5668,
+      "originals": 127,
+      "nonzero_originals": 78
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_other",
+      "value": "cancel_pending",
+      "rows": 10,
+      "originals": 8,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_other",
+      "value": "live",
+      "rows": 585,
+      "originals": 73,
+      "nonzero_originals": 39
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_other",
+      "value": "post_pending",
+      "rows": 3,
+      "originals": 3,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 2683,
+      "originals": 65,
+      "nonzero_originals": 40
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 2515,
+      "originals": 49,
+      "nonzero_originals": 26
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 660,
+      "originals": 14,
+      "nonzero_originals": 12
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 408,
+      "originals": 9,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 796,
+      "originals": 54,
+      "nonzero_originals": 31
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 1325,
+      "originals": 87,
+      "nonzero_originals": 42
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_queue",
+      "value": "0",
+      "rows": 119,
+      "originals": 20,
+      "nonzero_originals": 11
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 4026,
+      "originals": 121,
+      "nonzero_originals": 54
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_rem",
+      "value": "(0,10]",
+      "rows": 22,
+      "originals": 6,
+      "nonzero_originals": 4
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_rem",
+      "value": "(10,20]",
+      "rows": 30,
+      "originals": 6,
+      "nonzero_originals": 4
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(2000.0, 3500.0]",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 6214,
+      "originals": 127,
+      "nonzero_originals": 78
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 1168,
+      "originals": 119,
+      "nonzero_originals": 18
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_gen",
+      "value": "2",
+      "rows": 21,
+      "originals": 21,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 65,
+      "originals": 49,
+      "nonzero_originals": 4
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 1128,
+      "originals": 118,
+      "nonzero_originals": 16
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_inv",
+      "value": "long",
+      "rows": 44,
+      "originals": 14,
+      "nonzero_originals": 4
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_inv",
+      "value": "short",
+      "rows": 82,
+      "originals": 51,
+      "nonzero_originals": 6
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 1219,
+      "originals": 119,
+      "nonzero_originals": 18
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_other",
+      "value": "live",
+      "rows": 35,
+      "originals": 22,
+      "nonzero_originals": 3
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 533,
+      "originals": 60,
+      "nonzero_originals": 9
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 517,
+      "originals": 46,
+      "nonzero_originals": 6
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 90,
+      "originals": 10,
+      "nonzero_originals": 3
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 114,
+      "originals": 9,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 117,
+      "originals": 31,
+      "nonzero_originals": 6
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 281,
+      "originals": 63,
+      "nonzero_originals": 8
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_queue",
+      "value": "0",
+      "rows": 12,
+      "originals": 6,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 844,
+      "originals": 101,
+      "nonzero_originals": 7
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_rem",
+      "value": "(0,10]",
+      "rows": 6,
+      "originals": 4,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_rem",
+      "value": "(10,20]",
+      "rows": 4,
+      "originals": 3,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(250.0, 500.0]",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 1244,
+      "originals": 119,
+      "nonzero_originals": 17
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 3390,
+      "originals": 127,
+      "nonzero_originals": 81
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_gen",
+      "value": "2",
+      "rows": 184,
+      "originals": 52,
+      "nonzero_originals": 23
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 54,
+      "originals": 23,
+      "nonzero_originals": 8
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 3437,
+      "originals": 127,
+      "nonzero_originals": 82
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_inv",
+      "value": "long",
+      "rows": 40,
+      "originals": 11,
+      "nonzero_originals": 4
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_inv",
+      "value": "short",
+      "rows": 151,
+      "originals": 30,
+      "nonzero_originals": 16
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 2674,
+      "originals": 127,
+      "nonzero_originals": 82
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_other",
+      "value": "cancel_pending",
+      "rows": 23,
+      "originals": 20,
+      "nonzero_originals": 8
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_other",
+      "value": "live",
+      "rows": 917,
+      "originals": 121,
+      "nonzero_originals": 63
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_other",
+      "value": "post_pending",
+      "rows": 14,
+      "originals": 11,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 1676,
+      "originals": 65,
+      "nonzero_originals": 44
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 1363,
+      "originals": 48,
+      "nonzero_originals": 28
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 363,
+      "originals": 16,
+      "nonzero_originals": 12
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 226,
+      "originals": 8,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 422,
+      "originals": 48,
+      "nonzero_originals": 29
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 796,
+      "originals": 77,
+      "nonzero_originals": 45
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_queue",
+      "value": "0",
+      "rows": 63,
+      "originals": 17,
+      "nonzero_originals": 5
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 2347,
+      "originals": 121,
+      "nonzero_originals": 66
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_rem",
+      "value": "(0,10]",
+      "rows": 12,
+      "originals": 3,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_rem",
+      "value": "(10,20]",
+      "rows": 9,
+      "originals": 4,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(3500.0, 5000.0]",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 3607,
+      "originals": 127,
+      "nonzero_originals": 83
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_gen",
+      "value": "1",
+      "rows": 2318,
+      "originals": 125,
+      "nonzero_originals": 35
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_gen",
+      "value": "2",
+      "rows": 45,
+      "originals": 23,
+      "nonzero_originals": 3
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_gen",
+      "value": ">=3",
+      "rows": 138,
+      "originals": 57,
+      "nonzero_originals": 11
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_inv",
+      "value": "flat",
+      "rows": 2275,
+      "originals": 125,
+      "nonzero_originals": 33
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_inv",
+      "value": "long",
+      "rows": 58,
+      "originals": 13,
+      "nonzero_originals": 5
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_inv",
+      "value": "short",
+      "rows": 168,
+      "originals": 54,
+      "nonzero_originals": 14
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_other",
+      "value": "absent",
+      "rows": 2403,
+      "originals": 125,
+      "nonzero_originals": 35
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_other",
+      "value": "cancel_pending",
+      "rows": 4,
+      "originals": 4,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_other",
+      "value": "live",
+      "rows": 92,
+      "originals": 33,
+      "nonzero_originals": 7
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_other",
+      "value": "post_pending",
+      "rows": 2,
+      "originals": 2,
+      "nonzero_originals": 0
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_price",
+      "value": "(20,80]",
+      "rows": 1067,
+      "originals": 64,
+      "nonzero_originals": 19
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_price",
+      "value": "(5,20]",
+      "rows": 1054,
+      "originals": 48,
+      "nonzero_originals": 11
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_price",
+      "value": "(80,95]",
+      "rows": 170,
+      "originals": 10,
+      "nonzero_originals": 4
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_price",
+      "value": "[1,5]",
+      "rows": 210,
+      "originals": 10,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_queue",
+      "value": "(0,30]",
+      "rows": 288,
+      "originals": 37,
+      "nonzero_originals": 14
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_queue",
+      "value": "(30,150]",
+      "rows": 552,
+      "originals": 76,
+      "nonzero_originals": 21
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_queue",
+      "value": "0",
+      "rows": 21,
+      "originals": 9,
+      "nonzero_originals": 4
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_queue",
+      "value": ">150",
+      "rows": 1640,
+      "originals": 109,
+      "nonzero_originals": 16
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_rem",
+      "value": "(0,10]",
+      "rows": 9,
+      "originals": 3,
+      "nonzero_originals": 2
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_rem",
+      "value": "(10,20]",
+      "rows": 15,
+      "originals": 5,
+      "nonzero_originals": 1
+    },
+    {
+      "sh": "bid retain",
+      "hbin": "(500.0, 1000.0]",
+      "dim": "c_rem",
+      "value": "(20,30]",
+      "rows": 2477,
+      "originals": 125,
+      "nonzero_originals": 33
+    }
+  ],
+  "coverage": [
+    {
+      "sh": "ask post",
+      "cov": "delayed entry",
+      "rows": 2494,
+      "originals": 127,
+      "nonzero_originals": 86
+    },
+    {
+      "sh": "ask post",
+      "cov": "later generation",
+      "rows": 100,
+      "originals": 50,
+      "nonzero_originals": 20
+    },
+    {
+      "sh": "ask post",
+      "cov": "offset-zero entry",
+      "rows": 127,
+      "originals": 127,
+      "nonzero_originals": 58
+    },
+    {
+      "sh": "ask post",
+      "cov": "other",
+      "rows": 40,
+      "originals": 20,
+      "nonzero_originals": 9
+    },
+    {
+      "sh": "ask retain",
+      "cov": "later generation",
+      "rows": 1408,
+      "originals": 96,
+      "nonzero_originals": 50
+    },
+    {
+      "sh": "ask retain",
+      "cov": "other",
+      "rows": 18303,
+      "originals": 127,
+      "nonzero_originals": 87
+    },
+    {
+      "sh": "bid post",
+      "cov": "delayed entry",
+      "rows": 2487,
+      "originals": 127,
+      "nonzero_originals": 95
+    },
+    {
+      "sh": "bid post",
+      "cov": "later generation",
+      "rows": 101,
+      "originals": 49,
+      "nonzero_originals": 20
+    },
+    {
+      "sh": "bid post",
+      "cov": "offset-zero entry",
+      "rows": 127,
+      "originals": 127,
+      "nonzero_originals": 56
+    },
+    {
+      "sh": "bid post",
+      "cov": "other",
+      "rows": 48,
+      "originals": 24,
+      "nonzero_originals": 9
+    },
+    {
+      "sh": "bid retain",
+      "cov": "later generation",
+      "rows": 1465,
+      "originals": 91,
+      "nonzero_originals": 53
+    },
+    {
+      "sh": "bid retain",
+      "cov": "other",
+      "rows": 18259,
+      "originals": 127,
+      "nonzero_originals": 95
+    }
+  ],
+  "ranges": {
+    "ask post": {
+      "ctx_generation_age_ms": [
+        0.0,
+        0.0
+      ],
+      "ctx_generation_ordinal": [
+        1.0,
+        9.0
+      ],
+      "ctx_inventory_shares": [
+        -3.9968028886505635e-15,
+        30.0
+      ],
+      "ctx_bid_reserved_shares": [
+        0.0,
+        30.0
+      ],
+      "ctx_ask_reserved_shares": [
+        0.0,
+        0.0
+      ],
+      "t_to_end": [
+        100.0,
+        5000.0
+      ]
+    },
+    "ask retain": {
+      "ctx_generation_age_ms": [
+        100.0,
+        4950.0
+      ],
+      "ctx_generation_ordinal": [
+        1.0,
+        11.0
+      ],
+      "ctx_inventory_shares": [
+        -28.970367431640625,
+        30.0
+      ],
+      "ctx_bid_reserved_shares": [
+        0.0,
+        30.0
+      ],
+      "ctx_ask_reserved_shares": [
+        1.0296332836151123,
+        30.0
+      ],
+      "t_to_end": [
+        50.0,
+        4900.0
+      ]
+    },
+    "bid post": {
+      "ctx_generation_age_ms": [
+        0.0,
+        0.0
+      ],
+      "ctx_generation_ordinal": [
+        1.0,
+        13.0
+      ],
+      "ctx_inventory_shares": [
+        -30.0,
+        3.1086244689504383e-15
+      ],
+      "ctx_bid_reserved_shares": [
+        0.0,
+        0.0
+      ],
+      "ctx_ask_reserved_shares": [
+        0.0,
+        30.0
+      ],
+      "t_to_end": [
+        100.0,
+        5000.0
+      ]
+    },
+    "bid retain": {
+      "ctx_generation_age_ms": [
+        100.0,
+        4950.0
+      ],
+      "ctx_generation_ordinal": [
+        1.0,
+        13.0
+      ],
+      "ctx_inventory_shares": [
+        -30.0,
+        29.861738204956055
+      ],
+      "ctx_bid_reserved_shares": [
+        0.1382608711719513,
+        30.0
+      ],
+      "ctx_ask_reserved_shares": [
+        0.0,
+        30.0
+      ],
+      "t_to_end": [
+        50.0,
+        4900.0
+      ]
+    }
+  },
+  "presence": {
+    "bid post": {
+      "c_rem": {
+        "0": 0,
+        "(0,10]": 0,
+        "(10,20]": 0,
+        "(20,30]": 127
+      },
+      "c_queue": {
+        "unknown": 0,
+        "0": 0,
+        "(0,30]": 100,
+        "(30,150]": 107,
+        ">150": 126
+      },
+      "c_gen": {
+        "1": 127,
+        "2": 23,
+        ">=3": 40
+      },
+      "c_inv": {
+        "long": 0,
+        "flat": 127,
+        "short": 34
+      },
+      "c_other": {
+        "absent": 127,
+        "post_pending": 8,
+        "live": 14,
+        "cancel_pending": 5,
+        "terminal": 0
+      },
+      "c_price": {
+        "[1,5]": 10,
+        "(5,20]": 52,
+        "(20,80]": 70,
+        "(80,95]": 18,
+        "(95,99]": 0
+      }
+    },
+    "bid retain": {
+      "c_rem": {
+        "0": 0,
+        "(0,10]": 19,
+        "(10,20]": 21,
+        "(20,30]": 127
+      },
+      "c_queue": {
+        "unknown": 0,
+        "0": 43,
+        "(0,30]": 98,
+        "(30,150]": 112,
+        ">150": 126
+      },
+      "c_gen": {
+        "1": 127,
+        "2": 84,
+        ">=3": 74
+      },
+      "c_inv": {
+        "long": 45,
+        "flat": 127,
+        "short": 74
+      },
+      "c_other": {
+        "absent": 127,
+        "post_pending": 20,
+        "live": 123,
+        "cancel_pending": 38,
+        "terminal": 0
+      },
+      "c_price": {
+        "[1,5]": 10,
+        "(5,20]": 52,
+        "(20,80]": 70,
+        "(80,95]": 18,
+        "(95,99]": 0
+      }
+    },
+    "ask post": {
+      "c_rem": {
+        "0": 0,
+        "(0,10]": 0,
+        "(10,20]": 0,
+        "(20,30]": 127
+      },
+      "c_queue": {
+        "unknown": 0,
+        "0": 0,
+        "(0,30]": 92,
+        "(30,150]": 111,
+        ">150": 126
+      },
+      "c_gen": {
+        "1": 127,
+        "2": 31,
+        ">=3": 35
+      },
+      "c_inv": {
+        "long": 30,
+        "flat": 127,
+        "short": 0
+      },
+      "c_other": {
+        "absent": 127,
+        "post_pending": 32,
+        "live": 20,
+        "cancel_pending": 6,
+        "terminal": 0
+      },
+      "c_price": {
+        "[1,5]": 6,
+        "(5,20]": 52,
+        "(20,80]": 70,
+        "(80,95]": 21,
+        "(95,99]": 0
+      }
+    },
+    "ask retain": {
+      "c_rem": {
+        "0": 0,
+        "(0,10]": 12,
+        "(10,20]": 15,
+        "(20,30]": 127
+      },
+      "c_queue": {
+        "unknown": 0,
+        "0": 40,
+        "(0,30]": 90,
+        "(30,150]": 114,
+        ">150": 125
+      },
+      "c_gen": {
+        "1": 127,
+        "2": 88,
+        ">=3": 73
+      },
+      "c_inv": {
+        "long": 81,
+        "flat": 127,
+        "short": 34
+      },
+      "c_other": {
+        "absent": 127,
+        "post_pending": 15,
+        "live": 123,
+        "cancel_pending": 44,
+        "terminal": 0
+      },
+      "c_price": {
+        "[1,5]": 6,
+        "(5,20]": 52,
+        "(20,80]": 71,
+        "(80,95]": 21,
+        "(95,99]": 0
+      }
+    }
+  },
+  "unsupported_state_category": {
+    "bid post": [
+      "c_rem=0",
+      "c_rem=(0,10]",
+      "c_rem=(10,20]",
+      "c_queue=unknown",
+      "c_queue=0",
+      "c_inv=long",
+      "c_other=terminal",
+      "c_price=(95,99]"
+    ],
+    "bid retain": [
+      "c_rem=0",
+      "c_queue=unknown",
+      "c_other=terminal",
+      "c_price=(95,99]"
+    ],
+    "ask post": [
+      "c_rem=0",
+      "c_rem=(0,10]",
+      "c_rem=(10,20]",
+      "c_queue=unknown",
+      "c_queue=0",
+      "c_inv=short",
+      "c_other=terminal",
+      "c_price=(95,99]"
+    ],
+    "ask retain": [
+      "c_rem=0",
+      "c_queue=unknown",
+      "c_other=terminal",
+      "c_price=(95,99]"
+    ]
+  },
+  "fallback_rule": {
+    "statuses": [
+      "unsupported_horizon",
+      "unsupported_state_category",
+      "outside_training_range",
+      "insufficient_training_support"
+    ],
+    "absent": "WAIT",
+    "live": "KEEP",
+    "pending": "process notices",
+    "ranges": "observed per side / head; outside -> outside_training_range"
+  }
+}

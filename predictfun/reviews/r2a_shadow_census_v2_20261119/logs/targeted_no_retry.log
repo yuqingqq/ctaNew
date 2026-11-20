@@ -1,0 +1,2 @@
+R2 SHADOW SELFTEST FAILED: causality: an unbuildable future draw (mode 2) must read PASS (NOT-EVALUABLE, {'stored_vs_rebuild': 0, 'stored_vs_perturbed': 0, 'firing': 0, 'not_evaluable': 549}, retried 0)
+2026-11-19T22:44:10Z tag=pr2b_mutd23 rc=1 peak_rss_mib=263 wall_s=66.79 cpu_user_s=65.75 memavail_start_gib=23 disk_free_gib=465->465 slot=claude

@@ -353,6 +353,21 @@ pipeline_one_day_v3_20261119:
   values_equal_v2: {cells_per_day: 190, differing: 0}
   attribution_vs_pull_all_c: {"20261026": {first_step: 0.0, later: 954.33, never: 995.36, no_prediction: 0.0}, "20261027": {first_step: 0.0, later: -821.85, never: 251.74, no_prediction: 0.0}}
 
+r2a_shadow_census_v2_20261119:
+  status: done_r2a_v2_review_d10d3698_closed_partitioned_census_frozen_256_no_fit
+  asof: "2026-11-20 00:07Z"
+  receipt: predictfun/reviews/r2a_shadow_census_v2_20261119/report.md
+  supersedes: predictfun/reviews/r2a_shadow_census_20261119/report.md
+  source_sha256: bbff8b196df3031fab333dbf0225a9b9bee341873a4677be235a0dd4738ca4de
+  population: {day: "20261023", selected: 256, ids_sha256: 4538b694c92c5b6581f357396cb02e43c557b10c494efa08cd5780f0d6f4f501, represented: 256, reconciliation: EXACT}
+  census_r2av3: {partitions: 4, part_size: 64, rows: 213349, sampled_ok: 44959, equal_to_v3_except_joint_post_refused: true, refused: {entry: 312, joint_post_keep: 6, joint_chase: 12}, labels_failures: 0, causality_checked: 2765, causality_failures: 0, not_evaluable: 0, retried: 2, peak_rss_mib: 1246, partition_seconds: [327, 353, 304, 253]}
+  census_r2av2: {verdict: FAIL_as_declared, causality_failures: 2, cause: one_future_draw_built_no_path_missing_endpoint, kept: provenance}
+  rehearsal: {originals: 8, checked: 1372, receipt_clock_world_differences: 51, venue_clock_world_failures: 0}
+  throughput: {partition_s_without_causality: 25, causality_s_per_check: 0.41, full_day_arithmetic_h: {census: 3.3, causality_every_17th: 37.6}}
+  support: {cells: 28, supported: 0, terminal_other_state_sampled_rows: 0}
+  suites: {selftest: pass, mutants: 46/46}
+  next: codex_review_then_full_day_needs_causality_sample_resume_and_stop_rule
+
 r2a_shadow_census_20261119:
   status: done_r2a_adapter_manifest_oct23_census_no_fit
   asof: "2026-11-19 19:51Z"

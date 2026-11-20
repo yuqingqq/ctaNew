@@ -1,0 +1,85 @@
+{"partition": 0, "originals": 2, "rows": 1535, "seconds": 137.9, "rss_mib": 300}
+{"partition": 1, "originals": 2, "rows": 1724, "seconds": 143.8, "rss_mib": 299}
+{"partition": 2, "originals": 2, "rows": 1331, "seconds": 111.9, "rss_mib": 307}
+{"partition": 3, "originals": 2, "rows": 1887, "seconds": 166.0, "rss_mib": 307}
+{
+ "partitions": {
+  "count": 4,
+  "size": 2,
+  "seconds": [
+   137.92684745788574,
+   143.75942254066467,
+   111.91886115074158,
+   165.96772742271423
+  ],
+  "rss_mib_after": [
+   299.79296875,
+   298.75390625,
+   306.69921875,
+   306.8828125
+  ]
+ },
+ "labels": {
+  "checked": 1372,
+  "failed": 0,
+  "no_fill": 999,
+  "verdict": "PASS"
+ },
+ "refusals_by_source": {
+  "entry": 8,
+  "joint_post_keep": 0,
+  "joint_chase": 0
+ },
+ "causality": {
+  "checked": 1372,
+  "failed": 0,
+  "every": 1,
+  "details": [],
+  "components": {
+   "stored_vs_rebuild": 0,
+   "stored_vs_perturbed": 0,
+   "firing": 0
+  },
+  "verdict": "PASS"
+ },
+ "census_rows": 6477,
+ "sampled_ok_rows": 1372,
+ "by_source_head_status": {
+  "entry post ok": 166,
+  "joint_chase post cap_blocked": 135,
+  "joint_chase post near_end": 3,
+  "joint_chase post ok": 6,
+  "joint_chase post unsampled": 32,
+  "joint_chase retain cancel_pending": 48,
+  "joint_chase retain ok": 110,
+  "joint_chase retain post_pending": 38,
+  "joint_chase retain unsampled": 428,
+  "joint_post_keep post cap_blocked": 163,
+  "joint_post_keep post near_end": 2,
+  "joint_post_keep post ok": 4,
+  "joint_post_keep post unsampled": 16,
+  "joint_post_keep retain cancel_pending": 17,
+  "joint_post_keep retain ok": 115,
+  "joint_post_keep retain post_pending": 20,
+  "joint_post_keep retain unsampled": 463,
+  "retain retain cancel_pending": 206,
+  "retain retain ok": 971,
+  "retain retain post_pending": 166,
+  "retain retain unsampled": 3366,
+  "entry post near_end": 2
+ },
+ "peak_rss_mib": 306.8828125,
+ "population": {
+  "kind": "first_per_side",
+  "per_side": 4,
+  "selected": 8,
+  "by_status": {
+   "eligible": 7,
+   "refused_post_only": 1
+  },
+  "selected_ids_sha256": "687afcc43fa5386db7c641cbe9064a144696c6b8a922d0dd52654da57eff7b67",
+  "represented": 8,
+  "reconciliation": "EXACT"
+ }
+}
+2026-11-19T22:05:20Z tag=pr2b_smoke3 rc=0 peak_rss_mib=1161 wall_s=619.83 cpu_user_s=606.08 memavail_start_gib=23 disk_free_gib=466->465 slot=claude

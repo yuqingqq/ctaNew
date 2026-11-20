@@ -1,0 +1,2 @@
+R2 SHADOW SELFTEST FAILED: refusals: retain rows carry the POST refusal flag, or the fixture has no joint retain ok row (38)
+2026-11-19T20:57:20Z tag=pr2b_mut28 rc=1 peak_rss_mib=263 wall_s=48.52 cpu_user_s=47.47 memavail_start_gib=23 disk_free_gib=466->466 slot=claude

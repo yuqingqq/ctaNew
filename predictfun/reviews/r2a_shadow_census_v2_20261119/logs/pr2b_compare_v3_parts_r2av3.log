@@ -1,0 +1,7 @@
+canonical order: True
+every column but refused exact, dtypes included (213349 rows, 137 columns; v3 213349 x 137): True
+refused unchanged off the joint POST sampled ok rows: True; joint retain rows carry none: True
+joint POST sampled ok rows (289) now carry the boolean outcome: True; refused among them {'joint_post_keep': 6, 'joint_chase': 12}, equal to the census reading: True
+coarse support cells identical: True; selected-ID hash identical and reconciliation EXACT: True
+R2-A v2 PARTITIONED (r2av3) = v3 (+ the joint POST refusal outcome): True
+2026-11-19T23:08:28Z tag=pr2b_compare_v3_parts_r2av3 rc=0 peak_rss_mib=663 wall_s=1.87 cpu_user_s=1.45 memavail_start_gib=23 disk_free_gib=465->465 slot=claude

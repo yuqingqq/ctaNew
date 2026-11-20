@@ -1,0 +1,11 @@
+original 98 side 1 market 3655838 status eligible base path eligible
+seed 95692 venue-future path status: missing_endpoint
+seed 95693 venue-future path status: eligible
+seed 95694 venue-future path status: eligible
+seed 95695 venue-future path status: eligible
+seed 95696 venue-future path status: eligible
+seed 95697 venue-future path status: eligible
+seed 95698 venue-future path status: eligible
+seed 95699 venue-future path status: eligible
+frames after the venue frame by d up to END: 28 ; END - d = 3400.0 ms
+2026-11-19T22:38:40Z tag=pr2b_diag_nopath rc=0 peak_rss_mib=763 wall_s=1.99 cpu_user_s=1.40 memavail_start_gib=23 disk_free_gib=465->465 slot=claude

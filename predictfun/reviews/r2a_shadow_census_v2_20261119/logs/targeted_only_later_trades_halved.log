@@ -1,0 +1,2 @@
+R2 SHADOW SELFTEST FAILED: causality: an engine-truth context (unnotified fills) is not exposed by the halved unnotified trades ({'stored_vs_rebuild': 0, 'stored_vs_perturbed': 0, 'firing': 0})
+2026-11-19T22:04:11Z tag=pr2b_mut30c rc=1 peak_rss_mib=263 wall_s=57.76 cpu_user_s=56.68 memavail_start_gib=23 disk_free_gib=466->466 slot=claude

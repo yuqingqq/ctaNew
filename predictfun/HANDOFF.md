@@ -357,6 +357,26 @@ pulls and bid/ask; judge movement calibration on selected actions before changin
 order design. Other session owns fixes; scheduler remains off.
 <!-- /PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
 
+## 2026-11-20 00:07Z (session aea5bfb9) — R2-A v2: STORED-ROW CAUSALITY, NO-DROP POPULATION, THE PARTITIONED CENSUS ON THE FROZEN 256 (review d10d3698 answered; no full-day build, no fit) (USER: "... continue the implementing and next priority loop")
+- [Receipt](reviews/r2a_shadow_census_v2_20261119/report.md), superseding R2-A (5432f636) in-band; [`pf_r2_shadow.py`](research/pf_r2_shadow.py) `bbff8b19`.
+- d10d3698's P2 x3 and P3 x2 hold; each fixed:
+  - rebuild_row: the stored 107 vs an independent rebuild, a future-only world and firing controls; 4 planted corruptions and 2 shared leaks refused;
+  - missing_source statuses and an exact population reconciliation;
+  - partitions of <= 64 with a manifest and additive support;
+  - the joint POST refusal outcome (never on retain rows); 16 ctx fields; terminal disclosed;
+  - the support diagnostics completed (cells with fallbacks, unsupported categories, per side / head ranges, delayed entry / later generations).
+- A real-day rehearsal (8 originals, every row) found two instrument defects before the declared run:
+  - a one-sided builder call (crash);
+  - the engine's future world cut on the RECEIPT clock, rewriting the venue's past: 51 / 1,372 rows, all through the path (FINDINGS P77). Now the venue clock; rerun 0 / 1,372.
+- Census r2av2 FAILED as declared on causality, 2 / 2,765: one future draw built no path. Now up to 8 seeds, with a NOT EVALUABLE status (never a pass). Kept as provenance.
+- Census r2av3 (committed source):
+  - = v3 on every column, dtypes included, except refused on the 289 joint POST rows (6 + 12 refusals; entry 312);
+  - causality 2,765 / 0 (2 retried); labels 44,959 / 0; receipt checks 9 / 9;
+  - peak 1,246 MiB; partitions 327 / 353 / 304 / 253 s.
+- Throughput: 25 s per 64-original partition without causality, 0.41 s per causality check. Oct 23 full day: ~3.3 h + ~37.6 h at every 17th row (arithmetic).
+- Checks: selftest; mutation suite 46 / 46.
+- Next: the Codex review. The full-day stage needs a declared causality sample, a resume from manifests and the explicit 15 min / 1.5 GiB stop.
+
 ## 2026-11-19 19:51Z (session aea5bfb9) — R2-A: THE SHADOW-PROBE / FEATURE / SUPPORT ADAPTER, MANIFEST r2_shadow_sampling_v1, THE OCT 23 CENSUS (review 7d59bde7's next priority; no teacher fit) (USER: "... continue the implementing and next priority loop")
 - [Receipt](reviews/r2a_shadow_census_20261119/report.md); [`pf_r2_shadow.py`](research/pf_r2_shadow.py).
 - Population: Oct 23, the first 128 originals per side of any status (256), with an ID hash; a SHA-256 phase manifest.
