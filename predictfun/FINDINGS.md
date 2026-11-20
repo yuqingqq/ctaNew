@@ -1,3 +1,39 @@
+<!-- R2E_REVIEW_20261120_CODEX -->
+## 2026-11-20 — R2-E combined review: pilot accepted; production round authorized
+
+Target **714ce75978ab8dfec29c1fc41fd0dd800b982ad8**.
+[Complete ranked checklist, reproductions and next priority](reviews/automatic/20261120_714ce759/report.md).
+All 288 saved labels and A/B identities independently reconcile; B1 provenance
+and prior B2 four-corruption refusals hold. No demonstrated saved-label defect.
+
+P2 BLOCKING only for unprotected production acceptance: sample validator
+:545–548 skips pair checks for feature_unavailable/pair_not_ok; copied real
+rows with a false reconciliation hidden by status are admitted. :446–448 does
+not enforce effective END; changing 5000 to 4000 is admitted. Tighten or use a
+verified all-record acceptance audit, including common marks. Actual pilot is
+all ok and independently passes those checks. No need to rerun accepted data.
+
+P2 NONBLOCKING for pilot: :464 requires a positive teacher-call count even when
+no callback remains. Actual engine/wrapper synthetic k=99 bid KEEP/PULL has
+zero callbacks, zero binding failures and Y=+5 c. Handle this boundary in the
+production round; no dropped/replaced draws. Eligible pilot pools contain 116
+bid KEEP rows at 4950 ms, none selected here.
+
+P3 NONBLOCKING corrections: nonzero-original union is 10 (not 11); 21 fill
+paths differ, nine with equal value; coverage horizon_ms is elapsed time;
+pair/world cost coefficients are collinear, though the same-ratio 27-hour
+projection holds. Mutation summary lacks index/name uniqueness enforcement;
+this review independently verified all 135 v1/v2 records, so current counts hold.
+
+ONE next priority: same full sample/weights, bundled acceptance and boundary
+handling, optional every-35 continuation audit and hash-bound day cache, exact
+288-pilot economic/decision parity, then direct production and one receipt.
+No intermediate review or extra USER approval; teacher/target unchanged,
+four development slots, existing resource bounds and 40 core-hour planning
+ceiling. No candidate fit or untouched-day run yet. Sparse Y is a measurement
+of target variation, not proof of prediction skill or profitability.
+<!-- /R2E_REVIEW_20261120_CODEX -->
+
 <!-- R2D_BUNDLED_ROUND_20261120_CODEX -->
 ## 2026-11-20 — Consolidated closure round requested by USER
 

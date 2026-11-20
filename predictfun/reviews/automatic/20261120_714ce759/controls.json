@@ -1,0 +1,45 @@
+{
+  "intact_pass": true,
+  "corruption_results": {
+    "Y+1": {
+      "refused": true,
+      "messages": [
+        "{\"day\":\"20261024\",\"m\":3695631,\"t_ms\":1792802030000} side 0 mandatory: Y != R_a - R_b"
+      ]
+    },
+    "wrong_fork": {
+      "refused": true,
+      "messages": [
+        "{\"day\":\"20261024\",\"m\":3695631,\"t_ms\":1792802030000} side 0 mandatory: the result belongs to another fork"
+      ]
+    },
+    "false_reconcile": {
+      "refused": true,
+      "messages": [
+        "{\"day\":\"20261024\",\"m\":3695631,\"t_ms\":1792802030000} side 0 mandatory: a stored reconciliation or the pre-fork flag is false"
+      ]
+    },
+    "binding_bad": {
+      "refused": true,
+      "messages": [
+        "{\"day\":\"20261024\",\"m\":3695631,\"t_ms\":1792802030000} side 0 mandatory: an arm binding failure"
+      ]
+    },
+    "end_changed": {
+      "refused": false,
+      "messages": []
+    },
+    "failed_pair_disguised_as_feature_unavailable": {
+      "refused": false,
+      "messages": []
+    },
+    "ok_disguised_as_pair_not_ok": {
+      "refused": false,
+      "messages": []
+    }
+  },
+  "target": "714ce75978ab8dfec29c1fc41fd0dd800b982ad8",
+  "asof": "2026-11-20T19:03:03.760147+00:00",
+  "script_sha256": "a7e2a8c9f0e6ca78ca78f55f484f54c5afa1e0a4c5cd7c29bcb5a90e72527fe1",
+  "mode": "controls"
+}

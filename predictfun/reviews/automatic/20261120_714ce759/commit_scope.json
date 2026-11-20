@@ -1,0 +1,44 @@
+{
+  "target": "714ce75978ab8dfec29c1fc41fd0dd800b982ad8",
+  "owned_state": {
+    "predictfun/HANDOFF.md": {
+      "working_sha256": "7471be1d222b518f3d7f68185322bad7596958f87b7da630c69ad69b914f28bc",
+      "prior_working_sha256": "43b31f66be8ae4f39a1d627b1f7137a715d37a9d8c0864ae07140c9985bfd2e9",
+      "index_expected_sha256": "0c5283a8166424599fd5d7786944c753363f0e86dcb0fb9bb88c2beabbf10572"
+    },
+    "predictfun/STATUS.yml": {
+      "working_sha256": "b52403d1c72af460b9dc9448e674aa2b4a2d764bec92ae3f33d158744787f6e1",
+      "prior_working_sha256": "37d7fd14b583fed483f19741e89ae65e4d9f7a0c93401c5aa15de9b922f0d905",
+      "index_expected_sha256": "43ca987f1a82d9fc470d6df70f0d326029d468abc2e4a1203f89d220bf332e19"
+    },
+    "predictfun/FINDINGS.md": {
+      "working_sha256": "73843565c542f0664250206af5c9142fa0c4e7bbb3b06594990ee24c8b578b61",
+      "prior_working_sha256": "045a5187bf8b87db09790caa6400c770642d0d821be66901995f23e6971e1878",
+      "index_expected_sha256": "8dfc5c7832bb003dc75f158c17a45171578784a4c82ec8aa1a71129d07b59554"
+    }
+  },
+  "other_tracked_working_state": {
+    "data/pm_5min/derived/be133_forward_population_era_split.json": "DELETED",
+    "data/pm_5min/derived/be_tape_v2_builder_binding_proof_v1.json": "DELETED",
+    "data/pm_5min/derived/be_validation_review_v1.json": "DELETED",
+    "data/pm_5min/derived/p003_de_gate1_run_journal_de145day07__20260908T032816Z.json": "DELETED",
+    "data/pm_5min/derived/p003_de_gate1_run_journal_deRR20260903__20260907T195646Z.json": "DELETED",
+    "data/pm_5min/derived/p003_de_gate1_run_journal_deRR20260904__20260907T225517Z.json": "DELETED",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run__20260906T062115Z.json": "DELETED",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v2__20260906T064720Z.json": "DELETED",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v3__20260906T071214Z.json": "DELETED",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v4__20260906T074712Z.json": "DELETED",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v5__20260906T075707Z.json": "DELETED",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v6__20260906T081252Z.json": "DELETED",
+    "data/pm_5min/derived/p003_de_launch_form_probe__20260906T121813Z.json": "DELETED",
+    "data/pm_5min/derived/p003_de_r608_resolver_agreement__20260906T104000Z.json": "DELETED",
+    "data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/README": "DELETED",
+    "data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/linear_btc.json": "DELETED",
+    "data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/linear_eth.json": "DELETED",
+    "predictfun/handoffs/20261109_TODO.md": "8b7c104adae198927a9fecb04b5f57015fc2cef1afa09f48315b8c4ec413d7d8",
+    "predictfun/research/run_light.log": "3a718110852172c6a8c8d3279d9ec94dd8ed2118fe3988021c44b1251cceeb93"
+  },
+  "implementation_changed_by_review": false,
+  "index_was_empty": true,
+  "review_directory": "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261120_714ce759"
+}
