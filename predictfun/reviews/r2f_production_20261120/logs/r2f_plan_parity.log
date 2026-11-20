@@ -1,0 +1,2 @@
+{"run_set": "pilot", "partitions": 6, "N_worlds": {"20261024": 15352, "20261025": 14998}, "selected": {"20261024": 1536, "20261025": 1536}}
+2026-11-20T19:26:53Z tag=r2f_plan_parity rc=0 peak_rss_mib=1272 wall_s=117.78 cpu_user_s=115.35 memavail_start_gib=23 disk_free_gib=438->438 slot=claude2
