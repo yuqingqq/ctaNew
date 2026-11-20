@@ -1,0 +1,10 @@
+shard 1/2: unchanged copy passes its selftest: True
+  1 the remaining side skipped at the fork tick: caught - R2 LABELS SELFTEST FAILED: parity: pair_bound differs from pf_branch_engine.pair (post_keep k 0 side 0 post: ok / ok) | parity: pair_bound differs from pf_branch_engine.p
+  3 arms share one branch: caught - R2 LABELS SELFTEST FAILED: no feasible fork for the stale-binding falsifier 
+  5 the binding check disabled: caught - R2 LABELS SELFTEST FAILED: binding: a stale-bound teacher (0) or a reused first-arm teacher (0) is not caught 
+  7 reconcile without position from the fills: caught - R2 LABELS SELFTEST FAILED: reconciliation: clean True; cash False, position True, value False, a fill above size False must each fail alone 
+  9 reconcile without the size guard: caught - R2 LABELS SELFTEST FAILED: reconciliation: clean True; cash False, position False, value False, a fill above size True must each fail alone 
+  11 selection not round robin: caught - R2 LABELS SELFTEST FAILED: selection: [('neutral', 0), ('neutral', 1), ('neutral', 2), ('neutral', 3), ('neutral', 4), ('delayed', 0), ('delayed', 1)] is not the declared
+  13 selection of non-ok candidates: caught - R2 LABELS SELFTEST FAILED: selection: [('neutral', 0), ('delayed', 0), ('joint_post_keep', 0), ('joint_chase', 0), ('pi0', 0), ('neutral', 0), ('delayed', 1)] is not the 
+  15 held stops ignored: caught - R2 LABELS SELFTEST FAILED: stops: a STOP_HARD_RSS status not held until its identity-bound disposition (PAIRS_DONE, 1, PAIRS_DONE) 
+  17 the freeze sha not pinned: caught - R2 LABELS SELFTEST FAILED: pins: a wrong freeze sha was not refused 

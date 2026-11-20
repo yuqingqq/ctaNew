@@ -1,0 +1,5 @@
+shard 1/3: unchanged copy passes its selftest: True
+  1 the remaining side skipped at the fork tick: caught - R2 LABELS SELFTEST FAILED: parity: pair_bound differs from pf_branch_engine.pair (post_keep k 0 side 0 post: ok / ok) | parity: pair_bound differs from pf_branch_engine.p
+  4 Y reversed: caught - R2 LABELS SELFTEST FAILED: parity: pair_bound differs from pf_branch_engine.pair (post_keep k 2 side 1 keep: ok / ok) | parity: pair_bound differs from pf_branch_engine.p
+  7 reconcile without cash from the fills: caught - R2 LABELS SELFTEST FAILED: reconciliation: clean True; cash True, position False, value False, a fill above size False must each fail alone 
+  10 reconcile without the size guard: caught - R2 LABELS SELFTEST FAILED: reconciliation: clean True; cash False, position False, value False, a fill above size True must each fail alone 

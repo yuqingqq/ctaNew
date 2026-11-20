@@ -490,6 +490,26 @@ pipeline_one_day_v3_20261119:
   values_equal_v2: {cells_per_day: 190, differing: 0}
   attribution_vs_pull_all_c: {"20261026": {first_step: 0.0, later: 954.33, never: 995.36, no_prediction: 0.0}, "20261027": {first_step: 0.0, later: -821.85, never: 251.74, no_prediction: 0.0}}
 
+r2d_labels_20261120:
+  status: done_r2d_arm_bound_label_adapter_bounded_oct24_25_checks_all_true_except_D_census_memory
+  asof: "2026-11-20 15:01Z"
+  receipt: predictfun/reviews/r2d_labels_20261120/report.md
+  adapter_sha256: 42c40b16c0f084ee
+  adapter_selftest_sha256: 3b643eb03d08d3bf
+  adapter_mutants_sha256: 1a5c2f961a7d233e
+  runner_v4_sha256: 0f56442c1969c7a1
+  diag2: {module: pf_r2_teacher_diag2.py, superseding_receipt: predictfun/reviews/r2c_teacher_20261120/report_v2.md, selftest: pass, mutants: 4/4}
+  findings_8cc1dc49: {P1_arm_binding: fixed_pair_bound_per_arm_teacher_binding_check, P2_disposition_identity: fixed_runner_v4_stop_history_HELD, P3_value_estimand: superseded_diag2}
+  suites: {adapter_selftest: pass, adapter_mutants: 29/29, runner_v4_mutants: 29/29, equivalent_mutants_documented: 3}
+  build: {days: ["20261024", "20261025"], prefix_worlds: 32, candidates: 129868, ok_candidates: 27417, selected: 128, per_cell: 16, sources: [neutral, delayed, joint_post_keep, joint_chase, pi0], manifest_sha256_prefix: 71a406ca}
+  attempt1: {manifest_in_memory_mb: 70, stop: STOP_RESOURCE_first_oct25_pair_1553_mib, kept: provenance}
+  checks: {A_manifest: true, B_resume_identity: true, C_labels: true, D_resources: false, E_controls: true, F_suite_on_build_sources: true}
+  resources: {census_peak_mib: [1455, 1652], controls_peak_mib: 1631, pairs_peak_mib: [1440, 1319, 1413], checkpoint_mib: 1536, hard_cap_ok: true}
+  readings: {pairs_ok: 128, fallback_share: 0.0, seconds_per_pair_mean: 6.06, y_mostly_zero: true, full_day_core_hours: {"20261024": 9140, "20261025": 12708}}
+  known_defects: [census_cli_final_print_KeyError_after_outputs_written_verify_census_used]
+  controls: {stale_binding_caught: true, reversal_equal: true, single_branch_equals_r2c: true, v1_live_vs_json_kept: true}
+  next: codex_review_then_label_sample_size_decision_one_process_per_day_cli_fix
+
 r2c_teacher_20261120:
   status: done_r2c_pi0_50_v1_fitted_frozen_rollout_contract_checks_all_true_consumed_oct23
   asof: "2026-11-20 12:01Z"

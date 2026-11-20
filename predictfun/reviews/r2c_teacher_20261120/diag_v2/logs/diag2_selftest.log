@@ -1,0 +1,2 @@
+R2 TEACHER DIAG2 selftest passed: the coherent-conditional and all-row estimands give their known answers; v1 mixed form differs
+2026-11-20T12:26:33Z tag=diag2_selftest rc=0 peak_rss_mib=193 wall_s=0.92 cpu_user_s=0.75 memavail_start_gib=23 disk_free_gib=445->445 slot=claude2

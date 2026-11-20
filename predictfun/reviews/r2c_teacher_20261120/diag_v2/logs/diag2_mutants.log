@@ -1,0 +1,7 @@
+unchanged copy passes: True
+  v1 mixed denominator (coherent sums / all weight): caught
+  the realized coherent mean over all weight: caught
+  the all-row mean over coherent rows only: caught
+  incoherent rows counted coherent: caught
+diag2 mutation check passed: 4 / 4 planted errors caught by a check
+2026-11-20T12:26:50Z tag=diag2_mutants rc=0 peak_rss_mib=193 wall_s=4.74 cpu_user_s=3.90 memavail_start_gib=23 disk_free_gib=445->445 slot=claude2

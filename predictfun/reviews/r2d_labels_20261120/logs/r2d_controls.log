@@ -1,0 +1,2 @@
+{"holds": {"stale": true, "reversal": true, "single": true}, "all_true": true}
+2026-11-20T14:28:31Z tag=r2d_controls rc=0 peak_rss_mib=1631 wall_s=316.18 cpu_user_s=298.77 memavail_start_gib=22 disk_free_gib=444->444 slot=claude

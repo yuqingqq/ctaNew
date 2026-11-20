@@ -1,0 +1,12 @@
+shard 2/3: unchanged copy passes its selftest: True
+  2 the forced action dropped: caught - R2 LABELS SELFTEST FAILED: parity: pair_bound differs from pf_branch_engine.pair (post_keep k 0 side 0 post: ok / ok) | parity: pair_bound differs from pf_branch_engine.p
+  5 the binding check disabled: caught - R2 LABELS SELFTEST FAILED: binding: a stale-bound teacher (0) or a reused first-arm teacher (0) is not caught 
+  8 reconcile without position from the fills: caught - R2 LABELS SELFTEST FAILED: reconciliation: clean True; cash False, position True, value False, a fill above size False must each fail alone 
+  11 the manifest fingerprint unchecked: caught - R2 LABELS SELFTEST FAILED: identity: a manifest fork fingerprint that the rebuilt fork does not match was not refused 
+  14 selection of non-ok candidates: caught - R2 LABELS SELFTEST FAILED: selection: [('neutral', 0), ('delayed', 0), ('joint_post_keep', 0), ('joint_chase', 0), ('pi0', 0), ('neutral', 0), ('delayed', 1)] is not the 
+  17 libraries not enforced: caught - R2 LABELS SELFTEST FAILED: pins: a library mismatch was not refused 
+  20 bound_fork without the other side first: caught - R2 LABELS SELFTEST FAILED: binding: pair_bound refused a valid fork (a saved fork with the wrong sides already processed at its tick) | binding: pair_bound refused a vali
+  23 offset 0 named delayed: caught - R2 LABELS SELFTEST FAILED: census: pi0 sampling True / unsampled present True, neutral / delayed naming False, outcome-free rows True 
+  26 no arm causal probe: caught - R2 LABELS SELFTEST FAILED: binding: an arm-bound pair failed its binding / reconciliation / causal checks ([{'calls': 185, 'by_status': {'model': 120, 'cap_blocked': 65},
+r2 labels mutation check (shard 2/3) passed: the unchanged copy passes its selftest, 9 / 9 planted code errors are caught by a check
+2026-11-20T12:53:31Z tag=labels_mutants_2 rc=0 peak_rss_mib=261 wall_s=1230.02 cpu_user_s=1220.07 memavail_start_gib=23 disk_free_gib=445->445 slot=claude4
