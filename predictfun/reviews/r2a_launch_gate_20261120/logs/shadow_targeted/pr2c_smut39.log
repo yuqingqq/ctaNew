@@ -1,0 +1,2 @@
+R2 SHADOW SELFTEST FAILED: population: an original emitted in two partitions was not refused
+2026-11-20T01:25:29Z tag=pr2c_smut39 rc=1 peak_rss_mib=259 wall_s=102.19 cpu_user_s=100.32 memavail_start_gib=23 disk_free_gib=463->463 slot=claude

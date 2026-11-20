@@ -1,0 +1,2 @@
+R2 SHADOW SELFTEST FAILED: population: a repeated pair / status row / episode row within a partition was not refused ({'repeated pair': 'partition 0: the source yielded the pair of market 101 twice', 'repeated status': 'partition 0: an original with two status rows, or with a status row and episode rows', 'repeated episode': 'accepted'})
+2026-11-20T01:18:44Z tag=pr2c_smut30 rc=1 peak_rss_mib=258 wall_s=102.33 cpu_user_s=100.28 memavail_start_gib=23 disk_free_gib=463->463 slot=claude

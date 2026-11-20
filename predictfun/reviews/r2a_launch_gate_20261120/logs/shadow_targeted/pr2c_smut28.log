@@ -1,0 +1,2 @@
+R2 SHADOW SELFTEST FAILED: population: a repeated pair / status row / episode row within a partition was not refused ({'repeated pair': 'partition 0: a duplicate canonical candidate identity', 'repeated status': 'partition 0: an original with two status rows, or with a status row and episode rows', 'repeated episode': 'partition 0: a duplicate canonical candidate identity'})
+2026-11-20T01:15:21Z tag=pr2c_smut28 rc=1 peak_rss_mib=263 wall_s=102.06 cpu_user_s=99.83 memavail_start_gib=23 disk_free_gib=463->463 slot=claude

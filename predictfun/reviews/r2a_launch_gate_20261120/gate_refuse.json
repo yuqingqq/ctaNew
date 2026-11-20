@@ -1,0 +1,30 @@
+{
+ "corrupt part": {
+  "refused": true,
+  "message": "part 1: the part file is missing or its hash differs from the record"
+ },
+ "overlapping record": {
+  "refused": true,
+  "message": "part 2: the record's members differ from the plan's"
+ },
+ "another plan's record": {
+  "refused": true,
+  "message": "part 3: a completion record of another plan"
+ },
+ "stale source": {
+  "refused": true,
+  "message": "stale source: a module or a dependency changed since the plan"
+ },
+ "changed input": {
+  "refused": true,
+  "message": "changed input: the day's input hours or their hashes differ from the plan"
+ },
+ "a different plan": {
+  "refused": true,
+  "message": "a different plan exists for this directory (a plan is immutable)"
+ },
+ "B unchanged": {
+  "refused": true,
+  "message": "10 files hashed before and after"
+ }
+}

@@ -1,0 +1,10 @@
+(1) A COMPLETE, B1 [{'mode': 'B1', 'state': 'STOPPED', 'records': 2}], B COMPLETE: True
+(2) A = B: plan True, part hashes True, records True, support True: True
+(3) A parts = r2av3 parts, frame-equal: [True, True, True, True]; byte-identical: [True, True, True, True]: True
+(4) the independent audit sample: 1598 rows (declared 1,598), equal to A's 1598 audited keys: True
+(5) causality PASS {'stored_vs_rebuild': 0, 'stored_vs_perturbed': 0, 'stored_vs_visibility': 0, 'firing': 0, 'not_evaluable': 0} (retried 2); labels {'checked': 44959, 'failed': 0, 'no_fill': 32902, 'verdict': 'PASS'}; weights {'groups': 508, 'groups_summing_to_one': 508}; population 256 / 256; status rows {'original post no_path:missing_endpoint': 2}: True
+(6) A parts [156, 161, 156, 142] s, high-water [1180, 1180, 1180, 1180] MiB, run_light peak [1179] MiB: True
+(7) refused resumes: {'corrupt part': True, 'overlapping record': True, "another plan's record": True, 'stale source': True, 'changed input': True, 'a different plan': True, 'B unchanged': True}: True
+(8) re-finalized with sentinels: COMPLETE, readings equal: True
+GATE CHECKS: {'states': True, 'resume_identity': True, 'equals_r2av3': True, 'audit_sample': True, 'readings': True, 'resources': True, 'refused_resumes': True, 'refinalize_sentinel': True}; ALL TRUE: True
+2026-11-20T02:30:26Z tag=gate2_checks rc=0 peak_rss_mib=582 wall_s=7.16 cpu_user_s=6.71 memavail_start_gib=23 disk_free_gib=462->462 slot=claude
