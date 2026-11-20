@@ -1,0 +1,54 @@
+{
+  "record_admission": {
+    "positive_rows": 128,
+    "corruptions": {
+      "Y_plus_one": {
+        "valid_record": true,
+        "exported_rows": 128
+      },
+      "wrong_result_fork": {
+        "valid_record": true,
+        "exported_rows": 128
+      },
+      "failed_reconciliation": {
+        "valid_record": true,
+        "exported_rows": 128
+      },
+      "binding_mismatch": {
+        "valid_record": true,
+        "exported_rows": 128
+      }
+    },
+    "undisposed_stop_still_finalizes": true
+  },
+  "stale_manifest_source": {
+    "declared_label_source": "0000000000000000000000000000000000000000000000000000000000000000",
+    "actual_label_source": "42c40b16c0f084eef7639611825da6816d25326d984a30dc90fb63c67887c12f",
+    "resume_state": "PAIRS_DONE",
+    "finalized_rows": 128
+  },
+  "watchdog_history": {
+    "old_event": "f7e67e729ee73c5d34377fd718b3645a1953d49d637a6156fea1011b171bfeed",
+    "recorded_events": [
+      "44b86947d94877c75a247eb706cb1c9683e92eae47a7c2fc74b846cbe84844a8"
+    ],
+    "old_stop_lost": true
+  },
+  "census_day_lifetime": {
+    "at_load": [
+      {
+        "day": "first",
+        "previous_depth_alive": false
+      },
+      {
+        "day": "second",
+        "previous_depth_alive": true
+      }
+    ],
+    "released_after_function_returns": true
+  },
+  "target": "f96c38d01a7f27ed4fd39ddf2ddadeecf162b84b",
+  "asof": "2026-11-20T15:12:18.685405+00:00",
+  "script_sha256": "842aaea915f6118334e10e1508fb709176ae11188d5ee3e9093d4517992edf0b",
+  "mode": "controls"
+}

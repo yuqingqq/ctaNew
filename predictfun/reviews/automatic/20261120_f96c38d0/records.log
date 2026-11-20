@@ -1,0 +1,2 @@
+{"mode": "records", "result": "PASS", "evidence": "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261120_f96c38d0/records.json"}
+2026-11-20T15:11:46Z tag=reviewf96_records rc=0 peak_rss_mib=199 wall_s=1.02 cpu_user_s=0.83 memavail_start_gib=23 disk_free_gib=443->443 slot=codex

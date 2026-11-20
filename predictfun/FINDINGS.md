@@ -1,3 +1,35 @@
+<!-- R2D_REVIEW_20261120_CODEX -->
+## 2026-11-20 R2-D review: saved labels valid; two production-acceptance blockers
+
+Target **f96c38d01a7f27ed4fd39ddf2ddadeecf162b84b**.
+[Report and next priority](reviews/automatic/20261120_f96c38d0/report.md).
+P1 BLOCKING: labels :239-242,359-363,379-399,446-449 record but do not enforce
+new orchestration hashes; label-day market-feature/clock/metadata input identity
+is missing. A synthetic stale-source manifest resumes as PAIRS_DONE and exports.
+P1 BLOCKING: labels :430-434,446-463 admit records by manifest/key only and trust
+saved flags. Temporary Y+1, wrong fork, reconciliation=false and binding_bad=1
+all export; undisposed stop also does not block finalization. Intact positive
+control exports; actual 128 records independently reconcile. Add common strict
+preflight/admission/publication checks with persisted-corruption falsifiers.
+
+Prior arm-binding P1 CLOSED in per-arm factory and roll-in. Prior diagnostic P3
+CLOSED by coherent denominators and separate all-row means. Prior stop P2 PARTLY
+closed: content/plan identity and HELD correct; runner :94-98,207-234 watchdog
+can erase an unarchived stop before archive_stops. NONBLOCKING for delivered data.
+Resource D remains FAIL; labels :341-357 retains world.depth into next-day load
+(synthetic weak-reference proof), census lacks a watchdog/checkpoint. Fix with
+isolated processes and guards; CLI :472 also needs the declared correction.
+
+All 129,868 candidate rows, exact selection, 128 persisted pairs and A/B identity
+checked. Four nonzero labels represent two originals, not four independent
+opportunities; selected coverage is eight worlds and one market/day near 00:00.
+No forward signal or profit claim. Six bounded successes, 181.38 s / 396 MiB;
+no real-data generation or fit. ONE next priority: repaired production launch
+gate plus frozen r2_label_sample_v2 (hour-stratified <=18,432 weighted pairs,
+first <=288 distributed pairs for review), unchanged teacher/target. No new USER
+approval. The report fixes inclusion weights and resource/acceptance requirements.
+<!-- /R2D_REVIEW_20261120_CODEX -->
+
 <!-- R2C_REVIEW_20261120_CODEX -->
 ## 2026-11-20 R2-C review: valid teacher artifacts, paired callback binding blocks labels
 

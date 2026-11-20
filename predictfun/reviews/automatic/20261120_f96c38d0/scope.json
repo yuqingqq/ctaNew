@@ -1,0 +1,43 @@
+{
+  "target": "f96c38d01a7f27ed4fd39ddf2ddadeecf162b84b",
+  "asof": "2026-11-20T15:18:52.900816+00:00",
+  "backup_directory": "/tmp/pf-review-f96c38d0-state-backup",
+  "preexisting_tracked_status": " D data/pm_5min/derived/be133_forward_population_era_split.json\n D data/pm_5min/derived/be_tape_v2_builder_binding_proof_v1.json\n D data/pm_5min/derived/be_validation_review_v1.json\n D data/pm_5min/derived/p003_de_gate1_run_journal_de145day07__20260908T032816Z.json\n D data/pm_5min/derived/p003_de_gate1_run_journal_deRR20260903__20260907T195646Z.json\n D data/pm_5min/derived/p003_de_gate1_run_journal_deRR20260904__20260907T225517Z.json\n D data/pm_5min/derived/p003_de_gate1_synthetic_day_run__20260906T062115Z.json\n D data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v2__20260906T064720Z.json\n D data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v3__20260906T071214Z.json\n D data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v4__20260906T074712Z.json\n D data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v5__20260906T075707Z.json\n D data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v6__20260906T081252Z.json\n D data/pm_5min/derived/p003_de_launch_form_probe__20260906T121813Z.json\n D data/pm_5min/derived/p003_de_r608_resolver_agreement__20260906T104000Z.json\n D data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/README\n D data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/linear_btc.json\n D data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/linear_eth.json\n M predictfun/FINDINGS.md\n M predictfun/HANDOFF.md\n M predictfun/STATUS.yml\n M predictfun/handoffs/20261109_TODO.md\n M predictfun/research/run_light.log\n",
+  "state": {
+    "predictfun/HANDOFF.md": {
+      "prior_worktree_sha256": "0208e1dc8b8cae561f87757bdf86ea2b1814f7893bb4c0e323bee6514cd2cfa8",
+      "prefix_sha256": "c32464d0edc96258815f84dbfbe199f6f12f4f88a981cb9fbcbe700feb1d0794",
+      "worktree_sha256": "317ee419ed46e3afa6b26215bafa3130e5a20ee7f16b11a96e33e825be763d3f",
+      "staged_sha256": "a8238f8a46db0b06a2c21200aef3aa8f841063d9b2559ec922b350a8ed9905d1",
+      "preserved_prior_worktree_bytes": true
+    },
+    "predictfun/FINDINGS.md": {
+      "prior_worktree_sha256": "be32e00a515d27fbb9de766924bdc441edc8aeb5c49b1dc421e1420a2b22d63a",
+      "prefix_sha256": "28c2c3b5024af4640549d904f070e2c8c1d2824e476edfc31fea18d93ed35217",
+      "worktree_sha256": "5269f7a77376e8c54cdce94c291d09da70128db413bb82cd220cb9fb0e1dcf20",
+      "staged_sha256": "fd4fb7eb0a2c5be857357a87e8e781ee0c9e191b59db5723ab107e7dddbd4680",
+      "preserved_prior_worktree_bytes": true
+    },
+    "predictfun/STATUS.yml": {
+      "prior_worktree_sha256": "46db33e9688b7da65460ca45320f756aabf1966b36688ed2c21bc7b216335b66",
+      "prefix_sha256": "b98f55acaa8a2fe1e3f1758191240b3221d7622141ed2d353dd129644f1d1197",
+      "worktree_sha256": "26e4bfffc20c37bf492e8f349730f2edc18157cee5d4231416e3162683e17b35",
+      "staged_sha256": "4a8f25a0950bf25b49eae547bfccfbfff75e3ac5bb6f3d21317dec7193529052",
+      "preserved_prior_worktree_bytes": true
+    }
+  },
+  "review_artifacts_sha256": {
+    "controls.json": "3ddf3b76ce3cc13dc2c57ef34bb33f5446e7b45ed048bd303e4d4e8d4a8b1ab8",
+    "controls.log": "df9e6e5894c485cc8cda6f1e32df10382bba83cc14352df5346bad1be6fb990e",
+    "diagnostics.json": "de96742592fdead680c916387c4dde5719264aa4874f502e2eb4dbd7c27b91d4",
+    "diagnostics.log": "e3a08a9511489e1d5495cf6e923fcdc425f9a48ab179cf1f6585c3280fef8399",
+    "labels_selftest.log": "4c89d965ad5b43e601322d939d965e0a834d9d3332faae64b90d6721cd8636c5",
+    "metadata.json": "999e24a675558875fa98fc70d60fe3bc9f775997cdda76242f30a5007f686c2a",
+    "metadata.log": "a6b2ac30ea499c432f3bb7e0c57efac5fa1253dd3115f2cd7fa6448a3baaf21a",
+    "records.json": "8dab4bd2a394531eb1c5ebf25a49de979d620fcbbc837c4c8ddd73bbd5896951",
+    "records.log": "ac8f1f896e15d6d55e0d05e47b453a8e2e4837a8691ec73736b09b237e2e64d7",
+    "report.md": "58353c87387110063faee539a1b8aaec54e5fa31622df321ac89ca35cd9456b7",
+    "runner_selftest.log": "5bf6b36bdcadac53561904b0de9cce14c2aecaa589e6622cee486586aac6ed3c",
+    "verify.py": "842aaea915f6118334e10e1508fb709176ae11188d5ee3e9093d4517992edf0b"
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "manifest_sha256": "71a406caffe4f1fd83951e71208edb1eb806b48735e8d027c4273942b07bfc4a",
+  "candidates_sha256": "bbec686a57117f4fafbb99481e12997377aa57fa57a48c64d7c0ab13c6ca2b0a",
+  "all_candidate_rows": 129868,
+  "statuses": {
+    "unsampled": 88912,
+    "cap_blocked": 6606,
+    "cancel_pending": 3259,
+    "post_pending": 3439,
+    "near_end": 235,
+    "ok": 27417
+  },
+  "independent_selection_equal": true,
+  "duplicates": 0,
+  "source_closure_and_frozen_models_match": true,
+  "populations": {
+    "20261024": {
+      "day_worlds": 15352,
+      "prefix_worlds": 32,
+      "selected_pairs": 64,
+      "selected_worlds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        12,
+        13,
+        16
+      ],
+      "selected_markets": [
+        3695091
+      ],
+      "selected_first_t": 1792800005000.0,
+      "selected_last_t": 1792800085000.0,
+      "distinct_side_originals": 13,
+      "selected_sources": {
+        "neutral": 16,
+        "delayed": 12,
+        "joint_post_keep": 12,
+        "joint_chase": 12,
+        "pi0": 12
+      },
+      "prefix_ok": 11314
+    },
+    "20261025": {
+      "day_worlds": 14998,
+      "prefix_worlds": 32,
+      "selected_pairs": 64,
+      "selected_worlds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        7,
+        8,
+        11
+      ],
+      "selected_markets": [
+        3723772
+      ],
+      "selected_first_t": 1792886405000.0,
+      "selected_last_t": 1792886460000.0,
+      "distinct_side_originals": 13,
+      "selected_sources": {
+        "neutral": 16,
+        "delayed": 12,
+        "joint_post_keep": 12,
+        "joint_chase": 12,
+        "pi0": 12
+      },
+      "prefix_ok": 16103
+    }
+  },
+  "saved_mutants_caught": 29,
+  "selected_pi0_fingerprint_equal": 24,
+  "target": "f96c38d01a7f27ed4fd39ddf2ddadeecf162b84b",
+  "asof": "2026-11-20T15:11:23.528915+00:00",
+  "script_sha256": "842aaea915f6118334e10e1508fb709176ae11188d5ee3e9093d4517992edf0b",
+  "mode": "metadata"
+}

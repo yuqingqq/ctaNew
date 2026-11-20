@@ -1,0 +1,81 @@
+{
+  "pairs": 128,
+  "per_arm_identities_and_value_arithmetic_pass": true,
+  "all_checkpoint_record_bytes_match": true,
+  "independent_resumed_records_equal": true,
+  "binding_checked": 40374,
+  "causal": {
+    "n": 40374,
+    "checked": 5875,
+    "mismatch": 0,
+    "parity_checked": 5445,
+    "parity_mismatch": 0,
+    "delivered_changed": 5211
+  },
+  "nonzero_pairs": [
+    {
+      "key": "20261024|3695091|0|0|neutral|keep|0.0|1.0|100.0",
+      "world": 0,
+      "original": 0,
+      "Y": -182.64329999999995
+    },
+    {
+      "key": "20261024|3695091|0|0|joint_post_keep|keep|None|1.0|100.0",
+      "world": 0,
+      "original": 0,
+      "Y": -182.64329999999995
+    },
+    {
+      "key": "20261024|3695091|0|0|joint_chase|keep|None|1.0|100.0",
+      "world": 0,
+      "original": 0,
+      "Y": -182.64329999999995
+    },
+    {
+      "key": "20261025|3723772|2|0|neutral|post|0.0|1.0|0.0",
+      "world": 2,
+      "original": 2,
+      "Y": -45.0
+    }
+  ],
+  "nonzero_count": 4,
+  "mean_pair_seconds": 6.061852753162384,
+  "max_pair_seconds": 8.962964534759521,
+  "resource_peaks_over_1536": {
+    "r2d_controls.log": {
+      "peak": 1631,
+      "rc": 0
+    },
+    "r2d_B_census.log": {
+      "peak": 1652,
+      "rc": 1
+    }
+  },
+  "saved_predicates": {
+    "A_manifest": true,
+    "B_resume_identity": true,
+    "C_labels": true,
+    "D_resources": false,
+    "E_controls": true,
+    "F_suite_on_build_sources": true
+  },
+  "projections_arithmetic_correct": {
+    "20261024": {
+      "prefix_ok_candidates": 11314,
+      "prefix_hours": 19.051056124799782,
+      "day_worlds": 15352,
+      "full_day_hours": 9139.744175872695
+    },
+    "20261025": {
+      "prefix_ok_candidates": 16103,
+      "prefix_hours": 27.115004134492743,
+      "day_worlds": 14998,
+      "full_day_hours": 12708.463500285066
+    }
+  },
+  "raw_fill_traces_available": false,
+  "target": "f96c38d01a7f27ed4fd39ddf2ddadeecf162b84b",
+  "asof": "2026-11-20T15:11:47.744667+00:00",
+  "script_sha256": "842aaea915f6118334e10e1508fb709176ae11188d5ee3e9093d4517992edf0b",
+  "mode": "records"
+}

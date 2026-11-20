@@ -1,3 +1,28 @@
+r2d_review_20261120_codex:
+  status: bounded_labels_accepted_production_acceptance_blocked
+  target_commit: f96c38d01a7f27ed4fd39ddf2ddadeecf162b84b
+  range_base: 4584a3c2696625d27cf87f193a6260997348f85e
+  report: predictfun/reviews/automatic/20261120_f96c38d0/report.md
+  freeze_sha256: 769dff779d584f913aa9c142fb852a47eddbe01bdd6c0930c87b9d28dfa73294
+  saved_integration_labels: accepted_with_resource_gate_D_failed
+  blocking_for_production: [P1_unenforced_adapter_and_input_identity, P1_unvalidated_persisted_records_and_finalization]
+  nonblocking: [P2_watchdog_can_erase_unarchived_stop, P2_live_multiday_references_and_unguarded_census, P3_census_CLI_print]
+  prior: {arm_binding: closed, value_denominator: closed, library_enforcement: closed, stop_event_disposition: partially_closed}
+  artifacts: {census_rows: 129868, worlds: 64, sampled_ok_candidates: 27417, pairs: 128, A_B_identity: true, independent_value_arithmetic: true}
+  saved_checks: {binding: 40374, binding_bad: 0, causal: 5875, causal_bad: 0, parity: 5445, parity_bad: 0}
+  sparse_reading: {nonzero_Y: 4, distinct_nonzero_originals: 2, positive_Y: 0, selected_worlds_per_day: 8, selected_markets_per_day: 1, integration_only: true}
+  resources: {gate_D: FAIL, census_peak_mib: 1652, controls_peak_mib: 1631, checkpoint_mib: 1536}
+  review_tests: {checks: 6, passed: 6, wall_seconds: 181.38, peak_rss_mib: 396}
+  next_priority: r2_label_sample_v2_production_acceptance_and_distributed_launch_gate
+  declared_sample: {worlds_per_UTC_hour_day: 64, max_worlds: 3072, max_pairs: 18432, inverse_probability_original_head_weights: true}
+  next_gate: {worlds_per_UTC_hour_day: 1, max_worlds: 48, max_pairs: 288, review_before_remaining_sample: true}
+  planning_core_hours_ceiling: 40
+  additional_user_approval_required: false
+  teacher_or_candidate_fit_this_step: false
+  real_data_fit_or_label_build_this_review: false
+  untouched_validation: false
+  profitability_or_prediction_skill_claim: false
+
 r2c_review_20261120_codex:
   status: teacher_artifacts_accepted_paired_binding_required_before_labels
   target_commit: 4584a3c2696625d27cf87f193a6260997348f85e
