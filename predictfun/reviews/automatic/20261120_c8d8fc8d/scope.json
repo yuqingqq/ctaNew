@@ -1,0 +1,45 @@
+{
+  "target_commit": "c8d8fc8d52faeacb9413b33a679f99de451b3624",
+  "asof": "2026-11-20T03:09:21.982720+00:00",
+  "backup_directory": "/tmp/pf-c8d8fc8d-state-1uqeh510",
+  "pinned_worktree": "/tmp/pf-review-c8d8fc8d",
+  "state": {
+    "predictfun/HANDOFF.md": {
+      "original_worktree_sha256": "6afa008dbab6d0c621c6c7388c8ba824edcfbbd814b826655016eb1d8baeeb64",
+      "base_sha256": "bc5e2080a0c9dcb341feb98573660e2a09d5b9744417a2957034d6baab94dc4e",
+      "backup": "/tmp/pf-c8d8fc8d-state-1uqeh510/HANDOFF.md"
+    },
+    "predictfun/FINDINGS.md": {
+      "original_worktree_sha256": "f2b249f0a8a14636ca10f689a47c59eb40137723f50e1cc8d4ada144c89ac8dc",
+      "base_sha256": "033b59f65ff36d6366e303401c2186cfee254131604815cced508803f9719f65",
+      "backup": "/tmp/pf-c8d8fc8d-state-1uqeh510/FINDINGS.md"
+    },
+    "predictfun/STATUS.yml": {
+      "original_worktree_sha256": "4197b31a8c05cead4dd47b8733499436d80efe3d12e12bcde0564c67f5814362",
+      "base_sha256": "eecad00b600ab60271f15fb878184a99001b8e0b362a51d3a3274c698eaf88ea",
+      "backup": "/tmp/pf-c8d8fc8d-state-1uqeh510/STATUS.yml"
+    }
+  },
+  "prior_tracked_deletions": [
+    "data/pm_5min/derived/be133_forward_population_era_split.json",
+    "data/pm_5min/derived/be_tape_v2_builder_binding_proof_v1.json",
+    "data/pm_5min/derived/be_validation_review_v1.json",
+    "data/pm_5min/derived/p003_de_gate1_run_journal_de145day07__20260908T032816Z.json",
+    "data/pm_5min/derived/p003_de_gate1_run_journal_deRR20260903__20260907T195646Z.json",
+    "data/pm_5min/derived/p003_de_gate1_run_journal_deRR20260904__20260907T225517Z.json",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run__20260906T062115Z.json",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v2__20260906T064720Z.json",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v3__20260906T071214Z.json",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v4__20260906T074712Z.json",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v5__20260906T075707Z.json",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v6__20260906T081252Z.json",
+    "data/pm_5min/derived/p003_de_launch_form_probe__20260906T121813Z.json",
+    "data/pm_5min/derived/p003_de_r608_resolver_agreement__20260906T104000Z.json",
+    "data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/README",
+    "data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/linear_btc.json",
+    "data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/linear_eth.json"
+  ],
+  "review_script_sha256": "a14fefe635f5b2989338fae2967a698aa07da0fc26dcc6457ffc73ce2274cc94",
+  "check_launcher_sha256": "e53f7f23fe3865a051bf1e641114e9840c45d298ab1f9627402a07b8365fda5d",
+  "launcher_uncommitted_change_owned_by_other_session": true
+}

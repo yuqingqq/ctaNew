@@ -1,0 +1,2 @@
+Visibility clean/leak/delivered controls pass; records-only finalize passes. Resource latch and finalize source-preflight gaps reproduced.
+2026-11-20T03:04:42Z tag=review_c8d8fc8d_controls rc=0 peak_rss_mib=269 wall_s=1.75 cpu_user_s=1.45 memavail_start_gib=23 disk_free_gib=462->462 slot=codex

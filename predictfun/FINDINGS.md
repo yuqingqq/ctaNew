@@ -1,3 +1,37 @@
+<!-- R2_LAUNCH_REVIEW_20261120_CODEX -->
+## 2026-11-20 R2-A launch review: prior three issues closed; no blocking finding
+
+Target **c8d8fc8d52faeacb9413b33a679f99de451b3624**.
+[Review / full-day acceptance contract](reviews/automatic/20261120_c8d8fc8d/report.md),
+[artifacts](reviews/automatic/20261120_c8d8fc8d/artifacts.json),
+[controls](reviews/automatic/20261120_c8d8fc8d/controls.json).
+Gate2 receipt supported: frozen Oct23 slice 256 originals / 213,349 rows /
+44,959 sampled ok / 508 weight groups / 1,598 audits, all failure components zero,
+two retries; A and resumed B match and preserve r2av3 parts byte for byte.
+Records-only finalization/sentinels, client-visibility perturbation without past
+re-execution, and multiplicity guards close 4cd7b45f's three findings. Independent
+former leak fixture catches absent/live direct hidden reads, delivered controls
+fire; label/clock/weight/support algebra and audit identities reconcile.
+
+P2 NONBLOCKING: runner :169-174 discards previous resource latch; finalize
+:243-248 ignores old part breaches when choosing COMPLETE. Copied saved run with
+901-second part and STOP_RESOURCE becomes PARTS_DONE/COMPLETE, still breaches=[0].
+P2 NONBLOCKING with pinned finalization: :222-230 does not assert actual source
+hashes equal the plan before support_merge; different-source wrapper finalizes.
+No numerical error demonstrated on current gate. Explicit acceptance checks for
+all historical breaches and finalizer source identity prevent silent promotion;
+fix these operational gaps next round without discarding otherwise valid data.
+Watchdog lifetime excludes initial loading/finalization; VmHWM/launcher peaks
+still include them. No prior sourcefinding remains a launch blocker.
+
+ONE next priority: full Oct23 data/support acceptance before pi0-50 fitting.
+Records may stay in data/ with a committed hash manifest. Optional prospective
+/256 audit needs a new version/frozen plan and unchanged components, weights and
+100% sampled-ok per-fill checks. Continue an already-started /64 plan; do not mix.
+Both pinned selftests pass; four codex checks 141.22 s / 398 MiB peak. Consumed
+teacher day only; no predictive-skill, economic or untouched-validation claim.
+<!-- /R2_LAUNCH_REVIEW_20261120_CODEX -->
+
 <!-- R2AV2_REVIEW_20261120_CODEX -->
 ## 2026-11-20 R2-A v2: saved results pass; full-day finalization and visibility gaps
 

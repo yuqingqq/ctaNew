@@ -1,0 +1,71 @@
+{
+  "all_checks_pass": true,
+  "hashes": {
+    "pf_r2_shadow.py": "962cf7b42c1a8ff78b7a4cb46f111036c824270ff8fa91d95c1c42558f098ab9",
+    "pf_r2_runner.py": "5499248bc4741f859a0e55dfc4a16a4777c4570d61c22bdb2fe69f90a6296ed8",
+    "pf_r2_shadow_mutants.py": "dbd12301ad6f953052e6699a1070ccf56da1710ea2175ebc62239f6173fbc218",
+    "pf_r2_runner_mutants.py": "edf7d1b7fa2c8ab5e6e3a179e7b2dcc41c89ea395f7809eeac2fa99064702798",
+    "pf_branch_engine.py": "8b7960ef4bbbc178b281e57d92d4795d7678436c0ca875e7199e24a6626af3a8",
+    "pf_pipeline_export.py": "ee2953fd00f70a7d12607abd4b418471b2208b8f9728009c7e538ccb55733931",
+    "pf_keep_pull.py": "58b972f92bda06fbc847c43d2ace8db9d7b12f4daaf67bcfaa14e92deb475835",
+    "pf_queue_place_test.py": "188c1495ce35db80ce8b79cbc50541964d0d32d9da38fee4b925e951eec01a1f",
+    "pf_flow_price_data.py": "fa9112d1147e955b4ff4ff2c09d2c8c23e37418b3e2957cb2f47deaf9a907a4e",
+    "pf_stop_model.py": "e2a857ddb6c4e76af40080e753942e1e0bef3bd42a34ed2929f378fe869df0ed",
+    "pf_flow_price_common.py": "beac0d747ec5dc84874fdee2f8e08057c1a47c819cfc648a762ea8950b0d1993",
+    "gate_run.py": "42a984d249926fdbedbe4ac4c1b9bb3e82888ee1baa8ac55158d60987abc4341",
+    "gate_checks.py": "76d57fea5068e192a3441000c263d1aecdaf11db7dfdf29874576d04625355e5",
+    "data/predict_fun/research/r2_shadow_20261119/census_20261023_gate2A/parts/part_0000.parquet": "277efb3bc126ba450873638082a4f57036cbcc4aa9225ecdbbd903793cfa0399",
+    "data/predict_fun/research/r2_shadow_20261119/census_20261023_gate2A/parts/part_0001.parquet": "b1dc53eeff858018419ead5d3c8e66c5556882b19ff3db75ab76a4467974cacf",
+    "data/predict_fun/research/r2_shadow_20261119/census_20261023_gate2A/parts/part_0002.parquet": "ba364fc59046bdc3194d711eece15292d37c0cf9ade7b9a3be79bbf1df3951d5",
+    "data/predict_fun/research/r2_shadow_20261119/census_20261023_gate2A/parts/part_0003.parquet": "83e11917aa08840d51781bef98add90558a5c8a3e3c52be137d84eed8d384949",
+    "data/predict_fun/research/r2_shadow_20261119/census_20261023_r2av3/part_0000.parquet": "277efb3bc126ba450873638082a4f57036cbcc4aa9225ecdbbd903793cfa0399",
+    "data/predict_fun/research/r2_shadow_20261119/census_20261023_r2av3/part_0001.parquet": "b1dc53eeff858018419ead5d3c8e66c5556882b19ff3db75ab76a4467974cacf",
+    "data/predict_fun/research/r2_shadow_20261119/census_20261023_r2av3/part_0002.parquet": "ba364fc59046bdc3194d711eece15292d37c0cf9ade7b9a3be79bbf1df3951d5",
+    "data/predict_fun/research/r2_shadow_20261119/census_20261023_r2av3/part_0003.parquet": "83e11917aa08840d51781bef98add90558a5c8a3e3c52be137d84eed8d384949"
+  },
+  "saved_asof": "2026-11-20T02:14:22.611131+00:00",
+  "resumed_saved_asof": "2026-11-20T02:26:31.363289+00:00",
+  "rows": 213349,
+  "sampled_ok": 44959,
+  "originals": 256,
+  "weight_groups": 508,
+  "audits": 1598,
+  "audit_components": {
+    "stored_vs_rebuild": 0,
+    "stored_vs_perturbed": 0,
+    "stored_vs_visibility": 0,
+    "firing": 0,
+    "not_evaluable": 0
+  },
+  "retry_count": 2,
+  "support_cells": 28,
+  "parts_identical_to_r2av3": true,
+  "resumed_records_identical_except_resources": true,
+  "gate_checks": 8,
+  "saved_peak_rss_mib": 1179,
+  "partition_seconds": [
+    156.24610328674316,
+    161.0316755771637,
+    156.48415303230286,
+    141.65201473236084
+  ],
+  "old_plan_difference": [
+    "tag"
+  ],
+  "mutation_targets": {
+    "runner": 18,
+    "shadow": 56
+  },
+  "developer_logs": {
+    "runner": 18,
+    "shadow_targeted": 18
+  },
+  "prospective_div256_slice_count": 1214,
+  "prospective_div256_full_count": 144475.484375,
+  "prospective_div256_full_hours": 16.142265277777778,
+  "target_commit": "c8d8fc8d52faeacb9413b33a679f99de451b3624",
+  "asof": "2026-11-20T03:04:37.550381+00:00",
+  "script_sha256": "a14fefe635f5b2989338fae2967a698aa07da0fc26dcc6457ffc73ce2274cc94",
+  "source_sha256": "962cf7b42c1a8ff78b7a4cb46f111036c824270ff8fa91d95c1c42558f098ab9",
+  "runner_sha256": "5499248bc4741f859a0e55dfc4a16a4777c4570d61c22bdb2fe69f90a6296ed8"
+}
