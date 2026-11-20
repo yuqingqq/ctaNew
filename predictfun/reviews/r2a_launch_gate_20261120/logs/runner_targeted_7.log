@@ -1,0 +1,2 @@
+R2 RUNNER SELFTEST FAILED: failure records: a failed part was COMPLETE, rerun or refused (finalize: part 0 has no accepted completion record) | verdicts: an unbuildable future world was not NOT-EVALUABLE / FAILED (finalize: part 0 has no accepted completion record)
+2026-11-20T01:01:00Z tag=pr2c_rmut7 rc=1 peak_rss_mib=397 wall_s=30.12 cpu_user_s=28.66 memavail_start_gib=23 disk_free_gib=464->464 slot=claude

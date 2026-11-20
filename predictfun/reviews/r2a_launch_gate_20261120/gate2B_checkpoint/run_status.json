@@ -1,0 +1,14 @@
+{
+ "state": "PARTS_DONE",
+ "plan_sha256": "adf34d1e9b75a1adbb685472800a6c4b29461c671e4fdccfdbc479cdf4223853",
+ "done": [
+  0,
+  1,
+  2,
+  3
+ ],
+ "pending": [],
+ "latch": null,
+ "hwm_mib": 1138.7109375,
+ "asof": "2026-11-20T02:26:31.312702+00:00"
+}

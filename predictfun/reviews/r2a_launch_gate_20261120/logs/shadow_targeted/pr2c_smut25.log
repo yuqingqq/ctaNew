@@ -1,0 +1,2 @@
+R2 SHADOW SELFTEST FAILED: audit sample: the per-stratum min(n, max(1, ceil(n / 64))) smallest hashes, independent of order (6)
+2026-11-20T01:10:17Z tag=pr2c_smut25 rc=1 peak_rss_mib=259 wall_s=100.99 cpu_user_s=98.94 memavail_start_gib=23 disk_free_gib=463->464 slot=claude

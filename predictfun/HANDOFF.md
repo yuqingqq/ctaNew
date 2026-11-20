@@ -400,6 +400,23 @@ pulls and bid/ask; judge movement calibration on selected actions before changin
 order design. Other session owns fixes; scheduler remains off.
 <!-- /PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
 
+## 2026-11-20 02:53Z (session aea5bfb9) — R2-A FULL-DAY LAUNCH GATE: THE BOUNDED, RESUMABLE RUNNER; THE THREE FINDINGS CLOSED (review 4cd7b45f answered; no full-day run, no fit) (USER: "... continue the implementing and next priority loop")
+- [Receipt](reviews/r2a_launch_gate_20261120/report.md); [`pf_r2_runner.py`](research/pf_r2_runner.py) `5499248b` (new); [`pf_r2_shadow.py`](research/pf_r2_shadow.py) `962cf7b4`.
+- 4cd7b45f's three P2s hold; each fixed:
+  - census never materializes (records-only finalize; `materialize()` is the only all-part reader, bounded at 300k rows; sentinels);
+  - the client-visibility control (`hidden_copy`: unreceived engine fields perturbed at the captured state, no re-execution; observation equal; delivered positive control) - a test gap, no leak;
+  - multiplicity guards in `process_partition` (repeated pair, two status rows, duplicate canonical ids refused).
+- Runner: an immutable content-only plan; validated temporary writes promoted with completion records; resume with refusals; stop rule (900 s / VmHWM 1,536 MiB, never reset) and a watchdog (2,048 MiB); finalize from the records. Audit sample `r2_full_causal_v1` as declared by 4cd7b45f.
+- Gate on the frozen 256 (consumed Oct 23):
+  - The first run FAILED declared check (2) A = B: the plans differed only in `tag` (the output location) - fixed, the plan binds content only (FINDINGS P78).
+  - Gate2 ALL TRUE: A = B (plan `adf34d1e`, parts, records, support, readings); A = r2av3 byte-identical; the independent audit sample = 1,598 = A's keys; causality 1,598 / 0 in every component; labels 44,959 / 0; 6 refused resumes with B unchanged; sentinel re-finalization identical; parts 142-161 s, peak 1,179 MiB.
+- Checks: runner mutation suite 18 / 18; shadow 18 / 18 new and retargeted mutants caught (the full suite running at commit; its log with the next commit); a runner watchdog mutant once escaped via a subprocess of the file on disk (FINDINGS P78).
+- Throughput: 2.40 s per original -> ~20.3 h for Oct 23 (arithmetic).
+- Open for the launch:
+  - ~210 KB records x 477 ~ 100 MB -> records beside the parts in data/, records.sha256 committed (no runner change);
+  - inputs reloaded per process start.
+- Next (USER: accelerate while reliable): the full Oct 23 build starts when the slot frees, in parallel with the Codex review, accepted only after it passes; then support -> pi0-50.
+
 ## 2026-11-20 00:07Z (session aea5bfb9) — R2-A v2: STORED-ROW CAUSALITY, NO-DROP POPULATION, THE PARTITIONED CENSUS ON THE FROZEN 256 (review d10d3698 answered; no full-day build, no fit) (USER: "... continue the implementing and next priority loop")
 - [Receipt](reviews/r2a_shadow_census_v2_20261119/report.md), superseding R2-A (5432f636) in-band; [`pf_r2_shadow.py`](research/pf_r2_shadow.py) `bbff8b19`.
 - d10d3698's P2 x3 and P3 x2 hold; each fixed:

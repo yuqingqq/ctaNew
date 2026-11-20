@@ -387,6 +387,22 @@ pipeline_one_day_v3_20261119:
   values_equal_v2: {cells_per_day: 190, differing: 0}
   attribution_vs_pull_all_c: {"20261026": {first_step: 0.0, later: 954.33, never: 995.36, no_prediction: 0.0}, "20261027": {first_step: 0.0, later: -821.85, never: 251.74, no_prediction: 0.0}}
 
+r2a_launch_gate_20261120:
+  status: done_r2a_full_day_launch_gate_review_4cd7b45f_closed_no_full_day_run_no_fit
+  asof: "2026-11-20 02:53Z"
+  receipt: predictfun/reviews/r2a_launch_gate_20261120/report.md
+  runner_sha256: 5499248bc4741f859a0e55dfc4a16a4777c4570d61c22bdb2fe69f90a6296ed8
+  shadow_sha256: 962cf7b42c1a8ff78b7a4cb46f111036c824270ff8fa91d95c1c42558f098ab9
+  findings_4cd7b45f: {final_materialization: fixed_records_only_finalize_bounded_materialize, visibility_gap: fixed_hidden_copy_control_test_gap_no_leak, within_partition_duplicates: fixed_multiplicity_guards}
+  audit_sample: {version: r2_full_causal_v1, slice_checks: 1598, independent_count_equal: true}
+  gate_first_run: {checks_true: 7, of: 8, failed: resume_identity_plan_bound_output_tag, kept: provenance}
+  gate2: {all_true: true, plan_sha256_prefix: adf34d1e, a_equals_b: true, a_equals_r2av3_bytes: true, causality_checked: 1598, causality_failures: 0, labels_failures: 0, refused_resumes: 6, b_unchanged: true, sentinel_refinalize_equal: true, partition_seconds: [156, 161, 156, 142], peak_rss_mib: 1179}
+  throughput: {s_per_original: 2.40, full_day_arithmetic_h: 20.3}
+  suites: {shadow_selftest: pass, runner_selftest: pass, shadow_mutants: targeted_18_of_18_full_suite_running_at_commit, runner_mutants: 18/18}
+  open_for_launch: [records_210kb_each_kept_in_data_hashes_committed_no_runner_change, inputs_reloaded_per_process_start]
+  acceleration: USER_2026-11-20_accelerate_if_reliable_full_day_build_starts_when_slot_frees_accepted_only_after_review
+  next: codex_review_then_full_oct23_build_support_pi0_50
+
 r2a_shadow_census_v2_20261119:
   status: done_r2a_v2_review_d10d3698_closed_partitioned_census_frozen_256_no_fit
   asof: "2026-11-20 00:07Z"

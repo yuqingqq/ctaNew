@@ -1,0 +1,2 @@
+R2 SHADOW SELFTEST FAILED: visibility: a context reading the engine-truth queue ahead is not refused by the client-visibility control ({'stored_vs_rebuild': 0, 'stored_vs_perturbed': 9, 'stored_vs_visibility': 0, 'firing': 0, 'not_evaluable': 0})
+2026-11-20T01:06:52Z tag=pr2c_smut23 rc=1 peak_rss_mib=258 wall_s=102.33 cpu_user_s=99.21 memavail_start_gib=23 disk_free_gib=464->464 slot=claude

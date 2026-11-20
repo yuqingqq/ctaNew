@@ -41,10 +41,13 @@ CONTROLS (selftest, synthetic; each a valid case and a known-bad one): M1 the ma
  pf_r2_shadow_mutants.py.
 Usage (run_light, PF_SLOT=claude): pf_r2_shadow.py selftest | census <day>
 """
+import collections
 import contextlib
+import copy
 import hashlib
 import io
 import json
+import math
 import sys
 import tempfile
 import time
@@ -86,6 +89,13 @@ FAIR_LEAK = False                                          # planted-error switc
 INV_TOL = 1e-9                                             # the inventory-sign tolerance (round-off is not a long / short category)
 VENUE_DRAWS = 8                                            # deterministic seeds tried for a check's future-only world (a draw can leave no valid END mark)
 VENUE_NO_PATH = 0                                          # planted-error switch (selftest only): 1 no future world builds, 2 the first draw of each check fails
+CAUSAL_VERSION = 'r2_full_causal_v1'                       # review 4cd7b45f: the declared audit sample (causal_select)
+CAUSAL_DIV = 64                                            # min(n, max(1, ceil(n / 64))) rows per original x side x source x head stratum
+MAX_MATERIALIZE_ROWS = 300000                              # materialize(): a test / slice helper, refused above this (the full day never materializes)
+CONTEXT_UNRECEIVED = ''                                    # planted-error switch (selftest only): 'frame' reads the venue frame at g (received or not),
+                                                           # 'ahead' the open generation's engine-truth queue ahead
+DUP_STATUS = False                                         # planted-error switch (selftest only): a status row emitted twice in one partition
+DUP_EPISODE = False                                        # planted-error switch (selftest only): an episode row emitted twice in one partition
 
 
 def phase(day, instrument, episode, side, head):
@@ -115,6 +125,10 @@ def client_snapshot(B, g, s):
         Ik = sum((1. if f_[2] == 0 else -1.) * f_[3] for f_ in B.E.fills if f_[0] <= g)
     if CONTEXT_FUTURE:                                                                      # planted: the whole tape's trade count leaks in
         Ik += 1e-3 * len(B.E.tr)
+    if CONTEXT_UNRECEIVED == 'frame':                                                       # planted: the venue frame at g read directly (received or not)
+        jv_ = int(np.searchsorted(B.E.f[:, 0], g, side='right') - 1); Ik += .01 * float(B.E.f[max(jv_, 0), 2])
+    elif CONTEXT_UNRECEIVED == 'ahead' and o is not None:                                   # planted: the engine-truth queue ahead
+        Ik += .01 * float(o['ahead'])
     x = dict(ctx_has_generation=float(gid is not None), ctx_generation_age_ms=float(g - o['submit']) if o is not None else 0.,
              ctx_generation_ordinal=float(n_side if gid is not None else n_side + 1), ctx_inventory_shares=float(Ik), ctx_bid_reserved_shares=float(Bk),
              ctx_ask_reserved_shares=float(Ak))
@@ -320,13 +334,20 @@ def resim(path_, o, day, r):
             BE.decide(B, gg, side_, pol)
 
 
-def rebuild_row(path_, W_, fv_, o, day, r, fair_m, depth, feat_fn, fill_change=None):
-    """An INDEPENDENT per-row rebuild of the 107 stored inputs (the 91 + the 16 context fields): the row's source re-simulated to its decision;
-    the generation's price / activation / fills from that simulation (an absent decision: the JOIN at the view, activation + 58 ms, no fill);
-    the market features at the decision's grid index, known_steps -> order_inputs, the fp_ extras, fair_edge from the archived fair path at the
-    decision step, t_to_end to the original END. fill_change(times, qty, decision) perturbs the generation's fill list (private notices)."""
+def market_at(W_, fair_m, depth, feat_fn, s, kk):
+    """The market features and the W30 scale at one grid index, from the builder (which reads both sides' keys)."""
+    ch = {0: [], 1: []}; ch[s] = [kk]                                                        # the real builder's contract: both sides' keys
+    return feat_fn(W_, fair_m, depth, ch)[s][kk]
+
+
+def rebuild_row(path_, W_, fv_, o, day, r, fair_m, depth, feat_fn, fill_change=None, B=None, market=None):
+    """An INDEPENDENT per-row rebuild of the 107 stored inputs (the 91 + the 16 context fields): the row's source re-simulated to its decision
+    (or B, a given decision state); the generation's price / activation / fills from that state (an absent decision: the JOIN at the view,
+    activation + 58 ms, no fill); the market features at the decision's grid index (or `market`, those features already built), known_steps ->
+    order_inputs, the fp_ extras, fair_edge from the archived fair path at the decision step, t_to_end to the original END.
+    fill_change(times, qty, decision) perturbs the generation's fill list (private notices)."""
     s, t0 = int(o.side), float(o.t); g = r['decision_ms']; d = t0 + g; sg = 1. if s == 0 else -1.
-    B = resim(path_, o, day, r); ctx = client_snapshot(B, g, s)[0]; gid = B.open[s]
+    B = resim(path_, o, day, r) if B is None else B; ctx = client_snapshot(B, g, s)[0]; gid = B.open[s]
     if gid is None:
         v = B.view(g, s); price, act, ft, fq = (v['bid'] if s == 0 else v['ask']), g + KP.PLACE, np.zeros(0), np.zeros(0)
     else:
@@ -337,8 +358,7 @@ def rebuild_row(path_, W_, fv_, o, day, r, fair_m, depth, feat_fn, fill_change=N
     w = W_[s]; tg = np.asarray(w['tg'], float); kk = min(int(np.searchsorted(tg, d)), len(tg) - 1)
     if abs(tg[kk] - d) > 1e-6:
         return None
-    ch = {0: [], 1: []}; ch[s] = [kk]                                                        # the real builder's contract: both sides' keys
-    xm, scale = feat_fn(W_, fair_m, depth, ch)[s][kk]; ref = float(xm[FC.MARKET.index('pf_mid')])
+    xm, scale = market if market is not None else market_at(W_, fair_m, depth, feat_fn, s, kk); ref = float(xm[FC.MARKET.index('pf_mid')])
     kn = X.known_steps(w, s, t0 + act, price, (ft, fq), np.array([d]), t0 + END)
     oi = FC.V.order_inputs(pd.DataFrame({f'x_{a}': kn[a] for a in X.KNOWN}), np.array([scale]), np.array([ref]))
     out = {nm: float(xm[i_]) for i_, nm in enumerate(FC.MARKET)}; out.update({nm: float(np.asarray(oi[nm], float)[0]) for nm in FC.ORDER})
@@ -358,7 +378,8 @@ def venue_windows(W, d, rng):
     """The windows' book frames after the last frame AT THE VENUE by d (tf <= d) perturbed as the builder's perturb_future perturbs them (P5 / S5 /
     opp). A frame received after the decision can precede it at the venue: the venue's past, whose own-order consequences (a post-only refusal,
     known at POST_NOTICE 0) the client is entitled to, so the engine's future-only world cuts on the venue clock, never on the receipt clock
-    (rehearsal 2026-11-19 21:52Z: the receipt-clock cut rewrote the venue's past on 51 of 1,372 rows)."""
+    (rehearsal 2026-11-19 21:52Z: the receipt-clock cut rewrote the venue's past on 51 of 1,372 rows). The client's own visibility of the
+    venue's past is checked separately (hidden_copy)."""
     out = {}
     for a, w in W.items():
         jv = int(np.searchsorted(np.asarray(w['tf'], float), d, side='right') - 1); w2 = dict(w); sl = slice(jv + 1, None)
@@ -371,54 +392,120 @@ def venue_windows(W, d, rng):
 
 def venue_future(W, o, g, rng, draw=0):
     """The engine's future-only world for a decision at g: the path rebuilt from venue_windows, with every trade whose fill would be unnotified at
-    the decision (after g - FILL_NOTICE) or later halved -> the path, or None (a draw whose perturbed future leaves no valid END mark builds no
-    path: census 2026-11-19 22:15Z, 2 of 2,765 checks, seed 95692 missing_endpoint; the next seeds build)."""
+    the decision (after g - FILL_NOTICE) or later halved -> (the path or None, the builder's status). A draw whose perturbed future leaves no
+    valid END mark builds no path (census 2026-11-19 22:15Z: 2 of 2,765 checks, seed 95692 missing_endpoint; the next seeds build)."""
     if VENUE_NO_PATH == 1 or (VENUE_NO_PATH == 2 and draw == 0):                           # planted (selftest only)
-        return None
-    t0 = float(o.t); pth, _ = QP.build_path(venue_windows(W, t0 + g, rng), t0, t0 + END)
+        return None, 'planted_no_path'
+    t0 = float(o.t); pth, st = QP.build_path(venue_windows(W, t0 + g, rng), t0, t0 + END)
     if pth is None:
-        return None
+        return None, st
     tr = np.array(pth['trades'], float, copy=True); tr[tr[:, 0] > g - BE.FILL_NOTICE, 3] *= .5
-    return dict(pth, trades=tr)
+    return dict(pth, trades=tr), st
 
 
-def causal_rows(rows, path, o, day, W, fair_m, depth, fv, every=17, feat=None, perturb=None, fire=None):
-    """The stored-row causality check (review d10d3698 P2) on every `every`-th sampled ok row: (i) the STORED 107 inputs equal an independent
-    rebuild at the same identity; (ii) they equal a rebuild in a future-only world: the market data received after the decision perturbed (the
-    export's own perturbation, for the market and order inputs); the engine's tape rebuilt with the venue's frames after the decision perturbed and
-    every trade whose fill would be unnotified at the decision halved (venue_future, for the client state); every fill not yet notified moved
-    later / resized in the order inputs; the archived fair path after the decision step changed; (iii) a same-time public input (the export's
-    fire), a notified fill and the fair at the step each change the rebuild. A check whose future-only world builds in none of VENUE_DRAWS
-    deterministic seeds is NOT EVALUABLE (counted; neither a pass nor a failure). -> (checked, failed, details, components)."""
+def hidden_copy(B, g, rng, delivered=False):
+    """The client-visibility control (review 4cd7b45f P2): a copy of the decision state in which every engine field the client has NOT received
+    is perturbed in place, WITHOUT re-running any execution: the book frames after the last received one (E.known), the own fills not yet
+    notified (time + FILL_NOTICE > g), every order's engine-truth remaining and queue ahead, and the public trades after g. The delivered public
+    history (the received frames) and the own-order notices (acceptance, refusal, notified fills, cancel acknowledgements) stay as they are.
+    delivered=True perturbs the last RECEIVED frame instead: the positive control (the client's observation must change)."""
+    B2 = copy.deepcopy(B); E = B2.E; f = np.array(E.f, float, copy=True)
+    rows = np.arange(E.known, E.known + 1) if delivered else np.arange(E.known + 1, len(f))
+    if len(rows):
+        px, sz = [2, 3, 4, 5, 6, 12, 13, 14, 15, 16], [7, 8, 9, 10, 11, 17, 18, 19, 20, 21]
+        p_ = f[np.ix_(rows, px)]; f[np.ix_(rows, px)] = np.where(p_ >= 0, np.clip(p_ + rng.choice([-3., -2., -1., 1., 2., 3.], p_.shape), 1., 99.), p_)
+        f[np.ix_(rows, sz)] = f[np.ix_(rows, sz)] * rng.uniform(1.5, 3., (len(rows), len(sz))) + 1.
+    E.f = f
+    if not delivered:
+        E.fills = [(t, i, s_, q * .5 if t + BE.FILL_NOTICE > g else q, p_, it) for t, i, s_, q, p_, it in E.fills]
+        for o_ in E.o:
+            o_['rem'] = o_['rem'] * .5 + 1.; o_['ahead'] = o_['ahead'] * 1.7 + 3.
+        tr = np.array(E.tr, float, copy=True); fut = tr[:, 0] > g; tr[fut, 3] = tr[fut, 3] * .5 + 1.; E.tr = tr
+    return B2
+
+
+def observe(B, g, s):
+    """The client's observation at g as canonical JSON: both sides' views and the context fields, read from a copy (status() closes
+    generations)."""
+    B_ = copy.deepcopy(B); x = dict(view=B_.view(g, s), other=B_.view(g, 1 - s), ctx=client_snapshot(B_, g, s)[0])
+    return json.dumps(x, sort_keys=True, default=str)
+
+
+def causal_key(r):
+    """r2_full_causal_v1's canonical key (review 4cd7b45f): [version, day, instrument, original, side, source, head, offset ms or null, generation,
+    decision ms] as compact UTF-8 JSON (the day a string; identifiers, generation and times integers in their units)."""
+    off = r.get('offset_ms'); off = None if off is None or not np.isfinite(float(off)) else int(round(float(off)))
+    return json.dumps([CAUSAL_VERSION, str(r['day']), int(r['instrument_id']), int(r['original_episode_id']), int(r['side']), str(r['source']), str(r['head']), off,
+                       int(round(float(r['generation']))), int(round(float(r['decision_ms'])))], separators=(',', ':'), ensure_ascii=False)
+
+
+def causal_select(ok, every=None):
+    """The audit sample of the stored-row causality check. every=n: every n-th row (the slice rule before review 4cd7b45f). Otherwise
+    r2_full_causal_v1: within each original x side x source x head stratum of n sampled ok rows, the min(n, max(1, ceil(n / 64))) rows with the
+    smallest SHA-256 of their canonical key, ties by the key; no label, mark or outcome enters. A pure function of the keys: the same after a
+    restart, a repartition or any iteration order. The training population and its weights are untouched."""
+    if every:
+        return ok[::int(every)]
+    strata = {}
+    for r in ok:
+        strata.setdefault((int(r['original_episode_id']), int(r['side']), str(r['source']), str(r['head'])), []).append(r)
+    out = []
+    for k_ in sorted(strata):
+        g_ = sorted(strata[k_], key=lambda r: (hashlib.sha256(causal_key(r).encode('utf-8')).hexdigest(), causal_key(r)))
+        out.extend(g_[:min(len(g_), max(1, math.ceil(len(g_) / CAUSAL_DIV)))])
+    return out
+
+
+def causal_rows(rows, path, o, day, W, fair_m, depth, fv, every=None, feat=None, perturb=None, fire=None):
+    """The stored-row causality check (reviews d10d3698, 4cd7b45f) on the declared audit sample (causal_select): (i) the STORED 107 inputs equal
+    an independent rebuild at the same identity; (ii) they equal a rebuild in a future-only world: the market data received after the decision
+    perturbed (the export's own perturbation, for the market and order inputs); the engine's tape rebuilt with the venue's frames after the
+    decision perturbed and every trade whose fill would be unnotified at the decision halved (venue_future, for the client state); every fill not
+    yet notified moved later / resized in the order inputs; the archived fair path after the decision step changed; (iii) they equal a rebuild
+    from the decision state with every unreceived engine field perturbed and no execution re-run, and the client's observation is unchanged
+    (hidden_copy: the client-visibility control); (iv) a same-time public input (the export's fire), a notified fill, the fair at the step and
+    the last received frame (the observation) each change. A check whose future-only world builds in none of VENUE_DRAWS deterministic seeds is
+    NOT EVALUABLE (counted; neither a pass nor a failure). -> (checked, failed, details, components, audit: one record per check)."""
     feat = feat or X.real_features; perturb = perturb or X.real_perturb; fire = fire or X.real_fire
-    s, t0 = int(o.side), float(o.t); n_chk = n_bad = 0; det = []; cols = INPUTS + CTX; comp = dict(stored_vs_rebuild=0, stored_vs_perturbed=0, firing=0, not_evaluable=0, retried=0)
-    for r in [x for x in rows if x.get('sampled') and x.get('status') == 'ok'][::every]:
+    s, t0 = int(o.side), float(o.t); n_chk = n_bad = 0; det = []; audit = []; cols = INPUTS + CTX
+    comp = dict(stored_vs_rebuild=0, stored_vs_perturbed=0, stored_vs_visibility=0, firing=0, not_evaluable=0, retried=0)
+    for r in causal_select([x for x in rows if x.get('sampled') and x.get('status') == 'ok'], every):
         g = r['decision_ms']; d = t0 + g; tg = np.asarray(W[s]['tg'], float); kk = min(int(np.searchsorted(tg, d)), len(tg) - 1); k_ep = int(round(g / STEP))
-        base = rebuild_row(path, W, fv, o, day, r, fair_m, depth, feat); bad_i = same_f32(r, base, cols) if base is not None else ['no grid index']
-        Wp, fair_p, dep_p = perturb(W, fair_m, depth, kk, d, np.random.default_rng(int(d) % 100003)); pth_p = None
+        mk0 = market_at(W, fair_m, depth, feat, s, kk)
+        base = rebuild_row(path, W, fv, o, day, r, fair_m, depth, feat, market=mk0); bad_i = same_f32(r, base, cols) if base is not None else ['no grid index']
+        sm = int(d) % 100003; Wp, fair_p, dep_p = perturb(W, fair_m, depth, kk, d, np.random.default_rng(sm)); pth_p = None; draws = []
         for i_ in range(VENUE_DRAWS):                                                       # the next deterministic seed when a draw builds no path
-            pth_p = venue_future(W, o, g, np.random.default_rng(int(d) % 100019 + i_), i_)
+            pth_p, st_ = venue_future(W, o, g, np.random.default_rng(int(d) % 100019 + i_), i_); draws.append([int(d) % 100019 + i_, str(st_)])
             if pth_p is not None:
                 comp['retried'] += int(i_ > 0); break
         fvp = np.array(fv, float).copy(); fvp[k_ep + 1:] += 7.
         late = lambda ft_, fq_, d_: (np.where(ft_ + KP.NOTICE > d_, ft_ + 777., ft_), np.where(ft_ + KP.NOTICE > d_, fq_ * .5, fq_))
         pert = rebuild_row(pth_p, Wp, fvp, o, day, r, fair_p, dep_p, feat, late) if pth_p is not None else None
         bad_ii = same_f32(r, pert, cols) if pert is not None else None                    # None: not evaluable
+        B0 = resim(path, o, day, r); ob0 = observe(B0, g, s); sh_ = int(d) % 100043
+        Bh = hidden_copy(B0, g, np.random.default_rng(sh_)); ob_h = observe(Bh, g, s)
+        vis = rebuild_row(path, W, fv, o, day, r, fair_m, depth, feat, B=Bh, market=mk0)
+        bad_v = same_f32(r, vis, cols) + (['observation'] if ob_h != ob0 else [])
+        f_del = observe(hidden_copy(B0, g, np.random.default_rng(sh_), delivered=True), g, s) != ob0
         fw = rebuild_row(path, fire(W, s, kk), fv, o, day, r, fair_m, depth, feat); f_mk = fw is not None and bool(same_f32(base, fw, FC.MARKET))
-        fvf = np.array(fv, float).copy(); fvf[min(k_ep, len(fvf) - 1)] += 3.; f_fair = rebuild_row(path, W, fvf, o, day, r, fair_m, depth, feat)['fair_edge'] != base['fair_edge']
+        fvf = np.array(fv, float).copy(); fvf[min(k_ep, len(fvf) - 1)] += 3.
+        f_fair = rebuild_row(path, W, fvf, o, day, r, fair_m, depth, feat, market=mk0)['fair_edge'] != base['fair_edge']
         known = [x for x in json.loads(r['fills']) if t0 + x[0] + KP.NOTICE <= d]
         f_fill = True
         if known:
             nf = lambda ft_, fq_, d_: (ft_, np.where(ft_ + KP.NOTICE <= d_, fq_ * .5, fq_))
-            f_fill = rebuild_row(path, W, fv, o, day, r, fair_m, depth, feat, nf)['fp_remaining'] != base['fp_remaining']
-        n_chk += 1; fail_ = bool(bad_i) or bool(bad_ii) or not (f_mk and f_fair and f_fill); n_bad += int(fail_)
-        comp['stored_vs_rebuild'] += int(bool(bad_i)); comp['stored_vs_perturbed'] += int(bool(bad_ii)); comp['firing'] += int(not (f_mk and f_fair and f_fill))
-        comp['not_evaluable'] += int(bad_ii is None)
+            f_fill = rebuild_row(path, W, fv, o, day, r, fair_m, depth, feat, nf, market=mk0)['fp_remaining'] != base['fp_remaining']
+        fires = bool(f_mk and f_fair and f_fill and f_del)
+        n_chk += 1; fail_ = bool(bad_i) or bool(bad_ii) or bool(bad_v) or not fires; n_bad += int(fail_)
+        comp['stored_vs_rebuild'] += int(bool(bad_i)); comp['stored_vs_perturbed'] += int(bool(bad_ii)); comp['stored_vs_visibility'] += int(bool(bad_v))
+        comp['firing'] += int(not fires); comp['not_evaluable'] += int(bad_ii is None)
+        audit.append(dict(key=causal_key(r), seed_market=sm, draws=draws, seed_hidden=sh_, rebuild=not bad_i, perturbed=None if bad_ii is None else not bad_ii,
+                          visibility=not bad_v, fires=fires))
         if fail_ or bad_ii is None:
             det.append(dict(oid=int(o.oid), side=s, source=r['source'], offset_ms=r.get('offset_ms'), decision_ms=g, stored_vs_rebuild=bad_i[:5],
-                            stored_vs_perturbed=bad_ii[:5] if bad_ii is not None else 'not evaluable', fires_market=f_mk, fires_fair=bool(f_fair),
-                            fires_notified_fill=bool(f_fill)))
-    return n_chk, n_bad, det, comp
+                            stored_vs_perturbed=bad_ii[:5] if bad_ii is not None else 'not evaluable', stored_vs_visibility=bad_v[:5], fires_market=f_mk,
+                            fires_fair=bool(f_fair), fires_notified_fill=bool(f_fill), fires_delivered=bool(f_del)))
+    return n_chk, n_bad, det, comp, audit
 
 
 def context_on_truncated(path, o, day, r, cut=True):
@@ -451,7 +538,8 @@ NUMERIC = ('ctx_generation_age_ms', 'ctx_generation_ordinal', 'ctx_inventory_sha
 def support_part(D):
     """The additive support tables of one partition's sampled ok rows (original episodes are partition-local, so distinct-original counts add):
     cells (side x head x horizon bin), categories and their cross-cells with the horizon bin (rows, distinct originals, nonzero originals),
-    per side / head numeric ranges, and the coverage of delayed entry (offset > 0), offset-zero entry and later generations (>= 2)."""
+    per side / head numeric ranges, and the coverage of delayed entry (offset > 0), offset-zero entry and later generations (>= 2); as JSON-able
+    records (a part's completion record carries them; review 4cd7b45f)."""
     ok = D[(D.status == 'ok') & D.sampled.astype(bool)].copy()
     if not len(ok):
         return None
@@ -473,21 +561,24 @@ def support_part(D):
     cross = pd.concat([ok.groupby(['sh', 'hbin', d_]).apply(cnt).reset_index().rename(columns={d_: 'value'}).assign(dim=d_) for d_ in DIMS], ignore_index=True)
     cov = ok.groupby(['sh', 'cov']).apply(cnt).reset_index()
     rng = ok.groupby('sh')[list(NUMERIC)].agg(['min', 'max'])
-    return dict(cells=cells, cats=cats, cross=cross, cov=cov, rng=rng)
+    rec = lambda df: [{k: (int(v) if k in ('rows', 'originals', 'nonzero_originals') else str(v)) for k, v in r.items()} for r in df.to_dict('records')]
+    rng_ = [dict(sh=str(sh_), field=c, lo=float(rng.loc[sh_, (c, 'min')]), hi=float(rng.loc[sh_, (c, 'max')])) for sh_ in rng.index for c in NUMERIC]
+    return dict(cells=rec(cells), cats=rec(cats), cross=rec(cross), cov=rec(cov), rng=rng_)
 
 
 def support_merge(parts):
     """The partition tables summed (counts) / merged (ranges) -> the support JSON (the floors applied to the merged cells)."""
-    parts = [x for x in parts if x is not None]
+    parts = [x for x in parts if x is not None and x.get('cells')]
     if not parts:
         return dict(cells={}, categories=[], cross_cells=[], coverage=[], ranges={}, presence={}, unsupported_state_category={}, fallback_rule={})
-    cells = pd.concat([x['cells'] for x in parts]).groupby(['sh', 'hbin'])[['rows', 'originals', 'nonzero_originals']].sum().reset_index()
-    cats = pd.concat([x['cats'] for x in parts]).groupby(['sh', 'dim', 'value'])[['rows', 'originals', 'nonzero_originals']].sum().reset_index()
-    cross = pd.concat([x['cross'] for x in parts]).groupby(['sh', 'hbin', 'dim', 'value'])[['rows', 'originals', 'nonzero_originals']].sum().reset_index()
-    cov = pd.concat([x['cov'] for x in parts]).groupby(['sh', 'cov'])[['rows', 'originals', 'nonzero_originals']].sum().reset_index()
-    rg = pd.concat([x['rng'] for x in parts]); rng = {}
-    for sh_, g_ in rg.groupby(level=0):
-        rng[sh_] = {c: [float(g_[(c, 'min')].min()), float(g_[(c, 'max')].max())] for c in NUMERIC}
+    F_ = lambda k: pd.DataFrame([r for x in parts for r in x[k]])
+    cells = F_('cells').groupby(['sh', 'hbin'])[['rows', 'originals', 'nonzero_originals']].sum().reset_index()
+    cats = F_('cats').groupby(['sh', 'dim', 'value'])[['rows', 'originals', 'nonzero_originals']].sum().reset_index()
+    cross = F_('cross').groupby(['sh', 'hbin', 'dim', 'value'])[['rows', 'originals', 'nonzero_originals']].sum().reset_index()
+    cov = F_('cov').groupby(['sh', 'cov'])[['rows', 'originals', 'nonzero_originals']].sum().reset_index()
+    rg = F_('rng'); rng = {}
+    for sh_, g_ in rg.groupby('sh'):
+        rng[sh_] = {c: [float(g_[g_.field == c].lo.min()), float(g_[g_.field == c].hi.max())] for c in NUMERIC}
     got = {(r.sh, r.hbin): r for r in cells.itertuples()}; out = {}
     for sh_ in SIDE_HEADS:                                                                  # every declared cell, an unobserved one with zeros
         for iv in pd.IntervalIndex.from_breaks(HORIZON_BINS, closed='right'):
@@ -512,127 +603,132 @@ def partitions(sel, size=None):
     return [s_.iloc[i:i + size] for i in range(0, len(s_), size)]
 
 
-def read_parts(d):
-    """The partitioned census in its canonical order (the parts in order, each sorted)."""
-    man = json.loads((Path(d) / 'manifest.json').read_text())
-    return pd.concat([pd.read_parquet(Path(d) / x['file']) for x in man['parts']], ignore_index=True)
+def materialize(d, max_rows=None):
+    """The ONLY all-part reader (review 4cd7b45f P2): the parts in their canonical order as one frame, for synthetic tests and the bounded slice
+    receipts; refused above max_rows (default MAX_MATERIALIZE_ROWS) before any part is read. The census itself never calls it. Reads the
+    runner's layout (plan.json, parts/part_NNNN.parquet with completion records) or the r2av2 / r2av3 slice layout (manifest.json)."""
+    d = Path(d); lim = MAX_MATERIALIZE_ROWS if max_rows is None else int(max_rows)
+    if (d / 'manifest.json').exists():
+        man = json.loads((d / 'manifest.json').read_text()); files = [(d / x['file'], int(x['rows'])) for x in man['parts']]
+    else:
+        plan = json.loads((d / 'plan.json').read_text()); files = []
+        for i in range(len(plan['partitions'])):
+            rec = json.loads((d / 'parts' / f'part_{i:04d}.json').read_text()); files.append((d / 'parts' / rec['file'], int(rec['rows'])))
+    n = sum(r for _, r in files); C.require(n <= lim, f'materialize: {n} rows above the bound {lim} (the full day is never materialized)')
+    return pd.concat([pd.read_parquet(f) for f, _ in files], ignore_index=True)
 
 
-def census(day=DAY, per_side=PER_SIDE, out=None, src=None, kp=None, inputs=None, feat_fn=None, markets=None, causal=True, causal_every=17, causal_feat=None,
-           causal_perturb=None, tag='', keep_fills=False, part_size=None, population='first_per_side'):
-    """The partitioned census of the fixed population (see POPULATION; review d10d3698): partitions of at most part_size originals in the
-    canonical order, each processed, weighted, sorted, written and released; every selected original represented exactly once (a market the
-    source does not list -> missing_source:market; a listed market without a yielded window -> missing_source:pair); the support tables added
-    across partitions -> census_<day><tag>/part_NNNN.parquet + manifest.json, support_<day><tag>.json, census_<day><tag>.json."""
-    start = time.time(); C.require(day in BE.SLICE_DAYS, 'consumed days only (Oct 23-27)'); out = Path(out or OUT); kp = Path(kp or KP.OUT)
-    pdir = out / f'census_{day}{tag}'; C.require(not (out / f'census_{day}{tag}.json').exists() and not pdir.exists(), 'output exists')
-    src = src or KP.Tape(); feat_fn = feat_fn or X.real_features
-    r_ = json.loads((kp / day / 'receipt.json').read_text()); C.require(all(C.sha(kp / day / x) == h for x, h in r_['outputs'].items()), 'keep-pull outputs changed since their receipt')
-    O = pd.read_parquet(kp / day / 'orders.parquet')
-    C.require(population in ('first_per_side', 'all'), 'undeclared population')
-    sel = O.copy() if population == 'all' else pd.concat([O[O.side == s_].sort_values('oid').head(int(per_side)) for s_ in (0, 1)], ignore_index=True)
-    sel_ids = sorted((int(s_), int(x)) for s_, x in zip(sel.side, sel.oid)); sel_hash = hashlib.sha256(json.dumps(sel_ids).encode()).hexdigest()
-    listed = set(int(m) for m in (src.markets(day) if markets is None else markets)); need = sorted(set(sel.m.astype(int)) & listed)
-    fair, depth, hrs, tracked = (inputs or X.real_inputs)(day, need) if need else ({}, None, [], {}); off = src.offset(day)
-    recon = dict(checked=0, failed=0, no_fill=0); refusals = {}; caus = dict(checked=0, failed=0, details=[]); supp = []; man = []; peak = 0.
-    st_counts = {}; n_rows = n_ok = 0; seen = set(); pdir.mkdir(parents=True)
-    status_row = lambda o, m, st: dict(day=day, instrument_id=int(m), original_episode_id=int(o.oid), side=int(o.side), t0=float(o.t), source='original', head='post',
-                                       status=st, sampled=True)
-    p_sec, p_rss = [], []
-    for pi, P in enumerate(partitions(sel, part_size)):
-        t_p = time.time(); rows, frames = [], []; mk = sorted(set(P.m.astype(int))); present = [m for m in mk if m in listed]
-        for o in P[~P.m.astype(int).isin(present)].itertuples():
-            rows.append(status_row(o, o.m, 'missing_source:market'))
-        yielded = set()
-        if present:
-            data = src.load(day, present, off)
-            for W in src.pairs(data):
-                m = int(W[0]['m'])
-                if m not in present:
+read_parts = materialize                                   # the slice-era receipt scripts' name: the same bounded reader
+
+
+def status_row(day, o, m, st):
+    """The one row of an original without episode rows (no path, a missing source): a status, never a silent drop."""
+    return dict(day=day, instrument_id=int(m), original_episode_id=int(o.oid), side=int(o.side), t0=float(o.t), source='original', head='post', status=st,
+                sampled=True)
+
+
+def process_partition(day, pi, P, listed, src, off, fair, depth, feat_fn, causal=True, causal_every=None, causal_feat=None, causal_perturb=None,
+                      keep_fills=False, prev=None):
+    """One partition P of selected originals (reviews d10d3698, 4cd7b45f): every candidate row with its inputs, labels and their per-fill
+    reconciliation; the stored-row causality on the declared audit sample; the canonical order and the weights; and the population guards - a
+    source pair yielded twice is refused, each original carries exactly one status row OR a set of episode rows (never both, never two status
+    rows), canonical candidate identities are unique, and the represented originals equal the partition's. -> (D, info), info JSON-able (the
+    part's completion record)."""
+    rows, frames = [], []; mk = sorted(set(P.m.astype(int))); present = [m for m in mk if m in listed]
+    recon = dict(checked=0, failed=0, no_fill=0); refusals = {}; caus = dict(checked=0, failed=0, details=[], audit=[])
+    for o in P[~P.m.astype(int).isin(present)].itertuples():
+        rows.append(status_row(day, o, o.m, 'missing_source:market'))
+    yielded = set()
+    if present:
+        data = src.load(day, present, off)
+        for W in src.pairs(data):
+            m = int(W[0]['m'])
+            if m not in present:
+                continue
+            C.require(m not in yielded, f'partition {pi}: the source yielded the pair of market {m} twice')
+            yielded.add(m)
+            for o in P[P.m.astype(int) == m].itertuples():
+                if DROP_ORIGINAL is not None and int(o.oid) == DROP_ORIGINAL:
                     continue
-                yielded.add(m)
-                for o in P[P.m.astype(int) == m].itertuples():
-                    if DROP_ORIGINAL is not None and int(o.oid) == DROP_ORIGINAL:
-                        continue
-                    if str(o.status) not in ('eligible', 'refused_post_only'):
-                        rows.append(status_row(o, m, f'no_path:{o.status}')); continue
-                    path, pst = QP.build_path(W, float(o.t), float(o.t) + END)
-                    if path is None:
-                        rows.append(status_row(o, m, f'no_path:{pst}')); continue
-                    er = probes(path, o, day, [])
-                    fv = np.array([float(getattr(o, f'f{j:02d}')) for j in range(KP.NSTEP + 1)])
-                    add_inputs(er, W, o, fair.get(m), depth, feat_fn, lambda k, fv=fv: float(fv[min(k, len(fv) - 1)]))
-                    if causal:
-                        nc_, nb_, dt_, cp_ = causal_rows(er, path, o, day, W, fair.get(m), depth, fv, every=causal_every, feat=causal_feat,
-                                                         perturb=(causal_perturb or (None, None))[0], fire=(causal_perturb or (None, None))[1])
-                        caus['checked'] += nc_; caus['failed'] += nb_; caus['details'].extend(dt_[:3])
-                        for k_, v_ in cp_.items():
-                            caus[k_] = caus.get(k_, 0) + v_
-                    for r in er:                                                            # the per-fill reconciliation of every sampled ok row
-                        if r.get('sampled') and r.get('status') == 'ok':
-                            fl = json.loads(r['fills']); sg_ = 1. if r['side'] == 0 else -1.; eff = r['effective_ms']; mk_ = r['end_mark']
-                            qq = sum(b for a, b, c in fl if a >= eff - 1e-9); vv = sum(b * sg_ * (mk_ - c) for a, b, c in fl if a >= eff - 1e-9)
-                            idn = r['value'] - (sg_ * (r['pf_mid_ref'] - r['price']) * (r['q'] if r['q'] > 0 else 0.) + r['qm'])
-                            recon['checked'] += 1; recon['failed'] += int(not (abs(qq - r['q']) <= 1e-9 and abs(vv - r['value']) <= 1e-9
-                                                                                  and abs(max(-vv - KP.SEVERE, 0.) - r['severe']) <= 1e-9 and abs(idn) <= 1e-9))
-                            recon['no_fill'] += int(r['q'] <= 1e-12)
-                            if r['head'] == 'post':
-                                k_ = r['source']; refusals[k_] = refusals.get(k_, 0) + int(bool(r.get('refused')))
-                        r['decision_abs_ms'] = float(o.t) + float(r['decision_ms']) if r.get('decision_ms') is not None else np.nan
-                        if not (r.get('sampled') and r.get('status') == 'ok'):
-                            for c in CTX:
-                                r.pop(c, None)
-                        if not keep_fills:
-                            r.pop('fills', None)
-                    frames.append(frame_of(er)); er = None
-            del data
-        for o in P[P.m.astype(int).isin([m for m in present if m not in yielded])].itertuples():
-            rows.append(status_row(o, o.m, 'missing_source:pair'))
-        if DUP_ORIGINAL and pi > 0:                                                         # planted: the previous partition's first original again
-            o_ = prev_first; rows.append(status_row(o_, o_.m, 'no_path:duplicate'))
-        if rows:
-            frames.append(frame_of(rows))
-        D = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame({c: [] for c in SORT_KEY + ['status', 'sampled', 't0']}); frames = None
-        miss = [c for c in INPUTS + CTX + ['q', 'value', 'qm', 'severe', 'refused'] if c not in D]
-        if miss:
-            D = pd.concat([D, pd.DataFrame({c: np.full(len(D), np.nan, np.float32 if c in INPUTS + CTX else float) for c in miss}, index=D.index)], axis=1)
-        D = canonical(D.copy()); D['weight'] = weights(D)
-        rep_ = set(zip(D.side.astype(int), D.original_episode_id.astype(int))); want_ = set(zip(P.side.astype(int), P.oid.astype(int)))
-        C.require(rep_ == want_ and not (rep_ & seen), f'partition {pi}: originals represented {len(rep_)} vs selected {len(want_)}, or an original in two partitions')
-        seen |= rep_; supp.append(support_part(D)); prev_first = next(P.itertuples())
-        for (a_, b_, c_), v_ in D.groupby(['source', 'head', 'status']).size().items():
-            st_counts[f'{a_} {b_} {c_}'] = st_counts.get(f'{a_} {b_} {c_}', 0) + int(v_)
-        n_rows += len(D); n_ok += int(((D.status == 'ok') & D.sampled.astype(bool)).sum())
-        f_ = f'part_{pi:04d}.parquet'; D.drop(columns=['fills'], errors='ignore').to_parquet(pdir / f_, index=False)
-        man.append(dict(part=pi, file=f_, originals=sorted(want_), rows=int(len(D)), sha256=C.sha(pdir / f_)))
-        D = None; C.guard('r2 shadow census'); peak = max(peak, I.K.rss_mib()); p_sec.append(time.time() - t_p); p_rss.append(float(I.K.rss_mib()))
-        print(json.dumps(dict(partition=pi, originals=len(want_), rows=man[-1]['rows'], seconds=round(p_sec[-1], 1), rss_mib=round(p_rss[-1]))), flush=True)
-    C.require(seen == set(sel_ids) and len(seen) == len(sel), 'the population reconciliation: represented originals differ from the selection')
-    C.dump(pdir / 'manifest.json', dict(day=day, manifest=MANIFEST, population=population, part_size=int(part_size or PART_SIZE), selected_ids_sha256=sel_hash, parts=man))
-    S = support_merge(supp); out.mkdir(parents=True, exist_ok=True); C.dump(out / f'support_{day}{tag}.json', S)
-    R = dict(population=dict(kind=population, per_side=int(per_side), selected=int(len(sel)), by_status=sel.status.astype(str).value_counts().to_dict(),
-                             selected_ids_sha256=sel_hash, selected_ids=sel_ids, represented=int(len(seen)), reconciliation='EXACT'),
-             partitions=dict(count=len(man), size=int(part_size or PART_SIZE), seconds=p_sec, rss_mib_after=p_rss),
-             labels=dict(recon, verdict='PASS' if (recon['checked'] > 0 and recon['failed'] == 0) else 'FAIL'), refusals_by_source=refusals,
-             causality=dict(checked=caus['checked'], failed=caus['failed'], every=int(causal_every), details=caus['details'][:10],
-                            components={k_: int(caus.get(k_, 0)) for k_ in ('stored_vs_rebuild', 'stored_vs_perturbed', 'firing', 'not_evaluable')},
-                            retried=int(caus.get('retried', 0)), draws=int(VENUE_DRAWS),
-                            verdict='NOT-RUN' if not causal else 'FAIL' if (caus['checked'] == 0 or caus['failed'] > 0)
-                            else 'NOT-EVALUABLE' if caus.get('not_evaluable', 0) > 0 else 'PASS'),
-             census_rows=int(n_rows), sampled_ok_rows=int(n_ok), by_source_head_status=st_counts, peak_rss_mib=float(peak))
-    C.dump(out / f'census_{day}{tag}.json', dict(asof=C.stamp(), day=day, manifest=MANIFEST, costs=COSTS, readings=R, inputs_list_sha256=hashlib.sha256(json.dumps(INPUTS + CTX).encode()).hexdigest(),
-                                           inputs=dict(kp_receipt=C.sha(kp / day / 'receipt.json'), hours=hrs, tracked=tracked),
-                                           outputs={**{f'census_{day}{tag}/{x["file"]}': x['sha256'] for x in man}, f'census_{day}{tag}/manifest.json': C.sha(pdir / 'manifest.json'),
-                                                    f'support_{day}{tag}.json': C.sha(out / f'support_{day}{tag}.json')},
-                                           source_sha256=C.sha(Path(__file__).resolve()), engine_sha256=C.sha(Path(BE.__file__).resolve()),
-                                           provenance=KP.provenance(), seconds=time.time() - start))
-    print(json.dumps({k: v for k, v in R.items() if k != 'population'} | dict(population={k: v for k, v in R['population'].items() if k != 'selected_ids'}), indent=1, default=str), flush=True)
-    return read_parts(pdir), S, R
+                if str(o.status) not in ('eligible', 'refused_post_only'):
+                    rows.append(status_row(day, o, m, f'no_path:{o.status}')); continue
+                path, pst = QP.build_path(W, float(o.t), float(o.t) + END)
+                if path is None:
+                    rows.append(status_row(day, o, m, f'no_path:{pst}')); continue
+                er = probes(path, o, day, [])
+                fv = np.array([float(getattr(o, f'f{j:02d}')) for j in range(KP.NSTEP + 1)])
+                add_inputs(er, W, o, fair.get(m), depth, feat_fn, lambda k, fv=fv: float(fv[min(k, len(fv) - 1)]))
+                if causal:
+                    nc_, nb_, dt_, cp_, au_ = causal_rows(er, path, o, day, W, fair.get(m), depth, fv, every=causal_every, feat=causal_feat,
+                                                          perturb=(causal_perturb or (None, None))[0], fire=(causal_perturb or (None, None))[1])
+                    caus['checked'] += nc_; caus['failed'] += nb_; caus['details'].extend(dt_[:3]); caus['audit'].extend(au_)
+                    for k_, v_ in cp_.items():
+                        caus[k_] = caus.get(k_, 0) + v_
+                for r in er:                                                                # the per-fill reconciliation of every sampled ok row
+                    if r.get('sampled') and r.get('status') == 'ok':
+                        fl = json.loads(r['fills']); sg_ = 1. if r['side'] == 0 else -1.; eff = r['effective_ms']; mk_ = r['end_mark']
+                        qq = sum(b for a, b, c in fl if a >= eff - 1e-9); vv = sum(b * sg_ * (mk_ - c) for a, b, c in fl if a >= eff - 1e-9)
+                        idn = r['value'] - (sg_ * (r['pf_mid_ref'] - r['price']) * (r['q'] if r['q'] > 0 else 0.) + r['qm'])
+                        recon['checked'] += 1; recon['failed'] += int(not (abs(qq - r['q']) <= 1e-9 and abs(vv - r['value']) <= 1e-9
+                                                                              and abs(max(-vv - KP.SEVERE, 0.) - r['severe']) <= 1e-9 and abs(idn) <= 1e-9))
+                        recon['no_fill'] += int(r['q'] <= 1e-12)
+                        if r['head'] == 'post':
+                            k_ = r['source']; refusals[k_] = refusals.get(k_, 0) + int(bool(r.get('refused')))
+                    r['decision_abs_ms'] = float(o.t) + float(r['decision_ms']) if r.get('decision_ms') is not None else np.nan
+                    if not (r.get('sampled') and r.get('status') == 'ok'):
+                        for c in CTX:
+                            r.pop(c, None)
+                    if not keep_fills:
+                        r.pop('fills', None)
+                frames.append(frame_of(er)); er = None
+        del data
+    for o in P[P.m.astype(int).isin([m for m in present if m not in yielded])].itertuples():
+        rows.append(status_row(day, o, o.m, 'missing_source:pair'))
+    if DUP_ORIGINAL and prev is not None:                                                   # planted: the previous partition's first original again
+        rows.append(status_row(day, prev, prev.m, 'no_path:duplicate'))
+    if DUP_STATUS and rows:                                                                 # planted: a status row twice in this partition
+        rows.append(dict(rows[0]))
+    if rows:
+        frames.append(frame_of(rows))
+    D = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame({c: [] for c in SORT_KEY + ['status', 'sampled', 't0']}); frames = None
+    if DUP_EPISODE and (D.source != 'original').any():                                     # planted: an episode row twice in this partition
+        D = pd.concat([D, D[D.source != 'original'].head(1)], ignore_index=True)
+    miss = [c for c in INPUTS + CTX + ['q', 'value', 'qm', 'severe', 'refused'] if c not in D]
+    if miss:
+        D = pd.concat([D, pd.DataFrame({c: np.full(len(D), np.nan, np.float32 if c in INPUTS + CTX else float) for c in miss}, index=D.index)], axis=1)
+    D = canonical(D.copy())
+    ks = list(zip(D.side.astype(int), D.original_episode_id.astype(int))); isst = (D.source == 'original').values      # the multiplicity guards
+    n_st = collections.Counter(k for k, x in zip(ks, isst) if x); n_ep = collections.Counter(k for k, x in zip(ks, isst) if not x)
+    want_ = set(zip(P.side.astype(int), P.oid.astype(int)))
+    C.require(set(n_st) | set(n_ep) == want_, f'partition {pi}: originals represented {len(set(n_st) | set(n_ep))} vs the partition\'s {len(want_)}')
+    C.require(all((n_st.get(k, 0) == 1 and n_ep.get(k, 0) == 0) or (n_st.get(k, 0) == 0 and n_ep.get(k, 0) > 0) for k in want_),
+              f'partition {pi}: an original with two status rows, or with a status row and episode rows')
+    C.require(not D.duplicated(subset=[c for c in SORT_KEY if c in D]).any(), f'partition {pi}: a duplicate canonical candidate identity')
+    D['weight'] = weights(D); ok = (D.status == 'ok') & D.sampled.astype(bool)
+    stc = {f'{a_} {b_} {c_}': int(v_) for (a_, b_, c_), v_ in D.groupby(['source', 'head', 'status']).size().items()}
+    gw = D[ok].groupby(['original_episode_id', 'side', 'head']).weight.sum()
+    info = dict(members=[list(x) for x in sorted(want_)], rows=int(len(D)), sampled_ok=int(ok.sum()), status_counts=stc, recon=recon, refusals=refusals,
+                weight_groups=int(len(gw)), weight_groups_one=int(np.isclose(gw.values, 1., rtol=0, atol=1e-12).sum()),
+                causal=dict({k_: v_ for k_, v_ in caus.items() if k_ not in ('details', 'audit')}, details=caus['details'][:10], audit=caus['audit']),
+                support=support_part(D))
+    return D, info
+
+
+def census(day=DAY, per_side=PER_SIDE, out=None, src=None, kp=None, inputs=None, feat_fn=None, markets=None, causal=True, causal_every=None, causal_feat=None,
+           causal_perturb=None, tag='', keep_fills=False, part_size=None, population='first_per_side', limits=None):
+    """The census through the full-day runner in one call (pf_r2_runner: an immutable plan; parts written to temporary files, validated and
+    promoted with completion records; resumable; the resource stop rule; finalized from the records alone) -> (the census directory, the
+    support JSON, the readings). It never materializes the parts: materialize() (bounded) is explicit."""
+    import pf_r2_runner as RN
+    return RN.census(mod=sys.modules[__name__], day=day, per_side=per_side, out=out, src=src, kp=kp, inputs=inputs, feat_fn=feat_fn, markets=markets,
+                     causal=causal, causal_every=causal_every, causal_feat=causal_feat, causal_perturb=causal_perturb, tag=tag, keep_fills=keep_fills,
+                     part_size=part_size, population=population, limits=limits)
 
 
 def selftest():  # noqa: C901
     """Synthetic only (see CONTROLS)."""
-    global CONTEXT_FROM_ENGINE, CONTEXT_FUTURE, LABEL_NUDGE, ADAPT_CORRUPT, DROP_ORIGINAL, DUP_ORIGINAL, FAIR_LEAK, VENUE_NO_PATH
+    global CONTEXT_FROM_ENGINE, CONTEXT_FUTURE, LABEL_NUDGE, ADAPT_CORRUPT, DROP_ORIGINAL, DUP_ORIGINAL, FAIR_LEAK, VENUE_NO_PATH, CONTEXT_UNRECEIVED
+    global DUP_STATUS, DUP_EPISODE
     viol = []
 
     def strict(f):                                                                          # the real builder (feature_rows) reads chosen[0] and chosen[1]
@@ -782,6 +878,40 @@ def selftest():  # noqa: C901
             and 'c_other=terminal' in Ss['unsupported_state_category']['bid post'] and 'c_inv=long' not in Ss['unsupported_state_category']['bid post']
             and 'c_inv=long' in Ss['unsupported_state_category']['ask retain'] and Ss['presence']['ask retain']['c_inv']['short'] == 1):
         bad.append(f"support: the declared cells / fallbacks / unsupported categories ({len(cl_)}, {Ss['unsupported_state_category'].get('bid post')})")
+    # ---- the client-visibility control (review 4cd7b45f P2): a venue frame at 0 ms received at 500 ms; an absent POST at 0 and a live retain row
+    tv = BE.tape([BE.frame(0, 0, 50, 52), BE.frame(0, 500, 64, 66)], [], 50.); ov = pd.DataFrame([dict(side=0, oid=e0p, m=7, t=0., phase=1)]).iloc[0]
+
+    def vis_rows(mode):
+        global CONTEXT_UNRECEIVED
+        CONTEXT_UNRECEIVED = mode
+        try:
+            res = []
+            for r in [x for x in probes(tv, ov, '20261023', []) if x.get('sampled') and x.get('status') == 'ok' and x['source'] in ('entry', 'retain') and x['decision_ms'] < 500]:
+                g = r['decision_ms']; B0 = resim(tv, ov, '20261023', r); Bh = hidden_copy(B0, g, np.random.default_rng(1))
+                ch = client_snapshot(copy.deepcopy(Bh), g, 0)[0]
+                res.append((r['head'], all(np.float32(ch[c]) == np.float32(r[c]) for c in CTX), observe(Bh, g, 0) == observe(B0, g, 0),
+                            observe(hidden_copy(B0, g, np.random.default_rng(1), delivered=True), g, 0) != observe(B0, g, 0)))
+            return res
+        finally:
+            CONTEXT_UNRECEIVED = ''
+    v_clean, v_leak = vis_rows(''), vis_rows('frame')
+    if not ({h for h, *_ in v_clean} == {'post', 'retain'} and all(a and b and c for _, a, b, c in v_clean)
+            and {h for h, a, b, _ in v_leak if not (a and b)} == {'post', 'retain'}):
+        bad.append(f'visibility: the unreceived-frame fixture (clean equal, planted read refused on the absent and the live row, delivered fires): {v_clean} / {v_leak}')
+    # ---- the audit sample r2_full_causal_v1 (review 4cd7b45f): the canonical key, the per-stratum count, the smallest hashes, order-free
+    rk = dict(day='20261023', instrument_id=7, original_episode_id=11, side=1, source='joint_chase', head='retain', offset_ms=np.nan, generation=2., decision_ms=1250.)
+    if causal_key(rk) != '["r2_full_causal_v1","20261023",7,11,1,"joint_chase","retain",null,2,1250]':
+        bad.append(f'audit sample: the canonical key {causal_key(rk)}')
+    pool = [dict(rk, decision_ms=float(50 * i)) for i in range(130)] + [dict(rk, head='post', source='entry', offset_ms=float(50 * i), decision_ms=float(50 * i), generation=1.)
+                                                                    for i in range(5)]
+    hx = lambda r: hashlib.sha256(('["r2_full_causal_v1","20261023",7,11,1,"' + r['source'] + '","' + r['head'] + '",'
+                                   + ('null' if r['source'] == 'joint_chase' else str(int(r['offset_ms']))) + ',' + str(int(r['generation'])) + ','
+                                   + str(int(r['decision_ms'])) + ']').encode()).hexdigest()
+    want = sorted(hx(r) for r in pool[:130])[:3] + sorted(hx(r) for r in pool[130:])[:1]
+    got = causal_select(pool); got_r = causal_select(pool[::-1])
+    if not (len(got) == 4 and sorted(hx(r) for r in got) == sorted(want) and [causal_key(r) for r in got] == [causal_key(r) for r in got_r]
+            and causal_select(pool, every=17) == pool[::17]):
+        bad.append(f'audit sample: the per-stratum min(n, max(1, ceil(n / 64))) smallest hashes, independent of order ({len(got)})')
     # ---- census complete, sampling rule, labels by an independent loop, the value identity (engine level)
     keys = [(r['source'], r['head'], r.get('offset_ms'), r['decision_ms']) for r in rows]
     if len(keys) != len(set(keys)):
@@ -811,8 +941,9 @@ def selftest():  # noqa: C901
         with contextlib.redirect_stdout(io.StringIO()):
             for d in days:
                 KP.day_run(d, src=src, v1=tmp / 'v1', out=tmp / 'kp')
-            D, S, R = census(d0, per_side=3, out=tmp / 'r2', src=src, kp=tmp / 'kp', inputs=X.syn_inputs, feat_fn=strict(X.syn_features()),
-                             causal_feat=strict(X.syn_features()), causal_perturb=(X.syn_perturb, X.syn_fire), keep_fills=True)
+            cd_, S, R = census(d0, per_side=3, out=tmp / 'r2', src=src, kp=tmp / 'kp', inputs=X.syn_inputs, feat_fn=strict(X.syn_features()),
+                               causal_feat=strict(X.syn_features()), causal_perturb=(X.syn_perturb, X.syn_fire), keep_fills=True)
+        D = materialize(cd_)
         if viol:
             bad.append(f'features: the builder called without both sides\' keys (the real builder reads both): {viol[:3]}')
         ok = D[(D.status == 'ok') & D.sampled.astype(bool)]
@@ -879,10 +1010,11 @@ def selftest():  # noqa: C901
                 return [W_ for W_ in self.b.pairs(data_) if int(W_[0]['m']) != self.m]
         try:
             with contextlib.redirect_stdout(io.StringIO()):
-                Dm, _, Rm = census(d0, per_side=2, out=tmp / 'r2m', src=src, kp=tmp / 'kp', inputs=X.syn_inputs, feat_fn=X.syn_features(), causal=False,
-                                   markets=[m_ for m_ in src.markets(d0) if m_ != sel_m[0]])
-                Dp, _, Rp = census(d0, per_side=2, out=tmp / 'r2p', src=Skip(src, sel_m[0]), kp=tmp / 'kp', inputs=X.syn_inputs, feat_fn=X.syn_features(), causal=False)
-                Da, _, Ra = census(d0, per_side=2, out=tmp / 'r2a', src=src, kp=tmp / 'kp', inputs=X.syn_inputs, feat_fn=X.syn_features(), causal=False)
+                pm_, _, Rm = census(d0, per_side=2, out=tmp / 'r2m', src=src, kp=tmp / 'kp', inputs=X.syn_inputs, feat_fn=X.syn_features(), causal=False,
+                                    markets=[m_ for m_ in src.markets(d0) if m_ != sel_m[0]])
+                pp_, _, Rp = census(d0, per_side=2, out=tmp / 'r2p', src=Skip(src, sel_m[0]), kp=tmp / 'kp', inputs=X.syn_inputs, feat_fn=X.syn_features(), causal=False)
+                pa_, _, Ra = census(d0, per_side=2, out=tmp / 'r2a', src=src, kp=tmp / 'kp', inputs=X.syn_inputs, feat_fn=X.syn_features(), causal=False)
+            Dm, Dp, Da = materialize(pm_), materialize(pp_), materialize(pa_)
             if not ((Dm.status == 'missing_source:market').any() and (Dp.status == 'missing_source:pair').any() and not Da.status.str.startswith('missing_source').any()
                     and Rm['population']['represented'] == Rm['population']['selected'] == Rp['population']['represented'] == Ra['population']['represented']):
                 bad.append(f"population: a missing market / pair is not a status, or an original is lost ({Rm['population'].get('represented')}, {Rp['population'].get('represented')})")
@@ -927,6 +1059,54 @@ def selftest():  # noqa: C901
             if not (cz_['verdict'] == want_ and cz_['failed'] == 0 and cz_['checked'] > 0
                     and ((ne_ == cz_['checked'] and cz_['retried'] == 0) if mode_ == 1 else (ne_ == 0 and cz_['retried'] == cz_['checked']))):
                 bad.append(f"causality: an unbuildable future draw (mode {mode_}) must read {want_} ({cz_['verdict']}, {cz_['components']}, retried {cz_['retried']})")
+        CONTEXT_UNRECEIVED = 'ahead'                                                        # a hidden engine field read by the context: only visibility sees it
+        try:
+            with contextlib.redirect_stdout(io.StringIO()):
+                Rh = census(d0, per_side=3, out=tmp / 'r2h', src=src, kp=tmp / 'kp', inputs=X.syn_inputs, feat_fn=X.syn_features(), causal_feat=X.syn_features(),
+                            causal_perturb=(X.syn_perturb, X.syn_fire), causal_every=1)[2]
+        finally:
+            CONTEXT_UNRECEIVED = ''
+        if not (Rh['causality']['components']['stored_vs_visibility'] > 0 and Rh['causality']['components']['stored_vs_rebuild'] == 0 and Rh['causality']['verdict'] == 'FAIL'):
+            bad.append(f"visibility: a context reading the engine-truth queue ahead is not refused by the client-visibility control ({Rh['causality']['components']})")
+        class Twice(Skip):                                                                  # one source pair yielded twice
+            def pairs(self, data_):
+                ws = list(self.b.pairs(data_)); return ws + [W_ for W_ in ws if int(W_[0]['m']) == self.m]
+        mult = {}
+        for nm_, fn_ in (('repeated pair', lambda: census(d0, per_side=2, out=tmp / 'r2t', src=Twice(src, sel_m[0]), kp=tmp / 'kp', inputs=X.syn_inputs,
+                                                          feat_fn=X.syn_features(), causal=False)),
+                         ('repeated status', lambda: census(d0, per_side=2, out=tmp / 'r2ts', src=Skip(src, sel_m[0]), kp=tmp / 'kp', inputs=X.syn_inputs,
+                                                            feat_fn=X.syn_features(), causal=False)),
+                         ('repeated episode', lambda: census(d0, per_side=2, out=tmp / 'r2te', src=src, kp=tmp / 'kp', inputs=X.syn_inputs, feat_fn=X.syn_features(),
+                                                             causal=False))):
+            DUP_STATUS, DUP_EPISODE = nm_ == 'repeated status', nm_ == 'repeated episode'
+            try:
+                with contextlib.redirect_stdout(io.StringIO()):
+                    fn_()
+                mult[nm_] = 'accepted'
+            except ValueError as e:
+                mult[nm_] = str(e)
+            finally:
+                DUP_STATUS = DUP_EPISODE = False
+        if not ('twice' in mult['repeated pair'] and 'two status rows' in mult['repeated status'] and 'duplicate canonical candidate identity' in mult['repeated episode']):
+            bad.append(f'population: a repeated pair / status row / episode row within a partition was not refused ({mult})')
+        def sentinel_(*a_, **k_):
+            raise AssertionError('an all-part read')
+        g_ = globals(); keep_m = (g_['materialize'], g_['read_parts'])
+        try:
+            g_['materialize'] = g_['read_parts'] = sentinel_
+            with contextlib.redirect_stdout(io.StringIO()):
+                Rs_ = census(d0, per_side=2, out=tmp / 'r2x', src=src, kp=tmp / 'kp', inputs=X.syn_inputs, feat_fn=X.syn_features(), causal=False)
+            sent = Rs_[2]['state'] == 'COMPLETE'
+        except AssertionError:
+            sent = False
+        finally:
+            g_['materialize'], g_['read_parts'] = keep_m
+        try:
+            materialize(Rs_[0], max_rows=5); bounded = False
+        except ValueError:
+            bounded = True
+        if not (sent and bounded):
+            bad.append(f'materialize: the census read all parts, or the explicit reader is unbounded ({sent}, {bounded})')
         DROP_ORIGINAL = int(Ok_[Ok_.status == 'eligible'].sort_values('oid').oid.iloc[0])
         try:
             with contextlib.redirect_stdout(io.StringIO()):
@@ -937,9 +1117,10 @@ def selftest():  # noqa: C901
         finally:
             DROP_ORIGINAL = None
         with contextlib.redirect_stdout(io.StringIO()):
-            D1, S1, _ = census(d0, per_side=3, out=tmp / 'r2s1', src=src, kp=tmp / 'kp', inputs=X.syn_inputs, feat_fn=X.syn_features(), causal=False, part_size=1)
-            D9, S9, _ = census(d0, per_side=3, out=tmp / 'r2s9', src=src, kp=tmp / 'kp', inputs=X.syn_inputs, feat_fn=X.syn_features(), causal=False, part_size=999)
-        if not (D1.equals(D9) and S1 == S9 and len(json.loads((tmp / 'r2s1' / f'census_{d0}' / 'manifest.json').read_text())['parts']) == 6):
+            p1_, S1, _ = census(d0, per_side=3, out=tmp / 'r2s1', src=src, kp=tmp / 'kp', inputs=X.syn_inputs, feat_fn=X.syn_features(), causal=False, part_size=1)
+            p9_, S9, _ = census(d0, per_side=3, out=tmp / 'r2s9', src=src, kp=tmp / 'kp', inputs=X.syn_inputs, feat_fn=X.syn_features(), causal=False, part_size=999)
+        D1, D9 = materialize(p1_), materialize(p9_)
+        if not (D1.equals(D9) and S1 == S9 and len(json.loads((p1_ / 'plan.json').read_text())['partitions']) == 6):
             bad.append('partitions: one-original partitions differ from a single partition (rows or support)')
         if not D[[c for c in SORT_KEY if c in D]].equals(canonical(D)[[c for c in SORT_KEY if c in D]]):
             bad.append('census: not in the manifest order (stable original identity, offset, generation, decision)')

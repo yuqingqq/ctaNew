@@ -1,0 +1,20 @@
+ 0 none (must pass): rc 0 -> passed
+ 1 a record of another plan accepted: rc 1 -> caught: R2 RUNNER SELFTEST FAILED: resume: a refusal did not fire ({'corrupt': True, 'overlap': True, 'other_plan': False, 'changed_input': True, 'different_plan': True, 'finalize_missing': True, 'stale_source': True})
+ 2 the part file's hash not checked: rc 1 -> caught: R2 RUNNER SELFTEST FAILED: resume: a refusal did not fire ({'corrupt': False, 'overlap': True, 'other_plan': True, 'changed_input': True, 'different_plan': True, 'finalize_missing': True, 'stale_source': True}) | finaliz
+ 3 the record's members not checked: rc 1 -> caught: R2 RUNNER SELFTEST FAILED: resume: a refusal did not fire ({'corrupt': True, 'overlap': False, 'other_plan': True, 'changed_input': True, 'different_plan': True, 'finalize_missing': True, 'stale_source': True})
+ 4 a stale source not refused: rc 1 -> caught: R2 RUNNER SELFTEST FAILED: resume: a refusal did not fire ({'corrupt': True, 'overlap': True, 'other_plan': True, 'changed_input': True, 'different_plan': True, 'finalize_missing': True, 'stale_source': False})
+ 5 changed input hours / hashes not refused: rc 1 -> caught: R2 RUNNER SELFTEST FAILED: resume: a refusal did not fire ({'corrupt': True, 'overlap': True, 'other_plan': True, 'changed_input': False, 'different_plan': True, 'finalize_missing': True, 'stale_source': True})
+ 6 a different plan overwritten: rc 1 -> caught: R2 RUNNER SELFTEST FAILED: resume: a refusal did not fire ({'corrupt': True, 'overlap': True, 'other_plan': True, 'changed_input': True, 'different_plan': False, 'finalize_missing': True, 'stale_source': True})
+ 7 a failed part rerun on resume: rc 1 -> raise ValueError(message) / ValueError: finalize: part 0 has no accepted completion record   <<< UNEXPECTED
+ 8 the stop rule reads the current RSS: rc 1 -> caught: R2 RUNNER SELFTEST FAILED: stop rule: a receding peak above the limit was not latched ({'state': 'STOP_RESOURCE', 'population': {'kind': 'first_per_side', 'per_side': 2, 'selected': 4, 'selected_ids': [[0, 0], [0, 1], [1
+ 9 no stop after a latched breach: rc 1 -> caught: R2 RUNNER SELFTEST FAILED: stop rule: a partition over the time limit did not stop the run at its checkpoint ({'state': 'STOP_RESOURCE'}, 4 parts) | stop rule: a receding peak above the limit was not latched ({'state': '
+10 the high-water after loading not checked: rc 1 -> caught: R2 RUNNER SELFTEST FAILED: stop rule: a high-water RSS above the limit before the first part did not stop the run ({'state': 'STOP_RESOURCE'})
+11 the watchdog never ends the process: rc 1 -> caught: R2 RUNNER SELFTEST FAILED: watchdog: a hard RSS breach did not write STOP_HARD_RSS and exit 3, or a quiet sample did (True, [], {'state': 'STOP_HARD_RSS', 'rss_mib': 229.4375, 'guard_rss_mib': 1.0, 'asof': '2026-11-20T00
+12 the watchdog fires below its limit: rc 3 ->    <<< UNEXPECTED
+13 a part promoted without its row check: rc 1 -> caught: R2 RUNNER SELFTEST FAILED: promotion: a part whose written rows differ from the frame was promoted
+14 finalize reads every part: rc 1 -> caught: R2 RUNNER SELFTEST FAILED: materialize: the census read all parts, or the explicit reader is unbounded
+15 finalize without accepting the records: rc 1 -> caught: R2 RUNNER SELFTEST FAILED: resume: a refusal did not fire ({'corrupt': True, 'overlap': True, 'other_plan': True, 'changed_input': True, 'different_plan': True, 'finalize_missing': False, 'stale_source': True}) | finaliz
+16 COMPLETE despite a failed part: rc 1 -> caught: R2 RUNNER SELFTEST FAILED: failure records: a failed part was COMPLETE, rerun or refused (COMPLETE) | verdicts: an unbuildable future world was not NOT-EVALUABLE / FAILED (NOT-EVALUABLE, COMPLETE)
+17 the verdict ignores the not-evaluable checks: rc 1 -> caught: R2 RUNNER SELFTEST FAILED: verdicts: an unbuildable future world was not NOT-EVALUABLE / FAILED (PASS, FAILED)
+R2 RUNNER MUTATION CHECK FAILED: 2 unexpected outcomes of 18
+2026-11-20T00:51:19Z tag=pr2c_runner_mutants2 rc=1 peak_rss_mib=399 wall_s=520.66 cpu_user_s=499.76 memavail_start_gib=23 disk_free_gib=463->463 slot=claude

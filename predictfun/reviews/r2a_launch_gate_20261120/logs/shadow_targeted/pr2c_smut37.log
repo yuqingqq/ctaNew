@@ -1,0 +1,2 @@
+R2 SHADOW SELFTEST FAILED: population: a census with a missing market / pair was refused instead of carrying a status (partition 0: originals represented 0 vs the partition's 4)
+2026-11-20T01:22:09Z tag=pr2c_smut37 rc=1 peak_rss_mib=257 wall_s=100.49 cpu_user_s=98.40 memavail_start_gib=23 disk_free_gib=463->463 slot=claude

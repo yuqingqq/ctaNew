@@ -1,0 +1,2 @@
+R2 SHADOW SELFTEST FAILED: audit sample: the canonical key ["20261023",7,11,1,"joint_chase","retain",null,2,1250] | audit sample: the per-stratum min(n, max(1, ceil(n / 64))) smallest hashes, independent of order (4)
+2026-11-20T01:13:40Z tag=pr2c_smut27 rc=1 peak_rss_mib=258 wall_s=101.14 cpu_user_s=99.20 memavail_start_gib=23 disk_free_gib=463->463 slot=claude

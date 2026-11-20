@@ -1,0 +1,4 @@
+{"partition": 0, "rows": 58490, "seconds": 154.6, "part_peak_rss_mib": 992, "hwm_mib": 1146, "status": "PASS"}
+{"partition": 1, "rows": 60369, "seconds": 159.2, "part_peak_rss_mib": 838, "hwm_mib": 1146, "status": "PASS"}
+{"mode": "B1", "state": "STOPPED", "records": 2}
+2026-11-20T02:14:22Z tag=gate2_B1 rc=0 peak_rss_mib=1146 wall_s=373.01 cpu_user_s=364.23 memavail_start_gib=23 disk_free_gib=462->462 slot=claude

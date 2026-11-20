@@ -1,0 +1,2 @@
+R2 SHADOW SELFTEST FAILED: census: not in the manifest order (stable original identity, offset, generation, decision)
+2026-11-20T01:30:34Z tag=pr2c_smut55 rc=1 peak_rss_mib=258 wall_s=102.13 cpu_user_s=99.91 memavail_start_gib=23 disk_free_gib=463->463 slot=claude

@@ -1,0 +1,2 @@
+R2 RUNNER SELFTEST FAILED: watchdog (a precondition of every run): a hard RSS breach did not write STOP_HARD_RSS and exit 3, or a quiet sample did (True, [], {'state': 'STOP_HARD_RSS', 'rss_mib': 190.0078125, 'guard_rss_mib': 1.0, 'asof': '2026-11-20T01:01:31.099553+00:00'}, False, [])
+2026-11-20T01:01:30Z tag=pr2c_rmut11 rc=1 peak_rss_mib=192 wall_s=0.94 cpu_user_s=0.76 memavail_start_gib=23 disk_free_gib=464->464 slot=claude
