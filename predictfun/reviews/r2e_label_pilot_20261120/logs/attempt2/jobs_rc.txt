@@ -1,0 +1,15 @@
+r2e_plan_B rc=0
+r2e_plan_A rc=0
+r2e_run_A1 rc=2
+r2e_run_A0 rc=2
+r2e_run_A4 rc=2
+r2e_run_A3 rc=2
+r2e_run_A2 rc=2
+r2e_run_A5 rc=2
+r2e_run_B1 rc=2
+r2e_run_B4 rc=2
+r2e_run_B0s3 rc=2
+r2e_run_B2 rc=2
+r2e_run_B0 rc=2
+r2e_run_B5 rc=2
+r2e_run_B3 rc=2

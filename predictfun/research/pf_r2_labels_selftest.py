@@ -16,18 +16,28 @@
        finished records untouched.
      - A tampered fork fingerprint is refused.
      - A STOP_HARD_RSS status holds the build until a disposition of its identity and this manifest.
+     - The CLI census (review 4393ad19 P3) exits 0; its printed counts equal the manifest's and the candidates file's; a second census refuses.
+     - A lifetime sentinel in every bound world: no world of an earlier day is alive when the next day's inputs load (census over two days).
+       Its positive control (the worlds deliberately retained) must report them.
+     - The checkpoints (one high-water reading, patched): census refuses, writes STOP_RESOURCE and no manifest; a pair latches STOP_RESOURCE;
+       finalize refuses and writes no labels; finalize refuses with an undisposed stop.
+     Blocks A-G run first; any failure among them exits before H (review 4393ad19 B6: a no-cap mutant is caught by G in seconds, not by a
+     production-sized H).
  (I) the frozen teacher's pins: a wrong freeze sha and a library mismatch are refused;
  COVERAGE (computed, required): post and keep forks on both sides; a delayed post; a later generation in an arm; a partial known fill at a
  keep fork; a fill after a cancel request; the remaining side deciding at the fork tick. All of these occur among the checked pairs.
 PF_TEACHER_SYN: the cached synthetic world (pf_r2_teacher_selftest.build_world)."""
 import contextlib
 import copy
+import gc
+import gzip
 import io
 import json
 import os
 import shutil
 import sys
 import tempfile
+import weakref
 from pathlib import Path
 
 import numpy as np
@@ -226,6 +236,8 @@ def run(L):  # noqa: C901
         want = [(s_, 0) for s_ in L.SOURCES] + [('neutral', 1), ('delayed', 1)]
         if got != want or [r['order'] for r in sel] != list(range(7)) or json.dumps(L.select(cands, cap=7), sort_keys=True, default=str) != json.dumps(sel, sort_keys=True, default=str):
             bad.append(f'selection: {got} is not the declared round robin {want} (ok only, the cap, deterministic)')
+        if bad:                                                                             # fail fast before the end to end (B6)
+            raise SystemExit(f'{FAIL}: ' + ' | '.join(bad))
         # ---- (H) end to end
         kw = dict(cfg=None, src=src, inputs=X.syn_inputs, feat_fn=ff, kp=kp, assets=(M, sup, None))
         o1, o2 = tmp / 'L1', tmp / 'L2'
@@ -287,6 +299,81 @@ def run(L):  # noqa: C901
             h2 = L.pairs(o4, **kw)
         if not (h1 == 'HELD' and len(ev) == 1 and h2 == 'PAIRS_DONE'):
             bad.append(f'stops: a STOP_HARD_RSS status not held until its identity-bound disposition ({h1}, {len(ev)}, {h2})')
+        ckw = dict(days=(day,), prefix=3, cap=2, freeze_sha='synthetic', **kw)
+        o5 = tmp / 'L5'; buf = io.StringIO()                                                # the CLI census (4393ad19 P3)
+        with contextlib.redirect_stdout(buf):
+            try:
+                rc5 = L.main(['census', str(o5)], **ckw)
+            except Exception as e:                                                          # a failed exit path is this check's failure
+                rc5 = f'raised {e!r}'
+        try:
+            pr5 = json.loads(buf.getvalue().strip().splitlines()[-1]); m5 = json.loads((o5 / 'manifest.json').read_text()); n5 = sum(1 for _ in gzip.open(o5 / 'candidates.jsonl.gz', 'rt'))
+        except Exception:
+            pr5, m5, n5 = None, {}, -1
+        if not (rc5 == 0 and pr5 == dict(candidates=m5.get('candidate_rows'), selected=len(m5.get('selected', []))) and pr5['candidates'] == n5 > 0):
+            bad.append(f'CLI: the census exit {rc5} / printed {pr5} disagrees with the manifest / candidates ({m5.get("candidate_rows")}, {n5})')
+        try:
+            with contextlib.redirect_stdout(io.StringIO()):
+                L.main(['census', str(o5)], **ckw)
+            bad.append('CLI: an existing census was rewritten')
+        except ValueError:
+            pass
+        class _Life:
+            pass
+        reg, viol, keep = [], [], []; wb0, wi0 = L.world_bind, L.world_inputs
+        def wb_s(*a_, **k_):
+            world_, st_ = wb0(*a_, **k_)
+            if world_ is not None:
+                s_ = _Life(); world_['_lifetime'] = s_; reg.append(weakref.ref(s_)); keep.extend([world_] if retain else [])
+            return world_, st_
+        def wi_s(*a_, **k_):
+            gc.collect(); viol.extend(r_ for r_ in reg if r_() is not None); reg.clear()   # every world of an earlier day must be dead now
+            return wi0(*a_, **k_)
+        life = {}
+        for retain, name in ((False, 'L6'), (True, 'L7')):
+            viol.clear(); reg.clear(); keep.clear(); L.world_bind, L.world_inputs = wb_s, wi_s
+            try:
+                with contextlib.redirect_stdout(io.StringIO()):
+                    L.census(tmp / name, **dict(ckw, days=(day, day)))
+            except Exception as e:
+                viol.append(f'raised {e!r}')
+            finally:
+                L.world_bind, L.world_inputs = wb0, wi0
+            life[retain] = len(viol)
+        if not (life[False] == 0 and life[True] > 0):
+            bad.append(f'lifetime: earlier-day worlds alive at the next load {life[False]} (must be 0); the retained control reported {life[True]} (must be > 0)')
+        keep.clear()
+        hw0 = L.hwm
+        try:
+            L.hwm = lambda: L.PEAK_MIB + 1.
+            try:
+                with contextlib.redirect_stdout(io.StringIO()):
+                    L.census(tmp / 'L8', **ckw)
+                bad.append('checkpoint: the census passed a high-water over the checkpoint')
+            except ValueError as e:
+                st8 = json.loads((tmp / 'L8' / 'census_status.json').read_text()) if (tmp / 'L8' / 'census_status.json').exists() else {}
+                if not ('high-water' in str(e) and st8.get('state') == 'STOP_RESOURCE' and not (tmp / 'L8' / 'manifest.json').exists()):
+                    bad.append(f'checkpoint: the census refusal is not the checkpoint ({str(e)[:80]}, {st8.get("state")})')
+            o9 = tmp / 'L9'; shutil.copytree(o1, o9); shutil.rmtree(o9 / 'pairs')
+            with contextlib.redirect_stdout(io.StringIO()):
+                s9 = L.pairs(o9, **kw)
+            if s9 != 'STOP_RESOURCE':
+                bad.append(f'checkpoint: a pair over the checkpoint did not latch ({s9})')
+            o10 = tmp / 'L10'; shutil.copytree(o1, o10); (o10 / 'labels.csv').unlink(missing_ok=True)
+            try:
+                L.finalize(o10); bad.append('checkpoint: finalize passed a high-water over the checkpoint')
+            except ValueError as e:
+                if 'high-water' not in str(e) or (o10 / 'labels.csv').exists():
+                    bad.append(f'checkpoint: the finalize refusal is not the checkpoint ({str(e)[:80]})')
+        finally:
+            L.hwm = hw0
+        o11 = tmp / 'L11'; shutil.copytree(o1, o11); (o11 / 'labels.csv').unlink(missing_ok=True)
+        (o11 / 'label_status.json').write_text(json.dumps(dict(state='STOP_RESOURCE', note='selftest')))
+        try:
+            L.finalize(o11); bad.append('finalize: an undisposed stop was accepted')
+        except ValueError as e:
+            if 'undisposed' not in str(e) or (o11 / 'labels.csv').exists():
+                bad.append(f'finalize: the refusal is not the held stop ({str(e)[:80]})')
     # ---- (I) the frozen teacher's pins
     try:
         L.teacher_assets(T.REAL, freeze_sha='0' * 64); bad.append('pins: a wrong freeze sha was not refused')
@@ -305,7 +392,8 @@ def run(L):  # noqa: C901
         raise SystemExit(f'{FAIL}: ' + ' | '.join(bad))
     print(f'r2 labels selftests passed (synthetic only): parity with pf_branch_engine.pair on {n_par} forks ({n_ok} ok pairs), {n_b} teacher-bound pairs '
           f'(binding, causal, reversal), stale-bound and reused-arm teachers caught, single branch = frozen teacher, fork identity, reconciliation '
-          f'falsifiers, selection, end to end (resume = uninterrupted, tampered fork refused, stop held), pins; coverage {sorted(cv)}')
+          f'falsifiers, selection, end to end (resume = uninterrupted, tampered fork refused, stop held, CLI census, lifetime sentinel + its control, '
+          f'checkpoints, held finalize), pins; coverage {sorted(cv)}')
 
 
 if __name__ == '__main__':

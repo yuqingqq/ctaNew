@@ -157,6 +157,12 @@ def bound_fork(path, factory, k, side, ident, episode=0):
     return ctx_of(B0, k, side, episode)
 
 
+def hwm():
+    """This process's never-reset high-water (VmHWM, MiB): the one reading of every checkpoint here (review 4393ad19 P2; the watchdog reads its
+    own RSS)."""
+    return RN.rss()[1]
+
+
 def _h(x):
     return hashlib.sha256(json.dumps(x, sort_keys=True, default=str).encode()).hexdigest()
 
@@ -333,10 +339,18 @@ def census(out, days=DAYS, prefix=PREFIX, cap=CAP, cfg=T.REAL, src=None, inputs=
     candidates are in memory at a time. (assets: stub models in the selftest only.)"""
     out = Path(out); out.mkdir(parents=True, exist_ok=True); mp, cp = out / 'manifest.json', out / 'candidates.jsonl.gz'
     C.require(not mp.exists() and not cp.exists(), 'the manifest exists (immutable)')
+    RN.archive_stops(out); mon = RN.Sampler(out / 'census_status.json', GUARD_MIB); mon.start()        # the watchdog over loading and census (4393ad19 P2)
+    try:
+        return _census(out, mp, cp, days, prefix, cap, cfg, src, inputs, feat_fn, kp, assets, freeze_sha)
+    finally:
+        mon.live = False
+
+
+def _census(out, mp, cp, days, prefix, cap, cfg, src, inputs, feat_fn, kp, assets, freeze_sha):
     M, sup, fz = assets or teacher_assets(cfg, freeze_sha); kp = Path(kp or json.loads(Path(cfg['population']).read_text())['inputs']['kp_dir'])
     wst, sel_all, info, counts = [], [], {}, collections.Counter()
     clean = lambda r: {k: (None if (isinstance(v, float) and not np.isfinite(v)) else v) for k, v in r.items()}
-    raw = open(cp, 'wb'); gz = gzip.GzipFile(filename='', mode='wb', fileobj=raw, mtime=0)                # deterministic bytes (A = B)
+    raw = open(cp, 'wb'); gz = gzip.GzipFile(filename='', mode='wb', fileobj=raw, mtime=0); world = ctx = None   # deterministic bytes (A = B)
     for day in days:
         W = worlds_of_day(day, kp, prefix); src_, pairs, fair, depth, ff = world_inputs(day, W, src, inputs, feat_fn); worlds = {}; ok_rows = []
         for wi, w in enumerate(W):
@@ -354,7 +368,11 @@ def census(out, days=DAYS, prefix=PREFIX, cap=CAP, cfg=T.REAL, src=None, inputs=
             ctx = fork_for(r, worlds[r['world']], M, sup); r['fork_fingerprint'] = ctx['fingerprint']
             r['fork_equals_census'] = (r['fingerprint'] == ctx['fingerprint']) if r['source'] == 'pi0' else None
         sel_all.extend(sel)
-        del pairs, fair, depth, worlds, src_, ok_rows; gc.collect()                         # one day's inputs in memory at a time (~1 GB each)
+        del pairs, fair, depth, worlds, src_, ok_rows; world = ctx = None; gc.collect()     # one day's inputs at a time: no world / fork kept (4393ad19 P2)
+        if hwm() > PEAK_MIB:                                                                # the checkpoint after every day's loading and census
+            gz.close(); raw.close()
+            RN.atomic_json(out / 'census_status.json', dict(state='STOP_RESOURCE', stage='census', day=day, hwm_mib=hwm(), peak_mib=PEAK_MIB, asof=C.stamp()))
+            raise ValueError(f'census: the process high-water passed {PEAK_MIB} MiB (day {day}); no manifest is written')
     gz.close(); raw.close()
     man = dict(version=VERSION, freeze_sha256=freeze_sha, days=list(days), prefix=prefix, cap=cap, sources=list(SOURCES), settings=dict(BE.SETTINGS),
                worlds=wst, candidates_file=cp.name, candidates_sha256=C.sha(cp), candidate_rows=int(sum(counts.values())),
@@ -399,17 +417,17 @@ def pairs(out, cfg=T.REAL, src=None, inputs=None, feat_fn=None, kp=None, stop_af
                 C.require(ctx['fingerprint'] == r['fork_fingerprint'], f"pair {rkey(r)}: the rebuilt fork differs from the manifest's")
                 fac = teacher_factory(M, sup, world); res = pair_bound(ctx, fac, r['kind'])
                 cz = [{k_: (v_ if k_ != 'details' else v_[:3]) for k_, v_ in st.items()} for _, st in fac.made]       # each arm's causal / parity probe
-                el = time.time() - t0; hw = RN.rss()[1]; breach = dict(seconds=bool(el > PAIR_SECONDS), rss=bool(hw > PEAK_MIB))
+                el = time.time() - t0; hw = hwm(); breach = dict(seconds=bool(el > PAIR_SECONDS), rss=bool(hw > PEAK_MIB))
                 rec = dict(manifest_sha256=msha, key=rkey(r), candidate=r, result=res, causal=cz, elapsed_s=el, hwm_mib=hw, breach=breach, asof=C.stamp())
                 write_record(rdir, r, rec); n_run += 1
                 if any(breach.values()):
                     RN.atomic_json(out / 'label_status.json', dict(state='STOP_RESOURCE', manifest_sha256=msha, pair=rkey(r), elapsed_s=el, hwm_mib=hw, **breach))
                     return 'STOP_RESOURCE'
-            del prs, fair, depth, bound, src_; gc.collect()                               # one day's inputs in memory at a time
+            del prs, fair, depth, bound, src_; world = ctx = fac = res = None; gc.collect()  # one day's inputs at a time: no world / fork / factory kept
             if state == 'STOPPED':
                 break
         RN.atomic_json(out / 'label_status.json', dict(state=state, manifest_sha256=msha, done=len([r for r in man['selected'] if valid_record(rdir, r, msha)]),
-                                                       asof=C.stamp(), hwm_mib=RN.rss()[1]))
+                                                       asof=C.stamp(), hwm_mib=hwm()))
         return state
     finally:
         mon.live = False
@@ -444,8 +462,19 @@ def held_stops(out, msha):
 
 
 def finalize(out):
-    """Every selected pair's record -> labels.csv (one row per pair, the key, Y, both arms' components, checks) and readings.json."""
-    out = Path(out); man = json.loads((out / 'manifest.json').read_text()); msha = C.sha(out / 'manifest.json'); rdir = out / 'pairs'; rows = []
+    """Every selected pair's record -> labels.csv (one row per pair, the key, Y, both arms' components, checks). Under the watchdog; refused if
+    the process high-water passes the checkpoint (4393ad19 P2). The R2-D historical path: production labels use pf_r2_label_sample's
+    shared validator."""
+    out = Path(out); RN.archive_stops(out); mon = RN.Sampler(out / 'finalize_status.json', GUARD_MIB); mon.start()
+    try:
+        D = _finalize(out); C.require(hwm() <= PEAK_MIB, f'finalize: the process high-water passed {PEAK_MIB} MiB'); D.to_csv(out / 'labels.csv', index=False); return D
+    finally:
+        mon.live = False
+
+
+def _finalize(out):
+    man = json.loads((out / 'manifest.json').read_text()); msha = C.sha(out / 'manifest.json'); rdir = out / 'pairs'; rows = []
+    C.require(not held_stops(out, msha)['undisposed'], 'finalize: an undisposed stop')                     # publication is held (4393ad19 P1)
     C.require(all(valid_record(rdir, r, msha) for r in man['selected']), 'finalize: a selected pair has no valid record')
     for r in man['selected']:
         rec = json.loads((rdir / rname(r)).read_text()); res = rec['result']; row = {k: r.get(k) for k in KEY}
@@ -459,20 +488,24 @@ def finalize(out):
                             f'{n}_open_ask': a['open_at_end'].get('1', a['open_at_end'].get(1)), f'{n}_calls': tch.get('calls'), f'{n}_binding_bad': tch.get('binding_bad'),
                             f'{n}_binding_checked': tch.get('binding_checked')})
         rows.append(row)
-    D = pd.DataFrame(rows); D.to_csv(out / 'labels.csv', index=False)
-    return D
+    return pd.DataFrame(rows)
+
+
+def main(argv, **kw):
+    """The CLI (review 4393ad19 P3: the census print read a removed field and exited 1 after writing its outputs) -> the exit code. kw: the
+    selftest's synthetic injections only."""
+    a = list(argv)
+    if a == ['selftest']:
+        import pf_r2_labels_selftest as ST
+        ST.run(sys.modules[__name__]); return 0
+    if len(a) == 2 and a[0] == 'census':
+        m_ = census(a[1], **kw); print(json.dumps(dict(candidates=m_['candidate_rows'], selected=len(m_['selected'])))); return 0
+    if len(a) in (2, 3) and a[0] == 'pairs':
+        st_ = pairs(a[1], stop_after=int(a[2]) if len(a) == 3 else None, **kw); print(st_); return 0 if st_ in ('PAIRS_DONE', 'STOPPED') else 2
+    if len(a) == 2 and a[0] == 'finalize':
+        print(len(finalize(a[1]))); return 0
+    print('usage: pf_r2_labels.py selftest | census <out> | pairs <out> [stop_after] | finalize <out>', file=sys.stderr); return 1
 
 
 if __name__ == '__main__':
-    a = sys.argv[1:]
-    if a == ['selftest']:
-        import pf_r2_labels_selftest as ST
-        ST.run(sys.modules[__name__])
-    elif len(a) == 2 and a[0] == 'census':
-        m_ = census(a[1]); print(json.dumps(dict(candidates=len(m_['candidates']), selected=len(m_['selected']))))
-    elif len(a) in (2, 3) and a[0] == 'pairs':
-        print(pairs(a[1], stop_after=int(a[2]) if len(a) == 3 else None))
-    elif len(a) == 2 and a[0] == 'finalize':
-        print(len(finalize(a[1])))
-    else:
-        sys.exit('usage: pf_r2_labels.py selftest | census <out> | pairs <out> [stop_after] | finalize <out>')
+    sys.exit(main(sys.argv[1:]))

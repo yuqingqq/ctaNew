@@ -10,15 +10,26 @@ Three candidates are equivalent mutants and are not listed, because no valid run
    cannot mutate the saved fork. The 8cc1dc49-era first run listed it and it passed; it is kept in that run's log;
  - the fork re-check after the arms: it can only fire when the fork copy itself is broken;
  - prefork_identical: it holds in every valid run.
-Usage: pf_r2_labels_mutants.py [k/n] (shard k of n: mutants i with i mod n = k; the unchanged control runs in every shard)."""
+Not mutated (no synthetic falsifier; documented): the pairs pass releasing its last world / fork / factory between days, because the
+synthetic world has one day and a two-day pairs pass skips the repeated day's records. The census release is mutated and caught by the
+lifetime sentinel.
+LOG (review 4393ad19 B6): the source hashes; then per mutant its class with its duration:
+ - CAUGHT: the selftest's own failure message;
+ - ESCAPED: the selftest passed;
+ - HARNESS_FAILURE: a crash or a timeout, never a catch.
+Usage: pf_r2_labels_mutants.py [k/n] (shard k of n: mutants i with i mod n = k; the unchanged control runs in every shard). Per-mutant jobs (one
+process each): pf_mutant_queue.sh with pf_mutant_one.py / pf_mutant_summary.py, which import MUTANTS, SRC, SELFTEST and FAIL from here."""
+import hashlib
 import os
 import subprocess
 import sys
 import tempfile
+import time
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 SRC = HERE / 'pf_r2_labels.py'
+SELFTEST = 'pf_r2_labels_selftest'
 FAIL = 'R2 LABELS SELFTEST FAILED'
 MUTANTS = [
     ('the arm teacher bound to the fork copy', "Bx = copy.deepcopy(Bv); pol = factory(Bx);", "Bx = copy.deepcopy(Bv); pol = factory(Bv);"),
@@ -34,6 +45,12 @@ MUTANTS = [
     ('the manifest fingerprint unchecked', "C.require(ctx['fingerprint'] == r['fork_fingerprint'], f\"pair {rkey(r)}: the rebuilt fork differs from the manifest's\")", "pass"),
     ('selection not round robin', "g = g.sort_values(['_rank', '_src'], kind='stable').head(cap)", "g = g.sort_values(['_src', '_rank'], kind='stable').head(cap)"),
     ('selection without the cap', ".head(cap)", ".head(10 ** 9)"),
+    ('the census checkpoint removed', "        if hwm() > PEAK_MIB:                                                                # the checkpoint after every day's loading and census", "        if False:"),
+    ('the census keeps the last world', "del pairs, fair, depth, worlds, src_, ok_rows; world = ctx = None; gc.collect()", "del pairs, fair, depth, worlds, src_, ok_rows; gc.collect()"),
+    ('the CLI prints the selection as the candidates', "print(json.dumps(dict(candidates=m_['candidate_rows'], selected=len(m_['selected']))))", "print(json.dumps(dict(candidates=len(m_['selected']), selected=len(m_['selected']))))"),
+    ('a pair ignores the high-water', "rss=bool(hw > PEAK_MIB))", "rss=False)"),
+    ('finalize ignores the high-water', "C.require(hwm() <= PEAK_MIB, f'finalize: the process high-water passed {PEAK_MIB} MiB'); ", ""),
+    ('finalize ignores held stops', "    C.require(not held_stops(out, msha)['undisposed'], 'finalize: an undisposed stop')", "    pass"),
     ('selection of non-ok candidates', "D = pd.DataFrame([r for r in rows if r['status'] == 'ok' and r['kind'] in KINDS])", "D = pd.DataFrame([r for r in rows if r['kind'] in KINDS])"),
     ('resume reruns finished pairs', "    rec = json.loads(p.read_text()); return rec.get('manifest_sha256') == msha and rec.get('key') == rkey(r)", "    return False"),
     ('held stops ignored', "        if held['undisposed']:\n            RN.atomic_json(out / 'label_status.json', dict(state='HELD'",
@@ -65,29 +82,39 @@ ST.run(mod)
 
 def run_copy(text, tmp):
     p = Path(tmp) / 'mutant.py'; p.write_text(text)
-    r = subprocess.run([sys.executable, '-c', RUN.format(here=str(HERE), src=str(SRC), mut=str(p))], capture_output=True, text=True, env=dict(os.environ))
+    try:
+        r = subprocess.run([sys.executable, '-c', RUN.format(here=str(HERE), src=str(SRC), mut=str(p))], capture_output=True, text=True, env=dict(os.environ), timeout=1800)
+    except subprocess.TimeoutExpired:
+        return None, 'TIMEOUT'
     return r.returncode, r.stdout + r.stderr
 
 
-k_, n_ = (int(x) for x in sys.argv[1].split('/')) if len(sys.argv) > 1 else (0, 1)
-base = SRC.read_text()
-bad = [n for n, old, _ in MUTANTS if base.count(old) != 1]
-if bad:
-    sys.exit(f'r2 labels mutation check REFUSED: targets not found exactly once: {bad}')
-mine = [(i, m) for i, m in enumerate(MUTANTS) if i % n_ == k_]
-with tempfile.TemporaryDirectory() as tmp:
-    rc, out = run_copy(base, tmp)
-    pre = rc == 0 and 'r2 labels selftests passed' in out
-    print(f'shard {k_}/{n_}: unchanged copy passes its selftest: {pre}', flush=True)
-    if not pre:
-        sys.exit(f'r2 labels mutation check FAILED: the unchanged copy does not pass ({out[-400:]})')
-    caught = []
-    for i, (name, old, new) in mine:
-        rc, out = run_copy(base.replace(old, new), tmp)
-        hit = rc != 0 and FAIL in out
-        why = out[out.index(FAIL):][:170].replace('\n', ' ') if hit else ('PASSED (not caught)' if rc == 0 else 'CRASHED: ' + out.strip().splitlines()[-1][:170])
-        caught.append(hit); print(f'  {i} {name}: {"caught" if hit else "NOT CAUGHT"} - {why}', flush=True)
-ok = all(caught)
-print(f'r2 labels mutation check (shard {k_}/{n_}) {"passed" if ok else "FAILED"}: the unchanged copy passes its selftest, {sum(caught)} / {len(mine)} planted '
-      f'code errors are caught by a check')
-sys.exit(0 if ok else 1)
+def main():
+    k_, n_ = (int(x) for x in sys.argv[1].split('/')) if len(sys.argv) > 1 else (0, 1)
+    base = SRC.read_text()
+    bad = [n for n, old, _ in MUTANTS if base.count(old) != 1]
+    if bad:
+        sys.exit(f'r2 labels mutation check REFUSED: targets not found exactly once: {bad}')
+    mine = [(i, m) for i, m in enumerate(MUTANTS) if i % n_ == k_]
+    print('sources: ' + ' '.join(f'{f} {hashlib.sha256((HERE / f).read_bytes()).hexdigest()[:16]}' for f in ('pf_r2_labels.py', 'pf_r2_labels_selftest.py', 'pf_r2_labels_mutants.py')), flush=True)
+    with tempfile.TemporaryDirectory() as tmp:
+        t0 = time.time(); rc, out = run_copy(base, tmp)
+        pre = rc == 0 and 'r2 labels selftests passed' in out
+        print(f'shard {k_}/{n_}: unchanged copy passes its selftest: {pre} ({time.time() - t0:.0f} s)', flush=True)
+        if not pre:
+            sys.exit(f'r2 labels mutation check FAILED: the unchanged copy does not pass ({out[-400:]})')
+        caught = []
+        for i, (name, old, new) in mine:
+            t0 = time.time(); rc, out = run_copy(base.replace(old, new), tmp)
+            hit = rc not in (0, None) and FAIL in out
+            cls = 'CAUGHT' if hit else ('ESCAPED' if rc == 0 else 'HARNESS_FAILURE')
+            why = out[out.index(FAIL):][:170].replace('\n', ' ') if hit else ('the selftest passed' if rc == 0 else 'timeout' if rc is None else 'crash: ' + out.strip().splitlines()[-1][:170])
+            caught.append(hit); print(f'  {i} {name}: {cls} ({time.time() - t0:.0f} s) - {why}', flush=True)
+    ok = all(caught)
+    print(f'r2 labels mutation check (shard {k_}/{n_}) {"passed" if ok else "FAILED"}: the unchanged copy passes its selftest, {sum(caught)} / {len(mine)} planted '
+          f'code errors are caught by a check')
+    sys.exit(0 if ok else 1)
+
+
+if __name__ == '__main__':
+    main()

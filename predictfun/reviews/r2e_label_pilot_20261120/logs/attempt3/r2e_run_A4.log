@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/research/pf_r2_label_sample.py", line 655, in <module>
+    st_ = run(a[1], int(a[2]), stop_after=int(a[3]) if len(a) == 4 else None); print(st_); sys.exit(0 if st_ in ('PART_DONE', 'DONE', 'STOPPED') else 2)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/research/pf_r2_label_sample.py", line 605, in run
+    C.require(not bad, f'part {k}: refused at promotion ({bad[:3]})')
+  File "/home/yuqing/ctaNew/predictfun/research/pf_flow_price_common.py", line 42, in require
+    raise ValueError(message)
+ValueError: part 4: refused at promotion (['the record was produced by other sources', 'the executing sources differ from the plan'])
+2026-11-20T16:48:59Z tag=r2e_run_A4 rc=1 peak_rss_mib=1136 wall_s=293.79 cpu_user_s=288.06 memavail_start_gib=21 disk_free_gib=439->439 slot=claude3

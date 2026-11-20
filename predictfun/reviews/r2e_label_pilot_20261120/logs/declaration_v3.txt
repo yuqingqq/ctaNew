@@ -1,0 +1,5 @@
+2026-11-20T17:09:26Z
+15a94fc1e552eecc29a130dfa23399934cceba18d721583df58232a59ae7d61d  predictfun/reviews/r2e_label_pilot_20261120/r2e_checks.py
+0ffef1fe98ea814cd5895065567170a052bafca437219d355173f2ca1c518753  predictfun/reviews/r2e_label_pilot_20261120/r2e_controls.py
+aacee701e6c806e6a70192621edb38f7d8f51742886af47be0c0db4921720745  predictfun/reviews/r2e_label_pilot_20261120/launch_r2e.sh
+v3 (attempt 4: review 0ca01d1f's bundled round; B7 readings): declared before any attempt-4 output exists; attempt-3 labels were never read

@@ -1,0 +1,2 @@
+STOP_RESOURCE
+2026-11-20T16:33:23Z tag=r2e_run_B2 rc=2 peak_rss_mib=1615 wall_s=118.83 cpu_user_s=112.24 memavail_start_gib=22 disk_free_gib=440->440 slot=claude4

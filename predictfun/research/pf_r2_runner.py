@@ -95,6 +95,7 @@ class Sampler(threading.Thread):
         """One sample -> True when the hard limit was breached (the status written, the exit called)."""
         r = rss()[0]; self.peak = max(self.peak, r)
         if r > self.hard:
+            archive_stops(self.status_path.parent)                                          # review 4393ad19 P2: never erase an unarchived stop
             atomic_json(self.status_path, dict(state='STOP_HARD_RSS', rss_mib=r, guard_rss_mib=self.hard, asof=C.stamp())); self.exit(3); return True
         return False
 
@@ -366,6 +367,11 @@ def selftest():  # noqa: C901
         if not (fired and hits == [3] and wdi.get('state') == 'STOP_HARD_RSS' and not calm and not quiet and not (tmp / 'wd_quiet.json').exists()):
             sys.exit(f'{MARK} SELFTEST FAILED: watchdog (a precondition of every run): a hard RSS breach did not write STOP_HARD_RSS and exit 3, or a '
                      f'quiet sample did ({fired}, {hits}, {wdi}, {calm}, {quiet})')
+        wa = tmp / 'wd_arch'; wa.mkdir(); (wa / 'run_status.json').write_text(json.dumps(dict(state='STOP_RESOURCE', note='an earlier, unarchived stop')))
+        old_id = hashlib.sha256((wa / 'run_status.json').read_bytes()).hexdigest(); hits2 = []
+        Sampler(wa / 'run_status.json', 1., exit=hits2.append).poll(); arch = archive_stops(wa)   # review 4393ad19 P2: the watchdog overwrites that file
+        if not (hits2 == [3] and old_id in {e['id'] for e in arch} and any(e['state'] == 'STOP_HARD_RSS' for e in arch) and len(arch) == 2):
+            sys.exit(f'{MARK} SELFTEST FAILED: watchdog: a hard stop erased an earlier unarchived stop ({[(e["state"], e["id"][:8]) for e in arch]})')
         with QL._v1_on(src, tmp):
             for d in days:
                 QP.day_run(d)
