@@ -522,6 +522,29 @@ pulls and bid/ask; judge movement calibration on selected actions before changin
 order design. Other session owns fixes; scheduler remains off.
 <!-- /PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
 
+## 2026-11-20 15:01Z (session aea5bfb9) — R2-D: THE ARM-BOUND PAIRED-LABEL ADAPTER AND ITS BOUNDED OCT 24–25 RECEIPT; CHECKS ALL TRUE EXCEPT (D) CENSUS MEMORY; THE FULL LABEL POPULATION IS INFEASIBLE AT ~6 s PER PAIR (review 8cc1dc49's next priority) (USER: "... continue the implementing and next priority loop")
+- [Receipt](reviews/r2d_labels_20261120/report.md); [R2-C v2 diagnostics](reviews/r2c_teacher_20261120/report_v2.md) (supersedes the value columns).
+- Review 8cc1dc49's findings:
+  - **P1:** [`pf_r2_labels.py`](research/pf_r2_labels.py) `42c40b16` (new; outside the frozen closure). `pair_bound` mirrors `BE.pair` with a per-arm teacher factory and a binding check at every callback. Selftest, plus mutants **29 / 29**; parity with `BE.pair` on 320 forks; the stale-bound and reused-arm falsifiers caught; all 9 coverage states.
+  - **P2:** runner v4 `0f56442c`: an append-only stop history keyed by content, plan-bound identity dispositions, and a `HELD` state. 29 / 29.
+  - **P3:** `pf_r2_teacher_diag2.py`, coherent-conditional and all-row means. Known answers; 4 / 4.
+- The bounded build: 2 days × 32 worlds; 129,868 candidates (27,417 ok); 128 pairs selected, 16 per day × side × kind, round robin over the 5 sources.
+  - **Attempt 1 (kept):** a 70 MB in-memory manifest made B's resume latch STOP_RESOURCE. Candidates now stream to a deterministic gzip.
+  - **Checks:**
+    - (A) manifests and candidates A = B;
+    - (B) the resume is byte-identical;
+    - (C) 128 / 128 reconciled, 0 binding failures, 0 causal / parity mismatches;
+    - (E) real-row controls: stale binding caught, reversal equal, single branch = R2-C; v1 compared live vs JSON and is kept;
+    - (F) the suite passed on the build's sources; v1 used a stale count and is kept;
+    - **(D) FALSE:** two multi-day processes peaked at 1,652 / 1,631 MiB, over the 1,536 MiB checkpoint and under 2 GiB. Every pairs pass was ≤ 1,440.
+- Readings:
+  - 0 fallbacks in every arm;
+  - Y mostly 0 (sparse labels under the pi0 continuation): Oct 24 bid KEEP mean −34.25 c, Oct 25 bid POST −2.81 c;
+  - 6.06 s per pair. **Labelling every ok candidate: ~9,100 / ~12,700 core-hours for Oct 24 / Oct 25: infeasible.**
+- Known defect: the census CLI's final print references a removed field and exits 1 after writing. `verify_census.py` checks the outputs; fix next round.
+- Leftover temporary directories from stopped test runs, for cleanup: `data/predict_fun/research/tmp56jtsgs0` (11 MB), `tmp_8g62ckp` (4 KB); `tmp0a7j_fb8` is of unknown origin and left untouched.
+- Next: Codex review. Before the full label production: a declared label sample size (given the projection), one process per day, the CLI fix.
+
 ## 2026-11-20 12:01Z (session aea5bfb9) — R2-C: THE SUPPORTED pi0-50 TEACHER FITTED, FROZEN AND ROLLED OUT ON CONSUMED OCT 23; CONTRACT CHECKS ALL TRUE (review 3d7eae6a's next priority) (USER: "... continue the implementing and next priority loop")
 - [Receipt](reviews/r2c_teacher_20261120/report.md).
 - Sources:

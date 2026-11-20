@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/research/pf_r2_labels.py", line 472, in <module>
+    m_ = census(a[1]); print(json.dumps(dict(candidates=len(m_['candidates']), selected=len(m_['selected']))))
+                                                            ~~^^^^^^^^^^^^^^
+KeyError: 'candidates'
+2026-11-20T13:50:31Z tag=r2d_A_census rc=1 peak_rss_mib=1455 wall_s=335.62 cpu_user_s=322.55 memavail_start_gib=23 disk_free_gib=444->443 slot=claude

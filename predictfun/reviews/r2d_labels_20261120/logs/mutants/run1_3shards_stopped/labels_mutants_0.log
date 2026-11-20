@@ -1,0 +1,12 @@
+shard 0/3: unchanged copy passes its selftest: True
+  0 the arm teacher bound to the fork copy: caught - R2 LABELS SELFTEST FAILED: binding: an arm-bound pair failed its binding / reconciliation / causal checks ([{'calls': 172, 'by_status': {'model': 170, 'near_end': 2}, 'by
+  3 arms share one branch: NOT CAUGHT - CRASHED: ValueError: side 0 already processed at 600.0
+  6 the fork state not copied: NOT CAUGHT - PASSED (not caught)
+  9 reconcile without the value identity: caught - R2 LABELS SELFTEST FAILED: reconciliation: clean True; cash False, position False, value True, a fill above size False must each fail alone 
+  12 selection not round robin: caught - R2 LABELS SELFTEST FAILED: selection: [('neutral', 0), ('neutral', 1), ('neutral', 2), ('neutral', 3), ('neutral', 4), ('delayed', 0), ('delayed', 1)] is not the declared
+  15 resume reruns finished pairs: NOT CAUGHT - CRASHED: ValueError: finalize: a selected pair has no valid record
+  18 the freeze sha not pinned: caught - R2 LABELS SELFTEST FAILED: pins: a wrong freeze sha was not refused 
+  21 the manifest rewritten: caught - R2 LABELS SELFTEST FAILED: manifest: an existing manifest was rewritten 
+  24 outcome fields kept: caught - R2 LABELS SELFTEST FAILED: census: pi0 sampling True / unsampled present True, neutral / delayed naming True, outcome-free rows False 
+r2 labels mutation check (shard 0/3) FAILED: the unchanged copy passes its selftest, 6 / 9 planted code errors are caught by a check
+2026-11-20T12:53:31Z tag=labels_mutants_0 rc=1 peak_rss_mib=273 wall_s=1200.49 cpu_user_s=1190.02 memavail_start_gib=23 disk_free_gib=445->445 slot=claude2

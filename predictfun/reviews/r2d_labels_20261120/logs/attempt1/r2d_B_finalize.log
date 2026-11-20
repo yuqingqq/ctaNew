@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/research/pf_r2_labels.py", line 453, in <module>
+    print(len(finalize(a[1])))
+              ^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/research/pf_r2_labels.py", line 426, in finalize
+    C.require(all(valid_record(rdir, r, msha) for r in man['selected']), 'finalize: a selected pair has no valid record')
+  File "/home/yuqing/ctaNew/predictfun/research/pf_flow_price_common.py", line 42, in require
+    raise ValueError(message)
+ValueError: finalize: a selected pair has no valid record
+2026-11-20T13:42:43Z tag=r2d_B_finalize rc=1 peak_rss_mib=404 wall_s=1.65 cpu_user_s=1.27 memavail_start_gib=22 disk_free_gib=444->444 slot=claude2

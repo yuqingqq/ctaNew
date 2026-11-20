@@ -166,21 +166,42 @@ def accept(d, plan, psha, i):
     return rec
 
 
-def held_breaches(d, accepted):
-    """Review e6b0efa4 finding 1: every accepted record with a breach and every status file of an earlier process that stopped on a resource
-    limit, and whether each is covered by the directory's disposition (disposition.json: the investigated parts and status files, a reason) ->
-    dict(parts, statuses, undisposed)."""
-    parts = sorted(int(r['part']) for r in accepted.values() if any(r.get('breach', {}).values()))
-    stats = sorted(p.name for p in Path(d).glob('*status*.json') if json.loads(p.read_text()).get('state') in ('STOP_RESOURCE', 'STOP_HARD_RSS'))
+STOP_STATES = ('STOP_RESOURCE', 'STOP_HARD_RSS')
+
+
+def archive_stops(d):
+    """Review 8cc1dc49 P2: the stop HISTORY. Every status file of a process that stopped on a resource limit is appended once, by the sha256
+    of its bytes, to the directory's append-only stops.jsonl. Every process does this before it writes a status, so a later overwrite of the
+    same file cannot erase a stop -> the history (one event per distinct stop)."""
+    hp = Path(d) / 'stops.jsonl'; hist = [json.loads(x) for x in hp.read_text().splitlines() if x.strip()] if hp.exists() else []; seen = {h['id'] for h in hist}
+    for p in sorted(Path(d).glob('*status*.json')):
+        raw = p.read_bytes(); st = json.loads(raw)
+        if st.get('state') in STOP_STATES and hashlib.sha256(raw).hexdigest() not in seen:
+            ev = dict(id=hashlib.sha256(raw).hexdigest(), file=p.name, state=st['state'], content=st, archived=C.stamp()); hist.append(ev); seen.add(ev['id'])
+            with open(hp, 'a') as f:
+                f.write(json.dumps(ev, sort_keys=True) + '\n')
+    return hist
+
+
+def held_breaches(d, accepted, psha):
+    """Review e6b0efa4 finding 1, review 8cc1dc49 P2: the held breaches. These are every accepted record with a breach (identity: the sha256
+    of its completion record) and every archived stop event (identity: the sha256 of the stop status's bytes). A breach is covered only by a
+    disposition of THIS plan that names its identity with a reason: disposition.json = {plan_sha256, entries: [{id, name, reason}]}. A file
+    name never covers a later event of the same name, and an older name-only disposition covers nothing -> dict(parts, stops, undisposed,
+    disposition)."""
+    hist = archive_stops(d)
+    parts = sorted((int(r['part']), C.sha(Path(d) / 'parts' / f"part_{int(r['part']):04d}.json")) for r in accepted.values() if any(r.get('breach', {}).values()))
     dp = Path(d) / 'disposition.json'; disp = json.loads(dp.read_text()) if dp.exists() else {}
-    undisposed = sorted(set(parts) - set(disp.get('parts', []))) + sorted(set(stats) - set(disp.get('statuses', [])))
-    return dict(parts=parts, statuses=stats, undisposed=undisposed, disposition=disp or None)
+    ok_ids = {e['id'] for e in disp.get('entries', []) if e.get('id') and str(e.get('reason', '')).strip()} if disp.get('plan_sha256') == psha else set()
+    undisposed = [f'part {i} {h[:12]}' for i, h in parts if h not in ok_ids] + [f"stop {e['file']} {e['id'][:12]}" for e in hist if e['id'] not in ok_ids]
+    return dict(parts=[i for i, _ in parts], part_ids=[h for _, h in parts], stops=[dict(file=e['file'], id=e['id'], state=e['state']) for e in hist],
+                undisposed=undisposed, disposition=disp or None)
 
 
 def run(d, mod=None, src=None, inputs=None, loaded=None, feat_fn=None, causal_feat=None, causal_perturb=None, shard=None):
     """Process every pending part of the plan in directory d (resume: accepted parts are kept, unfinished ones rerun); shard=(k, n): only the
     parts i with i % n == k, with only their markets' inputs -> the state of those parts: PARTS_DONE, STOPPED (a planted interruption),
-    STOP_RESOURCE (a latched breach); refusals raise."""
+    STOP_RESOURCE (a latched breach in this process), HELD (an earlier breach or stop without its disposition: nothing run); refusals raise."""
     mod = mod or R2; d = Path(d); plan = json.loads((d / 'plan.json').read_text()); psha = C.sha(d / 'plan.json'); lim = plan['limits']; day = plan['day']
     st_name = 'run_status.json' if shard is None else f'run_status_{int(shard[0])}of{int(shard[1])}.json'
     mon = Sampler(d / st_name, lim['guard_rss_mib'], exit=WATCHDOG_EXIT); mon.start()                    # review e6b0efa4: from the start, loading included
@@ -210,9 +231,9 @@ def _run(d, mod, plan, psha, lim, day, st_name, mon, src, inputs, loaded, feat_f
             mem = set(map(tuple, rec['members'])); C.require(not (mem & seen), f'part {i}: an original already in another accepted part'); seen |= mem; accepted[i] = rec
     pending = [i for i in mine if i not in accepted]
     status = d / st_name; latch = None; state = 'RUNNING'; n_run = 0
-    held = held_breaches(d, accepted)                                                       # review e6b0efa4 finding 1: a resource stop is carried
+    held = held_breaches(d, accepted, psha)                                                 # reviews e6b0efa4 / 8cc1dc49: a resource stop is carried
     if held['undisposed'] and pending:
-        latch = dict(reason='an earlier resource breach or stop without a recorded disposition', **held); state = 'STOP_RESOURCE'
+        latch = dict(reason='an earlier resource breach or stop without a recorded disposition', **held); state = 'HELD'   # no work, no new breach (8cc1dc49)
     try:
         hw0 = rss()[1]
         if latch is None and pending and hw0 > lim['peak_rss_mib']:
@@ -291,7 +312,7 @@ def _finalize(d, mod, plan, psha, lim, day):
     ck, cf = sum(int(r['causal'].get('checked', 0)) for r in recs), sum(int(r['causal'].get('failed', 0)) for r in recs)
     cverd = ('NOT-RUN' if not plan['causal']['on'] else 'FAIL' if (ck == 0 or cf > 0) else 'NOT-EVALUABLE' if comp['not_evaluable'] > 0 else 'PASS')
     lverd = 'PASS' if (recon['checked'] > 0 and recon['failed'] == 0) else 'FAIL'
-    hw = rss()[1]; parts_ok = all(r['status'] == 'PASS' for r in recs); held = held_breaches(d, {r['part']: r for r in recs})
+    hw = rss()[1]; parts_ok = all(r['status'] == 'PASS' for r in recs); held = held_breaches(d, {r['part']: r for r in recs}, psha)
     state = ('STOP_RESOURCE' if (hw > lim['peak_rss_mib'] or held['undisposed']) else 'COMPLETE' if (parts_ok and lverd == 'PASS' and cverd in ('PASS', 'NOT-RUN'))
              else 'FAILED')
     pop = dict(plan['population'], represented=len(seen), reconciliation='EXACT')
@@ -426,23 +447,33 @@ def selftest():  # noqa: C901
         finally:
             sources = src_fn
         c9 = copy_of('X9'); r9 = json.loads((c9 / 'parts' / 'part_0001.json').read_text()); r9['breach'] = dict(seconds=True, rss=False)   # finding 1: breaches held
-        (c9 / 'parts' / 'part_0001.json').write_text(json.dumps(r9))
+        (c9 / 'parts' / 'part_0001.json').write_text(json.dumps(r9)); ps9 = C.sha(c9 / 'plan.json'); id9 = C.sha(c9 / 'parts' / 'part_0001.json')
+        disp = lambda d_, psha_, ids: (d_ / 'disposition.json').write_text(json.dumps(dict(plan_sha256=psha_, entries=[dict(id=x, name='selftest', reason='selftest: investigated') for x in ids])))
         with contextlib.redirect_stdout(q):
             f9a = finalize(c9)[2]
-            (c9 / 'disposition.json').write_text(json.dumps(dict(parts=[1], statuses=[], reason='selftest: investigated')))
-            f9b = finalize(c9)[2]
-        c10 = copy_of('X10'); os.remove(c10 / 'parts' / 'part_0003.json'); (c10 / 'run_status.json').write_text(json.dumps(dict(state='STOP_RESOURCE')))
+            (c9 / 'disposition.json').write_text(json.dumps(dict(parts=[1], statuses=[], reason='selftest: the old name-only form')))
+            f9o = finalize(c9)[2]
+            disp(c9, '0' * 64, [id9]); f9p = finalize(c9)[2]
+            disp(c9, ps9, [id9]); f9b = finalize(c9)[2]
+        c10 = copy_of('X10'); os.remove(c10 / 'parts' / 'part_0003.json'); (c10 / 'run_status.json').write_text(json.dumps(dict(state='STOP_RESOURCE', note='first')))
+        ps10 = C.sha(c10 / 'plan.json'); id10 = hashlib.sha256((c10 / 'run_status.json').read_bytes()).hexdigest()
+        rn = lambda: run(c10, src=src, inputs=X.syn_inputs, feat_fn=X.syn_features(), causal_feat=X.syn_features(), causal_perturb=(X.syn_perturb, X.syn_fire))
         with contextlib.redirect_stdout(q):
-            r10a = run(c10, src=src, inputs=X.syn_inputs, feat_fn=X.syn_features(), causal_feat=X.syn_features(), causal_perturb=(X.syn_perturb, X.syn_fire))
-            gone10 = not (c10 / 'parts' / 'part_0003.json').exists()
-            (c10 / 'disposition.json').write_text(json.dumps(dict(parts=[], statuses=['run_status.json'], reason='selftest: investigated')))
-            r10b = run(c10, src=src, inputs=X.syn_inputs, feat_fn=X.syn_features(), causal_feat=X.syn_features(), causal_perturb=(X.syn_perturb, X.syn_fire))
-        held_ok = (stale_fin and f9a['state'] == 'STOP_RESOURCE' and f9a['held_breaches']['undisposed'] == [1] and f9b['state'] == 'COMPLETE'
-                   and f9b['held_breaches']['disposition'] is not None and r10a == 'STOP_RESOURCE' and gone10 and r10b == 'PARTS_DONE'
-                   and (c10 / 'parts' / 'part_0003.json').exists())
+            r10a = rn(); gone10 = not (c10 / 'parts' / 'part_0003.json').exists()               # held: the stop has no disposition
+            st10a = json.loads((c10 / 'run_status.json').read_text())                          # the held run overwrote the stop's file ...
+            r10a2 = rn()                                                                        # ... yet its event is in the history: held again
+            disp(c10, ps10, [id10]); r10b = rn(); back10 = (c10 / 'parts' / 'part_0003.json').exists()
+            (c10 / 'parts' / 'part_0003.json').unlink(missing_ok=True); (c10 / 'run_status.json').write_text(json.dumps(dict(state='STOP_HARD_RSS', rss_mib=2100)))
+            r10c = rn(); gone10c = not (c10 / 'parts' / 'part_0003.json').exists()             # review 8cc1dc49: a NEW stop, same file name
+        hist10 = [json.loads(x) for x in (c10 / 'stops.jsonl').read_text().splitlines()] if (c10 / 'stops.jsonl').exists() else []
+        held_ok = (stale_fin and f9a['state'] == 'STOP_RESOURCE' and len(f9a['held_breaches']['undisposed']) == 1 and f9a['held_breaches']['undisposed'][0].startswith('part 1 ')
+                   and f9o['state'] == 'STOP_RESOURCE' and f9p['state'] == 'STOP_RESOURCE' and f9b['state'] == 'COMPLETE' and f9b['held_breaches']['undisposed'] == []
+                   and r10a == 'HELD' and gone10 and st10a.get('state') == 'HELD' and r10a2 == 'HELD' and r10b == 'PARTS_DONE' and back10 and r10c == 'HELD' and gone10c
+                   and [h['state'] for h in hist10] == ['STOP_RESOURCE', 'STOP_HARD_RSS'] and hist10[0]['id'] == id10)
         if not held_ok:
-            bad.append(f"held breaches: a stale finalizer, a breached record or an earlier resource stop was not held until its disposition ({stale_fin}, "
-                       f"{f9a['state']}, {f9b['state']}, {r10a}, {gone10}, {r10b})")
+            bad.append(f"held breaches: a stale finalizer, a breached record or a resource stop not held until a disposition of ITS identity and plan "
+                       f"({stale_fin}, {f9a['state']}, old form {f9o['state']}, other plan {f9p['state']}, {f9b['state']}, {r10a}, {gone10}, {st10a.get('state')}, {r10a2}, "
+                       f"{r10b}, {back10}, new stop {r10c}, {gone10c}, history {[h['state'] for h in hist10]})")
         made, S0 = [], Sampler                                                              # the watchdog spans loading, the run and finalize
 
         class Rec(S0):
