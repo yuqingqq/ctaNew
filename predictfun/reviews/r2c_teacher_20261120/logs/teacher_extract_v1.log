@@ -1,0 +1,2 @@
+{"0_post": {"rows": 327341, "filled": 97582}, "0_retain": {"rows": 2353692, "filled": 573171}, "1_post": {"rows": 327264, "filled": 97868}, "1_retain": {"rows": 2375718, "filled": 578799}}
+2026-11-20T11:26:24Z tag=teacher_extract_v1 rc=0 peak_rss_mib=593 wall_s=42.92 cpu_user_s=27.27 memavail_start_gib=23 disk_free_gib=450->447 slot=claude2

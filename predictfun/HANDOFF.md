@@ -485,6 +485,35 @@ pulls and bid/ask; judge movement calibration on selected actions before changin
 order design. Other session owns fixes; scheduler remains off.
 <!-- /PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
 
+## 2026-11-20 12:01Z (session aea5bfb9) — R2-C: THE SUPPORTED pi0-50 TEACHER FITTED, FROZEN AND ROLLED OUT ON CONSUMED OCT 23; CONTRACT CHECKS ALL TRUE (review 3d7eae6a's next priority) (USER: "... continue the implementing and next priority loop")
+- [Receipt](reviews/r2c_teacher_20261120/report.md).
+- Sources:
+  - [`pf_r2_teacher.py`](research/pf_r2_teacher.py) `c7d72d91` (new), with its selftest and mutation suite: 44 / 44 caught; run 1 caught 40 / 43 (FINDINGS P80);
+  - runner v3 `516bf5f2`: e6b0efa4's two P2s, 25 / 25 mutants.
+- Declared before any fit (FINDINGS P81):
+  - every sampled ok row (5,384,015) and the J heads;
+  - weights × n / Σw (the lambda_l2 scale);
+  - the streamed Sequence construction (= in-memory ≤ 200k rows, a different bin sample above);
+  - the support statuses in order and the E1 rule.
+- Fit: 16 heads × 200 iterations, each reloading equal; RETAIN peaks 1,360–1,365 MiB.
+- Freeze `769dff77` (11:48:25Z) binds:
+  - the data, the inputs, the parameters and the library versions;
+  - the 16 model hashes (models committed as gz);
+  - all 76 imported research sources (an edit to any of them refuses the teacher);
+  - 1 teacher / 0 candidates.
+- Checks ALL TRUE:
+  - the adapter equals the census support (80 categories, 28 cells);
+  - rollout: 128 worlds (127 episodes, 1 no-path status); ledgers and logging hold;
+  - causality: 3,506 checks, 0 mismatches; the delivered control fired 3,271 times;
+  - parity with an independent rebuild: 3,384 checks, 0 mismatches.
+- Readings (declared, not gates):
+  - 0 support / forecast fallbacks;
+  - delayed first entries: bid 55, ask 70 (offset 0: 5 / 5; none 67 / 52); 202 later generations;
+  - 337 POSTs, 262 PULLs, 20 fills: no value claim;
+  - in-sample calibration close at ≥ 100 ms; at ≤ 100 ms the heads over-predict fill, severe and movement.
+- Prior findings: e6b0efa4's P2s fixed (v3). 3d7eae6a's provenance note: the v1 CSV snapshots are committed in `reviews/r2b_full_day_20261120/accept_v1_outputs/`.
+- Next: Codex reviews the freeze; then, in its sequence, Oct 24–25 candidate labels under the frozen `pi0_50_v1`.
+
 ## 2026-11-20 10:22Z (session aea5bfb9) — R2-B: THE FULL OCT 23 TEACHER-DATA BUILD ON 4 CORES, ACCEPTED ALL TRUE; 28 / 28 SUPPORT CELLS (review e6b0efa4's next priority; no fit) (USER: "... continue the implementing and next priority loop"; "Yea 4 cores to make it faster")
 - [Receipt](reviews/r2b_full_day_20261120/report.md); [`pf_r2_runner.py`](research/pf_r2_runner.py) `65293187` (sharded: `run(shard=(k, n))`, shard-local markets); [`run_light.sh`](research/run_light.sh) `e53f7f23` (slots claude2 / claude3 / claude4 on cores 10 / 13 / 14, cap 5).
 - Gated launch ([launch5.sh](reviews/r2b_full_day_20261120/launch5.sh), every gate computed):

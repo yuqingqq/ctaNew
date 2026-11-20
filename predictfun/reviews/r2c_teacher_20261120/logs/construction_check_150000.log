@@ -1,0 +1,3 @@
+{'binary': {'trees_equal': True, 'max_pred_diff': 0.0}, 'regression': {'trees_equal': True, 'max_pred_diff': 0.0}}
+EQUAL
+2026-11-20T11:59:55Z tag=construction_check_150000 rc=0 peak_rss_mib=295 wall_s=5.98 cpu_user_s=5.49 memavail_start_gib=23 disk_free_gib=446->446 slot=claude

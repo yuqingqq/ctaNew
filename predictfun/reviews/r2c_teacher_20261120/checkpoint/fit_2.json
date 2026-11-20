@@ -1,0 +1,35 @@
+{
+ "group": "1_post",
+ "rows": 327264,
+ "filled": 97868,
+ "heads": {
+  "p": {
+   "sha256": "cea8caaccb3a546a2ae1e7a1b172209972044f535675885c8deb374a604b9ede",
+   "rows": 327264,
+   "reload_equal": true,
+   "iterations": 200
+  },
+  "q": {
+   "sha256": "e22ff39639a85906fdec5e1c714c5e0ef36b5cb9f562deb8f5c4aa726531096e",
+   "rows": 97868,
+   "reload_equal": true,
+   "iterations": 200
+  },
+  "qm": {
+   "sha256": "c6fd0c4d7e532235c183a1bbfcee0fd73685ed5e8491e1bb2a78c191c0577e2b",
+   "rows": 97868,
+   "reload_equal": true,
+   "iterations": 200
+  },
+  "severe": {
+   "sha256": "7a790807351e99afa927b56ee4a7d532a923628cf8d9812cff003fdbe7412b56",
+   "rows": 327264,
+   "reload_equal": true,
+   "iterations": 200
+  }
+ },
+ "rounds": 200,
+ "seconds": 40.4,
+ "hwm_mib": 603.78125,
+ "asof": "2026-11-20T11:45:32.080687+00:00"
+}

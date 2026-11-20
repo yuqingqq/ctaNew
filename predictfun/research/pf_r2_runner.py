@@ -58,6 +58,7 @@ STOP_AFTER = None                                          # planted (selftest /
 CRASH_AFTER_TMP = None                                     # planted (selftest only): raise in part i after its temporary file is written
 WRITE_DROP = False                                         # planted (selftest only): the written part loses its last row
 SPIKE_MIB = 0.                                             # planted (selftest only): a transient allocation inside each part (a peak that recedes)
+WATCHDOG_EXIT = None                                       # the selftest injects a recorder; production: None (os._exit ends the process)
 
 
 def rss():
@@ -112,6 +113,15 @@ def make_plan(d, mod, day, per_side, population, part_size, kp, src, markets, in
     the content only, never the output location: `tag` is unused here (finalize derives the receipt names from the directory; the first gate run
     of 2026-11-20 01:32Z had two plans differing only in their tag, so a resumed copy of one content could not show the same plan hash)."""
     C.require(day in BE.SLICE_DAYS, 'consumed days only (Oct 23-27)'); d = Path(d); kp = Path(kp or KP.OUT); src = src or KP.Tape()
+    d.mkdir(parents=True, exist_ok=True); lim0 = dict(limits or LIMITS)
+    mon = Sampler(d / 'plan_status.json', lim0['guard_rss_mib'], exit=WATCHDOG_EXIT); mon.start()            # review e6b0efa4: the watchdog over loading
+    try:
+        return _make_plan(d, mod, day, per_side, population, part_size, kp, src, markets, inputs, causal, causal_every, keep_fills, limits)
+    finally:
+        mon.live = False
+
+
+def _make_plan(d, mod, day, per_side, population, part_size, kp, src, markets, inputs, causal, causal_every, keep_fills, limits):
     r_ = json.loads((kp / day / 'receipt.json').read_text())
     C.require(all(C.sha(kp / day / x) == h for x, h in r_['outputs'].items()), 'keep-pull outputs changed since their receipt')
     O = pd.read_parquet(kp / day / 'orders.parquet'); C.require(population in ('first_per_side', 'all'), 'undeclared population')
@@ -156,11 +166,31 @@ def accept(d, plan, psha, i):
     return rec
 
 
+def held_breaches(d, accepted):
+    """Review e6b0efa4 finding 1: every accepted record with a breach and every status file of an earlier process that stopped on a resource
+    limit, and whether each is covered by the directory's disposition (disposition.json: the investigated parts and status files, a reason) ->
+    dict(parts, statuses, undisposed)."""
+    parts = sorted(int(r['part']) for r in accepted.values() if any(r.get('breach', {}).values()))
+    stats = sorted(p.name for p in Path(d).glob('*status*.json') if json.loads(p.read_text()).get('state') in ('STOP_RESOURCE', 'STOP_HARD_RSS'))
+    dp = Path(d) / 'disposition.json'; disp = json.loads(dp.read_text()) if dp.exists() else {}
+    undisposed = sorted(set(parts) - set(disp.get('parts', []))) + sorted(set(stats) - set(disp.get('statuses', [])))
+    return dict(parts=parts, statuses=stats, undisposed=undisposed, disposition=disp or None)
+
+
 def run(d, mod=None, src=None, inputs=None, loaded=None, feat_fn=None, causal_feat=None, causal_perturb=None, shard=None):
     """Process every pending part of the plan in directory d (resume: accepted parts are kept, unfinished ones rerun); shard=(k, n): only the
     parts i with i % n == k, with only their markets' inputs -> the state of those parts: PARTS_DONE, STOPPED (a planted interruption),
     STOP_RESOURCE (a latched breach); refusals raise."""
     mod = mod or R2; d = Path(d); plan = json.loads((d / 'plan.json').read_text()); psha = C.sha(d / 'plan.json'); lim = plan['limits']; day = plan['day']
+    st_name = 'run_status.json' if shard is None else f'run_status_{int(shard[0])}of{int(shard[1])}.json'
+    mon = Sampler(d / st_name, lim['guard_rss_mib'], exit=WATCHDOG_EXIT); mon.start()                    # review e6b0efa4: from the start, loading included
+    try:
+        return _run(d, mod, plan, psha, lim, day, st_name, mon, src, inputs, loaded, feat_fn, causal_feat, causal_perturb, shard)
+    finally:
+        mon.live = False
+
+
+def _run(d, mod, plan, psha, lim, day, st_name, mon, src, inputs, loaded, feat_fn, causal_feat, causal_perturb, shard):
     C.require(sources(mod) == plan['sources'], 'stale source: a module or a dependency changed since the plan')
     kp = Path(plan['inputs']['kp_dir'])
     C.require(C.sha(kp / day / 'receipt.json') == plan['inputs']['kp_receipt'] and all(C.sha(kp / day / x) == h for x, h in plan['inputs']['kp_outputs'].items()),
@@ -179,11 +209,13 @@ def run(d, mod=None, src=None, inputs=None, loaded=None, feat_fn=None, causal_fe
         if rec is not None:
             mem = set(map(tuple, rec['members'])); C.require(not (mem & seen), f'part {i}: an original already in another accepted part'); seen |= mem; accepted[i] = rec
     pending = [i for i in mine if i not in accepted]
-    status = d / ('run_status.json' if shard is None else f'run_status_{int(shard[0])}of{int(shard[1])}.json')
-    mon = Sampler(status, lim['guard_rss_mib']); mon.start(); latch = None; state = 'RUNNING'; n_run = 0
+    status = d / st_name; latch = None; state = 'RUNNING'; n_run = 0
+    held = held_breaches(d, accepted)                                                       # review e6b0efa4 finding 1: a resource stop is carried
+    if held['undisposed'] and pending:
+        latch = dict(reason='an earlier resource breach or stop without a recorded disposition', **held); state = 'STOP_RESOURCE'
     try:
         hw0 = rss()[1]
-        if pending and hw0 > lim['peak_rss_mib']:
+        if latch is None and pending and hw0 > lim['peak_rss_mib']:
             latch = dict(reason='the high-water RSS after loading, before the first part', hwm_mib=hw0); state = 'STOP_RESOURCE'
         for i in (pending if latch is None else []):
             if STOP_AFTER is not None and n_run >= STOP_AFTER:
@@ -217,7 +249,7 @@ def run(d, mod=None, src=None, inputs=None, loaded=None, feat_fn=None, causal_fe
             if breach['seconds'] or breach['rss']:
                 latch = dict(part=i, elapsed_s=el, hwm_mib=hw, **breach); state = 'STOP_RESOURCE'; break
     finally:
-        mon.live = False
+        pass
     left = [i for i in mine if i not in accepted]
     if state == 'RUNNING':
         state = 'PARTS_DONE' if not left else 'STOPPED'
@@ -230,6 +262,15 @@ def finalize(d, mod=None):
     """The receipt from the completion records alone (never the parts' rows): every part accepted and its file re-hashed, the population
     exactly once, the readings and the support summed; the support and census JSONs written last -> (the directory, the support, the readings)."""
     mod = mod or R2; d = Path(d); plan = json.loads((d / 'plan.json').read_text()); psha = C.sha(d / 'plan.json'); lim = plan['limits']; day = plan['day']
+    C.require(sources(mod) == plan['sources'], 'stale finalizer: the finalizing sources differ from the plan (review e6b0efa4 finding 2)')
+    mon = Sampler(d / 'finalize_status.json', lim['guard_rss_mib'], exit=WATCHDOG_EXIT); mon.start()
+    try:
+        return _finalize(d, mod, plan, psha, lim, day)
+    finally:
+        mon.live = False
+
+
+def _finalize(d, mod, plan, psha, lim, day):
     C.require(d.name.startswith(f'census_{day}'), f'finalize: the directory {d.name} is not a census of {day}'); tag = d.name[len(f'census_{day}'):]
     recs, seen = [], set()
     for i in range(len(plan['partitions'])):
@@ -250,8 +291,9 @@ def finalize(d, mod=None):
     ck, cf = sum(int(r['causal'].get('checked', 0)) for r in recs), sum(int(r['causal'].get('failed', 0)) for r in recs)
     cverd = ('NOT-RUN' if not plan['causal']['on'] else 'FAIL' if (ck == 0 or cf > 0) else 'NOT-EVALUABLE' if comp['not_evaluable'] > 0 else 'PASS')
     lverd = 'PASS' if (recon['checked'] > 0 and recon['failed'] == 0) else 'FAIL'
-    hw = rss()[1]; parts_ok = all(r['status'] == 'PASS' for r in recs)
-    state = ('STOP_RESOURCE' if hw > lim['peak_rss_mib'] else 'COMPLETE' if (parts_ok and lverd == 'PASS' and cverd in ('PASS', 'NOT-RUN')) else 'FAILED')
+    hw = rss()[1]; parts_ok = all(r['status'] == 'PASS' for r in recs); held = held_breaches(d, {r['part']: r for r in recs})
+    state = ('STOP_RESOURCE' if (hw > lim['peak_rss_mib'] or held['undisposed']) else 'COMPLETE' if (parts_ok and lverd == 'PASS' and cverd in ('PASS', 'NOT-RUN'))
+             else 'FAILED')
     pop = dict(plan['population'], represented=len(seen), reconciliation='EXACT')
     R = dict(state=state, population=pop,
              partitions=dict(count=len(recs), size=plan['part_size'], seconds=[r['elapsed_s'] for r in recs], part_peak_rss_mib=[r['part_peak_rss_mib'] for r in recs],
@@ -262,12 +304,12 @@ def finalize(d, mod=None):
                             retried=comp['retried'], draws=plan['causal']['draws'], audited=sum(len(r['causal'].get('audit', [])) for r in recs), verdict=cverd),
              census_rows=add('rows'), sampled_ok_rows=add('sampled_ok'), by_source_head_status=stc,
              weights=dict(groups=add('weight_groups'), groups_summing_to_one=add('weight_groups_one')),
-             peak_rss_mib=max([hw] + [float(r['hwm_mib']) for r in recs]), finalize_hwm_mib=hw)
+             peak_rss_mib=max([hw] + [float(r['hwm_mib']) for r in recs]), finalize_hwm_mib=hw, held_breaches=held)
     out = d.parent
     atomic_json(out / f'support_{day}{tag}.json', S)
     atomic_json(out / f'census_{day}{tag}.json', dict(asof=C.stamp(), day=day, manifest=plan['manifest'], state=state, costs=plan['costs'], readings=R, plan_sha256=psha,
                                                      inputs_list_sha256=hashlib.sha256(json.dumps(plan['schema']['inputs'] + plan['schema']['ctx']).encode()).hexdigest(),
-                                                     inputs=plan['inputs'], sources=plan['sources'], provenance=KP.provenance(),
+                                                     inputs=plan['inputs'], sources=plan['sources'], finalizer_sources=sources(mod), provenance=KP.provenance(),
                                                      outputs={**{f'{d.name}/parts/{r["file"]}': r['sha256'] for r in recs}, f'{d.name}/plan.json': psha,
                                                               f'support_{day}{tag}.json': C.sha(out / f'support_{day}{tag}.json')}))
     print(json.dumps({k: v for k, v in R.items() if k != 'population'} | dict(population={k: v for k, v in pop.items() if k != 'selected_ids'}), indent=1, default=str), flush=True)
@@ -292,7 +334,7 @@ def selftest():  # noqa: C901
     a forged / overlapping record, another plan's record, a stale source, a changed input, a different plan); the stop rule (time, a receding
     peak, loading) and the watchdog; no all-part read in census / finalize (a sentinel); finalize refusing without publishing; a failed part kept
     as a failure record, never COMPLETE, never rerun; the audit sample identical across partitionings; a short write refused."""
-    global STOP_AFTER, CRASH_AFTER_TMP, SPIKE_MIB, WRITE_DROP, sources
+    global STOP_AFTER, CRASH_AFTER_TMP, SPIKE_MIB, WRITE_DROP, sources, Sampler
     bad = []; src = KP.Syn(); days = list(KP.DAYS); d0 = days[0]
     import pf_queue_place_ledger as QL
     with tempfile.TemporaryDirectory(dir=str(I.K.IO)) as tmp:
@@ -377,6 +419,43 @@ def selftest():  # noqa: C901
             sources = src_fn
         if not all(rr.values()):
             bad.append(f'resume: a refusal did not fire ({rr})')
+        c8 = copy_of('X8')                                                                  # review e6b0efa4 finding 2: a stale finalizer is refused
+        try:
+            sources = lambda mod: dict(src_fn(mod), **{'pf_r2_runner.py': '0' * 64})
+            stale_fin = refused(lambda: finalize(c8), 'stale finalizer')
+        finally:
+            sources = src_fn
+        c9 = copy_of('X9'); r9 = json.loads((c9 / 'parts' / 'part_0001.json').read_text()); r9['breach'] = dict(seconds=True, rss=False)   # finding 1: breaches held
+        (c9 / 'parts' / 'part_0001.json').write_text(json.dumps(r9))
+        with contextlib.redirect_stdout(q):
+            f9a = finalize(c9)[2]
+            (c9 / 'disposition.json').write_text(json.dumps(dict(parts=[1], statuses=[], reason='selftest: investigated')))
+            f9b = finalize(c9)[2]
+        c10 = copy_of('X10'); os.remove(c10 / 'parts' / 'part_0003.json'); (c10 / 'run_status.json').write_text(json.dumps(dict(state='STOP_RESOURCE')))
+        with contextlib.redirect_stdout(q):
+            r10a = run(c10, src=src, inputs=X.syn_inputs, feat_fn=X.syn_features(), causal_feat=X.syn_features(), causal_perturb=(X.syn_perturb, X.syn_fire))
+            gone10 = not (c10 / 'parts' / 'part_0003.json').exists()
+            (c10 / 'disposition.json').write_text(json.dumps(dict(parts=[], statuses=['run_status.json'], reason='selftest: investigated')))
+            r10b = run(c10, src=src, inputs=X.syn_inputs, feat_fn=X.syn_features(), causal_feat=X.syn_features(), causal_perturb=(X.syn_perturb, X.syn_fire))
+        held_ok = (stale_fin and f9a['state'] == 'STOP_RESOURCE' and f9a['held_breaches']['undisposed'] == [1] and f9b['state'] == 'COMPLETE'
+                   and f9b['held_breaches']['disposition'] is not None and r10a == 'STOP_RESOURCE' and gone10 and r10b == 'PARTS_DONE'
+                   and (c10 / 'parts' / 'part_0003.json').exists())
+        if not held_ok:
+            bad.append(f"held breaches: a stale finalizer, a breached record or an earlier resource stop was not held until its disposition ({stale_fin}, "
+                       f"{f9a['state']}, {f9b['state']}, {r10a}, {gone10}, {r10b})")
+        made, S0 = [], Sampler                                                              # the watchdog spans loading, the run and finalize
+
+        class Rec(S0):
+            def __init__(self, status_path, hard_mib, period=.02, exit=None):
+                made.append(Path(status_path).name); super().__init__(status_path, hard_mib, period, exit)
+        try:
+            Sampler = Rec
+            with contextlib.redirect_stdout(q):
+                census(day=d0, per_side=1, out=tmp / 'WD', part_size=1, causal=False, **{k: v for k, v in kw.items() if k not in ('causal_feat', 'causal_perturb')})
+        finally:
+            Sampler = S0
+        if not {'plan_status.json', 'run_status.json', 'finalize_status.json'} <= set(made):
+            bad.append(f'watchdog: not alive over every stage (loading, run, finalize): {sorted(set(made))}')
         c7 = copy_of('X7'); (tmp / 'X7' / f'census_{d0}.json').unlink(missing_ok=True); pf7 = c7 / 'parts' / 'part_0000.parquet'
         pf7.write_bytes(pf7.read_bytes() + b'x')                                            # corrupted between run and finalize: no receipt
         ok7 = refused(lambda: finalize(c7), 'hash differs') and not (tmp / 'X7' / f'census_{d0}.json').exists() and not (tmp / 'X7' / f'support_{d0}.json').exists()

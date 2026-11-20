@@ -1,0 +1,46 @@
+unchanged copy passes its selftest: True
+  weights dropped: caught - R2 TEACHER SELFTEST FAILED: construction: the streamed fit differs from the in-memory fit at <= 200,000 rows, or is not deterministic | weights: the heads predi
+  no normalization constant: caught - R2 TEACHER SELFTEST FAILED: weights: the 10-round spread is 1.342, not > 2.5 (the per-set constant n / sum w is not applied) 
+  q on all rows: caught - R2 TEACHER SELFTEST FAILED: weights: the heads predict {'p': 0.7500000059604643, 'q': 17.500000298023217, 'qm': 0.3333333207849871, 'severe': 1.499999964237214}
+  qm on all rows: caught - R2 TEACHER SELFTEST FAILED: weights: the heads predict {'p': 0.7500000059604643, 'q': 23.333333207849872, 'qm': 0.25000001788139303, 'severe': 1.499999964237214
+  p label not the fill indicator: caught - R2 TEACHER SELFTEST FAILED: weights: the heads predict {'p': 0.9999999999999989, 'q': 23.333333207849872, 'qm': 0.3333333207849871, 'severe': 1.499999964237214}
+  severe on the filled rows: caught - R2 TEACHER SELFTEST FAILED: weights: the heads predict {'p': 0.7500000059604643, 'q': 23.333333207849872, 'qm': 0.3333333207849871, 'severe': 1.0000000188225193
+  a tie POSTs: caught - R2 TEACHER SELFTEST FAILED: rule: post tie gives model POST, not model WAIT 
+  a tie PULLs: caught - R2 TEACHER SELFTEST FAILED: rule: retain tie gives model PULL, not model KEEP 
+  support ignored: caught - R2 TEACHER SELFTEST FAILED: rule: an unsupported state with V > 0 gives model POST, not the WAIT fallback 
+  coherence ignored: caught - R2 TEACHER SELFTEST FAILED: rule: incoherent post gives model POST, not incoherent_forecast WAIT | rule: incoherent retain gives model PULL, not incoherent_fore
+  cap ignored: caught - R2 TEACHER SELFTEST FAILED: rule: cap gives model POST, not cap_blocked WAIT 
+  near END ignored: caught - R2 TEACHER SELFTEST FAILED: rule: near END gives model POST, not near_end WAIT 
+  range without tolerance: caught - R2 TEACHER SELFTEST FAILED: support: case round-off gives outside_training_range, not None 
+  range ignored: caught - R2 TEACHER SELFTEST FAILED: support: case range gives None, not outside_training_range | support: case NaN gives None, not outside_training_range | support: cas
+  categories ignored: caught - R2 TEACHER SELFTEST FAILED: support: case long bid gives outside_training_range, not unsupported_state_category | support: case n/a gives None, not unsupported_
+  inventory sign without tolerance: caught - R2 TEACHER SELFTEST FAILED: support: case round-off gives unsupported_state_category, not None | support: the inventory-sign tolerance is not 1e-9 ([np.str_('lo
+  horizon outside ignored: caught - R2 TEACHER SELFTEST FAILED: support: case horizon gives insufficient_training_support, not unsupported_horizon 
+  cell support ignored: caught - R2 TEACHER SELFTEST FAILED: support: case cell gives None, not insufficient_training_support | support: case cell missing gives None, not insufficient_training_
+  horizon label from astype(str): caught - R2 TEACHER SELFTEST FAILED: support: case horizon gives insufficient_training_support, not unsupported_horizon 
+  extract column order: caught - R2 TEACHER SELFTEST FAILED: weights: the 10-round spread is 0.000, not > 2.5 (the per-set constant n / sum w is not applied) | adapter: categories / cells diffe
+  extract without the status filter: caught - R2 TEACHER SELFTEST FAILED: extract (controlled census) refused valid input (part 0: 2088 sampled ok rows, the record says 2080) 
+  extract without the sample filter: caught - R2 TEACHER SELFTEST FAILED: extract (controlled census) refused valid input (part 0: 2088 sampled ok rows, the record says 2080) 
+  a batch shifted by one row: caught - R2 TEACHER SELFTEST FAILED: construction: the file-backed rows differ from the matrix 
+  a single row shifted: caught - R2 TEACHER SELFTEST FAILED: construction: the streamed fit differs from the in-memory fit at <= 200,000 rows, or is not deterministic | construction: the file-b
+  a changed model accepted: caught - R2 TEACHER SELFTEST FAILED: freeze: a changed model file was not refused 
+  a changed support accepted: caught - R2 TEACHER SELFTEST FAILED: freeze: a changed support JSON was not refused 
+  a changed source accepted: caught - R2 TEACHER SELFTEST FAILED: freeze: a changed source was not refused 
+  a changed record accepted: caught - R2 TEACHER SELFTEST FAILED: identity: a changed record was not refused 
+  a changed parquet accepted: NOT CAUGHT - PASSED (not caught)
+  a wrong sampled-ok count accepted: NOT CAUGHT - PASSED (not caught)
+  extraction rewritten: caught - R2 TEACHER SELFTEST FAILED: extract: the training files were rewritten 
+  the probe never compares: caught - R2 TEACHER SELFTEST FAILED: causality: a teacher reading the engine-truth remainder ({'absent': {'checked': 240, 'mismatch': 0, 'delivered_changed': 32}, 'live'
+  decisions compared without inputs: caught - R2 TEACHER SELFTEST FAILED: rollout: causal probe {'checked': 800, 'mismatch': 0, 'delivered_changed': 0, 'by_state': {'absent': {'checked': 800, 'mismatch': 0,
+  the delivered control never counted: caught - R2 TEACHER SELFTEST FAILED: rollout: causal probe {'checked': 800, 'mismatch': 0, 'delivered_changed': 0, 'by_state': {'absent': {'checked': 800, 'mismatch': 0,
+  the market one grid step ahead: caught - R2 TEACHER SELFTEST FAILED: causality: the honest teacher on live and absent states {'absent': {'checked': 226, 'mismatch': 0, 'delivered_changed': 32}, 'live':
+  the other side's original: caught - R2 TEACHER SELFTEST FAILED: causality: the honest teacher on live and absent states {'absent': {'checked': 240, 'mismatch': 0, 'delivered_changed': 32}, 'live':
+  the other side's price: caught - R2 TEACHER SELFTEST FAILED: causality: the honest teacher on live and absent states {'absent': {'checked': 800, 'mismatch': 0, 'delivered_changed': 792}}, parit
+  decisions not logged: NOT CAUGHT - CRASHED: KeyError: 'causal'
+  ledger cash unchecked: caught - R2 TEACHER SELFTEST FAILED: ledger: the instrument passes a clean ledger True and must fail cash +1 / a 31-share fill / a missing log entry {'cash': True, 'logg
+  ledger generation size unchecked: caught - R2 TEACHER SELFTEST FAILED: ledger: the instrument passes a clean ledger True and must fail cash +1 / a 31-share fill / a missing log entry {'cash': False, 'log
+  logging unchecked: caught - R2 TEACHER SELFTEST FAILED: ledger: the instrument passes a clean ledger True and must fail cash +1 / a 31-share fill / a missing log entry {'cash': False, 'log
+  reconciliation always equal: caught - R2 TEACHER SELFTEST FAILED: adapter: the reconciliation does not separate equal tables from a count off by one 
+  the fit loses its weights constant on q / qm: caught - R2 TEACHER SELFTEST FAILED: weights: the heads predict {'p': 0.7500000059604643, 'q': 28.94736842105263, 'qm': 0.8947368421052632, 'severe': 1.499999964237214},
+r2 teacher mutation check FAILED: the unchanged copy passes its selftest, 40 / 43 planted code errors are caught by a check
+2026-11-20T11:05:34Z tag=teacher_mutants rc=1 peak_rss_mib=256 wall_s=1027.96 cpu_user_s=1009.23 memavail_start_gib=23 disk_free_gib=454->450 slot=claude
