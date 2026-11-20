@@ -1,0 +1,18 @@
+{
+  "target_commit": "294fd172d7712bdfeb4c776a33ba63eaf1b7fc0a",
+  "asof": "2026-11-20T10:34:32.561452+00:00",
+  "script_sha256": "00d086bd34f92f11210083428ad32d88626a7696eb2f47b778c8d901fba7de65",
+  "checks": {
+    "support_cells_full.csv": "4f5856a69535d1cdfc48c5e2ce101d28bd2d3e6d1bcd5bb897be02f699644f1b",
+    "support_categories_full.csv": "3009b8649d5520c20f1eca5f5009f4fcd67c5faaeb80f5981e81bb2cf7681847",
+    "support_cross_cells_full.csv": "bbd71f83fbc467e9d2da84bdc19172fdaff1f0f2b7914ab25a59fe77f6cb3f7f",
+    "support_coverage_full.csv": "dba04b4e62b064a03864ac4adf28519d401855ae1b12bf708fc149bb4099c028",
+    "support_ranges_full.csv": "067d74be69dea56d4173f4d1414aead7138d404020eaa1c615051fb01a05b3a8",
+    "support_presence_full.csv": "07294583c28378e37b07b1f883efc19956a5ed9ff490082274e4b8dcc6402382",
+    "parts_full.csv": "80e8dd6e84ee92b8969bed0a2de66043972582262f3e918e32ebd2d7ba86b32b"
+  },
+  "all_checks_pass": true,
+  "fine_cells": 559,
+  "fine_cells_below_200": 62,
+  "fine_cells_below_20_nonzero": 88
+}

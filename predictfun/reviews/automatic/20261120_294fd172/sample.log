@@ -1,0 +1,2 @@
+The predeclared 20-part sample passes row, label, clock, input, audit and support checks; all three falsifiers fire.
+2026-11-20T10:28:58Z tag=review_294fd172_sample rc=0 peak_rss_mib=487 wall_s=45.07 cpu_user_s=44.69 memavail_start_gib=23 disk_free_gib=454->454 slot=codex

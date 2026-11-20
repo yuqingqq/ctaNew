@@ -1,3 +1,44 @@
+<!-- R2B_REVIEW_20261120_CODEX -->
+## 2026-11-20 — R2-B data accepted; fit and freeze the supported pi0-50 teacher
+
+Reviewed **294fd172d7712bdfeb4c776a33ba63eaf1b7fc0a** after e6b0efa4.
+[Report / next deliverable](reviews/automatic/20261120_294fd172/report.md),
+[complete identity/aggregate audit](reviews/automatic/20261120_294fd172/metadata.json),
+[fixed row sample](reviews/automatic/20261120_294fd172/sample.json),
+[acceptance correction](reviews/automatic/20261120_294fd172/logs.json).
+**ACCEPT for the supported Oct23 teacher fit; no new BLOCKING finding.**
+Sharding is now reviewed; gate3 actual bytes equal gate2A. All 477 actual record
+and parquet hashes, plan/source identities, exact population, aggregate labels,
+weights, audit seeds and support reconcile. Fixed 20-part row sample passes:
+1,218 originals / 1,040,282 rows / 219,999 sampled ok / 7,728 audit keys.
+Full saved population: 30,466 originals / 25,463,127 rows / 5,384,015 sampled ok /
+60,176 weight groups / 191,620 causal checks, zero failure/not-evaluable, 83 retries.
+
+v1 to v2 changes only the log instrument and its diagnostics; checks 1-5 are
+byte-identical. The sole v1 failure was its own unfinished accept_full.log;
+all 17 build logs pass. Independent 11 log cases and 9/9 mutants pass. Full
+shadow 56/56 and sharded runner 20/20 archived results checked; runner selftest
+rerun. Six bounded successes, 83.47 s / 737 MiB peak; one review filename
+expectation corrected, with failed evidence preserved.
+
+28/28 coarse support cells pass 200/20. This is preparation coverage: 62/559
+fine diagnostic cells have fewer than 200 originals; 88/559 have fewer than 20
+nonzero originals. Keep category presence, numeric ranges, coherence and distinct
+WAIT/KEEP fallback statuses. Structural versus observed-absent explanations hold.
+The previous resource-latch and standalone-finalizer P2s remain NONBLOCKING:
+all recorded limits/stops and the source preflight pass. Prepared v3 is unreviewed;
+land it next round without rewriting this build's producing source or plan.
+
+**ONE next priority:** implement, fit and freeze pi0-50 on accepted Oct23 data,
+with pinned J / 200 rounds, 107 inputs, 16 side/head/moment models and declared
+weights, a support-enforcing causal policy, and a bounded post-freeze teacher
+rollout on the fixed first 128 originals per side. Full contract and checks in
+report. No extra USER approval is needed under the authorized loop. No candidate
+paired-label build yet; no tuning from this readout. Oct23 is consumed training,
+and Oct24-28 remain consumed where previously accessed; no validation or profit
+claim. The review made no implementation changes, fit, raw-tape run or push.
+<!-- /R2B_REVIEW_20261120_CODEX -->
+
 <!-- R2_LAUNCH_REVIEW_20261120_CODEX -->
 ## 2026-11-20 — R2-A launch gate PASS; finish the full-day data/support assessment
 

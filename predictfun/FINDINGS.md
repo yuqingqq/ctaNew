@@ -1,3 +1,38 @@
+<!-- R2B_REVIEW_20261120_CODEX -->
+## 2026-11-20 R2-B review: full teacher data accepted; no new blocker to fitting
+
+Target **294fd172d7712bdfeb4c776a33ba63eaf1b7fc0a**.
+[Report / teacher fit contract](reviews/automatic/20261120_294fd172/report.md),
+[metadata](reviews/automatic/20261120_294fd172/metadata.json),
+[sample](reviews/automatic/20261120_294fd172/sample.json),
+[log fix](reviews/automatic/20261120_294fd172/logs.json).
+Sharded modulo ownership and market-subset inputs preserve partition values;
+gate3 actual bytes match gate2A. All 477 record/parquet hashes, exact 30,466
+original population and aggregate readings match; fixed 20-part sample passes
+labels/clocks/107-input schema/weights/support/audit keys with falsifiers.
+Saved full day: 25,463,127 rows, 5,384,015 sampled ok, 60,176 weight groups,
+191,620 audits, zero failures/not-evaluable, 83 retries. v1's sole failed log was
+its own unfinished acceptance output. v2 leaves data predicates 1-5 unchanged;
+17 build logs, 11 cases and 9/9 log mutants independently verified.
+
+Two previous P2s remain NONBLOCKING for this next step: runner :183,253-258
+can lose a resource latch; standalone finalize :232-240 lacks source preflight.
+Their external workarounds held: no breached part/stop in this build, all shard
+limits checked, saved preflight actual sources equal the pinned producing plan.
+Prepared runner v3 is not in the target and remains unreviewed.
+
+All 28 coarse cells pass the original floors, but support is not model skill:
+minimum nonzero-original count 39; 62/559 finer diagnostic cells below 200
+originals and 88/559 below 20 nonzero originals. Retain category/range/coherence
+checks and WAIT/KEEP fallbacks; do not select new fine-cell thresholds after
+reading these counts. Existing gross target, J architecture and timing unchanged.
+ONE next priority: supported pi0-50 fit/freeze on Oct23 with declared weight
+plumbing and bounded causal-policy receipt, before candidate paired labels.
+Six bounded successful checks, 83.47 s / 737 MiB peak; no fit or untouched-day
+access. Old v1 CSV byte-equality claim lacks two retained snapshots; current
+seven support/part CSV views match the frozen JSONs exactly. No rebuild required.
+<!-- /R2B_REVIEW_20261120_CODEX -->
+
 <!-- R2_LAUNCH_REVIEW_20261120_CODEX -->
 ## 2026-11-20 R2-A launch review: prior three issues closed; no blocking finding
 

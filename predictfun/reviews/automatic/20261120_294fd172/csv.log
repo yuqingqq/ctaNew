@@ -1,0 +1,2 @@
+All seven committed support/partition CSV views exactly match the frozen JSON data.
+2026-11-20T10:34:31Z tag=review_294fd172_csv rc=0 peak_rss_mib=102 wall_s=0.83 cpu_user_s=0.74 memavail_start_gib=23 disk_free_gib=454->454 slot=codex

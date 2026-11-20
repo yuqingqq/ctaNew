@@ -1,0 +1,47 @@
+{
+  "target_commit": "294fd172d7712bdfeb4c776a33ba63eaf1b7fc0a",
+  "asof": "2026-11-20T10:36:05.928504+00:00",
+  "state": {
+    "predictfun/HANDOFF.md": {
+      "backup": "/tmp/pf-294fd172-state-jmqaecut/HANDOFF.md",
+      "original_worktree_sha256": "2f7ff29625feaee9e6a5b4d6f24d642daf74afd2d8ec71ca565066cf922fced4",
+      "base_sha256": "c759019a8ecdf17fc5cef7e5b03ce11366642d93fa17f5726377c12f6d288e9b"
+    },
+    "predictfun/FINDINGS.md": {
+      "backup": "/tmp/pf-294fd172-state-jmqaecut/FINDINGS.md",
+      "original_worktree_sha256": "1aee79eaf5037be4b2c36670c390261f577dcb3e22f0ab4073c6a029b1e3e85d",
+      "base_sha256": "6d7856c613f7c5a68b496e55e614086b8ad40427186f8850c51916c1ec6831fa"
+    },
+    "predictfun/STATUS.yml": {
+      "backup": "/tmp/pf-294fd172-state-jmqaecut/STATUS.yml",
+      "original_worktree_sha256": "d6679217693c2fcc1f0871ae9c9345028b243b3b6ed8c0a0d424ee6184d72879",
+      "base_sha256": "172c447bcced30a5b7a7bd23b273ec74addc609f9e65d3e9622ae344ee101b02"
+    }
+  },
+  "backup_directory": "/tmp/pf-294fd172-state-jmqaecut",
+  "pinned_worktree": "/tmp/pf-review-294fd172",
+  "prior_tracked_deletions": [
+    "data/pm_5min/derived/be133_forward_population_era_split.json",
+    "data/pm_5min/derived/be_tape_v2_builder_binding_proof_v1.json",
+    "data/pm_5min/derived/be_validation_review_v1.json",
+    "data/pm_5min/derived/p003_de_gate1_run_journal_de145day07__20260908T032816Z.json",
+    "data/pm_5min/derived/p003_de_gate1_run_journal_deRR20260903__20260907T195646Z.json",
+    "data/pm_5min/derived/p003_de_gate1_run_journal_deRR20260904__20260907T225517Z.json",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run__20260906T062115Z.json",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v2__20260906T064720Z.json",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v3__20260906T071214Z.json",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v4__20260906T074712Z.json",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v5__20260906T075707Z.json",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v6__20260906T081252Z.json",
+    "data/pm_5min/derived/p003_de_launch_form_probe__20260906T121813Z.json",
+    "data/pm_5min/derived/p003_de_r608_resolver_agreement__20260906T104000Z.json",
+    "data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/README",
+    "data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/linear_btc.json",
+    "data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/linear_eth.json"
+  ],
+  "source_sha256": {
+    "verify.py": "a370e8d51dcc9a3ff6d04b71e1e2e691985b0ac3f170bd8f47b04d9b0bf01737",
+    "verify_v1.py": "2c125678cc3d856101a4fbc4dda846251f7a2c0147f1806d3e6240341f52b60b",
+    "verify_csv.py": "00d086bd34f92f11210083428ad32d88626a7696eb2f47b778c8d901fba7de65"
+  }
+}

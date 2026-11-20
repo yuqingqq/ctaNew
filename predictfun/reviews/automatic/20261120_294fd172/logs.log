@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261120_294fd172/verify.py", line 198, in <module>
+    if __name__=='__main__': {'meta':meta,'sample':sample,'logs':logs}[sys.argv[1]]()
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261120_294fd172/verify.py", line 176, in logs
+    assert [k for k,v in a['logs'].items() if not v or any(int(x)!=0 or int(y)>1536 for x,y in v)]==['accept_full_v1.log']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+2026-11-20T10:30:06Z tag=review_294fd172_logs rc=1 peak_rss_mib=194 wall_s=0.92 cpu_user_s=0.76 memavail_start_gib=23 disk_free_gib=454->454 slot=codex

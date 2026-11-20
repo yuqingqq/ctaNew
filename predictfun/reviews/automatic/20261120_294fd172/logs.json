@@ -1,0 +1,188 @@
+{
+  "all_checks_pass": true,
+  "unchanged_data_predicates_1_to_5": true,
+  "changed_result_only": "6_run_disposition",
+  "old_failure_only": "accept_full.log",
+  "build_logs": 17,
+  "falsifiers": [
+    [
+      "clean",
+      true,
+      true
+    ],
+    [
+      "a second clean footer (resume)",
+      true,
+      true
+    ],
+    [
+      "peak 1536 = the cap",
+      true,
+      true
+    ],
+    [
+      "rc 1",
+      false,
+      false
+    ],
+    [
+      "rc 10",
+      false,
+      false
+    ],
+    [
+      "peak 1537",
+      false,
+      false
+    ],
+    [
+      "a declared log missing",
+      false,
+      false
+    ],
+    [
+      "a footerless build log",
+      false,
+      false
+    ],
+    [
+      "a failing second footer",
+      false,
+      false
+    ],
+    [
+      "a footerless acceptance log is excluded",
+      true,
+      true
+    ],
+    [
+      "a failing acceptance log is excluded",
+      true,
+      true
+    ]
+  ],
+  "runner_saved_mutants": 20,
+  "shadow_saved_mutants": 56,
+  "source_mutation_targets_resolve": true,
+  "acceptance_asof": "2026-11-20T10:21:00.689582+00:00",
+  "logs": {
+    "ok": true,
+    "missing": [],
+    "bad": [],
+    "logs": {
+      "r2full_finalize.log": [
+        [
+          "0",
+          "510"
+        ]
+      ],
+      "r2full_plan.log": [
+        [
+          "0",
+          "1289"
+        ]
+      ],
+      "r2full_preflight.log": [
+        [
+          "0",
+          "196"
+        ]
+      ],
+      "r2full_run_0.log": [
+        [
+          "0",
+          "1124"
+        ]
+      ],
+      "r2full_run_1.log": [
+        [
+          "0",
+          "1421"
+        ]
+      ],
+      "r2full_run_2.log": [
+        [
+          "0",
+          "1265"
+        ]
+      ],
+      "r2full_run_3.log": [
+        [
+          "0",
+          "1210"
+        ]
+      ],
+      "runner_mutants.log": [
+        [
+          "0",
+          "399"
+        ]
+      ],
+      "runner_selftest.log": [
+        [
+          "0",
+          "399"
+        ]
+      ],
+      "shard4_check.log": [
+        [
+          "0",
+          "197"
+        ]
+      ],
+      "shard4_finalize.log": [
+        [
+          "0",
+          "203"
+        ]
+      ],
+      "shard4_plan.log": [
+        [
+          "0",
+          "1188"
+        ]
+      ],
+      "shard4_preflight.log": [
+        [
+          "0",
+          "193"
+        ]
+      ],
+      "shard4_run_0.log": [
+        [
+          "0",
+          "1241"
+        ]
+      ],
+      "shard4_run_1.log": [
+        [
+          "0",
+          "1143"
+        ]
+      ],
+      "shard4_run_2.log": [
+        [
+          "0",
+          "1086"
+        ]
+      ],
+      "shard4_run_3.log": [
+        [
+          "0",
+          "1281"
+        ]
+      ]
+    },
+    "excluded": [
+      "accept_full_v1.log",
+      "accept_full_v2.log",
+      "accept_logs_mutants.log",
+      "accept_logs_selftest.log"
+    ]
+  },
+  "target_commit": "294fd172d7712bdfeb4c776a33ba63eaf1b7fc0a",
+  "asof": "2026-11-20T10:30:48.709605+00:00",
+  "script_sha256": "a370e8d51dcc9a3ff6d04b71e1e2e691985b0ac3f170bd8f47b04d9b0bf01737",
+  "runner_sha256": "65293187d9f7e4f81e9d8bb5ca1503d68b204a5712d753897a40ed6b6decd488",
+  "shadow_sha256": "962cf7b42c1a8ff78b7a4cb46f111036c824270ff8fa91d95c1c42558f098ab9"
+}
