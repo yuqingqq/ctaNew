@@ -1,0 +1,46 @@
+{
+  "target": "714ce75978ab8dfec29c1fc41fd0dd800b982ad8",
+  "asof": "2026-11-20T19:05:54.638272+00:00",
+  "source_sha256": "01605ad6148a1fde3a0bcd217fe1e684121adc8a7d885f176f761d5be12a6add",
+  "synthetic_final_tick": [
+    {
+      "k": 98,
+      "side": 0,
+      "Y": 5.0,
+      "binding_by_arm": {
+        "KEEP": 3,
+        "PULL": 2
+      },
+      "binding_failures": 0,
+      "current_binding_gate_pass": true
+    },
+    {
+      "k": 99,
+      "side": 0,
+      "Y": 5.0,
+      "binding_by_arm": {
+        "KEEP": 0,
+        "PULL": 0
+      },
+      "binding_failures": 0,
+      "current_binding_gate_pass": false
+    },
+    {
+      "k": 99,
+      "side": 1,
+      "Y": 0.0,
+      "binding_by_arm": {
+        "KEEP": 1,
+        "PULL": 1
+      },
+      "binding_failures": 0,
+      "current_binding_gate_pass": true
+    }
+  ],
+  "saved_pool_final_tick_keep": {
+    "20261024|0": 57,
+    "20261024|1": 14,
+    "20261025|1": 58,
+    "20261025|0": 59
+  }
+}

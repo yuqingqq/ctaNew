@@ -23,6 +23,39 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- R2E_REVIEW_20261120_CODEX -->
+## 2026-11-20 — R2-E pilot accepted; one production round authorized
+
+Reviewed **714ce75978ab8dfec29c1fc41fd0dd800b982ad8**, producing freeze
+**56e740826d480afd252c487e591678a0faed05f5**.
+[Combined report, evidence and production contract](reviews/automatic/20261120_714ce759/report.md).
+The saved 48-world / 288-pair pilot passes independent identity, population,
+weight, input and numerical ledger checks. Prior B1/B2 mechanisms are largely
+closed; no saved-label corruption found. The current labels measure target
+variation, not model skill: 276 zero, 12 nonzero from **10** distinct originals
+(correcting the receipt's 11); nine additional pairs change fill paths but not
+economic value.
+
+**ONE next priority:** complete the unchanged <=18,432-pair full Oct24–25
+sample and its support/readiness receipt. Bundle two validation items, speedups,
+controls and production in this round; no repair-by-repair review. Protect
+publication against non-ok statuses hiding failed invariants and check effective
+END/common marks (blocking only for unprotected production acceptance; current
+pilot independently passes). Permit genuinely zero-callback continuations:
+the final-tick synthetic KEEP pair has Y=+5 c and no teacher call, so the current
+binding_checked>0 predicate falsely refuses it. Preserve all selected draws.
+
+Approved: continuation causal probe every 35 calls (first call retained), and
+an exact per-day input cache bound to complete identities. Freeze changed
+orchestration in a new namespace; verify all 288 pilot economic/decision
+payloads byte-identical, excluding only declared audit/provenance fields.
+Then launch directly under existing four development slots and resource limits,
+40 core-hour planning ceiling, without another intermediate review or USER
+approval. All-callback binding, fork checks, accounting and teacher/model/target
+freeze stay unchanged. One combined receipt afterward; no candidate fit or
+untouched-day run in this step. Remaining minor cleanup is nonblocking.
+<!-- /R2E_REVIEW_20261120_CODEX -->
+
 <!-- R2D_BUNDLED_ROUND_20261120_CODEX -->
 ## 2026-11-20 — USER: bundle all known issues into one development round
 

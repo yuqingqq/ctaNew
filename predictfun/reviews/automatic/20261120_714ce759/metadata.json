@@ -1,0 +1,48 @@
+{
+  "plan_sha256": "a3f1e8975728800e728836c3c34574c151091991a2e5fe2903f22903223411ac",
+  "sources": 81,
+  "models": 16,
+  "population": {
+    "20261024": {
+      "worlds": 15352,
+      "selected": 1536,
+      "pilot": 24,
+      "selected_markets": 288,
+      "pilot_markets": 24
+    },
+    "20261025": {
+      "worlds": 14998,
+      "selected": 1536,
+      "pilot": 24,
+      "selected_markets": 285,
+      "pilot_markets": 24
+    }
+  },
+  "input_files": 221,
+  "input_bytes": 1222090373,
+  "mutations": {
+    "v1": {
+      "caught": 35,
+      "identities_verified": true
+    },
+    "v2": {
+      "caught": 100,
+      "identities_verified": true
+    }
+  },
+  "v3_v4_readings_unchanged": true,
+  "all_declared_predicates": {
+    "A_plan": true,
+    "B_runs": true,
+    "C_resume_identity": true,
+    "D_acceptance": true,
+    "E_resources": true,
+    "F_labels": true,
+    "G_controls": true,
+    "H_suites": true
+  },
+  "target": "714ce75978ab8dfec29c1fc41fd0dd800b982ad8",
+  "asof": "2026-11-20T19:02:40.455245+00:00",
+  "script_sha256": "a7e2a8c9f0e6ca78ca78f55f484f54c5afa1e0a4c5cd7c29bcb5a90e72527fe1",
+  "mode": "metadata"
+}

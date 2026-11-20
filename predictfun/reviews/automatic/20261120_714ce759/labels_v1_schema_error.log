@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261120_714ce759/verify.py", line 234, in <module>
+    mode=sys.argv[1]; obj=globals()[mode]()
+                          ^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261120_714ce759/verify.py", line 162, in labels
+    for t,g,s,q,pr in fills:
+        ^^^^^^^^^^
+ValueError: too many values to unpack (expected 5)
+2026-11-20T19:02:49Z tag=review714_labels rc=1 peak_rss_mib=241 wall_s=2.84 cpu_user_s=2.62 memavail_start_gib=23 disk_free_gib=439->439 slot=codex

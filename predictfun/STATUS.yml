@@ -1,3 +1,24 @@
+r2e_review_20261120_codex:
+  status: pilot_accepted_full_sample_round_authorized
+  target_commit: 714ce75978ab8dfec29c1fc41fd0dd800b982ad8
+  producing_freeze_commit: 56e740826d480afd252c487e591678a0faed05f5
+  report: predictfun/reviews/automatic/20261120_714ce759/report.md
+  dataset_sha256: 0d5356401b5aee7ba872b3d8debd24d244cdb19989180867a1ac437fa6f8f5d9
+  saved_pilot_valid: true
+  production_acceptance_requires: strict_status_invariants_and_END_common_mark_checks_or_verified_all_record_audit
+  production_round_includes: [valid_zero_callback_boundary, acceptance_protection, optional_exact_speedups, pilot_parity, full_sample, support_receipt]
+  artifacts: {worlds: 48, originals: 96, pairs: 288, zero_Y: 276, nonzero_Y: 12, nonzero_originals_union: 10, different_fill_paths: 21, different_fill_paths_zero_Y: 9}
+  checks: {binding: 66280, causal: 9715, parity: 9183, failures: 0}
+  review_tests: {successful_checks: 5, wall_seconds: 157.51, peak_rss_mib: 263, initial_review_fill_schema_error_retained: true}
+  next_priority: complete_declared_production_label_sample_and_support_readiness_receipt
+  full_sample: {max_worlds: 3072, max_pairs: 18432, days: ["20261024", "20261025"], sample_and_weights_unchanged: true}
+  speedups: {continuation_causal_every: 35, first_call_retained: true, exact_hash_bound_per_day_cache: optional_approved, required_pilot_parity_pairs: 288}
+  resource_contract: {development_slots: 4, planning_core_hours_ceiling: 40, checkpoint_mib: 1536, hard_rss_mib: 2048, pair_seconds: 120}
+  additional_user_approval_required: false
+  intermediate_fix_only_review_required: false
+  candidate_fit_or_untouched_day_authorized_in_this_step: false
+  profitability_or_prediction_skill_claim: false
+
 r2d_bundled_round_20261120_codex:
   status: single_development_round_requested_by_user
   basis_review_commit: 4393ad19d97f35e07b476cb93670fb7fbe4f614f
