@@ -1,0 +1,3 @@
+{"partition": 0, "rows": 58490, "seconds": 156.9, "part_peak_rss_mib": 1237, "hwm_mib": 1241, "status": "PASS"}
+PARTS_DONE
+2026-11-20T04:30:02Z tag=shard4_run_0 rc=0 peak_rss_mib=1241 wall_s=219.98 cpu_user_s=210.95 memavail_start_gib=23 disk_free_gib=460->460 slot=claude

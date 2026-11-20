@@ -1,0 +1,2 @@
+{"equal": true, "differing": []}
+2026-11-20T04:33:52Z tag=shard4_preflight rc=0 peak_rss_mib=193 wall_s=0.92 cpu_user_s=0.76 memavail_start_gib=23 disk_free_gib=460->460 slot=claude

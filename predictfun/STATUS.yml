@@ -426,6 +426,25 @@ pipeline_one_day_v3_20261119:
   values_equal_v2: {cells_per_day: 190, differing: 0}
   attribution_vs_pull_all_c: {"20261026": {first_step: 0.0, later: 954.33, never: 995.36, no_prediction: 0.0}, "20261027": {first_step: 0.0, later: -821.85, never: 251.74, no_prediction: 0.0}}
 
+r2b_full_day_20261120:
+  status: done_r2b_full_oct23_teacher_data_accepted_all_true_4_cores_no_fit
+  asof: "2026-11-20 10:22Z"
+  receipt: predictfun/reviews/r2b_full_day_20261120/report.md
+  runner_sha256: 65293187d9f7e4f81e9d8bb5ca1503d68b204a5712d753897a40ed6b6decd488
+  runner_mutants_sha256: 32e1904431dbe6281245feea566e63c786ea3831dddf390132b7f693a9a03431
+  run_light_sha256: e53f7f23fe3865a051bf1e641114e9840c45d298ab1f9627402a07b8365fda5d
+  shadow_sha256: 962cf7b42c1a8ff78b7a4cb46f111036c824270ff8fa91d95c1c42558f098ab9
+  slots: {claude: 9, claude2: 10, claude3: 13, claude4: 14, codex: 8, cap: 5, user: "Yea 4 cores to make it faster"}
+  gates: {shadow_mutants: 56/56, runner_selftest: pass, runner_mutants: 20/20, shard4_reproduces_gate2A: true}
+  plan_sha256: 249161127c39d5a51cc7c374262073af4f38c9245ef08fb505f0ec3e646dd56b
+  build: {originals: 30466, partitions: 477, shards: 4, start: "04:35Z", parts_done: "09:43Z", wall_h: 5.1, shard_peak_rss_mib: [1124, 1421, 1265, 1210], part64_seconds: [112.6, 171.5], breaches: 0, failed: 0, preflight_equal: true, finalize: COMPLETE}
+  readings: {rows: 25463127, sampled_ok: 5384015, labels_failed: 0, causality_checked: 191620, causality_failed: 0, retried: 83, not_evaluable: 0, weight_groups: 60176, refusals: {entry: 27532, joint_post_keep: 871, joint_chase: 1478}}
+  support: {cells: 28, supported: 28, floors: [200, 20], structural_absent: [post_remaining_below_30, post_inventory_sign, other_terminal], observed_absent: [queue_unknown, post_queue_0], fallback: absent_WAIT_live_KEEP}
+  acceptance: {v2: all_true, v1: {checks_true: 5, of: 6, failed: run_disposition_read_its_own_unfinished_log, kept: provenance}, change: check6_log_predicate_only, falsifiers: 11/11, mutants: 9/9, outputs_v1_equal_v2: true, planted_dry_runs_false: [rc1, missing_log]}
+  findings_e6b0efa4: {resource_latch: workaround_none_occurred_v3_prepared, finalize_preflight: workaround_equal_v3_prepared}
+  runner_v3: {selftest: pass, mutants: 25/25, lands: next_round_after_review}
+  next: codex_review_then_supported_pi0_50_fit_and_freeze
+
 r2a_launch_gate_20261120:
   status: done_r2a_full_day_launch_gate_review_4cd7b45f_closed_no_full_day_run_no_fit
   asof: "2026-11-20 02:53Z"

@@ -3,7 +3,9 @@
 # "allow a light process, and watch out memory usage and disk usage"; 2026-11-12: "Can we launch 2 parallel
 # processes" / "One for codex and one here").
 # Two slots, one core each: PF_SLOT=codex (the default; core 8, the Codex session) and PF_SLOT=claude (core 9, the
-# Claude session). Refuses if a research process already runs on the slot's core, if 2 already run (the cap),
+# Claude session). 2026-11-20, USER "Yea 4 cores to make it faster" (the sharded full Oct 23 R2 build): three more
+# Claude slots, one core each - claude2 (core 10), claude3 (core 13), claude4 (core 14) - and the cap raised from 2 to
+# 5 so the codex slot stays free. Refuses if a research process already runs on the slot's core, if 5 already run (the cap),
 # if MemAvailable < 8 GiB, or if the data disk has < 100 GiB free. A research process is a python whose argv names
 # predictfun.research.<mod> or a predictfun/research/pf_*.py script (script paths were invisible to the check
 # before 2026-11-12). Pins the slot's core, caps address space at 4 GiB, logs the measured peak RSS
@@ -13,14 +15,15 @@ set -u
 ROOT=/home/yuqing/ctaNew; LOG=$ROOT/predictfun/research/run_light.log
 TAG="${1:?tag}"; shift; [ "${1:-}" = "--" ] && shift
 SLOT="${PF_SLOT:-codex}"
-case "$SLOT" in codex) CORE=8;; claude) CORE=9;; *) echo "REFUSED: PF_SLOT must be codex or claude, not '$SLOT'" >&2; exit 1;; esac
+case "$SLOT" in codex) CORE=8;; claude) CORE=9;; claude2) CORE=10;; claude3) CORE=13;; claude4) CORE=14;;
+  *) echo "REFUSED: PF_SLOT must be codex, claude, claude2, claude3 or claude4, not '$SLOT'" >&2; exit 1;; esac
 N=0; BUSY=
 for P in $(ps -eo pid=,args= | awk '$2 ~ /^(\/[^ ]*\/)?python(3(\.[0-9]+)?)?$/ && (/predictfun\.research\./ || /predictfun\/research\/pf_/) {print $1}'); do
   N=$((N+1))
   [ "$(awk '/^Cpus_allowed_list/{print $2}' /proc/$P/status 2>/dev/null)" = "$CORE" ] && BUSY=$P
 done
 [ -n "$BUSY" ] && { echo "REFUSED: research slot $SLOT (core $CORE) is in use by pid $BUSY" >&2; exit 1; }
-[ "$N" -ge 2 ] && { echo "REFUSED: $N predictfun research processes already running (cap 2)" >&2; exit 1; }
+[ "$N" -ge 5 ] && { echo "REFUSED: $N predictfun research processes already running (cap 5)" >&2; exit 1; }
 AV=$(awk '/MemAvailable/{print int($2/1048576)}' /proc/meminfo)
 DF=$(df -BG --output=avail $ROOT/data | tail -1 | tr -dc 0-9)
 [ "$AV" -lt 8 ] && { echo "REFUSED: MemAvailable ${AV} GiB < 8" >&2; exit 1; }

@@ -1,0 +1,9 @@
+(1) population: 30466 originals {0: 15233, 1: 15233}, 477 partitions = independent: True; records accepted: True; records.sha256 re-verified: True; preflight equal: True; bound r2_full_causal_v1, 107 float32, zero costs: True
+(2) per part: True; totals = census (25463127 rows, 5384015 sampled ok, 60176 weight groups): True; merged support = census: True: True
+(3) labels / clocks per part: True; census labels {'checked': 5384015, 'failed': 0, 'no_fill': 4036595, 'verdict': 'PASS'}: True
+(4) inputs / audit per part: True; 191620 audited checks (census 191620), 83 retried, components {'stored_vs_rebuild': 0, 'stored_vs_perturbed': 0, 'stored_vs_visibility': 0, 'firing': 0, 'not_evaluable': 0}: True
+(5) support: 28 of 28 cells SUPPORTED under 200 / 20; fallbacks {}; floors applied as declared: True
+    logs: 17 checked, 17 declared, missing [], failing [], excluded (own) ['accept_full_v1.log', 'accept_full_v2.log', 'accept_logs_mutants.log', 'accept_logs_selftest.log']; falsifier cases 11 / 11 as expected
+(6) records PASS, no breach, elapsed max 171 s, high-water max 1421 MiB; shards [('run_status_0of4.json', 'PARTS_DONE'), ('run_status_1of4.json', 'PARTS_DONE'), ('run_status_2of4.json', 'PARTS_DONE'), ('run_status_3of4.json', 'PARTS_DONE')]; run logs rc 0 / peak <= 1,536: True; the shadow suite archived as passed: True; state COMPLETE: True
+FULL-DAY ACCEPTANCE: {'1_population_identity': True, '2_streaming_reconciliation': True, '3_labels_clocks': True, '4_inputs_audit': True, '5_support_reported': True, '6_run_disposition': True}; ALL TRUE: True
+2026-11-20T10:04:57Z tag=accept_full_v2 rc=0 peak_rss_mib=671 wall_s=964.07 cpu_user_s=957.07 memavail_start_gib=23 disk_free_gib=455->455 slot=claude
