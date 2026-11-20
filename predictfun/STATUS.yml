@@ -1,3 +1,42 @@
+r2_launch_review_20261120_codex:
+  status: pinned_launch_gate_pass_no_blocking_findings
+  target_commit: c8d8fc8d52faeacb9413b33a679f99de451b3624
+  range_base: 4cd7b45ff01c64d1473c695cbee21a8ce799526a
+  report: predictfun/reviews/automatic/20261120_c8d8fc8d/report.md
+  artifact_audit: predictfun/reviews/automatic/20261120_c8d8fc8d/artifacts.json
+  independent_controls: predictfun/reviews/automatic/20261120_c8d8fc8d/controls.json
+  prior_closed: [unbounded_final_materialization, hidden_venue_past_book_visibility_blind_spot, same_partition_multiplicity]
+  blocking_findings: []
+  nonblocking_P2: [resource_latch_not_carried_across_resume_or_finalize, standalone_finalize_omits_source_preflight]
+  acceptance_workarounds: [inspect_every_record_breach_and_prior_stop, assert_actual_finalizer_sources_equal_plan]
+  watchdog_scope_limitation: loading_and_finalization_have_high_water_checks_but_no_active_sampler
+  current_saved_data_error_demonstrated: false
+  gate_predicates_supported: 8
+  saved_population: {day: "20261023", originals: 256, rows: 213349, columns: 137, sampled_ok: 44959, weight_groups: 508}
+  comparison: A_equals_resumed_B_equals_r2av3_parts_byte_for_byte
+  saved_causality: {checked: 1598, failed: 0, not_evaluable: 0, retried: 2}
+  support: {cells: 28, supported: 0, diagnostics_verified: true, floors_unchanged: true}
+  saved_peak_rss_mib: 1179
+  saved_asof: "2026-11-20T02:14:22.611131+00:00"
+  audit_asof: "2026-11-20T03:04:37.550381+00:00"
+  immediate_priority: accept_full_Oct23_data_and_support_assessment_before_pi0_50_fit
+  full_day_launch_gate: passed_for_pinned_sequential_runner
+  uncommitted_sharding_or_speed_changes_reviewed: false
+  rerun_required_by_this_review: false
+  next_population: {originals: 30466, per_side: 15233, partitions: 477, max_per_partition: 64}
+  completion_records_storage: data_with_committed_ordered_records_sha256_and_plan_status_census_support_logs
+  input_reload_per_start: accepted
+  current_audit_v1: valid_continue_if_started
+  prospective_audit: r2_full_causal_v2_div256_new_source_and_plan_no_version_mixing
+  prospective_audit_slice_checks: 1214
+  prospective_full_core_hours_arithmetic: 16.14
+  support_floor: {distinct_originals: 200, nonzero_originals: 20}
+  costs: unchanged_explicit_zero_fees_rebates_gross_values_latency_retained
+  verification: {successful_runs: 4, wall_seconds: 141.22, peak_rss_mib: 398, launcher_refusals_before_retry: 2, runner_selftest: pass, shadow_selftest: pass, runner_mutation_targets: 18, shadow_mutation_targets: 56, saved_runner_mutants: 18, saved_shadow_targeted_mutants: 18, full_shadow_suite_pending_at_target: true}
+  review_fit_full_labels_new_real_tape_untouched_day: false
+  implementation_changed_by_review: false
+  development_owner: other_session
+
 r2av2_review_20261120_codex:
   status: saved_receipt_verified_full_day_launch_gate_open
   target_commit: b565f6714ddf37216ab7061f4bf8a1f64eb08efe

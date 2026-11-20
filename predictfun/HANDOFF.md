@@ -1,3 +1,47 @@
+<!-- R2_LAUNCH_REVIEW_20261120_CODEX -->
+## 2026-11-20 — R2-A launch gate PASS; finish the full-day data/support assessment
+
+Reviewed **c8d8fc8d52faeacb9413b33a679f99de451b3624** after 4cd7b45f.
+[Report, decisions and acceptance checks](reviews/automatic/20261120_c8d8fc8d/report.md),
+[artifact audit](reviews/automatic/20261120_c8d8fc8d/artifacts.json),
+[independent controls](reviews/automatic/20261120_c8d8fc8d/controls.json).
+**No blocking finding.** The three prior issues are closed: finalization uses
+records without materializing rows; captured-state visibility catches the former
+unreceived-frame leak fixture; repeated pairs/statuses/candidates are refused.
+Gate2A/resumed B and r2av3 parts are byte-identical. Exact population, labels,
+107 inputs, weights, support, audit keys and the eight gate predicates reconcile.
+Saved Oct23 slice: 256 originals / 213,349 rows / 44,959 sampled ok / 508 weight
+groups / 1,598 causal checks, zero failures or not-evaluable, two retries.
+All 28 support cells remain insufficient at this slice size. No prediction claim.
+
+Two NONBLOCKING operational findings: resume/finalize can lose a prior resource
+stop; standalone finalize lacks source preflight. Both reproduced on temporary
+copies. Neither affected gate2. For the full-day receipt, explicitly check all
+record breaches and stop history, and assert the finalizer source map equals
+the frozen plan. Carry these fixes into the next development round; no data
+restart is required by this review. Approval covers the pinned sequential runner,
+not uncommitted speed/sharding changes.
+
+**ONE next priority:** finish and accept all 30,466 Oct23 originals / 477 parts,
+with independent streaming population/label/input/audit/weight/support checks,
+then assess the supported teacher states BEFORE a pi0-50 fit. Full checklist in
+report; keep 200-distinct / 20-nonzero-original support floors and WAIT/KEEP
+fallbacks. The authorized speculative build can continue.
+
+Storage choice accepted: records in data/, committed ordered records.sha256 plus
+plan/status/census/support/logs, actual records retained and hashes verified.
+Per-start input reload accepted. Prospective audit r2_full_causal_v2_div256 is
+approved under a NEW frozen source/plan, keeping min one per stratum and all
+components/per-fill checks. Slice count 1,214 vs 1,598 (24% fewer, not 4x); about
+16.1 vs 20.3 core-hours by arithmetic. Prefer finishing an underway v1 run over
+restarting for this saving; never mix versions or resample failures.
+
+Audit as-of 03:04:37Z Nov20; both pinned selftests pass. Four bounded codex successes,
+141.22 s, peak 398 MiB. Saved runner 18/18 and targeted shadow 18/18 logs checked;
+all mutation targets resolve; full 56-mutant shadow suite still pending at target.
+No fit, full labels, new real tape, untouched day, implementation edit or push.
+<!-- /R2_LAUNCH_REVIEW_20261120_CODEX -->
+
 <!-- R2AV2_REVIEW_20261120_CODEX -->
 ## 2026-11-20 — R2-A v2 receipt verified; finish the full-day launch gate
 

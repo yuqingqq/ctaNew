@@ -1,0 +1,37 @@
+{
+  "visibility": [
+    {
+      "decision_ms": 0.0,
+      "clean_equal": true,
+      "delivered_fires": true,
+      "previous_planted_leak_caught": true
+    },
+    {
+      "decision_ms": 150.0,
+      "clean_equal": true,
+      "delivered_fires": true,
+      "previous_planted_leak_caught": true
+    }
+  ],
+  "finalization": {
+    "clean_sentinel": "COMPLETE",
+    "resource_latch_lost": {
+      "run_state": "PARTS_DONE",
+      "final_state": "COMPLETE",
+      "breaches": [
+        0
+      ]
+    },
+    "failed_part_control": "FAILED",
+    "finalize_omits_source_preflight": {
+      "different_source_hash": true,
+      "final_state": "COMPLETE"
+    }
+  },
+  "source": "synthetic_visibility_and_saved_copy_controls_only",
+  "target_commit": "c8d8fc8d52faeacb9413b33a679f99de451b3624",
+  "asof": "2026-11-20T03:04:43.725079+00:00",
+  "script_sha256": "a14fefe635f5b2989338fae2967a698aa07da0fc26dcc6457ffc73ce2274cc94",
+  "source_sha256": "962cf7b42c1a8ff78b7a4cb46f111036c824270ff8fa91d95c1c42558f098ab9",
+  "runner_sha256": "5499248bc4741f859a0e55dfc4a16a4777c4570d61c22bdb2fe69f90a6296ed8"
+}
