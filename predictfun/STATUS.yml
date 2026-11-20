@@ -1,3 +1,28 @@
+r2c_review_20261120_codex:
+  status: teacher_artifacts_accepted_paired_binding_required_before_labels
+  target_commit: 4584a3c2696625d27cf87f193a6260997348f85e
+  range_base: 294fd172d7712bdfeb4c776a33ba63eaf1b7fc0a
+  report: predictfun/reviews/automatic/20261120_4584a3c2/report.md
+  freeze_sha256: 769dff779d584f913aa9c142fb852a47eddbe01bdd6c0930c87b9d28dfa73294
+  teacher_data_models_single_branch_rollout: accepted
+  blocking_for_paired_labels: [P1_teacher_callback_not_rebound_to_executed_arm]
+  nonblocking_findings: [P2_resource_disposition_not_bound_to_stop_event, P3_value_mean_population_mixed]
+  pair_interface_control: {calls: 397, branch_generation_disagreements: 98, positive_single_branch_calls: 198, positive_disagreements: 0}
+  identities_verified: {training_files: 96, models: 16, imported_sources: 76, features: 107, libraries_match: true}
+  extraction_sample: {parts: 20, sampled_ok_rows: 219999, bit_equal: true, all_conditional_label_weight_subsets_checked: true}
+  saved_rollout: {worlds: 128, completed: 127, decisions: 24541, delayed_bid: 55, delayed_ask: 70, later_generations: 202, fills: 20, support_forecast_fallbacks: 0}
+  short_horizon_recomputed: {rows: 137738, saved_fields_match: true, training_only: true}
+  prior_runner_findings: {finalizer_source_preflight: closed, watchdog_coverage: closed, historical_resource_stop: improved_event_identity_gap_open}
+  prior_v1_snapshots: nine_files_byte_equal_to_v2
+  tests: {successful_bounded_checks: 8, wall_seconds: 82.17, peak_rss_mib: 1068, review_instrument_failed_attempt: retained_and_corrected}
+  next_priority: R2D_arm_bound_paired_label_adapter_and_bounded_Oct24_25_gate
+  next_gate: {world_prefix_per_day: 32, max_pairs_per_side_head_day: 16, max_total_pairs: 128, review_before_full_labels: true}
+  refit_required: false
+  additional_user_approval_required: false
+  real_data_fit_or_label_build_this_review: false
+  untouched_validation: false
+  profit_or_forward_skill_claim: false
+
 r2b_review_20261120_codex:
   status: full_Oct23_teacher_data_accepted_for_supported_pi0_50_fit
   target_commit: 294fd172d7712bdfeb4c776a33ba63eaf1b7fc0a

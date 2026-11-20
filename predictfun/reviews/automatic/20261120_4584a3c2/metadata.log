@@ -1,0 +1,2 @@
+{"mode": "metadata", "result": "PASS", "evidence": "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261120_4584a3c2/metadata.json"}
+2026-11-20T12:11:36Z tag=review4584_metadata rc=0 peak_rss_mib=221 wall_s=3.39 cpu_user_s=2.77 memavail_start_gib=23 disk_free_gib=446->446 slot=codex

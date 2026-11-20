@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261120_4584a3c2/verify.py", line 239, in <module>
+    mode = sys.argv[1]; result = globals()[mode]()
+                                 ^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261120_4584a3c2/verify.py", line 97, in metadata
+    assignment = next(n for n in tree.body if isinstance(n, ast.Assign) and any(isinstance(t, ast.Name) and t.id == 'MUTANTS' for t in n.targets))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+2026-11-20T12:10:44Z tag=review4584_metadata rc=1 peak_rss_mib=221 wall_s=5.48 cpu_user_s=2.79 memavail_start_gib=23 disk_free_gib=446->446 slot=codex

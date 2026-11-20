@@ -1,0 +1,2 @@
+{"mode": "controls", "result": "PASS", "evidence": "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261120_4584a3c2/controls.json"}
+2026-11-20T12:12:24Z tag=review4584_controls rc=0 peak_rss_mib=194 wall_s=0.89 cpu_user_s=0.71 memavail_start_gib=23 disk_free_gib=446->446 slot=codex

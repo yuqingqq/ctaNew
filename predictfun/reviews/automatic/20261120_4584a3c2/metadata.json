@@ -1,0 +1,58 @@
+{
+  "freeze_sha256": "769dff779d584f913aa9c142fb852a47eddbe01bdd6c0930c87b9d28dfa73294",
+  "source_count": 76,
+  "libraries": {
+    "lightgbm": "4.6.0",
+    "numpy": "2.2.6",
+    "pandas": "3.0.1",
+    "pyarrow": "24.0.0",
+    "python": "3.12.3"
+  },
+  "train_files": 96,
+  "train_bytes": 3473420460,
+  "groups": {
+    "0_post": {
+      "rows": 327341,
+      "filled": 97582
+    },
+    "0_retain": {
+      "rows": 2353692,
+      "filled": 573171
+    },
+    "1_post": {
+      "rows": 327264,
+      "filled": 97868
+    },
+    "1_retain": {
+      "rows": 2375718,
+      "filled": 578799
+    }
+  },
+  "models_verified": 16,
+  "reextraction_manifest_equal": true,
+  "saved_v1_v2_files_equal": [
+    "parts_full.csv",
+    "records_full.sha256",
+    "statuses_full.csv",
+    "support_categories_full.csv",
+    "support_cells_full.csv",
+    "support_coverage_full.csv",
+    "support_cross_cells_full.csv",
+    "support_presence_full.csv",
+    "support_ranges_full.csv"
+  ],
+  "mutants": {
+    "pf_r2_teacher": {
+      "targets": 44,
+      "saved_log_pass": true
+    },
+    "pf_r2_runner": {
+      "targets": 25,
+      "saved_log_pass": true
+    }
+  },
+  "target": "4584a3c2696625d27cf87f193a6260997348f85e",
+  "asof": "2026-11-20T12:11:39.892011+00:00",
+  "script_sha256": "20e8df687b642f73a51400d9240e72ef6927089953125a8c236129f39a3ad7cf",
+  "mode": "metadata"
+}

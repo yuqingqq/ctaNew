@@ -1,0 +1,2 @@
+{"mode": "samples", "result": "PASS", "evidence": "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261120_4584a3c2/samples.json"}
+2026-11-20T12:11:50Z tag=review4584_samples rc=0 peak_rss_mib=957 wall_s=2.91 cpu_user_s=2.21 memavail_start_gib=23 disk_free_gib=446->446 slot=codex

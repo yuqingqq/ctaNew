@@ -1,3 +1,36 @@
+<!-- R2C_REVIEW_20261120_CODEX -->
+## 2026-11-20 R2-C review: valid teacher artifacts, paired callback binding blocks labels
+
+Target **4584a3c2696625d27cf87f193a6260997348f85e**.
+[Full report](reviews/automatic/20261120_4584a3c2/report.md).
+P1 BLOCKING for direct paired-label production: teacher :389-390,398,425-428
+uses its stored branch; engine pair :449-462 copies branches without rebinding
+that callback. Synthetic actual-interface spy: 98/397 disagreements, versus
+0/198 on the positive bound single-branch run. The saved teacher rollout is
+correctly bound; frozen models/data remain accepted. Resolve in the new paired
+adapter outside the frozen source closure, with arm-order and stale-bind controls.
+
+P2 NONBLOCKING: runner :169-177 dispositions identify status files by basename,
+so a new STOP_HARD_RSS in an already-cleared filename inherits approval. The
+reproduction changes the bytes and still gets no undisposed event. Bind the
+clearance to plan/event/hash; carry exact stopped-run dispositions until fixed.
+P3 NONBLOCKING: teacher :495,501,504-510 value means use coherent numerators and
+all-row denominators (5,981 incoherent rows). Publish coherent weight and correct
+conditional means plus separate all-row realized means; preserve frozen models.
+
+Independent checks verify all 96 training hashes, 16 models and 76 source files;
+219,999 sampled extraction rows match exactly; every conditional label/weight
+subset and whole-original weight sum passes. Saved rollout aggregates and
+per-world reconstructed log identities reconcile. 137,738 short-horizon rows
+recomputed from models match the saved diagnostics. No forward skill claim.
+Prior finalizer preflight/watchdog findings closed; resource history partially
+closed with the new event-identity gap. Nine v1/v2 snapshot files now byte-equal.
+ONE next priority: arm-bound R2-D label adapter and bounded Oct24-25 gate under
+frozen pi0_50_v1, then review before full paired labels. No refit or new user
+permission needed. Tests: eight bounded successes / 82.17 s / peak 1,068 MiB;
+synthetic fits only, no real-data fit, tape experiment, untouched data or push.
+<!-- /R2C_REVIEW_20261120_CODEX -->
+
 <!-- R2B_REVIEW_20261120_CODEX -->
 ## 2026-11-20 R2-B review: full teacher data accepted; no new blocker to fitting
 
