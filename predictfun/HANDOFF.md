@@ -1,3 +1,46 @@
+<!-- R2AV2_REVIEW_20261120_CODEX -->
+## 2026-11-20 — R2-A v2 receipt verified; finish the full-day launch gate
+
+Reviewed **b565f6714ddf37216ab7061f4bf8a1f64eb08efe** after d10d3698.
+[Report / next priority / launch decisions](reviews/automatic/20261120_b565f671/report.md),
+[artifact audit](reviews/automatic/20261120_b565f671/artifacts.json),
+[independent controls](reviews/automatic/20261120_b565f671/synthetic.json).
+The saved 256-original receipt reproduces: 213,349 rows, 44,959 sampled ok,
+508 weight groups, exact v3 columns/dtypes except the intended 289 joint POST
+refusal flags (entry 312, joint post-keep 6, joint chase 12). Nine receipt
+predicates and independent label/clock/support counts pass. The stored 107-input
+rebuild, missing-source statuses, refusal metadata and support diagnostics are
+fixed. R1 remains accepted. No saved input leak or label error demonstrated.
+
+Three P2 findings: census still calls read_parts on return, reassembling the
+whole day (18.55 GiB frame-only linear estimate); the venue-preserving causal
+world cannot catch a context's direct read of an unreceived venue-past book;
+set-based reconciliation misses duplicate original/status or candidate rows
+within a partition. Independent positive controls and counterexamples in report.
+The 1,246 MiB saved peak is valid for the four-part slice, not full-day proof.
+
+Agree with venue-clock replay to preserve already known execution outcomes;
+add a separate client-visibility test without rewriting delivered notices.
+The eight-seed retry and explicit NOT-EVALUABLE gate are accepted. All 28
+support cells remain insufficient at this slice size, with correct fallbacks.
+
+**ONE next priority:** bounded, resumable R2-A full-day launch gate on the same
+256-original slice plus synthetic visibility/duplicate/finalization/stop controls.
+No full-day launch or teacher fit yet. Then all 30,466 Oct23 originals, support
+assessment before pi0-50 fit, unchanged target/model/training sampling and costs.
+Full-day audit sample declared in report: per original/side/source/head select
+max(1, ceil(n / 64)) sampled-ok rows by canonical identity SHA-256 (1,598 on this
+slice; about 25 core-hours full-day arithmetic). Commit immutable plan and verified
+atomic partition checkpoints; do not materialize all parts or count a checkpoint
+twice. Stop after a safe checkpoint if partition >900 s or peak RSS >1,536 MiB;
+retain immediate hard limits. No outcome-based resampling or lowered support floor.
+
+Saved as-of Nov19 23:08:09Z; audit Nov20 00:14:01Z. Pinned synthetic selftest passes;
+46 mutation targets and saved 46/46 log verified. Five successful bounded codex
+runs, 77.95 s / peak 694 MiB; one dependency-only interpreter failure retained.
+No implementation edit, model fit, new real tape, full labels, untouched day or push.
+<!-- /R2AV2_REVIEW_20261120_CODEX -->
+
 <!-- R2A_REVIEW_20261119_CODEX -->
 ## 2026-11-19 — R2-A values reconcile; close acceptance and scale gaps before the full teacher day
 

@@ -1,0 +1,83 @@
+{
+  "population": {
+    "good": {
+      "rows": 2,
+      "reconciliation": "EXACT",
+      "statuses": [
+        "no_path:missing_endpoint",
+        "no_path:missing_endpoint"
+      ],
+      "duplicate_original_status_rows": 0
+    },
+    "missing_pair": {
+      "rows": 2,
+      "reconciliation": "EXACT",
+      "statuses": [
+        "no_path:missing_endpoint",
+        "missing_source:pair"
+      ],
+      "duplicate_original_status_rows": 0
+    },
+    "missing_market": {
+      "rows": 2,
+      "reconciliation": "EXACT",
+      "statuses": [
+        "no_path:missing_endpoint",
+        "missing_source:market"
+      ],
+      "duplicate_original_status_rows": 0
+    },
+    "duplicate": {
+      "rows": 3,
+      "reconciliation": "EXACT",
+      "statuses": [
+        "no_path:missing_endpoint",
+        "no_path:missing_endpoint",
+        "no_path:missing_endpoint"
+      ],
+      "duplicate_original_status_rows": 1
+    }
+  },
+  "whole_day_read": {
+    "manifest_exists": true,
+    "receipt_exists": true,
+    "parts": 2
+  },
+  "clock_visibility": {
+    "clean": [
+      1,
+      0,
+      [],
+      {
+        "stored_vs_rebuild": 0,
+        "stored_vs_perturbed": 0,
+        "firing": 0,
+        "not_evaluable": 0,
+        "retried": 0
+      }
+    ],
+    "planted_unreceived_book_leak": [
+      1,
+      0,
+      [],
+      {
+        "stored_vs_rebuild": 0,
+        "stored_vs_perturbed": 0,
+        "firing": 0,
+        "not_evaluable": 0,
+        "retried": 0
+      }
+    ],
+    "leaked_inventory": 0.64,
+    "clean_inventory": 0.0,
+    "changed_hidden_book_inventory": 0.65,
+    "frame_venue_ms": 0.0,
+    "frame_receipt_ms": 500.0,
+    "decision_ms": 0.0
+  },
+  "source": "synthetic_only",
+  "target_commit": "b565f6714ddf37216ab7061f4bf8a1f64eb08efe",
+  "asof": "2026-11-20T00:14:02.723865+00:00",
+  "script_sha256": "2b897b64e83d4b6930c448a0e99f745f922312f7f0a87cf45b8e7ff1d9187dc7",
+  "source_sha256": "bbff8b196df3031fab333dbf0225a9b9bee341873a4677be235a0dd4738ca4de"
+}

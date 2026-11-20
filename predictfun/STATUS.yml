@@ -1,3 +1,37 @@
+r2av2_review_20261120_codex:
+  status: saved_receipt_verified_full_day_launch_gate_open
+  target_commit: b565f6714ddf37216ab7061f4bf8a1f64eb08efe
+  range_base: d10d36983b2f2baa358ea4ee0b170162984272c6
+  report: predictfun/reviews/automatic/20261120_b565f671/report.md
+  artifacts: predictfun/reviews/automatic/20261120_b565f671/artifacts.json
+  synthetic: predictfun/reviews/automatic/20261120_b565f671/synthetic.json
+  prior_R1: remains_accepted_unchanged
+  prior_closed: [stored_vector_rebuild, missing_source_statuses, joint_post_refusal_flag, context_count_terminal_wording, support_diagnostics]
+  prior_memory: partition_loop_fixed_final_read_parts_still_unbounded
+  P2: [whole_census_read_on_return_after_receipt, unreceived_venue_past_book_visibility_blind_spot, same_partition_duplicates_not_refused]
+  actual_saved_leak_label_error_or_duplicate_demonstrated: false
+  saved_population: {day: "20261023", originals: 256, rows: 213349, columns: 137, sampled_ok: 44959, weight_groups: 508}
+  comparison: all_columns_and_dtypes_exact_except_refused_on_289_joint_post_rows
+  refusals: {entry: 312, joint_post_keep: 6, joint_chase: 12}
+  saved_causality: {checked: 2765, failed: 0, not_evaluable: 0, retried: 2, draws: 8}
+  support: {cells: 28, supported: 0, diagnostics_verified: true, floors_unchanged: true}
+  saved_peak_rss_mib: 1246
+  linear_full_frame_gib: 18.554
+  timing_decision: venue_clock_execution_replay_plus_separate_client_visibility_control
+  immediate_priority: bounded_resumable_full_day_launch_gate_same256_and_synthetic_controls
+  full_day_or_fit_now: false
+  subsequent_population: {originals: 30466, per_side: 15233, partitions: 477, max_per_partition: 64}
+  prospective_causal_sample: r2_full_causal_v1_per_original_side_source_head_ceil_n_over64_min1_identity_sha256
+  sample_capacity_arithmetic: {slice_checks: 1598, full_checks: 190174, full_core_hours: 24.97, measured_full_day: false}
+  stop: {checkpoint_partition_seconds_above: 900, measured_peak_rss_mib_above: 1536, hard_rss_guard_mib: 2048, address_space_gib: 4}
+  costs: explicit_zero_fee_rebate_gross_execution_latency_retained
+  saved_asof: "2026-11-19T23:08:09.597010+00:00"
+  audit_asof: "2026-11-20T00:14:01.158499+00:00"
+  verification: {successful_runs: 5, wall_seconds: 77.95, peak_rss_mib: 694, interpreter_dependency_failures: 1, selftest: pass, mutation_targets: 46, developer_mutants_log: 46, full_suite_rerun: false}
+  fit_full_labels_new_real_tape_untouched_day: false
+  implementation_changed_by_review: false
+  development_owner: other_session
+
 r2a_review_20261119_codex:
   status: core_values_verified_acceptance_and_scale_gaps_open
   target_commit: 5432f636c63c11e7e04d59be35320589b2cfcf64

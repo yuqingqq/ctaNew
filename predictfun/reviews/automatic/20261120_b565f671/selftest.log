@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/pf-review-b565f671/predictfun/research/pf_r2_shadow.py", line 53, in <module>
+    import numpy as np
+ModuleNotFoundError: No module named 'numpy'
+2026-11-20T00:09:51Z tag=review_b565f671_selftest rc=1 peak_rss_mib=32 wall_s=0.17 cpu_user_s=0.09 memavail_start_gib=23 disk_free_gib=464->464 slot=codex

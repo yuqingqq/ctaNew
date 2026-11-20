@@ -1,0 +1,2 @@
+Missing-source fixes pass; within-part duplicate accepted; whole-census read reached after receipt write; unreceived venue-past book leak escapes.
+2026-11-20T00:14:01Z tag=review_b565f671_synthetic_final rc=0 peak_rss_mib=210 wall_s=1.49 cpu_user_s=1.28 memavail_start_gib=23 disk_free_gib=464->464 slot=codex
