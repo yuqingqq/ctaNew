@@ -1,0 +1,5 @@
+2026-11-20T16:34:00Z
+3b56497e5f3be5543a15bcc99bd4ca97ca09735e1ff272bf2202d0d8d0e0d244  predictfun/reviews/r2e_label_pilot_20261120/r2e_checks.py
+3fc3aef9b59293e2f73cf825d9946566fe4f047f7caed19c498ac288495671aa  predictfun/reviews/r2e_label_pilot_20261120/r2e_controls.py
+b6b5e94ec86e7b7087ce26100dcbd048bd9ed901a6b1034306bf6769bae8a4bb  predictfun/reviews/r2e_label_pilot_20261120/launch_r2e.sh
+declared before any pilot output (part files, records, accepted manifests, controls) is read

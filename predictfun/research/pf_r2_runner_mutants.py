@@ -37,6 +37,7 @@ MUT = [
      "if e.get('id') and str(e.get('reason', '')).strip()} if True else set()"),
     ('a stop matched by its file name (8cc1dc49)', "for e in hist if e['id'] not in ok_ids]", "for e in hist if e['file'] not in {h['file'] for h in hist if h['id'] in ok_ids}]"),
     ('no stop history (8cc1dc49)', "            with open(hp, 'a') as f:\n                f.write(json.dumps(ev, sort_keys=True) + '\\n')", "            pass"),
+    ('the watchdog overwrites an unarchived stop (4393ad19)', "            archive_stops(self.status_path.parent)                                          # review 4393ad19 P2: never erase an unarchived stop\n", ""),
     ('a held run recorded as a resource stop (8cc1dc49)', "**held); state = 'HELD'", "**held); state = 'STOP_RESOURCE'"),
     ('no watchdog during loading (e6b0efa4)', "    mon = Sampler(d / 'plan_status.json', lim0['guard_rss_mib'], exit=WATCHDOG_EXIT); mon.start()", "    mon = threading.Thread()"),
     ('a failed part rerun on resume', "    return rec\n\n\nSTOP_STATES = ", "    return rec if rec.get('status') == 'PASS' else None\n\n\nSTOP_STATES = "),
@@ -46,7 +47,7 @@ MUT = [
      "latch = dict(part=i, elapsed_s=el, hwm_mib=hw, **breach); state = 'STOP_RESOURCE'"),
     ('the high-water after loading not checked', "if latch is None and pending and hw0 > lim['peak_rss_mib']:", "if False:"),
     ('the watchdog never ends the process', "guard_rss_mib=self.hard, asof=C.stamp())); self.exit(3); return True", "guard_rss_mib=self.hard, asof=C.stamp())); return True"),
-    ('the watchdog fires below its limit', "        if r > self.hard:\n            atomic_json(self.status_path,", "        if r > 0:\n            atomic_json(self.status_path,"),
+    ('the watchdog fires below its limit', "        if r > self.hard:\n            archive_stops(self.status_path.parent)", "        if r > 0:\n            archive_stops(self.status_path.parent)"),
     # --- promotion and finalization
     ('a part promoted without its row check', "C.require(pq.read_metadata(tmp).num_rows == n_rows == info['rows'],", "C.require(True,"),
     ('finalize reads every part', "S = mod.support_merge([r['support'] for r in recs]); add =", "_all = mod.materialize(d); S = mod.support_merge([r['support'] for r in recs]); add ="),

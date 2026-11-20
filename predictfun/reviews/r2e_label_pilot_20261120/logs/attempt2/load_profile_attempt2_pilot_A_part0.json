@@ -1,0 +1,82 @@
+{
+ "day": "20261024",
+ "part": 0,
+ "markets": [
+  3695631,
+  3696268,
+  3696590,
+  3696918,
+  3697517,
+  3699302,
+  3700020,
+  3700711
+ ],
+ "steps": [
+  {
+   "step": "python start",
+   "rss_mib": 189.7,
+   "hwm_mib": 189.7,
+   "t_s": 0.9
+  },
+  {
+   "step": "imports",
+   "rss_mib": 193.7,
+   "hwm_mib": 193.7,
+   "t_s": 0.9
+  },
+  {
+   "step": "source closure (AST + hashes)",
+   "rss_mib": 213.0,
+   "hwm_mib": 218.7,
+   "t_s": 1.9
+  },
+  {
+   "step": "teacher assets",
+   "rss_mib": 229.6,
+   "hwm_mib": 229.6,
+   "t_s": 2.0
+  },
+  {
+   "step": "input identity",
+   "rss_mib": 229.8,
+   "hwm_mib": 229.8,
+   "t_s": 2.4
+  },
+  {
+   "step": "worlds_all (15352 worlds)",
+   "rss_mib": 751.4,
+   "hwm_mib": 806.7,
+   "t_s": 57.7
+  },
+  {
+   "step": "worlds_all released",
+   "rss_mib": 498.5,
+   "hwm_mib": 806.7,
+   "t_s": 58.8
+  },
+  {
+   "step": "real_inputs (8 markets)",
+   "rss_mib": 942.5,
+   "hwm_mib": 1102.9,
+   "t_s": 110.6
+  },
+  {
+   "step": "tape load",
+   "rss_mib": 555.3,
+   "hwm_mib": 1102.9,
+   "t_s": 111.4
+  },
+  {
+   "step": "tape pairs",
+   "rss_mib": 554.4,
+   "hwm_mib": 1102.9,
+   "t_s": 111.5
+  },
+  {
+   "step": "tape data released",
+   "rss_mib": 553.8,
+   "hwm_mib": 1102.9,
+   "t_s": 111.5
+  }
+ ]
+}

@@ -1,0 +1,2 @@
+{"parts": 6, "run_set": "pilot"}
+2026-11-20T15:42:36Z tag=r2e_plan_A rc=0 peak_rss_mib=2132 wall_s=248.84 cpu_user_s=238.46 memavail_start_gib=22 disk_free_gib=441->440 slot=claude3

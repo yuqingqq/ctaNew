@@ -1,0 +1,5 @@
+2026-11-20T16:40:53Z
+da769f62b227e7e5c9e3d6251e6e132e1c58edb950bf4846ecb28055b2baa524  predictfun/reviews/r2e_label_pilot_20261120/r2e_checks.py
+0ffef1fe98ea814cd5895065567170a052bafca437219d355173f2ca1c518753  predictfun/reviews/r2e_label_pilot_20261120/r2e_controls.py
+5e3f10bb404edcb27ffc90ee928acfdc25c99db530335bf01e87f8ebc88740a0  predictfun/reviews/r2e_label_pilot_20261120/launch_r2e.sh
+v2 (attempt 3 paths; member-only world build): declared before any pilot output is read; attempt 2 produced no part, record or label (every partition latched at loading)
