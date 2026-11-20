@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "62", "name": "finalize accepts an unpromoted part", "seconds": 137.5, "sources": {"pf_r2_label_sample.py": "3ae26a7ceb1293a1", "pf_r2_label_sample_mutants.py": "59dfc4bc5eab7a02", "pf_r2_label_sample_selftest.py": "02b79ba131c6080d"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: finalize: an unpromoted part was accepted"}
+2026-11-20T18:40:09Z tag=mut_v2_62 rc=0 peak_rss_mib=266 wall_s=137.67 cpu_user_s=135.75 memavail_start_gib=22 disk_free_gib=439->439 slot=claude2

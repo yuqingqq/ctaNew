@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "22", "name": "libraries not enforced", "seconds": 162.4, "sources": {"pf_r2_labels.py": "f56f1ae560492aa9", "pf_r2_labels_mutants.py": "a62f0507cdc2189c", "pf_r2_labels_selftest.py": "ad68b48219e4c60e"}, "why": "R2 LABELS SELFTEST FAILED: pins: a library mismatch was not refused"}
+2026-11-20T17:59:10Z tag=mut_v1_22 rc=0 peak_rss_mib=254 wall_s=162.64 cpu_user_s=161.07 memavail_start_gib=22 disk_free_gib=439->440 slot=claude

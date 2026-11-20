@@ -1,0 +1,4 @@
+2026-11-20T18:22:46Z
+59e74f3c2fa12d118504957582db6336772a7e452b4afd26b26dc951709164cd  predictfun/reviews/r2e_label_pilot_20261120/r2e_checks.py
+15a94fc1e552eecc29a130dfa23399934cceba18d721583df58232a59ae7d61d  predictfun/reviews/r2e_label_pilot_20261120/r2e_checks_v3.py
+v4: only predicate H changed (the producing files at the freeze; the check files at the final suite run) because the frozen v2 selftest caught 95 / 100 and was fixed in the selftest only; declared before r2e_checks runs; readings unchanged; v3 is run too (checks_v3.json)

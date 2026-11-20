@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "36", "name": "the pilot run set ignored", "seconds": 6.1, "sources": {"pf_r2_label_sample.py": "3ae26a7ceb1293a1", "pf_r2_label_sample_mutants.py": "59dfc4bc5eab7a02", "pf_r2_label_sample_selftest.py": "02b79ba131c6080d"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: plan: the pilot run set is not the first-ranked world of each stratum of the same sample"}
+2026-11-20T18:26:51Z tag=mut_v2_36 rc=0 peak_rss_mib=219 wall_s=6.31 cpu_user_s=6.09 memavail_start_gib=22 disk_free_gib=439->439 slot=claude3

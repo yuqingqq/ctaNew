@@ -1,2 +1,2 @@
 r2 label sample selftests passed (synthetic only): UTC hour / world sample, picks / weights / enumerated IPW identity, end to end (2 parts, resume identical), validator refuses 38 corruptions, identity refusals (10), stops (held, two successive stops, high-water at the loading / census / world, pair, bound), lifetime sentinel, promotion / resume, finalize (6 refusals, manifest)
-2026-11-20T17:09:26Z tag=v2_selftest rc=0 peak_rss_mib=264 wall_s=138.55 cpu_user_s=136.85 memavail_start_gib=23 disk_free_gib=441->441 slot=claude4
+2026-11-20T18:19:57Z tag=v2_selftest rc=0 peak_rss_mib=266 wall_s=138.90 cpu_user_s=136.37 memavail_start_gib=22 disk_free_gib=440->439 slot=claude2

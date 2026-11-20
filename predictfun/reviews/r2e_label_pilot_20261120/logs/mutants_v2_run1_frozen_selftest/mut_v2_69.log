@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "69", "name": "the record breach unchecked", "seconds": 58.3, "sources": {"pf_r2_label_sample.py": "3ae26a7ceb1293a1", "pf_r2_label_sample_mutants.py": "59dfc4bc5eab7a02", "pf_r2_label_sample_selftest.py": "e939986984f76c5c"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['a breach']"}
+2026-11-20T18:06:21Z tag=mut_v2_69 rc=0 peak_rss_mib=250 wall_s=58.59 cpu_user_s=58.17 memavail_start_gib=22 disk_free_gib=440->440 slot=claude3

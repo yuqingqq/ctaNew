@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "14", "name": "the census keeps the last world", "seconds": 161.3, "sources": {"pf_r2_labels.py": "f56f1ae560492aa9", "pf_r2_labels_mutants.py": "a62f0507cdc2189c", "pf_r2_labels_selftest.py": "ad68b48219e4c60e"}, "why": "R2 LABELS SELFTEST FAILED: lifetime: earlier-day worlds alive at the next load 1 (must be 0); the retained control reported 3 (must be > 0)"}
+2026-11-20T17:39:07Z tag=mut_v1_14 rc=0 peak_rss_mib=255 wall_s=161.55 cpu_user_s=160.06 memavail_start_gib=21 disk_free_gib=439->439 slot=claude

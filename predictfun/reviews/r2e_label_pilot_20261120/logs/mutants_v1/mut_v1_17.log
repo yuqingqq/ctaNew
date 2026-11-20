@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "17", "name": "finalize ignores the high-water", "seconds": 160.9, "sources": {"pf_r2_labels.py": "f56f1ae560492aa9", "pf_r2_labels_mutants.py": "a62f0507cdc2189c", "pf_r2_labels_selftest.py": "ad68b48219e4c60e"}, "why": "R2 LABELS SELFTEST FAILED: checkpoint: finalize passed a high-water over the checkpoint"}
+2026-11-20T17:47:20Z tag=mut_v1_17 rc=0 peak_rss_mib=255 wall_s=161.12 cpu_user_s=160.06 memavail_start_gib=23 disk_free_gib=439->439 slot=claude

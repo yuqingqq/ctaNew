@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "3", "name": "worlds ranked by key only", "seconds": 0.8, "sources": {"pf_r2_label_sample.py": "3ae26a7ceb1293a1", "pf_r2_label_sample_mutants.py": "59dfc4bc5eab7a02", "pf_r2_label_sample_selftest.py": "02b79ba131c6080d"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: sample: not the lowest-ranked worlds"}
+2026-11-20T18:22:27Z tag=mut_v2_3 rc=0 peak_rss_mib=194 wall_s=0.96 cpu_user_s=0.82 memavail_start_gib=22 disk_free_gib=439->439 slot=claude3

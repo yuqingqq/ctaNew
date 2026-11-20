@@ -1,0 +1,102 @@
+  0 the stratum cap ignored: CAUGHT (0.8 s) - R2 LABEL SAMPLE SELFTEST FAILED: sample strata [{'day': 'd', 'hour': 3, 'N': 1, 'n': 1, 'pi': 1.0}, {'day': 'd', 'hour': 7, 'N': 5, 'n': 5, 'pi': 1.0}
+  1 pi fixed at 1: CAUGHT (0.8 s) - R2 LABEL SAMPLE SELFTEST FAILED: sample strata [{'day': 'd', 'hour': 3, 'N': 1, 'n': 1, 'pi': 1.0}, {'day': 'd', 'hour': 7, 'N': 5, 'n': 2, 'pi': 1.0}
+  2 the pilot not the first-ranked: CAUGHT (0.8 s) - R2 LABEL SAMPLE SELFTEST FAILED: sample: the pilot is not the first-ranked world
+  3 worlds ranked by key only: CAUGHT (0.8 s) - R2 LABEL SAMPLE SELFTEST FAILED: sample: not the lowest-ranked worlds
+  4 world ties not broken by the key: CAUGHT (0.8 s) - R2 LABEL SAMPLE SELFTEST FAILED: sample: ties are not broken by the canonical key
+  5 the canonical key unsorted: CAUGHT (0.8 s) - R2 LABEL SAMPLE SELFTEST FAILED: the canonical key: sorted keys, explicit nulls
+  6 not processed in canonical order: CAUGHT (0.8 s) - R2 LABEL SAMPLE SELFTEST FAILED: sample selection / canonical order / determinism
+  7 the UTC day not enforced: CAUGHT (0.8 s) - R2 LABEL SAMPLE SELFTEST FAILED: a t0 outside its UTC day was accepted
+  8 the hour shifted by one: CAUGHT (0.8 s) - R2 LABEL SAMPLE SELFTEST FAILED: the UTC hour of t0
+  9 the closure misses lazy imports: CAUGHT (1.4 s) - R2 LABEL SAMPLE SELFTEST FAILED: the source closure (core modules, function-level imports, no checks)
+  10 the checks in the closure: CAUGHT (1.8 s) - R2 LABEL SAMPLE SELFTEST FAILED: the source closure (core modules, function-level imports, no checks)
+  11 rows ranked by key only: CAUGHT (1.8 s) - R2 LABEL SAMPLE SELFTEST FAILED: picks: the extra is not the lowest-ranked other row
+  12 duplicate keys accepted: CAUGHT (1.8 s) - R2 LABEL SAMPLE SELFTEST FAILED: picks: two rows with one key were accepted
+  13 two mandatory rows accepted: CAUGHT (1.8 s) - R2 LABEL SAMPLE SELFTEST FAILED: picks: two mandatory rows were accepted
+  14 no mandatory POST: CAUGHT (1.8 s) - R2 LABEL SAMPLE SELFTEST FAILED: picks: mandatory + extra (q 1, 1 / (N - 1); total 1 / pi)
+  15 the mandatory rule ignores the decision: CAUGHT (1.8 s) - R2 LABEL SAMPLE SELFTEST FAILED: the mandatory rule (neutral, entry, decision 0)
+  16 the mandatory rule ignores the shadow source: CAUGHT (1.8 s) - R2 LABEL SAMPLE SELFTEST FAILED: the mandatory rule (neutral, entry, decision 0)
+  17 the mandatory rule ignores the source: CAUGHT (1.8 s) - R2 LABEL SAMPLE SELFTEST FAILED: the mandatory rule (neutral, entry, decision 0)
+  18 the extra q 1 / N: CAUGHT (1.8 s) - R2 LABEL SAMPLE SELFTEST FAILED: picks: mandatory + extra (q 1, 1 / (N - 1); total 1 / pi)
+  19 the keep q 1: CAUGHT (1.8 s) - R2 LABEL SAMPLE SELFTEST FAILED: picks: keep (q 1 / N)
+  20 the only q 1: CAUGHT (1.8 s) - R2 LABEL SAMPLE SELFTEST FAILED: picks: no mandatory row (q 1 / N) / an absent head
+  21 the weights without pi: CAUGHT (1.8 s) - R2 LABEL SAMPLE SELFTEST FAILED: picks: mandatory + extra (q 1, 1 / (N - 1); total 1 / pi)
+  22 the extra may redraw the mandatory: CAUGHT (1.8 s) - R2 LABEL SAMPLE SELFTEST FAILED: picks: a singleton pool raised ZeroDivisionError('float division by zero')
+  23 the census check not called: CAUGHT (120.5 s) - R2 LABEL SAMPLE SELFTEST FAILED: stops: the high-water was not checked at the census
+  24 the pair check not called: CAUGHT (57.5 s) - R2 LABEL SAMPLE SELFTEST FAILED: records: the completion record lacks its timing ({'load_s': 0.025891780853271484, 'worlds': [{'census_s': 0.596252441
+  25 the pool keeps ineligible rows: CAUGHT (19.3 s) - R2 LABEL SAMPLE SELFTEST FAILED: runs: a run raised ValueError('part 0: refused at promotion ([\'{"day":"20261024","m":101,"t_ms":1702073870000} side 
+  26 the hidden copy perturbs the delivered frame: CAUGHT (21.4 s) - R2 LABEL SAMPLE SELFTEST FAILED: runs: a run raised ValueError('part 0: refused at promotion ([\'{"day":"20261024","m":101,"t_ms":1702073870000} side 
+  27 the delivered control never perturbs: CAUGHT (57.6 s) - R2 LABEL SAMPLE SELFTEST FAILED: fork inputs: the delivered positive control never changed the inputs
+  28 the arm fills not stored: CAUGHT (20.9 s) - R2 LABEL SAMPLE SELFTEST FAILED: runs: a run raised ValueError('part 0: refused at promotion ([\'{"day":"20261024","m":101,"t_ms":1702073870000} side 
+  29 the stop rule disabled: CAUGHT (127.3 s) - R2 LABEL SAMPLE SELFTEST FAILED: stops: a high-water over the checkpoint did not latch at the loading
+  30 the pair limit ignored: CAUGHT (128.2 s) - R2 LABEL SAMPLE SELFTEST FAILED: stops: a pair over its limit did not latch at the pair
+  31 the high-water ignored: CAUGHT (127.7 s) - R2 LABEL SAMPLE SELFTEST FAILED: stops: a high-water over the checkpoint did not latch at the loading
+  32 the bound ignored: CAUGHT (131.7 s) - R2 LABEL SAMPLE SELFTEST FAILED: stops: the process bound did not latch at the loading
+  33 the plan rewritten: CAUGHT (7.4 s) - R2 LABEL SAMPLE SELFTEST FAILED: plan: an existing plan was rewritten
+  34 a stop history reused: CAUGHT (8.4 s) - R2 LABEL SAMPLE SELFTEST FAILED: plan: a directory with a stop history was reused
+  35 the plan checkpoint removed: CAUGHT (7.2 s) - R2 LABEL SAMPLE SELFTEST FAILED: plan: the high-water checkpoint did not refuse and latch
+  36 the pilot run set ignored: CAUGHT (6.1 s) - R2 LABEL SAMPLE SELFTEST FAILED: plan: the pilot run set is not the first-ranked world of each stratum of the same sample
+  37 partitions overlap: CAUGHT (138.3 s) - R2 LABEL SAMPLE SELFTEST FAILED: finalize: an unpromoted part was accepted
+  38 the source check skipped: CAUGHT (58.6 s) - R2 LABEL SAMPLE SELFTEST FAILED: identity: a stale source was not refused before the skip
+  39 the feature schema unchecked: CAUGHT (58.5 s) - R2 LABEL SAMPLE SELFTEST FAILED: identity: a changed feature schema was not refused
+  40 the day inputs unchecked: CAUGHT (58.1 s) - R2 LABEL SAMPLE SELFTEST FAILED: identity: changed loader files were not refused before the skip
+  41 verified after the skip: CAUGHT (58.3 s) - R2 LABEL SAMPLE SELFTEST FAILED: identity: a stale source was not refused before the skip
+  42 kp outputs unchecked: CAUGHT (71.0 s) - R2 LABEL SAMPLE SELFTEST FAILED: identity: a changed keep / pull output was not refused
+  43 the offset not bound: CAUGHT (58.6 s) - R2 LABEL SAMPLE SELFTEST FAILED: identity: a changed tape offset was not refused before the skip
+  44 held stops ignored: CAUGHT (81.4 s) - R2 LABEL SAMPLE SELFTEST FAILED: stops: a hard stop not held until its disposition (PART_DONE, PART_DONE, 1, DONE, DONE)
+  45 the keyed world build ignores its keys: CAUGHT (7.1 s) - R2 LABEL SAMPLE SELFTEST FAILED: worlds: a keyed build is not exactly the keyed worlds
+  46 the member worlds unchecked: CAUGHT (71.7 s) - R2 LABEL SAMPLE SELFTEST FAILED: identity: a member world missing from the day was not refused
+  47 the partition builds every world: CAUGHT (8.4 s) - R2 LABEL SAMPLE SELFTEST FAILED: runs: a run raised ValueError("a member world is not one of the day's worlds")
+  48 timing not recorded: CAUGHT (57.1 s) - R2 LABEL SAMPLE SELFTEST FAILED: records: the completion record lacks its timing ({})
+  49 the guard log not kept: CAUGHT (57.4 s) - R2 LABEL SAMPLE SELFTEST FAILED: records: the completion record lacks its timing ({'load_s': None, 'worlds': [], 'pairs': 0, 'pair_mean_s': None, 'pai
+  50 the day inputs read twice: CAUGHT (113.8 s) - R2 LABEL SAMPLE SELFTEST FAILED: lifetime: earlier worlds alive 0 (must be 0), inputs read [('20261024', (101, 103)), ('20261024', (101, 103))] (once,
+  51 the producing identity unchecked: CAUGHT (71.5 s) - R2 LABEL SAMPLE SELFTEST FAILED: identity: real_inputs' own tracked hashes were not compared
+  52 the load check not called: CAUGHT (21.0 s) - R2 LABEL SAMPLE SELFTEST FAILED: runs: a run raised TypeError("unsupported operand type(s) for -: 'float' and 'NoneType'")
+  53 the world check not called: CAUGHT (57.8 s) - R2 LABEL SAMPLE SELFTEST FAILED: records: the completion record lacks its timing ({'load_s': 0.027179956436157227, 'worlds': [], 'pairs': 0, 'pair_mea
+  54 the planted interruption ignored: CAUGHT (52.4 s) - R2 LABEL SAMPLE SELFTEST FAILED: runs / resume: ['PART_DONE', 'PART_DONE'], stopped PART_DONE (promoted True), ['DONE', 'PART_DONE'], equal True, reru
+  55 a part promoted without validation: CAUGHT (136.9 s) - R2 LABEL SAMPLE SELFTEST FAILED: promotion: an invalid part was promoted
+  56 non-deterministic part bytes: CAUGHT (66.3 s) - R2 LABEL SAMPLE SELFTEST FAILED: runs / resume: ['PART_DONE', 'PART_DONE'], stopped STOPPED (promoted False), ['PART_DONE', 'PART_DONE'], equal False,
+  57 a disposition of another plan accepted: CAUGHT (71.5 s) - R2 LABEL SAMPLE SELFTEST FAILED: stops: a hard stop not held until its disposition (HELD, HELD, 1, PART_DONE, DONE)
+  58 the byte pre-check removed: CAUGHT (136.1 s) - R2 LABEL SAMPLE SELFTEST FAILED: resume: a changed promoted part was skipped as done
+  59 resume skips an invalid part: CAUGHT (58.2 s) - R2 LABEL SAMPLE SELFTEST FAILED: identity: a changed plan did not refuse the records of the old one
+  60 finalize ignores held stops: CAUGHT (135.4 s) - R2 LABEL SAMPLE SELFTEST FAILED: finalize: an undisposed stop was accepted
+  61 finalize skips the current identity: CAUGHT (137.2 s) - R2 LABEL SAMPLE SELFTEST FAILED: finalize: a changed input was accepted
+  62 finalize accepts an unpromoted part: CAUGHT (137.5 s) - R2 LABEL SAMPLE SELFTEST FAILED: finalize: an unpromoted part was accepted
+  63 finalize ignores the high-water: CAUGHT (135.7 s) - R2 LABEL SAMPLE SELFTEST FAILED: finalize: a high-water over the checkpoint was accepted
+  64 finalize ignores the partition cover: CAUGHT (135.8 s) - R2 LABEL SAMPLE SELFTEST FAILED: finalize: overlapping partitions were accepted
+  65 the record bytes unchecked: CAUGHT (58.9 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['a part byte', 'a pool byte']
+  66 the record plan unchecked: CAUGHT (57.6 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['another plan']
+  67 the record sources unchecked: CAUGHT (58.2 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['other sources']
+  68 the record inputs unchecked: CAUGHT (58.8 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['other inputs']
+  69 the record breach unchecked: CAUGHT (57.6 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['a breach']
+  70 the record counts unchecked: CAUGHT (58.0 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['wrong counts']
+  71 the executing sources unchecked: CAUGHT (58.5 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: other executing sources were not refused
+  72 members outside the sample accepted: CAUGHT (57.7 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: a member outside the sample was accepted
+  73 extra rows accepted: CAUGHT (57.9 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['extra row (another partition)']
+  74 duplicate rows accepted: CAUGHT (58.6 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['duplicate row']
+  75 duplicate pool lines accepted: CAUGHT (57.5 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['a duplicated pool line']
+  76 the world status check removed: CAUGHT (58.0 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['a world status with a missing pick', 'a world status with pool lines']
+  77 a missing pool line accepted: CAUGHT (58.9 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['a pool line dropped']
+  78 pool consistency unchecked: CAUGHT (57.7 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['inconsistent pool counts']
+  79 the stored picks unchecked: CAUGHT (58.1 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['missing pick']
+  80 N / q / w unchecked: CAUGHT (59.3 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['wrong weight', 'a self-consistent N']
+  81 the empty-pick status unchecked: CAUGHT (57.4 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['an empty pick with the wrong status']
+  82 the picked row identity unchecked: CAUGHT (58.4 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['a changed row key']
+  83 ok pairs not checked: CAUGHT (59.0 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['Y + 1', 'another fork', 'reconciled false', 'binding failure', 'causal mismatch'
+  84 finite values unchecked: CAUGHT (57.6 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['a NaN mark']
+  85 the context unchecked: CAUGHT (57.9 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['another side', 'another original', 'another decision']
+  86 Y unchecked: CAUGHT (58.5 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['Y + 1']
+  87 R unchecked: CAUGHT (57.4 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['R != cash + position x mark']
+  88 the ledger unchecked: CAUGHT (58.6 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['a self-consistent ledger change', 'an added (zero) fill', 'an overfilled generat
+  89 the fills hash / count unchecked: CAUGHT (58.6 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['an added (zero) fill']
+  90 cash / position unchecked: CAUGHT (57.4 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['a self-consistent ledger change']
+  91 generation sizes unchecked: CAUGHT (58.0 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['an overfilled generation']
+  92 the pre-fork fills unchecked: CAUGHT (58.5 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['a consistent pre-fork fill in one arm']
+  93 the stored flags unchecked: CAUGHT (57.7 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['reconciled false']
+  94 the result fork unchecked: CAUGHT (57.8 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['another fork']
+  95 the arm binding unchecked: CAUGHT (58.5 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['binding failure']
+  96 the arm causal probe unchecked: CAUGHT (57.8 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['causal mismatch']
+  97 the hidden copy unchecked: CAUGHT (57.5 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['hidden copy unequal']
+  98 the rebuild unchecked: CAUGHT (58.2 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['rebuild unequal']
+  99 the inputs hash unchecked: CAUGHT (57.5 s) - R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['fork input hash']
+control: PASSED (138.9 s); sources {'pf_r2_label_sample.py': '3ae26a7ceb1293a1', 'pf_r2_label_sample_mutants.py': '59dfc4bc5eab7a02', 'pf_r2_label_sample_selftest.py': '02b79ba131c6080d'}
+mutation check passed: the control passes its selftest, 100 / 100 planted code errors are caught by a check (88.3 CPU min)

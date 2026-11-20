@@ -1,0 +1,2 @@
+{"cls": "HARNESS_FAILURE", "index": "14", "name": "no mandatory POST", "seconds": 1.8, "sources": {"pf_r2_label_sample.py": "3ae26a7ceb1293a1", "pf_r2_label_sample_mutants.py": "59dfc4bc5eab7a02", "pf_r2_label_sample_selftest.py": "e939986984f76c5c"}, "why": "crash: IndexError('list index out of range')"}
+2026-11-20T17:50:00Z tag=mut_v2_14 rc=1 peak_rss_mib=217 wall_s=2.03 cpu_user_s=1.83 memavail_start_gib=22 disk_free_gib=439->439 slot=claude2

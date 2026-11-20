@@ -1,0 +1,2 @@
+{"part": 4, "reversal": "48/48", "stale": {"m": 3736250, "t_ms": 1792917360000, "side": 0, "head": "post", "status": "ok", "binding_bad": 393, "binding_checked": 394}, "corruptions": {"Y + 1": true, "another fork": true, "reconciled false": true, "binding_bad 1": true}, "intact": true, "hwm_mib": 1152.28125}
+2026-11-20T17:42:28Z tag=r2e_controls_4 rc=0 peak_rss_mib=1152 wall_s=290.73 cpu_user_s=284.99 memavail_start_gib=22 disk_free_gib=439->439 slot=claude3

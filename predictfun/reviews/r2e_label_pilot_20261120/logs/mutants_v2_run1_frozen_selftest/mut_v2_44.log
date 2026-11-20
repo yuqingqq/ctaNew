@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "44", "name": "held stops ignored", "seconds": 81.5, "sources": {"pf_r2_label_sample.py": "3ae26a7ceb1293a1", "pf_r2_label_sample_mutants.py": "59dfc4bc5eab7a02", "pf_r2_label_sample_selftest.py": "e939986984f76c5c"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: stops: a hard stop not held until its disposition (PART_DONE, PART_DONE, 1, DONE, DONE)"}
+2026-11-20T17:58:54Z tag=mut_v2_44 rc=0 peak_rss_mib=261 wall_s=81.78 cpu_user_s=80.37 memavail_start_gib=22 disk_free_gib=439->439 slot=claude2

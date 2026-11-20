@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "1", "name": "pi fixed at 1", "seconds": 0.8, "sources": {"pf_r2_label_sample.py": "3ae26a7ceb1293a1", "pf_r2_label_sample_mutants.py": "59dfc4bc5eab7a02", "pf_r2_label_sample_selftest.py": "02b79ba131c6080d"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: sample strata [{'day': 'd', 'hour': 3, 'N': 1, 'n': 1, 'pi': 1.0}, {'day': 'd', 'hour': 7, 'N': 5, 'n': 2, 'pi': 1.0}]"}
+2026-11-20T18:22:28Z tag=mut_v2_1 rc=0 peak_rss_mib=193 wall_s=1.00 cpu_user_s=0.84 memavail_start_gib=22 disk_free_gib=439->439 slot=claude4

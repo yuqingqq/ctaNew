@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "29", "name": "the candidates hash unchecked", "seconds": 160.0, "sources": {"pf_r2_labels.py": "f56f1ae560492aa9", "pf_r2_labels_mutants.py": "a62f0507cdc2189c", "pf_r2_labels_selftest.py": "ad68b48219e4c60e"}, "why": "R2 LABELS SELFTEST FAILED: candidates: a tampered candidates file was not refused"}
+2026-11-20T18:15:20Z tag=mut_v1_29 rc=0 peak_rss_mib=257 wall_s=160.19 cpu_user_s=159.23 memavail_start_gib=22 disk_free_gib=440->440 slot=claude

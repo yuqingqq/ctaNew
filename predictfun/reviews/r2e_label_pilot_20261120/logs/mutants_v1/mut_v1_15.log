@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "15", "name": "the CLI prints the selection as the candidates", "seconds": 163.5, "sources": {"pf_r2_labels.py": "f56f1ae560492aa9", "pf_r2_labels_mutants.py": "a62f0507cdc2189c", "pf_r2_labels_selftest.py": "ad68b48219e4c60e"}, "why": "R2 LABELS SELFTEST FAILED: CLI: the census exit 0 / printed {'candidates': 8, 'selected': 8} disagrees with the manifest / candidates (5194, 5194)"}
+2026-11-20T17:41:48Z tag=mut_v1_15 rc=0 peak_rss_mib=253 wall_s=163.74 cpu_user_s=162.16 memavail_start_gib=21 disk_free_gib=439->439 slot=claude

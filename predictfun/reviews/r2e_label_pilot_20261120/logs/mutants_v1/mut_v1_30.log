@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "30", "name": "the pi0 sampling ignored", "seconds": 93.7, "sources": {"pf_r2_labels.py": "f56f1ae560492aa9", "pf_r2_labels_mutants.py": "a62f0507cdc2189c", "pf_r2_labels_selftest.py": "ad68b48219e4c60e"}, "why": "R2 LABELS SELFTEST FAILED: census: pi0 sampling False / unsampled present False, neutral / delayed naming True, outcome-free rows True"}
+2026-11-20T18:18:00Z tag=mut_v1_30 rc=0 peak_rss_mib=251 wall_s=93.92 cpu_user_s=93.35 memavail_start_gib=22 disk_free_gib=440->440 slot=claude

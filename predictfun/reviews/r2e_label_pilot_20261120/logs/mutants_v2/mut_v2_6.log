@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "6", "name": "not processed in canonical order", "seconds": 0.8, "sources": {"pf_r2_label_sample.py": "3ae26a7ceb1293a1", "pf_r2_label_sample_mutants.py": "59dfc4bc5eab7a02", "pf_r2_label_sample_selftest.py": "02b79ba131c6080d"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: sample selection / canonical order / determinism"}
+2026-11-20T18:22:28Z tag=mut_v2_6 rc=0 peak_rss_mib=192 wall_s=0.98 cpu_user_s=0.83 memavail_start_gib=22 disk_free_gib=439->439 slot=claude3

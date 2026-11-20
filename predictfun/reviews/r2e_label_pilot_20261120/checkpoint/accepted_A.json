@@ -1,0 +1,72 @@
+{
+ "version": "r2_label_sample_v2",
+ "plan_sha256": "a3f1e8975728800e728836c3c34574c151091991a2e5fe2903f22903223411ac",
+ "run_set": "pilot",
+ "parts": [
+  {
+   "part": 0,
+   "day": "20261024",
+   "sha256": "c149b29eefe7c070249f46f701b38d1c86ef8e7bdc8d6f159d4f329711807022",
+   "pools_sha256": "52fd19ef62a2ee021a3bb32416fbcac50c7c6bc722a14dcc2a8d13fef33f62c2",
+   "rows": 48
+  },
+  {
+   "part": 1,
+   "day": "20261024",
+   "sha256": "d8c785e2c5109e2559837c53a5642c89340c498effe88118051d92a1f905d049",
+   "pools_sha256": "16797db61cd86a239c58bdfb3f812dd1ccbd67705ff9c99746115f1290211b7f",
+   "rows": 48
+  },
+  {
+   "part": 2,
+   "day": "20261024",
+   "sha256": "f20d926fd151443c8be8741d5af96d3374eba2cd0c0fdbd381211e15e5d57575",
+   "pools_sha256": "6bd536af949d6900f701760dadbf8fc2502056557bd9961d2a02f20c66a37b47",
+   "rows": 48
+  },
+  {
+   "part": 3,
+   "day": "20261025",
+   "sha256": "437375fa9eaffd03501e0de15661c1b2a72c215bea57a948435231d3ea18bd89",
+   "pools_sha256": "ac5ab786bc4dc7862296008c9bd10dcad9763b9e8b95dcb5c4c6ccbb01717575",
+   "rows": 48
+  },
+  {
+   "part": 4,
+   "day": "20261025",
+   "sha256": "b63d65d7e649524ceee870acf678263dcaa723f609736c64682545614fb76e3e",
+   "pools_sha256": "154092267e5ea5e089025583002c447ab9f23dba8e49a57beb776b09c36872a6",
+   "rows": 48
+  },
+  {
+   "part": 5,
+   "day": "20261025",
+   "sha256": "82abb783214d68a576a0995dfe8e2dffe380b459e165eef511a70cb566c4b175",
+   "pools_sha256": "dddbc13271dbcc46435253420239df5779cc445a3978329013b3151d56932f11",
+   "rows": 48
+  }
+ ],
+ "rows": 288,
+ "pairs": {
+  "20261024": 144,
+  "20261025": 144
+ },
+ "statuses": {
+  "20261024 keep ok": 48,
+  "20261024 post ok": 96,
+  "20261025 keep ok": 48,
+  "20261025 post ok": 96
+ },
+ "weight_totals": {
+  "20261024 keep": 479.75,
+  "20261024 post": 479.75000000000006,
+  "20261025 keep": 468.6875,
+  "20261025 post": 468.6875000000001
+ },
+ "dataset_sha256": "0d5356401b5aee7ba872b3d8debd24d244cdb19989180867a1ac437fa6f8f5d9",
+ "current_sources_equal": true,
+ "current_inputs_equal": true,
+ "teacher_verified": true,
+ "accepted": true,
+ "asof": "2026-11-20T17:36:40.851906+00:00"
+}

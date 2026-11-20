@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "52", "name": "the load check not called", "seconds": 21.0, "sources": {"pf_r2_label_sample.py": "3ae26a7ceb1293a1", "pf_r2_label_sample_mutants.py": "59dfc4bc5eab7a02", "pf_r2_label_sample_selftest.py": "02b79ba131c6080d"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: runs: a run raised TypeError(\"unsupported operand type(s) for -: 'float' and 'NoneType'\")"}
+2026-11-20T18:32:05Z tag=mut_v2_52 rc=0 peak_rss_mib=230 wall_s=21.24 cpu_user_s=20.87 memavail_start_gib=22 disk_free_gib=439->439 slot=claude4

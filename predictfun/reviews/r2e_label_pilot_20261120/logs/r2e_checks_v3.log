@@ -1,0 +1,2 @@
+{"checks": {"A_plan": true, "B_runs": true, "C_resume_identity": true, "D_acceptance": true, "E_resources": true, "F_labels": true, "G_controls": true, "H_suites": false}, "all_true": false, "projected_core_hours": 26.974599999999995, "above_ceiling": false}
+2026-11-20T18:54:51Z tag=r2e_checks_v3 rc=0 peak_rss_mib=232 wall_s=2.32 cpu_user_s=2.09 memavail_start_gib=23 disk_free_gib=438->438 slot=claude

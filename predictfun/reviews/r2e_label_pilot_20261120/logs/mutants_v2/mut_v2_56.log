@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "56", "name": "non-deterministic part bytes", "seconds": 66.3, "sources": {"pf_r2_label_sample.py": "3ae26a7ceb1293a1", "pf_r2_label_sample_mutants.py": "59dfc4bc5eab7a02", "pf_r2_label_sample_selftest.py": "02b79ba131c6080d"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: runs / resume: ['PART_DONE', 'PART_DONE'], stopped STOPPED (promoted False), ['PART_DONE', 'PART_DONE'], equal False, rerun DONE"}
+2026-11-20T18:38:04Z tag=mut_v2_56 rc=0 peak_rss_mib=237 wall_s=66.56 cpu_user_s=56.88 memavail_start_gib=22 disk_free_gib=439->439 slot=claude2

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "54", "name": "the planted interruption ignored", "seconds": 51.9, "sources": {"pf_r2_label_sample.py": "3ae26a7ceb1293a1", "pf_r2_label_sample_mutants.py": "59dfc4bc5eab7a02", "pf_r2_label_sample_selftest.py": "e939986984f76c5c"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: runs / resume: ['PART_DONE', 'PART_DONE'], stopped PART_DONE (promoted True), ['DONE', 'PART_DONE'], equal True, rerun DONE"}
+2026-11-20T17:58:47Z tag=mut_v2_54 rc=0 peak_rss_mib=237 wall_s=52.14 cpu_user_s=51.78 memavail_start_gib=22 disk_free_gib=439->439 slot=claude3
