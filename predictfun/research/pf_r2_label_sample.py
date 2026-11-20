@@ -72,6 +72,17 @@ RESOURCES (review 4393ad19 P2): one process per partition (one day; at most 32 w
    byte-deterministic).
 PILOT: the nested subset of the frozen full sample, its first-ranked world per (day, hour): at most 48 worlds and 288 pairs, in partitions of
  8. The weights refer to the full sample.
+REVIEW 38febc0b (the production round):
+ - Every picked row's status must equal its result's: 'pair_not_ok' iff the pair failed, and then only for a declared missing-data outcome
+   ('missing_mark'); any other failed pair is a run failure, never an exclusion. 'feature_unavailable' rows pass every pair invariant
+   except the fork inputs.
+ - END = 5,000 ms (the result and the episode identity); both arms' mark = the result's common finite mark; every fill time within
+   [0, END].
+ - Each arm's teacher callbacks are reconciled with its decision log, hash-bound to pair_bound's own decisions hash. Counted: every
+   decision after the fork, and the other side's at the fork tick when it acts after the forced one, less the engine's no-book
+   fallbacks. Calls = binding checks = that count, so zero only when no callback was required (a final-tick fork); 0 binding failures.
+ - The causal audit runs at the plan's declared rate (audit_every; production 35, the pilot 7): calls 1, 1 + every, ... Its checks must
+   equal ceil(calls / every); 0 mismatches.
 Usage (run_light): pf_r2_label_sample.py selftest | plan <out> [pilot] | run <out> <part> [stop_after_worlds] | finalize <out>
 """
 import ast
@@ -101,6 +112,8 @@ C, pd, KP, X = L.C, L.pd, L.KP, L.X
 VERSION, DOMAIN = 'r2_label_sample_v2', 'r2_label_sample_v2_20261120'
 DAYS, PER_HOUR, PART_WORLDS, PILOT_PART = ('20261024', '20261025'), 64, 32, 8
 LIMITS = dict(load_s=600., world_s=120., pair_s=120.)    # declared time limits (header); a plan records its own
+AUDIT_EVERY = 35                                         # the causal audit rate (review 38febc0b decision 2); a plan records its own
+PAIR_DATA_STATUSES = ('missing_mark',)                   # the only failed pair outcome that is a missing-data exclusion
 PEAK, GUARD = 1536., 2048.                               # fixed memory limits: a plan never changes them
 TOL_V, TOL_P = 1e-6, 1e-9                                # pf_r2_labels.reconcile_arm's ledger tolerances (value / cash, position / quantity)
 CORE = ('pf_r2_label_sample.py', 'pf_r2_labels.py', 'pf_r2_teacher.py', 'pf_r2_shadow.py', 'pf_branch_engine.py', 'pf_r2_runner.py', 'pf_pipeline_bench.py',
@@ -300,7 +313,9 @@ def arm_ledgers(fac, res, reverse=False):
     for name, (t_, _) in zip(names, fac.made):
         fl = json.loads(json.dumps(list(t_.B.E.fills), default=str))
         C.require(L._h(fl) == res['arms'][name]['fills_sha256'], f'{name}: the bound branch is not the arm')
-        out[name] = dict(fill_list=fl, sizes=[float(o['size']) for o in t_.B.E.o])
+        dl = json.loads(json.dumps(list(t_.B.decisions), default=str))
+        C.require(L._h(dl) == res['arms'][name]['decisions_sha256'], f'{name}: the bound branch decisions are not the arm\'s')
+        out[name] = dict(fill_list=fl, sizes=[float(o['size']) for o in t_.B.E.o], decision_list=dl, fallback_list=json.loads(json.dumps(list(t_.B.fallbacks), default=str)))
     return out
 
 
@@ -335,7 +350,7 @@ def timing(log):
     return dict(out, pairs=len(ps_), pair_mean_s=(sum(ps_) / len(ps_) if ps_ else None), pair_max_s=(max(ps_) if ps_ else None))
 
 
-def world_rows(day, w, world, M, sup, guard):
+def world_rows(day, w, world, M, sup, guard, every=AUDIT_EVERY):
     """Every pick of one selected world -> (rows, pools); statuses included. guard.check after the census and after every pair."""
     base = dict(day=day, m=w['m'], t_ms=w['t_ms'], hour=w['hour'], world_rank=w['rank'], pi=w['pi'])
     if world is None:
@@ -356,7 +371,7 @@ def world_rows(day, w, world, M, sup, guard):
                     rows.append(dict(r, status='no_additional_post' if pick == 'extra' else 'empty_pool')); continue
                 r.update(source=key['source'], row_key=key, row_rank=rank('row', key)); t0 = time.time()
                 ctx = L.fork_for(by[ckey(key)], world, M, sup); fi = fork_inputs(ctx, world, M, sup, head, int(r['row_rank'][:8], 16))
-                fac = L.teacher_factory(M, sup, world); res = L.pair_bound(ctx, fac, head)
+                fac = L.teacher_factory(M, sup, world, every=every); res = L.pair_bound(ctx, fac, head)
                 if res.get('status') == 'ok':
                     for n_, v_ in arm_ledgers(fac, res).items():
                         res['arms'][n_].update(v_)
@@ -369,19 +384,19 @@ def world_rows(day, w, world, M, sup, guard):
 
 # ---------------------------------------------------------------- the plan
 def make_plan(out, days=DAYS, pilot=False, per_hour=PER_HOUR, kp=None, src=None, files_fn=None, ht_fn=None, cfg=T.REAL, freeze_sha=L.FREEZE_SHA, assets=None,
-              part_size=None, limits=None):
+              part_size=None, limits=None, audit_every=None):
     """The immutable plan (canonical JSON): sources, teacher, sample, per-day input identity, partitions of the run set, limits. Under the
     watchdog; the high-water checkpoint after every day; refused in a directory with a plan or a stop history."""
     out = Path(out); out.mkdir(parents=True, exist_ok=True); pp = out / 'plan.json'; C.require(not pp.exists(), 'the plan exists (immutable)')
     C.require(not RN.archive_stops(out), 'a plan directory with a stop history: use a new namespace')
     mon = RN.Sampler(out / 'plan_status.json', GUARD); mon.start()
     try:
-        return _make_plan(out, pp, days, pilot, per_hour, kp, src, files_fn, ht_fn, cfg, freeze_sha, assets, part_size, limits)
+        return _make_plan(out, pp, days, pilot, per_hour, kp, src, files_fn, ht_fn, cfg, freeze_sha, assets, part_size, limits, audit_every)
     finally:
         mon.live = False
 
 
-def _make_plan(out, pp, days, pilot, per_hour, kp, src, files_fn, ht_fn, cfg, freeze_sha, assets, part_size, limits):
+def _make_plan(out, pp, days, pilot, per_hour, kp, src, files_fn, ht_fn, cfg, freeze_sha, assets, part_size, limits, audit_every):
     fz = (assets or (lambda: L.teacher_assets(cfg, freeze_sha)))()[2] or {}
     kp = Path(kp or json.loads(Path(cfg['population']).read_text())['inputs']['kp_dir']); src = src or KP.Tape()
     files_fn, ht_fn = files_fn or real_files, ht_fn or hours_tracked; ps = int(part_size or (PILOT_PART if pilot else PART_WORLDS)); sample, parts = {}, []
@@ -398,7 +413,7 @@ def _make_plan(out, pp, days, pilot, per_hour, kp, src, files_fn, ht_fn, cfg, fr
     plan = dict(version=VERSION, domain=DOMAIN, days=list(days), per_hour=int(per_hour), run_set='pilot' if pilot else 'full', part_size=ps, strict_day=STRICT_DAY,
                 freeze_sha256=freeze_sha, libraries=fz.get('libraries'), sources=sources_now(), settings=dict(BE.SETTINGS), kp_dir=str(kp),
                 feature_schema=dict(n=len(T.FEATS), sha256=hashlib.sha256(ckey(list(T.FEATS)).encode()).hexdigest()),
-                limits=dict(dict(limits or LIMITS), peak_mib=PEAK, guard_mib=GUARD), sample=sample, partitions=parts)
+                limits=dict(dict(limits or LIMITS), peak_mib=PEAK, guard_mib=GUARD), audit_every=int(audit_every or AUDIT_EVERY), sample=sample, partitions=parts)
     RN.atomic_json(pp, json.loads(json.dumps(plan, default=str))); return plan
 
 
@@ -435,14 +450,45 @@ def _ledger_bad(A):
     return None
 
 
-def _pair_bad(plan, day, w, r):
-    """Every invariant of one ok pair row -> the list of failures."""
+def policy_calls(A, g, side, first):
+    """The arm teacher's required callbacks, recomputed from the arm's decision log. pf_branch_engine.decide calls the policy only in an
+    eligible state, without a forced action, with a book. Counted: every decision after the fork, and the other side's at the fork tick when
+    it acts after the forced one, less the engine's no-book fallbacks."""
+    fb = {(float(f[0]), int(f[1])) for f in A['fallback_list']}; n = 0
+    for t, s, st, a, op in A['decision_list']:
+        t, s = float(t), int(s)
+        if t < g or (t == g and (s == side or first != side)) or (t, s) in fb:
+            continue
+        n += 1
+    return n
+
+
+def _arm_calls_bad(A, g, side, first):
+    """One arm's callbacks against its decision log (review 38febc0b item 2) -> a failure or None."""
+    dl, fb, t_ = A.get('decision_list'), A.get('fallback_list'), A.get('teacher') or {}
+    if not (isinstance(dl, list) and isinstance(fb, list) and L._h(dl) == A.get('decisions_sha256')):
+        return 'the stored decisions differ from their hash'
+    n = policy_calls(A, g, side, first)
+    if not (t_.get('calls') == n and t_.get('binding_checked') == n and t_.get('binding_bad') == 0):
+        return f"the teacher's calls / binding checks ({t_.get('calls')} / {t_.get('binding_checked')}) are not the {n} required callbacks, or a binding failed"
+    return None
+
+
+def _pair_bad(plan, day, w, r, inputs_required=True):
+    """Every invariant of one pair row whose pair ran ('ok'; 'feature_unavailable' without its inputs) -> the list of failures."""
     bad = []; res, fi, rk = r.get('result') or {}, r.get('fork') or {}, r.get('row_key') or {}
     names = NAMES[r['head']]; arms = res.get('arms') or {}
     vals = [res.get('Y')] + [arms[n].get(x) for n in names if n in arms for x in ('value', 'cash', 'position', 'mark')]
     if res.get('status') != 'ok' or set(arms) != set(names) or len(vals) != 9 or not all(isinstance(v, (int, float)) and math.isfinite(v) for v in vals):
         return ['arms / finite values']
     idn, oid = res.get('ident') or {}, w[f"oid{r['side']}"]
+    end = float(plan['settings']['end_ms'])
+    if not (float(res.get('end', -1.)) == end and abs(float(idn.get('end_abs_ms', -1.)) - float(idn.get('start_abs_ms', 0.)) - end) < 1e-6):
+        bad.append('the END is not the declared 5,000 ms')
+    if not (isinstance(res.get('mark'), (int, float)) and math.isfinite(res['mark']) and all(arms[n]['mark'] == res['mark'] for n in names)):
+        bad.append("an arm's mark is not the common finite mark")
+    if not all(isinstance(arms[n].get('fill_list'), list) and all(0. <= float(f[0]) <= end for f in arms[n]['fill_list']) for n in names):
+        bad.append('a fill outside the episode')
     if not (res.get('kind') == r['head'] and res.get('side') == r['side'] and int(round(float(res.get('k', -1)) * L.STEP)) == rk.get('decision_ms')
             and res.get('settings') == plan['settings'] and idn.get('day') == day and idn.get('side') == r['side'] and idn.get('original_episode_id') == oid
             and idn.get('instrument_id') == r['m'] and abs(float(idn.get('start_abs_ms', -1.)) - r['t_ms']) < 1e-6):
@@ -461,14 +507,20 @@ def _pair_bad(plan, day, w, r):
         bad.append('a stored reconciliation or the pre-fork flag is false')
     if res.get('fork_fingerprint') != r.get('fork_fingerprint'):
         bad.append('the result belongs to another fork')
-    if not all((arms[n].get('teacher') or {}).get('binding_checked', 0) > 0 and (arms[n].get('teacher') or {}).get('binding_bad', 1) == 0 for n in names):
-        bad.append('an arm binding failure')
-    cz = r.get('causal') or []
+    g, first = float(res.get('k', -1)) * L.STEP, int(res.get('fork_first_side', -1))
+    cb = [x for x in (_arm_calls_bad(arms[n], g, r['side'], first) for n in names) if x]
+    bad += cb
+    cz, ev = r.get('causal') or [], int(plan['audit_every'])
     if len(cz) != 2 or not all(c.get('mismatch', 1) == 0 and c.get('parity_mismatch', 1) == 0 for c in cz):
         bad.append('an arm causal / parity mismatch')
-    if not (fi.get('status') == 'ok' and isinstance(fi.get('inputs'), list) and len(fi['inputs']) == plan['feature_schema']['n'] and fi.get('hidden_equal') is True
-            and fi.get('rebuild_equal') is True and hashlib.sha256(np.asarray(fi['inputs'], np.float32).tobytes()).hexdigest() == fi.get('inputs_sha256')):
-        bad.append('the fork inputs are incomplete or not causal')
+    elif not cb and not all(c.get('checked') == -(-int((arms[n].get('teacher') or {}).get('calls', 0)) // ev) for c, n in zip(cz, names)):
+        bad.append(f'the causal audit did not run at its declared rate (every {ev})')
+    if inputs_required:
+        if not (fi.get('status') == 'ok' and isinstance(fi.get('inputs'), list) and len(fi['inputs']) == plan['feature_schema']['n'] and fi.get('hidden_equal') is True
+                and fi.get('rebuild_equal') is True and hashlib.sha256(np.asarray(fi['inputs'], np.float32).tobytes()).hexdigest() == fi.get('inputs_sha256')):
+            bad.append('the fork inputs are incomplete or not causal')
+    elif fi.get('status') != 'feature_unavailable':
+        bad.append('a feature exclusion without unavailable fork inputs')
     return bad
 
 
@@ -544,8 +596,15 @@ def validate(plan, psha, part, rows, pools, rec=None, raw=None, enforce_current=
                         continue
                     if st not in PICKED or r.get('row_key') != key or r.get('row_rank') != rank('row', key) or r.get('source') != key['source']:
                         bad.append(f'{wk} side {s} {pick}: the picked row differs from the pool\'s ({st})'); continue
-                    if st == 'ok':
-                        bad += [f'{wk} side {s} {pick}: {x}' for x in _pair_bad(plan, day, w, r)]
+                    res_, fi_ = r.get('result') or {}, r.get('fork') or {}
+                    exp_st = 'pair_not_ok' if res_.get('status') != 'ok' else ('feature_unavailable' if fi_.get('status') != 'ok' else 'ok')
+                    if st != exp_st:
+                        bad.append(f'{wk} side {s} {pick}: the status {st} is not its result\'s ({exp_st})'); continue
+                    if st == 'pair_not_ok':                                                 # a failed pair: only a declared missing-data outcome
+                        if res_.get('status') not in PAIR_DATA_STATUSES or res_.get('fork_fingerprint') != r.get('fork_fingerprint'):
+                            bad.append(f"{wk} side {s} {pick}: the pair outcome {res_.get('status')} is a failure, not an exclusion")
+                        continue
+                    bad += [f'{wk} side {s} {pick}: {x}' for x in _pair_bad(plan, day, w, r, inputs_required=(st == 'ok'))]
     return bad
 
 
@@ -612,7 +671,7 @@ def run(out, k, stop_after=None, src=None, inputs=None, feat_fn=None, files_fn=N
             if limit is not None and n_w >= limit:
                 RN.atomic_json(stp, dict(state='STOPPED', plan_sha256=psha, part=k, worlds_done=n_w, asof=C.stamp())); return 'STOPPED'
             aw = allw[ckey(wkey(w))]; world, wst = L.world_bind(day, dict(m=w['m'], t=aw['t'], o=aw['o']), prs, fair, depth, feat_fn)
-            wr, wp = world_rows(day, dict(w, t=aw['t'], status=wst), world, M, sup, G); rows += wr; pools += wp; world = None; n_w += 1
+            wr, wp = world_rows(day, dict(w, t=aw['t'], status=wst), world, M, sup, G, plan['audit_every']); rows += wr; pools += wp; world = None; n_w += 1
             G.check('world')
         rp, fp, pp = part_paths(out, k); rp.parent.mkdir(exist_ok=True); b, pb = gz_bytes(rows), gz_bytes(pools)
         rec = dict(plan_sha256=psha, part=k, day=day, members=part['members'], file=fp.name, pools_file=pp.name, rows=len(rows), pools=len(pools),
@@ -652,7 +711,7 @@ def finalize(out, src=None, files_fn=None, ht_fn=None, assets=None, cfg=T.REAL):
                     wt[f"{r['day']} {r['head']}"] += r['w']
                 pairs[r['day']] += int(r['status'] in PICKED)
         C.require(hwm() <= PEAK, f'finalize: the process high-water passed {PEAK} MiB')
-        acc = dict(version=VERSION, plan_sha256=psha, run_set=plan['run_set'], parts=parts, rows=n, pairs=dict(pairs), statuses=dict(sorted(st.items())),
+        acc = dict(version=VERSION, plan_sha256=psha, run_set=plan['run_set'], audit_every=plan['audit_every'], parts=parts, rows=n, pairs=dict(pairs), statuses=dict(sorted(st.items())),
                    weight_totals=dict(sorted(wt.items())), dataset_sha256=hashlib.sha256(ckey(parts).encode()).hexdigest(), current_sources_equal=True,
                    current_inputs_equal=True, teacher_verified=True, accepted=True, asof=C.stamp())
         RN.atomic_json(out / 'accepted.json', acc); return acc

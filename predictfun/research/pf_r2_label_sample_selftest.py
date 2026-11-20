@@ -18,6 +18,12 @@
      row key. Ledgers: R != cash + position x mark, a self-consistent ledger change against the fills, an added fill, a consistent
      pre-fork fill in one arm, an overfilled generation. Context: another side, original or decision. Pools: an added key, a dropped line,
      inconsistent counts. Records: a part byte, a pool byte, other sources / inputs / plan, a breach, wrong counts;
+     Review 38febc0b:
+     - a 'feature_unavailable' row with a false reconciliation, an intact pair relabelled 'pair_not_ok', END 4,000, another common mark, a
+       consistent fill after END, a failed pair dressed as an exclusion, a skipped required callback, a wrong audit denominator: each
+       refused; a legitimate 'missing_mark' exclusion passes;
+     - the final-tick boundary (the review's scenario on the real engine): a KEEP fork at the last tick has zero required callbacks and is
+       valid (Y = +5 c from a trade at 4,990 ms); the tick before has callbacks; a skipped callback and an edited decision log are refused;
  (5) identity, each refused by its own check:
      - before a done part is skipped: a stale source, changed loader files (no day input is read), changed tracked hours, a changed teacher,
        a changed feature schema, a changed tape offset; a changed plan (its records bind the old plan);
@@ -252,6 +258,14 @@ def run(S):  # noqa: C901
                 gen = [x for x in range(len(A['sizes'])) if A['sizes'][x] - filled.get(x, 0.) >= 1.][0]
                 q = (A['sizes'][gen] - filled.get(gen, 0.) + 1.) if qty_over else 1.
                 A['fill_list'] = sorted(A['fill_list'] + [[g - 1. if before else g + 1., gen, 0, q, 40.]], key=lambda f: float(f[0])); relabel(r, A)
+            def fill_at(r, arm, t_fill):                                                   # a consistent fill at a given time (after the fork)
+                A = r['result']['arms'][arm]; filled = {}
+                for f in A['fill_list']:
+                    filled[int(f[1])] = filled.get(int(f[1]), 0.) + float(f[3])
+                gen = [x for x in range(len(A['sizes'])) if A['sizes'][x] - filled.get(x, 0.) >= 1.][0]
+                A['fill_list'] = sorted(A['fill_list'] + [[t_fill, gen, 0, 1., 40.]], key=lambda f: float(f[0])); relabel(r, A)
+            def as_missing(r, status='missing_mark'):
+                r['status'] = 'pair_not_ok'; r['result'] = dict(status=status, fork_fingerprint=r['fork_fingerprint']) if status == 'missing_mark' else dict(status=status, state='live')
             def ledger_shift(r):
                 A = r['result']['arms'][arm0]; A['position'] += 1; A['cash'] -= A['mark']
             def keyshift(r):
@@ -289,7 +303,19 @@ def run(S):  # noqa: C901
                 'a duplicated pool line': mod(lambda qq: qq.append(dict(qq[0])), 'pools'),
                 'a duplicated pool key': mod(lambda qq: (qq[pk_i]['keys'].append(dict(qq[pk_i]['keys'][0])), qq[pk_i]['counts'].__setitem__('ok', qq[pk_i]['counts']['ok'] + 1),
                                                          qq[pk_i]['kinds'].__setitem__(qq[pk_i]['head'], qq[pk_i]['kinds'][qq[pk_i]['head']] + 1)), 'pools'),
-                'a NaN mark': mod(lambda rr: rr[i]['result']['arms'][arm0].__setitem__('mark', float('nan')))}
+                'a NaN mark': mod(lambda rr: rr[i]['result']['arms'][arm0].__setitem__('mark', float('nan'))),
+                'feature_unavailable with a false reconciliation': mod(lambda rr: (rr[i].__setitem__('status', 'feature_unavailable'), rr[i]['fork'].__setitem__('status', 'feature_unavailable'),
+                                                                                rr[i]['result'].__setitem__('reconciled', False))),
+                'an intact pair relabelled pair_not_ok': mod(lambda rr: rr[i].__setitem__('status', 'pair_not_ok')),
+                'END 4,000': mod(lambda rr: rr[i]['result'].__setitem__('end', 4000.)),
+                'another common mark': mod(lambda rr: rr[i]['result'].__setitem__('mark', rr[i]['result']['mark'] + 1.)),
+                'a consistent fill after END': mod(lambda rr: fill_at(rr[i], arm0, 5010.)),
+                'a failed pair dressed as an exclusion': mod(lambda rr: as_missing(rr[i], 'not_keep_state' if rr[i]['head'] == 'keep' else 'not_post_state')),
+                'a skipped required callback': mod(lambda rr: (rr[i]['result']['arms'][arm0]['teacher'].__setitem__('calls', rr[i]['result']['arms'][arm0]['teacher']['calls'] - 1),
+                                                               rr[i]['result']['arms'][arm0]['teacher'].__setitem__('binding_checked', rr[i]['result']['arms'][arm0]['teacher']['binding_checked'] - 1))),
+                'an edited decision log': mod(lambda rr: rr[i]['result']['arms'][arm0]['decision_list'].pop()),
+                'a wrong audit denominator': mod(lambda rr: rr[i]['causal'][0].__setitem__('checked', rr[i]['causal'][0]['checked'] + 1))}
+            must(not vbad(S, plan, psha, part, *mod2(lambda rr, qq: as_missing(rr[i]))), 'validator: a legitimate missing_mark exclusion was refused')
             w0 = part['members'][0]; wk0 = (w0['m'], w0['t_ms']); sel0 = [x for x in plan['sample'][day]['selected'] if (x['m'], x['t_ms']) == wk0][0]
             def as_world_status(rr, qq, n=4, keep_pool=False):                              # a world without an episode: four status picks, no pool lines
                 base = dict(day=day, m=w0['m'], t_ms=w0['t_ms'], hour=sel0['hour'], world_rank=sel0['rank'], pi=sel0['pi'])
@@ -325,6 +351,28 @@ def run(S):  # noqa: C901
                  'validator: a member outside the sample was accepted')
             n_del = sum(1 for k in range(np_) for r in S.gz_rows(S.part_paths(tmp / 'A', k)[1].read_bytes()) if r['status'] == 'ok' and r['fork'].get('delivered_changed'))
             must(n_del > 0, 'fork inputs: the delivered positive control never changed the inputs')
+            # the final-tick boundary (review 38febc0b item 2), on the real engine with a stub continuation
+            path_b = S.BE.tape([S.BE.frame(0, 0, 50, 52, bsz=0, asz=0)], [[4990., 0, 50., 5.]], 51.)
+            def stub_factory(B):
+                t_ = S.L.ArmTeacher({}, None); t_.bind(B, None)
+                t_.decide = lambda v, b: dict(side=v['side'], state=v['state'], status='synthetic', action='WAIT' if v['state'] == 'absent' else 'KEEP')
+                stub_factory.made.append((t_, None)); return t_
+            bd = {}
+            for kb, sb in ((98, 0), (99, 0), (99, 1)):
+                stub_factory.made = []; ctx_b = S.BE.fork_state(path_b, S.BE.POST_KEEP, kb, sb); res_b = S.L.pair_bound(ctx_b, stub_factory, 'keep')
+                led = S.arm_ledgers(stub_factory, res_b); A_ = {n: dict(res_b['arms'][n], **led[n]) for n in S.NAMES['keep']}; g_b = kb * S.L.STEP
+                bd[(kb, sb)] = dict(Y=res_b['Y'], calls={n: S.policy_calls(A_[n], g_b, sb, res_b['fork_first_side']) for n in A_},
+                                    bad=[S._arm_calls_bad(A_[n], g_b, sb, res_b['fork_first_side']) for n in A_], A=A_, g=g_b, first=res_b['fork_first_side'])
+            g0 = 1000.; dec_h = [[950., 0, 'absent', 'WAIT', None], [g0, 1, 'absent', 'WAIT', None], [g0, 0, 'live', 'KEEP', 3], [1050., 0, 'live', 'KEEP', 3], [1050., 1, 'absent', 'WAIT', None],
+                                 [1100., 0, 'live', 'KEEP', 3], [1100., 1, 'absent', 'WAIT', None]]
+            hand = lambda first: S.policy_calls(dict(decision_list=dec_h, fallback_list=[[1100., 1, 'absent', 'feature_unavailable']]), g0, 0, first)
+            must(hand(1) == 3 and hand(0) == 4, f'callbacks: the hand-built decision log (pre-fork, forced, the other side before / after it, a fallback) counts {hand(1)} / {hand(0)}, not 3 / 4')
+            z = bd[(99, 0)]; pre = bd[(98, 0)]; n0 = S.NAMES['keep'][0]
+            A_skip = dict(pre['A'][n0], teacher=dict(pre['A'][n0]['teacher'], calls=pre['A'][n0]['teacher']['calls'] - 1, binding_checked=pre['A'][n0]['teacher']['binding_checked'] - 1))
+            A_edit = dict(pre['A'][n0], decision_list=pre['A'][n0]['decision_list'][:-1])
+            must(z['Y'] == 5 and set(z['calls'].values()) == {0} and z['bad'] == [None, None] and min(pre['calls'].values()) > 0 and pre['bad'] == [None, None]
+                 and bd[(99, 1)]['bad'] == [None, None] and S._arm_calls_bad(A_skip, pre['g'], 0, pre['first']) and S._arm_calls_bad(A_edit, pre['g'], 0, pre['first']),
+                 f"callbacks: the final-tick boundary (zero required callbacks valid; skipped / edited refused) failed {[(k_, v_['Y'], v_['calls'], v_['bad']) for k_, v_ in bd.items()]}")
             # ---- (5) identity
             def copy_of(name, keep_parts=True):
                 d = tmp / name; shutil.copytree(tmp / 'A', d)
@@ -483,7 +531,7 @@ def run(S):  # noqa: C901
     finally:
         S.STRICT_DAY = sd0
     print(f'r2 label sample selftests passed (synthetic only): UTC hour / world sample, picks / weights / enumerated IPW identity, end to end ({np_} parts, '
-          f'resume identical), validator refuses {len(corrupt) + len(rec_bad)} corruptions, identity refusals (10), stops (held, two successive stops, high-water at the loading / census / world, pair, bound), lifetime sentinel, '
+          f'resume identical), validator refuses {len(corrupt) + len(rec_bad)} corruptions (a missing_mark exclusion passes), the final-tick callback boundary, identity refusals (10), stops (held, two successive stops, high-water at the loading / census / world, pair, bound), lifetime sentinel, '
           f'promotion / resume, finalize (6 refusals, manifest)')
 
 

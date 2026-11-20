@@ -1,0 +1,5 @@
+2026-11-20T19:29:00Z
+38c8b0f86ffc545fc38127ff670d8bc90f63188f922c194fb1660baa4758d0c2  predictfun/reviews/r2f_production_20261120/r2f_checks.py
+75663207dd4a8568043136d50e81c2b0b2c7d9261faf08407ea37e396139d8f8  predictfun/reviews/r2f_production_20261120/r2f_parity.py
+ef438a51c553b7b2dff394cf75b395c69cf3a9f50179e7f895da75ea6af2d26c  predictfun/reviews/r2f_production_20261120/launch_r2f.sh
+declared before any parity or production output exists (review 38febc0b's next priority)

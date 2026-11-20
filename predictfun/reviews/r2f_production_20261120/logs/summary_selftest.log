@@ -1,0 +1,1 @@
+mutant summary selftest passed: 8 cases (all caught passes; a missing record, an escape, a crash, a failed control, mixed sources, a copied and a renamed record fail)
