@@ -129,7 +129,8 @@ def run(S):  # noqa: C901
          'sample: ties are not broken by the canonical key')
     must(S.ckey(S.wkey(W[0])) == '{"day":"d","m":%d,"t_ms":%d}' % (W[0]['m'], W[0]['t_ms']), 'the canonical world key')
     must(S.ckey(dict(t_ms=1, day='d', m=2, x=None)) == '{"day":"d","m":2,"t_ms":1,"x":null}', 'the canonical key: sorted keys, explicit nulls')
-    cl = S.closure(); must(set(S.CORE) <= set(cl) and not any(n.endswith(S.CHECKS) for n in cl) and 'pf_io.py' in cl, 'the source closure (core modules, lazy imports, no checks)')
+    cl = S.closure(); lazy_only = {'pf_gap_top_makers.py', 'pf_move_info.py', 'pf_qr2_v3_early.py'}                  # reached only by function-level imports (2026-11-20)
+    must(set(S.CORE) <= set(cl) and not any(n.endswith(S.CHECKS) for n in cl) and lazy_only <= set(cl), 'the source closure (core modules, function-level imports, no checks)')
     # ---- (2) the picks and weights
     pi = .4
     pools = dict(full=[cand('neutral', 0, offset=0.)] + [cand(s_, k) for s_, k in (('delayed', 5), ('pi0', 10), ('joint_chase', 15))]
@@ -138,7 +139,7 @@ def run(S):  # noqa: C901
                  dup=[cand('neutral', 0, offset=0.), cand('pi0', 0), cand('pi0', 30, 'keep')],
                  empty=[cand('delayed', 5, status='unsampled'), cand('pi0', 10, 'keep', status='cap_blocked')])
     P = lambda n, h: S.picks_of([K(c) for c in pools[n] if c['kind'] == h and c['status'] == 'ok'], h, pi)
-    get = lambda n, h, p: [x for x in P(n, h) if x[0] == p][0]
+    get = lambda n, h, p: next((x for x in P(n, h) if x[0] == p), (p, None, None, None, None))   # an absent pick fails its check, never crashes
     tot = lambda n, h: sum(x[4] for x in P(n, h) if x[4] is not None)
     must(get('full', 'post', 'mandatory')[3] == 1. and get('full', 'post', 'extra')[3] == 1 / 3 and get('full', 'post', 'extra')[2] == 4 and abs(tot('full', 'post') - 1 / pi) < 1e-12,
          'picks: mandatory + extra (q 1, 1 / (N - 1); total 1 / pi)')
@@ -254,7 +255,7 @@ def run(S):  # noqa: C901
             def ledger_shift(r):
                 A = r['result']['arms'][arm0]; A['position'] += 1; A['cash'] -= A['mark']
             def keyshift(r):
-                r['row_key'] = dict(r['row_key'], decision_ms=r['row_key']['decision_ms'] + 50); r['row_rank'] = S.rank('row', r['row_key'])
+                r['row_key'] = dict(r['row_key'], generation=(r['row_key']['generation'] or 0) + 7); r['row_rank'] = S.rank('row', r['row_key'])   # only the identity check sees it
             def bump_n(r):
                 r['N'] += 1; r['q'] = 1. / (r['N'] - 1); r['w'] = 1. / (r['pi'] * r['N'] * r['q'])
             pk_i = [n for n, p in enumerate(pools_) if p['keys']][0]
@@ -402,6 +403,11 @@ def run(S):  # noqa: C901
             keep.clear(); mk0 = tuple(sorted({m_['m'] for m_ in part['members']}))
             must(life[False][0] == 'PART_DONE' and life[False][1] == 0 and life[False][2] == [(day, mk0)] and life[True][1] > 0,
                  f'lifetime: earlier worlds alive {life[False][1]} (must be 0), inputs read {life[False][2]} (once, for its day), retained control {life[True][1]} (must be > 0)')
+            def run_state(d, **k_):                                                         # a refusal or crash is a state for the must below
+                try:
+                    return quiet(S.run, d, 0, **dict(kw, **k_))
+                except Exception as e:
+                    return f'raised {e!r}'
             def latched(d, stage, field):
                 s_ = json.loads((d / 'part_000_status.json').read_text()) if (d / 'part_000_status.json').exists() else {}
                 la = s_.get('latch') or {}
@@ -409,17 +415,17 @@ def run(S):  # noqa: C901
             d = copy_of('Lp', False); hw0 = S.hwm
             try:
                 S.hwm = lambda: S.PEAK + 1.
-                sp = quiet(S.run, d, 0, **kw)
+                sp = run_state(d)
             finally:
                 S.hwm = hw0
             must(sp == 'STOP_RESOURCE' and latched(d, 'load', lambda la: la['hwm_mib'] > la['peak_mib']), 'stops: a high-water over the checkpoint did not latch at the loading')
             quiet(S.make_plan, tmp / 'Lq', **dict(pkw, limits=dict(load_s=600., world_s=120., pair_s=1e-9)))
-            must(quiet(S.run, tmp / 'Lq', 0, **kw) == 'STOP_RESOURCE' and latched(tmp / 'Lq', 'pair', lambda la: la['max_pair_s'] > la['pair_limit_s']),
+            must(run_state(tmp / 'Lq') == 'STOP_RESOURCE' and latched(tmp / 'Lq', 'pair', lambda la: la['max_pair_s'] > la['pair_limit_s']),
                  'stops: a pair over its limit did not latch at the pair')
             quiet(S.make_plan, tmp / 'Lb', **dict(pkw, limits=dict(load_s=0., world_s=0., pair_s=120.)))
-            must(quiet(S.run, tmp / 'Lb', 0, **kw) == 'STOP_RESOURCE' and latched(tmp / 'Lb', 'load', lambda la: la['elapsed_s'] > la['bound_s']),
+            must(run_state(tmp / 'Lb') == 'STOP_RESOURCE' and latched(tmp / 'Lb', 'load', lambda la: la['elapsed_s'] > la['bound_s']),
                  'stops: the process bound did not latch at the loading')
-            must(quiet(S.run, tmp / 'Lb', 0, **kw) == 'HELD', 'stops: a latched stop did not hold the rerun')
+            must(run_state(tmp / 'Lb') == 'HELD', 'stops: a latched stop did not hold the rerun')
             def seq_hwm(n_low):
                 calls = [0]
                 def f():
@@ -430,7 +436,7 @@ def run(S):  # noqa: C901
             for name, n_low, stage in (('Lc', 1, 'census'), ('Lw', 2 + n_pairs0, 'world')):
                 d = copy_of(name, False); hw0 = S.hwm
                 try:
-                    S.hwm = seq_hwm(n_low); sp = quiet(S.run, d, 0, **kw)
+                    S.hwm = seq_hwm(n_low); sp = run_state(d)
                 finally:
                     S.hwm = hw0
                 must(sp == 'STOP_RESOURCE' and latched(d, stage, lambda la: la['hwm_mib'] > la['peak_mib']), f'stops: the high-water was not checked at the {stage}')

@@ -1,0 +1,2 @@
+{"cls": "HARNESS_FAILURE", "index": "31", "name": "the high-water ignored", "seconds": 127.1, "sources": {"pf_r2_label_sample.py": "3ae26a7ceb1293a1", "pf_r2_label_sample_mutants.py": "59dfc4bc5eab7a02", "pf_r2_label_sample_selftest.py": "e939986984f76c5c"}, "why": "crash: ValueError(\"part 0: refused at promotion (['the record carries a resource breach'])\")"}
+2026-11-20T17:48:34Z tag=mut_v2_31 rc=1 peak_rss_mib=262 wall_s=127.38 cpu_user_s=126.07 memavail_start_gib=22 disk_free_gib=439->439 slot=claude4

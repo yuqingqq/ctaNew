@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "17", "name": "the mandatory rule ignores the source", "seconds": 1.8, "sources": {"pf_r2_label_sample.py": "3ae26a7ceb1293a1", "pf_r2_label_sample_mutants.py": "59dfc4bc5eab7a02", "pf_r2_label_sample_selftest.py": "02b79ba131c6080d"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: the mandatory rule (neutral, entry, decision 0)"}
+2026-11-20T18:24:51Z tag=mut_v2_17 rc=0 peak_rss_mib=217 wall_s=1.97 cpu_user_s=1.78 memavail_start_gib=22 disk_free_gib=439->439 slot=claude2

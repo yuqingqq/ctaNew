@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "4", "name": "Y reversed", "seconds": 85.8, "sources": {"pf_r2_labels.py": "f56f1ae560492aa9", "pf_r2_labels_mutants.py": "a62f0507cdc2189c", "pf_r2_labels_selftest.py": "ad68b48219e4c60e"}, "why": "R2 LABELS SELFTEST FAILED: parity: pair_bound differs from pf_branch_engine.pair (post_keep k 2 side 1 keep: ok / ok) | parity: pair_bound differs from pf_branch_engine.pair (post_keep k 5 side 1 keep"}
+2026-11-20T17:20:55Z tag=mut_v1_4 rc=0 peak_rss_mib=247 wall_s=86.05 cpu_user_s=85.51 memavail_start_gib=21 disk_free_gib=440->440 slot=claude

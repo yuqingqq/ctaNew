@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "32", "name": "outcome fields kept", "seconds": 95.2, "sources": {"pf_r2_labels.py": "f56f1ae560492aa9", "pf_r2_labels_mutants.py": "a62f0507cdc2189c", "pf_r2_labels_selftest.py": "ad68b48219e4c60e"}, "why": "R2 LABELS SELFTEST FAILED: census: pi0 sampling True / unsampled present True, neutral / delayed naming True, outcome-free rows False"}
+2026-11-20T18:21:08Z tag=mut_v1_32 rc=0 peak_rss_mib=251 wall_s=95.45 cpu_user_s=94.55 memavail_start_gib=23 disk_free_gib=439->439 slot=claude

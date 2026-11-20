@@ -1,0 +1,85 @@
+Fri Nov 20 18:28:18 2026    /home/yuqing/ctaNew/predictfun/reviews/r2e_label_pilot_20261120/logs/pair_profile.prof
+
+         149903531 function calls (147813705 primitive calls) in 130.282 seconds
+
+   Ordered by: internal time
+   List reduced from 7741 to 25 due to restriction <25>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+     5997   23.184    0.004  112.332    0.019 {built-in method time.sleep}
+   103730   11.853    0.000   11.853    0.000 {method 'astype' of 'numpy.ndarray' objects}
+  1427310    6.671    0.000    6.671    0.000 {method 'partition' of 'numpy.ndarray' objects}
+    23986    4.923    0.000    5.210    0.000 /home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/arrays/string_arrow.py:194(_from_sequence)
+  1427310    4.815    0.000   30.541    0.000 /home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/numpy/lib/_function_base_impl.py:4005(_median)
+    26231    4.183    0.000    4.183    0.000 {method 'decompress' of 'zlib._ZlibDecompressor' objects}
+  2927993    3.415    0.000    3.415    0.000 {method 'reduce' of 'numpy.ufunc' objects}
+24803265/24780342    3.160    0.000    4.571    0.000 {built-in method builtins.isinstance}
+  1427312    2.592    0.000    6.940    0.000 /home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/numpy/_core/_methods.py:118(_mean)
+  1711305    2.468    0.000    2.468    0.000 {method 'split' of 'str' objects}
+  1427310    2.093    0.000    6.264    0.000 /home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/numpy/lib/_utils_impl.py:643(_median_nancheck)
+    26023    1.976    0.000   13.338    0.001 /home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/arrays/arrow/array.py:1671(to_numpy)
+  1427310    1.790    0.000   32.778    0.000 /home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/numpy/lib/_function_base_impl.py:3834(_ureduce)
+   583347    1.777    0.000    5.853    0.000 /home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/construction.py:531(sanitize_array)
+      230    1.606    0.007   15.089    0.066 /home/yuqing/ctaNew/predictfun/research/pf_stop_model.py:440(pair_scales)
+   464712    1.465    0.000    6.928    0.000 /home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/internals/construction.py:999(convert)
+  1427312    1.329    0.000    1.730    0.000 /home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/numpy/_core/_methods.py:76(_count_reduce_items)
+  1683336    1.210    0.000    3.664    0.000 /home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/strings/object_array.py:388(<lambda>)
+  1427312    1.114    0.000    8.055    0.000 /home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/numpy/_core/fromnumeric.py:3735(mean)
+  1496082    1.104    0.000    2.553    0.000 /home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/numpy/_core/numerictypes.py:471(issubdtype)
+     2512    1.101    0.000    1.101    0.000 {method 'update' of '_hashlib.HASH' objects}
+  8492573    1.077    0.000    1.077    0.000 {built-in method builtins.issubclass}
+  1427362    0.975    0.000    0.975    0.000 {method 'take' of 'numpy.ndarray' objects}
+  1427311    0.942    0.000    2.660    0.000 {method 'any' of 'numpy.generic' objects}
+6409749/4921834    0.879    0.000    1.148    0.000 {built-in method builtins.len}
+
+
+Fri Nov 20 18:28:18 2026    /home/yuqing/ctaNew/predictfun/reviews/r2e_label_pilot_20261120/logs/pair_profile.prof
+
+         149903531 function calls (147813705 primitive calls) in 130.282 seconds
+
+   Ordered by: cumulative time
+   List reduced from 7741 to 40 due to restriction <40>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+   1629/1    0.034    0.000  129.183  129.183 {built-in method builtins.exec}
+      2/1    0.002    0.001  129.183  129.183 /home/yuqing/ctaNew/predictfun/research/pf_r2_label_sample.py:1(<module>)
+      2/1    0.002    0.001  129.181  129.181 /home/yuqing/ctaNew/predictfun/research/pf_r2_label_sample.py:590(run)
+     5997   23.184    0.004  112.332    0.019 {built-in method time.sleep}
+        1    0.002    0.002   70.224   70.224 /home/yuqing/ctaNew/predictfun/research/pf_r2_label_sample.py:338(world_rows)
+    14810    0.035    0.000   68.725    0.005 /home/yuqing/ctaNew/predictfun/research/pf_branch_engine.py:339(decide)
+    14260    0.007    0.000   68.433    0.005 /home/yuqing/ctaNew/predictfun/research/pf_branch_engine.py:485(__call__)
+     1811    0.007    0.000   68.424    0.038 /home/yuqing/ctaNew/predictfun/research/pf_r2_labels.py:114(fn)
+     1811    0.012    0.000   68.406    0.038 /home/yuqing/ctaNew/predictfun/research/pf_r2_teacher.py:425(fn)
+        6    0.002    0.000   65.256   10.876 /home/yuqing/ctaNew/predictfun/research/pf_r2_labels.py:180(pair_bound)
+     2770    0.010    0.000   65.055    0.023 /home/yuqing/ctaNew/predictfun/research/pf_branch_engine.py:382(step)
+        1    0.003    0.003   54.498   54.498 /home/yuqing/ctaNew/predictfun/research/pf_pipeline_export.py:285(real_inputs)
+     1811    0.017    0.000   44.512    0.025 /home/yuqing/ctaNew/predictfun/research/pf_r2_teacher.py:449(probe)
+     2397    0.126    0.000   42.138    0.018 /home/yuqing/ctaNew/predictfun/research/pf_r2_shadow.py:343(rebuild_row)
+      230    0.006    0.000   38.949    0.169 /home/yuqing/ctaNew/predictfun/research/pf_pipeline_export.py:136(real_features)
+      230    0.018    0.000   38.943    0.169 /home/yuqing/ctaNew/predictfun/research/pf_flow_price_data.py:17(feature_rows)
+      229    0.001    0.000   38.758    0.169 /home/yuqing/ctaNew/predictfun/research/pf_r2_shadow.py:337(market_at)
+  1427310    0.753    0.000   33.531    0.000 /home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/numpy/lib/_function_base_impl.py:3916(median)
+  1427310    1.790    0.000   32.778    0.000 /home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/numpy/lib/_function_base_impl.py:3834(_ureduce)
+  1427310    4.815    0.000   30.541    0.000 /home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/numpy/lib/_function_base_impl.py:4005(_median)
+     2283    0.074    0.000   29.502    0.013 /home/yuqing/ctaNew/predictfun/research/pf_r2_teacher.py:406(decide)
+       25    0.000    0.000   28.130    1.125 /home/yuqing/ctaNew/predictfun/research/pf_stop_model_x5.py:77(parse_depth)
+       50    0.015    0.000   28.130    0.563 /home/yuqing/ctaNew/predictfun/research/pf_stop_model_x5.py:79(lv)
+       50    0.001    0.000   20.064    0.401 /home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/io/parsers/readers.py:349(read_csv)
+       50    0.035    0.001   20.062    0.401 /home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/io/parsers/readers.py:258(_read)
+       50    0.003    0.000   19.959    0.399 /home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/io/parsers/readers.py:1931(read)
+     6973    0.045    0.000   16.832    0.002 /home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/frame.py:702(__init__)
+    23566    0.065    0.000   15.462    0.001 /home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/generic.py:6360(astype)
+      230    1.606    0.007   15.089    0.066 /home/yuqing/ctaNew/predictfun/research/pf_stop_model.py:440(pair_scales)
+    28516    0.110    0.000   14.840    0.001 /home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/internals/managers.py:396(apply)
+    27997    0.161    0.000   14.809    0.001 /home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/arrays/string_arrow.py:317(astype)
+    23566    0.020    0.000   14.728    0.001 /home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/internals/managers.py:610(astype)
+    25516    0.065    0.000   14.478    0.001 /home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/internals/blocks.py:578(astype)
+     2156    0.069    0.000   14.312    0.007 /home/yuqing/ctaNew/predictfun/research/pf_r2_teacher.py:147(check)
+    25516    0.043    0.000   14.165    0.001 /home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/dtypes/astype.py:194(astype_array_safe)
+    25516    0.034    0.000   13.840    0.001 /home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/dtypes/astype.py:160(astype_array)
+    26023    1.976    0.000   13.338    0.001 /home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/arrays/arrow/array.py:1671(to_numpy)
+       50    0.001    0.000   11.902    0.238 /home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/strings/accessor.py:700(split)
+   103730   11.853    0.000   11.853    0.000 {method 'astype' of 'numpy.ndarray' objects}
+     4269    0.265    0.000    8.940    0.002 /home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/internals/construction.py:463(nested_data_to_arrays)
+
+

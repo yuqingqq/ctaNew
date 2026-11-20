@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "20", "name": "resume reruns finished pairs", "seconds": 127.3, "sources": {"pf_r2_labels.py": "f56f1ae560492aa9", "pf_r2_labels_mutants.py": "a62f0507cdc2189c", "pf_r2_labels_selftest.py": "ad68b48219e4c60e"}, "why": "R2 LABELS SELFTEST FAILED: finalize refused valid input (finalize: a selected pair has no valid record)"}
+2026-11-20T17:54:18Z tag=mut_v1_20 rc=0 peak_rss_mib=255 wall_s=127.55 cpu_user_s=125.81 memavail_start_gib=22 disk_free_gib=439->439 slot=claude

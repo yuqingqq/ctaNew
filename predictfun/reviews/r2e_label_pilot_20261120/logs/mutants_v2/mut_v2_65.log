@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "65", "name": "the record bytes unchecked", "seconds": 58.9, "sources": {"pf_r2_label_sample.py": "3ae26a7ceb1293a1", "pf_r2_label_sample_mutants.py": "59dfc4bc5eab7a02", "pf_r2_label_sample_selftest.py": "02b79ba131c6080d"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['a part byte', 'a pool byte']"}
+2026-11-20T18:42:27Z tag=mut_v2_65 rc=0 peak_rss_mib=250 wall_s=59.15 cpu_user_s=58.23 memavail_start_gib=22 disk_free_gib=439->439 slot=claude2

@@ -1,0 +1,4 @@
+2026-11-20T18:54:51Z
+ed3180b7800bc823af730464067ffe3d1bf651c7d7ec86d80fa514c15dc2b0ba  predictfun/reviews/r2e_label_pilot_20261120/r2e_checks_v3.py
+382068e3aae70d60f47c5b8e12e626c5b486bcd4df138e39ad1de75ad3442660  predictfun/reviews/r2e_label_pilot_20261120/r2e_checks.py
+v3.1 / v4.1: one instrument fix in both: logs/build_sources.txt was parsed hash -> file, so predicate H crashed (FileNotFoundError / KeyError) before any reading was printed or written; now file -> hash. No predicate or reading changed.

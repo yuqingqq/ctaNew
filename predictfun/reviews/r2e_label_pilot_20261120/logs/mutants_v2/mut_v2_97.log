@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "97", "name": "the hidden copy unchecked", "seconds": 57.5, "sources": {"pf_r2_label_sample.py": "3ae26a7ceb1293a1", "pf_r2_label_sample_mutants.py": "59dfc4bc5eab7a02", "pf_r2_label_sample_selftest.py": "02b79ba131c6080d"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['hidden copy unequal']"}
+2026-11-20T18:51:17Z tag=mut_v2_97 rc=0 peak_rss_mib=250 wall_s=57.67 cpu_user_s=57.09 memavail_start_gib=23 disk_free_gib=438->438 slot=claude4

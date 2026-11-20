@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "45", "name": "the keyed world build ignores its keys", "seconds": 7.2, "sources": {"pf_r2_label_sample.py": "3ae26a7ceb1293a1", "pf_r2_label_sample_mutants.py": "59dfc4bc5eab7a02", "pf_r2_label_sample_selftest.py": "e939986984f76c5c"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: worlds: a keyed build is not exactly the keyed worlds"}
+2026-11-20T17:56:31Z tag=mut_v2_45 rc=0 peak_rss_mib=218 wall_s=7.45 cpu_user_s=7.23 memavail_start_gib=22 disk_free_gib=439->439 slot=claude3

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "64", "name": "finalize ignores the partition cover", "seconds": 135.8, "sources": {"pf_r2_label_sample.py": "3ae26a7ceb1293a1", "pf_r2_label_sample_mutants.py": "59dfc4bc5eab7a02", "pf_r2_label_sample_selftest.py": "02b79ba131c6080d"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: finalize: overlapping partitions were accepted"}
+2026-11-20T18:39:17Z tag=mut_v2_64 rc=0 peak_rss_mib=263 wall_s=135.96 cpu_user_s=134.86 memavail_start_gib=22 disk_free_gib=439->439 slot=claude4

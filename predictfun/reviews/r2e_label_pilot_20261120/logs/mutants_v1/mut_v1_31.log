@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "31", "name": "offset 0 named delayed", "seconds": 94.2, "sources": {"pf_r2_labels.py": "f56f1ae560492aa9", "pf_r2_labels_mutants.py": "a62f0507cdc2189c", "pf_r2_labels_selftest.py": "ad68b48219e4c60e"}, "why": "R2 LABELS SELFTEST FAILED: census: pi0 sampling True / unsampled present True, neutral / delayed naming False, outcome-free rows True"}
+2026-11-20T18:19:34Z tag=mut_v1_31 rc=0 peak_rss_mib=251 wall_s=94.46 cpu_user_s=93.59 memavail_start_gib=23 disk_free_gib=440->439 slot=claude

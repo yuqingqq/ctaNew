@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "55", "name": "a part promoted without validation", "seconds": 136.9, "sources": {"pf_r2_label_sample.py": "3ae26a7ceb1293a1", "pf_r2_label_sample_mutants.py": "59dfc4bc5eab7a02", "pf_r2_label_sample_selftest.py": "02b79ba131c6080d"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: promotion: an invalid part was promoted"}
+2026-11-20T18:32:26Z tag=mut_v2_55 rc=0 peak_rss_mib=263 wall_s=137.16 cpu_user_s=135.72 memavail_start_gib=22 disk_free_gib=439->439 slot=claude4

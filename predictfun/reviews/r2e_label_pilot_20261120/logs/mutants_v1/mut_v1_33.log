@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "33", "name": "the arm probes not recorded", "seconds": 160.7, "sources": {"pf_r2_labels.py": "f56f1ae560492aa9", "pf_r2_labels_mutants.py": "a62f0507cdc2189c", "pf_r2_labels_selftest.py": "ad68b48219e4c60e"}, "why": "R2 LABELS SELFTEST FAILED: records: the arm causal / parity probes are not recorded per arm, did not run, or mismatch"}
+2026-11-20T18:22:44Z tag=mut_v1_33 rc=0 peak_rss_mib=255 wall_s=160.90 cpu_user_s=159.68 memavail_start_gib=22 disk_free_gib=439->439 slot=claude

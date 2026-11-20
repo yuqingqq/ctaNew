@@ -607,6 +607,37 @@ pulls and bid/ask; judge movement calibration on selected actions before changin
 order design. Other session owns fixes; scheduler remains off.
 <!-- /PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
 
+## 2026-11-20 18:57Z (session aea5bfb9) — R2-E: THE r2_label_sample_v2 LAUNCH GATE — THE BUNDLED B1–B7 ROUND AND THE 48-WORLD DISTRIBUTED PILOT; DECLARED CHECKS ALL TRUE; LABELS SPARSE (276 / 288 EXACTLY 0); FULL SAMPLE PROJECTED AT 27.0 CORE-HOURS (reviews 4393ad19 / 0ca01d1f) (USER: "include as many issues as possible in each round"; "We need to make the run more efficient")
+- [Receipt](reviews/r2e_label_pilot_20261120/report.md). The freeze `56e74082` came before any attempt-4 pair; the results are in this commit. **Label-only: target variation and build reliability, no model skill.**
+- **The consolidated B1–B7 checklist (closure matrix in the receipt): all closed.**
+  - B1 provenance: [`pf_r2_label_sample.py`](research/pf_r2_label_sample.py) `verify_current` binds the source closure, teacher, schema and every day's input identity before skip, run and accept.
+  - B2: one shared validator, recomputing the ledgers from the stored fills.
+  - B3: runner v5.
+  - B4: member-only partitions, watchdog and stage checkpoints, lifetime sentinels.
+  - B5: the CLI.
+  - B6: fail-fast selftests and one mutant per job.
+  - B7: the sample and the 107 fork inputs.
+  - **Suites:** v1 35 / 35; v2 100 / 100 (run 2; run 1 on the frozen selftest caught 95 / 100, the selftest was fixed, the module unchanged); runner v5 30 / 30.
+- **Attempts 1–3 kept** (FINDINGS P85–P87):
+  - attempt 1: an unguarded plan step, 2,132 MiB, over the 2 GiB rule;
+  - attempt 2: every partition latched loading the whole day's worlds;
+  - attempt 3: measurement only; a mid-run source edit was refused by the B1 binding.
+  - Attempt 4: all 13 jobs exit 0, peaks ≤ 1,271 MiB, no stop.
+- **Checks (declared before outputs):** A–H all true (v4.1; v3 kept: H false by design after the selftest fix). The controls on 6 partitions: reversal 288 / 288 equal, stale binding caught, the 4 corruptions refused.
+- **Readings** (FINDINGS P89):
+  - Y = 0 on 276 / 288 pairs; the 12 nonzero from 11 / 96 originals; range −165 to +226 c; the top-5 \|Y\| share 0.88.
+  - Absent states: pi0 KEEP and joint_chase POST were never drawn (a pool-size property of the uniform design).
+- **Cost:**
+  - 5.0 s a pair; full sample 27.0 core-hours (~7 h on 4 slots).
+  - Profile: about two thirds of a pair's time is the frozen teacher's causal probe. Exact options, for the review: probe every 35th decision instead of 7th (~2×; less checking power) and a per-day input cache (~10 %), each verified byte-identical against the pilot first.
+- **Deferred (nonblocking):**
+  - v1 pairs' between-day release is not sentinel-tested (one synthetic day);
+  - v1 stays the historical path;
+  - runner v5's log has no per-mutant durations;
+  - attempt-3 and profile-only outputs stay in data/ (the USER deletes);
+  - a production stratification amendment only if the absent strata matter.
+- **Next measurement:** the combined review. Then, on its go, the remaining production sample (≤ 18,432 pairs), then the candidate stage, designed for a ~4 %-nonzero target.
+
 ## 2026-11-20 15:01Z (session aea5bfb9) — R2-D: THE ARM-BOUND PAIRED-LABEL ADAPTER AND ITS BOUNDED OCT 24–25 RECEIPT; CHECKS ALL TRUE EXCEPT (D) CENSUS MEMORY; THE FULL LABEL POPULATION IS INFEASIBLE AT ~6 s PER PAIR (review 8cc1dc49's next priority) (USER: "... continue the implementing and next priority loop")
 - [Receipt](reviews/r2d_labels_20261120/report.md); [R2-C v2 diagnostics](reviews/r2c_teacher_20261120/report_v2.md) (supersedes the value columns).
 - Review 8cc1dc49's findings:

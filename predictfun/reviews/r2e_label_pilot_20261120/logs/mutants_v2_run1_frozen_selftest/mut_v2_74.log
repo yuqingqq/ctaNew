@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "74", "name": "duplicate rows accepted", "seconds": 58.7, "sources": {"pf_r2_label_sample.py": "3ae26a7ceb1293a1", "pf_r2_label_sample_mutants.py": "59dfc4bc5eab7a02", "pf_r2_label_sample_selftest.py": "e939986984f76c5c"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['duplicate row']"}
+2026-11-20T18:10:39Z tag=mut_v2_74 rc=0 peak_rss_mib=252 wall_s=58.93 cpu_user_s=57.93 memavail_start_gib=22 disk_free_gib=440->440 slot=claude2

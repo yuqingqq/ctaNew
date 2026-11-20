@@ -533,6 +533,27 @@ pipeline_one_day_v3_20261119:
   values_equal_v2: {cells_per_day: 190, differing: 0}
   attribution_vs_pull_all_c: {"20261026": {first_step: 0.0, later: 954.33, never: 995.36, no_prediction: 0.0}, "20261027": {first_step: 0.0, later: -821.85, never: 251.74, no_prediction: 0.0}}
 
+r2e_label_pilot_20261120:
+  status: done_r2e_launch_gate_bundled_b1_b7_pilot_checks_all_true_labels_sparse
+  asof: "2026-11-20 18:57Z"
+  receipt: predictfun/reviews/r2e_label_pilot_20261120/report.md
+  freeze_commit: 56e740826d480afd252c487e591678a0faed05f5
+  plan_sha256_prefix: a3f1e8975728800e
+  runner_sha256: 3ae26a7ceb1293a1
+  labels_v1_sha256: f56f1ae560492aa9
+  runner_v5_sha256: 5778c1a64ad5d616
+  selftest_v2: {frozen: e939986984f76c5c, final: 02b79ba131c6080d}
+  suites: {v1: 35/35, v2_run1_frozen_selftest: 95/100, v2_run2: 100/100, runner_v5: 30/30}
+  closure: {B1: closed, B2: closed, B3: closed, B4: closed, B5: closed, B6: closed, B7: closed}
+  attempts: {a1: plan_unguarded_2132_mib_over_2gib, a2: every_partition_latched_loading, a3: measurement_only_a4_refused_by_source_binding, a4: all_jobs_rc0_no_stop}
+  checks_v4_1: {A_plan: true, B_runs: true, C_resume_identity: true, D_acceptance: true, E_resources: true, F_labels: true, G_controls: true, H_suites: true}
+  checks_v3_1: {H_suites: false_by_design_selftest_fixed_after_freeze}
+  pilot: {worlds: 48, pairs: 288, ok: 288, dataset_sha256_prefix: 0d5356401b5aee7b}
+  readings: {y_zero: 276, y_positive: 8, y_negative: 4, nonzero_originals: 11, originals: 96, top5_abs_share: 0.88, y_min_c: -165.0, y_max_c: 225.85}
+  causal: {probe_checked: 9715, mismatch: 0, parity_checked: 9183, parity_mismatch: 0, binding_checked: 66280, binding_bad: 0}
+  cost: {pair_s_mean: 5.0, pair_s_max: 9.65, load_s_mean: 54.8, full_sample_core_hours: 26.97, conservative_bound_core_hours: 46.14, ceiling: 40, pilot_core_hours: 1.05}
+  efficiency_options_for_review: [probe_every_35th_decision_about_2x_less_checking_power, per_day_input_cache_about_10pct]
+  next: combined_review_then_remaining_production_sample_on_its_go
 r2d_labels_20261120:
   status: done_r2d_arm_bound_label_adapter_bounded_oct24_25_checks_all_true_except_D_census_memory
   asof: "2026-11-20 15:01Z"

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "10", "name": "the manifest fingerprint unchecked", "seconds": 170.5, "sources": {"pf_r2_labels.py": "f56f1ae560492aa9", "pf_r2_labels_mutants.py": "a62f0507cdc2189c", "pf_r2_labels_selftest.py": "ad68b48219e4c60e"}, "why": "R2 LABELS SELFTEST FAILED: identity: a manifest fork fingerprint that the rebuilt fork does not match was not refused"}
+2026-11-20T17:30:22Z tag=mut_v1_10 rc=0 peak_rss_mib=256 wall_s=170.72 cpu_user_s=169.55 memavail_start_gib=21 disk_free_gib=440->440 slot=claude

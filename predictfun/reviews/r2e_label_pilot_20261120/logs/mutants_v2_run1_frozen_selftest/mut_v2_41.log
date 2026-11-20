@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "41", "name": "verified after the skip", "seconds": 58.3, "sources": {"pf_r2_label_sample.py": "3ae26a7ceb1293a1", "pf_r2_label_sample_mutants.py": "59dfc4bc5eab7a02", "pf_r2_label_sample_selftest.py": "e939986984f76c5c"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: identity: a stale source was not refused before the skip"}
+2026-11-20T17:57:55Z tag=mut_v2_41 rc=0 peak_rss_mib=248 wall_s=58.51 cpu_user_s=57.61 memavail_start_gib=22 disk_free_gib=439->439 slot=claude2

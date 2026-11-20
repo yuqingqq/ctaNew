@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "26", "name": "the manifest rewritten", "seconds": 169.5, "sources": {"pf_r2_labels.py": "f56f1ae560492aa9", "pf_r2_labels_mutants.py": "a62f0507cdc2189c", "pf_r2_labels_selftest.py": "ad68b48219e4c60e"}, "why": "R2 LABELS SELFTEST FAILED: manifest: an existing manifest was rewritten | CLI: an existing census was rewritten"}
+2026-11-20T18:07:02Z tag=mut_v1_26 rc=0 peak_rss_mib=253 wall_s=169.68 cpu_user_s=167.96 memavail_start_gib=22 disk_free_gib=440->440 slot=claude

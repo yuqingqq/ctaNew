@@ -14,9 +14,13 @@ CHECKS
      every ok pair's arms with checks > 0; the delivered positive control changed the fork inputs on >= 1 ok row a day; at most 288 pairs.
  (G) controls (r2e_controls.py, every A partition): reversal equal on every ok pair; the stale binding caught (binding_bad > 0) on each
      partition's first ok pair; the four corruptions refused; the intact parts valid; controls peaks <= 1,536 MiB.
- (H) suites: every build file's hash equals the freeze's (logs/build_sources.txt). The v1 and v2 selftests passed on them. Both per-mutant
-     summaries passed: their controls passed and every planted error was caught (35 / 35 v1, 100 / 100 v2). The runner v5 suite passed
-     (30 / 30) on its unchanged sources.
+ (H) suites (v4; v3 kept as r2e_checks_v3.py -> checks_v3.json): the PRODUCING files equal the freeze's (logs/build_sources.txt: the two
+     label modules and the runner; the plan's whole source closure equals the executing one). The CHECK files (selftests, harnesses, mutant
+     tooling) are the final suite run's: each summary's records ran on one source set equal to the files on disk.
+     - Required: the v1 and v2 selftests pass on them; both per-mutant summaries pass (control passed; 35 / 35 v1, 100 / 100 v2); the runner
+       v5 suite passed (30 / 30).
+     - Why v4: the frozen v2 selftest (e9399869) caught 95 / 100. Its five gaps were fixed in the selftest only (02b79ba1; the module is
+       unchanged), and the suite was rerun. Run 1 is kept in logs/mutants_v2_run1_*.
 READINGS (review 0ca01d1f's list; descriptive, the pilot's own populations, no intervals)
  - population: planned versus realized worlds, markets, UTC hours, originals, picks, pairs; statuses by day / side / head / source;
  - Y by day and head: zero / positive / negative counts, the distinct originals behind each, mean, median, tails (1 / 5 / 95 / 99 %), min,
@@ -49,7 +53,7 @@ import pf_r2_label_sample as S                            # noqa: E402
 
 HERE = Path(__file__).resolve().parent; LOGS = HERE / 'logs'
 D = Path('/home/yuqing/ctaNew/data/predict_fun/research/r2_label_sample_v2_20261120'); A, B = D / 'attempt4_pilot_A', D / 'attempt4_pilot_B'                  # attempts 1-3 kept (logs/attempt*)
-BUILD = dict(ln.split()[::-1] for ln in (HERE / 'logs' / 'build_sources.txt').read_text().splitlines() if ln.strip())   # file -> sha256[:16] at the freeze
+BUILD = dict(ln.split() for ln in (HERE / 'logs' / 'build_sources.txt').read_text().splitlines() if ln.strip())   # file -> sha256[:16] at the freeze (v.1: was parsed hash -> file)
 RL = re.compile(r'tag=(\S+) rc=(\d+) peak_rss_mib=(\d+) wall_s=([\d.]+) cpu_user_s=([\d.]+)')
 
 
@@ -105,13 +109,13 @@ def main():  # noqa: C901
     ctl_peaks = [run_light(f"r2e_controls_{p['part']}")['peak'] for p in pa['partitions']]
     ck['G_controls'] = bool(all(c['reversal']['n'] > 0 and c['reversal']['equal'] == c['reversal']['n'] and c['stale_binding'] and c['stale_binding']['binding_bad'] > 0
                                 and all(c['corruptions_refused'].values()) and c['intact_valid'] and c['plan_sha256'] == psha for c in ctl) and max(ctl_peaks) <= 1536)
-    RES = Path('/home/yuqing/ctaNew/predictfun/research')
-    now = {f: S.C.sha(RES / f)[:16] for f in BUILD}
+    RES = Path('/home/yuqing/ctaNew/predictfun/research'); PROD = ('pf_r2_label_sample.py', 'pf_r2_labels.py', 'pf_r2_runner.py')
+    now = {f: S.C.sha(RES / f)[:16] for f in PROD}
     summ = {k: (LOGS / f'mutants_{k}_summary.log').read_text() for k in ('v1', 'v2')}
     cnt = {k: re.search(r'mutation check passed: the control passes its selftest, (\d+) / (\d+) planted', v) for k, v in summ.items()}
     st_ok = all('selftests passed' in (LOGS / f'{k}_selftest.log').read_text() for k in ('v1', 'v2'))
     rv5 = (LOGS / 'runner_v5' / 'runner_v5_mutants.log').read_text()
-    ck['H_suites'] = bool(now == BUILD and S.sources_now() == pa['sources'] and st_ok and all(cnt.values()) and int(cnt['v1'].group(1)) == int(cnt['v1'].group(2)) == 35
+    ck['H_suites'] = bool(now == {f: BUILD[f] for f in PROD} and S.sources_now() == pa['sources'] and st_ok and all(cnt.values()) and int(cnt['v1'].group(1)) == int(cnt['v1'].group(2)) == 35
                           and int(cnt['v2'].group(1)) == int(cnt['v2'].group(2)) == 100 and '30 / 30 planted code errors are caught by a check' in rv5)
     # ---- readings (review 0ca01d1f): descriptive, the pilot's own populations; not a training set, no intervals
     def wcsv(name, head, rows_):

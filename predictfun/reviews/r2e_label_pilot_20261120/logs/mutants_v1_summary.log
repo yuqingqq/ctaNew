@@ -1,0 +1,37 @@
+  0 the arm teacher bound to the fork copy: CAUGHT (50.5 s) - R2 LABELS SELFTEST FAILED: binding: an arm-bound pair failed its binding / reconciliation / causal checks ([{'calls': 172, 'by_status': {'model': 170,
+  1 the remaining side skipped at the fork tick: CAUGHT (95.3 s) - R2 LABELS SELFTEST FAILED: parity: pair_bound differs from pf_branch_engine.pair (post_keep k 0 side 0 post: ok / ok) | parity: pair_bound differs fro
+  2 the forced action dropped: CAUGHT (98.7 s) - R2 LABELS SELFTEST FAILED: parity: pair_bound differs from pf_branch_engine.pair (post_keep k 0 side 0 post: ok / ok) | parity: pair_bound differs fro
+  3 arms share one branch: CAUGHT (30.9 s) - R2 LABELS SELFTEST FAILED: no feasible fork for the stale-binding falsifier
+  4 Y reversed: CAUGHT (85.8 s) - R2 LABELS SELFTEST FAILED: parity: pair_bound differs from pf_branch_engine.pair (post_keep k 2 side 1 keep: ok / ok) | parity: pair_bound differs fro
+  5 the binding check disabled: CAUGHT (95.3 s) - R2 LABELS SELFTEST FAILED: binding: a stale-bound teacher (0) or a reused first-arm teacher (0) is not caught
+  6 reconcile without cash from the fills: CAUGHT (95.8 s) - R2 LABELS SELFTEST FAILED: reconciliation: clean True; cash True, position False, value False, a fill above size False must each fail alone
+  7 reconcile without position from the fills: CAUGHT (96.4 s) - R2 LABELS SELFTEST FAILED: reconciliation: clean True; cash False, position True, value False, a fill above size False must each fail alone
+  8 reconcile without the value identity: CAUGHT (94.8 s) - R2 LABELS SELFTEST FAILED: reconciliation: clean True; cash False, position False, value True, a fill above size False must each fail alone
+  9 reconcile without the size guard: CAUGHT (96.5 s) - R2 LABELS SELFTEST FAILED: reconciliation: clean True; cash False, position False, value False, a fill above size True must each fail alone
+  10 the manifest fingerprint unchecked: CAUGHT (170.5 s) - R2 LABELS SELFTEST FAILED: identity: a manifest fork fingerprint that the rebuilt fork does not match was not refused
+  11 selection not round robin: CAUGHT (94.0 s) - R2 LABELS SELFTEST FAILED: selection: [('neutral', 0), ('neutral', 1), ('neutral', 2), ('neutral', 3), ('neutral', 4), ('delayed', 0), ('delayed', 1)]
+  12 selection without the cap: CAUGHT (94.6 s) - R2 LABELS SELFTEST FAILED: selection: [('neutral', 0), ('delayed', 0), ('joint_post_keep', 0), ('joint_chase', 0), ('pi0', 0), ('neutral', 1), ('delay
+  13 the census checkpoint removed: CAUGHT (164.6 s) - R2 LABELS SELFTEST FAILED: checkpoint: the census passed a high-water over the checkpoint
+  14 the census keeps the last world: CAUGHT (161.3 s) - R2 LABELS SELFTEST FAILED: lifetime: earlier-day worlds alive at the next load 1 (must be 0); the retained control reported 3 (must be > 0)
+  15 the CLI prints the selection as the candidates: CAUGHT (163.5 s) - R2 LABELS SELFTEST FAILED: CLI: the census exit 0 / printed {'candidates': 8, 'selected': 8} disagrees with the manifest / candidates (5194, 5194)
+  16 a pair ignores the high-water: CAUGHT (167.7 s) - R2 LABELS SELFTEST FAILED: checkpoint: a pair over the checkpoint did not latch (PAIRS_DONE)
+  17 finalize ignores the high-water: CAUGHT (160.9 s) - R2 LABELS SELFTEST FAILED: checkpoint: finalize passed a high-water over the checkpoint
+  18 finalize ignores held stops: CAUGHT (162.3 s) - R2 LABELS SELFTEST FAILED: finalize: an undisposed stop was accepted
+  19 selection of non-ok candidates: CAUGHT (94.1 s) - R2 LABELS SELFTEST FAILED: selection: [('neutral', 0), ('delayed', 0), ('joint_post_keep', 0), ('joint_chase', 0), ('pi0', 0), ('neutral', 0), ('delay
+  20 resume reruns finished pairs: CAUGHT (127.3 s) - R2 LABELS SELFTEST FAILED: finalize refused valid input (finalize: a selected pair has no valid record)
+  21 held stops ignored: CAUGHT (164.0 s) - R2 LABELS SELFTEST FAILED: stops: a STOP_HARD_RSS status not held until its identity-bound disposition (PAIRS_DONE, 1, PAIRS_DONE)
+  22 libraries not enforced: CAUGHT (162.4 s) - R2 LABELS SELFTEST FAILED: pins: a library mismatch was not refused
+  23 the freeze sha not pinned: CAUGHT (161.6 s) - R2 LABELS SELFTEST FAILED: pins: a wrong freeze sha was not refused
+  24 the census fingerprint without the focal identity: CAUGHT (94.3 s) - R2 LABELS SELFTEST FAILED: fork: the pi0 roll-in differs from the census rollout's state (k 0.0 side 1)
+  25 bound_fork without the other side first: CAUGHT (53.0 s) - R2 LABELS SELFTEST FAILED: binding: pair_bound refused a valid fork (a saved fork with the wrong sides already processed at its tick) | binding: pair_
+  26 the manifest rewritten: CAUGHT (169.5 s) - R2 LABELS SELFTEST FAILED: manifest: an existing manifest was rewritten | CLI: an existing census was rewritten
+  27 the candidates gzip not deterministic: CAUGHT (166.8 s) - R2 LABELS SELFTEST FAILED: candidates: the streamed file differs between builds, or its rows (5194) / counts differ from the manifest (5194), or carry
+  28 only ok candidates streamed: CAUGHT (160.1 s) - R2 LABELS SELFTEST FAILED: candidates: the streamed file differs between builds, or its rows (1071) / counts differ from the manifest (5194), or carry
+  29 the candidates hash unchecked: CAUGHT (160.0 s) - R2 LABELS SELFTEST FAILED: candidates: a tampered candidates file was not refused
+  30 the pi0 sampling ignored: CAUGHT (93.7 s) - R2 LABELS SELFTEST FAILED: census: pi0 sampling False / unsampled present False, neutral / delayed naming True, outcome-free rows True
+  31 offset 0 named delayed: CAUGHT (94.2 s) - R2 LABELS SELFTEST FAILED: census: pi0 sampling True / unsampled present True, neutral / delayed naming False, outcome-free rows True
+  32 outcome fields kept: CAUGHT (95.2 s) - R2 LABELS SELFTEST FAILED: census: pi0 sampling True / unsampled present True, neutral / delayed naming True, outcome-free rows False
+  33 the arm probes not recorded: CAUGHT (160.7 s) - R2 LABELS SELFTEST FAILED: records: the arm causal / parity probes are not recorded per arm, did not run, or mismatch
+  34 no arm causal probe: CAUGHT (32.3 s) - R2 LABELS SELFTEST FAILED: binding: an arm-bound pair failed its binding / reconciliation / causal checks ([{'calls': 185, 'by_status': {'model': 120,
+control: PASSED (163.2 s); sources {'pf_r2_labels.py': 'f56f1ae560492aa9', 'pf_r2_labels_mutants.py': 'a62f0507cdc2189c', 'pf_r2_labels_selftest.py': 'ad68b48219e4c60e'}
+mutation check passed: the control passes its selftest, 35 / 35 planted code errors are caught by a check (72.2 CPU min)

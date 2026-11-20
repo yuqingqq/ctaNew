@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "16", "name": "a pair ignores the high-water", "seconds": 167.7, "sources": {"pf_r2_labels.py": "f56f1ae560492aa9", "pf_r2_labels_mutants.py": "a62f0507cdc2189c", "pf_r2_labels_selftest.py": "ad68b48219e4c60e"}, "why": "R2 LABELS SELFTEST FAILED: checkpoint: a pair over the checkpoint did not latch (PAIRS_DONE)"}
+2026-11-20T17:44:32Z tag=mut_v1_16 rc=0 peak_rss_mib=254 wall_s=167.87 cpu_user_s=166.75 memavail_start_gib=21 disk_free_gib=439->439 slot=claude

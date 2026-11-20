@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "13", "name": "the census checkpoint removed", "seconds": 164.6, "sources": {"pf_r2_labels.py": "f56f1ae560492aa9", "pf_r2_labels_mutants.py": "a62f0507cdc2189c", "pf_r2_labels_selftest.py": "ad68b48219e4c60e"}, "why": "R2 LABELS SELFTEST FAILED: checkpoint: the census passed a high-water over the checkpoint"}
+2026-11-20T17:36:22Z tag=mut_v1_13 rc=0 peak_rss_mib=255 wall_s=164.86 cpu_user_s=163.65 memavail_start_gib=23 disk_free_gib=439->439 slot=claude
