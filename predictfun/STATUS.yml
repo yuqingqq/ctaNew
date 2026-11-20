@@ -465,6 +465,26 @@ pipeline_one_day_v3_20261119:
   values_equal_v2: {cells_per_day: 190, differing: 0}
   attribution_vs_pull_all_c: {"20261026": {first_step: 0.0, later: 954.33, never: 995.36, no_prediction: 0.0}, "20261027": {first_step: 0.0, later: -821.85, never: 251.74, no_prediction: 0.0}}
 
+r2c_teacher_20261120:
+  status: done_r2c_pi0_50_v1_fitted_frozen_rollout_contract_checks_all_true_consumed_oct23
+  asof: "2026-11-20 12:01Z"
+  receipt: predictfun/reviews/r2c_teacher_20261120/report.md
+  teacher_sha256: c7d72d91b0d422d1
+  selftest_sha256: c30537f01deb6d67
+  mutants_sha256: b946b8c90079cbf4
+  runner_v3_sha256: 516bf5f228dd63fd
+  suites: {teacher_selftest: pass, teacher_mutants: 44/44, teacher_mutants_run1: 40/43_fixed_P80, runner_v3_selftest: pass, runner_v3_mutants: 25/25}
+  declared: {population: all_sampled_ok_rows_5384015, heads: J_p_q_qm_severe, rounds: 200, weights: census_weight_times_n_over_sum_per_set, construction: file_backed_sequence_equal_in_memory_le_200k, support: statuses_in_order_wait_keep_fallback, rule: E1}
+  extraction: {rows: 5384015, filled: 1347420, reextract_identical_files: 96}
+  fits: {heads: 16, iterations_200: 16, reload_equal: 16, retain_peak_rss_mib: [1365, 1360], post_peak_rss_mib: [601, 604]}
+  freeze: {sha256_prefix: 769dff77, asof: "11:48:25Z", sources_bound: 76, multiplicity: {teacher_versions: 1, candidates: 0}, models_committed: gz}
+  checks: {all_true: true, A_fits: true, B_freeze: true, C_adapter: true, D_rollout: true}
+  rollout: {worlds: 128, episodes: 127, no_path: 1, decisions: 24541, fallbacks: 0, cap_blocked: 690, near_end: 176, posts: 337, pulls: 262, fills: 20, refused: 28, later_generations: 202, delayed_first_entry: {bid: 55, ask: 70}, causal: {checked: 3506, mismatch: 0, delivered_changed: 3271}, parity: {checked: 3384, mismatch: 0}, peak_rss_mib: 1234}
+  limitation_flags: {delayed_entry_present: both_sides, fallback_dominant: false}
+  diagnostics: in_sample_calibration_close_ge_100ms_short_horizon_overpredicts_fill_severe_movement
+  findings_prior: {e6b0efa4_P2s: fixed_runner_v3, 3d7eae6a_v1_csv: snapshots_committed}
+  next: codex_review_then_oct24_25_candidate_labels_under_frozen_pi0_50_v1
+
 r2b_full_day_20261120:
   status: done_r2b_full_oct23_teacher_data_accepted_all_true_4_cores_no_fit
   asof: "2026-11-20 10:22Z"

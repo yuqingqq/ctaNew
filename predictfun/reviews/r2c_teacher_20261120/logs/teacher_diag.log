@@ -1,0 +1,2 @@
+{"categories_equal": true, "cells_equal": true, "category_keys": 80, "cell_keys": 28, "category_diff": [], "cell_diff": []}
+2026-11-20T11:48:25Z tag=teacher_diag rc=0 peak_rss_mib=1095 wall_s=136.95 cpu_user_s=122.72 memavail_start_gib=23 disk_free_gib=447->446 slot=claude

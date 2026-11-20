@@ -27,12 +27,19 @@ MUT = [
      "mine = [i for i in range(len(plan['partitions']))]"),
     ('a shard runs the other parts', "mine = [i for i in range(len(plan['partitions'])) if shard is None or i % int(shard[1]) == int(shard[0])]",
      "mine = [i for i in range(len(plan['partitions'])) if shard is None or i % int(shard[1]) != int(shard[0])]"),
-    ('a failed part rerun on resume', "    return rec\n\n\ndef run(", "    return rec if rec.get('status') == 'PASS' else None\n\n\ndef run("),
+    ('finalize without the source preflight (e6b0efa4)', "    C.require(sources(mod) == plan['sources'], 'stale finalizer: the finalizing sources differ from the plan (review e6b0efa4 finding 2)')",
+     "    pass"),
+    ('finalize ignores the held breaches (e6b0efa4)', "state = ('STOP_RESOURCE' if (hw > lim['peak_rss_mib'] or held['undisposed']) else", "state = ('STOP_RESOURCE' if (hw > lim['peak_rss_mib']) else"),
+    ('a run through an earlier resource stop (e6b0efa4)', "    if held['undisposed'] and pending:", "    if False:"),
+    ('a disposition never accepted (e6b0efa4)', "    undisposed = sorted(set(parts) - set(disp.get('parts', []))) + sorted(set(stats) - set(disp.get('statuses', [])))",
+     "    undisposed = parts + stats"),
+    ('no watchdog during loading (e6b0efa4)', "    mon = Sampler(d / 'plan_status.json', lim0['guard_rss_mib'], exit=WATCHDOG_EXIT); mon.start()", "    mon = threading.Thread()"),
+    ('a failed part rerun on resume', "    return rec\n\n\ndef held_breaches(", "    return rec if rec.get('status') == 'PASS' else None\n\n\ndef held_breaches("),
     # --- the stop rule and the watchdog
     ('the stop rule reads the current RSS', "el = time.time() - t0; hw = rss()[1]", "el = time.time() - t0; hw = rss()[0]"),
     ('no stop after a latched breach', "latch = dict(part=i, elapsed_s=el, hwm_mib=hw, **breach); state = 'STOP_RESOURCE'; break",
      "latch = dict(part=i, elapsed_s=el, hwm_mib=hw, **breach); state = 'STOP_RESOURCE'"),
-    ('the high-water after loading not checked', "if pending and hw0 > lim['peak_rss_mib']:", "if False:"),
+    ('the high-water after loading not checked', "if latch is None and pending and hw0 > lim['peak_rss_mib']:", "if False:"),
     ('the watchdog never ends the process', "guard_rss_mib=self.hard, asof=C.stamp())); self.exit(3); return True", "guard_rss_mib=self.hard, asof=C.stamp())); return True"),
     ('the watchdog fires below its limit', "        if r > self.hard:\n            atomic_json(self.status_path,", "        if r > 0:\n            atomic_json(self.status_path,"),
     # --- promotion and finalization
@@ -40,7 +47,7 @@ MUT = [
     ('finalize reads every part', "S = mod.support_merge([r['support'] for r in recs]); add =", "_all = mod.materialize(d); S = mod.support_merge([r['support'] for r in recs]); add ="),
     ('finalize without accepting the records', "rec = accept(d, plan, psha, i); C.require(rec is not None, f'finalize: part {i} has no accepted completion record')",
      "rec = json.loads((d / 'parts' / f'part_{i:04d}.json').read_text())"),
-    ('COMPLETE despite a failed part', "else 'COMPLETE' if (parts_ok and lverd == 'PASS' and cverd in ('PASS', 'NOT-RUN')) else 'FAILED')", "else 'COMPLETE')"),
+    ('COMPLETE despite a failed part', "else 'COMPLETE' if (parts_ok and lverd == 'PASS' and cverd in ('PASS', 'NOT-RUN'))\n             else 'FAILED')", "else 'COMPLETE')"),
     ('the verdict ignores the not-evaluable checks', "else 'NOT-EVALUABLE' if comp['not_evaluable'] > 0 else 'PASS')", "else 'PASS')"),
 ]
 
