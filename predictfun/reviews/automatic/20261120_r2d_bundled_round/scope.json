@@ -1,0 +1,27 @@
+{
+  "basis_review_commit": "4393ad19d97f35e07b476cb93670fb7fbe4f614f",
+  "asof": "2026-11-20T16:46:06.686907+00:00",
+  "backup_directory": "/tmp/pf-r2d-bundled-state-backup",
+  "preexisting_tracked_status": " D data/pm_5min/derived/be133_forward_population_era_split.json\n D data/pm_5min/derived/be_tape_v2_builder_binding_proof_v1.json\n D data/pm_5min/derived/be_validation_review_v1.json\n D data/pm_5min/derived/p003_de_gate1_run_journal_de145day07__20260908T032816Z.json\n D data/pm_5min/derived/p003_de_gate1_run_journal_deRR20260903__20260907T195646Z.json\n D data/pm_5min/derived/p003_de_gate1_run_journal_deRR20260904__20260907T225517Z.json\n D data/pm_5min/derived/p003_de_gate1_synthetic_day_run__20260906T062115Z.json\n D data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v2__20260906T064720Z.json\n D data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v3__20260906T071214Z.json\n D data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v4__20260906T074712Z.json\n D data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v5__20260906T075707Z.json\n D data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v6__20260906T081252Z.json\n D data/pm_5min/derived/p003_de_launch_form_probe__20260906T121813Z.json\n D data/pm_5min/derived/p003_de_r608_resolver_agreement__20260906T104000Z.json\n D data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/README\n D data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/linear_btc.json\n D data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/linear_eth.json\n M predictfun/FINDINGS.md\n M predictfun/HANDOFF.md\n M predictfun/STATUS.yml\n M predictfun/handoffs/20261109_TODO.md\n M predictfun/research/pf_r2_runner.py\n M predictfun/research/pf_r2_runner_mutants.py\n M predictfun/research/run_light.log\n",
+  "state": {
+    "predictfun/HANDOFF.md": {
+      "prior_worktree_sha256": "317ee419ed46e3afa6b26215bafa3130e5a20ee7f16b11a96e33e825be763d3f",
+      "worktree_sha256": "9941a09bc4623d122def32efa6b42c336c6837837635288d44ddac9d9c51702f",
+      "staged_sha256": "21447cb97f745c2e0808d00e949b1a651d82cba5c0f3f76cc03b434f06e3cb24",
+      "preserved_prior_worktree_bytes": true
+    },
+    "predictfun/FINDINGS.md": {
+      "prior_worktree_sha256": "5269f7a77376e8c54cdce94c291d09da70128db413bb82cd220cb9fb0e1dcf20",
+      "worktree_sha256": "fe61292345560a288abd3aedb2b3f12775bda7e0fee70d79e9b1cc545684f71b",
+      "staged_sha256": "4ddc170ebd7d61aeb44acf09ded484273fd765978c4f03b862e39e8c55401125",
+      "preserved_prior_worktree_bytes": true
+    },
+    "predictfun/STATUS.yml": {
+      "prior_worktree_sha256": "26e4bfffc20c37bf492e8f349730f2edc18157cee5d4231416e3162683e17b35",
+      "worktree_sha256": "b8b5c9af932ad7e4ed0d3d6054f52207da05aa6a4b8d65192df8e5093c4c2a37",
+      "staged_sha256": "60c21215605411d0a04c8b055667d1bbaccfdb87298676322a60c89b68d9a7dd",
+      "preserved_prior_worktree_bytes": true
+    }
+  },
+  "plan_sha256": "514873e749c5f024b3bb9d1f4d4660509917363c1f747ea2975c5245f64170d0"
+}

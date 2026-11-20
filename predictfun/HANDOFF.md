@@ -1,3 +1,27 @@
+<!-- R2D_BUNDLED_ROUND_20261120_CODEX -->
+## 2026-11-20 — USER: bundle all known issues into one development round
+
+[Consolidated work list, acceptance gate and receipt requirements](reviews/automatic/20261120_r2d_bundled_round/plan.md).
+Development owner: Claude aea5bfb9. Bundle execution/input provenance, strict
+record/finalization validation, durable stop history, memory/process/census
+guards, the CLI fix, bounded mutation tests and r2_label_sample_v2 together.
+The plan gives B1–B7 closure evidence; no new model or target change is added.
+
+**One combined delivery:** implement all fixes, run small final-source controls,
+commit the source/plan freeze, then proceed directly to the nested hourly sample
+(up to 48 worlds / 288 pairs over consumed Oct24–25). Submit one combined code
+and result receipt. No intermediate reviewer approval between these steps.
+Include numerical action-value readings and distinct-original coverage, not
+only passing tests. The 18,432-pair full sample and candidate fit follow review
+of this gate. Preserve the frozen teacher and the declared inclusion weights.
+
+B1/B2 remain the known production-reliability blockers; operational issues are
+included in this same round. Nonblocking residual cleanup does not automatically
+create a new fix-only round. Four existing development slots; no new USER
+approval. This is a sequencing consolidation of review 4393ad19, not a new
+result review or certification of current uncommitted implementation.
+<!-- /R2D_BUNDLED_ROUND_20261120_CODEX -->
+
 <!-- R2D_REVIEW_20261120_CODEX -->
 ## 2026-11-20 — R2-D arm binding accepted; production acceptance and sampled launch gate next
 

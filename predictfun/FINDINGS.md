@@ -1,3 +1,22 @@
+<!-- R2D_BUNDLED_ROUND_20261120_CODEX -->
+## 2026-11-20 — Consolidated closure round requested by USER
+
+[Single B1–B7 development package](reviews/automatic/20261120_r2d_bundled_round/plan.md)
+consolidates review 4393ad19 of f96c38d01a7f27ed4fd39ddf2ddadeecf162b84b.
+All known issues are in scope together: provenance, record admission/finalize,
+stop history, live multi-day references/census guards, CLI completion, bounded
+test execution and representative sampled-label integration. No new defect or
+closed-finding regression is asserted by this planning update.
+
+One freeze plus one bounded distributed result receipt closes the round;
+no review between individual repairs and the <=288-pair integration. Require
+measured economic variation, population/weight/context coverage and runtime,
+with existing corruption/source/binding controls. Candidate fitting and the
+remaining production sample stay after this combined review. Frozen teacher,
+paired target, sampling/weight contract and reliability classifications remain
+as in 4393ad19. Development owns fixes; review-owned documentation only here.
+<!-- /R2D_BUNDLED_ROUND_20261120_CODEX -->
+
 <!-- R2D_REVIEW_20261120_CODEX -->
 ## 2026-11-20 R2-D review: saved labels valid; two production-acceptance blockers
 
