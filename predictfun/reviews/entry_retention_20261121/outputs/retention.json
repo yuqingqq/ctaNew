@@ -1,0 +1,180 @@
+{
+ "asof": "2026-11-21T10:24:04.376518+00:00",
+ "fork_statuses": [
+  {
+   "day": "20261024",
+   "n": 190,
+   "status": "ok"
+  },
+  {
+   "day": "20261024",
+   "n": 2,
+   "status": "world:no_path:missing_endpoint"
+  },
+  {
+   "day": "20261025",
+   "n": 190,
+   "status": "ok"
+  },
+  {
+   "day": "20261025",
+   "n": 2,
+   "status": "world:no_path:missing_endpoint"
+  },
+  {
+   "day": "20261026",
+   "n": 186,
+   "status": "ok"
+  },
+  {
+   "day": "20261026",
+   "n": 6,
+   "status": "world:no_path:missing_endpoint"
+  },
+  {
+   "day": "20261027",
+   "n": 190,
+   "status": "ok"
+  },
+  {
+   "day": "20261027",
+   "n": 2,
+   "status": "world:no_path:missing_endpoint"
+  }
+ ],
+ "forks": 768,
+ "manifest_sha256": "6cf2c6248d937ad036b95acce466861a2dbbbfd4f124c18f33dcb015b96b839c",
+ "predicates": {
+  "discriminates": {
+   "entry": false,
+   "first_review": false
+  },
+  "flip_share": 0.049930651872399444,
+  "readings": {
+   "entry_identifiable": false,
+   "forecasts_fail": true,
+   "not_distinguishable": false,
+   "review_protective": false
+  },
+  "selection": {
+   "entry": {
+    "degenerate_strata": 151,
+    "mean_all": -13.462597985868282,
+    "mean_sel": -13.222287596805783,
+    "n": 755,
+    "n_sel": 712,
+    "null_mean": -13.271942804905605,
+    "null_p05": -14.450761440885891,
+    "null_p95": -12.06787555965451,
+    "percentile": 0.544,
+    "selected_action": "WAIT",
+    "strata": 192,
+    "thin": false
+   },
+   "first_review": {
+    "degenerate_strata": 172,
+    "mean_all": -13.88306470843483,
+    "mean_sel": -13.8688631911864,
+    "n": 718,
+    "n_sel": 697,
+    "null_mean": -13.935343992244139,
+    "null_p05": -14.383280674711157,
+    "null_p95": -13.403678765319924,
+    "percentile": 0.608,
+    "selected_action": "PULL",
+    "strata": 192,
+    "thin": true
+   }
+  },
+  "value_fails": {
+   "entry": true,
+   "first_review": true
+  }
+ },
+ "sources": {
+  "pf_adv2_replay.py": "e5d0f55d5c534d1cfb008e361641334dc503a22d10015a88cde0ea4686b8752a",
+  "pf_branch_engine.py": "8b7960ef4bbbc178b281e57d92d4795d7678436c0ca875e7199e24a6626af3a8",
+  "pf_entry_exposure.py": "33f3e0c72850e0c6c623f96cf157c02c72cdceefc0721f87c64afc59547533f0",
+  "pf_entry_retention.py": "93f8050f39ca8df0f9b8955bdfd0ef16623b4bfd8c7e2bc664c920bac867f732",
+  "pf_pipeline_bench.py": "c2942249a4fef1ef9be487bc87d0b84cec90785da442d604b49b144186a437e0",
+  "pf_r2_label_sample.py": "4cdeff0c6d491611f970756f263f4ef03c3e2a90dbade580d435c68bae32e769",
+  "pf_r2_labels.py": "f56f1ae560492aa9b7d040b28f02d96a2b2fd2611da4047d4c7227b497684d6e",
+  "pf_r2_shadow.py": "962cf7b42c1a8ff78b7a4cb46f111036c824270ff8fa91d95c1c42558f098ab9",
+  "pf_r2_teacher.py": "c7d72d91b0d422d192015f331154881ba030989a6802d23a604a3b667194d79b"
+ },
+ "stage_statuses": [
+  {
+   "fork_status": "ok",
+   "n": 756,
+   "stage": "entry",
+   "stage_status": "ok"
+  },
+  {
+   "fork_status": "world:no_path:missing_endpoint",
+   "n": 12,
+   "stage": "entry",
+   "stage_status": "world:no_path:missing_endpoint"
+  },
+  {
+   "fork_status": "ok",
+   "n": 3,
+   "stage": "first_pull",
+   "stage_status": "no_pull:closed:filled"
+  },
+  {
+   "fork_status": "ok",
+   "n": 28,
+   "stage": "first_pull",
+   "stage_status": "no_pull:closed:refused"
+  },
+  {
+   "fork_status": "ok",
+   "n": 9,
+   "stage": "first_pull",
+   "stage_status": "no_pull:closed:removed"
+  },
+  {
+   "fork_status": "ok",
+   "n": 2,
+   "stage": "first_pull",
+   "stage_status": "no_pull:end"
+  },
+  {
+   "fork_status": "ok",
+   "n": 714,
+   "stage": "first_pull",
+   "stage_status": "ok"
+  },
+  {
+   "fork_status": "world:no_path:missing_endpoint",
+   "n": 12,
+   "stage": "first_pull",
+   "stage_status": "world:no_path:missing_endpoint"
+  },
+  {
+   "fork_status": "ok",
+   "n": 28,
+   "stage": "first_review",
+   "stage_status": "no_review:closed:refused"
+  },
+  {
+   "fork_status": "ok",
+   "n": 7,
+   "stage": "first_review",
+   "stage_status": "no_review:closed:removed"
+  },
+  {
+   "fork_status": "ok",
+   "n": 721,
+   "stage": "first_review",
+   "stage_status": "ok"
+  },
+  {
+   "fork_status": "world:no_path:missing_endpoint",
+   "n": 12,
+   "stage": "first_review",
+   "stage_status": "world:no_path:missing_endpoint"
+  }
+ ],
+ "version": "entry_retention_v1"
+}

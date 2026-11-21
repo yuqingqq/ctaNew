@@ -8,5 +8,6 @@
  "so_far_core_hours": 0.11106666666666663,
  "projected_core_hours": 0.33559999999999995,
  "ceiling": 1.0,
- "run_rest": true
+ "run_rest": true,
+ "note": "decision-time output of tools/pilot_projection_ret.py after the pilot (10:19Z), restored verbatim from the session transcript: a later re-run at 10:27Z, after the whole round, had overwritten this file with so_far including every later job (projection 0.561)"
 }

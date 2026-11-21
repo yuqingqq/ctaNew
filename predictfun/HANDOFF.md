@@ -855,6 +855,24 @@ pulls and bid/ask; judge movement calibration on selected actions before changin
 order design. Other session owns fixes; scheduler remains off.
 <!-- /PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
 
+## 2026-11-21 10:27Z (session aea5bfb9) — ENTRY-RETENTION-DISCRIMINATION-v1: PI0'S FORECASTS AT ENTRY / FIRST REVIEW / FIRST PULL AGAINST MATCHED TARGETS; CHECKS ALL TRUE; READINGS FORECASTS_FAIL (review 67a0d9f7's next priority) (USER: "... continue the implementing and next priority loop")
+- [Receipt](reviews/entry_retention_20261121/report.md).
+  - Commits: freeze `2ac6e084` (before any measurement), freeze 2b `0f89182f` (the falsifier's one-line argument fix, before its output), results in this commit.
+  - One diagnostic; zero fitted candidates.
+- **Review 67a0d9f7's checklist (all nonblocking, folded in):**
+  - 1: the exposure result is restated (every discretionary pull suppressed; not the first pull's necessity). Shadow admission, first review and first pull are reported separately.
+  - 2: forecast components are measured against matched targets, with full 107-input vectors.
+  - 3: END / mark / settings and the callback and probe denominators are in check B, with wrong-END and missing-callback falsifiers.
+  - 4: stage capture runs in fn (actual callbacks only).
+  - 5: the END value is named end_value, and the fill-time execution edge is added.
+- **Codex churn note `1b6e7799`:** its request (full 107-input vectors and moment / value components at submission and first review) is implemented here, at entry, the first review and the first pull.
+- **Readings** (FINDINGS P96):
+  - Entry (would_WAIT): 712 of 755 selected, mean value -13.22 c vs matched null -13.27 c, percentile 0.544; MAE V 35.54 vs zero 27.63 vs edge×E[q] 31.49 c.
+  - First review (PULL): 697 of 718 selected, mean value -13.87 c vs matched null -13.94 c, percentile 0.608 (thin); MAE V 39.83 vs zero 27.04 vs edge×E[q] 31.32 c.
+  - Declared reading `forecasts_fail`: Actual-state value forecasts fail (no better than zero, or a mechanical flip without economic separation): the target / representation / model mismatch should be fixed before another conditional-retention fit.
+- **Cost:** 0.337 core-hours of the 1 ceiling; peak 1180 MiB.
+- **Next measurement:** the combined review (one request), which names the next priority.
+
 ## 2026-11-21 09:32Z (session aea5bfb9) — ENTRY-EXPOSURE-v1: THE SAME INITIAL POST UNDER PI0 VERSUS KEEPING IT; CHECKS ALL TRUE; DIAGNOSIS PI0_BETTER (review 3d8bf5ad's next priority) (USER: "... continue the implementing and next priority loop")
 - [Receipt](reviews/entry_exposure_20261121/report.md).
   - Commits: freeze `6ca42d25` (before any branch ran); freeze 2b `5ece0c98` (override readings from the decision log, which the frozen check C required); freeze 2c `46a2eabc` (a NaN-aware checker comparison); results in this commit. No value changed.
