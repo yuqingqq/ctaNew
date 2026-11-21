@@ -1,0 +1,22 @@
+  0 a same-timestamp request counted pending: CAUGHT (0.9 s) - RESIDUAL SELFTEST FAILED: 1 a request at the fill's own timestamp is not pending
+  1 removal not strict: CAUGHT (0.9 s) - RESIDUAL SELFTEST FAILED: 1 the fill / effect boundary
+  2 the pending reason ignored: CAUGHT (0.9 s) - RESIDUAL SELFTEST FAILED: 1 the three removal reasons pending
+  3 the feasible window without the cancel latency: CAUGHT (0.9 s) - RESIDUAL SELFTEST FAILED: 1 classify: stopped (IndexError('list index out of range'))
+  4 a feasible tick needs no latency: CAUGHT (0.9 s) - RESIDUAL SELFTEST FAILED: 1 pressure ON only after the last feasible tick is unflagged_later
+  5 a fallback callback counted evaluable: CAUGHT (0.9 s) - RESIDUAL SELFTEST FAILED: 1 non-ok input at every feasible tick, or fallback callbacks, is nonevaluable
+  6 a non-ok status counted evaluable: CAUGHT (0.9 s) - RESIDUAL SELFTEST FAILED: 1 non-ok input at every feasible tick, or fallback callbacks, is nonevaluable
+  7 a timely ON absorbed as unflagged: CAUGHT (0.9 s) - RESIDUAL SELFTEST FAILED: 1 ON at a feasible evaluable tick is a mismatch (None)
+  8 nonevaluable never assigned: CAUGHT (0.9 s) - RESIDUAL SELFTEST FAILED: 1 non-ok input at every feasible tick, or fallback callbacks, is nonevaluable
+  9 the signal of the other side: CAUGHT (0.9 s) - RESIDUAL SELFTEST FAILED: 1 ON at a feasible evaluable tick is a mismatch (None) | 1 an ON on the other side is not this order's signal | 1 non-ok inp
+  10 the eligible cutoff dropped: CAUGHT (0.9 s) - RESIDUAL SELFTEST FAILED: 2 values on the END - 1 s cutoff (True, 0.0)
+  11 the exactly-once check dropped: CAUGHT (0.9 s) - RESIDUAL SELFTEST FAILED: 3 a duplicated fill refuses | 3 a missing fill refuses
+  12 a reconcile tolerance of everything: CAUGHT (0.9 s) - RESIDUAL SELFTEST FAILED: 3 a sum differing from the arm row refuses
+  13 mismatches do not fail the audit: CAUGHT (0.9 s) - RESIDUAL SELFTEST FAILED: 4 a mismatch fails the audit
+  14 thin days ignored: CAUGHT (0.9 s) - RESIDUAL SELFTEST FAILED: 4 a thin day
+  15 the dominance bar at a quarter: CAUGHT (1.0 s) - RESIDUAL SELFTEST FAILED: 4 unflagged dominant | 4 mixed days
+  16 positives in the negative fractions: CAUGHT (0.9 s) - RESIDUAL SELFTEST FAILED: 4 table / reading: stopped (TypeError("unsupported operand type(s) for +: 'NoneType' and 'NoneType'"))
+  17 audit without the freeze check: CAUGHT (0.9 s) - RESIDUAL SELFTEST FAILED: 5 guards: stopped (KeyError('edges'))
+  18 audit without the write-once check: CAUGHT (0.9 s) - RESIDUAL SELFTEST FAILED: 5 guards: stopped (KeyError('edges'))
+control: PASSED (0.9 s); sources {'pf_ladder_pressure_residual.py': '0095296829d92f6e', 'pf_ladder_pressure_residual_mutants.py': '17801ca3b24c12e2', 'pf_ladder_pressure_residual_selftest.py': 'b69b583e43e1f52d'}
+mutation check passed: the control passes its selftest, 19 / 19 planted code errors are caught by a check (0.3 CPU min)
+2026-11-21T20:44:31Z tag=lrs_summary_try1 rc=0 peak_rss_mib=15 wall_s=0.02 cpu_user_s=0.02 memavail_start_gib=22 disk_free_gib=436->436 slot=claude

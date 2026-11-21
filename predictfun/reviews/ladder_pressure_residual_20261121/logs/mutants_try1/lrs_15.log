@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "15", "name": "the dominance bar at a quarter", "seconds": 1.0, "sources": {"pf_ladder_pressure_residual.py": "0095296829d92f6e", "pf_ladder_pressure_residual_mutants.py": "17801ca3b24c12e2", "pf_ladder_pressure_residual_selftest.py": "b69b583e43e1f52d"}, "why": "RESIDUAL SELFTEST FAILED: 4 unflagged dominant | 4 mixed days"}
+2026-11-21T20:44:23Z tag=lrs_15 rc=0 peak_rss_mib=200 wall_s=1.15 cpu_user_s=0.90 memavail_start_gib=22 disk_free_gib=436->436 slot=claude

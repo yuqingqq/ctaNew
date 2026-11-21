@@ -1,0 +1,133 @@
+{
+ "ablation": {
+  "arms_csv_sha256": "dd5de6d3fecf4efc60752511398a305361f83bfa4fdfb5a537edef3ee8dbbe68",
+  "checks": "d4b843c3",
+  "freeze": "8f618ea6",
+  "manifest_sha256": "c8bf971de68644851a4807d301af96a83b0fb87d1c1f186e0d41f507c3983e6a",
+  "part_records": {
+   "pilot|20261024": "fa0425bf0cbd1345bba01857b0b1f6c0c920c5eb5d443705d84b413f777a51b6",
+   "pilot|20261025": "8ca0c82ce58f913f870161ebfba5f467e7cbe8208a66fc1840cd48123ea6be7f",
+   "pilot|20261026": "3e747f499fdc52d8d09369068cb0753277fced89b40c5a44b09ffa744457bfee",
+   "pilot|20261027": "4cf6d089aca86872432b54c6c3745472dd90a0dfbbb5201b2274e60dc51337d0",
+   "rest|20261024": "b5686c9bb065067bb3964375a5f0dc2483be334c93862dae83615786bb2ff3f7",
+   "rest|20261025": "abd81665f7b453fb5034453de35e3d0321f9b3e13e5946942d4cac83aea397b4",
+   "rest|20261026": "fa85664146858d729a0fd1f03f2075af29ebbbca678ffbcf2cc555d68a4f53d3",
+   "rest|20261027": "0c1f18d53ffd40a6eae07b367cd0c260213dc144cabf4f7f5bf612fffe272fb1"
+  },
+  "results": "54eab545",
+  "review": "e40bd01d",
+  "rule_sha256": "aef75e7c50108a6cfe4072bfaeaca6cb5e26676118e41b9e1264c5bb68ab4505"
+ },
+ "asof": "2026-11-21T20:46:42.195846+00:00",
+ "cancel_ms": 37.0,
+ "days": [
+  "20261024",
+  "20261025",
+  "20261026",
+  "20261027"
+ ],
+ "edges": {
+  "0": [
+   -0.6315650224685669,
+   -0.23532847166061402,
+   0.23543085157871246,
+   0.4666730940341952
+  ],
+  "1": [
+   -0.7444053292274475,
+   -0.4986844062805176,
+   -0.23543085157871246,
+   0.285456120967865
+  ]
+ },
+ "edges_sha256": "ca688917cd7ddc7c40e94031bee646f4fc1339511bb7c48fbe5270797a38bf80",
+ "min_neg_fills": 30,
+ "parent_day_records": {
+  "20261024": "ab599b8eceefb881fe712bb7ceb9c314fc7eb3b5ef6872778f58f2c2f2a67277",
+  "20261025": "3874552b6ae995cccf46ba820963fd27222ba530fb552dab74d28fbcd9f3bfe8",
+  "20261026": "0833d2c4278d89e6a6af24a72e4c6313ddf411da267b5aa5b428513fa96d30d6",
+  "20261027": "25345c86153002aa643ff8c06862b906373e171a10e63eaf4e687647842a55cd"
+ },
+ "parts": {
+  "pilot": {
+   "20261024": [
+    3697902,
+    3699278
+   ],
+   "20261025": [
+    3723774,
+    3734864
+   ],
+   "20261026": [
+    3789484,
+    3803131
+   ],
+   "20261027": [
+    3877472,
+    3899224
+   ]
+  },
+  "rest": {
+   "20261024": [
+    3700070,
+    3702960,
+    3704004,
+    3712725,
+    3716727
+   ],
+   "20261025": [
+    3737919,
+    3763401,
+    3776314
+   ],
+   "20261026": [
+    3804696,
+    3838531,
+    3850428
+   ],
+   "20261027": []
+  }
+ },
+ "sources": {
+  "pf_branch_engine.py": "8b7960ef4bbbc178b281e57d92d4795d7678436c0ca875e7199e24a6626af3a8",
+  "pf_branch_ladder.py": "c9e0852eccea5b4248001693fd8ddec083ea2df517dc8f3fd0d8b2f091ab285a",
+  "pf_flow_price_common.py": "beac0d747ec5dc84874fdee2f8e08057c1a47c819cfc648a762ea8950b0d1993",
+  "pf_flow_price_data.py": "fa9112d1147e955b4ff4ff2c09d2c8c23e37418b3e2957cb2f47deaf9a907a4e",
+  "pf_influence.py": "5c5bd6f61da5800fcc67045b8c5ec3b4ab61eede3a4383ac244f5dd405f6ac55",
+  "pf_ladder_audit.py": "97a79a90a06062a775d3fe66f55da5172b3ffc2cf39e771cf52e6852fe38f44c",
+  "pf_ladder_guard.py": "5349b75682108857eeb367f0da86ea387c1682e99ee1761f2b60f0d50e01c2fe",
+  "pf_ladder_pressure.py": "357f1d19b32ab5a8d51bc26f884d03492d008c3653b981a147d0bbca17068114",
+  "pf_ladder_pressure_ablation.py": "cfe8a5051c0fb55c0f995383d17ce4414ad3b45645ca5dd539bac45db182c5c0",
+  "pf_ladder_pressure_ablation_selftest.py": "e40db31ed0d5ed0e4c36830c9b787ac4c540dc2c13b1c932b6dd21f71f89b0fe",
+  "pf_ladder_pressure_lag.py": "0dcb03c430db87e2cf85104eebdf3aa175eb6af4594ac9a89dec89d1bbf5c7d4",
+  "pf_ladder_pressure_lag_selftest.py": "7db1a9511b064ef9bd0c04a8fd85ca6c736e66d35cf81c9a00c8e2bd106ea7b8",
+  "pf_ladder_pressure_residual.py": "0095296829d92f6e986360cb1c37a47d20e451f830bb4341f8b3d4498b222c44",
+  "pf_ladder_pressure_residual_selftest.py": "b69b583e43e1f52dd0d0bd8e426188bebd6cb1c8e7f1ef6754df7311fbd1b9b4",
+  "pf_ladder_pressure_selftest.py": "9a380526b4b8b1486652a62fda1e027096e9c8afb580e7d3c68a388f6e11718e",
+  "pf_ladder_rest.py": "d90016ce7d25f89f6f6c6662075f5be72539d3140373e42c8b7228ebcf8ce5e0",
+  "pf_pipeline_export.py": "ee2953fd00f70a7d12607abd4b418471b2208b8f9728009c7e538ccb55733931",
+  "pf_pull_depth.py": "a8670b2e9751f16dce37aab7c18ce35cc31fa3431e392b9a7397f4375a9114ef",
+  "pf_stop_depth.py": "819d5e06d32b647cdac96cca0f9f9191eb033c9a9b6c1cfd160df3f0228aae46",
+  "pf_stop_ev_minutes_inputs.py": "bbec0ff5d8f14a617b1ef83cfcdda659de1b4998ab25a9b05e098140316de7b6",
+  "pf_stop_model.py": "e2a857ddb6c4e76af40080e753942e1e0bef3bd42a34ed2929f378fe869df0ed"
+ },
+ "statuses": [
+  "pending_pressure",
+  "pending_inventory",
+  "pending_structural",
+  "before_feasible_effect",
+  "unflagged_later",
+  "nonevaluable",
+  "event_or_action_mismatch"
+ ],
+ "timing": [
+  "pending_pressure",
+  "pending_inventory",
+  "pending_structural",
+  "before_feasible_effect"
+ ],
+ "unflagged": [
+  "unflagged_later"
+ ],
+ "version": "pressure_residual_timing_audit_v1"
+}

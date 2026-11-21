@@ -1,0 +1,2 @@
+RESIDUAL SELFTEST PASSED: classify_fill, market_rows, reconcile, the table and the reading, guards
+2026-11-21T20:44:12Z tag=res_selftest_try1 rc=0 peak_rss_mib=202 wall_s=1.04 cpu_user_s=0.85 memavail_start_gib=23 disk_free_gib=436->436 slot=claude

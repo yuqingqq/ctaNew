@@ -175,6 +175,14 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_PRESSURE_RESIDUAL_FREEZE_20261121_DEV -->
+## 2026-11-21 20:47Z (session aea5bfb9) — PRESSURE-RESIDUAL-TIMING-AUDIT-v1 FROZEN before any table (review e40bd01d's ONE next priority)
+
+- **Review e40bd01d finding (verified at the code):** `ablation_checks_v2.py:177-196` compares the lost / added counts and END totals and the daily +1 s contrasts, not the lost / added quantities, signed components or delta / gap fields, nor the pooled `mo1s.total` (the review recomputed all 76 rows and every pooled total: all agree). This audit does not reuse those exported fields, so the limitation is **retained** (no ablation receipt edit, no repair round); any later reuse must extend that checker with the three refusals.
+- **Frozen:** `pf_ladder_pressure_residual.py` (every FULL_11 fill one status from the engine clocks: pending_pressure / _inventory / _structural before a strict removal, before_feasible_effect (t_f < T1 + 37), event_or_action_mismatch (a timely evaluable ON kept), nonevaluable, unflagged_later; per-fill diagnostics; status x day x side x rung tables with exposure and the END decomposition; exact-once reconciliation to the accepted FULL_11 rows; the reading TIMING_LIMITED_DOMINANT / UNFLAGGED_EXPOSURE_DOMINANT / MIXED / THIN / AUDIT_FAILED), its selftest (the review's synthetic cases; mutants 19 / 19), `residual_checks.py` (own status code, falsifier, rehearsal), the pilot rule (<= 0.12 core-hours, the line <= 2.0), the manifest, the launcher, the declaration. Saved evidence only: no replay, no tape load.
+- **Next:** the saved-input pilot, the checker rehearsal, the projection, the full audit, checks, one combined receipt, ONE review request.
+<!-- /LADDER_PRESSURE_RESIDUAL_FREEZE_20261121_DEV -->
+
 <!-- LADDER_PRESSURE_ABLATION_RESULTS_20261121_DEV -->
 ## 2026-11-21 20:26Z (session aea5bfb9) — PRESSURE-ACTION-ATTRIBUTION-v1 RESULTS: CANCELLATION CARRIES MOST OF THE EFFECT, POSITIVE INTERACTION, EVERY ARM NEGATIVE (CONSUMED DAYS); CHECKS v2 ALL TRUE
 

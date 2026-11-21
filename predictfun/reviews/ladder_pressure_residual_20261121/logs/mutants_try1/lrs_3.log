@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "3", "name": "the feasible window without the cancel latency", "seconds": 0.9, "sources": {"pf_ladder_pressure_residual.py": "0095296829d92f6e", "pf_ladder_pressure_residual_mutants.py": "17801ca3b24c12e2", "pf_ladder_pressure_residual_selftest.py": "b69b583e43e1f52d"}, "why": "RESIDUAL SELFTEST FAILED: 1 classify: stopped (IndexError('list index out of range'))"}
+2026-11-21T20:44:20Z tag=lrs_3 rc=0 peak_rss_mib=201 wall_s=1.11 cpu_user_s=0.87 memavail_start_gib=23 disk_free_gib=436->436 slot=claude

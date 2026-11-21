@@ -1,0 +1,24 @@
+{
+ "version": "pressure_residual_timing_audit_v1",
+ "ablation": {
+  "freeze": "8f618ea6",
+  "checks": "d4b843c3",
+  "results": "54eab545",
+  "review": "e40bd01d",
+  "manifest_sha256": "c8bf971de68644851a4807d301af96a83b0fb87d1c1f186e0d41f507c3983e6a",
+  "rule_sha256": "aef75e7c50108a6cfe4072bfaeaca6cb5e26676118e41b9e1264c5bb68ab4505",
+  "part_records": {
+   "pilot|20261024": "fa0425bf0cbd1345bba01857b0b1f6c0c920c5eb5d443705d84b413f777a51b6",
+   "pilot|20261025": "8ca0c82ce58f913f870161ebfba5f467e7cbe8208a66fc1840cd48123ea6be7f",
+   "pilot|20261026": "3e747f499fdc52d8d09369068cb0753277fced89b40c5a44b09ffa744457bfee",
+   "pilot|20261027": "4cf6d089aca86872432b54c6c3745472dd90a0dfbbb5201b2274e60dc51337d0",
+   "rest|20261024": "b5686c9bb065067bb3964375a5f0dc2483be334c93862dae83615786bb2ff3f7",
+   "rest|20261025": "abd81665f7b453fb5034453de35e3d0321f9b3e13e5946942d4cac83aea397b4",
+   "rest|20261026": "fa85664146858d729a0fd1f03f2075af29ebbbca678ffbcf2cc555d68a4f53d3",
+   "rest|20261027": "0c1f18d53ffd40a6eae07b367cd0c260213dc144cabf4f7f5bf612fffe272fb1"
+  },
+  "arms_csv_sha256": "dd5de6d3fecf4efc60752511398a305361f83bfa4fdfb5a537edef3ee8dbbe68"
+ },
+ "parent_day_records": {
+  "20261024": 
+2026-11-21T20:46:41Z tag=gr_manifest rc=0 peak_rss_mib=196 wall_s=0.92 cpu_user_s=0.74 memavail_start_gib=23 disk_free_gib=436->436 slot=claude
