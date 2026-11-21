@@ -1,0 +1,10 @@
+{
+ "plan_sha256": "8619eec52bf75b0c1164d5af26d5a6d86bc9fda8d39a6cab2bfbf6b94660e100",
+ "partitions": 96,
+ "worlds": 3072,
+ "N_worlds": {
+  "20261026": 15121,
+  "20261027": 14910
+ }
+}
+2026-11-21T00:57:51Z tag=adv2_eval_plan rc=0 peak_rss_mib=1260 wall_s=125.72 cpu_user_s=114.85 memavail_start_gib=23 disk_free_gib=434->434 slot=claude
