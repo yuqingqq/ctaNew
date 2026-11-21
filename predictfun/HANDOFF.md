@@ -958,6 +958,22 @@ pulls and bid/ask; judge movement calibration on selected actions before changin
 order design. Other session owns fixes; scheduler remains off.
 <!-- /PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
 
+## 2026-11-21 12:43Z (session aea5bfb9) — PI0-MOVEMENT-SHRINK-v1: ONE SCALAR MOVEMENT CHALLENGER FIT OCT 26 / MEASURED OCT 27; CHECKS ALL TRUE; ENTRY INCONCLUSIVE, FIRST REVIEW INCONCLUSIVE (review 7ad03681's next priority) (USER: "... continue the implementing and next priority loop")
+- [Receipt](reviews/movement_shrink_20261121/report.md).
+  - Commits: freeze `97208136` (before any fit), fit `bd5e2f01` (before any Oct 27 score), results in this commit.
+  - One new candidate (4 groups, ≤ 8 scalars); nothing else tuned.
+- **Review 7ad03681's checklist (folded in):**
+  - Item 1: P98's flag stays as recorded and is a declared research heuristic; the forced near-zero error is aggregate calibration on that cohort; this round is a new adaptive experiment.
+  - Item 2: shrink_checks.py recomputes every aggregate value of this receipt; its falsifier corrupts conditional means, MSE, weighted denominators, selection values, null draws and readings.
+  - Item 3: weighted and unweighted fill denominators stored and labelled; cost as of 2026-11-21 12:41Z. P98's per-share table showed 2,014.7 unweighted shares beside weighted ratios (weighted denominator 4,429.48); the audit's final logs total 152 jobs / 0.282 core-hours (not 148 / 0.275).
+  - Item 4: every admission record bound to its committed copy, the audit table by its committed hash; no new mid lookup.
+- **Readings** (FINDINGS P99):
+  - Fit: Every group has fit support. The raw weighted least-squares slope exceeds 1 in all four groups, so lambda clips to 1 everywhere: the fitted candidate is the pooled-prior control, on every row.
+  - Entry: movement MSE 2,248.6 → 2,125.9 c² (improves; zero 2,313.1); value MSE 2,050.2 → 2,010.8 (improves; zero 2,046.4, mechanical 2,099.3); movement bias +6.62 → -7.72 c (not reduced); side 0: movement MSE does not improve, value MSE does not improve; side 1: movement MSE improves, value MSE improves; the candidate POSTs on 2 of 163 rows (J +0.000 c per opportunity, mean among the chosen +0.00); original 163 rows, J -3.740; all -3.740; none +0.000; prior 2 rows, J +0.000; decision INCONCLUSIVE (candidate_mask_equals_prior, inadequate_movable_support).
+  - First review: movement MSE 1,578.3 → 1,808.5 c² (does not improve; zero 1,838.6); value MSE 1,495.7 → 1,749.9 (does not improve; zero 1,665.5, mechanical 1,714.8); movement bias -0.63 → -11.01 c (not reduced); side 0: movement MSE does not improve, value MSE improves; side 1: movement MSE does not improve, value MSE does not improve; the candidate KEEPs 6 of 148 rows (J -0.196 c per opportunity, mean among the chosen -4.43); original 35 rows, J -0.852; all -3.087; none +0.000; prior 6 rows, J -0.196; decision INCONCLUSIVE (candidate_mask_equals_prior, inadequate_movable_support).
+- **Cost:** 0.064 core-hours as of 2026-11-21 12:41Z; peak 244 MiB.
+- **Next measurement:** the combined review (one request), which names the next priority.
+
 ## 2026-11-21 12:07Z (session aea5bfb9) — PI0-MOVEMENT-CALIBRATION-AUDIT-v1: THE MOVEMENT HEAD'S DECOMPOSITION, STRATA, FILL TIMING AND PRE / POST-FILL SPLIT; CHECKS ALL TRUE; RECOMMENDATION REPRESENTATION_OR_DATA_NEEDED (review 5a8ee6f5's next priority) (USER: "... continue the implementing and next priority loop")
 - [Receipt](reviews/movement_audit_20261121/report.md).
   - Commits: freeze `03243e5b` (before any table), results in this commit.

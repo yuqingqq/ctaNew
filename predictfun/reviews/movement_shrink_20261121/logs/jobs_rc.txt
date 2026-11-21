@@ -1,2 +1,6 @@
 shr_manifest rc=0
 shr_fit rc=0
+shr_score rc=0
+shr_checks rc=0
+shr_report rc=0
+shr_report rc=0

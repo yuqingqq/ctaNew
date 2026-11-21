@@ -1,0 +1,17 @@
+{
+ "checks": {
+  "A_identity": true,
+  "B_membership": true,
+  "C_fit": true,
+  "D_predictions": true,
+  "E_scores": true,
+  "F_calibration": true,
+  "G_actions": true,
+  "H_null": true,
+  "I_readings": true,
+  "J_resources_suites": true
+ },
+ "all_ok": true
+}
+{"cases": {"A_substituted": {"check": "A_identity", "clean": true, "corrupted": false, "applied": true}, "B_drop": {"check": "B_membership", "clean": true, "corrupted": false, "applied": true}, "C_lambda": {"check": "C_fit", "clean": true, "corrupted": false, "applied": true}, "D_candidate_V": {"check": "D_predictions", "clean": true, "corrupted": false, "applied": true}, "E_conditional_mean": {"check": "E_scores", "clean": true, "corrupted": false, "applied": true}, "E_mse": {"check": "E_scores", "clean": true, "corrupted": false, "applied": true}, "E_weighted_denominator": {"check": "E_scores", "clean": true, "corrupted": false, "applied": true}, "F_calibration_mean": {"check": "F_calibration", "clean": true, "corrupted": false, "applied": true}, "G_selection_value": {"check": "G_actions", "clean": true, "corrupted": false, "applied": true}, "G_chosen_weight": {"check": "G_actions", "clean": true, "corrupted": false, "applied": true}, "H_draw": {"check": "H_null", "clean": true, "corrupted": false, "applied": true}, "H_p95": {"check": "H_null", "clean": true, "corrupted": false, "applied": true}, "I_decision": {"check": "I_readings", "clean": true, "corrupted": false, "applied": true}, "J_budget": {"check": "J_resources_suites", "clean": true, "corrupted": false, "applied": true}, "J_suite": {"check": "J_resources_suites", "clean": true, "corrupted": false, "applied": true}}, "falsifier_ok": true}
+2026-11-21T12:41:00Z tag=shr_checks rc=0 peak_rss_mib=248 wall_s=14.26 cpu_user_s=13.20 memavail_start_gib=22 disk_free_gib=441->441 slot=claude

@@ -1,0 +1,77 @@
+{
+ "all_ok": true,
+ "asof": "2026-11-21T12:41:02.112907+00:00",
+ "checks": {
+  "A_identity": true,
+  "B_membership": true,
+  "C_fit": true,
+  "D_predictions": true,
+  "E_scores": true,
+  "F_calibration": true,
+  "G_actions": true,
+  "H_null": true,
+  "I_readings": true,
+  "J_resources_suites": true
+ },
+ "details": {
+  "A": {
+   "audit_bindings": true,
+   "committed": true,
+   "inputs_committed": true,
+   "manifest_inputs": true,
+   "partitions": true,
+   "sources": true
+  },
+  "B": {
+   "eval_rows": true,
+   "failures": [],
+   "manifest_keys": true
+  },
+  "C": {
+   "failures": []
+  },
+  "D": {
+   "failures": []
+  },
+  "E": {
+   "failures": [],
+   "rows": 27
+  },
+  "F": {
+   "failures": [],
+   "rows": 114
+  },
+  "G": {
+   "failures": [],
+   "rows": 30
+  },
+  "H": {
+   "failures": []
+  },
+  "I": {
+   "failures": []
+  },
+  "J": {
+   "asof": "2026-11-21T12:41:02.112413+00:00",
+   "resources": {
+    "bad": [],
+    "core_hours": 0.06412777777777776,
+    "jobs": 121,
+    "ok": true,
+    "peak_mib": 244,
+    "run_peaks": {
+     "shr_fit": 238,
+     "shr_score": 238
+    }
+   },
+   "suites": {
+    "extra_files": [],
+    "failures": [],
+    "judge_ok": true,
+    "ok": true,
+    "one_record_per_file": true,
+    "planted": 56
+   }
+  }
+ }
+}

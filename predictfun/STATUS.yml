@@ -745,6 +745,21 @@ pipeline_one_day_v3_20261119:
   values_equal_v2: {cells_per_day: 190, differing: 0}
   attribution_vs_pull_all_c: {"20261026": {first_step: 0.0, later: 954.33, never: 995.36, no_prediction: 0.0}, "20261027": {first_step: 0.0, later: -821.85, never: 251.74, no_prediction: 0.0}}
 
+movement_shrink_20261121:
+  status: done_pi0_movement_shrink_v1_one_candidate
+  asof: "2026-11-21 12:43Z"
+  receipt: predictfun/reviews/movement_shrink_20261121/report.md
+  commits: {freeze: 97208136, fit: bd5e2f01}
+  checks: {all_true: true, falsifier_ok: true, mutants_caught: 56, mutants: 56}
+  populations: {train_entry: 166, train_first_review: 151, eval_entry: 163, eval_first_review: 148}
+  fit_entry_side0: {status: ok, mu: -38.8889, lam_raw: 2.1034, lam: 1.0000}
+  fit_entry_side1: {status: ok, mu: -107.8294, lam_raw: 1.8471, lam: 1.0000}
+  fit_first_review_side0: {status: ok, mu: -39.5288, lam_raw: 1.6926, lam: 1.0000}
+  fit_first_review_side1: {status: ok, mu: -119.8467, lam_raw: 1.7524, lam: 1.0000}
+  reading_entry: {decision: INCONCLUSIVE, reasons: [candidate_mask_equals_prior, inadequate_movable_support], movement_mse_improves: true, value_mse_improves: true, movement_bias_reduced: false, J_candidate: 0.0000, J_original: -3.7404, chosen: 2}
+  reading_first_review: {decision: INCONCLUSIVE, reasons: [candidate_mask_equals_prior, inadequate_movable_support], movement_mse_improves: false, value_mse_improves: false, movement_bias_reduced: false, J_candidate: -0.1959, J_original: -0.8523, chosen: 6}
+  cost_core_hours: 0.064
+  next: combined_review_names_the_next_priority
 movement_audit_20261121:
   status: done_pi0_movement_calibration_audit_v1_no_fit
   asof: "2026-11-21 12:07Z"

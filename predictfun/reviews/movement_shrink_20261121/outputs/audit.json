@@ -1,0 +1,231 @@
+{
+ "admission_manifest_sha256": "3c5bf097328ee2cd31a4e7d1b17d6aadc8559559ccd74f91154f15614b91696c",
+ "asof": "2026-11-21T12:40:53.531527+00:00",
+ "descriptive_first_pull": 134,
+ "fit_sha256": "029d41e5541ed3f39bc56cb721184d6bdf94b5e9c6fd70ebfb3e389fe096703c",
+ "manifest_sha256": "22f57a741c17a7bc3e22c43f80245ed3b4d320d43e5449134a9c9e0c39684269",
+ "null": {
+  "entry": {
+   "J": 0.0,
+   "chosen": 2,
+   "chosen_weight": 2.0,
+   "free_rows": 6,
+   "free_strata": 2,
+   "null_mean": 0.0,
+   "null_p05": 0.0,
+   "null_p95": 0.0,
+   "percentile": 1.0,
+   "strata": 45,
+   "weight_mismatch_draws": 0
+  },
+  "first_review": {
+   "J": -0.19593613933236576,
+   "chosen": 6,
+   "chosen_weight": 15.25,
+   "free_rows": 21,
+   "free_strata": 6,
+   "null_mean": -0.06143991273393934,
+   "null_p05": -0.22677662516232525,
+   "null_p95": 0.0,
+   "percentile": 0.244,
+   "strata": 45,
+   "weight_mismatch_draws": 0
+  }
+ },
+ "params": {
+  "entry|0": {
+   "binding_weight_share": 0.01510989010989011,
+   "den": 9784.367780357308,
+   "fills": 20,
+   "lam": 1.0,
+   "lam_raw": 2.1034488852458098,
+   "mu": -38.88886197647255,
+   "n": 82,
+   "num": 20580.917500427597,
+   "status": "ok",
+   "weight": 182.0,
+   "weighted_fills": 36.5
+  },
+  "entry|1": {
+   "binding_weight_share": 0.16423357664233576,
+   "den": 146803.78262521175,
+   "fills": 22,
+   "lam": 1.0,
+   "lam_raw": 1.8471200346737193,
+   "mu": -107.82940609874369,
+   "n": 84,
+   "num": 271164.2080529143,
+   "status": "ok",
+   "weight": 137.0,
+   "weighted_fills": 46.5
+  },
+  "first_review|0": {
+   "binding_weight_share": 0.007352941176470588,
+   "den": 4106.49240561182,
+   "fills": 18,
+   "lam": 1.0,
+   "lam_raw": 1.6926109705333685,
+   "mu": -39.52877684746996,
+   "n": 76,
+   "num": 6950.69409615053,
+   "status": "ok",
+   "weight": 170.0,
+   "weighted_fills": 33.5
+  },
+  "first_review|1": {
+   "binding_weight_share": 0.2139917695473251,
+   "den": 122679.76703194775,
+   "fills": 19,
+   "lam": 1.0,
+   "lam_raw": 1.7523785639222853,
+   "mu": -119.84669890393295,
+   "n": 75,
+   "num": 214981.3939737651,
+   "status": "ok",
+   "weight": 121.5,
+   "weighted_fills": 41.25
+  }
+ },
+ "predicates": [
+  {
+   "J": {
+    "all": -3.740366887448493,
+    "candidate": 0.0,
+    "none": 0.0,
+    "original": -3.740366887448493,
+    "prior": 0.0
+   },
+   "decision": "INCONCLUSIVE",
+   "free_rows": 6,
+   "free_strata": 2,
+   "head": "entry",
+   "inconclusive_reasons": [
+    "candidate_mask_equals_prior",
+    "inadequate_movable_support"
+   ],
+   "null_p95": 0.0,
+   "prediction": {
+    "0": {
+     "movement_bias_reduced": false,
+     "movement_mse_improves": false,
+     "value_mse_improves": false
+    },
+    "1": {
+     "movement_bias_reduced": true,
+     "movement_mse_improves": true,
+     "value_mse_improves": true
+    },
+    "all": {
+     "movement_bias_reduced": false,
+     "movement_mse_improves": true,
+     "value_mse_improves": true
+    }
+   }
+  },
+  {
+   "J": {
+    "all": -3.0872560880018516,
+    "candidate": -0.19593613933236576,
+    "none": 0.0,
+    "original": -0.8523468355543825,
+    "prior": -0.19593613933236576
+   },
+   "decision": "INCONCLUSIVE",
+   "free_rows": 21,
+   "free_strata": 6,
+   "head": "first_review",
+   "inconclusive_reasons": [
+    "candidate_mask_equals_prior",
+    "inadequate_movable_support"
+   ],
+   "null_p95": 0.0,
+   "prediction": {
+    "0": {
+     "movement_bias_reduced": false,
+     "movement_mse_improves": false,
+     "value_mse_improves": true
+    },
+    "1": {
+     "movement_bias_reduced": false,
+     "movement_mse_improves": false,
+     "value_mse_improves": false
+    },
+    "all": {
+     "movement_bias_reduced": false,
+     "movement_mse_improves": false,
+     "value_mse_improves": false
+    }
+   }
+  }
+ ],
+ "sources": {
+  "pf_entry_retention.py": "93f8050f39ca8df0f9b8955bdfd0ef16623b4bfd8c7e2bc664c920bac867f732",
+  "pf_movement_audit.py": "21b13b801fc08c1cb48142dfa79cf540c272a7bdd50810dc357016088ea97d9a",
+  "pf_movement_shrink.py": "1da51bcf67d9066b07baeb3518d13b03e9258dfa7072b1174a49741e59424322",
+  "pf_movement_shrink_selftest.py": "9f70409841b4948e323ad94fab6063b1d9db5263d0ffd453f0545d4864f59fe5",
+  "pf_pi0_admission.py": "a47f5690a9caacb38c5c734e6501993af7816bf3097129eabb619f2f454e450d"
+ },
+ "statuses": [
+  {
+   "day": "20261026",
+   "n": 166,
+   "stage": "entry",
+   "status": "ok"
+  },
+  {
+   "day": "20261027",
+   "n": 163,
+   "stage": "entry",
+   "status": "ok"
+  },
+  {
+   "day": "20261026",
+   "n": 32,
+   "stage": "first_pull",
+   "status": "not_eligible"
+  },
+  {
+   "day": "20261026",
+   "n": 134,
+   "stage": "first_pull",
+   "status": "ok"
+  },
+  {
+   "day": "20261027",
+   "n": 29,
+   "stage": "first_pull",
+   "status": "not_eligible"
+  },
+  {
+   "day": "20261027",
+   "n": 134,
+   "stage": "first_pull",
+   "status": "ok"
+  },
+  {
+   "day": "20261026",
+   "n": 15,
+   "stage": "first_review",
+   "status": "not_eligible"
+  },
+  {
+   "day": "20261026",
+   "n": 151,
+   "stage": "first_review",
+   "status": "ok"
+  },
+  {
+   "day": "20261027",
+   "n": 15,
+   "stage": "first_review",
+   "status": "not_eligible"
+  },
+  {
+   "day": "20261027",
+   "n": 148,
+   "stage": "first_review",
+   "status": "ok"
+  }
+ ],
+ "version": "pi0_movement_shrink_v1"
+}

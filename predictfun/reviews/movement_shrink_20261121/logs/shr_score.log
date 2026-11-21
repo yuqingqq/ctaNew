@@ -1,0 +1,19 @@
+{
+ "decisions": {
+  "entry": "INCONCLUSIVE",
+  "first_review": "INCONCLUSIVE"
+ },
+ "prediction": {
+  "entry": {
+   "movement_mse_improves": true,
+   "value_mse_improves": true,
+   "movement_bias_reduced": false
+  },
+  "first_review": {
+   "movement_mse_improves": false,
+   "value_mse_improves": false,
+   "movement_bias_reduced": false
+  }
+ }
+}
+2026-11-21T12:40:51Z tag=shr_score rc=0 peak_rss_mib=238 wall_s=2.05 cpu_user_s=1.83 memavail_start_gib=23 disk_free_gib=441->441 slot=claude
