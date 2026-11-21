@@ -1,0 +1,228 @@
+# ENTRY-RETENTION-DISCRIMINATION-v1 — PI0's frozen forecasts at entry, first review and first pull against matched targets
+
+Review 67a0d9f7 (one next priority). Freeze `2ac6e084`, committed before any measurement. Outputs as of 2026-11-21T10:24:04.376518+00:00. Development session Claude aea5bfb9. One diagnostic, zero fitted candidates, consumed Oct 24–27.
+
+## Verdict (every sentence chosen by a computed or declared predicate)
+
+- **Declared checks:** all true ([checks.json](checks.json)); falsifier v2 passed, 11 cases ([checks_falsifier_v2.json](checks_falsifier_v2.json); the frozen falsifier raised on its first case, see Provenance).
+- **Population:** 768 manifest forks; 756 ok; 12 world:no_path:missing_endpoint.
+- **Reading `forecasts_fail`:** Actual-state value forecasts fail (no better than zero, or a mechanical flip without economic separation): the target / representation / model mismatch should be fixed before another conditional-retention fit.
+- **Entry (shadow admission; the selected set is would_WAIT):** 755 eligible rows, 712 selected; the selected mean value -13.222 c against all -13.463 c and a matched null of -13.272 c (5–95 % -14.451 to -12.068); percentile 0.544; thin false; 151 of 192 strata degenerate. MAE of V 35.541 c against 27.632 c for zero and 31.493 c for edge × E[q]; Brier 0.2296 against 0.2405 for the pooled rate.
+- **First review (the selected set is PULL):** 718 eligible rows, 697 selected; the selected mean value -13.869 c against all -13.883 c and a matched null of -13.935 c (5–95 % -14.383 to -13.404); percentile 0.608; thin true; 172 of 192 strata degenerate. MAE of V 39.830 c against 27.040 c for zero and 31.321 c for edge × E[q]; Brier 0.2279 against 0.2402 for the pooled rate.
+- **First pull:** 714 rows; MAE of V 39.691 c against 27.034 c for zero; fill rate after the effect 0.401 against mean P 0.449.
+- **Entry → first review:** 721 forks; market_flow inputs changed in 1.000, fair in 1.000, order_state in 1.000, time in 1.000; mean V -13.742 → -20.952 c; flip share 0.050.
+- **Descriptive, computed (not declared readings):**
+  - entry: mean V -13.901 c against mean value -13.463 c (bias -0.439 c); the movement term adds error (MAE 31.493 c for edge × E[q] against 35.541 c for V); mean P 0.406 against fill rate 0.403; qm | fill MAE 73.354 c.
+  - first_review: mean V -20.972 c against mean value -13.883 c (bias -7.089 c); the movement term adds error (MAE 31.321 c for edge × E[q] against 39.830 c for V); mean P 0.451 against fill rate 0.401; qm | fill MAE 74.779 c.
+  - PI0's shadow admission is would_WAIT on 713 of 756 forced entries (0.943): these probes are mostly entries PI0 itself would not make.
+  - The held initial fills (767; 767 with a fill-time mid) gain +2969.7 c against the venue mid at their fill times and are worth -10164.3 c at the END mark.
+- **Scope:** adaptive development description on consumed days; no interval, no significance, no fit, no new target chosen here. POST and RETAIN scores have different targets, so their difference is not called a forecast reversal.
+
+## Tables (retention_tables.py, copied from the outputs)
+
+### Fork statuses (every manifest fork)
+
+| day | status | forks |
+|---|---|---|
+| 20261024 | ok | 190 |
+| 20261024 | world:no_path:missing_endpoint | 2 |
+| 20261025 | ok | 190 |
+| 20261025 | world:no_path:missing_endpoint | 2 |
+| 20261026 | ok | 186 |
+| 20261026 | world:no_path:missing_endpoint | 6 |
+| 20261027 | ok | 190 |
+| 20261027 | world:no_path:missing_endpoint | 2 |
+
+### Stage statuses
+
+| stage | fork status | stage status | rows |
+|---|---|---|---|
+| entry | ok | ok | 756 |
+| entry | world:no_path:missing_endpoint | world:no_path:missing_endpoint | 12 |
+| first_pull | ok | no_pull:closed:filled | 3 |
+| first_pull | ok | no_pull:closed:refused | 28 |
+| first_pull | ok | no_pull:closed:removed | 9 |
+| first_pull | ok | no_pull:end | 2 |
+| first_pull | ok | ok | 714 |
+| first_pull | world:no_path:missing_endpoint | world:no_path:missing_endpoint | 12 |
+| first_review | ok | no_review:closed:refused | 28 |
+| first_review | ok | no_review:closed:removed | 7 |
+| first_review | ok | ok | 721 |
+| first_review | world:no_path:missing_endpoint | world:no_path:missing_endpoint | 12 |
+
+### Shadow entry admission (PI0 unforced, on the exact absent fork state)
+
+| day | side | evaluable forks | would_POST | would_WAIT | model decisions | other statuses |
+|---|---|---|---|---|---|---|
+| 20261024 | 0 | 95 | 8 | 87 | 95 | 0 |
+| 20261024 | 1 | 95 | 10 | 85 | 95 | 0 |
+| 20261025 | 0 | 95 | 8 | 87 | 95 | 0 |
+| 20261025 | 1 | 95 | 7 | 88 | 95 | 0 |
+| 20261026 | 0 | 93 | 2 | 91 | 93 | 0 |
+| 20261026 | 1 | 93 | 0 | 93 | 92 | 1 |
+| 20261027 | 0 | 95 | 4 | 91 | 95 | 0 |
+| 20261027 | 1 | 95 | 4 | 91 | 95 | 0 |
+
+### Forecast calibration against the matched neutral-hold targets (c, shares; eligible model rows)
+
+| stage | day | side | n | filled | fill rate | mean P | Brier(P) | Brier(pooled rate) | mean E[q] | mean q | MAE q | mean V | mean value | MAE V | MAE 0 | MAE edge×E[q] | MAE q\|fill | MAE qm\|fill |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| entry | all | all | 755 | 304 | 0.403 | 0.406 | 0.230 | 0.241 | 9.266 | 9.127 | 11.408 | -13.901 | -13.463 | 35.541 | 27.632 | 31.493 | 8.998 | 73.354 |
+| entry | 20261024 | 0 | 95 | 30 | 0.316 | 0.414 | 0.234 | 0.224 | 9.144 | 7.242 | 11.218 | -11.277 | -16.699 | 30.766 | 22.860 | 27.445 | 9.508 | 71.573 |
+| entry | 20261024 | 1 | 95 | 42 | 0.442 | 0.408 | 0.231 | 0.248 | 9.309 | 9.901 | 11.723 | -14.248 | -3.691 | 34.160 | 24.122 | 27.457 | 9.602 | 65.904 |
+| entry | 20261025 | 0 | 95 | 43 | 0.453 | 0.402 | 0.223 | 0.250 | 9.028 | 10.531 | 11.132 | -12.149 | -16.560 | 39.902 | 32.554 | 36.148 | 8.075 | 81.902 |
+| entry | 20261025 | 1 | 95 | 36 | 0.379 | 0.403 | 0.227 | 0.236 | 9.520 | 8.838 | 11.559 | -15.407 | -5.229 | 31.190 | 21.010 | 25.775 | 7.983 | 69.290 |
+| entry | 20261026 | 0 | 93 | 37 | 0.398 | 0.404 | 0.233 | 0.240 | 8.817 | 8.179 | 10.470 | -12.648 | -16.030 | 28.292 | 23.380 | 26.756 | 9.347 | 55.254 |
+| entry | 20261026 | 1 | 92 | 42 | 0.457 | 0.416 | 0.254 | 0.251 | 9.743 | 10.462 | 11.951 | -15.558 | -4.372 | 35.857 | 27.599 | 31.115 | 8.101 | 67.429 |
+| entry | 20261027 | 0 | 95 | 35 | 0.368 | 0.406 | 0.216 | 0.234 | 9.295 | 9.142 | 11.660 | -13.725 | -30.817 | 47.111 | 41.675 | 45.877 | 8.617 | 98.265 |
+| entry | 20261027 | 1 | 95 | 39 | 0.411 | 0.397 | 0.221 | 0.242 | 9.279 | 8.740 | 11.548 | -16.226 | -14.071 | 36.901 | 27.767 | 31.259 | 10.889 | 78.270 |
+| first_review | all | all | 718 | 288 | 0.401 | 0.451 | 0.228 | 0.240 | 10.299 | 9.168 | 11.760 | -20.972 | -13.883 | 39.830 | 27.040 | 31.321 | 8.935 | 74.779 |
+| first_review | 20261024 | 0 | 90 | 28 | 0.311 | 0.450 | 0.233 | 0.222 | 9.939 | 7.122 | 11.642 | -15.980 | -17.021 | 35.217 | 22.902 | 28.109 | 9.405 | 68.497 |
+| first_review | 20261024 | 1 | 90 | 41 | 0.456 | 0.469 | 0.234 | 0.251 | 10.746 | 10.450 | 12.463 | -22.694 | -3.890 | 40.157 | 25.457 | 29.225 | 9.473 | 68.280 |
+| first_review | 20261025 | 0 | 91 | 42 | 0.462 | 0.439 | 0.216 | 0.252 | 9.826 | 10.664 | 11.445 | -18.830 | -17.618 | 45.441 | 33.655 | 37.404 | 8.380 | 84.984 |
+| first_review | 20261025 | 1 | 88 | 34 | 0.386 | 0.457 | 0.236 | 0.237 | 10.820 | 9.184 | 12.139 | -26.783 | -4.956 | 39.850 | 21.993 | 26.442 | 7.636 | 82.788 |
+| first_review | 20261026 | 0 | 89 | 34 | 0.382 | 0.432 | 0.212 | 0.236 | 9.477 | 7.835 | 10.466 | -17.076 | -16.279 | 29.051 | 22.274 | 25.996 | 9.243 | 51.885 |
+| first_review | 20261026 | 1 | 89 | 39 | 0.438 | 0.458 | 0.239 | 0.248 | 10.635 | 10.018 | 11.681 | -22.643 | -7.987 | 37.206 | 23.234 | 27.383 | 8.139 | 62.762 |
+| first_review | 20261027 | 0 | 89 | 34 | 0.382 | 0.442 | 0.237 | 0.236 | 10.209 | 9.421 | 12.325 | -20.169 | -29.355 | 52.064 | 40.945 | 45.622 | 8.711 | 101.210 |
+| first_review | 20261027 | 1 | 92 | 36 | 0.391 | 0.461 | 0.217 | 0.238 | 10.741 | 8.642 | 11.922 | -23.660 | -13.851 | 39.589 | 25.765 | 30.293 | 10.611 | 77.271 |
+| first_pull | all | all | 714 | 286 | 0.401 | 0.449 | 0.227 | 0.240 | 10.268 | 9.156 | 11.731 | -21.461 | -13.803 | 39.691 | 27.034 | 31.304 | 8.972 | 74.564 |
+| first_pull | 20261024 | 0 | 88 | 27 | 0.307 | 0.450 | 0.227 | 0.221 | 9.918 | 7.114 | 11.557 | -17.672 | -16.471 | 34.238 | 22.485 | 27.556 | 9.711 | 66.618 |
+| first_pull | 20261024 | 1 | 90 | 41 | 0.456 | 0.464 | 0.232 | 0.251 | 10.655 | 10.450 | 12.378 | -23.598 | -3.890 | 39.508 | 25.457 | 29.185 | 9.472 | 66.965 |
+| first_pull | 20261025 | 0 | 89 | 41 | 0.461 | 0.438 | 0.220 | 0.252 | 9.812 | 10.567 | 11.471 | -19.521 | -17.677 | 46.142 | 34.074 | 37.839 | 8.415 | 86.897 |
+| first_pull | 20261025 | 1 | 88 | 34 | 0.386 | 0.452 | 0.232 | 0.237 | 10.712 | 9.184 | 12.040 | -27.176 | -4.956 | 39.576 | 21.993 | 26.468 | 7.662 | 81.765 |
+| first_pull | 20261026 | 0 | 89 | 34 | 0.382 | 0.432 | 0.212 | 0.236 | 9.477 | 7.835 | 10.466 | -17.076 | -16.279 | 29.051 | 22.274 | 25.996 | 9.243 | 51.885 |
+| first_pull | 20261026 | 1 | 89 | 39 | 0.438 | 0.458 | 0.239 | 0.248 | 10.635 | 10.018 | 11.681 | -22.643 | -7.987 | 37.206 | 23.234 | 27.383 | 8.139 | 62.762 |
+| first_pull | 20261027 | 0 | 89 | 34 | 0.382 | 0.441 | 0.238 | 0.236 | 10.194 | 9.421 | 12.341 | -20.181 | -29.355 | 52.076 | 40.945 | 45.630 | 8.710 | 101.316 |
+| first_pull | 20261027 | 1 | 92 | 36 | 0.391 | 0.459 | 0.215 | 0.238 | 10.720 | 8.642 | 11.900 | -23.742 | -13.851 | 39.669 | 25.765 | 30.332 | 10.611 | 77.271 |
+
+### Probability bins
+
+| stage | P from | P to | rows | mean P | fill rate |
+|---|---|---|---|---|---|
+| entry | 0.000 | 0.010 | 0 | — | — |
+| entry | 0.010 | 0.020 | 0 | — | — |
+| entry | 0.020 | 0.050 | 2 | 0.029 | 0.000 |
+| entry | 0.050 | 0.100 | 9 | 0.084 | 0.111 |
+| entry | 0.100 | 0.200 | 44 | 0.151 | 0.159 |
+| entry | 0.200 | 0.400 | 264 | 0.316 | 0.348 |
+| entry | 0.400 | 1.000 | 436 | 0.495 | 0.468 |
+| first_review | 0.000 | 0.010 | 0 | — | — |
+| first_review | 0.010 | 0.020 | 1 | 0.020 | 0.000 |
+| first_review | 0.020 | 0.050 | 1 | 0.036 | 0.000 |
+| first_review | 0.050 | 0.100 | 5 | 0.079 | 0.200 |
+| first_review | 0.100 | 0.200 | 31 | 0.163 | 0.129 |
+| first_review | 0.200 | 0.400 | 188 | 0.318 | 0.261 |
+| first_review | 0.400 | 1.000 | 492 | 0.525 | 0.476 |
+| first_pull | 0.000 | 0.010 | 0 | — | — |
+| first_pull | 0.010 | 0.020 | 1 | 0.020 | 0.000 |
+| first_pull | 0.020 | 0.050 | 1 | 0.036 | 0.000 |
+| first_pull | 0.050 | 0.100 | 5 | 0.079 | 0.200 |
+| first_pull | 0.100 | 0.200 | 32 | 0.165 | 0.125 |
+| first_pull | 0.200 | 0.400 | 187 | 0.316 | 0.257 |
+| first_pull | 0.400 | 1.000 | 488 | 0.525 | 0.477 |
+
+### Realized value by forecast sign and shadow entry admission (c; unweighted rows)
+
+| stage | V sign | admission | rows | worlds | benefit | Σ benefit | loss | Σ loss | zero | severe (< −30) | top-5 \|value\| share |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| entry | all | all | 756 | 378 | 104 | 5,348.99 | 197 | -15,513.26 | 455 | 123 | 0.10 |
+| entry | V<0 | would_WAIT | 713 | 377 | 98 | 5,050.19 | 188 | -14,464.46 | 427 | 117 | 0.11 |
+| entry | V>=0 | would_POST | 43 | 42 | 6 | 298.81 | 9 | -1,048.80 | 28 | 6 | 0.72 |
+| first_review | all | all | 721 | 374 | 98 | 4,738.44 | 188 | -14,691.48 | 435 | 117 | 0.11 |
+| first_review | V<0 | would_POST | 36 | 36 | 6 | 298.81 | 6 | -831.22 | 24 | 4 | 0.84 |
+| first_review | V<0 | would_WAIT | 664 | 369 | 89 | 4,396.00 | 176 | -13,515.18 | 399 | 109 | 0.12 |
+| first_review | V>=0 | would_POST | 6 | 6 | 0 | 0.00 | 2 | -90.08 | 4 | 1 | 1.00 |
+| first_review | V>=0 | would_WAIT | 15 | 15 | 3 | 43.63 | 4 | -255.00 | 8 | 3 | 0.93 |
+| first_pull | all | all | 714 | 374 | 97 | 4,723.44 | 186 | -14,578.98 | 431 | 116 | 0.11 |
+| first_pull | V<0 | would_POST | 37 | 36 | 5 | 283.81 | 7 | -838.80 | 25 | 4 | 0.84 |
+| first_pull | V<0 | would_WAIT | 677 | 372 | 92 | 4,439.63 | 179 | -13,740.18 | 406 | 112 | 0.11 |
+
+### Selection against 500 matched random draws (within day × side × UTC hour)
+
+| stage | selected | eligible | selected rows | selected mean value | all mean | null mean | null 5% | null 95% | percentile | strata | degenerate | thin |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| entry | WAIT | 755 | 712 | -13.222 | -13.463 | -13.272 | -14.451 | -12.068 | 0.544 | 192 | 151 | false |
+| first_review | PULL | 718 | 697 | -13.869 | -13.883 | -13.935 | -14.383 | -13.404 | 0.608 | 192 | 172 | true |
+
+### Entry → first review: changed inputs and moment terms
+
+| day | side | forks | market_flow changed | fair changed | order_state changed | time changed | mean dV | mean V entry | mean V review | flip share | unchanged-market forks | their flip share |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| all | all | 721 | 1.000 | 1.000 | 1.000 | 1.000 | -7.211 | -13.742 | -20.952 | 0.050 | 0 | — |
+| 20261024 | 0 | 91 | 1.000 | 1.000 | 1.000 | 1.000 | -5.596 | -10.488 | -16.084 | 0.055 | 0 | — |
+| 20261024 | 1 | 90 | 1.000 | 1.000 | 1.000 | 1.000 | -8.432 | -14.262 | -22.694 | 0.089 | 0 | — |
+| 20261025 | 0 | 91 | 1.000 | 1.000 | 1.000 | 1.000 | -6.655 | -12.175 | -18.830 | 0.088 | 0 | — |
+| 20261025 | 1 | 90 | 1.000 | 1.000 | 1.000 | 1.000 | -11.205 | -15.242 | -26.447 | 0.056 | 0 | — |
+| 20261026 | 0 | 89 | 1.000 | 1.000 | 1.000 | 1.000 | -4.956 | -12.121 | -17.076 | 0.022 | 0 | — |
+| 20261026 | 1 | 89 | 1.000 | 1.000 | 1.000 | 1.000 | -7.040 | -15.603 | -22.643 | 0.000 | 0 | — |
+| 20261027 | 0 | 89 | 1.000 | 1.000 | 1.000 | 1.000 | -6.189 | -13.980 | -20.169 | 0.045 | 0 | — |
+| 20261027 | 1 | 92 | 1.000 | 1.000 | 1.000 | 1.000 | -7.591 | -16.069 | -23.660 | 0.043 | 0 | — |
+
+### Stage timing (ms from the fork; the POST at 0, activation at 58)
+
+| stage | evaluable forks | with the stage | mean t | median t | max t | PULL | same as review |
+|---|---|---|---|---|---|---|---|
+| first_review | 756 | 721 | 100.0 | 100.0 | 100.0 | 697 | — |
+| first_pull | 756 | 714 | 107.7 | 100.0 | 1,400.0 | 714 | 697 |
+
+### Prefix stop reasons
+
+| stop reason | forks |
+|---|---|
+| pull | 714 |
+| closed:refused | 28 |
+| closed:removed | 9 |
+| closed:filled | 3 |
+| end | 2 |
+
+### Held initial fills: fill-time execution edge against the END value (c)
+
+| day | side | fills | shares | Σ END value | fills with a mid | their shares | Σ fill-time edge | Σ END value (same fills) |
+|---|---|---|---|---|---|---|---|---|
+| 20261024 | 0 | 84 | 687.99 | -1,586.41 | 84 | 687.99 | 250.48 | -1,586.41 |
+| 20261024 | 1 | 97 | 940.59 | -350.63 | 97 | 940.59 | 609.06 | -350.63 |
+| 20261025 | 0 | 97 | 1,000.46 | -1,573.21 | 97 | 1,000.46 | 674.40 | -1,573.21 |
+| 20261025 | 1 | 110 | 839.66 | -496.71 | 110 | 839.66 | 300.04 | -496.71 |
+| 20261026 | 0 | 84 | 760.68 | -1,490.80 | 84 | 760.68 | 131.00 | -1,490.80 |
+| 20261026 | 1 | 107 | 962.48 | -402.18 | 107 | 962.48 | 517.94 | -402.18 |
+| 20261027 | 0 | 100 | 868.50 | -2,927.60 | 100 | 868.50 | 91.07 | -2,927.60 |
+| 20261027 | 1 | 88 | 830.26 | -1,336.72 | 88 | 830.26 | 395.75 | -1,336.72 |
+
+### Declared predicates and readings
+
+| item | value |
+|---|---|
+| discriminates entry | false |
+| discriminates first_review | false |
+| value_fails entry | true |
+| value_fails first_review | true |
+| flip_share | 0.0499 |
+| reading entry_identifiable | false |
+| reading forecasts_fail | true |
+| reading not_distinguishable | false |
+| reading review_protective | false |
+
+## Review 73f6cfa6 (nonblocking items, folded in)
+
+- **Item 1:** restated. Suppressing every discretionary PULL of the forced initial generation (the entire initial-generation retention policy) loses on the forced forks; it does not show that the first pull was necessary. The 86 ms was the mean removal-effect delay after activation among the 735 orders with a request. This receipt reports shadow entry admission, first-review status and first-pull time separately.
+- **Item 2:** this measurement compares P, E[q], E[qm] and V with matched neutral-hold targets on full 107-input vectors, against zero and edge × E[q].
+- **Item 3:** check B enforces END 5,000, one mark and settings, and the true callback / probe denominators, with wrong-END and missing-callback falsifiers.
+- **Item 4:** stage capture runs in the teacher's fn (actual callbacks only); decide has no side effect.
+- **Item 5:** a fill's END-mark value is named end_value; the fill-time venue-mid execution edge is reported with its denominators (tables).
+
+## Provenance
+
+- Mutation checks: the final suite 32 / 32; run 1 30 / 32 (an equivalent mutant on the side test, which the gid and the stop rule already imply, was replaced; the unavoidable sign was moved into a tested function). The checker's synthetic selftest passed before the run.
+- The frozen falsifier raised `TypeError` at its first case before recording any (one line unpacked two paths instead of one argument tuple). Freeze 2b `0f89182f` corrected that line (declaration_v2.md, retention_checks_v2.py); the frozen checks A–H in checks.json are unchanged.
+- Pilot (part 0): 67 CPU s, peak 1148 MiB; projection 0.336 core-hours against the 1 ceiling, so the rest ran.
+
+## Cost
+
+- 0.337 core-hours of CPU over every run_light job under logs/, recursive (the ceiling is 1); 84 jobs, peak 1180 MiB; check G true.
+
+## Limits
+
+- Forced original-time neutral mandatory POST probes, not voluntary PI0 admissions; the entry stage reports what PI0 would have done there.
+- Unweighted rows within repeated worlds; both side forks of a world are related; four consumed days; adaptive development descriptions.
+- Remaining queue priority at END has no value (`pf_branch_engine.finish`); targets are gross at the common END mark.
+

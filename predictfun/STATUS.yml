@@ -669,6 +669,19 @@ pipeline_one_day_v3_20261119:
   values_equal_v2: {cells_per_day: 190, differing: 0}
   attribution_vs_pull_all_c: {"20261026": {first_step: 0.0, later: 954.33, never: 995.36, no_prediction: 0.0}, "20261027": {first_step: 0.0, later: -821.85, never: 251.74, no_prediction: 0.0}}
 
+entry_retention_20261121:
+  status: done_entry_retention_discrimination_v1_no_fit
+  asof: "2026-11-21 10:27Z"
+  receipt: predictfun/reviews/entry_retention_20261121/report.md
+  commits: {freeze: 2ac6e084, freeze_2b_falsifier: 0f89182f}
+  checks: {all_true: true, falsifier_ok: true}
+  forks: {manifest: 768, ok: 756}
+  entry: {selected: 712, eligible: 755, percentile: 0.5440, thin: false, discriminates: false, value_fails: true}
+  first_review: {selected: 697, eligible: 718, percentile: 0.6080, thin: true, discriminates: false, value_fails: true}
+  flip_share: 0.049930651872399444
+  readings: {entry_identifiable: false, forecasts_fail: true, not_distinguishable: false, review_protective: false}
+  cost_core_hours: 0.337
+  next: combined_review_names_the_next_priority
 entry_exposure_20261121:
   status: done_entry_exposure_v1_keep_initial_vs_pi0
   asof: "2026-11-21 09:32Z"

@@ -1,0 +1,7 @@
+{
+ "holds": [
+  "forecasts_fail"
+ ],
+ "all_true": true
+}
+2026-11-21T10:27:46Z tag=retention_report rc=0 peak_rss_mib=201 wall_s=1.05 cpu_user_s=0.85 memavail_start_gib=23 disk_free_gib=445->445 slot=claude
