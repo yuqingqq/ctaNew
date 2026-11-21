@@ -1,0 +1,25 @@
+{
+ "heads": {
+  "0 post": 6084,
+  "0 keep": 3042,
+  "1 post": 6084,
+  "1 keep": 3039
+ },
+ "statuses": {
+  "20261024 keep feature_unavailable": 1,
+  "20261024 keep ok": 3041,
+  "20261024 keep world:no_path:missing_endpoint": 30,
+  "20261024 post ok": 6084,
+  "20261024 post world:no_path:missing_endpoint": 30,
+  "20261025 keep empty_pool": 1,
+  "20261025 keep feature_unavailable": 1,
+  "20261025 keep ok": 3040,
+  "20261025 keep world:no_path:missing_endpoint": 24,
+  "20261025 keep world:no_path:stale_future_book": 6,
+  "20261025 post ok": 6084,
+  "20261025 post world:no_path:missing_endpoint": 24,
+  "20261025 post world:no_path:stale_future_book": 6
+ },
+ "support_sha256": "fbeae28e1c7ee56f977d3a2a21451cbdc829bdfa89d69edd1a9f93c53e819156"
+}
+2026-11-21T03:40:42Z tag=r3_extract rc=0 peak_rss_mib=301 wall_s=15.53 cpu_user_s=14.94 memavail_start_gib=21 disk_free_gib=432->432 slot=claude
