@@ -1,3 +1,29 @@
+default_post_inventory_20261121_codex:
+  status: user_directed_inventory_comparison_ready
+  source_head: a4c0d2880b8ce3039de20aa99af91ced0e9633d9
+  base_plan: predictfun/reviews/automatic/20261121_default_post_duration_size/plan_v2.md
+  addendum: predictfun/reviews/automatic/20261121_default_post_inventory/addendum.md
+  additional_arms: [ROOM_CLIP_Q100_C100, INVENTORY_SKEW_Q100_C100]
+  total_scenarios: 7
+  max_order_shares: 100
+  hard_cap_shares: 100
+  duration_ms: 60000
+  inventory_target_shares: 0
+  soft_trigger_shares: 50
+  recovery_band_shares: 25
+  inventory_hysteresis_not_timer: true
+  preserve_live_orders_except_restricted_side_pull: true
+  price_skew_or_taker_liquidation: false
+  new_model_fits: 0
+  worlds_max: 96
+  pilot_worlds: 8
+  core_hours_ceiling: 2
+  also_bounded_by_unused_previous_eight_hour_allocation: true
+  extra_user_approval_within_contract: false
+  combined_reviews: 1
+  implementation_owner: development_session
+  new_simulations_in_this_planning_session: 0
+
 default_post_duration_size_20261121_codex:
   status: user_directed_amended_development_handoff_ready
   source_head: e9e710fd606d96b8ce45f92a219bb4efcc9fac37

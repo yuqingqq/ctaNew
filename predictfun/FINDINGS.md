@@ -1,3 +1,23 @@
+<!-- DEFAULT_POST_INVENTORY_20261121_CODEX -->
+## 2026-11-21 — A larger cap permits size; it does not manage inventory economically
+
+[Inventory addendum](reviews/automatic/20261121_default_post_inventory/addendum.md)
+to the duration/size experiment. At source a4c0d288, new bids require
+I+B+q<=C and asks require -I+A+q<=C. Unacknowledged fills/removals remain
+reserved. Fixed-size posting rejects the whole order when room is smaller;
+silently clipping it would change the default baseline.
+
+Separate fixed-size Q100, room-clipped Qmax100, and an inventory-aware
+Qmax100 rule at the same cap100. The frozen diagnostic rule uses smaller
+new risk-increasing orders and a 50-share soft trigger with recovery at 25;
+it selectively cancels the risk-increasing side at that trigger while
+preserving other resting orders. Its thresholds are not fitted or optimal.
+It can sacrifice profitable fills or overshoot zero, so compare full replay
+value, exposure, participation and queue effects. No economic benefit is
+claimed before the common-world run. Bundle the comparison with the planned
+duration/size round; no new dates, larger budget or separate repair review.
+<!-- /DEFAULT_POST_INVENTORY_20261121_CODEX -->
+
 <!-- DEFAULT_POST_DURATION_SIZE_20261121_CODEX -->
 ## 2026-11-21 — Five-second/30-share evidence does not resolve longer queue value
 

@@ -23,6 +23,29 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- DEFAULT_POST_INVENTORY_20261121_CODEX -->
+## 2026-11-21 — Inventory comparison added to the duration/size round
+
+Current contract: [duration/size v2](reviews/automatic/20261121_default_post_duration_size/plan_v2.md)
+plus this [inventory addendum](reviews/automatic/20261121_default_post_inventory/addendum.md).
+The USER asks whether larger posts require corresponding inventory management.
+The hard cap remains mandatory; raising it alone supplies no rebalancing rule.
+
+Keep the five v2 arms. Add two Qmax100/cap100/60s comparisons: neutral
+room-clipped posting, and inventory-aware sizing with target zero. The latter
+reduces new same-direction size, restricts/pulls that side at |known I|=50,
+and releases the restriction inside |I|<=25. It preserves other live/partial
+orders and the reducing-side queue. This is inventory hysteresis, not a
+cooldown; notices, reservations and cancel latency remain real.
+
+Seven arms total, same <=96 consumed-day worlds and eight-world pilot,
+unchanged two-core-hour/remaining-allocation ceiling. Project all arms before
+the full run. No fitting or price-skew search. Report value and foregone fills
+alongside inventory, clipping, cap blocks, inventory pulls and queue loss;
+lower inventory alone is not economic improvement. One combined review.
+Development may proceed within the linked scope; this is a plan, no result.
+<!-- /DEFAULT_POST_INVENTORY_20261121_CODEX -->
+
 <!-- DEFAULT_POST_DURATION_SIZE_20261121_CODEX -->
 ## 2026-11-21 — USER amendment: measure longer-lived, larger resting orders
 
