@@ -1,0 +1,63 @@
+{
+ "RICH 0 post": {
+  "rows": 6084,
+  "trees": 200,
+  "sha": "e9212d76fcdc"
+ },
+ "RICH 0 keep": {
+  "rows": 3042,
+  "trees": 200,
+  "sha": "2b0f49d8e3ae"
+ },
+ "RICH 1 post": {
+  "rows": 6084,
+  "trees": 200,
+  "sha": "e22536c2f21e"
+ },
+ "RICH 1 keep": {
+  "rows": 3039,
+  "trees": 200,
+  "sha": "2254e4f3bcc7"
+ },
+ "FAIR 0 post": {
+  "rows": 6084,
+  "trees": 200,
+  "sha": "70bfd5b72d81"
+ },
+ "FAIR 0 keep": {
+  "rows": 3042,
+  "trees": 200,
+  "sha": "8659bf6fc5a5"
+ },
+ "FAIR 1 post": {
+  "rows": 6084,
+  "trees": 200,
+  "sha": "00b24eb95bc9"
+ },
+ "FAIR 1 keep": {
+  "rows": 3039,
+  "trees": 200,
+  "sha": "79218e911418"
+ },
+ "MECH 0 post": {
+  "rows": 6084,
+  "trees": 200,
+  "sha": "cc80428db294"
+ },
+ "MECH 0 keep": {
+  "rows": 3042,
+  "trees": 200,
+  "sha": "fa935f2f3717"
+ },
+ "MECH 1 post": {
+  "rows": 6084,
+  "trees": 200,
+  "sha": "0ff7bbdb0419"
+ },
+ "MECH 1 keep": {
+  "rows": 3039,
+  "trees": 200,
+  "sha": "af5b6c7ad16a"
+ }
+}
+2026-11-21T03:40:57Z tag=r3_fit rc=0 peak_rss_mib=261 wall_s=4.75 cpu_user_s=4.47 memavail_start_gib=21 disk_free_gib=432->432 slot=claude
