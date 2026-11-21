@@ -1,0 +1,56 @@
+"""MUTATION CHECK of pf_entry_exposure (ENTRY-EXPOSURE-v1; 2026-11-21, session aea5bfb9), run by pf_mutant_one.py with
+pf_entry_exposure_selftest. Required: the control passes; every mutant is caught BY A CHECK; every target occurs exactly once."""
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+SRC = HERE / 'pf_entry_exposure.py'
+SELFTEST = 'pf_entry_exposure_selftest'
+FAIL = 'ENTRY EXPOSURE SELFTEST FAILED'
+MUTANTS = [
+    ('the override on any live PULL', "and v['state'] == 'live' and int(v['side']) == self.focal and v['gid'] == self.gid0 and d.get('action') == 'PULL'",
+     "and v['state'] == 'live' and d.get('action') == 'PULL'"),
+    ('the override of the opposite side', "int(v['side']) == self.focal and v['gid'] == self.gid0", "int(v['side']) != self.focal and v['gid'] == self.gid0"),
+    ('gid0 never set from the fork POST', "pol.gid0 = Bx.open[side]; C.require(pol.gid0 is not None, 'the forced POST opened no generation'); pol.ahead0 = float(Bx.E.o[pol.gid0]['ahead'])",
+     "pol.ahead0 = None"),
+    ('the other side decided again at the fork', "    if first == side:\n        BE.decide(Bx, g, 1 - side, pol)\n", "    if True:\n        BE.decide(Bx, g, 1 - side, pol)\n"),
+    ('the reproduction ignores the decisions hash', "for h in ('fills_sha256', 'decisions_sha256', 'requests_sha256', 'value')", "for h in ('fills_sha256', 'requests_sha256', 'value')"),
+    ('the reproduction ignores the requests hash', "for h in ('fills_sha256', 'decisions_sha256', 'requests_sha256', 'value')", "for h in ('fills_sha256', 'decisions_sha256', 'value')"),
+    ('the reproduction ignores Y', "repro = bool(res['Y'] == f['Y'] and res['reconciled'] and", "repro = bool(res['reconciled'] and"),
+    ('the pair reconciliation ignored', "repro = bool(res['Y'] == f['Y'] and res['reconciled'] and", "repro = bool(res['Y'] == f['Y'] and"),
+    ('the KEEP reconciliation ignored', "keep_reconciled=bool(L.reconcile_arm(Lk, Bk))", "keep_reconciled=True"),
+    ('the fork fingerprint unchecked', "    if ctx['fingerprint'] != f['fork_fingerprint']:\n        return dict(r, status='fork_mismatch')\n", ""),
+    ('D against the WAIT arm', "y, yk, d = rp - rw, rk - rw, rk - rp;", "y, yk, d = rp - rw, rk - rw, rk - rw;"),
+    ('the components not differenced', "di, df, do = (ck[k] - cp[k] for k in", "di, df, do = (ck[k] for k in"),
+    ('the opposite side counted as focal', "'v_focal_rest' if int(f[2]) == int(side) else 'v_opposite'", "'v_focal_rest'"),
+    ('the components identity unchecked', "components_ok=bool(abs(d - (di + df + do)) <= 1e-6 and", "components_ok=bool(True or"),
+    ('the thin floor ignored', "'not_identified_thin' if len(ad) < THIN else ", ""),
+    ('equal fills counted as additional', "ad = ok[ok.KEEP_filled > ok.PI0_filled + 1e-9]", "ad = ok[ok.KEEP_filled >= ok.PI0_filled]"),
+    ('harmful extra fills signed wrong', "extra_fills_harmful=bool(len(ad) and float(ad.D_initial.mean()) < 0)", "extra_fills_harmful=bool(len(ad) and float(ad.D_initial.mean()) > 0)"),
+    ('the markout quantity from every fill', "out[f'{b}_{h}_q'] = float(sum(x['q'] for x in fl if x.get(h) is not None))", "out[f'{b}_{h}_q'] = float(sum(x['q'] for x in fl))"),
+    ('the prefix compares actions only', "i = next((j for j, (a, b) in enumerate(zip(dk, dp)) if a != b), None)", "i = next((j for j, (a, b) in enumerate(zip(dk, dp)) if a[3] != b[3]), None)"),
+    ('the prefix ignores fills before the override', "a[4] == b[4] == pk.gid0\n                and [f for f in Bk.E.fills if f[0] <= g] == [f for f in Bp.E.fills if f[0] <= g])",
+     "a[4] == b[4] == pk.gid0)"),
+    ('the no-override prefix ignores fills', "        return bool(dk == dp and list(Bk.E.fills) == list(Bp.E.fills))", "        return bool(dk == dp)"),
+    ('a partial fill counted full', "if full is None and q >= float(o['size']) - 1e-9:", "if full is None and q > 0:"),
+    ('the structural reason lost', "(o['why'] or 'end') if float(o['remove']) <= END else 'end')", "'end')"),
+    ('a markout past END from the last frame', "m_ = AR.mid_at(B.E.f, t + h) if t + h <= END else None", "m_ = AR.mid_at(B.E.f, t + h)"),
+    ('five worlds per hour', "PREFIX, PER_HOUR, PART, AUDIT_EVERY, NT, END = 'entry_exposure_v1|', 4,", "PREFIX, PER_HOUR, PART, AUDIT_EVERY, NT, END = 'entry_exposure_v1|', 5,"),
+    ('an unsalted rank', "    return hashlib.sha256((PREFIX + LS.ckey(", "    return hashlib.sha256((LS.ckey("),
+    ('summaries over every status', "    ok = F[F.status == 'ok']; out = []\n    for (day, s), g in ok.groupby(['day', 'side'], sort=True):\n        d = g.D_EXPOSURE",
+     "    ok = F; out = []\n    for (day, s), g in ok.groupby(['day', 'side'], sort=True):\n        d = g.D_EXPOSURE"),
+    ('the open inventory from the PI0 arm', "f'open_inv_{b}': float(g[f'{arm}_position'].abs().mean())", "f'open_inv_{b}': float(g['POST_PI0_position'].abs().mean())"),
+    ('the KEEP reasons read from PI0', "            for why, n in sorted(g[f'{b}_why'].value_counts().items()):", "            for why, n in sorted(g['PI0_why'].value_counts().items()):"),
+    ('a non-unique mandatory row accepted', "                if len(mand) == 1 and len(mall) == 1:", "                if len(mand) >= 1:"),
+    ('a failed mandatory row status lost', "else f\"mandatory_{mall[0]['status']}\", row_statuses=st)", "else 'no_mandatory_row', row_statuses=st)"),
+    ('the stored requests hash dropped', "requests_sha256=a['requests_sha256'])\n", "requests_sha256=None)\n"),
+    ('the manifest overwritten', "C.require(not mp.exists(), 'the manifest exists (immutable)'); ", ""),
+    ('summarize reads a partition without its hash', "C.require(hashlib.sha256(b).hexdigest() == rec['sha256'] and rec['manifest_sha256']", "C.require(True and rec['manifest_sha256']"),
+    ('run_part without the committed manifest', "C.require(committed_equal(RECEIPT_REL, out / 'manifest.json'), 'the manifest is not the one committed in HEAD: no simulation before the freeze')\n    ", ""),
+    ('a day without a sign counted', "sign=0 if abs(m) <= SIGN_TOL else (1 if m > 0 else -1)", "sign=1 if m >= 0 else -1"),
+    ('keep_better on three of four days', "'keep_better' if all(x > 0 for x in sg)", "'keep_better' if sum(x > 0 for x in sg) >= 3"),
+    ('incomplete days not refused', "('incomplete' if len(days) != len(DAYS) else", "('incomplete' if not days else"),
+    ('the predicates over every status', "    ok = F[F.status == 'ok']; days = {}", "    ok = F; days = {}"),
+    ('more execution at any gain', "more_execution=bool(fp is not None and fk - fp >= MORE_EXECUTION)", "more_execution=bool(fp is not None and fk - fp > 0)"),
+    ('the components compared signed', "initial_carries=bool(abs(si) >= abs(sr))", "initial_carries=bool(si >= sr)"),
+    ('the unfilled remainder at END ignored', "unfilled_at_end=float(o['rem']) if (float(o['remove']) > END and not o['refused']) else 0.", "unfilled_at_end=0."),
+]

@@ -1,0 +1,32 @@
+{
+ "train": {
+  "worlds": 8,
+  "forks": 16,
+  "ok": 11,
+  "parts": 1
+ },
+ "eval": {
+  "worlds": 8,
+  "forks": 16,
+  "ok": 11,
+  "parts": 1
+ }
+}
+{
+ "forks": 4,
+ "statuses": [
+  {
+   "day": "d",
+   "status": "ok",
+   "n": 3
+  },
+  {
+   "day": "d",
+   "status": "world:x",
+   "n": 1
+  }
+ ],
+ "reproduced_all": true
+}
+entry exposure selftest passed: crafted tapes (more resting time, harmful late fill, structural removal, refusal, partial fill, already keeps, ask side, late fill; later / opposite untouched; wrong gid0; stale branch); prefix_ok (valid, altered); fork_package end to end (reproduced; different Y / decisions / requests / fingerprint refused; reconcile failures); select_worlds; values; summaries; reasons; writers end to end (build_manifest statuses and refusal; summarize outputs and refusal; run_part refuses an uncommitted manifest)
+2026-11-21T08:42:53Z tag=pf_entry_exposure_selftest rc=0 peak_rss_mib=233 wall_s=11.21 cpu_user_s=11.00 memavail_start_gib=23 disk_free_gib=446->446 slot=claude

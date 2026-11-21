@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "6", "name": "the reproduction ignores Y", "seconds": 11.2, "sources": {"pf_entry_exposure.py": "9f723cdcdaf56bef", "pf_entry_exposure_mutants.py": "d6d7fa634f99f24f", "pf_entry_exposure_selftest.py": "730c7e2e35a21f88"}, "why": "ENTRY EXPOSURE SELFTEST FAILED: fork_package: a different stored Y was not reproduction_failed"}
+2026-11-21T08:32:52Z tag=mut_exp_6 rc=0 peak_rss_mib=232 wall_s=11.45 cpu_user_s=11.14 memavail_start_gib=22 disk_free_gib=446->446 slot=claude4

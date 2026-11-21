@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "11", "name": "D_initial not differenced", "seconds": 11.0, "sources": {"pf_entry_exposure.py": "62e8b55d69e2a3a5", "pf_entry_exposure_mutants.py": "1a048604afcec9b6", "pf_entry_exposure_selftest.py": "8b2a236ed1caafbf"}, "why": "ENTRY EXPOSURE SELFTEST FAILED: values: the declared contrasts ({'Y_PI0': 2.0, 'Y_KEEP_INITIAL': 5.0, 'D_EXPOSURE': 3.0, 'D_initial': 4.5, 'D_rest': -1.5, 'identity_ok': True})"}
+2026-11-21T08:26:35Z tag=mut_exp_11 rc=0 peak_rss_mib=230 wall_s=11.30 cpu_user_s=11.05 memavail_start_gib=22 disk_free_gib=446->446 slot=claude
