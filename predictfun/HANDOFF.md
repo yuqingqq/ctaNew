@@ -211,6 +211,14 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_PRESSURE_POSITIVE_FREEZE_20261121_DEV -->
+## 2026-11-21 21:08Z (session aea5bfb9) — POSITIVE-PRESSURE-GUARD-v1 FROZEN before any challenger replay (review 4a236235's ONE next priority)
+
+- **Review 4a236235 findings (verified at the code):** (1) `pf_ladder_pressure_residual.py:103-110` returns for pending fills before the feasible / evaluable / ON counters (`:114-118`) run, so those columns read zero / blank for the 391 pending fills (the review found 0 timely ON over all fills; no status changes), and 242 fills precede their recorded T1 (a retrospective diagnostic) -> **marked uncomputed / deferred**: not reused here; (2) `residual_checks.py` does not cover every supporting field -> **deferred**, not reused. The ablation's lost / added field checks (e40bd01d) also stay deferred (this round checks counts, END and the identity).
+- **Frozen:** `pf_ladder_pressure_positive.py` (PositivePressureGuard: the frozen PressureGuard with ON = finite float32 adv_bn_r250 > 0 at the current tick, both sides; Q5_CONTROL must equal the accepted pressure arm; the Oct 24 pilot reused, Oct 25-27 only if the whole-round projection fits; the contrast POSITIVE - Q5_CONTROL for END and eligible +1 s with IMPROVES / WORSENS / MIXED and stop_candidate; the incremental screen on q5-OFF baseline KEEP states with the x > 0 mask through the frozen selection), its selftest (mutants 13 / 13), `positive_checks.py` (A-I, falsifier, rehearsal), the pilot rule (<= 0.14 core-hours, the line <= 2.0), the manifest, the launcher, the declaration.
+- **Next:** the Oct 24 pilot, the projection (stop and ask the USER if it does not fit), the rehearsal, the rest, screen, measurement, checks, one combined receipt, ONE review request.
+<!-- /LADDER_PRESSURE_POSITIVE_FREEZE_20261121_DEV -->
+
 <!-- LADDER_PRESSURE_RESIDUAL_RESULTS_20261121_DEV -->
 ## 2026-11-21 20:49Z (session aea5bfb9) — PRESSURE-RESIDUAL-TIMING-AUDIT-v1 RESULTS: UNFLAGGED_EXPOSURE_DOMINANT (CONSUMED DAYS); CHECKS ALL TRUE
 

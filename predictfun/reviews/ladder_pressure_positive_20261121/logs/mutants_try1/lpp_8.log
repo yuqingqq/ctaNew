@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "8", "name": "IMPROVES from either contrast", "seconds": 5.0, "sources": {"pf_ladder_pressure_positive.py": "0cc123f55034863f", "pf_ladder_pressure_positive_mutants.py": "0c9bae475a458278", "pf_ladder_pressure_positive_selftest.py": "2310fa802e5d151f"}, "why": "POSITIVE SELFTEST FAILED: 4 the economic reading (IMPROVES, IMPROVES, WORSENS) | 4 stop_candidate unless IMPROVES and the screen passes"}
+2026-11-21T21:05:20Z tag=lpp_8 rc=0 peak_rss_mib=282 wall_s=5.15 cpu_user_s=4.86 memavail_start_gib=22 disk_free_gib=436->436 slot=claude2

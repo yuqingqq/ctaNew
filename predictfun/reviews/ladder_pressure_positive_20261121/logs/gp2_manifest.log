@@ -1,0 +1,40 @@
+{
+ "version": "positive_pressure_guard_v1",
+ "rule_sha256": "63ba4a8ce001bfb1959d6a98b20af0b9cfdac1d5f2c162554ae8343611dc2f67",
+ "run_arms": [
+  "Q5_CONTROL",
+  "POSITIVE"
+ ],
+ "mask_on": 10.0,
+ "pilot_day": "20261024",
+ "parent": {
+  "freeze": "793c706b",
+  "results": "40a3ee8d",
+  "review": "4a236235",
+  "rule_sha256": "24f853dcfab0682e766742f506cb36faa86dd2f7c6170aed2febb801486d24fa",
+  "manifest_sha256": "8546b34ab6914bc6cf4922683d63b01b5b8a9b018e0915d76b2f42ff4d9d288e",
+  "day_records": {
+   "20261024": "ab599b8eceefb881fe712bb7ceb9c314fc7eb3b5ef6872778f58f2c2f2a67277",
+   "20261025": "3874552b6ae995cccf46ba820963fd27222ba530fb552dab74d28fbcd9f3bfe8",
+   "20261026": "0833d2c4278d89e6a6af24a72e4c6313ddf411da267b5aa5b428513fa96d30d6",
+   "20261027": "25345c86153002aa643ff8c06862b906373e171a10e63eaf4e687647842a55cd"
+  }
+ },
+ "edges": {
+  "0": [
+   -0.6315650224685669,
+   -0.23532847166061402,
+   0.23543085157871246,
+   0.4666730940341952
+  ],
+  "1": [
+   -0.7444053292274475,
+   -0.4986844062805176,
+   -0.23543085157871246,
+   0.285456120967865
+  ]
+ },
+ "edges_sha256": "ca688917cd7ddc7c40e94031bee646f4fc1339511bb7c48fbe5270797a38bf80",
+ "sources": {
+  "pf_ladder_pressure_positive.
+2026-11-21T21:07:51Z tag=gp2_manifest rc=0 peak_rss_mib=200 wall_s=0.96 cpu_user_s=0.76 memavail_start_gib=22 disk_free_gib=436->436 slot=claude

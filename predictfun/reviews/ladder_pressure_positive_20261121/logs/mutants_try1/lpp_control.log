@@ -1,0 +1,2 @@
+{"cls": "PASSED", "index": "control", "name": "control (the unchanged copy)", "seconds": 4.9, "sources": {"pf_ladder_pressure_positive.py": "0cc123f55034863f", "pf_ladder_pressure_positive_mutants.py": "0c9bae475a458278", "pf_ladder_pressure_positive_selftest.py": "2310fa802e5d151f"}, "why": "POSITIVE SELFTEST PASSED: the signal and delegation, the hand tape, the screen population, the readings, guards"}
+2026-11-21T21:05:08Z tag=lpp_control rc=0 peak_rss_mib=282 wall_s=5.12 cpu_user_s=4.78 memavail_start_gib=23 disk_free_gib=436->436 slot=claude

@@ -1,0 +1,160 @@
+{
+ "asof": "2026-11-21T21:07:52.651628+00:00",
+ "complete": {
+  "20261024": [
+   3697902,
+   3699278,
+   3700070,
+   3702960,
+   3704004,
+   3712725,
+   3716727
+  ],
+  "20261025": [
+   3723774,
+   3734864,
+   3737919,
+   3763401,
+   3776314
+  ],
+  "20261026": [
+   3789484,
+   3803131,
+   3804696,
+   3838531,
+   3850428
+  ],
+  "20261027": [
+   3877472,
+   3899224
+  ]
+ },
+ "days": [
+  "20261024",
+  "20261025",
+  "20261026",
+  "20261027"
+ ],
+ "edges": {
+  "0": [
+   -0.6315650224685669,
+   -0.23532847166061402,
+   0.23543085157871246,
+   0.4666730940341952
+  ],
+  "1": [
+   -0.7444053292274475,
+   -0.4986844062805176,
+   -0.23543085157871246,
+   0.285456120967865
+  ]
+ },
+ "edges_sha256": "ca688917cd7ddc7c40e94031bee646f4fc1339511bb7c48fbe5270797a38bf80",
+ "mask_on": 10.0,
+ "multiplicity": {
+  "controls": [
+   "Q5_CONTROL (= the accepted pressure arm)",
+   "BASELINE (context)"
+  ],
+  "new_candidates": [
+   "POSITIVE_PRESSURE_GUARD_v1"
+  ]
+ },
+ "null": {
+  "age_bands_ms": [
+   500.0,
+   2000.0,
+   10000.0
+  ],
+  "b_edge": 200.0,
+  "draws": 500,
+  "min_movable_rows": 30,
+  "min_movable_strata": 5,
+  "rem_bands": [
+   25.0,
+   50.0,
+   75.0
+  ],
+  "seed": 20261121
+ },
+ "parent": {
+  "day_records": {
+   "20261024": "ab599b8eceefb881fe712bb7ceb9c314fc7eb3b5ef6872778f58f2c2f2a67277",
+   "20261025": "3874552b6ae995cccf46ba820963fd27222ba530fb552dab74d28fbcd9f3bfe8",
+   "20261026": "0833d2c4278d89e6a6af24a72e4c6313ddf411da267b5aa5b428513fa96d30d6",
+   "20261027": "25345c86153002aa643ff8c06862b906373e171a10e63eaf4e687647842a55cd"
+  },
+  "freeze": "793c706b",
+  "manifest_sha256": "8546b34ab6914bc6cf4922683d63b01b5b8a9b018e0915d76b2f42ff4d9d288e",
+  "results": "40a3ee8d",
+  "review": "4a236235",
+  "rule_sha256": "24f853dcfab0682e766742f506cb36faa86dd2f7c6170aed2febb801486d24fa"
+ },
+ "parts": {
+  "pilot": {
+   "20261024": [
+    3697902,
+    3699278,
+    3700070,
+    3702960,
+    3704004,
+    3712725,
+    3716727
+   ],
+   "20261025": [],
+   "20261026": [],
+   "20261027": []
+  },
+  "rest": {
+   "20261024": [],
+   "20261025": [
+    3723774,
+    3734864,
+    3737919,
+    3763401,
+    3776314
+   ],
+   "20261026": [
+    3789484,
+    3803131,
+    3804696,
+    3838531,
+    3850428
+   ],
+   "20261027": [
+    3877472,
+    3899224
+   ]
+  }
+ },
+ "pilot_day": "20261024",
+ "rule_sha256": "63ba4a8ce001bfb1959d6a98b20af0b9cfdac1d5f2c162554ae8343611dc2f67",
+ "run_arms": [
+  "Q5_CONTROL",
+  "POSITIVE"
+ ],
+ "sources": {
+  "pf_branch_engine.py": "8b7960ef4bbbc178b281e57d92d4795d7678436c0ca875e7199e24a6626af3a8",
+  "pf_branch_ladder.py": "c9e0852eccea5b4248001693fd8ddec083ea2df517dc8f3fd0d8b2f091ab285a",
+  "pf_flow_price_common.py": "beac0d747ec5dc84874fdee2f8e08057c1a47c819cfc648a762ea8950b0d1993",
+  "pf_flow_price_data.py": "fa9112d1147e955b4ff4ff2c09d2c8c23e37418b3e2957cb2f47deaf9a907a4e",
+  "pf_influence.py": "5c5bd6f61da5800fcc67045b8c5ec3b4ab61eede3a4383ac244f5dd405f6ac55",
+  "pf_ladder_audit.py": "97a79a90a06062a775d3fe66f55da5172b3ffc2cf39e771cf52e6852fe38f44c",
+  "pf_ladder_guard.py": "5349b75682108857eeb367f0da86ea387c1682e99ee1761f2b60f0d50e01c2fe",
+  "pf_ladder_pressure.py": "357f1d19b32ab5a8d51bc26f884d03492d008c3653b981a147d0bbca17068114",
+  "pf_ladder_pressure_ablation.py": "cfe8a5051c0fb55c0f995383d17ce4414ad3b45645ca5dd539bac45db182c5c0",
+  "pf_ladder_pressure_ablation_selftest.py": "e40db31ed0d5ed0e4c36830c9b787ac4c540dc2c13b1c932b6dd21f71f89b0fe",
+  "pf_ladder_pressure_lag.py": "0dcb03c430db87e2cf85104eebdf3aa175eb6af4594ac9a89dec89d1bbf5c7d4",
+  "pf_ladder_pressure_lag_selftest.py": "7db1a9511b064ef9bd0c04a8fd85ca6c736e66d35cf81c9a00c8e2bd106ea7b8",
+  "pf_ladder_pressure_positive.py": "0cc123f55034863f4bc752aec36f1f52c8686258bc2c8375bd0d8ca76fb32f5f",
+  "pf_ladder_pressure_positive_selftest.py": "2310fa802e5d151f04c3d4acfd485e369256e4fcba1f0883af40257a5dc29116",
+  "pf_ladder_pressure_selftest.py": "9a380526b4b8b1486652a62fda1e027096e9c8afb580e7d3c68a388f6e11718e",
+  "pf_ladder_rest.py": "d90016ce7d25f89f6f6c6662075f5be72539d3140373e42c8b7228ebcf8ce5e0",
+  "pf_pipeline_export.py": "ee2953fd00f70a7d12607abd4b418471b2208b8f9728009c7e538ccb55733931",
+  "pf_pull_depth.py": "a8670b2e9751f16dce37aab7c18ce35cc31fa3431e392b9a7397f4375a9114ef",
+  "pf_stop_depth.py": "819d5e06d32b647cdac96cca0f9f9191eb033c9a9b6c1cfd160df3f0228aae46",
+  "pf_stop_ev_minutes_inputs.py": "bbec0ff5d8f14a617b1ef83cfcdda659de1b4998ab25a9b05e098140316de7b6",
+  "pf_stop_model.py": "e2a857ddb6c4e76af40080e753942e1e0bef3bd42a34ed2929f378fe869df0ed"
+ },
+ "version": "positive_pressure_guard_v1"
+}

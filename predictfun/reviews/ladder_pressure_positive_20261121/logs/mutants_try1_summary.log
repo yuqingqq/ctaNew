@@ -1,0 +1,16 @@
+  0 a zero tie counted ON: CAUGHT (4.5 s) - POSITIVE SELFTEST FAILED: 1 the signal boundary on both sides ([True, True, True, True, True, True, False, False, False, False, True, True, False, Fal
+  1 a non-ok status acts: CAUGHT (4.9 s) - POSITIVE SELFTEST FAILED: 1 the signal boundary on both sides ([True, True, False, False, False, False, False, False, False, False, True, True, True, 
+  2 the disabled guard acts: CAUGHT (4.9 s) - POSITIVE SELFTEST FAILED: 1 the signal boundary on both sides ([True, True, False, False, False, False, False, False, False, False, True, True, False,
+  3 the challenger keeps the q5 test: CAUGHT (5.2 s) - POSITIVE SELFTEST FAILED: 1 the signal boundary on both sides ([False, False, False, False, False, False, False, False, False, False, False, True, Fal
+  4 the screen keeps fallback callbacks: CAUGHT (4.9 s) - POSITIVE SELFTEST FAILED: 3 the population ({'live_states': 8, 'without_callback': 1, 'keep_callbacks': 6, 'finite': 5, 'q5_off': 4, 'mask_on': 2}, [0
+  5 the screen keeps inventory pulls: CAUGHT (4.9 s) - POSITIVE SELFTEST FAILED: 3 the population ({'live_states': 8, 'without_callback': 1, 'keep_callbacks': 6, 'finite': 5, 'q5_off': 4, 'mask_on': 2}, [0
+  6 the screen without the q5-OFF restriction: CAUGHT (4.9 s) - POSITIVE SELFTEST FAILED: 3 the population ({'live_states': 8, 'without_callback': 1, 'keep_callbacks': 5, 'finite': 4, 'q5_off': 4, 'mask_on': 2}, [0
+  7 the mask from x >= 0: CAUGHT (5.0 s) - POSITIVE SELFTEST FAILED: 3 the population ({'live_states': 8, 'without_callback': 1, 'keep_callbacks': 5, 'finite': 4, 'q5_off': 3, 'mask_on': 2}, [0
+  8 IMPROVES from either contrast: CAUGHT (5.0 s) - POSITIVE SELFTEST FAILED: 4 the economic reading (IMPROVES, IMPROVES, WORSENS) | 4 stop_candidate unless IMPROVES and the screen passes
+  9 the candidate continues without the screen: CAUGHT (4.9 s) - POSITIVE SELFTEST FAILED: 4 stop_candidate unless IMPROVES and the screen passes
+  10 run_day without the part check: CAUGHT (4.9 s) - POSITIVE SELFTEST FAILED: 5 run_day refuses a day outside its part
+  11 the rest without the projection: CAUGHT (4.7 s) - POSITIVE SELFTEST FAILED: 5 guards: stopped (KeyError('20261025'))
+  12 measure without the screen prerequisite: CAUGHT (4.9 s) - POSITIVE SELFTEST FAILED: 5 guards: stopped (FileNotFoundError(2, 'No such file or directory'))
+control: PASSED (4.9 s); sources {'pf_ladder_pressure_positive.py': '0cc123f55034863f', 'pf_ladder_pressure_positive_mutants.py': '0c9bae475a458278', 'pf_ladder_pressure_positive_selftest.py': '2310fa802e5d151f'}
+mutation check passed: the control passes its selftest, 13 / 13 planted code errors are caught by a check (1.1 CPU min)
+2026-11-21T21:05:30Z tag=lpp_summary_try1 rc=0 peak_rss_mib=15 wall_s=0.02 cpu_user_s=0.02 memavail_start_gib=22 disk_free_gib=436->436 slot=claude

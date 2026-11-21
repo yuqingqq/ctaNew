@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "11", "name": "the rest without the projection", "seconds": 4.7, "sources": {"pf_ladder_pressure_positive.py": "0cc123f55034863f", "pf_ladder_pressure_positive_mutants.py": "0c9bae475a458278", "pf_ladder_pressure_positive_selftest.py": "2310fa802e5d151f"}, "why": "POSITIVE SELFTEST FAILED: 5 guards: stopped (KeyError('20261025'))"}
+2026-11-21T21:05:24Z tag=lpp_11 rc=0 peak_rss_mib=204 wall_s=4.84 cpu_user_s=4.60 memavail_start_gib=22 disk_free_gib=436->436 slot=claude

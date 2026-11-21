@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "10", "name": "run_day without the part check", "seconds": 4.9, "sources": {"pf_ladder_pressure_positive.py": "0cc123f55034863f", "pf_ladder_pressure_positive_mutants.py": "0c9bae475a458278", "pf_ladder_pressure_positive_selftest.py": "2310fa802e5d151f"}, "why": "POSITIVE SELFTEST FAILED: 5 run_day refuses a day outside its part"}
+2026-11-21T21:05:24Z tag=lpp_10 rc=0 peak_rss_mib=282 wall_s=5.11 cpu_user_s=4.80 memavail_start_gib=22 disk_free_gib=436->436 slot=claude4
