@@ -920,6 +920,24 @@ pulls and bid/ask; judge movement calibration on selected actions before changin
 order design. Other session owns fixes; scheduler remains off.
 <!-- /PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
 
+## 2026-11-21 12:07Z (session aea5bfb9) — PI0-MOVEMENT-CALIBRATION-AUDIT-v1: THE MOVEMENT HEAD'S DECOMPOSITION, STRATA, FILL TIMING AND PRE / POST-FILL SPLIT; CHECKS ALL TRUE; RECOMMENDATION REPRESENTATION_OR_DATA_NEEDED (review 5a8ee6f5's next priority) (USER: "... continue the implementing and next priority loop")
+- [Receipt](reviews/movement_audit_20261121/report.md).
+  - Commits: freeze `03243e5b` (before any table), results in this commit.
+  - One diagnostic; zero fitted candidates.
+- **Review 5a8ee6f5's checklist (folded in):**
+  - Finding 1: the bookTicker label (`new_bookticker`); the three clocks and units documented.
+  - Finding 2: explicit unconditional / conditional / per-share units; qm is decision-to-END movement.
+  - Finding 3: weighted and unweighted concentration; signed day × side contributions.
+  - Finding 4: exact-key weight / n_cell / cell / part binding (module, check B, falsifier B_weight); the control's hour from each review's own decision time (299 / 299 equal the admission cell).
+- **Readings** (FINDINGS P98):
+  - Entry: (i) concentrated, (ii) both, (iii) material, (iv) populated → `representation_or_data_needed`.
+  - First review: (i) concentrated, (ii) decision_state, (iii) material, (iv) populated → `representation_or_data_needed`; first pull: (i) concentrated, (ii) decision_state, (iii) material, (iv) populated → `representation_or_data_needed`.
+  - Conditional head on fills: admitted c +38.57 (forecast -6.90, realized -45.47 c per fill); forced Oct 26–27 c +3.11 (forecast -48.77, realized -51.88).
+  - Declared meaning: a small chronologically fitted calibration candidate is not supported by these cells; more representative data or a different target representation is needed (declaration.md).
+- **Validity:** checks A–I 9 / 9; falsifier 13 / 13; mutants 64 / 64; the review's independent numbers reproduce (check H).
+- **Cost:** 0.275 core-hours of the 1 ceiling; peak 1140 MiB.
+- **Next measurement:** the combined review (one request), which names the next priority.
+
 ## 2026-11-21 11:13Z (session aea5bfb9) — PI0-ADMISSION-EXPOSURE-v1: LONGER EXPOSURE OF PI0'S OWN ADMISSIONS; CHECKS ALL TRUE; READING ADMITTED_LONGER_HARMFUL (review 99fb165d's next priority) (USER: "... continue the implementing and next priority loop")
 - [Receipt](reviews/pi0_admission_20261121/report.md).
   - Commits: freeze `6b14953f` (before any branch ran), results in this commit.

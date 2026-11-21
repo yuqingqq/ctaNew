@@ -1,0 +1,16 @@
+{
+ "checks": {
+  "A_identity": true,
+  "B_membership": true,
+  "C_accounting": true,
+  "D_strata": true,
+  "E_fills": true,
+  "F_denominators": true,
+  "G_predicates": true,
+  "H_reproduction": true,
+  "I_resources_suites": true
+ },
+ "all_ok": true
+}
+{"cases": {"A_substituted": {"check": "A_identity", "clean": true, "corrupted": false, "applied": true}, "B_weight": {"check": "B_membership", "clean": true, "corrupted": false, "applied": true}, "B_drop": {"check": "B_membership", "clean": true, "corrupted": false, "applied": true}, "C_units": {"check": "C_accounting", "clean": true, "corrupted": false, "applied": true}, "C_sign": {"check": "C_accounting", "clean": true, "corrupted": false, "applied": true}, "D_venue": {"check": "D_strata", "clean": true, "corrupted": false, "applied": true}, "E_time": {"check": "E_fills", "clean": true, "corrupted": false, "applied": true}, "E_mark": {"check": "E_fills", "clean": true, "corrupted": false, "applied": true}, "F_count": {"check": "F_denominators", "clean": true, "corrupted": false, "applied": true}, "G_reading": {"check": "G_predicates", "clean": true, "corrupted": false, "applied": true}, "H_number": {"check": "H_reproduction", "clean": true, "corrupted": false, "applied": true}, "I_budget": {"check": "I_resources_suites", "clean": true, "corrupted": false, "applied": true}, "I_suite": {"check": "I_resources_suites", "clean": true, "corrupted": false, "applied": true}}, "falsifier_ok": true}
+2026-11-21T12:01:52Z tag=mov_checks rc=0 peak_rss_mib=298 wall_s=24.85 cpu_user_s=23.68 memavail_start_gib=23 disk_free_gib=443->443 slot=claude

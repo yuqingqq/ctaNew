@@ -1,0 +1,256 @@
+{
+ "admission_manifest_sha256": "3c5bf097328ee2cd31a4e7d1b17d6aadc8559559ccd74f91154f15614b91696c",
+ "asof": "2026-11-21T12:01:45.279737+00:00",
+ "control": {
+  "cell_equal_admission": 299,
+  "free_rows": 166,
+  "free_strata": 45,
+  "mean_all": -9.943903858011465,
+  "mean_sel": -12.377689892747242,
+  "n": 299,
+  "n_sel": 233,
+  "null_mean": -12.698684421366169,
+  "null_p05": -13.26442882907122,
+  "null_p95": -12.16538452930897,
+  "percentile": 0.806,
+  "reviews_with_time": 299,
+  "strata": 91,
+  "thin": false
+ },
+ "exposure_manifest_sha256": "6cf2c6248d937ad036b95acce466861a2dbbbfd4f124c18f33dcb015b96b839c",
+ "fill_statuses": [
+  {
+   "cohort": "admitted",
+   "n": 535,
+   "ref_status": "ok"
+  },
+  {
+   "cohort": "forced",
+   "n": 2235,
+   "ref_status": "ok"
+  }
+ ],
+ "membership": {
+  "admitted_equal": true,
+  "admitted_keys": 329,
+  "admitted_rows": 329,
+  "admitted_weight_sum": 689.0,
+  "forced_equal": true,
+  "forced_keys": 768,
+  "forced_rows": 768,
+  "weight_mismatch": 0
+ },
+ "mids_records": {
+  "0": "7bf79e35a8194d764d716c22eee7dd8e4501d3fef1c2cec5776a768fc428899b",
+  "1": "435256ec2142bfeb3f7e1d4afd41ec58d57ebfdd2ffab5195188770b4940444f",
+  "2": "11517ab2675539a43fbff846a5b29b4d798a70d6255dbe03c331139f918e7416",
+  "3": "a439cfd97807a4359f737b693cf3973237091bad045408570fd62b59305012c4",
+  "4": "8b858f1c351a38b20f3c47c77955ae50091d531f4f69c142c968b4f74519b7cd",
+  "5": "9fb45715d001c2cbd60acec446495fa4a48c4212f7426a233efdf974c25576fb",
+  "6": "4bcbc27e561539673d21f15638be52725c1f1fcba8547cb37e79e170cbc9e738",
+  "7": "bc3a0e0135c724b385ecbd301f080ff165030f6ed71e89f1638a380535b4bdaf",
+  "8": "80a9c0647c8b64a87cd31f1784816f01752eca0f5ef703f1ab9f1edd7d047968",
+  "9": "553e5e695f9c672897a0ee8406a11b24dece8dde7497d4cee10a1e1f488fefd3",
+  "10": "6be3b492e2bc71bb251129fc6b70107fbb983054f50a369fb876b43e87833d9d",
+  "11": "11d4c5fbc85f1c7f1e64c582dce1f925a7f4b5a10117f12030822a74e4dda19b"
+ },
+ "parts_without_mids": [],
+ "predicates": [
+  {
+   "i": {
+    "answer": "concentrated",
+    "cells": {
+     "20261026/0": 6.136211705525238,
+     "20261026/1": 34.22895154496286,
+     "20261027/0": 0.46394478511151344,
+     "20261027/1": 16.389086208352396
+    },
+    "positive_cells": 4,
+    "top5_world_share": 0.5913974528681527
+   },
+   "ii": {
+    "answer": "both",
+    "decision_ranges": {
+     "hbin": 33.63892518722061,
+     "obin": 34.20324909022983,
+     "qbin": 65.37633250727497
+    },
+    "delay_range": 61.146642668638506
+   },
+   "iii": {
+    "answer": "material",
+    "c_admitted": 38.56792593006221,
+    "c_forced_all": -0.7138910719803113,
+    "c_forced_overlap": 3.1091167157462225,
+    "fills_admitted": 88,
+    "fills_forced_overlap": 153
+   },
+   "iv": {
+    "answer": "populated",
+    "populated_cells": {
+     "hbin": 2,
+     "obin": 3,
+     "qbin": 3
+    }
+   },
+   "recommendation": "representation_or_data_needed",
+   "stage": "entry"
+  },
+  {
+   "i": {
+    "answer": "concentrated",
+    "cells": {
+     "20261026/0": 1.678604960967586,
+     "20261026/1": 30.442535062754775,
+     "20261027/0": -3.8987857949290667,
+     "20261027/1": 5.416049828337731
+    },
+    "positive_cells": 3,
+    "top5_world_share": 0.525591191371515
+   },
+   "ii": {
+    "answer": "decision_state",
+    "decision_ranges": {
+     "hbin": 34.47762491898483,
+     "obin": 28.14629384652553,
+     "qbin": 95.22141336226633
+    },
+    "delay_range": 59.471828053718454
+   },
+   "iii": {
+    "answer": "material",
+    "c_admitted": 17.16689400170384,
+    "c_forced_all": -7.828524271449725,
+    "c_forced_overlap": -0.8478267812663354,
+    "fills_admitted": 79,
+    "fills_forced_overlap": 143
+   },
+   "iv": {
+    "answer": "populated",
+    "populated_cells": {
+     "hbin": 2,
+     "obin": 3,
+     "qbin": 3
+    }
+   },
+   "recommendation": "representation_or_data_needed",
+   "stage": "first_review"
+  },
+  {
+   "i": {
+    "answer": "concentrated",
+    "cells": {
+     "20261026/0": 1.5974057128405348,
+     "20261026/1": 34.75255871110598,
+     "20261027/0": -6.129093960729399,
+     "20261027/1": 5.222502455403521
+    },
+    "positive_cells": 3,
+    "top5_world_share": 0.5141440581517573
+   },
+   "ii": {
+    "answer": "decision_state",
+    "decision_ranges": {
+     "hbin": 41.408076869874,
+     "obin": 29.27840453981027,
+     "qbin": 107.90317121716704
+    },
+    "delay_range": 67.74084458469726
+   },
+   "iii": {
+    "answer": "material",
+    "c_admitted": 17.372225201642518,
+    "c_forced_all": -9.00132305302102,
+    "c_forced_overlap": -0.8730809974416862,
+    "fills_admitted": 73,
+    "fills_forced_overlap": 143
+   },
+   "iv": {
+    "answer": "populated",
+    "populated_cells": {
+     "hbin": 2,
+     "obin": 3,
+     "qbin": 3
+    }
+   },
+   "recommendation": "representation_or_data_needed",
+   "stage": "first_pull"
+  }
+ ],
+ "sources": {
+  "pf_adv2_replay.py": "e5d0f55d5c534d1cfb008e361641334dc503a22d10015a88cde0ea4686b8752a",
+  "pf_entry_retention.py": "93f8050f39ca8df0f9b8955bdfd0ef16623b4bfd8c7e2bc664c920bac867f732",
+  "pf_movement_audit.py": "21b13b801fc08c1cb48142dfa79cf540c272a7bdd50810dc357016088ea97d9a",
+  "pf_movement_audit_selftest.py": "2258d404a99964c44fea928c76089c1e58c3bfb3b9f1a81c77fa001ff045abb3",
+  "pf_pi0_admission.py": "a47f5690a9caacb38c5c734e6501993af7816bf3097129eabb619f2f454e450d"
+ },
+ "statuses": [
+  {
+   "acc_status": "ok",
+   "cohort": "admitted",
+   "n": 329,
+   "stage": "entry"
+  },
+  {
+   "acc_status": "not_eligible",
+   "cohort": "admitted",
+   "n": 61,
+   "stage": "first_pull"
+  },
+  {
+   "acc_status": "ok",
+   "cohort": "admitted",
+   "n": 268,
+   "stage": "first_pull"
+  },
+  {
+   "acc_status": "not_eligible",
+   "cohort": "admitted",
+   "n": 30,
+   "stage": "first_review"
+  },
+  {
+   "acc_status": "ok",
+   "cohort": "admitted",
+   "n": 299,
+   "stage": "first_review"
+  },
+  {
+   "acc_status": "not_eligible",
+   "cohort": "forced",
+   "n": 13,
+   "stage": "entry"
+  },
+  {
+   "acc_status": "ok",
+   "cohort": "forced",
+   "n": 755,
+   "stage": "entry"
+  },
+  {
+   "acc_status": "not_eligible",
+   "cohort": "forced",
+   "n": 54,
+   "stage": "first_pull"
+  },
+  {
+   "acc_status": "ok",
+   "cohort": "forced",
+   "n": 714,
+   "stage": "first_pull"
+  },
+  {
+   "acc_status": "not_eligible",
+   "cohort": "forced",
+   "n": 50,
+   "stage": "first_review"
+  },
+  {
+   "acc_status": "ok",
+   "cohort": "forced",
+   "n": 718,
+   "stage": "first_review"
+  }
+ ],
+ "version": "pi0_movement_audit_v1"
+}

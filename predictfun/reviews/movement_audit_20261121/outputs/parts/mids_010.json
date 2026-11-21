@@ -1,0 +1,103 @@
+{
+ "version": "pi0_movement_audit_v1",
+ "part": 10,
+ "day": "20261027",
+ "rows": 4,
+ "mids": {
+  "[\"20261027\", 3876919, 1793119685000, 1, 2, 4550]": {
+   "status": "ok",
+   "mids": {
+    "0": {
+     "mid": 14.5,
+     "frame_t": 4676.0,
+     "recv_t": 4705.361328125
+    },
+    "1": {
+     "mid": 14.5,
+     "frame_t": 4676.0,
+     "recv_t": 4705.361328125
+    },
+    "2": {
+     "mid": 14.5,
+     "frame_t": 4676.0,
+     "recv_t": 4705.361328125
+    }
+   }
+  },
+  "[\"20261027\", 3877765, 1793123060000, 0, 0, 0]": {
+   "status": "ok",
+   "mids": {
+    "0": {
+     "mid": 78.5,
+     "frame_t": 659.0,
+     "recv_t": 684.32177734375
+    }
+   }
+  },
+  "[\"20261027\", 3877765, 1793123060000, 0, 15, 3050]": {
+   "status": "ok",
+   "mids": {
+    "0": {
+     "mid": 79.0,
+     "frame_t": 3204.0,
+     "recv_t": 3221.54443359375
+    },
+    "1": {
+     "mid": 79.0,
+     "frame_t": 3204.0,
+     "recv_t": 3221.54443359375
+    }
+   }
+  },
+  "[\"20261027\", 3877765, 1793123060000, 1, 17, 3600]": {
+   "status": "ok",
+   "mids": {
+    "0": {
+     "mid": 78.5,
+     "frame_t": 3654.0,
+     "recv_t": 3691.7607421875
+    },
+    "1": {
+     "mid": 78.5,
+     "frame_t": 4149.0,
+     "recv_t": 4225.238037109375
+    }
+   }
+  }
+ },
+ "sha256": "6be3b492e2bc71bb251129fc6b70107fbb983054f50a369fb876b43e87833d9d",
+ "admission_manifest_sha256": "3c5bf097328ee2cd31a4e7d1b17d6aadc8559559ccd74f91154f15614b91696c",
+ "admission_record_sha256": "3ad389be4a085c0bf913a97de9c944bdc3c4c04a284aa1f569767310e9f8a01f",
+ "sources": {
+  "pf_movement_audit.py": "21b13b801fc08c1cb48142dfa79cf540c272a7bdd50810dc357016088ea97d9a",
+  "pf_movement_audit_selftest.py": "2258d404a99964c44fea928c76089c1e58c3bfb3b9f1a81c77fa001ff045abb3",
+  "pf_pi0_admission.py": "a47f5690a9caacb38c5c734e6501993af7816bf3097129eabb619f2f454e450d",
+  "pf_entry_retention.py": "93f8050f39ca8df0f9b8955bdfd0ef16623b4bfd8c7e2bc664c920bac867f732",
+  "pf_adv2_replay.py": "e5d0f55d5c534d1cfb008e361641334dc503a22d10015a88cde0ea4686b8752a"
+ },
+ "elapsed_s": 56.67987251281738,
+ "hwm_mib": 1111.13671875,
+ "timing": {
+  "load_s": 56.45758891105652,
+  "worlds": [
+   {
+    "census_s": null,
+    "pair_s": [
+     0.10890841484069824
+    ],
+    "world_s": 0.1090841293334961
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     0.1126558780670166
+    ],
+    "world_s": 0.11282682418823242
+   }
+  ],
+  "pairs": 2,
+  "pair_mean_s": 0.11078214645385742,
+  "pair_max_s": 0.1126558780670166
+ },
+ "asof": "2026-11-21T12:01:21.978230+00:00"
+}

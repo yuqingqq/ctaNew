@@ -1,0 +1,37 @@
+| P98 | PI0-MOVEMENT-CALIBRATION-AUDIT-v1 (PI0's frozen movement head on the 329 admitted generations, inclusion-weighted, Oct 26–27, against the 768 forced forks as an unweighted neutral reference, Oct 24–27; exact rowwise decomposition, declared decision-state strata, realized fill timing and a pre / post-fill split from fill-time mids; no fit; as of 2026-11-21 12:01Z; checks all_true = true, falsifier 13 / 13). **Admitted entry:** V − value +11.099 c = edge × (E[q] − q) -0.882 + E[qm] − M +11.981, of which probability factor +0.310 and conditional head +11.671. On fills the head forecasts -6.90 c per fill against -45.47 realized (c = +38.57, 88 fills); the forced Oct 26–27 reference forecasts -48.77 against -51.88 (c = +3.11, 153 fills). Per filled share the admitted movement is -2.140 c, of which -1.849 post-fill. u = E[qm] − M by day × side: Oct 26 bid +6.14, Oct 26 ask +34.23, Oct 27 bid +0.46, Oct 27 ask +16.39 c; weighted top-5 world share 0.591. Largest decision-state range of c 65.4 c, delay range 61.1 c. | Computed (entry): (i) concentrated, (ii) both, (iii) material, (iv) populated → `representation_or_data_needed`; first review and first pull give the same recommendation. Declared meaning: a small chronologically fitted calibration candidate is not supported by these cells; more representative data or a different target representation is needed (declaration.md). |
+
+## 2026-11-21 12:07Z (session aea5bfb9) — PI0-MOVEMENT-CALIBRATION-AUDIT-v1: THE MOVEMENT HEAD'S DECOMPOSITION, STRATA, FILL TIMING AND PRE / POST-FILL SPLIT; CHECKS ALL TRUE; RECOMMENDATION REPRESENTATION_OR_DATA_NEEDED (review 5a8ee6f5's next priority) (USER: "... continue the implementing and next priority loop")
+- [Receipt](reviews/movement_audit_20261121/report.md).
+  - Commits: freeze `03243e5b` (before any table), results in this commit.
+  - One diagnostic; zero fitted candidates.
+- **Review 5a8ee6f5's checklist (folded in):**
+  - Finding 1: the bookTicker label (`new_bookticker`); the three clocks and units documented.
+  - Finding 2: explicit unconditional / conditional / per-share units; qm is decision-to-END movement.
+  - Finding 3: weighted and unweighted concentration; signed day × side contributions.
+  - Finding 4: exact-key weight / n_cell / cell / part binding (module, check B, falsifier B_weight); the control's hour from each review's own decision time (299 / 299 equal the admission cell).
+- **Readings** (FINDINGS P98):
+  - Entry: (i) concentrated, (ii) both, (iii) material, (iv) populated → `representation_or_data_needed`.
+  - First review: (i) concentrated, (ii) decision_state, (iii) material, (iv) populated → `representation_or_data_needed`; first pull: (i) concentrated, (ii) decision_state, (iii) material, (iv) populated → `representation_or_data_needed`.
+  - Conditional head on fills: admitted c +38.57 (forecast -6.90, realized -45.47 c per fill); forced Oct 26–27 c +3.11 (forecast -48.77, realized -51.88).
+  - Declared meaning: a small chronologically fitted calibration candidate is not supported by these cells; more representative data or a different target representation is needed (declaration.md).
+- **Validity:** checks A–I 9 / 9; falsifier 13 / 13; mutants 64 / 64; the review's independent numbers reproduce (check H).
+- **Cost:** 0.275 core-hours of the 1 ceiling; peak 1140 MiB.
+- **Next measurement:** the combined review (one request), which names the next priority.
+
+
+movement_audit_20261121:
+  status: done_pi0_movement_calibration_audit_v1_no_fit
+  asof: "2026-11-21 12:07Z"
+  receipt: predictfun/reviews/movement_audit_20261121/report.md
+  commits: {freeze: 03243e5b}
+  checks: {all_true: true, falsifier_ok: true, mutants_caught: 64, mutants: 64}
+  cohorts: {admitted: 329, forced: 768}
+  entry_values: {bias_V: 11.0994, mov_prob: 0.3102, mov_cond: 11.6711, c_admitted: 38.5679, c_forced_overlap: 3.1091, post_fill_per_share: -1.8489, total_per_share: -2.1403}
+  reading_entry: {i: concentrated, ii: both, iii: material, iv: populated, recommendation: representation_or_data_needed}
+  reading_first_review: {i: concentrated, ii: decision_state, iii: material, iv: populated, recommendation: representation_or_data_needed}
+  reading_first_pull: {i: concentrated, ii: decision_state, iii: material, iv: populated, recommendation: representation_or_data_needed}
+  control: {selected: 233, eligible: 299, percentile: 0.806, cell_equal_admission: 299}
+  cost_core_hours: 0.275
+  next: combined_review_names_the_next_priority
+
+2026-11-21T12:07:00Z tag=mov_state rc=0 peak_rss_mib=102 wall_s=0.31 cpu_user_s=0.25 memavail_start_gib=22 disk_free_gib=443->443 slot=claude

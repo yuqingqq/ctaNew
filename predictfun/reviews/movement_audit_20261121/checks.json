@@ -1,0 +1,124 @@
+{
+ "all_ok": true,
+ "asof": "2026-11-21T12:01:56.266628+00:00",
+ "checks": {
+  "A_identity": true,
+  "B_membership": true,
+  "C_accounting": true,
+  "D_strata": true,
+  "E_fills": true,
+  "F_denominators": true,
+  "G_predicates": true,
+  "H_reproduction": true,
+  "I_resources_suites": true
+ },
+ "details": {
+  "A": {
+   "audit_manifests": true,
+   "frozen": true,
+   "manifests_committed": true,
+   "mids": true,
+   "partitions": true,
+   "sources": true
+  },
+  "B": {
+   "admitted": true,
+   "admitted_rows": 329,
+   "binding": true,
+   "forced": true,
+   "forced_rows": 768,
+   "opportunities": true,
+   "weights": true
+  },
+  "C": {
+   "failures": [],
+   "n_fail": 0,
+   "ok_rows": 3083
+  },
+  "D": {
+   "failures": [],
+   "n_fail": 0,
+   "rows": 3083
+  },
+  "E": {
+   "expected": 2770,
+   "failures": [],
+   "fills": 2770,
+   "n_fail": 0
+  },
+  "F": {
+   "failures": [],
+   "moments": 91,
+   "n_fail": 0,
+   "prepost": 69,
+   "strata": 304
+  },
+  "G": {
+   "entry": {
+    "ok": true,
+    "recomputed": {
+     "i": "concentrated",
+     "ii": "both",
+     "iii": "material",
+     "iv": "populated",
+     "recommendation": "representation_or_data_needed"
+    }
+   },
+   "first_pull": {
+    "ok": true,
+    "recomputed": {
+     "i": "concentrated",
+     "ii": "decision_state",
+     "iii": "material",
+     "iv": "populated",
+     "recommendation": "representation_or_data_needed"
+    }
+   },
+   "first_review": {
+    "ok": true,
+    "recomputed": {
+     "i": "concentrated",
+     "ii": "decision_state",
+     "iii": "material",
+     "iv": "populated",
+     "recommendation": "representation_or_data_needed"
+    }
+   }
+  },
+  "H": {
+   "bias_V": true,
+   "control": true,
+   "mean_Eqm": true,
+   "mean_M": true,
+   "mov_cond": true,
+   "mov_prob": true,
+   "mov_term": true,
+   "mse_V": true,
+   "mse_m": true,
+   "mse_m_zero": true,
+   "mse_mech": true,
+   "mse_zero": true,
+   "qty_term": true,
+   "top5_unweighted": true,
+   "top5_weighted": true
+  },
+  "I": {
+   "resources": {
+    "bad": [],
+    "core_hours": 0.2754805555555561,
+    "jobs": 148,
+    "mids_hwm_max": 1140.8515625,
+    "ok": true,
+    "peak_mib": 1140
+   },
+   "suites": {
+    "extra_files": [],
+    "failures": [],
+    "judge_ok": true,
+    "ok": true,
+    "one_record_per_file": true,
+    "planted": 64
+   }
+  }
+ }
+}
