@@ -647,6 +647,21 @@ pipeline_one_day_v3_20261119:
   values_equal_v2: {cells_per_day: 190, differing: 0}
   attribution_vs_pull_all_c: {"20261026": {first_step: 0.0, later: 954.33, never: 995.36, no_prediction: 0.0}, "20261027": {first_step: 0.0, later: -821.85, never: 251.74, no_prediction: 0.0}}
 
+entry_exposure_20261121:
+  status: done_entry_exposure_v1_keep_initial_vs_pi0
+  asof: "2026-11-21 09:32Z"
+  receipt: predictfun/reviews/entry_exposure_20261121/report.md
+  commits: {freeze: 6ca42d25, freeze_2b_override_readings: 5ece0c98, freeze_2c_checker_nan: 46a2eabc}
+  checks: {version: v3, all_true: true, falsifier_ok: true, v1_false: [C_raw], v2_false: [H_overrides]}
+  forks: {manifest: 768, ok: 756}
+  diagnosis: pi0_better
+  day_20261024: {forks: 190, mean_D: -9.3609, sign: -1}
+  day_20261025: {forks: 190, mean_D: -9.4767, sign: -1}
+  day_20261026: {forks: 186, mean_D: -11.5877, sign: -1}
+  day_20261027: {forks: 190, mean_D: -19.4905, sign: -1}
+  pooled: {fill_prob_PI0: 0.0251, fill_prob_KEEP: 0.4021, additional_fill_forks: 286, more_execution: true, extra_fills_harmful: true, initial_carries: true}
+  cost_core_hours: 1.890
+  next: combined_review_names_the_next_priority
 entry_target_audit_20261121:
   status: done_entry_target_audit_v1_existing_labels_no_fit
   asof: "2026-11-21 07:52Z"

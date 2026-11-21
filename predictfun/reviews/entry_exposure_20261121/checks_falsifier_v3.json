@@ -1,0 +1,74 @@
+{
+ "asof": "2026-11-21T09:29:37.224694+00:00",
+ "cases": {
+  "A": {
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  },
+  "B": {
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  },
+  "C_components": {
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  },
+  "C_counter_deficit": {
+   "a_still_true": true,
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  },
+  "C_fill_price": {
+   "a_still_true": true,
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  },
+  "C_wrong_gid": {
+   "a_still_true": true,
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  },
+  "D": {
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  },
+  "E": {
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  },
+  "F": {
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  },
+  "G": {
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  },
+  "G2": {
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  },
+  "H": {
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  },
+  "H_counter": {
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  }
+ },
+ "falsifier_ok": true
+}

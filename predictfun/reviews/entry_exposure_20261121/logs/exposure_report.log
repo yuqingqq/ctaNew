@@ -1,0 +1,90 @@
+{
+ "checks": {
+  "A_identity": true,
+  "B_reproduction": true,
+  "C_raw": true,
+  "D_summaries": true,
+  "E_predicates": true,
+  "F_resources": true,
+  "G2_suite_v2": true,
+  "G_suites": true,
+  "H_overrides": true
+ },
+ "all_true": true,
+ "falsifier_ok": true,
+ "predicates": {
+  "additional_fill_forks": 286,
+  "days": {
+   "20261024": {
+    "fill_prob_KEEP": 0.37894736842105264,
+    "fill_prob_PI0": 0.021052631578947368,
+    "forks": 190,
+    "mean_D": -9.360853269974138,
+    "mean_D_initial": -9.47130906203897,
+    "mean_D_rest": 0.110455792064831,
+    "sign": -1
+   },
+   "20261025": {
+    "fill_prob_KEEP": 0.41578947368421054,
+    "fill_prob_PI0": 0.021052631578947368,
+    "forks": 190,
+    "mean_D": -9.476660454746833,
+    "mean_D_initial": -10.575626552423458,
+    "mean_D_rest": 1.0989660976766256,
+    "sign": -1
+   },
+   "20261026": {
+    "fill_prob_KEEP": 0.42473118279569894,
+    "fill_prob_PI0": 0.03763440860215054,
+    "forks": 186,
+    "mean_D": -11.587739546799943,
+    "mean_D_initial": -11.61154444380732,
+    "mean_D_rest": 0.023804897007377538,
+    "sign": -1
+   },
+   "20261027": {
+    "fill_prob_KEEP": 0.3894736842105263,
+    "fill_prob_PI0": 0.021052631578947368,
+    "forks": 190,
+    "mean_D": -19.49052982271857,
+    "mean_D_initial": -20.457239091369402,
+    "mean_D_rest": 0.9667092686508313,
+    "sign": -1
+   }
+  },
+  "diagnosis": "pi0_better",
+  "extra_fills_harmful": true,
+  "fill_prob_KEEP": 0.4021164021164021,
+  "fill_prob_PI0": 0.02513227513227513,
+  "forks": 756,
+  "initial_carries": true,
+  "mean_D_initial_additional": -34.45993168061611,
+  "more_execution": true,
+  "share_D_initial_neg_additional": 0.6503496503496503,
+  "sum_D_initial": -9855.54046065621,
+  "sum_D_rest": 417.8926309379069
+ },
+ "statuses": {
+  "ok": 756,
+  "world:no_path:missing_endpoint": 12
+ },
+ "forks": 768,
+ "ok": 756,
+ "core_hours": 1.890419444444445,
+ "peak_mib": 1165,
+ "asof": "2026-11-21T09:27:06.616074+00:00",
+ "diagnosis_sentence": "PI0's early pull avoids value-losing exposure on every consumed day: keeping the initial order costs value, so later work focuses on adverse-selection discrimination, not longer resting, larger size or unconditional posting.",
+ "projection": {
+  "pilot_cpu_s": 382.62,
+  "pilot_wall_s": 391.1,
+  "pilot_peak_mib": 1136,
+  "pilot_rc": 0,
+  "pilot_record": true,
+  "pilot_hwm_mib": 1136.66015625,
+  "so_far_core_hours": 0.6813999999999999,
+  "projected_core_hours": 1.9567999999999999,
+  "ceiling": 2.0,
+  "run_rest": true
+ }
+}
+2026-11-21T09:31:58Z tag=exposure_report rc=0 peak_rss_mib=215 wall_s=1.45 cpu_user_s=1.24 memavail_start_gib=23 disk_free_gib=446->446 slot=claude
