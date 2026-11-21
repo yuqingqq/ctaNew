@@ -1,0 +1,22 @@
+{
+  "H_body_only_declared_comparison": true,
+  "mutants": {
+    "G": {
+      "extra_files": [],
+      "failures": [],
+      "judge_ok": true,
+      "one_record_per_file": true,
+      "planted": 42
+    },
+    "G2": {
+      "extra_files": [],
+      "failures": [],
+      "judge_ok": true,
+      "one_record_per_file": true,
+      "planted": 11
+    }
+  },
+  "original_runner_frozen": true,
+  "receipt_hashes": 20,
+  "teacher_sources": 76
+}

@@ -1,3 +1,25 @@
+entry_exposure_review_20261121_codex:
+  status: exposure_comparison_accepted_discrimination_measurement_next
+  target_commit: 73f6cfa6f8fd0d1fcb9283e8c7610f43b3b796d7
+  report: predictfun/reviews/automatic/20261121_73f6cfa6/report.md
+  blocking_findings_for_saved_comparison: []
+  supersessions_accepted: [override_summary_v2, nan_aware_checker_v3]
+  artifacts: {worlds: 384, forks: 768, evaluable_forks: 756, excluded_world_forks: 12, arm_ledgers: 2268, additional_fill_forks: 286}
+  initial_fill_probability: {PI0: 0.02513227513227513, KEEP: 0.4021164021164021}
+  negative_mean_exposure_effect_on_all_four_consumed_days: true
+  first_cancel_optimality_or_market_deterioration_identified: false
+  nonblocking: [forced_admission_and_repeated_override_scope, existing_neutral_value_design_vs_forecast_error, checker_END_and_callback_contract, probe_inflated_override_counter, END_value_misnamed_execution_edge]
+  current_artifact_reconciliation_workaround_verified: true
+  independent_review: {successful_jobs: 3, successful_wall_seconds: 64.44, all_attempts_wall_seconds: 133.17, peak_rss_mib: 357, fits: 0, real_tape_runs: 0}
+  next_priority: ENTRY_RETENTION_DISCRIMINATION_v1
+  next_round: {days: ["20261024", "20261025", "20261026", "20261027"], all_consumed: true, exact_existing_manifest: true, max_forks: 768, reconstruct: POST_PI0_prefixes_only, model_fits: 0, new_full_continuations: 0, full_inputs: 107, matched_draws: 500, core_hours_ceiling: 1, development_slots_max: 4, checkpoint_mib: 1536, hard_rss_mib: 2048, per_world_guard_seconds: 120}
+  forecast_stages: [shadow_entry_admission, first_live_policy_review, first_policy_pull]
+  target_match: existing_initial_KEEP_fills_after_action_effect_to_original_END
+  additional_user_approval_required: false
+  new_label_dates_or_untouched_access_authorized: false
+  intermediate_repair_review_required: false
+  prediction_skill_or_profitable_strategy_established: false
+
 entry_horizon_direction_20261121_user:
   source: "Yea prediction should be based on longer term holding period"
   note: predictfun/reviews/automatic/20261121_entry_horizon_direction/note.md

@@ -1,0 +1,2 @@
+{"H_body_only_declared_comparison": true, "mutants": {"G": {"extra_files": [], "failures": [], "judge_ok": true, "one_record_per_file": true, "planted": 42}, "G2": {"extra_files": [], "failures": [], "judge_ok": true, "one_record_per_file": true, "planted": 11}}, "original_runner_frozen": true, "receipt_hashes": 20, "teacher_sources": 76}
+2026-11-21T09:39:15Z tag=review_73f6_metadata rc=0 peak_rss_mib=230 wall_s=1.51 cpu_user_s=1.32 memavail_start_gib=23 disk_free_gib=445->445 slot=codex

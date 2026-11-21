@@ -1,3 +1,34 @@
+<!-- ENTRY_EXPOSURE_REVIEW_20261121_CODEX -->
+## 2026-11-21 — Exposure loss verified; selective retention remains untested
+
+Target **73f6cfa6f8fd0d1fcb9283e8c7610f43b3b796d7**.
+[Ranked checklist and complete next-round contract](reviews/automatic/20261121_73f6cfa6/report.md).
+No BLOCKING finding for the narrower comparison: 768 manifest forks, 756 ok,
+2,268 arm ledgers and every summary reproduce. Logged-override v2 and NaN
+checker v3 are accepted; all 13 falsifiers pass. Independent successful checks
+64.44 s, peak 357 MiB; no fit, label build or real-tape replay.
+
+P1 NONBLOCKING: mandatory neutral posts plus overriding every later initial-gid
+PULL identify the whole retention-policy effect, not necessity of the first
+early cancel or deterioration after an order the model wanted to enter.
+P1 NONBLOCKING: PI0 already keeps nonnegative predicted neutral value through
+the original END; a new conditional-retention label needs a demonstrated
+forecast/target distinction. P2 NONBLOCKING: the row checker accepts a wrong
+END; every actual END/settings/mark/callback denominator was independently
+verified, so no rebuild. P2 NONBLOCKING: probe calls inflate override counters;
+actual logged counts are correct and do not change decisions/values.
+P3 NONBLOCKING: stored fill `edge` is END value, not fill-time execution edge.
+Fold these into the next measurement where reused, no repair-only cycle.
+
+ONE next priority: ENTRY-RETENTION-DISCRIMINATION-v1. Exact same consumed
+768-fork population, saved neutral KEEP outcomes, short POST_PI0 prefixes,
+shadow admission and target-matched fill/quantity/movement/value errors at
+entry / first review / first pull. Full 107 inputs, statuses and matched
+controls; one core-hour, existing slots, no fit/new dates/full continuation.
+No additional USER approval. Longer resting conditionally remains compatible
+with fast risk updates; this unconditional KEEP result does not reject it.
+<!-- /ENTRY_EXPOSURE_REVIEW_20261121_CODEX -->
+
 <!-- ENTRY_AUDIT_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — Entry-target audit: valid accounting; continuation exposure unresolved
 

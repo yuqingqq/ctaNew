@@ -1,0 +1,150 @@
+{
+  "checks": {
+    "A": true,
+    "B": true,
+    "C": true,
+    "D": true,
+    "E": true,
+    "F": true,
+    "G": true,
+    "G2": true,
+    "H": true
+  },
+  "falsifier": {
+    "asof": "2026-11-21T09:46:41.219075+00:00",
+    "cases": {
+      "A": {
+        "applied": true,
+        "clean": true,
+        "corrupted": false
+      },
+      "B": {
+        "applied": true,
+        "clean": true,
+        "corrupted": false
+      },
+      "C_components": {
+        "applied": true,
+        "clean": true,
+        "corrupted": false
+      },
+      "C_counter_deficit": {
+        "a_still_true": true,
+        "applied": true,
+        "clean": true,
+        "corrupted": false
+      },
+      "C_fill_price": {
+        "a_still_true": true,
+        "applied": true,
+        "clean": true,
+        "corrupted": false
+      },
+      "C_wrong_gid": {
+        "a_still_true": true,
+        "applied": true,
+        "clean": true,
+        "corrupted": false
+      },
+      "D": {
+        "applied": true,
+        "clean": true,
+        "corrupted": false
+      },
+      "E": {
+        "applied": true,
+        "clean": true,
+        "corrupted": false
+      },
+      "F": {
+        "applied": true,
+        "clean": true,
+        "corrupted": false
+      },
+      "G": {
+        "applied": true,
+        "clean": true,
+        "corrupted": false
+      },
+      "G2": {
+        "applied": true,
+        "clean": true,
+        "corrupted": false
+      },
+      "H": {
+        "applied": true,
+        "clean": true,
+        "corrupted": false
+      },
+      "H_counter": {
+        "applied": true,
+        "clean": true,
+        "corrupted": false
+      }
+    },
+    "falsifier_ok": true
+  },
+  "mitigation": "data mode verifies END/settings/common marks/whole callback populations on all saved arms",
+  "readings": {
+    "A": {
+      "bad": [],
+      "forks": 768,
+      "manifest_forks": 768
+    },
+    "B": {
+      "by_status": {
+        "ok": 756
+      },
+      "evaluable": 756,
+      "flags_false": 0,
+      "rows": 756,
+      "y_differs": 0
+    },
+    "C": {
+      "delivered_changed": 11276,
+      "examples": [],
+      "failing": 0,
+      "rows": 756
+    },
+    "D": {
+      "bad": []
+    },
+    "E": {
+      "diagnosis": "pi0_better",
+      "recomputed": "pi0_better",
+      "same": true
+    },
+    "F": {
+      "bad": [],
+      "core_hours": 1.8907638888888894,
+      "jobs": 229,
+      "part_hwm_max": 1165.17578125,
+      "peak_mib": 1165
+    },
+    "G": {
+      "extra_files": [],
+      "failures": [],
+      "judge_ok": true,
+      "one_record_per_file": true,
+      "planted": 42
+    },
+    "G2": {
+      "extra_files": [],
+      "failures": [],
+      "judge_ok": true,
+      "one_record_per_file": true,
+      "planted": 11
+    },
+    "H": {
+      "bad": [],
+      "changed": 424,
+      "forks_with_arms": 756,
+      "overrides_forks_v1": 714,
+      "overrides_forks_v2": 714,
+      "same_predicates": true,
+      "same_rest": true
+    }
+  },
+  "synthetic": true,
+  "wrong_END_accepted_by_row_checker": true
+}
