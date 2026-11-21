@@ -1,0 +1,24 @@
+  0 the lag not applied: CAUGHT (5.1 s) - LAG SELFTEST FAILED: 1 lag 1 differs from it (0 of 8 differ) | 2 ON crossing: lag 0 pulls at 1,000, lag 1 at 1,050 ([1000.0, 1000.0], [1000.0, 1000.0]
+  1 the lag doubled: CAUGHT (5.1 s) - LAG SELFTEST FAILED: 2 ON crossing: lag 0 pulls at 1,000, lag 1 at 1,050 ([1000.0, 1000.0], [1100.0, 1100.0]) | 2 OFF crossing: lag 0 re-posts at 2,00
+  2 a future read: CAUGHT (5.7 s) - LAG SELFTEST FAILED: 2 ON crossing: lag 0 pulls at 1,000, lag 1 at 1,050 ([1000.0, 1000.0], [950.0, 950.0]) | 2 OFF crossing: lag 0 re-posts at 2,000,
+  3 warm-up reads tick 0: CAUGHT (5.1 s) - LAG SELFTEST FAILED: 2 warm-up: lag 0 withholds at 0 and posts at 50, lag 1 posts at 0 and never acts (50.0, 100.0, 4)
+  4 the source time without the lag: CAUGHT (5.1 s) - LAG SELFTEST FAILED: 2 lag 1 logs the source time t - 50 and the effective age source age + 50
+  5 the effective age without the lag: CAUGHT (5.1 s) - LAG SELFTEST FAILED: 2 lag 1 logs the source time t - 50 and the effective age source age + 50
+  6 lag_join without the lag: CAUGHT (5.1 s) - LAG SELFTEST FAILED: 3 lag_join values ([0.0, 0.5, 0.699999988079071, -1.0, nan, 9.0], {'live_states': 5, 'zero_lag_mismatched': 1, 'off_tick': 1, 'wa
+  7 lag_join warm-up reads the last tick: CAUGHT (5.1 s) - LAG SELFTEST FAILED: 3 lag_join values ([1.899999976158142, 0.4000000059604645, nan, -0.9000000357627869, nan, 9.0], {'live_states': 5, 'zero_lag_mism
+  8 lag_join ignores a non-ok status: CAUGHT (5.1 s) - LAG SELFTEST FAILED: 3 lag_join values ([nan, 0.4000000059604645, 0.6000000238418579, -0.9000000357627869, nan, 9.0], {'live_states': 5, 'zero_lag_mis
+  9 the zero-lag mismatch not counted: CAUGHT (5.1 s) - LAG SELFTEST FAILED: 3 lag_join counts ({'live_states': 5, 'zero_lag_mismatched': 0, 'off_tick': 1, 'warmup': 1, 'non_ok': 1})
+  10 run_selection without the join check: CAUGHT (5.1 s) - LAG SELFTEST FAILED: 3 lag_join: stopped (AttributeError("'DataFrame' object has no attribute 'ctx_bid_reserved_shares'"))
+  11 same_price from the rungs: CAUGHT (5.1 s) - LAG SELFTEST FAILED: 4 reentry_pairs ({'pull_gid': 0, 'side': 0, 'pull_t': 1000.0, 'pull_price': 49.0, 'pull_rung': 0.0, 'pull_venue_ahead': 20.0, 'pu
+  12 the ahead difference reversed: CAUGHT (5.1 s) - LAG SELFTEST FAILED: 4 reentry_pairs ({'pull_gid': 0, 'side': 0, 'pull_t': 1000.0, 'pull_price': 49.0, 'pull_rung': 0.0, 'pull_venue_ahead': 20.0, 'pu
+  13 the queue label not applied: CAUGHT (5.1 s) - LAG SELFTEST FAILED: 4 arm_row carries the relabelled queue fields only
+  14 the retained gain inverted: CAUGHT (5.1 s) - LAG SELFTEST FAILED: 4 retained (2.0, 0.5)
+  15 the reading without the selection screen: CAUGHT (5.1 s) - LAG SELFTEST FAILED: 4 the reading (survives_50ms_screen; []; ['END_paired: MIXED', 'mo1s_per_share: WORSENS_EVERY_DAY'])
+  16 the reading without per share: CAUGHT (5.1 s) - LAG SELFTEST FAILED: 4 the reading (survives_50ms_screen; ['selection: INCONCLUSIVE']; ['END_paired: MIXED'])
+  17 run_day without the parent record check: CAUGHT (5.3 s) - LAG SELFTEST FAILED: 5 run_day refuses a parent day record differing from the manifest
+  18 run_day without the source check: CAUGHT (5.3 s) - LAG SELFTEST FAILED: 5 run_day refuses another source
+  19 run_day without the write-once check: CAUGHT (5.4 s) - LAG SELFTEST FAILED: 5 run_day refuses an existing output
+  20 measure without the selection prerequisite: CAUGHT (5.1 s) - LAG SELFTEST FAILED: 5 guards: stopped (FileNotFoundError(2, 'No such file or directory'))
+control: PASSED (5.1 s); sources {'pf_ladder_pressure_lag.py': '0dcb03c430db87e2', 'pf_ladder_pressure_lag_mutants.py': '0a7e383f8a7a6efd', 'pf_ladder_pressure_lag_selftest.py': '7db1a9511b064ef9'}
+mutation check passed: the control passes its selftest, 21 / 21 planted code errors are caught by a check (1.9 CPU min)
+2026-11-21T19:47:36Z tag=llh_summary_try2 rc=0 peak_rss_mib=16 wall_s=0.02 cpu_user_s=0.02 memavail_start_gib=22 disk_free_gib=437->437 slot=claude

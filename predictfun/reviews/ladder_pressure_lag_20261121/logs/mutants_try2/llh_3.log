@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "3", "name": "warm-up reads tick 0", "seconds": 5.1, "sources": {"pf_ladder_pressure_lag.py": "0dcb03c430db87e2", "pf_ladder_pressure_lag_mutants.py": "0a7e383f8a7a6efd", "pf_ladder_pressure_lag_selftest.py": "7db1a9511b064ef9"}, "why": "LAG SELFTEST FAILED: 2 warm-up: lag 0 withholds at 0 and posts at 50, lag 1 posts at 0 and never acts (50.0, 100.0, 4)"}
+2026-11-21T19:47:08Z tag=llh_3 rc=0 peak_rss_mib=284 wall_s=5.30 cpu_user_s=5.03 memavail_start_gib=22 disk_free_gib=437->437 slot=claude

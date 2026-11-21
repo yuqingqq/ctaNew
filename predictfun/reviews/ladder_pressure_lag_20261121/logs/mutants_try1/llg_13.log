@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "13", "name": "the queue label not applied", "seconds": 5.2, "sources": {"pf_ladder_pressure_lag.py": "0dcb03c430db87e2", "pf_ladder_pressure_lag_mutants.py": "0a7e383f8a7a6efd", "pf_ladder_pressure_lag_selftest.py": "9725f50171a0018b"}, "why": "LAG SELFTEST FAILED: 4 arm_row carries the relabelled queue fields only"}
+2026-11-21T19:46:19Z tag=llg_13 rc=0 peak_rss_mib=284 wall_s=5.38 cpu_user_s=5.15 memavail_start_gib=22 disk_free_gib=437->437 slot=claude3

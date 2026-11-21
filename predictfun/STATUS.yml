@@ -64,6 +64,19 @@ ladder_audit_review_20261121_codex:
   additional_user_permission_within_scope: false
   untouched_validation: false
 
+ladder_pressure_lag_20261121_dev:
+  status: frozen_before_replay
+  asof: "2026-11-21 19:51Z"
+  declaration: predictfun/reviews/ladder_pressure_lag_20261121/declaration.md
+  review: 909c671e9411746b6900f5bcd7b03b21e9ba16ff
+  candidate: PRESSURE_LEAD_LAG1_v1
+  lag_ms: 50
+  markets: 19
+  pilot_markets: 8
+  mutants: "21/21"
+  core_hours_cap: 0.50
+  review_findings_909c671e: addressed_in_new_files_1_2
+  next: pilot_projection_rehearsal_full_selection_measure_checks_one_review
 ladder_pressure_results_20261121_dev:
   status: done_one_candidate_replay
   asof: "2026-11-21 19:25Z"

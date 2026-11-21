@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "20", "name": "measure without the selection prerequisite", "seconds": 5.1, "sources": {"pf_ladder_pressure_lag.py": "0dcb03c430db87e2", "pf_ladder_pressure_lag_mutants.py": "0a7e383f8a7a6efd", "pf_ladder_pressure_lag_selftest.py": "9725f50171a0018b"}, "why": "LAG SELFTEST FAILED: 5 guards: stopped (FileNotFoundError(2, 'No such file or directory'))"}
+2026-11-21T19:46:27Z tag=llg_20 rc=0 peak_rss_mib=285 wall_s=5.29 cpu_user_s=5.00 memavail_start_gib=22 disk_free_gib=437->437 slot=claude2

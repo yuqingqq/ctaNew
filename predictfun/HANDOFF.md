@@ -113,6 +113,14 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_PRESSURE_LAG_FREEZE_20261121_DEV -->
+## 2026-11-21 19:51Z (session aea5bfb9) — PRESSURE-LEAD-SENSITIVITY-v1 FROZEN before any lagged replay (review 909c671e's ONE next priority; its two findings hold)
+
+- **Review 909c671e findings (verified at the code):** (1) `pressure_checks.py:192-194` reconciles no uptime / inventory / queue field and `:252-255` compares only the filled-quantity part of participation, so the receipt's claim (`ladder_pressure_20261121/report.md:192`, frozen, not edited) that every reading field is recomputed was too broad -> the new `lag_checks.py` F rebuilds exact uptime (activation / removal / full fill), exact inventory, the queue fields and pair summaries, compares the participation / inventory readings, and its falsifier holds the coordinated uptime case; (2) `ahead0` is the activation-clock snapshot (`pf_branch_engine.py:126-134`: the venue frame at submission + 58 ms, evaluated at submission) and the re-entry is the next same-side submission at any price / rung -> relabelled (q_activation_ahead_mean; next-same-side pairs with both gids / prices / rungs, same-price / same-rung flags, the ahead difference next - pull).
+- **Frozen:** `pf_ladder_pressure_lag.py` (LaggedPressureGuard = the frozen PressureGuard reading the hash-bound saved cache at k - 1 on its own side; warm-up at tick 0; PULL / withhold / clearing all delayed; the zero-lag control must equal the pressure receipt; the lagged join + the unchanged frozen screen; three-arm measurement; the reading survives_50ms_screen / not_demonstrated_at_50ms), its selftest (mutants 21 / 21), `lag_checks.py` (A-I, falsifier, rehearsal), the pilot rule (<= 0.50 core-hours), the manifest (the parent's 19 markets, pilot 8, parent day-record sha256s), the launcher, the declaration.
+- **Next:** pilot, projection, rehearsal, the 19 markets, selection, measurement, checks, one combined receipt, ONE review request.
+<!-- /LADDER_PRESSURE_LAG_FREEZE_20261121_DEV -->
+
 <!-- LADDER_PRESSURE_RESULTS_20261121_DEV -->
 ## 2026-11-21 19:25Z (session aea5bfb9) — BINANCE-PRESSURE-GUARD-v1 RESULTS: INTERPRETATION BETTER_SELECTION (CONSUMED DAYS); CHECKS ALL TRUE
 

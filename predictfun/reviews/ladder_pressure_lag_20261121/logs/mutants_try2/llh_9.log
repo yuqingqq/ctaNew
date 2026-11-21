@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "9", "name": "the zero-lag mismatch not counted", "seconds": 5.1, "sources": {"pf_ladder_pressure_lag.py": "0dcb03c430db87e2", "pf_ladder_pressure_lag_mutants.py": "0a7e383f8a7a6efd", "pf_ladder_pressure_lag_selftest.py": "7db1a9511b064ef9"}, "why": "LAG SELFTEST FAILED: 3 lag_join counts ({'live_states': 5, 'zero_lag_mismatched': 0, 'off_tick': 1, 'warmup': 1, 'non_ok': 1})"}
+2026-11-21T19:47:17Z tag=llh_9 rc=0 peak_rss_mib=285 wall_s=5.24 cpu_user_s=4.99 memavail_start_gib=22 disk_free_gib=437->437 slot=claude3

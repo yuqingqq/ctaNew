@@ -1,0 +1,2 @@
+LAG SELFTEST PASSED: the zero-lag control, the hand tape (ON / OFF crossings, warm-up, no future read, wrong side, log fields), lag_join and run_selection, measurement helpers and the reading, guards
+2026-11-21T19:45:46Z tag=lag_selftest_try1 rc=0 peak_rss_mib=286 wall_s=5.28 cpu_user_s=4.99 memavail_start_gib=23 disk_free_gib=437->437 slot=claude
