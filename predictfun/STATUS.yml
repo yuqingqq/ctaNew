@@ -1,4 +1,16 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+default_post_plan_review_20261121_codex:
+  status: design_ready_for_implementation_and_bounded_pilot
+  target_commit: e3c2b998ec6a31d8cc682f56e41abe0c74824549
+  report: predictfun/reviews/automatic/20261121_ladder_plan_review/report.md
+  blocking_design_findings: 0
+  implementation_accepted: false
+  economic_results_accepted: false
+  same_batch_clarifications: [structural_cancel_subreasons, reconstructible_decision_state_comparisons]
+  next_priority: implement_freeze_pilot_then_declared_sample_with_one_combined_receipt
+  additional_user_permission_within_scope: false
+  new_simulations_by_review: 0
+
 default_post_metrics_20261121_codex:
   status: specified_for_current_single_run
   source_head: cf4eee757747d9a6e54148e02aa5dfb00ea051c8

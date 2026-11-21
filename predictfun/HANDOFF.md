@@ -23,6 +23,23 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- LADDER_PLAN_REVIEW_20261121_CODEX -->
+## 2026-11-21 — Plan reviewed: proceed to implementation and bounded pilot
+
+[Plan review](reviews/automatic/20261121_ladder_plan_review/report.md) at
+**e3c2b998ec6a31d8cc682f56e41abe0c74824549** finds no blocking design defect.
+The current ladder plan and metric contract remain authoritative. This is
+design acceptance, not acceptance of an unreviewed implementation or result.
+
+ONE next priority: implement/freeze the two-level/100-share strategy, complete
+its existing focused checks, run the eight-market pilot and expand within
+the same declared sample/budget. In that batch log structural cancel subreasons
+and retain decision-time source/state records for loss AND ordinary/no-fill
+comparisons. Reconstructible logs suffice; no full feature rebuild every tick.
+Return one combined code/results receipt, then choose one next improvement.
+No new user confirmation or intermediate design review is needed in scope.
+<!-- /LADDER_PLAN_REVIEW_20261121_CODEX -->
+
 <!-- LADDER_POST_ANALYSIS_20261121_CODEX -->
 ## 2026-11-21 — Metrics for the current ladder experiment
 

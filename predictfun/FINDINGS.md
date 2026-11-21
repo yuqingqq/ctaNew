@@ -1,3 +1,19 @@
+<!-- LADDER_PLAN_REVIEW_20261121_CODEX -->
+## 2026-11-21 — Baseline design ready; collect evidence for the next change
+
+[Plan review](reviews/automatic/20261121_ladder_plan_review/report.md) at
+**e3c2b998ec6a31d8cc682f56e41abe0c74824549**: no blocking plan defect.
+The single-open-gid client still needs the extension already required by
+the plan. Preserve focused implementation checks before economic acceptance.
+Record structural cancel subreasons and reconstructible causal states at
+reviews/pulls as well as ordinary/no-fill controls, in the existing batch.
+
+One policy can locate adverse fills, inventory loss or participation limits;
+it cannot establish saved-loss or ladder/inventory causal gains. Run the
+bounded baseline and use one combined receipt to choose one next comparison.
+Static plan review only; no new performance, simulation or validation claim.
+<!-- /LADDER_PLAN_REVIEW_20261121_CODEX -->
+
 <!-- LADDER_POST_ANALYSIS_20261121_CODEX -->
 ## 2026-11-21 — Measure economics alongside participation and queue retention
 
