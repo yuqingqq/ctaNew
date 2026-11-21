@@ -1,0 +1,2 @@
+shrink checks selftest passed: C-I true on hand rows scored by the module; each corruption (mu, a candidate E[qm], a conditional mean, a calibration mean, a mean among the chosen, a null draw, a decision) flips its check
+2026-11-21T12:39:20Z tag=shrink_checks_selftest rc=0 peak_rss_mib=205 wall_s=2.29 cpu_user_s=2.08 memavail_start_gib=23 disk_free_gib=441->441 slot=claude

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "36", "name": "equal prior masks allowed", "seconds": 1.9, "sources": {"pf_movement_shrink.py": "1da51bcf67d9066b", "pf_movement_shrink_mutants.py": "746ef64f8358bd4c", "pf_movement_shrink_selftest.py": "9f70409841b4948e"}, "why": "MOVEMENT SHRINK SELFTEST FAILED: readings: a candidate equal to the prior is not INCONCLUSIVE (INCONCLUSIVE)"}
+2026-11-21T12:37:07Z tag=shr_36 rc=0 peak_rss_mib=204 wall_s=2.13 cpu_user_s=1.95 memavail_start_gib=22 disk_free_gib=441->441 slot=claude2

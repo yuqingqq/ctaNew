@@ -1,0 +1,59 @@
+  0 the row floor at 31: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: fit_group: exactly 30 rows and 10 fills refused
+  1 the fill floor at 9: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: fit_group: a support floor
+  2 the bid bounds for asks: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: prior / bounds ([np.float64(-50.0), np.float64(-50.0), np.float64(0.0), np.float64(-30.0)], [np.False_, np.False_, np
+  3 the projection unbounded below: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: prior / bounds ([np.float64(-50.0), np.float64(-50.0), np.float64(0.0), np.float64(-50.0)], [np.False_, np.False_, np
+  4 the upper bind unflagged: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: prior / bounds ([np.float64(-50.0), np.float64(-50.0), np.float64(0.0), np.float64(-30.0)], [np.False_, np.False_, np
+  5 a training row of the evaluation day: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: fit_group: an evaluation-day row was accepted
+  6 a training row of another side: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: fit_group: a row of another side was accepted
+  7 mu over every opportunity: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: fit_group: mu / lambda against the independent solve ({'n': 40, 'fills': 14, 'weight': 76.14802869147974, 'weighted_f
+  8 lambda unclipped: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: fit_group: the exact mixture / the clip (2.0, 2.0; -1.0, -1.0; 0.29999999999999993)
+  9 lambda against M, not M - b: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: fit_group: mu / lambda against the independent solve ({'n': 40, 'fills': 14, 'weight': 76.14802869147974, 'weighted_f
+  10 lambda unweighted: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: fit_group: mu / lambda against the independent solve ({'n': 40, 'fills': 14, 'weight': 76.14802869147974, 'weighted_f
+  11 the zero denominator fitted: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: fit_group: stopped (ZeroDivisionError('float division by zero'))
+  12 the support floor ignored: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: fit_group: a support floor
+  13 the prior arm with the fitted lambda: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: predict: the prior / candidate arms; readings: the hypothetical positive exposure is not selectable (INCONCLUSIVE, {'
+  14 V without lambda: CAUGHT (1.5 s) - MOVEMENT SHRINK SELFTEST FAILED: predict: lambda 0 does not reproduce the original vectors / mask exactly; predict: the prior / candidate arms; masks:
+  15 E[qm] without lambda: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: predict: lambda 0 does not reproduce the original vectors / mask exactly; predict: the prior / candidate arms; scores
+  16 an unsupported group gets the prior: CAUGHT (1.4 s) - MOVEMENT SHRINK SELFTEST FAILED: predict / masks / actions: stopped (TypeError("float() argument must be a string or a real number, not 'NoneType'"));
+  17 the entry tie POSTs: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: masks: the tie rules ([np.True_, np.True_, np.False_], [np.True_, np.True_, np.False_])
+  18 the review tie PULLs: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: masks: the tie rules ([np.False_, np.True_, np.False_], [np.False_, np.True_, np.False_])
+  19 the movement MSE unweighted: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: scores: the weighted movement MSE / conditional error / Brier / mechanical baseline ({'head': 'entry', 'side': 'all',
+  20 the conditional error unweighted: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: scores: the weighted movement MSE / conditional error / Brier / mechanical baseline ({'head': 'entry', 'side': 'all',
+  21 the Brier unweighted: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: scores: the weighted movement MSE / conditional error / Brier / mechanical baseline ({'head': 'entry', 'side': 'all',
+  22 the mechanical baseline without edge: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: scores: the weighted movement MSE / conditional error / Brier / mechanical baseline ({'head': 'entry', 'side': 'all',
+  23 J over the chosen weight: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: chosen_stats ({'n': 6, 'weight': 7.0, 'chosen': 4, 'chosen_weight': 5.0, 'J': -19.2, 'mean_chosen': -19.2, 'worlds': 
+  24 severe below -40: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: chosen_stats ({'n': 6, 'weight': 7.0, 'chosen': 4, 'chosen_weight': 5.0, 'J': -13.714285714285714, 'mean_chosen': -19
+  25 the changed count against the prior: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: actions: the rules / slices / changed counts
+  26 the null with replacement: CAUGHT (2.0 s) - MOVEMENT SHRINK SELFTEST FAILED: readings: the hypothetical positive exposure is not selectable (INCONCLUSIVE, {'none': 0.0, 'all': 0.0, 'original': 0
+  27 the weight mismatch uncounted: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: null: a within-stratum weight difference was not detected; readings: a null weight mismatch is not INCONCLUSIVE
+  28 degenerate strata as free: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: null: a degenerate mask ({'strata': 10, 'free_strata': 10, 'free_rows': 60, 'chosen': 60, 'chosen_weight': 60.0, 'J':
+  29 the percentile strict: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: null: a degenerate mask ({'strata': 10, 'free_strata': 0, 'free_rows': 0, 'chosen': 60, 'chosen_weight': 60.0, 'J': 0
+  30 the null over side only: CAUGHT (2.0 s) - MOVEMENT SHRINK SELFTEST FAILED: readings: the hypothetical positive exposure is not selectable (INCONCLUSIVE, {'none': 0.0, 'all': 0.0, 'original': 0
+  31 PASS without the p95: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: readings: the p95 case is PASS [] (J {'none': 0.0, 'all': 5.0, 'original': 1.25, 'prior': 0.0, 'candidate': 3.75}, p9
+  32 PASS without the prior: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: readings: the prior case is PASS [] (J {'none': 0.0, 'all': 5.0, 'original': 0.0, 'prior': 5.0, 'candidate': 4.166666
+  33 PASS without the original: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: readings: the original case is PASS [] (J {'none': 0.0, 'all': 5.0, 'original': 9.166666666666666, 'prior': 0.0, 'can
+  34 PASS on a non-positive J: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: readings: the positive_J case is PASS [] (J {'none': 0.0, 'all': -11.071428571428571, 'original': -3.2142857142857144
+  35 equal original masks allowed: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: readings: equal masks are not INCONCLUSIVE (INCONCLUSIVE)
+  36 equal prior masks allowed: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: readings: a candidate equal to the prior is not INCONCLUSIVE (INCONCLUSIVE)
+  37 thin support allowed: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: readings: thin movable support is not INCONCLUSIVE (PASS, [])
+  38 the null weight mismatch allowed: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: readings: a null weight mismatch is not INCONCLUSIVE
+  39 no fit support allowed: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: readings: no fit support is not flagged
+  40 the prediction boolean on bias: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: readings: the prediction booleans when MSE and bias disagree ({'movement_mse_improves': False, 'value_mse_improves': 
+  41 the audit mismatch ignored: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: stage_rows: a reference value in other units or a missing reference row was accepted
+  42 the reference without V: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: stage_rows: a reference value in other units or a missing reference row was accepted
+  43 populations over every status: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: populations: the key lists ({'entry': 2, 'first_review': 2})
+  44 the cell from the world start: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: stage_rows: the statuses / mid / cells of consistent rows ({'entry': 'ok', 'first_review': 'ok', 'first_pull': 'not_e
+  45 the mid of the entry at every stage: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: stage_rows: the statuses / mid / cells of consistent rows ({'entry': 'ok', 'first_review': 'ok', 'first_pull': 'not_e
+  46 a changed population accepted: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: check_populations: a dropped training key was accepted
+  47 the input hashes unchecked: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: check_inputs: another a record was accepted; check_inputs: another the audit table was accepted
+  48 evaluation rows of the training day: CAUGHT (2.0 s) - MOVEMENT SHRINK SELFTEST FAILED: score_all: an evaluation row of the training day was accepted
+  49 frozen without the manifest: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: frozen: true without a committed manifest
+  50 inputs without the records: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: inputs_bound: true without committed admission records
+  51 the fit written over: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: run_fit: refused an existing fit for another reason (ValueError('not frozen: the module / selftest / declaration / ma
+  52 the scores written over: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: run_score: refused existing scores for another reason (ValueError('not frozen: the module / selftest / declaration / 
+  53 a score before the fit commit: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: run_score: refused an uncommitted fit for another reason (FileNotFoundError(2, 'No such file or directory'))
+  54 a fit of another identity: CAUGHT (2.7 s) - MOVEMENT SHRINK SELFTEST FAILED: run_score: refused a foreign fit for another reason (KeyError('admission_manifest_sha256'))
+  55 run before the freeze: CAUGHT (1.9 s) - MOVEMENT SHRINK SELFTEST FAILED: run_fit: refused for another reason (FileNotFoundError(2, 'No such file or directory'))
+control: PASSED (1.9 s); sources {'pf_movement_shrink.py': '1da51bcf67d9066b', 'pf_movement_shrink_mutants.py': '746ef64f8358bd4c', 'pf_movement_shrink_selftest.py': '9f70409841b4948e'}
+mutation check passed: the control passes its selftest, 56 / 56 planted code errors are caught by a check (1.8 CPU min)
+2026-11-21T12:39:31Z tag=shr_mutant_summary rc=0 peak_rss_mib=15 wall_s=0.03 cpu_user_s=0.02 memavail_start_gib=22 disk_free_gib=441->441 slot=claude

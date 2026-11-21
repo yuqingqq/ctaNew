@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "41", "name": "the audit mismatch ignored", "seconds": 1.9, "sources": {"pf_movement_shrink.py": "1da51bcf67d9066b", "pf_movement_shrink_mutants.py": "746ef64f8358bd4c", "pf_movement_shrink_selftest.py": "dd7d919ab9157837"}, "why": "MOVEMENT SHRINK SELFTEST FAILED: stage_rows: a reference value in other units or a missing reference row was accepted"}
+2026-11-21T12:36:00Z tag=shr_41 rc=0 peak_rss_mib=203 wall_s=2.12 cpu_user_s=1.93 memavail_start_gib=22 disk_free_gib=441->441 slot=claude3
