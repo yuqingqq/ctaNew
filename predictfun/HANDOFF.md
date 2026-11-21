@@ -23,6 +23,22 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- ENTRY_HORIZON_DIRECTION_20261121_USER -->
+## 2026-11-21 — USER direction: entry value over a longer resting lifetime
+
+USER: "Yea prediction should be based on longer term holding period".
+[Recorded clarification](reviews/automatic/20261121_entry_horizon_direction/note.md).
+The label and controller must share the same intended resting/retention policy.
+The existing target already has a five-second END; changing that mark alone
+would retain PI0's quick cancellation. Distinguish decision interval, order
+lifetime and post-fill valuation horizon. Fast risk updates remain compatible
+with longer resting exposure. ENTRY-EXPOSURE-v1 remains the next measurement,
+under its existing freeze and budget: same initial order, PI0 versus
+KEEP_INITIAL, WAIT reference, structural safety and common END unchanged.
+This clarification does not amend the running freeze or select a fixed hold
+timer. Development owns implementation; the combined result review follows.
+<!-- /ENTRY_HORIZON_DIRECTION_20261121_USER -->
+
 <!-- ENTRY_AUDIT_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — Entry audit accepted; test initial resting exposure next
 

@@ -1,3 +1,13 @@
+entry_horizon_direction_20261121_user:
+  source: "Yea prediction should be based on longer term holding period"
+  note: predictfun/reviews/automatic/20261121_entry_horizon_direction/note.md
+  direction: value_entry_over_longer_resting_lifetime_with_matching_controller
+  distinguish: [decision_interval, resting_lifetime, valuation_horizon]
+  next_measurement: ENTRY_EXPOSURE_v1_under_existing_contract
+  running_freeze_amended: false
+  additional_horizon_or_model_fit_selected: false
+  new_results_or_resource_expansion: false
+
 entry_audit_review_20261121_codex:
   status: accounting_accepted_initial_exposure_probe_next
   target_commit: 37300cc93c47900e11eb1806eefb4c6febce2ccb
