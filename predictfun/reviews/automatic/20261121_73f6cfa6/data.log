@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261121_73f6cfa6/verify.py", line 168, in <module>
+    mode=sys.argv[1];r=globals()[mode]();(OUT/(mode+'.json')).write_text(json.dumps(r,indent=2,sort_keys=True,default=str)+'\n');print(json.dumps(r,sort_keys=True,default=str))
+                       ^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261121_73f6cfa6/verify.py", line 78, in data
+    assert set(observed)==set(mf)
+           ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+2026-11-21T09:39:58Z tag=review_73f6_data rc=1 peak_rss_mib=254 wall_s=22.58 cpu_user_s=21.70 memavail_start_gib=23 disk_free_gib=445->445 slot=codex

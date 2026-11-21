@@ -1,0 +1,56 @@
+{
+ "train": {
+  "worlds": 8,
+  "forks": 16,
+  "ok": 11,
+  "parts": 1
+ },
+ "eval": {
+  "worlds": 8,
+  "forks": 16,
+  "ok": 11,
+  "parts": 1
+ }
+}
+{
+ "forks": 4,
+ "statuses": [
+  {
+   "day": "d",
+   "status": "ok",
+   "n": 3
+  },
+  {
+   "day": "d",
+   "status": "world:x",
+   "n": 1
+  }
+ ],
+ "reproduced_all": true
+}
+entry exposure selftest passed: crafted tapes (more resting time, harmful late fill, structural removal, refusal, partial fill, already keeps, ask side, late fill; later / opposite untouched; wrong gid0; stale branch); prefix_ok (valid, altered); fork_package end to end (reproduced; different Y / decisions / requests / fingerprint refused; reconcile failures); select_worlds; values; summaries; reasons; writers end to end (build_manifest statuses and refusal; summarize outputs and refusal; run_part refuses an uncommitted manifest)
+{
+ "forks": 4,
+ "statuses": [
+  {
+   "day": "20261024",
+   "status": "keep_baseline_mismatch",
+   "n": 1
+  },
+  {
+   "day": "20261024",
+   "status": "ok",
+   "n": 3
+  }
+ ],
+ "overrides_changed_forks": 3,
+ "diagnosis": "incomplete",
+ "reproduced_all": true
+}
+entry exposure summary v2 selftest passed: flat_v2 (log count, counter kept, baseline equality from the ledgers, world rows unchanged); summaries on v2 rows; summarize_v2 end to end (outputs, manifest copy, linked partitions, supersedes; immutable; partition hash refused)
+exposure checks selftest passed: 4 clean synthetic rows reconcile; compensating components, a wrong but valid gid and a KEEP fill price are flagged
+exposure checks v2 selftest passed: the frozen synthetic selftest under the v2 rule; a counter below the log, an excess beyond the probe bound and a shadow entry of another gid are flagged; an excess inside the bound is not
+exposure checks v3 selftest passed: counter_equal on 5 hand cases; the v2 comparison's NaN failure reproduces under pandas 3.0.1
+{"cases": {"A": {"clean": true, "corrupted": false, "applied": true}, "B": {"clean": true, "corrupted": false, "applied": true}, "C_components": {"clean": true, "corrupted": false, "applied": true}, "D": {"clean": true, "corrupted": false, "applied": true}, "H": {"clean": true, "corrupted": false, "applied": true}, "H_counter": {"clean": true, "corrupted": false, "applied": true}, "C_wrong_gid": {"clean": true, "corrupted": false, "applied": true, "a_still_true": true}, "C_fill_price": {"clean": true, "corrupted": false, "applied": true, "a_still_true": true}, "C_counter_deficit": {"clean": true, "corrupted": false, "applied": true, "a_still_true": true}, "E": {"clean": true, "corrupted": false, "applied": true}, "F": {"clean": true, "corrupted": false, "applied": true}, "G": {"clean": true, "corrupted": false, "applied": true}, "G2": {"clean": true, "corrupted": false, "applied": true}}, "falsifier_ok": true}
+{"checks": {"A": true, "B": true, "C": true, "D": true, "E": true, "F": true, "G": true, "G2": true, "H": true}, "falsifier": {"asof": "2026-11-21T09:46:41.219075+00:00", "cases": {"A": {"applied": true, "clean": true, "corrupted": false}, "B": {"applied": true, "clean": true, "corrupted": false}, "C_components": {"applied": true, "clean": true, "corrupted": false}, "C_counter_deficit": {"a_still_true": true, "applied": true, "clean": true, "corrupted": false}, "C_fill_price": {"a_still_true": true, "applied": true, "clean": true, "corrupted": false}, "C_wrong_gid": {"a_still_true": true, "applied": true, "clean": true, "corrupted": false}, "D": {"applied": true, "clean": true, "corrupted": false}, "E": {"applied": true, "clean": true, "corrupted": false}, "F": {"applied": true, "clean": true, "corrupted": false}, "G": {"applied": true, "clean": true, "corrupted": false}, "G2": {"applied": true, "clean": true, "corrupted": false}, "H": {"applied": true, "clean": true, "corrupted": false}, "H_counter": {"applied": true, "clean": true, "corrupted": false}}, "falsifier_ok": true}, "mitigation": "data mode verifies END/settings/common marks/whole callback populations on all saved arms", "readings": {"A": {"bad": [], "forks": 768, "manifest_forks": 768}, "B": {"by_status": {"ok": 756}, "evaluable": 756, "flags_false": 0, "rows": 756, "y_differs": 0}, "C": {"delivered_changed": 11276, "examples": [], "failing": 0, "rows": 756}, "D": {"bad": []}, "E": {"diagnosis": "pi0_better", "recomputed": "pi0_better", "same": true}, "F": {"bad": [], "core_hours": 1.8907638888888894, "jobs": 229, "part_hwm_max": 1165.17578125, "peak_mib": 1165}, "G": {"extra_files": [], "failures": [], "judge_ok": true, "one_record_per_file": true, "planted": 42}, "G2": {"extra_files": [], "failures": [], "judge_ok": true, "one_record_per_file": true, "planted": 11}, "H": {"bad": [], "changed": 424, "forks_with_arms": 756, "overrides_forks_v1": 714, "overrides_forks_v2": 714, "same_predicates": true, "same_rest": true}}, "synthetic": true, "wrong_END_accepted_by_row_checker": true}
+2026-11-21T09:46:02Z tag=review_73f6_controls rc=0 peak_rss_mib=251 wall_s=39.11 cpu_user_s=38.73 memavail_start_gib=23 disk_free_gib=445->445 slot=codex

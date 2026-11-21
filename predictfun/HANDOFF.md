@@ -23,6 +23,38 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- ENTRY_EXPOSURE_REVIEW_20261121_CODEX -->
+## 2026-11-21 — Exposure comparison accepted; entry/retention discrimination next
+
+Reviewed **73f6cfa6f8fd0d1fcb9283e8c7610f43b3b796d7**.
+[Combined review, evidence and next-round contract](reviews/automatic/20261121_73f6cfa6/report.md).
+No BLOCKING finding for the saved comparison. All 768 manifest forks,
+756 evaluable forks and 2,268 arm ledgers reconcile; both supersessions are
+accepted. Keeping the forced initial generation raises initial fill probability
+from 2.5% to 40.2% but reduces common-END value on each consumed Oct24-27 day.
+The 286 additional-fill forks have mean D_initial -34.46 c. This suppresses
+ALL later discretionary pulls of a forced neutral POST; it does not establish
+first-cancel optimality, new danger after admission, or failure of conditional
+longer resting. PI0 already maps neutral exposure through the original END.
+
+ONE next priority: ENTRY-RETENTION-DISCRIMINATION-v1, no fit. Reuse this exact
+manifest and saved KEEP outcomes; reconstruct only POST_PI0 prefixes for
+shadow entry admission, first live review and first policy pull. Retain all
+107 inputs and probability/quantity/movement/value components; reconcile
+target-matched forecasts to effective-time initial fills. Separate already-bad
+entries from subsequent market changes, mechanical state/target differences
+and forecast error. The report defines all-population metrics, 500 matched
+controls, statuses, prefix checks and a one-aggregate-core-hour ceiling.
+Existing slots, no new dates/untouched access or full continuation replay.
+
+Five nonblocking items are bundled in the report: causal scope; existing
+conditional-value design versus forecast evidence; checker END/callback
+coverage (all actual artifacts independently verified); probe-inflated action
+counter (logged workaround accepted); END value misnamed execution edge.
+No label rebuild or separate cleanup review. No extra USER approval for this
+diagnostic; extended horizon, new dates, resources or research line need USER.
+<!-- /ENTRY_EXPOSURE_REVIEW_20261121_CODEX -->
+
 <!-- CHURN_OBSERVED_INPUTS_20261121_CODEX -->
 ## 2026-11-21 — Churn cause remains unidentified; market inputs usually change
 
