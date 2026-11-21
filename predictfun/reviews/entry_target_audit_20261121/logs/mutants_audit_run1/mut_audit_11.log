@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "11", "name": "rare execution without the no-fill condition", "seconds": 0.7, "sources": {"pf_entry_audit.py": "ae6c32802a0f722e", "pf_entry_audit_mutants.py": "05f0cdd49b237b2b", "pf_entry_audit_selftest.py": "e119ffaffd9cbf8d"}, "why": "ENTRY AUDIT SELFTEST FAILED: predicates: {'share_meaningful': 0.05, 'init_no_fill': 0.4, 'abs_v_initial': 10.0, 'abs_Y': 6.0} -> rare_execution, not not_identified"}
+2026-11-21T07:45:40Z tag=mut_audit_11 rc=0 peak_rss_mib=198 wall_s=0.94 cpu_user_s=0.78 memavail_start_gib=22 disk_free_gib=447->447 slot=claude

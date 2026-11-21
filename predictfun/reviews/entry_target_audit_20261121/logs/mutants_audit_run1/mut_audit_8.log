@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "8", "name": "a partial fill counted full", "seconds": 0.7, "sources": {"pf_entry_audit.py": "ae6c32802a0f722e", "pf_entry_audit_mutants.py": "05f0cdd49b237b2b", "pf_entry_audit_selftest.py": "e119ffaffd9cbf8d"}, "why": "ENTRY AUDIT SELFTEST FAILED: partial initial fill: init_fill = full, not partial"}
+2026-11-21T07:45:42Z tag=mut_audit_8 rc=0 peak_rss_mib=198 wall_s=0.93 cpu_user_s=0.78 memavail_start_gib=22 disk_free_gib=447->447 slot=claude2

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "9", "name": "the residue counted an exact zero", "seconds": 0.7, "sources": {"pf_entry_audit.py": "ae6c32802a0f722e", "pf_entry_audit_mutants.py": "05f0cdd49b237b2b", "pf_entry_audit_selftest.py": "e119ffaffd9cbf8d"}, "why": "ENTRY AUDIT SELFTEST FAILED: a residue: exact_zero = True, not False"}
+2026-11-21T07:45:44Z tag=mut_audit_9 rc=0 peak_rss_mib=198 wall_s=0.96 cpu_user_s=0.81 memavail_start_gib=22 disk_free_gib=447->447 slot=claude3

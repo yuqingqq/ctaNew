@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "7", "name": "the economic comparison with times", "seconds": 0.8, "sources": {"pf_entry_audit.py": "ae6c32802a0f722e", "pf_entry_audit_mutants.py": "05f0cdd49b237b2b", "pf_entry_audit_selftest.py": "e119ffaffd9cbf8d"}, "why": "ENTRY AUDIT SELFTEST FAILED: delayed WAIT entry, same economic fill: cls = same_cash_inventory, not economic_identical; a residue: cls = same_cash_inventory, not economic_identical"}
+2026-11-21T07:45:39Z tag=mut_audit_7 rc=0 peak_rss_mib=198 wall_s=0.97 cpu_user_s=0.81 memavail_start_gib=22 disk_free_gib=447->447 slot=claude
