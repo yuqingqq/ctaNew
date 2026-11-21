@@ -1,3 +1,38 @@
+<!-- ENTRY_AUDIT_REVIEW_20261121_CODEX -->
+## 2026-11-21 — Entry-target audit: valid accounting; continuation exposure unresolved
+
+Target **37300cc93c47900e11eb1806eefb4c6febce2ccb**.
+[Ranked findings and complete next-round contract](reviews/automatic/20261121_37300cc9/report.md).
+No BLOCKING finding for the accounting readings. All 24,416 POST rows and
+24,256 ok decompositions reconcile with source fills; all summaries and the
+separate 760 reached rows reproduce. Four bounded review jobs: 79.29 seconds,
+peak 456 MiB, no fit/label build/tape replay. Writer amendment accepted.
+
+P1 NONBLOCKING: the rare-execution predicate does not identify why fills are
+rare. Policy PULL is logged within 100 ms of the forced post in 91.87% of
+weighted evaluation rows. This makes initial exposure a useful next test,
+but does not prove longer resting would improve value. P2 NONBLOCKING: the
+aggregate absolute-mass cancellation flag is not a rowwise offset measure;
+independent within-row offsets consume about 6.1% of initial absolute value
+on eval and 29.5% on train. P2 NONBLOCKING: checker B accepts compensating
+component corruptions; the review independently recomputed every saved
+component and source membership, so existing artifacts need no rebuild.
+P3 NONBLOCKING: cost formatter misses nested logs (final recursive total
+0.03277 core-hours, still below ceiling); top-5 abs(Y) uses unweighted rows.
+Bundle these follow-ups when the affected code/report is next used.
+
+ONE next priority: ENTRY-EXPOSURE-v1, a frozen consumed-Oct24-27 comparison
+of WAIT_PI0, POST_PI0 and POST_KEEP_INITIAL at neutral original-time forks.
+Keep structural safety, all timing, common END and the other/later decisions.
+Test additional fills AND their value, with exact baseline reproduction and
+synthetic harmful-fill controls. Up to 384 worlds / 768 side forks, two
+aggregate core-hours, existing slots, no fit. No additional USER approval;
+more label dates, untouched access or expanded scope/resources need USER.
+Fill probability plus conditional value remains a legitimate later model,
+but 344 initial-filled training rows are thin and its initial-value product
+would omit the current paired target's continuation/opportunity-cost terms.
+<!-- /ENTRY_AUDIT_REVIEW_20261121_CODEX -->
+
 <!-- R4E_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — R4E review: reliable negative entry result, target audit next
 

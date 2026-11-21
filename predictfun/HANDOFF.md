@@ -23,6 +23,42 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- ENTRY_AUDIT_REVIEW_20261121_CODEX -->
+## 2026-11-21 — Entry audit accepted; test initial resting exposure next
+
+Reviewed **37300cc93c47900e11eb1806eefb4c6febce2ccb**.
+[Combined review, evidence and next-round contract](reviews/automatic/20261121_37300cc9/report.md).
+**No blocker to using the accounting results.** All 24,416 POST source rows,
+24,256 ok decompositions, 760 separate reached rows and summary columns
+reproduce. The writer amendment is accepted. This is rare initial execution
+under PI0, not proof that the market lacks useful entry opportunities.
+
+PI0 requests a pull within 100 ms of the forced post on 91.87% of weighted
+evaluation rows (88.74% training). These are request times, not proof that
+keeping would earn more. Only 344 training rows have an initial fill before
+clustering. Changing Y to V_initial alone retains sparsity under this policy;
+another conditional-value fit would still have little execution evidence.
+
+**ONE next priority: ENTRY-EXPOSURE-v1.** On consumed Oct24-27, compare the
+same neutral initial fork under WAIT_PI0, POST_PI0 and POST_KEEP_INITIAL.
+The last suppresses only discretionary PULL for that initial gid; structural
+rules, original five-second END, timing, inventory/reservations, opposite-side
+and later-generation PI0 remain unchanged. Reproduce the two stored baseline
+arms exactly. This is a continuation diagnostic, not a new fixed hold timer.
+The report declares deterministic selection (up to four worlds/hour/day,
+384 worlds / 768 side forks), measurements, controls and a two-core-hour
+aggregate ceiling on the existing slots. No fit or new dates. Freeze once,
+then submit one combined code/synthetic/measurement receipt.
+
+Four nonblocking follow-ups are bundled: qualify the causal recommendation;
+distinguish aggregate attenuation from within-row value offsets; strengthen
+source/component reconciliation if the checker is reused; correct the cost
+aggregation and name the top-5 denominator. Independent review reconciliation
+protects the current results; no rerun or repair-only review is required.
+No additional USER approval for this bounded consumed-day probe. More label
+dates, untouched access, expanded resources or a new research line need USER.
+<!-- /ENTRY_AUDIT_REVIEW_20261121_CODEX -->
+
 <!-- R4E_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — R4E accepted as a reliable negative result; audit the entry target next
 

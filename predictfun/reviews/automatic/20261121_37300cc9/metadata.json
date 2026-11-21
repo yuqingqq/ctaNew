@@ -1,0 +1,7 @@
+{
+  "audit_sha": "6fc7d2e487f3fdf531ec74a16e8685a1258940b0cc5412047e104e3580c24941",
+  "copied_record_refused": true,
+  "mutants": 16,
+  "output_hashes": 9,
+  "synthetic_passed": true
+}

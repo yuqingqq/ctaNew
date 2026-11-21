@@ -1,0 +1,31 @@
+{
+ "asof": "2026-11-21T07:59:39.138868+00:00",
+ "cases": {
+  "A": {
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  },
+  "B": {
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  },
+  "C": {
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  },
+  "E": {
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  },
+  "G": {
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  }
+ },
+ "falsifier_ok": true
+}

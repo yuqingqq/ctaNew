@@ -1,0 +1,15 @@
+{
+ "checks": {
+  "A_identity": true,
+  "B_accounting": true,
+  "C_predictions": true,
+  "D_reached": true,
+  "E_summaries": true,
+  "F_resources": true,
+  "G_suites": true
+ },
+ "all_true": true
+}
+{"cases": {"B": {"clean": true, "corrupted": false, "applied": true}, "A": {"clean": true, "corrupted": false, "applied": true}, "C": {"clean": true, "corrupted": false, "applied": true}, "E": {"clean": true, "corrupted": false, "applied": true}, "G": {"clean": true, "corrupted": false, "applied": true}}, "falsifier_ok": true}
+{"checks": {"all_true": true, "asof": "2026-11-21T07:59:35.559034+00:00", "checks": {"A_identity": true, "B_accounting": true, "C_predictions": true, "D_reached": true, "E_summaries": true, "F_resources": true, "G_suites": true}, "readings": {"A": {"bad": [], "rows": 24416}, "B": {"accounted": 24256, "bad_class": 0, "failures": 0, "inconsistent": 0, "max_gap": 5.453415496958769e-13}, "C": {"equal_to_r4e": true, "eval_ok": 12088, "in_sample": 12168, "joined": 12088, "train_ok": 12168}, "D": {"max_gap": 2.1316282072803006e-13, "ok": 760, "r4e_ok": 760, "rows": 760}, "E": {"bad": [], "predicates": {"eval": "rare_execution", "train": "rare_execution"}}, "F": {"bad": [], "core_hours": 0.032766666666666666, "jobs": 56, "peak_mib": 456}, "G": {"extra_files": [], "failures": [], "judge_ok": true, "one_record_per_file": true, "planted": 16}}, "source_sha256": "468121d1c1ae76dcfff2a667ef44344c4efc742a77d034fde8331fb733c45073"}, "compensating_component_corruption_accepted": true, "falsifier": {"asof": "2026-11-21T07:59:39.138868+00:00", "cases": {"A": {"applied": true, "clean": true, "corrupted": false}, "B": {"applied": true, "clean": true, "corrupted": false}, "C": {"applied": true, "clean": true, "corrupted": false}, "E": {"applied": true, "clean": true, "corrupted": false}, "G": {"applied": true, "clean": true, "corrupted": false}}, "falsifier_ok": true}, "mitigation": "data.json reproduces each saved component from hash-bound source fills and the forced-generation decision."}
+2026-11-21T07:59:34Z tag=review_3730_controls rc=0 peak_rss_mib=243 wall_s=6.30 cpu_user_s=5.96 memavail_start_gib=22 disk_free_gib=446->446 slot=codex

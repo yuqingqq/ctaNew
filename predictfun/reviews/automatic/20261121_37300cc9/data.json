@@ -1,0 +1,37 @@
+{
+  "all_saved_columns_reproduced": true,
+  "all_summary_columns_reproduced": true,
+  "original_ledgers_and_component_allocation_checked": true,
+  "policy_pull_diagnostic": [
+    {
+      "first_100ms_pull": 11161,
+      "no_fill_and_first100_pull": 10896,
+      "note": "Policy request timing only. No inference about unrecorded structural lifetime or queue position.",
+      "policy_pull_recorded": 11344,
+      "rows": 12088,
+      "set": "eval",
+      "weighted_first100_pull_share": 0.918716278940371,
+      "weighted_pull_share": 0.9341689305175159
+    },
+    {
+      "first_100ms_pull": 10931,
+      "no_fill_and_first100_pull": 10692,
+      "note": "Policy request timing only. No inference about unrecorded structural lifetime or queue position.",
+      "policy_pull_recorded": 11350,
+      "rows": 12168,
+      "set": "train",
+      "weighted_first100_pull_share": 0.8873849722457395,
+      "weighted_pull_share": 0.9211715174766456
+    }
+  ],
+  "reached": 760,
+  "rows": 24416,
+  "statuses": {
+    "eval ok": 12088,
+    "eval world:no_path:missing_endpoint": 92,
+    "eval world:no_path:stale_future_book": 8,
+    "train ok": 12168,
+    "train world:no_path:missing_endpoint": 54,
+    "train world:no_path:stale_future_book": 6
+  }
+}
