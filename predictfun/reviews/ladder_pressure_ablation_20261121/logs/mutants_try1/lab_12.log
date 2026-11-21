@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "12", "name": "all arms negative from any", "seconds": 9.3, "sources": {"pf_ladder_pressure_ablation.py": "cfe8a5051c0fb55c", "pf_ladder_pressure_ablation_mutants.py": "350d0fd6b9091420", "pf_ladder_pressure_ablation_selftest.py": "e40db31ed0d5ed0e"}, "why": "ABLATION SELFTEST FAILED: 4 one positive arm breaks all_arms_negative"}
+2026-11-21T20:15:35Z tag=lab_12 rc=0 peak_rss_mib=286 wall_s=9.48 cpu_user_s=9.22 memavail_start_gib=22 disk_free_gib=437->437 slot=claude2

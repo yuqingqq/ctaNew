@@ -144,6 +144,14 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_PRESSURE_ABLATION_FREEZE_20261121_DEV -->
+## 2026-11-21 20:19Z (session aea5bfb9) — PRESSURE-ACTION-ATTRIBUTION-v1 FROZEN before any ablated replay (review 7fca0db4's ONE next priority; its finding holds)
+
+- **Review 7fca0db4 finding (verified at the code):** `lag_checks_v2.py:20` describes a reentry.csv reconciliation but `:291-302` checks membership and pull_gid only (the review verified all 905 rows itself) -> this round exports the next-same-side rows again, so `ablation_checks.py` H compares every exported field against the ledger and its falsifier refuses a changed re-entry price; the lag receipt (frozen) is not edited.
+- **Frozen:** `pf_ladder_pressure_ablation.py` (AblatedPressureGuard: bit C gates the pressure PULL, bit W the pressure WAIT, a disabled component delegates exactly to LadderInventory; arms BASELINE_00 (reused), PULL_ONLY_10, WITHHOLD_ONLY_01, FULL_11 (must equal the accepted pressure arm); pilot / rest parts; the contrasts R11-R01, R11-R10, R10-R00, R01-R00 and the interaction for END and eligible +1 s, per share apart, classified against zero, market counts, top-3 share, all_arms_negative), its selftest (mutants 20 / 20), `ablation_checks.py` (A-I, falsifier, rehearsal), the pilot rule (<= 0.35 core-hours; ladder line <= 2.0), the manifest (multiplicity: the two new real arms), the launcher, the declaration.
+- **Next:** pilot, projection, rehearsal, the rest, measurement, checks, one combined receipt, ONE review request.
+<!-- /LADDER_PRESSURE_ABLATION_FREEZE_20261121_DEV -->
+
 <!-- LADDER_PRESSURE_LAG_RESULTS_20261121_DEV -->
 ## 2026-11-21 19:58Z (session aea5bfb9) — PRESSURE-LEAD-SENSITIVITY-v1 RESULTS: SURVIVES_50MS_SCREEN (CONSUMED DAYS); CHECKS v2 ALL TRUE
 

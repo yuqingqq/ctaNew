@@ -1,0 +1,23 @@
+  0 the cancellation gate inverted: CAUGHT (9.4 s) - ABLATION SELFTEST FAILED: 1 BASELINE_00 equals LadderInventory (8 of 8 differ) | 1 FULL_11 equals the frozen PressureGuard (8 of 8 differ) | 1 the sin
+  1 the cancellation gate ignored: CAUGHT (9.1 s) - ABLATION SELFTEST FAILED: 1 BASELINE_00 equals LadderInventory (8 of 8 differ) | 1 the single-component arms act (0, 8 of 8 differ from BASELINE_00) a
+  2 the withholding gate inverted: CAUGHT (9.4 s) - ABLATION SELFTEST FAILED: 1 BASELINE_00 equals LadderInventory (8 of 8 differ) | 1 FULL_11 equals the frozen PressureGuard (8 of 8 differ) | 1 the sin
+  3 the withholding gate ignored: CAUGHT (9.4 s) - ABLATION SELFTEST FAILED: 1 BASELINE_00 equals LadderInventory (8 of 8 differ) | 1 the single-component arms act (8, 0 of 8 differ from BASELINE_00) a
+  4 the disabled branch skips the first review: CAUGHT (9.3 s) - ABLATION SELFTEST FAILED: 2 hand tape: stopped (KeyError(0))
+  5 the rest takes the pilot: CAUGHT (9.3 s) - ABLATION SELFTEST FAILED: 3 parts: stopped (ValueError('the parts do not cover the complete markets'))
+  6 the covering check dropped: CAUGHT (9.3 s) - ABLATION SELFTEST FAILED: 3 parts_of accepted a pilot outside the complete markets
+  7 withholding-given-cancellation against the wrong arm: CAUGHT (9.4 s) - ABLATION SELFTEST FAILED: 4 the contrasts by day and in total ({'20261024': 5.0, '20261025': 4.0}, 15.0)
+  8 the interaction without the baseline term: CAUGHT (9.3 s) - ABLATION SELFTEST FAILED: 4 the interaction ({'20261024': 41.0, '20261025': 53.0})
+  9 a zero day counted positive: CAUGHT (9.3 s) - ABLATION SELFTEST FAILED: 4 classification against zero (POSITIVE_EVERY_DAY, POSITIVE_EVERY_DAY)
+  10 equal markets counted better: CAUGHT (9.3 s) - ABLATION SELFTEST FAILED: 4 better / worse / equal markets and the top-3 share (4, 2, 1.0)
+  11 the top-2 share: CAUGHT (9.3 s) - ABLATION SELFTEST FAILED: 4 better / worse / equal markets and the top-3 share (2, 2, 1.0)
+  12 all arms negative from any: CAUGHT (9.3 s) - ABLATION SELFTEST FAILED: 4 one positive arm breaks all_arms_negative
+  13 the per share from the END: CAUGHT (9.3 s) - ABLATION SELFTEST FAILED: 4 all_arms_negative and the pooled per share
+  14 run_day without the part check: CAUGHT (9.4 s) - ABLATION SELFTEST FAILED: 5 run_day refuses an unknown part
+  15 run_day without the source check: CAUGHT (9.6 s) - ABLATION SELFTEST FAILED: 5 run_day refuses another source
+  16 the rest without the projection: CAUGHT (9.6 s) - ABLATION SELFTEST FAILED: 5 the rest refuses without the projection
+  17 run_day without the write-once check: CAUGHT (9.5 s) - ABLATION SELFTEST FAILED: 5 run_day refuses an existing output
+  18 an empty part loads anyway: CAUGHT (9.3 s) - ABLATION SELFTEST FAILED: 5 the empty part stopped (KeyError('20261027'))
+  19 measure without the write-once check: CAUGHT (9.5 s) - ABLATION SELFTEST FAILED: 5 guards: stopped (FileNotFoundError(2, 'No such file or directory'))
+control: PASSED (9.4 s); sources {'pf_ladder_pressure_ablation.py': 'cfe8a5051c0fb55c', 'pf_ladder_pressure_ablation_mutants.py': '350d0fd6b9091420', 'pf_ladder_pressure_ablation_selftest.py': 'e40db31ed0d5ed0e'}
+mutation check passed: the control passes its selftest, 20 / 20 planted code errors are caught by a check (3.3 CPU min)
+2026-11-21T20:16:03Z tag=lab_summary_try1 rc=0 peak_rss_mib=15 wall_s=0.02 cpu_user_s=0.01 memavail_start_gib=22 disk_free_gib=437->437 slot=claude

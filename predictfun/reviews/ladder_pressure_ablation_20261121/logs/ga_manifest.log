@@ -1,0 +1,70 @@
+{
+ "version": "pressure_action_attribution_v1",
+ "rule_sha256": "aef75e7c50108a6cfe4072bfaeaca6cb5e26676118e41b9e1264c5bb68ab4505",
+ "arms": {
+  "BASELINE_00": [
+   false,
+   false
+  ],
+  "PULL_ONLY_10": [
+   true,
+   false
+  ],
+  "WITHHOLD_ONLY_01": [
+   false,
+   true
+  ],
+  "FULL_11": [
+   true,
+   true
+  ]
+ },
+ "run_arms": [
+  "FULL_11",
+  "PULL_ONLY_10",
+  "WITHHOLD_ONLY_01"
+ ],
+ "contrasts": {
+  "cancel_given_withhold": [
+   "FULL_11",
+   "WITHHOLD_ONLY_01"
+  ],
+  "withhold_given_cancel": [
+   "FULL_11",
+   "PULL_ONLY_10"
+  ],
+  "cancel_alone": [
+   "PULL_ONLY_10",
+   "BASELINE_00"
+  ],
+  "withhold_alone": [
+   "WITHHOLD_ONLY_01",
+   "BASELINE_00"
+  ]
+ },
+ "multiplicity": {
+  "ladder_line_before": [
+   "ASK_RESERVATION_GUARD_v1",
+   "BINANCE_PRESSURE_GUARD_v1",
+   "PRESSURE_LEAD_LAG1_v1 (a timing sensitivity of the second)"
+  ],
+  "new_real_arms": [
+   "PULL_ONLY_10",
+   "WITHHOLD_ONLY_01"
+  ],
+  "controls": [
+   "FULL_11 (= the accepted pressure arm)",
+   "BASELINE_00 (= the reused baseline)"
+  ]
+ },
+ "parent": {
+  "freeze": "793c706b",
+  "results": "40a3ee8d",
+  "review": "7fca0db4",
+  "rule_sha256": "24f853dcfab0682e766742f506cb36faa86dd2f7c6170aed2febb801486d24fa",
+  "manifest_sha256": "8546b34ab6914bc6cf4922683d63b01b5b8a9b018e0915d76b2f42ff4d9d288e",
+  "day_records": {
+   "20261024": "ab599b8eceefb881fe712bb7ceb9c314fc7eb3b5ef6872778f58f2c2f2a67277",
+   "20261025": "3874552b6ae995cccf46ba820963fd27222ba530fb552dab74d28fbcd9f3bfe8",
+   "20261026": "0833d2c4278d89e6
+2026-11-21T20:19:11Z tag=ga_manifest rc=0 peak_rss_mib=199 wall_s=0.96 cpu_user_s=0.77 memavail_start_gib=23 disk_free_gib=437->437 slot=claude

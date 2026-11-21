@@ -1,0 +1,2 @@
+ABLATION SELFTEST PASSED: delegation, the hand tape and the policy level, the parts, the readings, guards
+2026-11-21T20:14:49Z tag=abl_selftest_try1 rc=0 peak_rss_mib=287 wall_s=9.52 cpu_user_s=9.21 memavail_start_gib=23 disk_free_gib=437->437 slot=claude
