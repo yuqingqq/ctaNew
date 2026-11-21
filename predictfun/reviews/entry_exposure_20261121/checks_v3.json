@@ -1,0 +1,79 @@
+{
+ "all_true": true,
+ "asof": "2026-11-21T09:29:26.004721+00:00",
+ "checks": {
+  "A_identity": true,
+  "B_reproduction": true,
+  "C_raw": true,
+  "D_summaries": true,
+  "E_predicates": true,
+  "F_resources": true,
+  "G2_suite_v2": true,
+  "G_suites": true,
+  "H_overrides": true
+ },
+ "frozen_checks_sha256": "b818be0bd07c68c87245add2065dc4492b5968178e9f451797121052d0e9b12e",
+ "readings": {
+  "A": {
+   "bad": [],
+   "forks": 768,
+   "manifest_forks": 768
+  },
+  "B": {
+   "by_status": {
+    "ok": 756
+   },
+   "evaluable": 756,
+   "flags_false": 0,
+   "rows": 756,
+   "y_differs": 0
+  },
+  "C": {
+   "delivered_changed": 11276,
+   "examples": [],
+   "failing": 0,
+   "rows": 756
+  },
+  "D": {
+   "bad": []
+  },
+  "E": {
+   "diagnosis": "pi0_better",
+   "recomputed": "pi0_better",
+   "same": true
+  },
+  "F": {
+   "bad": [],
+   "core_hours": 1.886355555555556,
+   "jobs": 226,
+   "part_hwm_max": 1165.17578125,
+   "peak_mib": 1165
+  },
+  "G": {
+   "extra_files": [],
+   "failures": [],
+   "judge_ok": true,
+   "one_record_per_file": true,
+   "planted": 42
+  },
+  "G2": {
+   "extra_files": [],
+   "failures": [],
+   "judge_ok": true,
+   "one_record_per_file": true,
+   "planted": 11
+  },
+  "H": {
+   "bad": [],
+   "changed": 424,
+   "forks_with_arms": 756,
+   "overrides_forks_v1": 714,
+   "overrides_forks_v2": 714,
+   "same_predicates": true,
+   "same_rest": true
+  }
+ },
+ "source_sha256": "a35c590d070ae77764c3e7c2e7d0b75353847a4fb4ccbe826177c019b0c64952",
+ "supersedes": "checks_v2.json (check H compared NaN counters elementwise)",
+ "v2_checks_sha256": "96acc0b2e2cf2191e9bc2cb1e3a75682b89548dc96dd206d40b4a52d18d28a3e"
+}

@@ -803,6 +803,22 @@ pulls and bid/ask; judge movement calibration on selected actions before changin
 order design. Other session owns fixes; scheduler remains off.
 <!-- /PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
 
+## 2026-11-21 09:32Z (session aea5bfb9) — ENTRY-EXPOSURE-v1: THE SAME INITIAL POST UNDER PI0 VERSUS KEEPING IT; CHECKS ALL TRUE; DIAGNOSIS PI0_BETTER (review 3d8bf5ad's next priority) (USER: "... continue the implementing and next priority loop")
+- [Receipt](reviews/entry_exposure_20261121/report.md).
+  - Commits: freeze `6ca42d25` (before any branch ran); freeze 2b `5ece0c98` (override readings from the decision log, which the frozen check C required); freeze 2c `46a2eabc` (a NaN-aware checker comparison); results in this commit. No value changed.
+  - One continuation contrast enters the ledger. It is not a fitted candidate and not a hold timer.
+- **Review 3d8bf5ad's checklist (all nonblocking, folded in):**
+  - 1: the "rare execution only" wording is superseded: changing Y to V_initial alone would retain the observed sparsity under PI0.
+  - 2: the `cancellation` flag is named an aggregate attenuation screen; the receipt shows the rowwise offset measure.
+  - 3: the new checker reconciles every fork from its raw arms, with a compensating-component control and a wrong-but-valid gid control.
+  - 4: core-hours use the recursive aggregation; the audit's top-5 share is labelled "unweighted rows".
+- **Readings** (FINDINGS P95):
+  - Mean D_EXPOSURE per day: Oct 24 -9.361 c (190 forks); Oct 25 -9.477 c (190 forks); Oct 26 -11.588 c (186 forks); Oct 27 -19.491 c (190 forks).
+  - P(initial fill) PI0 0.0251 → KEEP 0.4021; 286 additional-fill forks (mean D_initial over them -34.460 c, 0.650 negative).
+  - Declared reading: PI0's early pull avoids value-losing exposure on every consumed day: keeping the initial order costs value, so later work focuses on adverse-selection discrimination, not longer resting, larger size or unconditional posting.
+- **Cost:** 1.890 core-hours of the 2 ceiling; peak 1165 MiB.
+- **Next measurement:** the combined review (one request), which names the next priority.
+
 ## 2026-11-21 07:52Z (session aea5bfb9) — ENTRY-TARGET-AUDIT-v1: THE EXISTING POST / WAIT LABELS DECOMPOSED (NO FIT, NO NEW LABEL); CHECKS ALL TRUE; DIAGNOSIS RARE_EXECUTION ON OCT 26–27, RARE_EXECUTION ON OCT 24–25 (review d6d5d55e's next priority) (USER: "... continue the implementing and next priority loop")
 - [Receipt](reviews/entry_target_audit_20261121/report.md).
   - Commits: freeze `811fd7b3`, amendment `6157b1a0` (every output under its own name, before any output), results in this commit.

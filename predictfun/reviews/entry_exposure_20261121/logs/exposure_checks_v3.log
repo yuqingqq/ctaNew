@@ -1,0 +1,16 @@
+{
+ "checks": {
+  "A_identity": true,
+  "B_reproduction": true,
+  "C_raw": true,
+  "D_summaries": true,
+  "E_predicates": true,
+  "F_resources": true,
+  "H_overrides": true,
+  "G_suites": true,
+  "G2_suite_v2": true
+ },
+ "all_true": true
+}
+{"cases": {"A": {"clean": true, "corrupted": false, "applied": true}, "B": {"clean": true, "corrupted": false, "applied": true}, "C_components": {"clean": true, "corrupted": false, "applied": true}, "D": {"clean": true, "corrupted": false, "applied": true}, "H": {"clean": true, "corrupted": false, "applied": true}, "H_counter": {"clean": true, "corrupted": false, "applied": true}, "C_wrong_gid": {"clean": true, "corrupted": false, "applied": true, "a_still_true": true}, "C_fill_price": {"clean": true, "corrupted": false, "applied": true, "a_still_true": true}, "C_counter_deficit": {"clean": true, "corrupted": false, "applied": true, "a_still_true": true}, "E": {"clean": true, "corrupted": false, "applied": true}, "F": {"clean": true, "corrupted": false, "applied": true}, "G": {"clean": true, "corrupted": false, "applied": true}, "G2": {"clean": true, "corrupted": false, "applied": true}}, "falsifier_ok": true}
+2026-11-21T09:29:23Z tag=exposure_checks_v3 rc=0 peak_rss_mib=234 wall_s=14.14 cpu_user_s=13.62 memavail_start_gib=23 disk_free_gib=446->446 slot=claude

@@ -59,6 +59,7 @@ def main(out=M.OUT):
     (od / 'SHA256SUMS').write_text('\n'.join(sums) + '\n')
     F = pd.read_csv(out / 'forks.csv', float_precision='round_trip'); F['day'] = F.day.astype(str); S = pd.read_csv(out / 'summary.csv', float_precision='round_trip')
     W = pd.read_csv(out / 'reasons.csv'); js = json.loads((out / 'exposure.json').read_text()); P = js['predicates']; man = json.loads((out / 'manifest.json').read_text())
+    S['day'] = S.day.astype(str); W['day'] = W.day.astype(str)
     ok = F[F.status == 'ok']; T = {}
     st = F.groupby(['day', 'status']).size().rename('n').reset_index()
     T['Statuses (every fork of the manifest)'] = table(st, ['day', 'status', 'n'], ['day', 'status', 'forks'])
@@ -70,7 +71,7 @@ def main(out=M.OUT):
     T['Contrasts per day and side (c; equal-world means over the evaluable forks)'] = table(
         S, ['day', 'side', 'forks', 'overrides_forks', 'mean_Y_PI0', 'mean_Y_KEEP', 'mean_D', 'sum_D', 'n_D_pos', 'n_D_neg', 'n_D_zero', 'worst_D', 'best_D', 'n_abs_D_gt30',
             'n_meaningful_Y_PI0', 'n_meaningful_Y_KEEP'],
-        ['day', 'side', 'forks', 'forks with an override', 'mean Y_PI0', 'mean Y_KEEP_INITIAL', 'mean D_EXPOSURE', 'Σ D', 'D > 0', 'D < 0', 'D = 0', 'worst D', 'best D', '\\|D\\| > 30',
+        ['day', 'side', 'forks', 'forks with an override', 'mean Y_PI0', 'mean Y_KEEP_INITIAL', 'mean D_EXPOSURE', 'Σ D', 'D > 0', 'D < 0', 'D = 0', 'worst D', 'best D', '|D| > 30',
          'meaningful Y_PI0', 'meaningful Y_KEEP'])
     rows = []
     for (day, s), g in ok.groupby(['day', 'side']):
@@ -79,7 +80,7 @@ def main(out=M.OUT):
                          offset=offset_share(g.D_initial, g.D_rest)))
     T['Components of D_EXPOSURE (c): the initial generation, the focal side\'s other generations, the opposite side'] = table(
         pd.DataFrame(rows), ['day', 'side', 'mean_D_initial', 'mean_D_focal_rest', 'mean_D_opposite', 'mean_D_rest', 'sum_D_initial', 'sum_D_rest', 'offset'],
-        ['day', 'side', 'mean D_initial', 'mean D_focal_rest', 'mean D_opposite', 'mean D_rest', 'Σ D_initial', 'Σ D_rest', 'within-fork offset of \\|D_initial\\| by D_rest'], nd=3)
+        ['day', 'side', 'mean D_initial', 'mean D_focal_rest', 'mean D_opposite', 'mean D_rest', 'Σ D_initial', 'Σ D_rest', 'within-fork offset of |D_initial| by D_rest'], nd=3)
     ex = []
     for r in S.to_dict('records'):
         for b in ('PI0', 'KEEP'):
@@ -89,7 +90,7 @@ def main(out=M.OUT):
     T['Execution of the initial generation per branch (shares, shares filled, ms, c)'] = table(
         pd.DataFrame(ex), ['day', 'side', 'branch', 'fill_prob', 'mean_filled', 'q_filled', 'mean_active', 'mean_first_fill', 'median_first_fill', 'mean_vinit', 'unfilled_end', 'open_inv', 'fills'],
         ['day', 'side', 'branch', 'P(initial fill)', 'mean filled (sh)', 'Σ filled (sh)', 'mean active (ms)', 'mean first fill (ms)', 'median first fill (ms)', 'mean V_initial (c)',
-         'mean unfilled at END (sh)', 'mean \\|open inventory\\| at END (sh)', 'initial fills'], nd=3)
+         'mean unfilled at END (sh)', 'mean |open inventory| at END (sh)', 'initial fills'], nd=3)
     T['Additional-fill forks (KEEP\'s initial generation filled more than PI0\'s)'] = table(
         S, ['day', 'side', 'forks', 'addl_fill_forks', 'mean_D_addl', 'mean_D_initial_addl', 'n_D_initial_neg_addl'],
         ['day', 'side', 'forks', 'additional-fill forks', 'mean D_EXPOSURE (c)', 'mean D_initial (c)', 'D_initial < 0'])
