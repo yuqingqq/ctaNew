@@ -1,0 +1,45 @@
+{
+ "census": 10,
+ "selected": 8,
+ "cells": 4,
+ "worlds": 7,
+ "parts": [
+  0
+ ]
+}
+{
+ "generations": 8,
+ "statuses": [
+  {
+   "day": "20261026",
+   "status": "ok",
+   "n": 8
+  }
+ ],
+ "readings": {
+  "admitted_longer_beneficial": false,
+  "admitted_longer_harmful": false,
+  "not_identified": true
+ },
+ "days": {
+  "20261026": {
+   "n": 8,
+   "wmean_D": 1.0,
+   "sign": 1
+  }
+ },
+ "mse": {
+  "entry": false,
+  "first_review": false,
+  "first_pull": false
+ },
+ "retention_v2": {
+  "entry_mse_beats_zero": true,
+  "review_mse_beats_zero": false
+ }
+}
+pi0 admission selftest passed: census / select; the factual loop equals pf_branch_engine.step; world_rows on first, nonzero / delayed and late generations with four refusals; the perfect-mean mixture, weighted economics, the weighted null, new observations, predicates, the cross-tab and RETENTION v2 against the frozen outputs; writers (manifest and measure immutable, a changed partition refused, run_part refused)
+admission checks selftest passed: a clean synthetic row passes B / C / D; 7 corruptions are flagged (a KEEP decision, a factual value, a wrong END, compensating target / unavoidable, a wrong but valid gid, D_selected, one input)
+{"cases": {"B_keep_decision": {"clean": true, "corrupted": false, "applied": true}, "B_factual_value": {"clean": true, "corrupted": false, "applied": true}, "B_wrong_END": {"clean": true, "corrupted": false, "applied": true}, "C_compensating": {"clean": true, "corrupted": false, "applied": true}, "C_wrong_gid": {"clean": true, "corrupted": false, "applied": true}, "D_input": {"clean": true, "corrupted": false, "applied": true}, "A": {"clean": true, "corrupted": false, "applied": true}, "E": {"clean": true, "corrupted": false, "applied": true}, "F": {"clean": true, "corrupted": false, "applied": true}, "G": {"clean": true, "corrupted": false, "applied": true}, "H": {"clean": true, "corrupted": false, "applied": true}}, "falsifier_ok": true}
+{"asof": "2026-11-21T11:19:50.043127+00:00", "falsifier_ok": true, "falsifiers": 11, "synthetic_suites_passed": true, "target": "6c2a992d8fc0e3e52b073c694687e674aa562f34"}
+2026-11-21T11:19:25Z tag=review_6c2a992d_controls rc=0 peak_rss_mib=434 wall_s=24.52 cpu_user_s=24.11 memavail_start_gib=22 disk_free_gib=443->443 slot=codex

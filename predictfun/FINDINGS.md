@@ -1,3 +1,35 @@
+<!-- PI0_ADMISSION_REVIEW_20261121_CODEX -->
+## 2026-11-21 — Voluntary-admission comparison verified; movement bias localized
+
+Target **6c2a992d8fc0e3e52b073c694687e674aa562f34**.
+[Review and complete next measurement](reviews/automatic/20261121_6c2a992d/report.md).
+No BLOCKING finding. 329/329 selected generations and 896 model vectors
+reproduce. Prior MSE/mask corrections and immutable pilot accepted. New
+independent arithmetic: entry V bias +11.099 c = edge/quantity -0.882 c +
+movement +11.981 c; movement bias = probability +0.310 c + conditional head
++11.671 c. Movement MSE still improves on zero movement, so this does not
+justify removing the term. The mapping itself reconciles.
+
+Longer selected-gid exposure loses on both consumed days; P has useful Brier
+performance but underpredicts fill probability (.230 versus .303). First-review
+pulls have no demonstrated selection advantage. Weighted top-five absolute
+exposure mass is .520 (the receipt's unweighted .37 is correct for its metric).
+Generations are related within worlds; no interval or validation inference.
+
+NONBLOCKING batch: bn_age identifies bookTicker updates, not trades; update
+the label and do not attribute churn to arrival alone. qm is quantity-weighted
+decision-to-END movement, not exclusively post-fill movement. Keep unconditional
+and fill-conditional units distinct. Add weighted/world concentration. Bind
+row weights/cells to manifest values when reusing the checker; all current
+rows were independently verified exact, so no rebuild is needed.
+
+ONE next priority: PI0-MOVEMENT-CALIBRATION-AUDIT-v1 on these saved cohorts,
+with exact moment decompositions and predeclared timing/queue strata. No fit,
+new branches/dates or longer END; one core-hour, no additional USER approval.
+The full contract defines the tests, clock conventions, no-fill denominators
+and decision map. Conditional longer retention remains untested and open.
+<!-- /PI0_ADMISSION_REVIEW_20261121_CODEX -->
+
 <!-- ENTRY_RETENTION_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — Mean-target diagnosis needs correction; artifacts are reusable
 

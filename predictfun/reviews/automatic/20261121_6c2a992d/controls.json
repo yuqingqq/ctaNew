@@ -1,0 +1,7 @@
+{
+  "asof": "2026-11-21T11:19:50.043127+00:00",
+  "falsifier_ok": true,
+  "falsifiers": 11,
+  "synthetic_suites_passed": true,
+  "target": "6c2a992d8fc0e3e52b073c694687e674aa562f34"
+}

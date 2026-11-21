@@ -23,6 +23,39 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- PI0_ADMISSION_REVIEW_20261121_CODEX -->
+## 2026-11-21 — Admission exposure accepted; movement calibration is next
+
+Reviewed **6c2a992d8fc0e3e52b073c694687e674aa562f34**.
+[Combined review, evidence and next-round contract](reviews/automatic/20261121_6c2a992d/report.md).
+No BLOCKING finding for the saved comparison or reuse. All 329 generations,
+their weighted population/ledgers/targets and 896 forecast vectors reproduce;
+synthetic controls and all 11 falsifiers pass. Prior mean-score/mask/pilot
+findings closed; the quote-versus-trade label still needs correction.
+
+Longer exposure costs -16.90 c / -2.87 c per admission on the two consumed
+days. Entry V is optimistic by +11.10 c: movement contributes +11.98 c,
+quantity/edge -0.88 c. Movement still improves MSE versus omitting it.
+First-review V beats zero on MSE but pull selection has no demonstrated
+advantage (matched percentile .806). No profitable-policy/validation claim.
+
+ONE next priority: PI0-MOVEMENT-CALIBRATION-AUDIT-v1. Use all saved admitted
+generations and the forced cohort separately; decompose unconditional bias,
+calibration, decision-time queue/horizon state, realized fill timing and tail
+concentration. qm is decision-to-END quantity-weighted movement, not purely
+post-fill movement. Preserve no fills/statuses; realized timing and venue queue
+are explanatory only. No new fit, population, branch simulation or horizon.
+One aggregate core-hour, existing slots; no additional USER approval.
+
+One batch: correct new_bn_age to bookTicker; qualify P calibration and movement
+units; add weighted/world tail concentration; compare result-row weights/cells
+to the manifest (actual rows independently verified exact). Nonblocking items
+must not trigger a repair-only review. Consumed days remain usable for this
+diagnostic, never independent validation. More dates/untouched access, extended
+END or more resources require a USER decision. Conditional longer retention
+with a matched target/controller remains open; unconditional duration loses.
+<!-- /PI0_ADMISSION_REVIEW_20261121_CODEX -->
+
 <!-- ENTRY_RETENTION_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — Retention artifacts accepted; mean-forecast inference corrected
 
