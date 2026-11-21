@@ -1,3 +1,29 @@
+pi0_admission_review_20261121_codex:
+  status: comparison_accepted_movement_calibration_diagnostic_next
+  target_commit: 6c2a992d8fc0e3e52b073c694687e674aa562f34
+  report: predictfun/reviews/automatic/20261121_6c2a992d/report.md
+  blocking_findings_for_saved_results: []
+  population: {census_POST_generations: 689, selected: 329, worlds: 155, nonempty_cells: 93, weight_sum: 689}
+  stages: {entry: 329, first_review: 299, first_pull: 268, no_review: 30, no_pull: 61, forecast_vectors_reproduced: 896}
+  weighted_exposure_D_c: {"20261026": -16.9007, "20261027": -2.8719, pooled: -9.367}
+  entry_bias_c: {value: 11.099422619095773, movement: 11.981294174281873, quantity_edge: -0.8818715551861003}
+  movement_bias_components_c: {probability: 0.3101583884793006, conditional_head: 11.671135785802573}
+  entry_MSE_c2: {V: 4043.2733378307407, zero: 3981.9971603059403, mechanical: 4098.463467206647}
+  first_review_MSE_c2: {V: 3743.447651577628, zero: 4018.1627872407557}
+  first_review_selection_percentile: 0.806
+  weighted_top5_abs_exposure_share: 0.5196909621829989
+  nonblocking: [bookTicker_mislabeled_trade_and_new_observation_attribution, movement_units_and_probability_calibration_scope, weighted_tail_concentration, row_weight_cell_manifest_binding]
+  actual_row_weights_cells_verified_exact: true
+  prior_mean_score_and_mask_corrections_accepted: true
+  independent_review: {successful_jobs: 4, successful_wall_seconds: 33.83, all_attempts_wall_seconds: 35.35, peak_rss_mib: 452, falsifiers: 11, fits: 0, real_tape_runs: 0}
+  next_priority: PI0_MOVEMENT_CALIBRATION_AUDIT_v1
+  next_round: {primary: saved_admissions_329, reference: saved_forced_forks_768_separate, consumed_days: ["20261024", "20261025", "20261026", "20261027"], core_hours_ceiling: 1, development_slots_max: 4, checkpoint_mib: 1536, hard_rss_mib: 2048, fits: 0, new_branches: 0, new_dates: 0}
+  original_END_and_teacher_unchanged: true
+  conditional_longer_retention_rejected: false
+  extra_user_approval_for_next_diagnostic: false
+  new_dates_untouched_validation_extended_END_or_more_compute_authorized: false
+  profitable_strategy_or_independent_validation_established: false
+
 entry_retention_review_20261121_codex:
   status: artifacts_accepted_mean_diagnosis_correction_bundled_with_admission_measurement
   target_commit: a44f7dd807f7d8cf88d8967801652ef26ca93ad8

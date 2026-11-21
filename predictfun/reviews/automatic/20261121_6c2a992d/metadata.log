@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261121_6c2a992d/verify.py", line 123, in <module>
+    mode=sys.argv[1]; result=globals()[mode](); result['target']='6c2a992d8fc0e3e52b073c694687e674aa562f34'
+                             ^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261121_6c2a992d/verify.py", line 45, in metadata
+    assert q.exists(),q
+           ^^^^^^^^^^
+AssertionError: /tmp/pf-review-6c2a992d/predictfun/reviews/entry_exposure_20261121/outputs/v2/forks.csv.gz
+2026-11-21T11:18:41Z tag=review_6c2a992d_metadata rc=1 peak_rss_mib=230 wall_s=1.52 cpu_user_s=1.32 memavail_start_gib=23 disk_free_gib=443->443 slot=codex
