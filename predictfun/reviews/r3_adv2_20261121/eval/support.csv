@@ -1,0 +1,13 @@
+day,side,head,support,rows
+20261026,0,keep,outside_training_range,2
+20261026,0,keep,supported,1507
+20261026,0,post,supported,3018
+20261026,1,keep,outside_training_range,5
+20261026,1,keep,supported,1504
+20261026,1,post,supported,3018
+20261027,0,keep,outside_training_range,2
+20261027,0,keep,supported,1511
+20261027,0,post,supported,3026
+20261027,1,keep,outside_training_range,1
+20261027,1,keep,supported,1512
+20261027,1,post,supported,3026

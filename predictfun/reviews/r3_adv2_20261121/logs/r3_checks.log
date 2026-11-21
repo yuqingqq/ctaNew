@@ -1,0 +1,16 @@
+{
+ "checks": {
+  "A_extraction": true,
+  "B_fit": true,
+  "C_order": true,
+  "D_sample": true,
+  "E_readings": true,
+  "F_control": true,
+  "G_replay": false,
+  "H_suites": true,
+  "I_resources": true
+ },
+ "all_true": false
+}
+{"cases": {"E": {"clean": true, "corrupted": false}, "G": {"clean": false, "corrupted": false}, "H": {"clean": true, "corrupted": false}}, "falsifier_ok": false}
+2026-11-21T06:10:12Z tag=r3_checks rc=0 peak_rss_mib=244 wall_s=3.81 cpu_user_s=3.18 memavail_start_gib=23 disk_free_gib=445->445 slot=claude

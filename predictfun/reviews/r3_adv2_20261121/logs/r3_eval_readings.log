@@ -1,0 +1,22 @@
+{
+ "rows": 18132,
+ "screens": {
+  "20261026 0 keep RICH KEEP": "INSUFFICIENT_SUPPORT",
+  "20261026 0 keep RICH PULL": "FAIL",
+  "20261026 0 post RICH POST": "FAIL",
+  "20261026 0 post RICH WAIT": "FAIL",
+  "20261026 1 keep RICH KEEP": "INSUFFICIENT_SUPPORT",
+  "20261026 1 keep RICH PULL": "FAIL",
+  "20261026 1 post RICH POST": "FAIL",
+  "20261026 1 post RICH WAIT": "FAIL",
+  "20261027 0 keep RICH KEEP": "INSUFFICIENT_SUPPORT",
+  "20261027 0 keep RICH PULL": "FAIL",
+  "20261027 0 post RICH POST": "FAIL",
+  "20261027 0 post RICH WAIT": "FAIL",
+  "20261027 1 keep RICH KEEP": "INSUFFICIENT_SUPPORT",
+  "20261027 1 keep RICH PULL": "PASS",
+  "20261027 1 post RICH POST": "FAIL",
+  "20261027 1 post RICH WAIT": "FAIL"
+ }
+}
+2026-11-21T06:07:57Z tag=r3_eval_readings rc=0 peak_rss_mib=448 wall_s=125.33 cpu_user_s=123.71 memavail_start_gib=23 disk_free_gib=445->445 slot=claude4

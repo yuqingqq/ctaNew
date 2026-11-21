@@ -1,0 +1,36 @@
+{
+ "version": "r2_label_sample_v2",
+ "plan_sha256": "8619eec52bf75b0c1164d5af26d5a6d86bc9fda8d39a6cab2bfbf6b94660e100",
+ "run_set": "full",
+ "audit_every": 35,
+ "rows": 18332,
+ "pairs": {
+  "20261026": 9054,
+  "20261027": 9078
+ },
+ "statuses": {
+  "20261026 keep ok": 3018,
+  "20261026 keep world:no_path:missing_endpoint": 46,
+  "20261026 keep world:no_path:stale_future_book": 8,
+  "20261026 post ok": 6036,
+  "20261026 post world:no_path:missing_endpoint": 46,
+  "20261026 post world:no_path:stale_future_book": 8,
+  "20261027 keep ok": 3026,
+  "20261027 keep world:no_path:missing_endpoint": 46,
+  "20261027 post ok": 6052,
+  "20261027 post world:no_path:missing_endpoint": 46
+ },
+ "weight_totals": {
+  "20261026 keep": 29713.15625,
+  "20261026 post": 29713.15625,
+  "20261027 keep": 29384.78125,
+  "20261027 post": 29384.78125
+ },
+ "dataset_sha256": "902526da20ecea3c224dab403135f701ac47386a72b0779723d36077b2553572",
+ "current_sources_equal": true,
+ "current_inputs_equal": true,
+ "teacher_verified": true,
+ "accepted": true,
+ "asof": "2026-11-21T06:07:56.825039+00:00"
+}
+2026-11-21T06:07:09Z tag=r3_eval_finalize rc=0 peak_rss_mib=278 wall_s=47.34 cpu_user_s=45.94 memavail_start_gib=23 disk_free_gib=445->445 slot=claude4

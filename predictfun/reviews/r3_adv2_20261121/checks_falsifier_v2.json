@@ -1,0 +1,32 @@
+{
+ "asof": "2026-11-21T06:11:52.560155+00:00",
+ "cases": {
+  "G2 binding_failure": {
+   "applied": true,
+   "value": false
+  },
+  "G2 cap_ok_false": {
+   "applied": true,
+   "value": false
+  },
+  "G2 clean": {
+   "applied": true,
+   "value": true
+  },
+  "G2 zero_callback_at_a_non_final_tick": {
+   "applied": true,
+   "value": false
+  }
+ },
+ "falsifier_ok": true,
+ "v1_cases_E_H": {
+  "E": {
+   "clean": true,
+   "corrupted": false
+  },
+  "H": {
+   "clean": true,
+   "corrupted": false
+  }
+ }
+}

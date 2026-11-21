@@ -1,0 +1,119 @@
+{
+ "all_true": false,
+ "asof": "2026-11-21T06:10:14.841142+00:00",
+ "checks": {
+  "A_extraction": true,
+  "B_fit": true,
+  "C_order": true,
+  "D_sample": true,
+  "E_readings": true,
+  "F_control": true,
+  "G_replay": false,
+  "H_suites": true,
+  "I_resources": true
+ },
+ "readings": {
+  "A": {
+   "crossing": 0,
+   "dataset_ok": 18249,
+   "rows": 18249
+  },
+  "B": {
+   "bad": [],
+   "models": 12
+  },
+  "C": {
+   "commit": "2bec465d2d63de193795a5907626b5a948b0c835",
+   "committed_at": "2026-11-21T03:41:17+00:00",
+   "eval_asof": "2026-11-21T06:10:02.148171+00:00",
+   "replay_parts": 12
+  },
+  "D": {
+   "dataset_sha256": "902526da20ecea3c224dab403135f701ac47386a72b0779723d36077b2553572",
+   "pairs": {
+    "20261026": 9054,
+    "20261027": 9078
+   },
+   "statuses": {
+    "20261026 keep ok": 3018,
+    "20261026 keep world:no_path:missing_endpoint": 46,
+    "20261026 keep world:no_path:stale_future_book": 8,
+    "20261026 post ok": 6036,
+    "20261026 post world:no_path:missing_endpoint": 46,
+    "20261026 post world:no_path:stale_future_book": 8,
+    "20261027 keep ok": 3026,
+    "20261027 keep world:no_path:missing_endpoint": 46,
+    "20261027 post ok": 6052,
+    "20261027 post world:no_path:missing_endpoint": 46
+   }
+  },
+  "E": {
+   "coverage_bad": [],
+   "missing": [],
+   "screens": {
+    "FAIL": 31,
+    "INSUFFICIENT_SUPPORT": 12,
+    "PASS": 5
+   }
+  },
+  "F": {
+   "draws": 500,
+   "rows": 18,
+   "seed": 20261121
+  },
+  "G": {
+   "bad": [
+    "3817683 1793023385000 reached pair",
+    "3854908 1793065000000 reached pair"
+   ],
+   "population": 384,
+   "reached": {
+    "missing_mark": 0,
+    "no_eligible_decision": 4,
+    "ok": 1516,
+    "other": 0
+   },
+   "worlds": 384
+  },
+  "H": {
+   "adv2": {
+    "caught": 33,
+    "extra_files": [],
+    "failures": [],
+    "judge_ok": true,
+    "one_record_per_file": true,
+    "planted": 33
+   },
+   "eval": {
+    "caught": 30,
+    "extra_files": [],
+    "failures": [],
+    "judge_ok": true,
+    "one_record_per_file": true,
+    "planted": 30
+   },
+   "replay": {
+    "caught": 26,
+    "extra_files": [],
+    "failures": [],
+    "judge_ok": true,
+    "one_record_per_file": true,
+    "planted": 26
+   },
+   "sample": {
+    "caught": 19,
+    "extra_files": [],
+    "failures": [],
+    "judge_ok": true,
+    "one_record_per_file": true,
+    "planted": 19
+   }
+  },
+  "I": {
+   "bad": [],
+   "core_hours": 18.62810833333334,
+   "jobs": 390,
+   "peak_mib": 1260
+  }
+ }
+}

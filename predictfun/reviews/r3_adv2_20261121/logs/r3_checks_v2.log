@@ -1,0 +1,16 @@
+{
+ "checks": {
+  "A_extraction": true,
+  "B_fit": true,
+  "C_order": true,
+  "D_sample": true,
+  "E_readings": true,
+  "F_control": true,
+  "G_replay": true,
+  "H_suites": true,
+  "I_resources": true
+ },
+ "all_true": true
+}
+{"cases": {"G2 clean": {"applied": true, "value": true}, "G2 zero_callback_at_a_non_final_tick": {"applied": true, "value": false}, "G2 binding_failure": {"applied": true, "value": false}, "G2 cap_ok_false": {"applied": true, "value": false}}, "falsifier_ok": true}
+2026-11-21T06:11:48Z tag=r3_checks_v2 rc=0 peak_rss_mib=244 wall_s=4.44 cpu_user_s=4.13 memavail_start_gib=23 disk_free_gib=445->445 slot=claude
