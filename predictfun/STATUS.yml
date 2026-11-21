@@ -1,3 +1,22 @@
+r3_review_20261121_codex:
+  status: reliable_negative_candidate_result_entry_experiment_next
+  target_commit: 76be496029ae3180b266bc94a6f8a2b16bf257ff
+  report: predictfun/reviews/automatic/20261121_76be4960/report.md
+  blocking_findings_for_current_readings: []
+  candidate_passes_model_or_economic_gates: false
+  artifacts: {evaluation_parts: 96, evaluation_ok_rows: 18132, replay_planned_worlds: 384, replay_ok_worlds: 380, reached_ok_pairs: 1516}
+  independent_review: {checks: 5, wall_seconds: 200.58, peak_rss_mib: 529, model_fits: 0, real_tape_runs: 0}
+  prior_review_items: [coverage_closed, meaningful_nonzero_floor_closed, mutation_identity_closed]
+  nonblocking: [post_prediction_failure, different_head_scores_not_temporal_forecast_reversal, state_shift_not_causally_isolated, replay_evidence_retention, calibration_pooling_convention]
+  next_priority: ADV2_ENTRY_SMOOTH_v1_entry_complexity_experiment_with_PI0_retention
+  candidate: {new_primary: 1, new_POST_heads: 2, min_data_in_leaf: 1000, rounds: 50, other_parameters_unchanged: true, retention: frozen_pi0_50_v1}
+  primary_comparator: frozen_ENTRY_ONLY
+  chronology: {train: ["20261024", "20261025"], adaptive_development_eval: ["20261026", "20261027"], all_consumed: true}
+  next_round: {reuse_existing_offline_labels: true, replay_max_worlds: 384, reached_POST_max_pairs: 768, planning_core_hours_ceiling: 8, authorized_development_slots: 4}
+  additional_user_approval_required_for_declared_round: false
+  untouched_validation_or_more_label_days_authorized: false
+  intermediate_review_required: false
+
 r2f_review_20261121_codex:
   status: production_labels_accepted_candidate_round_authorized
   target_commit: f68fd805ca6ba52c411b7d570aaa791f10d17feb

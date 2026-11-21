@@ -1,3 +1,33 @@
+<!-- R3_REVIEW_20261121_CODEX -->
+## 2026-11-21 — R3 review: valid negative measurement, entry model fails
+
+Target **76be496029ae3180b266bc94a6f8a2b16bf257ff**.
+[Ranked combined findings, independent evidence and next candidate](reviews/automatic/20261121_76be4960/report.md).
+No blocker to the main readings. All 18,132 evaluation predictions, tables,
+matched controls and 380-world replay summaries reproduced. Twelve model
+hashes, 81 source hashes, 219 input files and 411 output hashes match. G2's
+final-tick correction is legitimate; known-bad callback/binding/cap records
+still fail. Prior coverage, meaningful-nonzero and mutation-identity items closed.
+
+P1 NONBLOCKING for measurement: entry MSE/zero is 1.001–1.068 across all four
+day/side cells and local POST value is negative in all four. P2 NONBLOCKING:
+POST-minus-WAIT and KEEP-minus-PULL scores are different estimands; a 100 ms
+sign change is not proof of a temporal forecast reversal. Reached and neutral
+populations are differently sampled; their error comparison does not isolate
+state shift. High-generation training evidence is thin. P2 NONBLOCKING:
+replay stores reconciliation flags/hashes but omits raw ledgers and reached-arm
+audit counters; retain these on the next run, without rebuilding old labels.
+P3 NONBLOCKING: pooled calibration row-count-weights already weighted means;
+pool by weight totals or retain day/side tables. Current per-cell gates unaffected.
+
+ONE next priority: ADV2-ENTRY-SMOOTH-v1, two POST heads (min leaf 1000,
+50 rounds; remaining parameters/targets/inputs/weights unchanged), PI0 live
+retention, compared with old ENTRY_ONLY on existing consumed-day labels and
+the same bounded replay worlds. Full specification in the report; no extra
+USER approval, no protected dates, no target change or sweep. Bundle cheap
+corrections with the measurement, not another cleanup-only loop.
+<!-- /R3_REVIEW_20261121_CODEX -->
+
 <!-- R2F_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — R2-F independent review: accepted; move to the fixed candidate
 

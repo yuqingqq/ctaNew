@@ -1,0 +1,97 @@
+{
+  "all_predictions_reloaded": true,
+  "control_draws_recomputed": 500,
+  "counters": {
+    "causal": 146352,
+    "parity": 140646
+  },
+  "parts": 96,
+  "readings": [
+    {
+      "always1": -0.5992350688111916,
+      "day": "20261026",
+      "head": "keep",
+      "mse_ratio": 0.9929675139488013,
+      "n": 1509,
+      "side": 0,
+      "value": -0.2991639624628252
+    },
+    {
+      "always1": -0.8821991772708303,
+      "day": "20261026",
+      "head": "post",
+      "mse_ratio": 1.067730698093384,
+      "n": 3018,
+      "side": 0,
+      "value": -0.6865050729272942
+    },
+    {
+      "always1": -0.8378236719870341,
+      "day": "20261026",
+      "head": "keep",
+      "mse_ratio": 0.9681023127899323,
+      "n": 1509,
+      "side": 1,
+      "value": 0.1489200971410308
+    },
+    {
+      "always1": -1.1589937153560779,
+      "day": "20261026",
+      "head": "post",
+      "mse_ratio": 1.032079255460632,
+      "n": 3018,
+      "side": 1,
+      "value": -0.9490737086327287
+    },
+    {
+      "always1": -0.556620431243474,
+      "day": "20261027",
+      "head": "keep",
+      "mse_ratio": 0.9612722069925123,
+      "n": 1513,
+      "side": 0,
+      "value": -0.15620571569806435
+    },
+    {
+      "always1": -0.8869646096278789,
+      "day": "20261027",
+      "head": "post",
+      "mse_ratio": 1.018563493550478,
+      "n": 3026,
+      "side": 0,
+      "value": -0.22452835787419503
+    },
+    {
+      "always1": -1.2731352228526036,
+      "day": "20261027",
+      "head": "keep",
+      "mse_ratio": 0.9760218989700367,
+      "n": 1513,
+      "side": 1,
+      "value": -0.25183602831593666
+    },
+    {
+      "always1": -1.194947779228135,
+      "day": "20261027",
+      "head": "post",
+      "mse_ratio": 1.0012341560237197,
+      "n": 3026,
+      "side": 1,
+      "value": -0.38088702492323206
+    }
+  ],
+  "rows": 18132,
+  "statuses": {
+    "20261026 keep ok": 3018,
+    "20261026 keep world:no_path:missing_endpoint": 46,
+    "20261026 keep world:no_path:stale_future_book": 8,
+    "20261026 post ok": 6036,
+    "20261026 post world:no_path:missing_endpoint": 46,
+    "20261026 post world:no_path:stale_future_book": 8,
+    "20261027 keep ok": 3026,
+    "20261027 keep world:no_path:missing_endpoint": 46,
+    "20261027 post ok": 6052,
+    "20261027 post world:no_path:missing_endpoint": 46
+  },
+  "training_extraction_exact": true
+}
