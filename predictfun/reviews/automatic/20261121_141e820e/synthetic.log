@@ -1,0 +1,35 @@
+adv2 entry eval selftest passed: frame (actions, tie, fallback, same rows, training means); r3_identity (equal; altered Y / w / prediction / missing row); readings and screens; calibration pooling by w_sum; strata (hand-computed); predicates (pass, no_admissions, negative value); the eval refusal
+adv2 entry replay selftest passed: select_entry (minimum rank, absent model decisions only, outcome-free, inclusion counts); end to end (every policy reconciled, bound, its trace passing the shared ledger / callback / audit-rate checks); the reproduction control (equal to the pf_adv2 construction, perturbed references refused); reached entry pairs (the shared pair invariants, recorded inputs, both heads; tampered fingerprint; empty selection); part identity, membership and the run refusal
+{
+ "statuses": {
+  "ok": 2,
+  "world:no_path:x": 1
+ },
+ "worlds": 2,
+ "diffs": 12,
+ "reached": [
+  {
+   "day": "20261026",
+   "status": "no_eligible_decision",
+   "n": 1
+  },
+  {
+   "day": "20261026",
+   "status": "ok",
+   "n": 1
+  },
+  {
+   "day": "20261027",
+   "status": "no_eligible_decision",
+   "n": 1
+  },
+  {
+   "day": "20261027",
+   "status": "ok",
+   "n": 1
+  }
+ ]
+}
+adv2 entry replay summary selftest passed: a valid summary completes; statuses, totals, trace-summed bindings (a missing counter fails), paired differences (sums, above / below, a tie), reached counts under 'n'; refusals of a changed CSV and a changed part
+{"fits": 0, "passed": ["eval", "replay", "replay_summary"], "real_tape_runs": 0}
+2026-11-21T07:33:44Z tag=review_141e_synthetic rc=0 peak_rss_mib=236 wall_s=17.83 cpu_user_s=17.63 memavail_start_gib=23 disk_free_gib=442->442 slot=codex

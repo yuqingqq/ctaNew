@@ -1,3 +1,36 @@
+<!-- R4E_REVIEW_20261121_CODEX -->
+## 2026-11-21 — R4E review: reliable negative entry result, target audit next
+
+Target **141e820e4b736c6a8c4f27b0a0dbf53789e95e89**.
+[Ranked findings and complete next-round contract](reviews/automatic/20261121_141e820e/report.md).
+No BLOCKING finding for the main readings. All 12,088 POST predictions and
+tables/controls reproduce; all 1,520 episode ledgers and 760 reached pairs
+check, with 1,140 exact R3 control comparisons. Amendments accepted; five
+successful bounded review jobs took 102.49 s, peak 349 MiB, no fits/tape runs.
+
+P1 NONBLOCKING for measurement: SMOOTH's selected POST mean is negative in
+all four day/side cells; it trails PI0 on both days despite fewer generations.
+This remains an entry-selection failure; reduced activity is not proven
+timing skill. P2 NONBLOCKING: Y measures POST now minus WAIT one tick, then
+PI0 in both branches, including future generations and both sides. Its
+near-zero labels do not by themselves show that market information is weak.
+The churn table still needs policy-specific score names: paired A at SMOOTH /
+ENTRY_ONLY entry, PI0 V_retain at review, PI0 V_post at PI0 entry. The control
+column uses mandatory anchors, unlike the all-sampled POST group.
+P3 NONBLOCKING: episode check F accepts a rehashed wrong END field; this
+review checked actual END/settings/common marks/fill bounds on every trace
+and they are correct. Strengthen that checker only when reused; no rerun.
+
+ONE next priority: ENTRY-TARGET-AUDIT-v1, a frozen streaming accounting audit
+of existing Oct24-27 POST traces and separately the 760 reached pairs. Explain
+zeros and decompose Y into initial-generation and subsequent/cross-side value,
+without changing the target or selecting filled-only rows. One combined
+measured receipt, one core-hour ceiling, no new fit/labels/tape. No extra USER
+approval; more label dates or protected/untouched validation need the USER.
+Stop tuning/promoting the current direct entry regressors pending this audit;
+this is not a conclusion that all entry models or market making cannot work.
+<!-- /R4E_REVIEW_20261121_CODEX -->
+
 <!-- R3_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — R3 review: valid negative measurement, entry model fails
 

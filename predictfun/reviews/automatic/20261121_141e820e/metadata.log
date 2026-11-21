@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261121_141e820e/verify.py", line 148, in <module>
+    mode=sys.argv[1]; result=globals()[mode]()
+                             ^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261121_141e820e/verify.py", line 54, in metadata
+    assert git('show','602fdfc5:'+ck)==(PIN/ck).read_bytes()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+2026-11-21T07:31:06Z tag=review_141e_metadata rc=1 peak_rss_mib=229 wall_s=1.47 cpu_user_s=1.23 memavail_start_gib=23 disk_free_gib=442->442 slot=codex

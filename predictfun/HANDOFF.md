@@ -23,6 +23,42 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- R4E_REVIEW_20261121_CODEX -->
+## 2026-11-21 — R4E accepted as a reliable negative result; audit the entry target next
+
+Reviewed **141e820e4b736c6a8c4f27b0a0dbf53789e95e89**.
+[Combined review, evidence and next-round contract](reviews/automatic/20261121_141e820e/report.md).
+**No blocker to the main readings; no demonstrated entry skill.** All 12,088
+POST predictions, seven evaluation tables and matched controls reproduce.
+All 12 replay parts, 380 ok worlds, 1,520 episode ledgers, 760 reached pairs
+and 1,140 R3 control comparisons checked. The float-parser, summary and
+falsifier amendments are accepted. Prior traces, common-state comparisons,
+calibration weighting, part identity and membership requirements are closed.
+
+SMOOTH improves error versus RICH in 4/4 cells but its selected entries have
+negative mean value in 4/4. It still trails PI0 by 2,207 / 1,525 c on Oct26 /
+Oct27; 22.5% fewer generations did not resolve first-review pulling. These
+are consumed-day gross five-second measurements, not validation or settlement
+profitability. Reduced participation does not establish useful timing.
+
+**ONE next priority: ENTRY-TARGET-AUDIT-v1.** Stop further tuning of the current
+direct POST-minus-WAIT regressors. Stream existing Oct24-27 POST label traces;
+classify zero/equal-payoff cases and decompose Y into the forced generation's
+END value plus subsequent/cross-side differences. Include the existing 760
+reached pairs separately. The report fixes populations, weights, controls,
+accounting identities and a one-core-hour ceiling. No fit, new label, tape
+replay, target replacement or untouched-day access in this batch. Deliver
+one frozen audit and measured receipt; no intermediate fix-only review.
+
+Nonblocking follow-ups: distinguish paired advantage A from PI0's V_post /
+V_retain in the churn table; name the mandatory-anchor control population;
+bind END/settings/fill bounds/common marks if the episode checker is reused.
+The current episode fields were independently verified correct, so no rerun
+is required. No additional USER approval for this existing-data diagnostic.
+More label dates, protected/untouched access or expanded resources need an
+explicit USER scope/budget decision; neither candidate merits validation now.
+<!-- /R4E_REVIEW_20261121_CODEX -->
+
 <!-- R3_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — R3 accepted as a negative experiment; entry selection is the next priority
 

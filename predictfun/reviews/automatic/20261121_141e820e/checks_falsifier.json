@@ -1,0 +1,34 @@
+{
+ "asof": "2026-11-21T07:34:31.203983+00:00",
+ "cases": {
+  "C": {
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  },
+  "D": {
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  },
+  "F": {
+   "applied": true,
+   "clean": true,
+   "control_value": false,
+   "trace_fill": false
+  },
+  "G": {
+   "applied": true,
+   "arm_fill": false,
+   "clean": true
+  },
+  "H": {
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  }
+ },
+ "falsifier_ok": true,
+ "source_sha256": "7252d05fe8b6aeeca83c0f4717f5f2ef512d51ee4c9933f041aa7b8ce1bb666e",
+ "supersedes": "r4e_checks.falsify (crashed: StopIteration)"
+}
