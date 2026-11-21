@@ -1,0 +1,42 @@
+{
+ "pilots_done": true,
+ "pilot_jobs": {
+  "20261024": {
+   "rc": 0,
+   "peak": 1276,
+   "wall": 84.2,
+   "cpu": 77.83
+  },
+  "20261025": {
+   "rc": 0,
+   "peak": 1233,
+   "wall": 80.23,
+   "cpu": 76.07
+  },
+  "20261026": {
+   "rc": 0,
+   "peak": 1140,
+   "wall": 90.65,
+   "cpu": 83.98
+  },
+  "20261027": {
+   "rc": 0,
+   "peak": 1106,
+   "wall": 81.07,
+   "cpu": 75.84
+  }
+ },
+ "load_s": 58.95617485046387,
+ "causal_s": 5.083329677581787,
+ "market_s_mean": 9.322134763002396,
+ "markets": 19,
+ "cpu_per_wall": 0.9332738360850812,
+ "projected_full_wall_s": 433.27857860922813,
+ "pilot_core_hours": 0.08714444444444445,
+ "so_far_core_hours": 0.2750194444444445,
+ "projected_core_hours": 0.5373437669867016,
+ "cap": 0.75,
+ "peaks_ok": true,
+ "run_rest": true
+}
+2026-11-21T19:19:42Z tag=gp_projection rc=0 peak_rss_mib=26 wall_s=0.07 cpu_user_s=0.06 memavail_start_gib=23 disk_free_gib=437->437 slot=claude

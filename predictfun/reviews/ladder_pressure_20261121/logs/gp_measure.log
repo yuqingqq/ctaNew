@@ -1,0 +1,109 @@
+{
+ "predicates": {
+  "days": [
+   "20261024",
+   "20261025",
+   "20261026",
+   "20261027"
+  ],
+  "END_paired": {
+   "answer": "IMPROVES_EVERY_DAY",
+   "by_day": {
+    "20261024": 31276.762616277134,
+    "20261025": 36873.90531126577,
+    "20261026": 36125.09838414239,
+    "20261027": 19172.334949677756
+   },
+   "total": 123448.10126136304,
+   "markets_better": 18,
+   "markets_worse": 1,
+   "markets_equal": 0
+  },
+  "END_by_side": {
+   "bid": {
+    "answer": "MIXED",
+    "by_day": {
+     "20261024": -13429.516764440836,
+     "20261025": 38606.51098765071,
+     "20261026": 18875.34433331067,
+     "20261027": 123993.37314277545
+    }
+   },
+   "ask": {
+    "answer": "MIXED",
+    "by_day": {
+     "20261024": 44706.279380717955,
+     "20261025": -1732.6056763849265,
+     "20261026": 17249.754050831718,
+     "20261027": -104821.0381930977
+    }
+   }
+  },
+  "mo1s_per_share": {
+   "all": {
+    "answer": "IMPROVES_EVERY_DAY",
+    "by_day": {
+     "20261024": 0.7660778352974591,
+     "20261025": 1.2932269405228558,
+     "20261026": 0.7042854501892226,
+     "20261027": 1.55937590687866
+    }
+   },
+   "bid": {
+    "answer": "IMPROVES_EVERY_DAY",
+    "by_day": {
+     "20261024": 0.12819829224754753,
+     "20261025": 1.369437115242039,
+     "20261026": 0.3057949280480914,
+     "20261027": 1.2409645440841133
+    }
+   },
+   "ask": {
+    "answer": "IMPROVES_EVERY_DAY",
+    "by_day": {
+     "20261024": 1.392837437559879,
+     "20261025": 1.2169745019637208,
+     "20261026": 1.1063557174465957,
+     "20261027": 1.8746902970628052
+    }
+   }
+  },
+  "participation": {
+   "filled_q_delta_by_day": {
+    "20261024": -1968.0359873952839,
+    "20261025": -2551.6279671640514,
+    "20261026": -7857.050172669558,
+    "20261027": -5214.890575797432
+   },
+   "both_exact_delta": -0.005095372659837505,
+   "bid_exact_delta": -0.03942617449664432,
+   "ask_exact_delta": -0.06301324620275517,
+   "pulls": 433,
+   "withholds": 1289,
+   "reducing_suppressed": 980
+  },
+  "inventory": {
+   "mean_abs_delta": 0.08173754584284154,
+   "share_abs_ge_S_delta": -0.05592087601554224,
+   "terminal_abs_delta": 3.3347889456328232
+  },
+  "selection": "SELECTION_BEYOND_EXPOSURE",
+  "interpretation": "better_selection",
+  "note": "the second guard candidate of the ladder line on 19 consumed-day markets; no profitability, significance, validation or promotion claim"
+ },
+ "integration": {
+  "control_all": true,
+  "parity_rows": 14968,
+  "parity_mismatched": 0,
+  "parity_unavailable": 0,
+  "sign_mismatched": 0,
+  "causal_n": 64,
+  "causal_ok": 64,
+  "causal_same": 64,
+  "causal_same_signal": 64,
+  "causal_fired": 64,
+  "causal_cached_equal": 64,
+  "identity_gap_max": 7.275957614183426e-12
+ }
+}
+2026-11-21T19:22:27Z tag=gp_measure rc=0 peak_rss_mib=229 wall_s=1.85 cpu_user_s=1.65 memavail_start_gib=23 disk_free_gib=437->437 slot=claude

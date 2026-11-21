@@ -1,0 +1,85 @@
+{
+ "checks": {
+  "A_committed": true,
+  "A_rule": true,
+  "A_edges": true,
+  "A_sources": true,
+  "A_outputs": true,
+  "B_membership": false,
+  "B_pilot": true,
+  "C_disabled_equals_baseline": true,
+  "D_log": true,
+  "D_commands": true,
+  "D_requests": true,
+  "D_disabled_inert": true,
+  "E_accounting": true,
+  "F_reconcile": true,
+  "F_identity": true,
+  "F_selection": true,
+  "F_readings": true,
+  "G_parity": true,
+  "G_sign": true,
+  "G_causal": true,
+  "H_queue": true,
+  "I_resources": true
+ },
+ "cases": {
+  "coordinated_markout_and_reading": [
+   true,
+   true
+  ],
+  "logged_x_below_the_edge": [
+   true,
+   true
+  ],
+  "a_keep_at_an_on_tick": [
+   true,
+   true
+  ],
+  "disabled_fill_dropped": [
+   true,
+   true
+  ],
+  "cash_changed": [
+   true,
+   true
+  ],
+  "lost_end_changed": [
+   true,
+   true
+  ],
+  "selection_seed_changed": [
+   true,
+   true
+  ],
+  "stored_interpretation_changed": [
+   true,
+   true
+  ],
+  "a_cache_value_changed": [
+   true,
+   true
+  ],
+  "a_causal_entry_not_fired": [
+   true,
+   true
+  ],
+  "a_pull_without_its_queue_entry": [
+   true,
+   true
+  ],
+  "a_member_dropped": [
+   false,
+   true
+  ],
+  "a_record_rule_changed": [
+   true,
+   true
+  ],
+  "resources_over_the_cap": [
+   true,
+   true
+  ]
+ }
+}
+2026-11-21T19:19:53Z tag=gp_rehearse_checks rc=0 peak_rss_mib=338 wall_s=6.22 cpu_user_s=5.87 memavail_start_gib=23 disk_free_gib=437->437 slot=claude

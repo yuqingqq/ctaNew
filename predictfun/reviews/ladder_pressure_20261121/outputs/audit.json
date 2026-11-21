@@ -1,0 +1,179 @@
+{
+  "version": "binance_pressure_guard_v1",
+  "asof": "2026-11-21T19:22:29.385263+00:00",
+  "predicates": {
+    "days": [
+      "20261024",
+      "20261025",
+      "20261026",
+      "20261027"
+    ],
+    "END_paired": {
+      "answer": "IMPROVES_EVERY_DAY",
+      "by_day": {
+        "20261024": 31276.762616277134,
+        "20261025": 36873.90531126577,
+        "20261026": 36125.09838414239,
+        "20261027": 19172.334949677756
+      },
+      "total": 123448.10126136304,
+      "markets_better": 18,
+      "markets_worse": 1,
+      "markets_equal": 0
+    },
+    "END_by_side": {
+      "bid": {
+        "answer": "MIXED",
+        "by_day": {
+          "20261024": -13429.516764440836,
+          "20261025": 38606.51098765071,
+          "20261026": 18875.34433331067,
+          "20261027": 123993.37314277545
+        }
+      },
+      "ask": {
+        "answer": "MIXED",
+        "by_day": {
+          "20261024": 44706.279380717955,
+          "20261025": -1732.6056763849265,
+          "20261026": 17249.754050831718,
+          "20261027": -104821.0381930977
+        }
+      }
+    },
+    "mo1s_per_share": {
+      "all": {
+        "answer": "IMPROVES_EVERY_DAY",
+        "by_day": {
+          "20261024": 0.7660778352974591,
+          "20261025": 1.2932269405228558,
+          "20261026": 0.7042854501892226,
+          "20261027": 1.55937590687866
+        }
+      },
+      "bid": {
+        "answer": "IMPROVES_EVERY_DAY",
+        "by_day": {
+          "20261024": 0.12819829224754753,
+          "20261025": 1.369437115242039,
+          "20261026": 0.3057949280480914,
+          "20261027": 1.2409645440841133
+        }
+      },
+      "ask": {
+        "answer": "IMPROVES_EVERY_DAY",
+        "by_day": {
+          "20261024": 1.392837437559879,
+          "20261025": 1.2169745019637208,
+          "20261026": 1.1063557174465957,
+          "20261027": 1.8746902970628052
+        }
+      }
+    },
+    "participation": {
+      "filled_q_delta_by_day": {
+        "20261024": -1968.0359873952839,
+        "20261025": -2551.6279671640514,
+        "20261026": -7857.050172669558,
+        "20261027": -5214.890575797432
+      },
+      "both_exact_delta": -0.005095372659837505,
+      "bid_exact_delta": -0.03942617449664432,
+      "ask_exact_delta": -0.06301324620275517,
+      "pulls": 433,
+      "withholds": 1289,
+      "reducing_suppressed": 980
+    },
+    "inventory": {
+      "mean_abs_delta": 0.08173754584284154,
+      "share_abs_ge_S_delta": -0.05592087601554224,
+      "terminal_abs_delta": 3.3347889456328232
+    },
+    "selection": "SELECTION_BEYOND_EXPOSURE",
+    "interpretation": "better_selection",
+    "note": "the second guard candidate of the ladder line on 19 consumed-day markets; no profitability, significance, validation or promotion claim"
+  },
+  "integration": {
+    "control_all": true,
+    "parity_rows": 14968,
+    "parity_mismatched": 0,
+    "parity_unavailable": 0,
+    "sign_mismatched": 0,
+    "causal_n": 64,
+    "causal_ok": 64,
+    "causal_same": 64,
+    "causal_same_signal": 64,
+    "causal_fired": 64,
+    "causal_cached_equal": 64,
+    "identity_gap_max": 7.275957614183426e-12
+  },
+  "markets": 19,
+  "selection": {
+    "answer": "SELECTION_BEYOND_EXPOSURE",
+    "selected": 111,
+    "states": 4831,
+    "censored": 9,
+    "selected_censored": 0,
+    "J": -97.72575217515998,
+    "J_per_valid_share": -10.17056144734432,
+    "valid_window_q": 1066.5643728326534,
+    "total_window_q": 1066.5643728326534,
+    "excluded_window_q": 0.0,
+    "null_mean": -32.080587315003015,
+    "null_p05": -58.801108025440044,
+    "null_p95": -8.084515125723597,
+    "percentile": 0.0,
+    "null_q_p05": -5.372137808322056,
+    "strata": 887,
+    "movable_strata": 59,
+    "movable_selected": 104,
+    "degenerate_strata": 5,
+    "missing_feature": 0,
+    "per_side": {
+      "0": {
+        "selected": 51,
+        "J": -26.35989219840936,
+        "null_mean": -8.550463510957819,
+        "null_p05": -35.90424746823828,
+        "percentile": 0.132
+      },
+      "1": {
+        "selected": 60,
+        "J": -158.38673315539802,
+        "null_mean": -52.08119254844143,
+        "null_p05": -100.8007317043993,
+        "percentile": 0.0
+      }
+    },
+    "draws": 500,
+    "seed": 20261121,
+    "inputs": {
+      "states_sha256": "d50c718fd9f867ad4b28e46b8d9edad2da14603b1ec385498b3eb0777e0e2111",
+      "edges_sha256": "ca688917cd7ddc7c40e94031bee646f4fc1339511bb7c48fbe5270797a38bf80"
+    }
+  },
+  "outputs": {
+    "arms.csv": "2bba64b1ffb827d96d3d82f00f36a5a1d08ed72874e6ec741489d9759fb1a6af",
+    "control.csv": "3f5afe63e84ee5e12c2029d504dabd3cd092a3af4be1277ec7e6df5d9776933d",
+    "lost_added.csv": "6d398c579a0778c5a087b269a6f038e857759d6f057b8c577f3d5f41e250b7f1",
+    "causal.csv": "732492b342dda63a0cf0852264d578d45aca447430184d7847800acc3eebe732"
+  },
+  "sources": {
+    "pf_ladder_pressure.py": "357f1d19b32ab5a8d51bc26f884d03492d008c3653b981a147d0bbca17068114",
+    "pf_ladder_pressure_selftest.py": "9a380526b4b8b1486652a62fda1e027096e9c8afb580e7d3c68a388f6e11718e",
+    "pf_ladder_guard.py": "5349b75682108857eeb367f0da86ea387c1682e99ee1761f2b60f0d50e01c2fe",
+    "pf_ladder_rest.py": "d90016ce7d25f89f6f6c6662075f5be72539d3140373e42c8b7228ebcf8ce5e0",
+    "pf_branch_ladder.py": "c9e0852eccea5b4248001693fd8ddec083ea2df517dc8f3fd0d8b2f091ab285a",
+    "pf_branch_engine.py": "8b7960ef4bbbc178b281e57d92d4795d7678436c0ca875e7199e24a6626af3a8",
+    "pf_ladder_audit.py": "97a79a90a06062a775d3fe66f55da5172b3ffc2cf39e771cf52e6852fe38f44c",
+    "pf_pipeline_export.py": "ee2953fd00f70a7d12607abd4b418471b2208b8f9728009c7e538ccb55733931",
+    "pf_flow_price_data.py": "fa9112d1147e955b4ff4ff2c09d2c8c23e37418b3e2957cb2f47deaf9a907a4e",
+    "pf_flow_price_common.py": "beac0d747ec5dc84874fdee2f8e08057c1a47c819cfc648a762ea8950b0d1993",
+    "pf_stop_ev_minutes_inputs.py": "bbec0ff5d8f14a617b1ef83cfcdda659de1b4998ab25a9b05e098140316de7b6",
+    "pf_stop_model.py": "e2a857ddb6c4e76af40080e753942e1e0bef3bd42a34ed2929f378fe869df0ed",
+    "pf_stop_depth.py": "819d5e06d32b647cdac96cca0f9f9191eb033c9a9b6c1cfd160df3f0228aae46",
+    "pf_pull_depth.py": "a8670b2e9751f16dce37aab7c18ce35cc31fa3431e392b9a7397f4375a9114ef",
+    "pf_influence.py": "5c5bd6f61da5800fcc67045b8c5ec3b4ab61eede3a4383ac244f5dd405f6ac55"
+  },
+  "rule_sha256": "24f853dcfab0682e766742f506cb36faa86dd2f7c6170aed2febb801486d24fa"
+}

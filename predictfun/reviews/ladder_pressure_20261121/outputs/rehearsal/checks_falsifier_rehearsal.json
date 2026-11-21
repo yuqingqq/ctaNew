@@ -1,0 +1,131 @@
+{
+ "cases": {
+  "coordinated_markout_and_reading": {
+   "family": "F",
+   "target": "F_reconcile",
+   "clean": true,
+   "refused": true,
+   "flipped": [
+    "F_readings",
+    "F_reconcile"
+   ]
+  },
+  "logged_x_below_the_edge": {
+   "family": "D",
+   "target": "D_log",
+   "clean": true,
+   "refused": true,
+   "flipped": [
+    "D_log"
+   ]
+  },
+  "a_keep_at_an_on_tick": {
+   "family": "D",
+   "target": "D_commands",
+   "clean": true,
+   "refused": true,
+   "flipped": [
+    "D_commands"
+   ]
+  },
+  "disabled_fill_dropped": {
+   "family": "C",
+   "target": "C_disabled_equals_baseline",
+   "clean": true,
+   "refused": true,
+   "flipped": [
+    "C_disabled_equals_baseline"
+   ]
+  },
+  "cash_changed": {
+   "family": "E",
+   "target": "E_accounting",
+   "clean": true,
+   "refused": true,
+   "flipped": [
+    "E_accounting"
+   ]
+  },
+  "lost_end_changed": {
+   "family": "F",
+   "target": "F_identity",
+   "clean": true,
+   "refused": true,
+   "flipped": [
+    "F_identity"
+   ]
+  },
+  "selection_seed_changed": {
+   "family": "F",
+   "target": "F_selection",
+   "clean": true,
+   "refused": true,
+   "flipped": [
+    "F_selection"
+   ]
+  },
+  "stored_interpretation_changed": {
+   "family": "F",
+   "target": "F_readings",
+   "clean": true,
+   "refused": true,
+   "flipped": [
+    "F_readings"
+   ]
+  },
+  "a_cache_value_changed": {
+   "family": "G",
+   "target": "G_parity",
+   "clean": true,
+   "refused": true,
+   "flipped": [
+    "G_parity",
+    "G_sign"
+   ]
+  },
+  "a_causal_entry_not_fired": {
+   "family": "G",
+   "target": "G_causal",
+   "clean": true,
+   "refused": true,
+   "flipped": [
+    "G_causal"
+   ]
+  },
+  "a_pull_without_its_queue_entry": {
+   "family": "H",
+   "target": "H_queue",
+   "clean": true,
+   "refused": true,
+   "flipped": [
+    "H_queue"
+   ]
+  },
+  "a_member_dropped": {
+   "family": "B",
+   "target": "B_membership",
+   "clean": false,
+   "refused": true,
+   "flipped": []
+  },
+  "a_record_rule_changed": {
+   "family": "A",
+   "target": "A_rule",
+   "clean": true,
+   "refused": true,
+   "flipped": [
+    "A_rule"
+   ]
+  },
+  "resources_over_the_cap": {
+   "family": "I",
+   "target": "I_resources",
+   "clean": true,
+   "refused": true,
+   "flipped": [
+    "I_resources"
+   ]
+  }
+ },
+ "falsifier_ok": false
+}

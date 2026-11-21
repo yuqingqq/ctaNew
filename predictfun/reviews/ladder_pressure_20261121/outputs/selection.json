@@ -1,0 +1,44 @@
+{
+  "answer": "SELECTION_BEYOND_EXPOSURE",
+  "selected": 111,
+  "states": 4831,
+  "censored": 9,
+  "selected_censored": 0,
+  "J": -97.72575217515998,
+  "J_per_valid_share": -10.17056144734432,
+  "valid_window_q": 1066.5643728326534,
+  "total_window_q": 1066.5643728326534,
+  "excluded_window_q": 0.0,
+  "null_mean": -32.080587315003015,
+  "null_p05": -58.801108025440044,
+  "null_p95": -8.084515125723597,
+  "percentile": 0.0,
+  "null_q_p05": -5.372137808322056,
+  "strata": 887,
+  "movable_strata": 59,
+  "movable_selected": 104,
+  "degenerate_strata": 5,
+  "missing_feature": 0,
+  "per_side": {
+    "0": {
+      "selected": 51,
+      "J": -26.35989219840936,
+      "null_mean": -8.550463510957819,
+      "null_p05": -35.90424746823828,
+      "percentile": 0.132
+    },
+    "1": {
+      "selected": 60,
+      "J": -158.38673315539802,
+      "null_mean": -52.08119254844143,
+      "null_p05": -100.8007317043993,
+      "percentile": 0.0
+    }
+  },
+  "draws": 500,
+  "seed": 20261121,
+  "inputs": {
+    "states_sha256": "d50c718fd9f867ad4b28e46b8d9edad2da14603b1ec385498b3eb0777e0e2111",
+    "edges_sha256": "ca688917cd7ddc7c40e94031bee646f4fc1339511bb7c48fbe5270797a38bf80"
+  }
+}

@@ -40,6 +40,22 @@ ladder_audit_review_20261121_codex:
   additional_user_permission_within_scope: false
   untouched_validation: false
 
+ladder_pressure_results_20261121_dev:
+  status: done_one_candidate_replay
+  asof: "2026-11-21 19:25Z"
+  receipt: predictfun/reviews/ladder_pressure_20261121/report.md
+  freeze: 793c706b
+  disabled_control_equal: 19/19
+  END_paired: IMPROVES_EVERY_DAY
+  END_delta_cents: 123448.1
+  mo1s_per_share: IMPROVES_EVERY_DAY
+  selection: SELECTION_BEYOND_EXPOSURE
+  interpretation: better_selection
+  evidence: consumed_days_development_only
+  checks_all_true: true
+  cost_core_hours: 0.398
+  review_findings_2c5dbd53: addressed_1_2_3
+  next: one_combined_review_names_the_next_step
 ladder_pressure_20261121_dev:
   status: frozen_before_replay
   asof: "2026-11-21 19:17Z"

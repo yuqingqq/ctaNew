@@ -81,6 +81,19 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_PRESSURE_RESULTS_20261121_DEV -->
+## 2026-11-21 19:25Z (session aea5bfb9) — BINANCE-PRESSURE-GUARD-v1 RESULTS: INTERPRETATION BETTER_SELECTION (CONSUMED DAYS); CHECKS ALL TRUE
+
+- [Receipt](reviews/ladder_pressure_20261121/report.md); freeze `793c706b`, results in this commit. Disabled control 19 / 19; parity 14,968 rows bit-equal; causal 64 / 64.
+- **Paired END:** IMPROVES_EVERY_DAY (20261024 +31,276.8 c, 20261025 +36,873.9 c, 20261026 +36,125.1 c, 20261027 +19,172.3 c; total +123,448.1 c; 18 better / 1 worse).
+- **+1 s per share:** IMPROVES_EVERY_DAY (bid IMPROVES_EVERY_DAY, ask IMPROVES_EVERY_DAY); eligible +1 s delta +117,919.6 c; +50 ms delta +64,093.9 c; filled shares -17,591.6.
+- **Selection control:** SELECTION_BEYOND_EXPOSURE (percentile 0.00 %; bids alone 13.20 %, asks 0.00 %).
+- **Validity:** checks 22 / 22, falsifier 14 / 14, rehearsal before the full run, mutants 29 / 29; 0.398 core-hours of 0.75.
+- **Review 2c5dbd53 findings 1-3 addressed:** ledger-reconciled checker with the coordinated falsifier case; queue diagnostics; isolated guard tests.
+- **Watch:** consumed-day development evidence only - the feature and its edges came from the audit of these markets; any validation needs untouched days (a USER decision).
+- **Next:** the ONE combined review, which names the next step.
+<!-- /LADDER_PRESSURE_RESULTS_20261121_DEV -->
+
 <!-- LADDER_PRESSURE_FREEZE_20261121_DEV -->
 ## 2026-11-21 19:17Z (session aea5bfb9) — BINANCE-PRESSURE-GUARD-v1 FROZEN before any replay (review 2c5dbd53's ONE next priority; its three findings hold)
 

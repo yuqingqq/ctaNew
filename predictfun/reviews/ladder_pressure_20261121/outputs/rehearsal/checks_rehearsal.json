@@ -1,0 +1,78 @@
+{
+ "checks": {
+  "A_committed": true,
+  "A_rule": true,
+  "A_edges": true,
+  "A_sources": true,
+  "A_outputs": true,
+  "B_membership": false,
+  "B_pilot": true,
+  "C_disabled_equals_baseline": true,
+  "D_log": true,
+  "D_commands": true,
+  "D_requests": true,
+  "D_disabled_inert": true,
+  "E_accounting": true,
+  "F_reconcile": true,
+  "F_identity": true,
+  "F_selection": true,
+  "F_readings": true,
+  "G_parity": true,
+  "G_sign": true,
+  "G_causal": true,
+  "H_queue": true,
+  "I_resources": true
+ },
+ "details": {
+  "complete": {
+   "20261024": 7,
+   "20261025": 5,
+   "20261026": 5,
+   "20261027": 2
+  },
+  "C_mismatch": 0,
+  "D_log_bad": 0,
+  "D_command_escapes": 0,
+  "D_repeat_requests": 0,
+  "D_disabled_bad": 0,
+  "D_commands_at_on_ticks": 2701,
+  "F_reconcile_bad": 0,
+  "F_identity_bad": 0,
+  "F_selection": {
+   "answer": "SELECTION_BEYOND_EXPOSURE",
+   "selected": 111,
+   "states": 4831,
+   "J": -97.72575217515998,
+   "null_mean": -32.080587315003015,
+   "null_p05": -58.801108025440044,
+   "movable_strata": 59,
+   "valid_window_q": 1066.5643728326534,
+   "total_window_q": 1066.5643728326534,
+   "excluded_window_q": 0.0
+  },
+  "F_readings": {
+   "END_by_day": {
+    "20261024": 13443.852768045956,
+    "20261025": 23893.88962821338,
+    "20261026": 12308.675447732825,
+    "20261027": 19172.334949677756
+   },
+   "per_share_all": {
+    "20261024": 0.31361005055047364,
+    "20261025": 1.4188193328440486,
+    "20261026": 0.4062372730155479,
+    "20261027": 1.559375906878658
+   },
+   "interpretation": "better_selection"
+  },
+  "G_parity_bad": 0,
+  "G_sign_bad": 0,
+  "G_causal_bad": 0,
+  "H_queue_bad": 0,
+  "I": {
+   "core_hours": 0.2758138888888889,
+   "peak_mib": 1276
+  }
+ },
+ "all_ok": false
+}
