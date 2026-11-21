@@ -1,0 +1,63 @@
+{
+ "all_true": true,
+ "asof": "2026-11-21T10:24:19.699213+00:00",
+ "checks": {
+  "A_identity": true,
+  "B_prefix": true,
+  "C_targets": true,
+  "D_forecasts": true,
+  "E_measurements": true,
+  "F_predicates": true,
+  "G_resources": true,
+  "H_suites": true
+ },
+ "readings": {
+  "A": {
+   "bad": [],
+   "forks": 768,
+   "stage_rows": 2304
+  },
+  "B": {
+   "examples": [],
+   "failing": 0,
+   "rows": 756
+  },
+  "C": {
+   "examples": [],
+   "failing": 0,
+   "rows": 756
+  },
+  "D": {
+   "examples": [],
+   "failing": 0,
+   "rows": 756
+  },
+  "E": {
+   "bad": []
+  },
+  "F": {
+   "readings": {
+    "entry_identifiable": false,
+    "forecasts_fail": true,
+    "not_distinguishable": false,
+    "review_protective": false
+   },
+   "same": true
+  },
+  "G": {
+   "bad": [],
+   "core_hours": 0.3280944444444447,
+   "jobs": 81,
+   "part_hwm_max": 1180.25,
+   "peak_mib": 1180
+  },
+  "H": {
+   "extra_files": [],
+   "failures": [],
+   "judge_ok": true,
+   "one_record_per_file": true,
+   "planted": 32
+  }
+ },
+ "source_sha256": "c5c6d031ee6b658846d1370035e9024e11d8805ab23575c31db0e75f563e6623"
+}

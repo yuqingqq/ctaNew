@@ -1,0 +1,22 @@
+{
+ "checks": {
+  "A_identity": true,
+  "B_prefix": true,
+  "C_targets": true,
+  "D_forecasts": true,
+  "E_measurements": true,
+  "F_predicates": true,
+  "G_resources": true,
+  "H_suites": true
+ },
+ "all_true": true
+}
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/entry_retention_20261121/retention_checks.py", line 393, in <module>
+    main(); falsify()
+            ^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/entry_retention_20261121/retention_checks.py", line 320, in falsify
+    res[name] = dict(clean=safe(chk, clean, clean_e, {}), corrupted=safe(chk, *args_c, {}) if on == 'out' else safe(chk, *args_x, {}), applied=bool(ap))
+                                                                    ^^^^^^^^^^^^^^^^^^^^^^
+TypeError: Value after * must be an iterable, not PosixPath
+2026-11-21T10:24:10Z tag=retention_checks rc=1 peak_rss_mib=251 wall_s=9.77 cpu_user_s=9.47 memavail_start_gib=22 disk_free_gib=445->445 slot=claude
