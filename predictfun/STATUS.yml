@@ -719,6 +719,20 @@ pipeline_one_day_v3_20261119:
   values_equal_v2: {cells_per_day: 190, differing: 0}
   attribution_vs_pull_all_c: {"20261026": {first_step: 0.0, later: 954.33, never: 995.36, no_prediction: 0.0}, "20261027": {first_step: 0.0, later: -821.85, never: 251.74, no_prediction: 0.0}}
 
+movement_audit_20261121:
+  status: done_pi0_movement_calibration_audit_v1_no_fit
+  asof: "2026-11-21 12:07Z"
+  receipt: predictfun/reviews/movement_audit_20261121/report.md
+  commits: {freeze: 03243e5b}
+  checks: {all_true: true, falsifier_ok: true, mutants_caught: 64, mutants: 64}
+  cohorts: {admitted: 329, forced: 768}
+  entry_values: {bias_V: 11.0994, mov_prob: 0.3102, mov_cond: 11.6711, c_admitted: 38.5679, c_forced_overlap: 3.1091, post_fill_per_share: -1.8489, total_per_share: -2.1403}
+  reading_entry: {i: concentrated, ii: both, iii: material, iv: populated, recommendation: representation_or_data_needed}
+  reading_first_review: {i: concentrated, ii: decision_state, iii: material, iv: populated, recommendation: representation_or_data_needed}
+  reading_first_pull: {i: concentrated, ii: decision_state, iii: material, iv: populated, recommendation: representation_or_data_needed}
+  control: {selected: 233, eligible: 299, percentile: 0.806, cell_equal_admission: 299}
+  cost_core_hours: 0.275
+  next: combined_review_names_the_next_priority
 pi0_admission_20261121:
   status: done_pi0_admission_exposure_v1_no_fit
   asof: "2026-11-21 11:13Z"

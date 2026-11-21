@@ -1,0 +1,98 @@
+{
+ "statuses": [
+  {
+   "cohort": "admitted",
+   "stage": "entry",
+   "acc_status": "ok",
+   "n": 329
+  },
+  {
+   "cohort": "admitted",
+   "stage": "first_pull",
+   "acc_status": "not_eligible",
+   "n": 61
+  },
+  {
+   "cohort": "admitted",
+   "stage": "first_pull",
+   "acc_status": "ok",
+   "n": 268
+  },
+  {
+   "cohort": "admitted",
+   "stage": "first_review",
+   "acc_status": "not_eligible",
+   "n": 30
+  },
+  {
+   "cohort": "admitted",
+   "stage": "first_review",
+   "acc_status": "ok",
+   "n": 299
+  },
+  {
+   "cohort": "forced",
+   "stage": "entry",
+   "acc_status": "not_eligible",
+   "n": 13
+  },
+  {
+   "cohort": "forced",
+   "stage": "entry",
+   "acc_status": "ok",
+   "n": 755
+  },
+  {
+   "cohort": "forced",
+   "stage": "first_pull",
+   "acc_status": "not_eligible",
+   "n": 54
+  },
+  {
+   "cohort": "forced",
+   "stage": "first_pull",
+   "acc_status": "ok",
+   "n": 714
+  },
+  {
+   "cohort": "forced",
+   "stage": "first_review",
+   "acc_status": "not_eligible",
+   "n": 50
+  },
+  {
+   "cohort": "forced",
+   "stage": "first_review",
+   "acc_status": "ok",
+   "n": 718
+  }
+ ],
+ "fill_statuses": [
+  {
+   "cohort": "admitted",
+   "ref_status": "ok",
+   "n": 535
+  },
+  {
+   "cohort": "forced",
+   "ref_status": "ok",
+   "n": 2235
+  }
+ ],
+ "membership": {
+  "admitted_rows": 329,
+  "admitted_keys": 329,
+  "admitted_equal": true,
+  "forced_rows": 768,
+  "forced_keys": 768,
+  "forced_equal": true,
+  "weight_mismatch": 0,
+  "admitted_weight_sum": 689.0
+ },
+ "recommendation": [
+  "representation_or_data_needed",
+  "representation_or_data_needed",
+  "representation_or_data_needed"
+ ]
+}
+2026-11-21T12:01:42Z tag=mov_measure rc=0 peak_rss_mib=271 wall_s=3.31 cpu_user_s=3.08 memavail_start_gib=22 disk_free_gib=443->443 slot=claude

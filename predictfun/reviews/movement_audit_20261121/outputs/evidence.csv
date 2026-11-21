@@ -1,0 +1,16 @@
+stage,question,answer,detail
+entry,i,concentrated,"{""cells"": {""20261026/0"": 6.136211705525238, ""20261026/1"": 34.22895154496286, ""20261027/0"": 0.46394478511151344, ""20261027/1"": 16.389086208352396}, ""positive_cells"": 4, ""top5_world_share"": 0.5913974528681527}"
+entry,ii,both,"{""decision_ranges"": {""hbin"": 33.63892518722061, ""obin"": 34.20324909022983, ""qbin"": 65.37633250727497}, ""delay_range"": 61.146642668638506}"
+entry,iii,material,"{""c_admitted"": 38.56792593006221, ""c_forced_all"": -0.7138910719803113, ""c_forced_overlap"": 3.1091167157462225, ""fills_admitted"": 88, ""fills_forced_overlap"": 153}"
+entry,iv,populated,"{""populated_cells"": {""hbin"": 2, ""obin"": 3, ""qbin"": 3}}"
+entry,recommendation,representation_or_data_needed,
+first_review,i,concentrated,"{""cells"": {""20261026/0"": 1.678604960967586, ""20261026/1"": 30.442535062754775, ""20261027/0"": -3.8987857949290667, ""20261027/1"": 5.416049828337731}, ""positive_cells"": 3, ""top5_world_share"": 0.525591191371515}"
+first_review,ii,decision_state,"{""decision_ranges"": {""hbin"": 34.47762491898483, ""obin"": 28.14629384652553, ""qbin"": 95.22141336226633}, ""delay_range"": 59.471828053718454}"
+first_review,iii,material,"{""c_admitted"": 17.16689400170384, ""c_forced_all"": -7.828524271449725, ""c_forced_overlap"": -0.8478267812663354, ""fills_admitted"": 79, ""fills_forced_overlap"": 143}"
+first_review,iv,populated,"{""populated_cells"": {""hbin"": 2, ""obin"": 3, ""qbin"": 3}}"
+first_review,recommendation,representation_or_data_needed,
+first_pull,i,concentrated,"{""cells"": {""20261026/0"": 1.5974057128405348, ""20261026/1"": 34.75255871110598, ""20261027/0"": -6.129093960729399, ""20261027/1"": 5.222502455403521}, ""positive_cells"": 3, ""top5_world_share"": 0.5141440581517573}"
+first_pull,ii,decision_state,"{""decision_ranges"": {""hbin"": 41.408076869874, ""obin"": 29.27840453981027, ""qbin"": 107.90317121716704}, ""delay_range"": 67.74084458469726}"
+first_pull,iii,material,"{""c_admitted"": 17.372225201642518, ""c_forced_all"": -9.00132305302102, ""c_forced_overlap"": -0.8730809974416862, ""fills_admitted"": 73, ""fills_forced_overlap"": 143}"
+first_pull,iv,populated,"{""populated_cells"": {""hbin"": 2, ""obin"": 3, ""qbin"": 3}}"
+first_pull,recommendation,representation_or_data_needed,

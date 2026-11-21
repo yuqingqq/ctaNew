@@ -1,0 +1,88 @@
+{
+ "version": "pi0_movement_audit_v1",
+ "part": 11,
+ "day": "20261027",
+ "rows": 4,
+ "mids": {
+  "[\"20261027\", 3887618, 1793138315000, 0, 2, 500]": {
+   "status": "ok",
+   "mids": {
+    "0": {
+     "mid": 6.5,
+     "frame_t": 4728.0,
+     "recv_t": 4836.772705078125
+    }
+   }
+  },
+  "[\"20261027\", 3887618, 1793138315000, 0, 5, 1250]": {
+   "status": "ok",
+   "mids": {
+    "0": {
+     "mid": 6.5,
+     "frame_t": 4728.0,
+     "recv_t": 4836.772705078125
+    }
+   }
+  },
+  "[\"20261027\", 3887618, 1793138315000, 0, 7, 1750]": {
+   "status": "ok",
+   "mids": {
+    "0": {
+     "mid": 6.5,
+     "frame_t": 4728.0,
+     "recv_t": 4836.772705078125
+    }
+   }
+  },
+  "[\"20261027\", 3899966, 1793144710000, 1, 2, 4000]": {
+   "status": "ok",
+   "mids": {
+    "0": {
+     "mid": 58.5,
+     "frame_t": 4146.0,
+     "recv_t": 4251.00537109375
+    },
+    "1": {
+     "mid": 58.5,
+     "frame_t": 4349.0,
+     "recv_t": 4366.5830078125
+    }
+   }
+  }
+ },
+ "sha256": "11d4c5fbc85f1c7f1e64c582dce1f925a7f4b5a10117f12030822a74e4dda19b",
+ "admission_manifest_sha256": "3c5bf097328ee2cd31a4e7d1b17d6aadc8559559ccd74f91154f15614b91696c",
+ "admission_record_sha256": "45f5cea72859ddd2deab4aff14c7891a419e58302c11c1f7c36f3dc54beda056",
+ "sources": {
+  "pf_movement_audit.py": "21b13b801fc08c1cb48142dfa79cf540c272a7bdd50810dc357016088ea97d9a",
+  "pf_movement_audit_selftest.py": "2258d404a99964c44fea928c76089c1e58c3bfb3b9f1a81c77fa001ff045abb3",
+  "pf_pi0_admission.py": "a47f5690a9caacb38c5c734e6501993af7816bf3097129eabb619f2f454e450d",
+  "pf_entry_retention.py": "93f8050f39ca8df0f9b8955bdfd0ef16623b4bfd8c7e2bc664c920bac867f732",
+  "pf_adv2_replay.py": "e5d0f55d5c534d1cfb008e361641334dc503a22d10015a88cde0ea4686b8752a"
+ },
+ "elapsed_s": 56.09095907211304,
+ "hwm_mib": 1125.8671875,
+ "timing": {
+  "load_s": 55.88878774642944,
+  "worlds": [
+   {
+    "census_s": null,
+    "pair_s": [
+     0.09853625297546387
+    ],
+    "world_s": 0.09872198104858398
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     0.10293841361999512
+    ],
+    "world_s": 0.1030726432800293
+   }
+  ],
+  "pairs": 2,
+  "pair_mean_s": 0.10073733329772949,
+  "pair_max_s": 0.10293841361999512
+ },
+ "asof": "2026-11-21T12:01:21.961591+00:00"
+}

@@ -1,0 +1,16 @@
+{
+ "pilot_cpu_s": 60.52,
+ "pilot_wall_s": 65.64,
+ "pilot_peak_mib": 1129,
+ "pilot_rc": 0,
+ "pilot_record": true,
+ "pilot_hwm_mib": 1129.109375,
+ "partitions_with_fills": 12,
+ "worlds_with_fills": 56,
+ "pilot_worlds": 3,
+ "so_far_core_hours": 0.09261666666666664,
+ "projected_core_hours": 0.40642407407407405,
+ "ceiling": 1.0,
+ "run_rest": true
+}
+2026-11-21T11:58:07Z tag=mov_pilot_projection rc=0 peak_rss_mib=19 wall_s=0.12 cpu_user_s=0.11 memavail_start_gib=22 disk_free_gib=442->442 slot=claude
