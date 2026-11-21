@@ -243,6 +243,7 @@ def run(S):  # noqa: C901
             okr = [i for i, r in enumerate(rows) if r['status'] == 'ok']; mx = [i for i in okr if rows[i]['pick'] == 'extra']
             must(bool(okr) and bool(mx), 'validator: part 0 has no ok row or no ok extra pick for the corruptions')
             i = okr[0]; j = mx[0]; arm0, arm1 = S.NAMES[rows[i]['head']]; ow = plan['partitions'][1]['members'][0]
+            ipf = [n for n in okr if rows[n]['row_key']['decision_ms'] > 0][0]                 # a fork after 0 ms (for the pre-fork fill)
             def mod(fn, which='rows'):
                 rr, qq = json.loads(json.dumps(rows)), json.loads(json.dumps(pools_)); fn(rr if which == 'rows' else qq); return rr, qq
             def mod2(fn):
@@ -265,7 +266,7 @@ def run(S):  # noqa: C901
                 gen = [x for x in range(len(A['sizes'])) if A['sizes'][x] - filled.get(x, 0.) >= 1.][0]
                 A['fill_list'] = sorted(A['fill_list'] + [[t_fill, gen, 0, 1., 40.]], key=lambda f: float(f[0])); relabel(r, A)
             def as_missing(r, status='missing_mark'):
-                r['status'] = 'pair_not_ok'; r['result'] = dict(status=status, fork_fingerprint=r['fork_fingerprint']) if status == 'missing_mark' else dict(status=status, state='live')
+                r['status'] = 'pair_not_ok'; r['result'] = dict(status=status, fork_fingerprint=r['fork_fingerprint'])   # only the data-status rule can tell them apart
             def ledger_shift(r):
                 A = r['result']['arms'][arm0]; A['position'] += 1; A['cash'] -= A['mark']
             def keyshift(r):
@@ -291,8 +292,8 @@ def run(S):  # noqa: C901
                 'R != cash + position x mark': mod(lambda rr: (rr[i]['result']['arms'][arm0].__setitem__('value', rr[i]['result']['arms'][arm0]['value'] + 1.),
                                                                rr[i]['result'].__setitem__('Y', rr[i]['result']['Y'] + 1.))),
                 'a self-consistent ledger change': mod(lambda rr: ledger_shift(rr[i])),
-                'an added (zero) fill': mod(lambda rr: rr[i]['result']['arms'][arm0]['fill_list'].append([1e9, 0, 0, 0., 1.])),
-                'a consistent pre-fork fill in one arm': mod(lambda rr: add_fill(rr[i], arm1, True)),
+                'an added (zero) fill': mod(lambda rr: rr[i]['result']['arms'][arm0]['fill_list'].append([4999., 0, 0, 0., 1.])),   # inside the episode: only the hash / count sees it
+                'a consistent pre-fork fill in one arm': mod(lambda rr: add_fill(rr[ipf], S.NAMES[rr[ipf]['head']][1], True)),   # a fork after 0 ms: the fill stays inside the episode
                 'an overfilled generation': mod(lambda rr: add_fill(rr[i], arm0, False, True)),
                 'another side': mod(lambda rr: rr[i]['result'].__setitem__('side', 1 - rr[i]['result']['side'])),
                 'another original': mod(lambda rr: rr[i]['result']['ident'].__setitem__('original_episode_id', rr[i]['result']['ident']['original_episode_id'] + 1)),
@@ -304,6 +305,7 @@ def run(S):  # noqa: C901
                 'a duplicated pool key': mod(lambda qq: (qq[pk_i]['keys'].append(dict(qq[pk_i]['keys'][0])), qq[pk_i]['counts'].__setitem__('ok', qq[pk_i]['counts']['ok'] + 1),
                                                          qq[pk_i]['kinds'].__setitem__(qq[pk_i]['head'], qq[pk_i]['kinds'][qq[pk_i]['head']] + 1)), 'pools'),
                 'a NaN mark': mod(lambda rr: rr[i]['result']['arms'][arm0].__setitem__('mark', float('nan'))),
+                'a NaN arm value': mod(lambda rr: rr[i]['result']['arms'][arm0].__setitem__('value', float('nan'))),   # only the finite check sees it
                 'feature_unavailable with a false reconciliation': mod(lambda rr: (rr[i].__setitem__('status', 'feature_unavailable'), rr[i]['fork'].__setitem__('status', 'feature_unavailable'),
                                                                                 rr[i]['result'].__setitem__('reconciled', False))),
                 'an intact pair relabelled pair_not_ok': mod(lambda rr: rr[i].__setitem__('status', 'pair_not_ok')),
@@ -314,7 +316,9 @@ def run(S):  # noqa: C901
                 'a skipped required callback': mod(lambda rr: (rr[i]['result']['arms'][arm0]['teacher'].__setitem__('calls', rr[i]['result']['arms'][arm0]['teacher']['calls'] - 1),
                                                                rr[i]['result']['arms'][arm0]['teacher'].__setitem__('binding_checked', rr[i]['result']['arms'][arm0]['teacher']['binding_checked'] - 1))),
                 'an edited decision log': mod(lambda rr: rr[i]['result']['arms'][arm0]['decision_list'].pop()),
-                'a wrong audit denominator': mod(lambda rr: rr[i]['causal'][0].__setitem__('checked', rr[i]['causal'][0]['checked'] + 1))}
+                'a count-neutral decision-log edit': mod(lambda rr: rr[i]['result']['arms'][arm0]['decision_list'][-1].__setitem__(3, 'EDITED')),   # only the hash sees it
+                'a wrong audit denominator': mod(lambda rr: rr[i]['causal'][0].__setitem__('checked', rr[i]['causal'][0]['checked'] + 1)),
+                'a feature exclusion without its reason': mod(lambda rr: (rr[i].__setitem__('status', 'feature_unavailable'), rr[i]['fork'].__setitem__('status', 'error')))}
             must(not vbad(S, plan, psha, part, *mod2(lambda rr, qq: as_missing(rr[i]))), 'validator: a legitimate missing_mark exclusion was refused')
             w0 = part['members'][0]; wk0 = (w0['m'], w0['t_ms']); sel0 = [x for x in plan['sample'][day]['selected'] if (x['m'], x['t_ms']) == wk0][0]
             def as_world_status(rr, qq, n=4, keep_pool=False):                              # a world without an episode: four status picks, no pool lines

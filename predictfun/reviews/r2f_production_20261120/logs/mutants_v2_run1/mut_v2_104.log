@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "104", "name": "the common mark unchecked", "seconds": 49.7, "sources": {"pf_r2_label_sample.py": "4cdeff0c6d491611", "pf_r2_label_sample_mutants.py": "ce0c703833269dc0", "pf_r2_label_sample_selftest.py": "0941600079467125"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['another common mark']"}
+2026-11-20T20:00:33Z tag=mut_v2_104 rc=0 peak_rss_mib=287 wall_s=49.88 cpu_user_s=48.96 memavail_start_gib=22 disk_free_gib=437->438 slot=claude

@@ -1,0 +1,28 @@
+{
+ "asof": "2026-11-20T19:48:01.356445+00:00",
+ "audit_checks": {
+  "new": 2202,
+  "old": 9715
+ },
+ "audit_every": {
+  "new": 35,
+  "old": 7
+ },
+ "new_cpu_s": 1091.7002482414246,
+ "new_hwm_mib": 1158.94921875,
+ "new_pair_s_mean": 2.403387868569957,
+ "parity": true,
+ "plans_same_partitions": true,
+ "plans_same_sample": true,
+ "pools": {
+  "differing": 0,
+  "new": 192,
+  "old": 192
+ },
+ "rows": {
+  "differing": 0,
+  "first_differing": [],
+  "new": 288,
+  "old": 288
+ }
+}

@@ -81,35 +81,77 @@ def main():  # noqa: C901
     ck['B_runs'] = bool(all(j is not None and j['rc'] == 0 for j in jobs.values()) and all(S.part_paths(P, p['part'])[0].exists() for p in pa['partitions']))
     par = json.loads((HERE / 'parity.json').read_text()); ck['C_parity'] = bool(par['parity'])
     acc = json.loads((P / 'accepted.json').read_text()); ck['D_acceptance'] = bool(acc['accepted'] and acc['plan_sha256'] == psha)
-    PA = [(p, json.loads(S.part_paths(P, p['part'])[0].read_text()), S.part_paths(P, p['part'])[1].read_bytes(), S.part_paths(P, p['part'])[2].read_bytes()) for p in pa['partitions']]
-    recs = [r for _, r, _, _ in PA]; peaks = [j['peak'] for j in jobs.values() if j] + [x['peak'] for x in (run_light('r2f_plan_production'), run_light('r2f_finalize')) if x]
+    # v1.2 (logs/declaration_v1_2.txt): one partition in memory at a time. Per partition: the revalidation, the controls, then the rows reduced
+    # to the scalar fields the readings use (slim) and the per-row accumulations (causal, teacher, delivered, paths, arms, coverage), in v1.1's
+    # order. The predicates and readings are v1.1's.
+    recs, reval, ctl, slim = [], [], [], []
+    cz, tch, dl, pth, cov = collections.Counter(), collections.Counter(), collections.Counter(), collections.Counter(), collections.Counter()
+    arm = collections.defaultdict(collections.Counter)
+
+    def corrupt(part_, rows_, pools_, i, fn):
+        rr = json.loads(json.dumps(rows_)); fn(rr[i]); return bool(S.validate(pa, psha, part_, rr, pools_))
+    for part_ in pa['partitions']:
+        rp, fp, pp = S.part_paths(P, part_['part']); rec = json.loads(rp.read_text()); b, q = fp.read_bytes(), pp.read_bytes(); recs.append(rec)
+        reval.append(S.validate(pa, psha, part_, S.gz_rows(b), S.gz_rows(q), rec, (b, q)))
+        rows_, pools_ = S.gz_rows(b), S.gz_rows(q); i = [n for n, r in enumerate(rows_) if r['status'] == 'ok'][0]; a0 = S.NAMES[rows_[i]['head']][0]
+        c_ = {'Y + 1': corrupt(part_, rows_, pools_, i, lambda r: r['result'].__setitem__('Y', r['result']['Y'] + 1.)),
+              'another fork': corrupt(part_, rows_, pools_, i, lambda r: r['result'].__setitem__('fork_fingerprint', '0' * 64)),
+              'reconciled false': corrupt(part_, rows_, pools_, i, lambda r: r['result'].__setitem__('reconciled', False)),
+              'binding_bad 1': corrupt(part_, rows_, pools_, i, lambda r: r['result']['arms'][a0]['teacher'].__setitem__('binding_bad', 1)),
+              'feature_unavailable, reconciled false': corrupt(part_, rows_, pools_, i, lambda r: (r.__setitem__('status', 'feature_unavailable'),
+                                                                                                r['fork'].__setitem__('status', 'feature_unavailable'),
+                                                                                                r['result'].__setitem__('reconciled', False))),
+              'relabelled pair_not_ok': corrupt(part_, rows_, pools_, i, lambda r: r.__setitem__('status', 'pair_not_ok')),
+              'END 4,000': corrupt(part_, rows_, pools_, i, lambda r: r['result'].__setitem__('end', 4000.))}
+        ctl.append(dict(part=part_['part'], refused=c_, intact=not S.validate(pa, psha, part_, rows_, pools_, rec, (b, q))))
+        rows_ = pools_ = None
+        for r in S.gz_rows(b):
+            ok_r = r['status'] == 'ok'
+            slim.append(dict(day=r['day'], m=r['m'], t_ms=r['t_ms'], side=r['side'], head=r['head'], hour=r['hour'], source=r.get('source'), status=r['status'],
+                             w=r['w'], Y=r['result']['Y'] if ok_r else None))
+            if not ok_r:
+                continue
+            for c in r['causal']:
+                for k_ in ('checked', 'mismatch', 'parity_checked', 'parity_mismatch'):
+                    cz[k_] += c[k_]
+            for n_ in S.NAMES[r['head']]:
+                t = r['result']['arms'][n_]['teacher']
+                tch['binding_checked'] += t['binding_checked']; tch['binding_bad'] += t['binding_bad']; tch['binding_bad_arms'] += int(t['binding_bad'] != 0)
+                tch['zero_callback_arms'] += int(t['calls'] == 0)
+            if r['fork']['delivered_changed']:
+                dl[r['day']] += 1
+            a_, b_ = (r['result']['arms'][n] for n in S.NAMES[r['head']])
+            same = a_['fill_list'] == b_['fill_list']
+            cls = 'identical fills' if same else ('path-only (Y = 0, equal cash and inventory)' if r['result']['Y'] == 0 and a_['cash'] == b_['cash'] and a_['position'] == b_['position']
+                                                  else 'economic (Y != 0)' if r['result']['Y'] != 0 else 'other (Y = 0, cash or inventory differ)')
+            pth[(r['day'], r['head'], cls)] += 1
+            for n_ in S.NAMES[r['head']]:
+                A_ = r['result']['arms'][n_]; t_ = A_['teacher'] or {}; c_ = arm[(r['day'], r['head'], n_)]
+                c_['rows'] += 1; c_['value_sum'] += A_['value']; c_['cash_sum'] += A_['cash']; c_['position_sum'] += A_['position']; c_['inventory_nonzero_rows'] += int(A_['position'] != 0)
+                c_['fills'] += A_['fills']; c_['filled_qty'] += sum(float(f[3]) for f in A_['fill_list']); c_['generations'] += A_['generations']
+                c_['open_at_end_rows'] += int(any(float(v) > 0 for v in A_['open_at_end'].values())); c_['teacher_calls'] += t_.get('calls', 0)
+                for k_, v_ in (t_.get('by_action') or {}).items():
+                    c_[f'action {k_}'] += v_
+                for k_, v_ in (t_.get('by_status') or {}).items():
+                    c_[f'status {k_}'] += v_
+            k = r['row_key']; g_ = k['generation']
+            for dim, v in (('source', r['source']), ('decision_ms', dbin(k['decision_ms'])), ('remaining_ms', rbin(k['decision_ms'])),
+                           ('generation', 'none' if g_ is None else ('3+' if g_ >= 3 else str(g_))), ('partial_queue', 'known_filled>0' if r['result']['fork_known_filled'] > 0 else 'none'),
+                           ('support', str(r['fork']['support'])), ('utc_hour', f"{r['hour']:02d}"), ('side', str(r['side']))):
+                cov[(r['day'], r['head'], dim, v)] += 1
+        b = q = None
+    rows = slim; ok = [r for r in rows if r['status'] == 'ok']; picked = [r for r in rows if r['status'] in S.PICKED]
+    peaks = [j['peak'] for j in jobs.values() if j] + [x['peak'] for x in (run_light('r2f_plan_production'), run_light('r2f_finalize')) if x]
     bounds = {p['part']: pa['limits']['load_s'] + pa['limits']['world_s'] * len(p['members']) for p in pa['partitions']}
     ck['E_resources'] = bool(max(peaks) <= 1536 and all(r['hwm_mib'] <= 1536 and r['max_pair_s'] <= 120 and r['elapsed_s'] <= bounds[r['part']] for r in recs)
                              and not ((P / 'stops.jsonl').exists() and (P / 'stops.jsonl').read_text().strip()))
-    rows = [r for _, _, b, _ in PA for r in S.gz_rows(b)]; ok = [r for r in rows if r['status'] == 'ok']; picked = [r for r in rows if r['status'] in S.PICKED]
-    reval = [S.validate(pa, psha, p, S.gz_rows(b), S.gz_rows(q), rec, (b, q)) for p, rec, b, q in PA]
-    cz = [c for r in ok for c in r['causal']]; tch = [r['result']['arms'][n]['teacher'] for r in ok for n in S.NAMES[r['head']]]
-    dl = collections.Counter(r['day'] for r in ok if r['fork']['delivered_changed'])
-    ck['F_labels'] = bool(not any(reval) and sum(c['checked'] for c in cz) > 0 and sum(c['mismatch'] for c in cz) == 0 and sum(c['parity_mismatch'] for c in cz) == 0
-                          and all(t['binding_bad'] == 0 for t in tch) and all(dl[d] >= 1 for d in days))
-    def corrupt(rows_, pools_, i, fn):
-        rr = json.loads(json.dumps(rows_)); fn(rr[i]); return bool(S.validate(pa, psha, part_, rr, pools_))
-    ctl = []
-    for part_, rec, b, q in PA:
-        rows_, pools_ = S.gz_rows(b), S.gz_rows(q); i = [n for n, r in enumerate(rows_) if r['status'] == 'ok'][0]; a0 = S.NAMES[rows_[i]['head']][0]
-        c_ = {'Y + 1': corrupt(rows_, pools_, i, lambda r: r['result'].__setitem__('Y', r['result']['Y'] + 1.)),
-              'another fork': corrupt(rows_, pools_, i, lambda r: r['result'].__setitem__('fork_fingerprint', '0' * 64)),
-              'reconciled false': corrupt(rows_, pools_, i, lambda r: r['result'].__setitem__('reconciled', False)),
-              'binding_bad 1': corrupt(rows_, pools_, i, lambda r: r['result']['arms'][a0]['teacher'].__setitem__('binding_bad', 1)),
-              'feature_unavailable, reconciled false': corrupt(rows_, pools_, i, lambda r: (r.__setitem__('status', 'feature_unavailable'), r['fork'].__setitem__('status', 'feature_unavailable'),
-                                                                                         r['result'].__setitem__('reconciled', False))),
-              'relabelled pair_not_ok': corrupt(rows_, pools_, i, lambda r: r.__setitem__('status', 'pair_not_ok')),
-              'END 4,000': corrupt(rows_, pools_, i, lambda r: r['result'].__setitem__('end', 4000.))}
-        ctl.append(dict(part=part_['part'], refused=c_, intact=not S.validate(pa, psha, part_, rows_, pools_, rec, (b, q))))
+    ck['F_labels'] = bool(not any(reval) and cz['checked'] > 0 and cz['mismatch'] == 0 and cz['parity_mismatch'] == 0
+                          and tch['binding_bad_arms'] == 0 and all(dl[d] >= 1 for d in days))
     ck['G_controls'] = bool(all(all(c['refused'].values()) and c['intact'] for c in ctl))
     now = {f: S.C.sha(RES / f)[:16] for f in PROD}
     summ = (LOGS / 'mutants_v2_summary.log').read_text(); cnt = re.search(r'mutation check passed: the control passes its selftest, (\d+) / (\d+) planted', summ)
-    ck['H_suites'] = bool(now == {f: BUILD[f] for f in PROD} and S.sources_now() == pa['sources'] and cnt and cnt.group(1) == cnt.group(2) == '114'
+    # v1.1 (logs/declaration_v1_1.txt): 113, not 114 - the status-against-result mutant is equivalent and was removed from the harness
+    ck['H_suites'] = bool(now == {f: BUILD[f] for f in PROD} and S.sources_now() == pa['sources'] and cnt and cnt.group(1) == cnt.group(2) == '113'
                           and 'selftests passed' in (LOGS / 'v2_selftest.log').read_text() and 'mutant summary selftest passed' in (LOGS / 'summary_selftest.log').read_text())
     # ---- readings
     pop = []
@@ -125,45 +167,20 @@ def main():  # noqa: C901
     ys = []; orig = lambda r: (r['day'], r['m'], r['t_ms'], r['side']); world = lambda r: (r['day'], r['m'], r['t_ms'])
     for d in days + ['both']:
         for h in ('post', 'keep', 'both'):
-            s_ = [r for r in ok if (d == 'both' or r['day'] == d) and (h == 'both' or r['head'] == h)]; y = np.array([r['result']['Y'] for r in s_], float)
-            nz = [r for r in s_ if r['result']['Y'] != 0]; ab = np.sort(np.abs(y))[::-1]
-            ys.append([d, h, len(y), int((y == 0).sum()), int((y > 0).sum()), int((y < 0).sum()), len({orig(r) for r in s_ if r['result']['Y'] > 0}),
-                       len({orig(r) for r in s_ if r['result']['Y'] < 0}), len({orig(r) for r in nz}), len({world(r) for r in nz}), len({orig(r) for r in s_}),
+            s_ = [r for r in ok if (d == 'both' or r['day'] == d) and (h == 'both' or r['head'] == h)]; y = np.array([r['Y'] for r in s_], float)
+            nz = [r for r in s_ if r['Y'] != 0]; ab = np.sort(np.abs(y))[::-1]
+            ys.append([d, h, len(y), int((y == 0).sum()), int((y > 0).sum()), int((y < 0).sum()), len({orig(r) for r in s_ if r['Y'] > 0}),
+                       len({orig(r) for r in s_ if r['Y'] < 0}), len({orig(r) for r in nz}), len({world(r) for r in nz}), len({orig(r) for r in s_}),
                        *([float(np.mean(y)), float(np.median(y)), *[float(np.percentile(y, q_)) for q_ in (1, 5, 95, 99)], float(y.min()), float(y.max()),
                           float(ab[:5].sum() / ab.sum()) if ab.sum() > 0 else 0., float(ab[:max(1, len(ab) // 100)].sum() / ab.sum()) if ab.sum() > 0 else 0.] if len(y) else [None] * 10)])
     YH = ['day', 'head', 'n_ok', 'zero', 'positive', 'negative', 'originals_positive', 'originals_negative', 'originals_nonzero_union', 'worlds_nonzero', 'originals',
           'mean_c', 'median_c', 'p01_c', 'p05_c', 'p95_c', 'p99_c', 'min_c', 'max_c', 'top5_abs_share', 'top1pct_abs_share']
     wcsv('y_summary.csv', YH, ys)
-    pth = collections.Counter()
-    for r in ok:
-        a_, b_ = (r['result']['arms'][n] for n in S.NAMES[r['head']])
-        same = a_['fill_list'] == b_['fill_list']
-        cls = 'identical fills' if same else ('path-only (Y = 0, equal cash and inventory)' if r['result']['Y'] == 0 and a_['cash'] == b_['cash'] and a_['position'] == b_['position']
-                                              else 'economic (Y != 0)' if r['result']['Y'] != 0 else 'other (Y = 0, cash or inventory differ)')
-        pth[(r['day'], r['head'], cls)] += 1
     wcsv('paths.csv', ['day', 'head', 'class', 'ok_pairs'], [[*k, v] for k, v in sorted(pth.items())])
-    arm = collections.defaultdict(collections.Counter)
-    for r in ok:
-        for n_ in S.NAMES[r['head']]:
-            A_ = r['result']['arms'][n_]; t_ = A_['teacher'] or {}; c_ = arm[(r['day'], r['head'], n_)]
-            c_['rows'] += 1; c_['value_sum'] += A_['value']; c_['cash_sum'] += A_['cash']; c_['position_sum'] += A_['position']; c_['inventory_nonzero_rows'] += int(A_['position'] != 0)
-            c_['fills'] += A_['fills']; c_['filled_qty'] += sum(float(f[3]) for f in A_['fill_list']); c_['generations'] += A_['generations']
-            c_['open_at_end_rows'] += int(any(float(v) > 0 for v in A_['open_at_end'].values())); c_['teacher_calls'] += t_.get('calls', 0)
-            for k_, v_ in (t_.get('by_action') or {}).items():
-                c_[f'action {k_}'] += v_
-            for k_, v_ in (t_.get('by_status') or {}).items():
-                c_[f'status {k_}'] += v_
     keys = sorted({k for c_ in arm.values() for k in c_})
     wcsv('arms.csv', ['day', 'head', 'arm'] + keys, [[*k, *[arm[k].get(x, 0) for x in keys]] for k in sorted(arm)])
-    cov = collections.Counter(); cats = dict(source=list(S.L.SOURCES), decision_ms=['0', '50-500', '550-1000', '1050-2000', '2050-4950'],
-                                              remaining_ms=['5000', '2050-4950', '1050-2000', '550-1000', '<=500'], generation=['1', '2', '3+', 'none'],
-                                              partial_queue=['known_filled>0', 'none'])
-    for r in ok:
-        k = r['row_key']; g_ = k['generation']
-        for dim, v in (('source', r['source']), ('decision_ms', dbin(k['decision_ms'])), ('remaining_ms', rbin(k['decision_ms'])),
-                       ('generation', 'none' if g_ is None else ('3+' if g_ >= 3 else str(g_))), ('partial_queue', 'known_filled>0' if r['result']['fork_known_filled'] > 0 else 'none'),
-                       ('support', str(r['fork']['support'])), ('utc_hour', f"{r['hour']:02d}"), ('side', str(r['side']))):
-            cov[(r['day'], r['head'], dim, v)] += 1
+    cats = dict(source=list(S.L.SOURCES), decision_ms=['0', '50-500', '550-1000', '1050-2000', '2050-4950'],
+                remaining_ms=['5000', '2050-4950', '1050-2000', '550-1000', '<=500'], generation=['1', '2', '3+', 'none'], partial_queue=['known_filled>0', 'none'])
     covrows = []
     for d in days:
         for h in ('post', 'keep'):
@@ -175,7 +192,7 @@ def main():  # noqa: C901
     for d in days + ['both']:
         for h in ('post', 'keep'):
             pk = [r for r in picked if (d == 'both' or r['day'] == d) and r['head'] == h]; ok_ = [r for r in pk if r['status'] == 'ok']
-            w_all = np.array([r['w'] for r in pk], float); w = np.array([r['w'] for r in ok_], float); y = np.array([r['result']['Y'] for r in ok_], float)
+            w_all = np.array([r['w'] for r in pk], float); w = np.array([r['w'] for r in ok_], float); y = np.array([r['Y'] for r in ok_], float)
             wrows.append([d, h, len(pk), float(w_all.sum()), len(ok_), float(w.sum()), float((w * y).sum() / w.sum()) if w.sum() > 0 else None,
                           float(w.sum() ** 2 / (w ** 2).sum()) if len(w) else None, float(w.max() / w.sum()) if len(w) else None,
                           float(np.sort(w)[::-1][:max(1, len(w) // 10)].sum() / w.sum()) if len(w) else None, float(np.mean(y)) if len(y) else None])
@@ -190,9 +207,8 @@ def main():  # noqa: C901
     rd.update(y_summary=[dict(zip(YH, x)) for x in ys], paths={' | '.join(k): v for k, v in sorted(pth.items())}, cost=dict(cost),
               statuses={' '.join(map(str, k)): v for k, v in sorted(collections.Counter((r['day'], r['head'], r['status']) for r in rows).items())},
               weights=[dict(zip(['day', 'head', 'picked', 'raw_weight_total', 'ok', 'ok_weight_total', 'weighted_mean_Y_c', 'ess'], x[:8])) for x in wrows],
-              causal=dict(checked=sum(c['checked'] for c in cz), mismatch=sum(c['mismatch'] for c in cz), parity_checked=sum(c['parity_checked'] for c in cz),
-                          parity_mismatch=sum(c['parity_mismatch'] for c in cz), binding_checked=sum(t['binding_checked'] for t in tch), binding_bad=sum(t['binding_bad'] for t in tch),
-                          zero_callback_arms=sum(1 for t in tch if t['calls'] == 0), fork_delivered_changed=dict(dl)),
+              causal=dict(checked=cz['checked'], mismatch=cz['mismatch'], parity_checked=cz['parity_checked'], parity_mismatch=cz['parity_mismatch'],
+                          binding_checked=tch['binding_checked'], binding_bad=tch['binding_bad'], zero_callback_arms=tch['zero_callback_arms'], fork_delivered_changed=dict(dl)),
               controls=ctl, parity={k: v for k, v in par.items() if k != 'rows'} | dict(rows=par['rows']), asof_records=max(r['asof'] for r in recs),
               stops=[json.loads(x)['content'] for x in (P / 'stops.jsonl').read_text().splitlines()] if (P / 'stops.jsonl').exists() else [])
     out = dict(checks=ck, all_true=all(ck.values()), readings=rd, plan_sha256=psha, accepted={x: acc[x] for x in ('dataset_sha256', 'rows', 'pairs', 'statuses', 'audit_every')}, asof=S.C.stamp())

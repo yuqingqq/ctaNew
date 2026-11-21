@@ -1,0 +1,1651 @@
+{
+ "accepted": {
+  "audit_every": 35,
+  "dataset_sha256": "2c62fc9baf696e6cd8913c5c294dea2c9513640714ae34b413dc37ef8c0acb2e",
+  "pairs": {
+   "20261024": 9126,
+   "20261025": 9125
+  },
+  "rows": 18372,
+  "statuses": {
+   "20261024 keep feature_unavailable": 1,
+   "20261024 keep ok": 3041,
+   "20261024 keep world:no_path:missing_endpoint": 30,
+   "20261024 post ok": 6084,
+   "20261024 post world:no_path:missing_endpoint": 30,
+   "20261025 keep empty_pool": 1,
+   "20261025 keep feature_unavailable": 1,
+   "20261025 keep ok": 3040,
+   "20261025 keep world:no_path:missing_endpoint": 24,
+   "20261025 keep world:no_path:stale_future_book": 6,
+   "20261025 post ok": 6084,
+   "20261025 post world:no_path:missing_endpoint": 24,
+   "20261025 post world:no_path:stale_future_book": 6
+  }
+ },
+ "all_true": true,
+ "asof": "2026-11-21T00:26:53.305358+00:00",
+ "checks": {
+  "A_plan": true,
+  "B_runs": true,
+  "C_parity": true,
+  "D_acceptance": true,
+  "E_resources": true,
+  "F_labels": true,
+  "G_controls": true,
+  "H_suites": true
+ },
+ "plan_sha256": "0de151d1b980661d739e12c880f71eb1c81cca680ef6cef7ea97fcb36ce6c7fc",
+ "readings": {
+  "asof_records": "2026-11-21T00:21:10.154532+00:00",
+  "causal": {
+   "binding_bad": 0,
+   "binding_checked": 4435006,
+   "checked": 145045,
+   "fork_delivered_changed": {
+    "20261024": 6037,
+    "20261025": 6010
+   },
+   "mismatch": 0,
+   "parity_checked": 138385,
+   "parity_mismatch": 0,
+   "zero_callback_arms": 71
+  },
+  "controls": [
+   {
+    "intact": true,
+    "part": 0,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 1,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 2,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 3,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 4,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 5,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 6,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 7,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 8,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 9,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 10,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 11,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 12,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 13,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 14,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 15,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 16,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 17,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 18,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 19,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 20,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 21,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 22,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 23,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 24,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 25,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 26,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 27,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 28,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 29,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 30,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 31,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 32,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 33,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 34,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 35,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 36,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 37,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 38,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 39,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 40,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 41,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 42,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 43,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 44,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 45,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 46,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 47,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 48,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 49,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 50,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 51,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 52,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 53,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 54,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 55,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 56,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 57,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 58,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 59,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 60,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 61,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 62,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 63,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 64,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 65,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 66,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 67,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 68,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 69,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 70,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 71,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 72,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 73,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 74,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 75,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 76,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 77,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 78,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 79,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 80,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 81,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 82,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 83,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 84,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 85,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 86,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 87,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 88,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 89,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 90,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 91,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 92,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 93,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 94,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   },
+   {
+    "intact": true,
+    "part": 95,
+    "refused": {
+     "END 4,000": true,
+     "Y + 1": true,
+     "another fork": true,
+     "binding_bad 1": true,
+     "feature_unavailable, reconciled false": true,
+     "reconciled false": true,
+     "relabelled pair_not_ok": true
+    }
+   }
+  ],
+  "cost": {
+   "ceiling_core_hours": 40.0,
+   "census_s_mean": 1.722544959937954,
+   "load_s_mean": 52.34442700445652,
+   "pair_s_max": 4.270367622375488,
+   "pair_s_mean": 2.5150991081440326,
+   "pairs": 18251,
+   "parity_cpu_core_hours": 0.2962611111111111,
+   "partition_cpu_core_hours": 15.45778611111111,
+   "partition_jobs": 96,
+   "partition_wall_hours_sum": 15.657433333333334,
+   "peak_mib_jobs": 1271,
+   "peak_mib_records": 1181.2734375
+  },
+  "parity": {
+   "asof": "2026-11-20T19:48:01.356445+00:00",
+   "audit_checks": {
+    "new": 2202,
+    "old": 9715
+   },
+   "audit_every": {
+    "new": 35,
+    "old": 7
+   },
+   "new_cpu_s": 1091.7002482414246,
+   "new_hwm_mib": 1158.94921875,
+   "new_pair_s_mean": 2.403387868569957,
+   "parity": true,
+   "plans_same_partitions": true,
+   "plans_same_sample": true,
+   "pools": {
+    "differing": 0,
+    "new": 192,
+    "old": 192
+   },
+   "rows": {
+    "differing": 0,
+    "first_differing": [],
+    "new": 288,
+    "old": 288
+   }
+  },
+  "paths": {
+   "20261024 | keep | economic (Y != 0)": 90,
+   "20261024 | keep | identical fills": 2935,
+   "20261024 | keep | other (Y = 0, cash or inventory differ)": 1,
+   "20261024 | keep | path-only (Y = 0, equal cash and inventory)": 15,
+   "20261024 | post | economic (Y != 0)": 198,
+   "20261024 | post | identical fills": 5402,
+   "20261024 | post | other (Y = 0, cash or inventory differ)": 2,
+   "20261024 | post | path-only (Y = 0, equal cash and inventory)": 482,
+   "20261025 | keep | economic (Y != 0)": 82,
+   "20261025 | keep | identical fills": 2941,
+   "20261025 | keep | path-only (Y = 0, equal cash and inventory)": 17,
+   "20261025 | post | economic (Y != 0)": 173,
+   "20261025 | post | identical fills": 5498,
+   "20261025 | post | other (Y = 0, cash or inventory differ)": 1,
+   "20261025 | post | path-only (Y = 0, equal cash and inventory)": 412
+  },
+  "statuses": {
+   "20261024 keep feature_unavailable": 1,
+   "20261024 keep ok": 3041,
+   "20261024 keep world:no_path:missing_endpoint": 30,
+   "20261024 post ok": 6084,
+   "20261024 post world:no_path:missing_endpoint": 30,
+   "20261025 keep empty_pool": 1,
+   "20261025 keep feature_unavailable": 1,
+   "20261025 keep ok": 3040,
+   "20261025 keep world:no_path:missing_endpoint": 24,
+   "20261025 keep world:no_path:stale_future_book": 6,
+   "20261025 post ok": 6084,
+   "20261025 post world:no_path:missing_endpoint": 24,
+   "20261025 post world:no_path:stale_future_book": 6
+  },
+  "stops": [],
+  "weights": [
+   {
+    "day": "20261024",
+    "ess": 3195.2659462110173,
+    "head": "post",
+    "ok": 6084,
+    "ok_weight_total": 30406.6875,
+    "picked": 6084,
+    "raw_weight_total": 30406.6875,
+    "weighted_mean_Y_c": -0.5026984948434791
+   },
+   {
+    "day": "20261024",
+    "ess": 3035.438768904921,
+    "head": "keep",
+    "ok": 3041,
+    "ok_weight_total": 30396.59375,
+    "picked": 3042,
+    "raw_weight_total": 30406.6875,
+    "weighted_mean_Y_c": -0.4263840125802555
+   },
+   {
+    "day": "20261025",
+    "ess": 3191.1895912109694,
+    "head": "post",
+    "ok": 6084,
+    "ok_weight_total": 29709.15625,
+    "picked": 6084,
+    "raw_weight_total": 29709.15625,
+    "weighted_mean_Y_c": -0.4496283046807345
+   },
+   {
+    "day": "20261025",
+    "ess": 3031.73339404957,
+    "head": "keep",
+    "ok": 3040,
+    "ok_weight_total": 29689.828125,
+    "picked": 3041,
+    "raw_weight_total": 29700.03125,
+    "weighted_mean_Y_c": -0.3440207313781927
+   },
+   {
+    "day": "both",
+    "ess": 6385.687800857756,
+    "head": "post",
+    "ok": 12168,
+    "ok_weight_total": 60115.84375,
+    "picked": 12168,
+    "raw_weight_total": 60115.84375,
+    "weighted_mean_Y_c": -0.47647128961087853
+   },
+   {
+    "day": "both",
+    "ess": 6066.417732391134,
+    "head": "keep",
+    "ok": 6081,
+    "ok_weight_total": 60086.421875,
+    "picked": 6083,
+    "raw_weight_total": 60106.71875,
+    "weighted_mean_Y_c": -0.3856867704015243
+   }
+  ],
+  "y_summary": [
+   {
+    "day": "20261024",
+    "head": "post",
+    "max_c": 675.0,
+    "mean_c": -0.3887773080497033,
+    "median_c": 0.0,
+    "min_c": -720.0,
+    "n_ok": 6084,
+    "negative": 125,
+    "originals": 3042,
+    "originals_negative": 117,
+    "originals_nonzero_union": 186,
+    "originals_positive": 71,
+    "p01_c": -21.630743161290322,
+    "p05_c": 0.0,
+    "p95_c": 0.0,
+    "p99_c": 3.7277742112677026,
+    "positive": 73,
+    "top1pct_abs_share": 0.8021444704983451,
+    "top5_abs_share": 0.23882173120615233,
+    "worlds_nonzero": 175,
+    "zero": 5886
+   },
+   {
+    "day": "20261024",
+    "head": "keep",
+    "max_c": 165.0,
+    "mean_c": -0.4336715164322174,
+    "median_c": 0.0,
+    "min_c": -510.0,
+    "n_ok": 3041,
+    "negative": 54,
+    "originals": 3041,
+    "originals_negative": 54,
+    "originals_nonzero_union": 90,
+    "originals_positive": 36,
+    "p01_c": -15.0,
+    "p05_c": 0.0,
+    "p95_c": 0.0,
+    "p99_c": 4.515912727272705,
+    "positive": 36,
+    "top1pct_abs_share": 0.8146035312739769,
+    "top5_abs_share": 0.3633979031437557,
+    "worlds_nonzero": 88,
+    "zero": 2951
+   },
+   {
+    "day": "20261024",
+    "head": "both",
+    "max_c": 675.0,
+    "mean_c": -0.4037387642350432,
+    "median_c": 0.0,
+    "min_c": -720.0,
+    "n_ok": 9125,
+    "negative": 179,
+    "originals": 3042,
+    "originals_negative": 163,
+    "originals_nonzero_union": 260,
+    "originals_positive": 105,
+    "p01_c": -16.720199090909166,
+    "p05_c": 0.0,
+    "p95_c": 0.0,
+    "p99_c": 4.527729454545445,
+    "positive": 109,
+    "top1pct_abs_share": 0.8086005285657085,
+    "top5_abs_share": 0.19100245908282723,
+    "worlds_nonzero": 246,
+    "zero": 8837
+   },
+   {
+    "day": "20261025",
+    "head": "post",
+    "max_c": 940.6439053511706,
+    "mean_c": -0.4458719038936515,
+    "median_c": 0.0,
+    "min_c": -542.6438571571907,
+    "n_ok": 6084,
+    "negative": 113,
+    "originals": 3042,
+    "originals_negative": 107,
+    "originals_nonzero_union": 162,
+    "originals_positive": 57,
+    "p01_c": -30.721917808219192,
+    "p05_c": 0.0,
+    "p95_c": 0.0,
+    "p99_c": 0.0,
+    "positive": 60,
+    "top1pct_abs_share": 0.8285148198432435,
+    "top5_abs_share": 0.23278851566328673,
+    "worlds_nonzero": 155,
+    "zero": 5911
+   },
+   {
+    "day": "20261025",
+    "head": "keep",
+    "max_c": 525.0,
+    "mean_c": -0.35864213630400604,
+    "median_c": 0.0,
+    "min_c": -330.0,
+    "n_ok": 3040,
+    "negative": 48,
+    "originals": 3040,
+    "originals_negative": 48,
+    "originals_nonzero_union": 82,
+    "originals_positive": 34,
+    "p01_c": -7.893449999999986,
+    "p05_c": 0.0,
+    "p95_c": 0.0,
+    "p99_c": 1.0603296703296892,
+    "positive": 34,
+    "top1pct_abs_share": 0.8875535662476907,
+    "top5_abs_share": 0.4296920398194049,
+    "worlds_nonzero": 81,
+    "zero": 2958
+   },
+   {
+    "day": "20261025",
+    "head": "both",
+    "max_c": 940.6439053511706,
+    "mean_c": -0.41680806199618087,
+    "median_c": 0.0,
+    "min_c": -542.6438571571907,
+    "n_ok": 9124,
+    "negative": 161,
+    "originals": 3042,
+    "originals_negative": 151,
+    "originals_nonzero_union": 233,
+    "originals_positive": 88,
+    "p01_c": -15.0,
+    "p05_c": 0.0,
+    "p95_c": 0.0,
+    "p99_c": 0.9496875000000955,
+    "positive": 94,
+    "top1pct_abs_share": 0.8603683081465944,
+    "top5_abs_share": 0.19167972477981934,
+    "worlds_nonzero": 222,
+    "zero": 8869
+   },
+   {
+    "day": "both",
+    "head": "post",
+    "max_c": 940.6439053511706,
+    "mean_c": -0.4173246059716774,
+    "median_c": 0.0,
+    "min_c": -720.0,
+    "n_ok": 12168,
+    "negative": 238,
+    "originals": 6084,
+    "originals_negative": 224,
+    "originals_nonzero_union": 348,
+    "originals_positive": 128,
+    "p01_c": -27.034350000000003,
+    "p05_c": 0.0,
+    "p95_c": 0.0,
+    "p99_c": 2.1550694999999567,
+    "positive": 133,
+    "top1pct_abs_share": 0.8207350281605884,
+    "top5_abs_share": 0.15039044976610758,
+    "worlds_nonzero": 330,
+    "zero": 11797
+   },
+   {
+    "day": "both",
+    "head": "keep",
+    "max_c": 525.0,
+    "mean_c": -0.3961629955327334,
+    "median_c": 0.0,
+    "min_c": -510.0,
+    "n_ok": 6081,
+    "negative": 102,
+    "originals": 6081,
+    "originals_negative": 102,
+    "originals_nonzero_union": 172,
+    "originals_positive": 70,
+    "p01_c": -11.20477012987014,
+    "p05_c": 0.0,
+    "p95_c": 0.0,
+    "p99_c": 2.1599999999999877,
+    "positive": 70,
+    "top1pct_abs_share": 0.8582795583589284,
+    "top5_abs_share": 0.2674471983188688,
+    "worlds_nonzero": 169,
+    "zero": 5909
+   },
+   {
+    "day": "both",
+    "head": "both",
+    "max_c": 940.6439053511706,
+    "mean_c": -0.41027305503303874,
+    "median_c": 0.0,
+    "min_c": -720.0,
+    "n_ok": 18249,
+    "negative": 340,
+    "originals": 6084,
+    "originals_negative": 314,
+    "originals_nonzero_union": 493,
+    "originals_positive": 193,
+    "p01_c": -15.102631578947413,
+    "p05_c": 0.0,
+    "p95_c": 0.0,
+    "p99_c": 2.1760000000000153,
+    "positive": 203,
+    "top1pct_abs_share": 0.8354517386034847,
+    "top5_abs_share": 0.11442475791557462,
+    "worlds_nonzero": 468,
+    "zero": 17706
+   }
+  ]
+ }
+}

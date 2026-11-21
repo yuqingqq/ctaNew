@@ -1,0 +1,13 @@
+item,value
+partition_jobs,96
+partition_cpu_core_hours,15.45778611111111
+partition_wall_hours_sum,15.657433333333334
+parity_cpu_core_hours,0.2962611111111111
+pairs,18251
+pair_s_mean,2.5150991081440326
+pair_s_max,4.270367622375488
+load_s_mean,52.34442700445652
+census_s_mean,1.722544959937954
+peak_mib_jobs,1271
+peak_mib_records,1181.2734375
+ceiling_core_hours,40.0

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "32", "name": "the bound ignored", "seconds": 110.6, "sources": {"pf_r2_label_sample.py": "4cdeff0c6d491611", "pf_r2_label_sample_mutants.py": "ae0157317e4d3a9c", "pf_r2_label_sample_selftest.py": "60414b3fa5677ff6"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: stops: the process bound did not latch at the loading"}
+2026-11-20T20:20:23Z tag=mut_v2_32 rc=0 peak_rss_mib=305 wall_s=110.88 cpu_user_s=109.21 memavail_start_gib=21 disk_free_gib=437->437 slot=claude

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "59", "name": "resume skips an invalid part", "seconds": 49.7, "sources": {"pf_r2_label_sample.py": "4cdeff0c6d491611", "pf_r2_label_sample_mutants.py": "ce0c703833269dc0", "pf_r2_label_sample_selftest.py": "0941600079467125"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: identity: a changed plan did not refuse the records of the old one"}
+2026-11-20T19:43:42Z tag=mut_v2_59 rc=0 peak_rss_mib=292 wall_s=49.96 cpu_user_s=49.26 memavail_start_gib=22 disk_free_gib=437->437 slot=claude

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "75", "name": "duplicate pool lines accepted", "seconds": 50.6, "sources": {"pf_r2_label_sample.py": "4cdeff0c6d491611", "pf_r2_label_sample_mutants.py": "ce0c703833269dc0", "pf_r2_label_sample_selftest.py": "0941600079467125"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['a duplicated pool line']"}
+2026-11-20T19:45:31Z tag=mut_v2_75 rc=0 peak_rss_mib=287 wall_s=50.84 cpu_user_s=49.93 memavail_start_gib=22 disk_free_gib=437->436 slot=claude2

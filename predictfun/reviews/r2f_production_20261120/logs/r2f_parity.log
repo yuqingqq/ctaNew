@@ -1,0 +1,2 @@
+{"plans_same_sample": true, "plans_same_partitions": true, "audit_every": {"old": 7, "new": 35}, "pools": {"old": 192, "new": 192, "differing": 0}, "audit_checks": {"new": 2202, "old": 9715}, "new_cpu_s": 1091.7002482414246, "new_pair_s_mean": 2.403387868569957, "new_hwm_mib": 1158.94921875, "asof": "2026-11-20T19:48:01.356445+00:00", "parity": true, "differing_rows": 0}
+2026-11-20T19:47:59Z tag=r2f_parity rc=0 peak_rss_mib=245 wall_s=1.57 cpu_user_s=1.33 memavail_start_gib=22 disk_free_gib=437->437 slot=claude4
