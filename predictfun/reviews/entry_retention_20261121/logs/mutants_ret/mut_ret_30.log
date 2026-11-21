@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "30", "name": "a partition read without its hash", "seconds": 4.9, "sources": {"pf_entry_retention.py": "93f8050f39ca8df0", "pf_entry_retention_mutants.py": "5000b960daac89b8", "pf_entry_retention_selftest.py": "b6ac9cff3643f204"}, "why": "ENTRY RETENTION SELFTEST FAILED: measure: a partition whose bytes differ from its record was read"}
+2026-11-21T10:13:46Z tag=mut_ret_30 rc=0 peak_rss_mib=224 wall_s=5.11 cpu_user_s=4.92 memavail_start_gib=22 disk_free_gib=445->445 slot=claude4

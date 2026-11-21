@@ -1,0 +1,22 @@
+{
+ "forks": 2,
+ "fork_statuses": [
+  {
+   "day": "20261024",
+   "status": "ok",
+   "n": 2
+  }
+ ],
+ "readings": {
+  "entry_identifiable": false,
+  "review_protective": false,
+  "forecasts_fail": true,
+  "not_distinguishable": false
+ },
+ "discriminates": {
+  "entry": false,
+  "first_review": false
+ }
+}
+entry retention selftest passed: crafted tapes (distinct pull, same-as-review pull, refusal, structural removal, other side, prefix and callback refusals, neutral hold, target split, first-pull reconciliation, hidden-state leak); fork_stages end to end with four refusals; groups, transition, calibration, bins, decisions, matched nulls, predicates; writers (measure immutable / refused; run_part refused)
+2026-11-21T10:12:59Z tag=pf_entry_retention_selftest rc=0 peak_rss_mib=224 wall_s=4.99 cpu_user_s=4.80 memavail_start_gib=23 disk_free_gib=445->445 slot=claude

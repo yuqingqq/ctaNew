@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "20", "name": "the hidden copy not consulted", "seconds": 4.8, "sources": {"pf_entry_retention.py": "f5d54ec151f14a5a", "pf_entry_retention_mutants.py": "57dc884da262ca9d", "pf_entry_retention_selftest.py": "a8afaf987c880015"}, "why": "ENTRY RETENTION SELFTEST FAILED: a decision reading the branch object was not flagged by the hidden copy"}
+2026-11-21T10:12:06Z tag=mut_ret_20 rc=0 peak_rss_mib=225 wall_s=5.06 cpu_user_s=4.86 memavail_start_gib=22 disk_free_gib=445->445 slot=claude2

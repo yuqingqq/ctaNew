@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "11", "name": "the effect ignores the pending clock", "seconds": 4.9, "sources": {"pf_entry_retention.py": "f5d54ec151f14a5a", "pf_entry_retention_mutants.py": "57dc884da262ca9d", "pf_entry_retention_selftest.py": "a8afaf987c880015"}, "why": "ENTRY RETENTION SELFTEST FAILED: effect_of: the engine's request rule"}
+2026-11-21T10:11:54Z tag=mut_ret_11 rc=0 peak_rss_mib=224 wall_s=5.08 cpu_user_s=4.88 memavail_start_gib=22 disk_free_gib=445->445 slot=claude

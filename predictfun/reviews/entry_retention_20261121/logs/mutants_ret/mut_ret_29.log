@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "29", "name": "the measurement overwritten", "seconds": 4.9, "sources": {"pf_entry_retention.py": "93f8050f39ca8df0", "pf_entry_retention_mutants.py": "5000b960daac89b8", "pf_entry_retention_selftest.py": "b6ac9cff3643f204"}, "why": "ENTRY RETENTION SELFTEST FAILED: measure: an existing measurement was overwritten"}
+2026-11-21T10:13:44Z tag=mut_ret_29 rc=0 peak_rss_mib=225 wall_s=5.15 cpu_user_s=4.98 memavail_start_gib=22 disk_free_gib=445->445 slot=claude3

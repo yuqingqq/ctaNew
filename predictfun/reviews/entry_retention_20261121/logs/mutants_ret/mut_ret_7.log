@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "7", "name": "the prefix ignores the saved decisions", "seconds": 4.9, "sources": {"pf_entry_retention.py": "93f8050f39ca8df0", "pf_entry_retention_mutants.py": "5000b960daac89b8", "pf_entry_retention_selftest.py": "b6ac9cff3643f204"}, "why": "ENTRY RETENTION SELFTEST FAILED: prefix_check: a changed saved decision was accepted; fork_stages: a decision changed gave ok, not prefix_mismatch"}
+2026-11-21T10:13:14Z tag=mut_ret_7 rc=0 peak_rss_mib=224 wall_s=5.14 cpu_user_s=4.91 memavail_start_gib=22 disk_free_gib=445->445 slot=claude
