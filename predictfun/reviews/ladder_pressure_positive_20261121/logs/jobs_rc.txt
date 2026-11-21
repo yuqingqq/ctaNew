@@ -1,1 +1,3 @@
 gp2_manifest rc=0
+gp2_pilot rc=0
+gp2_projection rc=0

@@ -151,6 +151,18 @@ ladder_audit_review_20261121_codex:
   additional_user_permission_within_scope: false
   untouched_validation: false
 
+ladder_pressure_positive_stop_20261121_dev:
+  status: stopped_at_projection_awaiting_user_resource_decision
+  asof: "2026-11-21 21:10Z"
+  freeze: 53013bea
+  pilot: oct24_7_markets_done_q5_control_7_of_7_equal
+  projected_round_core_hours: 0.1531
+  round_cap: 0.14
+  line_recorded_core_hours: 1.8645
+  line_projected_core_hours: 1.9651
+  pilot_economics_read: false
+  loop: stopped
+  decisions_needed: [authorize_about_0.02_more_core_hours_for_this_round, or_stop_the_candidate_at_the_pilot, or_extend_or_close_the_ladder_allocation]
 ladder_pressure_positive_20261121_dev:
   status: frozen_before_replay
   asof: "2026-11-21 21:08Z"

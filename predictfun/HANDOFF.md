@@ -211,6 +211,16 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_PRESSURE_POSITIVE_STOP_20261121_DEV -->
+## 2026-11-21 21:10Z (session aea5bfb9) — POSITIVE-PRESSURE-GUARD-v1 STOPPED AT THE WRITE-ONCE PROJECTION: AWAITING THE USER'S RESOURCE DECISION (loop stopped)
+
+- **What ran:** freeze `53013bea`; the Oct 24 pilot (all 7 markets; Q5_CONTROL equals the accepted pressure arm on 7 / 7: ledger, log, command array, queue); the write-once projection `ladder_pressure_positive_20261121/logs/pilot_projection.json`.
+- **The projection refused the rest:** this round projected **0.1531 core-hours > its 0.14 cap** (the ladder line would reach 1.965 of 2.0; recorded 1.8645 incl. this round's 0.0525). Per review 4a236235 and the declaration: stop before Oct 25-27 and seek the USER's resource decision; no trimmed controls / population, no relaxed ceiling.
+- **The pilot's economics were NOT read** (no screen, measurement or checks ran), so the continue / stop decision is independent of the result.
+- **Decision needed (USER):** (a) authorize about +0.02 core-hours for this round (cap 0.16, within the line's 2.0) and run Oct 25-27, the screen, measurement and checks, then ONE review; or (b) stop this candidate with the pilot only (no economic reading); or (c) extend or close the ladder line's 2-core-hour allocation.
+- **Deferred (unchanged):** review 4a236235 findings 1-2; review e40bd01d's ablation lost / added checks.
+<!-- /LADDER_PRESSURE_POSITIVE_STOP_20261121_DEV -->
+
 <!-- LADDER_PRESSURE_POSITIVE_FREEZE_20261121_DEV -->
 ## 2026-11-21 21:08Z (session aea5bfb9) — POSITIVE-PRESSURE-GUARD-v1 FROZEN before any challenger replay (review 4a236235's ONE next priority)
 
