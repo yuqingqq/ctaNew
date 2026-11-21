@@ -1,0 +1,21 @@
+  0 R3's domain: CAUGHT (18.2 s) - ADV2 ENTRY REPLAY SELFTEST FAILED: constants: the declared domain / audit rate / controls changed
+  1 live states selected: CAUGHT (84.4 s) - ADV2 ENTRY REPLAY SELFTEST FAILED: select_entry: not one per side, prediction-dependent, or the inclusion count is not the eligible number
+  2 fallback decisions selected: CAUGHT (17.9 s) - ADV2 ENTRY REPLAY SELFTEST FAILED: select_entry: not one per side, prediction-dependent, or the inclusion count is not the eligible number
+  3 the inclusion count of the first decision: CAUGHT (17.9 s) - ADV2 ENTRY REPLAY SELFTEST FAILED: select_entry: not one per side, prediction-dependent, or the inclusion count is not the eligible number
+  4 the trace fills hash of the decisions: CAUGHT (18.6 s) - ADV2 ENTRY REPLAY SELFTEST FAILED: trace: N0 (the stored fills differ from their hash / count; None; probe 29 of 200 calls); reproduction: N0 does not
+  5 the trace calls from the binding counter: CAUGHT (28.8 s) - ADV2 ENTRY REPLAY SELFTEST FAILED: trace: N0 (None; the teacher's calls / binding checks (201 / 200) are not the 200 required callbacks, or a binding 
+  6 the trace without order sizes: CAUGHT (18.2 s) - ADV2 ENTRY REPLAY SELFTEST FAILED: trace: PI0 (a generation filled beyond its size; None; probe 27 of 189 calls); trace: ENTRY_ONLY (a generation fill
+  7 r3_match ignores the fills: CAUGHT (17.7 s) - ADV2 ENTRY REPLAY SELFTEST FAILED: reproduction: N0 does not match its pf_adv2 construction, or a perturbed reference matched; reproduction: PI0 does 
+  8 r3_match ignores the value: CAUGHT (18.3 s) - ADV2 ENTRY REPLAY SELFTEST FAILED: reproduction: N0 does not match its pf_adv2 construction, or a perturbed reference matched; reproduction: PI0 does 
+  9 the fork check skipped: CAUGHT (24.3 s) - ADV2 ENTRY REPLAY SELFTEST FAILED: reached: a tampered recorded fingerprint was not refused; reached: a tampered recorded fingerprint was not refused;
+  10 the input comparison skipped: CAUGHT (18.2 s) - ADV2 ENTRY REPLAY SELFTEST FAILED: reached: recorded inputs that differ from the rebuilt fork inputs were not input_mismatch; reached: recorded inputs
+  11 the arm ledgers not attached: HARNESS_FAILURE (0.0 s) - crash: IndentationError("expected an indented block after 'if' statement on line 109", ('/home/yuqing/ctaNew/predictfun/research/pf_adv2_entry_replay.
+  12 the pair probe at another rate: CAUGHT (19.8 s) - ADV2 ENTRY REPLAY SELFTEST FAILED: reached: a pair fails ['the causal audit did not run at its declared rate (every 35)']; reached: a pair fails ['the
+  13 the RICH prediction from the SMOOTH head: CAUGHT (20.0 s) - ADV2 ENTRY REPLAY SELFTEST FAILED: reached: a pair fails ['the RICH prediction']; reached: a pair fails ['the RICH prediction']; reached: a pair fails
+  14 part identity ignores the sources: CAUGHT (18.0 s) - ADV2 ENTRY REPLAY SELFTEST FAILED: part identity: a record with another sources was accepted
+  15 part identity ignores the bytes: CAUGHT (17.9 s) - ADV2 ENTRY REPLAY SELFTEST FAILED: part identity: a record with another sha256 was accepted
+  16 an existing record not checked: CAUGHT (17.7 s) - ADV2 ENTRY REPLAY SELFTEST FAILED: run_part: an existing record of another identity was accepted
+  17 frames without the membership check: CAUGHT (17.3 s) - ADV2 ENTRY REPLAY SELFTEST FAILED: frames: a part whose rows are not exactly its members was not refused
+  18 the run without the committed fit: CAUGHT (17.8 s) - ADV2 ENTRY REPLAY SELFTEST FAILED: run_part: ran without a committed fit manifest
+control: PASSED (18.0 s); sources {'pf_adv2_entry_replay.py': '1ec1b7fe1afea0d7', 'pf_adv2_entry_replay_mutants.py': '5467d91711835446', 'pf_adv2_entry_replay_selftest.py': '20295ff722c071f6'}
+mutation check FAILED: the control passes its selftest, 18 / 19 planted code errors are caught by a check (7.2 CPU min) | 11 the arm ledgers not attached: HARNESS_FAILURE - crash: IndentationError("expected an indented block after 'if' statement on line 109", ('/home/yuqing/ctaNew/predictfun/

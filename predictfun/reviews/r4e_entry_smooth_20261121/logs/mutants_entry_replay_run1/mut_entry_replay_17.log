@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "17", "name": "frames without the membership check", "seconds": 17.3, "sources": {"pf_adv2_entry_replay.py": "1ec1b7fe1afea0d7", "pf_adv2_entry_replay_mutants.py": "5467d91711835446", "pf_adv2_entry_replay_selftest.py": "20295ff722c071f6"}, "why": "ADV2 ENTRY REPLAY SELFTEST FAILED: frames: a part whose rows are not exactly its members was not refused"}
+2026-11-21T06:53:15Z tag=mut_entry_replay_17 rc=0 peak_rss_mib=234 wall_s=17.50 cpu_user_s=17.31 memavail_start_gib=22 disk_free_gib=443->443 slot=claude3

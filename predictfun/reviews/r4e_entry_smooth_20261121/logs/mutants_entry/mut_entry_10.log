@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "10", "name": "R3's training files not checked", "seconds": 6.7, "sources": {"pf_adv2_entry.py": "5c3bb8b2b3377331", "pf_adv2_entry_mutants.py": "5adf93efa8f6e6a9", "pf_adv2_entry_selftest.py": "2db0578ccea4a2d9"}, "why": "ADV2 ENTRY SELFTEST FAILED: r3_train: a training file that differs from its manifest was not refused"}
+2026-11-21T06:49:49Z tag=mut_entry_10 rc=0 peak_rss_mib=248 wall_s=6.93 cpu_user_s=6.63 memavail_start_gib=22 disk_free_gib=443->443 slot=claude4
