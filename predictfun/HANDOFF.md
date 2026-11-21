@@ -23,6 +23,38 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- LADDER_PRESSURE_REVIEW_20261121_CODEX -->
+## 2026-11-21 — Pressure guard reviewed; next: one 50 ms timing sensitivity
+
+[Combined review](reviews/automatic/20261121_ladder_pressure_review/report.md)
+of **40a3ee8d4cac39e98ee065845df63f853544c855** accepts the consumed-day
+diagnostic. No blocking finding, rerun or promotion. Independently reconciled
+38 ledgers, exact uptime/inventory, all 1,722 pressure interventions and
+226,480 cache side/ticks to the stored decision rows. Pinned selftest,
+22 saved checks and 14 falsifiers pass.
+
+END improves +123,448.1 c (18/19 markets; every day), but pressure END remains
+-86,109.6 c and +1 s value -1.077 c/share. The pooled matched local screen
+passes, driven more strongly by asks; it is not a null for feedback P&L.
+Oct 27 both-side participation falls 39.84% to 20.77%. Only 23/4,422 reviewed
+generations are pressure-pulled at the first review. No future signal read
+found under the declared E+1.5+2 ms Binance clock; actual receipt tails and
+unchanged external flow remain simulation assumptions.
+
+Bundle two NONBLOCKING items: extend the checker to exact participation and
+inventory fields (current numbers independently verified); label queue birth
+as activation-time initialization and same-side next-post comparisons rather
+than replacement queue cost (274/430 change rung; 57 keep price).
+
+ONE next experiment: **PRESSURE-LEAD-SENSITIVITY-v1** under the report's
+contract. Same rule/edges/19 markets; at tick k use signal k-1, with explicit
+warm-up and current inventory/structural state. Reproduce zero lag, compare
++50 ms, retain full accounting and the matched local screen. No cooldown or
+new tuning. At most 0.50 additional core-hours, still within the original
+2-core-hour cumulative allocation after checking logs. No extra USER
+permission within this scope; new days/resources/validation need the USER.
+<!-- /LADDER_PRESSURE_REVIEW_20261121_CODEX -->
+
 <!-- LADDER_GUARD_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — Ask reservation guard reviewed; next: external market pressure
 

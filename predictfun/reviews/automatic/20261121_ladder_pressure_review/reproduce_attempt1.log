@@ -1,0 +1,8 @@
+PRESSURE SELFTEST PASSED: disabled = baseline, the signal and precedence, the hand tape (pulls, withholds, re-entry, queue), the cache helpers and causal plumbing, the selection control, measurement and readings, guards
+Pinned selftest and saved checks passed
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261121_ladder_pressure_review/reproduce.py", line 64, in <module>
+    start=r['disabled']['ident']['t_start']
+          ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+KeyError: 't_start'
+2026-11-21T19:32:08Z tag=codex_pressure_review rc=1 peak_rss_mib=499 wall_s=11.67 cpu_user_s=11.26 memavail_start_gib=23 disk_free_gib=437->437 slot=codex

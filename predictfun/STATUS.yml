@@ -1,4 +1,28 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+ladder_pressure_review_20261121_codex:
+  status: consumed_day_diagnostic_accepted_no_rerun_no_promotion
+  target_commit: 40a3ee8d4cac39e98ee065845df63f853544c855
+  report: predictfun/reviews/automatic/20261121_ladder_pressure_review/report.md
+  complete_markets: 19
+  selected_markets: 96
+  independently_checked_arm_ledgers: 38
+  independently_checked_cache_side_ticks: 226480
+  saved_checks_passed: 22
+  saved_falsifiers_passed: 14
+  pressure_pulls_reconciled: 433
+  withheld_slot_proposals_reconciled: 1289
+  paired_end_delta_cents_rounded: 123448.1
+  pressure_end_value_cents_rounded: -86109.6
+  pressure_mo1s_per_valid_share_cents_rounded: -1.077
+  interpretation: better_selection_on_consumed_population_only
+  blocking_findings: 0
+  nonblocking_findings: [participation_inventory_checker_gap, queue_clock_and_pairing_labels]
+  next_priority: PRESSURE-LEAD-SENSITIVITY-v1
+  next_round_core_hour_ceiling: 0.50
+  original_cumulative_core_hour_ceiling: 2.0
+  additional_user_permission_within_scope: false
+  untouched_validation: false
+
 ladder_guard_review_20261121_codex:
   status: paired_diagnostic_accepted_no_promotion_no_rerun
   target_commit: 84a4f999eabdfbe1e756b3f59213a641dc343a4e

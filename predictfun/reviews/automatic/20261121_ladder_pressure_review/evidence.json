@@ -1,0 +1,688 @@
+{
+  "target": "40a3ee8d4cac39e98ee065845df63f853544c855",
+  "selftest": "passed",
+  "checks": {
+    "checks": {
+      "A_committed": true,
+      "A_rule": true,
+      "A_edges": true,
+      "A_sources": true,
+      "A_outputs": true,
+      "B_membership": true,
+      "B_pilot": true,
+      "C_disabled_equals_baseline": true,
+      "D_log": true,
+      "D_commands": true,
+      "D_requests": true,
+      "D_disabled_inert": true,
+      "E_accounting": true,
+      "F_reconcile": true,
+      "F_identity": true,
+      "F_selection": true,
+      "F_readings": true,
+      "G_parity": true,
+      "G_sign": true,
+      "G_causal": true,
+      "H_queue": true,
+      "I_resources": true
+    },
+    "details": {
+      "complete": {
+        "20261024": 7,
+        "20261025": 5,
+        "20261026": 5,
+        "20261027": 2
+      },
+      "C_mismatch": 0,
+      "D_log_bad": 0,
+      "D_command_escapes": 0,
+      "D_repeat_requests": 0,
+      "D_disabled_bad": 0,
+      "D_commands_at_on_ticks": 4648,
+      "F_reconcile_bad": 0,
+      "F_identity_bad": 0,
+      "F_selection": {
+        "answer": "SELECTION_BEYOND_EXPOSURE",
+        "selected": 111,
+        "states": 4831,
+        "J": -97.72575217515998,
+        "null_mean": -32.080587315003015,
+        "null_p05": -58.801108025440044,
+        "movable_strata": 59,
+        "valid_window_q": 1066.5643728326534,
+        "total_window_q": 1066.5643728326534,
+        "excluded_window_q": 0.0
+      },
+      "F_readings": {
+        "END_by_day": {
+          "20261024": 31276.762616277134,
+          "20261025": 36873.90531126577,
+          "20261026": 36125.09838414239,
+          "20261027": 19172.334949677756
+        },
+        "per_share_all": {
+          "20261024": 0.7660778352974595,
+          "20261025": 1.2932269405228562,
+          "20261026": 0.7042854501892215,
+          "20261027": 1.559375906878658
+        },
+        "interpretation": "better_selection"
+      },
+      "G_parity_bad": 0,
+      "G_sign_bad": 0,
+      "G_causal_bad": 0,
+      "H_queue_bad": 0,
+      "I": {
+        "core_hours": 0.398469444444444,
+        "peak_mib": 1276
+      }
+    },
+    "all_ok": true
+  },
+  "receipt_hashes": {
+    "arms.csv": "2bba64b1ffb827d96d3d82f00f36a5a1d08ed72874e6ec741489d9759fb1a6af",
+    "audit.json": "c703f0104c3923ae3ef1f6a4d06f887f2d952e749621c343e68bb7dcdb421f64",
+    "causal.csv": "732492b342dda63a0cf0852264d578d45aca447430184d7847800acc3eebe732",
+    "control.csv": "3f5afe63e84ee5e12c2029d504dabd3cd092a3af4be1277ec7e6df5d9776933d",
+    "days/20261024.json": "ab599b8eceefb881fe712bb7ceb9c314fc7eb3b5ef6872778f58f2c2f2a67277",
+    "days/20261025.json": "3874552b6ae995cccf46ba820963fd27222ba530fb552dab74d28fbcd9f3bfe8",
+    "days/20261026.json": "0833d2c4278d89e6a6af24a72e4c6313ddf411da267b5aa5b428513fa96d30d6",
+    "days/20261027.json": "25345c86153002aa643ff8c06862b906373e171a10e63eaf4e687647842a55cd",
+    "lost_added.csv": "6d398c579a0778c5a087b269a6f038e857759d6f057b8c577f3d5f41e250b7f1",
+    "pilot/20261024.json": "ddfa01d0c2d1798da16ea397e48ee5e2573c60c4c592f714cbc5bf920c7f3cc7",
+    "pilot/20261025.json": "f3016ed8e641aaf16d7c9c76549fefbc07ee8a6a631dfbb95f5cb6f590b1384e",
+    "pilot/20261026.json": "ae2e59a6a31dc03f1d8a4dfd1d593bc3292d72b5602b45806f7bf064adaa21d2",
+    "pilot/20261027.json": "71c0d33ab865eafef058521f31e34ab3dbd9ddd6c808edc5d50db1f94e3718a2",
+    "rehearsal/checks_falsifier_rehearsal.json": "ca6703ea18b45b9df2f1904f84019ce068eeaddadd5a1d2e5a19fe5718d168f0",
+    "rehearsal/checks_rehearsal.json": "e0d53c0384fdc0fe780d49ef0352cf0df469c450935bb02ffbf8b5d0de8bbe92",
+    "selection.json": "cc8facf685d63f2ae068b0e02a54683a54326925f14f52300d5c33e0e3bc171c"
+  },
+  "selection": {
+    "answer": "SELECTION_BEYOND_EXPOSURE",
+    "selected": 111,
+    "states": 4831,
+    "censored": 9,
+    "selected_censored": 0,
+    "J": -97.72575217515998,
+    "J_per_valid_share": -10.17056144734432,
+    "valid_window_q": 1066.5643728326534,
+    "total_window_q": 1066.5643728326534,
+    "excluded_window_q": 0.0,
+    "null_mean": -32.080587315003015,
+    "null_p05": -58.801108025440044,
+    "null_p95": -8.084515125723597,
+    "percentile": 0.0,
+    "null_q_p05": -5.372137808322056,
+    "strata": 887,
+    "movable_strata": 59,
+    "movable_selected": 104,
+    "degenerate_strata": 5,
+    "missing_feature": 0,
+    "per_side": {
+      "0": {
+        "selected": 51,
+        "J": -26.35989219840936,
+        "null_mean": -8.550463510957819,
+        "null_p05": -35.90424746823828,
+        "percentile": 0.132
+      },
+      "1": {
+        "selected": 60,
+        "J": -158.38673315539802,
+        "null_mean": -52.08119254844143,
+        "null_p05": -100.8007317043993,
+        "percentile": 0.0
+      }
+    },
+    "draws": 500,
+    "seed": 20261121
+  },
+  "clocks": [
+    {
+      "day": "20261024",
+      "m": 3697902,
+      "side": 0,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 785.5
+    },
+    {
+      "day": "20261024",
+      "m": 3697902,
+      "side": 1,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 785.5
+    },
+    {
+      "day": "20261024",
+      "m": 3699278,
+      "side": 0,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 473.5
+    },
+    {
+      "day": "20261024",
+      "m": 3699278,
+      "side": 1,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 473.5
+    },
+    {
+      "day": "20261024",
+      "m": 3700070,
+      "side": 0,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 920.5
+    },
+    {
+      "day": "20261024",
+      "m": 3700070,
+      "side": 1,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 920.5
+    },
+    {
+      "day": "20261024",
+      "m": 3702960,
+      "side": 0,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 766.5
+    },
+    {
+      "day": "20261024",
+      "m": 3702960,
+      "side": 1,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 766.5
+    },
+    {
+      "day": "20261024",
+      "m": 3704004,
+      "side": 0,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 695.5
+    },
+    {
+      "day": "20261024",
+      "m": 3704004,
+      "side": 1,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 695.5
+    },
+    {
+      "day": "20261024",
+      "m": 3712725,
+      "side": 0,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 514.5
+    },
+    {
+      "day": "20261024",
+      "m": 3712725,
+      "side": 1,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 514.5
+    },
+    {
+      "day": "20261024",
+      "m": 3716727,
+      "side": 0,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 477.5
+    },
+    {
+      "day": "20261024",
+      "m": 3716727,
+      "side": 1,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 477.5
+    },
+    {
+      "day": "20261025",
+      "m": 3723774,
+      "side": 0,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 529.5
+    },
+    {
+      "day": "20261025",
+      "m": 3723774,
+      "side": 1,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 529.5
+    },
+    {
+      "day": "20261025",
+      "m": 3734864,
+      "side": 0,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 673.5
+    },
+    {
+      "day": "20261025",
+      "m": 3734864,
+      "side": 1,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 673.5
+    },
+    {
+      "day": "20261025",
+      "m": 3737919,
+      "side": 0,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 714.5
+    },
+    {
+      "day": "20261025",
+      "m": 3737919,
+      "side": 1,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 714.5
+    },
+    {
+      "day": "20261025",
+      "m": 3763401,
+      "side": 0,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 655.5
+    },
+    {
+      "day": "20261025",
+      "m": 3763401,
+      "side": 1,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 655.5
+    },
+    {
+      "day": "20261025",
+      "m": 3776314,
+      "side": 0,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 1385.5
+    },
+    {
+      "day": "20261025",
+      "m": 3776314,
+      "side": 1,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 1385.5
+    },
+    {
+      "day": "20261026",
+      "m": 3789484,
+      "side": 0,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 442.5
+    },
+    {
+      "day": "20261026",
+      "m": 3789484,
+      "side": 1,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 442.5
+    },
+    {
+      "day": "20261026",
+      "m": 3803131,
+      "side": 0,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 692.5
+    },
+    {
+      "day": "20261026",
+      "m": 3803131,
+      "side": 1,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 692.5
+    },
+    {
+      "day": "20261026",
+      "m": 3804696,
+      "side": 0,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 537.5
+    },
+    {
+      "day": "20261026",
+      "m": 3804696,
+      "side": 1,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 537.5
+    },
+    {
+      "day": "20261026",
+      "m": 3838531,
+      "side": 0,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 324.5
+    },
+    {
+      "day": "20261026",
+      "m": 3838531,
+      "side": 1,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 324.5
+    },
+    {
+      "day": "20261026",
+      "m": 3850428,
+      "side": 0,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 739.5
+    },
+    {
+      "day": "20261026",
+      "m": 3850428,
+      "side": 1,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 739.5
+    },
+    {
+      "day": "20261027",
+      "m": 3877472,
+      "side": 0,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 507.5
+    },
+    {
+      "day": "20261027",
+      "m": 3877472,
+      "side": 1,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 507.5
+    },
+    {
+      "day": "20261027",
+      "m": 3899224,
+      "side": 0,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 743.5
+    },
+    {
+      "day": "20261027",
+      "m": 3899224,
+      "side": 1,
+      "rows": 5960,
+      "min_age": 0.5,
+      "max_age": 743.5
+    }
+  ],
+  "commands": {
+    "pressure_pull": 433,
+    "pressure_withhold": 1289
+  },
+  "queue_reentries": {
+    "n": 430,
+    "different_rung": 274,
+    "same_price": 57,
+    "before_old_removal": 0
+  },
+  "day_totals": [
+    {
+      "day": "20261024",
+      "arm": "disabled",
+      "end_value": -64287.86774717526,
+      "q": 35761.43200600747,
+      "mo1s": -61614.3179317701,
+      "valid_q": 35728.165339340805,
+      "mo50": -26511.260600912174,
+      "both_exact": 0.39850431447746887,
+      "bid_exact": 0.6502142857142857,
+      "ask_exact": 0.7206615532118887
+    },
+    {
+      "day": "20261024",
+      "arm": "pressure",
+      "end_value": -33011.105130898126,
+      "q": 33793.396018612184,
+      "mo1s": -32357.492642288664,
+      "valid_q": 33760.129351945514,
+      "mo50": -14362.229116418928,
+      "both_exact": 0.46335714285714286,
+      "bid_exact": 0.6876255992329818,
+      "ask_exact": 0.7502780441035475
+    },
+    {
+      "day": "20261025",
+      "arm": "disabled",
+      "end_value": -66495.76606478279,
+      "q": 26959.380418520494,
+      "mo1s": -54432.53881769054,
+      "valid_q": 26704.39693029039,
+      "mo50": -30250.530207261545,
+      "both_exact": 0.41156174496644293,
+      "bid_exact": 0.6681845637583892,
+      "ask_exact": 0.716596644295302
+    },
+    {
+      "day": "20261025",
+      "arm": "pressure",
+      "end_value": -29621.860753517012,
+      "q": 24407.752451356442,
+      "mo1s": -17996.45166575444,
+      "valid_q": 24152.768963126342,
+      "mo50": -6919.9462642929075,
+      "both_exact": 0.4568543624161074,
+      "bid_exact": 0.681010067114094,
+      "ask_exact": 0.7488630872483222
+    },
+    {
+      "day": "20261026",
+      "arm": "disabled",
+      "end_value": -45400.15656970043,
+      "q": 24370.299889366237,
+      "mo1s": -61126.41092541069,
+      "valid_q": 24271.465306032907,
+      "mo50": -24685.72885953267,
+      "both_exact": 0.41769530201342286,
+      "bid_exact": 0.6666026845637584,
+      "ask_exact": 0.6620597315436242
+    },
+    {
+      "day": "20261026",
+      "arm": "pressure",
+      "end_value": -9275.058185558062,
+      "q": 16513.249716696682,
+      "mo1s": -29854.126925308366,
+      "valid_q": 16456.152338346168,
+      "mo50": -5129.756012862287,
+      "both_exact": 0.33851275167785233,
+      "bid_exact": 0.5717067114093959,
+      "ask_exact": 0.4869234899328859
+    },
+    {
+      "day": "20261027",
+      "arm": "disabled",
+      "end_value": -33373.91826838687,
+      "q": 9899.958819329906,
+      "mo1s": -25910.653873144314,
+      "valid_q": 9899.958819329906,
+      "mo50": -10300.48916000509,
+      "both_exact": 0.39841275167785234,
+      "bid_exact": 0.6561442953020133,
+      "ask_exact": 0.6937936241610738
+    },
+    {
+      "day": "20261027",
+      "arm": "pressure",
+      "end_value": -14201.583318709112,
+      "q": 4685.068243532474,
+      "mo1s": -4956.206003108195,
+      "valid_q": 4685.068243532474,
+      "mo50": -1242.21740815693,
+      "both_exact": 0.20774664429530199,
+      "bid_exact": 0.3558322147651007,
+      "ask_exact": 0.3486845637583893
+    }
+  ],
+  "falsifiers": {
+    "cases": {
+      "coordinated_markout_and_reading": {
+        "family": "F",
+        "target": "F_reconcile",
+        "clean": true,
+        "refused": true,
+        "flipped": [
+          "F_readings",
+          "F_reconcile"
+        ]
+      },
+      "logged_x_below_the_edge": {
+        "family": "D",
+        "target": "D_log",
+        "clean": true,
+        "refused": true,
+        "flipped": [
+          "D_log"
+        ]
+      },
+      "a_keep_at_an_on_tick": {
+        "family": "D",
+        "target": "D_commands",
+        "clean": true,
+        "refused": true,
+        "flipped": [
+          "D_commands"
+        ]
+      },
+      "disabled_fill_dropped": {
+        "family": "C",
+        "target": "C_disabled_equals_baseline",
+        "clean": true,
+        "refused": true,
+        "flipped": [
+          "C_disabled_equals_baseline"
+        ]
+      },
+      "cash_changed": {
+        "family": "E",
+        "target": "E_accounting",
+        "clean": true,
+        "refused": true,
+        "flipped": [
+          "E_accounting"
+        ]
+      },
+      "lost_end_changed": {
+        "family": "F",
+        "target": "F_identity",
+        "clean": true,
+        "refused": true,
+        "flipped": [
+          "F_identity"
+        ]
+      },
+      "selection_seed_changed": {
+        "family": "F",
+        "target": "F_selection",
+        "clean": true,
+        "refused": true,
+        "flipped": [
+          "F_selection"
+        ]
+      },
+      "stored_interpretation_changed": {
+        "family": "F",
+        "target": "F_readings",
+        "clean": true,
+        "refused": true,
+        "flipped": [
+          "F_readings"
+        ]
+      },
+      "a_cache_value_changed": {
+        "family": "G",
+        "target": "G_parity",
+        "clean": true,
+        "refused": true,
+        "flipped": [
+          "G_parity",
+          "G_sign"
+        ]
+      },
+      "a_causal_entry_not_fired": {
+        "family": "G",
+        "target": "G_causal",
+        "clean": true,
+        "refused": true,
+        "flipped": [
+          "G_causal"
+        ]
+      },
+      "a_pull_without_its_queue_entry": {
+        "family": "H",
+        "target": "H_queue",
+        "clean": true,
+        "refused": true,
+        "flipped": [
+          "H_queue"
+        ]
+      },
+      "a_member_dropped": {
+        "family": "B",
+        "target": "B_membership",
+        "clean": true,
+        "refused": true,
+        "flipped": [
+          "B_membership"
+        ]
+      },
+      "a_record_rule_changed": {
+        "family": "A",
+        "target": "A_rule",
+        "clean": true,
+        "refused": true,
+        "flipped": [
+          "A_rule"
+        ]
+      },
+      "resources_over_the_cap": {
+        "family": "I",
+        "target": "I_resources",
+        "clean": true,
+        "refused": true,
+        "flipped": [
+          "I_resources"
+        ]
+      }
+    },
+    "falsifier_ok": true
+  },
+  "coordinated_uptime_corruption_accepted": true
+}

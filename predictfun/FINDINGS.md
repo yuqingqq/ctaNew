@@ -1,3 +1,33 @@
+<!-- LADDER_PRESSURE_REVIEW_20261121_CODEX -->
+## 2026-11-21 — BINANCE-PRESSURE-GUARD-v1 independently reviewed
+
+[Report and evidence](reviews/automatic/20261121_ladder_pressure_review/report.md),
+target **40a3ee8d4cac39e98ee065845df63f853544c855**. No blocking finding.
+All 19 disabled paths reproduce the baseline; 38 ledger/accounting and exact
+participation/inventory reconciliations pass. All 226,480 cache side/ticks
+equal the stored bn_r250/age decision rows; source uses E+1.5+2 <= tau.
+The 64 saved causal records, 22 checks, 14 falsifiers and selftest hold.
+
+Paired END +123,448.1 c; pressure END -86,109.6 c; +1 s/share -1.077 c.
+Pooled local selection passes; bid-only percentile 13.2%, ask 0.0%, not
+prospective inference. Lower participation materially contributes and
+path-coupled inventory remains. Same public flow is a counterfactual
+assumption, not established exchange realism.
+
+Two NONBLOCKING findings bundled for the next round: a coordinated +25 pp
+uptime corruption still passes the checker (current values independently
+protected); queue birth is initialized at activation but stamped submission,
+and next same-side order is usually not a same-price replacement (57/430
+same price, 274 different rungs). Prior economic markout-checker flaw and
+isolated guard tests are fixed; queue logging now exists with these limits.
+
+ONE next priority is PRESSURE-LEAD-SENSITIVITY-v1: fixed +50 ms signal lag,
+zero-lag reproduction, unchanged strategy and consumed population, at most
+0.50 additional core-hours within the original 2.0 cumulative ceiling.
+No additional USER permission in that scope. No new day, model fit, threshold
+tuning, validation or promotion is authorized by this review.
+<!-- /LADDER_PRESSURE_REVIEW_20261121_CODEX -->
+
 <!-- LADDER_GUARD_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — Review of P103: useful diagnostic improvement, selection unproven
 

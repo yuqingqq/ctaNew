@@ -1,0 +1,19 @@
+PRESSURE SELFTEST PASSED: disabled = baseline, the signal and precedence, the hand tape (pulls, withholds, re-entry, queue), the cache helpers and causal plumbing, the selection control, measurement and readings, guards
+Pinned selftest and saved checks passed
+All cache rows, disabled paths, 38 ledgers, exact exposure and intervention times reconciled
+{
+  "arms": 38,
+  "cache_rows": 226480,
+  "commands": {
+    "pressure_pull": 433,
+    "pressure_withhold": 1289
+  },
+  "queue": {
+    "n": 430,
+    "different_rung": 274,
+    "same_price": 57,
+    "before_old_removal": 0
+  },
+  "coordinated_uptime_corruption_accepted": true
+}
+2026-11-21T19:32:45Z tag=codex_pressure_review_v2 rc=0 peak_rss_mib=503 wall_s=19.99 cpu_user_s=19.48 memavail_start_gib=23 disk_free_gib=437->437 slot=codex
