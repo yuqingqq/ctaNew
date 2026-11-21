@@ -1,16 +1,17 @@
-  0 a tie POSTs: CAUGHT (1.1 s) - ADV2 ENTRY EVAL SELFTEST FAILED: frame: a tie did not WAIT, or RICH is not on the same rows
-  1 unsupported rows decided: CAUGHT (3.3 s) - ADV2 ENTRY EVAL SELFTEST FAILED: frame: SMOOTH actions / d (['WAIT', 'WAIT', 'WAIT', 'WAIT', 'WAIT', 'WAIT', 'POST', 'POST', 'POST', 'POST', 'POST', '
-  2 RICH from the SMOOTH heads: CAUGHT (1.1 s) - ADV2 ENTRY EVAL SELFTEST FAILED: frame: a tie did not WAIT, or RICH is not on the same rows
-  3 the training mean of the other side: CAUGHT (1.1 s) - ADV2 ENTRY EVAL SELFTEST FAILED: frame: rows / training means / categories / day type
-  4 the identity ignores Y: CAUGHT (1.1 s) - ADV2 ENTRY EVAL SELFTEST FAILED: r3_identity: an altered Y passed
-  5 the identity ignores w: CAUGHT (2.6 s) - ADV2 ENTRY EVAL SELFTEST FAILED: r3_identity: an altered w passed
+  0 a tie POSTs: CAUGHT (1.0 s) - ADV2 ENTRY EVAL SELFTEST FAILED: frame: a tie did not WAIT, or RICH is not on the same rows
+  1 unsupported rows decided: CAUGHT (1.0 s) - ADV2 ENTRY EVAL SELFTEST FAILED: frame: SMOOTH actions / d (['WAIT', 'WAIT', 'WAIT', 'WAIT', 'WAIT', 'WAIT', 'POST', 'POST', 'POST', 'POST', 'POST', '
+  2 RICH from the SMOOTH heads: CAUGHT (1.0 s) - ADV2 ENTRY EVAL SELFTEST FAILED: frame: a tie did not WAIT, or RICH is not on the same rows
+  3 the training mean of the other side: CAUGHT (1.0 s) - ADV2 ENTRY EVAL SELFTEST FAILED: frame: rows / training means / categories / day type
+  4 the identity ignores Y: CAUGHT (1.0 s) - ADV2 ENTRY EVAL SELFTEST FAILED: r3_identity: an altered Y passed
+  5 the identity ignores w: CAUGHT (1.0 s) - ADV2 ENTRY EVAL SELFTEST FAILED: r3_identity: an altered w passed
   6 the identity ignores the predictions: CAUGHT (1.0 s) - ADV2 ENTRY EVAL SELFTEST FAILED: r3_identity: an altered pred_RICH passed
-  7 the identity ignores missing rows: CAUGHT (1.1 s) - ADV2 ENTRY EVAL SELFTEST FAILED: r3_identity: a missing row passed
+  7 the identity ignores missing rows: CAUGHT (1.0 s) - ADV2 ENTRY EVAL SELFTEST FAILED: r3_identity: a missing row passed
   8 calibration bins without their weight: CAUGHT (1.0 s) - ADV2 ENTRY EVAL SELFTEST FAILED: calibration: 0 RICH (-1, -0.5] pooling by w_sum (1.0) is not the weighted mean (1.0)
   9 the stratum value unweighted: CAUGHT (1.0 s) - ADV2 ENTRY EVAL SELFTEST FAILED: strata: rows / posts / value per stratum, or the declared dimensions
   10 the predicate value of the all group: CAUGHT (1.0 s) - ADV2 ENTRY EVAL SELFTEST FAILED: predicates: a passing candidate failed ({'day': 'd', 'side': 0, 'candidate': 'SMOOTH', 'admissions': 60, 'status': 'a
   11 zero admissions admitted: CAUGHT (1.0 s) - ADV2 ENTRY EVAL SELFTEST FAILED: predicates: zero admissions was not no_admissions with every predicate false ({'day': 'd', 'side': 0, 'candidate': 'R
   12 the p95 predicate on the mean: CAUGHT (1.0 s) - ADV2 ENTRY EVAL SELFTEST FAILED: predicates: a negative POST group had positive value, or the mean / p95 predicates are not separate
-  13 the evaluation without the committed fit: CAUGHT (1.0 s) - ADV2 ENTRY EVAL SELFTEST FAILED: cmd_eval: ran without a committed fit manifest
-control: PASSED (1.0 s); sources {'pf_adv2_entry_eval.py': '40730500a438dcdd', 'pf_adv2_entry_eval_mutants.py': 'edd4fe7fca6a1e54', 'pf_adv2_entry_eval_selftest.py': 'd1b6e0b011d0dfff'}
-mutation check passed: the control passes its selftest, 14 / 14 planted code errors are caught by a check (0.3 CPU min)
+  13 the R3 file parsed by the default float converter: CAUGHT (1.0 s) - ADV2 ENTRY EVAL SELFTEST FAILED: read_r3: a CSV round trip is not exact ({'rows': 24, 'r3_rows': 24, 'same_keys': True, 'y_equal': False, 'w_equal': F
+  14 the evaluation without the committed fit: CAUGHT (1.1 s) - ADV2 ENTRY EVAL SELFTEST FAILED: cmd_eval: ran without a committed fit manifest
+control: PASSED (1.0 s); sources {'pf_adv2_entry_eval.py': '27f3e6dc4154dcf3', 'pf_adv2_entry_eval_mutants.py': 'b6002bbb8cb21a11', 'pf_adv2_entry_eval_selftest.py': '0999a8b3ddef014f'}
+mutation check passed: the control passes its selftest, 15 / 15 planted code errors are caught by a check (0.3 CPU min)

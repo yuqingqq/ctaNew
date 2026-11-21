@@ -69,6 +69,12 @@ def frame(E, smooth, rich, csup, fz):
     return D
 
 
+def read_r3(p):
+    """A saved predictions file, every float parsed exactly (pandas' default C parser is not round-trip exact: ~1 ulp on ~28 % of R3's weights;
+    freeze amendment 2026-11-21)."""
+    return pd.read_csv(p, float_precision='round_trip')
+
+
 def r3_identity(D, r3):
     """The existing labels reused unchanged: the same POST row keys, Y, w and RICH predictions as R3's saved predictions -> dict of booleans."""
     r = r3[r3['head'] == 'post'].copy(); r['day'] = r.day.astype(str); a = D.set_index(KEY).sort_index(); b = r.set_index(KEY).sort_index()
@@ -153,7 +159,7 @@ def cmd_eval(out=N.OUT, rec=RECEIPT):
     acc = json.loads((AE.EVAL_DIR / 'accepted.json').read_text())
     C.require(acc['accepted'] is True and acc['plan_sha256'] == AE.EVAL_PLAN_SHA and acc['dataset_sha256'] == R3_DATASET, "not R3's accepted evaluation dataset")
     E, st = A.extract(A.dataset_rows(AE.EVAL_DIR, R3_DATASET), AS.EVAL_DAYS); E = {h: E[h] for h in N.HEADS}
-    D = frame(E, smooth, rich, csup, fz); idn = r3_identity(D, pd.read_csv(N.REPO / R3_PRED))
+    D = frame(E, smooth, rich, csup, fz); idn = r3_identity(D, read_r3(N.REPO / R3_PRED))
     C.require(all(v for k, v in idn.items() if k not in ('rows', 'r3_rows')), f"the reused rows / labels / weights / RICH predictions differ from R3's: {idn}")
     R = evaluate(D); dst.mkdir(parents=True, exist_ok=True)
     for k in ('readings', 'screens', 'calibration', 'control', 'strata', 'coverage', 'predicates'):

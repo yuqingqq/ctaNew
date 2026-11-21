@@ -1,2 +1,2 @@
 adv2 entry eval selftest passed: frame (actions, tie, fallback, same rows, training means); r3_identity (equal; altered Y / w / prediction / missing row); readings and screens; calibration pooling by w_sum; strata (hand-computed); predicates (pass, no_admissions, negative value); the eval refusal
-2026-11-21T06:49:10Z tag=pf_adv2_entry_eval_selftest rc=0 peak_rss_mib=200 wall_s=1.17 cpu_user_s=1.03 memavail_start_gib=22 disk_free_gib=443->443 slot=claude
+2026-11-21T06:58:23Z tag=pf_adv2_entry_eval_selftest rc=0 peak_rss_mib=200 wall_s=1.19 cpu_user_s=1.01 memavail_start_gib=22 disk_free_gib=442->442 slot=claude

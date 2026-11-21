@@ -21,5 +21,6 @@ MUTANTS = [
     ('the predicate value of the all group', "& (rd.candidate == cand) & (rd.group == 'POST')].iloc[0]", "& (rd.candidate == cand) & (rd.group == 'all')].iloc[0]"),
     ('zero admissions admitted', "status='no_admissions' if n == 0 else 'admitted'", "status='admitted'"),
     ('the p95 predicate on the mean', "above_draw_p95=bool(n > 0 and real > p95)", "above_draw_p95=bool(n > 0 and real > dm)"),
+    ('the R3 file parsed by the default float converter', "    return pd.read_csv(p, float_precision='round_trip')", "    return pd.read_csv(p)"),
     ('the evaluation without the committed fit', "    C.require(N.committed_equal(rec / 'fit' / 'fit.json', out / 'fit.json'), 'the fit manifest is not committed in HEAD: no label is read before the model hashes')\n", ""),
 ]
