@@ -1,0 +1,67 @@
+GUARD SELFTEST PASSED: disabled = baseline, the signal and precedence, the hand tape (both side orders, notices, no timer), the selection control, the censor count, arm metrics and readings, guards
+Pinned selftest and 21 saved checks passed.
+All arm metrics, actual guard reservations and commands reconciled.
+{
+  "pairs": 19,
+  "commands": {
+    "guard_withhold": 37989,
+    "guard_pull": 588,
+    "near_end_withholds": 5
+  },
+  "worst": {
+    "day": "20261026",
+    "m": 3838531,
+    "delta": {
+      "end": -10779.043979602131,
+      "q": 2224.1617831784256,
+      "mo1s": -3869.2866520084945,
+      "post1s_to_END": -7212.705394735218,
+      "late_or_missing_END": 302.948067141582,
+      "mean_abs_exact": -16.67123409606559,
+      "mean_abs_grid": -16.66614241968709,
+      "band_fraction_exact": -0.0029832214765100895,
+      "band_fraction_grid": -0.0030201342281879207,
+      "terminal_inventory": -124.85894090966599,
+      "peak_abs_exact": -23.283179661017016,
+      "both_exact": 0.06697651006711411,
+      "bid_q": 1049.6514211343795,
+      "ask_q": 1174.510362044046
+    },
+    "arms": {
+      "disabled": {
+        "end": -4906.061334672079,
+        "q": 2930.8774409380226,
+        "mo1s": -6086.200241917078,
+        "post1s_to_END": 1180.1389072450006,
+        "late_or_missing_END": 0.0,
+        "mean_abs_exact": 106.18591776147555,
+        "mean_abs_grid": 106.16944350796199,
+        "band_fraction_exact": 0.40806711409395974,
+        "band_fraction_grid": 0.4080536912751678,
+        "terminal_inventory": 99.82072264577175,
+        "peak_abs_exact": 191.31741192977586,
+        "both_exact": 0.1288456375838926,
+        "bid_q": 1515.349081791897,
+        "ask_q": 1415.5283591461252
+      },
+      "guard": {
+        "end": -15685.105314274211,
+        "q": 5155.039224116448,
+        "mo1s": -9955.486893925572,
+        "post1s_to_END": -6032.566487490218,
+        "late_or_missing_END": 302.948067141582,
+        "mean_abs_exact": 89.51468366540996,
+        "mean_abs_grid": 89.5033010882749,
+        "band_fraction_exact": 0.40508389261744965,
+        "band_fraction_grid": 0.40503355704697985,
+        "terminal_inventory": -25.038218263894233,
+        "peak_abs_exact": 168.03423226875884,
+        "both_exact": 0.19582214765100672,
+        "bid_q": 2565.0005029262766,
+        "ask_q": 2590.038721190171
+      }
+    }
+  },
+  "coordinated_markout_corruption_accepted": true
+}
+2026-11-21T18:37:08Z tag=codex_ladder_guard_review rc=0 peak_rss_mib=458 wall_s=67.30 cpu_user_s=66.71 memavail_start_gib=23 disk_free_gib=437->437 slot=codex

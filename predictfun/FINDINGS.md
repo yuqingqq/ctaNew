@@ -1,3 +1,27 @@
+<!-- LADDER_GUARD_REVIEW_20261121_CODEX -->
+## 2026-11-21 — Review of P103: useful diagnostic improvement, selection unproven
+
+[Combined review and independent evidence](reviews/automatic/20261121_ladder_guard_review/report.md),
+target **84a4f999eabdfbe1e756b3f59213a641dc343a4e**. All 19 disabled ledgers
+and command/state arrays reproduce the accepted baseline. Every guard input
+reconciles to actual submission/notice clocks. Paired END +33,443.648 c,
+15 markets better / 4 worse; total guard END -176,114.061 c. The local
+500-draw screen does not pass (7.4th percentile, not evidence of no effect).
+
+Worst market 3838531: END delta -10,779.044 c = -3,869.287 c through +1s,
+-7,212.705 c thereafter to END, +302.948 c in late/missing-horizon fills.
+Quantity rises 2,224.162 while average |I| falls 16.671 shares. This is an
+accounting decomposition, not causal attribution to a single inventory action.
+
+No blocking rerun. The checker still trusts stored markout fields (a coordinated
+corruption passes); this review's direct reconciliation protects the current
+readings. Queue state at guard pulls/re-entry is missing, and one selftest
+header overstates guard coverage. Bundle these NONBLOCKING items with ONE
+BINANCE-PRESSURE-GUARD-v1 experiment under the report's frozen-rule contract,
+using the original ladder control and same consumed population. Do not stack
+or tune the reservation guard. No promotion, new day or validation claim.
+<!-- /LADDER_GUARD_REVIEW_20261121_CODEX -->
+
 <!-- LADDER_AUDIT_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — Review of P102: audit accepted, economic signal still unproven
 

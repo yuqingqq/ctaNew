@@ -23,6 +23,36 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- LADDER_GUARD_REVIEW_20261121_CODEX -->
+## 2026-11-21 — Ask reservation guard reviewed; next: external market pressure
+
+[Combined review](reviews/automatic/20261121_ladder_guard_review/report.md) of
+**84a4f999eabdfbe1e756b3f59213a641dc343a4e** accepts this consumed-day
+experiment; no blocking rerun, no promotion. Independently checked 19 paired
+ledgers, disabled command/state parity, every intervention's known B/position,
+markouts/cutoffs, exact uptime and the 500-draw selection statistics.
+
+END improves +33,443.648 c overall but remains -176,114.061 c, with Oct 26
+worse. +1s per valid share improves from -2.102 to -1.886 c; the matched local
+selection screen fails its declared criterion. Market 3838531 trades 2,224
+more shares and loses another 10,779 c despite lower average and peak |I|.
+The guard's feedback changes more than inventory size or quote participation.
+
+Three NONBLOCKING issues to bundle: reconcile all paired markout/exposure
+fields directly from ledgers in the checker; record queue state at pulls and
+re-entry; correct the selftest's operational-coverage claims. Current metrics
+are independently verified. No fix-only round needed.
+
+ONE next priority: **BINANCE-PRESSURE-GUARD-v1**, the report's exact contract.
+One new candidate against the original ladder, without the reservation guard:
+per-side causal adv_bn_r250 in its frozen live q5 triggers pull/withhold;
+clearance immediately restores baseline posting, no timer. Same 19 markets,
+2 levels, nominal 100 shares, inventory and latency settings. Same 8-market
+pilot; <=0.75 additional core-hours within the unused original allocation.
+Freeze before results; matched local controls and full feedback metrics stay
+separate. One combined receipt. No additional USER permission in this scope.
+<!-- /LADDER_GUARD_REVIEW_20261121_CODEX -->
+
 <!-- LADDER_AUDIT_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — Lead-time audit accepted; next: one ask-side guard experiment
 

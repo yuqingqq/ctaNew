@@ -1,4 +1,26 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+ladder_guard_review_20261121_codex:
+  status: paired_diagnostic_accepted_no_promotion_no_rerun
+  target_commit: 84a4f999eabdfbe1e756b3f59213a641dc343a4e
+  report: predictfun/reviews/automatic/20261121_ladder_guard_review/report.md
+  selected_markets: 96
+  complete_markets: 19
+  independently_checked_arm_ledgers: 38
+  saved_checks_passed: 21
+  saved_falsifiers_passed: 7
+  guard_pulls_reconciled: 588
+  guard_withholds_reconciled: 37989
+  paired_end_delta_cents: 33443.64793312087
+  guard_end_value_cents: -176114.0607169245
+  interpretation: mixed
+  blocking_findings: 0
+  nonblocking_findings: [paired_metric_checker_boundary, missing_queue_attribution, selftest_coverage_claim]
+  next_priority: BINANCE-PRESSURE-GUARD-v1
+  next_round_core_hour_ceiling: 0.75
+  within_unused_original_allocation: true
+  additional_user_permission_within_scope: false
+  untouched_validation: false
+
 ladder_audit_review_20261121_codex:
   status: accepted_descriptive_audit_no_blocking_rerun
   target_commit: 6b14fbf951a96baebd885f96a93ecd10a7744bd8
