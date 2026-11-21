@@ -1,3 +1,36 @@
+default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_full_market/plan.md
+default_post_full_market_20261121_codex:
+  status: user_simplified_single_strategy_handoff_ready
+  source_head: 40d11d2185f611616193c390065822b82c524281
+  plan: predictfun/reviews/automatic/20261121_default_post_full_market/plan.md
+  supersedes: [default_post_plan_20261121_codex, default_post_duration_size_20261121_codex, default_post_inventory_20261121_codex]
+  primary_strategy: LARGE_REST_INVENTORY_v1
+  strategy_arms: 1
+  size_or_inventory_comparison_matrix: false
+  max_new_order_shares: 100
+  hard_cap_shares: 100
+  inventory_target_shares: 0
+  soft_trigger_shares: 50
+  recovery_band_shares: 25
+  start: market_open_wait_for_causally_valid_book
+  supported_end_offset_ms: 298000
+  stop_at_first_minute: false
+  reset_at_minute_boundaries: false
+  no_free_terminal_liquidation: true
+  consumed_days: ["20261024", "20261025", "20261026", "20261027"]
+  population: unique_parent_manifest_markets_one_hash_ranked_per_opening_hour
+  markets_max: 96
+  pilot_markets: 8
+  core_hours_ceiling: 2
+  also_bounded_by_unused_previous_eight_hour_allocation: true
+  pilot_core_hours_ceiling: 0.25
+  new_model_fits: 0
+  necessary_correctness_checks_only: true
+  combined_reviews: 1
+  extra_user_approval_within_contract: false
+  implementation_owner: development_session
+  new_simulations_by_planning_session: 0
+
 default_post_inventory_20261121_codex:
   status: user_directed_inventory_comparison_ready
   source_head: a4c0d2880b8ce3039de20aa99af91ced0e9633d9

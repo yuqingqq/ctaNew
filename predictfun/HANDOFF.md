@@ -23,6 +23,32 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- DEFAULT_POST_FULL_MARKET_20261121_CODEX -->
+## 2026-11-21 — SINGLE CURRENT PLAN: large orders + inventory, across the market
+
+**Read [the consolidated full-market plan](reviews/automatic/20261121_default_post_full_market/plan.md).**
+The USER explicitly simplifies the experiment: test large resting orders WITH
+inventory management; do not run many variants or limit quoting to one minute.
+This supersedes ALL earlier default-post matrices/addenda below. Those entries
+are historical, not cumulative requirements or additional launch instructions.
+
+One primary strategy, LARGE_REST_INVENTORY_v1: max new size100, cap100,
+inventory target zero, soft trigger50/recovery25, room-clipped inventory-aware
+new sizes and selective inventory pulls. Preserve partial-order priority,
+notices and structural rules. No comparison-size matrix, separate no-inventory
+run, PI0 extrapolation, prediction fit or discretionary model guard this round.
+
+Quote continuously from opening/first causally valid book through the existing
+supported market endpoint (start+298s). No 5s/60s cutoff or minute resets.
+Minute observations are diagnostics; final inventory is marked, not freely
+liquidated. Reuse unique market IDs from the consumed Oct24-27 manifest;
+select at most one per opening hour, <=96 markets, with explicit coverage
+statuses and no outcome-based backfill. Eight-market pilot, unchanged budget
+and resource limits. Necessary correctness checks only, one combined receipt
+and review. Development can proceed under this single plan without another
+confirmation; the remaining task is implementation and the reliable run.
+<!-- /DEFAULT_POST_FULL_MARKET_20261121_CODEX -->
+
 <!-- DEFAULT_POST_INVENTORY_20261121_CODEX -->
 ## 2026-11-21 — Inventory comparison added to the duration/size round
 

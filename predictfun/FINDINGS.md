@@ -1,3 +1,23 @@
+<!-- DEFAULT_POST_FULL_MARKET_20261121_CODEX -->
+## 2026-11-21 — Simplified primary experiment: inventory-managed large orders
+
+[The consolidated current plan](reviews/automatic/20261121_default_post_full_market/plan.md)
+supersedes the earlier default-post scenario matrices. The USER wants one
+large-order strategy with inventory management, measured through each market
+rather than stopped after a minute. Use Qmax100/cap100 and the already
+specified inventory sizing/restriction mechanism; no additional policy sweep.
+
+Start from the registry market opening, not an old sampled order timestamp.
+Preserve continuous queue/inventory/pending state across minutes. The current
+supported tape ends at opening+298s; report the omitted last two seconds and
+remaining marked inventory. This is not settlement P&L or automatic flattening.
+Deduplicate markets and report coverage/statuses. One-strategy observations
+can reveal losses and mechanisms but cannot prove a causal inventory-policy
+or large-versus-small advantage without a later targeted counterfactual.
+Keep necessary correctness checks, defer minor cleanup, and deliver one
+combined result review. This is planning only; no new result is claimed.
+<!-- /DEFAULT_POST_FULL_MARKET_20261121_CODEX -->
+
 <!-- DEFAULT_POST_INVENTORY_20261121_CODEX -->
 ## 2026-11-21 — A larger cap permits size; it does not manage inventory economically
 
