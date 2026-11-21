@@ -1,0 +1,3 @@
+entry audit selftest passed: 8 accounting cases (classes, V_initial / D_focal / D_opposite, identity, initial fill, WAIT next POST); 6 refusals; the predicates (5 cases); group_summary (hand values); the key join and prediction_missing
+{"audit_sha": "6fc7d2e487f3fdf531ec74a16e8685a1258940b0cc5412047e104e3580c24941", "copied_record_refused": true, "mutants": 16, "output_hashes": 9, "synthetic_passed": true}
+2026-11-21T07:56:31Z tag=review_3730_metadata rc=0 peak_rss_mib=215 wall_s=1.41 cpu_user_s=1.23 memavail_start_gib=23 disk_free_gib=446->446 slot=codex

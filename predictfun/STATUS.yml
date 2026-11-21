@@ -1,3 +1,24 @@
+entry_audit_review_20261121_codex:
+  status: accounting_accepted_initial_exposure_probe_next
+  target_commit: 37300cc93c47900e11eb1806eefb4c6febce2ccb
+  report: predictfun/reviews/automatic/20261121_37300cc9/report.md
+  blocking_findings_for_current_accounting: []
+  interpretation: rare_initial_execution_under_frozen_PI0_not_market_opportunity_scarcity
+  artifacts: {POST_rows_all_statuses: 24416, POST_ok_rows: 24256, POST_excluded_rows: 160, reached_ok_pairs_separate: 760, initial_filled_training_rows: 344}
+  weighted_policy_pull_within_100ms: {train: 0.8873849722457395, eval: 0.918716278940371}
+  policy_pull_is_request_time_not_counterfactual_benefit: true
+  independent_review: {successful_jobs: 4, wall_seconds: 79.29, peak_rss_mib: 456, fits: 0, real_tape_runs: 0, all_saved_columns_and_summaries_reproduced: true}
+  prior_items: [audit_population_closed, decomposition_closed, prediction_joins_closed, separate_reached_closed, target_names_closed, anchor_population_names_closed, writer_amendment_accepted]
+  nonblocking: [causal_recommendation_scope, aggregate_attenuation_vs_rowwise_offsets, checker_source_component_reconciliation, resource_and_concentration_denominators]
+  current_artifact_reconciliation_workaround_verified: true
+  next_priority: ENTRY_EXPOSURE_v1_initial_generation_continuation_contrast
+  next_round: {days: ["20261024", "20261025", "20261026", "20261027"], all_consumed: true, worlds_per_UTC_hour_day_max: 4, max_worlds: 384, max_side_forks: 768, branches: [WAIT_PI0, POST_PI0, POST_KEEP_INITIAL], original_END_ms: 5000, core_hours_ceiling: 2, authorized_development_slots_max: 4, checkpoint_mib: 1536, hard_rss_mib: 2048, fork_package_timeout_seconds: 120, fits: 0}
+  structural_rules_and_other_generations_unchanged: true
+  additional_user_approval_for_declared_probe: false
+  new_label_dates_or_untouched_access_authorized: false
+  intermediate_review_required: false
+  prediction_skill_or_profitable_strategy_established: false
+
 r4e_review_20261121_codex:
   status: reliable_negative_entry_result_target_audit_next
   target_commit: 141e820e4b736c6a8c4f27b0a0dbf53789e95e89
