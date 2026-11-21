@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "1", "name": "the CSV identity unchecked", "seconds": 0.9, "sources": {"pf_adv2_replay_summary.py": "7bec599434ba3d59", "pf_adv2_replay_summary_mutants.py": "4dac410b4c9de26e", "pf_adv2_replay_summary_selftest.py": "158ac346774a0858"}, "why": "ADV2 REPLAY SUMMARY SELFTEST FAILED: a CSV that is not the frozen one was not refused"}
+2026-11-21T05:44:13Z tag=mut_rsummary_1 rc=0 peak_rss_mib=198 wall_s=1.06 cpu_user_s=0.90 memavail_start_gib=21 disk_free_gib=445->445 slot=claude

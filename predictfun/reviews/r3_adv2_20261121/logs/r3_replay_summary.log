@@ -1,0 +1,23 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/research/pf_adv2_replay.py", line 380, in <module>
+    summarize()
+  File "/home/yuqing/ctaNew/predictfun/research/pf_adv2_replay.py", line 364, in summarize
+    (out / 'replay.json').write_text(json.dumps(js, indent=1, sort_keys=True, default=str) + '\n')
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/__init__.py", line 238, in dumps
+    **kw).encode(obj)
+          ^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/encoder.py", line 202, in encode
+    chunks = list(chunks)
+             ^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/encoder.py", line 432, in _iterencode
+    yield from _iterencode_dict(o, _current_indent_level)
+  File "/usr/lib/python3.12/json/encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "/usr/lib/python3.12/json/encoder.py", line 326, in _iterencode_list
+    yield from chunks
+  File "/usr/lib/python3.12/json/encoder.py", line 354, in _iterencode_dict
+    items = sorted(dct.items())
+            ^^^^^^^^^^^^^^^^^^^
+TypeError: '<' not supported between instances of 'int' and 'str'
+2026-11-21T05:41:39Z tag=r3_replay_summary rc=1 peak_rss_mib=313 wall_s=2.44 cpu_user_s=2.16 memavail_start_gib=21 disk_free_gib=445->445 slot=claude

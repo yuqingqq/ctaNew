@@ -1,0 +1,11 @@
+{
+ "statuses": {
+  "ok": 2,
+  "world:no_path:x": 1
+ },
+ "worlds": 2,
+ "diffs": 28,
+ "reached": 6
+}
+adv2 replay summary selftest passed: a valid summary completes with sorted keys; statuses, totals, worlds, paired differences (sums, above / below, a tie), reached counts under 'n', CSV hashes; refusals of a changed CSV and a changed part
+2026-11-21T05:44:05Z tag=pf_adv2_replay_summary_selftest rc=0 peak_rss_mib=198 wall_s=1.00 cpu_user_s=0.84 memavail_start_gib=21 disk_free_gib=445->445 slot=claude
