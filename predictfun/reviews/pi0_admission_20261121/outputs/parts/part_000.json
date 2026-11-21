@@ -1,0 +1,130 @@
+{
+ "version": "pi0_admission_exposure_v1",
+ "part": 0,
+ "day": "20261026",
+ "rows": 30,
+ "sha256": "7a229ffd93eff6fb02724e515d63d71a842bea132ebe80dbfbf44e6e3724da23",
+ "manifest_sha256": "3c5bf097328ee2cd31a4e7d1b17d6aadc8559559ccd74f91154f15614b91696c",
+ "r4e_record_sha256": "d87a1e36aafd0cfd49f8808d55195418385d4600742f33552d04ac95c4cc8bb7",
+ "sources": {
+  "pf_pi0_admission.py": "a47f5690a9caacb38c5c734e6501993af7816bf3097129eabb619f2f454e450d",
+  "pf_entry_retention.py": "93f8050f39ca8df0f9b8955bdfd0ef16623b4bfd8c7e2bc664c920bac867f732",
+  "pf_entry_exposure.py": "33f3e0c72850e0c6c623f96cf157c02c72cdceefc0721f87c64afc59547533f0",
+  "pf_adv2.py": "c98e7d407595a6903fec130db2fac0b772c255d09c5064e987ba74f234db6936",
+  "pf_r2_labels.py": "f56f1ae560492aa9b7d040b28f02d96a2b2fd2611da4047d4c7227b497684d6e",
+  "pf_r2_label_sample.py": "4cdeff0c6d491611f970756f263f4ef03c3e2a90dbade580d435c68bae32e769",
+  "pf_branch_engine.py": "8b7960ef4bbbc178b281e57d92d4795d7678436c0ca875e7199e24a6626af3a8",
+  "pf_r2_teacher.py": "c7d72d91b0d422d192015f331154881ba030989a6802d23a604a3b667194d79b",
+  "pf_r2_shadow.py": "962cf7b42c1a8ff78b7a4cb46f111036c824270ff8fa91d95c1c42558f098ab9",
+  "pf_pipeline_bench.py": "c2942249a4fef1ef9be487bc87d0b84cec90785da442d604b49b144186a437e0"
+ },
+ "elapsed_s": 113.9256534576416,
+ "hwm_mib": 1156.125,
+ "timing": {
+  "load_s": 63.7870934009552,
+  "worlds": [
+   {
+    "census_s": null,
+    "pair_s": [
+     1.6892476081848145
+    ],
+    "world_s": 6.340981960296631
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     0.21573996543884277
+    ],
+    "world_s": 2.303786516189575
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     1.9022810459136963
+    ],
+    "world_s": 5.521074533462524
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     0.11970734596252441
+    ],
+    "world_s": 2.1455676555633545
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     1.1122760772705078
+    ],
+    "world_s": 3.1996960639953613
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     1.5650475025177002
+    ],
+    "world_s": 5.894613981246948
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     1.305372714996338
+    ],
+    "world_s": 3.3509557247161865
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     1.888153076171875
+    ],
+    "world_s": 4.1071741580963135
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     1.5233361721038818
+    ],
+    "world_s": 3.737905740737915
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     0.12266421318054199
+    ],
+    "world_s": 2.187480926513672
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     0.17343711853027344
+    ],
+    "world_s": 2.0898051261901855
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     0.1984410285949707
+    ],
+    "world_s": 2.2007689476013184
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     0.19080591201782227
+    ],
+    "world_s": 2.2764289379119873
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     1.0358188152313232
+    ],
+    "world_s": 4.754784822463989
+   }
+  ],
+  "pairs": 14,
+  "pair_mean_s": 0.931594899722508,
+  "pair_max_s": 1.9022810459136963
+ },
+ "asof": "2026-11-21T11:05:59.903918+00:00"
+}

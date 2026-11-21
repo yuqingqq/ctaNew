@@ -1,0 +1,15 @@
+{
+ "checks": {
+  "A_identity": true,
+  "B_arms": true,
+  "C_targets": true,
+  "D_forecasts": true,
+  "E_measurements": true,
+  "F_predicates": true,
+  "G_resources": true,
+  "H_suites": true
+ },
+ "all_true": true
+}
+{"cases": {"B_keep_decision": {"clean": true, "corrupted": false, "applied": true}, "B_factual_value": {"clean": true, "corrupted": false, "applied": true}, "B_wrong_END": {"clean": true, "corrupted": false, "applied": true}, "C_compensating": {"clean": true, "corrupted": false, "applied": true}, "C_wrong_gid": {"clean": true, "corrupted": false, "applied": true}, "D_input": {"clean": true, "corrupted": false, "applied": true}, "A": {"clean": true, "corrupted": false, "applied": true}, "E": {"clean": true, "corrupted": false, "applied": true}, "F": {"clean": true, "corrupted": false, "applied": true}, "G": {"clean": true, "corrupted": false, "applied": true}, "H": {"clean": true, "corrupted": false, "applied": true}}, "falsifier_ok": true}
+2026-11-21T11:12:09Z tag=admission_checks rc=0 peak_rss_mib=428 wall_s=17.51 cpu_user_s=16.96 memavail_start_gib=22 disk_free_gib=444->444 slot=claude

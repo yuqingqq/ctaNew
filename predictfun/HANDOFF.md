@@ -887,6 +887,23 @@ pulls and bid/ask; judge movement calibration on selected actions before changin
 order design. Other session owns fixes; scheduler remains off.
 <!-- /PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
 
+## 2026-11-21 11:13Z (session aea5bfb9) — PI0-ADMISSION-EXPOSURE-v1: LONGER EXPOSURE OF PI0'S OWN ADMISSIONS; CHECKS ALL TRUE; READING ADMITTED_LONGER_HARMFUL (review 99fb165d's next priority) (USER: "... continue the implementing and next priority loop")
+- [Receipt](reviews/pi0_admission_20261121/report.md).
+  - Commits: freeze `6b14953f` (before any branch ran), results in this commit.
+  - One diagnostic; zero fitted candidates.
+- **Review 99fb165d's checklist (folded in):**
+  - P1: the MAE gate is superseded by RETENTION v2 (MSE / calibration); the perfect-mean mixture is a control.
+  - P2: both-modeled masks; new observations are separated from aging; "not demonstrated on this forced sample".
+  - P3: the pilot record is write-once.
+  - The cross-tab of D_EXPOSURE by shadow admission is reported.
+- **Readings** (FINDINGS P97):
+  - Weighted mean D_EXPOSURE per day: Oct 26 -16.901 c (166); Oct 27 -2.872 c (163).
+  - First review: No first-review selection advantage is demonstrated on this sample (not identified when thin or degenerate).
+  - RETENTION v2: At the forced entries, V's squared error is below zero's: the earlier MAE-based failure reading does not hold for the mean forecast. At the forced first reviews, V's squared error is above zero's: retention calibration remains a problem.
+  - Declared reading `admitted_longer_harmful`: Longer exposure of PI0's own admitted orders loses on both consumed days: later work should focus on admission and remaining-value discrimination, not unconditional duration.
+- **Cost:** 0.576 core-hours of the 1 ceiling; peak 1179 MiB.
+- **Next measurement:** the combined review (one request), which names the next priority.
+
 ## 2026-11-21 10:27Z (session aea5bfb9) — ENTRY-RETENTION-DISCRIMINATION-v1: PI0'S FORECASTS AT ENTRY / FIRST REVIEW / FIRST PULL AGAINST MATCHED TARGETS; CHECKS ALL TRUE; READINGS FORECASTS_FAIL (review 67a0d9f7's next priority) (USER: "... continue the implementing and next priority loop")
 - [Receipt](reviews/entry_retention_20261121/report.md).
   - Commits: freeze `2ac6e084` (before any measurement), freeze 2b `0f89182f` (the falsifier's one-line argument fix, before its output), results in this commit.

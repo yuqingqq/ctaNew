@@ -1,0 +1,61 @@
+{
+ "asof": "2026-11-21T11:12:26.499819+00:00",
+ "cases": {
+  "A": {
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  },
+  "B_factual_value": {
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  },
+  "B_keep_decision": {
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  },
+  "B_wrong_END": {
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  },
+  "C_compensating": {
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  },
+  "C_wrong_gid": {
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  },
+  "D_input": {
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  },
+  "E": {
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  },
+  "F": {
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  },
+  "G": {
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  },
+  "H": {
+   "applied": true,
+   "clean": true,
+   "corrupted": false
+  }
+ },
+ "falsifier_ok": true
+}

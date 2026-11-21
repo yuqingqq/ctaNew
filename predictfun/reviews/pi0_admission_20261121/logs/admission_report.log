@@ -1,0 +1,7 @@
+{
+ "holds": [
+  "admitted_longer_harmful"
+ ],
+ "all_true": true
+}
+2026-11-21T11:13:15Z tag=admission_report rc=0 peak_rss_mib=102 wall_s=0.31 cpu_user_s=0.25 memavail_start_gib=23 disk_free_gib=444->444 slot=claude

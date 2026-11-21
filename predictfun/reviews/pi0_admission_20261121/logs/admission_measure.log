@@ -1,0 +1,42 @@
+{
+ "generations": 329,
+ "statuses": [
+  {
+   "day": "20261026",
+   "status": "ok",
+   "n": 166
+  },
+  {
+   "day": "20261027",
+   "status": "ok",
+   "n": 163
+  }
+ ],
+ "readings": {
+  "admitted_longer_beneficial": false,
+  "admitted_longer_harmful": true,
+  "not_identified": false
+ },
+ "days": {
+  "20261026": {
+   "n": 166,
+   "wmean_D": -16.900686741489906,
+   "sign": -1
+  },
+  "20261027": {
+   "n": 163,
+   "wmean_D": -2.871862578742754,
+   "sign": -1
+  }
+ },
+ "mse": {
+  "entry": false,
+  "first_review": true,
+  "first_pull": true
+ },
+ "retention_v2": {
+  "entry_mse_beats_zero": true,
+  "review_mse_beats_zero": false
+ }
+}
+2026-11-21T11:11:59Z tag=admission_measure rc=0 peak_rss_mib=237 wall_s=1.95 cpu_user_s=1.76 memavail_start_gib=22 disk_free_gib=444->444 slot=claude

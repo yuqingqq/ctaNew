@@ -1,0 +1,95 @@
+{
+ "version": "pi0_admission_exposure_v1",
+ "part": 10,
+ "day": "20261027",
+ "rows": 26,
+ "sha256": "95438365b1044eb43ce72213718900a1bb6a2f63d88895ec67bdc8f4c929aa92",
+ "manifest_sha256": "3c5bf097328ee2cd31a4e7d1b17d6aadc8559559ccd74f91154f15614b91696c",
+ "r4e_record_sha256": "f415224d28ecef69b4a053b58e0550533aa22636b574a09d6d511dd26ff232f5",
+ "sources": {
+  "pf_pi0_admission.py": "a47f5690a9caacb38c5c734e6501993af7816bf3097129eabb619f2f454e450d",
+  "pf_entry_retention.py": "93f8050f39ca8df0f9b8955bdfd0ef16623b4bfd8c7e2bc664c920bac867f732",
+  "pf_entry_exposure.py": "33f3e0c72850e0c6c623f96cf157c02c72cdceefc0721f87c64afc59547533f0",
+  "pf_adv2.py": "c98e7d407595a6903fec130db2fac0b772c255d09c5064e987ba74f234db6936",
+  "pf_r2_labels.py": "f56f1ae560492aa9b7d040b28f02d96a2b2fd2611da4047d4c7227b497684d6e",
+  "pf_r2_label_sample.py": "4cdeff0c6d491611f970756f263f4ef03c3e2a90dbade580d435c68bae32e769",
+  "pf_branch_engine.py": "8b7960ef4bbbc178b281e57d92d4795d7678436c0ca875e7199e24a6626af3a8",
+  "pf_r2_teacher.py": "c7d72d91b0d422d192015f331154881ba030989a6802d23a604a3b667194d79b",
+  "pf_r2_shadow.py": "962cf7b42c1a8ff78b7a4cb46f111036c824270ff8fa91d95c1c42558f098ab9",
+  "pf_pipeline_bench.py": "c2942249a4fef1ef9be487bc87d0b84cec90785da442d604b49b144186a437e0"
+ },
+ "elapsed_s": 90.02461814880371,
+ "hwm_mib": 1176.640625,
+ "timing": {
+  "load_s": 57.772990703582764,
+  "worlds": [
+   {
+    "census_s": null,
+    "pair_s": [
+     0.15488648414611816
+    ],
+    "world_s": 2.403228759765625
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     0.5236971378326416
+    ],
+    "world_s": 3.1494178771972656
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     0.12712359428405762
+    ],
+    "world_s": 2.195323944091797
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     1.2203006744384766
+    ],
+    "world_s": 5.620981216430664
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     1.0000386238098145
+    ],
+    "world_s": 2.811983346939087
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     1.2483675479888916
+    ],
+    "world_s": 4.624895334243774
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     0.11316204071044922
+    ],
+    "world_s": 2.137387275695801
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     1.2506709098815918
+    ],
+    "world_s": 3.1439809799194336
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     1.257929801940918
+    ],
+    "world_s": 6.140570878982544
+   }
+  ],
+  "pairs": 9,
+  "pair_mean_s": 0.7662418683369955,
+  "pair_max_s": 1.257929801940918
+ },
+ "asof": "2026-11-21T11:11:42.994416+00:00"
+}

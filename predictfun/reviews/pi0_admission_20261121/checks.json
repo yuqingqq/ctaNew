@@ -1,0 +1,63 @@
+{
+ "all_true": true,
+ "asof": "2026-11-21T11:12:15.723037+00:00",
+ "checks": {
+  "A_identity": true,
+  "B_arms": true,
+  "C_targets": true,
+  "D_forecasts": true,
+  "E_measurements": true,
+  "F_predicates": true,
+  "G_resources": true,
+  "H_suites": true
+ },
+ "readings": {
+  "A": {
+   "bad": [],
+   "census": 689,
+   "rows": 329,
+   "selected": 329
+  },
+  "B": {
+   "examples": [],
+   "failing": 0,
+   "rows": 329
+  },
+  "C": {
+   "examples": [],
+   "failing": 0,
+   "rows": 329
+  },
+  "D": {
+   "examples": [],
+   "failing": 0,
+   "rows": 329
+  },
+  "E": {
+   "bad": []
+  },
+  "F": {
+   "readings": {
+    "admitted_longer_beneficial": false,
+    "admitted_longer_harmful": true,
+    "not_identified": false
+   },
+   "same": true
+  },
+  "G": {
+   "bad": [],
+   "core_hours": 0.5715666666666663,
+   "jobs": 106,
+   "part_hwm_max": 1179.62890625,
+   "peak_mib": 1179
+  },
+  "H": {
+   "extra_files": [],
+   "failures": [],
+   "judge_ok": true,
+   "one_record_per_file": true,
+   "planted": 29
+  }
+ },
+ "source_sha256": "6a006d7add1ef0e652874220f4f306209faf27de2c5ec735e947f6c91b8ad254"
+}
