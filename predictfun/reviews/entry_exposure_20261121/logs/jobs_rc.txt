@@ -13,3 +13,6 @@ exposure_part_010 rc=0
 exposure_part_011 rc=0
 exposure_summarize rc=0
 exposure_checks rc=0
+exposure_summarize_v2 rc=0
+exposure_checks_v2 rc=0
+exposure_checks_v3_selftest rc=0
