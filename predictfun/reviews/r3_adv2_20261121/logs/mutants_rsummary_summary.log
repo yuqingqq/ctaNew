@@ -1,0 +1,12 @@
+  0 the count column named 0 again (the frozen defect): CAUGHT (0.8 s) - ADV2 REPLAY SUMMARY SELFTEST FAILED: summarize: a valid summary stopped (TypeError("'<' not supported between instances of 'int' and 'str'"))
+  1 the CSV identity unchecked: CAUGHT (0.9 s) - ADV2 REPLAY SUMMARY SELFTEST FAILED: a CSV that is not the frozen one was not refused
+  2 the part hash unchecked: CAUGHT (0.8 s) - ADV2 REPLAY SUMMARY SELFTEST FAILED: a part whose bytes differ from its record was not refused
+  3 a reversed difference: CAUGHT (0.8 s) - ADV2 REPLAY SUMMARY SELFTEST FAILED: diffs: ('20261026', 'RICH', 'PI0') = {'day': '20261026', 'diff_sum': -2.0, 'n': 1, 'negative': 0, 'policy': 'RICH
+  4 a tie counted as above: CAUGHT (0.8 s) - ADV2 REPLAY SUMMARY SELFTEST FAILED: diffs: ('20261027', 'MECH', 'ENTRY_PA') = {'day': '20261027', 'diff_sum': 0.0, 'n': 1, 'negative': 0, 'policy': '
+  5 only ok worlds counted: CAUGHT (0.8 s) - ADV2 REPLAY SUMMARY SELFTEST FAILED: statuses / worlds: {'ok': 2} / 2
+  6 the bid value as the value: CAUGHT (0.8 s) - ADV2 REPLAY SUMMARY SELFTEST FAILED: totals: not the per day / policy sums of the episode values
+  7 no difference against ENTRY_PA: CAUGHT (0.8 s) - ADV2 REPLAY SUMMARY SELFTEST FAILED: diffs: ('20261026', 'RICH', 'ENTRY_PA') = None, not (4.0, 1, 0); diffs: ('20261027', 'MECH', 'ENTRY_PA') = None, 
+  8 worlds counted as episodes: CAUGHT (0.8 s) - ADV2 REPLAY SUMMARY SELFTEST FAILED: statuses / worlds: {'ok': 2, 'world:no_path:x': 1} / 16
+  9 the CSV hashes of another file: CAUGHT (0.8 s) - ADV2 REPLAY SUMMARY SELFTEST FAILED: csv hashes: not the CSVs on disk
+control: PASSED (0.8 s); sources {'pf_adv2_replay_summary.py': '7bec599434ba3d59', 'pf_adv2_replay_summary_mutants.py': '4dac410b4c9de26e', 'pf_adv2_replay_summary_selftest.py': '158ac346774a0858'}
+mutation check passed: the control passes its selftest, 10 / 10 planted code errors are caught by a check (0.1 CPU min)

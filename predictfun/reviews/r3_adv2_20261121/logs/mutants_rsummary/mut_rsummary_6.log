@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "6", "name": "the bid value as the value", "seconds": 0.8, "sources": {"pf_adv2_replay_summary.py": "7bec599434ba3d59", "pf_adv2_replay_summary_mutants.py": "4dac410b4c9de26e", "pf_adv2_replay_summary_selftest.py": "158ac346774a0858"}, "why": "ADV2 REPLAY SUMMARY SELFTEST FAILED: totals: not the per day / policy sums of the episode values"}
+2026-11-21T05:44:18Z tag=mut_rsummary_6 rc=0 peak_rss_mib=199 wall_s=0.99 cpu_user_s=0.82 memavail_start_gib=21 disk_free_gib=445->445 slot=claude
