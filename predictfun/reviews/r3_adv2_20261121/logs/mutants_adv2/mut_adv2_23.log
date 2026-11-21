@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "23", "name": "the other side's head", "seconds": 7.8, "sources": {"pf_adv2.py": "c98e7d407595a690", "pf_adv2_mutants.py": "e1827a0b778c3212", "pf_adv2_selftest.py": "26f2b73957c9ab3a"}, "why": "ADV2 SELFTEST FAILED: controller: the side / head mapping or signs are wrong ({(0, 'absent'): 'WAIT', (0, 'live'): 'KEEP', (1, 'absent'): 'POST', (1, 'live'): 'PULL'})"}
+2026-11-21T03:38:48Z tag=mut_adv2_23 rc=0 peak_rss_mib=250 wall_s=8.01 cpu_user_s=7.73 memavail_start_gib=21 disk_free_gib=432->432 slot=claude

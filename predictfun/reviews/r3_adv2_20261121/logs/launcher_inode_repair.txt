@@ -1,0 +1,11 @@
+# launcher in-place edit during the label build, and its repair (2026-11-21T02:25:49Z)
+launch_r3.sh (freeze 1, 2143 bytes) was extended in place at 01:22:27Z while the four label queues (started 01:01:31Z) executed it.
+bash had parsed the whole case statement at start and re-reads its script fd 255 from the parse position (2143) after the loop ends,
+so the edited bytes from 2143 on would have been parsed at each queue's end (they begin 'ys.argv[1]), ...': a syntax error, no command).
+Repair at the time above: the committed 2143 bytes were copied back into the same inode (10229342), and the extended launcher was moved in as a new inode (10229404).
+Each queue's fd 255 after the repair:
+  pid 3107641 /bin/bash /home/yuqing/ctaNew/predictfun/reviews/r3_adv2_20261121/launch_r3.sh queue claud -> inode 10229342 size 2143 pos: 2143
+  pid 3107762 /bin/bash /home/yuqing/ctaNew/predictfun/reviews/r3_adv2_20261121/launch_r3.sh queue claud -> inode 10229342 size 2143 pos: 2143
+  pid 3107834 /bin/bash /home/yuqing/ctaNew/predictfun/reviews/r3_adv2_20261121/launch_r3.sh queue claud -> inode 10229342 size 2143 pos: 2143
+  pid 3107894 /bin/bash /home/yuqing/ctaNew/predictfun/reviews/r3_adv2_20261121/launch_r3.sh queue claud -> inode 10229342 size 2143 pos: 2143
+sha256 of the bytes the queues read (= HEAD:predictfun/reviews/r3_adv2_20261121/launch_r3.sh): 0b97f9a3196a60698a4a338a271b6347009a10d583eeb1db5ce70ccb7950443b / 0b97f9a3196a60698a4a338a271b6347009a10d583eeb1db5ce70ccb7950443b

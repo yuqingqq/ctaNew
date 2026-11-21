@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "7", "name": "no crossing purge", "seconds": 7.7, "sources": {"pf_adv2.py": "c98e7d407595a690", "pf_adv2_mutants.py": "e1827a0b778c3212", "pf_adv2_selftest.py": "26f2b73957c9ab3a"}, "why": "ADV2 SELFTEST FAILED: extract: (1, 'post') rows / labels / weights / inputs not exactly the written ones; extract: the statuses are not counted ({'20261024 keep feature_unavailable': 1, '20261024 keep"}
+2026-11-21T03:36:40Z tag=mut_adv2_7 rc=0 peak_rss_mib=250 wall_s=7.92 cpu_user_s=7.63 memavail_start_gib=21 disk_free_gib=432->432 slot=claude

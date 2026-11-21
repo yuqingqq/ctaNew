@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "24", "name": "the evaluation without the committed fit", "seconds": 1.2, "sources": {"pf_adv2_eval.py": "197ff94528cbf9c9", "pf_adv2_eval_mutants.py": "53361a867513b8d6", "pf_adv2_eval_selftest.py": "f0f0bdfa510298b0"}, "why": "ADV2 EVAL SELFTEST FAILED: cmd_eval: ran without a committed fit manifest"}
+2026-11-21T03:10:09Z tag=mut_eval_24 rc=0 peak_rss_mib=199 wall_s=1.39 cpu_user_s=1.22 memavail_start_gib=21 disk_free_gib=433->433 slot=claude

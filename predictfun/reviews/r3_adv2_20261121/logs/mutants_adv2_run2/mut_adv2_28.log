@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "28", "name": "the review rule keeps", "seconds": 7.5, "sources": {"pf_adv2.py": "c98e7d407595a690", "pf_adv2_mutants.py": "e1827a0b778c3212", "pf_adv2_selftest.py": "7fc3bd440378121c"}, "why": "ADV2 SELFTEST FAILED: policies: ENTRY_PA does not POST by RICH and PULL at the review; end to end: RICH (POST > 0, KEEP < 0) differs from ENTRY_PA or never pulls; end to end: RICH (POST > 0, KEEP < 0)"}
+2026-11-21T03:24:57Z tag=mut_adv2_28 rc=0 peak_rss_mib=250 wall_s=7.69 cpu_user_s=7.46 memavail_start_gib=22 disk_free_gib=433->433 slot=claude

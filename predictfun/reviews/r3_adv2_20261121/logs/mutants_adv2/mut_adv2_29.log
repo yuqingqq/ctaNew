@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "29", "name": "N0 posts", "seconds": 7.1, "sources": {"pf_adv2.py": "c98e7d407595a690", "pf_adv2_mutants.py": "e1827a0b778c3212", "pf_adv2_selftest.py": "26f2b73957c9ab3a"}, "why": "ADV2 SELFTEST FAILED: policies: N0 posts or acts in a live state; end to end: the N0 episode stopped (ValueError('N0 asked in a live state: it never posted')); end to end: a fixed-sign comparison epis"}
+2026-11-21T03:39:36Z tag=mut_adv2_29 rc=0 peak_rss_mib=246 wall_s=7.33 cpu_user_s=7.06 memavail_start_gib=21 disk_free_gib=432->432 slot=claude

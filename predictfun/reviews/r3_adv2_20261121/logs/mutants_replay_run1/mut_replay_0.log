@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "0", "name": "nine worlds an hour", "seconds": 18.6, "sources": {"pf_adv2_replay.py": "e5d0f55d5c534d1c", "pf_adv2_replay_mutants.py": "d3e0aee92fc4db74", "pf_adv2_replay_selftest.py": "8fca5d0b8291f724"}, "why": "ADV2 REPLAY SELFTEST FAILED: population: not the first eight by rank per (day, hour) in partitions of one day; constants: the declared population / audit / domain changed"}
+2026-11-21T03:10:36Z tag=mut_replay_0 rc=0 peak_rss_mib=234 wall_s=18.88 cpu_user_s=18.62 memavail_start_gib=22 disk_free_gib=433->433 slot=claude

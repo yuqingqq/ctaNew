@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "15", "name": "a model file overwritten", "seconds": 7.7, "sources": {"pf_adv2.py": "c98e7d407595a690", "pf_adv2_mutants.py": "e1827a0b778c3212", "pf_adv2_selftest.py": "daba1f473d6ed667"}, "why": "ADV2 SELFTEST FAILED: fit_all: an existing model was overwritten"}
+2026-11-21T03:07:19Z tag=mut_adv2_15 rc=0 peak_rss_mib=250 wall_s=7.91 cpu_user_s=7.69 memavail_start_gib=22 disk_free_gib=433->433 slot=claude

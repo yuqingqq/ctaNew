@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "3", "name": "regret without the oracle", "seconds": 1.2, "sources": {"pf_adv2_eval.py": "197ff94528cbf9c9", "pf_adv2_eval_mutants.py": "53361a867513b8d6", "pf_adv2_eval_selftest.py": "f5b5251233b9f12e"}, "why": "ADV2 EVAL SELFTEST FAILED: group readings: regret = -7.0, not 1.6666666666666669e-10"}
+2026-11-21T03:25:34Z tag=mut_eval_3 rc=0 peak_rss_mib=200 wall_s=1.39 cpu_user_s=1.22 memavail_start_gib=22 disk_free_gib=433->433 slot=claude

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "6", "name": "the intersection advances both", "seconds": 18.7, "sources": {"pf_adv2_replay.py": "e5d0f55d5c534d1c", "pf_adv2_replay_mutants.py": "97ac33fda18ca65c", "pf_adv2_replay_selftest.py": "5cabe316c36febe9"}, "why": "ADV2 REPLAY SELFTEST FAILED: intervals: union / intersection / length"}
+2026-11-21T03:28:25Z tag=mut_replay_6 rc=0 peak_rss_mib=234 wall_s=18.94 cpu_user_s=18.65 memavail_start_gib=22 disk_free_gib=433->433 slot=claude

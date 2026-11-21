@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "30", "name": "a hybrid routes by the wrong state", "seconds": 7.5, "sources": {"pf_adv2.py": "c98e7d407595a690", "pf_adv2_mutants.py": "e1827a0b778c3212", "pf_adv2_selftest.py": "26f2b73957c9ab3a"}, "why": "ADV2 SELFTEST FAILED: policies: ENTRY_PA does not POST by RICH and PULL at the review; policies: a hybrid routes absent / live states to the wrong sub-policy; end to end: the ENTRY_PA episode stopped "}
+2026-11-21T03:39:44Z tag=mut_adv2_30 rc=0 peak_rss_mib=250 wall_s=7.70 cpu_user_s=7.41 memavail_start_gib=21 disk_free_gib=432->432 slot=claude

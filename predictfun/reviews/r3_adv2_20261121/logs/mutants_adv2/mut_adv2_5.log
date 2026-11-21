@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "5", "name": "the dataset hash unchecked", "seconds": 7.8, "sources": {"pf_adv2.py": "c98e7d407595a690", "pf_adv2_mutants.py": "e1827a0b778c3212", "pf_adv2_selftest.py": "26f2b73957c9ab3a"}, "why": "ADV2 SELFTEST FAILED: reader: another dataset hash was accepted"}
+2026-11-21T03:36:24Z tag=mut_adv2_5 rc=0 peak_rss_mib=250 wall_s=8.00 cpu_user_s=7.69 memavail_start_gib=21 disk_free_gib=432->432 slot=claude

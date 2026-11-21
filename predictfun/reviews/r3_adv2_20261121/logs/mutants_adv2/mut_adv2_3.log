@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "3", "name": "the parts-list hash unchecked", "seconds": 7.7, "sources": {"pf_adv2.py": "c98e7d407595a690", "pf_adv2_mutants.py": "e1827a0b778c3212", "pf_adv2_selftest.py": "26f2b73957c9ab3a"}, "why": "ADV2 SELFTEST FAILED: reader: a parts list that does not hash to the dataset was accepted"}
+2026-11-21T03:36:08Z tag=mut_adv2_3 rc=0 peak_rss_mib=249 wall_s=7.91 cpu_user_s=7.64 memavail_start_gib=21 disk_free_gib=432->432 slot=claude

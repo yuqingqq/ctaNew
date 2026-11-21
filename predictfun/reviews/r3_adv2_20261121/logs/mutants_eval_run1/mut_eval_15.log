@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "15", "name": "PULL on a tie", "seconds": 1.2, "sources": {"pf_adv2_eval.py": "197ff94528cbf9c9", "pf_adv2_eval_mutants.py": "53361a867513b8d6", "pf_adv2_eval_selftest.py": "f0f0bdfa510298b0"}, "why": "ADV2 EVAL SELFTEST FAILED: frame: a keep tie or the keep signs are wrong (['fallback', 'KEEP', 'KEEP', 'KEEP', 'KEEP', 'KEEP', 'PULL', 'PULL', 'PULL', 'PULL', 'PULL', 'PULL'])"}
+2026-11-21T03:09:56Z tag=mut_eval_15 rc=0 peak_rss_mib=200 wall_s=1.37 cpu_user_s=1.20 memavail_start_gib=21 disk_free_gib=433->433 slot=claude

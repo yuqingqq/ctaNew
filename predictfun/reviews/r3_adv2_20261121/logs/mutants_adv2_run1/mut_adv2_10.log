@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "10", "name": "the weight as the label", "seconds": 7.5, "sources": {"pf_adv2.py": "c98e7d407595a690", "pf_adv2_mutants.py": "e1827a0b778c3212", "pf_adv2_selftest.py": "daba1f473d6ed667"}, "why": "ADV2 SELFTEST FAILED: extract: (0, 'post') rows / labels / weights / inputs not exactly the written ones; extract: (0, 'keep') rows / labels / weights / inputs not exactly the written ones; extract: ("}
+2026-11-21T03:06:46Z tag=mut_adv2_10 rc=0 peak_rss_mib=248 wall_s=7.78 cpu_user_s=7.57 memavail_start_gib=22 disk_free_gib=434->433 slot=claude

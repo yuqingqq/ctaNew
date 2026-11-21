@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "17", "name": "another domain", "seconds": 19.0, "sources": {"pf_adv2_replay.py": "e5d0f55d5c534d1c", "pf_adv2_replay_mutants.py": "d3e0aee92fc4db74", "pf_adv2_replay_selftest.py": "8fca5d0b8291f724"}, "why": "ADV2 REPLAY SELFTEST FAILED: constants: the declared population / audit / domain changed"}
+2026-11-21T03:15:57Z tag=mut_replay_17 rc=0 peak_rss_mib=233 wall_s=19.23 cpu_user_s=18.94 memavail_start_gib=21 disk_free_gib=433->433 slot=claude

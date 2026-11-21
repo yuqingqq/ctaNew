@@ -1,0 +1,2 @@
+{"cls": "HARNESS_FAILURE", "index": "30", "name": "a hybrid routes by the wrong state", "seconds": 3.6, "sources": {"pf_adv2.py": "c98e7d407595a690", "pf_adv2_mutants.py": "e1827a0b778c3212", "pf_adv2_selftest.py": "daba1f473d6ed667"}, "why": "crash: ValueError('the review rule asked outside a live state')"}
+2026-11-21T03:09:14Z tag=mut_adv2_30 rc=1 peak_rss_mib=244 wall_s=3.85 cpu_user_s=3.64 memavail_start_gib=22 disk_free_gib=433->433 slot=claude

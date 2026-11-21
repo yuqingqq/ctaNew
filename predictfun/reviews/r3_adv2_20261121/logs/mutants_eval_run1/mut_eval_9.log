@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "9", "name": "the support floor unchecked", "seconds": 1.2, "sources": {"pf_adv2_eval.py": "197ff94528cbf9c9", "pf_adv2_eval_mutants.py": "53361a867513b8d6", "pf_adv2_eval_selftest.py": "f0f0bdfa510298b0"}, "why": "ADV2 EVAL SELFTEST FAILED: screen: POST {'originals': 199} -> PASS, not INSUFFICIENT_SUPPORT"}
+2026-11-21T03:09:47Z tag=mut_eval_9 rc=0 peak_rss_mib=199 wall_s=1.39 cpu_user_s=1.22 memavail_start_gib=21 disk_free_gib=433->433 slot=claude
