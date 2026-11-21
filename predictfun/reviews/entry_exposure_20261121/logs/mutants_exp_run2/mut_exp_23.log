@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "23", "name": "the unfilled remainder at END ignored", "seconds": 11.1, "sources": {"pf_entry_exposure.py": "62e8b55d69e2a3a5", "pf_entry_exposure_mutants.py": "1a048604afcec9b6", "pf_entry_exposure_selftest.py": "8b2a236ed1caafbf"}, "why": "ENTRY EXPOSURE SELFTEST FAILED: partial fill: unfilled = 0.0, not 18.0"}
+2026-11-21T08:27:09Z tag=mut_exp_23 rc=0 peak_rss_mib=229 wall_s=11.32 cpu_user_s=11.08 memavail_start_gib=22 disk_free_gib=446->446 slot=claude

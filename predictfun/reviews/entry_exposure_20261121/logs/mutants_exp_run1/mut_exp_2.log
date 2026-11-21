@@ -1,0 +1,2 @@
+{"cls": "HARNESS_FAILURE", "index": "2", "name": "gid0 never set from the fork POST", "seconds": 0.8, "sources": {"pf_entry_exposure.py": "2742a925bb9cf8a1", "pf_entry_exposure_mutants.py": "f2b0e7ab56809f6d", "pf_entry_exposure_selftest.py": "20e34a9b81df67e1"}, "why": "crash: TypeError(\"int() argument must be a string, a bytes-like object or a real number, not 'NoneType'\")"}
+2026-11-21T08:17:58Z tag=mut_exp_2 rc=1 peak_rss_mib=197 wall_s=1.03 cpu_user_s=0.86 memavail_start_gib=22 disk_free_gib=447->447 slot=claude4

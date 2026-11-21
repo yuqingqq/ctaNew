@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "3", "name": "the other side decided again at the fork", "seconds": 7.0, "sources": {"pf_entry_exposure.py": "2742a925bb9cf8a1", "pf_entry_exposure_mutants.py": "f2b0e7ab56809f6d", "pf_entry_exposure_selftest.py": "20e34a9b81df67e1"}, "why": "ENTRY EXPOSURE SELFTEST FAILED: crafted: a case stopped (ValueError('side 0 already processed at 0.0'))"}
+2026-11-21T08:17:59Z tag=mut_exp_3 rc=0 peak_rss_mib=226 wall_s=7.26 cpu_user_s=7.05 memavail_start_gib=22 disk_free_gib=447->447 slot=claude

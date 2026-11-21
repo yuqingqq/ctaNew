@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "6", "name": "the fork fingerprint unchecked", "seconds": 8.5, "sources": {"pf_entry_exposure.py": "2742a925bb9cf8a1", "pf_entry_exposure_mutants.py": "f2b0e7ab56809f6d", "pf_entry_exposure_selftest.py": "20e34a9b81df67e1"}, "why": "ENTRY EXPOSURE SELFTEST FAILED: fork_package: a different fingerprint was not fork_mismatch"}
+2026-11-21T08:17:59Z tag=mut_exp_6 rc=0 peak_rss_mib=225 wall_s=8.77 cpu_user_s=8.51 memavail_start_gib=22 disk_free_gib=447->447 slot=claude4

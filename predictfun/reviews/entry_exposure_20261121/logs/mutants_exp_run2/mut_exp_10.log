@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "10", "name": "D against the WAIT arm", "seconds": 11.2, "sources": {"pf_entry_exposure.py": "62e8b55d69e2a3a5", "pf_entry_exposure_mutants.py": "1a048604afcec9b6", "pf_entry_exposure_selftest.py": "8b2a236ed1caafbf"}, "why": "ENTRY EXPOSURE SELFTEST FAILED: values: the declared contrasts ({'Y_PI0': 2.0, 'Y_KEEP_INITIAL': 5.0, 'D_EXPOSURE': 5.0, 'D_initial': 2.5, 'D_rest': 2.5, 'identity_ok': False})"}
+2026-11-21T08:26:23Z tag=mut_exp_10 rc=0 peak_rss_mib=229 wall_s=11.43 cpu_user_s=11.15 memavail_start_gib=22 disk_free_gib=446->446 slot=claude4

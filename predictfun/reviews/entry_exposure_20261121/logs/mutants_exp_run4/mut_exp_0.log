@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "0", "name": "the override on any live PULL", "seconds": 11.1, "sources": {"pf_entry_exposure.py": "9f723cdcdaf56bef", "pf_entry_exposure_mutants.py": "d6d7fa634f99f24f", "pf_entry_exposure_selftest.py": "730c7e2e35a21f88"}, "why": "ENTRY EXPOSURE SELFTEST FAILED: untouched: an override outside the live focal gid0, or no later / opposite PULL left to PI0; wrong gid0 99: an override happened"}
+2026-11-21T08:32:43Z tag=mut_exp_0 rc=0 peak_rss_mib=232 wall_s=11.33 cpu_user_s=11.05 memavail_start_gib=22 disk_free_gib=446->446 slot=claude2

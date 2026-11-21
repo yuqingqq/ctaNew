@@ -1,0 +1,32 @@
+  0 the override on any live PULL: CAUGHT (11.0 s) - ENTRY EXPOSURE SELFTEST FAILED: untouched: an override outside the live focal gid0, or no later / opposite PULL left to PI0; wrong gid0 99: an overrid
+  1 the override of the opposite side: CAUGHT (10.7 s) - ENTRY EXPOSURE SELFTEST FAILED: more resting time: D = 0.0, not 30.0; more resting time: keep_filled = 0.0, not 30.0; harmful late fill: D = 0.0, not 
+  2 gid0 never set from the fork POST: CAUGHT (4.4 s) - ENTRY EXPOSURE SELFTEST FAILED: more resting time: the KEEP arm's gid0 None is not the fork POST's 0; harmful late fill: the KEEP arm's gid0 None is n
+  3 the other side decided again at the fork: CAUGHT (11.1 s) - ENTRY EXPOSURE SELFTEST FAILED: crafted: a case stopped (ValueError('side 0 already processed at 0.0'))
+  4 the reproduction ignores the decisions hash: CAUGHT (11.1 s) - ENTRY EXPOSURE SELFTEST FAILED: fork_package: a different stored WAIT decisions_sha256 was not reproduction_failed
+  5 the reproduction ignores the requests hash: CAUGHT (10.9 s) - ENTRY EXPOSURE SELFTEST FAILED: fork_package: a different stored POST requests_sha256 was not reproduction_failed
+  6 the reproduction ignores Y: CAUGHT (11.2 s) - ENTRY EXPOSURE SELFTEST FAILED: fork_package: a different stored Y was not reproduction_failed
+  7 the pair reconciliation ignored: CAUGHT (11.0 s) - ENTRY EXPOSURE SELFTEST FAILED: fork_package: reconcile call 1 failing gave ok, not reproduction_failed
+  8 the KEEP reconciliation ignored: CAUGHT (11.1 s) - ENTRY EXPOSURE SELFTEST FAILED: fork_package: reconcile call 3 failing gave ok, not not_reconciled
+  9 the fork fingerprint unchecked: CAUGHT (12.3 s) - ENTRY EXPOSURE SELFTEST FAILED: fork_package: a different fingerprint was not fork_mismatch
+  10 D against the WAIT arm: CAUGHT (11.2 s) - ENTRY EXPOSURE SELFTEST FAILED: values: the declared contrasts ({'Y_PI0': 2.0, 'Y_KEEP_INITIAL': 5.0, 'D_EXPOSURE': 5.0, 'D_initial': 2.5, 'D_rest': 2
+  11 D_initial not differenced: CAUGHT (11.1 s) - ENTRY EXPOSURE SELFTEST FAILED: values: the declared contrasts ({'Y_PI0': 2.0, 'Y_KEEP_INITIAL': 5.0, 'D_EXPOSURE': 3.0, 'D_initial': 4.5, 'D_rest': -
+  12 the prefix compares actions only: CAUGHT (11.1 s) - ENTRY EXPOSURE SELFTEST FAILED: prefix_ok: true after a decision before the override
+  13 the prefix ignores fills before the override: CAUGHT (11.0 s) - ENTRY EXPOSURE SELFTEST FAILED: prefix_ok: true after a fill before the override
+  14 the no-override prefix ignores fills: CAUGHT (11.3 s) - ENTRY EXPOSURE SELFTEST FAILED: prefix_ok: the no-override arm is not compared in full
+  15 a partial fill counted full: CAUGHT (11.2 s) - ENTRY EXPOSURE SELFTEST FAILED: partial fill: keep_why = full_fill, not end
+  16 the structural reason lost: CAUGHT (11.1 s) - ENTRY EXPOSURE SELFTEST FAILED: structural removal: keep_why = end, not structural
+  17 a markout past END from the last frame: CAUGHT (10.9 s) - ENTRY EXPOSURE SELFTEST FAILED: late fill: a markout past END was not missing, or one inside it was
+  18 five worlds per hour: CAUGHT (11.2 s) - ENTRY EXPOSURE SELFTEST FAILED: select_worlds: not the four lowest declared ranks per hour (all if fewer); build_manifest train: statuses / selection 
+  19 an unsalted rank: CAUGHT (11.0 s) - ENTRY EXPOSURE SELFTEST FAILED: select_worlds: not the four lowest declared ranks per hour (all if fewer)
+  20 summaries over every status: CAUGHT (11.1 s) - ENTRY EXPOSURE SELFTEST FAILED: summaries: hand values ({'day': 'd', 'side': 0, 'forks': 4, 'overrides_forks': 3, 'mean_Y_PI0': 0.0, 'mean_Y_KEEP': 1.
+  21 the open inventory from the PI0 arm: CAUGHT (11.0 s) - ENTRY EXPOSURE SELFTEST FAILED: summaries: hand values ({'day': 'd', 'side': 0, 'forks': 3, 'overrides_forks': 3, 'mean_Y_PI0': 0.0, 'mean_Y_KEEP': 1.
+  22 the KEEP reasons read from PI0: CAUGHT (11.3 s) - ENTRY EXPOSURE SELFTEST FAILED: reasons: hand counts ({('PI0', 'policy'): 3, ('KEEP', 'policy'): 3})
+  23 a non-unique mandatory row accepted: CAUGHT (11.2 s) - ENTRY EXPOSURE SELFTEST FAILED: build_manifest train: statuses / selection / stored fields ([((1, 0), 'world:x'), ((1, 1), 'world:x'), ((2, 0), 'ok'),
+  24 a failed mandatory row status lost: CAUGHT (11.0 s) - ENTRY EXPOSURE SELFTEST FAILED: build_manifest train: statuses / selection / stored fields ([((1, 0), 'world:x'), ((1, 1), 'world:x'), ((2, 0), 'ok'),
+  25 the stored requests hash dropped: CAUGHT (11.0 s) - ENTRY EXPOSURE SELFTEST FAILED: build_manifest train: statuses / selection / stored fields ([((1, 0), 'world:x'), ((1, 1), 'world:x'), ((2, 0), 'ok'),
+  26 the manifest overwritten: CAUGHT (11.1 s) - ENTRY EXPOSURE SELFTEST FAILED: build_manifest: an existing manifest was overwritten
+  27 summarize reads a partition without its hash: CAUGHT (11.0 s) - ENTRY EXPOSURE SELFTEST FAILED: summarize: a partition whose bytes differ from its record was read
+  28 run_part without the committed manifest: CAUGHT (11.1 s) - ENTRY EXPOSURE SELFTEST FAILED: run_part: refused for another reason (ValueError("not the manifest's plan"))
+  29 the unfilled remainder at END ignored: CAUGHT (11.0 s) - ENTRY EXPOSURE SELFTEST FAILED: partial fill: unfilled = 0.0, not 18.0
+control: PASSED (11.0 s); sources {'pf_entry_exposure.py': 'b61f646c160506ee', 'pf_entry_exposure_mutants.py': 'd6d7fa634f99f24f', 'pf_entry_exposure_selftest.py': '730c7e2e35a21f88'}
+mutation check passed: the control passes its selftest, 30 / 30 planted code errors are caught by a check (5.6 CPU min)

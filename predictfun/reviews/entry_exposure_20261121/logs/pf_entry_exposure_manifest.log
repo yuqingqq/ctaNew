@@ -1,0 +1,15 @@
+{
+ "train": {
+  "worlds": 192,
+  "forks": 384,
+  "ok": 380,
+  "parts": 6
+ },
+ "eval": {
+  "worlds": 192,
+  "forks": 384,
+  "ok": 376,
+  "parts": 6
+ }
+}
+2026-11-21T08:50:10Z tag=pf_entry_exposure_manifest rc=0 peak_rss_mib=256 wall_s=24.71 cpu_user_s=23.83 memavail_start_gib=23 disk_free_gib=446->446 slot=claude

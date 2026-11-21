@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "28", "name": "run_part without the committed manifest", "seconds": 11.1, "sources": {"pf_entry_exposure.py": "b61f646c160506ee", "pf_entry_exposure_mutants.py": "d6d7fa634f99f24f", "pf_entry_exposure_selftest.py": "730c7e2e35a21f88"}, "why": "ENTRY EXPOSURE SELFTEST FAILED: run_part: refused for another reason (ValueError(\"not the manifest's plan\"))"}
+2026-11-21T08:31:52Z tag=mut_exp_28 rc=0 peak_rss_mib=234 wall_s=11.27 cpu_user_s=11.02 memavail_start_gib=22 disk_free_gib=446->446 slot=claude2

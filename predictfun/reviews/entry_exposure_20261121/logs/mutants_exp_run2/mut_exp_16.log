@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "16", "name": "the structural reason lost", "seconds": 11.1, "sources": {"pf_entry_exposure.py": "62e8b55d69e2a3a5", "pf_entry_exposure_mutants.py": "1a048604afcec9b6", "pf_entry_exposure_selftest.py": "8b2a236ed1caafbf"}, "why": "ENTRY EXPOSURE SELFTEST FAILED: structural removal: keep_why = end, not structural"}
+2026-11-21T08:26:48Z tag=mut_exp_16 rc=0 peak_rss_mib=229 wall_s=11.33 cpu_user_s=11.04 memavail_start_gib=22 disk_free_gib=446->446 slot=claude2

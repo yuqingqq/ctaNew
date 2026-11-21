@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "10", "name": "a markout past END from the last frame", "seconds": 7.1, "sources": {"pf_entry_exposure.py": "2742a925bb9cf8a1", "pf_entry_exposure_mutants.py": "f2b0e7ab56809f6d", "pf_entry_exposure_selftest.py": "20e34a9b81df67e1"}, "why": "ENTRY EXPOSURE SELFTEST FAILED: late fill: a markout past END was not missing, or one inside it was"}
+2026-11-21T08:18:08Z tag=mut_exp_10 rc=0 peak_rss_mib=224 wall_s=7.36 cpu_user_s=7.16 memavail_start_gib=22 disk_free_gib=447->447 slot=claude4

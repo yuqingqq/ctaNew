@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "19", "name": "an unsalted rank", "seconds": 11.0, "sources": {"pf_entry_exposure.py": "62e8b55d69e2a3a5", "pf_entry_exposure_mutants.py": "1a048604afcec9b6", "pf_entry_exposure_selftest.py": "8b2a236ed1caafbf"}, "why": "ENTRY EXPOSURE SELFTEST FAILED: select_worlds: not the four lowest declared ranks per hour (all if fewer)"}
+2026-11-21T08:26:58Z tag=mut_exp_19 rc=0 peak_rss_mib=229 wall_s=11.26 cpu_user_s=10.99 memavail_start_gib=22 disk_free_gib=446->446 slot=claude

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "5", "name": "the reproduction ignores the requests hash", "seconds": 10.9, "sources": {"pf_entry_exposure.py": "b61f646c160506ee", "pf_entry_exposure_mutants.py": "d6d7fa634f99f24f", "pf_entry_exposure_selftest.py": "730c7e2e35a21f88"}, "why": "ENTRY EXPOSURE SELFTEST FAILED: fork_package: a different stored POST requests_sha256 was not reproduction_failed"}
+2026-11-21T08:30:45Z tag=mut_exp_5 rc=0 peak_rss_mib=231 wall_s=11.19 cpu_user_s=11.03 memavail_start_gib=22 disk_free_gib=446->446 slot=claude3

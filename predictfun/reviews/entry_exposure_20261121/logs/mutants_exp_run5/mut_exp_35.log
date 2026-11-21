@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "35", "name": "a day without a sign counted", "seconds": 11.1, "sources": {"pf_entry_exposure.py": "33f3e0c72850e0c6", "pf_entry_exposure_mutants.py": "02b8d81a4c4cc8be", "pf_entry_exposure_selftest.py": "f5824d2e0cd3c7dd"}, "why": "ENTRY EXPOSURE SELFTEST FAILED: predicates: days disagreeing / zero sign / incomplete"}
+2026-11-21T08:42:11Z tag=mut_exp_35 rc=0 peak_rss_mib=230 wall_s=11.35 cpu_user_s=11.10 memavail_start_gib=22 disk_free_gib=446->446 slot=claude
