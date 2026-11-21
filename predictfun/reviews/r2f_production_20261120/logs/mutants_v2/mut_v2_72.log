@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "72", "name": "members outside the sample accepted", "seconds": 50.0, "sources": {"pf_r2_label_sample.py": "4cdeff0c6d491611", "pf_r2_label_sample_mutants.py": "ae0157317e4d3a9c", "pf_r2_label_sample_selftest.py": "60414b3fa5677ff6"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: validator: a member outside the sample was accepted"}
+2026-11-20T21:00:36Z tag=mut_v2_72 rc=0 peak_rss_mib=292 wall_s=50.24 cpu_user_s=49.41 memavail_start_gib=21 disk_free_gib=437->437 slot=claude

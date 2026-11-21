@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "34", "name": "a stop history reused", "seconds": 8.3, "sources": {"pf_r2_label_sample.py": "4cdeff0c6d491611", "pf_r2_label_sample_mutants.py": "ce0c703833269dc0", "pf_r2_label_sample_selftest.py": "0941600079467125"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: plan: a directory with a stop history was reused"}
+2026-11-20T19:32:08Z tag=mut_v2_34 rc=0 peak_rss_mib=220 wall_s=8.51 cpu_user_s=8.31 memavail_start_gib=22 disk_free_gib=437->437 slot=claude3

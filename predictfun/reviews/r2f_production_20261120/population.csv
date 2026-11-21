@@ -1,0 +1,72 @@
+day,item,n
+20261024,worlds_planned,1536
+20261024,worlds_realized,1536
+20261024,markets,288
+20261024,utc_hours,24
+20261024,originals,3072
+20261024,picks,9186
+20261024,pairs_run,9126
+20261024,ok,9125
+20261024,side 0 keep - world:no_path:missing_endpoint,15
+20261024,side 0 keep delayed ok,1183
+20261024,side 0 keep joint_chase ok,108
+20261024,side 0 keep joint_post_keep ok,128
+20261024,side 0 keep neutral ok,92
+20261024,side 0 keep pi0 ok,10
+20261024,side 0 post - world:no_path:missing_endpoint,15
+20261024,side 0 post delayed ok,756
+20261024,side 0 post joint_chase ok,23
+20261024,side 0 post joint_post_keep ok,16
+20261024,side 0 post neutral ok,1521
+20261024,side 0 post pi0 ok,726
+20261024,side 1 keep - world:no_path:missing_endpoint,15
+20261024,side 1 keep delayed feature_unavailable,1
+20261024,side 1 keep delayed ok,1208
+20261024,side 1 keep joint_chase ok,94
+20261024,side 1 keep joint_post_keep ok,122
+20261024,side 1 keep neutral ok,83
+20261024,side 1 keep pi0 ok,13
+20261024,side 1 post - world:no_path:missing_endpoint,15
+20261024,side 1 post delayed ok,783
+20261024,side 1 post joint_chase ok,27
+20261024,side 1 post joint_post_keep ok,23
+20261024,side 1 post neutral ok,1521
+20261024,side 1 post pi0 ok,688
+20261025,worlds_planned,1536
+20261025,worlds_realized,1536
+20261025,markets,285
+20261025,utc_hours,24
+20261025,originals,3072
+20261025,picks,9186
+20261025,pairs_run,9125
+20261025,ok,9124
+20261025,side 0 keep - world:no_path:missing_endpoint,12
+20261025,side 0 keep - world:no_path:stale_future_book,3
+20261025,side 0 keep delayed ok,1201
+20261025,side 0 keep joint_chase ok,110
+20261025,side 0 keep joint_post_keep ok,107
+20261025,side 0 keep neutral ok,94
+20261025,side 0 keep pi0 ok,9
+20261025,side 0 post - world:no_path:missing_endpoint,12
+20261025,side 0 post - world:no_path:stale_future_book,3
+20261025,side 0 post delayed ok,797
+20261025,side 0 post joint_chase ok,30
+20261025,side 0 post joint_post_keep ok,13
+20261025,side 0 post neutral ok,1521
+20261025,side 0 post pi0 ok,681
+20261025,side 1 keep - empty_pool,1
+20261025,side 1 keep - world:no_path:missing_endpoint,12
+20261025,side 1 keep - world:no_path:stale_future_book,3
+20261025,side 1 keep delayed ok,1183
+20261025,side 1 keep joint_chase ok,123
+20261025,side 1 keep joint_post_keep ok,117
+20261025,side 1 keep neutral feature_unavailable,1
+20261025,side 1 keep neutral ok,92
+20261025,side 1 keep pi0 ok,4
+20261025,side 1 post - world:no_path:missing_endpoint,12
+20261025,side 1 post - world:no_path:stale_future_book,3
+20261025,side 1 post delayed ok,774
+20261025,side 1 post joint_chase ok,22
+20261025,side 1 post joint_post_keep ok,14
+20261025,side 1 post neutral ok,1521
+20261025,side 1 post pi0 ok,711

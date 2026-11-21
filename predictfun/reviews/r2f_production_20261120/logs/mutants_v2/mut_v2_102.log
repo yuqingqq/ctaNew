@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "102", "name": "END unchecked", "seconds": 49.9, "sources": {"pf_r2_label_sample.py": "4cdeff0c6d491611", "pf_r2_label_sample_mutants.py": "ae0157317e4d3a9c", "pf_r2_label_sample_selftest.py": "60414b3fa5677ff6"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['END 4,000']"}
+2026-11-20T21:25:45Z tag=mut_v2_102 rc=0 peak_rss_mib=292 wall_s=50.12 cpu_user_s=49.27 memavail_start_gib=21 disk_free_gib=436->436 slot=claude

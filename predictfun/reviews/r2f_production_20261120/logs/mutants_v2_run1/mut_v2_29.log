@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "29", "name": "the stop rule disabled", "seconds": 105.6, "sources": {"pf_r2_label_sample.py": "4cdeff0c6d491611", "pf_r2_label_sample_mutants.py": "ce0c703833269dc0", "pf_r2_label_sample_selftest.py": "0941600079467125"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: stops: a high-water over the checkpoint did not latch at the loading"}
+2026-11-20T19:33:35Z tag=mut_v2_29 rc=0 peak_rss_mib=300 wall_s=105.82 cpu_user_s=104.34 memavail_start_gib=22 disk_free_gib=437->437 slot=claude

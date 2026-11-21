@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "39", "name": "the feature schema unchecked", "seconds": 51.0, "sources": {"pf_r2_label_sample.py": "4cdeff0c6d491611", "pf_r2_label_sample_mutants.py": "ae0157317e4d3a9c", "pf_r2_label_sample_selftest.py": "60414b3fa5677ff6"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: identity: a changed feature schema was not refused"}
+2026-11-20T20:25:29Z tag=mut_v2_39 rc=0 peak_rss_mib=294 wall_s=51.17 cpu_user_s=50.54 memavail_start_gib=21 disk_free_gib=437->437 slot=claude

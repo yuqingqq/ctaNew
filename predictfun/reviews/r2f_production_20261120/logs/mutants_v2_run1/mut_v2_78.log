@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "78", "name": "pool consistency unchecked", "seconds": 49.9, "sources": {"pf_r2_label_sample.py": "4cdeff0c6d491611", "pf_r2_label_sample_mutants.py": "ce0c703833269dc0", "pf_r2_label_sample_selftest.py": "0941600079467125"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['inconsistent pool counts']"}
+2026-11-20T19:46:22Z tag=mut_v2_78 rc=0 peak_rss_mib=287 wall_s=50.21 cpu_user_s=49.29 memavail_start_gib=22 disk_free_gib=436->437 slot=claude2

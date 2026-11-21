@@ -1,0 +1,10 @@
+{"finished": 1, "partitions": 96, "mean_cpu_s": 580.75, "projected_core_hours": 15.486666666666666, "ceiling": 40.0}
+{"finished": 10, "partitions": 96, "mean_cpu_s": 578.307, "projected_core_hours": 15.421520000000001, "ceiling": 40.0}
+{"finished": 20, "partitions": 96, "mean_cpu_s": 580.3495, "projected_core_hours": 15.475986666666667, "ceiling": 40.0}
+{"finished": 30, "partitions": 96, "mean_cpu_s": 579.8633333333333, "projected_core_hours": 15.463022222222223, "ceiling": 40.0}
+{"finished": 40, "partitions": 96, "mean_cpu_s": 581.1510000000001, "projected_core_hours": 15.497360000000002, "ceiling": 40.0}
+{"finished": 50, "partitions": 96, "mean_cpu_s": 582.3518, "projected_core_hours": 15.529381333333335, "ceiling": 40.0}
+{"finished": 60, "partitions": 96, "mean_cpu_s": 581.8555, "projected_core_hours": 15.516146666666666, "ceiling": 40.0}
+{"finished": 70, "partitions": 96, "mean_cpu_s": 581.6842857142857, "projected_core_hours": 15.511580952380953, "ceiling": 40.0}
+{"finished": 80, "partitions": 96, "mean_cpu_s": 580.784375, "projected_core_hours": 15.487583333333331, "ceiling": 40.0}
+{"finished": 90, "partitions": 96, "mean_cpu_s": 580.5851111111111, "projected_core_hours": 15.48226962962963, "ceiling": 40.0}

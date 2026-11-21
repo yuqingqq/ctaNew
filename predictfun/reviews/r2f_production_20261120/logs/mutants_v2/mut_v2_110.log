@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "110", "name": "the audit rate unchecked", "seconds": 49.4, "sources": {"pf_r2_label_sample.py": "4cdeff0c6d491611", "pf_r2_label_sample_mutants.py": "ae0157317e4d3a9c", "pf_r2_label_sample_selftest.py": "60414b3fa5677ff6"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: validator: corruptions not refused ['a wrong audit denominator']"}
+2026-11-20T21:31:54Z tag=mut_v2_110 rc=0 peak_rss_mib=291 wall_s=49.59 cpu_user_s=48.91 memavail_start_gib=21 disk_free_gib=436->436 slot=claude

@@ -12,6 +12,9 @@ Guards over one property mask each other's mutants (FINDINGS P80). The selftest 
  - the high-water is checked at each stage by a staged reading (loading, census, world);
  - the byte pre-check and the validator's byte check refuse with different messages;
  - identity refusals are matched by message, and changed inputs refuse before any day input is read.
+Equivalent, not listed (review 38febc0b round): the explicit status-against-result check. Every status / result mismatch is also refused by
+its status branch: an 'ok' row by the pair or fork-input checks, a 'feature_unavailable' row by its reason rule or the pair checks, a
+'pair_not_ok' row by the data-status rule. The first R2-F run listed it and it passed (logs/mutants_v2_run1_summary.log).
 Not mutated (equivalent on intact data, documented): the arm-to-teacher mapping hash check (an inversion is equivalent when both arms' fills
 coincide); the fork-state copy before the inputs (the builders do not mutate the state); the running worst-pair maximum (the pair that
 exceeds the limit latches at its own check).
@@ -128,7 +131,6 @@ MUTANTS = [
     ("the hidden copy unchecked", " and fi.get('hidden_equal') is True\n", "\n"),
     ("the rebuild unchecked", "            and fi.get('rebuild_equal') is True and hashlib", "            and hashlib"),
     ("the inputs hash unchecked", " and hashlib.sha256(np.asarray(fi['inputs'], np.float32).tobytes()).hexdigest() == fi.get('inputs_sha256')):", "):"),
-    ("the status not checked against its result", "                    if st != exp_st:\n                        bad.append(f'{wk} side {s} {pick}: the status {st} is not its result\\'s ({exp_st})'); continue", "                    if False:\n                        bad.append(f'{wk} side {s} {pick}: the status {st} is not its result\\'s ({exp_st})'); continue"),
     ("any failed pair is an exclusion", "                        if res_.get('status') not in PAIR_DATA_STATUSES or res_.get('fork_fingerprint') != r.get('fork_fingerprint'):", "                        if res_.get('fork_fingerprint') != r.get('fork_fingerprint'):"),
     ("feature exclusions skip the pair invariants", "_pair_bad(plan, day, w, r, inputs_required=(st == 'ok'))]", "(_pair_bad(plan, day, w, r) if st == 'ok' else [])]"),
     ("END unchecked", "    if not (float(res.get('end', -1.)) == end and abs(float(idn.get('end_abs_ms', -1.)) - float(idn.get('start_abs_ms', 0.)) - end) < 1e-6):", "    if False:"),

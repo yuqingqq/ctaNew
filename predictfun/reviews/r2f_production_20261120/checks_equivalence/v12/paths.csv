@@ -1,0 +1,11 @@
+day,head,class,ok_pairs
+20261024,keep,economic (Y != 0),1
+20261024,keep,identical fills,47
+20261024,post,economic (Y != 0),5
+20261024,post,identical fills,84
+20261024,post,"path-only (Y = 0, equal cash and inventory)",7
+20261025,keep,economic (Y != 0),2
+20261025,keep,identical fills,46
+20261025,post,economic (Y != 0),4
+20261025,post,identical fills,90
+20261025,post,"path-only (Y = 0, equal cash and inventory)",2

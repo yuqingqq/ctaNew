@@ -640,6 +640,22 @@ pulls and bid/ask; judge movement calibration on selected actions before changin
 order design. Other session owns fixes; scheduler remains off.
 <!-- /PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
 
+## 2026-11-21 00:29Z (session aea5bfb9) — R2-F: THE FULL r2_label_sample_v2 PRODUCTION BUILD — 3,072 WORLDS ON CONSUMED OCT 24–25; DECLARED CHECKS ALL TRUE; 17,706 / 18,249 LABELS EXACTLY 0 c (review 38febc0b's next priority) (USER: "... continue the implementing and next priority loop"; "As long as the results are reliable, we can accelerate the process")
+- [Receipt](reviews/r2f_production_20261120/report.md). The freeze `d3d024fd` came before any parity or production pair; the results are in this commit. **Label-only: target support, variation and build reliability; no model skill measured.**
+- **Review 38febc0b's checklist (closure matrix in the receipt): all closed.**
+  - Item 1 (P2): the validator checks each status against its result; `missing_mark` is the only failed-pair exclusion; END, the common mark and fill times are checked on every pair, the feature exclusions included.
+  - Item 2 (P2): required callbacks are recomputed from hash-bound decision logs, so zero is valid only when none was required (the final-tick control on the real engine: Y = +5 c with zero callbacks).
+  - Item 3 (P3): R2-E's readings are superseded in the receipt: 10 nonzero originals (the union, not 11) in 9 worlds; 21 pairs with different fill lists, 9 path-only and 12 economic; decision_ms and the remaining horizon split; no fitted coefficients.
+  - Item 4 (P3): the mutant summary checks each record's index and name.
+  - Decision 2: the causal probe every 35th call. Decision 3 (the input cache): skipped.
+  - **Suites:** v2 run 1 on the frozen selftest caught 107 / 114 (five corruptions masked by checks added in the round, one check untested: fixed in the selftest only; one equivalent mutant removed; FINDINGS P90); run 2 113 / 113 on the unchanged module; v1 35 / 35 and runner v5 30 / 30 unchanged.
+- **Parity:** the 288 pilot pairs byte-identical outside the declared audit fields (288/288), 192/192 pools; 2.40 s a pair against 5.0.
+- **Checks** (declared before outputs; v1.1 the mutant count and v1.2 one partition in memory, both declared before any label was read; v1.1 = v1.2 on the parity output): **A–H all true**. The seven refusals and the intact part hold on every partition.
+- **Readings** (FINDINGS P91): 18,249 ok pairs, 17,706 exactly 0 c (97.0 %); 203 positive and 340 negative from 493 originals in 468 worlds; the top-5 \|Y\| share 0.114; 926 path-only and 543 economic fill differences; 71 zero-callback arms, each reconciled with its decision log.
+- **Cost:** 15.46 core-hours (R2-E projected 26.97 at the 7th-call probe); 2.52 s a pair; peaks ≤ 1,271 MiB; the checks v1.2 283 MiB.
+- **Deferred (nonblocking):** the input cache; mutant #100's header wording; R2-E's deferrals (v1 between-day sentinel, v1 historical path, runner v5 durations, attempt-3 outputs in data/); the strata absent in the pilot (pi0 KEEP, joint_chase POST) are drawn on both days (counts in the receipt); the 96 parts stay in data/ (manifest in the receipt).
+- **Next measurement:** the combined review (one request), which names the next priority. The question put to it: the candidate stage (plan v2 R4: one declared candidate and its evaluation design) on consumed days, designed for 543 nonzero labels from 493 originals in 468 worlds.
+
 ## 2026-11-20 18:57Z (session aea5bfb9) — R2-E: THE r2_label_sample_v2 LAUNCH GATE — THE BUNDLED B1–B7 ROUND AND THE 48-WORLD DISTRIBUTED PILOT; DECLARED CHECKS ALL TRUE; LABELS SPARSE (276 / 288 EXACTLY 0); FULL SAMPLE PROJECTED AT 27.0 CORE-HOURS (reviews 4393ad19 / 0ca01d1f) (USER: "include as many issues as possible in each round"; "We need to make the run more efficient")
 - [Receipt](reviews/r2e_label_pilot_20261120/report.md). The freeze `56e74082` came before any attempt-4 pair; the results are in this commit. **Label-only: target variation and build reliability, no model skill.**
 - **The consolidated B1–B7 checklist (closure matrix in the receipt): all closed.**

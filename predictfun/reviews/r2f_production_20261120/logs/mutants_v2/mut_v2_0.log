@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "0", "name": "the stratum cap ignored", "seconds": 0.8, "sources": {"pf_r2_label_sample.py": "4cdeff0c6d491611", "pf_r2_label_sample_mutants.py": "ae0157317e4d3a9c", "pf_r2_label_sample_selftest.py": "60414b3fa5677ff6"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: sample strata [{'day': 'd', 'hour': 3, 'N': 1, 'n': 1, 'pi': 1.0}, {'day': 'd', 'hour': 7, 'N': 5, 'n': 5, 'pi': 1.0}]"}
+2026-11-20T20:10:05Z tag=mut_v2_0 rc=0 peak_rss_mib=194 wall_s=0.99 cpu_user_s=0.82 memavail_start_gib=21 disk_free_gib=438->438 slot=claude

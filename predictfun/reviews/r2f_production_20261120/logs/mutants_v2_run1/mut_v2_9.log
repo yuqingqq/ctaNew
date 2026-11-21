@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "9", "name": "the closure misses lazy imports", "seconds": 1.4, "sources": {"pf_r2_label_sample.py": "4cdeff0c6d491611", "pf_r2_label_sample_mutants.py": "ce0c703833269dc0", "pf_r2_label_sample_selftest.py": "0941600079467125"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: the source closure (core modules, function-level imports, no checks)"}
+2026-11-20T19:29:33Z tag=mut_v2_9 rc=0 peak_rss_mib=216 wall_s=1.56 cpu_user_s=1.37 memavail_start_gib=22 disk_free_gib=437->437 slot=claude2

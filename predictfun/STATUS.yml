@@ -554,6 +554,28 @@ pipeline_one_day_v3_20261119:
   values_equal_v2: {cells_per_day: 190, differing: 0}
   attribution_vs_pull_all_c: {"20261026": {first_step: 0.0, later: 954.33, never: 995.36, no_prediction: 0.0}, "20261027": {first_step: 0.0, later: -821.85, never: 251.74, no_prediction: 0.0}}
 
+r2f_production_20261120:
+  status: done_r2f_full_label_sample_3072_worlds_consumed_oct24_25_label_only
+  asof: "2026-11-21 00:29Z"
+  receipt: predictfun/reviews/r2f_production_20261120/report.md
+  freeze_commit: d3d024fd2c5ccb1ca7e4d33e9b1162b91b50abd5
+  plan_sha256_prefix: 0de151d1b980661d
+  dataset_sha256_prefix: 2c62fc9baf696e6c
+  module_sha256: 4cdeff0c (unchanged since the freeze)
+  selftest_v2: {frozen: 09416000, final: 60414b3f}
+  mutants_v2_harness: {frozen: ce0c7038, final: ae015731}
+  suites: {v2_run1_frozen_selftest: 107/114, v2_run2: 113/113, equivalent_removed: 1, v1: 35/35, runner_v5: 30/30, summary_selftest: pass}
+  closure_38febc0b: {item1_status_end_mark_fill_times: closed, item2_zero_callback_final_tick: closed, item3_interpretations: superseded_in_r2f_receipt, item4_mutant_identity: closed, decision2_audit_every_35: adopted, decision3_input_cache: skipped}
+  checks_versions: {v1: declared_before_outputs, v1_1: mutant_count_113, v1_2: one_partition_in_memory, v1_1_equals_v1_2_on_parity_output: true}
+  checks: {A_plan: true, B_runs: true, C_parity: true, D_acceptance: true, E_resources: true, F_labels: true, G_controls: true, H_suites: true}
+  parity: {rows_identical: 288/288, pools_identical: 192/192, pair_s_mean: 2.40}
+  sample: {worlds_planned: 3072, worlds_realized: 3072, partitions: 96, picks: 18372, ok_pairs: 18249}
+  readings: {y_zero: 17706, y_positive: 203, y_negative: 340, nonzero_originals_union: 493, originals_with_ok: 6084, nonzero_worlds: 468, top5_abs_share: 0.114, top1pct_abs_share: 0.835, y_min_c: -720.00, y_max_c: 940.64}
+  fill_paths: {identical: 16776, path_only: 926, economic: 543, other: 4}
+  causal: {probe_checked: 145045, mismatch: 0, parity_checked: 138385, parity_mismatch: 0, binding_checked: 4435006, binding_bad: 0, zero_callback_arms: 71}
+  cost: {partition_core_hours: 15.46, r2e_projection_core_hours: 26.97, pair_s_mean: 2.52, pair_s_max: 4.3, load_s_mean: 52.3, peak_mib_jobs: 1271, peak_mib_records: 1181, checks_v1_2_peak_mib: 283, finalize_peak_mib: 280, parity_core_hours: 0.30}
+  r2e_superseded: {nonzero_originals_union: 10, nonzero_worlds: 9, different_fill_lists: 21, path_only: 9, economic: 12}
+  next: combined_review_names_the_next_priority_question_put_r4_candidate_stage_on_consumed_days
 r2e_label_pilot_20261120:
   status: done_r2e_launch_gate_bundled_b1_b7_pilot_checks_all_true_labels_sparse
   asof: "2026-11-20 18:57Z"
@@ -570,7 +592,7 @@ r2e_label_pilot_20261120:
   checks_v4_1: {A_plan: true, B_runs: true, C_resume_identity: true, D_acceptance: true, E_resources: true, F_labels: true, G_controls: true, H_suites: true}
   checks_v3_1: {H_suites: false_by_design_selftest_fixed_after_freeze}
   pilot: {worlds: 48, pairs: 288, ok: 288, dataset_sha256_prefix: 0d5356401b5aee7b}
-  readings: {y_zero: 276, y_positive: 8, y_negative: 4, nonzero_originals: 11, originals: 96, top5_abs_share: 0.88, y_min_c: -165.0, y_max_c: 225.85}
+  readings: {y_zero: 276, y_positive: 8, y_negative: 4, nonzero_originals_union: 10, nonzero_worlds: 9, originals: 96, top5_abs_share: 0.88, y_min_c: -165.0, y_max_c: 225.85, superseded_by: predictfun/reviews/r2f_production_20261120/report.md, was: nonzero_originals_11_the_per_sign_sum}
   causal: {probe_checked: 9715, mismatch: 0, parity_checked: 9183, parity_mismatch: 0, binding_checked: 66280, binding_bad: 0}
   cost: {pair_s_mean: 5.0, pair_s_max: 9.65, load_s_mean: 54.8, full_sample_core_hours: 26.97, conservative_bound_core_hours: 46.14, ceiling: 40, pilot_core_hours: 1.05}
   efficiency_options_for_review: [probe_every_35th_decision_about_2x_less_checking_power, per_day_input_cache_about_10pct]

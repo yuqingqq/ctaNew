@@ -1,0 +1,43 @@
+day,item,n
+20261024,worlds_planned,24
+20261024,worlds_realized,24
+20261024,markets,24
+20261024,utc_hours,24
+20261024,originals,48
+20261024,picks,144
+20261024,pairs_run,144
+20261024,ok,144
+20261024,side 0 keep delayed ok,16
+20261024,side 0 keep joint_chase ok,2
+20261024,side 0 keep joint_post_keep ok,1
+20261024,side 0 keep neutral ok,5
+20261024,side 0 post delayed ok,8
+20261024,side 0 post joint_post_keep ok,1
+20261024,side 0 post neutral ok,24
+20261024,side 0 post pi0 ok,15
+20261024,side 1 keep delayed ok,20
+20261024,side 1 keep joint_chase ok,2
+20261024,side 1 keep joint_post_keep ok,2
+20261024,side 1 post delayed ok,14
+20261024,side 1 post neutral ok,24
+20261024,side 1 post pi0 ok,10
+20261025,worlds_planned,24
+20261025,worlds_realized,24
+20261025,markets,24
+20261025,utc_hours,24
+20261025,originals,48
+20261025,picks,144
+20261025,pairs_run,144
+20261025,ok,144
+20261025,side 0 keep delayed ok,19
+20261025,side 0 keep joint_post_keep ok,5
+20261025,side 0 post delayed ok,11
+20261025,side 0 post neutral ok,24
+20261025,side 0 post pi0 ok,13
+20261025,side 1 keep delayed ok,19
+20261025,side 1 keep joint_chase ok,1
+20261025,side 1 keep joint_post_keep ok,1
+20261025,side 1 keep neutral ok,3
+20261025,side 1 post delayed ok,14
+20261025,side 1 post neutral ok,24
+20261025,side 1 post pi0 ok,10

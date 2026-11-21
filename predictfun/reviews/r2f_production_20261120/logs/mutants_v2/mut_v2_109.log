@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "109", "name": "engine fallbacks counted as callbacks", "seconds": 49.4, "sources": {"pf_r2_label_sample.py": "4cdeff0c6d491611", "pf_r2_label_sample_mutants.py": "ae0157317e4d3a9c", "pf_r2_label_sample_selftest.py": "60414b3fa5677ff6"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: callbacks: the hand-built decision log (pre-fork, forced, the other side before / after it, a fallback) counts 4 / 5, not 3 / 4"}
+2026-11-20T21:31:05Z tag=mut_v2_109 rc=0 peak_rss_mib=292 wall_s=49.59 cpu_user_s=48.99 memavail_start_gib=21 disk_free_gib=436->436 slot=claude

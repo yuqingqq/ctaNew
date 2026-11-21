@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "58", "name": "the byte pre-check removed", "seconds": 114.9, "sources": {"pf_r2_label_sample.py": "4cdeff0c6d491611", "pf_r2_label_sample_mutants.py": "ae0157317e4d3a9c", "pf_r2_label_sample_selftest.py": "60414b3fa5677ff6"}, "why": "R2 LABEL SAMPLE SELFTEST FAILED: resume: a changed promoted part was skipped as done"}
+2026-11-20T20:42:19Z tag=mut_v2_58 rc=0 peak_rss_mib=310 wall_s=115.15 cpu_user_s=113.43 memavail_start_gib=21 disk_free_gib=436->436 slot=claude
