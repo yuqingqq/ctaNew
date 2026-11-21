@@ -1,0 +1,21 @@
+  0 the guard keeps every book part: CAUGHT (1.1 s) - ADV2 SAMPLE SELFTEST FAILED: the guard refused a valid day (20261027: a sealed date in the identity); the guard opened a foreign part; the guarded boo
+  1 the book parts listed without the name filter: CAUGHT (1.1 s) - ADV2 SAMPLE SELFTEST FAILED: the guard refused a valid day (20261027: a sealed date in the identity); the guard opened a foreign part; the guarded boo
+  2 the sealed-date refusal removed: CAUGHT (1.1 s) - ADV2 SAMPLE SELFTEST FAILED: a sealed date was not refused before any hash (20261028: a sealed date in the identity, 8 hashed)
+  3 the identity name check removed: CAUGHT (1.1 s) - ADV2 SAMPLE SELFTEST FAILED: an Oct 28 part admitted by the loader rule was not refused by the name check
+  4 the loader-flag check removed: CAUGHT (1.1 s) - ADV2 SAMPLE SELFTEST FAILED: a loader that reads foreign parts was not refused
+  5 an identity file dropped: CAUGHT (1.1 s) - ADV2 SAMPLE SELFTEST FAILED: Oct 24: guarded != real_files minus the after-day part (['legs_tk.parquet', 'part_20261025_00.parquet'])
+  6 plan_ok: days unchecked: CAUGHT (1.1 s) - ADV2 SAMPLE SELFTEST FAILED: plan_ok missed: days; a plan failing its post-condition was not refused by it (KeyError('strata'))
+  7 plan_ok: audit rate unchecked: CAUGHT (1.1 s) - ADV2 SAMPLE SELFTEST FAILED: plan_ok missed: audit rate
+  8 plan_ok: limits unchecked: CAUGHT (1.1 s) - ADV2 SAMPLE SELFTEST FAILED: plan_ok missed: limits
+  9 plan_ok: book parts unchecked: CAUGHT (1.1 s) - ADV2 SAMPLE SELFTEST FAILED: plan_ok missed: book part
+  10 plan_ok: sealed names unchecked: CAUGHT (1.1 s) - ADV2 SAMPLE SELFTEST FAILED: plan_ok missed: sealed tracked
+  11 plan_ok: selected days unchecked: CAUGHT (1.1 s) - ADV2 SAMPLE SELFTEST FAILED: plan_ok missed: selected day
+  12 plan_ok: partition days unchecked: CAUGHT (1.1 s) - ADV2 SAMPLE SELFTEST FAILED: plan_ok missed: partition day
+  13 run without the guard: CAUGHT (1.1 s) - ADV2 SAMPLE SELFTEST FAILED: run: the frozen runner was not given guarded_files
+  14 finalize without the guard: CAUGHT (1.1 s) - ADV2 SAMPLE SELFTEST FAILED: finalize: the frozen runner was not given guarded_files
+  15 plan without the guard: CAUGHT (1.1 s) - ADV2 SAMPLE SELFTEST FAILED: plan: the frozen runner was not given guarded_files
+  16 plan on the default (training) days: CAUGHT (1.1 s) - ADV2 SAMPLE SELFTEST FAILED: plan: not the declared days
+  17 the post-condition not enforced: CAUGHT (1.1 s) - ADV2 SAMPLE SELFTEST FAILED: a plan failing its post-condition was not refused by it (KeyError('strata'))
+  18 the declared days changed: CAUGHT (1.1 s) - ADV2 SAMPLE SELFTEST FAILED: the declared days changed: ('20261026', '20261028') / ('20261028',); a conforming plan was flagged: ['20261028: a book pa
+control: PASSED (1.1 s); sources {'pf_adv2_sample.py': '8bd33c5d1f5a8708', 'pf_adv2_sample_mutants.py': '7926f6b82431dfc4', 'pf_adv2_sample_selftest.py': 'c7da360bc1866f19'}
+mutation check passed: the control passes its selftest, 19 / 19 planted code errors are caught by a check (0.4 CPU min)

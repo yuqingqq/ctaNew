@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "13", "name": "run without the guard", "seconds": 1.1, "sources": {"pf_adv2_sample.py": "8bd33c5d1f5a8708", "pf_adv2_sample_mutants.py": "7926f6b82431dfc4", "pf_adv2_sample_selftest.py": "c7da360bc1866f19"}, "why": "ADV2 SAMPLE SELFTEST FAILED: run: the frozen runner was not given guarded_files"}
+2026-11-21T00:57:27Z tag=mut_sample_13 rc=0 peak_rss_mib=194 wall_s=1.32 cpu_user_s=1.06 memavail_start_gib=22 disk_free_gib=434->434 slot=claude

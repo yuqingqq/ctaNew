@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "4", "name": "the loader-flag check removed", "seconds": 1.1, "sources": {"pf_adv2_sample.py": "8bd33c5d1f5a8708", "pf_adv2_sample_mutants.py": "7926f6b82431dfc4", "pf_adv2_sample_selftest.py": "c7da360bc1866f19"}, "why": "ADV2 SAMPLE SELFTEST FAILED: a loader that reads foreign parts was not refused"}
+2026-11-21T00:57:15Z tag=mut_sample_4 rc=0 peak_rss_mib=194 wall_s=1.30 cpu_user_s=1.04 memavail_start_gib=23 disk_free_gib=434->434 slot=claude

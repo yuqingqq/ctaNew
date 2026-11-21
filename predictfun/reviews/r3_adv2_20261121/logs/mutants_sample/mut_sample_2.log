@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "2", "name": "the sealed-date refusal removed", "seconds": 1.1, "sources": {"pf_adv2_sample.py": "8bd33c5d1f5a8708", "pf_adv2_sample_mutants.py": "7926f6b82431dfc4", "pf_adv2_sample_selftest.py": "c7da360bc1866f19"}, "why": "ADV2 SAMPLE SELFTEST FAILED: a sealed date was not refused before any hash (20261028: a sealed date in the identity, 8 hashed)"}
+2026-11-21T00:57:12Z tag=mut_sample_2 rc=0 peak_rss_mib=194 wall_s=1.29 cpu_user_s=1.03 memavail_start_gib=23 disk_free_gib=434->434 slot=claude
