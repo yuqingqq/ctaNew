@@ -1,0 +1,7 @@
+{
+  "clean": true,
+  "reversed_selected_bin_means_accepted": true,
+  "changed_censor_count_accepted": true,
+  "altered_mean_rows": 8,
+  "note": "Current saved means independently reconcile in evidence.json; these expose checker coverage, not corrupt real data."
+}

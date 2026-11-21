@@ -1,0 +1,39 @@
+AUDIT SELFTEST PASSED: boundaries and the review control, sweeps, windows, churn / recovery, durations, bins / leads, the round trip, order causality, safe resume, guards
+LADDER SELFTEST PASSED: legacy reproduction, the long queue case and its two planted implementations, ladder fixtures, hidden notices, inventory mode, cancel timing, resume, observer / reconstruction, features, measurement, population and guards
+LADDER SELFTEST v2 PASSED: the frozen suite under explicit negative guard conditions, and the allowed guard conditions
+Pinned selftests and 23 saved checks passed
+{
+  "all_rows": {
+    "membership_inputs_windows_checked": 14968,
+    "kinds": {
+      "entry": 5288,
+      "first": 4840,
+      "live": 4840
+    }
+  },
+  "leads": [
+    {
+      "kind": "live",
+      "feature": "ctx_bid_reserved_shares",
+      "lead": true,
+      "cells": [
+        -7.850517364054211,
+        -58.087475717828426,
+        -13.766823813462842,
+        -47.0692004095454,
+        -0.37888143517371375,
+        -37.50466164341053,
+        -47.272346196450655,
+        -16.951287865860316
+      ],
+      "pooled": -23.13801130445861
+    }
+  ],
+  "censor_counter": {
+    "reported": -3195,
+    "actual": 13,
+    "no_fill": 3208
+  },
+  "falsifier_ok": true
+}
+2026-11-21T18:01:02Z tag=codex_ladder_audit_review rc=0 peak_rss_mib=427 wall_s=48.98 cpu_user_s=48.25 memavail_start_gib=23 disk_free_gib=438->438 slot=codex

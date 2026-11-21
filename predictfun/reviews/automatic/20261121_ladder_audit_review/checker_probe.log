@@ -1,0 +1,8 @@
+{
+  "clean": true,
+  "reversed_selected_bin_means_accepted": true,
+  "changed_censor_count_accepted": true,
+  "altered_mean_rows": 8,
+  "note": "Current saved means independently reconcile in evidence.json; these expose checker coverage, not corrupt real data."
+}
+2026-11-21T18:04:12Z tag=codex_ladder_audit_checker_probe rc=0 peak_rss_mib=410 wall_s=13.74 cpu_user_s=13.32 memavail_start_gib=23 disk_free_gib=438->438 slot=codex

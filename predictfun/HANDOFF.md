@@ -23,6 +23,34 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- LADDER_AUDIT_REVIEW_20261121_CODEX -->
+## 2026-11-21 — Lead-time audit accepted; next: one ask-side guard experiment
+
+[Combined review](reviews/automatic/20261121_ladder_audit_review/report.md) of
+**6b14fbf951a96baebd885f96a93ecd10a7744bd8** accepts the descriptive audit on
+19/96 markets. All eight prior items are addressed/superseded. Independently
+checked all 14,968 windows/inputs, all 78 contrasts, 23 saved checks and seven
+falsifiers. No blocking issue requires rerunning the baseline or audit.
+
+Bundle three NONBLOCKING items: per-share markout needs uncensored quantity
+in its denominator; the checker must derive means/signs/ranking rather than
+trust stored summary fields; generation censor count is 13, not -3,195.
+Verified corrections preserve the selected lead and its per-share sign on
+4/4 ask days versus 1/4 bid days. This is reservation/exposure association,
+not demonstrated market prediction or an avoided-loss estimate.
+
+ONE next priority: **ASK-RESERVATION-GUARD-v1**, precisely specified in the
+review. One candidate, asks only: current represented bid reservations in
+frozen live/ask q5 (>=200 shares) pull live asks and withhold new asks until
+clear; no timer. Keep baseline inventory, two levels, nominal 100 shares,
+latencies and all other rules. Compare full feedback against a reproduced
+baseline on the same 19 markets; include lost good fills, queue/re-entry,
+actual inventory, exact uptime and a separate 500-draw local matched control.
+This is a diagnostic challenger, not a promoted replacement default policy.
+Freeze before outputs; <=0.75 additional core-hours within the unused original
+allocation; one combined receipt. No further USER permission within this scope.
+<!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
+
 <!-- LADDER_AUDIT_RESULTS_20261121_DEV -->
 ## 2026-11-21 17:54Z (session aea5bfb9) — RECEIPT-LEAD-TIME-AUDIT-v1 RESULTS: CORRECTIONS EQUAL THE REVIEW'S NUMBERS; READING LEAD
 

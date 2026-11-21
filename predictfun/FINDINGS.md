@@ -1,3 +1,29 @@
+<!-- LADDER_AUDIT_REVIEW_20261121_CODEX -->
+## 2026-11-21 — Review of P102: audit accepted, economic signal still unproven
+
+[Review/evidence](reviews/automatic/20261121_ladder_audit_review/report.md),
+target **6b14fbf951a96baebd885f96a93ecd10a7744bd8**. All 14,968 windows and
+saved dictionary inputs reconcile; 78 independently recomputed contrasts
+preserve the single live/bid-reservation LEAD (-23.138 c/state). Corrected
+per-share denominators preserve its sign on four ask days and one bid day.
+The feature means opposite-side exposure for asks, own-side exposure for bids.
+This is not evidence for a symmetric guard or a market prediction model.
+
+Three NONBLOCKING issues: per-share table includes censored shares in its
+denominator; the checker accepts corrupted stored bin means despite a sign
+reversal; the unused generation censor counter is -3,195 instead of 13.
+Independent recomputation verifies the current headline despite these gaps.
+Prior F1-F8 are addressed/superseded; no baseline/audit rerun required.
+
+Proceed with ONE frozen ASK-RESERVATION-GUARD-v1 challenger on the same 19
+complete markets (all 96 statuses kept), using the review's exact rule and
+control/evaluation contract. Measure full feedback value, lost fills and
+inventory; do not delete bad baseline fills to estimate guard profit.
+No new day, fitting or validation; <=0.75 additional core-hours, one bundled
+receipt. The 19/96 coverage and absence of demonstrated incremental selection
+remain the largest limits.
+<!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
+
 <!-- LADDER_REST_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — Review qualifies P101's mechanism readings; ledger loss stands
 

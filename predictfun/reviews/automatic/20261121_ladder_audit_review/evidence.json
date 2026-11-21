@@ -1,0 +1,315 @@
+{
+  "target": "6b14fbf951a96baebd885f96a93ecd10a7744bd8",
+  "selftests": "audit and ladder v2 passed",
+  "checks": {
+    "checks": {
+      "A_committed": true,
+      "A_run_sources": true,
+      "A_outputs": true,
+      "B_statuses": true,
+      "B_generations": true,
+      "B_states": true,
+      "C_locked_window": true,
+      "C_sweeps": true,
+      "C_window_denominators": true,
+      "C_early_requests": true,
+      "C_recovery": true,
+      "C_fill_timing_counts": true,
+      "C_fill_timing_per_fill_vs_review": true,
+      "C_fill_timing_generation_censored": true,
+      "C_both_exact": true,
+      "C_common_subset": true,
+      "C_net_top5": true,
+      "D_windows": true,
+      "D_bins": true,
+      "D_leads": true,
+      "D_lead_flags": true,
+      "E_causal": true,
+      "F_resources": true
+    },
+    "details": {
+      "C_fill_timing": {
+        "per_fill": {
+          "before_request": -173618.20296596884,
+          "cancel_pending": -29465.71858204696
+        },
+        "per_fill_valid": {
+          "before_request": 8603,
+          "cancel_pending": 558
+        },
+        "generation_censored": {
+          "before_request": -173449.69934253785,
+          "cancel_pending": -29465.718582046964
+        }
+      },
+      "D_windows_checked": 599,
+      "D_candidate": {
+        "recomputed": [
+          "live",
+          "ctx_bid_reserved_shares"
+        ],
+        "audit": [
+          "live",
+          "ctx_bid_reserved_shares"
+        ]
+      },
+      "E": {
+        "20261024": {
+          "day": "20261024",
+          "n": 16,
+          "market_same": 16,
+          "market_fired": 16,
+          "order_same": 16,
+          "order_fire_eligible": 14,
+          "order_fired": 14,
+          "asof": "2026-11-21T17:50:19.257626+00:00"
+        },
+        "20261025": {
+          "day": "20261025",
+          "n": 16,
+          "market_same": 16,
+          "market_fired": 16,
+          "order_same": 16,
+          "order_fire_eligible": 15,
+          "order_fired": 15,
+          "asof": "2026-11-21T17:50:12.927597+00:00"
+        },
+        "20261026": {
+          "day": "20261026",
+          "n": 16,
+          "market_same": 16,
+          "market_fired": 16,
+          "order_same": 16,
+          "order_fire_eligible": 14,
+          "order_fired": 14,
+          "asof": "2026-11-21T17:50:32.248299+00:00"
+        },
+        "20261027": {
+          "day": "20261027",
+          "n": 16,
+          "market_same": 16,
+          "market_fired": 16,
+          "order_same": 16,
+          "order_fire_eligible": 16,
+          "order_fired": 16,
+          "asof": "2026-11-21T17:50:19.514598+00:00"
+        }
+      },
+      "F": {
+        "core_hours": 0.20632222222222232,
+        "peak_mib": 1252
+      }
+    },
+    "all_ok": true
+  },
+  "receipt_hashes": {
+    "audit.json": "ed2617d9ec723a4b271fe6f75090480ca531fb29d4ef1471684ae3829ae2f43d",
+    "bins.csv": "4a8074a40dbda467e6cb0a94b69db468c8deffdc72dffd2b1a0e1d4d8b3ec7f3",
+    "causal_20261024.json": "52f48adeffff2f0eb3cc64078e7b6daf9994ed1557839e2473415f673a15a769",
+    "causal_20261025.json": "4e8f5976c125fce2d282ceca51a6fa08edaa637ce54d380180014bafb394552f",
+    "causal_20261026.json": "2cefd47b01d2cd8652ace2e7a78c84777d0faa1ab8a5e282c98610041d501a43",
+    "causal_20261027.json": "71729065332ad0e09a3be9c6fec7d582be75afd2af2c14faf041d27fd50746f7",
+    "churn.csv": "a5c85baf56f955865f5ca98bd9a7db569899bd4be2df1c1d55025605e3e5d3e6",
+    "durations.csv": "1e9b473140e3d85e6ada751ff4b02313bacc86799ca300e23d57526084d619b3",
+    "generations_v2.csv.gz": "4fb13bab564ae57647348e7e04a0eb628fee0a3f999b70584a3b2c18ea2439e5",
+    "leads.csv": "f603f747d1bc00c63cca6f50b14838d0fca1e3d9441ac143067080101068af5e",
+    "recovery.csv": "b24e6db459b9e63954287a5b28a663957aab09f91ad09d382b9442780cc3c6e8",
+    "states.csv.gz": "ec2eaf7cd53628170fe485bb55a9889ae77e7f85188e592b078de6f1ec9a3043",
+    "sweep_rows.csv.gz": "c0fa66ce5959a6aea09e2eff85e821e3f45939b416ec55c52a929e08e946995f"
+  },
+  "all_rows": {
+    "membership_inputs_windows_checked": 14968,
+    "kinds": {
+      "entry": 5288,
+      "first": 4840,
+      "live": 4840
+    }
+  },
+  "leads": [
+    {
+      "kind": "live",
+      "feature": "ctx_bid_reserved_shares",
+      "lead": true,
+      "cells": [
+        -7.850517364054211,
+        -58.087475717828426,
+        -13.766823813462842,
+        -47.0692004095454,
+        -0.37888143517371375,
+        -37.50466164341053,
+        -47.272346196450655,
+        -16.951287865860316
+      ],
+      "pooled": -23.13801130445861
+    }
+  ],
+  "lead_per_share_common_population": [
+    {
+      "day": "20261024",
+      "side": 0,
+      "n1": 195,
+      "n5": 480,
+      "q1_valid": 2086.96949334646,
+      "q5_valid": 7569.746005344401,
+      "q1_all": 2086.96949334646,
+      "q5_all": 7569.746005344401,
+      "per_share_valid_difference": -0.0939000906693448
+    },
+    {
+      "day": "20261024",
+      "side": 1,
+      "n1": 117,
+      "n5": 189,
+      "q1_valid": 1755.5053207068709,
+      "q5_valid": 2377.5154088503123,
+      "q1_all": 1755.5053207068709,
+      "q5_all": 2377.5154088503123,
+      "per_share_valid_difference": -4.7475169172318195
+    },
+    {
+      "day": "20261025",
+      "side": 0,
+      "n1": 100,
+      "n5": 325,
+      "q1_valid": 1123.171572212054,
+      "q5_valid": 5533.897568388209,
+      "q1_all": 1123.171572212054,
+      "q5_all": 5633.897568388209,
+      "per_share_valid_difference": 0.6779460689186774
+    },
+    {
+      "day": "20261025",
+      "side": 1,
+      "n1": 67,
+      "n5": 109,
+      "q1_valid": 1097.6484083486744,
+      "q5_valid": 1790.2666524623937,
+      "q1_all": 1097.6484083486744,
+      "q5_all": 1829.0687191290601,
+      "per_share_valid_difference": -2.863628903037785
+    },
+    {
+      "day": "20261026",
+      "side": 0,
+      "n1": 163,
+      "n5": 331,
+      "q1_valid": 1464.0313567848425,
+      "q5_valid": 4647.473565181746,
+      "q1_all": 1464.0313567848425,
+      "q5_all": 4653.353565181746,
+      "per_share_valid_difference": 1.1735566611786972
+    },
+    {
+      "day": "20261026",
+      "side": 1,
+      "n1": 121,
+      "n5": 162,
+      "q1_valid": 1128.2484091287927,
+      "q5_valid": 1619.9394781076687,
+      "q1_all": 1128.2484091287927,
+      "q5_all": 1704.7957281076688,
+      "per_share_valid_difference": -3.7234618710126597
+    },
+    {
+      "day": "20261027",
+      "side": 0,
+      "n1": 39,
+      "n5": 122,
+      "q1_valid": 121.40026862726702,
+      "q5_valid": 2873.057818798829,
+      "q1_all": 121.40026862726702,
+      "q5_all": 2873.057818798829,
+      "per_share_valid_difference": 0.0913357331434641
+    },
+    {
+      "day": "20261027",
+      "side": 1,
+      "n1": 39,
+      "n5": 57,
+      "q1_valid": 639.6931211136293,
+      "q5_valid": 805.1200985823195,
+      "q1_all": 639.6931211136293,
+      "q5_all": 805.1200985823195,
+      "per_share_valid_difference": -1.6835066876112856
+    }
+  ],
+  "censor_counter": {
+    "reported": -3195,
+    "actual": 13,
+    "no_fill": 3208
+  },
+  "saved_causal_receipts": {
+    "20261024": {
+      "n": 16,
+      "market_same": 16,
+      "market_fired": 16,
+      "order_same": 16,
+      "order_fire_eligible": 14,
+      "order_fired": 14
+    },
+    "20261025": {
+      "n": 16,
+      "market_same": 16,
+      "market_fired": 16,
+      "order_same": 16,
+      "order_fire_eligible": 15,
+      "order_fired": 15
+    },
+    "20261026": {
+      "n": 16,
+      "market_same": 16,
+      "market_fired": 16,
+      "order_same": 16,
+      "order_fire_eligible": 14,
+      "order_fired": 14
+    },
+    "20261027": {
+      "n": 16,
+      "market_same": 16,
+      "market_fired": 16,
+      "order_same": 16,
+      "order_fire_eligible": 16,
+      "order_fired": 16
+    }
+  },
+  "falsifier": {
+    "cases": {
+      "C_locked_window": {
+        "clean": true,
+        "corrupted": false,
+        "applied": true
+      },
+      "C_sweeps": {
+        "clean": true,
+        "corrupted": false,
+        "applied": true
+      },
+      "B_generations": {
+        "clean": true,
+        "corrupted": false,
+        "applied": true
+      },
+      "D_windows": {
+        "clean": true,
+        "corrupted": false,
+        "applied": true
+      },
+      "D_bins": {
+        "clean": true,
+        "corrupted": false,
+        "applied": true
+      },
+      "E_causal": {
+        "clean": true,
+        "corrupted": false,
+        "applied": true
+      },
+      "C_both_exact": {
+        "clean": true,
+        "corrupted": false,
+        "applied": true
+      }
+    },
+    "falsifier_ok": true
+  }
+}
