@@ -1,0 +1,94 @@
+{
+ "all_ok": true,
+ "failed": [],
+ "falsifier_ok": true,
+ "cases": {
+  "coordinated_markout_and_contrast": [
+   true,
+   [
+    "F_readings",
+    "F_reconcile"
+   ]
+  ],
+  "a_reentry_price_changed": [
+   true,
+   [
+    "H_queue"
+   ]
+  ],
+  "a_pull_only_withhold": [
+   true,
+   [
+    "D_rule"
+   ]
+  ],
+  "a_withhold_only_post_at_an_on_tick": [
+   true,
+   [
+    "D_rule"
+   ]
+  ],
+  "full_fill_dropped": [
+   true,
+   [
+    "C_full_equals_parent"
+   ]
+  ],
+  "cash_changed": [
+   true,
+   [
+    "E_accounting"
+   ]
+  ],
+  "lost_end_changed": [
+   true,
+   [
+    "F_identity"
+   ]
+  ],
+  "stored_interaction_answer_changed": [
+   true,
+   [
+    "F_readings"
+   ]
+  ],
+  "a_market_dropped": [
+   true,
+   [
+    "B_membership"
+   ]
+  ],
+  "a_record_rule_changed": [
+   true,
+   [
+    "A_rule"
+   ]
+  ],
+  "resources_over_the_cap": [
+   true,
+   [
+    "I_resources"
+   ]
+  ]
+ },
+ "details": {
+  "C_full_mismatch": 0,
+  "C_baseline_mismatch": 0,
+  "D_bad": {},
+  "F_reconcile_bad": 0,
+  "F_identity_bad": 0,
+  "F_totals": {
+   "BASELINE_00": -209557.70865004536,
+   "PULL_ONLY_10": -132118.5644031699,
+   "WITHHOLD_ONLY_01": -191208.88116325362,
+   "FULL_11": -86109.60738868231
+  },
+  "H_queue_bad": 0,
+  "I": {
+   "round_core_hours": 0.2380722222222223,
+   "line_core_hours": 1.7782583333333333,
+   "peak_mib": 1226
+  }
+ }
+}
+2026-11-21T20:24:27Z tag=ga_checks_v2 rc=0 peak_rss_mib=635 wall_s=16.34 cpu_user_s=15.78 memavail_start_gib=22 disk_free_gib=436->436 slot=claude

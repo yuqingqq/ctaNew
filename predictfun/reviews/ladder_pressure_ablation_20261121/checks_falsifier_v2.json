@@ -1,0 +1,105 @@
+{
+ "cases": {
+  "coordinated_markout_and_contrast": {
+   "family": "F",
+   "target": "F_reconcile",
+   "clean": true,
+   "refused": true,
+   "flipped": [
+    "F_readings",
+    "F_reconcile"
+   ]
+  },
+  "a_reentry_price_changed": {
+   "family": "H",
+   "target": "H_queue",
+   "clean": true,
+   "refused": true,
+   "flipped": [
+    "H_queue"
+   ]
+  },
+  "a_pull_only_withhold": {
+   "family": "D",
+   "target": "D_rule",
+   "clean": true,
+   "refused": true,
+   "flipped": [
+    "D_rule"
+   ]
+  },
+  "a_withhold_only_post_at_an_on_tick": {
+   "family": "D",
+   "target": "D_rule",
+   "clean": true,
+   "refused": true,
+   "flipped": [
+    "D_rule"
+   ]
+  },
+  "full_fill_dropped": {
+   "family": "C",
+   "target": "C_full_equals_parent",
+   "clean": true,
+   "refused": true,
+   "flipped": [
+    "C_full_equals_parent"
+   ]
+  },
+  "cash_changed": {
+   "family": "E",
+   "target": "E_accounting",
+   "clean": true,
+   "refused": true,
+   "flipped": [
+    "E_accounting"
+   ]
+  },
+  "lost_end_changed": {
+   "family": "F",
+   "target": "F_identity",
+   "clean": true,
+   "refused": true,
+   "flipped": [
+    "F_identity"
+   ]
+  },
+  "stored_interaction_answer_changed": {
+   "family": "F",
+   "target": "F_readings",
+   "clean": true,
+   "refused": true,
+   "flipped": [
+    "F_readings"
+   ]
+  },
+  "a_market_dropped": {
+   "family": "B",
+   "target": "B_membership",
+   "clean": true,
+   "refused": true,
+   "flipped": [
+    "B_membership"
+   ]
+  },
+  "a_record_rule_changed": {
+   "family": "A",
+   "target": "A_rule",
+   "clean": true,
+   "refused": true,
+   "flipped": [
+    "A_rule"
+   ]
+  },
+  "resources_over_the_cap": {
+   "family": "I",
+   "target": "I_resources",
+   "clean": true,
+   "refused": true,
+   "flipped": [
+    "I_resources"
+   ]
+  }
+ },
+ "falsifier_ok": true
+}

@@ -1,0 +1,377 @@
+{
+  "version": "pressure_action_attribution_v1",
+  "asof": "2026-11-21T20:24:27.511095+00:00",
+  "predicates": {
+    "days": [
+      "20261024",
+      "20261025",
+      "20261026",
+      "20261027"
+    ],
+    "arm_totals": {
+      "BASELINE_00": {
+        "END": -209557.70865004533,
+        "mo1s": -203083.92154801564,
+        "valid_q": 96603.986394994,
+        "per_share": -2.1022312756085126
+      },
+      "PULL_ONLY_10": {
+        "END": -132118.5644031699,
+        "mo1s": -113644.58749664502,
+        "valid_q": 85369.05777231036,
+        "per_share": -1.3312152021139665
+      },
+      "WITHHOLD_ONLY_01": {
+        "END": -191208.88116325362,
+        "mo1s": -192679.1175011969,
+        "valid_q": 96352.52891095144,
+        "per_share": -1.9997307769604058
+      },
+      "FULL_11": {
+        "END": -86109.60738868231,
+        "mo1s": -85164.27723645967,
+        "valid_q": 79054.11889695049,
+        "per_share": -1.0772908284193765
+      }
+    },
+    "arm_by_day": {
+      "20261024": {
+        "BASELINE_00": {
+          "END": -64287.86774717526,
+          "mo1s": -61614.3179317701,
+          "valid_q": 35728.165339340805,
+          "per_share": -1.7245306985837774
+        },
+        "PULL_ONLY_10": {
+          "END": -38717.97303618165,
+          "mo1s": -38065.47125101257,
+          "valid_q": 33965.52603755791,
+          "per_share": -1.120709015633118
+        },
+        "WITHHOLD_ONLY_01": {
+          "END": -59955.5405212469,
+          "mo1s": -58588.537959428184,
+          "valid_q": 35993.10938792464,
+          "per_share": -1.6277709527114128
+        },
+        "FULL_11": {
+          "END": -33011.105130898126,
+          "mo1s": -32357.492642288664,
+          "valid_q": 33760.12935194552,
+          "per_share": -0.9584528632863183
+        }
+      },
+      "20261025": {
+        "BASELINE_00": {
+          "END": -66495.76606478279,
+          "mo1s": -54432.53881769054,
+          "valid_q": 26704.396930290393,
+          "per_share": -2.038336194589309
+        },
+        "PULL_ONLY_10": {
+          "END": -39414.55593842885,
+          "mo1s": -26094.036319553066,
+          "valid_q": 25093.301867318383,
+          "per_share": -1.039880540931843
+        },
+        "WITHHOLD_ONLY_01": {
+          "END": -57192.453390437,
+          "mo1s": -52395.860093641706,
+          "valid_q": 27027.093224954064,
+          "per_share": -1.9386420751035376
+        },
+        "FULL_11": {
+          "END": -29621.860753517012,
+          "mo1s": -17996.45166575444,
+          "valid_q": 24152.76896312634,
+          "per_share": -0.7451092540664529
+        }
+      },
+      "20261026": {
+        "BASELINE_00": {
+          "END": -45400.15656970044,
+          "mo1s": -61126.41092541069,
+          "valid_q": 24271.465306032907,
+          "per_share": -2.5184474919286033
+        },
+        "PULL_ONLY_10": {
+          "END": -25921.59377230973,
+          "mo1s": -36410.14747702551,
+          "valid_q": 19168.968485449957,
+          "per_share": -1.8994317563129346
+        },
+        "WITHHOLD_ONLY_01": {
+          "END": -42633.488110317936,
+          "mo1s": -58329.03910936694,
+          "valid_q": 23905.66158533064,
+          "per_share": -2.4399675742569578
+        },
+        "FULL_11": {
+          "END": -9275.058185558055,
+          "mo1s": -29854.126925308366,
+          "valid_q": 16456.152338346168,
+          "per_share": -1.8141620417393807
+        }
+      },
+      "20261027": {
+        "BASELINE_00": {
+          "END": -33373.91826838687,
+          "mo1s": -25910.653873144314,
+          "valid_q": 9899.958819329906,
+          "per_share": -2.6172486518381413
+        },
+        "PULL_ONLY_10": {
+          "END": -28064.44165624968,
+          "mo1s": -13074.932449053878,
+          "valid_q": 7141.261381984124,
+          "per_share": -1.8308995777747525
+        },
+        "WITHHOLD_ONLY_01": {
+          "END": -31427.399141251786,
+          "mo1s": -23365.680338760067,
+          "valid_q": 9426.66471274212,
+          "per_share": -2.478679474743218
+        },
+        "FULL_11": {
+          "END": -14201.583318709116,
+          "mo1s": -4956.206003108195,
+          "valid_q": 4685.068243532474,
+          "per_share": -1.0578727449594814
+        }
+      }
+    },
+    "contrasts": {
+      "cancel_given_withhold": {
+        "arms": [
+          "FULL_11",
+          "WITHHOLD_ONLY_01"
+        ],
+        "END": {
+          "answer": "POSITIVE_EVERY_DAY",
+          "by_day": {
+            "20261024": 26944.43539034877,
+            "20261025": 27570.592636919984,
+            "20261026": 33358.42992475988,
+            "20261027": 17225.81582254267
+          },
+          "total": 105099.27377457131
+        },
+        "mo1s": {
+          "answer": "POSITIVE_EVERY_DAY",
+          "by_day": {
+            "20261024": 26231.04531713952,
+            "20261025": 34399.40842788726,
+            "20261026": 28474.912184058572,
+            "20261027": 18409.474335651874
+          },
+          "total": 107514.84026473721
+        },
+        "per_share": {
+          "answer": "POSITIVE_EVERY_DAY",
+          "by_day": {
+            "20261024": 0.6693180894250945,
+            "20261025": 1.1935328210370848,
+            "20261026": 0.6258055325175771,
+            "20261027": 1.4208067297837368
+          },
+          "total": 0.9224399485410293
+        },
+        "markets_better": 18,
+        "markets_worse": 1,
+        "markets_equal": 0,
+        "top3_abs_share": 0.41479749088732737
+      },
+      "withhold_given_cancel": {
+        "arms": [
+          "FULL_11",
+          "PULL_ONLY_10"
+        ],
+        "END": {
+          "answer": "POSITIVE_EVERY_DAY",
+          "by_day": {
+            "20261024": 5706.867905283521,
+            "20261025": 9792.695184911838,
+            "20261026": 16646.535586751677,
+            "20261027": 13862.858337540565
+          },
+          "total": 46008.95701448759
+        },
+        "mo1s": {
+          "answer": "POSITIVE_EVERY_DAY",
+          "by_day": {
+            "20261024": 5707.9786087239045,
+            "20261025": 8097.584653798625,
+            "20261026": 6556.020551717142,
+            "20261027": 8118.726445945684
+          },
+          "total": 28480.310260185346
+        },
+        "per_share": {
+          "answer": "POSITIVE_EVERY_DAY",
+          "by_day": {
+            "20261024": 0.1622561523467998,
+            "20261025": 0.2947712868653901,
+            "20261026": 0.08526971457355392,
+            "20261027": 0.7730268328152712
+          },
+          "total": 0.25392437369459
+        },
+        "markets_better": 14,
+        "markets_worse": 5,
+        "markets_equal": 0,
+        "top3_abs_share": 0.6922088953996707
+      },
+      "cancel_alone": {
+        "arms": [
+          "PULL_ONLY_10",
+          "BASELINE_00"
+        ],
+        "END": {
+          "answer": "POSITIVE_EVERY_DAY",
+          "by_day": {
+            "20261024": 25569.894710993613,
+            "20261025": 27081.210126353937,
+            "20261026": 19478.56279739071,
+            "20261027": 5309.47661213719
+          },
+          "total": 77439.14424687542
+        },
+        "mo1s": {
+          "answer": "POSITIVE_EVERY_DAY",
+          "by_day": {
+            "20261024": 23548.84668075753,
+            "20261025": 28338.502498137474,
+            "20261026": 24716.26344838518,
+            "20261027": 12835.721424090436
+          },
+          "total": 89439.33405137062
+        },
+        "per_share": {
+          "answer": "POSITIVE_EVERY_DAY",
+          "by_day": {
+            "20261024": 0.6038216829506593,
+            "20261025": 0.9984556536574658,
+            "20261026": 0.6190157356156687,
+            "20261027": 0.7863490740633887
+          },
+          "total": 0.7710160734945462
+        },
+        "markets_better": 17,
+        "markets_worse": 2,
+        "markets_equal": 0,
+        "top3_abs_share": 0.3519652163216502
+      },
+      "withhold_alone": {
+        "arms": [
+          "WITHHOLD_ONLY_01",
+          "BASELINE_00"
+        ],
+        "END": {
+          "answer": "POSITIVE_EVERY_DAY",
+          "by_day": {
+            "20261024": 4332.327225928362,
+            "20261025": 9303.31267434579,
+            "20261026": 2766.668459382505,
+            "20261027": 1946.519127135085
+          },
+          "total": 18348.827486791706
+        },
+        "mo1s": {
+          "answer": "POSITIVE_EVERY_DAY",
+          "by_day": {
+            "20261024": 3025.7799723419157,
+            "20261025": 2036.6787240488338,
+            "20261026": 2797.3718160437493,
+            "20261027": 2544.9735343842476
+          },
+          "total": 10404.804046818754
+        },
+        "per_share": {
+          "answer": "POSITIVE_EVERY_DAY",
+          "by_day": {
+            "20261024": 0.09675974587236458,
+            "20261025": 0.09969411948577123,
+            "20261026": 0.07847991767164553,
+            "20261027": 0.1385691770949231
+          },
+          "total": 0.10250049864810684
+        },
+        "markets_better": 14,
+        "markets_worse": 1,
+        "markets_equal": 4,
+        "top3_abs_share": 0.6434227372443999
+      }
+    },
+    "interaction": {
+      "END": {
+        "answer": "POSITIVE_EVERY_DAY",
+        "by_day": {
+          "20261024": 1374.5406793551665,
+          "20261025": 489.38251056605077,
+          "20261026": 13879.867127369173,
+          "20261027": 11916.33921040548
+        },
+        "total": 27660.129527695884
+      },
+      "mo1s": {
+        "answer": "POSITIVE_EVERY_DAY",
+        "by_day": {
+          "20261024": 2682.1986363819888,
+          "20261025": 6060.905929749788,
+          "20261026": 3758.6487356733924,
+          "20261027": 5573.752911561438
+        },
+        "total": 18075.506213366607
+      }
+    },
+    "all_arms_negative": {
+      "total": true,
+      "by_day": {
+        "20261024": true,
+        "20261025": true,
+        "20261026": true,
+        "20261027": true
+      }
+    },
+    "note": "a 2 x 2 ablation of complete feedback policies on 19 consumed-day markets; no interval, winner, promotion, threshold or new candidate"
+  },
+  "control_all": true,
+  "markets": 19,
+  "parts": [
+    "pilot",
+    "rest"
+  ],
+  "context_screen": {
+    "answer": "SELECTION_BEYOND_EXPOSURE",
+    "percentile": 0.0,
+    "note": "the pressure receipt's local screen: context, not an entry-action or whole-policy null"
+  },
+  "outputs": {
+    "arms.csv": "dd5de6d3fecf4efc60752511398a305361f83bfa4fdfb5a537edef3ee8dbbe68",
+    "control.csv": "330652ee6b471bbfa4745a9bbf7f038c5faf895124acb2b6ff489ae2d6c0e9bf",
+    "lost_added.csv": "7a5699cdd24094e9860ec55d20953cce72678534fae217d1db0f8690ae58ebdd",
+    "reentry.csv": "7d3d64d5058e075a305a25a4902cf1be2b7fdab99ebf1621dc0a8d5374d46d14"
+  },
+  "sources": {
+    "pf_ladder_pressure_ablation.py": "cfe8a5051c0fb55c0f995383d17ce4414ad3b45645ca5dd539bac45db182c5c0",
+    "pf_ladder_pressure_ablation_selftest.py": "e40db31ed0d5ed0e4c36830c9b787ac4c540dc2c13b1c932b6dd21f71f89b0fe",
+    "pf_ladder_pressure_lag.py": "0dcb03c430db87e2cf85104eebdf3aa175eb6af4594ac9a89dec89d1bbf5c7d4",
+    "pf_ladder_pressure_lag_selftest.py": "7db1a9511b064ef9bd0c04a8fd85ca6c736e66d35cf81c9a00c8e2bd106ea7b8",
+    "pf_ladder_pressure.py": "357f1d19b32ab5a8d51bc26f884d03492d008c3653b981a147d0bbca17068114",
+    "pf_ladder_pressure_selftest.py": "9a380526b4b8b1486652a62fda1e027096e9c8afb580e7d3c68a388f6e11718e",
+    "pf_ladder_guard.py": "5349b75682108857eeb367f0da86ea387c1682e99ee1761f2b60f0d50e01c2fe",
+    "pf_ladder_rest.py": "d90016ce7d25f89f6f6c6662075f5be72539d3140373e42c8b7228ebcf8ce5e0",
+    "pf_branch_ladder.py": "c9e0852eccea5b4248001693fd8ddec083ea2df517dc8f3fd0d8b2f091ab285a",
+    "pf_branch_engine.py": "8b7960ef4bbbc178b281e57d92d4795d7678436c0ca875e7199e24a6626af3a8",
+    "pf_ladder_audit.py": "97a79a90a06062a775d3fe66f55da5172b3ffc2cf39e771cf52e6852fe38f44c",
+    "pf_pipeline_export.py": "ee2953fd00f70a7d12607abd4b418471b2208b8f9728009c7e538ccb55733931",
+    "pf_flow_price_data.py": "fa9112d1147e955b4ff4ff2c09d2c8c23e37418b3e2957cb2f47deaf9a907a4e",
+    "pf_flow_price_common.py": "beac0d747ec5dc84874fdee2f8e08057c1a47c819cfc648a762ea8950b0d1993",
+    "pf_stop_ev_minutes_inputs.py": "bbec0ff5d8f14a617b1ef83cfcdda659de1b4998ab25a9b05e098140316de7b6",
+    "pf_stop_model.py": "e2a857ddb6c4e76af40080e753942e1e0bef3bd42a34ed2929f378fe869df0ed",
+    "pf_stop_depth.py": "819d5e06d32b647cdac96cca0f9f9191eb033c9a9b6c1cfd160df3f0228aae46",
+    "pf_pull_depth.py": "a8670b2e9751f16dce37aab7c18ce35cc31fa3431e392b9a7397f4375a9114ef",
+    "pf_influence.py": "5c5bd6f61da5800fcc67045b8c5ec3b4ab61eede3a4383ac244f5dd405f6ac55"
+  },
+  "rule_sha256": "aef75e7c50108a6cfe4072bfaeaca6cb5e26676118e41b9e1264c5bb68ab4505"
+}

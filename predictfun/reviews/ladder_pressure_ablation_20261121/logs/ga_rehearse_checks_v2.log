@@ -1,0 +1,68 @@
+{
+ "checks": {
+  "A_committed": true,
+  "A_rule": true,
+  "A_parent": true,
+  "A_edges": true,
+  "A_sources": true,
+  "A_outputs": true,
+  "B_membership": false,
+  "B_pilot": true,
+  "C_full_equals_parent": true,
+  "C_baseline_equals_original": true,
+  "D_rule": true,
+  "E_accounting": true,
+  "F_reconcile": true,
+  "F_identity": true,
+  "F_readings": true,
+  "H_queue": true,
+  "I_resources": true
+ },
+ "cases": {
+  "coordinated_markout_and_contrast": [
+   true,
+   true
+  ],
+  "a_reentry_price_changed": [
+   true,
+   true
+  ],
+  "a_pull_only_withhold": [
+   true,
+   true
+  ],
+  "a_withhold_only_post_at_an_on_tick": [
+   true,
+   true
+  ],
+  "full_fill_dropped": [
+   true,
+   true
+  ],
+  "cash_changed": [
+   true,
+   true
+  ],
+  "lost_end_changed": [
+   true,
+   true
+  ],
+  "stored_interaction_answer_changed": [
+   true,
+   true
+  ],
+  "a_market_dropped": [
+   false,
+   true
+  ],
+  "a_record_rule_changed": [
+   true,
+   true
+  ],
+  "resources_over_the_cap": [
+   true,
+   true
+  ]
+ }
+}
+2026-11-21T20:21:58Z tag=ga_rehearse_checks_v2 rc=0 peak_rss_mib=499 wall_s=7.97 cpu_user_s=7.50 memavail_start_gib=23 disk_free_gib=437->437 slot=claude

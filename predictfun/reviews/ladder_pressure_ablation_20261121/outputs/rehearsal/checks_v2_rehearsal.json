@@ -1,0 +1,41 @@
+{
+ "checks": {
+  "A_committed": true,
+  "A_rule": true,
+  "A_parent": true,
+  "A_edges": true,
+  "A_sources": true,
+  "A_outputs": true,
+  "B_membership": false,
+  "B_pilot": true,
+  "C_full_equals_parent": true,
+  "C_baseline_equals_original": true,
+  "D_rule": true,
+  "E_accounting": true,
+  "F_reconcile": true,
+  "F_identity": true,
+  "F_readings": true,
+  "H_queue": true,
+  "I_resources": true
+ },
+ "details": {
+  "C_full_mismatch": 0,
+  "C_baseline_mismatch": 0,
+  "D_bad": {},
+  "F_reconcile_bad": 0,
+  "F_identity_bad": 0,
+  "F_totals": {
+   "BASELINE_00": -93414.84922849649,
+   "PULL_ONLY_10": -48160.12884040981,
+   "WITHHOLD_ONLY_01": -82601.50046026547,
+   "FULL_11": -24596.096434826584
+  },
+  "H_queue_bad": 0,
+  "I": {
+   "round_core_hours": 0.14926944444444448,
+   "line_core_hours": 1.6894555555555555,
+   "peak_mib": 1226
+  }
+ },
+ "all_ok": false
+}

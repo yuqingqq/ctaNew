@@ -144,6 +144,18 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_PRESSURE_ABLATION_RESULTS_20261121_DEV -->
+## 2026-11-21 20:26Z (session aea5bfb9) — PRESSURE-ACTION-ATTRIBUTION-v1 RESULTS: CANCELLATION CARRIES MOST OF THE EFFECT, POSITIVE INTERACTION, EVERY ARM NEGATIVE (CONSUMED DAYS); CHECKS v2 ALL TRUE
+
+- [Receipt](reviews/ladder_pressure_ablation_20261121/report.md); freeze `8f618ea6`, checks v2 `d4b843c3` (the rehearsal caught a v1 falsifier crash before the rest ran), results in this commit. FULL_11 19 / 19 equal to the pressure arm.
+- **END totals:** 00 -209,557.7 c, 10 -132,118.6 c, 01 -191,208.9 c, 11 -86,109.6 c (all_arms_negative True).
+- **Contrasts (END; per share):** cancellation added to withholding (R11 - R01) +105,099.3 c POSITIVE_EVERY_DAY, +0.922 c / share POSITIVE_EVERY_DAY; withholding added to cancellation (R11 - R10) +46,009.0 c POSITIVE_EVERY_DAY, +0.254 c / share POSITIVE_EVERY_DAY; standalone cancellation (R10 - R00) +77,439.1 c POSITIVE_EVERY_DAY, +0.771 c / share POSITIVE_EVERY_DAY; standalone withholding (R01 - R00) +18,348.8 c POSITIVE_EVERY_DAY, +0.103 c / share POSITIVE_EVERY_DAY; interaction +27,660.1 c POSITIVE_EVERY_DAY.
+- **Validity:** checks v2 17 / 17, falsifier 11 / 11, mutants 20 / 20; 0.242 core-hours of 0.35; ladder line 1.778 of 2.0 at the checks.
+- **Review 7fca0db4 finding addressed:** field-by-field re-entry checks with a changed-price refusal.
+- **Watch:** consumed-day evidence; every arm loses at END; the 2-core-hour ladder allocation is nearly used (a further round of this size needs the USER).
+- **Next:** the ONE combined review, which names the next step.
+<!-- /LADDER_PRESSURE_ABLATION_RESULTS_20261121_DEV -->
+
 <!-- LADDER_PRESSURE_ABLATION_FREEZE_20261121_DEV -->
 ## 2026-11-21 20:19Z (session aea5bfb9) — PRESSURE-ACTION-ATTRIBUTION-v1 FROZEN before any ablated replay (review 7fca0db4's ONE next priority; its finding holds)
 
