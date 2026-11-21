@@ -1,0 +1,59 @@
+{
+ "answer": "SELECTION_BEYOND_EXPOSURE",
+ "selected": 110,
+ "states": 4831,
+ "censored": 9,
+ "selected_censored": 0,
+ "J": -90.20118290984475,
+ "J_per_valid_share": -9.231624272542335,
+ "valid_window_q": 1074.7978716588761,
+ "total_window_q": 1074.7978716588761,
+ "excluded_window_q": 0.0,
+ "null_mean": -31.486653821597372,
+ "null_p05": -57.865288023520236,
+ "null_p95": -6.760271187237031,
+ "percentile": 0.002,
+ "null_q_p05": -5.10397785391032,
+ "strata": 887,
+ "movable_strata": 62,
+ "movable_selected": 103,
+ "degenerate_strata": 5,
+ "missing_feature": 0,
+ "per_side": {
+  "0": {
+   "selected": 51,
+   "J": -18.436627066269544,
+   "null_mean": -13.614232508888392,
+   "null_p05": -43.1775565586981,
+   "percentile": 0.372
+  },
+  "1": {
+   "selected": 59,
+   "J": -152.23495152039283,
+   "null_mean": -46.93569597326106,
+   "null_p05": -90.52120877402466,
+   "percentile": 0.002
+  }
+ },
+ "draws": 500,
+ "seed": 20261121,
+ "join": {
+  "live_states": 4840,
+  "zero_lag_mismatched": 0,
+  "off_tick": 0,
+  "warmup": 0,
+  "non_ok": 0
+ },
+ "lag_ticks": 1,
+ "inputs": {
+  "states_sha256": "d50c718fd9f867ad4b28e46b8d9edad2da14603b1ec385498b3eb0777e0e2111",
+  "edges_sha256": "ca688917cd7ddc7c40e94031bee646f4fc1339511bb7c48fbe5270797a38bf80",
+  "parent_day_records": {
+   "20261024": "ab599b8eceefb881fe712bb7ceb9c314fc7eb3b5ef6872778f58f2c2f2a67277",
+   "20261025": "3874552b6ae995cccf46ba820963fd27222ba530fb552dab74d28fbcd9f3bfe8",
+   "20261026": "0833d2c4278d89e6a6af24a72e4c6313ddf411da267b5aa5b428513fa96d30d6",
+   "20261027": "25345c86153002aa643ff8c06862b906373e171a10e63eaf4e687647842a55cd"
+  }
+ }
+}
+2026-11-21T19:53:11Z tag=gl_rehearse_selection rc=0 peak_rss_mib=303 wall_s=2.78 cpu_user_s=2.47 memavail_start_gib=23 disk_free_gib=437->437 slot=claude

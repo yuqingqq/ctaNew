@@ -1,1 +1,9 @@
 gl_manifest rc=0
+gl_pilot_20261027 rc=0
+gl_pilot_20261025 rc=0
+gl_pilot_20261024 rc=0
+gl_pilot_20261026 rc=0
+gl_projection rc=0
+gl_rehearse_selection rc=0
+gl_rehearse_measure rc=0
+gl_rehearse_checks rc=1

@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/ladder_pressure_lag_20261121/lag_checks.py", line 401, in <module>
+    main()
+  File "/home/yuqing/ctaNew/predictfun/reviews/ladder_pressure_lag_20261121/lag_checks.py", line 391, in main
+    E = load(); res = run_checks(E); dest = D if rehearse else R; tag = '_rehearsal' if rehearse else ''
+                      ^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/ladder_pressure_lag_20261121/lag_checks.py", line 318, in run_checks
+    c, d = FAMS[k](E); chk.update(c); det.update(d)
+           ^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/ladder_pressure_lag_20261121/lag_checks.py", line 238, in fam_F
+    rb += int(len(row) != 1 or not all(close(row[k].iloc[0], x[k]) for k in keys))
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/ladder_pressure_lag_20261121/lag_checks.py", line 238, in <genexpr>
+    rb += int(len(row) != 1 or not all(close(row[k].iloc[0], x[k]) for k in keys))
+                                                             ~^^^
+KeyError: 'all_edge_censored'
+2026-11-21T19:53:16Z tag=gl_rehearse_checks rc=1 peak_rss_mib=487 wall_s=2.62 cpu_user_s=2.19 memavail_start_gib=22 disk_free_gib=437->437 slot=claude
