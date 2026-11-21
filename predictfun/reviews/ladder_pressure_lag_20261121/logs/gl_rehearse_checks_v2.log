@@ -1,0 +1,84 @@
+{
+ "checks": {
+  "A_committed": true,
+  "A_rule": true,
+  "A_parent": true,
+  "A_edges": true,
+  "A_sources": true,
+  "A_outputs": true,
+  "B_membership": false,
+  "B_pilot": true,
+  "C_zero_lag_equals_parent": true,
+  "C_baseline_equals_original": true,
+  "D_log": true,
+  "D_commands": true,
+  "D_requests": true,
+  "E_accounting": true,
+  "F_reconcile": true,
+  "F_identity": true,
+  "F_selection": true,
+  "F_readings": true,
+  "G_join": true,
+  "H_queue": true,
+  "I_resources": true
+ },
+ "cases": {
+  "coordinated_uptime_and_reading": [
+   true,
+   true
+  ],
+  "lag1_inventory_changed": [
+   true,
+   true
+  ],
+  "a_log_source_time_without_the_lag": [
+   true,
+   true
+  ],
+  "a_keep_at_a_lagged_on_tick": [
+   true,
+   true
+  ],
+  "zero_lag_fill_dropped": [
+   true,
+   true
+  ],
+  "cash_changed": [
+   true,
+   true
+  ],
+  "lost_end_changed": [
+   true,
+   true
+  ],
+  "stored_selection_J_changed": [
+   true,
+   true
+  ],
+  "stored_reading_changed": [
+   true,
+   true
+  ],
+  "a_saved_state_value_changed": [
+   true,
+   true
+  ],
+  "a_pull_without_its_queue_entry": [
+   true,
+   true
+  ],
+  "a_member_dropped": [
+   false,
+   true
+  ],
+  "a_record_rule_changed": [
+   true,
+   true
+  ],
+  "resources_over_the_cap": [
+   true,
+   true
+  ]
+ }
+}
+2026-11-21T19:54:00Z tag=gl_rehearse_checks_v2 rc=0 peak_rss_mib=493 wall_s=11.23 cpu_user_s=10.68 memavail_start_gib=23 disk_free_gib=436->436 slot=claude

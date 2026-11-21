@@ -1,0 +1,6 @@
+{
+ "reading": "survives_50ms_screen",
+ "failed": [],
+ "control_all": true
+}
+2026-11-21T19:56:28Z tag=gl_measure rc=0 peak_rss_mib=306 wall_s=2.90 cpu_user_s=2.59 memavail_start_gib=23 disk_free_gib=436->436 slot=claude

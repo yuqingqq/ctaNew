@@ -1,0 +1,302 @@
+{
+  "version": "pressure_lead_sensitivity_v1",
+  "asof": "2026-11-21T19:56:31.016126+00:00",
+  "predicates": {
+    "lag1_vs_baseline": {
+      "days": [
+        "20261024",
+        "20261025",
+        "20261026",
+        "20261027"
+      ],
+      "END_paired": {
+        "answer": "IMPROVES_EVERY_DAY",
+        "by_day": {
+          "20261024": 35638.16357384279,
+          "20261025": 28605.65109294255,
+          "20261026": 13642.189401885807,
+          "20261027": 9288.701807263038
+        },
+        "total": 87174.70587593419,
+        "markets_better": 18,
+        "markets_worse": 1,
+        "markets_equal": 0
+      },
+      "END_by_side": {
+        "bid": {
+          "answer": "MIXED",
+          "by_day": {
+            "20261024": -18422.86929249653,
+            "20261025": 39547.70710749728,
+            "20261026": -10525.713249737339,
+            "20261027": 65242.505603999685
+          }
+        },
+        "ask": {
+          "answer": "MIXED",
+          "by_day": {
+            "20261024": 54061.032866339316,
+            "20261025": -10942.056014554699,
+            "20261026": 24167.902651623182,
+            "20261027": -55953.8037967367
+          }
+        }
+      },
+      "mo1s_per_share": {
+        "all": {
+          "answer": "IMPROVES_EVERY_DAY",
+          "by_day": {
+            "20261024": 0.7057379273674518,
+            "20261025": 0.8724253707281031,
+            "20261026": 0.6165286362768878,
+            "20261027": 1.0089630769153275
+          }
+        },
+        "bid": {
+          "answer": "IMPROVES_EVERY_DAY",
+          "by_day": {
+            "20261024": 0.10269587451170747,
+            "20261025": 0.5796318122250912,
+            "20261026": 0.3069184427436178,
+            "20261027": 0.36287525372929563
+          }
+        },
+        "ask": {
+          "answer": "IMPROVES_EVERY_DAY",
+          "by_day": {
+            "20261024": 1.2982988456778632,
+            "20261025": 1.1571397232621234,
+            "20261026": 0.9253589211879811,
+            "20261027": 1.6499821083883555
+          }
+        }
+      },
+      "participation": {
+        "filled_q_delta_by_day": {
+          "20261024": -4678.826534921114,
+          "20261025": -1947.236185728685,
+          "20261026": -4556.584582514806,
+          "20261027": -2626.2434862388864
+        },
+        "both_exact_delta": 0.006884139879901052,
+        "bid_exact_delta": -0.030993465206640813,
+        "ask_exact_delta": -0.02116672553867882,
+        "pulls": 472,
+        "withholds": 1402,
+        "reducing_suppressed": 1049
+      },
+      "inventory": {
+        "mean_abs_delta": -2.8813809700068305,
+        "share_abs_ge_S_delta": -0.0627027552101731,
+        "terminal_abs_delta": -2.905019620873105
+      },
+      "selection": "SELECTION_BEYOND_EXPOSURE",
+      "interpretation": "better_selection",
+      "note": "the second guard candidate of the ladder line on 19 consumed-day markets; no profitability, significance, validation or promotion claim"
+    },
+    "lag0_vs_baseline": {
+      "days": [
+        "20261024",
+        "20261025",
+        "20261026",
+        "20261027"
+      ],
+      "END_paired": {
+        "answer": "IMPROVES_EVERY_DAY",
+        "by_day": {
+          "20261024": 31276.762616277134,
+          "20261025": 36873.90531126577,
+          "20261026": 36125.09838414239,
+          "20261027": 19172.334949677756
+        },
+        "total": 123448.10126136304,
+        "markets_better": 18,
+        "markets_worse": 1,
+        "markets_equal": 0
+      },
+      "END_by_side": {
+        "bid": {
+          "answer": "MIXED",
+          "by_day": {
+            "20261024": -13429.516764440836,
+            "20261025": 38606.51098765071,
+            "20261026": 18875.34433331067,
+            "20261027": 123993.37314277545
+          }
+        },
+        "ask": {
+          "answer": "MIXED",
+          "by_day": {
+            "20261024": 44706.279380717955,
+            "20261025": -1732.6056763849265,
+            "20261026": 17249.754050831718,
+            "20261027": -104821.0381930977
+          }
+        }
+      },
+      "mo1s_per_share": {
+        "all": {
+          "answer": "IMPROVES_EVERY_DAY",
+          "by_day": {
+            "20261024": 0.7660778352974591,
+            "20261025": 1.2932269405228558,
+            "20261026": 0.7042854501892226,
+            "20261027": 1.55937590687866
+          }
+        },
+        "bid": {
+          "answer": "IMPROVES_EVERY_DAY",
+          "by_day": {
+            "20261024": 0.12819829224754753,
+            "20261025": 1.369437115242039,
+            "20261026": 0.3057949280480914,
+            "20261027": 1.2409645440841133
+          }
+        },
+        "ask": {
+          "answer": "IMPROVES_EVERY_DAY",
+          "by_day": {
+            "20261024": 1.392837437559879,
+            "20261025": 1.2169745019637208,
+            "20261026": 1.1063557174465957,
+            "20261027": 1.8746902970628052
+          }
+        }
+      },
+      "participation": {
+        "filled_q_delta_by_day": {
+          "20261024": -1968.0359873952839,
+          "20261025": -2551.6279671640514,
+          "20261026": -7857.050172669558,
+          "20261027": -5214.890575797432
+        },
+        "both_exact_delta": -0.005095372659837505,
+        "bid_exact_delta": -0.03942617449664432,
+        "ask_exact_delta": -0.06301324620275517,
+        "pulls": 433,
+        "withholds": 1289,
+        "reducing_suppressed": 980
+      },
+      "inventory": {
+        "mean_abs_delta": 0.08173754584284154,
+        "share_abs_ge_S_delta": -0.05592087601554224,
+        "terminal_abs_delta": 3.3347889456328232
+      },
+      "selection": "SELECTION_BEYOND_EXPOSURE",
+      "interpretation": "better_selection",
+      "note": "the second guard candidate of the ladder line on 19 consumed-day markets; no profitability, significance, validation or promotion claim"
+    },
+    "retained": {
+      "END": {
+        "20261024": 1.139445409074911,
+        "20261025": 0.7757695001782984,
+        "20261026": 0.3776374324803012,
+        "20261027": 0.4844846405846441,
+        "all": 0.7061648173216436
+      },
+      "per_share": {
+        "20261024": 0.9212352777357433,
+        "20261025": 0.6746111942080164,
+        "20261026": 0.8753959578623172,
+        "20261027": 0.647030053795642,
+        "all": 0.7592530414197424
+      },
+      "lag1_minus_lag0_END": {
+        "20261024": 4361.400957565653,
+        "20261025": -8268.254218323225,
+        "20261026": -22482.90898225658,
+        "20261027": -9883.633142414717
+      }
+    },
+    "reading": "survives_50ms_screen",
+    "failed": [],
+    "note": "a 50 ms timing-margin sensitivity on 19 consumed-day markets; it chooses no lag or threshold and claims no validation or profitability"
+  },
+  "control_all": true,
+  "markets": 19,
+  "selection": {
+    "answer": "SELECTION_BEYOND_EXPOSURE",
+    "selected": 110,
+    "states": 4831,
+    "censored": 9,
+    "selected_censored": 0,
+    "J": -90.20118290984475,
+    "J_per_valid_share": -9.231624272542335,
+    "valid_window_q": 1074.7978716588761,
+    "total_window_q": 1074.7978716588761,
+    "excluded_window_q": 0.0,
+    "null_mean": -31.486653821597372,
+    "null_p05": -57.865288023520236,
+    "null_p95": -6.760271187237031,
+    "percentile": 0.002,
+    "null_q_p05": -5.10397785391032,
+    "strata": 887,
+    "movable_strata": 62,
+    "movable_selected": 103,
+    "degenerate_strata": 5,
+    "missing_feature": 0,
+    "per_side": {
+      "0": {
+        "selected": 51,
+        "J": -18.436627066269544,
+        "null_mean": -13.614232508888392,
+        "null_p05": -43.1775565586981,
+        "percentile": 0.372
+      },
+      "1": {
+        "selected": 59,
+        "J": -152.23495152039283,
+        "null_mean": -46.93569597326106,
+        "null_p05": -90.52120877402466,
+        "percentile": 0.002
+      }
+    },
+    "draws": 500,
+    "seed": 20261121,
+    "join": {
+      "live_states": 4840,
+      "zero_lag_mismatched": 0,
+      "off_tick": 0,
+      "warmup": 0,
+      "non_ok": 0
+    },
+    "lag_ticks": 1,
+    "inputs": {
+      "states_sha256": "d50c718fd9f867ad4b28e46b8d9edad2da14603b1ec385498b3eb0777e0e2111",
+      "edges_sha256": "ca688917cd7ddc7c40e94031bee646f4fc1339511bb7c48fbe5270797a38bf80",
+      "parent_day_records": {
+        "20261024": "ab599b8eceefb881fe712bb7ceb9c314fc7eb3b5ef6872778f58f2c2f2a67277",
+        "20261025": "3874552b6ae995cccf46ba820963fd27222ba530fb552dab74d28fbcd9f3bfe8",
+        "20261026": "0833d2c4278d89e6a6af24a72e4c6313ddf411da267b5aa5b428513fa96d30d6",
+        "20261027": "25345c86153002aa643ff8c06862b906373e171a10e63eaf4e687647842a55cd"
+      }
+    }
+  },
+  "parent_selection_answer": "SELECTION_BEYOND_EXPOSURE",
+  "outputs": {
+    "arms.csv": "1611665b390309e5be17257c9c3b56fa35909b99ad3956eb93a6a08349f9b7a5",
+    "control.csv": "89815c4842efa9a4c8b2fd78f466fcbe1014b21ad8529a055349d5181bea3464",
+    "lost_added.csv": "7825374e2048a48344abd75cd9196b650c5221c29d98ee8349d88a89c1c73e97",
+    "reentry.csv": "a40fb29152e0680c841c75098db59753c560f3cc0da2d0e2ae89b439d8b24d13"
+  },
+  "sources": {
+    "pf_ladder_pressure_lag.py": "0dcb03c430db87e2cf85104eebdf3aa175eb6af4594ac9a89dec89d1bbf5c7d4",
+    "pf_ladder_pressure_lag_selftest.py": "7db1a9511b064ef9bd0c04a8fd85ca6c736e66d35cf81c9a00c8e2bd106ea7b8",
+    "pf_ladder_pressure.py": "357f1d19b32ab5a8d51bc26f884d03492d008c3653b981a147d0bbca17068114",
+    "pf_ladder_pressure_selftest.py": "9a380526b4b8b1486652a62fda1e027096e9c8afb580e7d3c68a388f6e11718e",
+    "pf_ladder_guard.py": "5349b75682108857eeb367f0da86ea387c1682e99ee1761f2b60f0d50e01c2fe",
+    "pf_ladder_rest.py": "d90016ce7d25f89f6f6c6662075f5be72539d3140373e42c8b7228ebcf8ce5e0",
+    "pf_branch_ladder.py": "c9e0852eccea5b4248001693fd8ddec083ea2df517dc8f3fd0d8b2f091ab285a",
+    "pf_branch_engine.py": "8b7960ef4bbbc178b281e57d92d4795d7678436c0ca875e7199e24a6626af3a8",
+    "pf_ladder_audit.py": "97a79a90a06062a775d3fe66f55da5172b3ffc2cf39e771cf52e6852fe38f44c",
+    "pf_pipeline_export.py": "ee2953fd00f70a7d12607abd4b418471b2208b8f9728009c7e538ccb55733931",
+    "pf_flow_price_data.py": "fa9112d1147e955b4ff4ff2c09d2c8c23e37418b3e2957cb2f47deaf9a907a4e",
+    "pf_flow_price_common.py": "beac0d747ec5dc84874fdee2f8e08057c1a47c819cfc648a762ea8950b0d1993",
+    "pf_stop_ev_minutes_inputs.py": "bbec0ff5d8f14a617b1ef83cfcdda659de1b4998ab25a9b05e098140316de7b6",
+    "pf_stop_model.py": "e2a857ddb6c4e76af40080e753942e1e0bef3bd42a34ed2929f378fe869df0ed",
+    "pf_stop_depth.py": "819d5e06d32b647cdac96cca0f9f9191eb033c9a9b6c1cfd160df3f0228aae46",
+    "pf_pull_depth.py": "a8670b2e9751f16dce37aab7c18ce35cc31fa3431e392b9a7397f4375a9114ef",
+    "pf_influence.py": "5c5bd6f61da5800fcc67045b8c5ec3b4ab61eede3a4383ac244f5dd405f6ac55"
+  },
+  "rule_sha256": "f9b4bcd04e88168d3e5f1d5e8bc6fe432eff3c96fe2233abf9e56fb9a4b63e66"
+}

@@ -113,6 +113,19 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_PRESSURE_LAG_RESULTS_20261121_DEV -->
+## 2026-11-21 19:58Z (session aea5bfb9) — PRESSURE-LEAD-SENSITIVITY-v1 RESULTS: SURVIVES_50MS_SCREEN (CONSUMED DAYS); CHECKS v2 ALL TRUE
+
+- [Receipt](reviews/ladder_pressure_lag_20261121/report.md); freeze `b19b7ca0`, checks v2 `9cc6161a` (the rehearsal caught a v1 crash before the full run), results in this commit. Zero-lag control 19 / 19.
+- **lag1 vs baseline:** END IMPROVES_EVERY_DAY (20261024 +35,638.2 c, 20261025 +28,605.7 c, 20261026 +13,642.2 c, 20261027 +9,288.7 c; total +87,174.7 c); per share IMPROVES_EVERY_DAY (bid IMPROVES_EVERY_DAY, ask IMPROVES_EVERY_DAY).
+- **Retained:** 70.62 % of the zero-lag END gain (20261024 113.94 %, 20261025 77.58 %, 20261026 37.76 %, 20261027 48.45 %); per share 75.93 %.
+- **Lagged selection screen:** SELECTION_BEYOND_EXPOSURE (percentile 0.20 %; bids alone 37.20 %, asks 0.20 %).
+- **Validity:** checks v2 21 / 21, falsifier 14 / 14, mutants 21 / 21; 0.259 core-hours of 0.50.
+- **Review 909c671e findings 1-2 addressed:** uptime / inventory / queue reconciliation with the coordinated uptime refusal; activation-clock and next-same-side labels.
+- **Watch:** consumed-day evidence; the Binance clock is the declared median-delay model; validation needs untouched days (a USER decision).
+- **Next:** the ONE combined review, which names the next step.
+<!-- /LADDER_PRESSURE_LAG_RESULTS_20261121_DEV -->
+
 <!-- LADDER_PRESSURE_LAG_FREEZE_20261121_DEV -->
 ## 2026-11-21 19:51Z (session aea5bfb9) — PRESSURE-LEAD-SENSITIVITY-v1 FROZEN before any lagged replay (review 909c671e's ONE next priority; its two findings hold)
 

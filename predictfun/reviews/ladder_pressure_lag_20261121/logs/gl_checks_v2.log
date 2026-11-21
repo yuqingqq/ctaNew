@@ -1,0 +1,130 @@
+{
+ "all_ok": true,
+ "failed": [],
+ "falsifier_ok": true,
+ "cases": {
+  "coordinated_uptime_and_reading": [
+   true,
+   [
+    "F_readings",
+    "F_reconcile"
+   ]
+  ],
+  "lag1_inventory_changed": [
+   true,
+   [
+    "F_reconcile"
+   ]
+  ],
+  "a_log_source_time_without_the_lag": [
+   true,
+   [
+    "D_log"
+   ]
+  ],
+  "a_keep_at_a_lagged_on_tick": [
+   true,
+   [
+    "D_commands"
+   ]
+  ],
+  "zero_lag_fill_dropped": [
+   true,
+   [
+    "C_zero_lag_equals_parent"
+   ]
+  ],
+  "cash_changed": [
+   true,
+   [
+    "E_accounting"
+   ]
+  ],
+  "lost_end_changed": [
+   true,
+   [
+    "F_identity"
+   ]
+  ],
+  "stored_selection_J_changed": [
+   true,
+   [
+    "F_selection"
+   ]
+  ],
+  "stored_reading_changed": [
+   true,
+   [
+    "F_readings"
+   ]
+  ],
+  "a_saved_state_value_changed": [
+   true,
+   [
+    "G_join"
+   ]
+  ],
+  "a_pull_without_its_queue_entry": [
+   true,
+   [
+    "H_queue"
+   ]
+  ],
+  "a_member_dropped": [
+   true,
+   [
+    "B_membership"
+   ]
+  ],
+  "a_record_rule_changed": [
+   true,
+   [
+    "A_rule"
+   ]
+  ],
+  "resources_over_the_cap": [
+   true,
+   [
+    "I_resources"
+   ]
+  ]
+ },
+ "details": {
+  "C_zero_lag_mismatch": 0,
+  "C_baseline_mismatch": 0,
+  "D_log_bad": 0,
+  "D_command_escapes": 0,
+  "D_repeat_requests": 0,
+  "D_commands_at_lagged_on_ticks": 4538,
+  "F_reconcile_bad": 0,
+  "F_identity_bad": 0,
+  "F_selection": {
+   "answer": "SELECTION_BEYOND_EXPOSURE",
+   "selected": 110,
+   "states": 4831,
+   "J": -90.20118290984475,
+   "null_mean": -31.486653821597372,
+   "null_p05": -57.865288023520236,
+   "movable_strata": 62,
+   "valid_window_q": 1074.7978716588761,
+   "total_window_q": 1074.7978716588761,
+   "excluded_window_q": 0.0
+  },
+  "F_readings": {
+   "reading": "survives_50ms_screen",
+   "failed": []
+  },
+  "G_join": {
+   "live_states": 4840,
+   "zero_lag_mismatched": 0,
+   "warmup": 0,
+   "non_ok": 0
+  },
+  "H_queue_bad": 0,
+  "I": {
+   "core_hours": 0.25481388888888884,
+   "peak_mib": 1199
+  }
+ }
+}
+2026-11-21T19:56:31Z tag=gl_checks_v2 rc=0 peak_rss_mib=582 wall_s=15.34 cpu_user_s=14.72 memavail_start_gib=23 disk_free_gib=436->437 slot=claude

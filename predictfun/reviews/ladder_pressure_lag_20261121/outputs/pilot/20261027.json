@@ -1,0 +1,51 @@
+{
+ "version": "pressure_lead_sensitivity_v1",
+ "day": "20261027",
+ "pilot": true,
+ "members": [
+  3877472,
+  3899224
+ ],
+ "sha256": {
+  "gz": "bab7c61a8056dcc5f8990406c8f7f60149d7b65e2a7be545fea1b5d8c299e5ab",
+  "npz": "e962e5f838190b740e268271a7ac64b86cdde8b550ebc72141109b0f32437176"
+ },
+ "manifest_sha256": "28aba14b70bfbf09268da3e8874ada48c6f9466402550857a266f8f737942fd4",
+ "rule_sha256": "f9b4bcd04e88168d3e5f1d5e8bc6fe432eff3c96fe2233abf9e56fb9a4b63e66",
+ "parent_day_record_sha256": "25345c86153002aa643ff8c06862b906373e171a10e63eaf4e687647842a55cd",
+ "sources": {
+  "pf_ladder_pressure_lag.py": "0dcb03c430db87e2cf85104eebdf3aa175eb6af4594ac9a89dec89d1bbf5c7d4",
+  "pf_ladder_pressure_lag_selftest.py": "7db1a9511b064ef9bd0c04a8fd85ca6c736e66d35cf81c9a00c8e2bd106ea7b8",
+  "pf_ladder_pressure.py": "357f1d19b32ab5a8d51bc26f884d03492d008c3653b981a147d0bbca17068114",
+  "pf_ladder_pressure_selftest.py": "9a380526b4b8b1486652a62fda1e027096e9c8afb580e7d3c68a388f6e11718e",
+  "pf_ladder_guard.py": "5349b75682108857eeb367f0da86ea387c1682e99ee1761f2b60f0d50e01c2fe",
+  "pf_ladder_rest.py": "d90016ce7d25f89f6f6c6662075f5be72539d3140373e42c8b7228ebcf8ce5e0",
+  "pf_branch_ladder.py": "c9e0852eccea5b4248001693fd8ddec083ea2df517dc8f3fd0d8b2f091ab285a",
+  "pf_branch_engine.py": "8b7960ef4bbbc178b281e57d92d4795d7678436c0ca875e7199e24a6626af3a8",
+  "pf_ladder_audit.py": "97a79a90a06062a775d3fe66f55da5172b3ffc2cf39e771cf52e6852fe38f44c",
+  "pf_pipeline_export.py": "ee2953fd00f70a7d12607abd4b418471b2208b8f9728009c7e538ccb55733931",
+  "pf_flow_price_data.py": "fa9112d1147e955b4ff4ff2c09d2c8c23e37418b3e2957cb2f47deaf9a907a4e",
+  "pf_flow_price_common.py": "beac0d747ec5dc84874fdee2f8e08057c1a47c819cfc648a762ea8950b0d1993",
+  "pf_stop_ev_minutes_inputs.py": "bbec0ff5d8f14a617b1ef83cfcdda659de1b4998ab25a9b05e098140316de7b6",
+  "pf_stop_model.py": "e2a857ddb6c4e76af40080e753942e1e0bef3bd42a34ed2929f378fe869df0ed",
+  "pf_stop_depth.py": "819d5e06d32b647cdac96cca0f9f9191eb033c9a9b6c1cfd160df3f0228aae46",
+  "pf_pull_depth.py": "a8670b2e9751f16dce37aab7c18ce35cc31fa3431e392b9a7397f4375a9114ef",
+  "pf_influence.py": "5c5bd6f61da5800fcc67045b8c5ec3b4ab61eede3a4383ac244f5dd405f6ac55"
+ },
+ "timing": {
+  "load": 61.04151439666748,
+  "markets": [
+   {
+    "m": 3877472,
+    "s": 7.206571102142334
+   },
+   {
+    "m": 3899224,
+    "s": 4.981016159057617
+   }
+  ]
+ },
+ "elapsed_s": 73.41512751579285,
+ "hwm_mib": 1124.89453125,
+ "asof": "2026-11-21T19:52:56.670234+00:00"
+}

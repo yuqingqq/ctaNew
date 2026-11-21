@@ -1,0 +1,63 @@
+{
+ "checks": {
+  "A_committed": true,
+  "A_rule": true,
+  "A_parent": true,
+  "A_edges": true,
+  "A_sources": true,
+  "A_outputs": true,
+  "B_membership": false,
+  "B_pilot": true,
+  "C_zero_lag_equals_parent": true,
+  "C_baseline_equals_original": true,
+  "D_log": true,
+  "D_commands": true,
+  "D_requests": true,
+  "E_accounting": true,
+  "F_reconcile": true,
+  "F_identity": true,
+  "F_selection": true,
+  "F_readings": true,
+  "G_join": true,
+  "H_queue": true,
+  "I_resources": true
+ },
+ "details": {
+  "C_zero_lag_mismatch": 0,
+  "C_baseline_mismatch": 0,
+  "D_log_bad": 0,
+  "D_command_escapes": 0,
+  "D_repeat_requests": 0,
+  "D_commands_at_lagged_on_ticks": 2671,
+  "F_reconcile_bad": 0,
+  "F_identity_bad": 0,
+  "F_selection": {
+   "answer": "SELECTION_BEYOND_EXPOSURE",
+   "selected": 110,
+   "states": 4831,
+   "J": -90.20118290984475,
+   "null_mean": -31.486653821597372,
+   "null_p05": -57.865288023520236,
+   "movable_strata": 62,
+   "valid_window_q": 1074.7978716588761,
+   "total_window_q": 1074.7978716588761,
+   "excluded_window_q": 0.0
+  },
+  "F_readings": {
+   "reading": "survives_50ms_screen",
+   "failed": []
+  },
+  "G_join": {
+   "live_states": 4840,
+   "zero_lag_mismatched": 0,
+   "warmup": 0,
+   "non_ok": 0
+  },
+  "H_queue_bad": 0,
+  "I": {
+   "core_hours": 0.14599166666666666,
+   "peak_mib": 1199
+  }
+ },
+ "all_ok": false
+}
