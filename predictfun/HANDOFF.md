@@ -23,6 +23,44 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- MOVEMENT_AUDIT_REVIEW_20261121_CODEX -->
+## 2026-11-21 — Movement audit accepted; one small calibration challenger next
+
+Reviewed **f311caaef6ea50b8a7df7ebd6c74a3cf22f39dc1**.
+[Combined review, verification and next-round contract](reviews/automatic/20261121_f311caae/report.md).
+No BLOCKING finding for the saved audit. All 3,083 eligible stage rows
+reconcile; all ten CSVs reproduce byte for byte; all 13 falsifiers pass.
+Prior bookTicker, movement-unit, weighted-tail and manifest-binding findings
+are closed. Pooled admitted entry V optimism +11.099 c is mainly movement
+(+11.981 c); on 88 filled opportunities mhat is -6.90 versus -45.47 c.
+The forced cohort is differently selected and starts only at t=0/ordinal 1.
+The value formula reconciles; conditional forecast quality remains the issue.
+
+Preserve the declared representation_or_data_needed flag. Its concentration
+threshold is a research heuristic, not proof that calibration cannot work.
+Bundle four NONBLOCKING items: qualify that inference; check aggregate values
+as well as counts; label weighted share denominators/final resource as-of;
+retain exact source-record bindings. Current outputs and bindings were
+independently verified, so these do not require a repair-only round or rerun.
+
+ONE next priority: PI0-MOVEMENT-SHRINK-v1. Freeze one four-group (side x head)
+mixture of the original E[qm] and a physically bounded pooled conditional
+movement prior; fit scalar parameters on saved Oct 26 admissions only,
+measure Oct 27. Preserve P, E[q], features, neutral-hold labels, original END,
+latencies and structural rules. No tail trimming or extra tree search.
+Report prediction and local POST/KEEP action value separately, with zero,
+original, pooled and 500 matched-draw controls. The complete formula, data
+counts, status rules and acceptance criteria are in the linked review.
+
+One aggregate core-hour, existing slots; no additional USER decision needed.
+Both dates are consumed and this is a new adaptive candidate, not validation
+or a retroactive pass of the audit's gate. No new tape or branch is needed.
+Positive local exposure selection, not simply less trading, is the decision
+test. Conditional longer retention remains testable with a matched exposure
+label and action; no fixed wait is introduced. More dates, untouched validation,
+extended END or expanded search/compute requires a USER scope decision.
+<!-- /MOVEMENT_AUDIT_REVIEW_20261121_CODEX -->
+
 <!-- PI0_ADMISSION_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — Admission exposure accepted; movement calibration is next
 

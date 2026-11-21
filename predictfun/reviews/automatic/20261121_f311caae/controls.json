@@ -1,0 +1,85 @@
+{
+  "cases": {
+    "A_substituted": {
+      "applied": true,
+      "check": "A_identity",
+      "clean": true,
+      "corrupted": false
+    },
+    "B_drop": {
+      "applied": true,
+      "check": "B_membership",
+      "clean": true,
+      "corrupted": false
+    },
+    "B_weight": {
+      "applied": true,
+      "check": "B_membership",
+      "clean": true,
+      "corrupted": false
+    },
+    "C_sign": {
+      "applied": true,
+      "check": "C_accounting",
+      "clean": true,
+      "corrupted": false
+    },
+    "C_units": {
+      "applied": true,
+      "check": "C_accounting",
+      "clean": true,
+      "corrupted": false
+    },
+    "D_venue": {
+      "applied": true,
+      "check": "D_strata",
+      "clean": true,
+      "corrupted": false
+    },
+    "E_mark": {
+      "applied": true,
+      "check": "E_fills",
+      "clean": true,
+      "corrupted": false
+    },
+    "E_time": {
+      "applied": true,
+      "check": "E_fills",
+      "clean": true,
+      "corrupted": false
+    },
+    "F_count": {
+      "applied": true,
+      "check": "F_denominators",
+      "clean": true,
+      "corrupted": false
+    },
+    "G_reading": {
+      "applied": true,
+      "check": "G_predicates",
+      "clean": true,
+      "corrupted": false
+    },
+    "H_number": {
+      "applied": true,
+      "check": "H_reproduction",
+      "clean": true,
+      "corrupted": false
+    },
+    "I_budget": {
+      "applied": true,
+      "check": "I_resources_suites",
+      "clean": true,
+      "corrupted": false
+    },
+    "I_suite": {
+      "applied": true,
+      "check": "I_resources_suites",
+      "clean": true,
+      "corrupted": false
+    }
+  },
+  "falsifier_ok": true,
+  "selftests_passed": true,
+  "target": "f311caaef6ea50b8a7df7ebd6c74a3cf22f39dc1"
+}

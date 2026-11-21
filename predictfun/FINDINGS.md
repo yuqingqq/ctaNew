@@ -1,3 +1,37 @@
+<!-- MOVEMENT_AUDIT_REVIEW_20261121_CODEX -->
+## 2026-11-21 — Movement audit verified; concentration is a warning, not a calibration test
+
+Target **f311caaef6ea50b8a7df7ebd6c74a3cf22f39dc1**.
+[Review and concrete next candidate](reviews/automatic/20261121_f311caae/report.md).
+No BLOCKING finding. Complete membership, all 3,083 eligible stage identities,
+2,770 stage-counted fills and ten CSVs reproduce. Prior findings are closed.
+Admitted entry V optimism is +11.099 c, primarily movement +11.981 c; the
+conditional movement error on neutral fills is +38.57 c versus +3.11 c on
+the differently selected forced overlap. The mapping is arithmetically sound.
+
+P98's frozen representation_or_data_needed flag is reproduced and retained.
+Its top-five-world threshold (.591 observed versus .5) does not empirically
+reject a chronological calibration candidate. All four day/side errors are
+positive; marginal strata and the t=0-only reference do not isolate selection,
+queue or horizon effects. No model or longer-retention success is established.
+
+NONBLOCKING batch: qualify that inference; validate reported aggregates as
+well as counts (three changed aggregate cells can pass A-I; actual cells
+independently reproduced); show the weighted 4,429.48-share denominator
+beside the unweighted 2,014.73; retain exact prior partition/reference-record
+bindings if reused. All current bytes and those bindings check out. Final
+saved logs total .282478 core-hours, below the one-hour bound; the receipt's
+.275 is an earlier closeout snapshot. No repair-only round is needed.
+
+ONE next priority: PI0-MOVEMENT-SHRINK-v1, a frozen scalar mixture challenger
+on the existing admitted neutral-hold targets. Fit Oct 26, measure Oct 27;
+four side/head groups, no tail trimming, no teacher refit or new horizon.
+Keep P and E[q], separate forecast quality from positive local POST/KEEP
+exposure value, and use fixed original/pooled/zero and 500 matched controls.
+One aggregate core-hour, no additional USER decision. This is adaptive
+consumed-day development; more dates or independent validation needs the USER.
+<!-- /MOVEMENT_AUDIT_REVIEW_20261121_CODEX -->
+
 <!-- PI0_ADMISSION_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — Voluntary-admission comparison verified; movement bias localized
 

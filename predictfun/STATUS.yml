@@ -1,3 +1,29 @@
+movement_audit_review_20261121_codex:
+  status: saved_audit_accepted_scalar_movement_challenger_next
+  target_commit: f311caaef6ea50b8a7df7ebd6c74a3cf22f39dc1
+  report: predictfun/reviews/automatic/20261121_f311caae/report.md
+  blocking_findings_for_saved_results: []
+  prior_findings_closed: [bookTicker_label, movement_units_and_P_calibration_scope, weighted_world_tails, row_manifest_binding]
+  reviewed_population: {admitted_generations: 329, admitted_worlds: 155, admitted_weight_sum: 689, forced_forks: 768, eligible_stage_rows: 3083, stage_counted_fill_rows: 2770}
+  saved_checks: {A_I: all_true, aggregate_csvs_byte_equal: 10, independent_moment_views: 91, independent_prepost_views: 69, falsifiers: 13, final_mutants_rejudged: 64}
+  independent_review: {jobs: 4, wall_seconds: 41.51, user_cpu_seconds: 39.44, peak_rss_mib: 330, fits: 0, real_tape_runs: 0}
+  admitted_entry_bias_c: {V: 11.099422619095773, quantity_edge: -0.8818715551861003, movement: 11.981294174281873}
+  movement_per_filled_opportunity_c: {admitted_forecast: -6.90, admitted_realized: -45.47, forced_overlap_forecast: -48.77, forced_overlap_realized: -51.88}
+  admitted_entry_share_denominators: {unweighted: 2014.7336992234245, inclusion_weighted: 4429.481269115038}
+  nonblocking: [diagnostic_gate_inference_scope, aggregate_checker_coverage, denominator_and_resource_asof_labels, reference_record_binding_on_reuse]
+  current_aggregate_values_and_record_bindings_independently_verified: true
+  declared_representation_or_data_needed_flag_retained: true
+  calibration_failure_proven: false
+  next_priority: PI0_MOVEMENT_SHRINK_v1
+  next_round: {new_candidates: 1, groups: 4, scalar_parameters_max: 8, train_consumed_day: "20261026", measure_consumed_day: "20261027", core_hours_ceiling: 1, checkpoint_mib: 1536, hard_rss_mib: 2048, new_dates: 0, new_branches: 0, new_teacher_fits: 0}
+  train_rows: {entry: 166, entry_filled: 42, first_review: 151, first_review_filled: 37}
+  measure_rows: {entry: 163, entry_filled: 46, first_review: 148, first_review_filled: 42}
+  extra_user_approval_for_next_candidate: false
+  targets_and_original_END_unchanged: true
+  conditional_longer_retention_path_open: true
+  profitable_strategy_or_independent_validation_established: false
+  new_dates_untouched_validation_extended_END_or_expanded_search_authorized: false
+
 pi0_admission_review_20261121_codex:
   status: comparison_accepted_movement_calibration_diagnostic_next
   target_commit: 6c2a992d8fc0e3e52b073c694687e674aa562f34

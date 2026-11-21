@@ -1,0 +1,371 @@
+{
+  "aggregate_csvs_byte_reproduced": [
+    "opportunities",
+    "fills",
+    "moments",
+    "strata",
+    "prepost",
+    "concentration",
+    "contributions",
+    "sources",
+    "transitions",
+    "evidence"
+  ],
+  "checks": {
+    "A_identity": true,
+    "B_membership": true,
+    "C_accounting": true,
+    "D_strata": true,
+    "E_fills": true,
+    "F_denominators": true,
+    "G_predicates": true,
+    "H_reproduction": true,
+    "I_resources_suites": true
+  },
+  "details": {
+    "A": {
+      "audit_manifests": true,
+      "frozen": true,
+      "manifests_committed": true,
+      "mids": true,
+      "partitions": true,
+      "sources": true
+    },
+    "B": {
+      "admitted": true,
+      "admitted_rows": 329,
+      "binding": true,
+      "forced": true,
+      "forced_rows": 768,
+      "opportunities": true,
+      "weights": true
+    },
+    "C": {
+      "failures": [],
+      "n_fail": 0,
+      "ok_rows": 3083
+    },
+    "D": {
+      "failures": [],
+      "n_fail": 0,
+      "rows": 3083
+    },
+    "E": {
+      "expected": 2770,
+      "failures": [],
+      "fills": 2770,
+      "n_fail": 0
+    },
+    "F": {
+      "failures": [],
+      "moments": 91,
+      "n_fail": 0,
+      "prepost": 69,
+      "strata": 304
+    },
+    "G": {
+      "entry": {
+        "ok": true,
+        "recomputed": {
+          "i": "concentrated",
+          "ii": "both",
+          "iii": "material",
+          "iv": "populated",
+          "recommendation": "representation_or_data_needed"
+        }
+      },
+      "first_pull": {
+        "ok": true,
+        "recomputed": {
+          "i": "concentrated",
+          "ii": "decision_state",
+          "iii": "material",
+          "iv": "populated",
+          "recommendation": "representation_or_data_needed"
+        }
+      },
+      "first_review": {
+        "ok": true,
+        "recomputed": {
+          "i": "concentrated",
+          "ii": "decision_state",
+          "iii": "material",
+          "iv": "populated",
+          "recommendation": "representation_or_data_needed"
+        }
+      }
+    },
+    "H": {
+      "bias_V": true,
+      "control": true,
+      "mean_Eqm": true,
+      "mean_M": true,
+      "mov_cond": true,
+      "mov_prob": true,
+      "mov_term": true,
+      "mse_V": true,
+      "mse_m": true,
+      "mse_m_zero": true,
+      "mse_mech": true,
+      "mse_zero": true,
+      "qty_term": true,
+      "top5_unweighted": true,
+      "top5_weighted": true
+    },
+    "I": {
+      "resources": {
+        "bad": [],
+        "core_hours": 0.2824777777777783,
+        "jobs": 152,
+        "mids_hwm_max": 1140.8515625,
+        "ok": true,
+        "peak_mib": 1140
+      },
+      "suites": {
+        "extra_files": [],
+        "failures": [],
+        "judge_ok": true,
+        "ok": true,
+        "one_record_per_file": true,
+        "planted": 64
+      }
+    }
+  },
+  "forced_entry_state": {
+    "n": 755,
+    "ordinal": [
+      1.0
+    ],
+    "t": [
+      0.0
+    ]
+  },
+  "moment_views_independently_checked": 91,
+  "per_share": [
+    {
+      "cohort": "admitted",
+      "fills": 202,
+      "post_c_per_share": -1.8489381308239692,
+      "pre_c_per_share": -0.2913810294552807,
+      "total_c_per_share": -2.1403191602792493,
+      "unweighted_shares": 2014.7336992234245,
+      "view": "all",
+      "weighted_shares": 4429.481269115038,
+      "weighted_total_c": -9480.503630384963
+    },
+    {
+      "cohort": "forced",
+      "fills": 767,
+      "post_c_per_share": -1.9060738471901537,
+      "pre_c_per_share": -0.10167083873910729,
+      "total_c_per_share": -2.007744685929261,
+      "unweighted_shares": 6890.602429544662,
+      "view": "all",
+      "weighted_shares": 6890.602429544662,
+      "weighted_total_c": -13834.570410769553
+    },
+    {
+      "cohort": "forced",
+      "fills": 379,
+      "post_c_per_share": -2.131281936338557,
+      "pre_c_per_share": -0.18854869454871392,
+      "total_c_per_share": -2.3198306308872705,
+      "unweighted_shares": 3421.9126436214174,
+      "view": "overlap",
+      "weighted_shares": 3421.9126436214174,
+      "weighted_total_c": -7938.257766893401
+    }
+  ],
+  "predicates": [
+    {
+      "i": {
+        "answer": "concentrated",
+        "cells": {
+          "20261026/0": 6.136211705525238,
+          "20261026/1": 34.22895154496286,
+          "20261027/0": 0.46394478511151344,
+          "20261027/1": 16.389086208352396
+        },
+        "positive_cells": 4,
+        "top5_world_share": 0.5913974528681527
+      },
+      "ii": {
+        "answer": "both",
+        "decision_ranges": {
+          "hbin": 33.63892518722061,
+          "obin": 34.20324909022983,
+          "qbin": 65.37633250727497
+        },
+        "delay_range": 61.146642668638506
+      },
+      "iii": {
+        "answer": "material",
+        "c_admitted": 38.56792593006221,
+        "c_forced_all": -0.7138910719803113,
+        "c_forced_overlap": 3.1091167157462225,
+        "fills_admitted": 88,
+        "fills_forced_overlap": 153
+      },
+      "iv": {
+        "answer": "populated",
+        "populated_cells": {
+          "hbin": 2,
+          "obin": 3,
+          "qbin": 3
+        }
+      },
+      "recommendation": "representation_or_data_needed",
+      "stage": "entry"
+    },
+    {
+      "i": {
+        "answer": "concentrated",
+        "cells": {
+          "20261026/0": 1.678604960967586,
+          "20261026/1": 30.442535062754775,
+          "20261027/0": -3.8987857949290667,
+          "20261027/1": 5.416049828337731
+        },
+        "positive_cells": 3,
+        "top5_world_share": 0.525591191371515
+      },
+      "ii": {
+        "answer": "decision_state",
+        "decision_ranges": {
+          "hbin": 34.47762491898483,
+          "obin": 28.14629384652553,
+          "qbin": 95.22141336226633
+        },
+        "delay_range": 59.471828053718454
+      },
+      "iii": {
+        "answer": "material",
+        "c_admitted": 17.16689400170384,
+        "c_forced_all": -7.828524271449725,
+        "c_forced_overlap": -0.8478267812663354,
+        "fills_admitted": 79,
+        "fills_forced_overlap": 143
+      },
+      "iv": {
+        "answer": "populated",
+        "populated_cells": {
+          "hbin": 2,
+          "obin": 3,
+          "qbin": 3
+        }
+      },
+      "recommendation": "representation_or_data_needed",
+      "stage": "first_review"
+    },
+    {
+      "i": {
+        "answer": "concentrated",
+        "cells": {
+          "20261026/0": 1.5974057128405348,
+          "20261026/1": 34.75255871110598,
+          "20261027/0": -6.129093960729399,
+          "20261027/1": 5.222502455403521
+        },
+        "positive_cells": 3,
+        "top5_world_share": 0.5141440581517573
+      },
+      "ii": {
+        "answer": "decision_state",
+        "decision_ranges": {
+          "hbin": 41.408076869874,
+          "obin": 29.27840453981027,
+          "qbin": 107.90317121716704
+        },
+        "delay_range": 67.74084458469726
+      },
+      "iii": {
+        "answer": "material",
+        "c_admitted": 17.372225201642518,
+        "c_forced_all": -9.00132305302102,
+        "c_forced_overlap": -0.8730809974416862,
+        "fills_admitted": 73,
+        "fills_forced_overlap": 143
+      },
+      "iv": {
+        "answer": "populated",
+        "populated_cells": {
+          "hbin": 2,
+          "obin": 3,
+          "qbin": 3
+        }
+      },
+      "recommendation": "representation_or_data_needed",
+      "stage": "first_pull"
+    }
+  ],
+  "prepost_views_independently_checked": 69,
+  "statuses": [
+    {
+      "acc_status": "ok",
+      "cohort": "admitted",
+      "n": 329,
+      "stage": "entry"
+    },
+    {
+      "acc_status": "not_eligible",
+      "cohort": "admitted",
+      "n": 61,
+      "stage": "first_pull"
+    },
+    {
+      "acc_status": "ok",
+      "cohort": "admitted",
+      "n": 268,
+      "stage": "first_pull"
+    },
+    {
+      "acc_status": "not_eligible",
+      "cohort": "admitted",
+      "n": 30,
+      "stage": "first_review"
+    },
+    {
+      "acc_status": "ok",
+      "cohort": "admitted",
+      "n": 299,
+      "stage": "first_review"
+    },
+    {
+      "acc_status": "not_eligible",
+      "cohort": "forced",
+      "n": 13,
+      "stage": "entry"
+    },
+    {
+      "acc_status": "ok",
+      "cohort": "forced",
+      "n": 755,
+      "stage": "entry"
+    },
+    {
+      "acc_status": "not_eligible",
+      "cohort": "forced",
+      "n": 54,
+      "stage": "first_pull"
+    },
+    {
+      "acc_status": "ok",
+      "cohort": "forced",
+      "n": 714,
+      "stage": "first_pull"
+    },
+    {
+      "acc_status": "not_eligible",
+      "cohort": "forced",
+      "n": 50,
+      "stage": "first_review"
+    },
+    {
+      "acc_status": "ok",
+      "cohort": "forced",
+      "n": 718,
+      "stage": "first_review"
+    }
+  ],
+  "target": "f311caaef6ea50b8a7df7ebd6c74a3cf22f39dc1"
+}

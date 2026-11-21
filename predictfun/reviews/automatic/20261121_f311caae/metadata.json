@@ -1,0 +1,15 @@
+{
+  "frozen_files_unchanged": 6,
+  "mids_record_bindings": 12,
+  "mutants": {
+    "extra_files": [],
+    "failures": [],
+    "judge_ok": true,
+    "ok": true,
+    "one_record_per_file": true,
+    "planted": 64
+  },
+  "prior_partition_records_bound": 24,
+  "receipt_artifacts_equal": 23,
+  "target": "f311caaef6ea50b8a7df7ebd6c74a3cf22f39dc1"
+}

@@ -1,0 +1,28 @@
+{
+  "altered": {
+    "A_identity": true,
+    "B_membership": true,
+    "C_accounting": true,
+    "D_strata": true,
+    "E_fills": true,
+    "F_denominators": true,
+    "G_predicates": true,
+    "H_reproduction": true,
+    "I_resources_suites": true
+  },
+  "clean": {
+    "A_identity": true,
+    "B_membership": true,
+    "C_accounting": true,
+    "D_strata": true,
+    "E_fills": true,
+    "F_denominators": true,
+    "G_predicates": true,
+    "H_reproduction": true,
+    "I_resources_suites": true
+  },
+  "deliberate_aggregate_changes": 3,
+  "independent_hash_comparison_refuses": true,
+  "interpretation": "A-I do not independently validate all reported aggregate values; current values reproduced in data.json",
+  "target": "f311caaef6ea50b8a7df7ebd6c74a3cf22f39dc1"
+}
