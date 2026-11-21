@@ -1,0 +1,1 @@
+{"pandas": "3.0.1", "differing_columns": [], "elementwise_mismatches": 12, "mismatches_all_nan_in_both": true, "world_rows": 12, "nan_aware_equal": true}

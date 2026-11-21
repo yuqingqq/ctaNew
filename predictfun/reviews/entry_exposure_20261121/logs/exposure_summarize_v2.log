@@ -1,0 +1,49 @@
+{
+ "forks": 768,
+ "statuses": [
+  {
+   "day": "20261024",
+   "status": "ok",
+   "n": 190
+  },
+  {
+   "day": "20261024",
+   "status": "world:no_path:missing_endpoint",
+   "n": 2
+  },
+  {
+   "day": "20261025",
+   "status": "ok",
+   "n": 190
+  },
+  {
+   "day": "20261025",
+   "status": "world:no_path:missing_endpoint",
+   "n": 2
+  },
+  {
+   "day": "20261026",
+   "status": "ok",
+   "n": 186
+  },
+  {
+   "day": "20261026",
+   "status": "world:no_path:missing_endpoint",
+   "n": 6
+  },
+  {
+   "day": "20261027",
+   "status": "ok",
+   "n": 190
+  },
+  {
+   "day": "20261027",
+   "status": "world:no_path:missing_endpoint",
+   "n": 2
+  }
+ ],
+ "overrides_changed_forks": 424,
+ "diagnosis": "pi0_better",
+ "reproduced_all": true
+}
+2026-11-21T09:27:05Z tag=exposure_summarize_v2 rc=0 peak_rss_mib=234 wall_s=1.61 cpu_user_s=1.42 memavail_start_gib=23 disk_free_gib=446->446 slot=claude

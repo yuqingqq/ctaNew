@@ -1,0 +1,2 @@
+exposure checks v3 selftest passed: counter_equal on 5 hand cases; the v2 comparison's NaN failure reproduces under pandas 3.0.1
+2026-11-21T09:29:01Z tag=exposure_checks_v3_selftest rc=0 peak_rss_mib=197 wall_s=0.94 cpu_user_s=0.76 memavail_start_gib=23 disk_free_gib=446->446 slot=claude
