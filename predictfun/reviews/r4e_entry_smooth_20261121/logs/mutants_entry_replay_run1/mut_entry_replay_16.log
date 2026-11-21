@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "16", "name": "an existing record not checked", "seconds": 17.7, "sources": {"pf_adv2_entry_replay.py": "1ec1b7fe1afea0d7", "pf_adv2_entry_replay_mutants.py": "5467d91711835446", "pf_adv2_entry_replay_selftest.py": "20295ff722c071f6"}, "why": "ADV2 ENTRY REPLAY SELFTEST FAILED: run_part: an existing record of another identity was accepted"}
+2026-11-21T06:51:50Z tag=mut_entry_replay_16 rc=0 peak_rss_mib=234 wall_s=17.94 cpu_user_s=17.55 memavail_start_gib=22 disk_free_gib=443->443 slot=claude2

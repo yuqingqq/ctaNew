@@ -1,0 +1,2 @@
+adv2 entry selftest passed: the declared delta (3 refusals); fits (deterministic, RICH inputs, the explicit construction, no split under 2 x 1,000 rows, fit_all hashes / readings / no overwrite); R3 training identity (2 refusals); policies and the entry controller; end to end (every policy reconciled and bound, N0 no order, a negative SMOOTH = N0)
+2026-11-21T06:49:03Z tag=pf_adv2_entry_selftest rc=0 peak_rss_mib=246 wall_s=6.57 cpu_user_s=6.32 memavail_start_gib=22 disk_free_gib=443->443 slot=claude

@@ -1,0 +1,18 @@
+  0 the old min_data_in_leaf: CAUGHT (6.6 s) - ADV2 ENTRY SELFTEST FAILED: delta: the declared parameters were refused (the declared delta changed: {}, rounds 50); delta: the parameters are not the
+  1 200 rounds: CAUGHT (6.4 s) - ADV2 ENTRY SELFTEST FAILED: delta: the declared parameters were refused (the declared delta changed: {'min_data_in_leaf': (200, 1000)}, rounds 200); d
+  2 the delta check removed: CAUGHT (6.5 s) - ADV2 ENTRY SELFTEST FAILED: delta: {} / 200 rounds was not refused
+  3 the parameter hash unchecked: CAUGHT (6.5 s) - ADV2 ENTRY SELFTEST FAILED: delta: a base parameter changed together with the candidate was not refused (the frozen hash)
+  4 unnormalized weights: CAUGHT (6.5 s) - ADV2 ENTRY SELFTEST FAILED: fit: not the declared construction (pinned parameters with min_data_in_leaf 1,000, normalized weights, RICH's columns)
+  5 the columns reversed: CAUGHT (25.7 s) - ADV2 ENTRY SELFTEST FAILED: fit: not the declared construction (pinned parameters with min_data_in_leaf 1,000, normalized weights, RICH's columns)
+  6 predictions on the FAIR columns: CAUGHT (6.5 s) - ADV2 ENTRY SELFTEST FAILED: fit: fit_head failed on valid inputs (LightGBMError('The number of features in data (18) is not the same as it was in trai
+  7 a model overwritten: CAUGHT (6.6 s) - ADV2 ENTRY SELFTEST FAILED: fit_all: an existing model was overwritten
+  8 the in-sample error unweighted: CAUGHT (6.6 s) - ADV2 ENTRY SELFTEST FAILED: fit_all: SMOOTH 0 post file / trees / readings; fit_all: SMOOTH 1 post file / trees / readings
+  9 R3's extraction not checked as committed: CAUGHT (6.6 s) - ADV2 ENTRY SELFTEST FAILED: r3_train: an extraction manifest that is not the committed one was not refused
+  10 R3's training files not checked: CAUGHT (6.7 s) - ADV2 ENTRY SELFTEST FAILED: r3_train: a training file that differs from its manifest was not refused
+  11 the KEEP heads trained too: CAUGHT (6.5 s) - ADV2 ENTRY SELFTEST FAILED: r3_train: not the POST heads of the written extraction
+  12 SMOOTH entry from the RICH heads: CAUGHT (6.5 s) - ADV2 ENTRY SELFTEST FAILED: policies: SMOOTH is not the candidate entry (its heads, RICH columns) with PI0 retention; controller: SMOOTH entry 2.0 -> 
+  13 SMOOTH retention by the candidate: CAUGHT (5.4 s) - ADV2 ENTRY SELFTEST FAILED: policies: SMOOTH is not the candidate entry (its heads, RICH columns) with PI0 retention; end to end: the SMOOTH episode s
+  14 the SMOOTH name lost: CAUGHT (6.6 s) - ADV2 ENTRY SELFTEST FAILED: policies: SMOOTH is not the candidate entry (its heads, RICH columns) with PI0 retention; controller: SMOOTH entry 2.0 -> 
+  15 an undeclared policy accepted: CAUGHT (6.5 s) - ADV2 ENTRY SELFTEST FAILED: policies: an undeclared policy was made
+control: PASSED (6.4 s); sources {'pf_adv2_entry.py': '5c3bb8b2b3377331', 'pf_adv2_entry_mutants.py': '5adf93efa8f6e6a9', 'pf_adv2_entry_selftest.py': '2db0578ccea4a2d9'}
+mutation check passed: the control passes its selftest, 16 / 16 planted code errors are caught by a check (2.2 CPU min)

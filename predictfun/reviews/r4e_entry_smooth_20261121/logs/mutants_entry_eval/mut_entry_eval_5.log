@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "5", "name": "the identity ignores w", "seconds": 2.6, "sources": {"pf_adv2_entry_eval.py": "40730500a438dcdd", "pf_adv2_entry_eval_mutants.py": "edd4fe7fca6a1e54", "pf_adv2_entry_eval_selftest.py": "d1b6e0b011d0dfff"}, "why": "ADV2 ENTRY EVAL SELFTEST FAILED: r3_identity: an altered w passed"}
+2026-11-21T06:50:26Z tag=mut_entry_eval_5 rc=0 peak_rss_mib=200 wall_s=2.87 cpu_user_s=1.13 memavail_start_gib=22 disk_free_gib=443->443 slot=claude3

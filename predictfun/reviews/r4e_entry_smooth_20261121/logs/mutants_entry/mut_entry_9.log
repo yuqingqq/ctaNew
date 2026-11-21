@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "9", "name": "R3's extraction not checked as committed", "seconds": 6.6, "sources": {"pf_adv2_entry.py": "5c3bb8b2b3377331", "pf_adv2_entry_mutants.py": "5adf93efa8f6e6a9", "pf_adv2_entry_selftest.py": "2db0578ccea4a2d9"}, "why": "ADV2 ENTRY SELFTEST FAILED: r3_train: an extraction manifest that is not the committed one was not refused"}
+2026-11-21T06:50:06Z tag=mut_entry_9 rc=0 peak_rss_mib=237 wall_s=6.76 cpu_user_s=6.32 memavail_start_gib=22 disk_free_gib=443->443 slot=claude3
