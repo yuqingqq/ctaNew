@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "12", "name": "the weight without the world sample", "seconds": 7.9, "sources": {"pf_coverage.py": "b05701c4e89c1cb1", "pf_coverage_mutants.py": "cbd921525919dd0c", "pf_coverage_selftest.py": "0a0776d343e0b562"}, "why": "COVERAGE SELFTEST FAILED: sample_queries: the cell sample ({'day': '20261024', 'side': 0, 'hour': 3, 'cat': 'absent_WAIT', 'N': 12, 'n': 4, 'pi_cell': 0.3333333333333333}, 5)"}
+2026-11-21T14:48:16Z tag=cov_12 rc=0 peak_rss_mib=228 wall_s=8.12 cpu_user_s=7.88 memavail_start_gib=22 disk_free_gib=439->439 slot=claude2

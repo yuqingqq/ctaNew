@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "11", "name": "every query of a cell", "seconds": 8.2, "sources": {"pf_coverage.py": "ea70208ae92dce22", "pf_coverage_mutants.py": "952c85be3e54cbfe", "pf_coverage_selftest.py": "c17242259d6082bb"}, "why": "COVERAGE SELFTEST FAILED: sample_queries: the cell sample ({'day': '20261024', 'side': 0, 'hour': 3, 'cat': 'absent_WAIT', 'N': 12, 'n': 12, 'pi_cell': 1.0}, 13)"}
+2026-11-21T14:52:14Z tag=cov_11 rc=0 peak_rss_mib=240 wall_s=8.49 cpu_user_s=8.28 memavail_start_gib=22 disk_free_gib=439->439 slot=claude

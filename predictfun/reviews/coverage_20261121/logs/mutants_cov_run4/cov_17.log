@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "17", "name": "the POST gid unchecked", "seconds": 8.2, "sources": {"pf_coverage.py": "ea70208ae92dce22", "pf_coverage_mutants.py": "952c85be3e54cbfe", "pf_coverage_selftest.py": "b3091af130c4a938"}, "why": "COVERAGE SELFTEST FAILED: labels: a hold of another gid gave ok"}
+2026-11-21T14:54:29Z tag=cov_17 rc=0 peak_rss_mib=240 wall_s=8.48 cpu_user_s=8.30 memavail_start_gib=22 disk_free_gib=439->439 slot=claude3

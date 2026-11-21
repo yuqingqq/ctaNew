@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "30", "name": "covered on rows or fills", "seconds": 12.0, "sources": {"pf_coverage.py": "2916b8890415af16", "pf_coverage_mutants.py": "952c85be3e54cbfe", "pf_coverage_selftest.py": "45f9644bd305f4b1"}, "why": "COVERAGE SELFTEST FAILED: predicates: covered / lacking (['absent_POST|0|(0,100]', 'absent_POST|0|(2000,5000]'], ['absent_POST|0|(0,100]'])"}
+2026-11-21T15:00:39Z tag=cov_30 rc=0 peak_rss_mib=246 wall_s=12.27 cpu_user_s=11.98 memavail_start_gib=22 disk_free_gib=440->440 slot=claude4

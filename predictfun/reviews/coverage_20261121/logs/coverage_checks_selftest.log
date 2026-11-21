@@ -1,0 +1,2 @@
+coverage checks selftest passed: F / G true on the module's hand tables and false after a changed MSE, null draw or reading; the query recomputation equals the module's; target_of on the inclusive effect and the ask sign
+2026-11-21T14:58:39Z tag=coverage_checks_selftest rc=0 peak_rss_mib=204 wall_s=2.27 cpu_user_s=2.10 memavail_start_gib=23 disk_free_gib=439->439 slot=claude

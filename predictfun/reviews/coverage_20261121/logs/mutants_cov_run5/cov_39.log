@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "39", "name": "ordinal 2 merged", "seconds": 12.0, "sources": {"pf_coverage.py": "2916b8890415af16", "pf_coverage_mutants.py": "952c85be3e54cbfe", "pf_coverage_selftest.py": "45f9644bd305f4b1"}, "why": "COVERAGE SELFTEST FAILED: qbin / obin / hbin: a boundary"}
+2026-11-21T15:01:18Z tag=cov_39 rc=0 peak_rss_mib=245 wall_s=12.19 cpu_user_s=11.97 memavail_start_gib=22 disk_free_gib=440->440 slot=claude

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "9", "name": "creations unrecorded", "seconds": 4.9, "sources": {"pf_coverage.py": "2916b8890415af16", "pf_coverage_mutants.py": "952c85be3e54cbfe", "pf_coverage_selftest.py": "45f9644bd305f4b1"}, "why": "COVERAGE SELFTEST FAILED: roll: a review row without its first-review / creation / executed action; synthetic world: stopped (TypeError(\"'NoneType' object is not subscriptable\"))"}
+2026-11-21T14:59:41Z tag=cov_9 rc=0 peak_rss_mib=236 wall_s=5.18 cpu_user_s=4.99 memavail_start_gib=22 disk_free_gib=439->439 slot=claude3

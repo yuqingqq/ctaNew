@@ -1,0 +1,62 @@
+{
+ "asof": "2026-11-21T14:41:15.340219+00:00",
+ "day": "20261031",
+ "kp": {
+  "outputs": {
+   "fills.parquet": "66a7dcc5ed68bcee6a79cf4d77020c53e3b7d5f174f19a67047091493fc521aa",
+   "orders.parquet": "417b27f3b8b6e3b698c9f10bac62a978a43daccca22a3bb968929be8f1c4ddce"
+  },
+  "provenance": {
+   "commit": "aad6a8b69fc5f50962cc056b9612ee03d258db22",
+   "source": {
+    "pf_flow_control_kernel.cpp": "fb1ff31cdcf2a97783283f927fb2d56333a0760e877cb0b93348528138886612",
+    "pf_flow_control_kernel.py": "2460567474f28318f5d09df8ce0977e15748bb9263bc501471cf6a649b334379",
+    "pf_keep_pull.py": "58b972f92bda06fbc847c43d2ace8db9d7b12f4daaf67bcfaa14e92deb475835",
+    "pf_queue_place_ledger.py": "8fa16b929b4ae497109a70add4036dd7cd4501102a261c74eba63de0e0b94bb5",
+    "pf_queue_place_test.py": "188c1495ce35db80ce8b79cbc50541964d0d32d9da38fee4b925e951eec01a1f"
+   },
+   "uncommitted": ""
+  },
+  "reconciliation": {
+   "counted": 30654,
+   "matched": 30304,
+   "v1_counted": 30654,
+   "v1_join_rows": 30304
+  },
+  "stat": {
+   "grid_before_start_margin": 564,
+   "grid_counted": 30654,
+   "grid_expiry_censored": 564,
+   "grid_locked_or_crossed": 18,
+   "grid_one_sided_book": 2040,
+   "invariance_changed": 0,
+   "invariance_checked": 2756,
+   "kernel_checks": 2448,
+   "markets": 282,
+   "orders": 30654,
+   "windows": 282
+  },
+  "status": {
+   "eligible": 29729,
+   "missing_endpoint": 250,
+   "refused_post_only": 575,
+   "stale_future_book": 100
+  }
+ },
+ "qp": {
+  "markets": 282,
+  "outputs": {
+   "rows.parquet": "d96ddc9ba366d914c20d6a327948388b08f617c0fb42502405c24433bf0cf153"
+  },
+  "stat": {
+   "births": 21900,
+   "mut_checked": 505,
+   "mut_differs": 505,
+   "parity_bad": 0,
+   "parity_checked": 546,
+   "states": 30654
+  }
+ },
+ "seconds": 186.03410124778748,
+ "version": "source_extend_v1"
+}

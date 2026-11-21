@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "21", "name": "the reconciliation always true", "seconds": 12.0, "sources": {"pf_coverage.py": "2916b8890415af16", "pf_coverage_mutants.py": "952c85be3e54cbfe", "pf_coverage_selftest.py": "45f9644bd305f4b1"}, "why": "COVERAGE SELFTEST FAILED: recompute / reconcile: the inclusive effect or a refusal ({'q': 5.0, 'value': 10.0, 'qm': 7.5})"}
+2026-11-21T15:00:11Z tag=cov_21 rc=0 peak_rss_mib=245 wall_s=12.25 cpu_user_s=12.06 memavail_start_gib=22 disk_free_gib=439->439 slot=claude3

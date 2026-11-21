@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "37", "name": "a pilot written over", "seconds": 12.0, "sources": {"pf_coverage.py": "9cfd83d362749195", "pf_coverage_mutants.py": "ab4c4d64dedd41ee", "pf_coverage_selftest.py": "3ab5f678e72bd8a4"}, "why": "COVERAGE SELFTEST FAILED: run_pilot: overwrote a pilot"}
+2026-11-21T15:04:29Z tag=cov_37 rc=0 peak_rss_mib=246 wall_s=12.19 cpu_user_s=11.99 memavail_start_gib=22 disk_free_gib=440->440 slot=claude3

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "38", "name": "the queue ratio boundary", "seconds": 8.3, "sources": {"pf_coverage.py": "ea70208ae92dce22", "pf_coverage_mutants.py": "952c85be3e54cbfe", "pf_coverage_selftest.py": "c17242259d6082bb"}, "why": "COVERAGE SELFTEST FAILED: qbin / obin / hbin: a boundary"}
+2026-11-21T14:53:08Z tag=cov_38 rc=0 peak_rss_mib=240 wall_s=8.52 cpu_user_s=8.28 memavail_start_gib=22 disk_free_gib=439->439 slot=claude4

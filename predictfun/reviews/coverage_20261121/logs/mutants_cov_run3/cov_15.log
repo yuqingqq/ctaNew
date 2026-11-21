@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "15", "name": "the reroll unchecked", "seconds": 8.2, "sources": {"pf_coverage.py": "ea70208ae92dce22", "pf_coverage_mutants.py": "952c85be3e54cbfe", "pf_coverage_selftest.py": "c17242259d6082bb"}, "why": "COVERAGE SELFTEST FAILED: labels: other census hashes were accepted"}
+2026-11-21T14:52:23Z tag=cov_15 rc=0 peak_rss_mib=240 wall_s=8.43 cpu_user_s=8.22 memavail_start_gib=22 disk_free_gib=439->439 slot=claude

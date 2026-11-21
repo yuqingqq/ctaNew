@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "4", "name": "overlapping blocks", "seconds": 12.1, "sources": {"pf_coverage.py": "2916b8890415af16", "pf_coverage_mutants.py": "952c85be3e54cbfe", "pf_coverage_selftest.py": "45f9644bd305f4b1"}, "why": "COVERAGE SELFTEST FAILED: partitions: a world twice / missing / outside its block"}
+2026-11-21T14:59:27Z tag=cov_4 rc=0 peak_rss_mib=246 wall_s=12.32 cpu_user_s=11.99 memavail_start_gib=22 disk_free_gib=439->439 slot=claude2

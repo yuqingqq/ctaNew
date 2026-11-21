@@ -1,0 +1,50 @@
+  0 one world too many per hour: CAUGHT (12.2 s) - COVERAGE SELFTEST FAILED: sample_worlds: the per-hour ranks / pi / thin hour
+  1 pi_world of one: CAUGHT (12.0 s) - COVERAGE SELFTEST FAILED: sample_worlds: the per-hour ranks / pi / thin hour
+  2 worlds ranked by their key only: CAUGHT (12.1 s) - COVERAGE SELFTEST FAILED: sample_worlds: the per-hour ranks / pi / thin hour
+  3 the pilot by key order: CAUGHT (12.0 s) - COVERAGE SELFTEST FAILED: pilot_of: not the lowest-ranked worlds of the day
+  4 overlapping blocks: CAUGHT (12.1 s) - COVERAGE SELFTEST FAILED: partitions: a world twice / missing / outside its block
+  5 the manifest written over: CAUGHT (12.1 s) - COVERAGE SELFTEST FAILED: build_manifest: overwritten
+  6 later live decisions as reviews: CAUGHT (9.7 s) - COVERAGE SELFTEST FAILED: categorize('live', {'status': 'model', 'action': 'KEEP'}): ('review_KEEP', 'model') != (None, 'live_later'); roll: a review 
+  7 constrained decisions as model: CAUGHT (12.1 s) - COVERAGE SELFTEST FAILED: categorize('absent', {'status': 'model', 'action': 'POST'}): ('absent_POST', 'model') != (None, 'constrained')
+  8 every live decision a first review: CAUGHT (9.7 s) - COVERAGE SELFTEST FAILED: roll: first reviews are not once per generation; labels: review_PULL at 450 is factual_failed {'ledger_ok': True, 'factual':
+  9 creations unrecorded: CAUGHT (4.9 s) - COVERAGE SELFTEST FAILED: roll: a review row without its first-review / creation / executed action; synthetic world: stopped (TypeError("'NoneType' ob
+  10 the view after the decision: CAUGHT (7.8 s) - COVERAGE SELFTEST FAILED: synthetic: no world with a POST and a first review
+  11 every query of a cell: CAUGHT (13.7 s) - COVERAGE SELFTEST FAILED: sample_queries: the cell sample ({'day': '20261024', 'side': 0, 'hour': 3, 'cat': 'absent_WAIT', 'N': 12, 'n': 12, 'pi_cell'
+  12 the weight without the world sample: CAUGHT (12.1 s) - COVERAGE SELFTEST FAILED: sample_queries: the cell sample ({'day': '20261024', 'side': 0, 'hour': 3, 'cat': 'absent_WAIT', 'N': 12, 'n': 4, 'pi_cell':
+  13 the cell hour fixed: CAUGHT (11.9 s) - COVERAGE SELFTEST FAILED: sample_queries: the cell sample ({'day': '20261024', 'side': 0, 'hour': 0, 'cat': 'absent_WAIT', 'N': 12, 'n': 4, 'pi_cell':
+  14 queries ranked by their key only: CAUGHT (12.1 s) - COVERAGE SELFTEST FAILED: sample_queries: the cell sample ({'day': '20261024', 'side': 0, 'hour': 3, 'cat': 'absent_WAIT', 'N': 12, 'n': 4, 'pi_cell':
+  15 the reroll unchecked: CAUGHT (12.1 s) - COVERAGE SELFTEST FAILED: labels: other census hashes were accepted
+  16 the hold ledger unchecked: CAUGHT (12.1 s) - COVERAGE SELFTEST FAILED: labels: an unbooked hold fill gave target_reconciled_failed
+  17 the POST gid unchecked: CAUGHT (12.0 s) - COVERAGE SELFTEST FAILED: labels: a hold of another gid gave ok
+  18 the factual action unchecked: CAUGHT (12.1 s) - COVERAGE SELFTEST FAILED: labels: a POST query relabelled WAIT passed
+  19 the absent target from the decision: CAUGHT (12.0 s) - COVERAGE SELFTEST FAILED: labels: an absent target not from the hold activation
+  20 the review target from the activation: CAUGHT (12.2 s) - COVERAGE SELFTEST FAILED: labels: review_PULL at 1900 is pull_effect_failed {'ledger_ok': True, 'factual': True, 'gid': True, 'prefix': True, 'pull_ef
+  21 the reconciliation always true: CAUGHT (12.0 s) - COVERAGE SELFTEST FAILED: recompute / reconcile: the inclusive effect or a refusal ({'q': 5.0, 'value': 10.0, 'qm': 7.5})
+  22 fills strictly after the effect: CAUGHT (12.1 s) - COVERAGE SELFTEST FAILED: recompute / reconcile: the inclusive effect or a refusal ({'q': 0.0, 'value': 0.0, 'qm': 0.0})
+  23 fallback decisions eligible: CAUGHT (12.0 s) - COVERAGE SELFTEST FAILED: frame: eligibility / M on no fill
+  24 qm kept on no fill: CAUGHT (12.1 s) - COVERAGE SELFTEST FAILED: frame: eligibility / M on no fill
+  25 the value MSE unweighted: CAUGHT (12.0 s) - COVERAGE SELFTEST FAILED: forecasts: the weighted MSE / Brier
+  26 degeneracy unflagged: CAUGHT (12.2 s) - COVERAGE SELFTEST FAILED: actions: degeneracy within sources / the combined populations / the null
+  27 the POST tie posts: CAUGHT (12.0 s) - COVERAGE SELFTEST FAILED: rule: the POST / KEEP ties
+  28 the KEEP tie pulls: CAUGHT (12.2 s) - COVERAGE SELFTEST FAILED: rule: the POST / KEEP ties
+  29 the null with replacement: CAUGHT (12.1 s) - COVERAGE SELFTEST FAILED: null: draws that do not preserve the chosen count
+  30 covered on rows or fills: CAUGHT (12.2 s) - COVERAGE SELFTEST FAILED: predicates: covered / lacking (['absent_POST|0|(0,100]', 'absent_POST|0|(2000,5000]'], ['absent_POST|0|(0,100]'])
+  31 concentration strictly above one half: CAUGHT (12.2 s) - COVERAGE SELFTEST FAILED: predicates: the concentration threshold
+  32 POSITIVE without beating all: CAUGHT (12.1 s) - COVERAGE SELFTEST FAILED: predicates: a selection below choosing all is not NOT_POSITIVE
+  33 POSITIVE without the null: CAUGHT (12.0 s) - COVERAGE SELFTEST FAILED: predicates: a selection below the null p95 is not NOT_POSITIVE
+  34 movable rows unchecked: CAUGHT (12.2 s) - COVERAGE SELFTEST FAILED: predicates: thin movable rows are not INCONCLUSIVE
+  35 run_part before the freeze: CAUGHT (12.4 s) - COVERAGE SELFTEST FAILED: run_part: refused for another reason (FileNotFoundError(2, 'No such file or directory'))
+  36 run_part without the projection: CAUGHT (12.0 s) - COVERAGE SELFTEST FAILED: run_part: ran without an allowing projection; run_part: ran against a refusing projection
+  37 a pilot written over: CAUGHT (12.0 s) - COVERAGE SELFTEST FAILED: run_pilot: overwrote a pilot
+  38 the queue ratio boundary: CAUGHT (12.2 s) - COVERAGE SELFTEST FAILED: qbin / obin / hbin: a boundary
+  39 ordinal 2 merged: CAUGHT (12.2 s) - COVERAGE SELFTEST FAILED: qbin / obin / hbin: a boundary
+  40 the horizon intervals closed left: CAUGHT (12.0 s) - COVERAGE SELFTEST FAILED: qbin / obin / hbin: a boundary
+  41 the null only on the combined populations: CAUGHT (11.8 s) - COVERAGE SELFTEST FAILED: actions: degeneracy within sources / the combined populations / the null
+  42 the date share of the severe losses: CAUGHT (12.1 s) - COVERAGE SELFTEST FAILED: forecasts: the severe date share
+  43 one date at more than one half: CAUGHT (12.3 s) - COVERAGE SELFTEST FAILED: predicates: the concentration threshold
+  44 the reference without its review stage: CAUGHT (12.0 s) - COVERAGE SELFTEST FAILED: reference: the admitted cohort (['ref_admitted_entry'])
+  45 the label query counts unrecorded: CAUGHT (12.0 s) - COVERAGE SELFTEST FAILED: run_members: the synthetic end-to-end run (DONE, 25, ['ok'])
+  46 the measurement written over: CAUGHT (12.2 s) - COVERAGE SELFTEST FAILED: measure: refused for another reason (FileNotFoundError(2, 'No such file or directory'))
+control: PASSED (11.9 s); sources {'pf_coverage.py': 'd390f973a7d15def', 'pf_coverage_mutants.py': 'ab4c4d64dedd41ee', 'pf_coverage_selftest.py': '3ab5f678e72bd8a4'}
+mutation check passed: the control passes its selftest, 47 / 47 planted code errors are caught by a check (9.4 CPU min)
+2026-11-21T15:08:36Z tag=cov_mutant_summary rc=0 peak_rss_mib=15 wall_s=0.02 cpu_user_s=0.02 memavail_start_gib=22 disk_free_gib=440->440 slot=claude

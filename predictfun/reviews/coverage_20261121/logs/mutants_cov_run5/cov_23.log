@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "23", "name": "fallback decisions eligible", "seconds": 12.1, "sources": {"pf_coverage.py": "2916b8890415af16", "pf_coverage_mutants.py": "952c85be3e54cbfe", "pf_coverage_selftest.py": "45f9644bd305f4b1"}, "why": "COVERAGE SELFTEST FAILED: frame: eligibility / M on no fill"}
+2026-11-21T15:00:28Z tag=cov_23 rc=0 peak_rss_mib=246 wall_s=12.33 cpu_user_s=12.10 memavail_start_gib=22 disk_free_gib=440->440 slot=claude

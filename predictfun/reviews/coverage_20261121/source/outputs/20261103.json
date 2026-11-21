@@ -1,0 +1,62 @@
+{
+ "asof": "2026-11-21T14:41:53.459299+00:00",
+ "day": "20261103",
+ "kp": {
+  "outputs": {
+   "fills.parquet": "8af919185ea523fb6da6dbd15abe7cc0b3b76238a6eef2bec25109a3842f6a20",
+   "orders.parquet": "0f40dd16db725f29029c508434815c933392d44ad8fd0f73286cdee02060ed84"
+  },
+  "provenance": {
+   "commit": "aad6a8b69fc5f50962cc056b9612ee03d258db22",
+   "source": {
+    "pf_flow_control_kernel.cpp": "fb1ff31cdcf2a97783283f927fb2d56333a0760e877cb0b93348528138886612",
+    "pf_flow_control_kernel.py": "2460567474f28318f5d09df8ce0977e15748bb9263bc501471cf6a649b334379",
+    "pf_keep_pull.py": "58b972f92bda06fbc847c43d2ace8db9d7b12f4daaf67bcfaa14e92deb475835",
+    "pf_queue_place_ledger.py": "8fa16b929b4ae497109a70add4036dd7cd4501102a261c74eba63de0e0b94bb5",
+    "pf_queue_place_test.py": "188c1495ce35db80ce8b79cbc50541964d0d32d9da38fee4b925e951eec01a1f"
+   },
+   "uncommitted": ""
+  },
+  "reconciliation": {
+   "counted": 29684,
+   "matched": 29234,
+   "v1_counted": 29684,
+   "v1_join_rows": 29234
+  },
+  "stat": {
+   "grid_before_start_margin": 576,
+   "grid_counted": 29684,
+   "grid_expiry_censored": 576,
+   "grid_locked_or_crossed": 100,
+   "grid_one_sided_book": 3624,
+   "invariance_changed": 0,
+   "invariance_checked": 2659,
+   "kernel_checks": 2388,
+   "markets": 288,
+   "orders": 29684,
+   "windows": 288
+  },
+  "status": {
+   "eligible": 27981,
+   "missing_endpoint": 414,
+   "refused_post_only": 1253,
+   "stale_future_book": 36
+  }
+ },
+ "qp": {
+  "markets": 288,
+  "outputs": {
+   "rows.parquet": "699d478476c566249d4ffb3863e881ab2f9d95892b45b27c2d584f33cc8990e0"
+  },
+  "stat": {
+   "births": 22421,
+   "mut_checked": 527,
+   "mut_differs": 527,
+   "parity_bad": 0,
+   "parity_checked": 544,
+   "states": 29684
+  }
+ },
+ "seconds": 218.14065170288086,
+ "version": "source_extend_v1"
+}

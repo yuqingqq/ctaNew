@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "5", "name": "the manifest written over", "seconds": 8.2, "sources": {"pf_coverage.py": "ea70208ae92dce22", "pf_coverage_mutants.py": "952c85be3e54cbfe", "pf_coverage_selftest.py": "c17242259d6082bb"}, "why": "COVERAGE SELFTEST FAILED: build_manifest: overwritten"}
+2026-11-21T14:52:01Z tag=cov_5 rc=0 peak_rss_mib=240 wall_s=8.46 cpu_user_s=8.25 memavail_start_gib=22 disk_free_gib=439->439 slot=claude3

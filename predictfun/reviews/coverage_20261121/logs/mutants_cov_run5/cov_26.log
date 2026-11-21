@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "26", "name": "degeneracy unflagged", "seconds": 12.1, "sources": {"pf_coverage.py": "2916b8890415af16", "pf_coverage_mutants.py": "952c85be3e54cbfe", "pf_coverage_selftest.py": "45f9644bd305f4b1"}, "why": "COVERAGE SELFTEST FAILED: actions: degeneracy within sources / the combined populations / the null"}
+2026-11-21T15:00:26Z tag=cov_26 rc=0 peak_rss_mib=246 wall_s=12.35 cpu_user_s=12.10 memavail_start_gib=22 disk_free_gib=439->440 slot=claude4

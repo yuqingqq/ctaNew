@@ -1,0 +1,15 @@
+{
+ "all_ok": true,
+ "asof": "2026-11-21T14:37:21.188924+00:00",
+ "checks": {
+  "kp_fills": true,
+  "kp_frozen_sources": true,
+  "kp_orders": true,
+  "kp_receipt": true,
+  "qp_receipt": true,
+  "qp_rows": true
+ },
+ "day": "20261024",
+ "seconds": 201.04081845283508,
+ "version": "source_extend_v1"
+}

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "22", "name": "fills strictly after the effect", "seconds": 12.2, "sources": {"pf_coverage.py": "9cfd83d362749195", "pf_coverage_mutants.py": "ab4c4d64dedd41ee", "pf_coverage_selftest.py": "3ab5f678e72bd8a4"}, "why": "COVERAGE SELFTEST FAILED: recompute / reconcile: the inclusive effect or a refusal ({'q': 0.0, 'value': 0.0, 'qm': 0.0})"}
+2026-11-21T15:03:42Z tag=cov_22 rc=0 peak_rss_mib=246 wall_s=12.38 cpu_user_s=12.12 memavail_start_gib=22 disk_free_gib=440->440 slot=claude4

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "28", "name": "the KEEP tie pulls", "seconds": 12.1, "sources": {"pf_coverage.py": "2916b8890415af16", "pf_coverage_mutants.py": "952c85be3e54cbfe", "pf_coverage_selftest.py": "45f9644bd305f4b1"}, "why": "COVERAGE SELFTEST FAILED: rule: the POST / KEEP ties"}
+2026-11-21T15:00:39Z tag=cov_28 rc=0 peak_rss_mib=246 wall_s=12.36 cpu_user_s=12.05 memavail_start_gib=22 disk_free_gib=440->440 slot=claude2

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "2", "name": "worlds ranked by their key only", "seconds": 7.9, "sources": {"pf_coverage.py": "b05701c4e89c1cb1", "pf_coverage_mutants.py": "cbd921525919dd0c", "pf_coverage_selftest.py": "449f41ed0375c864"}, "why": "COVERAGE SELFTEST FAILED: sample_worlds: the per-hour ranks / pi / thin hour"}
+2026-11-21T14:46:12Z tag=cov_2 rc=0 peak_rss_mib=228 wall_s=8.14 cpu_user_s=7.87 memavail_start_gib=22 disk_free_gib=439->439 slot=claude4

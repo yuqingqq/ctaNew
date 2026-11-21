@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "44", "name": "the reference without its review stage", "seconds": 12.0, "sources": {"pf_coverage.py": "2916b8890415af16", "pf_coverage_mutants.py": "952c85be3e54cbfe", "pf_coverage_selftest.py": "45f9644bd305f4b1"}, "why": "COVERAGE SELFTEST FAILED: reference: the admitted cohort (['ref_admitted_entry'])"}
+2026-11-21T15:01:29Z tag=cov_44 rc=0 peak_rss_mib=246 wall_s=12.20 cpu_user_s=11.92 memavail_start_gib=22 disk_free_gib=440->440 slot=claude2

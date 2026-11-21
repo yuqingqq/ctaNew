@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "25", "name": "the value MSE unweighted", "seconds": 12.0, "sources": {"pf_coverage.py": "d390f973a7d15def", "pf_coverage_mutants.py": "ab4c4d64dedd41ee", "pf_coverage_selftest.py": "3ab5f678e72bd8a4"}, "why": "COVERAGE SELFTEST FAILED: forecasts: the weighted MSE / Brier"}
+2026-11-21T15:07:16Z tag=cov_25 rc=0 peak_rss_mib=246 wall_s=12.19 cpu_user_s=11.98 memavail_start_gib=22 disk_free_gib=440->440 slot=claude3

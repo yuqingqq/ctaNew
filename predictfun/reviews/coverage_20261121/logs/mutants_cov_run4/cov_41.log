@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "41", "name": "the null only on the combined populations", "seconds": 8.2, "sources": {"pf_coverage.py": "ea70208ae92dce22", "pf_coverage_mutants.py": "952c85be3e54cbfe", "pf_coverage_selftest.py": "b3091af130c4a938"}, "why": "COVERAGE SELFTEST FAILED: actions: degeneracy within sources / the combined populations / the null"}
+2026-11-21T14:55:20Z tag=cov_41 rc=0 peak_rss_mib=240 wall_s=8.40 cpu_user_s=8.19 memavail_start_gib=22 disk_free_gib=439->439 slot=claude3

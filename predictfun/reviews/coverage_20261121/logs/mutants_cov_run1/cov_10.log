@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "10", "name": "the view after the decision", "seconds": 7.4, "sources": {"pf_coverage.py": "b05701c4e89c1cb1", "pf_coverage_mutants.py": "cbd921525919dd0c", "pf_coverage_selftest.py": "449f41ed0375c864"}, "why": "COVERAGE SELFTEST FAILED: synthetic: no world with a POST and a first review"}
+2026-11-21T14:46:26Z tag=cov_10 rc=0 peak_rss_mib=226 wall_s=7.61 cpu_user_s=7.38 memavail_start_gib=22 disk_free_gib=439->439 slot=claude4

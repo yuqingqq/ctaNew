@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "33", "name": "POSITIVE without the null", "seconds": 12.0, "sources": {"pf_coverage.py": "d390f973a7d15def", "pf_coverage_mutants.py": "ab4c4d64dedd41ee", "pf_coverage_selftest.py": "3ab5f678e72bd8a4"}, "why": "COVERAGE SELFTEST FAILED: predicates: a selection below the null p95 is not NOT_POSITIVE"}
+2026-11-21T15:07:41Z tag=cov_33 rc=0 peak_rss_mib=246 wall_s=12.26 cpu_user_s=12.06 memavail_start_gib=22 disk_free_gib=440->440 slot=claude3

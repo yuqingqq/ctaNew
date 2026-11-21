@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "31", "name": "concentration strictly above one half", "seconds": 7.8, "sources": {"pf_coverage.py": "b05701c4e89c1cb1", "pf_coverage_mutants.py": "cbd921525919dd0c", "pf_coverage_selftest.py": "449f41ed0375c864"}, "why": "COVERAGE SELFTEST FAILED: predicates: the concentration threshold"}
+2026-11-21T14:47:11Z tag=cov_31 rc=0 peak_rss_mib=229 wall_s=8.07 cpu_user_s=7.88 memavail_start_gib=22 disk_free_gib=439->439 slot=claude

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "36", "name": "run_part without the projection", "seconds": 7.9, "sources": {"pf_coverage.py": "b05701c4e89c1cb1", "pf_coverage_mutants.py": "cbd921525919dd0c", "pf_coverage_selftest.py": "0a0776d343e0b562"}, "why": "COVERAGE SELFTEST FAILED: run_part: ran without an allowing projection; run_part: ran against a refusing projection"}
+2026-11-21T14:49:05Z tag=cov_36 rc=0 peak_rss_mib=229 wall_s=8.10 cpu_user_s=7.87 memavail_start_gib=22 disk_free_gib=439->439 slot=claude2

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "18", "name": "the factual action unchecked", "seconds": 12.2, "sources": {"pf_coverage.py": "2916b8890415af16", "pf_coverage_mutants.py": "952c85be3e54cbfe", "pf_coverage_selftest.py": "45f9644bd305f4b1"}, "why": "COVERAGE SELFTEST FAILED: labels: a POST query relabelled WAIT passed"}
+2026-11-21T15:00:02Z tag=cov_18 rc=0 peak_rss_mib=246 wall_s=12.47 cpu_user_s=12.21 memavail_start_gib=22 disk_free_gib=439->439 slot=claude4
