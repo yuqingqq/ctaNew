@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261121_churn_observed_inputs/inspect.py", line 104, in <module>
+    if __name__=='__main__':run()
+                            ^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261121_churn_observed_inputs/inspect.py", line 64, in run
+    assert (r['t_review'],r['side'],r['action'])==(float(first[r['gid']][0]),int(first[r['gid']][1]),first[r['gid']][3]), (w['day'],w['m'],w['t_ms'],policy,r,first[r['gid']])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('20261026', 3811225, 1793019560000, 'SMOOTH', {'action': 'PULL', 'adv_pf_imb1_post': -0.9430805444717407, 'by_post': 'SMOOTH', 'by_review': 'PI0', 'd_adv_pf_imb1': 0.05437421798706055, 'd_fair_edge': 0.014189481735229492, 'd_fp_queue': -477.0, 'd_fp_remaining': 0.0, 'd_o_edge': 0.0, 'd_pf_mid': 0.0, 'd_pf_spread': 0.0, 'd_t_to_end': -150.0, 'dt': 150.0, 'fair_edge_post': 0.7668105363845825, 'fp_queue_post': 2532.67041015625, 'fp_remaining_post': 30.0, 'gid': 11, 'o_edge_post': 0.5, 'pf_mid_post': 1.5, 'pf_spread_post': 1.0, 'side': 1, 'status_review': 'model', 't_post': 2100.0, 't_review': 2250.0, 't_to_end_post': 2900.0, 'value_post': 0.22393871305780313, 'value_review': -7.332176459025433}, [2200.0, 1, 'live', 'KEEP', 11])
+2026-11-21T09:29:46Z tag=review_churn_observed_inputs_diagnostic rc=1 peak_rss_mib=61 wall_s=0.27 cpu_user_s=0.22 memavail_start_gib=23 disk_free_gib=446->446 slot=codex

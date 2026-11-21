@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261121_churn_observed_inputs/inspect.py", line 104, in <module>
+    if __name__=='__main__':run()
+                            ^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261121_churn_observed_inputs/inspect.py", line 64, in run
+    assert (r['t_review'],r['side'],r['action'])==(float(first[r['gid']][0]),int(first[r['gid']][1]),first[r['gid']][3])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+2026-11-21T09:29:22Z tag=review_churn_observed_inputs rc=1 peak_rss_mib=61 wall_s=0.26 cpu_user_s=0.22 memavail_start_gib=23 disk_free_gib=446->446 slot=codex

@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261121_churn_observed_inputs/inspect.py", line 112, in <module>
+    if __name__=='__main__':run()
+                            ^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261121_churn_observed_inputs/inspect.py", line 77, in run
+    csv_rel='replay_v1/churn.csv'; cb=(DATA/csv_rel).read_bytes();assert sha(cb)==hashes[csv_rel]
+                                                                                  ~~~~~~^^^^^^^^^
+KeyError: 'replay_v1/churn.csv'
+2026-11-21T09:30:14Z tag=review_churn_observed_inputs_v2 rc=1 peak_rss_mib=80 wall_s=0.76 cpu_user_s=0.68 memavail_start_gib=23 disk_free_gib=446->446 slot=codex

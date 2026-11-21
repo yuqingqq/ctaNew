@@ -1,0 +1,2652 @@
+{
+  "all_saved_churn_fields_equal": true,
+  "asof": "2026-11-21T09:33:35.161037+00:00",
+  "csv_sha256": "c1a8ef9d6b1102f7c849be2abc731fba768b7d443ed2dabf6a6e080a16e02f2c",
+  "input_manifest_sha256": "bfa18ca14dbf3ed44300287c1c8d227fc5250f2b768499d4ea57b726aea9c8fa",
+  "limitations": [
+    "Eight retained fields only; full market/order-flow inputs absent.",
+    "Exact input changes do not measure materiality, forecast correctness, or causal contributions.",
+    "All counts are unweighted generation events, repeated within worlds; two consumed days, no intervals.",
+    "POST advantage and retention value are different targets; their difference is not a forecast revision."
+  ],
+  "parts": [
+    {
+      "data_sha256": "e3cb3c3ccb5e9b3e19773ce63205371f641234ee6aa92efcf0210c683949ccb0",
+      "part": 0,
+      "record_sha256": "d87a1e36aafd0cfd49f8808d55195418385d4600742f33552d04ac95c4cc8bb7"
+    },
+    {
+      "data_sha256": "9c881cbdc4a92fa0bab08c125d9a6b54aca36187b4073afc7be3ba1525e27017",
+      "part": 1,
+      "record_sha256": "0c694f2f285a2b66542b8795300d024626b8604d151c136636360b82ace7bde2"
+    },
+    {
+      "data_sha256": "de382b00ab62d3a251c43202506a2a428613b8dc7c0101d6be2ec12e457216e6",
+      "part": 2,
+      "record_sha256": "27c90d6fc127690a68153fc00b94bd00d401453c22489123682eae88d3585b0c"
+    },
+    {
+      "data_sha256": "e018e37f1748af1ede25fa5894b528ed56be645ebc79b1003312ae572a415644",
+      "part": 3,
+      "record_sha256": "ce6d4a9dcd8e33983fad6f94e83a175c59c182d709849e518b2b943e48dc9f82"
+    },
+    {
+      "data_sha256": "979497bcdc09e087c7e09e6b3cdb6ce9fdec75828e4399db77f7ef30343a401b",
+      "part": 4,
+      "record_sha256": "7590f492ceaec08251f54762ef2eaac1727275e189ad75d601259f279e06fc7a"
+    },
+    {
+      "data_sha256": "a92c78d552dd8863231fecb95243bf89b9ae621c0d39b44e9d67f1872d120d40",
+      "part": 5,
+      "record_sha256": "53aebb0fb345cf7d7ce6120f92b858714d4bd4d664e8e7be770837d6e5b381a7"
+    },
+    {
+      "data_sha256": "9d053d383e5f11086db5aef032b72ed40731e5f5dc519acfe620cdd493472557",
+      "part": 6,
+      "record_sha256": "cf7d34e2a5f58bab323e8b341cc3bed7a8ce830f35b84fa1695ce1fc6069237b"
+    },
+    {
+      "data_sha256": "5381d91d92fb6da9e28bd672df24188d01c03fd10b90fce632027365398c26cd",
+      "part": 7,
+      "record_sha256": "a13147c62b6ade5105a0f09fa7ccdfeeabfa1681ef5127fec642a15c6b268923"
+    },
+    {
+      "data_sha256": "f59ab2c7dcc1528b4efcd97ac7834754c81957e26c5743b39ef5c7ea84d1c791",
+      "part": 8,
+      "record_sha256": "b4ed21068fc645a9b7440c32a5a7fdf67c2b845745f21a03fe57d8e8ceebbc25"
+    },
+    {
+      "data_sha256": "eae1514beb15d2f36e3303fe7af0e6d79465cfbba4b3d1c28214ab6a4fc2c779",
+      "part": 9,
+      "record_sha256": "3f5ada65ecaba6567e78c3052ea1bde50aa277ad294bc05cc8f0b94b7292dc1a"
+    },
+    {
+      "data_sha256": "898516eb3480747803796e94f5facb9a6fdb6423f5444eff298702e8e11cec63",
+      "part": 10,
+      "record_sha256": "f415224d28ecef69b4a053b58e0550533aa22636b574a09d6d511dd26ff232f5"
+    },
+    {
+      "data_sha256": "83b37fa9727a344053920f1f50965f5d9eb9055bed6722a23129a53149094d6c",
+      "part": 11,
+      "record_sha256": "3b0ab32c54d8d54b9db88830c1c20b84a3bd908c2c9baf162c6630d9188e1ad3"
+    }
+  ],
+  "pinned_source": "141e820e4b736c6a8c4f27b0a0dbf53789e95e89",
+  "rows": 16455,
+  "selftest": true,
+  "summaries": [
+    {
+      "action": "KEEP",
+      "all_recorded_except_clock": {
+        "changed": 41
+      },
+      "book": {
+        "changed": 34,
+        "unchanged": 7
+      },
+      "day": "20261026",
+      "dt_ms": {
+        "100.0": 41
+      },
+      "fair_edge_increased_in_majority": false,
+      "fair_edge_increased_share": 0.2926829268292683,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 16,
+          "unchanged": 7,
+          "up": 18
+        },
+        "fair_edge": {
+          "down": 29,
+          "up": 12
+        },
+        "fp_queue": {
+          "down": 12,
+          "unchanged": 20,
+          "up": 9
+        },
+        "fp_remaining": {
+          "unchanged": 41
+        },
+        "o_edge": {
+          "down": 1,
+          "unchanged": 33,
+          "up": 7
+        },
+        "pf_mid": {
+          "down": 1,
+          "unchanged": 33,
+          "up": 7
+        },
+        "pf_spread": {
+          "down": 3,
+          "unchanged": 35,
+          "up": 3
+        },
+        "t_to_end": {
+          "down": 41
+        }
+      },
+      "imbalance_changed_share": 0.8292682926829268,
+      "n": 41,
+      "policy": "ENTRY_ONLY",
+      "policy_handoffs": {
+        "RICH -> PI0": 41
+      },
+      "recorded_market": {
+        "changed": 41
+      },
+      "same_book_fair_not_down_queue_not_up": 0,
+      "same_mid_and_spread": 33,
+      "same_mid_and_spread_share": 0.8048780487804879,
+      "side": "0",
+      "status": {
+        "model": 41
+      },
+      "worlds": 27
+    },
+    {
+      "action": "KEEP",
+      "all_recorded_except_clock": {
+        "changed": 40
+      },
+      "book": {
+        "changed": 33,
+        "unchanged": 7
+      },
+      "day": "20261026",
+      "dt_ms": {
+        "100.0": 40
+      },
+      "fair_edge_increased_in_majority": true,
+      "fair_edge_increased_share": 0.55,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 16,
+          "unchanged": 7,
+          "up": 17
+        },
+        "fair_edge": {
+          "down": 18,
+          "up": 22
+        },
+        "fp_queue": {
+          "down": 13,
+          "unchanged": 18,
+          "up": 9
+        },
+        "fp_remaining": {
+          "unchanged": 40
+        },
+        "o_edge": {
+          "down": 2,
+          "unchanged": 33,
+          "up": 5
+        },
+        "pf_mid": {
+          "down": 5,
+          "unchanged": 33,
+          "up": 2
+        },
+        "pf_spread": {
+          "down": 1,
+          "unchanged": 35,
+          "up": 4
+        },
+        "t_to_end": {
+          "down": 40
+        }
+      },
+      "imbalance_changed_share": 0.825,
+      "n": 40,
+      "policy": "ENTRY_ONLY",
+      "policy_handoffs": {
+        "RICH -> PI0": 40
+      },
+      "recorded_market": {
+        "changed": 40
+      },
+      "same_book_fair_not_down_queue_not_up": 5,
+      "same_mid_and_spread": 33,
+      "same_mid_and_spread_share": 0.825,
+      "side": "1",
+      "status": {
+        "incoherent_forecast": 1,
+        "model": 30,
+        "outside_training_range": 9
+      },
+      "worlds": 32
+    },
+    {
+      "action": "KEEP",
+      "all_recorded_except_clock": {
+        "changed": 81
+      },
+      "book": {
+        "changed": 67,
+        "unchanged": 14
+      },
+      "day": "20261026",
+      "dt_ms": {
+        "100.0": 81
+      },
+      "fair_edge_increased_in_majority": false,
+      "fair_edge_increased_share": 0.41975308641975306,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 32,
+          "unchanged": 14,
+          "up": 35
+        },
+        "fair_edge": {
+          "down": 47,
+          "up": 34
+        },
+        "fp_queue": {
+          "down": 25,
+          "unchanged": 38,
+          "up": 18
+        },
+        "fp_remaining": {
+          "unchanged": 81
+        },
+        "o_edge": {
+          "down": 3,
+          "unchanged": 66,
+          "up": 12
+        },
+        "pf_mid": {
+          "down": 6,
+          "unchanged": 66,
+          "up": 9
+        },
+        "pf_spread": {
+          "down": 4,
+          "unchanged": 70,
+          "up": 7
+        },
+        "t_to_end": {
+          "down": 81
+        }
+      },
+      "imbalance_changed_share": 0.8271604938271605,
+      "n": 81,
+      "policy": "ENTRY_ONLY",
+      "policy_handoffs": {
+        "RICH -> PI0": 81
+      },
+      "recorded_market": {
+        "changed": 81
+      },
+      "same_book_fair_not_down_queue_not_up": 5,
+      "same_mid_and_spread": 66,
+      "same_mid_and_spread_share": 0.8148148148148148,
+      "side": "all",
+      "status": {
+        "incoherent_forecast": 1,
+        "model": 71,
+        "outside_training_range": 9
+      },
+      "worlds": 50
+    },
+    {
+      "action": "PULL",
+      "all_recorded_except_clock": {
+        "changed": 2101,
+        "unchanged": 2
+      },
+      "book": {
+        "changed": 1827,
+        "unchanged": 276
+      },
+      "day": "20261026",
+      "dt_ms": {
+        "100.0": 2103
+      },
+      "fair_edge_increased_in_majority": true,
+      "fair_edge_increased_share": 0.5059438896814075,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 856,
+          "unchanged": 276,
+          "up": 971
+        },
+        "fair_edge": {
+          "down": 1009,
+          "unchanged": 30,
+          "up": 1064
+        },
+        "fp_queue": {
+          "down": 741,
+          "unchanged": 734,
+          "up": 628
+        },
+        "fp_remaining": {
+          "unchanged": 2103
+        },
+        "o_edge": {
+          "down": 50,
+          "unchanged": 1922,
+          "up": 131
+        },
+        "pf_mid": {
+          "down": 50,
+          "unchanged": 1922,
+          "up": 131
+        },
+        "pf_spread": {
+          "down": 66,
+          "unchanged": 1992,
+          "up": 45
+        },
+        "t_to_end": {
+          "down": 2103
+        }
+      },
+      "imbalance_changed_share": 0.8687589158345221,
+      "n": 2103,
+      "policy": "ENTRY_ONLY",
+      "policy_handoffs": {
+        "RICH -> PI0": 2103
+      },
+      "recorded_market": {
+        "changed": 2101,
+        "unchanged": 2
+      },
+      "same_book_fair_not_down_queue_not_up": 151,
+      "same_mid_and_spread": 1921,
+      "same_mid_and_spread_share": 0.9134569662387066,
+      "side": "0",
+      "status": {
+        "model": 2103
+      },
+      "worlds": 185
+    },
+    {
+      "action": "PULL",
+      "all_recorded_except_clock": {
+        "changed": 2187,
+        "unchanged": 3
+      },
+      "book": {
+        "changed": 1856,
+        "unchanged": 334
+      },
+      "day": "20261026",
+      "dt_ms": {
+        "100.0": 2190
+      },
+      "fair_edge_increased_in_majority": true,
+      "fair_edge_increased_share": 0.54337899543379,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 954,
+          "unchanged": 334,
+          "up": 902
+        },
+        "fair_edge": {
+          "down": 967,
+          "unchanged": 33,
+          "up": 1190
+        },
+        "fp_queue": {
+          "down": 660,
+          "unchanged": 813,
+          "up": 717
+        },
+        "fp_remaining": {
+          "unchanged": 2190
+        },
+        "o_edge": {
+          "down": 35,
+          "unchanged": 1993,
+          "up": 162
+        },
+        "pf_mid": {
+          "down": 162,
+          "unchanged": 1993,
+          "up": 35
+        },
+        "pf_spread": {
+          "down": 46,
+          "unchanged": 2092,
+          "up": 52
+        },
+        "t_to_end": {
+          "down": 2190
+        }
+      },
+      "imbalance_changed_share": 0.8474885844748858,
+      "n": 2190,
+      "policy": "ENTRY_ONLY",
+      "policy_handoffs": {
+        "RICH -> PI0": 2190
+      },
+      "recorded_market": {
+        "changed": 2187,
+        "unchanged": 3
+      },
+      "same_book_fair_not_down_queue_not_up": 201,
+      "same_mid_and_spread": 1992,
+      "same_mid_and_spread_share": 0.9095890410958904,
+      "side": "1",
+      "status": {
+        "model": 2190
+      },
+      "worlds": 187
+    },
+    {
+      "action": "PULL",
+      "all_recorded_except_clock": {
+        "changed": 4288,
+        "unchanged": 5
+      },
+      "book": {
+        "changed": 3683,
+        "unchanged": 610
+      },
+      "day": "20261026",
+      "dt_ms": {
+        "100.0": 4293
+      },
+      "fair_edge_increased_in_majority": true,
+      "fair_edge_increased_share": 0.5250407640344747,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 1810,
+          "unchanged": 610,
+          "up": 1873
+        },
+        "fair_edge": {
+          "down": 1976,
+          "unchanged": 63,
+          "up": 2254
+        },
+        "fp_queue": {
+          "down": 1401,
+          "unchanged": 1547,
+          "up": 1345
+        },
+        "fp_remaining": {
+          "unchanged": 4293
+        },
+        "o_edge": {
+          "down": 85,
+          "unchanged": 3915,
+          "up": 293
+        },
+        "pf_mid": {
+          "down": 212,
+          "unchanged": 3915,
+          "up": 166
+        },
+        "pf_spread": {
+          "down": 112,
+          "unchanged": 4084,
+          "up": 97
+        },
+        "t_to_end": {
+          "down": 4293
+        }
+      },
+      "imbalance_changed_share": 0.8579082226880969,
+      "n": 4293,
+      "policy": "ENTRY_ONLY",
+      "policy_handoffs": {
+        "RICH -> PI0": 4293
+      },
+      "recorded_market": {
+        "changed": 4288,
+        "unchanged": 5
+      },
+      "same_book_fair_not_down_queue_not_up": 352,
+      "same_mid_and_spread": 3913,
+      "same_mid_and_spread_share": 0.9114838108548801,
+      "side": "all",
+      "status": {
+        "model": 4293
+      },
+      "worlds": 188
+    },
+    {
+      "action": "KEEP",
+      "all_recorded_except_clock": {
+        "changed": 34
+      },
+      "book": {
+        "changed": 28,
+        "unchanged": 6
+      },
+      "day": "20261026",
+      "dt_ms": {
+        "100.0": 34
+      },
+      "fair_edge_increased_in_majority": false,
+      "fair_edge_increased_share": 0.23529411764705882,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 13,
+          "unchanged": 6,
+          "up": 15
+        },
+        "fair_edge": {
+          "down": 26,
+          "up": 8
+        },
+        "fp_queue": {
+          "down": 12,
+          "unchanged": 9,
+          "up": 13
+        },
+        "fp_remaining": {
+          "unchanged": 34
+        },
+        "o_edge": {
+          "down": 3,
+          "unchanged": 27,
+          "up": 4
+        },
+        "pf_mid": {
+          "down": 3,
+          "unchanged": 27,
+          "up": 4
+        },
+        "pf_spread": {
+          "down": 5,
+          "unchanged": 29
+        },
+        "t_to_end": {
+          "down": 34
+        }
+      },
+      "imbalance_changed_share": 0.8235294117647058,
+      "n": 34,
+      "policy": "PI0",
+      "policy_handoffs": {
+        "PI0 -> PI0": 34
+      },
+      "recorded_market": {
+        "changed": 34
+      },
+      "same_book_fair_not_down_queue_not_up": 0,
+      "same_mid_and_spread": 27,
+      "same_mid_and_spread_share": 0.7941176470588235,
+      "side": "0",
+      "status": {
+        "model": 34
+      },
+      "worlds": 25
+    },
+    {
+      "action": "KEEP",
+      "all_recorded_except_clock": {
+        "changed": 28
+      },
+      "book": {
+        "changed": 24,
+        "unchanged": 4
+      },
+      "day": "20261026",
+      "dt_ms": {
+        "100.0": 28
+      },
+      "fair_edge_increased_in_majority": false,
+      "fair_edge_increased_share": 0.25,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 12,
+          "unchanged": 4,
+          "up": 12
+        },
+        "fair_edge": {
+          "down": 21,
+          "up": 7
+        },
+        "fp_queue": {
+          "down": 11,
+          "unchanged": 8,
+          "up": 9
+        },
+        "fp_remaining": {
+          "unchanged": 28
+        },
+        "o_edge": {
+          "down": 3,
+          "unchanged": 21,
+          "up": 4
+        },
+        "pf_mid": {
+          "down": 4,
+          "unchanged": 21,
+          "up": 3
+        },
+        "pf_spread": {
+          "down": 4,
+          "unchanged": 22,
+          "up": 2
+        },
+        "t_to_end": {
+          "down": 28
+        }
+      },
+      "imbalance_changed_share": 0.8571428571428571,
+      "n": 28,
+      "policy": "PI0",
+      "policy_handoffs": {
+        "PI0 -> PI0": 28
+      },
+      "recorded_market": {
+        "changed": 28
+      },
+      "same_book_fair_not_down_queue_not_up": 2,
+      "same_mid_and_spread": 21,
+      "same_mid_and_spread_share": 0.75,
+      "side": "1",
+      "status": {
+        "model": 28
+      },
+      "worlds": 24
+    },
+    {
+      "action": "KEEP",
+      "all_recorded_except_clock": {
+        "changed": 62
+      },
+      "book": {
+        "changed": 52,
+        "unchanged": 10
+      },
+      "day": "20261026",
+      "dt_ms": {
+        "100.0": 62
+      },
+      "fair_edge_increased_in_majority": false,
+      "fair_edge_increased_share": 0.24193548387096775,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 25,
+          "unchanged": 10,
+          "up": 27
+        },
+        "fair_edge": {
+          "down": 47,
+          "up": 15
+        },
+        "fp_queue": {
+          "down": 23,
+          "unchanged": 17,
+          "up": 22
+        },
+        "fp_remaining": {
+          "unchanged": 62
+        },
+        "o_edge": {
+          "down": 6,
+          "unchanged": 48,
+          "up": 8
+        },
+        "pf_mid": {
+          "down": 7,
+          "unchanged": 48,
+          "up": 7
+        },
+        "pf_spread": {
+          "down": 9,
+          "unchanged": 51,
+          "up": 2
+        },
+        "t_to_end": {
+          "down": 62
+        }
+      },
+      "imbalance_changed_share": 0.8387096774193549,
+      "n": 62,
+      "policy": "PI0",
+      "policy_handoffs": {
+        "PI0 -> PI0": 62
+      },
+      "recorded_market": {
+        "changed": 62
+      },
+      "same_book_fair_not_down_queue_not_up": 2,
+      "same_mid_and_spread": 48,
+      "same_mid_and_spread_share": 0.7741935483870968,
+      "side": "all",
+      "status": {
+        "model": 62
+      },
+      "worlds": 43
+    },
+    {
+      "action": "PULL",
+      "all_recorded_except_clock": {
+        "changed": 127
+      },
+      "book": {
+        "changed": 109,
+        "unchanged": 18
+      },
+      "day": "20261026",
+      "dt_ms": {
+        "100.0": 127
+      },
+      "fair_edge_increased_in_majority": false,
+      "fair_edge_increased_share": 0.48031496062992124,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 59,
+          "unchanged": 18,
+          "up": 50
+        },
+        "fair_edge": {
+          "down": 66,
+          "up": 61
+        },
+        "fp_queue": {
+          "down": 45,
+          "unchanged": 30,
+          "up": 52
+        },
+        "fp_remaining": {
+          "unchanged": 127
+        },
+        "o_edge": {
+          "down": 12,
+          "unchanged": 101,
+          "up": 14
+        },
+        "pf_mid": {
+          "down": 12,
+          "unchanged": 101,
+          "up": 14
+        },
+        "pf_spread": {
+          "down": 22,
+          "unchanged": 102,
+          "up": 3
+        },
+        "t_to_end": {
+          "down": 127
+        }
+      },
+      "imbalance_changed_share": 0.8582677165354331,
+      "n": 127,
+      "policy": "PI0",
+      "policy_handoffs": {
+        "PI0 -> PI0": 127
+      },
+      "recorded_market": {
+        "changed": 127
+      },
+      "same_book_fair_not_down_queue_not_up": 4,
+      "same_mid_and_spread": 100,
+      "same_mid_and_spread_share": 0.7874015748031497,
+      "side": "0",
+      "status": {
+        "model": 127
+      },
+      "worlds": 63
+    },
+    {
+      "action": "PULL",
+      "all_recorded_except_clock": {
+        "changed": 96
+      },
+      "book": {
+        "changed": 85,
+        "unchanged": 11
+      },
+      "day": "20261026",
+      "dt_ms": {
+        "100.0": 96
+      },
+      "fair_edge_increased_in_majority": false,
+      "fair_edge_increased_share": 0.3645833333333333,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 42,
+          "unchanged": 11,
+          "up": 43
+        },
+        "fair_edge": {
+          "down": 61,
+          "up": 35
+        },
+        "fp_queue": {
+          "down": 27,
+          "unchanged": 41,
+          "up": 28
+        },
+        "fp_remaining": {
+          "unchanged": 96
+        },
+        "o_edge": {
+          "down": 11,
+          "unchanged": 71,
+          "up": 14
+        },
+        "pf_mid": {
+          "down": 14,
+          "unchanged": 71,
+          "up": 11
+        },
+        "pf_spread": {
+          "down": 19,
+          "unchanged": 72,
+          "up": 5
+        },
+        "t_to_end": {
+          "down": 96
+        }
+      },
+      "imbalance_changed_share": 0.8854166666666666,
+      "n": 96,
+      "policy": "PI0",
+      "policy_handoffs": {
+        "PI0 -> PI0": 96
+      },
+      "recorded_market": {
+        "changed": 96
+      },
+      "same_book_fair_not_down_queue_not_up": 7,
+      "same_mid_and_spread": 71,
+      "same_mid_and_spread_share": 0.7395833333333334,
+      "side": "1",
+      "status": {
+        "model": 96
+      },
+      "worlds": 48
+    },
+    {
+      "action": "PULL",
+      "all_recorded_except_clock": {
+        "changed": 223
+      },
+      "book": {
+        "changed": 194,
+        "unchanged": 29
+      },
+      "day": "20261026",
+      "dt_ms": {
+        "100.0": 223
+      },
+      "fair_edge_increased_in_majority": false,
+      "fair_edge_increased_share": 0.4304932735426009,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 101,
+          "unchanged": 29,
+          "up": 93
+        },
+        "fair_edge": {
+          "down": 127,
+          "up": 96
+        },
+        "fp_queue": {
+          "down": 72,
+          "unchanged": 71,
+          "up": 80
+        },
+        "fp_remaining": {
+          "unchanged": 223
+        },
+        "o_edge": {
+          "down": 23,
+          "unchanged": 172,
+          "up": 28
+        },
+        "pf_mid": {
+          "down": 26,
+          "unchanged": 172,
+          "up": 25
+        },
+        "pf_spread": {
+          "down": 41,
+          "unchanged": 174,
+          "up": 8
+        },
+        "t_to_end": {
+          "down": 223
+        }
+      },
+      "imbalance_changed_share": 0.8699551569506726,
+      "n": 223,
+      "policy": "PI0",
+      "policy_handoffs": {
+        "PI0 -> PI0": 223
+      },
+      "recorded_market": {
+        "changed": 223
+      },
+      "same_book_fair_not_down_queue_not_up": 11,
+      "same_mid_and_spread": 171,
+      "same_mid_and_spread_share": 0.7668161434977578,
+      "side": "all",
+      "status": {
+        "model": 223
+      },
+      "worlds": 88
+    },
+    {
+      "action": "KEEP",
+      "all_recorded_except_clock": {
+        "changed": 39
+      },
+      "book": {
+        "changed": 28,
+        "unchanged": 11
+      },
+      "day": "20261026",
+      "dt_ms": {
+        "100.0": 39
+      },
+      "fair_edge_increased_in_majority": false,
+      "fair_edge_increased_share": 0.3076923076923077,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 16,
+          "unchanged": 11,
+          "up": 12
+        },
+        "fair_edge": {
+          "down": 27,
+          "up": 12
+        },
+        "fp_queue": {
+          "down": 11,
+          "unchanged": 16,
+          "up": 12
+        },
+        "fp_remaining": {
+          "unchanged": 39
+        },
+        "o_edge": {
+          "down": 1,
+          "unchanged": 32,
+          "up": 6
+        },
+        "pf_mid": {
+          "down": 1,
+          "unchanged": 32,
+          "up": 6
+        },
+        "pf_spread": {
+          "down": 4,
+          "unchanged": 34,
+          "up": 1
+        },
+        "t_to_end": {
+          "down": 39
+        }
+      },
+      "imbalance_changed_share": 0.717948717948718,
+      "n": 39,
+      "policy": "SMOOTH",
+      "policy_handoffs": {
+        "SMOOTH -> PI0": 39
+      },
+      "recorded_market": {
+        "changed": 39
+      },
+      "same_book_fair_not_down_queue_not_up": 1,
+      "same_mid_and_spread": 31,
+      "same_mid_and_spread_share": 0.7948717948717948,
+      "side": "0",
+      "status": {
+        "model": 39
+      },
+      "worlds": 26
+    },
+    {
+      "action": "KEEP",
+      "all_recorded_except_clock": {
+        "changed": 22
+      },
+      "book": {
+        "changed": 18,
+        "unchanged": 4
+      },
+      "day": "20261026",
+      "dt_ms": {
+        "100.0": 22
+      },
+      "fair_edge_increased_in_majority": true,
+      "fair_edge_increased_share": 0.5909090909090909,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 7,
+          "unchanged": 4,
+          "up": 11
+        },
+        "fair_edge": {
+          "down": 9,
+          "up": 13
+        },
+        "fp_queue": {
+          "down": 8,
+          "unchanged": 7,
+          "up": 7
+        },
+        "fp_remaining": {
+          "unchanged": 22
+        },
+        "o_edge": {
+          "down": 1,
+          "unchanged": 16,
+          "up": 5
+        },
+        "pf_mid": {
+          "down": 5,
+          "unchanged": 16,
+          "up": 1
+        },
+        "pf_spread": {
+          "down": 1,
+          "unchanged": 16,
+          "up": 5
+        },
+        "t_to_end": {
+          "down": 22
+        }
+      },
+      "imbalance_changed_share": 0.8181818181818182,
+      "n": 22,
+      "policy": "SMOOTH",
+      "policy_handoffs": {
+        "SMOOTH -> PI0": 22
+      },
+      "recorded_market": {
+        "changed": 22
+      },
+      "same_book_fair_not_down_queue_not_up": 2,
+      "same_mid_and_spread": 16,
+      "same_mid_and_spread_share": 0.7272727272727273,
+      "side": "1",
+      "status": {
+        "incoherent_forecast": 2,
+        "model": 17,
+        "outside_training_range": 3
+      },
+      "worlds": 18
+    },
+    {
+      "action": "KEEP",
+      "all_recorded_except_clock": {
+        "changed": 61
+      },
+      "book": {
+        "changed": 46,
+        "unchanged": 15
+      },
+      "day": "20261026",
+      "dt_ms": {
+        "100.0": 61
+      },
+      "fair_edge_increased_in_majority": false,
+      "fair_edge_increased_share": 0.4098360655737705,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 23,
+          "unchanged": 15,
+          "up": 23
+        },
+        "fair_edge": {
+          "down": 36,
+          "up": 25
+        },
+        "fp_queue": {
+          "down": 19,
+          "unchanged": 23,
+          "up": 19
+        },
+        "fp_remaining": {
+          "unchanged": 61
+        },
+        "o_edge": {
+          "down": 2,
+          "unchanged": 48,
+          "up": 11
+        },
+        "pf_mid": {
+          "down": 6,
+          "unchanged": 48,
+          "up": 7
+        },
+        "pf_spread": {
+          "down": 5,
+          "unchanged": 50,
+          "up": 6
+        },
+        "t_to_end": {
+          "down": 61
+        }
+      },
+      "imbalance_changed_share": 0.7540983606557377,
+      "n": 61,
+      "policy": "SMOOTH",
+      "policy_handoffs": {
+        "SMOOTH -> PI0": 61
+      },
+      "recorded_market": {
+        "changed": 61
+      },
+      "same_book_fair_not_down_queue_not_up": 3,
+      "same_mid_and_spread": 47,
+      "same_mid_and_spread_share": 0.7704918032786885,
+      "side": "all",
+      "status": {
+        "incoherent_forecast": 2,
+        "model": 56,
+        "outside_training_range": 3
+      },
+      "worlds": 37
+    },
+    {
+      "action": "PULL",
+      "all_recorded_except_clock": {
+        "changed": 1987,
+        "unchanged": 6
+      },
+      "book": {
+        "changed": 1735,
+        "unchanged": 258
+      },
+      "day": "20261026",
+      "dt_ms": {
+        "100.0": 1993
+      },
+      "fair_edge_increased_in_majority": true,
+      "fair_edge_increased_share": 0.515805318615153,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 749,
+          "unchanged": 258,
+          "up": 986
+        },
+        "fair_edge": {
+          "down": 941,
+          "unchanged": 24,
+          "up": 1028
+        },
+        "fp_queue": {
+          "down": 774,
+          "unchanged": 695,
+          "up": 524
+        },
+        "fp_remaining": {
+          "unchanged": 1993
+        },
+        "o_edge": {
+          "down": 41,
+          "unchanged": 1849,
+          "up": 103
+        },
+        "pf_mid": {
+          "down": 41,
+          "unchanged": 1849,
+          "up": 103
+        },
+        "pf_spread": {
+          "down": 54,
+          "unchanged": 1907,
+          "up": 32
+        },
+        "t_to_end": {
+          "down": 1993
+        }
+      },
+      "imbalance_changed_share": 0.870546914199699,
+      "n": 1993,
+      "policy": "SMOOTH",
+      "policy_handoffs": {
+        "SMOOTH -> PI0": 1993
+      },
+      "recorded_market": {
+        "changed": 1987,
+        "unchanged": 6
+      },
+      "same_book_fair_not_down_queue_not_up": 139,
+      "same_mid_and_spread": 1849,
+      "same_mid_and_spread_share": 0.9277471149021576,
+      "side": "0",
+      "status": {
+        "model": 1993
+      },
+      "worlds": 183
+    },
+    {
+      "action": "PULL",
+      "all_recorded_except_clock": {
+        "changed": 1332
+      },
+      "book": {
+        "changed": 1110,
+        "unchanged": 222
+      },
+      "day": "20261026",
+      "dt_ms": {
+        "100.0": 1331,
+        "150.0": 1
+      },
+      "fair_edge_increased_in_majority": true,
+      "fair_edge_increased_share": 0.6659159159159159,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 597,
+          "unchanged": 222,
+          "up": 513
+        },
+        "fair_edge": {
+          "down": 417,
+          "unchanged": 28,
+          "up": 887
+        },
+        "fp_queue": {
+          "down": 343,
+          "unchanged": 517,
+          "up": 472
+        },
+        "fp_remaining": {
+          "unchanged": 1332
+        },
+        "o_edge": {
+          "down": 14,
+          "unchanged": 1165,
+          "up": 153
+        },
+        "pf_mid": {
+          "down": 153,
+          "unchanged": 1165,
+          "up": 14
+        },
+        "pf_spread": {
+          "down": 46,
+          "unchanged": 1255,
+          "up": 31
+        },
+        "t_to_end": {
+          "down": 1332
+        }
+      },
+      "imbalance_changed_share": 0.8333333333333334,
+      "n": 1332,
+      "policy": "SMOOTH",
+      "policy_handoffs": {
+        "SMOOTH -> PI0": 1332
+      },
+      "recorded_market": {
+        "changed": 1332
+      },
+      "same_book_fair_not_down_queue_not_up": 161,
+      "same_mid_and_spread": 1163,
+      "same_mid_and_spread_share": 0.8731231231231231,
+      "side": "1",
+      "status": {
+        "model": 1332
+      },
+      "worlds": 174
+    },
+    {
+      "action": "PULL",
+      "all_recorded_except_clock": {
+        "changed": 3319,
+        "unchanged": 6
+      },
+      "book": {
+        "changed": 2845,
+        "unchanged": 480
+      },
+      "day": "20261026",
+      "dt_ms": {
+        "100.0": 3324,
+        "150.0": 1
+      },
+      "fair_edge_increased_in_majority": true,
+      "fair_edge_increased_share": 0.5759398496240602,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 1346,
+          "unchanged": 480,
+          "up": 1499
+        },
+        "fair_edge": {
+          "down": 1358,
+          "unchanged": 52,
+          "up": 1915
+        },
+        "fp_queue": {
+          "down": 1117,
+          "unchanged": 1212,
+          "up": 996
+        },
+        "fp_remaining": {
+          "unchanged": 3325
+        },
+        "o_edge": {
+          "down": 55,
+          "unchanged": 3014,
+          "up": 256
+        },
+        "pf_mid": {
+          "down": 194,
+          "unchanged": 3014,
+          "up": 117
+        },
+        "pf_spread": {
+          "down": 100,
+          "unchanged": 3162,
+          "up": 63
+        },
+        "t_to_end": {
+          "down": 3325
+        }
+      },
+      "imbalance_changed_share": 0.8556390977443609,
+      "n": 3325,
+      "policy": "SMOOTH",
+      "policy_handoffs": {
+        "SMOOTH -> PI0": 3325
+      },
+      "recorded_market": {
+        "changed": 3319,
+        "unchanged": 6
+      },
+      "same_book_fair_not_down_queue_not_up": 300,
+      "same_mid_and_spread": 3012,
+      "same_mid_and_spread_share": 0.9058646616541354,
+      "side": "all",
+      "status": {
+        "model": 3325
+      },
+      "worlds": 188
+    },
+    {
+      "action": "KEEP",
+      "all_recorded_except_clock": {
+        "changed": 30
+      },
+      "book": {
+        "changed": 24,
+        "unchanged": 6
+      },
+      "day": "20261027",
+      "dt_ms": {
+        "100.0": 30
+      },
+      "fair_edge_increased_in_majority": false,
+      "fair_edge_increased_share": 0.4666666666666667,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 17,
+          "unchanged": 6,
+          "up": 7
+        },
+        "fair_edge": {
+          "down": 16,
+          "up": 14
+        },
+        "fp_queue": {
+          "down": 7,
+          "unchanged": 17,
+          "up": 6
+        },
+        "fp_remaining": {
+          "unchanged": 30
+        },
+        "o_edge": {
+          "down": 1,
+          "unchanged": 25,
+          "up": 4
+        },
+        "pf_mid": {
+          "down": 1,
+          "unchanged": 25,
+          "up": 4
+        },
+        "pf_spread": {
+          "down": 1,
+          "unchanged": 24,
+          "up": 5
+        },
+        "t_to_end": {
+          "down": 30
+        }
+      },
+      "imbalance_changed_share": 0.8,
+      "n": 30,
+      "policy": "ENTRY_ONLY",
+      "policy_handoffs": {
+        "RICH -> PI0": 30
+      },
+      "recorded_market": {
+        "changed": 30
+      },
+      "same_book_fair_not_down_queue_not_up": 3,
+      "same_mid_and_spread": 24,
+      "same_mid_and_spread_share": 0.8,
+      "side": "0",
+      "status": {
+        "model": 30
+      },
+      "worlds": 23
+    },
+    {
+      "action": "KEEP",
+      "all_recorded_except_clock": {
+        "changed": 45
+      },
+      "book": {
+        "changed": 36,
+        "unchanged": 9
+      },
+      "day": "20261027",
+      "dt_ms": {
+        "100.0": 45
+      },
+      "fair_edge_increased_in_majority": false,
+      "fair_edge_increased_share": 0.4222222222222222,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 17,
+          "unchanged": 9,
+          "up": 19
+        },
+        "fair_edge": {
+          "down": 26,
+          "up": 19
+        },
+        "fp_queue": {
+          "down": 18,
+          "unchanged": 19,
+          "up": 8
+        },
+        "fp_remaining": {
+          "unchanged": 45
+        },
+        "o_edge": {
+          "down": 3,
+          "unchanged": 38,
+          "up": 4
+        },
+        "pf_mid": {
+          "down": 4,
+          "unchanged": 38,
+          "up": 3
+        },
+        "pf_spread": {
+          "down": 2,
+          "unchanged": 38,
+          "up": 5
+        },
+        "t_to_end": {
+          "down": 45
+        }
+      },
+      "imbalance_changed_share": 0.8,
+      "n": 45,
+      "policy": "ENTRY_ONLY",
+      "policy_handoffs": {
+        "RICH -> PI0": 45
+      },
+      "recorded_market": {
+        "changed": 45
+      },
+      "same_book_fair_not_down_queue_not_up": 2,
+      "same_mid_and_spread": 37,
+      "same_mid_and_spread_share": 0.8222222222222222,
+      "side": "1",
+      "status": {
+        "incoherent_forecast": 2,
+        "model": 28,
+        "outside_training_range": 15
+      },
+      "worlds": 35
+    },
+    {
+      "action": "KEEP",
+      "all_recorded_except_clock": {
+        "changed": 75
+      },
+      "book": {
+        "changed": 60,
+        "unchanged": 15
+      },
+      "day": "20261027",
+      "dt_ms": {
+        "100.0": 75
+      },
+      "fair_edge_increased_in_majority": false,
+      "fair_edge_increased_share": 0.44,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 34,
+          "unchanged": 15,
+          "up": 26
+        },
+        "fair_edge": {
+          "down": 42,
+          "up": 33
+        },
+        "fp_queue": {
+          "down": 25,
+          "unchanged": 36,
+          "up": 14
+        },
+        "fp_remaining": {
+          "unchanged": 75
+        },
+        "o_edge": {
+          "down": 4,
+          "unchanged": 63,
+          "up": 8
+        },
+        "pf_mid": {
+          "down": 5,
+          "unchanged": 63,
+          "up": 7
+        },
+        "pf_spread": {
+          "down": 3,
+          "unchanged": 62,
+          "up": 10
+        },
+        "t_to_end": {
+          "down": 75
+        }
+      },
+      "imbalance_changed_share": 0.8,
+      "n": 75,
+      "policy": "ENTRY_ONLY",
+      "policy_handoffs": {
+        "RICH -> PI0": 75
+      },
+      "recorded_market": {
+        "changed": 75
+      },
+      "same_book_fair_not_down_queue_not_up": 5,
+      "same_mid_and_spread": 61,
+      "same_mid_and_spread_share": 0.8133333333333334,
+      "side": "all",
+      "status": {
+        "incoherent_forecast": 2,
+        "model": 58,
+        "outside_training_range": 15
+      },
+      "worlds": 51
+    },
+    {
+      "action": "PULL",
+      "all_recorded_except_clock": {
+        "changed": 2123,
+        "unchanged": 4
+      },
+      "book": {
+        "changed": 1861,
+        "unchanged": 266
+      },
+      "day": "20261027",
+      "dt_ms": {
+        "100.0": 2127
+      },
+      "fair_edge_increased_in_majority": false,
+      "fair_edge_increased_share": 0.49647390691114246,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 899,
+          "unchanged": 266,
+          "up": 962
+        },
+        "fair_edge": {
+          "down": 1056,
+          "unchanged": 15,
+          "up": 1056
+        },
+        "fp_queue": {
+          "down": 755,
+          "unchanged": 746,
+          "up": 626
+        },
+        "fp_remaining": {
+          "unchanged": 2127
+        },
+        "o_edge": {
+          "down": 39,
+          "unchanged": 1961,
+          "up": 127
+        },
+        "pf_mid": {
+          "down": 39,
+          "unchanged": 1961,
+          "up": 127
+        },
+        "pf_spread": {
+          "down": 59,
+          "unchanged": 2031,
+          "up": 37
+        },
+        "t_to_end": {
+          "down": 2127
+        }
+      },
+      "imbalance_changed_share": 0.8749412317818523,
+      "n": 2127,
+      "policy": "ENTRY_ONLY",
+      "policy_handoffs": {
+        "RICH -> PI0": 2127
+      },
+      "recorded_market": {
+        "changed": 2123,
+        "unchanged": 4
+      },
+      "same_book_fair_not_down_queue_not_up": 132,
+      "same_mid_and_spread": 1958,
+      "same_mid_and_spread_share": 0.92054536906441,
+      "side": "0",
+      "status": {
+        "model": 2127
+      },
+      "worlds": 187
+    },
+    {
+      "action": "PULL",
+      "all_recorded_except_clock": {
+        "changed": 2310,
+        "unchanged": 3
+      },
+      "book": {
+        "changed": 1994,
+        "unchanged": 319
+      },
+      "day": "20261027",
+      "dt_ms": {
+        "100.0": 2313
+      },
+      "fair_edge_increased_in_majority": true,
+      "fair_edge_increased_share": 0.512753999135322,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 991,
+          "unchanged": 320,
+          "up": 1002
+        },
+        "fair_edge": {
+          "down": 1110,
+          "unchanged": 17,
+          "up": 1186
+        },
+        "fp_queue": {
+          "down": 771,
+          "unchanged": 833,
+          "up": 709
+        },
+        "fp_remaining": {
+          "unchanged": 2313
+        },
+        "o_edge": {
+          "down": 30,
+          "unchanged": 2141,
+          "up": 142
+        },
+        "pf_mid": {
+          "down": 142,
+          "unchanged": 2141,
+          "up": 30
+        },
+        "pf_spread": {
+          "down": 37,
+          "unchanged": 2235,
+          "up": 41
+        },
+        "t_to_end": {
+          "down": 2313
+        }
+      },
+      "imbalance_changed_share": 0.8616515348032858,
+      "n": 2313,
+      "policy": "ENTRY_ONLY",
+      "policy_handoffs": {
+        "RICH -> PI0": 2313
+      },
+      "recorded_market": {
+        "changed": 2310,
+        "unchanged": 3
+      },
+      "same_book_fair_not_down_queue_not_up": 172,
+      "same_mid_and_spread": 2138,
+      "same_mid_and_spread_share": 0.924340683095547,
+      "side": "1",
+      "status": {
+        "model": 2313
+      },
+      "worlds": 190
+    },
+    {
+      "action": "PULL",
+      "all_recorded_except_clock": {
+        "changed": 4433,
+        "unchanged": 7
+      },
+      "book": {
+        "changed": 3855,
+        "unchanged": 585
+      },
+      "day": "20261027",
+      "dt_ms": {
+        "100.0": 4440
+      },
+      "fair_edge_increased_in_majority": true,
+      "fair_edge_increased_share": 0.5049549549549549,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 1890,
+          "unchanged": 586,
+          "up": 1964
+        },
+        "fair_edge": {
+          "down": 2166,
+          "unchanged": 32,
+          "up": 2242
+        },
+        "fp_queue": {
+          "down": 1526,
+          "unchanged": 1579,
+          "up": 1335
+        },
+        "fp_remaining": {
+          "unchanged": 4440
+        },
+        "o_edge": {
+          "down": 69,
+          "unchanged": 4102,
+          "up": 269
+        },
+        "pf_mid": {
+          "down": 181,
+          "unchanged": 4102,
+          "up": 157
+        },
+        "pf_spread": {
+          "down": 96,
+          "unchanged": 4266,
+          "up": 78
+        },
+        "t_to_end": {
+          "down": 4440
+        }
+      },
+      "imbalance_changed_share": 0.868018018018018,
+      "n": 4440,
+      "policy": "ENTRY_ONLY",
+      "policy_handoffs": {
+        "RICH -> PI0": 4440
+      },
+      "recorded_market": {
+        "changed": 4433,
+        "unchanged": 7
+      },
+      "same_book_fair_not_down_queue_not_up": 304,
+      "same_mid_and_spread": 4096,
+      "same_mid_and_spread_share": 0.9225225225225225,
+      "side": "all",
+      "status": {
+        "model": 4440
+      },
+      "worlds": 192
+    },
+    {
+      "action": "KEEP",
+      "all_recorded_except_clock": {
+        "changed": 49
+      },
+      "book": {
+        "changed": 39,
+        "unchanged": 10
+      },
+      "day": "20261027",
+      "dt_ms": {
+        "100.0": 49
+      },
+      "fair_edge_increased_in_majority": false,
+      "fair_edge_increased_share": 0.42857142857142855,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 24,
+          "unchanged": 10,
+          "up": 15
+        },
+        "fair_edge": {
+          "down": 28,
+          "up": 21
+        },
+        "fp_queue": {
+          "down": 16,
+          "unchanged": 23,
+          "up": 10
+        },
+        "fp_remaining": {
+          "unchanged": 49
+        },
+        "o_edge": {
+          "down": 2,
+          "unchanged": 43,
+          "up": 4
+        },
+        "pf_mid": {
+          "down": 2,
+          "unchanged": 43,
+          "up": 4
+        },
+        "pf_spread": {
+          "down": 2,
+          "unchanged": 43,
+          "up": 4
+        },
+        "t_to_end": {
+          "down": 49
+        }
+      },
+      "imbalance_changed_share": 0.7959183673469388,
+      "n": 49,
+      "policy": "PI0",
+      "policy_handoffs": {
+        "PI0 -> PI0": 49
+      },
+      "recorded_market": {
+        "changed": 49
+      },
+      "same_book_fair_not_down_queue_not_up": 2,
+      "same_mid_and_spread": 43,
+      "same_mid_and_spread_share": 0.8775510204081632,
+      "side": "0",
+      "status": {
+        "model": 49
+      },
+      "worlds": 33
+    },
+    {
+      "action": "KEEP",
+      "all_recorded_except_clock": {
+        "changed": 25
+      },
+      "book": {
+        "changed": 23,
+        "unchanged": 2
+      },
+      "day": "20261027",
+      "dt_ms": {
+        "100.0": 25
+      },
+      "fair_edge_increased_in_majority": false,
+      "fair_edge_increased_share": 0.36,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 16,
+          "unchanged": 2,
+          "up": 7
+        },
+        "fair_edge": {
+          "down": 16,
+          "up": 9
+        },
+        "fp_queue": {
+          "down": 6,
+          "unchanged": 14,
+          "up": 5
+        },
+        "fp_remaining": {
+          "unchanged": 25
+        },
+        "o_edge": {
+          "down": 2,
+          "unchanged": 22,
+          "up": 1
+        },
+        "pf_mid": {
+          "down": 1,
+          "unchanged": 22,
+          "up": 2
+        },
+        "pf_spread": {
+          "down": 2,
+          "unchanged": 22,
+          "up": 1
+        },
+        "t_to_end": {
+          "down": 25
+        }
+      },
+      "imbalance_changed_share": 0.92,
+      "n": 25,
+      "policy": "PI0",
+      "policy_handoffs": {
+        "PI0 -> PI0": 25
+      },
+      "recorded_market": {
+        "changed": 25
+      },
+      "same_book_fair_not_down_queue_not_up": 0,
+      "same_mid_and_spread": 22,
+      "same_mid_and_spread_share": 0.88,
+      "side": "1",
+      "status": {
+        "model": 25
+      },
+      "worlds": 19
+    },
+    {
+      "action": "KEEP",
+      "all_recorded_except_clock": {
+        "changed": 74
+      },
+      "book": {
+        "changed": 62,
+        "unchanged": 12
+      },
+      "day": "20261027",
+      "dt_ms": {
+        "100.0": 74
+      },
+      "fair_edge_increased_in_majority": false,
+      "fair_edge_increased_share": 0.40540540540540543,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 40,
+          "unchanged": 12,
+          "up": 22
+        },
+        "fair_edge": {
+          "down": 44,
+          "up": 30
+        },
+        "fp_queue": {
+          "down": 22,
+          "unchanged": 37,
+          "up": 15
+        },
+        "fp_remaining": {
+          "unchanged": 74
+        },
+        "o_edge": {
+          "down": 4,
+          "unchanged": 65,
+          "up": 5
+        },
+        "pf_mid": {
+          "down": 3,
+          "unchanged": 65,
+          "up": 6
+        },
+        "pf_spread": {
+          "down": 4,
+          "unchanged": 65,
+          "up": 5
+        },
+        "t_to_end": {
+          "down": 74
+        }
+      },
+      "imbalance_changed_share": 0.8378378378378378,
+      "n": 74,
+      "policy": "PI0",
+      "policy_handoffs": {
+        "PI0 -> PI0": 74
+      },
+      "recorded_market": {
+        "changed": 74
+      },
+      "same_book_fair_not_down_queue_not_up": 2,
+      "same_mid_and_spread": 65,
+      "same_mid_and_spread_share": 0.8783783783783784,
+      "side": "all",
+      "status": {
+        "model": 74
+      },
+      "worlds": 48
+    },
+    {
+      "action": "PULL",
+      "all_recorded_except_clock": {
+        "changed": 166
+      },
+      "book": {
+        "changed": 139,
+        "unchanged": 27
+      },
+      "day": "20261027",
+      "dt_ms": {
+        "100.0": 166
+      },
+      "fair_edge_increased_in_majority": false,
+      "fair_edge_increased_share": 0.4036144578313253,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 68,
+          "unchanged": 27,
+          "up": 71
+        },
+        "fair_edge": {
+          "down": 99,
+          "up": 67
+        },
+        "fp_queue": {
+          "down": 55,
+          "unchanged": 68,
+          "up": 43
+        },
+        "fp_remaining": {
+          "unchanged": 166
+        },
+        "o_edge": {
+          "down": 11,
+          "unchanged": 136,
+          "up": 19
+        },
+        "pf_mid": {
+          "down": 11,
+          "unchanged": 136,
+          "up": 19
+        },
+        "pf_spread": {
+          "down": 22,
+          "unchanged": 142,
+          "up": 2
+        },
+        "t_to_end": {
+          "down": 166
+        }
+      },
+      "imbalance_changed_share": 0.8373493975903614,
+      "n": 166,
+      "policy": "PI0",
+      "policy_handoffs": {
+        "PI0 -> PI0": 166
+      },
+      "recorded_market": {
+        "changed": 166
+      },
+      "same_book_fair_not_down_queue_not_up": 4,
+      "same_mid_and_spread": 136,
+      "same_mid_and_spread_share": 0.8192771084337349,
+      "side": "0",
+      "status": {
+        "model": 166
+      },
+      "worlds": 65
+    },
+    {
+      "action": "PULL",
+      "all_recorded_except_clock": {
+        "changed": 100
+      },
+      "book": {
+        "changed": 87,
+        "unchanged": 13
+      },
+      "day": "20261027",
+      "dt_ms": {
+        "100.0": 100
+      },
+      "fair_edge_increased_in_majority": false,
+      "fair_edge_increased_share": 0.43,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 42,
+          "unchanged": 13,
+          "up": 45
+        },
+        "fair_edge": {
+          "down": 57,
+          "up": 43
+        },
+        "fp_queue": {
+          "down": 35,
+          "unchanged": 30,
+          "up": 35
+        },
+        "fp_remaining": {
+          "unchanged": 100
+        },
+        "o_edge": {
+          "down": 17,
+          "unchanged": 70,
+          "up": 13
+        },
+        "pf_mid": {
+          "down": 13,
+          "unchanged": 70,
+          "up": 17
+        },
+        "pf_spread": {
+          "down": 17,
+          "unchanged": 75,
+          "up": 8
+        },
+        "t_to_end": {
+          "down": 100
+        }
+      },
+      "imbalance_changed_share": 0.87,
+      "n": 100,
+      "policy": "PI0",
+      "policy_handoffs": {
+        "PI0 -> PI0": 100
+      },
+      "recorded_market": {
+        "changed": 100
+      },
+      "same_book_fair_not_down_queue_not_up": 8,
+      "same_mid_and_spread": 69,
+      "same_mid_and_spread_share": 0.69,
+      "side": "1",
+      "status": {
+        "model": 100
+      },
+      "worlds": 39
+    },
+    {
+      "action": "PULL",
+      "all_recorded_except_clock": {
+        "changed": 266
+      },
+      "book": {
+        "changed": 226,
+        "unchanged": 40
+      },
+      "day": "20261027",
+      "dt_ms": {
+        "100.0": 266
+      },
+      "fair_edge_increased_in_majority": false,
+      "fair_edge_increased_share": 0.41353383458646614,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 110,
+          "unchanged": 40,
+          "up": 116
+        },
+        "fair_edge": {
+          "down": 156,
+          "up": 110
+        },
+        "fp_queue": {
+          "down": 90,
+          "unchanged": 98,
+          "up": 78
+        },
+        "fp_remaining": {
+          "unchanged": 266
+        },
+        "o_edge": {
+          "down": 28,
+          "unchanged": 206,
+          "up": 32
+        },
+        "pf_mid": {
+          "down": 24,
+          "unchanged": 206,
+          "up": 36
+        },
+        "pf_spread": {
+          "down": 39,
+          "unchanged": 217,
+          "up": 10
+        },
+        "t_to_end": {
+          "down": 266
+        }
+      },
+      "imbalance_changed_share": 0.849624060150376,
+      "n": 266,
+      "policy": "PI0",
+      "policy_handoffs": {
+        "PI0 -> PI0": 266
+      },
+      "recorded_market": {
+        "changed": 266
+      },
+      "same_book_fair_not_down_queue_not_up": 12,
+      "same_mid_and_spread": 205,
+      "same_mid_and_spread_share": 0.7706766917293233,
+      "side": "all",
+      "status": {
+        "model": 266
+      },
+      "worlds": 81
+    },
+    {
+      "action": "KEEP",
+      "all_recorded_except_clock": {
+        "changed": 41
+      },
+      "book": {
+        "changed": 31,
+        "unchanged": 10
+      },
+      "day": "20261027",
+      "dt_ms": {
+        "100.0": 41
+      },
+      "fair_edge_increased_in_majority": false,
+      "fair_edge_increased_share": 0.4146341463414634,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 15,
+          "unchanged": 10,
+          "up": 16
+        },
+        "fair_edge": {
+          "down": 24,
+          "up": 17
+        },
+        "fp_queue": {
+          "down": 13,
+          "unchanged": 20,
+          "up": 8
+        },
+        "fp_remaining": {
+          "unchanged": 41
+        },
+        "o_edge": {
+          "down": 1,
+          "unchanged": 38,
+          "up": 2
+        },
+        "pf_mid": {
+          "down": 1,
+          "unchanged": 38,
+          "up": 2
+        },
+        "pf_spread": {
+          "down": 1,
+          "unchanged": 38,
+          "up": 2
+        },
+        "t_to_end": {
+          "down": 41
+        }
+      },
+      "imbalance_changed_share": 0.7560975609756098,
+      "n": 41,
+      "policy": "SMOOTH",
+      "policy_handoffs": {
+        "SMOOTH -> PI0": 41
+      },
+      "recorded_market": {
+        "changed": 41
+      },
+      "same_book_fair_not_down_queue_not_up": 2,
+      "same_mid_and_spread": 38,
+      "same_mid_and_spread_share": 0.926829268292683,
+      "side": "0",
+      "status": {
+        "model": 41
+      },
+      "worlds": 28
+    },
+    {
+      "action": "KEEP",
+      "all_recorded_except_clock": {
+        "changed": 23
+      },
+      "book": {
+        "changed": 13,
+        "unchanged": 10
+      },
+      "day": "20261027",
+      "dt_ms": {
+        "100.0": 23
+      },
+      "fair_edge_increased_in_majority": false,
+      "fair_edge_increased_share": 0.4782608695652174,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 7,
+          "unchanged": 10,
+          "up": 6
+        },
+        "fair_edge": {
+          "down": 12,
+          "up": 11
+        },
+        "fp_queue": {
+          "down": 5,
+          "unchanged": 17,
+          "up": 1
+        },
+        "fp_remaining": {
+          "unchanged": 23
+        },
+        "o_edge": {
+          "unchanged": 20,
+          "up": 3
+        },
+        "pf_mid": {
+          "down": 3,
+          "unchanged": 20
+        },
+        "pf_spread": {
+          "unchanged": 21,
+          "up": 2
+        },
+        "t_to_end": {
+          "down": 23
+        }
+      },
+      "imbalance_changed_share": 0.5652173913043478,
+      "n": 23,
+      "policy": "SMOOTH",
+      "policy_handoffs": {
+        "SMOOTH -> PI0": 23
+      },
+      "recorded_market": {
+        "changed": 23
+      },
+      "same_book_fair_not_down_queue_not_up": 3,
+      "same_mid_and_spread": 20,
+      "same_mid_and_spread_share": 0.8695652173913043,
+      "side": "1",
+      "status": {
+        "incoherent_forecast": 4,
+        "model": 15,
+        "outside_training_range": 4
+      },
+      "worlds": 17
+    },
+    {
+      "action": "KEEP",
+      "all_recorded_except_clock": {
+        "changed": 64
+      },
+      "book": {
+        "changed": 44,
+        "unchanged": 20
+      },
+      "day": "20261027",
+      "dt_ms": {
+        "100.0": 64
+      },
+      "fair_edge_increased_in_majority": false,
+      "fair_edge_increased_share": 0.4375,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 22,
+          "unchanged": 20,
+          "up": 22
+        },
+        "fair_edge": {
+          "down": 36,
+          "up": 28
+        },
+        "fp_queue": {
+          "down": 18,
+          "unchanged": 37,
+          "up": 9
+        },
+        "fp_remaining": {
+          "unchanged": 64
+        },
+        "o_edge": {
+          "down": 1,
+          "unchanged": 58,
+          "up": 5
+        },
+        "pf_mid": {
+          "down": 4,
+          "unchanged": 58,
+          "up": 2
+        },
+        "pf_spread": {
+          "down": 1,
+          "unchanged": 59,
+          "up": 4
+        },
+        "t_to_end": {
+          "down": 64
+        }
+      },
+      "imbalance_changed_share": 0.6875,
+      "n": 64,
+      "policy": "SMOOTH",
+      "policy_handoffs": {
+        "SMOOTH -> PI0": 64
+      },
+      "recorded_market": {
+        "changed": 64
+      },
+      "same_book_fair_not_down_queue_not_up": 5,
+      "same_mid_and_spread": 58,
+      "same_mid_and_spread_share": 0.90625,
+      "side": "all",
+      "status": {
+        "incoherent_forecast": 4,
+        "model": 56,
+        "outside_training_range": 4
+      },
+      "worlds": 39
+    },
+    {
+      "action": "PULL",
+      "all_recorded_except_clock": {
+        "changed": 2040,
+        "unchanged": 1
+      },
+      "book": {
+        "changed": 1825,
+        "unchanged": 216
+      },
+      "day": "20261027",
+      "dt_ms": {
+        "100.0": 2041
+      },
+      "fair_edge_increased_in_majority": true,
+      "fair_edge_increased_share": 0.560999510044096,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 830,
+          "unchanged": 216,
+          "up": 995
+        },
+        "fair_edge": {
+          "down": 885,
+          "unchanged": 11,
+          "up": 1145
+        },
+        "fp_queue": {
+          "down": 771,
+          "unchanged": 673,
+          "up": 597
+        },
+        "fp_remaining": {
+          "unchanged": 2041
+        },
+        "o_edge": {
+          "down": 34,
+          "unchanged": 1900,
+          "up": 107
+        },
+        "pf_mid": {
+          "down": 34,
+          "unchanged": 1900,
+          "up": 107
+        },
+        "pf_spread": {
+          "down": 50,
+          "unchanged": 1954,
+          "up": 37
+        },
+        "t_to_end": {
+          "down": 2041
+        }
+      },
+      "imbalance_changed_share": 0.8941695247427731,
+      "n": 2041,
+      "policy": "SMOOTH",
+      "policy_handoffs": {
+        "SMOOTH -> PI0": 2041
+      },
+      "recorded_market": {
+        "changed": 2040,
+        "unchanged": 1
+      },
+      "same_book_fair_not_down_queue_not_up": 116,
+      "same_mid_and_spread": 1897,
+      "same_mid_and_spread_share": 0.9294463498285155,
+      "side": "0",
+      "status": {
+        "model": 2041
+      },
+      "worlds": 186
+    },
+    {
+      "action": "PULL",
+      "all_recorded_except_clock": {
+        "changed": 1446,
+        "unchanged": 4
+      },
+      "book": {
+        "changed": 1225,
+        "unchanged": 225
+      },
+      "day": "20261027",
+      "dt_ms": {
+        "100.0": 1450
+      },
+      "fair_edge_increased_in_majority": true,
+      "fair_edge_increased_share": 0.6972413793103448,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 683,
+          "unchanged": 226,
+          "up": 541
+        },
+        "fair_edge": {
+          "down": 419,
+          "unchanged": 20,
+          "up": 1011
+        },
+        "fp_queue": {
+          "down": 368,
+          "unchanged": 570,
+          "up": 512
+        },
+        "fp_remaining": {
+          "unchanged": 1450
+        },
+        "o_edge": {
+          "down": 13,
+          "unchanged": 1307,
+          "up": 130
+        },
+        "pf_mid": {
+          "down": 130,
+          "unchanged": 1307,
+          "up": 13
+        },
+        "pf_spread": {
+          "down": 27,
+          "unchanged": 1392,
+          "up": 31
+        },
+        "t_to_end": {
+          "down": 1450
+        }
+      },
+      "imbalance_changed_share": 0.8441379310344828,
+      "n": 1450,
+      "policy": "SMOOTH",
+      "policy_handoffs": {
+        "SMOOTH -> PI0": 1450
+      },
+      "recorded_market": {
+        "changed": 1446,
+        "unchanged": 4
+      },
+      "same_book_fair_not_down_queue_not_up": 170,
+      "same_mid_and_spread": 1307,
+      "same_mid_and_spread_share": 0.9013793103448275,
+      "side": "1",
+      "status": {
+        "model": 1450
+      },
+      "worlds": 180
+    },
+    {
+      "action": "PULL",
+      "all_recorded_except_clock": {
+        "changed": 3486,
+        "unchanged": 5
+      },
+      "book": {
+        "changed": 3050,
+        "unchanged": 441
+      },
+      "day": "20261027",
+      "dt_ms": {
+        "100.0": 3491
+      },
+      "fair_edge_increased_in_majority": true,
+      "fair_edge_increased_share": 0.6175880836436551,
+      "fields": {
+        "adv_pf_imb1": {
+          "down": 1513,
+          "unchanged": 442,
+          "up": 1536
+        },
+        "fair_edge": {
+          "down": 1304,
+          "unchanged": 31,
+          "up": 2156
+        },
+        "fp_queue": {
+          "down": 1139,
+          "unchanged": 1243,
+          "up": 1109
+        },
+        "fp_remaining": {
+          "unchanged": 3491
+        },
+        "o_edge": {
+          "down": 47,
+          "unchanged": 3207,
+          "up": 237
+        },
+        "pf_mid": {
+          "down": 164,
+          "unchanged": 3207,
+          "up": 120
+        },
+        "pf_spread": {
+          "down": 77,
+          "unchanged": 3346,
+          "up": 68
+        },
+        "t_to_end": {
+          "down": 3491
+        }
+      },
+      "imbalance_changed_share": 0.8733887138355771,
+      "n": 3491,
+      "policy": "SMOOTH",
+      "policy_handoffs": {
+        "SMOOTH -> PI0": 3491
+      },
+      "recorded_market": {
+        "changed": 3486,
+        "unchanged": 5
+      },
+      "same_book_fair_not_down_queue_not_up": 286,
+      "same_mid_and_spread": 3204,
+      "same_mid_and_spread_share": 0.9177885992552277,
+      "side": "all",
+      "status": {
+        "model": 3491
+      },
+      "worlds": 192
+    }
+  ],
+  "world_statuses": {
+    "ok": 380,
+    "world:no_path:missing_endpoint": 3,
+    "world:no_path:stale_future_book": 1
+  }
+}

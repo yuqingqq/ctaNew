@@ -1,0 +1,8 @@
+{
+  "parent": "73f6cfa6f8fd0d1fcb9283e8c7610f43b3b796d7",
+  "owned_file": "predictfun/HANDOFF.md",
+  "before_work_sha256": "64fc4ea564b7464422a4523302cb8667214c7c0f076a287c4f5563d73fdd6978",
+  "after_work_sha256": "045b57e859e218fd5321fe4d0d312cf895758a8e4fcefbf74a7549eff034534d",
+  "expected_index_sha256": "b12e2b8fae6daffb56f2250a70fb72d32fa0bb3ef599713d743009282c4c0faa",
+  "preserved_preexisting_content": true
+}

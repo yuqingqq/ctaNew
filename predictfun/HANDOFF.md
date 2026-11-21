@@ -23,6 +23,26 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- CHURN_OBSERVED_INPUTS_20261121_CODEX -->
+## 2026-11-21 — Churn cause remains unidentified; market inputs usually change
+
+[Bounded saved-trace diagnosis](reviews/automatic/20261121_churn_observed_inputs/report.md)
+of R4E commit **141e820e4b736c6a8c4f27b0a0dbf53789e95e89**; not a review
+of newer ENTRY-EXPOSURE commits. All 16,455 first-policy-review records,
+12 hash-bound parts and the committed CSV reconcile. In SMOOTH's 3,325 /
+3,491 first-review pulls on Oct26 / Oct27, mid and spread are unchanged in
+3,012 / 3,204, but a recorded market input changes in 3,319 / 3,486.
+Estimated fair edge improves in 1,915 / 2,156. These are descriptive event
+counts, not independent observations or proof that the changes cause PULL.
+Model handoff is a possible contributor, not an established dominant cause.
+The eight retained fields cannot isolate the full 107-input/estimator effect.
+Retain both full vectors and moment/value components in the next relevant
+bounded diagnostic; distinguish actual reproduction from fixed-market
+sensitivity, invalid input combinations and matched economic outcomes.
+The accepted priority remains ENTRY-EXPOSURE and its combined review. No
+freeze amendment, timer, full replay or separate cleanup review is required.
+<!-- /CHURN_OBSERVED_INPUTS_20261121_CODEX -->
+
 <!-- ENTRY_HORIZON_DIRECTION_20261121_USER -->
 ## 2026-11-21 — USER direction: entry value over a longer resting lifetime
 
