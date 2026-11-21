@@ -1,0 +1,72 @@
+{
+ "days": [
+  "20261024",
+  "20261025",
+  "20261026",
+  "20261027"
+ ],
+ "END_paired": {
+  "answer": "MIXED",
+  "by_day": {
+   "20261024": 23889.442708326664,
+   "20261025": 10662.518655608128,
+   "20261026": -3493.828647171458,
+   "20261027": 2385.5152163575294
+  },
+  "markets_better": 15,
+  "markets_worse": 4,
+  "markets_equal": 0
+ },
+ "mo1s_per_share": {
+  "all": {
+   "answer": "IMPROVES_EVERY_DAY",
+   "by_day": {
+    "20261024": 0.14424068519158806,
+    "20261025": 0.27753209065378615,
+    "20261026": 0.30627659506612126,
+    "20261027": 0.2580339824053812
+   }
+  },
+  "bid": {
+   "answer": "MIXED",
+   "by_day": {
+    "20261024": -0.22719257079252397,
+    "20261025": -0.20628612602571605,
+    "20261026": -0.04316755607481193,
+    "20261027": 0.0864311941852427
+   }
+  },
+  "ask": {
+   "answer": "IMPROVES_EVERY_DAY",
+   "by_day": {
+    "20261024": 0.5055227625144694,
+    "20261025": 0.754694468350322,
+    "20261026": 0.6586932189296317,
+    "20261027": 0.4284074777308047
+   }
+  }
+ },
+ "participation": {
+  "filled_q_delta_by_day": {
+   "20261024": -5054.644133472793,
+   "20261025": -1879.473835283301,
+   "20261026": 29.655852652929752,
+   "20261027": -315.59590092545477
+  },
+  "both_exact_delta": -0.09020381490639356,
+  "ask_exact_delta": -0.08340356764394208,
+  "ask_q_delta": -3795.720585915529,
+  "guard_pulls": 588,
+  "guard_withholds": 37989,
+  "reducing_suppressed": 0
+ },
+ "inventory": {
+  "mean_abs_delta": -7.639654948953833,
+  "share_abs_ge_S_delta": -0.05457435535146593,
+  "terminal_abs_delta": -17.39155363630836
+ },
+ "selection": "NO_SELECTION_BEYOND_EXPOSURE",
+ "interpretation": "mixed",
+ "note": "one adaptive consumed-day candidate on 19 markets; no profitability, significance, validation or promotion claim"
+}
+2026-11-21T18:22:34Z tag=gd_measure rc=0 peak_rss_mib=230 wall_s=1.56 cpu_user_s=1.35 memavail_start_gib=23 disk_free_gib=438->438 slot=claude

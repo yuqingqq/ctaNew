@@ -1,0 +1,39 @@
+{
+ "version": "ask_reservation_guard_v1",
+ "day": "20261026",
+ "pilot": true,
+ "members": [
+  3789484,
+  3803131
+ ],
+ "sha256": {
+  "gz": "fea36a612dd127c6108471e1da991be7d2b239a8f44952da28b4b4f71c64b876",
+  "npz": "9d8a51f25e098923df6fe668caba75ba09a44f2e8937c2bdbb53e6ed386d1d3d"
+ },
+ "manifest_sha256": "fd78f9de3045e556ebeee5b08b10bced736bdae18226650b61ca81ea6499ecf4",
+ "rule_sha256": "ff657441dee88f9b075c4ce95f33aaafc0a57f5c191a5bf556a705aa531a51a4",
+ "sources": {
+  "pf_ladder_guard.py": "5349b75682108857eeb367f0da86ea387c1682e99ee1761f2b60f0d50e01c2fe",
+  "pf_ladder_guard_selftest.py": "9867e0b3e77e3f3f99894a487621f70bcff363728dbc17cef5a30297b05e2223",
+  "pf_ladder_rest.py": "d90016ce7d25f89f6f6c6662075f5be72539d3140373e42c8b7228ebcf8ce5e0",
+  "pf_branch_ladder.py": "c9e0852eccea5b4248001693fd8ddec083ea2df517dc8f3fd0d8b2f091ab285a",
+  "pf_branch_engine.py": "8b7960ef4bbbc178b281e57d92d4795d7678436c0ca875e7199e24a6626af3a8",
+  "pf_ladder_audit.py": "97a79a90a06062a775d3fe66f55da5172b3ffc2cf39e771cf52e6852fe38f44c"
+ },
+ "timing": {
+  "load": 71.18908596038818,
+  "markets": [
+   {
+    "m": 3789484,
+    "s": 9.373934030532837
+   },
+   {
+    "m": 3803131,
+    "s": 6.569945812225342
+   }
+  ]
+ },
+ "elapsed_s": 87.3810122013092,
+ "hwm_mib": 1128.71875,
+ "asof": "2026-11-21T18:20:23.237425+00:00"
+}

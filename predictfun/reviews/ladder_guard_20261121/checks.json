@@ -1,0 +1,47 @@
+{
+ "checks": {
+  "A_committed": true,
+  "A_rule": true,
+  "A_edge": true,
+  "A_sources": true,
+  "A_outputs": true,
+  "B_membership": true,
+  "B_pilot": true,
+  "C_disabled_equals_baseline": true,
+  "D_rule": true,
+  "E_accounting": true,
+  "F_arms": true,
+  "F_END_reading": true,
+  "F_per_share_reading": true,
+  "F_selection": true,
+  "G_bin_means": true,
+  "G_bin_censored": true,
+  "G_lead_flags": true,
+  "G_candidate": true,
+  "H_censor_count": true,
+  "H_valid_terms": true,
+  "I_resources": true
+ },
+ "details": {
+  "C_disabled_mismatch": 0,
+  "D_rule_violations": 0,
+  "F_selection": {
+   "selected": 517,
+   "states": 2413,
+   "censored": 6,
+   "J": -58.02565487014587,
+   "valid_window_q": 6592.841638002696,
+   "total_window_q": 6716.499954669362,
+   "excluded_window_q": 123.65831666666665,
+   "null_p05": -58.71434979599412,
+   "null_mean": -51.440351403651775,
+   "movable_strata": 104
+  },
+  "H_censor_count": 13,
+  "I": {
+   "core_hours": 0.21097500000000005,
+   "peak_mib": 1136
+  }
+ },
+ "all_ok": true
+}

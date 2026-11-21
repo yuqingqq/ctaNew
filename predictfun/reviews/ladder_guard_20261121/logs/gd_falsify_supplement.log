@@ -1,0 +1,160 @@
+/home/yuqing/ctaNew/predictfun/reviews/ladder_guard_20261121/tools/falsify_supplement.py:56: ChainedAssignmentError: A value is being set on a copy of a DataFrame or Series through chained assignment.
+Such chained assignment never works to update the original DataFrame or Series, because the intermediate object on which we are setting values always behaves as a copy (due to Copy-on-Write).
+
+Try using '.loc[row_indexer, col_indexer] = value' instead, to perform the assignment in a single step.
+
+See the documentation for a more detailed explanation: https://pandas.pydata.org/pandas-docs/stable/user_guide/copy_on_write.html#chained-assignment
+  ('lead_flag_flipped', 'G_lead_flags', lambda E: E['leads'].__setitem__('lead', E['leads'].lead.where(E['leads'].index != lead_row(E), ~E['leads'].lead.astype(bool)))),
+/home/yuqing/ctaNew/predictfun/reviews/ladder_guard_20261121/tools/falsify_supplement.py:57: ChainedAssignmentError: A value is being set on a copy of a DataFrame or Series through chained assignment.
+Such chained assignment never works to update the original DataFrame or Series, because the intermediate object on which we are setting values always behaves as a copy (due to Copy-on-Write).
+
+Try using '.loc[row_indexer, col_indexer] = value' instead, to perform the assignment in a single step.
+
+See the documentation for a more detailed explanation: https://pandas.pydata.org/pandas-docs/stable/user_guide/copy_on_write.html#chained-assignment
+  ('pooled_contrast_negated', 'G_lead_flags', lambda E: E['leads'].__setitem__('pooled_q5_minus_q1', E['leads'].pooled_q5_minus_q1.where(E['leads'].index != lead_row(E), -E['leads'].pooled_q5_minus_q1))),
+{
+ "clean_all_ok": true,
+ "falsifier_ok": true,
+ "uncovered": [
+  "F_arms",
+  "G_bin_censored",
+  "H_valid_terms"
+ ],
+ "cases": {
+  "probe_q5_means_q1_plus_1": [
+   true,
+   [
+    "G_bin_means"
+   ]
+  ],
+  "probe_censor_counter_-999999": [
+   true,
+   [
+    "X_frozen_censor_field"
+   ]
+  ],
+  "corrected_censor_counter": [
+   true,
+   [
+    "H_censor_count"
+   ]
+  ],
+  "lead_flag_flipped": [
+   true,
+   [
+    "G_lead_flags"
+   ]
+  ],
+  "pooled_contrast_negated": [
+   true,
+   [
+    "G_lead_flags"
+   ]
+  ],
+  "candidate_sign": [
+   true,
+   [
+    "G_candidate"
+   ]
+  ],
+  "candidate_feature": [
+   true,
+   [
+    "G_candidate"
+   ]
+  ],
+  "candidate_lead_count": [
+   true,
+   [
+    "G_candidate"
+   ]
+  ],
+  "END_reading": [
+   true,
+   [
+    "F_END_reading"
+   ]
+  ],
+  "per_share_reading": [
+   true,
+   [
+    "F_per_share_reading"
+   ]
+  ],
+  "selection_answer": [
+   true,
+   [
+    "F_selection"
+   ]
+  ],
+  "member_dropped": [
+   true,
+   [
+    "B_membership"
+   ]
+  ],
+  "pilot_reordered": [
+   true,
+   [
+    "B_pilot"
+   ]
+  ],
+  "disabled_fill_dropped": [
+   true,
+   [
+    "C_disabled_equals_baseline",
+    "E_accounting",
+    "F_arms"
+   ]
+  ],
+  "repeated_request": [
+   true,
+   [
+    "D_rule"
+   ]
+  ],
+  "cash_changed": [
+   true,
+   [
+    "E_accounting"
+   ]
+  ],
+  "edge_changed": [
+   true,
+   [
+    "A_edge"
+   ]
+  ],
+  "rule_sha_changed": [
+   true,
+   [
+    "A_rule"
+   ]
+  ],
+  "sources_changed": [
+   true,
+   [
+    "A_sources"
+   ]
+  ],
+  "output_hash_changed": [
+   true,
+   [
+    "A_outputs"
+   ]
+  ],
+  "uncommitted_file": [
+   true,
+   [
+    "A_committed"
+   ]
+  ],
+  "resources_over_cap": [
+   true,
+   [
+    "I_resources"
+   ]
+  ]
+ }
+}
+2026-11-21T18:28:29Z tag=gd_falsify_supplement rc=0 peak_rss_mib=450 wall_s=122.79 cpu_user_s=121.17 memavail_start_gib=23 disk_free_gib=437->437 slot=claude

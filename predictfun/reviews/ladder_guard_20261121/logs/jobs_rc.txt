@@ -1,1 +1,17 @@
 gd_manifest rc=0
+gd_pilot_20261025 rc=0
+gd_pilot_20261024 rc=0
+gd_pilot_20261027 rc=0
+gd_pilot_20261026 rc=0
+gd_projection rc=0
+gd_rest_20261027 rc=0
+gd_rest_20261025 rc=0
+gd_rest_20261026 rc=0
+gd_rest_20261024 rc=0
+gd_selection rc=0
+gd_measure rc=0
+gd_checks rc=0
+gd_falsify_supplement rc=0
+gd_report2 rc=0
+gd_report3 rc=0
+gd_report4 rc=0

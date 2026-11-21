@@ -1,0 +1,40 @@
+{
+ "cases": {
+  "D_rule": {
+   "clean": true,
+   "corrupted": false,
+   "applied": true
+  },
+  "C_disabled_equals_baseline": {
+   "clean": true,
+   "corrupted": false,
+   "applied": true
+  },
+  "F_arms": {
+   "clean": true,
+   "corrupted": false,
+   "applied": true
+  },
+  "G_bin_means": {
+   "clean": true,
+   "corrupted": false,
+   "applied": true
+  },
+  "G_bin_censored": {
+   "clean": true,
+   "corrupted": false,
+   "applied": true
+  },
+  "F_selection": {
+   "clean": true,
+   "corrupted": false,
+   "applied": true
+  },
+  "H_valid_terms": {
+   "clean": true,
+   "corrupted": false,
+   "applied": true
+  }
+ },
+ "falsifier_ok": true
+}

@@ -1,0 +1,234 @@
+{
+ "clean_all_ok": true,
+ "clean_checks": {
+  "A_committed": true,
+  "A_rule": true,
+  "A_edge": true,
+  "A_sources": true,
+  "A_outputs": true,
+  "B_membership": true,
+  "B_pilot": true,
+  "C_disabled_equals_baseline": true,
+  "D_rule": true,
+  "E_accounting": true,
+  "F_arms": true,
+  "F_END_reading": true,
+  "F_per_share_reading": true,
+  "F_selection": true,
+  "G_bin_means": true,
+  "G_bin_censored": true,
+  "G_lead_flags": true,
+  "G_candidate": true,
+  "H_censor_count": true,
+  "H_valid_terms": true,
+  "I_resources": true,
+  "X_frozen_censor_field": true
+ },
+ "cases": {
+  "probe_q5_means_q1_plus_1": {
+   "target": "G_bin_means",
+   "target_refused": true,
+   "flipped": [
+    "G_bin_means"
+   ],
+   "altered_rows": 8
+  },
+  "probe_censor_counter_-999999": {
+   "target": "X_frozen_censor_field",
+   "target_refused": true,
+   "flipped": [
+    "X_frozen_censor_field"
+   ],
+   "altered_rows": null
+  },
+  "corrected_censor_counter": {
+   "target": "H_censor_count",
+   "target_refused": true,
+   "flipped": [
+    "H_censor_count"
+   ],
+   "altered_rows": null
+  },
+  "lead_flag_flipped": {
+   "target": "G_lead_flags",
+   "target_refused": true,
+   "flipped": [
+    "G_lead_flags"
+   ],
+   "altered_rows": null
+  },
+  "pooled_contrast_negated": {
+   "target": "G_lead_flags",
+   "target_refused": true,
+   "flipped": [
+    "G_lead_flags"
+   ],
+   "altered_rows": null
+  },
+  "candidate_sign": {
+   "target": "G_candidate",
+   "target_refused": true,
+   "flipped": [
+    "G_candidate"
+   ],
+   "altered_rows": null
+  },
+  "candidate_feature": {
+   "target": "G_candidate",
+   "target_refused": true,
+   "flipped": [
+    "G_candidate"
+   ],
+   "altered_rows": null
+  },
+  "candidate_lead_count": {
+   "target": "G_candidate",
+   "target_refused": true,
+   "flipped": [
+    "G_candidate"
+   ],
+   "altered_rows": null
+  },
+  "END_reading": {
+   "target": "F_END_reading",
+   "target_refused": true,
+   "flipped": [
+    "F_END_reading"
+   ],
+   "altered_rows": null
+  },
+  "per_share_reading": {
+   "target": "F_per_share_reading",
+   "target_refused": true,
+   "flipped": [
+    "F_per_share_reading"
+   ],
+   "altered_rows": null
+  },
+  "selection_answer": {
+   "target": "F_selection",
+   "target_refused": true,
+   "flipped": [
+    "F_selection"
+   ],
+   "altered_rows": null
+  },
+  "member_dropped": {
+   "target": "B_membership",
+   "target_refused": true,
+   "flipped": [
+    "B_membership"
+   ],
+   "altered_rows": null
+  },
+  "pilot_reordered": {
+   "target": "B_pilot",
+   "target_refused": true,
+   "flipped": [
+    "B_pilot"
+   ],
+   "altered_rows": null
+  },
+  "disabled_fill_dropped": {
+   "target": "C_disabled_equals_baseline",
+   "target_refused": true,
+   "flipped": [
+    "C_disabled_equals_baseline",
+    "E_accounting",
+    "F_arms"
+   ],
+   "altered_rows": null
+  },
+  "repeated_request": {
+   "target": "D_rule",
+   "target_refused": true,
+   "flipped": [
+    "D_rule"
+   ],
+   "altered_rows": null
+  },
+  "cash_changed": {
+   "target": "E_accounting",
+   "target_refused": true,
+   "flipped": [
+    "E_accounting"
+   ],
+   "altered_rows": null
+  },
+  "edge_changed": {
+   "target": "A_edge",
+   "target_refused": true,
+   "flipped": [
+    "A_edge"
+   ],
+   "altered_rows": null
+  },
+  "rule_sha_changed": {
+   "target": "A_rule",
+   "target_refused": true,
+   "flipped": [
+    "A_rule"
+   ],
+   "altered_rows": null
+  },
+  "sources_changed": {
+   "target": "A_sources",
+   "target_refused": true,
+   "flipped": [
+    "A_sources"
+   ],
+   "altered_rows": null
+  },
+  "output_hash_changed": {
+   "target": "A_outputs",
+   "target_refused": true,
+   "flipped": [
+    "A_outputs"
+   ],
+   "altered_rows": null
+  },
+  "uncommitted_file": {
+   "target": "A_committed",
+   "target_refused": true,
+   "flipped": [
+    "A_committed"
+   ],
+   "altered_rows": null
+  },
+  "resources_over_cap": {
+   "target": "I_resources",
+   "target_refused": true,
+   "flipped": [
+    "I_resources"
+   ],
+   "altered_rows": null
+  }
+ },
+ "covered_checks": [
+  "A_committed",
+  "A_edge",
+  "A_outputs",
+  "A_rule",
+  "A_sources",
+  "B_membership",
+  "B_pilot",
+  "C_disabled_equals_baseline",
+  "D_rule",
+  "E_accounting",
+  "F_END_reading",
+  "F_per_share_reading",
+  "F_selection",
+  "G_bin_means",
+  "G_candidate",
+  "G_lead_flags",
+  "H_censor_count",
+  "I_resources",
+  "X_frozen_censor_field"
+ ],
+ "uncovered_checks": [
+  "F_arms",
+  "G_bin_censored",
+  "H_valid_terms"
+ ],
+ "falsifier_ok": true
+}

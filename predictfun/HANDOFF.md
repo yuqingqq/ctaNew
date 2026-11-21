@@ -51,6 +51,18 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_GUARD_RESULTS_20261121_DEV -->
+## 2026-11-21 18:32Z (session aea5bfb9) — ASK-RESERVATION-GUARD-v1 RESULTS: INTERPRETATION MIXED; CHECKS ALL TRUE
+
+- [Receipt](reviews/ladder_guard_20261121/report.md); freeze `ee632bc2`, results in this commit. Disabled control 19 / 19 markets equal to the baseline.
+- **Paired END:** MIXED (20261024 +23,889.4 c, 20261025 +10,662.5 c, 20261026 -3,493.8 c, 20261027 +2,385.5 c; 15 better / 4 worse).
+- **+1 s per share:** IMPROVES_EVERY_DAY (ask IMPROVES_EVERY_DAY, bid MIXED); participation: both-side -9.02 pp, filled shares -7,220.1; inventory mean |I| -7.6.
+- **Selection control:** NO_SELECTION_BEYOND_EXPOSURE (percentile 7.40 %, 104 movable strata).
+- **Validity:** checks 21 / 21, falsifier 7 / 7 + post-run supplement 22 / 22 (incl. review f8c5e579's two probe corruptions), mutants 16 / 16; 0.259 core-hours of 0.75.
+- **Review f8c5e579 findings 1-3 cleared:** (1) valid / total / excluded window quantities published (6,592.8 / 6,716.5 / 123.7), a censored high-quantity row changes neither valid term (selftest 4); (2) the checker re-derives bin means, censored counts, every lead flag, pooled ranking and candidate from the state rows and refuses the probe's corruptions (supplement); (3) generation censor count 13 with 0 <= c <= generations and a no-fill control (selftest 5).
+- **Next:** the ONE combined review, which names the next experiment.
+<!-- /LADDER_GUARD_RESULTS_20261121_DEV -->
+
 <!-- LADDER_GUARD_FREEZE_20261121_DEV -->
 ## 2026-11-21 18:18Z (session aea5bfb9) — ASK-RESERVATION-GUARD-v1 FROZEN before any replay (review f8c5e579's ONE next priority; its three findings hold)
 
