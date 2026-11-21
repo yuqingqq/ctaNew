@@ -1,3 +1,33 @@
+<!-- LADDER_PRESSURE_LAG_REVIEW_20261121_CODEX -->
+## 2026-11-21 — Pressure +50 ms sensitivity independently reviewed
+
+[Report and evidence](reviews/automatic/20261121_ladder_pressure_lag_review/report.md),
+target **6b6f977bac5eee954033c7d9326506832d935b31**. No blocking finding.
+The lag uses k-1 for pressure activation and clearance; inventory/structural
+rules stay current. 19 zero-lag controls, 57 ledgers and exact uptime/inventory,
+all interventions and 905 re-entry rows reconcile. 21 checks, 14 falsifiers
+and 152 direct read-barrier controls pass. Checker v2's only substantive
+change is preserving default-zero counters; the superseded crash is retained.
+
++50 ms retains 70.62% of END improvement (+87,174.706 c vs baseline), but END
+is -122,383.003 c and +1 s/share -1.324 c. Pooled local selection passes;
+bid-only percentile 37.2%, ask 0.2%, on consumed days. The delay costs
+36,273.395 c vs nominal: -24,395.801 through +1 s, -12,500.022 thereafter,
++622.428 late/missing. This includes changed policy paths, not just late cancels.
+
+Prior participation/inventory checker and queue-label findings are addressed.
+One deferred P3: H checks reentry.csv membership but not every field; changing
+next_price passes H. Current exported fields were all reconciled directly;
+no rerun. Largest economic gap remains adverse value on retained exposure.
+
+ONE next priority: PRESSURE-ACTION-ATTRIBUTION-v1, a frozen 2x2 action
+ablation on the same markets, with two new arms (PULL_ONLY / WITHHOLD_ONLY),
+FULL reproduction and the original baseline. Report conditional increments
+and the interaction; no threshold/lag search or new validation claim. At most
+0.35 additional core-hours within the original cumulative 2.0; no additional
+USER permission in scope. The full contract is in the report.
+<!-- /LADDER_PRESSURE_LAG_REVIEW_20261121_CODEX -->
+
 <!-- LADDER_PRESSURE_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — BINANCE-PRESSURE-GUARD-v1 independently reviewed
 

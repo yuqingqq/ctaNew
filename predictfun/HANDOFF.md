@@ -23,6 +23,37 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- LADDER_PRESSURE_LAG_REVIEW_20261121_CODEX -->
+## 2026-11-21 — Pressure timing margin reviewed; next: separate the two actions
+
+[Combined review](reviews/automatic/20261121_ladder_pressure_lag_review/report.md)
+of **6b6f977bac5eee954033c7d9326506832d935b31** accepts the consumed-day
+sensitivity. No blocking finding or rerun. Both prior findings are addressed.
+Pinned selftest, 21 checks, 14 falsifiers, all parent/cache/source identities,
+19 zero-lag controls, 57 arm ledgers, exact exposure and 905 queue-pair rows
+pass. Direct controls confirm the delayed signal cannot read tick k onward.
+
+With +50 ms the guard retains 70.62% of END improvement, +87,174.706 c over
+baseline, but remains -122,383.003 c at END and -1.324 c/share at +1 s.
+Retained END gains vary 114/78/38/48% across the four consumed days. The
+lagged local screen passes, chiefly on asks; it is not a policy-P&L null.
+Timing margin exists under this replay, while residual adverse selection,
+19/96 coverage and unchanged external flow remain open limitations.
+
+One minor NONBLOCKING item: reentry.csv acceptance checks keys, not every
+exported value; all current rows were directly reconciled. Defer or fold
+field checks into the next round if those rows are used; no repair-only cycle.
+
+ONE next experiment: **PRESSURE-ACTION-ATTRIBUTION-v1** in the report.
+Keep the original pressure signal/clock/thresholds fixed; compare baseline,
+PULL_ONLY, WITHHOLD_ONLY and FULL. Two new ablation arms; FULL reproduces the
+accepted pressure result. Measure incremental action effects and their
+interaction, preserving full inventory feedback and accounting. At most
+0.35 additional core-hours within the original 2-hour cumulative allocation
+(recorded use about 1.540). No extra USER permission within that scope;
+new days, validation, resources or execution need the USER.
+<!-- /LADDER_PRESSURE_LAG_REVIEW_20261121_CODEX -->
+
 <!-- LADDER_PRESSURE_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — Pressure guard reviewed; next: one 50 ms timing sensitivity
 

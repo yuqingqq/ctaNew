@@ -1,0 +1,35 @@
+{
+  "ladder_rest_20261121": {
+    "cpu_hours": 0.35889166666666666,
+    "peak_mib": 1185,
+    "records": 117
+  },
+  "ladder_audit_20261121": {
+    "cpu_hours": 0.2063222222222222,
+    "peak_mib": 1252,
+    "records": 112
+  },
+  "ladder_guard_20261121": {
+    "cpu_hours": 0.25947777777777775,
+    "peak_mib": 1136,
+    "records": 37
+  },
+  "ladder_pressure_20261121": {
+    "cpu_hours": 0.39846944444444443,
+    "peak_mib": 1276,
+    "records": 116
+  },
+  "ladder_pressure_lag_20261121": {
+    "cpu_hours": 0.25905,
+    "peak_mib": 1199,
+    "records": 66
+  },
+  "available_review_logs": {
+    "cpu_hours": 0.050483333333333325,
+    "records": 7
+  },
+  "total_recorded_hours": 1.5326944444444444,
+  "proposed_next_cap_hours": 0.35,
+  "within_original_two_hours": true
+}
+2026-11-21T20:04:33Z tag=codex_pressure_lag_resources rc=0 peak_rss_mib=11 wall_s=0.03 cpu_user_s=0.02 memavail_start_gib=23 disk_free_gib=437->437 slot=codex

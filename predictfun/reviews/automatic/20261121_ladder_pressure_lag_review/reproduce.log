@@ -1,0 +1,65 @@
+LAG SELFTEST PASSED: the zero-lag control, the hand tape (ON / OFF crossings, warm-up, no future read, wrong side, log fields), lag_join and run_selection, measurement helpers and the reading, guards
+Pinned selftest, 21 checks, all receipt/source/parent hashes and selection passed
+57 ledgers, exact exposure, all intervention logs and re-entry rows reconciled
+{
+  "totals": {
+    "baseline": {
+      "value": -209557.70865004533,
+      "all_q": 96991.0711332241,
+      "all_cut_mo1s": -203083.92154801564,
+      "all_cut_valid_q": 96603.986394994,
+      "all_id_move": -7617.151514891614,
+      "all_id_late": 1143.3644128619142,
+      "all_mo50": -91748.00882771148
+    },
+    "lag0": {
+      "value": -86109.60738868231,
+      "all_q": 79399.46643019779,
+      "all_cut_mo1s": -85164.27723645966,
+      "all_cut_valid_q": 79054.1188969505,
+      "all_id_move": -1416.8421000502021,
+      "all_id_late": 471.5119478275499,
+      "all_mo50": -27654.14880173105
+    },
+    "lag1": {
+      "value": -122383.00277411118,
+      "all_q": 83182.18034382061,
+      "all_cut_mo1s": -109560.07869426117,
+      "all_cut_valid_q": 82746.67151776352,
+      "all_id_move": -13916.863719053606,
+      "all_id_late": 1093.9396392036,
+      "all_mo50": -35883.82202625088
+    }
+  },
+  "retained": {
+    "END": {
+      "20261024": 1.139445409074911,
+      "20261025": 0.7757695001782984,
+      "20261026": 0.3776374324803012,
+      "20261027": 0.4844846405846441,
+      "all": 0.7061648173216436
+    },
+    "per_share": {
+      "20261024": 0.9212352777357433,
+      "20261025": 0.6746111942080164,
+      "20261026": 0.8753959578623172,
+      "20261027": 0.647030053795642,
+      "all": 0.7592530414197424
+    },
+    "lag1_minus_lag0_END": {
+      "20261024": 4361.400957565653,
+      "20261025": -8268.254218323225,
+      "20261026": -22482.90898225658,
+      "20261027": -9883.633142414717
+    }
+  },
+  "interventions": {
+    "lag0|pressure_pull": 433,
+    "lag0|pressure_withhold": 1289,
+    "lag1|pressure_pull": 472,
+    "lag1|pressure_withhold": 1402
+  },
+  "queue_rows": 905,
+  "future_checks": 152
+}
+2026-11-21T20:02:43Z tag=codex_pressure_lag_review rc=0 peak_rss_mib=643 wall_s=23.13 cpu_user_s=22.49 memavail_start_gib=23 disk_free_gib=437->437 slot=codex
