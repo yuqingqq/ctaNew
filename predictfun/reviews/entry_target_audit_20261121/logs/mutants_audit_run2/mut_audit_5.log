@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "5", "name": "the pre-fork equality unchecked", "seconds": 0.7, "sources": {"pf_entry_audit.py": "ae6c32802a0f722e", "pf_entry_audit_mutants.py": "05f0cdd49b237b2b", "pf_entry_audit_selftest.py": "6d646587d9828eca"}, "why": "ENTRY AUDIT SELFTEST FAILED: refusal: a pre-fork difference -> ok, not identity_failure"}
+2026-11-21T07:46:08Z tag=mut_audit_5 rc=0 peak_rss_mib=198 wall_s=0.95 cpu_user_s=0.79 memavail_start_gib=22 disk_free_gib=447->447 slot=claude3

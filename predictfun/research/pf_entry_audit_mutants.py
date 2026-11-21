@@ -24,5 +24,6 @@ MUTANTS = [
     ('rare execution without the no-fill condition', "s['share_meaningful'] < RARE_MEANINGFUL and s['init_no_fill'] >= RARE_NOFILL)", "s['share_meaningful'] < RARE_MEANINGFUL)"),
     ('unweighted summaries', "w = g.w.astype(float).values if weighted else np.ones(len(g))", "w = np.ones(len(g))"),
     ('the join by row position', "            i = idx.get((r['day'], r['m'], r['t_ms'], r['side'], r['pick']))", "            i = rows.index(r) if rows.index(r) < len(P) else None"),
+    ('the reached rows overwritten by their summary', "reached_summary='reached_summary.csv'", "reached_summary='reached_rows.csv'"),
     ('a missing join dropped silently', "                    r['pred_status'] = 'prediction_missing'", "                    pass"),
 ]

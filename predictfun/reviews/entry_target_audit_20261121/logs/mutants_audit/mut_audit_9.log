@@ -1,2 +1,2 @@
-{"cls": "CAUGHT", "index": "9", "name": "the residue counted an exact zero", "seconds": 0.8, "sources": {"pf_entry_audit.py": "ae6c32802a0f722e", "pf_entry_audit_mutants.py": "05f0cdd49b237b2b", "pf_entry_audit_selftest.py": "6d646587d9828eca"}, "why": "ENTRY AUDIT SELFTEST FAILED: a residue: exact_zero = True, not False"}
-2026-11-21T07:46:09Z tag=mut_audit_9 rc=0 peak_rss_mib=198 wall_s=0.97 cpu_user_s=0.83 memavail_start_gib=22 disk_free_gib=447->447 slot=claude3
+{"cls": "CAUGHT", "index": "9", "name": "the residue counted an exact zero", "seconds": 0.8, "sources": {"pf_entry_audit.py": "6fc7d2e487f3fdf5", "pf_entry_audit_mutants.py": "d08e0428b2816e76", "pf_entry_audit_selftest.py": "1e6929f125f4338d"}, "why": "ENTRY AUDIT SELFTEST FAILED: a residue: exact_zero = True, not False"}
+2026-11-21T07:49:58Z tag=mut_audit_9 rc=0 peak_rss_mib=198 wall_s=0.97 cpu_user_s=0.81 memavail_start_gib=22 disk_free_gib=447->447 slot=claude3

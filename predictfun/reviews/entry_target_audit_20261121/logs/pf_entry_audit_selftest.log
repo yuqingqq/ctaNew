@@ -1,2 +1,2 @@
 entry audit selftest passed: 8 accounting cases (classes, V_initial / D_focal / D_opposite, identity, initial fill, WAIT next POST); 6 refusals; the predicates (5 cases); group_summary (hand values); the key join and prediction_missing
-2026-11-21T07:46:02Z tag=pf_entry_audit_selftest rc=0 peak_rss_mib=198 wall_s=0.91 cpu_user_s=0.74 memavail_start_gib=22 disk_free_gib=447->447 slot=claude
+2026-11-21T07:49:51Z tag=pf_entry_audit_selftest rc=0 peak_rss_mib=199 wall_s=0.93 cpu_user_s=0.77 memavail_start_gib=22 disk_free_gib=447->447 slot=claude

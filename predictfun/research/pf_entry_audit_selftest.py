@@ -8,7 +8,9 @@ copy under pf_mutant_one.py); any failed check exits with FAIL. Synthetic pair r
     forced_generation_not_unique; a pre-fork difference is an identity_failure;
  3. the predicates: rare_execution / cancellation / both / not_identified on hand summaries at the declared thresholds;
  4. group_summary: weighted class shares and means, absolute totals, the top-5 share, the WAIT-next-POST bins (hand values);
- 5. the prediction join: by the exact key whatever the row order; a missing key is the status prediction_missing, never a drop."""
+ 5. the prediction join: by the exact key whatever the row order; a missing key is the status prediction_missing, never a drop;
+ 6. write_outputs: every declared output written under its own name with its own rows (the reached rows not overwritten by their summary),
+    audit.json last."""
 import sys
 
 import numpy as np
@@ -100,6 +102,19 @@ def run(M):  # noqa: C901
         M.NE.read_r3 = sv
     if not (rows[0].get('pred_RICH') == 3. and rows[1].get('pred_SMOOTH') == .1 and rows[2].get('pred_status') == 'prediction_missing' and 'pred_RICH' not in rows[2]):
         bad.append('predictions: not joined by the exact key, or a missing key was not its status')
+    # ---- 6 write_outputs
+    import tempfile
+    from pathlib import Path
+    with tempfile.TemporaryDirectory() as td:
+        Dw = pd.DataFrame(dict(a=[1, 2])); Rw = pd.DataFrame(dict(b=[1, 2, 3])); Sw = {k: [dict(x=1)] for k in ('groups', 'strata', 'crosstab', 'statuses', 'reached_statuses')}
+        Sw['reached'] = [dict(y=1), dict(y=2), dict(y=3), dict(y=4)]
+        try:
+            M.write_outputs(td, Dw, Rw, Sw, dict(v=1))
+            got = {k: len(pd.read_csv(Path(td) / f)) for k, f in M.FILES.items()}
+            if got != dict(rows=2, reached_rows=3, groups=1, strata=1, crosstab=1, reached_summary=4, statuses=1, reached_statuses=1) or not (Path(td) / 'audit.json').exists():
+                bad.append(f'write_outputs: the outputs are not each under its own name ({got})')
+        except Exception as e:                                                              # noqa: BLE001
+            bad.append(f'write_outputs: a valid write stopped ({e!r})'[:200])
     if bad:
         sys.exit(FAIL + ': ' + '; '.join(bad))
     print('entry audit selftest passed: 8 accounting cases (classes, V_initial / D_focal / D_opposite, identity, initial fill, WAIT next POST); '
