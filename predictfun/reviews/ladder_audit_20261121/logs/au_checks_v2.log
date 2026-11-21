@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/ladder_audit_20261121/audit_checks_v2.py", line 216, in <module>
+    main()
+  File "/home/yuqing/ctaNew/predictfun/reviews/ladder_audit_20261121/audit_checks_v2.py", line 210, in main
+    sys.path.insert(0, str(REPO / 'predictfun/research')); E = load(); res = run_checks(E)
+                                                                             ^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/ladder_audit_20261121/audit_checks_v2.py", line 142, in run_checks
+    L_ = byk[(x['day'], int(x['m']))]['ledger']; o = [y for y in L_['orders'] if int(y['gid']) == int(x['gid'])][0]; mark = float(L_['mark'])
+         ~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: (20261024, 3697902)
+2026-11-21T17:51:45Z tag=au_checks_v2 rc=1 peak_rss_mib=200 wall_s=1.28 cpu_user_s=1.09 memavail_start_gib=23 disk_free_gib=438->438 slot=claude
