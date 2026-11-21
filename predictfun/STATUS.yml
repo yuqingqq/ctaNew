@@ -1,3 +1,22 @@
+r4e_review_20261121_codex:
+  status: reliable_negative_entry_result_target_audit_next
+  target_commit: 141e820e4b736c6a8c4f27b0a0dbf53789e95e89
+  report: predictfun/reviews/automatic/20261121_141e820e/report.md
+  blocking_findings_for_current_readings: []
+  demonstrated_entry_skill: false
+  promotion_or_untouched_validation_recommended: false
+  artifacts: {POST_eval_rows: 12088, replay_parts: 12, replay_planned_worlds: 384, replay_ok_worlds: 380, episode_ledgers: 1520, reached_ok_pairs: 760, reached_meaningful_pairs: 29, R3_control_matches: 1140}
+  independent_review: {successful_jobs: 5, wall_seconds: 102.49, total_wall_including_review_assertion_failure: 103.96, peak_rss_mib: 349, fits: 0, real_tape_runs: 0}
+  prior_items: [smoothing_experiment_complete_negative, trace_retention_closed, common_state_comparison_closed, calibration_weighting_closed, part_identity_closed, parser_amendment_accepted, writer_amendments_accepted]
+  nonblocking: [entry_economic_selection_failure, PI0_value_vs_paired_advantage_nomenclature, anchor_vs_sampled_population_labels, episode_check_END_settings_scope]
+  current_episode_END_settings_marks_and_fill_bounds_independently_correct: true
+  next_priority: ENTRY_TARGET_AUDIT_v1_existing_POST_pair_trace_decomposition
+  direct_advantage_regressor_tuning: stop_pending_target_audit
+  next_round: {train_data: ["20261024", "20261025"], development_data: ["20261026", "20261027"], all_consumed: true, existing_reached_pairs_separate: 760, core_hours_ceiling: 1, cores: 1, checkpoint_mib: 1536, hard_rss_mib: 2048, fits: 0, new_labels: 0, real_tape_runs: 0}
+  additional_user_approval_for_declared_audit: false
+  new_label_dates_or_untouched_access_authorized: false
+  intermediate_review_required: false
+
 r3_review_20261121_codex:
   status: reliable_negative_candidate_result_entry_experiment_next
   target_commit: 76be496029ae3180b266bc94a6f8a2b16bf257ff

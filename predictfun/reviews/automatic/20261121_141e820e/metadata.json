@@ -1,0 +1,27 @@
+{
+  "checkpoint_hashes": 36,
+  "checks_A_I_unchanged": true,
+  "exact_reader_only_amendment": true,
+  "models": 2,
+  "mutation_records": {
+    "entry": 16,
+    "entry_eval": 15,
+    "entry_replay": 19,
+    "rsum": 8
+  },
+  "params": {
+    "bagging_fraction": 0.8,
+    "bagging_freq": 1,
+    "feature_fraction": 0.8,
+    "lambda_l2": 10.0,
+    "learning_rate": 0.05,
+    "min_data_in_leaf": 1000,
+    "num_leaves": 31,
+    "num_threads": 1,
+    "objective": "regression",
+    "seed": 1,
+    "verbose": -1
+  },
+  "rounds": 50,
+  "unchanged_engine_teacher_labels_and_R3": true
+}

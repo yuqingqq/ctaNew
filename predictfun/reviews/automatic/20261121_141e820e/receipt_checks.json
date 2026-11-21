@@ -1,0 +1,146 @@
+{
+  "details": {
+    "A": {
+      "bad": [],
+      "delta": {
+        "min_data_in_leaf": [
+          200,
+          1000
+        ]
+      },
+      "models": 2
+    },
+    "B": {
+      "commit": "eaea1161dc39e8048655ebcd775fbf6004b18014",
+      "committed_at": "2026-11-21T06:56:07+00:00",
+      "eval_asof": "2026-11-21T07:00:08.702512+00:00",
+      "parts": 12
+    },
+    "C": {
+      "recomputed": {
+        "r3_rows": 12088,
+        "rich_pred_equal": true,
+        "rows": 12088,
+        "same_keys": true,
+        "w_equal": true,
+        "y_equal": true
+      },
+      "stored": {
+        "r3_rows": 12088,
+        "rich_pred_equal": true,
+        "rows": 12088,
+        "same_keys": true,
+        "w_equal": true,
+        "y_equal": true
+      }
+    },
+    "D": {
+      "missing": [],
+      "predicates_recomputed_equal": true,
+      "strata_dims": [
+        "c_gen",
+        "c_other",
+        "hbin",
+        "source"
+      ]
+    },
+    "E": {
+      "draws": 500,
+      "rows": 12,
+      "seed": 20261121
+    },
+    "F": {
+      "bad": [],
+      "episodes": 1520,
+      "n_bad": 0,
+      "population": 384,
+      "worlds": 384
+    },
+    "G": {
+      "bad": [],
+      "n_bad": 0,
+      "statuses": {
+        "ok": 760
+      }
+    },
+    "H": {
+      "entry": {
+        "caught": 16,
+        "extra_files": [],
+        "failures": [],
+        "judge_ok": true,
+        "one_record_per_file": true,
+        "planted": 16
+      },
+      "entry_eval": {
+        "caught": 15,
+        "extra_files": [],
+        "failures": [],
+        "judge_ok": true,
+        "one_record_per_file": true,
+        "planted": 15
+      },
+      "entry_replay": {
+        "caught": 19,
+        "extra_files": [],
+        "failures": [],
+        "judge_ok": true,
+        "one_record_per_file": true,
+        "planted": 19
+      }
+    },
+    "I": {
+      "bad": [],
+      "core_hours": 1.3860833333333336,
+      "jobs": 123,
+      "peak_mib": 1186
+    }
+  },
+  "episode_check_accepts_changed_END": true,
+  "flags": {
+    "A": true,
+    "B": true,
+    "C": true,
+    "D": true,
+    "E": true,
+    "F": true,
+    "G": true,
+    "H": true,
+    "I": true
+  },
+  "isolated_roundtrip_label_falsifier_passed": true,
+  "real_artifact_falsifier": {
+    "asof": "2026-11-21T07:34:31.203983+00:00",
+    "cases": {
+      "C": {
+        "applied": true,
+        "clean": true,
+        "corrupted": false
+      },
+      "D": {
+        "applied": true,
+        "clean": true,
+        "corrupted": false
+      },
+      "F": {
+        "applied": true,
+        "clean": true,
+        "control_value": false,
+        "trace_fill": false
+      },
+      "G": {
+        "applied": true,
+        "arm_fill": false,
+        "clean": true
+      },
+      "H": {
+        "applied": true,
+        "clean": true,
+        "corrupted": false
+      }
+    },
+    "falsifier_ok": true,
+    "source_sha256": "7252d05fe8b6aeeca83c0f4717f5f2ef512d51ee4c9933f041aa7b8ce1bb666e",
+    "supersedes": "r4e_checks.falsify (crashed: StopIteration)"
+  }
+}

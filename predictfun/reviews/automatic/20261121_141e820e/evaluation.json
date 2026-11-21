@@ -1,0 +1,114 @@
+{
+  "identity": {
+    "r3_rows": 12088,
+    "rich_pred_equal": true,
+    "rows": 12088,
+    "same_keys": true,
+    "w_equal": true,
+    "y_equal": true
+  },
+  "matched_draws": 500,
+  "stats": [
+    {
+      "admissions": 1247,
+      "candidate": "SMOOTH",
+      "day": "20261026",
+      "local_value": -0.4711956157378374,
+      "meaningful": 71,
+      "mse_over_zero": 1.0039887067717772,
+      "n": 3018,
+      "side": 0
+    },
+    {
+      "admissions": 1571,
+      "candidate": "RICH",
+      "day": "20261026",
+      "local_value": -0.6865050729272942,
+      "meaningful": 71,
+      "mse_over_zero": 1.067730698093384,
+      "n": 3018,
+      "side": 0
+    },
+    {
+      "admissions": 802,
+      "candidate": "SMOOTH",
+      "day": "20261026",
+      "local_value": -0.002481581352508934,
+      "meaningful": 97,
+      "mse_over_zero": 0.9981337860901086,
+      "n": 3018,
+      "side": 1
+    },
+    {
+      "admissions": 1526,
+      "candidate": "RICH",
+      "day": "20261026",
+      "local_value": -0.9490737086327287,
+      "meaningful": 97,
+      "mse_over_zero": 1.032079255460632,
+      "n": 3018,
+      "side": 1
+    },
+    {
+      "admissions": 1184,
+      "candidate": "SMOOTH",
+      "day": "20261027",
+      "local_value": -0.38590530998215494,
+      "meaningful": 85,
+      "mse_over_zero": 1.000104439413105,
+      "n": 3026,
+      "side": 0
+    },
+    {
+      "admissions": 1605,
+      "candidate": "RICH",
+      "day": "20261027",
+      "local_value": -0.22452835787419503,
+      "meaningful": 85,
+      "mse_over_zero": 1.018563493550478,
+      "n": 3026,
+      "side": 0
+    },
+    {
+      "admissions": 889,
+      "candidate": "SMOOTH",
+      "day": "20261027",
+      "local_value": -0.23062670439599453,
+      "meaningful": 73,
+      "mse_over_zero": 0.9956667311006375,
+      "n": 3026,
+      "side": 1
+    },
+    {
+      "admissions": 1648,
+      "candidate": "RICH",
+      "day": "20261027",
+      "local_value": -0.38088702492323206,
+      "meaningful": 73,
+      "mse_over_zero": 1.0012341560237197,
+      "n": 3026,
+      "side": 1
+    }
+  ],
+  "statuses": {
+    "20261026 keep ok": 3018,
+    "20261026 keep world:no_path:missing_endpoint": 46,
+    "20261026 keep world:no_path:stale_future_book": 8,
+    "20261026 post ok": 6036,
+    "20261026 post world:no_path:missing_endpoint": 46,
+    "20261026 post world:no_path:stale_future_book": 8,
+    "20261027 keep ok": 3026,
+    "20261027 keep world:no_path:missing_endpoint": 46,
+    "20261027 post ok": 6052,
+    "20261027 post world:no_path:missing_endpoint": 46
+  },
+  "tables_recomputed": [
+    "readings",
+    "screens",
+    "calibration",
+    "control",
+    "strata",
+    "coverage",
+    "predicates"
+  ]
+}

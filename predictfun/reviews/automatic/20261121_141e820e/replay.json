@@ -1,0 +1,253 @@
+{
+  "counters": {
+    "R3_control_matches": 1140,
+    "episode_callbacks": 254405,
+    "episode_checked": 7891,
+    "episode_parity_checked": 5255,
+    "episode_policies": 1520,
+    "fills": 660,
+    "reached_checked": 5379,
+    "reached_meaningful": 29,
+    "reached_ok": 760,
+    "reached_parity_checked": 5077
+  },
+  "csv_byte_identity": true,
+  "diffs": [
+    {
+      "day": "20261026",
+      "diff_sum": 2635.2838363590845,
+      "n": 188,
+      "negative": 24,
+      "policy": "N0",
+      "positive": 48,
+      "versus": "ENTRY_ONLY"
+    },
+    {
+      "day": "20261026",
+      "diff_sum": 265.06874204786135,
+      "n": 188,
+      "negative": 8,
+      "policy": "N0",
+      "positive": 8,
+      "versus": "PI0"
+    },
+    {
+      "day": "20261026",
+      "diff_sum": 2370.215094311223,
+      "n": 188,
+      "negative": 25,
+      "policy": "PI0",
+      "positive": 49,
+      "versus": "ENTRY_ONLY"
+    },
+    {
+      "day": "20261026",
+      "diff_sum": -2370.215094311223,
+      "n": 188,
+      "negative": 49,
+      "policy": "ENTRY_ONLY",
+      "positive": 25,
+      "versus": "PI0"
+    },
+    {
+      "day": "20261026",
+      "diff_sum": 163.5861431563393,
+      "n": 188,
+      "negative": 41,
+      "policy": "SMOOTH",
+      "positive": 42,
+      "versus": "ENTRY_ONLY"
+    },
+    {
+      "day": "20261026",
+      "diff_sum": -2206.628951154884,
+      "n": 188,
+      "negative": 40,
+      "policy": "SMOOTH",
+      "positive": 18,
+      "versus": "PI0"
+    },
+    {
+      "day": "20261027",
+      "diff_sum": 2377.5009329708014,
+      "n": 192,
+      "negative": 18,
+      "policy": "N0",
+      "positive": 49,
+      "versus": "ENTRY_ONLY"
+    },
+    {
+      "day": "20261027",
+      "diff_sum": -31.57334930598506,
+      "n": 192,
+      "negative": 6,
+      "policy": "N0",
+      "positive": 9,
+      "versus": "PI0"
+    },
+    {
+      "day": "20261027",
+      "diff_sum": 2409.074282276786,
+      "n": 192,
+      "negative": 18,
+      "policy": "PI0",
+      "positive": 50,
+      "versus": "ENTRY_ONLY"
+    },
+    {
+      "day": "20261027",
+      "diff_sum": -2409.074282276786,
+      "n": 192,
+      "negative": 50,
+      "policy": "ENTRY_ONLY",
+      "positive": 18,
+      "versus": "PI0"
+    },
+    {
+      "day": "20261027",
+      "diff_sum": 883.7152480962667,
+      "n": 192,
+      "negative": 33,
+      "policy": "SMOOTH",
+      "positive": 44,
+      "versus": "ENTRY_ONLY"
+    },
+    {
+      "day": "20261027",
+      "diff_sum": -1525.3590341805198,
+      "n": 192,
+      "negative": 36,
+      "policy": "SMOOTH",
+      "positive": 21,
+      "versus": "PI0"
+    }
+  ],
+  "summary_exact": true,
+  "totals": [
+    {
+      "binding_bad": 0,
+      "day": "20261026",
+      "filled_shares": 1536.887622810002,
+      "fills": 158,
+      "generations": 4611,
+      "ledger_ok": true,
+      "loss": 3896.874300591251,
+      "policy": "ENTRY_ONLY",
+      "severe": 21,
+      "value": -2635.2838363590845,
+      "value_ask": -415.0888474033931,
+      "value_bid": -2220.194988955691,
+      "worlds": 188
+    },
+    {
+      "binding_bad": 0,
+      "day": "20261026",
+      "filled_shares": 0.0,
+      "fills": 0,
+      "generations": 0,
+      "ledger_ok": true,
+      "loss": 0.0,
+      "policy": "N0",
+      "severe": 0,
+      "value": 0.0,
+      "value_ask": 0.0,
+      "value_bid": 0.0,
+      "worlds": 188
+    },
+    {
+      "binding_bad": 0,
+      "day": "20261026",
+      "filled_shares": 336.38419092005967,
+      "fills": 29,
+      "generations": 319,
+      "ledger_ok": true,
+      "loss": 370.4927108433735,
+      "policy": "PI0",
+      "severe": 3,
+      "value": -265.0687420478614,
+      "value_ask": 21.327053901895212,
+      "value_bid": -286.39579594975646,
+      "worlds": 188
+    },
+    {
+      "binding_bad": 0,
+      "day": "20261026",
+      "filled_shares": 1295.7593612423227,
+      "fills": 128,
+      "generations": 3540,
+      "ledger_ok": true,
+      "loss": 2915.6986035501345,
+      "policy": "SMOOTH",
+      "severe": 21,
+      "value": -2471.697693202745,
+      "value_ask": -793.6751582701133,
+      "value_bid": -1678.022534932632,
+      "worlds": 188
+    },
+    {
+      "binding_bad": 0,
+      "day": "20261027",
+      "filled_shares": 1386.7198227189574,
+      "fills": 172,
+      "generations": 4745,
+      "ledger_ok": true,
+      "loss": 3260.22538426852,
+      "policy": "ENTRY_ONLY",
+      "severe": 29,
+      "value": -2377.5009329708014,
+      "value_ask": -701.4066787869053,
+      "value_bid": -1676.0942541838956,
+      "worlds": 192
+    },
+    {
+      "binding_bad": 0,
+      "day": "20261027",
+      "filled_shares": 0.0,
+      "fills": 0,
+      "generations": 0,
+      "ledger_ok": true,
+      "loss": 0.0,
+      "policy": "N0",
+      "severe": 0,
+      "value": 0.0,
+      "value_ask": 0.0,
+      "value_bid": 0.0,
+      "worlds": 192
+    },
+    {
+      "binding_bad": 0,
+      "day": "20261027",
+      "filled_shares": 325.58975596097025,
+      "fills": 38,
+      "generations": 370,
+      "ledger_ok": true,
+      "loss": 398.2406259259259,
+      "policy": "PI0",
+      "severe": 3,
+      "value": 31.57334930598509,
+      "value_ask": -209.87062592592594,
+      "value_bid": 241.4439752319109,
+      "worlds": 192
+    },
+    {
+      "binding_bad": 0,
+      "day": "20261027",
+      "filled_shares": 1266.0392064444127,
+      "fills": 135,
+      "generations": 3712,
+      "ledger_ok": true,
+      "loss": 2521.8558222828947,
+      "policy": "SMOOTH",
+      "severe": 19,
+      "value": -1493.7856848745348,
+      "value_ask": -391.135316374269,
+      "value_bid": -1102.6503685002658,
+      "worlds": 192
+    }
+  ],
+  "worlds": {
+    "ok": 380,
+    "world:no_path:missing_endpoint": 3,
+    "world:no_path:stale_future_book": 1
+  }
+}
