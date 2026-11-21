@@ -1,3 +1,36 @@
+default_post_duration_size_20261121_codex:
+  status: user_directed_amended_development_handoff_ready
+  source_head: e9e710fd606d96b8ce45f92a219bb4efcc9fac37
+  plan: predictfun/reviews/automatic/20261121_default_post_duration_size/plan_v2.md
+  supersedes: default_post_plan_20261121_codex
+  next_priority: DEFAULT_POST_LOSS_MAP_v2
+  no_model_fit_this_round: true
+  scenarios:
+    - {name: LEGACY_5S_Q30_C30, duration_ms: 5000, size_shares: 30, cap_shares: 30}
+    - {name: REST_60S_Q30_C30, duration_ms: 60000, size_shares: 30, cap_shares: 30}
+    - {name: REST_60S_Q30_C100, duration_ms: 60000, size_shares: 30, cap_shares: 100}
+    - {name: REST_60S_Q50_C100, duration_ms: 60000, size_shares: 50, cap_shares: 100}
+    - {name: REST_60S_Q100_C100, duration_ms: 60000, size_shares: 100, cap_shares: 100}
+  continuous_state_checkpoints_ms: [5000, 30000, 60000]
+  checkpoint_reset_or_forced_cancel: false
+  manifest_parent: predictfun/reviews/entry_exposure_20261121/manifest.json
+  world_selection: one_hash_ranked_key_per_day_hour
+  worlds_max: 96
+  consumed_days: ["20261024", "20261025", "20261026", "20261027"]
+  no_status_backfill: true
+  pilot_worlds: 8
+  core_hours_ceiling: 2
+  also_bounded_by_unused_previous_eight_hour_allocation: true
+  pilot_core_hours_ceiling: 0.25
+  legacy_configuration_parity_required: true
+  frozen_PI0_extrapolation_authorized: false
+  no_new_dates_or_untouched_access: true
+  extra_user_approval_within_contract: false
+  combined_acceptance_reviews: 1
+  implementation_owner: development_session
+  new_simulations_run_by_planning_session: 0
+  larger_size_advantage_established: false
+
 default_post_plan_20261121_codex:
   status: user_directed_development_handoff_ready
   source_head: 8a990d5f2c87de732206aef70eae78cb8a02257a

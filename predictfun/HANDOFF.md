@@ -23,6 +23,37 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- DEFAULT_POST_DURATION_SIZE_20261121_CODEX -->
+## 2026-11-21 — USER amendment: measure longer-lived, larger resting orders
+
+**CURRENT CONTRACT: [DEFAULT-POST-LOSS-MAP-v2](reviews/automatic/20261121_default_post_duration_size/plan_v2.md).**
+This supersedes v1's five-second/30-share-only design and immediate optional
+guard fit. The USER notes that larger orders may preserve queue priority
+through multiple fills and that five seconds can miss that benefit.
+
+Run a bounded minute-long default-post experiment, carrying order/queue/
+inventory/pending state continuously; observe at 5/30/60 s without resets.
+Scenarios: legacy 5s/Q30/cap30; 60s/Q30/cap30; and 60s/Q30, Q50, Q100 each
+with cap100. The cap control separates inventory capacity from order size.
+Use one deterministic key per day/hour from the existing Oct24-27 manifest,
+at most 96 worlds, common eligible coverage and explicit expiry/gap statuses.
+No larger-size priority assumption, partial top-up, fixed minimum hold or
+quiet removal of structural cancellations. No new dates.
+
+The present engine binds END/SIZE/CAP and the teacher is not validated for
+the new settings. Development must add a minimal versioned configuration
+extension with legacy parity, actual settings in identity, and long partial-
+fill/queue/resume controls. Do not extrapolate PI0 or its five-second input
+vector to the new scenario. Reuse the matching/timing logic and raw builders.
+
+Measure later fills and their economics, queue survival, losses, cap-blocked
+time, inventory and quantity-normalized results. Defer protection fitting
+until this exposure design is understood. Replace, rather than duplicate,
+the old full study; retain the two-core-hour/remaining-allocation ceiling,
+fixed pilot, existing resource limits and ONE combined review. Development
+can proceed under this amended scope without another USER approval.
+<!-- /DEFAULT_POST_DURATION_SIZE_20261121_CODEX -->
+
 <!-- DEFAULT_POST_PLAN_20261121_CODEX -->
 ## 2026-11-21 — USER changes priority: default-post simulation and actionable loss map
 

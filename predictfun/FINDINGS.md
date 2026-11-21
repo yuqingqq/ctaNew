@@ -1,3 +1,28 @@
+<!-- DEFAULT_POST_DURATION_SIZE_20261121_CODEX -->
+## 2026-11-21 — Five-second/30-share evidence does not resolve longer queue value
+
+[Superseding USER-directed plan](reviews/automatic/20261121_default_post_duration_size/plan_v2.md).
+Planning evidence at **e9e710fd606d96b8ce45f92a219bb4efcc9fac37**:
+pf_branch_engine binds END=5000 and global SIZE/CAP in executed order and
+reservation logic; pf_r2_labels.world_bind extracts a five-second tape.
+The endpoint-aware queue-place path builder can supply a longer path subject
+to expiry and coverage checks, but the client/identity/feature configuration
+must also change consistently. A report-only horizon change is insufficient.
+
+A larger order can retain the priority of its unfilled remainder through
+multiple fills; it does not jump the queue. More filled shares or larger
+gross dollars alone do not establish a queue or efficiency benefit. Compare
+sizes at a common cap, report cap constraints separately, and preserve no-fill
+and right-censored orders. Historical replay remains conditional on external
+flow not reacting to our extra displayed quantity.
+
+Measure 60-second continuous default-post scenarios at sizes 30/50/100 plus
+legacy size/cap controls before fitting a new guard. Common observation marks
+are not forced cancellation times, and filled inventory is not liquidated
+for free. Model/guard labels must subsequently match the actual exposure
+policy and units. No new result or larger-size advantage is claimed.
+<!-- /DEFAULT_POST_DURATION_SIZE_20261121_CODEX -->
+
 <!-- DEFAULT_POST_PLAN_20261121_CODEX -->
 ## 2026-11-21 — Diagnose a default-post policy before expanding PI0 coverage
 
