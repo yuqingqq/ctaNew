@@ -1,0 +1,15 @@
+{
+  "frozen_sources_unchanged": true,
+  "mutants": {
+    "H": {
+      "extra_files": [],
+      "failures": [],
+      "judge_ok": true,
+      "one_record_per_file": true,
+      "planted": 32
+    }
+  },
+  "pilot_restoration_matches_committed_copy": true,
+  "receipt_hashes": 18,
+  "teacher_sources": 76
+}

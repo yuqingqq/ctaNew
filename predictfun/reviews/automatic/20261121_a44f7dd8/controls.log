@@ -1,0 +1,25 @@
+{
+ "forks": 2,
+ "fork_statuses": [
+  {
+   "day": "20261024",
+   "status": "ok",
+   "n": 2
+  }
+ ],
+ "readings": {
+  "entry_identifiable": false,
+  "review_protective": false,
+  "forecasts_fail": true,
+  "not_distinguishable": false
+ },
+ "discriminates": {
+  "entry": false,
+  "first_review": false
+ }
+}
+entry retention selftest passed: crafted tapes (distinct pull, same-as-review pull, refusal, structural removal, other side, prefix and callback refusals, neutral hold, target split, first-pull reconciliation, hidden-state leak); fork_stages end to end with four refusals; groups, transition, calibration, bins, decisions, matched nulls, predicates; writers (measure immutable / refused; run_part refused)
+retention checks selftest passed: a clean synthetic row passes B / C / D; 7 corruptions are flagged (review time, a missing callback, a wrong END, compensating target / unavoidable, a wrong but valid gid, D_initial, one input)
+{"cases": {"B_review_time": {"clean": true, "corrupted": false, "applied": true}, "B_missing_callback": {"clean": true, "corrupted": false, "applied": true}, "C_compensating": {"clean": true, "corrupted": false, "applied": true}, "C_wrong_gid": {"clean": true, "corrupted": false, "applied": true}, "D_input": {"clean": true, "corrupted": false, "applied": true}, "B_wrong_END": {"clean": true, "corrupted": false, "applied": true}, "A": {"clean": true, "corrupted": false, "applied": true}, "E": {"clean": true, "corrupted": false, "applied": true}, "F": {"clean": true, "corrupted": false, "applied": true}, "G": {"clean": true, "corrupted": false, "applied": true}, "H": {"clean": true, "corrupted": false, "applied": true}}, "falsifier_ok": true}
+{"checks": {"A_identity": true, "B_prefix": true, "C_targets": true, "D_forecasts": true, "E_measurements": true, "F_predicates": true, "G_resources": true, "H": true}, "falsifier": {"asof": "2026-11-21T10:33:45.414392+00:00", "cases": {"A": {"applied": true, "clean": true, "corrupted": false}, "B_missing_callback": {"applied": true, "clean": true, "corrupted": false}, "B_review_time": {"applied": true, "clean": true, "corrupted": false}, "B_wrong_END": {"applied": true, "clean": true, "corrupted": false}, "C_compensating": {"applied": true, "clean": true, "corrupted": false}, "C_wrong_gid": {"applied": true, "clean": true, "corrupted": false}, "D_input": {"applied": true, "clean": true, "corrupted": false}, "E": {"applied": true, "clean": true, "corrupted": false}, "F": {"applied": true, "clean": true, "corrupted": false}, "G": {"applied": true, "clean": true, "corrupted": false}, "H": {"applied": true, "clean": true, "corrupted": false}}, "falsifier_ok": true}, "mean_forecast_counterexample": {"declared_forecasts_fail": true, "forecast": -30.0, "mae": 42.0, "mae_zero": 30.0, "mse": 2100.0, "mse_zero": 3000.0, "true_mean": -30.0}, "readings": {"A": {"bad": [], "forks": 768, "stage_rows": 2304}, "B": {"examples": [], "failing": 0, "rows": 756}, "C": {"examples": [], "failing": 0, "rows": 756}, "D": {"examples": [], "failing": 0, "rows": 756}, "E": {"bad": []}, "F": {"readings": {"entry_identifiable": false, "forecasts_fail": true, "not_distinguishable": false, "review_protective": false}, "same": true}, "G": {"bad": [], "core_hours": 0.33712777777777797, "jobs": 85, "part_hwm_max": 1180.25, "peak_mib": 1180}, "H": {"extra_files": [], "failures": [], "judge_ok": true, "one_record_per_file": true, "planted": 32}}}
+2026-11-21T10:33:08Z tag=review_a44_controls rc=0 peak_rss_mib=260 wall_s=37.22 cpu_user_s=36.91 memavail_start_gib=23 disk_free_gib=444->444 slot=codex

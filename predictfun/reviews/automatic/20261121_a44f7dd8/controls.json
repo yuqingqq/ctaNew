@@ -1,0 +1,130 @@
+{
+  "checks": {
+    "A_identity": true,
+    "B_prefix": true,
+    "C_targets": true,
+    "D_forecasts": true,
+    "E_measurements": true,
+    "F_predicates": true,
+    "G_resources": true,
+    "H": true
+  },
+  "falsifier": {
+    "asof": "2026-11-21T10:33:45.414392+00:00",
+    "cases": {
+      "A": {
+        "applied": true,
+        "clean": true,
+        "corrupted": false
+      },
+      "B_missing_callback": {
+        "applied": true,
+        "clean": true,
+        "corrupted": false
+      },
+      "B_review_time": {
+        "applied": true,
+        "clean": true,
+        "corrupted": false
+      },
+      "B_wrong_END": {
+        "applied": true,
+        "clean": true,
+        "corrupted": false
+      },
+      "C_compensating": {
+        "applied": true,
+        "clean": true,
+        "corrupted": false
+      },
+      "C_wrong_gid": {
+        "applied": true,
+        "clean": true,
+        "corrupted": false
+      },
+      "D_input": {
+        "applied": true,
+        "clean": true,
+        "corrupted": false
+      },
+      "E": {
+        "applied": true,
+        "clean": true,
+        "corrupted": false
+      },
+      "F": {
+        "applied": true,
+        "clean": true,
+        "corrupted": false
+      },
+      "G": {
+        "applied": true,
+        "clean": true,
+        "corrupted": false
+      },
+      "H": {
+        "applied": true,
+        "clean": true,
+        "corrupted": false
+      }
+    },
+    "falsifier_ok": true
+  },
+  "mean_forecast_counterexample": {
+    "declared_forecasts_fail": true,
+    "forecast": -30.0,
+    "mae": 42.0,
+    "mae_zero": 30.0,
+    "mse": 2100.0,
+    "mse_zero": 3000.0,
+    "true_mean": -30.0
+  },
+  "readings": {
+    "A": {
+      "bad": [],
+      "forks": 768,
+      "stage_rows": 2304
+    },
+    "B": {
+      "examples": [],
+      "failing": 0,
+      "rows": 756
+    },
+    "C": {
+      "examples": [],
+      "failing": 0,
+      "rows": 756
+    },
+    "D": {
+      "examples": [],
+      "failing": 0,
+      "rows": 756
+    },
+    "E": {
+      "bad": []
+    },
+    "F": {
+      "readings": {
+        "entry_identifiable": false,
+        "forecasts_fail": true,
+        "not_distinguishable": false,
+        "review_protective": false
+      },
+      "same": true
+    },
+    "G": {
+      "bad": [],
+      "core_hours": 0.33712777777777797,
+      "jobs": 85,
+      "part_hwm_max": 1180.25,
+      "peak_mib": 1180
+    },
+    "H": {
+      "extra_files": [],
+      "failures": [],
+      "judge_ok": true,
+      "one_record_per_file": true,
+      "planted": 32
+    }
+  }
+}

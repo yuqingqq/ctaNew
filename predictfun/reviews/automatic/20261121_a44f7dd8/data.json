@@ -1,0 +1,160 @@
+{
+  "all_fields_and_summaries_reproduced": true,
+  "counts": {
+    "decision:entry:incoherent_forecast": 1,
+    "decision:entry:model": 755,
+    "decision:first_pull:model": 714,
+    "decision:first_review:incoherent_forecast": 3,
+    "decision:first_review:model": 718,
+    "entry:ok": 756,
+    "first_pull:no_pull:closed:filled": 3,
+    "first_pull:no_pull:closed:refused": 28,
+    "first_pull:no_pull:closed:removed": 9,
+    "first_pull:no_pull:end": 2,
+    "first_pull:ok": 714,
+    "first_review:no_review:closed:refused": 28,
+    "first_review:no_review:closed:removed": 7,
+    "first_review:ok": 721,
+    "ok": 756,
+    "world:no_path:missing_endpoint": 12
+  },
+  "limits": "Reference mids for fill-time edges not re-extracted from raw tape; no real branch reconstruction in review.",
+  "prediction_vectors_recomputed": 2191,
+  "scores": [
+    {
+      "bias": -0.43876430066821054,
+      "day": "all",
+      "mae_V": 35.54053346995859,
+      "mae_zero": 27.632121091606262,
+      "mean_value": -13.462597985868282,
+      "mse_V": 4690.440692485766,
+      "mse_in_sample_mean": 4604.035217141445,
+      "mse_mech": 4985.392676171131,
+      "mse_movement": 5030.368475552419,
+      "mse_qm_zero": 5283.219087631658,
+      "mse_zero": 4785.27676167055,
+      "n": 755,
+      "side": "all",
+      "stage": "entry"
+    },
+    {
+      "bias": -7.088985601686031,
+      "day": "all",
+      "mae_V": 39.830454125779596,
+      "mae_zero": 27.040277568770573,
+      "mean_value": -13.88306470843483,
+      "mse_V": 4794.909509628942,
+      "mse_in_sample_mean": 4375.833661204715,
+      "mse_mech": 4762.421728657418,
+      "mse_movement": 5178.326091491799,
+      "mse_qm_zero": 5066.457895418626,
+      "mse_zero": 4568.573146903305,
+      "n": 718,
+      "side": "all",
+      "stage": "first_review"
+    },
+    {
+      "bias": -7.6578272814554325,
+      "day": "all",
+      "mae_V": 39.69065802237083,
+      "mae_zero": 27.034200692405147,
+      "mean_value": -13.803277956101132,
+      "mse_V": 4789.9273414575655,
+      "mse_in_sample_mean": 4392.843844664613,
+      "mse_mech": 4779.149294734412,
+      "mse_movement": 5178.421694405298,
+      "mse_qm_zero": 5087.821455056826,
+      "mse_zero": 4583.3743269980005,
+      "n": 714,
+      "side": "all",
+      "stage": "first_pull"
+    }
+  ],
+  "stage_status_pairs": {
+    "('incoherent_forecast', 'model')": 1,
+    "('model', 'incoherent_forecast')": 3,
+    "('model', 'model')": 717
+  },
+  "top_changed_inputs": [
+    [
+      "t_rel",
+      721
+    ],
+    [
+      "sens",
+      721
+    ],
+    [
+      "adv_bnd_ofi1000",
+      721
+    ],
+    [
+      "bnd_age",
+      721
+    ],
+    [
+      "o_age",
+      721
+    ],
+    [
+      "o_horizon",
+      721
+    ],
+    [
+      "t_to_end",
+      721
+    ],
+    [
+      "ctx_has_generation",
+      721
+    ],
+    [
+      "ctx_generation_age_ms",
+      721
+    ],
+    [
+      "ctx_self_state_absent",
+      721
+    ],
+    [
+      "ctx_self_state_live",
+      721
+    ],
+    [
+      "pf_age",
+      719
+    ],
+    [
+      "adv_dd3_1000",
+      715
+    ],
+    [
+      "adv_bnd_ofi250",
+      707
+    ],
+    [
+      "bn_age",
+      703
+    ],
+    [
+      "adv_dd3_250",
+      703
+    ],
+    [
+      "act_rel",
+      699
+    ],
+    [
+      "gap_adv",
+      699
+    ],
+    [
+      "pbn_dist",
+      697
+    ],
+    [
+      "adv_ofi1000",
+      697
+    ]
+  ]
+}

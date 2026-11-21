@@ -1,0 +1,2 @@
+{"frozen_sources_unchanged": true, "mutants": {"H": {"extra_files": [], "failures": [], "judge_ok": true, "one_record_per_file": true, "planted": 32}}, "pilot_restoration_matches_committed_copy": true, "receipt_hashes": 18, "teacher_sources": 76}
+2026-11-21T10:32:18Z tag=review_a44_metadata rc=0 peak_rss_mib=229 wall_s=1.52 cpu_user_s=1.31 memavail_start_gib=23 disk_free_gib=444->444 slot=codex
