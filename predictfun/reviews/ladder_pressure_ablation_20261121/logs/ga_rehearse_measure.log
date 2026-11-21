@@ -1,0 +1,5 @@
+{
+ "markets": 8,
+ "control_all": true
+}
+2026-11-21T20:21:14Z tag=ga_rehearse_measure rc=0 peak_rss_mib=304 wall_s=2.47 cpu_user_s=2.07 memavail_start_gib=23 disk_free_gib=436->436 slot=claude

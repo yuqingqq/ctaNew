@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/ladder_pressure_ablation_20261121/ablation_checks.py", line 347, in <module>
+    main()
+  File "/home/yuqing/ctaNew/predictfun/reviews/ladder_pressure_ablation_20261121/ablation_checks.py", line 338, in main
+    (dest / f'checks{tag}.json').write_text(json.dumps(res, indent=1, default=str) + '\n'); fz = falsify(E, res)
+                                                                                                 ^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/ladder_pressure_ablation_20261121/ablation_checks.py", line 322, in falsify
+    X_ = dict(E); fn(X_)
+                  ^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/ladder_pressure_ablation_20261121/ablation_checks.py", line 313, in <lambda>
+    ('a_record_rule_changed', 'A', 'A_rule', lambda E: E.__setitem__('prec', dict(E['prec'], **{next(iter(E['prec'])): dict(E['prec'][next(iter(E['prec']))], rule_sha256='0' * 64)}))),
+                                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: keywords must be strings
+2026-11-21T20:21:16Z tag=ga_rehearse_checks rc=1 peak_rss_mib=499 wall_s=7.94 cpu_user_s=7.52 memavail_start_gib=22 disk_free_gib=436->436 slot=claude

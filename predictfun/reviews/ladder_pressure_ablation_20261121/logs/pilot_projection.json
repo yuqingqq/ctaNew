@@ -1,0 +1,47 @@
+{
+ "pilots_done": true,
+ "pilot_jobs": {
+  "20261024": {
+   "rc": 0,
+   "peak": 1226,
+   "wall": 88.12,
+   "cpu": 81.34
+  },
+  "20261025": {
+   "rc": 0,
+   "peak": 1176,
+   "wall": 87.35,
+   "cpu": 82.11
+  },
+  "20261026": {
+   "rc": 0,
+   "peak": 1164,
+   "wall": 90.88,
+   "cpu": 83.48
+  },
+  "20261027": {
+   "rc": 0,
+   "peak": 1146,
+   "wall": 82.39,
+   "cpu": 76.05
+  }
+ },
+ "load_s": 60.6400910615921,
+ "market_s_mean": 12.579587936401367,
+ "rest_days": [
+  "20261024",
+  "20261025",
+  "20261026"
+ ],
+ "rest_markets": 11,
+ "cpu_per_wall": 0.9261340826977118,
+ "projected_rest_wall_s": 320.29574048519135,
+ "so_far_core_hours": 0.1465888888888889,
+ "projected_core_hours": 0.30898800050173253,
+ "cap": 0.35,
+ "line_recorded_core_hours": 1.6867750000000001,
+ "line_projected_core_hours": 1.8491741116128437,
+ "line_cap": 2.0,
+ "peaks_ok": true,
+ "run_rest": true
+}
