@@ -997,6 +997,14 @@ pulls and bid/ask; judge movement calibration on selected actions before changin
 order design. Other session owns fixes; scheduler remains off.
 <!-- /PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
 
+## 2026-11-21 13:41Z (session aea5bfb9) — USER GO: THE SIX-DATE NEUTRAL-EXPOSURE LABEL COVERAGE BUILD (review 216ff603's next priority)
+- **USER 2026-11-21 13:41Z: "Approve go"** — in reply to the stop report's decision request. It authorizes [next_priority.md](reviews/automatic/20261121_530eac3b/next_priority.md) as written:
+  - dates 20261024, 20261025, 20261031, 20261101, 20261102, 20261103 (all consumed; Oct 23 stays the teacher day, Oct 28 out; the Oct 26-27 admitted cohort stays a separate reference); a metadata preflight first;
+  - the frozen PI0 (`pi0_50_v1`) and the unchanged neutral-hold target (END 5,000 ms, size / cap, latency, features, clocks, structural rules); no new predictor, target horizon, model search, live trading or untouched date;
+  - at most 192 worlds per date (8 per UTC hour by a declared SHA-256 rank), at most 4 local action queries per day x side x decision-hour x stage x factual decision cell (absent POST, absent WAIT, first-review KEEP, first-review PULL; at most 4,608), exact inclusion probabilities;
+  - budget: up to 8 aggregate core-hours on the four development slots, a fixed 24-world pilot (the first four hash-ranked worlds per date) capped at 0.5 core-hours with a write-once projection, 1,536 / 2,048 MiB; stop at a safe checkpoint with explicit statuses if exceeded.
+- The implement / review loop resumes with this build as its priority (freeze before labels; one combined freeze / pilot / build / support receipt).
+
 ## 2026-11-21 13:01Z (session aea5bfb9) — REVIEW 216ff603: PI0-MOVEMENT-SHRINK-v1 ACCEPTED, NOT PROMOTED; THE NEXT PRIORITY NEEDS THE USER; LOOP STOPPED
 - [Review](reviews/automatic/20261121_530eac3b/report.md), [proposal](reviews/automatic/20261121_530eac3b/next_priority.md). No blocking finding.
 - **Item 1 (P2) cleared:** FINDINGS P100 corrects P99 in band — entry: 161 of 163 original POSTs become WAIT, 0 WAITs become POST, 2 POSTs kept (a strict reduction); first review: 35 of 35 original KEEPs become PULL, 6 PULLs become KEEP, 0 KEEPs kept by both (not a subset: the candidate KEEP loss comes from newly selected exposure); hold-all local value on Oct 27: entry bid +1.464 c, ask -12.002 c; first review bid +0.995 c, ask -10.652 c per opportunity.

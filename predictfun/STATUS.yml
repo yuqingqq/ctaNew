@@ -774,6 +774,15 @@ pipeline_one_day_v3_20261119:
   values_equal_v2: {cells_per_day: 190, differing: 0}
   attribution_vs_pull_all_c: {"20261026": {first_step: 0.0, later: 954.33, never: 995.36, no_prediction: 0.0}, "20261027": {first_step: 0.0, later: -821.85, never: 251.74, no_prediction: 0.0}}
 
+p005_coverage_go_20261121:
+  status: user_go_build_in_progress
+  asof: "2026-11-21 13:41Z"
+  user: "Approve go"
+  authorizes: predictfun/reviews/automatic/20261121_530eac3b/next_priority.md
+  dates: ["20261024", "20261025", "20261031", "20261101", "20261102", "20261103"]
+  limits: {core_hours: 8, pilot_core_hours: 0.5, pilot_worlds: 24, worlds_per_date_max: 192, queries_max: 4608, slots: [claude, claude2, claude3, claude4], checkpoint_mib: 1536, hard_mib: 2048}
+  unchanged: [pi0_50_v1, neutral_hold_target, END_5000, size_cap, latency, features, clocks, structural_rules]
+  not_authorized: [new_predictor, new_target_horizon, model_search, live, untouched_dates]
 p005_loop_stop_20261121:
   status: awaiting_user_decision
   asof: "2026-11-21 13:01Z"
