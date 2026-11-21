@@ -23,6 +23,42 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- LADDER_PRESSURE_RESIDUAL_REVIEW_20261121_CODEX -->
+## 2026-11-21 — Residual timing partition accepted; next: test broader pressure
+
+[Combined review](reviews/automatic/20261121_ladder_pressure_residual_review/report.md)
+of **2063d31a91ab7e6124d7b8b7b7ec5df01ea66711** accepts the consumed-day
+partition. No blocking finding or required replay. Every one of 7,395 fills
+and 4,811 generations reconciles; independent native-clock reconstruction
+agrees on every status. Pinned selftest, ten checks, seven falsifiers and
+saved 19/19 mutation records pass. No observed timely-ON mismatch.
+
+Unflagged exposure carries 74.17% of gross negative eligible +1 s, >50%
+on all four days, but also 90.34% of valid shares and 91.23% of positive
+value. Its net -0.753 c/share compares with timing-limited -4.113 c/share.
+Loss mass does not establish that this mixed exposure is predictable or
+should all be cancelled. END remains -86,109.6 c; no validation/promotion.
+
+Bundled NONBLOCKING findings: 391 pending fills have uncomputed zero
+feasible-tick counters (fix/mark uncomputed before reuse); 242 T1 signals
+occur after their fill and are retrospective only. The checker omits some
+diagnostics/census/concentration/positive-value fields; current tables were
+reconciled independently. Prior ablation-field gap remains deferred/not
+reused. No repair-only round; preserve frozen receipts.
+
+ONE next priority: **POSITIVE-PRESSURE-GUARD-v1**, one frozen challenger
+using finite float32 adv_bn_r250 > 0 on both sides instead of q5. Preserve
+all other policy/timing/size/inventory settings and both PULL/WAIT actions.
+Pair against Q5_CONTROL reproducing FULL on the same 19 markets; report
+absolute and incremental END / eligible +1 s, quantities, good/bad exposure,
+participation/churn and the matched local screen on q5-OFF neutral live
+states. No threshold search. Full contract and stop criteria in the report.
+Whole batch <=0.14 additional core-hours and <=2.0 cumulative. Recorded use
+~1.812h leaves ~0.188h. Pilot the seven Oct 24 markets, reuse them, and only
+continue if the whole-round projection fits. No additional USER decision
+within this scope; if it cannot fit, stop and seek the resource decision.
+<!-- /LADDER_PRESSURE_RESIDUAL_REVIEW_20261121_CODEX -->
+
 <!-- LADDER_PRESSURE_ABLATION_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — Action attribution accepted; next: locate residual loss timing
 

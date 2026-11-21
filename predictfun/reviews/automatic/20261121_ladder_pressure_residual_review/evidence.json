@@ -1,0 +1,332 @@
+{
+  "target": "2063d31a91ab7e6124d7b8b7b7ec5df01ea66711",
+  "selftest": "passed",
+  "checks": {
+    "checks": {
+      "A_committed": true,
+      "A_inputs": true,
+      "A_outputs": true,
+      "B_membership": true,
+      "F_statuses": true,
+      "F_values": true,
+      "F_reconcile": true,
+      "F_table": true,
+      "F_reading": true,
+      "I_resources": true
+    },
+    "details": {
+      "B": {
+        "markets": 19,
+        "fills": 7395,
+        "generations": 4811
+      },
+      "F_answer": "UNFLAGGED_EXPOSURE_DOMINANT",
+      "F_mismatches": 0,
+      "F_status_counts": {
+        "unflagged_later": 6572,
+        "before_feasible_effect": 422,
+        "pending_structural": 321,
+        "pending_pressure": 75,
+        "pending_inventory": 5
+      },
+      "I": {
+        "round_core_hours": 0.009616666666666666,
+        "line_core_hours": 1.8082,
+        "peak_mib": 334
+      }
+    },
+    "all_ok": true
+  },
+  "receipt_hashes": {
+    "full/audit.json": "e5634f62a985b8ab6d30deab7e1a197ba94930da67d7a0f0b28be6782999f053",
+    "full/fills.csv": "4786427069a0da22c37d251ec441146dc90b88cbb5d745be5e745e026aa5f5d5",
+    "full/generation_status.csv": "d1ac624e6c879c01904a645441ce358d0faef8ecb05cf4cd4147581ee362582b",
+    "full/generations.csv": "dde37fc89d6e7b315886952d4cf1add12ecc71dbd249b23576bd1671f648b473",
+    "full/status_table.csv": "f92f80864a4eedb4dbd601a9cfcb592350b3265b983ef1f24ea8879e430f706b",
+    "pilot/audit.json": "7d8551bef1a656359798916fd31fbed7ff5a5b000a692f36f1e58a70f4716d61",
+    "pilot/checks_falsifier_rehearsal.json": "9fe878560eaee324845a13ae9ae9f8930da262a89fd002d185f06a3521702f0f",
+    "pilot/checks_rehearsal.json": "d12149657b8d251ddda3c1ed81495254257a7adbeea8865bef8677ec6cf610b0",
+    "pilot/generation_status.csv": "7766aecd20b4c1bef6ec23c723c85ac83871892869bb121c8e9b5b5d0da8dcec",
+    "pilot/status_table.csv": "8fc10e8a0508ead7914f5b9e129849a93fe0e8653c4683c7475285fa33b26949"
+  },
+  "all_input_identities_verified": true,
+  "fills": 7395,
+  "generations": 4811,
+  "status_counts": {
+    "unflagged_later": 6572,
+    "before_feasible_effect": 422,
+    "pending_structural": 321,
+    "pending_pressure": 75,
+    "pending_inventory": 5
+  },
+  "generation_counts": {
+    "no_fill": 2745,
+    "filled": 1790,
+    "refused": 276
+  },
+  "request_reason_counts": {
+    "structural": 3613,
+    "inventory": 84,
+    "pressure": 433
+  },
+  "diagnostics": {
+    "pending_with_feasible": 391,
+    "affected_by_status": {
+      "pending_structural": 313,
+      "pending_pressure": 73,
+      "pending_inventory": 5
+    },
+    "all_timed_on": 0,
+    "T1_after_fill": 242,
+    "delayed_T1_count": 0,
+    "delayed_T1_examples": []
+  },
+  "reading": {
+    "by_day": {
+      "20261024": {
+        "total": {
+          "neg": -56260.62096313886,
+          "pos": 23903.128320850203,
+          "q": 33760.12935194552,
+          "fills": 3234,
+          "neg_fills": 1856
+        },
+        "timing": {
+          "neg": -15937.00875059437,
+          "pos": 1827.0355923592392,
+          "q": 3341.6182595814435,
+          "fills": 377,
+          "neg_fills": 312
+        },
+        "unflagged": {
+          "neg": -40323.612212544496,
+          "pos": 22076.092728490963,
+          "q": 30418.511092364075,
+          "fills": 2857,
+          "neg_fills": 1544
+        },
+        "other": {
+          "neg": 0.0,
+          "pos": 0.0,
+          "q": 0.0,
+          "fills": 0,
+          "neg_fills": 0
+        },
+        "frac_timing": 0.283271113574023,
+        "frac_unflagged": 0.716728886425977
+      },
+      "20261025": {
+        "total": {
+          "neg": -39686.26961035004,
+          "pos": 21689.817944595605,
+          "q": 24152.76896312634,
+          "fills": 2303,
+          "neg_fills": 1281
+        },
+        "timing": {
+          "neg": -10425.976598299894,
+          "pos": 2208.816376032506,
+          "q": 2274.5815417596773,
+          "fills": 244,
+          "neg_fills": 179
+        },
+        "unflagged": {
+          "neg": -29260.293012050148,
+          "pos": 19481.001568563093,
+          "q": 21878.187421366663,
+          "fills": 2059,
+          "neg_fills": 1102
+        },
+        "other": {
+          "neg": 0.0,
+          "pos": 0.0,
+          "q": 0.0,
+          "fills": 0,
+          "neg_fills": 0
+        },
+        "frac_timing": 0.26270991707370844,
+        "frac_unflagged": 0.7372900829262916
+      },
+      "20261026": {
+        "total": {
+          "neg": -36567.569322823474,
+          "pos": 6713.442397515102,
+          "q": 16456.152338346168,
+          "fills": 1433,
+          "neg_fills": 1035
+        },
+        "timing": {
+          "neg": -7143.880347303245,
+          "pos": 797.5587954632053,
+          "q": 1575.6591349132232,
+          "fills": 172,
+          "neg_fills": 151
+        },
+        "unflagged": {
+          "neg": -29423.68897552023,
+          "pos": 5915.8836020518975,
+          "q": 14880.493203432943,
+          "fills": 1261,
+          "neg_fills": 884
+        },
+        "other": {
+          "neg": 0.0,
+          "pos": 0.0,
+          "q": 0.0,
+          "fills": 0,
+          "neg_fills": 0
+        },
+        "frac_timing": 0.19536109398565973,
+        "frac_unflagged": 0.8046389060143402
+      },
+      "20261027": {
+        "total": {
+          "neg": -7780.522581619629,
+          "pos": 2824.316578511435,
+          "q": 4685.068243532474,
+          "fills": 388,
+          "neg_fills": 239
+        },
+        "timing": {
+          "neg": -2736.340472131148,
+          "pos": 2.5,
+          "q": 444.26694426229506,
+          "fills": 29,
+          "neg_fills": 28
+        },
+        "unflagged": {
+          "neg": -5044.182109488482,
+          "pos": 2821.816578511435,
+          "q": 4240.801299270179,
+          "fills": 359,
+          "neg_fills": 211
+        },
+        "other": {
+          "neg": 0.0,
+          "pos": 0.0,
+          "q": 0.0,
+          "fills": 0,
+          "neg_fills": 0
+        },
+        "frac_timing": 0.35169109059529763,
+        "frac_unflagged": 0.6483089094047024
+      },
+      "all": {
+        "total": {
+          "neg": -140294.982477932,
+          "pos": 55130.705241472344,
+          "q": 79054.1188969505,
+          "fills": 7358,
+          "neg_fills": 4411
+        },
+        "timing": {
+          "neg": -36243.20616832866,
+          "pos": 4835.910763854951,
+          "q": 7636.125880516639,
+          "fills": 822,
+          "neg_fills": 670
+        },
+        "unflagged": {
+          "neg": -104051.77630960336,
+          "pos": 50294.79447761739,
+          "q": 71417.99301643386,
+          "fills": 6536,
+          "neg_fills": 3741
+        },
+        "other": {
+          "neg": 0.0,
+          "pos": 0.0,
+          "q": 0.0,
+          "fills": 0,
+          "neg_fills": 0
+        },
+        "frac_timing": 0.2583357261121552,
+        "frac_unflagged": 0.7416642738878448
+      }
+    },
+    "mismatches": 0,
+    "thin_days": [],
+    "answer": "UNFLAGGED_EXPOSURE_DOMINANT",
+    "note": "a diagnostic partition of the full rule's fills on 19 consumed-day markets; not predictive skill, no threshold inferred"
+  },
+  "concentration": {
+    "before_feasible_effect": {
+      "markets": 17,
+      "top3_share": 0.4331697310034479
+    },
+    "pending_inventory": {
+      "markets": 2,
+      "top3_share": 1.0
+    },
+    "pending_pressure": {
+      "markets": 13,
+      "top3_share": 0.5563936865340131
+    },
+    "pending_structural": {
+      "markets": 19,
+      "top3_share": 0.5327277657871349
+    },
+    "unflagged_later": {
+      "markets": 19,
+      "top3_share": 0.24959644855955274
+    }
+  },
+  "falsifier": {
+    "cases": {
+      "a_status_changed": {
+        "family": "F",
+        "target": "F_statuses",
+        "clean": true,
+        "refused": true
+      },
+      "a_value_changed": {
+        "family": "F",
+        "target": "F_values",
+        "clean": true,
+        "refused": true
+      },
+      "a_fill_duplicated": {
+        "family": "B",
+        "target": "B_membership",
+        "clean": true,
+        "refused": true
+      },
+      "a_table_cell_changed": {
+        "family": "F",
+        "target": "F_table",
+        "clean": true,
+        "refused": true
+      },
+      "the_reading_changed": {
+        "family": "F",
+        "target": "F_reading",
+        "clean": true,
+        "refused": true
+      },
+      "an_output_hash_changed": {
+        "family": "A",
+        "target": "A_outputs",
+        "clean": true,
+        "refused": true
+      },
+      "resources_over_the_cap": {
+        "family": "I",
+        "target": "I_resources",
+        "clean": true,
+        "refused": true
+      }
+    },
+    "falsifier_ok": true
+  },
+  "checker_omission_probes_family_F_passes": {
+    "diagnostic": true,
+    "concentration": true,
+    "generation_status": true,
+    "positive_reading": true
+  },
+  "synthetic_pending_counter": {
+    "status": "pending_structural",
+    "stored_n_feasible": 0,
+    "actual_n_feasible": 18
+  }
+}

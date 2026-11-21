@@ -1,0 +1,50 @@
+RESIDUAL SELFTEST PASSED: classify_fill, market_rows, reconcile, the table and the reading, guards
+Pinned selftest, ten saved checks, artifact hashes and complete membership passed
+{
+  "target": "2063d31a91ab7e6124d7b8b7b7ec5df01ea66711",
+  "selftest": "passed",
+  "all_input_identities_verified": true,
+  "fills": 7395,
+  "generations": 4811,
+  "status_counts": {
+    "unflagged_later": 6572,
+    "before_feasible_effect": 422,
+    "pending_structural": 321,
+    "pending_pressure": 75,
+    "pending_inventory": 5
+  },
+  "generation_counts": {
+    "no_fill": 2745,
+    "filled": 1790,
+    "refused": 276
+  },
+  "request_reason_counts": {
+    "structural": 3613,
+    "inventory": 84,
+    "pressure": 433
+  },
+  "diagnostics": {
+    "pending_with_feasible": 391,
+    "affected_by_status": {
+      "pending_structural": 313,
+      "pending_pressure": 73,
+      "pending_inventory": 5
+    },
+    "all_timed_on": 0,
+    "T1_after_fill": 242,
+    "delayed_T1_count": 0,
+    "delayed_T1_examples": []
+  },
+  "checker_omission_probes_family_F_passes": {
+    "diagnostic": true,
+    "concentration": true,
+    "generation_status": true,
+    "positive_reading": true
+  },
+  "synthetic_pending_counter": {
+    "status": "pending_structural",
+    "stored_n_feasible": 0,
+    "actual_n_feasible": 18
+  }
+}
+2026-11-21T20:53:02Z tag=codex_residual_review rc=0 peak_rss_mib=330 wall_s=13.95 cpu_user_s=13.52 memavail_start_gib=23 disk_free_gib=436->436 slot=codex

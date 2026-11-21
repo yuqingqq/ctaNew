@@ -1,0 +1,68 @@
+{
+  "ladder_rest": {
+    "cpu_hours": 0.35889166666666666,
+    "peak_mib": 1185,
+    "records": 117
+  },
+  "ladder_audit": {
+    "cpu_hours": 0.2063222222222222,
+    "peak_mib": 1252,
+    "records": 112
+  },
+  "ladder_guard": {
+    "cpu_hours": 0.25947777777777775,
+    "peak_mib": 1136,
+    "records": 37
+  },
+  "ladder_pressure": {
+    "cpu_hours": 0.39846944444444443,
+    "peak_mib": 1276,
+    "records": 116
+  },
+  "ladder_pressure_lag": {
+    "cpu_hours": 0.25905,
+    "peak_mib": 1199,
+    "records": 66
+  },
+  "ladder_pressure_ablation": {
+    "cpu_hours": 0.24258611111111114,
+    "peak_mib": 1226,
+    "records": 39
+  },
+  "ladder_pressure_residual": {
+    "cpu_hours": 0.009616666666666666,
+    "peak_mib": 334,
+    "records": 31
+  },
+  "available_review_logs": {
+    "cpu_hours": 0.07754166666666666,
+    "records": 18
+  },
+  "total_recorded_hours": 1.8119555555555555,
+  "remaining_hours": 0.18804444444444446,
+  "proposed_next_cap_hours": 0.14,
+  "next_round_within_original_two_hours": true,
+  "mutant_summary_rejudged": {
+    "control": "PASSED",
+    "caught": 19,
+    "sources": {
+      "pf_ladder_pressure_residual.py": "0095296829d92f6e",
+      "pf_ladder_pressure_residual_selftest.py": "b69b583e43e1f52d",
+      "pf_ladder_pressure_residual_mutants.py": "17801ca3b24c12e2"
+    }
+  },
+  "descriptive_denominators": {
+    "timing": {
+      "valid_q_fraction": 0.09659364985739156,
+      "positive_value_fraction": 0.08771719394253483,
+      "negative_cents_per_valid_share": -4.746281915126908,
+      "net_cents_per_valid_share": -4.112988169119703
+    },
+    "unflagged": {
+      "valid_q_fraction": 0.9034063501426084,
+      "positive_value_fraction": 0.9122828060574651,
+      "negative_cents_per_valid_share": -1.4569406379938485,
+      "net_cents_per_valid_share": -0.7527092202047186
+    }
+  }
+}

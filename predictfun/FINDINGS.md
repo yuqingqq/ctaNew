@@ -1,3 +1,37 @@
+<!-- LADDER_PRESSURE_RESIDUAL_REVIEW_20261121_CODEX -->
+## 2026-11-21 — Residual loss timing independently accepted
+
+[Report and evidence](reviews/automatic/20261121_ladder_pressure_residual_review/report.md),
+target **2063d31a91ab7e6124d7b8b7b7ec5df01ea66711**. No blocking finding.
+7,395 fills / 4,811 generations: identities, exactly-once membership,
+native-clock statuses, request reasons, values and END all reconcile.
+The first live grid equals ceil(activation/50)*50 wherever recorded;
+all feasible callbacks, including pending cases, have zero timely ONs.
+Ten checks, seven falsifiers, selftest and saved 19/19 mutants pass.
+
+Unflagged later exposure has 74.17% of gross negative +1 s, on 90.34% of
+eligible shares, while retaining 91.23% of positive value. Net -0.753 c/share
+versus timing-limited -4.113. The declared UNFLAGGED_EXPOSURE_DOMINANT reading
+holds every consumed day; this is loss mass, not a risk-rate or predictive
+skill claim. Unflagged later movement -69,006.5 c is offset by other groups;
+all-fills later movement is -1,416.8 c net. END remains -86,109.6 c.
+
+Deferred/bundled: 391 pending fills have placeholder zero feasible counts
+because of early returns; compute or mark uncomputed before reuse. 242 T1
+signals are post-fill diagnostics. The checker skips some supporting fields;
+all current values were independently reconciled (with the counter caveat).
+The prior ablation-field checker limitation is retained/not reused.
+
+ONE next priority: POSITIVE-PRESSURE-GUARD-v1, a single frozen broader-sign
+candidate (finite float32 adv_bn_r250 > 0) paired with a reproducing q5
+control, with all other settings fixed. Measure total END / +1 s economics,
+good exposure sacrificed, participation/churn and an incremental matched
+screen on neutral q5-OFF live states. No threshold search, new day or
+promotion. <=0.14h additional, <=2.0h cumulative; ~0.188h remains. Pilot
+Oct 24's seven markets and reuse them; stop if the projection does not fit.
+No additional USER decision within scope; extra resources need the USER.
+<!-- /LADDER_PRESSURE_RESIDUAL_REVIEW_20261121_CODEX -->
+
 <!-- LADDER_PRESSURE_ABLATION_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — Four-arm pressure attribution independently accepted
 

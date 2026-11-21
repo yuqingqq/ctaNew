@@ -1,4 +1,34 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+ladder_pressure_residual_review_20261121_codex:
+  status: consumed_day_timing_partition_accepted_no_replay_no_promotion
+  target_commit: 2063d31a91ab7e6124d7b8b7b7ec5df01ea66711
+  report: predictfun/reviews/automatic/20261121_ladder_pressure_residual_review/report.md
+  complete_markets: 19
+  selected_markets: 96
+  independently_checked_fills: 7395
+  independently_checked_generations: 4811
+  saved_checks_passed: 10
+  saved_falsifiers_passed: 7
+  saved_mutant_records_rejudged: 19
+  unflagged_gross_negative_share_rounded: 0.7417
+  unflagged_valid_share_fraction_rounded: 0.9034
+  unflagged_positive_value_fraction_rounded: 0.9123
+  unflagged_net_cents_per_valid_share_rounded: -0.753
+  timing_net_cents_per_valid_share_rounded: -4.113
+  timely_on_mismatches: 0
+  pending_fills_with_uncomputed_zero_counters: 391
+  fills_preceding_recorded_T1: 242
+  reading: UNFLAGGED_EXPOSURE_DOMINANT
+  blocking_findings: 0
+  nonblocking_findings: [uncomputed_pending_diagnostics, supporting_field_checker_coverage]
+  prior_ablation_finding: deferred_not_reused
+  next_priority: POSITIVE-PRESSURE-GUARD-v1
+  next_round_core_hour_ceiling: 0.14
+  original_cumulative_core_hour_ceiling: 2.0
+  recorded_core_hours_asof_review: 1.811956
+  additional_user_permission_within_scope: false
+  untouched_validation: false
+
 ladder_pressure_ablation_review_20261121_codex:
   status: consumed_day_action_attribution_accepted_no_replay_no_promotion
   target_commit: 54eab5455dd4c6e61c79d3543e3dd8a28e801ed0
