@@ -1,0 +1,55 @@
+{
+ "entry|0": {
+  "n": 82,
+  "fills": 20,
+  "weight": 182.0,
+  "weighted_fills": 36.5,
+  "status": "ok",
+  "mu": -38.88886197647255,
+  "lam": 1.0,
+  "lam_raw": 2.1034488852458098,
+  "den": 9784.367780357308,
+  "num": 20580.917500427597,
+  "binding_weight_share": 0.01510989010989011
+ },
+ "entry|1": {
+  "n": 84,
+  "fills": 22,
+  "weight": 137.0,
+  "weighted_fills": 46.5,
+  "status": "ok",
+  "mu": -107.82940609874369,
+  "lam": 1.0,
+  "lam_raw": 1.8471200346737193,
+  "den": 146803.78262521175,
+  "num": 271164.2080529143,
+  "binding_weight_share": 0.16423357664233576
+ },
+ "first_review|0": {
+  "n": 76,
+  "fills": 18,
+  "weight": 170.0,
+  "weighted_fills": 33.5,
+  "status": "ok",
+  "mu": -39.52877684746996,
+  "lam": 1.0,
+  "lam_raw": 1.6926109705333685,
+  "den": 4106.49240561182,
+  "num": 6950.69409615053,
+  "binding_weight_share": 0.007352941176470588
+ },
+ "first_review|1": {
+  "n": 75,
+  "fills": 19,
+  "weight": 121.5,
+  "weighted_fills": 41.25,
+  "status": "ok",
+  "mu": -119.84669890393295,
+  "lam": 1.0,
+  "lam_raw": 1.7523785639222853,
+  "den": 122679.76703194775,
+  "num": 214981.3939737651,
+  "binding_weight_share": 0.2139917695473251
+ }
+}
+2026-11-21T12:40:34Z tag=shr_fit rc=0 peak_rss_mib=238 wall_s=1.76 cpu_user_s=1.53 memavail_start_gib=23 disk_free_gib=441->441 slot=claude

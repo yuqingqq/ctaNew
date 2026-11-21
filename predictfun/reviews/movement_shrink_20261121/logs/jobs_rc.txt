@@ -1,1 +1,2 @@
 shr_manifest rc=0
+shr_fit rc=0
