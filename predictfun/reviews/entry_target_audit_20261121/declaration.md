@@ -62,3 +62,17 @@ The receipt's recommendation is chosen from these predicates:
 3. The checks, the falsifier and the receipt.
 
 The planning ceiling is **one core-hour**. A breach stops with an explicit incomplete status.
+
+## Freeze amendment (before any output)
+
+The first run was stopped by hand before it wrote any file. Writing the formatter showed that `cmd_run` wrote the per-row reached data to
+`reached.csv` and then overwrote it with the per-day summary of the same name.
+
+The amendment:
+- every output now has its own declared name (`FILES`, checked distinct: `reached_rows.csv` and `reached_summary.csv`), with `audit.json`
+  written last;
+- the selftest writes every output to a temporary directory;
+- one more mutant (the collision restored) is caught: 16 / 16;
+- check D and the formatter read the new names.
+
+No definition, predicate or threshold changed.

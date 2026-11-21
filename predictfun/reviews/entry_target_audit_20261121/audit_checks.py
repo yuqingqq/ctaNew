@@ -70,7 +70,7 @@ def check_C(out, R):
 
 
 def check_D(out, R):
-    Rr = pd.read_csv(Path(out) / 'reached.csv', float_precision='round_trip'); ok = Rr[Rr.status == 'ok']
+    Rr = pd.read_csv(Path(out) / M.FILES['reached_rows'], float_precision='round_trip'); ok = Rr[Rr.status == 'ok']
     gap = np.abs(ok.Y - (ok.v_initial + ok.d_focal + ok.d_opposite))
     n_r4e = int((pd.read_csv('/home/yuqing/ctaNew/predictfun/reviews/r4e_entry_smooth_20261121/replay/reached.csv.gz' if Path('/home/yuqing/ctaNew/predictfun/reviews/r4e_entry_smooth_20261121/replay/reached.csv.gz').exists()
                           else '/home/yuqing/ctaNew/predictfun/reviews/r4e_entry_smooth_20261121/replay/reached.csv').status == 'ok').sum())

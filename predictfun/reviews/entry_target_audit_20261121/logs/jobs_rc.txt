@@ -1,2 +1,3 @@
 pf_entry_audit_selftest rc=0
 pf_entry_audit_selftest rc=0
+pf_entry_audit_selftest rc=0

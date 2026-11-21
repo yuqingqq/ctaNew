@@ -57,6 +57,8 @@ CLASSES = ('no_post_fork_fills', 'economic_identical', 'same_cash_inventory', 'o
 MEANINGFUL, TOL, TOLP = 1e-6, LS.TOL_V, LS.TOL_P
 RARE_MEANINGFUL, RARE_NOFILL, CANCEL = .10, .50, .5
 GEN_I = T.FEATS.index('ctx_generation_ordinal')
+FILES = dict(rows='rows.csv.gz', reached_rows='reached_rows.csv', groups='groups.csv', strata='strata.csv', crosstab='crosstab.csv', reached_summary='reached_summary.csv',
+             statuses='statuses.csv', reached_statuses='reached_statuses.csv')          # distinct names (freeze amendment: the reached rows were overwritten)
 
 
 def sg(s):
@@ -237,6 +239,16 @@ def summaries(D, R):
                 reached_statuses=R.groupby(['day', 'status']).size().rename('n').reset_index().to_dict('records'))
 
 
+def write_outputs(out, D, R, S, js):
+    """Every output under its own declared name (FILES, checked distinct), audit.json last."""
+    out = Path(out); C.require(len(set(FILES.values())) == len(FILES), 'two outputs share a file name')
+    D.to_csv(out / FILES['rows'], index=False); R.to_csv(out / FILES['reached_rows'], index=False)
+    for k in ('groups', 'strata', 'crosstab', 'statuses', 'reached_statuses'):
+        pd.DataFrame(S[k]).to_csv(out / FILES[k], index=False)
+    pd.DataFrame(S['reached']).to_csv(out / FILES['reached_summary'], index=False)
+    (out / 'audit.json').write_text(json.dumps(js, indent=1, sort_keys=True, default=str) + '\n')
+
+
 def cmd_run(out=OUT):
     """The audit -> out/rows.csv.gz, reached.csv, the summary CSVs and audit.json (header). Never overwrites an existing audit."""
     out = Path(out); C.require(not (out / 'audit.json').exists(), 'the audit exists'); out.mkdir(parents=True, exist_ok=True); t0 = time.time()
@@ -249,13 +261,10 @@ def cmd_run(out=OUT):
     exp = {k: sum(v for kk, v in a['statuses'].items() if kk.split()[1] == 'post') for k, a in acc.items()}
     C.require(all(int((D.set == k).sum()) == exp[k] for k in SETS), f'not every POST row once: {D.set.value_counts().to_dict()} against {exp}')
     S = summaries(D, R)
-    D.to_csv(out / 'rows.csv.gz', index=False); R.to_csv(out / 'reached.csv', index=False)
-    for k in ('groups', 'strata', 'crosstab', 'reached', 'statuses', 'reached_statuses'):
-        pd.DataFrame(S[k]).to_csv(out / f'{k}.csv', index=False)
     js = dict(version=VERSION, datasets={k: s['sha'] for k, s in SETS.items()}, expected_post_rows=exp, rows=int(len(D)), reached_rows=int(len(R)), predicates=S['predicates'],
               thresholds=dict(rare_meaningful=RARE_MEANINGFUL, rare_nofill=RARE_NOFILL, cancel=CANCEL), r4e_predictions_sha256=C.sha(N.REPO / R4E_PRED),
               fit_sha256=C.sha(N.OUT / 'fit.json'), source_sha256=C.sha(Path(__file__)), seconds=round(time.time() - t0, 1), asof=C.stamp())
-    (out / 'audit.json').write_text(json.dumps(js, indent=1, sort_keys=True, default=str) + '\n')
+    write_outputs(out, D, R, S, js)
     print(json.dumps(dict(rows=js['rows'], reached=js['reached_rows'], predicates=S['predicates'], statuses=S['statuses']), indent=1, default=str))
 
 

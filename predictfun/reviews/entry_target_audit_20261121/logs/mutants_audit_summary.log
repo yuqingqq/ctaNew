@@ -1,17 +1,18 @@
-  0 the fork-tick fill counted post-fork: CAUGHT (0.7 s) - ENTRY AUDIT SELFTEST FAILED: no fills: cls = economic_identical, not no_post_fork_fills; group_summary: share_no_post_fork_fills = 0.0, not 0.1
+  0 the fork-tick fill counted post-fork: CAUGHT (0.8 s) - ENTRY AUDIT SELFTEST FAILED: no fills: cls = economic_identical, not no_post_fork_fills; group_summary: share_no_post_fork_fills = 0.0, not 0.1
   1 the forced generation of the other side: CAUGHT (0.8 s) - ENTRY AUDIT SELFTEST FAILED: no fills: status forced_generation_not_unique (gap None); delayed WAIT entry, same economic fill: status forced_generatio
-  2 V_initial of every POST-arm generation: CAUGHT (0.7 s) - ENTRY AUDIT SELFTEST FAILED: initial gain, later loss: status identity_failure (gap 60.0); cross-side: status identity_failure (gap -30.0); group_summ
+  2 V_initial of every POST-arm generation: CAUGHT (0.8 s) - ENTRY AUDIT SELFTEST FAILED: initial gain, later loss: status identity_failure (gap 60.0); cross-side: status identity_failure (gap -30.0); group_summ
   3 D_opposite: the WAIT arm added: CAUGHT (0.7 s) - ENTRY AUDIT SELFTEST FAILED: cross-side: status identity_failure (gap -10.0); group_summary: the fixture cases did not account; group_summary: rows = 
-  4 a loose identity: CAUGHT (0.7 s) - ENTRY AUDIT SELFTEST FAILED: refusal: an altered side -> ok, not identity_failure; refusal: an altered quantity -> ok, not identity_failure; refusal: 
-  5 the pre-fork equality unchecked: CAUGHT (0.7 s) - ENTRY AUDIT SELFTEST FAILED: refusal: a pre-fork difference -> ok, not identity_failure
+  4 a loose identity: CAUGHT (0.8 s) - ENTRY AUDIT SELFTEST FAILED: refusal: an altered side -> ok, not identity_failure; refusal: an altered quantity -> ok, not identity_failure; refusal: 
+  5 the pre-fork equality unchecked: CAUGHT (0.8 s) - ENTRY AUDIT SELFTEST FAILED: refusal: a pre-fork difference -> ok, not identity_failure
   6 offset before same cash / inventory: CAUGHT (0.8 s) - ENTRY AUDIT SELFTEST FAILED: same cash and inventory: cls = offset_by_mark, not same_cash_inventory
   7 the economic comparison with times: CAUGHT (0.8 s) - ENTRY AUDIT SELFTEST FAILED: delayed WAIT entry, same economic fill: cls = same_cash_inventory, not economic_identical; a residue: cls = same_cash_inv
-  8 a partial fill counted full: CAUGHT (0.7 s) - ENTRY AUDIT SELFTEST FAILED: partial initial fill: init_fill = full, not partial
+  8 a partial fill counted full: CAUGHT (0.8 s) - ENTRY AUDIT SELFTEST FAILED: partial initial fill: init_fill = full, not partial
   9 the residue counted an exact zero: CAUGHT (0.8 s) - ENTRY AUDIT SELFTEST FAILED: a residue: exact_zero = True, not False
-  10 a wider cancellation threshold: CAUGHT (0.7 s) - ENTRY AUDIT SELFTEST FAILED: predicates: {'share_meaningful': 0.3, 'init_no_fill': 0.6, 'abs_v_initial': 10.0, 'abs_Y': 8.0} -> cancellation, not not_
-  11 rare execution without the no-fill condition: CAUGHT (0.7 s) - ENTRY AUDIT SELFTEST FAILED: predicates: {'share_meaningful': 0.05, 'init_no_fill': 0.4, 'abs_v_initial': 10.0, 'abs_Y': 6.0} -> rare_execution, not n
-  12 unweighted summaries: CAUGHT (0.8 s) - ENTRY AUDIT SELFTEST FAILED: group_summary: w_sum = 4.0, not 10.0; group_summary: share_meaningful = 0.5, not 0.7; group_summary: share_no_post_fork_f
-  13 the join by row position: CAUGHT (0.7 s) - ENTRY AUDIT SELFTEST FAILED: predictions: not joined by the exact key, or a missing key was not its status
-  14 a missing join dropped silently: CAUGHT (0.7 s) - ENTRY AUDIT SELFTEST FAILED: predictions: not joined by the exact key, or a missing key was not its status
-control: PASSED (0.7 s); sources {'pf_entry_audit.py': 'ae6c32802a0f722e', 'pf_entry_audit_mutants.py': '05f0cdd49b237b2b', 'pf_entry_audit_selftest.py': '6d646587d9828eca'}
-mutation check passed: the control passes its selftest, 15 / 15 planted code errors are caught by a check (0.2 CPU min)
+  10 a wider cancellation threshold: CAUGHT (0.8 s) - ENTRY AUDIT SELFTEST FAILED: predicates: {'share_meaningful': 0.3, 'init_no_fill': 0.6, 'abs_v_initial': 10.0, 'abs_Y': 8.0} -> cancellation, not not_
+  11 rare execution without the no-fill condition: CAUGHT (0.8 s) - ENTRY AUDIT SELFTEST FAILED: predicates: {'share_meaningful': 0.05, 'init_no_fill': 0.4, 'abs_v_initial': 10.0, 'abs_Y': 6.0} -> rare_execution, not n
+  12 unweighted summaries: CAUGHT (0.7 s) - ENTRY AUDIT SELFTEST FAILED: group_summary: w_sum = 4.0, not 10.0; group_summary: share_meaningful = 0.5, not 0.7; group_summary: share_no_post_fork_f
+  13 the join by row position: CAUGHT (0.8 s) - ENTRY AUDIT SELFTEST FAILED: predictions: not joined by the exact key, or a missing key was not its status
+  14 the reached rows overwritten by their summary: CAUGHT (0.8 s) - ENTRY AUDIT SELFTEST FAILED: write_outputs: a valid write stopped (ValueError('two outputs share a file name'))
+  15 a missing join dropped silently: CAUGHT (0.8 s) - ENTRY AUDIT SELFTEST FAILED: predictions: not joined by the exact key, or a missing key was not its status
+control: PASSED (0.7 s); sources {'pf_entry_audit.py': '6fc7d2e487f3fdf5', 'pf_entry_audit_mutants.py': 'd08e0428b2816e76', 'pf_entry_audit_selftest.py': '1e6929f125f4338d'}
+mutation check passed: the control passes its selftest, 16 / 16 planted code errors are caught by a check (0.2 CPU min)

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "15", "name": "a missing join dropped silently", "seconds": 0.8, "sources": {"pf_entry_audit.py": "6fc7d2e487f3fdf5", "pf_entry_audit_mutants.py": "d08e0428b2816e76", "pf_entry_audit_selftest.py": "1e6929f125f4338d"}, "why": "ENTRY AUDIT SELFTEST FAILED: predictions: not joined by the exact key, or a missing key was not its status"}
+2026-11-21T07:49:56Z tag=mut_audit_15 rc=0 peak_rss_mib=198 wall_s=0.97 cpu_user_s=0.82 memavail_start_gib=22 disk_free_gib=447->447 slot=claude
