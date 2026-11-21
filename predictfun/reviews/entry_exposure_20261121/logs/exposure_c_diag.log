@@ -1,0 +1,4 @@
+rows 756 messages {'KEEP: the shadow log is not its overrides': 424}
+counter > log on 424 rows; bound 0 <= counter - log <= 2 x probe-checked on 756 of 756
+examples (day, m, side, counter, log, probe checked): [('20261024', 3695609, 0, 104, 98, 6), ('20261024', 3696268, 0, 46, 44, 6), ('20261024', 3696268, 1, 49, 45, 6), ('20261024', 3696270, 0, 55, 51, 6)]
+2026-11-21T09:20:05Z tag=exposure_c_diag rc=0 peak_rss_mib=212 wall_s=1.47 cpu_user_s=1.28 memavail_start_gib=23 disk_free_gib=446->446 slot=claude

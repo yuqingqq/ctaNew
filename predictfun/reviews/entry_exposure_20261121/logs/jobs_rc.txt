@@ -1,1 +1,15 @@
 pf_entry_exposure_selftest rc=0
+exposure_part_000 rc=0
+exposure_part_004 rc=0
+exposure_part_002 rc=0
+exposure_part_003 rc=0
+exposure_part_001 rc=0
+exposure_part_008 rc=0
+exposure_part_006 rc=0
+exposure_part_005 rc=0
+exposure_part_007 rc=0
+exposure_part_009 rc=0
+exposure_part_010 rc=0
+exposure_part_011 rc=0
+exposure_summarize rc=0
+exposure_checks rc=0

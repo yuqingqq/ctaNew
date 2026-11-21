@@ -1,0 +1,3 @@
+exposure checks selftest passed: 4 clean synthetic rows reconcile; compensating components, a wrong but valid gid and a KEEP fill price are flagged
+exposure checks v2 selftest passed: the frozen synthetic selftest under the v2 rule; a counter below the log, an excess beyond the probe bound and a shadow entry of another gid are flagged; an excess inside the bound is not
+2026-11-21T09:25:31Z tag=exposure_checks_v2_selftest rc=0 peak_rss_mib=228 wall_s=16.19 cpu_user_s=15.74 memavail_start_gib=23 disk_free_gib=446->446 slot=claude

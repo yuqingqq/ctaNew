@@ -1,0 +1,20 @@
+{
+ "forks": 4,
+ "statuses": [
+  {
+   "day": "20261024",
+   "status": "keep_baseline_mismatch",
+   "n": 1
+  },
+  {
+   "day": "20261024",
+   "status": "ok",
+   "n": 3
+  }
+ ],
+ "overrides_changed_forks": 3,
+ "diagnosis": "incomplete",
+ "reproduced_all": true
+}
+entry exposure summary v2 selftest passed: flat_v2 (log count, counter kept, baseline equality from the ledgers, world rows unchanged); summaries on v2 rows; summarize_v2 end to end (outputs, manifest copy, linked partitions, supersedes; immutable; partition hash refused)
+2026-11-21T09:24:09Z tag=pf_entry_exposure_summary_selftest rc=0 peak_rss_mib=199 wall_s=0.93 cpu_user_s=0.79 memavail_start_gib=23 disk_free_gib=446->446 slot=claude
