@@ -1,3 +1,28 @@
+<!-- LADDER_REST_REVIEW_20261121_CODEX -->
+## 2026-11-21 — Review qualifies P101's mechanism readings; ledger loss stands
+
+[Combined review and independent evidence](reviews/automatic/20261121_ladder_rest_review/report.md)
+at **869fa85ffc158b070e63c1b89af4cea3c82c3abf**: 19-market ledger loss
+-209,557.709 c independently reconciled. Same-valid-fill edge/markouts confirm
+rapid adverse movement under M50. Only 19/96 contracts have full-path coverage.
+
+Corrections before using the diagnostics for optimization: earliest pending
+cancel can take effect at submit+95 (the table uses +137); 235 saved fill rows
+fall between those boundaries, positive +32,481.240 c in aggregate. Of 2,132
+timestamp-group sweep fill rows, 1,744 are outside multi-level public-trade
+events. Sampled-live ever-fill count 2,074 differs from future-fill count 1,702.
+Early removal requests include 143 structural cases omitted from the policy-only
+first-review pull count of 4. Recovery summaries include 23 direct reversals.
+These do not change the aggregate P&L. Minute NEW_FILLS includes later inventory
+movement; per-generation END tails are not independently removable losses.
+
+Resume envelope/runtime fields are not fully bound (unused in this run);
+the selftest's negative guard fixtures fail after the module is committed and
+the pilot exists. Independent saved checks pass; isolated fixture rerun passes.
+Bundle repairs with RECEIPT-LEAD-TIME-AUDIT-v1 on the same consumed population,
+one combined review. No new policy/model skill or validation is claimed.
+<!-- /LADDER_REST_REVIEW_20261121_CODEX -->
+
 <!-- LADDER_PLAN_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — Baseline design ready; collect evidence for the next change
 

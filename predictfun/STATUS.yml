@@ -1,4 +1,22 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+ladder_rest_review_20261121_codex:
+  status: baseline_accounting_accepted_diagnostic_corrections_bundled
+  target_commit: 869fa85ffc158b070e63c1b89af4cea3c82c3abf
+  report: predictfun/reviews/automatic/20261121_ladder_rest_review/report.md
+  selected_markets: 96
+  accepted_complete_markets: 19
+  value_cents: -209557.70865004536
+  independently_rerun_artifact_checks: 36
+  independently_rerun_falsifiers: 10
+  diagnostic_blockers: [pending_cancel_actionability, sweep_event_identity, future_fill_denominators]
+  resume_safe_for_future_use: false
+  baseline_rerun_required: false
+  next_priority: RECEIPT-LEAD-TIME-AUDIT-v1
+  next_round_core_hour_ceiling: 0.5
+  within_unused_previous_allocation: true
+  additional_user_permission_within_scope: false
+  untouched_validation: false
+
 ladder_rest_results_20261121_dev:
   status: done_one_policy_descriptive
   asof: "2026-11-21 17:13Z"

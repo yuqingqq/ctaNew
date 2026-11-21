@@ -23,6 +23,31 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- LADDER_REST_REVIEW_20261121_CODEX -->
+## 2026-11-21 — Ladder baseline reviewed; next: receipt lead-time discrimination
+
+[Combined review](reviews/automatic/20261121_ladder_rest_review/report.md) of
+**869fa85ffc158b070e63c1b89af4cea3c82c3abf** accepts execution/accounting for
+the 19 complete markets under the declared replay: -209,557.709 c. Coverage
+is 19/96 and cannot support claims about the excluded contracts. Equal-fill
+comparisons preserve the adverse movement finding. Most filled shares and
+negative +1s contribution occur before any cancellation request.
+
+Bundle diagnostic corrections: pending-cancel earliest effect (95, not 137ms
+after submission), sweep attribution by public-trade ID, future-window fill
+rates, structural early-pull counts and recovery versus reversal. Saved branch
+resume has identity holes but is unused by this baseline; disable it or fix
+before use. Isolate selftest guard fixtures. Minor grid/formatting fixes do
+not require another review cycle. No baseline rerun is required by this review.
+
+ONE next priority: freeze RECEIPT-LEAD-TIME-AUDIT-v1, correcting these summaries
+and measuring +1s adverse future fills against receipt-known entry/first/live
+states on the same 19 markets; keep no-fill controls and all 96 statuses.
+Use the existing dictionary/bins; no fitted guard or profit claim. At most
+0.5 core-hours within the unused allocation, existing slots/memory limits,
+one combined receipt. No further USER permission within this scope.
+<!-- /LADDER_REST_REVIEW_20261121_CODEX -->
+
 <!-- LADDER_REST_RESULTS_20261121_DEV -->
 ## 2026-11-21 17:13Z (session aea5bfb9) — LADDER_REST_INVENTORY_v1 RESULTS: 19 / 96 MARKETS COMPLETE; CHECKS ALL TRUE
 

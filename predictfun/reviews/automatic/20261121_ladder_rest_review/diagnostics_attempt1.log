@@ -1,0 +1,5 @@
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261121_ladder_rest_review/diagnostics.py", line 43
+    coverage += [dict(x,day=day) for x in json.loads((P/'logs'/f'coverage_diag_{day}.json').read_text())['markets']
+                ^
+SyntaxError: '[' was never closed
+2026-11-21T17:23:13Z tag=codex_lr_saved_diagnostics rc=1 peak_rss_mib=9 wall_s=0.01 cpu_user_s=0.00 memavail_start_gib=23 disk_free_gib=438->438 slot=codex

@@ -1,0 +1,55 @@
+LADDER SELFTEST PASSED: legacy reproduction, the long queue case and its two planted implementations, ladder fixtures, hidden notices, inventory mode, cancel timing, resume, observer / reconstruction, features, measurement, population and guards
+CHECKS SELFTEST PASSED
+{
+  "headline": {
+    "markets": 19,
+    "value": -209557.70865004536,
+    "filled_shares": 96991.0711332241,
+    "both_exact": 0.40698110208406924,
+    "both_grid": 0.40305545743553517
+  },
+  "pending_cancel_control": {
+    "request": 50.0,
+    "effect": 95.0,
+    "reported_earliest": 137.0,
+    "controlled_fill_q": 0,
+    "no_request_fill_q": 10.0
+  },
+  "locked_window": {
+    "fills": 235,
+    "generations": 93,
+    "shares": 2175.7239230388514,
+    "end_value": 32481.24000623977
+  },
+  "live_fill_denominators": {
+    "first": {
+      "n": 4840,
+      "any_generation_fill": 2074,
+      "future_fill": 1986
+    },
+    "live": {
+      "n": 4840,
+      "any_generation_fill": 2074,
+      "future_fill": 1702
+    }
+  },
+  "resume_next_k": {
+    "accepted": true,
+    "next_k": 11,
+    "cap": 200.0,
+    "executed_mark": 51.0
+  },
+  "resume_runtime_cap": {
+    "accepted": true,
+    "next_k": 2,
+    "cap": 999.0,
+    "executed_mark": 51.0
+  },
+  "resume_tape_envelope": {
+    "accepted": true,
+    "next_k": 2,
+    "cap": 200.0,
+    "executed_mark": 51.0
+  }
+}
+2026-11-21T17:19:39Z tag=codex_lr_review2_869fa85f rc=0 peak_rss_mib=510 wall_s=21.05 cpu_user_s=20.44 memavail_start_gib=23 disk_free_gib=438->438 slot=codex
