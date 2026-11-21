@@ -1,0 +1,28 @@
+{
+ "all_ok": true,
+ "asof": "2026-11-21T13:00:34.373811+00:00",
+ "clean_failures": [],
+ "falsifier": {
+  "horizon_bin_changed": {
+   "flagged": true
+  },
+  "hour_plus_1": {
+   "flagged": true
+  },
+  "mid_plus_1c": {
+   "flagged": true
+  },
+  "side_flipped": {
+   "flagged": true
+  },
+  "weight_doubled": {
+   "flagged": true
+  }
+ },
+ "heads": {
+  "entry": 163,
+  "first_review": 148
+ },
+ "n_clean_failures": 0,
+ "rows": 311
+}

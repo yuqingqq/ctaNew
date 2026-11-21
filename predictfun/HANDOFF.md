@@ -997,6 +997,14 @@ pulls and bid/ask; judge movement calibration on selected actions before changin
 order design. Other session owns fixes; scheduler remains off.
 <!-- /PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
 
+## 2026-11-21 13:01Z (session aea5bfb9) — REVIEW 216ff603: PI0-MOVEMENT-SHRINK-v1 ACCEPTED, NOT PROMOTED; THE NEXT PRIORITY NEEDS THE USER; LOOP STOPPED
+- [Review](reviews/automatic/20261121_530eac3b/report.md), [proposal](reviews/automatic/20261121_530eac3b/next_priority.md). No blocking finding.
+- **Item 1 (P2) cleared:** FINDINGS P100 corrects P99 in band — entry: 161 of 163 original POSTs become WAIT, 0 WAITs become POST, 2 POSTs kept (a strict reduction); first review: 35 of 35 original KEEPs become PULL, 6 PULLs become KEEP, 0 KEEPs kept by both (not a subset: the candidate KEEP loss comes from newly selected exposure); hold-all local value on Oct 27: entry bid +1.464 c, ask -12.002 c; first review bid +0.995 c, ask -10.652 c per opportunity.
+- **Item 2 (P3) cleared for this receipt:** `reviews/movement_shrink_20261121/context_checks.py` compares every decision-context column of the committed 311 eval rows (key identity, head, weight, mid, decision cell, status, strata) to their bound sources: 0 failures; falsifier 5 / 5 (mid +1 c, hour +1, side flip, horizon bin, doubled weight). For reuse: consume the committed bytes or run this comparison. No rebuild; no fix-only review (the review asked for none).
+- **Round totals as of 2026-11-21 13:01Z:** 124 run_light jobs, 0.0683 core-hours, peak 248 MiB (the receipt's 0.064 was an earlier as-of).
+- **Decision needed (USER):** authorize Codex's proposal — a six-date (Oct 24–25, Oct 31, Nov 1–3; all consumed; Oct 23 stays the teacher day, Oct 28 out) fixed-PI0, unchanged-target neutral-exposure label coverage build: metadata preflight of the dates, at most 192 worlds per date (1,152), at most 4,608 local action queries (absent POST, absent WAIT, first-review KEEP, first-review PULL) with exact inclusion probabilities, a fixed 24-world pilot capped at 0.5 core-hours and a write-once projection, up to 8 core-hours on the four development slots, 1,536 / 2,048 MiB. Without the go: retain the artifacts, launch nothing. Separate USER choices: untouched validation (at least five complete days; no candidate is ready), a new target / model search, or stopping this line.
+- The loop (USER 2026-11-19) stopped here by its STOP rule; no review request is pending.
+
 ## 2026-11-21 12:43Z (session aea5bfb9) — PI0-MOVEMENT-SHRINK-v1: ONE SCALAR MOVEMENT CHALLENGER FIT OCT 26 / MEASURED OCT 27; CHECKS ALL TRUE; ENTRY INCONCLUSIVE, FIRST REVIEW INCONCLUSIVE (review 7ad03681's next priority) (USER: "... continue the implementing and next priority loop")
 - [Receipt](reviews/movement_shrink_20261121/report.md).
   - Commits: freeze `97208136` (before any fit), fit `bd5e2f01` (before any Oct 27 score), results in this commit.

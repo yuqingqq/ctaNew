@@ -774,6 +774,17 @@ pipeline_one_day_v3_20261119:
   values_equal_v2: {cells_per_day: 190, differing: 0}
   attribution_vs_pull_all_c: {"20261026": {first_step: 0.0, later: 954.33, never: 995.36, no_prediction: 0.0}, "20261027": {first_step: 0.0, later: -821.85, never: 251.74, no_prediction: 0.0}}
 
+p005_loop_stop_20261121:
+  status: awaiting_user_decision
+  asof: "2026-11-21 13:01Z"
+  reason: codex_review_216ff603_next_priority_needs_user
+  proposal: predictfun/reviews/automatic/20261121_530eac3b/next_priority.md
+  decision_requested: {six_date_coverage_build: pending, ceiling_core_hours: 8, pilot_core_hours: 0.5, worlds_max: 1152, queries_max: 4608, dates: ["20261024", "20261025", "20261031", "20261101", "20261102", "20261103"]}
+  review_216ff603: {blocking: [], item1_decision_directions: corrected_FINDINGS_P100, item2_context_columns: context_checks_all_ok}
+  decision_moves: {entry_post_to_wait: 161, entry_wait_to_post: 0, review_keep_to_pull: 35, review_pull_to_keep: 6, review_kept_by_both: 0}
+  shrink_round_totals: {jobs: 124, core_hours: 0.0683, peak_mib: 248}
+  candidate_promoted: false
+  loop: stopped
 movement_shrink_20261121:
   status: done_pi0_movement_shrink_v1_one_candidate
   asof: "2026-11-21 12:43Z"

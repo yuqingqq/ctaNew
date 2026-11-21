@@ -1,0 +1,29 @@
+{
+ "rows": 311,
+ "heads": {
+  "entry": 163,
+  "first_review": 148
+ },
+ "clean_failures": [],
+ "n_clean_failures": 0,
+ "falsifier": {
+  "mid_plus_1c": {
+   "flagged": true
+  },
+  "hour_plus_1": {
+   "flagged": true
+  },
+  "side_flipped": {
+   "flagged": true
+  },
+  "horizon_bin_changed": {
+   "flagged": true
+  },
+  "weight_doubled": {
+   "flagged": true
+  }
+ },
+ "all_ok": true,
+ "asof": "2026-11-21T13:00:34.373811+00:00"
+}
+2026-11-21T13:00:32Z tag=shr_context_checks rc=0 peak_rss_mib=237 wall_s=1.63 cpu_user_s=1.37 memavail_start_gib=22 disk_free_gib=441->441 slot=claude
