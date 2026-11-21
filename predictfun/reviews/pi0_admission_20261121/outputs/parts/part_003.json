@@ -1,0 +1,151 @@
+{
+ "version": "pi0_admission_exposure_v1",
+ "part": 3,
+ "day": "20261026",
+ "rows": 32,
+ "sha256": "ac372d7c048db8349377eac34b0c08e83c0fce7b2673cda099a4533d34024f6e",
+ "manifest_sha256": "3c5bf097328ee2cd31a4e7d1b17d6aadc8559559ccd74f91154f15614b91696c",
+ "r4e_record_sha256": "ce6d4a9dcd8e33983fad6f94e83a175c59c182d709849e518b2b943e48dc9f82",
+ "sources": {
+  "pf_pi0_admission.py": "a47f5690a9caacb38c5c734e6501993af7816bf3097129eabb619f2f454e450d",
+  "pf_entry_retention.py": "93f8050f39ca8df0f9b8955bdfd0ef16623b4bfd8c7e2bc664c920bac867f732",
+  "pf_entry_exposure.py": "33f3e0c72850e0c6c623f96cf157c02c72cdceefc0721f87c64afc59547533f0",
+  "pf_adv2.py": "c98e7d407595a6903fec130db2fac0b772c255d09c5064e987ba74f234db6936",
+  "pf_r2_labels.py": "f56f1ae560492aa9b7d040b28f02d96a2b2fd2611da4047d4c7227b497684d6e",
+  "pf_r2_label_sample.py": "4cdeff0c6d491611f970756f263f4ef03c3e2a90dbade580d435c68bae32e769",
+  "pf_branch_engine.py": "8b7960ef4bbbc178b281e57d92d4795d7678436c0ca875e7199e24a6626af3a8",
+  "pf_r2_teacher.py": "c7d72d91b0d422d192015f331154881ba030989a6802d23a604a3b667194d79b",
+  "pf_r2_shadow.py": "962cf7b42c1a8ff78b7a4cb46f111036c824270ff8fa91d95c1c42558f098ab9",
+  "pf_pipeline_bench.py": "c2942249a4fef1ef9be487bc87d0b84cec90785da442d604b49b144186a437e0"
+ },
+ "elapsed_s": 124.20539116859436,
+ "hwm_mib": 1179.62890625,
+ "timing": {
+  "load_s": 71.01153707504272,
+  "worlds": [
+   {
+    "census_s": null,
+    "pair_s": [
+     1.4084358215332031
+    ],
+    "world_s": 3.5233888626098633
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     1.8189988136291504
+    ],
+    "world_s": 3.8492255210876465
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     0.2478024959564209
+    ],
+    "world_s": 2.3247523307800293
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     0.11545610427856445
+    ],
+    "world_s": 2.151869773864746
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     1.3385865688323975
+    ],
+    "world_s": 5.346589088439941
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     1.2604446411132812
+    ],
+    "world_s": 3.5484704971313477
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     0.851337194442749
+    ],
+    "world_s": 3.08992338180542
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     0.9380636215209961
+    ],
+    "world_s": 2.9941911697387695
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     1.0436196327209473
+    ],
+    "world_s": 4.07242751121521
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     0.9684443473815918
+    ],
+    "world_s": 3.042066812515259
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     0.24314355850219727
+    ],
+    "world_s": 2.4093801975250244
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     0.1971430778503418
+    ],
+    "world_s": 2.2879679203033447
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     0.40755486488342285
+    ],
+    "world_s": 2.5360336303710938
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     0.12313079833984375
+    ],
+    "world_s": 2.22611403465271
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     0.4947524070739746
+    ],
+    "world_s": 3.5338900089263916
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     0.186859130859375
+    ],
+    "world_s": 2.4208033084869385
+   },
+   {
+    "census_s": null,
+    "pair_s": [
+     1.4018678665161133
+    ],
+    "world_s": 3.807194709777832
+   }
+  ],
+  "pairs": 17,
+  "pair_mean_s": 0.7673906438490924,
+  "pair_max_s": 1.8189988136291504
+ },
+ "asof": "2026-11-21T11:08:30.489363+00:00"
+}
