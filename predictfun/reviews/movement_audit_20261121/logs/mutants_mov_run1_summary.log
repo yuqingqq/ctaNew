@@ -1,0 +1,67 @@
+  0 every opportunity a fill: CAUGHT (1.5 s) - MOVEMENT AUDIT SELFTEST FAILED: accounting: the exact calibrated mixture; accounting: the probability / conditional-head attribution; moments: the for
+  1 the probability term without z: CAUGHT (1.5 s) - MOVEMENT AUDIT SELFTEST FAILED: accounting: the exact calibrated mixture; accounting: the probability / conditional-head attribution; tables_of: a mov
+  2 the conditional term on every opportunity: CAUGHT (1.5 s) - MOVEMENT AUDIT SELFTEST FAILED: accounting: the exact calibrated mixture; accounting: the probability / conditional-head attribution; moments: the for
+  3 the identity residual unchecked: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: accounting: a changed value or a V in other units was accepted
+  4 zero_P reported ok: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: accounting: zero_P / movement_missing / no_forecast_or_target
+  5 a missing qm as zero: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: accounting: zero_P / movement_missing / no_forecast_or_target
+  6 the mechanical baseline on the realized q: CAUGHT (2.1 s) - MOVEMENT AUDIT SELFTEST FAILED: accounting: the exact calibrated mixture
+  7 fills before the effect counted: CAUGHT (2.1 s) - MOVEMENT AUDIT SELFTEST FAILED: fills: the pre / post split, the effect / gid cut or the delay classes ([(110.0, 5.0, 10.0, 'negative'), (600.0, 20.0,
+  8 other gids counted: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: fills: the pre / post split, the effect / gid cut or the delay classes ([(600.0, 20.0, 10.0, '(100,500]'), (700.0, nan
+  9 the entry from the review effect: CAUGHT (1.0 s) - MOVEMENT AUDIT SELFTEST FAILED: fills: the pre / post split, the effect / gid cut or the delay classes ([(600.0, 20.0, 10.0, '(100,500]'), (600.0, 20.
+  10 the pre-fill sign reversed: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: fills: the pre / post split, the effect / gid cut or the delay classes ([(600.0, -20.0, 10.0, '(100,500]'), (110.0, -5
+  11 the ask side as the bid: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: fills: the ask side signs
+  12 the forced mid without the side: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: forced_mids: the mid from a retained fill-time edge
+  13 a late reference accepted: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: fills: a mid stamped after the fill was accepted
+  14 no record as a missing mid: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: fills: a missing record is not reference_unavailable; measure: the fill references of the hand cohorts
+  15 the fill totals unchecked against M: CAUGHT (2.1 s) - MOVEMENT AUDIT SELFTEST FAILED: tables_of: a moved fill time or END mark was accepted (['ok', 'fill_mismatch', 'ok'])
+  16 the delay class boundary: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: strata: a bin boundary or a declared constant
+  17 the horizon intervals closed left: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: strata: a bin boundary or a declared constant; tables_of: the client queue stratum ((0,1]), the horizon / ordinal or t
+  18 the queue ratio boundary: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: strata: a bin boundary or a declared constant
+  19 the decision queue from the venue: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: tables_of: the client queue stratum (missing_or_invalid), the horizon / ordinal or the split status; tables_of: the ve
+  20 ordinal 2 merged: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: strata: a bin boundary or a declared constant
+  21 the E[q] boundary: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: strata: a bin boundary or a declared constant
+  22 P = 1 outside the bins: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: strata: a bin boundary or a declared constant
+  23 non-model decisions eligible: CAUGHT (2.1 s) - MOVEMENT AUDIT SELFTEST FAILED: tables_of: a non-model decision was eligible
+  24 fallback as its shadow action: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: admission_of: the shadow admission labels
+  25 the row weight unbound: CAUGHT (2.1 s) - MOVEMENT AUDIT SELFTEST FAILED: adm_rows: the manifest binding (['ok', 'ok', 'weight_mismatch', 'ok']); membership: the complete hand cohorts ({'admit
+  26 the row cell unbound: CAUGHT (2.1 s) - MOVEMENT AUDIT SELFTEST FAILED: adm_rows: the manifest binding (['ok', 'weight_mismatch', 'ok', 'ok']); membership: the complete hand cohorts ({'admit
+  27 the row part unbound: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: adm_rows: a row in another part than its manifest row was accepted
+  28 the weight from the row: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: adm_rows: the manifest binding (['ok', 'weight_mismatch', 'weight_mismatch', 'ok'])
+  29 a partition unhashed: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: adm_rows: a substituted partition was accepted
+  30 membership a subset: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: membership: a missing fork was accepted
+  31 measure without the forced membership: ESCAPED (2.1 s) - movement audit selftest passed: accounting (calibrated mixture, probability vs head attribution, refusals); fills (pre / post split, effect and gid cu
+  32 measure overwrites: CAUGHT (2.5 s) - MOVEMENT AUDIT SELFTEST FAILED: measure: an existing measurement was overwritten
+  33 a mids record unhashed: CAUGHT (2.5 s) - MOVEMENT AUDIT SELFTEST FAILED: measure: a tampered mids record was accepted
+  34 mids keyed by string: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: measure: a valid mids record did not bind the admitted fill mid
+  35 the overlap is every day: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: moments: the forced views; moments: severe sums, the pooled Brier reference, ESS or the overlap view
+  36 the overlap views for the admitted too: CAUGHT (2.1 s) - MOVEMENT AUDIT SELFTEST FAILED: moments: the forced views
+  37 the Brier reference is P: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: moments: severe sums, the pooled Brier reference, ESS or the overlap view
+  38 severe as above +30: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: moments: severe sums, the pooled Brier reference, ESS or the overlap view
+  39 Kish without the square: CAUGHT (2.1 s) - MOVEMENT AUDIT SELFTEST FAILED: moments: severe sums, the pooled Brier reference, ESS or the overlap view
+  40 weighted concentration unweighted: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: concentration: the weighted / unweighted shares
+  41 the top-6 generation share: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: concentration: the weighted / unweighted shares
+  42 unweighted contributions: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: contributions: the signed day x side sums
+  43 per share without the weights: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: prepost: per-share units or the missing count ({'cohort': 'admitted', 'stage': 'entry', 'view': 'all', 'cell': 'all', 
+  44 missing references uncounted: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: prepost: per-share units or the missing count ({'cohort': 'admitted', 'stage': 'entry', 'view': 'all', 'cell': 'all', 
+  45 a changed bookTicker age as new: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: sources_table: the quote-only update or the clock-only transition
+  46 every PF receipt new: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: sources_table: the quote-only update or the clock-only transition
+  47 the control on the admission hour: CAUGHT (2.1 s) - MOVEMENT AUDIT SELFTEST FAILED: control: the review hour from its own decision time ({'reviews_with_time': 2, 'cell_equal_admission': 1, 'n': 2, 'n_se
+  48 broad on two cells: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: predicates P4: {'i': 'broad', 'ii': 'both', 'iv': 'populated', 'recommendation': 'calibration_candidate_defensible'} !
+  49 a looser tail share: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: predicates P2: {'i': 'broad', 'ii': 'fill_timing', 'iii': 'material', 'recommendation': 'representation_or_data_needed
+  50 the ratio dropped: CAUGHT (2.1 s) - MOVEMENT AUDIT SELFTEST FAILED: predicates P4: {'i': 'inconclusive', 'ii': 'decision_state', 'iv': 'populated', 'recommendation': 'inconclusive'} != {
+  51 no_fill among the delay classes: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: predicates P1: {'i': 'broad', 'ii': 'fill_timing', 'iii': 'similar', 'iv': 'populated', 'recommendation': 'representat
+  52 every subset in the strata read: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: predicates P2: {'i': 'concentrated', 'ii': 'decision_state', 'iii': 'material', 'recommendation': 'representation_or_d
+  53 material at a full difference: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: predicates P5: {'i': 'broad', 'ii': 'both', 'iii': 'similar', 'recommendation': 'calibration_candidate_defensible'} !=
+  54 the forced reference over every day: CAUGHT (2.1 s) - MOVEMENT AUDIT SELFTEST FAILED: predicates P1: {'i': 'broad', 'ii': 'decision_state', 'iii': 'material', 'iv': 'populated', 'recommendation': 'calibra
+  55 populated in one stratification: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: predicates P3: {'iii': 'inconclusive', 'iv': 'populated', 'recommendation': 'calibration_candidate_defensible'} != {'i
+  56 populated without fills: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: predicates P6: {'ii': 'inconclusive', 'iv': 'populated', 'recommendation': 'inconclusive'} != {'ii': 'inconclusive', '
+  57 defensible only on decision_state: CAUGHT (2.1 s) - MOVEMENT AUDIT SELFTEST FAILED: predicates P5: {'i': 'broad', 'ii': 'both', 'iii': 'material', 'recommendation': 'inconclusive'} != {'i': 'broad', 'ii
+  58 fill timing not a representation need: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: predicates P7: {'i': 'broad', 'ii': 'fill_timing', 'iv': 'populated', 'recommendation': 'inconclusive'} != {'i': 'broa
+  59 mid_lookup at or after: CAUGHT (2.1 s) - MOVEMENT AUDIT SELFTEST FAILED: mid_lookup: the convention
+  60 mid_lookup on one best: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: mid_lookup: the convention
+  61 frozen always: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: run_part: refused for another reason (ValueError('a cohort manifest is not its committed receipt copy')); frozen / inp
+  62 inputs_frozen ignores its arguments: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: inputs_frozen accepted hand manifests, or committed_equal refused a committed file
+  63 run_part before the freeze: CAUGHT (2.0 s) - MOVEMENT AUDIT SELFTEST FAILED: run_part: refused for another reason (ValueError('a cohort manifest is not its committed receipt copy'))
+control: PASSED (2.0 s); sources {'pf_movement_audit.py': '21b13b801fc08c1c', 'pf_movement_audit_mutants.py': '180bd112c49bfb0a', 'pf_movement_audit_selftest.py': '9b868b12bd9e1e84'}
+mutation check FAILED: the control passes its selftest, 63 / 64 planted code errors are caught by a check (2.2 CPU min) | 31 measure without the forced membership: ESCAPED - movement audit selftest passed: accounting (calibrated mixture, probability vs head attribution, refusals); fills (pre /
+2026-11-21T11:48:51Z tag=mov_mutant_summary rc=1 peak_rss_mib=16 wall_s=0.03 cpu_user_s=0.02 memavail_start_gib=22 disk_free_gib=442->442 slot=claude

@@ -1,0 +1,196 @@
+{
+ "statuses": [
+  {
+   "cohort": "admitted",
+   "stage": "entry",
+   "acc_status": "not_eligible",
+   "n": 2
+  },
+  {
+   "cohort": "admitted",
+   "stage": "entry",
+   "acc_status": "ok",
+   "n": 2
+  },
+  {
+   "cohort": "admitted",
+   "stage": "first_pull",
+   "acc_status": "not_eligible",
+   "n": 4
+  },
+  {
+   "cohort": "admitted",
+   "stage": "first_review",
+   "acc_status": "fill_mismatch",
+   "n": 1
+  },
+  {
+   "cohort": "admitted",
+   "stage": "first_review",
+   "acc_status": "not_eligible",
+   "n": 2
+  },
+  {
+   "cohort": "admitted",
+   "stage": "first_review",
+   "acc_status": "ok",
+   "n": 1
+  },
+  {
+   "cohort": "forced",
+   "stage": "entry",
+   "acc_status": "fill_mismatch",
+   "n": 1
+  },
+  {
+   "cohort": "forced",
+   "stage": "entry",
+   "acc_status": "ok",
+   "n": 3
+  },
+  {
+   "cohort": "forced",
+   "stage": "first_pull",
+   "acc_status": "not_eligible",
+   "n": 4
+  },
+  {
+   "cohort": "forced",
+   "stage": "first_review",
+   "acc_status": "fill_mismatch",
+   "n": 1
+  },
+  {
+   "cohort": "forced",
+   "stage": "first_review",
+   "acc_status": "ok",
+   "n": 3
+  }
+ ],
+ "fill_statuses": [
+  {
+   "cohort": "admitted",
+   "ref_status": "reference_unavailable:no_record",
+   "n": 1
+  },
+  {
+   "cohort": "forced",
+   "ref_status": "ok",
+   "n": 1
+  }
+ ],
+ "membership": {
+  "admitted_rows": 4,
+  "admitted_keys": 4,
+  "admitted_equal": true,
+  "forced_rows": 4,
+  "forced_keys": 4,
+  "forced_equal": true,
+  "weight_mismatch": 2,
+  "admitted_weight_sum": 6.0
+ },
+ "recommendation": [
+  "representation_or_data_needed",
+  "representation_or_data_needed",
+  "representation_or_data_needed"
+ ]
+}
+{
+ "statuses": [
+  {
+   "cohort": "admitted",
+   "stage": "entry",
+   "acc_status": "not_eligible",
+   "n": 2
+  },
+  {
+   "cohort": "admitted",
+   "stage": "entry",
+   "acc_status": "ok",
+   "n": 2
+  },
+  {
+   "cohort": "admitted",
+   "stage": "first_pull",
+   "acc_status": "not_eligible",
+   "n": 4
+  },
+  {
+   "cohort": "admitted",
+   "stage": "first_review",
+   "acc_status": "fill_mismatch",
+   "n": 1
+  },
+  {
+   "cohort": "admitted",
+   "stage": "first_review",
+   "acc_status": "not_eligible",
+   "n": 2
+  },
+  {
+   "cohort": "admitted",
+   "stage": "first_review",
+   "acc_status": "ok",
+   "n": 1
+  },
+  {
+   "cohort": "forced",
+   "stage": "entry",
+   "acc_status": "fill_mismatch",
+   "n": 1
+  },
+  {
+   "cohort": "forced",
+   "stage": "entry",
+   "acc_status": "ok",
+   "n": 3
+  },
+  {
+   "cohort": "forced",
+   "stage": "first_pull",
+   "acc_status": "not_eligible",
+   "n": 4
+  },
+  {
+   "cohort": "forced",
+   "stage": "first_review",
+   "acc_status": "fill_mismatch",
+   "n": 1
+  },
+  {
+   "cohort": "forced",
+   "stage": "first_review",
+   "acc_status": "ok",
+   "n": 3
+  }
+ ],
+ "fill_statuses": [
+  {
+   "cohort": "admitted",
+   "ref_status": "ok",
+   "n": 1
+  },
+  {
+   "cohort": "forced",
+   "ref_status": "ok",
+   "n": 1
+  }
+ ],
+ "membership": {
+  "admitted_rows": 4,
+  "admitted_keys": 4,
+  "admitted_equal": true,
+  "forced_rows": 4,
+  "forced_keys": 4,
+  "forced_equal": true,
+  "weight_mismatch": 2,
+  "admitted_weight_sum": 6.0
+ },
+ "recommendation": [
+  "representation_or_data_needed",
+  "representation_or_data_needed",
+  "representation_or_data_needed"
+ ]
+}
+movement audit selftest passed: accounting (calibrated mixture, probability vs head attribution, refusals); fills (pre / post split, effect and gid cut, delay classes, missing / unavailable / late references, ask signs, retained mids, moved fill time / END mark refused); strata boundaries, the client queue and the explanatory venue queue; quote-only / clock-only sources; the manifest binding, substituted partitions and membership; moments views, severe sums, Brier reference, prepost units, concentration, contributions, the control hour; the evidence predicates and recommendation; mid_lookup; writers and the freeze guards
+2026-11-21T11:49:04Z tag=pf_movement_audit_selftest rc=0 peak_rss_mib=207 wall_s=2.21 cpu_user_s=2.02 memavail_start_gib=22 disk_free_gib=442->442 slot=claude

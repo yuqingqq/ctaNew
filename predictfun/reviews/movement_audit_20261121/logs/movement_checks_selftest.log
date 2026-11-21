@@ -1,0 +1,79 @@
+{
+ "statuses": [
+  {
+   "cohort": "admitted",
+   "stage": "entry",
+   "acc_status": "ok",
+   "n": 4
+  },
+  {
+   "cohort": "admitted",
+   "stage": "first_pull",
+   "acc_status": "not_eligible",
+   "n": 4
+  },
+  {
+   "cohort": "admitted",
+   "stage": "first_review",
+   "acc_status": "ok",
+   "n": 4
+  },
+  {
+   "cohort": "forced",
+   "stage": "entry",
+   "acc_status": "ok",
+   "n": 4
+  },
+  {
+   "cohort": "forced",
+   "stage": "first_pull",
+   "acc_status": "not_eligible",
+   "n": 4
+  },
+  {
+   "cohort": "forced",
+   "stage": "first_review",
+   "acc_status": "ok",
+   "n": 4
+  }
+ ],
+ "fill_statuses": [
+  {
+   "cohort": "admitted",
+   "ref_status": "ok",
+   "n": 2
+  },
+  {
+   "cohort": "admitted",
+   "ref_status": "reference_missing",
+   "n": 2
+  },
+  {
+   "cohort": "forced",
+   "ref_status": "ok",
+   "n": 2
+  },
+  {
+   "cohort": "forced",
+   "ref_status": "reference_missing",
+   "n": 2
+  }
+ ],
+ "membership": {
+  "admitted_rows": 4,
+  "admitted_keys": 4,
+  "admitted_equal": true,
+  "forced_rows": 4,
+  "forced_keys": 4,
+  "forced_equal": true,
+  "weight_mismatch": 0,
+  "admitted_weight_sum": 6.0
+ },
+ "recommendation": [
+  "representation_or_data_needed",
+  "representation_or_data_needed",
+  "representation_or_data_needed"
+ ]
+}
+movement checks selftest passed: A-G true on hand cohorts measured by the module; each A-G corruption flips its check; h_compare and resources on synthetic values
+2026-11-21T11:54:38Z tag=movement_checks_selftest rc=0 peak_rss_mib=205 wall_s=2.75 cpu_user_s=2.52 memavail_start_gib=22 disk_free_gib=442->442 slot=claude

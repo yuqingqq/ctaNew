@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "47", "name": "the control on the admission hour", "seconds": 2.1, "sources": {"pf_movement_audit.py": "21b13b801fc08c1c", "pf_movement_audit_mutants.py": "180bd112c49bfb0a", "pf_movement_audit_selftest.py": "9b868b12bd9e1e84"}, "why": "MOVEMENT AUDIT SELFTEST FAILED: control: the review hour from its own decision time ({'reviews_with_time': 2, 'cell_equal_admission': 1, 'n': 2, 'n_sel': 1, 'strata': 1})"}
+2026-11-21T11:48:25Z tag=mov_47 rc=0 peak_rss_mib=203 wall_s=2.28 cpu_user_s=2.11 memavail_start_gib=22 disk_free_gib=442->442 slot=claude

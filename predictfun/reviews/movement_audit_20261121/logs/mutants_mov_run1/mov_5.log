@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "5", "name": "a missing qm as zero", "seconds": 2.0, "sources": {"pf_movement_audit.py": "21b13b801fc08c1c", "pf_movement_audit_mutants.py": "180bd112c49bfb0a", "pf_movement_audit_selftest.py": "9b868b12bd9e1e84"}, "why": "MOVEMENT AUDIT SELFTEST FAILED: accounting: zero_P / movement_missing / no_forecast_or_target"}
+2026-11-21T11:48:03Z tag=mov_5 rc=0 peak_rss_mib=202 wall_s=2.24 cpu_user_s=2.07 memavail_start_gib=22 disk_free_gib=442->442 slot=claude3
