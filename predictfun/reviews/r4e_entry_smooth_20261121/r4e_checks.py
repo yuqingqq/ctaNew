@@ -78,7 +78,7 @@ def check_B(out, R):
 
 
 def check_C(out, R):
-    ev = json.loads((out / 'eval' / 'eval.json').read_text()); D = pd.read_csv(out / 'eval' / 'predictions.csv.gz'); r3 = pd.read_csv(N.REPO / NE.R3_PRED)
+    ev = json.loads((out / 'eval' / 'eval.json').read_text()); D = NE.read_r3(out / 'eval' / 'predictions.csv.gz'); r3 = NE.read_r3(N.REPO / NE.R3_PRED)
     idn = NE.r3_identity(D.assign(day=D.day.astype(str)), r3); acc = json.loads((AE.EVAL_DIR / 'accepted.json').read_text())
     R['C'] = dict(recomputed=idn, stored=ev['identity'])
     return bool(all(v for k, v in idn.items() if k not in ('rows', 'r3_rows')) and acc['dataset_sha256'] == NE.R3_DATASET and ev['r3_dataset_sha256'] == NE.R3_DATASET)

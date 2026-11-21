@@ -87,3 +87,19 @@ Oct 26–27 informed this design (R3), so every result here is **adaptive consum
 
 Partition 0 (32 worlds) is the cost pilot. The round's ceiling is **8 core-hours** (check I). If the projection exceeds it, explicit stop
 statuses are kept, and no smaller population is chosen after outcomes are seen.
+
+## Freeze amendment (before any evaluation output)
+
+The first evaluation run (`logs/r4e_eval_refused_default_parser.log`) refused at the declared reuse check. All 12,088 POST row keys
+matched R3's, but labels, weights and RICH predictions compared unequal.
+
+The cause was the reader, not the data. pandas' default C float parser is not round-trip exact: on R3's `predictions.csv.gz` it
+differs from the exact parse in 44 labels, 5,064 weights and 4,857 predictions, by at most 5.7e-14.
+
+The amendment changes only the reader:
+- `pf_adv2_entry_eval.read_r3` parses with `float_precision='round_trip'`;
+- the checker's C uses the same reader;
+- the selftest adds a CSV write / read round trip, which must be exact;
+- one more mutant (the default parser) is caught.
+
+No reading had been computed or written, the models were already committed, and the exact comparison itself is unchanged.

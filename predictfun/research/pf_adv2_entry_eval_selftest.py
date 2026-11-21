@@ -3,6 +3,7 @@ module object M (the file, or a mutated copy under pf_mutant_one.py); any failed
  1. the frame: stub heads -> each candidate's POST iff > 0 (a tie WAITs), fallbacks for unsupported rows (d 0), both candidates on identical
     rows, the training mean of the side;
  2. r3_identity: an equal R3 frame passes every field; an altered label, weight or RICH prediction and a missing row each fail their field;
+    a frame written to a gzipped CSV and read back by read_r3 passes exactly (the round-trip parse; random floats);
  3. readings / screens: every day / side / candidate has all / POST / WAIT / fallback, and POST / WAIT verdicts from the declared set;
  4. calibration: each bin's w_sum is its weight total and pooling (w_sum x mean) / sum(w_sum) over days equals the direct weighted mean;
  5. strata: per dimension value the rows, posts and the local value sum(w d Y) / sum(w) of each candidate (hand-computed);
@@ -65,6 +66,11 @@ def run(M):  # noqa: C901
             bad.append(f'r3_identity: an altered {col} passed')
     if M.r3_identity(D, r3.iloc[1:])['same_keys']:
         bad.append('r3_identity: a missing row passed')
+    Dr = D.copy(); Dr['Y'] = rng.normal(size=len(Dr)) * 7.3; Dr['w'] = rng.uniform(.1, 9., len(Dr)); Dr['pred_RICH'] = rng.normal(size=len(Dr)) / 3.
+    with tempfile.TemporaryDirectory() as td:
+        fp = Path(td) / 'p.csv.gz'; Dr[M.KEY + ['Y', 'w', 'pred_RICH']].assign(head='post').to_csv(fp, index=False); idr = M.r3_identity(Dr, M.read_r3(fp))
+    if not all(idr[k] for k in ('same_keys', 'y_equal', 'w_equal', 'rich_pred_equal')):
+        bad.append(f'read_r3: a CSV round trip is not exact ({idr})')
     # ---- 3 readings / screens
     rows, scr = M.readings(D); rd, sc = pd.DataFrame(rows), pd.DataFrame(scr)
     for s in (0, 1):

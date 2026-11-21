@@ -1,2 +1,2 @@
-{"cls": "CAUGHT", "index": "4", "name": "the identity ignores Y", "seconds": 1.1, "sources": {"pf_adv2_entry_eval.py": "40730500a438dcdd", "pf_adv2_entry_eval_mutants.py": "edd4fe7fca6a1e54", "pf_adv2_entry_eval_selftest.py": "d1b6e0b011d0dfff"}, "why": "ADV2 ENTRY EVAL SELFTEST FAILED: r3_identity: an altered Y passed"}
-2026-11-21T06:50:22Z tag=mut_entry_eval_4 rc=0 peak_rss_mib=200 wall_s=1.31 cpu_user_s=1.15 memavail_start_gib=22 disk_free_gib=443->443 slot=claude2
+{"cls": "CAUGHT", "index": "4", "name": "the identity ignores Y", "seconds": 1.0, "sources": {"pf_adv2_entry_eval.py": "27f3e6dc4154dcf3", "pf_adv2_entry_eval_mutants.py": "b6002bbb8cb21a11", "pf_adv2_entry_eval_selftest.py": "0999a8b3ddef014f"}, "why": "ADV2 ENTRY EVAL SELFTEST FAILED: r3_identity: an altered Y passed"}
+2026-11-21T06:58:30Z tag=mut_entry_eval_4 rc=0 peak_rss_mib=200 wall_s=1.26 cpu_user_s=1.10 memavail_start_gib=22 disk_free_gib=442->442 slot=claude4

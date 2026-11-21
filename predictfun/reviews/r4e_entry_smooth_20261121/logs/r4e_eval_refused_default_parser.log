@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/research/pf_adv2_entry_eval.py", line 179, in <module>
+    cmd_eval()
+  File "/home/yuqing/ctaNew/predictfun/research/pf_adv2_entry_eval.py", line 157, in cmd_eval
+    C.require(all(v for k, v in idn.items() if k not in ('rows', 'r3_rows')), f"the reused rows / labels / weights / RICH predictions differ from R3's: {idn}")
+  File "/home/yuqing/ctaNew/predictfun/research/pf_flow_price_common.py", line 42, in require
+    raise ValueError(message)
+ValueError: the reused rows / labels / weights / RICH predictions differ from R3's: {'rows': 12088, 'r3_rows': 12088, 'same_keys': True, 'y_equal': False, 'w_equal': False, 'rich_pred_equal': False}
+2026-11-21T06:56:25Z tag=r4e_eval rc=1 peak_rss_mib=317 wall_s=46.01 cpu_user_s=45.49 memavail_start_gib=23 disk_free_gib=442->442 slot=claude
