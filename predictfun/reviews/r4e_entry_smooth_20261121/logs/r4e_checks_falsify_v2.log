@@ -1,0 +1,2 @@
+{"cases": {"C": {"clean": true, "corrupted": false, "applied": true}, "D": {"clean": true, "corrupted": false, "applied": true}, "F": {"clean": true, "trace_fill": false, "control_value": false, "applied": true}, "G": {"clean": true, "arm_fill": false, "applied": true}, "H": {"clean": true, "corrupted": false, "applied": true}}, "falsifier_ok": true}
+2026-11-21T07:23:07Z tag=r4e_checks_falsify_v2 rc=0 peak_rss_mib=258 wall_s=8.41 cpu_user_s=8.00 memavail_start_gib=22 disk_free_gib=443->443 slot=claude

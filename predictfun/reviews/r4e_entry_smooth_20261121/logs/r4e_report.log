@@ -1,0 +1,172 @@
+{
+ "cells": 4,
+ "below_zero": 2,
+ "below_rich": 4,
+ "below_mean": 1,
+ "value_above_rich": 3,
+ "value_above_never": 0,
+ "pred_SMOOTH": {
+  "cells": 4,
+  "admitted": 4,
+  "post_value_positive": 0,
+  "screen_pass": 0,
+  "above_draw_mean": 1,
+  "above_draw_p95": 0,
+  "demonstrated": 0,
+  "admissions": 4122
+ },
+ "pred_RICH": {
+  "cells": 4,
+  "admitted": 4,
+  "post_value_positive": 0,
+  "screen_pass": 0,
+  "above_draw_mean": 2,
+  "above_draw_p95": 0,
+  "demonstrated": 0,
+  "admissions": 6350
+ },
+ "replay": {
+  "20261026": {
+   "worlds": 188,
+   "totals": {
+    "ENTRY_ONLY": -2635.2838363590845,
+    "N0": 0.0,
+    "PI0": -265.0687420478614,
+    "SMOOTH": -2471.697693202745
+   },
+   "smooth_vs_entry": [
+    163.5861431563393,
+    42,
+    41,
+    188
+   ],
+   "smooth_vs_pi0": [
+    -2206.628951154884,
+    18,
+    40,
+    188
+   ],
+   "entry_vs_pi0": [
+    -2370.215094311223,
+    25,
+    49,
+    188
+   ],
+   "r3_match": {
+    "N0": 188,
+    "PI0": 188,
+    "ENTRY_ONLY": 188
+   },
+   "generations": {
+    "SMOOTH": 3540,
+    "ENTRY_ONLY": 4611
+   }
+  },
+  "20261027": {
+   "worlds": 192,
+   "totals": {
+    "ENTRY_ONLY": -2377.5009329708014,
+    "N0": 0.0,
+    "PI0": 31.57334930598509,
+    "SMOOTH": -1493.7856848745348
+   },
+   "smooth_vs_entry": [
+    883.7152480962667,
+    44,
+    33,
+    192
+   ],
+   "smooth_vs_pi0": [
+    -1525.3590341805198,
+    21,
+    36,
+    192
+   ],
+   "entry_vs_pi0": [
+    -2409.074282276786,
+    18,
+    50,
+    192
+   ],
+   "r3_match": {
+    "N0": 192,
+    "PI0": 192,
+    "ENTRY_ONLY": 192
+   },
+   "generations": {
+    "SMOOTH": 3712,
+    "ENTRY_ONLY": 4745
+   }
+  }
+ },
+ "reached": [
+  {
+   "day": "20261026",
+   "pairs": 376,
+   "nonzero": 15,
+   "mse_smooth": 381.2080119870516,
+   "mse_rich": 362.801488437509,
+   "mse_zero": 379.07298578315425,
+   "smooth_below_rich": false,
+   "smooth_below_zero": false
+  },
+  {
+   "day": "20261027",
+   "pairs": 384,
+   "nonzero": 14,
+   "mse_smooth": 382.6251052986545,
+   "mse_rich": 386.9632380519735,
+   "mse_zero": 379.3808606811853,
+   "smooth_below_rich": true,
+   "smooth_below_zero": false
+  }
+ ],
+ "reached_statuses": {
+  "ok": 760
+ },
+ "replay_core_hours": 1.1059861111111111,
+ "replay_peak": 1186,
+ "round_core_hours": 1.378975,
+ "round_peak": 1186,
+ "all_true": true,
+ "falsifier_ok": true,
+ "checks": {
+  "A_fit": true,
+  "B_order": true,
+  "C_reuse": true,
+  "D_readings": true,
+  "E_control": true,
+  "F_replay": true,
+  "G_reached": true,
+  "H_suites": true,
+  "I_resources": true
+ },
+ "asof": "2026-11-21T07:20:13.981250+00:00",
+ "identity": {
+  "r3_rows": 12088,
+  "rich_pred_equal": true,
+  "rows": 12088,
+  "same_keys": true,
+  "w_equal": true,
+  "y_equal": true
+ },
+ "suites": {
+  "entry": [
+   16,
+   16
+  ],
+  "entry_eval": [
+   15,
+   15
+  ],
+  "entry_replay": [
+   19,
+   19
+  ]
+ },
+ "run1_replay": [
+  18,
+  19
+ ]
+}
+2026-11-21T07:23:36Z tag=r4e_report rc=0 peak_rss_mib=105 wall_s=0.34 cpu_user_s=0.28 memavail_start_gib=22 disk_free_gib=443->443 slot=claude

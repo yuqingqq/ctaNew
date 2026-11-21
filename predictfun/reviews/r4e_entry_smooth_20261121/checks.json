@@ -1,0 +1,113 @@
+{
+ "all_true": true,
+ "asof": "2026-11-21T07:20:13.981250+00:00",
+ "checks": {
+  "A_fit": true,
+  "B_order": true,
+  "C_reuse": true,
+  "D_readings": true,
+  "E_control": true,
+  "F_replay": true,
+  "G_reached": true,
+  "H_suites": true,
+  "I_resources": true
+ },
+ "readings": {
+  "A": {
+   "bad": [],
+   "delta": {
+    "min_data_in_leaf": [
+     200,
+     1000
+    ]
+   },
+   "models": 2
+  },
+  "B": {
+   "commit": "eaea1161dc39e8048655ebcd775fbf6004b18014",
+   "committed_at": "2026-11-21T06:56:07+00:00",
+   "eval_asof": "2026-11-21T07:00:08.702512+00:00",
+   "parts": 12
+  },
+  "C": {
+   "recomputed": {
+    "r3_rows": 12088,
+    "rich_pred_equal": true,
+    "rows": 12088,
+    "same_keys": true,
+    "w_equal": true,
+    "y_equal": true
+   },
+   "stored": {
+    "r3_rows": 12088,
+    "rich_pred_equal": true,
+    "rows": 12088,
+    "same_keys": true,
+    "w_equal": true,
+    "y_equal": true
+   }
+  },
+  "D": {
+   "missing": [],
+   "predicates_recomputed_equal": true,
+   "strata_dims": [
+    "c_gen",
+    "c_other",
+    "hbin",
+    "source"
+   ]
+  },
+  "E": {
+   "draws": 500,
+   "rows": 12,
+   "seed": 20261121
+  },
+  "F": {
+   "bad": [],
+   "episodes": 1520,
+   "n_bad": 0,
+   "population": 384,
+   "worlds": 384
+  },
+  "G": {
+   "bad": [],
+   "n_bad": 0,
+   "statuses": {
+    "ok": 760
+   }
+  },
+  "H": {
+   "entry": {
+    "caught": 16,
+    "extra_files": [],
+    "failures": [],
+    "judge_ok": true,
+    "one_record_per_file": true,
+    "planted": 16
+   },
+   "entry_eval": {
+    "caught": 15,
+    "extra_files": [],
+    "failures": [],
+    "judge_ok": true,
+    "one_record_per_file": true,
+    "planted": 15
+   },
+   "entry_replay": {
+    "caught": 19,
+    "extra_files": [],
+    "failures": [],
+    "judge_ok": true,
+    "one_record_per_file": true,
+    "planted": 19
+   }
+  },
+  "I": {
+   "bad": [],
+   "core_hours": 1.378975,
+   "jobs": 108,
+   "peak_mib": 1186
+  }
+ },
+ "source_sha256": "4699cb0d82c5a32e82c6193be148e0728f8b14f020feb0073b694073e2887e43"
+}
