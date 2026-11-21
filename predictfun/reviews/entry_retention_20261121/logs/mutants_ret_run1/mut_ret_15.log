@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "15", "name": "the horizon unchecked", "seconds": 4.9, "sources": {"pf_entry_retention.py": "f5d54ec151f14a5a", "pf_entry_retention_mutants.py": "57dc884da262ca9d", "pf_entry_retention_selftest.py": "a8afaf987c880015"}, "why": "ENTRY RETENTION SELFTEST FAILED: fork_stages: END changed gave ok, not horizon_mismatch"}
+2026-11-21T10:11:59Z tag=mut_ret_15 rc=0 peak_rss_mib=225 wall_s=5.17 cpu_user_s=4.98 memavail_start_gib=22 disk_free_gib=445->445 slot=claude

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "27", "name": "discrimination ignores thin", "seconds": 4.9, "sources": {"pf_entry_retention.py": "f5d54ec151f14a5a", "pf_entry_retention_mutants.py": "57dc884da262ca9d", "pf_entry_retention_selftest.py": "a8afaf987c880015"}, "why": "ENTRY RETENTION SELFTEST FAILED: predicates: a thin planted selection discriminates"}
+2026-11-21T10:12:15Z tag=mut_ret_27 rc=0 peak_rss_mib=224 wall_s=5.13 cpu_user_s=4.91 memavail_start_gib=22 disk_free_gib=445->445 slot=claude

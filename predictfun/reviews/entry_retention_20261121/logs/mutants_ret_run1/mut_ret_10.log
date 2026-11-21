@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "10", "name": "the probe count unchecked", "seconds": 4.9, "sources": {"pf_entry_retention.py": "f5d54ec151f14a5a", "pf_entry_retention_mutants.py": "57dc884da262ca9d", "pf_entry_retention_selftest.py": "a8afaf987c880015"}, "why": "ENTRY RETENTION SELFTEST FAILED: prefix_check: the callback denominator (forced POST and engine fallbacks excluded) or the probe count"}
+2026-11-21T10:11:55Z tag=mut_ret_10 rc=0 peak_rss_mib=222 wall_s=5.12 cpu_user_s=4.92 memavail_start_gib=22 disk_free_gib=445->445 slot=claude4

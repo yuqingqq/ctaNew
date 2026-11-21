@@ -1,0 +1,34 @@
+  0 the review captured on either side: ESCAPED (4.8 s) - entry retention selftest passed: crafted tapes (distinct pull, same-as-review pull, refusal, structural removal, other side, prefix and callback refus
+  1 a first pull from a keeping review: CAUGHT (4.8 s) - ENTRY RETENTION SELFTEST FAILED: distinct pull: stages [('first_review', 100.0, 'KEEP'), ('first_pull', 100.0, 'KEEP')], stop 100.0, pull; prefix_chec
+  2 a distinct pull marked same_as_review: CAUGHT (4.9 s) - ENTRY RETENTION SELFTEST FAILED: distinct pull: stages [('first_review', 100.0, 'KEEP'), ('first_pull', 200.0, 'PULL')], stop 200.0, pull
+  3 the prefix runs past the pull: CAUGHT (4.9 s) - ENTRY RETENTION SELFTEST FAILED: distinct pull: stages [('first_review', 100.0, 'KEEP'), ('first_pull', 200.0, 'PULL')], stop 350.0, closed:removed; a
+  4 the prefix ignores the closure: CAUGHT (4.9 s) - ENTRY RETENTION SELFTEST FAILED: refused: a stage captured or the stop reason end is not closed:refused; structural: a stage captured or the stop reas
+  5 the prefix ignores the saved fills: CAUGHT (4.9 s) - ENTRY RETENTION SELFTEST FAILED: prefix_check: a changed saved fill was accepted
+  6 the prefix ignores the saved requests: CAUGHT (4.9 s) - ENTRY RETENTION SELFTEST FAILED: prefix_check: a changed saved request was accepted
+  7 the prefix ignores the saved decisions: CAUGHT (4.9 s) - ENTRY RETENTION SELFTEST FAILED: prefix_check: a changed saved decision was accepted; fork_stages: a decision changed gave ok, not prefix_mismatch
+  8 callbacks count the forced POST: CAUGHT (4.7 s) - ENTRY RETENTION SELFTEST FAILED: prefix_check: a valid prefix refused ({'prefix_same': True, 'callbacks_ok': False, 'callbacks': 8, 'expected_callback
+  9 callbacks count engine fallbacks: CAUGHT (4.8 s) - ENTRY RETENTION SELFTEST FAILED: prefix_check: the callback denominator (forced POST and engine fallbacks excluded) or the probe count
+  10 the probe count unchecked: CAUGHT (4.9 s) - ENTRY RETENTION SELFTEST FAILED: prefix_check: the callback denominator (forced POST and engine fallbacks excluded) or the probe count
+  11 the effect ignores the pending clock: CAUGHT (4.9 s) - ENTRY RETENTION SELFTEST FAILED: effect_of: the engine's request rule
+  12 the equivalence ignores the KEEP fills: CAUGHT (4.9 s) - ENTRY RETENTION SELFTEST FAILED: fork_stages: a KEEP initial fill changed gave ok, not target_not_equivalent
+  13 the reconciliation ignores D_initial: CAUGHT (4.8 s) - ENTRY RETENTION SELFTEST FAILED: fork_stages: D_initial changed gave ok, not pull_not_reconciled
+  14 the reconciliation ignores the pre-effect fills: CAUGHT (4.9 s) - ENTRY RETENTION SELFTEST FAILED: fork_stages: a PI0 initial fill before the effect changed gave ok, not pull_not_reconciled
+  15 the horizon unchecked: CAUGHT (4.9 s) - ENTRY RETENTION SELFTEST FAILED: fork_stages: END changed gave ok, not horizon_mismatch
+  16 the review target from activation: CAUGHT (4.9 s) - ENTRY RETENTION SELFTEST FAILED: fork_stages: the stage target times, the unavoidable value, the admission or the first pull
+  17 the unavoidable value signed wrong: ESCAPED (4.9 s) - entry retention selftest passed: crafted tapes (distinct pull, same-as-review pull, refusal, structural removal, other side, prefix and callback refus
+  18 the admission inverted: CAUGHT (4.9 s) - ENTRY RETENTION SELFTEST FAILED: fork_stages: the stage target times, the unavoidable value, the admission or the first pull
+  19 the reproduction ignores V: CAUGHT (4.9 s) - ENTRY RETENTION SELFTEST FAILED: moments: a logged V that differs was reproduced, or the true one was not
+  20 the hidden copy not consulted: CAUGHT (4.8 s) - ENTRY RETENTION SELFTEST FAILED: a decision reading the branch object was not flagged by the hidden copy
+  21 the flip signed wrong: CAUGHT (4.9 s) - ENTRY RETENTION SELFTEST FAILED: stage_table: the unchanged-market transition
+  22 the changes over every input: CAUGHT (4.9 s) - ENTRY RETENTION SELFTEST FAILED: stage_table: the unchanged-market transition
+  23 the eligible rows of every status: CAUGHT (4.9 s) - ENTRY RETENTION SELFTEST FAILED: selection / predicates on hand rows (0.0, 0.538, {'entry_identifiable': True, 'review_protective': False, 'forecasts_
+  24 unmatched strata: CAUGHT (4.8 s) - ENTRY RETENTION SELFTEST FAILED: selection_null: an all-selected population is not degenerate / thin
+  25 the percentile reversed: CAUGHT (4.9 s) - ENTRY RETENTION SELFTEST FAILED: predicates: a thin planted selection discriminates; selection / predicates on hand rows (1.0, 0.462, {'entry_identifi
+  26 never thin: CAUGHT (4.9 s) - ENTRY RETENTION SELFTEST FAILED: predicates: a thin planted selection discriminates; selection_null: an all-selected population is not degenerate / th
+  27 discrimination ignores thin: CAUGHT (4.9 s) - ENTRY RETENTION SELFTEST FAILED: predicates: a thin planted selection discriminates
+  28 value_fails strict: CAUGHT (4.9 s) - ENTRY RETENTION SELFTEST FAILED: selection / predicates on hand rows (0.0, 0.538, {'entry_identifiable': True, 'review_protective': False, 'forecasts_
+  29 the measurement overwritten: CAUGHT (4.9 s) - ENTRY RETENTION SELFTEST FAILED: measure: an existing measurement was overwritten
+  30 a partition read without its hash: CAUGHT (4.9 s) - ENTRY RETENTION SELFTEST FAILED: measure: a partition whose bytes differ from its record was read
+  31 run_part without the exposure manifest: CAUGHT (4.8 s) - ENTRY RETENTION SELFTEST FAILED: run_part: refused for another reason (ValueError('the module / declaration is not committed in HEAD: no measurement b
+control: PASSED (4.8 s); sources {'pf_entry_retention.py': 'f5d54ec151f14a5a', 'pf_entry_retention_mutants.py': '57dc884da262ca9d', 'pf_entry_retention_selftest.py': 'a8afaf987c880015'}
+mutation check FAILED: the control passes its selftest, 30 / 32 planted code errors are caught by a check (2.7 CPU min) | 0 the review captured on either side: ESCAPED - entry retention selftest passed: crafted tapes (distinct pull, same-as-review pull, refusal, structural removal, other s | 17 the unavoidable value signed wrong: ESCAPED - entry retention selftest passed: crafted tapes (distinct pull, same-as-review pull, refusal, structural removal, other s

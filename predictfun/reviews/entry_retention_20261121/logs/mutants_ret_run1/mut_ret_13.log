@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "13", "name": "the reconciliation ignores D_initial", "seconds": 4.8, "sources": {"pf_entry_retention.py": "f5d54ec151f14a5a", "pf_entry_retention_mutants.py": "57dc884da262ca9d", "pf_entry_retention_selftest.py": "a8afaf987c880015"}, "why": "ENTRY RETENTION SELFTEST FAILED: fork_stages: D_initial changed gave ok, not pull_not_reconciled"}
+2026-11-21T10:11:58Z tag=mut_ret_13 rc=0 peak_rss_mib=225 wall_s=5.03 cpu_user_s=4.85 memavail_start_gib=22 disk_free_gib=445->445 slot=claude3

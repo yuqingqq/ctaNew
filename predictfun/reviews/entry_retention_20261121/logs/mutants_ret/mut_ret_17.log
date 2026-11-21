@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "17", "name": "the unavoidable value signed wrong", "seconds": 4.8, "sources": {"pf_entry_retention.py": "93f8050f39ca8df0", "pf_entry_retention_mutants.py": "5000b960daac89b8", "pf_entry_retention_selftest.py": "b6ac9cff3643f204"}, "why": "ENTRY RETENTION SELFTEST FAILED: unavoidable_of: the entry value less the stage value"}
+2026-11-21T10:13:28Z tag=mut_ret_17 rc=0 peak_rss_mib=224 wall_s=5.06 cpu_user_s=4.90 memavail_start_gib=22 disk_free_gib=445->445 slot=claude3
