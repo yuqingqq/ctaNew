@@ -1,0 +1,546 @@
+{
+ "asof": "2026-11-21T05:44:53.102983+00:00",
+ "csv_sha256": {
+  "churn": "928f90da23e0a197e1aa58918685507aa2e0c051bf87f403f78a41095310f8ca",
+  "episodes": "e460c81e730b39cdfcc68f8aae1b86a45f939c22c88b475fc2306905742361cd",
+  "exposure": "02b01941231a6fe5980c64fc099dc0871770c98c899dbfd56de152803e4666da",
+  "reached": "f11708205f30e38792db05cb011ac07e61761100a95c3bf00e4c838463e64e07"
+ },
+ "diffs": [
+  {
+   "day": "20261026",
+   "diff_sum": 265.06874204786135,
+   "n": 188,
+   "negative": 8,
+   "policy": "N0",
+   "positive": 8,
+   "versus": "PI0"
+  },
+  {
+   "day": "20261026",
+   "diff_sum": 2701.339976709962,
+   "n": 188,
+   "negative": 21,
+   "policy": "N0",
+   "positive": 47,
+   "versus": "ENTRY_PA"
+  },
+  {
+   "day": "20261026",
+   "diff_sum": 2436.2712346621,
+   "n": 188,
+   "negative": 26,
+   "policy": "PI0",
+   "positive": 50,
+   "versus": "ENTRY_PA"
+  },
+  {
+   "day": "20261026",
+   "diff_sum": -2951.0464522812035,
+   "n": 188,
+   "negative": 56,
+   "policy": "RICH",
+   "positive": 31,
+   "versus": "PI0"
+  },
+  {
+   "day": "20261026",
+   "diff_sum": -514.7752176191032,
+   "n": 188,
+   "negative": 26,
+   "policy": "RICH",
+   "positive": 20,
+   "versus": "ENTRY_PA"
+  },
+  {
+   "day": "20261026",
+   "diff_sum": -5083.843564036098,
+   "n": 188,
+   "negative": 84,
+   "policy": "FAIR",
+   "positive": 29,
+   "versus": "PI0"
+  },
+  {
+   "day": "20261026",
+   "diff_sum": -2647.572329373997,
+   "n": 188,
+   "negative": 71,
+   "policy": "FAIR",
+   "positive": 43,
+   "versus": "ENTRY_PA"
+  },
+  {
+   "day": "20261026",
+   "diff_sum": -6114.124393450098,
+   "n": 188,
+   "negative": 77,
+   "policy": "MECH",
+   "positive": 25,
+   "versus": "PI0"
+  },
+  {
+   "day": "20261026",
+   "diff_sum": -3677.853158787997,
+   "n": 188,
+   "negative": 67,
+   "policy": "MECH",
+   "positive": 40,
+   "versus": "ENTRY_PA"
+  },
+  {
+   "day": "20261026",
+   "diff_sum": -2370.215094311223,
+   "n": 188,
+   "negative": 49,
+   "policy": "ENTRY_ONLY",
+   "positive": 25,
+   "versus": "PI0"
+  },
+  {
+   "day": "20261026",
+   "diff_sum": 66.05614035087729,
+   "n": 188,
+   "negative": 3,
+   "policy": "ENTRY_ONLY",
+   "positive": 4,
+   "versus": "ENTRY_PA"
+  },
+  {
+   "day": "20261026",
+   "diff_sum": -355.4276595744681,
+   "n": 188,
+   "negative": 5,
+   "policy": "RETAIN_ONLY",
+   "positive": 2,
+   "versus": "PI0"
+  },
+  {
+   "day": "20261026",
+   "diff_sum": 2080.8435750876324,
+   "n": 188,
+   "negative": 27,
+   "policy": "RETAIN_ONLY",
+   "positive": 46,
+   "versus": "ENTRY_PA"
+  },
+  {
+   "day": "20261026",
+   "diff_sum": -2436.2712346621,
+   "n": 188,
+   "negative": 50,
+   "policy": "ENTRY_PA",
+   "positive": 26,
+   "versus": "PI0"
+  },
+  {
+   "day": "20261027",
+   "diff_sum": -31.57334930598506,
+   "n": 192,
+   "negative": 6,
+   "policy": "N0",
+   "positive": 9,
+   "versus": "PI0"
+  },
+  {
+   "day": "20261027",
+   "diff_sum": 2408.480368410522,
+   "n": 192,
+   "negative": 16,
+   "policy": "N0",
+   "positive": 47,
+   "versus": "ENTRY_PA"
+  },
+  {
+   "day": "20261027",
+   "diff_sum": 2440.0537177165074,
+   "n": 192,
+   "negative": 18,
+   "policy": "PI0",
+   "positive": 50,
+   "versus": "ENTRY_PA"
+  },
+  {
+   "day": "20261027",
+   "diff_sum": -3284.2925161992466,
+   "n": 192,
+   "negative": 64,
+   "policy": "RICH",
+   "positive": 23,
+   "versus": "PI0"
+  },
+  {
+   "day": "20261027",
+   "diff_sum": -844.2387984827394,
+   "n": 192,
+   "negative": 33,
+   "policy": "RICH",
+   "positive": 23,
+   "versus": "ENTRY_PA"
+  },
+  {
+   "day": "20261027",
+   "diff_sum": -4872.9752049755325,
+   "n": 192,
+   "negative": 82,
+   "policy": "FAIR",
+   "positive": 36,
+   "versus": "PI0"
+  },
+  {
+   "day": "20261027",
+   "diff_sum": -2432.9214872590246,
+   "n": 192,
+   "negative": 66,
+   "policy": "FAIR",
+   "positive": 49,
+   "versus": "ENTRY_PA"
+  },
+  {
+   "day": "20261027",
+   "diff_sum": -5868.457813038814,
+   "n": 192,
+   "negative": 81,
+   "policy": "MECH",
+   "positive": 28,
+   "versus": "PI0"
+  },
+  {
+   "day": "20261027",
+   "diff_sum": -3428.404095322306,
+   "n": 192,
+   "negative": 63,
+   "policy": "MECH",
+   "positive": 37,
+   "versus": "ENTRY_PA"
+  },
+  {
+   "day": "20261027",
+   "diff_sum": -2409.074282276786,
+   "n": 192,
+   "negative": 50,
+   "policy": "ENTRY_ONLY",
+   "positive": 18,
+   "versus": "PI0"
+  },
+  {
+   "day": "20261027",
+   "diff_sum": 30.979435439720707,
+   "n": 192,
+   "negative": 4,
+   "policy": "ENTRY_ONLY",
+   "positive": 4,
+   "versus": "ENTRY_PA"
+  },
+  {
+   "day": "20261027",
+   "diff_sum": -77.9520526455027,
+   "n": 192,
+   "negative": 4,
+   "policy": "RETAIN_ONLY",
+   "positive": 3,
+   "versus": "PI0"
+  },
+  {
+   "day": "20261027",
+   "diff_sum": 2362.1016650710044,
+   "n": 192,
+   "negative": 19,
+   "policy": "RETAIN_ONLY",
+   "positive": 49,
+   "versus": "ENTRY_PA"
+  },
+  {
+   "day": "20261027",
+   "diff_sum": -2440.0537177165074,
+   "n": 192,
+   "negative": 50,
+   "policy": "ENTRY_PA",
+   "positive": 18,
+   "versus": "PI0"
+  }
+ ],
+ "reached": [
+  {
+   "day": "20261026",
+   "head": "keep",
+   "n": 376,
+   "status": "ok"
+  },
+  {
+   "day": "20261026",
+   "head": "post",
+   "n": 376,
+   "status": "ok"
+  },
+  {
+   "day": "20261027",
+   "head": "keep",
+   "n": 4,
+   "status": "no_eligible_decision"
+  },
+  {
+   "day": "20261027",
+   "head": "keep",
+   "n": 380,
+   "status": "ok"
+  },
+  {
+   "day": "20261027",
+   "head": "post",
+   "n": 384,
+   "status": "ok"
+  }
+ ],
+ "source_sha256": "7bec599434ba3d590256f4aa3f011a8e58c65ce41da26401f8f265d344ce0d5b",
+ "statuses": {
+  "ok": 380,
+  "world:no_path:missing_endpoint": 3,
+  "world:no_path:stale_future_book": 1
+ },
+ "supersedes": "pf_adv2_replay.summarize (freeze 2 c8655f75): replay.json only",
+ "totals": [
+  {
+   "binding_bad": 0,
+   "day": "20261026",
+   "filled_shares": 1536.887622810002,
+   "fills": 158,
+   "generations": 4611,
+   "ledger_ok": true,
+   "loss": 3896.874300591251,
+   "policy": "ENTRY_ONLY",
+   "severe": 21,
+   "value": -2635.2838363590845,
+   "value_ask": -415.0888474033931,
+   "value_bid": -2220.194988955691,
+   "worlds": 188
+  },
+  {
+   "binding_bad": 0,
+   "day": "20261026",
+   "filled_shares": 1388.7367456170198,
+   "fills": 150,
+   "generations": 4741,
+   "ledger_ok": true,
+   "loss": 3888.202565942129,
+   "policy": "ENTRY_PA",
+   "severe": 21,
+   "value": -2701.339976709962,
+   "value_ask": -451.14498775427035,
+   "value_bid": -2250.194988955691,
+   "worlds": 188
+  },
+  {
+   "binding_bad": 0,
+   "day": "20261026",
+   "filled_shares": 2976.020533827884,
+   "fills": 334,
+   "generations": 3177,
+   "ledger_ok": true,
+   "loss": 6270.956801088321,
+   "policy": "FAIR",
+   "severe": 48,
+   "value": -5348.912306083959,
+   "value_ask": -1128.6973336356932,
+   "value_bid": -4220.214972448265,
+   "worlds": 188
+  },
+  {
+   "binding_bad": 0,
+   "day": "20261026",
+   "filled_shares": 2676.331763373147,
+   "fills": 305,
+   "generations": 3475,
+   "ledger_ok": true,
+   "loss": 7231.257186272167,
+   "policy": "MECH",
+   "severe": 46,
+   "value": -6379.193135497959,
+   "value_ask": -2898.2248894996073,
+   "value_bid": -3480.968245998351,
+   "worlds": 188
+  },
+  {
+   "binding_bad": 0,
+   "day": "20261026",
+   "filled_shares": 0.0,
+   "fills": 0,
+   "generations": 0,
+   "ledger_ok": true,
+   "loss": 0.0,
+   "policy": "N0",
+   "severe": 0,
+   "value": 0.0,
+   "value_ask": 0.0,
+   "value_bid": 0.0,
+   "worlds": 188
+  },
+  {
+   "binding_bad": 0,
+   "day": "20261026",
+   "filled_shares": 336.38419092005967,
+   "fills": 29,
+   "generations": 319,
+   "ledger_ok": true,
+   "loss": 370.4927108433735,
+   "policy": "PI0",
+   "severe": 3,
+   "value": -265.0687420478614,
+   "value_ask": 21.327053901895212,
+   "value_bid": -286.39579594975646,
+   "worlds": 188
+  },
+  {
+   "binding_bad": 0,
+   "day": "20261026",
+   "filled_shares": 285.5288717711235,
+   "fills": 26,
+   "generations": 323,
+   "ledger_ok": true,
+   "loss": 693.7416852023479,
+   "policy": "RETAIN_ONLY",
+   "severe": 4,
+   "value": -620.4964016223295,
+   "value_ask": -293.6729460981048,
+   "value_bid": -326.8234555242245,
+   "worlds": 188
+  },
+  {
+   "binding_bad": 0,
+   "day": "20261026",
+   "filled_shares": 2050.7212890861697,
+   "fills": 204,
+   "generations": 3429,
+   "ledger_ok": true,
+   "loss": 4871.210338741689,
+   "policy": "RICH",
+   "severe": 29,
+   "value": -3216.1151943290647,
+   "value_ask": -250.55713756138192,
+   "value_bid": -2965.558056767683,
+   "worlds": 188
+  },
+  {
+   "binding_bad": 0,
+   "day": "20261027",
+   "filled_shares": 1386.7198227189574,
+   "fills": 172,
+   "generations": 4745,
+   "ledger_ok": true,
+   "loss": 3260.22538426852,
+   "policy": "ENTRY_ONLY",
+   "severe": 29,
+   "value": -2377.5009329708014,
+   "value_ask": -701.4066787869053,
+   "value_bid": -1676.0942541838956,
+   "worlds": 192
+  },
+  {
+   "binding_bad": 0,
+   "day": "20261027",
+   "filled_shares": 1340.9657920786422,
+   "fills": 162,
+   "generations": 4831,
+   "ledger_ok": true,
+   "loss": 3273.7365943283016,
+   "policy": "ENTRY_PA",
+   "severe": 30,
+   "value": -2408.4803684105223,
+   "value_ask": -670.8269215137833,
+   "value_bid": -1737.6534468967382,
+   "worlds": 192
+  },
+  {
+   "binding_bad": 0,
+   "day": "20261027",
+   "filled_shares": 3167.3138291556793,
+   "fills": 349,
+   "generations": 3125,
+   "ledger_ok": true,
+   "loss": 6850.057325209247,
+   "policy": "FAIR",
+   "severe": 44,
+   "value": -4841.401855669547,
+   "value_ask": -3556.5802214699943,
+   "value_bid": -1284.8216341995528,
+   "worlds": 192
+  },
+  {
+   "binding_bad": 0,
+   "day": "20261027",
+   "filled_shares": 3058.6876117509237,
+   "fills": 339,
+   "generations": 3603,
+   "ledger_ok": true,
+   "loss": 6902.157734387086,
+   "policy": "MECH",
+   "severe": 49,
+   "value": -5836.884463732828,
+   "value_ask": -3237.1922903895293,
+   "value_bid": -2599.6921733433,
+   "worlds": 192
+  },
+  {
+   "binding_bad": 0,
+   "day": "20261027",
+   "filled_shares": 0.0,
+   "fills": 0,
+   "generations": 0,
+   "ledger_ok": true,
+   "loss": 0.0,
+   "policy": "N0",
+   "severe": 0,
+   "value": 0.0,
+   "value_ask": 0.0,
+   "value_bid": 0.0,
+   "worlds": 192
+  },
+  {
+   "binding_bad": 0,
+   "day": "20261027",
+   "filled_shares": 325.58975596097025,
+   "fills": 38,
+   "generations": 370,
+   "ledger_ok": true,
+   "loss": 398.2406259259259,
+   "policy": "PI0",
+   "severe": 3,
+   "value": 31.57334930598509,
+   "value_ask": -209.87062592592594,
+   "value_bid": 241.4439752319109,
+   "worlds": 192
+  },
+  {
+   "binding_bad": 0,
+   "day": "20261027",
+   "filled_shares": 367.87196178107604,
+   "fills": 35,
+   "generations": 378,
+   "ledger_ok": true,
+   "loss": 487.4049,
+   "policy": "RETAIN_ONLY",
+   "severe": 3,
+   "value": -46.3787033395176,
+   "value_ask": -441.90489999999994,
+   "value_bid": 395.52619666048236,
+   "worlds": 192
+  },
+  {
+   "binding_bad": 0,
+   "day": "20261027",
+   "filled_shares": 1975.65406053705,
+   "fills": 223,
+   "generations": 3401,
+   "ledger_ok": true,
+   "loss": 4375.620324271245,
+   "policy": "RICH",
+   "severe": 33,
+   "value": -3252.7191668932614,
+   "value_ask": -1562.4448678758586,
+   "value_bid": -1690.2742990174024,
+   "worlds": 192
+  }
+ ],
+ "version": "adv2_replay_summary_v2",
+ "worlds": 380
+}

@@ -1,0 +1,11 @@
+{
+ "statuses": {
+  "ok": 380,
+  "world:no_path:stale_future_book": 1,
+  "world:no_path:missing_endpoint": 3
+ },
+ "worlds": 380,
+ "diffs": 28,
+ "reached": 5
+}
+2026-11-21T05:44:50Z tag=r3_replay_summary_v2 rc=0 peak_rss_mib=322 wall_s=2.53 cpu_user_s=2.17 memavail_start_gib=21 disk_free_gib=445->445 slot=claude

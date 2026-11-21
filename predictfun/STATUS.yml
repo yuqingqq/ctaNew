@@ -578,6 +578,27 @@ pipeline_one_day_v3_20261119:
   values_equal_v2: {cells_per_day: 190, differing: 0}
   attribution_vs_pull_all_c: {"20261026": {first_step: 0.0, later: 954.33, never: 995.36, no_prediction: 0.0}, "20261027": {first_step: 0.0, later: -821.85, never: 251.74, no_prediction: 0.0}}
 
+r3_adv2_rich_v1_20261121:
+  status: done_r3_adv2_rich_v1_consumed_oct26_27_prediction_diagnostic_and_bounded_replay
+  diagnosis: {no_post_head_skill: true, most_posts_pulled_at_first_review: true, rich_below_pi0_both_days: true}
+  asof: "2026-11-21 06:16Z"
+  receipt: predictfun/reviews/r3_adv2_20261121/report.md
+  commits: {freeze1: 551185f2, freeze2: c8655f75, model_hashes: 2bec465d, freeze2b_summary_v2: 259e6c56}
+  eval_plan_sha256_prefix: 8619eec52bf75b0c
+  training_dataset_sha256_prefix: 2c62fc9baf696e6c
+  checks_v1: {all_true: false, G_replay: false, reason: zero_callback_final_tick_keep_pairs_2}
+  checks_v2: {all_true: true, falsifier_ok: true}
+  suites: {sample: 19/19, adv2: 33/33, eval: 30/30, replay: 26/26, replay_summary_v2: 10/10, run1: 83/89_test_instrument_only}
+  prediction: {post_mse_over_zero: [1.001, 1.068], keep_mse_over_zero: [0.961, 0.993], below_zero_cells: 4/8, below_fair: 6, below_mech: 6}
+  screens_rich: {pass: 1, fail: 11, insufficient_support: 4, not_evaluable: 0}
+  local_value: {post_negative_cells: 4/4, keep_beats_always_keep: 4/4, keep_beats_always_pull: 1/4}
+  control_rich: {lift_positive: "2 of 4", above_p95: "0 of 4"}
+  replay_20261026: {worlds: 188, rich_minus_pi0_c: -2951.0, entry_only_minus_pi0_c: -2370.2, retain_only_minus_pi0_c: -355.4, pi0_total_c: -265.1}
+  replay_20261027: {worlds: 192, rich_minus_pi0_c: -3284.3, entry_only_minus_pi0_c: -2409.1, retain_only_minus_pi0_c: -78.0, pi0_total_c: 31.6}
+  churn_rich: {first_review_pull_share: 0.590, post_to_review_ms: 100.0}
+  state_shift: {rich_absent_gen3plus_share: 0.725, train_post_gen3plus_share: 0.030, reached_worse_cells: 3/4}
+  cost: {round_core_hours: 18.63, label_core_hours: 16.06, replay_core_hours: 1.96, peak_mib: 1260}
+  next: combined_review_names_the_next_priority
 r2f_production_20261120:
   status: done_r2f_full_label_sample_3072_worlds_consumed_oct24_25_label_only
   asof: "2026-11-21 00:29Z"

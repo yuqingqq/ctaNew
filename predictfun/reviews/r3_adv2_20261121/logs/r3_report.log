@@ -1,0 +1,169 @@
+{
+ "cells": 8,
+ "beats_zero": 4,
+ "beats_mean": 4,
+ "beats_fair": 6,
+ "beats_mech": 6,
+ "beats_fallback": 4,
+ "beats_const": 1,
+ "above_fair_value": 3,
+ "above_mech_value": 3,
+ "screens": {
+  "RICH": {
+   "PASS": 1,
+   "FAIL": 11,
+   "INSUFFICIENT_SUPPORT": 4,
+   "NOT_EVALUABLE": 0
+  },
+  "FAIR": {
+   "PASS": 3,
+   "FAIL": 9,
+   "INSUFFICIENT_SUPPORT": 4,
+   "NOT_EVALUABLE": 0
+  },
+  "MECH": {
+   "PASS": 1,
+   "FAIL": 11,
+   "INSUFFICIENT_SUPPORT": 4,
+   "NOT_EVALUABLE": 0
+  }
+ },
+ "screens_total": 16,
+ "fallback_rows": 10,
+ "eval_rows": 18132,
+ "fallback_share": 0.0005515111405250386,
+ "fallback_by_status": {
+  "outside_training_range": 10
+ },
+ "control_lift_pos": "2 of 4",
+ "control_above_p95": "0 of 4",
+ "replay": {
+  "20261026": {
+   "worlds": 188,
+   "totals": {
+    "ENTRY_ONLY": -2635.2838363590845,
+    "ENTRY_PA": -2701.339976709962,
+    "FAIR": -5348.912306083959,
+    "MECH": -6379.193135497959,
+    "N0": 0.0,
+    "PI0": -265.0687420478614,
+    "RETAIN_ONLY": -620.4964016223295,
+    "RICH": -3216.1151943290647
+   },
+   "rich_vs_pi0": [
+    -2951.0464522812035,
+    31,
+    56,
+    188
+   ],
+   "rich_vs_pa": [
+    -514.7752176191032,
+    20,
+    26,
+    188
+   ],
+   "fair_vs_pi0": [
+    -5083.843564036098,
+    29,
+    84,
+    188
+   ],
+   "mech_vs_pi0": [
+    -6114.124393450098,
+    25,
+    77,
+    188
+   ],
+   "entry_only_vs_pi0": [
+    -2370.215094311223,
+    25,
+    49,
+    188
+   ],
+   "retain_only_vs_pi0": [
+    -355.4276595744681,
+    2,
+    5,
+    188
+   ]
+  },
+  "20261027": {
+   "worlds": 192,
+   "totals": {
+    "ENTRY_ONLY": -2377.5009329708014,
+    "ENTRY_PA": -2408.4803684105223,
+    "FAIR": -4841.401855669547,
+    "MECH": -5836.884463732828,
+    "N0": 0.0,
+    "PI0": 31.57334930598509,
+    "RETAIN_ONLY": -46.3787033395176,
+    "RICH": -3252.7191668932614
+   },
+   "rich_vs_pi0": [
+    -3284.2925161992466,
+    23,
+    64,
+    192
+   ],
+   "rich_vs_pa": [
+    -844.2387984827394,
+    23,
+    33,
+    192
+   ],
+   "fair_vs_pi0": [
+    -4872.9752049755325,
+    36,
+    82,
+    192
+   ],
+   "mech_vs_pi0": [
+    -5868.457813038814,
+    28,
+    81,
+    192
+   ],
+   "entry_only_vs_pi0": [
+    -2409.074282276786,
+    18,
+    50,
+    192
+   ],
+   "retain_only_vs_pi0": [
+    -77.9520526455027,
+    3,
+    4,
+    192
+   ]
+  }
+ },
+ "reached_cells": 4,
+ "reached_worse": 3,
+ "reached_statuses": {
+  "ok": 1516,
+  "no_eligible_decision": 4
+ },
+ "label_core_hours": 16.05818888888889,
+ "replay_core_hours": 1.9588722222222223,
+ "label_peak": 1203,
+ "replay_peak": 1171,
+ "label_jobs": 96,
+ "replay_jobs": 12,
+ "round_core_hours": 18.629088888888898,
+ "round_peak": 1260,
+ "all_true": true,
+ "falsifier_ok": true,
+ "checks": {
+  "A_extraction": true,
+  "B_fit": true,
+  "C_order": true,
+  "D_sample": true,
+  "E_readings": true,
+  "F_control": true,
+  "G_replay": true,
+  "H_suites": true,
+  "I_resources": true
+ },
+ "asof": "2026-11-21T06:11:50.521874+00:00"
+}
+2026-11-21T06:16:04Z tag=r3_report rc=0 peak_rss_mib=116 wall_s=0.43 cpu_user_s=0.35 memavail_start_gib=23 disk_free_gib=445->445 slot=claude

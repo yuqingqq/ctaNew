@@ -678,6 +678,18 @@ pulls and bid/ask; judge movement calibration on selected actions before changin
 order design. Other session owns fixes; scheduler remains off.
 <!-- /PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
 
+## 2026-11-21 06:16Z (session aea5bfb9) — R3: ADV2-RICH v1 FITTED ON CONSUMED OCT 24–25, EVALUATED ON CONSUMED OCT 26–27 AND REPLAYED ON 384 WORLDS (380 OK); CHECKS v2 ALL TRUE; NO POST-HEAD SKILL, MOST POSTS PULLED AT THE FIRST REVIEW, RICH BELOW PI0 IN THE REPLAY ON BOTH DAYS (review 315979d2's next priority) (USER: "... continue the implementing and next priority loop"; "As long as the results are reliable, we can accelerate the process")
+- [Receipt](reviews/r3_adv2_20261121/report.md). Commits: freeze 1 `551185f2` (evaluation sample), freeze 2 `c8655f75` (candidate, controls, evaluator, replay, checks; 108 / 108 planted errors caught), model hashes `2bec465d` (before any Oct 26–27 label), freeze 2b `259e6c56` (the replay summary v2), results in this commit. **This round measures prediction skill on two consumed days (development evidence, no interval, no validation).**
+- **Review 315979d2's items:** 1, the coverage by source / horizon / six support dimensions (evaluation by RICH's action, training) and RICH's own-state exposure; 2, the meaningful (|Y| > 1e-6 c) floor with the exact count beside it; 3, check H per record against the final sources, with a falsifier.
+- **Readings** (FINDINGS P92): POST head MSE / zero 1.001–1.068 (0 of 4 below zero), KEEP 0.961–0.993 (4 of 4); RICH screens PASS 1 / FAIL 11 / INSUFFICIENT 4; replay 10-26: RICH − PI0 -2,951 c, ENTRY_ONLY − PI0 -2,370, RETAIN_ONLY − PI0 -355, FAIR − PI0 -5,084, MECH − PI0 -6,114 (PI0 total -265 c, 188 worlds); 10-27: RICH − PI0 -3,284 c, ENTRY_ONLY − PI0 -2,409, RETAIN_ONLY − PI0 -78, FAIR − PI0 -4,873, MECH − PI0 -5,868 (PI0 total +32 c, 192 worlds); 59 % of RICH's reviewed generations pulled at the first review; 72.5 % of its absent decisions at generation ≥ 3 (training 3.0 %).
+- **Deviations, all in the receipt:**
+  - v1 check G was false on 2 final-tick KEEP pairs with zero callbacks, which is correct. r3_checks_v2.py changes only that predicate, and its falsifier passes.
+  - The frozen replay summarize crashed writing replay.json (an int column under sort_keys). The superseding summary proved the four CSVs byte-identical (10 / 10 mutants caught).
+  - The launcher was edited in place under running queues, and was repaired before any queue read it.
+  - Mutation run 1 caught 83 / 89, all misses in the tests.
+- **Cost:** 18.63 core-hours of the 40 ceiling (labels 16.06, replay 1.96); peak 1,260 MiB.
+- **Next measurement:** the combined review (one request), which names the next priority. The question put to it: what the diagnosis implies for the next declared candidate on consumed days. These results are not a model search, and no refit has been made.
+
 ## 2026-11-21 00:29Z (session aea5bfb9) — R2-F: THE FULL r2_label_sample_v2 PRODUCTION BUILD — 3,072 WORLDS ON CONSUMED OCT 24–25; DECLARED CHECKS ALL TRUE; 17,706 / 18,249 LABELS EXACTLY 0 c (review 38febc0b's next priority) (USER: "... continue the implementing and next priority loop"; "As long as the results are reliable, we can accelerate the process")
 - [Receipt](reviews/r2f_production_20261120/report.md). The freeze `d3d024fd` came before any parity or production pair; the results are in this commit. **Label-only: target support, variation and build reliability; no model skill measured.**
 - **Review 38febc0b's checklist (closure matrix in the receipt): all closed.**
