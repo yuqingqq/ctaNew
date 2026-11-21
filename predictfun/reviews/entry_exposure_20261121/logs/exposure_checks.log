@@ -1,0 +1,14 @@
+{
+ "checks": {
+  "A_identity": true,
+  "B_reproduction": true,
+  "C_raw": false,
+  "D_summaries": true,
+  "E_predicates": true,
+  "F_resources": true,
+  "G_suites": true
+ },
+ "all_true": false
+}
+{"cases": {"A": {"clean": true, "corrupted": false, "applied": true}, "B": {"clean": true, "corrupted": false, "applied": true}, "C_components": {"clean": false, "corrupted": false, "applied": true}, "D": {"clean": true, "corrupted": false, "applied": true}, "C_wrong_gid": {"clean": false, "corrupted": false, "applied": true, "a_still_true": true}, "C_fill_price": {"clean": false, "corrupted": false, "applied": true, "a_still_true": true}, "E": {"clean": true, "corrupted": false, "applied": true}, "F": {"clean": true, "corrupted": false, "applied": true}, "G": {"clean": true, "corrupted": false, "applied": true}}, "falsifier_ok": false}
+2026-11-21T09:19:00Z tag=exposure_checks rc=0 peak_rss_mib=234 wall_s=9.05 cpu_user_s=8.68 memavail_start_gib=22 disk_free_gib=446->446 slot=claude

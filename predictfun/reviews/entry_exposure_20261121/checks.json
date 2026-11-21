@@ -1,0 +1,119 @@
+{
+ "all_true": false,
+ "asof": "2026-11-21T09:19:02.971265+00:00",
+ "checks": {
+  "A_identity": true,
+  "B_reproduction": true,
+  "C_raw": false,
+  "D_summaries": true,
+  "E_predicates": true,
+  "F_resources": true,
+  "G_suites": true
+ },
+ "readings": {
+  "A": {
+   "bad": [],
+   "forks": 768,
+   "manifest_forks": 768
+  },
+  "B": {
+   "by_status": {
+    "ok": 756
+   },
+   "evaluable": 756,
+   "flags_false": 0,
+   "rows": 756,
+   "y_differs": 0
+  },
+  "C": {
+   "delivered_changed": 11276,
+   "examples": [
+    {
+     "bad": [
+      "KEEP: the shadow log is not its overrides"
+     ],
+     "key": [
+      "20261024",
+      3695609,
+      1792801655000,
+      0
+     ],
+     "part": 0
+    },
+    {
+     "bad": [
+      "KEEP: the shadow log is not its overrides"
+     ],
+     "key": [
+      "20261024",
+      3696268,
+      1792805555000,
+      0
+     ],
+     "part": 0
+    },
+    {
+     "bad": [
+      "KEEP: the shadow log is not its overrides"
+     ],
+     "key": [
+      "20261024",
+      3696268,
+      1792805555000,
+      1
+     ],
+     "part": 0
+    },
+    {
+     "bad": [
+      "KEEP: the shadow log is not its overrides"
+     ],
+     "key": [
+      "20261024",
+      3696270,
+      1792805940000,
+      0
+     ],
+     "part": 0
+    },
+    {
+     "bad": [
+      "KEEP: the shadow log is not its overrides"
+     ],
+     "key": [
+      "20261024",
+      3696270,
+      1792805940000,
+      1
+     ],
+     "part": 0
+    }
+   ],
+   "failing": 424,
+   "rows": 756
+  },
+  "D": {
+   "bad": []
+  },
+  "E": {
+   "diagnosis": "pi0_better",
+   "recomputed": "pi0_better",
+   "same": true
+  },
+  "F": {
+   "bad": [],
+   "core_hours": 1.8580555555555558,
+   "jobs": 206,
+   "part_hwm_max": 1165.17578125,
+   "peak_mib": 1165
+  },
+  "G": {
+   "extra_files": [],
+   "failures": [],
+   "judge_ok": true,
+   "one_record_per_file": true,
+   "planted": 42
+  }
+ },
+ "source_sha256": "b818be0bd07c68c87245add2065dc4492b5968178e9f451797121052d0e9b12e"
+}
