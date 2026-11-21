@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "4", "name": "a save off the tick boundary", "seconds": 4.6, "sources": {"pf_branch_ladder_safe.py": "a2e181902d768d2c", "pf_branch_ladder_safe_mutants.py": "cc36571f501608ee", "pf_ladder_audit_selftest.py": "7fd1ceb40912e709"}, "why": "AUDIT SELFTEST FAILED: 8 a save off the tick boundary was accepted"}
+2026-11-21T17:45:47Z tag=lsf_4 rc=0 peak_rss_mib=203 wall_s=4.75 cpu_user_s=4.57 memavail_start_gib=22 disk_free_gib=437->438 slot=claude2

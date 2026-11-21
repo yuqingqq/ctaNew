@@ -1,0 +1,2 @@
+{"cls": "PASSED", "index": "control", "name": "control (the unchanged copy)", "seconds": 4.8, "sources": {"pf_branch_ladder.py": "c9e0852eccea5b42", "pf_branch_ladder_mutants_v2.py": "ceed14af3331277a", "pf_ladder_rest_selftest_v2.py": "f85625be77769fde"}, "why": "LADDER SELFTEST v2 PASSED: the frozen suite under explicit negative guard conditions, and the allowed guard conditions"}
+2026-11-21T17:37:52Z tag=lbc2_control rc=0 peak_rss_mib=233 wall_s=5.03 cpu_user_s=4.81 memavail_start_gib=23 disk_free_gib=438->438 slot=claude

@@ -1,0 +1,2 @@
+{"cls": "PASSED", "index": "control", "name": "control (the unchanged copy)", "seconds": 4.7, "sources": {"pf_ladder_audit.py": "97a79a90a06062a7", "pf_ladder_audit_mutants.py": "6c102c7d34749ffc", "pf_ladder_audit_selftest.py": "47dd364cb87f6af9"}, "why": "AUDIT SELFTEST PASSED: boundaries and the review control, sweeps, windows, churn / recovery, durations, bins / leads, the round trip, order causality, safe resume, guards"}
+2026-11-21T17:46:19Z tag=lau_control rc=0 peak_rss_mib=203 wall_s=4.87 cpu_user_s=4.63 memavail_start_gib=23 disk_free_gib=438->438 slot=claude

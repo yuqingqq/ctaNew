@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "15", "name": "a stage before the freeze", "seconds": 12.4, "sources": {"pf_ladder_audit.py": "97a79a90a06062a7", "pf_ladder_audit_mutants.py": "6c102c7d34749ffc", "pf_ladder_audit_selftest.py": "7fd1ceb40912e709"}, "why": "AUDIT SELFTEST FAILED: 9 a stage ran before the freeze"}
+2026-11-21T17:45:27Z tag=lau_15 rc=0 peak_rss_mib=462 wall_s=12.65 cpu_user_s=12.09 memavail_start_gib=22 disk_free_gib=438->438 slot=claude

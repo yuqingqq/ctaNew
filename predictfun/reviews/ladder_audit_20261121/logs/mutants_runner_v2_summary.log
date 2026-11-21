@@ -1,0 +1,23 @@
+  0 the opening backdated: CAUGHT (4.8 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 10 the opening waits for a received valid boo
+  1 markouts past END: CAUGHT (4.8 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 10 markouts never past END
+  2 the fill mid from a later frame: CAUGHT (4.8 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 10 the fill-time mid is the last frame at or 
+  3 the locked boundary inclusive: CAUGHT (4.8 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 10 the earliest cancel effect is the first ti
+  4 the carry at the interval end: CAUGHT (4.8 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 10 minute increments telescope and split into
+  5 downtime precedence reversed: CAUGHT (4.8 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 10 downtime precedence
+  6 the maximum-rank live checkpoint: CAUGHT (4.9 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 8 each live snapshot is its generation's mini
+  7 entries recorded past END: CAUGHT (4.9 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 8 a POST that cannot activate before END reco
+  8 the reconstruction mode strict: CAUGHT (4.7 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 8 every snapshot reconstructs from the saved 
+  9 the reconstruction without same-tick posts: CAUGHT (4.8 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 8 every snapshot reconstructs from the saved 
+  10 one more pilot market: CAUGHT (4.8 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 10 build_manifest: the frozen population
+  11 the maximum-rank market: CAUGHT (4.9 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 10 select_markets: one per day x opening hour
+  12 fair_edge stretched: CAUGHT (4.8 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 10 full-market features: fair_edge unavailabl
+  13 the posted size as q0: CAUGHT (4.8 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 9 the 107 inputs equal Teacher.inputs (0 equa
+  14 values without the ask sign: CAUGHT (4.8 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 10 generation and fill values sum to cash + i
+  15 the manifest written over: CAUGHT (4.9 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 10 build_manifest overwrote its output
+  16 the measurement written over: CAUGHT (4.8 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 10 measurement: stopped (FileNotFoundError(2,
+  17 run_day before the freeze: CAUGHT (4.8 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 10 measurement: stopped (RuntimeError('the bi
+  18 the full run without the projection: CAUGHT (4.8 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 10 measurement: stopped (RuntimeError('the bi
+  19 the phase from the opening: CAUGHT (4.9 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 10 full-market features: fair_edge unavailabl
+control: PASSED (4.9 s); sources {'pf_ladder_rest.py': 'd90016ce7d25f89f', 'pf_ladder_rest_mutants_v2.py': '5788db2057a48db9', 'pf_ladder_rest_selftest_v2.py': 'f85625be77769fde'}
+mutation check passed: the control passes its selftest, 20 / 20 planted code errors are caught by a check (1.7 CPU min)
+2026-11-21T17:38:56Z tag=lrr2_summary rc=0 peak_rss_mib=16 wall_s=0.02 cpu_user_s=0.02 memavail_start_gib=22 disk_free_gib=438->438 slot=claude

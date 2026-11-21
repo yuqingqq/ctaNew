@@ -1,4 +1,13 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+ladder_audit_20261121_dev:
+  status: frozen_before_reading_saved_evidence
+  asof: "2026-11-21 17:48Z"
+  declaration: predictfun/reviews/ladder_audit_20261121/declaration.md
+  review: 0065191f7b83732aff6994f5b5bef5aad5b0e6bf
+  findings_holding: 8
+  mutants: {audit: "16/16", safe_resume: "6/6", client_v2: "24/24", runner_v2: "20/20"}
+  core_hours_cap: 0.5
+  next: saved_stage_causal_audit_checks_one_review
 ladder_rest_review_20261121_codex:
   status: baseline_accounting_accepted_diagnostic_corrections_bundled
   target_commit: 869fa85ffc158b070e63c1b89af4cea3c82c3abf

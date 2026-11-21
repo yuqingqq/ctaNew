@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "7", "name": "early requests far past the first live tick", "seconds": 4.7, "sources": {"pf_ladder_audit.py": "97a79a90a06062a7", "pf_ladder_audit_mutants.py": "6c102c7d34749ffc", "pf_ladder_audit_selftest.py": "7fd1ceb40912e709"}, "why": "AUDIT SELFTEST FAILED: 4 early requests by reason ({'reviewed': 2, 'policy_first_review_pulls': 1, 'requested_by_first_live': 2, 'by_reason': {'structural': 1, 'policy': 1}})"}
+2026-11-21T17:45:18Z tag=lau_7 rc=0 peak_rss_mib=203 wall_s=4.87 cpu_user_s=4.65 memavail_start_gib=22 disk_free_gib=438->438 slot=claude

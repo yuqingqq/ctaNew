@@ -1,0 +1,2 @@
+{"cls": "ESCAPED", "index": "14", "name": "the inventory move from the wrong tick", "seconds": 4.6, "sources": {"pf_ladder_audit.py": "97a79a90a06062a7", "pf_ladder_audit_mutants.py": "6c102c7d34749ffc", "pf_ladder_audit_selftest.py": "7fd1ceb40912e709"}, "why": "AUDIT SELFTEST PASSED: boundaries and the review control, sweeps, windows, churn / recovery, durations, bins / leads, the round trip, order causality, safe resume, guards"}
+2026-11-21T17:45:28Z tag=lau_14 rc=1 peak_rss_mib=203 wall_s=4.78 cpu_user_s=4.61 memavail_start_gib=22 disk_free_gib=438->438 slot=claude4

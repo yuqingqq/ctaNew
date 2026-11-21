@@ -1,0 +1,27 @@
+  0 the LONG trigger strict: CAUGHT (4.8 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 5 next_mode boundaries and reversal | 5 LONG 
+  1 the recovery band strict: CAUGHT (4.8 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 5 next_mode boundaries and reversal
+  2 no direct reversal: CAUGHT (4.9 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 5 next_mode boundaries and reversal
+  3 cancel-pending orders unreserved: CAUGHT (2.5 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 1 legacy reproduction: stopped (ValueError('p
+  4 the removal closed at its effect: CAUGHT (2.5 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 1 legacy reproduction: stopped (ValueError('p
+  5 order fills known without the notice delay: CAUGHT (2.2 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 1 legacy reproduction: stopped (ValueError('p
+  6 the position known without the notice delay: CAUGHT (2.4 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 1 legacy reproduction: stopped (ValueError('r
+  7 the cap check without the quantity: CAUGHT (4.5 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 1 legacy reproduction: stopped (ValueError('r
+  8 duplicate prices allowed: CAUGHT (4.8 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 2 long case: the partial fills after 5 s, pri
+  9 no own-cross rule: CAUGHT (4.8 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 3 a bid crossing our own unclosed (cancel-pen
+  10 more than two orders per side: CAUGHT (2.4 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 1 legacy reproduction: stopped (ValueError('m
+  11 the birth rung forgotten: CAUGHT (4.9 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 3 two bid levels at I = 0: 100 + 100 at 50 / 
+  12 the primary subreason fixed: CAUGHT (4.8 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 3 one structural (cross) pull leaves the othe
+  13 the mode from the previous tick: CAUGHT (4.7 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 5 the live bid pulled at the LONG tick, effec
+  14 one closure clears the side: CAUGHT (3.0 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 3 a cancel-pending order holds its slot and r
+  15 a fixed side order: CAUGHT (4.8 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 1 legacy reproduction: 44 of 44 tapes differ 
+  16 no fallback without a book: CAUGHT (4.8 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 1 legacy reproduction: 4 of 44 tapes differ (
+  17 the per-level size without the side multiplier: CAUGHT (4.7 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 3 I = +40 gives two 60-share bids (100.0, 20.
+  18 no side exposure budget: CAUGHT (4.8 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 3 reservations above the desired exposure add
+  19 the restricted side kept: CAUGHT (4.8 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 5 the live bid pulled at the LONG tick, effec
+  20 sizes rounded up: CAUGHT (4.8 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 3 sizes round down to whole shares (I = 33.3:
+  21 the restricted side may post: CAUGHT (4.8 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 5 no new bid while restricted, bids resume af
+  22 resume without the tape check: CAUGHT (4.8 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 7 another configuration / END / tape / a chan
+  23 the fingerprint without the mode log: CAUGHT (4.9 s) - LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 7 another configuration / END / tape / a chan
+control: PASSED (4.8 s); sources {'pf_branch_ladder.py': 'c9e0852eccea5b42', 'pf_branch_ladder_mutants_v2.py': 'ceed14af3331277a', 'pf_ladder_rest_selftest_v2.py': 'f85625be77769fde'}
+mutation check passed: the control passes its selftest, 24 / 24 planted code errors are caught by a check (1.8 CPU min)
+2026-11-21T17:38:56Z tag=lbc2_summary rc=0 peak_rss_mib=16 wall_s=0.02 cpu_user_s=0.02 memavail_start_gib=22 disk_free_gib=438->438 slot=claude

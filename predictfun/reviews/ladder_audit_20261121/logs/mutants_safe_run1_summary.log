@@ -1,0 +1,9 @@
+  0 no object tape / mark check: CAUGHT (4.6 s) - AUDIT SELFTEST FAILED: 8 resume_v2 refuses the four review falsifiers ({'next_k': True, 'ident': True, 'runtime_cap': True, 'tape_envelope': False})
+  1 no ident check: CAUGHT (4.6 s) - AUDIT SELFTEST FAILED: 8 resume_v2 refuses the four review falsifiers ({'next_k': True, 'ident': False, 'runtime_cap': True, 'tape_envelope': True})
+  2 executable fields reduced: CAUGHT (4.5 s) - AUDIT SELFTEST FAILED: 8 safe resume: stopped (ValueError('the executable fields differ from the declared configuration'))
+  3 no next_k check: CAUGHT (4.6 s) - AUDIT SELFTEST FAILED: 8 resume_v2 refuses the four review falsifiers ({'next_k': False, 'ident': True, 'runtime_cap': True, 'tape_envelope': True})
+  4 a save off the tick boundary: CAUGHT (4.6 s) - AUDIT SELFTEST FAILED: 8 a save off the tick boundary was accepted
+  5 no path tape check: CAUGHT (4.6 s) - AUDIT SELFTEST FAILED: 8 resume_v2 accepted another path under an untouched envelope
+control: PASSED (4.7 s); sources {'pf_branch_ladder_safe.py': 'a2e181902d768d2c', 'pf_branch_ladder_safe_mutants.py': 'cc36571f501608ee', 'pf_ladder_audit_selftest.py': '7fd1ceb40912e709'}
+mutation check passed: the control passes its selftest, 6 / 6 planted code errors are caught by a check (0.5 CPU min)
+2026-11-21T17:45:53Z tag=lsf_summary rc=0 peak_rss_mib=15 wall_s=0.02 cpu_user_s=0.02 memavail_start_gib=22 disk_free_gib=438->438 slot=claude

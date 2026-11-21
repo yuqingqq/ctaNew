@@ -1,0 +1,3 @@
+LADDER SELFTEST PASSED: legacy reproduction, the long queue case and its two planted implementations, ladder fixtures, hidden notices, inventory mode, cancel timing, resume, observer / reconstruction, features, measurement, population and guards
+LADDER SELFTEST v2 PASSED: the frozen suite under explicit negative guard conditions, and the allowed guard conditions
+2026-11-21T17:37:27Z tag=ladder_selftest_v2 rc=0 peak_rss_mib=231 wall_s=5.01 cpu_user_s=4.78 memavail_start_gib=23 disk_free_gib=438->438 slot=claude

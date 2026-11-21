@@ -23,6 +23,14 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- LADDER_AUDIT_FREEZE_20261121_DEV -->
+## 2026-11-21 17:48Z (session aea5bfb9) — RECEIPT-LEAD-TIME-AUDIT-v1 FROZEN (review 0065191f's ONE next priority; every finding verified at the code)
+
+- **Findings 1-8 all hold** (verified at `pf_branch_ladder.py:137-153` / `pf_branch_engine.py:142-149` (pending cancel lands at submit + 95), `pf_ladder_rest.py` sweep / state-map / churn / recovery / grid code, `pf_branch_ladder.resume`, the v1 selftest guards, `tools/fill_ladder.py`). The frozen baseline files stay unchanged (bound into the run); corrections are new files.
+- **Frozen:** `pf_ladder_audit.py` (F1 engine-consistent boundaries, F2 public-trade sweeps, F3 one window per snapshot with +1 s markouts primary and censoring, F4 churn / recovery, F7 net views, F8 exact durations; the lead audit on the frozen Oct 24-25 bins; the bounded causal audit), its selftest (mutants 16 / 16), `pf_branch_ladder_safe.py` (finding 5; the review's four falsifiers refused; mutants 6 / 6), `pf_ladder_rest_selftest_v2.py` (finding 6; the frozen harnesses' mutants 24 / 24 and 20 / 20 again), `audit_checks.py` (A-F, the review's numbers as cross-checks, falsifier), the launcher, the declaration.
+- **Next:** the saved-evidence stage and the 4-day causal audit, checks, one combined receipt, ONE review request.
+<!-- /LADDER_AUDIT_FREEZE_20261121_DEV -->
+
 <!-- LADDER_REST_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — Ladder baseline reviewed; next: receipt lead-time discrimination
 

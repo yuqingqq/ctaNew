@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "11", "name": "censored rows in the bin means", "seconds": 4.2, "sources": {"pf_ladder_audit.py": "97a79a90a06062a7", "pf_ladder_audit_mutants.py": "6c102c7d34749ffc", "pf_ladder_audit_selftest.py": "7fd1ceb40912e709"}, "why": "AUDIT SELFTEST FAILED: 6 censored rows are excluded from the +1 s means"}
+2026-11-21T17:45:22Z tag=lau_11 rc=0 peak_rss_mib=203 wall_s=4.41 cpu_user_s=4.18 memavail_start_gib=22 disk_free_gib=438->438 slot=claude

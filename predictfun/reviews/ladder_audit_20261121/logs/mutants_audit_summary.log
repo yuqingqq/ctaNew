@@ -1,0 +1,19 @@
+  0 the effect without the pending clock: CAUGHT (4.6 s) - AUDIT SELFTEST FAILED: 1 eff before / after activation | 1 boundaries | 1 the review control: a request at 50 lands at 95 and prevents the 100 ms fill
+  1 pending_first from the first live tick: CAUGHT (4.6 s) - AUDIT SELFTEST FAILED: 1 boundaries | 1 the review control: a request at 50 lands at 95 and prevents the 100 ms fill ([(0, 50.0, 95.0), (10.0, None, 1
+  2 the window strictly after the effect: CAUGHT (4.6 s) - AUDIT SELFTEST FAILED: 3 the live window starts at d + 37 = 237 (q 0.0), [200, 237) pre-effect (q 3.0), censored
+  3 entries at the request effect: CAUGHT (4.6 s) - AUDIT SELFTEST FAILED: 3 the entry window is every fill of its generation from its activation; lifetime apart
+  4 a censored markout as zero: CAUGHT (4.6 s) - AUDIT SELFTEST FAILED: 3 the live window starts at d + 37 = 237 (q 4.0), [200, 237) pre-effect (q 3.0), censored
+  5 sweeps by timestamp: CAUGHT (4.5 s) - AUDIT SELFTEST FAILED: 2 sweep events by public trade (2 rows) vs timestamp groups (4 rows): 4, 4
+  6 reversals as recoveries: CAUGHT (4.6 s) - AUDIT SELFTEST FAILED: 4 recovery / reversal / censored (['recovered', 'recovered', 'censored'])
+  7 early requests far past the first live tick: CAUGHT (4.7 s) - AUDIT SELFTEST FAILED: 4 early requests by reason ({'reviewed': 2, 'policy_first_review_pulls': 1, 'requested_by_first_live': 2, 'by_reason': {'struct
+  8 durations without the full fill: CAUGHT (4.6 s) - AUDIT SELFTEST FAILED: 5 exact durations: bid [58, 2000), ask [558, 600) closed by its full fill (179.0, 1942.0)
+  9 leads without the sign consistency: CAUGHT (4.5 s) - AUDIT SELFTEST FAILED: 6 one flipped cell is no LEAD
+  10 leads without the cell minimum: CAUGHT (4.6 s) - AUDIT SELFTEST FAILED: 6 a thin cell (< MIN_CELL) is no LEAD
+  11 censored rows in the bin means: CAUGHT (4.2 s) - AUDIT SELFTEST FAILED: 6 censored rows are excluded from the +1 s means
+  12 notified fills perturbed in the order check: CAUGHT (4.6 s) - AUDIT SELFTEST FAILED: 7 future-only perturbation unchanged, the frame at d fires (False, True, True)
+  13 pre-effect fills before the decision: CAUGHT (4.6 s) - AUDIT SELFTEST FAILED: 3 the live window starts at d + 37 = 237 (q 4.0), [200, 237) pre-effect (q 10.0), censored
+  14 the inventory move from the wrong tick: CAUGHT (4.6 s) - AUDIT SELFTEST FAILED: 3 the inventory move to d + 1 s: I 10 x (mid(1,200) - mid(200)) = 20 (21.000000000000014)
+  15 a stage before the freeze: CAUGHT (12.6 s) - AUDIT SELFTEST FAILED: 9 a stage ran before the freeze
+control: PASSED (4.7 s); sources {'pf_ladder_audit.py': '97a79a90a06062a7', 'pf_ladder_audit_mutants.py': '6c102c7d34749ffc', 'pf_ladder_audit_selftest.py': '47dd364cb87f6af9'}
+mutation check passed: the control passes its selftest, 16 / 16 planted code errors are caught by a check (1.4 CPU min)
+2026-11-21T17:47:05Z tag=lau_summary rc=0 peak_rss_mib=16 wall_s=0.02 cpu_user_s=0.02 memavail_start_gib=22 disk_free_gib=438->438 slot=claude

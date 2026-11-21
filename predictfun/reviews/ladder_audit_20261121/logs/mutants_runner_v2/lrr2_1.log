@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "1", "name": "markouts past END", "seconds": 4.8, "sources": {"pf_ladder_rest.py": "d90016ce7d25f89f", "pf_ladder_rest_mutants_v2.py": "5788db2057a48db9", "pf_ladder_rest_selftest_v2.py": "f85625be77769fde"}, "why": "LADDER SELFTEST FAILED: the frozen suite under the explicit negative conditions: LADDER SELFTEST FAILED: 10 markouts never past END"}
+2026-11-21T17:38:29Z tag=lrr2_1 rc=0 peak_rss_mib=232 wall_s=5.00 cpu_user_s=4.82 memavail_start_gib=22 disk_free_gib=438->438 slot=claude3

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "0", "name": "no object tape / mark check", "seconds": 4.6, "sources": {"pf_branch_ladder_safe.py": "a2e181902d768d2c", "pf_branch_ladder_safe_mutants.py": "cc36571f501608ee", "pf_ladder_audit_selftest.py": "47dd364cb87f6af9"}, "why": "AUDIT SELFTEST FAILED: 8 resume_v2 refuses the four review falsifiers ({'next_k': True, 'ident': True, 'runtime_cap': True, 'tape_envelope': False})"}
+2026-11-21T17:46:53Z tag=lsf_0 rc=0 peak_rss_mib=203 wall_s=4.79 cpu_user_s=4.60 memavail_start_gib=23 disk_free_gib=438->438 slot=claude2

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "5", "name": "no path tape check", "seconds": 4.6, "sources": {"pf_branch_ladder_safe.py": "a2e181902d768d2c", "pf_branch_ladder_safe_mutants.py": "cc36571f501608ee", "pf_ladder_audit_selftest.py": "47dd364cb87f6af9"}, "why": "AUDIT SELFTEST FAILED: 8 resume_v2 accepted another path under an untouched envelope"}
+2026-11-21T17:47:00Z tag=lsf_5 rc=0 peak_rss_mib=204 wall_s=4.80 cpu_user_s=4.63 memavail_start_gib=22 disk_free_gib=438->438 slot=claude3

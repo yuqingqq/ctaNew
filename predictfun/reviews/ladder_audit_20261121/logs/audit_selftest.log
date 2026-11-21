@@ -1,0 +1,2 @@
+AUDIT SELFTEST PASSED: boundaries and the review control, sweeps, windows, churn / recovery, durations, bins / leads, the round trip, order causality, safe resume, guards
+2026-11-21T17:46:14Z tag=audit_selftest rc=0 peak_rss_mib=205 wall_s=4.79 cpu_user_s=4.59 memavail_start_gib=23 disk_free_gib=438->438 slot=claude

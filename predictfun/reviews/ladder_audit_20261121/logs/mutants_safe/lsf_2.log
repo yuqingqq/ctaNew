@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "2", "name": "executable fields reduced", "seconds": 4.5, "sources": {"pf_branch_ladder_safe.py": "a2e181902d768d2c", "pf_branch_ladder_safe_mutants.py": "cc36571f501608ee", "pf_ladder_audit_selftest.py": "47dd364cb87f6af9"}, "why": "AUDIT SELFTEST FAILED: 8 safe resume: stopped (ValueError('the executable fields differ from the declared configuration'))"}
+2026-11-21T17:46:57Z tag=lsf_2 rc=0 peak_rss_mib=202 wall_s=4.71 cpu_user_s=4.52 memavail_start_gib=22 disk_free_gib=438->438 slot=claude4

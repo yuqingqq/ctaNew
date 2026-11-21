@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "8", "name": "durations without the full fill", "seconds": 4.6, "sources": {"pf_ladder_audit.py": "97a79a90a06062a7", "pf_ladder_audit_mutants.py": "6c102c7d34749ffc", "pf_ladder_audit_selftest.py": "47dd364cb87f6af9"}, "why": "AUDIT SELFTEST FAILED: 5 exact durations: bid [58, 2000), ask [558, 600) closed by its full fill (179.0, 1942.0)"}
+2026-11-21T17:46:30Z tag=lau_8 rc=0 peak_rss_mib=203 wall_s=4.82 cpu_user_s=4.66 memavail_start_gib=22 disk_free_gib=437->438 slot=claude2

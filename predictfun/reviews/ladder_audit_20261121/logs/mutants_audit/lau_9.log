@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "9", "name": "leads without the sign consistency", "seconds": 4.5, "sources": {"pf_ladder_audit.py": "97a79a90a06062a7", "pf_ladder_audit_mutants.py": "6c102c7d34749ffc", "pf_ladder_audit_selftest.py": "47dd364cb87f6af9"}, "why": "AUDIT SELFTEST FAILED: 6 one flipped cell is no LEAD"}
+2026-11-21T17:46:32Z tag=lau_9 rc=0 peak_rss_mib=203 wall_s=4.73 cpu_user_s=4.57 memavail_start_gib=22 disk_free_gib=438->438 slot=claude3

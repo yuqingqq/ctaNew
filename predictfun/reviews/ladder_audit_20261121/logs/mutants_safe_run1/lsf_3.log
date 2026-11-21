@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "3", "name": "no next_k check", "seconds": 4.6, "sources": {"pf_branch_ladder_safe.py": "a2e181902d768d2c", "pf_branch_ladder_safe_mutants.py": "cc36571f501608ee", "pf_ladder_audit_selftest.py": "7fd1ceb40912e709"}, "why": "AUDIT SELFTEST FAILED: 8 resume_v2 refuses the four review falsifiers ({'next_k': False, 'ident': True, 'runtime_cap': True, 'tape_envelope': True})"}
+2026-11-21T17:45:45Z tag=lsf_3 rc=0 peak_rss_mib=203 wall_s=4.84 cpu_user_s=4.61 memavail_start_gib=22 disk_free_gib=437->438 slot=claude
