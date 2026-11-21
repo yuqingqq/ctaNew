@@ -774,6 +774,18 @@ pipeline_one_day_v3_20261119:
   values_equal_v2: {cells_per_day: 190, differing: 0}
   attribution_vs_pull_all_c: {"20261026": {first_step: 0.0, later: 954.33, never: 995.36, no_prediction: 0.0}, "20261027": {first_step: 0.0, later: -821.85, never: 251.74, no_prediction: 0.0}}
 
+coverage_20261121:
+  status: stopped_by_user_partial_no_result
+  asof: "2026-11-21 15:30Z"
+  user: "Stop the current task, more data can't solve our issues now"
+  freeze: 8a990d5f
+  source_extension: {freeze: aad6a8b6, days_built: ["20261031", "20261101", "20261102", "20261103"], control_exact: true}
+  pilot: {worlds: 24, queries: 254, rows_ok: 254}
+  projection: {projected_core_hours: 6.711, run_rest: true}
+  partitions: {total: 72, complete: 22, cut_mid_run: [20, 21], not_started: 48}
+  measured: false
+  direction: more_label_data_not_the_next_lever
+  loop: stopped
 p005_source_extend_20261121:
   status: user_go_source_extension
   asof: "2026-11-21 14:29Z"

@@ -1,0 +1,57 @@
+{
+ "pilots_done": true,
+ "pilot_jobs": {
+  "20261024": {
+   "rc": 0,
+   "peak": 1103,
+   "wall": 76.86,
+   "cpu": 69.97
+  },
+  "20261025": {
+   "rc": 0,
+   "peak": 1167,
+   "wall": 66.24,
+   "cpu": 61.75
+  },
+  "20261031": {
+   "rc": 0,
+   "peak": 1091,
+   "wall": 61.26,
+   "cpu": 58.25
+  },
+  "20261101": {
+   "rc": 0,
+   "peak": 1099,
+   "wall": 63.31,
+   "cpu": 60.06
+  },
+  "20261102": {
+   "rc": 0,
+   "peak": 1118,
+   "wall": 79.52,
+   "cpu": 72.6
+  },
+  "20261103": {
+   "rc": 0,
+   "peak": 1146,
+   "wall": 74.72,
+   "cpu": 69.8
+  }
+ },
+ "load_fixed_s": 0.688263734181722,
+ "load_s_per_member": 13.133323808511099,
+ "census_s_per_world": 1.9302819967269897,
+ "label_a_s": 1.9536188125096998,
+ "label_b_s_per_query": 0.008857400591136605,
+ "worlds": 1152,
+ "query_cap": 4608,
+ "cpu_per_wall": 0.9301272783295016,
+ "projected_build_wall_s": 19694.212650430494,
+ "pilot_core_hours": 0.10900833333333333,
+ "so_far_core_hours": 1.3226472222222216,
+ "projected_core_hours": 6.7110151142742644,
+ "ceiling": 8.0,
+ "peaks_ok": true,
+ "run_rest": true
+}
+2026-11-21T15:18:40Z tag=cov_projection rc=0 peak_rss_mib=28 wall_s=0.09 cpu_user_s=0.06 memavail_start_gib=23 disk_free_gib=439->439 slot=claude
