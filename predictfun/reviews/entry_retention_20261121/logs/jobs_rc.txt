@@ -1,1 +1,15 @@
 pf_entry_retention_selftest rc=0
+retention_part_000 rc=0
+retention_part_004 rc=0
+retention_part_003 rc=0
+retention_part_002 rc=0
+retention_part_001 rc=0
+retention_part_005 rc=0
+retention_part_008 rc=0
+retention_part_007 rc=0
+retention_part_006 rc=0
+retention_part_009 rc=0
+retention_part_011 rc=0
+retention_part_010 rc=0
+retention_measure rc=0
+retention_checks rc=1

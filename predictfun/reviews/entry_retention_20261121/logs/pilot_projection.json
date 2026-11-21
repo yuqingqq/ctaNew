@@ -1,0 +1,12 @@
+{
+ "pilot_cpu_s": 67.36,
+ "pilot_wall_s": 71.45,
+ "pilot_peak_mib": 1148,
+ "pilot_rc": 0,
+ "pilot_record": true,
+ "pilot_hwm_mib": 1148.76171875,
+ "so_far_core_hours": 0.11106666666666663,
+ "projected_core_hours": 0.33559999999999995,
+ "ceiling": 1.0,
+ "run_rest": true
+}
