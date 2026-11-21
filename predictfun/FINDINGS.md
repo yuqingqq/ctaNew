@@ -1,3 +1,35 @@
+<!-- ENTRY_RETENTION_REVIEW_20261121_CODEX -->
+## 2026-11-21 — Mean-target diagnosis needs correction; artifacts are reusable
+
+Target **a44f7dd807f7d8cf88d8967801652ef26ca93ad8**.
+[Ranked findings, evidence and next-round contract](reviews/automatic/20261121_a44f7dd8/report.md).
+All saved stages/targets and 2,191 forecast vectors reproduce. First-pull
+reconciliation holds on 714 forks. Falsifier v2 and pilot restoration verified;
+five review jobs, 45.82 s, peak 397 MiB, no fit/real tape experiment.
+
+P1 BLOCKING for the broad forecast inference, not data reuse: MAE targets the
+median. A true -30 c mean for a 30%-chance -100 c payoff has MAE 42 versus
+zero's 30, but better MSE (2,100 versus 3,000). The current gate falsely fails
+that exact mean. Actual entry MSE(V) is 4,690 versus zero 4,785 / mechanical
+4,985; first-review MSE 4,795 versus zero 4,569, with -7.09 c bias. Correct
+the reading in band; keep MAE secondary. No new fit/relabel to correct it.
+P2 NONBLOCKING: 721 transition rows include four invalid-stage combinations;
+the both-modeled count is 717, with 34 flips. P2 NONBLOCKING: market_flow and
+fair groups contain clock-driven bnd_age / sens, so changed groups do not
+identify new danger. P2 NONBLOCKING: 713/756 forced posts are rejected by
+PI0; null non-passes under degenerate/thin controls are not proof of no skill.
+P3 NONBLOCKING: restored pilot matches committed values and pre-rest CPU
+logs; prevent future overwrites when reusing the script.
+
+ONE next priority: PI0-ADMISSION-EXPOSURE-v1, on actual PI0 admissions from
+accepted consumed Oct26-27 traces. Exact hash-ranked sample of 329 out of
+689 POST generations, weighted by inverse inclusion, matched PI0 versus
+selected-gid retention, original END/inventory/context preserved. Include the
+existing exposure-by-shadow-admission table, corrected metrics and all fixes
+in one round. One core-hour, existing slots, no fit/new dates. No additional
+USER approval and no separate repair review; broader scope needs a decision.
+<!-- /ENTRY_RETENTION_REVIEW_20261121_CODEX -->
+
 <!-- ENTRY_EXPOSURE_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — Exposure loss verified; selective retention remains untested
 

@@ -23,6 +23,38 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- ENTRY_RETENTION_REVIEW_20261121_CODEX -->
+## 2026-11-21 — Retention artifacts accepted; mean-forecast inference corrected
+
+Reviewed **a44f7dd807f7d8cf88d8967801652ef26ca93ad8**.
+[Combined review and next-round contract](reviews/automatic/20261121_a44f7dd8/report.md).
+All 768 forks / 2,304 stage rows and 2,191 saved forecast vectors reproduce;
+714 first-pull targets reconcile with D_initial. Falsifier v2 accepted.
+One P1 blocks the broad model inference, not artifact reuse: MAE evaluates a
+median, not the conditional mean. A perfect mean can fail this gate. On the
+actual valid entry rows, MSE(V) 4,690 < zero 4,785 < mechanical 4,985 c²;
+first-review MSE(V) 4,795 > zero 4,569, with -7.09 c average bias.
+The movement term improves entry MSE; do not call it generally harmful from
+MAE alone. No demonstrated selection advantage in a mostly rejected / thin
+sample; this is not proof that inputs contain no information.
+
+ONE next priority: PI0-ADMISSION-EXPOSURE-v1. Use the accepted R4E PI0 traces
+on consumed Oct26-27: 689 voluntary POST generations in 380 evaluable worlds.
+Freeze a maximum four hash-ranked admissions per action-day/side/UTC-hour
+(329 selected; inverse-inclusion weights), then compare PI0 with retaining
+that selected gid under structural safety through the ORIGINAL END. Preserve
+actual inventory/generation/other-side state and reproduce the factual arm.
+Include the existing D_EXPOSURE x shadow-admission cross-tab separately.
+Use proper mean metrics, exact targets and complete statuses; no new fit,
+dates, horizon or timer. One aggregate core-hour, existing slots.
+
+Bundle five findings: mean-metric/reading correction; valid versus fallback
+transition populations; clock versus new-event input changes; selection-power
+and forced-admission scope; immutable pilot records. The report supplies a
+verified correction/workaround for current artifacts: no label rebuild or
+repair-only review. No extra USER approval for the declared diagnostic.
+<!-- /ENTRY_RETENTION_REVIEW_20261121_CODEX -->
+
 <!-- ENTRY_EXPOSURE_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — Exposure comparison accepted; entry/retention discrimination next
 

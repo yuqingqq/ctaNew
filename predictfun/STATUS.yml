@@ -1,3 +1,27 @@
+entry_retention_review_20261121_codex:
+  status: artifacts_accepted_mean_diagnosis_correction_bundled_with_admission_measurement
+  target_commit: a44f7dd807f7d8cf88d8967801652ef26ca93ad8
+  report: predictfun/reviews/automatic/20261121_a44f7dd8/report.md
+  blocking_findings_for_artifact_reuse: []
+  blocking_interpretation: MAE_failure_is_not_failure_of_conditional_mean_prediction
+  corrected_reading: entry_MSE_slightly_below_zero_retention_MSE_above_zero_no_demonstrated_selection_advantage
+  no_label_rebuild_or_intermediate_review_required: true
+  artifacts: {forks: 768, evaluable: 756, excluded: 12, stage_rows: 2304, forecast_vectors: 2191, first_pull_targets: 714}
+  model_valid: {entry: 755, first_review: 718, first_pull: 714, paired_transition: 717, valid_flips: 34}
+  entry_MSE_c2: {V: 4690.440692485766, zero: 4785.27676167055, mechanical: 4985.392676171131}
+  first_review_MSE_c2: {V: 4794.909509628942, zero: 4568.573146903305, mechanical: 4762.421728657418}
+  nonblocking: [transition_eligibility, clock_vs_market_update_attribution, thin_selection_and_forced_admission_scope, pilot_record_immutability]
+  falsifier_v2_accepted: true
+  pilot_projection_reconstructed_core_hours: 0.3356
+  independent_review: {successful_jobs: 5, wall_seconds: 45.82, peak_rss_mib: 397, fits: 0, real_tape_runs: 0}
+  next_priority: PI0_ADMISSION_EXPOSURE_v1
+  next_round: {consumed_days: ["20261026", "20261027"], source: accepted_R4E_PI0_traces, world_population: 384, evaluable_worlds: 380, POST_generations: 689, selected_generations: 329, max_per_action_day_side_hour: 4, source_weight: inverse_inclusion, core_hours_ceiling: 1, development_slots_max: 4, checkpoint_mib: 1536, hard_rss_mib: 2048, per_generation_guard_seconds: 120, model_fits: 0, new_dates: 0}
+  existing_exposure_shadow_admission_crosstab: declared_next_not_computed_in_review
+  original_END_and_frozen_teacher_unchanged: true
+  additional_user_approval_required_for_declared_round: false
+  new_label_dates_or_untouched_access_authorized: false
+  forecast_skill_or_profitable_strategy_established: false
+
 entry_exposure_review_20261121_codex:
   status: exposure_comparison_accepted_discrimination_measurement_next
   target_commit: 73f6cfa6f8fd0d1fcb9283e8c7610f43b3b796d7
