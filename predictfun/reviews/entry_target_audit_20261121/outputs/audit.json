@@ -1,0 +1,43 @@
+{
+ "asof": "2026-11-21T07:51:34.654731+00:00",
+ "datasets": {
+  "eval": "902526da20ecea3c224dab403135f701ac47386a72b0779723d36077b2553572",
+  "train": "2c62fc9baf696e6cd8913c5c294dea2c9513640714ae34b413dc37ef8c0acb2e"
+ },
+ "expected_post_rows": {
+  "eval": 12188,
+  "train": 12228
+ },
+ "fit_sha256": "6397033d082f9b4c9c411bab21b8e55def9503f863e0a12bc978d6829c34cf75",
+ "predicates": {
+  "eval": {
+   "abs_Y": 102171.05499247246,
+   "abs_v_initial": 89509.19615985214,
+   "cancellation": false,
+   "diagnosis": "rare_execution",
+   "init_no_fill": 0.9740997205088353,
+   "rare_execution": true,
+   "share_meaningful": 0.028017346849756177
+  },
+  "train": {
+   "abs_Y": 109719.04249492308,
+   "abs_v_initial": 116115.39342130131,
+   "cancellation": false,
+   "diagnosis": "rare_execution",
+   "init_no_fill": 0.9714308223959377,
+   "rare_execution": true,
+   "share_meaningful": 0.030262766482953757
+  }
+ },
+ "r4e_predictions_sha256": "e460402d8fff70511cfd15316033c44f052e261ce0a8b83ac83ec29bdcaec930",
+ "reached_rows": 760,
+ "rows": 24416,
+ "seconds": 70.4,
+ "source_sha256": "6fc7d2e487f3fdf531ec74a16e8685a1258940b0cc5412047e104e3580c24941",
+ "thresholds": {
+  "cancel": 0.5,
+  "rare_meaningful": 0.1,
+  "rare_nofill": 0.5
+ },
+ "version": "entry_target_audit_v1"
+}

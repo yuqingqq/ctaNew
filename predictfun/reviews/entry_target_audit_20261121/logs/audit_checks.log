@@ -1,0 +1,14 @@
+{
+ "checks": {
+  "A_identity": true,
+  "B_accounting": true,
+  "C_predictions": true,
+  "D_reached": true,
+  "E_summaries": true,
+  "F_resources": true,
+  "G_suites": true
+ },
+ "all_true": true
+}
+{"cases": {"B": {"clean": true, "corrupted": false, "applied": true}, "A": {"clean": true, "corrupted": false, "applied": true}, "C": {"clean": true, "corrupted": false, "applied": true}, "E": {"clean": true, "corrupted": false, "applied": true}, "G": {"clean": true, "corrupted": false, "applied": true}}, "falsifier_ok": true}
+2026-11-21T07:51:45Z tag=audit_checks rc=0 peak_rss_mib=243 wall_s=5.33 cpu_user_s=4.99 memavail_start_gib=23 disk_free_gib=447->447 slot=claude
