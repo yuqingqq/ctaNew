@@ -1,0 +1,21 @@
+{
+ "census": 689,
+ "selected": 329,
+ "cells": 93,
+ "worlds": 384,
+ "parts": [
+  0,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11
+ ]
+}
+2026-11-21T11:03:35Z tag=admission_manifest rc=0 peak_rss_mib=388 wall_s=1.88 cpu_user_s=1.61 memavail_start_gib=22 disk_free_gib=444->444 slot=claude

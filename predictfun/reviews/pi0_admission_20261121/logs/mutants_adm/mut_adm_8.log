@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "8", "name": "admission unchecked", "seconds": 9.5, "sources": {"pf_pi0_admission.py": "a47f5690a9caacb3", "pf_pi0_admission_mutants.py": "f361f422077a369c", "pf_pi0_admission_selftest.py": "1603e56046ba4f06"}, "why": "PI0 ADMISSION SELFTEST FAILED: a point PI0 did not POST: keep_not_admitted, not not_admitted"}
+2026-11-21T11:02:39Z tag=mut_adm_8 rc=0 peak_rss_mib=230 wall_s=9.70 cpu_user_s=9.46 memavail_start_gib=22 disk_free_gib=444->444 slot=claude2

@@ -1,0 +1,2 @@
+admission checks selftest passed: a clean synthetic row passes B / C / D; 7 corruptions are flagged (a KEEP decision, a factual value, a wrong END, compensating target / unavoidable, a wrong but valid gid, D_selected, one input)
+2026-11-21T11:00:30Z tag=admission_checks_selftest rc=0 peak_rss_mib=222 wall_s=4.39 cpu_user_s=4.20 memavail_start_gib=23 disk_free_gib=444->444 slot=claude

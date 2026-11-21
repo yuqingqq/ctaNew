@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "11", "name": "the prefix ignores fills", "seconds": 9.0, "sources": {"pf_pi0_admission.py": "a47f5690a9caacb3", "pf_pi0_admission_mutants.py": "f361f422077a369c", "pf_pi0_admission_selftest.py": "1603e56046ba4f06"}, "why": "PI0 ADMISSION SELFTEST FAILED: keep_prefix_ok: a fill before the override that the factual lacks was accepted"}
+2026-11-21T11:02:47Z tag=mut_adm_11 rc=0 peak_rss_mib=230 wall_s=9.27 cpu_user_s=9.07 memavail_start_gib=22 disk_free_gib=444->444 slot=claude

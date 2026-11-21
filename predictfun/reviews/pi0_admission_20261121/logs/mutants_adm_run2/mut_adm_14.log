@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "14", "name": "the reconciliation ignores the pre-effect fills", "seconds": 9.1, "sources": {"pf_pi0_admission.py": "ab3f8ce707130e33", "pf_pi0_admission_mutants.py": "f361f422077a369c", "pf_pi0_admission_selftest.py": "1603e56046ba4f06"}, "why": "PI0 ADMISSION SELFTEST FAILED: reconcile_pull: the value, the pre-effect fills or the removal time"}
+2026-11-21T10:58:06Z tag=mut_adm_14 rc=0 peak_rss_mib=230 wall_s=9.28 cpu_user_s=9.04 memavail_start_gib=22 disk_free_gib=443->443 slot=claude4

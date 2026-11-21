@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "0", "name": "the census over excluded worlds", "seconds": 8.9, "sources": {"pf_pi0_admission.py": "ab3f8ce707130e33", "pf_pi0_admission_mutants.py": "f361f422077a369c", "pf_pi0_admission_selftest.py": "1603e56046ba4f06"}, "why": "PI0 ADMISSION SELFTEST FAILED: census / select: stopped (KeyError('episodes')); writers: stopped (KeyError('episodes'))"}
+2026-11-21T10:57:34Z tag=mut_adm_0 rc=0 peak_rss_mib=229 wall_s=9.11 cpu_user_s=8.89 memavail_start_gib=22 disk_free_gib=443->443 slot=claude2

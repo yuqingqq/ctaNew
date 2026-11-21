@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "6", "name": "the factual decisions hash unchecked", "seconds": 9.5, "sources": {"pf_pi0_admission.py": "ab3f8ce707130e33", "pf_pi0_admission_mutants.py": "f361f422077a369c", "pf_pi0_admission_selftest.py": "1603e56046ba4f06"}, "why": "PI0 ADMISSION SELFTEST FAILED: a different decisions hash: ok, not factual_not_reproduced"}
+2026-11-21T10:57:47Z tag=mut_adm_6 rc=0 peak_rss_mib=230 wall_s=9.74 cpu_user_s=9.49 memavail_start_gib=22 disk_free_gib=443->443 slot=claude4

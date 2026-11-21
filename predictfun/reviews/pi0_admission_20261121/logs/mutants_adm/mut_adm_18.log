@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "18", "name": "the economics over every status", "seconds": 9.1, "sources": {"pf_pi0_admission.py": "a47f5690a9caacb3", "pf_pi0_admission_mutants.py": "f361f422077a369c", "pf_pi0_admission_selftest.py": "1603e56046ba4f06"}, "why": "PI0 ADMISSION SELFTEST FAILED: economics: weighted mean 5.956521739130435"}
+2026-11-21T11:03:02Z tag=mut_adm_18 rc=0 peak_rss_mib=231 wall_s=9.28 cpu_user_s=9.04 memavail_start_gib=22 disk_free_gib=444->444 slot=claude4

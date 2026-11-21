@@ -1,0 +1,1 @@
+pf_pi0_admission_selftest rc=0
