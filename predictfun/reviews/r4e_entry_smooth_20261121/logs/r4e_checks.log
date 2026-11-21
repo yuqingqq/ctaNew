@@ -1,0 +1,29 @@
+{
+ "checks": {
+  "A_fit": true,
+  "B_order": true,
+  "C_reuse": true,
+  "D_readings": true,
+  "E_control": true,
+  "F_replay": true,
+  "G_reached": true,
+  "H_suites": true,
+  "I_resources": true
+ },
+ "all_true": true
+}
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/r4e_entry_smooth_20261121/r4e_checks.py", line 294, in <module>
+    main(); falsify()
+            ^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/r4e_entry_smooth_20261121/r4e_checks.py", line 276, in falsify
+    res['F'] = dict(clean=safe(check_F, out, {}, clean_dir), corrupted_trace_fill=safe(check_F, out, {}, part_copy('Ffill', fill_bump)),
+                                                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/r4e_entry_smooth_20261121/r4e_checks.py", line 256, in part_copy
+    rec = json.loads((g / 'part_000.json').read_text()); rows = LS.gz_rows((g / 'part_000.jsonl.gz').read_bytes()); fn(rows)
+                                                                                                                    ^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/r4e_entry_smooth_20261121/r4e_checks.py", line 264, in fill_bump
+    tr = next(e['trace'] for e in first_ok(rows)['episodes'].values() if e['trace']['fill_list']); tr['fill_list'][0][3] = float(tr['fill_list'][0][3]) + 1.
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+2026-11-21T07:20:10Z tag=r4e_checks rc=1 peak_rss_mib=277 wall_s=5.98 cpu_user_s=5.61 memavail_start_gib=22 disk_free_gib=443->443 slot=claude

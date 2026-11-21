@@ -1,0 +1,25 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/research/pf_adv2_entry_replay.py", line 250, in <module>
+    summarize()
+  File "/home/yuqing/ctaNew/predictfun/research/pf_adv2_entry_replay.py", line 226, in summarize
+    tot = E.groupby(['day', 'policy']).agg(worlds=('value', 'size'), value=('value', 'sum'), value_bid=('value_bid', 'sum'), value_ask=('value_ask', 'sum'),
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/groupby/generic.py", line 2291, in aggregate
+    result = op.agg()
+             ^^^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/apply.py", line 294, in agg
+    return self.agg_dict_like()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/apply.py", line 511, in agg_dict_like
+    return self.agg_or_apply_dict_like(op_name="agg")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/apply.py", line 1677, in agg_or_apply_dict_like
+    result_index, result_data = self.compute_dict_like(
+                                ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/apply.py", line 550, in compute_dict_like
+    func = self.normalize_dictlike_arg(op_name, selected_obj, func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/apply.py", line 762, in normalize_dictlike_arg
+    raise KeyError(f"Label(s) {list(cols)} do not exist")
+KeyError: "Label(s) ['binding_bad'] do not exist"
+2026-11-21T07:20:08Z tag=r4e_replay_summary rc=1 peak_rss_mib=275 wall_s=2.10 cpu_user_s=1.84 memavail_start_gib=23 disk_free_gib=443->443 slot=claude

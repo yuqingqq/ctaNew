@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "4", "name": "no difference against PI0", "seconds": 0.8, "sources": {"pf_adv2_entry_replay_summary.py": "06b3f88f3b9753b9", "pf_adv2_entry_replay_summary_mutants.py": "77e0053e0557db39", "pf_adv2_entry_replay_summary_selftest.py": "ecaae28b10a74bab"}, "why": "ADV2 ENTRY REPLAY SUMMARY SELFTEST FAILED: diffs: ('20261026', 'SMOOTH', 'PI0') = None; diffs: ('20261027', 'ENTRY_ONLY', 'PI0') = None"}
+2026-11-21T07:22:32Z tag=mut_rsum_4 rc=0 peak_rss_mib=199 wall_s=0.95 cpu_user_s=0.79 memavail_start_gib=22 disk_free_gib=443->443 slot=claude2

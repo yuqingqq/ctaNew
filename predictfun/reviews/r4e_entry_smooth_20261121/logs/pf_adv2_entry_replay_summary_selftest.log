@@ -1,0 +1,32 @@
+{
+ "statuses": {
+  "ok": 2,
+  "world:no_path:x": 1
+ },
+ "worlds": 2,
+ "diffs": 12,
+ "reached": [
+  {
+   "day": "20261026",
+   "status": "no_eligible_decision",
+   "n": 1
+  },
+  {
+   "day": "20261026",
+   "status": "ok",
+   "n": 1
+  },
+  {
+   "day": "20261027",
+   "status": "no_eligible_decision",
+   "n": 1
+  },
+  {
+   "day": "20261027",
+   "status": "ok",
+   "n": 1
+  }
+ ]
+}
+adv2 entry replay summary selftest passed: a valid summary completes; statuses, totals, trace-summed bindings (a missing counter fails), paired differences (sums, above / below, a tie), reached counts under 'n'; refusals of a changed CSV and a changed part
+2026-11-21T07:22:28Z tag=pf_adv2_entry_replay_summary_selftest rc=0 peak_rss_mib=199 wall_s=0.96 cpu_user_s=0.80 memavail_start_gib=23 disk_free_gib=443->443 slot=claude
