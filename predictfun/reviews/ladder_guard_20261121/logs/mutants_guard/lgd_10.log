@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "10", "name": "the +1 s comparison without the shared cutoff", "seconds": 4.6, "sources": {"pf_ladder_guard.py": "5349b75682108857", "pf_ladder_guard_mutants.py": "97d8a0ac6e083c31", "pf_ladder_guard_selftest.py": "9867e0b3e77e3f3f"}, "why": "GUARD SELFTEST FAILED: 6 the shared cutoff (END - 1 s), censor counts and splits (20.0, 1)"}
+2026-11-21T18:16:13Z tag=lgd_10 rc=0 peak_rss_mib=203 wall_s=4.77 cpu_user_s=4.57 memavail_start_gib=22 disk_free_gib=438->438 slot=claude4

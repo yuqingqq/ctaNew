@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "1", "name": "the disabled guard still active", "seconds": 4.5, "sources": {"pf_ladder_guard.py": "5349b75682108857", "pf_ladder_guard_mutants.py": "97d8a0ac6e083c31", "pf_ladder_guard_selftest.py": "9867e0b3e77e3f3f"}, "why": "GUARD SELFTEST FAILED: 1 the disabled guard equals the baseline policy (8 of 8 differ) | 2 the signal boundary"}
+2026-11-21T18:16:01Z tag=lgd_1 rc=0 peak_rss_mib=202 wall_s=4.64 cpu_user_s=4.47 memavail_start_gib=22 disk_free_gib=438->438 slot=claude3

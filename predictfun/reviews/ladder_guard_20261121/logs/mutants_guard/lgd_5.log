@@ -1,0 +1,6 @@
+/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/numpy/lib/_nanfunctions_impl.py:1601: RuntimeWarning: All-NaN slice encountered
+  return _nanquantile_unchecked(
+/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/numpy/lib/_nanfunctions_impl.py:1601: RuntimeWarning: All-NaN slice encountered
+  return _nanquantile_unchecked(
+{"cls": "CAUGHT", "index": "5", "name": "selected by q4", "seconds": 3.8, "sources": {"pf_ladder_guard.py": "5349b75682108857", "pf_ladder_guard_mutants.py": "97d8a0ac6e083c31", "pf_ladder_guard_selftest.py": "9867e0b3e77e3f3f"}, "why": "GUARD SELFTEST FAILED: 4 selection: stopped (TypeError('unsupported format string passed to NoneType.__format__'))"}
+2026-11-21T18:16:06Z tag=lgd_5 rc=0 peak_rss_mib=202 wall_s=4.03 cpu_user_s=3.87 memavail_start_gib=22 disk_free_gib=438->438 slot=claude3

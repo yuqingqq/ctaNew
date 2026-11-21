@@ -18,6 +18,18 @@ ladder_audit_review_20261121_codex:
   additional_user_permission_within_scope: false
   untouched_validation: false
 
+ladder_guard_20261121_dev:
+  status: frozen_before_replay
+  asof: "2026-11-21 18:18Z"
+  declaration: predictfun/reviews/ladder_guard_20261121/declaration.md
+  review: f8c5e579f15be9cfbf3e525567de55cbfa13780d
+  candidate: ASK_RESERVATION_GUARD_v1
+  edge_shares: 200
+  markets: 19
+  pilot_markets: 8
+  mutants: "16/16"
+  core_hours_cap: 0.75
+  next: pilot_projection_full_selection_measure_checks_one_review
 ladder_audit_results_20261121_dev:
   status: done_corrections_and_lead_audit
   asof: "2026-11-21 17:54Z"

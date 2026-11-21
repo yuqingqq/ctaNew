@@ -1,0 +1,19 @@
+  0 the signal strictly above the edge: CAUGHT (4.5 s) - GUARD SELFTEST FAILED: 2 the signal boundary | 2 the inventory rule keeps precedence and its reasons | 3 bid side first: the ask side sees B = 200 at 
+  1 the disabled guard still active: CAUGHT (4.5 s) - GUARD SELFTEST FAILED: 1 the disabled guard equals the baseline policy (8 of 8 differ) | 2 the signal boundary
+  2 the signal from the ask reservations: CAUGHT (4.5 s) - GUARD SELFTEST FAILED: 2 the signal boundary | 2 the inventory rule keeps precedence and its reasons | 3 bid side first: the ask side sees B = 200 at 
+  3 the guard pulls bids too: CAUGHT (4.5 s) - GUARD SELFTEST FAILED: 2 the inventory rule keeps precedence and its reasons | 3 bid side first: the ask side sees B = 200 at the same tick and withho
+  4 the guard relabels inventory pulls: CAUGHT (4.4 s) - GUARD SELFTEST FAILED: 2 the inventory rule keeps precedence and its reasons
+  5 selected by q4: CAUGHT (3.8 s) - GUARD SELFTEST FAILED: 4 selection: stopped (TypeError('unsupported format string passed to NoneType.__format__'))
+  6 draws with replacement: CAUGHT (4.6 s) - GUARD SELFTEST FAILED: 4 a fully degenerate population: every draw is the selected set (without replacement)
+  7 strata without the age band: CAUGHT (4.4 s) - GUARD SELFTEST FAILED: 4 matching on the age band removes a confounded difference (SELECTION_BEYOND_EXPOSURE)
+  8 strata without the remaining band: CAUGHT (4.3 s) - GUARD SELFTEST FAILED: 4 matching on the rem band removes a confounded difference (SELECTION_BEYOND_EXPOSURE)
+  9 censored states in the statistic: CAUGHT (4.5 s) - GUARD SELFTEST FAILED: 4 a censored high-quantity selected state changes neither valid term (finding 1)
+  10 the +1 s comparison without the shared cutoff: CAUGHT (4.6 s) - GUARD SELFTEST FAILED: 6 the shared cutoff (END - 1 s), censor counts and splits (20.0, 1)
+  11 reducing suppressions with the wrong sign: CAUGHT (4.5 s) - GUARD SELFTEST FAILED: 6 the shared cutoff (END - 1 s), censor counts and splits (15.0, 1)
+  12 better_selection without the selection control: CAUGHT (4.5 s) - GUARD SELFTEST FAILED: 6 without selection evidence the reading is not better_selection
+  13 quoting_less without the per-share condition: CAUGHT (4.5 s) - GUARD SELFTEST FAILED: 6 without selection evidence the reading is not better_selection | 6 a day that worsens makes END MIXED
+  14 no-fill generations counted as censored: CAUGHT (4.5 s) - GUARD SELFTEST FAILED: 5 the generation censor count excludes no-fill generations
+  15 run_day before the freeze: CAUGHT (4.5 s) - GUARD SELFTEST FAILED: 7 guards: stopped (FileNotFoundError(2, 'No such file or directory'))
+control: PASSED (4.5 s); sources {'pf_ladder_guard.py': '5349b75682108857', 'pf_ladder_guard_mutants.py': '97d8a0ac6e083c31', 'pf_ladder_guard_selftest.py': '9867e0b3e77e3f3f'}
+mutation check passed: the control passes its selftest, 16 / 16 planted code errors are caught by a check (1.3 CPU min)
+2026-11-21T18:16:22Z tag=lgd_summary rc=0 peak_rss_mib=15 wall_s=0.02 cpu_user_s=0.01 memavail_start_gib=22 disk_free_gib=438->438 slot=claude

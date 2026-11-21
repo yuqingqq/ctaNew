@@ -51,6 +51,14 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_GUARD_FREEZE_20261121_DEV -->
+## 2026-11-21 18:18Z (session aea5bfb9) — ASK-RESERVATION-GUARD-v1 FROZEN before any replay (review f8c5e579's ONE next priority; its three findings hold)
+
+- **Findings:** (1) the per-share table divided valid +1 s sums by all-window quantities (`pf_ladder_audit.py:264-267`); (2) the audit checker trusted stored means / ranking; (3) the generation censor counter subtracted no-fill generations (-3,195; correct 13). All hold; corrected in this round's new files (frozen files unchanged).
+- **Frozen:** `pf_ladder_guard.py` (AskGuard: asks only, PULL a would-be-KEEP / WAIT a would-be-POST while float32(B) >= 200, the frozen Oct 24-25 edge; the inventory rule keeps precedence; no timer; the disabled arm reproduces the baseline; the matched-draw selection control (500 draws, seed 20261121, day x market x remaining x age x inventory-sign strata); the paired measurement and readings; the corrected summaries), its selftest (mutants 16 / 16), `guard_checks.py` (A-I incl. the audit-lead re-derivation, falsifier), the pilot rule (<= 0.75 core-hours), the manifest (19 markets, pilot 8), the launcher, the declaration.
+- **Next:** pilot, projection, the 19 markets, selection, measurement, checks, one combined receipt, ONE review request.
+<!-- /LADDER_GUARD_FREEZE_20261121_DEV -->
+
 <!-- LADDER_AUDIT_RESULTS_20261121_DEV -->
 ## 2026-11-21 17:54Z (session aea5bfb9) — RECEIPT-LEAD-TIME-AUDIT-v1 RESULTS: CORRECTIONS EQUAL THE REVIEW'S NUMBERS; READING LEAD
 

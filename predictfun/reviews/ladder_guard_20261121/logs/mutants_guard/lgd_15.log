@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "15", "name": "run_day before the freeze", "seconds": 4.5, "sources": {"pf_ladder_guard.py": "5349b75682108857", "pf_ladder_guard_mutants.py": "97d8a0ac6e083c31", "pf_ladder_guard_selftest.py": "9867e0b3e77e3f3f"}, "why": "GUARD SELFTEST FAILED: 7 guards: stopped (FileNotFoundError(2, 'No such file or directory'))"}
+2026-11-21T18:16:16Z tag=lgd_15 rc=0 peak_rss_mib=203 wall_s=4.68 cpu_user_s=4.48 memavail_start_gib=22 disk_free_gib=438->438 slot=claude

@@ -1,0 +1,2 @@
+GUARD SELFTEST PASSED: disabled = baseline, the signal and precedence, the hand tape (both side orders, notices, no timer), the selection control, the censor count, arm metrics and readings, guards
+2026-11-21T18:15:53Z tag=guard_selftest rc=0 peak_rss_mib=205 wall_s=4.67 cpu_user_s=4.44 memavail_start_gib=23 disk_free_gib=438->438 slot=claude

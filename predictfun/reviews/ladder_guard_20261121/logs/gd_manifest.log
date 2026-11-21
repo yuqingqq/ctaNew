@@ -1,0 +1,84 @@
+{
+ "version": "ask_reservation_guard_v1",
+ "rule_sha256": "ff657441dee88f9b075c4ce95f33aaafc0a57f5c191a5bf556a705aa531a51a4",
+ "edge": 200.0,
+ "edge_key": "live|1|ctx_bid_reserved_shares",
+ "edges_source": "/home/yuqing/ctaNew/data/predict_fun/research/ladder_rest_v1_20261121/measure/audit.json",
+ "edges_sha256": "ca688917cd7ddc7c40e94031bee646f4fc1339511bb7c48fbe5270797a38bf80",
+ "baseline": {
+  "freeze": "47d2eec1",
+  "results": "869fa85f",
+  "manifest_sha256": "df9edb241f9ad07e8fcb47636dd54681571770b64f3ac104c9a1bef99bbfcd35"
+ },
+ "days": [
+  "20261024",
+  "20261025",
+  "20261026",
+  "20261027"
+ ],
+ "complete": {
+  "20261024": [
+   3697902,
+   3699278,
+   3700070,
+   3702960,
+   3704004,
+   3712725,
+   3716727
+  ],
+  "20261025": [
+   3723774,
+   3734864,
+   3737919,
+   3763401,
+   3776314
+  ],
+  "20261026": [
+   3789484,
+   3803131,
+   3804696,
+   3838531,
+   3850428
+  ],
+  "20261027": [
+   3877472,
+   3899224
+  ]
+ },
+ "pilot": {
+  "20261024": [
+   3697902,
+   3699278
+  ],
+  "20261025": [
+   3723774,
+   3734864
+  ],
+  "20261026": [
+   3789484,
+   3803131
+  ],
+  "20261027": [
+   3877472,
+   3899224
+  ]
+ },
+ "null": {
+  "draws": 500,
+  "seed": 20261121,
+  "rem_bands": [
+   25.0,
+   50.0,
+   75.0
+  ],
+  "age_bands_ms": [
+   500.0,
+   2000.0,
+   10000.0
+  ],
+  "min_movable_strata": 5,
+  "min_movable_rows": 30
+ },
+ "asof": "2026-11-21T18:18:23.188933+00:00"
+}
+2026-11-21T18:18:22Z tag=gd_manifest rc=0 peak_rss_mib=226 wall_s=1.11 cpu_user_s=0.92 memavail_start_gib=23 disk_free_gib=438->438 slot=claude
