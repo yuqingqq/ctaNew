@@ -1,0 +1,38 @@
+{
+ "all_ok": false,
+ "failed": [
+  "B_membership"
+ ],
+ "falsifier_ok": false,
+ "cases": {
+  "a_status_changed": true,
+  "a_value_changed": true,
+  "a_fill_duplicated": true,
+  "a_table_cell_changed": true,
+  "the_reading_changed": true,
+  "an_output_hash_changed": true,
+  "resources_over_the_cap": true
+ },
+ "details": {
+  "B": {
+   "markets": 8,
+   "fills": 2789,
+   "generations": 1927
+  },
+  "F_answer": "UNFLAGGED_EXPOSURE_DOMINANT",
+  "F_mismatches": 0,
+  "F_status_counts": {
+   "unflagged_later": 2482,
+   "before_feasible_effect": 133,
+   "pending_structural": 126,
+   "pending_pressure": 46,
+   "pending_inventory": 2
+  },
+  "I": {
+   "round_core_hours": 0.006222222222222222,
+   "line_core_hours": 1.8048055555555556,
+   "peak_mib": 310
+  }
+ }
+}
+2026-11-21T20:47:17Z tag=gr_rehearse_checks rc=0 peak_rss_mib=139 wall_s=2.78 cpu_user_s=2.64 memavail_start_gib=22 disk_free_gib=436->436 slot=claude

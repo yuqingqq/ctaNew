@@ -1,0 +1,12 @@
+{
+ "scope": "pilot",
+ "reconcile": {
+  "markets": 8,
+  "fills": 2789,
+  "generations": 1927
+ },
+ "answer": "UNFLAGGED_EXPOSURE_DOMINANT",
+ "mismatches": 0,
+ "elapsed_s": 1.4
+}
+2026-11-21T20:47:15Z tag=gr_audit_pilot rc=0 peak_rss_mib=310 wall_s=2.33 cpu_user_s=2.01 memavail_start_gib=23 disk_free_gib=436->436 slot=claude

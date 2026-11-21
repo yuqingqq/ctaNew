@@ -1,0 +1,12 @@
+{
+ "scope": "full",
+ "reconcile": {
+  "markets": 19,
+  "fills": 7395,
+  "generations": 4811
+ },
+ "answer": "UNFLAGGED_EXPOSURE_DOMINANT",
+ "mismatches": 0,
+ "elapsed_s": 2.4
+}
+2026-11-21T20:47:31Z tag=gr_audit_full rc=0 peak_rss_mib=334 wall_s=3.32 cpu_user_s=2.97 memavail_start_gib=23 disk_free_gib=436->436 slot=claude

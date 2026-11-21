@@ -1,0 +1,18 @@
+{
+ "pilot_done": true,
+ "pilot_job": {
+  "rc": 0,
+  "peak": 310,
+  "cpu": 2.01
+ },
+ "pilot_fills": 2789,
+ "all_fills": 7395,
+ "projected_core_hours": 0.038435969682482765,
+ "cap": 0.12,
+ "line_recorded_core_hours": 1.805538888888889,
+ "line_projected_core_hours": 1.8370193030158162,
+ "line_cap": 2.0,
+ "peak_ok": true,
+ "run_full": true
+}
+2026-11-21T20:47:20Z tag=gr_projection rc=0 peak_rss_mib=29 wall_s=0.30 cpu_user_s=0.26 memavail_start_gib=23 disk_free_gib=436->436 slot=claude

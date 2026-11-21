@@ -1,0 +1,47 @@
+{
+ "cases": {
+  "a_status_changed": {
+   "family": "F",
+   "target": "F_statuses",
+   "clean": true,
+   "refused": true
+  },
+  "a_value_changed": {
+   "family": "F",
+   "target": "F_values",
+   "clean": true,
+   "refused": true
+  },
+  "a_fill_duplicated": {
+   "family": "B",
+   "target": "B_membership",
+   "clean": true,
+   "refused": true
+  },
+  "a_table_cell_changed": {
+   "family": "F",
+   "target": "F_table",
+   "clean": true,
+   "refused": true
+  },
+  "the_reading_changed": {
+   "family": "F",
+   "target": "F_reading",
+   "clean": true,
+   "refused": true
+  },
+  "an_output_hash_changed": {
+   "family": "A",
+   "target": "A_outputs",
+   "clean": true,
+   "refused": true
+  },
+  "resources_over_the_cap": {
+   "family": "I",
+   "target": "I_resources",
+   "clean": true,
+   "refused": true
+  }
+ },
+ "falsifier_ok": true
+}

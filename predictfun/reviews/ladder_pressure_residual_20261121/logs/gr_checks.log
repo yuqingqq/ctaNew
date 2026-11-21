@@ -1,0 +1,36 @@
+{
+ "all_ok": true,
+ "failed": [],
+ "falsifier_ok": true,
+ "cases": {
+  "a_status_changed": true,
+  "a_value_changed": true,
+  "a_fill_duplicated": true,
+  "a_table_cell_changed": true,
+  "the_reading_changed": true,
+  "an_output_hash_changed": true,
+  "resources_over_the_cap": true
+ },
+ "details": {
+  "B": {
+   "markets": 19,
+   "fills": 7395,
+   "generations": 4811
+  },
+  "F_answer": "UNFLAGGED_EXPOSURE_DOMINANT",
+  "F_mismatches": 0,
+  "F_status_counts": {
+   "unflagged_later": 6572,
+   "before_feasible_effect": 422,
+   "pending_structural": 321,
+   "pending_pressure": 75,
+   "pending_inventory": 5
+  },
+  "I": {
+   "round_core_hours": 0.007852777777777778,
+   "line_core_hours": 1.8064361111111111,
+   "peak_mib": 334
+  }
+ }
+}
+2026-11-21T20:47:35Z tag=gr_checks rc=0 peak_rss_mib=179 wall_s=5.90 cpu_user_s=5.71 memavail_start_gib=23 disk_free_gib=436->436 slot=claude

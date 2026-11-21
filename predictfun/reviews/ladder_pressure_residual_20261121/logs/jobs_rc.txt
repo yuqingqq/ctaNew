@@ -1,1 +1,8 @@
 gr_manifest rc=0
+gr_audit_pilot rc=0
+gr_rehearse_checks rc=0
+gr_projection rc=0
+gr_audit_full rc=0
+gr_checks rc=0
+gr_report rc=0
+gr_report2 rc=0

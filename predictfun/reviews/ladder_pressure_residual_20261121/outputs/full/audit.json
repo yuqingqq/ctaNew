@@ -1,0 +1,231 @@
+{
+  "version": "pressure_residual_timing_audit_v1",
+  "scope": "full",
+  "asof": "2026-11-21T20:47:34.944266+00:00",
+  "reconcile": {
+    "markets": 19,
+    "fills": 7395,
+    "generations": 4811
+  },
+  "reading": {
+    "by_day": {
+      "20261024": {
+        "total": {
+          "neg": -56260.62096313886,
+          "pos": 23903.128320850203,
+          "q": 33760.12935194552,
+          "fills": 3234,
+          "neg_fills": 1856
+        },
+        "timing": {
+          "neg": -15937.00875059437,
+          "pos": 1827.0355923592392,
+          "q": 3341.6182595814435,
+          "fills": 377,
+          "neg_fills": 312
+        },
+        "unflagged": {
+          "neg": -40323.612212544496,
+          "pos": 22076.092728490963,
+          "q": 30418.511092364075,
+          "fills": 2857,
+          "neg_fills": 1544
+        },
+        "other": {
+          "neg": 0.0,
+          "pos": 0.0,
+          "q": 0.0,
+          "fills": 0,
+          "neg_fills": 0
+        },
+        "frac_timing": 0.283271113574023,
+        "frac_unflagged": 0.716728886425977
+      },
+      "20261025": {
+        "total": {
+          "neg": -39686.26961035004,
+          "pos": 21689.817944595605,
+          "q": 24152.76896312634,
+          "fills": 2303,
+          "neg_fills": 1281
+        },
+        "timing": {
+          "neg": -10425.976598299894,
+          "pos": 2208.816376032506,
+          "q": 2274.5815417596773,
+          "fills": 244,
+          "neg_fills": 179
+        },
+        "unflagged": {
+          "neg": -29260.293012050148,
+          "pos": 19481.001568563093,
+          "q": 21878.187421366663,
+          "fills": 2059,
+          "neg_fills": 1102
+        },
+        "other": {
+          "neg": 0.0,
+          "pos": 0.0,
+          "q": 0.0,
+          "fills": 0,
+          "neg_fills": 0
+        },
+        "frac_timing": 0.26270991707370844,
+        "frac_unflagged": 0.7372900829262916
+      },
+      "20261026": {
+        "total": {
+          "neg": -36567.569322823474,
+          "pos": 6713.442397515102,
+          "q": 16456.152338346168,
+          "fills": 1433,
+          "neg_fills": 1035
+        },
+        "timing": {
+          "neg": -7143.880347303245,
+          "pos": 797.5587954632053,
+          "q": 1575.6591349132232,
+          "fills": 172,
+          "neg_fills": 151
+        },
+        "unflagged": {
+          "neg": -29423.68897552023,
+          "pos": 5915.8836020518975,
+          "q": 14880.493203432943,
+          "fills": 1261,
+          "neg_fills": 884
+        },
+        "other": {
+          "neg": 0.0,
+          "pos": 0.0,
+          "q": 0.0,
+          "fills": 0,
+          "neg_fills": 0
+        },
+        "frac_timing": 0.19536109398565973,
+        "frac_unflagged": 0.8046389060143402
+      },
+      "20261027": {
+        "total": {
+          "neg": -7780.522581619629,
+          "pos": 2824.316578511435,
+          "q": 4685.068243532474,
+          "fills": 388,
+          "neg_fills": 239
+        },
+        "timing": {
+          "neg": -2736.340472131148,
+          "pos": 2.5,
+          "q": 444.26694426229506,
+          "fills": 29,
+          "neg_fills": 28
+        },
+        "unflagged": {
+          "neg": -5044.182109488482,
+          "pos": 2821.816578511435,
+          "q": 4240.801299270179,
+          "fills": 359,
+          "neg_fills": 211
+        },
+        "other": {
+          "neg": 0.0,
+          "pos": 0.0,
+          "q": 0.0,
+          "fills": 0,
+          "neg_fills": 0
+        },
+        "frac_timing": 0.35169109059529763,
+        "frac_unflagged": 0.6483089094047024
+      },
+      "all": {
+        "total": {
+          "neg": -140294.982477932,
+          "pos": 55130.705241472344,
+          "q": 79054.1188969505,
+          "fills": 7358,
+          "neg_fills": 4411
+        },
+        "timing": {
+          "neg": -36243.20616832866,
+          "pos": 4835.910763854951,
+          "q": 7636.125880516639,
+          "fills": 822,
+          "neg_fills": 670
+        },
+        "unflagged": {
+          "neg": -104051.77630960336,
+          "pos": 50294.79447761739,
+          "q": 71417.99301643386,
+          "fills": 6536,
+          "neg_fills": 3741
+        },
+        "other": {
+          "neg": 0.0,
+          "pos": 0.0,
+          "q": 0.0,
+          "fills": 0,
+          "neg_fills": 0
+        },
+        "frac_timing": 0.2583357261121552,
+        "frac_unflagged": 0.7416642738878448
+      }
+    },
+    "mismatches": 0,
+    "thin_days": [],
+    "answer": "UNFLAGGED_EXPOSURE_DOMINANT",
+    "note": "a diagnostic partition of the full rule's fills on 19 consumed-day markets; not predictive skill, no threshold inferred"
+  },
+  "concentration": {
+    "before_feasible_effect": {
+      "markets": 17,
+      "top3_share": 0.4331697310034479
+    },
+    "pending_inventory": {
+      "markets": 2,
+      "top3_share": 1.0
+    },
+    "pending_pressure": {
+      "markets": 13,
+      "top3_share": 0.5563936865340131
+    },
+    "pending_structural": {
+      "markets": 19,
+      "top3_share": 0.5327277657871349
+    },
+    "unflagged_later": {
+      "markets": 19,
+      "top3_share": 0.24959644855955274
+    }
+  },
+  "elapsed_s": 2.351137161254883,
+  "outputs": {
+    "fills.csv": "4786427069a0da22c37d251ec441146dc90b88cbb5d745be5e745e026aa5f5d5",
+    "generations.csv": "dde37fc89d6e7b315886952d4cf1add12ecc71dbd249b23576bd1671f648b473",
+    "status_table.csv": "f92f80864a4eedb4dbd601a9cfcb592350b3265b983ef1f24ea8879e430f706b",
+    "generation_status.csv": "d1ac624e6c879c01904a645441ce358d0faef8ecb05cf4cd4147581ee362582b"
+  },
+  "sources": {
+    "pf_ladder_pressure_residual.py": "0095296829d92f6e986360cb1c37a47d20e451f830bb4341f8b3d4498b222c44",
+    "pf_ladder_pressure_residual_selftest.py": "b69b583e43e1f52dd0d0bd8e426188bebd6cb1c8e7f1ef6754df7311fbd1b9b4",
+    "pf_ladder_pressure_ablation.py": "cfe8a5051c0fb55c0f995383d17ce4414ad3b45645ca5dd539bac45db182c5c0",
+    "pf_ladder_pressure_ablation_selftest.py": "e40db31ed0d5ed0e4c36830c9b787ac4c540dc2c13b1c932b6dd21f71f89b0fe",
+    "pf_ladder_pressure_lag.py": "0dcb03c430db87e2cf85104eebdf3aa175eb6af4594ac9a89dec89d1bbf5c7d4",
+    "pf_ladder_pressure_lag_selftest.py": "7db1a9511b064ef9bd0c04a8fd85ca6c736e66d35cf81c9a00c8e2bd106ea7b8",
+    "pf_ladder_pressure.py": "357f1d19b32ab5a8d51bc26f884d03492d008c3653b981a147d0bbca17068114",
+    "pf_ladder_pressure_selftest.py": "9a380526b4b8b1486652a62fda1e027096e9c8afb580e7d3c68a388f6e11718e",
+    "pf_ladder_guard.py": "5349b75682108857eeb367f0da86ea387c1682e99ee1761f2b60f0d50e01c2fe",
+    "pf_ladder_rest.py": "d90016ce7d25f89f6f6c6662075f5be72539d3140373e42c8b7228ebcf8ce5e0",
+    "pf_branch_ladder.py": "c9e0852eccea5b4248001693fd8ddec083ea2df517dc8f3fd0d8b2f091ab285a",
+    "pf_branch_engine.py": "8b7960ef4bbbc178b281e57d92d4795d7678436c0ca875e7199e24a6626af3a8",
+    "pf_ladder_audit.py": "97a79a90a06062a775d3fe66f55da5172b3ffc2cf39e771cf52e6852fe38f44c",
+    "pf_pipeline_export.py": "ee2953fd00f70a7d12607abd4b418471b2208b8f9728009c7e538ccb55733931",
+    "pf_flow_price_data.py": "fa9112d1147e955b4ff4ff2c09d2c8c23e37418b3e2957cb2f47deaf9a907a4e",
+    "pf_flow_price_common.py": "beac0d747ec5dc84874fdee2f8e08057c1a47c819cfc648a762ea8950b0d1993",
+    "pf_stop_ev_minutes_inputs.py": "bbec0ff5d8f14a617b1ef83cfcdda659de1b4998ab25a9b05e098140316de7b6",
+    "pf_stop_model.py": "e2a857ddb6c4e76af40080e753942e1e0bef3bd42a34ed2929f378fe869df0ed",
+    "pf_stop_depth.py": "819d5e06d32b647cdac96cca0f9f9191eb033c9a9b6c1cfd160df3f0228aae46",
+    "pf_pull_depth.py": "a8670b2e9751f16dce37aab7c18ce35cc31fa3431e392b9a7397f4375a9114ef",
+    "pf_influence.py": "5c5bd6f61da5800fcc67045b8c5ec3b4ab61eede3a4383ac244f5dd405f6ac55"
+  },
+  "manifest_sha256": "93354e2cf26fd11f55c6180dc0548b593234c75481225389a97f2956061756b4"
+}

@@ -175,6 +175,18 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_PRESSURE_RESIDUAL_RESULTS_20261121_DEV -->
+## 2026-11-21 20:49Z (session aea5bfb9) — PRESSURE-RESIDUAL-TIMING-AUDIT-v1 RESULTS: UNFLAGGED_EXPOSURE_DOMINANT (CONSUMED DAYS); CHECKS ALL TRUE
+
+- [Receipt](reviews/ladder_pressure_residual_20261121/report.md); freeze `a10eeea3`, results in this commit. 7,395 fills / 4,811 generations reconcile exactly; 0 mismatches.
+- **Shares of the gross negative +1 s (-140,295.0 c):** unflagged_later 74.17 % (71.67 % / 73.73 % / 80.46 % / 64.83 %), timing-limited 25.83 %; unflagged fills also carry +50,294.8 c positive value; timing-limited +4,835.9 c.
+- **Statuses:** pending_pressure 75, pending_inventory 5, pending_structural 321, before_feasible_effect 422, unflagged_later 6,572, nonevaluable 0, event_or_action_mismatch 0.
+- **Validity:** checks 10 / 10, falsifier 7 / 7, mutants 19 / 19; 0.010 core-hours of 0.12; ladder line 1.806 of 2.0.
+- **Review e40bd01d finding:** retained (not reused here).
+- **Watch:** the ladder line is close to its 2-core-hour allocation; consumed-day evidence only.
+- **Next:** the ONE combined review, which names the next step.
+<!-- /LADDER_PRESSURE_RESIDUAL_RESULTS_20261121_DEV -->
+
 <!-- LADDER_PRESSURE_RESIDUAL_FREEZE_20261121_DEV -->
 ## 2026-11-21 20:47Z (session aea5bfb9) — PRESSURE-RESIDUAL-TIMING-AUDIT-v1 FROZEN before any table (review e40bd01d's ONE next priority)
 

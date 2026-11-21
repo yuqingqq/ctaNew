@@ -1,0 +1,36 @@
+{
+ "checks": {
+  "A_committed": true,
+  "A_inputs": true,
+  "A_outputs": true,
+  "B_membership": false,
+  "F_statuses": true,
+  "F_values": true,
+  "F_reconcile": true,
+  "F_table": true,
+  "F_reading": true,
+  "I_resources": true
+ },
+ "details": {
+  "B": {
+   "markets": 8,
+   "fills": 2789,
+   "generations": 1927
+  },
+  "F_answer": "UNFLAGGED_EXPOSURE_DOMINANT",
+  "F_mismatches": 0,
+  "F_status_counts": {
+   "unflagged_later": 2482,
+   "before_feasible_effect": 133,
+   "pending_structural": 126,
+   "pending_pressure": 46,
+   "pending_inventory": 2
+  },
+  "I": {
+   "round_core_hours": 0.006222222222222222,
+   "line_core_hours": 1.8048055555555556,
+   "peak_mib": 310
+  }
+ },
+ "all_ok": false
+}
