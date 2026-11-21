@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/pf-review-f68fd805/predictfun/research/pf_r2_label_sample.py", line 101, in <module>
+    import numpy as np
+ModuleNotFoundError: No module named 'numpy'
+2026-11-21T00:31:11Z tag=reviewf68_selftest rc=1 peak_rss_mib=30 wall_s=0.21 cpu_user_s=0.08 memavail_start_gib=22 disk_free_gib=435->435 slot=codex

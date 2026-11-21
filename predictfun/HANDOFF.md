@@ -23,6 +23,44 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- R2F_REVIEW_20261121_CODEX -->
+## 2026-11-21 — R2-F production labels accepted; fixed candidate experiment next
+
+Reviewed **f68fd805ca6ba52c411b7d570aaa791f10d17feb**, freeze
+**d3d024fd2c5ccb1ca7e4d33e9b1162b91b50abd5**.
+[Combined review, evidence and complete next-round contract](reviews/automatic/20261121_f68fd805/report.md).
+**No blocker to the candidate stage.** All 96 partitions / 18,249 ok pairs
+independently reconcile. Prior status/END and zero-callback issues are closed;
+the 288-pilot parity and frozen source/input identities hold. No label rebuild
+or extra fix-only round. Sparse evidence is now the main limitation: 543 exact
+nonzero labels, of which 539 exceed 1e-6 c; KEEP has only 40–48 nonzero originals
+per side/day and 36 pi0-source rows across both days. Label validity is not
+model skill or profitability.
+
+**ONE next priority:** ADV2-RICH-v1 direct paired-value regressors, four heads,
+plus fixed FAIR/MECH input controls (12 heads total), pinned parameters and 200
+rounds. Train on all accepted Oct24–25 rows with unchanged targets/raw weights;
+evaluate on consumed Oct26–27 under a declared hourly sample. Include zero and
+training-mean baselines, action-value/regret and matched local controls, exact
+support counts and the existing calibration screens. No outcome downsampling,
+tail clipping, hyperparameter search, calibration map or target change.
+
+In the same round, run the bounded R4 own-state diagnostic on the nested first
+eight selected worlds/hour/day (<=384 worlds) with PI0, input controls, hybrids
+and ENTRY-PA. Regenerate labels from sampled RICH-reached forks; never join
+neutral labels by timestamp. Record churn, executable two-sided coverage,
+inventory and actual episode value separately from local prediction. This
+diagnostic does not pass full R4: same-history NEU2/full qualification remain
+deferred. The report settles input lists, weighting, support/fallbacks, nulls,
+sampling, freeze and acceptance requirements.
+
+Proceed through code, bounded controls, freeze, fit and authorized measurement
+without intermediate review; one combined receipt afterward. No extra USER
+approval, no untouched days; four existing development slots, current RSS and
+pair bounds, 40 core-hour planning ceiling for the round. Minor support-reading
+and summary-integration items are nonblocking and belong in the same delivery.
+<!-- /R2F_REVIEW_20261121_CODEX -->
+
 <!-- R2E_REVIEW_20261120_CODEX -->
 ## 2026-11-20 — R2-E pilot accepted; one production round authorized
 

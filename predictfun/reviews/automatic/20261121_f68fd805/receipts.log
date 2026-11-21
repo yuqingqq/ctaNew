@@ -1,0 +1,2 @@
+{"mode": "receipts", "result": "PASS", "output": "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261121_f68fd805/receipts.json"}
+2026-11-21T00:38:08Z tag=reviewf68_receipts_v2 rc=0 peak_rss_mib=194 wall_s=0.89 cpu_user_s=0.73 memavail_start_gib=23 disk_free_gib=435->435 slot=codex

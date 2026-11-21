@@ -1,0 +1,1321 @@
+{
+  "parts": 96,
+  "rows": 18372,
+  "ok": 18249,
+  "status": {
+    "20261024 post ok": 6084,
+    "20261024 keep ok": 3041,
+    "20261024 post world:no_path:missing_endpoint": 30,
+    "20261024 keep world:no_path:missing_endpoint": 30,
+    "20261024 keep feature_unavailable": 1,
+    "20261025 post ok": 6084,
+    "20261025 keep ok": 3040,
+    "20261025 post world:no_path:stale_future_book": 6,
+    "20261025 keep world:no_path:stale_future_book": 6,
+    "20261025 post world:no_path:missing_endpoint": 24,
+    "20261025 keep world:no_path:missing_endpoint": 24,
+    "20261025 keep empty_pool": 1,
+    "20261025 keep feature_unavailable": 1
+  },
+  "no_path_worlds": 30,
+  "non_ok_picked": [
+    {
+      "key": [
+        "20261024",
+        3696345,
+        1792806345000,
+        1,
+        "keep",
+        "keep"
+      ],
+      "status": "feature_unavailable",
+      "fork": {
+        "status": "feature_unavailable"
+      },
+      "Y": 0.0,
+      "decision_ms": 3000.0
+    },
+    {
+      "key": [
+        "20261025",
+        3764206,
+        1792949685000,
+        1,
+        "keep",
+        "keep"
+      ],
+      "status": "feature_unavailable",
+      "fork": {
+        "status": "feature_unavailable"
+      },
+      "Y": 0.0,
+      "decision_ms": 3250.0
+    }
+  ],
+  "counts": {
+    "binding_checked": 4435006,
+    "zero_callback_arms": 71,
+    "checked": 145045,
+    "mismatch": 0,
+    "parity_checked": 138385,
+    "parity_mismatch": 0
+  },
+  "zero_callback_arms": [
+    {
+      "key": [
+        "20261024",
+        3696045,
+        1792804615000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3696045,
+        1792804615000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3698886,
+        1792819280000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3698886,
+        1792819280000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3699304,
+        1792820255000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3699304,
+        1792820255000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3699615,
+        1792821395000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3699615,
+        1792821395000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3699990,
+        1792822400000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3699990,
+        1792822400000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3702057,
+        1792835445000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3702057,
+        1792835445000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3703405,
+        1792840280000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3703405,
+        1792840280000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3708689,
+        1792859435000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3708689,
+        1792859435000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3712658,
+        1792865210000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3712658,
+        1792865210000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3718113,
+        1792871225000,
+        1,
+        "post",
+        "extra"
+      ],
+      "arm": "POST",
+      "decision_ms": 4900.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3718364,
+        1792873070000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3718364,
+        1792873070000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3721983,
+        1792882970000,
+        0,
+        "post",
+        "extra"
+      ],
+      "arm": "POST",
+      "decision_ms": 4900.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3721985,
+        1792883260000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3721985,
+        1792883260000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3722002,
+        1792883645000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3722002,
+        1792883645000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3726155,
+        1792893080000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3726155,
+        1792893080000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3726405,
+        1792894010000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3726405,
+        1792894010000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3727774,
+        1792899210000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3727774,
+        1792899210000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3727898,
+        1792900945000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3727898,
+        1792900945000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3730821,
+        1792905850000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3730821,
+        1792905850000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3735298,
+        1792914330000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3735298,
+        1792914330000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3735729,
+        1792916180000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3735729,
+        1792916180000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3736294,
+        1792918220000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3736294,
+        1792918220000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3736304,
+        1792918600000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3736304,
+        1792918600000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3736304,
+        1792918605000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3736304,
+        1792918605000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3736928,
+        1792921715000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3736928,
+        1792921715000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3736936,
+        1792922340000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3736936,
+        1792922340000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3737521,
+        1792923770000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3737521,
+        1792923770000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3737606,
+        1792924585000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3737606,
+        1792924585000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3758042,
+        1792942530000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3758042,
+        1792942530000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3758042,
+        1792942730000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3758042,
+        1792942730000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3758285,
+        1792942975000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3758285,
+        1792942975000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3765541,
+        1792952050000,
+        1,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4900.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3775026,
+        1792957220000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3775026,
+        1792957220000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3775069,
+        1792957735000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3775069,
+        1792957735000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3776298,
+        1792959695000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3776298,
+        1792959695000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3781962,
+        1792966545000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3781962,
+        1792966545000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3786389,
+        1792972285000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "KEEP",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3786389,
+        1792972285000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "arm": "PULL",
+      "decision_ms": 4950.0,
+      "Y": 0.0
+    }
+  ],
+  "near_zero_nonzero": [
+    {
+      "key": [
+        "20261024",
+        3696970,
+        1792812570000,
+        0,
+        "keep",
+        "keep"
+      ],
+      "day": "20261024",
+      "side": 0,
+      "head": "keep",
+      "source": "delayed",
+      "Y": -1.4210854715202004e-14,
+      "w": 9.781250000000002,
+      "remaining_ms": 1900.0,
+      "support": "supported",
+      "partial": false
+    },
+    {
+      "key": [
+        "20261024",
+        3698884,
+        1792819125000,
+        1,
+        "post",
+        "extra"
+      ],
+      "day": "20261024",
+      "side": 1,
+      "head": "post",
+      "source": "delayed",
+      "Y": 2.2737367544323206e-13,
+      "w": 10.107421875,
+      "remaining_ms": 4150.0,
+      "support": "supported",
+      "partial": false
+    },
+    {
+      "key": [
+        "20261024",
+        3699983,
+        1792822155000,
+        0,
+        "post",
+        "mandatory"
+      ],
+      "day": "20261024",
+      "side": 0,
+      "head": "post",
+      "source": "neutral",
+      "Y": -2.2737367544323206e-13,
+      "w": 0.37890625,
+      "remaining_ms": 5000.0,
+      "support": "supported",
+      "partial": false
+    },
+    {
+      "key": [
+        "20261024",
+        3714947,
+        1792867480000,
+        1,
+        "keep",
+        "keep"
+      ],
+      "day": "20261024",
+      "side": 1,
+      "head": "keep",
+      "source": "delayed",
+      "Y": -4.547473508864641e-13,
+      "w": 9.796874999999998,
+      "remaining_ms": 1200.0,
+      "support": "supported",
+      "partial": true
+    }
+  ],
+  "paths": {
+    "identical": 16776,
+    "economic": 543,
+    "path_only": 926,
+    "offsetting": 4
+  },
+  "group_support": {
+    "20261024 0 post": {
+      "rows": 3042,
+      "originals": 1521,
+      "positive": 38,
+      "negative": 71,
+      "nonzero_originals": 99,
+      "material_nonzero_originals": 98,
+      "weighted_mean": -0.5024301219141367,
+      "weighted_MSE_zero": 809.9702761280003,
+      "events_by_source": {
+        "neutral": 47,
+        "delayed": 34,
+        "pi0": 26,
+        "joint_post_keep": 1
+      },
+      "rows_by_source": {
+        "neutral": 1521,
+        "joint_chase": 23,
+        "delayed": 756,
+        "pi0": 726,
+        "joint_post_keep": 16
+      }
+    },
+    "20261024 0 keep": {
+      "rows": 1521,
+      "originals": 1521,
+      "positive": 20,
+      "negative": 28,
+      "nonzero_originals": 48,
+      "material_nonzero_originals": 47,
+      "weighted_mean": -0.15825786380090243,
+      "weighted_MSE_zero": 76.87205854229977,
+      "events_by_source": {
+        "delayed": 40,
+        "joint_post_keep": 3,
+        "joint_chase": 3,
+        "neutral": 1
+      },
+      "rows_by_source": {
+        "pi0": 10,
+        "delayed": 1183,
+        "neutral": 92,
+        "joint_chase": 108,
+        "joint_post_keep": 128
+      }
+    },
+    "20261024 1 post": {
+      "rows": 3042,
+      "originals": 1521,
+      "positive": 35,
+      "negative": 54,
+      "nonzero_originals": 87,
+      "material_nonzero_originals": 86,
+      "weighted_mean": -0.5029668677728212,
+      "weighted_MSE_zero": 127.42398327668707,
+      "events_by_source": {
+        "delayed": 27,
+        "neutral": 54,
+        "pi0": 6,
+        "joint_post_keep": 1
+      },
+      "rows_by_source": {
+        "neutral": 1521,
+        "pi0": 688,
+        "delayed": 783,
+        "joint_post_keep": 23,
+        "joint_chase": 27
+      }
+    },
+    "20261024 1 keep": {
+      "rows": 1520,
+      "originals": 1520,
+      "positive": 16,
+      "negative": 26,
+      "nonzero_originals": 42,
+      "material_nonzero_originals": 41,
+      "weighted_mean": -0.6946882929847868,
+      "weighted_MSE_zero": 383.3680465271648,
+      "events_by_source": {
+        "joint_chase": 6,
+        "delayed": 29,
+        "pi0": 2,
+        "neutral": 1,
+        "joint_post_keep": 3
+      },
+      "rows_by_source": {
+        "joint_chase": 94,
+        "delayed": 1208,
+        "joint_post_keep": 122,
+        "neutral": 83,
+        "pi0": 13
+      }
+    },
+    "20261025 0 post": {
+      "rows": 3042,
+      "originals": 1521,
+      "positive": 30,
+      "negative": 47,
+      "nonzero_originals": 71,
+      "material_nonzero_originals": 71,
+      "weighted_mean": -0.24959777978561917,
+      "weighted_MSE_zero": 357.9731271135085,
+      "events_by_source": {
+        "neutral": 38,
+        "delayed": 23,
+        "pi0": 15,
+        "joint_post_keep": 1
+      },
+      "rows_by_source": {
+        "neutral": 1521,
+        "delayed": 797,
+        "pi0": 681,
+        "joint_chase": 30,
+        "joint_post_keep": 13
+      }
+    },
+    "20261025 0 keep": {
+      "rows": 1521,
+      "originals": 1521,
+      "positive": 20,
+      "negative": 22,
+      "nonzero_originals": 42,
+      "material_nonzero_originals": 42,
+      "weighted_mean": -0.5680688621014267,
+      "weighted_MSE_zero": 174.1254850992307,
+      "events_by_source": {
+        "neutral": 4,
+        "delayed": 32,
+        "joint_chase": 4,
+        "joint_post_keep": 2
+      },
+      "rows_by_source": {
+        "delayed": 1201,
+        "joint_post_keep": 107,
+        "neutral": 94,
+        "joint_chase": 110,
+        "pi0": 9
+      }
+    },
+    "20261025 1 post": {
+      "rows": 3042,
+      "originals": 1521,
+      "positive": 30,
+      "negative": 66,
+      "nonzero_originals": 91,
+      "material_nonzero_originals": 91,
+      "weighted_mean": -0.6496588295758501,
+      "weighted_MSE_zero": 668.3668532103197,
+      "events_by_source": {
+        "pi0": 14,
+        "delayed": 35,
+        "neutral": 46,
+        "joint_chase": 1
+      },
+      "rows_by_source": {
+        "neutral": 1521,
+        "delayed": 774,
+        "pi0": 711,
+        "joint_chase": 22,
+        "joint_post_keep": 14
+      }
+    },
+    "20261025 1 keep": {
+      "rows": 1519,
+      "originals": 1519,
+      "positive": 14,
+      "negative": 26,
+      "nonzero_originals": 40,
+      "material_nonzero_originals": 40,
+      "weighted_mean": -0.11968069925278259,
+      "weighted_MSE_zero": 287.8473148421948,
+      "events_by_source": {
+        "neutral": 6,
+        "delayed": 28,
+        "joint_chase": 4,
+        "pi0": 1,
+        "joint_post_keep": 1
+      },
+      "rows_by_source": {
+        "delayed": 1183,
+        "joint_chase": 123,
+        "joint_post_keep": 117,
+        "neutral": 92,
+        "pi0": 4
+      }
+    }
+  },
+  "controls": {
+    "0 END": [
+      "{\"day\":\"20261024\",\"m\":3695091,\"t_ms\":1792800125000} side 0 mandatory: the END is not the declared 5,000 ms"
+    ],
+    "0 Y": [
+      "{\"day\":\"20261024\",\"m\":3695091,\"t_ms\":1792800125000} side 0 mandatory: Y != R_a - R_b"
+    ],
+    "0 hidden_failed_pair": [
+      "{\"day\":\"20261024\",\"m\":3695091,\"t_ms\":1792800125000} side 0 mandatory: a stored reconciliation or the pre-fork flag is false"
+    ],
+    "0 false_pair_status": [
+      "{\"day\":\"20261024\",\"m\":3695091,\"t_ms\":1792800125000} side 0 mandatory: the status pair_not_ok is not its result's (ok)"
+    ],
+    "0 skipped_callback": [
+      "{\"day\":\"20261024\",\"m\":3695091,\"t_ms\":1792800125000} side 0 mandatory: the teacher's calls / binding checks (187 / 0) are not the 187 required callbacks, or a binding failed"
+    ],
+    "48 END": [
+      "{\"day\":\"20261025\",\"m\":3723772,\"t_ms\":1792886425000} side 0 mandatory: the END is not the declared 5,000 ms"
+    ],
+    "48 Y": [
+      "{\"day\":\"20261025\",\"m\":3723772,\"t_ms\":1792886425000} side 0 mandatory: Y != R_a - R_b"
+    ],
+    "48 hidden_failed_pair": [
+      "{\"day\":\"20261025\",\"m\":3723772,\"t_ms\":1792886425000} side 0 mandatory: a stored reconciliation or the pre-fork flag is false"
+    ],
+    "48 false_pair_status": [
+      "{\"day\":\"20261025\",\"m\":3723772,\"t_ms\":1792886425000} side 0 mandatory: the status pair_not_ok is not its result's (ok)"
+    ],
+    "48 skipped_callback": [
+      "{\"day\":\"20261025\",\"m\":3723772,\"t_ms\":1792886425000} side 0 mandatory: the teacher's calls / binding checks (196 / 0) are not the 196 required callbacks, or a binding failed"
+    ]
+  },
+  "feature_missing": {
+    "o_q_frac": 99,
+    "dfv250": 10,
+    "dfv1000": 10,
+    "gap_adv": 10,
+    "sens": 10,
+    "pbn_dist": 10,
+    "own_d250": 2,
+    "opp_d250": 2,
+    "opp_mv250": 1,
+    "adv_dd3_250": 2,
+    "own_mv250": 1,
+    "adv_dd3_1000": 4,
+    "own_mv1000": 1
+  },
+  "constant_features": [
+    "o_rung",
+    "o_qunk",
+    "fp_size",
+    "ctx_self_state_post_pending",
+    "ctx_self_state_cancel_pending",
+    "ctx_self_state_terminal",
+    "ctx_other_state_terminal"
+  ],
+  "all_checks_pass": true,
+  "target": "f68fd805ca6ba52c411b7d570aaa791f10d17feb",
+  "asof": "2026-11-21T00:35:23.149338+00:00",
+  "script_sha256": "4c39324470fd81b18f0a7b0a448ed25e2d0072db792a9b4f702acd71eb75c0ce",
+  "mode": "audit"
+}
