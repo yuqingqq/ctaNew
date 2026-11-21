@@ -1,3 +1,7 @@
 pf_entry_audit_selftest rc=0
 pf_entry_audit_selftest rc=0
 pf_entry_audit_selftest rc=0
+audit_run rc=0
+audit_checks rc=0
+audit_tables rc=0
+audit_report rc=0

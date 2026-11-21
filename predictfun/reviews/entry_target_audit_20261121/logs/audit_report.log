@@ -1,0 +1,50 @@
+{
+ "checks": {
+  "A_identity": true,
+  "B_accounting": true,
+  "C_predictions": true,
+  "D_reached": true,
+  "E_summaries": true,
+  "F_resources": true,
+  "G_suites": true
+ },
+ "all_true": true,
+ "falsifier_ok": true,
+ "predicates": {
+  "eval": {
+   "abs_Y": 102171.05499247246,
+   "abs_v_initial": 89509.19615985214,
+   "cancellation": false,
+   "diagnosis": "rare_execution",
+   "init_no_fill": 0.9740997205088353,
+   "rare_execution": true,
+   "share_meaningful": 0.028017346849756177
+  },
+  "train": {
+   "abs_Y": 109719.04249492308,
+   "abs_v_initial": 116115.39342130131,
+   "cancellation": false,
+   "diagnosis": "rare_execution",
+   "init_no_fill": 0.9714308223959377,
+   "rare_execution": true,
+   "share_meaningful": 0.030262766482953757
+  }
+ },
+ "agree": true,
+ "rank": {
+  "SMOOTH": [
+   3,
+   4
+  ],
+  "RICH": [
+   2,
+   4
+  ]
+ },
+ "rows": 24416,
+ "reached_rows": 760,
+ "core_hours": 0.02187777777777778,
+ "asof": "2026-11-21T07:51:47.351480+00:00",
+ "recommendation": "Rare execution only: the forced 50 ms deviation rarely changes execution, so relabeling the initial-generation component alone will not solve the entry problem."
+}
+2026-11-21T07:52:04Z tag=audit_report rc=0 peak_rss_mib=103 wall_s=0.30 cpu_user_s=0.24 memavail_start_gib=22 disk_free_gib=447->447 slot=claude

@@ -1,0 +1,87 @@
+{
+ "rows": 24416,
+ "reached": 760,
+ "predicates": {
+  "eval": {
+   "rare_execution": true,
+   "cancellation": false,
+   "diagnosis": "rare_execution",
+   "share_meaningful": 0.028017346849756177,
+   "init_no_fill": 0.9740997205088353,
+   "abs_v_initial": 89509.19615985214,
+   "abs_Y": 102171.05499247246
+  },
+  "train": {
+   "rare_execution": true,
+   "cancellation": false,
+   "diagnosis": "rare_execution",
+   "share_meaningful": 0.030262766482953757,
+   "init_no_fill": 0.9714308223959377,
+   "abs_v_initial": 116115.39342130131,
+   "abs_Y": 109719.04249492308
+  }
+ },
+ "statuses": [
+  {
+   "set": "eval",
+   "day": "20261026",
+   "status": "ok",
+   "n": 6036
+  },
+  {
+   "set": "eval",
+   "day": "20261026",
+   "status": "world:no_path:missing_endpoint",
+   "n": 46
+  },
+  {
+   "set": "eval",
+   "day": "20261026",
+   "status": "world:no_path:stale_future_book",
+   "n": 8
+  },
+  {
+   "set": "eval",
+   "day": "20261027",
+   "status": "ok",
+   "n": 6052
+  },
+  {
+   "set": "eval",
+   "day": "20261027",
+   "status": "world:no_path:missing_endpoint",
+   "n": 46
+  },
+  {
+   "set": "train",
+   "day": "20261024",
+   "status": "ok",
+   "n": 6084
+  },
+  {
+   "set": "train",
+   "day": "20261024",
+   "status": "world:no_path:missing_endpoint",
+   "n": 30
+  },
+  {
+   "set": "train",
+   "day": "20261025",
+   "status": "ok",
+   "n": 6084
+  },
+  {
+   "set": "train",
+   "day": "20261025",
+   "status": "world:no_path:missing_endpoint",
+   "n": 24
+  },
+  {
+   "set": "train",
+   "day": "20261025",
+   "status": "world:no_path:stale_future_book",
+   "n": 6
+  }
+ ]
+}
+2026-11-21T07:50:23Z tag=audit_run rc=0 peak_rss_mib=456 wall_s=71.93 cpu_user_s=71.09 memavail_start_gib=22 disk_free_gib=447->447 slot=claude

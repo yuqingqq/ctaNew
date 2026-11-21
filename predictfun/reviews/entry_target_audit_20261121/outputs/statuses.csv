@@ -1,0 +1,11 @@
+set,day,status,n
+eval,20261026,ok,6036
+eval,20261026,world:no_path:missing_endpoint,46
+eval,20261026,world:no_path:stale_future_book,8
+eval,20261027,ok,6052
+eval,20261027,world:no_path:missing_endpoint,46
+train,20261024,ok,6084
+train,20261024,world:no_path:missing_endpoint,30
+train,20261025,ok,6084
+train,20261025,world:no_path:missing_endpoint,24
+train,20261025,world:no_path:stale_future_book,6

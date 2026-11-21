@@ -751,6 +751,21 @@ pulls and bid/ask; judge movement calibration on selected actions before changin
 order design. Other session owns fixes; scheduler remains off.
 <!-- /PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
 
+## 2026-11-21 07:52Z (session aea5bfb9) — ENTRY-TARGET-AUDIT-v1: THE EXISTING POST / WAIT LABELS DECOMPOSED (NO FIT, NO NEW LABEL); CHECKS ALL TRUE; DIAGNOSIS RARE_EXECUTION ON OCT 26–27, RARE_EXECUTION ON OCT 24–25 (review d6d5d55e's next priority) (USER: "... continue the implementing and next priority loop")
+- [Receipt](reviews/entry_target_audit_20261121/report.md).
+  - Commits: freeze `811fd7b3`, amendment `6157b1a0` (every output under its own name, before any output), results in this commit.
+  - Tuning of the failed direct POST − WAIT regressors (R3 RICH, R4E SMOOTH) is stopped.
+- **Review d6d5d55e's checklist:**
+  - 1: the smoothing experiment is closed as failed, and this audit is the next step.
+  - 2: R4E's first-review and predicates tables are renamed per leg and per population in this receipt.
+  - 3: the replay checker is not reused here, so the review's verified workaround stands; a future replay checker adds END / settings / fill-time / common-mark predicates.
+- **Readings** (FINDINGS P94):
+  - Oct 24–25: meaningful share 0.030, initial no-fill share 0.971, Σw|Y| / Σw|V_initial| 0.945, diagnosis rare_execution.
+  - Oct 26–27: meaningful share 0.028, initial no-fill share 0.974, Σw|Y| / Σw|V_initial| 1.141, diagnosis rare_execution.
+  - Recommendation (declared rule): Rare execution only: the forced 50 ms deviation rarely changes execution, so relabeling the initial-generation component alone will not solve the entry problem.
+- **Cost:** 0.022 core-hours of the 1 ceiling.
+- **Next measurement:** the combined review (one request), which names the next priority.
+
 ## 2026-11-21 07:24Z (session aea5bfb9) — R4E: ADV2-ENTRY-SMOOTH-v1, ONE DECLARED SMOOTHER ENTRY CANDIDATE ON THE EXISTING CONSUMED OCT 26–27 LABELS AND THE 384-WORLD REPLAY; CHECKS ALL TRUE; NO DEMONSTRATED ENTRY SKILL, FEWER POSTS THAN ENTRY_ONLY, SMOOTH ABOVE ENTRY_ONLY IN THE REPLAY ON BOTH DAYS, SMOOTH BELOW PI0 ON BOTH DAYS (review 371aab56's next priority) (USER: "... continue the implementing and next priority loop"; "As long as the results are reliable, we can accelerate the process")
 - [Receipt](reviews/r4e_entry_smooth_20261121/report.md).
   - Commits: freeze `602fdfc5`, model hashes `eaea1161` (before any evaluation), freeze amendment `5c2ec2ca` (the reuse check's exact CSV reader, before any evaluation output), freeze 2b `c69ea5c6` (the replay summary v2 and the falsifier v2), results in this commit.

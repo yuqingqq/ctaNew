@@ -616,6 +616,18 @@ pipeline_one_day_v3_20261119:
   values_equal_v2: {cells_per_day: 190, differing: 0}
   attribution_vs_pull_all_c: {"20261026": {first_step: 0.0, later: 954.33, never: 995.36, no_prediction: 0.0}, "20261027": {first_step: 0.0, later: -821.85, never: 251.74, no_prediction: 0.0}}
 
+entry_target_audit_20261121:
+  status: done_entry_target_audit_v1_existing_labels_no_fit
+  asof: "2026-11-21 07:52Z"
+  receipt: predictfun/reviews/entry_target_audit_20261121/report.md
+  commits: {freeze: 811fd7b3, amendment_distinct_outputs: 6157b1a0}
+  checks: {all_true: true, falsifier_ok: true}
+  eval: {share_meaningful: 0.0280, init_no_fill: 0.9741, abs_v_initial: 89509.2, abs_Y: 102171.1, rare_execution: true, cancellation: false, diagnosis: rare_execution}
+  train: {share_meaningful: 0.0303, init_no_fill: 0.9714, abs_v_initial: 116115.4, abs_Y: 109719.0, rare_execution: true, cancellation: false, diagnosis: rare_execution}
+  sets_agree: true
+  rows: {post_rows: 24416, reached_pairs: 760}
+  cost_core_hours: 0.022
+  next: combined_review_names_the_next_priority
 r4e_entry_smooth_20261121:
   status: done_r4e_adv2_entry_smooth_v1_existing_labels_and_bounded_replay
   diagnosis: {no_demonstrated_entry_skill: true, fewer_posts_than_entry_only: true, controls_equal_r3: true}
