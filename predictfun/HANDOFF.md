@@ -23,6 +23,34 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- DEFAULT_POST_LADDER_20261121_CODEX -->
+## 2026-11-21 — CURRENT PLAN: one persistent ladder, 100 shares per level
+
+**[Standalone current ladder plan](reviews/automatic/20261121_default_post_ladder/plan.md)**
+supersedes the single-level full-market plan. The USER wants pre-positioned
+levels and says 50 shares per level is too small. Use two prices per side
+(received best and one tick behind), nominal 100 per level: 200 per side,
+shared hard cap200, inventory trigger100/recovery50. This explicitly expands
+the former 100-share side budget; do not give each rung a separate cap.
+
+Preserve gid/price/queue through partial fills and best-price changes; fill
+acknowledged vacant slots without shifting the whole ladder. At most two
+unclosed orders per side, including pending. Aggregate every reservation,
+avoid duplicate prices/own crosses, and preserve per-order notice/status.
+The old client is single-open-gid: extend it explicitly, retaining the engine's
+price/time and shared-public-volume matching and focused correctness checks.
+
+The USER asks why cancellations remain: soft-inventory pulls are a policy
+choice, not required by an already-satisfied hard cap. Structural distance,
+book and crossing rules are inherited choices, not demonstrated protection.
+There is no prediction cancellation model. Log each reason and queue cost;
+do not flush unaffected levels merely because the best changes.
+
+Still ONE strategy over full supported markets (opening to +298s), the same
+consumed-day market sample, pilot and budget, and one combined review. No
+size sweep, model fitting or result is added by this planning commit.
+<!-- /DEFAULT_POST_LADDER_20261121_CODEX -->
+
 <!-- DEFAULT_POST_FULL_MARKET_20261121_CODEX -->
 ## 2026-11-21 — SINGLE CURRENT PLAN: large orders + inventory, across the market
 

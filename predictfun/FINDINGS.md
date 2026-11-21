@@ -1,3 +1,26 @@
+<!-- DEFAULT_POST_LADDER_20261121_CODEX -->
+## 2026-11-21 — Queue age requires persistent individual ladder orders
+
+[Current ladder plan](reviews/automatic/20261121_default_post_ladder/plan.md),
+prepared at **60f43033fc4f54a8d3be77a18ea4b1bafbd5a7d8**. The USER wants
+multiple levels and rejects 50 shares per level. One two-level/100-share
+ladder per side shares cap200 and inventory trigger100/recovery50. Pre-posting
+can accumulate queue age before a price becomes best; it does not place us
+ahead of existing orders or establish profitable queue advantage.
+
+The matching engine has an order list and price/time priority, while the
+client's open[side], status, reserve and action guards assume one gid per
+side. A reliable ladder needs per-gid lifecycle and aggregate reservations;
+one notice must not close another level, and one public trade's quantity
+must not fill each level independently. Keep pending slots/prices reserved.
+
+Hard caps do not require pulling already-reserved legal exposure. The soft
+inventory trigger and inherited distance/book/crossing requests are declared
+policy choices. Their queue/opportunity cost must be reported, not described
+as proven danger signals. No best-change-driven ladder rebuild or model-score
+cancel is introduced. Planning only; no new execution or result claimed.
+<!-- /DEFAULT_POST_LADDER_20261121_CODEX -->
+
 <!-- DEFAULT_POST_FULL_MARKET_20261121_CODEX -->
 ## 2026-11-21 — Simplified primary experiment: inventory-managed large orders
 
