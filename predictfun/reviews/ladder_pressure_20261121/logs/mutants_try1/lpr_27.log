@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "27", "name": "run_day without the write-once check", "seconds": 6.9, "sources": {"pf_ladder_pressure.py": "40e5044a923ca811", "pf_ladder_pressure_mutants.py": "8be5545592578bdd", "pf_ladder_pressure_selftest.py": "03efb06eaf963368"}, "why": "PRESSURE SELFTEST FAILED: 7 run_day refuses an existing output"}
+2026-11-21T19:09:44Z tag=lpr_27 rc=0 peak_rss_mib=232 wall_s=7.12 cpu_user_s=6.86 memavail_start_gib=22 disk_free_gib=437->437 slot=claude

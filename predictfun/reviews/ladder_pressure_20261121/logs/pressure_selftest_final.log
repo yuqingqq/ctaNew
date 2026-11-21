@@ -1,0 +1,2 @@
+PRESSURE SELFTEST PASSED: disabled = baseline, the signal and precedence, the hand tape (pulls, withholds, re-entry, queue), the cache helpers and causal plumbing, the selection control, measurement and readings, guards
+2026-11-21T19:16:06Z tag=pressure_selftest_final rc=0 peak_rss_mib=231 wall_s=7.05 cpu_user_s=6.78 memavail_start_gib=23 disk_free_gib=437->437 slot=claude

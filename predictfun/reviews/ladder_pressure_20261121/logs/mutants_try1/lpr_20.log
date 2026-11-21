@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "20", "name": "time at the limit strictly above", "seconds": 6.8, "sources": {"pf_ladder_pressure.py": "40e5044a923ca811", "pf_ladder_pressure_mutants.py": "8be5545592578bdd", "pf_ladder_pressure_selftest.py": "03efb06eaf963368"}, "why": "PRESSURE SELFTEST FAILED: 6 the exact inventory integrals ({'mean_abs_inv': 65.0, 'peak_abs_inv': 100.0, 'share_abs_ge_S': 0.0, 'terminal_inv': 60.0})"}
+2026-11-21T19:09:32Z tag=lpr_20 rc=0 peak_rss_mib=228 wall_s=6.98 cpu_user_s=6.75 memavail_start_gib=22 disk_free_gib=437->437 slot=claude2

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "21", "name": "lost / added without the price", "seconds": 6.8, "sources": {"pf_ladder_pressure.py": "40e5044a923ca811", "pf_ladder_pressure_mutants.py": "8be5545592578bdd", "pf_ladder_pressure_selftest.py": "9a380526b4b8b148"}, "why": "PRESSURE SELFTEST FAILED: 6 lost / added (a price difference is not a match; identity gap 1.00e+01)"}
+2026-11-21T19:10:56Z tag=lpr_21 rc=0 peak_rss_mib=228 wall_s=7.04 cpu_user_s=6.85 memavail_start_gib=22 disk_free_gib=437->437 slot=claude3

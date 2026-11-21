@@ -81,6 +81,14 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_PRESSURE_FREEZE_20261121_DEV -->
+## 2026-11-21 19:17Z (session aea5bfb9) — BINANCE-PRESSURE-GUARD-v1 FROZEN before any replay (review 2c5dbd53's ONE next priority; its three findings hold)
+
+- **Review 2c5dbd53 findings (verified at the code):** (1) `guard_checks.py:134-150` reconciles value / fill count / quantity only and reads the per-share fields and the selection answer from stored outputs -> the new `pressure_checks.py` F recomputes every reading field from the fills / mids / orders / logs, derives the readings and the selection answer itself (manifest draws / seed / bands), and its falsifier includes the coordinated markout-and-reading corruption; (2) `pf_ladder_guard.py:115-120` saved no queue observations -> the new runner records venue queue ahead / remaining after submission, at the first live review and at every pressure pull, apart from the receipt-known estimates, plus the re-entry; (3) `pf_ladder_guard_selftest.py` group 7 tests less than its header names (frozen; not edited) -> the new selftest's header names only what runs and tests every run_day guard in isolation with its message asserted. Interpretation details adopted: inventory now exact from the fills (the guard round's were 50 ms grid estimates); withholds are called withheld slot proposals (near-END ones counted apart).
+- **Frozen:** `pf_ladder_pressure.py` (PressureGuard: per side, PULL a would-be-KEEP / WAIT a would-be-POST while the builder's float32 adv_bn_r250 is finite, > 0 and in the frozen live|s q5 - x >= 0.4666730940341952 bids / 0.285456120967865 asks, edge file ca688917...; inventory / structural precedence; no timer; disabled = baseline), the per-market builder cache with snapshot-parity / side-sign / 16-per-date causal checks, the queue diagnostics, the both-side selection control (strata + the B >= 200 indicator; 500 draws, seed 20261121), the fill-reconciled measurement (END identity, lost / added) and readings; its selftest (mutants 29 / 29), `pressure_checks.py` (A-I, falsifier, rehearsal mode), the pilot rule (<= 0.75 core-hours), the manifest (19 markets, pilot 8), the launcher (with a pre-run rehearsal on the pilot copy), the declaration.
+- **Next:** pilot, projection, rehearsal, the 19 markets, selection, measurement, checks, one combined receipt, ONE review request.
+<!-- /LADDER_PRESSURE_FREEZE_20261121_DEV -->
+
 <!-- LADDER_GUARD_RESULTS_20261121_DEV -->
 ## 2026-11-21 18:32Z (session aea5bfb9) — ASK-RESERVATION-GUARD-v1 RESULTS: INTERPRETATION MIXED; CHECKS ALL TRUE
 

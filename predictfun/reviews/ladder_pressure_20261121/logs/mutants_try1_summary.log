@@ -1,0 +1,32 @@
+  0 q4 counted as ON: CAUGHT (6.7 s) - PRESSURE SELFTEST FAILED: 2 the bid boundary (the edge is not a float32 value) | 2 the ask boundary (the edge is a float32 value) | 2 a value ON under
+  1 the other side's edges: ESCAPED (6.8 s) - PRESSURE SELFTEST PASSED: disabled = baseline, the signal and precedence, the hand tape (pulls, withholds, re-entry, queue), the cache helpers and cau
+  2 the disabled guard still active: CAUGHT (6.7 s) - PRESSURE SELFTEST FAILED: 1 the disabled guard equals the baseline policy (8 of 8 differ) | 2 ON at an ok tick, OFF at a non-ok tick with a finite val
+  3 a non-ok status acts on its value: CAUGHT (6.7 s) - PRESSURE SELFTEST FAILED: 2 ON at an ok tick, OFF at a non-ok tick with a finite value (and counted), OFF when disabled
+  4 the guard relabels inventory pulls: CAUGHT (6.9 s) - PRESSURE SELFTEST FAILED: 2 the inventory rule keeps precedence and its reasons while ON
+  5 the guard relabels restricted waits: CAUGHT (3.0 s) - PRESSURE SELFTEST FAILED: 1 disabled: stopped (TypeError("float() argument must be a string or a real number, not 'NoneType'")) | 2 signal: stopped (T
+  6 the signal read one tick late: CAUGHT (6.8 s) - PRESSURE SELFTEST FAILED: 3 the bids posted at 0 are pulled at their first live review, once each ([]) | 3 bid slots withheld until clearance, re-post
+  7 off-grid steps accepted: CAUGHT (6.9 s) - PRESSURE SELFTEST FAILED: 4 statuses: off_grid at tick 5, no_market_row at tick 8 (grid 7), nan at tick 10 (grid 9) (['ok', 'ok', 'ok', 'ok', 'ok', 'o
+  8 the wrong market column: CAUGHT (6.9 s) - PRESSURE SELFTEST FAILED: 4 statuses: off_grid at tick 5, no_market_row at tick 8 (grid 7), nan at tick 10 (grid 9) (['ok', 'ok', 'ok', 'ok', 'ok', 'o
+  9 parity by value, not bits: CAUGHT (6.8 s) - PRESSURE SELFTEST FAILED: 4 snapshot_parity by bits ({'rows': 5, 'equal': 3, 'unavailable': 1, 'mismatched': 1, 'first_bad': [[0, 250.0, 'off_tick_or_
+  10 the side sign without the negation: CAUGHT (6.8 s) - PRESSURE SELFTEST FAILED: 4 side_sign ({'ticks': 29, 'equal': 8, 'mismatched': 21})
+  11 the future check without the perturbation: CAUGHT (6.9 s) - PRESSURE SELFTEST FAILED: 4 a builder reading the next step row fails same (True); one ignoring the step row fails fired (False)
+  12 the control with the wrong sign: CAUGHT (6.8 s) - PRESSURE SELFTEST FAILED: 4 a causal builder passes (ON pulled to OFF, OFF pushed to ON): True, False
+  13 the queue pull and first review swapped: CAUGHT (6.8 s) - PRESSURE SELFTEST FAILED: 3 the queue observer: ahead after submission for every order, first review and pulls ([0, 1, 2, 3, 4, 5])
+  14 a pressure pull not queued for the observer: CAUGHT (6.8 s) - PRESSURE SELFTEST FAILED: 3 the queue observer: ahead after submission for every order, first review and pulls ([])
+  15 strata without the side: CAUGHT (6.7 s) - PRESSURE SELFTEST FAILED: 5 matching on side removes a side-confounded difference (SELECTION_BEYOND_EXPOSURE)
+  16 strata without the B indicator: CAUGHT (6.8 s) - PRESSURE SELFTEST FAILED: 5 matching on the B >= 200 indicator removes a confounded difference (SELECTION_BEYOND_EXPOSURE)
+  17 draws with replacement: ESCAPED (6.9 s) - PRESSURE SELFTEST PASSED: disabled = baseline, the signal and precedence, the hand tape (pulls, withholds, re-entry, queue), the cache helpers and cau
+  18 censored states in the statistic: CAUGHT (6.9 s) - PRESSURE SELFTEST FAILED: 5 a censored high-quantity selected state changes neither valid term
+  19 the late term by the cutoff only: CAUGHT (6.8 s) - PRESSURE SELFTEST FAILED: 6 the END identity (115.000000 = 120.000000 = 120.000000)
+  20 time at the limit strictly above: CAUGHT (6.8 s) - PRESSURE SELFTEST FAILED: 6 the exact inventory integrals ({'mean_abs_inv': 65.0, 'peak_abs_inv': 100.0, 'share_abs_ge_S': 0.0, 'terminal_inv': 60.0})
+  21 lost / added without the price: CAUGHT (6.8 s) - PRESSURE SELFTEST FAILED: 6 lost / added (a price difference is not a match; identity gap 1.00e+01)
+  22 the reducing side reversed: CAUGHT (6.8 s) - PRESSURE SELFTEST FAILED: 6 arm counts (1, 2, 0, 1)
+  23 the first-review rate from the last command: CAUGHT (6.9 s) - PRESSURE SELFTEST FAILED: 6 the first-review pull rate
+  24 better_selection without the selection control: CAUGHT (6.8 s) - PRESSURE SELFTEST FAILED: 6 readings (better_selection, better_selection, quoting_less, mixed)
+  25 quoting_less without the per-share condition: CAUGHT (6.8 s) - PRESSURE SELFTEST FAILED: 6 readings (better_selection, quoting_less, quoting_less, quoting_less)
+  26 run_day without the source check: CAUGHT (6.9 s) - PRESSURE SELFTEST FAILED: 7 run_day refuses another source
+  27 run_day without the write-once check: CAUGHT (6.9 s) - PRESSURE SELFTEST FAILED: 7 run_day refuses an existing output
+  28 measure without the selection prerequisite: CAUGHT (6.8 s) - PRESSURE SELFTEST FAILED: 7 guards: stopped (FileNotFoundError(2, 'No such file or directory'))
+control: PASSED (6.8 s); sources {'pf_ladder_pressure.py': '40e5044a923ca811', 'pf_ladder_pressure_mutants.py': '8be5545592578bdd', 'pf_ladder_pressure_selftest.py': '03efb06eaf963368'}
+mutation check FAILED: the control passes its selftest, 27 / 29 planted code errors are caught by a check (3.3 CPU min) | 1 the other side's edges: ESCAPED - PRESSURE SELFTEST PASSED: disabled = baseline, the signal and precedence, the hand tape (pulls, withholds, re-entry, que | 17 draws with replacement: ESCAPED - PRESSURE SELFTEST PASSED: disabled = baseline, the signal and precedence, the hand tape (pulls, withholds, re-entry, que
+2026-11-21T19:09:53Z tag=lpr_summary_try1 rc=1 peak_rss_mib=15 wall_s=0.02 cpu_user_s=0.01 memavail_start_gib=22 disk_free_gib=437->437 slot=claude

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "26", "name": "run_day without the source check", "seconds": 6.9, "sources": {"pf_ladder_pressure.py": "357f1d19b32ab5a8", "pf_ladder_pressure_mutants.py": "8be5545592578bdd", "pf_ladder_pressure_selftest.py": "9a380526b4b8b148"}, "why": "PRESSURE SELFTEST FAILED: 7 run_day refuses another source"}
+2026-11-21T19:17:01Z tag=lpf_26 rc=0 peak_rss_mib=232 wall_s=7.08 cpu_user_s=6.87 memavail_start_gib=22 disk_free_gib=437->437 slot=claude4

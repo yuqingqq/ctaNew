@@ -40,6 +40,20 @@ ladder_audit_review_20261121_codex:
   additional_user_permission_within_scope: false
   untouched_validation: false
 
+ladder_pressure_20261121_dev:
+  status: frozen_before_replay
+  asof: "2026-11-21 19:17Z"
+  declaration: predictfun/reviews/ladder_pressure_20261121/declaration.md
+  review: 2c5dbd533b3586e30db45220838266982670664b
+  candidate: BINANCE_PRESSURE_GUARD_v1
+  feature: adv_bn_r250
+  edges_last: {bid: 0.4666730940341952, ask: 0.285456120967865}
+  markets: 19
+  pilot_markets: 8
+  mutants: "29/29"
+  core_hours_cap: 0.75
+  review_findings_2c5dbd53: addressed_in_new_files_1_2_3
+  next: pilot_projection_rehearsal_full_selection_measure_checks_one_review
 ladder_guard_results_20261121_dev:
   status: done_one_candidate_replay
   asof: "2026-11-21 18:32Z"

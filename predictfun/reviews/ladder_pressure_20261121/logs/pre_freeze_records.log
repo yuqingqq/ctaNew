@@ -1,0 +1,5 @@
+# pre-freeze timing probe (tools/pre_freeze_cost_probe.py; timing and counts only, no feature value printed); its run_light record:
+2026-11-21T18:53:26Z tag=pressure_cost_probe rc=0 peak_rss_mib=1087 wall_s=54.53 cpu_user_s=49.14 memavail_start_gib=23 disk_free_gib=437->437 slot=claude
+# the two first selftest attempts (stdout only):
+2026-11-21T19:07:35Z tag=pressure_selftest_try1 rc=0 peak_rss_mib=231 wall_s=6.97 cpu_user_s=6.75 memavail_start_gib=23 disk_free_gib=437->437 slot=claude
+2026-11-21T19:08:48Z tag=pressure_selftest_try2 rc=0 peak_rss_mib=231 wall_s=7.03 cpu_user_s=6.81 memavail_start_gib=23 disk_free_gib=437->437 slot=claude
