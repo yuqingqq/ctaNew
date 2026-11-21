@@ -1,0 +1,63 @@
+[
+ {
+  "m": 3788669,
+  "status": "missing_endpoint",
+  "start_rel_s": 0.0,
+  "gaps_gt_1s": 0,
+  "max_gap_s": 0.355,
+  "first_gap_rel_s": null,
+  "last_valid_mark_rel_s": 292.869,
+  "end_minus_last_mark_s": 5.131
+ },
+ {
+  "m": 3789484,
+  "status": "eligible",
+  "start_rel_s": 0.0,
+  "gaps_gt_1s": 0,
+  "max_gap_s": 0.297,
+  "first_gap_rel_s": null,
+  "last_valid_mark_rel_s": 297.99,
+  "end_minus_last_mark_s": 0.01
+ },
+ {
+  "m": 3791435,
+  "status": "missing_endpoint",
+  "start_rel_s": 0.0,
+  "gaps_gt_1s": 0,
+  "max_gap_s": 0.614,
+  "first_gap_rel_s": null,
+  "last_valid_mark_rel_s": 296.389,
+  "end_minus_last_mark_s": 1.611
+ },
+ {
+  "m": 3792112,
+  "status": "missing_endpoint",
+  "start_rel_s": 0.0,
+  "gaps_gt_1s": 0,
+  "max_gap_s": 0.235,
+  "first_gap_rel_s": null,
+  "last_valid_mark_rel_s": 296.647,
+  "end_minus_last_mark_s": 1.353
+ },
+ {
+  "m": 3792958,
+  "status": "missing_endpoint",
+  "start_rel_s": 0.0,
+  "gaps_gt_1s": 0,
+  "max_gap_s": 0.286,
+  "first_gap_rel_s": null,
+  "last_valid_mark_rel_s": 292.698,
+  "end_minus_last_mark_s": 5.302
+ },
+ {
+  "m": 3796997,
+  "status": "stale_future_book",
+  "start_rel_s": 0.0,
+  "gaps_gt_1s": 3,
+  "max_gap_s": 1.135,
+  "first_gap_rel_s": 248.348,
+  "last_valid_mark_rel_s": 240.273,
+  "end_minus_last_mark_s": 57.727
+ }
+]
+2026-11-21T17:08:32Z tag=lr_covdiag_20261026 rc=0 peak_rss_mib=1093 wall_s=72.11 cpu_user_s=63.77 memavail_start_gib=23 disk_free_gib=438->438 slot=claude3

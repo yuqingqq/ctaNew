@@ -1,0 +1,290 @@
+{
+ "version": "ladder_rest_inventory_full_market_v1",
+ "day": "20261024",
+ "pilot": false,
+ "members": [
+  3695609,
+  3696378,
+  3696745,
+  3696970,
+  3697902,
+  3699278,
+  3700070,
+  3700451,
+  3701097,
+  3701803,
+  3702960,
+  3703978,
+  3704004,
+  3705358,
+  3706749,
+  3707385,
+  3708347,
+  3711345,
+  3712725,
+  3716727,
+  3718697,
+  3719771,
+  3721958,
+  3721985
+ ],
+ "records": 24,
+ "sha256": {
+  "gz": "e6b1ff1de9e6b49ad2ab8a4b4f3990e0f485ca51d631dfffa4e76bbe15fbdf6d",
+  "npz": "924febfb4498f7ac9052d4272357ce52bb67e1ab3fd9d510725607ebeb54ad27",
+  "feat": "9f940406af48466049e5fffbcd336bab836ea0e015eb543d24a783deceaff201"
+ },
+ "manifest_sha256": "df9edb241f9ad07e8fcb47636dd54681571770b64f3ac104c9a1bef99bbfcd35",
+ "sources": {
+  "pf_ladder_rest.py": "d90016ce7d25f89f6f6c6662075f5be72539d3140373e42c8b7228ebcf8ce5e0",
+  "pf_ladder_rest_selftest.py": "e838475859bc7e05868f9eae8482ec4a268a52a0cfa7dfcc475fc631abe76d87",
+  "pf_branch_ladder.py": "c9e0852eccea5b4248001693fd8ddec083ea2df517dc8f3fd0d8b2f091ab285a",
+  "pf_branch_engine.py": "8b7960ef4bbbc178b281e57d92d4795d7678436c0ca875e7199e24a6626af3a8",
+  "pf_entry_exposure.py": "33f3e0c72850e0c6c623f96cf157c02c72cdceefc0721f87c64afc59547533f0",
+  "pf_r2_shadow.py": "962cf7b42c1a8ff78b7a4cb46f111036c824270ff8fa91d95c1c42558f098ab9",
+  "pf_r2_teacher.py": "c7d72d91b0d422d192015f331154881ba030989a6802d23a604a3b667194d79b",
+  "pf_r2_labels.py": "f56f1ae560492aa9b7d040b28f02d96a2b2fd2611da4047d4c7227b497684d6e",
+  "pf_r2_label_sample.py": "4cdeff0c6d491611f970756f263f4ef03c3e2a90dbade580d435c68bae32e769",
+  "pf_pipeline_export.py": "ee2953fd00f70a7d12607abd4b418471b2208b8f9728009c7e538ccb55733931",
+  "pf_queue_place_test.py": "188c1495ce35db80ce8b79cbc50541964d0d32d9da38fee4b925e951eec01a1f",
+  "pf_adv2_replay.py": "e5d0f55d5c534d1cfb008e361641334dc503a22d10015a88cde0ea4686b8752a"
+ },
+ "timing": {
+  "load": 60.13763666152954,
+  "markets": [
+   {
+    "m": 3695609,
+    "s": 0.19393706321716309,
+    "status": "incomplete:stale_future_book",
+    "parts": {
+     "legacy": 0.19382762908935547,
+     "path": 9.393692016601562e-05
+    }
+   },
+   {
+    "m": 3696378,
+    "s": 0.2502281665802002,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.24040746688842773,
+     "path": 0.009803533554077148
+    }
+   },
+   {
+    "m": 3696745,
+    "s": 0.24565887451171875,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.24293994903564453,
+     "path": 0.0027074813842773438
+    }
+   },
+   {
+    "m": 3696970,
+    "s": 0.22726941108703613,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.2254011631011963,
+     "path": 0.001855611801147461
+    }
+   },
+   {
+    "m": 3697902,
+    "s": 5.715808629989624,
+    "status": "complete",
+    "parts": {
+     "legacy": 0.22806000709533691,
+     "path": 0.00672602653503418,
+     "run": 3.7603445053100586,
+     "features": 0.5918419361114502
+    }
+   },
+   {
+    "m": 3699278,
+    "s": 7.870438575744629,
+    "status": "complete",
+    "parts": {
+     "legacy": 0.2496626377105713,
+     "path": 0.07462358474731445,
+     "run": 4.960520505905151,
+     "features": 0.8550808429718018
+    }
+   },
+   {
+    "m": 3700070,
+    "s": 10.657348394393921,
+    "status": "complete",
+    "parts": {
+     "legacy": 0.2549712657928467,
+     "path": 0.007197141647338867,
+     "run": 6.409418821334839,
+     "features": 1.1340343952178955
+    }
+   },
+   {
+    "m": 3700451,
+    "s": 0.23474788665771484,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.23206162452697754,
+     "path": 0.0026700496673583984
+    }
+   },
+   {
+    "m": 3701097,
+    "s": 0.24685955047607422,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.2435297966003418,
+     "path": 0.0033180713653564453
+    }
+   },
+   {
+    "m": 3701803,
+    "s": 0.23224163055419922,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.2298591136932373,
+     "path": 0.0023713111877441406
+    }
+   },
+   {
+    "m": 3702960,
+    "s": 4.172565221786499,
+    "status": "complete",
+    "parts": {
+     "legacy": 0.22280120849609375,
+     "path": 0.006091117858886719,
+     "run": 2.760838270187378,
+     "features": 0.5430574417114258
+    }
+   },
+   {
+    "m": 3703978,
+    "s": 0.25310206413269043,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.2493760585784912,
+     "path": 0.003704547882080078
+    }
+   },
+   {
+    "m": 3704004,
+    "s": 9.347976922988892,
+    "status": "complete",
+    "parts": {
+     "legacy": 0.2391970157623291,
+     "path": 0.009185791015625,
+     "run": 6.168658018112183,
+     "features": 0.9207241535186768
+    }
+   },
+   {
+    "m": 3705358,
+    "s": 0.23729372024536133,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.23398590087890625,
+     "path": 0.003292083740234375
+    }
+   },
+   {
+    "m": 3706749,
+    "s": 0.24324870109558105,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.23891019821166992,
+     "path": 0.004327058792114258
+    }
+   },
+   {
+    "m": 3707385,
+    "s": 0.24892425537109375,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.24450397491455078,
+     "path": 0.004408359527587891
+    }
+   },
+   {
+    "m": 3708347,
+    "s": 0.2309105396270752,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.22667717933654785,
+     "path": 0.00422358512878418
+    }
+   },
+   {
+    "m": 3711345,
+    "s": 0.00010466575622558594,
+    "status": "incomplete:stale_future_book",
+    "parts": {
+     "legacy": 1.621246337890625e-05,
+     "path": 8.153915405273438e-05
+    }
+   },
+   {
+    "m": 3712725,
+    "s": 8.084892749786377,
+    "status": "complete",
+    "parts": {
+     "legacy": 0.24258732795715332,
+     "path": 0.009468317031860352,
+     "run": 4.705205917358398,
+     "features": 0.9457831382751465
+    }
+   },
+   {
+    "m": 3716727,
+    "s": 7.608631372451782,
+    "status": "complete",
+    "parts": {
+     "legacy": 0.23584699630737305,
+     "path": 0.0075986385345458984,
+     "run": 4.610952854156494,
+     "features": 0.864039421081543
+    }
+   },
+   {
+    "m": 3718697,
+    "s": 0.21035408973693848,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.2080092430114746,
+     "path": 0.0023288726806640625
+    }
+   },
+   {
+    "m": 3719771,
+    "s": 0.22050952911376953,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.21774530410766602,
+     "path": 0.0027532577514648438
+    }
+   },
+   {
+    "m": 3721958,
+    "s": 0.23018598556518555,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.22659540176391602,
+     "path": 0.0035800933837890625
+    }
+   },
+   {
+    "m": 3721985,
+    "s": 0.23139405250549316,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.22893166542053223,
+     "path": 0.0024509429931640625
+    }
+   }
+  ]
+ },
+ "elapsed_s": 117.99806785583496,
+ "hwm_mib": 1105.55859375,
+ "asof": "2026-11-21T17:08:09.843857+00:00"
+}

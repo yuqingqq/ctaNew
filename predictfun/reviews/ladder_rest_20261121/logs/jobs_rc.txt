@@ -1,1 +1,17 @@
 lr_manifest rc=0
+lr_pilot_20261024 rc=0
+lr_pilot_20261025 rc=0
+lr_pilot_20261027 rc=0
+lr_pilot_20261026 rc=0
+lr_projection rc=0
+lr_rest_20261027 rc=0
+lr_rest_20261025 rc=0
+lr_rest_20261026 rc=0
+lr_rest_20261024 rc=0
+lr_covdiag_20261025 rc=0
+lr_covdiag_20261024 rc=0
+lr_covdiag_20261027 rc=0
+lr_covdiag_20261026 rc=0
+lr_measure rc=0
+lr_checks rc=0
+lr_checks_v2 rc=0

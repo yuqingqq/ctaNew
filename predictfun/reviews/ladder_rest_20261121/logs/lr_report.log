@@ -1,0 +1,4 @@
+/home/yuqing/ctaNew/predictfun/reviews/ladder_rest_20261121/tools/fill_ladder.py:57: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  hd = both.assign(severe=both.v_severe)
+report.md 72 lines
+2026-11-21T17:13:02Z tag=lr_report rc=0 peak_rss_mib=121 wall_s=1.40 cpu_user_s=1.30 memavail_start_gib=23 disk_free_gib=438->438 slot=claude

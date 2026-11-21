@@ -1,0 +1,55 @@
+{
+ "cases": {
+  "C_value": {
+   "clean": true,
+   "corrupted": false,
+   "applied": true
+  },
+  "C_trade": {
+   "clean": true,
+   "corrupted": false,
+   "applied": true
+  },
+  "B_membership": {
+   "clean": true,
+   "corrupted": false,
+   "applied": true
+  },
+  "D_size": {
+   "clean": true,
+   "corrupted": false,
+   "applied": true
+  },
+  "D_mode": {
+   "clean": true,
+   "corrupted": false,
+   "applied": true
+  },
+  "D_dup_price": {
+   "clean": true,
+   "corrupted": false,
+   "applied": true
+  },
+  "D_struct": {
+   "clean": true,
+   "corrupted": false,
+   "applied": true
+  },
+  "E_summary_totals": {
+   "clean": true,
+   "corrupted": false,
+   "applied": true
+  },
+  "F_legacy_engine": {
+   "clean": true,
+   "corrupted": false,
+   "applied": true
+  },
+  "G_pilot_equals_full": {
+   "clean": true,
+   "corrupted": false,
+   "applied": true
+  }
+ },
+ "falsifier_ok": true
+}

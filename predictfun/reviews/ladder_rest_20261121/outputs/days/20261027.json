@@ -1,0 +1,280 @@
+{
+ "version": "ladder_rest_inventory_full_market_v1",
+ "day": "20261027",
+ "pilot": false,
+ "members": [
+  3853425,
+  3855039,
+  3855455,
+  3856715,
+  3858387,
+  3861514,
+  3863088,
+  3864797,
+  3865917,
+  3866772,
+  3867043,
+  3868279,
+  3868822,
+  3871995,
+  3872834,
+  3874854,
+  3877092,
+  3877472,
+  3879202,
+  3881457,
+  3884545,
+  3887086,
+  3899224,
+  3900028
+ ],
+ "records": 24,
+ "sha256": {
+  "gz": "8b05e2f6e504a2395b202798f7cd6985702888f0b434f2fcd827637d90ce79b3",
+  "npz": "f342c09acb300e8b57e0962dc2b04264b750475b4542a92a23f7da11f2084edc",
+  "feat": "a5c1f08eec007fe871bffff202fcd3817c101ad6a84c5f309edec891390d0ddd"
+ },
+ "manifest_sha256": "df9edb241f9ad07e8fcb47636dd54681571770b64f3ac104c9a1bef99bbfcd35",
+ "sources": {
+  "pf_ladder_rest.py": "d90016ce7d25f89f6f6c6662075f5be72539d3140373e42c8b7228ebcf8ce5e0",
+  "pf_ladder_rest_selftest.py": "e838475859bc7e05868f9eae8482ec4a268a52a0cfa7dfcc475fc631abe76d87",
+  "pf_branch_ladder.py": "c9e0852eccea5b4248001693fd8ddec083ea2df517dc8f3fd0d8b2f091ab285a",
+  "pf_branch_engine.py": "8b7960ef4bbbc178b281e57d92d4795d7678436c0ca875e7199e24a6626af3a8",
+  "pf_entry_exposure.py": "33f3e0c72850e0c6c623f96cf157c02c72cdceefc0721f87c64afc59547533f0",
+  "pf_r2_shadow.py": "962cf7b42c1a8ff78b7a4cb46f111036c824270ff8fa91d95c1c42558f098ab9",
+  "pf_r2_teacher.py": "c7d72d91b0d422d192015f331154881ba030989a6802d23a604a3b667194d79b",
+  "pf_r2_labels.py": "f56f1ae560492aa9b7d040b28f02d96a2b2fd2611da4047d4c7227b497684d6e",
+  "pf_r2_label_sample.py": "4cdeff0c6d491611f970756f263f4ef03c3e2a90dbade580d435c68bae32e769",
+  "pf_pipeline_export.py": "ee2953fd00f70a7d12607abd4b418471b2208b8f9728009c7e538ccb55733931",
+  "pf_queue_place_test.py": "188c1495ce35db80ce8b79cbc50541964d0d32d9da38fee4b925e951eec01a1f",
+  "pf_adv2_replay.py": "e5d0f55d5c534d1cfb008e361641334dc503a22d10015a88cde0ea4686b8752a"
+ },
+ "timing": {
+  "load": 62.54346680641174,
+  "markets": [
+   {
+    "m": 3853425,
+    "s": 0.24273681640625,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.23390412330627441,
+     "path": 0.008813142776489258
+    }
+   },
+   {
+    "m": 3855039,
+    "s": 0.22828269004821777,
+    "status": "incomplete:stale_future_book",
+    "parts": {
+     "legacy": 0.22814488410949707,
+     "path": 0.0001239776611328125
+    }
+   },
+   {
+    "m": 3855455,
+    "s": 0.31601572036743164,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.244492769241333,
+     "path": 0.07151055335998535
+    }
+   },
+   {
+    "m": 3856715,
+    "s": 0.20701360702514648,
+    "status": "incomplete:stale_future_book",
+    "parts": {
+     "legacy": 0.20690393447875977,
+     "path": 9.870529174804688e-05
+    }
+   },
+   {
+    "m": 3858387,
+    "s": 0.2295851707458496,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.2265923023223877,
+     "path": 0.0029692649841308594
+    }
+   },
+   {
+    "m": 3861514,
+    "s": 0.1797342300415039,
+    "status": "incomplete:stale_future_book",
+    "parts": {
+     "legacy": 0.17961454391479492,
+     "path": 0.00010752677917480469
+    }
+   },
+   {
+    "m": 3863088,
+    "s": 0.24779057502746582,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.24377202987670898,
+     "path": 0.004008293151855469
+    }
+   },
+   {
+    "m": 3864797,
+    "s": 0.25348806381225586,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.24954438209533691,
+     "path": 0.003931999206542969
+    }
+   },
+   {
+    "m": 3865917,
+    "s": 0.24126410484313965,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.2377150058746338,
+     "path": 0.003537893295288086
+    }
+   },
+   {
+    "m": 3866772,
+    "s": 0.2052457332611084,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.2024974822998047,
+     "path": 0.002737283706665039
+    }
+   },
+   {
+    "m": 3867043,
+    "s": 0.2195892333984375,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.21674370765686035,
+     "path": 0.0028345584869384766
+    }
+   },
+   {
+    "m": 3868279,
+    "s": 0.22109246253967285,
+    "status": "incomplete:stale_future_book",
+    "parts": {
+     "legacy": 0.22097444534301758,
+     "path": 0.00010657310485839844
+    }
+   },
+   {
+    "m": 3868822,
+    "s": 0.24793767929077148,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.24454069137573242,
+     "path": 0.0033855438232421875
+    }
+   },
+   {
+    "m": 3871995,
+    "s": 0.0032842159271240234,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 1.9073486328125e-05,
+     "path": 0.0032567977905273438
+    }
+   },
+   {
+    "m": 3872834,
+    "s": 0.2410597801208496,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.23729991912841797,
+     "path": 0.0037491321563720703
+    }
+   },
+   {
+    "m": 3874854,
+    "s": 0.21293926239013672,
+    "status": "incomplete:stale_future_book",
+    "parts": {
+     "legacy": 0.21282100677490234,
+     "path": 0.00010752677917480469
+    }
+   },
+   {
+    "m": 3877092,
+    "s": 0.18220210075378418,
+    "status": "incomplete:stale_future_book",
+    "parts": {
+     "legacy": 0.18209457397460938,
+     "path": 9.775161743164062e-05
+    }
+   },
+   {
+    "m": 3877472,
+    "s": 8.493722438812256,
+    "status": "complete",
+    "parts": {
+     "legacy": 0.23958396911621094,
+     "path": 0.014052867889404297,
+     "run": 5.693120956420898,
+     "features": 0.93430495262146
+    }
+   },
+   {
+    "m": 3879202,
+    "s": 0.2250502109527588,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.22205591201782227,
+     "path": 0.0029754638671875
+    }
+   },
+   {
+    "m": 3881457,
+    "s": 0.23067140579223633,
+    "status": "incomplete:stale_future_book",
+    "parts": {
+     "legacy": 0.2305588722229004,
+     "path": 0.00010228157043457031
+    }
+   },
+   {
+    "m": 3884545,
+    "s": 0.2309727668762207,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.227827787399292,
+     "path": 0.003134489059448242
+    }
+   },
+   {
+    "m": 3887086,
+    "s": 0.1891779899597168,
+    "status": "incomplete:stale_future_book",
+    "parts": {
+     "legacy": 0.18907523155212402,
+     "path": 9.322166442871094e-05
+    }
+   },
+   {
+    "m": 3899224,
+    "s": 6.452674627304077,
+    "status": "complete",
+    "parts": {
+     "legacy": 0.22884321212768555,
+     "path": 0.009140729904174805,
+     "run": 4.236834526062012,
+     "features": 0.7346951961517334
+    }
+   },
+   {
+    "m": 3900028,
+    "s": 0.2113959789276123,
+    "status": "incomplete:stale_future_book",
+    "parts": {
+     "legacy": 0.21126461029052734,
+     "path": 0.00011372566223144531
+    }
+   }
+  ]
+ },
+ "elapsed_s": 82.45636987686157,
+ "hwm_mib": 1140.1953125,
+ "asof": "2026-11-21T17:07:34.301957+00:00"
+}

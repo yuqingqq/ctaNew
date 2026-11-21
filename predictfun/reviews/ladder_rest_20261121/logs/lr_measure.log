@@ -1,0 +1,91 @@
+{
+ "statuses": {
+  "incomplete:missing_endpoint": 54,
+  "incomplete:stale_future_book": 23,
+  "complete": 19
+ },
+ "predicates": {
+  "days": [
+   "20261024",
+   "20261025",
+   "20261026",
+   "20261027"
+  ],
+  "complete_days": true,
+  "headline": {
+   "20261024": {
+    "value": -64287.86774717526,
+    "filled_shares": 35761.43200600747,
+    "both_active": 0.3945110258868648,
+    "severe_value": -595609.1446497983
+   },
+   "20261025": {
+    "value": -66495.76606478279,
+    "filled_shares": 26959.380418520494,
+    "both_active": 0.40818791946308725,
+    "severe_value": -611285.8339696566
+   },
+   "20261026": {
+    "value": -45400.15656970044,
+    "filled_shares": 24370.299889366237,
+    "both_active": 0.41322147651006713,
+    "severe_value": -436563.371904871
+   },
+   "20261027": {
+    "value": -33373.91826838687,
+    "filled_shares": 9899.958819329906,
+    "both_active": 0.39471476510067116,
+    "severe_value": -241491.20350968887
+   },
+   "all": {
+    "value": -209557.7086500454,
+    "filled_shares": 96991.0711332241,
+    "both_active": 0.40305545743553517,
+    "severe_value": -1884949.5540340147
+   }
+  },
+  "strategy_value": {
+   "answer": "NEGATIVE_EVERY_DAY",
+   "value_by_day": {
+    "20261024": -64287.86774717526,
+    "20261025": -66495.76606478279,
+    "20261026": -45400.15656970044,
+    "20261027": -33373.91826838687
+   }
+  },
+  "repeated_fills": {
+   "answer": "REPEATED_LOSE",
+   "repeat_generations": 888,
+   "value_by_day": {
+    "20261024": -34222.577794957084,
+    "20261025": -21953.66034967403,
+    "20261026": -22921.302356162647,
+    "20261027": -6344.121149884878
+   }
+  },
+  "loss_source": {
+   "answer": "NEW_FILLS_DOMINATE",
+   "carry": {
+    "20261024": -1599.7649407454394,
+    "20261025": -14451.91782126621,
+    "20261026": -2045.4291040164412,
+    "20261027": -2381.343832045527
+   },
+   "new": {
+    "20261024": -62688.10280642982,
+    "20261025": -52043.84824351657,
+    "20261026": -43354.727465684,
+    "20261027": -30992.574436341343
+   }
+  },
+  "patterns": {
+   "edge_then_adverse": true,
+   "short_positive_later_negative": false,
+   "low_participation": true,
+   "tail_erases_ordinary": true,
+   "deep_level_rarely_filled": false
+  },
+  "patterns_note": "investigation guides from the review, not causal verdicts; one policy identifies no ladder or inventory-control gain"
+ }
+}
+2026-11-21T17:09:44Z tag=lr_measure rc=0 peak_rss_mib=481 wall_s=7.77 cpu_user_s=7.36 memavail_start_gib=23 disk_free_gib=438->438 slot=claude

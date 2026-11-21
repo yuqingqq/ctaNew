@@ -1,0 +1,58 @@
+{
+ "version": "ladder_rest_inventory_full_market_v1",
+ "day": "20261026",
+ "pilot": true,
+ "members": [
+  3788669,
+  3789484
+ ],
+ "records": 2,
+ "sha256": {
+  "gz": "eb57287a9f4c826f34b24f0b9fa8268f48c16b4a98e3e6716585f310cc17bed3",
+  "npz": "fdb8ceb69aa8d2002e75fcda09b28f3423aca1c5b8f4566cbbe928cd4e782cdc",
+  "feat": "686be9051b7fc565a89dad3c933a8ab51dce7079514a9fa11bf010c50331a701"
+ },
+ "manifest_sha256": "df9edb241f9ad07e8fcb47636dd54681571770b64f3ac104c9a1bef99bbfcd35",
+ "sources": {
+  "pf_ladder_rest.py": "d90016ce7d25f89f6f6c6662075f5be72539d3140373e42c8b7228ebcf8ce5e0",
+  "pf_ladder_rest_selftest.py": "e838475859bc7e05868f9eae8482ec4a268a52a0cfa7dfcc475fc631abe76d87",
+  "pf_branch_ladder.py": "c9e0852eccea5b4248001693fd8ddec083ea2df517dc8f3fd0d8b2f091ab285a",
+  "pf_branch_engine.py": "8b7960ef4bbbc178b281e57d92d4795d7678436c0ca875e7199e24a6626af3a8",
+  "pf_entry_exposure.py": "33f3e0c72850e0c6c623f96cf157c02c72cdceefc0721f87c64afc59547533f0",
+  "pf_r2_shadow.py": "962cf7b42c1a8ff78b7a4cb46f111036c824270ff8fa91d95c1c42558f098ab9",
+  "pf_r2_teacher.py": "c7d72d91b0d422d192015f331154881ba030989a6802d23a604a3b667194d79b",
+  "pf_r2_labels.py": "f56f1ae560492aa9b7d040b28f02d96a2b2fd2611da4047d4c7227b497684d6e",
+  "pf_r2_label_sample.py": "4cdeff0c6d491611f970756f263f4ef03c3e2a90dbade580d435c68bae32e769",
+  "pf_pipeline_export.py": "ee2953fd00f70a7d12607abd4b418471b2208b8f9728009c7e538ccb55733931",
+  "pf_queue_place_test.py": "188c1495ce35db80ce8b79cbc50541964d0d32d9da38fee4b925e951eec01a1f",
+  "pf_adv2_replay.py": "e5d0f55d5c534d1cfb008e361641334dc503a22d10015a88cde0ea4686b8752a"
+ },
+ "timing": {
+  "load": 71.1393392086029,
+  "markets": [
+   {
+    "m": 3788669,
+    "s": 0.25861048698425293,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.25522875785827637,
+     "path": 0.003367900848388672
+    }
+   },
+   {
+    "m": 3789484,
+    "s": 9.931663751602173,
+    "status": "complete",
+    "parts": {
+     "legacy": 0.23888587951660156,
+     "path": 0.007021665573120117,
+     "run": 5.154823541641235,
+     "features": 1.2842652797698975
+    }
+   }
+  ]
+ },
+ "elapsed_s": 81.47203040122986,
+ "hwm_mib": 1112.328125,
+ "asof": "2026-11-21T17:05:26.912401+00:00"
+}

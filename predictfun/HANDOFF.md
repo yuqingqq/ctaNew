@@ -23,6 +23,18 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- LADDER_REST_RESULTS_20261121_DEV -->
+## 2026-11-21 17:13Z (session aea5bfb9) — LADDER_REST_INVENTORY_v1 RESULTS: 19 / 96 MARKETS COMPLETE; CHECKS ALL TRUE
+
+- [Receipt](reviews/ladder_rest_20261121/report.md); freeze `47d2eec1`, results in this commit.
+- **Headline (all days):** value -209,557.7 c, filled 96,991 shares, both-side active 40.3%, severe -1,884,949.6 c; execution edge +39,326.2 c, markouts +50 ms -91,748.0, +1 s -203,083.9, +5 s -214,789.5 c on their valid fills.
+- **Coverage (the binding limitation of this run):** coverage 19 of 96 complete: missing_endpoint 54 (valid marks stop a median 11.6 s before opening + 298 s, no frame gap > 1 s), stale_future_book 23 (first gap > 1 s a median 274.7 s after the opening); the builder rules were kept, nothing was bridged or shortened.
+- **Checker correction:** v1 (frozen) failed ['E_severe'] on ~1 ulp CSV parsing; v2 (`42411ab3`, committed before it ran) reads exactly; v1 kept.
+- **Readings:** strategy_value NEGATIVE_EVERY_DAY; repeated_fills REPEATED_LOSE; loss_source NEW_FILLS_DOMINATE; patterns {"edge_then_adverse": true, "short_positive_later_negative": false, "low_participation": true, "tail_erases_ordinary": true, "deep_level_rarely_filled": false}.
+- **Validity:** checks 36 / 36, falsifier 10 / 10, mutants 24 / 24 and 20 / 20; cost 0.355 core-hours.
+- **Next:** the ONE combined review, which names the largest evidenced limitation and one targeted next experiment.
+<!-- /LADDER_REST_RESULTS_20261121_DEV -->
+
 <!-- LADDER_REST_FREEZE_20261121_DEV -->
 ## 2026-11-21 17:03Z (session aea5bfb9) — LADDER_REST_INVENTORY_v1 FROZEN before the pilot (the review's ONE next priority)
 

@@ -1,0 +1,79 @@
+{
+ "checks": {
+  "A_committed": true,
+  "A_bound": true,
+  "A_measure_bound": true,
+  "B_membership": true,
+  "B_statuses": true,
+  "B_complete_have_ledgers": true,
+  "B_markets_csv": true,
+  "C_fill_window": true,
+  "C_order_size": true,
+  "C_trade": true,
+  "C_price": true,
+  "C_value": true,
+  "C_levels": true,
+  "C_reservation": true,
+  "C_shape": true,
+  "D_mode": true,
+  "D_size": true,
+  "D_restricted_post": true,
+  "D_entry_membership": true,
+  "D_pull_side": true,
+  "D_dup_price": true,
+  "D_own_cross": true,
+  "D_struct": true,
+  "E_summary_totals": true,
+  "E_per_day": true,
+  "E_generations_sum": true,
+  "E_severe": false,
+  "E_minutes": true,
+  "E_markout_identity": true,
+  "E_no_markout_past_end": true,
+  "E_strategy_value_predicate": true,
+  "F_legacy_engine": true,
+  "F_legacy_features": true,
+  "F_reconstruction": true,
+  "G_pilot_equals_full": true,
+  "H_resources": true
+ },
+ "details": {
+  "statuses": {
+   "incomplete:stale_future_book": 23,
+   "incomplete:missing_endpoint": 54,
+   "complete": 19
+  },
+  "C": {
+   "fill_window": 0,
+   "order_size": 0,
+   "trade": 0,
+   "price": 0,
+   "value": 0,
+   "levels": 0,
+   "reservation": 0,
+   "shape": 0
+  },
+  "D": {
+   "mode": 0,
+   "size": 0,
+   "restricted_post": 0,
+   "entry_membership": 0,
+   "pull_side": 0,
+   "dup_price": 0,
+   "own_cross": 0,
+   "struct": 0
+  },
+  "F": {
+   "legacy_worlds": 93,
+   "features_equal": 677,
+   "reconstruct_checked": 14968
+  },
+  "H": {
+   "core_hours": 0.35172777777777736,
+   "peak_mib": 1185,
+   "cap": 2.0,
+   "hwm": 1156.31640625
+  }
+ },
+ "all_ok": false
+}

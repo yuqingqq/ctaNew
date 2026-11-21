@@ -1,0 +1,286 @@
+{
+ "version": "ladder_rest_inventory_full_market_v1",
+ "day": "20261025",
+ "pilot": false,
+ "members": [
+  3723774,
+  3725884,
+  3726408,
+  3727774,
+  3730213,
+  3732331,
+  3732938,
+  3734864,
+  3735729,
+  3736855,
+  3737919,
+  3739819,
+  3742871,
+  3753334,
+  3755607,
+  3758641,
+  3761106,
+  3763401,
+  3768439,
+  3775026,
+  3776314,
+  3779380,
+  3781973,
+  3783696
+ ],
+ "records": 24,
+ "sha256": {
+  "gz": "e89b04406dedd39d57fd3c6433dfbae07ce84a0bbfe56960757b7e750d5ce795",
+  "npz": "14b45a45ebad75a688776977e22e9353be7735f7165b4acceae76c0d11634a7b",
+  "feat": "6ffe53083a62b2d82c42068ed90b20b2c09e051510f9e3f3b34783a37450d187"
+ },
+ "manifest_sha256": "df9edb241f9ad07e8fcb47636dd54681571770b64f3ac104c9a1bef99bbfcd35",
+ "sources": {
+  "pf_ladder_rest.py": "d90016ce7d25f89f6f6c6662075f5be72539d3140373e42c8b7228ebcf8ce5e0",
+  "pf_ladder_rest_selftest.py": "e838475859bc7e05868f9eae8482ec4a268a52a0cfa7dfcc475fc631abe76d87",
+  "pf_branch_ladder.py": "c9e0852eccea5b4248001693fd8ddec083ea2df517dc8f3fd0d8b2f091ab285a",
+  "pf_branch_engine.py": "8b7960ef4bbbc178b281e57d92d4795d7678436c0ca875e7199e24a6626af3a8",
+  "pf_entry_exposure.py": "33f3e0c72850e0c6c623f96cf157c02c72cdceefc0721f87c64afc59547533f0",
+  "pf_r2_shadow.py": "962cf7b42c1a8ff78b7a4cb46f111036c824270ff8fa91d95c1c42558f098ab9",
+  "pf_r2_teacher.py": "c7d72d91b0d422d192015f331154881ba030989a6802d23a604a3b667194d79b",
+  "pf_r2_labels.py": "f56f1ae560492aa9b7d040b28f02d96a2b2fd2611da4047d4c7227b497684d6e",
+  "pf_r2_label_sample.py": "4cdeff0c6d491611f970756f263f4ef03c3e2a90dbade580d435c68bae32e769",
+  "pf_pipeline_export.py": "ee2953fd00f70a7d12607abd4b418471b2208b8f9728009c7e538ccb55733931",
+  "pf_queue_place_test.py": "188c1495ce35db80ce8b79cbc50541964d0d32d9da38fee4b925e951eec01a1f",
+  "pf_adv2_replay.py": "e5d0f55d5c534d1cfb008e361641334dc503a22d10015a88cde0ea4686b8752a"
+ },
+ "timing": {
+  "load": 55.138885498046875,
+  "markets": [
+   {
+    "m": 3723774,
+    "s": 8.74185037612915,
+    "status": "complete",
+    "parts": {
+     "legacy": 0.23760175704956055,
+     "path": 0.013860225677490234,
+     "run": 5.8229310512542725,
+     "features": 0.9238615036010742
+    }
+   },
+   {
+    "m": 3725884,
+    "s": 0.23224401473999023,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.23003172874450684,
+     "path": 0.0021932125091552734
+    }
+   },
+   {
+    "m": 3726408,
+    "s": 0.2350940704345703,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.2311398983001709,
+     "path": 0.003942966461181641
+    }
+   },
+   {
+    "m": 3727774,
+    "s": 0.2179574966430664,
+    "status": "incomplete:stale_future_book",
+    "parts": {
+     "legacy": 0.21783781051635742,
+     "path": 0.0001068115234375
+    }
+   },
+   {
+    "m": 3730213,
+    "s": 0.21762800216674805,
+    "status": "incomplete:stale_future_book",
+    "parts": {
+     "legacy": 0.21751856803894043,
+     "path": 9.846687316894531e-05
+    }
+   },
+   {
+    "m": 3732331,
+    "s": 0.2334897518157959,
+    "status": "incomplete:stale_future_book",
+    "parts": {
+     "legacy": 0.23337841033935547,
+     "path": 0.00010156631469726562
+    }
+   },
+   {
+    "m": 3732938,
+    "s": 0.2250075340270996,
+    "status": "incomplete:stale_future_book",
+    "parts": {
+     "legacy": 0.22474384307861328,
+     "path": 0.0002529621124267578
+    }
+   },
+   {
+    "m": 3734864,
+    "s": 8.046056985855103,
+    "status": "complete",
+    "parts": {
+     "legacy": 0.23897981643676758,
+     "path": 0.009396791458129883,
+     "run": 5.208601236343384,
+     "features": 0.9034719467163086
+    }
+   },
+   {
+    "m": 3735729,
+    "s": 0.2066049575805664,
+    "status": "incomplete:stale_future_book",
+    "parts": {
+     "legacy": 0.20648622512817383,
+     "path": 0.0001010894775390625
+    }
+   },
+   {
+    "m": 3736855,
+    "s": 0.22687935829162598,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.22314238548278809,
+     "path": 0.003725767135620117
+    }
+   },
+   {
+    "m": 3737919,
+    "s": 7.149751901626587,
+    "status": "complete",
+    "parts": {
+     "legacy": 0.25618886947631836,
+     "path": 0.008006095886230469,
+     "run": 4.060262680053711,
+     "features": 0.8439614772796631
+    }
+   },
+   {
+    "m": 3739819,
+    "s": 0.23119258880615234,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.22787809371948242,
+     "path": 0.0032961368560791016
+    }
+   },
+   {
+    "m": 3742871,
+    "s": 0.21957945823669434,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.21724486351013184,
+     "path": 0.0023221969604492188
+    }
+   },
+   {
+    "m": 3753334,
+    "s": 0.23247551918029785,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.2290651798248291,
+     "path": 0.003400087356567383
+    }
+   },
+   {
+    "m": 3755607,
+    "s": 0.16906476020812988,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.16698098182678223,
+     "path": 0.0020723342895507812
+    }
+   },
+   {
+    "m": 3758641,
+    "s": 0.23151397705078125,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.2279808521270752,
+     "path": 0.0035092830657958984
+    }
+   },
+   {
+    "m": 3761106,
+    "s": 0.2295055389404297,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.2232530117034912,
+     "path": 0.0062408447265625
+    }
+   },
+   {
+    "m": 3763401,
+    "s": 7.818012237548828,
+    "status": "complete",
+    "parts": {
+     "legacy": 0.24176025390625,
+     "path": 0.009693384170532227,
+     "run": 5.009727954864502,
+     "features": 0.8784809112548828
+    }
+   },
+   {
+    "m": 3768439,
+    "s": 0.21648025512695312,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.2138817310333252,
+     "path": 0.0025801658630371094
+    }
+   },
+   {
+    "m": 3775026,
+    "s": 0.22082805633544922,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.21851444244384766,
+     "path": 0.002301931381225586
+    }
+   },
+   {
+    "m": 3776314,
+    "s": 4.5844502449035645,
+    "status": "complete",
+    "parts": {
+     "legacy": 0.21351218223571777,
+     "path": 0.008573532104492188,
+     "run": 3.110201597213745,
+     "features": 0.5591368675231934
+    }
+   },
+   {
+    "m": 3779380,
+    "s": 0.1908435821533203,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.18807101249694824,
+     "path": 0.0027565956115722656
+    }
+   },
+   {
+    "m": 3781973,
+    "s": 0.18387675285339355,
+    "status": "incomplete:stale_future_book",
+    "parts": {
+     "legacy": 0.1837749481201172,
+     "path": 9.131431579589844e-05
+    }
+   },
+   {
+    "m": 3783696,
+    "s": 0.24083709716796875,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.2372446060180664,
+     "path": 0.003580808639526367
+    }
+   }
+  ]
+ },
+ "elapsed_s": 96.10550856590271,
+ "hwm_mib": 1127.30078125,
+ "asof": "2026-11-21T17:07:47.951082+00:00"
+}

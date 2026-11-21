@@ -1,0 +1,6 @@
+{
+ "all_ok": true,
+ "failed": [],
+ "falsifier_ok": true
+}
+2026-11-21T17:11:18Z tag=lr_checks_v2 rc=0 peak_rss_mib=499 wall_s=12.80 cpu_user_s=12.15 memavail_start_gib=23 disk_free_gib=438->438 slot=claude

@@ -1,0 +1,56 @@
+{
+ "version": "ladder_rest_inventory_full_market_v1",
+ "day": "20261024",
+ "pilot": true,
+ "members": [
+  3695609,
+  3696378
+ ],
+ "records": 2,
+ "sha256": {
+  "gz": "a7ee83f1c78de84a7667b7c449bbb0007415723b12a5c57281d98a1d5360c9ad",
+  "npz": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+  "feat": "421c63970dec1e8fc429a69762ba749b69ff24ea94d9786e3222ad662e1a843d"
+ },
+ "manifest_sha256": "df9edb241f9ad07e8fcb47636dd54681571770b64f3ac104c9a1bef99bbfcd35",
+ "sources": {
+  "pf_ladder_rest.py": "d90016ce7d25f89f6f6c6662075f5be72539d3140373e42c8b7228ebcf8ce5e0",
+  "pf_ladder_rest_selftest.py": "e838475859bc7e05868f9eae8482ec4a268a52a0cfa7dfcc475fc631abe76d87",
+  "pf_branch_ladder.py": "c9e0852eccea5b4248001693fd8ddec083ea2df517dc8f3fd0d8b2f091ab285a",
+  "pf_branch_engine.py": "8b7960ef4bbbc178b281e57d92d4795d7678436c0ca875e7199e24a6626af3a8",
+  "pf_entry_exposure.py": "33f3e0c72850e0c6c623f96cf157c02c72cdceefc0721f87c64afc59547533f0",
+  "pf_r2_shadow.py": "962cf7b42c1a8ff78b7a4cb46f111036c824270ff8fa91d95c1c42558f098ab9",
+  "pf_r2_teacher.py": "c7d72d91b0d422d192015f331154881ba030989a6802d23a604a3b667194d79b",
+  "pf_r2_labels.py": "f56f1ae560492aa9b7d040b28f02d96a2b2fd2611da4047d4c7227b497684d6e",
+  "pf_r2_label_sample.py": "4cdeff0c6d491611f970756f263f4ef03c3e2a90dbade580d435c68bae32e769",
+  "pf_pipeline_export.py": "ee2953fd00f70a7d12607abd4b418471b2208b8f9728009c7e538ccb55733931",
+  "pf_queue_place_test.py": "188c1495ce35db80ce8b79cbc50541964d0d32d9da38fee4b925e951eec01a1f",
+  "pf_adv2_replay.py": "e5d0f55d5c534d1cfb008e361641334dc503a22d10015a88cde0ea4686b8752a"
+ },
+ "timing": {
+  "load": 57.77913475036621,
+  "markets": [
+   {
+    "m": 3695609,
+    "s": 0.1944882869720459,
+    "status": "incomplete:stale_future_book",
+    "parts": {
+     "legacy": 0.194380521774292,
+     "path": 9.298324584960938e-05
+    }
+   },
+   {
+    "m": 3696378,
+    "s": 0.23364901542663574,
+    "status": "incomplete:missing_endpoint",
+    "parts": {
+     "legacy": 0.23089814186096191,
+     "path": 0.0027358531951904297
+    }
+   }
+  ]
+ },
+ "elapsed_s": 58.210113286972046,
+ "hwm_mib": 1120.15625,
+ "asof": "2026-11-21T17:05:03.652137+00:00"
+}
