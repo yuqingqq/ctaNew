@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "28", "name": "the retention flips on every review", "seconds": 9.0, "sources": {"pf_pi0_admission.py": "ab3f8ce707130e33", "pf_pi0_admission_mutants.py": "f361f422077a369c", "pf_pi0_admission_selftest.py": "1603e56046ba4f06"}, "why": "PI0 ADMISSION SELFTEST FAILED: retention_v2: 4690.44 / {'both_modeled': 720, 'flips': 36, 'flip_share': 0.05}"}
+2026-11-21T10:58:39Z tag=mut_adm_28 rc=0 peak_rss_mib=230 wall_s=9.23 cpu_user_s=8.97 memavail_start_gib=22 disk_free_gib=443->443 slot=claude2

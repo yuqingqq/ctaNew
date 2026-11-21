@@ -1,0 +1,31 @@
+  0 the census over excluded worlds: CAUGHT (8.9 s) - PI0 ADMISSION SELFTEST FAILED: census / select: stopped (KeyError('episodes')); writers: stopped (KeyError('episodes'))
+  1 the cell from the world start: CAUGHT (9.0 s) - PI0 ADMISSION SELFTEST FAILED: census / select: 10 generations, 4 in the first cell
+  2 five per cell: CAUGHT (9.1 s) - PI0 ADMISSION SELFTEST FAILED: census / select: 10 generations, 5 in the first cell
+  3 an unsalted rank: CAUGHT (9.1 s) - PI0 ADMISSION SELFTEST FAILED: census / select: 10 generations, 4 in the first cell
+  4 the weight inverted: CAUGHT (9.1 s) - PI0 ADMISSION SELFTEST FAILED: census / select: 10 generations, 4 in the first cell
+  5 the snapshot after the decision: CAUGHT (4.3 s) - PI0 ADMISSION SELFTEST FAILED: world_rows: stopped (ValueError('side 0 already processed at 250.0'))
+  6 the factual decisions hash unchecked: CAUGHT (9.5 s) - PI0 ADMISSION SELFTEST FAILED: a different decisions hash: ok, not factual_not_reproduced
+  7 the horizon unchecked: CAUGHT (9.5 s) - PI0 ADMISSION SELFTEST FAILED: a different END: ok, not horizon_mismatch
+  8 admission unchecked: CAUGHT (9.5 s) - PI0 ADMISSION SELFTEST FAILED: a point PI0 did not POST: keep_not_admitted, not not_admitted
+  9 the gid unchecked: CAUGHT (9.4 s) - PI0 ADMISSION SELFTEST FAILED: a wrong gid: keep_not_admitted, not gid_mismatch
+  10 the override on any live PULL: CAUGHT (8.6 s) - PI0 ADMISSION SELFTEST FAILED: world_rows: generation gid 0 at 250 (prefix_mismatch, {'factual_reproduced': True, 'horizon_ok': True, 'prefix_ok': Fal
+  11 the prefix ignores fills: CAUGHT (9.0 s) - PI0 ADMISSION SELFTEST FAILED: keep_prefix_ok: a fill before the override that the factual lacks was accepted
+  12 the equivalence ignores the fills: CAUGHT (9.1 s) - PI0 ADMISSION SELFTEST FAILED: world_rows: a held fill the KEEP arm lacks gave ok
+  13 the reconciliation ignores the value: CAUGHT (9.0 s) - PI0 ADMISSION SELFTEST FAILED: reconcile_pull: the value, the pre-effect fills or the removal time
+  14 the reconciliation ignores the pre-effect fills: CAUGHT (9.1 s) - PI0 ADMISSION SELFTEST FAILED: reconcile_pull: the value, the pre-effect fills or the removal time
+  15 the reconciliation ignores the removal time: CAUGHT (9.1 s) - PI0 ADMISSION SELFTEST FAILED: reconcile_pull: the value, the pre-effect fills or the removal time
+  16 the review target from activation: CAUGHT (9.1 s) - PI0 ADMISSION SELFTEST FAILED: world_rows: a stage target that does not start at its effect / activation; world_rows: a stage target that does not sta
+  17 an unweighted mean: CAUGHT (9.0 s) - PI0 ADMISSION SELFTEST FAILED: economics: weighted mean 0.5; predicates: harmful / thin / days disagreeing / RETENTION v2
+  18 the economics over every status: CAUGHT (9.1 s) - PI0 ADMISSION SELFTEST FAILED: economics: weighted mean 5.956521739130435
+  19 MSE as an absolute error: CAUGHT (9.1 s) - PI0 ADMISSION SELFTEST FAILED: the perfect-mean mixture: {'stage': 'entry', 'day': 'all', 'side': 'all', 'weighted': True, 'n': 100, 'fill_rate': 0.3,
+  20 unmatched strata: CAUGHT (9.0 s) - PI0 ADMISSION SELFTEST FAILED: selection: a planted protective selection ({'n': 80, 'n_sel': 40, 'mean_sel': -15.333333333333334, 'mean_all': -10.3333
+  21 the percentile reversed: CAUGHT (9.0 s) - PI0 ADMISSION SELFTEST FAILED: selection: a planted protective selection ({'n': 80, 'n_sel': 40, 'mean_sel': -15.333333333333334, 'mean_all': -10.3333
+  22 never thin: CAUGHT (9.1 s) - PI0 ADMISSION SELFTEST FAILED: selection: an all-PULL population is not degenerate / thin
+  23 a new observation on any age change: CAUGHT (9.1 s) - PI0 ADMISSION SELFTEST FAILED: stage_rows: a new PF receipt with aging-only ages; stage_rows: the new-observation classification (ages in ms grow by t
+  24 the PF receipt ignored: CAUGHT (9.1 s) - PI0 ADMISSION SELFTEST FAILED: stage_rows: a new PF receipt with aging-only ages
+  25 the thin floor ignored: CAUGHT (9.1 s) - PI0 ADMISSION SELFTEST FAILED: predicates: both days positive is not beneficial, or a thin positive sample is
+  26 one negative day suffices: CAUGHT (9.1 s) - PI0 ADMISSION SELFTEST FAILED: predicates: harmful / thin / days disagreeing / RETENTION v2
+  27 the missing admissions over every fork: CAUGHT (9.0 s) - PI0 ADMISSION SELFTEST FAILED: crosstab: 768 joined, 12 missing, classes {'excluded': 12, 'fallback': 1, 'would_POST': 43, 'would_WAIT': 712}
+  28 the retention flips on every review: CAUGHT (9.0 s) - PI0 ADMISSION SELFTEST FAILED: retention_v2: 4690.44 / {'both_modeled': 720, 'flips': 36, 'flip_share': 0.05}
+control: PASSED (9.0 s); sources {'pf_pi0_admission.py': 'ab3f8ce707130e33', 'pf_pi0_admission_mutants.py': 'f361f422077a369c', 'pf_pi0_admission_selftest.py': '1603e56046ba4f06'}
+mutation check passed: the control passes its selftest, 29 / 29 planted code errors are caught by a check (4.5 CPU min)

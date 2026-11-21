@@ -1,0 +1,42 @@
+{
+ "census": 10,
+ "selected": 8,
+ "cells": 4,
+ "worlds": 7,
+ "parts": [
+  0
+ ]
+}
+{
+ "generations": 8,
+ "statuses": [
+  {
+   "day": "20261026",
+   "status": "ok",
+   "n": 8
+  }
+ ],
+ "readings": {
+  "admitted_longer_beneficial": false,
+  "admitted_longer_harmful": false,
+  "not_identified": true
+ },
+ "days": {
+  "20261026": {
+   "n": 8,
+   "wmean_D": 1.0,
+   "sign": 1
+  }
+ },
+ "mse": {
+  "entry": false,
+  "first_review": false,
+  "first_pull": false
+ },
+ "retention_v2": {
+  "entry_mse_beats_zero": true,
+  "review_mse_beats_zero": false
+ }
+}
+pi0 admission selftest passed: census / select; the factual loop equals pf_branch_engine.step; world_rows on first, nonzero / delayed and late generations with four refusals; the perfect-mean mixture, weighted economics, the weighted null, new observations, predicates, the cross-tab and RETENTION v2 against the frozen outputs; writers (manifest and measure immutable, a changed partition refused, run_part refused)
+2026-11-21T11:02:09Z tag=pf_pi0_admission_selftest rc=0 peak_rss_mib=232 wall_s=9.23 cpu_user_s=9.03 memavail_start_gib=23 disk_free_gib=444->444 slot=claude

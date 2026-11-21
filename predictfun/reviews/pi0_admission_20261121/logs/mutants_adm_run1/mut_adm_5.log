@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "5", "name": "the snapshot after the decision", "seconds": 4.3, "sources": {"pf_pi0_admission.py": "ab3f8ce707130e33", "pf_pi0_admission_mutants.py": "f361f422077a369c", "pf_pi0_admission_selftest.py": "776b8d94cd096c68"}, "why": "PI0 ADMISSION SELFTEST FAILED: world_rows: stopped (ValueError('side 0 already processed at 250.0'))"}
+2026-11-21T10:56:08Z tag=mut_adm_5 rc=0 peak_rss_mib=227 wall_s=4.47 cpu_user_s=4.29 memavail_start_gib=22 disk_free_gib=443->443 slot=claude3

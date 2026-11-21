@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "17", "name": "an unweighted mean", "seconds": 9.0, "sources": {"pf_pi0_admission.py": "ab3f8ce707130e33", "pf_pi0_admission_mutants.py": "f361f422077a369c", "pf_pi0_admission_selftest.py": "776b8d94cd096c68"}, "why": "PI0 ADMISSION SELFTEST FAILED: economics: weighted mean 0.5; predicates: harmful / thin / days disagreeing / RETENTION v2"}
+2026-11-21T10:56:31Z tag=mut_adm_17 rc=0 peak_rss_mib=230 wall_s=9.20 cpu_user_s=8.99 memavail_start_gib=22 disk_free_gib=443->443 slot=claude3
