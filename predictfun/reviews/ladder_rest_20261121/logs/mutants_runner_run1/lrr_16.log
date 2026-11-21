@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "16", "name": "the measurement written over", "seconds": 4.8, "sources": {"pf_ladder_rest.py": "d90016ce7d25f89f", "pf_ladder_rest_mutants.py": "ba2232b7b2e3700f", "pf_ladder_rest_selftest.py": "cbb8197a16508e9d"}, "why": "LADDER SELFTEST FAILED: 10 measurement: stopped (FileNotFoundError(2, 'No such file or directory'))"}
+2026-11-21T16:57:29Z tag=lrr_16 rc=0 peak_rss_mib=230 wall_s=5.02 cpu_user_s=4.84 memavail_start_gib=22 disk_free_gib=438->438 slot=claude2

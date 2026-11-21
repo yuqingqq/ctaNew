@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "9", "name": "no own-cross rule", "seconds": 4.8, "sources": {"pf_branch_ladder.py": "c9e0852eccea5b42", "pf_branch_ladder_mutants.py": "77ffb2995745cb2a", "pf_ladder_rest_selftest.py": "e838475859bc7e05"}, "why": "LADDER SELFTEST FAILED: 3 a bid crossing our own unclosed (cancel-pending) ask is own_cross_blocked until its acknowledgement"}
+2026-11-21T16:58:48Z tag=lbc_9 rc=0 peak_rss_mib=230 wall_s=5.02 cpu_user_s=4.86 memavail_start_gib=22 disk_free_gib=438->438 slot=claude3

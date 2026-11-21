@@ -1,0 +1,3174 @@
+{
+ "asof": "2026-11-21T17:03:15.594320+00:00",
+ "cells": [
+  {
+   "candidate_ids": [
+    3695609,
+    3695631,
+    3695696,
+    3695833
+   ],
+   "candidates": 4,
+   "day": "20261024",
+   "hour": 0
+  },
+  {
+   "candidate_ids": [
+    3696268,
+    3696270,
+    3696345,
+    3696378
+   ],
+   "candidates": 4,
+   "day": "20261024",
+   "hour": 1
+  },
+  {
+   "candidate_ids": [
+    3696590,
+    3696741,
+    3696745,
+    3696786
+   ],
+   "candidates": 4,
+   "day": "20261024",
+   "hour": 2
+  },
+  {
+   "candidate_ids": [
+    3696970,
+    3697031,
+    3697114
+   ],
+   "candidates": 3,
+   "day": "20261024",
+   "hour": 3
+  },
+  {
+   "candidate_ids": [
+    3697453,
+    3697902,
+    3698001
+   ],
+   "candidates": 3,
+   "day": "20261024",
+   "hour": 4
+  },
+  {
+   "candidate_ids": [
+    3698437,
+    3698886,
+    3699278,
+    3699615
+   ],
+   "candidates": 4,
+   "day": "20261024",
+   "hour": 5
+  },
+  {
+   "candidate_ids": [
+    3699981,
+    3700046,
+    3700070,
+    3700131
+   ],
+   "candidates": 4,
+   "day": "20261024",
+   "hour": 6
+  },
+  {
+   "candidate_ids": [
+    3700345,
+    3700398,
+    3700451,
+    3700711
+   ],
+   "candidates": 4,
+   "day": "20261024",
+   "hour": 7
+  },
+  {
+   "candidate_ids": [
+    3701097,
+    3701157
+   ],
+   "candidates": 2,
+   "day": "20261024",
+   "hour": 8
+  },
+  {
+   "candidate_ids": [
+    3701680,
+    3701803,
+    3701843,
+    3701844
+   ],
+   "candidates": 4,
+   "day": "20261024",
+   "hour": 9
+  },
+  {
+   "candidate_ids": [
+    3702201,
+    3702702,
+    3702738,
+    3702960
+   ],
+   "candidates": 4,
+   "day": "20261024",
+   "hour": 10
+  },
+  {
+   "candidate_ids": [
+    3703354,
+    3703476,
+    3703704,
+    3703978
+   ],
+   "candidates": 4,
+   "day": "20261024",
+   "hour": 11
+  },
+  {
+   "candidate_ids": [
+    3704004,
+    3704366
+   ],
+   "candidates": 2,
+   "day": "20261024",
+   "hour": 12
+  },
+  {
+   "candidate_ids": [
+    3705358
+   ],
+   "candidates": 1,
+   "day": "20261024",
+   "hour": 13
+  },
+  {
+   "candidate_ids": [
+    3705854,
+    3706450,
+    3706749,
+    3706912
+   ],
+   "candidates": 4,
+   "day": "20261024",
+   "hour": 14
+  },
+  {
+   "candidate_ids": [
+    3707385,
+    3707645,
+    3707656,
+    3707892
+   ],
+   "candidates": 4,
+   "day": "20261024",
+   "hour": 15
+  },
+  {
+   "candidate_ids": [
+    3707937,
+    3708011,
+    3708347,
+    3709505
+   ],
+   "candidates": 4,
+   "day": "20261024",
+   "hour": 16
+  },
+  {
+   "candidate_ids": [
+    3709821,
+    3711335,
+    3711345,
+    3711654
+   ],
+   "candidates": 4,
+   "day": "20261024",
+   "hour": 17
+  },
+  {
+   "candidate_ids": [
+    3712725,
+    3714204,
+    3714947,
+    3715196
+   ],
+   "candidates": 4,
+   "day": "20261024",
+   "hour": 18
+  },
+  {
+   "candidate_ids": [
+    3715722,
+    3716727,
+    3717163,
+    3718117
+   ],
+   "candidates": 4,
+   "day": "20261024",
+   "hour": 19
+  },
+  {
+   "candidate_ids": [
+    3718171,
+    3718173,
+    3718364,
+    3718697
+   ],
+   "candidates": 4,
+   "day": "20261024",
+   "hour": 20
+  },
+  {
+   "candidate_ids": [
+    3719686,
+    3719771,
+    3719832,
+    3720362
+   ],
+   "candidates": 4,
+   "day": "20261024",
+   "hour": 21
+  },
+  {
+   "candidate_ids": [
+    3720453,
+    3720854,
+    3721958
+   ],
+   "candidates": 3,
+   "day": "20261024",
+   "hour": 22
+  },
+  {
+   "candidate_ids": [
+    3721985,
+    3722002,
+    3723687
+   ],
+   "candidates": 3,
+   "day": "20261024",
+   "hour": 23
+  },
+  {
+   "candidate_ids": [
+    3723774,
+    3724661,
+    3724663,
+    3724745
+   ],
+   "candidates": 4,
+   "day": "20261025",
+   "hour": 0
+  },
+  {
+   "candidate_ids": [
+    3725527,
+    3725884,
+    3725933
+   ],
+   "candidates": 3,
+   "day": "20261025",
+   "hour": 1
+  },
+  {
+   "candidate_ids": [
+    3726338,
+    3726405,
+    3726408,
+    3726464
+   ],
+   "candidates": 4,
+   "day": "20261025",
+   "hour": 2
+  },
+  {
+   "candidate_ids": [
+    3727261,
+    3727774,
+    3727830
+   ],
+   "candidates": 3,
+   "day": "20261025",
+   "hour": 3
+  },
+  {
+   "candidate_ids": [
+    3727901,
+    3728547,
+    3729522,
+    3730213
+   ],
+   "candidates": 4,
+   "day": "20261025",
+   "hour": 4
+  },
+  {
+   "candidate_ids": [
+    3730237,
+    3732331,
+    3732355,
+    3732393
+   ],
+   "candidates": 4,
+   "day": "20261025",
+   "hour": 5
+  },
+  {
+   "candidate_ids": [
+    3732938,
+    3732947,
+    3733280
+   ],
+   "candidates": 3,
+   "day": "20261025",
+   "hour": 6
+  },
+  {
+   "candidate_ids": [
+    3734864,
+    3734866,
+    3734941,
+    3735309
+   ],
+   "candidates": 4,
+   "day": "20261025",
+   "hour": 7
+  },
+  {
+   "candidate_ids": [
+    3735461,
+    3735729,
+    3736294
+   ],
+   "candidates": 3,
+   "day": "20261025",
+   "hour": 8
+  },
+  {
+   "candidate_ids": [
+    3736533,
+    3736855,
+    3736928,
+    3736933
+   ],
+   "candidates": 4,
+   "day": "20261025",
+   "hour": 9
+  },
+  {
+   "candidate_ids": [
+    3737057,
+    3737604,
+    3737917,
+    3737919
+   ],
+   "candidates": 4,
+   "day": "20261025",
+   "hour": 10
+  },
+  {
+   "candidate_ids": [
+    3739813,
+    3739819,
+    3740000,
+    3740544
+   ],
+   "candidates": 4,
+   "day": "20261025",
+   "hour": 11
+  },
+  {
+   "candidate_ids": [
+    3741911,
+    3742871
+   ],
+   "candidates": 2,
+   "day": "20261025",
+   "hour": 12
+  },
+  {
+   "candidate_ids": [
+    3750228,
+    3750599,
+    3753334,
+    3753893
+   ],
+   "candidates": 4,
+   "day": "20261025",
+   "hour": 13
+  },
+  {
+   "candidate_ids": [
+    3753954,
+    3754801,
+    3755607
+   ],
+   "candidates": 3,
+   "day": "20261025",
+   "hour": 14
+  },
+  {
+   "candidate_ids": [
+    3758040,
+    3758641,
+    3758644
+   ],
+   "candidates": 3,
+   "day": "20261025",
+   "hour": 15
+  },
+  {
+   "candidate_ids": [
+    3759674,
+    3761106,
+    3761634,
+    3762527
+   ],
+   "candidates": 4,
+   "day": "20261025",
+   "hour": 16
+  },
+  {
+   "candidate_ids": [
+    3763401,
+    3764206,
+    3764211
+   ],
+   "candidates": 3,
+   "day": "20261025",
+   "hour": 17
+  },
+  {
+   "candidate_ids": [
+    3765492,
+    3768439,
+    3769132,
+    3769199
+   ],
+   "candidates": 4,
+   "day": "20261025",
+   "hour": 18
+  },
+  {
+   "candidate_ids": [
+    3773101,
+    3775019,
+    3775026,
+    3775069
+   ],
+   "candidates": 4,
+   "day": "20261025",
+   "hour": 19
+  },
+  {
+   "candidate_ids": [
+    3775438,
+    3776314,
+    3777586,
+    3777602
+   ],
+   "candidates": 4,
+   "day": "20261025",
+   "hour": 20
+  },
+  {
+   "candidate_ids": [
+    3778543,
+    3779380,
+    3779661
+   ],
+   "candidates": 3,
+   "day": "20261025",
+   "hour": 21
+  },
+  {
+   "candidate_ids": [
+    3781973,
+    3783041,
+    3783683
+   ],
+   "candidates": 3,
+   "day": "20261025",
+   "hour": 22
+  },
+  {
+   "candidate_ids": [
+    3783696,
+    3785799,
+    3785800,
+    3786444
+   ],
+   "candidates": 4,
+   "day": "20261025",
+   "hour": 23
+  },
+  {
+   "candidate_ids": [
+    3787234,
+    3787743,
+    3788223,
+    3788669
+   ],
+   "candidates": 4,
+   "day": "20261026",
+   "hour": 0
+  },
+  {
+   "candidate_ids": [
+    3788689,
+    3789484,
+    3789977
+   ],
+   "candidates": 3,
+   "day": "20261026",
+   "hour": 1
+  },
+  {
+   "candidate_ids": [
+    3791366,
+    3791370,
+    3791435
+   ],
+   "candidates": 3,
+   "day": "20261026",
+   "hour": 2
+  },
+  {
+   "candidate_ids": [
+    3792081,
+    3792112,
+    3792204,
+    3792643
+   ],
+   "candidates": 4,
+   "day": "20261026",
+   "hour": 3
+  },
+  {
+   "candidate_ids": [
+    3792862,
+    3792958,
+    3795090
+   ],
+   "candidates": 3,
+   "day": "20261026",
+   "hour": 4
+  },
+  {
+   "candidate_ids": [
+    3796997,
+    3797111,
+    3797765,
+    3798850
+   ],
+   "candidates": 4,
+   "day": "20261026",
+   "hour": 5
+  },
+  {
+   "candidate_ids": [
+    3800178,
+    3800967,
+    3801363,
+    3801827
+   ],
+   "candidates": 4,
+   "day": "20261026",
+   "hour": 6
+  },
+  {
+   "candidate_ids": [
+    3802211,
+    3803131
+   ],
+   "candidates": 2,
+   "day": "20261026",
+   "hour": 7
+  },
+  {
+   "candidate_ids": [
+    3803335,
+    3803849,
+    3803875
+   ],
+   "candidates": 3,
+   "day": "20261026",
+   "hour": 8
+  },
+  {
+   "candidate_ids": [
+    3804696,
+    3804706,
+    3804738,
+    3804740
+   ],
+   "candidates": 4,
+   "day": "20261026",
+   "hour": 9
+  },
+  {
+   "candidate_ids": [
+    3805012,
+    3805097,
+    3805241
+   ],
+   "candidates": 3,
+   "day": "20261026",
+   "hour": 10
+  },
+  {
+   "candidate_ids": [
+    3805925,
+    3806141,
+    3806282,
+    3807182
+   ],
+   "candidates": 4,
+   "day": "20261026",
+   "hour": 11
+  },
+  {
+   "candidate_ids": [
+    3808508,
+    3810548,
+    3811217,
+    3811225
+   ],
+   "candidates": 4,
+   "day": "20261026",
+   "hour": 12
+  },
+  {
+   "candidate_ids": [
+    3811924,
+    3812717,
+    3813913,
+    3814579
+   ],
+   "candidates": 4,
+   "day": "20261026",
+   "hour": 13
+  },
+  {
+   "candidate_ids": [
+    3819451,
+    3819978,
+    3820690
+   ],
+   "candidates": 3,
+   "day": "20261026",
+   "hour": 14
+  },
+  {
+   "candidate_ids": [
+    3822182,
+    3823373,
+    3823814,
+    3823840
+   ],
+   "candidates": 4,
+   "day": "20261026",
+   "hour": 15
+  },
+  {
+   "candidate_ids": [
+    3824365,
+    3827443,
+    3828901
+   ],
+   "candidates": 3,
+   "day": "20261026",
+   "hour": 16
+  },
+  {
+   "candidate_ids": [
+    3829404,
+    3831312,
+    3831539,
+    3833030
+   ],
+   "candidates": 4,
+   "day": "20261026",
+   "hour": 17
+  },
+  {
+   "candidate_ids": [
+    3835592,
+    3835598,
+    3835721
+   ],
+   "candidates": 3,
+   "day": "20261026",
+   "hour": 18
+  },
+  {
+   "candidate_ids": [
+    3838141,
+    3838531,
+    3841698,
+    3841760
+   ],
+   "candidates": 4,
+   "day": "20261026",
+   "hour": 19
+  },
+  {
+   "candidate_ids": [
+    3841803,
+    3843751,
+    3844040
+   ],
+   "candidates": 3,
+   "day": "20261026",
+   "hour": 20
+  },
+  {
+   "candidate_ids": [
+    3844597,
+    3844600,
+    3845583,
+    3846777
+   ],
+   "candidates": 4,
+   "day": "20261026",
+   "hour": 21
+  },
+  {
+   "candidate_ids": [
+    3847789,
+    3848961,
+    3850428
+   ],
+   "candidates": 3,
+   "day": "20261026",
+   "hour": 22
+  },
+  {
+   "candidate_ids": [
+    3851900,
+    3852471,
+    3852498,
+    3852573
+   ],
+   "candidates": 4,
+   "day": "20261026",
+   "hour": 23
+  },
+  {
+   "candidate_ids": [
+    3853227,
+    3853425,
+    3853491,
+    3853494
+   ],
+   "candidates": 4,
+   "day": "20261027",
+   "hour": 0
+  },
+  {
+   "candidate_ids": [
+    3854753,
+    3854908,
+    3855039,
+    3855073
+   ],
+   "candidates": 4,
+   "day": "20261027",
+   "hour": 1
+  },
+  {
+   "candidate_ids": [
+    3855361,
+    3855364,
+    3855455
+   ],
+   "candidates": 3,
+   "day": "20261027",
+   "hour": 2
+  },
+  {
+   "candidate_ids": [
+    3856528,
+    3856607,
+    3856715
+   ],
+   "candidates": 3,
+   "day": "20261027",
+   "hour": 3
+  },
+  {
+   "candidate_ids": [
+    3858121,
+    3858387,
+    3858756
+   ],
+   "candidates": 3,
+   "day": "20261027",
+   "hour": 4
+  },
+  {
+   "candidate_ids": [
+    3859335,
+    3859354,
+    3861273,
+    3861514
+   ],
+   "candidates": 4,
+   "day": "20261027",
+   "hour": 5
+  },
+  {
+   "candidate_ids": [
+    3863088,
+    3863147,
+    3863163
+   ],
+   "candidates": 3,
+   "day": "20261027",
+   "hour": 6
+  },
+  {
+   "candidate_ids": [
+    3863780,
+    3864797,
+    3864800
+   ],
+   "candidates": 3,
+   "day": "20261027",
+   "hour": 7
+  },
+  {
+   "candidate_ids": [
+    3865917,
+    3865939,
+    3866020
+   ],
+   "candidates": 3,
+   "day": "20261027",
+   "hour": 8
+  },
+  {
+   "candidate_ids": [
+    3866772,
+    3866885,
+    3866895
+   ],
+   "candidates": 3,
+   "day": "20261027",
+   "hour": 9
+  },
+  {
+   "candidate_ids": [
+    3866949,
+    3867043,
+    3867152,
+    3867406
+   ],
+   "candidates": 4,
+   "day": "20261027",
+   "hour": 10
+  },
+  {
+   "candidate_ids": [
+    3868062,
+    3868167,
+    3868279,
+    3868509
+   ],
+   "candidates": 4,
+   "day": "20261027",
+   "hour": 11
+  },
+  {
+   "candidate_ids": [
+    3868822,
+    3869979
+   ],
+   "candidates": 2,
+   "day": "20261027",
+   "hour": 12
+  },
+  {
+   "candidate_ids": [
+    3870054,
+    3871561,
+    3871995,
+    3872024
+   ],
+   "candidates": 4,
+   "day": "20261027",
+   "hour": 13
+  },
+  {
+   "candidate_ids": [
+    3872531,
+    3872834,
+    3873097,
+    3873293
+   ],
+   "candidates": 4,
+   "day": "20261027",
+   "hour": 14
+  },
+  {
+   "candidate_ids": [
+    3873313,
+    3874125,
+    3874410,
+    3874854
+   ],
+   "candidates": 4,
+   "day": "20261027",
+   "hour": 15
+  },
+  {
+   "candidate_ids": [
+    3876526,
+    3877092
+   ],
+   "candidates": 2,
+   "day": "20261027",
+   "hour": 16
+  },
+  {
+   "candidate_ids": [
+    3877446,
+    3877472,
+    3877765,
+    3878306
+   ],
+   "candidates": 4,
+   "day": "20261027",
+   "hour": 17
+  },
+  {
+   "candidate_ids": [
+    3878682,
+    3879202,
+    3879633,
+    3880109
+   ],
+   "candidates": 4,
+   "day": "20261027",
+   "hour": 18
+  },
+  {
+   "candidate_ids": [
+    3881457,
+    3882534,
+    3882540
+   ],
+   "candidates": 3,
+   "day": "20261027",
+   "hour": 19
+  },
+  {
+   "candidate_ids": [
+    3883162,
+    3884545
+   ],
+   "candidates": 2,
+   "day": "20261027",
+   "hour": 20
+  },
+  {
+   "candidate_ids": [
+    3885429,
+    3885666,
+    3885669,
+    3887086
+   ],
+   "candidates": 4,
+   "day": "20261027",
+   "hour": 21
+  },
+  {
+   "candidate_ids": [
+    3887723,
+    3891065,
+    3899221,
+    3899224
+   ],
+   "candidates": 4,
+   "day": "20261027",
+   "hour": 22
+  },
+  {
+   "candidate_ids": [
+    3899455,
+    3899531,
+    3899946,
+    3900028
+   ],
+   "candidates": 4,
+   "day": "20261027",
+   "hour": 23
+  }
+ ],
+ "config": {
+  "cap": 200.0,
+  "end_ms": null,
+  "inventory": {
+   "Qside": 200.0,
+   "R": 50.0,
+   "S": 100.0,
+   "target": 0.0
+  },
+  "levels": 2,
+  "own_cross": true,
+  "q0": 100.0
+ },
+ "contract": "branch_ladder_v1",
+ "days": [
+  "20261024",
+  "20261025",
+  "20261026",
+  "20261027"
+ ],
+ "dictionary": [
+  {
+   "clock": "the last received Predict frame",
+   "col": "pf_spread",
+   "family": "spread",
+   "meaning": "Predict spread (cents)"
+  },
+  {
+   "clock": "the last received Predict frame",
+   "col": "o_depth",
+   "family": "distance from best",
+   "meaning": "order price behind the received best (ticks; 0 = at best)"
+  },
+  {
+   "clock": "the last received Predict frame",
+   "col": "r_s1",
+   "family": "displayed depth",
+   "meaning": "own best level size / the window liquidity scale"
+  },
+  {
+   "clock": "frames received since activation (rule M)",
+   "col": "fp_queue",
+   "family": "queue",
+   "meaning": "client-known queue ahead (shares; the shown size at the price at an entry)"
+  },
+  {
+   "clock": "frames received since activation",
+   "col": "o_q_rel",
+   "family": "queue",
+   "meaning": "client-known queue ahead relative to the window scale"
+  },
+  {
+   "clock": "the client clock",
+   "col": "ctx_generation_age_ms",
+   "family": "age",
+   "meaning": "ms since the generation was submitted (0 at an entry)"
+  },
+  {
+   "clock": "fill notices (+100 ms)",
+   "col": "fp_remaining",
+   "family": "remaining",
+   "meaning": "client-known remaining quantity (shares)"
+  },
+  {
+   "clock": "Binance trades received by the decision",
+   "col": "adv_bn_flow1000",
+   "family": "signed flow",
+   "meaning": "Binance trade flow over the last 1 s, adverse-signed"
+  },
+  {
+   "clock": "Predict frames received by the decision",
+   "col": "adv_ofi250",
+   "family": "signed flow",
+   "meaning": "Predict order-flow imbalance over 250 ms, adverse-signed"
+  },
+  {
+   "clock": "Predict trades received by the decision",
+   "col": "r_own_pend",
+   "family": "signed flow",
+   "meaning": "own-side pending Predict flow over 1 s / the window scale"
+  },
+  {
+   "clock": "the last received Predict frame",
+   "col": "adv_pf_imb1",
+   "family": "imbalance",
+   "meaning": "Predict level-1 depth imbalance against the side"
+  },
+  {
+   "clock": "Binance book received by the decision",
+   "col": "adv_d_bnimb250",
+   "family": "imbalance change",
+   "meaning": "Binance top-of-book imbalance change over 250 ms, adverse-signed"
+  },
+  {
+   "clock": "received Predict frames",
+   "col": "own_d250",
+   "family": "imbalance change",
+   "meaning": "own-side best-level size change over 250 ms (negative = depletion)"
+  },
+  {
+   "clock": "received Predict frames",
+   "col": "adv_pf_dm1000",
+   "family": "movement",
+   "meaning": "Predict mid change over 1 s, adverse-signed"
+  },
+  {
+   "clock": "Binance book received by the decision",
+   "col": "adv_bn_r250",
+   "family": "movement",
+   "meaning": "Binance mid return over 250 ms, adverse-signed"
+  },
+  {
+   "clock": "Binance book received by the decision",
+   "col": "adv_bn_r1000",
+   "family": "movement",
+   "meaning": "Binance mid return over 1 s, adverse-signed"
+  },
+  {
+   "clock": "Binance history received by the decision",
+   "col": "sigma",
+   "family": "volatility",
+   "meaning": "Binance volatility (unsigned)"
+  },
+  {
+   "clock": "Binance trades received by the decision",
+   "col": "bn_ntr1000",
+   "family": "volatility",
+   "meaning": "Binance trades in the last 1 s (unsigned activity)"
+  },
+  {
+   "clock": "fair prices stamped by the decision",
+   "col": "gap_adv",
+   "family": "fair price",
+   "meaning": "fair-price gap against the side"
+  },
+  {
+   "clock": "the client clock",
+   "col": "pf_age",
+   "family": "source age",
+   "meaning": "age of the received Predict book state (ms)"
+  },
+  {
+   "clock": "the client clock",
+   "col": "bn_age",
+   "family": "source age",
+   "meaning": "age of the received Binance state (ms)"
+  },
+  {
+   "clock": "the client clock",
+   "col": "t_to_end",
+   "family": "remaining time",
+   "meaning": "ms to the supported market end"
+  },
+  {
+   "clock": "fill notices (+100 ms)",
+   "col": "inv_signed",
+   "family": "inventory",
+   "meaning": "client-known inventory in the order's direction (bid +I, ask -I; shares)"
+  },
+  {
+   "clock": "the client state",
+   "col": "ctx_bid_reserved_shares",
+   "family": "reservations",
+   "meaning": "known remaining of every unclosed bid (shares)"
+  },
+  {
+   "clock": "the client state",
+   "col": "ctx_ask_reserved_shares",
+   "family": "reservations",
+   "meaning": "known remaining of every unclosed ask (shares)"
+  },
+  {
+   "clock": "the client state",
+   "col": "ctx_other_state_post_pending",
+   "family": "pending flags",
+   "meaning": "the opposite side's most active state is post-pending (0 / 1)"
+  }
+ ],
+ "discovery": [
+  "20261024",
+  "20261025"
+ ],
+ "feature_schema": {
+  "n": 107,
+  "sha256": "43c9598dfb3bc2475d6b98c2b1107cfa57cfed1a8644992569e32c8a4d9ff1f9"
+ },
+ "inputs": {
+  "20261024": {
+   "files": "real_files",
+   "inputs": {
+    "files": {
+     "/home/yuqing/ctaNew/data/predict_fun/research/flow_price_20261116_v1/20261024/receipt.json": "d299a7ec72b332f7d3e03c492d5a7f6ed8c900d2682dbb4e576a3446d34fd2e8",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261023_23.parquet": "899c5bca49667271dc6c39534483a12998c223f6631cf6eecb14ffe59bffcc88",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_00.parquet": "dc5b5d721958ac8bd8596850d1ea7f73c3c8e400de6eaddbf7e1e4ad9d34338d",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_01.parquet": "fa9af3d2363e9265b335f00cf2e66efb923bb2f5e621009d0827354eb9d0427b",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_02.parquet": "b003f7ab3578da0c525be9f9cdcbdb9d5ffd98aad0c7935e8817aa9e19d3bad3",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_03.parquet": "aef6334676ee309a9fd2cfdb62dc860ea4712d96c29412cf02ae09815e0dbbc3",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_04.parquet": "161a43df0dc7b189536ea9871654fcf61c580d6554671a01e0e87fb8cb62a014",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_05.parquet": "e96ba547e412f238ebebbb53a64856b147cf8e83c39757a75cf0848e8e66a057",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_06.parquet": "90367d42af56fa28eb54b6bfa215a532e2c69a3ad7812d51a84e46e115325529",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_07.parquet": "d2b4e72d1f824cbe4a2604fc4ab932cea1bbd18744ff1902e983e72e477f2306",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_08.parquet": "6ee338f8df81f7299a7a250ae5e6c05c193464bf6f350edd99b91905942e8aad",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_09.parquet": "faadff5459fd51a067c222099d19ae87a4bf949611b9aa7173fce86f83d57271",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_10.parquet": "4042eb8bea7cfb474bab215fbe8c3754e52f17011694028f6ee276e19f9ac146",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_11.parquet": "b7edc2812235265375db5902240d4308023507324cfd0032e648acaee449040e",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_12.parquet": "a5f08b666b996adab95022390a9b3be19faa0d2a3266878f608e19d23ce34d77",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_13.parquet": "638dc4d41368b471100b4e591c4d122b130191b9133c3ffbcf3b91eb5ffeb142",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_14.parquet": "dc856fe8199b1fb2adec02d7f71d86ba84480eb2becc5bb8b3b4731e1f54d6c9",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_15.parquet": "18d8b5c3fdb013ca124dfad388ea5e3777176072c0613001b3ead0a18f745c8e",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_16.parquet": "1379cc0faa2d118892fbdfc99826a6c021962fbfc3ac40a964c942b208267b69",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_17.parquet": "613df271276bbc6142514fdb5795d9af1d429a03af277a477cb583d140fa2f47",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_18.parquet": "2de00fa35c1bad57595b4adb5225cf9d23c63faaff07289593e3067fe8fa3c71",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_19.parquet": "26070fb65e0c9eb13830f92ed766e106e6efe6da842fde533cbb8ad8932275fd",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_20.parquet": "18af2e7a3f14055b7296cb6b65818262bc07d83511e93deb115482ef1a4c1a1e",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_21.parquet": "5e5f2a975dedc4b481c99fcd04c09e42f3d223b19679dbdbc7a801ba53260807",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_22.parquet": "bc50e043af9d8b88e797c6db8ca62b5d2b646e3856741fc78c19bc5ce5536fbd",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_23.parquet": "c823ef0cbca974119479b603611351f086af408d86bcb3533dc9a169b518aac1",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261025_00.parquet": "3212f2851e39ec129b2bead18af637028dc3de996aff06fa2ee5f7d6261754c2",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/clock_rl_d2.json": "9c6aa937d7e4d201706598a163e2b9fa781ba9cc0ce897f87941518c4d4aa6c5",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/legs_timed2.parquet": "b1e9d1b0c446ddcb7abc430d7e578b6c3554d2bcf85032a1b7136e2371b60368",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/legs_tk.parquet": "f1064853457fc6f18b623db1578c6d1843666396ff558b473fa5fdad73dbbc5f",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/registry.parquet": "21482f2cbec32188e80d5f80926f99bf87158507643c307ae4d177cb89e7c9c0",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261024/preds_t60k.parquet": "4a81efd59fad6fe11cb97c15cc7ec57eda9048df64ed61acf81e2f4604d29922",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261024/rows_rl_d2_pk.parquet": "112e48d765bb3b086c1c34153080650e795b0d4a43bd674e0eb5b1c92827bca2",
+     "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_20261115/day_20261024_imp.json": "4a31b46e19ca9920220cdd5d405bb8a0ecb3592d7bd2f75c0f70cce2a13e9009"
+    },
+    "hours": [
+     "20261023_23",
+     "20261024_00",
+     "20261024_01",
+     "20261024_02",
+     "20261024_03",
+     "20261024_04",
+     "20261024_05",
+     "20261024_06",
+     "20261024_07",
+     "20261024_08",
+     "20261024_09",
+     "20261024_10",
+     "20261024_11",
+     "20261024_12",
+     "20261024_13",
+     "20261024_14",
+     "20261024_15",
+     "20261024_16",
+     "20261024_17",
+     "20261024_18",
+     "20261024_19",
+     "20261024_20",
+     "20261024_21",
+     "20261024_22",
+     "20261024_23"
+    ],
+    "kp_outputs": {
+     "fills.parquet": "dfe6d32f9da51865f83465e28a592751b51eab4a3ac84ae8f8bcb63252f964b1",
+     "orders.parquet": "38a37005f7d466e5b7317974a9368c5cc7cfa7d5435bccb9cec2be97e6e3577b"
+    },
+    "kp_receipt": "14dbf7193dca0c9f6817d8f8f8c84734fbd202f97adf44bd32ee7954875a9535",
+    "offset": -20.0,
+    "tracked": {
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_23.csv.gz": "4548530c4a10e5c6e2fc3b52e714b297832dc3401e8e7c1e582c365fa7d4edab",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_00.csv.gz": "d56b7ec4d45ebe5742c174544b3a0199a4f8ded39c1a144ff91e1f1fa074235c",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_01.csv.gz": "bf8e898fccd139635d694de75dbe0687592040081ad37bdbbffb83ec3815359d",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_02.csv.gz": "8efd92a7e8eaa4326577a4007903902cf116c8ad08a52dec39c563198b0d81a8",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_03.csv.gz": "e3f72c2551940353856347481873cf59e722bb3b8d1c5b5c946750a4c5cba8ef",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_04.csv.gz": "c3d2313683aff8e6a945bb6079d446fad58dcbabf3d13fdb3cec6fa656232dc9",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_05.csv.gz": "f7bef7607f53e5c015f50c24d93aa7833bb6d6a5aeb75bc95b2c96337e7855e5",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_06.csv.gz": "3fcadc80b9e387e6ae2823fd4137d8883c8d7d3a8d93524902d837e60718d646",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_07.csv.gz": "507947e55f80117005623bfa13a8f2306e423f1054c9a37133a6ce892526c599",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_08.csv.gz": "637499c6c8410f472bd81e582d7fb79642a9be048d1c160815fecb1b7c27c389",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_09.csv.gz": "ebbe64fb0155e9cf5e0f9a3f2b9e9067d3b2d1f01a0f58457611304d9c249e45",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_10.csv.gz": "50bd4629bd5bdd9680475a10dba71d7e7f297862519139d23e8d9f95839b7057",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_11.csv.gz": "735d40a83e275311bfb0b7bcb883e124242a17998195cea94883224d1eb07a7c",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_12.csv.gz": "5016eb52631a66fe0b3c53387187046c5161a38724debca251240007a1292ff3",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_13.csv.gz": "7f4a0d556ee3d6a6377de87c3a9c292eb80b7d0dcb01142fa5d6fd8a786d57cd",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_14.csv.gz": "4819550caec67aada6139ab8d1db2e57de159c594651a588de3ef068ce7865b1",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_15.csv.gz": "adfd389fc0a75ae7c8cf9bb94459f59c080f539fa3672a97fd0989c28baa7b7c",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_16.csv.gz": "730304b59e1e2fbf56904585e76dacdda5187f6f54650786b7be2600a4149d49",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_17.csv.gz": "278d80a608df10e5ca7c4bf83d5deda611db79820274de4378eb7d33f56e3f54",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_18.csv.gz": "32226d52a4d83d2088917d8daf464392d17ac6f1cedd6bd6cbd419cb3d559636",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_19.csv.gz": "28561d72a42b810930275695aedaa708725e979a848175c99e9bbd0f493406c0",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_20.csv.gz": "0c0bfa0a8e2816002e549544b82a6933ee007fd7c478d6a132ddb22195b08197",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_21.csv.gz": "9ea0d8924e447948a9edda576310b0e4baa33e8d91aa2a62ab47ae239f876af5",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_22.csv.gz": "f74e605d5202e1cb4325b0370c046ed11f28c42fa829e9374c9935514f17d266",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_23.csv.gz": "2ed42ebad8b4b5d4510b13a85080f138f4a579960debf86df5d75a2cf62bc1c3",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261023_23.csv.gz": "b2f962bc438b160c7d7c92ef320791532d317a7df6b4c69cdfad97b4219eca00",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261024_00.csv.gz": "299fc201607c002ebff462258ba171e338934537b2abf215ec1fa2cacfe95ce2",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261024_01.csv.gz": "253bb83c0b0a30bcc19abfe24e229d11d1e2115c73b227763c06b36c599fdf08",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261024_02.csv.gz": "959457dc8f653f6bad1ec971e177c1e11bb0318b3a15d4c0f7bc69bd6ea243af",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261024_03.csv.gz": "0757efac45882e0788f41c29866e249e16746b62113e93c166fde2c16ae95b53",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261024_04.csv.gz": "defd8863544ed8d539cba9eff4a65f9722e3347bfab43058f13f58daeb78adbe",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261024_05.csv.gz": "c9699599109d5e06db49158d3dd639017d026cc63b8a239ee7b866e9fe9f5264",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261024_06.csv.gz": "a24ab60008499cba260889468efc7979f5d52b244c075f04afafce494c982d30",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261024_07.csv.gz": "307149a943c822bfee0a1995aad591aa66a8a6290215819b8b2d78b4fd36ee98",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261024_08.csv.gz": "69979adeb5e834ea55fe80c3f0503c6dcc2724da46181cfc7e2a55182a794148",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261024_09.csv.gz": "ebe6fc0b5eea14c5207087d91039a9aec845bac3f08d11718c9dcfc46d08abb9",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261024_10.csv.gz": "1c2b3aa69b9557aa21f3419c810ee34e83de3700a5dea249a9829530f449dec7",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261024_11.csv.gz": "6bfd18126adbfacc113f7d6af08beff438d083799d07ef4a5b840f058a60370d",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261024_12.csv.gz": "02f2de8a4f803c7b078cb6cc6bf8917bc53df302c1f7e4d02b228d060ffbdd12",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261024_13.csv.gz": "e7390be073495ff48c0e6de277c4af1b9cd0750761b424e98b6fb8a98c7508f1",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261024_14.csv.gz": "8a31958c55573b56b7e7b460fb2c66d18b2d59e834fdfcf3dc8f1ba0b21c0234",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261024_15.csv.gz": "bd7b12eb95cf49e07e156c963296fba1c632258572290e91b0a0c9179cc9786b",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261024_16.csv.gz": "ea28a98e3b03e5609bcff139081334c2aef063ee5da4332aa2c1627e6b1814b4",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261024_17.csv.gz": "1f97b1b8138da925c0ff7b75291071ccc902fe88f128c41465d14c6ece56f994",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261024_18.csv.gz": "81f4580621983daefcb521ef3bb3e5559661b604055ec92f8878ccfdd3f99199",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261024_19.csv.gz": "8f5d850b1c7c00547aef27ca7e1433da603866a62ef2f774738c90a8bb57b97c",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261024_20.csv.gz": "083b11f810944bc471d13e7a0cb4ec250bdd0fdac43942165616f14a5251c4a2",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261024_21.csv.gz": "92cf0d526f2ce2a5396e1f096b244e3747643f0a3c5587cad18abf4078b3c76e",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261024_22.csv.gz": "c3deaea317b2827192749db4b7ea8debe145362a9a40b068ce144894a72f18f8",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261024_23.csv.gz": "724e86ff21d1575b296a6c925897d4d7e482e40d630cac7cb20a43bc25cd2d29",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261023_23.jsonl.gz": "abaf79c7499be613dd73ee63c619e0a21e953ff142a2929d59be046a6aa91e8a",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261024_00.jsonl.gz": "e241bc31f844df62b50b595a6d6976d38f392351ad0ea021b3243b38e1071533",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261024_01.jsonl.gz": "a20290c4fe1a29863fcc6b35154d2744f998fd11d1c9c4c2696a2c6aa344194a",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261024_02.jsonl.gz": "6db32a2cbb24a95c6dda2b85fb047f2ebea2c8733d05933078f58a8aaad341d5",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261024_03.jsonl.gz": "712292ce9ce2d5ab0d82306f615e0977834b6d60032c0719cc0bc1c67697eb51",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261024_04.jsonl.gz": "2ad9a5df4dcddba1df5777f6ebbc36fc8e3bd57c8ed73bd836b09f7c664e36f2",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261024_05.jsonl.gz": "026fa97a0cb0688eae3d58fb95a48fbae125b085001f59b29cafdd4ed77a1e52",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261024_06.jsonl.gz": "50a4f8b9cb9da193816aa22ea0bedd04ad8cb1f16bc687b5af604586ca533c76",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261024_07.jsonl.gz": "21acd45ed0e666ec56486c499cdac0b0d71fff6a6ebc6770c3f46dabedc1d082",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261024_08.jsonl.gz": "e00e46ed80a37f7381827225163b867f7984cd943782ecdf55b48a11c72fcf7f",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261024_09.jsonl.gz": "d1f10f1b37b7e01b0c13f1e2b67b11af7ccb4624534153f22db7491c24734e4b",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261024_10.jsonl.gz": "cbb65e81f96bd947b948f32e5499ab40df4aa72dc6150f5bb319daca960a7f44",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261024_11.jsonl.gz": "faaef28aa8ac8c00ec3aa7cce3815f9e48d0b52c82832c9fee2fa7387d007089",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261024_12.jsonl.gz": "de3720fa3cbac4ab4f5b1e6f1b202e2223da83994e0b85d302b9ad43137e9ba2",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261024_13.jsonl.gz": "f091a459a882be93fa3f895f3e070f7827ff61b7c417fd69e9f8465ce515ce49",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261024_14.jsonl.gz": "bc50935cc62acb6c62d511644cdba5e16bba9c3bc9469b30f6c29bf7f1db36a0",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261024_15.jsonl.gz": "a20f8c67e205b21793765b580ecad68f6b4fb6b630288d763b07e193ecdc5d95",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261024_16.jsonl.gz": "19f75380b2f807f10e08987d31943e94a7f7140e4ab37ea170074f02792b9975",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261024_17.jsonl.gz": "7f424ad33f43695893e9abf2d998becba004508bc7b8004493390cca6f7e32b3",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261024_18.jsonl.gz": "8d9d44d23d84dbca3c05d6fd949d6072689090e8e436eb5a6107db3a9de86703",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261024_19.jsonl.gz": "f0401cad798d758ea10b0839ce50ce81af4f7c97a0ee3a38b2a14af187d837dd",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261024_20.jsonl.gz": "a4956124adadf79883fc84c58f3d95835a395c0f4a5fe6c0e7332c56ed8a53f9",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261024_21.jsonl.gz": "d75352bde1a66febe3a8bbe3a25c71b9738577ced3e7feb8b87db49d2483ba8c",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261024_22.jsonl.gz": "c55aedaed5d0792c54bee37b87c000e98e15433b5a3e1fd85b0ad921b50b1996",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261024_23.jsonl.gz": "145952f4ed1bc91657e45bbeb9064ca5940d6254a3779b77b4d437971ad7c8a8"
+    }
+   },
+   "kp_dir": "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_20261117",
+   "plan_sha256": "0de151d1b980661d739e12c880f71eb1c81cca680ef6cef7ea97fcb36ce6c7fc",
+   "set": "train"
+  },
+  "20261025": {
+   "files": "real_files",
+   "inputs": {
+    "files": {
+     "/home/yuqing/ctaNew/data/predict_fun/research/flow_price_20261116_v1/20261025/receipt.json": "395d5815d0f1b20538fe1579346a1a0ab700c60755ff63d59677a896f8423f90",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261024_23.parquet": "81a08fd13c0c6c06c9856d888dc30c7922a83192704bc951e03672cda4cf8ff8",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_00.parquet": "bc6be83cf2430edbfe1db9ac3b1ced99e448b998276f3377f32b86747cbeaf54",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_01.parquet": "62188e9e7c26913a877452e53214546f10131eeb89cab79538ba7b2745b12432",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_02.parquet": "31220f358e82197acc715c9a53f53938a84a965b15ab947744b7bc3f188220cf",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_03.parquet": "af87bfa9cb2458370693b2bcc7769689e99c08343065ebc2357c07784999ebbd",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_04.parquet": "b4088263ac298506a6e0a13b99b4df3cfe36a992eca25d9c450cf140514a5e0d",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_05.parquet": "71ce1be288da10e93762ec9cfebfb725b1ed6bd8613b77fac5fbdd90c6ecf21e",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_06.parquet": "6ed926fe04f5a380f9e868e6566899ecec838db14f5c90380b946d3527fd9918",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_07.parquet": "a6c5632d9fd44af60ebb6a1a7e51b80bb47c67ac7fedaddd9a0927ae7011b17a",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_08.parquet": "9d867b883f20d07126a933d36fc9273e3912915f5aa599994bd73fa7dd4ee743",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_09.parquet": "35db307fb278cb4063679e4654e1feb5e15f8c979932082e7045a0fa7e6fe350",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_10.parquet": "e823343dab8f19f33c0d7dce23d6bea323d719653d7cbf6a8ae658089de33b17",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_11.parquet": "819494c28e95139c0cc17c8e5e84a8d604137baae07c05a3eb9d499fc4723e25",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_12.parquet": "e288feab62a0a16dbae1d61fbde62bf347ef9f4a40368f5e45b45fe1fb72dfd7",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_13.parquet": "5ad910af7ed9e957f60e04a2c54024ff615d541d21ccef103adce6efa0769d3f",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_14.parquet": "ee444030e883756c46bcb392d0e83a47b6d31dc9924e721a0e17f2ea1c89a3b1",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_15.parquet": "1d2970913303632d613af4ab33229914972f00dc8b5820159ac63f94af6a01cb",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_16.parquet": "1aa8b6ef3453002b858865d59622e4d235241010daea6e619699a2b4b515bb22",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_17.parquet": "70437f91965c2cf0c9354fb40a41b842e8835332d2c3c58d0ed2960ce4cc558e",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_18.parquet": "067814d281c6bd7ebb7bfe8192ba2ed5242632a858114b37031e379519fc144c",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_19.parquet": "2cc04e27d5b22458c606cf172d12288cb302223dc5a4b9993761053a8be5d0d1",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_20.parquet": "1ae28841c7e5fd959a4cdab095c4269ce11ed5edc2433abd79e5de1bff7104a8",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_21.parquet": "acca61d6ce285b2b003bf659c2b2a17c6fb7f35cd6405b031a3b0a8fa9ee47da",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_22.parquet": "57b5511d13e86e3ebae7f8eb58863b38ca2ab9f90af7ae17b1f6b2f1c131964b",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_23.parquet": "629b7a42e77b64a14d63cb92a336552fe3433bb016e6af1d02fd942ab0a20139",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261026_00.parquet": "cb601f73c1f2132a9669230a63a8d01841afa737ebe08c21f2c7ce275242a243",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/clock_rl_d2.json": "8c0bc8fe388d064f881b611754db605955ccac4382febe0c48dc31071ee1cd32",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/legs_timed2.parquet": "0334830c2b45cb228d9c30c34cca72a120529c118722bcb3bc948eda7a49403b",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/legs_tk.parquet": "ffa83b2ca697e2c87f40a6dbe91679b2c114c4624dc6118b5c0bd6168bc95f82",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/registry.parquet": "f5fec8709ef9868574909ae982ef6bbf851909bb4cd7e1cafadfbc1f7b740f28",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261025/preds_t60k.parquet": "e311faa032c1586f13acd95171823f1a241fa53983fdee5a638e7bb58ea10f57",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261025/rows_rl_d2_pk.parquet": "e1c2f43f98971b5a877927fa14c4ed3c85ac229cd2f846547ba8dda6938c9a7b",
+     "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_20261115/day_20261025_imp.json": "9163e3202e7831c1fc4a1db5d4fdb279aa37ddf776d3fa4ae54618541e4090cd"
+    },
+    "hours": [
+     "20261024_23",
+     "20261025_00",
+     "20261025_01",
+     "20261025_02",
+     "20261025_03",
+     "20261025_04",
+     "20261025_05",
+     "20261025_06",
+     "20261025_07",
+     "20261025_08",
+     "20261025_09",
+     "20261025_10",
+     "20261025_11",
+     "20261025_12",
+     "20261025_13",
+     "20261025_14",
+     "20261025_15",
+     "20261025_16",
+     "20261025_17",
+     "20261025_18",
+     "20261025_19",
+     "20261025_20",
+     "20261025_21",
+     "20261025_22",
+     "20261025_23"
+    ],
+    "kp_outputs": {
+     "fills.parquet": "52ba8f169dddfdd8ff1240233f8f98e1796f33e75ca6d04cfcc06da3a1bdd816",
+     "orders.parquet": "795a2866d182cfaa3eb1f2121b3fd3f9e939d382d58ddd17bf9dc7331b3fa655"
+    },
+    "kp_receipt": "20ae2f35f06209eaca0e8ed7310ba9b4f1dbb184d8e06216f15525ae7d1e6e74",
+    "offset": -17.0,
+    "tracked": {
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_23.csv.gz": "2ed42ebad8b4b5d4510b13a85080f138f4a579960debf86df5d75a2cf62bc1c3",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_00.csv.gz": "1f1381fcaac2ae7768b2aff08600d055560d6f7bdcd9209ca2b63d8a3637267c",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_01.csv.gz": "a0ef0b31a368fb7d92f330b587d96c8208c8e6418e334a7cd1d0b7b313a4f430",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_02.csv.gz": "c31ed210ddfdde691e5de80cade318d5f123d7abe436835cb9e4c9a0fc1eece8",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_03.csv.gz": "a79e318dc3f824e73e64b302a0ffb4391017803138fdb8be97d39283ce39dec2",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_04.csv.gz": "276e11bcd067a66917e4e7d97b5efb6d7a004d7d11d9ea957ac5ffcf5c06ad84",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_05.csv.gz": "a21f4bf6aa668941bb6a49070946a7a559cbb164d5e68e490e59a9275957941f",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_06.csv.gz": "3bb4213c3c1f1dc7b9252aebe82332fafc19c133a55610c8e318abbf49d1b331",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_07.csv.gz": "8846d6b3fac3f4919bf24f8f4c7874baa272cfa2dc8d4a6f4b7530c423eff597",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_08.csv.gz": "60cd7946368da79c5ec61342f01cab97a7e3c56dbee738d9f4994613e34626f4",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_09.csv.gz": "d7cb7865928c79887809a620698d6eaf239b0f2fa84447fc14afa510982be2bf",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_10.csv.gz": "01c4cbf79e30fa6d50883f1df73c68961cb59a949794ca4e069c79d80a4db708",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_11.csv.gz": "976ebe13f86d5b5d1d9bdae51d8964d98441babdf6372e79d057adae372b68d3",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_12.csv.gz": "a277f6cb3c6f7b1be8f199110d037bdacf6a5f6467d262917de4c36ac78d6cf8",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_13.csv.gz": "fae0b40b46c4dde2d0799f6c9be5e19ff5d3d84ec49502c71cf7043791e7eaf3",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_14.csv.gz": "c41dd28b60108dc365a1a23b6c1dc0c54d56b32369bcc9fb3fa316f0eeb16143",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_15.csv.gz": "d3397399391d9014c054e5dae33ee34632643ad09b17655f6747a672b1f94682",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_16.csv.gz": "60c7a3f1e6cfec3d6269b75157df969cdcffc5866796f81a9b97f8b3078d1da5",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_17.csv.gz": "d146cd6807d369d25168c863f4ba7d9811172a74d2a1c2e23a06272704bf7579",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_18.csv.gz": "bae45ff85422b10b890a409a56364197a8d45666f525c1ab49467a3adf63ac7a",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_19.csv.gz": "2c5b94b0d9089a45cbc9acac610f4d239312d29dd2fd77fb65964329e484cf29",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_20.csv.gz": "9e04d8931beff655d6be725cb28f3c5b9d98530c11fd5ffb1773c05ed7df3b80",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_21.csv.gz": "302eca9589e2f55af64969263ce4588bde28e19c3a9948bb662c7d65f9b6a05f",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_22.csv.gz": "49f213b9674eda6d7ce988d6d40aacba13847d917325a82f3a154e7eba084dbc",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_23.csv.gz": "528e33f21170b18f536ddc333a40eaf67816550482a20fb8b1db5fc3578fc7da",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261024_23.csv.gz": "724e86ff21d1575b296a6c925897d4d7e482e40d630cac7cb20a43bc25cd2d29",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261025_00.csv.gz": "a5eec5a27ab0273d7abd55b0239e4349a18ad8a2bfbea4a4d7e70439a84d5d12",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261025_01.csv.gz": "5bf11bac49ceeeb720d74b9dff29e7930fc7f28eb7c79be4d76e49f9912f09cb",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261025_02.csv.gz": "6d33575bbd88681a8f0259d75bc20f637abf01a676190b9edff9d85d28b6fa3b",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261025_03.csv.gz": "17ac62975c0c81c6f017561da7d6357b8473a05b064bc6f2b5092df35eb03748",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261025_04.csv.gz": "a3f73bb80eda7d2479802be866b7f0a4eb183285d87335fe34db54c3db19eea4",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261025_05.csv.gz": "62de442e380431db659c27b79ae31f50c21308023d1e5d1c7969a427a0522f4f",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261025_06.csv.gz": "26857d49d4e861784ef3d9640cd7226d2ab67bfe607fcce73ff04590e7572915",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261025_07.csv.gz": "a10e6a5edb98a153403c5a245e61ee4b4f31041182358841273f9eec16a9d7ce",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261025_08.csv.gz": "b671d4972c204fdd3ad3ad9fe236f8a7e5269d7723ae74123336fdacbdd44ee4",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261025_09.csv.gz": "9ad4e4a2e11cebb630e2391aff187ed6d2d83042e054e8377e7c1d7f188cc69f",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261025_10.csv.gz": "ac3f50e301f3c69dba85946b05b6f8810c6103bef1da27046cacdc779c72c0ba",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261025_11.csv.gz": "0ac920343d746bd894d9db75a14eab11c55b994c9ea0e9202979b1957395d788",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261025_12.csv.gz": "38453c6000b2474f071cdf6462c9bd79a47257d5ceac5881403c2f623eb2a3ac",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261025_13.csv.gz": "4acfcb8f62dfb35de44186d002dc1520ebc2c17ec668ec18b28981f9b41a92d3",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261025_14.csv.gz": "6892d1f249f3f387e9f43b0f958ea6f030c507d36f349bac9dd9d95144340330",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261025_15.csv.gz": "96fd87aa36b5348fe0084dcaab76508dc8e12b94c4329dfd80875c684dcec6dd",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261025_16.csv.gz": "22b62a370ce4992f9b8b8e08c257d49d4f8cc05815118134f6451a23e8302904",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261025_17.csv.gz": "78384fc7098febb2214d542e812c7864aa93ad7098f78d2c21965da86e197f43",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261025_18.csv.gz": "4ccf55ef95b07abf8f8fd5a73d2ab5552e9816f220f0852097d908fb4a9c1c5d",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261025_19.csv.gz": "cb40e1724092f8f335bf94bc59e69b4bf506d65ddae68341dff1e637478c81c5",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261025_20.csv.gz": "f476cc36ce55b94382a3f13de1e94b9ad6221914db5772b053c8494e8c43c25c",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261025_21.csv.gz": "b813a4153ac226dbdae3dc56122c4ba529a3359bffbb5cc60d304fbae4300d6c",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261025_22.csv.gz": "f7a9d398d561bcc1de68d59960b5872ebbd8b3f996d81026041c244e543d8740",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261025_23.csv.gz": "94d64a080c9196b9f4561fd00090e93ff675a69ba16cf667631036eb1d4a7a54",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261024_23.jsonl.gz": "145952f4ed1bc91657e45bbeb9064ca5940d6254a3779b77b4d437971ad7c8a8",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261025_00.jsonl.gz": "108f4faa932293e27cefca092c6970ee5567019eed9f1aa6b58d6247bc355963",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261025_01.jsonl.gz": "e23cae40876a56e64313b8f1671959a937ae15e3638aae8dcc79925b73241db8",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261025_02.jsonl.gz": "bb1228dea019146db9e7cbdb9f0f21812bc4e3885cbda575fdd414af3a577aca",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261025_03.jsonl.gz": "2f5bd8ab34b2919efbbd4fdbf9c0f0ed62285f24a855ebb90e42df3768dab337",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261025_04.jsonl.gz": "aefb30ed7095ff8eabd6c88d7d80af5a92114f3b0fc4289b1a269859c27dad44",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261025_05.jsonl.gz": "338580103ea9a11817601d00cfab835c306e201b9fa99183cd89a8ed7f5a9745",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261025_06.jsonl.gz": "06d60841373af04c2773f79c55ef3ecaeff0ee271a6ee5a370d7ee19ff6e9344",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261025_07.jsonl.gz": "6cb52c8b9d3eaf99eb542aff987ebfd4ba15307efb1c732b13c7b7525d034689",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261025_08.jsonl.gz": "6c4aea1273e1dc742ec8f9db70dc639c3a16e458b0eff09e078dfc9a6ae9dcd5",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261025_09.jsonl.gz": "ac0163b06b51cfc54d9c8cd98845a091fba7deff64eb5fe6a6d4971bb8be5bc3",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261025_10.jsonl.gz": "357e7fdd3f93229873dc617ccc4929b705a7538c21d09de38ce57c1107367826",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261025_11.jsonl.gz": "788d2af32ab1c6e47399a590383f87960d842fea34a60b080ac22f165d8e1761",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261025_12.jsonl.gz": "3e928249f40de2171d36afd0518f3e8b54cc68ddbd563abb5c4a955f0d3ff3d1",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261025_13.jsonl.gz": "e45fea161f47a6d969bcb8bf6fc4fe8cf4d470617acec0121f8c1b8e1aaf5c04",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261025_14.jsonl.gz": "d1c75743a3bf6e41be4c794233972c11fb19d5eb2f752c5964f65aab6fac571a",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261025_15.jsonl.gz": "96862a07be644442fee40d3f49545d194df0268aacf84685c37ba7ee0a8ed943",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261025_16.jsonl.gz": "8cde03c5243811a0e9ad8e62de60bb522cdf2296a0ad0fda3e0d73cfb85e6b2a",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261025_17.jsonl.gz": "abf142b05a5b689218498764f026a5e0e3427a8888eeaf8efe0d1a0fd42b74d5",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261025_18.jsonl.gz": "bad668c529b37182408e0b5c87825efd4b44d451fb6107798fdb2896e28921d0",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261025_19.jsonl.gz": "cd279fcb70249ee6dffe067b4c752367ca96d7ef7709b4af7513a7fe440996de",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261025_20.jsonl.gz": "1cd1d0a9b78c232fe2efcbf4f9fc273c2fbf522f109a2791b38950a0cd8ea9b0",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261025_21.jsonl.gz": "e753da1bcbe3c204ad047ec8fbcfdbbdb852e6b3d9a4dd614121f0d3414cef4b",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261025_22.jsonl.gz": "0b7ff8b28f0b9bc7a8924ac75988462e735dbfcd9eabb0f78a77beef5325a82a",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261025_23.jsonl.gz": "22c48d89d03b0e811a6812e7210a50473b8263ad72a274c734289ed3d3a90f6d"
+    }
+   },
+   "kp_dir": "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_20261117",
+   "plan_sha256": "0de151d1b980661d739e12c880f71eb1c81cca680ef6cef7ea97fcb36ce6c7fc",
+   "set": "train"
+  },
+  "20261026": {
+   "files": "guarded_files",
+   "inputs": {
+    "files": {
+     "/home/yuqing/ctaNew/data/predict_fun/research/flow_price_20261116_v1/20261026/receipt.json": "c276531748ffcd8b42a86aec7d66daf0c7a50b2195240cf08e362a1edc2ae49c",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261025_23.parquet": "29db66fedccd0b94cf62780736d08b9dd1f5626aae4bc0981862ec7eac2ee8c0",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_00.parquet": "bdb2473d99c056aeeffd409721da4020856c03789e5a0ba165379952466ec424",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_01.parquet": "25d3a68c70c1d4f8f55aa2dad27a363d60837571b365b8a45015f05047561918",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_02.parquet": "5c6a55bace4385b32be49f7bdd5bbf179591d27f7ddf2aa50a9fe4967a7525b1",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_03.parquet": "7f4326923dd4b049b2f682f5b5cb94d3a7614b91ed744408dc7c620d4e742e45",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_04.parquet": "93547977c69ab39de29e719bea4309dda0da5ce87c467ca334e70f50a0483f53",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_05.parquet": "5348d3ad84886c85b522049c01c15d8b45bbcf822f4438f4cb0a992f5628bf26",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_06.parquet": "3b5ba42249b2ed0fdb4c4442a5884ad6ced9c12d2c3b1399994b0e0369a66f55",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_07.parquet": "4b942e932a8910a4c39d2d4383d767a69e999147475a2f67660d1645a5551d70",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_08.parquet": "d1da8648102e205736bc00d98abdc1f71cda110b0f85318afc35589c09b7705a",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_09.parquet": "9ca133fe29ef95a6bf0d6175329289dde2ae91f2b2e9d16b78148fb861843549",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_10.parquet": "4d5abf21301231db8d2c84e3ec3e6c94103b66b2ca27018c6249393444452464",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_11.parquet": "f7a176b0c9d83046ce1db46a78b0325a7b8e5c37a02393bb10777a66cad1412c",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_12.parquet": "dfe4e9e36d5a5d5e1f45ea819ddc2faacb02d9f59c372780315cdaf4bafdd310",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_13.parquet": "bf80b4a2654de6facf4d6ff47b3e49338143d95cfd3b13327df7ddbc68f96675",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_14.parquet": "3dcae452fac46bc9a6b03962aba2a9fe7dd0adedf7d3a90659acd3e25b978cee",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_15.parquet": "9598a0bf43d4c8472e389bc709345098e3ca219c5b0b71ddd155d6d111673011",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_16.parquet": "1cd6d10c2da86121c764bf532e91f69e1877dd72e1d675f175b0d203b9f1d783",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_17.parquet": "d50b73c4a57f37081d7f6f21e08283771a2aa552a367b9781ffba78513c40fc8",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_18.parquet": "5d792e2af752eafb869b0f110f34f2bd451bcb4d8bb3c88cbf32fed853b0690d",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_19.parquet": "b7e1ab038e1bf2f31577b58fd9c193d08b727f4741f7197867b749cd109e2b7a",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_20.parquet": "cb490ffd24dacd25ab58291ccb1e6fc52fab1c9027dad0cc9bac051f48c6cbce",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_21.parquet": "5b7abb1f6ad1cfbfe61c541fd3eb965d071dc34f9042d9015fe418952422817e",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_22.parquet": "e6e62cedc77a3aaad6c34970b568cd49ec5da130d98e8d5359a3e43b7fd3cecb",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_23.parquet": "35c75d2cfa4e5005623ed399832278d77187da2d193a6c28a19966d66316b4f6",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/clock_rl_d2.json": "e12c07574e86481448d3be18eb2286a51b5ba256e1b61e15221706463f0a40fe",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/legs_timed2.parquet": "f7b925de0ef0aaae226f7673d9544f514a4091571be941b5d3ff84c84ca68d21",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/legs_tk.parquet": "ce2c642027b06d18f4d0760ca0e512816836ad55a59608f89b6604e5a0a86c6a",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/registry.parquet": "172173018e75a05cb83dd810daf93633fd3f3e2fe91412b760e5ebb0016ea772",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261026/preds_t60k.parquet": "2eadf2440b82657fa13601e30fb47115d93ca5bd3bd82b19614010c67801b959",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261026/rows_rl_d2_pk.parquet": "30ca5564b0f22a5613e0b94baab6a279f7e08117ae9ee1c9023e37f8d076a04e",
+     "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_20261115/day_20261026_imp.json": "9f82ec238504ec591f263cd965645ce105969326a4f8f4e6ab86acdee191ed33"
+    },
+    "hours": [
+     "20261025_23",
+     "20261026_00",
+     "20261026_01",
+     "20261026_02",
+     "20261026_03",
+     "20261026_04",
+     "20261026_05",
+     "20261026_06",
+     "20261026_07",
+     "20261026_08",
+     "20261026_09",
+     "20261026_10",
+     "20261026_11",
+     "20261026_12",
+     "20261026_13",
+     "20261026_14",
+     "20261026_15",
+     "20261026_16",
+     "20261026_17",
+     "20261026_18",
+     "20261026_19",
+     "20261026_20",
+     "20261026_21",
+     "20261026_22",
+     "20261026_23"
+    ],
+    "kp_outputs": {
+     "fills.parquet": "809e3639caeec0c754b0ea407309fd439a396ad90b684ba1dfff7360f2b58b03",
+     "orders.parquet": "75a99ce469e38fea0ae8558d2e1f1c8728c89c3e96e2b2910fd544702fd5ca81"
+    },
+    "kp_receipt": "b004af6470fd480371f75e5d831a4596fa72899214d58525331d8ca061f63587",
+    "offset": -38.0,
+    "tracked": {
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_23.csv.gz": "528e33f21170b18f536ddc333a40eaf67816550482a20fb8b1db5fc3578fc7da",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_00.csv.gz": "1ab096b655f11bfcbdf813474471723bb8d1ac5e421ced211bb1142d53bd4472",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_01.csv.gz": "fd91114d5391f4b92189ad1fb089ce8255bbab45cf7d17f2fb6cec6c6b6b5966",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_02.csv.gz": "ea17ca9d85f4690990905974a280a84e4492b6cab80b7f88a0f6f4178847af81",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_03.csv.gz": "716bc756840c6999d5e8f4f3a6e1af032d891392c258cde31c90856834f7a444",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_04.csv.gz": "ded9cef2cc5762457e884f2a7c3694873dc2446b52fea10132833d0a9be87c00",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_05.csv.gz": "c69c3d7bec45426c88ba22f12adef6bb3a292b6643b80491d3e3c6c89cb5f70a",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_06.csv.gz": "c0ec009372a6ad50e6b6826a6aa28813fc97f590c5ecfe0631fb02760ba9d399",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_07.csv.gz": "f7ca621857f666a4ba9b12fa5c39af53d9735d3749a5c6deb38b4c8fc9b320d9",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_08.csv.gz": "750b1b4055fbb6d6f4843f413f4730270ca6fd153afacdd65aac6022bb37ea0a",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_09.csv.gz": "706288ae8c0d103de8f88655a646f80aab084fafe4b9f656b800c32eef832635",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_10.csv.gz": "6e07f15d8f4667c57c9c2983edb5612e21f1a5444dafa9ab01978d5924644c1a",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_11.csv.gz": "a329cf6f98922aa010da1b9ee295dac126f06e53cac79febc63ba1573da13303",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_12.csv.gz": "6cfaf43dc177f2c03c1ff196bc87d3eee7ed3704047c6a424fce3fa4629920ea",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_13.csv.gz": "69ebe47fc78379c5a2a9d917e33fc8c82ac6db208de021d7b4b29e305d5dadaf",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_14.csv.gz": "5e1e4665847d5049e35cbcb381718fe43a740d53c0e449a47cd4017866f921ff",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_15.csv.gz": "c7859296c2cdb2b269de62c6f4568445486f07706c8d68fdfc6bfe525b108ae5",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_16.csv.gz": "3ca4a07175b215ed498efd88b13cfaad1a83e97c638608eefe8b4785fa8c1ceb",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_17.csv.gz": "a8cc99ea2a4ca20eb326676cb4a535451916af674502a282cf4de7556e33b6a5",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_18.csv.gz": "734716acc2e7f4e0635ca4de5fa88bea298ea734bd9a29685113df833a7de6c6",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_19.csv.gz": "abc5a333bad6a0a70237c02e719dee353a5964a243adabf854827f5d731f5eab",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_20.csv.gz": "92593451eaac469a05b761958ceee357c03b205f3f2be7d6230f2e7da456c8a8",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_21.csv.gz": "e74cb6f573fa5d42c9648dde1d59a6df86b62c026f4e9c27e5cf597f00094d77",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_22.csv.gz": "21f37c9e21de5c3b64f9c610077524064ec3fd44ec047927a435ad3e663e7bd8",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_23.csv.gz": "6a455d4f7ef2fd38c7e4668953148487184585d9089342cd47f695dfedce510f",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261025_23.csv.gz": "94d64a080c9196b9f4561fd00090e93ff675a69ba16cf667631036eb1d4a7a54",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261026_00.csv.gz": "382f3e1cd072e4edf958a3e71c7323d6e821b53ecaff14ac0956e703d20d7357",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261026_01.csv.gz": "fad08579e52c8f2486562fb2f49f4d87dc6c079271c6c6c308b3a5f4790f459e",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261026_02.csv.gz": "9d02af308e06b795c50242313f823f1dad233eb968379764e8bcf91f4150b02c",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261026_03.csv.gz": "ba5b65878128a6c270a8083b6555dcdf09e625cc871afdde6167e1edc9d2d171",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261026_04.csv.gz": "87c2bb191967015f7577e8b80219eeff8db77f075af3cce5e6abf491e579732c",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261026_05.csv.gz": "c6e1086aebca775f847fc1d75938af0c63b236f72f66c9a53fc5b322ca1780d7",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261026_06.csv.gz": "52df679205b1a15f824b6bf80e5ee1de80043f101ef6b6ca231f97adb0cdc396",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261026_07.csv.gz": "a20b13aebfa0d21b6d4b75e824d14bedf7c6e608537a2bd7f67c2b9cbbc08e95",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261026_08.csv.gz": "35be8967153b5c4b3b93aa213fa8e8182f0d27ff514a083de02132f3ad98f441",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261026_09.csv.gz": "8ff446023fc831f08f3216bfafa95fe7d712628d44f542d83aa5e47944c683a5",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261026_10.csv.gz": "81de308c5bee68e0bba3e971ec611b7cbbaa415ba27c12371be13b666e4cec18",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261026_11.csv.gz": "d2f20cde7e793eefd1dcee73c8a5492730a7355cdad816ec83f2b7c4622953d8",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261026_12.csv.gz": "24c8557dd196f4d98748059843c3965f6dcf67ae8db7ba0c90a57dbeb6dca9fc",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261026_13.csv.gz": "f73a947435d8be97ea9893b1809c9499e2ea7c3cab7601feae910a8ee1c2b476",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261026_14.csv.gz": "f4671b39e6e5bade5dc7fe469798ab5eb778d74e7661f00a88cdaddbae36ef05",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261026_15.csv.gz": "73ea969629a3b5b4e3203681995ca019ef52bc81a2a792d96508ba59b50764a8",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261026_16.csv.gz": "855ebb6bad54d00d4e8fece97103264cb38fd0502045b356f9ddfc9d5184b18e",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261026_17.csv.gz": "94abe1e6d427bb232a288bbaec183cac0cab5a950bc2b1944a84e9ae78fc492a",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261026_18.csv.gz": "fb82bfdc36ef29fb7786a0fd18ff83d428e336c7e4cfd68fc88ff02b324fdbcb",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261026_19.csv.gz": "f6873a494de66859442418712cff2ddad9f9d9ab84eebad0b9ef8f5d5b220c64",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261026_20.csv.gz": "f251aebe579e67e4130eddf1e5243fca3486e3dab4be85d4bf7888a392c88960",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261026_21.csv.gz": "99392f866287d18aef6d9a94e21f3bcb1a246adbf563a124e6ee3e1e7b2ce4a2",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261026_22.csv.gz": "9e45717bb6afe2821b55b7fdce29335db2145c99773e95984f60e58937b14285",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261026_23.csv.gz": "65a6d358f4f3a4d89f01a0a7893490d010d6631cffc220b139194a8db5afdd22",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261025_23.jsonl.gz": "22c48d89d03b0e811a6812e7210a50473b8263ad72a274c734289ed3d3a90f6d",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261026_00.jsonl.gz": "e2b0b39e83ce63904f2f458286b2df2d98fd61300ac0a14156b88ef95b41986d",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261026_01.jsonl.gz": "33a9f90655eda13e08d0da5a95de62f41de46e1667b6e8416fc98ce8b974ea34",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261026_02.jsonl.gz": "7ce9a08306584e2506dfbdb662c15e75972a0cc4a639bbec096cddb5216609fc",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261026_03.jsonl.gz": "f02ceffdbcb89a76009e241d4f07fd99670d88f8cf0a99fd95a3c1e82411f893",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261026_04.jsonl.gz": "b9e8437744b36754de6af547f768f2339fcf18e39921856841369d364eeff3b9",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261026_05.jsonl.gz": "25569b6a310804d70b9f60197153a6f1ac5ed6592c2a1bc463c5e9e839b2de93",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261026_06.jsonl.gz": "fc30a0727ebde4109dbec664cd9bf5ec4602d22e2667e1c40b2b86ae8238d981",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261026_07.jsonl.gz": "5a7207c18bb97a4a8c449250ccf7f2a7dbad1e3099f66f425aaaba0310aedc98",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261026_08.jsonl.gz": "bd2455d044d4b17b43992240781292796c5e0fdb38186b64eced026e70b7fac3",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261026_09.jsonl.gz": "a17fb79b677357d3ca808165ae9a84a52cb86d60c853e24f7157e0fa8b465fd9",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261026_10.jsonl.gz": "37465ebff447811fd4dbbdfcc362a2e14bf9b37602fd9b1e197b09c0d965c981",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261026_11.jsonl.gz": "8033f1dbe29c053b7a41c6ced7760835f892bab55322746bf65f007c3c927e70",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261026_12.jsonl.gz": "050c139fd4a0a3b82f1a2e9b27485883d374b6d7bc21858ff54fad6ba4acd046",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261026_13.jsonl.gz": "2382552b59be4732129779d34d3994421b132b6524ae47116f481fcf0bd95a75",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261026_14.jsonl.gz": "6abf37ab93db698a9aec9cf2a59e3995903af5d4286d46e2275f563f5f0a5564",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261026_15.jsonl.gz": "007f2cbad0c5d14f4fb25e94606d888f68dea25ed7d9ff9880f452921e323053",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261026_16.jsonl.gz": "4ce86cf060fbcba8bcacaf4a8be5983307928df1d767a2e239fe5a4f04bdd772",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261026_17.jsonl.gz": "610e15ca327e3d99a6ed5fb73b46e31005bbbf89bbf2bfcbd58f7bb3af5f48c8",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261026_18.jsonl.gz": "51c100ee171588dda42b3fbc22a7bab977e2d68063d7c8b2e61b1b05d03e5103",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261026_19.jsonl.gz": "419938cc68c4669f48be30722cb37fd9099919faedbdce99c1d32d9470784fe6",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261026_20.jsonl.gz": "a9b76c8464c37b5f699eb776d9879f69c20393ad20fa06859ab450fa5ebfcba9",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261026_21.jsonl.gz": "5c740be385c7f5d23f97dd8b55d64e9b7e99c200d36cba6508a3e4e83808a301",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261026_22.jsonl.gz": "ab7586ee9d9628a43de63f2275f44efad47e01be6ec14381da4106ea5206c3ad",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261026_23.jsonl.gz": "6ad0ff3b3789d8233c94f3cffff1fceb59554a5b40c0b48fa01bdbd866c4a9ba"
+    }
+   },
+   "kp_dir": "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_20261117",
+   "plan_sha256": "8619eec52bf75b0c1164d5af26d5a6d86bc9fda8d39a6cab2bfbf6b94660e100",
+   "set": "eval"
+  },
+  "20261027": {
+   "files": "guarded_files",
+   "inputs": {
+    "files": {
+     "/home/yuqing/ctaNew/data/predict_fun/research/flow_price_20261116_v1/20261027/receipt.json": "b90628347e222a3bf0afc11682b5f949af8f51b06b56a7d7a3be9ef9bde035a5",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261026_23.parquet": "e20accfafc787dc14509e8f40a9560ffe7f97ac867f5ea54456090b94a104619",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_00.parquet": "67a13b079d92e7a844d9e046d61da1b6c4ee0af04fd97b53337dc5d84e2cbff9",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_01.parquet": "84298a9a362f4e29af4f41c29c4cea6bebb98ca177145393eb3ce1ebef7070e4",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_02.parquet": "4e708de6eb0d738134e1198e27dd599fd84446941c4eb8e9ba7ac2e1a93ed8f4",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_03.parquet": "f6902fba1c0fb3a849de4fcba6a84dfb98dfb83713e539b39fc8deb5c92f50f4",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_04.parquet": "45885b8d8c14529f794b495072fedc6c07b5f38865e240a22f1a17b0126a827b",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_05.parquet": "59ee31c0cb9d51c8a57fce9bc5f0ceaab6327338c21f6280103a8209f4ea1ad8",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_06.parquet": "58b9ec8cee3eab688210fb49822f2f2607095ab14936e22ea932b3fb4f062df3",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_07.parquet": "f6e18eb21dce2518d5003a871d15c2219a7a4b64e6f89846031331f737b204be",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_08.parquet": "992a5810bd44948db92867a9b9f66d48dc3b30812ecff6d5ea7e1734eb7232f4",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_09.parquet": "192d724a46d33c457117ec7a757c5ef4094dcc94d9d3db0caf9492c1123b7d8c",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_10.parquet": "523896c20b23db7e964d371c14fbe060cf714b6f9c69aeaa87f727230ec569f1",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_11.parquet": "c320e6430575d078c0f2a26d3828d44b5cd08ec0355ce5c00671e52a6a5c9b9b",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_12.parquet": "d78ba15f2b081154708b45d2e477c7ca0475d6ca538d1798a8ae673f279b41f8",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_13.parquet": "352c21af15b968390f9cde9ff8b9a506c8d8e41aec782512cfc098cb642f4192",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_14.parquet": "312df1322a58f81b79b84d0abca7cdd793978e15090c4948f3a3e2075f8142b6",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_15.parquet": "6b743106d26a7d10d7f9d548c09844daf776cdf7dcccc4bc9456cf2a02fca5f4",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_16.parquet": "22b6cce9f0d75ed723db3079fa34b1796ec4ac9d90e298e2c1c984b5931c5543",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_17.parquet": "9cd3618a9c7231e982848666e7715dd1706ae9f0aea9c95a025352fb844d9339",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_18.parquet": "8385aae6920a4b2739c204575a296ac2c3ac9d2228b33f120e20d7e0ad5de62b",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_19.parquet": "94e83ad9c02977182f15e69945b4b5347966de9e36a75c2d5e578f9fd794dc33",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_20.parquet": "15567c0627fcaf00869d69e742ad3ec4431e871abf3f65a5ad505dbba828c610",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_21.parquet": "48e0f022333b1f6e2b4121cf1674d80f82c7db32b44fcdb0078b64f63fb11389",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_22.parquet": "d891fc19e82e533493647e2049d5312ee52197c8a5ffb4d09ec02a9d61eaea91",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_23.parquet": "8ad6744dc6a5874a8539a0788f20355a3caaaa1c0ab5198dc5e78bfdaed53819",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/clock_rl_d2.json": "d62f344616f65a3d89c45757306f311c55f70d4f6d6beb087800676f3e7dad35",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/legs_timed2.parquet": "ca6f8c4e7b98158307ae01a164414049ddd5ec4401aa9f92c3023415315d9210",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/legs_tk.parquet": "972cdcafb0fdd3225a8eed6c10e95044be16a3008133059af2e84aa4beb2a7ec",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/registry.parquet": "096b08b011fc9e5de1e22cdc46f416adbd522fdb9b19eabad00591937c2fc356",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261027/preds_t60k.parquet": "b0f92acd2b5bca2eae2e4b66b44e4ae1a9d5a2a92d117e72de6be111ad2a8c69",
+     "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261027/rows_rl_d2_pk.parquet": "7f169da05924f911c31419bdc7eb63e66a79ffe9a533652111b3b0ea22745153",
+     "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_20261115/day_20261027_imp.json": "cb534295d5d88a206a30da9a5204ec014aa567697e6d32eceabb452c2f273b8c"
+    },
+    "hours": [
+     "20261026_23",
+     "20261027_00",
+     "20261027_01",
+     "20261027_02",
+     "20261027_03",
+     "20261027_04",
+     "20261027_05",
+     "20261027_06",
+     "20261027_07",
+     "20261027_08",
+     "20261027_09",
+     "20261027_10",
+     "20261027_11",
+     "20261027_12",
+     "20261027_13",
+     "20261027_14",
+     "20261027_15",
+     "20261027_16",
+     "20261027_17",
+     "20261027_18",
+     "20261027_19",
+     "20261027_20",
+     "20261027_21",
+     "20261027_22",
+     "20261027_23"
+    ],
+    "kp_outputs": {
+     "fills.parquet": "0b6ad80e527add141810736abcbeac74b897c194b08354fd550fbb614c34da08",
+     "orders.parquet": "5e36fdd9fa6c5305e46f52d1620112752ae5709375357e14b09effe7b81ea2f4"
+    },
+    "kp_receipt": "5b4c34b0f86cf53248c2d6c21c1b05d8c4620178ab8597cdbcc2e8783a644d2e",
+    "offset": -51.0,
+    "tracked": {
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_23.csv.gz": "6a455d4f7ef2fd38c7e4668953148487184585d9089342cd47f695dfedce510f",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_00.csv.gz": "2bad777c823c59f2c496f65027183108c6521a1b9d8b63deb250071fb138f0cc",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_01.csv.gz": "5925e7ffae518efcc601dd151db871fc5c27849c60c2fdf4073bdd25e0e63dbe",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_02.csv.gz": "b5e2b17f628c5603f40e009e21ad8b491c5563c4d7ad657de10e666180ba6048",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_03.csv.gz": "a774322e3533fa6727eb7b9509a8a61154b45d69748dcc3bb0474491839db389",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_04.csv.gz": "4a4d7e851104bc8b91acd0011c418dc42d14a0e43eacb0c0d39d136fdad0e9e9",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_05.csv.gz": "07d856f94b8ebba945408ffa96621afc6ff1749f1ad38f0ff1a662de6604ad81",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_06.csv.gz": "38a5c9683a4bbeb7cba2f8dcd3512edd86e13ae9b8db58f8c59100543942ebb3",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_07.csv.gz": "033de8412e56ed3c508e83340420b5a80c8d9cb63086ec52c18cdbd7ac2b3b5f",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_08.csv.gz": "710315ff80bd9235ed52029937c9e9bab35d9c377fc3360640205b58010e722a",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_09.csv.gz": "1d3ffed0711817485832ba7d9b48799ef53bd2b843eb5633daad11cd64cfddf6",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_10.csv.gz": "1024ee790f691e525dafe03b84a8e2d4a0846abc7f4836d9cc0e091b2a1442f1",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_11.csv.gz": "320af13ff355da177c2c7173db735d38ed483049bf0f0c9dcb8be4318928c75c",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_12.csv.gz": "c4a3215b7a67521776665cba4eec37f5bd856f2738a306cf8030cbd3d4470708",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_13.csv.gz": "d9969c51be77024ae9fb0294fa60a2500bf7e9323a3614c672797fc1f48e078e",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_14.csv.gz": "5d10fb1dbd5209ee51049c053c851214fdbf24cfd5101fad290a7533e26f9b18",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_15.csv.gz": "b54a2c02e24348e5c1797f559c0f9cb1452954ca595741aaf29d31c8833415aa",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_16.csv.gz": "2874ca883daffae8332ac6c6e9a1a446be02590308cda1fec80f99fc0dbad413",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_17.csv.gz": "168273b38909bc25a77a5a8b038376c78090c3fa86292e0b19d750cf90df4fca",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_18.csv.gz": "5da9b6e174cd89d58e04252624eb7ee7c34040bffcfef6249d7cf1f762849de2",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_19.csv.gz": "be39e45a6458b162251565c51aec03cc964fa4a97a98719b298b568db8d8d373",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_20.csv.gz": "8b7332539d60ffc4d66829e4dc5ea6e80a842a8b7d4da86462774d52693116e3",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_21.csv.gz": "754e76ba0cd613e08a998f85f89c8866058f56715af11962fc454558ecbfa3c9",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_22.csv.gz": "15b8a635d26b14564b1d66e443a5738c6c475abb586739e12a09d005657cee52",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_23.csv.gz": "6e7c705d4c06bf5dc2c9f21de4972baf8b593946db397fa20a3b35ff083c667e",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261026_23.csv.gz": "65a6d358f4f3a4d89f01a0a7893490d010d6631cffc220b139194a8db5afdd22",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261027_00.csv.gz": "7af66acf66e17072d5b33ec53048682ed7158df5749735422bd0acc843d7b35f",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261027_01.csv.gz": "5abfcba37c914bd33b2704fe2e7546fe8c435030ec56288105a9b356b2a7f6ce",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261027_02.csv.gz": "83184e3309c3b32ec583219e92c1bef0e6549bd792d1e79d21a86f1c804692ec",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261027_03.csv.gz": "61aa6b756411fefc9159facb3388bfd7ce93083ad43e85c7f2046e8768ca3d59",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261027_04.csv.gz": "1ebd7bddae95a535f647b66d5c7bb44667dc97b936e6d3ff2f786d5e485e390c",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261027_05.csv.gz": "f88bfee787443ee663aed28f68dd67f263c200798e36eebb478f12c97651a2ca",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261027_06.csv.gz": "d02f775d51157a6697766cfbb00fe5dd92888d30f3ea754891a9d8e8a29b23b6",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261027_07.csv.gz": "716781d8e1cc6e59043e9ab4188c113ee8f031b40d686b8a13925315db03b50e",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261027_08.csv.gz": "bf53f1f604b573d0eb9c411d445551e66a150c0b561999a41f7d0ec2c3536666",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261027_09.csv.gz": "06b5ee6116d092abde8f833e7868c48e60b873171dd05e30202a2e6e25567c41",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261027_10.csv.gz": "1cf25acc9c9d09d9cdece414e5da34d8205e6d45f4caee576017ead220b3ca12",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261027_11.csv.gz": "cf7b51c1f6ef4397572546f89036f692b912822bc9cafd8324fc30d5ee1ceff7",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261027_12.csv.gz": "40e5f2b14cb1fdbbe57744dab3fdce636d76b4c6da8e78e6bab2f3b30d8eec15",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261027_13.csv.gz": "c098afeda5988c6213ed062a6dc6981a34afed511b94470a0691af19d4feaddf",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261027_14.csv.gz": "8e3f45f1924ba9b61f6bf48882a49a5ff62fa6f0cb7e168dad0b64cf6db5b975",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261027_15.csv.gz": "d2dd824e47d8dbb9afabf1fac7391d3d703c2c78b6caeb1cb0b7c64fd31a3d7c",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261027_16.csv.gz": "3e75fa2ac45138c342ccef289b76bb83ee49bcf0b88b2e18e3b3c9e14418d758",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261027_17.csv.gz": "082d664adba372a7ab7196fc76ae0db3951a4054107377a344b3ad60d375693e",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261027_18.csv.gz": "f89c1b700822e614763c82278ea0e297ac59251b010191f629f454591f59eaab",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261027_19.csv.gz": "74811802c5d21b59c1a932924c1fe24ee0099bd2654d04acc78a7d9594406f66",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261027_20.csv.gz": "7291af2459f6d7419f1355de5ad7489918dcdbed9f35ac685c6d523cf26ca051",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261027_21.csv.gz": "1e73879518c60307abb55058d75b776904042e29671e95902f19aa931cc36bd8",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261027_22.csv.gz": "c9b60bf72f4c67330e5a5942a9026827b7a793e7f93702705756cae678411e31",
+     "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261027_23.csv.gz": "2062d32b8b89edb7192a4c6396dc167630692783b2a434568acbd3d205f50a1c",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261026_23.jsonl.gz": "6ad0ff3b3789d8233c94f3cffff1fceb59554a5b40c0b48fa01bdbd866c4a9ba",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261027_00.jsonl.gz": "595f31562946b623d5c18d1a3e0fed886b860f0b09113da5608903cb1bba1dc0",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261027_01.jsonl.gz": "dab154da5fbb6ebfa323c8fbca6153ea4e42377bde5cbe1e43282d24968c898e",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261027_02.jsonl.gz": "abacc32de8d8fba61333d5632fe69c2846cc9ccca4d5fad1ec676c58d54bb637",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261027_03.jsonl.gz": "f4c8e55cc49f4c7d9786dbe359434efb534c556901e13bf1b37c345f605debd8",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261027_04.jsonl.gz": "31b41efa24c4adfc8983503f4268a2395e10f16922463e86788ce21bf47b787d",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261027_05.jsonl.gz": "22f2954d1de31ed80c1d2b636b28179644bd025b6401bf03ac11ed80f85e1eed",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261027_06.jsonl.gz": "6557fcf4395c3d02d811058a0924ea14151ae44f6fe4689d4fcf6022bbdef2ee",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261027_07.jsonl.gz": "fef007a5fc20324564cfc8f2051c4f6706b130bd16f271a2c3bc0da0fd056dd3",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261027_08.jsonl.gz": "2088e62c8fe6991bfdba90af984604805b030ba53eae630b8314118d723f3b69",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261027_09.jsonl.gz": "50cf5caa9afbb93945df1d01b5461ff9935345a25eff77deab81af7ae227df62",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261027_10.jsonl.gz": "fb8d1ad8692c3f8666bdcde791e013ad4bc9c5fba4b8b72c4b1aa4abb5941a6d",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261027_11.jsonl.gz": "cf0a65d317511edaf7a940a62ca46ed506857aa80934822287a4b6ae717b12cd",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261027_12.jsonl.gz": "0a2134fb4e0cccd3cb9f5efae28f3b7e02d4cff6c96148521e95129b84c95106",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261027_13.jsonl.gz": "5d79bbbd20a213aa19975035cb03028d176abb0b97f5c3cc2b25217b2504204e",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261027_14.jsonl.gz": "3452a854c22f24c77f56ac0e09191d9c279fc1226ed627a8c6c3508ffcaf13b3",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261027_15.jsonl.gz": "424a8dba3b04db6f6b03fcd00016a477a4be103f96f9dd1562d4483c85b72486",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261027_16.jsonl.gz": "16a3bd0254398e6b1cf5df0331715ebed81c8876d526d8c5c9e4ba734d0d6049",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261027_17.jsonl.gz": "ef21867185336eeeac3e5f00b305c4726bb22881254884fca7a63b1404cf49ea",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261027_18.jsonl.gz": "70bcdb17fcbff0b6aafde12b91df1805b77f3fb2114dae3bd70c30bd5a9a174c",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261027_19.jsonl.gz": "c4441c7c9d8e4811a131f4001f2408c26c3d59690129fe6320bbcae80f69da22",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261027_20.jsonl.gz": "568705431f9f11e1db51a67158ac832cfa94441c83d7efb8c3989b97243adc27",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261027_21.jsonl.gz": "eb6a8b6369f7deb742a9c4abcee855e609fa83b2d50068c23fe80a975c04508d",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261027_22.jsonl.gz": "ba4fab49b790561dd33cafc6d5581e581a26ac65da91b3ce2a84d0fa635a1280",
+     "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261027_23.jsonl.gz": "524395352b82d6b459db1f6558044e2c371e244f579b326248848aa42cd52ddd"
+    }
+   },
+   "kp_dir": "/home/yuqing/ctaNew/data/predict_fun/research/keep_pull_20261117",
+   "plan_sha256": "8619eec52bf75b0c1164d5af26d5a6d86bc9fda8d39a6cab2bfbf6b94660e100",
+   "set": "eval"
+  }
+ },
+ "legacy": {
+  "cap": 30.0,
+  "end_ms": 5000.0,
+  "inventory": null,
+  "levels": 1,
+  "own_cross": false,
+  "q0": 30.0
+ },
+ "markouts": [
+  50.0,
+  100.0,
+  1000.0,
+  5000.0,
+  30000.0
+ ],
+ "parent": {
+  "rel": "predictfun/reviews/entry_exposure_20261121/manifest.json",
+  "sha256": "6cf2c6248d937ad036b95acce466861a2dbbbfd4f124c18f33dcb015b96b839c"
+ },
+ "pilot": {
+  "20261024": [
+   3695609,
+   3696378
+  ],
+  "20261025": [
+   3723774,
+   3725884
+  ],
+  "20261026": [
+   3788669,
+   3789484
+  ],
+  "20261027": [
+   3853425,
+   3855039
+  ]
+ },
+ "prefix": "large_rest_inventory_full_market_v1|",
+ "registry": {
+  "20261024": {
+   "metadata_receipt_sha256": "d299a7ec72b332f7d3e03c492d5a7f6ed8c900d2682dbb4e576a3446d34fd2e8",
+   "parent_markets": 85,
+   "registry_markets": 288,
+   "registry_sha256": "21482f2cbec32188e80d5f80926f99bf87158507643c307ae4d177cb89e7c9c0"
+  },
+  "20261025": {
+   "metadata_receipt_sha256": "395d5815d0f1b20538fe1579346a1a0ab700c60755ff63d59677a896f8423f90",
+   "parent_markets": 85,
+   "registry_markets": 288,
+   "registry_sha256": "f5fec8709ef9868574909ae982ef6bbf851909bb4cd7e1cafadfbc1f7b740f28"
+  },
+  "20261026": {
+   "metadata_receipt_sha256": "c276531748ffcd8b42a86aec7d66daf0c7a50b2195240cf08e362a1edc2ae49c",
+   "parent_markets": 84,
+   "registry_markets": 288,
+   "registry_sha256": "172173018e75a05cb83dd810daf93633fd3f3e2fe91412b760e5ebb0016ea772"
+  },
+  "20261027": {
+   "metadata_receipt_sha256": "b90628347e222a3bf0afc11682b5f949af8f51b06b56a7d7a3be9ef9bde035a5",
+   "parent_markets": 82,
+   "registry_markets": 288,
+   "registry_sha256": "096b08b011fc9e5de1e22cdc46f416adbd522fdb9b19eabad00591937c2fc356"
+  }
+ },
+ "sampling": {
+  "entries": "every executed entry",
+  "first": "each generation's first live review",
+  "live": "per generation the minimum sha256(PREFIX|live|{day, m, side, gid, t}) live decision; eligible = its live decisions"
+ },
+ "selected": [
+  {
+   "cell_candidates": 4,
+   "day": "20261024",
+   "decimal_precision": 2,
+   "hour": 0,
+   "m": 3695609,
+   "parent_worlds": [
+    1792801655000
+   ],
+   "rank": "1614c9d35392959a7c6b599075c89f5e2c1ac85d65332ea72b6a151b2ed075d3",
+   "set": "train",
+   "ws": 1792801500000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261024",
+   "decimal_precision": 2,
+   "hour": 1,
+   "m": 3696378,
+   "parent_worlds": [
+    1792806950000
+   ],
+   "rank": "48afee77e16c9ca85ac527ec19a67ed05a7280230988ed4c08cfef9ff5e11b2f",
+   "set": "train",
+   "ws": 1792806900000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261024",
+   "decimal_precision": 2,
+   "hour": 2,
+   "m": 3696745,
+   "parent_worlds": [
+    1792809545000
+   ],
+   "rank": "37dfc50ee621fa0bef5ee1363bd5e69c66c96eee394b66690c76153f1a00de04",
+   "set": "train",
+   "ws": 1792809300000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261024",
+   "decimal_precision": 2,
+   "hour": 3,
+   "m": 3696970,
+   "parent_worlds": [
+    1792812330000
+   ],
+   "rank": "95ad2afcd3610e508b8a115dc68f07c90128aab8f883bc02593a1d01faf6c0d5",
+   "set": "train",
+   "ws": 1792812300000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261024",
+   "decimal_precision": 2,
+   "hour": 4,
+   "m": 3697902,
+   "parent_worlds": [
+    1792816845000
+   ],
+   "rank": "8f693ed691e91c0fe8ce4dbae6f7ebc23ef47bb450cbde29baafb1b2102f9458",
+   "set": "train",
+   "ws": 1792816800000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261024",
+   "decimal_precision": 2,
+   "hour": 5,
+   "m": 3699278,
+   "parent_worlds": [
+    1792819765000
+   ],
+   "rank": "45f212afaaaa03a5be242289ec12b210ded75362580e6f693bf59d8be620d44f",
+   "set": "train",
+   "ws": 1792819500000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261024",
+   "decimal_precision": 2,
+   "hour": 6,
+   "m": 3700070,
+   "parent_worlds": [
+    1792824565000
+   ],
+   "rank": "224f29a2a95781981329830b6dc99c5c1f0b63f524cb29f20399d920ca6d9c9b",
+   "set": "train",
+   "ws": 1792824300000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261024",
+   "decimal_precision": 2,
+   "hour": 7,
+   "m": 3700451,
+   "parent_worlds": [
+    1792826780000
+   ],
+   "rank": "03688c708b3bad3593578731225ab7564117f3f8c67766b0d4c41027a66701f5",
+   "set": "train",
+   "ws": 1792826700000.0
+  },
+  {
+   "cell_candidates": 2,
+   "day": "20261024",
+   "decimal_precision": 2,
+   "hour": 8,
+   "m": 3701097,
+   "parent_worlds": [
+    1792829745000,
+    1792829795000,
+    1792829960000
+   ],
+   "rank": "b8f52dfcd2cc9384b6fbe5c278fad0b42388aac66a923b3b959a20043f1e1cda",
+   "set": "train",
+   "ws": 1792829700000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261024",
+   "decimal_precision": 2,
+   "hour": 9,
+   "m": 3701803,
+   "parent_worlds": [
+    1792833395000
+   ],
+   "rank": "4ca417822a6e1bfda15723466858e18696c7293d32f6089112e3adfe8bc90bd4",
+   "set": "train",
+   "ws": 1792833300000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261024",
+   "decimal_precision": 2,
+   "hour": 10,
+   "m": 3702960,
+   "parent_worlds": [
+    1792838470000
+   ],
+   "rank": "89a078056b8c193e7af93625ff18bb85831d2844ceaab41d81acc77133aad24c",
+   "set": "train",
+   "ws": 1792838400000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261024",
+   "decimal_precision": 2,
+   "hour": 11,
+   "m": 3703978,
+   "parent_worlds": [
+    1792842955000
+   ],
+   "rank": "469146d9d65568628766bd3028697b01d888fd27354fe9582ac1c704554d5e77",
+   "set": "train",
+   "ws": 1792842900000.0
+  },
+  {
+   "cell_candidates": 2,
+   "day": "20261024",
+   "decimal_precision": 2,
+   "hour": 12,
+   "m": 3704004,
+   "parent_worlds": [
+    1792843550000,
+    1792843730000
+   ],
+   "rank": "9b3ef195cbf29b56030e6815dbf096b467e11c33bf6239004f6867b18a9abc66",
+   "set": "train",
+   "ws": 1792843500000.0
+  },
+  {
+   "cell_candidates": 1,
+   "day": "20261024",
+   "decimal_precision": 2,
+   "hour": 13,
+   "m": 3705358,
+   "parent_worlds": [
+    1792847445000,
+    1792847455000,
+    1792847510000,
+    1792847545000
+   ],
+   "rank": "5361ffc6366420d05f4aff834399f3310fa4f6c31a60d1dff352c985b2a3b5b3",
+   "set": "train",
+   "ws": 1792847400000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261024",
+   "decimal_precision": 2,
+   "hour": 14,
+   "m": 3706749,
+   "parent_worlds": [
+    1792852575000
+   ],
+   "rank": "348277aa9f569d90e5e145a50318c1c04fdae04915355275302de7225212e4e1",
+   "set": "train",
+   "ws": 1792852500000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261024",
+   "decimal_precision": 2,
+   "hour": 15,
+   "m": 3707385,
+   "parent_worlds": [
+    1792854500000
+   ],
+   "rank": "49c0a44a877fffd73aa3b4da18eac318bf55d119bbb67e6eb0655b059b06e00d",
+   "set": "train",
+   "ws": 1792854300000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261024",
+   "decimal_precision": 2,
+   "hour": 16,
+   "m": 3708347,
+   "parent_worlds": [
+    1792858725000
+   ],
+   "rank": "004551f91903064ceeff53dbfdc06aa4704f89e40ebe8e4025d30c70065623f1",
+   "set": "train",
+   "ws": 1792858500000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261024",
+   "decimal_precision": 2,
+   "hour": 17,
+   "m": 3711345,
+   "parent_worlds": [
+    1792864130000
+   ],
+   "rank": "08d7724bf1cf79a950c8c2c6b378b93f49c9025ef8575c210dbca74c2b8b30ba",
+   "set": "train",
+   "ws": 1792863900000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261024",
+   "decimal_precision": 2,
+   "hour": 18,
+   "m": 3712725,
+   "parent_worlds": [
+    1792865755000
+   ],
+   "rank": "5591f58e74f9f0f4311ad6d5053effff05b59ea88a3741146fa1b9a4e6175320",
+   "set": "train",
+   "ws": 1792865700000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261024",
+   "decimal_precision": 2,
+   "hour": 19,
+   "m": 3716727,
+   "parent_worlds": [
+    1792869570000
+   ],
+   "rank": "24e6995a6a69a658884aa651d74fc9a4d026eded3f8cd4dfbb40b3558e3706ed",
+   "set": "train",
+   "ws": 1792869300000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261024",
+   "decimal_precision": 2,
+   "hour": 20,
+   "m": 3718697,
+   "parent_worlds": [
+    1792874210000
+   ],
+   "rank": "348de6e2384a059f7a3212c79d2eee78384304c0f02f6e14ab9ab6c8f4d3bfc3",
+   "set": "train",
+   "ws": 1792874100000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261024",
+   "decimal_precision": 2,
+   "hour": 21,
+   "m": 3719771,
+   "parent_worlds": [
+    1792876515000
+   ],
+   "rank": "13b4e69146214827c3fdb60fc855160a04e8499c05d059bcee38bbdd47226556",
+   "set": "train",
+   "ws": 1792876500000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261024",
+   "decimal_precision": 2,
+   "hour": 22,
+   "m": 3721958,
+   "parent_worlds": [
+    1792882585000
+   ],
+   "rank": "4096d7115dcfd49fbf4108b51200b6fd6346e46c59dcf702cb607002471c66f3",
+   "set": "train",
+   "ws": 1792882500000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261024",
+   "decimal_precision": 2,
+   "hour": 23,
+   "m": 3721985,
+   "parent_worlds": [
+    1792883380000
+   ],
+   "rank": "1de50acf8994b633b1130d232ad6fb5816c340a2f43cb75d3e09b6373999b2d8",
+   "set": "train",
+   "ws": 1792883100000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261025",
+   "decimal_precision": 2,
+   "hour": 0,
+   "m": 3723774,
+   "parent_worlds": [
+    1792886830000
+   ],
+   "rank": "15f45da36018b7022b0adac8bc8444d0f2959a5e5cb326f1d28db66d99a57e5e",
+   "set": "train",
+   "ws": 1792886700000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261025",
+   "decimal_precision": 2,
+   "hour": 1,
+   "m": 3725884,
+   "parent_worlds": [
+    1792891725000
+   ],
+   "rank": "0115d138a8a568fb98433d303114228094e79d361a5cb0cd35185068fce3ce95",
+   "set": "train",
+   "ws": 1792891500000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261025",
+   "decimal_precision": 2,
+   "hour": 2,
+   "m": 3726408,
+   "parent_worlds": [
+    1792894405000
+   ],
+   "rank": "1ec292b64ba828f1d9182ec6a7c5d1bada0424c1567647b1d275caa93b89836b",
+   "set": "train",
+   "ws": 1792894200000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261025",
+   "decimal_precision": 2,
+   "hour": 3,
+   "m": 3727774,
+   "parent_worlds": [
+    1792899195000
+   ],
+   "rank": "3ba05e8aa94ebf035583d7383862cf551f623f667830961c24abd206826d9f5e",
+   "set": "train",
+   "ws": 1792899000000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261025",
+   "decimal_precision": 2,
+   "hour": 4,
+   "m": 3730213,
+   "parent_worlds": [
+    1792904330000
+   ],
+   "rank": "1361ab7d1653ee711a4aecf9bb1f6b24353ee54e7a43952eb224d9ffa6d0869b",
+   "set": "train",
+   "ws": 1792904100000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261025",
+   "decimal_precision": 2,
+   "hour": 5,
+   "m": 3732331,
+   "parent_worlds": [
+    1792906890000
+   ],
+   "rank": "0bd9446bdc76c61afbe493313e0d71c120b8dd817c622d8811d75abd4658fcb5",
+   "set": "train",
+   "ws": 1792906800000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261025",
+   "decimal_precision": 2,
+   "hour": 6,
+   "m": 3732938,
+   "parent_worlds": [
+    1792909135000
+   ],
+   "rank": "10b8cada5cea13a722b3cf4a245e21ce530bb1fd3b211c1e9bcc89ad2edf3d23",
+   "set": "train",
+   "ws": 1792908900000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261025",
+   "decimal_precision": 2,
+   "hour": 7,
+   "m": 3734864,
+   "parent_worlds": [
+    1792912590000
+   ],
+   "rank": "31de4b4471f104b251204a7c77a18c1e0e0272956bec71220e2a454cabd6208f",
+   "set": "train",
+   "ws": 1792912500000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261025",
+   "decimal_precision": 2,
+   "hour": 8,
+   "m": 3735729,
+   "parent_worlds": [
+    1792916105000,
+    1792916310000
+   ],
+   "rank": "0679accb50a42a60cb46f01cc29d3af5611ea89d3d1991996fad29f7d42512cf",
+   "set": "train",
+   "ws": 1792916100000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261025",
+   "decimal_precision": 2,
+   "hour": 9,
+   "m": 3736855,
+   "parent_worlds": [
+    1792920775000
+   ],
+   "rank": "0991eadda73cf6042eeb84fbd0febd30f57447fbdfff2e2b6b9c62e7f481b268",
+   "set": "train",
+   "ws": 1792920600000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261025",
+   "decimal_precision": 2,
+   "hour": 10,
+   "m": 3737919,
+   "parent_worlds": [
+    1792925640000
+   ],
+   "rank": "09075f98f896204959b2ebfd4ae57123c55fec78b169d50a507c59b03267893b",
+   "set": "train",
+   "ws": 1792925400000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261025",
+   "decimal_precision": 2,
+   "hour": 11,
+   "m": 3739819,
+   "parent_worlds": [
+    1792927755000
+   ],
+   "rank": "210c5834e6e87aedc3e85a41c8952255b5cd4c7cb5e49fb6c80c85ec3ad38994",
+   "set": "train",
+   "ws": 1792927500000.0
+  },
+  {
+   "cell_candidates": 2,
+   "day": "20261025",
+   "decimal_precision": 2,
+   "hour": 12,
+   "m": 3742871,
+   "parent_worlds": [
+    1792932180000,
+    1792932265000
+   ],
+   "rank": "06fb807d87d6f3d2dd04f965b77705496e4e7db59a247253ad3c01a3cd658a0d",
+   "set": "train",
+   "ws": 1792932000000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261025",
+   "decimal_precision": 2,
+   "hour": 13,
+   "m": 3753334,
+   "parent_worlds": [
+    1792936260000
+   ],
+   "rank": "2df6cf6afa785b617512ad4cac3b4b6026c072d63ba1bdbfb75be611c37038ae",
+   "set": "train",
+   "ws": 1792936200000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261025",
+   "decimal_precision": 2,
+   "hour": 14,
+   "m": 3755607,
+   "parent_worlds": [
+    1792939270000
+   ],
+   "rank": "219bf00670ede7ecae41daedce79a54df2e6f8446a624fdb37e9f54b41deca9b",
+   "set": "train",
+   "ws": 1792939200000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261025",
+   "decimal_precision": 2,
+   "hour": 15,
+   "m": 3758641,
+   "parent_worlds": [
+    1792943510000,
+    1792943565000
+   ],
+   "rank": "016d29c41d50eadd3e0c56f10e038f8991c918123de309acc350020be4ba47e3",
+   "set": "train",
+   "ws": 1792943400000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261025",
+   "decimal_precision": 2,
+   "hour": 16,
+   "m": 3761106,
+   "parent_worlds": [
+    1792945385000
+   ],
+   "rank": "2a4bbe827bd369e296f52be92bcb415cdb81049ef93fc1f9fa967e99d8c18c75",
+   "set": "train",
+   "ws": 1792945200000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261025",
+   "decimal_precision": 2,
+   "hour": 17,
+   "m": 3763401,
+   "parent_worlds": [
+    1792948050000,
+    1792948070000
+   ],
+   "rank": "30b9b0868c714ebd314bb36aa40072c7096c027256ca69526717eb4b1f880dc7",
+   "set": "train",
+   "ws": 1792947900000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261025",
+   "decimal_precision": 2,
+   "hour": 18,
+   "m": 3768439,
+   "parent_worlds": [
+    1792952600000
+   ],
+   "rank": "3faae58ab5f7ccf8e8c965156b8415101cf5cc42b0c49f4bb5456abfaecf5996",
+   "set": "train",
+   "ws": 1792952400000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261025",
+   "decimal_precision": 2,
+   "hour": 19,
+   "m": 3775026,
+   "parent_worlds": [
+    1792957245000
+   ],
+   "rank": "2b0d83dd2a6ed1f38ba55816629264d6ce0ad99ec0ce1ff379510beb61e1ca8a",
+   "set": "train",
+   "ws": 1792957200000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261025",
+   "decimal_precision": 2,
+   "hour": 20,
+   "m": 3776314,
+   "parent_worlds": [
+    1792959935000
+   ],
+   "rank": "60a200762f020e844fb3932bd45e478fe53c7d93483f146058fdc9bd6701c2a6",
+   "set": "train",
+   "ws": 1792959900000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261025",
+   "decimal_precision": 2,
+   "hour": 21,
+   "m": 3779380,
+   "parent_worlds": [
+    1792963620000,
+    1792963625000
+   ],
+   "rank": "06eb71b1a04f6ab809479d7a298ba11999296317738c243ea0e530bcdc44bb13",
+   "set": "train",
+   "ws": 1792963500000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261025",
+   "decimal_precision": 2,
+   "hour": 22,
+   "m": 3781973,
+   "parent_worlds": [
+    1792966955000
+   ],
+   "rank": "23faabe836c0b8e792023f88f5a60837e30c73305d3c8d4487894529d831c136",
+   "set": "train",
+   "ws": 1792966800000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261025",
+   "decimal_precision": 2,
+   "hour": 23,
+   "m": 3783696,
+   "parent_worlds": [
+    1792969265000
+   ],
+   "rank": "6598603b1b6b9a394f0b6e3dcc77ce9da0c9504b01cca25ccdc333204017c7ce",
+   "set": "train",
+   "ws": 1792969200000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261026",
+   "decimal_precision": 2,
+   "hour": 0,
+   "m": 3788669,
+   "parent_worlds": [
+    1792976065000
+   ],
+   "rank": "8100e7fb471cbb70edcff2a25720465268286da8bc9ef07b1397a61ff7481448",
+   "set": "eval",
+   "ws": 1792975800000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261026",
+   "decimal_precision": 2,
+   "hour": 1,
+   "m": 3789484,
+   "parent_worlds": [
+    1792977190000
+   ],
+   "rank": "57936b61036f63e31f788c1e9dab873366d319478b007794a843e59cf43cec11",
+   "set": "eval",
+   "ws": 1792977000000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261026",
+   "decimal_precision": 2,
+   "hour": 2,
+   "m": 3791435,
+   "parent_worlds": [
+    1792981850000,
+    1792981920000
+   ],
+   "rank": "0ead45730e15548bf6febfabca713bbbdba6b6ffcd246984840e8c68f4635299",
+   "set": "eval",
+   "ws": 1792981800000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261026",
+   "decimal_precision": 2,
+   "hour": 3,
+   "m": 3792112,
+   "parent_worlds": [
+    1792984715000
+   ],
+   "rank": "1eebd558cbaa6fb5d546eac8269ec28b1dd053efc39692631156c69c14b980b9",
+   "set": "eval",
+   "ws": 1792984500000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261026",
+   "decimal_precision": 2,
+   "hour": 4,
+   "m": 3792958,
+   "parent_worlds": [
+    1792987590000
+   ],
+   "rank": "725e9853d6251991dfd7775d62c14d50c6fa2571b659eb4307d323cc20aa98a6",
+   "set": "eval",
+   "ws": 1792987500000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261026",
+   "decimal_precision": 2,
+   "hour": 5,
+   "m": 3796997,
+   "parent_worlds": [
+    1792991110000
+   ],
+   "rank": "288459c53458e49603ca4f5e18b73c68dbb984066edc04825c55b12a95c442f2",
+   "set": "eval",
+   "ws": 1792991100000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261026",
+   "decimal_precision": 2,
+   "hour": 6,
+   "m": 3801827,
+   "parent_worlds": [
+    1792997130000
+   ],
+   "rank": "574a7aec1a6ab4b82ad786991ce9e68b3030ea932813c424086b566be78f034b",
+   "set": "eval",
+   "ws": 1792997100000.0
+  },
+  {
+   "cell_candidates": 2,
+   "day": "20261026",
+   "decimal_precision": 2,
+   "hour": 7,
+   "m": 3803131,
+   "parent_worlds": [
+    1793001405000,
+    1793001455000
+   ],
+   "rank": "b216c67c7985b5ccbdeeee2b835aa3672fb9ea9fbc92e1283950e446c96092ec",
+   "set": "eval",
+   "ws": 1793001300000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261026",
+   "decimal_precision": 2,
+   "hour": 8,
+   "m": 3803849,
+   "parent_worlds": [
+    1793002430000
+   ],
+   "rank": "16c9fe704787a61172473912175f7b3a09cb71df7c3635cd15e395348a8528d5",
+   "set": "eval",
+   "ws": 1793002200000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261026",
+   "decimal_precision": 2,
+   "hour": 9,
+   "m": 3804696,
+   "parent_worlds": [
+    1793007250000
+   ],
+   "rank": "709b7ca3a538d5c208d7b8217f881ee7576f4894c8b1eeaaae18bec512a643eb",
+   "set": "eval",
+   "ws": 1793007000000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261026",
+   "decimal_precision": 2,
+   "hour": 10,
+   "m": 3805097,
+   "parent_worlds": [
+    1793010665000
+   ],
+   "rank": "382da20c2729fe2e0249d2c2dc00373ade4dd5fb7ff7fedf92f556b6b93a48da",
+   "set": "eval",
+   "ws": 1793010600000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261026",
+   "decimal_precision": 2,
+   "hour": 11,
+   "m": 3806141,
+   "parent_worlds": [
+    1793012755000
+   ],
+   "rank": "1e7987f19540097fea46bf954cb55c4b5859034dbe82a3fd67f60474a6808455",
+   "set": "eval",
+   "ws": 1793012700000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261026",
+   "decimal_precision": 2,
+   "hour": 12,
+   "m": 3811225,
+   "parent_worlds": [
+    1793019515000
+   ],
+   "rank": "a10505958b4b2c9aca77e322cb9e0fa431879c0731d69b44a0120490bf296040",
+   "set": "eval",
+   "ws": 1793019300000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261026",
+   "decimal_precision": 2,
+   "hour": 13,
+   "m": 3814579,
+   "parent_worlds": [
+    1793021905000
+   ],
+   "rank": "5b000e1c586af5ef8f17d11a5339e6ef5fd1efc4e76a47eae5aa9c4f1bb3f485",
+   "set": "eval",
+   "ws": 1793021700000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261026",
+   "decimal_precision": 2,
+   "hour": 14,
+   "m": 3819978,
+   "parent_worlds": [
+    1793025940000,
+    1793026015000
+   ],
+   "rank": "050472f4a075ffd9359d2e48edeed76be517ef471a99191851ff613434fb762a",
+   "set": "eval",
+   "ws": 1793025900000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261026",
+   "decimal_precision": 2,
+   "hour": 15,
+   "m": 3822182,
+   "parent_worlds": [
+    1793027745000
+   ],
+   "rank": "53078ec56f814cf5d94d0994ad3e4f3344782c3f0274b51b88320f2a5cdba5b3",
+   "set": "eval",
+   "ws": 1793027700000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261026",
+   "decimal_precision": 2,
+   "hour": 16,
+   "m": 3828901,
+   "parent_worlds": [
+    1793033775000
+   ],
+   "rank": "7c35c87a26fd2e50b5e4ed6f2c2e35f2f5111929103ffba513252e086962b3e9",
+   "set": "eval",
+   "ws": 1793033700000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261026",
+   "decimal_precision": 2,
+   "hour": 17,
+   "m": 3833030,
+   "parent_worlds": [
+    1793036945000
+   ],
+   "rank": "10bae4998d38958f344909b96bc69f811f7fd2dd8fa5dfdfba30dba4663c80e6",
+   "set": "eval",
+   "ws": 1793036700000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261026",
+   "decimal_precision": 2,
+   "hour": 18,
+   "m": 3835592,
+   "parent_worlds": [
+    1793038530000,
+    1793038740000
+   ],
+   "rank": "04637f4ed841ce7e8ece87192bde03e32523277bfcc75cc361e804db89a7ba2a",
+   "set": "eval",
+   "ws": 1793038500000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261026",
+   "decimal_precision": 2,
+   "hour": 19,
+   "m": 3838531,
+   "parent_worlds": [
+    1793041515000
+   ],
+   "rank": "2ce7415139c4fff1e62ea58fe4f308843b906bca756f7210260b09033da608a2",
+   "set": "eval",
+   "ws": 1793041500000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261026",
+   "decimal_precision": 2,
+   "hour": 20,
+   "m": 3844040,
+   "parent_worlds": [
+    1793047995000
+   ],
+   "rank": "030fa6094bd34972803ebd0adb4b8f8d9c15af3a95b57107de69cc51b735ea73",
+   "set": "eval",
+   "ws": 1793047800000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261026",
+   "decimal_precision": 2,
+   "hour": 21,
+   "m": 3846777,
+   "parent_worlds": [
+    1793050755000
+   ],
+   "rank": "242e163192529511ff7ec784c6353349b29841cc0abde2bfcd169a491d129532",
+   "set": "eval",
+   "ws": 1793050500000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261026",
+   "decimal_precision": 2,
+   "hour": 22,
+   "m": 3850428,
+   "parent_worlds": [
+    1793054930000
+   ],
+   "rank": "05eac33586e70518083b48999d58ee5dd866582a04b553880fce217ed105667d",
+   "set": "eval",
+   "ws": 1793054700000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261026",
+   "decimal_precision": 2,
+   "hour": 23,
+   "m": 3852498,
+   "parent_worlds": [
+    1793057405000
+   ],
+   "rank": "391f2b9b51874c7503c430fef746d0e54dbca1404545363bb274eee3c22b4b0d",
+   "set": "eval",
+   "ws": 1793057400000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261027",
+   "decimal_precision": 2,
+   "hour": 0,
+   "m": 3853425,
+   "parent_worlds": [
+    1793060610000
+   ],
+   "rank": "2da766e7049a648c2e1f1e6dd6a19648bde9ec1549252021f2b8ad48ce73eea7",
+   "set": "eval",
+   "ws": 1793060400000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261027",
+   "decimal_precision": 2,
+   "hour": 1,
+   "m": 3855039,
+   "parent_worlds": [
+    1793065575000
+   ],
+   "rank": "b3159a7c8b2ae2e1e20deadf1595fd568728c9edb2a06dcea6800bc55fc94165",
+   "set": "eval",
+   "ws": 1793065500000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261027",
+   "decimal_precision": 2,
+   "hour": 2,
+   "m": 3855455,
+   "parent_worlds": [
+    1793068370000
+   ],
+   "rank": "0b86b6f1a2c51119722643bc26586187bb785a81f55116e398c5181d53125137",
+   "set": "eval",
+   "ws": 1793068200000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261027",
+   "decimal_precision": 2,
+   "hour": 3,
+   "m": 3856715,
+   "parent_worlds": [
+    1793072850000
+   ],
+   "rank": "50a3654457d9a7994c44f7e4f9e7d2aaf1abfa71a8e420e15ccda6dafbe32f5b",
+   "set": "eval",
+   "ws": 1793072700000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261027",
+   "decimal_precision": 2,
+   "hour": 4,
+   "m": 3858387,
+   "parent_worlds": [
+    1793076460000,
+    1793076470000
+   ],
+   "rank": "19f2253726fdb5de699f41884cd62b374887a04b3dd0a06038075fa5cb614a48",
+   "set": "eval",
+   "ws": 1793076300000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261027",
+   "decimal_precision": 2,
+   "hour": 5,
+   "m": 3861514,
+   "parent_worlds": [
+    1793079975000
+   ],
+   "rank": "2350da4adab3a58e5a2e09d9779aa2663748efb4c6f0de18fdd874b06dcede6e",
+   "set": "eval",
+   "ws": 1793079900000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261027",
+   "decimal_precision": 2,
+   "hour": 6,
+   "m": 3863088,
+   "parent_worlds": [
+    1793082480000
+   ],
+   "rank": "6915697bbbb27f558498b188d3a7b59735cee5e19d9e15ce772ebbd5a7266bf0",
+   "set": "eval",
+   "ws": 1793082300000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261027",
+   "decimal_precision": 2,
+   "hour": 7,
+   "m": 3864797,
+   "parent_worlds": [
+    1793087625000,
+    1793087660000
+   ],
+   "rank": "723c4932f0df3e5793046d469017e33f2f29af05c06848d51764651f3b4d7d92",
+   "set": "eval",
+   "ws": 1793087400000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261027",
+   "decimal_precision": 2,
+   "hour": 8,
+   "m": 3865917,
+   "parent_worlds": [
+    1793089050000,
+    1793089140000
+   ],
+   "rank": "5a10562444b580968075e5b893fe6a1629e4f9aabd84158f0e6384518b5c0aab",
+   "set": "eval",
+   "ws": 1793088900000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261027",
+   "decimal_precision": 2,
+   "hour": 9,
+   "m": 3866772,
+   "parent_worlds": [
+    1793092260000
+   ],
+   "rank": "174f106f12b5442c8cd8395ec6bb907587938c1fde916d86652693716ef5c6c8",
+   "set": "eval",
+   "ws": 1793092200000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261027",
+   "decimal_precision": 2,
+   "hour": 10,
+   "m": 3867043,
+   "parent_worlds": [
+    1793095645000
+   ],
+   "rank": "187d0dfc3bc2f06800e1f40f45c9f935de527e3ec47110a560b7ca565d651716",
+   "set": "eval",
+   "ws": 1793095500000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261027",
+   "decimal_precision": 2,
+   "hour": 11,
+   "m": 3868279,
+   "parent_worlds": [
+    1793101465000
+   ],
+   "rank": "1e014af0414669aa97aa9d2d5a4d22e22bc1767425e1b40dec585223bc1b858b",
+   "set": "eval",
+   "ws": 1793101200000.0
+  },
+  {
+   "cell_candidates": 2,
+   "day": "20261027",
+   "decimal_precision": 2,
+   "hour": 12,
+   "m": 3868822,
+   "parent_worlds": [
+    1793103200000,
+    1793103240000
+   ],
+   "rank": "14f75699514858edbf04d5c0d746db1bb11782be9f28d51427dab09aa2c40577",
+   "set": "eval",
+   "ws": 1793103000000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261027",
+   "decimal_precision": 2,
+   "hour": 13,
+   "m": 3871995,
+   "parent_worlds": [
+    1793108665000
+   ],
+   "rank": "116dbcf409164fa57e91f673d9c07b153f2a745c0eef53021d31677fd3aa2eb1",
+   "set": "eval",
+   "ws": 1793108400000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261027",
+   "decimal_precision": 2,
+   "hour": 14,
+   "m": 3872834,
+   "parent_worlds": [
+    1793110255000
+   ],
+   "rank": "7d1bb35c227fd0921706a7051661adade8ac7b48bd5cfec30b4fc81c8b6f26ee",
+   "set": "eval",
+   "ws": 1793110200000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261027",
+   "decimal_precision": 2,
+   "hour": 15,
+   "m": 3874854,
+   "parent_worlds": [
+    1793115025000
+   ],
+   "rank": "0dc4f0b9833bf495d079e466678174dc2f4fa7b415f9618eb5c03f3abec66130",
+   "set": "eval",
+   "ws": 1793115000000.0
+  },
+  {
+   "cell_candidates": 2,
+   "day": "20261027",
+   "decimal_precision": 2,
+   "hour": 16,
+   "m": 3877092,
+   "parent_worlds": [
+    1793120110000,
+    1793120135000,
+    1793120160000
+   ],
+   "rank": "6478125fcc55d2f3b7047906b54b750f1188a825dc7fd0ba50537547217f12ad",
+   "set": "eval",
+   "ws": 1793120100000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261027",
+   "decimal_precision": 2,
+   "hour": 17,
+   "m": 3877472,
+   "parent_worlds": [
+    1793121980000
+   ],
+   "rank": "02a8075ee16be6cd4ff2ee08905b9ea3832ea13f6bab11ad749dffb7426bd804",
+   "set": "eval",
+   "ws": 1793121900000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261027",
+   "decimal_precision": 2,
+   "hour": 18,
+   "m": 3879202,
+   "parent_worlds": [
+    1793125935000
+   ],
+   "rank": "351aa0eb62f490f716e4be48dc416e0562b0568183b74ae1a4c4d7f24ae6898d",
+   "set": "eval",
+   "ws": 1793125800000.0
+  },
+  {
+   "cell_candidates": 3,
+   "day": "20261027",
+   "decimal_precision": 2,
+   "hour": 19,
+   "m": 3881457,
+   "parent_worlds": [
+    1793128015000,
+    1793128160000
+   ],
+   "rank": "13516b05449e462a66cd56a737b491f9fde91bd889d65af620bed2e86d3e62f5",
+   "set": "eval",
+   "ws": 1793127900000.0
+  },
+  {
+   "cell_candidates": 2,
+   "day": "20261027",
+   "decimal_precision": 2,
+   "hour": 20,
+   "m": 3884545,
+   "parent_worlds": [
+    1793133950000,
+    1793134050000
+   ],
+   "rank": "15780f115f6c3f93daa6c387fa64844970604393a3b931765634e34c2ae00a11",
+   "set": "eval",
+   "ws": 1793133900000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261027",
+   "decimal_precision": 2,
+   "hour": 21,
+   "m": 3887086,
+   "parent_worlds": [
+    1793137910000
+   ],
+   "rank": "628f86f51296f98547eb860c5555c66009f68ef2f8499b06a7e5261b810e05ff",
+   "set": "eval",
+   "ws": 1793137800000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261027",
+   "decimal_precision": 2,
+   "hour": 22,
+   "m": 3899224,
+   "parent_worlds": [
+    1793141860000
+   ],
+   "rank": "781dacb736fba050d2b21baf7046416e6a341d6f5ca1f45fd965d45b26d8e3ca",
+   "set": "eval",
+   "ws": 1793141700000.0
+  },
+  {
+   "cell_candidates": 4,
+   "day": "20261027",
+   "decimal_precision": 2,
+   "hour": 23,
+   "m": 3900028,
+   "parent_worlds": [
+    1793145070000
+   ],
+   "rank": "1702a8fda429a0aa6bdb0a0f443585c2f664c78034bf79a78c5d7d88273f76dc",
+   "set": "eval",
+   "ws": 1793145000000.0
+  }
+ ],
+ "settings": {
+  "activation_ms": 58.0,
+  "cancel_ack_ms": 100.0,
+  "cancel_effect_ms": 37.0,
+  "cap": 30.0,
+  "contract": "paired_continuation_v2",
+  "end_ms": 5000.0,
+  "fill_notice_ms": 100.0,
+  "hold_ticks": 3.0,
+  "pending_cancel_ms": 95.0,
+  "post_notice_ms": 0.0,
+  "size": 30.0,
+  "step_ms": 50.0,
+  "tie_order": "trades <= tick; notices due by the tick; client structural requests; policy decisions in the alternating side order"
+ },
+ "supported_end_ms": 298000.0,
+ "version": "ladder_rest_inventory_full_market_v1"
+}

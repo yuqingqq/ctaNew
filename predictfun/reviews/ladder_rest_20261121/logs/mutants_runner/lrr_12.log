@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "12", "name": "fair_edge stretched", "seconds": 4.8, "sources": {"pf_ladder_rest.py": "d90016ce7d25f89f", "pf_ladder_rest_mutants.py": "ba2232b7b2e3700f", "pf_ladder_rest_selftest.py": "e838475859bc7e05"}, "why": "LADDER SELFTEST FAILED: 10 full-market features: fair_edge unavailable, t_to_end, the posted size, the phase at the decision (ok)"}
+2026-11-21T16:59:26Z tag=lrr_12 rc=0 peak_rss_mib=231 wall_s=5.00 cpu_user_s=4.80 memavail_start_gib=22 disk_free_gib=438->438 slot=claude2

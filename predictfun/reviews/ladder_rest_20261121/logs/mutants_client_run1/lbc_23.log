@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "23", "name": "the fingerprint without the mode log", "seconds": 4.9, "sources": {"pf_branch_ladder.py": "c9e0852eccea5b42", "pf_branch_ladder_mutants.py": "3c236d914d5a4755", "pf_ladder_rest_selftest.py": "cbb8197a16508e9d"}, "why": "LADDER SELFTEST FAILED: 7 another configuration / END / tape / a changed state refused (3 / 4)"}
+2026-11-21T16:56:59Z tag=lbc_23 rc=0 peak_rss_mib=230 wall_s=5.08 cpu_user_s=4.79 memavail_start_gib=22 disk_free_gib=438->438 slot=claude

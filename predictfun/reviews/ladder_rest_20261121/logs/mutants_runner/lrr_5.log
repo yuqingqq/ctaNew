@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "5", "name": "downtime precedence reversed", "seconds": 4.8, "sources": {"pf_ladder_rest.py": "d90016ce7d25f89f", "pf_ladder_rest_mutants.py": "ba2232b7b2e3700f", "pf_ladder_rest_selftest.py": "e838475859bc7e05"}, "why": "LADDER SELFTEST FAILED: 10 downtime precedence"}
+2026-11-21T16:59:18Z tag=lrr_5 rc=0 peak_rss_mib=231 wall_s=5.03 cpu_user_s=4.87 memavail_start_gib=22 disk_free_gib=438->438 slot=claude3

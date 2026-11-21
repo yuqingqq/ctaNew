@@ -1,4 +1,14 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+ladder_rest_20261121_dev:
+  status: frozen_before_pilot
+  asof: "2026-11-21 17:03Z"
+  declaration: predictfun/reviews/ladder_rest_20261121/declaration.md
+  strategy: LADDER_REST_INVENTORY_v1
+  markets_selected: 96
+  pilot_markets: 8
+  mutants: {client: "24/24", runner: "20/20"}
+  core_hours_cap: 2.0
+  next: pilot_then_projection_then_full_run_measure_checks_one_review
 default_post_plan_review_20261121_codex:
   status: design_ready_for_implementation_and_bounded_pilot
   target_commit: e3c2b998ec6a31d8cc682f56e41abe0c74824549

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "10", "name": "one more pilot market", "seconds": 4.8, "sources": {"pf_ladder_rest.py": "d90016ce7d25f89f", "pf_ladder_rest_mutants.py": "ba2232b7b2e3700f", "pf_ladder_rest_selftest.py": "cbb8197a16508e9d"}, "why": "LADDER SELFTEST FAILED: 10 build_manifest: the frozen population"}
+2026-11-21T16:57:23Z tag=lrr_10 rc=0 peak_rss_mib=230 wall_s=5.01 cpu_user_s=4.82 memavail_start_gib=22 disk_free_gib=438->438 slot=claude4

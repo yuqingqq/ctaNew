@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "18", "name": "no side exposure budget", "seconds": 4.7, "sources": {"pf_branch_ladder.py": "c9e0852eccea5b42", "pf_branch_ladder_mutants.py": "3c236d914d5a4755", "pf_ladder_rest_selftest.py": "cbb8197a16508e9d"}, "why": "LADDER SELFTEST FAILED: 3 reservations above the desired exposure add nothing (exposure_full)"}
+2026-11-21T16:56:53Z tag=lbc_18 rc=0 peak_rss_mib=230 wall_s=4.96 cpu_user_s=4.74 memavail_start_gib=22 disk_free_gib=438->438 slot=claude4

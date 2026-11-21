@@ -1,0 +1,2 @@
+{"cls": "HARNESS_FAILURE", "index": "3", "name": "cancel-pending orders unreserved", "seconds": 0.8, "sources": {"pf_branch_ladder.py": "c9e0852eccea5b42", "pf_branch_ladder_mutants.py": "3c236d914d5a4755", "pf_ladder_rest_selftest.py": "cbb8197a16508e9d"}, "why": "crash: ValueError('position check at 700.0: engine 30.0 outside [-30.0, 0.0]')"}
+2026-11-21T16:56:42Z tag=lbc_3 rc=1 peak_rss_mib=195 wall_s=0.95 cpu_user_s=0.78 memavail_start_gib=22 disk_free_gib=438->438 slot=claude

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "13", "name": "the mode from the previous tick", "seconds": 4.6, "sources": {"pf_branch_ladder.py": "c9e0852eccea5b42", "pf_branch_ladder_mutants.py": "77ffb2995745cb2a", "pf_ladder_rest_selftest.py": "e838475859bc7e05"}, "why": "LADDER SELFTEST FAILED: 5 the live bid pulled at the LONG tick, effect +37, released at the acknowledgement | 8 every snapshot reconstructs from the saved events"}
+2026-11-21T16:58:53Z tag=lbc_13 rc=0 peak_rss_mib=230 wall_s=4.84 cpu_user_s=4.64 memavail_start_gib=22 disk_free_gib=438->438 slot=claude3

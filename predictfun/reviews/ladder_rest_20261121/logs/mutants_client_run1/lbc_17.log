@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "17", "name": "the per-level size without the side multiplier", "seconds": 4.6, "sources": {"pf_branch_ladder.py": "c9e0852eccea5b42", "pf_branch_ladder_mutants.py": "3c236d914d5a4755", "pf_ladder_rest_selftest.py": "cbb8197a16508e9d"}, "why": "LADDER SELFTEST FAILED: 3 I = +40 gives two 60-share bids (100.0, 20.0) | 3 sizes round down to whole shares (I = 33.3: 66, never above the budget)"}
+2026-11-21T16:56:57Z tag=lbc_17 rc=0 peak_rss_mib=230 wall_s=4.87 cpu_user_s=4.69 memavail_start_gib=22 disk_free_gib=438->438 slot=claude3

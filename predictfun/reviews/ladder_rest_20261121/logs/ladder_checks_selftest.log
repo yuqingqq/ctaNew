@@ -1,0 +1,2 @@
+CHECKS SELFTEST PASSED
+2026-11-21T17:02:32Z tag=lr_checks_selftest rc=0 peak_rss_mib=100 wall_s=0.30 cpu_user_s=0.23 memavail_start_gib=23 disk_free_gib=439->439 slot=claude

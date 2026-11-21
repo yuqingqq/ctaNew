@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "15", "name": "the manifest written over", "seconds": 4.8, "sources": {"pf_ladder_rest.py": "d90016ce7d25f89f", "pf_ladder_rest_mutants.py": "ba2232b7b2e3700f", "pf_ladder_rest_selftest.py": "cbb8197a16508e9d"}, "why": "LADDER SELFTEST FAILED: 10 build_manifest overwrote its output"}
+2026-11-21T16:57:27Z tag=lrr_15 rc=0 peak_rss_mib=230 wall_s=5.00 cpu_user_s=4.78 memavail_start_gib=22 disk_free_gib=438->438 slot=claude

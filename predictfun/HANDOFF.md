@@ -23,6 +23,14 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- LADDER_REST_FREEZE_20261121_DEV -->
+## 2026-11-21 17:03Z (session aea5bfb9) — LADDER_REST_INVENTORY_v1 FROZEN before the pilot (the review's ONE next priority)
+
+- **Frozen** ([declaration](reviews/ladder_rest_20261121/declaration.md)): the multi-order ladder client `pf_branch_ladder.py` (frozen engine reused; per-gid states, side-wide reservations, inventory hysteresis S 100 / R 50, structural subreasons per gid, own-cross / duplicate-price refusals), the runner / features / measurement `pf_ladder_rest.py`, the selftest (groups 1-10), the mutation harnesses (client 24 / 24, runner 20 / 20 caught; first runs kept), the manifest (96 markets, one per day x opening hour, 8 pilot), the write-once pilot rule, the launcher and the independent checks (A-H + falsifier).
+- **Done before the freeze:** legacy reproduction exact on 44 synthetic tapes (with one-sided books); snapshots reconstruct from saved events; plan v2 / single-level drafts (`pf_branch_cfg`, `pf_large_rest`) superseded before any run and never committed.
+- **Next:** the 8-market pilot (4 jobs), the write-once projection, then the 96 markets if it fits the 2 core-hour cap; measure, checks, one combined receipt, ONE review request.
+<!-- /LADDER_REST_FREEZE_20261121_DEV -->
+
 <!-- LADDER_PLAN_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — Plan reviewed: proceed to implementation and bounded pilot
 
