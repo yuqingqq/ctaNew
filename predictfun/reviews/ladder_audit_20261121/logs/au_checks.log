@@ -1,0 +1,22 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/ladder_audit_20261121/audit_checks.py", line 195, in <module>
+    main()
+  File "/home/yuqing/ctaNew/predictfun/reviews/ladder_audit_20261121/audit_checks.py", line 189, in main
+    sys.path.insert(0, str(REPO / 'predictfun/research')); E = load(); res = run_checks(E)
+                                                                             ^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/ladder_audit_20261121/audit_checks.py", line 98, in run_checks
+    keys = {(r['day'], int(r['m'])) for r in comp}; F = E['features']; Fc = F[[(d, int(m)) in keys for d, m in zip(F.day, F.m)] & (F.gid >= 0)]
+                                                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/ops/common.py", line 85, in new_method
+    return method(self, other)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/arraylike.py", line 76, in __rand__
+    return self._logical_method(other, roperator.rand_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/series.py", line 6746, in _logical_method
+    res_values = ops.logical_op(lvalues, rvalues, op)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/ops/array_ops.py", line 438, in logical_op
+    raise TypeError(
+TypeError: Logical ops (and, or, xor) between Pandas objects and dtype-less sequences (e.g. list, tuple) are no longer supported. Wrap the object in a Series, Index, or np.array before operating instead.
+2026-11-21T17:50:39Z tag=au_checks rc=1 peak_rss_mib=198 wall_s=0.98 cpu_user_s=0.78 memavail_start_gib=23 disk_free_gib=437->437 slot=claude
