@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "7", "name": "refused orders quote", "seconds": 19.0, "sources": {"pf_adv2_replay.py": "e5d0f55d5c534d1c", "pf_adv2_replay_mutants.py": "97ac33fda18ca65c", "pf_adv2_replay_selftest.py": "5cabe316c36febe9"}, "why": "ADV2 REPLAY SELFTEST FAILED: active_intervals: {0: [[10.0, 5000.0]], 1: [[60.0, 150.0]]} / {0: [[10.0, 100.0], [200.0, 5000.0]], 1: [[60.0, 150.0]]}"}
+2026-11-21T03:28:44Z tag=mut_replay_7 rc=0 peak_rss_mib=234 wall_s=19.33 cpu_user_s=19.01 memavail_start_gib=22 disk_free_gib=433->433 slot=claude

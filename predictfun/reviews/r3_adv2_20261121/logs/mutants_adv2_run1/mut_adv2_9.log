@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "9", "name": "a result of another head accepted", "seconds": 7.6, "sources": {"pf_adv2.py": "c98e7d407595a690", "pf_adv2_mutants.py": "e1827a0b778c3212", "pf_adv2_selftest.py": "daba1f473d6ed667"}, "why": "ADV2 SELFTEST FAILED: extract: a result of another head was accepted"}
+2026-11-21T03:06:38Z tag=mut_adv2_9 rc=0 peak_rss_mib=250 wall_s=7.79 cpu_user_s=7.55 memavail_start_gib=22 disk_free_gib=434->434 slot=claude

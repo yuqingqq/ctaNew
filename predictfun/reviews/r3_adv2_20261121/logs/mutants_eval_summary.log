@@ -1,0 +1,32 @@
+  0 no exact zero bin: CAUGHT (1.2 s) - ADV2 EVAL SELFTEST FAILED: bins: [(0.0, '(-0.5, 0)', '0 (exact)')]
+  1 left-closed bins: CAUGHT (1.2 s) - ADV2 EVAL SELFTEST FAILED: bins: [(-10.0, '(-10, -5]', '(-inf, -10]'), (-0.5, '(-0.5, 0)', '(-1, -0.5]'), (0.5, '(0.5, 1]', '(0, 0.5]'), (10.0, '(10, 
+  2 the value of the other action: CAUGHT (1.2 s) - ADV2 EVAL SELFTEST FAILED: group readings: value = -1.6666666665, not 7.0
+  3 regret without the oracle: CAUGHT (1.2 s) - ADV2 EVAL SELFTEST FAILED: group readings: regret = -7.0, not 1.6666666666666669e-10
+  4 missed positive of the taken action: CAUGHT (1.2 s) - ADV2 EVAL SELFTEST FAILED: group readings: missed_positive = 42.0, not 1e-09; group readings: the missed / admitted values are wrong (2.0, 40.0, -10.0
+  5 admitted negative unweighted: CAUGHT (1.2 s) - ADV2 EVAL SELFTEST FAILED: group readings: the missed / admitted values are wrong (40.000000001, 40.0, -5.0)
+  6 meaningful = exact: CAUGHT (1.2 s) - ADV2 EVAL SELFTEST FAILED: group readings: meaningful_originals = 3, not 2; constants: the declared seed / draws / floors / tolerances changed; covera
+  7 a 3 c tail: CAUGHT (1.2 s) - ADV2 EVAL SELFTEST FAILED: group readings: tail_events = 2, not 1; group readings: tail_sum = 30.0, not 40.0; constants: the declared seed / draws / f
+  8 the training mean as zero: CAUGHT (1.2 s) - ADV2 EVAL SELFTEST FAILED: group readings: wmse_train_mean = 275.6666666666667, not 270.58333333316665
+  9 the support floor unchecked: CAUGHT (1.2 s) - ADV2 EVAL SELFTEST FAILED: screen: POST {'originals': 199} -> PASS, not INSUFFICIENT_SUPPORT
+  10 the nonzero floor unchecked: CAUGHT (1.2 s) - ADV2 EVAL SELFTEST FAILED: screen: POST {'meaningful_originals': 19} -> PASS, not INSUFFICIENT_SUPPORT
+  11 a zero mean label evaluated: CAUGHT (1.2 s) - ADV2 EVAL SELFTEST FAILED: screen: POST {'wmean_y': 0.0, 'wmean_pred': 0.0} -> FAIL, not NOT_EVALUABLE
+  12 WAIT / PULL need a positive label: CAUGHT (1.2 s) - ADV2 EVAL SELFTEST FAILED: screen: WAIT {} -> PASS, not FAIL; screen: WAIT {'wmean_y': -1.0, 'wmean_pred': -1.1} -> FAIL, not PASS
+  13 a wider amount tolerance: CAUGHT (1.2 s) - ADV2 EVAL SELFTEST FAILED: screen: KEEP {'wmean_pred': 2.6} -> PASS, not FAIL; screen: PULL {'wmean_y': -3.0, 'wmean_pred': -2.0} -> PASS, not FAIL
+  14 POST on a tie: CAUGHT (1.2 s) - ADV2 EVAL SELFTEST FAILED: frame: the controls do not predict the same rows, or the training mean is not the side / head's
+  15 PULL on a tie: CAUGHT (1.2 s) - ADV2 EVAL SELFTEST FAILED: frame: a keep tie or the keep signs are wrong (['fallback', 'KEEP', 'KEEP', 'KEEP', 'KEEP', 'KEEP', 'PULL', 'PULL', 'PULL',
+  16 a keep fallback PULLs: CAUGHT (1.2 s) - ADV2 EVAL SELFTEST FAILED: frame: the keep head actions / d are wrong (['fallback', 'PULL', 'PULL', 'PULL', 'PULL', 'PULL', 'KEEP', 'KEEP', 'KEEP', 'K
+  17 unsupported rows decided by the model: CAUGHT (1.2 s) - ADV2 EVAL SELFTEST FAILED: frame: the post head actions / d are wrong (['WAIT', 'WAIT', 'WAIT', 'WAIT', 'WAIT', 'WAIT', 'POST', 'POST', 'POST', 'POST'
+  18 the RICH training mean of another head: CAUGHT (1.2 s) - ADV2 EVAL SELFTEST FAILED: frame: the controls do not predict the same rows, or the training mean is not the side / head's
+  19 extra picks are anchors: CAUGHT (1.2 s) - ADV2 EVAL SELFTEST FAILED: control: the perfect selector reading is wrong ({'anchors': 162, 'strata': 42, 'singleton_strata': 2, 'realized': 3.1652892
+  20 fallback anchors kept: CAUGHT (1.2 s) - ADV2 EVAL SELFTEST FAILED: control: the perfect selector reading is wrong ({'anchors': 162, 'strata': 42, 'singleton_strata': 2, 'realized': 2.9586776
+  21 a stratum denominator: CAUGHT (1.2 s) - ADV2 EVAL SELFTEST FAILED: control: the perfect selector reading is wrong ({'anchors': 161, 'strata': 41, 'singleton_strata': 1, 'realized': 2.9709543
+  22 another seed: CAUGHT (1.2 s) - ADV2 EVAL SELFTEST FAILED: constants: the declared seed / draws / floors / tolerances changed
+  23 committed always true: CAUGHT (1.2 s) - ADV2 EVAL SELFTEST FAILED: committed: (True, True, True, True)
+  24 the evaluation without the committed fit: CAUGHT (1.2 s) - ADV2 EVAL SELFTEST FAILED: cmd_eval: ran without a committed fit manifest
+  25 coverage: meaningful = exact: CAUGHT (1.2 s) - ADV2 EVAL SELFTEST FAILED: coverage: [(('all', 'source', 'neutral', 'meaningful_originals'), 3, 2), (('WAIT', 'source', 'neutral', 'meaningful_origina
+  26 coverage: rows as originals: CAUGHT (1.1 s) - ADV2 EVAL SELFTEST FAILED: coverage: [(('all', 'source', 'neutral', 'originals'), 5, 4)] / dims ['c_gen', 'c_inv', 'c_other', 'c_price', 'c_queue', 'c
+  27 coverage: no candidate groups: CAUGHT (1.1 s) - ADV2 EVAL SELFTEST FAILED: coverage: [(('POST', 'source', 'neutral', 'rows'), None, 2), (('POST', 'source', 'delayed', 'rows'), None, 1), (('WAIT', 's
+  28 coverage: a dimension dropped: CAUGHT (1.2 s) - ADV2 EVAL SELFTEST FAILED: coverage: [] / dims ['c_gen', 'c_inv', 'c_other', 'c_price', 'c_queue', 'hbin', 'source'] / groups ['POST', 'WAIT', 'all', 
+  29 no categories on the evaluation rows: CAUGHT (1.2 s) - ADV2 EVAL SELFTEST FAILED: frame: the support categories / horizon bin are missing from the evaluation or training frame
+control: PASSED (1.2 s); sources {'pf_adv2_eval.py': '197ff94528cbf9c9', 'pf_adv2_eval_mutants.py': '53361a867513b8d6', 'pf_adv2_eval_selftest.py': 'f5b5251233b9f12e'}
+mutation check passed: the control passes its selftest, 30 / 30 planted code errors are caught by a check (0.6 CPU min)

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "31", "name": "ENTRY_ONLY retains by RICH", "seconds": 6.8, "sources": {"pf_adv2.py": "c98e7d407595a690", "pf_adv2_mutants.py": "e1827a0b778c3212", "pf_adv2_selftest.py": "daba1f473d6ed667"}, "why": "ADV2 SELFTEST FAILED: policies: the hybrids do not dispatch to the declared sub-policies; policies: a hybrid routes absent / live states to the wrong sub-policy"}
+2026-11-21T03:09:18Z tag=mut_adv2_31 rc=0 peak_rss_mib=249 wall_s=7.03 cpu_user_s=6.79 memavail_start_gib=22 disk_free_gib=433->433 slot=claude

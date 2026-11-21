@@ -1,0 +1,2 @@
+{"cls": "HARNESS_FAILURE", "index": "14", "name": "all 107 columns for every candidate", "seconds": 0.9, "sources": {"pf_adv2.py": "c98e7d407595a690", "pf_adv2_mutants.py": "e1827a0b778c3212", "pf_adv2_selftest.py": "daba1f473d6ed667"}, "why": "crash: ValueError(\"Length of feature_name(18) and num_feature(107) don't match\")"}
+2026-11-21T03:07:18Z tag=mut_adv2_14 rc=1 peak_rss_mib=213 wall_s=1.11 cpu_user_s=0.95 memavail_start_gib=22 disk_free_gib=433->433 slot=claude

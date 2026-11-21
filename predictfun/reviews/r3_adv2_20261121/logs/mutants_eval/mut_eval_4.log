@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "4", "name": "missed positive of the taken action", "seconds": 1.2, "sources": {"pf_adv2_eval.py": "197ff94528cbf9c9", "pf_adv2_eval_mutants.py": "53361a867513b8d6", "pf_adv2_eval_selftest.py": "f5b5251233b9f12e"}, "why": "ADV2 EVAL SELFTEST FAILED: group readings: missed_positive = 42.0, not 1e-09; group readings: the missed / admitted values are wrong (2.0, 40.0, -10.0)"}
+2026-11-21T03:25:35Z tag=mut_eval_4 rc=0 peak_rss_mib=199 wall_s=1.38 cpu_user_s=1.20 memavail_start_gib=22 disk_free_gib=433->433 slot=claude

@@ -1,0 +1,2 @@
+adv2 eval selftest passed: bins (12 cases), group readings (hand-computed), screens (11 cases), frame (actions, d, fallbacks, same rows, training means), control (deterministic, perfect / blind / always selectors, singleton / no-variation strata, anchors), committed() and the eval refusal, coverage (hand-counted; exact vs meaningful; groups; dimensions)
+2026-11-21T03:35:16Z tag=pf_adv2_eval_selftest rc=0 peak_rss_mib=200 wall_s=1.36 cpu_user_s=1.17 memavail_start_gib=21 disk_free_gib=432->432 slot=claude

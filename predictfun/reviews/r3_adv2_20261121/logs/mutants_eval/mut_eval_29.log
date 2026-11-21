@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "29", "name": "no categories on the evaluation rows", "seconds": 1.2, "sources": {"pf_adv2_eval.py": "197ff94528cbf9c9", "pf_adv2_eval_mutants.py": "53361a867513b8d6", "pf_adv2_eval_selftest.py": "f5b5251233b9f12e"}, "why": "ADV2 EVAL SELFTEST FAILED: frame: the support categories / horizon bin are missing from the evaluation or training frame"}
+2026-11-21T03:26:11Z tag=mut_eval_29 rc=0 peak_rss_mib=199 wall_s=1.36 cpu_user_s=1.19 memavail_start_gib=22 disk_free_gib=433->433 slot=claude

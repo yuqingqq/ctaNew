@@ -1,0 +1,35 @@
+  0 FAIR without fair_edge: CAUGHT (7.5 s) - ADV2 SELFTEST FAILED: inputs: the declared lists were refused (FAIR: the input list is not 18 unique stored inputs); inputs: not the declared RICH 107
+  1 the input-hash check removed: CAUGHT (7.5 s) - ADV2 SELFTEST FAILED: inputs: a FAIR list with a changed order (hash) was accepted
+  2 another objective: CAUGHT (7.6 s) - ADV2 SELFTEST FAILED: inputs: the declared lists were refused (the resolved parameters changed); fit: RICH is not the declared construction (pinned pa
+  3 the parts-list hash unchecked: CAUGHT (7.6 s) - ADV2 SELFTEST FAILED: reader: a parts list that does not hash to the dataset was accepted
+  4 the part bytes unchecked: CAUGHT (7.6 s) - ADV2 SELFTEST FAILED: reader: a changed part byte was accepted
+  5 the dataset hash unchecked: CAUGHT (7.6 s) - ADV2 SELFTEST FAILED: reader: another dataset hash was accepted
+  6 rows of any day accepted: CAUGHT (7.6 s) - ADV2 SELFTEST FAILED: extract: a training-day row was accepted as an evaluation row (split leakage)
+  7 no crossing purge: CAUGHT (7.6 s) - ADV2 SELFTEST FAILED: extract: (1, 'post') rows / labels / weights / inputs not exactly the written ones; extract: the statuses are not counted ({'202
+  8 the inputs hash unchecked: CAUGHT (7.6 s) - ADV2 SELFTEST FAILED: extract: a row whose inputs differ from their hash was accepted
+  9 a result of another head accepted: CAUGHT (7.7 s) - ADV2 SELFTEST FAILED: extract: a result of another head was accepted
+  10 the weight as the label: CAUGHT (7.8 s) - ADV2 SELFTEST FAILED: extract: (0, 'post') rows / labels / weights / inputs not exactly the written ones; extract: (0, 'keep') rows / labels / weights
+  11 the generation from another input: CAUGHT (7.9 s) - ADV2 SELFTEST FAILED: extract: the metadata generation / decision ms are not the stored ones
+  12 the decision time not stored: CAUGHT (7.8 s) - ADV2 SELFTEST FAILED: extract: the metadata generation / decision ms are not the stored ones
+  13 raw weights in the fit: CAUGHT (7.9 s) - ADV2 SELFTEST FAILED: fit: RICH is not the declared construction (pinned parameters, normalized weights, its columns); fit: FAIR is not the declared c
+  14 all 107 columns for every candidate: CAUGHT (7.8 s) - ADV2 SELFTEST FAILED: fit: FAIR fit_head failed on valid inputs (ValueError("Length of feature_name(18) and num_feature(107) don't match")); fit: MECH
+  15 a model file overwritten: CAUGHT (7.8 s) - ADV2 SELFTEST FAILED: fit_all: an existing model was overwritten
+  16 an unweighted training mean: CAUGHT (7.7 s) - ADV2 SELFTEST FAILED: fit_all: RICH 0 post in-sample readings are not the weighted formulas; fit_all: RICH 0 keep in-sample readings are not the weigh
+  17 widened training ranges: CAUGHT (7.6 s) - ADV2 SELFTEST FAILED: support: outside_training_range not reported (None)
+  18 the horizon unchecked: CAUGHT (7.6 s) - ADV2 SELFTEST FAILED: support: unsupported_horizon not reported (None)
+  19 a 20-original floor: CAUGHT (7.6 s) - ADV2 SELFTEST FAILED: support: fewer than 200 originals passed
+  20 the categories unchecked: CAUGHT (7.5 s) - ADV2 SELFTEST FAILED: support: unsupported_state_category not reported (None)
+  21 POST on a tie: CAUGHT (7.5 s) - ADV2 SELFTEST FAILED: controller: prediction 0.0 does not give WAIT / KEEP
+  22 PULL on a tie: CAUGHT (7.6 s) - ADV2 SELFTEST FAILED: controller: prediction 0.0 does not give WAIT / KEEP
+  23 the other side's head: CAUGHT (7.6 s) - ADV2 SELFTEST FAILED: controller: the side / head mapping or signs are wrong ({(0, 'absent'): 'WAIT', (0, 'live'): 'KEEP', (1, 'absent'): 'POST', (1, 
+  24 the cap unchecked: CAUGHT (8.5 s) - ADV2 SELFTEST FAILED: controller: a cap-blocked POST was not WAIT / cap_blocked
+  25 near END unchecked: CAUGHT (7.5 s) - ADV2 SELFTEST FAILED: controller: a near-END POST was not WAIT / near_end
+  26 a nonfinite prediction used: CAUGHT (7.6 s) - ADV2 SELFTEST FAILED: controller: a nonfinite prediction did not fall back
+  27 the unsupported fallback WAITs: CAUGHT (7.6 s) - ADV2 SELFTEST FAILED: controller: an unsupported state did not fall back with its own status
+  28 the review rule keeps: CAUGHT (7.5 s) - ADV2 SELFTEST FAILED: policies: ENTRY_PA does not POST by RICH and PULL at the review; end to end: RICH (POST > 0, KEEP < 0) differs from ENTRY_PA or 
+  29 N0 posts: HARNESS_FAILURE (3.8 s) - crash: ValueError('N0 asked in a live state: it never posted')
+  30 a hybrid routes by the wrong state: HARNESS_FAILURE (3.9 s) - crash: ValueError('the review rule asked outside a live state')
+  31 ENTRY_ONLY retains by RICH: CAUGHT (6.8 s) - ADV2 SELFTEST FAILED: policies: the hybrids do not dispatch to the declared sub-policies; policies: a hybrid routes absent / live states to the wrong 
+  32 an undeclared policy made: CAUGHT (7.6 s) - ADV2 SELFTEST FAILED: policies: an undeclared policy was made
+control: PASSED (7.5 s); sources {'pf_adv2.py': 'c98e7d407595a690', 'pf_adv2_mutants.py': 'e1827a0b778c3212', 'pf_adv2_selftest.py': '7fc3bd440378121c'}
+mutation check FAILED: the control passes its selftest, 31 / 33 planted code errors are caught by a check (4.2 CPU min) | 29 N0 posts: HARNESS_FAILURE - crash: ValueError('N0 asked in a live state: it never posted') | 30 a hybrid routes by the wrong state: HARNESS_FAILURE - crash: ValueError('the review rule asked outside a live state')

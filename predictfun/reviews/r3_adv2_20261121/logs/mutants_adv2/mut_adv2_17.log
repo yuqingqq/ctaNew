@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "17", "name": "widened training ranges", "seconds": 7.6, "sources": {"pf_adv2.py": "c98e7d407595a690", "pf_adv2_mutants.py": "e1827a0b778c3212", "pf_adv2_selftest.py": "26f2b73957c9ab3a"}, "why": "ADV2 SELFTEST FAILED: support: outside_training_range not reported (None)"}
+2026-11-21T03:37:59Z tag=mut_adv2_17 rc=0 peak_rss_mib=250 wall_s=7.89 cpu_user_s=7.61 memavail_start_gib=21 disk_free_gib=432->432 slot=claude

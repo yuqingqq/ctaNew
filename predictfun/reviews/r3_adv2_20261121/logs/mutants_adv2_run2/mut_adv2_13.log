@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "13", "name": "raw weights in the fit", "seconds": 7.9, "sources": {"pf_adv2.py": "c98e7d407595a690", "pf_adv2_mutants.py": "e1827a0b778c3212", "pf_adv2_selftest.py": "7fc3bd440378121c"}, "why": "ADV2 SELFTEST FAILED: fit: RICH is not the declared construction (pinned parameters, normalized weights, its columns); fit: FAIR is not the declared construction (pinned parameters, normalized weights"}
+2026-11-21T03:22:57Z tag=mut_adv2_13 rc=0 peak_rss_mib=247 wall_s=8.19 cpu_user_s=7.92 memavail_start_gib=21 disk_free_gib=433->433 slot=claude

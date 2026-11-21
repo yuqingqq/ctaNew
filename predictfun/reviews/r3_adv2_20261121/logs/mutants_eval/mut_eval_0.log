@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "0", "name": "no exact zero bin", "seconds": 1.2, "sources": {"pf_adv2_eval.py": "197ff94528cbf9c9", "pf_adv2_eval_mutants.py": "53361a867513b8d6", "pf_adv2_eval_selftest.py": "f5b5251233b9f12e"}, "why": "ADV2 EVAL SELFTEST FAILED: bins: [(0.0, '(-0.5, 0)', '0 (exact)')]"}
+2026-11-21T03:25:29Z tag=mut_eval_0 rc=0 peak_rss_mib=199 wall_s=1.37 cpu_user_s=1.19 memavail_start_gib=22 disk_free_gib=433->433 slot=claude

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "19", "name": "a 20-original floor", "seconds": 7.6, "sources": {"pf_adv2.py": "c98e7d407595a690", "pf_adv2_mutants.py": "e1827a0b778c3212", "pf_adv2_selftest.py": "7fc3bd440378121c"}, "why": "ADV2 SELFTEST FAILED: support: fewer than 200 originals passed"}
+2026-11-21T03:23:45Z tag=mut_adv2_19 rc=0 peak_rss_mib=250 wall_s=7.81 cpu_user_s=7.58 memavail_start_gib=22 disk_free_gib=433->433 slot=claude

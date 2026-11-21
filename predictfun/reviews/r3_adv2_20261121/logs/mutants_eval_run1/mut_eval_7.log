@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "7", "name": "a 3 c tail", "seconds": 1.2, "sources": {"pf_adv2_eval.py": "197ff94528cbf9c9", "pf_adv2_eval_mutants.py": "53361a867513b8d6", "pf_adv2_eval_selftest.py": "f0f0bdfa510298b0"}, "why": "ADV2 EVAL SELFTEST FAILED: group readings: tail_events = 2, not 1; group readings: tail_sum = 30.0, not 40.0; constants: the declared seed / draws / floors / tolerances changed"}
+2026-11-21T03:09:44Z tag=mut_eval_7 rc=0 peak_rss_mib=200 wall_s=1.37 cpu_user_s=1.19 memavail_start_gib=21 disk_free_gib=433->433 slot=claude

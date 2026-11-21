@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "2", "name": "the value of the other action", "seconds": 1.2, "sources": {"pf_adv2_eval.py": "197ff94528cbf9c9", "pf_adv2_eval_mutants.py": "53361a867513b8d6", "pf_adv2_eval_selftest.py": "f0f0bdfa510298b0"}, "why": "ADV2 EVAL SELFTEST FAILED: group readings: value = -1.6666666665, not 7.0"}
+2026-11-21T03:09:37Z tag=mut_eval_2 rc=0 peak_rss_mib=199 wall_s=1.37 cpu_user_s=1.21 memavail_start_gib=22 disk_free_gib=433->433 slot=claude

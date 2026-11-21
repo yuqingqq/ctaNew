@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "1", "name": "the input-hash check removed", "seconds": 7.6, "sources": {"pf_adv2.py": "c98e7d407595a690", "pf_adv2_mutants.py": "e1827a0b778c3212", "pf_adv2_selftest.py": "daba1f473d6ed667"}, "why": "ADV2 SELFTEST FAILED: inputs: a FAIR list with a changed order (hash) was accepted"}
+2026-11-21T03:05:36Z tag=mut_adv2_1 rc=0 peak_rss_mib=250 wall_s=7.80 cpu_user_s=7.57 memavail_start_gib=22 disk_free_gib=433->433 slot=claude

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "16", "name": "a keep fallback PULLs", "seconds": 1.2, "sources": {"pf_adv2_eval.py": "197ff94528cbf9c9", "pf_adv2_eval_mutants.py": "53361a867513b8d6", "pf_adv2_eval_selftest.py": "f0f0bdfa510298b0"}, "why": "ADV2 EVAL SELFTEST FAILED: frame: the keep head actions / d are wrong (['fallback', 'PULL', 'PULL', 'PULL', 'PULL', 'PULL', 'KEEP', 'KEEP', 'KEEP', 'KEEP', 'KEEP', 'KEEP'])"}
+2026-11-21T03:09:57Z tag=mut_eval_16 rc=0 peak_rss_mib=199 wall_s=1.40 cpu_user_s=1.23 memavail_start_gib=21 disk_free_gib=433->433 slot=claude

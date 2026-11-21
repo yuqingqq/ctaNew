@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "14", "name": "POST on a tie", "seconds": 1.2, "sources": {"pf_adv2_eval.py": "197ff94528cbf9c9", "pf_adv2_eval_mutants.py": "53361a867513b8d6", "pf_adv2_eval_selftest.py": "f0f0bdfa510298b0"}, "why": "ADV2 EVAL SELFTEST FAILED: frame: the controls do not predict the same rows, or the training mean is not the side / head's"}
+2026-11-21T03:09:54Z tag=mut_eval_14 rc=0 peak_rss_mib=200 wall_s=1.35 cpu_user_s=1.17 memavail_start_gib=21 disk_free_gib=433->433 slot=claude

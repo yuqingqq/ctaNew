@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "16", "name": "the replay without the committed fit", "seconds": 18.8, "sources": {"pf_adv2_replay.py": "e5d0f55d5c534d1c", "pf_adv2_replay_mutants.py": "97ac33fda18ca65c", "pf_adv2_replay_selftest.py": "5cabe316c36febe9"}, "why": "ADV2 REPLAY SELFTEST FAILED: run_part: ran without a committed fit manifest"}
+2026-11-21T03:31:26Z tag=mut_replay_16 rc=0 peak_rss_mib=260 wall_s=19.02 cpu_user_s=18.70 memavail_start_gib=21 disk_free_gib=433->433 slot=claude
