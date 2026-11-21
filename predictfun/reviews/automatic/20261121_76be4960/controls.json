@@ -1,0 +1,57 @@
+{
+  "G2_falsifiers": {
+    "binding_failed": false,
+    "cap_failed": false,
+    "clean": true,
+    "required_callback_missing": false
+  },
+  "changed_label_refused": true,
+  "generation3": {
+    "replay_share": 0.7246166516333974,
+    "training_share": 0.029750164365548983
+  },
+  "new_G": {
+    "G": {
+      "bad": [],
+      "population": 384,
+      "reached": {
+        "missing_mark": 0,
+        "no_eligible_decision": 4,
+        "ok": 1516,
+        "other": 0
+      },
+      "worlds": 384,
+      "zero_callback_ok_pairs": 2
+    }
+  },
+  "old_G": {
+    "G": {
+      "bad": [
+        "3817683 1793023385000 reached pair",
+        "3854908 1793065000000 reached pair"
+      ],
+      "population": 384,
+      "reached": {
+        "missing_mark": 0,
+        "no_eligible_decision": 4,
+        "ok": 1516,
+        "other": 0
+      },
+      "worlds": 384
+    }
+  },
+  "rich_first_pull": {
+    "dt": [
+      100.0
+    ],
+    "n": 3787,
+    "post_mean": 1.4278760154804417,
+    "review_mean": -1.7805858965418573
+  },
+  "train_mse_ratios": {
+    "RICH 0 keep": 0.8589174601156853,
+    "RICH 0 post": 0.7840025905281156,
+    "RICH 1 keep": 0.890039201787806,
+    "RICH 1 post": 0.8300901999548922
+  }
+}

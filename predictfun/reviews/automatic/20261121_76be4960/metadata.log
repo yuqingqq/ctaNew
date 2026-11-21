@@ -1,0 +1,2 @@
+{"checkpoint_hashes": 411, "input_bytes": 1623133524, "input_files": 219, "model_hashes": 12, "mutants": {"adv2": 33, "eval": 30, "replay": 26, "rsummary": 10, "sample": 19}, "plan_sha256": "8619eec52bf75b0c1164d5af26d5a6d86bc9fda8d39a6cab2bfbf6b94660e100", "source_files": 81}
+2026-11-21T06:22:42Z tag=review_76be_metadata rc=0 peak_rss_mib=257 wall_s=4.01 cpu_user_s=3.35 memavail_start_gib=23 disk_free_gib=444->444 slot=codex

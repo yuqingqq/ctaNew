@@ -1,0 +1,41 @@
+{
+  "other_dirty": {
+    "data/pm_5min/derived/be133_forward_population_era_split.json": "DELETED",
+    "data/pm_5min/derived/be_tape_v2_builder_binding_proof_v1.json": "DELETED",
+    "data/pm_5min/derived/be_validation_review_v1.json": "DELETED",
+    "data/pm_5min/derived/p003_de_gate1_run_journal_de145day07__20260908T032816Z.json": "DELETED",
+    "data/pm_5min/derived/p003_de_gate1_run_journal_deRR20260903__20260907T195646Z.json": "DELETED",
+    "data/pm_5min/derived/p003_de_gate1_run_journal_deRR20260904__20260907T225517Z.json": "DELETED",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run__20260906T062115Z.json": "DELETED",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v2__20260906T064720Z.json": "DELETED",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v3__20260906T071214Z.json": "DELETED",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v4__20260906T074712Z.json": "DELETED",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v5__20260906T075707Z.json": "DELETED",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v6__20260906T081252Z.json": "DELETED",
+    "data/pm_5min/derived/p003_de_launch_form_probe__20260906T121813Z.json": "DELETED",
+    "data/pm_5min/derived/p003_de_r608_resolver_agreement__20260906T104000Z.json": "DELETED",
+    "data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/README": "DELETED",
+    "data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/linear_btc.json": "DELETED",
+    "data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/linear_eth.json": "DELETED",
+    "predictfun/handoffs/20261109_TODO.md": "8b7c104adae198927a9fecb04b5f57015fc2cef1afa09f48315b8c4ec413d7d8",
+    "predictfun/research/run_light.log": "ee899f490d7b43fad2d51171190c1c248cf1a932f4409d4800279b60566d3793"
+  },
+  "owned": {
+    "predictfun/FINDINGS.md": {
+      "after_work_sha256": "7faba0f2bf24d24e3b01cf48d30f4eff32af1e786c371f89d492f91882da5f4a",
+      "before_work_sha256": "a7a89413a53f7a45819f444ef54ac9fb6b2f53020299a65d7ee19513b42ba3ef",
+      "expected_index_sha256": "9afdbcac07d777a7b90f46c4a7b9ba140002388ac611fb6d9724e757b186864e"
+    },
+    "predictfun/HANDOFF.md": {
+      "after_work_sha256": "9cdc0ac5f9e30f6ce330e3d8cd2d966466a6674ab4bc1e40fa5f0f28d38f2444",
+      "before_work_sha256": "65330c1cc951442f3eff368c5fa38e4cfec1cf93f1d122be698c225968211d95",
+      "expected_index_sha256": "0169766a5527cae3698c4bdfc67dba73a9170f51d900eafa80899b0d2eb48228"
+    },
+    "predictfun/STATUS.yml": {
+      "after_work_sha256": "dfdbcf74427d46b5fe37e70f9302623bc868a3672c4c17d3960e357e8ca1d927",
+      "before_work_sha256": "6596fb812c5ff867646396874a6f017b3e45629b230bf2690349820b1b1b243c",
+      "expected_index_sha256": "d2aae691685b72e69f5db202f9b8479c84157043bbb00692521f1a1de1e5f20a"
+    }
+  },
+  "target": "76be496029ae3180b266bc94a6f8a2b16bf257ff"
+}

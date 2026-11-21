@@ -1,0 +1,14 @@
+adv2 eval selftest passed: bins (12 cases), group readings (hand-computed), screens (11 cases), frame (actions, d, fallbacks, same rows, training means), control (deterministic, perfect / blind / always selectors, singleton / no-variation strata, anchors), committed() and the eval refusal, coverage (hand-counted; exact vs meaningful; groups; dimensions)
+adv2 replay selftest passed: population (rank, nesting, partitions); selection (minimum rank, model decisions only, outcome-free); intervals and active / at-best time; end to end (every policy reconciled and bound; value / markout / quote identities; N0, ENTRY_PA, keep-always; fork rebuild = the recorded state, PI0 roll-in differs; reached pairs ok, tampered fingerprint refused; churn records; cap_ok; RICH exposure counts); refusal without the committed fit
+{
+ "statuses": {
+  "ok": 2,
+  "world:no_path:x": 1
+ },
+ "worlds": 2,
+ "diffs": 28,
+ "reached": 6
+}
+adv2 replay summary selftest passed: a valid summary completes with sorted keys; statuses, totals, worlds, paired differences (sums, above / below, a tie), reached counts under 'n', CSV hashes; refusals of a changed CSV and a changed part
+{"model_fits": 0, "passed": ["eval", "replay", "replay_summary"], "real_tape_runs": 0}
+2026-11-21T06:27:05Z tag=review_76be_synthetic rc=0 peak_rss_mib=235 wall_s=18.83 cpu_user_s=18.62 memavail_start_gib=23 disk_free_gib=444->444 slot=codex

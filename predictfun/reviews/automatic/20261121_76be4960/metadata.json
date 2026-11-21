@@ -1,0 +1,15 @@
+{
+  "checkpoint_hashes": 411,
+  "input_bytes": 1623133524,
+  "input_files": 219,
+  "model_hashes": 12,
+  "mutants": {
+    "adv2": 33,
+    "eval": 30,
+    "replay": 26,
+    "rsummary": 10,
+    "sample": 19
+  },
+  "plan_sha256": "8619eec52bf75b0c1164d5af26d5a6d86bc9fda8d39a6cab2bfbf6b94660e100",
+  "source_files": 81
+}

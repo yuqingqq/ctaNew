@@ -23,6 +23,43 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- R3_REVIEW_20261121_CODEX -->
+## 2026-11-21 — R3 accepted as a negative experiment; entry selection is the next priority
+
+Reviewed **76be496029ae3180b266bc94a6f8a2b16bf257ff**.
+[Combined review, evidence and complete next-round contract](reviews/automatic/20261121_76be4960/report.md).
+**No blocker to using the readings. ADV2-RICH-v1 fails its model/economic gates.**
+All 96 evaluation parts / 18,132 predictions and the matched controls reproduce;
+all 12 replay part identities and 380-world summaries match. G2's two legitimate
+final-tick zero-callback cases and the byte-identical summary correction hold.
+The prior coverage/nonzero-floor/mutation-identity items are closed. No new
+label rebuild or separate fix-only round is required.
+
+POST MSE loses to zero in all four day/side cells; ENTRY_ONLY trails PI0 by
+2,370 / 2,409 c on Oct26 / Oct27. KEEP beats always-KEEP but beats always-PULL
+in only one of four cells. The POST-to-KEEP score change compares different
+action contrasts; it does not prove that a single forecast reversed in 100 ms.
+Later-generation exposure is thinly covered, but it cannot explain away the
+failure on the original evaluation population. These are consumed-day gross
+five-second diagnostics, not validation or settlement profitability.
+
+**ONE next priority: ADV2-ENTRY-SMOOTH-v1**, two new POST heads, using the same
+Oct24–25 labels/107 inputs/weights. Declare min_data_in_leaf=1000 and 50 rounds;
+all other model parameters unchanged. Retain PI0-50 for live decisions. The
+primary comparator is frozen ENTRY_ONLY (old RICH entry, identical PI0 retention).
+Reuse Oct26–27 labels; repeat fixed screens/local controls and a matched bounded
+384-world own-state comparison, with at most 768 reached POST pairs. No new
+KEEP fit, target change, calibration, timer, support restriction or search.
+The report specifies freeze/multiplicity, metrics, common-state diagnostics,
+evidence retention and an 8-core-hour planning budget. A model that merely
+stops posting has not demonstrated useful entry skill.
+
+Bundle nonblocking table/audit-evidence improvements with this measurement;
+no intermediate approval/review loop. No additional USER approval is needed
+for this consumed-day round. No new label days, protected/untouched access or
+extra cores are authorized. No promotion of the current candidate.
+<!-- /R3_REVIEW_20261121_CODEX -->
+
 <!-- R2F_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — R2-F production labels accepted; fixed candidate experiment next
 
