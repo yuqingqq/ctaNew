@@ -597,6 +597,22 @@ pipeline_one_day_v3_20261119:
   values_equal_v2: {cells_per_day: 190, differing: 0}
   attribution_vs_pull_all_c: {"20261026": {first_step: 0.0, later: 954.33, never: 995.36, no_prediction: 0.0}, "20261027": {first_step: 0.0, later: -821.85, never: 251.74, no_prediction: 0.0}}
 
+r4e_entry_smooth_20261121:
+  status: done_r4e_adv2_entry_smooth_v1_existing_labels_and_bounded_replay
+  diagnosis: {no_demonstrated_entry_skill: true, fewer_posts_than_entry_only: true, controls_equal_r3: true}
+  asof: "2026-11-21 07:24Z"
+  receipt: predictfun/reviews/r4e_entry_smooth_20261121/report.md
+  commits: {freeze: 602fdfc5, model_hashes: eaea1161, freeze_amendment: 5c2ec2ca, freeze2b_summary_falsifier_v2: c69ea5c6}
+  candidate: {name: ADV2-ENTRY-SMOOTH-v1, delta: min_data_in_leaf_1000, rounds: 50, retention: frozen_pi0, comparator: ENTRY_ONLY, multiplicity: one_more_primary_two_heads}
+  checks: {all_true: true, falsifier_ok: true}
+  suites: {entry: 16/16, entry_eval: 15/15, entry_replay: 19/19}
+  prediction: {smooth_mse_over_zero: [0.9957, 1.0040], rich_mse_over_zero: [1.0012, 1.0677], below_zero: 2/4, below_rich: 4/4}
+  predicates_smooth: {post_value_positive: 0, screen_pass: 0, above_draw_mean: 1, above_draw_p95: 0, demonstrated: 0, admissions: 4122, rich_admissions: 6350}
+  replay_20261026: {worlds: 188, smooth_minus_entry_only_c: 163.6, smooth_minus_pi0_c: -2206.6, entry_only_minus_pi0_c: -2370.2}
+  replay_20261027: {worlds: 192, smooth_minus_entry_only_c: 883.7, smooth_minus_pi0_c: -1525.4, entry_only_minus_pi0_c: -2409.1}
+  reached: {smooth_below_rich_days: 1, smooth_below_zero_days: 0, days: 2}
+  cost: {round_core_hours: 1.38, peak_mib: 1186}
+  next: combined_review_names_the_next_priority
 r3_adv2_rich_v1_20261121:
   status: done_r3_adv2_rich_v1_consumed_oct26_27_prediction_diagnostic_and_bounded_replay
   diagnosis: {no_post_head_skill: true, most_posts_pulled_at_first_review: true, rich_below_pi0_both_days: true}

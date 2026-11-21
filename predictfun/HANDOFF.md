@@ -715,6 +715,25 @@ pulls and bid/ask; judge movement calibration on selected actions before changin
 order design. Other session owns fixes; scheduler remains off.
 <!-- /PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
 
+## 2026-11-21 07:24Z (session aea5bfb9) — R4E: ADV2-ENTRY-SMOOTH-v1, ONE DECLARED SMOOTHER ENTRY CANDIDATE ON THE EXISTING CONSUMED OCT 26–27 LABELS AND THE 384-WORLD REPLAY; CHECKS ALL TRUE; NO DEMONSTRATED ENTRY SKILL, FEWER POSTS THAN ENTRY_ONLY, SMOOTH ABOVE ENTRY_ONLY IN THE REPLAY ON BOTH DAYS, SMOOTH BELOW PI0 ON BOTH DAYS (review 371aab56's next priority) (USER: "... continue the implementing and next priority loop"; "As long as the results are reliable, we can accelerate the process")
+- [Receipt](reviews/r4e_entry_smooth_20261121/report.md).
+  - Commits: freeze `602fdfc5`, model hashes `eaea1161` (before any evaluation), freeze amendment `5c2ec2ca` (the reuse check's exact CSV reader, before any evaluation output), freeze 2b `c69ea5c6` (the replay summary v2 and the falsifier v2), results in this commit.
+  - **Adaptive consumed-day development:** these days informed the design. No interval, no validation, no refit, no sweep.
+- **Review 371aab56's checklist, all handled in this round:**
+  - 1, entry selection: this experiment.
+  - 2: the first-review readings name the two targets. FINDINGS P92's wording is corrected here, and hybrid losses are not summed.
+  - 3: strata by generation / source / horizon / other side; both heads on identical reached states.
+  - 4: full traces for every episode and reached pair, recomputed by checks F and G with the frozen label validator; the controls' reproduction of R3 is read from R3's parts.
+  - 5: calibration w_sum pooling, and R3's pooled table recomputed by weights.
+  - Operational: part identity on reuse, complete membership in the summary, a separate launcher.
+- **Readings** (FINDINGS P93): SMOOTH MSE / zero 0.996–1.004 (RICH 1.001–1.068). The declared entry conjunction holds in 0 of 4 cells. Replay: 10-26: SMOOTH − ENTRY_ONLY +164 c (42 above / 41 below), SMOOTH − PI0 -2,207 c, ENTRY_ONLY − PI0 -2,370 c; generations 3,540 against 4,611 (188 worlds); 10-27: SMOOTH − ENTRY_ONLY +884 c (44 above / 33 below), SMOOTH − PI0 -1,525 c, ENTRY_ONLY − PI0 -2,409 c; generations 3,712 against 4,745 (192 worlds).
+- **Deviations:**
+  - The first evaluation refused at the reuse check, because pandas' default CSV float parser is not exact. The reader was amended before any output.
+  - Replay mutation run 1 caught 18 / 19 (a harness replacement did not compile).
+  - Two frozen writers failed after the run and are superseded in freeze 2b. The replay summary used a column the episodes keep in their traces; v2 proved the four CSVs byte-identical. The falsifier looked for a fill in one world without fills; v2 searches every partition and records each corruption as applied. The checks A–I themselves are unchanged.
+- **Cost:** 1.38 core-hours of the 8 ceiling; peak 1,186 MiB.
+- **Next measurement:** the combined review (one request), which names the next priority.
+
 ## 2026-11-21 06:16Z (session aea5bfb9) — R3: ADV2-RICH v1 FITTED ON CONSUMED OCT 24–25, EVALUATED ON CONSUMED OCT 26–27 AND REPLAYED ON 384 WORLDS (380 OK); CHECKS v2 ALL TRUE; NO POST-HEAD SKILL, MOST POSTS PULLED AT THE FIRST REVIEW, RICH BELOW PI0 IN THE REPLAY ON BOTH DAYS (review 315979d2's next priority) (USER: "... continue the implementing and next priority loop"; "As long as the results are reliable, we can accelerate the process")
 - [Receipt](reviews/r3_adv2_20261121/report.md). Commits: freeze 1 `551185f2` (evaluation sample), freeze 2 `c8655f75` (candidate, controls, evaluator, replay, checks; 108 / 108 planted errors caught), model hashes `2bec465d` (before any Oct 26–27 label), freeze 2b `259e6c56` (the replay summary v2), results in this commit. **This round measures prediction skill on two consumed days (development evidence, no interval, no validation).**
 - **Review 315979d2's items:** 1, the coverage by source / horizon / six support dimensions (evaluation by RICH's action, training) and RICH's own-state exposure; 2, the meaningful (|Y| > 1e-6 c) floor with the exact count beside it; 3, check H per record against the final sources, with a falsifier.

@@ -1,0 +1,22 @@
+{
+ "statuses": {
+  "ok": 380,
+  "world:no_path:stale_future_book": 1,
+  "world:no_path:missing_endpoint": 3
+ },
+ "worlds": 380,
+ "diffs": 12,
+ "reached": [
+  {
+   "day": "20261026",
+   "status": "ok",
+   "n": 376
+  },
+  {
+   "day": "20261027",
+   "status": "ok",
+   "n": 384
+  }
+ ]
+}
+2026-11-21T07:23:04Z tag=r4e_replay_summary_v2 rc=0 peak_rss_mib=271 wall_s=2.77 cpu_user_s=2.56 memavail_start_gib=23 disk_free_gib=443->443 slot=claude

@@ -1,0 +1,273 @@
+{
+ "asof": "2026-11-21T07:23:07.335620+00:00",
+ "csv_sha256": {
+  "churn": "c1a8ef9d6b1102f7c849be2abc731fba768b7d443ed2dabf6a6e080a16e02f2c",
+  "episodes": "7bd8057d80875441195180d5425ede851ec95866889748ee0acd664249a79f3a",
+  "exposure": "5c39b6e3809534bcf5f3ffc7cd34137ee20112583c944e9076cd6948d975aa8d",
+  "reached": "fec09b94e47fbdffb08274b7f6a5e0da0a11ddd512dcdcbdc7eb3f30b9d38fcc"
+ },
+ "diffs": [
+  {
+   "day": "20261026",
+   "diff_sum": 2635.2838363590845,
+   "n": 188,
+   "negative": 24,
+   "policy": "N0",
+   "positive": 48,
+   "versus": "ENTRY_ONLY"
+  },
+  {
+   "day": "20261026",
+   "diff_sum": 265.06874204786135,
+   "n": 188,
+   "negative": 8,
+   "policy": "N0",
+   "positive": 8,
+   "versus": "PI0"
+  },
+  {
+   "day": "20261026",
+   "diff_sum": 2370.215094311223,
+   "n": 188,
+   "negative": 25,
+   "policy": "PI0",
+   "positive": 49,
+   "versus": "ENTRY_ONLY"
+  },
+  {
+   "day": "20261026",
+   "diff_sum": -2370.215094311223,
+   "n": 188,
+   "negative": 49,
+   "policy": "ENTRY_ONLY",
+   "positive": 25,
+   "versus": "PI0"
+  },
+  {
+   "day": "20261026",
+   "diff_sum": 163.5861431563393,
+   "n": 188,
+   "negative": 41,
+   "policy": "SMOOTH",
+   "positive": 42,
+   "versus": "ENTRY_ONLY"
+  },
+  {
+   "day": "20261026",
+   "diff_sum": -2206.628951154884,
+   "n": 188,
+   "negative": 40,
+   "policy": "SMOOTH",
+   "positive": 18,
+   "versus": "PI0"
+  },
+  {
+   "day": "20261027",
+   "diff_sum": 2377.5009329708014,
+   "n": 192,
+   "negative": 18,
+   "policy": "N0",
+   "positive": 49,
+   "versus": "ENTRY_ONLY"
+  },
+  {
+   "day": "20261027",
+   "diff_sum": -31.57334930598506,
+   "n": 192,
+   "negative": 6,
+   "policy": "N0",
+   "positive": 9,
+   "versus": "PI0"
+  },
+  {
+   "day": "20261027",
+   "diff_sum": 2409.074282276786,
+   "n": 192,
+   "negative": 18,
+   "policy": "PI0",
+   "positive": 50,
+   "versus": "ENTRY_ONLY"
+  },
+  {
+   "day": "20261027",
+   "diff_sum": -2409.074282276786,
+   "n": 192,
+   "negative": 50,
+   "policy": "ENTRY_ONLY",
+   "positive": 18,
+   "versus": "PI0"
+  },
+  {
+   "day": "20261027",
+   "diff_sum": 883.7152480962667,
+   "n": 192,
+   "negative": 33,
+   "policy": "SMOOTH",
+   "positive": 44,
+   "versus": "ENTRY_ONLY"
+  },
+  {
+   "day": "20261027",
+   "diff_sum": -1525.3590341805198,
+   "n": 192,
+   "negative": 36,
+   "policy": "SMOOTH",
+   "positive": 21,
+   "versus": "PI0"
+  }
+ ],
+ "reached": [
+  {
+   "day": "20261026",
+   "n": 376,
+   "status": "ok"
+  },
+  {
+   "day": "20261027",
+   "n": 384,
+   "status": "ok"
+  }
+ ],
+ "source_sha256": "06b3f88f3b9753b9f6497c966426f2d49515b86e9cc9526f95516b4f28cbd675",
+ "sources": {
+  "pf_adv2.py": "c98e7d407595a6903fec130db2fac0b772c255d09c5064e987ba74f234db6936",
+  "pf_adv2_entry.py": "5c3bb8b2b3377331c5a8b271e1029c033a831319b43367d3075dac75ebb4ece7",
+  "pf_adv2_entry_replay.py": "1ec1b7fe1afea0d72169746b93f373b48fc4923edfc4d77a540904db242886b0",
+  "pf_adv2_replay.py": "e5d0f55d5c534d1cfb008e361641334dc503a22d10015a88cde0ea4686b8752a",
+  "pf_branch_engine.py": "8b7960ef4bbbc178b281e57d92d4795d7678436c0ca875e7199e24a6626af3a8",
+  "pf_r2_label_sample.py": "4cdeff0c6d491611f970756f263f4ef03c3e2a90dbade580d435c68bae32e769",
+  "pf_r2_labels.py": "f56f1ae560492aa9b7d040b28f02d96a2b2fd2611da4047d4c7227b497684d6e",
+  "pf_r2_shadow.py": "962cf7b42c1a8ff78b7a4cb46f111036c824270ff8fa91d95c1c42558f098ab9",
+  "pf_r2_teacher.py": "c7d72d91b0d422d192015f331154881ba030989a6802d23a604a3b667194d79b"
+ },
+ "statuses": {
+  "ok": 380,
+  "world:no_path:missing_endpoint": 3,
+  "world:no_path:stale_future_book": 1
+ },
+ "supersedes": "pf_adv2_entry_replay.summarize (602fdfc5): replay.json only",
+ "totals": [
+  {
+   "binding_bad": 0,
+   "day": "20261026",
+   "filled_shares": 1536.887622810002,
+   "fills": 158,
+   "generations": 4611,
+   "ledger_ok": true,
+   "loss": 3896.874300591251,
+   "policy": "ENTRY_ONLY",
+   "severe": 21,
+   "value": -2635.2838363590845,
+   "value_ask": -415.0888474033931,
+   "value_bid": -2220.194988955691,
+   "worlds": 188
+  },
+  {
+   "binding_bad": 0,
+   "day": "20261026",
+   "filled_shares": 0.0,
+   "fills": 0,
+   "generations": 0,
+   "ledger_ok": true,
+   "loss": 0.0,
+   "policy": "N0",
+   "severe": 0,
+   "value": 0.0,
+   "value_ask": 0.0,
+   "value_bid": 0.0,
+   "worlds": 188
+  },
+  {
+   "binding_bad": 0,
+   "day": "20261026",
+   "filled_shares": 336.38419092005967,
+   "fills": 29,
+   "generations": 319,
+   "ledger_ok": true,
+   "loss": 370.4927108433735,
+   "policy": "PI0",
+   "severe": 3,
+   "value": -265.0687420478614,
+   "value_ask": 21.327053901895212,
+   "value_bid": -286.39579594975646,
+   "worlds": 188
+  },
+  {
+   "binding_bad": 0,
+   "day": "20261026",
+   "filled_shares": 1295.7593612423227,
+   "fills": 128,
+   "generations": 3540,
+   "ledger_ok": true,
+   "loss": 2915.6986035501345,
+   "policy": "SMOOTH",
+   "severe": 21,
+   "value": -2471.697693202745,
+   "value_ask": -793.6751582701133,
+   "value_bid": -1678.022534932632,
+   "worlds": 188
+  },
+  {
+   "binding_bad": 0,
+   "day": "20261027",
+   "filled_shares": 1386.7198227189574,
+   "fills": 172,
+   "generations": 4745,
+   "ledger_ok": true,
+   "loss": 3260.22538426852,
+   "policy": "ENTRY_ONLY",
+   "severe": 29,
+   "value": -2377.5009329708014,
+   "value_ask": -701.4066787869053,
+   "value_bid": -1676.0942541838956,
+   "worlds": 192
+  },
+  {
+   "binding_bad": 0,
+   "day": "20261027",
+   "filled_shares": 0.0,
+   "fills": 0,
+   "generations": 0,
+   "ledger_ok": true,
+   "loss": 0.0,
+   "policy": "N0",
+   "severe": 0,
+   "value": 0.0,
+   "value_ask": 0.0,
+   "value_bid": 0.0,
+   "worlds": 192
+  },
+  {
+   "binding_bad": 0,
+   "day": "20261027",
+   "filled_shares": 325.58975596097025,
+   "fills": 38,
+   "generations": 370,
+   "ledger_ok": true,
+   "loss": 398.2406259259259,
+   "policy": "PI0",
+   "severe": 3,
+   "value": 31.57334930598509,
+   "value_ask": -209.87062592592594,
+   "value_bid": 241.4439752319109,
+   "worlds": 192
+  },
+  {
+   "binding_bad": 0,
+   "day": "20261027",
+   "filled_shares": 1266.0392064444127,
+   "fills": 135,
+   "generations": 3712,
+   "ledger_ok": true,
+   "loss": 2521.8558222828947,
+   "policy": "SMOOTH",
+   "severe": 19,
+   "value": -1493.7856848745348,
+   "value_ask": -391.135316374269,
+   "value_bid": -1102.6503685002658,
+   "worlds": 192
+  }
+ ],
+ "version": "adv2_entry_smooth_replay_summary_v2",
+ "worlds": 380
+}
