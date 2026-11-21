@@ -23,6 +23,37 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- LADDER_PRESSURE_ABLATION_REVIEW_20261121_CODEX -->
+## 2026-11-21 — Action attribution accepted; next: locate residual loss timing
+
+[Combined review](reviews/automatic/20261121_ladder_pressure_ablation_review/report.md)
+of **54eab5455dd4c6e61c79d3543e3dd8a28e801ed0** accepts this consumed-day
+experiment. No blocking finding or required replay. Prior re-entry finding
+closed. Pinned selftest, 17 checks, 11 falsifiers, 19 FULL controls, 76 arm
+ledgers, 986 re-entry rows and all 76 lost/added rows reconcile; saved 20/20
+mutation records rejudged against pinned sources.
+
+Cancellation alone adds 77,439.1 c, withholding alone 18,348.8 c, interaction
+27,660.1 c at END. Both conditional increments help every day, but all four
+arms lose every day. FULL remains -86,109.6 c END / -85,164.3 c eligible +1 s;
+later movement contributes only -1,416.8 c net. These are policy contrasts,
+not isolated avoided losses or validation. No strategy promotion.
+
+One deferred P3: checker F omits some exported lost/added fields and pooled
++1 s contrast totals. All current values independently match raw evidence;
+bundle checks only if reused, with no repair-only cycle or rerun.
+
+ONE next priority: **PRESSURE-RESIDUAL-TIMING-AUDIT-v1**, the report's frozen
+saved-evidence audit of FULL's remaining fills: pending removals / earliest
+live-cancel window / later unflagged exposure / fallback or mismatch. Retain
+all generations, no-fill statuses, every signed value, event-time boundaries
+and complete accounting. No tape replay, candidate or threshold search.
+Cap the whole round at 0.12 additional core-hours and 2.0 cumulative; recorded
+use including this review is about 1.799 (about 0.201 remains). No additional
+USER decision within this scope; more compute, new days or validation needs
+the USER. One combined receipt, preserving the batching rule.
+<!-- /LADDER_PRESSURE_ABLATION_REVIEW_20261121_CODEX -->
+
 <!-- LADDER_PRESSURE_LAG_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — Pressure timing margin reviewed; next: separate the two actions
 

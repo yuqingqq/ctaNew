@@ -1,0 +1,525 @@
+{
+  "target": "54eab5455dd4c6e61c79d3543e3dd8a28e801ed0",
+  "selftest": "passed",
+  "checks": {
+    "checks": {
+      "A_committed": true,
+      "A_rule": true,
+      "A_parent": true,
+      "A_edges": true,
+      "A_sources": true,
+      "A_outputs": true,
+      "B_membership": true,
+      "B_pilot": true,
+      "C_full_equals_parent": true,
+      "C_baseline_equals_original": true,
+      "D_rule": true,
+      "E_accounting": true,
+      "F_reconcile": true,
+      "F_identity": true,
+      "F_readings": true,
+      "H_queue": true,
+      "I_resources": true
+    },
+    "details": {
+      "C_full_mismatch": 0,
+      "C_baseline_mismatch": 0,
+      "D_bad": {},
+      "F_reconcile_bad": 0,
+      "F_identity_bad": 0,
+      "F_totals": {
+        "BASELINE_00": -209557.70865004536,
+        "PULL_ONLY_10": -132118.5644031699,
+        "WITHHOLD_ONLY_01": -191208.88116325362,
+        "FULL_11": -86109.60738868231
+      },
+      "H_queue_bad": 0,
+      "I": {
+        "round_core_hours": 0.2425861111111112,
+        "line_core_hours": 1.7827722222222222,
+        "peak_mib": 1226
+      }
+    },
+    "all_ok": true
+  },
+  "receipt_hashes": {
+    "arms.csv": "dd5de6d3fecf4efc60752511398a305361f83bfa4fdfb5a537edef3ee8dbbe68",
+    "audit.json": "a5a03cbd04b8b466ad1aff932fee7bca62b16fff4cad8d99f8c201765b02ed97",
+    "control.csv": "330652ee6b471bbfa4745a9bbf7f038c5faf895124acb2b6ff489ae2d6c0e9bf",
+    "lost_added.csv": "7a5699cdd24094e9860ec55d20953cce72678534fae217d1db0f8690ae58ebdd",
+    "pilot/20261024.json": "fa0425bf0cbd1345bba01857b0b1f6c0c920c5eb5d443705d84b413f777a51b6",
+    "pilot/20261025.json": "8ca0c82ce58f913f870161ebfba5f467e7cbe8208a66fc1840cd48123ea6be7f",
+    "pilot/20261026.json": "3e747f499fdc52d8d09369068cb0753277fced89b40c5a44b09ffa744457bfee",
+    "pilot/20261027.json": "4cf6d089aca86872432b54c6c3745472dd90a0dfbbb5201b2274e60dc51337d0",
+    "reentry.csv": "7d3d64d5058e075a305a25a4902cf1be2b7fdab99ebf1621dc0a8d5374d46d14",
+    "rehearsal/checks_falsifier_v2_rehearsal.json": "41f5113a214e1f64ac76b5027b6e8f4d16b07fe52163453b4520d660a42c82a9",
+    "rehearsal/checks_v2_rehearsal.json": "ca60077c0465cd97e49e224b1449856071d0f6297dc9a5c59adf25cd161392db",
+    "rest/20261024.json": "b5686c9bb065067bb3964375a5f0dc2483be334c93862dae83615786bb2ff3f7",
+    "rest/20261025.json": "abd81665f7b453fb5034453de35e3d0321f9b3e13e5946942d4cac83aea397b4",
+    "rest/20261026.json": "fa85664146858d729a0fd1f03f2075af29ebbbca678ffbcf2cc555d68a4f53d3",
+    "rest/20261027.json": "0c1f18d53ffd40a6eae07b367cd0c260213dc144cabf4f7f5bf612fffe272fb1"
+  },
+  "parent_and_source_hashes_verified": true,
+  "arm_ledgers": 76,
+  "full_array_controls": 152,
+  "commands": {
+    "PULL_ONLY_10|pressure_pull": 553,
+    "FULL_11|pressure_pull": 433,
+    "FULL_11|pressure_withhold": 1289,
+    "WITHHOLD_ONLY_01|pressure_withhold": 523
+  },
+  "first_reviews": 14033,
+  "reentry_rows": 986,
+  "lost_added_contrasts": 76,
+  "predicates": {
+    "days": [
+      "20261024",
+      "20261025",
+      "20261026",
+      "20261027"
+    ],
+    "arm_totals": {
+      "BASELINE_00": {
+        "END": -209557.70865004533,
+        "mo1s": -203083.92154801564,
+        "valid_q": 96603.986394994,
+        "per_share": -2.1022312756085126
+      },
+      "PULL_ONLY_10": {
+        "END": -132118.5644031699,
+        "mo1s": -113644.58749664502,
+        "valid_q": 85369.05777231036,
+        "per_share": -1.3312152021139665
+      },
+      "WITHHOLD_ONLY_01": {
+        "END": -191208.88116325362,
+        "mo1s": -192679.1175011969,
+        "valid_q": 96352.52891095144,
+        "per_share": -1.9997307769604058
+      },
+      "FULL_11": {
+        "END": -86109.60738868231,
+        "mo1s": -85164.27723645967,
+        "valid_q": 79054.11889695049,
+        "per_share": -1.0772908284193765
+      }
+    },
+    "arm_by_day": {
+      "20261024": {
+        "BASELINE_00": {
+          "END": -64287.86774717526,
+          "mo1s": -61614.3179317701,
+          "valid_q": 35728.165339340805,
+          "per_share": -1.7245306985837774
+        },
+        "PULL_ONLY_10": {
+          "END": -38717.97303618165,
+          "mo1s": -38065.47125101257,
+          "valid_q": 33965.52603755791,
+          "per_share": -1.120709015633118
+        },
+        "WITHHOLD_ONLY_01": {
+          "END": -59955.5405212469,
+          "mo1s": -58588.537959428184,
+          "valid_q": 35993.10938792464,
+          "per_share": -1.6277709527114128
+        },
+        "FULL_11": {
+          "END": -33011.105130898126,
+          "mo1s": -32357.492642288664,
+          "valid_q": 33760.12935194552,
+          "per_share": -0.9584528632863183
+        }
+      },
+      "20261025": {
+        "BASELINE_00": {
+          "END": -66495.76606478279,
+          "mo1s": -54432.53881769054,
+          "valid_q": 26704.396930290393,
+          "per_share": -2.038336194589309
+        },
+        "PULL_ONLY_10": {
+          "END": -39414.55593842885,
+          "mo1s": -26094.036319553066,
+          "valid_q": 25093.301867318383,
+          "per_share": -1.039880540931843
+        },
+        "WITHHOLD_ONLY_01": {
+          "END": -57192.453390437,
+          "mo1s": -52395.860093641706,
+          "valid_q": 27027.093224954064,
+          "per_share": -1.9386420751035376
+        },
+        "FULL_11": {
+          "END": -29621.860753517012,
+          "mo1s": -17996.45166575444,
+          "valid_q": 24152.76896312634,
+          "per_share": -0.7451092540664529
+        }
+      },
+      "20261026": {
+        "BASELINE_00": {
+          "END": -45400.15656970044,
+          "mo1s": -61126.41092541069,
+          "valid_q": 24271.465306032907,
+          "per_share": -2.5184474919286033
+        },
+        "PULL_ONLY_10": {
+          "END": -25921.59377230973,
+          "mo1s": -36410.14747702551,
+          "valid_q": 19168.968485449957,
+          "per_share": -1.8994317563129346
+        },
+        "WITHHOLD_ONLY_01": {
+          "END": -42633.488110317936,
+          "mo1s": -58329.03910936694,
+          "valid_q": 23905.66158533064,
+          "per_share": -2.4399675742569578
+        },
+        "FULL_11": {
+          "END": -9275.058185558055,
+          "mo1s": -29854.126925308366,
+          "valid_q": 16456.152338346168,
+          "per_share": -1.8141620417393807
+        }
+      },
+      "20261027": {
+        "BASELINE_00": {
+          "END": -33373.91826838687,
+          "mo1s": -25910.653873144314,
+          "valid_q": 9899.958819329906,
+          "per_share": -2.6172486518381413
+        },
+        "PULL_ONLY_10": {
+          "END": -28064.44165624968,
+          "mo1s": -13074.932449053878,
+          "valid_q": 7141.261381984124,
+          "per_share": -1.8308995777747525
+        },
+        "WITHHOLD_ONLY_01": {
+          "END": -31427.399141251786,
+          "mo1s": -23365.680338760067,
+          "valid_q": 9426.66471274212,
+          "per_share": -2.478679474743218
+        },
+        "FULL_11": {
+          "END": -14201.583318709116,
+          "mo1s": -4956.206003108195,
+          "valid_q": 4685.068243532474,
+          "per_share": -1.0578727449594814
+        }
+      }
+    },
+    "contrasts": {
+      "cancel_given_withhold": {
+        "arms": [
+          "FULL_11",
+          "WITHHOLD_ONLY_01"
+        ],
+        "END": {
+          "answer": "POSITIVE_EVERY_DAY",
+          "by_day": {
+            "20261024": 26944.43539034877,
+            "20261025": 27570.592636919984,
+            "20261026": 33358.42992475988,
+            "20261027": 17225.81582254267
+          },
+          "total": 105099.27377457131
+        },
+        "mo1s": {
+          "answer": "POSITIVE_EVERY_DAY",
+          "by_day": {
+            "20261024": 26231.04531713952,
+            "20261025": 34399.40842788726,
+            "20261026": 28474.912184058572,
+            "20261027": 18409.474335651874
+          },
+          "total": 107514.84026473721
+        },
+        "per_share": {
+          "answer": "POSITIVE_EVERY_DAY",
+          "by_day": {
+            "20261024": 0.6693180894250945,
+            "20261025": 1.1935328210370848,
+            "20261026": 0.6258055325175771,
+            "20261027": 1.4208067297837368
+          },
+          "total": 0.9224399485410293
+        },
+        "markets_better": 18,
+        "markets_worse": 1,
+        "markets_equal": 0,
+        "top3_abs_share": 0.41479749088732737
+      },
+      "withhold_given_cancel": {
+        "arms": [
+          "FULL_11",
+          "PULL_ONLY_10"
+        ],
+        "END": {
+          "answer": "POSITIVE_EVERY_DAY",
+          "by_day": {
+            "20261024": 5706.867905283521,
+            "20261025": 9792.695184911838,
+            "20261026": 16646.535586751677,
+            "20261027": 13862.858337540565
+          },
+          "total": 46008.95701448759
+        },
+        "mo1s": {
+          "answer": "POSITIVE_EVERY_DAY",
+          "by_day": {
+            "20261024": 5707.9786087239045,
+            "20261025": 8097.584653798625,
+            "20261026": 6556.020551717142,
+            "20261027": 8118.726445945684
+          },
+          "total": 28480.310260185346
+        },
+        "per_share": {
+          "answer": "POSITIVE_EVERY_DAY",
+          "by_day": {
+            "20261024": 0.1622561523467998,
+            "20261025": 0.2947712868653901,
+            "20261026": 0.08526971457355392,
+            "20261027": 0.7730268328152712
+          },
+          "total": 0.25392437369459
+        },
+        "markets_better": 14,
+        "markets_worse": 5,
+        "markets_equal": 0,
+        "top3_abs_share": 0.6922088953996707
+      },
+      "cancel_alone": {
+        "arms": [
+          "PULL_ONLY_10",
+          "BASELINE_00"
+        ],
+        "END": {
+          "answer": "POSITIVE_EVERY_DAY",
+          "by_day": {
+            "20261024": 25569.894710993613,
+            "20261025": 27081.210126353937,
+            "20261026": 19478.56279739071,
+            "20261027": 5309.47661213719
+          },
+          "total": 77439.14424687542
+        },
+        "mo1s": {
+          "answer": "POSITIVE_EVERY_DAY",
+          "by_day": {
+            "20261024": 23548.84668075753,
+            "20261025": 28338.502498137474,
+            "20261026": 24716.26344838518,
+            "20261027": 12835.721424090436
+          },
+          "total": 89439.33405137062
+        },
+        "per_share": {
+          "answer": "POSITIVE_EVERY_DAY",
+          "by_day": {
+            "20261024": 0.6038216829506593,
+            "20261025": 0.9984556536574658,
+            "20261026": 0.6190157356156687,
+            "20261027": 0.7863490740633887
+          },
+          "total": 0.7710160734945462
+        },
+        "markets_better": 17,
+        "markets_worse": 2,
+        "markets_equal": 0,
+        "top3_abs_share": 0.3519652163216502
+      },
+      "withhold_alone": {
+        "arms": [
+          "WITHHOLD_ONLY_01",
+          "BASELINE_00"
+        ],
+        "END": {
+          "answer": "POSITIVE_EVERY_DAY",
+          "by_day": {
+            "20261024": 4332.327225928362,
+            "20261025": 9303.31267434579,
+            "20261026": 2766.668459382505,
+            "20261027": 1946.519127135085
+          },
+          "total": 18348.827486791706
+        },
+        "mo1s": {
+          "answer": "POSITIVE_EVERY_DAY",
+          "by_day": {
+            "20261024": 3025.7799723419157,
+            "20261025": 2036.6787240488338,
+            "20261026": 2797.3718160437493,
+            "20261027": 2544.9735343842476
+          },
+          "total": 10404.804046818754
+        },
+        "per_share": {
+          "answer": "POSITIVE_EVERY_DAY",
+          "by_day": {
+            "20261024": 0.09675974587236458,
+            "20261025": 0.09969411948577123,
+            "20261026": 0.07847991767164553,
+            "20261027": 0.1385691770949231
+          },
+          "total": 0.10250049864810684
+        },
+        "markets_better": 14,
+        "markets_worse": 1,
+        "markets_equal": 4,
+        "top3_abs_share": 0.6434227372443999
+      }
+    },
+    "interaction": {
+      "END": {
+        "answer": "POSITIVE_EVERY_DAY",
+        "by_day": {
+          "20261024": 1374.5406793551665,
+          "20261025": 489.38251056605077,
+          "20261026": 13879.867127369173,
+          "20261027": 11916.33921040548
+        },
+        "total": 27660.129527695884
+      },
+      "mo1s": {
+        "answer": "POSITIVE_EVERY_DAY",
+        "by_day": {
+          "20261024": 2682.1986363819888,
+          "20261025": 6060.905929749788,
+          "20261026": 3758.6487356733924,
+          "20261027": 5573.752911561438
+        },
+        "total": 18075.506213366607
+      }
+    },
+    "all_arms_negative": {
+      "total": true,
+      "by_day": {
+        "20261024": true,
+        "20261025": true,
+        "20261026": true,
+        "20261027": true
+      }
+    },
+    "note": "a 2 x 2 ablation of complete feedback policies on 19 consumed-day markets; no interval, winner, promotion, threshold or new candidate"
+  },
+  "falsifier": {
+    "cases": {
+      "coordinated_markout_and_contrast": {
+        "family": "F",
+        "target": "F_reconcile",
+        "clean": true,
+        "refused": true,
+        "flipped": [
+          "F_readings",
+          "F_reconcile"
+        ]
+      },
+      "a_reentry_price_changed": {
+        "family": "H",
+        "target": "H_queue",
+        "clean": true,
+        "refused": true,
+        "flipped": [
+          "H_queue"
+        ]
+      },
+      "a_pull_only_withhold": {
+        "family": "D",
+        "target": "D_rule",
+        "clean": true,
+        "refused": true,
+        "flipped": [
+          "D_rule"
+        ]
+      },
+      "a_withhold_only_post_at_an_on_tick": {
+        "family": "D",
+        "target": "D_rule",
+        "clean": true,
+        "refused": true,
+        "flipped": [
+          "D_rule"
+        ]
+      },
+      "full_fill_dropped": {
+        "family": "C",
+        "target": "C_full_equals_parent",
+        "clean": true,
+        "refused": true,
+        "flipped": [
+          "C_full_equals_parent"
+        ]
+      },
+      "cash_changed": {
+        "family": "E",
+        "target": "E_accounting",
+        "clean": true,
+        "refused": true,
+        "flipped": [
+          "E_accounting"
+        ]
+      },
+      "lost_end_changed": {
+        "family": "F",
+        "target": "F_identity",
+        "clean": true,
+        "refused": true,
+        "flipped": [
+          "F_identity"
+        ]
+      },
+      "stored_interaction_answer_changed": {
+        "family": "F",
+        "target": "F_readings",
+        "clean": true,
+        "refused": true,
+        "flipped": [
+          "F_readings"
+        ]
+      },
+      "a_market_dropped": {
+        "family": "B",
+        "target": "B_membership",
+        "clean": true,
+        "refused": true,
+        "flipped": [
+          "B_membership"
+        ]
+      },
+      "a_record_rule_changed": {
+        "family": "A",
+        "target": "A_rule",
+        "clean": true,
+        "refused": true,
+        "flipped": [
+          "A_rule"
+        ]
+      },
+      "resources_over_the_cap": {
+        "family": "I",
+        "target": "I_resources",
+        "clean": true,
+        "refused": true,
+        "flipped": [
+          "I_resources"
+        ]
+      }
+    },
+    "falsifier_ok": true
+  },
+  "disabled_read_barriers": 4,
+  "checker_coverage_probes": {
+    "lost_q": {
+      "family_still_passes": true
+    },
+    "lost_mo1s_neg": {
+      "family_still_passes": true
+    },
+    "contrast_mo1s_total": {
+      "family_still_passes": true
+    }
+  }
+}

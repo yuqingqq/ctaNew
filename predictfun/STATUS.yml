@@ -1,4 +1,34 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+ladder_pressure_ablation_review_20261121_codex:
+  status: consumed_day_action_attribution_accepted_no_replay_no_promotion
+  target_commit: 54eab5455dd4c6e61c79d3543e3dd8a28e801ed0
+  report: predictfun/reviews/automatic/20261121_ladder_pressure_ablation_review/report.md
+  complete_markets: 19
+  selected_markets: 96
+  independently_checked_arm_ledgers: 76
+  full_control_markets: 19
+  full_control_arrays: 152
+  checked_reentry_rows: 986
+  checked_lost_added_rows: 76
+  saved_checks_passed: 17
+  saved_falsifiers_passed: 11
+  saved_mutant_records_rejudged: 20
+  cancel_alone_end_cents_rounded: 77439.1
+  withhold_alone_end_cents_rounded: 18348.8
+  interaction_end_cents_rounded: 27660.1
+  full_end_value_cents_rounded: -86109.6
+  full_eligible_mo1s_cents_rounded: -85164.3
+  all_arms_negative_every_day: true
+  blocking_findings: 0
+  nonblocking_findings: [lost_added_and_pooled_markout_checker_coverage]
+  prior_reentry_finding: closed
+  next_priority: PRESSURE-RESIDUAL-TIMING-AUDIT-v1
+  next_round_core_hour_ceiling: 0.12
+  original_cumulative_core_hour_ceiling: 2.0
+  recorded_core_hours_asof_review: 1.798575
+  additional_user_permission_within_scope: false
+  untouched_validation: false
+
 ladder_pressure_lag_review_20261121_codex:
   status: consumed_day_sensitivity_accepted_no_rerun_no_promotion
   target_commit: 6b6f977bac5eee954033c7d9326506832d935b31

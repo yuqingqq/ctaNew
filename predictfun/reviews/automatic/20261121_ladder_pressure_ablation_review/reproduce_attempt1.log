@@ -1,0 +1,17 @@
+ABLATION SELFTEST PASSED: delegation, the hand tape and the policy level, the parts, the readings, guards
+Pinned selftest, 17 checks and receipt/source/parent hashes passed
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261121_ladder_pressure_ablation_review/reproduce.py", line 136, in <module>
+    g=AB.AblatedPressureGuard(SimpleNamespace(end=1000.),{},edges,C,W)
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/pf-ablation-review-54eab545/predictfun/research/pf_ladder_pressure_ablation.py", line 79, in __init__
+    super().__init__(B, cache, edges, enabled=True); self.C, self.W = bool(C), bool(W)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/pf-ablation-review-54eab545/predictfun/research/pf_ladder_pressure.py", line 118, in __init__
+    self.inner, self.cache, self.enabled, self.B = LB.LadderInventory(B), cache, bool(enabled), B
+                                                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/pf-ablation-review-54eab545/predictfun/research/pf_branch_ladder.py", line 284, in __init__
+    C.require(B.inv is not None, 'the ladder policy needs the inventory configuration'); super().__init__(LADDER, B.end)
+              ^^^^^
+AttributeError: 'types.SimpleNamespace' object has no attribute 'inv'
+2026-11-21T20:32:13Z tag=codex_ablation_review rc=1 peak_rss_mib=692 wall_s=28.08 cpu_user_s=27.37 memavail_start_gib=23 disk_free_gib=436->436 slot=codex

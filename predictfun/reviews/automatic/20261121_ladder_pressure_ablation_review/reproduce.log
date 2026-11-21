@@ -1,0 +1,31 @@
+ABLATION SELFTEST PASSED: delegation, the hand tape and the policy level, the parts, the readings, guards
+Pinned selftest, 17 checks and receipt/source/parent hashes passed
+{
+  "target": "54eab5455dd4c6e61c79d3543e3dd8a28e801ed0",
+  "selftest": "passed",
+  "parent_and_source_hashes_verified": true,
+  "arm_ledgers": 76,
+  "full_array_controls": 152,
+  "commands": {
+    "PULL_ONLY_10|pressure_pull": 553,
+    "FULL_11|pressure_pull": 433,
+    "FULL_11|pressure_withhold": 1289,
+    "WITHHOLD_ONLY_01|pressure_withhold": 523
+  },
+  "first_reviews": 14033,
+  "reentry_rows": 986,
+  "lost_added_contrasts": 76,
+  "disabled_read_barriers": 4,
+  "checker_coverage_probes": {
+    "lost_q": {
+      "family_still_passes": true
+    },
+    "lost_mo1s_neg": {
+      "family_still_passes": true
+    },
+    "contrast_mo1s_total": {
+      "family_still_passes": true
+    }
+  }
+}
+2026-11-21T20:32:58Z tag=codex_ablation_review_v2 rc=0 peak_rss_mib=689 wall_s=30.16 cpu_user_s=29.52 memavail_start_gib=23 disk_free_gib=436->436 slot=codex

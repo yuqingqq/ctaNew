@@ -1,0 +1,49 @@
+{
+  "ladder_rest": {
+    "cpu_hours": 0.35889166666666666,
+    "peak_mib": 1185,
+    "records": 117
+  },
+  "ladder_audit": {
+    "cpu_hours": 0.2063222222222222,
+    "peak_mib": 1252,
+    "records": 112
+  },
+  "ladder_guard": {
+    "cpu_hours": 0.25947777777777775,
+    "peak_mib": 1136,
+    "records": 37
+  },
+  "ladder_pressure": {
+    "cpu_hours": 0.39846944444444443,
+    "peak_mib": 1276,
+    "records": 116
+  },
+  "ladder_pressure_lag": {
+    "cpu_hours": 0.25905,
+    "peak_mib": 1199,
+    "records": 66
+  },
+  "ladder_pressure_ablation": {
+    "cpu_hours": 0.24258611111111114,
+    "peak_mib": 1226,
+    "records": 39
+  },
+  "available_review_logs": {
+    "cpu_hours": 0.07377777777777779,
+    "records": 16
+  },
+  "total_recorded_hours": 1.798575,
+  "remaining_hours": 0.20142499999999997,
+  "proposed_next_cap_hours": 0.12,
+  "next_round_within_original_two_hours": true,
+  "mutant_summary_rejudged": {
+    "control": "PASSED",
+    "caught": 20,
+    "sources": {
+      "pf_ladder_pressure_ablation.py": "cfe8a5051c0fb55c",
+      "pf_ladder_pressure_ablation_selftest.py": "e40db31ed0d5ed0e",
+      "pf_ladder_pressure_ablation_mutants.py": "350d0fd6b9091420"
+    }
+  }
+}

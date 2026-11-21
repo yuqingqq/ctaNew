@@ -1,3 +1,35 @@
+<!-- LADDER_PRESSURE_ABLATION_REVIEW_20261121_CODEX -->
+## 2026-11-21 — Four-arm pressure attribution independently accepted
+
+[Report and evidence](reviews/automatic/20261121_ladder_pressure_ablation_review/report.md),
+target **54eab5455dd4c6e61c79d3543e3dd8a28e801ed0**. No blocking finding.
+Disabled C/W paths delegate without reading signal; C-off retains first-live
+queue bookkeeping. The 8/11 pilot/rest split covers the 19 complete markets
+once; FULL matches the parent on every market. All 76 ledgers, exact
+uptime/inventory, lost/added fields and 986 re-entry rows reconcile. 17 checks,
+11 falsifiers and pinned-source saved 20/20 mutation records pass.
+
+Cancellation-alone END +77,439.1 c, withholding-alone +18,348.8 c, interaction
++27,660.1 c; total +123,448.1 c. Conditional increments and the interaction
+are positive each consumed day. All four arms remain negative each day;
+FULL END -86,109.6 c, eligible +1 s -85,164.3 c, later movement -1,416.8 c
+net, late/missing +471.5 c. Positive and negative eligible +1 s contributions
+are +55,130.7 / -140,295.0 c. This is policy-path attribution, not profitable
+trading, order-level avoided losses or untouched validation.
+
+Prior re-entry checker finding is closed. Deferred P3: F does not compare
+some lost/added fields or pooled +1 s contrast totals; independent raw-data
+reproduction verifies every current field. Fold coverage in only if reused;
+no repair-only round. Recorded ladder use including this review is ~1.799h.
+
+ONE next priority: PRESSURE-RESIDUAL-TIMING-AUDIT-v1 on saved FULL evidence,
+all generations including no-fill, with each actual fill in one native-clock
+timing category. Locate pending-cancel / earliest-live-window versus later
+unflagged loss without another threshold or candidate. <=0.12h additional,
+<=2.0h cumulative, no tape replay or new days. No extra USER decision within
+that scope; broader work needs the USER. Full contract is in the report.
+<!-- /LADDER_PRESSURE_ABLATION_REVIEW_20261121_CODEX -->
+
 <!-- LADDER_PRESSURE_LAG_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — Pressure +50 ms sensitivity independently reviewed
 
