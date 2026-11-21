@@ -1,4 +1,14 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+default_post_metrics_20261121_codex:
+  status: specified_for_current_single_run
+  source_head: cf4eee757747d9a6e54148e02aa5dfb00ea051c8
+  contract: predictfun/reviews/automatic/20261121_ladder_post_analysis/metrics.md
+  headline: [final_marked_value, filled_shares, both_side_active_time, severe_loss_contribution]
+  markout_horizons_ms: [50, 100, 1000, 5000, 30000]
+  additional_strategy_arms: 0
+  new_simulations_by_planning_session: 0
+  inventory_and_queue_benefits_require_comparison: true
+
 default_post_ladder_20261121_codex:
   status: user_directed_ladder_plan_ready
   source_head: 60f43033fc4f54a8d3be77a18ea4b1bafbd5a7d8

@@ -23,6 +23,22 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- LADDER_POST_ANALYSIS_20261121_CODEX -->
+## 2026-11-21 — Metrics for the current ladder experiment
+
+[Post-run metric definitions](reviews/automatic/20261121_ladder_post_analysis/metrics.md)
+supplement the current two-level/100-share ladder plan without adding a run,
+model or parameter sweep. Headline value, filled shares, both-side uptime and
+tail loss belong together. Measure execution edge and 50/100/1,000/5,000/30,000
+ms markouts, queue/partial fills, cancellation reasons, inventory and loss
+conditions; missing horizons stay explicit. Reconcile fills to cash plus
+marked inventory and carry equity across minute boundaries.
+
+Single-policy observations cannot establish saved-loss or ladder/inventory
+causal benefit. Use this one combined receipt to identify one next change;
+no cosmetic-completeness gate. Development owns implementation. Planning only.
+<!-- /LADDER_POST_ANALYSIS_20261121_CODEX -->
+
 <!-- DEFAULT_POST_LADDER_20261121_CODEX -->
 ## 2026-11-21 — CURRENT PLAN: one persistent ladder, 100 shares per level
 

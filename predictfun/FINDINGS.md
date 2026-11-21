@@ -1,3 +1,20 @@
+<!-- LADDER_POST_ANALYSIS_20261121_CODEX -->
+## 2026-11-21 — Measure economics alongside participation and queue retention
+
+[Metric contract](reviews/automatic/20261121_ladder_post_analysis/metrics.md),
+prepared at **cf4eee757747d9a6e54148e02aa5dfb00ea051c8**. The USER requests
+post-analysis for optimization. Separate execution edge, subsequent movement
+and inventory exposure; report tail contributions alongside no-fills, actual
+shares and quoting time. A lower loss from trading almost nothing is not
+demonstrated selection skill. Longer markouts use the existing market path
+with coverage, and minute equity increments must not double-count fills.
+
+Queue age and cancel timelines describe mechanisms, not counterfactual P&L.
+Saved-loss, ladder and inventory benefits need a later declared comparison.
+This is a measurement specification for the existing single experiment, not
+a new result or additional experiment. Keep one combined development review.
+<!-- /LADDER_POST_ANALYSIS_20261121_CODEX -->
+
 <!-- DEFAULT_POST_LADDER_20261121_CODEX -->
 ## 2026-11-21 — Queue age requires persistent individual ladder orders
 
