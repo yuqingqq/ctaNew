@@ -1,0 +1,22 @@
+{
+  "equal_csvs": [
+    "arms.csv",
+    "cost.csv",
+    "coverage.csv",
+    "paths.csv",
+    "population.csv",
+    "weights.csv",
+    "y_summary.csv"
+  ],
+  "checks_equal_except_asof": true,
+  "comparison_bad_control": true,
+  "production_jobs": 96,
+  "cpu_core_hours": 15.45778611111111,
+  "wall_hours_sum": 15.657433333333334,
+  "peak_mib": 1181,
+  "zero_stops": true,
+  "target": "f68fd805ca6ba52c411b7d570aaa791f10d17feb",
+  "asof": "2026-11-21T00:38:09.080125+00:00",
+  "script_sha256": "d00a9013be8a8034be52014fcd30b299083988e936a582e5a7bd8b90d47fe698",
+  "mode": "receipts"
+}

@@ -1,3 +1,35 @@
+<!-- R2F_REVIEW_20261121_CODEX -->
+## 2026-11-21 — R2-F independent review: accepted; move to the fixed candidate
+
+Target **f68fd805ca6ba52c411b7d570aaa791f10d17feb**.
+[Ranked findings, complete evidence and next experiment](reviews/automatic/20261121_f68fd805/report.md).
+No blocking finding. All 96 parts, 18,251 executed pairs (18,249 ok), labels,
+cash/quantity/END values, callback counts, accepted hash and source/input
+identities checked. The two feature exclusions and all 71 zero-callback arms
+are legitimate. Prior status/END and final-tick issues closed. Saved 288-pilot
+payload parity independently reproduced; no need to rebuild data.
+
+P2 NONBLOCKING: pooled counts overstate information per model. Bid/ask KEEP has
+48/42 nonzero originals on Oct24, 42/40 on Oct25; only 36 pi0 KEEP rows across
+both days. Use side/action and reached-state support, never treat teacher
+support as candidate calibration. P3 NONBLOCKING: exact Y!=0 counts include
+four 1.4e-14..4.6e-13 c residues (r2f_checks.py:170–175); 539 labels exceed the
+existing 1e-6 c accounting tolerance. Preserve raw targets and exact readings;
+do not count residues toward meaningful-event support. P3 NONBLOCKING:
+r2f_checks.py:151–155 consumes suite summary text; this review verifies all
+113 mutant record identities/hashes, covering the current receipt. Reuse that
+check in the next combined round; no extra mutation campaign just for cleanup.
+
+ONE priority: train the declared four-head ADV2-RICH direct regressor and
+FAIR/MECH controls on full Oct24–25; sampled consumed Oct26–27 prediction test,
+plus bounded own-state R4 diagnostic. Exact design and limits are in the report.
+Keep zeros/tails, weights, teacher, target, pinned 200-round parameters and sign
+controller. Measure local selection versus fixed baselines separately from
+actual replay value, churn, coverage and inventory. No full R4 qualification,
+untouched-day use or model search in this round. One combined delivery, no
+intermediate approval; additional USER approval not required.
+<!-- /R2F_REVIEW_20261121_CODEX -->
+
 <!-- R2E_REVIEW_20261120_CODEX -->
 ## 2026-11-20 — R2-E combined review: pilot accepted; production round authorized
 

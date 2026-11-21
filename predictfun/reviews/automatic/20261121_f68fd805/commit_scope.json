@@ -1,0 +1,43 @@
+{
+  "target": "f68fd805ca6ba52c411b7d570aaa791f10d17feb",
+  "owned_state": {
+    "predictfun/HANDOFF.md": {
+      "working_sha256": "91c2590ac76a2cddc1d463cb1d6014f68947d2b6e05e6f6490dc7cfb0984427b",
+      "prior_working_sha256": "4c61fe2741a32b1eaa7d0b0277b8b951f96be4dbe685534fffe340086684592a",
+      "index_expected_sha256": "dc05096400d1fcbdc5ea6a2b8aaeb05ff67b58620124dff8ba171f31ba521476"
+    },
+    "predictfun/STATUS.yml": {
+      "working_sha256": "750bd9d477f19cbe4e13af8283c092d68ae6e0e3f8387516dfcd3bbd1092902a",
+      "prior_working_sha256": "af1756a531a9c4d8d18718d2d25ab8b33af48bf4ff186fd431861b2a33738ade",
+      "index_expected_sha256": "4c89d5c3edba7f23c38592aeb9d090a4ff02b948f50fe1fe36c4d9356fea5b7a"
+    },
+    "predictfun/FINDINGS.md": {
+      "working_sha256": "f5de1cbeed27db08d32c7f29821efbbac5296d795baad83b21ab78f5d537665b",
+      "prior_working_sha256": "979a79326e417f393ff4e16e9fd18d2a873eb3b04470c201095f3b3b193f4ce0",
+      "index_expected_sha256": "08790487c3a579456e89c5da751d991938b31e1d5b0f33dd4dc8e0993c339045"
+    }
+  },
+  "other_tracked_working_state": {
+    "data/pm_5min/derived/be133_forward_population_era_split.json": "DELETED",
+    "data/pm_5min/derived/be_tape_v2_builder_binding_proof_v1.json": "DELETED",
+    "data/pm_5min/derived/be_validation_review_v1.json": "DELETED",
+    "data/pm_5min/derived/p003_de_gate1_run_journal_de145day07__20260908T032816Z.json": "DELETED",
+    "data/pm_5min/derived/p003_de_gate1_run_journal_deRR20260903__20260907T195646Z.json": "DELETED",
+    "data/pm_5min/derived/p003_de_gate1_run_journal_deRR20260904__20260907T225517Z.json": "DELETED",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run__20260906T062115Z.json": "DELETED",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v2__20260906T064720Z.json": "DELETED",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v3__20260906T071214Z.json": "DELETED",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v4__20260906T074712Z.json": "DELETED",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v5__20260906T075707Z.json": "DELETED",
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v6__20260906T081252Z.json": "DELETED",
+    "data/pm_5min/derived/p003_de_launch_form_probe__20260906T121813Z.json": "DELETED",
+    "data/pm_5min/derived/p003_de_r608_resolver_agreement__20260906T104000Z.json": "DELETED",
+    "data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/README": "DELETED",
+    "data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/linear_btc.json": "DELETED",
+    "data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/linear_eth.json": "DELETED",
+    "predictfun/handoffs/20261109_TODO.md": "8b7c104adae198927a9fecb04b5f57015fc2cef1afa09f48315b8c4ec413d7d8",
+    "predictfun/research/run_light.log": "86dc1481037da7bb508c09a175d6659c7c51898bdb1e274a98a8ef2899482e10"
+  },
+  "implementation_changed_by_review": false,
+  "index_was_empty": true
+}

@@ -1,3 +1,27 @@
+r2f_review_20261121_codex:
+  status: production_labels_accepted_candidate_round_authorized
+  target_commit: f68fd805ca6ba52c411b7d570aaa791f10d17feb
+  producing_freeze_commit: d3d024fd2c5ccb1ca7e4d33e9b1162b91b50abd5
+  report: predictfun/reviews/automatic/20261121_f68fd805/report.md
+  dataset_sha256: 2c62fc9baf696e6cd8913c5c294dea2c9513640714ae34b413dc37ef8c0acb2e
+  blocking_findings: []
+  prior_status_END_callback_findings: closed
+  artifacts: {parts: 96, worlds: 3072, saved_rows: 18372, pairs_run: 18251, ok: 18249, exact_zero: 17706, exact_nonzero: 543, abs_Y_above_1e_6_c: 539, nonzero_originals: 493, nonzero_worlds: 468}
+  checks: {binding: 4435006, causal: 145045, parity: 138385, zero_callback_arms: 71, failures: 0}
+  review_tests: {successful_checks: 5, wall_seconds: 177.53, peak_rss_mib: 321, reviewer_environment_and_csv_count_failures_retained: true}
+  nonblocking: [thin_retention_and_on_policy_support, four_arithmetic_residues_in_exact_nonzero_counts, top_level_suite_summary_identity_integration]
+  next_priority: ADV2_RICH_v1_fixed_prediction_experiment_with_bounded_R4_own_state_diagnostic
+  candidate: {primary: ADV2_RICH_v1, input_controls: [ADV2_FAIR_v1, ADV2_MECH_v1], heads: 12, objective: regression, rounds: 200, pinned_parameters: true}
+  chronology: {train: ["20261024", "20261025"], development_eval: ["20261026", "20261027"], all_consumed: true}
+  evaluation: {max_sampled_worlds: 3072, max_sampled_labels: 18432, own_state_diagnostic_max_worlds: 384, max_RICH_reached_pairs: 1536, local_null_draws: 500}
+  whole_R4_qualification_this_round: false
+  same_history_NEU2: deferred_from_bounded_diagnostic
+  intermediate_review_required: false
+  additional_user_approval_required: false
+  resource_contract: {development_slots: 4, planning_core_hours_ceiling: 40, checkpoint_mib: 1536, hard_rss_mib: 2048}
+  untouched_day_or_model_search_authorized: false
+  prediction_skill_or_profitability_established: false
+
 r2e_review_20261120_codex:
   status: pilot_accepted_full_sample_round_authorized
   target_commit: 714ce75978ab8dfec29c1fc41fd0dd800b982ad8

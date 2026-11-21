@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261121_f68fd805/verify.py", line 207, in <module>
+    mode=sys.argv[1];result=globals()[mode]();result.update(target=TARGET,asof=datetime.now(timezone.utc).isoformat(),script_sha256=sha(__file__),mode=mode)
+                            ^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261121_f68fd805/verify.py", line 186, in receipts
+    fs=sorted(p.name for p in a.glob('*.csv'));assert len(fs)==8
+                                                      ^^^^^^^^^^
+AssertionError
+2026-11-21T00:37:51Z tag=reviewf68_receipts rc=1 peak_rss_mib=195 wall_s=0.91 cpu_user_s=0.74 memavail_start_gib=23 disk_free_gib=435->435 slot=codex

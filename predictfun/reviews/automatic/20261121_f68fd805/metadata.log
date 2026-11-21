@@ -1,0 +1,3 @@
+mutant summary selftest passed: 8 cases (all caught passes; a missing record, an escape, a crash, a failed control, mixed sources, a copied and a renamed record fail)
+{"mode": "metadata", "result": "PASS", "output": "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261121_f68fd805/metadata.json"}
+2026-11-21T00:34:18Z tag=reviewf68_metadata rc=0 peak_rss_mib=226 wall_s=3.17 cpu_user_s=2.51 memavail_start_gib=23 disk_free_gib=435->435 slot=codex
