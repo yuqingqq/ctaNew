@@ -1,3 +1,36 @@
+default_post_plan_20261121_codex:
+  status: user_directed_development_handoff_ready
+  source_head: 8a990d5f2c87de732206aef70eae78cb8a02257a
+  plan: predictfun/reviews/automatic/20261121_default_post_plan/plan.md
+  supersedes_priority: representative_neutral_exposure_label_coverage
+  coverage_stop: committed_stop_preserve_partial_artifacts
+  coverage_stop_commit: 7a2478a004d9c251d85475a418d367134927e423
+  coverage_resumed_by_review_session: false
+  implementation_owner: development_session
+  review_owner: codex
+  next_priority: DEFAULT_POST_LOSS_MAP_v1
+  baseline: DEFAULT_POST_KEEP_v1
+  engine_policy: pf_branch_engine.POST_KEEP
+  comparators: [PI0_50_v1, NO_QUOTE]
+  world_manifest: predictfun/reviews/entry_exposure_20261121/manifest.json
+  worlds_max: 384
+  discovery_days: ["20261024", "20261025"]
+  measure_days: ["20261026", "20261027"]
+  all_days_consumed: true
+  conditional_guard_candidates_max: 1
+  conditional_guard_support_required: true
+  core_hours_ceiling: 2
+  also_bounded_by_unused_previous_eight_hour_allocation: true
+  pilot_core_hours_ceiling: 0.25
+  development_slots_max: 4
+  checkpoint_mib: 1536
+  hard_rss_mib: 2048
+  combined_acceptance_reviews: 1
+  extra_user_approval_within_contract: false
+  new_dates_or_untouched_validation_authorized: false
+  new_simulations_run_by_this_planning_session: 0
+  profitability_established: false
+
 movement_shrink_review_20261121_codex:
   status: experiment_accepted_no_candidate_promotion_coverage_proposal_pending_user
   target_commit: 530eac3b230659f1d90c630aac9ecd0f80f139e5

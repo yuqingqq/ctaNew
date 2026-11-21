@@ -23,6 +23,33 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- DEFAULT_POST_PLAN_20261121_CODEX -->
+## 2026-11-21 — USER changes priority: default-post simulation and actionable loss map
+
+**CURRENT NEXT PRIORITY: [DEFAULT-POST-LOSS-MAP-v1](reviews/automatic/20261121_default_post_plan/plan.md).**
+The USER has told development to stop the coverage work and requested an
+efficient plan for default posting, loss attribution and selective protection.
+This supersedes the coverage-build priority below; historical reviews remain.
+Preserve stopped work and its artifacts, with an explicit stopped/superseded
+status. Do not resume that build automatically or accept unfinished results.
+
+Development may proceed: reuse the existing two-sided POST_KEEP branch policy,
+unchanged execution/queue/cap/notice mechanics and the 384 world keys on
+consumed Oct24-27. Default POST/KEEP/replenish, zero discretionary pulls;
+separate structural/cap/pending effects. Run PI0 as a reference. Reconcile
+execution edge, subsequent movement, common-END value and tails. Determine
+which losses were knowable and preventable at the actual cancellation time.
+Keep no-fills and profitable exposures; explain what protection sacrifices.
+
+The linked contract specifies discovery Oct24-25, later measurement Oct26-27,
+complete metrics, one conditional small protection test (only if supported),
+and one combined acceptance review. No new dates, cooldown, longer END,
+teacher refit or large label build. Two aggregate core-hours maximum, also
+bounded by the unused prior eight-hour allocation; fixed pilot and existing
+slots/RSS bounds. No additional USER approval within this scope. This is a
+plan, not a new result or a claim that default quoting is profitable.
+<!-- /DEFAULT_POST_PLAN_20261121_CODEX -->
+
 <!-- MOVEMENT_SHRINK_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — Scalar challenger result accepted; broader coverage proposed
 

@@ -1,3 +1,28 @@
+<!-- DEFAULT_POST_PLAN_20261121_CODEX -->
+## 2026-11-21 — Diagnose a default-post policy before expanding PI0 coverage
+
+[USER-directed development plan](reviews/automatic/20261121_default_post_plan/plan.md)
+at source HEAD **8a990d5f2c87de732206aef70eae78cb8a02257a**.
+No new result. The default-post experiment must use a jointly replenishing
+two-sided branch: prior KEEP_INITIAL/KEEP_SELECTED extensions of one order
+and NO_QUOTE/N0 do not establish that policy's behavior. The existing
+pf_branch_engine.POST_KEEP supplies the baseline action rule; retain engine
+constraints, queue priority, notices and structural pulls.
+
+Measure ordinary gains and tail losses on all opportunities, then identify
+danger using information received before an actionable intervention. A
+cancel cannot reverse prior fills; post-fill inventory movement is not
+automatically a cancellation-model error. Local avoided-loss accounting
+excludes fills before the cancel effect and must not be summed as full-policy
+P&L. Check actual re-entry/queue/inventory consequences by branch replay.
+
+The USER supersedes the broader-coverage priority with this bounded diagnostic
+and at most one supported small protection test. More samples alone will not
+resolve a wrong decision population or demonstrate selective protection.
+Keep the stopped coverage work as provenance; no silent resume, new dates,
+large model search, fixed timer or untouched validation. One combined review.
+<!-- /DEFAULT_POST_PLAN_20261121_CODEX -->
+
 <!-- MOVEMENT_SHRINK_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — Scalar correction is reliable as an experiment, not an economic improvement
 
