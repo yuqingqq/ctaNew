@@ -1,0 +1,32 @@
+{
+  "artifacts_byte_equal": [
+    "actions.csv",
+    "audit.json",
+    "calibration.csv",
+    "eval_rows.csv.gz",
+    "null_draws.csv",
+    "scores.csv"
+  ],
+  "fit_commit_bound": true,
+  "fit_commit_without_scores": true,
+  "freeze_files_unchanged": [
+    "predictfun/research/pf_movement_shrink.py",
+    "predictfun/research/pf_movement_shrink_selftest.py",
+    "predictfun/research/pf_movement_shrink_mutants.py",
+    "predictfun/reviews/movement_shrink_20261121/manifest.json",
+    "predictfun/reviews/movement_shrink_20261121/declaration.md",
+    "predictfun/reviews/movement_shrink_20261121/shrink_checks.py",
+    "predictfun/reviews/movement_shrink_20261121/launch_shrink.sh"
+  ],
+  "freeze_without_fit": true,
+  "mutants": {
+    "extra_files": [],
+    "failures": [],
+    "judge_ok": true,
+    "ok": true,
+    "one_record_per_file": true,
+    "planted": 56
+  },
+  "source_imports_pinned": true,
+  "target": "530eac3b230659f1d90c630aac9ecd0f80f139e5"
+}

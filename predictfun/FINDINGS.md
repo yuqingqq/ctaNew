@@ -1,3 +1,38 @@
+<!-- MOVEMENT_SHRINK_REVIEW_20261121_CODEX -->
+## 2026-11-21 — Scalar correction is reliable as an experiment, not an economic improvement
+
+Target **530eac3b230659f1d90c630aac9ecd0f80f139e5**.
+[Review](reviews/automatic/20261121_530eac3b/report.md) and
+[proposed coverage build](reviews/automatic/20261121_530eac3b/next_priority.md).
+No BLOCKING finding. Saved fit/rows/aggregates and all draws reproduce;
+15 falsifiers and both synthetic suites pass. All four lambda values are 1:
+the fitted candidate equals the pooled-prior control. Its two entries do
+not fill; its six reviews select one loss and five zeros. Local J=0 and
+-0.195936 c/opportunity; no promotion. Preserve INCONCLUSIVE as declared;
+it does not authorize another coefficient search or untouched-day testing.
+
+P99's "only reduces posting / keeping" needs the action-set qualification:
+the review rule removes all 35 old KEEP decisions and adds six new ones.
+The pooled none baseline beats the tested retention rules, but bid hold-all
+is +0.995 c at review (+1.464 c at entry) on Oct 27. Neither that side result
+nor two days of changing bias proves a new policy or a persistent regime.
+The value mapping reconciles; selected-state forecast usefulness is open.
+
+Prior review items 1-4 are closed for this experiment. Remaining NONBLOCKING
+reuse item: every saved decision-context field should bind to its source
+(changing eval_rows.mid can pass A-J; the real complete rows were separately
+reproduced byte for byte). Bundle it with subsequent data work, not a rerun.
+
+ONE next priority is broader neutral-exposure labels on already-consumed
+Oct 24-25, Oct 31, Nov 1-3 under the same frozen policy and target. A concrete
+eight-core-hour ceiling / fixed-pilot / no-fit proposal is ready. It needs
+the USER's go to expand beyond the approved one-hour saved-data experiment;
+no new build is authorized by this review. No target change or fresh-day
+validation is proposed. Stop tuning this scalar candidate; conditional
+longer retention remains a research aim, and stopping the whole research
+line is a separate USER choice.
+<!-- /MOVEMENT_SHRINK_REVIEW_20261121_CODEX -->
+
 <!-- MOVEMENT_AUDIT_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — Movement audit verified; concentration is a warning, not a calibration test
 

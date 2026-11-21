@@ -1,3 +1,32 @@
+movement_shrink_review_20261121_codex:
+  status: experiment_accepted_no_candidate_promotion_coverage_proposal_pending_user
+  target_commit: 530eac3b230659f1d90c630aac9ecd0f80f139e5
+  report: predictfun/reviews/automatic/20261121_530eac3b/report.md
+  next_priority_proposal: predictfun/reviews/automatic/20261121_530eac3b/next_priority.md
+  blocking_findings_for_saved_results: []
+  prior_review_items_closed_for_this_experiment: [inference_scope, aggregate_value_checks, denominator_and_cost_asof_labels, committed_record_binding]
+  nonblocking: [pooled_side_scope_and_nonnested_retention_changes, saved_context_column_binding_if_reused]
+  actual_full_saved_rows_verified: true
+  population: {source_generations: 329, all_stage_status_rows: 987, train_entry: 166, train_review: 151, eval_entry: 163, eval_review: 148, descriptive_first_pull: 134}
+  saved_results: {all_four_lambdas: 1, candidate_equals_prior: true, entry_J_c: 0, review_J_c: -0.19593613933236576, candidate_positive_outcomes: 0, entry_selected: 2, review_selected: 6}
+  retention_switches: {old_KEEP_removed: 35, new_KEEP_added: 6, KEEP_overlap: 0}
+  original_movement_bias_c: {entry_oct26: 18.201118783904406, entry_oct27: 6.618796740580288, review_oct26: 13.667687319002388, review_oct27: -0.6338615525213278}
+  oct27_bid_hold_all_J_c: {entry: 1.4643662692812114, review: 0.9950187903969825}
+  bid_only_policy_authorized: false
+  declared_decisions: {entry: INCONCLUSIVE, first_review: INCONCLUSIVE}
+  candidate_promotion: false
+  candidate_retuning_on_same_rows: false
+  checks: {A_J: all_true, output_csvs_byte_equal: 5, score_rows: 27, calibration_rows: 114, action_rows: 30, null_draws: 1000, falsifiers: 15, final_mutants_rejudged: 56}
+  independent_review: {jobs: 4, wall_seconds: 23.06, user_cpu_seconds: 21.07, peak_rss_mib: 275, prelaunch_shell_typos: 1, new_candidate_fits: 0, tape_or_label_runs: 0}
+  next_priority: representative_neutral_exposure_label_coverage
+  proposed_additional_consumed_dates: ["20261024", "20261025", "20261031", "20261101", "20261102", "20261103"]
+  proposed_build: {core_hours_ceiling: 8, fixed_pilot_core_hours_ceiling: 0.5, worlds_max: 1152, local_queries_max: 4608, development_slots_max: 4, checkpoint_mib: 1536, hard_rss_mib: 2048, new_model_fits: 0}
+  user_go_required_for_expanded_build: true
+  expanded_build_authorized: false
+  untouched_validation_authorized: false
+  conditional_longer_retention_research_path_open: true
+  profitable_strategy_or_independent_validation_established: false
+
 movement_audit_review_20261121_codex:
   status: saved_audit_accepted_scalar_movement_challenger_next
   target_commit: f311caaef6ea50b8a7df7ebd6c74a3cf22f39dc1

@@ -1,0 +1,187 @@
+{
+  "action_sets": [
+    {
+      "J": {
+        "all": -3.740366887448493,
+        "candidate": 0.0,
+        "none": 0.0,
+        "original": -3.740366887448493,
+        "prior": 0.0
+      },
+      "candidate_filled": 0,
+      "candidate_negative": 0,
+      "candidate_positive": 0,
+      "candidate_selected": 2,
+      "candidate_zero": 2,
+      "head": "entry",
+      "n": 163,
+      "null": {
+        "J": 0.0,
+        "chosen": 2,
+        "chosen_weight": 2.0,
+        "free_rows": 6,
+        "free_strata": 2,
+        "null_mean": 0.0,
+        "null_p05": 0.0,
+        "null_p95": 0.0,
+        "percentile": 1.0,
+        "strata": 45,
+        "weight_mismatch_draws": 0
+      },
+      "switches": {
+        "added": 0,
+        "both_chosen": 2,
+        "both_not_chosen": 0,
+        "removed": 161
+      }
+    },
+    {
+      "J": {
+        "all": -3.0872560880018516,
+        "candidate": -0.19593613933236576,
+        "none": 0.0,
+        "original": -0.8523468355543825,
+        "prior": -0.19593613933236576
+      },
+      "candidate_filled": 1,
+      "candidate_negative": 1,
+      "candidate_positive": 0,
+      "candidate_selected": 6,
+      "candidate_zero": 5,
+      "head": "first_review",
+      "n": 148,
+      "null": {
+        "J": -0.19593613933236576,
+        "chosen": 6,
+        "chosen_weight": 15.25,
+        "free_rows": 21,
+        "free_strata": 6,
+        "null_mean": -0.06143991273393934,
+        "null_p05": -0.22677662516232525,
+        "null_p95": 0.0,
+        "percentile": 0.244,
+        "strata": 45,
+        "weight_mismatch_draws": 0
+      },
+      "switches": {
+        "added": 6,
+        "both_chosen": 0,
+        "both_not_chosen": 107,
+        "removed": 35
+      }
+    }
+  ],
+  "admitted_rows": 329,
+  "all_stage_rows": 987,
+  "checks": {
+    "A_identity": true,
+    "B_membership": true,
+    "C_fit": true,
+    "D_predictions": true,
+    "E_scores": true,
+    "F_calibration": true,
+    "G_actions": true,
+    "H_null": true,
+    "I_readings": true,
+    "J_resources_suites": true
+  },
+  "details": {
+    "A": {
+      "audit_bindings": true,
+      "committed": true,
+      "inputs_committed": true,
+      "manifest_inputs": true,
+      "partitions": true,
+      "sources": true
+    },
+    "B": {
+      "eval_rows": true,
+      "failures": [],
+      "manifest_keys": true
+    },
+    "C": {
+      "failures": []
+    },
+    "D": {
+      "failures": []
+    },
+    "E": {
+      "failures": [],
+      "rows": 27
+    },
+    "F": {
+      "failures": [],
+      "rows": 114
+    },
+    "G": {
+      "failures": [],
+      "rows": 30
+    },
+    "H": {
+      "failures": []
+    },
+    "I": {
+      "failures": []
+    },
+    "J": {
+      "asof": "2026-11-21T12:49:56.022955+00:00",
+      "resources": {
+        "bad": [],
+        "core_hours": 0.06787777777777776,
+        "jobs": 123,
+        "ok": true,
+        "peak_mib": 248,
+        "run_peaks": {
+          "shr_fit": 238,
+          "shr_score": 238
+        }
+      },
+      "suites": {
+        "extra_files": [],
+        "failures": [],
+        "judge_ok": true,
+        "ok": true,
+        "one_record_per_file": true,
+        "planted": 56
+      }
+    }
+  },
+  "parameters_verified_by_linear_solve": [
+    {
+      "head": "entry",
+      "lam": 1.0,
+      "lam_raw": 2.1034488852458098,
+      "mu": -38.88886197647255,
+      "side": 0
+    },
+    {
+      "head": "entry",
+      "lam": 1.0,
+      "lam_raw": 1.8471200346737187,
+      "mu": -107.82940609874369,
+      "side": 1
+    },
+    {
+      "head": "first_review",
+      "lam": 1.0,
+      "lam_raw": 1.6926109705333676,
+      "mu": -39.52877684746996,
+      "side": 0
+    },
+    {
+      "head": "first_review",
+      "lam": 1.0,
+      "lam_raw": 1.7523785639222857,
+      "mu": -119.84669890393295,
+      "side": 1
+    }
+  ],
+  "tables_byte_reproduced": [
+    "eval_rows",
+    "scores",
+    "calibration",
+    "actions",
+    "null_draws"
+  ],
+  "target": "530eac3b230659f1d90c630aac9ecd0f80f139e5"
+}

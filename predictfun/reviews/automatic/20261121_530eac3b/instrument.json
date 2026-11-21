@@ -1,0 +1,30 @@
+{
+  "all_checks_pass_after_mid_change": true,
+  "changed_mid": {
+    "A_identity": true,
+    "B_membership": true,
+    "C_fit": true,
+    "D_predictions": true,
+    "E_scores": true,
+    "F_calibration": true,
+    "G_actions": true,
+    "H_null": true,
+    "I_readings": true,
+    "J_resources_suites": true
+  },
+  "clean": {
+    "A_identity": true,
+    "B_membership": true,
+    "C_fit": true,
+    "D_predictions": true,
+    "E_scores": true,
+    "F_calibration": true,
+    "G_actions": true,
+    "H_null": true,
+    "I_readings": true,
+    "J_resources_suites": true
+  },
+  "current_full_row_bytes_independently_reproduced": true,
+  "limitation": "A-J do not bind every saved decision-context column; reuse exact committed rows or add field comparisons",
+  "target": "530eac3b230659f1d90c630aac9ecd0f80f139e5"
+}

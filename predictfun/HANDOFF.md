@@ -23,6 +23,45 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- MOVEMENT_SHRINK_REVIEW_20261121_CODEX -->
+## 2026-11-21 — Scalar challenger result accepted; broader coverage proposed
+
+Reviewed **530eac3b230659f1d90c630aac9ecd0f80f139e5**.
+[Combined review](reviews/automatic/20261121_530eac3b/report.md),
+[ONE next priority and scope proposal](reviews/automatic/20261121_530eac3b/next_priority.md).
+No BLOCKING finding. The fit, all five output CSVs, aggregates and 1,000
+matched draws reproduce; both synthetic suites and 15 falsifiers pass.
+All four lambdas clip to 1, so candidate = pooled prior. Oct 27 entry
+selects two no-fill zeros (J=0); review selects one loss and five zeros
+(J=-0.195936 c/opportunity). No demonstrated positive local exposure;
+do not promote or tune another scalar variant on these rows.
+
+Preserve the declared INCONCLUSIVE statuses (prior equality, thin movable
+support). Prediction is mixed: pooled entry MSE improves slightly, review
+worsens. Original movement bias changes from +18.201 to +6.619 c at entry,
+and +13.668 to -0.634 at review across Oct 26/27. Two concentrated days
+cannot distinguish regime drift from sample/state-mix variation.
+
+NONBLOCKING batch: qualify pooled versus side-specific economics; bid
+hold-all is positive on Oct 27, not a basis for a post-hoc bid-only rule.
+The retention change removes 35 KEEP decisions and adds six different ones,
+with no overlap. Bind every saved context field if eval_rows is reused;
+the actual complete rows are independently byte-verified. Prior review
+items 1-4 are closed for this saved-data experiment. No repair-only round.
+
+ONE next priority: representative neutral-exposure label coverage under
+unchanged PI0/target, with additional dates 20261024, 20261025, 20261031,
+20261101, 20261102, 20261103 (already recorded as consumed). The proposal
+keeps admitted/review and eligible WAIT-state populations explicit, uses a
+fixed pilot, and caps the build at eight aggregate core-hours on existing
+slots. No new fitted candidate, target/horizon change or untouched access.
+The USER's go is required because this expands the prior one-hour saved-data
+scope. Proposal only; DO NOT LAUNCH THE BUILD without that go. More data is
+not guaranteed to cure the model. No untouched validation is recommended
+for this unsuccessful candidate. Conditional longer retention remains a
+research aim, not a demonstrated profitable rule or a reason for a timer.
+<!-- /MOVEMENT_SHRINK_REVIEW_20261121_CODEX -->
+
 <!-- MOVEMENT_AUDIT_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — Movement audit accepted; one small calibration challenger next
 

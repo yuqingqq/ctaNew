@@ -1,0 +1,97 @@
+{
+  "cases": {
+    "A_substituted": {
+      "applied": true,
+      "check": "A_identity",
+      "clean": true,
+      "corrupted": false
+    },
+    "B_drop": {
+      "applied": true,
+      "check": "B_membership",
+      "clean": true,
+      "corrupted": false
+    },
+    "C_lambda": {
+      "applied": true,
+      "check": "C_fit",
+      "clean": true,
+      "corrupted": false
+    },
+    "D_candidate_V": {
+      "applied": true,
+      "check": "D_predictions",
+      "clean": true,
+      "corrupted": false
+    },
+    "E_conditional_mean": {
+      "applied": true,
+      "check": "E_scores",
+      "clean": true,
+      "corrupted": false
+    },
+    "E_mse": {
+      "applied": true,
+      "check": "E_scores",
+      "clean": true,
+      "corrupted": false
+    },
+    "E_weighted_denominator": {
+      "applied": true,
+      "check": "E_scores",
+      "clean": true,
+      "corrupted": false
+    },
+    "F_calibration_mean": {
+      "applied": true,
+      "check": "F_calibration",
+      "clean": true,
+      "corrupted": false
+    },
+    "G_chosen_weight": {
+      "applied": true,
+      "check": "G_actions",
+      "clean": true,
+      "corrupted": false
+    },
+    "G_selection_value": {
+      "applied": true,
+      "check": "G_actions",
+      "clean": true,
+      "corrupted": false
+    },
+    "H_draw": {
+      "applied": true,
+      "check": "H_null",
+      "clean": true,
+      "corrupted": false
+    },
+    "H_p95": {
+      "applied": true,
+      "check": "H_null",
+      "clean": true,
+      "corrupted": false
+    },
+    "I_decision": {
+      "applied": true,
+      "check": "I_readings",
+      "clean": true,
+      "corrupted": false
+    },
+    "J_budget": {
+      "applied": true,
+      "check": "J_resources_suites",
+      "clean": true,
+      "corrupted": false
+    },
+    "J_suite": {
+      "applied": true,
+      "check": "J_resources_suites",
+      "clean": true,
+      "corrupted": false
+    }
+  },
+  "falsifier_ok": true,
+  "synthetic_selftests": true,
+  "target": "530eac3b230659f1d90c630aac9ecd0f80f139e5"
+}

@@ -1,0 +1,4 @@
+Reviewer launcher correction: the first data-check invocation had an accidental
+space in its output-redirection path. Bash refused the redirection because
+/home/yuqing/ctaNew/ is a directory, before run_light or Python started.
+The corrected command is recorded by data.log; no experiment or input changed.

@@ -1,0 +1,2 @@
+{"mode": "instrument", "passed": true}
+2026-11-21T12:51:50Z tag=review_530e_instrument rc=0 peak_rss_mib=245 wall_s=2.37 cpu_user_s=2.05 memavail_start_gib=22 disk_free_gib=440->440 slot=codex

@@ -1,0 +1,4 @@
+movement shrink selftest passed: bounds and the prior; mu / lambda against an independent solve, the clip, the zero denominator, support floors, chronology and side refusals; lambda 0 exact; prior / candidate arms; unsupported groups; tie rules; chosen statistics; the matched null; PASS on a positive exposure, not on adversarial / all-WAIT; INCONCLUSIVE on equal masks, thin support, null weight mismatch, no fit support; populations; the unit refusal; the freeze guards and write-once
+shrink checks selftest passed: C-I true on hand rows scored by the module; each corruption (mu, a candidate E[qm], a conditional mean, a calibration mean, a mean among the chosen, a null draw, a decision) flips its check
+{"mode": "controls", "passed": true}
+2026-11-21T12:51:12Z tag=review_530e_controls rc=0 peak_rss_mib=248 wall_s=16.13 cpu_user_s=15.03 memavail_start_gib=23 disk_free_gib=440->440 slot=codex
