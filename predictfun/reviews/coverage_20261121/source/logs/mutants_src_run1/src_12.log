@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "12", "name": "frozen sources uncompared", "seconds": 0.8, "sources": {"pf_source_extend.py": "eff7022f78f5a001", "pf_source_extend_mutants.py": "6d68769cfbe07dc5", "pf_source_extend_selftest.py": "8d1c3540c0d5549e"}, "why": "SOURCE EXTEND SELFTEST FAILED: compare: a changed source passed"}
+2026-11-21T14:32:52Z tag=src_12 rc=0 peak_rss_mib=200 wall_s=1.01 cpu_user_s=0.86 memavail_start_gib=22 disk_free_gib=439->439 slot=claude2

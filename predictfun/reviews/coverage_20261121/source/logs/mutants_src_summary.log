@@ -1,0 +1,21 @@
+  0 the sealed block allowed: CAUGHT (0.8 s) - SOURCE EXTEND SELFTEST FAILED: allowed: a sealed day passed
+  1 a forward day allowed: CAUGHT (0.8 s) - SOURCE EXTEND SELFTEST FAILED: allowed: a forward day passed
+  2 an undeclared day allowed: CAUGHT (0.8 s) - SOURCE EXTEND SELFTEST FAILED: allowed: the declared / undeclared days; declared: an undeclared day was swapped in
+  3 the day lists not restored: CAUGHT (0.8 s) - SOURCE EXTEND SELFTEST FAILED: declared: the swap or the restore ((('20261031',), ('20261031',), ('20261031',), PosixPath('/tmp/x_qp'))); declared: no
+  4 keep / pull keeps its own day list: CAUGHT (0.8 s) - SOURCE EXTEND SELFTEST FAILED: declared: the swap or the restore ((('20261031',), ('20261031',), ('20261023', '20261024', '20261025', '20261026', '202
+  5 keep / pull reconciles with the 11-17 v1: CAUGHT (0.8 s) - SOURCE EXTEND SELFTEST FAILED: build: the call order / roots / globals ([('qp', '20261102', PosixPath('/tmp/root/queue_place'), ('20261102',), ('20261
+  6 keep / pull before v1: CAUGHT (0.8 s) - SOURCE EXTEND SELFTEST FAILED: build: the call order / roots / globals ([('kp', '20261102', PosixPath('/tmp/root/queue_place'), PosixPath('/tmp/root/k
+  7 frames compared by their columns only: CAUGHT (0.8 s) - SOURCE EXTEND SELFTEST FAILED: frames_equal: a changed value, dtype or column order passed
+  8 frames compared by shape only: CAUGHT (0.8 s) - SOURCE EXTEND SELFTEST FAILED: frames_equal: a changed value, dtype or column order passed
+  9 the keep / pull receipt without status: CAUGHT (0.8 s) - SOURCE EXTEND SELFTEST FAILED: compare: a changed status passed
+  10 the keep / pull receipt without fair_missing: CAUGHT (0.8 s) - SOURCE EXTEND SELFTEST FAILED: compare: a changed fair_missing passed
+  11 v1 markets uncompared: CAUGHT (0.8 s) - SOURCE EXTEND SELFTEST FAILED: compare: a changed markets passed
+  12 frozen sources uncompared: CAUGHT (0.8 s) - SOURCE EXTEND SELFTEST FAILED: compare: a changed source passed
+  13 the control written over: CAUGHT (0.8 s) - SOURCE EXTEND SELFTEST FAILED: control: refused for another reason (ValueError('the wrapper is not committed'))
+  14 the control from an uncommitted wrapper: CAUGHT (0.8 s) - SOURCE EXTEND SELFTEST FAILED: control: refused for another reason (RuntimeError('build must not run'))
+  15 a new day without the control: CAUGHT (0.8 s) - SOURCE EXTEND SELFTEST FAILED: run_day: refused a failed control for another reason (RuntimeError('build must not run'))
+  16 a new day from an uncommitted wrapper: CAUGHT (0.8 s) - SOURCE EXTEND SELFTEST FAILED: run_day: refused for another reason (RuntimeError('build must not run'))
+  17 the control day as a new day: CAUGHT (0.8 s) - SOURCE EXTEND SELFTEST FAILED: run_day undeclared: refused for another reason (ValueError('the wrapper is not committed'))
+control: PASSED (0.8 s); sources {'pf_source_extend.py': '694ffe4174e16124', 'pf_source_extend_mutants.py': '138d52d9a775a846', 'pf_source_extend_selftest.py': '8d1c3540c0d5549e'}
+mutation check passed: the control passes its selftest, 18 / 18 planted code errors are caught by a check (0.3 CPU min)
+2026-11-21T14:33:27Z tag=src_mutant_summary rc=0 peak_rss_mib=15 wall_s=0.02 cpu_user_s=0.02 memavail_start_gib=22 disk_free_gib=439->439 slot=claude

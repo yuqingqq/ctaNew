@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "1", "name": "a forward day allowed", "seconds": 0.8, "sources": {"pf_source_extend.py": "694ffe4174e16124", "pf_source_extend_mutants.py": "138d52d9a775a846", "pf_source_extend_selftest.py": "8d1c3540c0d5549e"}, "why": "SOURCE EXTEND SELFTEST FAILED: allowed: a forward day passed"}
+2026-11-21T14:33:21Z tag=src_1 rc=0 peak_rss_mib=200 wall_s=1.04 cpu_user_s=0.89 memavail_start_gib=22 disk_free_gib=439->439 slot=claude3

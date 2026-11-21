@@ -997,6 +997,11 @@ pulls and bid/ask; judge movement calibration on selected actions before changin
 order design. Other session owns fixes; scheduler remains off.
 <!-- /PIPELINE_V2_RESULT_REVIEW_20261119_CODEX -->
 
+## 2026-11-21 14:29Z (session aea5bfb9) — PREFLIGHT: FOUR APPROVED DATES LACK THE WORLD SOURCE; USER: EXTEND THE FROZEN SOURCE TO ALL SIX
+- **Metadata preflight (before any label):** the guarded producing-input identities exist for all six dates (Oct 31 holds 24 book hours: its hour -1, sealed Oct 30 23Z, is refused by `part_allowed`; Nov 3's next 00h, forward Nov 4, likewise). The R2 / R3 world source (`keep_pull_20261117/<day>/orders.parquet`, the queue-place grid's JOIN states) exists for Oct 24-25 only: the frozen builders (`pf_queue_place_test.day_run` v1, then `pf_keep_pull.day_run`) declare Oct 23-27 and refuse other days.
+- **USER 2026-11-21 14:2xZ (choice "Extend source, all 6"):** run the two frozen builders unchanged for Oct 31 and Nov 1-3 through a declared wrapper (their day lists and output roots swapped for the call and restored; outputs under a new root), after proving the wrapper reproduces the existing Oct 24 outputs exactly and auditing the chain at the sealed Oct 28-30 and forward Nov 4 boundaries; then build all six dates within the 8 core-hours.
+- **Padding audit:** every reader of the chain goes through `pf_stop_ev_minutes_inputs` (`load_day`: `part_allowed`, `SKIP_FOREIGN_PARTS`; `fair_fix` / `depth_hours`: hours -1..23 through `part_allowed`; `real_inputs`: `hour_ok` and the window check) or day-named files (registry, imputation offset, step 5 rows); one loader module serves queue-place v1, the ledger, keep / pull and the label sampler.
+
 ## 2026-11-21 13:41Z (session aea5bfb9) — USER GO: THE SIX-DATE NEUTRAL-EXPOSURE LABEL COVERAGE BUILD (review 216ff603's next priority)
 - **USER 2026-11-21 13:41Z: "Approve go"** — in reply to the stop report's decision request. It authorizes [next_priority.md](reviews/automatic/20261121_530eac3b/next_priority.md) as written:
   - dates 20261024, 20261025, 20261031, 20261101, 20261102, 20261103 (all consumed; Oct 23 stays the teacher day, Oct 28 out; the Oct 26-27 admitted cohort stays a separate reference); a metadata preflight first;
