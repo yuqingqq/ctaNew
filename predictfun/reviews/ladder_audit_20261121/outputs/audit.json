@@ -1,0 +1,175 @@
+{
+  "version": "receipt_lead_time_audit_v1",
+  "asof": "2026-11-21T17:49:14.392498+00:00",
+  "statuses": {
+    "incomplete:stale_future_book": 23,
+    "incomplete:missing_endpoint": 54,
+    "complete": 19
+  },
+  "cross": {
+    "locked_window": {
+      "fills": 235,
+      "generations": 93,
+      "shares": 2175.7239230388514,
+      "end_value": 32481.240006239772
+    },
+    "sweeps": {
+      "trade_grouped_fill_rows": 388,
+      "time_grouped_fill_rows": 2132,
+      "time_grouped_but_not_same_trade_rows": 1744,
+      "trade_event_end_value": -48305.73570894924,
+      "trade_event_mo1s": -22605.949514484335
+    },
+    "live_fill_denominators": {
+      "first": {
+        "n": 4840,
+        "any_generation_fill": 2074,
+        "future_fill": 1986
+      },
+      "live": {
+        "n": 4840,
+        "any_generation_fill": 2074,
+        "future_fill": 1702
+      },
+      "entry": {
+        "n": 5288,
+        "any_generation_fill": 2080,
+        "future_fill": 2080
+      }
+    },
+    "first_review": {
+      "reviewed": 4840,
+      "policy_first_review_pulls": 4,
+      "requested_by_first_live": 147,
+      "by_reason": {
+        "structural": 143,
+        "policy": 4
+      }
+    },
+    "inventory_modes": {
+      "recovered": 252,
+      "reversal": 23,
+      "censored": 12,
+      "recovered_median_ms": 7275.0
+    },
+    "fill_timing": {
+      "before_request": {
+        "fills": 8647,
+        "q": 92497.57321214103,
+        "mo1s": -173449.69934253788
+      },
+      "cancel_pending": {
+        "fills": 559,
+        "q": 4493.497921083067,
+        "mo1s": -29465.718582046964
+      }
+    },
+    "durations": {
+      "both_exact": 0.40698110208406924,
+      "both_grid_mean": 0.4030554574355351,
+      "either_exact": 0.9542412575061816
+    },
+    "net_concentration": {
+      "losing_markets": 19,
+      "top5_share": 0.4148786944695414
+    },
+    "common_markouts": {
+      "fills": 9161,
+      "q": 96603.98639499366,
+      "edge": 39078.0199368997,
+      "mo50": -91489.17764484027,
+      "mo1s": -203083.9215480157
+    },
+    "common_markouts_all_horizons": {
+      "fills": 7796,
+      "q": 83164.94086931943,
+      "edge": 35625.16916149017,
+      "mo50": -65535.82286443209,
+      "mo1s": -161824.28100927637
+    },
+    "generations": 5288,
+    "complete": 19,
+    "selected": 96,
+    "generation_tails": {
+      "end_worst": -8550.0,
+      "end_severe_sum": -1884949.5540340147,
+      "mo1s_worst": -5250.0,
+      "mo1s_below_minus30_sum": -259294.85402119978,
+      "mo1s_censored": -3195
+    }
+  },
+  "timeline": {
+    "entry": {
+      "n": 5288,
+      "censored_1s": 13,
+      "win_any": 2080,
+      "lifetime_any": 2080,
+      "win_mo1s": -202915.41792458485,
+      "pre_mo1s": 0.0,
+      "cp_mo1s": -29465.718582046964,
+      "inv_move_1s": -54662.51462674886,
+      "inv_move_missing": 22,
+      "latency_median_ms": 58.0,
+      "pf_age_median_ms": 28.03857421875,
+      "bn_age_median_ms": 19.5
+    },
+    "first": {
+      "n": 4840,
+      "censored_1s": 13,
+      "win_any": 1986,
+      "lifetime_any": 2074,
+      "win_mo1s": -185438.1679892376,
+      "pre_mo1s": -4130.111095332502,
+      "cp_mo1s": -29152.05597569776,
+      "inv_move_1s": -43742.09141936526,
+      "inv_move_missing": 24,
+      "latency_median_ms": 37.0,
+      "pf_age_median_ms": 29.002197265625,
+      "bn_age_median_ms": 21.5
+    },
+    "live": {
+      "n": 4840,
+      "censored_1s": 9,
+      "win_any": 1702,
+      "lifetime_any": 2074,
+      "win_mo1s": -179659.47925314994,
+      "pre_mo1s": -8669.87982448973,
+      "cp_mo1s": -29152.05597569776,
+      "inv_move_1s": -31023.320494849235,
+      "inv_move_missing": 42,
+      "latency_median_ms": 37.0,
+      "pf_age_median_ms": 30.644287109375,
+      "bn_age_median_ms": 22.5
+    }
+  },
+  "candidate": {
+    "answer": "LEAD",
+    "kind": "live",
+    "feature": "ctx_bid_reserved_shares",
+    "sign": -1,
+    "pooled_q5_minus_q1": -23.13801130445861,
+    "n_leads": 1,
+    "note": "a lead for the next experiment, not a guard, threshold, profit or avoided-loss estimate"
+  },
+  "edges_source": "/home/yuqing/ctaNew/data/predict_fun/research/ladder_rest_v1_20261121/measure/audit.json",
+  "edges_sha256": "ca688917cd7ddc7c40e94031bee646f4fc1339511bb7c48fbe5270797a38bf80",
+  "outputs": {
+    "generations_v2.csv": "8107481670e4e2ae913bce29ca8225077f3a8895fac4373f69a96e49a1e300b6",
+    "sweep_rows.csv": "7f8d76a070fef62fe72141e73cd929a102cf6cebfb341ab574e99d8ed914524a",
+    "recovery.csv": "b24e6db459b9e63954287a5b28a663957aab09f91ad09d382b9442780cc3c6e8",
+    "durations.csv": "1e9b473140e3d85e6ada751ff4b02313bacc86799ca300e23d57526084d619b3",
+    "churn.csv": "a5c85baf56f955865f5ca98bd9a7db569899bd4be2df1c1d55025605e3e5d3e6",
+    "states.csv": "d50c718fd9f867ad4b28e46b8d9edad2da14603b1ec385498b3eb0777e0e2111",
+    "bins.csv": "4a8074a40dbda467e6cb0a94b69db468c8deffdc72dffd2b1a0e1d4d8b3ec7f3",
+    "leads.csv": "f603f747d1bc00c63cca6f50b14838d0fca1e3d9441ac143067080101068af5e"
+  },
+  "sources": {
+    "pf_ladder_audit.py": "97a79a90a06062a775d3fe66f55da5172b3ffc2cf39e771cf52e6852fe38f44c",
+    "pf_ladder_audit_selftest.py": "47dd364cb87f6af91eedef8b0dce9942e99d25022a4fe6a68a3e76b3c9a927e5",
+    "pf_ladder_rest.py": "d90016ce7d25f89f6f6c6662075f5be72539d3140373e42c8b7228ebcf8ce5e0",
+    "pf_branch_ladder.py": "c9e0852eccea5b4248001693fd8ddec083ea2df517dc8f3fd0d8b2f091ab285a",
+    "pf_branch_engine.py": "8b7960ef4bbbc178b281e57d92d4795d7678436c0ca875e7199e24a6626af3a8",
+    "pf_pipeline_export.py": "ee2953fd00f70a7d12607abd4b418471b2208b8f9728009c7e538ccb55733931"
+  },
+  "run_freeze": "47d2eec1"
+}

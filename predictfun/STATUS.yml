@@ -1,4 +1,16 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+ladder_audit_results_20261121_dev:
+  status: done_corrections_and_lead_audit
+  asof: "2026-11-21 17:54Z"
+  receipt: predictfun/reviews/ladder_audit_20261121/report.md
+  freeze: b1167651
+  checks: {version: v3, commit: 349d2f32, all_true: true, falsifier_ok: true}
+  candidate: LEAD
+  candidate_kind: live
+  candidate_feature: ctx_bid_reserved_shares
+  candidate_sign: -1
+  cost_core_hours: 0.196
+  next: one_combined_review_names_the_next_experiment
 ladder_audit_20261121_dev:
   status: frozen_before_reading_saved_evidence
   asof: "2026-11-21 17:48Z"

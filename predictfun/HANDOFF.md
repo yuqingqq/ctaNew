@@ -23,6 +23,17 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- LADDER_AUDIT_RESULTS_20261121_DEV -->
+## 2026-11-21 17:54Z (session aea5bfb9) — RECEIPT-LEAD-TIME-AUDIT-v1 RESULTS: CORRECTIONS EQUAL THE REVIEW'S NUMBERS; READING LEAD
+
+- [Receipt](reviews/ladder_audit_20261121/report.md); freeze `b1167651`, checkers v2 `b8642e6d` / v3 `349d2f32` (v1 / v2 crashed before computing; superseded in-band), results in this commit.
+- **Lead time:** at the first live review the future window carries -185,438.2 c of +1 s value, the fills before its 37 ms effect -4,130.1 c; entries (every fill) -202,915.4 c; cancel-pending fills -29,465.7 c.
+- **Reading:** LEAD live/ctx_bid_reserved_shares sign -1 pooled -23.1 c; per share the lead's sign holds on 4/4 ask days and 1/4 bid days (post-hoc view).
+- **Causal audit:** 64 snapshots unchanged under future-only perturbation (market and order inputs), controls firing.
+- **Validity:** checks v3 23 / 23, falsifier 7 / 7; mutants audit 16 / 16, safe resume 6 / 6, baseline v2 24 / 24 and 20 / 20; 0.196 core-hours.
+- **Next:** the ONE combined review, which names the next experiment.
+<!-- /LADDER_AUDIT_RESULTS_20261121_DEV -->
+
 <!-- LADDER_AUDIT_FREEZE_20261121_DEV -->
 ## 2026-11-21 17:48Z (session aea5bfb9) — RECEIPT-LEAD-TIME-AUDIT-v1 FROZEN (review 0065191f's ONE next priority; every finding verified at the code)
 

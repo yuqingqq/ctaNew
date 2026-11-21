@@ -1,0 +1,153 @@
+{
+ "statuses": {
+  "incomplete:stale_future_book": 23,
+  "incomplete:missing_endpoint": 54,
+  "complete": 19
+ },
+ "candidate": {
+  "answer": "LEAD",
+  "kind": "live",
+  "feature": "ctx_bid_reserved_shares",
+  "sign": -1,
+  "pooled_q5_minus_q1": -23.13801130445861,
+  "n_leads": 1,
+  "note": "a lead for the next experiment, not a guard, threshold, profit or avoided-loss estimate"
+ },
+ "cross": {
+  "locked_window": {
+   "fills": 235,
+   "generations": 93,
+   "shares": 2175.7239230388514,
+   "end_value": 32481.240006239772
+  },
+  "sweeps": {
+   "trade_grouped_fill_rows": 388,
+   "time_grouped_fill_rows": 2132,
+   "time_grouped_but_not_same_trade_rows": 1744,
+   "trade_event_end_value": -48305.73570894924,
+   "trade_event_mo1s": -22605.949514484335
+  },
+  "live_fill_denominators": {
+   "first": {
+    "n": 4840,
+    "any_generation_fill": 2074,
+    "future_fill": 1986
+   },
+   "live": {
+    "n": 4840,
+    "any_generation_fill": 2074,
+    "future_fill": 1702
+   },
+   "entry": {
+    "n": 5288,
+    "any_generation_fill": 2080,
+    "future_fill": 2080
+   }
+  },
+  "first_review": {
+   "reviewed": 4840,
+   "policy_first_review_pulls": 4,
+   "requested_by_first_live": 147,
+   "by_reason": {
+    "structural": 143,
+    "policy": 4
+   }
+  },
+  "inventory_modes": {
+   "recovered": 252,
+   "reversal": 23,
+   "censored": 12,
+   "recovered_median_ms": 7275.0
+  },
+  "fill_timing": {
+   "before_request": {
+    "fills": 8647,
+    "q": 92497.57321214103,
+    "mo1s": -173449.69934253788
+   },
+   "cancel_pending": {
+    "fills": 559,
+    "q": 4493.497921083067,
+    "mo1s": -29465.718582046964
+   }
+  },
+  "durations": {
+   "both_exact": 0.40698110208406924,
+   "both_grid_mean": 0.4030554574355351,
+   "either_exact": 0.9542412575061816
+  },
+  "net_concentration": {
+   "losing_markets": 19,
+   "top5_share": 0.4148786944695414
+  },
+  "common_markouts": {
+   "fills": 9161,
+   "q": 96603.98639499366,
+   "edge": 39078.0199368997,
+   "mo50": -91489.17764484027,
+   "mo1s": -203083.9215480157
+  },
+  "common_markouts_all_horizons": {
+   "fills": 7796,
+   "q": 83164.94086931943,
+   "edge": 35625.16916149017,
+   "mo50": -65535.82286443209,
+   "mo1s": -161824.28100927637
+  },
+  "generations": 5288,
+  "complete": 19,
+  "selected": 96,
+  "generation_tails": {
+   "end_worst": -8550.0,
+   "end_severe_sum": -1884949.5540340147,
+   "mo1s_worst": -5250.0,
+   "mo1s_below_minus30_sum": -259294.85402119978,
+   "mo1s_censored": -3195
+  }
+ },
+ "timeline": {
+  "entry": {
+   "n": 5288,
+   "censored_1s": 13,
+   "win_any": 2080,
+   "lifetime_any": 2080,
+   "win_mo1s": -202915.41792458485,
+   "pre_mo1s": 0.0,
+   "cp_mo1s": -29465.718582046964,
+   "inv_move_1s": -54662.51462674886,
+   "inv_move_missing": 22,
+   "latency_median_ms": 58.0,
+   "pf_age_median_ms": 28.03857421875,
+   "bn_age_median_ms": 19.5
+  },
+  "first": {
+   "n": 4840,
+   "censored_1s": 13,
+   "win_any": 1986,
+   "lifetime_any": 2074,
+   "win_mo1s": -185438.1679892376,
+   "pre_mo1s": -4130.111095332502,
+   "cp_mo1s": -29152.05597569776,
+   "inv_move_1s": -43742.09141936526,
+   "inv_move_missing": 24,
+   "latency_median_ms": 37.0,
+   "pf_age_median_ms": 29.002197265625,
+   "bn_age_median_ms": 21.5
+  },
+  "live": {
+   "n": 4840,
+   "censored_1s": 9,
+   "win_any": 1702,
+   "lifetime_any": 2074,
+   "win_mo1s": -179659.47925314994,
+   "pre_mo1s": -8669.87982448973,
+   "cp_mo1s": -29152.05597569776,
+   "inv_move_1s": -31023.320494849235,
+   "inv_move_missing": 42,
+   "latency_median_ms": 37.0,
+   "pf_age_median_ms": 30.644287109375,
+   "bn_age_median_ms": 22.5
+  }
+ }
+}
+2026-11-21T17:49:05Z tag=au_saved rc=0 peak_rss_mib=459 wall_s=8.86 cpu_user_s=8.37 memavail_start_gib=23 disk_free_gib=437->437 slot=claude

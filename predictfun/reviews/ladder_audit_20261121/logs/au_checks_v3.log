@@ -1,0 +1,79 @@
+{
+ "all_ok": true,
+ "failed": [],
+ "falsifier_ok": true,
+ "details": {
+  "C_fill_timing": {
+   "per_fill": {
+    "before_request": -173618.20296596884,
+    "cancel_pending": -29465.71858204696
+   },
+   "per_fill_valid": {
+    "before_request": 8603,
+    "cancel_pending": 558
+   },
+   "generation_censored": {
+    "before_request": -173449.69934253785,
+    "cancel_pending": -29465.718582046964
+   }
+  },
+  "D_windows_checked": 599,
+  "D_candidate": {
+   "recomputed": [
+    "live",
+    "ctx_bid_reserved_shares"
+   ],
+   "audit": [
+    "live",
+    "ctx_bid_reserved_shares"
+   ]
+  },
+  "E": {
+   "20261024": {
+    "day": "20261024",
+    "n": 16,
+    "market_same": 16,
+    "market_fired": 16,
+    "order_same": 16,
+    "order_fire_eligible": 14,
+    "order_fired": 14,
+    "asof": "2026-11-21T17:50:19.257626+00:00"
+   },
+   "20261025": {
+    "day": "20261025",
+    "n": 16,
+    "market_same": 16,
+    "market_fired": 16,
+    "order_same": 16,
+    "order_fire_eligible": 15,
+    "order_fired": 15,
+    "asof": "2026-11-21T17:50:12.927597+00:00"
+   },
+   "20261026": {
+    "day": "20261026",
+    "n": 16,
+    "market_same": 16,
+    "market_fired": 16,
+    "order_same": 16,
+    "order_fire_eligible": 14,
+    "order_fired": 14,
+    "asof": "2026-11-21T17:50:32.248299+00:00"
+   },
+   "20261027": {
+    "day": "20261027",
+    "n": 16,
+    "market_same": 16,
+    "market_fired": 16,
+    "order_same": 16,
+    "order_fire_eligible": 16,
+    "order_fired": 16,
+    "asof": "2026-11-21T17:50:19.514598+00:00"
+   }
+  },
+  "F": {
+   "core_hours": 0.19556666666666675,
+   "peak_mib": 1252
+  }
+ }
+}
+2026-11-21T17:52:20Z tag=au_checks_v3 rc=0 peak_rss_mib=427 wall_s=38.70 cpu_user_s=37.67 memavail_start_gib=23 disk_free_gib=437->437 slot=claude

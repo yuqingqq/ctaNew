@@ -1,0 +1,40 @@
+{
+ "cases": {
+  "C_locked_window": {
+   "clean": true,
+   "corrupted": false,
+   "applied": true
+  },
+  "C_sweeps": {
+   "clean": true,
+   "corrupted": false,
+   "applied": true
+  },
+  "B_generations": {
+   "clean": true,
+   "corrupted": false,
+   "applied": true
+  },
+  "D_windows": {
+   "clean": true,
+   "corrupted": false,
+   "applied": true
+  },
+  "D_bins": {
+   "clean": true,
+   "corrupted": false,
+   "applied": true
+  },
+  "E_causal": {
+   "clean": true,
+   "corrupted": false,
+   "applied": true
+  },
+  "C_both_exact": {
+   "clean": true,
+   "corrupted": false,
+   "applied": true
+  }
+ },
+ "falsifier_ok": true
+}
