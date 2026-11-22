@@ -1,0 +1,26 @@
+[
+ {
+  "day": "20261024",
+  "m": 3697902,
+  "fingerprint": true,
+  "fills": true,
+  "orders": true,
+  "value": true,
+  "requests": true,
+  "commands": true,
+  "guard_log": true,
+  "all": true
+ },
+ {
+  "day": "20261024",
+  "m": 3699278,
+  "fingerprint": true,
+  "fills": true,
+  "orders": true,
+  "value": true,
+  "requests": true,
+  "commands": true,
+  "guard_log": true,
+  "all": true
+ }
+]

@@ -648,6 +648,33 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_LONG_CONTINUATION_RESULTS_20261122_DEV -->
+## 2026-11-22 06:27Z (session aea5bfb9) — LONG-CONTINUATION-PAIRED-VALUE-v1 RESULTS: reliable_and_varied; retaining vs rebuilding is a wash on 64 pairs
+
+[Receipt](reviews/ladder_long_continuation_20261122/report.md). Frozen 7407bdf1.
+
+**Integrity:** every gate held:
+- 64 / 64 pairs ok; base parity 8 / 8;
+- the unused-exemption control reproduced the recorded path on all 18 pairs it applied to;
+- `lc_checks.py` A–I pass; falsifier 12 / 12;
+- batch 0.2235 h (0.2535 with the reserve, of 0.40); line 2.6563 (2.6863 with the reserve, of 2.85).
+
+**Result:** Y = Q_retain − Q_alternative, full book to END.
+- **Pooled:** 15 retain-better / 15 alternative-better / 34 exact ties; Σ Y −3.5k c, median 0.
+- **REVIEW:** −7.7k c, driven by other orders (−8.4k vs focal +0.7k).
+- **ADMISSION:** +4.2k c.
+- **By day:** signs mixed.
+- **Both arms:** inventory movement (about −6.0k c per pair) outweighs execution edge (about +1.8k).
+- **Early loss:** 0 retain arms had an early END-loss followed by later lineage benefit.
+- **Queue mechanism:** unidentified.
+
+**Reading:** this permits only a later causal-discrimination design on the paired END target. No fit, promotion or tuned variant.
+
+**Also in this commit:** the freeze HANDOFF's "Readings" line, which shell backticks had emptied, is restored.
+
+**Next:** ONE Codex review of 4e07b3ea..HEAD. POSITIVE-PRESSURE-GUARD-v1 stays stopped.
+<!-- /LADDER_LONG_CONTINUATION_RESULTS_20261122_DEV -->
+
 <!-- LADDER_LONG_CONTINUATION_FREEZE_20261122_DEV -->
 ## 2026-11-22 06:19Z (session aea5bfb9) — LONG-CONTINUATION-PAIRED-VALUE-v1 FROZEN before any pair (USER-approved ≤ 0.40 h / line 2.85)
 
@@ -665,7 +692,7 @@ allocation; one combined receipt. No further USER permission within this scope.
 - Both arms continue to the common market END.
 - Y = Q_retain − Q_alternative, with the inventory carried at the fork.
 
-**Readings:** two label axes; queue mechanism ; overall  /  / .
+**Readings:** two label axes; queue mechanism `unidentified`; overall `reliable_and_varied` / `reliable_not_varied` / `not_reliable`.
 
 **Frozen artifacts:**
 - builder + selftest (6 groups, including six known-bad controls and a future-only perturbation);

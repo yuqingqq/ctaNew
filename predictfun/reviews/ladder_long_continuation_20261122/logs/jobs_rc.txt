@@ -1,1 +1,9 @@
 lc_manifest rc=0
+lc_selftest_frozen rc=0
+lc_subset rc=0
+lc_projection rc=0
+lc_rest_20261026 rc=0
+lc_rest_20261027 rc=0
+lc_rest_20261025 rc=0
+lc_measure rc=0
+lc_checks rc=0

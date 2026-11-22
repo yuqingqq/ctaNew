@@ -1,0 +1,7 @@
+{
+ "reliable": true,
+ "varied": true,
+ "reading": "reliable_and_varied",
+ "parity_all": true
+}
+2026-11-22T06:26:17Z tag=lc_measure rc=0 peak_rss_mib=208 wall_s=1.23 cpu_user_s=1.02 memavail_start_gib=22 disk_free_gib=430->430 slot=claude

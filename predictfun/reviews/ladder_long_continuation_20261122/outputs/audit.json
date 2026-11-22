@@ -1,0 +1,22 @@
+{
+ "version": "long_continuation_paired_value_v1",
+ "reading": {
+  "reliable": true,
+  "varied": true,
+  "reading": "reliable_and_varied",
+  "parity_all": true
+ },
+ "pairs": 64,
+ "outputs": {
+  "pairs.csv": "4d678a0f87581e83a484920614a34759514d34285eaa33ebab92e6057d85d2de",
+  "arms.csv": "2f6bd0786fc0e7389262033a145eb6cfcca7549969d8bbb0ed8cf5645a946b54",
+  "replacements.csv": "5e1eec9167bf867d782d2a04c8fcba842506774923f5c1190f8e1c0ce2ac9625",
+  "summary.csv": "139ea9cb65e772c7a776218fc62f46ed22ba2e81e8ea85dae60f1c3820c7d750",
+  "parity.csv": "233435d3e6026bee182e15ee654074377acf344f6ce4674e5130f021de41ca6d"
+ },
+ "sources": {
+  "pf_ladder_long_continuation.py": "6e3ef761c2ec5b156985fe470a679fb89b4cd077c0c3188438b39482d9ffa306",
+  "pf_ladder_long_continuation_selftest.py": "299f5f11209c774cab463cc6ed51d1a4ed6a685151d19a49c43923964b6e46c5"
+ },
+ "asof": "2026-11-22T06:26:18Z"
+}

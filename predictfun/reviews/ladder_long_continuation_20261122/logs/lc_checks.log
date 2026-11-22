@@ -1,0 +1,87 @@
+{
+ "all_ok": true,
+ "failed": [],
+ "falsifier_ok": true,
+ "cases": {
+  "a_census_key_changed": [
+   true,
+   true
+  ],
+  "an_audit_hash_changed": [
+   true,
+   true
+  ],
+  "a_pair_dropped": [
+   true,
+   true
+  ],
+  "a_Y_changed": [
+   true,
+   true
+  ],
+  "an_econ_class_flipped": [
+   true,
+   true
+  ],
+  "a_post_fill_changed": [
+   true,
+   true
+  ],
+  "a_second_application": [
+   true,
+   true
+  ],
+  "an_inherited_queue": [
+   true,
+   true
+  ],
+  "a_lineage_pull": [
+   true,
+   true
+  ],
+  "a_base_differs": [
+   true,
+   true
+  ],
+  "a_summary_count_changed": [
+   true,
+   true
+  ],
+  "resources_over_the_cap": [
+   true,
+   true
+  ]
+ },
+ "details": {
+  "B": {
+   "pairs": 64,
+   "bases": 8
+  },
+  "Y": {
+   "bad": []
+  },
+  "G": {
+   "applied": [],
+   "pre_fork": [],
+   "reconciled": [],
+   "queue_reset": [],
+   "lineage_pull": [],
+   "unused_exemption": []
+  },
+  "P": {
+   "bad": []
+  },
+  "S": {
+   "bad": [],
+   "reading": "reliable_and_varied"
+  },
+  "I": {
+   "batch_core_hours": 0.22232499999999997,
+   "line_before": 2.432788888888893,
+   "line_with_batch": 2.655113888888893,
+   "with_reserve": 2.685113888888893,
+   "peak_mib": 1161
+  }
+ }
+}
+2026-11-22T06:26:18Z tag=lc_checks rc=0 peak_rss_mib=174 wall_s=4.66 cpu_user_s=4.31 memavail_start_gib=22 disk_free_gib=430->430 slot=claude

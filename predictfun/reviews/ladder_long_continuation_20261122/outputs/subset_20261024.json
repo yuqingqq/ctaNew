@@ -1,0 +1,24 @@
+{
+ "version": "long_continuation_paired_value_v1",
+ "part": "subset",
+ "day": "20261024",
+ "markets": [
+  3697902,
+  3699278
+ ],
+ "pairs": 16,
+ "sha256": {
+  "pairs": "d19cf4d95cac4479d14cebf7bed5ee9bb1510f631181d600e46bd878589bc36a",
+  "arms": "9723a8d988ac23ba5a7f9e438499850b83de05581b824963c00d218f0cd30334",
+  "reps": "624af45639e1877e747e59f114749d1c87717fb38ace9b09066069fcbd3813ca",
+  "parity": "4b27d4c6ff0faf3c8f888f7f02e09c41d97914f1cca078c678f55e28dfccfd5b",
+  "ledgers": "149294607de41cb152db3f6eaaba4142a816707f5ef89de93bc7eacb906617c0"
+ },
+ "sources": {
+  "pf_ladder_long_continuation.py": "6e3ef761c2ec5b156985fe470a679fb89b4cd077c0c3188438b39482d9ffa306",
+  "pf_ladder_long_continuation_selftest.py": "299f5f11209c774cab463cc6ed51d1a4ed6a685151d19a49c43923964b6e46c5"
+ },
+ "elapsed_s": 134.11790132522583,
+ "hwm_mib": 1092.6171875,
+ "asof": "2026-11-22T06:22:38Z"
+}

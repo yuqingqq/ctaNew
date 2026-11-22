@@ -1,0 +1,10 @@
+{
+ "spent": 0.08696666666666669,
+ "subset_core_hours": 0.03573333333333333,
+ "projected_rest": 0.10719999999999999,
+ "projected_batch": 0.21083333333333334,
+ "line_before": 2.432788888888893,
+ "projected_line": 2.6736222222222263,
+ "peak_mib": 1092,
+ "run_rest": true
+}

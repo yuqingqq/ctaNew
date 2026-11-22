@@ -458,7 +458,16 @@ ladder_async_fast_results_20261122_dev:
   batch_core_hours: 0.201
   line_core_hours: 2.375
 ladder_long_continuation_20261122_dev:
-  status: frozen_before_any_pair
+  status: results_receipt_complete_review_pending
+  results_asof: "2026-11-22 06:27Z"
+  freeze_commit: 7407bdf1
+  reading: reliable_and_varied
+  pairs: {total: 64, ok: 64, retain_better: 15, alternative_better: 15, tie: 34}
+  y_sum_c: {all: -3460.1, REVIEW: -7699.3, ADMISSION: 4239.1}
+  early_loss_then_later_benefit_retain_arms: 0
+  queue_mechanism: unidentified
+  batch_core_hours: 0.2235
+  line_core_hours: 2.6563
   asof: "2026-11-22 06:19Z"
   source: review_32d102bd_next_priority_contract_v2
   user_approval: {additional_core_hours: 0.40, includes: [controls, review_reserve_0.03], line_ceiling: 2.85, via: AskUserQuestion_2026-11-22}

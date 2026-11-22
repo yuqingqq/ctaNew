@@ -1,0 +1,10 @@
+{
+ "part": "subset",
+ "day": "20261024",
+ "pairs": 16,
+ "parity_all": true,
+ "statuses": {
+  "ok": 16
+ }
+}
+2026-11-22T06:20:23Z tag=lc_subset rc=0 peak_rss_mib=1092 wall_s=135.14 cpu_user_s=128.64 memavail_start_gib=22 disk_free_gib=430->430 slot=claude

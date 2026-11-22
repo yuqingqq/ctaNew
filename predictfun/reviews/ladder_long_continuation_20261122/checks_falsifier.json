@@ -1,0 +1,77 @@
+{
+ "cases": {
+  "a_census_key_changed": {
+   "family": "A",
+   "target": "A_census",
+   "clean": true,
+   "refused": true
+  },
+  "an_audit_hash_changed": {
+   "family": "A",
+   "target": "A_audit",
+   "clean": true,
+   "refused": true
+  },
+  "a_pair_dropped": {
+   "family": "B",
+   "target": "B_membership",
+   "clean": true,
+   "refused": true
+  },
+  "a_Y_changed": {
+   "family": "Y",
+   "target": "Y_values",
+   "clean": true,
+   "refused": true
+  },
+  "an_econ_class_flipped": {
+   "family": "Y",
+   "target": "Y_values",
+   "clean": true,
+   "refused": true
+  },
+  "a_post_fill_changed": {
+   "family": "Y",
+   "target": "Y_values",
+   "clean": true,
+   "refused": true
+  },
+  "a_second_application": {
+   "family": "G",
+   "target": "G_gates",
+   "clean": true,
+   "refused": true
+  },
+  "an_inherited_queue": {
+   "family": "G",
+   "target": "G_gates",
+   "clean": true,
+   "refused": true
+  },
+  "a_lineage_pull": {
+   "family": "G",
+   "target": "G_gates",
+   "clean": true,
+   "refused": true
+  },
+  "a_base_differs": {
+   "family": "P",
+   "target": "P_parity",
+   "clean": true,
+   "refused": true
+  },
+  "a_summary_count_changed": {
+   "family": "S",
+   "target": "S_summary",
+   "clean": true,
+   "refused": true
+  },
+  "resources_over_the_cap": {
+   "family": "I",
+   "target": "I_resources",
+   "clean": true,
+   "refused": true
+  }
+ },
+ "falsifier_ok": true
+}
