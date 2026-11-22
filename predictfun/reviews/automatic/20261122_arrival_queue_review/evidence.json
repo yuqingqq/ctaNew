@@ -1,0 +1,226 @@
+{
+  "target": "75e9531d21610a3b16f5597153299bc92c210a3a",
+  "checks": {
+    "checks": {
+      "A_committed": true,
+      "A_inputs": true,
+      "A_outputs": true,
+      "B_membership": true,
+      "F_state_labels": true,
+      "F_state_values": true,
+      "F_intervals": true,
+      "F_union_window": true,
+      "C_cells": true,
+      "R_user_table": true,
+      "S_summary": true,
+      "I_resources": true
+    },
+    "details": {
+      "B": {
+        "states": 4840
+      },
+      "C": {
+        "rows": 8760,
+        "bad": 0,
+        "keys_equal": true
+      },
+      "R": {
+        "rows": 1431,
+        "mine": 1431,
+        "bad": 0
+      },
+      "S": {
+        "venue_notice_gap_agrees": 4840,
+        "known_remaining_agree": 4840,
+        "union_common_all_horizons": 4591,
+        "union_common_1_5_30": 4591,
+        "union_no_fill": 3138,
+        "pre_effect_fills": 315,
+        "before_decision_fills": 1884,
+        "queue_bands": {
+          "beyond_R": 2122,
+          "within_R": 1929,
+          "front": 789
+        },
+        "first_review": {
+          "ok": 4314,
+          "first_review_is_decision": 526
+        },
+        "entry": {
+          "ok": 4840
+        },
+        "recent_250": {
+          "unavailable_no_saved_state": 3091,
+          "not_yet_born_at_t_minus_250": 1583,
+          "available": 166
+        },
+        "venue": {
+          "available": 4840
+        },
+        "gen_end_cause": {
+          "removal": 4004,
+          "full_fill": 800,
+          "end": 36
+        },
+        "union_follow_up": {
+          "removed_in_interval": 3993,
+          "filled_out_in_interval": 699,
+          "not_at_risk": 112,
+          "end_censored": 36
+        }
+      },
+      "I": {
+        "round_core_hours": 0.07670833333333328,
+        "cap": 0.1,
+        "line_core_hours": 1.9420611111111108,
+        "peak_mib": 699
+      }
+    },
+    "all_ok": true
+  },
+  "falsifier": {
+    "cases": {
+      "an_output_hash_changed": {
+        "family": "A",
+        "target": "A_outputs",
+        "clean": true,
+        "refused": true
+      },
+      "a_state_duplicated": {
+        "family": "B",
+        "target": "B_membership",
+        "clean": true,
+        "refused": true
+      },
+      "a_band_changed": {
+        "family": "F",
+        "target": "F_state_labels",
+        "clean": true,
+        "refused": true
+      },
+      "an_effect_changed": {
+        "family": "F",
+        "target": "F_state_values",
+        "clean": true,
+        "refused": true
+      },
+      "a_fill_moved_interval": {
+        "family": "F",
+        "target": "F_intervals",
+        "clean": true,
+        "refused": true
+      },
+      "a_value_changed": {
+        "family": "F",
+        "target": "F_intervals",
+        "clean": true,
+        "refused": true
+      },
+      "a_union_changed": {
+        "family": "F",
+        "target": "F_union_window",
+        "clean": true,
+        "refused": true
+      },
+      "a_cell_changed": {
+        "family": "C",
+        "target": "C_cells",
+        "clean": true,
+        "refused": true
+      },
+      "a_cell_dropped": {
+        "family": "C",
+        "target": "C_cells",
+        "clean": true,
+        "refused": true
+      },
+      "a_user_value_changed": {
+        "family": "R",
+        "target": "R_user_table",
+        "clean": true,
+        "refused": true
+      },
+      "a_summary_count_changed": {
+        "family": "S",
+        "target": "S_summary",
+        "clean": true,
+        "refused": true
+      },
+      "resources_over_the_cap": {
+        "family": "I",
+        "target": "I_resources",
+        "clean": true,
+        "refused": true
+      }
+    },
+    "falsifier_ok": true
+  },
+  "raw_ledger_hashes": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/ladder_pressure_v1_20261121/days/20261024.jsonl.gz": "de7a2bcd16c43b26f657a326e78aaa23fbcd2fadb048b138e2f447be8d314ce6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/ladder_pressure_v1_20261121/days/20261025.jsonl.gz": "221d43536f25ecfb498470ad351946da875cd6825f2a0856dbf161c78d16959b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/ladder_pressure_v1_20261121/days/20261026.jsonl.gz": "5af2906e3f8f00d9bdb337626f60b7a1fb72bec8c961703871c9dbb40ded20f1",
+    "/home/yuqing/ctaNew/data/predict_fun/research/ladder_pressure_v1_20261121/days/20261027.jsonl.gz": "9bdc515c5c80c7313d29bb930fef6c48c3a9c45de2302fa8391bd385703fc30d"
+  },
+  "feature_hashes": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/ladder_rest_v1_20261121/days/20261024_features.parquet": "9f940406af48466049e5fffbcd336bab836ea0e015eb543d24a783deceaff201",
+    "/home/yuqing/ctaNew/data/predict_fun/research/ladder_rest_v1_20261121/days/20261025_features.parquet": "6ffe53083a62b2d82c42068ed90b20b2c09e051510f9e3f3b34783a37450d187",
+    "/home/yuqing/ctaNew/data/predict_fun/research/ladder_rest_v1_20261121/days/20261026_features.parquet": "79ed57745d70a93a8122ce6653e23ebb3989b380ea18ea9ff9ca4fadce6323d3",
+    "/home/yuqing/ctaNew/data/predict_fun/research/ladder_rest_v1_20261121/days/20261027_features.parquet": "a5c1f08eec007fe871bffff202fcd3817c101ad6a84c5f309edec891390d0ddd"
+  },
+  "extra_state_value_mismatches": [],
+  "extra_cell_fields_match": true,
+  "reader_outputs_reproduced": true,
+  "mutants_rejudged": 37,
+  "checker_escapes": {
+    "zeroed_client_minus_venue": true,
+    "negated_h1000_per_share": true
+  },
+  "support_flips": [],
+  "r1_denominators": [
+    {
+      "interval": "I0",
+      "shares": 17468.552140173637,
+      "common_shares": 15061.922264692857,
+      "common_states": 4734
+    },
+    {
+      "interval": "I1",
+      "shares": 23435.741598921006,
+      "common_shares": 20129.581165884018,
+      "common_states": 4731
+    },
+    {
+      "interval": "I2",
+      "shares": 28667.836389139065,
+      "common_shares": 25557.601166912547,
+      "common_states": 4769
+    },
+    {
+      "interval": "I3",
+      "shares": 5315.738218136055,
+      "common_shares": 5271.319835901006,
+      "common_states": 4839
+    },
+    {
+      "interval": "union",
+      "shares": 74887.86834636977,
+      "common_shares": 66010.28312904261,
+      "common_states": 4591
+    }
+  ],
+  "front_occupancy": {
+    "front": 789,
+    "inside": 313,
+    "touch": 133,
+    "behind": 343,
+    "currently_displayed_positive": 331,
+    "currently_empty": 458,
+    "unknown_shown": 0,
+    "behind_and_displayed_positive": 198
+  },
+  "venue_error": {
+    "within_one": 2903,
+    "below_one": 1535,
+    "above_one": 402
+  }
+}

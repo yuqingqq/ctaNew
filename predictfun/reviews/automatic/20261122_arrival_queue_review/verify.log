@@ -1,0 +1,61 @@
+Pinned checker and 12 falsifiers PASS
+{
+  "target": "75e9531d21610a3b16f5597153299bc92c210a3a",
+  "extra_state_value_mismatches": [],
+  "extra_cell_fields_match": true,
+  "reader_outputs_reproduced": true,
+  "mutants_rejudged": 37,
+  "checker_escapes": {
+    "zeroed_client_minus_venue": true,
+    "negated_h1000_per_share": true
+  },
+  "support_flips": [],
+  "r1_denominators": [
+    {
+      "interval": "I0",
+      "shares": 17468.552140173637,
+      "common_shares": 15061.922264692857,
+      "common_states": 4734
+    },
+    {
+      "interval": "I1",
+      "shares": 23435.741598921006,
+      "common_shares": 20129.581165884018,
+      "common_states": 4731
+    },
+    {
+      "interval": "I2",
+      "shares": 28667.836389139065,
+      "common_shares": 25557.601166912547,
+      "common_states": 4769
+    },
+    {
+      "interval": "I3",
+      "shares": 5315.738218136055,
+      "common_shares": 5271.319835901006,
+      "common_states": 4839
+    },
+    {
+      "interval": "union",
+      "shares": 74887.86834636977,
+      "common_shares": 66010.28312904261,
+      "common_states": 4591
+    }
+  ],
+  "front_occupancy": {
+    "front": 789,
+    "inside": 313,
+    "touch": 133,
+    "behind": 343,
+    "currently_displayed_positive": 331,
+    "currently_empty": 458,
+    "unknown_shown": 0,
+    "behind_and_displayed_positive": 198
+  },
+  "venue_error": {
+    "within_one": 2903,
+    "below_one": 1535,
+    "above_one": 402
+  }
+}
+2026-11-22T01:37:46Z tag=codex_aq_verify rc=0 peak_rss_mib=263 wall_s=70.08 cpu_user_s=69.79 memavail_start_gib=23 disk_free_gib=434->434 slot=codex

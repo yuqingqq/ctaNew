@@ -1,0 +1,2 @@
+ARRIVAL QUEUE SELFTEST PASSED: arrival boundaries and follow-up, bands, state_record, reconcile, progress / decision inputs / venue join, cells and union, guards
+2026-11-22T01:35:47Z tag=codex_aq_selftest rc=0 peak_rss_mib=220 wall_s=2.30 cpu_user_s=2.10 memavail_start_gib=23 disk_free_gib=434->434 slot=codex

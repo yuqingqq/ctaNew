@@ -1,3 +1,32 @@
+<!-- ARRIVAL_QUEUE_REVIEW_20261122_CODEX -->
+## 2026-11-22 — Arrival/queue accounting accepted; correct occupancy and cohort readings
+
+[Report and independent evidence](reviews/automatic/20261122_arrival_queue_review/report.md),
+target **75e9531d21610a3b16f5597153299bc92c210a3a**. No blocking implementation
+defect / replay. All 4,840 states and their intervals reconcile, 8,760 cells and
+the prior 1,431-row table reproduce, 12 checks / 12 falsifiers pass, 37 saved
+mutants rejudged. Clock boundaries, missing marks, progress and notice gaps
+hold. Common union = 4,591 states / 66,010.28 shares; no model skill claim.
+
+NONBLOCKING batch: Q=0 is the historical running-minimum estimate, not current
+emptiness. Hash-bound fp_shown gives 458 empty / 331 occupied front states;
+198 of 343 behind-best front states still have displayed size. Common-front
+economics use 129 filled states / 4,682.60 shares, not total 238 / 8,475.66.
+Apply support to valued cohorts and name supported-day predicates accurately.
+Current sparse/0-of-60 pressure findings are unchanged. Derived queue/ratio
+fields evade the existing checker; independently verified correct in this
+review. I0's 22.5% net-loss fraction is not an unavoidable-latency fraction;
+later reviews can prevent some fills in that 250 ms arrival interval.
+
+ONE next priority: QUEUE-PRICE-STATE-AUDIT-v1, current occupancy x price state
+x queue, principally within at-touch occupied states, by side/day, preserving
+arrival intervals, native/common support and censoring. Bundle corrections,
+bounded controls and the diagnostic; no new predictor/threshold/replay.
+<=0.020h development and <=2.0h cumulative; ~1.962153h recorded after this
+review. No new USER decision within scope; stopped positive-pressure resource
+amendment, extra compute, new days, validation or live use remain the USER's.
+<!-- /ARRIVAL_QUEUE_REVIEW_20261122_CODEX -->
+
 <!-- QUEUE_CONDITIONS_20261122_CODEX -->
 ## 2026-11-22 — Queue conditioning added before the next measurement
 

@@ -1,4 +1,31 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+arrival_queue_review_20261122_codex:
+  status: consumed_day_decomposition_accepted_with_review_corrections_no_replay
+  target_commit: 75e9531d21610a3b16f5597153299bc92c210a3a
+  report: predictfun/reviews/automatic/20261122_arrival_queue_review/report.md
+  neutral_live_states: 4840
+  common_union_states: 4591
+  common_union_filled_states: 1453
+  independently_checked_cells: 8760
+  reproduced_prior_table_rows: 1431
+  checks_passed: 12
+  falsifiers_passed: 12
+  saved_mutants_rejudged: 37
+  queue_pressure_evaluable_contrasts: 0
+  queue_pressure_total_contrasts: 60
+  corrected_front_currently_empty: 458
+  corrected_front_currently_occupied: 331
+  behind_front_states_with_positive_display: 198
+  blocking_findings: 0
+  nonblocking_findings: [queue_estimate_vs_current_occupancy, cohort_support_and_day_labels, derived_field_checker_coverage, arrival_vs_latest_cancel_time]
+  next_priority: QUEUE-PRICE-STATE-AUDIT-v1
+  next_development_core_hour_ceiling: 0.020
+  recorded_cumulative_core_hours_after_numeric_review: 1.962153
+  original_line_core_hour_ceiling: 2.0
+  additional_user_permission_within_scope: false
+  stopped_positive_pressure_resource_gate: unchanged
+  untouched_validation: false
+
 queue_conditions_20261122_codex:
   status: user_requested_next_diagnostic_amendment_no_new_measurement
   source_commit: ed7c3db557ab610c8d14f7ae2d700330759447c9

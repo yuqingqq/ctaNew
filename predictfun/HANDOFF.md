@@ -23,6 +23,38 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- ARRIVAL_QUEUE_REVIEW_20261122_CODEX -->
+## 2026-11-22 — Arrival/queue decomposition accepted with bundled corrections
+
+[Combined review](reviews/automatic/20261122_arrival_queue_review/report.md)
+of **75e9531d21610a3b16f5597153299bc92c210a3a**: saved decomposition accepted,
+no blocking label/accounting defect or required replay. Pinned selftest, 12
+checks / 12 falsifiers, 37 saved mutant records, 4,840 states, 8,760 cells and
+the prior 1,431-row table independently reconcile. No model/validation claim.
+
+Four NONBLOCKING items for ONE next receipt: (1) actual current occupancy:
+of 789 Q=0 states, 458 have zero displayed size and 331 positive; 198 of 343
+behind-best states are occupied, so Q=0 is not current emptiness; (2) common
+markouts use common counts, not all-state counts: front has 129 common filled
+states / 4,682.60 shares versus 238 / 8,475.66 total; use proper support and
+day-consistency names; (3) checker misses derived queue/ratio fields (verified
+correct here; two in-memory escapes recorded); (4) I0 does not imply a signal
+must already exist at d: later reviews can precede some I0 fills. Supersede
+interpretations in band, no repair-only cycle. All 0/60 pressure contrasts
+remain unsupported after proper cohort counts; no sparse classification flips.
+
+ONE next priority: QUEUE-PRICE-STATE-AUDIT-v1, the report's small saved-data
+join of fp_shown and price distance/rung with Q/R, keeping all states and the
+existing arrival windows / marks. Principal queue comparison within at-touch
+occupied states, by side/day; exact-depth behind occupied separate. Report
+native/common support, good/bad exposure and remaining-time/censoring; no
+bin merging, new threshold, model or replay. If thin, say unsupported.
+Whole development batch <=0.020 core-hours, line <=2.0; recorded cumulative
+~1.962153 leaves ~0.037847, reserving review overhead. No new USER decision
+within that scope; extra compute/new days/validation/live use need the USER.
+The stopped positive-pressure replay and its resource gate remain unchanged.
+<!-- /ARRIVAL_QUEUE_REVIEW_20261122_CODEX -->
+
 <!-- QUEUE_CONDITIONS_20261122_CODEX -->
 ## 2026-11-22 — USER: queue position is mandatory in the next diagnostic
 
