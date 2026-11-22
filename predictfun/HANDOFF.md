@@ -23,6 +23,33 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- QUEUE_SWEEP_DIRECTION_20261122_CODEX -->
+## 2026-11-22 — USER direction: preserve queue/spread income while controlling sweeps
+
+[Concrete next diagnostic proposal](reviews/automatic/20261122_queue_sweep_direction/plan.md),
+source **82f4a04c2a8219aa383134be31148f3155f8bb15**. USER suspects queue
+disadvantage explains most losses; this is not yet measured. Objective is
+repeated spread capture with preserved priority and bounded directional risk,
+not eliminating every adverse fill. Do not rebuild the old P/q/qm architecture
+as if its existence were new; do not equate more fills with more profit.
+
+ONE recommended next experiment: QUEUE-PRIORITY-SENSITIVITY-v1. Current
+accepted Q5 ladder versus the identical feedback policy with hypothetical zero
+external ahead at activation, once per new accepted generation. Same consumed
+19 markets, size/price rules, inventory and latencies; actual notices and
+inventory evolve separately in each arm. This is an execution sensitivity,
+not an executable strategy or guaranteed PnL upper bound. Check absolute and
+incremental economics, same-price vs through-price fills, inventory and churn.
+No queue-only variant follows if improved priority does not improve economics.
+
+This updates the next-priority recommendation in 58d20752. The broader-pressure
+candidate stays preserved/stopped. No new run, fit, day or implementation
+change here. USER approval needed for this diagnostic and resource amendment:
+proposed batch <=0.25 additional core-hours, line <=2.25 including review;
+neither is authorized. Frozen pilot/projection required; no outcome-based
+continuation. Existing ~2.0-hour limit remains binding until approved.
+<!-- /QUEUE_SWEEP_DIRECTION_20261122_CODEX -->
+
 <!-- QUEUE_PRICE_REVIEW_20261122_CODEX -->
 ## 2026-11-22 — Queue/price audit accepted; prioritize the economic decision
 

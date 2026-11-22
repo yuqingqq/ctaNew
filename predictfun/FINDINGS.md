@@ -1,3 +1,21 @@
+<!-- QUEUE_SWEEP_DIRECTION_20261122_CODEX -->
+## 2026-11-22 — Queue/sweep hypothesis and next decision, no new result
+
+[Proposal](reviews/automatic/20261122_queue_sweep_direction/plan.md), source
+**82f4a04c2a8219aa383134be31148f3155f8bb15**. USER emphasizes acquiring and
+preserving front priority to capture repeated spread while controlling one-way
+and sweep exposure. Queue disadvantage explaining most losses is unproven.
+The engine deducts ahead for same-price prints; through-price fills bypass that
+deduction. Better priority can change both fill mix and subsequent inventory.
+
+Recommend ONE current-queue versus hypothetical front-at-activation sensitivity
+under the same Q5 ladder policy, with genuine feedback and full marked PnL.
+Do not treat it as executable priority or a guaranteed profit upper bound.
+No new experiment here; proposal needs USER approval (batch <=0.25h, line
+<=2.25h proposed, not authorized). Broader-pressure work remains stopped;
+this supersedes it as the next-priority recommendation. No minor-fix round.
+<!-- /QUEUE_SWEEP_DIRECTION_20261122_CODEX -->
+
 <!-- QUEUE_PRICE_REVIEW_20261122_CODEX -->
 ## 2026-11-22 — Queue/price economic reading reliable, no queue rule established
 

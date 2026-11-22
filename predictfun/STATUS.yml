@@ -1,4 +1,20 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+queue_sweep_direction_20261122_codex:
+  status: proposed_diagnostic_awaiting_user_resource_authorization
+  source_commit: 82f4a04c2a8219aa383134be31148f3155f8bb15
+  plan: predictfun/reviews/automatic/20261122_queue_sweep_direction/plan.md
+  next_priority: QUEUE-PRIORITY-SENSITIVITY-v1
+  objective: preserve_queue_spread_income_and_control_directional_sweeps
+  queue_explains_most_loss: unproven_hypothesis
+  proposed_arms: [CURRENT_QUEUE, FRONT_AT_ACTIVATION]
+  hypothetical_priority_is_executable: false
+  proposed_batch_core_hour_cap: 0.25
+  proposed_line_core_hour_cap: 2.25
+  resource_amendment_authorized: false
+  broader_pressure_candidate: preserved_stopped
+  no_new_measurement: true
+  implementation_owner: development_session
+
 queue_price_review_20261122_codex:
   status: descriptive_economics_accepted_no_rerun_thin_for_queue_rule
   target_commit: 012db7bbcdd861bbd19a984286935d1553c88db3
