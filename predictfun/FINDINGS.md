@@ -1,3 +1,25 @@
+<!-- ASYNC_EXECUTION_AMENDMENT_20261122_CODEX -->
+## 2026-11-22 — Async client clarification, no performance attribution yet
+
+[Amendment](reviews/automatic/20261122_async_execution_amendment/plan.md),
+inspected **9f7fe7031252aa8003cb2f275eb38587acb89d0b**. The engine already
+makes live cancellation effective before its ACK; commands on independent
+orders can overlap. The ladder still counts retiring generations in its two
+quote slots until notice closure, and excludes pending posts from the policy
+callback. These are frozen-client restrictions, not evidence of their PnL
+effect. All unclosed reservations and the desired-exposure sizing can also
+block replacement. At I=0, two 100-share bids leave no room for another 100
+under the current 200 cap; concurrency must not erase that exposure.
+
+The proposed faster arms now mean ASYNC_FAST10: 10ms venue action effects,
+unchanged 100ms notices, independent sends with separate desired-level and
+retiring records. This supersedes shortening every notice in 9f7fe703's plan.
+Keep risk limits, grid/feed/M50, baseline and hypothetical-priority caveats.
+No larger overlap budget, venue atomicity or measured latency is inferred.
+No implementation or new economic result. One combined execution-profile
+experiment remains proposed under the same unapproved resource amendment.
+<!-- /ASYNC_EXECUTION_AMENDMENT_20261122_CODEX -->
+
 <!-- QUEUE_LATENCY_AMENDMENT_20261122_CODEX -->
 ## 2026-11-22 — Lower-latency queue diagnostic amendment, no new result
 

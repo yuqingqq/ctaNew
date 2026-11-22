@@ -23,6 +23,30 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- ASYNC_EXECUTION_AMENDMENT_20261122_CODEX -->
+## 2026-11-22 — Concurrent sends are separate from notification speed
+
+[Execution amendment](reviews/automatic/20261122_async_execution_amendment/plan.md),
+source **9f7fe7031252aa8003cb2f275eb38587acb89d0b**. USER says post/cancel
+requests overlap; no response wait. Source has no global one-request gate and
+cancel effect already precedes ACK. It does hold cancel-pending generations
+in the two-per-side quote slots, and the policy cannot cancel pending posts.
+Reservations and inventory sizing independently limit replacement capacity.
+
+Supersede FAST10's all-notices-10ms proposal with ASYNC_FAST10: post/cancel
+effect 10ms assumed, notices remain 100ms, separate desired levels from retiring
+records, permit independent concurrent commands within unchanged exposure
+constraints. Keep grid/feed/M50 clocks. Two outstanding 100-share bids exhaust
+the 200-share cap; a third 100-share replacement still needs overlap capacity,
+which is NOT assumed. No atomic replace or unverified pending-cancel guarantee.
+
+ONE next priority remains the four-case queue/execution sensitivity; baseline
+parity, correct reservations and block-reason traces in the same batch. Its
+fast-minus-baseline is a combined execution-profile effect, not pure transport
+latency. No code or run here. Prior proposed 0.40h development / 2.45h line
+budget still needs its resource amendment; no additional arms or budget.
+<!-- /ASYNC_EXECUTION_AMENDMENT_20261122_CODEX -->
+
 <!-- QUEUE_LATENCY_AMENDMENT_20261122_CODEX -->
 ## 2026-11-22 — USER adds lower-latency sensitivity to the queue test
 

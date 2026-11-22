@@ -1,4 +1,23 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+async_execution_amendment_20261122_codex:
+  status: client_concurrency_scope_clarified_no_replay
+  source_commit: 9f7fe7031252aa8003cb2f275eb38587acb89d0b
+  plan: predictfun/reviews/automatic/20261122_async_execution_amendment/plan.md
+  supersedes: queue_latency_amendment_20261122_codex.fast10_execution_and_notice_profile
+  next_priority: QUEUE-PRIORITY-LATENCY-SENSITIVITY-v1
+  arms: [CURRENT_BASELINE, FRONT_BASELINE, CURRENT_ASYNC_FAST10, FRONT_ASYNC_FAST10]
+  async_fast10_post_cancel_effect_ms: 10
+  async_fast10_fill_notice_cancel_ack_ms: 100
+  hard_cap_shares: 200
+  transient_overlap_increase_authorized: false
+  decision_grid_ms: 50
+  feed_and_trade_clocks: unchanged
+  contrast: combined_execution_profile_not_pure_transport_latency
+  proposed_additional_development_core_hour_cap: 0.40
+  proposed_cumulative_core_hour_cap: 2.45
+  resource_amendment_authorized: false
+  implementation_or_replay_performed: false
+
 queue_latency_amendment_20261122_codex:
   status: timing_scope_requested_resource_amendment_pending
   source_commit: 1da57adb8de74616bbd56c638c6d2af5e64a008c
