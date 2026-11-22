@@ -1,3 +1,26 @@
+<!-- QUEUE_FILL_TRADEOFF_20261122_USER -->
+## 2026-11-22 — USER clarification: quantify which bad fills accompany valuable queue continuity
+
+[Plan amendment](reviews/automatic/20261122_queue_fill_tradeoff_amendment/plan.md),
+parent review 3e84ca6d. No new empirical result. Bad fills are not themselves
+what advances priority: the frozen same-price matcher depletes external
+ahead before our fill, while residual same-gid quantity keeps priority.
+Through matching bypasses queue. Resting exposes the order to both outcomes.
+
+The pending audit must distinguish pure observed bad suffixes from mixed
+suffixes where good value does / does not compensate losses. Report feasible
+bad-then-good / good-then-bad trade-offs, same-gid queue continuity, G good
+value sacrificed and L bad value avoided, with timing, censoring and end
+cause. Do not count repeated callbacks as independent fills. Earlier losses
+are sunk at later decisions. Same-cut longer-horizon sensitivity is required.
+
+A recorded permanent-cancel trade-off is not proof accepting losses was
+necessary to obtain later good fills: cancel/re-entry is untested. Such a
+causal queue claim stays unidentified. This is a clarification of the one
+saved-data audit, no new variant/fit/replay/day or automatic extension of
+the approved 0.05h development / 0.02h review / 2.50h cumulative caps.
+<!-- /QUEUE_FILL_TRADEOFF_20261122_USER -->
+
 <!-- ASYNC_FAST_REVIEW_20261122_CODEX -->
 ## 2026-11-22 — ASYNC result verified; fixed rule fails, input insufficiency unproved
 

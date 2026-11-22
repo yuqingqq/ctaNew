@@ -23,6 +23,35 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- QUEUE_FILL_TRADEOFF_20261122_USER -->
+## 2026-11-22 — USER: distinguish bad exposure accompanying good queue fills from pure loss
+
+[Amendment](reviews/automatic/20261122_queue_fill_tradeoff_amendment/plan.md)
+to the ONE pending FEASIBLE-CANCEL-HEADROOM-v1 audit. Fold into its freeze or
+a declared amendment before new outputs; no extra experimental round.
+
+For each feasible cancellation suffix, measure good value sacrificed G and
+bad value avoided L. Separate pure observed loss, compensated mixed G>L,
+uncompensated mixed L>G, ties, good-only/no-fill and incomplete outcomes.
+Show bad-then-good on the same surviving generation, good-then-bad with a
+feasible intervening cancel, and interleaved/indivisible cases. Reconcile
+economic counts once per generation at the declared anchors. Sunk losses
+before the decision are separate. Same-price replacement is a new queue.
+
+Bad fills do not mechanically buy queue priority; continuously resting
+preserves both priority and exposure. Saved-data suffix deletion can show
+the realized trade-off under one permanent cancel. It cannot prove bad fills
+were NECESSARY: a cancel/re-entry path might retain the good opportunity.
+Queue dependence needs that counterfactual; do not launch it automatically.
+Keep finite-lifetime, actual-cancellation truncation, missing marks and
+unknown queue observations explicit. No empirical categories measured here.
+
+Use +1s primary and 5/30s/END at the same cut with explicit/common cohorts;
+no horizon retuning. Parent caps unchanged: development <=0.05h, review
+reserve 0.02h, cumulative <=2.50h. No new replay/model/day. Another session
+implements, one combined review, minor formatting does not delay results.
+<!-- /QUEUE_FILL_TRADEOFF_20261122_USER -->
+
 <!-- ASYNC_FAST_REVIEW_20261122_CODEX -->
 ## 2026-11-22 — Async execution sensitivity accepted; still negative
 

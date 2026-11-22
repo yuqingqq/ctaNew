@@ -1,4 +1,19 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+queue_fill_tradeoff_amendment_20261122_user:
+  status: required_in_pending_saved_data_audit_no_results_yet
+  parent_review_commit: 3e84ca6d9e8a957e14ec97f5dbafe48a83f2026d
+  plan: predictfun/reviews/automatic/20261122_queue_fill_tradeoff_amendment/plan.md
+  next_priority: FEASIBLE-CANCEL-HEADROOM-v1
+  required_classes: [pure_observed_loss, compensated_mixed, uncompensated_mixed, mixed_tie, good_only_or_no_fill, incomplete_valuation, no_feasible_callback]
+  queue_necessity_identified_by_saved_data: false
+  same_gid_sequence_and_feasible_effect_required: true
+  extra_experiment_authorized: false
+  development_core_hour_cap_unchanged: 0.05
+  review_core_hour_reserve_unchanged: 0.02
+  cumulative_core_hour_ceiling_unchanged: 2.50
+  additional_user_permission_for_saved_data_clarification: false
+  queue_reentry_counterfactual_requires_separate_design_and_resource_decision: true
+
 async_fast_review_20261122_codex:
   status: numeric_result_accepted_no_rerun
   target_commit: 85127b3dfbdfb8689159fe8b9e76b447324b7cfc
