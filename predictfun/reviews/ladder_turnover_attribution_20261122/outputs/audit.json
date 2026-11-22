@@ -1,0 +1,56 @@
+{
+ "version": "paired_turnover_attribution_v1",
+ "asof": "2026-11-22T06:49:47Z",
+ "predicates": {
+  "day_signs": {
+   "ADMISSION": {
+    "by_day": {
+     "20261024": 2491.353969857345,
+     "20261025": 4547.473290625092,
+     "20261026": -901.437926310092,
+     "20261027": -1898.248058945046
+    },
+    "sign": "MIXED"
+   },
+   "REVIEW": {
+    "by_day": {
+     "20261024": -544.0561804646743,
+     "20261025": -1896.8446549506943,
+     "20261026": -2562.8200297545827,
+     "20261027": -2695.550540705956
+    },
+    "sign": "NEGATIVE_EVERY_DAY"
+   }
+  },
+  "Y_unchanged": true,
+  "decomposition_reconciles": true,
+  "event_identity": true,
+  "delays_differ_from_pilot": 12,
+  "delays_differ_by": [
+   {
+    "kind": "ADMISSION",
+    "arm": "alternative",
+    "n": 12
+   }
+  ],
+  "alternative_mean_attempt_delay": 869.8412698412699,
+  "alternative_arms_with_replacement": 63
+ },
+ "pairs": 64,
+ "arms": 128,
+ "outputs": {
+  "arms.csv": "595962e9a7b5ec65ade0e3221d48a6a90fd89058e2ba58ea74bbdc0171bc26b0",
+  "pairs.csv": "6f57983fa7c4f422dd48194540c7467c834170ebb87faf3523a801d30a57b55f",
+  "lots.csv": "6d6991b77a614cf0ae52dc19db2f83a57c1d352cba58d12e049e3680fa2a88f2",
+  "focal.csv": "4a797225604601269950e758bcd1f357bd7ed08cc4d1488c7ecff6aa60c2ede9",
+  "delays.csv": "07cdb9ee058e572c45affce82c802bb45d7097bebba26dfa31e60ce75efc7ebf",
+  "summary.csv": "aeebbfa76756894ce7355f68e378b9ff672e2ea2217c20c2973bce8b7c6c73c7"
+ },
+ "sources": {
+  "pf_ladder_turnover_attribution.py": "e2de1e6d6ce6c48734004f4d841f7e959cbda589c7f9c22be28b8a6afab1e45d",
+  "pf_ladder_turnover_attribution_selftest.py": "495b821e82f34bc2c2d5b39dbc8afff3e0a8c732c536b81403a71cc6f5ac86d0"
+ },
+ "manifest_sha256": "cb0df1aa43b3388a56db85b566549e54289eabbe3138cc4af95f28c07f36a09f",
+ "elapsed_s": 0.9025022983551025,
+ "note": "descriptive FIFO attribution; overlapping pairs, never portfolio P&L; queue mechanism unidentified"
+}

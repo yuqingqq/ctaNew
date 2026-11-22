@@ -1,0 +1,80 @@
+{
+ "all_ok": true,
+ "failed": [],
+ "falsifier_ok": true,
+ "cases": {
+  "an_output_hash_changed": [
+   true,
+   true
+  ],
+  "a_matched_profit_changed": [
+   true,
+   true
+  ],
+  "a_residual_changed": [
+   true,
+   true
+  ],
+  "a_dMatched_changed": [
+   true,
+   true
+  ],
+  "an_event_count_changed": [
+   true,
+   true
+  ],
+  "a_delay_left_uncorrected": [
+   true,
+   true
+  ],
+  "a_focal_class_count_changed": [
+   true,
+   true
+  ],
+  "a_summary_sum_changed": [
+   true,
+   true
+  ],
+  "a_day_sign_flipped": [
+   true,
+   true
+  ],
+  "resources_over_the_cap": [
+   true,
+   true
+  ]
+ },
+ "details": {
+  "D": {
+   "bad": []
+  },
+  "Y": {
+   "bad": []
+  },
+  "L": {
+   "bad": [],
+   "differ": 12,
+   "review_rows": 12
+  },
+  "F": {
+   "classes": 36
+  },
+  "S": {
+   "bad": [],
+   "day_signs": {
+    "ADMISSION": "MIXED",
+    "REVIEW": "NEGATIVE_EVERY_DAY"
+   }
+  },
+  "I": {
+   "followup_core_hours": 0.003775,
+   "pilot_batch": 0.2235222222222222,
+   "batch_with_reserves": 0.2772972222222222,
+   "line_before": 2.6595916666666723,
+   "line_with": 2.6633666666666724,
+   "with_reserve": 2.6833666666666725,
+   "peak_mib": 162
+  }
+ }
+}
+2026-11-22T06:49:47Z tag=ta_checks rc=0 peak_rss_mib=138 wall_s=1.74 cpu_user_s=1.60 memavail_start_gib=22 disk_free_gib=429->429 slot=claude

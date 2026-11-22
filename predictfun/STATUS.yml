@@ -481,7 +481,14 @@ ladder_async_fast_results_20261122_dev:
   batch_core_hours: 0.201
   line_core_hours: 2.375
 ladder_turnover_attribution_20261122_dev:
-  status: frozen_before_reading
+  status: results_receipt_complete_review_pending
+  results_asof: "2026-11-22 06:51Z"
+  freeze_commit: db044afb
+  review_Y: {sum_c: -7699.3, dMatched_c: -7710.8, dResidual_c: 11.6, day_signs: NEGATIVE_EVERY_DAY}
+  admission_Y: {sum_c: 4239.1, dMatched_c: 181.9, dResidual_c: 4057.3, day_signs: MIXED}
+  delays_corrected: 12
+  queue_mechanism: unidentified
+  line_core_hours: 2.6634
   asof: "2026-11-22 06:49Z"
   source: review_d799cb77_next_priority
   review_findings: {P2_sequence_cannot_test_two_sided: holds_bundled, P2_replacement_delay_gid_reuse: holds_bundled, P2_wording_day_signs: holds_bundled, P3_checker_coverage: deferred}

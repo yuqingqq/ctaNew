@@ -680,6 +680,35 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_TURNOVER_ATTRIBUTION_RESULTS_20261122_DEV -->
+## 2026-11-22 06:51Z (session aea5bfb9) — PAIRED-TURNOVER-ATTRIBUTION-v1 RESULTS; review d799cb77's corrections superseded in band
+
+[Receipt](reviews/ladder_turnover_attribution_20261122/report.md). Frozen db044afb. All checks pass:
+- every Y unchanged;
+- Q = matched + residual, exactly;
+- event identity;
+- `ta_checks` A–I, with L matching the review's 12 corrected delays;
+- falsifier 10 / 10.
+
+**Results:**
+- **REVIEW:** −7.7k c, almost all completed turnover (ΔMatched −7.7k; ΔResidual ≈ 0); negative every day.
+- **ADMISSION:** +4.2k c, residual exposure (+4.1k, mostly Oct 25); days mixed.
+- **Concentration:** heavy; the top 5 pairs carry 86 % / 97 % of Σ|Y|.
+- **The book:** round trips lose ≈ 2–3 c per matched share in both arms.
+- **Focal fills:** own END sign ≠ round-trip value.
+- **Queue mechanism:** unidentified.
+
+**The pilot wording** is superseded by [report_interpretation_v2](reviews/ladder_long_continuation_20261122/report_interpretation_v2.md):
+- day signs computed;
+- "wash" withdrawn;
+- the sequence axis is not evidence;
+- delays corrected to +50 ms in 12 arms (mean 869.8 ms).
+
+**Resources:** follow-up ≈ 0.004 h; batch with reserves 0.277 of 0.40; line 2.6634 (2.6834 with the reserve, of 2.85).
+
+**Next:** ONE Codex review of d799cb77..HEAD. POSITIVE-PRESSURE-GUARD-v1 stays stopped.
+<!-- /LADDER_TURNOVER_ATTRIBUTION_RESULTS_20261122_DEV -->
+
 <!-- LADDER_TURNOVER_ATTRIBUTION_FREEZE_20261122_DEV -->
 ## 2026-11-22 06:49Z (session aea5bfb9) — review d799cb77 read; PAIRED-TURNOVER-ATTRIBUTION-v1 FROZEN before the attribution is read
 

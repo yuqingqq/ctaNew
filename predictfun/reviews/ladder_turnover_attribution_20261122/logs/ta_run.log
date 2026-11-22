@@ -1,0 +1,8 @@
+{
+ "pairs": 64,
+ "day_signs": {
+  "ADMISSION": "MIXED",
+  "REVIEW": "NEGATIVE_EVERY_DAY"
+ }
+}
+2026-11-22T06:49:46Z tag=ta_run rc=0 peak_rss_mib=162 wall_s=1.22 cpu_user_s=1.09 memavail_start_gib=22 disk_free_gib=429->429 slot=claude
