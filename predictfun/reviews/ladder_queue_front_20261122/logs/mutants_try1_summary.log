@@ -1,0 +1,29 @@
+  0 the front never applied: CAUGHT (4.3 s) - QUEUE FRONT SELFTEST FAILED: 1 same-price prints consume the queue first ([], [], 40.0) | 1 partial fills keep the front ([], 30.0) | 1 one-time initi
+  1 the front applied to refused orders: CAUGHT (4.4 s) - QUEUE FRONT SELFTEST FAILED: 1 one-time initialisation (0.0, True, 2, 2, 2, 0, 95.0)
+  2 the front applied in CURRENT: CAUGHT (4.6 s) - QUEUE FRONT SELFTEST FAILED: 1 same-price prints consume the queue first ([(100.0, 0, 0, 30.0, 50.0, 0)], [(100.0, 0, 0, 30.0, 50.0, 0)], 0.0) | 1 one
+  3 accepted generations not counted: CAUGHT (4.4 s) - QUEUE FRONT SELFTEST FAILED: 1 one-time initialisation (0.0, True, 0, 1, 0, 0, 95.0) | 2 CURRENT equals the frozen branch (0 of 4 differ; engaged on 0
+  4 the swap allowed after an order: CAUGHT (4.4 s) - QUEUE FRONT SELFTEST FAILED: 2 the swap refuses after an order exists
+  5 the swapped engine with another END: CAUGHT (4.4 s) - QUEUE FRONT SELFTEST FAILED: 2 CURRENT equals the frozen branch (4 of 4 differ; engaged on 4)
+  6 the arms swapped: CAUGHT (4.4 s) - QUEUE FRONT SELFTEST FAILED: 3 run_arm maps the arms ([{'front': True, 'accepted_new': 114, 'front_set': 114}, {'front': False, 'accepted_new': 108, '
+  7 a near price counted same-price: CAUGHT (4.4 s) - QUEUE FRONT SELFTEST FAILED: 4 the classes ([['same_price', 50.0, 10.0], ['same_price', 49.0, 5.0]]) | 4 a fill against a trade it could not fill refu
+  8 any other price counted through: CAUGHT (4.4 s) - QUEUE FRONT SELFTEST FAILED: 4 a fill against a trade it could not fill refuses
+  9 the trade side not checked: CAUGHT (4.3 s) - QUEUE FRONT SELFTEST FAILED: 4 a fill on the other side of its trade refuses
+  10 three pilot markets per date: CAUGHT (4.4 s) - QUEUE FRONT SELFTEST FAILED: 6 parts ({'pilot': {'d1': [5, 3, 9], 'd2': [1, 2]}, 'rest': {'d1': [], 'd2': []}})
+  11 the last-second cut dropped: CAUGHT (4.4 s) - QUEUE FRONT SELFTEST FAILED: 5 class sums ({'day': 'd1', 'm': 1, 'arm': 'CURRENT_QUEUE', 'cls': 'same_price', 'fills': 2, 'q': 15.0, 'end': 30.0, 'el_
+  12 the positive and negative parts swapped: CAUGHT (4.7 s) - QUEUE FRONT SELFTEST FAILED: 5 class sums ({'day': 'd1', 'm': 1, 'arm': 'CURRENT_QUEUE', 'cls': 'same_price', 'fills': 2, 'q': 15.0, 'end': 30.0, 'el_
+  13 a shared trade needing three fills: CAUGHT (4.4 s) - QUEUE FRONT SELFTEST FAILED: 5 class sums ({'day': 'd1', 'm': 1, 'arm': 'CURRENT_QUEUE', 'cls': 'same_price', 'fills': 2, 'q': 15.0, 'end': 30.0, 'el_
+  14 the 5 s censoring read from the 1 s mid: CAUGHT (4.3 s) - QUEUE FRONT SELFTEST FAILED: 5 class sums ({'day': 'd1', 'm': 1, 'arm': 'CURRENT_QUEUE', 'cls': 'same_price', 'fills': 2, 'q': 15.0, 'end': 30.0, 'el_
+  15 the END value without the side sign: CAUGHT (4.4 s) - QUEUE FRONT SELFTEST FAILED: 5 class sums ({'day': 'd1', 'm': 1, 'arm': 'CURRENT_QUEUE', 'cls': 'same_price', 'fills': 2, 'q': 15.0, 'end': 30.0, 'el_
+  16 the volume term at FRONT's per-share: CAUGHT (4.4 s) - QUEUE FRONT SELFTEST FAILED: 5 the volume + value split (-10.0, 5.0, -5.0)
+  17 a negative FRONT END read as non-negative: CAUGHT (4.4 s) - QUEUE FRONT SELFTEST FAILED: 5 the readings ({'ins': 'queue_helps_policy_nonnegative', 'pos': 'queue_helps_policy_nonnegative', 'no': 'front_priority_
+  18 does-not-rescue without added fills: CAUGHT (4.4 s) - QUEUE FRONT SELFTEST FAILED: 5 the readings ({'ins': 'queue_helps_but_insufficient', 'pos': 'queue_helps_policy_nonnegative', 'no': 'front_priority_do
+  19 equal filled shares counted as added: CAUGHT (4.4 s) - QUEUE FRONT SELFTEST FAILED: 5 the readings ({'ins': 'queue_helps_but_insufficient', 'pos': 'queue_helps_policy_nonnegative', 'no': 'front_priority_do
+  20 the economic reading from END alone: CAUGHT (4.4 s) - QUEUE FRONT SELFTEST FAILED: 5 the readings ({'ins': 'queue_helps_but_insufficient', 'pos': 'queue_helps_policy_nonnegative', 'no': 'front_priority_do
+  21 the projection without write-once: CAUGHT (4.3 s) - QUEUE FRONT SELFTEST FAILED: 7 project refuses an existing projection
+  22 the rest without the projection gate: CAUGHT (4.4 s) - QUEUE FRONT SELFTEST FAILED: 7 guards: stopped (KeyError('parent'))
+  23 measure without write-once: CAUGHT (4.4 s) - QUEUE FRONT SELFTEST FAILED: 7 guards: stopped (KeyError('parent'))
+  24 run_day without write-once: CAUGHT (4.4 s) - QUEUE FRONT SELFTEST FAILED: 7 guards: stopped (KeyError('parent'))
+  25 run_day without the treatment identity: CAUGHT (4.3 s) - QUEUE FRONT SELFTEST FAILED: 7 guards: stopped (KeyError('parent'))
+control: PASSED (4.5 s); sources {'pf_ladder_queue_front.py': 'ad3aa100d4d54afd', 'pf_ladder_queue_front_mutants.py': 'a304be0b79e180af', 'pf_ladder_queue_front_selftest.py': 'bc6ff2db7f56ea56'}
+mutation check passed: the control passes its selftest, 26 / 26 planted code errors are caught by a check (2.0 CPU min)
+2026-11-22T03:46:29Z tag=lqf_summary_try1 rc=0 peak_rss_mib=16 wall_s=0.02 cpu_user_s=0.02 memavail_start_gib=22 disk_free_gib=432->432 slot=claude

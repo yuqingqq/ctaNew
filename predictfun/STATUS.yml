@@ -291,6 +291,16 @@ ladder_audit_review_20261121_codex:
   additional_user_permission_within_scope: false
   untouched_validation: false
 
+ladder_queue_front_20261122_dev:
+  status: frozen_before_replay
+  asof: "2026-11-22 03:49Z"
+  plan: 425e9fbc
+  user_approval: {batch_core_hours: 0.25, line_ceiling: 2.25, pilot: first_two_complete_markets_per_date}
+  arms: [CURRENT_QUEUE, FRONT_AT_ACTIVATION]
+  markets: {pilot: 8, rest: 11}
+  mutants: 26_of_26_caught
+  batch_core_hours_at_freeze: 0.037
+  positive_pressure_round: stopped_not_resumed
 ladder_queue_front_scope_20261122_dev:
   status: plan_checked_awaiting_user_approval
   asof: "2026-11-22 03:36Z"

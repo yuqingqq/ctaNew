@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "7", "name": "a near price counted same-price", "seconds": 4.4, "sources": {"pf_ladder_queue_front.py": "ad3aa100d4d54afd", "pf_ladder_queue_front_mutants.py": "a304be0b79e180af", "pf_ladder_queue_front_selftest.py": "bc6ff2db7f56ea56"}, "why": "QUEUE FRONT SELFTEST FAILED: 4 the classes ([['same_price', 50.0, 10.0], ['same_price', 49.0, 5.0]]) | 4 a fill against a trade it could not fill refuses"}
+2026-11-22T03:46:02Z tag=lqf_7 rc=0 peak_rss_mib=208 wall_s=4.63 cpu_user_s=4.39 memavail_start_gib=22 disk_free_gib=433->432 slot=claude

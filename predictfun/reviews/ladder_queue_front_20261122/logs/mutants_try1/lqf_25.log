@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "25", "name": "run_day without the treatment identity", "seconds": 4.3, "sources": {"pf_ladder_queue_front.py": "ad3aa100d4d54afd", "pf_ladder_queue_front_mutants.py": "a304be0b79e180af", "pf_ladder_queue_front_selftest.py": "bc6ff2db7f56ea56"}, "why": "QUEUE FRONT SELFTEST FAILED: 7 guards: stopped (KeyError('parent'))"}
+2026-11-22T03:46:24Z tag=lqf_25 rc=0 peak_rss_mib=208 wall_s=4.49 cpu_user_s=4.24 memavail_start_gib=22 disk_free_gib=432->432 slot=claude3

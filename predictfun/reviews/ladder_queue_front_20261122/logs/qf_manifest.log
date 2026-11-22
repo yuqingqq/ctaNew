@@ -1,0 +1,44 @@
+{
+ "version": "queue_priority_sensitivity_v1",
+ "plan": {
+  "plan": "425e9fbc",
+  "approval": "USER 2026-11-22: approve, the plan's pilot",
+  "parent_freeze": "793c706b",
+  "parent_results": "40a3ee8d"
+ },
+ "treatment_sha256": "61d67c00c4816eb9420e526a7bac41727cd7a6fe0a83faa6104140538ebf272d",
+ "parent_rule_sha256": "24f853dcfab0682e766742f506cb36faa86dd2f7c6170aed2febb801486d24fa",
+ "run_arms": [
+  "CURRENT_QUEUE",
+  "FRONT_AT_ACTIVATION"
+ ],
+ "pilot_per_day": 2,
+ "parent": {
+  "manifest_sha256": "8546b34ab6914bc6cf4922683d63b01b5b8a9b018e0915d76b2f42ff4d9d288e",
+  "day_records": {
+   "20261024": "ab599b8eceefb881fe712bb7ceb9c314fc7eb3b5ef6872778f58f2c2f2a67277",
+   "20261025": "3874552b6ae995cccf46ba820963fd27222ba530fb552dab74d28fbcd9f3bfe8",
+   "20261026": "0833d2c4278d89e6a6af24a72e4c6313ddf411da267b5aa5b428513fa96d30d6",
+   "20261027": "25345c86153002aa643ff8c06862b906373e171a10e63eaf4e687647842a55cd"
+  }
+ },
+ "edges": {
+  "0": [
+   -0.6315650224685669,
+   -0.23532847166061402,
+   0.23543085157871246,
+   0.4666730940341952
+  ],
+  "1": [
+   -0.7444053292274475,
+   -0.4986844062805176,
+   -0.23543085157871246,
+   0.285456120967865
+  ]
+ },
+ "edges_sha256": "ca688917cd7ddc7c40e94031bee646f4fc1339511bb7c48fbe5270797a38bf80",
+ "sources": {
+  "pf_ladder_queue_front.py": "ad3aa100d4d54afd8382f701ce256635a8577bae45404373b62f42e0bf8c5185",
+  "pf_ladder_queue_front_selftest.py": "bc6ff2db7f56ea5661e19675bdcbf09da99225a0116012ea41a556b3e06edc19",
+  "pf_ladder_pressure_ablation.py":
+2026-11-22T03:48:55Z tag=qf_manifest rc=0 peak_rss_mib=201 wall_s=0.96 cpu_user_s=0.76 memavail_start_gib=23 disk_free_gib=433->433 slot=claude

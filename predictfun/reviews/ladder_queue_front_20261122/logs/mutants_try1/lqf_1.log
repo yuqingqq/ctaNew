@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "1", "name": "the front applied to refused orders", "seconds": 4.4, "sources": {"pf_ladder_queue_front.py": "ad3aa100d4d54afd", "pf_ladder_queue_front_mutants.py": "a304be0b79e180af", "pf_ladder_queue_front_selftest.py": "bc6ff2db7f56ea56"}, "why": "QUEUE FRONT SELFTEST FAILED: 1 one-time initialisation (0.0, True, 2, 2, 2, 0, 95.0)"}
+2026-11-22T03:45:57Z tag=lqf_1 rc=0 peak_rss_mib=207 wall_s=4.61 cpu_user_s=4.39 memavail_start_gib=22 disk_free_gib=433->433 slot=claude3

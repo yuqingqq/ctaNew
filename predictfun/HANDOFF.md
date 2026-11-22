@@ -409,6 +409,19 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_QUEUE_FRONT_FREEZE_20261122_DEV -->
+## 2026-11-22 03:49Z (session aea5bfb9) — QUEUE-PRIORITY-SENSITIVITY-v1 FROZEN before any replay (USER plan 425e9fbc, approved by the USER with its caps and pilot)
+
+- **Approval (USER, 2026-11-22):** this diagnostic with its caps: the batch <= 0.25 additional core-hours; the ladder line <= 2.25 including review; the plan's pilot (the first two complete markets of each date).
+- **Arms:** CURRENT_QUEUE = the frozen pressure ladder on the wrapper engine with the flag off; it must equal the accepted pressure arm on every market. FRONT_AT_ACTIVATION = the same policy with every accepted new generation's external queue ahead set to 0 once, at activation. Both are complete feedback runs on the 19 consumed-day markets.
+- **Measured:** per-fill same-price / through class from the engine's own trade row; END, eligible +1 s, mix split, lost / added, participation and inventory.
+- **Readings (declared):** economic = IMPROVES / WORSENS / MIXED; queue_helps_policy_nonnegative / queue_helps_but_insufficient / front_priority_does_not_rescue / no_added_fills / mixed.
+- **Frozen:** runner + selftest (7 groups) + 26 / 26 mutants; write-once manifest (pilot 8 markets, rest 11); `fq_checks.py` (A / B / K / T / F / M / P / I, 10-case falsifier); launcher.
+- **Resources:** batch about 0.037 core-hours at freeze; estimate about 0.19 for the whole batch; the write-once projection gates the rest.
+- **Unchanged:** POSITIVE-PRESSURE-GUARD-v1 stays stopped.
+- **Next:** 4 pilot days in parallel -> projection -> rest -> measure -> checks -> receipt + ONE Codex review.
+<!-- /LADDER_QUEUE_FRONT_FREEZE_20261122_DEV -->
+
 <!-- LADDER_QUEUE_FRONT_SCOPE_20261122_DEV -->
 ## 2026-11-22 03:36Z (session aea5bfb9) — USER plan 425e9fbc (QUEUE-PRIORITY-SENSITIVITY-v1) checked; AWAITING THE USER'S APPROVAL (nothing frozen or run)
 
