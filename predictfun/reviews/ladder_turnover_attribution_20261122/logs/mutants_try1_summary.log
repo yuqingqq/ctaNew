@@ -1,0 +1,25 @@
+  0 pre-fork lots matched on the same side: CAUGHT (0.2 s) - TURNOVER ATTRIBUTION SELFTEST FAILED: 1 carried inventory closed later (6.0, 14.0, 250.0)
+  1 carried basis at the acquisition price: CAUGHT (0.2 s) - TURNOVER ATTRIBUTION SELFTEST FAILED: 1 fifo: stopped (ValueError('the FIFO decomposition does not reconcile Q (18.0 + 0.0 vs 6.0)'))
+  2 post-fork lots matched on the same side: CAUGHT (0.3 s) - TURNOVER ATTRIBUTION SELFTEST FAILED: 1 fifo: stopped (ValueError('the FIFO decomposition does not reconcile Q (0.0 + 40.0 vs 20.0)')) | 2 focal: stop
+  3 profit without the lot sign: CAUGHT (0.2 s) - TURNOVER ATTRIBUTION SELFTEST FAILED: 1 fifo: stopped (ValueError('the FIFO decomposition does not reconcile Q (-20.0 + 0.0 vs 20.0)'))
+  4 LIFO instead of FIFO: CAUGHT (0.2 s) - TURNOVER ATTRIBUTION SELFTEST FAILED: 1 fifo: stopped (ValueError('the FIFO decomposition does not reconcile Q (10.0 + 20.0 vs 20.0)')) | 2 focal: sto
+  5 residual without the lot sign: CAUGHT (0.2 s) - TURNOVER ATTRIBUTION SELFTEST FAILED: 1 fifo: stopped (ValueError('the FIFO decomposition does not reconcile Q (0.0 + 20.0 vs -20.0)'))
+  6 the reconciliation dropped: CAUGHT (0.2 s) - TURNOVER ATTRIBUTION SELFTEST FAILED: 1 a corrupted Q is refused
+  7 holding from zero: CAUGHT (0.2 s) - TURNOVER ATTRIBUTION SELFTEST FAILED: 1 profitable turnover despite a negative buy END mark (20.0, 0.0, 20.0) | 1 carried inventory closed later (6.0,
+  8 carried matched as new: CAUGHT (0.2 s) - TURNOVER ATTRIBUTION SELFTEST FAILED: 1 carried inventory closed later (6.0, 6.0, 250.0)
+  9 the remaining quantity unsigned: CAUGHT (0.2 s) - TURNOVER ATTRIBUTION SELFTEST FAILED: 1 residual long / short inventory (20.0, -20.0)
+  10 own END sign inverted: CAUGHT (0.3 s) - TURNOVER ATTRIBUTION SELFTEST FAILED: 2 own-END-negative fills with a profitable close ({'own_end_positive_round_trip_profitable': {'n': 2, 'own': -20
+  11 closes by a focal fill ignored: CAUGHT (0.2 s) - TURNOVER ATTRIBUTION SELFTEST FAILED: 2 a focal close of an earlier lot ({'own_end_negative_round_trip_flat': {'n': 1, 'own': -10.0, 'round_trip': 0.0
+  12 the event key by gid: CAUGHT (0.2 s) - TURNOVER ATTRIBUTION SELFTEST FAILED: 3 events by execution event ({'events_common': 0, 'events_retain_only': 2, 'events_alternative_only': 2, 'value_
+  13 no multiset difference: CAUGHT (0.2 s) - TURNOVER ATTRIBUTION SELFTEST FAILED: 3 events by execution event ({'events_common': 1, 'events_retain_only': 2, 'events_alternative_only': 2, 'value_
+  14 the WAIT rule on the POST arm: CAUGHT (0.2 s) - TURNOVER ATTRIBUTION SELFTEST FAILED: 4 the forked POST excluded ((0.0, 0.0))
+  15 accepted as refused: CAUGHT (0.2 s) - TURNOVER ATTRIBUTION SELFTEST FAILED: 4 gid reuse after WAIT ((50.0, nan)) | 4 the forked POST excluded ((500.0, nan)) | 4 attempts vs accepted ((0.0,
+  16 day signs swapped: CAUGHT (0.2 s) - TURNOVER ATTRIBUTION SELFTEST FAILED: 5 day signs ({'A': {'by_day': {'d1': -4.0, 'd2': 8.0}, 'sign': 'MIXED'}, 'B': {'by_day': {'d1': 1.0, 'd2': -1.0}
+  17 the turnover share of the residual: CAUGHT (0.2 s) - TURNOVER ATTRIBUTION SELFTEST FAILED: 5 the summary row (0.8333333333333334, 0.9444444444444444)
+  18 the top pair only: CAUGHT (0.2 s) - TURNOVER ATTRIBUTION SELFTEST FAILED: 5 the summary row (0.16666666666666666, 0.5555555555555556)
+  19 a tie as retain_better: ESCAPED (0.2 s) - TURNOVER ATTRIBUTION SELFTEST PASSED: FIFO decomposition, focal round trips, events, delays, summary and day signs, guards
+  20 run without write-once: CAUGHT (0.2 s) - TURNOVER ATTRIBUTION SELFTEST FAILED: 6 guards: stopped (KeyError('lc_records'))
+  21 build_manifest without write-once: CAUGHT (0.2 s) - TURNOVER ATTRIBUTION SELFTEST FAILED: 6 the manifest is write-once
+control: PASSED (0.2 s); sources {'pf_ladder_turnover_attribution.py': 'e2de1e6d6ce6c487', 'pf_ladder_turnover_attribution_mutants.py': 'fe8d37e2dd8b1055', 'pf_ladder_turnover_attribution_selftest.py': '2fda7cd5c1abc463'}
+mutation check FAILED: the control passes its selftest, 21 / 22 planted code errors are caught by a check (0.1 CPU min) | 19 a tie as retain_better: ESCAPED - TURNOVER ATTRIBUTION SELFTEST PASSED: FIFO decomposition, focal round trips, events, delays, summary and day signs, guar
+2026-11-22T06:47:13Z tag=lta_summary_try1 rc=1 peak_rss_mib=15 wall_s=0.02 cpu_user_s=0.02 memavail_start_gib=22 disk_free_gib=429->429 slot=claude

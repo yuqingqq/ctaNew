@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "5", "name": "residual without the lot sign", "seconds": 0.2, "sources": {"pf_ladder_turnover_attribution.py": "e2de1e6d6ce6c487", "pf_ladder_turnover_attribution_mutants.py": "fe8d37e2dd8b1055", "pf_ladder_turnover_attribution_selftest.py": "2fda7cd5c1abc463"}, "why": "TURNOVER ATTRIBUTION SELFTEST FAILED: 1 fifo: stopped (ValueError('the FIFO decomposition does not reconcile Q (0.0 + 20.0 vs -20.0)'))"}
+2026-11-22T06:47:09Z tag=lta_5 rc=0 peak_rss_mib=103 wall_s=0.30 cpu_user_s=0.25 memavail_start_gib=22 disk_free_gib=429->429 slot=claude3

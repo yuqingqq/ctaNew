@@ -1,0 +1,42 @@
+{
+ "version": "paired_turnover_attribution_v1",
+ "review": "d799cb77",
+ "pilot_freeze": "7407bdf1",
+ "pilot_results": "6b806c19",
+ "lc_records": {
+  "rest/20261025": "ba43aa7ed5774b22c36df5966d19a139df6ac796c31c1416df7f5ba9d6565af1",
+  "rest/20261026": "816adfc02dea87b5ecf82face58c7011eb1cd3265978a74ac21747e123641adc",
+  "rest/20261027": "2183e792a1371c9e1aa2eefa1e0f33bad8dfce7b6351bebfa76ae94cecc6fb02",
+  "subset/20261024": "76683b9d01c5e4a5aca922e567695edf8364a2c402dd17dd371e3a23b20f9b41"
+ },
+ "lc_audit_sha256": "2892ce97195c2c1649d0c15108f859ac3eb23791c1c5665739b5f838074ec020",
+ "sources": {
+  "pf_ladder_turnover_attribution.py": "e2de1e6d6ce6c48734004f4d841f7e959cbda589c7f9c22be28b8a6afab1e45d",
+  "pf_ladder_turnover_attribution_selftest.py": "495b821e82f34bc2c2d5b39dbc8afff3e0a8c732c536b81403a71cc6f5ac86d0"
+ },
+ "caps": {
+  "followup_core_hours": 0.04,
+  "review_reserve": 0.02,
+  "batch_core_hours": 0.4,
+  "line_ceiling": 2.85
+ },
+ "line_receipts": [
+  "ladder_rest_20261121",
+  "ladder_audit_20261121",
+  "ladder_guard_20261121",
+  "ladder_pressure_20261121",
+  "ladder_pressure_lag_20261121",
+  "ladder_pressure_ablation_20261121",
+  "ladder_pressure_residual_20261121",
+  "ladder_pressure_positive_20261121",
+  "ladder_arrival_queue_20261122",
+  "ladder_queue_price_20261122",
+  "ladder_queue_front_20261122",
+  "ladder_async_fast_20261122",
+  "ladder_cancel_headroom_20261122",
+  "ladder_long_continuation_20261122"
+ ],
+ "line_reviews": [
+  "20261121_ladder_rest_review",
+  "20
+2026-11-22T06:49:11Z tag=ta_manifest rc=0 peak_rss_mib=100 wall_s=0.30 cpu_user_s=0.23 memavail_start_gib=22 disk_free_gib=429->429 slot=claude

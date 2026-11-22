@@ -1,0 +1,2 @@
+TURNOVER ATTRIBUTION SELFTEST PASSED: FIFO decomposition, focal round trips, events, delays, summary and day signs, guards
+2026-11-22T06:47:29Z tag=ta_selftest_try2 rc=0 peak_rss_mib=105 wall_s=0.31 cpu_user_s=0.25 memavail_start_gib=22 disk_free_gib=429->429 slot=claude

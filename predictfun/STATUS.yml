@@ -480,6 +480,13 @@ ladder_async_fast_results_20261122_dev:
   all_arms_negative_every_day: true
   batch_core_hours: 0.201
   line_core_hours: 2.375
+ladder_turnover_attribution_20261122_dev:
+  status: frozen_before_reading
+  asof: "2026-11-22 06:49Z"
+  source: review_d799cb77_next_priority
+  review_findings: {P2_sequence_cannot_test_two_sided: holds_bundled, P2_replacement_delay_gid_reuse: holds_bundled, P2_wording_day_signs: holds_bundled, P3_checker_coverage: deferred}
+  mutants: 22_of_22_caught
+  budget: {followup_core_hours: 0.04, review_reserve: 0.02, batch_ceiling: 0.40, line_ceiling: 2.85}
 ladder_long_continuation_20261122_dev:
   status: results_receipt_complete_review_pending
   results_asof: "2026-11-22 06:27Z"

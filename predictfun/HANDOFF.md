@@ -680,6 +680,28 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_TURNOVER_ATTRIBUTION_FREEZE_20261122_DEV -->
+## 2026-11-22 06:49Z (session aea5bfb9) — review d799cb77 read; PAIRED-TURNOVER-ATTRIBUTION-v1 FROZEN before the attribution is read
+
+[Review d799cb77](reviews/automatic/20261122_long_continuation_review/report.md) accepts the 64 paired END labels and `reliable_and_varied`. It requires no replay. Each finding was verified at the code:
+- **P2 (sequence):** the END-signed sequence cannot reverse within one fixed-price generation, so the 0 count does not test the two-sided hypothesis. **Holds.**
+- **P2 (delay):** `first_rep_delay` skips a WAIT-arm replacement that reuses the factual gid; 12 ADMISSION alternative arms are affected. **Holds:** `pf_ladder_long_continuation.py`, the `first_rep_delay` filter.
+- **P2 (wording):** REVIEW is negative on all four days; "wash" / "mostly other orders" overstate. **Holds.**
+- **P3 (checker coverage):** deferred, as the review allowed.
+
+**Fixes, bundled into this ONE saved-data follow-up:**
+- [declaration](reviews/ladder_turnover_attribution_20261122/declaration.md): FIFO lots with carried basis = the fork mark and actual acquisition times;
+- Q = matched closing profit + residual (exact);
+- focal round trips (own END sign × round trip);
+- event-keyed retain-only / alternative-only fills;
+- corrected delays (attempt vs accepted);
+- computed day signs.
+
+**Frozen artifacts:** builder + selftest (realizable fixed-price fixtures); 22 / 22 mutants; `ta_checks.py` (A / D / Y / L / F / S / I, 10-case falsifier; L must match the review's 12 corrected rows).
+
+**Budget:** ≤ 0.04 h plus a 0.02 review reserve, inside the approved 0.40 / 2.85.
+<!-- /LADDER_TURNOVER_ATTRIBUTION_FREEZE_20261122_DEV -->
+
 <!-- LADDER_LONG_CONTINUATION_RESULTS_20261122_DEV -->
 ## 2026-11-22 06:27Z (session aea5bfb9) — LONG-CONTINUATION-PAIRED-VALUE-v1 RESULTS: reliable_and_varied; retaining vs rebuilding is a wash on 64 pairs
 
