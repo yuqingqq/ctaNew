@@ -1,0 +1,51 @@
+{
+ "checks": {
+  "A_committed": true,
+  "A_inputs": true,
+  "A_outputs": true,
+  "B_membership": true,
+  "K_control": true,
+  "T_treatment": true,
+  "F_fills": true,
+  "M_measurement": true,
+  "P_readings": true,
+  "I_resources": true
+ },
+ "details": {
+  "B": {
+   "markets": 19
+  },
+  "K": {
+   "markets_failed": []
+  },
+  "T": {
+   "failed": []
+  },
+  "F": {
+   "failed": []
+  },
+  "M": {
+   "failed": []
+  },
+  "P": {
+   "failed": [],
+   "mine": {
+    "END_answer": "MIXED",
+    "mo1s_answer": "MIXED",
+    "economic": "MIXED",
+    "reading": "mixed",
+    "adds_fills": true,
+    "END_total": 20172.513473897852,
+    "recovered": 0.2342655376750585,
+    "volume": 22561.613606329734,
+    "value": 790.2695647168675
+   }
+  },
+  "I": {
+   "batch_core_hours": 0.19559722222222223,
+   "line_core_hours": 2.1711666666666645,
+   "peak_mib": 1186
+  }
+ },
+ "all_ok": true
+}

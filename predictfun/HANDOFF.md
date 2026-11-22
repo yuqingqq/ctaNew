@@ -409,6 +409,22 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_QUEUE_FRONT_RESULTS_20261122_DEV -->
+## 2026-11-22 03:55Z (session aea5bfb9) — QUEUE-PRIORITY-SENSITIVITY-v1 RESULTS: reading MIXED - front priority recovers 23 % of the END deficit pooled, inconsistently by day; every arm still loses (receipt `reviews/ladder_queue_front_20261122/report.md`)
+
+- **Integrity:** CURRENT = the accepted pressure arm on 19 / 19; FRONT treated 4,874 / 4,874 accepted generations; `fq_checks_v2.py` A / B / K / T / F / M / P / I pass, falsifier 10 / 10. The v1 checker crashed in its falsifier helper before any verdict; v2 was committed before it ran.
+- **Resources:** batch 0.196 of 0.25 core-hours; line 2.172 of 2.25.
+- **Result:**
+  - END -86,110 -> -65,937 c (+20,173 pooled; by day +23.9k / +1.1k / -3.0k / -1.9k);
+  - eligible +1 s +23,352 c (3 of 4 days);
+  - +1 s per share -1.08 -> -0.53 c, better every day;
+  - filled shares +48 %;
+  - reading: mixed.
+- **Mechanism (1 s):** the loss is through-price sweep fills in both arms (CURRENT -2.09, FRONT -2.59 c/share); same-price fills are about break-even. The gain is mostly fewer sweep shares (volume term +22.6k c); per-share changes cancel. At END the class picture flips (directional exposure).
+- **Answer to the USER's hypothesis:** not supported - even perfect front priority leaves the policy losing every day.
+- **Next:** ONE Codex review of 425e9fbc..this commit. Per the plan no tuned queue variant follows. POSITIVE-PRESSURE-GUARD-v1 stays stopped.
+<!-- /LADDER_QUEUE_FRONT_RESULTS_20261122_DEV -->
+
 <!-- LADDER_QUEUE_FRONT_FREEZE_20261122_DEV -->
 ## 2026-11-22 03:49Z (session aea5bfb9) — QUEUE-PRIORITY-SENSITIVITY-v1 FROZEN before any replay (USER plan 425e9fbc, approved by the USER with its caps and pilot)
 

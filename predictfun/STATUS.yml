@@ -291,6 +291,23 @@ ladder_audit_review_20261121_codex:
   additional_user_permission_within_scope: false
   untouched_validation: false
 
+ladder_queue_front_results_20261122_dev:
+  status: results_complete_review_requested
+  asof: "2026-11-22 03:55Z"
+  freeze: b4ecbc34
+  checker: fq_checks_v2_580411db
+  control_current_equals_accepted: 19_of_19
+  treatment_applied: 4874_of_4874
+  checks_pass: true
+  falsifier: 10_of_10
+  end_c: {current: -86110, front: -65937, delta: 20173, recovered_share: 0.234}
+  end_delta_by_day_c: [23892, 1131, -2956, -1895]
+  per_share_1s_c: {current: -1.077, front: -0.528}
+  economic: MIXED
+  reading: mixed
+  all_arms_negative_every_day: true
+  batch_core_hours: 0.196
+  line_core_hours: 2.172
 ladder_queue_front_20261122_dev:
   status: frozen_before_replay
   asof: "2026-11-22 03:49Z"

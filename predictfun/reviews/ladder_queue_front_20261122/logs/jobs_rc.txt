@@ -10,3 +10,4 @@ qf_rest_20261026 rc=0
 qf_rest_20261024 rc=0
 qf_measure rc=0
 qf_checks rc=1
+qf_checks_v2 rc=0
