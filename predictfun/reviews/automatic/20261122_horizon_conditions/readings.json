@@ -1,0 +1,74 @@
+{
+  "common_full_fills": 6336,
+  "common_full_shares": 69035.02677098168,
+  "full_common_per_share": {
+    "0": 0.5931400197321837,
+    "50": -0.3339814179897563,
+    "100": -0.3735315612894239,
+    "1000": -1.10666830386559,
+    "5000": -1.2080598353749912,
+    "30000": -1.4690115851705097,
+    "END": -1.079030040337842
+  },
+  "full_5s_net_below_1s": true,
+  "full_30s_net_below_1s": true,
+  "negative_days_by_horizon": {
+    "1000": 4,
+    "5000": 4,
+    "30000": 4
+  },
+  "recovery_full": {
+    "5000": {
+      "fraction_of_1s_negative_fills": 0.2779078844652615,
+      "fraction_of_1s_negative_shares": 0.2841323349329001,
+      "fraction_of_original_1s_loss": 0.18989708201389033
+    },
+    "30000": {
+      "fraction_of_1s_negative_fills": 0.4205048139474369,
+      "fraction_of_1s_negative_shares": 0.42478723632814924,
+      "fraction_of_original_1s_loss": 0.3792831161367327
+    }
+  },
+  "joint_cells": [
+    {
+      "band": "non_adverse|PF_adverse",
+      "rows": 2216,
+      "common": 2084,
+      "no_fill": 1323
+    },
+    {
+      "band": "non_adverse|PF_non_adverse",
+      "rows": 2418,
+      "common": 2310,
+      "no_fill": 1689
+    },
+    {
+      "band": "positive_below_q5|PF_adverse",
+      "rows": 80,
+      "common": 79,
+      "no_fill": 49
+    },
+    {
+      "band": "positive_below_q5|PF_non_adverse",
+      "rows": 15,
+      "common": 12,
+      "no_fill": 9
+    },
+    {
+      "band": "q5|PF_adverse",
+      "rows": 104,
+      "common": 99,
+      "no_fill": 64
+    },
+    {
+      "band": "q5|PF_non_adverse",
+      "rows": 7,
+      "common": 7,
+      "no_fill": 4
+    }
+  ],
+  "resource_asof_before_summary_job": {
+    "cumulative_hours": 1.8652805555555556,
+    "own_hours": 0.0008222222222222222
+  }
+}

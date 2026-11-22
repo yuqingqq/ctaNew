@@ -1,0 +1,32 @@
+{
+  "source": "2063d31a91ab7e6124d7b8b7b7ec5df01ea66711",
+  "inputs": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/ladder_pressure_v1_20261121/days/20261024.json": "ab599b8eceefb881fe712bb7ceb9c314fc7eb3b5ef6872778f58f2c2f2a67277",
+    "/home/yuqing/ctaNew/data/predict_fun/research/ladder_pressure_ablation_v1_20261121/pilot/20261024.json": "fa0425bf0cbd1345bba01857b0b1f6c0c920c5eb5d443705d84b413f777a51b6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/ladder_pressure_ablation_v1_20261121/rest/20261024.json": "b5686c9bb065067bb3964375a5f0dc2483be334c93862dae83615786bb2ff3f7",
+    "/home/yuqing/ctaNew/data/predict_fun/research/ladder_pressure_v1_20261121/days/20261025.json": "3874552b6ae995cccf46ba820963fd27222ba530fb552dab74d28fbcd9f3bfe8",
+    "/home/yuqing/ctaNew/data/predict_fun/research/ladder_pressure_ablation_v1_20261121/pilot/20261025.json": "8ca0c82ce58f913f870161ebfba5f467e7cbe8208a66fc1840cd48123ea6be7f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/ladder_pressure_ablation_v1_20261121/rest/20261025.json": "abd81665f7b453fb5034453de35e3d0321f9b3e13e5946942d4cac83aea397b4",
+    "/home/yuqing/ctaNew/data/predict_fun/research/ladder_pressure_v1_20261121/days/20261026.json": "0833d2c4278d89e6a6af24a72e4c6313ddf411da267b5aa5b428513fa96d30d6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/ladder_pressure_ablation_v1_20261121/pilot/20261026.json": "3e747f499fdc52d8d09369068cb0753277fced89b40c5a44b09ffa744457bfee",
+    "/home/yuqing/ctaNew/data/predict_fun/research/ladder_pressure_ablation_v1_20261121/rest/20261026.json": "fa85664146858d729a0fd1f03f2075af29ebbbca678ffbcf2cc555d68a4f53d3",
+    "/home/yuqing/ctaNew/data/predict_fun/research/ladder_pressure_v1_20261121/days/20261027.json": "25345c86153002aa643ff8c06862b906373e171a10e63eaf4e687647842a55cd",
+    "/home/yuqing/ctaNew/data/predict_fun/research/ladder_pressure_ablation_v1_20261121/pilot/20261027.json": "4cf6d089aca86872432b54c6c3745472dd90a0dfbbb5201b2274e60dc51337d0"
+  },
+  "markets": 19,
+  "days": [
+    "20261024",
+    "20261025",
+    "20261026",
+    "20261027"
+  ],
+  "full_fills": 7395,
+  "full_common_fills": 6336,
+  "neutral_live_rows": 4840,
+  "neutral_common_rows": 4591,
+  "neutral_censored_rows": 249,
+  "neutral_common_no_fill": 3138,
+  "checks": "hashes, hand marks, missing propagation, unique keys, membership, END and accepted +1s reproduced",
+  "elapsed_s": 2.185105621814728
+}
+2026-11-22T00:38:47Z tag=codex_horizon_conditions rc=0 peak_rss_mib=223 wall_s=2.54 cpu_user_s=2.36 memavail_start_gib=23 disk_free_gib=435->435 slot=codex

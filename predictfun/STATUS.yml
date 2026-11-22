@@ -1,4 +1,25 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+horizon_conditions_20261122_codex:
+  status: saved_data_diagnostic_complete_no_replay_no_promotion
+  source_commit: 2063d31a91ab7e6124d7b8b7b7ec5df01ea66711
+  protocol_commit: aad19914b7ad969e73010e592ffbb098f147fea7
+  report: predictfun/reviews/automatic/20261122_horizon_conditions/report.md
+  complete_markets: 19
+  consumed_days: [20261024, 20261025, 20261026, 20261027]
+  full_common_fills: 6336
+  full_common_shares_rounded: 69035.03
+  common_markout_cents_per_share: {ms1000: -1.106668, ms5000: -1.208060, ms30000: -1.469012}
+  neutral_live_rows: 4840
+  neutral_common_rows: 4591
+  neutral_censored_rows: 249
+  neutral_common_no_fill_rows: 3138
+  condition_views_predeclared: 5
+  new_candidate: false
+  next_diagnostic: decision_to_fill_intervals_separate_from_post_fill_horizons
+  stopped_positive_pressure_replay: still_requires_user_resource_amendment
+  recorded_cumulative_core_hours_asof_numeric_summary: 1.86535
+  untouched_validation: false
+
 ladder_pressure_residual_review_20261121_codex:
   status: consumed_day_timing_partition_accepted_no_replay_no_promotion
   target_commit: 2063d31a91ab7e6124d7b8b7b7ec5df01ea66711

@@ -23,6 +23,37 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- HORIZON_CONDITIONS_20261122_CODEX -->
+## 2026-11-22 — USER-requested longer horizons and conditions checked
+
+[Saved-data diagnostic](reviews/automatic/20261122_horizon_conditions/report.md),
+source **2063d31a91ab7e6124d7b8b7b7ec5df01ea66711**, protocol frozen at aad19914.
+No replay, fit, new day or strategy change. FULL's same 6,336 fills / 69,035.03
+shares: +0.593 c/share at execution, -1.107 at 1 s, -1.208 at 5 s, -1.469 at
+30 s. Each day is negative at all three horizons; some fills recover (27.8%
+of 1 s-negative fills at 5 s, 42.1% at 30 s). These are marked values, not
+settlement or realized liquidation. The recent 74.2% partition was 1 s only.
+
+Five predeclared neutral-state condition views retain 4,840 live snapshots,
+4,591 common windows / 249 censored / 3,138 no-fill rows. Flow/depletion
+ordering changes with horizon; positive-below-q5 support is thin. No selected
+rule or skill claim. Features at a decision currently face every later fill
+of its generation: arrival timing and post-fill horizon are mixed.
+
+ONE next diagnostic: split decision-to-fill arrival intervals (effect to
+250 ms / 1 s / 5 s / later), separately from 50/100 ms and 1/5/30 s post-fill
+marks; retain no-fills/censoring, both sides/days, quantity and per-share value,
+the same five condition views, and exact interval-union reconciliation. Bundle
+with the next receipt; no new threshold search or repair-only round. Report
+contains the contract. This does not change the frozen guard's endpoint.
+
+The positive-pressure replay remains stopped: projection 0.153 h > its 0.14 h
+cap; USER resource amendment still needed to resume it. Saved-data follow-up
+within existing caps needs no new USER decision. Current numerical diagnostic
+used ~0.00090 h; cumulative ~1.86535 h, under 2.0. Largest limitation: mixed
+timing axes on four consumed days / 19 complete markets, not validation.
+<!-- /HORIZON_CONDITIONS_20261122_CODEX -->
+
 <!-- LADDER_PRESSURE_RESIDUAL_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — Residual timing partition accepted; next: test broader pressure
 

@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261122_horizon_conditions/summarize.py", line 4, in <module>
+    import pandas as pd
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/__init__.py", line 34, in <module>
+    from pandas._config import (
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/_config/__init__.py", line 19, in <module>
+    from pandas._config import config
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/_config/config.py", line 64, in <module>
+    from pandas.util._exceptions import find_stack_level
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/util/_exceptions.py", line 4, in <module>
+    import inspect
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261122_horizon_conditions/inspect.py", line 5, in <module>
+    F=pd.read_csv(O/'horizons.csv');T=pd.read_csv(O/'transitions.csv');C=pd.read_csv(O/'conditions.csv')
+      ^^^^^^^^^^^
+AttributeError: partially initialized module 'pandas' has no attribute 'read_csv' (most likely due to a circular import)
+2026-11-22T00:40:53Z tag=codex_horizon_summary rc=1 peak_rss_mib=60 wall_s=0.11 cpu_user_s=0.08 memavail_start_gib=23 disk_free_gib=435->435 slot=codex

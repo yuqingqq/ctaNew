@@ -1,3 +1,31 @@
+<!-- HORIZON_CONDITIONS_20261122_CODEX -->
+## 2026-11-22 — One-second markout misses longer exposure; conditions depend on horizon
+
+[Report and evidence](reviews/automatic/20261122_horizon_conditions/report.md),
+source **2063d31a91ab7e6124d7b8b7b7ec5df01ea66711**, pre-output freeze aad19914.
+Same 6,336 FULL fills: execution edge +0.593 c/share; markouts -1.107 / -1.208 /
+-1.469 at 1/5/30 s. All four consumed days negative at these horizons, with
+nonuniform recovery. 27.8% / 42.1% of initially 1 s-negative fills become
+nonnegative at 5/30 s. END is a separate variable-horizon pre-expiry mark.
+
+Five declared neutral-state condition views: 4,591 complete of 4,840 live
+snapshots, 249 censored, 3,138 no-fill. Flow/depletion ordering changes between
+1 and 30 s. Positive-below-q5 has only 91 common windows and 33 with fills.
+Per-opportunity vs per-share and inventory-reducing economics must remain
+separate. This is descriptive; no discovered rule or validation claim.
+
+Largest limitation/next diagnostic: separate decision-to-fill arrival bins
+from post-fill 1/5/30 s outcomes, retaining every opportunity and censoring.
+Current labels mix a 250 ms trailing signal with fills potentially much later
+in the generation. Exact union reconciliation, same views and side/day splits;
+one bundled saved-data receipt, no new guard or threshold selection. Existing
+residual checker/counter caveats were not reused as causal decision inputs.
+
+Hash-bound ledgers, neutral states, +1 s and END reconcile. No implementation
+change. Numeric checks ~0.00090 core-hours, cumulative ~1.86535. Positive-pressure
+replay still stopped at its separate 0.14 h cap; no resource override here.
+<!-- /HORIZON_CONDITIONS_20261122_CODEX -->
+
 <!-- LADDER_PRESSURE_RESIDUAL_REVIEW_20261121_CODEX -->
 ## 2026-11-21 — Residual loss timing independently accepted
 

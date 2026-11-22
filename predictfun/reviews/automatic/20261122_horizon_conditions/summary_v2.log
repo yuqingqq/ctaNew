@@ -1,0 +1,2 @@
+/usr/bin/time: cannot run /home/yuqing/ctaNew/predictfun/reviews/automatic/20261122_horizon_conditions/summarize.py: Permission denied
+2026-11-22T00:43:04Z tag=codex_horizon_summary_v2 rc=126 peak_rss_mib=1 wall_s=0.00 cpu_user_s=0.00 memavail_start_gib=23 disk_free_gib=435->435 slot=codex
