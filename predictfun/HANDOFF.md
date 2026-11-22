@@ -23,6 +23,39 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- QUEUE_FILL_CLASSES_20261122_CODEX -->
+## 2026-11-22 — USER-requested all-order classification measured independently
+
+[Result](reviews/automatic/20261122_queue_fill_classes/report.md), freeze
+2a8cde50, source 85127b3dfbdfb8689159fe8b9e76b447324b7cfc. Saved data only;
+first live KEEP +10ms suffix, +1s fill values; 19 complete consumed Oct24-27
+markets. CURRENT_ASYNC: 5,832 generations; pure bad 1,114, good only 711,
+mixed compensated 68, mixed uncompensated 84, near zero 21, incomplete 18,
+no suffix fills 3,416, no KEEP opportunity 400. FRONT separately: 6,303.
+Pure bad CURRENT suffixes carry -122,122.64c, 92.85% of observed gross
+negative suffix value. This is hindsight, not a causal avoided-loss estimate.
+
+Sequence: only 11 CURRENT orders have bad-then-good with compensation;
+11 bad-then-good do not compensate; 124 mixed orders have good-then-bad
+with a feasible intervening cancel; 6 interleaved. Categories at first
+anchor and sequence cross-tabs must not be added together. 662 pure-bad
+orders later close as removed: recorded no-good is not no-good-ever.
+Queue necessity remains untested; no cancel/re-entry counterfactual here.
+
+Every generation/status kept; 38 arm-market +1s/END totals reproduced;
+input hashes, arithmetic, synthetic controls, bad-label refusals and
+exported-table readback pass. 3.01 CPU seconds + tiny staging overhead,
+charged to the EXISTING 0.05h audit budget / 2.50h line, no extra allowance.
+
+ONE next priority unchanged: finish the pending feasible-cancel headroom
+audit in the same round, reproducing these all-order classes and adding
+its separate oracle, declared longer-horizon sensitivity and limits.
+The inspected uncommitted draft labels only oracle cuts, collapsing KEEP
+to not_cut; that must not hide compensated/good-only categories. Reuse
+this evidence; no duplicate standalone experiment or review gate. No new
+model, policy, replay, day or live use is launched by these results.
+<!-- /QUEUE_FILL_CLASSES_20261122_CODEX -->
+
 <!-- QUEUE_FILL_TRADEOFF_20261122_USER -->
 ## 2026-11-22 — USER: distinguish bad exposure accompanying good queue fills from pure loss
 

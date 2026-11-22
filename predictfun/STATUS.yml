@@ -1,4 +1,25 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+queue_fill_classes_20261122_codex:
+  status: independent_descriptive_classification_complete
+  report: predictfun/reviews/automatic/20261122_queue_fill_classes/report.md
+  source_commit: 85127b3dfbdfb8689159fe8b9e76b447324b7cfc
+  freeze_commit: 2a8cde500897ae913616b64acd16ecbef96c8874
+  anchor: first_recorded_live_KEEP_effect_plus_10ms
+  value_horizon: fill_plus_1s
+  consumed_complete_markets: 19
+  generations: {current_async: 5832, front_async: 6303}
+  current_classes: {pure_bad: 1114, good_only: 711, mixed_compensated: 68, mixed_uncompensated: 84, near_zero: 21, incomplete: 18, no_suffix_fills: 3416, no_opportunity: 400}
+  current_bad_then_good_compensated: 11
+  current_good_then_bad_separable: 124
+  current_pure_bad_loss_c: 122122.636790
+  current_pure_bad_share_observed_suffix_gross_loss: 0.928541
+  all_arm_market_totals_reproduced: 38
+  checks_and_artifact_readback: pass
+  predictive_or_queue_necessity_claim: false
+  measurement_cpu_seconds: 3.01
+  charged_to_existing_headroom_development_allowance: true
+  next_priority: finish_same_headroom_round_with_all_order_classes_and_horizon_sensitivity
+
 queue_fill_tradeoff_amendment_20261122_user:
   status: required_in_pending_saved_data_audit_no_results_yet
   parent_review_commit: 3e84ca6d9e8a957e14ec97f5dbafe48a83f2026d

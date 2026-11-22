@@ -1,0 +1,14 @@
+{
+  "synthetic": true,
+  "input_hashes": true,
+  "all_market_membership": true,
+  "one_row_per_generation": true,
+  "first_keep_effect": true,
+  "per_market_value_reproduction": true,
+  "fill_count_reconciled": true,
+  "prefix_suffix_reconciled": true,
+  "independent_classes": true,
+  "corrupt_category_refused": true,
+  "missing_mark_pure_bad_refused": true,
+  "class_count_reconciled": true
+}

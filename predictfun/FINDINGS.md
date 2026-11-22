@@ -1,3 +1,31 @@
+<!-- QUEUE_FILL_CLASSES_20261122_CODEX -->
+## 2026-11-22 — Independent classification: observed pure loss dominates actionable suffix loss
+
+[Receipt](reviews/automatic/20261122_queue_fill_classes/report.md), frozen
+2a8cde50 before measurement, accepted source 85127b3d. First live KEEP
+callback +10ms, +1s per-fill values, 19 complete consumed Oct24-27 markets:
+CURRENT_ASYNC 5,832 generations (including no-fill/no-callback); 1,114 pure
+bad suffixes, 711 good-only, 68 compensated mixed, 84 uncompensated mixed,
+21 zero, 18 incomplete, 3,416 no suffix fills, 400 no KEEP callback.
+Pure-bad suffix loss -122,122.64c is 92.85% of observed gross negative
+suffix value, not a forecast hit rate. 662 of those orders are ultimately
+removed: continuation is truncated, so no observed good does not mean
+no potential later good under longer KEEP or a different policy.
+
+Among mixed CURRENT cases: 11 bad-then-good compensate, 11 do not;
+124 good-then-bad have a feasible intervening cancel effect; 6 interleaved.
+Do not label every mixed order a necessary cost of queue continuity.
+Necessary-under-cancel/re-entry remains unidentified; prediction remains
+untested. One-second classes may differ at longer marks; full audit to
+carry same-cut horizon sensitivity. FRONT evidence is separate (6,303).
+
+All 38 arm-market totals reproduce the accepted values; complete membership,
+input identities, synthetic/refusal controls and exported-group readback
+pass. 3.01 CPU seconds, no replay/fit/new day. The pending development audit
+should reuse these results and classify retained orders as well as oracle
+cuts; keep this in the same combined round and existing resource allowance.
+<!-- /QUEUE_FILL_CLASSES_20261122_CODEX -->
+
 <!-- QUEUE_FILL_TRADEOFF_20261122_USER -->
 ## 2026-11-22 — USER clarification: quantify which bad fills accompany valuable queue continuity
 
