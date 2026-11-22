@@ -1,0 +1,52 @@
+{
+ "days": {
+  "20261024": {
+   "accepted": 1904,
+   "ahead_zero": 179,
+   "ahead_pos": 1725,
+   "median_ahead": 79.28999999999999,
+   "p75": 193.7375,
+   "p90": 320.035,
+   "median_ahead_over_size": 1.058846153846154,
+   "ahead_gt_size": 968
+  },
+  "20261025": {
+   "accepted": 1317,
+   "ahead_zero": 126,
+   "ahead_pos": 1191,
+   "median_ahead": 86.07151936758893,
+   "p75": 220.52,
+   "p90": 389.2795243926639,
+   "median_ahead_over_size": 1.037127659574468,
+   "ahead_gt_size": 671
+  },
+  "20261026": {
+   "accepted": 1036,
+   "ahead_zero": 62,
+   "ahead_pos": 974,
+   "median_ahead": 345.65,
+   "p75": 597.9566387755102,
+   "p90": 813.1482936619718,
+   "median_ahead_over_size": 4.17,
+   "ahead_gt_size": 820
+  },
+  "20261027": {
+   "accepted": 278,
+   "ahead_zero": 16,
+   "ahead_pos": 262,
+   "median_ahead": 377.76964999999996,
+   "p75": 630.4092,
+   "p90": 799.5401100000001,
+   "median_ahead_over_size": 4.963286,
+   "ahead_gt_size": 235
+  }
+ },
+ "all": {
+  "accepted": 4535,
+  "ahead_zero": 383,
+  "share_already_front": 0.0844542447629548,
+  "ahead_gt_size": 2694,
+  "share_ahead_gt_size": 0.5940463065049614
+ }
+}
+2026-11-22T03:35:30Z tag=qf_scope_ahead0 rc=0 peak_rss_mib=46 wall_s=0.28 cpu_user_s=0.23 memavail_start_gib=23 disk_free_gib=433->433 slot=claude

@@ -360,6 +360,19 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_QUEUE_FRONT_SCOPE_20261122_DEV -->
+## 2026-11-22 03:36Z (session aea5bfb9) — USER plan 425e9fbc (QUEUE-PRIORITY-SENSITIVITY-v1) checked; AWAITING THE USER'S APPROVAL (nothing frozen or run)
+
+- **Engine claims verified at the code** (`pf_branch_engine.py`):
+  - `add9` sets the external queue ahead once, from the displayed size at the order's price in the activation frame; a price beyond the 5 shown levels gets 0;
+  - `advance`: a same-price print consumes that queue first, then our remainder; a through-price trade fills us regardless of the queue and zeroes it;
+  - the running minimum never raises `ahead`, so FRONT_AT_ACTIVATION (ahead = 0 once, at activation) means the head of the level for life, and it can only ADD same-price fills directly - every other change comes through inventory / later quotes;
+  - own-order priority and the remaining-print carry are handled by the loop.
+- **Scope read** (counts only; accepted pressure arm = FULL_11, hash-bound day records; `reviews/ladder_queue_front_20261122/tools/scope_ahead0.py`, 0.23 CPU s): 4,535 accepted generations; 383 (8.4 %) already start at the front; 4,152 have external queue ahead. Median ahead 79 / 86 shares on Oct 24 / 25 (about 1 x the order size) and 346 / 378 on Oct 26 / 27 (4-5 x); 59 % start with more ahead than their own size. The treatment changes nearly every generation.
+- **Cost from measured replays:** earlier two- or four-arm 19-market replays cost 0.18-0.20 core-hours, dominated by a ~54 s per-day load. With the plan's pilot of two markets per date (a second load per day), the batch is about 0.19 core-hours, about 0.21 with review: inside the proposed 0.25 / line 2.25. A one-day pilot would save about 0.06.
+- **Needs the USER:** approval of this diagnostic and its caps (0.25 additional core-hours, line ceiling 2.25), and the pilot design. POSITIVE-PRESSURE-GUARD-v1 stays stopped; its 2.12 amendment is not approved and not transferred.
+<!-- /LADDER_QUEUE_FRONT_SCOPE_20261122_DEV -->
+
 <!-- LADDER_QUEUE_PRICE_REVIEW_ANSWER_20261122_DEV -->
 ## 2026-11-22 02:16Z (session aea5bfb9) — review 58d20752 answered; LOOP STOPPED: its ONE next priority needs the USER's resource decision
 

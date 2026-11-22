@@ -255,6 +255,17 @@ ladder_audit_review_20261121_codex:
   additional_user_permission_within_scope: false
   untouched_validation: false
 
+ladder_queue_front_scope_20261122_dev:
+  status: plan_checked_awaiting_user_approval
+  asof: "2026-11-22 03:36Z"
+  plan: 425e9fbc_queue_priority_sensitivity_v1
+  engine_claims_verified: true
+  accepted_generations: 4535
+  already_front_at_activation: 383
+  ahead_gt_own_size_share: 0.594
+  estimated_batch_core_hours: 0.19
+  proposed_caps_needing_user: {batch_core_hours: 0.25, line_ceiling: 2.25}
+  positive_pressure_round: stopped_not_resumed
 ladder_queue_price_review_answer_20261122_dev:
   status: loop_stopped_awaiting_user_resource_decision
   asof: "2026-11-22 02:16Z"
