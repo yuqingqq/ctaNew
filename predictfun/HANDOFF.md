@@ -266,6 +266,17 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_ARRIVAL_QUEUE_RESULTS_20261122_DEV -->
+## 2026-11-22 01:33Z (session aea5bfb9) — ARRIVAL-QUEUE-DECOMPOSITION-v1 RESULTS (frozen 29869269; receipt `reviews/ladder_arrival_queue_20261122/report.md`)
+
+- **Integrity:** 4,840 states once each; the interval union = the audit window on every state; the USER's `conditions.csv` reproduced 1,431 / 1,431; checks A / B / F / C / R / S / I pass, falsifier 12 / 12; notice latency respected on 4,840 / 4,840; round 0.077 core-hours (cap 0.10), line 1.942 of 2.0.
+- **Arrival x horizon (union-common, c/share):** fill-time +0.38, 50 ms -0.89, 1 s -2.23, 5 s -2.45, 30 s -2.89. 22.5 % of the 1 s net arrives within 250 ms of the cancel effect, 56.7 % within 1 s; early fills partially recover by 30 s, fills after 1 s deepen (64 % of the 30 s net).
+- **Queue (union 1 s / 30 s):** front -0.93 / +0.32, within_R -2.02 / -1.91, beyond_R -2.61 / -4.27; same 1 s order on all 4 days (post-run reading of the frozen cells); front worst in I0 (-2.80). **Confound:** 656 of 789 front states are alone at their price (inside the best or at an empty level behind it); only 133 at the touch.
+- **Queue x pressure:** 0 / 60 contrasts evaluable (positive Binance pressure in 206 of 4,840 neutral states). **Progress:** no consistent order. **Queue quality:** client estimate within 1 share of the replay's venue queue at 60 %, optimistic by >= 1 share at 32 %.
+- **Not shown:** skill, a rule, an always-kept fill rate, FULL's reached states.
+- **Next:** ONE Codex review of 13a70491..this commit; POSITIVE-PRESSURE-GUARD-v1 stays stopped (USER resource decision pending).
+<!-- /LADDER_ARRIVAL_QUEUE_RESULTS_20261122_DEV -->
+
 <!-- LADDER_ARRIVAL_QUEUE_FREEZE_20261122_DEV -->
 ## 2026-11-22 01:27Z (session aea5bfb9) — ARRIVAL-QUEUE-DECOMPOSITION-v1 FROZEN before the run (the USER's ed7c3db5 / 13a70491 ONE next priority)
 

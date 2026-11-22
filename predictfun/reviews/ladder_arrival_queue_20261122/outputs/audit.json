@@ -1,0 +1,117 @@
+{
+  "version": "arrival_queue_decomposition_v1",
+  "asof": "2026-11-22T01:28:21.907232+00:00",
+  "reconcile": {
+    "states": 4840,
+    "interval_rows": 19360,
+    "window_fills": 6992,
+    "window_shares": 74887.86834636977
+  },
+  "summary": {
+    "population": "BASELINE_neutral_live",
+    "queue_bands": {
+      "beyond_R": 2122,
+      "within_R": 1929,
+      "front": 789
+    },
+    "first_review": {
+      "ok": 4314,
+      "first_review_is_decision": 526
+    },
+    "entry": {
+      "ok": 4840
+    },
+    "recent_250": {
+      "unavailable_no_saved_state": 3091,
+      "not_yet_born_at_t_minus_250": 1583,
+      "available": 166
+    },
+    "venue": {
+      "available": 4840
+    },
+    "venue_notice_gap_agrees": 4840,
+    "venue_client_minus_venue": {
+      "n": 4840,
+      "median": 0.0,
+      "above": 1111,
+      "equal": 1483,
+      "below": 2246
+    },
+    "known_remaining_agree": 4840,
+    "gen_end_cause": {
+      "removal": 4004,
+      "full_fill": 800,
+      "end": 36
+    },
+    "follow_up": {
+      "I0": {
+        "at_risk_full": 3340,
+        "removed_in_interval": 1213,
+        "filled_out_in_interval": 165,
+        "not_at_risk": 112,
+        "end_censored": 10
+      },
+      "I1": {
+        "at_risk_full": 1774,
+        "not_at_risk": 1671,
+        "removed_in_interval": 1163,
+        "filled_out_in_interval": 214,
+        "end_censored": 18
+      },
+      "I2": {
+        "not_at_risk": 3118,
+        "removed_in_interval": 1136,
+        "at_risk_full": 309,
+        "filled_out_in_interval": 271,
+        "end_censored": 6
+      },
+      "I3": {
+        "not_at_risk": 4535,
+        "removed_in_interval": 254,
+        "filled_out_in_interval": 49,
+        "end_censored": 2
+      }
+    },
+    "union_follow_up": {
+      "removed_in_interval": 3993,
+      "filled_out_in_interval": 699,
+      "not_at_risk": 112,
+      "end_censored": 36
+    },
+    "union_common_all_horizons": 4591,
+    "union_common_1_5_30": 4591,
+    "union_no_fill": 3138,
+    "pre_effect_fills": 315,
+    "before_decision_fills": 1884,
+    "multiplicity": {
+      "views": 9,
+      "bands": {
+        "pressure_flow": 6,
+        "depletion": 3,
+        "depth": 22,
+        "age": 4,
+        "inventory": 3,
+        "queue": 3,
+        "queue_pressure": 9,
+        "queue_pressure_flow": 18,
+        "progress": 3
+      },
+      "cell_rows": 8760
+    }
+  },
+  "elapsed_s": 16.192330837249756,
+  "outputs": {
+    "states.csv": "a2ce881238f786d613c9c5c64de9ca25ef53cbefa9bc51bb85cd5982cd3b045b",
+    "intervals.csv": "4b05f5939c8976f608a53ec251772d1be7e6920e9c67c933b74f850994601777",
+    "cells.csv": "d53df3a4f7700e829c7fa3c2fe4e1ad6d517e2e8b61b945d1977b46fbc770b04"
+  },
+  "sources": {
+    "pf_ladder_arrival_queue.py": "919fb60c1a07c4789511313dfe1eda2ff35c1658b8835b526f860aa175ad2628",
+    "pf_ladder_arrival_queue_selftest.py": "84c531a8adbc168ed85d5deec0762608d542f31628edf7b3138f5f6fc0791769",
+    "pf_ladder_pressure_lag.py": "0dcb03c430db87e2cf85104eebdf3aa175eb6af4594ac9a89dec89d1bbf5c7d4",
+    "pf_ladder_pressure.py": "357f1d19b32ab5a8d51bc26f884d03492d008c3653b981a147d0bbca17068114",
+    "pf_ladder_rest.py": "d90016ce7d25f89f6f6c6662075f5be72539d3140373e42c8b7228ebcf8ce5e0"
+  },
+  "manifest_sha256": "e21eea6ed46691d04ac2befd47b3b3862138ba395058032d5f9007527ea040c0",
+  "note": "exploratory saved-data description; no rule, threshold or skill claim"
+}

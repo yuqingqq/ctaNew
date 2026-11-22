@@ -1,0 +1,117 @@
+{
+ "all_ok": true,
+ "failed": [],
+ "falsifier_ok": true,
+ "cases": {
+  "an_output_hash_changed": [
+   true,
+   true
+  ],
+  "a_state_duplicated": [
+   true,
+   true
+  ],
+  "a_band_changed": [
+   true,
+   true
+  ],
+  "an_effect_changed": [
+   true,
+   true
+  ],
+  "a_fill_moved_interval": [
+   true,
+   true
+  ],
+  "a_value_changed": [
+   true,
+   true
+  ],
+  "a_union_changed": [
+   true,
+   true
+  ],
+  "a_cell_changed": [
+   true,
+   true
+  ],
+  "a_cell_dropped": [
+   true,
+   true
+  ],
+  "a_user_value_changed": [
+   true,
+   true
+  ],
+  "a_summary_count_changed": [
+   true,
+   true
+  ],
+  "resources_over_the_cap": [
+   true,
+   true
+  ]
+ },
+ "details": {
+  "B": {
+   "states": 4840
+  },
+  "C": {
+   "rows": 8760,
+   "bad": 0,
+   "keys_equal": true
+  },
+  "R": {
+   "rows": 1431,
+   "mine": 1431,
+   "bad": 0
+  },
+  "S": {
+   "venue_notice_gap_agrees": 4840,
+   "known_remaining_agree": 4840,
+   "union_common_all_horizons": 4591,
+   "union_common_1_5_30": 4591,
+   "union_no_fill": 3138,
+   "pre_effect_fills": 315,
+   "before_decision_fills": 1884,
+   "queue_bands": {
+    "beyond_R": 2122,
+    "within_R": 1929,
+    "front": 789
+   },
+   "first_review": {
+    "ok": 4314,
+    "first_review_is_decision": 526
+   },
+   "entry": {
+    "ok": 4840
+   },
+   "recent_250": {
+    "unavailable_no_saved_state": 3091,
+    "not_yet_born_at_t_minus_250": 1583,
+    "available": 166
+   },
+   "venue": {
+    "available": 4840
+   },
+   "gen_end_cause": {
+    "removal": 4004,
+    "full_fill": 800,
+    "end": 36
+   },
+   "union_follow_up": {
+    "removed_in_interval": 3993,
+    "filled_out_in_interval": 699,
+    "not_at_risk": 112,
+    "end_censored": 36
+   }
+  },
+  "I": {
+   "round_core_hours": 0.06998333333333333,
+   "cap": 0.1,
+   "line_core_hours": 1.935336111111111,
+   "peak_mib": 699
+  }
+ }
+}
+2026-11-22T01:28:28Z tag=aq_checks rc=0 peak_rss_mib=264 wall_s=21.66 cpu_user_s=21.21 memavail_start_gib=23 disk_free_gib=435->435 slot=claude

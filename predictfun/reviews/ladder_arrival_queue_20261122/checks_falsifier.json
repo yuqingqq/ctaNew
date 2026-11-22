@@ -1,0 +1,77 @@
+{
+ "cases": {
+  "an_output_hash_changed": {
+   "family": "A",
+   "target": "A_outputs",
+   "clean": true,
+   "refused": true
+  },
+  "a_state_duplicated": {
+   "family": "B",
+   "target": "B_membership",
+   "clean": true,
+   "refused": true
+  },
+  "a_band_changed": {
+   "family": "F",
+   "target": "F_state_labels",
+   "clean": true,
+   "refused": true
+  },
+  "an_effect_changed": {
+   "family": "F",
+   "target": "F_state_values",
+   "clean": true,
+   "refused": true
+  },
+  "a_fill_moved_interval": {
+   "family": "F",
+   "target": "F_intervals",
+   "clean": true,
+   "refused": true
+  },
+  "a_value_changed": {
+   "family": "F",
+   "target": "F_intervals",
+   "clean": true,
+   "refused": true
+  },
+  "a_union_changed": {
+   "family": "F",
+   "target": "F_union_window",
+   "clean": true,
+   "refused": true
+  },
+  "a_cell_changed": {
+   "family": "C",
+   "target": "C_cells",
+   "clean": true,
+   "refused": true
+  },
+  "a_cell_dropped": {
+   "family": "C",
+   "target": "C_cells",
+   "clean": true,
+   "refused": true
+  },
+  "a_user_value_changed": {
+   "family": "R",
+   "target": "R_user_table",
+   "clean": true,
+   "refused": true
+  },
+  "a_summary_count_changed": {
+   "family": "S",
+   "target": "S_summary",
+   "clean": true,
+   "refused": true
+  },
+  "resources_over_the_cap": {
+   "family": "I",
+   "target": "I_resources",
+   "clean": true,
+   "refused": true
+  }
+ },
+ "falsifier_ok": true
+}

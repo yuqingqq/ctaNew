@@ -1,1 +1,5 @@
 aq_manifest rc=0
+aq_selftest_frozen rc=0
+aq_run rc=0
+aq_checks rc=0
+aq_readings rc=0

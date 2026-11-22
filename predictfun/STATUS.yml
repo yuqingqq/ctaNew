@@ -185,6 +185,23 @@ ladder_audit_review_20261121_codex:
   additional_user_permission_within_scope: false
   untouched_validation: false
 
+ladder_arrival_queue_results_20261122_dev:
+  status: results_complete_review_requested
+  asof: "2026-11-22 01:33Z"
+  freeze: 29869269
+  states: 4840
+  union_reconciles_audit_window: true
+  user_conditions_table_reproduced: 1431_of_1431
+  checks_pass: true
+  falsifier: 12_of_12
+  union_common_per_share_c: {fill: 0.379, ms50: -0.886, s1: -2.227, s5: -2.446, s30: -2.893}
+  share_of_1s_net_within_250ms_of_effect: 0.225
+  queue_union_1s_per_share_c: {front: -0.930, within_R: -2.015, beyond_R: -2.613}
+  queue_pressure_contrasts_evaluable: 0_of_60
+  material_confound: front_mostly_alone_at_price_656_of_789
+  round_core_hours: 0.077
+  line_core_hours: 1.942
+  positive_pressure_round: stopped_awaiting_user_resource_decision
 ladder_arrival_queue_20261122_dev:
   status: frozen_before_run
   asof: "2026-11-22 01:27Z"

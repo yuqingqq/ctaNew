@@ -1,0 +1,10 @@
+{
+ "reconcile": {
+  "states": 4840,
+  "interval_rows": 19360,
+  "window_fills": 6992,
+  "window_shares": 74887.86834636977
+ },
+ "elapsed_s": 16.2
+}
+2026-11-22T01:28:06Z tag=aq_run rc=0 peak_rss_mib=699 wall_s=17.31 cpu_user_s=16.60 memavail_start_gib=22 disk_free_gib=435->435 slot=claude
