@@ -505,7 +505,14 @@ ladder_async_fast_results_20261122_dev:
   batch_core_hours: 0.201
   line_core_hours: 2.375
 ladder_retention_discrimination_20261122_dev:
-  status: frozen_before_labels_and_fit
+  status: paused_by_user_before_measure_oct26_rerun_stopped
+  paused_asof: "2026-11-22 07:53Z"
+  completed_days: [20261024, 20261025, 20261027]
+  oct26: amend1_rerun_stopped_by_user_no_output
+  evaluation_read: false
+  batch_core_hours_logged: 0.4759
+  unlogged_killed_rerun_core_hours_max: 0.17
+  resume: run_oct26_amend1_then_measure_checks_receipt_review
   asof: "2026-11-22 07:22Z"
   source: review_838f4be2_next_priority
   user_approval: {additional_core_hours: 1.25, includes: review_reserve_0.05, line_ceiling: 4.00, via: AskUserQuestion_2026-11-22}

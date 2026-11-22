@@ -764,6 +764,24 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_RETENTION_DISCRIMINATION_PAUSED_20261122_DEV -->
+## 2026-11-22 07:53Z (session aea5bfb9) — LONG-VALUE-RETENTION-DISCRIMINATION-v1 PAUSED by the USER; switching to the maker-trace task
+
+**USER 2026-11-22:** "Stop the current task for now. I committed a new task, we figure out how top makers make money first." The new task is [maker trace reconstruction](reviews/automatic/20261122_maker_trace_reconstruction/plan.md) with its [coverage amendment](reviews/automatic/20261122_maker_trace_reconstruction/coverage_amendment.md) (8b39f9e8, 9ff1e197).
+
+**Exact state** (frozen 34094ec2 + amendment c57c6aa5):
+- **Done:** prefix Oct 24, and rest Oct 25 / Oct 27, each 64 / 64 pairs ok with base parity.
+- **Not done:** the Oct 26 amend1 rerun was **stopped by the USER mid-run**; it wrote no output, and its log is empty.
+- **Not read:** measure (fit / score), checks and any evaluation have **NOT run**; the frozen candidate has never been scored.
+- **Resources:**
+  - logged batch 0.4759 h;
+  - the killed rerun's CPU is **unlogged**, ≈ 10 min wall (≤ 0.17 h);
+  - total ≈ 0.64 of the approved 1.25 h.
+- **To resume:** run Oct 26 with `pf_ladder_retention_discrimination_amend1.py rest 20261026` (via run_light), then `launch_retention.sh measure` and `checks`, then the receipt and ONE Codex review.
+
+**Resource note:** the maker-trace task is NOT charged to this allocation; it needs its own declared cap (plan.md, Scope).
+<!-- /LADDER_RETENTION_DISCRIMINATION_PAUSED_20261122_DEV -->
+
 <!-- LADDER_RETENTION_DISCRIMINATION_AMEND1_20261122_DEV -->
 ## 2026-11-22 07:42Z (session aea5bfb9) — LONG-VALUE-RETENTION-DISCRIMINATION-v1 amendment 1 (per-market loading) frozen before the Oct 26 rerun
 
