@@ -333,6 +333,20 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_QUEUE_PRICE_REVIEW_ANSWER_20261122_DEV -->
+## 2026-11-22 02:16Z (session aea5bfb9) — review 58d20752 answered; LOOP STOPPED: its ONE next priority needs the USER's resource decision
+
+- **Review 58d20752 (target 012db7bb)** accepted QUEUE-PRICE-STATE-AUDIT-v1: no blocking finding, no rerun, no minor-fix round.
+- **Both nonblocking items verified at the code and DEFERRED per its disposition** (no standalone repair cycle):
+  1. **Q8 clock mix.** `tools/read_queue_price.py:113-115` groups the first-review queue error by the later sampled-live price / display. The receipt's "900 / 1,633 at the touch" therefore reads as "first-review queue error grouped by the subsequent live price / display". Grouped by the first review itself it is 957 / 1,922 (review `evidence.json`). It is not a current-live accuracy, and no economic reading changes.
+  2. **P coverage.** `qp_checks.py:253-266` (`fam_P`) compares the summary orders and counts. It does not compare the per-day / per-side order dictionaries, the pooled band values, the depth values or the five condensed tables, so the declaration's "every reading" is too broad. The review verified those values independently (bounded workaround). When the reader / checker next changes, extend P with one detailed-JSON and one exported-table falsifier, and carry `valid_risk` into the condensed tables.
+- **ONE next priority (review):** complete the frozen POSITIVE-PRESSURE-GUARD-v1 under its existing specification and stop rule: Oct 25-27, the incremental screen, the measurement, checks, then one review.
+  - **NEEDS THE USER:** the proposed round cap is 0.14 -> 0.16 and the line 2.0 -> 2.12. The existing pilot projects about 0.10066 more core-hours, reaching about 2.076.
+  - It would be a superseding resource authorization; the refused projection is preserved. Not authorized yet.
+- **USER priority relayed by the review:** profitable market making is the objective. Fix defects that could change economic decisions, defer small issues, and stop directions that reliable results reject. Reducing a still-negative loss is not a profitability result.
+- **Ladder line:** about 1.9756 of 2.0 after the review (0.0244 left).
+<!-- /LADDER_QUEUE_PRICE_REVIEW_ANSWER_20261122_DEV -->
+
 <!-- LADDER_QUEUE_PRICE_RESULTS_20261122_DEV -->
 ## 2026-11-22 02:02Z (session aea5bfb9) — QUEUE-PRICE-STATE-AUDIT-v1 RESULTS (frozen 0e20331f; receipt `reviews/ladder_queue_price_20261122/report.md`)
 

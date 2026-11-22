@@ -239,6 +239,16 @@ ladder_audit_review_20261121_codex:
   additional_user_permission_within_scope: false
   untouched_validation: false
 
+ladder_queue_price_review_answer_20261122_dev:
+  status: loop_stopped_awaiting_user_resource_decision
+  asof: "2026-11-22 02:16Z"
+  review: 58d20752
+  review_verdict: accepted_no_blocking_no_rerun
+  deferred_nonblocking: [q8_first_review_error_grouped_by_live_state_relabel, p_family_detailed_reading_and_table_coverage]
+  next_priority: complete_frozen_positive_pressure_guard_v1_oct25_27_screen_measurement_checks
+  needs_user: [positive_round_cap_0.14_to_0.16, ladder_line_2.0_to_2.12]
+  projected_additional_core_hours: 0.10066
+  line_core_hours_after_review: 1.9756
 ladder_queue_price_results_20261122_dev:
   status: results_complete_review_requested
   asof: "2026-11-22 02:02Z"
