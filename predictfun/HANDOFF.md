@@ -23,6 +23,30 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- QUEUE_CONDITIONS_20261122_CODEX -->
+## 2026-11-22 — USER: queue position is mandatory in the next diagnostic
+
+[Queue amendment](reviews/automatic/20261122_queue_conditions/plan.md) extends
+the next arrival-time x markout diagnostic, preserving the completed horizon
+report. Use client-known fp_queue, fp_remaining, Q/R, o_q_rel, notified partial
+fills, age, price distance and missing/source-age status per gid. Fixed queue
+bands (estimated front / 0<Q<=R / Q>R / unknown / invalid) crossed with pressure,
+side/day; Predict flow is a secondary split. Keep all no-fill opportunities,
+quantity, fill rate and positive/negative value at 1/5/30 s. No threshold search.
+
+The input is a receipt-frame running-minimum proxy, not exact venue rank.
+Order distance is not queue position. Queue progress requires causal earlier
+history; unavailable history remains a status. Activation-clock ahead0 and
+lifetime queue summaries are never earlier decision inputs. Same-side next
+submission is not necessarily a matched replacement or a measured queue cost.
+
+The eventual KEEP vs cancel/wait/re-entry value must include actual queue,
+remaining quantity, cancel-in-flight fills and inventory on a common horizon;
+do not double-count a queue penalty already represented in branch values.
+One bundled next receipt; no new result/fit/replay in this amendment. Existing
+resource gate for the stopped positive-pressure run remains unchanged.
+<!-- /QUEUE_CONDITIONS_20261122_CODEX -->
+
 <!-- HORIZON_CONDITIONS_20261122_CODEX -->
 ## 2026-11-22 — USER-requested longer horizons and conditions checked
 

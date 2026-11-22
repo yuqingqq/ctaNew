@@ -1,4 +1,17 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+queue_conditions_20261122_codex:
+  status: user_requested_next_diagnostic_amendment_no_new_measurement
+  source_commit: ed7c3db557ab610c8d14f7ae2d700330759447c9
+  plan: predictfun/reviews/automatic/20261122_queue_conditions/plan.md
+  next_priority: queue_conditioned_arrival_time_x_markout_diagnostic
+  inputs: [fp_queue, fp_remaining, o_q_rel, known_partial_fills, order_age, price_distance, source_age]
+  queue_bands: [estimated_front, positive_at_most_remaining, above_remaining, unknown, invalid]
+  decision_queue: receipt_time_estimate_only
+  venue_queue: diagnostic_only_exact_clock_join
+  measured_queue_opportunity_cost: false
+  implementation_owner: development_session
+  stopped_positive_pressure_resource_gate: unchanged
+
 horizon_conditions_20261122_codex:
   status: saved_data_diagnostic_complete_no_replay_no_promotion
   source_commit: 2063d31a91ab7e6124d7b8b7b7ec5df01ea66711

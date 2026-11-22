@@ -1,3 +1,22 @@
+<!-- QUEUE_CONDITIONS_20261122_CODEX -->
+## 2026-11-22 — Queue conditioning added before the next measurement
+
+USER requires queue position explicitly. [Amendment](reviews/automatic/20261122_queue_conditions/plan.md)
+at source **ed7c3db557ab610c8d14f7ae2d700330759447c9**: queue estimates already
+exist in saved inputs but were not an axis in the latest five-view diagnostic.
+Use shares ahead, remaining quantity and their ratio, notified partial fills,
+age and price distance jointly with pressure and future fill-arrival windows.
+Report no-fill/unknown states, quantities and 1/5/30 s economics separately.
+
+Source review confirms fp_queue is the received-frame running-minimum proxy,
+not an exact venue position. Venue ahead0 uses activation-clock information;
+lifetime last/front summaries cannot enter earlier decisions. Re-entry ahead
+differences alone do not price surrendered priority. Queue progress and estimate
+quality require exact receipt/gid/time provenance. No new simulator defect or
+queue-conditioned skill result claimed; no additional experiment performed.
+One integrated next development receipt, existing resource limits unchanged.
+<!-- /QUEUE_CONDITIONS_20261122_CODEX -->
+
 <!-- HORIZON_CONDITIONS_20261122_CODEX -->
 ## 2026-11-22 — One-second markout misses longer exposure; conditions depend on horizon
 
