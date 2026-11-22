@@ -1,3 +1,27 @@
+<!-- CANCEL_HEADROOM_REVIEW_20261122_CODEX -->
+## 2026-11-22 — Review: short-horizon oracle accounting holds; common long policy is still missing
+
+[Review](reviews/automatic/20261122_cancel_headroom_review/report.md), pinned
+438ce3a889e8f2b27b5622315e0454ce949a4af9. CURRENT +1s -78,485.90 ->
++52,682.23 c under hindsight deletion; the same cuts leave END -55,252.46 c,
+a +13,067.49 c change. This is not an END optimum or achievable strategy.
+1,238 pure chosen-cut suffixes include 124 initially mixed orders; only
+1,114 are pure from first review. Numbers accepted; amend that inference.
+
+The proposed pilot exempts the retained order from pressure pulls but not
+its replacement, confounding holding policy with queue value. Require a
+common focal-slot lineage continuation and real replacement queues, plus
+exact command context and full-book inventory accounting. Positive paired
+Y plus an early-loss/later-gain sequence does not alone prove queue necessity;
+separate exhaustive economic classes from mechanism evidence.
+
+Actual artifacts pass independent primary reconstruction and full generation
+and economic-table reproduction. Ancillary checker gaps are nonblocking;
+preserve the verified workaround. ONE next experiment is the amended 64-pair
+consumed-day pilot, pending USER approval for a 0.40h batch / 2.85h line.
+Current 2.50h ceiling remains; no pilot, fit or new data has been launched.
+<!-- /CANCEL_HEADROOM_REVIEW_20261122_CODEX -->
+
 <!-- TWO_SIDED_REST_VALUE_20261122_USER -->
 ## 2026-11-22 — USER economic mechanism: profitable inventory turnover from retained bid/ask queues
 

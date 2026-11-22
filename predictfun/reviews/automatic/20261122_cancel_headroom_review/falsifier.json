@@ -1,0 +1,119 @@
+{
+  "cases": {
+    "an_output_hash_changed": {
+      "family": "A",
+      "target": "A_outputs",
+      "clean": true,
+      "refused": true
+    },
+    "a_core_value_changed": {
+      "family": "A",
+      "target": "A_core",
+      "clean": true,
+      "refused": true
+    },
+    "a_generation_dropped": {
+      "family": "B",
+      "target": "B_membership",
+      "clean": true,
+      "refused": true
+    },
+    "an_end_cause_changed": {
+      "family": "E",
+      "target": "E_causes_queue",
+      "clean": true,
+      "refused": true
+    },
+    "a_queue_field_changed": {
+      "family": "E",
+      "target": "E_causes_queue",
+      "clean": true,
+      "refused": true
+    },
+    "a_cut_moved": {
+      "family": "O",
+      "target": "O_anchors",
+      "clean": true,
+      "refused": true
+    },
+    "a_removed_value_changed": {
+      "family": "O",
+      "target": "O_anchors",
+      "clean": true,
+      "refused": true
+    },
+    "a_known_bad_classification": {
+      "family": "O",
+      "target": "O_anchors",
+      "clean": true,
+      "refused": true
+    },
+    "a_status_changed": {
+      "family": "O",
+      "target": "O_anchors",
+      "clean": true,
+      "refused": true
+    },
+    "a_sequence_flag_flipped": {
+      "family": "Q",
+      "target": "Q_sequences",
+      "clean": true,
+      "refused": true
+    },
+    "a_horizon_value_changed": {
+      "family": "H",
+      "target": "H_horizons",
+      "clean": true,
+      "refused": true
+    },
+    "the_reproduction_broken": {
+      "family": "R",
+      "target": "R_reproduction",
+      "clean": true,
+      "refused": true
+    },
+    "a_summary_total_changed": {
+      "family": "S",
+      "target": "S_summary",
+      "clean": true,
+      "refused": true
+    },
+    "a_class_row_changed": {
+      "family": "S",
+      "target": "S_classes",
+      "clean": true,
+      "refused": true
+    },
+    "a_panel_total_changed": {
+      "family": "K",
+      "target": "K_panel",
+      "clean": true,
+      "refused": true
+    },
+    "a_case_replaced": {
+      "family": "C",
+      "target": "C_casebook",
+      "clean": true,
+      "refused": true
+    },
+    "a_reading_flipped": {
+      "family": "P",
+      "target": "P_readings",
+      "clean": true,
+      "refused": true
+    },
+    "resources_over_the_cap": {
+      "family": "I",
+      "target": "I_resources",
+      "clean": true,
+      "refused": true
+    },
+    "a_codex_class_disagrees": {
+      "family": "X",
+      "target": "X_codex_classification",
+      "clean": true,
+      "refused": true
+    }
+  },
+  "falsifier_ok": true
+}

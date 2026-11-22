@@ -1,0 +1,17 @@
+/tmp/pf-ch-review-438ce3a8/predictfun/reviews/ladder_cancel_headroom_20261122/ch_checks.py:332: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  J = C_.merge(E['gen'], on=['day', 'm', 'arm', 'gid'], how='outer', indicator=True); both = bool((J._merge == 'both').all() and len(J) == len(E['gen']))
+/tmp/pf-ch-review-438ce3a8/predictfun/reviews/ladder_cancel_headroom_20261122/ch_checks.py:332: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  J = C_.merge(E['gen'], on=['day', 'm', 'arm', 'gid'], how='outer', indicator=True); both = bool((J._merge == 'both').all() and len(J) == len(E['gen']))
+/tmp/pf-ch-review-438ce3a8/predictfun/reviews/ladder_cancel_headroom_20261122/ch_checks.py:332: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  J = C_.merge(E['gen'], on=['day', 'm', 'arm', 'gid'], how='outer', indicator=True); both = bool((J._merge == 'both').all() and len(J) == len(E['gen']))
+/tmp/pf-ch-review-438ce3a8/predictfun/reviews/ladder_cancel_headroom_20261122/ch_checks.py:332: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  J = C_.merge(E['gen'], on=['day', 'm', 'arm', 'gid'], how='outer', indicator=True); both = bool((J._merge == 'both').all() and len(J) == len(E['gen']))
+CANCEL HEADROOM SELFTEST PASSED: cut clock, oracle, classes, generations, sequences, inputs and panel, tables, guards
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261122_cancel_headroom_review/verify.py", line 105, in <module>
+    compare_frame(old, new, f)
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261122_cancel_headroom_review/verify.py", line 95, in compare_frame
+    assert clean(a) == clean(b), (name, col)
+           ^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('generations.csv', 'day')
+2026-11-22T05:37:42Z tag=ch_review_verify rc=1 peak_rss_mib=1239 wall_s=39.19 cpu_user_s=38.21 memavail_start_gib=22 disk_free_gib=430->430 slot=codex

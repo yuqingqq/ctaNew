@@ -1,4 +1,26 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+cancel_headroom_review_20261122_codex:
+  target: 438ce3a889e8f2b27b5622315e0454ce949a4af9
+  report: predictfun/reviews/automatic/20261122_cancel_headroom_review/report.md
+  status: numerical_diagnostic_accepted_no_rerun
+  result_blockers: 0
+  actual_generations_verified: 12135
+  independent_falsifiers: 19
+  final_source_mutant_records: 38
+  current_pure_at_first_callback: 1114
+  current_pure_at_chosen_oracle_cut: 1238
+  same_1s_cuts_current_END_gain_c: 13067.492357
+  same_1s_cuts_current_END_value_c: -55252.458773
+  END_optimized_bound: false
+  whole_life_queue_necessity_identified: false
+  next_priority: amended_64_pair_long_continuation_pilot_after_USER_resource_approval
+  pilot_requirements: [same_focal_lineage_continuation_in_both_arms, exhaustive_economic_classes, mechanism_separate, exact_callback_context, joint_inventory_accounting]
+  existing_line_ceiling_core_hours: 2.50
+  proposed_pilot_batch_including_review_core_hours: 0.40
+  proposed_line_ceiling_core_hours: 2.85
+  resource_extension_approved: false
+  new_run_or_fit_launched: false
+
 two_sided_rest_value_20261122_user:
   status: required_long_value_accounting_and_projection_no_new_run
   addendum: predictfun/reviews/automatic/20261122_long_horizon_value_contract/two_sided_value_addendum.md

@@ -1,0 +1,81 @@
+{
+  "checks": {
+    "A_committed": true,
+    "A_inputs": true,
+    "A_outputs": true,
+    "A_core": true,
+    "B_membership": true,
+    "E_causes_queue": true,
+    "O_anchors": true,
+    "Q_sequences": true,
+    "H_horizons": true,
+    "R_reproduction": true,
+    "S_summary": true,
+    "S_classes": true,
+    "S_sequences": true,
+    "K_panel": true,
+    "C_casebook": true,
+    "P_readings": true,
+    "I_resources": true,
+    "X_codex_classification": true
+  },
+  "details": {
+    "B": {
+      "generations": 12135,
+      "fills": 21150,
+      "panel_rows": 564851
+    },
+    "E": {
+      "mismatched": []
+    },
+    "O": {
+      "mismatched": []
+    },
+    "Q": {
+      "mismatched": []
+    },
+    "H": {
+      "mismatched": []
+    },
+    "R": {
+      "failed": []
+    },
+    "S": {
+      "rows": 30,
+      "bad": [],
+      "cls_bad": [],
+      "seq_bad": []
+    },
+    "K": {
+      "rows": 129,
+      "bad": []
+    },
+    "C": {
+      "cases": 49
+    },
+    "P": {
+      "failed": []
+    },
+    "I": {
+      "round_core_hours": 0.04020000000000002,
+      "line_before": 2.378697222222225,
+      "line_with_round": 2.418897222222225,
+      "with_reserve": 2.438897222222225,
+      "peak_mib": 826
+    },
+    "X": {
+      "rows": 12135,
+      "both": true,
+      "classes": true,
+      "good": true,
+      "loss": true,
+      "prefix_good": true,
+      "prefix_loss": true,
+      "whole_1s": true,
+      "whole_end": true,
+      "anchor": true,
+      "end_cause": true
+    }
+  },
+  "all_ok": true
+}

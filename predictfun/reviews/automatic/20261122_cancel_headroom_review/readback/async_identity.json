@@ -1,0 +1,47 @@
+{
+ "predicates": {
+  "identity_every_market": true,
+  "agrees_with_review_every_market": true,
+  "markets": 19,
+  "rows": 76
+ },
+ "falsifier": {
+  "perturbed_movement_breaks_agreement": true,
+  "perturbed_late_breaks_identity": true
+ },
+ "falsifier_ok": true,
+ "totals": [
+  {
+   "arm": "CURRENT_BASELINE",
+   "eligible_1s": -85164.28,
+   "subsequent_movement_on_that_cohort": -1416.84,
+   "late_unsupported_1s_fills_at_END": 471.51,
+   "END": -86109.61
+  },
+  {
+   "arm": "FRONT_BASELINE",
+   "eligible_1s": -61812.39,
+   "subsequent_movement_on_that_cohort": -5175.38,
+   "late_unsupported_1s_fills_at_END": 1050.68,
+   "END": -65937.09
+  },
+  {
+   "arm": "CURRENT_ASYNC_FAST10",
+   "eligible_1s": -78485.9,
+   "subsequent_movement_on_that_cohort": 9177.89,
+   "late_unsupported_1s_fills_at_END": 988.06,
+   "END": -68319.95
+  },
+  {
+   "arm": "FRONT_ASYNC_FAST10",
+   "eligible_1s": -61051.63,
+   "subsequent_movement_on_that_cohort": -26694.24,
+   "late_unsupported_1s_fills_at_END": 785.26,
+   "END": -86960.6
+  }
+ ],
+ "sources": {
+  "arms_copy": "4747e9b85e5e23edd47b089f4afca14e1b8eb2544dd3f3f520cc8aa7f1fef2a6",
+  "review_table": "9a52d843666603741c1bcc0097d3cdc3d3e3a344f0947185893c14cf2ac789f5"
+ }
+}

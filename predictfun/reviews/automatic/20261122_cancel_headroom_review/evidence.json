@@ -1,0 +1,93 @@
+{
+  "target": "438ce3a889e8f2b27b5622315e0454ce949a4af9",
+  "selftest": "8 groups pass",
+  "mutation_records": {
+    "count": 38,
+    "accepted": true
+  },
+  "checker": true,
+  "falsifier_cases": 19,
+  "freeze_closure": 11,
+  "full_field_reproduction": {
+    "generations": 12135,
+    "tables": 6,
+    "panel": "independent aggregate reproduction in retained checks.json; raw panel hash verified"
+  },
+  "interpretation": {
+    "CURRENT_ASYNC_FAST10": {
+      "generations": 5832,
+      "feasible": 5432,
+      "cuts": 1254,
+      "cuts_at_first": 1129,
+      "pure_at_chosen_cut": 1238,
+      "chosen_pure_also_pure_at_first": 1114,
+      "all_first_pure": 1114,
+      "keep_1s": -78485.89918974013,
+      "oracle_1s": 52682.225563855354,
+      "keep_END": -68319.95113050207,
+      "same_cut_END": -55252.458773466526,
+      "same_cut_END_gain": 13067.492357035531,
+      "common_removed_END": 19972.361305625163,
+      "removed_good_1s": 216.505314867295,
+      "removed_bad_1s": 131384.6300684628,
+      "first_vs_chosen_classes": {
+        "pure_observed_loss": 1114,
+        "uncompensated_mixed": 71,
+        "compensated_mixed": 53
+      },
+      "day_END_gain": {
+        "20261024": 15993.354421202937,
+        "20261025": -37262.930909492075,
+        "20261026": 28656.905103852867,
+        "20261027": 5680.163741471821
+      }
+    },
+    "FRONT_ASYNC_FAST10": {
+      "generations": 6303,
+      "feasible": 5884,
+      "cuts": 1578,
+      "cuts_at_first": 1253,
+      "pure_at_chosen_cut": 1560,
+      "chosen_pure_also_pure_at_first": 1241,
+      "all_first_pure": 1241,
+      "keep_1s": -61051.62534433181,
+      "oracle_1s": 96455.85418713788,
+      "keep_END": -86960.60415539259,
+      "same_cut_END": -23510.18746562273,
+      "same_cut_END_gain": 63450.41668976983,
+      "common_removed_END": -31884.419807655097,
+      "removed_good_1s": 96.78328377404071,
+      "removed_bad_1s": 157604.26281524374,
+      "first_vs_chosen_classes": {
+        "pure_observed_loss": 1241,
+        "uncompensated_mixed": 225,
+        "compensated_mixed": 93,
+        "mixed_tie": 1
+      },
+      "day_END_gain": {
+        "20261024": -13946.086793323026,
+        "20261025": 5401.402196727533,
+        "20261026": 62678.032121140335,
+        "20261027": 9317.069165225013
+      }
+    }
+  },
+  "checker_coverage": {
+    "native_30s_summary": {
+      "clean": true,
+      "corruption_passes_named_check": true
+    },
+    "case_timeline": {
+      "clean": true,
+      "corruption_passes_named_check": true
+    }
+  },
+  "resources": {
+    "round_core_hours": 0.04020000000000002,
+    "line_before": 2.378697222222225,
+    "line_with_round": 2.418897222222225,
+    "with_reserve": 2.438897222222225,
+    "peak_mib": 826
+  },
+  "limits": "saved evidence and synthetic controls only; no tape replay, new target optimization, fit or new day"
+}

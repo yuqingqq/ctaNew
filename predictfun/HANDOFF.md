@@ -23,6 +23,36 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- CANCEL_HEADROOM_REVIEW_20261122_CODEX -->
+## 2026-11-22 — Headroom accepted; amend common continuation before a resource-approved pilot
+
+[Combined review](reviews/automatic/20261122_cancel_headroom_review/report.md)
+of **438ce3a889e8f2b27b5622315e0454ce949a4af9**. No result-blocking
+defect or required rerun. Pinned synthetic controls, source-bound 38 mutants,
+independent saved-data checks and 19 falsifiers pass; all 12,135 generation
+rows and reported economic tables reproduce. Four consumed days only.
+
+Interpretation correction: 1,238 CURRENT suffixes are pure at the CHOSEN
+oracle cut; 1,114 are pure at first review. The other 124 were mixed there
+(53 compensated, 71 uncompensated). +13.1k c is the END gain of the
++1s-selected cuts, not an END bound; retained END remains -55.3k c.
+The whole-life queue mechanism is still unidentified. ASYNC P2 is resolved;
+ancillary checker gaps stay nonblocking with verified actual-field checks.
+
+ONE next priority: the amended 64-pair LONG-CONTINUATION-PAIRED-VALUE pilot.
+Before its freeze, give retained and replacement focal-slot lineages the
+SAME holding rule, define exhaustive economic categories separately from
+queue-mechanism evidence, and bind the exact callback/starting inventory.
+Use two first-live-KEEP generations and two POSTs per market/side on the
+eight consumed pilot markets; no outcome-selected sampling, no optional
+CONT-REST arm, no fit. See the report for complete controls and metrics.
+
+NOT LAUNCHED: USER resource approval is required for up to 0.40 additional
+core-hours including tests/review and a proposed 2.85h line ceiling. Current
+authorized ceiling remains 2.50h. Bundle the amendments, controls and pilot
+in one development round after approval; no minor-fix-only cycle.
+<!-- /CANCEL_HEADROOM_REVIEW_20261122_CODEX -->
+
 <!-- TWO_SIDED_REST_VALUE_20261122_USER -->
 ## 2026-11-22 — USER: long resting should earn repeated two-sided spread with controlled inventory
 
