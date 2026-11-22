@@ -1,0 +1,72 @@
+{
+ "all_ok": true,
+ "failed": [],
+ "falsifier_ok": true,
+ "cases": {
+  "an_output_hash_changed": [
+   true,
+   true
+  ],
+  "a_state_duplicated": [
+   true,
+   true
+  ],
+  "client_minus_venue_zeroed": [
+   true,
+   true
+  ],
+  "a_displayed_size_changed": [
+   true,
+   true
+  ],
+  "a_price_state_relabelled": [
+   true,
+   true
+  ],
+  "h1000_per_share_negated": [
+   true,
+   true
+  ],
+  "a_sparse_flag_flipped": [
+   true,
+   true
+  ],
+  "a_cell_dropped": [
+   true,
+   true
+  ],
+  "a_reading_changed": [
+   true,
+   true
+  ],
+  "resources_over_the_cap": [
+   true,
+   true
+  ]
+ },
+ "details": {
+  "B": {
+   "states": 4840
+  },
+  "U": {
+   "mismatched": []
+  },
+  "G": {
+   "mismatched": []
+  },
+  "C": {
+   "rows": 4920,
+   "mismatched": []
+  },
+  "P": {
+   "mismatched": []
+  },
+  "I": {
+   "round_core_hours": 0.012130555555555552,
+   "cap": 0.02,
+   "line_core_hours": 1.9742833333333316,
+   "peak_mib": 248
+  }
+ }
+}
+2026-11-22T01:59:50Z tag=qp_checks rc=0 peak_rss_mib=210 wall_s=2.00 cpu_user_s=1.79 memavail_start_gib=23 disk_free_gib=434->434 slot=claude

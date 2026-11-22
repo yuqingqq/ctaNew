@@ -212,6 +212,23 @@ ladder_audit_review_20261121_codex:
   additional_user_permission_within_scope: false
   untouched_validation: false
 
+ladder_queue_price_results_20261122_dev:
+  status: results_complete_review_requested
+  asof: "2026-11-22 02:02Z"
+  freeze: 0e20331f
+  checks_pass: true
+  falsifier: 10_of_10
+  front_occupancy: {zero_display: 458, occupied: 331, at_touch_occupied: 133}
+  principal_union_common_per_share_c: {front: [-0.951, 4.592], within_R: [-1.505, -1.267], beyond_R: [-2.274, -2.920]}
+  persists_at_touch_occupied: {s1: true, s30: true}
+  days_evaluable: 1_of_4
+  sides_same_order: false
+  front_at_touch_median_s_to_end: 47.6
+  pressure_contrasts_evaluable: 0_of_6
+  review_72a36de9_corrections_applied: 4_of_4
+  round_core_hours: 0.012
+  line_core_hours: 1.974
+  positive_pressure_round: stopped_awaiting_user_resource_decision
 ladder_queue_price_20261122_dev:
   status: frozen_before_run
   asof: "2026-11-22 01:59Z"

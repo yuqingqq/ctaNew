@@ -1,0 +1,73 @@
+{
+ "version": "queue_price_state_audit_v1",
+ "asof": "2026-11-22T01:59:48Z",
+ "summary": {
+  "states": 4840,
+  "price_display": {
+   "behind_best|shown_positive": 2749,
+   "at_touch|shown_positive": 1633,
+   "inside_best|shown_zero": 313,
+   "behind_best|shown_zero": 145
+  },
+  "price_display_queue": {
+   "behind_best|shown_positive|beyond_R": 1463,
+   "behind_best|shown_positive|within_R": 1088,
+   "at_touch|shown_positive|within_R": 841,
+   "at_touch|shown_positive|beyond_R": 659,
+   "inside_best|shown_zero|front": 313,
+   "behind_best|shown_positive|front": 198,
+   "behind_best|shown_zero|front": 145,
+   "at_touch|shown_positive|front": 133
+  },
+  "principal": 1633,
+  "behind_depth_queue": {
+   "outside": 2091,
+   "depth=1.0|beyond_R": 735,
+   "depth=1.0|within_R": 544,
+   "depth=2.0|beyond_R": 348,
+   "depth=2.0|within_R": 278,
+   "depth=3.0|beyond_R": 264,
+   "depth=3.0|within_R": 185,
+   "depth=4.0|beyond_R": 116,
+   "depth=1.0|front": 91,
+   "depth=4.0|within_R": 81,
+   "depth=2.0|front": 50,
+   "depth=3.0|front": 38,
+   "depth=4.0|front": 19
+  },
+  "principal_pressure": {
+   "outside": 3207,
+   "within_R|non_adverse": 774,
+   "beyond_R|non_adverse": 630,
+   "front|non_adverse": 129,
+   "within_R|q5": 36,
+   "within_R|positive_below_q5": 31,
+   "beyond_R|q5": 18,
+   "beyond_R|positive_below_q5": 11,
+   "front|q5": 3,
+   "front|positive_below_q5": 1
+  },
+  "q_above_shown": 0,
+  "cell_rows": 4920
+ },
+ "outputs": {
+  "states.csv": "633499dbfbf9bef3e39556f59364352c6d004dae37e1127912c2c05c35587cfb",
+  "cells.csv": "9a5ce414f909b880f7208c95117e0f1b9081c5bcf96586fcc5592a6dc8eed863"
+ },
+ "inputs": {
+  "aq_audit": "f1a8ba7264615d1a77ea7558ee94ed6624ac8f1ca4df7ebfe83fd953c45c4f8d",
+  "states.csv": "a2ce881238f786d613c9c5c64de9ca25ef53cbefa9bc51bb85cd5982cd3b045b",
+  "intervals.csv": "4b05f5939c8976f608a53ec251772d1be7e6920e9c67c933b74f850994601777",
+  "feat_20261024": "9f940406af48466049e5fffbcd336bab836ea0e015eb543d24a783deceaff201",
+  "feat_20261025": "6ffe53083a62b2d82c42068ed90b20b2c09e051510f9e3f3b34783a37450d187",
+  "feat_20261026": "79ed57745d70a93a8122ce6653e23ebb3989b380ea18ea9ff9ca4fadce6323d3",
+  "feat_20261027": "a5c1f08eec007fe871bffff202fcd3817c101ad6a84c5f309edec891390d0ddd"
+ },
+ "sources": {
+  "pf_ladder_queue_price.py": "692070d41ba9592150cdca66c905374f0709d7d1b6fe2dfbf3567e8ad6f55c8f",
+  "pf_ladder_queue_price_selftest.py": "1d5a322b785e58792fa0d4f56a488c20af8e89db4c08bb1bc119b2b1c7ac2015"
+ },
+ "manifest_sha256": "6d0472a1659e872d89ac29cd824914b5cddd0f99664e5f271bb3f45f99deba82",
+ "elapsed_s": 1.594451904296875,
+ "note": "exploratory saved-data description; no rule, threshold or skill claim"
+}

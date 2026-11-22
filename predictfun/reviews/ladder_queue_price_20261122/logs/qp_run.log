@@ -1,0 +1,7 @@
+{
+ "states": 4840,
+ "principal": 1633,
+ "cell_rows": 4920,
+ "elapsed_s": 1.59
+}
+2026-11-22T01:59:47Z tag=qp_run rc=0 peak_rss_mib=248 wall_s=1.91 cpu_user_s=1.77 memavail_start_gib=23 disk_free_gib=434->434 slot=claude

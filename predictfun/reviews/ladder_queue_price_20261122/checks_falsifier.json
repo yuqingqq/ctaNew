@@ -1,0 +1,65 @@
+{
+ "cases": {
+  "an_output_hash_changed": {
+   "family": "A",
+   "target": "A_outputs",
+   "clean": true,
+   "refused": true
+  },
+  "a_state_duplicated": {
+   "family": "B",
+   "target": "B_membership",
+   "clean": true,
+   "refused": true
+  },
+  "client_minus_venue_zeroed": {
+   "family": "U",
+   "target": "U_reused_fields",
+   "clean": true,
+   "refused": true
+  },
+  "a_displayed_size_changed": {
+   "family": "U",
+   "target": "U_reused_fields",
+   "clean": true,
+   "refused": true
+  },
+  "a_price_state_relabelled": {
+   "family": "G",
+   "target": "G_labels",
+   "clean": true,
+   "refused": true
+  },
+  "h1000_per_share_negated": {
+   "family": "C",
+   "target": "C_cells",
+   "clean": true,
+   "refused": true
+  },
+  "a_sparse_flag_flipped": {
+   "family": "C",
+   "target": "C_cells",
+   "clean": true,
+   "refused": true
+  },
+  "a_cell_dropped": {
+   "family": "C",
+   "target": "C_cells",
+   "clean": true,
+   "refused": true
+  },
+  "a_reading_changed": {
+   "family": "P",
+   "target": "P_readings",
+   "clean": true,
+   "refused": true
+  },
+  "resources_over_the_cap": {
+   "family": "I",
+   "target": "I_resources",
+   "clean": true,
+   "refused": true
+  }
+ },
+ "falsifier_ok": true
+}

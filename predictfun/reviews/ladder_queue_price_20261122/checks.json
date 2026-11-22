@@ -1,0 +1,38 @@
+{
+ "checks": {
+  "A_committed": true,
+  "A_inputs": true,
+  "A_outputs": true,
+  "B_membership": true,
+  "U_reused_fields": true,
+  "G_labels": true,
+  "C_cells": true,
+  "P_readings": true,
+  "I_resources": true
+ },
+ "details": {
+  "B": {
+   "states": 4840
+  },
+  "U": {
+   "mismatched": []
+  },
+  "G": {
+   "mismatched": []
+  },
+  "C": {
+   "rows": 4920,
+   "mismatched": []
+  },
+  "P": {
+   "mismatched": []
+  },
+  "I": {
+   "round_core_hours": 0.012130555555555552,
+   "cap": 0.02,
+   "line_core_hours": 1.9742833333333316,
+   "peak_mib": 248
+  }
+ },
+ "all_ok": true
+}

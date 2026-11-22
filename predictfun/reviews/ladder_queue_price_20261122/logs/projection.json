@@ -1,0 +1,15 @@
+{
+ "spent_core_hours": 0.011294444444444442,
+ "line_core_hours": 1.9734472222222206,
+ "stage_cpu_s": {
+  "selftest": 0.66,
+  "run": 1.97,
+  "readings": 1.01,
+  "checks": 1.75
+ },
+ "projected_core_hours": 0.0018715277777777777,
+ "cap": 0.02,
+ "round_total": 0.01316597222222222,
+ "line_total": 1.9753187499999985,
+ "run_full": true
+}

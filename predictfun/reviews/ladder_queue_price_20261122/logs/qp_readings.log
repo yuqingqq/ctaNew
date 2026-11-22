@@ -1,0 +1,335 @@
+{
+ "asof_outputs": "2026-11-22T01:59:48Z",
+ "states": 4840,
+ "support_rule": "valid filled states >= 20 on the value's own cohort",
+ "q1_occupancy": {
+  "at_touch|shown_positive|beyond_R": 659,
+  "at_touch|shown_positive|front": 133,
+  "at_touch|shown_positive|within_R": 841,
+  "behind_best|shown_positive|beyond_R": 1463,
+  "behind_best|shown_positive|front": 198,
+  "behind_best|shown_positive|within_R": 1088,
+  "behind_best|shown_zero|front": 145,
+  "inside_best|shown_zero|front": 313
+ },
+ "q1_front": {
+  "states": 789,
+  "inside_best|shown_zero": 313,
+  "inside_best|shown_positive": 0,
+  "inside_best|shown_unknown": 0,
+  "inside_best|shown_invalid": 0,
+  "at_touch|shown_zero": 0,
+  "at_touch|shown_positive": 133,
+  "at_touch|shown_unknown": 0,
+  "at_touch|shown_invalid": 0,
+  "behind_best|shown_zero": 145,
+  "behind_best|shown_positive": 198,
+  "behind_best|shown_unknown": 0,
+  "behind_best|shown_invalid": 0
+ },
+ "q2_principal": {
+  "I0": {
+   "1000": {
+    "pooled": "beyond_R<within_R<front",
+    "days": {
+     "20261024": "insufficient_support",
+     "20261025": "insufficient_support",
+     "20261026": "insufficient_support",
+     "20261027": "insufficient_support"
+    },
+    "days_evaluable": 0,
+    "days_same_order": 0,
+    "same_order_all_4_days": false,
+    "sides": {
+     "0": "insufficient_support",
+     "1": "insufficient_support"
+    },
+    "sides_same_order": false
+   },
+   "30000": {
+    "pooled": "within_R<beyond_R<front",
+    "days": {
+     "20261024": "insufficient_support",
+     "20261025": "insufficient_support",
+     "20261026": "insufficient_support",
+     "20261027": "insufficient_support"
+    },
+    "days_evaluable": 0,
+    "days_same_order": 0,
+    "same_order_all_4_days": false,
+    "sides": {
+     "0": "insufficient_support",
+     "1": "insufficient_support"
+    },
+    "sides_same_order": false
+   }
+  },
+  "I1": {
+   "1000": {
+    "pooled": "insufficient_support",
+    "days": {
+     "20261024": "insufficient_support",
+     "20261025": "insufficient_support",
+     "20261026": "insufficient_support",
+     "20261027": "insufficient_support"
+    },
+    "days_evaluable": 0,
+    "days_same_order": 0,
+    "same_order_all_4_days": false,
+    "sides": {
+     "0": "insufficient_support",
+     "1": "insufficient_support"
+    },
+    "sides_same_order": false
+   },
+   "30000": {
+    "pooled": "insufficient_support",
+    "days": {
+     "20261024": "insufficient_support",
+     "20261025": "insufficient_support",
+     "20261026": "insufficient_support",
+     "20261027": "insufficient_support"
+    },
+    "days_evaluable": 0,
+    "days_same_order": 0,
+    "same_order_all_4_days": false,
+    "sides": {
+     "0": "insufficient_support",
+     "1": "insufficient_support"
+    },
+    "sides_same_order": false
+   }
+  },
+  "I2": {
+   "1000": {
+    "pooled": "insufficient_support",
+    "days": {
+     "20261024": "insufficient_support",
+     "20261025": "insufficient_support",
+     "20261026": "insufficient_support",
+     "20261027": "insufficient_support"
+    },
+    "days_evaluable": 0,
+    "days_same_order": 0,
+    "same_order_all_4_days": false,
+    "sides": {
+     "0": "insufficient_support",
+     "1": "insufficient_support"
+    },
+    "sides_same_order": false
+   },
+   "30000": {
+    "pooled": "insufficient_support",
+    "days": {
+     "20261024": "insufficient_support",
+     "20261025": "insufficient_support",
+     "20261026": "insufficient_support",
+     "20261027": "insufficient_support"
+    },
+    "days_evaluable": 0,
+    "days_same_order": 0,
+    "same_order_all_4_days": false,
+    "sides": {
+     "0": "insufficient_support",
+     "1": "insufficient_support"
+    },
+    "sides_same_order": false
+   }
+  },
+  "I3": {
+   "1000": {
+    "pooled": "insufficient_support",
+    "days": {
+     "20261024": "insufficient_support",
+     "20261025": "insufficient_support",
+     "20261026": "insufficient_support",
+     "20261027": "insufficient_support"
+    },
+    "days_evaluable": 0,
+    "days_same_order": 0,
+    "same_order_all_4_days": false,
+    "sides": {
+     "0": "insufficient_support",
+     "1": "insufficient_support"
+    },
+    "sides_same_order": false
+   },
+   "30000": {
+    "pooled": "insufficient_support",
+    "days": {
+     "20261024": "insufficient_support",
+     "20261025": "insufficient_support",
+     "20261026": "insufficient_support",
+     "20261027": "insufficient_support"
+    },
+    "days_evaluable": 0,
+    "days_same_order": 0,
+    "same_order_all_4_days": false,
+    "sides": {
+     "0": "insufficient_support",
+     "1": "insufficient_support"
+    },
+    "sides_same_order": false
+   }
+  },
+  "union": {
+   "1000": {
+    "pooled": "beyond_R<within_R<front",
+    "days": {
+     "20261024": "within_R<beyond_R<front",
+     "20261025": "insufficient_support",
+     "20261026": "insufficient_support",
+     "20261027": "insufficient_support"
+    },
+    "days_evaluable": 1,
+    "days_same_order": 0,
+    "same_order_all_4_days": false,
+    "sides": {
+     "0": "insufficient_support",
+     "1": "beyond_R<front<within_R"
+    },
+    "sides_same_order": false
+   },
+   "30000": {
+    "pooled": "beyond_R<within_R<front",
+    "days": {
+     "20261024": "beyond_R<within_R<front",
+     "20261025": "insufficient_support",
+     "20261026": "insufficient_support",
+     "20261027": "insufficient_support"
+    },
+    "days_evaluable": 1,
+    "days_same_order": 1,
+    "same_order_all_4_days": false,
+    "sides": {
+     "0": "insufficient_support",
+     "1": "beyond_R<within_R<front"
+    },
+    "sides_same_order": false
+   }
+  }
+ },
+ "q3_pooled": {
+  "I0": {
+   "1000": {
+    "order": "front<beyond_R<within_R",
+    "bands": {
+     "front": {
+      "per_share": -2.8039101632495362,
+      "valid_filled": 75
+     },
+     "within_R": {
+      "per_share": -1.8781121336693354,
+      "valid_filled": 210
+     },
+     "beyond_R": {
+      "per_share": -2.376518455716145,
+      "valid_filled": 154
+     }
+    }
+   },
+   "30000": {
+    "order": "beyond_R<within_R<front",
+    "bands": {
+     "front": {
+      "per_share": 0.8734009682670361,
+      "valid_filled": 75
+     },
+     "within_R": {
+      "per_share": -0.8040849496696539,
+      "valid_filled": 210
+     },
+     "beyond_R": {
+      "per_share": -3.265725690919144,
+      "valid_filled": 154
+     }
+    }
+   }
+  },
+  "I1": {
+   "1000": {
+    "order": "beyond_R<within_R<front",
+    "bands": {
+     "front": {
+      "per_share": 1.1049422338025057,
+      "valid_filled": 38
+     },
+     "within_R": {
+      "per_share": -2.378680976171931,
+      "valid_filled": 231
+     },
+     "beyond_R": {
+      "per_share": -3.143330657082442,
+      "valid_filled": 245
+     }
+    }
+   },
+   "30000": {
+    "order": "beyond_R<within_R<front",
+    "bands": {
+     "front": {
+      "per_share": 4.418032782362399,
+      "valid_filled": 38
+     },
+     "within_R": {
+      "per_share": -2.2343650195995983,
+      "valid_filled": 231
+     },
+     "beyond_R": {
+      "per_share": -3.242452379459403,
+      "valid_filled": 245
+     }
+    }
+   }
+  },
+  "I2": {
+   "1000": {
+    "order": "beyond_R<within_R<front",
+    "bands": {
+     "front": {
+      "per_share": -0.23401657115419175,
+      "valid_filled": 26
+     },
+     "within_R": {
+      "per_share": -1.7324983713490694,
+      "valid_filled": 221
+     },
+     "beyond_R": {
+      "per_share": -2.6035098148174414,
+      "valid_filled": 296
+     }
+    }
+   },
+   "30000": {
+    "order": "front<beyond_R<within_R",
+    "bands": {
+     "front": {
+      "per_share": -5.866278023990066,
+      "valid_filled": 26
+     },
+     "within_R": {
+      "per_share": -1.9476187423096922,
+      "valid_filled": 221
+     },
+     "beyond_R": {
+      "per_share": -5.198829698354697,
+      "valid_filled": 296
+     }
+    }
+   }
+  },
+  "I3": {
+   "1000": {
+    "order": "insufficient_support",
+    "bands": {
+     "front": {
+      "per_share": -0.1279843174554805,
+      "valid_filled": 4
+     },
+     "within_R": {
+      "per_share": -2.5338135622504296,
+      "valid_filled": 41
+     },
+     "beyond_R": {
+      "per_share": -1.5591377
+2026-11-22T01:59:49Z tag=qp_readings rc=0 peak_rss_mib=114 wall_s=1.09 cpu_user_s=1.00 memavail_start_gib=22 disk_free_gib=434->434 slot=claude

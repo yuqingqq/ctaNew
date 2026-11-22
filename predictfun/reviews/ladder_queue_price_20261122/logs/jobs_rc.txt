@@ -1,1 +1,6 @@
 qp_manifest rc=0
+qp_selftest_frozen rc=0
+qp_projection rc=0
+qp_run rc=0
+qp_readings rc=0
+qp_checks rc=0

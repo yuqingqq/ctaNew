@@ -1,0 +1,2 @@
+QUEUE PRICE SELFTEST PASSED: labels, join, state_table, union and cells, guards
+2026-11-22T01:59:39Z tag=qp_selftest_frozen rc=0 peak_rss_mib=109 wall_s=0.72 cpu_user_s=0.66 memavail_start_gib=23 disk_free_gib=434->434 slot=claude

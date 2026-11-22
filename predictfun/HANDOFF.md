@@ -298,6 +298,17 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_QUEUE_PRICE_RESULTS_20261122_DEV -->
+## 2026-11-22 02:02Z (session aea5bfb9) — QUEUE-PRICE-STATE-AUDIT-v1 RESULTS (frozen 0e20331f; receipt `reviews/ladder_queue_price_20261122/report.md`)
+
+- **Integrity:** 4,840 / 4,840 exact-key joins; checks A / B / U / G / C / P / I pass; falsifier 10 / 10 (incl. zeroed client_minus_venue and negated per-share); round 0.012 of 0.020 core-hours, line 1.974 of 2.0.
+- **Occupancy (supersedes P108):** front (Q = 0) = 458 zero-display + 331 occupied (133 at touch, 198 behind).
+- **Principal (at the touch, occupied; union common, 1 s / 30 s c/share):** front -0.95 / +4.59 (39 valued filled), within_R -1.51 / -1.27 (357), beyond_R -2.27 / -2.92 (322) - the pooled order persists at both horizons. **But thin:** 1 of 4 days and 1 of 2 sides evaluable (side 1's 1 s order differs), only I0 among intervals; front-at-touch median 47.6 s to END (36 % < 30 s) vs 130 / 152 s.
+- **Also:** the pooled front changes sign by price state (inside-best zero-display -4.00 at 1 s); behind-occupied depth 1: beyond < within < front at 1 s, reversed for front at 30 s; pressure within the principal states 0 / 6 evaluable; client queue within 1 share of the replay's venue queue at 55 % of at-touch occupied first reviews.
+- **Review 72a36de9's four corrections:** all applied in this receipt (occupancy, denominators / predicate name, checker coverage, timing wording), superseding ARRIVAL-QUEUE's receipt in band.
+- **Next:** ONE Codex review of 72a36de9..this commit. Per the review's rule a thin answer starts no tuned variant; more data / a counterfactual queue-value experiment / resources beyond the line (0.026 core-hours left) are USER decisions; POSITIVE-PRESSURE-GUARD-v1 still awaits the USER.
+<!-- /LADDER_QUEUE_PRICE_RESULTS_20261122_DEV -->
+
 <!-- LADDER_QUEUE_PRICE_FREEZE_20261122_DEV -->
 ## 2026-11-22 01:59Z (session aea5bfb9) — QUEUE-PRICE-STATE-AUDIT-v1 FROZEN before the run (review 72a36de9's ONE next priority; its four nonblocking corrections bundled)
 
