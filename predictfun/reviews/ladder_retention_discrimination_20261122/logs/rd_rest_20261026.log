@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/research/pf_ladder_retention_discrimination.py", line 327, in <module>
+    run_part('rest', sys.argv[2])
+  File "/home/yuqing/ctaNew/predictfun/research/pf_ladder_retention_discrimination.py", line 269, in run_part
+    need(AF.LS.hwm() < 1450., f'{day} {m}: memory above the self-guard')
+  File "/home/yuqing/ctaNew/predictfun/research/pf_ladder_retention_discrimination.py", line 59, in need
+    C.require(cond, msg)
+  File "/home/yuqing/ctaNew/predictfun/research/pf_flow_price_common.py", line 42, in require
+    raise ValueError(message)
+ValueError: 20261026 3789484: memory above the self-guard
+2026-11-22T07:30:50Z tag=rd_rest_20261026 rc=1 peak_rss_mib=1451 wall_s=144.36 cpu_user_s=136.22 memavail_start_gib=22 disk_free_gib=428->428 slot=claude3

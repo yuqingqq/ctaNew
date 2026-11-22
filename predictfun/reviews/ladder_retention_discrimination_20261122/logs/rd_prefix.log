@@ -1,0 +1,10 @@
+{
+ "part": "prefix",
+ "day": "20261024",
+ "pairs": 64,
+ "parity_all": true,
+ "statuses": {
+  "ok": 64
+ }
+}
+2026-11-22T07:22:14Z tag=rd_prefix rc=0 peak_rss_mib=1272 wall_s=497.74 cpu_user_s=482.42 memavail_start_gib=22 disk_free_gib=428->428 slot=claude

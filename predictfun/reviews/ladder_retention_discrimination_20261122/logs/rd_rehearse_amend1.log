@@ -1,0 +1,30 @@
+{
+ "part": "prefix",
+ "day": "20990101",
+ "pairs": 8,
+ "parity_all": true,
+ "statuses": {
+  "ok": 8
+ }
+}
+{
+ "part": "prefix",
+ "day": "20990101",
+ "pairs": 8,
+ "parity_all": true,
+ "statuses": {
+  "ok": 8
+ }
+}
+{
+ "identical": {
+  "pairs": true,
+  "parity": true,
+  "ledgers": true
+ },
+ "refuses_unbound": true,
+ "records": 3,
+ "pairs": 8,
+ "rehearsal_ok": true
+}
+2026-11-22T07:42:12Z tag=rd_rehearse_amend1 rc=0 peak_rss_mib=203 wall_s=1.73 cpu_user_s=1.55 memavail_start_gib=22 disk_free_gib=428->428 slot=claude

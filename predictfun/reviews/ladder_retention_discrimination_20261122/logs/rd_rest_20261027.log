@@ -1,0 +1,10 @@
+{
+ "part": "rest",
+ "day": "20261027",
+ "pairs": 64,
+ "parity_all": true,
+ "statuses": {
+  "ok": 64
+ }
+}
+2026-11-22T07:30:50Z tag=rd_rest_20261027 rc=0 peak_rss_mib=1133 wall_s=456.04 cpu_user_s=447.91 memavail_start_gib=22 disk_free_gib=428->428 slot=claude4

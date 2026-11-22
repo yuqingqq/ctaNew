@@ -1,0 +1,17 @@
+{
+ "amendment": "amend1_per_market_loading",
+ "source": "3852f199d98faf169eca9afc6a051839d279ef0ec32f163cc1d9fd0a8d95da5d",
+ "manifest_sha256": "923ab5bc20f47fb6040d25657a1710667be700ce7bd17e5229abf2f7242e38ee",
+ "census_sha256": "415c66764d7d36f4529cc66f2ea58d4642a32e0217c9abf9ef85aa500946c754",
+ "frozen_sources": {
+  "pf_ladder_retention_discrimination.py": "32c19001cce4c714a9776ea2ea5b5e4fe115add48f1c8ac4cf9a62e2d7ea78af",
+  "pf_ladder_retention_discrimination_selftest.py": "ffb521d533693a47500a758cf0ebee3dea18025ae5166f04beac963dc4ecede6"
+ },
+ "self_guard_mib": 1450.0,
+ "applies_to": [
+  "rest/20261026"
+ ],
+ "reason": "the frozen Oct 26 rest job stopped at the 1,450 MiB self-guard (VmHWM 1,451) before any output",
+ "asof": "2026-11-22T07:42:36Z"
+}
+2026-11-22T07:42:35Z tag=rd_amend1_manifest rc=0 peak_rss_mib=196 wall_s=0.90 cpu_user_s=0.74 memavail_start_gib=22 disk_free_gib=428->428 slot=claude

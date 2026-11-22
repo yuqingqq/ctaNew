@@ -711,6 +711,21 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_RETENTION_DISCRIMINATION_AMEND1_20261122_DEV -->
+## 2026-11-22 07:42Z (session aea5bfb9) — LONG-VALUE-RETENTION-DISCRIMINATION-v1 amendment 1 (per-market loading) frozen before the Oct 26 rerun
+
+**What happened:**
+- The Oct 26 rest job stopped at the frozen **1,450 MiB self-guard** (VmHWM 1,451) after its first market, **before any output** (`logs/rd_rest_20261026.log`, 136 CPU s, counted).
+- The prefix (Oct 24) and the Oct 25 / 27 rest days finished: 64 / 64 ok each, parity.
+
+**The fix** (USER memory rule: never raise, redesign): `pf_ladder_retention_discrimination_amend1.py` loads one market's inputs at a time and frees them.
+- Everything else is the frozen run_part: checks, states, run_market, order, bytes, and the same guard, **not raised**.
+- `amend1_manifest.json` binds its sha256, the frozen manifest and census, and applies to `rest/20261026` only.
+- `tools/rehearse_amend1.py` shows byte-identical pairs / parity / ledgers against the frozen run_part on a synthetic three-market day, and refuses an unbound manifest.
+
+**Next:** Oct 26 with the amendment → measure → checks → receipt → ONE Codex review.
+<!-- /LADDER_RETENTION_DISCRIMINATION_AMEND1_20261122_DEV -->
+
 <!-- LADDER_RETENTION_DISCRIMINATION_FREEZE_20261122_DEV -->
 ## 2026-11-22 07:22Z (session aea5bfb9) — LONG-VALUE-RETENTION-DISCRIMINATION-v1 FROZEN before any label or fit (USER-approved 1.25 h / line 4.00)
 

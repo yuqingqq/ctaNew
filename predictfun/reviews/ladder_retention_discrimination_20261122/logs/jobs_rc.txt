@@ -1,1 +1,7 @@
 rd_manifest rc=0
+rd_selftest_frozen rc=0
+rd_prefix rc=0
+rd_projection rc=0
+rd_rest_20261026 rc=1
+rd_rest_20261027 rc=0
+rd_rest_20261025 rc=0
