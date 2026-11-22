@@ -1,5 +1,10 @@
 # Maker trace reconstruction — evidence before imitation
 
+**Governing USER clarification:** [coverage amendment](coverage_amendment.md).
+Aim to explain the bulk of observed behavior using constrained estimates and
+sensitivity checks. The eight-example packet is the initial check, not the
+final deliverable or a reason to stop at missing exact timestamps.
+
 2026-11-22. USER: simulate their whole queue trace, then inspect posting and
 pulling decisions. Design-only handoff; no new data replay, fit or strategy
 change has run. Source inspection at c57c6aa54ddb2d7a62e3a93cfbe0252cd683f971.

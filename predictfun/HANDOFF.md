@@ -23,6 +23,35 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- MAKER_TRACE_COVERAGE_20261122_USER -->
+## 2026-11-22 — USER: estimate missing details and reconstruct most of the makers' behavior
+
+[Governing coverage amendment](reviews/automatic/20261122_maker_trace_reconstruction/coverage_amendment.md).
+The objective is broad, economically useful reconstruction, not eight
+examples followed by a list of unknowns. The eight examples are a schema
+and controls step; bundle the broader declared measurement in the same
+round where resources permit. Exact command timestamps are not required
+for every useful conclusion.
+
+Combine order hashes, fills, depth, intervening trades and both sides'
+execution histories. Keep observed facts, constrained estimates,
+assumption-sensitive inferences and unresolved cases separate. Use a small
+predeclared family of compatible traces; report behavioral conclusions
+that survive its timing/size/queue assumptions. Do not manufacture exact
+CANCEL/KEEP labels or call model scores calibrated probabilities.
+
+Measure coverage separately by observed orders, executions, shares and
+economic importance, and separately for posting, queue/persistence and
+removal. Identity coverage is not action coverage. Report ranges and the
+important unresolved cases; never count unseen unfilled orders as known.
+The final deliverable includes representative whole-market timelines,
+aggregate behavior/coverage and robust economic mechanisms to test.
+
+Design amendment only; current frozen discrimination work is unchanged.
+No additional run, data day or resource extension launched by this note.
+Development owns implementation and the bounded projection/combined receipt.
+<!-- /MAKER_TRACE_COVERAGE_20261122_USER -->
+
 <!-- MAKER_TRACE_RECONSTRUCTION_20261122_USER -->
 ## 2026-11-22 — USER: reconstruct makers' whole queue traces to understand posting and pulling
 
