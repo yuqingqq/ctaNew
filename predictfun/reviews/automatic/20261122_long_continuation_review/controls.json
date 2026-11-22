@@ -1,0 +1,12 @@
+{
+  "synthetic_only": true,
+  "same_action_parity": {
+    "REVIEW": true,
+    "ADMISSION": true
+  },
+  "future_only_prefix_commands_and_fills": {
+    "KEEP": true,
+    "PULL": true
+  },
+  "positive_control_changes_future_fills": true
+}

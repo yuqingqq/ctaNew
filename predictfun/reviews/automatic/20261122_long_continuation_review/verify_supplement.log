@@ -1,0 +1,9 @@
+{
+  "target": "6b806c192980de106da80fa97ce4993d6553ec66",
+  "receipt_day_and_parity_copies": 8,
+  "missing_fork_mark_synthetic_status": "ok",
+  "missing_fork_mark_is_actual_result": false,
+  "caveat": "Current saved Y is verified; missing marks must be explicit before expanding the builder population."
+}
+Pinned imported research sources: 96
+2026-11-22T06:35:44Z tag=lc_review_supplement rc=0 peak_rss_mib=224 wall_s=1.40 cpu_user_s=1.07 memavail_start_gib=22 disk_free_gib=429->429 slot=codex

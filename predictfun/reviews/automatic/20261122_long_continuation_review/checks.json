@@ -1,0 +1,48 @@
+{
+  "checks": {
+    "A_committed": true,
+    "A_census": true,
+    "A_days": true,
+    "A_audit": true,
+    "B_membership": true,
+    "Y_values": true,
+    "G_gates": true,
+    "G_status": true,
+    "P_parity": true,
+    "S_summary": true,
+    "S_reading": true,
+    "I_resources": true
+  },
+  "details": {
+    "B": {
+      "pairs": 64,
+      "bases": 8
+    },
+    "Y": {
+      "bad": []
+    },
+    "G": {
+      "applied": [],
+      "pre_fork": [],
+      "reconciled": [],
+      "queue_reset": [],
+      "lineage_pull": [],
+      "unused_exemption": []
+    },
+    "P": {
+      "bad": []
+    },
+    "S": {
+      "bad": [],
+      "reading": "reliable_and_varied"
+    },
+    "I": {
+      "batch_core_hours": 0.2235222222222222,
+      "line_before": 2.432788888888893,
+      "line_with_batch": 2.6563111111111155,
+      "with_reserve": 2.6863111111111153,
+      "peak_mib": 1161
+    }
+  },
+  "all_ok": true
+}

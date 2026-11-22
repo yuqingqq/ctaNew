@@ -23,6 +23,38 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- LONG_CONTINUATION_REVIEW_20261122_CODEX -->
+## 2026-11-22 — Long-continuation labels accepted; explain turnover versus residual inventory next
+
+[Combined review](reviews/automatic/20261122_long_continuation_review/report.md)
+of **6b806c192980de106da80fa97ce4993d6553ec66**. Accept 64 paired END
+labels and the reliable_and_varied pilot gate; no result-blocking defect or
+required replay. Common lineage holding rules, own-branch feedback and
+full-book accounting hold. No predictive skill or profitability established.
+
+Bundled findings: a fixed-price order's fills all have the same END sign,
+so the zero early-loss/later-benefit count cannot reject two-sided queue
+compensation; 12 WAIT arms skip their actual first +50ms replacement due to
+cross-branch numeric gid reuse; FIFO ages reset carried inventory at the
+fork; REVIEW aggregate Y is negative on all four days, ADMISSION mixed.
+Large offsetting focal/other components do not imply a general 'wash'.
+Ancillary checker coverage is limited; actual Y and callback identity pass
+independent checks. No cleanup-only replay or new tuned variant.
+
+ONE next priority: PAIRED-TURNOVER-ATTRIBUTION-v1 on the SAME saved 64 pairs.
+Freeze the diagnostic; reconcile Q and Y into FIFO matched closing profit
+and marked residual inventory, keeping carried/new inventory and actual lot
+ages apart. Include opposite-side offsets of focal fills, arm-local IDs,
+corrected replacement timings and executable day-sign statements. Retain
+the primary Y and all statuses; no fit, replay, new labels or new data.
+
+This completes the approved pilot within its existing 0.40h batch / 2.85h
+line: follow-up <=0.06h INCLUDING 0.02h review. No additional USER decision
+for that saved-evidence completion. Expanded experiments/data/fitting or
+resources require a new scope decision. Development owns the one combined
+receipt. Details, controls and limitations are in the review.
+<!-- /LONG_CONTINUATION_REVIEW_20261122_CODEX -->
+
 <!-- CANCEL_HEADROOM_REVIEW_20261122_CODEX -->
 ## 2026-11-22 — Headroom accepted; amend common continuation before a resource-approved pilot
 

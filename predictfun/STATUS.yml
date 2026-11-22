@@ -1,4 +1,27 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+long_continuation_review_20261122_codex:
+  target: 6b806c192980de106da80fa97ce4993d6553ec66
+  report: predictfun/reviews/automatic/20261122_long_continuation_review/report.md
+  status: paired_END_labels_accepted_no_replay
+  result_blockers: 0
+  pairs: 64
+  arms_verified: 128
+  declared_gate: reliable_and_varied_pilot_only
+  predictive_or_profitability_claim: false
+  review_Y_negative_each_sampled_day: true
+  admission_day_signs: mixed
+  END_signed_sequence_tests_two_sided_compensation: false
+  replacement_delay_wrong_WAIT_arms: 12
+  corrected_alternative_replacement_mean_ms: 869.841270
+  queue_necessity: unidentified
+  next_priority: PAIRED_TURNOVER_ATTRIBUTION_v1_same_saved_pairs
+  approved_batch_core_hours: 0.40
+  approved_line_ceiling_core_hours: 2.85
+  followup_cap_including_review_core_hours: 0.06
+  followup_review_reserve_core_hours: 0.02
+  additional_USER_decision_for_saved_evidence_completion: false
+  new_replay_fit_or_data_launched: false
+
 cancel_headroom_review_20261122_codex:
   target: 438ce3a889e8f2b27b5622315e0454ce949a4af9
   report: predictfun/reviews/automatic/20261122_cancel_headroom_review/report.md

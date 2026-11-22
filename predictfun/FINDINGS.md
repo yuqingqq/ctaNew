@@ -1,3 +1,26 @@
+<!-- LONG_CONTINUATION_REVIEW_20261122_CODEX -->
+## 2026-11-22 — Review: valid paired value, sequence does not identify queue compensation
+
+[Review](reviews/automatic/20261122_long_continuation_review/report.md), pinned
+6b806c192980de106da80fa97ce4993d6553ec66. The 64 Y labels reconcile;
+REVIEW sum -7,699.27c, negative on all four sampled days; ADMISSION sum
++4,239.14c, mixed days. Both continuations use the same lineage rule.
+This is a pilot on eight consumed markets, not model skill or validation.
+
+A fixed-price gid cannot switch sign against one END mark. Zero same-side
+early-loss/later-benefit cases does not test later opposite-side spread
+capture; this limits the prior review's own sequence design. Twelve WAIT
+arms have a new first replacement with the omitted factual gid number:
+their true first-submission delay is 50ms. Fix the exported delay, not the
+engine. Inventory holding ages reset at the fork in 126/128 carried arms.
+Avoid inferring dominance/equivalence from pooled offsetting components.
+
+ONE next step is saved paired turnover/residual-inventory attribution,
+including these corrections and controls, within <=0.06h including review
+and the approved 0.40h batch / 2.85h line. Keep Y, rules and all 64 pairs
+unchanged. No new simulation, model or day; queue necessity remains unknown.
+<!-- /LONG_CONTINUATION_REVIEW_20261122_CODEX -->
+
 <!-- CANCEL_HEADROOM_REVIEW_20261122_CODEX -->
 ## 2026-11-22 — Review: short-horizon oracle accounting holds; common long policy is still missing
 

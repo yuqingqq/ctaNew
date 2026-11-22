@@ -1,0 +1,13 @@
+{
+  "synthetic_only": true,
+  "same_action_parity": {
+    "REVIEW": true,
+    "ADMISSION": true
+  },
+  "future_only_prefix_commands_and_fills": {
+    "KEEP": true,
+    "PULL": true
+  },
+  "positive_control_changes_future_fills": true
+}
+2026-11-22T06:37:51Z tag=lc_review_controls rc=0 peak_rss_mib=198 wall_s=1.15 cpu_user_s=0.98 memavail_start_gib=22 disk_free_gib=429->429 slot=codex

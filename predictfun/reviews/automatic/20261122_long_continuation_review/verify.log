@@ -1,0 +1,210 @@
+LONG CONTINUATION SELFTEST PASSED: inert guard, run_market gates, known-bad controls, future-only perturbation, pure parts, guards
+{
+  "target": "6b806c192980de106da80fa97ce4993d6553ec66",
+  "selftest": "6 groups PASS",
+  "saved_mutants_rejudged": 35,
+  "checks": true,
+  "falsifiers": 12,
+  "census": 4783,
+  "pairs": 64,
+  "arms_checked": 128,
+  "base_markets": 8,
+  "finite_common_marks": true,
+  "queue_checks_nonrefused": 5270,
+  "missing_activation_queue": 0,
+  "carried_inventory_arms": 126,
+  "summary_full_field_reproduction": true,
+  "kind_readings": {
+    "ADMISSION": {
+      "pairs": 32,
+      "by_day": {
+        "20261024": 2491.353969857345,
+        "20261025": 4547.473290625092,
+        "20261026": -901.437926310092,
+        "20261027": -1898.248058945046
+      },
+      "Y": 4239.141275227299,
+      "abs_Y": 12395.765023962113,
+      "abs_focal": 51578.82467378988,
+      "abs_other": 53254.78575006945,
+      "other_abs_larger": 6
+    },
+    "REVIEW": {
+      "pairs": 32,
+      "by_day": {
+        "20261024": -544.0561804646743,
+        "20261025": -1896.8446549506943,
+        "20261026": -2562.8200297545827,
+        "20261027": -2695.550540705956
+      },
+      "Y": -7699.271405875908,
+      "abs_Y": 22634.906244194175,
+      "abs_focal": 47594.564011516035,
+      "abs_other": 34515.44686445781,
+      "other_abs_larger": 10
+    }
+  },
+  "replacement_delay_changes": [
+    {
+      "key": "043a975bbb6351b5a7b4efad503d5dd576c88654323863396958e7f8f19433ca",
+      "day": "20261025",
+      "m": 3723774,
+      "kind": "ADMISSION",
+      "arm": "alternative",
+      "stored": 800.0,
+      "correct": 50.0,
+      "factual_gid": 30,
+      "actual_first_gid": 30
+    },
+    {
+      "key": "093ade5565ea5c8eede21ab251a8d967b5dfa96c2d6a0043096fe0da3a3300fa",
+      "day": "20261025",
+      "m": 3723774,
+      "kind": "ADMISSION",
+      "arm": "alternative",
+      "stored": 1600.0,
+      "correct": 50.0,
+      "factual_gid": 108,
+      "actual_first_gid": 108
+    },
+    {
+      "key": "0565818035385b63ded15e081db11f1fb1048926d1d1b1a57e6d6f94b089ef5f",
+      "day": "20261025",
+      "m": 3734864,
+      "kind": "ADMISSION",
+      "arm": "alternative",
+      "stored": 300.0,
+      "correct": 50.0,
+      "factual_gid": 287,
+      "actual_first_gid": 287
+    },
+    {
+      "key": "017bcd0ece074732cc7af9a2e33b880f7db38b5f9d84069ce19ffc6462469710",
+      "day": "20261026",
+      "m": 3789484,
+      "kind": "ADMISSION",
+      "arm": "alternative",
+      "stored": 1150.0,
+      "correct": 50.0,
+      "factual_gid": 423,
+      "actual_first_gid": 423
+    },
+    {
+      "key": "0073a60a2615c4150f5ccb9169ec0310876dde3830dcc427c99af8aac983d706",
+      "day": "20261026",
+      "m": 3789484,
+      "kind": "ADMISSION",
+      "arm": "alternative",
+      "stored": 100.0,
+      "correct": 50.0,
+      "factual_gid": 427,
+      "actual_first_gid": 427
+    },
+    {
+      "key": "015605d18104289bd6dcd196a7c9340c0425286f2edf9d851a700fb792aab4c8",
+      "day": "20261026",
+      "m": 3803131,
+      "kind": "ADMISSION",
+      "arm": "alternative",
+      "stored": 3200.0,
+      "correct": 50.0,
+      "factual_gid": 75,
+      "actual_first_gid": 75
+    },
+    {
+      "key": "025e8adf63707094987f52a913add627bf0904f296a6ad81bffa5278cac083ab",
+      "day": "20261026",
+      "m": 3803131,
+      "kind": "ADMISSION",
+      "arm": "alternative",
+      "stored": 4600.0,
+      "correct": 50.0,
+      "factual_gid": 188,
+      "actual_first_gid": 188
+    },
+    {
+      "key": "147891bfb4101cfa9b8d84712b69644060755c9e5adb5c6d9cc6d77e6aa0db28",
+      "day": "20261027",
+      "m": 3877472,
+      "kind": "ADMISSION",
+      "arm": "alternative",
+      "stored": 9800.0,
+      "correct": 50.0,
+      "factual_gid": 139,
+      "actual_first_gid": 139
+    },
+    {
+      "key": "021aae90d747142e3ae55152c115f0853dfdb8a48050a2b8192b91f97f64cbe7",
+      "day": "20261027",
+      "m": 3899224,
+      "kind": "ADMISSION",
+      "arm": "alternative",
+      "stored": 1200.0,
+      "correct": 50.0,
+      "factual_gid": 191,
+      "actual_first_gid": 191
+    },
+    {
+      "key": "04aa146c62cfed2ebf0c4f75083a7c601a10f3ad78a280f2e28faedfc421d775",
+      "day": "20261024",
+      "m": 3697902,
+      "kind": "ADMISSION",
+      "arm": "alternative",
+      "stored": 100.0,
+      "correct": 50.0,
+      "factual_gid": 88,
+      "actual_first_gid": 88
+    },
+    {
+      "key": "0392396694183a01e1d6fc87251fdde0720f4021723951d8c2b502b142f04f5e",
+      "day": "20261024",
+      "m": 3697902,
+      "kind": "ADMISSION",
+      "arm": "alternative",
+      "stored": 2750.0,
+      "correct": 50.0,
+      "factual_gid": 152,
+      "actual_first_gid": 152
+    },
+    {
+      "key": "013e2983f918559a7b91ff5b6e92c1f582d6d49a9c650bc49549e304d029cdbb",
+      "day": "20261024",
+      "m": 3699278,
+      "kind": "ADMISSION",
+      "arm": "alternative",
+      "stored": 5950.0,
+      "correct": 50.0,
+      "factual_gid": 297,
+      "actual_first_gid": 297
+    }
+  ],
+  "delay_alternative_mean_ms_before": 1361.111111111111,
+  "delay_alternative_mean_ms_after": 869.8412698412699,
+  "checker_corruptions_still_pass": {
+    "wrong_callback_action": true,
+    "wrong_callback_time": true,
+    "changed_reported_execution_edge": true
+  },
+  "fixed_price_sequence_example": {
+    "sequence": [
+      "early_loss_no_later_benefit",
+      -10.0,
+      -10.0
+    ],
+    "full_book_END_value": 20.0,
+    "meaning": "Opposite-side capture is not same-side END-sign reversal"
+  },
+  "resources": {
+    "batch_core_hours": 0.2235222222222222,
+    "line_before": 2.432788888888893,
+    "line_with_batch": 2.6563111111111155,
+    "with_reserve": 2.6863111111111153,
+    "peak_mib": 1161
+  },
+  "limitations": [
+    "no historical replay",
+    "arm orders/commands/fill-time mids not retained in paired ledgers; ancillary recomputation limited to saved facts",
+    "same-price sequence example synthetic, not evidence of realized queue necessity"
+  ]
+}
+2026-11-22T06:33:38Z tag=lc_review_verify rc=0 peak_rss_mib=282 wall_s=10.20 cpu_user_s=9.76 memavail_start_gib=22 disk_free_gib=429->429 slot=codex
