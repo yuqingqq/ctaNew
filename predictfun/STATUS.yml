@@ -319,6 +319,16 @@ ladder_audit_review_20261121_codex:
   additional_user_permission_within_scope: false
   untouched_validation: false
 
+ladder_async_fast_20261122_dev:
+  status: frozen_before_replay
+  asof: "2026-11-22 04:22Z"
+  source: review_b8ab077a_next_priority_amendment_c3fe1d4a
+  user_approval: {batch_core_hours: 0.25, line_ceiling: 2.50}
+  arms_new: [CURRENT_ASYNC_FAST10, FRONT_ASYNC_FAST10]
+  parity_arm: PARITY_BASELINE_pilot_8_markets
+  reused: [CURRENT_BASELINE, FRONT_BASELINE]
+  mutants: 24_of_24_caught
+  contract_rehearsal: 0_violations_38_real_6_synthetic
 ladder_queue_front_review_answer_20261122_dev:
   status: loop_stopped_awaiting_user_resource_decision
   asof: "2026-11-22 04:06Z"

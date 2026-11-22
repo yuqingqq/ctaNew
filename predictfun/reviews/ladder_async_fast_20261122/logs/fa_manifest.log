@@ -1,0 +1,52 @@
+{
+ "version": "async_execution_sensitivity_v1",
+ "review": "b8ab077a",
+ "amendment": "c3fe1d4a",
+ "approval": "USER 2026-11-22: approve ASYNC_FAST10 (<= 0.25 / line 2.50)",
+ "profile_sha256": "508d47e455687e436bf2e6ffa71170a40e5f0ff248d2ca6f6366c507a679221f",
+ "treatment_sha256": "61d67c00c4816eb9420e526a7bac41727cd7a6fe0a83faa6104140538ebf272d",
+ "profiles": {
+  "BASELINE": {
+   "place": 58.0,
+   "cancel": 37.0,
+   "pending": 95.0,
+   "slot_model": "frozen"
+  },
+  "ASYNC_FAST10": {
+   "place": 10.0,
+   "cancel": 10.0,
+   "pending": 20.0,
+   "slot_model": "desired_levels"
+  }
+ },
+ "notices": {
+  "fill_notice": 100.0,
+  "cancel_ack": 100.0,
+  "post_notice": 0.0
+ },
+ "run_arms": {
+  "PARITY_BASELINE": [
+   false,
+   "BASELINE"
+  ],
+  "CURRENT_ASYNC_FAST10": [
+   false,
+   "ASYNC_FAST10"
+  ],
+  "FRONT_ASYNC_FAST10": [
+   true,
+   "ASYNC_FAST10"
+  ]
+ },
+ "reused": {
+  "CURRENT_BASELINE": "CURRENT_QUEUE",
+  "FRONT_BASELINE": "FRONT_AT_ACTIVATION"
+ },
+ "reused_records": {
+  "pilot/20261024": "f9c9edbf20f728f035cd7855ce2d392a15973286c71b1e207390feb8d9c831eb",
+  "pilot/20261025": "fd16b3a46fec02b07ff738e43e0ded5ae028ad35feca77a35d9feec34e2e111c",
+  "pilot/20261026": "74ddb494472b64a9dedd3a4dd905303f5b8bfaf1bf2bf344a196961861e4f7b4",
+  "pilot/20261027": "69b81d26f5250ac25edc2b84e8a1804a068f4832d4f4bceedad81c9f17f7dbd9",
+  "rest/20261024": "c93727431fc24d8ba770127788d8faa61237f5928020c4eeae4ae4a2b2eae982",
+  "rest/20261025": "8e0c0e1c5429db3adc00637bf76d8be9ffd3f10eceb24e6363f67921c3d9
+2026-11-22T04:22:17Z tag=fa_manifest rc=0 peak_rss_mib=199 wall_s=0.99 cpu_user_s=0.80 memavail_start_gib=23 disk_free_gib=432->432 slot=claude

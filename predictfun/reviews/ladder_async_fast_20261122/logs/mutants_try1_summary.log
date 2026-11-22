@@ -1,0 +1,27 @@
+  0 the ASYNC activation at 58 ms: CAUGHT (3.1 s) - ASYNC FAST SELFTEST FAILED: 1 ASYNC timing (58.0, 20.0, 60.0) | 2 near END with the profile's activation ({'ASYNC_FAST10': (0, ['near_end', 'near_end'
+  1 the ASYNC live cancel at 37 ms: CAUGHT (3.4 s) - ASYNC FAST SELFTEST FAILED: 1 ASYNC timing (10.0, 37.0, 87.0)
+  2 the ASYNC pending-cancel minimum at 95 ms: CAUGHT (3.4 s) - ASYNC FAST SELFTEST FAILED: 1 ASYNC timing (10.0, 95.0, 60.0)
+  3 the ASYNC slot model frozen: CAUGHT (3.3 s) - ASYNC FAST SELFTEST FAILED: 2 overlap with headroom ([(1150.0, 51.0)], [(1150.0, 51.0)]) | 2 at the cap the replacement waits for the closure ([], [11
+  4 the activation from the frozen constant: CAUGHT (3.1 s) - ASYNC FAST SELFTEST FAILED: 1 ASYNC timing (58.0, 20.0, 60.0)
+  5 the pending race rule dropped: CAUGHT (3.3 s) - ASYNC FAST SELFTEST FAILED: 1 ASYNC timing (10.0, 10.0, 60.0) | 1 BASELINE equals the frozen engine ([(58.0, 37.0), (58.0, 137.0)]) | 4 BASELINE parit
+  6 retiring orders counted as desired: CAUGHT (3.2 s) - ASYNC FAST SELFTEST FAILED: 2 overlap with headroom ([(1150.0, 51.0)], [(1150.0, 51.0)]) | 2 at the cap the replacement waits for the closure ([], [11
+  7 the async desired invariant dropped: CAUGHT (3.3 s) - ASYNC FAST SELFTEST FAILED: 2 the async invariants refuse (reservation over the cap; three desired orders)
+  8 the async reservation invariant dropped: CAUGHT (3.4 s) - ASYNC FAST SELFTEST FAILED: 2 the async invariants refuse (reservation over the cap; three desired orders)
+  9 near END from the frozen constant: CAUGHT (3.3 s) - ASYNC FAST SELFTEST FAILED: 2 near END with the profile's activation ({'ASYNC_FAST10': (0, ['near_end', 'near_end']), 'BASELINE': (0, ['near_end', 'ne
+  10 the async settings not recorded: CAUGHT (3.3 s) - ASYNC FAST SELFTEST FAILED: 4 BASELINE parity (0 of 3 differ); ASYNC finishes with its settings (0) and differs (3)
+  11 the baseline settings changed: CAUGHT (3.4 s) - ASYNC FAST SELFTEST FAILED: 4 BASELINE parity (3 of 3 differ); ASYNC finishes with its settings (0) and differs (3)
+  12 run_arm with the front flag inverted: CAUGHT (3.4 s) - ASYNC FAST SELFTEST FAILED: 4 run_arm maps the arms ({'PARITY_BASELINE': (True, 'BASELINE'), 'CURRENT_ASYNC_FAST10': (True, 'ASYNC_FAST10'), 'FRONT_AS
+  13 FRONT_ASYNC without the front treatment: CAUGHT (3.3 s) - ASYNC FAST SELFTEST FAILED: 4 run_arm maps the arms ({'PARITY_BASELINE': (False, 'BASELINE'), 'CURRENT_ASYNC_FAST10': (False, 'ASYNC_FAST10'), 'FRONT_
+  14 a retiring tick after the request only: CAUGHT (3.3 s) - ASYNC FAST SELFTEST FAILED: 5 blocks ({'day': 'd', 'm': 1, 'arm': 'A', 'desired_occupancy': 0.40625, 'retiring_ticks': 2.0, 'cap_while_retiring': 0, '
+  15 every cap refusal counted while retiring: CAUGHT (3.4 s) - ASYNC FAST SELFTEST FAILED: 5 blocks ({'day': 'd', 'm': 1, 'arm': 'A', 'desired_occupancy': 0.375, 'retiring_ticks': 3.0, 'cap_while_retiring': 2, 'ca
+  16 the occupancy not capped at the levels: CAUGHT (3.3 s) - ASYNC FAST SELFTEST FAILED: 5 blocks ({'day': 'd', 'm': 1, 'arm': 'A', 'desired_occupancy': 0.4375, 'retiring_ticks': 3.0, 'cap_while_retiring': 1, 'c
+  17 the interaction sign: CAUGHT (3.3 s) - ASYNC FAST SELFTEST FAILED: 6 contrasts ({'EXEC_AT_CURRENT': (3.0, 'MIXED'), 'EXEC_AT_FRONT': (9.0, 'POSITIVE_EVERY_DAY'), 'QUEUE_AT_FAST': (9.0, 'POS
+  18 a zero END not nonnegative: CAUGHT (3.3 s) - ASYNC FAST SELFTEST FAILED: 6 a nonnegative arm ([], assumptions_do_not_rescue)
+  19 run_day without the profile identity: CAUGHT (3.3 s) - ASYNC FAST SELFTEST FAILED: 7 guards: stopped (KeyError('parent'))
+  20 the rest without the projection gate: CAUGHT (3.6 s) - ASYNC FAST SELFTEST FAILED: 7 guards: stopped (KeyError('parent'))
+  21 run_day without write-once: CAUGHT (3.3 s) - ASYNC FAST SELFTEST FAILED: 7 guards: stopped (KeyError('parent'))
+  22 the projection without write-once: CAUGHT (3.3 s) - ASYNC FAST SELFTEST FAILED: 7 project refuses an existing projection
+  23 measure without write-once: CAUGHT (3.4 s) - ASYNC FAST SELFTEST FAILED: 7 guards: stopped (KeyError('parent'))
+control: PASSED (3.4 s); sources {'pf_ladder_async_fast.py': '16b51d1ae44eb4a1', 'pf_ladder_async_fast_mutants.py': '003e424f0ea4a2a1', 'pf_ladder_async_fast_selftest.py': 'df4f1d136b3449d7'}
+mutation check passed: the control passes its selftest, 24 / 24 planted code errors are caught by a check (1.4 CPU min)
+2026-11-22T04:19:08Z tag=lfa_summary_try1 rc=0 peak_rss_mib=15 wall_s=0.02 cpu_user_s=0.01 memavail_start_gib=22 disk_free_gib=432->432 slot=claude

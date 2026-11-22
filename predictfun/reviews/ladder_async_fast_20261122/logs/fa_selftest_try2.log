@@ -1,0 +1,2 @@
+ASYNC FAST SELFTEST PASSED: timing, slot model, pending fills / removal / receipt, parity and invariants, blocks, predicates, guards
+2026-11-22T04:17:13Z tag=fa_selftest_try2 rc=0 peak_rss_mib=207 wall_s=2.91 cpu_user_s=2.70 memavail_start_gib=23 disk_free_gib=432->432 slot=claude

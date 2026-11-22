@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "9", "name": "near END from the frozen constant", "seconds": 3.3, "sources": {"pf_ladder_async_fast.py": "16b51d1ae44eb4a1", "pf_ladder_async_fast_mutants.py": "003e424f0ea4a2a1", "pf_ladder_async_fast_selftest.py": "df4f1d136b3449d7"}, "why": "ASYNC FAST SELFTEST FAILED: 2 near END with the profile's activation ({'ASYNC_FAST10': (0, ['near_end', 'near_end']), 'BASELINE': (0, ['near_end', 'near_end'])})"}
+2026-11-22T04:18:52Z tag=lfa_9 rc=0 peak_rss_mib=207 wall_s=3.48 cpu_user_s=3.30 memavail_start_gib=22 disk_free_gib=432->432 slot=claude3

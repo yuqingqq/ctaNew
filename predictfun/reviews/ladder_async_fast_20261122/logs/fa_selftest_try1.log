@@ -1,0 +1,2 @@
+ASYNC FAST SELFTEST FAILED: 3 a fill on a retiring order counted once; none at the effect ([], ('removed', 1150.0)) | 3 BASELINE: a trade 1 ms before the effect fills, at the effect not ([])
+2026-11-22T04:16:56Z tag=fa_selftest_try1 rc=1 peak_rss_mib=206 wall_s=2.84 cpu_user_s=2.59 memavail_start_gib=23 disk_free_gib=432->432 slot=claude

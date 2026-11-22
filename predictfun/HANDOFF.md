@@ -446,6 +446,21 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_ASYNC_FAST_FREEZE_20261122_DEV -->
+## 2026-11-22 04:22Z (session aea5bfb9) — ASYNC-EXECUTION-SENSITIVITY-v1 FROZEN before any replay (review b8ab077a's ONE next priority; USER-approved <= 0.25 / line 2.50)
+
+- **Arms:** CURRENT_ASYNC_FAST10 and FRONT_ASYNC_FAST10 (the USER's amendment c3fe1d4a). PARITY_BASELINE runs on the 8 pilot markets and must equal the accepted pressure arm. CURRENT / FRONT_BASELINE reuse QUEUE-PRIORITY-SENSITIVITY-v1's records, sha256-bound.
+- **ASYNC_FAST10 contract:**
+  - activation +10 ms, live cancel +10 ms, a pending post's cancel at max(req + 10, submit + 20);
+  - notices 100 / 100 / 0 ms unchanged;
+  - a cancel frees the desired slot, but the order keeps its reservation (200-share cap, no early release), its price lock and its own-cross visibility;
+  - received clocks and the cache unchanged.
+- **Frozen:** runner + selftest (7 groups) + 24 / 24 mutants; write-once manifest; `fa_checks.py` (A / B / K / S / E / T / F / M / P / I, 11-case falsifier); launcher. The contract check was rehearsed first: 0 violations on the 38 reused real baseline ledgers and on 6 synthetic runs, planted corruptions caught.
+- **Readings (declared):** contrasts EXEC_AT_CURRENT / EXEC_AT_FRONT / QUEUE_AT_FAST / INTERACTION; reading nonnegative_development_result / assumptions_do_not_rescue.
+- **Resources:** batch about 0.03 at freeze; the projection gates the rest.
+- **Next:** pilot (4 days in parallel) -> projection -> rest -> measure -> checks -> receipt + ONE Codex review.
+<!-- /LADDER_ASYNC_FAST_FREEZE_20261122_DEV -->
+
 <!-- LADDER_QUEUE_FRONT_REVIEW_ANSWER_20261122_DEV -->
 ## 2026-11-22 04:06Z (session aea5bfb9) — review b8ab077a answered; LOOP STOPPED: its ONE next priority (ASYNC_FAST10) needs the USER's resource approval
 
