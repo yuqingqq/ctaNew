@@ -1,3 +1,21 @@
+<!-- QUEUE_LATENCY_AMENDMENT_20261122_CODEX -->
+## 2026-11-22 — Lower-latency queue diagnostic amendment, no new result
+
+[Proposal](reviews/automatic/20261122_queue_latency_amendment/plan.md), source
+**1da57adb8de74616bbd56c638c6d2af5e64a008c**. USER asks to test a lower
+assumed latency. Compare current/front queues at BASELINE and FAST10 (four
+cases): post/cancel/fill notice/cancel ACK each 10ms, pending minimum 20ms,
+with decision grid 50ms, post notice 0ms, feed timestamps and M50 unchanged.
+M50 is the trade-clock shift, not submission or feed latency. FAST10 is
+optimistic assumed action/notice speed, not measured end-to-end capability.
+Preserve causal observations and per-arm inventory feedback; report queue,
+combined latency-profile effects and their interaction without fitting.
+
+Supersedes the two-arm and resource proposal of 425e9fbc. No code/run here;
+proposed development <=0.40h / cumulative <=2.45h remain subject to USER
+budget approval. All old artifacts and stopped broader-pressure work retained.
+<!-- /QUEUE_LATENCY_AMENDMENT_20261122_CODEX -->
+
 <!-- QUEUE_SWEEP_DIRECTION_20261122_CODEX -->
 ## 2026-11-22 — Queue/sweep hypothesis and next decision, no new result
 

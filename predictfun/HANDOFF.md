@@ -23,6 +23,31 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- QUEUE_LATENCY_AMENDMENT_20261122_CODEX -->
+## 2026-11-22 — USER adds lower-latency sensitivity to the queue test
+
+[Amended proposal](reviews/automatic/20261122_queue_latency_amendment/plan.md),
+source **1da57adb8de74616bbd56c638c6d2af5e64a008c**. USER explicitly requests
+a lower latency assumption. ONE next experiment is now
+QUEUE-PRIORITY-LATENCY-SENSITIVITY-v1: current vs hypothetical front-at-activation
+queues crossed with BASELINE vs FAST10, four predeclared cases. This supersedes
+425e9fbc's two-arm/timing/resource proposal, not its economic purpose.
+
+BASELINE: post 58ms, cancel 37ms, fill/cancel notices 100ms, pending minimum
+95ms. FAST10: post/cancel/fill notice/cancel ACK each 10ms, pending minimum
+20ms. Both retain 50ms decisions, post notice 0ms, original feed timestamps,
+Binance cache clocks and M50 trade-clock assumption. FAST10 is not 10ms
+end-to-end or measured deployable timing; gain includes notice/inventory/
+re-entry effects, not just cancel transport. Recompute timing-dependent order
+state/metrics; immutable baseline parity and actual effective-setting checks.
+
+No run or implementation here. Budget amendment still needs USER approval:
+propose <=0.40 additional core-hours for development, <=2.45 cumulative with
+review, replacing the unapproved 0.25/2.25 proposal. Frozen pilot/projection,
+same 19 markets on consumed dates, no fitting or parameter sweep. The stopped
+broader-pressure candidate remains stopped. Preserve previous proposals.
+<!-- /QUEUE_LATENCY_AMENDMENT_20261122_CODEX -->
+
 <!-- QUEUE_SWEEP_DIRECTION_20261122_CODEX -->
 ## 2026-11-22 — USER direction: preserve queue/spread income while controlling sweeps
 

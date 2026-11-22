@@ -1,4 +1,21 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+queue_latency_amendment_20261122_codex:
+  status: timing_scope_requested_resource_amendment_pending
+  source_commit: 1da57adb8de74616bbd56c638c6d2af5e64a008c
+  plan: predictfun/reviews/automatic/20261122_queue_latency_amendment/plan.md
+  next_priority: QUEUE-PRIORITY-LATENCY-SENSITIVITY-v1
+  arms: [CURRENT_BASELINE, FRONT_BASELINE, CURRENT_FAST10, FRONT_FAST10]
+  fast10_post_cancel_fill_notice_cancel_ack_ms: 10
+  fast10_pending_min_ms: 20
+  decision_grid_ms: 50
+  feed_and_trade_clocks: unchanged
+  measured_deployable_fast_latency: false
+  proposed_additional_development_core_hour_cap: 0.40
+  proposed_cumulative_core_hour_cap: 2.45
+  resource_amendment_authorized: false
+  new_experiments_run: false
+  broader_pressure_candidate: preserved_stopped
+
 queue_sweep_direction_20261122_codex:
   status: proposed_diagnostic_awaiting_user_resource_authorization
   source_commit: 82f4a04c2a8219aa383134be31148f3155f8bb15
