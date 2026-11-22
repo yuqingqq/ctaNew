@@ -1,3 +1,23 @@
+<!-- QUEUE_WHOLE_LIFE_20261122_USER -->
+## 2026-11-22 — Interpretation correction: no test yet of early-loss cost of queue retention
+
+[Superseding interpretation](reviews/automatic/20261122_queue_fill_classes/report_interpretation_v2.md)
+for c72f0d37. The USER means early adverse fills can accompany staying in
+the same queue, with surviving priority enabling later profitable fills.
+The whole-life comparison is retain versus avoid/re-enter, including early
+costs and later incremental gains. Saved suffix classification does not
+identify it: early prefix losses were separated; GOOD_ONLY may have a bad
+prefix, and 11 compensated bad-then-good suffixes do not bound all such
+whole-life cases. The existing numbers are unchanged, not evidence that
+queue-acquisition costs cannot pay. No new empirical result here.
+
+Necessity requires a feasible matched alternative with actual re-entry
+queue and timing, and attribution distinct from absence/price/inventory.
+Early-before-cancel loss requires an admission choice, not an invented
+past cancellation. Prepare that design in the same combined handoff;
+current suffix work remains descriptive. No new replay or resource grant.
+<!-- /QUEUE_WHOLE_LIFE_20261122_USER -->
+
 <!-- QUEUE_FILL_CLASSES_20261122_CODEX -->
 ## 2026-11-22 — Independent classification: observed pure loss dominates actionable suffix loss
 

@@ -23,6 +23,29 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- QUEUE_WHOLE_LIFE_20261122_USER -->
+## 2026-11-22 — USER correction: early losses may pay for later use of retained priority
+
+[Governing interpretation v2](reviews/automatic/20261122_queue_fill_classes/report_interpretation_v2.md).
+The hypothesis is whole-order economics from admission: remain exposed to
+early bad partial fills, preserve the residual queue, earn later good fills
+that cancel/re-entry would miss. This is plausible and still untested.
+The first-cancel suffix classes do NOT count this mechanism: GOOD_ONLY can
+hide an earlier losing prefix, and the 11 compensated bad-then-good suffixes
+are not a count of whole-life queue-benefit cases. Existing numbers remain
+valid only for their declared later anchor. Do not use them to dismiss the
+USER's hypothesis or label early loss generally unnecessary.
+
+In the pending combined receipt, link suffix classes to the full recorded
+prefix/end cause and state the distinction. Prepare a same-start retain vs
+avoid/re-enter design with real queue reset and common end, including whole
+entry costs, later incremental value, actual timing and inventory feedback.
+If loss precedes feasible cancellation, avoidance is an admission-time
+choice. Distinguish missed fills due to queue from absence/price/risk effects.
+No new replay is launched or budget expanded here; preserve the current
+saved-data scope. Another suffix table alone cannot answer queue necessity.
+<!-- /QUEUE_WHOLE_LIFE_20261122_USER -->
+
 <!-- QUEUE_FILL_CLASSES_20261122_CODEX -->
 ## 2026-11-22 — USER-requested all-order classification measured independently
 
