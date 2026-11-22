@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "25", "name": "project without write-once", "seconds": 1.4, "sources": {"pf_ladder_retention_discrimination.py": "1ff9fb50ea246830", "pf_ladder_retention_discrimination_mutants.py": "add44077de0759a6", "pf_ladder_retention_discrimination_selftest.py": "ffb521d533693a47"}, "why": "RETENTION DISCRIMINATION SELFTEST FAILED: 6 guards: stopped (FileNotFoundError(2, 'No such file or directory'))"}
+2026-11-22T07:18:34Z tag=lrd_25 rc=0 peak_rss_mib=202 wall_s=1.60 cpu_user_s=1.45 memavail_start_gib=22 disk_free_gib=428->428 slot=claude3

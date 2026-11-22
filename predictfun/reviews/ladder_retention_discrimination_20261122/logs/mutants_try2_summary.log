@@ -1,0 +1,29 @@
+  0 the distance without the side sign: CAUGHT (1.4 s) - RETENTION DISCRIMINATION SELFTEST FAILED: 1 an ask, a missing pressure and a restricted mode (-1.0, 12.0, 0.0)
+  1 the level size from the other side: CAUGHT (1.4 s) - RETENTION DISCRIMINATION SELFTEST FAILED: 1 the features by definition ({'shown_at_price': (0.0, 40.0)})
+  2 inventory without the side sign: CAUGHT (1.5 s) - RETENTION DISCRIMINATION SELFTEST FAILED: 1 an ask, a missing pressure and a restricted mode (1.0, -12.0, 0.0)
+  3 the reservations swapped: CAUGHT (1.4 s) - RETENTION DISCRIMINATION SELFTEST FAILED: 1 the features by definition ({'reservation_side': (5.0, 30.0), 'reservation_opp': (30.0, 5.0)})
+  4 a stale pressure value used: CAUGHT (1.4 s) - RETENTION DISCRIMINATION SELFTEST FAILED: 1 an ask, a missing pressure and a restricted mode (1.0, 12.0, 0.0)
+  5 the mid change over 100 ms: CAUGHT (1.4 s) - RETENTION DISCRIMINATION SELFTEST FAILED: 1 the features by definition ({'mid_change_toward_1s': (np.float64(0.0), -0.5)}) | 1 an ask, a missing press
+  6 the mid change on venue time: CAUGHT (1.5 s) - RETENTION DISCRIMINATION SELFTEST FAILED: 1 the features by definition ({'mid_change_toward_1s': (np.float64(0.0), -0.5)}) | 1 an ask, a missing press
+  7 the mode inverted: CAUGHT (1.5 s) - RETENTION DISCRIMINATION SELFTEST FAILED: 1 the features by definition ({'restricted': (1.0, 0.0)}) | 1 an ask, a missing pressure and a restricted mo
+  8 features in the KEEP arm only: CAUGHT (1.4 s) - RETENTION DISCRIMINATION SELFTEST FAILED: 2 pairs ok and parity (['gate_failed', 'gate_failed', 'gate_failed', 'gate_failed', 'gate_failed'], True) | 
+  9 the expected callback with PULL: CAUGHT (1.4 s) - RETENTION DISCRIMINATION SELFTEST FAILED: 2 pairs ok and parity (['gate_failed', 'gate_failed', 'gate_failed', 'gate_failed', 'gate_failed'], True) | 
+  10 no status on a failed gate: CAUGHT (1.5 s) - RETENTION DISCRIMINATION SELFTEST FAILED: 3 features differing between arms fail their gate (['ok', 'ok']) | 3 a retain arm unequal to the saved recor
+  11 the unused-exemption gate dropped: CAUGHT (1.5 s) - RETENTION DISCRIMINATION SELFTEST FAILED: 3 a retain arm unequal to the saved record fails (True, ok)
+  12 the winsor ceiling at the floor: CAUGHT (1.5 s) - RETENTION DISCRIMINATION SELFTEST FAILED: 4 the candidate reproduced by hand
+  13 lambda not scaled by n: CAUGHT (1.4 s) - RETENTION DISCRIMINATION SELFTEST FAILED: 4 the candidate reproduced by hand
+  14 the target unclipped: CAUGHT (1.5 s) - RETENTION DISCRIMINATION SELFTEST FAILED: 4 the candidate reproduced by hand | 4 heavy shrinkage
+  15 a zero sd kept: CAUGHT (1.5 s) - RETENTION DISCRIMINATION SELFTEST FAILED: 4 a constant feature keeps sd 1
+  16 the prediction without the intercept: CAUGHT (1.5 s) - RETENTION DISCRIMINATION SELFTEST FAILED: 4 the candidate reproduced by hand
+  17 retain the negative predictions: CAUGHT (1.4 s) - RETENTION DISCRIMINATION SELFTEST FAILED: 5 a discriminating rule (-500.0, 1.0, no_useful_discrimination) | 5 a harmful rule (no_useful_discrimination
+  18 the constant control inverted: CAUGHT (1.4 s) - RETENTION DISCRIMINATION SELFTEST FAILED: 5 a discriminating rule (900.0, 0.000999000999000999, useful_local_discrimination)
+  19 p from the lower tail: CAUGHT (1.5 s) - RETENTION DISCRIMINATION SELFTEST FAILED: 5 a discriminating rule (900.0, 1.0, no_useful_discrimination) | 5 one evaluation day failing (-45.0, no_use
+  20 no evaluation support floor: CAUGHT (1.4 s) - RETENTION DISCRIMINATION SELFTEST FAILED: 5 thin support (useful_local_discrimination)
+  21 no daily condition: CAUGHT (1.4 s) - RETENTION DISCRIMINATION SELFTEST FAILED: 5 one evaluation day failing (-45.0, useful_local_discrimination)
+  22 the rest without the projection: CAUGHT (1.5 s) - RETENTION DISCRIMINATION SELFTEST FAILED: 6 guards: stopped (KeyError('e'))
+  23 measure without the freeze: CAUGHT (1.5 s) - RETENTION DISCRIMINATION SELFTEST FAILED: 6 guards: stopped (FileNotFoundError(2, 'No such file or directory'))
+  24 build_manifest without write-once: CAUGHT (1.7 s) - RETENTION DISCRIMINATION SELFTEST FAILED: 6 manifest / projection write-once
+  25 project without write-once: CAUGHT (1.4 s) - RETENTION DISCRIMINATION SELFTEST FAILED: 6 guards: stopped (FileNotFoundError(2, 'No such file or directory'))
+control: PASSED (1.5 s); sources {'pf_ladder_retention_discrimination.py': '32c19001cce4c714', 'pf_ladder_retention_discrimination_mutants.py': 'add44077de0759a6', 'pf_ladder_retention_discrimination_selftest.py': 'ffb521d533693a47'}
+mutation check passed: the control passes its selftest, 26 / 26 planted code errors are caught by a check (0.7 CPU min)
+2026-11-22T07:21:02Z tag=lrd_summary_try2 rc=0 peak_rss_mib=16 wall_s=0.02 cpu_user_s=0.02 memavail_start_gib=22 disk_free_gib=428->428 slot=claude

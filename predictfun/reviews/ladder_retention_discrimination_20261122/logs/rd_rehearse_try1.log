@@ -1,0 +1,121 @@
+{
+ "part": "prefix",
+ "day": "20990101",
+ "pairs": 12,
+ "parity_all": true,
+ "statuses": {
+  "ok": 12
+ }
+}
+{
+ "part": "prefix",
+ "day": "20990102",
+ "pairs": 12,
+ "parity_all": true,
+ "statuses": {
+  "ok": 12
+ }
+}
+{
+ "n_train": 12,
+ "n_eval": 12,
+ "train_nontie": 10,
+ "eval_nontie": 11,
+ "retained": 4,
+ "V_rule": 375.1338478771204,
+ "V_rule_mean": 31.261153989760032,
+ "V_always_retain": 965.5070783016967,
+ "V_always_alternative": 0.0,
+ "V_constant": 0.0,
+ "constant_retains": false,
+ "V_rule_weighted": 1563.0576994880016,
+ "draws_mean": 346.15201042769445,
+ "draws_q95": 1125.4193903474386,
+ "p_draw": 0.44555444555444557,
+ "mse_model": 161932.0891814691,
+ "mse_zero": 78630.5994520875,
+ "mse_constant": 89636.12552795852,
+ "selected_min": -84.59094817224525,
+ "selected_negative_sum": -84.59094817224525,
+ "selected_top5_share": 1.0,
+ "per_day": {
+  "20990102": {
+   "V_rule": 375.1338478771204,
+   "always_retain": 965.5070783016967,
+   "constant": 0.0,
+   "retained": 4,
+   "n": 12
+  }
+ },
+ "per_side": {
+  "0": 206.72479604936572,
+  "1": 168.40905182775464
+ },
+ "reading": "INSUFFICIENT",
+ "parity_all": true,
+ "statuses": {
+  "ok": 24
+ },
+ "pilot_overlap": 0
+}
+{
+ "checks": {
+  "A_committed": false,
+  "A_census": true,
+  "A_days": true,
+  "A_audit": true,
+  "B_membership": true,
+  "Y_values": true,
+  "G_gates": true,
+  "G_status": true,
+  "P_parity": true,
+  "M_model": true,
+  "M_preds": true,
+  "M_metrics": true,
+  "M_reading": true,
+  "I_resources": true
+ },
+ "failed_except_committed": [],
+ "falsifier_unrefused": [],
+ "pairs": 24,
+ "statuses": {
+  "ok": 24
+ },
+ "reading": "INSUFFICIENT",
+ "details": {
+  "B": {
+   "pairs": 24,
+   "bases": 2
+  },
+  "Y": {
+   "bad": []
+  },
+  "G": {
+   "callback": [],
+   "pre_fork": [],
+   "reconciled": [],
+   "queue": [],
+   "lineage": [],
+   "unused": [],
+   "features": [],
+   "sanity": []
+  },
+  "P": {
+   "bad": []
+  },
+  "M": {
+   "reading": "INSUFFICIENT",
+   "V": 375.13384787712033,
+   "p": 0.44555444555444557
+  },
+  "I": {
+   "batch": 0.0,
+   "line_before": 2.664827777777784,
+   "line_with": 2.664827777777784,
+   "with_reserve": 2.7148277777777836,
+   "peak_mib": 0
+  }
+ },
+ "rehearsal_ok": true
+}
+2026-11-22T07:20:32Z tag=rd_rehearse_try1 rc=0 peak_rss_mib=207 wall_s=2.26 cpu_user_s=2.04 memavail_start_gib=22 disk_free_gib=428->428 slot=claude

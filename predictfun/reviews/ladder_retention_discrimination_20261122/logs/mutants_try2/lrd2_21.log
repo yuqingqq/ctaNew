@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "21", "name": "no daily condition", "seconds": 1.4, "sources": {"pf_ladder_retention_discrimination.py": "32c19001cce4c714", "pf_ladder_retention_discrimination_mutants.py": "add44077de0759a6", "pf_ladder_retention_discrimination_selftest.py": "ffb521d533693a47"}, "why": "RETENTION DISCRIMINATION SELFTEST FAILED: 5 one evaluation day failing (-45.0, useful_local_discrimination)"}
+2026-11-22T07:20:58Z tag=lrd2_21 rc=0 peak_rss_mib=202 wall_s=1.66 cpu_user_s=1.50 memavail_start_gib=22 disk_free_gib=428->428 slot=claude3

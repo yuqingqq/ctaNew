@@ -1,0 +1,98 @@
+{
+ "version": "long_value_retention_discrimination_v1",
+ "review": "838f4be2",
+ "approval": "USER 2026-11-22: approve 1.25 h / line 4.00 (AskUserQuestion)",
+ "arm": "CURRENT_ASYNC_FAST10",
+ "per_cell": 32,
+ "features": [
+  "age_ms",
+  "rung",
+  "dist_ticks",
+  "spread_ticks",
+  "size",
+  "known_rem",
+  "shown_at_price",
+  "position_toward",
+  "reservation_side",
+  "reservation_opp",
+  "n_side",
+  "n_opp",
+  "pressure_x",
+  "pressure_ok",
+  "time_left_ms",
+  "mid_change_toward_1s",
+  "restricted"
+ ],
+ "candidate": {
+  "model": "ridge",
+  "lambda_per_n": 1.0,
+  "winsor_q": [
+   0.01,
+   0.99
+  ],
+  "y_clip_q": [
+   0.05,
+   0.95
+  ],
+  "decision": "retain iff predicted Y > 0"
+ },
+ "train_days": [
+  "20261024",
+  "20261025"
+ ],
+ "eval_days": [
+  "20261026",
+  "20261027"
+ ],
+ "draws": {
+  "n": 1000,
+  "seed": 20261122
+ },
+ "reading": {
+  "min_nontie": 30,
+  "min_actions": 5,
+  "p_max": 0.05
+ },
+ "census_sha256": "415c66764d7d36f4529cc66f2ea58d4642a32e0217c9abf9ef85aa500946c754",
+ "census_rows": 5432,
+ "af_records": {
+  "pilot/20261024": "15f91548c31a4460287d676184f2bc4af57bff064c02c57afbe9b8033417c8cf",
+  "pilot/20261025": "9786fda7eabcbe9f71d7e820df19d24245253dcff11aa83ce25b6fa57dc5f939",
+  "pilot/20261026": "7a60c52d00ceb21a93f7ba6753ba2b06debd9f90ac97ada149557cf6a81f33d8",
+  "pilot/20261027": "e0e78f9b93cd048d82c88fc30ec1f40648545e74e839a4696146b5b02104fe71",
+  "rest/20261024": "9e7ccfe796ec6ae26b4fca7e1f60c3cc7e3e50e9478f5a57dcd8c1969e7e4d2d",
+  "rest/20261025": "712cf2230b198ddc97820feae4b350f8e59b9c8f78aee69dac27f76721246cc3",
+  "rest/20261026": "d398339a1fbdc0c9f33fd8fd08f42caa2425ad31b6e2d55189858da43b1b1fd9"
+ },
+ "parts": {
+  "prefix": [
+   "20261024"
+  ],
+  "rest": [
+   "20261025",
+   "20261026",
+   "20261027"
+  ]
+ },
+ "markets": {
+  "20261024": {
+   "pilot": [
+    3697902,
+    3699278
+   ],
+   "rest": [
+    3700070,
+    3702960,
+    3704004,
+    3712725,
+    3716727
+   ]
+  },
+  "20261025": {
+   "pilot": [
+    3723774,
+    3734864
+   ],
+   "rest": [
+    373791
+2026-11-22T07:21:35Z tag=rd_manifest rc=0 peak_rss_mib=210 wall_s=1.24 cpu_user_s=1.04 memavail_start_gib=22 disk_free_gib=428->428 slot=claude

@@ -1,0 +1,4 @@
+/home/yuqing/ctaNew/predictfun/research/pf_ladder_retention_discrimination.py:110: RuntimeWarning: invalid value encountered in divide
+  mu, sd = Xc.mean(0), Xc.std(0); sd = np.where(sd > 0, sd, 1.); Z = (Xc - mu) / sd; yl, yh = np.quantile(y, Y_CLIP_Q[0]), np.quantile(y, Y_CLIP_Q[1]); yc = np.clip(y, yl, yh)
+{"cls": "CAUGHT", "index": "15", "name": "a zero sd kept", "seconds": 1.5, "sources": {"pf_ladder_retention_discrimination.py": "32c19001cce4c714", "pf_ladder_retention_discrimination_mutants.py": "add44077de0759a6", "pf_ladder_retention_discrimination_selftest.py": "ffb521d533693a47"}, "why": "RETENTION DISCRIMINATION SELFTEST FAILED: 4 a constant feature keeps sd 1"}
+2026-11-22T07:20:52Z tag=lrd2_15 rc=0 peak_rss_mib=202 wall_s=1.66 cpu_user_s=1.49 memavail_start_gib=22 disk_free_gib=428->428 slot=claude

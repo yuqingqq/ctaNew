@@ -1,0 +1,2 @@
+RETENTION DISCRIMINATION SELFTEST PASSED: features, run_market gates, known-bad controls, the candidate, evaluate and readings, guards
+2026-11-22T07:17:50Z tag=rd_selftest_try2 rc=0 peak_rss_mib=204 wall_s=1.64 cpu_user_s=1.46 memavail_start_gib=22 disk_free_gib=428->428 slot=claude

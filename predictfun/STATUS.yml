@@ -504,6 +504,15 @@ ladder_async_fast_results_20261122_dev:
   all_arms_negative_every_day: true
   batch_core_hours: 0.201
   line_core_hours: 2.375
+ladder_retention_discrimination_20261122_dev:
+  status: frozen_before_labels_and_fit
+  asof: "2026-11-22 07:22Z"
+  source: review_838f4be2_next_priority
+  user_approval: {additional_core_hours: 1.25, includes: review_reserve_0.05, line_ceiling: 4.00, via: AskUserQuestion_2026-11-22}
+  census: {eligible: 5432, selected: 256, pilot_overlap: 32}
+  candidate: ridge_lambda_n_17_causal_features_train_oct24_25_eval_oct26_27_once
+  mutants: 26_of_26_caught
+  checker_falsifier_cases: 12
 ladder_turnover_attribution_review_answer_20261122_dev:
   status: review_838f4be2_answered_loop_stopped_user_scope_and_resource_decision_needed
   asof: "2026-11-22 07:07Z"

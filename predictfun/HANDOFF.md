@@ -711,6 +711,30 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_RETENTION_DISCRIMINATION_FREEZE_20261122_DEV -->
+## 2026-11-22 07:22Z (session aea5bfb9) — LONG-VALUE-RETENTION-DISCRIMINATION-v1 FROZEN before any label or fit (USER-approved 1.25 h / line 4.00)
+
+**USER 2026-11-22**, via AskUserQuestion: "Approve 1.25 h / 4.00". That approves the new label-and-discrimination scope of review 838f4be2, the review reserve included.
+
+**Built to the review's contract** ([declaration](reviews/ladder_retention_discrimination_20261122/declaration.md)):
+- census of 5,432 REVIEW first policy-consulted KEEPs on the 19 consumed markets;
+- 256 hash-selected, 32 per day × side; all 32 pilot REVIEW labels are among them (declared overlap);
+- the pilot's fork and continuation to END, with 17 causal features recorded at the callback (identical in both arms);
+- ONE frozen ridge candidate (λ = n, winsorized, clipped target), trained on Oct 24–25 and scored once on Oct 26–27; retain iff predicted Y > 0;
+- controls: always-retain / always-alternative / training constant / 1,000 matched draws.
+
+**Readings:** `INSUFFICIENT` / `useful_local_discrimination` / `no_useful_discrimination` / `not_reliable`.
+
+**Frozen artifacts:**
+- builder + selftest (6 groups, including three known-bad controls);
+- 26 / 26 mutants;
+- `rd_checks.py` (A / B / Y / G / P / M / I, independent refit and draws, 12-case falsifier);
+- the synthetic rehearsal (all families pass, all cases refused);
+- the launcher.
+
+**Next:** prefix (Oct 24, 64 forks) → projection → rest → measure → checks → receipt → ONE Codex review.
+<!-- /LADDER_RETENTION_DISCRIMINATION_FREEZE_20261122_DEV -->
+
 <!-- LADDER_TURNOVER_ATTRIBUTION_REVIEW_ANSWER_20261122_DEV -->
 ## 2026-11-22 07:07Z (session aea5bfb9) — review 838f4be2 ANSWERED; LOOP STOPPED: the next experiment needs the USER's scope and resource decision
 
