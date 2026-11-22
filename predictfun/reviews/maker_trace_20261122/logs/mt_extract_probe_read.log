@@ -1,0 +1,160 @@
+REST hour receipt: {'family': 'rest', 'stem': '20261024_12', 'bytes': 86400516, 'conflict_receipts': 10, 'lines': 4598, 'match_rows': 3762, 'new_records': 24608, 'pages': 3762, 'record_receipts': 342380, 'repolls': 317762, 'cpu_s': 18.457, 'vmhwm_mib': 199.2}
+WS hour receipt: {'family': 'predict_ws', 'stem': '20261024_12', 'bytes': 4872768, 'frames': 69294, 'lines': 69726, 'lines_without_book_topic': 432, 'cpu_s': 5.581, 'vmhwm_mib': 199.3}
+KEYS record [(8, 24608)] 
+KEYS taker [(7, 24608)] 
+KEYS maker [(7, 38369)] 
+KEYS taker.outcome [(8, 24608)] 
+KEYS maker.outcome [(8, 38369)] 
+KEYS taker.fee [(2, 24608)] 
+KEYS maker.fee [(2, 38369)] 
+KEYS market [(34, 19)] 
+KEYS market.outcomes[] [(8, 38)] 
+KEYS market.resolution [(8, 5)] ['bestAsk', 'bestBid', 'indexSet', 'name', 'onChainId', 'status', 'team', 'variantData']
+KEYS market.rewards [(2, 19)] ['current', 'schedule']
+KEYS market.rewards.schedule[] [(3, 19)] 
+KEYS market.variantData [(6, 19)] 
+KEYS frame [(8, 69641)] ['asks', 'bids', 'lastOrderSettled', 'marketId', 'orderCount', 'settlementsPending', 'updateTimestampMs', 'version']
+KEYS rest_row [(11, 50)] 
+KEYS rest_params [(3, 31), (2, 19)] ['after', 'first', 'marketId']
+KEYS rest_payload [(3, 50)] 
+KEYS ws_row [(8, 50)] 
+KEYS ws_msg [(3, 50)] 
+LEAF record.amountFilled {'types': {'str': 24608}, 'formats': {'digits': 2000}}
+LEAF record.executedAt {'types': {'str': 24608}, 'formats': {'iso_frac3_Z': 2000}}
+LEAF record.priceExecuted {'types': {'str': 24608}, 'formats': {'digits': 2000}}
+LEAF record.settlementId {'types': {'str': 24608}, 'formats': {'uuid_v7': 2000}}
+LEAF record.transactionHash {'types': {'str': 24608}, 'formats': {'hex_lower64': 2000}}
+LEAF taker.hash {'types': {'str': 24608}, 'formats': {'hex_lower64': 2000}}
+LEAF taker.signer {'types': {'str': 24608}, 'formats': {'hex_mixed40': 2000}}
+LEAF maker.signer {'types': {'str': 38369}, 'formats': {'hex_mixed40': 2924}}
+LEAF maker.quoteType {'types': {'str': 38369}, 'formats': {'word:Bid': 2751, 'word:Ask': 173}}
+LEAF taker.fee.type {'types': {'str': 24608}, 'formats': {'word:COLLATERAL': 168, 'word:SHARES': 1832}}
+LEAF maker.fee.type {'types': {'str': 38369}, 'formats': {'word:SHARES': 2751, 'word:COLLATERAL': 173}}
+LEAF taker.outcome.status {'types': {'str': 2199, 'NoneType': 22409}, 'formats': {'word:WON': 803, 'word:LOST': 410}}
+LEAF taker.outcome.bestBid {'types': {'NoneType': 2436, 'dict': 22172}, 'formats': {}}
+LEAF taker.outcome.onChainId {'types': {'str': 24608}, 'formats': {'digits': 2000}}
+LEAF taker.outcome.team {'types': {'NoneType': 24608}, 'formats': {}}
+LEAF taker.outcome.variantData {'types': {'NoneType': 24608}, 'formats': {}}
+LEAF market.status {'types': {'str': 19}, 'formats': {'word:RESOLVED': 5, 'word:REGISTERED': 14}}
+LEAF market.tradingStatus {'types': {'str': 19}, 'formats': {'word:CLOSED': 5, 'word:OPEN': 14}}
+LEAF market.isBoosted {'types': {'bool': 19}, 'formats': {}}
+LEAF market.decimalPrecision {'types': {'int': 19}, 'formats': {}}
+LEAF market.feeRateBps {'types': {'int': 19}, 'formats': {}}
+LEAF market.makerFeeBps {'types': {'int': 19}, 'formats': {}}
+LEAF market.spreadThreshold {'types': {'float': 19}, 'formats': {}}
+LEAF market.shareThreshold {'types': {'int': 19}, 'formats': {}}
+LEAF market.createdAt {'types': {'str': 19}, 'formats': {'iso_frac3_Z': 19}}
+LEAF market.boostStartsAt {'types': {'str': 19}, 'formats': {'iso_frac3_Z': 19}}
+LEAF frame.updateTimestampMs {'types': {'int': 347}, 'formats': {}}
+LEAF frame.orderCount {'types': {'int': 347}, 'formats': {}}
+LEAF frame.version {'types': {'int': 347}, 'formats': {}}
+LEAF frame.marketId {'types': {'int': 347}, 'formats': {}}
+CNT depth_levels {'whole_cent': 591630}
+CNT executedAt_after_seconds {'.000Z': 24608}
+CNT lastOrderSettled {"('LIMIT', 'Yes', 'Bid')": 34916, "('LIMIT', 'No', 'Bid')": 29166, "('LIMIT', 'Yes', 'Ask')": 4483, "('LIMIT', 'No', 'Ask')": 729}
+CNT leg_match {'mint': 31535, 'regular': 6603, 'merge': 231}
+CNT maker_fee {'legs': 38369, 'nonzero': 0}
+CNT maker_fee_type {'SHARES': 35459, 'COLLATERAL': 2910}
+CNT maker_vs_taker_yes_side {'opposite': 38369}
+CNT makers_yes_price_from_taker_best {'monotone': 3390, 'all_same_price': 3274, 'not_monotone': 1355}
+CNT n_makers {'1': 19863, '2': 2407, '3': 1235, '4': 319, '5': 197, '6': 119, '20': 102, '7': 88, '8': 67, '9': 41, '15': 27, '11': 23}
+CNT priceExecuted_vs_maker_avg {'exact': 23270, 'within_rounding': 1007, 'differs': 331}
+CNT taker_fee_type | taker Ask/indexSet 1/YES ask {'COLLATERAL': 1422}
+CNT taker_fee_type | taker Ask/indexSet 2/YES bid {'COLLATERAL': 814}
+CNT taker_fee_type | taker Bid/indexSet 1/YES bid {'SHARES': 11609}
+CNT taker_fee_type | taker Bid/indexSet 2/YES ask {'SHARES': 10763}
+CNT tob_state {'two_sided': 66888, 'one_sided': 2406}
+CNT version {'1': 69294}
+IDS {"unique_keys": 24608, "rows_with_sid": 24608, "distinct_sid": 24608, "key_kinds": {"sid": 24608}, "records_per_transactionHash": {"1": 24608}, "records_per_taker_hash": {"1": 18419, "2": 1557, "3": 430, "4": 156, "5": 67, "6": 41, "7": 24, "8": 9, "9": 9, "10": 4, "11": 3, "12": 5, "13": 1, "15": 1, "17": 1, "18": 2, "19": 1, "26": 1}, "n_recv": {"9": 6783, "8": 4419, "10": 3802, "11": 1581, "13": 767, "22": 628, "12": 601, "33": 585, "19": 433, "7": 405, "4": 331, "39": 285, "35": 279, "32": 236, "36": 235, "38": 223, "29": 222, "40": 212, "34": 210, "14": 183, "37": 174, "31": 157, "30": 156, "27": 148, "17": 139, "15": 139, "41": 134, "1": 111, "28": 109, "16": 96, "43": 93, "18": 91, "42": 72, "6": 72, "50": 70, "25": 58, "26": 57, "2": 47, "5": 38, "3": 38, "46": 35, "21": 26, "44": 25, "48": 19, "49": 17, "45": 16, "47": 16, "20": 14, "23": 14, "24": 7}, "keys_with_conflict": 1, "conflict_receipts": 10}
+CLOCKS {"settle_minus_exec_ms": {"p0": -1414.0, "p0.1": -978.393, "p1": -743.0, "p5": -555.0, "p50": 5.0, "p95": 541.6499999999978, "p99": 688.9300000000003, "p99.9": 776.7860000000073, "p100": 840.0, "n": 24608}, "taker_fee_over_q_min_p_1mp | COLLATERAL": {"p0": 0.017999999999999818, "p0.1": 0.017999999999999995, "p1": 0.018, "p5": 0.018, "p50": 0.02, "p95": 0.02, "p99": 0.02, "p99.9": 0.02, "p100": 0.02, "n": 2236}, "taker_fee_over_q_min_p_1mp | SHARES": {"p0": 0.01818181818181811, "p0.1": 0.018181818181818174, "p1": 0.01875, "p5": 0.020202020202020204, "p50": 0.03529411764705882, "p95": 0.16666666666666666, "p99": 0.5, "p99.9": 2.0, "p100": 2.0, "n": 22372}, "first_recv_minus_exec_ms": {"p0": 1497.0, "p0.1": 1665.0, "p1": 1905.0, "p5": 2499.0, "p50": 6662.0, "p95": 635346.9999999978, "p99": 1586558.0000000002, "p99.9": 1628642.0, "p100": 44247106.0, "n": 24608}}
+WSQ {"frame_interval_ms": {"p0": 2.0, "p0.1": 5.0, "p1": 12.0, "p5": 27.0, "p50": 51.0, "p95": 253.0, "p99": 1217.6300000000192, "p99.9": 3979.489000000045, "p100": 11975.0, "n": 69280}, "levels_per_frame": {"p0": 1.0, "p0.1": 11.0, "p1": 30.0, "p5": 78.0, "p50": 99.0, "p95": 99.0, "p99": 99.0, "p99.9": 99.0, "p100": 99.0, "n": 69294}, "recv_minus_upd_ms": {"p0": 78.634521484375, "p0.1": 81.74560424804687, "p1": 86.32064697265625, "p5": 93.19962158203126, "p50": 125.731201171875, "p95": 167.85108642578123, "p99": 202.8293725585936, "p99.9": 303.59441845703384, "p100": 2624.29736328125, "n": 69294}}
+conflict rows:
+                                                                             16316
+day                                                                       20261024
+mid                                                                        3704410
+sid                                           01a16dea-2bc0-7f30-983b-2a6888ae8c44
+tx              0x4dc3d0e06c3d538c08de0231f85fecc32dcb721534fd6de958823590213cd791
+settle_ms                                                            1792845425600
+exec_ms                                                              1792845425000
+first_recv_ns                                                  1792845427445906736
+n_recv                                                                           1
+amount_filled                                                              4.72549
+price_executed                                                                0.51
+n_makers                                                                         1
+tk_hash         0xd9cc7a92a4b162b6167a2a16fd3d1f3ffdd2cfc737f42d9883738161adcbb119
+tk_signer                               0x00349b5924fD4B7dF61B4637Ba5343038B556Cd1
+tk_quote                                                                       Bid
+tk_index_set                                                                     2
+tk_price                                                                      0.51
+tk_amount                                                                  4.72549
+tk_fee                                                                    0.090804
+tk_fee_type                                                                 SHARES
+tk_y_side                                                                      ask
+status                                     conflict+recon_mk_sum+boundary_censored
+x_n_variants                                                                     2
+x_n_recv_other                                                                  10
+                                                                            24768
+day                                                                      20261024
+mid                                                                       3704410
+sid                                          01a16dea-2bc0-7f30-983b-2a6888ae8c44
+tx             0x4dc3d0e06c3d538c08de0231f85fecc32dcb721534fd6de958823590213cd791
+settle_ms                                                           1792845425600
+exec_ms                                                             1792845425000
+first_recv_ns                                                 1792845427445906736
+mk_idx                                                                          0
+n_makers                                                                        1
+mk_hash        0xc840ebe33d8dd3ef3df96a73d4d7c5c5b164a9a31c65ad76c8c396311d61ccb1
+mk_signer                              0xc834ec3dc19a57e240a42982d898b0178Aba9c86
+mk_quote                                                                      Bid
+mk_index_set                                                                    1
+mk_price                                                                     0.49
+shares                                                                        2.0
+mk_fee                                                                        0.0
+mk_fee_type                                                                SHARES
+y_side                                                                        bid
+y_price                                                                      0.49
+y_ptick                                                                        49
+tk_hash        0xd9cc7a92a4b162b6167a2a16fd3d1f3ffdd2cfc737f42d9883738161adcbb119
+tk_signer                              0x00349b5924fD4B7dF61B4637Ba5343038B556Cd1
+tk_y_side                                                                     ask
+phase                                                                        live
+t_rel_s                                                                     125.6
+status                                    conflict+recon_mk_sum+boundary_censored
+x_match                                                                      mint
+settle - ws (s) quantiles [-44519.4, -680.8, -168.4, -1.7, 145.4, 284.8, 297.8, 303.9]
+share settled > 10 min before ws 0.0010972041612483745 n 27 of 24608
+lag (s) for settle >= ws - 5 min [6.7, 632.9, 1586.0, 1628.2, 1632.8]
+lag (s) for settle < ws - 10 min [381.0, 901.3, 44247.5]
+first_recv - we (s) per market max quantiles [-304.5, 6.6, 1027.3, 1569.6]
+early records by market {3704008: 1, 3704100: 2, 3704101: 1, 3704366: 4, 3704409: 4, 3704410: 3, 3704508: 3, 3704524: 2, 3704697: 3, 3704702: 3, 3704720: 1} their first_recv - ws (s) {'count': 27.0, 'mean': -277.6, 'std': 10.0, 'min': -294.5, '25%': -283.4, '50%': -276.9, '75%': -270.6, 'max': -261.1}
+phase {'live': 36012, 'pre': 2298, 'post': 59} x_match {'mint': 31535, 'regular': 6603, 'merge': 231} n_makers {1: 19863, 2: 2407, 3: 1235, 4: 319, 5: 197, 6: 119, 7: 88, 8: 67}
+tk fee type x tk_y_side {('Ask', 1, 'COLLATERAL'): 1422, ('Ask', 2, 'COLLATERAL'): 814, ('Bid', 1, 'SHARES'): 11609, ('Bid', 2, 'SHARES'): 10763}
+y_ptick range 1 99 mk_fee nonzero 0
+tob per conn {'9c860e7ef228483eb8987ce2da5bf176': 69294} markets 14 gap rows 978
+gap markets {3704366: 95, 3704508: 92, 3704008: 89, 3704101: 88, 3704004: 85}
+depth 3704004 frames 6369 levels 591630 levels/frame {'count': 6369.0, 'mean': 92.9, 'std': 15.1, 'min': 1.0, '25%': 98.0, '50%': 99.0, '75%': 99.0, 'max': 99.0} ptick range 1 99
+frame upd range rel ws (s) (np.float64(-282.107), np.float64(302.549))
+frames status {'ok': 6284, 'gap': 85} los kinds {'LIMIT': 6369} los outcome {'Yes': 3429, 'No': 2940}
+         mid          ws  n_records  n_legs  n_pages  n_frames market_status trading_status resolution changed_fields  isBoosted                                  status
+138  3703688  1792841400        300     403       12         0      RESOLVED         CLOSED         Up                         0  boundary_censored+no_frames+ws_clipped
+139  3703701  1792841700        200     266       16         0      RESOLVED         CLOSED         Up                         0  boundary_censored+no_frames+ws_clipped
+140  3703704  1792842000        500     672       65         0      RESOLVED         CLOSED       Down                         0  boundary_censored+no_frames+ws_clipped
+141  3703728  1792842300        400     541       76         0      RESOLVED         CLOSED         Up                         0  boundary_censored+no_frames+ws_clipped
+142  3703730  1792842600        600     870      132         0      RESOLVED         CLOSED       Down                         0  boundary_censored+no_frames+ws_clipped
+143  3703978  1792842900        400     588      100        23      RESOLVED         CLOSED       Down                         0            boundary_censored+ws_clipped
+144  3704000  1792843200       2269    3311      365      5798      RESOLVED         CLOSED         Up        rewards          0            boundary_censored+ws_clipped
+145  3704004  1792843500       2050    3252      387      6369      RESOLVED         CLOSED       Down        rewards          0                              ws_clipped
+146  3704008  1792843800       1056    1671      204      4996      RESOLVED         CLOSED         Up        rewards          0                              ws_clipped
+147  3704100  1792844100       1206    2051      195      4480      RESOLVED         CLOSED         Up        rewards          0                              ws_clipped
+148  3704101  1792844400       2032    3058      307      5836      RESOLVED         CLOSED         Up        rewards          0                              ws_clipped
+149  3704366  1792844700       2125    3109      312      6164      RESOLVED         CLOSED         Up        rewards          0                              ws_clipped
+150  3704409  1792845000       2359    3581      379      6358      RESOLVED         CLOSED         Up        rewards          0            boundary_censored+ws_clipped
+151  3704410  1792845300       2076    3137      310      6325      RESOLVED         CLOSED         Up        rewards          0            boundary_censored+ws_clipped
+152  3704508  1792845600       1376    2532      196      5185      RESOLVED         CLOSED       Down        rewards          0            boundary_censored+ws_clipped
+153  3704524  1792845900       1369    2392      187      4921      RESOLVED         CLOSED         Up        rewards          0            boundary_censored+ws_clipped
+154  3704697  1792846200       2285    3682      279      6563      RESOLVED         CLOSED       Down        rewards          0            boundary_censored+ws_clipped
+155  3704702  1792846500       1945    3124      202      5847    REGISTERED           OPEN                   rewards          0            boundary_censored+ws_clipped
+156  3704720  1792846800         60     129       38       429    REGISTERED           OPEN                                    0            boundary_censored+ws_clipped
+rewards sample ['{"current":null,"schedule":[{"endsAt":"2026-10-24T11:35:00.000Z","hourlyRate":3000,"startsAt":"2026-10-24T11:30:00.000Z"}]}', '{"current":null,"schedule":[{"endsAt":"2026-10-24T11:40:00.000Z","hourlyRate":3000,"startsAt":"2026-10-24T11:35:00.000Z"}]}']
+outcome_statuses sample ['[{"indexSet":1,"name":"Up","status":"WON"},{"indexSet":2,"name":"Down","status":"LOST"}]', '[{"indexSet":1,"name":"Up","status":"WON"},{"indexSet":2,"name":"Down","status":"LOST"}]']
+2026-11-22T08:58:01Z tag=mt_extract_probe_read rc=0 peak_rss_mib=232 wall_s=0.51 cpu_user_s=0.38 memavail_start_gib=22 disk_free_gib=426->426 slot=claude2

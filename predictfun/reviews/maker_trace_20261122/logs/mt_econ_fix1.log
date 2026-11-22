@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_econ_selftest.py", line 692, in <module>
+    main()
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_econ_selftest.py", line 685, in main
+    root = main_world(tmp)
+           ^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_econ_selftest.py", line 433, in main_world
+    write(root, world())
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_econ_selftest.py", line 170, in write
+    W['dlevels'][list(C.SCHEMAS['levels'])].to_parquet(root / 'depth' / f'{D1}_101_levels.parquet', index=False)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/frame.py", line 4384, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 6302, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 6355, in _raise_if_missing
+    raise KeyError(f"{not_found} not in index")
+KeyError: "['status'] not in index"
+2026-11-22T14:40:53Z tag=mt_econ_fix1 rc=1 peak_rss_mib=113 wall_s=0.36 cpu_user_s=0.29 memavail_start_gib=22 disk_free_gib=429->429 slot=claude4

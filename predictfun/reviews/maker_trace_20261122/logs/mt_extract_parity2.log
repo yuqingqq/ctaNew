@@ -1,0 +1,6 @@
+tob_20261024 best_bid equal with NaN==NaN: True NaN count 414
+tob_20261024 best_ask equal with NaN==NaN: True NaN count 1992
+depth/20261024_3704004_levels x_price equal with NaN==NaN: True NaN count 591630
+markets_20261024 spreadThreshold equal with NaN==NaN: True NaN count 269
+markets_20261024 shareThreshold equal with NaN==NaN: True NaN count 269
+2026-11-22T09:13:11Z tag=mt_extract_parity2 rc=0 peak_rss_mib=201 wall_s=0.45 cpu_user_s=0.32 memavail_start_gib=22 disk_free_gib=427->427 slot=claude2

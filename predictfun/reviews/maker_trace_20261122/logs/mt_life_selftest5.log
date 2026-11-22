@@ -1,0 +1,12 @@
+LIFECYCLE SELFTEST FAILED 10 of 136 checks
+ - b hB pending preferred over the earlier drop (lo 1000, pend_inc, drop fid 1011)
+ - b hB capacity posting bound (1900, capacity, assumption_sensitive)
+ - c fill lows from distinct pending values
+ - c persistence observed on [min hi, max lo] (1060, 2000, observed)
+ - c capacity size bound (12.0, assumption_sensitive)
+ - c later fills at the front ([6.0, 0.0, 6.0])
+ - f contradiction in every scenario (['clock_capacity_conflict', 'ok', 'clock_capacity_conflict'])
+ - f not fitted away
+ - f fills flagged
+ - f summary ({'hard_violation_cell_frames': 0, 'orders_contradicted': 0, 'clock_violation_cell_frames': {'S_FIFO': 20, 'S_FIFO_LO': 0, 'S_NOPRIO': 20}, 'orders_clock_conflict': {'S_FIFO': 1, 'S_FIFO_LO': 0, 'S_NOPRIO': 1}})
+2026-11-22T09:38:15Z tag=mt_life_selftest5 rc=1 peak_rss_mib=123 wall_s=2.12 cpu_user_s=2.03 memavail_start_gib=22 disk_free_gib=426->426 slot=claude3

@@ -1,0 +1,9 @@
+start {'VmRSS': 100, 'VmHWM': 100}
+legs {'VmRSS': 599, 'VmHWM': 811} 200 MiB deep
+{'day': 0, 'mid': 4, 'sid': 35, 'settle_ms': 4, 'first_recv_ns': 4, 'mk_idx': 4, 'mk_hash': 53, 'mk_signer': 1, 'mk_quote': 0, 'mk_index_set': 4, 'mk_price': 4, 'shares': 4, 'mk_fee': 4, 'mk_fee_type': 0, 'y_side': 0, 'y_price': 4, 'y_ptick': 4, 'tk_hash': 50, 'tk_signer': 1, 'tk_y_side': 0, 't_rel_s': 4, 'status': 0}
+records {'VmRSS': 688, 'VmHWM': 811} 102 MiB deep
+{'day': 0, 'mid': 3, 'sid': 17, 'settle_ms': 3, 'first_recv_ns': 3, 'n_makers': 3, 'amount_filled': 3, 'tk_hash': 31, 'tk_signer': 21, 'tk_quote': 0, 'tk_index_set': 3, 'tk_price': 3, 'tk_amount': 3, 'tk_fee': 3, 'tk_fee_type': 0, 'tk_y_side': 0, 'status': 0}
+tob {'VmRSS': 799, 'VmHWM': 811} 81 MiB deep
+frames {'VmRSS': 857, 'VmHWM': 922}
+dtypes {'sid': 'category', 'mk_hash': 'category'} Index str
+2026-11-22T09:16:31Z tag=mt_econ_scale_prof2 rc=0 peak_rss_mib=922 wall_s=3.18 cpu_user_s=2.29 memavail_start_gib=22 disk_free_gib=426->427 slot=claude4

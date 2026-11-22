@@ -1,0 +1,1214 @@
+[e2e] extract 20261023: rc=0 cpu=0.07s child_cpu=0.0s
+[e2e] extract 20261024: rc=0 cpu=0.1s child_cpu=0.0s
+[e2e] extract 20261025: rc=0 cpu=0.09s child_cpu=0.0s
+[e2e] extract 20261026: rc=0 cpu=0.09s child_cpu=0.0s
+[e2e] extract 20261027: rc=0 cpu=0.11s child_cpu=0.0s
+[e2e] extract 20261108: rc=0 cpu=0.14s child_cpu=0.0s
+[e2e] lifecycle 20261024 8001062: rc=0 cpu=0.09s child_cpu=0.0s
+[e2e] lifecycle 20261025 8002110: rc=0 cpu=0.08s child_cpu=0.0s
+[e2e] lifecycle 20261026 8003150: rc=0 cpu=0.07s child_cpu=0.0s
+[e2e] lifecycle 20261027 8004140: rc=0 cpu=0.07s child_cpu=0.0s
+[e2e] lifecycle 20261108 8008124: rc=0 cpu=0.07s child_cpu=0.0s
+[e2e] lifecycle 20261108 8008182: rc=0 cpu=0.07s child_cpu=0.0s
+[e2e] lifecycle 20261108 8008275: rc=0 cpu=0.07s child_cpu=0.0s
+[e2e] truth build: rc=0 cpu=0.08s child_cpu=0.0s
+[e2e] truth dry: rc=0 cpu=0.11s child_cpu=0.0s
+[e2e] truth score: rc=0 cpu=0.21s child_cpu=0.0s
+[e2e] econ run: rc=0 cpu=0.11s child_cpu=5.61s
+[e2e] report: rc=0 cpu=1.77s child_cpu=-0.0s
+[e2e] checks run: rc=1 cpu=1.83s child_cpu=-0.0s ERROR 
+E2E_SUMMARY {
+ "harness": "mt_e2e_v1",
+ "started_utc": "2026-11-22T15:08:14+00:00",
+ "tmp": "/tmp/claude-1001/-home-yuqing-ctaNew/aea5bfb9-4ea4-41d0-bf73-bb98d818e3d4/scratchpad/e2e_2",
+ "kept": true,
+ "sources_sha256_16": {
+  "pf_mt_common": "eff4463b0e19faaf",
+  "pf_mt_extract": "b25b3841ee408c50",
+  "pf_mt_lifecycle": "1de97098e83ad445",
+  "pf_mt_truth": "7c5ad93fcc595510",
+  "pf_mt_econ": "a0bd305326758d25",
+  "pf_mt_report": "704a695fc726babc",
+  "mt_checks": "ddee6e58e4f61ade"
+ },
+ "patched": {
+  "pf_mt_common": [
+   "REPO",
+   "PF_RUN",
+   "OUT",
+   "RECEIPT",
+   "STEP1"
+  ],
+  "pf_mt_extract": [
+   "GT_EXPORT",
+   "GT_SCOPE",
+   "GT_REGISTRY"
+  ],
+  "pf_mt_lifecycle": [],
+  "pf_mt_truth": [
+   "EXP",
+   "LV"
+  ],
+  "pf_mt_econ": [],
+  "pf_mt_report": [],
+  "mt_checks": [
+   "GT_SCOPE"
+  ]
+ },
+ "world": {
+  "markets": {
+   "B24": {
+    "day": "20261024",
+    "mid": 8001062,
+    "ws": "2026-10-24T05:10:00.000Z",
+    "records": 14,
+    "orders": 22,
+    "depth": true
+   },
+   "B25": {
+    "day": "20261025",
+    "mid": 8002110,
+    "ws": "2026-10-25T09:10:00.000Z",
+    "records": 10,
+    "orders": 10,
+    "depth": true
+   },
+   "B26": {
+    "day": "20261026",
+    "mid": 8003150,
+    "ws": "2026-10-26T12:30:00.000Z",
+    "records": 4,
+    "orders": 5,
+    "depth": true
+   },
+   "B27": {
+    "day": "20261027",
+    "mid": 8004140,
+    "ws": "2026-10-27T11:40:00.000Z",
+    "records": 2,
+    "orders": 4,
+    "depth": true
+   },
+   "F24": {
+    "day": "20261024",
+    "mid": 8001096,
+    "ws": "2026-10-24T08:00:00.000Z",
+    "records": 3,
+    "orders": 4,
+    "depth": false
+   },
+   "F25": {
+    "day": "20261025",
+    "mid": 8002120,
+    "ws": "2026-10-25T10:00:00.000Z",
+    "records": 2,
+    "orders": 4,
+    "depth": false
+   },
+   "F26": {
+    "day": "20261026",
+    "mid": 8003168,
+    "ws": "2026-10-26T14:00:00.000Z",
+    "records": 2,
+    "orders": 4,
+    "depth": false
+   },
+   "F27a": {
+    "day": "20261027",
+    "mid": 8004060,
+    "ws": "2026-10-27T05:00:00.000Z",
+    "records": 2,
+    "orders": 4,
+    "depth": false
+   },
+   "F27z": {
+    "day": "20261027",
+    "mid": 8004287,
+    "ws": "2026-10-27T23:55:00.000Z",
+    "records": 4,
+    "orders": 4,
+    "depth": false
+   },
+   "I0": {
+    "day": "20261023",
+    "mid": 8000000,
+    "ws": "2026-10-23T00:00:00.000Z",
+    "records": 3,
+    "orders": 2,
+    "depth": false
+   },
+   "I1": {
+    "day": "20261023",
+    "mid": 8000144,
+    "ws": "2026-10-23T12:00:00.000Z",
+    "records": 6,
+    "orders": 5,
+    "depth": false
+   },
+   "I2": {
+    "day": "20261023",
+    "mid": 8000287,
+    "ws": "2026-10-23T23:55:00.000Z",
+    "records": 2,
+    "orders": 2,
+    "depth": false
+   },
+   "G1": {
+    "day": "20261108",
+    "mid": 8008124,
+    "ws": "2026-11-08T10:20:00.000Z",
+    "records": 4,
+    "orders": 7,
+    "depth": true
+   },
+   "G2": {
+    "day": "20261108",
+    "mid": 8008125,
+    "ws": "2026-11-08T10:25:00.000Z",
+    "records": 1,
+    "orders": 4,
+    "depth": false
+   },
+   "G5": {
+    "day": "20261108",
+    "mid": 8008126,
+    "ws": "2026-11-08T10:30:00.000Z",
+    "records": 1,
+    "orders": 3,
+    "depth": false
+   },
+   "G3": {
+    "day": "20261108",
+    "mid": 8008182,
+    "ws": "2026-11-08T15:10:00.000Z",
+    "records": 4,
+    "orders": 5,
+    "depth": true
+   },
+   "G4": {
+    "day": "20261108",
+    "mid": 8008275,
+    "ws": "2026-11-08T22:55:00.000Z",
+    "records": 3,
+    "orders": 4,
+    "depth": true
+   }
+  },
+  "records": 67,
+  "raw_files": 405,
+  "raw_lines": {
+   "rest": 152,
+   "predict_ws": 10805,
+   "events": 1
+  },
+  "lines_refused_by_hour_guard": {
+   "rest": 8,
+   "predict_ws": 120
+  },
+  "own_orders": 7,
+  "own_fill_notices": 12,
+  "export_public_legs": 12,
+  "book": {
+   "20261024": [
+    8001062
+   ],
+   "20261025": [
+    8002110
+   ],
+   "20261026": [
+    8003150
+   ],
+   "20261027": [
+    8004140
+   ]
+  },
+  "expect_depth": {
+   "20261024": [
+    8001062
+   ],
+   "20261025": [
+    8002110
+   ],
+   "20261026": [
+    8003150
+   ],
+   "20261027": [
+    8004140
+   ],
+   "20261108": [
+    8008124,
+    8008182,
+    8008275
+   ]
+  }
+ },
+ "hour_guard": {
+  "rest:first_hour_after_oct27": {
+   "result": "refused",
+   "fs_events": 0
+  },
+  "rest:nov8_hour_23": {
+   "result": "refused",
+   "fs_events": 0
+  },
+  "predict_ws:first_hour_after_oct27": {
+   "result": "refused",
+   "fs_events": 0
+  },
+  "predict_ws:nov8_hour_23": {
+   "result": "refused",
+   "fs_events": 0
+  },
+  "events:first_hour_after_oct27": {
+   "result": "refused",
+   "fs_events": 0
+  },
+  "events:nov8_hour_23": {
+   "result": "refused",
+   "fs_events": 0
+  },
+  "allowed_hour_in_temp": true,
+  "lines_refused_while_writing": {
+   "rest": 8,
+   "predict_ws": 120
+  },
+  "ok": true
+ },
+ "checker_diag": {
+  "B24": {
+   "rows": [
+    {
+     "order": "b3",
+     "scenario": "S_FIFO",
+     "why": [
+      "sole exhausted (capacity_tight, constrained) without checker price-priority / shown-zero evidence"
+     ],
+     "size_exact": 8.0,
+     "truth": {
+      "post": -25000,
+      "removal": "exhausted",
+      "at": 170000,
+      "size": 8.0
+     }
+    },
+    {
+     "order": "b4",
+     "scenario": "S_FIFO",
+     "why": [
+      "post_lo 99630 (capacity) vs checker capacity -25370 / strict -25370"
+     ],
+     "size_exact": null,
+     "truth": {
+      "post": 100000,
+      "removal": null,
+      "at": null,
+      "size": 3.0
+     }
+    },
+    {
+     "order": "b3",
+     "scenario": "S_FIFO_LO",
+     "why": [
+      "sole exhausted (capacity_tight, constrained) without checker price-priority / shown-zero evidence"
+     ],
+     "size_exact": 8.0,
+     "truth": {
+      "post": -25000,
+      "removal": "exhausted",
+      "at": 170000,
+      "size": 8.0
+     }
+    },
+    {
+     "order": "b4",
+     "scenario": "S_FIFO_LO",
+     "why": [
+      "post_lo 99630 (capacity) vs checker capacity -25370 / strict -25370"
+     ],
+     "size_exact": null,
+     "truth": {
+      "post": 100000,
+      "removal": null,
+      "at": null,
+      "size": 3.0
+     }
+    },
+    {
+     "order": "b3",
+     "scenario": "S_NOPRIO",
+     "why": [
+      "sole exhausted (capacity_tight, constrained) without checker price-priority / shown-zero evidence"
+     ],
+     "size_exact": 8.0,
+     "truth": {
+      "post": -25000,
+      "removal": "exhausted",
+      "at": 170000,
+      "size": 8.0
+     }
+    },
+    {
+     "order": "b4",
+     "scenario": "S_NOPRIO",
+     "why": [
+      "post_lo 99630 (capacity) vs checker capacity -25370 / strict -25370"
+     ],
+     "size_exact": null,
+     "truth": {
+      "post": 100000,
+      "removal": null,
+      "at": null,
+      "size": 3.0
+     }
+    }
+   ],
+   "T1_T2_lifecycle": {
+    "T1_price": {
+     "makers": 6,
+     "groups": null,
+     "violations": 0,
+     "violations_certain": 0
+    },
+    "T2_time": {
+     "makers": null,
+     "groups": 4,
+     "violations": 0,
+     "violations_certain": 0
+    }
+   },
+   "T1_T2_checker": {
+    "t1_legs": 0,
+    "t1_hashes": 0,
+    "t2": 0
+   }
+  },
+  "B25": {
+   "rows": [],
+   "T1_T2_lifecycle": {
+    "T1_price": {
+     "makers": 6,
+     "groups": null,
+     "violations": 1,
+     "violations_certain": 1
+    },
+    "T2_time": {
+     "makers": null,
+     "groups": 1,
+     "violations": 1,
+     "violations_certain": 1
+    }
+   },
+   "T1_T2_checker": {
+    "t1_legs": 1,
+    "t1_hashes": 1,
+    "t2": 1
+   }
+  },
+  "B26": {
+   "rows": [],
+   "T1_T2_lifecycle": {
+    "T1_price": {
+     "makers": 0,
+     "groups": null,
+     "violations": 0,
+     "violations_certain": 0
+    },
+    "T2_time": {
+     "makers": null,
+     "groups": 1,
+     "violations": 0,
+     "violations_certain": 0
+    }
+   },
+   "T1_T2_checker": {
+    "t1_legs": 0,
+    "t1_hashes": 0,
+    "t2": 0
+   }
+  },
+  "B27": {
+   "rows": [],
+   "T1_T2_lifecycle": {
+    "T1_price": {
+     "makers": 0,
+     "groups": null,
+     "violations": 0,
+     "violations_certain": 0
+    },
+    "T2_time": {
+     "makers": null,
+     "groups": 0,
+     "violations": 0,
+     "violations_certain": 0
+    }
+   },
+   "T1_T2_checker": {
+    "t1_legs": 0,
+    "t1_hashes": 0,
+    "t2": 0
+   }
+  },
+  "G1": {
+   "rows": [],
+   "T1_T2_lifecycle": {
+    "T1_price": {
+     "makers": 0,
+     "groups": null,
+     "violations": 0,
+     "violations_certain": 0
+    },
+    "T2_time": {
+     "makers": null,
+     "groups": 0,
+     "violations": 0,
+     "violations_certain": 0
+    }
+   },
+   "T1_T2_checker": {
+    "t1_legs": 0,
+    "t1_hashes": 0,
+    "t2": 0
+   }
+  },
+  "G3": {
+   "rows": [],
+   "T1_T2_lifecycle": {
+    "T1_price": {
+     "makers": 0,
+     "groups": null,
+     "violations": 0,
+     "violations_certain": 0
+    },
+    "T2_time": {
+     "makers": null,
+     "groups": 0,
+     "violations": 0,
+     "violations_certain": 0
+    }
+   },
+   "T1_T2_checker": {
+    "t1_legs": 0,
+    "t1_hashes": 0,
+    "t2": 0
+   }
+  }
+ },
+ "truth_scores": {
+  "population": {
+   "truth_rows": 7,
+   "truth_status": {
+    "ok": 5,
+    "unfilled": 2
+   },
+   "scored_own_orders": 4,
+   "scored_legs": 5,
+   "scored_shares": 12.0,
+   "gt_markets": 5,
+   "lifecycle_markets": 2,
+   "own_fill_markets_without_lifecycle": [],
+   "presence_orders": 3,
+   "boundary_censored": {
+    "windows": [
+     8008275
+    ],
+    "lifecycle_orders_rows": 0,
+    "lifecycle_fills_rows": 0,
+    "own_orders": 1,
+    "own_legs": 1,
+    "own_shares": 3.0
+   }
+  },
+  "defects_total": {
+   "fills": 0,
+   "S_FIFO": 4,
+   "S_FIFO_LO": 4,
+   "S_NOPRIO": 4
+  },
+  "unique_defects": {
+   "n": 4,
+   "by_field": {
+    "identity.signer": 4
+   },
+   "note": "distinct (order, field) pairs failing in at least one scenario; fills fields are scenario-independent"
+  },
+  "defect_rows": [
+   {
+    "scenario": "S_FIFO",
+    "category": "identity",
+    "field": "identity.signer",
+    "mid": "8008124",
+    "mk_hash": "0x90c50c2690329eb4edde26ae6ebfcf04b7eb93fd9aa87345bd6f0642efd7ff5d",
+    "cls": "observed",
+    "detail": "signer differs from truth"
+   },
+   {
+    "scenario": "S_FIFO",
+    "category": "identity",
+    "field": "identity.signer",
+    "mid": "8008124",
+    "mk_hash": "0x4d5a136bfea56c409cdc866956e11621a83ed36882d48d5142d766e721bc8f19",
+    "cls": "observed",
+    "detail": "signer differs from truth"
+   },
+   {
+    "scenario": "S_FIFO",
+    "category": "identity",
+    "field": "identity.signer",
+    "mid": "8008182",
+    "mk_hash": "0x3737b891998e94ce547d81a74eacfb6fa268a4895ede7eb047a8a2f425409ad4",
+    "cls": "observed",
+    "detail": "signer differs from truth"
+   },
+   {
+    "scenario": "S_FIFO",
+    "category": "identity",
+    "field": "identity.signer",
+    "mid": "8008182",
+    "mk_hash": "0xb290577b1c00cbc55dc68c1d31fd758d36c3e257dcf91fc189a551303d72c067",
+    "cls": "observed",
+    "detail": "signer differs from truth"
+   },
+   {
+    "scenario": "S_FIFO_LO",
+    "category": "identity",
+    "field": "identity.signer",
+    "mid": "8008124",
+    "mk_hash": "0x90c50c2690329eb4edde26ae6ebfcf04b7eb93fd9aa87345bd6f0642efd7ff5d",
+    "cls": "observed",
+    "detail": "signer differs from truth"
+   },
+   {
+    "scenario": "S_FIFO_LO",
+    "category": "identity",
+    "field": "identity.signer",
+    "mid": "8008124",
+    "mk_hash": "0x4d5a136bfea56c409cdc866956e11621a83ed36882d48d5142d766e721bc8f19",
+    "cls": "observed",
+    "detail": "signer differs from truth"
+   }
+  ]
+ },
+ "checks": {
+  "n_checks": 39,
+  "n_passed": 25,
+  "reparse_keys": [
+   "20261024_8001062",
+   "20261108_8008124"
+  ],
+  "n_reparse_checks": 22,
+  "expected_failures": {},
+  "n_eval": {
+   "outputs_present": 68,
+   "schema": 41,
+   "status_present": 123,
+   "status_counts_reported": 45,
+   "records_unique_key": 12,
+   "legs_complete": 72,
+   "amounts_reconcile": 30,
+   "yes_space_mapping": 24,
+   "clock_fields": 30,
+   "day_assignment": 23,
+   "legs_phase_clock": 12,
+   "boundary_censored": 17,
+   "fills_complete": 18,
+   "fill_hi_rule": 12,
+   "fill_lo_status": 6,
+   "fill_time_order": 6,
+   "fill_lo_frame": 30,
+   "orders_complete": 36,
+   "orders_cumulative": 6,
+   "H1_identity": 12,
+   "H2_presence": 12,
+   "H3_overfill_flagged": 6,
+   "posting_capacity_bound": 12,
+   "posting_before_first_fill": 6,
+   "removal_after_last_fill": 6,
+   "removal_lo_bound": 6,
+   "removal_class_evidence": 105,
+   "class_scenario_consistency": 60,
+   "size_bounds": 12,
+   "priority_exhaustion": 18,
+   "priority_tests_T1_T2": 6,
+   "priority_ahead_lo": 6,
+   "levels_frames_consistent": 42,
+   "tob_from_levels": 60,
+   "coverage_arithmetic": 1,
+   "econ_conservation": 362,
+   "econ_pnl_recompute": 4,
+   "identities_exante": 2,
+   "gt_scores": 1
+  }
+ },
+ "falsifier": {
+  "cases": 72,
+  "refused": 61,
+  "cpu_s": 17.9,
+  "not_refused": {
+   "pnl_sign_flip": {
+    "check": "econ_pnl_recompute",
+    "expected": "independent recompute",
+    "got": [
+     "econ: 0 recomputed (addr, mid) pairs absent from maker_market, 12 maker_market pairs with no ok legs",
+     "econ: 2 (addr, mid) fee_fill != recompute (SHARES fee at the fill price)"
+    ],
+    "baseline_clean": true
+   },
+   "extract_flag_undeclared": {
+    "check": "status_present",
+    "expected": "undeclared flag",
+    "got": [
+     "status records 20261024: the extract receipt declares no flag order (FLAGS / WS_FLAGS / MK_FLAGS)",
+     "status legs 20261024: the extract receipt declares no flag order (FLAGS / WS_FLAGS / MK_FLAGS)"
+    ],
+    "baseline_clean": true
+   },
+   "frames_excluded_wrong": {
+    "check": "status_counts_reported",
+    "expected": "frames_excluded",
+    "got": [
+     "lifecycle summary 20261024_8001062: frames_excluded {} != the 1 non-ok frames"
+    ],
+    "baseline_clean": false
+   },
+   "mk_idx_only_exhaustion": {
+    "check": "priority_exhaustion",
+    "expected": "without price-priority or shown-zero evidence",
+    "got": [
+     "orders 20261024_8001062: 5 rows claim sole exhausted without price-priority or shown-zero evidence (mk_idx is never evidence)",
+     "orders 20261024_8001062: 5 rows state size_exact without price-priority or shown-zero exhaustion at the last fill (or != cum_shares)"
+    ],
+    "baseline_clean": false
+   },
+   "size_exact_unjustified": {
+    "check": "priority_exhaustion",
+    "expected": "state size_exact without",
+    "got": [
+     "orders 20261024_8001062: 3 rows claim sole exhausted without price-priority or shown-zero evidence (mk_idx is never evidence)",
+     "orders 20261024_8001062: 4 rows state size_exact without price-priority or shown-zero exhaustion at the last fill (or != cum_shares)"
+    ],
+    "baseline_clean": false
+   },
+   "identities_wrong": {
+    "check": "identities_exante",
+    "expected": "differs from the Oct 23 recompute",
+    "got": [
+     "identities: maker_day in_exante_sh marks 4 addresses vs [5] expected (differs from the Oct 23 recompute)",
+     "identities: maker_day in_exante_pnl marks 4 addresses vs [5, 5] expected (differs from the Oct 23 recompute)"
+    ],
+    "baseline_clean": false
+   }
+  },
+  "not_plantable": {
+   "coverage_wrong": "not plantable here: no class map in the lifecycle receipt",
+   "extract_flag_order": "not plantable here: the extract receipt declares fewer than two flags",
+   "price_mismatch_unflagged": "not plantable here: no flagged price-mismatch record whose amounts reconcile",
+   "t1_reported_wrong": "not plantable here: no T1 report in the lifecycle summary",
+   "rp_ident": "not plantable here: no row for orders.status"
+  }
+ },
+ "oracle": {
+  "markets": {
+   "B24": {
+    "order_rows": 51,
+    "fill_rows": 24
+   },
+   "B25": {
+    "order_rows": 24,
+    "fill_rows": 17
+   },
+   "B26": {
+    "order_rows": 9,
+    "fill_rows": 5
+   },
+   "B27": {
+    "order_rows": 6,
+    "fill_rows": 2
+   },
+   "G1": {
+    "order_rows": 12,
+    "fill_rows": 4
+   },
+   "G3": {
+    "order_rows": 9,
+    "fill_rows": 4
+   },
+   "G4": {
+    "order_rows": 6,
+    "fill_rows": 2
+   }
+  },
+  "defects": [],
+  "sensitive_misses": [],
+  "unknown_hashes": 0,
+  "unknown_sids": 0,
+  "counts": {
+   "fill_lo_refinement": {
+    "assumption_sensitive:ok": 58
+   },
+   "fill_window": {
+    "observed:ok": 58
+   },
+   "persistence": {
+    "observed:ok": 45
+   },
+   "posting": {
+    "constrained:ok": 111,
+    "unresolved:ok": 6
+   },
+   "queue": {
+    "assumption_sensitive:ok": 105
+   },
+   "removal_set": {
+    "assumption_sensitive:ok": 33,
+    "constrained:ok": 66,
+    "unresolved:ok": 18
+   },
+   "removal_window": {
+    "assumption_sensitive:ok": 33,
+    "constrained:ok": 66
+   },
+   "size_exact": {
+    "assumption_sensitive:ok": 18,
+    "constrained:ok": 24
+   },
+   "size_lb": {
+    "assumption_sensitive:ok": 27,
+    "constrained:ok": 33,
+    "observed:ok": 57
+   }
+  }
+ },
+ "features": {
+  "multi_price_records": 8,
+  "mint_legs": 6,
+  "merge_legs": 2,
+  "conflict_records": 2,
+  "repolled_records": 65,
+  "taker_addresses_also_makers": 2,
+  "taker_hashes_also_makers": 1,
+  "sealed_outcome_blank": true,
+  "boundary_censored": {
+   "lower": true,
+   "upper": true,
+   "gt": true
+  },
+  "frames_with_gap_flag": 1,
+  "fifo_price_exhaustions": 8,
+  "fifo_time_exhaustions": 3,
+  "survivors_with_ahead_lo": 3,
+  "fills_lo_unbounded": 1,
+  "truth_scored_own_orders": 5,
+  "own_hashes_in_gt_lifecycle": 5,
+  "econ_tie_rows": 4,
+  "econ_ok_rows_on_censored": 0,
+  "not_exercised": []
+ },
+ "firewall": {
+  "violations": 0,
+  "subprocesses": [
+   {
+    "stage": "econ run",
+    "argv": [
+     "/home/yuqing/pricer-sol/venv/bin/python3",
+     "/home/yuqing/ctaNew/predictfun/research/pf_mt_econ.py",
+     "day",
+     "/tmp/claude-1001/-home-yuqing-ctaNew/aea5bfb9-4ea4-41d0-bf73-bb98d818e3d4/scratchpad/e2e_2/repo/data/predict_fun/research/maker_trace_v1_<non-consumed-day>/.econ.partial_<non-consumed-day>T150817_873286/parts/20261023.args.json"
+    ]
+   },
+   {
+    "stage": "econ run",
+    "argv": [
+     "/home/yuqing/pricer-sol/venv/bin/python3",
+     "/home/yuqing/ctaNew/predictfun/research/pf_mt_econ.py",
+     "day",
+     "/tmp/claude-1001/-home-yuqing-ctaNew/aea5bfb9-4ea4-41d0-bf73-bb98d818e3d4/scratchpad/e2e_2/repo/data/predict_fun/research/maker_trace_v1_<non-consumed-day>/.econ.partial_<non-consumed-day>T150817_873286/parts/20261024.args.json"
+    ]
+   },
+   {
+    "stage": "econ run",
+    "argv": [
+     "/home/yuqing/pricer-sol/venv/bin/python3",
+     "/home/yuqing/ctaNew/predictfun/research/pf_mt_econ.py",
+     "day",
+     "/tmp/claude-1001/-home-yuqing-ctaNew/aea5bfb9-4ea4-41d0-bf73-bb98d818e3d4/scratchpad/e2e_2/repo/data/predict_fun/research/maker_trace_v1_<non-consumed-day>/.econ.partial_<non-consumed-day>T150817_873286/parts/20261025.args.json"
+    ]
+   },
+   {
+    "stage": "econ run",
+    "argv": [
+     "/home/yuqing/pricer-sol/venv/bin/python3",
+     "/home/yuqing/ctaNew/predictfun/research/pf_mt_econ.py",
+     "day",
+     "/tmp/claude-1001/-home-yuqing-ctaNew/aea5bfb9-4ea4-41d0-bf73-bb98d818e3d4/scratchpad/e2e_2/repo/data/predict_fun/research/maker_trace_v1_<non-consumed-day>/.econ.partial_<non-consumed-day>T150817_873286/parts/20261026.args.json"
+    ]
+   },
+   {
+    "stage": "econ run",
+    "argv": [
+     "/home/yuqing/pricer-sol/venv/bin/python3",
+     "/home/yuqing/ctaNew/predictfun/research/pf_mt_econ.py",
+     "day",
+     "/tmp/claude-1001/-home-yuqing-ctaNew/aea5bfb9-4ea4-41d0-bf73-bb98d818e3d4/scratchpad/e2e_2/repo/data/predict_fun/research/maker_trace_v1_<non-consumed-day>/.econ.partial_<non-consumed-day>T150817_873286/parts/20261027.args.json"
+    ]
+   }
+  ]
+ },
+ "stages": [
+  {
+   "stage": "extract 20261023",
+   "module": "pf_mt_extract",
+   "rc": 0,
+   "cpu_s": 0.07,
+   "child_cpu_s": 0.0,
+   "wall_s": 0.07
+  },
+  {
+   "stage": "extract 20261024",
+   "module": "pf_mt_extract",
+   "rc": 0,
+   "cpu_s": 0.1,
+   "child_cpu_s": 0.0,
+   "wall_s": 0.1
+  },
+  {
+   "stage": "extract 20261025",
+   "module": "pf_mt_extract",
+   "rc": 0,
+   "cpu_s": 0.09,
+   "child_cpu_s": 0.0,
+   "wall_s": 0.09
+  },
+  {
+   "stage": "extract 20261026",
+   "module": "pf_mt_extract",
+   "rc": 0,
+   "cpu_s": 0.09,
+   "child_cpu_s": 0.0,
+   "wall_s": 0.09
+  },
+  {
+   "stage": "extract 20261027",
+   "module": "pf_mt_extract",
+   "rc": 0,
+   "cpu_s": 0.11,
+   "child_cpu_s": 0.0,
+   "wall_s": 0.11
+  },
+  {
+   "stage": "extract 20261108",
+   "module": "pf_mt_extract",
+   "rc": 0,
+   "cpu_s": 0.14,
+   "child_cpu_s": 0.0,
+   "wall_s": 0.14
+  },
+  {
+   "stage": "lifecycle 20261024 8001062",
+   "module": "pf_mt_lifecycle",
+   "rc": 0,
+   "cpu_s": 0.09,
+   "child_cpu_s": 0.0,
+   "wall_s": 0.09
+  },
+  {
+   "stage": "lifecycle 20261025 8002110",
+   "module": "pf_mt_lifecycle",
+   "rc": 0,
+   "cpu_s": 0.08,
+   "child_cpu_s": 0.0,
+   "wall_s": 0.08
+  },
+  {
+   "stage": "lifecycle 20261026 8003150",
+   "module": "pf_mt_lifecycle",
+   "rc": 0,
+   "cpu_s": 0.07,
+   "child_cpu_s": 0.0,
+   "wall_s": 0.07
+  },
+  {
+   "stage": "lifecycle 20261027 8004140",
+   "module": "pf_mt_lifecycle",
+   "rc": 0,
+   "cpu_s": 0.07,
+   "child_cpu_s": 0.0,
+   "wall_s": 0.07
+  },
+  {
+   "stage": "lifecycle 20261108 8008124",
+   "module": "pf_mt_lifecycle",
+   "rc": 0,
+   "cpu_s": 0.07,
+   "child_cpu_s": 0.0,
+   "wall_s": 0.07
+  },
+  {
+   "stage": "lifecycle 20261108 8008182",
+   "module": "pf_mt_lifecycle",
+   "rc": 0,
+   "cpu_s": 0.07,
+   "child_cpu_s": 0.0,
+   "wall_s": 0.07
+  },
+  {
+   "stage": "lifecycle 20261108 8008275",
+   "module": "pf_mt_lifecycle",
+   "rc": 0,
+   "cpu_s": 0.07,
+   "child_cpu_s": 0.0,
+   "wall_s": 0.07
+  },
+  {
+   "stage": "truth build",
+   "module": "pf_mt_truth",
+   "rc": 0,
+   "cpu_s": 0.08,
+   "child_cpu_s": 0.0,
+   "wall_s": 0.08
+  },
+  {
+   "stage": "truth dry",
+   "module": "pf_mt_truth",
+   "rc": 0,
+   "cpu_s": 0.11,
+   "child_cpu_s": 0.0,
+   "wall_s": 0.11
+  },
+  {
+   "stage": "truth score",
+   "module": "pf_mt_truth",
+   "rc": 0,
+   "cpu_s": 0.21,
+   "child_cpu_s": 0.0,
+   "wall_s": 0.21
+  },
+  {
+   "stage": "econ run",
+   "module": "pf_mt_econ",
+   "rc": 0,
+   "cpu_s": 0.11,
+   "child_cpu_s": 5.61,
+   "wall_s": 5.72
+  },
+  {
+   "stage": "report",
+   "module": "pf_mt_report",
+   "rc": 0,
+   "cpu_s": 1.77,
+   "child_cpu_s": -0.0,
+   "wall_s": 1.77
+  },
+  {
+   "stage": "checks run",
+   "module": "mt_checks",
+   "rc": 1,
+   "cpu_s": 1.83,
+   "child_cpu_s": -0.0,
+   "wall_s": 1.83,
+   "error": "",
+   "where": "",
+   "log_tail": [
+    "  \"econ_pnl_recompute\",",
+    "  \"identities_exante\",",
+    "  \"gt_scores\",",
+    "  \"20261024_8001062:rp_records_status\"",
+    " ]",
+    "}"
+   ]
+  }
+ ],
+ "cpu_s": 24.2,
+ "child_cpu_s": 5.6,
+ "n_failures": 26,
+ "integration_failures": [
+  {
+   "module": "mt_checks",
+   "check": "outputs_present",
+   "evidence": "scores output missing",
+   "examples": [
+    "scores output missing"
+   ]
+  },
+  {
+   "module": "mt_checks",
+   "check": "status_present",
+   "evidence": "status records 20261023: the extract receipt declares no flag order (FLAGS / WS_FLAGS / MK_FLAGS)",
+   "examples": [
+    "status records 20261023: the extract receipt declares no flag order (FLAGS / WS_FLAGS / MK_FLAGS)",
+    "status legs 20261023: the extract receipt declares no flag order (FLAGS / WS_FLAGS / MK_FLAGS)",
+    "status records 20261024: the extract receipt declares no flag order (FLAGS / WS_FLAGS / MK_FLAGS)"
+   ]
+  },
+  {
+   "module": "mt_checks",
+   "check": "status_counts_reported",
+   "evidence": "lifecycle summary 20261024_8001062: frames_excluded {} != the 1 non-ok frames",
+   "examples": [
+    "lifecycle summary 20261024_8001062: frames_excluded {} != the 1 non-ok frames",
+    "lifecycle summary 20261025_8002110: frames_excluded {} != the 2 non-ok frames",
+    "status counts frames 20261108: no extract receipt map equals the day totals {'ok': 1560}"
+   ]
+  },
+  {
+   "module": "mt_checks",
+   "check": "amounts_reconcile",
+   "evidence": "records 20261024: 1 status-ok records whose maker-weighted YES price != priceExecuted (must carry a status)",
+   "examples": [
+    "records 20261024: 1 status-ok records whose maker-weighted YES price != priceExecuted (must carry a status)",
+    "records 20261025: 1 status-ok records whose maker-weighted YES price != priceExecuted (must carry a status)"
+   ]
+  },
+  {
+   "module": "mt_checks",
+   "check": "fill_lo_frame",
+   "evidence": "fills 20261025_8002110: 2 bounded fills with a frame strictly between f_before and the evidence frame f_after",
+   "examples": [
+    "fills 20261025_8002110: 2 bounded fills with a frame strictly between f_before and the evidence frame f_after"
+   ]
+  },
+  {
+   "module": "mt_checks",
+   "check": "posting_capacity_bound",
+   "evidence": "orders 20261024_8001062: 3 rows claim post_method capacity with another bound (or none exists)",
+   "examples": [
+    "orders 20261024_8001062: 3 rows claim post_method capacity with another bound (or none exists)"
+   ]
+  },
+  {
+   "module": "mt_checks",
+   "check": "removal_class_evidence",
+   "evidence": "orders 20261024_8001062: constrained sole exhausted without shown(p)=0 evidence after the last fill (S_FIFO)",
+   "examples": [
+    "orders 20261024_8001062: constrained sole exhausted without shown(p)=0 evidence after the last fill (S_FIFO)",
+    "orders 20261024_8001062: constrained sole exhausted without shown(p)=0 evidence after the last fill (S_FIFO_LO)",
+    "orders 20261024_8001062: constrained sole exhausted without shown(p)=0 evidence after the last fill (S_NOPRIO)"
+   ]
+  },
+  {
+   "module": "mt_checks",
+   "check": "priority_exhaustion",
+   "evidence": "orders 20261024_8001062: 3 rows claim sole exhausted without price-priority or shown-zero evidence (mk_idx is never evidence)",
+   "examples": [
+    "orders 20261024_8001062: 3 rows claim sole exhausted without price-priority or shown-zero evidence (mk_idx is never evidence)",
+    "orders 20261024_8001062: 3 rows state size_exact without price-priority or shown-zero exhaustion at the last fill (or != cum_shares)"
+   ]
+  },
+  {
+   "module": "mt_checks",
+   "check": "priority_tests_T1_T2",
+   "evidence": "lifecycle summary 20261024_8001062: priority tests T1 / T2 not reported",
+   "examples": [
+    "lifecycle summary 20261024_8001062: priority tests T1 / T2 not reported",
+    "lifecycle summary 20261025_8002110: priority tests T1 / T2 not reported",
+    "lifecycle summary 20261026_8003150: priority tests T1 / T2 not reported"
+   ]
+  },
+  {
+   "module": "mt_checks",
+   "check": "coverage_arithmetic",
+   "evidence": "no class coverage reported anywhere (life receipts / coverage file): coverage arithmetic unverifiable",
+   "examples": [
+    "no class coverage reported anywhere (life receipts / coverage file): coverage arithmetic unverifiable"
+   ]
+  },
+  {
+   "module": "mt_checks",
+   "check": "econ_conservation",
+   "evidence": "econ maker_market: 12 rows with resid != drift + resol",
+   "examples": [
+    "econ maker_market: 12 rows with resid != drift + resol"
+   ]
+  },
+  {
+   "module": "mt_checks",
+   "check": "econ_pnl_recompute",
+   "evidence": "econ: 0 recomputed (addr, mid) pairs absent from maker_market, 12 maker_market pairs with no ok legs",
+   "examples": [
+    "econ: 0 recomputed (addr, mid) pairs absent from maker_market, 12 maker_market pairs with no ok legs",
+    "econ: 2 (addr, mid) fee_fill != recompute (SHARES fee at the fill price)"
+   ]
+  },
+  {
+   "module": "mt_checks",
+   "check": "identities_exante",
+   "evidence": "identities: maker_day in_exante_pnl marks 4 addresses vs [5, 5] expected (differs from the Oct 23 recompute)",
+   "examples": [
+    "identities: maker_day in_exante_pnl marks 4 addresses vs [5, 5] expected (differs from the Oct 23 recompute)"
+   ]
+  },
+  {
+   "module": "mt_checks",
+   "check": "gt_scores",
+   "evidence": "truth own_orders (role columns) or truth/scores.json missing: ",
+   "examples": [
+    "truth own_orders (role columns) or truth/scores.json missing: "
+   ]
+  },
+  {
+   "module": "mt_checks",
+   "check": "reparse 20261024_8001062:rp_records_status",
+   "evidence": "records 20261024_8001062: maker-weighted YES price != priceExecuted but the record is status ok",
+   "examples": [
+    "records 20261024_8001062: maker-weighted YES price != priceExecuted but the record is status ok"
+   ]
+  },
+  {
+   "module": "mt_checks",
+   "check": "falsifier pnl_sign_flip",
+   "evidence": "not refused by econ_pnl_recompute (expected 'independent recompute'); got ['econ: 0 recomputed (addr, mid) pairs absent from maker_market, 12 maker_market pairs with no ok legs', 'econ: 2 (addr, mid) fee_fill != recompute (SHARES fee at the fill price)']; baseline_clean=True"
+  },
+  {
+   "module": "mt_checks",
+   "check": "falsifier extract_flag_undeclared",
+   "evidence": "not refused by status_present (expected 'undeclared flag'); got ['status records 20261024: the extract receipt declares no flag order (FLAGS / WS_FLAGS / MK_FLAGS)', 'status legs 20261024: the extract receipt declares no flag order (FLAGS / WS_FLAGS / MK_FLAGS)']; baseline_clean=True"
+  },
+  {
+   "module": "mt_checks",
+   "check": "falsifier frames_excluded_wrong",
+   "evidence": "not refused by status_counts_reported (expected 'frames_excluded'); got ['lifecycle summary 20261024_8001062: frames_excluded {} != the 1 non-ok frames']; baseline_clean=False"
+  },
+  {
+   "module": "mt_checks",
+   "check": "falsifier mk_idx_only_exhaustion",
+   "evidence": "not refused by priority_exhaustion (expected 'without price-priority or shown-zero evidence'); got ['orders 20261024_8001062: 5 rows claim sole exhausted without price-priority or shown-zero evidence (mk_idx is never evidence)', 'orders 20261024_8001062: 5 rows state size_exact without price-priority or shown-zero exhaustion at the last fill (or != cum_shares)']; baseline_clean=False"
+  },
+  {
+   "module": "mt_checks",
+   "check": "falsifier size_exact_unjustified",
+   "evidence": "not refused by priority_exhaustion (expected 'state size_exact without'); got ['orders 20261024_8001062: 3 rows claim sole exhausted without price-priority or shown-zero evidence (mk_idx is never evidence)', 'orders 20261024_8001062: 4 rows state size_exact without price-priority or shown-zero exhaustion at the last fill (or != cum_shares)']; baseline_clean=False"
+  },
+  {
+   "module": "mt_checks",
+   "check": "falsifier identities_wrong",
+   "evidence": "not refused by identities_exante (expected 'differs from the Oct 23 recompute'); got ['identities: maker_day in_exante_sh marks 4 addresses vs [5] expected (differs from the Oct 23 recompute)', 'identities: maker_day in_exante_pnl marks 4 addresses vs [5, 5] expected (differs from the Oct 23 recompute)']; baseline_clean=False"
+  },
+  {
+   "module": "harness fixture",
+   "check": "falsifier coverage_wrong",
+   "evidence": "not plantable: not plantable here: no class map in the lifecycle receipt"
+  },
+  {
+   "module": "harness fixture",
+   "check": "falsifier extract_flag_order",
+   "evidence": "not plantable: not plantable here: the extract receipt declares fewer than two flags"
+  },
+  {
+   "module": "harness fixture",
+   "check": "falsifier price_mismatch_unflagged",
+   "evidence": "not plantable: not plantable here: no flagged price-mismatch record whose amounts reconcile"
+  },
+  {
+   "module": "harness fixture",
+   "check": "falsifier t1_reported_wrong",
+   "evidence": "not plantable: not plantable here: no T1 report in the lifecycle summary"
+  },
+  {
+   "module": "harness fixture",
+   "check": "falsifier rp_ident",
+   "evidence": "not plantable: not plantable here: no row for orders.status"
+  }
+ ],
+ "first_failure": "mt_checks / outputs_present"
+}
+E2E RESULT FAIL rc=1 failures=26 first=mt_checks / outputs_present
+2026-11-22T15:08:14Z tag=mt_e2e_2 rc=1 peak_rss_mib=149 wall_s=29.97 cpu_user_s=28.66 memavail_start_gib=22 disk_free_gib=450->450 slot=claude3

@@ -1,0 +1,93 @@
+PASS canon: a re-poll differing only in market / outcome.status / bestBid / bestAsk / onChainId has equal content
+PASS canon: a maker amount change is a content change
+PASS canon: an executedAt change is a content change (not volatile)
+PASS canon: a new leg key takes the generic form and is a content change
+PASS u256: exact int
+PASS u256 refuses '1_0'
+PASS u256 refuses ' 1'
+PASS u256 refuses '+1'
+PASS u256 refuses '1.5'
+PASS u256 refuses 12
+PASS iso_ms: executedAt -> integer ms
+PASS iso_ms: a naive or missing time -> -1
+PASS UUIDv7 decode
+PASS UUIDv4 refused as a settle time
+PASS status: fixed order, ok when empty
+PASS status refuses an unknown flag
+PASS Forbidden: a 20261028 REST hour
+PASS Forbidden: Nov 8 hour 23 (WS)
+PASS Forbidden: a 20261028 day run
+PASS Forbidden: ZERO filesystem calls before each refusal
+PASS FILL: the clipped REST hour is exactly the Oct 28 00Z hour of day_hours
+PASS FILL: no filesystem call ever names a clipped hour
+PASS FILL: gzip opens = the planned hours minus the missing ones
+PASS FILL: missing hours are recorded
+PASS FILL: receipt sha256 + bytes of every hour file read
+PASS FILL: measured margins (ungated p99.9 lag 128.46 s -> 3 min, p50 would give 1; post 4 s -> 1 min; pre recv 90 s -> 2 min)
+PASS FILL: a discovery-gated lag (3 h trade received at discovery) is excluded from the margin and reported
+PASS FILL: every page took the market cut (compact payloads)
+PASS FILL: exclusions counted, not dropped (other-market page, HTTP 500, foreign record, conflict, re-poll, inverted and repeated-payload receipts)
+PASS FILL: one row per unique key (17)
+PASS FILL: repeated payloads (fast path) raise n_recv and keep the earliest receipt
+PASS FILL: de-dup across hours: re-polls with volatile changes -> n_recv 3, first receipt kept
+PASS FILL: conflict (the probe case): the later reconciling variant is kept, status conflict, every receipt counted, earliest receipt
+PASS FILL: one content per key -> x_kept only
+PASS FILL: the variant not kept is counted, not written
+PASS FILL: sum(makers) short by 1 wei (equal as floats) -> recon_mk_sum
+PASS FILL: taker.price != priceExecuted by 1 wei (equal as floats) -> recon_price
+PASS FILL: a non-v7 settlementId -> sid_not_v7, settle_ms -1
+PASS FILL: a non-integer amount -> malformed row (no legs), not a drop
+PASS FILL: page / record market mismatch -> page_mid_mismatch
+PASS FILL: the 23:55 market -> boundary_censored; 23:50 -> ok
+PASS FILL: first_recv_ns = the earliest receipt of the kept content (a later line with an earlier recv_ns)
+PASS FILL: legs rows = legs of the kept contents (20; none for the malformed record)
+PASS FILL: the kept conflict record carries the missing maker's leg
+PASS FILL: legs of a regular + mint record in YES space
+PASS FILL: mint: NO bid 0.01 -> YES ask 0.99
+PASS FILL: NO-outcome regular match in YES space; no settle time -> phase unknown
+PASS FILL: legs carry the earliest receipt too
+PASS FILL: legs inherit record statuses
+PASS FILL: shares are floats only after the integer check (5e18-1 -> 5.0, flagged)
+PASS FILL: pre / post-window phases on the settle clock
+PASS FILL: market statuses (boundary, missing REST hour, fills outside / in a missing WS hour, no records / frames)
+PASS FILL: WS coverage counts per market
+PASS FILL: markets row = the latest receipt, here a byte-identical replay of an older payload (its values re-applied); the changed field named
+PASS FILL: tob statuses (dup, same_ms_changed, gap > 1 s, out_of_order, new_conn)
+PASS FILL: exact tob rows (two-sided; one-sided with NaN best bid); frames of other markets / non-book lines not in tob
+PASS FILL: depth frames statuses (+ off_grid, dup_level)
+PASS FILL: exact depth frame row (lastOrderSettled kept raw)
+PASS FILL: levels = full snapshot in integer cents; an off-grid price -> status off_grid with its exact price
+PASS FILL: depth only for BOOK markets
+PASS FILL: schemas = pf_mt_common.SCHEMAS (+ x_ extras only)
+PASS FILL: computed inventory (match kinds, maker fees, makers[] order, avg price, sub-second, ids, order hashes, exact keys)
+PASS FILL: rewards variants kept with their first receipt
+PASS FILL: receipt hashes the published outputs
+PASS FILL: the temp dir is gone
+PASS write-once: a second run of the day is refused
+PASS write-once: refused with ZERO raw-file calls
+PASS guard: VmHWM >= GUARD_MIB stops the run
+PASS guard: nothing published, temp dir removed
+PASS ID: the 00:00 market is boundary_censored (its receipts could precede the first allowed hour); 23:55 is covered by Oct 24 00Z
+PASS ID: REST only: no WS file touched, no tob / depth output
+PASS ID: the clipped hour is the one before the day and is never touched
+PASS ID: records carry the market boundary status
+PASS GT: every scope window in markets; the WS rule skips windows without an own maker leg (an own taker leg does not count); 22:55 boundary_censored
+PASS GT: the rule, our signer and the selected / excluded counts are in the receipt
+PASS GT: tob only for the selected window; the skipped window's frames counted, not parsed
+PASS GT: records and legs for every scope window
+PASS GT: no clipped hour (07Z23, 08Z23, 09Z00) is ever touched
+PASS GT: depth only for the selected window
+PASS probe: output under OUT refused
+PASS probe: more than 2 hour files refused
+PASS probe: another day refused
+PASS probe: unknown hour family refused
+PASS day: a padded stem list is refused for a day run
+PASS registry: 287 windows refused (a missing window would drop its records)
+PASS registry refusal: ZERO raw-file calls
+PASS CONFLICT: most receipts / tie -> first seen / none -> first / a reconciling first beats more receipts
+PASS CONFLICT: the kept variant's legs only
+PASS CONFLICT: payloads the market cut cannot validate are parsed whole (spaced JSON; market not followed by taker; taker first)
+PASS CONFLICT: the last line of a file without a final newline is read
+PASS CONFLICT: receipt counts
+SELFTEST PASS: 91/91 checks passed
+2026-11-22T09:37:59Z tag=mt_extract_selftest rc=0 peak_rss_mib=119 wall_s=0.58 cpu_user_s=0.48 memavail_start_gib=22 disk_free_gib=426->426 slot=claude2

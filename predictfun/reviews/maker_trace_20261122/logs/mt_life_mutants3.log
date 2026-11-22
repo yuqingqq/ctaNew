@@ -1,0 +1,13 @@
+mutant: pending evidence: last candidate
+   simcheck: 2 observed / constrained claims failed, T1 + T2 0; first: fills window observed: o411_1236 lo-m 9 hi-m 28 pend_inc
+mutant: drop evidence: last candidate
+   3 of 136 checks fail, first: t first drop (an unrelated 6-sh drop at 1500) taken (3000, book_drop, 1031)
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_lifecycle_selftest.py", line 853, in <module>
+    mutants()
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_lifecycle_selftest.py", line 692, in mutants
+    C.need(src.count(old) == 1, f'mutant {name!r}: its target occurs {src.count(old)} times in pf_mt_lifecycle.py')
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_common.py", line 32, in need
+    raise ValueError(msg)
+ValueError: mutant 'drop preferred over pending': its target occurs 0 times in pf_mt_lifecycle.py
+2026-11-22T09:41:23Z tag=mt_life_mutants3 rc=1 peak_rss_mib=155 wall_s=10.54 cpu_user_s=10.41 memavail_start_gib=22 disk_free_gib=426->426 slot=claude3

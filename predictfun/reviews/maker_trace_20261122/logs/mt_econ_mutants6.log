@@ -1,0 +1,39 @@
+{
+ "baseline_rc": 0,
+ "n_mutants": 34,
+ "killed": 6,
+ "survivors": [],
+ "detail": [
+  {
+   "mutant": "fee_res_at_fill_price",
+   "killed": true,
+   "first_error": "ValueError: fills_valued a1/0/taker.fee_res: expected 0.1, got np.float64(0.053000000000000005)"
+  },
+  {
+   "mutant": "zero_sum_check_off",
+   "killed": true,
+   "first_error": "AssertionError: a dropped address breaks the zero sum: not refused (expected: zero_sum_gross)"
+  },
+  {
+   "mutant": "censor_status_off",
+   "killed": true,
+   "first_error": "ValueError: censored markets: no outcome surfaces (V NaN), st_res censored, rows kept with status: expected True, got False"
+  },
+  {
+   "mutant": "fifo_ignores_price_priority",
+   "killed": true,
+   "first_error": "ValueError: fills_valued b8/0/maker.mq: expected 0.0, got np.float64(2.0)"
+  },
+  {
+   "mutant": "lo_from_flagged_fills",
+   "killed": true,
+   "first_error": "ValueError: fills_valued a5/0/maker.t_status: expected 'hi_fill_status', got 'lo'"
+  },
+  {
+   "mutant": "worker_failure_swallowed",
+   "killed": true,
+   "first_error": "FileNotFoundError: [Errno 2] No such file or directory: '/tmp/claude-1001/-home-yuqing-ctaNew/aea5bfb9-4ea4-41d0-bf73-bb98d818e3d4/scratchpad/mt_econ_selftest_9"
+  }
+ ]
+}
+2026-11-22T09:37:36Z tag=mt_econ_mutants6 rc=0 peak_rss_mib=124 wall_s=27.52 cpu_user_s=24.05 memavail_start_gib=22 disk_free_gib=426->426 slot=claude4

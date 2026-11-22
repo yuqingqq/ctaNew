@@ -1,0 +1,4 @@
+CONFLICT sid_tail 518770 market 3697899 receipt gap s 6.403524944
+   ('.makers', "[{'amount': '30000000000000000000', 'fee", "[{'amount': '6217899355386872784', 'fee'")
+INT_MISMATCH [{"sid_tail": "518770", "taker_amount": "945060052690856305871", "amountFilled": "945060052690856305871", "makers_sum": "316415745788299621766", "taker_price": "514435100373263332", "priceExecuted": "514435100373263332", "n_makers": 12}]
+2026-11-22T09:07:01Z tag=mt_checks_probe_conflict rc=0 peak_rss_mib=138 wall_s=19.33 cpu_user_s=18.70 memavail_start_gib=22 disk_free_gib=427->427 slot=claude2

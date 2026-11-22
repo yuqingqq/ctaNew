@@ -1,0 +1,49 @@
+SIMCHECK 4 markets x 60 s (frames, records, legs, hashes per market: [(1220, 1296, 1945, 1156), (1220, 1357, 2024, 1129), (1219, 1293, 1988, 1104), (1220, 1400, 2182, 1087)]); run_market cpu 4.14 s total
+  S_FIFO    persist         observed              n     78  failed     0
+  S_FIFO    post            assumption_sensitive  n   3951  failed  1205
+  S_FIFO    post            constrained           n    525  failed     0
+  S_FIFO    queue           assumption_sensitive  n    333  failed     0
+  S_FIFO    removal_member  assumption_sensitive  n   4330  failed     8
+  S_FIFO    removal_member  constrained           n    140  failed     0
+  S_FIFO    removal_member  unresolved            n      6  failed     0
+  S_FIFO    removal_window  assumption_sensitive  n   4330  failed     7
+  S_FIFO    removal_window  constrained           n    140  failed     0
+  S_FIFO    removal_window  unresolved            n      6  failed     0
+  S_FIFO    size_exact      assumption_sensitive  n   2545  failed     8
+  S_FIFO    size_exact      constrained           n      7  failed     0
+  S_FIFO    size_lb         observed              n   4476  failed     0
+  S_FIFO    size_ub         assumption_sensitive  n   2928  failed    56
+  S_FIFO    size_ub         constrained           n     24  failed     0
+  S_FIFO_LO persist         observed              n     78  failed     0
+  S_FIFO_LO post            assumption_sensitive  n   3951  failed     7
+  S_FIFO_LO post            constrained           n    525  failed     0
+  S_FIFO_LO queue           assumption_sensitive  n    333  failed     0
+  S_FIFO_LO removal_member  assumption_sensitive  n   4330  failed     8
+  S_FIFO_LO removal_member  constrained           n    140  failed     0
+  S_FIFO_LO removal_member  unresolved            n      6  failed     0
+  S_FIFO_LO removal_window  assumption_sensitive  n   4330  failed  1595
+  S_FIFO_LO removal_window  constrained           n    140  failed     0
+  S_FIFO_LO removal_window  unresolved            n      6  failed     0
+  S_FIFO_LO size_exact      assumption_sensitive  n   2401  failed     5
+  S_FIFO_LO size_exact      constrained           n      7  failed     0
+  S_FIFO_LO size_lb         observed              n   4476  failed     0
+  S_FIFO_LO size_ub         assumption_sensitive  n   2605  failed    17
+  S_FIFO_LO size_ub         constrained           n     24  failed     0
+  S_NOPRIO  persist         observed              n     78  failed     0
+  S_NOPRIO  post            assumption_sensitive  n   3951  failed   986
+  S_NOPRIO  post            constrained           n    525  failed     0
+  S_NOPRIO  removal_member  assumption_sensitive  n   4330  failed     8
+  S_NOPRIO  removal_member  constrained           n    140  failed     0
+  S_NOPRIO  removal_member  unresolved            n      6  failed     0
+  S_NOPRIO  removal_window  assumption_sensitive  n   4330  failed     7
+  S_NOPRIO  removal_window  constrained           n    140  failed     0
+  S_NOPRIO  removal_window  unresolved            n      6  failed     0
+  S_NOPRIO  size_exact      assumption_sensitive  n    495  failed     8
+  S_NOPRIO  size_exact      constrained           n      7  failed     0
+  S_NOPRIO  size_lb         observed              n   4476  failed     0
+  S_NOPRIO  size_ub         assumption_sensitive  n   1213  failed    56
+  S_NOPRIO  size_ub         constrained           n     24  failed     0
+  fills     window          observed              n   8139  failed     0
+  priority tests (T1 makers, T1 violations, T2 groups, T2 violations): [{'S_FIFO': (456, 0, 158, 0), 'S_FIFO_LO': (456, 0, 158, 0)}, {'S_FIFO': (430, 0, 194, 0), 'S_FIFO_LO': (430, 0, 194, 0)}, {'S_FIFO': (390, 0, 219, 0), 'S_FIFO_LO': (390, 0, 219, 0)}, {'S_FIFO': (398, 0, 269, 0), 'S_FIFO_LO': (398, 0, 269, 0)}]
+SIMCHECK PASSED: 0 of 24309 observed / constrained claims failed; T1 = T2 = 0; assumption_sensitive misses 3981
+2026-11-22T09:40:11Z tag=mt_life_simcheck3 rc=0 peak_rss_mib=152 wall_s=5.53 cpu_user_s=5.43 memavail_start_gib=22 disk_free_gib=426->426 slot=claude3

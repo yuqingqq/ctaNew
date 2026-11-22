@@ -1,0 +1,30 @@
+records_20261024: rows 24608 / 24608; shared cols 23; differing []; only v1 []; only v2 []
+legs_20261024: rows 38369 / 38369; shared cols 27; differing []; only v1 []; only v2 []
+tob_20261024: rows 69294 / 69294; shared cols 15; differing ['best_bid', 'best_ask']; only v1 []; only v2 []
+depth/20261024_3704004_frames: rows 6369 / 6369; shared cols 14; differing []; only v1 []; only v2 []
+depth/20261024_3704004_levels: rows 591630 / 591630; shared cols 7; differing ['x_price']; only v1 []; only v2 []
+markets_20261024: rows 288 / 288; shared cols 32; differing ['spreadThreshold', 'shareThreshold', 'status']; only v1 ['ws_hi_ms', 'ws_lo_ms']; only v2 ['n_legs_in_missing_ws_hour', 'n_legs_outside_ws', 'rewards_variants']
+markets status changes v1 -> v2: {'no_records+boundary_censored+no_frames+ws_clipped': 269, 'boundary_censored+ws_clipped': 9, 'boundary_censored+no_frames+ws_clipped': 5, 'ws_clipped': 5} -> {'no_records+boundary_censored+no_frames': 269, 'boundary_censored': 6, 'boundary_censored+no_frames+fills_outside_ws': 5, 'fills_outside_ws': 5, 'boundary_censored+fills_outside_ws': 3}
+    mid  n_records  n_legs_outside_ws  n_frames                                       status
+3703688        300                403         0 boundary_censored+no_frames+fills_outside_ws
+3703701        200                266         0 boundary_censored+no_frames+fills_outside_ws
+3703704        500                672         0 boundary_censored+no_frames+fills_outside_ws
+3703728        400                541         0 boundary_censored+no_frames+fills_outside_ws
+3703730        600                870         0 boundary_censored+no_frames+fills_outside_ws
+3703978        400                587        23           boundary_censored+fills_outside_ws
+3704000       2269                157      5798           boundary_censored+fills_outside_ws
+3704004       2050                  9      6369                             fills_outside_ws
+3704008       1056                  3      4996                             fills_outside_ws
+3704100       1206                  4      4480                             fills_outside_ws
+3704101       2032                  3      5836                             fills_outside_ws
+3704366       2125                  4      6164                             fills_outside_ws
+3704409       2359                  4      6358           boundary_censored+fills_outside_ws
+3704410       2076                  0      6325                            boundary_censored
+3704508       1376                  0      5185                            boundary_censored
+3704524       1369                  0      4921                            boundary_censored
+3704697       2285                  0      6563                            boundary_censored
+3704702       1945                  0      5847                            boundary_censored
+3704720         60                  0       429                            boundary_censored
+rewards_variants sample [{"first_recv_ns":1792843222967246884,"rewards":{"current":null,"schedule":[{"endsAt":"2026-10-24T12:10:00.000Z","hourlyRate":3000,"startsAt":"2026-10-24T12:05:00.000Z"}]}},{"first_recv_ns":1792843508772046599,"rewards":{"current":{"endsAt":"2026-10-24T12:10:00.000Z","hourlyRate":3000,"startsAt":"2026-10-24T12:05:00.000Z"},"schedule":[{"endsAt":"2026-10-24T12:10:00.000Z","hourlyRate":3000,"startsAt":"2026-10-24T12:05:00.000Z"}]}}]
+n rewards variants per market {2: 12, 1: 7}
+2026-11-22T09:12:54Z tag=mt_extract_parity rc=0 peak_rss_mib=184 wall_s=0.55 cpu_user_s=0.41 memavail_start_gib=22 disk_free_gib=427->427 slot=claude2

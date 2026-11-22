@@ -1,0 +1,8 @@
+truth {'signer': 'M0', 'side': 'bid', 'tick': 45, 'size': 8.0, 'post': 9144, 'rm': 9803, 'cause': 'cancelled_or_expired'}
+                                      sid  shares          hi_ms          lo_ms   t_method  f_before  f_after  x_lo_exact_ms    hi    lo     m
+299  01a16b6c-1ae4-7000-8000-0000019c00cd     1.0  1792803609316  1792803607402  book_drop      1148     1186  1792803609168  9316  7402  9290
+300  01a16b6c-1af3-7000-8000-0000019c00ce     2.0  1792803609331  1792803607402  book_drop      1148     1187  1792803609065  9331  7402  9308
+305  01a16b6c-1bae-7000-8000-0000019c00d2     2.0  1792803609518  1792803607599  book_drop      1152     1190  1792803609065  9518  7599  9512
+order {'cum_shares': 5.0, 'x_size_ub': 6.0, 'size_class': 'constrained', 'persist_lo_ms': -1, 'persist_hi_ms': -1, 'status': 'ok'}
+hard presence frames fid 1186 .. 1152
+2026-11-22T09:35:39Z tag=mt_life_trace_o412b rc=0 peak_rss_mib=135 wall_s=1.48 cpu_user_s=1.41 memavail_start_gib=22 disk_free_gib=426->426 slot=claude3

@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_truth.py", line 689, in <module>
+    sys.exit({'build': main_build, 'dry': lambda: main_build(dry=True), 'score': main_score}[sys.argv[1]]())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_truth.py", line 671, in main_score
+    refuse(have, 'no lifecycle outputs for the GT markets: run pf_mt_lifecycle on them first')
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_truth.py", line 127, in refuse
+    C.need(bool(ok), 'REFUSED: ' + msg)
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_common.py", line 32, in need
+    raise ValueError(msg)
+ValueError: REFUSED: no lifecycle outputs for the GT markets: run pf_mt_lifecycle on them first
+2026-11-22T08:55:24Z tag=mt_truth_score_probe rc=1 peak_rss_mib=144 wall_s=0.37 cpu_user_s=0.29 memavail_start_gib=22 disk_free_gib=426->426 slot=claude

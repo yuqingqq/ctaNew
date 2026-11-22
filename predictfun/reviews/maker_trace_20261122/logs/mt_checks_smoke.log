@@ -1,0 +1,48 @@
+{
+ "stem_day": "20261024",
+ "market": 3697902,
+ "counters": {
+  "all_records": 315929,
+  "needle_miss_full_parse": 0,
+  "int_mismatch_receipts": 1,
+  "maker_fee_nonzero_legs": 0,
+  "taker_fee_SHARES": 288539,
+  "maker_same_side_as_taker": 0,
+  "complementary_legs": 431549,
+  "taker_fee_COLLATERAL": 27390,
+  "needle_miss": 0
+ },
+ "market_receipts": 20742,
+ "market_unique_records": 1430,
+ "market_legs": 2507,
+ "market_status": {
+  "ok": 1430
+ },
+ "market_repolled": 1430,
+ "market_max_n_recv": 46,
+ "sids_seen": 25070,
+ "sids_with_distinct_canonical_contents": 1,
+ "first_receipt_lag_ms": {
+  "n": 18816,
+  "p50": 6408.0,
+  "p99": 19722.4,
+  "p999": 102837.4,
+  "max": 2532864.0
+ },
+ "markets_in_hour": 19,
+ "receipt_after_window_end_s": {
+  "p50": 1769.8,
+  "p99": 1807.6,
+  "max": 1808.5
+ },
+ "multi_maker_receipts": 77616,
+ "nonmonotone_multi_maker_receipts": 20046,
+ "vmhwm_mib": 404.9,
+ "market_fifo_evidence_legs": 975,
+ "market_multi_maker_records": 362,
+ "market_nonmonotone_records": 88,
+ "market_identity_conflict_hashes": 0,
+ "market_hashes": 1644,
+ "market_repeat_fill_hashes": 417
+}
+2026-11-22T09:05:41Z tag=mt_checks_smoke rc=0 peak_rss_mib=406 wall_s=26.79 cpu_user_s=24.45 memavail_start_gib=22 disk_free_gib=427->427 slot=claude2

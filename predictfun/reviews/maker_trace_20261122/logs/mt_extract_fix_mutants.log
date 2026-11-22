@@ -1,0 +1,10 @@
+KILLED [B1: sealed outcomes kept] rc=1 fails=['FILL: market statuses (boundary, missing REST hour, fills outside / in a missing WS hour, no records / frames)', 'FILL: a registry outcome first seen in a sealed hour is blanked (outcome_sealed) and reaches no output', 'GT: every scope window in markets; the WS rule skips windows without an own maker leg (an own taker leg does not count); 22:55 boundary_censored', 'GT: the registry is read for the scope rows only; an outcome seen in hour 23 is blanked; neither value reaches an output']
+KILLED [N1: Up index unchecked] rc=1 fails=['N1: a market object whose Up outcome is not indexSet 1 -> up_index_mismatch (counted)']
+KILLED [N2: no synthetic sid] rc=1 fails=['FILL: a non-v7 settlementId -> sid_not_v7, settle_ms -1, a synthetic unique sid nosid:<tx>:<digest>, the raw id in x_sid_raw', 'N2: records without a settlementId get unique synthetic sids nosid:<tx>:<digest> (re-polls still de-duplicated); legs carry them']
+KILLED [N2: synthetic sid without tx] rc=1 fails=['FILL: a non-v7 settlementId -> sid_not_v7, settle_ms -1, a synthetic unique sid nosid:<tx>:<digest>, the raw id in x_sid_raw', 'N2: records without a settlementId get unique synthetic sids nosid:<tx>:<digest> (re-polls still de-duplicated); legs carry them']
+KILLED [N3: events not read] rc=1 fails=['N3: MATCH_POLL_INCOMPLETE events inside a market envelope -> poll_incomplete with per-reason counts; outside -> none']
+KILLED [N3: event times not bounded by the envelope] rc=1 fails=['N3: MATCH_POLL_INCOMPLETE events inside a market envelope -> poll_incomplete with per-reason counts; outside -> none']
+KILLED [N5: status orders not declared] rc=1 fails=['t_fill ran to completion']
+UNMUTATED: SELFTEST PASS: 100/100 checks passed rc 0
+MUTANTS SURVIVED: none (7 mutants)
+2026-11-22T14:33:08Z tag=mt_extract_fix_mutants rc=0 peak_rss_mib=120 wall_s=5.24 cpu_user_s=4.27 memavail_start_gib=22 disk_free_gib=423->423 slot=claude2

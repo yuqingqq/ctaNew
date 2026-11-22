@@ -1,0 +1,2 @@
+{"selftest": "pf_mt_econ", "assertions_passed": 642, "result": "PASS"}
+2026-11-22T09:03:20Z tag=mt_econ_selftest3 rc=0 peak_rss_mib=121 wall_s=2.72 cpu_user_s=2.59 memavail_start_gib=22 disk_free_gib=427->427 slot=claude4

@@ -1,0 +1,183 @@
+{
+ "approval": {
+  "first": {
+   "core_hours": 0.9,
+   "line_ceiling": 4.4
+  },
+  "reserve_h": 0.05,
+  "topup": {
+   "core_hours": 1.35,
+   "line_ceiling": 4.85
+  },
+  "via": "AskUserQuestion 2026-11-22"
+ },
+ "caps": {
+  "checkpoint_mib": 1536,
+  "guard_mib": 1450.0,
+  "hard_mib": 2048
+ },
+ "classes": [
+  "observed",
+  "constrained",
+  "assumption_sensitive",
+  "unresolved"
+ ],
+ "contract_commit": "5927971d",
+ "inputs": {
+  "book_manifest": {
+   "path": "predictfun/reviews/ladder_async_fast_20261122/manifest.json",
+   "sha256": "34444c8a1b85752069a27d8e884e7d116656c03a88d3ccd3eb1f584355e5a013"
+  },
+  "gt_scope": {
+   "path": "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/scope.json",
+   "sha256": "0fdb454efec919ab03b2e44fddef154c5e9964c65d1ab3cf10828eabf0dc58b6"
+  },
+  "registry_20261023": {
+   "path": "data/predict_fun/research/step1/20261023/registry.parquet",
+   "sha256": "660d09ea425a4da5bf2b59d87e1d4693a121cfde47b5bfcdda6db6c1a86ce591"
+  },
+  "registry_20261024": {
+   "path": "data/predict_fun/research/step1/20261024/registry.parquet",
+   "sha256": "21482f2cbec32188e80d5f80926f99bf87158507643c307ae4d177cb89e7c9c0"
+  },
+  "registry_20261025": {
+   "path": "data/predict_fun/research/step1/20261025/registry.parquet",
+   "sha256": "f5fec8709ef9868574909ae982ef6bbf851909bb4cd7e1cafadfbc1f7b740f28"
+  },
+  "registry_20261026": {
+   "path": "data/predict_fun/research/step1/20261026/registry.parquet",
+   "sha256": "172173018e75a05cb83dd810daf93633fd3f3e2fe91412b760e5ebb0016ea772"
+  },
+  "registry_20261027": {
+   "path": "data/predict_fun/research/step1/20261027/registry.parquet",
+   "sha256": "096b08b011fc9e5de1e22cdc46f416adbd522fdb9b19eabad00591937c2fc356"
+  },
+  "truth_table": {
+   "note": "v2 (per-run clock bands), built before the freeze; the run refuses unless the frozen code reproduces it (dry gate)",
+   "path": "data/predict_fun/research/maker_trace_v1_20261122/truth/v2/own_orders.parquet",
+   "sha256": "d42c3946f3f9890e6e029093234ec8447244674c83e20906af75d105d51d93c3"
+  },
+  "truth_table_v1_provenance": {
+   "note": "v1 (pooled clock band), superseded by v2, kept unedited",
+   "path": "data/predict_fun/research/maker_trace_v1_20261122/truth/own_orders.parquet",
+   "sha256": "760607f1531dde15b6c875d48134a7a32c9cb29bc4a6d1988f7de332524956d7"
+  }
+ },
+ "multiplicity": 0,
+ "plan": [
+  "8b39f9e8",
+  "9ff1e197"
+ ],
+ "populations": {
+  "BOOK": {
+   "20261024": [
+    3697902,
+    3699278,
+    3700070,
+    3702960,
+    3704004,
+    3712725,
+    3716727
+   ],
+   "20261025": [
+    3723774,
+    3734864,
+    3737919,
+    3763401,
+    3776314
+   ],
+   "20261026": [
+    3789484,
+    3803131,
+    3804696,
+    3838531,
+    3850428
+   ],
+   "20261027": [
+    3877472,
+    3899224
+   ]
+  },
+  "FILL": [
+   "20261024",
+   "20261025",
+   "20261026",
+   "20261027"
+  ],
+  "GT": {
+   "day": "20261108",
+   "rule": "scope windows with a maker leg of our signer 0xba14f115ccf30e976f7639594fdee7b36c85ced8 (public legs)"
+  },
+  "ID": "20261023"
+ },
+ "readings": {
+  "R1": {
+   "min_denominator": 200,
+   "supported_max_rate": 0.01,
+   "tests": [
+    "T1_price_priority",
+    "T2_time_priority"
+   ]
+  },
+  "R2": {
+   "defect": "a failed observed / constrained claim",
+   "reading": [
+    "no_defect",
+    "defective"
+   ]
+  },
+  "R3": "coverage fractions, no threshold",
+  "R4": {
+   "intervals": "none (4 < 5 days)",
+   "no_verdict": true,
+   "sign_consistent": "same sign on all 4 days"
+  }
+ },
+ "removal": [
+  "exhausted",
+  "cancelled_or_expired",
+  "end_censored",
+  "missing_evidence"
+ ],
+ "scenarios": {
+  "S_FIFO": {
+   "fill_clock": "hi",
+   "note": "price-time priority (amendment 1: makers[] order is NOT evidence; exhaustion by price priority across a record's prices); fill at the upper end of its window",
+   "priority": "price_time"
+  },
+  "S_FIFO_LO": {
+   "fill_clock": "lo",
+   "note": "as S_FIFO with each fill at the lower end of its window (lo unbounded -> hi minus the declared max lag)",
+   "priority": "price_time"
+  },
+  "S_NOPRIO": {
+   "fill_clock": "hi",
+   "note": "no priority rule: only quantity / visibility constraints",
+   "priority": "none"
+  }
+ },
+ "sources": {
+  "predictfun/research/pf_mt_common.py": "eff4463b0e19faafd20aa1423f4d06824223cc3382d945b7bca14cbfb13da17c",
+  "predictfun/research/pf_mt_econ.py": "a0bd305326758d257def7d98279513928b721ed11562bdce6b5946b1f02f19e7",
+  "predictfun/research/pf_mt_econ_selftest.py": "7ce915480d64222575819223806edb8107183c4e51ff4d4be0e47f9f8ab28a9d",
+  "predictfun/research/pf_mt_extract.py": "b25b3841ee408c5018803ee732c0f275fe3fa8a085929222122c99f54101b5ea",
+  "predictfun/research/pf_mt_extract_selftest.py": "ed06c292bd7333eef7fbe148ac798faca1054bc7a2a58a4989241839a72cc402",
+  "predictfun/research/pf_mt_lifecycle.py": "98412295d9381f1aac1f7b6e2b32d917757d4accdcbfc067cea15e9f7fb3d1ec",
+  "predictfun/research/pf_mt_lifecycle_selftest.py": "bec9799e7e71ab4e3b64817ddab819f617e371dcbcefd3fcafbe6ae43034c98d",
+  "predictfun/research/pf_mt_report.py": "704a695fc726babcc39d1745b2ba2201eb99c8d5ea58d9d82847d1fc9d8c85c2",
+  "predictfun/research/pf_mt_report_selftest.py": "23aa5f1585c0a6030def11628e965ffdb934118c08121b8dfa04706fe2c7d07d",
+  "predictfun/research/pf_mt_truth.py": "be8080985b44cf78b0570359b2feba3bdf92415cb5ff9678d3c719acc73a802d",
+  "predictfun/research/pf_mt_truth_selftest.py": "2ce8156985e96cee87185386fcfdd43181b66e394c6dbcae7fbd94a4742fb67e",
+  "predictfun/reviews/maker_trace_20261122/contract.md": "5c0c5820a49d02ca1e50171bdb18bdaffcb3193c29c03911356cf03f04a2f3b0",
+  "predictfun/reviews/maker_trace_20261122/declaration.md": "46b717006087e55f90fe93b844aee8a3748a8bca62e62cd403cfbbab11ed27a9",
+  "predictfun/reviews/maker_trace_20261122/launch_mt.sh": "f03417f5daedefead66f384c4d5f5a25613ac93229144f66124cd392b3fc6a08",
+  "predictfun/reviews/maker_trace_20261122/mt_checks.py": "98d231e382d78252b0914e269e299075e9cec3633d19c8df45fc2b4879ec8679",
+  "predictfun/reviews/maker_trace_20261122/tools/build_manifest.py": "fe048f65646b1ebd022e95d82ac2c9a94c7ac44307e3b2d40aaae800100b5a43",
+  "predictfun/reviews/maker_trace_20261122/tools/cpu_ledger.py": "043691f66f2a49078ebcded4448b0f41c7f5374c6a95bac5cad8c99433aa408a",
+  "predictfun/reviews/maker_trace_20261122/tools/project.py": "354c578736a2c08c00c80659bdb2354a71de528a603b826aa4da60ec22f629c4",
+  "predictfun/reviews/maker_trace_20261122/tools/rehearse_checks.py": "1c78f0ae9c265974552200d950efe3b3d441be87ad699c1f21242dc20d595bec",
+  "predictfun/reviews/maker_trace_20261122/tools/rehearse_e2e.py": "eb65797a4125e29af056fc1803b98bc598b24c874d85c9a034055c027bcf29d6"
+ },
+ "task": "MAKER-TRACE-RECONSTRUCTION-v1",
+ "version": "maker_trace_v1"
+}

@@ -1,0 +1,56 @@
+mutant: pending evidence: last candidate
+   2 of 121 checks fail, first: c2 both lows at the first increment ([1000, 2000])
+mutant: drop evidence: last candidate
+   3 of 121 checks fail, first: b hB pending preferred over the earlier drop (lo 3000, pend_inc, drop fid 1031)
+mutant: drop preferred over pending
+   11 of 121 checks fail, first: a h7 fill window (lo 1000, hi 1060, book_drop, 1010, 1011, ok)
+mutant: lo at the evidence frame itself
+   31 of 102 checks fail, first: a h7 fill window (lo 1100, hi 1060, pend_inc, 1011, 1011, ok)
+mutant: hard H3 contradiction silenced
+   2 of 121 checks fail, first: f contradiction in every scenario (['ok', 'ok', 'ok'])
+mutant: exhaustion needs a strictly worse later price
+   9 of 121 checks fail, first: g fills: g1 S_FIFO-exhausted, g2 behind 4 sh
+mutant: exhausted dropped unless proven
+   13 of 121 checks fail, first: a S_FIFO h7 keeps exhausted and cancelled (cancelled_or_expired)
+mutant: end_censored never kept
+   3 of 121 checks fail, first: a S_NOPRIO h7 unbounded (cancelled_or_expired|exhausted, -1, end_open)
+mutant: out_of_order frames used
+   2 of 121 checks fail, first: d1 posting bound from the usable frame at 800, not the out_of_order one at 900 (900, constrained)
+mutant: gap-flagged frames excluded
+   3 of 121 checks fail, first: d2 S_FIFO removal bounded by the first real frame after the gap (cancelled_or_expired|exhausted|missing_evidence, 5100, book_gone+unprinted_drop)
+mutant: absent price unknown instead of 0
+   13 of 121 checks fail, first: b hB pending preferred over the earlier drop (lo 3000, pend_inc, drop fid -1)
+mutant: a gap adds no missing_evidence
+   3 of 121 checks fail, first: d2 S_FIFO removal bounded by the first real frame after the gap (cancelled_or_expired|exhausted, 5000, book_gone+unprinted_drop)
+mutant: negative ahead_hi silently 0
+   1 of 121 checks fail, first: e S_FIFO_LO (0.0, -5.0, 2900, ok)
+mutant: classes: every scenario identical
+   4 of 121 checks fail, first: a h7 classes (observed, unresolved, unresolved, constrained, constrained)
+mutant: posting: earliest failing frame
+   9 of 121 checks fail, first: b hB capacity posting bound (1100, capacity, constrained)
+mutant: persistence span from the min lo
+   1 of 121 checks fail, first: c persistence observed on [min hi, max lo] (1060, 1000, observed)
+mutant: identity unchecked
+   5 of 121 checks fail, first: i hI identity_conflict in every row
+mutant: fifo_front searched from the start
+   12 of 51 checks fail, first: a stopped (ValueError('removal window inverted for h9'))
+mutant: fifo_through includes the same price
+   1 of 121 checks fail, first: k posting after the trade-through (2000, fifo_through, 0, -1)
+mutant: fifo_front ignores the taker signer
+   1 of 121 checks fail, first: s front bound at the first other-signer record (2060, fifo_front, cancelled_or_expired|exhausted|missing_evidence)
+mutant: no unprinted-drop evidence
+   3 of 121 checks fail, first: d2 S_FIFO removal bounded by the first real frame after the gap (cancelled_or_expired|exhausted|missing_evidence, 5000, book_gone)
+mutant: room ignores the other orders
+   1 of 121 checks fail, first: n S_NOPRIO nA gone by accounting (cancelled_or_expired|exhausted, 3100, book_gone)
+mutant: queue frame = the clock frame
+   1 of 121 checks fail, first: t queue at f_before (9.0, 15.0)
+mutant: lo clock = hi clock
+   4 of 121 checks fail, first: e S_FIFO_LO (15.0, 15.0, 3900, ok)
+mutant: capacity-tight exhaustion ignored
+   3 of 121 checks fail, first: n S_FIFO nB capacity_tight (nan, cancelled_or_expired|exhausted, book_empty_after+book_gone, 3100)
+mutant: re-appearance not counted
+   1 of 121 checks fail, first: g2 re-appearance and front violation counted ({'exhausted_hashes': 2, 'reappear': 0, 'reappear_rate': 0.0, 'reappear_tie': 0, 'refills': 1, 'front_vio
+mutant: removal_lo from the first fill
+   3 of 121 checks fail, first: n S_FIFO nB capacity_tight (6.0, exhausted, capacity_tight, 3060)
+MUTANTS: base passes 121 checks; killed 27 of 27
+2026-11-22T09:14:51Z tag=mt_life_mutants1 rc=0 peak_rss_mib=125 wall_s=30.45 cpu_user_s=30.14 memavail_start_gib=22 disk_free_gib=426->426 slot=claude3

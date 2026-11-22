@@ -1,0 +1,2 @@
+SELFTEST PASS: 45 exact checks (P1 build: band, link, statuses, venue times, receipt; P2 score: coverage, identity, posting, size, removal, persistence, queue, fill windows, defect rows) and 16 known-bad inputs refused with the reason asserted
+2026-11-22T08:50:32Z tag=mt_truth_selftest2 rc=0 peak_rss_mib=120 wall_s=0.72 cpu_user_s=0.63 memavail_start_gib=22 disk_free_gib=426->426 slot=claude

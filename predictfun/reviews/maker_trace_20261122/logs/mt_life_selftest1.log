@@ -1,0 +1,6 @@
+LIFECYCLE SELFTEST FAILED 4 of 109 checks
+ - b hA gone at the next frame in every scenario (cancelled_or_expired|exhausted, 1100, book_empty_after+book_gone, constrained)
+ - d2 S_FIFO removal bounded by the first real frame after the gap (cancelled_or_expired|exhausted|missing_evidence, 5000, book_gone+unprinted_drop)
+ - d2 S_FIFO_LO removal bounded by the first real frame after the gap (cancelled_or_expired|exhausted|missing_evidence, 5000, book_gone+unprinted_drop)
+ - d2 S_NOPRIO removal bounded by the first real frame after the gap (cancelled_or_expired|exhausted|missing_evidence, 5000, book_gone+unprinted_drop)
+2026-11-22T09:11:05Z tag=mt_life_selftest1 rc=1 peak_rss_mib=120 wall_s=1.23 cpu_user_s=1.17 memavail_start_gib=22 disk_free_gib=427->427 slot=claude3

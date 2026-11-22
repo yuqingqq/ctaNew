@@ -1,0 +1,11 @@
+records: rows 24608 / 24608 | 24 shared cols | differing [] | only left [] | only right []
+legs: rows 38370 / 38370 | 27 shared cols | differing [] | only left [] | only right []
+tob: rows 69294 / 69294 | 15 shared cols | differing [] | only left [] | only right []
+depth frames: rows 6369 / 6369 | 14 shared cols | differing [] | only left [] | only right []
+depth levels: rows 591630 / 591630 | 7 shared cols | differing [] | only left [] | only right []
+markets: rows 288 / 288 | 35 shared cols | differing [] | only left [] | only right []
+inventory differing sections: [] | rest.ids differing keys: [] | rest clocks equal: True
+envelope equal: True | markets_flagged equal: True | counts {'records': 24608, 'legs': 38370, 'variants_not_kept': {'records': 1, 'legs': 1}, 'tob': 69294, 'frames': 6369, 'levels': 591630, 'markets': 288} {'records': 24608, 'legs': 38370, 'variants_not_kept': {'records': 1, 'legs': 1}, 'tob': 69294, 'frames': 6369, 'levels': 591630, 'markets': 288}
+rest hour counters differing: {'cpu_s': (11.446, 11.401), 'vmhwm_mib': (271.5, 271.3)}
+ws hour counters differing: {'cpu_s': (5.174, 5.158), 'vmhwm_mib': (271.7, 271.3)}
+2026-11-22T09:34:24Z tag=mt_extract_equiv_v3__v5 rc=0 peak_rss_mib=320 wall_s=1.28 cpu_user_s=0.87 memavail_start_gib=23 disk_free_gib=426->426 slot=claude2

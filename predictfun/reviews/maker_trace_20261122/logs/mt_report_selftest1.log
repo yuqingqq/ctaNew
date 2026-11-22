@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_report_selftest.py", line 799, in <module>
+    main()
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_report_selftest.py", line 487, in main
+    close(x.mean, 11625., 'post mean 46500 / 4')
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_report_selftest.py", line 121, in close
+    ok(a is not None and not (isinstance(a, float) and math.isnan(a)) and abs(float(a) - float(b)) <= tol, f'{msg}: {a} != {b}')
+                                                                              ^^^^^^^^
+TypeError: float() argument must be a string or a real number, not 'method'
+2026-11-22T14:46:23Z tag=mt_report_selftest1 rc=1 peak_rss_mib=129 wall_s=2.04 cpu_user_s=1.90 memavail_start_gib=22 disk_free_gib=429->429 slot=claude4

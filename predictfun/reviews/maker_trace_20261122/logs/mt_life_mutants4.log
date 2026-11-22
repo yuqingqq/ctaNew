@@ -1,0 +1,49 @@
+mutant: pending evidence: last candidate
+   simcheck: 2 observed / constrained claims failed, T1 + T2 0; first: fills window observed: o411_1236 lo-m 9 hi-m 28 pend_inc
+mutant: drop evidence: last candidate
+   4 of 137 checks fail, first: t first drop (an unrelated 6-sh drop at 1500) taken (3000, book_drop, 1031)
+mutant: pending first, an earlier drop ignored
+   1 of 137 checks fail, first: tp the earlier evidence of either kind (3000, pend_inc, exact 3000)
+mutant: lo at the evidence frame itself
+   17 of 43 checks fail, first: a stopped (ValueError('fill window inverted for record 01a16b6b-faa4-7000-8000-000000650001'))
+mutant: unknown cell not a drop candidate
+   1 of 137 checks fail, first: tu an unknown cell is a possible drop (3000, book_drop, 1030, ok)
+mutant: hard H3 contradiction silenced
+   2 of 137 checks fail, first: f contradiction in every scenario (['ok', 'ok', 'ok'])
+mutant: rule 1 by the makers[] listing (pre-amendment)
+   10 of 137 checks fail, first: g rule 1 by price, not by listing (the mk_idx rule gives bq, p2 False) ({'w': True, 'bq': False, 'p1': True, 'p3': True, 'p2': False})
+mutant: rule 1 includes the worst price
+   5 of 137 checks fail, first: g rule 1 by price, not by listing (the mk_idx rule gives bq, p2 False) ({'w': True, 'bq': True, 'p1': True, 'p3': True, 'p2': True})
+mutant: rule 2 survivor gets no ahead_lo
+   4 of 137 checks fail, first: g2 S_FIFO the survivor x2 had x1 ahead (0.0, exh False, 0.0)
+mutant: rule 2 exhausts the survivor too
+   2 of 137 checks fail, first: g2 S_FIFO the survivor x2 had x1 ahead (4.0, exh True, 4.0)
+mutant: T1 violations not counted
+   1 of 137 checks fail, first: t1 a price-exhausted maker fills again ({'makers': 2, 'violations': 0, 'rate': 0.0, 'violations_certain': 1, 'rate_certain': 0.5, 'ties': 0, 'unit': '
+mutant: T1 violator still claimed exhausted
+   1 of 137 checks fail, first: t1 q1 flagged, no exhaustion claim even at its last fill (fifo_reappearance, 3.0)
+mutant: T2 violators not flagged
+   1 of 137 checks fail, first: t2 both flagged, no claims
+mutant: exhausted dropped unless proven
+   16 of 137 checks fail, first: a S_FIFO h7 keeps exhausted and cancelled (cancelled_or_expired)
+mutant: end_censored never kept
+   2 of 137 checks fail, first: a S_NOPRIO h7 unbounded (cancelled_or_expired|exhausted, -1, end_open)
+mutant: out_of_order frames used
+   2 of 137 checks fail, first: d1 posting bound from the usable frame at 800, not the out_of_order one at 900 (900, constrained)
+mutant: gap-flagged frames excluded
+   3 of 137 checks fail, first: d2 S_FIFO removal bounded by the first real frame after the gap (cancelled_or_expired|exhausted|missing_evidence, 5100, book_gone+unprinted_drop)
+mutant: unlocated dup_level / off_grid frame used
+   1 of 137 checks fail, first: V frames excluded by flag / pending range / bad level / unlocated dup_level ({'bad_frame': 1, 'bad_level': 1, 'pend_out_of_range': 1})
+mutant: unknown cell shown as 0
+   4 of 137 checks fail, first: hu an unknown cell is no bound ([600, 600, 600], 0)
+mutant: absent price unknown instead of 0
+   19 of 137 checks fail, first: b hB window (lo 1000, book_drop, drop fid 1011, exact 3000)
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_lifecycle_selftest.py", line 860, in <module>
+    mutants()
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_lifecycle_selftest.py", line 699, in mutants
+    C.need(src.count(old) == 1, f'mutant {name!r}: its target occurs {src.count(old)} times in pf_mt_lifecycle.py')
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_common.py", line 32, in need
+    raise ValueError(msg)
+ValueError: mutant 'a gap adds no missing_evidence': its target occurs 2 times in pf_mt_lifecycle.py
+2026-11-22T09:42:01Z tag=mt_life_mutants4 rc=1 peak_rss_mib=155 wall_s=41.34 cpu_user_s=41.11 memavail_start_gib=23 disk_free_gib=426->426 slot=claude3

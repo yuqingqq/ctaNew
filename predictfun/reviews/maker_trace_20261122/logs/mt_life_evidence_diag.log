@@ -1,0 +1,6 @@
+V0 exact-pend else drop          records  5346  lo after the match  11  unbounded   18  width ms p50   1014 p90   1907
+V1 min(exact-pend, drop)         records  5346  lo after the match   1  unbounded   18  width ms p50   1736 p90   2010
+V2 permissive-pend else drop     records  5346  lo after the match   0  unbounded    1  width ms p50   1602 p90   2002
+V3 min(permissive-pend, drop)    records  5346  lo after the match   0  unbounded    1  width ms p50   1773 p90   2016
+V4 any change at the cell        records  5346  lo after the match   0  unbounded    0  width ms p50   1986 p90   2039
+2026-11-22T09:33:42Z tag=mt_life_evidence_diag rc=0 peak_rss_mib=144 wall_s=2.10 cpu_user_s=2.00 memavail_start_gib=22 disk_free_gib=426->426 slot=claude3

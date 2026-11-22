@@ -1,0 +1,20 @@
+records (all rows): rows v2 24608 v3 24608 | shared cols 24 | differing [] | only v2 [] | only v3 []
+legs (all rows): rows v2 38370 v3 38370 | shared cols 27 | differing [] | only v2 [] | only v3 []
+tob: rows v2 69294 v3 69294 | shared cols 15 | differing [] | only v2 [] | only v3 []
+depth frames: rows v2 6369 v3 6369 | shared cols 14 | differing [] | only v2 [] | only v3 []
+depth levels: rows v2 591630 v3 591630 | shared cols 7 | differing [] | only v2 [] | only v3 []
+markets (all columns): rows v2 288 v3 288 | shared cols 35 | differing [] | only v2 [] | only v3 []
+markets n_legs changes {}
+CONFLICT KEY v2: [{'n_makers': 2, 'n_recv': 10, 'x_n_variants': 2, 'x_n_recv_other': 1, 'first_recv_ns': 1792845427445906736, 'amount_filled': 4.7254901960784315, 'status': 'conflict+boundary_censored'}]
+CONFLICT KEY v3: [{'n_makers': 2, 'n_recv': 10, 'x_n_variants': 2, 'x_n_recv_other': 1, 'x_kept': 'reconciles', 'first_recv_ns': 1792845427445906736, 'amount_filled': 4.7254901960784315, 'status': 'conflict+boundary_censored'}]
+CONFLICT LEGS v3: [{'mk_idx': 0, 'mk_hash': '0xc840ebe33d8dd3ef3df96a73d4d7c5c5b164a9a31c65ad76c8c396311d61ccb1', 'shares': 2.0, 'y_ptick': 49, 'status': 'conflict+boundary_censored'}, {'mk_idx': 1, 'mk_hash': '0x57e3372dc3a94567ed0481d43dc4ba229a760582b0e8af8396e463151b3529e5', 'shares': 2.7254901960784315, 'y_ptick': 49, 'status': 'conflict+boundary_censored'}] | v2 legs 2
+inventory objects equal
+inventory leaves equal
+inventory counters equal
+inventory ws equal
+inventory rest clocks equal
+inventory rest ids, differing keys: []
+envelope equal: True | markets_flagged equal: True
+rest hour counters differing: {'cpu_s': (11.446, 12.833), 'vmhwm_mib': (271.5, 278.2)}
+ws hour counters differing: {'vmhwm_mib': (271.7, 278.2), 'cpu_s': (5.174, 5.182)}
+2026-11-22T09:31:28Z tag=mt_extract_equiv_v4_v3 rc=0 peak_rss_mib=468 wall_s=1.39 cpu_user_s=0.96 memavail_start_gib=22 disk_free_gib=426->426 slot=claude2

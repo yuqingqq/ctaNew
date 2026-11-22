@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_econ_selftest.py", line 548, in <module>
+    main()
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_econ_selftest.py", line 542, in main
+    direct_cases()
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_econ_selftest.py", line 465, in direct_cases
+    eq(sorted(pr), ['mm'], 'only qualifying orders count')
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_econ_selftest.py", line 152, in eq
+    need(a is not None and not (isinstance(a, float) and math.isnan(a)) and abs(float(a) - float(b)) <= 1e-9, f'{what}: expected {b!r}, got {a!r}')
+                                                                                ^^^^^^^^
+TypeError: float() argument must be a string or a real number, not 'list'
+2026-11-22T09:03:10Z tag=mt_econ_selftest2 rc=1 peak_rss_mib=121 wall_s=1.08 cpu_user_s=0.99 memavail_start_gib=22 disk_free_gib=427->427 slot=claude4

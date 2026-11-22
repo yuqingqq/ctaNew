@@ -1,0 +1,11 @@
+start {'VmRSS': 100, 'VmHWM': 100}
+Traceback (most recent call last):
+  File "/tmp/claude-1001/-home-yuqing-ctaNew/aea5bfb9-4ea4-41d0-bf73-bb98d818e3d4/scratchpad/predictfun/research/pf_mt_econ_scale.py", line 145, in <module>
+    L = E.load(ROOT / f'legs_{D1}.parquet', 'legs', E.LEG_COLS, E.LEG_CATS)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_econ.py", line 203, in load
+    need(path.is_file(), f'{kind}: input missing: {path.parent.name}/{path.name}')
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_common.py", line 32, in need
+    raise ValueError(msg)
+ValueError: legs: input missing: scale_w/legs_20261024.parquet
+2026-11-22T09:16:11Z tag=mt_econ_scale_prof rc=1 peak_rss_mib=103 wall_s=0.31 cpu_user_s=0.25 memavail_start_gib=22 disk_free_gib=427->427 slot=claude4

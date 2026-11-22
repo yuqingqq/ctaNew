@@ -1,0 +1,102 @@
+PASS canon: a re-poll differing only in market / outcome.status / bestBid / bestAsk / onChainId has equal content
+PASS canon: a maker amount change is a content change
+PASS canon: an executedAt change is a content change (not volatile)
+PASS canon: a new leg key takes the generic form and is a content change
+PASS u256: exact int
+PASS u256 refuses '1_0'
+PASS u256 refuses ' 1'
+PASS u256 refuses '+1'
+PASS u256 refuses '1.5'
+PASS u256 refuses 12
+PASS iso_ms: executedAt -> integer ms
+PASS iso_ms: a naive or missing time -> -1
+PASS UUIDv7 decode
+PASS UUIDv4 refused as a settle time
+PASS N4: market text with quotes / backslashes / CRLF / unicode through the cut == a full parse (ensure_ascii=True)
+PASS N4: market text with quotes / backslashes / CRLF / unicode through the cut == a full parse (ensure_ascii=False)
+PASS status: fixed order, ok when empty
+PASS status refuses an unknown flag
+PASS Forbidden: a 20261028 REST hour
+PASS Forbidden: Nov 8 hour 23 (WS)
+PASS Forbidden: a 20261028 day run
+PASS Forbidden: ZERO filesystem calls before each refusal
+PASS FILL: the clipped REST hour is exactly the Oct 28 00Z hour of day_hours
+PASS FILL: no filesystem call ever names a clipped hour
+PASS FILL: gzip opens = the planned hours minus the missing ones
+PASS FILL: missing hours are recorded
+PASS FILL: receipt sha256 + bytes of every hour file read
+PASS FILL: measured margins (ungated p99.9 lag 128.46 s -> 3 min, p50 would give 1; post 4 s -> 1 min; pre recv 90 s -> 2 min)
+PASS FILL: a discovery-gated lag (3 h trade received at discovery) is excluded from the margin and reported
+PASS FILL: every page took the market cut (compact payloads)
+PASS FILL: exclusions counted, not dropped (other-market page, HTTP 500, foreign record, conflict, re-poll, inverted and repeated-payload receipts)
+PASS FILL: one row per unique key (17)
+PASS FILL: repeated payloads (fast path) raise n_recv and keep the earliest receipt
+PASS FILL: de-dup across hours: re-polls with volatile changes -> n_recv 3, first receipt kept
+PASS FILL: conflict (the probe case): the later reconciling variant is kept, status conflict, every receipt counted, earliest receipt
+PASS FILL: one content per key -> x_kept only
+PASS FILL: the variant not kept is counted, not written
+PASS FILL: sum(makers) short by 1 wei (equal as floats) -> recon_mk_sum
+PASS FILL: taker.price != priceExecuted by 1 wei (equal as floats) -> recon_price
+PASS FILL: a non-v7 settlementId -> sid_not_v7, settle_ms -1, a synthetic unique sid nosid:<tx>:<digest>, the raw id in x_sid_raw
+PASS FILL: the sid column is unique
+PASS FILL: a non-integer amount -> malformed row (no legs), not a drop
+PASS FILL: page / record market mismatch -> page_mid_mismatch
+PASS FILL: the 23:55 market -> boundary_censored; 23:50 -> ok
+PASS FILL: first_recv_ns = the earliest receipt of the kept content (a later line with an earlier recv_ns)
+PASS FILL: legs rows = legs of the kept contents (20; none for the malformed record)
+PASS FILL: the kept conflict record carries the missing maker's leg
+PASS FILL: legs of a regular + mint record in YES space
+PASS FILL: mint: NO bid 0.01 -> YES ask 0.99
+PASS FILL: NO-outcome regular match in YES space; no settle time -> phase unknown
+PASS FILL: legs carry the earliest receipt too
+PASS FILL: legs inherit record statuses
+PASS FILL: shares are floats only after the integer check (5e18-1 -> 5.0, flagged)
+PASS FILL: pre / post-window phases on the settle clock
+PASS FILL: market statuses (boundary, missing REST hour, fills outside / in a missing WS hour, no records / frames)
+FAIL FILL: a registry outcome first seen in a sealed hour is blanked (outcome_sealed) and reaches no output  :: []
+PASS FILL: the receipt declares the status order lists and every output status follows them (N5)
+PASS FILL: WS coverage counts per market
+PASS FILL: markets row = the latest receipt, here a byte-identical replay of an older payload (its values re-applied); the changed field named
+PASS FILL: tob statuses (dup, same_ms_changed, gap > 1 s, out_of_order, new_conn)
+PASS FILL: exact tob rows (two-sided; one-sided with NaN best bid); frames of other markets / non-book lines not in tob
+PASS FILL: depth frames statuses (+ off_grid, dup_level)
+PASS FILL: exact depth frame row (lastOrderSettled kept raw)
+PASS FILL: levels = full snapshot in integer cents; an off-grid price -> status off_grid with its exact price
+PASS FILL: depth only for BOOK markets
+PASS FILL: schemas = pf_mt_common.SCHEMAS (+ x_ extras only)
+PASS FILL: computed inventory (match kinds, maker fees, makers[] order, avg price, sub-second, ids, order hashes, exact keys)
+PASS FILL: rewards variants kept with their first receipt
+PASS FILL: receipt hashes the published outputs
+PASS FILL: the temp dir is gone
+PASS write-once: a second run of the day is refused
+PASS write-once: refused with ZERO raw-file calls
+PASS guard: VmHWM >= GUARD_MIB stops the run
+PASS guard: nothing published, temp dir removed
+PASS ID: the 00:00 market is boundary_censored (its receipts could precede the first allowed hour); 23:55 is covered by Oct 24 00Z
+PASS ID: REST only: no WS file touched, no tob / depth output
+PASS ID: the clipped hour is the one before the day and is never touched
+PASS ID: records carry the market boundary status
+PASS GT: every scope window in markets; the WS rule skips windows without an own maker leg (an own taker leg does not count); 22:55 boundary_censored
+PASS GT: the registry is read for the scope rows only; an outcome seen in hour 23 is blanked; neither value reaches an output
+PASS GT: the rule, our signer and the selected / excluded counts are in the receipt
+PASS GT: tob only for the selected window; the skipped window's frames counted, not parsed
+PASS GT: records and legs for every scope window
+PASS GT: no clipped hour (07Z23, 08Z23, 09Z00) is ever touched
+PASS GT: depth only for the selected window
+PASS probe: output under OUT refused
+PASS probe: more than 2 hour files refused
+PASS probe: another day refused
+PASS probe: unknown hour family refused
+PASS day: a padded stem list is refused for a day run
+PASS registry: 287 windows refused (a missing window would drop its records)
+PASS registry refusal: ZERO raw-file calls
+FAIL CONFLICT: most receipts / tie -> first seen / none -> first / a reconciling first beats more receipts  :: {1: ('most_receipts', 2, 1, 1793016012000, 'conflict+hour_missing'), 2: ('reconciles_tie_first_seen', 1, 1, 1793016021000, 'conflict+hour_missing'), 3: ('first_none_reconciles', 1, 1, 1793016031000, 'conflict+recon_mk_sum+hour_missing'), 4: ('reconciles', 1, 3, 1793016041000, 'conflict+hour_missing')}
+PASS CONFLICT: the kept variant's legs only
+FAIL CONFLICT: payloads the market cut cannot validate are parsed whole (spaced JSON; market not followed by taker; taker first)  :: 3 {'status': ('hour_missing', 'ok')} {'status': ('hour_missing', 'ok')} {'status': ('hour_missing', 'ok')}
+PASS CONFLICT: the last line of a file without a final newline is read
+PASS CONFLICT: receipt counts
+FAIL N2: records without a settlementId get unique synthetic sids nosid:<tx>:<digest> (re-polls still de-duplicated); legs carry them  :: [{'day': '20261026', 'mid': 6144, 'sid': 'nosid:0x0000000000000000000000000000000000000000000000000000000000000039:5cbef3d63218acc2', 'tx': '0x0000000000000000000000000000000000000000000000000000000000000039', 'settle_ms': -1, 'exec_ms': 1793016091000, 'first_recv_ns': 1793016067000000000, 'n_recv': 2, 'amount_filled': 1.0, 'price_executed': 0.5, 'n_makers': 1, 'tk_hash': '0x0000000000000000000000000000000000000000000000000000000000000tc9', 'tk_signer': '0xSIGNER_tc9', 'tk_quote': 'Bid', 'tk_index_set': 1, 'tk_price': 0.5, 'tk_amount': 1.0, 'tk_fee': 0.0, 'tk_fee_type': 'SHARES', 'tk_y_side': 'bid', 'status': 'no_sid+hour_missing', 'x_n_variants': 1, 'x_n_recv_other': 0, 'x_kept': 'only', 'x_sid_raw': ''}, {'day': '20261026', 'mid': 6144, 'sid': 'nosid:0x0000000000000000000000000000000000000000000000000000000000000040:08c945e072a752da', 'tx': '0x0000000000000000000000000000000000000000000000000000000000000040', 'settle_ms': -1, 'exec_ms': 1793016101000, 'first_recv_ns': 1793016069000000000, 'n_recv': 1, 'amount_filled': 1.0, 'price_executed': 0.5, 'n_makers': 1, 'tk_hash': '0x000000000000000000000000000000000000000000000000000000000000tc10', 'tk_signer': '0xSIGNER_tc10', 'tk_quote': 'Bid', 'tk_index_set': 1, 'tk_price': 0.5, 'tk_amount': 1.0, 'tk_fee': 0.0, 'tk_fee_type': 'SHARES', 'tk_y_side': 'bid', 'status': 'no_sid+hour_missing', 'x_n_variants': 1, 'x_n_recv_other': 0, 'x_kept': 'only', 'x_sid_raw': ''}]
+PASS N1: a market object whose Up outcome is not indexSet 1 -> up_index_mismatch (counted)
+PASS N3: MATCH_POLL_INCOMPLETE events inside a market envelope -> poll_incomplete with per-reason counts; outside -> none
+SELFTEST FAIL: 96/100 checks passed; failed: ['FILL: a registry outcome first seen in a sealed hour is blanked (outcome_sealed) and reaches no output', 'CONFLICT: most receipts / tie -> first seen / none -> first / a reconciling first beats more receipts', 'CONFLICT: payloads the market cut cannot validate are parsed whole (spaced JSON; market not followed by taker; taker first)', 'N2: records without a settlementId get unique synthetic sids nosid:<tx>:<digest> (re-polls still de-duplicated); legs carry them']
+2026-11-22T14:31:40Z tag=mt_extract_fix1 rc=1 peak_rss_mib=118 wall_s=0.63 cpu_user_s=0.51 memavail_start_gib=22 disk_free_gib=423->423 slot=claude2

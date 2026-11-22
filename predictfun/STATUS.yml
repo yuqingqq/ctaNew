@@ -505,7 +505,14 @@ ladder_async_fast_results_20261122_dev:
   batch_core_hours: 0.201
   line_core_hours: 2.375
 maker_trace_reconstruction_20261122_dev:
-  status: build_contract_committed_builders_running
+  status: frozen_before_run_prefix_next
+  frozen_asof: "2026-11-22 20:25Z"
+  e2e_rehearsal: {run: 7, checks: 39_of_39, reparse: 22_of_22, falsifier: 76_of_76, simulator_observed_constrained_failures: 0}
+  selftests: {extract: 100, lifecycle: 145, econ_assertions: 1010, truth_checks: 59, truth_mutants: 43_of_43, report_assertions: 323, checker_defects_refused: 76}
+  pre_run_reviews: 5_all_blocking_fixed
+  user_cap: {core_hours: 1.35, line_ceiling: 4.85, first: {core_hours: 0.90, line_ceiling: 4.40}}
+  spent_core_hours_before_run: 0.503
+  truth_table: v2_per_run_clock_bands
   asof: "2026-11-22 08:22Z"
   source: user_task_8b39f9e8_9ff1e197
   user_approval: {core_hours: 0.90, includes: review_reserve_0.05, line_ceiling: 4.40, via: AskUserQuestion_2026-11-22}

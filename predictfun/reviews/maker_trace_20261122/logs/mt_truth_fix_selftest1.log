@@ -1,0 +1,5 @@
+dry: reproduces the written truth table: True | written registry identical: True
+dry: reproduces the written truth table: False | written registry identical: True
+SELFTEST FAIL (1 of 57 checks + 23 refusals)
+caveats: got ('only filled orders print ', {'v6': [-100.0, 50.0], 'basis': [-150.0, 1000.0]}, True) expected ('only filled orders print a', {'v6': [-100.0, 50.0], 'basis': [-150.0, 1000.0]}, True)
+2026-11-22T14:38:09Z tag=mt_truth_fix_selftest1 rc=1 peak_rss_mib=122 wall_s=1.10 cpu_user_s=1.02 memavail_start_gib=22 disk_free_gib=429->429 slot=claude

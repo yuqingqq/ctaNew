@@ -1,0 +1,53 @@
+LIFECYCLE SELFTEST PASSED: 145 checks; VmHWM 123 MiB
+SIMCHECK 4 markets x 60 s (frames, records, legs, hashes per market: [(1221, 1456, 2352, 1135), (1220, 1421, 2290, 1121), (1220, 1378, 2210, 1089), (1220, 1525, 2481, 1294)]); run_market cpu 4.57 s total
+  S_FIFO    persist         observed              n     51  failed     0
+  S_FIFO    post            assumption_sensitive  n   4573  failed  2524
+  S_FIFO    post            constrained           n     62  failed     0
+  S_FIFO    post            unresolved            n      4  failed     0
+  S_FIFO    queue           assumption_sensitive  n   1028  failed     3
+  S_FIFO    removal_member  assumption_sensitive  n   4575  failed    13
+  S_FIFO    removal_member  constrained           n     12  failed     0
+  S_FIFO    removal_member  unresolved            n     52  failed     0
+  S_FIFO    removal_window  assumption_sensitive  n   4575  failed    11
+  S_FIFO    removal_window  constrained           n     12  failed     0
+  S_FIFO    removal_window  unresolved            n     52  failed     0
+  S_FIFO    size_exact      assumption_sensitive  n   1794  failed    13
+  S_FIFO    size_lb         observed              n   4639  failed     0
+  S_FIFO    size_ub         assumption_sensitive  n   2519  failed    17
+  S_FIFO    size_ub         constrained           n      1  failed     0
+  S_FIFO_LO persist         observed              n     51  failed     0
+  S_FIFO_LO post            assumption_sensitive  n   4573  failed    67
+  S_FIFO_LO post            constrained           n     62  failed     0
+  S_FIFO_LO post            unresolved            n      4  failed     0
+  S_FIFO_LO queue           assumption_sensitive  n   1028  failed     3
+  S_FIFO_LO removal_member  assumption_sensitive  n   4575  failed    13
+  S_FIFO_LO removal_member  constrained           n     12  failed     0
+  S_FIFO_LO removal_member  unresolved            n     52  failed     0
+  S_FIFO_LO removal_window  assumption_sensitive  n   4575  failed   361
+  S_FIFO_LO removal_window  constrained           n     12  failed     0
+  S_FIFO_LO removal_window  unresolved            n     52  failed     0
+  S_FIFO_LO size_exact      assumption_sensitive  n   1794  failed    13
+  S_FIFO_LO size_lb         observed              n   4639  failed     0
+  S_FIFO_LO size_ub         assumption_sensitive  n   2466  failed    18
+  S_FIFO_LO size_ub         constrained           n      1  failed     0
+  S_NOPRIO  persist         observed              n     51  failed     0
+  S_NOPRIO  post            assumption_sensitive  n   4573  failed  1226
+  S_NOPRIO  post            constrained           n     62  failed     0
+  S_NOPRIO  post            unresolved            n      4  failed     0
+  S_NOPRIO  removal_member  assumption_sensitive  n   4575  failed     0
+  S_NOPRIO  removal_member  constrained           n     12  failed     0
+  S_NOPRIO  removal_member  unresolved            n     52  failed     0
+  S_NOPRIO  removal_window  assumption_sensitive  n   4575  failed     1
+  S_NOPRIO  removal_window  constrained           n     12  failed     0
+  S_NOPRIO  removal_window  unresolved            n     52  failed     0
+  S_NOPRIO  size_lb         observed              n   4639  failed     0
+  S_NOPRIO  size_ub         assumption_sensitive  n    881  failed     4
+  S_NOPRIO  size_ub         constrained           n      1  failed     0
+  fills     window          observed              n   9333  failed     0
+  priority tests (T1 makers, T1 violations settle order, T1 certain, T2 groups, T2 violations settle order, T2 certain): [{'S_FIFO': (304, 62, 0, 406, 121, 0), 'S_FIFO_LO': (304, 62, 0, 406, 121, 0)}, {'S_FIFO': (321, 67, 0, 402, 112, 0), 'S_FIFO_LO': (321, 67, 0, 402, 112, 0)}, {'S_FIFO': (255, 47, 0, 411, 126, 0), 'S_FIFO_LO': (255, 47, 0, 411, 126, 0)}, {'S_FIFO': (381, 74, 0, 421, 110, 0), 'S_FIFO_LO': (381, 74, 0, 421, 110, 0)}]
+  evidence lo_ms (a scenario refinement) at or after the true match: 4 of 9328 bounded fills (0.0429%); lo < match on 9324 (99.9571%)
+SIMCHECK PASSED: 0 of 23664 observed / constrained claims failed; T1 / T2 certain = 0; assumption_sensitive misses 4287
+mutant: book evidence claims exhaustion (integrator decision reverted)
+   4 of 145 checks fail, first: n S_FIFO nB capacity_tight keeps both explanations (nan, 6.0, exhausted, fifo_time, 4060)
+MUTANTS: base passes None checks; killed 1 of 1
+2026-11-22T15:18:46Z tag=mt_life_fix3 rc=0 peak_rss_mib=201 wall_s=10.31 cpu_user_s=10.16 memavail_start_gib=22 disk_free_gib=449->449 slot=claude3

@@ -1,0 +1,61 @@
+v6 Matched price==tick/100 33 ==1-tick/100 32 of 63 by up {False: 0.0625, True: 1.0}
+v6 cands 55 cids 53 of 53 hashes 53 cid multi 2 hash multi 2
+                 cid   market y_side  tick  size  filled                                                          maker_hash  n    t_accepted      t_Filled
+38  1794108465186808  4338816    bid    61   5.0     5.0  0x0cf9210922ba136fb5cf95d3be7d7b0a835291c86606ca501c3ec58cd60b5e8a  1  1.794136e+12  1.794136e+12
+39  1794108465186808  4338816    bid    61   5.0     5.0  0xec80bd75f83d4dd8cf84dcc7bb4d463a81da71ecfa0bfbef938918a45a4a1d5a  1  1.794136e+12  1.794136e+12
+40  1794108465186824  4338816    bid    61   5.0     5.0  0x0cf9210922ba136fb5cf95d3be7d7b0a835291c86606ca501c3ec58cd60b5e8a  1  1.794136e+12  1.794136e+12
+41  1794108465186824  4338816    bid    61   5.0     5.0  0xec80bd75f83d4dd8cf84dcc7bb4d463a81da71ecfa0bfbef938918a45a4a1d5a  1  1.794136e+12  1.794136e+12
+v6 core CancelDone w/o kernel PendingAudit 83 accepted 6 rejected 0 filled>0 6 full 6 UserCancel 0 cancel req 83 signed 10
+                   cid  size  filled         t_req  t_signed  t_accepted    t_Answered  t_Rejected      t_cancel  t_CancelDone  t_UserCancel  t_Throttled
+1602  1794108465173602   5.0     0.0  1.794113e+12       NaN         NaN  1.794113e+12         NaN  1.794113e+12  1.794113e+12           NaN          NaN
+1606  1794108465173606   5.0     0.0  1.794113e+12       NaN         NaN  1.794113e+12         NaN  1.794113e+12  1.794113e+12           NaN          NaN
+1608  1794108465173608   5.0     0.0  1.794113e+12       NaN         NaN  1.794113e+12         NaN  1.794113e+12  1.794113e+12           NaN          NaN
+1611  1794108465173611   5.0     0.0  1.794113e+12       NaN         NaN  1.794113e+12         NaN  1.794113e+12  1.794113e+12           NaN          NaN
+v6 not accepted/not rejected/not refused 93 signed 22 answered 93 cancel req 93 CancelDone 93 PendingAudit 18 filled 0
+                   cid  size         t_req       t_place  t_signed    t_Answered      t_cancel  t_CancelDone  t_CancelPendingAudit  t_UserCancel
+1602  1794108465173602   5.0  1.794113e+12  1.794113e+12       NaN  1.794113e+12  1.794113e+12  1.794113e+12                   NaN           NaN
+1606  1794108465173606   5.0  1.794113e+12  1.794113e+12       NaN  1.794113e+12  1.794113e+12  1.794113e+12                   NaN           NaN
+1608  1794108465173608   5.0  1.794113e+12  1.794113e+12       NaN  1.794113e+12  1.794113e+12  1.794113e+12                   NaN           NaN
+1611  1794108465173611   5.0  1.794113e+12  1.794113e+12       NaN  1.794113e+12  1.794113e+12  1.794113e+12                   NaN           NaN
+v6 core-only accepted
+                   cid  size  filled      t_signed    t_Accepted    t_Answered  t_CancelDone  t_CancelPendingAudit
+4527  1794108465176527   5.0     0.0  1.794118e+12  1.794118e+12  1.794118e+12  1.794118e+12          1.794118e+12
+7108  1794108465179108   5.0     0.0  1.794123e+12  1.794123e+12  1.794123e+12  1.794123e+12          1.794123e+12
+v6 partial
+                    cid       size     filled      t_cancel  t_CancelPendingAudit  t_CancelDone      t_Filled  t_Filled_last  t_UserCancel
+6898   1794108465178898   5.000000   1.580784  1.794123e+12          1.794123e+12  1.794123e+12  1.794123e+12   1.794123e+12  1.794123e+12
+7541   1794108465179541  25.000000  23.026153  1.794124e+12          1.794124e+12  1.794124e+12  1.794124e+12   1.794124e+12  1.794124e+12
+7635   1794108465179635  23.026153  23.020000  1.794124e+12          1.794124e+12  1.794124e+12  1.794124e+12   1.794124e+12  1.794124e+12
+16801  1794108465188801   5.000000   1.892384  1.794139e+12          1.794139e+12  1.794139e+12  1.794139e+12   1.794139e+12  1.794139e+12
+v6 full: cancel req 49 PendingAudit 43 CancelDone 49 of 49
+v6 rejected: accepted too 0 signed 89 of 265
+v6 accepted w/o signed 0 acc<signed 0 cancelreq<accepted 1756 PendingAudit<cancelreq 0 PendingAudit w/o cancel req 0
+basis Matched price==tick/100 14 ==1-tick/100 22 of 36 by up {False: 0.0, True: 1.0}
+basis cands 33 cids 33 of 33 hashes 33 cid multi 0 hash multi 0
+Empty DataFrame
+Columns: [cid, market, y_side, tick, size, filled, maker_hash, n, t_accepted, t_Filled]
+Index: []
+basis core CancelDone w/o kernel PendingAudit 128 accepted 2 rejected 0 filled>0 2 full 2 UserCancel 0 cancel req 128 signed 6
+                  cid  size  filled         t_req      t_signed    t_accepted    t_Answered  t_Rejected      t_cancel  t_CancelDone  t_UserCancel   t_Throttled
+460  1794147344737460  25.0     0.0  1.794150e+12           NaN           NaN           NaN         NaN  1.794150e+12  1.794150e+12           NaN  1.794150e+12
+556  1794147344737556   5.0     5.0  1.794150e+12  1.794150e+12  1.794150e+12  1.794150e+12         NaN  1.794150e+12  1.794150e+12           NaN           NaN
+571  1794147344737571   5.0     0.0  1.794150e+12           NaN           NaN  1.794150e+12         NaN  1.794150e+12  1.794150e+12           NaN           NaN
+578  1794147344737578   5.0     0.0  1.794150e+12           NaN           NaN  1.794150e+12         NaN  1.794150e+12  1.794150e+12           NaN           NaN
+basis not accepted/not rejected/not refused 109 signed 18 answered 109 cancel req 109 CancelDone 109 PendingAudit 14 filled 0
+                  cid  size         t_req       t_place  t_signed    t_Answered      t_cancel  t_CancelDone  t_CancelPendingAudit  t_UserCancel
+571  1794147344737571   5.0  1.794150e+12  1.794150e+12       NaN  1.794150e+12  1.794150e+12  1.794150e+12                   NaN           NaN
+578  1794147344737578   5.0  1.794150e+12  1.794150e+12       NaN  1.794150e+12  1.794150e+12  1.794150e+12                   NaN           NaN
+585  1794147344737585   5.0  1.794150e+12  1.794150e+12       NaN  1.794150e+12  1.794150e+12  1.794150e+12                   NaN           NaN
+590  1794147344737590   5.0  1.794150e+12  1.794150e+12       NaN  1.794150e+12  1.794150e+12  1.794150e+12                   NaN           NaN
+basis core-only accepted
+Empty DataFrame
+Columns: [cid, size, filled, t_signed, t_Accepted, t_Answered, t_CancelDone, t_CancelPendingAudit]
+Index: []
+basis partial
+                   cid  size     filled      t_cancel  t_CancelPendingAudit  t_CancelDone      t_Filled  t_Filled_last  t_UserCancel
+634   1794147344737634   5.0   2.940000  1.794150e+12          1.794150e+12  1.794150e+12  1.794150e+12   1.794150e+12  1.794150e+12
+9973  1794147344746973  25.0  12.407999  1.794166e+12          1.794166e+12  1.794166e+12  1.794166e+12   1.794166e+12  1.794166e+12
+basis full: cancel req 30 PendingAudit 28 CancelDone 30 of 31
+basis rejected: accepted too 1 signed 64 of 246
+basis accepted w/o signed 0 acc<signed 0 cancelreq<accepted 1854 PendingAudit<cancelreq 0 PendingAudit w/o cancel req 1
+2026-11-22T08:32:26Z tag=mt_truth_probe4 rc=0 peak_rss_mib=272 wall_s=0.66 cpu_user_s=0.45 memavail_start_gib=22 disk_free_gib=427->427 slot=claude

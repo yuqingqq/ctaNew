@@ -1,0 +1,29 @@
+{
+ "baseline_rc": 0,
+ "n_mutants": 4,
+ "killed": 4,
+ "survivors": [],
+ "detail": [
+  {
+   "mutant": "B1_markouts_from_lo",
+   "killed": true,
+   "first_error": "ValueError: fills_valued a1/0/maker.v_1s: expected -0.1, got np.float64(0.20000000000000018)"
+  },
+  {
+   "mutant": "B3_pnl_rank_without_maker_majority",
+   "killed": true,
+   "first_error": "ValueError: maker_day 20261025/0x01.rank_pnl: expected 2, got np.int64(3)"
+  },
+  {
+   "mutant": "B5_any_flag_unusable",
+   "killed": true,
+   "first_error": "ValueError: fills_valued a1/0/maker.st_end: expected 'ok', got 'frame_status'"
+  },
+  {
+   "mutant": "B6_tie_ignored",
+   "killed": true,
+   "first_error": "ValueError: fills_valued i15/0/maker.V: expected 0.5, got np.float64(1.0)"
+  }
+ ]
+}
+2026-11-22T14:43:20Z tag=mt_econ_fix_mut rc=0 peak_rss_mib=127 wall_s=23.30 cpu_user_s=20.57 memavail_start_gib=22 disk_free_gib=429->429 slot=claude4

@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/tmp/claude-1001/-home-yuqing-ctaNew/aea5bfb9-4ea4-41d0-bf73-bb98d818e3d4/scratchpad/predictfun/research/pf_mt_econ_mutants.py", line 64, in <module>
+    rc, err = run(tag, old, new)
+              ^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-1001/-home-yuqing-ctaNew/aea5bfb9-4ea4-41d0-bf73-bb98d818e3d4/scratchpad/predictfun/research/pf_mt_econ_mutants.py", line 50, in run
+    assert t.count(old) == 1, f'{tag}: target occurs {t.count(old)} times'
+           ^^^^^^^^^^^^^^^^^
+AssertionError: spread_boundary_inclusive: target occurs 0 times
+2026-11-22T09:08:38Z tag=mt_econ_mutants3 rc=1 peak_rss_mib=125 wall_s=17.14 cpu_user_s=15.66 memavail_start_gib=22 disk_free_gib=427->427 slot=claude4

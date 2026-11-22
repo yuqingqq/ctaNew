@@ -1,0 +1,131 @@
+{
+ "baseline_rc": 0,
+ "n_mutants": 24,
+ "killed": 23,
+ "survivors": [
+  "reward_remaining_cut_off"
+ ],
+ "detail": [
+  {
+   "mutant": "fee_res_at_fill_price",
+   "killed": true,
+   "first_error": "ValueError: fills_valued a1/0/taker.fee_res: expected 0.1, got np.float64(0.053000000000000005)"
+  },
+  {
+   "mutant": "stale_boundary_ge",
+   "killed": true,
+   "first_error": "ValueError: fills_valued a2/0/maker.st_1s: expected 'ok', got 'stale'"
+  },
+  {
+   "mutant": "lifo_not_fifo",
+   "killed": true,
+   "first_error": "ValueError: fills_valued a1/0/maker.mq: expected 6.0, got np.float64(4.0)"
+  },
+  {
+   "mutant": "record_min_lo",
+   "killed": true,
+   "first_error": "ValueError: fills_valued a2/0/maker.v_spr: expected 0.06, got np.float64(0.0)"
+  },
+  {
+   "mutant": "stale_over_frame_status",
+   "killed": true,
+   "first_error": "ValueError: fills_valued a1/0/maker.st_60s: expected 'one_sided', got 'stale'"
+  },
+  {
+   "mutant": "no_end_guard",
+   "killed": true,
+   "first_error": "ValueError: fills_valued a1/0/maker.st_end: expected 'ok', got 'stale'"
+  },
+  {
+   "mutant": "fee_split_not_pro_rata",
+   "killed": true,
+   "first_error": "ValueError: fills_valued a1/0/taker.fee_dy: expected -0.1, got np.float64(-0.05)"
+  },
+  {
+   "mutant": "exhausted_any_token",
+   "killed": true,
+   "first_error": "ValueError: fills_valued a2/1/maker.life_exh: expected 'exhausted_or_other', got 'exhausted'"
+  },
+  {
+   "mutant": "tie_break_descending",
+   "killed": true,
+   "first_error": "ValueError: segment 20261024/exante_shares/in/maker/all/all.n_addr: expected 2, got np.int64(1)"
+  },
+  {
+   "mutant": "zero_sum_check_off",
+   "killed": true,
+   "first_error": "AssertionError: a dropped address breaks the zero sum: not refused (expected: zero_sum_gross)"
+  },
+  {
+   "mutant": "conservation_check_off",
+   "killed": true,
+   "first_error": "AssertionError: planted FIFO conservation error: not refused (expected: gross_eq_rt_plus_resid)"
+  },
+  {
+   "mutant": "float_price_buckets",
+   "killed": true,
+   "first_error": "ValueError: fills_valued a3/0/maker.pseg: expected 'd_0.1_0.2', got 'd_0.0_0.1'"
+  },
+  {
+   "mutant": "mint_merge_swapped",
+   "killed": true,
+   "first_error": "ValueError: fills_valued a2/1/maker.kind: expected 'merge', got 'mint'"
+  },
+  {
+   "mutant": "taker_same_side",
+   "killed": true,
+   "first_error": "ValueError: zero-sum: zero_sum_gross violated in a market (max deviation 95)"
+  },
+  {
+   "mutant": "one_sided_not_flagged",
+   "killed": true,
+   "first_error": "ValueError: cannot convert float NaN to integer"
+  },
+  {
+   "mutant": "spread_boundary_inclusive",
+   "killed": true,
+   "first_error": "ValueError: bid eligible ms (strict spread boundary): expected 1000, got 1500"
+  },
+  {
+   "mutant": "no_record_propagation",
+   "killed": true,
+   "first_error": "ValueError: fills_valued b4/0/maker.status: expected 'record_leg_excluded', got 'ok'"
+  },
+  {
+   "mutant": "reward_remaining_cut_off",
+   "killed": false,
+   "first_error": ""
+  },
+  {
+   "mutant": "after_end_off",
+   "killed": true,
+   "first_error": "ValueError: fills_valued a4/0/maker.st_end: expected 'after_end', got 'ok'"
+  },
+  {
+   "mutant": "beyond_end_off",
+   "killed": true,
+   "first_error": "ValueError: fills_valued a4/0/maker.st_1s: expected 'beyond_end', got 'stale'"
+  },
+  {
+   "mutant": "no_share_fee_as_yes",
+   "killed": true,
+   "first_error": "ValueError: fills_valued c1/0/taker.fee_dy: expected 0.06, got np.float64(-0.06)"
+  },
+  {
+   "mutant": "pnl_rank_admits_takers",
+   "killed": true,
+   "first_error": "ValueError: maker_day 20261024/0x01.rank_pnl: expected 3, got np.int64(5)"
+  },
+  {
+   "mutant": "field_includes_nonmakers",
+   "killed": true,
+   "first_error": "ValueError: segment 20261024/exante_shares/nonmaker/taker/all/all missing or duplicated"
+  },
+  {
+   "mutant": "drift_to_resolution",
+   "killed": true,
+   "first_error": "ValueError: conservation: resid_eq_drift_plus_resol violated (max deviation 3.36)"
+  }
+ ]
+}
+2026-11-22T09:04:13Z tag=mt_econ_mutants1 rc=0 peak_rss_mib=125 wall_s=27.53 cpu_user_s=25.30 memavail_start_gib=22 disk_free_gib=427->427 slot=claude4

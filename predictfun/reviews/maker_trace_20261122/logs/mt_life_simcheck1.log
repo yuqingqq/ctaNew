@@ -1,0 +1,63 @@
+SIMCHECK 4 markets x 60 s (frames, records, legs, hashes per market: [(1220, 1296, 1945, 1156), (1220, 1357, 2024, 1129), (1219, 1293, 1988, 1104), (1220, 1400, 2182, 1087)]); run_market cpu 4.04 s total
+  S_FIFO    persist         observed              n    518  failed     1
+  S_FIFO    post            assumption_sensitive  n   3788  failed  1205
+  S_FIFO    post            constrained           n    688  failed     0
+  S_FIFO    queue           assumption_sensitive  n   1220  failed     0
+  S_FIFO    queue           unresolved            n      1  failed     0
+  S_FIFO    removal_member  assumption_sensitive  n   3927  failed     8
+  S_FIFO    removal_member  constrained           n    540  failed     0
+  S_FIFO    removal_member  unresolved            n      9  failed     0
+  S_FIFO    removal_window  assumption_sensitive  n   3927  failed     9
+  S_FIFO    removal_window  constrained           n    540  failed     0
+  S_FIFO    removal_window  unresolved            n      9  failed     0
+  S_FIFO    size_exact      assumption_sensitive  n   2424  failed     8
+  S_FIFO    size_exact      constrained           n    126  failed     0
+  S_FIFO    size_lb         observed              n   4476  failed     0
+  S_FIFO    size_ub         assumption_sensitive  n   2794  failed    55
+  S_FIFO    size_ub         constrained           n    148  failed     1
+  S_FIFO_LO persist         observed              n    518  failed     1
+  S_FIFO_LO post            assumption_sensitive  n   3788  failed   179
+  S_FIFO_LO post            constrained           n    688  failed     0
+  S_FIFO_LO queue           assumption_sensitive  n   1220  failed     0
+  S_FIFO_LO queue           unresolved            n      1  failed     0
+  S_FIFO_LO removal_member  assumption_sensitive  n   3927  failed    20
+  S_FIFO_LO removal_member  constrained           n    540  failed     0
+  S_FIFO_LO removal_member  unresolved            n      9  failed     0
+  S_FIFO_LO removal_window  assumption_sensitive  n   3927  failed  1487
+  S_FIFO_LO removal_window  constrained           n    540  failed     0
+  S_FIFO_LO removal_window  unresolved            n      9  failed     0
+  S_FIFO_LO size_exact      assumption_sensitive  n   1427  failed    19
+  S_FIFO_LO size_exact      constrained           n    126  failed     0
+  S_FIFO_LO size_lb         observed              n   4476  failed     0
+  S_FIFO_LO size_ub         assumption_sensitive  n   1676  failed    25
+  S_FIFO_LO size_ub         constrained           n    148  failed     1
+  S_NOPRIO  persist         observed              n    518  failed     1
+  S_NOPRIO  post            assumption_sensitive  n   3788  failed   986
+  S_NOPRIO  post            constrained           n    688  failed     0
+  S_NOPRIO  removal_member  assumption_sensitive  n   3927  failed     8
+  S_NOPRIO  removal_member  constrained           n    540  failed     0
+  S_NOPRIO  removal_member  unresolved            n      9  failed     0
+  S_NOPRIO  removal_window  assumption_sensitive  n   3927  failed     9
+  S_NOPRIO  removal_window  constrained           n    540  failed     0
+  S_NOPRIO  removal_window  unresolved            n      9  failed     0
+  S_NOPRIO  size_exact      assumption_sensitive  n    373  failed     8
+  S_NOPRIO  size_exact      constrained           n    126  failed     0
+  S_NOPRIO  size_lb         observed              n   4476  failed     0
+  S_NOPRIO  size_ub         assumption_sensitive  n   1063  failed    55
+  S_NOPRIO  size_ub         constrained           n    148  failed     1
+  fills     window          observed              n   8139  failed    12
+  priority tests (T1 makers, T1 violations, T2 groups, T2 violations): [{'S_FIFO': (456, 0, 158, 0), 'S_FIFO_LO': (456, 87, 127, 12)}, {'S_FIFO': (430, 0, 194, 0), 'S_FIFO_LO': (430, 87, 134, 19)}, {'S_FIFO': (390, 0, 219, 0), 'S_FIFO_LO': (390, 67, 144, 37)}, {'S_FIFO': (398, 0, 269, 0), 'S_FIFO_LO': (398, 94, 174, 50)}]
+  DEFECT fills window observed: o411_707 lo-m 2 hi-m 29 pend_inc
+  DEFECT fills window observed: o411_1027 lo-m 6 hi-m 17 pend_inc
+  DEFECT fills window observed: o411_1236 lo-m 9 hi-m 28 book_drop
+  DEFECT fills window observed: o411_1608 lo-m 17 hi-m 24 pend_inc
+  DEFECT fills window observed: o413_241 lo-m 12 hi-m 21 pend_inc
+  DEFECT fills window observed: o413_641 lo-m 4 hi-m 16 pend_inc
+  DEFECT fills window observed: o413_1756 lo-m 3 hi-m 19 pend_inc
+  DEFECT fills window observed: o414_303 lo-m 0 hi-m 3 pend_inc
+  DEFECT fills window observed: o414_393 lo-m 24 hi-m 28 pend_inc
+  DEFECT fills window observed: o414_400 lo-m 24 hi-m 28 pend_inc
+  DEFECT fills window observed: o414_1375 lo-m 20 hi-m 25 pend_inc
+  DEFECT fills window observed: o414_1764 lo-m 11 hi-m 19 pend_inc
+LIFECYCLE SELFTEST FAILED simcheck: 18 observed / constrained claims failed; T1 + T2 violations 453 on a FIFO venue
+2026-11-22T09:31:26Z tag=mt_life_simcheck1 rc=1 peak_rss_mib=153 wall_s=5.48 cpu_user_s=5.36 memavail_start_gib=21 disk_free_gib=425->426 slot=claude3

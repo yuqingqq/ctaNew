@@ -1,0 +1,5 @@
+round 0 gzip line iterator: 2.48 cpu s (1800642211 bytes)
+round 0 4 MiB blocks + split: 2.49 cpu s (1800642211 bytes)
+round 1 gzip line iterator: 2.23 cpu s (1800642211 bytes)
+round 1 4 MiB blocks + split: 2.39 cpu s (1800642211 bytes)
+2026-11-22T09:31:47Z tag=mt_extract_reader_ab rc=0 peak_rss_mib=95 wall_s=9.74 cpu_user_s=9.30 memavail_start_gib=22 disk_free_gib=426->426 slot=claude2

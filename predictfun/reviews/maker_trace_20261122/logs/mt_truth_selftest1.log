@@ -1,0 +1,22 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_truth_selftest.py", line 324, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_truth_selftest.py", line 314, in main
+    res, TT, O, F, pub = p2_score(Tr, rec)
+                         ^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_truth_selftest.py", line 207, in p2_score
+    res = T.score(O, F, TT, pub, [101, 102, 201])
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_truth.py", line 489, in score
+    refuse(not miss.any(), f'lifecycle {nm} row for a hash not in the public data ({int(miss.sum())} rows, e.g. {df.mk_hash[miss].iloc[0]})')
+                                                                                                                 ~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/indexing.py", line 1207, in __getitem__
+    return self._getitem_axis(maybe_callable, axis=axis)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/indexing.py", line 1773, in _getitem_axis
+    self._validate_integer(key, axis)
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/indexing.py", line 1706, in _validate_integer
+    raise IndexError("single positional indexer is out-of-bounds")
+IndexError: single positional indexer is out-of-bounds
+2026-11-22T08:50:23Z tag=mt_truth_selftest1 rc=1 peak_rss_mib=119 wall_s=0.43 cpu_user_s=0.34 memavail_start_gib=22 disk_free_gib=426->426 slot=claude

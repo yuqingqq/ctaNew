@@ -1,0 +1,248 @@
+dry: reproduces the written truth table: True | written registry identical: True
+{
+ "clock_band": {
+  "per_run": {
+   "v6": {
+    "d_lo_ms": -226.392822265625,
+    "d_hi_ms": 49.336669921875,
+    "n_lo": 189,
+    "n_hi": 63,
+    "binding_lo": {
+     "cid": 1794108465182043,
+     "status": "Matched"
+    },
+    "binding_hi": {
+     "cid": 1794108465184263
+    }
+   },
+   "basis": {
+    "d_lo_ms": -260.68505859375,
+    "d_hi_ms": 449.531494140625,
+    "n_lo": 108,
+    "n_hi": 36,
+    "binding_lo": {
+     "cid": 1794147344757273,
+     "status": "Matched"
+    },
+    "binding_hi": {
+     "cid": 1794147344739837
+    }
+   }
+  },
+  "clock": "venue STATUS clock - bot clock (ms), one band per run",
+  "definition": "per run: d >= match_ms - at (Matched, Confirmed notices); d <= match_ms + 1000 - t_place (Matched)",
+  "premises": [
+   "one constant bot-to-venue offset within each run (each run its own bot clock)",
+   "a notice is received after its status second starts",
+   "a match follows its placement and precedes the end of its Matched second",
+   "activation in [signed, Accepted answer received]",
+   "a cancel takes effect in [request, first Canceled answer received]",
+   "NOT ESTABLISHED: the lifecycle venue book / UUID / collector clocks equal the venue status clock"
+  ]
+ },
+ "signer": {
+  "our_address": "0xba14f115ccf30e976f7639594fdee7b36c85ced8",
+  "signers_of_own_legs": [
+   "0xba14f115ccf30e976f7639594fdee7b36c85ced8"
+  ]
+ },
+ "own_public": {
+  "legs": 99,
+  "hashes": 86,
+  "shares": 849.8673227752638,
+  "hash_identity_conflicts": 0
+ },
+ "rows": 42064,
+ "status": {
+  "unfilled": 30135,
+  "refused": 11131,
+  "rejected": 510,
+  "not_accepted": 170,
+  "ok": 86,
+  "unconfirmed_live": 32
+ },
+ "final_state": {
+  "cancelled": 30173,
+  "other": 11811,
+  "filled": 80
+ },
+ "link_status": {
+  "none": 41978,
+  "unique": 84,
+  "unique_by_time": 2
+ },
+ "checks": {
+  "v6": {
+   "orders": 21495,
+   "core_filled_eq_matched": 21495,
+   "matched_notices": 63,
+   "matched_price_eq_token_price": 63,
+   "accepted_from_core_only": 2
+  },
+  "basis": {
+   "orders": 20569,
+   "core_filled_eq_matched": 20569,
+   "matched_notices": 36,
+   "matched_price_eq_token_price": 36,
+   "accepted_from_core_only": 0
+  }
+ },
+ "scored": {
+  "orders": 86,
+  "legs": 99,
+  "shares": 849.8673227752638,
+  "exhausted": 80,
+  "cancelled": 6
+ },
+ "presence_rows": 1815,
+ "link_evidence": [
+  {
+   "cid": 1794108465186808,
+   "mk_hash": "0x0cf9210922ba136fb5cf95d3be7d7b0a835291c86606ca501c3ec58cd60b5e8a",
+   "link": "unique_by_time",
+   "linked": true,
+   "leg_exec_s": [
+    1794135950
+   ],
+   "confirmed_notice_s": [
+    1794135950
+   ],
+   "leg_shares": [
+    5.0
+   ],
+   "matched_sizes": [
+    5.0
+   ],
+   "time_consistent": true
+  },
+  {
+   "cid": 1794108465186808,
+   "mk_hash": "0xec80bd75f83d4dd8cf84dcc7bb4d463a81da71ecfa0bfbef938918a45a4a1d5a",
+   "link": "unique_by_time",
+   "linked": false,
+   "leg_exec_s": [
+    1794135953
+   ],
+   "confirmed_notice_s": [
+    1794135950
+   ],
+   "leg_shares": [
+    5.0
+   ],
+   "matched_sizes": [
+    5.0
+   ],
+   "time_consistent": false
+  },
+  {
+   "cid": 1794108465186824,
+   "mk_hash": "0x0cf9210922ba136fb5cf95d3be7d7b0a835291c86606ca501c3ec58cd60b5e8a",
+   "link": "unique_by_time",
+   "linked": false,
+   "leg_exec_s": [
+    1794135950
+   ],
+   "confirmed_notice_s": [
+    1794135953
+   ],
+   "leg_shares": [
+    5.0
+   ],
+   "matched_sizes": [
+    5.0
+   ],
+   "time_consistent": false
+  },
+  {
+   "cid": 1794108465186824,
+   "mk_hash": "0xec80bd75f83d4dd8cf84dcc7bb4d463a81da71ecfa0bfbef938918a45a4a1d5a",
+   "link": "unique_by_time",
+   "linked": true,
+   "leg_exec_s": [
+    1794135953
+   ],
+   "confirmed_notice_s": [
+    1794135953
+   ],
+   "leg_shares": [
+    5.0
+   ],
+   "matched_sizes": [
+    5.0
+   ],
+   "time_consistent": true
+  }
+ ],
+ "gt_markets": {
+  "scope": 220,
+  "with_own_orders": 220,
+  "with_accepted": 220,
+  "with_own_fills": 52,
+  "by_run": {
+   "v6": {
+    "scope": 122,
+    "with_own_fills": 29
+   },
+   "basis": {
+    "scope": 98,
+    "with_own_fills": 23
+   }
+  },
+  "own_fill_mids": [
+   4332392,
+   4332523,
+   4333221,
+   4333422,
+   4334454,
+   4334459,
+   4335705,
+   4335715,
+   4335834,
+   4335876,
+   4335911,
+   4336217,
+   4336563,
+   4337112,
+   4337117,
+   4337356,
+   4337390,
+   4337525,
+   4337531,
+   4338816,
+   4339068,
+   4339636,
+   4340059,
+   4342264,
+   4342752,
+   4342760,
+   4343118,
+   4343254,
+   4347066,
+   4353706,
+   4356245,
+   4356476,
+   4357673,
+   4359992,
+   4364410,
+   4365071,
+   4365075,
+   4365097,
+   4365459,
+   4366247,
+   4366252,
+   4366273,
+   4368080,
+   4368290,
+   4368359,
+   4373352,
+   4373830,
+   4374363,
+   4374385,
+   4375582,
+   4376038,
+   4376057
+  ]
+ }
+}
+VmHWM_MiB 302.5
+2026-11-22T14:39:29Z tag=mt_truth_fix_dry rc=0 peak_rss_mib=302 wall_s=0.99 cpu_user_s=0.79 memavail_start_gib=22 disk_free_gib=429->429 slot=claude

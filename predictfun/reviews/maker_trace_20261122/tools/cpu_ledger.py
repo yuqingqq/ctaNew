@@ -1,0 +1,41 @@
+"""CPU LEDGER of MAKER-TRACE-RECONSTRUCTION-v1 (session aea5bfb9, 2026-11-22). Sums cpu_user_s of every run_light line whose tag starts
+'mt_' in predictfun/research/run_light.log (the launcher's authoritative ledger; every Python run of this task goes through run_light),
+from the task start (2026-11-22T08:00Z), and checks the USER cap: 1.35 core-hours including the 0.05 h review reserve, line ceiling 4.85 (first approval 0.90 / 4.40)
+from a line of at most 3.3107 before the task; the USER topped it up to 1.35 h / line 4.85 (AskUserQuestion, 2026-11-22) after the
+builders' tests used 0.33 h. A line without a parsable cpu_user_s is counted at its wall_s (never as zero); a line with
+neither refuses. Usage: cpu_ledger.py [--need <projected_more_h>]"""
+import json
+import re
+import sys
+
+LOG = '/home/yuqing/ctaNew/predictfun/research/run_light.log'
+START, CAP, RESERVE, LINE_BEFORE, CEILING = '2026-11-22T08:00:00Z', 1.35, 0.05, 3.3107, 4.85   # USER top-up 2026-11-22: 0.90 -> 1.35 h, 4.40 -> 4.85
+PAT = re.compile(r'^(\S+) tag=(mt_\S+) rc=(\S+) .*?wall_s=(\S+) cpu_user_s=(\S+)')
+
+
+def ledger(log=LOG):
+    rows = []
+    for line in open(log):
+        m = PAT.match(line)
+        if not m or m.group(1) < START:
+            continue
+        t, tag, rc, wall, cpu = m.groups()
+        try:
+            s = float(cpu)
+        except ValueError:
+            try:
+                s = float(wall)
+            except ValueError:
+                raise SystemExit(f'unparsable ledger line: {line.strip()}')
+        rows.append(dict(t=t, tag=tag, rc=rc, cpu_s=s))
+    return rows
+
+
+if __name__ == '__main__':
+    need = float(sys.argv[sys.argv.index('--need') + 1]) if '--need' in sys.argv else 0.
+    rows = ledger(); spent = sum(r['cpu_s'] for r in rows) / 3600.
+    res = dict(runs=len(rows), spent_h=round(spent, 4), cap_h=CAP, reserve_h=RESERVE, need_h=need, fits=bool(spent + need + RESERVE <= CAP and LINE_BEFORE + spent + need + RESERVE <= CEILING),
+               line_now_max=round(LINE_BEFORE + spent, 4), ceiling=CEILING, by_prefix={})
+    for r in rows:
+        k = '_'.join(r['tag'].split('_')[:2]); res['by_prefix'][k] = round(res['by_prefix'].get(k, 0.) + r['cpu_s'], 2)
+    print(json.dumps(res, indent=1))

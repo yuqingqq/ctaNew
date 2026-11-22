@@ -1,0 +1,7 @@
+python 3.12.3 pandas 3.0.1 pyarrow 24.0.0 numpy 2.2.6
+20261023 registry exists True
+ rows 288 ws min/max 1792713600.0 1792799700.0 outcomes {'Down': 150, 'Up': 138}
+20261108 registry exists False
+gt windows 220 ws min/max 1794110400 1794178500 max hour 22 runs ['basis', 'v6']
+gt hours in scope allowed: False n hours 22
+2026-11-22T08:43:36Z tag=mt_checks_probe_env rc=0 peak_rss_mib=111 wall_s=0.31 cpu_user_s=0.25 memavail_start_gib=22 disk_free_gib=427->427 slot=claude2

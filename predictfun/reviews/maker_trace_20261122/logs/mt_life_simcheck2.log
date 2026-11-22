@@ -1,0 +1,52 @@
+SIMCHECK 4 markets x 60 s (frames, records, legs, hashes per market: [(1220, 1296, 1945, 1156), (1220, 1357, 2024, 1129), (1219, 1293, 1988, 1104), (1220, 1400, 2182, 1087)]); run_market cpu 4.07 s total
+  S_FIFO    persist         observed              n     78  failed     0
+  S_FIFO    post            assumption_sensitive  n   4076  failed  1205
+  S_FIFO    post            constrained           n    400  failed     0
+  S_FIFO    queue           assumption_sensitive  n    333  failed     0
+  S_FIFO    removal_member  assumption_sensitive  n   3992  failed     8
+  S_FIFO    removal_member  constrained           n    478  failed     0
+  S_FIFO    removal_member  unresolved            n      6  failed     0
+  S_FIFO    removal_window  assumption_sensitive  n   3992  failed     7
+  S_FIFO    removal_window  constrained           n    478  failed     0
+  S_FIFO    removal_window  unresolved            n      6  failed     0
+  S_FIFO    size_exact      assumption_sensitive  n   2208  failed     8
+  S_FIFO    size_exact      constrained           n    342  failed     0
+  S_FIFO    size_lb         observed              n   4476  failed     0
+  S_FIFO    size_ub         assumption_sensitive  n   2593  failed    55
+  S_FIFO    size_ub         constrained           n    349  failed     1
+  S_FIFO_LO persist         observed              n     78  failed     0
+  S_FIFO_LO post            assumption_sensitive  n   4076  failed     7
+  S_FIFO_LO post            constrained           n    400  failed     0
+  S_FIFO_LO queue           assumption_sensitive  n    333  failed     0
+  S_FIFO_LO removal_member  assumption_sensitive  n   3992  failed     8
+  S_FIFO_LO removal_member  constrained           n    478  failed     0
+  S_FIFO_LO removal_member  unresolved            n      6  failed     0
+  S_FIFO_LO removal_window  assumption_sensitive  n   3992  failed  1595
+  S_FIFO_LO removal_window  constrained           n    478  failed     0
+  S_FIFO_LO removal_window  unresolved            n      6  failed     0
+  S_FIFO_LO size_exact      assumption_sensitive  n   2062  failed     5
+  S_FIFO_LO size_exact      constrained           n    342  failed     0
+  S_FIFO_LO size_lb         observed              n   4476  failed     0
+  S_FIFO_LO size_ub         assumption_sensitive  n   2244  failed    16
+  S_FIFO_LO size_ub         constrained           n    349  failed     1
+  S_NOPRIO  persist         observed              n     78  failed     0
+  S_NOPRIO  post            assumption_sensitive  n   4076  failed   986
+  S_NOPRIO  post            constrained           n    400  failed     0
+  S_NOPRIO  removal_member  assumption_sensitive  n   3992  failed     8
+  S_NOPRIO  removal_member  constrained           n    478  failed     0
+  S_NOPRIO  removal_member  unresolved            n      6  failed     0
+  S_NOPRIO  removal_window  assumption_sensitive  n   3992  failed     7
+  S_NOPRIO  removal_window  constrained           n    478  failed     0
+  S_NOPRIO  removal_window  unresolved            n      6  failed     0
+  S_NOPRIO  size_exact      assumption_sensitive  n    157  failed     8
+  S_NOPRIO  size_exact      constrained           n    342  failed     0
+  S_NOPRIO  size_lb         observed              n   4476  failed     0
+  S_NOPRIO  size_ub         assumption_sensitive  n    862  failed    55
+  S_NOPRIO  size_ub         constrained           n    349  failed     1
+  fills     window          observed              n   8139  failed     0
+  priority tests (T1 makers, T1 violations, T2 groups, T2 violations): [{'S_FIFO': (456, 0, 158, 0), 'S_FIFO_LO': (456, 0, 158, 0)}, {'S_FIFO': (430, 0, 194, 0), 'S_FIFO_LO': (430, 0, 194, 0)}, {'S_FIFO': (390, 0, 219, 0), 'S_FIFO_LO': (390, 0, 219, 0)}, {'S_FIFO': (398, 0, 269, 0), 'S_FIFO_LO': (398, 0, 269, 0)}]
+  DEFECT S_FIFO size_ub constrained: o412_315 8.0 > 6.0
+  DEFECT S_FIFO_LO size_ub constrained: o412_315 8.0 > 6.0
+  DEFECT S_NOPRIO size_ub constrained: o412_315 8.0 > 6.0
+LIFECYCLE SELFTEST FAILED simcheck: 3 observed / constrained claims failed; T1 + T2 violations 0 on a FIFO venue
+2026-11-22T09:35:09Z tag=mt_life_simcheck2 rc=1 peak_rss_mib=152 wall_s=5.49 cpu_user_s=5.38 memavail_start_gib=22 disk_free_gib=426->426 slot=claude3

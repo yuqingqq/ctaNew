@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/tmp/claude-1001/-home-yuqing-ctaNew/aea5bfb9-4ea4-41d0-bf73-bb98d818e3d4/scratchpad/trace_o412.py", line 11, in <module>
+    T = TR[H]; print('truth', {k: (v - 0 if not isinstance(v, (int, float)) else v) for k, v in T.items()})
+                                   ~~^~~
+TypeError: unsupported operand type(s) for -: 'str' and 'int'
+2026-11-22T09:35:32Z tag=mt_life_trace_o412 rc=1 peak_rss_mib=135 wall_s=1.49 cpu_user_s=1.40 memavail_start_gib=22 disk_free_gib=426->426 slot=claude3

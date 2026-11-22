@@ -1,0 +1,104 @@
+mutant: pending evidence: last candidate
+   1 of 144 checks fail, first: tq the first pending candidate (2000, pend_inc)
+mutant: drop evidence: last candidate
+   4 of 144 checks fail, first: t first drop (an unrelated 6-sh drop at 1500) taken (3000, book_drop, 1031)
+mutant: pending first, an earlier drop ignored
+   1 of 144 checks fail, first: tp the earlier evidence of either kind (3000, pend_inc, exact 3000)
+mutant: exact-value-first evidence (the reviewed rule)
+   1 of 144 checks fail, first: tp the earlier evidence of either kind (3000, pend_inc, exact 3000)
+mutant: lo at the evidence frame itself
+   18 of 45 checks fail, first: a stopped (ValueError('fill window inverted for record 01a16b6b-faa4-7000-8000-000000650001'))
+mutant: unknown cell not a drop candidate
+   1 of 144 checks fail, first: tu an unknown cell is a possible drop (3000, book_drop, 1030, ok)
+mutant: receipt-hi fills keep the evidence (B2)
+   1 of 144 checks fail, first: r receipt-hi fill: no lower end (1792803601000, -1, pend_inc, hi_from_receipt)
+mutant: hard logic on the evidence lo (B2 reverted)
+   7 of 144 checks fail, first: b hB capacity posting bound (1900, capacity, constrained)
+mutant: removal_lo / persistence from the evidence lo (B2 reverted)
+   13 of 144 checks fail, first: a S_FIFO h7 removal_lo = its evidence-free lower end
+mutant: hard H3 contradiction silenced
+   3 of 144 checks fail, first: f contradiction in every scenario (['capacity_bounds_void', 'capacity_bounds_void', 'capacity_bounds_void'])
+mutant: a contradicted order keeps its hard capacity claims (B1)
+   1 of 144 checks fail, first: f classes (observed, unresolved, observed, assumption_sensitive, -1, 1792803605100)
+mutant: a contradicted scenario keeps its capacity claims (B1)
+   1 of 144 checks fail, first: f2 contradicted under every clock, capacity void, nothing constrained (['ahead_hi_negative+clock_capacity_conflict', 'ahead_hi_negative+clock_capacity
+mutant: violated cells known to the others (B1)
+   1 of 144 checks fail, first: f3 violated cells are unknown for another order (1100, cancelled_or_expired|exhausted, capacity_bounds_void+capacity_contradiction)
+mutant: no class demotion on a contradiction (B1)
+   1 of 144 checks fail, first: f2 contradicted under every clock, capacity void, nothing constrained (['ahead_hi_negative+capacity_bounds_void+clock_capacity_conflict', 'ahead_hi_ne
+mutant: persistence observed with an empty span (B3)
+   1 of 144 checks fail, first: c2 empty certain span -> persistence unresolved (-1, -1)
+mutant: rule 1 by the makers[] listing (pre-amendment)
+   10 of 144 checks fail, first: g rule 1 by price, not by listing (the mk_idx rule gives bq, p2 False) ({'w': True, 'bq': False, 'p1': True, 'p3': True, 'p2': False})
+mutant: rule 1 includes the worst price
+   5 of 144 checks fail, first: g rule 1 by price, not by listing (the mk_idx rule gives bq, p2 False) ({'w': True, 'bq': True, 'p1': True, 'p3': True, 'p2': True})
+mutant: rule 2 survivor gets no ahead_lo
+   4 of 144 checks fail, first: g2 S_FIFO the survivor x2 had x1 ahead (0.0, exh False, 0.0)
+mutant: rule 2 exhausts the survivor too
+   2 of 144 checks fail, first: g2 S_FIFO the survivor x2 had x1 ahead (4.0, exh True, 4.0)
+mutant: T1 violations not counted
+   1 of 144 checks fail, first: t1 a price-exhausted maker fills again; tied legs out of the units ({'makers': 2, 'violations': 0, 'rate': 0.0, 'violations_certain': 1, 'rate_certain
+mutant: T1 counts tied legs
+   1 of 144 checks fail, first: t1 a price-exhausted maker fills again; tied legs out of the units ({'makers': 4, 'violations': 1, 'rate': 0.25, 'violations_certain': 1, 'rate_certai
+mutant: T1 violator still claimed exhausted
+   1 of 144 checks fail, first: t1 q1 flagged, no exhaustion claim even at its last fill (fifo_reappearance, 3.0)
+mutant: per-fill exhaustion kept for a T1 violator
+   1 of 144 checks fail, first: t1 no per-fill exhaustion for a T1 violator
+mutant: T2 violators not flagged
+   1 of 144 checks fail, first: t2 both flagged, no claims
+mutant: exhausted dropped unless proven
+   18 of 144 checks fail, first: a S_FIFO h7 keeps exhausted and cancelled (cancelled_or_expired)
+mutant: end_censored never kept
+   4 of 144 checks fail, first: a S_NOPRIO h7 unbounded (cancelled_or_expired|exhausted, -1, end_open)
+mutant: a fifo_front bound past the book drops end_censored
+   1 of 144 checks fail, first: s front bound at the first other-signer record (3060, fifo_front, cancelled_or_expired|exhausted|missing_evidence)
+mutant: out_of_order frames used
+   2 of 144 checks fail, first: d1 posting bound from the usable frame at 800, not the out_of_order one at 900 (900, constrained)
+mutant: gap-flagged frames excluded
+   3 of 144 checks fail, first: d2 S_FIFO removal bounded by the first real frame after the gap (cancelled_or_expired|exhausted|missing_evidence, 5100, book_gone+unprinted_drop)
+mutant: unlocated dup_level / off_grid frame used
+   1 of 144 checks fail, first: V frames excluded by flag / pending range / bad level / unlocated dup_level ({'bad_frame': 1, 'bad_level': 1, 'empty_book_in_window': 1, 'pend_out_of_
+mutant: a wiped book inside the window used
+   1 of 144 checks fail, first: V frames excluded by flag / pending range / bad level / unlocated dup_level ({'bad_frame': 1, 'bad_level': 1, 'dup_level_unlocated': 1, 'pend_out_of_r
+mutant: unknown cell shown as 0
+   4 of 144 checks fail, first: hu an unknown cell is no bound ([600, 600, 600], 0)
+mutant: absent price unknown instead of 0
+   19 of 144 checks fail, first: b hB window (lo 1000, book_drop, drop fid 1011, exact 3000)
+mutant: a gap adds no missing_evidence
+   4 of 144 checks fail, first: d2 S_FIFO removal bounded by the first real frame after the gap (cancelled_or_expired|exhausted, 5000, book_gone+unprinted_drop)
+mutant: negative ahead_hi silently 0
+   1 of 144 checks fail, first: e S_FIFO_LO (0.0, -5.0, 2900, ok)
+mutant: classes: every scenario identical
+   7 of 144 checks fail, first: a h7 classes (observed, unresolved, unresolved, assumption_sensitive, unresolved)
+mutant: posting: earliest failing frame
+   4 of 144 checks fail, first: b hB capacity posting bound (1000, capacity, constrained)
+mutant: persistence span from the min lo
+   1 of 144 checks fail, first: c persistence observed on [min hi, max lo] (1060, -940, observed)
+mutant: identity unchecked
+   5 of 144 checks fail, first: i hI identity_conflict in every row
+mutant: fifo_front searched from the start
+   12 of 128 checks fail, first: a S_FIFO h7 removal bounded by R2 (cancelled_or_expired|exhausted, 1060, fifo_front)
+mutant: fifo_through includes the same price
+   1 of 144 checks fail, first: k posting after the trade-through (2000, fifo_through, 0, -1)
+mutant: fifo_front ignores the taker signer
+   1 of 144 checks fail, first: s front bound at the first other-signer record (2060, fifo_front, cancelled_or_expired|end_censored|exhausted|missing_evidence)
+mutant: no unprinted-drop evidence
+   3 of 144 checks fail, first: d2 S_FIFO removal bounded by the first real frame after the gap (cancelled_or_expired|exhausted|missing_evidence, 5000, book_gone)
+mutant: room ignores the other orders
+   1 of 144 checks fail, first: n S_NOPRIO nA gone by accounting (cancelled_or_expired|exhausted, 4100, book_gone)
+mutant: queue frame = the clock frame
+   1 of 144 checks fail, first: t queue at f_before (9.0, 15.0)
+mutant: lo clock = hi clock
+   4 of 144 checks fail, first: e S_FIFO_LO (15.0, 15.0, 3900, post_after_first_fill)
+mutant: capacity-tight exhaustion ignored
+   4 of 144 checks fail, first: n S_FIFO nB capacity_tight (nan, cancelled_or_expired|exhausted, book_empty_after+book_gone, 4060)
+mutant: removal_lo from the first fill
+   3 of 144 checks fail, first: n S_FIFO nB capacity_tight (6.0, exhausted, capacity_tight, 4060)
+mutant: size class ignores the scenario-free result
+   1 of 144 checks fail, first: c capacity size bound only under the clocks (12.0, observed)
+mutant: posting class ignores the scenario-free result
+   2 of 144 checks fail, first: b hB capacity posting bound (1900, capacity, constrained)
+mutant: removal class ignores the scenario-free result
+MUTANTS: base passes 144 checks; killed 50 of 51; SURVIVED: ['removal class ignores the scenario-free result']
+LIFECYCLE SELFTEST FAILED mutant(s) survived
+2026-11-22T14:47:26Z tag=mt_life_fix_mutants rc=1 peak_rss_mib=196 wall_s=113.25 cpu_user_s=106.68 memavail_start_gib=22 disk_free_gib=429->429 slot=claude3

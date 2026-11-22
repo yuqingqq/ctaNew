@@ -1,0 +1,2 @@
+{"id_legs": 85890, "id_records": 59328, "d1_legs": 646979, "d1_records": 446688, "d1_frames": 1501632, "gen_s": 10.3, "bytes": {"markets_20261024.parquet": 7727, "tob_20261024.parquet": 19723869, "legs_20261023.parquet": 15915648, "records_20261023.parquet": 10745122, "records_20261024.parquet": 74168972, "legs_20261024.parquet": 111067723}}
+2026-11-22T09:11:47Z tag=mt_econ_scale_gen2 rc=0 peak_rss_mib=1835 wall_s=10.63 cpu_user_s=4.55 memavail_start_gib=22 disk_free_gib=427->427 slot=claude4

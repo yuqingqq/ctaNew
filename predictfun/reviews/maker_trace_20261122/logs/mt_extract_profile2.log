@@ -1,0 +1,30 @@
+[rest] 20261024_12 {"pages": 3762, "record_receipts": 342380, "new_records": 24608, "cpu_s": 15.654, "vmhwm_mib": 267.4}
+         17310912 function calls in 15.710 seconds
+
+   Ordered by: internal time
+   List reduced from 184 to 18 due to restriction <18>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+     8842    3.238    0.000    3.238    0.000 /usr/lib/python3.12/json/decoder.py:343(raw_decode)
+        1    2.512    2.512   15.712   15.712 /home/yuqing/ctaNew/predictfun/research/pf_mt_extract.py:459(rest_hour)
+   202920    1.108    0.000    1.719    0.000 /home/yuqing/ctaNew/predictfun/research/pf_mt_extract.py:291(canon)
+    24609    1.073    0.000    2.886    0.000 /home/yuqing/ctaNew/predictfun/research/pf_mt_extract.py:642(new_record)
+   220131    0.911    0.000    0.911    0.000 {method 'decompress' of 'zlib._ZlibDecompressor' objects}
+     4599    0.714    0.000    2.826    0.001 {method 'readline' of '_io.BufferedReader' objects}
+   213658    0.621    0.000    0.799    0.000 /home/yuqing/ctaNew/predictfun/research/pf_mt_extract.py:356(obj)
+   220133    0.502    0.000    0.502    0.000 {built-in method zlib.crc32}
+   426991    0.472    0.000    0.472    0.000 {method 'find' of 'bytes' objects}
+  1630525    0.434    0.000    0.434    0.000 {method 'get' of 'dict' objects}
+   202920    0.411    0.000    5.459    0.000 /home/yuqing/ctaNew/predictfun/research/pf_mt_extract.py:593(record)
+   220132    0.305    0.000    2.113    0.000 /usr/lib/python3.12/_compression.py:66(readinto)
+  2865972    0.295    0.000    0.295    0.000 {method 'append' of 'list' objects}
+   527182    0.287    0.000    0.349    0.000 /home/yuqing/ctaNew/predictfun/research/pf_mt_extract.py:278(_leg_c)
+     2257    0.245    0.000    0.795    0.000 /home/yuqing/ctaNew/predictfun/research/pf_mt_extract.py:219(cut_markets)
+   220132    0.235    0.000    1.695    0.000 /usr/lib/python3.12/gzip.py:502(read)
+  1784466    0.180    0.000    0.180    0.000 {method 'keys' of 'dict' objects}
+  1939029    0.152    0.000    0.152    0.000 {built-in method builtins.len}
+
+
+
+done
+2026-11-22T09:27:35Z tag=mt_extract_profile2 rc=0 peak_rss_mib=267 wall_s=16.13 cpu_user_s=15.85 memavail_start_gib=22 disk_free_gib=426->426 slot=claude2

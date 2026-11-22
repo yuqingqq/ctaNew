@@ -1,0 +1,7 @@
+prefix: b'{"run_id":"20261021T162823Z_0dd45f2d5a","seq":5204593,"sourc' ... raw head: b',"raw":"{\\"success\\":true,\\"cursor\\":\\"eyJjcmVhdGVkQXQiOiIyMDI2LTEwLTI0VDExOjQ5OjQzWiIsIm9yZGVySWQiOjYxODMyMzE3NjYsInRyYW5zYWN0aW9uSWQiOjMxN'
+markers: MK_A 100 MK_B 100 cut records 100 line bytes 495421 cut bytes 141021
+prefix: b'{"run_id":"20261021T162823Z_0dd45f2d5a","seq":5204609,"sourc' ... raw head: b',"raw":"{\\"success\\":true,\\"cursor\\":\\"eyJjcmVhdGVkQXQiOiIyMDI2LTEwLTI0VDExOjQ5OjI0WiIsIm9yZGVySWQiOjYxODMyMjIyODEsInRyYW5zYWN0aW9uSWQiOjMxN'
+markers: MK_A 100 MK_B 100 cut records 100 line bytes 516896 cut bytes 162496
+prefix: b'{"run_id":"20261021T162823Z_0dd45f2d5a","seq":5204621,"sourc' ... raw head: b',"raw":"{\\"success\\":true,\\"cursor\\":\\"eyJjcmVhdGVkQXQiOiIyMDI2LTEwLTI0VDExOjQ5OjA5WiIsIm9yZGVySWQiOjYxODMyMTIxNDEsInRyYW5zYWN0aW9uSWQiOjMxN'
+markers: MK_A 100 MK_B 100 cut records 100 line bytes 505314 cut bytes 150914
+2026-11-22T09:23:32Z tag=mt_extract_raw_format rc=0 peak_rss_mib=70 wall_s=0.15 cpu_user_s=0.12 memavail_start_gib=22 disk_free_gib=426->426 slot=claude2

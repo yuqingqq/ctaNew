@@ -764,6 +764,53 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- MAKER_TRACE_FREEZE_20261122_DEV -->
+## 2026-11-22 20:25Z (session aea5bfb9) — MAKER-TRACE-RECONSTRUCTION-v1 FROZEN before any data run (builders, checker, declaration, launcher)
+
+**Code:**
+- `research/pf_mt_{common,extract,lifecycle,econ,truth}.py` and their selftests;
+- in [maker_trace_20261122](reviews/maker_trace_20261122/): `mt_checks.py`, `tools/{rehearse_checks,rehearse_e2e,cpu_ledger,project,build_manifest}.py`, `launch_mt.sh`, `declaration.md`, `manifest.json`, and the contract with amendments 1–2.
+
+The report module (`pf_mt_report.py`, 323 assertions, covered by the end-to-end rehearsal) is frozen in the same commit.
+
+**Pre-run review:**
+- **Reviews:** five independent code reviews (extract, lifecycle, econ, truth + seams, and an open-ended premise review). Every blocking finding is fixed. The batch includes:
+  - BOOK markouts that started before the trade;
+  - ties paid as Up;
+  - taker legs inside the P&L ranking;
+  - a reward parse error;
+  - the rebate and reward pool absent;
+  - sealed-day outcomes copied into write-once files;
+  - capacity contradictions that never demoted a claim;
+  - an evidence lower end that could fall after the match (claims now use `hi − 2 s`);
+  - book emptiness read as exhaustion (both explanations are now kept);
+  - a pooled clock band across two hosts (now one band per run; truth v2);
+  - signers compared case-sensitively;
+  - a projection gate that would have crashed;
+  - checker misreadings.
+- **End-to-end rehearsal:** the real builders run on synthetic raw data, then mt_checks and the falsifier: run 7 passes end to end: all 18 builder stages, 39/39 checks, 22/22 re-parse checks and 76/76 falsifier cases, with 0 observed / constrained failures against the simulator.
+- **Selftests:**
+  - extract 100/100;
+  - lifecycle 145/145, simulator 0 of 23,664 observed / constrained claims failed;
+  - econ 1,010 assertions;
+  - truth 59 checks, 43/43 mutants;
+  - report 323;
+  - checker 39/39 checks, 72/72 defects refused.
+
+**Resources:**
+- **USER cap:** 1.35 core-hours, line 4.85 (topped up from 0.90 / 4.40).
+- **Spent before the run:** 0.503 h, on tests and probes.
+- **Projection gate:** after the Oct 24 prefix, the run continues only if spent + measured projection + 0.05 reserve ≤ 1.35 and line ≤ 4.85.
+
+**Next:**
+1. Run `launch_mt.sh` with `extract 20261024 claude`, then `life-prefix`, then `project`.
+2. If `run_rest`: extract Oct 23 / 25 / 26 / 27 and Nov 8; `life`; `truth`; `econ`.
+3. `report`, then `checks`.
+4. Results receipt and ONE Codex review.
+
+**Deferred:** an all-maker calldata validation (original sizes / expiry from the cached Oct 23 calldata).
+<!-- /MAKER_TRACE_FREEZE_20261122_DEV -->
+
 <!-- MAKER_TRACE_RECONSTRUCTION_20261122_DEV -->
 ## 2026-11-22 08:22Z (session aea5bfb9) — MAKER-TRACE-RECONSTRUCTION-v1 started: build contract + USER compute cap
 

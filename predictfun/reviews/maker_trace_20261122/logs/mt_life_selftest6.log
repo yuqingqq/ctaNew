@@ -1,0 +1,2 @@
+LIFECYCLE SELFTEST PASSED: 136 checks; VmHWM 122 MiB
+2026-11-22T09:39:59Z tag=mt_life_selftest6 rc=0 peak_rss_mib=123 wall_s=2.00 cpu_user_s=1.92 memavail_start_gib=22 disk_free_gib=426->426 slot=claude3

@@ -1,0 +1,19 @@
+{
+ "baseline_rc": 0,
+ "n_mutants": 24,
+ "killed": 2,
+ "survivors": [],
+ "detail": [
+  {
+   "mutant": "spread_boundary_inclusive",
+   "killed": true,
+   "first_error": "ValueError: bid eligible ms (remaining-size cut, strict spread boundary): expected 500, got 1000"
+  },
+  {
+   "mutant": "reward_remaining_cut_off",
+   "killed": true,
+   "first_error": "ValueError: maker_market 20261024/101/0x01.rew_ask_ms: expected 0.0, got np.float64(3000.0)"
+  }
+ ]
+}
+2026-11-22T09:05:23Z tag=mt_econ_mutants2 rc=0 peak_rss_mib=124 wall_s=4.95 cpu_user_s=4.62 memavail_start_gib=22 disk_free_gib=427->427 slot=claude4

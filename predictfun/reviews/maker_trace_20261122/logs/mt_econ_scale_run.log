@@ -1,0 +1,14 @@
+[econ] 20261023 ID legs 85890 records 59328 markets 288 maker_market 97240 addresses 7981 hwm 503 MiB
+Traceback (most recent call last):
+  File "/tmp/claude-1001/-home-yuqing-ctaNew/aea5bfb9-4ea4-41d0-bf73-bb98d818e3d4/scratchpad/predictfun/research/pf_mt_econ_scale.py", line 141, in <module>
+    rec = E.run(inp=ROOT, out=ROOT / 'econ', step1=ROOT / 'step1', book=book, days=(ID, D1))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_econ.py", line 973, in run
+    mem[f'{d}/{k0}'] = guard(guard_mib, f'{d} chunk {k0 // chunk}')
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_econ.py", line 157, in guard
+    need(h < lim, f'memory self-guard: VmHWM {h:.0f} MiB >= {lim:.0f} MiB at {where}')
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_common.py", line 32, in need
+    raise ValueError(msg)
+ValueError: memory self-guard: VmHWM 1499 MiB >= 1450 MiB at 20261024 chunk 4
+2026-11-22T09:12:04Z tag=mt_econ_scale_run rc=1 peak_rss_mib=1498 wall_s=19.04 cpu_user_s=16.49 memavail_start_gib=22 disk_free_gib=427->427 slot=claude4

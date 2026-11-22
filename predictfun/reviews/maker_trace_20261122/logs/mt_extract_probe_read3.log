@@ -1,0 +1,4 @@
+multi-price records: makers[] order {'best_first': 116, 'worst_first': 977, 'neither': 378}
+VARIANT n_recv 1 first 1792845427445906736 amountFilled 4725490196078431371 taker 4725490196078431371 makers [('2000000000000000000', '490000000000000000', 'Bid', 1, '0xc840ebe33d')] tx 0x4dc3d0e06c executedAt 2026-10-24T12:37:05.000Z
+VARIANT n_recv 10 first 1792845435173699396 amountFilled 4725490196078431371 taker 4725490196078431371 makers [('2000000000000000000', '490000000000000000', 'Bid', 1, '0xc840ebe33d'), ('2725490196078431371', '490000000000000000', 'Bid', 1, '0x57e3372dc3')] tx 0x4dc3d0e06c executedAt 2026-10-24T12:37:05.000Z
+2026-11-22T09:00:47Z tag=mt_extract_probe_read3 rc=0 peak_rss_mib=128 wall_s=3.17 cpu_user_s=3.07 memavail_start_gib=22 disk_free_gib=427->427 slot=claude2

@@ -1,0 +1,70 @@
+{
+ "stem_day": "20261024",
+ "market": 3697902,
+ "counters": {
+  "all_records": 315929,
+  "needle_miss_full_parse": 0,
+  "int_mismatch_receipts": 1,
+  "maker_fee_nonzero_legs": 0,
+  "taker_fee_SHARES": 288539,
+  "maker_same_side_as_taker": 0,
+  "taker_fee_COLLATERAL": 27390,
+  "needle_miss": 0
+ },
+ "unique_record_stats": {
+  "records_complementary": 21512,
+  "px_mismatch_complementary": 1,
+  "multi_price_worst_first": 1158,
+  "records_regular": 2891,
+  "px_mismatch_regular": 9,
+  "records_mixed": 667,
+  "px_mismatch_mixed": 260,
+  "multi_price_neither": 374,
+  "multi_price_best_first": 85
+ },
+ "market_receipts": 20742,
+ "market_unique_records": 1430,
+ "market_legs": 2507,
+ "market_status": {
+  "ok": 1430
+ },
+ "market_repolled": 1430,
+ "market_max_n_recv": 46,
+ "market_price_mismatch": 23,
+ "sids_seen": 25070,
+ "sids_with_distinct_canonical_contents": 1,
+ "conflict_variants": [
+  {
+   "n": 2,
+   "reconciling": 1
+  }
+ ],
+ "first_receipt_lag_ms": {
+  "n": 18816,
+  "p50": 6408.0,
+  "p99": 19722.4,
+  "p999": 102837.4,
+  "max": 2532864.0
+ },
+ "markets_in_hour": 19,
+ "receipt_after_window_end_s": {
+  "p50": 1769.8,
+  "p99": 1807.6,
+  "max": 1808.5
+ },
+ "vmhwm_mib": 409.2,
+ "market_price_priority_evidence_legs": 815,
+ "market_T1_legs": 0,
+ "market_T1_hashes": 0,
+ "market_T2_records": 0,
+ "market_makers_order": {
+  "worst_first": 53,
+  "neither": 35,
+  "best_first": 5
+ },
+ "market_ahead_lo_nonzero": 176,
+ "market_identity_conflict_hashes": 0,
+ "market_hashes": 1644,
+ "market_repeat_fill_hashes": 417
+}
+2026-11-22T09:36:51Z tag=mt_checks_smoke2 rc=0 peak_rss_mib=410 wall_s=25.86 cpu_user_s=25.28 memavail_start_gib=23 disk_free_gib=426->426 slot=claude2

@@ -1,0 +1,38 @@
+NON-MONOTONE 01a16db0-639a-7b11-acd6-87055805287f taker Bid 2 ask tk_price 0.14307692307692307 amount 86.66666666666667
+ mk_idx mk_quote  mk_index_set  mk_price y_side  y_price    shares x_match                                  mk_signer
+      0      Bid             1      0.85    bid     0.85 26.666667    mint 0x0D3a7529e5ECA6ACF303Ae7E655faF51285D9CeC
+      1      Bid             1      0.86    bid     0.86 20.000000    mint 0x8b47169353662C2abd8ab0Ae0444eF987bbF917b
+      2      Bid             1      0.86    bid     0.86 10.000000    mint 0x041249547Eb7619696A76929a23A95375BA07b4e
+      3      Bid             1      0.86    bid     0.86 20.000000    mint 0x3D98e064ceCfD27789c4c764d1c418FA691Cdf36
+      4      Bid             1      0.86    bid     0.86 10.000000    mint 0x5D48Fa9aD25Ff215cAaC4A5Dc5CdEb2bE87A7E8B
+NON-MONOTONE 01a16db0-6e77-72e3-a840-74e7b9d3247b taker Bid 1 bid tk_price 0.9034065934065935 amount 18.813186813186814
+ mk_idx mk_quote  mk_index_set  mk_price y_side  y_price    shares x_match                                  mk_signer
+      0      Ask             1      0.91    ask     0.91  6.813187 regular 0x9F27F58A2f552f6767CB830C4E94c6c6e2B4c8a1
+      1      Bid             2      0.10    ask     0.90 12.000000    mint 0xCf49797EcDC40c96Bd4753bB06917A15A1beccaD
+NON-MONOTONE 01a16db0-86d3-79f0-a4af-9698aff8d0f8 taker Bid 1 bid tk_price 0.9487617049757772 amount 350.34086879432624
+ mk_idx mk_quote  mk_index_set  mk_price y_side  y_price    shares x_match                                  mk_signer
+      0      Bid             2      0.05    ask     0.95 40.000000    mint 0xDe610D8054681A61e68B120482d943230498D21B
+      1      Bid             2      0.05    ask     0.95 40.000000    mint 0x25Be6eF1e3Cc750cA351621a54287Ab0371e1Ea4
+      2      Bid             2      0.04    ask     0.96 20.979167    mint 0x9e5c5014dB68268DFdD722c8b76Fba64A5b81809
+      3      Bid             2      0.05    ask     0.95 60.000000    mint 0x22EE0B771e624a62b38b6B6FFFB2ba50fb4EE61A
+      4      Bid             2      0.05    ask     0.95 75.000000    mint 0x37402073c0D7d3C2B45B7BBf73E175aCB21C64B0
+      5      Bid             2      0.06    ask     0.94 64.361702    mint 0x37402073c0D7d3C2B45B7BBf73E175aCB21C64B0
+      6      Bid             2      0.05    ask     0.95 50.000000    mint 0x2248C646b9E547dA6Bda3259D7690b89877dbAf6
+NON-MONOTONE 01a16db0-8fa2-7653-921b-1f567bdfeaf5 taker Bid 1 bid tk_price 0.9575808483830324 amount 104.4298245614035
+ mk_idx mk_quote  mk_index_set  mk_price y_side  y_price    shares x_match                                  mk_signer
+      0      Bid             2      0.04    ask     0.96 59.020833    mint 0x9e5c5014dB68268DFdD722c8b76Fba64A5b81809
+      1      Bid             2      0.04    ask     0.96 20.145833    mint 0x7f937e22402986e6Afd83f7D6631Cf606D8B84a9
+      2      Bid             2      0.05    ask     0.95 25.263158    mint 0x22EE0B771e624a62b38b6B6FFFB2ba50fb4EE61A
+monotone rate 0.7144362486828241 n 4745 | monotone within regular / complementary groups 0.7293993677555322
+non-monotone by kind mix {'mint': 870, 'mint+regular': 302, 'regular': 149, 'merge+regular': 34} | all multi by kind mix {'mint': 3420, 'mint+regular': 735, 'regular': 512, 'merge+regular': 77, 'merge': 1}
+mixed-kind records 812 regular legs listed first 0.3312807881773399
+priceExecuted - maker avg |diff| quantiles [0.0, 5.77412795780606e-05, 0.001954432494618252, 0.02820253164556963] n > 1e-6 328
+AVG-DIFFERS 01a16db0-6e77-72e3-a840-74e7b9d3247b Bid 1 pe 0.9034065934065935 avg 0.903621 [['Ask', 1, 0.91, 0.91, 6.813186813186813, 'regular'], ['Bid', 2, 0.1, 0.9, 12.0, 'mint']]
+AVG-DIFFERS 01a16db9-7f84-72d2-b947-17cb67605105 Bid 1 pe 0.28600403027867094 avg 0.286778 [['Ask', 1, 0.3, 0.3, 28.668659375000004, 'regular'], ['Ask', 1, 0.29, 0.29, 20.6454, 'regular'], ['Bid', 2, 0.71, 0.29000000000000004, 30.0, 'mint'], ['Bid', 2, 0.72, 0.28, 30.0, 'mint'], ['Ask', 1, 0.28, 0.28, 50.0, 'regular']]
+AVG-DIFFERS 01a16db9-9aa2-7520-9dce-561ce7dbbf83 Bid 2 pe 0.7657636887608069 avg 0.764706 [['Ask', 2, 0.76, 0.76, 5.0, 'regular'], ['Bid', 1, 0.22, 0.78, 1.5384615384615385, 'mint']]
+avg-differs by kind mix {'mint+regular': 311, 'regular': 17} | n_makers {3: 74, 2: 60, 4: 25, 7: 15, 5: 13}
+lag (s), settled >= 12:01 (true first receipt) [1.63, 6.23, 11.43, 14.51, 303.12, 1576.81] n 21685
+pre-window records 1329 settle - ws (s) quantiles [-44519.4, -1160.0, -276.8, -35.4, -0.0]
+taker hashes also maker hashes 90 of 20731 | maker hashes 24705 | maker hashes with >1 fill 6818
+levels parquet MB 0.5 frames MB 0.2 tob MB 2.03 records MB 4.18 legs MB 5.93
+2026-11-22T08:59:45Z tag=mt_extract_probe_read2 rc=0 peak_rss_mib=214 wall_s=10.79 cpu_user_s=10.62 memavail_start_gib=22 disk_free_gib=426->426 slot=claude2

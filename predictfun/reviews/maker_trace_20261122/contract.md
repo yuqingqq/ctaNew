@@ -217,3 +217,80 @@ Projection:
 - selftests: ≈ 0.03 h.
 
 It needs a USER-approved cap before any non-synthetic run beyond the schema probes. The probes so far cost 13.5 CPU s, declared.
+
+## Amendment 1 — real-data probe facts (2026-11-22, before any full run)
+
+The extraction probe read 2026-10-24 hours 12–13 (REST + WS; the only real data read so far). It contradicted three premises of this contract. The changes below are in force; the sections above stand except where stated.
+
+### makers[] is not the fill order
+
+**Finding:** of 1,471 multi-price records (YES space, judged from the taker's best price):
+- 66% list makers worst-first;
+- 8% best-first;
+- 26% neither.
+
+`mk_idx` is data, never evidence.
+
+**S_FIFO exhaustion now uses PRICE priority:**
+- In a record spanning ≥ 2 YES prices, every maker at a price strictly better for the taker than the record's worst maker price was consumed by that record: it is exhausted there, and `size_exact = cum_shares` through that fill.
+- Among the k makers at the record's worst price, at most one keeps a remaining balance. If exactly one of them fills again later, the other k − 1 are exhausted, and that one had them ahead of it (`ahead_lo` = their shares). Otherwise there is only a count constraint, and `ahead_lo = 0`.
+
+**Priority tests (replacing §5's "ordering" test):**
+- T1, price priority: strictly-better-price "exhausted" makers that fill again later.
+- T2, time priority: records with ≥ 2 worst-price makers that both fill again.
+
+### Clocks and prices
+
+- **Book latency:** frames arrive p50 126 ms after `updateTimestampMs` on our collector (minimum 79 ms), not 53 ms (that figure was Tokyo's).
+- **Taker price:** `priceExecuted` differs from the maker-weighted average in 1.3% of records (regular legs, mostly mixed mint + regular). Taker legs are valued per maker leg at that leg's YES price, and the mismatch is a status.
+
+### Statuses and de-duplication
+
+- **Status format:** statuses are '+'-joined flags in a fixed order; `ok` means clean.
+- **Levels:** `levels` gains `status` (in `pf_mt_common`).
+- **Conflicts:** for a conflict, the kept variant is the one that reconciles exactly. If several reconcile, keep the one with the most receipts; if none reconciles, keep the first. The status keeps `conflict`.
+
+### Boundaries
+
+- **Upper margin:** the p99.9 receipt lag over records settled at or after `ws − pre_recv`. Early trades occur up to 12.4 h before `ws`. The all-record value is reported.
+- **Lower boundary:** it censors the first markets of Oct 23 and Nov 8.
+- **Exclusion from economics:** `boundary_censored` markets are excluded from the economics as a status. The Oct 27 23:55 window's registry outcome was first seen after Oct 27 ended and is never read.
+
+## Amendment 2 — pre-run review and end-to-end rehearsal (2026-11-22, before any full run)
+
+Five independent code reviews and an end-to-end rehearsal (the real builders run on synthetic raw data) settled the following. The sections above stand except where stated.
+
+### §3 / amendment 1 — price mismatch
+
+A `priceExecuted` mismatch against the maker-weighted price is an economics **diagnostic** (`px_gap`, counted with its USD), **not a record status**. A status would exclude about 1.3% of records, concentrated in mixed mint + regular matches.
+
+### §5 — removal evidence from the book
+
+A book showing an order's price emptied (or holding exactly what other proven orders need) after its last fill proves only that the order is **gone** by that frame. Its remainder may have been cancelled within the ~50 ms before the snapshot: this is the plan's two-history case. So:
+- `removal_set` keeps both `exhausted` and `cancelled_or_expired`;
+- `size_exact` comes only from the S_FIFO price-priority and worst-price-survivor rules (assumption_sensitive).
+
+This supersedes the "or shown(p) after the fill = 0" clause in §5.
+
+### §5 — H3 joint form and the hard lower end
+
+**Joint form:** H3's joint form (shown ≥ Σ of the needs of all orders proven resting at the cell) may tighten a posting bound beyond the single-order bound.
+
+**Hard lower end:** every observed / constrained claim uses `x_lo_hard_ms = hi − 2,000 ms` (−1 for receipt-hi fills). The evidence lower end `lo_ms` is only a refinement.
+
+**Contradictions:** a capacity contradiction voids that order's capacity-based claims (`capacity_bounds_void`), and the violated cells become unknown for every other order.
+
+### §6 — economics
+
+- **Markouts** start from `settle_ms` on every market. On BOOK markets `m_minus` is at the evidence `lo`, with the settle-clock spread beside it.
+- **Ties** (start = end price) resolve at V = 0.5.
+- **The advertised 25% taker-fee rebate** is carried as a separate scenario (`reb25_*`, unverified), never inside `net_res`.
+- **The reward pool** comes with a BOOK eligible-depth upper bound and each identity set's proven lower bound. Per-maker rewards are unidentifiable.
+- **`exante_pnl`** is the top 10 by Oct 23 **maker-leg** net P&L among maker-majority addresses (`sh_mk > sh_tk`) with resolved maker shares.
+
+### §7 — ground truth
+
+- **Clock bands:** one per run (v6 [−226.39, +49.34] ms; basis [−260.69, +449.53] ms), applied in the v2 truth table (`truth/v2/`). The v1 table is kept unedited as provenance.
+- **Completeness:** scoring refuses unless every selected GT window has lifecycle outputs.
+- **Addresses** are compared lowercased.
+- **Size blocks of the scores:** the size lower bound is always class `observed` (cumulative fills). For the exact-size and upper-bound blocks, the denominator is every scored order, with `not_stated` as an outcome.

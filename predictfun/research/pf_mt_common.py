@@ -82,7 +82,7 @@ REMOVAL = ('exhausted', 'cancelled_or_expired', 'end_censored', 'missing_evidenc
 
 # ---- declared scenarios (contract.md section 5); never chosen after seeing outcomes ----
 SCENARIOS = {
-    'S_FIFO':  dict(priority='price_time', fill_clock='hi', note='makers[] = fill order; price-time priority; fill at the upper end of its window'),
+    'S_FIFO':  dict(priority='price_time', fill_clock='hi', note='price-time priority (amendment 1: makers[] order is NOT evidence; exhaustion by price priority across a record\'s prices); fill at the upper end of its window'),
     'S_FIFO_LO': dict(priority='price_time', fill_clock='lo', note='as S_FIFO with each fill at the lower end of its window (lo unbounded -> hi minus the declared max lag)'),
     'S_NOPRIO': dict(priority='none', fill_clock='hi', note='no priority rule: only quantity / visibility constraints'),
 }
@@ -108,7 +108,7 @@ SCHEMAS = {
     # full depth for the book-supported and ground-truth markets: frames + long levels
     'frames': dict(mid='int64', fid='int64', upd_ms='int64', recv_ns='int64', conn='str', order_count='int64', pend_bids='str', pend_asks='str',
                    los_id='str', los_side='str', los_price='float64', los_outcome='str', status='str'),
-    'levels': dict(mid='int64', fid='int64', side='str', ptick='int64', shares='float64'),
+    'levels': dict(mid='int64', fid='int64', side='str', ptick='int64', shares='float64', status='str'),   # status added, amendment 1
     # per-fill timing (lifecycle step 1); window [lo_ms, hi_ms]; lo_ms = -1 when unbounded
     'fills': dict(mid='int64', sid='str', mk_hash='str', mk_idx='int64', y_side='str', y_ptick='int64', shares='float64',
                   hi_ms='int64', lo_ms='int64', t_method='str', f_before='int64', f_after='int64', status='str'),

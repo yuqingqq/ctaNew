@@ -1,0 +1,31 @@
+  mutant band dropped on act_lo                 killed: venue times: got {1: (np.float64(1000.25), np.float64(1080.0), np.float64(2450.0), np.float64(2450.0), np.floa
+  mutant act_hi ignores the first match         killed: venue times: got {1: (np.float64(900.25), np.float64(1080.0), np.float64(2450.0), np.float64(2450.0), np.float
+  mutant link ignores Confirmed seconds         killed: status: got {1: 'ok', 2: 'link_ambiguous', 3: 'link_ambiguous', 4: 'ok', 5: 'unfilled', 6: 'refused', 7: 'reje
+  mutant link ignores the leg split             killed: P3 multiset link: got {4: ('', 'ambiguous', 'link_ambiguous'), 14: ('', 'ambiguous', 'link_ambiguous')} expect
+  mutant band pooled the wrong way              killed: band: got (-150.0, 1000.0) expected (-100.0, 50.0)
+  mutant partial fill called filled             killed: final: got {1: 'filled', 2: 'filled', 3: 'filled', 4: 'filled', 5: 'cancelled', 6: 'other', 7: 'other', 8: 'ca
+  mutant cancel ack without d_hi                killed: venue times: got {1: (np.float64(900.25), np.float64(1080.0), np.float64(2450.0), np.float64(2450.0), np.float
+  mutant presence end on d_hi                   killed: venue times: got {1: (np.float64(900.25), np.float64(1080.0), np.float64(2450.0), np.float64(2450.0), np.float
+  mutant fill price check off                   killed: status: got {1: 'ok', 2: 'ok', 3: 'ok', 4: 'ok', 5: 'unfilled', 6: 'refused', 7: 'rejected', 8: 'unconfirmed_l
+  mutant sensitive counted as defect            killed: exception ValueError: REFUSED: defect rows 17 != defect counts {'fills': 4, 'S_FIFO': 11, 'S_FIFO_LO': 13, 'S_
+  mutant disjoint misses truth-after-claim      killed: S_FIFO removal window: got {'assumption_sensitive': {'n': 3, 'no_claim': 0, 'overlap': 3, 'failed': 0, 'defect
+  mutant inside ignores the upper end           killed: S_NOPRIO posting: got ({'n': 3, 'inside': 3, 'failed': 0, 'defects': 0, 'sensitive_misses': 0}, {'n': 1, 'insi
+  mutant size_lb test reversed                  killed: defect rows: got [('S_FIFO', 'persistence', '0x000000000000000000000000000000000000000000000000000000000000000
+  mutant exhausted-only = contains exhausted    killed: totals: got (5, 7, 2, 6, 6, 0) expected (5, 7, 1, 6, 6, 0)
+  mutant uninformative members ignored          killed: S_FIFO membership: got {'assumption_sensitive': {'n': 3, 'contradicted': 1, 'member': 2, 'failed': 1, 'defects
+  mutant persistence upper end unchecked        killed: S_FIFO persistence: got ({'n': 4, 'no_claim': 0, 'within': 4, 'failed': 0, 'defects': 0, 'sensitive_misses': 0
+  mutant queue counts the order itself          killed: S_FIFO queue own: got {'n': 2, 'evidence_against': 2, 'failed': 2, 'defects': 0, 'sensitive_misses': 2} expect
+  mutant queue frame = fill upper end           killed: S_FIFO queue other: got ({'n': 2, 'evidence_against': 1, 'no_evidence': 1, 'failed': 1, 'defects': 1, 'sensiti
+  mutant execution match ignores shares         killed: fills coverage: got ({'n': 6, 'covered': 6, 'rate': 1.0}, {'n': 30.0, 'covered': 30.0, 'rate': 1.0}, 1, 1, 3) 
+  mutant fill tick unchecked                    killed: fills coverage: got ({'n': 6, 'covered': 5, 'rate': 0.833333}, {'n': 30.0, 'covered': 25.0, 'rate': 0.833333},
+  mutant coverage counts every order            killed: S_NOPRIO coverage: got {'orders': {'n': 5, 'covered': 5, 'rate': 1.0}, 'executions': {'n': 6, 'covered': 6, 'r
+  mutant registry clock unchecked               killed: K clock registry: NOT refused (expected 'clock-domain mismatch: truth column act_lo_venue_ms')
+  mutant band identity unchecked                killed: K unconverted venue times: NOT refused (expected 'clock-domain mismatch: act_lo_venue_ms != signed_bot_ms')
+  mutant unit check off                         killed: K ns times: NOT refused (expected 'clock/unit mismatch: orders.post_lo_ms')
+  mutant public-hash check off                  killed: K hash not public: NOT refused (expected 'row for a hash not in the public data')
+  mutant hash format check off                  killed: K lifecycle hash format: NOT refused (expected 'lifecycle orders hash format')
+  mutant duplicate truth hash allowed           killed: K duplicate truth hash: refused for another reason: operands could not be broadcast together with shapes (8,) 
+  mutant GT market check off                    killed: K market outside GT: NOT refused (expected 'outside the GT markets')
+  mutant unknown removal member allowed         killed: K unknown removal member: NOT refused (expected 'unknown removal member')
+SELFTEST PASS: 48 exact checks (P1 build: band, link, statuses, venue times, receipt; P3 split-leg link; P2 score: coverage, identity, posting, size, removal, persistence, queue, fill windows, defect rows), 17 known-bad inputs refused with the reason asserted; mutants killed 29 of 29
+2026-11-22T08:57:26Z tag=mt_truth_selftest5 rc=0 peak_rss_mib=125 wall_s=14.86 cpu_user_s=14.52 memavail_start_gib=22 disk_free_gib=426->426 slot=claude

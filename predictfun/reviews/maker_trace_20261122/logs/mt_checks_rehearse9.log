@@ -1,0 +1,422 @@
+{
+ "fixture_expectations_failed": [],
+ "checks_total": 39,
+ "checks_failed": {
+  "legs_phase_clock": "legs 20261027: no status-ok legs with a registry window"
+ },
+ "info": {
+  "ptick_units": [
+   100
+  ],
+  "t_rel_anchor": [
+   "settle_ms"
+  ],
+  "vmhwm_mib": 123.0
+ },
+ "reparse": {
+  "book": {
+   "n_checks": 11,
+   "info": {
+    "unique_records": 18,
+    "legs": 25,
+    "conflicts": 1,
+    "amount_mismatch": 1,
+    "price_mismatch": 1,
+    "repolled": 3,
+    "frames": 141,
+    "hours_clipped": 0,
+    "rest_hours_read": 1,
+    "h3_violating_prices": 0,
+    "capacity_bounds": 12,
+    "builder_variant_column": "x_n_variants"
+   }
+  },
+  "gt": {
+   "n_checks": 11,
+   "info": {
+    "unique_records": 18,
+    "legs": 25,
+    "conflicts": 1,
+    "amount_mismatch": 1,
+    "price_mismatch": 1,
+    "repolled": 3,
+    "frames": 141,
+    "hours_clipped": 0,
+    "rest_hours_read": 1,
+    "h3_violating_prices": 0,
+    "capacity_bounds": 12,
+    "builder_variant_column": "x_n_variants"
+   }
+  }
+ },
+ "reparse_failed": {},
+ "falsifier_cases": 63,
+ "falsifier_not_refused": {},
+ "checks_without_a_refused_falsifier": [],
+ "falsifier": {
+  "overfill_H3": {
+   "check": "H3_overfill_flagged",
+   "refused": true,
+   "got": "orders 20261024_9100001: H3 overfill - shown size < later fills of proven-resting orders at ('ask', 61) (need 2 > shown 0); 2 member hashes still status ok"
+  },
+  "fill_after_removal": {
+   "check": "removal_after_last_fill",
+   "refused": true,
+   "got": "orders 20261024_9100001: 15 ok rows with a fill after the removal window (removal_hi_ms < last fill lo_ms)"
+  },
+  "identity_conflict_merged": {
+   "check": "H1_identity",
+   "refused": true,
+   "got": "orders 20261024_9100001: 1 hashes with >1 (signer, YES side, price) or market not labelled identity_conflict (merged silently)"
+  },
+  "instrument_controls": {
+   "check": "FsTrace + needle-miss counter",
+   "refused": true,
+   "got": "FsTrace probe hits = 3 (>= 2 expected); needle misses counted = 1 (1 expected)"
+  },
+  "forbidden_hour_path": {
+   "check": "pf_mt_common.hour_path via raw_path",
+   "refused": true,
+   "got": "Forbidden raised (rest, ws) = [True, True]; filesystem calls naming the day = 0; padding hours clipped = 4"
+  },
+  "dropped_leg_row": {
+   "check": "legs_complete",
+   "refused": true,
+   "got": "legs 20261024: 1 records whose leg count != n_makers (dropped/extra/orphan legs)"
+  },
+  "dropped_fill_row": {
+   "check": "fills_complete",
+   "refused": true,
+   "got": "fills 20261024_9100001: 1 maker legs have no fill row (dropped), 0 fill rows have no leg"
+  },
+  "dropped_record_vs_raw": {
+   "check": "rp_records_set",
+   "refused": true,
+   "got": "records 20261024_9100001: raw has 18 unique records, builder 17: 1 missing from the builder (dropped), 0 builder records absent from raw"
+  },
+  "observed_cancel": {
+   "check": "removal_class_evidence",
+   "refused": true,
+   "got": "orders 20261024_9100001: 1 rows with an observed removal (no public field observes a removal)"
+  },
+  "time_inversion": {
+   "check": "fill_time_order",
+   "refused": true,
+   "got": "fills 20261024_9100001: 1 status-ok fills with lo_ms > hi_ms (time inversion)"
+  },
+  "dup_key_conflict_merged": {
+   "check": "rp_records_status",
+   "refused": true,
+   "got": "records 20261024_9100001: a settlementId with 2 distinct canonical contents is status ok (duplicate-key conflict merged silently)"
+  },
+  "conflict_wrong_variant": {
+   "check": "rp_records_status",
+   "refused": true,
+   "got": "records 20261024_9100001: a conflict record does not keep the variant that reconciles exactly"
+  },
+  "dup_key_rows_ok": {
+   "check": "records_unique_key",
+   "refused": true,
+   "got": "records 20261024: 1 settlementIds duplicated without status conflict"
+  },
+  "sensitive_labelled_constrained": {
+   "check": "class_scenario_consistency",
+   "refused": true,
+   "got": "orders 20261024_9100001: 1 hashes whose removal differs across scenarios but is labelled constrained"
+  },
+  "econ_total_ne_components": {
+   "check": "econ_conservation",
+   "refused": true,
+   "got": "econ maker_market: 1 rows with pnl != gross - fees"
+  },
+  "status_count_unreported": {
+   "check": "status_counts_reported",
+   "refused": true,
+   "got": "status counts legs 20261024: no receipt map equals the per-flag counts {'ok': 21, 'price_mismatch': 2, 'conflict': 1, 'amount_mismatch': 1, 'xx_unreported': 1} "
+  },
+  "schema_dtype": {
+   "check": "schema",
+   "refused": true,
+   "got": "schema fills 20261024_9100001: missing [] wrong dtype ['hi_ms:double'] extra non-x_ []"
+  },
+  "schema_extra_col": {
+   "check": "schema",
+   "refused": true,
+   "got": "schema orders 20261024_9100001: missing [] wrong dtype [] extra non-x_ ['note']"
+  },
+  "schema_missing_col": {
+   "check": "schema",
+   "refused": true,
+   "got": "schema fills 20261024_9100001: missing ['lo_ms'] wrong dtype [] extra non-x_ []"
+  },
+  "hi_off_by_one": {
+   "check": "fill_hi_rule",
+   "refused": true,
+   "got": "fills 20261024_9100001: 25 rows with hi_ms != min(settle_ms, first_recv_ns//1e6)"
+  },
+  "size_exact_below_lb": {
+   "check": "size_bounds",
+   "refused": true,
+   "got": "orders 20261024_9100001: 1 ok rows with size_exact < size_lb"
+  },
+  "post_after_first_fill": {
+   "check": "posting_before_first_fill",
+   "refused": true,
+   "got": "orders 20261024_9100001: 45 ok rows with post_hi_ms unbounded or after the first fill hi, or post_lo > post_hi"
+  },
+  "unbounded_lo_status_ok": {
+   "check": "fill_lo_status",
+   "refused": true,
+   "got": "fills 20261024_9100001: 1 rows where lo_ms == -1 and status fill_lo_unbounded disagree (or lo_ms < -1)"
+  },
+  "coverage_wrong": {
+   "check": "coverage_arithmetic",
+   "refused": true,
+   "got": "coverage 20261024_9100001: reported class map {'assumption_sensitive': 0.3611, 'constrained': 0.4444, 'observed': 0.4444} matches no recomputed vector"
+  },
+  "gt_score_wrong": {
+   "check": "gt_scores",
+   "refused": true,
+   "got": "gt scores: coverage reported 1.125 != recomputed 1.0"
+  },
+  "pnl_sign_flip": {
+   "check": "econ_pnl_recompute",
+   "refused": true,
+   "got": "econ: 1 (addr, mid) gross P&L to resolution != the independent recompute sum s*q*(V-p)"
+  },
+  "missing_life_json": {
+   "check": "outputs_present",
+   "refused": true,
+   "got": "life_json output missing for BOOK/GT market 20261024_9100001"
+  },
+  "empty_status": {
+   "check": "status_present",
+   "refused": true,
+   "got": "status records 20261024: 1 null or empty status values"
+  },
+  "taker_amount_mismatch": {
+   "check": "amounts_reconcile",
+   "refused": true,
+   "got": "records 20261024: 1 status-ok records with taker.amount != amountFilled"
+  },
+  "yes_side_flip": {
+   "check": "yes_space_mapping",
+   "refused": true,
+   "got": "legs 20261024: 1 legs whose (y_side, y_price) != yes_space(quote, indexSet, price)"
+  },
+  "settle_not_uuid7": {
+   "check": "clock_fields",
+   "refused": true,
+   "got": "records 20261024: 1 rows whose settle_ms != UUIDv7 ms of settlementId"
+  },
+  "day_column_wrong": {
+   "check": "day_assignment",
+   "refused": true,
+   "got": "20261024: 1 rows whose day column != the file day"
+  },
+  "t_rel_off": {
+   "check": "legs_phase_clock",
+   "refused": true,
+   "got": "legs 20261024: t_rel_s equals none of (settle_ms | exec_ms | hi_ms) - ws"
+  },
+  "upper_boundary_not_censored": {
+   "check": "boundary_censored",
+   "refused": true,
+   "got": "20261027: market 9100007 ends in a non-consumed hour but 1 records are not boundary_censored"
+  },
+  "lower_boundary_not_censored": {
+   "check": "boundary_censored",
+   "refused": true,
+   "got": "20261023: market 9300002 starts right after a non-consumed hour but 1 records are not boundary_censored"
+  },
+  "boundary_false_flag": {
+   "check": "boundary_censored",
+   "refused": true,
+   "got": "20261024: market 9100001 is boundary_censored with no non-consumed hour within 2 h of its window (false flag)"
+  },
+  "econ_includes_censored": {
+   "check": "econ_conservation",
+   "refused": true,
+   "got": "econ maker_market: 2 status-ok rows on boundary_censored markets (must be excluded as a status)"
+  },
+  "flag_order_inconsistent": {
+   "check": "status_present",
+   "refused": true,
+   "got": "status records 20261024: 1 flag pairs appear in both orders (flag order is not fixed), e.g. boundary_censored/conflict"
+  },
+  "ok_joined": {
+   "check": "status_present",
+   "refused": true,
+   "got": "status records 20261024: 1 statuses with bad flag syntax (empty / repeated flag, or ok joined with other flags)"
+  },
+  "price_mismatch_unflagged": {
+   "check": "amounts_reconcile",
+   "refused": true,
+   "got": "records 20261024: 1 status-ok records whose maker-weighted YES price != priceExecuted (must carry a status)"
+  },
+  "f_before_wrong": {
+   "check": "fill_lo_frame",
+   "refused": true,
+   "got": "fills 20261024_9100001: 1 bounded fills whose lo_ms != upd_ms of frame f_before"
+  },
+  "scenario_row_dropped": {
+   "check": "orders_complete",
+   "refused": true,
+   "got": "orders 20261024_9100001 S_FIFO: 1 filled hashes missing (dropped), 0 hashes without fills"
+  },
+  "n_fills_wrong": {
+   "check": "orders_cumulative",
+   "refused": true,
+   "got": "orders 20261024_9100001: 1 rows whose n_fills/cum_shares/first_hi_ms/last_hi_ms differ from their fills"
+  },
+  "persist_beyond_last_fill": {
+   "check": "H2_presence",
+   "refused": true,
+   "got": "orders 20261024_9100001: 1 ok rows whose persistence window contradicts the span [first fill, last fill]"
+  },
+  "capacity_ignored": {
+   "check": "posting_capacity_bound",
+   "refused": true,
+   "got": "orders 20261024_9100001: 30 ok rows with post_lo_ms below the H3 capacity bound (latest frame before the first fill with shown < cumulative fills)"
+  },
+  "removal_lo_early": {
+   "check": "removal_lo_bound",
+   "refused": true,
+   "got": "orders 20261024_9100001: 42 ok rows with removal_lo_ms < the last fill lo_ms, or removal_lo > removal_hi"
+  },
+  "priority_evidence_ignored": {
+   "check": "priority_exhaustion",
+   "refused": true,
+   "got": "orders 20261024_9100001: 4 S_FIFO-family rows ignore price-priority exhaustion evidence (exhausted not in set, or size_exact != cum_shares)"
+  },
+  "mk_idx_only_exhaustion": {
+   "check": "priority_exhaustion",
+   "refused": true,
+   "got": "orders 20261024_9100001: 2 rows claim sole exhausted without price-priority or shown-zero evidence (mk_idx is never evidence)"
+  },
+  "size_exact_unjustified": {
+   "check": "priority_exhaustion",
+   "refused": true,
+   "got": "orders 20261024_9100001: 1 rows state size_exact without price-priority or shown-zero exhaustion at the last fill (or != cum_shares)"
+  },
+  "t1_reported_wrong": {
+   "check": "priority_tests_T1_T2",
+   "refused": true,
+   "got": "lifecycle summary 20261024_9100001: T1 reported [8.0] != recomputed [1] (strictly-better exhausted makers that fill again)"
+  },
+  "ahead_lo_wrong": {
+   "check": "priority_ahead_lo",
+   "refused": true,
+   "got": "orders 20261024_9100001: 1 S_FIFO-family rows whose ahead_lo matches no fill of theirs under price priority (the other worst-price makers when it alone refilled"
+  },
+  "level_side_bad": {
+   "check": "levels_frames_consistent",
+   "refused": true,
+   "got": "levels/frames 20261024_9100001: 1 rows with side not in bid/ask"
+  },
+  "tob_best_sh_wrong": {
+   "check": "tob_from_levels",
+   "refused": true,
+   "got": "tob 20261024_9100001: 1 frames whose best_bid_sh differs from the depth levels/frame"
+  },
+  "identities_wrong": {
+   "check": "identities_exante",
+   "refused": true,
+   "got": "identities: top_shares differs from the Oct 23 recompute"
+  },
+  "rp_exec_ms": {
+   "check": "rp_records_fields",
+   "refused": true,
+   "got": "records 20261024_9100001: 1 records whose exec_ms differs from raw"
+  },
+  "rp_leg_shares": {
+   "check": "rp_legs",
+   "refused": true,
+   "got": "legs 20261024_9100001: 1 legs whose shares differs from raw"
+  },
+  "rp_frame_dropped": {
+   "check": "rp_frames",
+   "refused": true,
+   "got": "frames 20261024_9100001: raw 141 frame receipts vs builder 140 (1 dropped, 0 extra)"
+  },
+  "rp_hi": {
+   "check": "rp_fill_hi",
+   "refused": true,
+   "got": "fills 20261024_9100001: 24 fills whose hi_ms != raw min(settle_ms, first receipt)"
+  },
+  "rp_cum": {
+   "check": "rp_cumulative",
+   "refused": true,
+   "got": "orders 20261024_9100001: 45 rows whose n_fills/cum_shares differ from the raw per-hash fills"
+  },
+  "rp_ident": {
+   "check": "rp_H1",
+   "refused": true,
+   "got": "orders 20261024_9100001: 1 raw identity conflicts not labelled identity_conflict"
+  },
+  "rp_lo_not_frame": {
+   "check": "rp_H3",
+   "refused": true,
+   "got": "fills 20261024_9100001: 22 bounded lo_ms are not the venue time of any raw frame"
+  },
+  "rp_capacity_ignored": {
+   "check": "rp_capacity",
+   "refused": true,
+   "got": "orders 20261024_9100001: 36 ok rows below the raw H3 capacity posting bound"
+  },
+  "rp_forbidden_receipt": {
+   "check": "rp_hours",
+   "refused": true,
+   "got": "builder holds 1 first receipts in non-consumed hours"
+  }
+ },
+ "n_eval": {
+  "outputs_present": 38,
+  "schema": 19,
+  "status_present": 57,
+  "status_counts_reported": 19,
+  "records_unique_key": 8,
+  "legs_complete": 48,
+  "amounts_reconcile": 20,
+  "yes_space_mapping": 16,
+  "clock_fields": 20,
+  "day_assignment": 11,
+  "legs_phase_clock": 7,
+  "boundary_censored": 7,
+  "fills_complete": 6,
+  "fill_hi_rule": 2,
+  "fill_lo_status": 2,
+  "fill_time_order": 2,
+  "fill_lo_frame": 8,
+  "orders_complete": 12,
+  "orders_cumulative": 2,
+  "H1_identity": 4,
+  "H2_presence": 2,
+  "H3_overfill_flagged": 2,
+  "posting_capacity_bound": 4,
+  "posting_before_first_fill": 2,
+  "removal_after_last_fill": 2,
+  "removal_lo_bound": 2,
+  "removal_class_evidence": 52,
+  "class_scenario_consistency": 20,
+  "size_bounds": 4,
+  "priority_exhaustion": 6,
+  "priority_tests_T1_T2": 4,
+  "priority_ahead_lo": 2,
+  "levels_frames_consistent": 14,
+  "tob_from_levels": 20,
+  "coverage_arithmetic": 135,
+  "econ_conservation": 11,
+  "econ_pnl_recompute": 3,
+  "identities_exante": 2,
+  "gt_scores": 16
+ },
+ "priority_info": {
+  "price_priority_evidence_legs": 6,
+  "multi_price_records_best_first": 2,
+  "multi_price_records_worst_first": 2
+ },
+ "vmhwm_mib": 125.9
+}
+REHEARSAL FAIL
+2026-11-22T09:35:43Z tag=mt_checks_rehearse9 rc=1 peak_rss_mib=127 wall_s=13.10 cpu_user_s=12.56 memavail_start_gib=22 disk_free_gib=426->426 slot=claude2

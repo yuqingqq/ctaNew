@@ -1,0 +1,84 @@
+own legs yes_side {'ask': 54, 'bid': 45}
+v6 filled up {False: 27, True: 26} lanes {1: 18, 0: 16, 2: 10, 3: 9}
+-- market 4332392
+                   cid  lane    up  tick  size  filled      t_Filled
+1114  1794108465173114     0  True    42   5.0     5.0  1.794113e+12
+1115  1794108465173115     2  True    41   5.0     5.0  1.794113e+12
+           exec_s yes_side  ptick  shares                                                          maker_hash
+11975  1794112849      bid     41     5.0  0xaa9922f63b04c556c18db0af081f2a162d5a20f53e65db78702dff99a7761a13
+11976  1794112849      bid     42     5.0  0xc37d80808666c53ca31651ee87ffb54fa2c9c070bf98acb296b0be0c0d8b159d
+-- market 4332523
+                   cid  lane     up  tick  size  filled      t_Filled
+1311  1794108465173311     1  False    30   5.0     5.0  1.794113e+12
+1312  1794108465173312     3  False    31   5.0     5.0  1.794113e+12
+           exec_s yes_side  ptick  shares                                                          maker_hash
+13405  1794113142      ask     31     5.0  0x7c96142e85685b5d5ae700fb7949853b25b9fb5167a4029a71c0232f5608e12c
+13406  1794113142      ask     30     5.0  0x816ed21ea3ddfdf65a27982a84ab708378537a1f7876c9ce873c740f3e5a0052
+-- market 4333221
+                   cid  lane     up  tick  size  filled      t_Filled
+2144  1794108465174144     1  False    59   5.0     5.0  1.794115e+12
+2145  1794108465174145     3  False    60   5.0     5.0  1.794115e+12
+2388  1794108465174388     0   True    95   5.0     5.0  1.794115e+12
+           exec_s yes_side  ptick  shares                                                          maker_hash
+20423  1794114636      ask     59     5.0  0x4d49eafe81e93f73412ae1bdd9a20a1bd8e0cfdd19d7a2213e89d8f21d8ec815
+20424  1794114636      ask     60     5.0  0x0dba70ab0d7b0e980c10eecc50bc0d8fbe9a98c6e32d42574c9bb6bca9f95263
+21478  1794114821      bid     95     5.0  0xc4c6d5174b12d0a762043536e318db9e46bc1be10fe2b2a4660fae49f18474d8
+-- market 4333422
+                   cid  lane    up  tick  size  filled      t_Filled
+2647  1794108465174647     2  True     9  25.0    25.0  1.794115e+12
+2648  1794108465174648     0  True    10  25.0    25.0  1.794115e+12
+           exec_s yes_side  ptick  shares                                                          maker_hash
+23258  1794115226      bid      9    25.0  0x18d952d507e73178638b8bbbc10d83c172b8b953a724da3c03838005305edf33
+23260  1794115226      bid     10    25.0  0xc42d97d8359928e40d5fd9066de4c496f73c873314f30fb7f86b689b328e24e0
+-- market 4334454
+                   cid  lane     up  tick  size  filled      t_Filled
+4707  1794108465176707     1  False    55   5.0     5.0  1.794118e+12
+4708  1794108465176708     3  False    56   5.0     5.0  1.794118e+12
+           exec_s yes_side  ptick  shares                                                          maker_hash
+39757  1794118205      ask     56     5.0  0x30d05118689bbf87a666e2ae041b4e2b7c6e22cd50ba466a78f83693f703ed8f
+39766  1794118205      ask     55     4.2  0xa1250e224dc5f33bdb66b64feaef7968c0fcb625791a3d16a8c7e8537ea0a51a
+39769  1794118205      ask     55     0.8  0xa1250e224dc5f33bdb66b64feaef7968c0fcb625791a3d16a8c7e8537ea0a51a
+-- market 4334459
+                   cid  lane     up  tick  size  filled      t_Filled
+5001  1794108465177001     1  False    69   5.0     5.0  1.794119e+12
+           exec_s yes_side  ptick  shares                                                          maker_hash
+42348  1794118560      ask     69     5.0  0x0f4f1fb5ee8e0b690a515720256e193ebfd137098053d83b7ae4e24b072bf627
+basis filled up {False: 19, True: 14} lanes {1: 12, 0: 11, 3: 7, 2: 3}
+-- market 4353706
+                  cid  lane     up  tick  size  filled      t_Filled
+556  1794147344737556     0   True    81   5.0    5.00  1.794150e+12
+634  1794147344737634     1  False    19   5.0    2.94  1.794150e+12
+            exec_s yes_side  ptick  shares                                                          maker_hash
+224133  1794150049      bid     81    5.00  0x0594a4b5774c30fcdc797e945f4f5d019e7524c67ff5da6999c429dec724f8ee
+225022  1794150227      ask     19    2.94  0x0a179bc7e613710ec8222a1375239b5788deac97a733ae8a102f3d0846c0e311
+-- market 4356245
+                   cid  lane     up  tick  size  filled      t_Filled
+2837  1794147344739837     0   True    70   5.0     5.0  1.794154e+12
+2846  1794147344739846     3  False    71   5.0     5.0  1.794154e+12
+            exec_s yes_side  ptick  shares                                                          maker_hash
+246553  1794153660      ask     71  2.5898  0xb07fc2f8625fafdb4fb2b6bb09875e526c9d683ff246b1560b4679b717e20bd3
+246555  1794153660      ask     71  2.4102  0xb07fc2f8625fafdb4fb2b6bb09875e526c9d683ff246b1560b4679b717e20bd3
+246608  1794153653      bid     70  5.0000  0xf886a056e2093a704918467e5215bdcf4a9ced95944b49b5962492967b517fbc
+-- market 4356476
+                   cid  lane     up  tick  size  filled      t_Filled
+3727  1794147344740727     1  False    21   5.0     5.0  1.794155e+12
+            exec_s yes_side  ptick  shares                                                          maker_hash
+254480  1794154860      ask     21     5.0  0x4896b62acc61cda3eaf0bb5829b2ced1b3025d29ab21642b7624a97af13562ec
+-- market 4357673
+                   cid  lane    up  tick  size  filled      t_Filled
+4257  1794147344741257     0  True    54   5.0     5.0  1.794156e+12
+            exec_s yes_side  ptick  shares                                                          maker_hash
+262986  1794156317      bid     54     5.0  0xf218bfad93bddd8bd813589d49b51558ff8a60bdd77e1ca5a91e95bde4fa9b4a
+-- market 4359992
+                   cid  lane     up  tick  size  filled      t_Filled
+5224  1794147344742224     1  False    58   5.0     5.0  1.794158e+12
+            exec_s yes_side  ptick  shares                                                          maker_hash
+273289  1794158112      ask     58     5.0  0x714115429050170f3b5183771d96d20f408208f49e92875c35945bae3b59d4f5
+-- market 4364410
+                   cid  lane     up  tick  size  filled      t_Filled
+6888  1794147344743888     1  False    54   5.0     5.0  1.794162e+12
+6937  1794147344743937     0   True    58   5.0     5.0  1.794162e+12
+            exec_s yes_side  ptick  shares                                                          maker_hash
+293797  1794161712      ask     54     5.0  0xf54e19e0d6b9d2498c9cef4d4987744683f726cdd9e4acc2d2554453a92d1ee9
+293886  1794161731      bid     58     5.0  0xfe4df1572aace8fc2f649bf6d0b2920c5929b5cdc96bdd6352983591ad21d411
+2026-11-22T08:28:15Z tag=mt_truth_probe3 rc=0 peak_rss_mib=272 wall_s=0.63 cpu_user_s=0.43 memavail_start_gib=22 disk_free_gib=427->427 slot=claude
