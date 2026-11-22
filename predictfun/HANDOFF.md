@@ -764,6 +764,33 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- MAKER_TRACE_RECONSTRUCTION_20261122_DEV -->
+## 2026-11-22 08:22Z (session aea5bfb9) — MAKER-TRACE-RECONSTRUCTION-v1 started: build contract + USER compute cap
+
+**Task:** the USER's "we figure out how top makers make money first". Plan: [plan](reviews/automatic/20261122_maker_trace_reconstruction/plan.md) and [coverage amendment](reviews/automatic/20261122_maker_trace_reconstruction/coverage_amendment.md).
+
+**Build contract:** [contract](reviews/maker_trace_20261122/contract.md), with code anchor `research/pf_mt_common.py`:
+- the date guard (Oct 23–27; Nov 8 hours 00–22; refuses before any open), paths, schemas, statuses, classes and scenarios.
+
+**Populations:**
+
+| Name | Use |
+|---|---|
+| ID | Oct 23: ex-ante top makers |
+| FILL | every market, Oct 24–27 |
+| BOOK | the 19 complete markets |
+| GT | Nov 8 live windows: our own orders as the real-data positive control |
+
+**Matching priority:** UNKNOWN at the venue. S_FIFO / S_FIFO_LO / S_NOPRIO are declared, and the receipt tests the priority assumption by the re-appearance of "exhausted" hashes.
+
+**USER approval** (AskUserQuestion, 2026-11-22 08:22Z): **0.90 core-hours** for this task, including a 0.05 h review reserve, with a **ladder line ceiling of 4.40**.
+- The line before it is ≈ 3.31: 2.6648, plus the discrimination's logged 0.4759, plus ≤ 0.17 unlogged for the killed rerun.
+- The ceiling leaves ≈ 0.18 h to resume the paused discrimination.
+- **Projection:** ≈ 0.73 h, from one measured REST hour at 12.65 CPU s; the schema probes so far cost 13.5 CPU s.
+
+**Build:** five builder agents work in parallel on new files: extract, lifecycle, econ, truth and an independent checker. Integration, freeze and the run follow, then ONE Codex review.
+<!-- /MAKER_TRACE_RECONSTRUCTION_20261122_DEV -->
+
 <!-- LADDER_RETENTION_DISCRIMINATION_PAUSED_20261122_DEV -->
 ## 2026-11-22 07:53Z (session aea5bfb9) — LONG-VALUE-RETENTION-DISCRIMINATION-v1 PAUSED by the USER; switching to the maker-trace task
 

@@ -504,6 +504,15 @@ ladder_async_fast_results_20261122_dev:
   all_arms_negative_every_day: true
   batch_core_hours: 0.201
   line_core_hours: 2.375
+maker_trace_reconstruction_20261122_dev:
+  status: build_contract_committed_builders_running
+  asof: "2026-11-22 08:22Z"
+  source: user_task_8b39f9e8_9ff1e197
+  user_approval: {core_hours: 0.90, includes: review_reserve_0.05, line_ceiling: 4.40, via: AskUserQuestion_2026-11-22}
+  line_before_core_hours_max: 3.3107
+  projection_core_hours: 0.73
+  populations: {ID: oct23_all, FILL: oct24_27_all, BOOK: complete_19, GT: nov8_live_windows}
+  scenarios: [S_FIFO, S_FIFO_LO, S_NOPRIO]
 ladder_retention_discrimination_20261122_dev:
   status: paused_by_user_before_measure_oct26_rerun_stopped
   paused_asof: "2026-11-22 07:53Z"
