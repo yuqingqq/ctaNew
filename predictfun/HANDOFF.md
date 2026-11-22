@@ -298,6 +298,33 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_QUEUE_PRICE_FREEZE_20261122_DEV -->
+## 2026-11-22 01:59Z (session aea5bfb9) — QUEUE-PRICE-STATE-AUDIT-v1 FROZEN before the run (review 72a36de9's ONE next priority; its four nonblocking corrections bundled)
+
+- **Review 72a36de9 (target 75e9531d) verified at the code, all four hold:**
+  1. `fp_shown` (`pf_ladder_rest.py:493`) is the current displayed size beside the running-minimum `fp_queue`, so my "656 front states alone at their price" was wrong. Reproduced from the hash-bound parquets: 458 zero-display / 331 occupied; 198 of the behind-best front states occupied; all 133 at-touch front states occupied.
+  2. The tables mixed all-state and cohort denominators, the sparse screen used all-state fills (`read_arrival_queue.py:79-106`), and `:142` misnamed its day predicate.
+  3. `aq_checks.py` let a zeroed client_minus_venue and a negated per-share pass.
+  4. `report.md:68`'s timing sentence was wrong.
+  - All four are fixed in this receipt, superseding in band; the frozen ARRIVAL-QUEUE files are not edited.
+- **What:** the same 4,840 states, joined at the exact key to the original feature rows.
+  - price_state x display x queue band, declared before economics.
+  - Principal comparison: at_touch & shown_positive, by band, side and day.
+  - Behind-best occupied exact-depth diagnostic kept apart; pressure as a support census only.
+  - Each cell carries all-state AND cohort counts; support is on the valued filled states.
+- **Frozen:**
+  - builder + selftest (5 groups) + 23 / 23 mutants;
+  - write-once manifest;
+  - `qp_checks.py` (A / B / U / G / C / P / I; 10-case falsifier including the review's two escapes);
+  - reading rules;
+  - projection gate (<= 0.020 core-hours, line <= 2.0);
+  - launcher.
+- **Rehearsal (disclosed):** one unfrozen run; no value read. A checker bug (`A.lt` resolving to the DataFrame method) was fixed. Then all checks passed except A_committed (pre-commit), and the falsifier refused 10 / 10.
+- **Resources:** round 0.011 of 0.020 at freeze; line 1.973 of 2.0.
+- **Next:** project -> run -> readings -> checks -> receipt, then ONE Codex review.
+- **USER decision still open:** POSITIVE-PRESSURE-GUARD-v1 resources.
+<!-- /LADDER_QUEUE_PRICE_FREEZE_20261122_DEV -->
+
 <!-- LADDER_ARRIVAL_QUEUE_RESULTS_20261122_DEV -->
 ## 2026-11-22 01:33Z (session aea5bfb9) — ARRIVAL-QUEUE-DECOMPOSITION-v1 RESULTS (frozen 29869269; receipt `reviews/ladder_arrival_queue_20261122/report.md`)
 

@@ -1,0 +1,2 @@
+{"cls": "HARNESS_FAILURE", "index": "20", "name": "run without the write-once check", "seconds": 0.2, "sources": {"pf_ladder_queue_price.py": "692070d41ba95921", "pf_ladder_queue_price_mutants.py": "c88341fa279a6110", "pf_ladder_queue_price_selftest.py": "766f45c28c6e0139"}, "why": "crash: AttributeError(\"module 'pf_ladder_queue_price_selftest' has no attribute 'run'\")"}
+2026-11-22T01:52:18Z tag=lqp_20 rc=1 peak_rss_mib=99 wall_s=0.29 cpu_user_s=0.24 memavail_start_gib=23 disk_free_gib=434->434 slot=claude2

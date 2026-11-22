@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "16", "name": "censoring from the native cohort", "seconds": 0.7, "sources": {"pf_ladder_queue_price.py": "692070d41ba95921", "pf_ladder_queue_price_mutants.py": "c88341fa279a6110", "pf_ladder_queue_price_selftest.py": "1d5a322b785e5879"}, "why": "QUEUE PRICE SELFTEST FAILED: 4 cohort counts beside the all-state counts (3, 2, 2, 0, 0.5, 0.6666666666666666)"}
+2026-11-22T01:52:34Z tag=lqp2_16 rc=0 peak_rss_mib=108 wall_s=0.73 cpu_user_s=0.67 memavail_start_gib=23 disk_free_gib=434->434 slot=claude2

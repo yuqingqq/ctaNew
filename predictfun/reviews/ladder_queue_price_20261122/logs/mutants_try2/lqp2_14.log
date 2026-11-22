@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "14", "name": "sparse on the all-state filled states", "seconds": 0.7, "sources": {"pf_ladder_queue_price.py": "692070d41ba95921", "pf_ladder_queue_price_mutants.py": "c88341fa279a6110", "pf_ladder_queue_price_selftest.py": "1d5a322b785e5879"}, "why": "QUEUE PRICE SELFTEST FAILED: 4 sparse on the valued filled states (20, 19, False, False)"}
+2026-11-22T01:52:38Z tag=lqp2_14 rc=0 peak_rss_mib=108 wall_s=0.72 cpu_user_s=0.66 memavail_start_gib=23 disk_free_gib=434->434 slot=claude4

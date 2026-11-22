@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "2", "name": "a negative display counted zero", "seconds": 0.7, "sources": {"pf_ladder_queue_price.py": "692070d41ba95921", "pf_ladder_queue_price_mutants.py": "c88341fa279a6110", "pf_ladder_queue_price_selftest.py": "1d5a322b785e5879"}, "why": "QUEUE PRICE SELFTEST FAILED: 1 display (['shown_zero', 'shown_positive', 'shown_zero', 'shown_unknown', 'shown_unknown', 'shown_positive'])"}
+2026-11-22T01:52:35Z tag=lqp2_2 rc=0 peak_rss_mib=108 wall_s=0.73 cpu_user_s=0.67 memavail_start_gib=23 disk_free_gib=434->434 slot=claude4

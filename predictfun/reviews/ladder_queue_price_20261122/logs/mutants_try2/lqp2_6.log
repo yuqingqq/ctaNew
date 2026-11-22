@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "6", "name": "the join without the decision time", "seconds": 0.7, "sources": {"pf_ladder_queue_price.py": "692070d41ba95921", "pf_ladder_queue_price_mutants.py": "c88341fa279a6110", "pf_ladder_queue_price_selftest.py": "1d5a322b785e5879"}, "why": "QUEUE PRICE SELFTEST FAILED: 2 a 1 ms key shift refuses"}
+2026-11-22T01:52:36Z tag=lqp2_6 rc=0 peak_rss_mib=108 wall_s=0.72 cpu_user_s=0.67 memavail_start_gib=22 disk_free_gib=434->434 slot=claude4

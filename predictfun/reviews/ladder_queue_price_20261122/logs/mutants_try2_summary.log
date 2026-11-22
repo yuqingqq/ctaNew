@@ -1,0 +1,26 @@
+  0 at the touch counted inside: CAUGHT (0.7 s) - QUEUE PRICE SELFTEST FAILED: 1 price states (['inside_best', 'inside_best', 'behind_best', 'inside_best', 'inside_best', 'behind_best', 'unknown', 'un
+  1 a near-touch depth at the touch: CAUGHT (0.7 s) - QUEUE PRICE SELFTEST FAILED: 1 price states (['inside_best', 'at_touch', 'at_touch', 'inside_best', 'at_touch', 'behind_best', 'unknown', 'unknown'])
+  2 a negative display counted zero: CAUGHT (0.7 s) - QUEUE PRICE SELFTEST FAILED: 1 display (['shown_zero', 'shown_positive', 'shown_zero', 'shown_unknown', 'shown_unknown', 'shown_positive'])
+  3 a small display not positive: CAUGHT (0.7 s) - QUEUE PRICE SELFTEST FAILED: 1 display (['shown_zero', 'shown_positive', 'shown_invalid', 'shown_unknown', 'shown_unknown', 'shown_invalid'])
+  4 a negative queue estimate not unknown: CAUGHT (0.7 s) - QUEUE PRICE SELFTEST FAILED: 1 queue bands (['front', 'unknown', 'within_R', 'within_R', 'beyond_R', 'invalid_R', 'invalid_R'])
+  5 the duplicated-key check dropped: CAUGHT (0.7 s) - QUEUE PRICE SELFTEST FAILED: 2 a duplicated feature key refuses
+  6 the join without the decision time: CAUGHT (0.7 s) - QUEUE PRICE SELFTEST FAILED: 2 a 1 ms key shift refuses
+  7 the queue agreement dropped: CAUGHT (0.7 s) - QUEUE PRICE SELFTEST FAILED: 2 a disagreeing fp_queue refuses
+  8 a missing value never equal: CAUGHT (0.6 s) - QUEUE PRICE SELFTEST FAILED: 2 join: stopped (ValueError('the feature row disagrees with the state')) | 3 state_table: stopped (UnboundLocalError("can
+  9 the saved-band check dropped: CAUGHT (0.7 s) - QUEUE PRICE SELFTEST FAILED: 3 a saved band that differs refuses
+  10 the principal as either condition: CAUGHT (0.7 s) - QUEUE PRICE SELFTEST FAILED: 3 the principal needs both at_touch and shown_positive ([True, True])
+  11 the exact-depth view without the display: CAUGHT (0.7 s) - QUEUE PRICE SELFTEST FAILED: 3 labels (['at_touch|shown_positive|front', 'behind_best|shown_zero|unknown'], ['outside', 'depth=2.0|unknown'], ['front|
+  12 the union status ignoring the at-risk test: CAUGHT (0.7 s) - QUEUE PRICE SELFTEST FAILED: 4 the union status from the end cause ({1: 'removed_in_interval', 2: 'removed_in_interval', 4: 'removed_in_interval', 3: 
+  13 the valid any-fill rate over all at-risk states: CAUGHT (0.7 s) - QUEUE PRICE SELFTEST FAILED: 4 cohort counts beside the all-state counts (3, 2, 2, 1, 0.3333333333333333, 0.6666666666666666)
+  14 sparse on the all-state filled states: CAUGHT (0.7 s) - QUEUE PRICE SELFTEST FAILED: 4 sparse on the valued filled states (20, 19, False, False)
+  15 per share over all shares: CAUGHT (0.7 s) - QUEUE PRICE SELFTEST FAILED: 4 cohort counts beside the all-state counts (3, 2, 2, 1, 0.5, 0.6666666666666666)
+  16 censoring from the native cohort: CAUGHT (0.7 s) - QUEUE PRICE SELFTEST FAILED: 4 cohort counts beside the all-state counts (3, 2, 2, 0, 0.5, 0.6666666666666666)
+  17 the time-to-END count at 60 s: CAUGHT (0.7 s) - QUEUE PRICE SELFTEST FAILED: 4 time to END (40000.0, 2)
+  18 valid filled counting invalid fills: CAUGHT (0.7 s) - QUEUE PRICE SELFTEST FAILED: 4 cohort counts beside the all-state counts (3, 2, 2, 1, 1.0, 0.6666666666666666) | 4 sparse on the valued filled states 
+  19 the common cohort replaced by the native one: CAUGHT (0.7 s) - QUEUE PRICE SELFTEST FAILED: 4 cohort counts beside the all-state counts (3, 2, 3, 0, 0.6666666666666666, 0.6666666666666666) | 4 sparse on the valued
+  20 run without the write-once check: CAUGHT (0.9 s) - QUEUE PRICE SELFTEST FAILED: 5 guards: stopped (KeyError('inputs'))
+  21 the interval-row count not checked: CAUGHT (0.8 s) - QUEUE PRICE SELFTEST FAILED: 4 a missing interval row refuses
+  22 build_manifest without the write-once check: CAUGHT (0.9 s) - QUEUE PRICE SELFTEST FAILED: 5 build_manifest refuses an existing manifest
+control: PASSED (0.7 s); sources {'pf_ladder_queue_price.py': '692070d41ba95921', 'pf_ladder_queue_price_mutants.py': 'c88341fa279a6110', 'pf_ladder_queue_price_selftest.py': '1d5a322b785e5879'}
+mutation check passed: the control passes its selftest, 23 / 23 planted code errors are caught by a check (0.3 CPU min)
+2026-11-22T01:52:40Z tag=lqp_summary_try2 rc=0 peak_rss_mib=15 wall_s=0.02 cpu_user_s=0.02 memavail_start_gib=23 disk_free_gib=434->434 slot=claude

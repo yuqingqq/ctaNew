@@ -1,0 +1,74 @@
+{
+ "all_ok": false,
+ "failed": [
+  "A_committed"
+ ],
+ "falsifier_ok": false,
+ "cases": {
+  "an_output_hash_changed": [
+   true,
+   true
+  ],
+  "a_state_duplicated": [
+   true,
+   true
+  ],
+  "client_minus_venue_zeroed": [
+   true,
+   true
+  ],
+  "a_displayed_size_changed": [
+   true,
+   true
+  ],
+  "a_price_state_relabelled": [
+   true,
+   true
+  ],
+  "h1000_per_share_negated": [
+   true,
+   true
+  ],
+  "a_sparse_flag_flipped": [
+   true,
+   true
+  ],
+  "a_cell_dropped": [
+   true,
+   true
+  ],
+  "a_reading_changed": [
+   true,
+   true
+  ],
+  "resources_over_the_cap": [
+   true,
+   true
+  ]
+ },
+ "details": {
+  "B": {
+   "states": 4840
+  },
+  "U": {
+   "mismatched": []
+  },
+  "G": {
+   "mismatched": []
+  },
+  "C": {
+   "rows": 4920,
+   "mismatched": []
+  },
+  "P": {
+   "mismatched": []
+  },
+  "I": {
+   "round_core_hours": 0.010313888888888888,
+   "cap": 0.02,
+   "line_core_hours": 1.972466666666665,
+   "peak_mib": 246
+  }
+ }
+}
+2026-11-22T01:57:56Z tag=qp_rehearsal_checks rc=0 peak_rss_mib=209 wall_s=1.95 cpu_user_s=1.75 memavail_start_gib=23 disk_free_gib=434->434 slot=claude

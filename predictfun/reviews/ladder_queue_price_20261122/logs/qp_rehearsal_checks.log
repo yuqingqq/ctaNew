@@ -1,0 +1,19 @@
+/home/yuqing/ctaNew/predictfun/reviews/ladder_queue_price_20261122/qp_checks.py:134: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  X[f'{c}{h}_net'], X[f'{c}{h}_sp'], X[f'{c}{h}_sn'] = v, np.maximum(v, 0.), np.minimum(v, 0.)
+/home/yuqing/ctaNew/predictfun/reviews/ladder_queue_price_20261122/qp_checks.py:134: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  X[f'{c}{h}_net'], X[f'{c}{h}_sp'], X[f'{c}{h}_sn'] = v, np.maximum(v, 0.), np.minimum(v, 0.)
+/home/yuqing/ctaNew/predictfun/reviews/ladder_queue_price_20261122/qp_checks.py:135: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  X[f'{c}{h}_fp'], X[f'{c}{h}_fn'] = np.where(o, X[f'fpos{h}'], 0.), np.where(o, X[f'fneg{h}'], 0.)
+/home/yuqing/ctaNew/predictfun/reviews/ladder_queue_price_20261122/qp_checks.py:135: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  X[f'{c}{h}_fp'], X[f'{c}{h}_fn'] = np.where(o, X[f'fpos{h}'], 0.), np.where(o, X[f'fneg{h}'], 0.)
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/ladder_queue_price_20261122/qp_checks.py", line 334, in <module>
+    main(sys.argv[1:])
+  File "/home/yuqing/ctaNew/predictfun/reviews/ladder_queue_price_20261122/qp_checks.py", line 325, in main
+    E['mine_s'] = my_states(E); E['mine_c'] = my_cells(E['mine_s'], E['aq_intervals.csv']); E['mine_r'] = my_readings(E['mine_s'], E['mine_c'])
+                                                                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/ladder_queue_price_20261122/qp_checks.py", line 199, in my_readings
+    cen = {b: (int(r.censored_from_common), float(r.all_t_to_end_median), int(r.all_t_to_end_lt30s)) for b in BANDS for r in [cell(C_, 'price_display_queue', f'{PR}|{b}', 'union')] if r is not None}
+                                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: int() argument must be a string, a bytes-like object or a real number, not 'method'
+2026-11-22T01:56:30Z tag=qp_rehearsal_checks rc=1 peak_rss_mib=199 wall_s=9.58 cpu_user_s=9.31 memavail_start_gib=23 disk_free_gib=434->434 slot=claude

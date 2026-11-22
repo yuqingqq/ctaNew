@@ -1,0 +1,29 @@
+parquet live rows 4840 columns with fp_/t_to_end/rung: ['q', 'rung', 'price', 'fp_size', 'fp_remaining', 'fp_queue', 'fp_shown', 'fp_scale', 'fp_phase', 't_to_end']
+joined 4840 missing 0 Q equal True R equal True depth equal True
+front by price x display
+display      shown_positive  shown_zero  All
+price_state                                 
+at_touch                133           0  133
+behind_best             198         145  343
+inside_best               0         313  313
+All                     331         458  789
+all by price x display
+display      shown_positive  shown_zero   All
+price_state                                  
+at_touch               1633           0  1633
+behind_best            2749         145  2894
+inside_best               0         313   313
+All                    4382         458  4840
+at_touch & shown_positive by queue band
+queue_band
+within_R    841
+beyond_R    659
+front       133
+finding 2 support (union):
+            all_filled  common_filled  all_shares  common_shares
+queue_band                                                      
+beyond_R         759.0          715.0    33205.48       31892.16
+front            238.0          129.0     8475.66        4682.60
+within_R         705.0          609.0    33206.73       29435.52
+t_to_end < 30 s states 807 median t_to_end 122250.0
+2026-11-22T01:47:43Z tag=qp_verify_review rc=0 peak_rss_mib=149 wall_s=0.63 cpu_user_s=0.53 memavail_start_gib=23 disk_free_gib=434->434 slot=claude

@@ -1,0 +1,55 @@
+{
+ "version": "queue_price_state_audit_v1",
+ "review": "72a36de984fa2ace2b626bea6e8b6db5682fcb16",
+ "target_reviewed": "75e9531d21610a3b16f5597153299bc92c210a3a",
+ "inputs": {
+  "aq_audit": "f1a8ba7264615d1a77ea7558ee94ed6624ac8f1ca4df7ebfe83fd953c45c4f8d",
+  "states.csv": "a2ce881238f786d613c9c5c64de9ca25ef53cbefa9bc51bb85cd5982cd3b045b",
+  "intervals.csv": "4b05f5939c8976f608a53ec251772d1be7e6920e9c67c933b74f850994601777",
+  "feat_20261024": "9f940406af48466049e5fffbcd336bab836ea0e015eb543d24a783deceaff201",
+  "feat_20261025": "6ffe53083a62b2d82c42068ed90b20b2c09e051510f9e3f3b34783a37450d187",
+  "feat_20261026": "79ed57745d70a93a8122ce6653e23ebb3989b380ea18ea9ff9ca4fadce6323d3",
+  "feat_20261027": "a5c1f08eec007fe871bffff202fcd3817c101ad6a84c5f309edec891390d0ddd"
+ },
+ "days": [
+  "20261024",
+  "20261025",
+  "20261026",
+  "20261027"
+ ],
+ "horizons_ms": [
+  0,
+  1000,
+  5000,
+  30000
+ ],
+ "intervals": [
+  "I0",
+  "I1",
+  "I2",
+  "I3"
+ ],
+ "sparse_min_filled": 20,
+ "views": [
+  "price_display",
+  "price_display_queue",
+  "behind_depth_queue",
+  "principal_pressure"
+ ],
+ "principal": [
+  "at_touch",
+  "shown_positive"
+ ],
+ "follow_up": [
+  "not_at_risk",
+  "at_risk_full",
+  "removed_in_interval",
+  "filled_out_in_interval",
+  "end_censored"
+ ],
+ "states": 4840,
+ "live_feature_rows": 4840,
+ "sources": {
+  "pf_ladder_queue_price.py": "692070d41ba9592150cdca66c905374f0709d7d1b6fe2dfbf3567e8ad6f55c8f",
+  "pf_ladder_queue_price_selftest.py": "1d5a322b785e58792fa0d4f56a488c20af8e89db
+2026-11-22T01:58:55Z tag=qp_manifest rc=0 peak_rss_mib=131 wall_s=0.55 cpu_user_s=0.46 memavail_start_gib=23 disk_free_gib=434->434 slot=claude
