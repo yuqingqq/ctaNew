@@ -23,6 +23,41 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- QUEUE_PRICE_REVIEW_20261122_CODEX -->
+## 2026-11-22 — Queue/price audit accepted; prioritize the economic decision
+
+[Review](reviews/automatic/20261122_queue_price_review/report.md), target
+**012db7bbcdd861bbd19a984286935d1553c88db3**. No blocking finding or rerun:
+4,840 states, all 4,920 cells and five reading tables verified; selftest,
+9 checks, 10 falsifiers pass; 23 saved mutants rejudged. All four prior
+corrections are implemented for the economic result. Pooled at-touch queue
+ordering is correct but thin: 39 front valued-filled states, only 1/4 days
+and 1/2 sides evaluable; remaining-time/censoring composition uncontrolled.
+No queue rule or causal priority valuation follows from it.
+
+Two NONBLOCKING deferred items, no fix-only round: Q8 groups first-review
+queue error by a later live price/display state (1,240 group changes; actual
+first-touch error within 1 share is 957/1,922, not the live-group 900/1,633).
+The checker omits some detailed reading fields and the five compact tables;
+all actual values verified correct here. Full cells/reused fields are covered.
+
+**Standing USER priority, clarified 2026-11-22:** make the MM strategy
+profitable. Fix issues that can materially change reliable economic decisions;
+defer minor cleanup and stop directions reliably rejected. Do not spend another
+round perfecting a weak direction or confuse reduced loss with profitability.
+
+ONE next priority: complete the already-frozen POSITIVE-PRESSURE-GUARD-v1
+comparison and its existing stop criterion, reusing Oct 24's pilot. No new
+queue variant, threshold, day or model. It remains STOPPED pending the USER's
+budget amendment: propose positive round cap 0.16h and line cap 2.12h;
+~0.10066h projected remaining does not fit the current ~0.02443h. Review
+compute was 2.84 CPU seconds, line ~1.97557/2.0 before commit verification.
+Do not resume from this recommendation alone; preserve the refused projection.
+One combined economic result/review, with absolute END, markout, participation,
+inventory/churn and the incremental selection screen. A failed/thin frozen
+screen stops this challenger; no further threshold search.
+<!-- /QUEUE_PRICE_REVIEW_20261122_CODEX -->
+
 <!-- ARRIVAL_QUEUE_REVIEW_20261122_CODEX -->
 ## 2026-11-22 — Arrival/queue decomposition accepted with bundled corrections
 

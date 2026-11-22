@@ -1,4 +1,31 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+queue_price_review_20261122_codex:
+  status: descriptive_economics_accepted_no_rerun_thin_for_queue_rule
+  target_commit: 012db7bbcdd861bbd19a984286935d1553c88db3
+  report: predictfun/reviews/automatic/20261122_queue_price_review/report.md
+  states_verified: 4840
+  cells_verified: 4920
+  reading_tables_verified: 5
+  check_predicates_passed: 9
+  falsifiers_passed: 10
+  saved_mutants_rejudged: 23
+  blocking_findings: 0
+  deferred_nonblocking_findings: [queue_error_grouping_clock, detailed_reading_checker_coverage]
+  principal_front_valued_filled: 39
+  principal_days_evaluable: 1
+  principal_sides_evaluable: 1
+  queue_rule_supported: false
+  user_priority: profitability_material_outcome_issues_only_stop_rejected_directions
+  next_priority: complete_frozen_positive_pressure_guard_after_budget_authorization
+  next_priority_status: awaiting_user_budget_amendment_no_run_authorized
+  proposed_positive_round_cap_hours: 0.16
+  proposed_line_cap_hours: 2.12
+  projected_positive_remaining_core_hours: 0.100659
+  recorded_line_hours_before_commit_verification: 1.97557
+  current_line_cap_hours: 2.0
+  review_cpu_seconds: 2.84
+  untouched_validation: false
+
 arrival_queue_review_20261122_codex:
   status: consumed_day_decomposition_accepted_with_review_corrections_no_replay
   target_commit: 75e9531d21610a3b16f5597153299bc92c210a3a

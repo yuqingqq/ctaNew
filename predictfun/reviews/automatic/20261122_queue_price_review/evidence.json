@@ -1,0 +1,132 @@
+{
+  "target": "012db7bbcdd861bbd19a984286935d1553c88db3",
+  "checks": {
+    "checks": {
+      "A_committed": true,
+      "A_inputs": true,
+      "A_outputs": true,
+      "B_membership": true,
+      "U_reused_fields": true,
+      "G_labels": true,
+      "C_cells": true,
+      "P_readings": true,
+      "I_resources": true
+    },
+    "details": {
+      "B": {
+        "states": 4840
+      },
+      "U": {
+        "mismatched": []
+      },
+      "G": {
+        "mismatched": []
+      },
+      "C": {
+        "rows": 4920,
+        "mismatched": []
+      },
+      "P": {
+        "mismatched": []
+      },
+      "I": {
+        "round_core_hours": 0.012627777777777774,
+        "cap": 0.02,
+        "line_core_hours": 1.9747805555555538,
+        "peak_mib": 248
+      }
+    },
+    "all_ok": true
+  },
+  "falsifiers": {
+    "cases": {
+      "an_output_hash_changed": {
+        "family": "A",
+        "target": "A_outputs",
+        "clean": true,
+        "refused": true
+      },
+      "a_state_duplicated": {
+        "family": "B",
+        "target": "B_membership",
+        "clean": true,
+        "refused": true
+      },
+      "client_minus_venue_zeroed": {
+        "family": "U",
+        "target": "U_reused_fields",
+        "clean": true,
+        "refused": true
+      },
+      "a_displayed_size_changed": {
+        "family": "U",
+        "target": "U_reused_fields",
+        "clean": true,
+        "refused": true
+      },
+      "a_price_state_relabelled": {
+        "family": "G",
+        "target": "G_labels",
+        "clean": true,
+        "refused": true
+      },
+      "h1000_per_share_negated": {
+        "family": "C",
+        "target": "C_cells",
+        "clean": true,
+        "refused": true
+      },
+      "a_sparse_flag_flipped": {
+        "family": "C",
+        "target": "C_cells",
+        "clean": true,
+        "refused": true
+      },
+      "a_cell_dropped": {
+        "family": "C",
+        "target": "C_cells",
+        "clean": true,
+        "refused": true
+      },
+      "a_reading_changed": {
+        "family": "P",
+        "target": "P_readings",
+        "clean": true,
+        "refused": true
+      },
+      "resources_over_the_cap": {
+        "family": "I",
+        "target": "I_resources",
+        "clean": true,
+        "refused": true
+      }
+    },
+    "falsifier_ok": true
+  },
+  "extra": {
+    "all_detailed_reading_fields": true,
+    "five_reading_tables": {
+      "t_principal": 15,
+      "t_price_display": 20,
+      "t_front_composition": 20,
+      "t_behind_depth": 60,
+      "t_pressure_census": 10
+    }
+  },
+  "unchecked_reading_corruptions_pass": {
+    "wrong_per_day_order": true,
+    "wrong_pooled_numeric_value": true
+  },
+  "queue_error_group_clock": {
+    "states": 4840,
+    "later_than_first": 4314,
+    "group_changed": 1240,
+    "current_touch_changed": 376,
+    "actual_first_touch": {
+      "n": 1922,
+      "within_1": 957
+    }
+  },
+  "saved_mutants": 23,
+  "note": "Detailed readings and all five tables independently verified correct now; frozen family P has narrower coverage."
+}

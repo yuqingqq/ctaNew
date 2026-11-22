@@ -1,0 +1,10 @@
+{
+  "review_cpu_seconds_before_this_small_summary": 2.83,
+  "cumulative_before_summary": 1.975566666666665,
+  "remaining_original_allocation_before_summary": 0.024433333333335125,
+  "prior_positive_guard_projected_remaining": 0.10065892907427568,
+  "cumulative_projected_if_completed": 2.0762255957409406,
+  "proposed_positive_round_ceiling": 0.16,
+  "proposed_line_ceiling": 2.12,
+  "proposed_ceilings_are_not_authorized": true
+}

@@ -1,0 +1,30 @@
+{
+  "checks": true,
+  "falsifiers": true,
+  "extra": {
+    "all_detailed_reading_fields": true,
+    "five_reading_tables": {
+      "t_principal": 15,
+      "t_price_display": 20,
+      "t_front_composition": 20,
+      "t_behind_depth": 60,
+      "t_pressure_census": 10
+    }
+  },
+  "escapes": {
+    "wrong_per_day_order": true,
+    "wrong_pooled_numeric_value": true
+  },
+  "clock": {
+    "states": 4840,
+    "later_than_first": 4314,
+    "group_changed": 1240,
+    "current_touch_changed": 376,
+    "actual_first_touch": {
+      "n": 1922,
+      "within_1": 957
+    }
+  },
+  "mutants": 23
+}
+2026-11-22T02:07:19Z tag=qp_review_verify rc=0 peak_rss_mib=208 wall_s=2.41 cpu_user_s=2.17 memavail_start_gib=23 disk_free_gib=434->434 slot=codex

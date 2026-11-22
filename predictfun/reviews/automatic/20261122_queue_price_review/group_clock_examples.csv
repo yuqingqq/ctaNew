@@ -1,0 +1,13 @@
+day,m,gid,t,t_first,price_display,price_display_first,client_minus_venue
+20261024,3697902,1,750.0,100.0,behind_best|shown_zero,behind_best|shown_positive,0.0
+20261024,3697902,7,39600.0,37100.0,behind_best|shown_positive,at_touch|shown_positive,-31.32000438496405
+20261024,3697902,29,65550.0,63700.0,behind_best|shown_positive,at_touch|shown_positive,1.220703097715159e-06
+20261024,3697902,32,81650.0,81200.0,at_touch|shown_positive,behind_best|shown_positive,0.0
+20261024,3697902,36,86900.0,84600.0,behind_best|shown_positive,at_touch|shown_positive,-58.7300072998047
+20261024,3697902,55,130100.0,128100.0,behind_best|shown_positive,at_touch|shown_positive,-32.000000076293944
+20261024,3697902,62,134900.0,130450.0,behind_best|shown_positive,at_touch|shown_positive,-2.9999975585937477
+20261024,3697902,68,160450.0,159400.0,behind_best|shown_positive,at_touch|shown_positive,-23.000004882812505
+20261024,3697902,70,176300.0,160950.0,behind_best|shown_positive,at_touch|shown_positive,0.0
+20261024,3697902,91,224100.0,223150.0,behind_best|shown_positive,at_touch|shown_positive,3.3569335897709607e-06
+20261024,3697902,96,226400.0,225250.0,at_touch|shown_positive,behind_best|shown_positive,5.340576159085231e-07
+20261024,3697902,114,244550.0,240450.0,behind_best|shown_positive,at_touch|shown_positive,-85.0

@@ -1,3 +1,29 @@
+<!-- QUEUE_PRICE_REVIEW_20261122_CODEX -->
+## 2026-11-22 — Queue/price economic reading reliable, no queue rule established
+
+[Review](reviews/automatic/20261122_queue_price_review/report.md) of
+**012db7bbcdd861bbd19a984286935d1553c88db3**: no blocker/replay. All 4,840
+states, 4,920 cells and five reading tables verified; 9 checks/10 falsifiers
+pass, 23 saved mutants rejudged. Front-at-touch common markouts -0.951/+4.592
+c/share at 1/30s are correct, but only 39 valued filled front states, one
+evaluable day and one side, with remaining-horizon composition uncontrolled.
+No established queue-based economic rule or priority opportunity cost.
+
+Deferred: Q8 conditions first-review error on later live grouping (1,240
+group changes; first-review at-touch grouping is 957/1,922 within one share).
+Frozen P misses detailed reading values/orders and compact CSVs; all present
+ones independently checked correct. These do not alter the economic decision
+and require no fix-only round. Prior four corrections accepted for this result.
+
+USER priority: profitability; only material reliability defects gate testing;
+defer small issues and stop rejected directions. ONE next priority is the
+already-frozen positive-pressure economic comparison, not more queue tables
+or a tuned queue rule. It remains stopped pending USER resource approval:
+proposed round 0.16h/line 2.12h; current line ~1.97557/2.0, projected remaining
+~0.10066h. Keep its existing stop criterion and report absolute value, not
+just improvement. No new data, validation or live use authorized.
+<!-- /QUEUE_PRICE_REVIEW_20261122_CODEX -->
+
 <!-- ARRIVAL_QUEUE_REVIEW_20261122_CODEX -->
 ## 2026-11-22 — Arrival/queue accounting accepted; correct occupancy and cohort readings
 
