@@ -1,0 +1,28 @@
+{
+  "source": "85127b3dfbdfb8689159fe8b9e76b447324b7cfc",
+  "source_manifest_sha": "34444c8a1b85752069a27d8e884e7d116656c03a88d3ccd3eb1f584355e5a013",
+  "files": {
+    "data/predict_fun/research/ladder_async_fast_v1_20261122/pilot/20261024.json": "15f91548c31a4460287d676184f2bc4af57bff064c02c57afbe9b8033417c8cf",
+    "data/predict_fun/research/ladder_async_fast_v1_20261122/pilot/20261024.jsonl.gz": "e1067426a8a075115007fbe69452dda934f5bcc85b400821ef78ecfd3daed155",
+    "data/predict_fun/research/ladder_async_fast_v1_20261122/pilot/20261024_arrays.npz": "669f576f96819bdaa6fba0fe547463c889dfac51407379b07ddfb4923680acb3",
+    "data/predict_fun/research/ladder_async_fast_v1_20261122/rest/20261024.json": "9e7ccfe796ec6ae26b4fca7e1f60c3cc7e3e50e9478f5a57dcd8c1969e7e4d2d",
+    "data/predict_fun/research/ladder_async_fast_v1_20261122/rest/20261024.jsonl.gz": "3068adbf28c1f786fe5ef84b71774d9be83e19611de321841e4993fd31ff9329",
+    "data/predict_fun/research/ladder_async_fast_v1_20261122/rest/20261024_arrays.npz": "f9b30d26a648621f34179c40a38d530317d731dce5db3cd3dced42c01ae85409",
+    "data/predict_fun/research/ladder_async_fast_v1_20261122/pilot/20261025.json": "9786fda7eabcbe9f71d7e820df19d24245253dcff11aa83ce25b6fa57dc5f939",
+    "data/predict_fun/research/ladder_async_fast_v1_20261122/pilot/20261025.jsonl.gz": "d0f1e238351d22c2ee8bf1a22347a4fb7a6dd89e0fb3a9764c4c64d0ac44af3d",
+    "data/predict_fun/research/ladder_async_fast_v1_20261122/pilot/20261025_arrays.npz": "34529cc1da6f412e648e8b864c137bea9169ac4e3ed865f5c838878c65231414",
+    "data/predict_fun/research/ladder_async_fast_v1_20261122/rest/20261025.json": "712cf2230b198ddc97820feae4b350f8e59b9c8f78aee69dac27f76721246cc3",
+    "data/predict_fun/research/ladder_async_fast_v1_20261122/rest/20261025.jsonl.gz": "9f1d3e3c51979955aafe2ce8bd6bab0a96c81edff73d0ac7d00f9f5db4f8188b",
+    "data/predict_fun/research/ladder_async_fast_v1_20261122/rest/20261025_arrays.npz": "ecc9b16ab287b907fda9f4f2ade5b67583a272583dec6f2ed49f15863c13d40e",
+    "data/predict_fun/research/ladder_async_fast_v1_20261122/pilot/20261026.json": "7a60c52d00ceb21a93f7ba6753ba2b06debd9f90ac97ada149557cf6a81f33d8",
+    "data/predict_fun/research/ladder_async_fast_v1_20261122/pilot/20261026.jsonl.gz": "97306d2706831b14b0665df931bebf120fd1918c93dd4641f6fb6741e233d3f7",
+    "data/predict_fun/research/ladder_async_fast_v1_20261122/pilot/20261026_arrays.npz": "c1de9a81c0382e33fb71409cda478a386ec2804f20dd93cedc069b59753212c1",
+    "data/predict_fun/research/ladder_async_fast_v1_20261122/rest/20261026.json": "d398339a1fbdc0c9f33fd8fd08f42caa2425ad31b6e2d55189858da43b1b1fd9",
+    "data/predict_fun/research/ladder_async_fast_v1_20261122/rest/20261026.jsonl.gz": "c66519fbd2c28bbd144bc60feb10ec03e1352e62db733d72a828585188c10727",
+    "data/predict_fun/research/ladder_async_fast_v1_20261122/rest/20261026_arrays.npz": "89da2deed045c58f493d6607fa0aaba3b0ba4a43fe3a51d1a99b5a903b987d0b",
+    "data/predict_fun/research/ladder_async_fast_v1_20261122/pilot/20261027.json": "e0e78f9b93cd048d82c88fc30ec1f40648545e74e839a4696146b5b02104fe71",
+    "data/predict_fun/research/ladder_async_fast_v1_20261122/pilot/20261027.jsonl.gz": "667f611e3d2a5b1899c2d405b7a349925b15ed1aba68bddf0c959804b875637b",
+    "data/predict_fun/research/ladder_async_fast_v1_20261122/pilot/20261027_arrays.npz": "eb3fd72445ece50bcdc6f9f5ed93a3525ab10b4b59baa3a80bd510d3340f91d5"
+  },
+  "reference_arms_sha": "9e4972065b115f1a2ac5f328d1db400f988be2f405873d23c06d9c187dea4d78"
+}
