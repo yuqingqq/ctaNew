@@ -1,4 +1,32 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+queue_front_review_20261122_codex:
+  status: numeric_result_accepted_mixed_no_rerun
+  target_commit: c7404f212700ebf1c6977e1806a28c23b5961f02
+  report: predictfun/reviews/automatic/20261122_queue_front_review/report.md
+  approved_completed_scope: 425e9fbc_two_arm_queue_priority
+  approved_batch_core_hour_cap: 0.25
+  approved_line_core_hour_cap: 2.25
+  blocking_findings: 0
+  nonblocking_findings: [causal_interpretation_overreach, incomplete_checker_field_coverage]
+  current_control_markets: 19
+  front_accepted_generations: 4874
+  arm_rows_verified: 57
+  class_rows_verified: 76
+  checker_booleans: 10
+  falsifiers: 10
+  saved_mutants_rejudged: 26
+  end_c: {current: -86109.6074, front: -65937.0939, delta: 20172.5135}
+  economic: MIXED
+  all_days_still_negative: true
+  async_and_faster_latency_tested: false
+  review_cpu_seconds: 9.09
+  line_core_hours_before_commit_verification: 2.174203
+  next_priority: prepare_ASYNC_FAST10_current_and_front_execution_sensitivity
+  next_development_core_hour_cap_proposed: 0.25
+  next_line_core_hour_cap_proposed: 2.50
+  next_batch_authorized: false
+  positive_pressure_status: preserved_stopped
+
 async_execution_amendment_20261122_codex:
   status: client_concurrency_scope_clarified_no_replay
   source_commit: 9f7fe7031252aa8003cb2f275eb38587acb89d0b

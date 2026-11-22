@@ -1,0 +1,98 @@
+{
+  "target": "c7404f212700ebf1c6977e1806a28c23b5961f02",
+  "class_horizons": [
+    {
+      "arm": "CURRENT_QUEUE",
+      "cls": "same_price",
+      "all_fills": 3430,
+      "all_q": 37461.43251424881,
+      "end": -95332.96730904398,
+      "eligible_1s_q": 37421.932667611596,
+      "mo1s": 1767.4693155998955,
+      "mo5s": -11285.301053705125,
+      "eligible_5s_q": 37256.64785012976,
+      "censored_5s": 26,
+      "mo30s": -21989.158089765242,
+      "eligible_30s_q": 35004.195175626664,
+      "censored_30s": 267
+    },
+    {
+      "arm": "CURRENT_QUEUE",
+      "cls": "through",
+      "all_fills": 3965,
+      "all_q": 41938.033915948996,
+      "end": 9223.359920361658,
+      "eligible_1s_q": 41632.18622933891,
+      "mo1s": -86931.74655205953,
+      "mo5s": -87672.8000161288,
+      "eligible_5s_q": 40442.15962995247,
+      "censored_5s": 164,
+      "mo30s": -79424.09601936313,
+      "eligible_30s_q": 34030.83159535502,
+      "censored_30s": 792
+    },
+    {
+      "arm": "FRONT_AT_ACTIVATION",
+      "cls": "same_price",
+      "all_fills": 8312,
+      "all_q": 85210.3147941658,
+      "end": -38436.3919909999,
+      "eligible_1s_q": 85087.74813576057,
+      "mo1s": 20881.405933366223,
+      "mo5s": -7594.393411027762,
+      "eligible_5s_q": 84256.9440932777,
+      "censored_5s": 101,
+      "mo30s": 19.743496314329377,
+      "eligible_30s_q": 78788.78131302808,
+      "censored_30s": 658
+    },
+    {
+      "arm": "FRONT_AT_ACTIVATION",
+      "cls": "through",
+      "all_fills": 3283,
+      "all_q": 32295.317014445638,
+      "end": -27500.70192378454,
+      "eligible_1s_q": 31905.441542194916,
+      "mo1s": -82693.79999877926,
+      "mo5s": -92779.62856224144,
+      "eligible_5s_q": 31078.22974122859,
+      "censored_5s": 148,
+      "mo30s": -78297.8178907875,
+      "eligible_30s_q": 24644.98239413248,
+      "censored_30s": 812
+    }
+  ],
+  "extra_check_refusals": {
+    "class_30s": true,
+    "added_end": true,
+    "day_sign": true
+  },
+  "checker_v2_changed_functions": [
+    "_edit",
+    "main"
+  ],
+  "frozen_source_closure_unchanged": true,
+  "projection_recomputed": true,
+  "frozen_logged_core_hours": 2.171622222222222,
+  "duplicate_log_receipts": [],
+  "additional_jobs": [
+    {
+      "time": "2026-11-22T03:49:01Z",
+      "tag": "codex_async_execution_commit_verify",
+      "cpu_s": 0.06
+    },
+    {
+      "time": "2026-11-22T03:49:13Z",
+      "tag": "codex_async_execution_commit_verify_appendlog",
+      "cpu_s": 0.14
+    },
+    {
+      "time": "2026-11-22T03:59:28Z",
+      "tag": "codex_qf_review_verify",
+      "cpu_s": 8.78
+    }
+  ],
+  "line_core_hours_before_this_check": 2.1741166666666665,
+  "note": "This job and final commit verification are added from their run_light log lines in the report."
+}
+2026-11-22T04:01:17Z tag=codex_qf_review_diagnostics rc=0 peak_rss_mib=108 wall_s=0.42 cpu_user_s=0.31 memavail_start_gib=23 disk_free_gib=432->432 slot=codex

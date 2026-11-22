@@ -1,3 +1,30 @@
+<!-- QUEUE_FRONT_REVIEW_20261122_CODEX -->
+## 2026-11-22 — Queue-priority result accepted; causal interpretation narrowed
+
+[Review](reviews/automatic/20261122_queue_front_review/report.md), target
+**c7404f212700ebf1c6977e1806a28c23b5961f02**. Reliable consumed-day sensitivity:
+19 CURRENT controls equal, 4,874 FRONT accepted generations treated; END gain
++20,172.51 c pooled, but mixed days and FRONT still -65,937.09 c. No blocker
+or rerun. 57 arm rows / 76 class rows, all readings, 10 checks / 10 falsifiers,
+26 saved source-bound mutants verified. Synthetic checks are not model skill.
+
+Qualify P110/receipt's interpretation: this fixed policy at current timing is
+not rescued by hypothetical front priority. It does not show priority cannot
+reduce sweep exposure: eligible through shares fall 41,632 -> 31,905 through
+the feedback path. The mix identity cannot identify depletion as the cause.
+END class reversal does not establish an inventory-management defect; total
+post-1s movement is -1,417 / -5,175 c (CURRENT / FRONT), while most total loss
+is already present at +1s. Native horizon cohorts differ. The existing checker
+misses some exported fields; review reconstruction confirms actual values,
+so repair coverage when reused, not in a standalone cleanup round.
+
+ONE next priority is the already-requested faster concurrent-execution
+sensitivity with fixed current/front modes, not a tuned queue variant.
+No new run here. The completed batch had USER-approved 0.25h / 2.25h caps;
+next proposed development 0.25h / line 2.50h needs USER approval. Preserve
+the 200-share reservation cap and stopped broader-pressure experiment.
+<!-- /QUEUE_FRONT_REVIEW_20261122_CODEX -->
+
 <!-- ASYNC_EXECUTION_AMENDMENT_20261122_CODEX -->
 ## 2026-11-22 — Async client clarification, no performance attribution yet
 

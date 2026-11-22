@@ -23,6 +23,43 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- QUEUE_FRONT_REVIEW_20261122_CODEX -->
+## 2026-11-22 — Queue-priority sensitivity accepted numerically; mixed, still losing
+
+[Combined review](reviews/automatic/20261122_queue_front_review/report.md),
+target **c7404f212700ebf1c6977e1806a28c23b5961f02**. No blocking implementation
+or accounting finding, no replay or minor-fix round. CURRENT = accepted
+pressure on 19/19 markets; FRONT treats 4,874/4,874 accepted generations.
+END -86,109.61 -> -65,937.09 c, +20,172.51 (23.4% of deficit), mixed by day;
++1s -85,164.28 -> -61,812.39 c. All days remain negative. Source selftest,
+10 checker booleans, 10 falsifiers, 26 saved mutants rejudged; all 57 arm and
+76 class rows plus full readings checked. Checks used 9.09 CPU seconds.
+
+Two NONBLOCKING findings: (1) supersede report lines 54/80/90's causal claim.
+Queue directly changes same-price allocation but also changes later sweep
+and inventory exposure; the arithmetic mix split does not prove depletion
+caused the gain. END class reversal is not an inventory-ablation result;
+aggregate post-1s movement is only -1,417 c CURRENT / -5,175 FRONT. Native
+5/30s cohorts differ. (2) checker omits long-horizon, lost/added-value and
+detailed-reading fields; three corruptions pass. All ACTUAL fields verified
+here; extend coverage only when reused. No numerical correction needed.
+
+ONE next priority: prepare the prior ASYNC_FAST10 queue/execution sensitivity,
+reusing these two baseline ledgers and adding current/front faster profiles.
+10ms post/live cancel, 100ms notices, same feeds/grid/M50/cap/strategy; no
+new queue threshold, model or days. Preserve reservations under overlapping
+commands; 200-share capacity still blocks a third fully-sized bid. Combined
+execution-profile effect, not pure wire latency. Source freeze, bounded
+controls, pilot/projection and one combined review. No automatic variant.
+
+APPROVAL UPDATE: this completed experiment's approved caps were batch 0.25h /
+line 2.25h. Line now approximately 2.1742h before final commit verification.
+The NEXT batch needs USER approval: proposed additional development <=0.25h,
+line <=2.50h including review, replacing earlier unapproved FAST10 proposals.
+No launch here. POSITIVE-PRESSURE remains stopped. Largest limitation: residual
+short-horizon sweep losses remain; their avoidability by timing is unmeasured.
+<!-- /QUEUE_FRONT_REVIEW_20261122_CODEX -->
+
 <!-- ASYNC_EXECUTION_AMENDMENT_20261122_CODEX -->
 ## 2026-11-22 — Concurrent sends are separate from notification speed
 

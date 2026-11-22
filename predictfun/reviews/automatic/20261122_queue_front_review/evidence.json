@@ -1,0 +1,393 @@
+{
+  "target": "c7404f212700ebf1c6977e1806a28c23b5961f02",
+  "selftest_pass": true,
+  "frozen_checks": {
+    "checks": {
+      "A_committed": true,
+      "A_inputs": true,
+      "A_outputs": true,
+      "B_membership": true,
+      "K_control": true,
+      "T_treatment": true,
+      "F_fills": true,
+      "M_measurement": true,
+      "P_readings": true,
+      "I_resources": true
+    },
+    "details": {
+      "B": {
+        "markets": 19
+      },
+      "K": {
+        "markets_failed": []
+      },
+      "T": {
+        "failed": []
+      },
+      "F": {
+        "failed": []
+      },
+      "M": {
+        "failed": []
+      },
+      "P": {
+        "failed": [],
+        "mine": {
+          "END_answer": "MIXED",
+          "mo1s_answer": "MIXED",
+          "economic": "MIXED",
+          "reading": "mixed",
+          "adds_fills": true,
+          "END_total": 20172.513473897852,
+          "recovered": 0.2342655376750585,
+          "volume": 22561.613606329734,
+          "value": 790.2695647168675
+        }
+      },
+      "I": {
+        "batch_core_hours": 0.1960527777777778,
+        "line_core_hours": 2.17162222222222,
+        "peak_mib": 1186
+      }
+    },
+    "all_ok": true
+  },
+  "falsifiers": {
+    "cases": {
+      "an_output_hash_changed": {
+        "family": "A",
+        "target": "A_outputs",
+        "clean": true,
+        "refused": true
+      },
+      "a_market_dropped": {
+        "family": "B",
+        "target": "B_membership",
+        "clean": true,
+        "refused": true
+      },
+      "a_current_fill_changed": {
+        "family": "K",
+        "target": "K_control",
+        "clean": true,
+        "refused": true
+      },
+      "a_front_generation_behind": {
+        "family": "T",
+        "target": "T_treatment",
+        "clean": true,
+        "refused": true
+      },
+      "a_fill_class_flipped": {
+        "family": "F",
+        "target": "F_fills",
+        "clean": true,
+        "refused": true
+      },
+      "a_fill_over_its_trade": {
+        "family": "F",
+        "target": "F_fills",
+        "clean": true,
+        "refused": true
+      },
+      "an_arm_value_changed": {
+        "family": "M",
+        "target": "M_measurement",
+        "clean": true,
+        "refused": true
+      },
+      "a_class_value_changed": {
+        "family": "M",
+        "target": "M_measurement",
+        "clean": true,
+        "refused": true
+      },
+      "a_reading_changed": {
+        "family": "P",
+        "target": "P_readings",
+        "clean": true,
+        "refused": true
+      },
+      "resources_over_the_cap": {
+        "family": "I",
+        "target": "I_resources",
+        "clean": true,
+        "refused": true
+      }
+    },
+    "falsifier_ok": true
+  },
+  "mutants_rejudged": 26,
+  "markets": 19,
+  "arms_reconstructed": 57,
+  "class_rows_reconstructed": 76,
+  "independently_recomputed_arm_fields": 4104,
+  "fill_event_consistency_rows": 18990,
+  "full_predicates_verified": {
+    "days": [
+      "20261024",
+      "20261025",
+      "20261026",
+      "20261027"
+    ],
+    "arm_totals": {
+      "BASELINE": {
+        "END": -209557.70865004533,
+        "mo1s": -203083.92154801564,
+        "valid_q": 96603.986394994,
+        "per_share": -2.1022312756085126,
+        "q": 96991.0711332241
+      },
+      "CURRENT_QUEUE": {
+        "END": -86109.60738868231,
+        "mo1s": -85164.27723645967,
+        "valid_q": 79054.11889695049,
+        "per_share": -1.0772908284193765,
+        "q": 79399.46643019778
+      },
+      "FRONT_AT_ACTIVATION": {
+        "END": -65937.09391478446,
+        "mo1s": -61812.39406541304,
+        "valid_q": 116993.18967795551,
+        "per_share": -0.5283418140454381,
+        "q": 117505.63180861143
+      }
+    },
+    "arm_by_day": {
+      "20261024": {
+        "BASELINE": {
+          "END": -64287.86774717526,
+          "mo1s": -61614.3179317701,
+          "valid_q": 35728.165339340805,
+          "per_share": -1.7245306985837774,
+          "q": 35761.43200600747
+        },
+        "CURRENT_QUEUE": {
+          "END": -33011.105130898126,
+          "mo1s": -32357.492642288664,
+          "valid_q": 33760.12935194552,
+          "per_share": -0.9584528632863183,
+          "q": 33793.396018612184
+        },
+        "FRONT_AT_ACTIVATION": {
+          "END": -9118.957736183973,
+          "mo1s": -20169.88199456931,
+          "valid_q": 30527.808435005012,
+          "per_share": -0.6607052071068854,
+          "q": 30544.475101671676
+        }
+      },
+      "20261025": {
+        "BASELINE": {
+          "END": -66495.76606478279,
+          "mo1s": -54432.53881769054,
+          "valid_q": 26704.396930290393,
+          "per_share": -2.038336194589309,
+          "q": 26959.380418520494
+        },
+        "CURRENT_QUEUE": {
+          "END": -29621.860753517012,
+          "mo1s": -17996.45166575444,
+          "valid_q": 24152.76896312634,
+          "per_share": -0.7451092540664529,
+          "q": 24407.752451356442
+        },
+        "FRONT_AT_ACTIVATION": {
+          "END": -28490.438028822875,
+          "mo1s": -8654.504815701783,
+          "valid_q": 39612.64927006774,
+          "per_share": -0.21847831375018212,
+          "q": 39892.724491631176
+        }
+      },
+      "20261026": {
+        "BASELINE": {
+          "END": -45400.15656970044,
+          "mo1s": -61126.41092541069,
+          "valid_q": 24271.465306032907,
+          "per_share": -2.5184474919286033,
+          "q": 24370.299889366237
+        },
+        "CURRENT_QUEUE": {
+          "END": -9275.058185558055,
+          "mo1s": -29854.126925308366,
+          "valid_q": 16456.152338346168,
+          "per_share": -1.8141620417393807,
+          "q": 16513.24971669668
+        },
+        "FRONT_AT_ACTIVATION": {
+          "END": -12231.065602363708,
+          "mo1s": -22350.31871999243,
+          "valid_q": 30521.950178447038,
+          "per_share": -0.7322703362439476,
+          "q": 30737.650420872877
+        }
+      },
+      "20261027": {
+        "BASELINE": {
+          "END": -33373.91826838687,
+          "mo1s": -25910.653873144314,
+          "valid_q": 9899.958819329906,
+          "per_share": -2.6172486518381413,
+          "q": 9899.958819329906
+        },
+        "CURRENT_QUEUE": {
+          "END": -14201.583318709116,
+          "mo1s": -4956.206003108195,
+          "valid_q": 4685.068243532474,
+          "per_share": -1.0578727449594814,
+          "q": 4685.068243532474
+        },
+        "FRONT_AT_ACTIVATION": {
+          "END": -16096.632547413916,
+          "mo1s": -10637.688535149513,
+          "valid_q": 16330.781794435705,
+          "per_share": -0.6513888109615201,
+          "q": 16330.781794435705
+        }
+      }
+    },
+    "END": {
+      "answer": "MIXED",
+      "by_day": {
+        "20261024": 23892.147394714153,
+        "20261025": 1131.4227246941373,
+        "20261026": -2956.0074168056526,
+        "20261027": -1895.0492287048
+      },
+      "total": 20172.513473897852,
+      "markets_better": 13,
+      "markets_worse": 6,
+      "markets_equal": 0
+    },
+    "mo1s": {
+      "answer": "MIXED",
+      "by_day": {
+        "20261024": 12187.610647719353,
+        "20261025": 9341.946850052658,
+        "20261026": 7503.808205315938,
+        "20261027": -5681.482532041318
+      },
+      "total": 23351.883171046633
+    },
+    "per_share": {
+      "answer": "POSITIVE_EVERY_DAY",
+      "by_day": {
+        "20261024": 0.2977476561794329,
+        "20261025": 0.5266309403162708,
+        "20261026": 1.0818917054954331,
+        "20261027": 0.40648393399796123
+      },
+      "total": 0.5489490143739384
+    },
+    "end_negative": {
+      "total": {
+        "BASELINE": true,
+        "CURRENT_QUEUE": true,
+        "FRONT_AT_ACTIVATION": true
+      },
+      "by_day": {
+        "20261024": {
+          "BASELINE": true,
+          "CURRENT_QUEUE": true,
+          "FRONT_AT_ACTIVATION": true
+        },
+        "20261025": {
+          "BASELINE": true,
+          "CURRENT_QUEUE": true,
+          "FRONT_AT_ACTIVATION": true
+        },
+        "20261026": {
+          "BASELINE": true,
+          "CURRENT_QUEUE": true,
+          "FRONT_AT_ACTIVATION": true
+        },
+        "20261027": {
+          "BASELINE": true,
+          "CURRENT_QUEUE": true,
+          "FRONT_AT_ACTIVATION": true
+        }
+      }
+    },
+    "adds_fills": true,
+    "filled_q": {
+      "current": 79399.46643019778,
+      "front": 117505.63180861143
+    },
+    "recovered": 0.2342655376750585,
+    "mix": {
+      "classes": {
+        "same_price": {
+          "cur_q": 37421.932667611596,
+          "front_q": 85087.74813576057,
+          "cur_per_share": 0.0472308400343424,
+          "front_per_share": 0.24541025460033547,
+          "cur_mo1s": 1767.4693155998955,
+          "front_mo1s": 20881.405933366223,
+          "volume": 2251.2965054826277,
+          "value": 16862.640112283698
+        },
+        "through": {
+          "cur_q": 41632.18622933891,
+          "front_q": 31905.441542194916,
+          "cur_per_share": -2.088089875299348,
+          "front_per_share": -2.591840012288085,
+          "cur_mo1s": -86931.74655205953,
+          "front_mo1s": -82693.79999877926,
+          "volume": 20310.317100847107,
+          "value": -16072.370547566827
+        }
+      },
+      "volume": 22561.613606329734,
+      "value": 790.2695647168712,
+      "total": 23351.883171046604
+    },
+    "participation": {
+      "both_exact": -0.04577781702578598,
+      "bid_exact": -0.06913917343694809,
+      "ask_exact": -0.022728717767573348,
+      "pulls": 127.0,
+      "withholds": 419.0,
+      "first_review_pulls": 26.0,
+      "generations": 385.0,
+      "structural": -205.0
+    },
+    "inventory": {
+      "mean_abs": 0.858563314766343,
+      "share_abs_ge_S": -0.03029918756623101
+    },
+    "economic": "MIXED",
+    "reading": "mixed",
+    "note": "a hypothetical execution sensitivity on 19 consumed-day markets; not an executable policy, upper bound, validation or profitability claim"
+  },
+  "identity_sources_and_receipt_copies": true,
+  "checker_escapes": {
+    "wrong_30s_class_value": true,
+    "wrong_added_end_with_stored_gap_unchanged": true,
+    "wrong_day_absolute_sign": true
+  },
+  "arm_decomposition": {
+    "BASELINE": {
+      "mo1s": -203083.92154801564,
+      "move_to_end": -7617.151514891631,
+      "late": 1143.3644128619142,
+      "end": -209557.70865004536
+    },
+    "CURRENT_QUEUE": {
+      "mo1s": -85164.27723645966,
+      "move_to_end": -1416.8421000502267,
+      "late": 471.51194782755,
+      "end": -86109.60738868231
+    },
+    "FRONT_AT_ACTIVATION": {
+      "mo1s": -61812.39406541302,
+      "move_to_end": -5175.3757945287625,
+      "late": 1050.6759451573066,
+      "end": -65937.09391478446
+    }
+  },
+  "limitations": [
+    "No raw market tape reloaded; class metadata mapping verified in pinned source and synthetic controls, and cross-arm event consistency.",
+    "Full arm helper reproduction complements independent economic checks; it is not an independent simulator."
+  ]
+}
