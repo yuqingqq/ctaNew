@@ -23,6 +23,28 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- TWO_SIDED_REST_VALUE_20261122_USER -->
+## 2026-11-22 — USER: long resting should earn repeated two-sided spread with controlled inventory
+
+[Two-sided value addendum](reviews/automatic/20261122_long_horizon_value_contract/two_sided_value_addendum.md)
+to the governing longer-continuation contract. Value each order by its
+marginal effect on the full bid/ask book, including repeated partials,
+opposite-side offset timing/prices, queue retention/reset and inventory
+feedback. Forecast jointly, not as independent one-fill bid/ask EVs.
+
+Low inventory is a hypothesis: balanced expected volumes or flat final
+inventory can conceal large/intermittent exposure. Required metrics include
+matched volume and actual paired prices, lot holding times, time-weighted
+absolute/peak/terminal inventory, risk-limited time, net economic value,
+execution edge versus inventory movement, participation and churn. Queue
+benefit belongs in future fills, not an added bonus; costs count once.
+
+Keep existing caps/hysteresis; no implicit size/risk change. Same next
+combined deliverable: bounded diagnostic closure plus concrete longer-
+continuation paired-value design and pilot projection. No new run/fit/day
+or budget extension; line remains <=2.50h. Another session implements.
+<!-- /TWO_SIDED_REST_VALUE_20261122_USER -->
+
 <!-- LONG_CONTINUATION_VALUE_20261122_USER -->
 ## 2026-11-22 — USER: project longer economic continuation, not the first fill or 1s loss
 

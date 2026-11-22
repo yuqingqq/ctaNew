@@ -1,4 +1,16 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+two_sided_rest_value_20261122_user:
+  status: required_long_value_accounting_and_projection_no_new_run
+  addendum: predictfun/reviews/automatic/20261122_long_horizon_value_contract/two_sided_value_addendum.md
+  parent_contract_commit: c590b083bb129b9a3f936831a72f773847981490
+  economic_unit: marginal_order_effect_on_joint_bid_ask_continuation
+  low_inventory_assumed_from_long_resting: false
+  required: [joint_fill_timing_and_prices, matched_turnover, lot_holding_time, mean_peak_terminal_inventory, net_ledger_value, queue_reset, churn]
+  inventory_rules_and_caps: unchanged
+  additive_queue_bonus: prohibited_double_counting
+  next_deliverable: same_long_continuation_contract_and_bounded_pilot_design
+  new_run_fit_data_day_or_resource_extension: false
+
 long_continuation_value_20261122_user:
   status: governing_target_direction_no_new_run
   plan: predictfun/reviews/automatic/20261122_long_horizon_value_contract/plan.md

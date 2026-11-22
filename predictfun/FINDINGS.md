@@ -1,3 +1,21 @@
+<!-- TWO_SIDED_REST_VALUE_20261122_USER -->
+## 2026-11-22 — USER economic mechanism: profitable inventory turnover from retained bid/ask queues
+
+[Addendum](reviews/automatic/20261122_long_horizon_value_contract/two_sided_value_addendum.md),
+design only, no new result. Longer resting may enable repeated spread
+capture, but low inventory needs timely, economically favorable opposite-
+side fills. Balanced expected volume/flat terminal position do not prove
+low interim risk. Evaluate joint paths and marginal full-book order value,
+not a sum of independent first-fill estimates.
+
+Full cash-plus-marked-inventory accounting is primary. Execution edge and
+inventory movement explain it; do not double-count markouts, round-trip
+profit or a queue bonus. Record matched shares/prices, inventory holding
+times and time-weighted/peak/terminal inventory beside profit and churn.
+These join the existing longer-continuation design; pinned risk controls
+and resource ceilings remain. No new simulation or policy launched here.
+<!-- /TWO_SIDED_REST_VALUE_20261122_USER -->
+
 <!-- LONG_CONTINUATION_VALUE_20261122_USER -->
 ## 2026-11-22 — USER economic objective: all future fills and continuation, not first-fill markout
 
