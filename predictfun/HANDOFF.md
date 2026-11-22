@@ -23,6 +23,30 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- MAKER_TRACE_RECONSTRUCTION_20261122_USER -->
+## 2026-11-22 — USER: reconstruct makers' whole queue traces to understand posting and pulling
+
+[Reconstruction contract](reviews/automatic/20261122_maker_trace_reconstruction/plan.md).
+The prior next-trade review proves an identification limit: the same public
+fills/depth can represent exhaustion or cancellation, and later participation
+by the same address does not prove the same order survived. Do not turn
+GONE/STAYED into exact CANCEL/KEEP labels or first/last fills into commands.
+
+First deliverable: a small separately declared trace-identifiability packet
+on one existing supported consumed market, up to eight order examples from
+two maker addresses. Check raw fields, reconcile order-hash fills and joint
+inventory, provide conservative quantity/queue/timing bounds, and retain
+multiple compatible histories where actions are ambiguous. Venue effects
+and private decision times are separate. No profitability or imitation claim.
+
+Development owns this follow-up after the current frozen discrimination
+round; its ongoing experiment and gates are unchanged. Design only is now
+recorded: no new replay, fit, data day or compute extension was launched.
+Declare cost before a new maker replay; the existing 1.25h discrimination
+allocation is not automatically a budget for broad reconstruction. Bundle
+material findings and the packet in one round, no minor-fix cycle.
+<!-- /MAKER_TRACE_RECONSTRUCTION_20261122_USER -->
+
 <!-- TURNOVER_ATTRIBUTION_REVIEW_20261122_CODEX -->
 ## 2026-11-22 — Turnover attribution accepted; conditional long-value discrimination needs a new scope decision
 
