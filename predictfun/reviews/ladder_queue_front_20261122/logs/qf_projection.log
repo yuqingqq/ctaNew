@@ -1,0 +1,29 @@
+{
+ "pilot_load_s": [
+  58.22454237937927,
+  51.742388010025024,
+  67.2277181148529,
+  58.414844274520874
+ ],
+ "pilot_market_s_mean": 10.063328057527542,
+ "cpu_per_wall": 0.9378365758754863,
+ "rest_markets": {
+  "20261024": 5,
+  "20261025": 3,
+  "20261026": 3,
+  "20261027": 0
+ },
+ "projected_rest_cpu_s": 269.5377283647737,
+ "tail_s": 60.0,
+ "batch_spent": 0.12053055555555552,
+ "batch_projected": 0.21206881343465933,
+ "line_now": 2.096099999999998,
+ "line_projected": 2.2176382578791016,
+ "caps": {
+  "batch_core_hours": 0.25,
+  "line_ceiling": 2.25,
+  "review_reserve": 0.03
+ },
+ "run_rest": true
+}
+2026-11-22T03:51:15Z tag=qf_projection rc=0 peak_rss_mib=197 wall_s=0.99 cpu_user_s=0.81 memavail_start_gib=23 disk_free_gib=432->432 slot=claude

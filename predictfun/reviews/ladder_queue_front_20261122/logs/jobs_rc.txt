@@ -1,1 +1,12 @@
 qf_manifest rc=0
+qf_selftest_frozen rc=0
+qf_pilot_20261024 rc=0
+qf_pilot_20261027 rc=0
+qf_pilot_20261025 rc=0
+qf_pilot_20261026 rc=0
+qf_projection rc=0
+qf_rest_20261025 rc=0
+qf_rest_20261026 rc=0
+qf_rest_20261024 rc=0
+qf_measure rc=0
+qf_checks rc=1

@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/ladder_queue_front_20261122/fq_checks.py", line 301, in <module>
+    main(sys.argv[1:])
+  File "/home/yuqing/ctaNew/predictfun/reviews/ladder_queue_front_20261122/fq_checks.py", line 293, in main
+    E = load(*(argv[:1] or [None])); E['mine_t'] = my_totals(E); E['mine_p'] = my_predicates(E['mine_t'], E); r_ = run_checks(E); fz = falsify(E, r_)
+                                                                                                                                       ^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/ladder_queue_front_20261122/fq_checks.py", line 282, in falsify
+    X_ = dict(E); fn(X_)
+                  ^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/ladder_queue_front_20261122/fq_checks.py", line 267, in <lambda>
+    ('a_current_fill_changed', 'K', 'K_control', lambda E: _edit(E, lambda r: r[C_]['fills'][0].__setitem__(3, float(r[C_]['fills'][0][3]) + 1.))),
+                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/ladder_queue_front_20261122/fq_checks.py", line 256, in _edit
+    k = _first(E); r = json.loads(json.dumps(E['runs'][k][0])); fn(r); E['runs'] = dict(E['runs'], **{k: [r]})
+                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: keywords must be strings
+2026-11-22T03:53:19Z tag=qf_checks rc=1 peak_rss_mib=210 wall_s=1.32 cpu_user_s=1.15 memavail_start_gib=23 disk_free_gib=433->433 slot=claude

@@ -1,0 +1,2 @@
+QUEUE FRONT SELFTEST PASSED: treatment, swap and inertness, feedback, classes, readings, parts, guards
+2026-11-22T03:49:26Z tag=qf_selftest_frozen rc=0 peak_rss_mib=210 wall_s=4.56 cpu_user_s=4.33 memavail_start_gib=23 disk_free_gib=433->433 slot=claude
