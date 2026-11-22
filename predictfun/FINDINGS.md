@@ -1,3 +1,33 @@
+<!-- ASYNC_FAST_REVIEW_20261122_CODEX -->
+## 2026-11-22 — ASYNC result verified; fixed rule fails, input insufficiency unproved
+
+[Review](reviews/automatic/20261122_async_fast_review/report.md), full target
+**85127b3dfbdfb8689159fe8b9e76b447324b7cfc**. No blocker/rerun. 19 complete
+consumed markets; 8/8 parity; contract on 76 ledgers; all 95 arm / 152 class
+rows and full predicates checked. Every tested arm loses on every day;
+all four combined economic contrasts MIXED. Through-price +1s loss remains
+about -80k to -87k c across arms. These are simulated marked values, not
+untouched validation or proof of achievable live latency.
+
+Qualify P111/new receipt: END minus eligible +1s includes late/unsupported
+fills. Actual post-1s movement (current base / front base / current async /
+front async): -1,416.84 / -5,175.38 / +9,177.89 / -26,694.24 c; late values
++471.51 / +1,050.68 / +988.06 / +785.26 c. This is an accounting identity,
+not an inventory-policy ablation. The fixed pressure rule fails to avoid
+enough loss; the experiment does not show decision-time information itself
+cannot anticipate sweeps. Timing, concurrency and subsequent state paths
+change together. The checker still omits ancillary fields; actual values
+are verified by this review, so repair only when relevant fields are reused.
+
+ONE next priority: FEASIBLE-CANCEL-HEADROOM-v1. Quantify, on saved CURRENT /
+FRONT ASYNC ledgers separately, the best hindsight one-cancel cut at an
+actual live KEEP callback and the good suffix fills sacrificed with bad
+ones. Fixed-path local accounting only; no executable oracle, fit, replay,
+new day or tuned guard. Development <=0.05h + next review <=0.02h within
+the approved line <=2.50h (about 2.379 used). This bounded diagnostic needs
+no further USER permission; extensions do. POSITIVE-PRESSURE stays stopped.
+<!-- /ASYNC_FAST_REVIEW_20261122_CODEX -->
+
 <!-- QUEUE_FRONT_REVIEW_20261122_CODEX -->
 ## 2026-11-22 — Queue-priority result accepted; causal interpretation narrowed
 

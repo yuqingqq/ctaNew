@@ -1,0 +1,199 @@
+{
+  "target": "85127b3dfbdfb8689159fe8b9e76b447324b7cfc",
+  "selftest_pass": true,
+  "checks": {
+    "checks": {
+      "A_committed": true,
+      "A_inputs": true,
+      "A_outputs": true,
+      "B_membership": true,
+      "K_parity": true,
+      "S_settings": true,
+      "E_contract": true,
+      "T_treatment": true,
+      "F_fills": true,
+      "M_measurement": true,
+      "P_readings": true,
+      "I_resources": true
+    },
+    "details": {
+      "B": {
+        "markets": 19
+      },
+      "K": {
+        "failed": []
+      },
+      "S": {
+        "failed": []
+      },
+      "E": {
+        "failed": [],
+        "n": 0
+      },
+      "T": {
+        "failed": []
+      },
+      "F": {
+        "failed": []
+      },
+      "M": {
+        "failed": []
+      },
+      "P": {
+        "failed": []
+      },
+      "I": {
+        "batch_core_hours": 0.20148055555555547,
+        "line_core_hours": 2.375627777777776,
+        "peak_mib": 1187
+      }
+    },
+    "all_ok": true
+  },
+  "falsifier": {
+    "cases": {
+      "an_output_hash_changed": {
+        "family": "A",
+        "target": "A_outputs",
+        "clean": true,
+        "refused": true
+      },
+      "a_market_dropped": {
+        "family": "B",
+        "target": "B_membership",
+        "clean": true,
+        "refused": true
+      },
+      "a_parity_fill_changed": {
+        "family": "K",
+        "target": "K_parity",
+        "clean": true,
+        "refused": true
+      },
+      "an_async_setting_changed": {
+        "family": "S",
+        "target": "S_settings",
+        "clean": true,
+        "refused": true
+      },
+      "an_activation_shifted": {
+        "family": "E",
+        "target": "E_contract",
+        "clean": true,
+        "refused": true
+      },
+      "a_size_over_the_room": {
+        "family": "E",
+        "target": "E_contract",
+        "clean": true,
+        "refused": true
+      },
+      "a_duplicate_price": {
+        "family": "E",
+        "target": "E_contract",
+        "clean": true,
+        "refused": true
+      },
+      "a_front_generation_behind": {
+        "family": "T",
+        "target": "T_treatment",
+        "clean": true,
+        "refused": true
+      },
+      "a_fill_class_flipped": {
+        "family": "F",
+        "target": "F_fills",
+        "clean": true,
+        "refused": true
+      },
+      "an_arm_value_changed": {
+        "family": "M",
+        "target": "M_measurement",
+        "clean": true,
+        "refused": true
+      },
+      "a_reading_changed": {
+        "family": "P",
+        "target": "P_readings",
+        "clean": true,
+        "refused": true
+      },
+      "resources_over_the_cap": {
+        "family": "I",
+        "target": "I_resources",
+        "clean": true,
+        "refused": true
+      }
+    },
+    "falsifier_ok": true
+  },
+  "mutants_rejudged": 24,
+  "markets": 19,
+  "arms_reconstructed": 95,
+  "class_rows_reconstructed": 152,
+  "independently_recomputed_arm_fields": 6840,
+  "event_consistency_rows": 40140,
+  "source_and_receipt_identity": true,
+  "full_predicates_verified": true,
+  "projection_verified": true,
+  "checker_escapes": {
+    "wrong_class_mo30s": true,
+    "wrong_day_absolute_sign": true,
+    "wrong_uptime": true
+  },
+  "arm_decomposition": {
+    "BASELINE": {
+      "mo1s": -203083.92154801564,
+      "move_to_end": -7617.151514891631,
+      "late": 1143.3644128619142,
+      "end": -209557.70865004536
+    },
+    "CURRENT_ASYNC_FAST10": {
+      "mo1s": -78485.89918974016,
+      "move_to_end": 9177.887327040087,
+      "late": 988.0607321979768,
+      "end": -68319.95113050206
+    },
+    "CURRENT_BASELINE": {
+      "mo1s": -85164.27723645966,
+      "move_to_end": -1416.8421000502267,
+      "late": 471.51194782755,
+      "end": -86109.60738868231
+    },
+    "FRONT_ASYNC_FAST10": {
+      "mo1s": -61051.62534433181,
+      "move_to_end": -26694.2429309938,
+      "late": 785.2641199330249,
+      "end": -86960.6041553926
+    },
+    "FRONT_BASELINE": {
+      "mo1s": -61812.39406541302,
+      "move_to_end": -5175.3757945287625,
+      "late": 1050.6759451573066,
+      "end": -65937.09391478446
+    }
+  },
+  "near_end_label": {
+    "CURRENT_ASYNC_FAST10": {
+      "frozen_window": 0,
+      "profile_window": 0
+    },
+    "CURRENT_BASELINE": {
+      "frozen_window": 0,
+      "profile_window": 0
+    },
+    "FRONT_ASYNC_FAST10": {
+      "frozen_window": 0,
+      "profile_window": 0
+    },
+    "FRONT_BASELINE": {
+      "frozen_window": 0,
+      "profile_window": 0
+    }
+  },
+  "limits": [
+    "No market tape reloaded, no real replay. Trade metadata checked across arms, pinned source and synthetic controls.",
+    "Full arm helper reproduction supplements independent economic checks, not an independent simulator.",
+    "Consumed Oct24-27, 19 complete markets, fixed external flow, no profitability/validation claim."
+  ]
+}

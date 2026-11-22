@@ -23,6 +23,46 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- ASYNC_FAST_REVIEW_20261122_CODEX -->
+## 2026-11-22 — Async execution sensitivity accepted; still negative
+
+[Combined review](reviews/automatic/20261122_async_fast_review/report.md),
+target **85127b3dfbdfb8689159fe8b9e76b447324b7cfc**. No blocking finding or
+required rerun. PARITY_BASELINE 8/8; execution contract holds on 76 ledgers;
+95 arm rows / 152 class rows and full readings verified. Selftest, 12 checks,
+12 falsifiers and 24 source-bound saved mutant verdicts pass. Review check:
+11.05 CPU seconds, 392 MiB. Four consumed days, 19 complete markets only.
+
+Every arm loses every day. CURRENT_ASYNC END -68,320 c / +1s -78,486 c;
+FRONT_ASYNC END -86,961 c / +1s -61,052 c. All economic contrasts MIXED.
+Faster concurrent execution raises participation but does not rescue the
+fixed pressure ladder. This does not establish that its inputs cannot
+predict adverse flow. Requests/states also change in this complete feedback
+experiment; it is not a matched-action 27-48ms latency estimate.
+
+Two NONBLOCKING items, bundle in the next receipt: (1) END minus eligible
+1s includes late fills; use the review's three-term decomposition. Narrow
+the information/latency causal wording. (2) checker coverage omits some
+long-horizon, uptime and detailed reading fields. All actual exports were
+verified here; extend when reused, no cleanup-only gate.
+
+ONE next priority: **FEASIBLE-CANCEL-HEADROOM-v1**, the review's saved-data
+contract. CURRENT_ASYNC primary; FRONT_ASYNC separate sensitivity. At actual
+live KEEP callbacks, evaluate one hypothetical cancel per generation with
+the 10ms effect. A hindsight best cut must remove the entire later suffix,
+including its good fills. Report timing-constrained prefix, removed bad
+value, sacrificed good value, retained loss and concentration. Fixed later
+orders/flow: an optimistic local accounting bound, never model skill or a
+realizable strategy. No replay, fitting, new days or tuned speed/queue arm.
+
+Next diagnostic development <=0.05 core-hours + review reserve 0.02, subject
+to updated cumulative line <=2.50 (about 2.379 now). No additional USER
+permission inside that scope/budget; stop if it cannot fit. POSITIVE-PRESSURE
+stays stopped. New data, untouched validation, live use or >2.50 need USER.
+Largest limitation: feasible bad-fill avoidance versus good-fill sacrifice
+and causal predictability are not yet quantified.
+<!-- /ASYNC_FAST_REVIEW_20261122_CODEX -->
+
 <!-- QUEUE_FRONT_REVIEW_20261122_CODEX -->
 ## 2026-11-22 — Queue-priority sensitivity accepted numerically; mixed, still losing
 

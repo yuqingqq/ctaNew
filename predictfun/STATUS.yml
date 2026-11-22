@@ -1,4 +1,33 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+async_fast_review_20261122_codex:
+  status: numeric_result_accepted_no_rerun
+  target_commit: 85127b3dfbdfb8689159fe8b9e76b447324b7cfc
+  report: predictfun/reviews/automatic/20261122_async_fast_review/report.md
+  blocking_findings: 0
+  nonblocking_findings: [movement_and_information_interpretation, inherited_checker_field_coverage]
+  complete_consumed_markets: 19
+  parity_markets: 8
+  execution_contract_ledgers: 76
+  arm_rows_verified: 95
+  class_rows_verified: 152
+  checker_booleans: 12
+  falsifiers: 12
+  saved_mutants_rejudged: 24
+  reading: assumptions_do_not_rescue
+  all_arms_negative_every_day: true
+  all_economic_contrasts: MIXED
+  end_c: {current_baseline: -86109.6074, front_baseline: -65937.0939, current_async: -68319.9511, front_async: -86960.6042}
+  review_check_cpu_seconds: 11.05
+  line_core_hours_before_staging: 2.378697
+  approved_line_ceiling: 2.50
+  next_priority: FEASIBLE-CANCEL-HEADROOM-v1
+  next_diagnostic_development_core_hour_cap: 0.05
+  next_review_core_hour_reserve: 0.02
+  next_scope: saved_data_local_oracle_accounting_no_replay_or_fit
+  additional_user_permission_within_scope_and_ceiling: false
+  positive_pressure_status: preserved_stopped
+  untouched_validation: false
+
 queue_front_review_20261122_codex:
   status: numeric_result_accepted_mixed_no_rerun
   target_commit: c7404f212700ebf1c6977e1806a28c23b5961f02
