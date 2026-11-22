@@ -1,0 +1,38 @@
+  0 the forced action at every later tick: CAUGHT (2.5 s) - LONG CONTINUATION SELFTEST FAILED: 2 every pair ok (['ok', 'callback_not_reached', 'ok', 'callback_not_reached', 'callback_not_reached', 'callback_not
+  1 no exemption: CAUGHT (2.5 s) - LONG CONTINUATION SELFTEST FAILED: 2 every pair ok (['gate_failed', 'gate_failed', 'gate_failed', 'gate_failed', 'gate_failed', 'gate_failed']) | 3 an
+  2 the exemption on the opposite side: CAUGHT (2.5 s) - LONG CONTINUATION SELFTEST FAILED: 2 every pair ok (['gate_failed', 'gate_failed', 'gate_failed', 'gate_failed', 'gate_failed', 'gate_failed']) | 3 an
+  3 the focal gid outside the lineage: CAUGHT (2.5 s) - LONG CONTINUATION SELFTEST FAILED: 2 every pair ok (['ok', 'gate_failed', 'ok', 'gate_failed', 'gate_failed', 'gate_failed']) | 3 an exemption missing
+  4 the lineage by another rung: CAUGHT (2.6 s) - LONG CONTINUATION SELFTEST FAILED: 2 every pair ok (['gate_failed', 'gate_failed', 'gate_failed', 'gate_failed', 'gate_failed', 'gate_failed']) | 3 an
+  5 every KEEP counted as suppressed: CAUGHT (2.4 s) - LONG CONTINUATION SELFTEST FAILED: 2 the unused-exemption control ran and held ([None, None, None, None, None]) | 3 a retain arm unequal to the saved 
+  6 a forced KEEP with a new reason: CAUGHT (2.5 s) - LONG CONTINUATION SELFTEST FAILED: 2 the unused-exemption control ran and held ([True, True, False, False, False])
+  7 a forced WAIT that posts: CAUGHT (2.5 s) - LONG CONTINUATION SELFTEST FAILED: 2 POST posts the focal order at the fork, WAIT does not
+  8 the forced slot at another rung: CAUGHT (2.5 s) - LONG CONTINUATION SELFTEST FAILED: 2 the forced callback context = the plain run's own callback context, in both arms | 2 POST posts the focal order a
+  9 the carried mark one second late: CAUGHT (2.5 s) - LONG CONTINUATION SELFTEST FAILED: 2 the carried mark is the venue mid at the fork
+  10 the carried inventory double-counted: CAUGHT (2.5 s) - LONG CONTINUATION SELFTEST FAILED: 2 every pair ok (['ok', 'ok', 'ok', 'ok', 'ok', 'gate_failed']) | 2 reconciled, pre-fork identical, queue reset in 
+  11 the reconciliation sign: CAUGHT (2.5 s) - LONG CONTINUATION SELFTEST FAILED: 2 every pair ok (['ok', 'ok', 'ok', 'ok', 'ok', 'gate_failed']) | 2 reconciled, pre-fork identical, queue reset in 
+  12 the activation frame from the left: CAUGHT (2.5 s) - LONG CONTINUATION SELFTEST FAILED: 5 shown_at ((100.0, 0), (100.0, 0))
+  13 beyond the shown levels not zero: CAUGHT (2.5 s) - LONG CONTINUATION SELFTEST FAILED: 5 shown_at ((100.0, 0), (60.0, 1))
+  14 the queue reset without a tolerance: CAUGHT (2.5 s) - LONG CONTINUATION SELFTEST FAILED: 3 inherited replacement priority is refused (replacement True)
+  15 FIFO matching the same side: CAUGHT (2.5 s) - LONG CONTINUATION SELFTEST FAILED: 5 fifo ((0.0, nan, -4.0))
+  16 FIFO holding from zero: CAUGHT (2.5 s) - LONG CONTINUATION SELFTEST FAILED: 5 fifo ((10.0, 420.0, -4.0))
+  17 both sides as either side: CAUGHT (2.5 s) - LONG CONTINUATION SELFTEST FAILED: 5 active_both ({0: 0.5, 1: 0.75, 'both': 1.0})
+  18 an early gain as an early loss: CAUGHT (2.5 s) - LONG CONTINUATION SELFTEST FAILED: 5 sequence_axis (('no_early_loss_later_benefit', -20.0, 40.0))
+  19 the early group counted later: CAUGHT (2.5 s) - LONG CONTINUATION SELFTEST FAILED: 5 sequence_axis (('early_loss_later_benefit', -20.0, 20.0))
+  20 a tie as retain_better: CAUGHT (2.5 s) - LONG CONTINUATION SELFTEST FAILED: 5 pair classes (retain_better, retention_beneficial_with_early_loss, retain_better, alternative_better)
+  21 the mechanism from the alternative arm: CAUGHT (2.5 s) - LONG CONTINUATION SELFTEST FAILED: 5 pair classes (retain_better, retention_beneficial_without_early_loss, tie, alternative_better)
+  22 Y as a sum: CAUGHT (2.5 s) - LONG CONTINUATION SELFTEST FAILED: 2 the Y identity: Q_retain - Q_alternative = the post-fork difference | 5 pair classes (retain_better, retention_be
+  23 Y_focal as a sum: CAUGHT (2.5 s) - LONG CONTINUATION SELFTEST FAILED: 2 the Y identity: Q_retain - Q_alternative = the post-fork difference
+  24 the lineage replacement at the fork tick dropped: CAUGHT (2.5 s) - LONG CONTINUATION SELFTEST FAILED: 2 POST posts the focal order at the fork, WAIT does not
+  25 the fills list shared between arms: CAUGHT (1.0 s) - LONG CONTINUATION SELFTEST FAILED: 2 run_market: stopped (ValueError('a fork copy differs from its context')) | 3 known-bad: stopped (ValueError('rese
+  26 the unused-exemption gate dropped: CAUGHT (2.5 s) - LONG CONTINUATION SELFTEST FAILED: 3 a retain arm unequal to the saved record is refused (['ok', 'ok', 'ok', 'ok', 'ok'])
+  27 no gate on lineage pulls: CAUGHT (2.5 s) - LONG CONTINUATION SELFTEST FAILED: 3 an exemption missing in one arm is refused (26, 2)
+  28 no gate on the queue reset: CAUGHT (2.5 s) - LONG CONTINUATION SELFTEST FAILED: 3 inherited replacement priority is refused (replacement True)
+  29 the base parity without the guard log: CAUGHT (2.5 s) - LONG CONTINUATION SELFTEST FAILED: 2 base parity ({'day': 'd', 'm': 1, 'fingerprint': True, 'fills': True, 'orders': True, 'value': True, 'requests': 
+  30 a material threshold too high: CAUGHT (2.4 s) - LONG CONTINUATION SELFTEST FAILED: 5 the reading ({'reliable': True, 'varied': False, 'reading': 'reliable_not_varied'}, {'reliable': True, 'varied': 
+  31 a gate failure still reliable: CAUGHT (2.5 s) - LONG CONTINUATION SELFTEST FAILED: 5 the reading ({'reliable': True, 'varied': True, 'reading': 'reliable_and_varied'}, {'reliable': True, 'varied': F
+  32 the rest without the projection: CAUGHT (2.5 s) - LONG CONTINUATION SELFTEST FAILED: 6 guards: stopped (KeyError('e'))
+  33 measure without the freeze: CAUGHT (2.5 s) - LONG CONTINUATION SELFTEST FAILED: 6 measure refuses before the freeze
+  34 build_manifest without write-once: CAUGHT (2.7 s) - LONG CONTINUATION SELFTEST FAILED: 6 the manifest and the projection are write-once
+control: PASSED (2.5 s); sources {'pf_ladder_long_continuation.py': '6e3ef761c2ec5b15', 'pf_ladder_long_continuation_mutants.py': '6164095c42e0e36f', 'pf_ladder_long_continuation_selftest.py': '299f5f11209c774c'}
+mutation check passed: the control passes its selftest, 35 / 35 planted code errors are caught by a check (1.5 CPU min)
+2026-11-22T06:16:33Z tag=llc_summary_try2 rc=0 peak_rss_mib=15 wall_s=0.03 cpu_user_s=0.01 memavail_start_gib=22 disk_free_gib=430->430 slot=claude

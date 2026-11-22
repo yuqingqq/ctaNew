@@ -1,0 +1,45 @@
+{
+ "part": "subset",
+ "day": "20990101",
+ "pairs": 8,
+ "parity_all": true,
+ "statuses": {
+  "ok": 8
+ }
+}
+{
+ "reliable": true,
+ "varied": true,
+ "reading": "reliable_and_varied",
+ "parity_all": true
+}
+{
+ "checks": {
+  "A_committed": false,
+  "A_census": true,
+  "A_days": true,
+  "A_audit": true,
+  "B_membership": true,
+  "Y_values": true,
+  "G_gates": true,
+  "G_status": true,
+  "P_parity": true,
+  "S_summary": true,
+  "S_reading": true,
+  "I_resources": true
+ },
+ "failed_except_committed": [],
+ "falsifier_unrefused": [],
+ "pairs": 8,
+ "statuses": {
+  "ok": 8
+ },
+ "reading": {
+  "reliable": true,
+  "varied": true,
+  "reading": "reliable_and_varied",
+  "parity_all": true
+ },
+ "rehearsal_ok": true
+}
+2026-11-22T06:18:41Z tag=lc_rehearse_try1 rc=0 peak_rss_mib=204 wall_s=1.49 cpu_user_s=1.28 memavail_start_gib=22 disk_free_gib=430->430 slot=claude

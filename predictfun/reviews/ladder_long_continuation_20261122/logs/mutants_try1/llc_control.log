@@ -1,0 +1,2 @@
+{"cls": "PASSED", "index": "control", "name": "control (the unchanged copy)", "seconds": 2.1, "sources": {"pf_ladder_long_continuation.py": "6e3ef761c2ec5b15", "pf_ladder_long_continuation_mutants.py": "6164095c42e0e36f", "pf_ladder_long_continuation_selftest.py": "42227be60ec06564"}, "why": "LONG CONTINUATION SELFTEST PASSED: inert guard, run_market gates, known-bad controls, future-only perturbation, pure parts, guards"}
+2026-11-22T06:14:08Z tag=llc_control rc=0 peak_rss_mib=204 wall_s=2.32 cpu_user_s=2.10 memavail_start_gib=22 disk_free_gib=430->430 slot=claude

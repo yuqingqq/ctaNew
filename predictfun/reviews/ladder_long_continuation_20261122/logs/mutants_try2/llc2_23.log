@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "23", "name": "Y_focal as a sum", "seconds": 2.5, "sources": {"pf_ladder_long_continuation.py": "6e3ef761c2ec5b15", "pf_ladder_long_continuation_mutants.py": "6164095c42e0e36f", "pf_ladder_long_continuation_selftest.py": "299f5f11209c774c"}, "why": "LONG CONTINUATION SELFTEST FAILED: 2 the Y identity: Q_retain - Q_alternative = the post-fork difference"}
+2026-11-22T06:16:19Z tag=llc2_23 rc=0 peak_rss_mib=205 wall_s=2.69 cpu_user_s=2.48 memavail_start_gib=22 disk_free_gib=430->430 slot=claude

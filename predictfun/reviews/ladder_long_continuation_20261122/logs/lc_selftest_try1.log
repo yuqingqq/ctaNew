@@ -1,0 +1,2 @@
+LONG CONTINUATION SELFTEST FAILED: 2 the unused-exemption control ran and held
+2026-11-22T06:11:16Z tag=lc_selftest_try1 rc=1 peak_rss_mib=206 wall_s=1.89 cpu_user_s=1.72 memavail_start_gib=22 disk_free_gib=430->430 slot=claude

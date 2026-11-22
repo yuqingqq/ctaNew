@@ -1,0 +1,751 @@
+{
+ "af_manifest_sha256": "34444c8a1b85752069a27d8e884e7d116656c03a88d3ccd3eb1f584355e5a013",
+ "approval": "USER 2026-11-22: approve 0.40 h / line 2.85",
+ "arm": "CURRENT_ASYNC_FAST10",
+ "asof": "2026-11-22T06:19:30Z",
+ "caps": {
+  "batch_core_hours": 0.4,
+  "line_ceiling": 2.85,
+  "prior_unlogged_s": 30.0,
+  "review_reserve": 0.03,
+  "tail_s": 60.0
+ },
+ "census_rows": 4783,
+ "census_sha256": "4e2f7beb89f9b0398711ad8afd25bc3f940ef90ba379501e1613fc959174b499",
+ "contract": "reviews/ladder_long_continuation_contract_20261122/contract_v2.md",
+ "horizons": [
+  1000.0,
+  5000.0,
+  30000.0,
+  60000.0
+ ],
+ "kinds": [
+  "REVIEW",
+  "ADMISSION"
+ ],
+ "line_receipts": [
+  "ladder_rest_20261121",
+  "ladder_audit_20261121",
+  "ladder_guard_20261121",
+  "ladder_pressure_20261121",
+  "ladder_pressure_lag_20261121",
+  "ladder_pressure_ablation_20261121",
+  "ladder_pressure_residual_20261121",
+  "ladder_pressure_positive_20261121",
+  "ladder_arrival_queue_20261122",
+  "ladder_queue_price_20261122",
+  "ladder_queue_front_20261122",
+  "ladder_async_fast_20261122",
+  "ladder_cancel_headroom_20261122"
+ ],
+ "line_reviews": [
+  "20261121_ladder_rest_review",
+  "20261121_ladder_audit_review",
+  "20261121_ladder_guard_review",
+  "20261121_ladder_pressure_review",
+  "20261121_ladder_pressure_lag_review",
+  "20261121_ladder_pressure_ablation_review",
+  "20261121_ladder_pressure_residual_review",
+  "20261122_horizon_conditions",
+  "20261122_queue_conditions",
+  "20261122_arrival_queue_review",
+  "20261122_queue_price_review",
+  "20261122_queue_sweep_direction",
+  "20261122_queue_latency_amendment",
+  "20261122_async_execution_amendment",
+  "20261122_queue_front_review",
+  "20261122_async_fast_review",
+  "20261122_queue_fill_tradeoff_amendment",
+  "20261122_cancel_headroom_review"
+ ],
+ "parts": {
+  "rest": [
+   "20261025",
+   "20261026",
+   "20261027"
+  ],
+  "subset": [
+   "20261024"
+  ]
+ },
+ "per_cell": 2,
+ "pilot_markets": {
+  "20261024": [
+   3697902,
+   3699278
+  ],
+  "20261025": [
+   3723774,
+   3734864
+  ],
+  "20261026": [
+   3789484,
+   3803131
+  ],
+  "20261027": [
+   3877472,
+   3899224
+  ]
+ },
+ "pilot_records": {
+  "20261024": "15f91548c31a4460287d676184f2bc4af57bff064c02c57afbe9b8033417c8cf",
+  "20261025": "9786fda7eabcbe9f71d7e820df19d24245253dcff11aa83ce25b6fa57dc5f939",
+  "20261026": "7a60c52d00ceb21a93f7ba6753ba2b06debd9f90ac97ada149557cf6a81f33d8",
+  "20261027": "e0e78f9b93cd048d82c88fc30ec1f40648545e74e839a4696146b5b02104fe71"
+ },
+ "profile": "ASYNC_FAST10",
+ "reversal_ms": 100.0,
+ "review": "32d102bd",
+ "selected": [
+  {
+   "day": "20261024",
+   "gid": 152,
+   "key": "0392396694183a01e1d6fc87251fdde0720f4021723951d8c2b502b142f04f5e",
+   "kind": "ADMISSION",
+   "m": 3697902,
+   "rung": 1.0,
+   "side": 0,
+   "t": 265100.0
+  },
+  {
+   "day": "20261024",
+   "gid": 88,
+   "key": "04aa146c62cfed2ebf0c4f75083a7c601a10f3ad78a280f2e28faedfc421d775",
+   "kind": "ADMISSION",
+   "m": 3697902,
+   "rung": 0.0,
+   "side": 0,
+   "t": 217450.0
+  },
+  {
+   "day": "20261024",
+   "gid": 6,
+   "key": "028861974c16dd24aac57e6ac230674687f772ac96be7a330dd82518b8058c4a",
+   "kind": "ADMISSION",
+   "m": 3697902,
+   "rung": 0.0,
+   "side": 1,
+   "t": 20000.0
+  },
+  {
+   "day": "20261024",
+   "gid": 169,
+   "key": "02f5eb0441622652332664e782e62c721927f90f6d76340da04ae9679eaeeb25",
+   "kind": "ADMISSION",
+   "m": 3697902,
+   "rung": 0.0,
+   "side": 1,
+   "t": 271300.0
+  },
+  {
+   "day": "20261024",
+   "gid": 133,
+   "key": "00c512717685ddf833c0a52b4407893156554140455f794b9818b2127aa656e4",
+   "kind": "REVIEW",
+   "m": 3697902,
+   "rung": 0.0,
+   "side": 0,
+   "t": 260600.0
+  },
+  {
+   "day": "20261024",
+   "gid": 63,
+   "key": "0834314d8de4c918832fa41b16aadba26d3dda8a84f33cc56533e68951fcabd8",
+   "kind": "REVIEW",
+   "m": 3697902,
+   "rung": 1.0,
+   "side": 0,
+   "t": 150850.0
+  },
+  {
+   "day": "20261024",
+   "gid": 24,
+   "key": "03e680e5a0587728a83866e0229ef8c55e4d29796c96671ac22459c6a25511aa",
+   "kind": "REVIEW",
+   "m": 3697902,
+   "rung": 1.0,
+   "side": 1,
+   "t": 45800.0
+  },
+  {
+   "day": "20261024",
+   "gid": 81,
+   "key": "060fb17a2a2f1494d3b9d9e323a32ff28f6fa65cc79148fbff449811780f5bfd",
+   "kind": "REVIEW",
+   "m": 3697902,
+   "rung": 0.0,
+   "side": 1,
+   "t": 208900.0
+  },
+  {
+   "day": "20261024",
+   "gid": 289,
+   "key": "0099feef92db9419992200d241ceff0056494d056574368b5b7af31a47925a96",
+   "kind": "ADMISSION",
+   "m": 3699278,
+   "rung": 0.0,
+   "side": 0,
+   "t": 280800.0
+  },
+  {
+   "day": "20261024",
+   "gid": 122,
+   "key": "01030f60ae3f8778b242403ae6e640c47e8bd7c9bccac437bb5d4e515dd3f519",
+   "kind": "ADMISSION",
+   "m": 3699278,
+   "rung": 1.0,
+   "side": 0,
+   "t": 141300.0
+  },
+  {
+   "day": "20261024",
+   "gid": 275,
+   "key": "009b247be40c53fa374b5818c1c607a128b8d0dc659090e4668192c1f71f9256",
+   "kind": "ADMISSION",
+   "m": 3699278,
+   "rung": 0.0,
+   "side": 1,
+   "t": 269150.0
+  },
+  {
+   "day": "20261024",
+   "gid": 297,
+   "key": "013e2983f918559a7b91ff5b6e92c1f582d6d49a9c650bc49549e304d029cdbb",
+   "kind": "ADMISSION",
+   "m": 3699278,
+   "rung": 1.0,
+   "side": 1,
+   "t": 282000.0
+  },
+  {
+   "day": "20261024",
+   "gid": 53,
+   "key": "008ad15cbe8bd35cf7f784070b873cf49c035dcc25c2a5d06a2347f516f05835",
+   "kind": "REVIEW",
+   "m": 3699278,
+   "rung": 1.0,
+   "side": 0,
+   "t": 84100.0
+  },
+  {
+   "day": "20261024",
+   "gid": 59,
+   "key": "03218ad3995ef30db32191971232fe688b8fba6bb626b91ed3481a83a612eaf2",
+   "kind": "REVIEW",
+   "m": 3699278,
+   "rung": 1.0,
+   "side": 0,
+   "t": 88450.0
+  },
+  {
+   "day": "20261024",
+   "gid": 264,
+   "key": "00fcb757b5836d27b6952a028fcf50ad3afb6cd10838c6ea7aa5de2806f8a143",
+   "kind": "REVIEW",
+   "m": 3699278,
+   "rung": 0.0,
+   "side": 1,
+   "t": 257400.0
+  },
+  {
+   "day": "20261024",
+   "gid": 240,
+   "key": "02ab6695d9167f6d569ae4d4ea20dea8d348de75dbed70e1e9961c8f3b870d4f",
+   "kind": "REVIEW",
+   "m": 3699278,
+   "rung": 0.0,
+   "side": 1,
+   "t": 239650.0
+  },
+  {
+   "day": "20261025",
+   "gid": 220,
+   "key": "033784827af540f43cade6439b5f372a22f2ca2233a37f23be628b92c9c183f3",
+   "kind": "ADMISSION",
+   "m": 3723774,
+   "rung": 0.0,
+   "side": 0,
+   "t": 193700.0
+  },
+  {
+   "day": "20261025",
+   "gid": 30,
+   "key": "043a975bbb6351b5a7b4efad503d5dd576c88654323863396958e7f8f19433ca",
+   "kind": "ADMISSION",
+   "m": 3723774,
+   "rung": 1.0,
+   "side": 0,
+   "t": 5600.0
+  },
+  {
+   "day": "20261025",
+   "gid": 134,
+   "key": "081df822ebbacf7f57f6125fd7a264ac83e9b84c1310be15123b00fa2b6d64de",
+   "kind": "ADMISSION",
+   "m": 3723774,
+   "rung": 0.0,
+   "side": 1,
+   "t": 83600.0
+  },
+  {
+   "day": "20261025",
+   "gid": 108,
+   "key": "093ade5565ea5c8eede21ab251a8d967b5dfa96c2d6a0043096fe0da3a3300fa",
+   "kind": "ADMISSION",
+   "m": 3723774,
+   "rung": 1.0,
+   "side": 1,
+   "t": 66800.0
+  },
+  {
+   "day": "20261025",
+   "gid": 77,
+   "key": "00a3991d73c92d52e4b4cd05ba339d27f983b47cda3631a6dbe34668bdadc583",
+   "kind": "REVIEW",
+   "m": 3723774,
+   "rung": 1.0,
+   "side": 0,
+   "t": 43550.0
+  },
+  {
+   "day": "20261025",
+   "gid": 14,
+   "key": "03025d662cd2dc70b89fd783b041306176929218448fb685c71ec930136517bc",
+   "kind": "REVIEW",
+   "m": 3723774,
+   "rung": 0.0,
+   "side": 0,
+   "t": 800.0
+  },
+  {
+   "day": "20261025",
+   "gid": 256,
+   "key": "03d53d15afc04c60af59a156b67156191e2669cbd17a195f73d6b8cf6a671916",
+   "kind": "REVIEW",
+   "m": 3723774,
+   "rung": 0.0,
+   "side": 1,
+   "t": 222450.0
+  },
+  {
+   "day": "20261025",
+   "gid": 174,
+   "key": "0419ca78e3e1e05351a18f1d35c9971bbb74aed2b203ba72ff6dacc0997c01b2",
+   "kind": "REVIEW",
+   "m": 3723774,
+   "rung": 1.0,
+   "side": 1,
+   "t": 125500.0
+  },
+  {
+   "day": "20261025",
+   "gid": 93,
+   "key": "00341e1f3ad5a0c662277b2b8308832a4b9ee323afe6aabd90164beeb441c9a3",
+   "kind": "ADMISSION",
+   "m": 3734864,
+   "rung": 0.0,
+   "side": 0,
+   "t": 63500.0
+  },
+  {
+   "day": "20261025",
+   "gid": 255,
+   "key": "0155f9a747bc39d3c7f98232f4b6c7982adbba8bf1dcdb4041ec467373495aa0",
+   "kind": "ADMISSION",
+   "m": 3734864,
+   "rung": 1.0,
+   "side": 0,
+   "t": 219150.0
+  },
+  {
+   "day": "20261025",
+   "gid": 160,
+   "key": "02b9c45ddd440b812f24ad8bc7213ad21af1c1a9e11c04a2ea6ef069483921eb",
+   "kind": "ADMISSION",
+   "m": 3734864,
+   "rung": 0.0,
+   "side": 1,
+   "t": 132750.0
+  },
+  {
+   "day": "20261025",
+   "gid": 287,
+   "key": "0565818035385b63ded15e081db11f1fb1048926d1d1b1a57e6d6f94b089ef5f",
+   "kind": "ADMISSION",
+   "m": 3734864,
+   "rung": 0.0,
+   "side": 1,
+   "t": 249050.0
+  },
+  {
+   "day": "20261025",
+   "gid": 239,
+   "key": "0013cbae42d4c88ed97574b382150479cdcd114176d32f7d503f8f0e55933841",
+   "kind": "REVIEW",
+   "m": 3734864,
+   "rung": 1.0,
+   "side": 0,
+   "t": 212450.0
+  },
+  {
+   "day": "20261025",
+   "gid": 121,
+   "key": "0170408e93625ebc4a66623717a94d1061f0a31961ac5d6706b52696a7b18859",
+   "kind": "REVIEW",
+   "m": 3734864,
+   "rung": 0.0,
+   "side": 0,
+   "t": 85350.0
+  },
+  {
+   "day": "20261025",
+   "gid": 200,
+   "key": "003aa314d951dce84a588df6beb9ab71708bb527e9f52baf87461c852c0ed0c2",
+   "kind": "REVIEW",
+   "m": 3734864,
+   "rung": 0.0,
+   "side": 1,
+   "t": 180700.0
+  },
+  {
+   "day": "20261025",
+   "gid": 57,
+   "key": "003c6708e01a6c672cc54c89b751472f1d54c6d3cf4ba866c299e819f51b4389",
+   "kind": "REVIEW",
+   "m": 3734864,
+   "rung": 1.0,
+   "side": 1,
+   "t": 41300.0
+  },
+  {
+   "day": "20261026",
+   "gid": 130,
+   "key": "005ee4770f338f11f4468b4bab315300d10359a21639b25948c9f9a3862d11ad",
+   "kind": "ADMISSION",
+   "m": 3789484,
+   "rung": 0.0,
+   "side": 0,
+   "t": 72450.0
+  },
+  {
+   "day": "20261026",
+   "gid": 423,
+   "key": "017bcd0ece074732cc7af9a2e33b880f7db38b5f9d84069ce19ffc6462469710",
+   "kind": "ADMISSION",
+   "m": 3789484,
+   "rung": 1.0,
+   "side": 0,
+   "t": 271550.0
+  },
+  {
+   "day": "20261026",
+   "gid": 427,
+   "key": "0073a60a2615c4150f5ccb9169ec0310876dde3830dcc427c99af8aac983d706",
+   "kind": "ADMISSION",
+   "m": 3789484,
+   "rung": 0.0,
+   "side": 1,
+   "t": 272500.0
+  },
+  {
+   "day": "20261026",
+   "gid": 332,
+   "key": "0096ae7a06986fb0c622c00bf88aebe47eaaf3ced625ec081f58a3273dbae0b2",
+   "kind": "ADMISSION",
+   "m": 3789484,
+   "rung": 0.0,
+   "side": 1,
+   "t": 215600.0
+  },
+  {
+   "day": "20261026",
+   "gid": 176,
+   "key": "02145168e6b96945415d2e4c57d3c0a9bf01cb194096ee9c82852c270dc8a63f",
+   "kind": "REVIEW",
+   "m": 3789484,
+   "rung": 1.0,
+   "side": 0,
+   "t": 101800.0
+  },
+  {
+   "day": "20261026",
+   "gid": 25,
+   "key": "02b11959cdf3546d470b6a17d28d02c3922e9ec9547069735fce4e3a986e9527",
+   "kind": "REVIEW",
+   "m": 3789484,
+   "rung": 1.0,
+   "side": 0,
+   "t": 12400.0
+  },
+  {
+   "day": "20261026",
+   "gid": 336,
+   "key": "00a283be6349578f0f2ff19ff7202b4858435e78bf2ff8fbfc2ae41f881f23e4",
+   "kind": "REVIEW",
+   "m": 3789484,
+   "rung": 1.0,
+   "side": 1,
+   "t": 225550.0
+  },
+  {
+   "day": "20261026",
+   "gid": 378,
+   "key": "06a1a65e66b014bdc989f1dfdca942c19b2350309578b6cda31e8767386bbed6",
+   "kind": "REVIEW",
+   "m": 3789484,
+   "rung": 1.0,
+   "side": 1,
+   "t": 259550.0
+  },
+  {
+   "day": "20261026",
+   "gid": 188,
+   "key": "025e8adf63707094987f52a913add627bf0904f296a6ad81bffa5278cac083ab",
+   "kind": "ADMISSION",
+   "m": 3803131,
+   "rung": 0.0,
+   "side": 0,
+   "t": 265250.0
+  },
+  {
+   "day": "20261026",
+   "gid": 111,
+   "key": "031ba7a3060a3a1fc077a655e93e95cabd9cf5564bdbe68a56adddef74f8a0f4",
+   "kind": "ADMISSION",
+   "m": 3803131,
+   "rung": 0.0,
+   "side": 0,
+   "t": 187350.0
+  },
+  {
+   "day": "20261026",
+   "gid": 75,
+   "key": "015605d18104289bd6dcd196a7c9340c0425286f2edf9d851a700fb792aab4c8",
+   "kind": "ADMISSION",
+   "m": 3803131,
+   "rung": 1.0,
+   "side": 1,
+   "t": 110200.0
+  },
+  {
+   "day": "20261026",
+   "gid": 269,
+   "key": "02d73b73f0c406f3b0369576fa0c78afa5348c0a7fdfd9231737b4cce981962c",
+   "kind": "ADMISSION",
+   "m": 3803131,
+   "rung": 1.0,
+   "side": 1,
+   "t": 292150.0
+  },
+  {
+   "day": "20261026",
+   "gid": 286,
+   "key": "003b0bf4e506320b08a8d82f058d764c447a934f5232b6dea721796ecca7c30b",
+   "kind": "REVIEW",
+   "m": 3803131,
+   "rung": 0.0,
+   "side": 0,
+   "t": 297000.0
+  },
+  {
+   "day": "20261026",
+   "gid": 111,
+   "key": "00b83f792dc38872072ef1ce35feb6c7beee342db77e845112b13b4cfcaa0a7d",
+   "kind": "REVIEW",
+   "m": 3803131,
+   "rung": 0.0,
+   "side": 0,
+   "t": 187400.0
+  },
+  {
+   "day": "20261026",
+   "gid": 146,
+   "key": "018f64faf47a664dfe0a7431df7fb75a1b013271086d50b02ac303f38f55fcad",
+   "kind": "REVIEW",
+   "m": 3803131,
+   "rung": 1.0,
+   "side": 1,
+   "t": 242300.0
+  },
+  {
+   "day": "20261026",
+   "gid": 97,
+   "key": "02aa83355cd1af2a339688302e1dc0f08c0c499f8a5e853b87fc9275b7760b35",
+   "kind": "REVIEW",
+   "m": 3803131,
+   "rung": 1.0,
+   "side": 1,
+   "t": 155300.0
+  },
+  {
+   "day": "20261027",
+   "gid": 29,
+   "key": "1078a051405e47ee18f12b2b397130a0eb8c79322155bcd657153aa3d8913453",
+   "kind": "ADMISSION",
+   "m": 3877472,
+   "rung": 0.0,
+   "side": 0,
+   "t": 12850.0
+  },
+  {
+   "day": "20261027",
+   "gid": 139,
+   "key": "147891bfb4101cfa9b8d84712b69644060755c9e5adb5c6d9cc6d77e6aa0db28",
+   "kind": "ADMISSION",
+   "m": 3877472,
+   "rung": 1.0,
+   "side": 0,
+   "t": 116450.0
+  },
+  {
+   "day": "20261027",
+   "gid": 61,
+   "key": "0019568e1f5dcca5735e08c24f382f6e55d27593d4a398cbc71b43eb1daecdce",
+   "kind": "ADMISSION",
+   "m": 3877472,
+   "rung": 0.0,
+   "side": 1,
+   "t": 44450.0
+  },
+  {
+   "day": "20261027",
+   "gid": 41,
+   "key": "00d6aab3244f5eba822c42de43e0cb21ca58f47a8ef43a71a9a32dedcd7d6c8e",
+   "kind": "ADMISSION",
+   "m": 3877472,
+   "rung": 1.0,
+   "side": 1,
+   "t": 20350.0
+  },
+  {
+   "day": "20261027",
+   "gid": 126,
+   "key": "01d5ee4b929b73b9d20856dbbdd65913ae49d04eedd5c61a9fe3e7d4d6d8bed4",
+   "kind": "REVIEW",
+   "m": 3877472,
+   "rung": 0.0,
+   "side": 0,
+   "t": 104400.0
+  },
+  {
+   "day": "20261027",
+   "gid": 13,
+   "key": "03c302acece3e39d75bb51b4889b752cf661130b57aa205424407c8db6b32e81",
+   "kind": "REVIEW",
+   "m": 3877472,
+   "rung": 0.0,
+   "side": 0,
+   "t": 6450.0
+  },
+  {
+   "day": "20261027",
+   "gid": 105,
+   "key": "035d52e143cf9258fe94c7b024a9d352fa34158c4c86768a67e95f36befd251e",
+   "kind": "REVIEW",
+   "m": 3877472,
+   "rung": 0.0,
+   "side": 1,
+   "t": 95200.0
+  },
+  {
+   "day": "20261027",
+   "gid": 85,
+   "key": "03ce50bff1808dd2a41c30a113f9dbb2e09fecab9ce68acc459eaf16a0ebba71",
+   "kind": "REVIEW",
+   "m": 3877472,
+   "rung": 1.0,
+   "side": 1,
+   "t": 66750.0
+  },
+  {
+   "day": "20261027",
+   "gid": 108,
+   "key": "0417e9d1813000a588bb9106861a8853beff84f77d868beda05f5bcf272541ad",
+   "kind": "ADMISSION",
+   "m": 3899224,
+   "rung": 0.0,
+   "side": 0,
+   "t": 151800.0
+  },
+  {
+   "day": "20261027",
+   "gid": 77,
+   "key": "05a12caf6e23a75bed047e5b803029a889c45305e81b6e9b9980131f7f1ab644",
+   "kind": "ADMISSION",
+   "m": 3899224,
+   "rung": 0.0,
+   "side": 0,
+   "t": 130700.0
+  },
+  {
+   "day": "20261027",
+   "gid": 48,
+   "key": "0166abd452a6cdac770d58defcd51b1096ad986f47df84c41f65febcd3d80f40",
+   "kind": "ADMISSION",
+   "m": 3899224,
+   "rung": 0.0,
+   "side": 1,
+   "t": 89700.0
+  },
+  {
+   "day": "20261027",
+   "gid": 191,
+   "key": "021aae90d747142e3ae55152c115f0853dfdb8a48050a2b8192b91f97f64cbe7",
+   "kind": "ADMISSION",
+   "m": 3899224,
+   "rung": 0.0,
+   "side": 1,
+   "t": 237200.0
+  },
+  {
+   "day": "20261027",
+   "gid": 229,
+   "key": "0308f621d13938495cb0475c084d08156eda4f4f295fab5e9cf1f95a3857889b",
+   "kind": "REVIEW",
+   "m": 3899224,
+   "rung": 0.0,
+   "side": 0,
+   "t": 247350.0
+  },
+  {
+   "day": "20261027",
+   "gid": 87,
+   "key": "03643cc89044afe112a496e8d3177fcd8e4aab0f35c20650d96ec79b5938d737",
+   "kind": "REVIEW",
+   "m": 3899224,
+   "rung": 0.0,
+   "side": 0,
+   "t": 140750.0
+  },
+  {
+   "day": "20261027",
+   "gid": 48,
+   "key": "00a62fcaf727d08726ef10dcdf3fd60c2cf2092d9869b789820e9acc00c5c2a2",
+   "kind": "REVIEW",
+   "m": 3899224,
+   "rung": 0.0,
+   "side": 1,
+   "t": 89750.0
+  },
+  {
+   "day": "20261027",
+   "gid": 11,
+   "key": "025e770ceb28a5cfaf55b82181e8f3c189c1b18b17cf981d21356c4dea410090",
+   "kind": "REVIEW",
+   "m": 3899224,
+   "rung": 0.0,
+   "side": 1,
+   "t": 8900.0
+  }
+ ],
+ "sources": {
+  "pf_ladder_long_continuation.py": "6e3ef761c2ec5b156985fe470a679fb89b4cd077c0c3188438b39482d9ffa306",
+  "pf_ladder_long_continuation_selftest.py": "299f5f11209c774cab463cc6ed51d1a4ed6a685151d19a49c43923964b6e46c5"
+ },
+ "tol": 1e-06,
+ "varied": {
+  "abs_c": 1000.0,
+  "share": 0.1
+ },
+ "version": "long_continuation_paired_value_v1"
+}

@@ -1,0 +1,2 @@
+LONG CONTINUATION SELFTEST FAILED: 3 a late state carries inventory into the fork
+2026-11-22T06:14:54Z tag=lc_selftest_try5 rc=1 peak_rss_mib=207 wall_s=2.71 cpu_user_s=2.52 memavail_start_gib=22 disk_free_gib=430->430 slot=claude

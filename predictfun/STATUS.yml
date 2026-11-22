@@ -457,6 +457,15 @@ ladder_async_fast_results_20261122_dev:
   all_arms_negative_every_day: true
   batch_core_hours: 0.201
   line_core_hours: 2.375
+ladder_long_continuation_20261122_dev:
+  status: frozen_before_any_pair
+  asof: "2026-11-22 06:19Z"
+  source: review_32d102bd_next_priority_contract_v2
+  user_approval: {additional_core_hours: 0.40, includes: [controls, review_reserve_0.03], line_ceiling: 2.85, via: AskUserQuestion_2026-11-22}
+  census: {eligible: 4783, review: 2299, admission: 2484, selected: 64}
+  mutants: 35_of_35_caught
+  checker_falsifier_cases: 12
+  rehearsal: all_families_pass_12_of_12_refused_synthetic
 ladder_cancel_headroom_review_answer_20261122_dev:
   status: review_32d102bd_answered_loop_stopped_user_resource_decision_needed
   asof: "2026-11-22 05:46Z"

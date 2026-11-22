@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "17", "name": "both sides as either side", "seconds": 2.1, "sources": {"pf_ladder_long_continuation.py": "6e3ef761c2ec5b15", "pf_ladder_long_continuation_mutants.py": "6164095c42e0e36f", "pf_ladder_long_continuation_selftest.py": "42227be60ec06564"}, "why": "LONG CONTINUATION SELFTEST FAILED: 5 active_both ({0: 0.5, 1: 0.75, 'both': 1.0})"}
+2026-11-22T06:14:21Z tag=llc_17 rc=0 peak_rss_mib=204 wall_s=2.29 cpu_user_s=2.13 memavail_start_gib=22 disk_free_gib=430->430 slot=claude3

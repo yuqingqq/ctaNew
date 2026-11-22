@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "34", "name": "build_manifest without write-once", "seconds": 2.7, "sources": {"pf_ladder_long_continuation.py": "6e3ef761c2ec5b15", "pf_ladder_long_continuation_mutants.py": "6164095c42e0e36f", "pf_ladder_long_continuation_selftest.py": "299f5f11209c774c"}, "why": "LONG CONTINUATION SELFTEST FAILED: 6 the manifest and the projection are write-once"}
+2026-11-22T06:16:30Z tag=llc2_34 rc=0 peak_rss_mib=211 wall_s=2.83 cpu_user_s=2.60 memavail_start_gib=22 disk_free_gib=430->430 slot=claude4

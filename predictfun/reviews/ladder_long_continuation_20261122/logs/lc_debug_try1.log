@@ -1,0 +1,8 @@
+ADMISSION 0.0 1 ok 66 None 24.999999999999886 retain_better
+REVIEW 50.0 1 ok 66 None 24.999999999999886 retain_better
+ADMISSION 100.0 2 ok 15 None 0.0 tie
+REVIEW 150.0 2 ok 15 None -82.0 alternative_better
+REVIEW 150.0 3 ok 31 None 553.3707370752122 retain_better
+REVIEW 250.0 4 ok 68 None 308.81378653534034 retain_better
+{'day': 'd', 'm': 1, 'fingerprint': True, 'fills': True, 'orders': True, 'value': True, 'requests': True, 'commands': True, 'guard_log': True, 'all': True}
+2026-11-22T06:11:39Z tag=lc_debug_try1 rc=0 peak_rss_mib=198 wall_s=1.28 cpu_user_s=1.11 memavail_start_gib=22 disk_free_gib=430->430 slot=claude

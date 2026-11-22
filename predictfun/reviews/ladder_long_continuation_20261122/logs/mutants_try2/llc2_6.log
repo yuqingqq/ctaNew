@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "6", "name": "a forced KEEP with a new reason", "seconds": 2.5, "sources": {"pf_ladder_long_continuation.py": "6e3ef761c2ec5b15", "pf_ladder_long_continuation_mutants.py": "6164095c42e0e36f", "pf_ladder_long_continuation_selftest.py": "299f5f11209c774c"}, "why": "LONG CONTINUATION SELFTEST FAILED: 2 the unused-exemption control ran and held ([True, True, False, False, False])"}
+2026-11-22T06:16:11Z tag=llc2_6 rc=0 peak_rss_mib=204 wall_s=2.66 cpu_user_s=2.49 memavail_start_gib=22 disk_free_gib=430->430 slot=claude4

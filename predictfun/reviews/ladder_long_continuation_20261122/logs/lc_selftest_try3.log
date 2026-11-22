@@ -1,0 +1,2 @@
+LONG CONTINUATION SELFTEST PASSED: inert guard, run_market gates, known-bad controls, future-only perturbation, pure parts, guards
+2026-11-22T06:12:36Z tag=lc_selftest_try3 rc=0 peak_rss_mib=207 wall_s=2.28 cpu_user_s=2.07 memavail_start_gib=22 disk_free_gib=430->430 slot=claude

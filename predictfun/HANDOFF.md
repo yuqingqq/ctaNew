@@ -648,6 +648,35 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_LONG_CONTINUATION_FREEZE_20261122_DEV -->
+## 2026-11-22 06:19Z (session aea5bfb9) — LONG-CONTINUATION-PAIRED-VALUE-v1 FROZEN before any pair (USER-approved ≤ 0.40 h / line 2.85)
+
+**USER 2026-11-22**, via AskUserQuestion: "Approve 0.40 h / 2.85". That approves the review 32d102bd pilot with controls and the 0.03 h review reserve included, and raises the line ceiling 2.50 → 2.85.
+
+**Built to** [contract_v2](reviews/ladder_long_continuation_contract_20261122/contract_v2.md):
+- CURRENT_ASYNC_FAST10 on the 8 pilot markets;
+- census of 4,783 eligible states (2,299 REVIEW first policy-consulted KEEPs, 2,484 ADMISSION POSTs);
+- 64 selected by hash, 2 per market × side × kind.
+
+**Mechanics:**
+- One roll-in per market; tick-start fork copies.
+- The ONE forced action at the identified callback.
+- One focal-lineage pressure-pull exemption in both arms.
+- Both arms continue to the common market END.
+- Y = Q_retain − Q_alternative, with the inventory carried at the fork.
+
+**Readings:** two label axes; queue mechanism ; overall  /  / .
+
+**Frozen artifacts:**
+- builder + selftest (6 groups, including six known-bad controls and a future-only perturbation);
+- 35 / 35 mutants;
+- `lc_checks.py` (A / B / Y / G / P / S / I, 12-case falsifier);
+- the synthetic end-to-end rehearsal (all families pass, 12 / 12 refused);
+- the launcher.
+
+**Next:** subset (Oct 24, 16 pairs) → write-once projection → rest (3 days in parallel) → measure → checks → receipt → ONE Codex review.
+<!-- /LADDER_LONG_CONTINUATION_FREEZE_20261122_DEV -->
+
 <!-- LADDER_CANCEL_HEADROOM_REVIEW_ANSWER_20261122_DEV -->
 ## 2026-11-22 05:46Z (session aea5bfb9) — review 32d102bd ANSWERED; LOOP STOPPED: the 64-pair pilot needs the USER's resource decision
 

@@ -1,0 +1,80 @@
+{
+ "version": "long_continuation_paired_value_v1",
+ "review": "32d102bd",
+ "contract": "reviews/ladder_long_continuation_contract_20261122/contract_v2.md",
+ "approval": "USER 2026-11-22: approve 0.40 h / line 2.85",
+ "arm": "CURRENT_ASYNC_FAST10",
+ "profile": "ASYNC_FAST10",
+ "kinds": [
+  "REVIEW",
+  "ADMISSION"
+ ],
+ "per_cell": 2,
+ "tol": 1e-06,
+ "horizons": [
+  1000.0,
+  5000.0,
+  30000.0,
+  60000.0
+ ],
+ "reversal_ms": 100.0,
+ "varied": {
+  "share": 0.1,
+  "abs_c": 1000.0
+ },
+ "census_sha256": "4e2f7beb89f9b0398711ad8afd25bc3f940ef90ba379501e1613fc959174b499",
+ "census_rows": 4783,
+ "af_manifest_sha256": "34444c8a1b85752069a27d8e884e7d116656c03a88d3ccd3eb1f584355e5a013",
+ "pilot_records": {
+  "20261024": "15f91548c31a4460287d676184f2bc4af57bff064c02c57afbe9b8033417c8cf",
+  "20261025": "9786fda7eabcbe9f71d7e820df19d24245253dcff11aa83ce25b6fa57dc5f939",
+  "20261026": "7a60c52d00ceb21a93f7ba6753ba2b06debd9f90ac97ada149557cf6a81f33d8",
+  "20261027": "e0e78f9b93cd048d82c88fc30ec1f40648545e74e839a4696146b5b02104fe71"
+ },
+ "parts": {
+  "subset": [
+   "20261024"
+  ],
+  "rest": [
+   "20261025",
+   "20261026",
+   "20261027"
+  ]
+ },
+ "pilot_markets": {
+  "20261024": [
+   3697902,
+   3699278
+  ],
+  "20261025": [
+   3723774,
+   3734864
+  ],
+  "20261026": [
+   3789484,
+   3803131
+  ],
+  "20261027": [
+   3877472,
+   3899224
+  ]
+ },
+ "sources": {
+  "pf_ladder_long_continuation.py": "6e3ef761c2ec5b156985fe470a679fb89b4cd077c0c3188438b39482d9ffa306",
+  "pf_ladder_long_continuation_selftest.py": "299f5f11209c774cab463cc6ed51d1a4ed6a685151d19a49c43923964b6e46c5"
+ },
+ "line_receipts": [
+  "ladder_rest_20261121",
+  "ladder_audit_20261121",
+  "ladder_guard_20261121",
+  "ladder_pressure_20261121",
+  "ladder_pressure_lag_20261121",
+  "ladder_pressure_ablation_20261121",
+  "ladder_pressure_residual_20261121",
+  "ladder_pressure_positive_20261121",
+  "ladder_arrival_queue_20261122",
+  "ladder_queue_price_20261122",
+  "ladder_queue_front_20261122",
+  "ladder_async_fast_20261122",
+  "ladder_c
+2026-11-22T06:19:29Z tag=lc_manifest rc=0 peak_rss_mib=210 wall_s=1.09 cpu_user_s=0.91 memavail_start_gib=22 disk_free_gib=430->430 slot=claude
