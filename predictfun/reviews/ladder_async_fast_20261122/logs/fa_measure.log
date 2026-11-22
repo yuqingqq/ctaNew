@@ -1,0 +1,7 @@
+{
+ "markets": 19,
+ "parity_all": true,
+ "parity_markets": 8,
+ "reading": "assumptions_do_not_rescue"
+}
+2026-11-22T04:26:45Z tag=fa_measure rc=0 peak_rss_mib=335 wall_s=4.20 cpu_user_s=3.86 memavail_start_gib=23 disk_free_gib=432->432 slot=claude

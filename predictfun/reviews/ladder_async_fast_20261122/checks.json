@@ -1,0 +1,49 @@
+{
+ "checks": {
+  "A_committed": true,
+  "A_inputs": true,
+  "A_outputs": true,
+  "B_membership": true,
+  "K_parity": true,
+  "S_settings": true,
+  "E_contract": true,
+  "T_treatment": true,
+  "F_fills": true,
+  "M_measurement": true,
+  "P_readings": true,
+  "I_resources": true
+ },
+ "details": {
+  "B": {
+   "markets": 19
+  },
+  "K": {
+   "failed": []
+  },
+  "S": {
+   "failed": []
+  },
+  "E": {
+   "failed": [],
+   "n": 0
+  },
+  "T": {
+   "failed": []
+  },
+  "F": {
+   "failed": []
+  },
+  "M": {
+   "failed": []
+  },
+  "P": {
+   "failed": []
+  },
+  "I": {
+   "batch_core_hours": 0.20053888888888885,
+   "line_core_hours": 2.37468611111111,
+   "peak_mib": 1187
+  }
+ },
+ "all_ok": true
+}

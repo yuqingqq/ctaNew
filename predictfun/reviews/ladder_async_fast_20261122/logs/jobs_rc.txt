@@ -1,1 +1,12 @@
 fa_manifest rc=0
+fa_selftest_frozen rc=0
+fa_pilot_20261025 rc=0
+fa_pilot_20261024 rc=0
+fa_pilot_20261027 rc=0
+fa_pilot_20261026 rc=0
+fa_projection rc=0
+fa_rest_20261025 rc=0
+fa_rest_20261026 rc=0
+fa_rest_20261024 rc=0
+fa_measure rc=0
+fa_checks rc=0

@@ -1,0 +1,77 @@
+{
+ "cases": {
+  "an_output_hash_changed": {
+   "family": "A",
+   "target": "A_outputs",
+   "clean": true,
+   "refused": true
+  },
+  "a_market_dropped": {
+   "family": "B",
+   "target": "B_membership",
+   "clean": true,
+   "refused": true
+  },
+  "a_parity_fill_changed": {
+   "family": "K",
+   "target": "K_parity",
+   "clean": true,
+   "refused": true
+  },
+  "an_async_setting_changed": {
+   "family": "S",
+   "target": "S_settings",
+   "clean": true,
+   "refused": true
+  },
+  "an_activation_shifted": {
+   "family": "E",
+   "target": "E_contract",
+   "clean": true,
+   "refused": true
+  },
+  "a_size_over_the_room": {
+   "family": "E",
+   "target": "E_contract",
+   "clean": true,
+   "refused": true
+  },
+  "a_duplicate_price": {
+   "family": "E",
+   "target": "E_contract",
+   "clean": true,
+   "refused": true
+  },
+  "a_front_generation_behind": {
+   "family": "T",
+   "target": "T_treatment",
+   "clean": true,
+   "refused": true
+  },
+  "a_fill_class_flipped": {
+   "family": "F",
+   "target": "F_fills",
+   "clean": true,
+   "refused": true
+  },
+  "an_arm_value_changed": {
+   "family": "M",
+   "target": "M_measurement",
+   "clean": true,
+   "refused": true
+  },
+  "a_reading_changed": {
+   "family": "P",
+   "target": "P_readings",
+   "clean": true,
+   "refused": true
+  },
+  "resources_over_the_cap": {
+   "family": "I",
+   "target": "I_resources",
+   "clean": true,
+   "refused": true
+  }
+ },
+ "falsifier_ok": true
+}

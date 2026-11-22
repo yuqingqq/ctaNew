@@ -1,0 +1,88 @@
+{
+ "all_ok": true,
+ "failed": [],
+ "falsifier_ok": true,
+ "cases": {
+  "an_output_hash_changed": [
+   true,
+   true
+  ],
+  "a_market_dropped": [
+   true,
+   true
+  ],
+  "a_parity_fill_changed": [
+   true,
+   true
+  ],
+  "an_async_setting_changed": [
+   true,
+   true
+  ],
+  "an_activation_shifted": [
+   true,
+   true
+  ],
+  "a_size_over_the_room": [
+   true,
+   true
+  ],
+  "a_duplicate_price": [
+   true,
+   true
+  ],
+  "a_front_generation_behind": [
+   true,
+   true
+  ],
+  "a_fill_class_flipped": [
+   true,
+   true
+  ],
+  "an_arm_value_changed": [
+   true,
+   true
+  ],
+  "a_reading_changed": [
+   true,
+   true
+  ],
+  "resources_over_the_cap": [
+   true,
+   true
+  ]
+ },
+ "details": {
+  "B": {
+   "markets": 19
+  },
+  "K": {
+   "failed": []
+  },
+  "S": {
+   "failed": []
+  },
+  "E": {
+   "failed": [],
+   "n": 0
+  },
+  "T": {
+   "failed": []
+  },
+  "F": {
+   "failed": []
+  },
+  "M": {
+   "failed": []
+  },
+  "P": {
+   "failed": []
+  },
+  "I": {
+   "batch_core_hours": 0.20053888888888885,
+   "line_core_hours": 2.37468611111111,
+   "peak_mib": 1187
+  }
+ }
+}
+2026-11-22T04:26:54Z tag=fa_checks rc=0 peak_rss_mib=293 wall_s=3.67 cpu_user_s=3.39 memavail_start_gib=22 disk_free_gib=432->432 slot=claude

@@ -446,6 +446,23 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_ASYNC_FAST_RESULTS_20261122_DEV -->
+## 2026-11-22 04:28Z (session aea5bfb9) — ASYNC-EXECUTION-SENSITIVITY-v1 RESULTS: assumptions_do_not_rescue - every arm loses every day even at 10 ms, concurrent, front queue (receipt `reviews/ladder_async_fast_20261122/report.md`)
+
+- **Integrity:** parity 8 / 8 (the wrapper in BASELINE mode = the accepted pressure arm); ASYNC settings as declared; the execution contract recomputed with 0 violations on 4 arms x 19 markets; `fa_checks.py` A-I pass, falsifier 12 / 12.
+- **Resources:** batch 0.201 of 0.25 core-hours; line 2.375 of 2.50.
+- **END (c):** CURRENT_BASELINE -86,110; FRONT_BASELINE -65,937; CURRENT_ASYNC -68,320; FRONT_ASYNC -86,961.
+- **+1 s per share (c):** -1.08 / -0.53 / -0.98 / -0.48.
+- **Contrasts:** all MIXED.
+  - EXEC_AT_CURRENT: END +17.8k (3 of 4 days), +1 s +6.7k (3 of 4);
+  - EXEC_AT_FRONT: END -21.0k;
+  - QUEUE_AT_FAST: +1 s +17.4k every day, END -18.6k;
+  - INTERACTION: END -38.8k.
+  - END differences carry directional inventory movement as large as the contrasts.
+- **Mechanism:** through-price sweep fills still cost -80k to -87k c at 1 s in every arm. ASYNC mainly raises occupancy (0.61 -> 0.65 at the current queue), both-sides quoting, generations, pulls and withholds. Cap refusals are 0 in every arm (the sizing never exceeds the room).
+- **Next:** ONE Codex review of b8ab077a..this commit. Per the declared reading no tuned speed / queue variant follows. POSITIVE-PRESSURE-GUARD-v1 stays stopped.
+<!-- /LADDER_ASYNC_FAST_RESULTS_20261122_DEV -->
+
 <!-- LADDER_ASYNC_FAST_FREEZE_20261122_DEV -->
 ## 2026-11-22 04:22Z (session aea5bfb9) — ASYNC-EXECUTION-SENSITIVITY-v1 FROZEN before any replay (review b8ab077a's ONE next priority; USER-approved <= 0.25 / line 2.50)
 
