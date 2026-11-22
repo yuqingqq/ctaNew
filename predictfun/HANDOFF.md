@@ -446,6 +446,27 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_QUEUE_FRONT_REVIEW_ANSWER_20261122_DEV -->
+## 2026-11-22 04:06Z (session aea5bfb9) — review b8ab077a answered; LOOP STOPPED: its ONE next priority (ASYNC_FAST10) needs the USER's resource approval
+
+- **Review b8ab077a (target c7404f21)** accepted the numerical result: MIXED, still negative; no blocking finding, no rerun.
+- **Finding 1 (P2), answered.** The report's causal wording overstated; superseded in band by `reviews/ladder_queue_front_20261122/report_interpretation_v2.md`:
+  - priority changes sweep / inventory exposure through feedback;
+  - the mix split is arithmetic;
+  - the class horizons are native cohorts;
+  - the END class flip is not an inventory diagnosis;
+  - "not supported by this test of the fixed policy".
+- **Finding 2 (P3), DEFERRED** per its disposition. `fq_checks_v2.py` omits the 5 / 30 s class values, the lost / added sums and the daily-sign and participation readings; the review verified them. Extend the checker with its three known-bad controls when it is next reused.
+- **Process slip, disclosed.** The USER's amendments 9f7fe703 (FAST10, 03:40Z) and c3fe1d4a (ASYNC_FAST10, 03:49:01Z) landed before the freeze (03:49:18Z) and were not read before it. The run is exactly the approved two-arm design, which the review confirms.
+- **ONE next priority (review):** prepare CURRENT_ASYNC_FAST10 and FRONT_ASYNC_FAST10 per the async amendment:
+  - 10 ms post / live-cancel effects; 100 ms fill / cancel notices;
+  - independent requests in flight; retiring records stay reserved; the 200-share cap and desired-exposure limit kept;
+  - reuse this round's two baseline ledgers;
+  - controls first, then the 2-markets-per-date pilot and the cost gate.
+  - **NEEDS THE USER before launch:** <= 0.25 additional core-hours and a 2.50 line ceiling including review (replacing the earlier FAST10 proposals). Not authorized yet.
+- **Ladder line:** about 2.174 of the approved 2.25 after the review. POSITIVE-PRESSURE-GUARD-v1 stays stopped.
+<!-- /LADDER_QUEUE_FRONT_REVIEW_ANSWER_20261122_DEV -->
+
 <!-- LADDER_QUEUE_FRONT_RESULTS_20261122_DEV -->
 ## 2026-11-22 03:55Z (session aea5bfb9) — QUEUE-PRIORITY-SENSITIVITY-v1 RESULTS: reading MIXED - front priority recovers 23 % of the END deficit pooled, inconsistently by day; every arm still loses (receipt `reviews/ladder_queue_front_20261122/report.md`)
 

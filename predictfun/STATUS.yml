@@ -319,6 +319,17 @@ ladder_audit_review_20261121_codex:
   additional_user_permission_within_scope: false
   untouched_validation: false
 
+ladder_queue_front_review_answer_20261122_dev:
+  status: loop_stopped_awaiting_user_resource_decision
+  asof: "2026-11-22 04:06Z"
+  review: b8ab077a
+  review_verdict: accepted_mixed_no_blocking_no_rerun
+  interpretation_superseded_by: report_interpretation_v2.md
+  deferred_nonblocking: [checker_coverage_5_30s_classes_lost_added_sums_daily_signs]
+  process_slip: amendments_9f7fe703_c3fe1d4a_not_read_before_freeze_run_matches_approved_two_arm_design
+  next_priority: async_fast10_current_and_front_execution_sensitivity
+  needs_user: {batch_core_hours: 0.25, line_ceiling: 2.50}
+  line_core_hours_after_review: 2.174
 ladder_queue_front_results_20261122_dev:
   status: results_complete_review_requested
   asof: "2026-11-22 03:55Z"
