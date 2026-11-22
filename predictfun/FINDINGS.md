@@ -1,3 +1,23 @@
+<!-- LONG_CONTINUATION_VALUE_20261122_USER -->
+## 2026-11-22 — USER economic objective: all future fills and continuation, not first-fill markout
+
+[Contract](reviews/automatic/20261122_long_horizon_value_contract/plan.md).
+No new empirical finding. Short-term loss can accompany a valuable retained
+queue; classify and predict the full entry/remaining-order continuation
+relative to feasible WAIT or PULL/re-entry, with the same supported terminal
+time and risk framework. Include repeated partial fills, queue reset, later
+good flow, inventory and other-order effects. Marked net ledger value is
+the economic target; 1s/first-fill markout locates adverse selection only.
+
+The saved suffix figures do not establish longer-horizon compensation or
+queue necessity. Increasing horizon alone does not fix model/controller
+inconsistency: post, keep and re-enter values need the same continuation,
+including lost queue benefit. No artificial minimum holding timer; new risk
+can justify immediate cancellation under the longer value comparison.
+Finish the current bounded diagnostic, then bring one precise paired-value
+contract and pilot cost into the same review. No new run or budget grant.
+<!-- /LONG_CONTINUATION_VALUE_20261122_USER -->
+
 <!-- QUEUE_WHOLE_LIFE_20261122_USER -->
 ## 2026-11-22 — Interpretation correction: no test yet of early-loss cost of queue retention
 

@@ -1,4 +1,18 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+long_continuation_value_20261122_user:
+  status: governing_target_direction_no_new_run
+  plan: predictfun/reviews/automatic/20261122_long_horizon_value_contract/plan.md
+  parent_commit: 90e82f8eea0505321f422e0ebda011fd973ae5da
+  primary_target: paired_full_continuation_net_ledger_value
+  primary_terminal: same_predeclared_supported_episode_END
+  include: [all_partial_fills, queue_continuity_and_reset, later_fills, inventory, other_order_effects]
+  first_fill_or_1s_value_as_action_objective: false
+  common_entry_retention_reentry_continuation_required: true
+  fixed_minimum_rest_or_cooldown_required: false
+  next_combined_deliverable: bounded_diagnostic_closure_plus_long_continuation_contract_controls_and_pilot_projection
+  new_replay_fit_day_or_resource_extension_launched: false
+  cumulative_core_hour_ceiling_unchanged: 2.50
+
 queue_whole_life_clarification_20261122_user:
   status: mechanism_plausible_not_tested_by_suffix_classes
   governing_interpretation: predictfun/reviews/automatic/20261122_queue_fill_classes/report_interpretation_v2.md

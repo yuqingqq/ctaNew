@@ -23,6 +23,31 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- LONG_CONTINUATION_VALUE_20261122_USER -->
+## 2026-11-22 — USER: project longer economic continuation, not the first fill or 1s loss
+
+[Governing target/controller contract](reviews/automatic/20261122_long_horizon_value_contract/plan.md).
+POST/WAIT and KEEP/PULL-reentry must value the same longer continuation to
+a common predeclared supported episode END. Include all partial fills,
+retained/replaced priority, early cost, later incremental good fills,
+inventory and other-order effects. Compare full net-cash plus terminal
+inventory mark; queue benefit enters future fills, not a duplicate bonus.
+
+One-second/first-fill values remain diagnostic. Neither is the action
+objective or grounds to dismiss whole-life queue continuity. Fast decision
+updates can use long-horizon value; no fixed holding timer/cooldown and no
+automatic cancellation solely on a negative next-fill forecast. Structural
+and inventory protection remain. Longer horizon alone does not cure churn:
+entry, retention and re-entry must share the continuation; log reversals.
+
+ONE combined deliverable: finish the bounded saved-data diagnostic without
+promoting its short-horizon classes, and prepare the longer-continuation
+paired-value/controller specification plus controls and pilot projection.
+No new tuned variant/model/replay/day is launched by this note. Same 0.05h
+diagnostic + 0.02h review allowance and cumulative 2.50h ceiling; no extension.
+Development implements; this thread reviews one combined receipt.
+<!-- /LONG_CONTINUATION_VALUE_20261122_USER -->
+
 <!-- QUEUE_WHOLE_LIFE_20261122_USER -->
 ## 2026-11-22 — USER correction: early losses may pay for later use of retained priority
 
