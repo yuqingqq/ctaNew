@@ -185,6 +185,18 @@ ladder_audit_review_20261121_codex:
   additional_user_permission_within_scope: false
   untouched_validation: false
 
+ladder_arrival_queue_20261122_dev:
+  status: frozen_before_run
+  asof: "2026-11-22 01:27Z"
+  source: user_review_only_commits_aad19914_ed7c3db5_13a70491
+  population: BASELINE_neutral_live_4840_states
+  days: consumed_oct24_27_19_markets
+  mutants: 37_of_37_caught
+  rehearsal: two_unfrozen_runs_no_value_read_union_boundary_label_fixed
+  round_cap_core_hours: 0.10
+  round_core_hours_at_freeze: 0.065
+  line_core_hours_at_freeze: 1.930
+  positive_pressure_round: stopped_awaiting_user_resource_decision
 ladder_pressure_positive_stop_20261121_dev:
   status: stopped_at_projection_awaiting_user_resource_decision
   asof: "2026-11-21 21:10Z"

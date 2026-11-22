@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "14", "name": "a later state used as history", "seconds": 1.7, "sources": {"pf_ladder_arrival_queue.py": "919fb60c1a07c478", "pf_ladder_arrival_queue_mutants.py": "92ff8959784c8113", "pf_ladder_arrival_queue_selftest.py": "84c531a8adbc168e"}, "why": "ARRIVAL QUEUE SELFTEST FAILED: 5 progress statuses | 5 a later saved state's queue leaves the decision inputs unchanged"}
+2026-11-22T01:26:22Z tag=laqf_14 rc=0 peak_rss_mib=204 wall_s=1.87 cpu_user_s=1.69 memavail_start_gib=22 disk_free_gib=435->435 slot=claude4

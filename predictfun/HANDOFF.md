@@ -266,6 +266,17 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_ARRIVAL_QUEUE_FREEZE_20261122_DEV -->
+## 2026-11-22 01:27Z (session aea5bfb9) — ARRIVAL-QUEUE-DECOMPOSITION-v1 FROZEN before the run (the USER's ed7c3db5 / 13a70491 ONE next priority)
+
+- **What:** one saved-data decision-to-fill x post-fill decomposition of the 4,840 neutral BASELINE live snapshots: fill arrival after the cancel effect (I0 < 250 ms, I1 < 1 s, I2 < 5 s, I3 later) x the saved 0 / 50 / 100 ms and 1 / 5 / 30 s marks, with the mandatory queue axis (Q, R, Q/R, o_q_rel; bands front / within_R / beyond_R / unknown / invalid_R), queue x Binance band by side / day (Predict flow secondary), the USER's five views, causal progress (first review / entry; 250 ms only at an exact saved state), follow-up / censor statuses, the venue queue explanatory only. No replay, tape, fit, threshold or new day.
+- **Frozen:** `pf_ladder_arrival_queue.py` + selftest (7 groups) + 37 / 37 mutants caught; write-once `manifest.json`; independent `aq_checks.py` (A / B / F / C / R / S / I, 12-case falsifier; R reproduces the USER's `conditions.csv`); reading rules `tools/read_arrival_queue.py` (sparse < 20 filled states; point estimates only, 4 days < 5); launcher.
+- **Pre-freeze rehearsal (disclosed in the declaration):** two unfrozen runs: the interval union = the audit window on 4,840 / 4,840; checks all pass but A_committed (pre-commit); the USER's table 1,431 / 1,431. It found a union label defect (227 generations ending exactly on an interval boundary were labelled at_risk_full), fixed before this freeze. No value was read.
+- **Resources:** round cap 0.10 core-hours, 0.065 used at freeze (selftests, three mutation runs, two rehearsals); line 1.930 of 2.0.
+- **Unchanged:** POSITIVE-PRESSURE-GUARD-v1 stays stopped; its resource decision is the USER's.
+- **Next:** run -> checks -> readings -> receipt, then ONE Codex review.
+<!-- /LADDER_ARRIVAL_QUEUE_FREEZE_20261122_DEV -->
+
 <!-- LADDER_PRESSURE_POSITIVE_STOP_20261121_DEV -->
 ## 2026-11-21 21:10Z (session aea5bfb9) — POSITIVE-PRESSURE-GUARD-v1 STOPPED AT THE WRITE-ONCE PROJECTION: AWAITING THE USER'S RESOURCE DECISION (loop stopped)
 

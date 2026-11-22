@@ -1,0 +1,2 @@
+ARRIVAL QUEUE SELFTEST PASSED: arrival boundaries and follow-up, bands, state_record, reconcile, progress and the venue join, cells, guards
+2026-11-22T01:01:31Z tag=aq_selftest_try3 rc=0 peak_rss_mib=205 wall_s=1.23 cpu_user_s=1.04 memavail_start_gib=23 disk_free_gib=435->435 slot=claude

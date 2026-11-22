@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "22", "name": "the exactly-once check dropped", "seconds": 1.6, "sources": {"pf_ladder_arrival_queue.py": "919fb60c1a07c478", "pf_ladder_arrival_queue_mutants.py": "92ff8959784c8113", "pf_ladder_arrival_queue_selftest.py": "84c531a8adbc168e"}, "why": "ARRIVAL QUEUE SELFTEST FAILED: 4 a duplicated state refuses | 4 a missing state refuses"}
+2026-11-22T01:26:26Z tag=laqf_22 rc=0 peak_rss_mib=204 wall_s=1.85 cpu_user_s=1.68 memavail_start_gib=22 disk_free_gib=435->435 slot=claude4

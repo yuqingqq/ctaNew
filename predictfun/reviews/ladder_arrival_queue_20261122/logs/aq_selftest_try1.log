@@ -1,0 +1,2 @@
+ARRIVAL QUEUE SELFTEST FAILED: 3 a missing +5 s mark stays missing, never zero; the interval leaves the common cohort | 4 reconcile: stopped (ValueError("the interval union does not reproduce the audit window: [('20261024', 7, 3)]"))
+2026-11-22T01:00:24Z tag=aq_selftest_try1 rc=1 peak_rss_mib=204 wall_s=1.20 cpu_user_s=1.00 memavail_start_gib=23 disk_free_gib=435->435 slot=claude

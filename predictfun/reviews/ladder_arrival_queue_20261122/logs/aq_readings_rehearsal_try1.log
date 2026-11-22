@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/ladder_arrival_queue_20261122/tools/read_arrival_queue.py", line 150, in <module>
+    main()
+  File "/home/yuqing/ctaNew/predictfun/reviews/ladder_arrival_queue_20261122/tools/read_arrival_queue.py", line 139, in main
+    r2_queue_order={iv: {str(h): order_of(q, iv, h, qb3) for h in (1000, 30000)} for iv in IVS},
+                                 ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/ladder_arrival_queue_20261122/tools/read_arrival_queue.py", line 112, in order_of
+    x = df[(df.interval == iv) & df.band.isin(bands) & ~df.sparse].sort_values(f'per_share_{h}')
+                                                        ^^^^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/generic.py", line 6206, in __getattr__
+    return object.__getattribute__(self, name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/accessor.py", line 230, in __get__
+    return self._accessor(obj)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/arrays/sparse/accessor.py", line 37, in __init__
+    self._validate(data)
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/arrays/sparse/accessor.py", line 306, in _validate
+    raise AttributeError(self._validation_msg)
+AttributeError: Can only use the '.sparse' accessor with Sparse data.
+2026-11-22T01:24:59Z tag=aq_readings_rehearsal_try1 rc=1 peak_rss_mib=137 wall_s=3.12 cpu_user_s=2.99 memavail_start_gib=23 disk_free_gib=435->435 slot=claude

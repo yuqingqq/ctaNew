@@ -1,0 +1,38 @@
+  0 interval boundaries closed on the right: CAUGHT (1.5 s) - ARRIVAL QUEUE SELFTEST FAILED: 1 arrival intervals ([None, 'I0', 'I0', 'I1', 'I1', 'I2', 'I2', 'I3', None]) | 3 fills by interval ([('I0', 0), ('I1', 
+  1 a completing fill at an interval start not at risk: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 1 follow-up statuses ({'I0': ('at_risk_full', 250.0), 'I1': ('removed_in_interval', 350.0), 'I2': ('not_at_risk', 0.0),
+  2 a removal at an interval start at risk: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 1 follow-up statuses ({'I0': ('at_risk_full', 250.0), 'I1': ('removed_in_interval', 350.0), 'I2': ('not_at_risk', 0.0),
+  3 END censoring not distinguished: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 1 follow-up statuses ({'I0': ('at_risk_full', 250.0), 'I1': ('removed_in_interval', 350.0), 'I2': ('not_at_risk', 0.0),
+  4 the removal first in the tie order: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 3 the generation end and cause (7000.0, full_fill)
+  5 a negative queue estimate not unknown: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 2 queue bands (['front', 'unknown', 'within_R', 'within_R', 'beyond_R', 'invalid_R', 'invalid_R', 'invalid_R', 'within_
+  6 Q = R beyond R: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 2 queue bands (['front', 'unknown', 'unknown', 'beyond_R', 'beyond_R', 'invalid_R', 'invalid_R', 'invalid_R', 'within_R
+  7 R = 0 valid: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 2 queue bands (['front', 'unknown', 'unknown', 'within_R', 'beyond_R', 'beyond_R', 'invalid_R', 'invalid_R', 'within_R'
+  8 q5 strictly above the edge: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 2 q5 at the float32-exact ask edge
+  9 a zero move adverse: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 2 Binance bands (['positive_below_q5', 'positive_below_q5', 'q5', 'positive_below_q5', 'missing', 'non_adverse', 'missi
+  10 the comparison without the float32 cast: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 2 the float32 cast before the comparison (the frozen rule's)
+  11 a horizon past END valid: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 3 a horizon past END stays missing
+  12 a missing mark counted as zero: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 3 a missing +5 s mark stays missing, never zero; the interval leaves the common cohort
+  13 known remaining without the notice: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 5 a future-only perturbation leaves every decision input unchanged ([True, True, True]) | 5 R known only after the noti
+  14 a later state used as history: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 5 progress statuses | 5 a later saved state's queue leaves the decision inputs unchanged
+  15 the same-tick first review as progress: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 5 progress statuses
+  16 the order match without the price: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 5 progress statuses
+  17 not-yet-born decisions not distinguished: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 5 progress statuses
+  18 the venue record at a nearby tick: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 5 the venue joins only at the first review's exact tick (available, available)
+  19 the notice gap with a closed lower end: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 5 the venue joins only at the first review's exact tick (available, time_mismatch)
+  20 recent depletion at a nearby state: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 5 recent 250 ms only at exactly d - 250
+  21 the window reconciliation dropped: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 4 a fill moved before the effect refuses | 4 a changed fill quantity refuses | 4 a changed pre-effect count refuses
+  22 the exactly-once check dropped: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 4 a duplicated state refuses | 4 a missing state refuses
+  23 the pre-effect count not reconciled: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 4 a changed pre-effect count refuses
+  24 the interval-row count not checked: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 4 a missing interval row refuses
+  25 run without the write-once check: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 7 guards: stopped (KeyError('edges'))
+  26 the union status the first at-risk interval's: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 6 the union cell (0, 88.0, 0) | 6 the union status is the last at-risk interval's (at_risk_full, at_risk_full, not_at_r
+  27 partial counting filled-out states: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 6 the union cell (0, 88.0, 0)
+  28 the common cohort replaced by the native one: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 6 the union cell (1, 88.0, 0)
+  29 the state-level positive part from fills: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 6 state-level and fill-level parts (30.0, 30.0, -2.0)
+  30 the any-fill rate over all opportunities: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 6 the any-fill rate over the at-risk states (2, 1, 0.5)
+  31 the snapshot side not checked against its order: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 3 another order's snapshot refuses
+  32 a window fill after the generation end accepted: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 3 a window fill after the generation end refuses
+  33 pre-effect counting the fills before the decision: CAUGHT (1.5 s) - ARRIVAL QUEUE SELFTEST FAILED: 3 fills by interval ([('I0', 1), ('I1', 1), ('I2', 2), ('I3', 1)], pre 2, before 1) | 4 reconcile: stopped (ValueError(
+  34 build_manifest without the write-once check: CAUGHT (1.6 s) - ARRIVAL QUEUE SELFTEST FAILED: 7 build_manifest refuses an existing manifest
+control: PASSED (1.5 s); sources {'pf_ladder_arrival_queue.py': 'e0459f242e7e9586', 'pf_ladder_arrival_queue_mutants.py': 'a72796e0b1b9fb66', 'pf_ladder_arrival_queue_selftest.py': '30ca15ccc95d3354'}
+mutation check passed: the control passes its selftest, 35 / 35 planted code errors are caught by a check (1.0 CPU min)
+2026-11-22T01:16:00Z tag=laq_summary_try2 rc=0 peak_rss_mib=16 wall_s=0.02 cpu_user_s=0.01 memavail_start_gib=22 disk_free_gib=435->435 slot=claude

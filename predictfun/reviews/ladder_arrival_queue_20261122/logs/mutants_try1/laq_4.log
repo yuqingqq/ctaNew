@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "4", "name": "Q = R beyond R", "seconds": 1.0, "sources": {"pf_ladder_arrival_queue.py": "920ce51ffbf3afcd", "pf_ladder_arrival_queue_mutants.py": "fd2e5f4ff7a3709e", "pf_ladder_arrival_queue_selftest.py": "28e4d726c84e1009"}, "why": "ARRIVAL QUEUE SELFTEST FAILED: 2 queue bands (['front', 'unknown', 'unknown', 'beyond_R', 'beyond_R', 'invalid_R', 'invalid_R', 'invalid_R', 'within_R'])"}
+2026-11-22T01:01:35Z tag=laq_4 rc=0 peak_rss_mib=203 wall_s=1.21 cpu_user_s=1.05 memavail_start_gib=22 disk_free_gib=435->435 slot=claude2

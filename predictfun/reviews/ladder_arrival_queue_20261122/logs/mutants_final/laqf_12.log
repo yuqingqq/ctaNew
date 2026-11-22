@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "12", "name": "a missing mark counted as zero", "seconds": 1.7, "sources": {"pf_ladder_arrival_queue.py": "919fb60c1a07c478", "pf_ladder_arrival_queue_mutants.py": "92ff8959784c8113", "pf_ladder_arrival_queue_selftest.py": "84c531a8adbc168e"}, "why": "ARRIVAL QUEUE SELFTEST FAILED: 3 a missing +5 s mark stays missing, never zero; the interval leaves the common cohort"}
+2026-11-22T01:26:18Z tag=laqf_12 rc=0 peak_rss_mib=204 wall_s=1.87 cpu_user_s=1.72 memavail_start_gib=22 disk_free_gib=435->435 slot=claude2

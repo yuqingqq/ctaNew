@@ -1,0 +1,52 @@
+{
+ "version": "arrival_queue_decomposition_v1",
+ "population": "BASELINE_neutral_live",
+ "user_commits": {
+  "protocol": "aad19914",
+  "results": "ed7c3db5",
+  "queue_plan": "13a70491"
+ },
+ "states": {
+  "path": "predictfun/reviews/ladder_audit_20261121/outputs/states.csv.gz",
+  "sha256": "ec2eaf7cd53628170fe485bb55a9889ae77e7f85188e592b078de6f1ec9a3043"
+ },
+ "parent_day_records": {
+  "20261024": "ab599b8eceefb881fe712bb7ceb9c314fc7eb3b5ef6872778f58f2c2f2a67277",
+  "20261025": "3874552b6ae995cccf46ba820963fd27222ba530fb552dab74d28fbcd9f3bfe8",
+  "20261026": "0833d2c4278d89e6a6af24a72e4c6313ddf411da267b5aa5b428513fa96d30d6",
+  "20261027": "25345c86153002aa643ff8c06862b906373e171a10e63eaf4e687647842a55cd"
+ },
+ "days": [
+  "20261024",
+  "20261025",
+  "20261026",
+  "20261027"
+ ],
+ "edges": {
+  "0": [
+   -0.6315650224685669,
+   -0.23532847166061402,
+   0.23543085157871246,
+   0.4666730940341952
+  ],
+  "1": [
+   -0.7444053292274475,
+   -0.4986844062805176,
+   -0.23543085157871246,
+   0.285456120967865
+  ]
+ },
+ "edges_sha256": "ca688917cd7ddc7c40e94031bee646f4fc1339511bb7c48fbe5270797a38bf80",
+ "horizons_ms": [
+  0,
+  50,
+  100,
+  1000,
+  5000,
+  30000
+ ],
+ "intervals": [
+  [
+   "I0",
+   
+2026-11-22T01:27:04Z tag=aq_manifest rc=0 peak_rss_mib=197 wall_s=0.93 cpu_user_s=0.78 memavail_start_gib=23 disk_free_gib=435->435 slot=claude

@@ -1,0 +1,105 @@
+{
+ "asof": "2026-11-22T01:27:05.528488+00:00",
+ "cap_core_hours": 0.1,
+ "days": [
+  "20261024",
+  "20261025",
+  "20261026",
+  "20261027"
+ ],
+ "edges": {
+  "0": [
+   -0.6315650224685669,
+   -0.23532847166061402,
+   0.23543085157871246,
+   0.4666730940341952
+  ],
+  "1": [
+   -0.7444053292274475,
+   -0.4986844062805176,
+   -0.23543085157871246,
+   0.285456120967865
+  ]
+ },
+ "edges_sha256": "ca688917cd7ddc7c40e94031bee646f4fc1339511bb7c48fbe5270797a38bf80",
+ "follow_up": [
+  "not_at_risk",
+  "at_risk_full",
+  "removed_in_interval",
+  "filled_out_in_interval",
+  "end_censored"
+ ],
+ "horizons_ms": [
+  0,
+  50,
+  100,
+  1000,
+  5000,
+  30000
+ ],
+ "intervals": [
+  [
+   "I0",
+   0.0,
+   250.0
+  ],
+  [
+   "I1",
+   250.0,
+   1000.0
+  ],
+  [
+   "I2",
+   1000.0,
+   5000.0
+  ],
+  [
+   "I3",
+   5000.0,
+   null
+  ]
+ ],
+ "line_cap_core_hours": 2.0,
+ "parent_day_records": {
+  "20261024": "ab599b8eceefb881fe712bb7ceb9c314fc7eb3b5ef6872778f58f2c2f2a67277",
+  "20261025": "3874552b6ae995cccf46ba820963fd27222ba530fb552dab74d28fbcd9f3bfe8",
+  "20261026": "0833d2c4278d89e6a6af24a72e4c6313ddf411da267b5aa5b428513fa96d30d6",
+  "20261027": "25345c86153002aa643ff8c06862b906373e171a10e63eaf4e687647842a55cd"
+ },
+ "population": "BASELINE_neutral_live",
+ "queue_bands": [
+  "front",
+  "within_R",
+  "beyond_R",
+  "unknown",
+  "invalid_R"
+ ],
+ "sources": {
+  "pf_ladder_arrival_queue.py": "919fb60c1a07c4789511313dfe1eda2ff35c1658b8835b526f860aa175ad2628",
+  "pf_ladder_arrival_queue_selftest.py": "84c531a8adbc168ed85d5deec0762608d542f31628edf7b3138f5f6fc0791769",
+  "pf_ladder_pressure.py": "357f1d19b32ab5a8d51bc26f884d03492d008c3653b981a147d0bbca17068114",
+  "pf_ladder_pressure_lag.py": "0dcb03c430db87e2cf85104eebdf3aa175eb6af4594ac9a89dec89d1bbf5c7d4",
+  "pf_ladder_rest.py": "d90016ce7d25f89f6f6c6662075f5be72539d3140373e42c8b7228ebcf8ce5e0"
+ },
+ "states": {
+  "path": "predictfun/reviews/ladder_audit_20261121/outputs/states.csv.gz",
+  "sha256": "ec2eaf7cd53628170fe485bb55a9889ae77e7f85188e592b078de6f1ec9a3043"
+ },
+ "user_commits": {
+  "protocol": "aad19914",
+  "queue_plan": "13a70491",
+  "results": "ed7c3db5"
+ },
+ "version": "arrival_queue_decomposition_v1",
+ "views": [
+  "pressure_flow",
+  "depletion",
+  "depth",
+  "age",
+  "inventory",
+  "queue",
+  "queue_pressure",
+  "queue_pressure_flow",
+  "progress"
+ ]
+}

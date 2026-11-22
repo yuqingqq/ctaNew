@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "8", "name": "a horizon past END valid", "seconds": 1.0, "sources": {"pf_ladder_arrival_queue.py": "920ce51ffbf3afcd", "pf_ladder_arrival_queue_mutants.py": "fd2e5f4ff7a3709e", "pf_ladder_arrival_queue_selftest.py": "28e4d726c84e1009"}, "why": "ARRIVAL QUEUE SELFTEST FAILED: 3 a horizon past END stays missing"}
+2026-11-22T01:01:36Z tag=laq_8 rc=0 peak_rss_mib=203 wall_s=1.24 cpu_user_s=1.07 memavail_start_gib=22 disk_free_gib=435->435 slot=claude2
