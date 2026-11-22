@@ -1,0 +1,65 @@
+{
+  "cases": {
+    "an_output_hash_changed": {
+      "family": "A",
+      "target": "A_outputs",
+      "clean": true,
+      "refused": true
+    },
+    "a_matched_profit_changed": {
+      "family": "D",
+      "target": "D_decomposition",
+      "clean": true,
+      "refused": true
+    },
+    "a_residual_changed": {
+      "family": "D",
+      "target": "D_decomposition",
+      "clean": true,
+      "refused": true
+    },
+    "a_dMatched_changed": {
+      "family": "Y",
+      "target": "Y_values",
+      "clean": true,
+      "refused": true
+    },
+    "an_event_count_changed": {
+      "family": "Y",
+      "target": "Y_values",
+      "clean": true,
+      "refused": true
+    },
+    "a_delay_left_uncorrected": {
+      "family": "L",
+      "target": "L_delays",
+      "clean": true,
+      "refused": true
+    },
+    "a_focal_class_count_changed": {
+      "family": "F",
+      "target": "F_focal",
+      "clean": true,
+      "refused": true
+    },
+    "a_summary_sum_changed": {
+      "family": "S",
+      "target": "S_summary",
+      "clean": true,
+      "refused": true
+    },
+    "a_day_sign_flipped": {
+      "family": "S",
+      "target": "S_day_signs",
+      "clean": true,
+      "refused": true
+    },
+    "resources_over_the_cap": {
+      "family": "I",
+      "target": "I_resources",
+      "clean": true,
+      "refused": true
+    }
+  },
+  "falsifier_ok": true
+}

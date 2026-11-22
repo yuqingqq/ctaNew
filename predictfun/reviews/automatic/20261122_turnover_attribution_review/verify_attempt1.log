@@ -1,0 +1,22 @@
+TURNOVER ATTRIBUTION SELFTEST PASSED: FIFO decomposition, focal round trips, events, delays, summary and day signs, guards
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261122_turnover_attribution_review/verify.py", line 45, in <module>
+    try: falsifier=C.falsify(E,checks)
+                   ^^^^^^^^^^^^^^^^^^^
+  File "/tmp/pf-ta-review-51ed592d/predictfun/reviews/ladder_turnover_attribution_20261122/ta_checks.py", line 243, in falsify
+    fn(X_); c, _ = FAMS[fam](X_, X_['_root']) if fam == 'I' else FAMS[fam](X_); refused = not c[target]
+                                                                 ^^^^^^^^^^^^^
+  File "/tmp/pf-ta-review-51ed592d/predictfun/reviews/ladder_turnover_attribution_20261122/ta_checks.py", line 98, in fam_A
+    c['A_outputs'] = all(E['audit']['outputs'][f'{n}.csv'] == sha((D / f'{n}.csv').read_bytes()) for n in OUTS); return c, {}
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/pf-ta-review-51ed592d/predictfun/reviews/ladder_turnover_attribution_20261122/ta_checks.py", line 98, in <genexpr>
+    c['A_outputs'] = all(E['audit']['outputs'][f'{n}.csv'] == sha((D / f'{n}.csv').read_bytes()) for n in OUTS); return c, {}
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1021, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1015, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/yuqing/ctaNew/predictfun/reviews/automatic/20261122_turnover_attribution_review/arms.csv'
+2026-11-22T06:57:46Z tag=codex_ta_review_verify rc=1 peak_rss_mib=143 wall_s=1.08 cpu_user_s=0.94 memavail_start_gib=22 disk_free_gib=428->428 slot=codex

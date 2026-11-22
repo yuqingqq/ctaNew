@@ -1,4 +1,28 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+turnover_attribution_review_20261122_codex:
+  target: 51ed592d9ddf9e2968d12ffb9fc966763c0a8ce9
+  report: predictfun/reviews/automatic/20261122_turnover_attribution_review/report.md
+  status: attribution_accepted_no_rerun
+  result_blockers: 0
+  pairs_verified: 64
+  arms_verified: 128
+  FIFO_closes_verified: 30504
+  full_summary_groups_verified: 31
+  delay_corrections_closed: 12
+  review_total_Y_negative_each_day: true
+  review_matched_component_negative_each_day: false
+  queue_necessity: unidentified
+  predictive_skill_established: false
+  next_priority: proposed_LONG_VALUE_RETENTION_DISCRIMINATION_v1
+  next_scope: 256_REVIEW_forks_same_19_consumed_markets_one_declared_candidate
+  next_scope_USER_approval_required: true
+  proposed_additional_core_hours_including_review: 1.25
+  proposed_review_reserve_core_hours: 0.05
+  proposed_line_ceiling_core_hours: 4.00
+  approved_line_ceiling_core_hours: 2.85
+  approved_current_batch_core_hours: 0.40
+  new_run_fit_or_data_launched: false
+
 long_continuation_review_20261122_codex:
   target: 6b806c192980de106da80fa97ce4993d6553ec66
   report: predictfun/reviews/automatic/20261122_long_continuation_review/report.md

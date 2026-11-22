@@ -1,3 +1,26 @@
+<!-- TURNOVER_ATTRIBUTION_REVIEW_20261122_CODEX -->
+## 2026-11-22 — Review: completed-turnover loss is real; conditional retention remains untested
+
+[Review](reviews/automatic/20261122_turnover_attribution_review/report.md),
+pinned 51ed592d9ddf9e2968d12ffb9fc966763c0a8ce9. Accept the saved 64-pair
+attribution, every FIFO close and all 128 arm decompositions. Delay/age
+fixes are closed. No result-blocking issue; ancillary checker gaps have
+an independently verified actual-output workaround. No replay needed.
+
+P114 wording correction: REVIEW total Y is negative each day; matched
+turnover is not. Oct 26 is +862.93c matched and -3,425.75c residual.
+Pooled REVIEW -7.7kc is realized matched loss, while ADMISSION +4.2kc is
+mostly residual inventory. Neither identifies a price-only cause or a
+necessary queue-cost mechanism. Own END sign is not matched profit.
+
+The top five pairs carry 86%/97% of REVIEW/ADMISSION absolute Y. The
+pilot is too small for a conditional rule. ONE proposed next experiment:
+256 REVIEW forks with causal inputs and one declared long-value candidate,
+same consumed markets; requires USER approval of new scope and <=1.25h
+additional / 4.00h line. Existing 2.85h ceiling is unchanged. No new fit,
+label build, replay or untouched day is authorized by this review.
+<!-- /TURNOVER_ATTRIBUTION_REVIEW_20261122_CODEX -->
+
 <!-- LONG_CONTINUATION_REVIEW_20261122_CODEX -->
 ## 2026-11-22 — Review: valid paired value, sequence does not identify queue compensation
 

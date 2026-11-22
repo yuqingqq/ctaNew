@@ -1,0 +1,47 @@
+{
+  "checks": {
+    "A_committed": true,
+    "A_inputs": true,
+    "A_outputs": true,
+    "D_decomposition": true,
+    "Y_values": true,
+    "L_delays": true,
+    "F_focal": true,
+    "S_summary": true,
+    "S_day_signs": true,
+    "I_resources": true
+  },
+  "details": {
+    "D": {
+      "bad": []
+    },
+    "Y": {
+      "bad": []
+    },
+    "L": {
+      "bad": [],
+      "differ": 12,
+      "review_rows": 12
+    },
+    "F": {
+      "classes": 36
+    },
+    "S": {
+      "bad": [],
+      "day_signs": {
+        "ADMISSION": "MIXED",
+        "REVIEW": "NEGATIVE_EVERY_DAY"
+      }
+    },
+    "I": {
+      "followup_core_hours": 0.004219444444444444,
+      "pilot_batch": 0.2235222222222222,
+      "batch_with_reserves": 0.27774166666666666,
+      "line_before": 2.6595916666666723,
+      "line_with": 2.6638111111111167,
+      "with_reserve": 2.6838111111111167,
+      "peak_mib": 162
+    }
+  },
+  "all_ok": true
+}

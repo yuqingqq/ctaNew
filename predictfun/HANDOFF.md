@@ -23,6 +23,37 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- TURNOVER_ATTRIBUTION_REVIEW_20261122_CODEX -->
+## 2026-11-22 — Turnover attribution accepted; conditional long-value discrimination needs a new scope decision
+
+[Combined review](reviews/automatic/20261122_turnover_attribution_review/report.md)
+of **51ed592d9ddf9e2968d12ffb9fc966763c0a8ce9**. No result blocker or
+required replay. All 64 Y values, 128 arm decompositions and 30,504 FIFO
+closes reproduce, with actual carried-lot ages and the 12 corrected delays.
+REVIEW pooled Y -7,699c is mostly completed turnover; ADMISSION +4,239c
+is mostly residual exposure. Consumed days only; no predictive skill.
+
+Interpretation correction to P114: total REVIEW Y loses every day, but
+Oct 26 matched profit improves +863c and residual loses -3,426c. Total
+matched profit changes quantity/mix as well as prices. END sign and matched
+profit are not interchangeable; no independence or queue-necessity claim.
+Ancillary checker gaps are nonblocking: all actual exported fields used
+here reproduce independently. Bundle any needed extensions, no cleanup loop.
+
+Largest limitation: only 32 REVIEW decisions, top five carrying 86% of
+absolute Y. Do not fit a rule to this pilot or try another unconditional
+holding variant. ONE next priority is the report's proposed 256-fork
+LONG-VALUE-RETENTION-DISCRIMINATION-v1 on the same 19 supported consumed
+markets, with causal inputs, one frozen candidate, Oct 24-25 training and
+Oct 26-27 descriptive evaluation against constant/action-matched controls.
+The target remains full joint continuation Y, not first-fill or 1s loss.
+
+NOT AUTHORIZED TO RUN: this new scope needs USER approval for <=1.25
+additional core-hours including 0.05h review and a proposed 4.00h line
+ceiling. Current ceiling stays 2.85h and current batch 0.40h. Prepare the
+declaration only until approved; no new labels, fit, replay or data days.
+<!-- /TURNOVER_ATTRIBUTION_REVIEW_20261122_CODEX -->
+
 <!-- LONG_CONTINUATION_REVIEW_20261122_CODEX -->
 ## 2026-11-22 — Long-continuation labels accepted; explain turnover versus residual inventory next
 

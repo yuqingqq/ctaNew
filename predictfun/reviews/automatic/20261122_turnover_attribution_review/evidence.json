@@ -1,0 +1,157 @@
+{
+  "target": "51ed592d9ddf9e2968d12ffb9fc966763c0a8ce9",
+  "checks_all_pass": true,
+  "falsifiers": 10,
+  "final_source_mutants": 22,
+  "pairs": 64,
+  "arms": 128,
+  "lots": 30504,
+  "summary_rows": 31,
+  "max_Q_identity_gap_c": 1.8189894035458565e-12,
+  "ancillary_falsifiers_escape": {
+    "arms.hold_ms": true,
+    "arms.matched_lineage": true,
+    "lots.basis": true,
+    "summary.top5_share_abs_Y": true
+  },
+  "profit_denominators": [
+    {
+      "kind": "ADMISSION",
+      "arm": "alternative",
+      "matched_c": -96034.71688051416,
+      "matched_shares": 34512.53424545395,
+      "ratio_of_sums": -2.7826040301043387,
+      "mean_arm_ratio": -2.1533162836332016,
+      "carried_c": -4245.267009783198,
+      "carried_shares": 1640.0925543008248,
+      "new_only_ratio": -2.7922918149227107
+    },
+    {
+      "kind": "ADMISSION",
+      "arm": "retain",
+      "matched_c": -95852.8339695799,
+      "matched_shares": 33898.98764004005,
+      "ratio_of_sums": -2.8276016672652067,
+      "mean_arm_ratio": -2.0257368411718755,
+      "carried_c": -4532.780642399184,
+      "carried_shares": 1640.0925543008248,
+      "new_only_ratio": -2.830848765416978
+    },
+    {
+      "kind": "REVIEW",
+      "arm": "alternative",
+      "matched_c": -131422.51225870388,
+      "matched_shares": 41312.83235124935,
+      "ratio_of_sums": -3.181154735200079,
+      "mean_arm_ratio": -2.878542654042875,
+      "carried_c": -4113.7906028496045,
+      "carried_shares": 2057.4166937145073,
+      "new_only_ratio": -3.2430868333301706
+    },
+    {
+      "kind": "REVIEW",
+      "arm": "retain",
+      "matched_c": -139133.34203910967,
+      "matched_shares": 40910.7686233499,
+      "ratio_of_sums": -3.4008977763301926,
+      "mean_arm_ratio": -2.8997086334324216,
+      "carried_c": -7135.4635338175995,
+      "carried_shares": 2057.4166937145073,
+      "new_only_ratio": -3.397335672462553
+    }
+  ],
+  "per_day": [
+    {
+      "kind": "ADMISSION",
+      "day": "20261024",
+      "Y": 2491.353969857345,
+      "dMatched": 2451.1078896771087,
+      "dResidual": 40.24608018023687
+    },
+    {
+      "kind": "ADMISSION",
+      "day": "20261025",
+      "Y": 4547.473290625092,
+      "dMatched": 530.6156625294632,
+      "dResidual": 4016.857628095625
+    },
+    {
+      "kind": "ADMISSION",
+      "day": "20261026",
+      "Y": -901.437926310092,
+      "dMatched": -912.2660078604226,
+      "dResidual": 10.828081550330351
+    },
+    {
+      "kind": "ADMISSION",
+      "day": "20261027",
+      "Y": -1898.248058945046,
+      "dMatched": -1887.5746334118867,
+      "dResidual": -10.673425533162233
+    },
+    {
+      "kind": "REVIEW",
+      "day": "20261024",
+      "Y": -544.0561804646743,
+      "dMatched": -653.7088289399136,
+      "dResidual": 109.65264847524014
+    },
+    {
+      "kind": "REVIEW",
+      "day": "20261025",
+      "Y": -1896.8446549506943,
+      "dMatched": -6202.297727512846,
+      "dResidual": 4305.453072562152
+    },
+    {
+      "kind": "REVIEW",
+      "day": "20261026",
+      "Y": -2562.8200297545827,
+      "dMatched": 862.9266883013336,
+      "dResidual": -3425.746718055915
+    },
+    {
+      "kind": "REVIEW",
+      "day": "20261027",
+      "Y": -2695.550540705956,
+      "dMatched": -1717.7499122543572,
+      "dResidual": -977.8006284515961
+    }
+  ],
+  "audit_predicates": {
+    "day_signs": {
+      "ADMISSION": {
+        "by_day": {
+          "20261024": 2491.353969857345,
+          "20261025": 4547.473290625092,
+          "20261026": -901.437926310092,
+          "20261027": -1898.248058945046
+        },
+        "sign": "MIXED"
+      },
+      "REVIEW": {
+        "by_day": {
+          "20261024": -544.0561804646743,
+          "20261025": -1896.8446549506943,
+          "20261026": -2562.8200297545827,
+          "20261027": -2695.550540705956
+        },
+        "sign": "NEGATIVE_EVERY_DAY"
+      }
+    },
+    "Y_unchanged": true,
+    "decomposition_reconciles": true,
+    "event_identity": true,
+    "delays_differ_from_pilot": 12,
+    "delays_differ_by": [
+      {
+        "kind": "ADMISSION",
+        "arm": "alternative",
+        "n": 12
+      }
+    ],
+    "alternative_mean_attempt_delay": 869.8412698412699,
+    "alternative_arms_with_replacement": 63
+  },
+  "limitations": "Saved inputs only; no economic test, raw tape reload, fit or replay."
+}
