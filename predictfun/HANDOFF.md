@@ -618,6 +618,43 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_CANCEL_HEADROOM_FREEZE_20261122_DEV -->
+## 2026-11-22 05:24Z (session aea5bfb9) — FEASIBLE-CANCEL-HEADROOM-v1 FROZEN before any table (review 3e84ca6d's ONE next priority; USER amendment 6d200317 folded in)
+
+**What it is:** an ORACLE fixed-path deletion accounting diagnostic on saved ASYNC records, CURRENT_ASYNC_FAST10 (primary) and FRONT_ASYNC_FAST10 (reference), 19 consumed-day markets, every generation kept. No replay, fit or new day.
+
+**Choices:** KEEP, or ONE recorded live KEEP replaced by a permanent PULL effective at +10 ms; the generation's fills at or after the effect are deleted.
+
+**Measurement:**
+- G / L suffix classes, applied in precedence:
+  - incomplete;
+  - pure;
+  - compensated / uncompensated / tie;
+  - good-only-or-no-fill.
+- **Anchors:** (a) the first feasible callback; (b) the oracle (KEEP wins ties within 1e-6 c). END, 5 s and 30 s are evaluated at the same cut.
+- **Sequences:** generation-level flags, overlapping.
+- **Queue fields:** recorded values only.
+- **Outputs:** a decision-state panel and an outcome-independent casebook.
+
+**Reading:** `no_local_cancel_rescue` / `local_cancel_headroom` per arm and day.
+
+**Frozen artifacts:**
+- builder + selftest (8 groups, including the USER's hand cases);
+- 38 / 38 mutants;
+- `ch_checks.py`: families A / B / E / O / Q / H / R / S / K / C / P / I, plus X, which cross-checks the Codex classification c72f0d37 per generation; 19-case falsifier;
+- the synthetic end-to-end rehearsal: all families pass, 19 / 19 cases refused;
+- `tools/read_headroom.py` (T1–T7, including T3, which links each class to its prefix and end cause per 90e82f8e);
+- `tools/async_identity.py` (the review's P2 identity fix).
+
+**Resources:** this round about 0.035 h at freeze, including:
+- the Codex classification's 3.01 s, counted here;
+- a declared 30 s allowance for unlogged inspection plus two deleted first-draft mutant batches.
+
+The projection gates the run at 0.05 h.
+
+**Next:** timing → projection → run → checks → identity → readout. Then the long-continuation paired-value contract (design only, per c590b083 / 60768c83), the receipt, and ONE Codex review.
+<!-- /LADDER_CANCEL_HEADROOM_FREEZE_20261122_DEV -->
+
 <!-- LADDER_ASYNC_FAST_RESULTS_20261122_DEV -->
 ## 2026-11-22 04:28Z (session aea5bfb9) — ASYNC-EXECUTION-SENSITIVITY-v1 RESULTS: assumptions_do_not_rescue - every arm loses every day even at 10 ms, concurrent, front queue (receipt `reviews/ladder_async_fast_20261122/report.md`)
 

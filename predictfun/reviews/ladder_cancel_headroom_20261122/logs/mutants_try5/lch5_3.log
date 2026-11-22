@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "3", "name": "the latest of equal cuts", "seconds": 0.7, "sources": {"pf_ladder_cancel_headroom.py": "5505f16587af272b", "pf_ladder_cancel_headroom_mutants.py": "7182e3359f9a3769", "pf_ladder_cancel_headroom_selftest.py": "e257ba599a544d0f"}, "why": "CANCEL HEADROOM SELFTEST FAILED: 2 the earliest equal cut | 2 the earliest cut within the tolerance of the best"}
+2026-11-22T05:17:34Z tag=lch5_3 rc=0 peak_rss_mib=106 wall_s=0.74 cpu_user_s=0.67 memavail_start_gib=23 disk_free_gib=431->431 slot=claude

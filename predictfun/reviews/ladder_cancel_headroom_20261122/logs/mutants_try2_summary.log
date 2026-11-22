@@ -1,0 +1,21 @@
+  0 a fill at the effect retained: CAUGHT (0.3 s) - CANCEL HEADROOM SELFTEST FAILED: 1 obj at the effect (-5.0) | 1 the cut keeps the request tick and before the effect ({'status': 'eligible', 'cut': 10
+  1 late marks counted in the objective: CAUGHT (0.3 s) - CANCEL HEADROOM SELFTEST FAILED: 2 late marks count 0 in the objective ({'status': 'eligible', 'cut': None, 'first_cut': 1000.0, 'v_keep': 1.0, 'v_ora
+  2 the effect at the request tick: CAUGHT (0.3 s) - CANCEL HEADROOM SELFTEST FAILED: 1 the cut keeps the request tick and before the effect ({'status': 'eligible', 'cut': 1000.0, 'first_cut': 1000.0, 'v
+  3 ties to the later cut: CAUGHT (0.3 s) - CANCEL HEADROOM SELFTEST FAILED: 2 KEEP wins a tie | 3 statuses (no_eligible_callback, no_fill, no_fill)
+  4 KEEP not a candidate: CAUGHT (0.3 s) - CANCEL HEADROOM SELFTEST FAILED: 2 KEEP wins a tie | 2 late marks count 0 in the objective ({'status': 'eligible', 'cut': 1000.0, 'first_cut': 1000.0,
+  5 no review without the no-fill status: CAUGHT (0.3 s) - CANCEL HEADROOM SELFTEST FAILED: 3 statuses (no_eligible_callback, no_fill, no_eligible_callback)
+  6 the first-cut control at the last callback: CAUGHT (0.3 s) - CANCEL HEADROOM SELFTEST FAILED: 2 good-then-bad cuts the bad suffix ({'status': 'eligible', 'cut': 2000.0, 'first_cut': 1000.0, 'v_keep': -3.0, 'v_or
+  7 the cut kinds swapped: CAUGHT (0.3 s) - CANCEL HEADROOM SELFTEST FAILED: 4 cut kinds (bad_suffix_only, good_then_bad)
+  8 a fill at the first effect counted as prefix: CAUGHT (0.3 s) - CANCEL HEADROOM SELFTEST FAILED: 4 a fill at the first effect is deleted, not prefix (1, 1)
+  9 END for the chosen cut over all fills: CAUGHT (0.3 s) - CANCEL HEADROOM SELFTEST FAILED: 4 END for the chosen cut and the late fills apart
+  10 the retained class value over all fills: CAUGHT (0.3 s) - CANCEL HEADROOM SELFTEST FAILED: 4 the classes
+  11 the reproduction dropped: CAUGHT (0.3 s) - CANCEL HEADROOM SELFTEST FAILED: 5 reproduce refuses a mismatched market
+  12 a zero oracle total read as no rescue: CAUGHT (0.3 s) - CANCEL HEADROOM SELFTEST FAILED: 5 readings ({'A': {'by_day': {'d': 'local_cancel_headroom', 'e': 'no_local_cancel_rescue', 'f': 'no_local_cancel_resc
+  13 the top market only: CAUGHT (0.3 s) - CANCEL HEADROOM SELFTEST FAILED: 5 concentration (0.6086956521739131) | 5 the top-3 market share (0.375)
+  14 PULL callbacks as cuts: CAUGHT (0.3 s) - CANCEL HEADROOM SELFTEST FAILED: 1 keep_times ([1000.0, 1500.0])
+  15 the last-second cut dropped: CAUGHT (0.3 s) - CANCEL HEADROOM SELFTEST FAILED: 1 fill_rows ([(100.0, 1, 10.0, 'same_price', 10.0, 20.0), (9500.0, 2, 5.0, 'through', 5.0, -5.0)])
+  16 run without write-once: CAUGHT (0.3 s) - CANCEL HEADROOM SELFTEST FAILED: 6 guards: stopped (KeyError('af_records'))
+  17 build_manifest without write-once: CAUGHT (0.8 s) - CANCEL HEADROOM SELFTEST FAILED: 6 build_manifest refuses an existing manifest
+control: PASSED (0.3 s); sources {'pf_ladder_cancel_headroom.py': '8a190647a5f4be70', 'pf_ladder_cancel_headroom_mutants.py': '1c5f66a835983abe', 'pf_ladder_cancel_headroom_selftest.py': '2a4eab43f74c1ac5'}
+mutation check passed: the control passes its selftest, 18 / 18 planted code errors are caught by a check (0.1 CPU min)
+2026-11-22T04:46:25Z tag=lch_summary_try2 rc=0 peak_rss_mib=15 wall_s=0.02 cpu_user_s=0.02 memavail_start_gib=22 disk_free_gib=431->431 slot=claude

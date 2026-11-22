@@ -1,0 +1,5 @@
+  File "/home/yuqing/ctaNew/predictfun/reviews/ladder_cancel_headroom_20261122/tools/rehearse_checks.py", line 115
+    fz = CH.falsify(dict(E), dict(base, all_ok=all(v for k, v in base['checks'].items() if k != 'A_committed')))
+                                                                                                                ^
+IndentationError: unindent does not match any outer indentation level
+2026-11-22T05:22:14Z tag=ch_rehearse_try2 rc=1 peak_rss_mib=10 wall_s=0.01 cpu_user_s=0.00 memavail_start_gib=22 disk_free_gib=431->431 slot=claude

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "36", "name": "build_manifest without write-once", "seconds": 1.2, "sources": {"pf_ladder_cancel_headroom.py": "e8cddae92d293403", "pf_ladder_cancel_headroom_mutants.py": "7182e3359f9a3769", "pf_ladder_cancel_headroom_selftest.py": "b7768609639758a5"}, "why": "CANCEL HEADROOM SELFTEST FAILED: 8 the manifest and the projection are write-once"}
+2026-11-22T05:06:53Z tag=lch3_36 rc=0 peak_rss_mib=202 wall_s=1.42 cpu_user_s=1.25 memavail_start_gib=22 disk_free_gib=431->431 slot=claude2

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "23", "name": "the END value without the side", "seconds": 0.7, "sources": {"pf_ladder_cancel_headroom.py": "e8cddae92d293403", "pf_ladder_cancel_headroom_mutants.py": "7182e3359f9a3769", "pf_ladder_cancel_headroom_selftest.py": "e257ba599a544d0f"}, "why": "CANCEL HEADROOM SELFTEST FAILED: 6 two gids at one price stay apart"}
+2026-11-22T05:07:13Z tag=lch4_23 rc=0 peak_rss_mib=106 wall_s=0.75 cpu_user_s=0.68 memavail_start_gib=22 disk_free_gib=431->431 slot=claude

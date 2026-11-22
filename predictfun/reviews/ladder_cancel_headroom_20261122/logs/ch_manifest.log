@@ -1,0 +1,65 @@
+{
+ "version": "feasible_cancel_headroom_v1",
+ "review": "3e84ca6d",
+ "amendment": "6d200317",
+ "arms": [
+  "CURRENT_ASYNC_FAST10",
+  "FRONT_ASYNC_FAST10"
+ ],
+ "effect_ms": 10.0,
+ "notice_ms": 100.0,
+ "tol": 1e-06,
+ "repl_ms": 1000.0,
+ "classes": [
+  "incomplete_valuation",
+  "pure_observed_loss",
+  "compensated_mixed",
+  "uncompensated_mixed",
+  "mixed_tie",
+  "good_only_or_no_fill"
+ ],
+ "b_classes": [
+  "incomplete_valuation",
+  "pure_observed_loss",
+  "compensated_mixed",
+  "uncompensated_mixed",
+  "mixed_tie",
+  "good_only_or_no_fill",
+  "oracle_keep",
+  "no_feasible_callback"
+ ],
+ "end_causes": [
+  "refused",
+  "filled_out",
+  "recorded_cancellation",
+  "end_open"
+ ],
+ "encoding": {
+  "live": 0,
+  "keep": 2,
+  "fallback": 11,
+  "reasons": [
+   "post",
+   "keep",
+   "inventory_pull",
+   "restricted",
+   "zero_desired",
+   "exposure_full",
+   "no_room",
+   "cap",
+   "near_end",
+   "own_cross_blocked",
+   "unavailable_price",
+   "fallback",
+   "pressure_pull",
+   "pressure_withhold"
+  ]
+ },
+ "af_records": {
+  "pilot/20261024": "15f91548c31a4460287d676184f2bc4af57bff064c02c57afbe9b8033417c8cf",
+  "pilot/20261025": "9786fda7eabcbe9f71d7e820df19d24245253dcff11aa83ce25b6fa57dc5f939",
+  "pilot/20261026": "7a60c52d00ceb21a93f7ba6753ba2b06debd9f90ac97ada149557cf6a81f33d8",
+  "pilot/20261027": "e0e78f9b93cd048d82c88fc30ec1f40648545e74e839a4696146b5b02104fe71",
+  "rest/20261024": "9e7ccfe796ec6ae26b4fca7e1f60c3cc7e3e50e9478f5a57dcd8c1969e7e4d2d",
+  "rest/20261025": "712cf2230b198ddc9
+2026-11-22T05:23:21Z tag=ch_manifest rc=0 peak_rss_mib=198 wall_s=0.95 cpu_user_s=0.78 memavail_start_gib=23 disk_free_gib=431->431 slot=claude

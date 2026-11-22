@@ -1,0 +1,148 @@
+{
+ "af_manifest_sha256": "34444c8a1b85752069a27d8e884e7d116656c03a88d3ccd3eb1f584355e5a013",
+ "af_records": {
+  "pilot/20261024": "15f91548c31a4460287d676184f2bc4af57bff064c02c57afbe9b8033417c8cf",
+  "pilot/20261025": "9786fda7eabcbe9f71d7e820df19d24245253dcff11aa83ce25b6fa57dc5f939",
+  "pilot/20261026": "7a60c52d00ceb21a93f7ba6753ba2b06debd9f90ac97ada149557cf6a81f33d8",
+  "pilot/20261027": "e0e78f9b93cd048d82c88fc30ec1f40648545e74e839a4696146b5b02104fe71",
+  "rest/20261024": "9e7ccfe796ec6ae26b4fca7e1f60c3cc7e3e50e9478f5a57dcd8c1969e7e4d2d",
+  "rest/20261025": "712cf2230b198ddc97820feae4b350f8e59b9c8f78aee69dac27f76721246cc3",
+  "rest/20261026": "d398339a1fbdc0c9f33fd8fd08f42caa2425ad31b6e2d55189858da43b1b1fd9"
+ },
+ "amendment": "6d200317",
+ "arms": [
+  "CURRENT_ASYNC_FAST10",
+  "FRONT_ASYNC_FAST10"
+ ],
+ "asof": "2026-11-22T05:23:22Z",
+ "b_classes": [
+  "incomplete_valuation",
+  "pure_observed_loss",
+  "compensated_mixed",
+  "uncompensated_mixed",
+  "mixed_tie",
+  "good_only_or_no_fill",
+  "oracle_keep",
+  "no_feasible_callback"
+ ],
+ "caps": {
+  "line_ceiling": 2.5,
+  "review_reserve": 0.02,
+  "round_core_hours": 0.05,
+  "tail_s": 15.0,
+  "unlogged_inspection_s": 30.0
+ },
+ "classes": [
+  "incomplete_valuation",
+  "pure_observed_loss",
+  "compensated_mixed",
+  "uncompensated_mixed",
+  "mixed_tie",
+  "good_only_or_no_fill"
+ ],
+ "complete": {
+  "20261024": [
+   3697902,
+   3699278,
+   3700070,
+   3702960,
+   3704004,
+   3712725,
+   3716727
+  ],
+  "20261025": [
+   3723774,
+   3734864,
+   3737919,
+   3763401,
+   3776314
+  ],
+  "20261026": [
+   3789484,
+   3803131,
+   3804696,
+   3838531,
+   3850428
+  ],
+  "20261027": [
+   3877472,
+   3899224
+  ]
+ },
+ "days": [
+  "20261024",
+  "20261025",
+  "20261026",
+  "20261027"
+ ],
+ "effect_ms": 10.0,
+ "encoding": {
+  "fallback": 11,
+  "keep": 2,
+  "live": 0,
+  "reasons": [
+   "post",
+   "keep",
+   "inventory_pull",
+   "restricted",
+   "zero_desired",
+   "exposure_full",
+   "no_room",
+   "cap",
+   "near_end",
+   "own_cross_blocked",
+   "unavailable_price",
+   "fallback",
+   "pressure_pull",
+   "pressure_withhold"
+  ]
+ },
+ "end_causes": [
+  "refused",
+  "filled_out",
+  "recorded_cancellation",
+  "end_open"
+ ],
+ "line_receipts": [
+  "ladder_rest_20261121",
+  "ladder_audit_20261121",
+  "ladder_guard_20261121",
+  "ladder_pressure_20261121",
+  "ladder_pressure_lag_20261121",
+  "ladder_pressure_ablation_20261121",
+  "ladder_pressure_residual_20261121",
+  "ladder_pressure_positive_20261121",
+  "ladder_arrival_queue_20261122",
+  "ladder_queue_price_20261122",
+  "ladder_queue_front_20261122",
+  "ladder_async_fast_20261122"
+ ],
+ "line_reviews": [
+  "20261121_ladder_rest_review",
+  "20261121_ladder_audit_review",
+  "20261121_ladder_guard_review",
+  "20261121_ladder_pressure_review",
+  "20261121_ladder_pressure_lag_review",
+  "20261121_ladder_pressure_ablation_review",
+  "20261121_ladder_pressure_residual_review",
+  "20261122_horizon_conditions",
+  "20261122_queue_conditions",
+  "20261122_arrival_queue_review",
+  "20261122_queue_price_review",
+  "20261122_queue_sweep_direction",
+  "20261122_queue_latency_amendment",
+  "20261122_async_execution_amendment",
+  "20261122_queue_front_review",
+  "20261122_async_fast_review",
+  "20261122_queue_fill_tradeoff_amendment"
+ ],
+ "notice_ms": 100.0,
+ "repl_ms": 1000.0,
+ "review": "3e84ca6d",
+ "sources": {
+  "pf_ladder_cancel_headroom.py": "5505f16587af272bd45407351426df3bf25c20a87224bc610747390f461245c8",
+  "pf_ladder_cancel_headroom_selftest.py": "e257ba599a544d0f72da077a33d8bc279e52c99f129c616b7a77a588547f85f2"
+ },
+ "tol": 1e-06,
+ "version": "feasible_cancel_headroom_v1"
+}

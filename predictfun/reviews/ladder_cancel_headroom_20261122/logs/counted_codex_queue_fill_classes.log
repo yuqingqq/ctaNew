@@ -1,0 +1,6 @@
+# The Codex review's independent first-anchor classification (predictfun/reviews/automatic/20261122_queue_fill_classes, commits 2a8cde50 / c72f0d37)
+# declares its CPU counted against THIS round's 0.05 h allowance; its three run_light lines, copied verbatim from its prepare.log / run.log /
+# readback.log, so this round's ledger counts them (that directory is NOT in the line_reviews list: no double count).
+2026-11-22T04:54:52Z tag=queue_classes_readback rc=0 peak_rss_mib=116 wall_s=0.63 cpu_user_s=0.56 memavail_start_gib=23 disk_free_gib=431->431 slot=codex
+2026-11-22T04:53:31Z tag=queue_classes_run rc=0 peak_rss_mib=158 wall_s=2.32 cpu_user_s=2.20 memavail_start_gib=23 disk_free_gib=431->431 slot=codex
+2026-11-22T04:53:03Z tag=queue_classes_prepare rc=0 peak_rss_mib=101 wall_s=0.31 cpu_user_s=0.25 memavail_start_gib=23 disk_free_gib=431->431 slot=codex

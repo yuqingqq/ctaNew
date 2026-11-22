@@ -1,0 +1,41 @@
+  0 a fill at the effect retained: CAUGHT (0.7 s) - CANCEL HEADROOM SELFTEST FAILED: 1 the effect boundary (1, 4.0, -5.0) | 1 same-time partial fills are indivisible (1050.0) | 6 panel_rows = the scalar
+  1 the effect at the request tick: CAUGHT (0.7 s) - CANCEL HEADROOM SELFTEST FAILED: 1 the effect boundary (4, 11.0, 2.0) | 1 same-time partial fills are indivisible (1050.0) | 2 the later strictly bett
+  2 KEEP loses exact ties: CAUGHT (0.7 s) - CANCEL HEADROOM SELFTEST FAILED: 2 oracle: stopped (IndexError('index 0 is out of bounds for axis 0 with size 0')) | 4 generation: stopped (IndexError
+  3 the latest of equal cuts: CAUGHT (0.7 s) - CANCEL HEADROOM SELFTEST FAILED: 2 the earliest equal cut | 2 the earliest cut within the tolerance of the best
+  4 unvalued fills counted as losses: CAUGHT (0.6 s) - CANCEL HEADROOM SELFTEST FAILED: 2 unvalued fills count 0
+  5 one unvalued fill not incomplete: CAUGHT (0.6 s) - CANCEL HEADROOM SELFTEST FAILED: 3 suffix classes (['pure_observed_loss', 'pure_observed_loss', 'compensated_mixed', 'uncompensated_mixed', 'mixed_tie
+  6 pure without the tolerance: CAUGHT (0.7 s) - CANCEL HEADROOM SELFTEST FAILED: 3 suffix classes (['pure_observed_loss', 'good_only_or_no_fill', 'compensated_mixed', 'uncompensated_mixed', 'mixed_t
+  7 compensated and uncompensated swapped: CAUGHT (0.3 s) - CANCEL HEADROOM SELFTEST FAILED: 3 suffix classes (['pure_observed_loss', 'pure_observed_loss', 'uncompensated_mixed', 'compensated_mixed', 'mixed_tie
+  8 ties without the tolerance: CAUGHT (0.7 s) - CANCEL HEADROOM SELFTEST FAILED: 3 suffix classes (['pure_observed_loss', 'pure_observed_loss', 'compensated_mixed', 'uncompensated_mixed', 'uncompens
+  9 the panel without the incomplete precedence: CAUGHT (0.7 s) - CANCEL HEADROOM SELFTEST FAILED: 3 the panel classes = the scalar ones (['pure_observed_loss', 'pure_observed_loss', 'compensated_mixed', 'uncompensat
+  10 the panel suffix from the right: CAUGHT (0.7 s) - CANCEL HEADROOM SELFTEST FAILED: 6 panel_rows = the scalar suffix per callback ([[0.0, 4.0, 0.0, 2.0, 1.0, 1.0], [0.0, 0.0, 0.0, 0.0, 1.0, 1.0], [0.0,
+  11 the panel known remaining without the notice: CAUGHT (0.7 s) - CANCEL HEADROOM SELFTEST FAILED: 6 panel_rows = the scalar suffix per callback ([[0.0, 4.0, 0.0, 2.0, 1.0, 1.0], [0.0, 4.0, 0.0, 2.0, 1.0, 1.0], [0.0,
+  12 the anchor known remaining without the notice: CAUGHT (0.6 s) - CANCEL HEADROOM SELFTEST FAILED: 4 the known remaining waits for the fill notice
+  13 the venue remaining from the suffix: CAUGHT (0.7 s) - CANCEL HEADROOM SELFTEST FAILED: 4 the anchor clocks (990.0, 100.0, 90.0, 90.0)
+  14 a filled-out order never filled: CAUGHT (0.6 s) - CANCEL HEADROOM SELFTEST FAILED: 4 generation: stopped (ValueError('gid 1: the end cause end_open disagrees with the closure filled'))
+  15 the unacknowledged flag inverted: CAUGHT (0.7 s) - CANCEL HEADROOM SELFTEST FAILED: 4 end causes ([('recorded_cancellation', True), ('filled_out', False), ('refused', False), ('end_open', False), ('rec
+  16 the replacement strictly after the request: CAUGHT (0.6 s) - CANCEL HEADROOM SELFTEST FAILED: 4 the same-price NEW generation (-1, nan, nan)
+  17 the earliest cut before the bad fill: CAUGHT (0.7 s) - CANCEL HEADROOM SELFTEST FAILED: 5 the latest feasible cut before the bad fill
+  18 an effect at the good fill as intervening: CAUGHT (0.7 s) - CANCEL HEADROOM SELFTEST FAILED: 5 an effect at the good fill is not after it
+  19 one sign change as interleaved: CAUGHT (0.7 s) - CANCEL HEADROOM SELFTEST FAILED: 5 simultaneous / interleaved (True, True, True)
+  20 simultaneous good / bad read as good: CAUGHT (0.7 s) - CANCEL HEADROOM SELFTEST FAILED: 5 simultaneous / interleaved (False, True, False)
+  21 the whole-generation class of nothing: CAUGHT (0.6 s) - CANCEL HEADROOM SELFTEST FAILED: 5 a missing later mark is incomplete, never pure (incomplete_valuation, good_only_or_no_fill) | 5 the whole-generatio
+  22 the last second valued: CAUGHT (0.7 s) - CANCEL HEADROOM SELFTEST FAILED: 6 fills_of ([100.0, 9000.0, 9001.0], [6.0, 10.0, 5.0])
+  23 the END value without the side: CAUGHT (0.7 s) - CANCEL HEADROOM SELFTEST FAILED: 6 two gids at one price stay apart
+  24 fallback flags inverted: CAUGHT (0.7 s) - CANCEL HEADROOM SELFTEST FAILED: 6 keeps_of ({7: ([900.0, 1000.0], [False, True]), 8: ([1300.0], [False])})
+  25 PULL callbacks as cuts: CAUGHT (0.7 s) - CANCEL HEADROOM SELFTEST FAILED: 6 keeps_of ({7: ([900.0, 1000.0, 1500.0], [True, False, False]), 8: ([1300.0], [True])})
+  26 the reproduction dropped: CAUGHT (0.7 s) - CANCEL HEADROOM SELFTEST FAILED: 7 reproduce refuses a mismatched market
+  27 the oracle class check dropped: CAUGHT (0.7 s) - CANCEL HEADROOM SELFTEST FAILED: 7 reconcile refuses an impossible oracle class
+  28 the reading on the recorded path: CAUGHT (0.7 s) - CANCEL HEADROOM SELFTEST FAILED: 7 readings ({'A': {'by_day': {'d1': 'no_local_cancel_rescue', 'd2': 'no_local_cancel_rescue'}, 'pooled': 'no_local_ca
+  29 the loss share over the suffixes only: CAUGHT (0.6 s) - CANCEL HEADROOM SELFTEST FAILED: 7 class loss shares (25.0, 0.17647058823529413)
+  30 the top market only: CAUGHT (0.7 s) - CANCEL HEADROOM SELFTEST FAILED: 7 concentration (0.5161290322580645, 1.0)
+  31 compensated and uncompensated counts swapped: CAUGHT (0.7 s) - CANCEL HEADROOM SELFTEST FAILED: 7 sequence counts (3, 1.0)
+  32 the class table by the first anchor: CAUGHT (0.7 s) - CANCEL HEADROOM SELFTEST FAILED: 7 the class table ({'compensated_mixed': 1, 'no_feasible_callback': 1, 'pure_observed_loss': 1, 'uncompensated_mixed'
+  33 the casebook by gid: CAUGHT (0.6 s) - CANCEL HEADROOM SELFTEST FAILED: 7 the casebook key (9)
+  34 the projection gate dropped: CAUGHT (0.6 s) - CANCEL HEADROOM SELFTEST FAILED: 8 guards: stopped (KeyError('af_records'))
+  35 run without write-once: CAUGHT (0.7 s) - CANCEL HEADROOM SELFTEST FAILED: 8 guards: stopped (KeyError('af_records'))
+  36 build_manifest without write-once: CAUGHT (1.2 s) - CANCEL HEADROOM SELFTEST FAILED: 8 the manifest and the projection are write-once
+  37 project without write-once: CAUGHT (0.6 s) - CANCEL HEADROOM SELFTEST FAILED: 8 guards: stopped (FileNotFoundError(2, 'No such file or directory'))
+control: PASSED (0.7 s); sources {'pf_ladder_cancel_headroom.py': 'e8cddae92d293403', 'pf_ladder_cancel_headroom_mutants.py': '7182e3359f9a3769', 'pf_ladder_cancel_headroom_selftest.py': 'e257ba599a544d0f'}
+mutation check passed: the control passes its selftest, 38 / 38 planted code errors are caught by a check (0.4 CPU min)
+2026-11-22T05:07:22Z tag=lch_summary_try4 rc=0 peak_rss_mib=16 wall_s=0.02 cpu_user_s=0.02 memavail_start_gib=22 disk_free_gib=431->431 slot=claude

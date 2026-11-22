@@ -435,6 +435,16 @@ ladder_async_fast_results_20261122_dev:
   all_arms_negative_every_day: true
   batch_core_hours: 0.201
   line_core_hours: 2.375
+ladder_cancel_headroom_20261122_dev:
+  status: frozen_before_any_table
+  asof: "2026-11-22 05:24Z"
+  source: review_3e84ca6d_next_priority_amendment_6d200317
+  later_directions_read: [2a8cde50, c72f0d37, 90e82f8e, c590b083, 60768c83]
+  arms: [CURRENT_ASYNC_FAST10, FRONT_ASYNC_FAST10]
+  mutants: 38_of_38_caught
+  checker_falsifier_cases: 19
+  rehearsal: all_families_pass_19_of_19_refused_synthetic
+  caps: {round_core_hours: 0.05, review_reserve: 0.02, line_ceiling: 2.50}
 ladder_async_fast_20261122_dev:
   status: frozen_before_replay
   asof: "2026-11-22 04:22Z"

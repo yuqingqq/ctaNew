@@ -1,0 +1,2 @@
+{"cls": "ESCAPED", "index": "4", "name": "unvalued fills counted as losses", "seconds": 0.6, "sources": {"pf_ladder_cancel_headroom.py": "e8cddae92d293403", "pf_ladder_cancel_headroom_mutants.py": "7182e3359f9a3769", "pf_ladder_cancel_headroom_selftest.py": "b7768609639758a5"}, "why": "CANCEL HEADROOM SELFTEST PASSED: cut clock, oracle, classes, generations, sequences, inputs and panel, tables, guards"}
+2026-11-22T05:06:47Z tag=lch3_4 rc=1 peak_rss_mib=106 wall_s=0.72 cpu_user_s=0.66 memavail_start_gib=22 disk_free_gib=431->431 slot=claude2

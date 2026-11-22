@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "29", "name": "the loss share over the suffixes only", "seconds": 0.6, "sources": {"pf_ladder_cancel_headroom.py": "e8cddae92d293403", "pf_ladder_cancel_headroom_mutants.py": "7182e3359f9a3769", "pf_ladder_cancel_headroom_selftest.py": "b7768609639758a5"}, "why": "CANCEL HEADROOM SELFTEST FAILED: 7 class loss shares (25.0, 0.17647058823529413)"}
+2026-11-22T05:06:53Z tag=lch3_29 rc=0 peak_rss_mib=106 wall_s=0.71 cpu_user_s=0.65 memavail_start_gib=22 disk_free_gib=431->431 slot=claude3

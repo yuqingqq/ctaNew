@@ -1,0 +1,2 @@
+{"cls": "PASSED", "index": "control", "name": "control (the unchanged copy)", "seconds": 0.7, "sources": {"pf_ladder_cancel_headroom.py": "5505f16587af272b", "pf_ladder_cancel_headroom_mutants.py": "7182e3359f9a3769", "pf_ladder_cancel_headroom_selftest.py": "e257ba599a544d0f"}, "why": "CANCEL HEADROOM SELFTEST PASSED: cut clock, oracle, classes, generations, sequences, inputs and panel, tables, guards"}
+2026-11-22T05:17:33Z tag=lch5_control rc=0 peak_rss_mib=106 wall_s=0.72 cpu_user_s=0.64 memavail_start_gib=23 disk_free_gib=431->431 slot=claude

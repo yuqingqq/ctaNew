@@ -1,0 +1,2 @@
+CANCEL HEADROOM SELFTEST PASSED: cut clock, oracle, statuses, rows, reproduce and summary, guards
+2026-11-22T04:45:21Z tag=ch_selftest_try2 rc=0 peak_rss_mib=105 wall_s=0.37 cpu_user_s=0.32 memavail_start_gib=23 disk_free_gib=431->431 slot=claude

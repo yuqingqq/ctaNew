@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "24", "name": "fallback flags inverted", "seconds": 0.7, "sources": {"pf_ladder_cancel_headroom.py": "e8cddae92d293403", "pf_ladder_cancel_headroom_mutants.py": "7182e3359f9a3769", "pf_ladder_cancel_headroom_selftest.py": "e257ba599a544d0f"}, "why": "CANCEL HEADROOM SELFTEST FAILED: 6 keeps_of ({7: ([900.0, 1000.0], [False, True]), 8: ([1300.0], [False])})"}
+2026-11-22T05:07:16Z tag=lch4_24 rc=0 peak_rss_mib=106 wall_s=0.73 cpu_user_s=0.67 memavail_start_gib=22 disk_free_gib=431->431 slot=claude2

@@ -1,0 +1,2 @@
+{"cls": "CAUGHT", "index": "13", "name": "the venue remaining from the suffix", "seconds": 0.7, "sources": {"pf_ladder_cancel_headroom.py": "e8cddae92d293403", "pf_ladder_cancel_headroom_mutants.py": "7182e3359f9a3769", "pf_ladder_cancel_headroom_selftest.py": "b7768609639758a5"}, "why": "CANCEL HEADROOM SELFTEST FAILED: 4 the anchor clocks (990.0, 100.0, 90.0, 90.0)"}
+2026-11-22T05:06:50Z tag=lch3_13 rc=0 peak_rss_mib=106 wall_s=0.73 cpu_user_s=0.67 memavail_start_gib=22 disk_free_gib=431->431 slot=claude3

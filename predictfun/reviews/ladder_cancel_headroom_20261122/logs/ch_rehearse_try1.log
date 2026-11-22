@@ -1,0 +1,120 @@
+{
+ "generations": 112,
+ "panel_rows": 9534,
+ "reproduced_markets": 8,
+ "reading": {
+  "CURRENT_ASYNC_FAST10": {
+   "by_day": {
+    "20990101": "local_cancel_headroom",
+    "20990102": "local_cancel_headroom"
+   },
+   "pooled": "local_cancel_headroom",
+   "days_no_rescue": 0
+  },
+  "FRONT_ASYNC_FAST10": {
+   "by_day": {
+    "20990101": "local_cancel_headroom",
+    "20990102": "local_cancel_headroom"
+   },
+   "pooled": "local_cancel_headroom",
+   "days_no_rescue": 0
+  }
+ }
+}
+{
+ "checks": {
+  "A_committed": false,
+  "A_inputs": true,
+  "A_outputs": true,
+  "A_core": true,
+  "B_membership": true,
+  "E_causes_queue": true,
+  "O_anchors": true,
+  "Q_sequences": true,
+  "H_horizons": true,
+  "R_reproduction": true,
+  "S_summary": true,
+  "S_classes": true,
+  "S_sequences": true,
+  "K_panel": true,
+  "C_casebook": true,
+  "P_readings": true,
+  "I_resources": true
+ },
+ "failed_except_committed": [],
+ "falsifier_unrefused": [],
+ "coverage": {
+  "a_classes": [
+   "compensated_mixed",
+   "good_only_or_no_fill",
+   "incomplete_valuation",
+   "mixed_tie",
+   "no_feasible_callback",
+   "pure_observed_loss",
+   "uncompensated_mixed"
+  ],
+  "b_classes": [
+   "incomplete_valuation",
+   "no_feasible_callback",
+   "oracle_keep",
+   "pure_observed_loss",
+   "uncompensated_mixed"
+  ],
+  "end_causes": [
+   "end_open",
+   "filled_out",
+   "recorded_cancellation",
+   "refused"
+  ],
+  "btg": 28,
+  "gtb": 28,
+  "fallback_keeps": 1055
+ },
+ "details": {
+  "B": {
+   "generations": 112,
+   "fills": 219,
+   "panel_rows": 9534
+  },
+  "E": {
+   "mismatched": []
+  },
+  "O": {
+   "mismatched": []
+  },
+  "Q": {
+   "mismatched": []
+  },
+  "H": {
+   "mismatched": []
+  },
+  "R": {
+   "failed": []
+  },
+  "S": {
+   "rows": 18,
+   "bad": [],
+   "cls_bad": [],
+   "seq_bad": []
+  },
+  "K": {
+   "rows": 73,
+   "bad": []
+  },
+  "C": {
+   "cases": 54
+  },
+  "P": {
+   "failed": []
+  },
+  "I": {
+   "round_core_hours": 0.008333333333333333,
+   "line_before": 2.378697222222225,
+   "line_with_round": 2.387030555555558,
+   "with_reserve": 2.4070305555555582,
+   "peak_mib": 0
+  }
+ },
+ "rehearsal_ok": true
+}
+2026-11-22T05:17:09Z tag=ch_rehearse_try1 rc=0 peak_rss_mib=125 wall_s=2.51 cpu_user_s=2.39 memavail_start_gib=22 disk_free_gib=431->431 slot=claude
