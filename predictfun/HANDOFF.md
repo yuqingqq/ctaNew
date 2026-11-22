@@ -711,6 +711,25 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_TURNOVER_ATTRIBUTION_REVIEW_ANSWER_20261122_DEV -->
+## 2026-11-22 07:07Z (session aea5bfb9) — review 838f4be2 ANSWERED; LOOP STOPPED: the next experiment needs the USER's scope and resource decision
+
+[Review](reviews/automatic/20261122_turnover_attribution_review/report.md): the saved-data attribution is accepted, with no replay. Findings verified at the data (`review_answer_verify.py`, 0.28 CPU s):
+1. **P2 (wording)** holds. Superseded in band by [report_interpretation_v2](reviews/ladder_turnover_attribution_20261122/report_interpretation_v2.md):
+   - the Oct 26 exception (matched +863, residual −3,426);
+   - mean-of-ratios vs ratio-of-sums per share (REVIEW −2.90 / −3.40 c retain);
+   - "not interchangeable" instead of "independent".
+2. **P3 (checker coverage)** is deferred, with the review's `verify.py` as the workaround.
+
+**Next priority: LONG-VALUE-RETENTION-DISCRIMINATION-v1.**
+- 256 REVIEW forks on the 19 supported consumed markets.
+- Causal input vectors.
+- ONE conservative candidate, trained on Oct 24–25 and scored once on Oct 26–27.
+- `retain iff predicted Y > 0` against always-retain / always-alternative / constant baselines and ≥ 500 matched draws; INSUFFICIENT when support is thin.
+
+**USER decision needed:** authorize this new label-and-discrimination scope at up to **1.25 additional core-hours** (a 0.05 h review reserve included) and a **ladder line ceiling of 4.00 h**. The current approval (0.40 / 2.85) does not cover it. No new days or untouched validation are requested.
+<!-- /LADDER_TURNOVER_ATTRIBUTION_REVIEW_ANSWER_20261122_DEV -->
+
 <!-- LADDER_TURNOVER_ATTRIBUTION_RESULTS_20261122_DEV -->
 ## 2026-11-22 06:51Z (session aea5bfb9) — PAIRED-TURNOVER-ATTRIBUTION-v1 RESULTS; review d799cb77's corrections superseded in band
 

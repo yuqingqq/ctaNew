@@ -1,0 +1,28 @@
+{
+ "review_oct26": {
+  "Y": -2562.82,
+  "dMatched": 862.93,
+  "dResidual": -3425.75
+ },
+ "ADMISSION/alternative": {
+  "mean_arm_ratio": -2.153,
+  "ratio_of_sums": -2.783,
+  "new_lots_ratio_of_sums": -2.792
+ },
+ "ADMISSION/retain": {
+  "mean_arm_ratio": -2.026,
+  "ratio_of_sums": -2.828,
+  "new_lots_ratio_of_sums": -2.831
+ },
+ "REVIEW/alternative": {
+  "mean_arm_ratio": -2.879,
+  "ratio_of_sums": -3.181,
+  "new_lots_ratio_of_sums": -3.243
+ },
+ "REVIEW/retain": {
+  "mean_arm_ratio": -2.9,
+  "ratio_of_sums": -3.401,
+  "new_lots_ratio_of_sums": -3.397
+ }
+}
+2026-11-22T07:06:39Z tag=ta_review_answer_verify rc=0 peak_rss_mib=112 wall_s=0.36 cpu_user_s=0.28 memavail_start_gib=22 disk_free_gib=428->428 slot=claude

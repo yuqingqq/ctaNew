@@ -504,6 +504,12 @@ ladder_async_fast_results_20261122_dev:
   all_arms_negative_every_day: true
   batch_core_hours: 0.201
   line_core_hours: 2.375
+ladder_turnover_attribution_review_answer_20261122_dev:
+  status: review_838f4be2_answered_loop_stopped_user_scope_and_resource_decision_needed
+  asof: "2026-11-22 07:07Z"
+  findings: {P2_wording: superseded_in_band_report_interpretation_v2, P3_checker_coverage: deferred_reviewer_workaround}
+  next_priority: LONG_VALUE_RETENTION_DISCRIMINATION_v1
+  user_decision_needed: {additional_core_hours: 1.25, includes: review_reserve_0.05, line_ceiling: {from: 2.85, to: 4.00}, new_scope: label_and_discrimination}
 ladder_turnover_attribution_20261122_dev:
   status: results_receipt_complete_review_pending
   results_asof: "2026-11-22 06:51Z"
