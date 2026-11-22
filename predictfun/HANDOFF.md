@@ -648,6 +648,26 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_CANCEL_HEADROOM_REVIEW_ANSWER_20261122_DEV -->
+## 2026-11-22 05:46Z (session aea5bfb9) — review 32d102bd ANSWERED; LOOP STOPPED: the 64-pair pilot needs the USER's resource decision
+
+[Review](reviews/automatic/20261122_cancel_headroom_review/report.md): the saved-path numbers are accepted, with no rerun. Each finding was verified at the code and data (`tools/review_answer_verify.py`, 0.31 CPU s):
+1. **P1** (the retain-only exemption makes the two continuations differ) holds. It is folded into [contract_v2](reviews/ladder_long_continuation_contract_20261122/contract_v2.md): one focal-lineage holding rule in both arms, replacements included, new gids, pressure-withholding kept, CONT-REST dropped.
+2. **P2** (mechanism labels not executable) holds. Folded in:
+   - an exhaustive economic axis (retain-better / alternative-better / tie, 1e-6 c) separate from a sequence axis;
+   - END-signed per-fill contributions;
+   - the focal-lineage vs other-order split of Y;
+   - the exact pre-command fork state with a same-tick fixture;
+   - absolute Q with the inventory carried at the fork.
+3. **P2** (wording) holds; superseded in band by [report_interpretation_v2](reviews/ladder_cancel_headroom_20261122/report_interpretation_v2.md):
+   - pure after the chosen cut: 1,238; pure at the first review: 1,114; 124 start mixed;
+   - +13.1k c is the END gain of the +1 s-selected cuts, not a bound;
+   - the 629 c covers 27 of 29 sequences.
+4. **P3** (checker coverage narrower than the prose) is deferred, as the review allowed: its workaround reproduced every column. The named comparisons will be extended when those fields next drive a decision.
+
+**Decision needed from the USER:** approve LONG-CONTINUATION-PAIRED-VALUE-v1 at **≤ 0.40 additional core-hours**, including controls and a 0.03 h review reserve, and raise the line ceiling **2.50 → 2.85**. The current line is 2.4189 h. No new data, untouched validation or live use. POSITIVE-PRESSURE-GUARD-v1 stays stopped.
+<!-- /LADDER_CANCEL_HEADROOM_REVIEW_ANSWER_20261122_DEV -->
+
 <!-- LADDER_CANCEL_HEADROOM_RESULTS_20261122_DEV -->
 ## 2026-11-22 05:30Z (session aea5bfb9) — FEASIBLE-CANCEL-HEADROOM-v1 RESULTS + the long-continuation contract (design only)
 

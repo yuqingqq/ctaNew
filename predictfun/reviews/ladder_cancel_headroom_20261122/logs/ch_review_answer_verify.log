@@ -1,0 +1,28 @@
+{
+ "CURRENT_ASYNC_FAST10": {
+  "b_pure": 1238,
+  "a_class_of_b_pure": {
+   "pure_observed_loss": 1114,
+   "uncompensated_mixed": 71,
+   "compensated_mixed": 53
+  },
+  "b_pure_cut_at_first": 1114,
+  "btg_flagged": 29,
+  "btg_feasible": 27,
+  "btg_L_feasible": 629.11
+ },
+ "FRONT_ASYNC_FAST10": {
+  "b_pure": 1560,
+  "a_class_of_b_pure": {
+   "pure_observed_loss": 1241,
+   "uncompensated_mixed": 225,
+   "compensated_mixed": 93,
+   "mixed_tie": 1
+  },
+  "b_pure_cut_at_first": 1241,
+  "btg_flagged": 47,
+  "btg_feasible": 44,
+  "btg_L_feasible": 683.35
+ }
+}
+2026-11-22T05:44:45Z tag=ch_review_answer_verify rc=0 peak_rss_mib=120 wall_s=0.37 cpu_user_s=0.31 memavail_start_gib=22 disk_free_gib=430->430 slot=claude
