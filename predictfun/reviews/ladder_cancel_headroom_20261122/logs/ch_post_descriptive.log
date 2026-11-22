@@ -1,0 +1,43 @@
+{
+ "CURRENT_ASYNC_FAST10": {
+  "oracle_cuts": 1254,
+  "at_first_callback": 1129,
+  "b_age_p25": 40.0,
+  "b_age_p50": 40.0,
+  "b_age_p75": 40.0,
+  "b_age_p90": 40.0,
+  "L_removed_at_first_callback": 122887.19,
+  "L_removed_total": 131384.63,
+  "cut_end_causes": {
+   "recorded_cancellation": 728,
+   "filled_out": 525,
+   "end_open": 1
+  },
+  "cut_why": {
+   "structural": 761,
+   "": 381,
+   "policy": 112
+  }
+ },
+ "FRONT_ASYNC_FAST10": {
+  "oracle_cuts": 1578,
+  "at_first_callback": 1253,
+  "b_age_p25": 40.0,
+  "b_age_p50": 40.0,
+  "b_age_p75": 40.0,
+  "b_age_p90": 1154.9999999999977,
+  "L_removed_at_first_callback": 134766.62,
+  "L_removed_total": 157604.26,
+  "cut_end_causes": {
+   "recorded_cancellation": 860,
+   "filled_out": 717,
+   "end_open": 1
+  },
+  "cut_why": {
+   "structural": 861,
+   "": 551,
+   "policy": 166
+  }
+ }
+}
+2026-11-22T05:26:54Z tag=ch_post_descriptive rc=0 peak_rss_mib=120 wall_s=0.38 cpu_user_s=0.28 memavail_start_gib=22 disk_free_gib=431->431 slot=claude

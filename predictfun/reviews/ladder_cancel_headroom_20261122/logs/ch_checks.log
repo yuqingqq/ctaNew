@@ -1,0 +1,150 @@
+/home/yuqing/ctaNew/predictfun/reviews/ladder_cancel_headroom_20261122/ch_checks.py:332: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  J = C_.merge(E['gen'], on=['day', 'm', 'arm', 'gid'], how='outer', indicator=True); both = bool((J._merge == 'both').all() and len(J) == len(E['gen']))
+/home/yuqing/ctaNew/predictfun/reviews/ladder_cancel_headroom_20261122/ch_checks.py:332: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  J = C_.merge(E['gen'], on=['day', 'm', 'arm', 'gid'], how='outer', indicator=True); both = bool((J._merge == 'both').all() and len(J) == len(E['gen']))
+/home/yuqing/ctaNew/predictfun/reviews/ladder_cancel_headroom_20261122/ch_checks.py:332: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  J = C_.merge(E['gen'], on=['day', 'm', 'arm', 'gid'], how='outer', indicator=True); both = bool((J._merge == 'both').all() and len(J) == len(E['gen']))
+/home/yuqing/ctaNew/predictfun/reviews/ladder_cancel_headroom_20261122/ch_checks.py:332: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  J = C_.merge(E['gen'], on=['day', 'm', 'arm', 'gid'], how='outer', indicator=True); both = bool((J._merge == 'both').all() and len(J) == len(E['gen']))
+{
+ "all_ok": true,
+ "failed": [],
+ "falsifier_ok": true,
+ "cases": {
+  "an_output_hash_changed": [
+   true,
+   true
+  ],
+  "a_core_value_changed": [
+   true,
+   true
+  ],
+  "a_generation_dropped": [
+   true,
+   true
+  ],
+  "an_end_cause_changed": [
+   true,
+   true
+  ],
+  "a_queue_field_changed": [
+   true,
+   true
+  ],
+  "a_cut_moved": [
+   true,
+   true
+  ],
+  "a_removed_value_changed": [
+   true,
+   true
+  ],
+  "a_known_bad_classification": [
+   true,
+   true
+  ],
+  "a_status_changed": [
+   true,
+   true
+  ],
+  "a_sequence_flag_flipped": [
+   true,
+   true
+  ],
+  "a_horizon_value_changed": [
+   true,
+   true
+  ],
+  "the_reproduction_broken": [
+   true,
+   true
+  ],
+  "a_summary_total_changed": [
+   true,
+   true
+  ],
+  "a_class_row_changed": [
+   true,
+   true
+  ],
+  "a_panel_total_changed": [
+   true,
+   true
+  ],
+  "a_case_replaced": [
+   true,
+   true
+  ],
+  "a_reading_flipped": [
+   true,
+   true
+  ],
+  "resources_over_the_cap": [
+   true,
+   true
+  ],
+  "a_codex_class_disagrees": [
+   true,
+   true
+  ]
+ },
+ "details": {
+  "B": {
+   "generations": 12135,
+   "fills": 21150,
+   "panel_rows": 564851
+  },
+  "E": {
+   "mismatched": []
+  },
+  "O": {
+   "mismatched": []
+  },
+  "Q": {
+   "mismatched": []
+  },
+  "H": {
+   "mismatched": []
+  },
+  "R": {
+   "failed": []
+  },
+  "S": {
+   "rows": 30,
+   "bad": [],
+   "cls_bad": [],
+   "seq_bad": []
+  },
+  "K": {
+   "rows": 129,
+   "bad": []
+  },
+  "C": {
+   "cases": 49
+  },
+  "P": {
+   "failed": []
+  },
+  "I": {
+   "round_core_hours": 0.038169444444444464,
+   "line_before": 2.378697222222225,
+   "line_with_round": 2.416866666666669,
+   "with_reserve": 2.436866666666669,
+   "peak_mib": 826
+  },
+  "X": {
+   "rows": 12135,
+   "both": true,
+   "classes": true,
+   "good": true,
+   "loss": true,
+   "prefix_good": true,
+   "prefix_loss": true,
+   "whole_1s": true,
+   "whole_end": true,
+   "anchor": true,
+   "end_cause": true
+  }
+ }
+}
+2026-11-22T05:24:36Z tag=ch_checks rc=0 peak_rss_mib=380 wall_s=6.75 cpu_user_s=6.28 memavail_start_gib=22 disk_free_gib=431->431 slot=claude

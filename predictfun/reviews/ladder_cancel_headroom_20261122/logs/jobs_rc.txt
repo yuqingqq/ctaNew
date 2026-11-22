@@ -1,1 +1,8 @@
 ch_manifest rc=0
+ch_selftest_frozen rc=0
+ch_timing rc=0
+ch_projection rc=0
+ch_run rc=0
+ch_checks rc=0
+ch_identity rc=0
+ch_read rc=0

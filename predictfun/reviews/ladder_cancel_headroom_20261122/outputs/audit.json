@@ -1,0 +1,60 @@
+{
+ "version": "feasible_cancel_headroom_v1",
+ "asof": "2026-11-22T05:24:31Z",
+ "reproduced_markets": 38,
+ "generations": 12135,
+ "fills": 21150,
+ "panel_rows": 564851,
+ "reconciliation": {
+  "a": true,
+  "b": true,
+  "b_classes": true,
+  "a_classes": true,
+  "oracle_ge_keep": true
+ },
+ "reading": {
+  "CURRENT_ASYNC_FAST10": {
+   "by_day": {
+    "20261024": "local_cancel_headroom",
+    "20261025": "local_cancel_headroom",
+    "20261026": "local_cancel_headroom",
+    "20261027": "no_local_cancel_rescue"
+   },
+   "pooled": "local_cancel_headroom",
+   "days_no_rescue": 1
+  },
+  "FRONT_ASYNC_FAST10": {
+   "by_day": {
+    "20261024": "local_cancel_headroom",
+    "20261025": "local_cancel_headroom",
+    "20261026": "local_cancel_headroom",
+    "20261027": "local_cancel_headroom"
+   },
+   "pooled": "local_cancel_headroom",
+   "days_no_rescue": 0
+  }
+ },
+ "keep_reasons": {
+  "fallback": 217,
+  "all": 564851
+ },
+ "outputs": {
+  "generations.csv": "23bcf451c367b4195b3aca52f39e0f21468e750568830a47e1229db2e979a099",
+  "generations_core.csv": "a4baaee2704d26ca2094c06e8b330d768a248bd70b865248b26f123c3fdf572a",
+  "summary.csv": "359f2793a5d9cbc14088bafe62d74ecc32d9b4335c63ece0612ef825d2e7fd45",
+  "classes.csv": "fc7b3c6d2ed16afe25bae6d4dade09545589072061c347b645d62ee0ba45bc6f",
+  "markets.csv": "206f34eadf3b87aced5202ce812220f91cee891938a993596cf70da7bc8ad2d9",
+  "sequences.csv": "bda8ca86f1b50ccc4c9f5f561ab5353f5542b85ff646e65eb593b00f2faa7b24",
+  "panel_summary.csv": "223a7696aec091c922b46ea9c72291a9d7a959987be77316fb07a7eb8ba2a88e",
+  "cases.csv": "8a6ef9ea79b767ad6ae257babe734f1f5b9d23f7c4eafe658a2a380013fdde91",
+  "panel.csv.gz": "f041659fa24fc7c82a5d34c4beaa19e96e1c9698f0567a41addd8fdc76e24676"
+ },
+ "sources": {
+  "pf_ladder_cancel_headroom.py": "5505f16587af272bd45407351426df3bf25c20a87224bc610747390f461245c8",
+  "pf_ladder_cancel_headroom_selftest.py": "e257ba599a544d0f72da077a33d8bc279e52c99f129c616b7a77a588547f85f2"
+ },
+ "manifest_sha256": "664faa1a3c96ce29181c8e2643aebddd861bcbc0ec46f2b4606bf7e9233155a7",
+ "projection_sha256": "8bc8798214b7147a719e2e69f91d391312dbbc84ae4e216632b289603308fc35",
+ "elapsed_s": 14.662557125091553,
+ "note": "an ORACLE fixed-path deletion accounting diagnostic; not a signal, strategy, upper bound or profitability claim"
+}

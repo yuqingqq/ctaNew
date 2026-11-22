@@ -1,0 +1,2 @@
+CANCEL HEADROOM SELFTEST PASSED: cut clock, oracle, classes, generations, sequences, inputs and panel, tables, guards
+2026-11-22T05:24:08Z tag=ch_selftest_frozen rc=0 peak_rss_mib=109 wall_s=0.73 cpu_user_s=0.64 memavail_start_gib=23 disk_free_gib=431->431 slot=claude

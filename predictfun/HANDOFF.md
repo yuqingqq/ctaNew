@@ -618,6 +618,37 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- LADDER_CANCEL_HEADROOM_RESULTS_20261122_DEV -->
+## 2026-11-22 05:30Z (session aea5bfb9) — FEASIBLE-CANCEL-HEADROOM-v1 RESULTS + the long-continuation contract (design only)
+
+[Receipt](reviews/ladder_cancel_headroom_20261122/report.md). Frozen 2a2f78da. All checks pass:
+- A–X, including a per-generation match with the Codex classification c72f0d37;
+- falsifier 19 / 19; mutants 38 / 38.
+
+**Reading:** CURRENT `local_cancel_headroom` pooled and Oct 24–26, `no_local_cancel_rescue` Oct 27; FRONT headroom every day.
+
+**Oracle (hindsight):**
+- CURRENT eligible +1 s: KEEP −78,486 c → oracle +52,682 c.
+- 1,254 cuts remove 88.7 % of the gross bad value and sacrifice 217 c of good value.
+- 90 % of the cuts sit at the first review, 40 ms after activation. The discrimination worth learning is per generation, at admission or first review.
+
+**At longer horizons:** the advantage shrinks. CURRENT END: oracle −55.3k vs KEEP −68.3k c; worse on Oct 25. The removed common cohort turns +20.0k c by END.
+
+**Whole-life question:** NOT tested (90e82f8e). Bad-then-good on one generation is rare in the truncated recorded paths, and re-entry is unmodelled.
+
+**Bundled:**
+- P2: ASYNC `report_interpretation_v2.md`, with the identity computed and equal to the review's table on 76 / 76 rows.
+- The design-only [LONG-CONTINUATION-PAIRED-VALUE-v1 contract](reviews/ladder_long_continuation_contract_20261122/contract.md):
+  - paired retain vs avoid / re-enter at REVIEW and ADMISSION states, to the common market END;
+  - full-ledger two-sided value, with the focal generation exempt from pressure pulls in the retain arm;
+  - six parity / falsifier gates;
+  - pilot cost ≈ 0.36 h for 64 pairs, with margin.
+
+**Process slip, disclosed:** the per-mutant logs of two first-draft batches were deleted before the rewrite. They are counted through the declared 30 s unlogged allowance (with about 12 s of pre-design inspection).
+
+**Next:** ONE Codex review of 3e84ca6d..HEAD. The paired pilot needs a USER resource decision, because the 2.50 line leaves about 0.06 h. POSITIVE-PRESSURE-GUARD-v1 stays stopped.
+<!-- /LADDER_CANCEL_HEADROOM_RESULTS_20261122_DEV -->
+
 <!-- LADDER_CANCEL_HEADROOM_FREEZE_20261122_DEV -->
 ## 2026-11-22 05:24Z (session aea5bfb9) — FEASIBLE-CANCEL-HEADROOM-v1 FROZEN before any table (review 3e84ca6d's ONE next priority; USER amendment 6d200317 folded in)
 

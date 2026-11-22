@@ -436,7 +436,17 @@ ladder_async_fast_results_20261122_dev:
   batch_core_hours: 0.201
   line_core_hours: 2.375
 ladder_cancel_headroom_20261122_dev:
-  status: frozen_before_any_table
+  status: results_receipt_complete_review_pending
+  results_asof: "2026-11-22 05:30Z"
+  freeze_commit: 2a2f78da
+  reading: {CURRENT_ASYNC_FAST10: {pooled: local_cancel_headroom, no_local_cancel_rescue_days: [20261027]}, FRONT_ASYNC_FAST10: {pooled: local_cancel_headroom, no_local_cancel_rescue_days: []}}
+  oracle_eligible_1s_c: {CURRENT: {keep: -78485.90, first_cut: -9519.81, oracle: 52682.23}, FRONT: {keep: -61051.63, first_cut: -7109.19, oracle: 96455.85}}
+  oracle_end_c: {CURRENT: {keep: -68319.95, oracle: -55252.46}, FRONT: {keep: -86960.60, oracle: -23510.19}}
+  checks: A_to_X_all_pass_including_codex_c72f0d37_per_generation
+  round_core_hours: 0.0402
+  line_core_hours: 2.4189
+  whole_life_queue_hypothesis_tested: false
+  next: long_continuation_paired_value_contract_design_only_pilot_needs_user_resource_decision
   asof: "2026-11-22 05:24Z"
   source: review_3e84ca6d_next_priority_amendment_6d200317
   later_directions_read: [2a8cde50, c72f0d37, 90e82f8e, c590b083, 60768c83]

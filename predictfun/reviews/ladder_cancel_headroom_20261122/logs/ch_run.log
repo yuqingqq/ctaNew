@@ -1,0 +1,28 @@
+{
+ "generations": 12135,
+ "panel_rows": 564851,
+ "reproduced_markets": 38,
+ "reading": {
+  "CURRENT_ASYNC_FAST10": {
+   "by_day": {
+    "20261024": "local_cancel_headroom",
+    "20261025": "local_cancel_headroom",
+    "20261026": "local_cancel_headroom",
+    "20261027": "no_local_cancel_rescue"
+   },
+   "pooled": "local_cancel_headroom",
+   "days_no_rescue": 1
+  },
+  "FRONT_ASYNC_FAST10": {
+   "by_day": {
+    "20261024": "local_cancel_headroom",
+    "20261025": "local_cancel_headroom",
+    "20261026": "local_cancel_headroom",
+    "20261027": "local_cancel_headroom"
+   },
+   "pooled": "local_cancel_headroom",
+   "days_no_rescue": 0
+  }
+ }
+}
+2026-11-22T05:24:16Z tag=ch_run rc=0 peak_rss_mib=826 wall_s=15.10 cpu_user_s=14.43 memavail_start_gib=23 disk_free_gib=431->431 slot=claude
