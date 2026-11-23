@@ -1,0 +1,100 @@
+{
+  "input_sha256": "33442969f9da3fcd1133b210462258ad12c40b11e07e47383c65c0ab324a20ec",
+  "n": 4147,
+  "classes": {
+    "cls_rec": {
+      "reduce_partial": 2376,
+      "add": 1579,
+      "from_flat": 52,
+      "reversal_reducing": 51,
+      "overshoot": 51,
+      "no_change": 38
+    },
+    "cls_sim": {
+      "reduce_partial": 1502,
+      "add": 1222,
+      "overshoot": 25,
+      "reversal_reducing": 22,
+      "no_change": 19
+    },
+    "cls_cert_0": {
+      "reduce_partial": 2496,
+      "add": 1388,
+      "from_flat": 103,
+      "reversal_reducing": 70,
+      "overshoot": 52,
+      "no_change": 38
+    }
+  },
+  "ambiguous_fine_class_n": 838,
+  "all_available_classes_reduce": 48,
+  "at_least_one_class_reduce": 689,
+  "all_available_classes_add": 149,
+  "at_least_one_class_add": 790,
+  "conditional_events": [
+    {
+      "scope": "pooled",
+      "table": "marginal",
+      "factor": "inv_ledger_conditional",
+      "level": "yes",
+      "maker_seconds": 939,
+      "event_seconds_reduce": 46,
+      "takes_reduce": 107,
+      "hazard_reduce": 0.04898828541001065,
+      "event_seconds_add": 42,
+      "takes_add": 93,
+      "hazard_add": 0.04472843450479233,
+      "event_seconds_other": 2,
+      "takes_other": 2,
+      "hazard_other": 0.002129925452609159,
+      "event_seconds_timing_sensitive": 16,
+      "takes_timing_sensitive": 46,
+      "hazard_timing_sensitive": 0.01703940362087327,
+      "event_seconds_any": 101,
+      "takes_any": 248,
+      "hazard_any": 0.10756123535676251
+    }
+  ],
+  "discordant_take_counts": [
+    {
+      "pattern": "status:reduce_q0_at_t",
+      "definition": "reduce take, q(t) = 0",
+      "scope": "pooled",
+      "n_event_seconds": 0,
+      "n_takes": 0,
+      "maker_days": 0,
+      "markets_ge1": 0,
+      "markets_ge5": 0,
+      "takes_denominator": 4147,
+      "share_of_takes": 0.0,
+      "takes_in_population": 4124
+    },
+    {
+      "pattern": "status:reduce_btc_missing",
+      "definition": "reduce take, q != 0, BTC 5 s missing",
+      "scope": "pooled",
+      "n_event_seconds": 5,
+      "n_takes": 8,
+      "maker_days": 1,
+      "markets_ge1": 1,
+      "markets_ge5": 1,
+      "takes_denominator": 4147,
+      "share_of_takes": 0.0019291053773812395,
+      "takes_in_population": 4124
+    },
+    {
+      "pattern": "status:reduce_side_equals_inventory_sign",
+      "definition": "reduce take whose side equals the sign of q(t)",
+      "scope": "pooled",
+      "n_event_seconds": 13,
+      "n_takes": 46,
+      "maker_days": 5,
+      "markets_ge1": 11,
+      "markets_ge5": 0,
+      "takes_denominator": 4147,
+      "share_of_takes": 0.011092355919942128,
+      "takes_in_population": 4124
+    }
+  ]
+}
+2026-11-23T13:04:38Z tag=codex_take_logic_labels_v2 rc=0 peak_rss_mib=120 wall_s=0.46 cpu_user_s=0.39 memavail_start_gib=22 disk_free_gib=429->429 slot=codex

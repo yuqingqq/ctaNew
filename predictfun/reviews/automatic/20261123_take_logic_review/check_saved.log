@@ -1,0 +1,76 @@
+{
+  "suites": [
+    {
+      "name": "chain_correct_post_selftest",
+      "rc": 0,
+      "tail": [
+        "PASS refusal: an action type without a declared grade refuses the run",
+        "{\"checks\": 94, \"failed\": 0, \"vmhwm_mib\": 128.9}"
+      ]
+    },
+    {
+      "name": "chain_correct_pull_take_selftest",
+      "rc": 0,
+      "tail": [
+        "PASS refuse: nothing written by any refused run",
+        "{\"checks\": 90, \"failed\": 0, \"vmhwm_mib\": 136.9}"
+      ]
+    },
+    {
+      "name": "take_logic_selftest",
+      "rc": 0,
+      "tail": [
+        "PASS e2e: a second write into the written directory is refused",
+        "{\"checks\": 70, \"failed\": 0, \"cpu_s\": 1.529, \"process_cpu_s\": 1.983, \"vmhwm_mib\": 165.7}"
+      ]
+    }
+  ],
+  "artifact_checks": 40,
+  "artifact_bad": [],
+  "MH_bad": [],
+  "consistency_bad": [],
+  "posthoc_size": [
+    {
+      "scope": "rank1",
+      "type": "reduce",
+      "RR_MH": 1.2710401731367496
+    },
+    {
+      "scope": "rank1",
+      "type": "add",
+      "RR_MH": 0.5551274034325997
+    },
+    {
+      "scope": "rank1",
+      "type": "timing_sensitive",
+      "RR_MH": 0.05815449398825711
+    },
+    {
+      "scope": "rank1",
+      "type": "any",
+      "RR_MH": 0.6506506306232883
+    },
+    {
+      "scope": "pooled",
+      "type": "reduce",
+      "RR_MH": 1.4794262670434537
+    },
+    {
+      "scope": "pooled",
+      "type": "add",
+      "RR_MH": 0.6402240644436556
+    },
+    {
+      "scope": "pooled",
+      "type": "timing_sensitive",
+      "RR_MH": 0.060242770693072746
+    },
+    {
+      "scope": "pooled",
+      "type": "any",
+      "RR_MH": 0.754997600061769
+    }
+  ],
+  "cpu_s": 6.9127520570000005
+}
+2026-11-23T13:01:54Z tag=codex_take_logic_review rc=0 peak_rss_mib=165 wall_s=7.25 cpu_user_s=6.70 memavail_start_gib=22 disk_free_gib=429->429 slot=codex

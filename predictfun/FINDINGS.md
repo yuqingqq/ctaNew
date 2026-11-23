@@ -1,3 +1,11 @@
+<!-- TAKE_LOGIC_REVIEW_20261123_CODEX -->
+## 2026-11-23 — Codex combined correction / TAKE-LOGIC review
+
+Pinned **cccac3665b967fc4858b2335add811779918b87a**; [review/evidence/one next priority](reviews/automatic/20261123_take_logic_review/report.md). Corrected historical grades/signs/references accepted descriptively. New strongest claim remains blocked: the reduction label discards inventory-dependent ambiguity (pooled small position 109 reduce/127 uncertain event-seconds vs large 325/19); moving state clocks keeps those labels fixed. Arithmetic is correct: independently reproduced size RR 1.479; diagnostic any-take RR 0.755 on the same strata is not a new validated result. 48 of 838 ambiguous records are reductions in every available class but differ in fine subtype; 689 have at least one reducing class.
+
+Bundled P2/P3: distinguish proxy anchor from private knowledge; association from causal trigger/latency; carry 46 anchor-direction mismatches, 248 conditional-ledger takes, three overshoots; correct duplicated execution census (9,026 maker rows and 4,147 take records, not 19,658 executions); qualify end/lot-carry and event-second repetition wording. One <=0.025 h ambiguity-aware saved-data packet next; no full replay/new model/new days. Review charge 0.010 h once.
+<!-- /TAKE_LOGIC_REVIEW_20261123_CODEX -->
+
 <!-- LOGIC_CHAINS_REVIEW_20261123_CODEX -->
 ## 2026-11-23 — Codex maker logic-chain review, consolidated round
 

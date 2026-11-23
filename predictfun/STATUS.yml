@@ -1,4 +1,23 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+take_logic_review_20261123_codex:
+  target: cccac3665b967fc4858b2335add811779918b87a
+  report: predictfun/reviews/automatic/20261123_take_logic_review/report.md
+  status: descriptive_tables_accepted_inventory_trigger_not_established
+  prior_correction: accepted_with_explicit_deferred_items
+  synthetic_checks_passed: 254
+  artifact_source_checks_passed: 40
+  independent_mh_recounts_passed: 16
+  consistency_recounts_passed: 120
+  material_remaining_issue: inventory_dependent_take_classification_uncertainty
+  next_priority: one_ambiguity_aware_inventory_take_saved_data_packet
+  next_packet_all_in_core_hours_cap: 0.025
+  review_charge_core_hours: 0.010
+  pre_review_task_core_hours: 1.8064
+  pre_review_line_core_hours: 5.1171
+  task_core_hours_cap: 1.90
+  line_core_hours_cap: 5.25
+  additional_user_decision_within_scope_and_caps: false
+
 logic_chains_review_20261123_codex:
   target: 8d68808d4c5232f910d92808bef14871eb6ab1b5
   report: predictfun/reviews/automatic/20261123_logic_chains_review/report.md

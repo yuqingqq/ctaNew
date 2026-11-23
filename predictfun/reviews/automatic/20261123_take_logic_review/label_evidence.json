@@ -1,0 +1,585 @@
+{
+  "input_sha256": "33442969f9da3fcd1133b210462258ad12c40b11e07e47383c65c0ab324a20ec",
+  "n": 4147,
+  "classes": {
+    "cls_rec": {
+      "reduce_partial": 2376,
+      "add": 1579,
+      "from_flat": 52,
+      "reversal_reducing": 51,
+      "overshoot": 51,
+      "no_change": 38
+    },
+    "cls_sim": {
+      "reduce_partial": 1502,
+      "add": 1222,
+      "overshoot": 25,
+      "reversal_reducing": 22,
+      "no_change": 19
+    },
+    "cls_cert_0": {
+      "reduce_partial": 2496,
+      "add": 1388,
+      "from_flat": 103,
+      "reversal_reducing": 70,
+      "overshoot": 52,
+      "no_change": 38
+    }
+  },
+  "ambiguous_fine_class_n": 838,
+  "all_available_classes_reduce": 48,
+  "at_least_one_class_reduce": 689,
+  "all_available_classes_add": 149,
+  "at_least_one_class_add": 790,
+  "class_combinations": [
+    {
+      "cls_rec": "add",
+      "cls_sim": "absent",
+      "cls_cert_0": "from_flat",
+      "n": 24
+    },
+    {
+      "cls_rec": "add",
+      "cls_sim": "absent",
+      "cls_cert_0": "overshoot",
+      "n": 16
+    },
+    {
+      "cls_rec": "add",
+      "cls_sim": "absent",
+      "cls_cert_0": "reduce_partial",
+      "n": 86
+    },
+    {
+      "cls_rec": "add",
+      "cls_sim": "absent",
+      "cls_cert_0": "reversal_reducing",
+      "n": 11
+    },
+    {
+      "cls_rec": "add",
+      "cls_sim": "add",
+      "cls_cert_0": "from_flat",
+      "n": 25
+    },
+    {
+      "cls_rec": "add",
+      "cls_sim": "add",
+      "cls_cert_0": "overshoot",
+      "n": 18
+    },
+    {
+      "cls_rec": "add",
+      "cls_sim": "add",
+      "cls_cert_0": "reduce_partial",
+      "n": 198
+    },
+    {
+      "cls_rec": "add",
+      "cls_sim": "add",
+      "cls_cert_0": "reversal_reducing",
+      "n": 16
+    },
+    {
+      "cls_rec": "from_flat",
+      "cls_sim": "add",
+      "cls_cert_0": "from_flat",
+      "n": 42
+    },
+    {
+      "cls_rec": "overshoot",
+      "cls_sim": "absent",
+      "cls_cert_0": "add",
+      "n": 7
+    },
+    {
+      "cls_rec": "overshoot",
+      "cls_sim": "absent",
+      "cls_cert_0": "reduce_partial",
+      "n": 5
+    },
+    {
+      "cls_rec": "overshoot",
+      "cls_sim": "absent",
+      "cls_cert_0": "reversal_reducing",
+      "n": 2
+    },
+    {
+      "cls_rec": "overshoot",
+      "cls_sim": "add",
+      "cls_cert_0": "add",
+      "n": 5
+    },
+    {
+      "cls_rec": "overshoot",
+      "cls_sim": "add",
+      "cls_cert_0": "overshoot",
+      "n": 8
+    },
+    {
+      "cls_rec": "overshoot",
+      "cls_sim": "add",
+      "cls_cert_0": "reduce_partial",
+      "n": 15
+    },
+    {
+      "cls_rec": "overshoot",
+      "cls_sim": "overshoot",
+      "cls_cert_0": "add",
+      "n": 4
+    },
+    {
+      "cls_rec": "overshoot",
+      "cls_sim": "overshoot",
+      "cls_cert_0": "reduce_partial",
+      "n": 1
+    },
+    {
+      "cls_rec": "overshoot",
+      "cls_sim": "reduce_partial",
+      "cls_cert_0": "reduce_partial",
+      "n": 1
+    },
+    {
+      "cls_rec": "reduce_partial",
+      "cls_sim": "absent",
+      "cls_cert_0": "add",
+      "n": 53
+    },
+    {
+      "cls_rec": "reduce_partial",
+      "cls_sim": "absent",
+      "cls_cert_0": "overshoot",
+      "n": 2
+    },
+    {
+      "cls_rec": "reduce_partial",
+      "cls_sim": "absent",
+      "cls_cert_0": "reversal_reducing",
+      "n": 7
+    },
+    {
+      "cls_rec": "reduce_partial",
+      "cls_sim": "add",
+      "cls_cert_0": "add",
+      "n": 17
+    },
+    {
+      "cls_rec": "reduce_partial",
+      "cls_sim": "add",
+      "cls_cert_0": "overshoot",
+      "n": 1
+    },
+    {
+      "cls_rec": "reduce_partial",
+      "cls_sim": "add",
+      "cls_cert_0": "reduce_partial",
+      "n": 77
+    },
+    {
+      "cls_rec": "reduce_partial",
+      "cls_sim": "add",
+      "cls_cert_0": "reversal_reducing",
+      "n": 2
+    },
+    {
+      "cls_rec": "reduce_partial",
+      "cls_sim": "overshoot",
+      "cls_cert_0": "add",
+      "n": 2
+    },
+    {
+      "cls_rec": "reduce_partial",
+      "cls_sim": "overshoot",
+      "cls_cert_0": "reduce_partial",
+      "n": 5
+    },
+    {
+      "cls_rec": "reduce_partial",
+      "cls_sim": "overshoot",
+      "cls_cert_0": "reversal_reducing",
+      "n": 3
+    },
+    {
+      "cls_rec": "reduce_partial",
+      "cls_sim": "reduce_partial",
+      "cls_cert_0": "add",
+      "n": 105
+    },
+    {
+      "cls_rec": "reduce_partial",
+      "cls_sim": "reduce_partial",
+      "cls_cert_0": "from_flat",
+      "n": 2
+    },
+    {
+      "cls_rec": "reduce_partial",
+      "cls_sim": "reduce_partial",
+      "cls_cert_0": "overshoot",
+      "n": 2
+    },
+    {
+      "cls_rec": "reduce_partial",
+      "cls_sim": "reduce_partial",
+      "cls_cert_0": "reversal_reducing",
+      "n": 14
+    },
+    {
+      "cls_rec": "reduce_partial",
+      "cls_sim": "reversal_reducing",
+      "cls_cert_0": "add",
+      "n": 3
+    },
+    {
+      "cls_rec": "reduce_partial",
+      "cls_sim": "reversal_reducing",
+      "cls_cert_0": "reduce_partial",
+      "n": 16
+    },
+    {
+      "cls_rec": "reversal_reducing",
+      "cls_sim": "absent",
+      "cls_cert_0": "add",
+      "n": 5
+    },
+    {
+      "cls_rec": "reversal_reducing",
+      "cls_sim": "absent",
+      "cls_cert_0": "reduce_partial",
+      "n": 9
+    },
+    {
+      "cls_rec": "reversal_reducing",
+      "cls_sim": "add",
+      "cls_cert_0": "add",
+      "n": 2
+    },
+    {
+      "cls_rec": "reversal_reducing",
+      "cls_sim": "add",
+      "cls_cert_0": "overshoot",
+      "n": 1
+    },
+    {
+      "cls_rec": "reversal_reducing",
+      "cls_sim": "add",
+      "cls_cert_0": "reduce_partial",
+      "n": 12
+    },
+    {
+      "cls_rec": "reversal_reducing",
+      "cls_sim": "add",
+      "cls_cert_0": "reversal_reducing",
+      "n": 2
+    },
+    {
+      "cls_rec": "reversal_reducing",
+      "cls_sim": "overshoot",
+      "cls_cert_0": "overshoot",
+      "n": 1
+    },
+    {
+      "cls_rec": "reversal_reducing",
+      "cls_sim": "overshoot",
+      "cls_cert_0": "reduce_partial",
+      "n": 4
+    },
+    {
+      "cls_rec": "reversal_reducing",
+      "cls_sim": "overshoot",
+      "cls_cert_0": "reversal_reducing",
+      "n": 5
+    },
+    {
+      "cls_rec": "reversal_reducing",
+      "cls_sim": "reversal_reducing",
+      "cls_cert_0": "reduce_partial",
+      "n": 2
+    }
+  ],
+  "old_overshoots": [
+    {
+      "day": 20261024,
+      "mid": 3700070,
+      "rank": 1,
+      "sid": "01a16ca9-51a6-7cf2-8816-4e59144caa3f",
+      "dq": -9.9233,
+      "pos_rec": 0.6053289843392462,
+      "pos_cert_0": 2.329466915373729,
+      "cls_rec": "overshoot",
+      "cls_sim": NaN,
+      "cls_cert_0": "overshoot"
+    },
+    {
+      "day": 20261024,
+      "mid": 3716727,
+      "rank": 2,
+      "sid": "01a16f59-b47b-7b20-8197-cca0751cd1d5",
+      "dq": -20.0,
+      "pos_rec": 6.061918585307684,
+      "pos_cert_0": 6.491918585307683,
+      "cls_rec": "overshoot",
+      "cls_sim": NaN,
+      "cls_cert_0": "overshoot"
+    },
+    {
+      "day": 20261026,
+      "mid": 3838531,
+      "rank": 1,
+      "sid": "01a1799d-2a8a-7133-8727-2779812b6335",
+      "dq": 30.26,
+      "pos_rec": -6.9066639869864765,
+      "pos_cert_0": -6.9066639869864765,
+      "cls_rec": "overshoot",
+      "cls_sim": NaN,
+      "cls_cert_0": "overshoot"
+    }
+  ],
+  "conditional_events": [
+    {
+      "scope": "pooled",
+      "table": "marginal",
+      "factor": "inv_ledger_conditional",
+      "level": "yes",
+      "maker_seconds": 939,
+      "event_seconds_reduce": 46,
+      "takes_reduce": 107,
+      "hazard_reduce": 0.04898828541001065,
+      "event_seconds_add": 42,
+      "takes_add": 93,
+      "hazard_add": 0.04472843450479233,
+      "event_seconds_other": 2,
+      "takes_other": 2,
+      "hazard_other": 0.002129925452609159,
+      "event_seconds_timing_sensitive": 16,
+      "takes_timing_sensitive": 46,
+      "hazard_timing_sensitive": 0.01703940362087327,
+      "event_seconds_any": 101,
+      "takes_any": 248,
+      "hazard_any": 0.10756123535676251
+    }
+  ],
+  "discordant_take_counts": [
+    {
+      "pattern": "status:reduce_q0_at_t",
+      "definition": "reduce take, q(t) = 0",
+      "scope": "pooled",
+      "n_event_seconds": 0,
+      "n_takes": 0,
+      "maker_days": 0,
+      "markets_ge1": 0,
+      "markets_ge5": 0,
+      "takes_denominator": 4147,
+      "share_of_takes": 0.0,
+      "takes_in_population": 4124
+    },
+    {
+      "pattern": "status:reduce_btc_missing",
+      "definition": "reduce take, q != 0, BTC 5 s missing",
+      "scope": "pooled",
+      "n_event_seconds": 5,
+      "n_takes": 8,
+      "maker_days": 1,
+      "markets_ge1": 1,
+      "markets_ge5": 1,
+      "takes_denominator": 4147,
+      "share_of_takes": 0.0019291053773812395,
+      "takes_in_population": 4124
+    },
+    {
+      "pattern": "status:reduce_side_equals_inventory_sign",
+      "definition": "reduce take whose side equals the sign of q(t)",
+      "scope": "pooled",
+      "n_event_seconds": 13,
+      "n_takes": 46,
+      "maker_days": 5,
+      "markets_ge1": 11,
+      "markets_ge5": 0,
+      "takes_denominator": 4147,
+      "share_of_takes": 0.011092355919942128,
+      "takes_in_population": 4124
+    }
+  ],
+  "census_base_and_overlaps": [
+    {
+      "source": "chains/take/actions.csv",
+      "action_type": "maker_fill",
+      "scope": "pooled",
+      "day": "all",
+      "subset": "all",
+      "n": 9026,
+      "n_action_total": 9026,
+      "evidence_grade": "observed_execution",
+      "identified_repost": false,
+      "n_identified": NaN,
+      "identified_basis": NaN,
+      "population": "outcome_selected_filled_orders",
+      "grade_basis": "public match record of a resting own order (outcome-selected: unfilled orders are invisible)"
+    },
+    {
+      "source": "chains/take/actions.csv",
+      "action_type": "take_add",
+      "scope": "pooled",
+      "day": "all",
+      "subset": "all",
+      "n": 1185,
+      "n_action_total": 1185,
+      "evidence_grade": "observed_execution",
+      "identified_repost": false,
+      "n_identified": NaN,
+      "identified_basis": NaN,
+      "population": "take_records_complete",
+      "grade_basis": "public take record (observed); its inventory class is computed on the retained status-ok ledger (recorded / certain / simultaneous variants agree)"
+    },
+    {
+      "source": "chains/take/actions.csv",
+      "action_type": "take_from_flat",
+      "scope": "pooled",
+      "day": "all",
+      "subset": "all",
+      "n": 10,
+      "n_action_total": 10,
+      "evidence_grade": "observed_execution",
+      "identified_repost": false,
+      "n_identified": NaN,
+      "identified_basis": NaN,
+      "population": "take_records_complete",
+      "grade_basis": "public take record (observed); its inventory class is computed on the retained status-ok ledger (recorded / certain / simultaneous variants agree)"
+    },
+    {
+      "source": "chains/take/actions.csv",
+      "action_type": "take_kind_merge",
+      "scope": "pooled",
+      "day": "all",
+      "subset": "all",
+      "n": 16,
+      "n_action_total": 16,
+      "evidence_grade": "observed_execution",
+      "identified_repost": false,
+      "n_identified": NaN,
+      "identified_basis": NaN,
+      "population": "take_records_complete",
+      "grade_basis": "attribute of a public take record"
+    },
+    {
+      "source": "chains/take/actions.csv",
+      "action_type": "take_kind_mint",
+      "scope": "pooled",
+      "day": "all",
+      "subset": "all",
+      "n": 3709,
+      "n_action_total": 3709,
+      "evidence_grade": "observed_execution",
+      "identified_repost": false,
+      "n_identified": NaN,
+      "identified_basis": NaN,
+      "population": "take_records_complete",
+      "grade_basis": "attribute of a public take record"
+    },
+    {
+      "source": "chains/take/actions.csv",
+      "action_type": "take_multi_record_order",
+      "scope": "pooled",
+      "day": "all",
+      "subset": "all",
+      "n": 2722,
+      "n_action_total": 2722,
+      "evidence_grade": "observed_execution",
+      "identified_repost": false,
+      "n_identified": NaN,
+      "identified_basis": NaN,
+      "population": "take_records_complete",
+      "grade_basis": "attribute of a public take record"
+    },
+    {
+      "source": "chains/take/actions.csv",
+      "action_type": "take_no_change",
+      "scope": "pooled",
+      "day": "all",
+      "subset": "all",
+      "n": 38,
+      "n_action_total": 38,
+      "evidence_grade": "observed_execution",
+      "identified_repost": false,
+      "n_identified": NaN,
+      "identified_basis": NaN,
+      "population": "take_records_complete",
+      "grade_basis": "public take record (observed); its inventory class is computed on the retained status-ok ledger (recorded / certain / simultaneous variants agree)"
+    },
+    {
+      "source": "chains/take/actions.csv",
+      "action_type": "take_overshoot",
+      "scope": "pooled",
+      "day": "all",
+      "subset": "all",
+      "n": 3,
+      "n_action_total": 3,
+      "evidence_grade": "observed_execution",
+      "identified_repost": false,
+      "n_identified": NaN,
+      "identified_basis": NaN,
+      "population": "take_records_complete",
+      "grade_basis": "public take record (observed); its inventory class is computed on the retained status-ok ledger (recorded / certain / simultaneous variants agree)"
+    },
+    {
+      "source": "chains/take/actions.csv",
+      "action_type": "take_reduce_partial",
+      "scope": "pooled",
+      "day": "all",
+      "subset": "all",
+      "n": 2065,
+      "n_action_total": 2065,
+      "evidence_grade": "observed_execution",
+      "identified_repost": false,
+      "n_identified": NaN,
+      "identified_basis": NaN,
+      "population": "take_records_complete",
+      "grade_basis": "public take record (observed); its inventory class is computed on the retained status-ok ledger (recorded / certain / simultaneous variants agree)"
+    },
+    {
+      "source": "chains/take/actions.csv",
+      "action_type": "take_reversal_reducing",
+      "scope": "pooled",
+      "day": "all",
+      "subset": "all",
+      "n": 8,
+      "n_action_total": 8,
+      "evidence_grade": "observed_execution",
+      "identified_repost": false,
+      "n_identified": NaN,
+      "identified_basis": NaN,
+      "population": "take_records_complete",
+      "grade_basis": "public take record (observed); its inventory class is computed on the retained status-ok ledger (recorded / certain / simultaneous variants agree)"
+    },
+    {
+      "source": "chains/take/actions.csv",
+      "action_type": "take_self_trade",
+      "scope": "pooled",
+      "day": "all",
+      "subset": "all",
+      "n": 38,
+      "n_action_total": 38,
+      "evidence_grade": "observed_execution",
+      "identified_repost": false,
+      "n_identified": NaN,
+      "identified_basis": NaN,
+      "population": "take_records_complete",
+      "grade_basis": "attribute of a public take record"
+    },
+    {
+      "source": "chains/take/actions.csv",
+      "action_type": "take_timing_sensitive",
+      "scope": "pooled",
+      "day": "all",
+      "subset": "all",
+      "n": 838,
+      "n_action_total": 838,
+      "evidence_grade": "observed_execution",
+      "identified_repost": false,
+      "n_identified": NaN,
+      "identified_basis": NaN,
+      "population": "take_records_complete",
+      "grade_basis": "public take record (observed); the recorded / certain / simultaneous inventory variants disagree"
+    }
+  ]
+}

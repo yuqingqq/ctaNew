@@ -22,6 +22,21 @@ toward the authorized model/value/controller measurements once their gates pass.
 [current consolidated package](reviews/automatic/20261120_r2d_bundled_round/plan.md).
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
+
+<!-- TAKE_LOGIC_REVIEW_20261123_CODEX -->
+## 2026-11-23 — combined logic-chain correction / TAKE-LOGIC review
+
+[Review and independent evidence](reviews/automatic/20261123_take_logic_review/report.md), pinned **cccac3665b967fc4858b2335add811779918b87a**. Prior findings 1–7 are closed for the corrected descriptive tables or explicitly deferred; no rebuild required. New MH arithmetic, full-market population and circular-shift implementation pass bounded checks. Suites 94/94, 90/90, 70/70; 40 artifact/source checks; 16 independent MH and 120 consistency recounts agree.
+
+Do not promote inventory size as an identified trigger yet. Pooled small positions have 109 classified-reduce vs 127 timing-sensitive event-seconds, large positions 325 vs 19. The fixed event labels do not change under D1000/pending sensitivities. Pooled size RR=1.479 for classified reductions, but a post-hoc same-strata any-take RR=0.755. This does not prove the effect artificial; it requires an ambiguity-aware outcome test. Also carry 46 inherited reductions whose side adds at the new anchor, 939 conditional-ledger seconds/248 takes, and three overshoots.
+
+Bundle remaining interpretation/count corrections: venue-time proxy is not private decision information; no identified reaction latency or absence of BTC mechanism; endpoint inventories do not prove same-lot carry. Census 19,658 double-counts take attributes: report 9,026 maker-fill rows and 4,147 take records separately.
+
+ONE next priority: one ambiguity-aware inventory/take packet, same consumed days, <=0.025 core-hours all-in including <=0.010 review. Freeze raw-side/opposite-to-anchor and feasible coarse-class outcomes; shift raw side schedules then reclassify against destination state; compare full and clean-ledger panels; add classification-uncertainty falsifiers. Save sufficient statistics, no model/policy replay or new days. Stop treating size as a rule if the association disappears; do not tune to restore it. No new USER decision within this authorized question/caps.
+
+Review charge 0.010 h (<=0.015 request), once; live pre-review ledger 1.8064 task/5.1171 line. Including this charge plus whole next packet: 1.8414/1.90 task, 5.1521/5.25 line, or 1.8914 task with standing 0.05 reserve. Reconcile concurrent runs.
+<!-- /TAKE_LOGIC_REVIEW_20261123_CODEX -->
+
 <!-- LOGIC_CHAINS_REVIEW_20261123_CODEX -->
 ## 2026-11-23 — maker logic-chain review: correct the mechanism claims in one saved-evidence packet
 

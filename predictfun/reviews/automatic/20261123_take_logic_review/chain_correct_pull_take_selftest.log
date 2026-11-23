@@ -1,0 +1,91 @@
+PASS engine: DIRCAT, CLS, REDUCING and the move thresholds equal chain_take
+PASS engine: chain_take.window_feats r_1s is aligned with the TAKE side (sell, buy x BTC up, down)
+PASS engine: chain_take.window_feats r_5s is aligned with the TAKE side (sell, buy x BTC up, down)
+PASS engine: chain_take.window_feats r_30s is aligned with the TAKE side (sell, buy x BTC up, down)
+PASS engine: btc_side_code of the tool equals chain_take.window_feats on every side x move
+PASS engine: the class of every sign case is chain_take.classify(before, dq)
+PASS engine: production paths are the v2 receipt chains pull / take / correction_v1 (MT_RUN=v2)
+PASS engine: the seven declared output names
+PASS sign falsifier: every declared case passes unmutated (a reducing sell of a long with BTC up is against the take side and with the inventory; an adding buy with BTC down is against both)
+PASS sign falsifier: the flip_inventory_sign mutant is caught on every case
+PASS sign: a reducing sell of a long with BTC up is against the take side and with the inventory
+PASS sign: an adding buy with BTC down is against the take side and against the inventory
+PASS sign: timing_sensitive has no inventory side; a side-free category (flat) stays flat
+PASS relabel: only the take_vs_control rows are republished; the reducing_vs_adding rows are counted
+PASS relabel: r_5s_against -> btc_against_take_side_5s, take-side alignment, inventory reading withdrawn
+PASS relabel: a non-BTC feature keeps its name
+PASS relabel: match levels beside (pooled: 32 takes = 30 full stratum + 1 sign dropped + 1 inventory dropped)
+PASS relabel: its reconciliation checks pass (constant per group, non-negative, binary n_takes)
+PASS reconcile: match levels additive and equal to the receipt pools
+PASS reconcile: a receipt pool count that differs is flagged (the check can fire)
+PASS refuse: an unknown take feature
+PASS reconcile: every BTC take_vs_control obs is recomputed exactly from the takes
+PASS reconcile: a perturbed saved obs is flagged (the check can fire)
+PASS reconcile: class counts equal the take summary and the actions
+PASS reconcile: a summary class count off by one is flagged
+PASS reconcile: the take summary tvc_r_5s_against equals its take_controls rows
+PASS cases: rank1 day 1 reduce_partial = 2 takes, 1 against the take side, that one WITH the inventory (the reducing sell of a long, BTC up)
+PASS cases: rank1 day 1 add = 2 takes, 1 against the take side and against the inventory (the adding buy, BTC down)
+PASS cases: a timing_sensitive take has no inventory side (undetermined, empty rate)
+PASS cases: an overshooting sell with BTC down: with the take side, against the long held before
+PASS cases: a reducing buy of a short with BTC up: with the take side, against the short held
+PASS cases: the class basis follows D (take_class_1000 of the reducing sell is timing_sensitive: undetermined there)
+PASS cases: pooled all_classes = 32 takes, 30 with a determined inventory side; without earlier excluded legs 30 takes
+PASS cases: every row is labelled cases_only_no_reference; 2 populations x 20 groups x 4 D x 3 windows x 11 classes
+PASS sign falsifier: under flip_inventory_sign the reducing sell reads against the inventory - the hand count (1, 0) catches it
+PASS excluded before: pooled 2 takes (1 add, 1 reduce_partial), 30 without; the class statement is conditional on the retained ledger
+PASS omitted control: a complete summary publishes one row per key with both families side by side
+PASS omitted control: S_FIFO primary (first), S_NOPRIO beside; an unpublished group stays out
+PASS omitted control: the headline row carries both families with their support (48 events; 36 / 24 with references)
+PASS omitted control: a published key without its fill_anchored row is refused
+PASS omitted control: a published key without its presence row is refused
+PASS omitted control: the drop_fill_anchored mutant is refused (caught)
+PASS refuse: a published group absent under a view
+PASS refuse: a duplicate row per key and family
+PASS membership: S_FIFO cancel-compatible pooled = 48 events: 12 matched / 24 fallback / 12 unavailable; 24 anchored / 24 not; draws 36 / 24
+PASS membership: the cross tab (matched / fallback / unavailable x anchored / unavailable) = 12 0 12 12 0 12
+PASS membership: the successor split = 24 (0 / 12 / 12) and 24 (12 / 12 / 0)
+PASS membership: one rank x day cell (S_NOPRIO rank2 day 2) = 4 events 1 / 2 / 1
+PASS membership: every row reconciles with the summary support and the census
+PASS membership: one row per view x published group x scope x day; S_NOPRIO has no exhausted_proven row
+PASS membership: a summary support off by one event fails reconciliation on exactly that row (the check can fire)
+PASS membership: a pulls / controls draw-status disagreement is refused
+PASS membership: an unknown draw status is refused
+PASS membership: an event without one family row is refused
+PASS predicates: world A gives BTC enriched / inventory every day / cancel-compatible > exhausted = (True, False, False)
+PASS predicates: world B gives BTC enriched / inventory every day / cancel-compatible > exhausted = (True, True, True)
+PASS predicates: world A detail - the BTC comparison fails on the last day in both families; inventory fails under fill_anchored only
+PASS predicates: the presence inventory predicate (beside) holds in world A while the declared fill_anchored one fails
+PASS predicates: a missing day row makes the predicate False with the row named (never True)
+PASS predicates: diff > 0 with p_upper 0.3 is not enriched; the diff-only reading beside stays True
+PASS predicates: fewer than 200 replicates are never enriched
+PASS predicates: S_NOPRIO has no exhausted class - comparison not evaluable, value False; its BTC predicate is computed
+PASS predicates: the D = union profile carries the rate features
+PASS label: a cancel-compatible row labelled with the word is refused
+PASS label: the cell scope is the cancel-compatible rows (an unpublished-group cell is not one)
+PASS label: an output column carrying the word is refused
+PASS label: a claims key carrying the word is refused
+PASS label: a claims string carrying the word (any case) is refused
+PASS e2e: the run writes exactly the seven declared files beside the sibling file (no partial left, the sibling kept)
+PASS e2e: the receipt binds the sha256 of every other output
+PASS e2e: the receipt binds every input (8 CSVs + 2 receipts), the tool source and the contract
+PASS e2e: the receipt records every check passing, CPU and VmHWM
+PASS e2e: the claims carry the computed predicates (world A: True / False / False)
+PASS e2e: the claims carry every reviewer-number reproduction as a recorded predicate (synthetic: no match required)
+PASS e2e: pull_families.csv has both families on every row, S_FIFO first
+PASS e2e: take_relabelled.csv carries take-side names only (no saved r_<w> name left as a feature)
+PASS label: the word labels no cancel-compatible row, no output column and nothing in the claims (text scan of every output)
+PASS label: the text scan saw cancel-compatible rows (it can fire)
+PASS refuse: write-once when the outputs exist (asserted reason)
+PASS refuse: the existing outputs are untouched
+PASS refuse: write-once when one declared name exists, before any input is read
+PASS refuse: the sentinel and the sibling file are untouched and nothing else is written
+PASS e2e: dry writes nothing and returns the schema checks and the predicates
+PASS refuse: the freeze (the tool files not tracked / unmodified)
+PASS refuse: a take input other than the reviewed snapshot
+PASS refuse: a pull input whose sha256 differs from its receipt
+PASS refuse: omitted control on the production path (a published key without fill_anchored; its receipt consistent)
+PASS refuse: a set mutant never writes (run)
+PASS refuse: a set mutant never prints (dry)
+PASS refuse: nothing written by any refused run
+{"checks": 90, "failed": 0, "vmhwm_mib": 136.9}
