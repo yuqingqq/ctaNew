@@ -146,3 +146,41 @@ Every fill's match time is known only to a 2-s hard window. 72% of first fills a
    - a same-maker overlap gives `front_identified`;
    - a two-maker overlap gives `ambiguous_order` with both addresses, and enters the upper bound only;
    - an env mutant `MT_QF_MUT=same_maker_ambiguous` (the old rule) must be caught.
+
+## Amendment 2 (before the full run; reason: the r2 pilot's status counts, not its readings)
+
+**Pilot r2 (Oct 24):**
+
+| Status | Count |
+|---|---|
+| no_fill | 3,299 |
+| ambiguous_order | 2,311 |
+| unknown | 1,449 |
+| unexplained_decrease | 360 |
+| gap | 14 |
+| front_identified | 12 |
+
+Only 4 of 610 single-maker overlaps became identified. The binding condition is the settlement clock: a fill's hard window [hi − 2 s, hi] reaches back before the creation frame. Fills that emptied the cell's PREVIOUS life can settle after the new level appears, so the tool cannot assign a fill to the old or new life.
+
+The book has its own clock. A match shows up as a decrease of the cell's shown size between consecutive usable frames. Timing each taker RECORD by the decrease it caused replaces the 2-s settlement window with frame resolution. Nothing else changes: definitions, bins, null, thresholds and readings (amendment 1 included) stay as they are.
+
+1. **Record timing by the book.** For each match record (one taker order) with maker fills at the cell, take its total quantity q_rec at the cell. Its candidate intervals are the consecutive usable-frame intervals (upd(k−1), upd(k)] inside [hi − 2 s, hi + frame lag 0] where the cell's shown size decreases by q_rec within the 0.01-share display tolerance. If no other add or decrease explains the change, the record is `book_timed` to that interval.
+   - Several candidate intervals, or several records explaining one decrease, give `book_ambiguous`.
+   - No candidate gives `book_unmatched`.
+2. **Old vs new life.**
+   - A record book-timed at or before frame f−1, the last frame showing the cell at 0, belongs to the cell's previous life and is excluded from this fresh level.
+   - A record book-timed in an interval after upd(f) belongs to the new life.
+   - A record with no visible decrease, possible only inside the creation interval (upd(f−1), upd(f)], belongs to the new life only if its settlement window starts after upd(f−1) (the v1 rule). Otherwise it is `book_unmatched`.
+3. **Front holder.** The new life's earliest record, by book interval, then by settlement window when both are timed only by settlement.
+   - If the earliest record is unique and has ONE maker address at the cell, the status is `front_identified`.
+   - If it has several makers (one taker sweeping the cell), the status is `ambiguous_order` with that address set. The venue's time priority puts one of them first, and `makers[]` order does not identify which.
+   - The v1 conditions stay: an unexplained decrease before the earliest record gives `unexplained_decrease`; gaps and unknown cells keep their statuses.
+4. **Reported beside the readings:**
+   - the count of records per timing status (`book_timed` / `book_ambiguous` / `book_unmatched` / `settlement_only`);
+   - the share of fresh levels whose old-life fills were excluded by book timing.
+5. **Selftest additions:**
+   - an old-life record settling after the new creation, book-timed before f−1, must be excluded;
+   - a two-record race, book-timed to different intervals, gives the right holder;
+   - a single-record sweep with two makers gives `ambiguous_order` with both addresses;
+   - a decrease explained by no record gives `unexplained_decrease`;
+   - env mutants `MT_QF_MUT` ∈ {settle_only_timing (the r2 rule), ignore_old_life}, each caught.
