@@ -1,0 +1,73 @@
+{
+  "outcomes": {
+    "count": 3796,
+    "unique": true,
+    "labels": {
+      "other_improve": 1853,
+      "same_restoring": 753,
+      "two_side_both_up": 227,
+      "two_side_narrow": 226,
+      "two_side_both_down": 220,
+      "same_retreat_further": 184,
+      "same_partial": 139,
+      "same_overshoot": 107,
+      "other_retreat": 69,
+      "horizon_no_change": 7,
+      "two_side_sub_unknown": 6,
+      "censored_empty_side": 3,
+      "two_side_widen": 2
+    },
+    "saved_equal": true
+  },
+  "readings": {
+    "btc_with": "adequate_inconsistent",
+    "btc_against": "adequate_direction_consistent",
+    "fair_gap": "adequate_inconsistent",
+    "depth_own": "adequate_direction_consistent",
+    "time_left": "adequate_direction_consistent"
+  },
+  "economics": {
+    "orders": 95,
+    "response_orders": 89,
+    "exact_response_orders": 23,
+    "exact_all_recounted": 29,
+    "unavailable_response_orders": 66,
+    "clean_legs": 174,
+    "after_END_closes": 0,
+    "le10s": {
+      "closes": 19,
+      "shares": 156.7650779916578,
+      "net": 2.0441657862544993
+    },
+    "leEND": {
+      "closes": 23,
+      "shares": 213.90064935064902,
+      "net": -9.653268350463712
+    },
+    "by_response_type": {
+      "overshoot": {
+        "orders": 2,
+        "entry_net": -8.13838577561446,
+        "earlier_net": 0.0,
+        "residual": -6.2527760746888825e-15
+      },
+      "restoring": {
+        "orders": 21,
+        "entry_net": -1.514882574849252,
+        "earlier_net": -21.7655889456237,
+        "residual": -7.09704801462916
+      }
+    },
+    "available_residual_END": -7.097048014629166,
+    "earlier_net": -21.7655889456237,
+    "available_fee": 0.0,
+    "top3_entry_net": -12.09693135275297,
+    "unavailable_residual_END": -25.999867329091273
+  },
+  "rd_rows_verified": 260,
+  "instrument_controls": {
+    "changed_RD_refused": true,
+    "duplicate_close_detectable": true
+  }
+}
+2026-11-23T22:29:07Z tag=codex_competing_saved_v4 rc=0 peak_rss_mib=641 wall_s=2.94 cpu_user_s=2.46 memavail_start_gib=22 disk_free_gib=419->419 slot=codex

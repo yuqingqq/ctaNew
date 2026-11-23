@@ -1,0 +1,17 @@
+{
+  "response_all": {
+    "independent_take_count": 215,
+    "fifo_close_keys": 9,
+    "fifo_closing_shares": 91.56572734230735
+  },
+  "chains": {
+    "independent_take_count": 204,
+    "fifo_close_keys": 3,
+    "fifo_closing_shares": 22.218386390579617
+  },
+  "union": {
+    "independent_take_count": 375,
+    "fifo_close_keys": 12,
+    "fifo_closing_shares": 113.78411373288696
+  }
+}

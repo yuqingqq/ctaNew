@@ -1,0 +1,18 @@
+{
+  "response_all": {
+    "independent_take_count": 215,
+    "fifo_close_keys": 9,
+    "fifo_closing_shares": 91.56572734230735
+  },
+  "chains": {
+    "independent_take_count": 204,
+    "fifo_close_keys": 3,
+    "fifo_closing_shares": 22.218386390579617
+  },
+  "union": {
+    "independent_take_count": 375,
+    "fifo_close_keys": 12,
+    "fifo_closing_shares": 113.78411373288696
+  }
+}
+2026-11-23T22:30:26Z tag=codex_competing_take_scopes rc=0 peak_rss_mib=116 wall_s=0.37 cpu_user_s=0.30 memavail_start_gib=22 disk_free_gib=419->419 slot=codex

@@ -1,3 +1,13 @@
+<!-- COMPETING_TRANSITION_REVIEW_20261123_CODEX -->
+## 2026-11-23 — review: competing transitions/continuation accepted descriptively
+
+Pinned **4eab1efe2aea01d8b7e8c7a530604537d1a87ee8**. [Ranked report / evidence / ONE next priority](reviews/automatic/20261123_competing_transition_review/report.md). No material computation/accounting blocker; 132 synthetic checks, 21 output/source hashes, 3,796 outcomes, 260 RD rows/bounds and 29 exact-order accounting recounts pass. Prior a91f6bb52 findings closed for descriptive use; no broad rerun.
+
+P2 scoped interpretation: response != exact restoration (999 vs753); the pooled −$9.65 entry-close net is 21 restoring orders −$1.51 plus two overshoots −$8.14, not a restoration-policy test. BTC-against remains matched sign-consistent at both clocks/all days; raw sign reverses with different population/weights, largest market is 59.7% of NET RD. Do not summarize all BTC as inconsistent. Public-data limit must mean these records; same-format days cannot supply absent private lifecycle events. P3: label response-only vs union take scopes (215/nine close keys vs375/12), mark vs cutoff and cumulative close horizons.
+
+ONE next priority is an attributed order-lifecycle evidence gate, requiring USER source/scope/budget approval before acquisition or analysis. Stable order IDs, all actions incl unfilled/cancelled, maker join, synchronized sequence/time and book context; blind reconstruction vs ground truth. Own logs validate only own actions. If unavailable, close this identification line rather than tune anonymous snapshots again. No new data or experiment launched. Review charge0.010h once.
+<!-- /COMPETING_TRANSITION_REVIEW_20261123_CODEX -->
+
 <!-- TOUCH_RESPONSE_REVIEW_20261123_CODEX -->
 ## 2026-11-23 — review of TOUCH-TRANSITION-AND-RESPONSE v1
 

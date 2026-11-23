@@ -1,4 +1,25 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+competing_transition_review_20261123_codex:
+  target: 4eab1efe2aea01d8b7e8c7a530604537d1a87ee8
+  report: predictfun/reviews/automatic/20261123_competing_transition_review/report.md
+  result: descriptive_measurements_and_exact_accounting_accepted
+  material_computation_blocker: false
+  prior_a91f6bb52_findings: closed_for_stated_scope
+  tests: {competing: "81/81", continuation: "51/51", receipt_hashes: 21, rd_rows: 260, exact_orders: 29}
+  population: {episodes: 3796, same_side_responses: 999, exact_restorations: 753, response_orders: 89, exact_response_orders: 23, example_chains: 6}
+  report_corrections: [response_target_not_exact_restoration, no_restoration_policy_profit_claim, btc_against_consistent_matched_estimand, identification_limit_of_these_records, take_scope_and_terminal_mark_labels]
+  next_priority: attributed_order_lifecycle_evidence_gate
+  next_gate_requires_user: true
+  next_gate_unstarted: true
+  required_decision: identifying_source_and_scope_and_budget
+  proposed_next_gate_all_in_core_hours: 0.030
+  review_charge_core_hours_once: 0.010
+  task_after_review_core_hours: 1.9073
+  line_after_review_core_hours: 5.2180
+  task_with_standing_reserve_core_hours: 1.9573
+  line_with_standing_reserve_core_hours: 5.2680
+  task_cap: 2.00
+  line_cap: 5.30
 touch_response_review_20261123_codex:
   target: f81b5b0d61ca14eb6039231e9daaeaa954b647ee
   report: predictfun/reviews/automatic/20261123_touch_response_review/report.md

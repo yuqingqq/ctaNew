@@ -23,6 +23,20 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- COMPETING_TRANSITION_REVIEW_20261123_CODEX -->
+## 2026-11-23 — competing transitions and continuation accounting accepted; new identification evidence is next
+
+[Combined review, evidence and ONE next priority](reviews/automatic/20261123_competing_transition_review/report.md), pinned **4eab1efe2aea01d8b7e8c7a530604537d1a87ee8**. Suites 81/81 + 51/51; 21 output/source hashes plus economic/close/take/episode inputs; all 3,796 outcomes and 260 RD rows/bounds reproduce. All 29 exact orders (23 response candidates + six chains) reconcile. No material computational defect or full rerun needed. Prior a91f6bb52 corrections/guards are closed for their stated scope.
+
+Bundle report corrections from existing evidence: RDs concern 999 same-side responses (including partial/overshoot), not 753 exact restorations. The −$9.6533 entry-close total includes −$8.1384 from two overshoots and −$1.5149 from 21 restoring candidates; no policy-profitability conclusion. BTC-against remains adequate/consistent (+3.104/+3.142 points, 4/4 days), with matched/unmatched population differences and 59.7% NET-RD market contribution. BTC-with/fair-gap are inconsistent. 375 takes/12 close keys is the union with six chains; response-only is 215/nine. Terminal mark and execution cutoff differ. No cleanup-only testing loop.
+
+Identification limit is these saved aggregate records, not every conceivable public source. Three consistent contrasts leave the frozen all-thin/inconsistent flag false; that does not authorize a tuned variant. Same-format new days can test observable associations but cannot supply absent maker-tagged cancels/posts.
+
+ONE next priority: USER decision on an attributed order-lifecycle evidence gate. Required: stable IDs joinable to fills, owner, add/accept/amend/cancel/fill/terminal events including unfilled orders, size/remainder, venue sequence/time and receipt/book/BTC context. One predetermined recorded period; blind public-view reconstruction against ground truth with abstentions/errors. Own-order logs validate only our reconstruction, not competitor intent; top-maker claims require an actual maker-linked source. No new evidence/measurement launched. If no source exists, close this identification line; a counterfactual strategy pivot is a separate USER decision. Concrete contract and proposed <=0.030 all-in gate are in the report.
+
+Review charge 0.010 core-hours once, <=0.015 request. Ledger before charge 1.8973 task/5.2080 line; after 1.9073/5.2180, with 0.05 reserve 1.9573/5.2680 within 2.00/5.30. New source/scope and gate budget require USER authorization; no new days, live actions or policy test approved here.
+<!-- /COMPETING_TRANSITION_REVIEW_20261123_CODEX -->
+
 <!-- TOUCH_RESPONSE_REVIEW_20261123_CODEX -->
 ## 2026-11-23 — touch/response census accepted; next compare competing transitions and complete candidate economics
 

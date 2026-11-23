@@ -1,0 +1,475 @@
+{
+  "target": "4eab1efe2aea01d8b7e8c7a530604537d1a87ee8",
+  "hashes": [
+    {
+      "kind": "output",
+      "name": "competing_transition/claims.json",
+      "ok": true
+    },
+    {
+      "kind": "output",
+      "name": "competing_transition/fractions.csv",
+      "ok": true
+    },
+    {
+      "kind": "output",
+      "name": "competing_transition/outcomes.csv",
+      "ok": true
+    },
+    {
+      "kind": "output",
+      "name": "competing_transition/rd.csv",
+      "ok": true
+    },
+    {
+      "kind": "output",
+      "name": "competing_transition/support.csv",
+      "ok": true
+    },
+    {
+      "kind": "output",
+      "name": "competing_transition/timing.csv",
+      "ok": true
+    },
+    {
+      "kind": "source",
+      "name": "predictfun/research/pf_mt_common.py",
+      "ok": true
+    },
+    {
+      "kind": "source",
+      "name": "predictfun/reviews/automatic/20261123_touch_response_review/report.md",
+      "ok": true
+    },
+    {
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/competing_transition_contract.md",
+      "ok": true
+    },
+    {
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/competing_transition.py",
+      "ok": true
+    },
+    {
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/competing_transition_selftest.py",
+      "ok": true
+    },
+    {
+      "kind": "output",
+      "name": "continuation_econ/chains_econ.md",
+      "ok": true
+    },
+    {
+      "kind": "output",
+      "name": "continuation_econ/claims.json",
+      "ok": true
+    },
+    {
+      "kind": "output",
+      "name": "continuation_econ/links_econ.csv",
+      "ok": true
+    },
+    {
+      "kind": "output",
+      "name": "continuation_econ/orders_econ.csv",
+      "ok": true
+    },
+    {
+      "kind": "source",
+      "name": "predictfun/research/pf_mt_common.py",
+      "ok": true
+    },
+    {
+      "kind": "source",
+      "name": "predictfun/reviews/automatic/20261123_touch_response_review/report.md",
+      "ok": true
+    },
+    {
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/competing_transition_contract.md",
+      "ok": true
+    },
+    {
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/chains_v3.py",
+      "ok": true
+    },
+    {
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/continuation_econ.py",
+      "ok": true
+    },
+    {
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/continuation_econ_selftest.py",
+      "ok": true
+    }
+  ],
+  "saved_columns": [
+    "day",
+    "mid",
+    "episode_id",
+    "side",
+    "frame",
+    "t_prev_ms",
+    "t_start_ms",
+    "delta_bin",
+    "end_type",
+    "end_reason",
+    "end_frame",
+    "end_class",
+    "t_end_ms",
+    "resp_type",
+    "outcome",
+    "outcome_group",
+    "response",
+    "competing",
+    "censored",
+    "two_side_sub",
+    "two_side_saved_rows",
+    "state_status_D0",
+    "btc_5s_aligned_D0",
+    "fair_gap_bin_D0",
+    "depth_own_bin_D0",
+    "time_left_bin_D0",
+    "grp_btc_with_D0",
+    "grp_btc_against_D0",
+    "grp_fair_gap_D0",
+    "grp_depth_own_D0",
+    "grp_time_left_D0",
+    "state_status_LAG",
+    "btc_5s_aligned_LAG",
+    "fair_gap_bin_LAG",
+    "depth_own_bin_LAG",
+    "time_left_bin_LAG",
+    "grp_btc_with_LAG",
+    "grp_btc_against_LAG",
+    "grp_fair_gap_LAG",
+    "grp_depth_own_LAG",
+    "grp_time_left_LAG"
+  ],
+  "outcomes": {
+    "count": 3796,
+    "unique": true,
+    "labels": {
+      "other_improve": 1853,
+      "same_restoring": 753,
+      "two_side_both_up": 227,
+      "two_side_narrow": 226,
+      "two_side_both_down": 220,
+      "same_retreat_further": 184,
+      "same_partial": 139,
+      "same_overshoot": 107,
+      "other_retreat": 69,
+      "horizon_no_change": 7,
+      "two_side_sub_unknown": 6,
+      "censored_empty_side": 3,
+      "two_side_widen": 2
+    },
+    "saved_equal": true
+  },
+  "matched_comparisons": [
+    {
+      "variant": "D0",
+      "contrast": "btc_with",
+      "rd": 0.05255626851159102,
+      "day_values": {
+        "20261024": 0.018409317256599493,
+        "20261025": -0.01045132310000532,
+        "20261026": 0.09582618275471211,
+        "20261027": 0.045453066548831134
+      },
+      "adequate": true,
+      "markets_with_5_each": 15,
+      "all_exposed": 244,
+      "all_reference": 3146,
+      "mixed_exposed": 215,
+      "mixed_reference": 725,
+      "raw_rd": 0.03344606213458673,
+      "largest_abs_market": [
+        "20261026",
+        3804696
+      ],
+      "contribution": 0.0217943233617504,
+      "net_share": 0.41468551666570036,
+      "abs_share": 0.19032387478734938
+    },
+    {
+      "variant": "D0",
+      "contrast": "btc_against",
+      "rd": 0.03104243626802813,
+      "day_values": {
+        "20261024": 0.01432134669279402,
+        "20261025": 0.018580577693445833,
+        "20261026": 0.02545057976436136,
+        "20261027": 0.08035311910330072
+      },
+      "adequate": true,
+      "markets_with_5_each": 15,
+      "all_exposed": 392,
+      "all_reference": 3146,
+      "mixed_exposed": 336,
+      "mixed_reference": 767,
+      "raw_rd": -0.04379549022406165,
+      "largest_abs_market": [
+        "20261026",
+        3789484
+      ],
+      "contribution": 0.01852533652524687,
+      "net_share": 0.5967745690220477,
+      "abs_share": 0.2102831977029652
+    },
+    {
+      "variant": "D0",
+      "contrast": "fair_gap",
+      "rd": -0.007958647728324006,
+      "day_values": {
+        "20261024": 0.013339036618277823,
+        "20261025": -0.03291674606602451,
+        "20261026": -0.05155541159468482,
+        "20261027": 0.08178766531898665
+      },
+      "adequate": true,
+      "markets_with_5_each": 18,
+      "all_exposed": 1927,
+      "all_reference": 1724,
+      "mixed_exposed": 803,
+      "mixed_reference": 783,
+      "raw_rd": -0.01153320080863346,
+      "largest_abs_market": [
+        "20261024",
+        3700070
+      ],
+      "contribution": 0.011168859975902378,
+      "net_share": -1.4033615203439094,
+      "abs_share": 0.19199573870995523
+    },
+    {
+      "variant": "D0",
+      "contrast": "depth_own",
+      "rd": -0.0969204959718407,
+      "day_values": {
+        "20261024": -0.002103234670811443,
+        "20261025": -0.09587048883557077,
+        "20261026": -0.09332143175539422,
+        "20261027": -0.38730976164474146
+      },
+      "adequate": true,
+      "markets_with_5_each": 15,
+      "all_exposed": 2835,
+      "all_reference": 240,
+      "mixed_exposed": 886,
+      "mixed_reference": 212,
+      "raw_rd": -0.05458553791887122,
+      "largest_abs_market": [
+        "20261026",
+        3804696
+      ],
+      "contribution": -0.026827192019050972,
+      "net_share": 0.2767958598441897,
+      "abs_share": 0.20288615082953335
+    },
+    {
+      "variant": "D0",
+      "contrast": "time_left",
+      "rd": 0.14757615547404446,
+      "day_values": {
+        "20261024": 0.07910771951249555,
+        "20261025": 0.24453005921012208,
+        "20261026": 0.11943922522198326,
+        "20261027": 0.2637389165838811
+      },
+      "adequate": true,
+      "markets_with_5_each": 19,
+      "all_exposed": 1065,
+      "all_reference": 1439,
+      "mixed_exposed": 1024,
+      "mixed_reference": 1392,
+      "raw_rd": 0.13862130391801816,
+      "largest_abs_market": [
+        "20261025",
+        3763401
+      ],
+      "contribution": 0.021616798797179006,
+      "net_share": 0.1464789398242655,
+      "abs_share": 0.1431834814580865
+    },
+    {
+      "variant": "LAG",
+      "contrast": "btc_with",
+      "rd": 0.03887888898493118,
+      "day_values": {
+        "20261024": -0.0010931823035276174,
+        "20261025": -0.010571476721899608,
+        "20261026": 0.08917891626759833,
+        "20261027": 0.00547371486867382
+      },
+      "adequate": true,
+      "markets_with_5_each": 15,
+      "all_exposed": 245,
+      "all_reference": 3152,
+      "mixed_exposed": 217,
+      "mixed_reference": 695,
+      "raw_rd": 0.028649124624469113,
+      "largest_abs_market": [
+        "20261026",
+        3804696
+      ],
+      "contribution": 0.021997336975891083,
+      "net_share": 0.5657912957445078,
+      "abs_share": 0.1886051844629305
+    },
+    {
+      "variant": "LAG",
+      "contrast": "btc_against",
+      "rd": 0.03141960402941887,
+      "day_values": {
+        "20261024": 0.014484303584335202,
+        "20261025": 0.0276131319668066,
+        "20261026": 0.02007293499362676,
+        "20261027": 0.09342436712036135
+      },
+      "adequate": true,
+      "markets_with_5_each": 15,
+      "all_exposed": 385,
+      "all_reference": 3152,
+      "mixed_exposed": 332,
+      "mixed_reference": 753,
+      "raw_rd": -0.03665699782451051,
+      "largest_abs_market": [
+        "20261026",
+        3789484
+      ],
+      "contribution": 0.016253526838220726,
+      "net_share": 0.5173052729436752,
+      "abs_share": 0.19905280918682985
+    },
+    {
+      "variant": "LAG",
+      "contrast": "fair_gap",
+      "rd": -0.015978698525792107,
+      "day_values": {
+        "20261024": 0.0033048487088139207,
+        "20261025": -0.03340975664432736,
+        "20261026": -0.06909071565606963,
+        "20261027": 0.082087285152104
+      },
+      "adequate": true,
+      "markets_with_5_each": 18,
+      "all_exposed": 1942,
+      "all_reference": 1714,
+      "mixed_exposed": 809,
+      "mixed_reference": 766,
+      "raw_rd": -0.01629940383129419,
+      "largest_abs_market": [
+        "20261024",
+        3700070
+      ],
+      "contribution": 0.011311349072847894,
+      "net_share": -0.7079017765176316,
+      "abs_share": 0.15981186631161923
+    },
+    {
+      "variant": "LAG",
+      "contrast": "depth_own",
+      "rd": -0.11210505530588083,
+      "day_values": {
+        "20261024": -0.115024274623061,
+        "20261025": -0.04985784535701715,
+        "20261026": -0.09770574950913727,
+        "20261027": -0.27849328491470327
+      },
+      "adequate": true,
+      "markets_with_5_each": 17,
+      "all_exposed": 2430,
+      "all_reference": 490,
+      "mixed_exposed": 1146,
+      "mixed_reference": 454,
+      "raw_rd": -0.05994792978919966,
+      "largest_abs_market": [
+        "20261026",
+        3804696
+      ],
+      "contribution": -0.03104558226384242,
+      "net_share": 0.27693293740531094,
+      "abs_share": 0.2460998565610411
+    },
+    {
+      "variant": "LAG",
+      "contrast": "time_left",
+      "rd": 0.1476684443247655,
+      "day_values": {
+        "20261024": 0.07904978704804075,
+        "20261025": 0.24284457351433603,
+        "20261026": 0.12190123865022148,
+        "20261027": 0.2637389165838811
+      },
+      "adequate": true,
+      "markets_with_5_each": 19,
+      "all_exposed": 1060,
+      "all_reference": 1440,
+      "mixed_exposed": 1019,
+      "mixed_reference": 1393,
+      "raw_rd": 0.1384827044025157,
+      "largest_abs_market": [
+        "20261025",
+        3763401
+      ],
+      "contribution": 0.021664379155666966,
+      "net_share": 0.14670960512064954,
+      "abs_share": 0.14352731906832053
+    }
+  ],
+  "rd_rows_verified": 260,
+  "readings": {
+    "btc_with": "adequate_inconsistent",
+    "btc_against": "adequate_direction_consistent",
+    "fair_gap": "adequate_inconsistent",
+    "depth_own": "adequate_direction_consistent",
+    "time_left": "adequate_direction_consistent"
+  },
+  "economics": {
+    "orders": 95,
+    "response_orders": 89,
+    "exact_response_orders": 23,
+    "exact_all_recounted": 29,
+    "unavailable_response_orders": 66,
+    "clean_legs": 174,
+    "after_END_closes": 0,
+    "le10s": {
+      "closes": 19,
+      "shares": 156.7650779916578,
+      "net": 2.0441657862544993
+    },
+    "leEND": {
+      "closes": 23,
+      "shares": 213.90064935064902,
+      "net": -9.653268350463712
+    },
+    "by_response_type": {
+      "overshoot": {
+        "orders": 2,
+        "entry_net": -8.13838577561446,
+        "earlier_net": 0.0,
+        "residual": -6.2527760746888825e-15
+      },
+      "restoring": {
+        "orders": 21,
+        "entry_net": -1.514882574849252,
+        "earlier_net": -21.7655889456237,
+        "residual": -7.09704801462916
+      }
+    },
+    "available_residual_END": -7.097048014629166,
+    "earlier_net": -21.7655889456237,
+    "available_fee": 0.0,
+    "top3_entry_net": -12.09693135275297,
+    "unavailable_residual_END": -25.999867329091273
+  },
+  "instrument_controls": {
+    "changed_RD_refused": true,
+    "duplicate_close_detectable": true
+  }
+}

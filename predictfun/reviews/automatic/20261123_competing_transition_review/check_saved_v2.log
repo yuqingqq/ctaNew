@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261123_competing_transition_review/check_saved.py", line 123, in <module>
+    for win,mask in [('le10s',(ent.close_settle_ms<=r.end_ms)&(ent.hold_ms<=10000)),('le60s',(ent.close_settle_ms<=r.end_ms)&(ent.hold_ms<=60000)),('leEND',ent.close_settle_ms<=r.end_ms),('afterEND',ent.close_settle_ms>r.end_ms)]:
+                               ^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/generic.py", line 6206, in __getattr__
+    return object.__getattribute__(self, name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'DataFrame' object has no attribute 'close_settle_ms'
+2026-11-23T22:28:03Z tag=codex_competing_saved_v2 rc=1 peak_rss_mib=710 wall_s=2.98 cpu_user_s=2.39 memavail_start_gib=22 disk_free_gib=419->419 slot=codex

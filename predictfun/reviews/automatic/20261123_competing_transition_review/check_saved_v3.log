@@ -1,0 +1,23 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261123_competing_transition_review/check_saved.py", line 134, in <module>
+    J=K.merge(types,on=['day','mid','order_hash'],how='left',validate='one_to_one')
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/frame.py", line 12884, in merge
+    return merge(
+           ^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/reshape/merge.py", line 385, in merge
+    op = _MergeOperation(
+         ^^^^^^^^^^^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/reshape/merge.py", line 1037, in __init__
+    self._validate_validate_kwd(validate)
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/reshape/merge.py", line 2005, in _validate_validate_kwd
+    raise MergeError(
+pandas.errors.MergeError: Merge keys are not unique in right dataset; not a one-to-one merge
+Duplicates in right:
+      day     mid order_hash
+20261024 3697902           
+20261024 3697902           
+20261024 3697902           
+20261024 3697902           
+20261024 3697902            ...
+2026-11-23T22:28:41Z tag=codex_competing_saved_v3 rc=1 peak_rss_mib=691 wall_s=2.97 cpu_user_s=2.48 memavail_start_gib=22 disk_free_gib=419->419 slot=codex
