@@ -171,3 +171,4 @@ mt_x_dec_selftest_v2 rc=0
 mt_x_decision_v2 rc=0
 mt_x_closes_v2 rc=1
 mt_x_closes_v2_r1 rc=0
+mt_x_gap_v2 rc=0

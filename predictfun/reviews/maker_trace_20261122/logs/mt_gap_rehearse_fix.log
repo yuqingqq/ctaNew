@@ -1,0 +1,258 @@
+{
+ "checks": {
+  "accepted_value_c": {
+   "max_dev": 0.0,
+   "ok": true
+  },
+  "cross_view": {
+   "max_dev": 1.1368683772161603e-13,
+   "ok": true
+  },
+  "econ_fifo": {
+   "max_dev": 2.1600499167107046e-12,
+   "ok": true
+  },
+  "identity": {
+   "max_dev": 1.1368683772161603e-13,
+   "ok": true
+  },
+  "mm_fee_fill": {
+   "max_dev": 7.105427357601002e-15,
+   "ok": true
+  },
+  "mm_net_pos": {
+   "max_dev": 5.109856981988514e-12,
+   "ok": true
+  },
+  "party_identity": {
+   "max_dev": 2.2737367544323206e-13,
+   "ok": true
+  },
+  "value_accounting": {
+   "max_dev": 4.263256414560601e-14,
+   "ok": true
+  },
+  "value_exact": {
+   "markets": 7,
+   "of": 7,
+   "ok": true
+  }
+ },
+ "closes_by_role_rows": 480,
+ "counts": {
+  "completeness_groups": 45,
+  "cross_view_checks": 39,
+  "econ_fifo_rows": 7001,
+  "fills_valued_groups_pruned": 11,
+  "fills_valued_groups_read": 7,
+  "fills_valued_rows_scanned": 601198,
+  "identity_checks": 89,
+  "maker_market_groups_pruned": 11,
+  "maker_market_groups_read": 7,
+  "maker_market_rows_scanned": 81540,
+  "market_status:ok": 7,
+  "member_carry_only": 6,
+  "open_status:ok": 7,
+  "ours_day_records": 2,
+  "ours_no_interval": 0,
+  "party_identity_checks": 64,
+  "rows_carried_pos": 6,
+  "rows_carried_pos_end_eq_open": 0,
+  "rows_carried_pos_views_differ": 6,
+  "tob_20261024_frames": 43033,
+  "tob_20261024_groups_pruned": 17,
+  "tob_20261024_groups_read": 7,
+  "tob_20261024_rows_scanned": 483081
+ },
+ "cpu_s": {
+  "by_stage": {
+   "accounting": 0.062,
+   "fills_valued": 0.14,
+   "hashes": 0.811,
+   "maker_market": 0.021,
+   "markets": 0.01,
+   "ours": 0.12,
+   "preflight": 0.002,
+   "tables": 0.041,
+   "tob": 0.066
+  },
+  "cap": 120.0,
+  "total": 1.273
+ },
+ "facts": {
+  "end_mark_vs_tob_abs_c": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "end_tob_status": [
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "ok"
+  ],
+  "fills": 3059,
+  "fills_at_END": 0,
+  "fills_at_start": 0,
+  "interval_ms": [
+   298000.0,
+   298000.0,
+   298000.0,
+   298000.0,
+   298000.0,
+   298000.0,
+   298000.0
+  ],
+  "interval_ok": 7,
+  "market_flags": [
+   "ok"
+  ],
+  "markets": 7,
+  "open_age_ms": [
+   23,
+   37,
+   127,
+   18,
+   20,
+   27,
+   32
+  ],
+  "open_status": [
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "ok"
+  ],
+  "opening_wait_ms": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "value_exact": [
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true
+  ]
+ },
+ "fills_valued_status_counts": {
+  "ok": 7043
+ },
+ "inputs": {
+  "econ/fills_valued.parquet": 1078229581,
+  "econ/identities.json": 80624,
+  "econ/maker_market.parquet": 153791175,
+  "manifest": 6797,
+  "ours/measure/arms.csv": 134906,
+  "ours/measure/audit.json": 12834,
+  "ours/pilot/20261024.json": 3129,
+  "ours/pilot/20261024.jsonl.gz": 202148,
+  "ours/rest/20261024.json": 3356,
+  "ours/rest/20261024.jsonl.gz": 420106,
+  "v2/markets_20261024.parquet": 67275,
+  "v2/tob_20261024.parquet": 49103205
+ },
+ "memory": {
+  "by_stage": {
+   "accounting": 169.08984375,
+   "fills_valued": 169.08984375,
+   "hashes": 169.08984375,
+   "maker_market": 169.08984375,
+   "markets": 133.74609375,
+   "ours": 133.74609375,
+   "preflight": 105.37109375,
+   "tables": 169.08984375,
+   "tob": 169.08984375
+  },
+  "guard_mib": 1450.0,
+  "vmhwm_mib": 169.08984375
+ },
+ "per_market_rows": 84,
+ "row_groups": {
+  "fills_valued": {
+   "empty": 0,
+   "mixed": 0,
+   "no_stats": 0,
+   "row_groups": 90,
+   "skipped": 72
+  },
+  "maker_market": {
+   "empty": 0,
+   "mixed": 0,
+   "no_stats": 0,
+   "row_groups": 90,
+   "skipped": 72
+  }
+ },
+ "statuses": {
+  "ours": {
+   "carry": {
+    "ok": 7
+   },
+   "zero": {
+    "ok": 7
+   }
+  },
+  "rank1": {
+   "carry": {
+    "ok": 7
+   },
+   "zero": {
+    "ok": 7
+   }
+  },
+  "rank2": {
+   "carry": {
+    "no_activity": 3,
+    "ok": 4
+   },
+   "zero": {
+    "no_activity": 3,
+    "ok": 4
+   }
+  },
+  "rank3": {
+   "carry": {
+    "ok": 7
+   },
+   "zero": {
+    "ok": 7
+   }
+  },
+  "top10": {
+   "carry": {
+    "ok": 7
+   },
+   "zero": {
+    "ok": 7
+   }
+  },
+  "top3": {
+   "carry": {
+    "ok": 7
+   },
+   "zero": {
+    "ok": 7
+   }
+  }
+ },
+ "wall_s": 1.29
+}
+2026-11-23T07:56:03Z tag=mt_gap_rehearse_fix rc=0 peak_rss_mib=169 wall_s=1.61 cpu_user_s=1.38 memavail_start_gib=22 disk_free_gib=434->434 slot=claude4

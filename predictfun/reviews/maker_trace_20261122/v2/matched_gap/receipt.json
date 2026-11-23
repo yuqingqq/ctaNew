@@ -1,0 +1,484 @@
+{
+ "addresses": [
+  {
+   "addr": "0x6Da6Cb464F92AE7aD4Ec3d239c81719Cb1D0Ae03",
+   "rank": 1,
+   "top3": true
+  },
+  {
+   "addr": "0x7d32c568a9bEA1714036972601c51F4902C67091",
+   "rank": 2,
+   "top3": true
+  },
+  {
+   "addr": "0x57FbC891E89184DA071AE9D97E745531cd7F718a",
+   "rank": 3,
+   "top3": true
+  },
+  {
+   "addr": "0x5E498154448608C826E005c93533B827Cbb6377e",
+   "rank": 4,
+   "top3": false
+  },
+  {
+   "addr": "0x22EE0B771e624a62b38b6B6FFFB2ba50fb4EE61A",
+   "rank": 5,
+   "top3": false
+  },
+  {
+   "addr": "0xCc8A732777a7529Ea70df18831fAB1B148c22a9E",
+   "rank": 6,
+   "top3": false
+  },
+  {
+   "addr": "0x0CCF72d0f646971ADB346E3bcFE425847351669B",
+   "rank": 7,
+   "top3": false
+  },
+  {
+   "addr": "0x9b18a93da790BD6cD8223d16ef4508f5b6903087",
+   "rank": 8,
+   "top3": false
+  },
+  {
+   "addr": "0x11EECAEc6aa40dE64e35DDEb3f8376F2AF25a927",
+   "rank": 9,
+   "top3": false
+  },
+  {
+   "addr": "0x192495Cb5C3c8a43B18676e29706dB34f6e828e8",
+   "rank": 10,
+   "top3": false
+  }
+ ],
+ "argv": [
+  "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/tools/matched_gap.py",
+  "run"
+ ],
+ "arm": "CURRENT_ASYNC_FAST10",
+ "asof_end": "2026-11-23T07:46:08Z",
+ "asof_start": "2026-11-23T07:46:06Z",
+ "checks": {
+  "accepted_value_c": {
+   "max_dev": 0.0,
+   "ok": true
+  },
+  "econ_fifo": {
+   "max_dev": 2.4211743721025414e-12,
+   "ok": true
+  },
+  "identity": {
+   "max_dev": 3.410605131648481e-13,
+   "ok": true
+  },
+  "mm_fee_fill": {
+   "max_dev": 7.105427357601002e-15,
+   "ok": true
+  },
+  "mm_net_pos": {
+   "max_dev": 1.4438228390645236e-11,
+   "ok": true
+  },
+  "value_accounting": {
+   "max_dev": 4.263256414560601e-14,
+   "ok": true
+  },
+  "value_exact": {
+   "markets": 19,
+   "of": 19,
+   "ok": true
+  }
+ },
+ "constants": {
+  "cpu_cap_s": 120.0,
+  "dust_sh": 1e-06,
+  "min_markets": 5,
+  "n_book": 19,
+  "pos_eps": 1e-09,
+  "quants": [
+   0.1,
+   0.25,
+   0.5,
+   0.75,
+   0.9
+  ],
+  "rel_tol": 1e-06,
+  "sh_tol_abs": 1e-09,
+  "sh_tol_rel": 1e-12,
+  "value_tol_c": 1e-09
+ },
+ "contract": "predictfun/reviews/maker_trace_20261122/matched_gap_contract.md (frozen in 46cd3cc56)",
+ "contract_sha256": "9867d11e180dc15347bf1c77736a8d11a72879dd7fccb67fd57e2847eed46501",
+ "counts": {
+  "completeness_groups": 131,
+  "econ_fifo_rows": 20856,
+  "excluded_rows:src_status": 17,
+  "fills_valued_groups_pruned": 53,
+  "fills_valued_groups_read": 19,
+  "fills_valued_rows_scanned": 1649076,
+  "identity_checks": 251,
+  "maker_market_groups_pruned": 53,
+  "maker_market_groups_read": 19,
+  "maker_market_rows_scanned": 220702,
+  "market_status:fills_outside_ws": 1,
+  "market_status:ok": 17,
+  "market_status:poll_incomplete": 1,
+  "open_status:ok": 19,
+  "ours_day_records": 7,
+  "ours_no_interval": 0,
+  "tob_20261024_frames": 43033,
+  "tob_20261024_groups_pruned": 17,
+  "tob_20261024_groups_read": 7,
+  "tob_20261024_rows_scanned": 483081,
+  "tob_20261025_frames": 30668,
+  "tob_20261025_groups_pruned": 19,
+  "tob_20261025_groups_read": 5,
+  "tob_20261025_rows_scanned": 336436,
+  "tob_20261026_frames": 31735,
+  "tob_20261026_groups_pruned": 18,
+  "tob_20261026_groups_read": 6,
+  "tob_20261026_rows_scanned": 424366,
+  "tob_20261027_frames": 12471,
+  "tob_20261027_groups_pruned": 21,
+  "tob_20261027_groups_read": 3,
+  "tob_20261027_rows_scanned": 199269
+ },
+ "cpu_s": {
+  "by_stage": {
+   "accounting": 0.174,
+   "fills_valued": 0.283,
+   "hashes": 0.912,
+   "maker_market": 0.039,
+   "markets": 0.018,
+   "ours": 0.332,
+   "preflight": 0.002,
+   "tables": 0.094,
+   "tob": 0.165,
+   "write": 0.017
+  },
+  "cap": 120.0,
+  "total": 2.036
+ },
+ "days": [
+  "20261024",
+  "20261025",
+  "20261026",
+  "20261027"
+ ],
+ "fills_valued_status_counts": {
+  "ok": 20932,
+  "src_status": 17
+ },
+ "git": {
+  "head": "c0f237ffec61610ccbc0b643dd7b921016a75310",
+  "tool_files": [
+   "predictfun/reviews/maker_trace_20261122/tools/matched_gap.py",
+   "predictfun/reviews/maker_trace_20261122/tools/matched_gap_selftest.py",
+   "predictfun/reviews/maker_trace_20261122/matched_gap_contract.md"
+  ],
+  "tracked": true,
+  "unmodified": true
+ },
+ "inputs": {
+  "econ/fills_valued.parquet": {
+   "bytes": 1078229581,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/econ/fills_valued.parquet",
+   "sha256": "2a874707cc7801d6760e2de36075870700cc0be8e72cd9a6df0213424221cde6"
+  },
+  "econ/identities.json": {
+   "bytes": 80624,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/econ/identities.json",
+   "sha256": "321c5274cc9cbc2151f94aad619ad199de41b98db4a410d12b83b61aa69aa239"
+  },
+  "econ/maker_market.parquet": {
+   "bytes": 153791175,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/econ/maker_market.parquet",
+   "sha256": "735fb019143dcb16cfefccd1417da6866dd7b67177eaa37935ab40f22ab2198d"
+  },
+  "manifest": {
+   "bytes": 6797,
+   "path": "/home/yuqing/ctaNew/predictfun/reviews/ladder_async_fast_20261122/manifest.json",
+   "sha256": "34444c8a1b85752069a27d8e884e7d116656c03a88d3ccd3eb1f584355e5a013"
+  },
+  "ours/measure/arms.csv": {
+   "bytes": 134906,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/ladder_async_fast_v1_20261122/measure/arms.csv",
+   "sha256": "4747e9b85e5e23edd47b089f4afca14e1b8eb2544dd3f3f520cc8aa7f1fef2a6"
+  },
+  "ours/measure/audit.json": {
+   "bytes": 12834,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/ladder_async_fast_v1_20261122/measure/audit.json",
+   "sha256": "a7b3484317f3e44ddd635474f3c6d8394af268a98e5bedc610c59965153e2744"
+  },
+  "ours/pilot/20261024.json": {
+   "bytes": 3129,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/ladder_async_fast_v1_20261122/pilot/20261024.json",
+   "sha256": "15f91548c31a4460287d676184f2bc4af57bff064c02c57afbe9b8033417c8cf"
+  },
+  "ours/pilot/20261024.jsonl.gz": {
+   "bytes": 202148,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/ladder_async_fast_v1_20261122/pilot/20261024.jsonl.gz",
+   "sha256": "e1067426a8a075115007fbe69452dda934f5bcc85b400821ef78ecfd3daed155"
+  },
+  "ours/pilot/20261025.json": {
+   "bytes": 3129,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/ladder_async_fast_v1_20261122/pilot/20261025.json",
+   "sha256": "9786fda7eabcbe9f71d7e820df19d24245253dcff11aa83ce25b6fa57dc5f939"
+  },
+  "ours/pilot/20261025.jsonl.gz": {
+   "bytes": 235402,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/ladder_async_fast_v1_20261122/pilot/20261025.jsonl.gz",
+   "sha256": "d0f1e238351d22c2ee8bf1a22347a4fb7a6dd89e0fb3a9764c4c64d0ac44af3d"
+  },
+  "ours/pilot/20261026.json": {
+   "bytes": 3125,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/ladder_async_fast_v1_20261122/pilot/20261026.json",
+   "sha256": "7a60c52d00ceb21a93f7ba6753ba2b06debd9f90ac97ada149557cf6a81f33d8"
+  },
+  "ours/pilot/20261026.jsonl.gz": {
+   "bytes": 280772,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/ladder_async_fast_v1_20261122/pilot/20261026.jsonl.gz",
+   "sha256": "97306d2706831b14b0665df931bebf120fd1918c93dd4641f6fb6741e233d3f7"
+  },
+  "ours/pilot/20261027.json": {
+   "bytes": 3129,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/ladder_async_fast_v1_20261122/pilot/20261027.json",
+   "sha256": "e0e78f9b93cd048d82c88fc30ec1f40648545e74e839a4696146b5b02104fe71"
+  },
+  "ours/pilot/20261027.jsonl.gz": {
+   "bytes": 201759,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/ladder_async_fast_v1_20261122/pilot/20261027.jsonl.gz",
+   "sha256": "667f611e3d2a5b1899c2d405b7a349925b15ed1aba68bddf0c959804b875637b"
+  },
+  "ours/rest/20261024.json": {
+   "bytes": 3356,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/ladder_async_fast_v1_20261122/rest/20261024.json",
+   "sha256": "9e7ccfe796ec6ae26b4fca7e1f60c3cc7e3e50e9478f5a57dcd8c1969e7e4d2d"
+  },
+  "ours/rest/20261024.jsonl.gz": {
+   "bytes": 420106,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/ladder_async_fast_v1_20261122/rest/20261024.jsonl.gz",
+   "sha256": "3068adbf28c1f786fe5ef84b71774d9be83e19611de321841e4993fd31ff9329"
+  },
+  "ours/rest/20261025.json": {
+   "bytes": 3188,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/ladder_async_fast_v1_20261122/rest/20261025.json",
+   "sha256": "712cf2230b198ddc97820feae4b350f8e59b9c8f78aee69dac27f76721246cc3"
+  },
+  "ours/rest/20261025.jsonl.gz": {
+   "bytes": 260333,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/ladder_async_fast_v1_20261122/rest/20261025.jsonl.gz",
+   "sha256": "9f1d3e3c51979955aafe2ce8bd6bab0a96c81edff73d0ac7d00f9f5db4f8188b"
+  },
+  "ours/rest/20261026.json": {
+   "bytes": 3190,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/ladder_async_fast_v1_20261122/rest/20261026.json",
+   "sha256": "d398339a1fbdc0c9f33fd8fd08f42caa2425ad31b6e2d55189858da43b1b1fd9"
+  },
+  "ours/rest/20261026.jsonl.gz": {
+   "bytes": 275777,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/ladder_async_fast_v1_20261122/rest/20261026.jsonl.gz",
+   "sha256": "c66519fbd2c28bbd144bc60feb10ec03e1352e62db733d72a828585188c10727"
+  },
+  "v2/markets_20261024.parquet": {
+   "bytes": 67275,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/markets_20261024.parquet",
+   "sha256": "9ba05add8488e2dda53639a84a5bc6514242e88d6f9335c24ad8c83b8cefa82e"
+  },
+  "v2/markets_20261025.parquet": {
+   "bytes": 67404,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/markets_20261025.parquet",
+   "sha256": "e017d6d95f627786c7afdbee4e45db31fe788b086433ea1cce270bdcb3a16c29"
+  },
+  "v2/markets_20261026.parquet": {
+   "bytes": 67285,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/markets_20261026.parquet",
+   "sha256": "b0f5bc74946c75bdbc7e3918cfc35713f05fe307b8f1a25f556c9cd3c2375877"
+  },
+  "v2/markets_20261027.parquet": {
+   "bytes": 68030,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/markets_20261027.parquet",
+   "sha256": "b6139aefc4e45e4e02cc65868e18c0acb77cf272e354ad76794f39ffb4ea5a36"
+  },
+  "v2/tob_20261024.parquet": {
+   "bytes": 49103205,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/tob_20261024.parquet",
+   "sha256": "52e24fa1c4c4fe2829a505747a47d7a9c9064b4a3ed3300707884d2ed718cc33"
+  },
+  "v2/tob_20261025.parquet": {
+   "bytes": 47728758,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/tob_20261025.parquet",
+   "sha256": "b111dd7302269a221c4d2bed722e37e714b2915fe86a3e1a3a38907c2fbc662f"
+  },
+  "v2/tob_20261026.parquet": {
+   "bytes": 54822113,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/tob_20261026.parquet",
+   "sha256": "ad5b375958bc332b7efad67f9cea043b01f4c652547f1bad4538b1d856bc7aff"
+  },
+  "v2/tob_20261027.parquet": {
+   "bytes": 53497457,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/tob_20261027.parquet",
+   "sha256": "f193ed73cfd37b9473809cf8c88e2d84d576ea7f8c5ba5158c91ad49659b6409"
+  }
+ },
+ "memory": {
+  "by_stage": {
+   "accounting": 196.05859375,
+   "fills_valued": 196.05859375,
+   "hashes": 196.05859375,
+   "maker_market": 196.05859375,
+   "markets": 150.0234375,
+   "ours": 150.0234375,
+   "preflight": 105.0078125,
+   "tables": 196.05859375,
+   "tob": 196.05859375,
+   "write": 196.05859375
+  },
+  "guard_mib": 1450.0,
+  "process": "one process",
+  "vmhwm_mib": 196.05859375
+ },
+ "module": "tools/matched_gap.py",
+ "n_markets": 19,
+ "not_measured": "no model skill, policy or profitability: an accounting of recorded and simulated fills on four consumed days",
+ "outputs": {
+  "answer.json": {
+   "bytes": 54580,
+   "sha256": "414c21bdc001448d0d0f8de307f9f989fd74454b2d8412bae36b7c4a230f3666"
+  },
+  "closes_by_role.csv": {
+   "bytes": 70273,
+   "rows": 480,
+   "sha256": "88450d290672b0b1577f7985b0acbab8795f3f0361f1c59b84d923d6fa07df88"
+  },
+  "per_market.csv": {
+   "bytes": 154017,
+   "rows": 228,
+   "sha256": "1d2691e4c7a06f8568d47d71ebb908196b699c882ebb8c441b080eb2b8fbbf8b"
+  }
+ },
+ "parties": {
+  "rank1": [
+   0
+  ],
+  "rank2": [
+   1
+  ],
+  "rank3": [
+   2
+  ],
+  "top10": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9
+  ],
+  "top3": [
+   0,
+   1,
+   2
+  ]
+ },
+ "review": "predictfun/reviews/automatic/20261123_maker_trace_v2_review/report.md (8f2a2e753), ONE next priority",
+ "row_groups": {
+  "fills_valued": {
+   "empty": 0,
+   "mixed": 0,
+   "no_stats": 0,
+   "row_groups": 90,
+   "skipped": 18
+  },
+  "maker_market": {
+   "empty": 0,
+   "mixed": 0,
+   "no_stats": 0,
+   "row_groups": 90,
+   "skipped": 18
+  }
+ },
+ "rules": {
+  "fifo": "one deque FIFO for every party / view / check; close P&L = shares x (sell - buy); fees prorated by shares; hold = exit t - entry t; dust < 1e-06 sh kept in sums, never counted",
+  "identity": "close net + carry + resid - fee_unclosed + self = direct (sum s q (END - p) - fees [+ C0 (END - open)]) within 1e-06 x max(1, |direct|); ours also = recorded value / 100",
+  "interval": "[start, END] = our ident start_abs_ms / end_abs_ms; '<' at both ends (t < start carried in, END < t outside, start and END inside); END mark = our recorded mark for every party; markets_<day> ws / we must agree",
+  "opening_mark": "pf_mt_econ.mid_at at floor(start): last tob frame with upd_ms <= start, usable, not stale (> 1,000 ms)",
+  "order": "chronological on absolute ms (asserted); ties: theirs settle_ms, sid, px_rank, mk_idx, maker first; ours the engine fill order",
+  "ours": "CURRENT_ASYNC_FAST10 accepted records (day record version / members / arm / manifest sha256 / gz sha256; arms.csv value); fills [t ms from the episode start, gid, side 0 bid s=+1 / 1 ask s=-1, q, p cents, trade row]; t_abs = ident.start_abs_ms + t; role maker; fee 0; value reproduced bit-exactly by the engine arithmetic and by the accounting",
+  "parties": "ours; rank1-3; top3 / top10 = sums over ok members (no cross-address pairing)",
+  "paths": "max |position| from the starting position along the FIFO leg order; actions = legs of one record and role; strict-earlier position before; opposing / absolute reduction / overshoot / simultaneous (POS_EPS 1e-09)",
+  "population": "the 19 BOOK markets: reviews/ladder_async_fast_20261122/manifest.json complete (measurement days; pilot / rest partition)",
+  "reading": "first match: our_turnover_loses (o < 0, t > 0); exposure_gap ((o >= 0, t >= 0) or (o < 0, t < 0), |dE| > |dT|); both_adverse (o < 0, t < 0); mixed_unsupported otherwise; all mixed_unsupported when fewer than 5 both-active markets; pooled: same rules on the sums (secondary)",
+  "theirs": "fills_valued v2, ex-ante top 10 (ranks 1-3 = top 3), BOOK markets; status ok; self-trades out of the lots (self line); t = settle_ms (upper bound); fee = fee_fill (USD at the fill price); completeness vs maker_market; econ mq / rq reproduced by the same FIFO",
+  "views": "carry (primary): carried lots = the pre-start FIFO remainder at the opening mark, no fee, actual acquisition time; zero: carried ignored (beside)"
+ },
+ "run": "v2",
+ "slot": "claude",
+ "sources": {
+  "closes.py": "44afcd91a8af29d1026ddde52e2a2506d55878359bf6e7d77a2950bf2beb877c",
+  "matched_gap.py": "579b176d1bd374622e3379299b86d4f82aced0aa137098da26a3b452b561288f",
+  "matched_gap_selftest.py": "74bb826d8744667738fec8e80e3e8a81554e2b7b7aae702565fbeda0494d1c53",
+  "pf_mt_common.py": "e54ccd15489ed41b23b1e1d62e11d26aacd7f1d778be47bdaf4154b2cb091f7b",
+  "pf_mt_econ.py": "a0bd305326758d257def7d98279513928b721ed11562bdce6b5946b1f02f19e7"
+ },
+ "statuses": {
+  "ours": {
+   "carry": {
+    "ok": 19
+   },
+   "zero": {
+    "ok": 19
+   }
+  },
+  "rank1": {
+   "carry": {
+    "ok": 19
+   },
+   "zero": {
+    "ok": 19
+   }
+  },
+  "rank2": {
+   "carry": {
+    "no_activity": 8,
+    "ok": 11
+   },
+   "zero": {
+    "no_activity": 8,
+    "ok": 11
+   }
+  },
+  "rank3": {
+   "carry": {
+    "no_activity": 2,
+    "ok": 17
+   },
+   "zero": {
+    "no_activity": 2,
+    "ok": 17
+   }
+  },
+  "top10": {
+   "carry": {
+    "ok": 19
+   },
+   "zero": {
+    "ok": 19
+   }
+  },
+  "top3": {
+   "carry": {
+    "ok": 19
+   },
+   "zero": {
+    "ok": 19
+   }
+  }
+ },
+ "version": "matched_gap_v1",
+ "wall_s": 2.07
+}

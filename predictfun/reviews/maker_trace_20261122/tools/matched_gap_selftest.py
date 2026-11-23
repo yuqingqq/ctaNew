@@ -15,6 +15,9 @@ World (YES space, USD; ms after each market's ws; END mark = our mark / 100; the
          .02 -> total .37 = direct -.78 - .10 + 5 x (.60 - .35); max |position| 5; actions 4: nonflat 4, opposing 4, reduce 3, overshoot 1.
          ZERO: closes t->t 3 -.12 - .06, m->t 2 -.04 - .02 -> -.24 on 5 sh; resid short 3 @.40 -.60 and 1 @.58 -.02 -> total -.88 = -.78 - .10.
    rank4 maker buy 2 @.50, maker sell 2 @.55 -> +.10 (in top10 only).
+   rank5 (r1 fix, the first run's defect): maker sell 3 @.45 BEFORE start and no fill inside -> carry_only: its short 3 enters top10's carry
+         view unclosed at the opening basis (carry 3 x -(.60 - .35) = -.75); top10 carry total .37 + .10 - .75 = -.28 vs zero -.78: the views
+         differ by exactly carried_pos_recorded (5 - 3 = 2) x (.60 - .35) = .50 (cross-view); rank 5 alone stays no_activity.
  M2 102: ours buy 2 @50 / sell 2 @49 (-.02); rank1 +.04 (2 sh); rank2 +.09 (3 sh). M3 103: ours -.02; rank1 maker buy 10 @.50, taker sell 10
    @.45 -> -.50. M4 201 (D2, mark 40): ours buy 2 @50 / sell 1 @49 (-.01) + resid 1 @.50 -> -.10 (total -.11); rank1 -.02. M5 202: ours +.02;
    rank1 -.01. M6 203: our record missing_mark -> no_interval. Markets 104 (a non-BOOK rank1 fill, filtered by mid) and 150 (its own row group,
@@ -24,7 +27,9 @@ World (YES space, USD; ms after each market's ws; END mark = our mark / 100; the
    1 market (< 5): every reading mixed_unsupported (raw our_turnover_loses). rank3: none. top3 / top10: the rank1 pattern.
 Refusals (each asserts its reason; no partial directory may remain; the output is never created): the recorded value (one cent; one ulp), the
 accepted arms.csv value, maker_market completeness, econ mq / rq, a BOOK market's row under another day, path_info vs ident, our fills out of
-order, a manifest day outside the measurement days, the population size, write-once, the freeze guard (when the tool is not committed).
+order, a manifest day outside the measurement days, the population size, write-once, the freeze guard (when the tool is not committed); the
+cross-view falsifier (identical views with a carried position and END != opening mark) and the planted first-run defect (_MUT_EXCLUDE_CARRY_ONLY:
+carry_only lots left out) refused by the party identity.
 Usage (run_light): matched_gap_selftest.py"""
 import gzip
 import hashlib
@@ -56,7 +61,7 @@ NAN = float('nan')
 W_, K_ = MG.WITHIN, MG.CARRIED
 R = X.TOP3 + tuple('0x' + format(i, '040x') for i in range(4, 11))      # ex-ante ranks 1-10 (4-10 synthetic)
 FA = tuple('0xf' + format(i, '039x') for i in range(1, 10))            # field addresses (never read by the tool)
-r1, r2, r3, r4 = R[:4]
+r1, r2, r3, r4, r5 = R[:5]
 f1, f2, f3, f4, f5, f6, f7 = FA[:7]
 WS = {101: B0[D1], 102: B0[D1] + 300000, 103: B0[D1] + 600000, 104: B0[D1] + 900000, 150: B0[D1] + 1200000,
       201: B0[D2], 202: B0[D2] + 300000, 203: B0[D2] + 600000}
@@ -84,6 +89,7 @@ LEGS = [
     leg(101, 'm1-x', 40000, r1, f7, +1, 10., .30, status='src_status'), leg(101, 'm1-h', 298000, r1, f1, -1, 1., .58),
     leg(101, 'm1-i', 298001, r1, f2, -1, 2., .59),
     leg(101, 'm1-j', 50000, r4, f3, +1, 2., .50), leg(101, 'm1-k', 60000, r4, f4, -1, 2., .55),
+    leg(101, 'm1-z', -3000, r5, f6, -1, 3., .45),                                                              # rank 5: carry_only
     leg(102, 'm2-a', 5000, r1, f1, +1, 2., .50), leg(102, 'm2-b', 6000, r1, f2, -1, 2., .52),
     leg(102, 'm2-c', 7000, r2, f3, +1, 3., .40), leg(102, 'm2-d', 8000, r2, f4, -1, 3., .43),
     leg(103, 'm3-a', 5000, r1, f1, +1, 10., .50), leg(103, 'm3-b', 6000, f2, r1, +1, 10., .45),
@@ -242,6 +248,18 @@ def t_identity():
     expect('identity falsifier: 2e-6 on 1 USD refused', lambda: MG.check_identity(1., 1. + 2e-6, 'x', {}), 'identity')
     expect('identity falsifier: 2e-3 on 1,000 USD refused', lambda: MG.check_identity(1000., 1000.002, 'x', {}), 'identity')
     expect('identity falsifier: NaN refused', lambda: MG.check_identity(NAN, 1., 'x', {}), 'identity')
+
+
+def t_cross_view():
+    expect('cross-view falsifier: identical views with carried_pos 2 and END .60 != open .35 refused',
+           lambda: MG.check_cross_view(1., 1., 2., .60, .35, 'x', {}, {}), 'cross-view')
+    expect('cross-view falsifier: a gap other than carried_pos x (END - open) refused', lambda: MG.check_cross_view(1.6, 1., 2., .60, .35, 'x', {}, {}),
+           'cross-view')
+    devs, cnt = {}, {}
+    ok1 = block('cross-view: carry - zero = 2 x .25 passes', MG.check_cross_view, 1.5, 1., 2., .60, .35, 'x', devs, cnt)
+    ok2 = block('cross-view: identical views with END = opening mark pass (correct, not a defect)', MG.check_cross_view, 1., 1., 2., .50, .50, 'x', devs, cnt)
+    ok3 = block('cross-view: no carried position, opening mark missing passes', MG.check_cross_view, 1., 1., 0., .60, NAN, 'x', devs, cnt)
+    check('cross-view: the three valid cases pass and are counted', None not in (ok1, ok2, ok3) and cnt.get('cross_view_checks') == 3, f'({cnt})')
 
 
 def t_fifo():
@@ -472,8 +490,19 @@ def chk_main(r, P):
                                                         direct=-.88, max_abs_pos=8., end_pos=-4., n_opposing=1, n_abs_reduce=1, hold_p50_s=29.,
                                                         hold_mean_s=25.4, reading='mixed_unsupported', reading_raw='mixed_unsupported',
                                                         carried_pos_recorded=5.))
-    vals('top10 M1 carry', g(101, 'top10', 'carry'), dict(status='ok', close_sh=11., close_net=.32, total=.47, n_members_ok=2, n_members_no_activity=8,
-                                                          max_abs_pos=5., reading='exposure_gap', d_turnover=.18, d_exposure=.42))
+    vals('top10 M1 carry (rank 5 carry_only enters)', g(101, 'top10', 'carry'), dict(
+        status='ok', close_sh=11., close_net=.32, carry=-.75, resid=.18, unclosed_carried_sh=3., carried_close_sh=5., total=-.28, direct=-.28,
+        carried_pos_recorded=2., carried_pos_in=2., carried_lots_recorded=3, n_members_ok=2, n_members_carry_only=1, n_members_no_activity=7,
+        max_abs_pos=5., party_identity_dev=0., reading='exposure_gap', d_turnover=.18, d_exposure=1.17, d_total=1.38))
+    vals('top10 M1 zero (carried lots ignored)', g(101, 'top10', 'zero'), dict(
+        status='ok', close_net=-.14, carry=0., unclosed_carried_sh=0., total=-.78, carried_pos_recorded=2., carried_pos_in=0., n_members_ok=2,
+        n_members_carry_only=0, n_members_no_activity=8))
+    tc, tz = g(101, 'top10', 'carry')['total'], g(101, 'top10', 'zero')['total']
+    check('top10 M1: carry and zero views differ by carried_pos 2 x (END .60 - open .35)', tc != tz and near(tc - tz, .50), f'({tc!r} vs {tz!r})')
+    vals('rank1 M1 carried position in the views', g(101, 'rank1', 'carry'), dict(carried_pos_in=5.))
+    vals('rank1 M1 zero carried position', g(101, 'rank1', 'zero'), dict(carried_pos_in=0.))
+    vals('rank5 alone is not a party; top3 M1 (ranks 1-3) unchanged', g(101, 'top3', 'carry'), dict(carried_pos_recorded=5., total=.37,
+                                                                                                     n_members_carry_only=0))
     vals('top3 M1 carry', g(101, 'top3', 'carry'), dict(status='ok', close_net=.22, total=.37, n_members_ok=1, n_members_no_activity=2))
     vals('rank2 M1 carry', g(101, 'rank2', 'carry'), dict(status='no_activity', both_active='False', pair_status='not_both_active:ours_ok|theirs_no_activity'))
     vals('top3 M2 carry', g(102, 'top3', 'carry'), dict(close_net=.13, close_sh=5., reading='our_turnover_loses', n_members_ok=2))
@@ -529,8 +558,14 @@ def chk_main(r, P):
     vals('closes ours zero active', h(party='ours', view='zero', scope='active', entry_kind='all', role_pair='all'), dict(n_markets=5, sh=13., net=.47))
     rec = json.loads((out / 'receipt.json').read_text())
     cnt = rec['counts']
-    check('receipt: identity checks 19 (ours 5 + theirs 14), econ FIFO rows 20, completeness groups 8',
-          cnt.get('identity_checks') == 19 and cnt.get('econ_fifo_rows') == 20 and cnt.get('completeness_groups') == 8, f'({cnt})')
+    check('receipt: identity checks 20 (ours 5 + theirs 14 + rank5 carry_only 1), econ FIFO rows 21, completeness groups 9',
+          cnt.get('identity_checks') == 20 and cnt.get('econ_fifo_rows') == 21 and cnt.get('completeness_groups') == 9, f'({cnt})')
+    check('receipt: party identity 32, cross-view 21, carry_only members 1; 3 rows with a carried position, all 3 with differing views',
+          cnt.get('party_identity_checks') == 32 and cnt.get('cross_view_checks') == 21 and cnt.get('member_carry_only') == 1
+          and cnt.get('rows_carried_pos') == 3 and cnt.get('rows_carried_pos_views_differ') == 3 and cnt.get('rows_carried_pos_end_eq_open', 0) == 0,
+          f'({cnt})')
+    check('receipt: the party and cross-view deviations recorded', 'party_identity' in rec['checks'] and 'cross_view' in rec['checks']
+          and rec['checks']['cross_view']['max_dev'] < 1e-9 and rec['out'] == str(out))
     check('receipt: fills_valued row groups read 2, the market-150 group pruned unread', cnt.get('fills_valued_groups_read') == 2
           and cnt.get('fills_valued_groups_pruned') == 1, f'({cnt})')
     check('receipt: excluded rows counted by status, our no_interval counted', cnt.get('excluded_rows:src_status') == 1 and cnt.get('ours_no_interval') == 1)
@@ -590,6 +625,13 @@ def refusals(tmp, F, MM):
     P = fresh(manifest=dict(days=[C.ID_DAY], complete={C.ID_DAY: [101]}, parts=dict(pilot={C.ID_DAY: [101]}, rest={C.ID_DAY: []})))
     expect('refuse: a manifest day outside the measurement days, before any other path', lambda: MG.build(P, write=True), 'measurement days', P['out'])
     P = fresh()
+    MG._MUT_EXCLUDE_CARRY_ONLY = True
+    try:
+        expect('refuse: the planted first-run defect (carry_only lots left out of the carry view) caught by the party identity',
+               lambda: MG.build(P, write=True), 'identity: party top10', P['out'])
+    finally:
+        MG._MUT_EXCLUDE_CARRY_ONLY = False
+    P = fresh()
     expect('refuse: the population size (contract 19)', lambda: MG.build(P, write=True, n_expected=MG.N_BOOK), 'the population holds 6 markets', P['out'])
     g = X._git(list(MG.TOOL_FILES))
     if g.get('tracked') and g.get('unmodified'):
@@ -605,8 +647,8 @@ def refusals(tmp, F, MM):
         st = dict(zip(rw['view'], rw['status']))
         check('no opening mark: rank1 M1 carry no_opening_mark, zero ok', st == {'carry': 'no_opening_mark', 'zero': 'ok'}, f'({st})')
         tw = PMx[((PMx['m'] == 101) & (PMx['party'] == 'top10') & (PMx['view'] == 'carry')).to_numpy()].iloc[0]
-        check('no opening mark: top10 M1 carry no_opening_mark (rank4 itself ok)', tw['status'] == 'no_opening_mark' and int(tw['n_members_ok']) == 1
-              and int(tw['n_members_no_opening_mark']) == 1)
+        check('no opening mark: top10 M1 carry no_opening_mark (rank1 active and rank5 carry_only lack it; rank4 ok)', tw['status'] == 'no_opening_mark'
+              and int(tw['n_members_ok']) == 1 and int(tw['n_members_no_opening_mark']) == 2, f'({tw["n_members_ok"]}, {tw["n_members_no_opening_mark"]})')
         a = r['answer']
         check('no opening mark: rank1 carry 4 markets (unsupported), zero 5 (supported)', a['readings']['rank1']['carry']['n_markets_both'] == 4
               and a['readings']['rank1']['carry']['supported'] is False and a['readings']['rank1']['zero']['supported'] is True
@@ -619,7 +661,8 @@ def main():
     tmp = Path(tempfile.mkdtemp(prefix='mg_selftest_', dir=os.environ.get('MG_SELFTEST_TMP') or None))
     try:
         for nm, fn in (('boundary', t_boundary), ('readings', t_readings), ('support', t_support), ('paths', t_paths), ('hold', t_hold),
-                       ('engine', t_engine), ('identity', t_identity), ('fifo', t_fifo), ('hand', t_hand), ('our_market', t_our_market)):
+                       ('engine', t_engine), ('identity', t_identity), ('cross_view', t_cross_view), ('fifo', t_fifo), ('hand', t_hand),
+                       ('our_market', t_our_market)):
             block(f'unit {nm}', fn)
         W = block('world: econ', lambda: econ_world(fv_rows(LEGS)))
         if W is not None:

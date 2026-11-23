@@ -1,0 +1,111 @@
+head=c0f237ffec61610ccbc0b643dd7b921016a75310
+{
+ "outputs": {
+  "answer.json": null,
+  "closes_by_role.csv": 480,
+  "per_market.csv": 228
+ },
+ "checks": {
+  "accepted_value_c": {
+   "max_dev": 0.0,
+   "ok": true
+  },
+  "econ_fifo": {
+   "max_dev": 2.4211743721025414e-12,
+   "ok": true
+  },
+  "identity": {
+   "max_dev": 3.410605131648481e-13,
+   "ok": true
+  },
+  "mm_fee_fill": {
+   "max_dev": 7.105427357601002e-15,
+   "ok": true
+  },
+  "mm_net_pos": {
+   "max_dev": 1.4438228390645236e-11,
+   "ok": true
+  },
+  "value_accounting": {
+   "max_dev": 4.263256414560601e-14,
+   "ok": true
+  },
+  "value_exact": {
+   "markets": 19,
+   "of": 19,
+   "ok": true
+  }
+ },
+ "statuses": {
+  "ours": {
+   "carry": {
+    "ok": 19
+   },
+   "zero": {
+    "ok": 19
+   }
+  },
+  "rank1": {
+   "carry": {
+    "ok": 19
+   },
+   "zero": {
+    "ok": 19
+   }
+  },
+  "rank2": {
+   "carry": {
+    "no_activity": 8,
+    "ok": 11
+   },
+   "zero": {
+    "no_activity": 8,
+    "ok": 11
+   }
+  },
+  "rank3": {
+   "carry": {
+    "ok": 17,
+    "no_activity": 2
+   },
+   "zero": {
+    "ok": 17,
+    "no_activity": 2
+   }
+  },
+  "top3": {
+   "carry": {
+    "ok": 19
+   },
+   "zero": {
+    "ok": 19
+   }
+  },
+  "top10": {
+   "carry": {
+    "ok": 19
+   },
+   "zero": {
+    "ok": 19
+   }
+  }
+ },
+ "vmhwm_mib": 196.05859375,
+ "cpu_s": {
+  "by_stage": {
+   "preflight": 0.002,
+   "ours": 0.332,
+   "markets": 0.018,
+   "fills_valued": 0.283,
+   "maker_market": 0.039,
+   "tob": 0.165,
+   "accounting": 0.174,
+   "tables": 0.094,
+   "hashes": 0.912,
+   "write": 0.017
+  },
+  "total": 2.036,
+  "cap": 120.0
+ }
+}
+2026-11-23T07:46:05Z tag=mt_x_gap_v2 rc=0 peak_rss_mib=196 wall_s=2.41 cpu_user_s=2.10 memavail_start_gib=22 disk_free_gib=434->434 slot=claude

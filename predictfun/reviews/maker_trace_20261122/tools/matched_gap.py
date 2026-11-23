@@ -51,17 +51,26 @@ DECOMPOSITION per address (or our arm) x market x view: close net (incl. carried
        (unclosed carried shares x (END mark - opening mark)) + resid (unclosed within lots: sum s rq (END mark - p)) - fee_unclosed (fee x rq / q)
        + self (sum s q (END mark - p) - fees of the in-interval self-trade rows) = total. IDENTITY: total = the direct recompute sum s q (END mark -
        p) - fees over the in-interval ok rows + [carry view] (sum s q before start) x (END mark - opening mark), within REL_TOL x max(1 USD,
-       |direct|), else refuse. exposure = carry + resid.
+       |direct|), else refuse. exposure = carry + resid. r1 FIX (integrator, after the first run c0f237ffe): the party-level checks below.
+       PARTY IDENTITY (per party x market x view): the party total = an INDEPENDENT party-level direct recompute = every active member's
+       in-window flow + [carry view] the carried position summed directly over EVERY member x (END mark - opening mark). CROSS-VIEW (per party x
+       market with both views ok): carry total - zero total = carried_pos_recorded x (END mark - opening mark) within REL_TOL x max(1, |rhs|):
+       refuses identical views whenever carried_pos x (END - open) != 0 (equal views with END = opening mark are correct, not refused).
 PATHS  max |position| along the leg path (FIFO order) from the starting position (carry: the carried position; zero: 0). Inventory actions (self-
        trades out; one action = one address's legs of one record and role: theirs a sid, ours a public trade row): position before = after
        every action at a strictly earlier ms (the declared strict-earlier convention); nonflat |before| > POS_EPS; opposing = s x before < 0;
        absolute reduction |after| < |before| - POS_EPS; overshoot = opposing with |after| > |before| + POS_EPS; simultaneous = actions sharing
        their ms with another action of the same address x market.
 PARTIES ours; rank1, rank2, rank3 (single addresses), top3 (ranks 1-3 pooled), top10 (ranks 1-10). A pooled party = the sum of its members'
-       accountings (the FIFO never pairs two addresses' legs): additive fields over its ok members, holding-time quantiles over their closes,
-       max |position| = the largest member's; row counts and the recorded carried inventory over every member. Member status (first that
-       applies): no_interval (market), no_activity (no row inside), rows_excluded (only excluded rows inside), no_opening_mark (carry view), ok.
-       Party status: no_interval; no_opening_mark if any member's; ok if any member ok; rows_excluded; no_activity.
+       accountings (the FIFO never pairs two addresses' legs). A party is ACTIVE in a market iff a member has an ok row inside (the contract's
+       no_activity rule, at the party level). Zero view: its active members. Carry view (r1 fix): its active members (with their carried lots)
+       AND every member with carried lots but no ok row inside (carry_only: its lots unclosed, valued at END mark - opening mark) - the party's
+       recorded inventory entering the interval, never only its active members'. Additive fields summed, holding-time quantiles over the
+       members' closes, max |position| = the largest member's; row counts and the recorded carried inventory over every member;
+       carried_pos_in = the carried position that entered the view (= carried_pos_recorded in the carry view, 0 in the zero view). Member status
+       per view: ok, carry_only (carry view), no_opening_mark (carry view, carried lots without an ok opening mark), rows_excluded, no_activity.
+       Party status: no_interval (market); not active -> rows_excluded if a member has excluded rows inside, else no_activity; no_opening_mark
+       (carry view) if any accounted member's; else ok.
 READING (frozen in the contract) per comparison party x market x view where ours and the party are both ok (active): o, t = our / their close
        net per matched share (NaN without a non-dust close); dT = our - their close net, dE = our - their exposure; the first matching row:
        our_turnover_loses: o < 0 and t > 0; exposure_gap: (o >= 0 and t >= 0, or o < 0 and t < 0) and |dE| > |dT|; both_adverse: o < 0 and
@@ -70,19 +79,21 @@ READING (frozen in the contract) per comparison party x market x view where ours
        sum close net / sum matched shares and sum dT / dE over the both-active markets. Reported: per party and view the count of each reading
        with its denominators (markets; our / their matched shares), the fee and self parts of the difference beside (dF, dS), per day sums;
        4 days, no intervals.
-OUTPUTS <out> = pf_mt_common.RECEIPT / 'matched_gap' (write-once: refused before any input if it exists; built in a partial directory renamed
-       at the end): per_market.csv (market x party x view), closes_by_role.csv (party x view x scope x entry kind x role pair), answer.json,
-       receipt.json (inputs' sha256, sources, git, counts, statuses, checks, CPU, memory).
+OUTPUTS <out> = pf_mt_common.RECEIPT / <subdir> (default 'matched_gap'; run --out <subdir> writes a new one, e.g. matched_gap_r1, never touching
+       an earlier output; write-once: refused before any input if it exists; built in a partial directory renamed at the end): per_market.csv
+       (market x party x view), closes_by_role.csv (party x view x scope x entry kind x role pair), answer.json, receipt.json (inputs' sha256,
+       sources, git, counts, statuses, checks, CPU, memory).
 GUARDS MT_RUN=v2 (CLI); measurement days only; VmHWM self-guard pf_mt_common.GUARD_MIB (1,450 MiB, never raised); CPU self-guard CPU_CAP_S;
        every input unchanged during the run; run refuses unless this tool, its selftest and the contract are tracked and unmodified (the freeze).
        rehearse <day>: the same build on one day with no write; prints checks, counts, statuses and timings only (no P&L, no reading).
-Usage (run_light): MT_RUN=v2 matched_gap.py run | MT_RUN=v2 matched_gap.py rehearse <day>          selftest: matched_gap_selftest.py"""
+Usage (run_light): MT_RUN=v2 matched_gap.py run [--out <subdir>] | MT_RUN=v2 matched_gap.py rehearse <day>    selftest: matched_gap_selftest.py"""
 import collections
 import gzip
 import hashlib
 import json
 import math
 import os
+import re
 import shutil
 import sys
 import time
@@ -134,6 +145,7 @@ POS_EPS = 1e-9
 VALUE_TOL_C = 1e-9
 QUANTS = X.QUANTS
 CPU_CAP_S = 120.
+_MUT_EXCLUDE_CARRY_ONLY = False      # planted-error switch (selftest only): the first run's defect, carried lots of members without a fill inside left out
 FV_COLS = ('day', 'mid', 'sid', 'mk_idx', 'px_rank', 'role', 'addr', 's', 'q', 'p', 'self_trade', 'settle_ms', 'fee_fill', 'mq', 'rq', 'status')
 FV_DICT = frozenset(('day', 'role', 'addr', 'status'))
 MM_COLS = ('day', 'mid', 'addr', 'n_mk', 'n_tk', 'n_excl', 'net_pos', 'fee_fill')
@@ -150,11 +162,12 @@ ROW_KEYS = ('n_rows_pre', 'n_rows_in', 'n_rows_post', 'n_self_in', 'n_excl_pre',
             'carried_lots_recorded', 'carried_dust_dropped')
 MET_ADD = ('buy_sh', 'sell_sh', 'n_closes', 'n_dust', 'close_sh', 'close_pnl', 'close_fee', 'close_net', 'carried_close_sh', 'carried_close_net',
            'unclosed_sh', 'unclosed_carried_sh', 'carry', 'resid', 'fee_unclosed', 'self_gross', 'self_fee', 'total', 'direct', 'end_pos',
-           'n_actions', 'n_nonflat', 'n_opposing', 'n_abs_reduce', 'n_overshoot', 'n_simultaneous')
-PM_COLS = (['day', 'm', 'party', 'view', 'primary', 'status', 'n_members', 'n_members_ok', 'n_members_no_activity', 'n_members_rows_excluded',
-            'n_members_no_opening_mark', 'market_status', 'market_reason', 'start_ms', 'end_ms', 'end_mark', 'open_mark', 'open_status', 'open_age_ms',
+           'n_actions', 'n_nonflat', 'n_opposing', 'n_abs_reduce', 'n_overshoot', 'n_simultaneous', 'carried_pos_in')
+MSTAT = ('ok', 'carry_only', 'no_activity', 'rows_excluded', 'no_opening_mark')
+PM_COLS = (['day', 'm', 'party', 'view', 'primary', 'status', 'n_members'] + [f'n_members_{s_}' for s_ in MSTAT] +
+           ['market_status', 'market_reason', 'start_ms', 'end_ms', 'end_mark', 'open_mark', 'open_status', 'open_age_ms',
             'tob_mid_end', 'tob_end_status', 'end_mark_minus_tob_c', 'value_recorded_c', 'value_exact'] + list(ROW_KEYS) + ['carried_first_ms'] +
-           list(MET_ADD) + ['close_net_c_sh', 'exposure', 'identity_dev', 'max_abs_pos'] + HOLD_COLS +
+           list(MET_ADD) + ['close_net_c_sh', 'exposure', 'identity_dev', 'party_identity_dev', 'max_abs_pos'] + HOLD_COLS +
            ['both_active', 'pair_status', 'reading', 'reading_raw', 'o_c_sh', 't_c_sh', 'd_turnover', 'd_exposure', 'd_fee_unclosed', 'd_self',
             'd_total', 'exposure_larger'])
 CR_COLS = ['party', 'view', 'scope', 'entry_kind', 'role_pair', 'n_markets', 'n_closes', 'n_dust', 'sh', 'pnl', 'fee', 'net', 'c_gross_sh',
@@ -178,7 +191,10 @@ RULES = dict(
              'max(1, |direct|); ours also = recorded value / 100',
     paths='max |position| from the starting position along the FIFO leg order; actions = legs of one record and role; strict-earlier position '
           f'before; opposing / absolute reduction / overshoot / simultaneous (POS_EPS {POS_EPS:g})',
-    parties='ours; rank1-3; top3 / top10 = sums over ok members (no cross-address pairing)',
+    parties='ours; rank1-3; top3 / top10 = sums over members (no cross-address pairing); active iff a member has an ok row inside; zero view: '
+            'active members; carry view (r1 fix): active members + every member with carried lots and no ok row inside (carry_only)',
+    party_checks='party total = independent party direct (active members in-window flow + [carry] carried position over EVERY member x '
+                 '(END - open)); cross-view: carry total - zero total = carried_pos_recorded x (END - open)',
     reading='first match: our_turnover_loses (o < 0, t > 0); exposure_gap ((o >= 0, t >= 0) or (o < 0, t < 0), |dE| > |dT|); both_adverse '
             f'(o < 0, t < 0); mixed_unsupported otherwise; all mixed_unsupported when fewer than {MIN_MARKETS} both-active markets; pooled: '
             'same rules on the sums (secondary)')
@@ -222,6 +238,20 @@ def check_identity(total, direct, where, devs, key='identity'):
     devs[key] = max(devs.get(key, 0.), dv)
     need(dv <= REL_TOL * max(1., abs(direct) if math.isfinite(direct) else 1.),
          f'identity: {where}: decomposition {total!r} vs direct {direct!r} (|dev| {dv:.3g} > {REL_TOL:g} x max(1, |direct|))')
+    return dv
+
+
+def check_cross_view(t_carry, t_zero, cpos, end_mark, open_mark, where, devs, cnt):
+    """CROSS-VIEW (module rules): carry total - zero total = the recorded carried position x (END mark - opening mark). Refuses identical views
+    whenever carried_pos x (END - open) != 0 (carried lots that never entered the carry view, the first run's defect) and any other gap."""
+    want = cpos * (end_mark - open_mark) if cpos != 0. else 0.
+    got = t_carry - t_zero
+    dv = abs(got - want) if (math.isfinite(got) and math.isfinite(want)) else math.inf
+    devs['cross_view'] = max(devs.get('cross_view', 0.), dv)
+    cnt['cross_view_checks'] = cnt.get('cross_view_checks', 0) + 1
+    need(dv <= REL_TOL * max(1., abs(want) if math.isfinite(want) else 1.),
+         f'cross-view: {where}: carry total - zero total = {got!r} but carried_pos {cpos!r} x (END - open) = {want!r} (carried lots outside the '
+         f'carry view?)')
     return dv
 
 
@@ -369,7 +399,7 @@ def account(fr, legs, self_rows, end_mark, open_mark, c0, pos0, where, devs, cnt
                n_closes=int((~cl['dust']).sum()), n_dust=int(cl['dust'].sum()), close_sh=float(cl['sh'].sum()), close_pnl=close_pnl, close_fee=close_fee,
                close_net=close_net, carried_close_sh=float(cl['sh'][car].sum()), carried_close_net=float((cl['pnl'] - cl['fee'])[car].sum()),
                unclosed_sh=un_sh, unclosed_carried_sh=un_car, carry=carry, resid=resid, fee_unclosed=fee_un, self_gross=sgr, self_fee=sfe, total=total,
-               direct=direct, identity_dev=dev)
+               direct=direct, identity_dev=dev, carried_pos_in=float(sum(items[i][LS] * items[i][LQ] for i in range(fr['n0']))))
     met.update(paths(legs, pos0))
     return met, cl
 
@@ -651,25 +681,54 @@ def their_member(A, idx, mk, om, a, devs, cnt):
         met, cl = account(fifo(inn, init), inn, S, M, om['mark'], c0 if (v == 'carry' and lots) else None, float(sum(x[LS] * x[LQ] for x in init)),
                           f'{where} {v}', devs, cnt)
         out[v] = ('ok', met, cl)
-    return rows, out
+    # the member's in-window flow summed directly (no FIFO; the party-level recompute) and, without an ok row inside, its carried lots alone
+    din = (float(sum(lg[LS] * lg[LQ] * (M - lg[LP]) for lg in inn)) - float(sum(lg[LF] for lg in inn))
+           + float(sum(s * q * (M - p) for s, q, p, _ in S)) - float(sum(f for _, _, _, f in S)))
+    co = None
+    if base != 'ok' and lots and om['ok']:
+        co = ('ok',) + account(fifo([], lots), [], [], M, om['mark'], c0, float(sum(x[LS] * x[LQ] for x in lots)), f'{where} carry_only', devs, cnt)
+        cnt['member_carry_only'] = cnt.get('member_carry_only', 0) + 1
+    return rows, out, dict(base=base, lots=lots, c0=c0 if lots else 0., din=din, carry_only=co)
 
 
-def combine(members, v):
-    """A party from its members' results in one view (module rules: PARTIES) -> dict(status, met, cl, rows, mstat)."""
-    sts = collections.Counter(mm[1][v][0] for mm in members)
-    okm = [mm[1][v] for mm in members if mm[1][v][0] == 'ok']
+def combine(members, v, mk, om, where, devs, cnt):
+    """A party from its members' results (rows, views, extra) in one view (module rules: PARTIES, PARTY IDENTITY) -> dict(status, met, cl, rows,
+    mstat). Active iff a member has an ok row inside; zero view = its active members; carry view = its active members plus every member with
+    carried lots and no ok row inside (carry_only). The party total is checked against an independent party-level direct recompute."""
     rows = {k: (float(sum(mm[0][k] for mm in members)) if k == 'carried_pos_recorded' else int(sum(mm[0][k] for mm in members))) for k in ROW_KEYS}
     fs = [mm[0]['carried_first_ms'] for mm in members if math.isfinite(mm[0]['carried_first_ms'])]
     rows['carried_first_ms'] = float(min(fs)) if fs else NAN
-    status = ('no_interval' if sts.get('no_interval') else 'no_opening_mark' if sts.get('no_opening_mark') else 'ok' if okm else
-              'rows_excluded' if sts.get('rows_excluded') else 'no_activity')
-    met = cl = None
-    if status == 'ok':
-        met = {k: (int(sum(x[1][k] for x in okm)) if k.startswith('n_') else float(sum(x[1][k] for x in okm))) for k in MET_ADD}
-        met['max_abs_pos'] = float(max(x[1]['max_abs_pos'] for x in okm))
-        met['identity_dev'] = float(max(x[1]['identity_dev'] for x in okm))
-        cl = {k: np.concatenate([x[2][k] for x in okm]) for k in EMPTY_CL}
-    return dict(status=status, met=met, cl=cl, rows=rows, mstat=sts)
+    sts = collections.Counter()
+    for mm in members:
+        ex = mm[2]
+        if ex['base'] == 'ok':
+            sts[mm[1][v][0]] += 1
+        elif v == 'carry' and ex['lots']:
+            sts['carry_only' if om['ok'] else 'no_opening_mark'] += 1
+        else:
+            sts[ex['base']] += 1
+    active = [mm for mm in members if mm[2]['base'] == 'ok']
+    out = dict(status=None, met=None, cl=None, rows=rows, mstat=sts)
+    if not active:
+        out['status'] = 'rows_excluded' if any(mm[2]['base'] == 'rows_excluded' for mm in members) else 'no_activity'
+        return out
+    if sts.get('no_opening_mark'):
+        out['status'] = 'no_opening_mark'
+        return out
+    acc = [mm[1][v] for mm in active]
+    if v == 'carry' and not _MUT_EXCLUDE_CARRY_ONLY:
+        acc += [mm[2]['carry_only'] for mm in members if mm[2]['base'] != 'ok' and mm[2]['lots']]
+    met = {k: (int(sum(x[1][k] for x in acc)) if k.startswith('n_') else float(sum(x[1][k] for x in acc))) for k in MET_ADD}
+    met['max_abs_pos'] = float(max(x[1]['max_abs_pos'] for x in acc))
+    met['identity_dev'] = float(max(x[1]['identity_dev'] for x in acc))
+    cl = {k: np.concatenate([x[2][k] for x in acc]) for k in EMPTY_CL}
+    direct = float(sum(mm[2]['din'] for mm in active))             # independent of which members were accounted
+    if v == 'carry' and any(mm[2]['lots'] for mm in members):
+        direct += float(sum(mm[2]['c0'] for mm in members)) * (mk['end_mark'] - om['mark'])
+    met['party_identity_dev'] = check_identity(met['total'], direct, f'party {where} {v}', devs, key='party_identity')
+    cnt['party_identity_checks'] = cnt.get('party_identity_checks', 0) + 1
+    out.update(status='ok', met=met, cl=cl)
+    return out
 
 
 # ------------------------------------------------------------------ markets and marks ------------------------------------------------------------------
@@ -772,7 +831,7 @@ def per_market_frame(pop, mks, oms, eds, res, RD):
                 row.update(day=k[0], m=k[1], party=p, view=v, primary=v == PRIMARY, status=r['status'],
                            n_members=1 if p == 'ours' else len(MEMBERS[p]), market_status=mk['status'], market_reason=mk['reason'],
                            start_ms=mk['start'], end_ms=mk['end'], end_mark=mk['end_mark'])
-                for s_ in ('ok', 'no_activity', 'rows_excluded', 'no_opening_mark'):
+                for s_ in MSTAT:
                     row[f'n_members_{s_}'] = int(r['mstat'].get(s_, 0))
                 if om is not None:
                     row.update(open_mark=om['mark'], open_status=om['st'], open_age_ms=om['age'])
@@ -784,6 +843,7 @@ def per_market_frame(pop, mks, oms, eds, res, RD):
                     row.update({c: r['rows'][c] for c in ROW_KEYS + ('carried_first_ms',)})
                 if r['met'] is not None:
                     row.update({c: r['met'][c] for c in MET_ADD + ('identity_dev', 'max_abs_pos')})
+                    row['party_identity_dev'] = r['met'].get('party_identity_dev', NAN)
                     row.update(close_net_c_sh=_cpc(r['met']['close_net'], r['met']['close_sh']) if r['met']['n_closes'] > 0 else NAN,
                                exposure=r['met']['carry'] + r['met']['resid'])
                     row.update(hold_stats(r['cl']['hold'], r['cl']['sh'], r['cl']['dust']))
@@ -991,9 +1051,21 @@ def build(P=None, days=None, write=False, require_frozen=False, n_expected=None,
         mem_res = []
         for a in range(NTOP):
             idx = A['groups'].get(k[1] * KEY_MUL + a)
-            mem_res.append(their_member(A, idx, mk, om, a, devs, cnt) if idx is not None else (dict(empty), {v: ('no_activity', None, None) for v in VIEWS}))
+            mem_res.append(their_member(A, idx, mk, om, a, devs, cnt) if idx is not None else
+                           (dict(empty), {v: ('no_activity', None, None) for v in VIEWS}, dict(base='no_activity', lots=[], c0=0., din=0., carry_only=None)))
         for p in COMPARE:
-            res[k][p] = {v: combine([mem_res[i] for i in MEMBERS[p]], v) for v in VIEWS}
+            res[k][p] = {v: combine([mem_res[i] for i in MEMBERS[p]], v, mk, om, f'{p} {k[0]} {k[1]}', devs, cnt) for v in VIEWS}
+        for p in PARTIES:                                   # CROSS-VIEW: carry - zero = carried_pos_recorded x (END - open)
+            rc, rz = res[k][p]['carry'], res[k][p]['zero']
+            if rc['status'] == OK and rz['status'] == OK:
+                cp = float(rc['rows']['carried_pos_recorded'])
+                check_cross_view(rc['met']['total'], rz['met']['total'], cp, mk['end_mark'], om['mark'], f'{p} {k[0]} {k[1]}', devs, cnt)
+                need(abs(rc['met']['carried_pos_in'] - cp) <= REL_TOL * max(1., abs(cp)) and rz['met']['carried_pos_in'] == 0.,
+                     f'carried position: {p} {k[0]} {k[1]}: {rc["met"]["carried_pos_in"]!r} entered the carry view, {cp!r} recorded')
+                if abs(cp) > DUST_SH:
+                    cnt['rows_carried_pos'] = cnt.get('rows_carried_pos', 0) + 1
+                    cnt['rows_carried_pos_views_differ'] = cnt.get('rows_carried_pos_views_differ', 0) + int(rc['met']['total'] != rz['met']['total'])
+                    cnt['rows_carried_pos_end_eq_open'] = cnt.get('rows_carried_pos_end_eq_open', 0) + int(mk['end_mark'] == om['mark'])
     stage('accounting')
     RD = readings(res, pop)
     PM = per_market_frame(pop, mks, oms, eds, res, RD)
@@ -1010,7 +1082,8 @@ def build(P=None, days=None, write=False, require_frozen=False, n_expected=None,
     checks = {k: dict(max_dev=v_, ok=True) for k, v_ in sorted(devs.items())}
     checks['value_exact'] = dict(markets=int(sum(1 for k in pop if mks[k]['value_exact'])), of=int(sum(1 for k in pop if mks[k]['status'] == OK)), ok=True)
     srcs = [HERE / 'matched_gap.py', HERE / 'matched_gap_selftest.py', HERE / 'closes.py', RESEARCH / 'pf_mt_common.py', RESEARCH / 'pf_mt_econ.py']
-    rec = dict(version=VERSION, module='tools/matched_gap.py', contract=CONTRACT, review=REVIEW, run=C.RUN, arm=ARM, days=list(days), n_markets=len(pop),
+    rec = dict(version=VERSION, module='tools/matched_gap.py', contract=CONTRACT, review=REVIEW, run=C.RUN, out=str(out), fix='r1: carry view accounts '
+               'every member\'s carried lots (carry_only); party identity and cross-view checks', arm=ARM, days=list(days), n_markets=len(pop),
                asof_start=asof0, addresses=[dict(rank=i + 1, addr=a, top3=i < 3) for i, a in enumerate(addrs)], parties={p: list(MEMBERS[p]) for p in COMPARE},
                inputs=hashes, sources={p.name: X._sha(p) for p in srcs if p.is_file()}, contract_sha256=X._sha(CONTRACT_FILE) if CONTRACT_FILE.is_file() else None,
                git=git, row_groups=dict(fills_valued=fv_info, maker_market=mm_info), counts=dict(sorted(cnt.items())),
@@ -1065,8 +1138,10 @@ def rehearsal_summary(r):
 if __name__ == '__main__':
     a = sys.argv[1:]
     need(C.RUN == 'v2', f'the matched-gap build reads the v2 roots: set MT_RUN=v2 (got {C.RUN!r})')
-    if a == ['run']:
-        r = build(write=True, require_frozen=True, n_expected=N_BOOK)
+    if a[:1] == ['run'] and (len(a) == 1 or (len(a) == 3 and a[1] == '--out')):
+        sub = a[2] if len(a) == 3 else 'matched_gap'
+        need(bool(re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.-]*', sub)) and '..' not in sub, f'run --out: {sub!r} is not a plain subdirectory name')
+        r = build(dict(out=Path(C.RECEIPT) / sub), write=True, require_frozen=True, n_expected=N_BOOK)
         rc = r['receipt']
         print(json.dumps(X._clean(dict(outputs={k: v.get('rows') for k, v in rc['outputs'].items()}, checks=rc['checks'], statuses=rc['statuses'],
                                        vmhwm_mib=rc['memory']['vmhwm_mib'], cpu_s=rc['cpu_s'])), indent=1))
@@ -1074,4 +1149,4 @@ if __name__ == '__main__':
         need(a[1] in C.MEASURE_DAYS, f'rehearse: {a[1]!r} is not a measurement day (refused before any path is built)')
         print(json.dumps(X._clean(rehearsal_summary(build(days=(a[1],), write=False))), indent=1, sort_keys=True))
     else:
-        sys.exit('usage: MT_RUN=v2 matched_gap.py run | MT_RUN=v2 matched_gap.py rehearse <day>')
+        sys.exit('usage: MT_RUN=v2 matched_gap.py run [--out <subdir>] | MT_RUN=v2 matched_gap.py rehearse <day>')

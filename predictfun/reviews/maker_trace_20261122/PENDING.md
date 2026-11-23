@@ -1,5 +1,18 @@
 # MAKER-TRACE-RECONSTRUCTION-v1 — pending work
 
+## STATE 2026-11-23 07:47Z — MATCHED-GAP run done (c0f237ffe; v2/matched_gap/) but its PRIMARY carry view is DEFECTIVE — read this first
+
+**Defect:** carried lots are not in the FIFO, so the carry view equals the zero view. The agent is fixing it (resume it if rate-limited).
+
+**Do NOT report the carry-view numbers.** The zero-start view is valid.
+
+**Next:**
+1. Re-freeze.
+2. Run with `--out matched_gap_r1`.
+3. Receipt, which discloses the defective first output (kept, not deleted).
+4. Commit, then ONE review.
+
+
 ## STATE 2026-11-23 06:58Z — USER GO for MATCHED-MARKET-TURNOVER-GAP-v1; contract frozen (46cd3cc56); tool agent building — read this first
 
 **Running:** the agent building `tools/matched_gap.py` + selftest. Resume it with SendMessage if a rate limit stopped it.
