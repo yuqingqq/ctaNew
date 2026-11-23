@@ -1,0 +1,55 @@
+PASS selftest environment: MT_RUN=v2 and no MT_PO_MUT / reused-tool mutant
+PASS bins: spread 1 / 2 / 3-4 / >= 5 / missing (inf, NaN, crossed)
+PASS bins: depth 0 / (0,50] / (50,200] / >200 / missing
+PASS bins: fair_gap <= 0 / (0,1] / (1,3] / >3 / missing
+PASS relation: bid while short / ask while long reduce; bid while long / ask while short add; flat
+PASS MH: the hand-computed 2-stratum toy (RR_MH 3.4, crude 3.889, T 15 / 25, events 7 / 3, 2 informative strata) through ratio_block
+PASS verdict rule: supported / supported_lower (mirror) / insufficient (< 30 events, < 5 markets) / not_supported (share, p, tie, NaN)
+PASS P1: planted: creations follow spread >= 2 AND fair_gap > 1 -> spread and fair_gap supported (any, deep: RR > 1.5, p_hi <= 0.05, >= 5 markets)
+PASS P4: planted: btc with / against, own depth and flow have no exposure variation -> insufficient_support (the verdict can say so)
+PASS P5: final verdict = D0 unless D1000 differs (timing_sensitive), over all 35 tests of both worlds; every verdict declared
+PASS P6: improve availability: spread-1 rows leave every improve ratio, improve spread contrast is 3+ vs 2 (person-time recounted from the panel)
+PASS R1: random twins: no supported / supported_lower verdict (final and D0) on any of the 35 tests
+PASS R2: random twins: the negative control is testable (any x spread / fair_gap / time_left: >= 5 supported markets, >= 30 events)
+PASS R3: random twins: pooled MH RR exactly 1 (twin symmetry, exact time-left balance); reciprocal market RRs; time-left ties in every market
+PASS FS: statuses: straddle -> status (not an event; touched rows counted), gap, unknown_cell, stale rows at t and t - 1 s, events with their keys
+PASS FC: causality: later frame / BTC / fill ARRIVAL TIMES moved -> every D0 / D1000 feature at t <= t* unchanged; later flow and BTC features change
+PASS FI: identity: G2 front with a containing window -> candidate_constrained (+ adding inventory); window opens later -> owner_unknown; G4 / non-top-3 -> candidate_scenario; no-fill -> owner_unknown
+PASS FI_v2: identity: a settlement-only first fill (v1 front by settlement) has no candidate under the v2 straddle rule
+PASS shift offsets: deterministic per (seed, day, mid, side), sides independent, in [0, K)
+PASS shift: every replicate keeps each market-side's event-second count, stays in it, is a bijection; offset 0 is the identity
+PASS mutant keep_spread1: caught by P6 (the check evaluates False without raising)
+PASS mutant assign_straddle: caught by FS (the check evaluates False without raising)
+PASS mutant leak_1s: caught by FC (the check evaluates False without raising)
+PASS mutant link_any_window: caught by FI (the check evaluates False without raising)
+PASS mutant v1_straddle: caught by FI_v2 (the check evaluates False without raising)
+PASS mutants: every declared MT_PO_MUT is exercised
+PASS queue_front_v2 adapter: the same identities as the fallback when its candidates are the fallback's (source recorded, agreement counted)
+PASS queue_front_v2 reader: levels.csv bound to its receipt, the run markets kept, the candidates counted, both files hashed
+PASS queue_front_v2 reader: a levels.csv unlike its receipt -> refused
+PASS queue_front_v2 reader: a levels.csv without the candidate_addr column -> refused (assumed interface)
+PASS queue_front_v2 reader: a levels.csv with the pre-alignment holder header -> refused (assumed interface)
+PASS queue_front_v2 reader: a levels.csv without any front_candidate status -> refused (assumed interface)
+PASS regrade reader: bound to its receipt; the run markets kept (another market dropped); both files hashed
+PASS regrade reader: a tampered post_regrade_orders.csv -> refused
+PASS e2e: execute (pilot path, injected loader) writes exactly the seven outputs
+PASS e2e: receipt.json hashes every other output, the sources and inputs; a finite projection; no mutant; the identity dependency named
+PASS e2e: rows.parquet = 2 sides x K seconds per market; events.csv events = sum N_any; the cell-event keys equal
+PASS e2e: ratios.csv = 2 variants x 5 types x 7 contrasts with declared verdicts; D0 any x spread person-time / events recounted from rows.parquet
+PASS e2e: identity.csv pooled owner counts = events.csv identities; the FI fixture links two candidates and leaves anonymous creations in
+PASS e2e: claims - reconciliation predicates all true; the verdict lists partition the 35 tests; descriptive only, no intervals
+PASS e2e: a second write into the written directory is refused (before any input is read)
+PASS e2e: a fills_valued unlike the binding -> refused
+PASS refuse: write-once on an existing output directory (overwrite)
+PASS refuse: production with MT_PO_MUT=assign_straddle before any input is read
+PASS refuse: production with MT_PO_MUT=bogus before any input is read
+PASS refuse: production with MT_QF_MUT=drop_no_fill before any input is read
+PASS refuse: production with MT_TL_MUT=leak_1s before any input is read
+PASS refuse: a pilot day outside the measurement days (before any path is built)
+PASS refuse: nothing written by a refused production call
+PASS refuse: the full run before any input (freeze)
+PASS refuse: the full run without a recorded pilot projection
+PASS refuse: a recorded pilot receipt p121.json (> 120 s (refused before launch))
+PASS refuse: a recorded pilot receipt pother.json (not a posting_opportunity_v1)
+PASS preflight: a 60 s projection passes and the pilot receipt is hashed as an input
+{"checks": 54, "failed": 0, "cpu_s": 2.019, "process_cpu_s": 2.52, "vmhwm_mib": 204.3}

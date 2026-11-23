@@ -1,3 +1,11 @@
+<!-- POSTING_CHAIN_REVIEW_20261123_CODEX -->
+## 2026-11-23 — Codex posting/queue/chain combined review
+
+Pinned **ed7d1ebaf34aa79cadec467ef41a894ea395423e**; [full report/evidence/next priority](reviews/automatic/20261123_posting_chain_review/report.md). Neutral panel and restricted descriptive statistics accepted: 155 synthetic checks, 50 hashes, 70 independent MH ratios, 1,330 market records and five real500-shift tail checks agree. Prior queue corrections close for scenario-only use; no new accounting defect found.
+
+P2 scoped interpretation/grade blockers: anchor availability omits81.7% of improvement event-seconds (3,664/4,484) and74.7% of creations (8,821/11,804); re_establish is print-compatible reappearance, not proven trade-caused clearing; chain pre-state drops G1/G4 uncertainty (Chain3 falsely implies ONE-HISTORY beyond its conflicted window). P3: unknown/uncomputed netting false and gross-unit wording. Bundle corrections with ONE native-frame touch-transition/quote-response-chain measurement, not another cleanup-only round. Whole maker chains and conditional economics remain the goal; anonymous frequency is not maker intent or economic skill. Review charge0.010h once; next<=0.040h all-in under standing short-CPU top-up authority.
+<!-- /POSTING_CHAIN_REVIEW_20261123_CODEX -->
+
 <!-- TAKE_QUEUE_REVIEW_20261123_CODEX -->
 ## 2026-11-23 — Codex TAKE-LOGIC v2 / QUEUE-FRONT v1 review
 

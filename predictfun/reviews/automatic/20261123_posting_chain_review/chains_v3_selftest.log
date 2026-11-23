@@ -1,0 +1,57 @@
+PASS second map: ws+1 and ws+1000 lie in k=0, ws+1001 in k=1, ws in k=-1
+PASS selection: first two per rank in row order of first appearance (b before a; c never)
+PASS paths.md parse
+PASS reading: >= 2 histories -> TIED, 1 -> ONE-HISTORY (positive control), pending -> PENDING, no take -> NO-EVENT
+PASS mutant tied_as_identified is live (a tied link would render IDENTIFIED)
+PASS size: the filled size is a lower bound, the submitted size unknown (never the filled bound)
+PASS mutant submitted_from_filled is live
+PASS three same-hash fills render as ONE order with 3 fills
+PASS two hashes render as two orders
+PASS mutant split_same_hash is live
+PASS binding lookup: dict / string / unique suffix / ambiguous suffix / missing
+PASS draft writes exactly the four outputs into chains_v3_draft
+PASS draft touches no other file (and leaves no partial directory)
+PASS receipt: sha256 of every output = its bytes; CPU and VmHWM recorded
+PASS receipt: every input recorded with its sha256 and an ok binding
+PASS six chains x seven links, every link graded and with a declared reading
+PASS selection = paths.md (first appearance: e018 before e006)
+PASS missing posting_opportunity: every pre-state link PENDING with the reason (draft)
+PASS missing queue_front_v2: queue links on v1 labels with the 'v1 labels, see section 5' marker
+PASS TIED iff >= 2 retained histories; no IDENTIFIED anywhere
+PASS positive control: chain 2 (G2 <= 1 s, EX only) renders post and ending ONE-HISTORY
+PASS v1 labels never let a queue link agree (masked netting kept)
+PASS chain 3: three same-hash fills render as ONE order (3 fills); v1 behind rows of the front hash -> later_same_hash
+PASS post: submitted size never set; the filled size kept as the lower bound
+PASS takes: chain 1 NO-EVENT; chain 4 one record (the outside-window record dropped) ONE-HISTORY; chain 5 TIED (clock disagreement x variant disagreement = 4 histories); chain 6 ONE-HISTORY with the case marked
+PASS ending grades: S_FIFO/S_NOPRIO cancel-compatible -> cancel_compatible_ending; PL only under S_FIFO_LO -> scenario_dependent_ending
+PASS repost: sequential and tied successors stay scenario_dependent_link (unrelated feasible), none -> unresolved; never identified
+PASS reconciliations hold on the consistent world (episode legs, own rows, closes per leg, carry row, census, pulls views, union, life fills)
+PASS value: hand-computed chain 2 END net (-0.27 $ on 2/2 valid legs) and the 60 s beyond_end row counted invalid in chain 1
+PASS row groups pruned: fills_valued (a non-chain market) and closes (another day)
+PASS agreement: per chain the agreeing links, the tied links with their hidden actions and the first branching link
+PASS draft records the pending links in claims (no_pending_link False)
+PASS run returns the same predicates it writes
+PASS overwrite: a second draft into the same directory is refused (write-once)
+PASS run without the sibling receipts refuses before any write
+PASS the run refusal message names each missing sibling receipt
+PASS a mutant outside the selftest is refused
+PASS an unknown mutant is refused
+PASS mutant tied_as_identified caught by the rendering verifier before any write
+PASS mutant split_same_hash caught by the rendering verifier before any write
+PASS mutant submitted_from_filled caught by the rendering verifier before any write
+PASS run with both siblings bound: every predicate holds, no pending link, reconciliations and bindings ok
+PASS queue links use queue_front_v2 labels (no v1 marker in any queue block)
+PASS v2 positive control: chain 2 level with alt_netting_possible False and one S_FIFO position -> ONE-HISTORY; others TIED
+PASS v2 rows of the 3-fill hash under ONE order: the front-candidate set (candidates.csv) and earliest_set + later_same_hash x2 (fills.csv)
+PASS v2 endpoint occupancy shown as an endpoint observation (never an actual-post queue label)
+PASS receipt binds every sibling file read (levels, candidates, fills, occupancy, rows)
+PASS pre-state: chain 1 TIED (spread changes inside its 78 s window, the hidden action names it); chain 2 ONE-HISTORY (constant)
+PASS pre-state: the D0 columns are read (spread_bin_D0), D1000 beside, and the visible creation at the order's cell is listed with its type
+PASS falsifier recorded in a draft: perturbed ep_sh -> episode_ep_sh_reconciles False
+PASS falsifier recorded in a draft: a byte-changed bound input -> binding mismatch
+PASS falsifier recorded in a draft: swapped paths.md -> selection predicate False
+PASS a run refuses on the falsifiers, naming selection, reconciliation and bindings, before any write
+PASS a sibling missing a feature column: pre-state links PENDING naming the column (draft)
+PASS a sibling file not matching its receipt: queue links fall back to v1 labels with the reason (draft)
+PASS a run refuses a sibling whose file does not match its receipt, before any write
+{"checks": 56, "failed": 0, "cpu_s": 2.234, "vmhwm_mib": 130.1}

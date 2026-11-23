@@ -1,0 +1,2525 @@
+{
+  "target": "ed7d1ebaf34aa79cadec467ef41a894ea395423e",
+  "suites": [
+    {
+      "name": "posting_opportunity_selftest",
+      "rc": 0,
+      "last": [
+        "PASS preflight: a 60 s projection passes and the pilot receipt is hashed as an input",
+        "{\"checks\": 54, \"failed\": 0, \"cpu_s\": 2.019, \"process_cpu_s\": 2.52, \"vmhwm_mib\": 204.3}"
+      ]
+    },
+    {
+      "name": "queue_front_v2_selftest",
+      "rc": 0,
+      "last": [
+        "PASS e2e: a second write into the written directory is refused (before any input is read)",
+        "{\"checks\": 45, \"failed\": 0, \"cpu_s\": 1.988, \"process_cpu_s\": 2.443, \"vmhwm_mib\": 159.4}"
+      ]
+    },
+    {
+      "name": "chains_v3_selftest",
+      "rc": 0,
+      "last": [
+        "PASS a run refuses a sibling whose file does not match its receipt, before any write",
+        "{\"checks\": 56, \"failed\": 0, \"cpu_s\": 2.234, \"vmhwm_mib\": 130.1}"
+      ]
+    }
+  ],
+  "hashes": [
+    {
+      "sub": "posting_opportunity",
+      "kind": "output",
+      "name": "claims.json",
+      "ok": true
+    },
+    {
+      "sub": "posting_opportunity",
+      "kind": "output",
+      "name": "consistency.csv",
+      "ok": true
+    },
+    {
+      "sub": "posting_opportunity",
+      "kind": "output",
+      "name": "events.csv",
+      "ok": true
+    },
+    {
+      "sub": "posting_opportunity",
+      "kind": "output",
+      "name": "identity.csv",
+      "ok": true
+    },
+    {
+      "sub": "posting_opportunity",
+      "kind": "output",
+      "name": "ratios.csv",
+      "ok": true
+    },
+    {
+      "sub": "posting_opportunity",
+      "kind": "output",
+      "name": "rows.parquet",
+      "ok": true
+    },
+    {
+      "sub": "posting_opportunity",
+      "kind": "source",
+      "name": "predictfun/research/pf_mt_common.py",
+      "ok": true
+    },
+    {
+      "sub": "posting_opportunity",
+      "kind": "source",
+      "name": "predictfun/research/pf_mt_decision.py",
+      "ok": true
+    },
+    {
+      "sub": "posting_opportunity",
+      "kind": "source",
+      "name": "predictfun/research/pf_mt_econ.py",
+      "ok": true
+    },
+    {
+      "sub": "posting_opportunity",
+      "kind": "source",
+      "name": "predictfun/research/pf_mt_lifecycle.py",
+      "ok": true
+    },
+    {
+      "sub": "posting_opportunity",
+      "kind": "source",
+      "name": "predictfun/reviews/automatic/20261123_take_queue_review/report.md",
+      "ok": true
+    },
+    {
+      "sub": "posting_opportunity",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/posting_chain_contract.md",
+      "ok": true
+    },
+    {
+      "sub": "posting_opportunity",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/queue_front_contract.md",
+      "ok": true
+    },
+    {
+      "sub": "posting_opportunity",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/take_logic_contract.md",
+      "ok": true
+    },
+    {
+      "sub": "posting_opportunity",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/chain_context.py",
+      "ok": true
+    },
+    {
+      "sub": "posting_opportunity",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/chain_take.py",
+      "ok": true
+    },
+    {
+      "sub": "posting_opportunity",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/closes.py",
+      "ok": true
+    },
+    {
+      "sub": "posting_opportunity",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/posting_opportunity.py",
+      "ok": true
+    },
+    {
+      "sub": "posting_opportunity",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/posting_opportunity_selftest.py",
+      "ok": true
+    },
+    {
+      "sub": "posting_opportunity",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/queue_front.py",
+      "ok": true
+    },
+    {
+      "sub": "posting_opportunity",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/take_logic.py",
+      "ok": true
+    },
+    {
+      "sub": "posting_opportunity",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/take_logic_v2.py",
+      "ok": true
+    },
+    {
+      "sub": "queue_front_v2",
+      "kind": "output",
+      "name": "candidates.csv",
+      "ok": true
+    },
+    {
+      "sub": "queue_front_v2",
+      "kind": "output",
+      "name": "claims.json",
+      "ok": true
+    },
+    {
+      "sub": "queue_front_v2",
+      "kind": "output",
+      "name": "economics.csv",
+      "ok": true
+    },
+    {
+      "sub": "queue_front_v2",
+      "kind": "output",
+      "name": "fills.csv",
+      "ok": true
+    },
+    {
+      "sub": "queue_front_v2",
+      "kind": "output",
+      "name": "levels.csv",
+      "ok": true
+    },
+    {
+      "sub": "queue_front_v2",
+      "kind": "output",
+      "name": "mechanism.csv",
+      "ok": true
+    },
+    {
+      "sub": "queue_front_v2",
+      "kind": "output",
+      "name": "occupancy.csv",
+      "ok": true
+    },
+    {
+      "sub": "queue_front_v2",
+      "kind": "output",
+      "name": "shares.csv",
+      "ok": true
+    },
+    {
+      "sub": "queue_front_v2",
+      "kind": "output",
+      "name": "speed.csv",
+      "ok": true
+    },
+    {
+      "sub": "queue_front_v2",
+      "kind": "source",
+      "name": "predictfun/research/pf_mt_common.py",
+      "ok": true
+    },
+    {
+      "sub": "queue_front_v2",
+      "kind": "source",
+      "name": "predictfun/research/pf_mt_decision.py",
+      "ok": true
+    },
+    {
+      "sub": "queue_front_v2",
+      "kind": "source",
+      "name": "predictfun/research/pf_mt_econ.py",
+      "ok": true
+    },
+    {
+      "sub": "queue_front_v2",
+      "kind": "source",
+      "name": "predictfun/research/pf_mt_lifecycle.py",
+      "ok": true
+    },
+    {
+      "sub": "queue_front_v2",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/posting_chain_contract.md",
+      "ok": true
+    },
+    {
+      "sub": "queue_front_v2",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/queue_front_contract.md",
+      "ok": true
+    },
+    {
+      "sub": "queue_front_v2",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/chain_context.py",
+      "ok": true
+    },
+    {
+      "sub": "queue_front_v2",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/chain_post_fill.py",
+      "ok": true
+    },
+    {
+      "sub": "queue_front_v2",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/queue_front.py",
+      "ok": true
+    },
+    {
+      "sub": "queue_front_v2",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/queue_front_selftest.py",
+      "ok": true
+    },
+    {
+      "sub": "queue_front_v2",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/queue_front_v2.py",
+      "ok": true
+    },
+    {
+      "sub": "queue_front_v2",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/queue_front_v2_selftest.py",
+      "ok": true
+    },
+    {
+      "sub": "chains_v3",
+      "kind": "output",
+      "name": "chain_links.csv",
+      "ok": true
+    },
+    {
+      "sub": "chains_v3",
+      "kind": "output",
+      "name": "chains.md",
+      "ok": true
+    },
+    {
+      "sub": "chains_v3",
+      "kind": "output",
+      "name": "claims.json",
+      "ok": true
+    },
+    {
+      "sub": "chains_v3",
+      "kind": "source",
+      "name": "predictfun/research/pf_mt_common.py",
+      "ok": true
+    },
+    {
+      "sub": "chains_v3",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/posting_chain_contract.md",
+      "ok": true
+    },
+    {
+      "sub": "chains_v3",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/chains_v3.py",
+      "ok": true
+    },
+    {
+      "sub": "chains_v3",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/chains_v3_selftest.py",
+      "ok": true
+    }
+  ],
+  "columns": [
+    "day",
+    "mid",
+    "side",
+    "k",
+    "t_ms",
+    "status_D0",
+    "book_age_ms_D0",
+    "spread_ticks_D0",
+    "spread_bin_D0",
+    "depth_touch_own_D0",
+    "depth_touch_own_bin_D0",
+    "depth_touch_opp_D0",
+    "depth_touch_opp_bin_D0",
+    "depth_2_own_D0",
+    "depth_2_own_bin_D0",
+    "btc_r_5s_bp_D0",
+    "btc_5s_aligned_D0",
+    "p_fair_D0",
+    "fair_gap_c_D0",
+    "fair_gap_bin_D0",
+    "flow_5s_sh_D0",
+    "flow_5s_bin_D0",
+    "time_left_s_D0",
+    "time_left_bin_D0",
+    "status_D1000",
+    "book_age_ms_D1000",
+    "spread_ticks_D1000",
+    "spread_bin_D1000",
+    "depth_touch_own_D1000",
+    "depth_touch_own_bin_D1000",
+    "depth_touch_opp_D1000",
+    "depth_touch_opp_bin_D1000",
+    "depth_2_own_D1000",
+    "depth_2_own_bin_D1000",
+    "btc_r_5s_bp_D1000",
+    "btc_5s_aligned_D1000",
+    "p_fair_D1000",
+    "fair_gap_c_D1000",
+    "fair_gap_bin_D1000",
+    "flow_5s_sh_D1000",
+    "flow_5s_bin_D1000",
+    "time_left_s_D1000",
+    "time_left_bin_D1000",
+    "improve_population",
+    "E_any",
+    "N_any",
+    "keys_any",
+    "E_improve",
+    "N_improve",
+    "keys_improve",
+    "E_re_establish",
+    "N_re_establish",
+    "keys_re_establish",
+    "E_deep",
+    "N_deep",
+    "keys_deep",
+    "E_at_empty_touch",
+    "N_at_empty_touch",
+    "keys_at_empty_touch",
+    "n_straddle",
+    "n_gap",
+    "n_unknown_cell",
+    "n_type_unknown"
+  ],
+  "event_columns": [
+    "key",
+    "day",
+    "mid",
+    "side",
+    "tick",
+    "frame",
+    "fid",
+    "t_open_ms",
+    "t_create_ms",
+    "k_lo",
+    "k_hi",
+    "row_k",
+    "status",
+    "is_improve",
+    "is_re_establish",
+    "is_deep",
+    "is_at_empty_touch",
+    "touch_unknown",
+    "mechanism_v1",
+    "best_prev_tick",
+    "size_created",
+    "qf_status_v1",
+    "qf_timing_v1",
+    "qf_status_v2",
+    "qf_timing_v2",
+    "qf2_status",
+    "cand_source",
+    "cand_addr",
+    "cand_group",
+    "cand_hash",
+    "cand_sid",
+    "cand_mk_idx",
+    "cand_hi_ms",
+    "win_lo_ms",
+    "win_hi_ms",
+    "win_unbounded",
+    "win_contains",
+    "grade",
+    "identity",
+    "identity_reason",
+    "inv_q",
+    "inv_pos_min",
+    "inv_pos_max",
+    "inv_relation",
+    "inv_timing_sensitive",
+    "inv_ledger_conditional"
+  ],
+  "population": {
+    "rows": 11400,
+    "keys_unique": true,
+    "per_market_side_counts": {
+      "300": 38
+    },
+    "status": {
+      "ok": 11400
+    },
+    "event_statuses": {
+      "event": 19991,
+      "straddle": 1159,
+      "outside_population": 245
+    }
+  },
+  "improve_exclusion": {
+    "rows_eligible": 1116,
+    "event_seconds": 4484,
+    "event_seconds_excluded": 3664,
+    "creations": 11804,
+    "creations_excluded": 8821
+  },
+  "uncertain_rows": {
+    "any": {
+      "event_seconds": 4946,
+      "straddle_without_event": 280
+    },
+    "improve": {
+      "event_seconds": 4484,
+      "straddle_without_event": 406
+    },
+    "re_establish": {
+      "event_seconds": 2200,
+      "straddle_without_event": 848
+    },
+    "deep": {
+      "event_seconds": 1838,
+      "straddle_without_event": 692
+    }
+  },
+  "outcome_recounts": [
+    {
+      "type": "any",
+      "ok": true
+    },
+    {
+      "type": "improve",
+      "ok": true
+    },
+    {
+      "type": "re_establish",
+      "ok": true
+    },
+    {
+      "type": "deep",
+      "ok": true
+    },
+    {
+      "type": "at_empty_touch",
+      "ok": true
+    }
+  ],
+  "ratios": [
+    {
+      "key": [
+        "D0",
+        "any",
+        "spread"
+      ],
+      "computed": 1.3645893617307794,
+      "saved": 1.3645893617307796,
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "any",
+        "spread"
+      ],
+      "computed": 1.0962541389444198,
+      "saved": 1.0962541389444203,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "any",
+        "fair_gap"
+      ],
+      "computed": 1.0924221289172327,
+      "saved": 1.0924221289172322,
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "any",
+        "fair_gap"
+      ],
+      "computed": 1.0309785820146429,
+      "saved": 1.0309785820146429,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "any",
+        "btc_with"
+      ],
+      "computed": 1.1260486342151117,
+      "saved": 1.1260486342151108,
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "any",
+        "btc_with"
+      ],
+      "computed": 1.0174070132504442,
+      "saved": 1.0174070132504438,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "any",
+        "btc_against"
+      ],
+      "computed": 1.0439343482957717,
+      "saved": 1.0439343482957713,
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "any",
+        "btc_against"
+      ],
+      "computed": 1.022066466946457,
+      "saved": 1.0220664669464568,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "any",
+        "depth_own"
+      ],
+      "computed": 1.1232368551380445,
+      "saved": 1.1232368551380445,
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "any",
+        "depth_own"
+      ],
+      "computed": 1.1195014401431476,
+      "saved": 1.1195014401431473,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "any",
+        "flow"
+      ],
+      "computed": 0.8880753138075312,
+      "saved": 0.8880753138075312,
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "any",
+        "flow"
+      ],
+      "computed": 0.6555809882859837,
+      "saved": 0.6555809882859834,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "any",
+        "time_left"
+      ],
+      "computed": 2.0446927374301693,
+      "saved": 2.044692737430168,
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "any",
+        "time_left"
+      ],
+      "computed": 2.0253823803519513,
+      "saved": 2.0253823803519544,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "improve",
+        "spread"
+      ],
+      "computed": 1.224261609222901,
+      "saved": 1.224261609222901,
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "improve",
+        "spread"
+      ],
+      "computed": 1.1066805799160762,
+      "saved": 1.1066805799160766,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "improve",
+        "fair_gap"
+      ],
+      "computed": 1.1379806789011342,
+      "saved": 1.1379806789011342,
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "improve",
+        "fair_gap"
+      ],
+      "computed": 0.972003938244276,
+      "saved": 0.972003938244276,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "improve",
+        "btc_with"
+      ],
+      "computed": 1.1455479365014816,
+      "saved": 1.1455479365014816,
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "improve",
+        "btc_with"
+      ],
+      "computed": 1.0796203006293,
+      "saved": 1.0796203006293,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "improve",
+        "btc_against"
+      ],
+      "computed": 0.938376496565384,
+      "saved": 0.9383764965653841,
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "improve",
+        "btc_against"
+      ],
+      "computed": 0.9357420189818811,
+      "saved": 0.9357420189818807,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "improve",
+        "depth_own"
+      ],
+      "computed": 1.1953192644189141,
+      "saved": 1.1953192644189141,
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "improve",
+        "depth_own"
+      ],
+      "computed": 1.0936267213173696,
+      "saved": 1.0936267213173696,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "improve",
+        "flow"
+      ],
+      "computed": 1.0833333333333333,
+      "saved": 1.0833333333333333,
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "improve",
+        "flow"
+      ],
+      "computed": 0.38709677419354843,
+      "saved": 0.38709677419354843,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "improve",
+        "time_left"
+      ],
+      "computed": 1.2555583674457056,
+      "saved": 1.2555583674457056,
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "improve",
+        "time_left"
+      ],
+      "computed": 1.2453981929513593,
+      "saved": 1.245398192951359,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "re_establish",
+        "spread"
+      ],
+      "computed": 1.485930034644525,
+      "saved": 1.485930034644524,
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "re_establish",
+        "spread"
+      ],
+      "computed": 1.1529341844447911,
+      "saved": 1.1529341844447907,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "re_establish",
+        "fair_gap"
+      ],
+      "computed": 1.3762336056524094,
+      "saved": 1.3762336056524094,
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "re_establish",
+        "fair_gap"
+      ],
+      "computed": 1.2283871924439638,
+      "saved": 1.2283871924439633,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "re_establish",
+        "btc_with"
+      ],
+      "computed": 0.8640610625611753,
+      "saved": 0.8640610625611752,
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "re_establish",
+        "btc_with"
+      ],
+      "computed": 0.9072044177891125,
+      "saved": 0.9072044177891125,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "re_establish",
+        "btc_against"
+      ],
+      "computed": 1.5008784728983535,
+      "saved": 1.5008784728983535,
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "re_establish",
+        "btc_against"
+      ],
+      "computed": 1.3293386047559308,
+      "saved": 1.3293386047559308,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "re_establish",
+        "depth_own"
+      ],
+      "computed": 1.4384641366651436,
+      "saved": 1.4384641366651436,
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "re_establish",
+        "depth_own"
+      ],
+      "computed": 1.4356741652294904,
+      "saved": 1.4356741652294904,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "re_establish",
+        "flow"
+      ],
+      "computed": 4.732758620689656,
+      "saved": 4.732758620689656,
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "re_establish",
+        "flow"
+      ],
+      "computed": 2.4042553191489358,
+      "saved": 2.404255319148936,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "re_establish",
+        "time_left"
+      ],
+      "computed": 2.6952191235059755,
+      "saved": 2.6952191235059755,
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "re_establish",
+        "time_left"
+      ],
+      "computed": 2.6391528645126243,
+      "saved": 2.639152864512626,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "deep",
+        "spread"
+      ],
+      "computed": 1.3805810782820775,
+      "saved": 1.380581078282077,
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "deep",
+        "spread"
+      ],
+      "computed": 1.1628852924050375,
+      "saved": 1.1628852924050368,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "deep",
+        "fair_gap"
+      ],
+      "computed": 0.8858030794446424,
+      "saved": 0.8858030794446423,
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "deep",
+        "fair_gap"
+      ],
+      "computed": 0.846946741042917,
+      "saved": 0.846946741042917,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "deep",
+        "btc_with"
+      ],
+      "computed": 1.4605216425791294,
+      "saved": 1.4605216425791294,
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "deep",
+        "btc_with"
+      ],
+      "computed": 1.135175916649073,
+      "saved": 1.1351759166490731,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "deep",
+        "btc_against"
+      ],
+      "computed": 1.5030914504553925,
+      "saved": 1.5030914504553925,
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "deep",
+        "btc_against"
+      ],
+      "computed": 1.2213369424651157,
+      "saved": 1.2213369424651157,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "deep",
+        "depth_own"
+      ],
+      "computed": 1.486723129354011,
+      "saved": 1.486723129354011,
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "deep",
+        "depth_own"
+      ],
+      "computed": 1.2695123264376398,
+      "saved": 1.2695123264376396,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "deep",
+        "flow"
+      ],
+      "computed": 0.9927927927927929,
+      "saved": 0.9927927927927929,
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "deep",
+        "flow"
+      ],
+      "computed": 0.6583509513742073,
+      "saved": 0.6583509513742072,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "deep",
+        "time_left"
+      ],
+      "computed": 7.596330275229364,
+      "saved": 7.5963302752293576,
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "deep",
+        "time_left"
+      ],
+      "computed": 7.49341692789969,
+      "saved": 7.4934169278996885,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "at_empty_touch",
+        "spread"
+      ],
+      "computed": "inf",
+      "saved": "inf",
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "at_empty_touch",
+        "spread"
+      ],
+      "computed": "inf",
+      "saved": "inf",
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "at_empty_touch",
+        "fair_gap"
+      ],
+      "computed": "inf",
+      "saved": "inf",
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "at_empty_touch",
+        "fair_gap"
+      ],
+      "computed": "inf",
+      "saved": "inf",
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "at_empty_touch",
+        "btc_with"
+      ],
+      "computed": "inf",
+      "saved": "inf",
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "at_empty_touch",
+        "btc_with"
+      ],
+      "computed": "inf",
+      "saved": "inf",
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "at_empty_touch",
+        "btc_against"
+      ],
+      "computed": "nan",
+      "saved": "nan",
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "at_empty_touch",
+        "btc_against"
+      ],
+      "computed": "nan",
+      "saved": "nan",
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "at_empty_touch",
+        "depth_own"
+      ],
+      "computed": "nan",
+      "saved": "nan",
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "at_empty_touch",
+        "depth_own"
+      ],
+      "computed": "inf",
+      "saved": "inf",
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "at_empty_touch",
+        "flow"
+      ],
+      "computed": "nan",
+      "saved": "nan",
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "at_empty_touch",
+        "flow"
+      ],
+      "computed": "nan",
+      "saved": "nan",
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "at_empty_touch",
+        "time_left"
+      ],
+      "computed": "inf",
+      "saved": "inf",
+      "ok": true
+    },
+    {
+      "key": [
+        "D1000",
+        "at_empty_touch",
+        "time_left"
+      ],
+      "computed": "inf",
+      "saved": "inf",
+      "ok": true
+    }
+  ],
+  "nulls": [
+    {
+      "key": [
+        "D0",
+        "any",
+        "spread"
+      ],
+      "p_hi": 0.001996007984031936,
+      "p_lo": 1.0,
+      "saved_hi": 0.001996007984031936,
+      "saved_lo": 1.0,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "any",
+        "depth_own"
+      ],
+      "p_hi": 0.001996007984031936,
+      "p_lo": 1.0,
+      "saved_hi": 0.001996007984031936,
+      "saved_lo": 1.0,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "re_establish",
+        "fair_gap"
+      ],
+      "p_hi": 0.001996007984031936,
+      "p_lo": 1.0,
+      "saved_hi": 0.001996007984031936,
+      "saved_lo": 1.0,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "re_establish",
+        "btc_against"
+      ],
+      "p_hi": 0.001996007984031936,
+      "p_lo": 1.0,
+      "saved_hi": 0.001996007984031936,
+      "saved_lo": 1.0,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "deep",
+        "time_left"
+      ],
+      "p_hi": 0.001996007984031936,
+      "p_lo": 1.0,
+      "saved_hi": 0.001996007984031936,
+      "saved_lo": 1.0,
+      "ok": true
+    }
+  ],
+  "consistency_failures": [],
+  "identity": {
+    "owner_unknown": 19282,
+    "candidate_scenario": 706,
+    "candidate_constrained": 3
+  },
+  "chain_link_columns": [
+    "chain",
+    "rank",
+    "episode_id",
+    "day",
+    "mid",
+    "addr",
+    "order_hash",
+    "item",
+    "link",
+    "status",
+    "source",
+    "evidence_grade",
+    "census",
+    "reading",
+    "n_histories",
+    "alternatives",
+    "histories_agree",
+    "hidden_action",
+    "identified_private_action",
+    "observed_public",
+    "submitted_size",
+    "size_lower_bound",
+    "n_records",
+    "n_fills",
+    "n_orders_rendered",
+    "pending_reason",
+    "summary"
+  ],
+  "chain_links": [
+    {
+      "chain": 1,
+      "rank": 1,
+      "episode_id": "20261024_3716727_r1_e018",
+      "day": 20261024,
+      "mid": 3716727,
+      "addr": "0x6da6cb464f92ae7ad4ec3d239c81719cb1d0ae03",
+      "order_hash": "0x88c0095c1ea1e1350b55d25f19c83af8fac96c4b3a5d27f395b21f9bb52611a4",
+      "item": "1",
+      "link": "pre_state",
+      "status": "filled",
+      "source": "chains/posting_opportunity/rows.parquet",
+      "evidence_grade": "observed_state",
+      "census": "nan",
+      "reading": "TIED",
+      "n_histories": 25,
+      "alternatives": "spread=1; depth_touch_own=(0,50]; depth_touch_opp=(0,50]; depth_2_own=0; btc_5s_aligned=flat; fair_gap=>3; flow_5s=>0; time_left=(120,240]|spread=1; depth_touch_own=(0,50]; depth_touch_opp=(0,50]; depth_2_own=>200; btc_5s_aligned=flat; fair_gap=(1,3]; flow_5s=>0; time_left=(240,300]|spread=1; depth_touch_own=(0,50]; depth_touch_opp=(50,200]; depth_2_own=(50,200]; btc_5s_aligned=flat; fair_gap=(0,1]; flow_5s=>0; time_left=(240,300]|spread=1; depth_touch_own=(0,50]; depth_touch_opp=>200; depth_2_own=(0,50]; btc_5s_aligned=flat; fair_gap=(1,3]; flow_5s=>0; time_left=(120,240]|spread=1; depth_touch_own=(0,50]; depth_touch_opp=>200; depth_2_own=>200; btc_5s_aligned=flat; fair_gap=(1,3]; flow_5s=>0; time_left=(240,300]|spread=1; depth_touch_own=(50,200]; depth_touch_opp=(0,50]; depth_2_own=(0,50]; btc_5s_aligned=flat; fair_gap=<=0; flow_5s=>0; time_left=(240,300]|spread=1; depth_touch_own=(50,200]; depth_touch_opp=(50,200]; depth_2_own=>200; btc_5s_aligned=flat; fair_gap=(1,3]; flow_5s=>0; time_left=(240,300]|spread=1; depth_touch_own=(50,200]; depth_touch_opp=>200; depth_2_own=(0,50]; btc_5s_aligned=flat; fair_gap=(0,1]; flow_5s=>0; time_left=(240,300]|spread=1; depth_touch_own=(50,200]; depth_touch_opp=>200; depth_2_own=(50,200]; btc_5s_aligned=flat; fair_gap=(1,3]; flow_5s=>0; time_left=(120,240]|spread=1; depth_touch_own=(50,200]; depth_touch_opp=>200; depth_2_own=(50,200]; btc_5s_aligned=flat; fair_gap=(1,3]; flow_5s=>0; time_left=(240,300]|spread=1; depth_touch_own=(50,200]; depth_touch_opp=>200; depth_2_own=>200; btc_5s_aligned=against; fair_gap=<=0; flow_5s=>0; time_left=(120,240]|spread=1; depth_touch_own=(50,200]; depth_touch_opp=>200; depth_2_own=>200; btc_5s_aligned=flat; fair_gap=(0,1]; flow_5s=>0; time_left=(120,240]|spread=1; depth_touch_own=(50,200]; depth_touch_opp=>200; depth_2_own=>200; btc_5s_aligned=flat; fair_gap=(0,1]; flow_5s=>0; time_left=(240,300]|spread=1; depth_touch_own=(50,200]; depth_touch_opp=>200; depth_2_own=>200; btc_5s_aligned=flat; fair_gap=(1,3]; flow_5s=>0; time_left=(240,300]|spread=1; depth_touch_own=>200; depth_touch_opp=(0,50]; depth_2_own=>200; btc_5s_aligned=flat; fair_gap=(1,3]; flow_5s=>0; time_left=(120,240]|spread=1; depth_touch_own=>200; depth_touch_opp=(0,50]; depth_2_own=>200; btc_5s_aligned=flat; fair_gap=(1,3]; flow_5s=>0; time_left=(240,300]|spread=1; depth_touch_own=>200; depth_touch_opp=(50,200]; depth_2_own=>200; btc_5s_aligned=flat; fair_gap=(1,3]; flow_5s=>0; time_left=(120,240]|spread=1; depth_touch_own=>200; depth_touch_opp=(50,200]; depth_2_own=>200; btc_5s_aligned=flat; fair_gap=(1,3]; flow_5s=>0; time_left=(240,300]|spread=1; depth_touch_own=>200; depth_touch_opp=>200; depth_2_own=(50,200]; btc_5s_aligned=flat; fair_gap=(1,3]; flow_5s=>0; time_left=(240,300]|spread=1; depth_touch_own=>200; depth_touch_opp=>200; depth_2_own=>200; btc_5s_aligned=flat; fair_gap=(0,1]; flow_5s=>0; time_left=(120,240]|spread=1; depth_touch_own=>200; depth_touch_opp=>200; depth_2_own=>200; btc_5s_aligned=flat; fair_gap=(1,3]; flow_5s=>0; time_left=(120,240]|spread=1; depth_touch_own=>200; depth_touch_opp=>200; depth_2_own=>200; btc_5s_aligned=flat; fair_gap=(1,3]; flow_5s=>0; time_left=(240,300]|spread=2; depth_touch_own=(0,50]; depth_touch_opp=(0,50]; depth_2_own=(0,50]; btc_5s_aligned=flat; fair_gap=<=0; flow_5s=>0; time_left=(240,300]|spread=2; depth_touch_own=(0,50]; depth_touch_opp=>200; depth_2_own=(50,200]; btc_5s_aligned=flat; fair_gap=>3; flow_5s=>0; time_left=(120,240]|spread=2; depth_touch_own=>200; depth_touch_opp=(50,200]; depth_2_own=>200; btc_5s_aligned=flat; fair_gap=(1,3]; flow_5s=>0; time_left=(240,300]",
+      "histories_agree": false,
+      "hidden_action": "the posting second inside k = 2..80 (ws+2..ws+81 s): features spread, depth_touch_own, depth_touch_opp, depth_2_own, btc_5s_aligned, fair_gap, time_left change across it",
+      "identified_private_action": false,
+      "observed_public": true,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 79,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "79 saved seconds; features constant: flow_5s"
+    },
+    {
+      "chain": 1,
+      "rank": 1,
+      "episode_id": "20261024_3716727_r1_e018",
+      "day": 20261024,
+      "mid": 3716727,
+      "addr": "0x6da6cb464f92ae7ad4ec3d239c81719cb1d0ae03",
+      "order_hash": "0x88c0095c1ea1e1350b55d25f19c83af8fac96c4b3a5d27f395b21f9bb52611a4",
+      "item": "2",
+      "link": "post",
+      "status": "filled",
+      "source": "correction_v1/post_regrade_orders.csv; post_fill/orders.csv; order_ledger.csv; cases.csv; census_graded.csv",
+      "evidence_grade": "post_window:G4_scenario_only",
+      "census": "rank1 20261024 G4_scenario_only: 348 of 746 first-filled orders",
+      "reading": "TIED",
+      "n_histories": 4,
+      "alternatives": "late_post_in_scenario_window + EX|late_post_in_scenario_window + PL|earlier_post_masked_by_replenishment + EX|earlier_post_masked_by_replenishment + PL",
+      "histories_agree": false,
+      "hidden_action": "the posting instant inside [ws+2.325s, ws+80.506s] (78181 ms; scenario union estimate only); the submitted size: exhausted at the filled size (EX) vs a cancelled remainder (PL)",
+      "identified_private_action": false,
+      "observed_public": false,
+      "submitted_size": "nan",
+      "size_lower_bound": 30.0,
+      "n_records": 0,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "ask 69c, G4_scenario_only gt_10s, size >= 30.00 sh (EX|PL)"
+    },
+    {
+      "chain": 1,
+      "rank": 1,
+      "episode_id": "20261024_3716727_r1_e018",
+      "day": 20261024,
+      "mid": 3716727,
+      "addr": "0x6da6cb464f92ae7ad4ec3d239c81719cb1d0ae03",
+      "order_hash": "0x88c0095c1ea1e1350b55d25f19c83af8fac96c4b3a5d27f395b21f9bb52611a4",
+      "item": "3",
+      "link": "queue",
+      "status": "filled",
+      "source": "queue_front_v2/levels+candidates; post_fill/orders.csv; life fills",
+      "evidence_grade": "scenario_queue_history",
+      "census": "nan",
+      "reading": "TIED",
+      "n_histories": 2,
+      "alternatives": "front_at_first_fill @ level 51 (unknown)|behind_at_first_fill @ level 51 (unknown)",
+      "histories_agree": false,
+      "hidden_action": "whether orders were ahead at the first fill (S_FIFO ahead [0.00, 320.00] sh at the first fill; [24.00, 442.97] sh at acceptance)",
+      "identified_private_action": false,
+      "observed_public": false,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 0,
+      "n_fills": 1,
+      "n_orders_rendered": 1,
+      "pending_reason": "nan",
+      "summary": "class unidentified; 1 compatible level(s)"
+    },
+    {
+      "chain": 1,
+      "rank": 1,
+      "episode_id": "20261024_3716727_r1_e018",
+      "day": 20261024,
+      "mid": 3716727,
+      "addr": "0x6da6cb464f92ae7ad4ec3d239c81719cb1d0ae03",
+      "order_hash": "0x88c0095c1ea1e1350b55d25f19c83af8fac96c4b3a5d27f395b21f9bb52611a4",
+      "item": "4a",
+      "link": "ending",
+      "status": "filled",
+      "source": "order_ledger.csv size_end; post_fill/orders.csv; pull/pulls.csv; episodes.csv; census_graded.csv",
+      "evidence_grade": "cancel_compatible_ending",
+      "census": "rank1 20261024 pull_possible:S_FIFO:cancel_possible 447; pull_possible:S_NOPRIO:cancel_possible 696",
+      "reading": "TIED",
+      "n_histories": 2,
+      "alternatives": "EX|PL",
+      "histories_agree": false,
+      "hidden_action": "an unobserved cancel of the remainder (PL: withdrawn [0.01, inf] sh in [ws+78.506s, ws+80.524s]) vs exhaustion by the last fill (EX): if exhausted there was no pull decision; if pulled, the END context is a candidate trigger only",
+      "identified_private_action": false,
+      "observed_public": false,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 0,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "EX|PL; cancel-compatible S_FIFO, S_NOPRIO"
+    },
+    {
+      "chain": 1,
+      "rank": 1,
+      "episode_id": "20261024_3716727_r1_e018",
+      "day": 20261024,
+      "mid": 3716727,
+      "addr": "0x6da6cb464f92ae7ad4ec3d239c81719cb1d0ae03",
+      "order_hash": "0x88c0095c1ea1e1350b55d25f19c83af8fac96c4b3a5d27f395b21f9bb52611a4",
+      "item": "4b",
+      "link": "repost",
+      "status": "filled",
+      "source": "post_fill/orders.csv; order_ledger.csv links; census_graded.csv",
+      "evidence_grade": "scenario_dependent_link",
+      "census": "rank1 20261024 successor_reprice sequential_under_scenarios: 150 of 505",
+      "reading": "TIED",
+      "n_histories": 3,
+      "alternatives": "replace|replenish|unrelated",
+      "histories_agree": false,
+      "hidden_action": "whether the successor 0x89e05c2583 was a new submission replacing this order (replace), a top-up (replenish), an order already resting (overlap) or unrelated: a sequential timing never identifies a repost or its intent",
+      "identified_private_action": false,
+      "observed_public": false,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 0,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "reprice sequential_under_scenarios to 0x89e05c2583"
+    },
+    {
+      "chain": 1,
+      "rank": 1,
+      "episode_id": "20261024_3716727_r1_e018",
+      "day": 20261024,
+      "mid": 3716727,
+      "addr": "0x6da6cb464f92ae7ad4ec3d239c81719cb1d0ae03",
+      "order_hash": "0x88c0095c1ea1e1350b55d25f19c83af8fac96c4b3a5d27f395b21f9bb52611a4",
+      "item": "5",
+      "link": "takes",
+      "status": "filled",
+      "source": "take_logic_v2/events.parquet; cases.csv; episodes.csv",
+      "evidence_grade": "observed_execution",
+      "census": "nan",
+      "reading": "ONE-HISTORY",
+      "n_histories": 1,
+      "alternatives": "D0/D1000/pend: q0,q0,same,same,opposing,opposing,same,same,opposing,same,same,same",
+      "histories_agree": true,
+      "hidden_action": "nan",
+      "identified_private_action": false,
+      "observed_public": true,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 12,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "12 take record(s); D0 {'opposing': 3, 'q0': 2, 'same': 7}; clock-disagreeing 0; undetermined {'q0': 2}"
+    },
+    {
+      "chain": 1,
+      "rank": 1,
+      "episode_id": "20261024_3716727_r1_e018",
+      "day": 20261024,
+      "mid": 3716727,
+      "addr": "0x6da6cb464f92ae7ad4ec3d239c81719cb1d0ae03",
+      "order_hash": "0x88c0095c1ea1e1350b55d25f19c83af8fac96c4b3a5d27f395b21f9bb52611a4",
+      "item": "6",
+      "link": "value",
+      "status": "filled",
+      "source": "econ/fills_valued.parquet; closes/closes.parquet; closes/closes_markets.parquet; matched_gap_r1/per_market.csv; episode_summary.csv; post_fill/orders.csv",
+      "evidence_grade": "recorded_fill_accounting",
+      "census": "nan",
+      "reading": "ONE-HISTORY",
+      "n_histories": 1,
+      "alternatives": "recorded_fills_under_every_retained_history",
+      "histories_agree": true,
+      "hidden_action": "nan",
+      "identified_private_action": false,
+      "observed_public": true,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 47,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "END net -42.93 $ (47/47 valid); 10s/60s/END same sign False"
+    },
+    {
+      "chain": 2,
+      "rank": 1,
+      "episode_id": "20261024_3702960_r1_e006",
+      "day": 20261024,
+      "mid": 3702960,
+      "addr": "0x6da6cb464f92ae7ad4ec3d239c81719cb1d0ae03",
+      "order_hash": "0x02fb943dae46a833559094e61ce64e8ac3ffcbde63f0db8abdc4c0ee9cc8521a",
+      "item": "1",
+      "link": "pre_state",
+      "status": "filled",
+      "source": "chains/posting_opportunity/rows.parquet",
+      "evidence_grade": "observed_state",
+      "census": "nan",
+      "reading": "TIED",
+      "n_histories": 3,
+      "alternatives": "spread=1; depth_touch_own=(50,200]; depth_touch_opp=>200; depth_2_own=(50,200]; btc_5s_aligned=flat; fair_gap=>3; flow_5s=>0; time_left=(60,120]|spread=2; depth_touch_own=(50,200]; depth_touch_opp=(50,200]; depth_2_own=(0,50]; btc_5s_aligned=flat; fair_gap=>3; flow_5s=>0; time_left=(60,120]|spread=2; depth_touch_own=>200; depth_touch_opp=(0,50]; depth_2_own=(50,200]; btc_5s_aligned=flat; fair_gap=>3; flow_5s=>0; time_left=(60,120]",
+      "histories_agree": false,
+      "hidden_action": "the posting second inside k = 211..213 (ws+211..ws+214 s): features spread, depth_touch_own, depth_touch_opp, depth_2_own change across it",
+      "identified_private_action": false,
+      "observed_public": true,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 3,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "3 saved seconds; features constant: btc_5s_aligned, fair_gap, flow_5s, time_left"
+    },
+    {
+      "chain": 2,
+      "rank": 1,
+      "episode_id": "20261024_3702960_r1_e006",
+      "day": 20261024,
+      "mid": 3702960,
+      "addr": "0x6da6cb464f92ae7ad4ec3d239c81719cb1d0ae03",
+      "order_hash": "0x02fb943dae46a833559094e61ce64e8ac3ffcbde63f0db8abdc4c0ee9cc8521a",
+      "item": "2",
+      "link": "post",
+      "status": "filled",
+      "source": "correction_v1/post_regrade_orders.csv; post_fill/orders.csv; order_ledger.csv; cases.csv; census_graded.csv",
+      "evidence_grade": "post_window:G4_scenario_only",
+      "census": "rank1 20261024 G4_scenario_only: 348 of 746 first-filled orders",
+      "reading": "TIED",
+      "n_histories": 4,
+      "alternatives": "late_post_in_scenario_window + EX|late_post_in_scenario_window + PL|earlier_post_masked_by_replenishment + EX|earlier_post_masked_by_replenishment + PL",
+      "histories_agree": false,
+      "hidden_action": "the posting instant inside [ws+211.237s, ws+213.303s] (2066 ms; scenario union estimate only); the submitted size: exhausted at the filled size (EX) vs a cancelled remainder (PL)",
+      "identified_private_action": false,
+      "observed_public": false,
+      "submitted_size": "nan",
+      "size_lower_bound": 6.6666,
+      "n_records": 0,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "ask 13c, G4_scenario_only le_10s, size >= 6.67 sh (EX|PL)"
+    },
+    {
+      "chain": 2,
+      "rank": 1,
+      "episode_id": "20261024_3702960_r1_e006",
+      "day": 20261024,
+      "mid": 3702960,
+      "addr": "0x6da6cb464f92ae7ad4ec3d239c81719cb1d0ae03",
+      "order_hash": "0x02fb943dae46a833559094e61ce64e8ac3ffcbde63f0db8abdc4c0ee9cc8521a",
+      "item": "3",
+      "link": "queue",
+      "status": "filled",
+      "source": "queue_front_v2/levels+candidates; post_fill/orders.csv; life fills",
+      "evidence_grade": "scenario_queue_history",
+      "census": "nan",
+      "reading": "TIED",
+      "n_histories": 4,
+      "alternatives": "front_at_first_fill @ level 236 (unknown)|front_at_first_fill @ level 273 (unknown)|behind_at_first_fill @ level 236 (unknown)|behind_at_first_fill @ level 273 (unknown)",
+      "histories_agree": false,
+      "hidden_action": "whether orders were ahead at the first fill (S_FIFO ahead [0.00, 177.15] sh at the first fill; [0.00, 183.82] sh at acceptance); which fresh-level life the first fill matched in (level 236 (unknown), level 273 (unknown))",
+      "identified_private_action": false,
+      "observed_public": false,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 0,
+      "n_fills": 1,
+      "n_orders_rendered": 1,
+      "pending_reason": "nan",
+      "summary": "class unidentified; 2 compatible level(s)"
+    },
+    {
+      "chain": 2,
+      "rank": 1,
+      "episode_id": "20261024_3702960_r1_e006",
+      "day": 20261024,
+      "mid": 3702960,
+      "addr": "0x6da6cb464f92ae7ad4ec3d239c81719cb1d0ae03",
+      "order_hash": "0x02fb943dae46a833559094e61ce64e8ac3ffcbde63f0db8abdc4c0ee9cc8521a",
+      "item": "4a",
+      "link": "ending",
+      "status": "filled",
+      "source": "order_ledger.csv size_end; post_fill/orders.csv; pull/pulls.csv; episodes.csv; census_graded.csv",
+      "evidence_grade": "cancel_compatible_ending",
+      "census": "rank1 20261024 pull_possible:S_FIFO:cancel_possible 447; pull_possible:S_NOPRIO:cancel_possible 696",
+      "reading": "TIED",
+      "n_histories": 2,
+      "alternatives": "EX|PL",
+      "histories_agree": false,
+      "hidden_action": "an unobserved cancel of the remainder (PL: withdrawn [0.01, inf] sh in [ws+211.303s, ws+271.016s]) vs exhaustion by the last fill (EX): if exhausted there was no pull decision; if pulled, the END context is a candidate trigger only",
+      "identified_private_action": false,
+      "observed_public": false,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 0,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "EX|PL; cancel-compatible S_FIFO, S_NOPRIO"
+    },
+    {
+      "chain": 2,
+      "rank": 1,
+      "episode_id": "20261024_3702960_r1_e006",
+      "day": 20261024,
+      "mid": 3702960,
+      "addr": "0x6da6cb464f92ae7ad4ec3d239c81719cb1d0ae03",
+      "order_hash": "0x02fb943dae46a833559094e61ce64e8ac3ffcbde63f0db8abdc4c0ee9cc8521a",
+      "item": "4b",
+      "link": "repost",
+      "status": "filled",
+      "source": "post_fill/orders.csv; order_ledger.csv links; census_graded.csv",
+      "evidence_grade": "scenario_dependent_link",
+      "census": "rank1 20261024 successor_reprice tied: 355 of 505",
+      "reading": "TIED",
+      "n_histories": 4,
+      "alternatives": "overlap|replace|replenish|unrelated",
+      "histories_agree": false,
+      "hidden_action": "whether the successor 0xdef88dc345 was a new submission replacing this order (replace), a top-up (replenish), an order already resting (overlap) or unrelated: a sequential timing never identifies a repost or its intent",
+      "identified_private_action": false,
+      "observed_public": false,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 0,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "reprice tied to 0xdef88dc345"
+    },
+    {
+      "chain": 2,
+      "rank": 1,
+      "episode_id": "20261024_3702960_r1_e006",
+      "day": 20261024,
+      "mid": 3702960,
+      "addr": "0x6da6cb464f92ae7ad4ec3d239c81719cb1d0ae03",
+      "order_hash": "0x02fb943dae46a833559094e61ce64e8ac3ffcbde63f0db8abdc4c0ee9cc8521a",
+      "item": "5",
+      "link": "takes",
+      "status": "filled",
+      "source": "take_logic_v2/events.parquet; cases.csv; episodes.csv",
+      "evidence_grade": "observed_execution",
+      "census": "nan",
+      "reading": "ONE-HISTORY",
+      "n_histories": 1,
+      "alternatives": "D0/D1000/pend: same,same,same,same,same,opposing,opposing,opposing",
+      "histories_agree": true,
+      "hidden_action": "nan",
+      "identified_private_action": false,
+      "observed_public": true,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 8,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "8 take record(s); D0 {'opposing': 3, 'same': 5}; clock-disagreeing 0; undetermined {}"
+    },
+    {
+      "chain": 2,
+      "rank": 1,
+      "episode_id": "20261024_3702960_r1_e006",
+      "day": 20261024,
+      "mid": 3702960,
+      "addr": "0x6da6cb464f92ae7ad4ec3d239c81719cb1d0ae03",
+      "order_hash": "0x02fb943dae46a833559094e61ce64e8ac3ffcbde63f0db8abdc4c0ee9cc8521a",
+      "item": "6",
+      "link": "value",
+      "status": "filled",
+      "source": "econ/fills_valued.parquet; closes/closes.parquet; closes/closes_markets.parquet; matched_gap_r1/per_market.csv; episode_summary.csv; post_fill/orders.csv",
+      "evidence_grade": "recorded_fill_accounting",
+      "census": "nan",
+      "reading": "ONE-HISTORY",
+      "n_histories": 1,
+      "alternatives": "recorded_fills_under_every_retained_history",
+      "histories_agree": true,
+      "hidden_action": "nan",
+      "identified_private_action": false,
+      "observed_public": true,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 21,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "END net +5.87 $ (21/21 valid); 10s/60s/END same sign True"
+    },
+    {
+      "chain": 3,
+      "rank": 2,
+      "episode_id": "20261024_3702960_r2_e007",
+      "day": 20261024,
+      "mid": 3702960,
+      "addr": "0x7d32c568a9bea1714036972601c51f4902c67091",
+      "order_hash": "0x084be2d8a41e7076c69f91fe7581a4089c4be1fda60a3a1b52069da39f6c58ca",
+      "item": "1",
+      "link": "pre_state",
+      "status": "filled",
+      "source": "chains/posting_opportunity/rows.parquet",
+      "evidence_grade": "observed_state",
+      "census": "nan",
+      "reading": "ONE-HISTORY",
+      "n_histories": 1,
+      "alternatives": "spread=1; depth_touch_own=(50,200]; depth_touch_opp=>200; depth_2_own=(50,200]; btc_5s_aligned=flat; fair_gap=(0,1]; flow_5s=>0; time_left=(240,300]",
+      "histories_agree": true,
+      "hidden_action": "nan",
+      "identified_private_action": false,
+      "observed_public": true,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 1,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "1 saved seconds; features constant: spread, depth_touch_own, depth_touch_opp, depth_2_own, btc_5s_aligned, fair_gap, flow_5s, time_left"
+    },
+    {
+      "chain": 3,
+      "rank": 2,
+      "episode_id": "20261024_3702960_r2_e007",
+      "day": 20261024,
+      "mid": 3702960,
+      "addr": "0x7d32c568a9bea1714036972601c51f4902c67091",
+      "order_hash": "0x084be2d8a41e7076c69f91fe7581a4089c4be1fda60a3a1b52069da39f6c58ca",
+      "item": "2",
+      "link": "post",
+      "status": "filled",
+      "source": "correction_v1/post_regrade_orders.csv; post_fill/orders.csv; order_ledger.csv; cases.csv; census_graded.csv",
+      "evidence_grade": "post_window:G1_conflict",
+      "census": "rank2 20261024 G1_conflict: 41 of 368 first-filled orders",
+      "reading": "TIED",
+      "n_histories": 4,
+      "alternatives": "posting_time_unresolved_early + EX|posting_time_unresolved_early + PL|posting_time_unresolved_late + EX|posting_time_unresolved_late + PL",
+      "histories_agree": false,
+      "hidden_action": "the posting instant inside [ws+4.027s, ws+4.785s] (758 ms; void: conflict flags); the submitted size: exhausted at the filled size (EX) vs a cancelled remainder (PL)",
+      "identified_private_action": false,
+      "observed_public": false,
+      "submitted_size": "nan",
+      "size_lower_bound": 50.0,
+      "n_records": 0,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "bid 49c, G1_conflict le_1s, size >= 50.00 sh (EX|PL)"
+    },
+    {
+      "chain": 3,
+      "rank": 2,
+      "episode_id": "20261024_3702960_r2_e007",
+      "day": 20261024,
+      "mid": 3702960,
+      "addr": "0x7d32c568a9bea1714036972601c51f4902c67091",
+      "order_hash": "0x084be2d8a41e7076c69f91fe7581a4089c4be1fda60a3a1b52069da39f6c58ca",
+      "item": "3",
+      "link": "queue",
+      "status": "filled",
+      "source": "queue_front_v2/levels+candidates; post_fill/orders.csv; life fills",
+      "evidence_grade": "scenario_queue_history",
+      "census": "nan",
+      "reading": "TIED",
+      "n_histories": 4,
+      "alternatives": "front_at_first_fill @ level 71 (ambiguous_order) + masked_netting_possible|behind_at_first_fill @ level 71 (ambiguous_order) + masked_netting_possible|front_at_first_fill @ level 71 (ambiguous_order) + as_saved|behind_at_first_fill @ level 71 (ambiguous_order) + as_saved",
+      "histories_agree": false,
+      "hidden_action": "whether orders were ahead at the first fill (S_FIFO ahead [6.86, 26.63] sh at the first fill; [21.86, 151.86] sh at acceptance); a cancellation / replenishment masked inside a frame interval (net book change; section 5 finding 1)",
+      "identified_private_action": false,
+      "observed_public": false,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 0,
+      "n_fills": 3,
+      "n_orders_rendered": 1,
+      "pending_reason": "nan",
+      "summary": "class conflicting; 1 compatible level(s)"
+    },
+    {
+      "chain": 3,
+      "rank": 2,
+      "episode_id": "20261024_3702960_r2_e007",
+      "day": 20261024,
+      "mid": 3702960,
+      "addr": "0x7d32c568a9bea1714036972601c51f4902c67091",
+      "order_hash": "0x084be2d8a41e7076c69f91fe7581a4089c4be1fda60a3a1b52069da39f6c58ca",
+      "item": "4a",
+      "link": "ending",
+      "status": "filled",
+      "source": "order_ledger.csv size_end; post_fill/orders.csv; pull/pulls.csv; episodes.csv; census_graded.csv",
+      "evidence_grade": "scenario_dependent_ending",
+      "census": "rank2 20261024 not cancel-compatible in S_FIFO / S_NOPRIO",
+      "reading": "TIED",
+      "n_histories": 2,
+      "alternatives": "EX|PL",
+      "histories_agree": false,
+      "hidden_action": "an unobserved cancel of the remainder (PL: withdrawn [0.01, 1.96] sh in [ws+5.030s, ws+7.626s]) vs exhaustion by the last fill (EX): if exhausted there was no pull decision; if pulled, the END context is a candidate trigger only",
+      "identified_private_action": false,
+      "observed_public": false,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 0,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "EX|PL; cancel-compatible none"
+    },
+    {
+      "chain": 3,
+      "rank": 2,
+      "episode_id": "20261024_3702960_r2_e007",
+      "day": 20261024,
+      "mid": 3702960,
+      "addr": "0x7d32c568a9bea1714036972601c51f4902c67091",
+      "order_hash": "0x084be2d8a41e7076c69f91fe7581a4089c4be1fda60a3a1b52069da39f6c58ca",
+      "item": "4b",
+      "link": "repost",
+      "status": "filled",
+      "source": "post_fill/orders.csv; order_ledger.csv links; census_graded.csv",
+      "evidence_grade": "scenario_dependent_link",
+      "census": "rank2 20261024 successor_reprice sequential_under_scenarios: 46 of 245",
+      "reading": "TIED",
+      "n_histories": 3,
+      "alternatives": "replace|replenish|unrelated",
+      "histories_agree": false,
+      "hidden_action": "whether the successor 0xd0f156e83a was a new submission replacing this order (replace), a top-up (replenish), an order already resting (overlap) or unrelated: a sequential timing never identifies a repost or its intent",
+      "identified_private_action": false,
+      "observed_public": false,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 0,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "reprice sequential_under_scenarios to 0xd0f156e83a"
+    },
+    {
+      "chain": 3,
+      "rank": 2,
+      "episode_id": "20261024_3702960_r2_e007",
+      "day": 20261024,
+      "mid": 3702960,
+      "addr": "0x7d32c568a9bea1714036972601c51f4902c67091",
+      "order_hash": "0x084be2d8a41e7076c69f91fe7581a4089c4be1fda60a3a1b52069da39f6c58ca",
+      "item": "5",
+      "link": "takes",
+      "status": "filled",
+      "source": "take_logic_v2/events.parquet; cases.csv; episodes.csv",
+      "evidence_grade": "observed_execution",
+      "census": "nan",
+      "reading": "ONE-HISTORY",
+      "n_histories": 1,
+      "alternatives": "D0/D1000/pend: q0,same,same,same,opposing",
+      "histories_agree": true,
+      "hidden_action": "nan",
+      "identified_private_action": false,
+      "observed_public": true,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 5,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "5 take record(s); D0 {'opposing': 1, 'q0': 1, 'same': 3}; clock-disagreeing 0; undetermined {'q0': 1}"
+    },
+    {
+      "chain": 3,
+      "rank": 2,
+      "episode_id": "20261024_3702960_r2_e007",
+      "day": 20261024,
+      "mid": 3702960,
+      "addr": "0x7d32c568a9bea1714036972601c51f4902c67091",
+      "order_hash": "0x084be2d8a41e7076c69f91fe7581a4089c4be1fda60a3a1b52069da39f6c58ca",
+      "item": "6",
+      "link": "value",
+      "status": "filled",
+      "source": "econ/fills_valued.parquet; closes/closes.parquet; closes/closes_markets.parquet; matched_gap_r1/per_market.csv; episode_summary.csv; post_fill/orders.csv",
+      "evidence_grade": "recorded_fill_accounting",
+      "census": "nan",
+      "reading": "ONE-HISTORY",
+      "n_histories": 1,
+      "alternatives": "recorded_fills_under_every_retained_history",
+      "histories_agree": true,
+      "hidden_action": "nan",
+      "identified_private_action": false,
+      "observed_public": true,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 33,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "END net -46.33 $ (33/33 valid); 10s/60s/END same sign False"
+    },
+    {
+      "chain": 4,
+      "rank": 2,
+      "episode_id": "20261024_3712725_r2_e015",
+      "day": 20261024,
+      "mid": 3712725,
+      "addr": "0x7d32c568a9bea1714036972601c51f4902c67091",
+      "order_hash": "0xa46229318a1903bd49f5ac1cb2d7d155da80edcca4ca4af179fda9d61d6c4369",
+      "item": "1",
+      "link": "pre_state",
+      "status": "filled",
+      "source": "chains/posting_opportunity/rows.parquet",
+      "evidence_grade": "observed_state",
+      "census": "nan",
+      "reading": "TIED",
+      "n_histories": 4,
+      "alternatives": "spread=1; depth_touch_own=(0,50]; depth_touch_opp=>200; depth_2_own=(50,200]; btc_5s_aligned=flat; fair_gap=(0,1]; flow_5s=>0; time_left=(120,240]|spread=1; depth_touch_own=>200; depth_touch_opp=>200; depth_2_own=>200; btc_5s_aligned=flat; fair_gap=(0,1]; flow_5s=>0; time_left=(120,240]|spread=1; depth_touch_own=>200; depth_touch_opp=>200; depth_2_own=>200; btc_5s_aligned=flat; fair_gap=(1,3]; flow_5s=>0; time_left=(120,240]|spread=1; depth_touch_own=>200; depth_touch_opp=>200; depth_2_own=>200; btc_5s_aligned=flat; fair_gap=>3; flow_5s=>0; time_left=(120,240]",
+      "histories_agree": false,
+      "hidden_action": "the posting second inside k = 62..65 (ws+62..ws+66 s): features depth_touch_own, depth_2_own, fair_gap change across it",
+      "identified_private_action": false,
+      "observed_public": true,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 4,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "4 saved seconds; features constant: spread, depth_touch_opp, btc_5s_aligned, flow_5s, time_left"
+    },
+    {
+      "chain": 4,
+      "rank": 2,
+      "episode_id": "20261024_3712725_r2_e015",
+      "day": 20261024,
+      "mid": 3712725,
+      "addr": "0x7d32c568a9bea1714036972601c51f4902c67091",
+      "order_hash": "0xa46229318a1903bd49f5ac1cb2d7d155da80edcca4ca4af179fda9d61d6c4369",
+      "item": "2",
+      "link": "post",
+      "status": "filled",
+      "source": "correction_v1/post_regrade_orders.csv; post_fill/orders.csv; order_ledger.csv; cases.csv; census_graded.csv",
+      "evidence_grade": "post_window:G2_bound_constrained",
+      "census": "rank2 20261024 G2_bound_constrained: 167 of 368 first-filled orders",
+      "reading": "TIED",
+      "n_histories": 2,
+      "alternatives": "posted_le_10s_before_first_fill + EX|posted_le_10s_before_first_fill + PL",
+      "histories_agree": false,
+      "hidden_action": "the submitted size: exhausted at the filled size (EX) vs a cancelled remainder (PL)",
+      "identified_private_action": false,
+      "observed_public": false,
+      "submitted_size": "nan",
+      "size_lower_bound": 50.0,
+      "n_records": 0,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "bid 42c, G2_bound_constrained le_10s, size >= 50.00 sh (EX|PL)"
+    },
+    {
+      "chain": 4,
+      "rank": 2,
+      "episode_id": "20261024_3712725_r2_e015",
+      "day": 20261024,
+      "mid": 3712725,
+      "addr": "0x7d32c568a9bea1714036972601c51f4902c67091",
+      "order_hash": "0xa46229318a1903bd49f5ac1cb2d7d155da80edcca4ca4af179fda9d61d6c4369",
+      "item": "3",
+      "link": "queue",
+      "status": "filled",
+      "source": "queue_front_v2/levels+candidates; post_fill/orders.csv; life fills",
+      "evidence_grade": "scenario_queue_history",
+      "census": "nan",
+      "reading": "TIED",
+      "n_histories": 4,
+      "alternatives": "front_at_first_fill @ level 221 (ambiguous_order) + masked_netting_possible|behind_at_first_fill @ level 221 (ambiguous_order) + masked_netting_possible|front_at_first_fill @ level 221 (ambiguous_order) + as_saved|behind_at_first_fill @ level 221 (ambiguous_order) + as_saved",
+      "histories_agree": false,
+      "hidden_action": "whether orders were ahead at the first fill (S_FIFO ahead [0.00, 509.52] sh at the first fill; [0.00, 793.04] sh at acceptance); a cancellation / replenishment masked inside a frame interval (net book change; section 5 finding 1)",
+      "identified_private_action": false,
+      "observed_public": false,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 0,
+      "n_fills": 1,
+      "n_orders_rendered": 1,
+      "pending_reason": "nan",
+      "summary": "class unidentified; 1 compatible level(s)"
+    },
+    {
+      "chain": 4,
+      "rank": 2,
+      "episode_id": "20261024_3712725_r2_e015",
+      "day": 20261024,
+      "mid": 3712725,
+      "addr": "0x7d32c568a9bea1714036972601c51f4902c67091",
+      "order_hash": "0xa46229318a1903bd49f5ac1cb2d7d155da80edcca4ca4af179fda9d61d6c4369",
+      "item": "4a",
+      "link": "ending",
+      "status": "filled",
+      "source": "order_ledger.csv size_end; post_fill/orders.csv; pull/pulls.csv; episodes.csv; census_graded.csv",
+      "evidence_grade": "cancel_compatible_ending",
+      "census": "rank2 20261024 pull_possible:S_NOPRIO:cancel_possible 344",
+      "reading": "TIED",
+      "n_histories": 2,
+      "alternatives": "EX|PL",
+      "histories_agree": false,
+      "hidden_action": "an unobserved cancel of the remainder (PL: withdrawn [0.01, inf] sh in [ws+63.084s, ws+65.085s]) vs exhaustion by the last fill (EX): if exhausted there was no pull decision; if pulled, the END context is a candidate trigger only",
+      "identified_private_action": false,
+      "observed_public": false,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 0,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "EX|PL; cancel-compatible S_NOPRIO"
+    },
+    {
+      "chain": 4,
+      "rank": 2,
+      "episode_id": "20261024_3712725_r2_e015",
+      "day": 20261024,
+      "mid": 3712725,
+      "addr": "0x7d32c568a9bea1714036972601c51f4902c67091",
+      "order_hash": "0xa46229318a1903bd49f5ac1cb2d7d155da80edcca4ca4af179fda9d61d6c4369",
+      "item": "4b",
+      "link": "repost",
+      "status": "filled",
+      "source": "post_fill/orders.csv; order_ledger.csv links; census_graded.csv",
+      "evidence_grade": "scenario_dependent_link",
+      "census": "rank2 20261024 successor_reprice tied: 199 of 245",
+      "reading": "TIED",
+      "n_histories": 4,
+      "alternatives": "overlap|replace|replenish|unrelated",
+      "histories_agree": false,
+      "hidden_action": "whether the successor 0x6f5fc55834 was a new submission replacing this order (replace), a top-up (replenish), an order already resting (overlap) or unrelated: a sequential timing never identifies a repost or its intent",
+      "identified_private_action": false,
+      "observed_public": false,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 0,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "reprice tied to 0x6f5fc55834"
+    },
+    {
+      "chain": 4,
+      "rank": 2,
+      "episode_id": "20261024_3712725_r2_e015",
+      "day": 20261024,
+      "mid": 3712725,
+      "addr": "0x7d32c568a9bea1714036972601c51f4902c67091",
+      "order_hash": "0xa46229318a1903bd49f5ac1cb2d7d155da80edcca4ca4af179fda9d61d6c4369",
+      "item": "5",
+      "link": "takes",
+      "status": "filled",
+      "source": "take_logic_v2/events.parquet; cases.csv; episodes.csv",
+      "evidence_grade": "observed_execution",
+      "census": "nan",
+      "reading": "NO-EVENT",
+      "n_histories": 1,
+      "alternatives": "no_take_record_in_the_window",
+      "histories_agree": true,
+      "hidden_action": "nan",
+      "identified_private_action": false,
+      "observed_public": true,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 0,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "no take record in the episode window"
+    },
+    {
+      "chain": 4,
+      "rank": 2,
+      "episode_id": "20261024_3712725_r2_e015",
+      "day": 20261024,
+      "mid": 3712725,
+      "addr": "0x7d32c568a9bea1714036972601c51f4902c67091",
+      "order_hash": "0xa46229318a1903bd49f5ac1cb2d7d155da80edcca4ca4af179fda9d61d6c4369",
+      "item": "6",
+      "link": "value",
+      "status": "filled",
+      "source": "econ/fills_valued.parquet; closes/closes.parquet; closes/closes_markets.parquet; matched_gap_r1/per_market.csv; episode_summary.csv; post_fill/orders.csv",
+      "evidence_grade": "recorded_fill_accounting",
+      "census": "nan",
+      "reading": "ONE-HISTORY",
+      "n_histories": 1,
+      "alternatives": "recorded_fills_under_every_retained_history",
+      "histories_agree": true,
+      "hidden_action": "nan",
+      "identified_private_action": false,
+      "observed_public": true,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 22,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "END net +77.05 $ (22/22 valid); 10s/60s/END same sign False"
+    },
+    {
+      "chain": 5,
+      "rank": 3,
+      "episode_id": "20261024_3712725_r3_e014",
+      "day": 20261024,
+      "mid": 3712725,
+      "addr": "0x57fbc891e89184da071ae9d97e745531cd7f718a",
+      "order_hash": "0x01ebf81129c65381fd72b5b33ddf3f4aa5e0b84e52b146e789e224ee313344b6",
+      "item": "1",
+      "link": "pre_state",
+      "status": "filled",
+      "source": "chains/posting_opportunity/rows.parquet",
+      "evidence_grade": "observed_state",
+      "census": "nan",
+      "reading": "TIED",
+      "n_histories": 2,
+      "alternatives": "spread=1; depth_touch_own=(50,200]; depth_touch_opp=>200; depth_2_own=(50,200]; btc_5s_aligned=flat; fair_gap=>3; flow_5s=>0; time_left=(60,120]|spread=1; depth_touch_own=>200; depth_touch_opp=(50,200]; depth_2_own=>200; btc_5s_aligned=flat; fair_gap=>3; flow_5s=>0; time_left=(60,120]",
+      "histories_agree": false,
+      "hidden_action": "the posting second inside k = 186..187 (ws+186..ws+188 s): features depth_touch_own, depth_touch_opp, depth_2_own change across it",
+      "identified_private_action": false,
+      "observed_public": true,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 2,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "2 saved seconds; features constant: spread, btc_5s_aligned, fair_gap, flow_5s, time_left"
+    },
+    {
+      "chain": 5,
+      "rank": 3,
+      "episode_id": "20261024_3712725_r3_e014",
+      "day": 20261024,
+      "mid": 3712725,
+      "addr": "0x57fbc891e89184da071ae9d97e745531cd7f718a",
+      "order_hash": "0x01ebf81129c65381fd72b5b33ddf3f4aa5e0b84e52b146e789e224ee313344b6",
+      "item": "2",
+      "link": "post",
+      "status": "filled",
+      "source": "correction_v1/post_regrade_orders.csv; post_fill/orders.csv; order_ledger.csv; cases.csv; census_graded.csv",
+      "evidence_grade": "post_window:G1_conflict",
+      "census": "rank3 20261024 G1_conflict: 33 of 471 first-filled orders",
+      "reading": "TIED",
+      "n_histories": 4,
+      "alternatives": "posting_time_unresolved_early + EX|posting_time_unresolved_early + PL|posting_time_unresolved_late + EX|posting_time_unresolved_late + PL",
+      "histories_agree": false,
+      "hidden_action": "the posting instant inside [ws+186.382s, ws+187.544s] (1162 ms; void: conflict flags); the submitted size: exhausted at the filled size (EX) vs a cancelled remainder (PL)",
+      "identified_private_action": false,
+      "observed_public": false,
+      "submitted_size": "nan",
+      "size_lower_bound": 220.0,
+      "n_records": 0,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "ask 32c, G1_conflict le_10s, size >= 220.00 sh (EX|PL)"
+    },
+    {
+      "chain": 5,
+      "rank": 3,
+      "episode_id": "20261024_3712725_r3_e014",
+      "day": 20261024,
+      "mid": 3712725,
+      "addr": "0x57fbc891e89184da071ae9d97e745531cd7f718a",
+      "order_hash": "0x01ebf81129c65381fd72b5b33ddf3f4aa5e0b84e52b146e789e224ee313344b6",
+      "item": "3",
+      "link": "queue",
+      "status": "filled",
+      "source": "queue_front_v2/levels+candidates; post_fill/orders.csv; life fills",
+      "evidence_grade": "scenario_queue_history",
+      "census": "nan",
+      "reading": "TIED",
+      "n_histories": 4,
+      "alternatives": "front_at_first_fill @ level 496 (unexplained_decrease) + masked_netting_possible|behind_at_first_fill @ level 496 (unexplained_decrease) + masked_netting_possible|front_at_first_fill @ level 496 (unexplained_decrease) + as_saved|behind_at_first_fill @ level 496 (unexplained_decrease) + as_saved",
+      "histories_agree": false,
+      "hidden_action": "whether orders were ahead at the first fill (S_FIFO ahead [0.00, na] sh at the first fill; [8.00, 736.27] sh at acceptance); a cancellation / replenishment masked inside a frame interval (net book change; section 5 finding 1)",
+      "identified_private_action": false,
+      "observed_public": false,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 0,
+      "n_fills": 7,
+      "n_orders_rendered": 1,
+      "pending_reason": "nan",
+      "summary": "class conflicting; 1 compatible level(s)"
+    },
+    {
+      "chain": 5,
+      "rank": 3,
+      "episode_id": "20261024_3712725_r3_e014",
+      "day": 20261024,
+      "mid": 3712725,
+      "addr": "0x57fbc891e89184da071ae9d97e745531cd7f718a",
+      "order_hash": "0x01ebf81129c65381fd72b5b33ddf3f4aa5e0b84e52b146e789e224ee313344b6",
+      "item": "4a",
+      "link": "ending",
+      "status": "filled",
+      "source": "order_ledger.csv size_end; post_fill/orders.csv; pull/pulls.csv; episodes.csv; census_graded.csv",
+      "evidence_grade": "cancel_compatible_ending",
+      "census": "rank3 20261024 pull_possible:S_NOPRIO:cancel_possible 451",
+      "reading": "TIED",
+      "n_histories": 2,
+      "alternatives": "EX|PL",
+      "histories_agree": false,
+      "hidden_action": "an unobserved cancel of the remainder (PL: withdrawn [0.01, 40.00] sh in [ws+193.961s, ws+196.082s]) vs exhaustion by the last fill (EX): if exhausted there was no pull decision; if pulled, the END context is a candidate trigger only",
+      "identified_private_action": false,
+      "observed_public": false,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 0,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "EX|PL; cancel-compatible S_NOPRIO"
+    },
+    {
+      "chain": 5,
+      "rank": 3,
+      "episode_id": "20261024_3712725_r3_e014",
+      "day": 20261024,
+      "mid": 3712725,
+      "addr": "0x57fbc891e89184da071ae9d97e745531cd7f718a",
+      "order_hash": "0x01ebf81129c65381fd72b5b33ddf3f4aa5e0b84e52b146e789e224ee313344b6",
+      "item": "4b",
+      "link": "repost",
+      "status": "filled",
+      "source": "post_fill/orders.csv; order_ledger.csv links; census_graded.csv",
+      "evidence_grade": "unresolved_alternatives",
+      "census": "rank3 20261024 successor_none none: 70 of 70",
+      "reading": "TIED",
+      "n_histories": 3,
+      "alternatives": "pull_without_repost|unfilled_repost|no_pull",
+      "histories_agree": false,
+      "hidden_action": "whether the order was pulled without a repost, reposted with an order that never filled, or exhausted (invisible in fills)",
+      "identified_private_action": false,
+      "observed_public": false,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 0,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "none none"
+    },
+    {
+      "chain": 5,
+      "rank": 3,
+      "episode_id": "20261024_3712725_r3_e014",
+      "day": 20261024,
+      "mid": 3712725,
+      "addr": "0x57fbc891e89184da071ae9d97e745531cd7f718a",
+      "order_hash": "0x01ebf81129c65381fd72b5b33ddf3f4aa5e0b84e52b146e789e224ee313344b6",
+      "item": "5",
+      "link": "takes",
+      "status": "filled",
+      "source": "take_logic_v2/events.parquet; cases.csv; episodes.csv",
+      "evidence_grade": "observed_execution",
+      "census": "nan",
+      "reading": "ONE-HISTORY",
+      "n_histories": 1,
+      "alternatives": "D0/D1000/pend: opposing,opposing,opposing,opposing,opposing",
+      "histories_agree": true,
+      "hidden_action": "nan",
+      "identified_private_action": false,
+      "observed_public": true,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 5,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "5 take record(s); D0 {'opposing': 5}; clock-disagreeing 0; undetermined {}"
+    },
+    {
+      "chain": 5,
+      "rank": 3,
+      "episode_id": "20261024_3712725_r3_e014",
+      "day": 20261024,
+      "mid": 3712725,
+      "addr": "0x57fbc891e89184da071ae9d97e745531cd7f718a",
+      "order_hash": "0x01ebf81129c65381fd72b5b33ddf3f4aa5e0b84e52b146e789e224ee313344b6",
+      "item": "6",
+      "link": "value",
+      "status": "filled",
+      "source": "econ/fills_valued.parquet; closes/closes.parquet; closes/closes_markets.parquet; matched_gap_r1/per_market.csv; episode_summary.csv; post_fill/orders.csv",
+      "evidence_grade": "recorded_fill_accounting",
+      "census": "nan",
+      "reading": "ONE-HISTORY",
+      "n_histories": 1,
+      "alternatives": "recorded_fills_under_every_retained_history",
+      "histories_agree": true,
+      "hidden_action": "nan",
+      "identified_private_action": false,
+      "observed_public": true,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 72,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "END net -263.95 $ (72/72 valid); 10s/60s/END same sign False"
+    },
+    {
+      "chain": 6,
+      "rank": 3,
+      "episode_id": "20261024_3716727_r3_e017",
+      "day": 20261024,
+      "mid": 3716727,
+      "addr": "0x57fbc891e89184da071ae9d97e745531cd7f718a",
+      "order_hash": "0x66e4f311be20759a83daa0ab94f757740294138102f04e5e433393540f759bd1",
+      "item": "1",
+      "link": "pre_state",
+      "status": "filled",
+      "source": "chains/posting_opportunity/rows.parquet",
+      "evidence_grade": "observed_state",
+      "census": "nan",
+      "reading": "TIED",
+      "n_histories": 17,
+      "alternatives": "spread=1; depth_touch_own=(0,50]; depth_touch_opp=(0,50]; depth_2_own=>200; btc_5s_aligned=flat; fair_gap=(1,3]; flow_5s=>0; time_left=(240,300]|spread=1; depth_touch_own=(0,50]; depth_touch_opp=(50,200]; depth_2_own=(50,200]; btc_5s_aligned=flat; fair_gap=(0,1]; flow_5s=>0; time_left=(240,300]|spread=1; depth_touch_own=(0,50]; depth_touch_opp=>200; depth_2_own=>200; btc_5s_aligned=flat; fair_gap=(1,3]; flow_5s=>0; time_left=(240,300]|spread=1; depth_touch_own=(50,200]; depth_touch_opp=(0,50]; depth_2_own=(0,50]; btc_5s_aligned=flat; fair_gap=(0,1]; flow_5s=>0; time_left=(240,300]|spread=1; depth_touch_own=(50,200]; depth_touch_opp=(0,50]; depth_2_own=(0,50]; btc_5s_aligned=flat; fair_gap=<=0; flow_5s=>0; time_left=(240,300]|spread=1; depth_touch_own=(50,200]; depth_touch_opp=(50,200]; depth_2_own=>200; btc_5s_aligned=flat; fair_gap=(1,3]; flow_5s=>0; time_left=(240,300]|spread=1; depth_touch_own=(50,200]; depth_touch_opp=>200; depth_2_own=(0,50]; btc_5s_aligned=flat; fair_gap=(0,1]; flow_5s=>0; time_left=(240,300]|spread=1; depth_touch_own=(50,200]; depth_touch_opp=>200; depth_2_own=(50,200]; btc_5s_aligned=flat; fair_gap=(1,3]; flow_5s=>0; time_left=(240,300]|spread=1; depth_touch_own=(50,200]; depth_touch_opp=>200; depth_2_own=>200; btc_5s_aligned=flat; fair_gap=(0,1]; flow_5s=>0; time_left=(240,300]|spread=1; depth_touch_own=(50,200]; depth_touch_opp=>200; depth_2_own=>200; btc_5s_aligned=flat; fair_gap=(1,3]; flow_5s=>0; time_left=(240,300]|spread=1; depth_touch_own=>200; depth_touch_opp=(0,50]; depth_2_own=>200; btc_5s_aligned=flat; fair_gap=(1,3]; flow_5s=>0; time_left=(240,300]|spread=1; depth_touch_own=>200; depth_touch_opp=(50,200]; depth_2_own=>200; btc_5s_aligned=flat; fair_gap=(1,3]; flow_5s=>0; time_left=(240,300]|spread=1; depth_touch_own=>200; depth_touch_opp=>200; depth_2_own=(50,200]; btc_5s_aligned=flat; fair_gap=(1,3]; flow_5s=>0; time_left=(240,300]|spread=1; depth_touch_own=>200; depth_touch_opp=>200; depth_2_own=>200; btc_5s_aligned=flat; fair_gap=(1,3]; flow_5s=>0; time_left=(240,300]|spread=2; depth_touch_own=(0,50]; depth_touch_opp=(0,50]; depth_2_own=(0,50]; btc_5s_aligned=flat; fair_gap=<=0; flow_5s=>0; time_left=(240,300]|spread=2; depth_touch_own=(0,50]; depth_touch_opp=>200; depth_2_own=(0,50]; btc_5s_aligned=flat; fair_gap=<=0; flow_5s=>0; time_left=(240,300]|spread=2; depth_touch_own=>200; depth_touch_opp=(50,200]; depth_2_own=>200; btc_5s_aligned=flat; fair_gap=(1,3]; flow_5s=>0; time_left=(240,300]",
+      "histories_agree": false,
+      "hidden_action": "the posting second inside k = 0..56 (ws+0..ws+57 s): features spread, depth_touch_own, depth_touch_opp, depth_2_own, fair_gap change across it",
+      "identified_private_action": false,
+      "observed_public": true,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 57,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "57 saved seconds; features constant: btc_5s_aligned, flow_5s, time_left"
+    },
+    {
+      "chain": 6,
+      "rank": 3,
+      "episode_id": "20261024_3716727_r3_e017",
+      "day": 20261024,
+      "mid": 3716727,
+      "addr": "0x57fbc891e89184da071ae9d97e745531cd7f718a",
+      "order_hash": "0x66e4f311be20759a83daa0ab94f757740294138102f04e5e433393540f759bd1",
+      "item": "2",
+      "link": "post",
+      "status": "filled",
+      "source": "correction_v1/post_regrade_orders.csv; post_fill/orders.csv; order_ledger.csv; cases.csv; census_graded.csv",
+      "evidence_grade": "post_window:G2_bound_constrained",
+      "census": "rank3 20261024 G2_bound_constrained: 209 of 471 first-filled orders",
+      "reading": "TIED",
+      "n_histories": 4,
+      "alternatives": "early_post_rest_gt_10s + EX|early_post_rest_gt_10s + PL|late_post_rest_le_10s + EX|late_post_rest_le_10s + PL",
+      "histories_agree": false,
+      "hidden_action": "the posting instant inside [ws+0.896s, ws+56.719s] (55823 ms; lifecycle scenario-free bound (conditional on H1 / H2 / capacity and the maximum match lag)); the submitted size: exhausted at the filled size (EX) vs a cancelled remainder (PL)",
+      "identified_private_action": false,
+      "observed_public": false,
+      "submitted_size": "nan",
+      "size_lower_bound": 10.0,
+      "n_records": 0,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "ask 61c, G2_bound_constrained gt_10s, size >= 10.00 sh (EX|PL)"
+    },
+    {
+      "chain": 6,
+      "rank": 3,
+      "episode_id": "20261024_3716727_r3_e017",
+      "day": 20261024,
+      "mid": 3716727,
+      "addr": "0x57fbc891e89184da071ae9d97e745531cd7f718a",
+      "order_hash": "0x66e4f311be20759a83daa0ab94f757740294138102f04e5e433393540f759bd1",
+      "item": "3",
+      "link": "queue",
+      "status": "filled",
+      "source": "queue_front_v2/levels+candidates; post_fill/orders.csv; life fills",
+      "evidence_grade": "scenario_queue_history",
+      "census": "nan",
+      "reading": "TIED",
+      "n_histories": 4,
+      "alternatives": "front_at_first_fill @ level 28 (ambiguous_order) + masked_netting_possible|behind_at_first_fill @ level 28 (ambiguous_order) + masked_netting_possible|front_at_first_fill @ level 28 (ambiguous_order) + as_saved|behind_at_first_fill @ level 28 (ambiguous_order) + as_saved",
+      "histories_agree": false,
+      "hidden_action": "whether orders were ahead at the first fill (S_FIFO ahead [0.00, 272.32] sh at the first fill; [0.00, 318.65] sh at acceptance); a cancellation / replenishment masked inside a frame interval (net book change; section 5 finding 1)",
+      "identified_private_action": false,
+      "observed_public": false,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 0,
+      "n_fills": 1,
+      "n_orders_rendered": 1,
+      "pending_reason": "nan",
+      "summary": "class unidentified; 1 compatible level(s)"
+    },
+    {
+      "chain": 6,
+      "rank": 3,
+      "episode_id": "20261024_3716727_r3_e017",
+      "day": 20261024,
+      "mid": 3716727,
+      "addr": "0x57fbc891e89184da071ae9d97e745531cd7f718a",
+      "order_hash": "0x66e4f311be20759a83daa0ab94f757740294138102f04e5e433393540f759bd1",
+      "item": "4a",
+      "link": "ending",
+      "status": "filled",
+      "source": "order_ledger.csv size_end; post_fill/orders.csv; pull/pulls.csv; episodes.csv; census_graded.csv",
+      "evidence_grade": "cancel_compatible_ending",
+      "census": "rank3 20261024 pull_possible:S_NOPRIO:cancel_possible 451",
+      "reading": "TIED",
+      "n_histories": 2,
+      "alternatives": "EX|PL",
+      "histories_agree": false,
+      "hidden_action": "an unobserved cancel of the remainder (PL: withdrawn [0.01, inf] sh in [ws+54.719s, ws+78.425s]) vs exhaustion by the last fill (EX): if exhausted there was no pull decision; if pulled, the END context is a candidate trigger only",
+      "identified_private_action": false,
+      "observed_public": false,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 0,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "EX|PL; cancel-compatible S_NOPRIO"
+    },
+    {
+      "chain": 6,
+      "rank": 3,
+      "episode_id": "20261024_3716727_r3_e017",
+      "day": 20261024,
+      "mid": 3716727,
+      "addr": "0x57fbc891e89184da071ae9d97e745531cd7f718a",
+      "order_hash": "0x66e4f311be20759a83daa0ab94f757740294138102f04e5e433393540f759bd1",
+      "item": "4b",
+      "link": "repost",
+      "status": "filled",
+      "source": "post_fill/orders.csv; order_ledger.csv links; census_graded.csv",
+      "evidence_grade": "scenario_dependent_link",
+      "census": "rank3 20261024 successor_reprice tied: 236 of 324",
+      "reading": "TIED",
+      "n_histories": 4,
+      "alternatives": "overlap|replace|replenish|unrelated",
+      "histories_agree": false,
+      "hidden_action": "whether the successor 0xc5d1f7e499 was a new submission replacing this order (replace), a top-up (replenish), an order already resting (overlap) or unrelated: a sequential timing never identifies a repost or its intent",
+      "identified_private_action": false,
+      "observed_public": false,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 0,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "reprice tied to 0xc5d1f7e499"
+    },
+    {
+      "chain": 6,
+      "rank": 3,
+      "episode_id": "20261024_3716727_r3_e017",
+      "day": 20261024,
+      "mid": 3716727,
+      "addr": "0x57fbc891e89184da071ae9d97e745531cd7f718a",
+      "order_hash": "0x66e4f311be20759a83daa0ab94f757740294138102f04e5e433393540f759bd1",
+      "item": "5",
+      "link": "takes",
+      "status": "filled",
+      "source": "take_logic_v2/events.parquet; cases.csv; episodes.csv",
+      "evidence_grade": "observed_execution",
+      "census": "nan",
+      "reading": "ONE-HISTORY",
+      "n_histories": 1,
+      "alternatives": "D0/D1000/pend: opposing,opposing,opposing",
+      "histories_agree": true,
+      "hidden_action": "nan",
+      "identified_private_action": false,
+      "observed_public": true,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 3,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "3 take record(s); D0 {'opposing': 3}; clock-disagreeing 0; undetermined {}"
+    },
+    {
+      "chain": 6,
+      "rank": 3,
+      "episode_id": "20261024_3716727_r3_e017",
+      "day": 20261024,
+      "mid": 3716727,
+      "addr": "0x57fbc891e89184da071ae9d97e745531cd7f718a",
+      "order_hash": "0x66e4f311be20759a83daa0ab94f757740294138102f04e5e433393540f759bd1",
+      "item": "6",
+      "link": "value",
+      "status": "filled",
+      "source": "econ/fills_valued.parquet; closes/closes.parquet; closes/closes_markets.parquet; matched_gap_r1/per_market.csv; episode_summary.csv; post_fill/orders.csv",
+      "evidence_grade": "recorded_fill_accounting",
+      "census": "nan",
+      "reading": "ONE-HISTORY",
+      "n_histories": 1,
+      "alternatives": "recorded_fills_under_every_retained_history",
+      "histories_agree": true,
+      "hidden_action": "nan",
+      "identified_private_action": false,
+      "observed_public": true,
+      "submitted_size": "nan",
+      "size_lower_bound": "nan",
+      "n_records": 67,
+      "n_fills": 0,
+      "n_orders_rendered": 0,
+      "pending_reason": "nan",
+      "summary": "END net -8.34 $ (67/67 valid); 10s/60s/END same sign False"
+    }
+  ]
+}

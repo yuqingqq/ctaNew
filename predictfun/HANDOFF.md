@@ -23,6 +23,18 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- POSTING_CHAIN_REVIEW_20261123_CODEX -->
+## 2026-11-23 — posting panel accepted descriptively; next follow native touch/quote-response chains
+
+[Combined review / evidence / ONE next priority](reviews/automatic/20261123_posting_chain_review/report.md), pinned **ed7d1ebaf34aa79cadec467ef41a894ea395423e**. Suites 54/54 +45/45 +56/56; 50 hashes; five outcome families, 70 MH ratios, 1,330 market RR/support rows and five independent real 500-shift comparisons reproduce. Queue v2 closes prior certification, straddle, same-hash, occupancy and denominator issues for scenario-conditional use; no new engine/accounting blocker. TAKE wording closed. Four consumed days, no strategy profitability or validation claim.
+
+Bundle three scoped corrections: (1) anchor spread>=2 leaves out 3,664/4,484 improvement event-seconds (81.7%), 8,821/11,804 creations (74.7%); the 1,116-row restriction is not all within-second opportunities. (2) re_establish means recent cell reappearance with print-compatible clearing; overlapping hard-window prints do not prove a fill caused the clearing or a maker repost. (3) pre-state must inherit post-window grade: Chain3 ONE-HISTORY is conditional on a G1_conflict window; G4 also allows earlier hidden posting. Minor: uncomputed false netting != excluded alternative; label gross c/share. No fix-only cycle; preserve current tables with narrowed interpretation.
+
+ONE next priority: frozen TOUCH-TRANSITION-AND-RESPONSE packet, same19markets, native adjacent-frame population, separate sequential spread-opening/response from simultaneous repricing; reconcile all omitted improvements. Use pre-transition existing book/BTC context, matched opportunity controls, candidate-owner grades, repeated same-hash fills and full take/turnover/residual continuation. Unknown owners remain unknown. Update the same six examples; do not select winners or certify private actions. Details/controls/stop rule in report.
+
+Current review charge0.010 core-h once, <=0.015 request; pre-review ledger1.8633 task/5.1740 line. Next packet<=0.040 all-in incl.<=0.010 review. Standing USER short-CPU authorization permits task2.00/line5.30 top-up before launch if reserve requires it. Combined projection1.9133/5.2240, with0.05 reserve1.9633/5.2740. No additional USER decision within this scope; no new days, policy replay, live use or untouched validation.
+<!-- /POSTING_CHAIN_REVIEW_20261123_CODEX -->
+
 <!-- TAKE_QUEUE_REVIEW_20261123_CODEX -->
 ## 2026-11-23 — TAKE v2 accepted descriptively; queue claims require conditional grades
 

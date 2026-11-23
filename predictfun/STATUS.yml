@@ -1,4 +1,29 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+posting_chain_review_20261123_codex:
+  target: ed7d1ebaf34aa79cadec467ef41a894ea395423e
+  report: predictfun/reviews/automatic/20261123_posting_chain_review/report.md
+  status: neutral_panel_accepted_restricted_scope_and_chain_grades_need_qualification
+  prior_queue_corrections: closed_for_scenario_conditional_use
+  synthetic_checks_passed: 155
+  artifact_source_checks_passed: 50
+  independent_outcome_families_passed: 5
+  independent_mh_recounts_passed: 70
+  independent_market_recounts_passed: 1330
+  independent_real_500_shift_comparisons_passed: 5
+  improvement_event_seconds: 4484
+  improvement_event_seconds_excluded_by_anchor_mask: 3664
+  improvement_creations: 11804
+  improvement_creations_excluded_by_anchor_mask: 8821
+  next_priority: native_frame_touch_transition_and_response_chains
+  next_packet_all_in_core_hours_cap: 0.040
+  review_charge_core_hours: 0.010
+  pre_review_task_core_hours: 1.8633
+  pre_review_line_core_hours: 5.1740
+  standing_small_cpu_topup_authorized: true
+  next_task_cap_with_reserve_core_hours: 2.00
+  next_line_cap_with_reserve_core_hours: 5.30
+  additional_user_decision_within_scope_and_caps: false
+
 take_queue_review_20261123_codex:
   target: 0b2b0b13eb19f9f8c3df40d149a31c0b832905f8
   report: predictfun/reviews/automatic/20261123_take_queue_review/report.md

@@ -1,0 +1,543 @@
+{
+  "target": "ed7d1ebaf34aa79cadec467ef41a894ea395423e",
+  "suites": [
+    {
+      "name": "posting_opportunity_selftest",
+      "rc": 0,
+      "last": [
+        "PASS preflight: a 60 s projection passes and the pilot receipt is hashed as an input",
+        "{\"checks\": 54, \"failed\": 0, \"cpu_s\": 2.019, \"process_cpu_s\": 2.52, \"vmhwm_mib\": 204.3}"
+      ]
+    },
+    {
+      "name": "queue_front_v2_selftest",
+      "rc": 0,
+      "last": [
+        "PASS e2e: a second write into the written directory is refused (before any input is read)",
+        "{\"checks\": 45, \"failed\": 0, \"cpu_s\": 1.988, \"process_cpu_s\": 2.443, \"vmhwm_mib\": 159.4}"
+      ]
+    },
+    {
+      "name": "chains_v3_selftest",
+      "rc": 0,
+      "last": [
+        "PASS a run refuses a sibling whose file does not match its receipt, before any write",
+        "{\"checks\": 56, \"failed\": 0, \"cpu_s\": 2.234, \"vmhwm_mib\": 130.1}"
+      ]
+    }
+  ],
+  "population": {
+    "rows": 11400,
+    "keys_unique": true,
+    "per_market_side_counts": {
+      "300": 38
+    },
+    "status": {
+      "ok": 11400
+    },
+    "event_statuses": {
+      "event": 19991,
+      "straddle": 1159,
+      "outside_population": 245
+    }
+  },
+  "improve_exclusion": {
+    "rows_eligible": 1116,
+    "event_seconds": 4484,
+    "event_seconds_excluded": 3664,
+    "creations": 11804,
+    "creations_excluded": 8821
+  },
+  "uncertain_rows": {
+    "any": {
+      "event_seconds": 4946,
+      "straddle_without_event": 280
+    },
+    "improve": {
+      "event_seconds": 4484,
+      "straddle_without_event": 406
+    },
+    "re_establish": {
+      "event_seconds": 2200,
+      "straddle_without_event": 848
+    },
+    "deep": {
+      "event_seconds": 1838,
+      "straddle_without_event": 692
+    }
+  },
+  "outcome_recounts": [
+    {
+      "type": "any",
+      "ok": false
+    },
+    {
+      "type": "improve",
+      "ok": false
+    },
+    {
+      "type": "re_establish",
+      "ok": false
+    },
+    {
+      "type": "deep",
+      "ok": false
+    },
+    {
+      "type": "at_empty_touch",
+      "ok": false
+    }
+  ],
+  "nulls": [
+    {
+      "key": [
+        "D0",
+        "any",
+        "spread"
+      ],
+      "p_hi": 0.001996007984031936,
+      "p_lo": 1.0,
+      "saved_hi": 0.001996007984031936,
+      "saved_lo": 1.0,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "any",
+        "depth_own"
+      ],
+      "p_hi": 0.001996007984031936,
+      "p_lo": 1.0,
+      "saved_hi": 0.001996007984031936,
+      "saved_lo": 1.0,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "re_establish",
+        "fair_gap"
+      ],
+      "p_hi": 0.001996007984031936,
+      "p_lo": 1.0,
+      "saved_hi": 0.001996007984031936,
+      "saved_lo": 1.0,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "re_establish",
+        "btc_against"
+      ],
+      "p_hi": 0.001996007984031936,
+      "p_lo": 1.0,
+      "saved_hi": 0.001996007984031936,
+      "saved_lo": 1.0,
+      "ok": true
+    },
+    {
+      "key": [
+        "D0",
+        "deep",
+        "time_left"
+      ],
+      "p_hi": 0.001996007984031936,
+      "p_lo": 1.0,
+      "saved_hi": 0.001996007984031936,
+      "saved_lo": 1.0,
+      "ok": true
+    }
+  ],
+  "consistency_failures": [
+    [
+      "D0",
+      "any",
+      "spread",
+      [
+        "20261024",
+        3697902
+      ],
+      1.7881219903691812,
+      1.8463289698349459,
+      false,
+      false
+    ],
+    [
+      "D0",
+      "any",
+      "spread",
+      [
+        "20261024",
+        3716727
+      ],
+      1.3823529411764703,
+      1.3956844056129203,
+      true,
+      true
+    ],
+    [
+      "D0",
+      "any",
+      "spread",
+      [
+        "20261026",
+        3804696
+      ],
+      1.3163869244645854,
+      1.3283582207029931,
+      true,
+      true
+    ],
+    [
+      "D0",
+      "any",
+      "spread",
+      [
+        "20261026",
+        3850428
+      ],
+      1.9548254620123202,
+      1.9031578947368422,
+      false,
+      false
+    ],
+    [
+      "D0",
+      "any",
+      "spread",
+      [
+        "20261027",
+        3877472
+      ],
+      1.4410796576695193,
+      1.449966420416387,
+      true,
+      true
+    ],
+    [
+      "D0",
+      "any",
+      "spread",
+      [
+        "20261027",
+        3899224
+      ],
+      1.6711409395973158,
+      1.757462686567164,
+      false,
+      false
+    ],
+    [
+      "D1000",
+      "any",
+      "spread",
+      [
+        "20261026",
+        3850428
+      ],
+      1.6091405184174628,
+      1.5207468879668051,
+      false,
+      false
+    ],
+    [
+      "D1000",
+      "any",
+      "spread",
+      [
+        "20261027",
+        3877472
+      ],
+      1.139183397247914,
+      1.1379192334017796,
+      true,
+      true
+    ],
+    [
+      "D0",
+      "re_establish",
+      "spread",
+      [
+        "20261024",
+        3697902
+      ],
+      2.672597864768683,
+      2.8302122347066163,
+      false,
+      false
+    ],
+    [
+      "D0",
+      "re_establish",
+      "spread",
+      [
+        "20261024",
+        3716727
+      ],
+      1.6988586479367866,
+      1.74327917282127,
+      true,
+      true
+    ],
+    [
+      "D0",
+      "re_establish",
+      "spread",
+      [
+        "20261026",
+        3804696
+      ],
+      1.1263237475627885,
+      1.1473977367700225,
+      true,
+      true
+    ],
+    [
+      "D0",
+      "re_establish",
+      "spread",
+      [
+        "20261027",
+        3877472
+      ],
+      1.9049707602339183,
+      1.8282163742690059,
+      true,
+      true
+    ],
+    [
+      "D0",
+      "re_establish",
+      "spread",
+      [
+        "20261027",
+        3899224
+      ],
+      2.0045248868778276,
+      2.119617224880383,
+      false,
+      false
+    ],
+    [
+      "D1000",
+      "re_establish",
+      "spread",
+      [
+        "20261027",
+        3877472
+      ],
+      1.3267086766844403,
+      1.286027798098025,
+      true,
+      true
+    ],
+    [
+      "D0",
+      "deep",
+      "spread",
+      [
+        "20261024",
+        3697902
+      ],
+      1.8534201954397398,
+      1.9056152927120666,
+      false,
+      false
+    ],
+    [
+      "D0",
+      "deep",
+      "spread",
+      [
+        "20261024",
+        3716727
+      ],
+      1.4236111111111112,
+      1.444182389937107,
+      true,
+      true
+    ],
+    [
+      "D0",
+      "deep",
+      "spread",
+      [
+        "20261026",
+        3804696
+      ],
+      0.7403252124423126,
+      0.7540422830011565,
+      true,
+      true
+    ],
+    [
+      "D0",
+      "deep",
+      "spread",
+      [
+        "20261026",
+        3850428
+      ],
+      2.297071129707113,
+      2.096234309623431,
+      false,
+      false
+    ],
+    [
+      "D0",
+      "deep",
+      "spread",
+      [
+        "20261027",
+        3877472
+      ],
+      1.7618343195266273,
+      1.7651109410864576,
+      true,
+      true
+    ],
+    [
+      "D0",
+      "deep",
+      "spread",
+      [
+        "20261027",
+        3899224
+      ],
+      2.3771428571428577,
+      2.628378378378378,
+      false,
+      false
+    ],
+    [
+      "D1000",
+      "deep",
+      "spread",
+      [
+        "20261026",
+        3850428
+      ],
+      1.7836021505376345,
+      1.5685483870967745,
+      false,
+      false
+    ],
+    [
+      "D1000",
+      "deep",
+      "spread",
+      [
+        "20261027",
+        3877472
+      ],
+      1.7838452787258252,
+      1.7863993025283347,
+      true,
+      true
+    ]
+  ],
+  "identity": {
+    "owner_unknown": 19282,
+    "candidate_scenario": 706,
+    "candidate_constrained": 3
+  },
+  "chain_link_columns": [
+    "chain",
+    "rank",
+    "episode_id",
+    "day",
+    "mid",
+    "addr",
+    "order_hash",
+    "item",
+    "link",
+    "status",
+    "source",
+    "evidence_grade",
+    "census",
+    "reading",
+    "n_histories",
+    "alternatives",
+    "histories_agree",
+    "hidden_action",
+    "identified_private_action",
+    "observed_public",
+    "submitted_size",
+    "size_lower_bound",
+    "n_records",
+    "n_fills",
+    "n_orders_rendered",
+    "pending_reason",
+    "summary"
+  ]
+}
+{
+  "hash_checks": 50,
+  "bad_hashes": [],
+  "mh_checks": 70,
+  "bad_ratios": [
+    {
+      "key": [
+        "D0",
+        "any",
+        "spread"
+      ],
+      "computed": 1.362324706868992,
+      "saved": 1.3645893617307796,
+      "ok": false
+    },
+    {
+      "key": [
+        "D1000",
+        "any",
+        "spread"
+      ],
+      "computed": 1.098133046211912,
+      "saved": 1.0962541389444203,
+      "ok": false
+    },
+    {
+      "key": [
+        "D0",
+        "re_establish",
+        "spread"
+      ],
+      "computed": 1.48357542192341,
+      "saved": 1.485930034644524,
+      "ok": false
+    },
+    {
+      "key": [
+        "D1000",
+        "re_establish",
+        "spread"
+      ],
+      "computed": 1.1551403347943876,
+      "saved": 1.1529341844447907,
+      "ok": false
+    },
+    {
+      "key": [
+        "D0",
+        "deep",
+        "spread"
+      ],
+      "computed": 1.3805811392602645,
+      "saved": 1.380581078282077,
+      "ok": false
+    },
+    {
+      "key": [
+        "D1000",
+        "deep",
+        "spread"
+      ],
+      "computed": 1.167289881588116,
+      "saved": 1.1628852924050368,
+      "ok": false
+    }
+  ]
+}
+2026-11-23T18:44:42Z tag=codex_posting_chain_saved rc=0 peak_rss_mib=283 wall_s=10.14 cpu_user_s=9.14 memavail_start_gib=22 disk_free_gib=422->422 slot=codex
