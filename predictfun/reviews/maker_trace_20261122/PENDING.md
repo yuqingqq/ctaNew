@@ -1,5 +1,24 @@
 # MAKER-TRACE-RECONSTRUCTION-v1 — pending work
 
+## STATE 2026-11-23 11:50Z — LOGIC-CHAIN CORRECTION v1 (review 6bb458b30's next priority) — read this first
+
+**Reviews processed:**
+- 6bb458b30 (findings 1–7 verified at the code: union `post_lo` / B_constrained, take-side 'against', fill-anchored family omitted). Being implemented.
+- Earlier: 6ddad3533, 8f2a2e753, 567f741d9.
+
+**Plan:** `chain_correction_contract.md` (budget ≤ 0.025 h all-in; ledger 1.7989 of 1.85 before it).
+
+**Agents:**
+- A: `tools/chain_correct_post.py` (§1 / §4 / §5);
+- B: `tools/chain_correct_pull_take.py` (§2 / §3 / §5).
+
+Each builder has ≤ 12 CPU s.
+
+**Next:** freeze-commit, then one real run of each into `v2/chains/correction_v1/`, then the superseding `v2/report_logic_chains_v2.md`, then commit + push, then ONE Codex review, then arm `scratchpad/review_watch.sh <SHA>`.
+
+**Auto-check:** cron 60c3d98d (:07 / :27 / :47) replaces 0a70a441.
+
+
 ## STATE 2026-11-23 11:13Z — LOGIC-CHAIN PACKET: USER raised the packet to 0.11 h (task about 1.82 of 1.85) — read this first
 
 **Done (tests pass):**
