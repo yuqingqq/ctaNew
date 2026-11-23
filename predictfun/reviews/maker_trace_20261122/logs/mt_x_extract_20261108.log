@@ -1,0 +1,50 @@
+head=05177007afe3219b28d987a9a92078a0982e6418
+[rest] 20261108_00 {"cpu_s": 1.094, "vmhwm_mib": 117.0}
+[rest] 20261108_01 {"cpu_s": 1.642, "vmhwm_mib": 117.4}
+[rest] 20261108_02 {"cpu_s": 1.712, "vmhwm_mib": 117.9}
+[rest] 20261108_03 {"pages": 48, "record_receipts": 411, "new_records": 42, "cpu_s": 1.341, "vmhwm_mib": 119.3}
+[rest] 20261108_04 {"pages": 2389, "record_receipts": 189096, "new_records": 10193, "cpu_s": 6.365, "vmhwm_mib": 195.9}
+[rest] 20261108_05 {"pages": 2576, "record_receipts": 214593, "new_records": 12080, "cpu_s": 7.169, "vmhwm_mib": 213.2}
+[rest] 20261108_06 {"pages": 2914, "record_receipts": 246257, "new_records": 13713, "cpu_s": 7.741, "vmhwm_mib": 223.0}
+[rest] 20261108_07 {"pages": 3175, "record_receipts": 278187, "new_records": 17642, "cpu_s": 9.178, "vmhwm_mib": 251.5}
+[rest] 20261108_08 {"pages": 2868, "record_receipts": 244828, "new_records": 14340, "cpu_s": 8.155, "vmhwm_mib": 251.5}
+[rest] 20261108_09 {"pages": 3255, "record_receipts": 284260, "new_records": 16653, "cpu_s": 9.393, "vmhwm_mib": 256.2}
+[rest] 20261108_10 {"pages": 2891, "record_receipts": 244668, "new_records": 13938, "cpu_s": 8.17, "vmhwm_mib": 256.2}
+[rest] 20261108_11 {"pages": 2736, "record_receipts": 231331, "new_records": 13645, "cpu_s": 8.105, "vmhwm_mib": 256.2}
+[rest] 20261108_12 {"pages": 2896, "record_receipts": 242756, "new_records": 13511, "cpu_s": 8.077, "vmhwm_mib": 256.5}
+[rest] 20261108_13 {"pages": 2672, "record_receipts": 231862, "new_records": 14154, "cpu_s": 8.362, "vmhwm_mib": 268.5}
+[rest] 20261108_14 {"pages": 1054, "record_receipts": 90954, "new_records": 4669, "cpu_s": 3.991, "vmhwm_mib": 268.5}
+[rest] 20261108_15 {"pages": 3009, "record_receipts": 256871, "new_records": 14939, "cpu_s": 8.829, "vmhwm_mib": 273.5}
+[rest] 20261108_16 {"pages": 2966, "record_receipts": 255140, "new_records": 15445, "cpu_s": 9.123, "vmhwm_mib": 287.0}
+[rest] 20261108_17 {"pages": 3010, "record_receipts": 257677, "new_records": 15115, "cpu_s": 9.156, "vmhwm_mib": 288.9}
+[rest] 20261108_18 {"pages": 2985, "record_receipts": 251094, "new_records": 13164, "cpu_s": 8.198, "vmhwm_mib": 288.9}
+[rest] 20261108_19 {"pages": 2421, "record_receipts": 192832, "new_records": 10283, "cpu_s": 6.721, "vmhwm_mib": 288.9}
+[rest] 20261108_20 {"pages": 2423, "record_receipts": 193220, "new_records": 11108, "cpu_s": 6.872, "vmhwm_mib": 288.9}
+[rest] 20261108_21 {"pages": 2661, "record_receipts": 226150, "new_records": 12789, "cpu_s": 7.562, "vmhwm_mib": 292.8}
+[rest] 20261108_22 {"pages": 2728, "record_receipts": 229717, "new_records": 13430, "cpu_s": 7.663, "vmhwm_mib": 299.5}
+[gt] WS pass for 52 of 220 scope windows (own maker fill)
+[ws] 20261108_00 {"frames_other_markets": 59376, "cpu_s": 0.192, "vmhwm_mib": 299.5}
+[ws] 20261108_01 {"frames_other_markets": 61634, "cpu_s": 0.203, "vmhwm_mib": 299.5}
+[ws] 20261108_02 {"frames_other_markets": 60823, "cpu_s": 0.196, "vmhwm_mib": 299.5}
+[ws] 20261108_03 {"frames_other_markets": 58309, "cpu_s": 0.189, "vmhwm_mib": 299.5}
+[ws] 20261108_04 {"frames": 8563, "frames_other_markets": 24, "cpu_s": 1.611, "vmhwm_mib": 314.2}
+[ws] 20261108_05 {"frames": 8396, "cpu_s": 1.56, "vmhwm_mib": 314.2}
+[ws] 20261108_06 {"frames": 9539, "cpu_s": 1.792, "vmhwm_mib": 314.2}
+[ws] 20261108_07 {"frames": 25593, "cpu_s": 4.5, "vmhwm_mib": 328.3}
+[ws] 20261108_08 {"frames": 13686, "cpu_s": 2.512, "vmhwm_mib": 328.3}
+[ws] 20261108_09 {"frames": 22202, "cpu_s": 3.879, "vmhwm_mib": 347.9}
+[ws] 20261108_10 {"frames": 4205, "cpu_s": 0.863, "vmhwm_mib": 347.9}
+[ws] 20261108_11 {"frames": 21259, "cpu_s": 3.792, "vmhwm_mib": 347.9}
+[ws] 20261108_12 {"frames": 4840, "cpu_s": 1.014, "vmhwm_mib": 347.9}
+[ws] 20261108_13 {"frames": 19245, "cpu_s": 3.481, "vmhwm_mib": 347.9}
+[ws] 20261108_14 {"frames": 5341, "frames_other_markets": 40531, "cpu_s": 1.097, "vmhwm_mib": 347.9}
+[ws] 20261108_15 {"frames": 5305, "cpu_s": 1.11, "vmhwm_mib": 347.9}
+[ws] 20261108_16 {"frames": 15658, "cpu_s": 3.006, "vmhwm_mib": 348.8}
+[ws] 20261108_17 {"frames": 5269, "cpu_s": 1.163, "vmhwm_mib": 348.8}
+[ws] 20261108_18 {"frames": 22754, "cpu_s": 4.256, "vmhwm_mib": 348.8}
+[ws] 20261108_19 {"frames": 23904, "cpu_s": 4.444, "vmhwm_mib": 364.5}
+[ws] 20261108_20 {"frames": 10017, "cpu_s": 1.972, "vmhwm_mib": 364.5}
+[ws] 20261108_21 {"frames": 21792, "cpu_s": 3.947, "vmhwm_mib": 364.5}
+[ws] 20261108_22 {"frames": 17211, "frames_other_markets": 289, "cpu_s": 3.258, "vmhwm_mib": 364.5}
+{"day": "20261108", "mode": "day", "counts": {"records": 250853, "legs": 375566, "variants_not_kept": {"records": 8, "legs": 24}, "tob": 264779, "frames": 264779, "levels": 24623951, "markets": 220}, "status_counts": {"records": {"ok": 249763, "boundary_censored": 1017, "off_grid": 64, "conflict": 8, "off_grid+boundary_censored": 1}, "legs": {"ok": 374068, "boundary_censored": 1311, "conflict": 107, "off_grid": 72, "off_grid+boundary_censored": 8}, "tob": {"ok": 261043, "gap": 3735, "same_ms_changed": 1}, "frames": {"ok": 261043, "gap": 3735, "same_ms_changed": 1}, "levels": {"ok": 24623951}, "markets": {"no_own_fill_ws_skipped": 142, "ok": 36, "no_own_fill_ws_skipped+poll_incomplete": 25, "poll_incomplete": 12, "fills_outside_ws": 3, "fills_outside_ws+poll_incomplete": 1, "boundary_censored+no_own_fill_ws_skipped+outcome_sealed": 1}}, "envelope": {"n_records": 250853, "n_with_settle": 250853, "pre_recv_max_ms": 295187.9738769531, "pre_recv_ms": 300000, "receipt_lag_ms": {"p0": 1540.84619140625, "p0.1": 1745.338623046875, "p1": 1965.43318359375, "p5": 2333.929296875, "p50": 5639.91162109375, "p95": 10600.095458984373, "p99": 17205.545458984427, "p99.9": 296677.25985449867, "p100": 55673990.4753418, "n": 250853}, "receipt_lag_ungated_ms": {"p0": 1540.84619140625, "p0.1": 1745.338623046875, "p1": 1965.2568359375, "p5": 2332.5927734375, "p50": 5627.559326171875, "p95": 10469.38427734375, "p99": 14941.3581640625, "p99.9": 26946.02771875038, "p100": 38074.72607421875, "n": 250045}, "n_discovery_gated": 808, "lag_p999_all_ms": 296677.25985449867, "lag_p999_ms": 26946.02771875038, "post_settle_max_ms": 42466.0, "pre_settle_max_ms": 55937579.0, "margin_ms": 60000, "post_settle_ms": 60000, "margin_min": 1}, "cpu_s": 234.233, "vmhwm_mib": 573.1}
+2026-11-23T00:35:37Z tag=mt_x_extract_20261108 rc=0 peak_rss_mib=573 wall_s=238.97 cpu_user_s=232.63 memavail_start_gib=21 disk_free_gib=443->443 slot=claude

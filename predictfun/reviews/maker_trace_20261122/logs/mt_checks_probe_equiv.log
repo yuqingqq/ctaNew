@@ -1,0 +1,313 @@
+{
+ "fixture_expectations_failed": [],
+ "checks_total": 39,
+ "checks_failed": {},
+ "info": {
+  "ptick_units": [
+   100
+  ],
+  "t_rel_anchor": [
+   "settle_ms"
+  ],
+  "vmhwm_mib": 130.5,
+  "mem_stages_mib": [
+   [
+    "20261023 day_checks",
+    129,
+    129
+   ],
+   [
+    "20261023 h1_pnl",
+    129,
+    129
+   ],
+   [
+    "20261023 markets",
+    129,
+    129
+   ],
+   [
+    "20261024 day_checks",
+    129,
+    129
+   ],
+   [
+    "20261024 h1_pnl",
+    129,
+    129
+   ],
+   [
+    "20261024 markets",
+    130,
+    130
+   ],
+   [
+    "20261027 day_checks",
+    130,
+    130
+   ],
+   [
+    "20261027 h1_pnl",
+    130,
+    130
+   ],
+   [
+    "20261027 markets",
+    130,
+    130
+   ],
+   [
+    "20261108 day_checks",
+    130,
+    130
+   ],
+   [
+    "20261108 h1_pnl",
+    130,
+    130
+   ],
+   [
+    "20261108 markets",
+    130,
+    130
+   ],
+   [
+    "global",
+    130,
+    130
+   ]
+  ]
+ },
+ "reparse": {
+  "book": {
+   "n_checks": 11,
+   "info": {
+    "unique_records": 18,
+    "legs": 25,
+    "conflicts": 1,
+    "amount_mismatch": 1,
+    "price_mismatch": 1,
+    "repolled": 3,
+    "frames": 141,
+    "hours_clipped": 0,
+    "rest_hours_read": 1,
+    "h3_violating_prices": 0,
+    "capacity_bounds": 12,
+    "builder_variant_column": "x_n_variants"
+   }
+  },
+  "gt": {
+   "n_checks": 11,
+   "info": {
+    "unique_records": 18,
+    "legs": 25,
+    "conflicts": 1,
+    "amount_mismatch": 1,
+    "price_mismatch": 1,
+    "repolled": 3,
+    "frames": 141,
+    "hours_clipped": 0,
+    "rest_hours_read": 1,
+    "h3_violating_prices": 0,
+    "capacity_bounds": 12,
+    "builder_variant_column": "x_n_variants"
+   }
+  }
+ },
+ "reparse_failed": {},
+ "falsifier_cases": 0,
+ "falsifier_not_refused": {},
+ "checks_without_a_refused_falsifier": [
+  "H1_identity",
+  "H2_presence",
+  "H3_overfill_flagged",
+  "amounts_reconcile",
+  "boundary_censored",
+  "class_scenario_consistency",
+  "clock_fields",
+  "coverage_arithmetic",
+  "day_assignment",
+  "econ_conservation",
+  "econ_pnl_recompute",
+  "fill_hi_rule",
+  "fill_lo_frame",
+  "fill_lo_status",
+  "fill_time_order",
+  "fills_complete",
+  "gt_scores",
+  "identities_exante",
+  "legs_complete",
+  "legs_phase_clock",
+  "levels_frames_consistent",
+  "orders_complete",
+  "orders_cumulative",
+  "outputs_present",
+  "posting_before_first_fill",
+  "posting_capacity_bound",
+  "priority_ahead_lo",
+  "priority_exhaustion",
+  "priority_tests_T1_T2",
+  "records_unique_key",
+  "removal_after_last_fill",
+  "removal_class_evidence",
+  "removal_lo_bound",
+  "rp_H1",
+  "rp_H3",
+  "rp_capacity",
+  "rp_cumulative",
+  "rp_fill_hi",
+  "rp_frames",
+  "rp_hours",
+  "rp_legs",
+  "rp_records_fields",
+  "rp_records_set",
+  "rp_records_status",
+  "schema",
+  "size_bounds",
+  "status_counts_reported",
+  "status_present",
+  "tob_from_levels",
+  "yes_space_mapping"
+ ],
+ "falsifier": {},
+ "n_eval": {
+  "outputs_present": 38,
+  "schema": 19,
+  "status_present": 57,
+  "status_counts_reported": 23,
+  "records_unique_key": 8,
+  "legs_complete": 48,
+  "amounts_reconcile": 16,
+  "yes_space_mapping": 16,
+  "clock_fields": 20,
+  "day_assignment": 12,
+  "legs_phase_clock": 8,
+  "boundary_censored": 8,
+  "fills_complete": 6,
+  "fill_hi_rule": 4,
+  "fill_lo_status": 2,
+  "fill_time_order": 2,
+  "fill_lo_frame": 10,
+  "orders_complete": 12,
+  "orders_cumulative": 2,
+  "H1_identity": 4,
+  "H2_presence": 4,
+  "H3_overfill_flagged": 2,
+  "posting_capacity_bound": 4,
+  "posting_before_first_fill": 2,
+  "removal_after_last_fill": 2,
+  "removal_lo_bound": 2,
+  "removal_class_evidence": 54,
+  "class_scenario_consistency": 20,
+  "size_bounds": 4,
+  "priority_exhaustion": 6,
+  "priority_tests_T1_T2": 4,
+  "priority_ahead_lo": 2,
+  "levels_frames_consistent": 14,
+  "tob_from_levels": 20,
+  "coverage_arithmetic": 75,
+  "econ_conservation": 42,
+  "econ_pnl_recompute": 5,
+  "identities_exante": 2,
+  "gt_scores": 24
+ },
+ "priority_info": {
+  "price_priority_evidence_legs": 8,
+  "multi_price_records_best_first": 2,
+  "multi_price_records_worst_first": 4
+ },
+ "vmhwm_mib": 130.5
+}
+REHEARSAL FAIL
+EQUIV {
+ "n_checks": 39,
+ "n_pass_new": 39,
+ "n_pass_old": 39,
+ "diff": {},
+ "info_new": {
+  "ptick_units": [
+   100
+  ],
+  "t_rel_anchor": [
+   "settle_ms"
+  ],
+  "vmhwm_mib": 130.5
+ },
+ "info_old": {
+  "ptick_units": [
+   100
+  ],
+  "t_rel_anchor": [
+   "settle_ms"
+  ],
+  "vmhwm_mib": 130.5
+ },
+ "mem": [
+  [
+   "20261023 day_checks",
+   129,
+   129
+  ],
+  [
+   "20261023 h1_pnl",
+   129,
+   129
+  ],
+  [
+   "20261023 markets",
+   129,
+   129
+  ],
+  [
+   "20261024 day_checks",
+   129,
+   129
+  ],
+  [
+   "20261024 h1_pnl",
+   129,
+   129
+  ],
+  [
+   "20261024 markets",
+   130,
+   130
+  ],
+  [
+   "20261027 day_checks",
+   130,
+   130
+  ],
+  [
+   "20261027 h1_pnl",
+   130,
+   130
+  ],
+  [
+   "20261027 markets",
+   130,
+   130
+  ],
+  [
+   "20261108 day_checks",
+   130,
+   130
+  ],
+  [
+   "20261108 h1_pnl",
+   130,
+   130
+  ],
+  [
+   "20261108 markets",
+   130,
+   130
+  ],
+  [
+   "global",
+   130,
+   130
+  ]
+ ]
+}
+2026-11-23T01:08:15Z tag=mt_checks_probe_equiv rc=0 peak_rss_mib=132 wall_s=2.95 cpu_user_s=2.82 memavail_start_gib=22 disk_free_gib=442->442 slot=claude2

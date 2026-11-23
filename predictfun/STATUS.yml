@@ -505,7 +505,7 @@ ladder_async_fast_results_20261122_dev:
   batch_core_hours: 0.201
   line_core_hours: 2.375
 maker_trace_reconstruction_20261122_dev:
-  status: prefix_done_gate_refused_user_topup_1.45_amend1
+  status: data_stages_done_report_checker_memory_amend2
   amend1: {cap_h: 1.45, line_ceiling: 4.85, projection_v1_h: 1.4046, prefix_extract_cpu_s: 403.5, prefix_life_cpu_s: 2.2}
   frozen_asof: "2026-11-22 20:25Z"
   e2e_rehearsal: {run: 7, checks: 39_of_39, reparse: 22_of_22, falsifier: 76_of_76, simulator_observed_constrained_failures: 0}

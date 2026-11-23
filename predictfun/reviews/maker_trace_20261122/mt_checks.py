@@ -12,7 +12,7 @@ flags counted by flag, levels.status, the reconciling-variant conflict rule, low
 taker legs valued at the maker legs' YES prices (a priceExecuted mismatch is a status).
 The econ / truth tables have no schema in the contract: IFACE declares the semantic columns this checker needs; integration maps them
 to the builders' names by editing IFACE values only (until then those checks fail closed, naming the missing columns)."""
-import builtins, datetime as dt, gzip, hashlib, json, os, re, shutil, sys, tempfile
+import builtins, datetime as dt, gc, gzip, hashlib, json, os, re, shutil, sys, tempfile
 from collections import Counter, defaultdict
 from pathlib import Path
 import numpy as np, pandas as pd, pyarrow as pa, pyarrow.parquet as pq
@@ -130,15 +130,53 @@ def flags(s):
     return frozenset(s.split('+')) if isinstance(s, str) and s else frozenset()
 
 
+def by_value(series, fn, na=False):
+    """fn evaluated once per DISTINCT value, broadcast through factorize codes (memory redesign: no per-row object copy); missing -> na."""
+    s = series if isinstance(series, (pd.Series, pd.Index)) else pd.Series(np.asarray(series, dtype=object))
+    codes, uniq = pd.factorize(s)
+    vals = np.array([bool(fn(v)) for v in uniq], dtype=bool)
+    out = np.full(len(codes), bool(na))
+    m = codes >= 0
+    out[m] = vals[codes[m]]
+    return out
+
+
 def hasf(series, flag):
-    """Vectorised 'flag in flags(status)'."""
-    return series.astype(object).fillna('').str.contains(r'(?:^|\+)' + re.escape(flag) + r'(?:\+|$)', regex=True).to_numpy(bool)
+    """Vectorised 'flag in flags(status)': the same token regex, evaluated per distinct status (a non-string non-null value counts as True,
+    as the former per-row str.contains NaN did; missing -> False)."""
+    rx = re.compile(r'(?:^|\+)' + re.escape(flag) + r'(?:\+|$)')
+    return by_value(series, lambda v: bool(rx.search(v)) if isinstance(v, str) else True)
 
 
 def only_flags(series, allowed):
     """Rows whose flags are all in `allowed` (evaluated on the distinct statuses)."""
-    u = {s: bool(flags(s)) and flags(s) <= set(allowed) for s in series.dropna().unique()}
-    return series.map(u).fillna(False).to_numpy(bool)
+    allowed = set(allowed)
+    return by_value(series, lambda s: bool(flags(s)) and flags(s) <= allowed)
+
+
+def _rd(E, k, day, cols, filters=None):
+    """Memory redesign: a day table is read by COLUMN SUBSET per check pass, never whole (a missing column raises -> that check fails closed)."""
+    return pd.read_parquet(E['P'][k][day], columns=list(dict.fromkeys(cols)), filters=filters)
+
+
+def _mem(G, stage):
+    """Record (VmHWM, VmRSS) MiB after a stage (receipt info: where the peak was reached)."""
+    v = {}
+    with open('/proc/self/status') as f:
+        for ln in f:
+            if ln.startswith(('VmHWM:', 'VmRSS:')):
+                v[ln[:5]] = int(ln.split()[1]) // 1024
+    G.setdefault('mem', []).append((stage, v.get('VmHWM'), v.get('VmRSS')))
+
+
+def _malloc_tune():
+    """Buffers >= 8 MiB are mmapped and returned to the OS on free (a fixed glibc M_MMAP_THRESHOLD: freed column buffers never grow the
+    heap between passes). Best effort: any failure leaves the defaults."""
+    try:
+        import ctypes
+        ctypes.CDLL('libc.so.6').mallopt(-3, 8 * 2 ** 20)
+    except Exception:
+        pass
 
 
 def flag_counts(series):
@@ -394,17 +432,23 @@ def yes_arrays(quote, iset, price):
     return m.s.to_numpy(dtype=object), m.y.to_numpy(dtype=float)
 
 
+def _eq(x, v):
+    """Elementwise x == v as bool (Arrow-backed strings compared natively, no per-row object copy; missing -> False, as numpy object ==)."""
+    s = x if isinstance(x, pd.Series) else pd.Series(np.asarray(x, dtype=object))
+    return (s == v).to_numpy(dtype=bool, na_value=False)
+
+
 def fee_value(fee, ftype, iset, V):
     """USD value of a fee to resolution: COLLATERAL as is; SHARES in the leg's own token at its payoff (V for indexSet 1, 1-V for 2)."""
-    fee, V, ft = np.asarray(fee, float), np.asarray(V, float), np.asarray(ftype, dtype=object)
+    fee, V, col, shr = np.asarray(fee, float), np.asarray(V, float), _eq(ftype, 'COLLATERAL'), _eq(ftype, 'SHARES')
     pay = np.where(np.asarray(iset) == 1, V, 1 - V)
-    return np.where(fee == 0, 0.0, np.where(ft == 'COLLATERAL', fee, np.where(ft == 'SHARES', fee * pay, np.nan)))    # a zero fee is 0 in any unit
+    return np.where(fee == 0, 0.0, np.where(col, fee, np.where(shr, fee * pay, np.nan)))    # a zero fee is 0 in any unit
 
 
 def fee_at_px(fee, ftype, px):
     """USD value of a fee at the fill: COLLATERAL as is; SHARES at the leg's own price px; any other type NaN (fails closed)."""
-    fee, px, ft = np.asarray(fee, float), np.asarray(px, float), np.asarray(ftype, dtype=object)
-    return np.where(fee == 0, 0.0, np.where(ft == 'COLLATERAL', fee, np.where(ft == 'SHARES', fee * px, np.nan)))
+    fee, px, col, shr = np.asarray(fee, float), np.asarray(px, float), _eq(ftype, 'COLLATERAL'), _eq(ftype, 'SHARES')
+    return np.where(fee == 0, 0.0, np.where(col, fee, np.where(shr, fee * px, np.nan)))
 
 
 def ptick_unit(price, ptick):
@@ -554,7 +598,7 @@ def status_ok(a, kind, df, label, order='sorted'):
     """Non-empty statuses; '+'-joined flag syntax (no empty flag, no repeat, 'ok' never joined). Flag order: lifecycle tables join SORTED
     flags (order='sorted'); extract tables follow the extractor's declared order (order = that list; None = undeclared -> refused)."""
     s = df['status']
-    a.check(int(s.isna().sum() + (~s.map(lambda v: isinstance(v, str) and v != '')).sum()), f'status {kind} {label}: {{n}} null or empty status values')
+    a.check(int(s.isna().sum() + (~by_value(s, lambda v: isinstance(v, str) and v != '')).sum()), f'status {kind} {label}: {{n}} null or empty status values')
     if order is None:
         a.fail(f'status {kind} {label}: the extract receipt declares no flag order (FLAGS / WS_FLAGS / MK_FLAGS)')
     pos = {f: i for i, f in enumerate(order)} if isinstance(order, list) else None
@@ -590,21 +634,27 @@ def counts_ok(a, kind, df, receipts, label):
 
 
 def day_checks(A, E, day, D, G):
-    R, L, rg = D['records'], D['legs'], reg(E, day)
+    """Day-level checks. Memory redesign (no change to any check's logic): the records / legs tables are never held whole - each pass reads
+    only the columns its checks use and frees them before the next pass."""
+    rg = reg(E, day)
     rec_j = D['rec_j'] = [rdj(E['P'][k][day]) for k in ('extract', 'inventory') if day in E['P'][k]]
     D['decl'] = {k: declared_order(rec_j, k) for k in ('records', 'legs', 'tob', 'frames', 'levels')}
     a = A['outputs_present']
     for k in ('records', 'legs', 'extract', 'inventory') + (('tob',) if day != C.ID_DAY else ()):
         (a.ok() if day in E['P'][k] else a.fail(f'{k} output missing for {day}'))
-    if R is None or L is None:
+    if not (D['avail'].get('records') and D['avail'].get('legs')):
         for n in DAY_CHECKS[1:]:
             A[n].fail(f'cannot evaluate {day}: records/legs output missing')
         return
+    rd = lambda k, cols: _rd(E, k, day, cols)
     TS = pd.read_parquet(E['P']['tob'][day], columns=['status']) if day in E['P']['tob'] else None
     _call(A, 'schema', lambda a: [schema_ok(a, k, E['P'][k][day], day) for k in ('records', 'legs', 'tob') if day in E['P'][k]])
+    # ---- pass 1: keys + statuses (status / counts / unique key / day assignment / boundary)
+    R, L = rd('records', ['sid', 'mid', 'status', 'day']), rd('legs', ['sid', 'mk_idx', 'mid', 'status', 'day'])
     _call(A, 'status_present', lambda a: [status_ok(a, k, df, day, D['decl'].get(k)) for k, df in (('records', R), ('legs', L), ('tob', TS)) if df is not None])
     _call(A, 'status_counts_reported', lambda a: [counts_ok(a, k, df, rec_j, day) for k, df in (('records', R), ('legs', L), ('tob', TS))
                                                  if df is not None])
+    del TS
 
     def _uniq(a):
         d = R[R.duplicated('sid', keep=False)]
@@ -612,60 +662,6 @@ def day_checks(A, E, day, D, G):
         a.check(int((L.duplicated(['sid', 'mk_idx'], keep=False) & ~L.sid.isin(d.sid)).sum()),
                 f'legs {day}: {{n}} duplicate (sid, mk_idx) rows outside conflict records')
     _call(A, 'records_unique_key', _uniq)
-
-    def _legs(a):        # column-wise maps, no full-table merge (a real day is ~0.75M legs)
-        j = pd.concat([R.groupby('sid').n_makers.sum().rename('need'), L.groupby('sid').size().rename('have')], axis=1).fillna(0)
-        a.check(int((j.need != j.have).sum()), f'legs {day}: {{n}} records whose leg count != n_makers (dropped/extra/orphan legs)')
-        cols = ['day', 'mid', 'tx', 'settle_ms', 'exec_ms', 'first_recv_ns', 'n_makers', 'tk_hash', 'tk_signer', 'tk_y_side']
-        one = R.loc[~R.sid.duplicated(keep=False), ['sid'] + cols].set_index('sid')
-        inn = L.sid.isin(one.index).to_numpy()
-        sid = L.sid[inn]
-        for c in cols:
-            x, y = L.loc[inn, c], sid.map(one[c])
-            if c in ('tx', 'tk_hash', 'tk_signer'):
-                x, y = x.str.lower(), y.str.lower()
-            a.check(int(neq(x, y).sum()), f'legs {day}: {{n}} legs whose {c} differs from its record')
-        g = L.loc[inn, ['sid', 'mk_idx']].groupby('sid').mk_idx.agg(['min', 'max', 'count', 'nunique']).join(one.n_makers)
-        a.check(int(((g['min'] != 0) | (g['max'] != g.n_makers - 1) | (g['count'] != g.n_makers) | (g['nunique'] != g.n_makers)).sum()),
-                f'legs {day}: {{n}} records whose mk_idx are not 0..n_makers-1')
-    _call(A, 'legs_complete', _legs)
-
-    def _amounts(a):
-        okm = (R.status == C.STATUS_OK).to_numpy()
-        s = L.groupby('sid').shares.sum().reindex(R.sid[okm]).to_numpy()
-        amt = R.amount_filled.to_numpy()[okm]; tol = TOL_SH * np.maximum(1, np.abs(amt))
-        a.check(int((np.abs(R.tk_amount.to_numpy()[okm] - amt) > tol).sum()), f'records {day}: {{n}} status-ok records with taker.amount != amountFilled')
-        a.check(int((~(np.abs(s - amt) <= tol)).sum()), f'records {day}: {{n}} status-ok records with sum(makers.amount) != amountFilled')
-        a.check(int((np.abs(R.tk_price.to_numpy()[okm] - R.price_executed.to_numpy()[okm]) > 1e-12).sum()),
-                f'records {day}: {{n}} status-ok records with taker.price != priceExecuted')
-        a.check(int((R.n_makers.to_numpy()[okm] < 1).sum()), f'records {day}: {{n}} status-ok records with no maker')
-        # declared rule: priceExecuted vs the maker-weighted YES price is an econ DIAGNOSTIC (px_gap), never a record status - counted only
-        pbar = (L.y_price * L.shares).groupby(L.sid).sum() / L.groupby('sid').shares.sum()
-        tp = np.where(R.tk_index_set.to_numpy() == 1, R.price_executed.to_numpy(), 1 - R.price_executed.to_numpy())
-        a.info['records_price_gap_diagnostic'] += int((~(np.abs(R.sid.map(pbar).to_numpy(float) - tp) <= PX_TOL)).sum()); a.info['records'] += len(R)
-    _call(A, 'amounts_reconcile', _amounts)
-
-    def _yes(a):
-        ys, yp = yes_arrays(L.mk_quote, L.mk_index_set, L.mk_price)
-        a.check(int((ys != L.y_side.to_numpy()).sum() + (np.abs(yp - L.y_price.to_numpy()) > 1e-9).sum()),
-                f'legs {day}: {{n}} legs whose (y_side, y_price) != yes_space(quote, indexSet, price)')
-        K = ptick_unit(L.y_price.to_numpy(), L.y_ptick.to_numpy())
-        if K is None:
-            a.fail(f'legs {day}: y_ptick is not round(y_price*K) for a single K in (100, 1000)')
-        else:
-            a.ok(); G['K'].add(K)
-        ts, _ = yes_arrays(R.tk_quote, R.tk_index_set, R.tk_price)
-        a.check(int((ts != R.tk_y_side.to_numpy()).sum()), f'records {day}: {{n}} records whose tk_y_side != yes_space(taker)')
-        a.check(int((L.y_side == L.tk_y_side).sum()), f'legs {day}: {{n}} maker legs on the same YES side as their taker')
-    _call(A, 'yes_space_mapping', _yes)
-
-    def _clock(a):
-        for name, df in (('records', R), ('legs', L)):
-            ms = {s: C.uuid7_ms(s) for s in df.sid.unique()}
-            a.check(int((df.sid.map(ms) != df.settle_ms).sum()), f'{name} {day}: {{n}} rows whose settle_ms != UUIDv7 ms of settlementId')
-            a.check(int(((df.first_recv_ns <= 0) | (df.exec_ms <= 0)).sum()), f'{name} {day}: {{n}} rows with non-positive first_recv_ns / exec_ms')
-        a.check(int((R.n_recv < 1).sum()), f'records {day}: {{n}} rows with n_recv < 1')
-    _call(A, 'clock_fields', _clock)
 
     def _dayas(a):
         a.check(int((R.day != day).sum() + (L.day != day).sum()), f'{day}: {{n}} rows whose day column != the file day')
@@ -676,24 +672,6 @@ def day_checks(A, E, day, D, G):
             else:
                 a.check(int(dt.datetime.fromtimestamp(r[0] / 1000, UTC).strftime('%Y%m%d') != day), f'{day}: market {mid} window starts on another UTC day')
     _call(A, 'day_assignment', _dayas)
-
-    def _phase(a):
-        k = L.loc[(L.status == C.STATUS_OK) & L.mid.isin(list(rg)), ['mid', 'settle_ms', 'exec_ms', 'first_recv_ns', 't_rel_s', 'phase']]
-        a.info['legs_without_registry'] += int((~L.mid.isin(list(rg))).sum())
-        if not len(k):
-            a.fail(f'legs {day}: no status-ok legs with a registry window'); return
-        ws = k.mid.map({m: v[0] for m, v in rg.items()}).to_numpy(np.int64)
-        anchors = dict(settle_ms=k.settle_ms.to_numpy(np.int64), exec_ms=k.exec_ms.to_numpy(np.int64),
-                       hi_ms=np.minimum(k.settle_ms.to_numpy(np.int64), k.first_recv_ns.to_numpy(np.int64) // 10 ** 6))
-        hit = [n for n, x in anchors.items() if np.all(np.abs((x - ws) / 1000. - k.t_rel_s.to_numpy()) <= 1e-6)]
-        if not hit:
-            a.fail(f'legs {day}: t_rel_s equals none of (settle_ms | exec_ms | hi_ms) - ws')
-        else:
-            a.ok(); G['anchor'].add(hit[0])
-        iv = sorted((g.t_rel_s.min(), g.t_rel_s.max(), ph) for ph, g in k.groupby('phase'))
-        ov = [(iv[i][2], iv[i + 1][2]) for i in range(len(iv) - 1) if iv[i][1] > iv[i + 1][0]]
-        (a.fail(f'legs {day}: phases overlap in t_rel_s {ov}') if ov else a.ok())
-    _call(A, 'legs_phase_clock', _phase)
 
     def _bound(a):
         """Certain implications only (the builder's margin / pre_recv are its own declared parameters): a window ending in a non-consumed
@@ -718,6 +696,105 @@ def day_checks(A, E, day, D, G):
             v = [x for r_ in rec_j for x in _find_key(r_, k)]
             a.info[f'reported_{k}'] = v[0] if v else None
     _call(A, 'boundary_censored', _bound)
+    del R, L
+    gc.collect()
+
+    def _legs(a):        # one key pass (positions of each leg's record), then ONE column at a time: the same column-wise comparisons
+        R, L = rd('records', ['sid', 'n_makers']), rd('legs', ['sid', 'mk_idx'])
+        j = pd.concat([R.groupby('sid').n_makers.sum().rename('need'), L.groupby('sid').size().rename('have')], axis=1).fillna(0)
+        bad_n = int((j.need != j.have).sum())
+        del j
+        upos = np.flatnonzero(~R.sid.duplicated(keep=False).to_numpy())     # records whose settlementId is unique (the compared rows)
+        uidx = pd.Index(R.sid.iloc[upos])
+        pos = uidx.get_indexer(L.sid)
+        inn = pos >= 0
+        lidx, rpos = np.flatnonzero(inn), upos[pos[inn]]
+        one_nm = pd.Series(R.n_makers.to_numpy()[upos], index=uidx, name='n_makers')
+        g = L.loc[inn, ['sid', 'mk_idx']].groupby('sid').mk_idx.agg(['min', 'max', 'count', 'nunique']).join(one_nm)
+        bad_k = int(((g['min'] != 0) | (g['max'] != g.n_makers - 1) | (g['count'] != g.n_makers) | (g['nunique'] != g.n_makers)).sum())
+        del R, L, uidx, pos, inn, one_nm, g
+        a.check(bad_n, f'legs {day}: {{n}} records whose leg count != n_makers (dropped/extra/orphan legs)')
+        for c in ['day', 'mid', 'tx', 'settle_ms', 'exec_ms', 'first_recv_ns', 'n_makers', 'tk_hash', 'tk_signer', 'tk_y_side']:
+            x = rd('legs', [c])[c].iloc[lidx]
+            y = rd('records', [c])[c].iloc[rpos].set_axis(x.index)
+            if c in ('tx', 'tk_hash', 'tk_signer'):
+                x, y = x.str.lower(), y.str.lower()
+            a.check(int(neq(x, y).sum()), f'legs {day}: {{n}} legs whose {c} differs from its record')
+            del x, y
+        a.check(bad_k, f'legs {day}: {{n}} records whose mk_idx are not 0..n_makers-1')
+    _call(A, 'legs_complete', _legs)
+    gc.collect()
+
+    def _amounts(a):
+        R = rd('records', ['sid', 'status', 'amount_filled', 'tk_amount', 'tk_price', 'price_executed', 'n_makers', 'tk_index_set'])
+        L = rd('legs', ['sid', 'shares', 'y_price'])
+        okm = (R.status == C.STATUS_OK).to_numpy()
+        s = L.groupby('sid').shares.sum().reindex(R.sid[okm]).to_numpy()
+        amt = R.amount_filled.to_numpy()[okm]; tol = TOL_SH * np.maximum(1, np.abs(amt))
+        a.check(int((np.abs(R.tk_amount.to_numpy()[okm] - amt) > tol).sum()), f'records {day}: {{n}} status-ok records with taker.amount != amountFilled')
+        a.check(int((~(np.abs(s - amt) <= tol)).sum()), f'records {day}: {{n}} status-ok records with sum(makers.amount) != amountFilled')
+        a.check(int((np.abs(R.tk_price.to_numpy()[okm] - R.price_executed.to_numpy()[okm]) > 1e-12).sum()),
+                f'records {day}: {{n}} status-ok records with taker.price != priceExecuted')
+        a.check(int((R.n_makers.to_numpy()[okm] < 1).sum()), f'records {day}: {{n}} status-ok records with no maker')
+        # declared rule: priceExecuted vs the maker-weighted YES price is an econ DIAGNOSTIC (px_gap), never a record status - counted only
+        pbar = (L.y_price * L.shares).groupby(L.sid).sum() / L.groupby('sid').shares.sum()
+        tp = np.where(R.tk_index_set.to_numpy() == 1, R.price_executed.to_numpy(), 1 - R.price_executed.to_numpy())
+        a.info['records_price_gap_diagnostic'] += int((~(np.abs(R.sid.map(pbar).to_numpy(float) - tp) <= PX_TOL)).sum()); a.info['records'] += len(R)
+    _call(A, 'amounts_reconcile', _amounts)
+    gc.collect()
+
+    def _yes(a):
+        L = rd('legs', ['mk_quote', 'mk_index_set', 'mk_price', 'y_side', 'y_price', 'y_ptick', 'tk_y_side'])
+        R = rd('records', ['tk_quote', 'tk_index_set', 'tk_price', 'tk_y_side'])
+        ys, yp = yes_arrays(L.mk_quote, L.mk_index_set, L.mk_price)
+        a.check(int((ys != L.y_side.to_numpy()).sum() + (np.abs(yp - L.y_price.to_numpy()) > 1e-9).sum()),
+                f'legs {day}: {{n}} legs whose (y_side, y_price) != yes_space(quote, indexSet, price)')
+        del ys, yp
+        K = ptick_unit(L.y_price.to_numpy(), L.y_ptick.to_numpy())
+        if K is None:
+            a.fail(f'legs {day}: y_ptick is not round(y_price*K) for a single K in (100, 1000)')
+        else:
+            a.ok(); G['K'].add(K)
+        ts, _ = yes_arrays(R.tk_quote, R.tk_index_set, R.tk_price)
+        a.check(int((ts != R.tk_y_side.to_numpy()).sum()), f'records {day}: {{n}} records whose tk_y_side != yes_space(taker)')
+        a.check(int((L.y_side == L.tk_y_side).sum()), f'legs {day}: {{n}} maker legs on the same YES side as their taker')
+    _call(A, 'yes_space_mapping', _yes)
+    gc.collect()
+
+    def _clock(a):       # one table at a time
+        nrecv = None
+        for name in ('records', 'legs'):
+            df = rd(name, ['sid', 'settle_ms', 'first_recv_ns', 'exec_ms'] + (['n_recv'] if name == 'records' else []))
+            ms = {s: C.uuid7_ms(s) for s in df.sid.unique()}
+            a.check(int((df.sid.map(ms) != df.settle_ms).sum()), f'{name} {day}: {{n}} rows whose settle_ms != UUIDv7 ms of settlementId')
+            a.check(int(((df.first_recv_ns <= 0) | (df.exec_ms <= 0)).sum()), f'{name} {day}: {{n}} rows with non-positive first_recv_ns / exec_ms')
+            if name == 'records':
+                nrecv = int((df.n_recv < 1).sum())
+            del df, ms
+        a.check(nrecv, f'records {day}: {{n}} rows with n_recv < 1')
+    _call(A, 'clock_fields', _clock)
+    gc.collect()
+
+    def _phase(a):
+        L = rd('legs', ['status', 'mid', 'settle_ms', 'exec_ms', 'first_recv_ns', 't_rel_s', 'phase'])
+        k = L.loc[(L.status == C.STATUS_OK) & L.mid.isin(list(rg)), ['mid', 'settle_ms', 'exec_ms', 'first_recv_ns', 't_rel_s', 'phase']]
+        a.info['legs_without_registry'] += int((~L.mid.isin(list(rg))).sum())
+        del L
+        if not len(k):
+            a.fail(f'legs {day}: no status-ok legs with a registry window'); return
+        ws = k.mid.map({m: v[0] for m, v in rg.items()}).to_numpy(np.int64)
+        anchors = dict(settle_ms=k.settle_ms.to_numpy(np.int64), exec_ms=k.exec_ms.to_numpy(np.int64),
+                       hi_ms=np.minimum(k.settle_ms.to_numpy(np.int64), k.first_recv_ns.to_numpy(np.int64) // 10 ** 6))
+        hit = [n for n, x in anchors.items() if np.all(np.abs((x - ws) / 1000. - k.t_rel_s.to_numpy()) <= 1e-6)]
+        if not hit:
+            a.fail(f'legs {day}: t_rel_s equals none of (settle_ms | exec_ms | hi_ms) - ws')
+        else:
+            a.ok(); G['anchor'].add(hit[0])
+        iv = sorted((g.t_rel_s.min(), g.t_rel_s.max(), ph) for ph, g in k.groupby('phase'))
+        ov = [(iv[i][2], iv[i + 1][2]) for i in range(len(iv) - 1) if iv[i][1] > iv[i + 1][0]]
+        (a.fail(f'legs {day}: phases overlap in t_rel_s {ov}') if ov else a.ok())
+    _call(A, 'legs_phase_clock', _phase)
+    gc.collect()
 
 
 # ------------------------------------------------------------------------------------------------------------ per-market checks
@@ -1071,12 +1148,15 @@ def _vec_match(found, cands):
     return False
 
 
-def _econ_frame(E, k, filters=None, extra=()):
+def _econ_frame(E, k, filters=None, extra=(), roles=None):
+    """An econ table in its pinned roles. Memory redesign: roles = only the roles a check uses (every pinned column must still exist);
+    filters (pyarrow) select rows at read time - never a whole-table read followed by a boolean copy."""
     names = pq.read_schema(E['P']['econ'][k]).names
     miss = [v for v in IFACE[k].values() if v not in names]
     need(not miss, f'econ {k}: pinned columns {miss} absent')
-    cols = list(IFACE[k].values()) + [c for c in extra if c in names and c not in IFACE[k].values()]
-    df = pd.read_parquet(E['P']['econ'][k], columns=cols, filters=filters).rename(columns={v: r for r, v in IFACE[k].items()})
+    use = {r: v for r, v in IFACE[k].items() if roles is None or r in roles}
+    cols = list(use.values()) + [c for c in extra if c in names and c not in use.values()]
+    df = pd.read_parquet(E['P']['econ'][k], columns=cols, filters=filters).rename(columns={v: r for r, v in use.items()})
     if 'addr' in df:
         df['addr'] = df.addr.str.lower()
     return df
@@ -1165,11 +1245,17 @@ def global_checks(A, E, G):
         miss = [k for k in ECON_T if k not in E['P']['econ']]
         if miss:
             a.fail(f'econ tables missing: {miss}'); return
-        MM, MD = _econ_frame(E, 'maker_market', extra=('fifo_status',)), _econ_frame(E, 'maker_day')
-        for X in (MM, MD):
+        cen_d = defaultdict(set)         # boundary_censored (day, mid) membership, vectorised per day (memory redesign; same count)
+        for d_, m_ in G['censored']:
+            cen_d[d_].add(int(m_))
+        ok_f = [(IFACE['maker_market']['status'], '=', C.STATUS_OK)]
+        # status-ok rows selected at read time, only the roles used here (was: the whole table, then a boolean copy)
+        mo = _econ_frame(E, 'maker_market', filters=ok_f, extra=('fifo_status',),
+                         roles=('day', 'mid', 'addr', 'gross_mk', 'gross_tk', 'fees', 'pnl', 'rt', 'resid', 'drift', 'resol', 'net_pos', 'status'))
+        MD = _econ_frame(E, 'maker_day')
+        for X in (mo, MD):
             X['gross'] = X.gross_mk + X.gross_tk          # pinned: gross = gross_res_mk + gross_res_tk
-        mo = MM[MM.status == C.STATUS_OK]
-        a.check(int(sum((d, int(m)) in G['censored'] for d, m in zip(mo.day, mo.mid))),
+        a.check(int(sum(int(mo.mid[_eq(mo.day, d_)].isin(s_).sum()) for d_, s_ in cen_d.items())),
                 'econ maker_market: {n} status-ok rows on boundary_censored markets (must be excluded as a status)')
         noend = hasf(mo.fifo_status, 'end_unavailable') if 'fifo_status' in mo else np.zeros(len(mo), bool)   # no book: END-based split undefined
         fin = lambda *xs: np.all([np.isfinite(x.to_numpy(float)) for x in xs], axis=0)
@@ -1178,27 +1264,45 @@ def global_checks(A, E, G):
                                         (mo.resid, mo.drift + mo.resol, 'resid != drift + resol', fin(mo.resid, mo.drift, mo.resol) & ~noend)):
             a.info[f'rows_identity_undefined[{what}]'] = int((~defined).sum())    # pinned: check only the identities that are defined
             a.check(int((~np.isclose(lhs, rhs, atol=TOL_USD, rtol=1e-9) & defined).sum()), f'econ maker_market: {{n}} rows with {what}')
+        del noend
         zs = mo.assign(ag=mo.gross.abs(), ap=mo.net_pos.abs()).groupby(['day', 'mid'])[['gross', 'net_pos', 'ag', 'ap']].sum()
         a.check(int(((zs.gross.abs() > TOL_USD + 1e-9 * zs.ag) | (zs.net_pos.abs() > 1e-6 + 1e-9 * zs.ap)).sum()),
                 'econ maker_market: {n} markets whose sum over addresses of gross or net_pos is not 0 (zero-sum)')
+        del zs
         cols = ['gross_mk', 'gross_tk', 'fees', 'pnl']           # always defined (the END-based / FIFO splits may be undefined without a book)
         j = mo.groupby(['addr', 'day'])[cols].sum(min_count=1).join(MD[MD.status == C.STATUS_OK].groupby(['addr', 'day'])[cols].sum(min_count=1),
                                                                     rsuffix='_d', how='outer')
         a.check(int(sum((~np.isclose(j[c].fillna(np.inf), j[c + '_d'].fillna(-np.inf), atol=TOL_USD, rtol=1e-9)).sum() for c in cols)),
                 'econ maker_day: {n} (addr, day) values != the sum of maker_market')
+        del j, MD
+        mo = mo[['day', 'mid', 'addr', 'pnl', 'fees']]            # only what the per-day fills_valued comparison uses
+        gc.collect()
+        ff, NCH = IFACE['fills_valued'], 4
         for d in sorted(set(mo.day)):
-            FV = _econ_frame(E, 'fills_valued', [(IFACE['fills_valued']['day'], '=', d)])
-            FV = FV[FV.status == C.STATUS_OK]
-            a.check(int(sum((d, int(m)) in G['censored'] for m in FV.mid)), f'econ fills_valued {d}: {{n}} status-ok rows on boundary_censored markets')
-            a.check(int((~np.isclose(FV.gross, FV.s * FV.q * (FV.V - FV.p), atol=TOL_USD, rtol=1e-9)).sum()),
-                    f'econ fills_valued {d}: {{n}} rows with gross_res != s*q*(V-p)')
-            a.check(int((~np.isclose(FV.pnl, FV.gross - FV.fee, atol=TOL_USD, rtol=1e-9)).sum()),
-                    f'econ fills_valued {d}: {{n}} rows with net_res != gross_res - fee_res')
-            m = mo[mo.day == d].groupby(['addr', 'mid'])[['pnl', 'fees']].sum().join(
-                FV.groupby(['addr', 'mid']).agg(pnl_v=('pnl', 'sum'), fee_v=('fee', 'sum')), how='outer')
-            a.check(int((~np.isclose(m.pnl.fillna(np.inf), m.pnl_v.fillna(-np.inf), atol=TOL_USD, rtol=1e-9)).sum() +
-                        (~np.isclose(m.fees.fillna(np.inf), m.fee_v.fillna(-np.inf), atol=TOL_USD, rtol=1e-9)).sum()),
-                    f'econ {d}: {{n}} (addr, mid) sums of fills_valued net_res / fee_res != maker_market')
+            md = mo[_eq(mo.day, d)]
+            um = np.unique(md.mid.to_numpy())
+            bnd = [None] + [int(um[(len(um) * i) // NCH]) for i in range(1, NCH) if len(um)] + [None]
+            n = dict(cen=0, gross=0, pnl=0, join=0)
+            for lo_, hi_ in zip(bnd[:-1], bnd[1:]):      # fills_valued in mid-range chunks of the day (row groups are mid-sorted): same counts
+                flt = [(ff['day'], '=', d), (ff['status'], '=', C.STATUS_OK)] + ([(ff['mid'], '>=', lo_)] if lo_ is not None else []) + \
+                      ([(ff['mid'], '<', hi_)] if hi_ is not None else [])
+                FV = _econ_frame(E, 'fills_valued', flt, roles=('mid', 'addr', 's', 'q', 'p', 'V', 'gross', 'fee', 'pnl', 'status'))
+                n['cen'] += int(FV.mid.isin(cen_d.get(d, set())).sum())
+                n['gross'] += int((~np.isclose(FV.gross, FV.s * FV.q * (FV.V - FV.p), atol=TOL_USD, rtol=1e-9)).sum())
+                n['pnl'] += int((~np.isclose(FV.pnl, FV.gross - FV.fee, atol=TOL_USD, rtol=1e-9)).sum())
+                mm = md.mid.to_numpy()
+                mc = md[(mm >= lo_ if lo_ is not None else np.ones(len(mm), bool)) & (mm < hi_ if hi_ is not None else np.ones(len(mm), bool))]
+                m = mc.groupby(['addr', 'mid'])[['pnl', 'fees']].sum().join(
+                    FV.groupby(['addr', 'mid']).agg(pnl_v=('pnl', 'sum'), fee_v=('fee', 'sum')), how='outer')
+                n['join'] += int((~np.isclose(m.pnl.fillna(np.inf), m.pnl_v.fillna(-np.inf), atol=TOL_USD, rtol=1e-9)).sum() +
+                                 (~np.isclose(m.fees.fillna(np.inf), m.fee_v.fillna(-np.inf), atol=TOL_USD, rtol=1e-9)).sum())
+                del FV, mc, m
+                gc.collect()
+            a.check(n['cen'], f'econ fills_valued {d}: {{n}} status-ok rows on boundary_censored markets')
+            a.check(n['gross'], f'econ fills_valued {d}: {{n}} rows with gross_res != s*q*(V-p)')
+            a.check(n['pnl'], f'econ fills_valued {d}: {{n}} rows with net_res != gross_res - fee_res')
+            a.check(n['join'], f'econ {d}: {{n}} (addr, mid) sums of fills_valued net_res / fee_res != maker_market')
+        del mo
         keys = [c for c in IFACE['segments_keys'] if c in pq.read_schema(E['P']['econ']['segments']).names]
         SG = _econ_frame(E, 'segments', extra=keys)
         SG = SG[SG.status == C.STATUS_OK]
@@ -1219,7 +1323,6 @@ def global_checks(A, E, G):
         a.info['segment_groups'] = ngrp
         if not ngrp:
             a.fail('econ segments: no status-ok segment group to verify')
-    _call(A, 'econ_conservation', _econ)
 
     def _pnl(a):
         if not G['pnl']:
@@ -1227,12 +1330,16 @@ def global_checks(A, E, G):
         if 'maker_market' not in E['P']['econ']:
             a.fail('econ maker_market missing'); return
         mine = pd.concat(G['pnl'], ignore_index=True)
+        G['pnl'].clear()                                       # memory redesign: the per-day pieces are freed (only the concatenation is used)
         a.check(int(mine.nfee_bad.sum()), 'econ: {n} valued (addr, mid, role) legs carry an unvaluable fee (missing, or type neither COLLATERAL nor SHARES)')
-        MM = _econ_frame(E, 'maker_market')
+        MM = _econ_frame(E, 'maker_market', filters=[(IFACE['maker_market']['status'], '=', C.STATUS_OK)],
+                         roles=('mid', 'addr', 'gross_mk', 'gross_tk', 'fees', 'fees_px', 'status'))      # status-ok rows, used roles only
         MM['gross'] = MM.gross_mk + MM.gross_tk
         g = mine.groupby(['addr', 'mid'])[['gross', 'fee', 'fee_px']].sum()
-        j = g.join(MM[MM.status == C.STATUS_OK].groupby(['addr', 'mid'])[['gross', 'fees', 'fees_px']].sum(), rsuffix='_b', how='outer')
         a.info['addr_mid_recomputed'] = int(len(g)); a.info['addresses_recomputed'] = int(mine.addr.nunique())
+        del mine
+        j = g.join(MM.groupby(['addr', 'mid'])[['gross', 'fees', 'fees_px']].sum(), rsuffix='_b', how='outer')
+        del MM, g
         miss, extra = int(j.gross_b.isna().sum()), int(j.gross.isna().sum())
         (a.fail(f'econ: {miss} recomputed (addr, mid) pairs absent from maker_market, {extra} maker_market pairs with no ok legs')
          if miss or extra else a.ok())
@@ -1241,7 +1348,10 @@ def global_checks(A, E, G):
                 'econ: {n} (addr, mid) gross P&L to resolution != the independent recompute sum s*q*(V-p)')
         a.check(int((~np.isclose(k.fee, k.fees, atol=TOL_USD, rtol=1e-9)).sum()), 'econ: {n} (addr, mid) fee_res != recompute (SHARES fee at the token resolution value)')
         a.check(int((~np.isclose(k.fee_px, k.fees_px, atol=TOL_USD, rtol=1e-9)).sum()), 'econ: {n} (addr, mid) fee_fill != recompute (SHARES fee at each leg\'s own price)')
-    _call(A, 'econ_pnl_recompute', _pnl)
+    _call(A, 'econ_pnl_recompute', _pnl)     # memory redesign: first, so the per-day P&L pieces are freed before the econ tables are read
+    gc.collect()
+    _call(A, 'econ_conservation', _econ)
+    gc.collect()
 
     def _ids(a):          # pinned: maker_day carries in_exante_sh / in_exante_pnl membership flags
         if C.ID_DAY not in E['days'] or G['id_tops'] is None:
@@ -1364,47 +1474,78 @@ def global_checks(A, E, G):
 
 
 # ------------------------------------------------------------------------------------------------------------------- run_checks
-def pnl_legs(E, day, R, L):
+def pnl_legs(E, day, ids=False):
     """Independent P&L to resolution per (address, market, role): s*q*(V-p) and fees. Population (amendment 1): records whose flags are 'ok'
     or informational only (IFACE econ_info_flags) - boundary_censored and every other flag are excluded. A taker leg is valued at its maker
-    legs' YES prices (priceExecuted can differ from the maker-weighted average): taker gross = s_taker * sum_i q_i (V - p_i)."""
+    legs' YES prices (priceExecuted can differ from the maker-weighted average): taker gross = s_taker * sum_i q_i (V - p_i).
+    Memory redesign (same arithmetic, same rows, same per-group summation order): reads its own column subsets (records; leg keys; leg
+    values; maker columns), joins legs to records by factorize codes (no per-row object copy) and aggregates each role on its own.
+    Returns (P per (addr, mid, role), maker shares per lowercase signer over the same population when ids, else None)."""
     rg = reg(E, day)
     keep = {C.STATUS_OK, *IFACE['econ_info_flags']}
-    ok = R.loc[only_flags(R.status, keep), ['sid', 'mid', 'tk_signer', 'tk_index_set', 'tk_price', 'tk_y_side', 'tk_fee', 'tk_fee_type']]
-    Lk = L.loc[L.sid.isin(ok.sid).to_numpy() & only_flags(L.status, keep),
-               ['sid', 'mk_signer', 'mid', 'y_side', 'shares', 'y_price', 'mk_fee', 'mk_fee_type', 'mk_index_set', 'mk_price']]
+    rd = lambda k, cols: _rd(E, k, day, cols)
+    okm = only_flags(rd('records', ['status']).status, keep)
+    ok = rd('records', ['sid', 'mid', 'tk_signer', 'tk_index_set', 'tk_price', 'tk_y_side', 'tk_fee', 'tk_fee_type'])
+    ok = ok if okm.all() else ok.loc[okm]
+    Lq = rd('legs', ['sid', 'status'])
+    lk = Lq.sid.isin(ok.sid).to_numpy() & only_flags(Lq.status, keep)
+    del Lq
+    ix = np.flatnonzero(lk)
+    L1 = rd('legs', ['sid', 'mid', 'shares', 'y_price'])
+    l_sid = L1.sid.iloc[ix]
+    l_mid, l_sh, l_y = L1.mid.to_numpy()[ix], L1.shares.to_numpy(float)[ix], L1.y_price.to_numpy(float)[ix]
+    del L1
     V = {m: rg.get(int(m), (0, 0, np.nan))[2] for m in ok.mid.unique()}
-    mv, tv = Lk.mid.map(V).to_numpy(float), ok.mid.map(V).to_numpy(float)
-    leg_val = Lk.shares.to_numpy() * (mv - Lk.y_price.to_numpy())                      # q_i (V - p_i) at the maker's YES price
-    mk = pd.DataFrame(dict(addr=Lk.mk_signer.str.lower().to_numpy(), mid=Lk.mid.to_numpy(), role='maker',
-                           gross=np.where(Lk.y_side == 'bid', 1.0, -1.0) * leg_val,
-                           fee=fee_value(Lk.mk_fee, Lk.mk_fee_type, Lk.mk_index_set, mv),
-                           fee_px=fee_at_px(Lk.mk_fee, Lk.mk_fee_type, Lk.mk_price), sh=Lk.shares.to_numpy(float)))
-    per_rec = pd.Series(leg_val, index=Lk.sid.to_numpy()).groupby(level=0).sum()
-    per_sh = Lk.groupby('sid').shares.sum()
+    mv, tv = pd.Series(l_mid).map(V).to_numpy(float), ok.mid.map(V).to_numpy(float)
+    leg_val = l_sh * (mv - l_y)                                                       # q_i (V - p_i) at the maker's YES price
+    # legs -> records by factorize codes (the former sid maps / groupby-by-sid, without object copies)
+    codes, uniq = pd.factorize(pd.concat([ok.sid, l_sid], ignore_index=True))
+    c_ok, c_leg, n_u = codes[:len(ok)], codes[len(ok):], max(len(uniq), 1)      # >= 1 slot: an all-missing sid set still indexes safely
+    del codes, uniq, l_sid
+    v_ = np.flatnonzero(c_ok >= 0)
+    u_codes, first = np.unique(c_ok[v_], return_index=True)                       # the first record of each sid (drop_duplicates)
+    tis_u = np.full(n_u, np.nan); tis_u[u_codes] = ok.tk_index_set.to_numpy(float)[v_[first]]
+    tis = np.where(c_leg >= 0, tis_u[np.maximum(c_leg, 0)], np.nan)
     # e2e 4 / amendments 1-2: a SHARES taker fee converts at EACH LEG's own price (the taker token's price at that maker leg: the leg's YES
     # price for indexSet 1, its complement for 2), share-weighted over the record's legs - never at priceExecuted (records can carry a gap)
-    tis = Lk.sid.map(ok.drop_duplicates('sid').set_index('sid').tk_index_set).to_numpy()
-    own_px = np.where(tis == 1, Lk.y_price.to_numpy(float), 1 - Lk.y_price.to_numpy(float))
-    px_w = pd.Series(Lk.shares.to_numpy(float) * own_px, index=Lk.sid.to_numpy()).groupby(level=0).sum() / per_sh
-    tk = pd.DataFrame(dict(addr=ok.tk_signer.str.lower().to_numpy(), mid=ok.mid.to_numpy(), role='taker',
-                           gross=np.where(ok.tk_y_side == 'bid', 1.0, -1.0) * ok.sid.map(per_rec).to_numpy(float),
-                           fee=fee_value(ok.tk_fee, ok.tk_fee_type, ok.tk_index_set, tv),
-                           fee_px=fee_at_px(ok.tk_fee, ok.tk_fee_type, ok.sid.map(px_w).to_numpy(float)), sh=ok.sid.map(per_sh).to_numpy(float)))
-    out = pd.concat([mk, tk], ignore_index=True)
-    out = out[np.isfinite(out.gross.to_numpy(float))]          # unresolved / sealed outcomes (V NaN) never valued
-    out = out.assign(nfee_bad=(~np.isfinite(out.fee.to_numpy(float)) | ~np.isfinite(out.fee_px.to_numpy(float))).astype(int))   # sum() skips NaN
-    return out.groupby(['addr', 'mid', 'role'], as_index=False)[['gross', 'fee', 'fee_px', 'sh', 'nfee_bad']].sum()     # aggregated: bounded memory
+    own_px = np.where(tis == 1, l_y, 1 - l_y)
+    kl = c_leg >= 0
+    agg = pd.DataFrame({'lv': leg_val[kl], 'sh': l_sh[kl], 'qo': (l_sh * own_px)[kl]}).groupby(c_leg[kl]).sum()
+    per = {k: np.full(n_u, np.nan) for k in ('lv', 'sh', 'pw')}
+    gi = agg.index.to_numpy(dtype=np.int64)
+    per['lv'][gi], per['sh'][gi] = agg.lv.to_numpy(), agg.sh.to_numpy()
+    per['pw'][gi] = (agg.qo / agg.sh).to_numpy()
+    on = lambda k: np.where(c_ok >= 0, per[k][np.maximum(c_ok, 0)], np.nan)        # sid.map(per-record value); no legs -> NaN
+    del agg, tis_u, tis, own_px
+
+    def role_agg(df, role):
+        df = df[np.isfinite(df.gross.to_numpy(float))]          # unresolved / sealed outcomes (V NaN) never valued
+        df = df.assign(nfee_bad=(~np.isfinite(df.fee.to_numpy(float)) | ~np.isfinite(df.fee_px.to_numpy(float))).astype(int))   # sum() skips NaN
+        return df.groupby(['addr', 'mid'], as_index=False)[['gross', 'fee', 'fee_px', 'sh', 'nfee_bad']].sum().assign(role=role)
+    tk = role_agg(pd.DataFrame(dict(addr=ok.tk_signer.str.lower().array, mid=ok.mid.to_numpy(),
+                                    gross=np.where(_eq(ok.tk_y_side, 'bid'), 1.0, -1.0) * on('lv'),
+                                    fee=fee_value(ok.tk_fee, ok.tk_fee_type, ok.tk_index_set, tv),
+                                    fee_px=fee_at_px(ok.tk_fee, ok.tk_fee_type, on('pw')), sh=on('sh'))), 'taker')
+    del ok, tv, per, c_ok, c_leg
+    gc.collect()
+    L2 = rd('legs', ['mk_signer', 'y_side', 'mk_fee', 'mk_fee_type', 'mk_index_set', 'mk_price'])
+    m_addr = L2.mk_signer.iloc[ix].str.lower().array
+    bid, ft = _eq(L2.y_side, 'bid')[ix], L2.mk_fee_type.iloc[ix]
+    m_fee, m_is, m_px = L2.mk_fee.to_numpy(float)[ix], L2.mk_index_set.to_numpy()[ix], L2.mk_price.to_numpy(float)[ix]
+    del L2
+    mk = pd.DataFrame(dict(addr=m_addr, mid=l_mid, gross=np.where(bid, 1.0, -1.0) * leg_val, fee=fee_value(m_fee, ft, m_is, mv),
+                           fee_px=fee_at_px(m_fee, ft, m_px), sh=l_sh))
+    sh_ids = mk.groupby('addr').sh.sum() if ids else None       # id_tops: maker shares per lowercase signer over the same population
+    mk = role_agg(mk, 'maker')
+    P = pd.concat([mk, tk], ignore_index=True).groupby(['addr', 'mid', 'role'], as_index=False)[['gross', 'fee', 'fee_px', 'sh', 'nfee_bad']].sum()
+    return P, sh_ids     # aggregated: bounded memory
 
 
-def id_tops(E, day, R, L):
+def id_tops(P, sh):
     """Ex-ante identities from the ID day: top 10 by maker shares; declared exante_pnl = top 10 by maker-leg NET P&L to resolution among
-    maker-majority addresses (resolved maker shares > resolved taker shares)."""
-    keep = {C.STATUS_OK, *IFACE['econ_info_flags']}
-    Lk = L.loc[L.sid.isin(R.sid[only_flags(R.status, keep)]).to_numpy() & only_flags(L.status, keep), ['mk_signer', 'shares']]
-    sh = Lk.groupby(Lk.mk_signer.str.lower()).shares.sum()
+    maker-majority addresses (resolved maker shares > resolved taker shares). P, sh: pnl_legs(E, ID_DAY, ids=True)."""
     top = lambda s: sorted(s.index, key=lambda x: (-s[x], x))[:10]
-    P = pnl_legs(E, day, R, L).assign(net=lambda d: d.gross - d.fee)
+    P = P.assign(net=lambda d: d.gross - d.fee)
     shr = P.pivot_table(index='addr', columns='role', values='sh', aggfunc='sum', fill_value=0.0).reindex(columns=['maker', 'taker'], fill_value=0.0)
     majority = set(shr.index[shr.maker > shr.taker])
     mnet = P[(P.role == 'maker') & P.addr.isin(majority)].groupby('addr').net.sum()
@@ -1412,9 +1553,10 @@ def id_tops(E, day, R, L):
 
 
 def run_checks(E, only=None, batch=40):
+    _malloc_tune()
     A = defaultdict(Acc); A['_only'] = set(only) if only else None
     G = dict(K=set(), anchor=set(), cov={}, life_json={}, gt_orders=[], pnl=[], id_tops=None, own=None, own_h=set(), own_err='', censored=set(),
-             gt_own_legs=None)
+             gt_own_legs=None, mem=[])
     a = A['outputs_present']
     a.check(E['n_forbidden_named'], '{n} output files named for a non-consumed day')
     a.check(E['n_unexpected'], '{n} unexpected file names under depth/ or life/')
@@ -1444,22 +1586,30 @@ def run_checks(E, only=None, batch=40):
     if E.get('gt_err'):
         A['outputs_present'].fail(f'GT population: {E["gt_err"]}')
     for day in E['days']:
-        D = {}
+        # memory redesign: the day tables are never loaded whole - day_checks / H1 / P&L read column subsets per pass, and the per-market
+        # checks get only the rows of the day's lifecycle markets (a pyarrow filter); same checks, same logic
+        D = dict(avail={}, records=None, legs=None)
         for k in ('records', 'legs'):             # a missing / unreadable day table fails that day's checks closed (day_checks), never the run
             try:
-                D[k] = pd.read_parquet(E['P'][k][day]) if day in E['P'][k] else None
+                D['avail'][k] = day in E['P'][k] and bool(pq.read_schema(E['P'][k][day]).names)
             except Exception as e:
-                D[k] = None; A['outputs_present'].fail(f'{k} {day} unreadable: {type(e).__name__}')
+                D['avail'][k] = False; A['outputs_present'].fail(f'{k} {day} unreadable: {type(e).__name__}')
+        both = D['avail']['records'] and D['avail']['legs']
         D['rec_j'], D['decl'] = [], {}
         D['depth_tot'] = {k: (Counter(), Counter()) for k in ('frames', 'levels')}      # per-flag / per-status day totals of depth tables
         D['depth_pm'] = {k: [] for k in ('frames', 'levels')}                            # per depth market: its own map was found
         guard(f'load {day}')
-        if D['records'] is not None:            # boundary-censored markets: economics must exclude them as a status (amendment 1 item 5)
-            R0 = D['records']
-            G['censored'].update((day, int(m)) for m in R0.mid[hasf(R0.status, 'boundary_censored')].unique())
-        if day == C.GT_DAY and D['legs'] is not None and G['own_h']:        # our own maker legs: GT execution / share coverage
-            Lg = D['legs']; m_ = Lg.mk_hash.str.lower().isin(G['own_h']).to_numpy()
+        if D['avail']['records']:               # boundary-censored markets: economics must exclude them as a status (amendment 1 item 5)
+            try:
+                R0 = _rd(E, 'records', day, ['mid', 'status'])
+                G['censored'].update((day, int(m)) for m in R0.mid[hasf(R0.status, 'boundary_censored')].unique())
+                del R0
+            except Exception as e:
+                both = D['avail']['records'] = False; A['outputs_present'].fail(f'records {day} unreadable: {type(e).__name__}')
+        if day == C.GT_DAY and D['avail']['legs'] and G['own_h']:        # our own maker legs: GT execution / share coverage
+            Lg = _rd(E, 'legs', day, ['mk_hash', 'mid', 'sid', 'mk_idx', 'shares']); m_ = Lg.mk_hash.str.lower().isin(G['own_h']).to_numpy()
             G['gt_own_legs'] = Lg.loc[m_, ['mid', 'sid', 'mk_idx', 'shares']].assign(h=Lg.mk_hash[m_].str.lower().to_numpy())
+            del Lg
         try:
             day_checks(A, E, day, D, G)
         except SystemExit:
@@ -1467,11 +1617,25 @@ def run_checks(E, only=None, batch=40):
         except Exception as e:
             for n in DAY_CHECKS:
                 A[n].fail(f'cannot evaluate {day}: {type(e).__name__}: {e}')
-        D['xm'] = set()
-        for name, fn in (('H1_identity', lambda: D.__setitem__('xm', (lambda n: set(n[n > 1].index))(D['legs'].groupby(D['legs'].mk_hash.str.lower()).mid.nunique()))),
-                         ('econ_pnl_recompute', lambda: G['pnl'].append(pnl_legs(E, day, D['records'], D['legs'])) if (day in C.MEASURE_DAYS or day == C.ID_DAY) else None),
-                         ('identities_exante', lambda: G.__setitem__('id_tops', id_tops(E, day, D['records'], D['legs'])) if day == C.ID_DAY else None)):
-            if D['legs'] is None or D['records'] is None:
+        gc.collect(); _mem(G, f'{day} day_checks')
+        D['xm'], pn = set(), {}
+
+        def _xm():
+            L = _rd(E, 'legs', day, ['mk_hash', 'mid'])
+            D['xm'] = (lambda n: set(n[n > 1].index))(L.groupby(L.mk_hash.str.lower()).mid.nunique())
+
+        def _pnl_day():          # ONE P&L pass per day feeds both the recompute and (Oct 23) the ex-ante identities
+            if day in C.MEASURE_DAYS or day == C.ID_DAY:
+                pn['P'], pn['sh'] = pnl_legs(E, day, ids=day == C.ID_DAY)
+                G['pnl'].append(pn['P'].groupby(['addr', 'mid'], as_index=False)[['gross', 'fee', 'fee_px', 'nfee_bad']].sum())   # roles summed
+
+        def _ids_day():
+            if day == C.ID_DAY:
+                if 'P' not in pn:    # the shared pass failed: rerun it here so this check fails with its own reason
+                    pn['P'], pn['sh'] = pnl_legs(E, day, ids=True)
+                G['id_tops'] = id_tops(pn['P'], pn['sh'])
+        for name, fn in (('H1_identity', _xm), ('econ_pnl_recompute', _pnl_day), ('identities_exante', _ids_day)):
+            if not both:
                 break
             try:       # xm: a hash in more than one market of the day is an identity conflict; pnl / id_tops feed the global checks
                 fn()
@@ -1479,7 +1643,16 @@ def run_checks(E, only=None, batch=40):
                 raise
             except Exception as e:
                 A[name].fail(f'cannot evaluate {day}: {type(e).__name__}: {e}')
+            gc.collect()
+        del pn
+        _mem(G, f'{day} h1_pnl')
         mids = [m for d2, m in E['life'] if d2 == day]
+        if mids and both:           # only the rows of the day's lifecycle markets (all columns) for the per-market checks
+            for k in ('records', 'legs'):
+                try:
+                    D[k] = pd.read_parquet(E['P'][k][day], filters=[('mid', 'in', [int(m) for m in mids])])
+                except Exception as e:
+                    D[k] = None; A['outputs_present'].fail(f'{k} {day} unreadable: {type(e).__name__}')
         for i in range(0, len(mids), batch):
             part = mids[i:i + batch]
             try:
@@ -1512,11 +1685,14 @@ def run_checks(E, only=None, batch=40):
                      a.fail(f'status counts {k} {day}: no extract receipt map equals the day totals {dict(tf)} over every depth window'))
         _call(A, 'status_counts_reported', _day_depth)
         del D
+        gc.collect(); _mem(G, f'{day} markets')
         guard(f'day {day}')
     global_checks(A, E, G)
+    _mem(G, 'global')
     names = [n for n in ALL_CHECKS if A['_only'] is None or n in A['_only']]
     return dict(checks={n: A[n].res() for n in names}, details={n: A[n].det() for n in names},
-                info=dict(ptick_units=sorted(G['K']), t_rel_anchor=sorted(G['anchor']), vmhwm_mib=round(hwm_mib(), 1)))
+                info=dict(ptick_units=sorted(G['K']), t_rel_anchor=sorted(G['anchor']), vmhwm_mib=round(hwm_mib(), 1),
+                          mem_stages_mib=G.get('mem', [])))
 
 
 # ---------------------------------------------------------------------------------------------------------------- raw re-parse

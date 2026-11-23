@@ -1,0 +1,108 @@
+head=05177007afe3219b28d987a9a92078a0982e6418
+{
+ "mid": 4342752,
+ "inputs": {
+  "legs": 1247,
+  "unplaceable_legs": 0,
+  "subcent_legs": 0,
+  "records": 827,
+  "records_with_legs": 827,
+  "records_without_legs": 0,
+  "frames": 3727,
+  "frames_usable": 3727,
+  "frames_excluded": {},
+  "frame_gaps": 80,
+  "unknown_cells": 0,
+  "conn": 1,
+  "conn_switches": 0,
+  "depth_span_ms": [
+   1794143108799,
+   1794143701909
+  ],
+  "fills_before_first_frame": 4,
+  "fills_after_last_frame": 0
+ },
+ "fills": {
+  "n": 1247,
+  "shares": 19951.555707,
+  "t_method": {
+   "book_drop": 643,
+   "none": 4,
+   "pend_inc": 600
+  },
+  "status": {
+   "fill_lo_unbounded": 4,
+   "ok": 1221,
+   "window_gap": 22
+  },
+  "status_flags": {
+   "fill_lo_unbounded": 4,
+   "ok": 1221,
+   "window_gap": 22
+  }
+ },
+ "priority_tests": {
+  "S_FIFO": {
+   "T1_price": {
+    "makers": 124,
+    "violations": 0,
+    "rate": 0.0,
+    "violations_certain": 0,
+    "rate_certain": 0.0,
+    "ties": 0,
+    "unit": "maker legs strictly better than their record worst price (valid orders); violation = the order fills again later"
+   },
+   "T2_time": {
+    "groups": 155,
+    "violations": 0,
+    "rate": 0.0,
+    "violations_certain": 0,
+    "rate_certain": 0.0,
+    "survivor_groups": 76,
+    "no_survivor_groups": 79,
+    "min_exhausted_in_no_survivor_groups": 155,
+    "groups_tie": 0,
+    "groups_invalid": 0,
+    "unit": "records with >= 2 makers at their worst price (valid orders, no tie); violation = >= 2 of them fill again later"
+   },
+   "front_survivor_conflicts": 0,
+   "order": "later = settle order (hi, then record rank); *_certain only from disjoint windows (lo_j >= hi_i)"
+  },
+  "S_FIFO_LO": {
+   "T1_price": {
+    "makers": 124,
+    "violations": 0,
+    "rate": 0.0,
+    "violations_certain": 0,
+    "rate_certain": 0.0,
+    "ties": 0,
+    "unit": "maker legs strictly better than their record worst price (valid orders); violation = the order fills again later"
+   },
+   "T2_time": {
+    "groups": 155,
+    "violations": 0,
+    "rate": 0.0,
+    "violations_certain": 0,
+    "rate_certain": 0.0,
+    "survivor_groups": 76,
+    "no_survivor_groups": 79,
+    "min_exhausted_in_no_survivor_groups": 155,
+    "groups_tie": 0,
+    "groups_invalid": 0,
+    "unit": "records with >= 2 makers at their worst price (valid orders, no tie); violation = >= 2 of them fill again later"
+   },
+   "front_survivor_conflicts": 0,
+   "order": "later = settle order (hi, then record rank); *_certain only from disjoint windows (lo_j >= hi_i)"
+  },
+  "makers_listing": {
+   "multi_price_records": 39,
+   "best_first": 3,
+   "worst_first": 25,
+   "neither": 11,
+   "multi_maker_records_without_price_time": 0,
+   "note": "descriptive only: mk_idx is data, never evidence (contract amendment 1)"
+  }
+ },
+ "vmhwm_mib": 191.2
+}
+2026-11-23T00:40:39Z tag=mt_life_20261108_4342752 rc=0 peak_rss_mib=191 wall_s=1.58 cpu_user_s=1.36 memavail_start_gib=22 disk_free_gib=442->442 slot=claude2

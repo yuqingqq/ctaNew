@@ -56,7 +56,9 @@ RULES
          size.ub / unique_defects / defect_rows.field, a defect category without a field) REFUSE with the reason: never guessed.
 Not a strategy: descriptive tables; no fit, imitation, tradeable claim or verdict. Usage (run_light): pf_mt_report.py"""
 import collections
+import ctypes
 import datetime as dt
+import gc
 import hashlib
 import json
 import os
@@ -618,31 +620,144 @@ def links(LK, O1, M):
 
 
 # ------------------------------------------------------------------ R4 ------------------------------------------------------------------
-def econ_frame(MM):
-    """maker_market FILL rows -> (X: additive per-row values, K: row keys day / mid / addr / fifo_ok, rows without an address). Resolved =
-    res_status in RES_VALID (ties included): round trip rt_pnl_res (== econ maker_day rt_pnl_res, check_rt) and residual resid_res there;
-    drift / resolution over fifo_status ok markets."""
-    mm = MM[MM.population == 'FILL']
-    need(set(mm.day) <= set(C.MEASURE_DAYS), f'maker_market: FILL rows of days {sorted(set(mm.day) - set(C.MEASURE_DAYS))} (not measurement days)')
-    n_noaddr = int(mm.addr.isna().sum())
-    mm = mm[mm.addr.notna()].reset_index(drop=True)
-    resok, fok = mm.res_status.isin(RES_VALID).to_numpy(bool), (mm.fifo_status == OK).to_numpy(bool)
-    nz = lambda c: np.nan_to_num(mm[c].to_numpy(float))  # noqa: E731
-    X = pd.DataFrame({c: nz(c) for c in dict.fromkeys(E.MM_SUM + ['n_excl'] + list(ECON_NEW_MM))})
-    X['rt_sh'], X['rt_pnl_res'] = np.where(resok, nz('rt_sh'), 0.), np.where(resok, nz('rt_pnl'), 0.)   # == maker_day rt_pnl_res (checked)
-    X['rt_pnl_unresolved_mkts'] = np.where(resok, 0., nz('rt_pnl'))
-    X['resid_res'] = np.where(resok, nz('resid_res'), 0.)
-    X['resid_res_fifo_ok'], X['resid_drift'], X['resid_resol'] = (np.where(fok, nz(c), 0.) for c in ('resid_res', 'resid_drift', 'resid_resol'))
-    X['net_pos'] = nz('net_pos')
-    X['n_rows'], X['n_rows_res_ok'], X['n_rows_fifo_ok'] = 1, resok.astype(np.int64), fok.astype(np.int64)
-    X['n_rows_status_ok'] = (mm.status == OK).to_numpy(np.int64)
-    K = pd.DataFrame(dict(day=mm.day.to_numpy(object), mid=mm.mid.to_numpy(np.int64), addr=mm.addr.to_numpy(object), fifo_ok=fok))
-    return X, K, n_noaddr
+MM_KEYS = ['day', 'mid', 'addr', 'population'] + MM_ST
+XBASE = list(dict.fromkeys(E.MM_SUM + ['n_excl'] + list(ECON_NEW_MM)))           # maker_market value columns (NaN -> 0)
+XCOLS = XBASE + ['rt_sh', 'rt_pnl_res', 'rt_pnl_unresolved_mkts', 'resid_res', 'resid_res_fifo_ok', 'resid_drift', 'resid_resol', 'net_pos',
+                 'n_rows', 'n_rows_res_ok', 'n_rows_fifo_ok', 'n_rows_status_ok']      # the additive per-row values, in their declared order
 
 
-def check_rt(X, K, MD):
+def trim():
+    """Return freed heap pages to the OS (arrow pool and glibc) so that later peaks do not stack on freed-but-held memory."""
+    gc.collect()
+    try:
+        pa.default_memory_pool().release_unused()
+    except AttributeError:
+        pass
+    try:
+        ctypes.CDLL('libc.so.6').malloc_trim(0)
+    except OSError:
+        pass
+
+
+class MarketPass:
+    """maker_market without materialising it (memory redesign, 2026-11-23): the key columns are read once and kept as integer codes, then
+    each value column is read alone, derived (RES_VALID / fifo restrictions as before) and reduced at once: group sums per set x day (+
+    pooled), per-member sums, the day maker totals, the (day, addr) round trips; net_pos / resid_resol are kept for the resolution null.
+    Every sum is the same pandas reduction over the same rows in the same order as the former per-row frame (bit-identical values).
+    Rows = FILL rows with an address; resolved = res_status in RES_VALID; drift / resolution over fifo_status ok."""
+
+    def __init__(self, p):
+        self.p = p
+        T = pq.read_table(p, columns=MM_KEYS)
+        fz = lambda c, s=False: pd.factorize(T.column(c).to_pandas(), sort=s)  # noqa: E731
+        dc, du = fz('day', True)
+        need(not (dc < 0).any(), 'maker_market: a row without its day')
+        self.all_days = [str(x) for x in du]
+        n_day = np.bincount(dc, minlength=len(du))
+        self.status, codes = [], {}
+        for c in MM_ST:                                         # every row, per day x status column (the former per-day Counter)
+            sc, su = fz(c)
+            lab = [str(x) for x in su] + ['nan']
+            codes[c] = (np.where(sc < 0, len(su), sc), lab)
+            K_ = np.bincount(dc * len(lab) + codes[c][0], minlength=len(du) * len(lab)).reshape(len(du), len(lab))
+            for k, d in enumerate(self.all_days):
+                self.status.append((d, c, Counter({lab[j]: int(K_[k, j]) for j in np.flatnonzero(K_[k])}), int(n_day[k])))
+        self.status.sort(key=lambda x: (x[0], MM_ST.index(x[1])))
+        pcd, pu = fz('population')
+        fill = pcd == ([str(x) for x in pu].index('FILL') if 'FILL' in [str(x) for x in pu] else -2)
+        self.fill_days = sorted({self.all_days[k] for k in np.unique(dc[fill])})
+        ac, au = fz('addr')
+        self.au = [str(x) for x in au]
+        self.code = {a: i for i, a in enumerate(self.au)}
+        self.n_noaddr = int((fill & (ac < 0)).sum())
+        self.idx = np.flatnonzero(fill & (ac >= 0))
+        ok_of = lambda c, vals: np.isin(codes[c][0], [j for j, v in enumerate(codes[c][1][:-1]) if v in vals])[self.idx]  # noqa: E731
+        self.resok, self.fok, self.stok = ok_of('res_status', RES_VALID), ok_of('fifo_status', (OK,)), ok_of('status', (OK,))
+        self.dcode, self.acode = dc[self.idx], ac[self.idx]
+        self.mid = T.column('mid').to_numpy()[self.idx].astype(np.int64)
+        del T, codes, dc, ac, pcd, fill
+        trim()
+
+    def check_days(self):
+        need(set(self.fill_days) <= set(C.MEASURE_DAYS),
+             f'maker_market: FILL rows of days {sorted(set(self.fill_days) - set(C.MEASURE_DAYS))} (not measurement days)')
+
+    def codes_of(self, addrs):
+        return [self.code[a] for a in addrs if a in self.code]
+
+    def group_codes(self, nm, M, makers):
+        """econ's comparison groups per row as GRPS indices: in (the set's members) / field (the day's other makers) / nonmaker."""
+        g = np.full(len(self.idx), 2, np.int8)
+        for d in C.MEASURE_DAYS:
+            if d not in self.all_days:
+                continue
+            sel = self.dcode == self.all_days.index(d)
+            mem = M[nm] if nm.startswith('exante') else M[nm].get(d, frozenset())
+            g[sel & np.isin(self.acode, self.codes_of(makers[d]))] = 1
+            g[sel & np.isin(self.acode, self.codes_of(mem))] = 0
+        return g
+
+    def value(self, c, cache):
+        def base(b):
+            if cache.get('name') != b:
+                cache.clear()
+                a = pq.read_table(self.p, columns=[b]).column(0).to_numpy()
+                cache.update(name=b, v=np.nan_to_num(np.asarray(a, dtype=float)[self.idx]))
+            return cache['v']
+        if c in XBASE:
+            return base(c)
+        return dict(rt_sh=lambda: np.where(self.resok, base('rt_sh'), 0.), rt_pnl_res=lambda: np.where(self.resok, base('rt_pnl'), 0.),
+                    rt_pnl_unresolved_mkts=lambda: np.where(self.resok, 0., base('rt_pnl')), resid_res=lambda: np.where(self.resok, base('resid_res'), 0.),
+                    resid_res_fifo_ok=lambda: np.where(self.fok, base('resid_res'), 0.), resid_drift=lambda: np.where(self.fok, base('resid_drift'), 0.),
+                    resid_resol=lambda: np.where(self.fok, base('resid_resol'), 0.), net_pos=lambda: base('net_pos'),
+                    n_rows=lambda: np.ones(len(self.idx), np.int64), n_rows_res_ok=lambda: self.resok.astype(np.int64),
+                    n_rows_fifo_ok=lambda: self.fok.astype(np.int64), n_rows_status_ok=lambda: self.stok.astype(np.int64))[c]()
+
+    def run(self, M, makers, memb, guard_at):
+        """The single pass over the value columns."""
+        self.gcodes = {nm: self.group_codes(nm, M, makers) for nm in ECON_SETS.values()}
+        D = {d: np.flatnonzero(self.dcode == self.all_days.index(d)) for d in C.MEASURE_DAYS if d in self.all_days}
+        IA = {a: np.flatnonzero(self.acode == self.code[a]) if a in self.code else np.zeros(0, np.int64) for a in memb}
+        IAD = {(a, d): IA[a][self.dcode[IA[a]] == self.all_days.index(d)] if d in self.all_days else IA[a][:0] for a in memb for d in C.MEASURE_DAYS}
+        self.acc, self.adr = {}, {}
+        self.naddr = {}
+        for nm, gc_ in self.gcodes.items():
+            for d_, ii in list(D.items()) + [('pooled', None)]:
+                g_, a_ = (gc_, self.acode) if ii is None else (gc_[ii], self.acode[ii])
+                for gi in range(len(GRPS)):
+                    self.naddr[(nm, d_, GRPS[gi])] = int(np.unique(a_[g_ == gi]).size)
+        self.nrows = {(a, 'pooled'): int(len(IA[a])) for a in memb} | {k: int(len(v)) for k, v in IAD.items()}
+        cache = {}
+        for c in XCOLS:
+            v = self.value(c, cache)
+            for nm, gc_ in self.gcodes.items():
+                for d_, ii in list(D.items()) + [('pooled', None)]:
+                    s = pd.Series(v).groupby(gc_).sum() if ii is None else pd.Series(v[ii]).groupby(gc_[ii]).sum()
+                    for gi, val in s.items():
+                        self.acc.setdefault((nm, d_, GRPS[int(gi)]), {})[c] = float(val)
+            for a in memb:
+                for d_ in C.MEASURE_DAYS + ('pooled',):
+                    self.adr.setdefault((a, d_), {})[c] = float(pd.Series(v[IA[a] if d_ == 'pooled' else IAD[(a, d_)]]).sum())
+            if c == 'sh_mk':                                   # the day maker totals (share of the day's maker volume)
+                s = pd.Series(v).groupby(self.dcode).sum()
+                self.dtot = pd.Series(s.to_numpy(), index=[self.all_days[int(k)] for k in s.index])
+            if c == 'rt_pnl_res':                              # per (day, addr), compared with maker_day rt_pnl_res
+                s = pd.Series(v).groupby([self.dcode, self.acode]).sum()
+                lv0, lv1 = s.index.get_level_values(0).to_numpy(), s.index.get_level_values(1).to_numpy()
+                self.rt_mine = pd.Series(s.to_numpy(), index=pd.MultiIndex.from_arrays(
+                    [np.array(self.all_days, dtype=object)[lv0], np.array(self.au, dtype=object)[lv1]], names=['day', 'addr']))
+            if c in ('net_pos', 'resid_resol'):
+                setattr(self, c, v)
+            del v
+            guard_at(f'econ column {c}')
+        self.dstr = np.array(self.all_days, dtype=object)[self.dcode]
+        cache.clear()
+        trim()
+
+
+def check_rt(MP, MD):
     """econ's maker_day rt_pnl_res (per address x day) must equal the same restriction summed here from maker_market (else refuse)."""
-    mine = pd.DataFrame(dict(day=K.day.to_numpy(object), addr=K.addr.to_numpy(object), rt=X.rt_pnl_res.to_numpy(float))).groupby(['day', 'addr']).rt.sum()
+    mine = MP.rt_mine
     md = MD[MD.population == 'FILL'].groupby(['day', 'addr']).rt_pnl_res.sum()
     keys = mine.index.union(md.index)
     a, b = mine.reindex(keys).fillna(0.).to_numpy(float), md.reindex(keys).fillna(0.).to_numpy(float)
@@ -653,37 +768,20 @@ def check_rt(X, K, MD):
     return float(dev.max()) if len(dev) else 0.
 
 
-def groups(K, nm, M, makers):
-    """econ's comparison groups per row: in (the set's members) / field (the day's other makers) / nonmaker."""
-    grp = np.full(len(K), 'nonmaker', dtype=object)
-    a = K.addr
-    for d in C.MEASURE_DAYS:
-        sel = K.day.to_numpy(object) == d
-        mem = M[nm] if nm.startswith('exante') else M[nm].get(d, frozenset())
-        grp[sel & a.isin(makers[d]).to_numpy(bool)] = 'field'
-        grp[sel & a.isin(mem).to_numpy(bool)] = 'in'
-    return grp
-
-
-def econ_tables(X, K, MD, SEG, M):
-    """-> (econ_identity_day, R4 summary, checks)."""
-    makers = {d: frozenset(MD.addr[(MD.day == d) & (MD.sh_mk > 0)]) for d in C.MEASURE_DAYS}
-    num = list(X.columns)
+def econ_tables(MP, SEG):
+    """MarketPass sums -> (econ_identity_day, R4 summary, checks)."""
     SA = SEG[(SEG.dim == 'all') & (SEG.bucket == 'all')]
     need(set(SEG.id_set) <= set(ECON_SETS), f'segments: unknown id_set {sorted(set(SEG.id_set) - set(ECON_SETS))}')
     seg_tot = SA.groupby(['id_set', 'grp', 'day'])[E.MET].sum()
     seg_mk = SA[SA.role == 'maker'].groupby(['id_set', 'grp', 'day'])[E.MET].sum()
     rows, maxdev, unrec = [], 0., set()
     for en, nm in ECON_SETS.items():
-        G = X.assign(grp=groups(K, nm, M, makers), addr=K.addr.to_numpy(object), day=K.day.to_numpy(object))
         for d_ in C.MEASURE_DAYS + ('pooled',):
-            Gd = G if d_ == 'pooled' else G[G.day == d_]
-            S = Gd.groupby('grp')[num].sum()
-            na = Gd.groupby('grp').addr.nunique()
             for g in GRPS:
-                r = {c: float(S.at[g, c]) if g in S.index else 0. for c in num}
+                acc = MP.acc.get((nm, d_, g))
+                r = {c: acc[c] if acc is not None else 0. for c in XCOLS}
                 o = derive(r)
-                o.update(id_set=nm, label=LABEL[nm], grp=g, day=d_, n_addr=int(na.get(g, 0)))
+                o.update(id_set=nm, label=LABEL[nm], grp=g, day=d_, n_addr=int(MP.naddr.get((nm, d_, g), 0)))
                 tol = TOL_ABS + TOL_REL * max(1., abs(o['notional']))
                 dev = abs(o['gross_res'] - (o['rt_pnl_res'] + o['resid_res']))
                 need(dev <= tol, f'econ {nm} {g} {d_}: gross {o["gross_res"]} != rt_pnl_res + resid_res ({dev:.3g}) on resolved markets')
@@ -775,25 +873,21 @@ def econ_segments(SEG, R1):
     return S.sort_values(['id_set', 'grp', 'day_order', 'role', 'dim', 'bucket'], kind='mergesort').drop(columns='day_order').reset_index(drop=True)
 
 
-def address_rows(X, K, MD, M, rk_ex, CP):
-    """econ_address_day: every ex-ante member per measurement day (+ pooled), from the same maker_market rows as the sets."""
+def address_rows(MP, MD, M, rk_ex, CP):
+    """econ_address_day: every ex-ante member per measurement day (+ pooled), from the same maker_market rows as the sets (MarketPass sums)."""
     memb = sorted(M['exante_sh'] | M['exante_pnl'])
-    num = list(X.columns)
-    G = X.assign(addr=K.addr.to_numpy(object), day=K.day.to_numpy(object))
-    dtot = G.groupby('day').sh_mk.sum()
+    dtot = MP.dtot
     ranks = {(d, a): (int(s_), int(p_)) for d, a, s_, p_ in zip(MD.day, MD.addr, MD.rank_sh, MD.rank_pnl)}
     selfq = CP[CP.cp == 'self'].groupby(['day', 'addr']).q_ok.sum() if len(CP) else pd.Series(dtype=float)
     rows = []
     for a in memb:
-        Ga = G[G.addr == a]
         for d_ in C.MEASURE_DAYS + ('pooled',):
-            x = Ga if d_ == 'pooled' else Ga[Ga.day == d_]
-            o = derive({c: float(x[c].sum()) for c in num})
+            o = derive(dict(MP.adr[(a, d_)]))
             tot = float(dtot.sum()) if d_ == 'pooled' else float(dtot.get(d_, 0.))
             sq = float(sum(selfq.get((d, a), 0.) for d in C.MEASURE_DAYS)) if d_ == 'pooled' else float(selfq.get((d_, a), 0.))
             rs = ranks.get((d_, a), (-1, -1))
             o.update(addr=a, day=d_, in_exante_sh=a in M['exante_sh'], rank_exante_sh=rk_ex['sh'].get(a, -1), in_exante_pnl=a in M['exante_pnl'],
-                     rank_exante_pnl=rk_ex['pnl'].get(a, -1), n_markets=int(len(x)), share_of_day_maker_volume=rate(o['sh_mk'], tot),
+                     rank_exante_pnl=rk_ex['pnl'].get(a, -1), n_markets=MP.nrows[(a, d_)], share_of_day_maker_volume=rate(o['sh_mk'], tot),
                      self_trade_sh=sq, rank_sh_day=rs[0] if d_ != 'pooled' else None, rank_pnl_day=rs[1] if d_ != 'pooled' else None)
             rows.append(o)
     D = pd.DataFrame(rows)
@@ -843,19 +937,19 @@ def counterparty(CP, memb):
                    rule=f'one_sided = >= {ONE_SIDED_FRAC} of the ok shares in one role (maker / taker) or one YES direction, with >= {ONE_SIDED_MIN_N} ok fills')
 
 
-def resolution_null(X, K, marks, M, makers):
+def resolution_null(MP, marks):
     """Resolution-luck null per set x group x day (+ pooled): S = sum over fifo-ok markets of NP_m (V_m - m_END_m), NP_m = the group's net
     position; null S* with V*_m ~ Bernoulli(m_END_m) independent per market, N_NULL draws, numpy default_rng([SEED, set, group, day]). The
-    actual S (econ resid_resol) must equal the recomputation from fills_valued V / m_end (else refuse)."""
+    actual S (econ resid_resol) must equal the recomputation from fills_valued V / m_end (else refuse). Rows: the MarketPass arrays."""
     rows = []
     days = C.MEASURE_DAYS + ('pooled',)
     for si, (en, nm) in enumerate(ECON_SETS.items()):
-        grp = groups(K, nm, M, makers)
+        gc_ = MP.gcodes[nm]
         for gi, g in enumerate(GRPS):
             for di, d_ in enumerate(days):
-                sel = (grp == g) & K.fifo_ok.to_numpy(bool) & ((K.day.to_numpy(object) == d_) if d_ != 'pooled' else True)
-                Z = pd.DataFrame(dict(day=K.day.to_numpy(object)[sel], mid=K.mid.to_numpy(np.int64)[sel], np_=X.net_pos.to_numpy(float)[sel],
-                                      rr=X.resid_resol.to_numpy(float)[sel])).groupby(['day', 'mid'], as_index=False).sum()
+                dk = MP.all_days.index(d_) if d_ in MP.all_days else -1
+                sel = (gc_ == gi) & MP.fok & ((MP.dcode == dk) if d_ != 'pooled' else True)
+                Z = pd.DataFrame(dict(day=MP.dstr[sel], mid=MP.mid[sel], np_=MP.net_pos[sel], rr=MP.resid_resol[sel])).groupby(['day', 'mid'], as_index=False).sum()
                 need(all(k in marks for k in zip(Z.day, Z.mid)), f'resolution null {nm} {g} {d_}: a fifo-ok market has no fills_valued END mark')
                 me = np.array([marks[k][0] for k in zip(Z.day, Z.mid)], dtype=float)
                 V = np.array([marks[k][1] for k in zip(Z.day, Z.mid)], dtype=float)
@@ -1171,6 +1265,12 @@ def build(I, tmp, asof0, t0, log):
         OUTS[fn] = dict(rows=int(len(df)), columns=int(len(df.columns)))
 
     # ---- 1. days: extract receipts, inventories, table statuses ----
+    def at(where):                                        # the self-guard, its VmHWM kept per section and logged (memory receipt)
+        h = guard(where)
+        mem[where] = h
+        log(f'[mem] {where}: VmHWM {h:.0f} MiB', flush=True)
+        return h
+
     EXT, ST, INVR = {}, [], []
     for d in DAYS:
         X = EXT[d] = I.json(f'extract_{day_ok(d)}.json', f'extract receipt {d}')
@@ -1191,7 +1291,7 @@ def build(I, tmp, asof0, t0, log):
             if c_:
                 ST += status_rows(d, k, 'status', c_, sum(c_.values()), source=f'extract_{d}.json')
         INVR += inventory_rows(d, V, X, rec)
-        mem[f'days {d}'] = guard(f'days {d}')
+        at(f'days {d}')
     log(f'[report] days read: {len(DAYS)}', flush=True)
     # ---- 2. econ receipts + identities (the BOOK list and the sets are needed by the lifecycle stage) ----
     EJ, ID = I.json('econ/econ.json', 'econ receipt'), I.json('econ/identities.json', 'econ identities')
@@ -1256,7 +1356,7 @@ def build(I, tmp, asof0, t0, log):
     sides = tuple(sorted(set(O1.y_side.astype(str)) | {'bid', 'ask'}))
     COV = coverage(O1, M, demote, sides)
     WIN, RMS, LNK = windows(OA, M, cov_scen), removal_sets(OA, M, cov_scen), links(LK, O1, M)
-    mem['r3'] = guard('R3 tables')
+    at('R3 tables')
     # ---- 6. econ tables ----
     pmd = I.schema('econ/maker_day.parquet', 'econ maker_day', list(E.MD))
     miss = [c for c in ECON_NEW_MD if c not in pq.read_schema(pmd).names]
@@ -1272,34 +1372,36 @@ def build(I, tmp, asof0, t0, log):
     pmm = I.schema('econ/maker_market.parquet', 'econ maker_market', list(E.MM))
     miss = [c for c in ECON_NEW_MM if c not in pq.read_schema(pmm).names]
     need(not miss, f'econ maker_market: declared columns {miss} absent (econ additions not in this artifact): refusing rather than guessing')
-    MM = I.table('econ/maker_market.parquet', 'econ maker_market', MM_COLS, required=list(E.MM))
+    need(set(MM_COLS) <= set(pq.read_schema(pmm).names), f'econ maker_market: columns {sorted(set(MM_COLS) - set(pq.read_schema(pmm).names))} absent')
+    MP = MarketPass(pmm)
+    at('econ keys')
     SEG = I.table('econ/segments.parquet', 'econ segments', list(E.SEG))
-    case_check(set(MM.addr.dropna()), M, 'maker_market')
-    X_, K_, n_noaddr = econ_frame(MM)
-    EID, R4, econ_chk = econ_tables(X_, K_, MD, SEG, M)
-    econ_chk.update(maker_market_rows_without_addr=n_noaddr, rt_pnl_res_vs_maker_day_max_abs_dev=check_rt(X_, K_, MD))
+    case_check(set(MP.au), M, 'maker_market')
+    MP.check_days()
+    makers = {d: frozenset(MD.addr[(MD.day == d) & (MD.sh_mk > 0)]) for d in C.MEASURE_DAYS}
+    memb = sorted(M['exante_sh'] | M['exante_pnl'])
+    rk_ex = dict(sh={x['addr']: int(x['rank']) for x in ID['ex_ante']['top10_shares']}, pnl={x['addr']: int(x['rank']) for x in ID['ex_ante']['top10_pnl']})
+    MP.run(M, makers, memb, lambda w: mem.__setitem__('econ columns (max)', max(mem.get('econ columns (max)', 0.), guard(w))))
+    at('econ columns')
+    EID, R4, econ_chk = econ_tables(MP, SEG)
+    econ_chk.update(maker_market_rows_without_addr=MP.n_noaddr, rt_pnl_res_vs_maker_day_max_abs_dev=check_rt(MP, MD))
     ESEG = econ_segments(SEG, R1)
     prm = I.path('econ/rewards_market.parquet', 'econ rewards_market')
     RWM = pq.read_table(prm).to_pandas()
     if 'day' in RWM.columns:
         need(set(RWM.day.astype(str)) <= set(DAYS), 'rewards_market: a day outside the consumed days')
-    makers = {d: frozenset(MD.addr[(MD.day == d) & (MD.sh_mk > 0)]) for d in C.MEASURE_DAYS}
-    memb = sorted(M['exante_sh'] | M['exante_pnl'])
-    rk_ex = dict(sh={x['addr']: int(x['rank']) for x in ID['ex_ante']['top10_shares']}, pnl={x['addr']: int(x['rank']) for x in ID['ex_ante']['top10_pnl']})
     for d, dg in sorted((EJ.get('diagnostics') or {}).items()):
         ST += [dict(day=day_ok(d), table='econ_diagnostics', part='', column=k, kind='count', value='', n=v, den=None, rate=None,
                     source='econ/econ.json diagnostics') for k, v in sorted(dg.items()) if isinstance(v, (int, float)) and not isinstance(v, bool)]
-    for d in sorted(set(MM.day)):
-        x = MM[MM.day == day_ok(d)]
-        for c in MM_ST:
-            ST += status_rows(d, 'econ_maker_market', c, Counter(x[c].astype(str)), len(x))
+    for d, c, cnt_, n_ in MP.status:
+        ST += status_rows(day_ok(d), 'econ_maker_market', c, cnt_, n_)
     for d in sorted(set(MD.day)):
         y = MD[MD.day == day_ok(d)]
         ST += status_rows(d, 'econ_maker_day', 'status', Counter(y.status.astype(str)), len(y))
     for d in sorted(set(SEG.day)):
         y = SEG[SEG.day == day_ok(d)]
         ST += status_rows(d, 'econ_segments', 'status', Counter(y.status.astype(str)), len(y))
-    mem['econ'] = guard('econ tables')
+    at('econ tables')
     # ---- 7. timeline markets (deterministic, from the lifecycle legs) ----
     O1k = O1.set_index(['day', 'mid', 'mk_hash']).mk_signer
     TL = {}
@@ -1318,12 +1420,15 @@ def build(I, tmp, asof0, t0, log):
     book_day = {m: d for d, v in book.items() for m in v}
     pfv = I.schema('econ/fills_valued.parquet', 'econ fills_valued', list(E.FV))
     cnt, NETd, TLR, marks, CP = fv_pass(pfv, book_day, [v['mid'] for v in TL.values() if v['mid'] is not None], top2, memb)
-    mem['fills_valued'] = guard('fills_valued pass')
-    ADR = address_rows(X_, K_, MD, M, rk_ex, CP)
+    at('fills_valued pass')
+    trim()
+    ADR = address_rows(MP, MD, M, rk_ex, CP)
     CPT, cp_info = counterparty(CP, memb)
-    RNULL = resolution_null(X_, K_, marks, M, makers)
+    RNULL = resolution_null(MP, marks)
     RKP = rank_persistence(MD, ID, M)
-    mem['econ_extra'] = guard('address / counterparty / null / ranks')
+    del MP
+    trim()
+    at('address / counterparty / null / ranks')
     ec = EJ.get('counts') or {}
     for d, cols in ec.items():
         day_ok(d)
@@ -1352,7 +1457,7 @@ def build(I, tmp, asof0, t0, log):
         put(f'timeline_{d}_{m}', T)
         TL[d].update(rows=int(len(T)), rows_maker=int((T.role == 'maker').sum()), rows_taker=int((T.role == 'taker').sum()))
         EXR += examples(d, m, top2, OC, NET)
-        mem[f'timeline {d}'] = guard(f'timeline {d}')
+        at(f'timeline {d}')
     UNR, n_cand = unresolved(OA, O1, NET, M)
     # ---- 10. tables + readings ----
     ST = pd.DataFrame(ST)

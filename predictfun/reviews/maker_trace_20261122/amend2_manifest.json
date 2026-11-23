@@ -1,0 +1,16 @@
+{
+ "amend1_sha256": "9d8c287e95fea172541b90c834ac759176c1c2dcd46c3ee0aad27a3483c7af57",
+ "amendment": "amend2_memory_only_report_and_checker",
+ "asof": "2026-11-23T01:10:09Z",
+ "changed": {
+  "predictfun/research/pf_mt_report.py": "93e76c750062a30e20e0af8725939e69999c828f5316762921b5efc1528a82c8",
+  "predictfun/reviews/maker_trace_20261122/mt_checks.py": "77869142b3f169071d822f70afa07645d1087e726881a0a26d6ff1ea3e991d3f"
+ },
+ "evidence": {
+  "checker": "rehearsal 39/39 checks, 76/76 falsifier cases, both reparses; every check result / count / message equal to the frozen checker on synthetic data (log mt_checks_rehearse_mem)",
+  "report": "byte-identical CSVs 21/21 on both selftest worlds vs the frozen version; selftest 323 assertions; real-size synthetic VmHWM 693 MiB (logs mt_report_mem_scale / mt_report_mem_selftest)"
+ },
+ "manifest_sha256": "d8300bb6cd6709593a2e44b99cc702eefb34c0acaebe7f9ee2bec1b591a8460e",
+ "reason": "on the real outputs the frozen report stopped at its 1,450 MiB self-guard (VmHWM 2,354 MiB at econ tables) and the frozen checker at its guard (VmHWM 2,050 MiB at day 20261023), both before writing anything; USER rule: never raise a cap, redesign",
+ "unchanged": "every builder, every computed value, every check and reading rule"
+}

@@ -1,0 +1,3 @@
+head=05177007afe3219b28d987a9a92078a0982e6418
+[mt_checks] ABORT at day 20261023: VmHWM 2050 MiB > guard 1450 MiB
+2026-11-23T00:45:12Z tag=mt_x_checks rc=1 peak_rss_mib=2049 wall_s=29.91 cpu_user_s=25.66 memavail_start_gib=22 disk_free_gib=441->441 slot=claude

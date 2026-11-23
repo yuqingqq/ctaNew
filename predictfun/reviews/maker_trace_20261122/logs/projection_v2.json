@@ -1,0 +1,42 @@
+{
+ "spent_h": 0.6156,
+ "projected_more_h": 0.739,
+ "components": {
+  "rest_h": 0.3794,
+  "ws_h": 0.1454,
+  "life_h": 0.0642,
+  "econ_h": 0.08,
+  "truth_h": 0.01,
+  "report_h": 0.01,
+  "checks_h": 0.04,
+  "selftests_after_h": 0.01
+ },
+ "reserve_h": 0.05,
+ "projected_batch_h": 1.4046,
+ "cap_h": 1.45,
+ "line_before_max": 3.3107,
+ "projected_line": 4.7153,
+ "ceiling": 4.85,
+ "measured": {
+  "prefix_process_cpu_s": 403.51,
+  "per_hour_sum_cpu_s": 372.039,
+  "rest_cpu_s": 278.62806982601285,
+  "rest_bytes": 1934302081,
+  "ws_cpu_s": 124.88193017398714,
+  "ws_bytes": 118924629,
+  "life_prefix": {
+   "day": "20261024",
+   "mid": 3697902,
+   "cpu_s": 2.2
+  }
+ },
+ "n_book": 19,
+ "n_gt": 52,
+ "life_safety": 1.5,
+ "run_rest": true,
+ "supersedes": {
+  "path": "logs/projection.json",
+  "sha256": "7538b01c580680e83b03fd1683b8fd014d67b8adf195e13ae7cfad59d2193c28",
+  "approval": "USER AskUserQuestion 2026-11-23: +0.10 h, cap 1.45, line ceiling 4.85 unchanged"
+ }
+}

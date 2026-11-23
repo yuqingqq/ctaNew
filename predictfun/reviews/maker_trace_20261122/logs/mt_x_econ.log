@@ -1,0 +1,43 @@
+head=05177007afe3219b28d987a9a92078a0982e6418
+[econ] 20261023 ID legs 844609 records 583210 markets 288 maker_market 221608 addresses 10240 hwm 909 MiB
+[econ] 20261024 FILL legs 724873 records 476897 markets 288 maker_market 205415 addresses 9779 hwm 1130 MiB
+[econ] 20261025 FILL legs 737177 records 466270 markets 288 maker_market 204510 addresses 9528 hwm 1093 MiB
+[econ] 20261026 FILL legs 871491 records 605035 markets 288 maker_market 231968 addresses 10194 hwm 1210 MiB
+[econ] 20261027 FILL legs 872523 records 594925 markets 288 maker_market 225677 addresses 10173 hwm 1099 MiB
+{
+ "rows": {
+  "fills_valued": 8101346,
+  "maker_market": 1089178,
+  "maker_day": 49914,
+  "segments": 3050,
+  "rewards_market": 1152
+ },
+ "checks": {
+  "gross_eq_rt_plus_resid": 2.944489096989855e-11,
+  "net_eq_gross_minus_fee": 1.8189894035458565e-12,
+  "net_pos_eq_buys_minus_sells": 2.9956481739645824e-11,
+  "resid_eq_drift_plus_resol": 1.8189894035458565e-12,
+  "zero_sum_gross": 1.8189894035458565e-12,
+  "zero_sum_net_pos": 4.220623850414995e-11,
+  "zero_sum_shares": 1.4551915228366852e-11,
+  "zero_sum_v_10s": 4.547473508864641e-13,
+  "zero_sum_v_1s": 9.094947017729282e-13,
+  "zero_sum_v_60s": 4.547473508864641e-13,
+  "zero_sum_v_end": 1.8189894035458565e-12,
+  "zero_sum_v_spr": 4.547473508864641e-13,
+  "segment_zero_sum_gross_res": 2.4556356947869062e-11,
+  "segment_zero_sum_v_10s": 1.1368683772161603e-11,
+  "segment_zero_sum_v_1s": 1.0913936421275139e-11,
+  "segment_zero_sum_v_60s": 1.0913936421275139e-11,
+  "segment_zero_sum_v_end": 1.0913936421275139e-11,
+  "segment_zero_sum_v_spr": 2.9103830456733704e-11
+ },
+ "memory": {
+  "20261023": 908.8046875,
+  "20261024": 1130.11328125,
+  "20261025": 1093.1015625,
+  "20261026": 1210.19140625,
+  "20261027": 1098.53515625
+ }
+}
+2026-11-23T00:39:50Z tag=mt_x_econ rc=0 peak_rss_mib=1210 wall_s=204.14 cpu_user_s=152.87 memavail_start_gib=22 disk_free_gib=443->441 slot=claude

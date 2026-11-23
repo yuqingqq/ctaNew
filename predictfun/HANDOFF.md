@@ -764,6 +764,26 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- MAKER_TRACE_AMEND2_20261123_DEV -->
+## 2026-11-23 01:10Z (session aea5bfb9) — MAKER-TRACE run: all data stages done; report and checker memory-only redesign (amendment 2)
+
+**Done (all rc 0):**
+- extraction of Oct 23–27 and Nov 8 (326–471 CPU s per day, peak ≤ 1,039 MiB);
+- lifecycle of all 19 BOOK and 52 GT markets (about 2–3 s each); on Nov 8 the public-leg rule selected exactly the 52 own-fill windows the private truth table names;
+- econ;
+- truth: the dry gate reproduces v2 exactly; scored.
+
+**Stopped at their own guards, before writing anything:**
+- the report, VmHWM 2,354 MiB while loading the econ tables (fills_valued is 8.1 M rows);
+- the checker, 2,050 MiB on Oct 23.
+
+**Amendment 2** (`amend2_manifest.json`): a memory-only redesign of both, with the caps not raised.
+- The report peaks at 693 MiB at real size, with CSVs byte-identical 21/21 to the frozen version on the selftest worlds.
+- The checker rehearsal passes 39/39 checks and 76/76 falsifier cases, with results equal to the frozen checker's.
+
+**Next:** `report`, then `checks _r1`, then the results receipt and ONE Codex review.
+<!-- /MAKER_TRACE_AMEND2_20261123_DEV -->
+
 <!-- MAKER_TRACE_AMEND1_20261123_DEV -->
 ## 2026-11-23 00:29Z (session aea5bfb9) — MAKER-TRACE prefix measured; gate refused at 1.4046 h > 1.35; USER approved cap 1.45 (line 4.85 unchanged); amendment 1
 

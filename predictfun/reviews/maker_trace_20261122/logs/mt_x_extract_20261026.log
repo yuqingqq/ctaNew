@@ -1,0 +1,53 @@
+head=05177007afe3219b28d987a9a92078a0982e6418
+[rest] 20261025_23 {"pages": 42, "record_receipts": 726, "new_records": 57, "cpu_s": 2.087, "vmhwm_mib": 118.2}
+[rest] 20261026_00 {"pages": 3359, "record_receipts": 298916, "new_records": 22718, "cpu_s": 10.641, "vmhwm_mib": 258.0}
+[rest] 20261026_01 {"pages": 3594, "record_receipts": 322777, "new_records": 23005, "cpu_s": 11.125, "vmhwm_mib": 273.8}
+[rest] 20261026_02 {"pages": 3993, "record_receipts": 361536, "new_records": 24629, "cpu_s": 12.26, "vmhwm_mib": 290.3}
+[rest] 20261026_03 {"pages": 3769, "record_receipts": 338523, "new_records": 22885, "cpu_s": 11.511, "vmhwm_mib": 293.3}
+[rest] 20261026_04 {"pages": 3224, "record_receipts": 288385, "new_records": 19972, "cpu_s": 10.558, "vmhwm_mib": 293.3}
+[rest] 20261026_05 {"pages": 3795, "record_receipts": 344573, "new_records": 23246, "cpu_s": 12.02, "vmhwm_mib": 307.4}
+[rest] 20261026_06 {"pages": 3282, "record_receipts": 292640, "new_records": 21140, "cpu_s": 11.291, "vmhwm_mib": 309.9}
+[rest] 20261026_07 {"pages": 3872, "record_receipts": 352919, "new_records": 24671, "cpu_s": 12.414, "vmhwm_mib": 331.7}
+[rest] 20261026_08 {"pages": 3649, "record_receipts": 336194, "new_records": 25021, "cpu_s": 12.66, "vmhwm_mib": 345.4}
+[rest] 20261026_09 {"pages": 3764, "record_receipts": 344860, "new_records": 23428, "cpu_s": 12.429, "vmhwm_mib": 345.2}
+[rest] 20261026_10 {"pages": 4019, "record_receipts": 369361, "new_records": 23612, "cpu_s": 12.662, "vmhwm_mib": 353.2}
+[rest] 20261026_11 {"pages": 4194, "record_receipts": 387477, "new_records": 28503, "cpu_s": 13.715, "vmhwm_mib": 378.3}
+[rest] 20261026_12 {"pages": 3652, "record_receipts": 331853, "new_records": 24442, "cpu_s": 12.447, "vmhwm_mib": 378.3}
+[rest] 20261026_13 {"pages": 3977, "record_receipts": 370893, "new_records": 30487, "cpu_s": 13.832, "vmhwm_mib": 406.6}
+[rest] 20261026_14 {"pages": 4064, "record_receipts": 375714, "new_records": 28710, "cpu_s": 14.182, "vmhwm_mib": 422.7}
+[rest] 20261026_15 {"pages": 4453, "record_receipts": 419007, "new_records": 33516, "cpu_s": 15.535, "vmhwm_mib": 454.4}
+[rest] 20261026_16 {"pages": 4517, "record_receipts": 423541, "new_records": 31302, "cpu_s": 14.53, "vmhwm_mib": 454.3}
+[rest] 20261026_17 {"pages": 3879, "record_receipts": 357103, "new_records": 27710, "cpu_s": 13.783, "vmhwm_mib": 454.3}
+[rest] 20261026_18 {"pages": 3842, "record_receipts": 347036, "new_records": 24838, "cpu_s": 12.914, "vmhwm_mib": 454.3}
+[rest] 20261026_19 {"pages": 4101, "record_receipts": 371472, "new_records": 27905, "cpu_s": 13.64, "vmhwm_mib": 462.8}
+[rest] 20261026_20 {"pages": 4039, "record_receipts": 365497, "new_records": 25701, "cpu_s": 13.094, "vmhwm_mib": 462.7}
+[rest] 20261026_21 {"pages": 3659, "record_receipts": 324956, "new_records": 21451, "cpu_s": 11.731, "vmhwm_mib": 462.7}
+[rest] 20261026_22 {"pages": 3745, "record_receipts": 329900, "new_records": 22548, "cpu_s": 11.291, "vmhwm_mib": 462.7}
+[rest] 20261026_23 {"pages": 3722, "record_receipts": 334996, "new_records": 23536, "cpu_s": 12.326, "vmhwm_mib": 473.6}
+[rest] 20261027_00 {"pages": 453, "record_receipts": 45300, "new_records": 2, "cpu_s": 2.811, "vmhwm_mib": 473.6}
+[ws] 20261026_00 {"frames": 72335, "frames_other_markets": 22, "cpu_s": 4.967, "vmhwm_mib": 473.6}
+[ws] 20261026_01 {"frames": 70195, "cpu_s": 5.582, "vmhwm_mib": 473.6}
+[ws] 20261026_02 {"frames": 74644, "cpu_s": 5.146, "vmhwm_mib": 473.6}
+[ws] 20261026_03 {"frames": 68532, "cpu_s": 4.694, "vmhwm_mib": 473.6}
+[ws] 20261026_04 {"frames": 69775, "cpu_s": 4.76, "vmhwm_mib": 473.6}
+[ws] 20261026_05 {"frames": 70485, "cpu_s": 4.812, "vmhwm_mib": 473.6}
+[ws] 20261026_06 {"frames": 66667, "cpu_s": 4.544, "vmhwm_mib": 473.6}
+[ws] 20261026_07 {"frames": 71194, "cpu_s": 5.588, "vmhwm_mib": 473.6}
+[ws] 20261026_08 {"frames": 70354, "cpu_s": 4.814, "vmhwm_mib": 473.6}
+[ws] 20261026_09 {"frames": 70726, "cpu_s": 5.465, "vmhwm_mib": 473.6}
+[ws] 20261026_10 {"frames": 70500, "cpu_s": 4.785, "vmhwm_mib": 473.6}
+[ws] 20261026_11 {"frames": 72703, "cpu_s": 4.996, "vmhwm_mib": 473.6}
+[ws] 20261026_12 {"frames": 70763, "cpu_s": 4.859, "vmhwm_mib": 473.6}
+[ws] 20261026_13 {"frames": 74477, "cpu_s": 5.197, "vmhwm_mib": 473.6}
+[ws] 20261026_14 {"frames": 75488, "cpu_s": 5.287, "vmhwm_mib": 473.6}
+[ws] 20261026_15 {"frames": 76523, "cpu_s": 5.39, "vmhwm_mib": 473.6}
+[ws] 20261026_16 {"frames": 74377, "cpu_s": 5.235, "vmhwm_mib": 473.6}
+[ws] 20261026_17 {"frames": 72047, "cpu_s": 5.035, "vmhwm_mib": 473.6}
+[ws] 20261026_18 {"frames": 71873, "cpu_s": 4.997, "vmhwm_mib": 481.3}
+[ws] 20261026_19 {"frames": 73662, "cpu_s": 5.752, "vmhwm_mib": 485.6}
+[ws] 20261026_20 {"frames": 69367, "cpu_s": 4.617, "vmhwm_mib": 486.1}
+[ws] 20261026_21 {"frames": 67764, "cpu_s": 4.682, "vmhwm_mib": 486.6}
+[ws] 20261026_22 {"frames": 68235, "cpu_s": 5.347, "vmhwm_mib": 488.2}
+[ws] 20261026_23 {"frames": 68851, "frames_other_markets": 385, "cpu_s": 4.793, "vmhwm_mib": 488.7}
+{"day": "20261026", "mode": "day", "counts": {"records": 605035, "legs": 871491, "variants_not_kept": {"records": 20, "legs": 209}, "tob": 1711537, "frames": 31735, "levels": 2988851, "markets": 288}, "status_counts": {"records": {"ok": 604919, "off_grid": 96, "conflict": 20}, "legs": {"ok": 871003, "conflict": 387, "off_grid": 101}, "tob": {"ok": 1689674, "gap": 21812, "new_conn": 30, "same_ms_changed": 11, "new_conn+gap": 10}, "frames": {"ok": 31373, "gap": 361, "new_conn": 1}, "levels": {"ok": 2988851}, "markets": {"ok": 249, "fills_outside_ws": 19, "poll_incomplete": 19, "fills_outside_ws+poll_incomplete": 1}}, "envelope": {"n_records": 605035, "n_with_settle": 605035, "pre_recv_max_ms": 295266.1477050781, "pre_recv_ms": 300000, "receipt_lag_ms": {"p0": 1520.052490234375, "p0.1": 1790.9709262695312, "p1": 2047.0875537109375, "p5": 2487.330029296875, "p50": 6383.259521484375, "p95": 12167.199682617169, "p99": 16326.392333984375, "p99.9": 1457617.5310058594, "p100": 86077277.02124023, "n": 605035}, "receipt_lag_ungated_ms": {"p0": 1520.052490234375, "p0.1": 1790.4462890625, "p1": 2046.648798828125, "p5": 2485.948974609375, "p50": 6371.5491943359375, "p95": 12064.764599609372, "p99": 15554.935319824208, "p99.9": 22968.128613037177, "p100": 40690.295654296875, "n": 603382}, "n_discovery_gated": 1653, "lag_p999_all_ms": 1457617.5310058594, "lag_p999_ms": 22968.128613037177, "post_settle_max_ms": 5241.0, "pre_settle_max_ms": 86344340.0, "margin_ms": 60000, "post_settle_ms": 60000, "margin_min": 1}, "cpu_s": 472.92, "vmhwm_mib": 1020.4}
+2026-11-23T00:29:57Z tag=mt_x_extract_20261026 rc=0 peak_rss_mib=1020 wall_s=480.94 cpu_user_s=470.55 memavail_start_gib=22 disk_free_gib=444->443 slot=claude3

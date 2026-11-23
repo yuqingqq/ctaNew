@@ -1,0 +1,53 @@
+head=05177007afe3219b28d987a9a92078a0982e6418
+[rest] 20261024_23 {"pages": 45, "record_receipts": 644, "new_records": 54, "cpu_s": 1.626, "vmhwm_mib": 118.0}
+[rest] 20261025_00 {"pages": 2712, "record_receipts": 224933, "new_records": 14945, "cpu_s": 8.198, "vmhwm_mib": 224.1}
+[rest] 20261025_01 {"pages": 3258, "record_receipts": 283315, "new_records": 16982, "cpu_s": 9.596, "vmhwm_mib": 238.5}
+[rest] 20261025_02 {"pages": 3169, "record_receipts": 276553, "new_records": 16626, "cpu_s": 9.636, "vmhwm_mib": 246.6}
+[rest] 20261025_03 {"pages": 3376, "record_receipts": 296909, "new_records": 18439, "cpu_s": 10.492, "vmhwm_mib": 262.2}
+[rest] 20261025_04 {"pages": 3248, "record_receipts": 285274, "new_records": 17861, "cpu_s": 10.459, "vmhwm_mib": 266.0}
+[rest] 20261025_05 {"pages": 3354, "record_receipts": 298883, "new_records": 20263, "cpu_s": 11.464, "vmhwm_mib": 292.9}
+[rest] 20261025_06 {"pages": 3236, "record_receipts": 287009, "new_records": 18555, "cpu_s": 10.962, "vmhwm_mib": 292.9}
+[rest] 20261025_07 {"pages": 3358, "record_receipts": 298170, "new_records": 18470, "cpu_s": 11.203, "vmhwm_mib": 295.1}
+[rest] 20261025_08 {"pages": 3184, "record_receipts": 284285, "new_records": 18496, "cpu_s": 11.22, "vmhwm_mib": 300.1}
+[rest] 20261025_09 {"pages": 3307, "record_receipts": 293215, "new_records": 19487, "cpu_s": 11.311, "vmhwm_mib": 317.7}
+[rest] 20261025_10 {"pages": 3754, "record_receipts": 338665, "new_records": 22660, "cpu_s": 12.593, "vmhwm_mib": 339.7}
+[rest] 20261025_11 {"pages": 3108, "record_receipts": 272434, "new_records": 17633, "cpu_s": 10.432, "vmhwm_mib": 339.7}
+[rest] 20261025_12 {"pages": 3246, "record_receipts": 286819, "new_records": 19734, "cpu_s": 11.19, "vmhwm_mib": 339.7}
+[rest] 20261025_13 {"pages": 3535, "record_receipts": 314612, "new_records": 22028, "cpu_s": 11.854, "vmhwm_mib": 350.9}
+[rest] 20261025_14 {"pages": 3290, "record_receipts": 294136, "new_records": 20073, "cpu_s": 11.433, "vmhwm_mib": 352.1}
+[rest] 20261025_15 {"pages": 3404, "record_receipts": 306950, "new_records": 21314, "cpu_s": 11.924, "vmhwm_mib": 363.0}
+[rest] 20261025_16 {"pages": 3550, "record_receipts": 321045, "new_records": 22706, "cpu_s": 12.49, "vmhwm_mib": 376.4}
+[rest] 20261025_17 {"pages": 3808, "record_receipts": 348181, "new_records": 25638, "cpu_s": 13.161, "vmhwm_mib": 401.4}
+[rest] 20261025_18 {"pages": 3775, "record_receipts": 338274, "new_records": 22741, "cpu_s": 12.241, "vmhwm_mib": 401.4}
+[rest] 20261025_19 {"pages": 3190, "record_receipts": 273314, "new_records": 15311, "cpu_s": 9.834, "vmhwm_mib": 401.4}
+[rest] 20261025_20 {"pages": 3605, "record_receipts": 320161, "new_records": 21590, "cpu_s": 11.622, "vmhwm_mib": 402.1}
+[rest] 20261025_21 {"pages": 3028, "record_receipts": 262039, "new_records": 14139, "cpu_s": 9.545, "vmhwm_mib": 402.1}
+[rest] 20261025_22 {"pages": 2743, "record_receipts": 227512, "new_records": 16149, "cpu_s": 8.699, "vmhwm_mib": 402.1}
+[rest] 20261025_23 {"pages": 3599, "record_receipts": 328121, "new_records": 24376, "cpu_s": 12.264, "vmhwm_mib": 428.3}
+[rest] 20261026_00 {"pages": 221, "record_receipts": 22100, "cpu_s": 2.218, "vmhwm_mib": 428.3}
+[ws] 20261025_00 {"frames": 64482, "frames_other_markets": 22, "cpu_s": 4.82, "vmhwm_mib": 428.3}
+[ws] 20261025_01 {"frames": 65428, "cpu_s": 4.524, "vmhwm_mib": 428.3}
+[ws] 20261025_02 {"frames": 67035, "cpu_s": 4.428, "vmhwm_mib": 428.3}
+[ws] 20261025_03 {"frames": 65607, "cpu_s": 4.337, "vmhwm_mib": 428.3}
+[ws] 20261025_04 {"frames": 64971, "cpu_s": 4.266, "vmhwm_mib": 428.3}
+[ws] 20261025_05 {"frames": 67104, "cpu_s": 4.471, "vmhwm_mib": 428.3}
+[ws] 20261025_06 {"frames": 65013, "cpu_s": 4.278, "vmhwm_mib": 428.3}
+[ws] 20261025_07 {"frames": 66142, "cpu_s": 5.041, "vmhwm_mib": 428.3}
+[ws] 20261025_08 {"frames": 64097, "cpu_s": 4.241, "vmhwm_mib": 428.3}
+[ws] 20261025_09 {"frames": 67079, "cpu_s": 4.489, "vmhwm_mib": 428.3}
+[ws] 20261025_10 {"frames": 69409, "cpu_s": 5.361, "vmhwm_mib": 428.3}
+[ws] 20261025_11 {"frames": 63630, "cpu_s": 4.255, "vmhwm_mib": 428.3}
+[ws] 20261025_12 {"frames": 66943, "cpu_s": 4.523, "vmhwm_mib": 428.3}
+[ws] 20261025_13 {"frames": 68337, "cpu_s": 4.528, "vmhwm_mib": 428.3}
+[ws] 20261025_14 {"frames": 64312, "cpu_s": 4.265, "vmhwm_mib": 431.0}
+[ws] 20261025_15 {"frames": 65854, "cpu_s": 4.245, "vmhwm_mib": 431.5}
+[ws] 20261025_16 {"frames": 65192, "cpu_s": 4.315, "vmhwm_mib": 432.0}
+[ws] 20261025_17 {"frames": 71273, "cpu_s": 5.558, "vmhwm_mib": 438.5}
+[ws] 20261025_18 {"frames": 68294, "cpu_s": 4.582, "vmhwm_mib": 439.1}
+[ws] 20261025_19 {"frames": 63048, "cpu_s": 4.196, "vmhwm_mib": 439.6}
+[ws] 20261025_20 {"frames": 65130, "cpu_s": 4.968, "vmhwm_mib": 440.9}
+[ws] 20261025_21 {"frames": 58579, "cpu_s": 3.914, "vmhwm_mib": 441.4}
+[ws] 20261025_22 {"frames": 63731, "cpu_s": 4.35, "vmhwm_mib": 441.9}
+[ws] 20261025_23 {"frames": 68470, "frames_other_markets": 487, "cpu_s": 4.732, "vmhwm_mib": 442.4}
+{"day": "20261025", "mode": "day", "counts": {"records": 466270, "legs": 737177, "variants_not_kept": {"records": 22, "legs": 352}, "tob": 1579160, "frames": 30668, "levels": 2808079, "markets": 288}, "status_counts": {"records": {"ok": 466133, "off_grid": 115, "conflict": 22}, "legs": {"ok": 736426, "conflict": 633, "off_grid": 118}, "tob": {"ok": 1557567, "gap": 21581, "same_ms_changed": 12}, "frames": {"ok": 30302, "gap": 366}, "levels": {"ok": 2808079}, "markets": {"ok": 174, "fills_outside_ws": 104, "poll_incomplete": 6, "fills_outside_ws+poll_incomplete": 4}}, "envelope": {"n_records": 466270, "n_with_settle": 466270, "pre_recv_max_ms": 294949.4421386719, "pre_recv_ms": 300000, "receipt_lag_ms": {"p0": 1522.60791015625, "p0.1": 1775.8949306640625, "p1": 2014.0955615234375, "p5": 2415.696044921875, "p50": 6139.9951171875, "p95": 12771.748291015625, "p99": 26198.212587890623, "p99.9": 493379.6546272036, "p100": 86085359.29833984, "n": 466270}, "receipt_lag_ungated_ms": {"p0": 1522.60791015625, "p0.1": 1775.5919267578124, "p1": 2013.545537109375, "p5": 2414.28056640625, "p50": 6127.93994140625, "p95": 12558.129003906244, "p99": 24646.62825195313, "p99.9": 53280.63402734435, "p100": 233510.23681640625, "n": 464805}, "n_discovery_gated": 1465, "lag_p999_all_ms": 493379.6546272036, "lag_p999_ms": 53280.63402734435, "post_settle_max_ms": 23036.0, "pre_settle_max_ms": 86344309.0, "margin_ms": 60000, "post_settle_ms": 60000, "margin_min": 1}, "cpu_s": 411.814, "vmhwm_mib": 912.6}
+2026-11-23T00:29:56Z tag=mt_x_extract_20261025 rc=0 peak_rss_mib=912 wall_s=418.70 cpu_user_s=408.15 memavail_start_gib=22 disk_free_gib=444->443 slot=claude2

@@ -1,0 +1,21 @@
+head=05177007afe3219b28d987a9a92078a0982e6418
+[report] days read: 6
+[report] lifecycle markets {'20261024': 7, '20261025': 5, '20261026': 5, '20261027': 2, '20261108': 52}; R1 supported / supported -> coverage scenario S_FIFO
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_report.py", line 1461, in <module>
+    main(sys.argv)
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_report.py", line 1453, in main
+    R = run()
+        ^^^^^
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_report.py", line 1148, in run
+    R = build(Inputs(out), tmp, asof0, t0, log)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_report.py", line 1302, in build
+    mem['econ'] = guard('econ tables')
+                  ^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_report.py", line 161, in guard
+    need(h < C.GUARD_MIB, f'memory self-guard: VmHWM {h:.0f} MiB >= {C.GUARD_MIB:.0f} MiB at {where}')
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_common.py", line 32, in need
+    raise ValueError(msg)
+ValueError: memory self-guard: VmHWM 2354 MiB >= 1450 MiB at econ tables
+2026-11-23T00:43:45Z tag=mt_x_report rc=1 peak_rss_mib=2354 wall_s=34.39 cpu_user_s=18.59 memavail_start_gib=22 disk_free_gib=441->441 slot=claude
