@@ -1,0 +1,56 @@
+head=6436ee97cfa8b0980ed5f3bc5caf86f1f08f5a1e
+PASS selftest environment: MT_RUN=v2, no MT_TL2_MUT / MT_TL_MUT
+PASS O4: fine subtypes grouped BEFORE agreement (reduce_partial / full_close / reversal_reducing reduce; add / from_flat / overshoot / no_change not); absent variants ignored; an unclassified variant or none -> unavailable (hand table)
+PASS O4: the grouping is chain_take.REDUCING vs the other inventory classes
+PASS refuse: a variant class outside chain_take.CLS (O4)
+PASS decision: primary not supported -> withdrawn; all six views supported -> qualified; otherwise unidentified (clean x pend alone: the conservative six-view reading, four named views reported True)
+PASS decision: rank 1 reads the same rule, reported as secondary
+PASS census: maker-fill rows and take records counted separately, attributes kept as attributes, old observed sum = base + attributes
+PASS census claims: computed predicates (take records = the takes table rows; contract numbers compared, here False)
+PASS census falsifier: an observed_execution row that is neither base nor attribute breaks the decomposition predicate
+PASS refuse: census rows without their n column
+PASS fixtures: planted takes (random, size)
+PASS F1 precondition: fine-class (v1 timing_sensitive) and grouped (O4 reduces_some) disagreement concentrate at |q| (0,50] (coverage table = direct count)
+PASS F1 bias control: the v1 outcome (classified reduce, ambiguous dropped) shows the spurious RR_size > 1 (rank 1 and pooled)
+PASS F1 bias control: O1 RR_size is NOT supported (rank 1 and pooled) and is testable (>= 5 supported markets, >= 30 events)
+PASS F1: the declared decision reads withdrawn for the random-side maker (pooled)
+PASS F2: a planted size policy (opposing-take hazard rising with |q|) reads O1 RR_size supported (rank 1 and pooled)
+PASS F2: the decision is not withdrawn (pooled)
+PASS F3: the raw-schedule null re-derives the direction at the destination second (tool = brute force, 3 clocks x 5 replicates, strata counts equal); source / destination sign changes exist
+PASS F3: raw counts per pair preserved in every replicate, shifted takes stay in their pair, collisions invariant, offsets deterministic; the O3 / O4 benchmark shift keeps its count
+PASS raw schedule: every assigned take record kept (ambiguous included, per pair); O3 = the distinct take seconds
+PASS dedupe: one indicator per second and outcome (3 takes / mixed sides -> O1 and O2 once each; q = 0 and side_mixed are statuses); collisions 3, mixed seconds 1
+PASS F5 clean ledger: a planted excluded leg removes exactly its pair's seconds from its window start (k >= 98, 202 maker-seconds); codes -1 there, unchanged elsewhere; a take there leaves the clean panel only
+PASS variants: the fixture classes (chain_take.classify / combine on chain_context positions) reproduce take_class row by row (positive control)
+PASS refuse: saved variant classes that do not reproduce take_class through chain_take.combine
+PASS refuse: a variant class outside chain_take.CLS (reproduction)
+PASS mutant shift_labels: caught by F3_DIR evaluating False without raising (failed: ['F3_DIR'])
+PASS mutant drop_ambiguous: caught by COUNT evaluating False without raising (failed: ['F1', 'COUNT'])
+PASS mutant sum_types: caught by DEDUPE evaluating False without raising (failed: ['DEDUPE'])
+PASS mutants: MT_TL2_MUT unset after the suite
+PASS refuse: write-once on an existing output directory (write_out)
+PASS refuse: the production pilot into an existing output directory, before any input is read
+PASS write-once: a failed write leaves no output and no partial directory
+PASS refuse: production with MT_TL2_MUT=drop_ambiguous before any input is read
+PASS refuse: production with MT_TL2_MUT=bogus before any input is read
+PASS refuse: production with MT_TL_MUT=flip_align before any input is read
+PASS refuse: nothing written by a refused production call
+PASS refuse: a pilot day outside the measurement days
+PASS refuse: the full run before any input (freeze)
+PASS refuse: the full run without a recorded pilot projection
+PASS refuse: preflight p41.json (> 40 s (refused before launch))
+PASS refuse: preflight pv1.json (not a take_logic_v2 pilot receipt)
+PASS preflight: a 20 s v2 projection passes and the pilot receipt is hashed as an input
+PASS e2e: run_core writes exactly the eight contract outputs
+PASS e2e: receipt.json hashes every other output (sha256 = the file) and the sources
+PASS e2e: panel.parquet = one row per maker-second (outcomes beside the state); events.parquet = one row per take record
+PASS e2e: ratios.csv = 2 panels x 3 clocks x 2 scopes x 4 outcomes x 6 ratios = 288 rows, each with a v1 verdict
+PASS e2e: the run_core ratios equal the direct ratio path (O1, six views, both scopes)
+PASS e2e: claims.json carries the decision for pooled (primary) and rank 1 (secondary), each a declared reading; multiplicity 96
+PASS e2e: coverage by |q| bin adds up to the maker-seconds and the raw takes
+PASS e2e: census_fix.csv rows and its claims predicates; consistency.csv = a market row per market and an all-days summary per ratio row
+PASS e2e: the pilot digest (the printed key numbers) builds and serialises
+PASS e2e: a second write into the written directory is refused
+FIXTURES {"F1_O1_RR_size_full_D0": {"pooled": {"RR_MH": 1.0118, "events": 180, "markets": "8/8", "p_hi": 0.45109780439121755, "verdict": "not_supported"}, "rank1": {"RR_MH": 1.0118, "events": 180, "markets": "3/8", "p_hi": 0.45109780439121755, "verdict": "not_supported"}}, "F1_disagreement_shares_rank1_D0": {"fine_large": 0.02247191011235955, "fine_small": 0.425531914893617, "grouped_large": 0.02247191011235955, "grouped_small": 0.425531914893617, "takes_large": 178, "takes_small": 188}, "F1_reading": "withdrawn", "F1_v1_reduce_RR_size_D0": {"pooled": {"RR_MH": 1.9179, "p_hi": 0.001996007984031936, "verdict": "supported"}, "rank1": {"RR_MH": 1.9179, "p_hi": 0.001996007984031936, "verdict": "supported"}}, "F2_O1_RR_size_full_D0": {"pooled": {"RR_MH": 5.564, "events": 223, "markets": "8/8", "p_hi": 0.001996007984031936, "verdict": "supported"}, "rank1": {"RR_MH": 5.564, "events": 223, "markets": "8/8", "p_hi": 0.001996007984031936, "verdict": "supported"}}, "F2_reading": {"pooled": "qualified_candidate_association", "rank1": "qualified_candidate_association"}, "mutant_drop_ambiguous_failed_checks": ["F1", "COUNT"], "mutant_shift_labels_failed_checks": ["F3_DIR"], "mutant_sum_types_failed_checks": ["DEDUPE"]}
+{"checks": 52, "failed": 0, "cpu_s": 1.479, "process_cpu_s": 1.89, "vmhwm_mib": 181.6}
+2026-11-23T15:58:00Z tag=mt_tl2_selftest1 rc=0 peak_rss_mib=181 wall_s=2.03 cpu_user_s=1.72 memavail_start_gib=22 disk_free_gib=424->424 slot=claude4
