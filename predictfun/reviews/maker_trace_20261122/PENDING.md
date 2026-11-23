@@ -1,5 +1,18 @@
 # MAKER-TRACE-RECONSTRUCTION-v1 — pending work
 
+## STATE 2026-11-23 13:11Z — TAKE-LOGIC v2 (ambiguity-aware; review af916aba6's next priority) — read this first
+
+**Reviews processed:**
+- af916aba6, verified at the code and data. Finding 1 holds: at |q| (0, 50], 127 ambiguous vs 109 classified reduce event-seconds; above 200, 19 vs 325. `chain_take.combine` makes any variant disagreement `timing_sensitive`.
+- Earlier: 6bb458b30, 6ddad3533, 8f2a2e753, 567f741d9.
+
+**Plan:** `take_logic_v2_contract.md` (≤ 0.025 h all-in; ledger 1.8164 of 1.90 before it).
+
+**Builder:** `tools/take_logic_v2.py`.
+
+**Next:** freeze, then the full run, then `v2/report_logic_chains_v3.md` (with the findings 2–5 corrections), then commit + push, then ONE review, then the watcher.
+
+
 ## STATE 2026-11-23 12:54Z — ROUND COMPLETE: LOGIC CHAINS v2 (correction 6bb458b30 + TAKE-LOGIC v1) — review pending — read this first
 
 **Receipt:** `v2/report_logic_chains_v2.md`.
