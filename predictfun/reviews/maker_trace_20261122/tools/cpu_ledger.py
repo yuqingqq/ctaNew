@@ -9,7 +9,7 @@ import re
 import sys
 
 LOG = '/home/yuqing/ctaNew/predictfun/research/run_light.log'
-START, CAP, RESERVE, LINE_BEFORE, CEILING = '2026-11-22T08:00:00Z', 1.85, 0.05, 3.3107, 5.25   # USER top-ups: 0.90 -> 1.35 h (4.40 -> 4.85); -> 1.45 (amendment 1); -> 1.85 / line 5.25 for the lifecycle fix + top-3 decision paths (amendment 3)
+START, CAP, RESERVE, LINE_BEFORE, CEILING = '2026-11-22T08:00:00Z', 1.90, 0.05, 3.3107, 5.25   # USER top-ups: 0.90 -> 1.35 h (4.40 -> 4.85); -> 1.45 (amendment 1); -> 1.85 / line 5.25 for the lifecycle fix + top-3 decision paths (amendment 3); -> 1.90 for TAKE-LOGIC v1 (USER 2026-11-23, line unchanged)
 EXTRA_H = 0.021 + 0.025 + 0.010 + 0.010   # Codex reviews 567f741d9 (0.021), 8f2a2e753 (<= 0.025), 6ddad3533 (0.010), 6bb458b30 (0.010): their declared conservative charges (runs outside the mt_ prefix)
 PAT = re.compile(r'^(\S+) tag=(mt_\S+) rc=(\S+) .*?wall_s=(\S+) cpu_user_s=(\S+)')
 
