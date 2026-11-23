@@ -1,0 +1,15 @@
+head=654cdb06d01a497eaa367900ab839b8ad2849948
+{
+ "n_checks": 39,
+ "failed": [
+  "H2_presence",
+  "posting_capacity_bound",
+  "class_scenario_consistency",
+  "priority_exhaustion",
+  "priority_tests_T1_T2",
+  "priority_ahead_lo",
+  "tob_from_levels",
+  "20261024_3697902:rp_capacity"
+ ]
+}
+2026-11-23T01:11:05Z tag=mt_x_checks_r1 rc=1 peak_rss_mib=919 wall_s=255.67 cpu_user_s=229.65 memavail_start_gib=22 disk_free_gib=441->441 slot=claude

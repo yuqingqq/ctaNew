@@ -764,6 +764,36 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- MAKER_TRACE_RESULTS_20261123_DEV -->
+## 2026-11-23 01:18Z (session aea5bfb9) — MAKER-TRACE-RECONSTRUCTION-v1 RESULTS: how the top makers make money (descriptive; 4 consumed days, no intervals)
+
+**Receipt:** [report.md](reviews/maker_trace_20261122/report.md). Every number is in `claims.json`, computed from the frozen report's `outputs/`.
+
+**Run:** all stages rc 0. CPU 1.341 of 1.45 h; line 4.65 ≤ 4.85.
+
+**R1** priority **supported**: T1 1 / 18,301; T2 3 / 15,900, recounted as 5 by the checker; certain 0.
+
+**R2** Nov 8 own orders: 86 / 86 covered, **0 defects**.
+
+**R4**, Oct 24–27:
+
+| Group | Net | Breakdown |
+|---|---|---|
+| Ex-ante top 10 | +35,586 USD (mixed days) | round trip +130,789; residual −72,444; fees −22,759; maker legs +7,509 vs taker legs +28,077 |
+| Field makers | +110,136 (every day) | taker legs +136,875 vs maker legs −26,739 |
+| Pure takers | −427,378 | fees 180,559; Σ net = −Σ fees |
+
+**Maker legs:** the best price loses; 1–3+ ticks behind earns. Sweeps +1.48 vs single-price −0.58 c/sh (4/4 days); first minute > last (4/4). Own taker legs show +1.21 c/sh at 1 s (4/4).
+
+**Incentives:** the rebate (advertised 25%, unverified) equals 0.68 of the top 10's net. The reward pool is 72k units per day (units unverified).
+
+**Consistency:** only 3 of the top 10 earn every day, and they are pure, flat-inventory makers.
+
+**Open:** the independent checker passes 32 / 39. The economics, extraction and GT checks pass; 7 lifecycle / book-size checks fail (`posting_capacity_bound`, `class_scenario_consistency`, `priority_exhaustion`, `priority_ahead_lo`, `priority_tests_T1_T2`, `H2_presence`, `tob_from_levels`), so **R3 coverage is provisional**. The fix and re-runs need about 0.1 h beyond the remaining reserve, which is a **USER resource decision**.
+
+**Next:** ONE Codex review of the round (5927971d..HEAD).
+<!-- /MAKER_TRACE_RESULTS_20261123_DEV -->
+
 <!-- MAKER_TRACE_AMEND2_20261123_DEV -->
 ## 2026-11-23 01:10Z (session aea5bfb9) — MAKER-TRACE run: all data stages done; report and checker memory-only redesign (amendment 2)
 

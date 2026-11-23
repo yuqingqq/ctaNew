@@ -1,0 +1,1301 @@
+day,table,part,column,kind,value,n,den,rate,source
+20261023,econ_diagnostics,,censored_legs,count,,1959.0,,,econ/econ.json diagnostics
+20261023,econ_diagnostics,,legs,count,,844609.0,,,econ/econ.json diagnostics
+20261023,econ_diagnostics,,legs_market_not_in_registry,count,,0.0,,,econ/econ.json diagnostics
+20261023,econ_diagnostics,,legs_recv_before_settle,count,,0.0,,,econ/econ.json diagnostics
+20261023,econ_diagnostics,,lf_hi_mismatch,count,,0.0,,,econ/econ.json diagnostics
+20261023,econ_diagnostics,,lf_matched,count,,0.0,,,econ/econ.json diagnostics
+20261023,econ_diagnostics,,lf_rows,count,,0.0,,,econ/econ.json diagnostics
+20261023,econ_diagnostics,,lf_status_not_ok,count,,0.0,,,econ/econ.json diagnostics
+20261023,econ_diagnostics,,markets_with_legs,count,,288.0,,,econ/econ.json diagnostics
+20261023,econ_diagnostics,,pre_legs,count,,41797.0,,,econ/econ.json diagnostics
+20261023,econ_diagnostics,,pre_legs_before_300s,count,,2331.0,,,econ/econ.json diagnostics
+20261023,econ_diagnostics,,records,count,,581733.0,,,econ/econ.json diagnostics
+20261023,econ_diagnostics,,records_in,count,,583210.0,,,econ/econ.json diagnostics
+20261023,econ_diagnostics,,records_without_legs,count,,0.0,,,econ/econ.json diagnostics
+20261023,econ_diagnostics,,registry_markets,count,,288.0,,,econ/econ.json diagnostics
+20261023,econ_diagnostics,,registry_markets_without_legs,count,,0.0,,,econ/econ.json diagnostics
+20261023,econ_diagnostics,,t_rel_min_s,count,,-37602.90000009537,,,econ/econ.json diagnostics
+20261023,econ_diagnostics,,tk_px_gap_max,count,,0.026073000000000013,,,econ/econ.json diagnostics
+20261023,econ_diagnostics,,tk_px_gap_n,count,,3966.0,,,econ/econ.json diagnostics
+20261023,econ_diagnostics,,tk_px_gap_usd,count,,325.0889928238553,,,econ/econ.json diagnostics
+20261023,econ_fills_valued,,kind,flag,merge,6410.0,1689218.0,0.0037946552783595724,table
+20261023,econ_fills_valued,,kind,flag,mint,1447716.0,1689218.0,0.8570332544408122,table
+20261023,econ_fills_valued,,kind,flag,regular,235092.0,1689218.0,0.13917209028082816,table
+20261023,econ_fills_valued,,kind,status,merge,6410.0,1689218.0,0.0037946552783595724,table
+20261023,econ_fills_valued,,kind,status,mint,1447716.0,1689218.0,0.8570332544408122,table
+20261023,econ_fills_valued,,kind,status,regular,235092.0,1689218.0,0.13917209028082816,table
+20261023,econ_fills_valued,,life_status,flag,na_not_book,844609.0,1689218.0,0.5,table
+20261023,econ_fills_valued,,life_status,flag,na_taker,844609.0,1689218.0,0.5,table
+20261023,econ_fills_valued,,life_status,status,na_not_book,844609.0,1689218.0,0.5,table
+20261023,econ_fills_valued,,life_status,status,na_taker,844609.0,1689218.0,0.5,table
+20261023,econ_fills_valued,,src_status,flag,boundary_censored,3918.0,1689218.0,0.0023194164400331986,table
+20261023,econ_fills_valued,,src_status,flag,conflict,452.0,1689218.0,0.00026757943616513677,table
+20261023,econ_fills_valued,,src_status,flag,off_grid,636.0,1689218.0,0.00037650557832085617,table
+20261023,econ_fills_valued,,src_status,flag,ok,1684212.0,1689218.0,0.9970364985454808,table
+20261023,econ_fills_valued,,src_status,status,boundary_censored,3918.0,1689218.0,0.0023194164400331986,table
+20261023,econ_fills_valued,,src_status,status,conflict,452.0,1689218.0,0.00026757943616513677,table
+20261023,econ_fills_valued,,src_status,status,off_grid,636.0,1689218.0,0.00037650557832085617,table
+20261023,econ_fills_valued,,src_status,status,ok,1684212.0,1689218.0,0.9970364985454808,table
+20261023,econ_fills_valued,,st_10s,flag,id_day_no_book,1689218.0,1689218.0,1.0,table
+20261023,econ_fills_valued,,st_10s,status,id_day_no_book,1689218.0,1689218.0,1.0,table
+20261023,econ_fills_valued,,st_1s,flag,id_day_no_book,1689218.0,1689218.0,1.0,table
+20261023,econ_fills_valued,,st_1s,status,id_day_no_book,1689218.0,1689218.0,1.0,table
+20261023,econ_fills_valued,,st_60s,flag,id_day_no_book,1689218.0,1689218.0,1.0,table
+20261023,econ_fills_valued,,st_60s,status,id_day_no_book,1689218.0,1689218.0,1.0,table
+20261023,econ_fills_valued,,st_end,flag,id_day_no_book,1689218.0,1689218.0,1.0,table
+20261023,econ_fills_valued,,st_end,status,id_day_no_book,1689218.0,1689218.0,1.0,table
+20261023,econ_fills_valued,,st_res,flag,censored,3918.0,1689218.0,0.0023194164400331986,table
+20261023,econ_fills_valued,,st_res,flag,ok,1673046.0,1689218.0,0.9904263392883571,table
+20261023,econ_fills_valued,,st_res,flag,tie,12254.0,1689218.0,0.0072542442716097034,table
+20261023,econ_fills_valued,,st_res,status,censored,3918.0,1689218.0,0.0023194164400331986,table
+20261023,econ_fills_valued,,st_res,status,ok,1673046.0,1689218.0,0.9904263392883571,table
+20261023,econ_fills_valued,,st_res,status,tie,12254.0,1689218.0,0.0072542442716097034,table
+20261023,econ_fills_valued,,st_spr,flag,id_day_no_book,1689218.0,1689218.0,1.0,table
+20261023,econ_fills_valued,,st_spr,status,id_day_no_book,1689218.0,1689218.0,1.0,table
+20261023,econ_fills_valued,,status,flag,boundary_censored,3918.0,1689218.0,0.0023194164400331986,table
+20261023,econ_fills_valued,,status,flag,ok,1684212.0,1689218.0,0.9970364985454808,table
+20261023,econ_fills_valued,,status,flag,src_status,1088.0,1689218.0,0.0006440850144859929,table
+20261023,econ_fills_valued,,status,status,boundary_censored,3918.0,1689218.0,0.0023194164400331986,table
+20261023,econ_fills_valued,,status,status,ok,1684212.0,1689218.0,0.9970364985454808,table
+20261023,econ_fills_valued,,status,status,src_status,1088.0,1689218.0,0.0006440850144859929,table
+20261023,econ_fills_valued,,t_status,flag,hi_no_lifecycle,1689218.0,1689218.0,1.0,table
+20261023,econ_fills_valued,,t_status,status,hi_no_lifecycle,1689218.0,1689218.0,1.0,table
+20261023,econ_maker_day,,status,flag,all_rows_excluded,13.0,10240.0,0.00126953125,table
+20261023,econ_maker_day,,status,flag,ok,10227.0,10240.0,0.99873046875,table
+20261023,econ_maker_day,,status,status,all_rows_excluded,13.0,10240.0,0.00126953125,table
+20261023,econ_maker_day,,status,status,ok,10227.0,10240.0,0.99873046875,table
+20261023,econ_maker_market,,end_status,flag,id_day_no_book,221608.0,221608.0,1.0,table
+20261023,econ_maker_market,,end_status,status,id_day_no_book,221608.0,221608.0,1.0,table
+20261023,econ_maker_market,,fifo_status,flag,censored,560.0,221608.0,0.002526984585394029,table
+20261023,econ_maker_market,,fifo_status,flag,end_unavailable,221048.0,221608.0,0.997473015414606,table
+20261023,econ_maker_market,,fifo_status,status,censored,560.0,221608.0,0.002526984585394029,table
+20261023,econ_maker_market,,fifo_status,status,end_unavailable,221048.0,221608.0,0.997473015414606,table
+20261023,econ_maker_market,,res_status,flag,censored,560.0,221608.0,0.002526984585394029,table
+20261023,econ_maker_market,,res_status,flag,ok,219575.0,221608.0,0.9908261434605249,table
+20261023,econ_maker_market,,res_status,flag,tie,1473.0,221608.0,0.00664687195408108,table
+20261023,econ_maker_market,,res_status,status,censored,560.0,221608.0,0.002526984585394029,table
+20261023,econ_maker_market,,res_status,status,ok,219575.0,221608.0,0.9908261434605249,table
+20261023,econ_maker_market,,res_status,status,tie,1473.0,221608.0,0.00664687195408108,table
+20261023,econ_maker_market,,rew_status,flag,not_book,221608.0,221608.0,1.0,table
+20261023,econ_maker_market,,rew_status,status,not_book,221608.0,221608.0,1.0,table
+20261023,econ_maker_market,,status,flag,all_rows_excluded,689.0,221608.0,0.003109093534529439,table
+20261023,econ_maker_market,,status,flag,ok,220919.0,221608.0,0.9968909064654705,table
+20261023,econ_maker_market,,status,status,all_rows_excluded,689.0,221608.0,0.003109093534529439,table
+20261023,econ_maker_market,,status,status,ok,220919.0,221608.0,0.9968909064654705,table
+20261023,legs,,status,flag,boundary_censored,1959.0,844609.0,0.0023194164400331986,table
+20261023,legs,,status,flag,conflict,226.0,844609.0,0.00026757943616513677,table
+20261023,legs,,status,flag,off_grid,140.0,844609.0,0.00016575717284565995,table
+20261023,legs,,status,flag,ok,842284.0,844609.0,0.997247246950956,table
+20261023,legs,,status,status,boundary_censored,1959.0,844609.0,0.0023194164400331986,table
+20261023,legs,,status,status,conflict,226.0,844609.0,0.00026757943616513677,table
+20261023,legs,,status,status,off_grid,140.0,844609.0,0.00016575717284565995,table
+20261023,legs,,status,status,ok,842284.0,844609.0,0.997247246950956,table
+20261023,markets,,status,flag,boundary_censored,1.0,288.0,0.003472222222222222,table
+20261023,markets,,status,flag,ok,248.0,288.0,0.8611111111111112,table
+20261023,markets,,status,flag,poll_incomplete,39.0,288.0,0.13541666666666666,table
+20261023,markets,,status,status,boundary_censored,1.0,288.0,0.003472222222222222,table
+20261023,markets,,status,status,ok,248.0,288.0,0.8611111111111112,table
+20261023,markets,,status,status,poll_incomplete,39.0,288.0,0.13541666666666666,table
+20261023,records,,status,flag,boundary_censored,1321.0,583210.0,0.0022650503249258417,table
+20261023,records,,status,flag,conflict,16.0,583210.0,2.743437183861731e-05,table
+20261023,records,,status,flag,off_grid,140.0,583210.0,0.00024005075358790145,table
+20261023,records,,status,flag,ok,581733.0,583210.0,0.9974674645496476,table
+20261023,records,,status,status,boundary_censored,1321.0,583210.0,0.0022650503249258417,table
+20261023,records,,status,status,conflict,16.0,583210.0,2.743437183861731e-05,table
+20261023,records,,status,status,off_grid,140.0,583210.0,0.00024005075358790145,table
+20261023,records,,status,status,ok,581733.0,583210.0,0.9974674645496476,table
+20261024,econ_diagnostics,,censored_legs,count,,0.0,,,econ/econ.json diagnostics
+20261024,econ_diagnostics,,legs,count,,724873.0,,,econ/econ.json diagnostics
+20261024,econ_diagnostics,,legs_market_not_in_registry,count,,0.0,,,econ/econ.json diagnostics
+20261024,econ_diagnostics,,legs_recv_before_settle,count,,0.0,,,econ/econ.json diagnostics
+20261024,econ_diagnostics,,lf_hi_mismatch,count,,0.0,,,econ/econ.json diagnostics
+20261024,econ_diagnostics,,lf_matched,count,,19639.0,,,econ/econ.json diagnostics
+20261024,econ_diagnostics,,lf_rows,count,,19639.0,,,econ/econ.json diagnostics
+20261024,econ_diagnostics,,lf_status_not_ok,count,,268.0,,,econ/econ.json diagnostics
+20261024,econ_diagnostics,,markets_with_legs,count,,288.0,,,econ/econ.json diagnostics
+20261024,econ_diagnostics,,pre_legs,count,,43139.0,,,econ/econ.json diagnostics
+20261024,econ_diagnostics,,pre_legs_before_300s,count,,2554.0,,,econ/econ.json diagnostics
+20261024,econ_diagnostics,,records,count,,476795.0,,,econ/econ.json diagnostics
+20261024,econ_diagnostics,,records_in,count,,476897.0,,,econ/econ.json diagnostics
+20261024,econ_diagnostics,,records_without_legs,count,,0.0,,,econ/econ.json diagnostics
+20261024,econ_diagnostics,,registry_markets,count,,288.0,,,econ/econ.json diagnostics
+20261024,econ_diagnostics,,registry_markets_without_legs,count,,0.0,,,econ/econ.json diagnostics
+20261024,econ_diagnostics,,rewards_presence_rows,count,,10.0,,,econ/econ.json diagnostics
+20261024,econ_diagnostics,,t_rel_min_s,count,,-86344.257999897,,,econ/econ.json diagnostics
+20261024,econ_diagnostics,,tk_px_gap_max,count,,0.039416947699505156,,,econ/econ.json diagnostics
+20261024,econ_diagnostics,,tk_px_gap_n,count,,4635.0,,,econ/econ.json diagnostics
+20261024,econ_diagnostics,,tk_px_gap_usd,count,,403.0547946589594,,,econ/econ.json diagnostics
+20261024,econ_fills_valued,,kind,flag,merge,6376.0,1449746.0,0.004398011789651429,table
+20261024,econ_fills_valued,,kind,flag,mint,1245358.0,1449746.0,0.859018062474392,table
+20261024,econ_fills_valued,,kind,flag,regular,198012.0,1449746.0,0.1365839257359565,table
+20261024,econ_fills_valued,,kind,status,merge,6376.0,1449746.0,0.004398011789651429,table
+20261024,econ_fills_valued,,kind,status,mint,1245358.0,1449746.0,0.859018062474392,table
+20261024,econ_fills_valued,,kind,status,regular,198012.0,1449746.0,0.1365839257359565,table
+20261024,econ_fills_valued,,life_status,flag,na_not_book,705234.0,1449746.0,0.48645348909395164,table
+20261024,econ_fills_valued,,life_status,flag,na_taker,724873.0,1449746.0,0.5,table
+20261024,econ_fills_valued,,life_status,flag,ok,15057.0,1449746.0,0.010385957264238011,table
+20261024,econ_fills_valued,,life_status,flag,orders_status,4582.0,1449746.0,0.0031605536418103583,table
+20261024,econ_fills_valued,,life_status,status,na_not_book,705234.0,1449746.0,0.48645348909395164,table
+20261024,econ_fills_valued,,life_status,status,na_taker,724873.0,1449746.0,0.5,table
+20261024,econ_fills_valued,,life_status,status,ok,15057.0,1449746.0,0.010385957264238011,table
+20261024,econ_fills_valued,,life_status,status,orders_status,4582.0,1449746.0,0.0031605536418103583,table
+20261024,econ_fills_valued,,src_status,flag,conflict,418.0,1449746.0,0.0002883263688949651,table
+20261024,econ_fills_valued,,src_status,flag,off_grid,652.0,1449746.0,0.0004497339533959742,table
+20261024,econ_fills_valued,,src_status,flag,ok,1448676.0,1449746.0,0.999261939677709,table
+20261024,econ_fills_valued,,src_status,status,conflict,418.0,1449746.0,0.0002883263688949651,table
+20261024,econ_fills_valued,,src_status,status,off_grid,652.0,1449746.0,0.0004497339533959742,table
+20261024,econ_fills_valued,,src_status,status,ok,1448676.0,1449746.0,0.999261939677709,table
+20261024,econ_fills_valued,,st_10s,flag,beyond_end,32124.0,1449746.0,0.022158364292779564,table
+20261024,econ_fills_valued,,st_10s,flag,crossed,580.0,1449746.0,0.0004000700812418175,table
+20261024,econ_fills_valued,,st_10s,flag,no_frame,5742.0,1449746.0,0.003960693804293994,table
+20261024,econ_fills_valued,,st_10s,flag,ok,1375512.0,1449746.0,0.9487951682570602,table
+20261024,econ_fills_valued,,st_10s,flag,one_sided,28300.0,1449746.0,0.01952066086059213,table
+20261024,econ_fills_valued,,st_10s,flag,stale,7488.0,1449746.0,0.005165042704032292,table
+20261024,econ_fills_valued,,st_10s,status,beyond_end,32124.0,1449746.0,0.022158364292779564,table
+20261024,econ_fills_valued,,st_10s,status,crossed,580.0,1449746.0,0.0004000700812418175,table
+20261024,econ_fills_valued,,st_10s,status,no_frame,5742.0,1449746.0,0.003960693804293994,table
+20261024,econ_fills_valued,,st_10s,status,ok,1375512.0,1449746.0,0.9487951682570602,table
+20261024,econ_fills_valued,,st_10s,status,one_sided,28300.0,1449746.0,0.01952066086059213,table
+20261024,econ_fills_valued,,st_10s,status,stale,7488.0,1449746.0,0.005165042704032292,table
+20261024,econ_fills_valued,,st_1s,flag,beyond_end,10082.0,1449746.0,0.006954321653586214,table
+20261024,econ_fills_valued,,st_1s,flag,crossed,214.0,1449746.0,0.00014761206445818785,table
+20261024,econ_fills_valued,,st_1s,flag,no_frame,6796.0,1449746.0,0.004687717710550676,table
+20261024,econ_fills_valued,,st_1s,flag,ok,1419660.0,1449746.0,0.9792473991995839,table
+20261024,econ_fills_valued,,st_1s,flag,one_sided,12824.0,1449746.0,0.008845687451457014,table
+20261024,econ_fills_valued,,st_1s,flag,stale,170.0,1449746.0,0.000117261920363981,table
+20261024,econ_fills_valued,,st_1s,status,beyond_end,10082.0,1449746.0,0.006954321653586214,table
+20261024,econ_fills_valued,,st_1s,status,crossed,214.0,1449746.0,0.00014761206445818785,table
+20261024,econ_fills_valued,,st_1s,status,no_frame,6796.0,1449746.0,0.004687717710550676,table
+20261024,econ_fills_valued,,st_1s,status,ok,1419660.0,1449746.0,0.9792473991995839,table
+20261024,econ_fills_valued,,st_1s,status,one_sided,12824.0,1449746.0,0.008845687451457014,table
+20261024,econ_fills_valued,,st_1s,status,stale,170.0,1449746.0,0.000117261920363981,table
+20261024,econ_fills_valued,,st_60s,flag,beyond_end,201576.0,1449746.0,0.13904228740758726,table
+20261024,econ_fills_valued,,st_60s,flag,crossed,58.0,1449746.0,4.000700812418175e-05,table
+20261024,econ_fills_valued,,st_60s,flag,no_frame,3728.0,1449746.0,0.0025714849359818894,table
+20261024,econ_fills_valued,,st_60s,flag,ok,1162286.0,1449746.0,0.8017169904245295,table
+20261024,econ_fills_valued,,st_60s,flag,one_sided,76532.0,1449746.0,0.052789936995859967,table
+20261024,econ_fills_valued,,st_60s,flag,stale,5566.0,1449746.0,0.003839293227917166,table
+20261024,econ_fills_valued,,st_60s,status,beyond_end,201576.0,1449746.0,0.13904228740758726,table
+20261024,econ_fills_valued,,st_60s,status,crossed,58.0,1449746.0,4.000700812418175e-05,table
+20261024,econ_fills_valued,,st_60s,status,no_frame,3728.0,1449746.0,0.0025714849359818894,table
+20261024,econ_fills_valued,,st_60s,status,ok,1162286.0,1449746.0,0.8017169904245295,table
+20261024,econ_fills_valued,,st_60s,status,one_sided,76532.0,1449746.0,0.052789936995859967,table
+20261024,econ_fills_valued,,st_60s,status,stale,5566.0,1449746.0,0.003839293227917166,table
+20261024,econ_fills_valued,,st_end,flag,after_end,6242.0,1449746.0,0.004305581805364526,table
+20261024,econ_fills_valued,,st_end,flag,ok,432182.0,1449746.0,0.2981087721573296,table
+20261024,econ_fills_valued,,st_end,flag,one_sided,1011322.0,1449746.0,0.6975856460373059,table
+20261024,econ_fills_valued,,st_end,status,after_end,6242.0,1449746.0,0.004305581805364526,table
+20261024,econ_fills_valued,,st_end,status,ok,432182.0,1449746.0,0.2981087721573296,table
+20261024,econ_fills_valued,,st_end,status,one_sided,1011322.0,1449746.0,0.6975856460373059,table
+20261024,econ_fills_valued,,st_res,flag,ok,1441602.0,1449746.0,0.9943824642385631,table
+20261024,econ_fills_valued,,st_res,flag,tie,8144.0,1449746.0,0.005617535761436831,table
+20261024,econ_fills_valued,,st_res,status,ok,1441602.0,1449746.0,0.9943824642385631,table
+20261024,econ_fills_valued,,st_res,status,tie,8144.0,1449746.0,0.005617535761436831,table
+20261024,econ_fills_valued,,st_spr,flag,crossed,246.0,1449746.0,0.0001696848965267019,table
+20261024,econ_fills_valued,,st_spr,flag,no_frame,6922.0,1449746.0,0.00477462948682045,table
+20261024,econ_fills_valued,,st_spr,flag,ok,1431650.0,1449746.0,0.9875178134652552,table
+20261024,econ_fills_valued,,st_spr,flag,one_sided,10690.0,1449746.0,0.007373705462887982,table
+20261024,econ_fills_valued,,st_spr,flag,stale,238.0,1449746.0,0.0001641666885095734,table
+20261024,econ_fills_valued,,st_spr,status,crossed,246.0,1449746.0,0.0001696848965267019,table
+20261024,econ_fills_valued,,st_spr,status,no_frame,6922.0,1449746.0,0.00477462948682045,table
+20261024,econ_fills_valued,,st_spr,status,ok,1431650.0,1449746.0,0.9875178134652552,table
+20261024,econ_fills_valued,,st_spr,status,one_sided,10690.0,1449746.0,0.007373705462887982,table
+20261024,econ_fills_valued,,st_spr,status,stale,238.0,1449746.0,0.0001641666885095734,table
+20261024,econ_fills_valued,,status,flag,ok,1448676.0,1449746.0,0.999261939677709,table
+20261024,econ_fills_valued,,status,flag,src_status,1070.0,1449746.0,0.0007380603222909393,table
+20261024,econ_fills_valued,,status,status,ok,1448676.0,1449746.0,0.999261939677709,table
+20261024,econ_fills_valued,,status,status,src_status,1070.0,1449746.0,0.0007380603222909393,table
+20261024,econ_fills_valued,,t_status,flag,hi_fill_status,340.0,1449746.0,0.000234523840727962,table
+20261024,econ_fills_valued,,t_status,flag,hi_lo_unbounded,192.0,1449746.0,0.00013243699241108443,table
+20261024,econ_fills_valued,,t_status,flag,hi_no_lifecycle,1410468.0,1449746.0,0.9729069781879033,table
+20261024,econ_fills_valued,,t_status,flag,lo,38746.0,1449746.0,0.026726060978957692,table
+20261024,econ_fills_valued,,t_status,status,hi_fill_status,340.0,1449746.0,0.000234523840727962,table
+20261024,econ_fills_valued,,t_status,status,hi_lo_unbounded,192.0,1449746.0,0.00013243699241108443,table
+20261024,econ_fills_valued,,t_status,status,hi_no_lifecycle,1410468.0,1449746.0,0.9729069781879033,table
+20261024,econ_fills_valued,,t_status,status,lo,38746.0,1449746.0,0.026726060978957692,table
+20261024,econ_maker_day,,status,flag,ok,9779.0,9779.0,1.0,table
+20261024,econ_maker_day,,status,status,ok,9779.0,9779.0,1.0,table
+20261024,econ_maker_market,,end_status,flag,ok,56167.0,205415.0,0.2734318331183214,table
+20261024,econ_maker_market,,end_status,flag,one_sided,149248.0,205415.0,0.7265681668816786,table
+20261024,econ_maker_market,,end_status,status,ok,56167.0,205415.0,0.2734318331183214,table
+20261024,econ_maker_market,,end_status,status,one_sided,149248.0,205415.0,0.7265681668816786,table
+20261024,econ_maker_market,,fifo_status,flag,end_unavailable,149248.0,205415.0,0.7265681668816786,table
+20261024,econ_maker_market,,fifo_status,flag,ok,56167.0,205415.0,0.2734318331183214,table
+20261024,econ_maker_market,,fifo_status,status,end_unavailable,149248.0,205415.0,0.7265681668816786,table
+20261024,econ_maker_market,,fifo_status,status,ok,56167.0,205415.0,0.2734318331183214,table
+20261024,econ_maker_market,,res_status,flag,ok,204372.0,205415.0,0.9949224740160164,table
+20261024,econ_maker_market,,res_status,flag,tie,1043.0,205415.0,0.005077525983983643,table
+20261024,econ_maker_market,,res_status,status,ok,204372.0,205415.0,0.9949224740160164,table
+20261024,econ_maker_market,,res_status,status,tie,1043.0,205415.0,0.005077525983983643,table
+20261024,econ_maker_market,,rew_status,flag,not_book,200247.0,205415.0,0.9748411751819487,table
+20261024,econ_maker_market,,rew_status,flag,ok,5168.0,205415.0,0.025158824818051262,table
+20261024,econ_maker_market,,rew_status,status,not_book,200247.0,205415.0,0.9748411751819487,table
+20261024,econ_maker_market,,rew_status,status,ok,5168.0,205415.0,0.025158824818051262,table
+20261024,econ_maker_market,,status,flag,all_rows_excluded,81.0,205415.0,0.0003943236861962369,table
+20261024,econ_maker_market,,status,flag,ok,205334.0,205415.0,0.9996056763138038,table
+20261024,econ_maker_market,,status,status,all_rows_excluded,81.0,205415.0,0.0003943236861962369,table
+20261024,econ_maker_market,,status,status,ok,205334.0,205415.0,0.9996056763138038,table
+20261024,econ_segments,,status,flag,ok,766.0,766.0,1.0,table
+20261024,econ_segments,,status,status,ok,766.0,766.0,1.0,table
+20261024,frames,,status,flag,gap,531.0,43033.0,0.012339367462180187,extract_20261024.json
+20261024,frames,,status,flag,ok,42501.0,43033.0,0.9876373945576651,extract_20261024.json
+20261024,frames,,status,flag,same_ms_changed,1.0,43033.0,2.323798015476495e-05,extract_20261024.json
+20261024,frames,,status,status,gap,531.0,43033.0,0.012339367462180187,extract_20261024.json
+20261024,frames,,status,status,ok,42501.0,43033.0,0.9876373945576651,extract_20261024.json
+20261024,frames,,status,status,same_ms_changed,1.0,43033.0,2.323798015476495e-05,extract_20261024.json
+20261024,legs,,status,flag,conflict,209.0,724873.0,0.0002883263688949651,table
+20261024,legs,,status,flag,off_grid,88.0,724873.0,0.00012140057637682739,table
+20261024,legs,,status,flag,ok,724576.0,724873.0,0.9995902730547283,table
+20261024,legs,,status,status,conflict,209.0,724873.0,0.0002883263688949651,table
+20261024,legs,,status,status,off_grid,88.0,724873.0,0.00012140057637682739,table
+20261024,legs,,status,status,ok,724576.0,724873.0,0.9995902730547283,table
+20261024,levels,,status,flag,ok,4055945.0,4055945.0,1.0,extract_20261024.json
+20261024,levels,,status,status,ok,4055945.0,4055945.0,1.0,extract_20261024.json
+20261024,life_fills,,status,flag,capacity_contradiction,3.0,19639.0,0.00015275726870003564,table
+20261024,life_fills,,status,flag,fill_lo_unbounded,96.0,19639.0,0.0048882325984011404,table
+20261024,life_fills,,status,flag,leg_off_grid,2.0,19639.0,0.0001018381791333571,table
+20261024,life_fills,,status,flag,ok,19371.0,19639.0,0.9863536839961301,table
+20261024,life_fills,,status,flag,subcent_price,2.0,19639.0,0.0001018381791333571,table
+20261024,life_fills,,status,flag,window_gap,168.0,19639.0,0.008554407047201996,table
+20261024,life_fills,,status,status,capacity_contradiction,3.0,19639.0,0.00015275726870003564,table
+20261024,life_fills,,status,status,fill_lo_unbounded,95.0,19639.0,0.004837313508834462,table
+20261024,life_fills,,status,status,fill_lo_unbounded+leg_off_grid+subcent_price,1.0,19639.0,5.091908956667855e-05,table
+20261024,life_fills,,status,status,leg_off_grid+subcent_price,1.0,19639.0,5.091908956667855e-05,table
+20261024,life_fills,,status,status,ok,19371.0,19639.0,0.9863536839961301,table
+20261024,life_fills,,status,status,window_gap,168.0,19639.0,0.008554407047201996,table
+20261024,life_inputs,,conn,count,,7.0,,,life/<day>_<mid>.json inputs
+20261024,life_inputs,,conn_switches,count,,0.0,,,life/<day>_<mid>.json inputs
+20261024,life_inputs,,fills_after_last_frame,count,,0.0,,,life/<day>_<mid>.json inputs
+20261024,life_inputs,,fills_before_first_frame,count,,90.0,,,life/<day>_<mid>.json inputs
+20261024,life_inputs,,frame_gaps,count,,531.0,,,life/<day>_<mid>.json inputs
+20261024,life_inputs,,frames,count,,43033.0,,,life/<day>_<mid>.json inputs
+20261024,life_inputs,,frames_usable,count,,43033.0,,,life/<day>_<mid>.json inputs
+20261024,life_inputs,,legs,count,,19639.0,,,life/<day>_<mid>.json inputs
+20261024,life_inputs,,records,count,,12704.0,,,life/<day>_<mid>.json inputs
+20261024,life_inputs,,records_with_legs,count,,12704.0,,,life/<day>_<mid>.json inputs
+20261024,life_inputs,,records_without_legs,count,,0.0,,,life/<day>_<mid>.json inputs
+20261024,life_inputs,,subcent_legs,count,,2.0,,,life/<day>_<mid>.json inputs
+20261024,life_inputs,,unknown_cells,count,,0.0,,,life/<day>_<mid>.json inputs
+20261024,life_inputs,,unplaceable_legs,count,,0.0,,,life/<day>_<mid>.json inputs
+20261024,life_orders,S_FIFO,status,flag,ahead_hi_clipped,7.0,12614.0,0.0005549389567147614,table
+20261024,life_orders,S_FIFO,status,flag,ahead_hi_negative,2756.0,12614.0,0.2184873949579832,table
+20261024,life_orders,S_FIFO,status,flag,capacity_bounds_void,23.0,12614.0,0.001823370857777073,table
+20261024,life_orders,S_FIFO,status,flag,capacity_contradiction,1.0,12614.0,7.927699381639449e-05,table
+20261024,life_orders,S_FIFO,status,flag,clock_capacity_conflict,22.0,12614.0,0.0017440938639606786,table
+20261024,life_orders,S_FIFO,status,flag,fifo_time_violation,2.0,12614.0,0.00015855398763278897,table
+20261024,life_orders,S_FIFO,status,flag,fill_order_tie,20.0,12614.0,0.0015855398763278896,table
+20261024,life_orders,S_FIFO,status,flag,leg_off_grid,1.0,12614.0,7.927699381639449e-05,table
+20261024,life_orders,S_FIFO,status,flag,ok,9784.0,12614.0,0.7756461074996036,table
+20261024,life_orders,S_FIFO,status,flag,queue_contradiction,26.0,12614.0,0.0020612018392262565,table
+20261024,life_orders,S_FIFO,status,flag,subcent_price,1.0,12614.0,7.927699381639449e-05,table
+20261024,life_orders,S_FIFO,status,status,ahead_hi_clipped,7.0,12614.0,0.0005549389567147614,table
+20261024,life_orders,S_FIFO,status,status,ahead_hi_negative,2751.0,12614.0,0.2180910099889012,table
+20261024,life_orders,S_FIFO,status,status,ahead_hi_negative+capacity_bounds_void+capacity_contradiction,1.0,12614.0,7.927699381639449e-05,table
+20261024,life_orders,S_FIFO,status,status,ahead_hi_negative+capacity_bounds_void+clock_capacity_conflict,4.0,12614.0,0.00031710797526557794,table
+20261024,life_orders,S_FIFO,status,status,capacity_bounds_void+clock_capacity_conflict,18.0,12614.0,0.0014269858886951008,table
+20261024,life_orders,S_FIFO,status,status,fifo_time_violation,2.0,12614.0,0.00015855398763278897,table
+20261024,life_orders,S_FIFO,status,status,fill_order_tie,20.0,12614.0,0.0015855398763278896,table
+20261024,life_orders,S_FIFO,status,status,leg_off_grid+subcent_price,1.0,12614.0,7.927699381639449e-05,table
+20261024,life_orders,S_FIFO,status,status,ok,9784.0,12614.0,0.7756461074996036,table
+20261024,life_orders,S_FIFO,status,status,queue_contradiction,26.0,12614.0,0.0020612018392262565,table
+20261024,life_orders,S_FIFO_LO,status,flag,ahead_hi_clipped,5.0,12614.0,0.0003963849690819724,table
+20261024,life_orders,S_FIFO_LO,status,flag,ahead_hi_negative,2756.0,12614.0,0.2184873949579832,table
+20261024,life_orders,S_FIFO_LO,status,flag,capacity_bounds_void,651.0,12614.0,0.05160932297447281,table
+20261024,life_orders,S_FIFO_LO,status,flag,capacity_contradiction,1.0,12614.0,7.927699381639449e-05,table
+20261024,life_orders,S_FIFO_LO,status,flag,clock_capacity_conflict,650.0,12614.0,0.051530045980656414,table
+20261024,life_orders,S_FIFO_LO,status,flag,fifo_time_violation,2.0,12614.0,0.00015855398763278897,table
+20261024,life_orders,S_FIFO_LO,status,flag,fill_order_tie,20.0,12614.0,0.0015855398763278896,table
+20261024,life_orders,S_FIFO_LO,status,flag,leg_off_grid,1.0,12614.0,7.927699381639449e-05,table
+20261024,life_orders,S_FIFO_LO,status,flag,ok,9295.0,12614.0,0.7368796575233867,table
+20261024,life_orders,S_FIFO_LO,status,flag,post_after_first_fill,816.0,12614.0,0.0646900269541779,table
+20261024,life_orders,S_FIFO_LO,status,flag,queue_contradiction,25.0,12614.0,0.0019819248454098623,table
+20261024,life_orders,S_FIFO_LO,status,flag,subcent_price,1.0,12614.0,7.927699381639449e-05,table
+20261024,life_orders,S_FIFO_LO,status,status,ahead_hi_clipped,5.0,12614.0,0.0003963849690819724,table
+20261024,life_orders,S_FIFO_LO,status,status,ahead_hi_negative,2225.0,12614.0,0.17639131124147772,table
+20261024,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+capacity_bounds_void+capacity_contradiction,1.0,12614.0,7.927699381639449e-05,table
+20261024,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+capacity_bounds_void+clock_capacity_conflict,137.0,12614.0,0.010860948152846044,table
+20261024,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+capacity_bounds_void+clock_capacity_conflict+post_after_first_fill,232.0,12614.0,0.01839226256540352,table
+20261024,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+post_after_first_fill,161.0,12614.0,0.012763596004439512,table
+20261024,life_orders,S_FIFO_LO,status,status,capacity_bounds_void+clock_capacity_conflict,92.0,12614.0,0.007293483431108292,table
+20261024,life_orders,S_FIFO_LO,status,status,capacity_bounds_void+clock_capacity_conflict+fill_order_tie,2.0,12614.0,0.00015855398763278897,table
+20261024,life_orders,S_FIFO_LO,status,status,capacity_bounds_void+clock_capacity_conflict+post_after_first_fill,181.0,12614.0,0.0143491358807674,table
+20261024,life_orders,S_FIFO_LO,status,status,capacity_bounds_void+clock_capacity_conflict+post_after_first_fill+queue_contradiction,4.0,12614.0,0.00031710797526557794,table
+20261024,life_orders,S_FIFO_LO,status,status,capacity_bounds_void+clock_capacity_conflict+queue_contradiction,2.0,12614.0,0.00015855398763278897,table
+20261024,life_orders,S_FIFO_LO,status,status,fifo_time_violation,2.0,12614.0,0.00015855398763278897,table
+20261024,life_orders,S_FIFO_LO,status,status,fill_order_tie,17.0,12614.0,0.0013477088948787063,table
+20261024,life_orders,S_FIFO_LO,status,status,fill_order_tie+post_after_first_fill,1.0,12614.0,7.927699381639449e-05,table
+20261024,life_orders,S_FIFO_LO,status,status,leg_off_grid+subcent_price,1.0,12614.0,7.927699381639449e-05,table
+20261024,life_orders,S_FIFO_LO,status,status,ok,9295.0,12614.0,0.7368796575233867,table
+20261024,life_orders,S_FIFO_LO,status,status,post_after_first_fill,237.0,12614.0,0.018788647534485493,table
+20261024,life_orders,S_FIFO_LO,status,status,queue_contradiction,19.0,12614.0,0.0015062628825114953,table
+20261024,life_orders,S_NOPRIO,status,flag,capacity_bounds_void,23.0,12614.0,0.001823370857777073,table
+20261024,life_orders,S_NOPRIO,status,flag,capacity_contradiction,1.0,12614.0,7.927699381639449e-05,table
+20261024,life_orders,S_NOPRIO,status,flag,clock_capacity_conflict,22.0,12614.0,0.0017440938639606786,table
+20261024,life_orders,S_NOPRIO,status,flag,leg_off_grid,1.0,12614.0,7.927699381639449e-05,table
+20261024,life_orders,S_NOPRIO,status,flag,ok,12590.0,12614.0,0.9980973521484066,table
+20261024,life_orders,S_NOPRIO,status,flag,subcent_price,1.0,12614.0,7.927699381639449e-05,table
+20261024,life_orders,S_NOPRIO,status,status,capacity_bounds_void+capacity_contradiction,1.0,12614.0,7.927699381639449e-05,table
+20261024,life_orders,S_NOPRIO,status,status,capacity_bounds_void+clock_capacity_conflict,22.0,12614.0,0.0017440938639606786,table
+20261024,life_orders,S_NOPRIO,status,status,leg_off_grid+subcent_price,1.0,12614.0,7.927699381639449e-05,table
+20261024,life_orders,S_NOPRIO,status,status,ok,12590.0,12614.0,0.9980973521484066,table
+20261024,life_x_links,,status,flag,ok,14332.0,14332.0,1.0,table
+20261024,life_x_links,,status,status,ok,14332.0,14332.0,1.0,table
+20261024,markets,,status,flag,fills_outside_ws,20.0,288.0,0.06944444444444445,table
+20261024,markets,,status,flag,ok,253.0,288.0,0.8784722222222222,table
+20261024,markets,,status,flag,poll_incomplete,16.0,288.0,0.05555555555555555,table
+20261024,markets,,status,status,fills_outside_ws,19.0,288.0,0.06597222222222222,table
+20261024,markets,,status,status,fills_outside_ws+poll_incomplete,1.0,288.0,0.003472222222222222,table
+20261024,markets,,status,status,ok,253.0,288.0,0.8784722222222222,table
+20261024,markets,,status,status,poll_incomplete,15.0,288.0,0.052083333333333336,table
+20261024,records,,status,flag,conflict,14.0,476897.0,2.935644384426826e-05,table
+20261024,records,,status,flag,off_grid,88.0,476897.0,0.0001845262184496862,table
+20261024,records,,status,flag,ok,476795.0,476897.0,0.9997861173377061,table
+20261024,records,,status,status,conflict,14.0,476897.0,2.935644384426826e-05,table
+20261024,records,,status,status,off_grid,88.0,476897.0,0.0001845262184496862,table
+20261024,records,,status,status,ok,476795.0,476897.0,0.9997861173377061,table
+20261024,tob,,status,flag,gap,21593.0,1629797.0,0.013248889278848838,table
+20261024,tob,,status,flag,ok,1608196.0,1629797.0,0.9867462021343762,table
+20261024,tob,,status,flag,same_ms_changed,8.0,1629797.0,4.908586774917367e-06,table
+20261024,tob,,status,status,gap,21593.0,1629797.0,0.013248889278848838,table
+20261024,tob,,status,status,ok,1608196.0,1629797.0,0.9867462021343762,table
+20261024,tob,,status,status,same_ms_changed,8.0,1629797.0,4.908586774917367e-06,table
+20261025,econ_diagnostics,,censored_legs,count,,0.0,,,econ/econ.json diagnostics
+20261025,econ_diagnostics,,legs,count,,737177.0,,,econ/econ.json diagnostics
+20261025,econ_diagnostics,,legs_market_not_in_registry,count,,0.0,,,econ/econ.json diagnostics
+20261025,econ_diagnostics,,legs_recv_before_settle,count,,0.0,,,econ/econ.json diagnostics
+20261025,econ_diagnostics,,lf_hi_mismatch,count,,0.0,,,econ/econ.json diagnostics
+20261025,econ_diagnostics,,lf_matched,count,,16101.0,,,econ/econ.json diagnostics
+20261025,econ_diagnostics,,lf_rows,count,,16101.0,,,econ/econ.json diagnostics
+20261025,econ_diagnostics,,lf_status_not_ok,count,,305.0,,,econ/econ.json diagnostics
+20261025,econ_diagnostics,,markets_with_legs,count,,288.0,,,econ/econ.json diagnostics
+20261025,econ_diagnostics,,pre_legs,count,,46613.0,,,econ/econ.json diagnostics
+20261025,econ_diagnostics,,pre_legs_before_300s,count,,2376.0,,,econ/econ.json diagnostics
+20261025,econ_diagnostics,,records,count,,466133.0,,,econ/econ.json diagnostics
+20261025,econ_diagnostics,,records_in,count,,466270.0,,,econ/econ.json diagnostics
+20261025,econ_diagnostics,,records_without_legs,count,,0.0,,,econ/econ.json diagnostics
+20261025,econ_diagnostics,,registry_markets,count,,288.0,,,econ/econ.json diagnostics
+20261025,econ_diagnostics,,registry_markets_without_legs,count,,0.0,,,econ/econ.json diagnostics
+20261025,econ_diagnostics,,rewards_presence_rows,count,,18.0,,,econ/econ.json diagnostics
+20261025,econ_diagnostics,,t_rel_min_s,count,,-86344.30900001526,,,econ/econ.json diagnostics
+20261025,econ_diagnostics,,tk_px_gap_max,count,,0.02703068,,,econ/econ.json diagnostics
+20261025,econ_diagnostics,,tk_px_gap_n,count,,3402.0,,,econ/econ.json diagnostics
+20261025,econ_diagnostics,,tk_px_gap_usd,count,,278.2651175488067,,,econ/econ.json diagnostics
+20261025,econ_fills_valued,,kind,flag,merge,4170.0,1474354.0,0.0028283573687187744,table
+20261025,econ_fills_valued,,kind,flag,mint,1292260.0,1474354.0,0.876492348513315,table
+20261025,econ_fills_valued,,kind,flag,regular,177924.0,1474354.0,0.12067929411796624,table
+20261025,econ_fills_valued,,kind,status,merge,4170.0,1474354.0,0.0028283573687187744,table
+20261025,econ_fills_valued,,kind,status,mint,1292260.0,1474354.0,0.876492348513315,table
+20261025,econ_fills_valued,,kind,status,regular,177924.0,1474354.0,0.12067929411796624,table
+20261025,econ_fills_valued,,life_status,flag,na_not_book,721076.0,1474354.0,0.4890792848935873,table
+20261025,econ_fills_valued,,life_status,flag,na_taker,737177.0,1474354.0,0.5,table
+20261025,econ_fills_valued,,life_status,flag,ok,12370.0,1474354.0,0.008390115264041065,table
+20261025,econ_fills_valued,,life_status,flag,orders_status,3731.0,1474354.0,0.002530599842371642,table
+20261025,econ_fills_valued,,life_status,status,na_not_book,721076.0,1474354.0,0.4890792848935873,table
+20261025,econ_fills_valued,,life_status,status,na_taker,737177.0,1474354.0,0.5,table
+20261025,econ_fills_valued,,life_status,status,ok,12370.0,1474354.0,0.008390115264041065,table
+20261025,econ_fills_valued,,life_status,status,orders_status,3731.0,1474354.0,0.002530599842371642,table
+20261025,econ_fills_valued,,src_status,flag,conflict,1266.0,1474354.0,0.0008586811579851244,table
+20261025,econ_fills_valued,,src_status,flag,off_grid,960.0,1474354.0,0.0006511326316474877,table
+20261025,econ_fills_valued,,src_status,flag,ok,1472128.0,1474354.0,0.9984901862103673,table
+20261025,econ_fills_valued,,src_status,status,conflict,1266.0,1474354.0,0.0008586811579851244,table
+20261025,econ_fills_valued,,src_status,status,off_grid,960.0,1474354.0,0.0006511326316474877,table
+20261025,econ_fills_valued,,src_status,status,ok,1472128.0,1474354.0,0.9984901862103673,table
+20261025,econ_fills_valued,,st_10s,flag,beyond_end,27812.0,1474354.0,0.01886385494935409,table
+20261025,econ_fills_valued,,st_10s,flag,crossed,154.0,1474354.0,0.00010445252632678448,table
+20261025,econ_fills_valued,,st_10s,flag,no_frame,5760.0,1474354.0,0.003906795789884926,table
+20261025,econ_fills_valued,,st_10s,flag,ok,1394746.0,1474354.0,0.9460048265206321,table
+20261025,econ_fills_valued,,st_10s,flag,one_sided,36052.0,1474354.0,0.024452743370995025,table
+20261025,econ_fills_valued,,st_10s,flag,stale,9830.0,1474354.0,0.0066673268428070875,table
+20261025,econ_fills_valued,,st_10s,status,beyond_end,27812.0,1474354.0,0.01886385494935409,table
+20261025,econ_fills_valued,,st_10s,status,crossed,154.0,1474354.0,0.00010445252632678448,table
+20261025,econ_fills_valued,,st_10s,status,no_frame,5760.0,1474354.0,0.003906795789884926,table
+20261025,econ_fills_valued,,st_10s,status,ok,1394746.0,1474354.0,0.9460048265206321,table
+20261025,econ_fills_valued,,st_10s,status,one_sided,36052.0,1474354.0,0.024452743370995025,table
+20261025,econ_fills_valued,,st_10s,status,stale,9830.0,1474354.0,0.0066673268428070875,table
+20261025,econ_fills_valued,,st_1s,flag,beyond_end,8534.0,1474354.0,0.005788297790082979,table
+20261025,econ_fills_valued,,st_1s,flag,crossed,128.0,1474354.0,8.681768421966502e-05,table
+20261025,econ_fills_valued,,st_1s,flag,no_frame,6628.0,1474354.0,0.004495528210999529,table
+20261025,econ_fills_valued,,st_1s,flag,ok,1442956.0,1474354.0,0.9787038933661794,table
+20261025,econ_fills_valued,,st_1s,flag,one_sided,15938.0,1474354.0,0.010810158211664226,table
+20261025,econ_fills_valued,,st_1s,flag,stale,170.0,1474354.0,0.0001153047368542426,table
+20261025,econ_fills_valued,,st_1s,status,beyond_end,8534.0,1474354.0,0.005788297790082979,table
+20261025,econ_fills_valued,,st_1s,status,crossed,128.0,1474354.0,8.681768421966502e-05,table
+20261025,econ_fills_valued,,st_1s,status,no_frame,6628.0,1474354.0,0.004495528210999529,table
+20261025,econ_fills_valued,,st_1s,status,ok,1442956.0,1474354.0,0.9787038933661794,table
+20261025,econ_fills_valued,,st_1s,status,one_sided,15938.0,1474354.0,0.010810158211664226,table
+20261025,econ_fills_valued,,st_1s,status,stale,170.0,1474354.0,0.0001153047368542426,table
+20261025,econ_fills_valued,,st_60s,flag,beyond_end,188808.0,1474354.0,0.12806151032926963,table
+20261025,econ_fills_valued,,st_60s,flag,crossed,94.0,1474354.0,6.37567368488165e-05,table
+20261025,econ_fills_valued,,st_60s,flag,no_frame,3418.0,1474354.0,0.0023183034739282424,table
+20261025,econ_fills_valued,,st_60s,flag,ok,1169108.0,1474354.0,0.7929628840834698,table
+20261025,econ_fills_valued,,st_60s,flag,one_sided,106208.0,1474354.0,0.07203697348126704,table
+20261025,econ_fills_valued,,st_60s,flag,stale,6718.0,1474354.0,0.004556571895216481,table
+20261025,econ_fills_valued,,st_60s,status,beyond_end,188808.0,1474354.0,0.12806151032926963,table
+20261025,econ_fills_valued,,st_60s,status,crossed,94.0,1474354.0,6.37567368488165e-05,table
+20261025,econ_fills_valued,,st_60s,status,no_frame,3418.0,1474354.0,0.0023183034739282424,table
+20261025,econ_fills_valued,,st_60s,status,ok,1169108.0,1474354.0,0.7929628840834698,table
+20261025,econ_fills_valued,,st_60s,status,one_sided,106208.0,1474354.0,0.07203697348126704,table
+20261025,econ_fills_valued,,st_60s,status,stale,6718.0,1474354.0,0.004556571895216481,table
+20261025,econ_fills_valued,,st_end,flag,after_end,5108.0,1474354.0,0.0034645682108910072,table
+20261025,econ_fills_valued,,st_end,flag,ok,392360.0,1474354.0,0.2661233326595919,table
+20261025,econ_fills_valued,,st_end,flag,one_sided,1076886.0,1474354.0,0.7304120991295171,table
+20261025,econ_fills_valued,,st_end,status,after_end,5108.0,1474354.0,0.0034645682108910072,table
+20261025,econ_fills_valued,,st_end,status,ok,392360.0,1474354.0,0.2661233326595919,table
+20261025,econ_fills_valued,,st_end,status,one_sided,1076886.0,1474354.0,0.7304120991295171,table
+20261025,econ_fills_valued,,st_res,flag,ok,1460632.0,1474354.0,0.9906928729463887,table
+20261025,econ_fills_valued,,st_res,flag,tie,13722.0,1474354.0,0.009307127053611277,table
+20261025,econ_fills_valued,,st_res,status,ok,1460632.0,1474354.0,0.9906928729463887,table
+20261025,econ_fills_valued,,st_res,status,tie,13722.0,1474354.0,0.009307127053611277,table
+20261025,econ_fills_valued,,st_spr,flag,crossed,216.0,1474354.0,0.00014650484212068473,table
+20261025,econ_fills_valued,,st_spr,flag,no_frame,6714.0,1474354.0,0.004553858842584617,table
+20261025,econ_fills_valued,,st_spr,flag,ok,1453984.0,1474354.0,0.9861837794722299,table
+20261025,econ_fills_valued,,st_spr,flag,one_sided,13008.0,1474354.0,0.008822847158823458,table
+20261025,econ_fills_valued,,st_spr,flag,stale,432.0,1474354.0,0.00029300968424136946,table
+20261025,econ_fills_valued,,st_spr,status,crossed,216.0,1474354.0,0.00014650484212068473,table
+20261025,econ_fills_valued,,st_spr,status,no_frame,6714.0,1474354.0,0.004553858842584617,table
+20261025,econ_fills_valued,,st_spr,status,ok,1453984.0,1474354.0,0.9861837794722299,table
+20261025,econ_fills_valued,,st_spr,status,one_sided,13008.0,1474354.0,0.008822847158823458,table
+20261025,econ_fills_valued,,st_spr,status,stale,432.0,1474354.0,0.00029300968424136946,table
+20261025,econ_fills_valued,,status,flag,ok,1472128.0,1474354.0,0.9984901862103673,table
+20261025,econ_fills_valued,,status,flag,src_status,2226.0,1474354.0,0.001509813789632612,table
+20261025,econ_fills_valued,,status,status,ok,1472128.0,1474354.0,0.9984901862103673,table
+20261025,econ_fills_valued,,status,status,src_status,2226.0,1474354.0,0.001509813789632612,table
+20261025,econ_fills_valued,,t_status,flag,hi_fill_status,446.0,1474354.0,0.0003025053684528953,table
+20261025,econ_fills_valued,,t_status,flag,hi_lo_unbounded,150.0,1474354.0,0.00010173947369491994,table
+20261025,econ_fills_valued,,t_status,flag,hi_no_lifecycle,1442152.0,1474354.0,0.9781585697871746,table
+20261025,econ_fills_valued,,t_status,flag,lo,31606.0,1474354.0,0.021437185370677597,table
+20261025,econ_fills_valued,,t_status,status,hi_fill_status,446.0,1474354.0,0.0003025053684528953,table
+20261025,econ_fills_valued,,t_status,status,hi_lo_unbounded,150.0,1474354.0,0.00010173947369491994,table
+20261025,econ_fills_valued,,t_status,status,hi_no_lifecycle,1442152.0,1474354.0,0.9781585697871746,table
+20261025,econ_fills_valued,,t_status,status,lo,31606.0,1474354.0,0.021437185370677597,table
+20261025,econ_maker_day,,status,flag,all_rows_excluded,2.0,9528.0,0.00020990764063811922,table
+20261025,econ_maker_day,,status,flag,ok,9526.0,9528.0,0.9997900923593619,table
+20261025,econ_maker_day,,status,status,all_rows_excluded,2.0,9528.0,0.00020990764063811922,table
+20261025,econ_maker_day,,status,status,ok,9526.0,9528.0,0.9997900923593619,table
+20261025,econ_maker_market,,end_status,flag,ok,50121.0,204510.0,0.24507848026991344,table
+20261025,econ_maker_market,,end_status,flag,one_sided,154389.0,204510.0,0.7549215197300866,table
+20261025,econ_maker_market,,end_status,status,ok,50121.0,204510.0,0.24507848026991344,table
+20261025,econ_maker_market,,end_status,status,one_sided,154389.0,204510.0,0.7549215197300866,table
+20261025,econ_maker_market,,fifo_status,flag,end_unavailable,154389.0,204510.0,0.7549215197300866,table
+20261025,econ_maker_market,,fifo_status,flag,ok,50121.0,204510.0,0.24507848026991344,table
+20261025,econ_maker_market,,fifo_status,status,end_unavailable,154389.0,204510.0,0.7549215197300866,table
+20261025,econ_maker_market,,fifo_status,status,ok,50121.0,204510.0,0.24507848026991344,table
+20261025,econ_maker_market,,res_status,flag,ok,202700.0,204510.0,0.9911495770377977,table
+20261025,econ_maker_market,,res_status,flag,tie,1810.0,204510.0,0.008850422962202337,table
+20261025,econ_maker_market,,res_status,status,ok,202700.0,204510.0,0.9911495770377977,table
+20261025,econ_maker_market,,res_status,status,tie,1810.0,204510.0,0.008850422962202337,table
+20261025,econ_maker_market,,rew_status,flag,not_book,200626.0,204510.0,0.981008263654589,table
+20261025,econ_maker_market,,rew_status,flag,ok,3884.0,204510.0,0.018991736345410983,table
+20261025,econ_maker_market,,rew_status,status,not_book,200626.0,204510.0,0.981008263654589,table
+20261025,econ_maker_market,,rew_status,status,ok,3884.0,204510.0,0.018991736345410983,table
+20261025,econ_maker_market,,status,flag,all_rows_excluded,79.0,204510.0,0.00038628917901325116,table
+20261025,econ_maker_market,,status,flag,ok,204431.0,204510.0,0.9996137108209867,table
+20261025,econ_maker_market,,status,status,all_rows_excluded,79.0,204510.0,0.00038628917901325116,table
+20261025,econ_maker_market,,status,status,ok,204431.0,204510.0,0.9996137108209867,table
+20261025,econ_segments,,status,flag,ok,763.0,763.0,1.0,table
+20261025,econ_segments,,status,status,ok,763.0,763.0,1.0,table
+20261025,frames,,status,flag,gap,366.0,30668.0,0.011934263727664015,extract_20261025.json
+20261025,frames,,status,flag,ok,30302.0,30668.0,0.988065736272336,extract_20261025.json
+20261025,frames,,status,status,gap,366.0,30668.0,0.011934263727664015,extract_20261025.json
+20261025,frames,,status,status,ok,30302.0,30668.0,0.988065736272336,extract_20261025.json
+20261025,legs,,status,flag,conflict,633.0,737177.0,0.0008586811579851244,table
+20261025,legs,,status,flag,off_grid,118.0,737177.0,0.00016007010528000737,table
+20261025,legs,,status,flag,ok,736426.0,737177.0,0.9989812487367349,table
+20261025,legs,,status,status,conflict,633.0,737177.0,0.0008586811579851244,table
+20261025,legs,,status,status,off_grid,118.0,737177.0,0.00016007010528000737,table
+20261025,legs,,status,status,ok,736426.0,737177.0,0.9989812487367349,table
+20261025,levels,,status,flag,ok,2808079.0,2808079.0,1.0,extract_20261025.json
+20261025,levels,,status,status,ok,2808079.0,2808079.0,1.0,extract_20261025.json
+20261025,life_fills,,status,flag,capacity_contradiction,13.0,16101.0,0.0008074032668778337,table
+20261025,life_fills,,status,flag,fill_lo_unbounded,75.0,16101.0,0.004658095770449041,table
+20261025,life_fills,,status,flag,leg_conflict,53.0,16101.0,0.003291721011117322,table
+20261025,life_fills,,status,flag,leg_off_grid,5.0,16101.0,0.00031053971802993605,table
+20261025,life_fills,,status,flag,ok,15796.0,16101.0,0.9810570772001739,table
+20261025,life_fills,,status,flag,subcent_price,5.0,16101.0,0.00031053971802993605,table
+20261025,life_fills,,status,flag,window_gap,166.0,16101.0,0.010309918638593877,table
+20261025,life_fills,,status,status,capacity_contradiction,7.0,16101.0,0.00043475560524191046,table
+20261025,life_fills,,status,status,capacity_contradiction+window_gap,6.0,16101.0,0.0003726476616359232,table
+20261025,life_fills,,status,status,fill_lo_unbounded,74.0,16101.0,0.004595987826843053,table
+20261025,life_fills,,status,status,fill_lo_unbounded+leg_off_grid+subcent_price,1.0,16101.0,6.21079436059872e-05,table
+20261025,life_fills,,status,status,leg_conflict,53.0,16101.0,0.003291721011117322,table
+20261025,life_fills,,status,status,leg_off_grid+subcent_price,4.0,16101.0,0.0002484317744239488,table
+20261025,life_fills,,status,status,ok,15796.0,16101.0,0.9810570772001739,table
+20261025,life_fills,,status,status,window_gap,160.0,16101.0,0.009937270976957954,table
+20261025,life_inputs,,conn,count,,5.0,,,life/<day>_<mid>.json inputs
+20261025,life_inputs,,conn_switches,count,,0.0,,,life/<day>_<mid>.json inputs
+20261025,life_inputs,,fills_after_last_frame,count,,0.0,,,life/<day>_<mid>.json inputs
+20261025,life_inputs,,fills_before_first_frame,count,,72.0,,,life/<day>_<mid>.json inputs
+20261025,life_inputs,,frame_gaps,count,,366.0,,,life/<day>_<mid>.json inputs
+20261025,life_inputs,,frames,count,,30668.0,,,life/<day>_<mid>.json inputs
+20261025,life_inputs,,frames_usable,count,,30668.0,,,life/<day>_<mid>.json inputs
+20261025,life_inputs,,legs,count,,16101.0,,,life/<day>_<mid>.json inputs
+20261025,life_inputs,,records,count,,10102.0,,,life/<day>_<mid>.json inputs
+20261025,life_inputs,,records_with_legs,count,,10102.0,,,life/<day>_<mid>.json inputs
+20261025,life_inputs,,records_without_legs,count,,0.0,,,life/<day>_<mid>.json inputs
+20261025,life_inputs,,subcent_legs,count,,5.0,,,life/<day>_<mid>.json inputs
+20261025,life_inputs,,unknown_cells,count,,0.0,,,life/<day>_<mid>.json inputs
+20261025,life_inputs,,unplaceable_legs,count,,0.0,,,life/<day>_<mid>.json inputs
+20261025,life_orders,S_FIFO,status,flag,ahead_hi_clipped,4.0,10577.0,0.0003781790677885979,table
+20261025,life_orders,S_FIFO,status,flag,ahead_hi_negative,2173.0,10577.0,0.2054457785761558,table
+20261025,life_orders,S_FIFO,status,flag,capacity_bounds_void,16.0,10577.0,0.0015127162711543916,table
+20261025,life_orders,S_FIFO,status,flag,capacity_contradiction,3.0,10577.0,0.00028363430084144843,table
+20261025,life_orders,S_FIFO,status,flag,clock_capacity_conflict,13.0,10577.0,0.0012290819703129432,table
+20261025,life_orders,S_FIFO,status,flag,fifo_reappearance,1.0,10577.0,9.454476694714947e-05,table
+20261025,life_orders,S_FIFO,status,flag,fill_order_tie,12.0,10577.0,0.0011345372033657937,table
+20261025,life_orders,S_FIFO,status,flag,leg_conflict,53.0,10577.0,0.005010872648198922,table
+20261025,life_orders,S_FIFO,status,flag,leg_off_grid,4.0,10577.0,0.0003781790677885979,table
+20261025,life_orders,S_FIFO,status,flag,ok,8298.0,10577.0,0.7845324761274464,table
+20261025,life_orders,S_FIFO,status,flag,queue_contradiction,24.0,10577.0,0.0022690744067315875,table
+20261025,life_orders,S_FIFO,status,flag,subcent_price,4.0,10577.0,0.0003781790677885979,table
+20261025,life_orders,S_FIFO,status,status,ahead_hi_clipped,4.0,10577.0,0.0003781790677885979,table
+20261025,life_orders,S_FIFO,status,status,ahead_hi_negative,2166.0,10577.0,0.20478396520752576,table
+20261025,life_orders,S_FIFO,status,status,ahead_hi_negative+capacity_bounds_void+clock_capacity_conflict,3.0,10577.0,0.00028363430084144843,table
+20261025,life_orders,S_FIFO,status,status,ahead_hi_negative+capacity_bounds_void+clock_capacity_conflict+fifo_reappearance,1.0,10577.0,9.454476694714947e-05,table
+20261025,life_orders,S_FIFO,status,status,ahead_hi_negative+fill_order_tie,3.0,10577.0,0.00028363430084144843,table
+20261025,life_orders,S_FIFO,status,status,capacity_bounds_void+capacity_contradiction,3.0,10577.0,0.00028363430084144843,table
+20261025,life_orders,S_FIFO,status,status,capacity_bounds_void+clock_capacity_conflict,9.0,10577.0,0.0008509029025243452,table
+20261025,life_orders,S_FIFO,status,status,fill_order_tie,9.0,10577.0,0.0008509029025243452,table
+20261025,life_orders,S_FIFO,status,status,leg_conflict,53.0,10577.0,0.005010872648198922,table
+20261025,life_orders,S_FIFO,status,status,leg_off_grid+subcent_price,4.0,10577.0,0.0003781790677885979,table
+20261025,life_orders,S_FIFO,status,status,ok,8298.0,10577.0,0.7845324761274464,table
+20261025,life_orders,S_FIFO,status,status,queue_contradiction,24.0,10577.0,0.0022690744067315875,table
+20261025,life_orders,S_FIFO_LO,status,flag,ahead_hi_clipped,3.0,10577.0,0.00028363430084144843,table
+20261025,life_orders,S_FIFO_LO,status,flag,ahead_hi_negative,2167.0,10577.0,0.2048785099744729,table
+20261025,life_orders,S_FIFO_LO,status,flag,capacity_bounds_void,509.0,10577.0,0.048123286376099084,table
+20261025,life_orders,S_FIFO_LO,status,flag,capacity_contradiction,3.0,10577.0,0.00028363430084144843,table
+20261025,life_orders,S_FIFO_LO,status,flag,clock_capacity_conflict,506.0,10577.0,0.04783965207525764,table
+20261025,life_orders,S_FIFO_LO,status,flag,fifo_reappearance,1.0,10577.0,9.454476694714947e-05,table
+20261025,life_orders,S_FIFO_LO,status,flag,fill_order_tie,12.0,10577.0,0.0011345372033657937,table
+20261025,life_orders,S_FIFO_LO,status,flag,leg_conflict,53.0,10577.0,0.005010872648198922,table
+20261025,life_orders,S_FIFO_LO,status,flag,leg_off_grid,4.0,10577.0,0.0003781790677885979,table
+20261025,life_orders,S_FIFO_LO,status,flag,ok,7865.0,10577.0,0.7435945920393306,table
+20261025,life_orders,S_FIFO_LO,status,flag,post_after_first_fill,707.0,10577.0,0.06684315023163467,table
+20261025,life_orders,S_FIFO_LO,status,flag,queue_contradiction,22.0,10577.0,0.0020799848728372886,table
+20261025,life_orders,S_FIFO_LO,status,flag,subcent_price,4.0,10577.0,0.0003781790677885979,table
+20261025,life_orders,S_FIFO_LO,status,status,ahead_hi_clipped,3.0,10577.0,0.00028363430084144843,table
+20261025,life_orders,S_FIFO_LO,status,status,ahead_hi_negative,1717.0,10577.0,0.16233336484825564,table
+20261025,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+capacity_bounds_void+clock_capacity_conflict,107.0,10577.0,0.010116290063344994,table
+20261025,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+capacity_bounds_void+clock_capacity_conflict+fifo_reappearance,1.0,10577.0,9.454476694714947e-05,table
+20261025,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+capacity_bounds_void+clock_capacity_conflict+fill_order_tie,1.0,10577.0,9.454476694714947e-05,table
+20261025,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+capacity_bounds_void+clock_capacity_conflict+post_after_first_fill,177.0,10577.0,0.01673442374964546,table
+20261025,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+fill_order_tie,2.0,10577.0,0.00018908953389429895,table
+20261025,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+post_after_first_fill,162.0,10577.0,0.015316252245438216,table
+20261025,life_orders,S_FIFO_LO,status,status,capacity_bounds_void+capacity_contradiction,3.0,10577.0,0.00028363430084144843,table
+20261025,life_orders,S_FIFO_LO,status,status,capacity_bounds_void+clock_capacity_conflict,90.0,10577.0,0.008509029025243453,table
+20261025,life_orders,S_FIFO_LO,status,status,capacity_bounds_void+clock_capacity_conflict+post_after_first_fill,118.0,10577.0,0.011156282499763638,table
+20261025,life_orders,S_FIFO_LO,status,status,capacity_bounds_void+clock_capacity_conflict+post_after_first_fill+queue_contradiction,5.0,10577.0,0.00047272383473574735,table
+20261025,life_orders,S_FIFO_LO,status,status,capacity_bounds_void+clock_capacity_conflict+queue_contradiction,7.0,10577.0,0.0006618133686300463,table
+20261025,life_orders,S_FIFO_LO,status,status,fill_order_tie,8.0,10577.0,0.0007563581355771958,table
+20261025,life_orders,S_FIFO_LO,status,status,fill_order_tie+post_after_first_fill,1.0,10577.0,9.454476694714947e-05,table
+20261025,life_orders,S_FIFO_LO,status,status,leg_conflict,53.0,10577.0,0.005010872648198922,table
+20261025,life_orders,S_FIFO_LO,status,status,leg_off_grid+subcent_price,4.0,10577.0,0.0003781790677885979,table
+20261025,life_orders,S_FIFO_LO,status,status,ok,7865.0,10577.0,0.7435945920393306,table
+20261025,life_orders,S_FIFO_LO,status,status,post_after_first_fill,243.0,10577.0,0.02297437836815732,table
+20261025,life_orders,S_FIFO_LO,status,status,post_after_first_fill+queue_contradiction,1.0,10577.0,9.454476694714947e-05,table
+20261025,life_orders,S_FIFO_LO,status,status,queue_contradiction,9.0,10577.0,0.0008509029025243452,table
+20261025,life_orders,S_NOPRIO,status,flag,capacity_bounds_void,16.0,10577.0,0.0015127162711543916,table
+20261025,life_orders,S_NOPRIO,status,flag,capacity_contradiction,3.0,10577.0,0.00028363430084144843,table
+20261025,life_orders,S_NOPRIO,status,flag,clock_capacity_conflict,13.0,10577.0,0.0012290819703129432,table
+20261025,life_orders,S_NOPRIO,status,flag,leg_conflict,53.0,10577.0,0.005010872648198922,table
+20261025,life_orders,S_NOPRIO,status,flag,leg_off_grid,4.0,10577.0,0.0003781790677885979,table
+20261025,life_orders,S_NOPRIO,status,flag,ok,10504.0,10577.0,0.9930982320128581,table
+20261025,life_orders,S_NOPRIO,status,flag,subcent_price,4.0,10577.0,0.0003781790677885979,table
+20261025,life_orders,S_NOPRIO,status,status,capacity_bounds_void+capacity_contradiction,3.0,10577.0,0.00028363430084144843,table
+20261025,life_orders,S_NOPRIO,status,status,capacity_bounds_void+clock_capacity_conflict,13.0,10577.0,0.0012290819703129432,table
+20261025,life_orders,S_NOPRIO,status,status,leg_conflict,53.0,10577.0,0.005010872648198922,table
+20261025,life_orders,S_NOPRIO,status,status,leg_off_grid+subcent_price,4.0,10577.0,0.0003781790677885979,table
+20261025,life_orders,S_NOPRIO,status,status,ok,10504.0,10577.0,0.9930982320128581,table
+20261025,life_x_links,,status,flag,invalid_order,1.0,12089.0,8.271982794275788e-05,table
+20261025,life_x_links,,status,flag,ok,12088.0,12089.0,0.9999172801720573,table
+20261025,life_x_links,,status,status,invalid_order,1.0,12089.0,8.271982794275788e-05,table
+20261025,life_x_links,,status,status,ok,12088.0,12089.0,0.9999172801720573,table
+20261025,markets,,status,flag,fills_outside_ws,108.0,288.0,0.375,table
+20261025,markets,,status,flag,ok,174.0,288.0,0.6041666666666666,table
+20261025,markets,,status,flag,poll_incomplete,10.0,288.0,0.034722222222222224,table
+20261025,markets,,status,status,fills_outside_ws,104.0,288.0,0.3611111111111111,table
+20261025,markets,,status,status,fills_outside_ws+poll_incomplete,4.0,288.0,0.013888888888888888,table
+20261025,markets,,status,status,ok,174.0,288.0,0.6041666666666666,table
+20261025,markets,,status,status,poll_incomplete,6.0,288.0,0.020833333333333332,table
+20261025,records,,status,flag,conflict,22.0,466270.0,4.7182962661119097e-05,table
+20261025,records,,status,flag,off_grid,115.0,466270.0,0.0002466382139103953,table
+20261025,records,,status,flag,ok,466133.0,466270.0,0.9997061788234285,table
+20261025,records,,status,status,conflict,22.0,466270.0,4.7182962661119097e-05,table
+20261025,records,,status,status,off_grid,115.0,466270.0,0.0002466382139103953,table
+20261025,records,,status,status,ok,466133.0,466270.0,0.9997061788234285,table
+20261025,tob,,status,flag,gap,21581.0,1579160.0,0.013666126294992274,table
+20261025,tob,,status,flag,ok,1557567.0,1579160.0,0.9863262747283366,table
+20261025,tob,,status,flag,same_ms_changed,12.0,1579160.0,7.59897667114162e-06,table
+20261025,tob,,status,status,gap,21581.0,1579160.0,0.013666126294992274,table
+20261025,tob,,status,status,ok,1557567.0,1579160.0,0.9863262747283366,table
+20261025,tob,,status,status,same_ms_changed,12.0,1579160.0,7.59897667114162e-06,table
+20261026,econ_diagnostics,,censored_legs,count,,0.0,,,econ/econ.json diagnostics
+20261026,econ_diagnostics,,legs,count,,871491.0,,,econ/econ.json diagnostics
+20261026,econ_diagnostics,,legs_market_not_in_registry,count,,0.0,,,econ/econ.json diagnostics
+20261026,econ_diagnostics,,legs_recv_before_settle,count,,0.0,,,econ/econ.json diagnostics
+20261026,econ_diagnostics,,lf_hi_mismatch,count,,0.0,,,econ/econ.json diagnostics
+20261026,econ_diagnostics,,lf_matched,count,,16410.0,,,econ/econ.json diagnostics
+20261026,econ_diagnostics,,lf_rows,count,,16410.0,,,econ/econ.json diagnostics
+20261026,econ_diagnostics,,lf_status_not_ok,count,,287.0,,,econ/econ.json diagnostics
+20261026,econ_diagnostics,,markets_with_legs,count,,288.0,,,econ/econ.json diagnostics
+20261026,econ_diagnostics,,pre_legs,count,,52498.0,,,econ/econ.json diagnostics
+20261026,econ_diagnostics,,pre_legs_before_300s,count,,2560.0,,,econ/econ.json diagnostics
+20261026,econ_diagnostics,,records,count,,604919.0,,,econ/econ.json diagnostics
+20261026,econ_diagnostics,,records_in,count,,605035.0,,,econ/econ.json diagnostics
+20261026,econ_diagnostics,,records_without_legs,count,,0.0,,,econ/econ.json diagnostics
+20261026,econ_diagnostics,,registry_markets,count,,288.0,,,econ/econ.json diagnostics
+20261026,econ_diagnostics,,registry_markets_without_legs,count,,0.0,,,econ/econ.json diagnostics
+20261026,econ_diagnostics,,rewards_presence_rows,count,,12.0,,,econ/econ.json diagnostics
+20261026,econ_diagnostics,,t_rel_min_s,count,,-86344.33999991417,,,econ/econ.json diagnostics
+20261026,econ_diagnostics,,tk_px_gap_max,count,,0.03973140000000003,,,econ/econ.json diagnostics
+20261026,econ_diagnostics,,tk_px_gap_n,count,,4057.0,,,econ/econ.json diagnostics
+20261026,econ_diagnostics,,tk_px_gap_usd,count,,334.5671934352321,,,econ/econ.json diagnostics
+20261026,econ_fills_valued,,kind,flag,merge,6358.0,1742982.0,0.0036477714629296228,table
+20261026,econ_fills_valued,,kind,flag,mint,1498656.0,1742982.0,0.8598229930085336,table
+20261026,econ_fills_valued,,kind,flag,regular,237968.0,1742982.0,0.1365292355285367,table
+20261026,econ_fills_valued,,kind,status,merge,6358.0,1742982.0,0.0036477714629296228,table
+20261026,econ_fills_valued,,kind,status,mint,1498656.0,1742982.0,0.8598229930085336,table
+20261026,econ_fills_valued,,kind,status,regular,237968.0,1742982.0,0.1365292355285367,table
+20261026,econ_fills_valued,,life_status,flag,na_not_book,855081.0,1742982.0,0.49058510070671985,table
+20261026,econ_fills_valued,,life_status,flag,na_taker,871491.0,1742982.0,0.5,table
+20261026,econ_fills_valued,,life_status,flag,ok,12658.0,1742982.0,0.007262266621227299,table
+20261026,econ_fills_valued,,life_status,flag,orders_status,3752.0,1742982.0,0.002152632672052838,table
+20261026,econ_fills_valued,,life_status,status,na_not_book,855081.0,1742982.0,0.49058510070671985,table
+20261026,econ_fills_valued,,life_status,status,na_taker,871491.0,1742982.0,0.5,table
+20261026,econ_fills_valued,,life_status,status,ok,12658.0,1742982.0,0.007262266621227299,table
+20261026,econ_fills_valued,,life_status,status,orders_status,3752.0,1742982.0,0.002152632672052838,table
+20261026,econ_fills_valued,,src_status,flag,conflict,774.0,1742982.0,0.0004440665480194288,table
+20261026,econ_fills_valued,,src_status,flag,off_grid,302.0,1742982.0,0.00017326627584220606,table
+20261026,econ_fills_valued,,src_status,flag,ok,1741906.0,1742982.0,0.9993826671761383,table
+20261026,econ_fills_valued,,src_status,status,conflict,774.0,1742982.0,0.0004440665480194288,table
+20261026,econ_fills_valued,,src_status,status,off_grid,302.0,1742982.0,0.00017326627584220606,table
+20261026,econ_fills_valued,,src_status,status,ok,1741906.0,1742982.0,0.9993826671761383,table
+20261026,econ_fills_valued,,st_10s,flag,beyond_end,37470.0,1742982.0,0.021497640251018083,table
+20261026,econ_fills_valued,,st_10s,flag,crossed,550.0,1742982.0,0.00031555116461328916,table
+20261026,econ_fills_valued,,st_10s,flag,no_frame,6970.0,1742982.0,0.003998893849735683,table
+20261026,econ_fills_valued,,st_10s,flag,ok,1646458.0,1742982.0,0.944621344339758,table
+20261026,econ_fills_valued,,st_10s,flag,one_sided,41490.0,1742982.0,0.023804032399646124,table
+20261026,econ_fills_valued,,st_10s,flag,stale,10044.0,1742982.0,0.005762537995228866,table
+20261026,econ_fills_valued,,st_10s,status,beyond_end,37470.0,1742982.0,0.021497640251018083,table
+20261026,econ_fills_valued,,st_10s,status,crossed,550.0,1742982.0,0.00031555116461328916,table
+20261026,econ_fills_valued,,st_10s,status,no_frame,6970.0,1742982.0,0.003998893849735683,table
+20261026,econ_fills_valued,,st_10s,status,ok,1646458.0,1742982.0,0.944621344339758,table
+20261026,econ_fills_valued,,st_10s,status,one_sided,41490.0,1742982.0,0.023804032399646124,table
+20261026,econ_fills_valued,,st_10s,status,stale,10044.0,1742982.0,0.005762537995228866,table
+20261026,econ_fills_valued,,st_1s,flag,beyond_end,12254.0,1742982.0,0.007030479947584083,table
+20261026,econ_fills_valued,,st_1s,flag,crossed,318.0,1742982.0,0.00018244594608550174,table
+20261026,econ_fills_valued,,st_1s,flag,no_frame,8244.0,1742982.0,0.004729825092858101,table
+20261026,econ_fills_valued,,st_1s,flag,ok,1705060.0,1742982.0,0.9782430340646088,table
+20261026,econ_fills_valued,,st_1s,flag,one_sided,16812.0,1742982.0,0.009645538508142941,table
+20261026,econ_fills_valued,,st_1s,flag,stale,294.0,1742982.0,0.00016867644072055823,table
+20261026,econ_fills_valued,,st_1s,status,beyond_end,12254.0,1742982.0,0.007030479947584083,table
+20261026,econ_fills_valued,,st_1s,status,crossed,318.0,1742982.0,0.00018244594608550174,table
+20261026,econ_fills_valued,,st_1s,status,no_frame,8244.0,1742982.0,0.004729825092858101,table
+20261026,econ_fills_valued,,st_1s,status,ok,1705060.0,1742982.0,0.9782430340646088,table
+20261026,econ_fills_valued,,st_1s,status,one_sided,16812.0,1742982.0,0.009645538508142941,table
+20261026,econ_fills_valued,,st_1s,status,stale,294.0,1742982.0,0.00016867644072055823,table
+20261026,econ_fills_valued,,st_60s,flag,beyond_end,241124.0,1742982.0,0.1383399254840268,table
+20261026,econ_fills_valued,,st_60s,flag,crossed,218.0,1742982.0,0.00012507300706490372,table
+20261026,econ_fills_valued,,st_60s,flag,no_frame,3984.0,1742982.0,0.0022857378905806257,table
+20261026,econ_fills_valued,,st_60s,flag,ok,1368172.0,1742982.0,0.7849604872568965,table
+20261026,econ_fills_valued,,st_60s,flag,one_sided,122466.0,1742982.0,0.0702623435009656,table
+20261026,econ_fills_valued,,st_60s,flag,stale,7018.0,1742982.0,0.00402643286046557,table
+20261026,econ_fills_valued,,st_60s,status,beyond_end,241124.0,1742982.0,0.1383399254840268,table
+20261026,econ_fills_valued,,st_60s,status,crossed,218.0,1742982.0,0.00012507300706490372,table
+20261026,econ_fills_valued,,st_60s,status,no_frame,3984.0,1742982.0,0.0022857378905806257,table
+20261026,econ_fills_valued,,st_60s,status,ok,1368172.0,1742982.0,0.7849604872568965,table
+20261026,econ_fills_valued,,st_60s,status,one_sided,122466.0,1742982.0,0.0702623435009656,table
+20261026,econ_fills_valued,,st_60s,status,stale,7018.0,1742982.0,0.00402643286046557,table
+20261026,econ_fills_valued,,st_end,flag,after_end,7410.0,1742982.0,0.004251334781426314,table
+20261026,econ_fills_valued,,st_end,flag,ok,452096.0,1742982.0,0.25938076239456287,table
+20261026,econ_fills_valued,,st_end,flag,one_sided,1283476.0,1742982.0,0.7363679028240108,table
+20261026,econ_fills_valued,,st_end,status,after_end,7410.0,1742982.0,0.004251334781426314,table
+20261026,econ_fills_valued,,st_end,status,ok,452096.0,1742982.0,0.25938076239456287,table
+20261026,econ_fills_valued,,st_end,status,one_sided,1283476.0,1742982.0,0.7363679028240108,table
+20261026,econ_fills_valued,,st_res,flag,ok,1737170.0,1742982.0,0.9966654847841229,table
+20261026,econ_fills_valued,,st_res,flag,tie,5812.0,1742982.0,0.003334515215877158,table
+20261026,econ_fills_valued,,st_res,status,ok,1737170.0,1742982.0,0.9966654847841229,table
+20261026,econ_fills_valued,,st_res,status,tie,5812.0,1742982.0,0.003334515215877158,table
+20261026,econ_fills_valued,,st_spr,flag,crossed,390.0,1742982.0,0.00022375446218033234,table
+20261026,econ_fills_valued,,st_spr,flag,no_frame,8372.0,1742982.0,0.0048032624548044675,table
+20261026,econ_fills_valued,,st_spr,flag,ok,1719808.0,1742982.0,0.9867043951113667,table
+20261026,econ_fills_valued,,st_spr,flag,one_sided,13540.0,1742982.0,0.007768295943388973,table
+20261026,econ_fills_valued,,st_spr,flag,stale,872.0,1742982.0,0.0005002920282596149,table
+20261026,econ_fills_valued,,st_spr,status,crossed,390.0,1742982.0,0.00022375446218033234,table
+20261026,econ_fills_valued,,st_spr,status,no_frame,8372.0,1742982.0,0.0048032624548044675,table
+20261026,econ_fills_valued,,st_spr,status,ok,1719808.0,1742982.0,0.9867043951113667,table
+20261026,econ_fills_valued,,st_spr,status,one_sided,13540.0,1742982.0,0.007768295943388973,table
+20261026,econ_fills_valued,,st_spr,status,stale,872.0,1742982.0,0.0005002920282596149,table
+20261026,econ_fills_valued,,status,flag,ok,1741906.0,1742982.0,0.9993826671761383,table
+20261026,econ_fills_valued,,status,flag,src_status,1076.0,1742982.0,0.0006173328238616348,table
+20261026,econ_fills_valued,,status,status,ok,1741906.0,1742982.0,0.9993826671761383,table
+20261026,econ_fills_valued,,status,status,src_status,1076.0,1742982.0,0.0006173328238616348,table
+20261026,econ_fills_valued,,t_status,flag,hi_fill_status,376.0,1742982.0,0.0002157222507174486,table
+20261026,econ_fills_valued,,t_status,flag,hi_lo_unbounded,194.0,1742982.0,0.00011130350169996018,table
+20261026,econ_fills_valued,,t_status,flag,hi_no_lifecycle,1710162.0,1742982.0,0.9811702014134397,table
+20261026,econ_fills_valued,,t_status,flag,lo,32250.0,1742982.0,0.018502772834142867,table
+20261026,econ_fills_valued,,t_status,status,hi_fill_status,376.0,1742982.0,0.0002157222507174486,table
+20261026,econ_fills_valued,,t_status,status,hi_lo_unbounded,194.0,1742982.0,0.00011130350169996018,table
+20261026,econ_fills_valued,,t_status,status,hi_no_lifecycle,1710162.0,1742982.0,0.9811702014134397,table
+20261026,econ_fills_valued,,t_status,status,lo,32250.0,1742982.0,0.018502772834142867,table
+20261026,econ_maker_day,,status,flag,ok,10194.0,10194.0,1.0,table
+20261026,econ_maker_day,,status,status,ok,10194.0,10194.0,1.0,table
+20261026,econ_maker_market,,end_status,flag,ok,56490.0,231968.0,0.24352496896123604,table
+20261026,econ_maker_market,,end_status,flag,one_sided,175478.0,231968.0,0.756475031038764,table
+20261026,econ_maker_market,,end_status,status,ok,56490.0,231968.0,0.24352496896123604,table
+20261026,econ_maker_market,,end_status,status,one_sided,175478.0,231968.0,0.756475031038764,table
+20261026,econ_maker_market,,fifo_status,flag,end_unavailable,175478.0,231968.0,0.756475031038764,table
+20261026,econ_maker_market,,fifo_status,flag,ok,56490.0,231968.0,0.24352496896123604,table
+20261026,econ_maker_market,,fifo_status,status,end_unavailable,175478.0,231968.0,0.756475031038764,table
+20261026,econ_maker_market,,fifo_status,status,ok,56490.0,231968.0,0.24352496896123604,table
+20261026,econ_maker_market,,res_status,flag,ok,231241.0,231968.0,0.9968659470271761,table
+20261026,econ_maker_market,,res_status,flag,tie,727.0,231968.0,0.0031340529728238376,table
+20261026,econ_maker_market,,res_status,status,ok,231241.0,231968.0,0.9968659470271761,table
+20261026,econ_maker_market,,res_status,status,tie,727.0,231968.0,0.0031340529728238376,table
+20261026,econ_maker_market,,rew_status,flag,not_book,227796.0,231968.0,0.9820147606566423,table
+20261026,econ_maker_market,,rew_status,flag,ok,4172.0,231968.0,0.017985239343357703,table
+20261026,econ_maker_market,,rew_status,status,not_book,227796.0,231968.0,0.9820147606566423,table
+20261026,econ_maker_market,,rew_status,status,ok,4172.0,231968.0,0.017985239343357703,table
+20261026,econ_maker_market,,status,flag,all_rows_excluded,50.0,231968.0,0.00021554697199613739,table
+20261026,econ_maker_market,,status,flag,ok,231918.0,231968.0,0.9997844530280039,table
+20261026,econ_maker_market,,status,status,all_rows_excluded,50.0,231968.0,0.00021554697199613739,table
+20261026,econ_maker_market,,status,status,ok,231918.0,231968.0,0.9997844530280039,table
+20261026,econ_segments,,status,flag,ok,762.0,762.0,1.0,table
+20261026,econ_segments,,status,status,ok,762.0,762.0,1.0,table
+20261026,frames,,status,flag,gap,361.0,31735.0,0.011375452969907043,extract_20261026.json
+20261026,frames,,status,flag,new_conn,1.0,31735.0,3.151095005514416e-05,extract_20261026.json
+20261026,frames,,status,flag,ok,31373.0,31735.0,0.9885930360800378,extract_20261026.json
+20261026,frames,,status,status,gap,361.0,31735.0,0.011375452969907043,extract_20261026.json
+20261026,frames,,status,status,new_conn,1.0,31735.0,3.151095005514416e-05,extract_20261026.json
+20261026,frames,,status,status,ok,31373.0,31735.0,0.9885930360800378,extract_20261026.json
+20261026,legs,,status,flag,conflict,387.0,871491.0,0.0004440665480194288,table
+20261026,legs,,status,flag,off_grid,101.0,871491.0,0.00011589333682160802,table
+20261026,legs,,status,flag,ok,871003.0,871491.0,0.999440040115159,table
+20261026,legs,,status,status,conflict,387.0,871491.0,0.0004440665480194288,table
+20261026,legs,,status,status,off_grid,101.0,871491.0,0.00011589333682160802,table
+20261026,legs,,status,status,ok,871003.0,871491.0,0.999440040115159,table
+20261026,levels,,status,flag,ok,2988851.0,2988851.0,1.0,extract_20261026.json
+20261026,levels,,status,status,ok,2988851.0,2988851.0,1.0,extract_20261026.json
+20261026,life_fills,,status,flag,capacity_contradiction,2.0,16410.0,0.0001218769043266301,table
+20261026,life_fills,,status,flag,fill_lo_unbounded,97.0,16410.0,0.00591102985984156,table
+20261026,life_fills,,status,flag,leg_off_grid,3.0,16410.0,0.00018281535648994517,table
+20261026,life_fills,,status,flag,ok,16123.0,16410.0,0.9825106642291286,table
+20261026,life_fills,,status,flag,subcent_price,3.0,16410.0,0.00018281535648994517,table
+20261026,life_fills,,status,flag,window_gap,187.0,16410.0,0.011395490554539915,table
+20261026,life_fills,,status,status,capacity_contradiction,2.0,16410.0,0.0001218769043266301,table
+20261026,life_fills,,status,status,fill_lo_unbounded,95.0,16410.0,0.00578915295551493,table
+20261026,life_fills,,status,status,fill_lo_unbounded+leg_off_grid+subcent_price,2.0,16410.0,0.0001218769043266301,table
+20261026,life_fills,,status,status,leg_off_grid+subcent_price,1.0,16410.0,6.093845216331505e-05,table
+20261026,life_fills,,status,status,ok,16123.0,16410.0,0.9825106642291286,table
+20261026,life_fills,,status,status,window_gap,187.0,16410.0,0.011395490554539915,table
+20261026,life_inputs,,conn,count,,6.0,,,life/<day>_<mid>.json inputs
+20261026,life_inputs,,conn_switches,count,,1.0,,,life/<day>_<mid>.json inputs
+20261026,life_inputs,,fills_after_last_frame,count,,0.0,,,life/<day>_<mid>.json inputs
+20261026,life_inputs,,fills_before_first_frame,count,,92.0,,,life/<day>_<mid>.json inputs
+20261026,life_inputs,,frame_gaps,count,,361.0,,,life/<day>_<mid>.json inputs
+20261026,life_inputs,,frames,count,,31735.0,,,life/<day>_<mid>.json inputs
+20261026,life_inputs,,frames_usable,count,,31735.0,,,life/<day>_<mid>.json inputs
+20261026,life_inputs,,legs,count,,16410.0,,,life/<day>_<mid>.json inputs
+20261026,life_inputs,,records,count,,11439.0,,,life/<day>_<mid>.json inputs
+20261026,life_inputs,,records_with_legs,count,,11439.0,,,life/<day>_<mid>.json inputs
+20261026,life_inputs,,records_without_legs,count,,0.0,,,life/<day>_<mid>.json inputs
+20261026,life_inputs,,subcent_legs,count,,3.0,,,life/<day>_<mid>.json inputs
+20261026,life_inputs,,unknown_cells,count,,0.0,,,life/<day>_<mid>.json inputs
+20261026,life_inputs,,unplaceable_legs,count,,0.0,,,life/<day>_<mid>.json inputs
+20261026,life_orders,S_FIFO,status,flag,ahead_hi_clipped,2.0,9858.0,0.0002028809089064719,table
+20261026,life_orders,S_FIFO,status,flag,ahead_hi_negative,2250.0,9858.0,0.2282410225197809,table
+20261026,life_orders,S_FIFO,status,flag,capacity_bounds_void,24.0,9858.0,0.002434570906877663,table
+20261026,life_orders,S_FIFO,status,flag,capacity_contradiction,1.0,9858.0,0.00010144045445323595,table
+20261026,life_orders,S_FIFO,status,flag,clock_capacity_conflict,23.0,9858.0,0.002333130452424427,table
+20261026,life_orders,S_FIFO,status,flag,fifo_front_conflict,1.0,9858.0,0.00010144045445323595,table
+20261026,life_orders,S_FIFO,status,flag,fifo_time_violation,2.0,9858.0,0.0002028809089064719,table
+20261026,life_orders,S_FIFO,status,flag,fill_order_tie,11.0,9858.0,0.0011158449989855954,table
+20261026,life_orders,S_FIFO,status,flag,leg_off_grid,2.0,9858.0,0.0002028809089064719,table
+20261026,life_orders,S_FIFO,status,flag,ok,7563.0,9858.0,0.7671941570298235,table
+20261026,life_orders,S_FIFO,status,flag,queue_contradiction,10.0,9858.0,0.0010144045445323595,table
+20261026,life_orders,S_FIFO,status,flag,subcent_price,2.0,9858.0,0.0002028809089064719,table
+20261026,life_orders,S_FIFO,status,status,ahead_hi_clipped,2.0,9858.0,0.0002028809089064719,table
+20261026,life_orders,S_FIFO,status,status,ahead_hi_negative,2245.0,9858.0,0.2277338202475147,table
+20261026,life_orders,S_FIFO,status,status,ahead_hi_negative+capacity_bounds_void+clock_capacity_conflict,2.0,9858.0,0.0002028809089064719,table
+20261026,life_orders,S_FIFO,status,status,ahead_hi_negative+fill_order_tie,3.0,9858.0,0.00030432136335970786,table
+20261026,life_orders,S_FIFO,status,status,capacity_bounds_void+capacity_contradiction,1.0,9858.0,0.00010144045445323595,table
+20261026,life_orders,S_FIFO,status,status,capacity_bounds_void+clock_capacity_conflict,19.0,9858.0,0.001927368634611483,table
+20261026,life_orders,S_FIFO,status,status,capacity_bounds_void+clock_capacity_conflict+fifo_time_violation,2.0,9858.0,0.0002028809089064719,table
+20261026,life_orders,S_FIFO,status,status,fifo_front_conflict,1.0,9858.0,0.00010144045445323595,table
+20261026,life_orders,S_FIFO,status,status,fill_order_tie,8.0,9858.0,0.0008115236356258876,table
+20261026,life_orders,S_FIFO,status,status,leg_off_grid+subcent_price,2.0,9858.0,0.0002028809089064719,table
+20261026,life_orders,S_FIFO,status,status,ok,7563.0,9858.0,0.7671941570298235,table
+20261026,life_orders,S_FIFO,status,status,queue_contradiction,10.0,9858.0,0.0010144045445323595,table
+20261026,life_orders,S_FIFO_LO,status,flag,ahead_hi_clipped,2.0,9858.0,0.0002028809089064719,table
+20261026,life_orders,S_FIFO_LO,status,flag,ahead_hi_negative,2251.0,9858.0,0.22834246297423413,table
+20261026,life_orders,S_FIFO_LO,status,flag,capacity_bounds_void,442.0,9858.0,0.04483668086833029,table
+20261026,life_orders,S_FIFO_LO,status,flag,capacity_contradiction,1.0,9858.0,0.00010144045445323595,table
+20261026,life_orders,S_FIFO_LO,status,flag,clock_capacity_conflict,441.0,9858.0,0.04473524041387705,table
+20261026,life_orders,S_FIFO_LO,status,flag,fifo_front_conflict,1.0,9858.0,0.00010144045445323595,table
+20261026,life_orders,S_FIFO_LO,status,flag,fifo_time_violation,2.0,9858.0,0.0002028809089064719,table
+20261026,life_orders,S_FIFO_LO,status,flag,fill_order_tie,11.0,9858.0,0.0011158449989855954,table
+20261026,life_orders,S_FIFO_LO,status,flag,leg_off_grid,2.0,9858.0,0.0002028809089064719,table
+20261026,life_orders,S_FIFO_LO,status,flag,ok,7199.0,9858.0,0.7302698316088456,table
+20261026,life_orders,S_FIFO_LO,status,flag,post_after_first_fill,646.0,9858.0,0.06553053357679042,table
+20261026,life_orders,S_FIFO_LO,status,flag,queue_contradiction,10.0,9858.0,0.0010144045445323595,table
+20261026,life_orders,S_FIFO_LO,status,flag,subcent_price,2.0,9858.0,0.0002028809089064719,table
+20261026,life_orders,S_FIFO_LO,status,status,ahead_hi_clipped,2.0,9858.0,0.0002028809089064719,table
+20261026,life_orders,S_FIFO_LO,status,status,ahead_hi_negative,1793.0,9858.0,0.18188273483465206,table
+20261026,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+capacity_bounds_void+clock_capacity_conflict,106.0,9858.0,0.010752688172043012,table
+20261026,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+capacity_bounds_void+clock_capacity_conflict+fill_order_tie,2.0,9858.0,0.0002028809089064719,table
+20261026,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+capacity_bounds_void+clock_capacity_conflict+post_after_first_fill,155.0,9858.0,0.015723270440251572,table
+20261026,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+fill_order_tie,1.0,9858.0,0.00010144045445323595,table
+20261026,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+post_after_first_fill,194.0,9858.0,0.019679448163927773,table
+20261026,life_orders,S_FIFO_LO,status,status,capacity_bounds_void+capacity_contradiction,1.0,9858.0,0.00010144045445323595,table
+20261026,life_orders,S_FIFO_LO,status,status,capacity_bounds_void+clock_capacity_conflict,88.0,9858.0,0.008926759991884763,table
+20261026,life_orders,S_FIFO_LO,status,status,capacity_bounds_void+clock_capacity_conflict+fifo_front_conflict+post_after_first_fill,1.0,9858.0,0.00010144045445323595,table
+20261026,life_orders,S_FIFO_LO,status,status,capacity_bounds_void+clock_capacity_conflict+fill_order_tie,1.0,9858.0,0.00010144045445323595,table
+20261026,life_orders,S_FIFO_LO,status,status,capacity_bounds_void+clock_capacity_conflict+post_after_first_fill,87.0,9858.0,0.008825319537431528,table
+20261026,life_orders,S_FIFO_LO,status,status,capacity_bounds_void+clock_capacity_conflict+post_after_first_fill+queue_contradiction,1.0,9858.0,0.00010144045445323595,table
+20261026,life_orders,S_FIFO_LO,status,status,fifo_time_violation,2.0,9858.0,0.0002028809089064719,table
+20261026,life_orders,S_FIFO_LO,status,status,fill_order_tie,6.0,9858.0,0.0006086427267194157,table
+20261026,life_orders,S_FIFO_LO,status,status,fill_order_tie+post_after_first_fill,1.0,9858.0,0.00010144045445323595,table
+20261026,life_orders,S_FIFO_LO,status,status,leg_off_grid+subcent_price,2.0,9858.0,0.0002028809089064719,table
+20261026,life_orders,S_FIFO_LO,status,status,ok,7199.0,9858.0,0.7302698316088456,table
+20261026,life_orders,S_FIFO_LO,status,status,post_after_first_fill,207.0,9858.0,0.020998174071819843,table
+20261026,life_orders,S_FIFO_LO,status,status,queue_contradiction,9.0,9858.0,0.0009129640900791236,table
+20261026,life_orders,S_NOPRIO,status,flag,capacity_bounds_void,24.0,9858.0,0.002434570906877663,table
+20261026,life_orders,S_NOPRIO,status,flag,capacity_contradiction,1.0,9858.0,0.00010144045445323595,table
+20261026,life_orders,S_NOPRIO,status,flag,clock_capacity_conflict,23.0,9858.0,0.002333130452424427,table
+20261026,life_orders,S_NOPRIO,status,flag,leg_off_grid,2.0,9858.0,0.0002028809089064719,table
+20261026,life_orders,S_NOPRIO,status,flag,ok,9832.0,9858.0,0.9973625481842159,table
+20261026,life_orders,S_NOPRIO,status,flag,subcent_price,2.0,9858.0,0.0002028809089064719,table
+20261026,life_orders,S_NOPRIO,status,status,capacity_bounds_void+capacity_contradiction,1.0,9858.0,0.00010144045445323595,table
+20261026,life_orders,S_NOPRIO,status,status,capacity_bounds_void+clock_capacity_conflict,23.0,9858.0,0.002333130452424427,table
+20261026,life_orders,S_NOPRIO,status,status,leg_off_grid+subcent_price,2.0,9858.0,0.0002028809089064719,table
+20261026,life_orders,S_NOPRIO,status,status,ok,9832.0,9858.0,0.9973625481842159,table
+20261026,life_x_links,,status,flag,invalid_order,1.0,10294.0,9.714396735962697e-05,table
+20261026,life_x_links,,status,flag,ok,10293.0,10294.0,0.9999028560326404,table
+20261026,life_x_links,,status,status,invalid_order,1.0,10294.0,9.714396735962697e-05,table
+20261026,life_x_links,,status,status,ok,10293.0,10294.0,0.9999028560326404,table
+20261026,markets,,status,flag,fills_outside_ws,20.0,288.0,0.06944444444444445,table
+20261026,markets,,status,flag,ok,249.0,288.0,0.8645833333333334,table
+20261026,markets,,status,flag,poll_incomplete,20.0,288.0,0.06944444444444445,table
+20261026,markets,,status,status,fills_outside_ws,19.0,288.0,0.06597222222222222,table
+20261026,markets,,status,status,fills_outside_ws+poll_incomplete,1.0,288.0,0.003472222222222222,table
+20261026,markets,,status,status,ok,249.0,288.0,0.8645833333333334,table
+20261026,markets,,status,status,poll_incomplete,19.0,288.0,0.06597222222222222,table
+20261026,records,,status,flag,conflict,20.0,605035.0,3.305593891262489e-05,table
+20261026,records,,status,flag,off_grid,96.0,605035.0,0.00015866850678059947,table
+20261026,records,,status,flag,ok,604919.0,605035.0,0.9998082755543067,table
+20261026,records,,status,status,conflict,20.0,605035.0,3.305593891262489e-05,table
+20261026,records,,status,status,off_grid,96.0,605035.0,0.00015866850678059947,table
+20261026,records,,status,status,ok,604919.0,605035.0,0.9998082755543067,table
+20261026,tob,,status,flag,gap,21822.0,1711537.0,0.012749943471861841,table
+20261026,tob,,status,flag,new_conn,40.0,1711537.0,2.33708064739471e-05,table
+20261026,tob,,status,flag,ok,1689674.0,1711537.0,0.9872261014515024,table
+20261026,tob,,status,flag,same_ms_changed,11.0,1711537.0,6.426971780335453e-06,table
+20261026,tob,,status,status,gap,21812.0,1711537.0,0.012744100770243355,table
+20261026,tob,,status,status,new_conn,30.0,1711537.0,1.7528104855460325e-05,table
+20261026,tob,,status,status,new_conn+gap,10.0,1711537.0,5.842701618486775e-06,table
+20261026,tob,,status,status,ok,1689674.0,1711537.0,0.9872261014515024,table
+20261026,tob,,status,status,same_ms_changed,11.0,1711537.0,6.426971780335453e-06,table
+20261027,econ_diagnostics,,censored_legs,count,,1980.0,,,econ/econ.json diagnostics
+20261027,econ_diagnostics,,legs,count,,872523.0,,,econ/econ.json diagnostics
+20261027,econ_diagnostics,,legs_market_not_in_registry,count,,0.0,,,econ/econ.json diagnostics
+20261027,econ_diagnostics,,legs_recv_before_settle,count,,0.0,,,econ/econ.json diagnostics
+20261027,econ_diagnostics,,lf_hi_mismatch,count,,0.0,,,econ/econ.json diagnostics
+20261027,econ_diagnostics,,lf_matched,count,,8620.0,,,econ/econ.json diagnostics
+20261027,econ_diagnostics,,lf_rows,count,,8620.0,,,econ/econ.json diagnostics
+20261027,econ_diagnostics,,lf_status_not_ok,count,,80.0,,,econ/econ.json diagnostics
+20261027,econ_diagnostics,,markets_with_legs,count,,288.0,,,econ/econ.json diagnostics
+20261027,econ_diagnostics,,pre_legs,count,,47986.0,,,econ/econ.json diagnostics
+20261027,econ_diagnostics,,pre_legs_before_300s,count,,2232.0,,,econ/econ.json diagnostics
+20261027,econ_diagnostics,,records,count,,593578.0,,,econ/econ.json diagnostics
+20261027,econ_diagnostics,,records_in,count,,594925.0,,,econ/econ.json diagnostics
+20261027,econ_diagnostics,,records_without_legs,count,,0.0,,,econ/econ.json diagnostics
+20261027,econ_diagnostics,,registry_markets,count,,288.0,,,econ/econ.json diagnostics
+20261027,econ_diagnostics,,registry_markets_without_legs,count,,0.0,,,econ/econ.json diagnostics
+20261027,econ_diagnostics,,rewards_presence_rows,count,,7.0,,,econ/econ.json diagnostics
+20261027,econ_diagnostics,,t_rel_min_s,count,,-85064.9509999752,,,econ/econ.json diagnostics
+20261027,econ_diagnostics,,tk_px_gap_max,count,,0.03435100000000002,,,econ/econ.json diagnostics
+20261027,econ_diagnostics,,tk_px_gap_n,count,,3899.0,,,econ/econ.json diagnostics
+20261027,econ_diagnostics,,tk_px_gap_usd,count,,313.34966422921025,,,econ/econ.json diagnostics
+20261027,econ_fills_valued,,kind,flag,merge,5830.0,1745046.0,0.0033408861428294726,table
+20261027,econ_fills_valued,,kind,flag,mint,1494028.0,1745046.0,0.8561539351971238,table
+20261027,econ_fills_valued,,kind,flag,regular,245188.0,1745046.0,0.14050517866004678,table
+20261027,econ_fills_valued,,kind,status,merge,5830.0,1745046.0,0.0033408861428294726,table
+20261027,econ_fills_valued,,kind,status,mint,1494028.0,1745046.0,0.8561539351971238,table
+20261027,econ_fills_valued,,kind,status,regular,245188.0,1745046.0,0.14050517866004678,table
+20261027,econ_fills_valued,,life_status,flag,na_not_book,863903.0,1745046.0,0.4950603021353019,table
+20261027,econ_fills_valued,,life_status,flag,na_taker,872523.0,1745046.0,0.5,table
+20261027,econ_fills_valued,,life_status,flag,ok,6557.0,1745046.0,0.0037574940717895115,table
+20261027,econ_fills_valued,,life_status,flag,orders_status,2063.0,1745046.0,0.001182203792908611,table
+20261027,econ_fills_valued,,life_status,status,na_not_book,863903.0,1745046.0,0.4950603021353019,table
+20261027,econ_fills_valued,,life_status,status,na_taker,872523.0,1745046.0,0.5,table
+20261027,econ_fills_valued,,life_status,status,ok,6557.0,1745046.0,0.0037574940717895115,table
+20261027,econ_fills_valued,,life_status,status,orders_status,2063.0,1745046.0,0.001182203792908611,table
+20261027,econ_fills_valued,,src_status,flag,boundary_censored,3960.0,1745046.0,0.002269281153620019,table
+20261027,econ_fills_valued,,src_status,flag,conflict,550.0,1745046.0,0.00031517793800278046,table
+20261027,econ_fills_valued,,src_status,flag,off_grid,316.0,1745046.0,0.00018108405165250658,table
+20261027,econ_fills_valued,,src_status,flag,ok,1740220.0,1745046.0,0.9972344568567247,table
+20261027,econ_fills_valued,,src_status,status,boundary_censored,3960.0,1745046.0,0.002269281153620019,table
+20261027,econ_fills_valued,,src_status,status,conflict,550.0,1745046.0,0.00031517793800278046,table
+20261027,econ_fills_valued,,src_status,status,off_grid,316.0,1745046.0,0.00018108405165250658,table
+20261027,econ_fills_valued,,src_status,status,ok,1740220.0,1745046.0,0.9972344568567247,table
+20261027,econ_fills_valued,,st_10s,flag,beyond_end,28262.0,1745046.0,0.016195561606971966,table
+20261027,econ_fills_valued,,st_10s,flag,crossed,458.0,1745046.0,0.0002624572647368608,table
+20261027,econ_fills_valued,,st_10s,flag,no_frame,6174.0,1745046.0,0.0035380156167803024,table
+20261027,econ_fills_valued,,st_10s,flag,ok,1654602.0,1745046.0,0.94817099377323,table
+20261027,econ_fills_valued,,st_10s,flag,one_sided,46250.0,1745046.0,0.026503599332051993,table
+20261027,econ_fills_valued,,st_10s,flag,stale,9300.0,1745046.0,0.005329372406228833,table
+20261027,econ_fills_valued,,st_10s,status,beyond_end,28262.0,1745046.0,0.016195561606971966,table
+20261027,econ_fills_valued,,st_10s,status,crossed,458.0,1745046.0,0.0002624572647368608,table
+20261027,econ_fills_valued,,st_10s,status,no_frame,6174.0,1745046.0,0.0035380156167803024,table
+20261027,econ_fills_valued,,st_10s,status,ok,1654602.0,1745046.0,0.94817099377323,table
+20261027,econ_fills_valued,,st_10s,status,one_sided,46250.0,1745046.0,0.026503599332051993,table
+20261027,econ_fills_valued,,st_10s,status,stale,9300.0,1745046.0,0.005329372406228833,table
+20261027,econ_fills_valued,,st_1s,flag,beyond_end,9136.0,1745046.0,0.005235392075624367,table
+20261027,econ_fills_valued,,st_1s,flag,crossed,314.0,1745046.0,0.0001799379500597692,table
+20261027,econ_fills_valued,,st_1s,flag,no_frame,7270.0,1745046.0,0.004166079289600388,table
+20261027,econ_fills_valued,,st_1s,flag,ok,1708554.0,1745046.0,0.9790882303389137,table
+20261027,econ_fills_valued,,st_1s,flag,one_sided,19572.0,1745046.0,0.011215750186528034,table
+20261027,econ_fills_valued,,st_1s,flag,stale,200.0,1745046.0,0.00011461015927373834,table
+20261027,econ_fills_valued,,st_1s,status,beyond_end,9136.0,1745046.0,0.005235392075624367,table
+20261027,econ_fills_valued,,st_1s,status,crossed,314.0,1745046.0,0.0001799379500597692,table
+20261027,econ_fills_valued,,st_1s,status,no_frame,7270.0,1745046.0,0.004166079289600388,table
+20261027,econ_fills_valued,,st_1s,status,ok,1708554.0,1745046.0,0.9790882303389137,table
+20261027,econ_fills_valued,,st_1s,status,one_sided,19572.0,1745046.0,0.011215750186528034,table
+20261027,econ_fills_valued,,st_1s,status,stale,200.0,1745046.0,0.00011461015927373834,table
+20261027,econ_fills_valued,,st_60s,flag,beyond_end,222052.0,1745046.0,0.12724707543526073,table
+20261027,econ_fills_valued,,st_60s,flag,crossed,280.0,1745046.0,0.0001604542229832337,table
+20261027,econ_fills_valued,,st_60s,flag,no_frame,3594.0,1745046.0,0.002059544562149078,table
+20261027,econ_fills_valued,,st_60s,flag,ok,1378890.0,1745046.0,0.7901740126048253,table
+20261027,econ_fills_valued,,st_60s,flag,one_sided,134284.0,1745046.0,0.0769515531395734,table
+20261027,econ_fills_valued,,st_60s,flag,stale,5946.0,1745046.0,0.0034073600352082407,table
+20261027,econ_fills_valued,,st_60s,status,beyond_end,222052.0,1745046.0,0.12724707543526073,table
+20261027,econ_fills_valued,,st_60s,status,crossed,280.0,1745046.0,0.0001604542229832337,table
+20261027,econ_fills_valued,,st_60s,status,no_frame,3594.0,1745046.0,0.002059544562149078,table
+20261027,econ_fills_valued,,st_60s,status,ok,1378890.0,1745046.0,0.7901740126048253,table
+20261027,econ_fills_valued,,st_60s,status,one_sided,134284.0,1745046.0,0.0769515531395734,table
+20261027,econ_fills_valued,,st_60s,status,stale,5946.0,1745046.0,0.0034073600352082407,table
+20261027,econ_fills_valued,,st_end,flag,after_end,5224.0,1745046.0,0.0029936173602300455,table
+20261027,econ_fills_valued,,st_end,flag,ok,347904.0,1745046.0,0.19936666425985333,table
+20261027,econ_fills_valued,,st_end,flag,one_sided,1391918.0,1745046.0,0.7976397183799167,table
+20261027,econ_fills_valued,,st_end,status,after_end,5224.0,1745046.0,0.0029936173602300455,table
+20261027,econ_fills_valued,,st_end,status,ok,347904.0,1745046.0,0.19936666425985333,table
+20261027,econ_fills_valued,,st_end,status,one_sided,1391918.0,1745046.0,0.7976397183799167,table
+20261027,econ_fills_valued,,st_res,flag,censored,3960.0,1745046.0,0.002269281153620019,table
+20261027,econ_fills_valued,,st_res,flag,ok,1741086.0,1745046.0,0.99773071884638,table
+20261027,econ_fills_valued,,st_res,status,censored,3960.0,1745046.0,0.002269281153620019,table
+20261027,econ_fills_valued,,st_res,status,ok,1741086.0,1745046.0,0.99773071884638,table
+20261027,econ_fills_valued,,st_spr,flag,crossed,364.0,1745046.0,0.0002085904898782038,table
+20261027,econ_fills_valued,,st_spr,flag,no_frame,7446.0,1745046.0,0.004266936229761278,table
+20261027,econ_fills_valued,,st_spr,flag,ok,1721508.0,1745046.0,0.9865115303550738,table
+20261027,econ_fills_valued,,st_spr,flag,one_sided,15360.0,1745046.0,0.008802060232223104,table
+20261027,econ_fills_valued,,st_spr,flag,stale,368.0,1745046.0,0.00021088269306367854,table
+20261027,econ_fills_valued,,st_spr,status,crossed,364.0,1745046.0,0.0002085904898782038,table
+20261027,econ_fills_valued,,st_spr,status,no_frame,7446.0,1745046.0,0.004266936229761278,table
+20261027,econ_fills_valued,,st_spr,status,ok,1721508.0,1745046.0,0.9865115303550738,table
+20261027,econ_fills_valued,,st_spr,status,one_sided,15360.0,1745046.0,0.008802060232223104,table
+20261027,econ_fills_valued,,st_spr,status,stale,368.0,1745046.0,0.00021088269306367854,table
+20261027,econ_fills_valued,,status,flag,boundary_censored,3960.0,1745046.0,0.002269281153620019,table
+20261027,econ_fills_valued,,status,flag,ok,1740220.0,1745046.0,0.9972344568567247,table
+20261027,econ_fills_valued,,status,flag,src_status,866.0,1745046.0,0.000496261989655287,table
+20261027,econ_fills_valued,,status,status,boundary_censored,3960.0,1745046.0,0.002269281153620019,table
+20261027,econ_fills_valued,,status,status,ok,1740220.0,1745046.0,0.9972344568567247,table
+20261027,econ_fills_valued,,status,status,src_status,866.0,1745046.0,0.000496261989655287,table
+20261027,econ_fills_valued,,t_status,flag,hi_fill_status,144.0,1745046.0,8.251931467709161e-05,table
+20261027,econ_fills_valued,,t_status,flag,hi_lo_unbounded,16.0,1745046.0,9.168812741899068e-06,table
+20261027,econ_fills_valued,,t_status,flag,hi_no_lifecycle,1727806.0,1745046.0,0.9901206042706038,table
+20261027,econ_fills_valued,,t_status,flag,lo,17080.0,1745046.0,0.009787707601977254,table
+20261027,econ_fills_valued,,t_status,status,hi_fill_status,144.0,1745046.0,8.251931467709161e-05,table
+20261027,econ_fills_valued,,t_status,status,hi_lo_unbounded,16.0,1745046.0,9.168812741899068e-06,table
+20261027,econ_fills_valued,,t_status,status,hi_no_lifecycle,1727806.0,1745046.0,0.9901206042706038,table
+20261027,econ_fills_valued,,t_status,status,lo,17080.0,1745046.0,0.009787707601977254,table
+20261027,econ_maker_day,,status,flag,all_rows_excluded,19.0,10173.0,0.0018676889806350143,table
+20261027,econ_maker_day,,status,flag,ok,10154.0,10173.0,0.998132311019365,table
+20261027,econ_maker_day,,status,status,all_rows_excluded,19.0,10173.0,0.0018676889806350143,table
+20261027,econ_maker_day,,status,status,ok,10154.0,10173.0,0.998132311019365,table
+20261027,econ_maker_market,,end_status,flag,ok,41071.0,225677.0,0.18199018951864834,table
+20261027,econ_maker_market,,end_status,flag,one_sided,184606.0,225677.0,0.8180098104813517,table
+20261027,econ_maker_market,,end_status,status,ok,41071.0,225677.0,0.18199018951864834,table
+20261027,econ_maker_market,,end_status,status,one_sided,184606.0,225677.0,0.8180098104813517,table
+20261027,econ_maker_market,,fifo_status,flag,censored,626.0,225677.0,0.002773875937734018,table
+20261027,econ_maker_market,,fifo_status,flag,end_unavailable,183980.0,225677.0,0.8152359345436176,table
+20261027,econ_maker_market,,fifo_status,flag,ok,41071.0,225677.0,0.18199018951864834,table
+20261027,econ_maker_market,,fifo_status,status,censored,626.0,225677.0,0.002773875937734018,table
+20261027,econ_maker_market,,fifo_status,status,end_unavailable,183980.0,225677.0,0.8152359345436176,table
+20261027,econ_maker_market,,fifo_status,status,ok,41071.0,225677.0,0.18199018951864834,table
+20261027,econ_maker_market,,res_status,flag,censored,626.0,225677.0,0.002773875937734018,table
+20261027,econ_maker_market,,res_status,flag,ok,225051.0,225677.0,0.997226124062266,table
+20261027,econ_maker_market,,res_status,status,censored,626.0,225677.0,0.002773875937734018,table
+20261027,econ_maker_market,,res_status,status,ok,225051.0,225677.0,0.997226124062266,table
+20261027,econ_maker_market,,rew_status,flag,not_book,223903.0,225677.0,0.9921392078058464,table
+20261027,econ_maker_market,,rew_status,flag,ok,1774.0,225677.0,0.007860792194153591,table
+20261027,econ_maker_market,,rew_status,status,not_book,223903.0,225677.0,0.9921392078058464,table
+20261027,econ_maker_market,,rew_status,status,ok,1774.0,225677.0,0.007860792194153591,table
+20261027,econ_maker_market,,status,flag,all_rows_excluded,676.0,225677.0,0.00299543152381501,table
+20261027,econ_maker_market,,status,flag,ok,225001.0,225677.0,0.997004568476185,table
+20261027,econ_maker_market,,status,status,all_rows_excluded,676.0,225677.0,0.00299543152381501,table
+20261027,econ_maker_market,,status,status,ok,225001.0,225677.0,0.997004568476185,table
+20261027,econ_segments,,status,flag,ok,759.0,759.0,1.0,table
+20261027,econ_segments,,status,status,ok,759.0,759.0,1.0,table
+20261027,frames,,status,flag,gap,150.0,12471.0,0.012027904738994467,extract_20261027.json
+20261027,frames,,status,flag,ok,12321.0,12471.0,0.9879720952610055,extract_20261027.json
+20261027,frames,,status,status,gap,150.0,12471.0,0.012027904738994467,extract_20261027.json
+20261027,frames,,status,status,ok,12321.0,12471.0,0.9879720952610055,extract_20261027.json
+20261027,legs,,status,flag,boundary_censored,1980.0,872523.0,0.002269281153620019,table
+20261027,legs,,status,flag,conflict,275.0,872523.0,0.00031517793800278046,table
+20261027,legs,,status,flag,off_grid,92.0,872523.0,0.00010544134653183927,table
+20261027,legs,,status,flag,ok,870176.0,872523.0,0.9973100995618454,table
+20261027,legs,,status,status,boundary_censored,1980.0,872523.0,0.002269281153620019,table
+20261027,legs,,status,status,conflict,275.0,872523.0,0.00031517793800278046,table
+20261027,legs,,status,status,off_grid,92.0,872523.0,0.00010544134653183927,table
+20261027,legs,,status,status,ok,870176.0,872523.0,0.9973100995618454,table
+20261027,levels,,status,flag,ok,1175791.0,1175791.0,1.0,extract_20261027.json
+20261027,levels,,status,status,ok,1175791.0,1175791.0,1.0,extract_20261027.json
+20261027,life_fills,,status,flag,fill_lo_unbounded,8.0,8620.0,0.0009280742459396752,table
+20261027,life_fills,,status,flag,ok,8540.0,8620.0,0.9907192575406032,table
+20261027,life_fills,,status,flag,window_gap,72.0,8620.0,0.008352668213457077,table
+20261027,life_fills,,status,status,fill_lo_unbounded,8.0,8620.0,0.0009280742459396752,table
+20261027,life_fills,,status,status,ok,8540.0,8620.0,0.9907192575406032,table
+20261027,life_fills,,status,status,window_gap,72.0,8620.0,0.008352668213457077,table
+20261027,life_inputs,,conn,count,,2.0,,,life/<day>_<mid>.json inputs
+20261027,life_inputs,,conn_switches,count,,0.0,,,life/<day>_<mid>.json inputs
+20261027,life_inputs,,fills_after_last_frame,count,,0.0,,,life/<day>_<mid>.json inputs
+20261027,life_inputs,,fills_before_first_frame,count,,6.0,,,life/<day>_<mid>.json inputs
+20261027,life_inputs,,frame_gaps,count,,150.0,,,life/<day>_<mid>.json inputs
+20261027,life_inputs,,frames,count,,12471.0,,,life/<day>_<mid>.json inputs
+20261027,life_inputs,,frames_usable,count,,12471.0,,,life/<day>_<mid>.json inputs
+20261027,life_inputs,,legs,count,,8620.0,,,life/<day>_<mid>.json inputs
+20261027,life_inputs,,records,count,,6421.0,,,life/<day>_<mid>.json inputs
+20261027,life_inputs,,records_with_legs,count,,6421.0,,,life/<day>_<mid>.json inputs
+20261027,life_inputs,,records_without_legs,count,,0.0,,,life/<day>_<mid>.json inputs
+20261027,life_inputs,,subcent_legs,count,,0.0,,,life/<day>_<mid>.json inputs
+20261027,life_inputs,,unknown_cells,count,,0.0,,,life/<day>_<mid>.json inputs
+20261027,life_inputs,,unplaceable_legs,count,,0.0,,,life/<day>_<mid>.json inputs
+20261027,life_orders,S_FIFO,status,flag,ahead_hi_negative,1154.0,4526.0,0.25497127706584183,table
+20261027,life_orders,S_FIFO,status,flag,capacity_bounds_void,12.0,4526.0,0.0026513477684489617,table
+20261027,life_orders,S_FIFO,status,flag,clock_capacity_conflict,12.0,4526.0,0.0026513477684489617,table
+20261027,life_orders,S_FIFO,status,flag,fifo_time_violation,2.0,4526.0,0.0004418912947414936,table
+20261027,life_orders,S_FIFO,status,flag,fill_order_tie,11.0,4526.0,0.0024304021210782146,table
+20261027,life_orders,S_FIFO,status,flag,ok,3342.0,4526.0,0.7384003535130358,table
+20261027,life_orders,S_FIFO,status,flag,queue_contradiction,10.0,4526.0,0.002209456473707468,table
+20261027,life_orders,S_FIFO,status,status,ahead_hi_negative,1151.0,4526.0,0.25430844012372955,table
+20261027,life_orders,S_FIFO,status,status,ahead_hi_negative+capacity_bounds_void+clock_capacity_conflict,1.0,4526.0,0.0002209456473707468,table
+20261027,life_orders,S_FIFO,status,status,ahead_hi_negative+fill_order_tie,2.0,4526.0,0.0004418912947414936,table
+20261027,life_orders,S_FIFO,status,status,capacity_bounds_void+clock_capacity_conflict,9.0,4526.0,0.001988510826336721,table
+20261027,life_orders,S_FIFO,status,status,capacity_bounds_void+clock_capacity_conflict+fifo_time_violation,2.0,4526.0,0.0004418912947414936,table
+20261027,life_orders,S_FIFO,status,status,fill_order_tie,9.0,4526.0,0.001988510826336721,table
+20261027,life_orders,S_FIFO,status,status,ok,3342.0,4526.0,0.7384003535130358,table
+20261027,life_orders,S_FIFO,status,status,queue_contradiction,10.0,4526.0,0.002209456473707468,table
+20261027,life_orders,S_FIFO_LO,status,flag,ahead_hi_negative,1156.0,4526.0,0.2554131683605833,table
+20261027,life_orders,S_FIFO_LO,status,flag,capacity_bounds_void,207.0,4526.0,0.045735749005744585,table
+20261027,life_orders,S_FIFO_LO,status,flag,clock_capacity_conflict,207.0,4526.0,0.045735749005744585,table
+20261027,life_orders,S_FIFO_LO,status,flag,fifo_time_violation,2.0,4526.0,0.0004418912947414936,table
+20261027,life_orders,S_FIFO_LO,status,flag,fill_order_tie,11.0,4526.0,0.0024304021210782146,table
+20261027,life_orders,S_FIFO_LO,status,flag,ok,3174.0,4526.0,0.7012814847547504,table
+20261027,life_orders,S_FIFO_LO,status,flag,post_after_first_fill,255.0,4526.0,0.056341140079540435,table
+20261027,life_orders,S_FIFO_LO,status,flag,queue_contradiction,9.0,4526.0,0.001988510826336721,table
+20261027,life_orders,S_FIFO_LO,status,status,ahead_hi_negative,984.0,4526.0,0.21741051701281486,table
+20261027,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+capacity_bounds_void+clock_capacity_conflict,46.0,4526.0,0.010163499779054353,table
+20261027,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+capacity_bounds_void+clock_capacity_conflict+fill_order_tie,1.0,4526.0,0.0002209456473707468,table
+20261027,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+capacity_bounds_void+clock_capacity_conflict+post_after_first_fill,62.0,4526.0,0.0136986301369863,table
+20261027,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+fill_order_tie,1.0,4526.0,0.0002209456473707468,table
+20261027,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+post_after_first_fill,62.0,4526.0,0.0136986301369863,table
+20261027,life_orders,S_FIFO_LO,status,status,capacity_bounds_void+clock_capacity_conflict,48.0,4526.0,0.010605391073795847,table
+20261027,life_orders,S_FIFO_LO,status,status,capacity_bounds_void+clock_capacity_conflict+post_after_first_fill,46.0,4526.0,0.010163499779054353,table
+20261027,life_orders,S_FIFO_LO,status,status,capacity_bounds_void+clock_capacity_conflict+post_after_first_fill+queue_contradiction,2.0,4526.0,0.0004418912947414936,table
+20261027,life_orders,S_FIFO_LO,status,status,capacity_bounds_void+clock_capacity_conflict+queue_contradiction,2.0,4526.0,0.0004418912947414936,table
+20261027,life_orders,S_FIFO_LO,status,status,fifo_time_violation,2.0,4526.0,0.0004418912947414936,table
+20261027,life_orders,S_FIFO_LO,status,status,fill_order_tie,8.0,4526.0,0.0017675651789659744,table
+20261027,life_orders,S_FIFO_LO,status,status,fill_order_tie+post_after_first_fill,1.0,4526.0,0.0002209456473707468,table
+20261027,life_orders,S_FIFO_LO,status,status,ok,3174.0,4526.0,0.7012814847547504,table
+20261027,life_orders,S_FIFO_LO,status,status,post_after_first_fill,82.0,4526.0,0.018117543084401236,table
+20261027,life_orders,S_FIFO_LO,status,status,queue_contradiction,5.0,4526.0,0.001104728236853734,table
+20261027,life_orders,S_NOPRIO,status,flag,capacity_bounds_void,12.0,4526.0,0.0026513477684489617,table
+20261027,life_orders,S_NOPRIO,status,flag,clock_capacity_conflict,12.0,4526.0,0.0026513477684489617,table
+20261027,life_orders,S_NOPRIO,status,flag,ok,4514.0,4526.0,0.997348652231551,table
+20261027,life_orders,S_NOPRIO,status,status,capacity_bounds_void+clock_capacity_conflict,12.0,4526.0,0.0026513477684489617,table
+20261027,life_orders,S_NOPRIO,status,status,ok,4514.0,4526.0,0.997348652231551,table
+20261027,life_x_links,,status,flag,ok,4881.0,4881.0,1.0,table
+20261027,life_x_links,,status,status,ok,4881.0,4881.0,1.0,table
+20261027,markets,,status,flag,boundary_censored,1.0,288.0,0.003472222222222222,table
+20261027,markets,,status,flag,fills_outside_ws,8.0,288.0,0.027777777777777776,table
+20261027,markets,,status,flag,ok,251.0,288.0,0.8715277777777778,table
+20261027,markets,,status,flag,outcome_sealed,1.0,288.0,0.003472222222222222,table
+20261027,markets,,status,flag,poll_incomplete,29.0,288.0,0.10069444444444445,table
+20261027,markets,,status,status,boundary_censored+outcome_sealed,1.0,288.0,0.003472222222222222,table
+20261027,markets,,status,status,fills_outside_ws,7.0,288.0,0.024305555555555556,table
+20261027,markets,,status,status,fills_outside_ws+poll_incomplete,1.0,288.0,0.003472222222222222,table
+20261027,markets,,status,status,ok,251.0,288.0,0.8715277777777778,table
+20261027,markets,,status,status,poll_incomplete,28.0,288.0,0.09722222222222222,table
+20261027,records,,status,flag,boundary_censored,1242.0,594925.0,0.0020876581081648946,table
+20261027,records,,status,flag,conflict,20.0,594925.0,3.3617682901206036e-05,table
+20261027,records,,status,flag,off_grid,85.0,594925.0,0.00014287515233012564,table
+20261027,records,,status,flag,ok,593578.0,594925.0,0.9977358490566037,table
+20261027,records,,status,status,boundary_censored,1242.0,594925.0,0.0020876581081648946,table
+20261027,records,,status,status,conflict,20.0,594925.0,3.3617682901206036e-05,table
+20261027,records,,status,status,off_grid,85.0,594925.0,0.00014287515233012564,table
+20261027,records,,status,status,ok,593578.0,594925.0,0.9977358490566037,table
+20261027,tob,,status,flag,gap,21958.0,1681220.0,0.01306075350043421,table
+20261027,tob,,status,flag,ok,1659252.0,1681220.0,0.986933298438039,table
+20261027,tob,,status,flag,same_ms_changed,10.0,1681220.0,5.948061526748433e-06,table
+20261027,tob,,status,status,gap,21958.0,1681220.0,0.01306075350043421,table
+20261027,tob,,status,status,ok,1659252.0,1681220.0,0.986933298438039,table
+20261027,tob,,status,status,same_ms_changed,10.0,1681220.0,5.948061526748433e-06,table
+20261108,frames,,status,flag,gap,3735.0,264779.0,0.014106103580722036,extract_20261108.json
+20261108,frames,,status,flag,ok,261043.0,264779.0,0.9858901196847182,extract_20261108.json
+20261108,frames,,status,flag,same_ms_changed,1.0,264779.0,3.776734559764936e-06,extract_20261108.json
+20261108,frames,,status,status,gap,3735.0,264779.0,0.014106103580722036,extract_20261108.json
+20261108,frames,,status,status,ok,261043.0,264779.0,0.9858901196847182,extract_20261108.json
+20261108,frames,,status,status,same_ms_changed,1.0,264779.0,3.776734559764936e-06,extract_20261108.json
+20261108,legs,,status,flag,boundary_censored,1319.0,375566.0,0.0035120325056048735,table
+20261108,legs,,status,flag,conflict,107.0,375566.0,0.00028490331925680175,table
+20261108,legs,,status,flag,off_grid,80.0,375566.0,0.00021301182748172093,table
+20261108,legs,,status,flag,ok,374068.0,375566.0,0.9960113535304048,table
+20261108,legs,,status,status,boundary_censored,1311.0,375566.0,0.003490731322856702,table
+20261108,legs,,status,status,conflict,107.0,375566.0,0.00028490331925680175,table
+20261108,legs,,status,status,off_grid,72.0,375566.0,0.00019171064473354882,table
+20261108,legs,,status,status,off_grid+boundary_censored,8.0,375566.0,2.1301182748172092e-05,table
+20261108,legs,,status,status,ok,374068.0,375566.0,0.9960113535304048,table
+20261108,levels,,status,flag,ok,24623951.0,24623951.0,1.0,extract_20261108.json
+20261108,levels,,status,status,ok,24623951.0,24623951.0,1.0,extract_20261108.json
+20261108,life_fills,,status,flag,capacity_contradiction,23.0,90281.0,0.00025476013779200495,table
+20261108,life_fills,,status,flag,fill_lo_unbounded,483.0,90281.0,0.005349962893632104,table
+20261108,life_fills,,status,flag,leg_conflict,99.0,90281.0,0.00109657624527863,table
+20261108,life_fills,,status,flag,leg_off_grid,13.0,90281.0,0.00014399486049113323,table
+20261108,life_fills,,status,flag,ok,88401.0,90281.0,0.9791761278674361,table
+20261108,life_fills,,status,flag,subcent_price,13.0,90281.0,0.00014399486049113323,table
+20261108,life_fills,,status,flag,window_gap,1269.0,90281.0,0.014056113689480622,table
+20261108,life_fills,,status,status,capacity_contradiction,23.0,90281.0,0.00025476013779200495,table
+20261108,life_fills,,status,status,fill_lo_unbounded,476.0,90281.0,0.005272427199521494,table
+20261108,life_fills,,status,status,fill_lo_unbounded+leg_off_grid+subcent_price,7.0,90281.0,7.753569411061021e-05,table
+20261108,life_fills,,status,status,leg_conflict,99.0,90281.0,0.00109657624527863,table
+20261108,life_fills,,status,status,leg_off_grid+subcent_price,6.0,90281.0,6.645916638052303e-05,table
+20261108,life_fills,,status,status,ok,88401.0,90281.0,0.9791761278674361,table
+20261108,life_fills,,status,status,window_gap,1269.0,90281.0,0.014056113689480622,table
+20261108,life_inputs,,conn,count,,52.0,,,life/<day>_<mid>.json inputs
+20261108,life_inputs,,conn_switches,count,,0.0,,,life/<day>_<mid>.json inputs
+20261108,life_inputs,,fills_after_last_frame,count,,0.0,,,life/<day>_<mid>.json inputs
+20261108,life_inputs,,fills_before_first_frame,count,,441.0,,,life/<day>_<mid>.json inputs
+20261108,life_inputs,,frame_gaps,count,,3735.0,,,life/<day>_<mid>.json inputs
+20261108,life_inputs,,frames,count,,264779.0,,,life/<day>_<mid>.json inputs
+20261108,life_inputs,,frames_usable,count,,264779.0,,,life/<day>_<mid>.json inputs
+20261108,life_inputs,,legs,count,,90281.0,,,life/<day>_<mid>.json inputs
+20261108,life_inputs,,records,count,,60042.0,,,life/<day>_<mid>.json inputs
+20261108,life_inputs,,records_with_legs,count,,60042.0,,,life/<day>_<mid>.json inputs
+20261108,life_inputs,,records_without_legs,count,,0.0,,,life/<day>_<mid>.json inputs
+20261108,life_inputs,,subcent_legs,count,,13.0,,,life/<day>_<mid>.json inputs
+20261108,life_inputs,,unknown_cells,count,,0.0,,,life/<day>_<mid>.json inputs
+20261108,life_inputs,,unplaceable_legs,count,,0.0,,,life/<day>_<mid>.json inputs
+20261108,life_orders,S_FIFO,status,flag,ahead_hi_clipped,9.0,57798.0,0.00015571473061351605,table
+20261108,life_orders,S_FIFO,status,flag,ahead_hi_negative,11118.0,57798.0,0.1923595972178968,table
+20261108,life_orders,S_FIFO,status,flag,capacity_bounds_void,61.0,57798.0,0.001055399840824942,table
+20261108,life_orders,S_FIFO,status,flag,capacity_contradiction,6.0,57798.0,0.00010380982040901069,table
+20261108,life_orders,S_FIFO,status,flag,clock_capacity_conflict,55.0,57798.0,0.0009515900204159313,table
+20261108,life_orders,S_FIFO,status,flag,fifo_front_conflict,1.0,57798.0,1.7301636734835114e-05,table
+20261108,life_orders,S_FIFO,status,flag,fill_order_tie,78.0,57798.0,0.001349527665317139,table
+20261108,life_orders,S_FIFO,status,flag,leg_conflict,99.0,57798.0,0.0017128620367486765,table
+20261108,life_orders,S_FIFO,status,flag,leg_off_grid,10.0,57798.0,0.00017301636734835116,table
+20261108,life_orders,S_FIFO,status,flag,ok,46451.0,57798.0,0.803678327969826,table
+20261108,life_orders,S_FIFO,status,flag,queue_contradiction,74.0,57798.0,0.0012803211183777985,table
+20261108,life_orders,S_FIFO,status,flag,subcent_price,10.0,57798.0,0.00017301636734835116,table
+20261108,life_orders,S_FIFO,status,status,ahead_hi_clipped,8.0,57798.0,0.00013841309387868092,table
+20261108,life_orders,S_FIFO,status,status,ahead_hi_clipped+capacity_bounds_void+clock_capacity_conflict,1.0,57798.0,1.7301636734835114e-05,table
+20261108,life_orders,S_FIFO,status,status,ahead_hi_negative,11018.0,57798.0,0.1906294335444133,table
+20261108,life_orders,S_FIFO,status,status,ahead_hi_negative+capacity_bounds_void+capacity_contradiction,1.0,57798.0,1.7301636734835114e-05,table
+20261108,life_orders,S_FIFO,status,status,ahead_hi_negative+capacity_bounds_void+capacity_contradiction+fifo_front_conflict,1.0,57798.0,1.7301636734835114e-05,table
+20261108,life_orders,S_FIFO,status,status,ahead_hi_negative+capacity_bounds_void+clock_capacity_conflict,4.0,57798.0,6.920654693934046e-05,table
+20261108,life_orders,S_FIFO,status,status,ahead_hi_negative+fill_order_tie,10.0,57798.0,0.00017301636734835116,table
+20261108,life_orders,S_FIFO,status,status,ahead_hi_negative+leg_conflict,84.0,57798.0,0.0014533374857261497,table
+20261108,life_orders,S_FIFO,status,status,capacity_bounds_void+capacity_contradiction,4.0,57798.0,6.920654693934046e-05,table
+20261108,life_orders,S_FIFO,status,status,capacity_bounds_void+clock_capacity_conflict,49.0,57798.0,0.0008477802000069207,table
+20261108,life_orders,S_FIFO,status,status,capacity_bounds_void+clock_capacity_conflict+queue_contradiction,1.0,57798.0,1.7301636734835114e-05,table
+20261108,life_orders,S_FIFO,status,status,fill_order_tie,68.0,57798.0,0.0011765112979687878,table
+20261108,life_orders,S_FIFO,status,status,leg_conflict,15.0,57798.0,0.0002595245510225267,table
+20261108,life_orders,S_FIFO,status,status,leg_off_grid+subcent_price,10.0,57798.0,0.00017301636734835116,table
+20261108,life_orders,S_FIFO,status,status,ok,46451.0,57798.0,0.803678327969826,table
+20261108,life_orders,S_FIFO,status,status,queue_contradiction,73.0,57798.0,0.0012630194816429634,table
+20261108,life_orders,S_FIFO_LO,status,flag,ahead_hi_clipped,9.0,57798.0,0.00015571473061351605,table
+20261108,life_orders,S_FIFO_LO,status,flag,ahead_hi_negative,11131.0,57798.0,0.19258451849544966,table
+20261108,life_orders,S_FIFO_LO,status,flag,capacity_bounds_void,1914.0,57798.0,0.03311533271047441,table
+20261108,life_orders,S_FIFO_LO,status,flag,capacity_contradiction,6.0,57798.0,0.00010380982040901069,table
+20261108,life_orders,S_FIFO_LO,status,flag,clock_capacity_conflict,1908.0,57798.0,0.0330115228900654,table
+20261108,life_orders,S_FIFO_LO,status,flag,fifo_front_conflict,1.0,57798.0,1.7301636734835114e-05,table
+20261108,life_orders,S_FIFO_LO,status,flag,fill_order_tie,78.0,57798.0,0.001349527665317139,table
+20261108,life_orders,S_FIFO_LO,status,flag,leg_conflict,99.0,57798.0,0.0017128620367486765,table
+20261108,life_orders,S_FIFO_LO,status,flag,leg_off_grid,10.0,57798.0,0.00017301636734835116,table
+20261108,life_orders,S_FIFO_LO,status,flag,ok,44559.0,57798.0,0.7709436312675179,table
+20261108,life_orders,S_FIFO_LO,status,flag,post_after_first_fill,3223.0,57798.0,0.055763175196373575,table
+20261108,life_orders,S_FIFO_LO,status,flag,queue_contradiction,71.0,57798.0,0.0012284162081732932,table
+20261108,life_orders,S_FIFO_LO,status,flag,subcent_price,10.0,57798.0,0.00017301636734835116,table
+20261108,life_orders,S_FIFO_LO,status,status,ahead_hi_clipped,9.0,57798.0,0.00015571473061351605,table
+20261108,life_orders,S_FIFO_LO,status,status,ahead_hi_negative,9225.0,57798.0,0.15960759887885395,table
+20261108,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+capacity_bounds_void+capacity_contradiction,1.0,57798.0,1.7301636734835114e-05,table
+20261108,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+capacity_bounds_void+capacity_contradiction+fifo_front_conflict,1.0,57798.0,1.7301636734835114e-05,table
+20261108,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+capacity_bounds_void+clock_capacity_conflict,323.0,57798.0,0.005588428665351742,table
+20261108,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+capacity_bounds_void+clock_capacity_conflict+fill_order_tie,3.0,57798.0,5.1904910204505343e-05,table
+20261108,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+capacity_bounds_void+clock_capacity_conflict+fill_order_tie+post_after_first_fill,2.0,57798.0,3.460327346967023e-05,table
+20261108,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+capacity_bounds_void+clock_capacity_conflict+leg_conflict,2.0,57798.0,3.460327346967023e-05,table
+20261108,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+capacity_bounds_void+clock_capacity_conflict+leg_conflict+post_after_first_fill,1.0,57798.0,1.7301636734835114e-05,table
+20261108,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+capacity_bounds_void+clock_capacity_conflict+post_after_first_fill,798.0,57798.0,0.013806706114398421,table
+20261108,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+fill_order_tie,5.0,57798.0,8.650818367417558e-05,table
+20261108,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+leg_conflict,75.0,57798.0,0.0012976227551126337,table
+20261108,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+leg_conflict+post_after_first_fill,6.0,57798.0,0.00010380982040901069,table
+20261108,life_orders,S_FIFO_LO,status,status,ahead_hi_negative+post_after_first_fill,689.0,57798.0,0.011920827710301394,table
+20261108,life_orders,S_FIFO_LO,status,status,capacity_bounds_void+capacity_contradiction,4.0,57798.0,6.920654693934046e-05,table
+20261108,life_orders,S_FIFO_LO,status,status,capacity_bounds_void+clock_capacity_conflict,230.0,57798.0,0.003979376449012076,table
+20261108,life_orders,S_FIFO_LO,status,status,capacity_bounds_void+clock_capacity_conflict+fill_order_tie,3.0,57798.0,5.1904910204505343e-05,table
+20261108,life_orders,S_FIFO_LO,status,status,capacity_bounds_void+clock_capacity_conflict+post_after_first_fill,519.0,57798.0,0.008979549465379424,table
+20261108,life_orders,S_FIFO_LO,status,status,capacity_bounds_void+clock_capacity_conflict+post_after_first_fill+queue_contradiction,18.0,57798.0,0.0003114294612270321,table
+20261108,life_orders,S_FIFO_LO,status,status,capacity_bounds_void+clock_capacity_conflict+queue_contradiction,9.0,57798.0,0.00015571473061351605,table
+20261108,life_orders,S_FIFO_LO,status,status,fill_order_tie,60.0,57798.0,0.001038098204090107,table
+20261108,life_orders,S_FIFO_LO,status,status,fill_order_tie+post_after_first_fill,5.0,57798.0,8.650818367417558e-05,table
+20261108,life_orders,S_FIFO_LO,status,status,leg_conflict,13.0,57798.0,0.0002249212775528565,table
+20261108,life_orders,S_FIFO_LO,status,status,leg_conflict+post_after_first_fill,2.0,57798.0,3.460327346967023e-05,table
+20261108,life_orders,S_FIFO_LO,status,status,leg_off_grid+subcent_price,10.0,57798.0,0.00017301636734835116,table
+20261108,life_orders,S_FIFO_LO,status,status,ok,44559.0,57798.0,0.7709436312675179,table
+20261108,life_orders,S_FIFO_LO,status,status,post_after_first_fill,1182.0,57798.0,0.020450534620575108,table
+20261108,life_orders,S_FIFO_LO,status,status,post_after_first_fill+queue_contradiction,1.0,57798.0,1.7301636734835114e-05,table
+20261108,life_orders,S_FIFO_LO,status,status,queue_contradiction,43.0,57798.0,0.00074397037959791,table
+20261108,life_orders,S_NOPRIO,status,flag,capacity_bounds_void,61.0,57798.0,0.001055399840824942,table
+20261108,life_orders,S_NOPRIO,status,flag,capacity_contradiction,6.0,57798.0,0.00010380982040901069,table
+20261108,life_orders,S_NOPRIO,status,flag,clock_capacity_conflict,55.0,57798.0,0.0009515900204159313,table
+20261108,life_orders,S_NOPRIO,status,flag,leg_conflict,99.0,57798.0,0.0017128620367486765,table
+20261108,life_orders,S_NOPRIO,status,flag,leg_off_grid,10.0,57798.0,0.00017301636734835116,table
+20261108,life_orders,S_NOPRIO,status,flag,ok,57628.0,57798.0,0.997058721755078,table
+20261108,life_orders,S_NOPRIO,status,flag,subcent_price,10.0,57798.0,0.00017301636734835116,table
+20261108,life_orders,S_NOPRIO,status,status,capacity_bounds_void+capacity_contradiction,6.0,57798.0,0.00010380982040901069,table
+20261108,life_orders,S_NOPRIO,status,status,capacity_bounds_void+clock_capacity_conflict,55.0,57798.0,0.0009515900204159313,table
+20261108,life_orders,S_NOPRIO,status,status,leg_conflict,99.0,57798.0,0.0017128620367486765,table
+20261108,life_orders,S_NOPRIO,status,status,leg_off_grid+subcent_price,10.0,57798.0,0.00017301636734835116,table
+20261108,life_orders,S_NOPRIO,status,status,ok,57628.0,57798.0,0.997058721755078,table
+20261108,life_x_links,,status,flag,invalid_order,3.0,60690.0,4.9431537320810677e-05,table
+20261108,life_x_links,,status,flag,ok,60687.0,60690.0,0.9999505684626792,table
+20261108,life_x_links,,status,status,invalid_order,3.0,60690.0,4.9431537320810677e-05,table
+20261108,life_x_links,,status,status,ok,60687.0,60690.0,0.9999505684626792,table
+20261108,markets,,status,flag,boundary_censored,1.0,220.0,0.004545454545454545,table
+20261108,markets,,status,flag,fills_outside_ws,4.0,220.0,0.01818181818181818,table
+20261108,markets,,status,flag,no_own_fill_ws_skipped,168.0,220.0,0.7636363636363637,table
+20261108,markets,,status,flag,ok,36.0,220.0,0.16363636363636364,table
+20261108,markets,,status,flag,outcome_sealed,1.0,220.0,0.004545454545454545,table
+20261108,markets,,status,flag,poll_incomplete,38.0,220.0,0.17272727272727273,table
+20261108,markets,,status,status,boundary_censored+no_own_fill_ws_skipped+outcome_sealed,1.0,220.0,0.004545454545454545,table
+20261108,markets,,status,status,fills_outside_ws,3.0,220.0,0.013636363636363636,table
+20261108,markets,,status,status,fills_outside_ws+poll_incomplete,1.0,220.0,0.004545454545454545,table
+20261108,markets,,status,status,no_own_fill_ws_skipped,142.0,220.0,0.6454545454545455,table
+20261108,markets,,status,status,no_own_fill_ws_skipped+poll_incomplete,25.0,220.0,0.11363636363636363,table
+20261108,markets,,status,status,ok,36.0,220.0,0.16363636363636364,table
+20261108,markets,,status,status,poll_incomplete,12.0,220.0,0.05454545454545454,table
+20261108,records,,status,flag,boundary_censored,1018.0,250853.0,0.0040581535799850904,table
+20261108,records,,status,flag,conflict,8.0,250853.0,3.189118726903804e-05,table
+20261108,records,,status,flag,off_grid,65.0,250853.0,0.0002591158965609341,table
+20261108,records,,status,flag,ok,249763.0,250853.0,0.9956548257345935,table
+20261108,records,,status,status,boundary_censored,1017.0,250853.0,0.004054167181576461,table
+20261108,records,,status,status,conflict,8.0,250853.0,3.189118726903804e-05,table
+20261108,records,,status,status,off_grid,64.0,250853.0,0.00025512949815230434,table
+20261108,records,,status,status,off_grid+boundary_censored,1.0,250853.0,3.986398408629755e-06,table
+20261108,records,,status,status,ok,249763.0,250853.0,0.9956548257345935,table
+20261108,tob,,status,flag,gap,3735.0,264779.0,0.014106103580722036,table
+20261108,tob,,status,flag,ok,261043.0,264779.0,0.9858901196847182,table
+20261108,tob,,status,flag,same_ms_changed,1.0,264779.0,3.776734559764936e-06,table
+20261108,tob,,status,status,gap,3735.0,264779.0,0.014106103580722036,table
+20261108,tob,,status,status,ok,261043.0,264779.0,0.9858901196847182,table
+20261108,tob,,status,status,same_ms_changed,1.0,264779.0,3.776734559764936e-06,table

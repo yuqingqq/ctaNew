@@ -83,3 +83,6 @@ mt_x_truth_score rc=0
 mt_x_report_selftest rc=0
 mt_x_report rc=1
 mt_x_checks rc=1
+mt_x_report_selftest_r1 rc=0
+mt_x_report_r1 rc=0
+mt_x_checks_r1 rc=1

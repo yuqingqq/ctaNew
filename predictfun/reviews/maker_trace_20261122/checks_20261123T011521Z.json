@@ -1,0 +1,667 @@
+{
+ "checks": {
+  "outputs_present": true,
+  "schema": true,
+  "status_present": true,
+  "status_counts_reported": true,
+  "records_unique_key": true,
+  "legs_complete": true,
+  "amounts_reconcile": true,
+  "yes_space_mapping": true,
+  "clock_fields": true,
+  "day_assignment": true,
+  "legs_phase_clock": true,
+  "boundary_censored": true,
+  "fills_complete": true,
+  "fill_hi_rule": true,
+  "fill_lo_status": true,
+  "fill_time_order": true,
+  "fill_lo_frame": true,
+  "orders_complete": true,
+  "orders_cumulative": true,
+  "H1_identity": true,
+  "H2_presence": false,
+  "H3_overfill_flagged": true,
+  "posting_capacity_bound": false,
+  "posting_before_first_fill": true,
+  "removal_after_last_fill": true,
+  "removal_lo_bound": true,
+  "removal_class_evidence": true,
+  "class_scenario_consistency": false,
+  "size_bounds": true,
+  "priority_exhaustion": false,
+  "priority_tests_T1_T2": false,
+  "priority_ahead_lo": false,
+  "levels_frames_consistent": true,
+  "tob_from_levels": false,
+  "coverage_arithmetic": true,
+  "econ_conservation": true,
+  "econ_pnl_recompute": true,
+  "identities_exante": true,
+  "gt_scores": true
+ },
+ "details": {
+  "outputs_present": {
+   "n_eval": 393,
+   "n_fail": 0,
+   "examples": [],
+   "reason": ""
+  },
+  "schema": {
+   "n_eval": 301,
+   "n_fail": 0,
+   "examples": [],
+   "reason": ""
+  },
+  "status_present": {
+   "n_eval": 903,
+   "n_fail": 0,
+   "examples": [],
+   "reason": ""
+  },
+  "status_counts_reported": {
+   "n_eval": 240,
+   "n_fail": 0,
+   "examples": [],
+   "reason": ""
+  },
+  "records_unique_key": {
+   "n_eval": 12,
+   "n_fail": 0,
+   "examples": [],
+   "reason": ""
+  },
+  "legs_complete": {
+   "n_eval": 72,
+   "n_fail": 0,
+   "examples": [],
+   "reason": ""
+  },
+  "amounts_reconcile": {
+   "n_eval": 24,
+   "n_fail": 0,
+   "examples": [],
+   "records_price_gap_diagnostic": 21588,
+   "records": 2977190,
+   "reason": ""
+  },
+  "yes_space_mapping": {
+   "n_eval": 24,
+   "n_fail": 0,
+   "examples": [],
+   "reason": ""
+  },
+  "clock_fields": {
+   "n_eval": 30,
+   "n_fail": 0,
+   "examples": [],
+   "reason": ""
+  },
+  "day_assignment": {
+   "n_eval": 1666,
+   "n_fail": 0,
+   "examples": [],
+   "reason": ""
+  },
+  "legs_phase_clock": {
+   "n_eval": 12,
+   "n_fail": 0,
+   "examples": [],
+   "legs_without_registry": 0,
+   "reason": ""
+  },
+  "boundary_censored": {
+   "n_eval": 1660,
+   "n_fail": 0,
+   "examples": [],
+   "boundary_flagged_markets": 3,
+   "boundary_certain_markets": 3,
+   "reported_lag_p999_all_ms": 296677.25985449867,
+   "reason": ""
+  },
+  "fills_complete": {
+   "n_eval": 213,
+   "n_fail": 0,
+   "examples": [],
+   "reason": ""
+  },
+  "fill_hi_rule": {
+   "n_eval": 142,
+   "n_fail": 0,
+   "examples": [],
+   "reason": ""
+  },
+  "fill_lo_status": {
+   "n_eval": 71,
+   "n_fail": 0,
+   "examples": [],
+   "reason": ""
+  },
+  "fill_time_order": {
+   "n_eval": 71,
+   "n_fail": 0,
+   "examples": [],
+   "flagged_inversions": 0,
+   "reason": ""
+  },
+  "fill_lo_frame": {
+   "n_eval": 355,
+   "n_fail": 0,
+   "examples": [],
+   "bounded_lo": 150292,
+   "evidence_column_x_evidence_fid": 71,
+   "reason": ""
+  },
+  "orders_complete": {
+   "n_eval": 426,
+   "n_fail": 0,
+   "examples": [],
+   "reason": ""
+  },
+  "orders_cumulative": {
+   "n_eval": 71,
+   "n_fail": 0,
+   "examples": [],
+   "mode_all_fills": 71,
+   "reason": ""
+  },
+  "H1_identity": {
+   "n_eval": 142,
+   "n_fail": 0,
+   "examples": [],
+   "reason": ""
+  },
+  "H2_presence": {
+   "n_eval": 142,
+   "n_fail": 1,
+   "examples": [
+    "orders 20261108_4334454: 3 rows whose persistence window contradicts the certain span [min hi, max lo] (-1/-1 when empty)"
+   ],
+   "reason": "orders 20261108_4334454: 3 rows whose persistence window contradicts the certain span [min hi, max lo] (-1/-1 when empty)"
+  },
+  "H3_overfill_flagged": {
+   "n_eval": 71,
+   "n_fail": 0,
+   "examples": [],
+   "h3_violating_prices": 11,
+   "reason": ""
+  },
+  "posting_capacity_bound": {
+   "n_eval": 142,
+   "n_fail": 27,
+   "examples": [
+    "orders 20261024_3697902: 25 ok rows with post_lo_ms below the H3 capacity bound (latest frame before the first fill with shown < cumulative fills)",
+    "orders 20261024_3699278: 8 ok rows with post_lo_ms below the H3 capacity bound (latest frame before the first fill with shown < cumulative fills)",
+    "orders 20261024_3700070: 13 ok rows with post_lo_ms below the H3 capacity bound (latest frame before the first fill with shown < cumulative fills)",
+    "orders 20261024_3704004: 1 ok rows with post_lo_ms below the H3 capacity bound (latest frame before the first fill with shown < cumulative fills)",
+    "orders 20261024_3716727: 3 ok rows with post_lo_ms below the H3 capacity bound (latest frame before the first fill with shown < cumulative fills)",
+    "orders 20261025_3723774: 3 ok rows with post_lo_ms below the H3 capacity bound (latest frame before the first fill with shown < cumulative fills)"
+   ],
+   "capacity_bounds": 87080,
+   "reason": "orders 20261024_3697902: 25 ok rows with post_lo_ms below the H3 capacity bound (latest frame before the first fill with shown < cumulative fills)"
+  },
+  "posting_before_first_fill": {
+   "n_eval": 71,
+   "n_fail": 0,
+   "examples": [],
+   "reason": ""
+  },
+  "removal_after_last_fill": {
+   "n_eval": 71,
+   "n_fail": 0,
+   "examples": [],
+   "reason": ""
+  },
+  "removal_lo_bound": {
+   "n_eval": 71,
+   "n_fail": 0,
+   "examples": [],
+   "reason": ""
+  },
+  "removal_class_evidence": {
+   "n_eval": 56673,
+   "n_fail": 0,
+   "examples": [],
+   "reason": ""
+  },
+  "class_scenario_consistency": {
+   "n_eval": 710,
+   "n_fail": 71,
+   "examples": [
+    "orders 20261024_3697902: 314 hashes whose queue differs across scenarios but is labelled unresolved",
+    "orders 20261024_3699278: 508 hashes whose queue differs across scenarios but is labelled unresolved",
+    "orders 20261024_3700070: 357 hashes whose queue differs across scenarios but is labelled unresolved",
+    "orders 20261024_3702960: 157 hashes whose queue differs across scenarios but is labelled unresolved",
+    "orders 20261024_3704004: 364 hashes whose queue differs across scenarios but is labelled unresolved",
+    "orders 20261024_3712725: 504 hashes whose queue differs across scenarios but is labelled unresolved"
+   ],
+   "sensitive_but_identical": 24165,
+   "reason": "orders 20261024_3697902: 314 hashes whose queue differs across scenarios but is labelled unresolved"
+  },
+  "size_bounds": {
+   "n_eval": 142,
+   "n_fail": 0,
+   "examples": [],
+   "reason": ""
+  },
+  "priority_exhaustion": {
+   "n_eval": 213,
+   "n_fail": 62,
+   "examples": [
+    "orders 20261024_3697902: 4 S_FIFO-family rows ignore price-priority exhaustion evidence (exhausted not in set, or size_exact != cum_shares)",
+    "orders 20261024_3699278: 3 S_FIFO-family rows ignore price-priority exhaustion evidence (exhausted not in set, or size_exact != cum_shares)",
+    "orders 20261024_3700070: 2 S_FIFO-family rows ignore price-priority exhaustion evidence (exhausted not in set, or size_exact != cum_shares)",
+    "orders 20261024_3702960: 8 S_FIFO-family rows ignore price-priority exhaustion evidence (exhausted not in set, or size_exact != cum_shares)",
+    "orders 20261024_3704004: 6 S_FIFO-family rows ignore price-priority exhaustion evidence (exhausted not in set, or size_exact != cum_shares)",
+    "orders 20261024_3712725: 2 S_FIFO-family rows ignore price-priority exhaustion evidence (exhausted not in set, or size_exact != cum_shares)"
+   ],
+   "price_priority_evidence_legs": 34280,
+   "multi_price_records_worst_first": 3120,
+   "multi_price_records_neither": 1219,
+   "multi_price_records_best_first": 406,
+   "reason": "orders 20261024_3697902: 4 S_FIFO-family rows ignore price-priority exhaustion evidence (exhausted not in set, or size_exact != cum_shares)"
+  },
+  "priority_tests_T1_T2": {
+   "n_eval": 142,
+   "n_fail": 2,
+   "examples": [
+    "lifecycle summary 20261025_3734864: T2 reported [0.0] != recomputed [1] (records whose >= 2 worst-price makers fill again)",
+    "lifecycle summary 20261108_4353706: T2 reported [0.0] != recomputed [1] (records whose >= 2 worst-price makers fill again)"
+   ],
+   "T1_legs": 1,
+   "T1_hashes": 1,
+   "T2_records": 5,
+   "reason": "lifecycle summary 20261025_3734864: T2 reported [0.0] != recomputed [1] (records whose >= 2 worst-price makers fill again)"
+  },
+  "priority_ahead_lo": {
+   "n_eval": 71,
+   "n_fail": 53,
+   "examples": [
+    "orders 20261024_3697902: 3 S_FIFO-family rows whose ahead_lo is not the price-priority value at the first fill of the order (the other worst-price makers when it alone refilled, else 0)",
+    "orders 20261024_3700070: 2 S_FIFO-family rows whose ahead_lo is not the price-priority value at the first fill of the order (the other worst-price makers when it alone refilled, else 0)",
+    "orders 20261024_3702960: 2 S_FIFO-family rows whose ahead_lo is not the price-priority value at the first fill of the order (the other worst-price makers when it alone refilled, else 0)",
+    "orders 20261024_3704004: 4 S_FIFO-family rows whose ahead_lo is not the price-priority value at the first fill of the order (the other worst-price makers when it alone refilled, else 0)",
+    "orders 20261025_3723774: 5 S_FIFO-family rows whose ahead_lo is not the price-priority value at the first fill of the order (the other worst-price makers when it alone refilled, else 0)",
+    "orders 20261025_3734864: 4 S_FIFO-family rows whose ahead_lo is not the price-priority value at the first fill of the order (the other worst-price makers when it alone refilled, else 0)"
+   ],
+   "reason": "orders 20261024_3697902: 3 S_FIFO-family rows whose ahead_lo is not the price-priority value at the first fill of the order (the other worst-price makers when it alone refilled, else 0)"
+  },
+  "levels_frames_consistent": {
+   "n_eval": 497,
+   "n_fail": 0,
+   "examples": [],
+   "reason": ""
+  },
+  "tob_from_levels": {
+   "n_eval": 710,
+   "n_fail": 70,
+   "examples": [
+    "tob 20261024_3697902: 39 frames whose best_ask_sh differs from the depth levels/frame",
+    "tob 20261024_3699278: 43 frames whose best_ask_sh differs from the depth levels/frame",
+    "tob 20261024_3702960: 33 frames whose best_bid_sh differs from the depth levels/frame",
+    "tob 20261024_3704004: 35 frames whose best_bid_sh differs from the depth levels/frame",
+    "tob 20261024_3712725: 36 frames whose best_ask_sh differs from the depth levels/frame",
+    "tob 20261024_3716727: 44 frames whose best_ask_sh differs from the depth levels/frame"
+   ],
+   "reason": "tob 20261024_3697902: 39 frames whose best_ask_sh differs from the depth levels/frame"
+  },
+  "coverage_arithmetic": {
+   "n_eval": 1065,
+   "n_fail": 0,
+   "examples": [],
+   "reason": ""
+  },
+  "econ_conservation": {
+   "n_eval": 666,
+   "n_fail": 0,
+   "examples": [],
+   "rows_identity_undefined[pnl != gross - fees]": 0,
+   "rows_identity_undefined[gross != rt + resid]": 0,
+   "rows_identity_undefined[resid != drift + resol]": 883814,
+   "segment_dims_not_a_partition": 640,
+   "segment_groups": 80,
+   "reason": ""
+  },
+  "econ_pnl_recompute": {
+   "n_eval": 5,
+   "n_fail": 0,
+   "examples": [],
+   "addr_mid_recomputed": 1087603,
+   "addresses_recomputed": 23004,
+   "reason": ""
+  },
+  "identities_exante": {
+   "n_eval": 2,
+   "n_fail": 0,
+   "examples": [],
+   "reason": ""
+  },
+  "gt_scores": {
+   "n_eval": 24,
+   "n_fail": 0,
+   "examples": [],
+   "gt_filled_own_orders": 86,
+   "gt_own_orders_in_censored_windows": 0,
+   "gt_censored_windows": 0,
+   "gt_blocks_nested": 15,
+   "gt_blocks_never_recomputed": "removal.membership, removal.window, persistence, queue.*, fill windows, defects_total",
+   "reason": ""
+  }
+ },
+ "info": {
+  "ptick_units": [
+   100
+  ],
+  "t_rel_anchor": [
+   "settle_ms"
+  ],
+  "vmhwm_mib": 635.3,
+  "mem_stages_mib": [
+   [
+    "20261023 day_checks",
+    524,
+    244
+   ],
+   [
+    "20261023 h1_pnl",
+    532,
+    366
+   ],
+   [
+    "20261023 markets",
+    532,
+    366
+   ],
+   [
+    "20261024 day_checks",
+    532,
+    283
+   ],
+   [
+    "20261024 h1_pnl",
+    532,
+    287
+   ],
+   [
+    "20261024 markets",
+    532,
+    329
+   ],
+   [
+    "20261025 day_checks",
+    532,
+    330
+   ],
+   [
+    "20261025 h1_pnl",
+    532,
+    416
+   ],
+   [
+    "20261025 markets",
+    532,
+    330
+   ],
+   [
+    "20261026 day_checks",
+    620,
+    333
+   ],
+   [
+    "20261026 h1_pnl",
+    620,
+    461
+   ],
+   [
+    "20261026 markets",
+    620,
+    355
+   ],
+   [
+    "20261027 day_checks",
+    635,
+    348
+   ],
+   [
+    "20261027 h1_pnl",
+    635,
+    357
+   ],
+   [
+    "20261027 markets",
+    635,
+    357
+   ],
+   [
+    "20261108 day_checks",
+    635,
+    357
+   ],
+   [
+    "20261108 h1_pnl",
+    635,
+    357
+   ],
+   [
+    "20261108 markets",
+    635,
+    404
+   ],
+   [
+    "global",
+    635,
+    405
+   ]
+  ]
+ },
+ "reparse": {
+  "20261024_3697902": {
+   "checks": {
+    "rp_H1": true,
+    "rp_H3": true,
+    "rp_capacity": false,
+    "rp_cumulative": true,
+    "rp_fill_hi": true,
+    "rp_frames": true,
+    "rp_hours": true,
+    "rp_legs": true,
+    "rp_records_fields": true,
+    "rp_records_set": true,
+    "rp_records_status": true
+   },
+   "details": {
+    "rp_H1": {
+     "n_eval": 1,
+     "n_fail": 0,
+     "examples": [],
+     "reason": ""
+    },
+    "rp_H3": {
+     "n_eval": 2,
+     "n_fail": 0,
+     "examples": [],
+     "reason": ""
+    },
+    "rp_capacity": {
+     "n_eval": 1,
+     "n_fail": 1,
+     "examples": [
+      "orders 20261024_3697902: 25 ok rows below the raw H3 capacity posting bound"
+     ],
+     "reason": "orders 20261024_3697902: 25 ok rows below the raw H3 capacity posting bound"
+    },
+    "rp_cumulative": {
+     "n_eval": 1,
+     "n_fail": 0,
+     "examples": [],
+     "reason": ""
+    },
+    "rp_fill_hi": {
+     "n_eval": 1,
+     "n_fail": 0,
+     "examples": [],
+     "reason": ""
+    },
+    "rp_frames": {
+     "n_eval": 4,
+     "n_fail": 0,
+     "examples": [],
+     "reason": ""
+    },
+    "rp_hours": {
+     "n_eval": 2,
+     "n_fail": 0,
+     "examples": [],
+     "reason": ""
+    },
+    "rp_legs": {
+     "n_eval": 16,
+     "n_fail": 0,
+     "examples": [],
+     "reason": ""
+    },
+    "rp_records_fields": {
+     "n_eval": 18,
+     "n_fail": 0,
+     "examples": [],
+     "reason": ""
+    },
+    "rp_records_set": {
+     "n_eval": 1,
+     "n_fail": 0,
+     "examples": [],
+     "reason": ""
+    },
+    "rp_records_status": {
+     "n_eval": 1430,
+     "n_fail": 0,
+     "examples": [],
+     "reason": ""
+    }
+   },
+   "info": {
+    "hours_clipped": 0,
+    "needle_miss": 0,
+    "tail_hours_added": 1,
+    "unique_records": 1430,
+    "legs": 2507,
+    "conflicts": 0,
+    "amount_mismatch": 0,
+    "parse_errors": 0,
+    "repolled": 1430,
+    "rest_hours_read": 3,
+    "price_mismatch": 23,
+    "builder_records_outside_scan": 0,
+    "builder_variant_column": "x_n_variants",
+    "ws_hours_read": 2,
+    "frames": 5917,
+    "raw_frames_outside_builder_range": 0,
+    "h3_violating_prices": 0,
+    "capacity_bounds": 1565
+   }
+  },
+  "20261108_4332392": {
+   "checks": {
+    "rp_H1": true,
+    "rp_H3": true,
+    "rp_capacity": true,
+    "rp_cumulative": true,
+    "rp_fill_hi": true,
+    "rp_frames": true,
+    "rp_hours": true,
+    "rp_legs": true,
+    "rp_records_fields": true,
+    "rp_records_set": true,
+    "rp_records_status": true
+   },
+   "details": {
+    "rp_H1": {
+     "n_eval": 1,
+     "n_fail": 0,
+     "examples": [],
+     "reason": ""
+    },
+    "rp_H3": {
+     "n_eval": 2,
+     "n_fail": 0,
+     "examples": [],
+     "reason": ""
+    },
+    "rp_capacity": {
+     "n_eval": 1,
+     "n_fail": 0,
+     "examples": [],
+     "reason": ""
+    },
+    "rp_cumulative": {
+     "n_eval": 1,
+     "n_fail": 0,
+     "examples": [],
+     "reason": ""
+    },
+    "rp_fill_hi": {
+     "n_eval": 1,
+     "n_fail": 0,
+     "examples": [],
+     "reason": ""
+    },
+    "rp_frames": {
+     "n_eval": 4,
+     "n_fail": 0,
+     "examples": [],
+     "reason": ""
+    },
+    "rp_hours": {
+     "n_eval": 2,
+     "n_fail": 0,
+     "examples": [],
+     "reason": ""
+    },
+    "rp_legs": {
+     "n_eval": 16,
+     "n_fail": 0,
+     "examples": [],
+     "reason": ""
+    },
+    "rp_records_fields": {
+     "n_eval": 18,
+     "n_fail": 0,
+     "examples": [],
+     "reason": ""
+    },
+    "rp_records_set": {
+     "n_eval": 1,
+     "n_fail": 0,
+     "examples": [],
+     "reason": ""
+    },
+    "rp_records_status": {
+     "n_eval": 680,
+     "n_fail": 0,
+     "examples": [],
+     "reason": ""
+    }
+   },
+   "info": {
+    "hours_clipped": 0,
+    "needle_miss": 0,
+    "tail_hours_added": 1,
+    "unique_records": 680,
+    "legs": 1309,
+    "conflicts": 0,
+    "amount_mismatch": 0,
+    "parse_errors": 0,
+    "repolled": 680,
+    "rest_hours_read": 3,
+    "price_mismatch": 6,
+    "builder_records_outside_scan": 0,
+    "builder_variant_column": "x_n_variants",
+    "ws_hours_read": 2,
+    "frames": 5112,
+    "raw_frames_outside_builder_range": 0,
+    "h3_violating_prices": 0,
+    "capacity_bounds": 834
+   }
+  }
+ }
+}
