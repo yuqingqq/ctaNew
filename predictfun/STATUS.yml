@@ -1,4 +1,23 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+maker_decision_timing_20261123_user:
+  plan: predictfun/reviews/automatic/20261123_maker_decision_timing/plan.md
+  status: user_requested_design_handoff_no_measurement
+  existing_matched_gap_contract: 46cd3cc56
+  existing_matched_gap_work: continue_unchanged
+  queued_packet: MAKER_DECISION_TIMING_v1
+  population: existing_top3_Oct24_27_BOOK_only
+  maximum_detailed_cases: 96
+  time_estimate: feasible_ranges_not_first_fill_or_midpoint
+  queue_and_inventory_mandatory: true
+  packet_all_in_core_hours_cap: 0.035
+  packet_review_reserve_core_hours: 0.010
+  preserve_matched_gap_reservation_core_hours: 0.10
+  maker_trace_task_cap_core_hours: 1.85
+  line_ceiling_core_hours: 5.25
+  updated_shared_ledger_must_fit_before_run: true
+  additional_USER_permission_within_requested_scope_and_caps: false
+  no_new_data_fit_or_replay_launched: true
+
 maker_trace_v2_review_20261123_codex:
   target: 0e21193f2d403d08bb5172aaf727a6a93110e8a9
   report: predictfun/reviews/automatic/20261123_maker_trace_v2_review/report.md

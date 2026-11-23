@@ -1,3 +1,32 @@
+<!-- MAKER_DECISION_TIMING_20261123_USER -->
+## 2026-11-23 — USER: estimate when makers quote and make decisions
+
+[Timing reconstruction contract](reviews/automatic/20261123_maker_decision_timing/plan.md).
+USER: "Yes we need to estimate the time when they quote, do decisions etc."
+Keep the already frozen MATCHED-MARKET-TURNOVER-GAP-v1 comparison running;
+queue this evidence-backed timing packet after it. Development implements;
+this is a design amendment, not a measured result or an implementation freeze.
+
+Separate quote submission/acceptance, match, cancellation effect/request
+and private notices. Begin from all accepted lifecycle scenarios and tighten
+only with joint level-capacity/trade evidence; anonymous size changes cannot
+be assigned to one maker without alternatives. Unknown stays unknown.
+Show front-at-entry vs front-after-clearing/partial-fill vs unidentified,
+and inventory-reducing takes vs exposure additions/reversals/overshoots.
+Market conditions must be evaluated across feasible decision-time histories,
+never at a first-fill or midpoint timestamp presented as the real decision.
+
+First bounded deliverable: existing top-three/19-BOOK coverage census plus
+at most 96 predetermined detailed quote/take cases, full traces, time-width
+bins and condition stability, with identity/ambiguity/causality controls.
+Stop if the evidence cannot distinguish the mechanism; no tuned timestamp
+or policy variant. Preserve the comparison's <=0.10h reservation. Timing
+packet <=0.035h all-in (review reserve 0.010h), only if updated shared usage
+fits task 1.85h / line 5.25h. Existing USER instruction authorizes this
+bounded scope; larger resources/new data/policy testing need a new decision.
+No new reconstruction run is launched by this note. One combined review.
+<!-- /MAKER_DECISION_TIMING_20261123_USER -->
+
 <!-- MAKER_TRACE_V2_REVIEW_20261123_CODEX -->
 ## 2026-11-23 — Maker trace v2 accepted as descriptive accounting; next compare the same markets
 
