@@ -83,3 +83,23 @@
 - consumed hours only, through a guard like `pf_mt_common.hour_path` for the bookTicker family (Oct 24–27; Oct 23 23Z allowed as padding; never Oct 28);
 - the memory self-guard stays at 1,450 MiB;
 - CPU ≤ 0.17 h for the study run, plus ≤ 0.03 h of tests.
+
+## Amendment 1 (2026-11-23, before the data run) — declared constants and fixes from the build
+
+**Constants (accepted):**
+- `sig_60` floor 0.2 bps/√s;
+- BTC is stale after 1 s;
+- a 200-row minimum per threshold split;
+- the gap clipped at ± 20 c in the logistic;
+- `poll_incomplete` markets kept and counted.
+
+**BTC grid rows** (`pf_mt_btc.py`): each row carries the last update with `E_ms ≤ g`. `age_ms = −1` and any non-ok status count as missing, never as fresh.
+
+**Removal control:** drawn from the SAME phase (pre-`ws` vs live), with the same width and the same market. A selftest case shows that a phase-mismatched control would fake a "pull before moves" signal.
+
+**Selftest (before the fix):** 67/67.
+- The taker control recovers 1.5 c at L = 50 ms (rate 1.0 / 0.0), and flags `lag_sensitive` at L = 250.
+- The maker control recovers offsets −1.98 / +1.99 c and skew −0.98 / −1.01 c per 100 shares.
+- A look-ahead falsifier catches a planted +150 ms leak.
+
+**Projected run:** 0.04–0.063 core-h, memory 0.65–0.92 GB.

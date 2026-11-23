@@ -1,0 +1,72 @@
+world: A1 takes {101: (429, 596), 102: (451, 660), 201: (687, 217), 202: (715, 196)}, A2 fills [357, 360, 264, 219], records 5578
+PASS run: write-once output published, partial / fit directories removed
+module run cpu 1.55 s; rows {'take_hazard_1d.csv': 6583, 'take_hazard_2d.csv': 14675, 'take_threshold.csv': 432, 'take_logit.csv': 24, 'take_events.csv': 54, 'post_fill.csv': 54, 'post_fill_tau.csv': 180, 'post_posting.csv': 180, 'post_skew.csv': 78, 'links.csv': 24, 'removal.csv': 108, 'inventory.csv': 72, 'timeline_rank1_20261024_101.csv': 5948, 'timeline_rank1_20261024_102.csv': 3110, 'timeline_rank2_20261024_101.csv': 6000, 'timeline_rank2_20261024_102.csv': 6000, 'timeline_rank3_20261024_102.csv': 6000, 'timeline_rank3_20261025_201.csv': 6000, 'address_summary.csv': 4, 'statuses.csv': 300}
+PASS CONTROL 1 buy all: threshold within one 0.5 c bucket of 1.5 c, rate above >= 0.8, below <= 0.05
+PASS CONTROL 1 buy 20261024: threshold within one 0.5 c bucket of 1.5 c, rate above >= 0.8, below <= 0.05
+PASS CONTROL 1 buy 20261025: threshold within one 0.5 c bucket of 1.5 c, rate above >= 0.8, below <= 0.05
+PASS CONTROL 1 sell all: threshold within one 0.5 c bucket of 1.5 c, rate above >= 0.8, below <= 0.05
+PASS CONTROL 1 sell 20261024: threshold within one 0.5 c bucket of 1.5 c, rate above >= 0.8, below <= 0.05
+PASS CONTROL 1 sell 20261025: threshold within one 0.5 c bucket of 1.5 c, rate above >= 0.8, below <= 0.05
+PASS CONTROL 1 exact replication: every r_1s > 0 g bucket at or above 1.5 c rates >= 0.99, every one below <= 0.01
+PASS CONTROL 1 take records (two-leg records counted once) in span = the taker's decisions
+PASS CONTROL 2 fill bid: offset -2 c and skew -1 c / 100 sh recovered within +-0.5 c
+PASS CONTROL 2 fill ask: offset +2 c and skew -1 c / 100 sh recovered within +-0.5 c
+PASS CONTROL 2 hi bid: offset -2 c and skew -1 c / 100 sh recovered within +-0.5 c
+PASS CONTROL 2 hi ask: offset +2 c and skew -1 c / 100 sh recovered within +-0.5 c
+PASS claim: rank1 buy 10x threshold holds at L 50 with its n, every L evaluated
+PASS claim: rank2 quotes centred on p_fair within 0.5 c at L 0 (n recorded)
+PASS claim: rank2 quotes skew against inventory at L 0
+PASS claim: rank2 next maker fill reduces |position| (inventory-dependent hits)
+PASS claim: the random taker (rank3) claim is computed with its n at every L (no assertion on its value: ~50 random takes)
+PASS removal: planted top-decile adverse cancels beyond the matched null (p <= 0.01, >= 200 draws)
+PASS removal: random-time exhausted windows sit inside the null (mean percentile 0.35-0.65)
+PASS removal: cancel minus exhausted beyond its paired null (p <= 0.01)
+PASS removal: every planted order with a valid window is measured once (the OTHER order never)
+PASS links: rank2 reprices track p_fair (slope 0.8-1.2, sign agreement >= 0.9, per side)
+PASS links: invalid-status, not-latest and OTHER links excluded
+PASS logit: rank1 buy fitted with a positive gap coefficient (near-separation: max_iter or converged)
+PASS logit: every pooled model ran (24 rows, pooled present)
+PASS pairs: rank3 202 fill_status_src_status and 203 market_boundary_censored excluded with statuses
+PASS take after we counted outside_span (rank3, 1)
+PASS grid status btc_invalid counted
+PASS grid status book_stale counted
+PASS grid status book_frame_status counted
+PASS grid status book_one_sided counted
+PASS grid status book_crossed counted
+PASS ID-day rows skipped and counted (5)
+PASS BTC row before the Oct 23 23Z padding clipped and counted (1)
+PASS self-trade take record counted (1)
+PASS fills_valued top-3 rows on the measurement days = the world count
+PASS posting: S_NOPRIO unbounded lo / mid counted as statuses
+PASS orders: identity_conflict order counted invalid (2 BOOK markets)
+PASS rest: rank2 BOOK rows carry resting-order evidence (bid / ask / both buckets present)
+PASS OTHER never surfaces in any output (address string absent)
+PASS every scope label is rank1-3 / pooled
+PASS address_summary: 4 rows, the contract addresses in rank order
+PASS timelines: the declared deterministic choice (2 per address here)
+PASS timeline timeline_rank1_20261024_101.csv: take_buy buckets = the taker's buys there and BTC overlaid
+PASS timeline timeline_rank1_20261024_102.csv: take_buy buckets = the taker's buys there and BTC overlaid
+PASS receipt: inputs hashed, declared constants and the BTC as-of assumption recorded
+PASS refused: a forbidden day (20261028) (reason asserted)
+PASS refused: the GT day as a measurement day (reason asserted)
+PASS refused: a forbidden BTC file path (before any access) (reason asserted)
+PASS refused: a missing BTC grid (reason asserted)
+PASS refused: an address outside the top 3 (reason asserted)
+PASS refused: identities.json ranks 1-3 differ from the contract (reason asserted)
+PASS refused: a BTC row on Oct 28 (forbidden day) (reason asserted)
+PASS refused: an ok BTC row with age_ms < 0 (look-ahead) (reason asserted)
+PASS refused: an existing output (write-once) (reason asserted)
+PASS refused: a fills_valued top-3 row on a non-consumed day (reason asserted)
+PASS refusals leave no partial or fit directory behind
+PASS book parity with pf_mt_econ.mid_at: identical statuses on 8000 queries
+PASS book parity: identical mids where ok
+PASS ORDER_INVALID equals pf_mt_lifecycle.INVALID
+PASS causality L=0: features at x <= cut unchanged when later BTC rows / frames (values and arrival times) / own fills change
+PASS causality L=50: features at x <= cut unchanged when later BTC rows / frames (values and arrival times) / own fills change
+PASS causality L=250: features at x <= cut unchanged when later BTC rows / frames (values and arrival times) / own fills change
+PASS causality falsifier fires: a planted +150 ms look-ahead does change features
+BENCH {"rows": 420000, "valid_rows_L0": 418627, "cpu_btc_day_s": 0.212, "cpu_tob_per_Mframe_s": 0.388, "cpu_grid_us_per_row_L": 0.401, "cpu_fit_us_per_row_pass": 0.205, "fit_passes_total": 12, "proj_R10M_typical16passes_grid_plus_fit_h": 0.0125, "proj_R10M_worst_capped_grid_plus_fit_h": 0.0426, "proj_R20.7M_typical16passes_grid_plus_fit_h": 0.0258, "proj_R20.7M_worst_capped_grid_plus_fit_h": 0.048}
+PASS bench: production chunk / fit code ran on 420 k synthetic rows
+PASS fit CPU cap: models still running end with status cpu_cap (no data pass)
+SELFTEST 67/67 checks passed; cpu 5.1 s
+2026-11-23T02:29:22Z tag=mt_dec_selftest2 rc=0 peak_rss_mib=666 wall_s=5.81 cpu_user_s=5.09 memavail_start_gib=21 disk_free_gib=439->439 slot=claude2

@@ -1,0 +1,3 @@
+head=40ee591ea095b150e252d221b59233d98127c5c0
+{"selftest": "pf_mt_report", "assertions_passed": 323, "result": "PASS"}
+2026-11-23T02:30:24Z tag=mt_x_report_selftest_v2 rc=0 peak_rss_mib=134 wall_s=9.59 cpu_user_s=9.25 memavail_start_gib=22 disk_free_gib=439->439 slot=claude

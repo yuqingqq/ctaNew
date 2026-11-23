@@ -1,0 +1,114 @@
+head=40ee591ea095b150e252d221b59233d98127c5c0
+{
+ "mid": 4336563,
+ "inputs": {
+  "legs": 1110,
+  "unplaceable_legs": 0,
+  "subcent_legs": 0,
+  "records": 714,
+  "records_with_legs": 714,
+  "records_without_legs": 0,
+  "frames": 3587,
+  "frames_usable": 3587,
+  "frames_excluded": {},
+  "frame_gaps": 72,
+  "unknown_cells": 0,
+  "conn": 1,
+  "conn_switches": 0,
+  "depth_span_ms": [
+   1794126626249,
+   1794127201196
+  ],
+  "fills_before_first_frame": 6,
+  "fills_after_last_frame": 0
+ },
+ "fills": {
+  "n": 1110,
+  "shares": 17267.041662,
+  "t_method": {
+   "book_drop": 542,
+   "none": 6,
+   "pend_inc": 562
+  },
+  "status": {
+   "fill_lo_unbounded": 6,
+   "ok": 1093,
+   "window_gap": 11
+  },
+  "status_flags": {
+   "fill_lo_unbounded": 6,
+   "ok": 1093,
+   "window_gap": 11
+  }
+ },
+ "priority_tests": {
+  "S_FIFO": {
+   "T1_price": {
+    "makers": 83,
+    "violations": 0,
+    "rate": 0.0,
+    "violations_certain": 0,
+    "rate_certain": 0.0,
+    "ties": 1,
+    "receipt_hi_excluded": 0,
+    "unit": "maker legs strictly better than their record worst price (valid orders, none with a receipt-hi fill; tied legs included); violation = the order fills again in a later settle ms"
+   },
+   "T2_time": {
+    "groups": 147,
+    "violations": 0,
+    "rate": 0.0,
+    "violations_certain": 0,
+    "rate_certain": 0.0,
+    "survivor_groups": 92,
+    "no_survivor_groups": 55,
+    "min_exhausted_in_no_survivor_groups": 109,
+    "groups_tie": 7,
+    "groups_invalid": 0,
+    "groups_receipt_hi": 0,
+    "unit": "records with >= 2 makers at their worst price (valid orders, no receipt-hi fill; groups with a tied member included, groups_tie of them); violation = >= 2 of them fill again in a later settle ms"
+   },
+   "front_survivor_conflicts": 0,
+   "tie_conflict_orders": 0,
+   "order": "later = a strictly later settle ms (hi); fills of one settle ms are unordered, never later, and never void a rule; *_certain only from disjoint windows (lo_j >= hi_i)"
+  },
+  "S_FIFO_LO": {
+   "T1_price": {
+    "makers": 83,
+    "violations": 0,
+    "rate": 0.0,
+    "violations_certain": 0,
+    "rate_certain": 0.0,
+    "ties": 1,
+    "receipt_hi_excluded": 0,
+    "unit": "maker legs strictly better than their record worst price (valid orders, none with a receipt-hi fill; tied legs included); violation = the order fills again in a later settle ms"
+   },
+   "T2_time": {
+    "groups": 147,
+    "violations": 0,
+    "rate": 0.0,
+    "violations_certain": 0,
+    "rate_certain": 0.0,
+    "survivor_groups": 92,
+    "no_survivor_groups": 55,
+    "min_exhausted_in_no_survivor_groups": 109,
+    "groups_tie": 7,
+    "groups_invalid": 0,
+    "groups_receipt_hi": 0,
+    "unit": "records with >= 2 makers at their worst price (valid orders, no receipt-hi fill; groups with a tied member included, groups_tie of them); violation = >= 2 of them fill again in a later settle ms"
+   },
+   "front_survivor_conflicts": 0,
+   "tie_conflict_orders": 0,
+   "order": "later = a strictly later settle ms (hi); fills of one settle ms are unordered, never later, and never void a rule; *_certain only from disjoint windows (lo_j >= hi_i)"
+  },
+  "makers_listing": {
+   "multi_price_records": 29,
+   "best_first": 2,
+   "worst_first": 21,
+   "neither": 6,
+   "multi_maker_records_without_price_time": 0,
+   "note": "descriptive only: mk_idx is data, never evidence (contract amendment 1)"
+  }
+ },
+ "vmhwm_mib": 201.9
+}
+2026-11-23T02:25:25Z tag=mt_life_v2_20261108_4336563 rc=0 peak_rss_mib=201 wall_s=1.42 cpu_user_s=1.29 memavail_start_gib=22 disk_free_gib=440->440 slot=claude

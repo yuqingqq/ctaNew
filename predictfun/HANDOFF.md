@@ -803,6 +803,27 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- MAKER_TRACE_AMEND5_20261123_DEV -->
+## 2026-11-23 02:56Z (session aea5bfb9) — MAKER-TRACE v2 results checker-clean (39/39); decision-path module frozen (amendment 5); decision run next
+
+**v2 results** ([v2/report.md](reviews/maker_trace_20261122/v2/report.md); supersedes the v1 receipt; v2 numbers only):
+- **Checker:** 39 / 39, both re-parses pass.
+- **R1 supported:** T1 1 / 18,433; T2 5 / 16,433, equal to the checker's recount; certain 0.
+- **R2:** 86 / 86 covered, 0 defects.
+- **R3 coverage** is checker-validated: posting constrained 0.341, removal constrained 0.169.
+- **R4** is unchanged (the fill valuation is independent of the lifecycle fix).
+
+**Decision module** (`pf_mt_decision.py`, selftest 78 / 78):
+- the taker control recovers 1.5 c (flagged `lag_sensitive` at L = 250);
+- the maker control recovers offsets ± 2 c and skew −1 c per 100 shares;
+- the phase-matched removal control holds (a mismatched one would fake p = 0.002);
+- a look-ahead falsifier is included.
+
+The constants are declared in `decision_contract.md`, amendment 1.
+
+**Next:** `MT_RUN=v2 launch_mt.sh decision`, then the decision receipt, then ONE Codex review.
+<!-- /MAKER_TRACE_AMEND5_20261123_DEV -->
+
 <!-- MAKER_TRACE_AMEND4_20261123_DEV -->
 ## 2026-11-23 02:24Z (session aea5bfb9) — MAKER-TRACE amendment 4: the 7 failing checks settled (5 lifecycle, 2 checker); BTC grid module; v2 chain next
 

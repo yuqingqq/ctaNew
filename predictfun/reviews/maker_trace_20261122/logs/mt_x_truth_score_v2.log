@@ -1,0 +1,42 @@
+head=40ee591ea095b150e252d221b59233d98127c5c0
+{
+ "population": {
+  "truth_rows": 42064,
+  "truth_status": {
+   "unfilled": 30135,
+   "refused": 11131,
+   "rejected": 510,
+   "not_accepted": 170,
+   "ok": 86,
+   "unconfirmed_live": 32
+  },
+  "scored_own_orders": 86,
+  "scored_legs": 99,
+  "scored_shares": 849.867323,
+  "gt_markets": 220,
+  "lifecycle_markets": 52,
+  "own_fill_markets_without_lifecycle": [],
+  "presence_orders": 1815,
+  "boundary_censored": {
+   "windows": [],
+   "lifecycle_orders_rows": 0,
+   "lifecycle_fills_rows": 0,
+   "own_orders": 0,
+   "own_legs": 0,
+   "own_shares": 0.0
+  }
+ },
+ "defects_total": {
+  "fills": 0,
+  "S_FIFO": 0,
+  "S_FIFO_LO": 0,
+  "S_NOPRIO": 0
+ },
+ "unique_defects": {
+  "n": 0,
+  "by_field": {},
+  "note": "distinct (order, field) pairs failing in at least one scenario; fills fields are scenario-independent"
+ }
+}
+VmHWM_MiB 513.7
+2026-11-23T02:26:57Z tag=mt_x_truth_score_v2 rc=0 peak_rss_mib=513 wall_s=6.02 cpu_user_s=5.58 memavail_start_gib=22 disk_free_gib=440->440 slot=claude

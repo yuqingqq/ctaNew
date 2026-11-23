@@ -1,0 +1,24 @@
+world: A1 takes {101: (429, 596), 102: (451, 660), 201: (687, 217), 202: (715, 196)}, A2 fills [357, 360, 264, 219], records 5578
+FAIL main run: ran without an exception  [TypeError: DataFrameGroupBy.aggregate() got multiple values for argument 'self' |   File "/home/yuqing/ctaNew/predictfun/research/pf_mt_decision.py", line 977, in day_pass /     TK = T.groupby(['gid', 'sid'], sort=True).agg(settle=('settle', 'min'), settle_hi=('settle', 'max'), s=('s', 'first'), s_lo=('s', 'min'), /          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^]
+PASS refused: a forbidden day (20261028) (reason asserted)
+PASS refused: the GT day as a measurement day (reason asserted)
+PASS refused: a forbidden BTC file path (before any access) (reason asserted)
+PASS refused: a missing BTC grid (reason asserted)
+PASS refused: an address outside the top 3 (reason asserted)
+PASS refused: identities.json ranks 1-3 differ from the contract (reason asserted)
+FAIL refused: a BTC row on Oct 28 (forbidden day)  [TypeError: DataFrameGroupBy.aggregate() got multiple values for argument 'self']
+PASS refused: an ok BTC row with age_ms < 0 (look-ahead) (reason asserted)
+PASS refused: an existing output (write-once) (reason asserted)
+PASS refused: a fills_valued top-3 row on a non-consumed day (reason asserted)
+PASS refusals leave no partial or fit directory behind
+PASS book parity with pf_mt_econ.mid_at: identical statuses on 8000 queries
+PASS book parity: identical mids where ok
+PASS ORDER_INVALID equals pf_mt_lifecycle.INVALID
+PASS causality L=0: features at x <= cut unchanged when later BTC rows / frames (values and arrival times) / own fills change
+PASS causality L=50: features at x <= cut unchanged when later BTC rows / frames (values and arrival times) / own fills change
+PASS causality L=250: features at x <= cut unchanged when later BTC rows / frames (values and arrival times) / own fills change
+PASS causality falsifier fires: a planted +150 ms look-ahead does change features
+BENCH {"rows": 420000, "valid_rows_L0": 418627, "cpu_btc_day_s": 0.23, "cpu_tob_per_Mframe_s": 0.735, "cpu_grid_us_per_row_L": 0.431, "cpu_fit_us_per_row_pass": 0.216, "fit_passes_total": 12, "proj_R10M_passes16_grid_plus_fit_h": 0.0132, "proj_R10M_passes120_grid_plus_fit_h": 0.0757, "proj_R20.7M_passes16_grid_plus_fit_h": 0.0273, "proj_R20.7M_passes120_grid_plus_fit_h": 0.1567}
+PASS bench: production chunk / fit code ran on 420 k synthetic rows
+SELFTEST 18/20 checks passed; cpu 3.8 s
+2026-11-23T02:26:10Z tag=mt_dec_selftest1 rc=1 peak_rss_mib=653 wall_s=4.31 cpu_user_s=3.41 memavail_start_gib=22 disk_free_gib=440->440 slot=claude2

@@ -1,0 +1,89 @@
+world: A1 takes {101: (429, 596), 102: (451, 660), 201: (687, 217), 202: (715, 196)}, A2 fills [357, 360, 264, 219], records 5578
+PASS run: write-once output published, partial / fit directories removed
+module run cpu 2.44 s; rows {'take_hazard_1d.csv': 6583, 'take_hazard_2d.csv': 14675, 'take_threshold.csv': 432, 'take_logit.csv': 24, 'take_events.csv': 54, 'post_fill.csv': 54, 'post_fill_tau.csv': 180, 'post_posting.csv': 240, 'post_skew.csv': 108, 'links.csv': 24, 'removal.csv': 540, 'inventory.csv': 72, 'timeline_rank1_20261024_101.csv': 5948, 'timeline_rank1_20261024_102.csv': 3110, 'timeline_rank2_20261024_101.csv': 6000, 'timeline_rank2_20261024_102.csv': 6000, 'timeline_rank3_20261024_102.csv': 6000, 'timeline_rank3_20261025_201.csv': 6000, 'address_summary.csv': 4, 'statuses.csv': 377}
+INFO control1 thresholds (rank1, all days, r1_aligned): [{"L": 0, "side": "buy", "threshold_c": 1.5, "rate_above": 0.8166, "rate_below": 0.0278, "n_above": 2306, "n_below": 6004, "e_above": 1883, "e_below": 167, "status": "ok"}, {"L": 0, "side": "sell", "threshold_c": 1.5, "rate_above": 0.8146, "rate_below": 0.0234, "n_above": 1688, "n_below": 6247, "e_above": 1375, "e_below": 146, "status": "ok"}, {"L": 50, "side": "buy", "threshold_c": 1.5, "rate_above": 1.0, "rate_below": 0.0, "n_above": 2282, "n_below": 6026, "e_above": 2282, "e_below": 0, "status": "below_zero_events"}, {"L": 50, "side": "sell", "threshold_c": 1.5, "rate_above": 1.0, "rate_below": 0.0, "n_above": 1669, "n_below": 6265, "e_above": 1669, "e_below": 0, "status": "below_zero_events"}, {"L": 250, "side": "buy", "threshold_c": 0.5, "rate_above": 0.5841, "rate_below": 0.0324, "n_above": 3121, "n_below": 5185, "e_above": 1823, "e_below": 168, "status": "ok"}, {"L": 250, "side": "sell", "threshold_c": 1.5, "rate_above": 0.7082, "rate_below": 0.0482, "n_above": 1669, "n_below": 6267, "e_above": 1182, "e_below": 302, "status": "ok"}]
+INFO control2 skew (rank2): [{"L": 0, "clock": "fill", "side": "bid", "n": 600, "a_c": -1.9827, "b_c_per_100sh": -0.9831, "resid_sd": 0.2935}, {"L": 0, "clock": "fill", "side": "ask", "n": 600, "a_c": 1.9905, "b_c_per_100sh": -1.0083, "resid_sd": 0.2911}, {"L": 50, "clock": "fill", "side": "bid", "n": 600, "a_c": -2.0079, "b_c_per_100sh": -0.9629, "resid_sd": 0.4589}, {"L": 50, "clock": "fill", "side": "ask", "n": 600, "a_c": 1.9907, "b_c_per_100sh": -1.0297, "resid_sd": 0.4628}, {"L": 250, "clock": "fill", "side": "bid", "n": 600, "a_c": -2.0268, "b_c_per_100sh": -0.9539, "resid_sd": 0.8111}, {"L": 250, "clock": "fill", "side": "ask", "n": 600, "a_c": 1.9508, "b_c_per_100sh": -1.032, "resid_sd": 0.854}, {"L": 0, "clock": "hi", "side": "bid", "n": 446, "a_c": -1.9728, "b_c_per_100sh": -1.0167, "resid_sd": 0.2972}, {"L": 0, "clock": "hi", "side": "ask", "n": 431, "a_c": 2.0004, "b_c_per_100sh": -1.021, "resid_sd": 0.2904}, {"L": 50, "clock": "hi", "side": "bid", "n": 446, "a_c": -1.986, "b_c_per_100sh": -0.9713, "resid_sd": 0.5368}, {"L": 50, "clock": "hi", "side": "ask", "n": 431, "a_c": 2.0243, "b_c_per_100sh": -0.9911, "resid_sd": 0.5842}, {"L": 250, "clock": "hi", "side": "bid", "n": 446, "a_c": -1.9833, "b_c_per_100sh": -0.9734, "resid_sd": 0.8696}, {"L": 250, "clock": "hi", "side": "ask", "n": 431, "a_c": 2.004, "b_c_per_100sh": -1.0041, "resid_sd": 1.0669}]
+INFO removal (rank2, adverse, L 0): [{"phase": "pre", "group": "cancel_possible", "n_orders": 12, "obs_mean": 0.0, "null_mean": 0.0, "null_sd": 0.0, "z": NaN, "p_one_sided": 1.0, "mean_percentile": 0.5}, {"phase": "live", "group": "cancel_possible", "n_orders": 120, "obs_mean": 5.5617, "null_mean": 0.0225, "null_sd": 0.2491, "z": 22.2366, "p_one_sided": 0.002, "mean_percentile": 0.9543}, {"phase": "all", "group": "cancel_possible", "n_orders": 132, "obs_mean": 5.0561, "null_mean": 0.0205, "null_sd": 0.2265, "z": 22.2366, "p_one_sided": 0.002, "mean_percentile": 0.913}, {"phase": "pre", "group": "exhausted_only", "n_orders": 10, "obs_mean": 0.0, "null_mean": 0.0, "null_sd": 0.0, "z": NaN, "p_one_sided": 1.0, "mean_percentile": 0.5}, {"phase": "live", "group": "exhausted_only", "n_orders": 109, "obs_mean": 0.3289, "null_mean": -0.0378, "null_sd": 0.2737, "z": 1.3401, "p_one_sided": 0.0778, "mean_percentile": 0.5236}, {"phase": "all", "group": "exhausted_only", "n_orders": 119, "obs_mean": 0.3013, "null_mean": -0.0347, "null_sd": 0.2507, "z": 1.3401, "p_one_sided": 0.0778, "mean_percentile": 0.5216}, {"phase": "pre", "group": "cancel_minus_exhausted", "n_orders": 22, "obs_mean": 0.0, "null_mean": 0.0, "null_sd": 0.0, "z": NaN, "p_one_sided": 1.0, "mean_percentile": NaN}, {"phase": "live", "group": "cancel_minus_exhausted", "n_orders": 229, "obs_mean": 5.2327, "null_mean": 0.0604, "null_sd": 0.3731, "z": 13.8648, "p_one_sided": 0.002, "mean_percentile": NaN}, {"phase": "all", "group": "cancel_minus_exhausted", "n_orders": 251, "obs_mean": 4.7548, "null_mean": 0.0552, "null_sd": 0.3405, "z": 13.8002, "p_one_sided": 0.002, "mean_percentile": NaN}]
+INFO links (rank2, reprice): [{"L": 0, "side": "bid", "n": 47, "ols_slope_dtick_on_dpf": 0.9784, "sign_agree": 1.0, "gap_p50": 3000}, {"L": 0, "side": "ask", "n": 34, "ols_slope_dtick_on_dpf": 0.9923, "sign_agree": 1.0, "gap_p50": 3300}, {"L": 50, "side": "bid", "n": 47, "ols_slope_dtick_on_dpf": 0.8777, "sign_agree": 0.8936, "gap_p50": 3000}, {"L": 50, "side": "ask", "n": 34, "ols_slope_dtick_on_dpf": 0.9859, "sign_agree": 0.9118, "gap_p50": 3300}, {"L": 250, "side": "bid", "n": 47, "ols_slope_dtick_on_dpf": 0.8183, "sign_agree": 0.8723, "gap_p50": 3000}, {"L": 250, "side": "ask", "n": 34, "ols_slope_dtick_on_dpf": 0.8975, "sign_agree": 0.9118, "gap_p50": 3300}]
+INFO logit (rank1): [{"L": 0, "side": "buy", "status": "converged", "iterations": 9, "n": 16245, "events": 2279, "b_g_c": 1.0167, "b_r_1s_bps": 1.3136, "pseudo_r2": 0.6007}, {"L": 0, "side": "sell", "status": "converged", "iterations": 9, "n": 16245, "events": 1669, "b_g_c": 1.3364, "b_r_1s_bps": -0.7947, "pseudo_r2": 0.6822}, {"L": 50, "side": "buy", "status": "converged", "iterations": 5, "n": 16242, "events": 2282, "b_g_c": 1.591, "b_r_1s_bps": 2.2665, "pseudo_r2": 0.724}, {"L": 50, "side": "sell", "status": "converged", "iterations": 6, "n": 16242, "events": 1669, "b_g_c": 2.2372, "b_r_1s_bps": -1.9876, "pseudo_r2": 0.8157}, {"L": 250, "side": "buy", "status": "converged", "iterations": 6, "n": 16242, "events": 2275, "b_g_c": 0.6211, "b_r_1s_bps": 1.1596, "pseudo_r2": 0.4698}, {"L": 250, "side": "sell", "status": "converged", "iterations": 6, "n": 16242, "events": 1661, "b_g_c": 0.8202, "b_r_1s_bps": -0.8081, "pseudo_r2": 0.5228}]
+PASS CONTROL 1 buy all: threshold within one 0.5 c bucket of 1.5 c, rate above >= 0.8, below <= 0.05
+PASS CONTROL 1 buy 20261024: threshold within one 0.5 c bucket of 1.5 c, rate above >= 0.8, below <= 0.05
+PASS CONTROL 1 buy 20261025: threshold within one 0.5 c bucket of 1.5 c, rate above >= 0.8, below <= 0.05
+PASS CONTROL 1 sell all: threshold within one 0.5 c bucket of 1.5 c, rate above >= 0.8, below <= 0.05
+PASS CONTROL 1 sell 20261024: threshold within one 0.5 c bucket of 1.5 c, rate above >= 0.8, below <= 0.05
+PASS CONTROL 1 sell 20261025: threshold within one 0.5 c bucket of 1.5 c, rate above >= 0.8, below <= 0.05
+PASS CONTROL 1 exact replication: every r_1s > 0 g bucket at or above 1.5 c rates >= 0.99, every one below <= 0.01
+PASS CONTROL 1 take records (two-leg records counted once) in span = the taker's decisions
+PASS CONTROL 2 fill bid: offset -2 c and skew -1 c / 100 sh recovered within +-0.5 c
+PASS CONTROL 2 fill ask: offset +2 c and skew -1 c / 100 sh recovered within +-0.5 c
+PASS CONTROL 2 hi bid: offset -2 c and skew -1 c / 100 sh recovered within +-0.5 c
+PASS CONTROL 2 hi ask: offset +2 c and skew -1 c / 100 sh recovered within +-0.5 c
+PASS claim: rank1 buy 10x threshold holds at L 50 with its n, every L evaluated
+PASS claim: rank2 quotes centred on p_fair within 0.5 c at L 0 (n recorded)
+PASS claim: rank2 quotes skew against inventory at L 0
+PASS claim: rank2 next maker fill reduces |position| (inventory-dependent hits)
+PASS claim: the random taker (rank3) claim is computed with its n at every L (no assertion on its value: ~50 random takes)
+PASS removal: planted top-decile adverse live cancels beyond the phase-matched null (p <= 0.01, >= 200 draws)
+PASS removal: random-time exhausted live windows sit inside the null (mean percentile 0.35-0.65)
+PASS removal: cancel minus exhausted beyond its paired null (p <= 0.01)
+PASS removal: every planted live order with a usable window and a placement is measured once (OTHER never)
+PASS removal: every planted pre order with a usable window and a placement is measured once (OTHER never)
+PASS removal: pre-ws windows are drawn from the pre phase only (p_fair flat there: observed and null |dp| exactly 0; BTC null moves)
+PASS removal statuses: straddling-ws and beyond-we windows, the market-day pool and no-placement windows counted
+INFO phase case: n 2980 obs |dp| 2.2848 c; mismatched null mean 1.1476 p 0.0020 z 31.0; reference matched z 0.06; module [{"n_orders": 2980, "obs_mean": 2.28477, "null_mean": 2.28246, "null_sd": 0.04046, "z": 0.05705, "p_one_sided": 0.47305, "mean_percentile": 0.50025}]
+PASS phase case: a phase-MISMATCHED control (draws over [ws - 300 s, we)) gives a false "moves inside random live pulls" signal (p <= 0.01, z > 3)
+PASS phase case: the module's phase-matched control gives none (|z| < 3, p > 0.05, observed mean = the reference)
+PASS phase case: claim removal_windows_move_beyond_null is False for rank3 at L 0
+PASS claim: rank2 planted adverse cancels flagged at L 0 (phase-matched)
+PASS links: rank2 reprices track p_fair (slope 0.8-1.2, sign agreement >= 0.9, per side)
+PASS links: invalid-status, not-latest and OTHER links excluded
+PASS logit: rank1 buy fitted with a positive gap coefficient (near-separation: max_iter or converged)
+PASS logit: every pooled model ran (24 rows, pooled present)
+PASS pairs: rank3 202 fill_status_src_status and 203 market_boundary_censored excluded with statuses
+PASS take after we counted outside_span (rank3, 1)
+PASS grid status btc_invalid counted
+PASS grid status book_stale counted
+PASS grid status book_frame_status counted
+PASS grid status book_one_sided counted
+PASS grid status book_crossed counted
+PASS ID-day rows skipped and counted (5)
+PASS BTC row before the Oct 23 23Z padding clipped and counted (1)
+PASS BTC overlap: 600 rows in two files, 50 own-day gap rows filled by the other file's usable rows, 30 age -1 rows missing (the gap patch)
+PASS poll_incomplete market kept and counted (market 102: 3 pairs)
+PASS self-trade take record counted (1)
+PASS fills_valued top-3 rows on the measurement days = the world count
+PASS posting: S_NOPRIO unbounded lo / mid counted as statuses
+PASS orders: identity_conflict order counted invalid (2 BOOK markets)
+PASS rest: rank2 BOOK rows carry resting-order evidence (bid / ask / both buckets present)
+PASS OTHER never surfaces in any output (address string absent)
+PASS every scope label is rank1-3 / pooled
+PASS address_summary: 4 rows, the contract addresses in rank order
+PASS timelines: the declared deterministic choice (2 per address here)
+PASS timeline timeline_rank1_20261024_101.csv: take_buy buckets = the taker's buys there and BTC overlaid
+PASS timeline timeline_rank1_20261024_102.csv: take_buy buckets = the taker's buys there and BTC overlaid
+PASS receipt: inputs hashed, the accepted constants printed, the pf_mt_btc semantics and the phase-matched null recorded
+PASS refused: a forbidden day (20261028) (reason asserted)
+PASS refused: the GT day as a measurement day (reason asserted)
+PASS refused: a forbidden BTC file path (before any access) (reason asserted)
+PASS refused: a missing BTC grid (reason asserted)
+PASS refused: an address outside the top 3 (reason asserted)
+PASS refused: identities.json ranks 1-3 differ from the contract (reason asserted)
+PASS refused: a BTC row on Oct 28 (forbidden day) (reason asserted)
+PASS refused: an ok BTC row with age_ms < 0 (look-ahead) (reason asserted)
+PASS refused: an existing output (write-once) (reason asserted)
+PASS refused: a fills_valued top-3 row on a non-consumed day (reason asserted)
+PASS refusals leave no partial or fit directory behind
+PASS BTC rule: an ok row with age_ms -1 is missing (counted), never fresh, not refused
+PASS BTC rule: two usable rows of one g_ms that disagree are refused (reason asserted)
+PASS book parity with pf_mt_econ.mid_at: identical statuses on 8000 queries
+PASS book parity: identical mids where ok
+PASS ORDER_INVALID equals pf_mt_lifecycle.INVALID
+PASS causality L=0: features at x <= cut unchanged when later BTC rows / frames (values and arrival times) / own fills change
+PASS causality L=50: features at x <= cut unchanged when later BTC rows / frames (values and arrival times) / own fills change
+PASS causality L=250: features at x <= cut unchanged when later BTC rows / frames (values and arrival times) / own fills change
+PASS causality falsifier fires: a planted +150 ms look-ahead does change features
+BENCH {"rows": 420000, "valid_rows_L0": 418627, "cpu_btc_day_s": 0.237, "cpu_tob_per_Mframe_s": 0.395, "cpu_grid_us_per_row_L": 0.412, "cpu_fit_us_per_row_pass": 0.198, "fit_passes_total": 12, "proj_R10M_typical16passes_grid_plus_fit_h": 0.0122, "proj_R10M_worst_capped_grid_plus_fit_h": 0.0426, "proj_R20.7M_typical16passes_grid_plus_fit_h": 0.0253, "proj_R20.7M_worst_capped_grid_plus_fit_h": 0.048}
+PASS bench: production chunk / fit code ran on 420 k synthetic rows
+PASS fit CPU cap: models still running end with status cpu_cap (no data pass)
+SELFTEST 78/78 checks passed; cpu 6.9 s
+2026-11-23T02:56:10Z tag=mt_dec_selftest_fix2 rc=0 peak_rss_mib=668 wall_s=7.38 cpu_user_s=6.36 memavail_start_gib=22 disk_free_gib=438->438 slot=claude2

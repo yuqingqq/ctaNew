@@ -1,0 +1,38 @@
+{
+ "checker": {
+  "file": "checks_20261123T023555Z.json",
+  "passed": 39,
+  "n": 39,
+  "failed": [],
+  "reparse_failed": []
+ },
+ "R1": {
+  "T1": {
+   "violations": 1,
+   "den": 18433,
+   "rate": 5.425052894265719e-05,
+   "certain": 0,
+   "reading": "supported"
+  },
+  "T2": {
+   "violations": 5,
+   "den": 16433,
+   "rate": 0.0003042658066086533,
+   "certain": 0,
+   "reading": "supported",
+   "checker_recomputed_records": 5,
+   "checker_rate": 0.0003042658066086533
+  },
+  "both_below_1pct_even_with_checker_counts": true
+ },
+ "R2": {
+  "defects_total": 0,
+  "scored_own_orders": 86,
+  "coverage_orders": {
+   "covered": 86,
+   "n": 86,
+   "rate": 1.0
+  }
+ }
+}
+2026-11-23T02:36:13Z tag=mt_x_claims_v2 rc=0 peak_rss_mib=110 wall_s=0.49 cpu_user_s=0.41 memavail_start_gib=22 disk_free_gib=438->438 slot=claude

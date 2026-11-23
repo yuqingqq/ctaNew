@@ -1,0 +1,63 @@
+head=40ee591ea095b150e252d221b59233d98127c5c0
+[mem] days 20261023: VmHWM 122 MiB
+[mem] days 20261024: VmHWM 127 MiB
+[mem] days 20261025: VmHWM 128 MiB
+[mem] days 20261026: VmHWM 129 MiB
+[mem] days 20261027: VmHWM 129 MiB
+[mem] days 20261108: VmHWM 129 MiB
+[report] days read: 6
+[report] lifecycle markets {'20261024': 7, '20261025': 5, '20261026': 5, '20261027': 2, '20261108': 52}; R1 supported / supported -> coverage scenario S_FIFO
+[mem] R3 tables: VmHWM 429 MiB
+[mem] econ keys: VmHWM 630 MiB
+[mem] econ columns: VmHWM 630 MiB
+[mem] econ tables: VmHWM 630 MiB
+[mem] fills_valued pass: VmHWM 900 MiB
+[mem] address / counterparty / null / ranks: VmHWM 900 MiB
+[mem] timeline 20261024: VmHWM 900 MiB
+[mem] timeline 20261025: VmHWM 900 MiB
+[mem] timeline 20261026: VmHWM 900 MiB
+[mem] timeline 20261027: VmHWM 900 MiB
+{
+ "R1": {
+  "T1": {
+   "den": 18433,
+   "violations": 1,
+   "rate": 5.425052894265719e-05,
+   "reading": "supported"
+  },
+  "T2": {
+   "den": 16433,
+   "violations": 5,
+   "rate": 0.0003042658066086533,
+   "reading": "supported"
+  }
+ },
+ "coverage_scenario": "S_FIFO",
+ "R2": "no_defect",
+ "outputs": [
+  "counterparty.csv",
+  "coverage.csv",
+  "econ_address_day.csv",
+  "econ_identity_day.csv",
+  "econ_segments.csv",
+  "examples.csv",
+  "gt_scores.csv",
+  "inventory.csv",
+  "links.csv",
+  "priority_tests.csv",
+  "rank_persistence.csv",
+  "rebate_scenario.csv",
+  "removal_sets.csv",
+  "resolution_null.csv",
+  "rewards_market.csv",
+  "statuses.csv",
+  "timeline_20261024_3704004.csv",
+  "timeline_20261025_3763401.csv",
+  "timeline_20261026_3838531.csv",
+  "timeline_20261027_3877472.csv",
+  "unresolved_top.csv",
+  "windows.csv"
+ ],
+ "vmhwm_mib": 899.5
+}
+2026-11-23T02:30:34Z tag=mt_x_report_v2 rc=0 peak_rss_mib=899 wall_s=34.23 cpu_user_s=29.47 memavail_start_gib=22 disk_free_gib=439->439 slot=claude

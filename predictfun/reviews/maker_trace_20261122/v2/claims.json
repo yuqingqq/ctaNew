@@ -1,0 +1,466 @@
+{
+ "checker": {
+  "file": "checks_20261123T023555Z.json",
+  "passed": 39,
+  "n": 39,
+  "failed": [],
+  "reparse_failed": []
+ },
+ "R1": {
+  "T1": {
+   "violations": 1,
+   "den": 18433,
+   "rate": 5.425052894265719e-05,
+   "certain": 0,
+   "reading": "supported"
+  },
+  "T2": {
+   "violations": 5,
+   "den": 16433,
+   "rate": 0.0003042658066086533,
+   "certain": 0,
+   "reading": "supported",
+   "checker_recomputed_records": 5,
+   "checker_rate": 0.0003042658066086533
+  },
+  "both_below_1pct_even_with_checker_counts": true
+ },
+ "R2": {
+  "defects_total": 0,
+  "scored_own_orders": 86,
+  "coverage_orders": {
+   "covered": 86,
+   "n": 86,
+   "rate": 1.0
+  }
+ },
+ "exante_sh.in": {
+  "n_addr": 10,
+  "sh_mk": 16154809,
+  "sh_tk": 3855126,
+  "maker_frac": 0.807,
+  "net": 35586.0,
+  "gross": 58345.34,
+  "fees": 22759.34,
+  "rt": 130789.28,
+  "resid": -72443.93,
+  "net_maker_legs": 7508.74,
+  "net_taker_legs": 28077.26,
+  "reb25": 24139.43,
+  "c_net": 0.1778,
+  "net_by_day": {
+   "20261024": 8614.23,
+   "20261025": -14321.18,
+   "20261026": 41996.9,
+   "20261027": -703.95
+  },
+  "sign_consistent": false,
+  "identity_gross_eq_rt_plus_resid": true,
+  "identity_net_eq_gross_minus_fees": true
+ },
+ "exante_sh.field": {
+  "n_addr": 2943,
+  "sh_mk": 36307011,
+  "sh_tk": 13983594,
+  "maker_frac": 0.722,
+  "net": 110136.2,
+  "gross": 188473.9,
+  "fees": 78337.71,
+  "rt": 356550.8,
+  "resid": -168076.89,
+  "net_maker_legs": -26739.25,
+  "net_taker_legs": 136875.45,
+  "reb25": 46274.59,
+  "c_net": 0.219,
+  "net_by_day": {
+   "20261024": 34285.33,
+   "20261025": 32149.84,
+   "20261026": 21263.33,
+   "20261027": 22437.7
+  },
+  "sign_consistent": true,
+  "identity_gross_eq_rt_plus_resid": true,
+  "identity_net_eq_gross_minus_fees": true
+ },
+ "exante_sh.nonmaker": {
+  "n_addr": 18346,
+  "sh_mk": 0,
+  "sh_tk": 34623099,
+  "maker_frac": 0.0,
+  "net": -427378.25,
+  "gross": -246819.25,
+  "fees": 180559.01,
+  "rt": 225546.35,
+  "resid": -472365.6,
+  "net_maker_legs": 0.0,
+  "net_taker_legs": -427378.25,
+  "reb25": 0.0,
+  "c_net": -1.2344,
+  "net_by_day": {
+   "20261024": -103287.56,
+   "20261025": -78073.99,
+   "20261026": -148179.13,
+   "20261027": -97837.58
+  },
+  "sign_consistent": true,
+  "identity_gross_eq_rt_plus_resid": true,
+  "identity_net_eq_gross_minus_fees": true
+ },
+ "exante_pnl.in": {
+  "n_addr": 9,
+  "sh_mk": 5127009,
+  "sh_tk": 455181,
+  "maker_frac": 0.918,
+  "net": 12323.47,
+  "gross": 15206.03,
+  "fees": 2882.57,
+  "rt": 60064.18,
+  "resid": -44858.14,
+  "net_maker_legs": 8201.94,
+  "net_taker_legs": 4121.52,
+  "reb25": 6972.94,
+  "c_net": 0.2208,
+  "net_by_day": {
+   "20261024": 1662.2,
+   "20261025": -7417.54,
+   "20261026": 9889.89,
+   "20261027": 8188.92
+  },
+  "sign_consistent": false,
+  "identity_gross_eq_rt_plus_resid": true,
+  "identity_net_eq_gross_minus_fees": true
+ },
+ "exante_pnl.field": {
+  "n_addr": 2944,
+  "sh_mk": 47334810,
+  "sh_tk": 17383540,
+  "maker_frac": 0.731,
+  "net": 133398.73,
+  "gross": 231613.21,
+  "fees": 98214.48,
+  "rt": 427275.9,
+  "resid": -195662.68,
+  "net_maker_legs": -27432.46,
+  "net_taker_legs": 160831.19,
+  "reb25": 63441.07,
+  "c_net": 0.2061,
+  "net_by_day": {
+   "20261024": 41237.36,
+   "20261025": 25246.21,
+   "20261026": 53370.34,
+   "20261027": 13544.83
+  },
+  "sign_consistent": true,
+  "identity_gross_eq_rt_plus_resid": true,
+  "identity_net_eq_gross_minus_fees": true
+ },
+ "exante_pnl.nonmaker": {
+  "n_addr": 18346,
+  "sh_mk": 0,
+  "sh_tk": 34623099,
+  "maker_frac": 0.0,
+  "net": -427378.25,
+  "gross": -246819.25,
+  "fees": 180559.01,
+  "rt": 225546.35,
+  "resid": -472365.6,
+  "net_maker_legs": 0.0,
+  "net_taker_legs": -427378.25,
+  "reb25": 0.0,
+  "c_net": -1.2344,
+  "net_by_day": {
+   "20261024": -103287.56,
+   "20261025": -78073.99,
+   "20261026": -148179.13,
+   "20261027": -97837.58
+  },
+  "sign_consistent": true,
+  "identity_gross_eq_rt_plus_resid": true,
+  "identity_net_eq_gross_minus_fees": true
+ },
+ "zero_sum": {
+  "sum_net_all_addresses": -281656.05,
+  "sum_fees": 281656.05,
+  "net_plus_fees": 0.0
+ },
+ "segments.exante_sh.in": {
+  "pooled": {
+   "depth_c_net": [
+    -0.1584,
+    0.2494,
+    0.8107,
+    0.8699
+   ],
+   "depth_monotone_increasing": true,
+   "depth_d0_below_deeper": true,
+   "sweep_c_net": 1.4752,
+   "single_c_net": -0.5777,
+   "sweep_gt_single": true,
+   "early_c_net": 0.8134,
+   "late_c_net": -1.5014,
+   "early_gt_late": true,
+   "taker_c_1s": 1.208,
+   "taker_c_net": 0.7283,
+   "taker_1s_positive": true
+  },
+  "20261024": {
+   "depth_c_net": [
+    -0.0038,
+    -0.4514,
+    -0.35,
+    1.7945
+   ],
+   "depth_monotone_increasing": false,
+   "depth_d0_below_deeper": false,
+   "sweep_c_net": 0.2057,
+   "single_c_net": 0.1105,
+   "sweep_gt_single": true,
+   "early_c_net": 0.4488,
+   "late_c_net": -0.0733,
+   "early_gt_late": true,
+   "taker_c_1s": 1.0499,
+   "taker_c_net": 0.4662,
+   "taker_1s_positive": true
+  },
+  "20261025": {
+   "depth_c_net": [
+    -0.6267,
+    0.4903,
+    1.4979,
+    2.2735
+   ],
+   "depth_monotone_increasing": true,
+   "depth_d0_below_deeper": true,
+   "sweep_c_net": 1.8932,
+   "single_c_net": -1.6251,
+   "sweep_gt_single": true,
+   "early_c_net": 0.0662,
+   "late_c_net": -1.1912,
+   "early_gt_late": true,
+   "taker_c_1s": 1.2345,
+   "taker_c_net": -0.2254,
+   "taker_1s_positive": true
+  },
+  "20261026": {
+   "depth_c_net": [
+    -0.0208,
+    0.812,
+    2.0581,
+    3.1845
+   ],
+   "depth_monotone_increasing": true,
+   "depth_d0_below_deeper": true,
+   "sweep_c_net": 2.6136,
+   "single_c_net": -0.1383,
+   "sweep_gt_single": true,
+   "early_c_net": 1.6093,
+   "late_c_net": -2.0003,
+   "early_gt_late": true,
+   "taker_c_1s": 1.2348,
+   "taker_c_net": 0.6428,
+   "taker_1s_positive": true
+  },
+  "20261027": {
+   "depth_c_net": [
+    -0.1585,
+    -0.0047,
+    -0.168,
+    -5.0191
+   ],
+   "depth_monotone_increasing": false,
+   "depth_d0_below_deeper": false,
+   "sweep_c_net": 1.2161,
+   "single_c_net": -0.973,
+   "sweep_gt_single": true,
+   "early_c_net": 0.6209,
+   "late_c_net": -2.7441,
+   "early_gt_late": true,
+   "taker_c_1s": 1.2463,
+   "taker_c_net": 1.3938,
+   "taker_1s_positive": true
+  },
+  "days_count": {
+   "depth_d0_below_deeper": 2,
+   "depth_monotone_increasing": 2,
+   "sweep_gt_single": 4,
+   "early_gt_late": 4,
+   "taker_1s_positive": 4
+  }
+ },
+ "segments.exante_sh.field": {
+  "pooled": {
+   "depth_c_net": [
+    -0.1764,
+    0.3513,
+    0.7115,
+    0.9756
+   ],
+   "depth_monotone_increasing": true,
+   "depth_d0_below_deeper": true,
+   "sweep_c_net": 1.2853,
+   "single_c_net": -0.4957,
+   "sweep_gt_single": true,
+   "early_c_net": 0.3654,
+   "late_c_net": -0.4006,
+   "early_gt_late": true,
+   "taker_c_1s": 0.1555,
+   "taker_c_net": 0.9788,
+   "taker_1s_positive": true
+  },
+  "20261024": {
+   "depth_c_net": [
+    -0.3854,
+    1.3232,
+    0.1435,
+    -1.6291
+   ],
+   "depth_monotone_increasing": false,
+   "depth_d0_below_deeper": false,
+   "sweep_c_net": 1.0561,
+   "single_c_net": -0.7391,
+   "sweep_gt_single": true,
+   "early_c_net": 1.068,
+   "late_c_net": -1.0844,
+   "early_gt_late": true,
+   "taker_c_1s": 0.4027,
+   "taker_c_net": 1.6784,
+   "taker_1s_positive": true
+  },
+  "20261025": {
+   "depth_c_net": [
+    -0.6496,
+    0.1869,
+    2.6049,
+    3.4406
+   ],
+   "depth_monotone_increasing": true,
+   "depth_d0_below_deeper": true,
+   "sweep_c_net": 1.9283,
+   "single_c_net": -1.17,
+   "sweep_gt_single": true,
+   "early_c_net": 0.7716,
+   "late_c_net": 0.0924,
+   "early_gt_late": true,
+   "taker_c_1s": 0.3049,
+   "taker_c_net": 1.9868,
+   "taker_1s_positive": true
+  },
+  "20261026": {
+   "depth_c_net": [
+    0.1546,
+    0.3676,
+    0.414,
+    1.2166
+   ],
+   "depth_monotone_increasing": true,
+   "depth_d0_below_deeper": true,
+   "sweep_c_net": 1.1349,
+   "single_c_net": 0.029,
+   "sweep_gt_single": true,
+   "early_c_net": 0.2288,
+   "late_c_net": -0.613,
+   "early_gt_late": true,
+   "taker_c_1s": -0.1155,
+   "taker_c_net": -0.2118,
+   "taker_1s_positive": false
+  },
+  "20261027": {
+   "depth_c_net": [
+    -0.0052,
+    -0.3036,
+    -0.3339,
+    0.5769
+   ],
+   "depth_monotone_increasing": false,
+   "depth_d0_below_deeper": false,
+   "sweep_c_net": 1.0051,
+   "single_c_net": -0.327,
+   "sweep_gt_single": true,
+   "early_c_net": -0.3288,
+   "late_c_net": -0.0641,
+   "early_gt_late": false,
+   "taker_c_1s": 0.097,
+   "taker_c_net": 0.7416,
+   "taker_1s_positive": true
+  },
+  "days_count": {
+   "depth_d0_below_deeper": 2,
+   "depth_monotone_increasing": 2,
+   "sweep_gt_single": 4,
+   "early_gt_late": 3,
+   "taker_1s_positive": 3
+  }
+ },
+ "rebate_scenario": {
+  "note": "advertised 25% taker-fee rebate, unverified as paid; shown beside, never inside, net P&L",
+  "in_reb25": 24139.43,
+  "in_net": 35586.0,
+  "in_net_maker_legs": 7508.74,
+  "in_ratio_reb_to_net": 0.678,
+  "field_reb25": 46274.59,
+  "field_net": 110136.2,
+  "field_ratio_reb_to_net": 0.42
+ },
+ "reward_pool": {
+  "units": "unverified (per-window schedule hourlyRate); per-maker rewards unidentifiable",
+  "pool_units_by_day": {
+   "20261024": 72000.0,
+   "20261025": 72000.0,
+   "20261026": 72000.0,
+   "20261027": 71750.0
+  },
+  "all_makers_net_usd_by_day": {
+   "20261024": 42899.56,
+   "20261025": 17828.66,
+   "20261026": 63260.23,
+   "20261027": 21733.75
+  }
+ },
+ "resolution_null.exante_sh.in": {
+  "percentile": {
+   "20261024": 0.316,
+   "20261025": 0.199,
+   "20261026": 0.522,
+   "20261027": 0.414
+  },
+  "n_draws": 1000,
+  "within_central_95": true
+ },
+ "addresses.exante_sh": {
+  "n": 10,
+  "n_net_positive_pooled": 8,
+  "n_positive_every_day": 3,
+  "positive_every_day": [
+   {
+    "addr": "0x0CCF72d0f646971ADB346E3bcFE425847351669B",
+    "maker_frac": 1.0,
+    "net": 4611.63,
+    "rt": 2253.0,
+    "resid": 2358.63
+   },
+   {
+    "addr": "0x11EECAEc6aa40dE64e35DDEb3f8376F2AF25a927",
+    "maker_frac": 1.0,
+    "net": 6045.72,
+    "rt": 5174.6,
+    "resid": 871.12
+   },
+   {
+    "addr": "0x192495Cb5C3c8a43B18676e29706dB34f6e828e8",
+    "maker_frac": 1.0,
+    "net": 5124.18,
+    "rt": 4891.68,
+    "resid": 232.5
+   }
+  ],
+  "n_pure_makers": 5,
+  "net_range": [
+   -18274.25,
+   15083.97
+  ]
+ },
+ "rank_persistence.exante_sh": {
+  "mean_days_in_daily_top10": 2.4,
+  "n": 10
+ }
+}
