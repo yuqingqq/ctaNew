@@ -1,0 +1,16 @@
+LIFECYCLE SELFTEST PASSED: 145 checks; VmHWM 124 MiB
+{"selftest": "pf_mt_econ", "assertions_passed": 1010, "result": "PASS"}
+{
+  "target": "1af85c5691d5ca4c2f9565d94a13cd9680688d3c",
+  "synthetic_receipt_before_UUID": {
+    "hi": 1792803602500,
+    "actual_lo_h": 1792803600500,
+    "contract_lo_h": -1,
+    "actual_receipt_hi": false
+  },
+  "current_artifact_scope": "Saved fill_hi_rule passes; this is a future-input defect, not demonstrated on the measured rows.",
+  "lifecycle_selftest": "PASS",
+  "econ_selftest": "PASS",
+  "cpu_s": 2.791185483
+}
+2026-11-23T01:33:11Z tag=codex_mt_review_controls rc=0 peak_rss_mib=128 wall_s=13.83 cpu_user_s=12.35 memavail_start_gib=22 disk_free_gib=441->440 slot=codex

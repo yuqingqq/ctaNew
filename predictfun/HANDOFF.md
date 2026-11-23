@@ -23,6 +23,45 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- MAKER_TRACE_REVIEW_20261123_CODEX -->
+## 2026-11-23 — Maker trace review: ledger accepted; horizon and inventory interpretation must be corrected
+
+[Combined review](reviews/automatic/20261123_maker_trace_review/report.md),
+pinned 1af85c5691d5ca4c2f9565d94a13cd9680688d3c. Top-ten net +$35,586,
+matched +$130,789, residual -$72,444 and fees -$22,759 independently
+reconcile. All 335 report input hashes match. R1's declared low-contradiction
+screen stands; R2 reproduces 86/86 filled own orders with zero recorded
+defects. These are consumed-day descriptions, not validation or a policy.
+
+The seven failed checks mainly disagree with the frozen rounding, ties,
+invalid-row and empty-side conventions. The report adjudicates each one.
+No full lifecycle rebuild is justified by the sampled failures; keep R3
+formally provisional until a consolidated corrected checker receipt.
+Batch semantic fixes with useful analysis; no one-issue review loops.
+
+Material correction: the d0/depth/sweep figures are resolution P&L, not
+short-horizon adverse selection. On identical valid-1s rows, top-ten d0
+maker fills are +0.363c/share at 1s and -0.157c at resolution. Other makers'
+taker fills are +0.156c gross but -0.424c net at 1s. Small aggregate residual
+P&L does not prove flat inventory; the three consistently profitable pure
+makers have material recorded position excursions. Withdraw those causal
+claims before selecting a quoting rule. A latent receipt-hi fallback bug
+is nonblocking for these saved rows and deferred until lifecycle reuse.
+
+Concurrent 9da9c2e61 records USER approval for the ex-ante top-three
+decision-path study, cap 1.85h / line 5.25h. ONE next priority: finish that
+authorized packet, bundling checker corrections and completed FIFO turnover
+by entry/exit role, fees, holding time and residual exposure. Align
+1s/10s/60s/END/resolution cohorts. The ex-ante top three are not the three
+post-hoc winners. Fill-relative conditions are not known posting inputs;
+test feasible action-time/observation bounds. The first/last-fill activity
+span defines a conditional take rate, not an unconditional hazard.
+Amend and freeze these points before measurement. No repeated approval is
+needed inside the newly approved scope/caps. This review did not launch
+the study or review its not-yet-submitted implementation.
+Review charge <=0.021 core-hours (codex_mt_review_*; do not double count).
+<!-- /MAKER_TRACE_REVIEW_20261123_CODEX -->
+
 <!-- MAKER_TRACE_COVERAGE_20261122_USER -->
 ## 2026-11-22 — USER: estimate missing details and reconstruct most of the makers' behavior
 

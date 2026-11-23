@@ -1,4 +1,27 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+maker_trace_review_20261123_codex:
+  target: 1af85c5691d5ca4c2f9565d94a13cd9680688d3c
+  report: predictfun/reviews/automatic/20261123_maker_trace_review/report.md
+  disposition: descriptive_economics_accepted_interpretation_corrections_required
+  original_checker_passes: 32
+  original_checker_checks: 39
+  R3_formal_status: provisional_pending_semantic_checker_reconciliation
+  verified_report_input_hashes: 335
+  own_filled_orders: 86
+  own_recorded_defects: 0
+  verified_top10_net_usd: 35586.000936
+  top10_d0_same_cohort_net_1s_c_per_share: 0.363283
+  top10_d0_same_cohort_resolution_c_per_share: -0.157288
+  field_taker_same_cohort_net_1s_c_per_share: -0.424470
+  full_lifecycle_rerun_justified_by_review: false
+  next_priority: authorized_top3_decision_paths_with_horizon_aligned_turnover_and_timing_bounds
+  subsequent_authorization_commit: 9da9c2e61
+  next_packet_needs_additional_USER_decision_within_caps: false
+  maker_trace_task_cap_core_hours: 1.85
+  existing_line_ceiling_core_hours: 5.25
+  review_charge_upper_bound_core_hours: 0.021
+  next_packet_launched: false
+
 turnover_attribution_review_20261122_codex:
   target: 51ed592d9ddf9e2968d12ffb9fc966763c0a8ce9
   report: predictfun/reviews/automatic/20261122_turnover_attribution_review/report.md

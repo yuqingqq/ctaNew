@@ -1,0 +1,135 @@
+source_disagreements {}
+queue {"markets": 71, "unresolved_differing_hashes": 18274, "only_0_vs_nan_lo_and_nan_hi": 18271, "only_display_tolerance_vs_nan": 18274, "nonzero_examples": [[{"mk_hash": "0x62483c5f7b3e9e5c6ba3bc4f7c1fbb4d9f8aa78248b751a1e38834fa386e60bf", "scenario": "S_FIFO", "ahead_lo": 0.01, "ahead_hi": NaN, "queue_class": "unresolved"}, {"mk_hash": "0x62483c5f7b3e9e5c6ba3bc4f7c1fbb4d9f8aa78248b751a1e38834fa386e60bf", "scenario": "S_FIFO_LO", "ahead_lo": 0.01, "ahead_hi": NaN, "queue_class": "unresolved"}, {"mk_hash": "0x62483c5f7b3e9e5c6ba3bc4f7c1fbb4d9f8aa78248b751a1e38834fa386e60bf", "scenario": "S_NOPRIO", "ahead_lo": NaN, "ahead_hi": NaN, "queue_class": "unresolved"}], [{"mk_hash": "0x430c986cab458dc00974870fd6a9912b86d3eead92b1628ded8f4d2a247d30a2", "scenario": "S_FIFO", "ahead_lo": 0.0066666, "ahead_hi": NaN, "queue_class": "unresolved"}, {"mk_hash": "0x430c986cab458dc00974870fd6a9912b86d3eead92b1628ded8f4d2a247d30a2", "scenario": "S_FIFO_LO", "ahead_lo": 0.0066666, "ahead_hi": NaN, "queue_class": "unresolved"}, {"mk_hash": "0x430c986cab458dc00974870fd6a9912b86d3eead92b1628ded8f4d2a247d30a2", "scenario": "S_NOPRIO", "ahead_lo": NaN, "ahead_hi": NaN, "queue_class": "unresolved"}], [{"mk_hash": "0xbbdb2462b7ad7ee8ceb2d555b3ce38d8bf9d82e18138d7760c07c4ae531e9e48", "scenario": "S_FIFO", "ahead_lo": 0.003333333333333335, "ahead_hi": NaN, "queue_class": "unresolved"}, {"mk_hash": "0xbbdb2462b7ad7ee8ceb2d555b3ce38d8bf9d82e18138d7760c07c4ae531e9e48", "scenario": "S_FIFO_LO", "ahead_lo": 0.003333333333333335, "ahead_hi": NaN, "queue_class": "unresolved"}, {"mk_hash": "0xbbdb2462b7ad7ee8ceb2d555b3ce38d8bf9d82e18138d7760c07c4ae531e9e48", "scenario": "S_NOPRIO", "ahead_lo": NaN, "ahead_hi": NaN, "queue_class": "unresolved"}]]}
+{
+  "queue": {
+    "markets": 71,
+    "unresolved_differing_hashes": 18274,
+    "only_0_vs_nan_lo_and_nan_hi": 18271,
+    "only_display_tolerance_vs_nan": 18274,
+    "nonzero_examples": [
+      [
+        {
+          "mk_hash": "0x62483c5f7b3e9e5c6ba3bc4f7c1fbb4d9f8aa78248b751a1e38834fa386e60bf",
+          "scenario": "S_FIFO",
+          "ahead_lo": 0.01,
+          "ahead_hi": NaN,
+          "queue_class": "unresolved"
+        },
+        {
+          "mk_hash": "0x62483c5f7b3e9e5c6ba3bc4f7c1fbb4d9f8aa78248b751a1e38834fa386e60bf",
+          "scenario": "S_FIFO_LO",
+          "ahead_lo": 0.01,
+          "ahead_hi": NaN,
+          "queue_class": "unresolved"
+        },
+        {
+          "mk_hash": "0x62483c5f7b3e9e5c6ba3bc4f7c1fbb4d9f8aa78248b751a1e38834fa386e60bf",
+          "scenario": "S_NOPRIO",
+          "ahead_lo": NaN,
+          "ahead_hi": NaN,
+          "queue_class": "unresolved"
+        }
+      ],
+      [
+        {
+          "mk_hash": "0x430c986cab458dc00974870fd6a9912b86d3eead92b1628ded8f4d2a247d30a2",
+          "scenario": "S_FIFO",
+          "ahead_lo": 0.0066666,
+          "ahead_hi": NaN,
+          "queue_class": "unresolved"
+        },
+        {
+          "mk_hash": "0x430c986cab458dc00974870fd6a9912b86d3eead92b1628ded8f4d2a247d30a2",
+          "scenario": "S_FIFO_LO",
+          "ahead_lo": 0.0066666,
+          "ahead_hi": NaN,
+          "queue_class": "unresolved"
+        },
+        {
+          "mk_hash": "0x430c986cab458dc00974870fd6a9912b86d3eead92b1628ded8f4d2a247d30a2",
+          "scenario": "S_NOPRIO",
+          "ahead_lo": NaN,
+          "ahead_hi": NaN,
+          "queue_class": "unresolved"
+        }
+      ],
+      [
+        {
+          "mk_hash": "0xbbdb2462b7ad7ee8ceb2d555b3ce38d8bf9d82e18138d7760c07c4ae531e9e48",
+          "scenario": "S_FIFO",
+          "ahead_lo": 0.003333333333333335,
+          "ahead_hi": NaN,
+          "queue_class": "unresolved"
+        },
+        {
+          "mk_hash": "0xbbdb2462b7ad7ee8ceb2d555b3ce38d8bf9d82e18138d7760c07c4ae531e9e48",
+          "scenario": "S_FIFO_LO",
+          "ahead_lo": 0.003333333333333335,
+          "ahead_hi": NaN,
+          "queue_class": "unresolved"
+        },
+        {
+          "mk_hash": "0xbbdb2462b7ad7ee8ceb2d555b3ce38d8bf9d82e18138d7760c07c4ae531e9e48",
+          "scenario": "S_NOPRIO",
+          "ahead_lo": NaN,
+          "ahead_hi": NaN,
+          "queue_class": "unresolved"
+        }
+      ]
+    ]
+  },
+  "tob": {
+    "20261024_3697902": {
+      "bid": {
+        "n": 0,
+        "all_empty_side_zero_vs_nan": true
+      },
+      "ask": {
+        "n": 39,
+        "all_empty_side_zero_vs_nan": true
+      }
+    },
+    "20261025_3734864": {
+      "bid": {
+        "n": 0,
+        "all_empty_side_zero_vs_nan": true
+      },
+      "ask": {
+        "n": 34,
+        "all_empty_side_zero_vs_nan": true
+      }
+    },
+    "20261108_4353706": {
+      "bid": {
+        "n": 0,
+        "all_empty_side_zero_vs_nan": true
+      },
+      "ask": {
+        "n": 44,
+        "all_empty_side_zero_vs_nan": true
+      }
+    },
+    "20261108_4334454": {
+      "bid": {
+        "n": 39,
+        "all_empty_side_zero_vs_nan": true
+      },
+      "ask": {
+        "n": 0,
+        "all_empty_side_zero_vs_nan": true
+      }
+    }
+  },
+  "top10_independent_sums": {
+    "gross_res_mk": 7508.740043015823,
+    "gross_res_tk": 50836.60136249864,
+    "fee_res": 22759.340469916944,
+    "net_res": 35586.000935597534,
+    "rt_pnl_res": 130789.2756366034,
+    "resid_res": -72443.93423109005
+  },
+  "all_addresses_net_plus_fees": -1.4551915228366852e-11,
+  "cpu_s": 17.63779787,
+  "peak_mib": 564.734375
+}
+2026-11-23T01:28:54Z tag=codex_mt_review_supplement3 rc=0 peak_rss_mib=564 wall_s=17.99 cpu_user_s=17.55 memavail_start_gib=22 disk_free_gib=440->440 slot=codex

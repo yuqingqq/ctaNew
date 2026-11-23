@@ -1,0 +1,13 @@
+{
+  "target": "1af85c5691d5ca4c2f9565d94a13cd9680688d3c",
+  "synthetic_receipt_before_UUID": {
+    "hi": 1792803602500,
+    "actual_lo_h": 1792803600500,
+    "contract_lo_h": -1,
+    "actual_receipt_hi": false
+  },
+  "current_artifact_scope": "Saved fill_hi_rule passes; this is a future-input defect, not demonstrated on the measured rows.",
+  "lifecycle_selftest": "PASS",
+  "econ_selftest": "PASS",
+  "cpu_s": 2.791185483
+}

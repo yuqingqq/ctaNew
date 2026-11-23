@@ -1,0 +1,351 @@
+{
+  "target": "1af85c5691d5ca4c2f9565d94a13cd9680688d3c",
+  "sources": {
+    "predictfun/research/pf_mt_common.py": true,
+    "predictfun/research/pf_mt_econ.py": true,
+    "predictfun/research/pf_mt_econ_selftest.py": true,
+    "predictfun/research/pf_mt_extract.py": true,
+    "predictfun/research/pf_mt_extract_selftest.py": true,
+    "predictfun/research/pf_mt_lifecycle.py": true,
+    "predictfun/research/pf_mt_lifecycle_selftest.py": true,
+    "predictfun/research/pf_mt_report.py": true,
+    "predictfun/research/pf_mt_report_selftest.py": true,
+    "predictfun/research/pf_mt_truth.py": true,
+    "predictfun/research/pf_mt_truth_selftest.py": true,
+    "predictfun/reviews/maker_trace_20261122/contract.md": true,
+    "predictfun/reviews/maker_trace_20261122/declaration.md": true,
+    "predictfun/reviews/maker_trace_20261122/launch_mt.sh": true,
+    "predictfun/reviews/maker_trace_20261122/mt_checks.py": true,
+    "predictfun/reviews/maker_trace_20261122/tools/build_manifest.py": true,
+    "predictfun/reviews/maker_trace_20261122/tools/cpu_ledger.py": true,
+    "predictfun/reviews/maker_trace_20261122/tools/project.py": true,
+    "predictfun/reviews/maker_trace_20261122/tools/rehearse_checks.py": true,
+    "predictfun/reviews/maker_trace_20261122/tools/rehearse_e2e.py": true
+  },
+  "source_disagreements": {},
+  "readings_input_schema": [
+    [
+      "depth/20261024_3704004_frames.parquet",
+      {
+        "bytes": 208280,
+        "sha256": "785b1cceac1a717775fdfc4aa61dbf6ecb8167e1730c3084fc192ccbee425592"
+      }
+    ],
+    [
+      "depth/20261024_3704004_levels.parquet",
+      {
+        "bytes": 519268,
+        "sha256": "961ae89623eebc217c8519ee6e65eb0e665ae82af470c31548666d88d843a0f5"
+      }
+    ]
+  ],
+  "queue": {
+    "markets": 71,
+    "unresolved_differing_hashes": 18274,
+    "only_0_vs_nan_lo_and_nan_hi": 18271,
+    "only_display_tolerance_vs_nan": 18274,
+    "nonzero_examples": [
+      [
+        {
+          "mk_hash": "0x62483c5f7b3e9e5c6ba3bc4f7c1fbb4d9f8aa78248b751a1e38834fa386e60bf",
+          "scenario": "S_FIFO",
+          "ahead_lo": 0.01,
+          "ahead_hi": NaN,
+          "queue_class": "unresolved"
+        },
+        {
+          "mk_hash": "0x62483c5f7b3e9e5c6ba3bc4f7c1fbb4d9f8aa78248b751a1e38834fa386e60bf",
+          "scenario": "S_FIFO_LO",
+          "ahead_lo": 0.01,
+          "ahead_hi": NaN,
+          "queue_class": "unresolved"
+        },
+        {
+          "mk_hash": "0x62483c5f7b3e9e5c6ba3bc4f7c1fbb4d9f8aa78248b751a1e38834fa386e60bf",
+          "scenario": "S_NOPRIO",
+          "ahead_lo": NaN,
+          "ahead_hi": NaN,
+          "queue_class": "unresolved"
+        }
+      ],
+      [
+        {
+          "mk_hash": "0x430c986cab458dc00974870fd6a9912b86d3eead92b1628ded8f4d2a247d30a2",
+          "scenario": "S_FIFO",
+          "ahead_lo": 0.0066666,
+          "ahead_hi": NaN,
+          "queue_class": "unresolved"
+        },
+        {
+          "mk_hash": "0x430c986cab458dc00974870fd6a9912b86d3eead92b1628ded8f4d2a247d30a2",
+          "scenario": "S_FIFO_LO",
+          "ahead_lo": 0.0066666,
+          "ahead_hi": NaN,
+          "queue_class": "unresolved"
+        },
+        {
+          "mk_hash": "0x430c986cab458dc00974870fd6a9912b86d3eead92b1628ded8f4d2a247d30a2",
+          "scenario": "S_NOPRIO",
+          "ahead_lo": NaN,
+          "ahead_hi": NaN,
+          "queue_class": "unresolved"
+        }
+      ],
+      [
+        {
+          "mk_hash": "0xbbdb2462b7ad7ee8ceb2d555b3ce38d8bf9d82e18138d7760c07c4ae531e9e48",
+          "scenario": "S_FIFO",
+          "ahead_lo": 0.003333333333333335,
+          "ahead_hi": NaN,
+          "queue_class": "unresolved"
+        },
+        {
+          "mk_hash": "0xbbdb2462b7ad7ee8ceb2d555b3ce38d8bf9d82e18138d7760c07c4ae531e9e48",
+          "scenario": "S_FIFO_LO",
+          "ahead_lo": 0.003333333333333335,
+          "ahead_hi": NaN,
+          "queue_class": "unresolved"
+        },
+        {
+          "mk_hash": "0xbbdb2462b7ad7ee8ceb2d555b3ce38d8bf9d82e18138d7760c07c4ae531e9e48",
+          "scenario": "S_NOPRIO",
+          "ahead_lo": NaN,
+          "ahead_hi": NaN,
+          "queue_class": "unresolved"
+        }
+      ]
+    ]
+  },
+  "tob": {
+    "20261024_3697902": {
+      "bid": {
+        "n": 0,
+        "all_empty_side_zero_vs_nan": true
+      },
+      "ask": {
+        "n": 39,
+        "all_empty_side_zero_vs_nan": true
+      }
+    },
+    "20261025_3734864": {
+      "bid": {
+        "n": 0,
+        "all_empty_side_zero_vs_nan": true
+      },
+      "ask": {
+        "n": 34,
+        "all_empty_side_zero_vs_nan": true
+      }
+    },
+    "20261108_4353706": {
+      "bid": {
+        "n": 0,
+        "all_empty_side_zero_vs_nan": true
+      },
+      "ask": {
+        "n": 44,
+        "all_empty_side_zero_vs_nan": true
+      }
+    },
+    "20261108_4334454": {
+      "bid": {
+        "n": 39,
+        "all_empty_side_zero_vs_nan": true
+      },
+      "ask": {
+        "n": 0,
+        "all_empty_side_zero_vs_nan": true
+      }
+    }
+  },
+  "R2": {
+    "population_equal": true,
+    "defects_equal": true,
+    "population": {
+      "truth_rows": 42064,
+      "truth_status": {
+        "unfilled": 30135,
+        "refused": 11131,
+        "rejected": 510,
+        "not_accepted": 170,
+        "ok": 86,
+        "unconfirmed_live": 32
+      },
+      "scored_own_orders": 86,
+      "scored_legs": 99,
+      "scored_shares": 849.867323,
+      "gt_markets": 220,
+      "lifecycle_markets": 52,
+      "own_fill_markets_without_lifecycle": [],
+      "presence_orders": 1815,
+      "boundary_censored": {
+        "windows": [],
+        "lifecycle_orders_rows": 0,
+        "lifecycle_fills_rows": 0,
+        "own_orders": 0,
+        "own_legs": 0,
+        "own_shares": 0.0
+      }
+    },
+    "defects": {
+      "fills": 0,
+      "S_FIFO": 0,
+      "S_FIFO_LO": 0,
+      "S_NOPRIO": 0
+    },
+    "H2_flagged_order_is_own": false
+  },
+  "maker_day_columns": [
+    "day",
+    "addr",
+    "population",
+    "n_markets",
+    "n_markets_mk",
+    "n_mk",
+    "sh_mk",
+    "n_tk",
+    "sh_tk",
+    "notional",
+    "sh_buy",
+    "sh_sell",
+    "gross_res_mk",
+    "gross_res_tk",
+    "sh_res",
+    "sh_res_mk",
+    "fee_res",
+    "fee_fill",
+    "net_res",
+    "net_res_mk",
+    "reb25_res",
+    "reb25_fill",
+    "n_res_na",
+    "v_spr_mk",
+    "sh_spr_mk",
+    "v_spr_tk",
+    "sh_spr_tk",
+    "v_1s_mk",
+    "sh_1s_mk",
+    "v_1s_tk",
+    "sh_1s_tk",
+    "v_10s_mk",
+    "sh_10s_mk",
+    "v_10s_tk",
+    "sh_10s_tk",
+    "v_60s_mk",
+    "sh_60s_mk",
+    "v_60s_tk",
+    "sh_60s_tk",
+    "v_end_mk",
+    "sh_end_mk",
+    "v_end_tk",
+    "sh_end_tk",
+    "rt_sh",
+    "rt_pnl",
+    "net_pos",
+    "resid_res",
+    "resid_drift",
+    "resid_resol",
+    "rt_pnl_res",
+    "n_mkt_res_na",
+    "n_mkt_end_na",
+    "rew_bid_ms",
+    "rew_ask_ms",
+    "rew_both_ms",
+    "rew_n_orders",
+    "n_excl",
+    "rank_sh",
+    "rank_pnl",
+    "in_exante_sh",
+    "in_exante_pnl",
+    "in_sameday_sh",
+    "in_sameday_pnl",
+    "status"
+  ],
+  "top10_independent_sums": {
+    "gross_res_mk": 7508.740043015823,
+    "gross_res_tk": 50836.60136249864,
+    "fee_res": 22759.340469916944,
+    "net_res": 35586.000935597534,
+    "rt_pnl_res": 130789.2756366034,
+    "resid_res": -72443.93423109005
+  },
+  "top10_byday": {
+    "20261024": 8614.2298268499,
+    "20261025": -14321.180593421854,
+    "20261026": 41996.89900327387,
+    "20261027": -703.9473011043892
+  },
+  "all_addresses_net_plus_fees": -1.4551915228366852e-11,
+  "economic_columns": [
+    "day",
+    "id_set",
+    "label",
+    "grp",
+    "role",
+    "dim",
+    "bucket",
+    "n_addr",
+    "n",
+    "sh",
+    "notional",
+    "gross_res",
+    "sh_res",
+    "fee_res",
+    "fee_fill",
+    "net_res",
+    "n_res_na",
+    "reb25_res",
+    "reb25_fill",
+    "v_spr",
+    "sh_spr",
+    "v_1s",
+    "sh_1s",
+    "v_10s",
+    "sh_10s",
+    "v_60s",
+    "sh_60s",
+    "v_end",
+    "sh_end",
+    "ci",
+    "status",
+    "s_fifo_dependent",
+    "r1_contradicted",
+    "r1_readings",
+    "set_net_res",
+    "share_net",
+    "dim_share_sum",
+    "c_sh_gross",
+    "c_sh_fee",
+    "c_sh_net",
+    "c_sh_spr",
+    "c_sh_1s",
+    "c_sh_10s",
+    "c_sh_60s",
+    "c_sh_end",
+    "n_days",
+    "ci_days"
+  ],
+  "taker_all": [
+    {
+      "grp": "field",
+      "sh": 13983594.439277384,
+      "sh_1s": 12836785.995116299,
+      "v_1s": 19965.8073887398,
+      "fee_fill": 76036.21446227338,
+      "fee_res": 78337.70617982435,
+      "net_res": 136875.45205317135
+    },
+    {
+      "grp": "in",
+      "sh": 3855126.1923658345,
+      "sh_1s": 3802655.5852887323,
+      "v_1s": 45936.68025414508,
+      "fee_fill": 22387.1537563677,
+      "fee_res": 22759.34046991694,
+      "net_res": 28077.2608925817
+    }
+  ],
+  "R4_claim_reproduction": "independent maker_day sums equal reported rounded top-ten totals; all-address conservation holds",
+  "cpu_s": 17.63779787,
+  "peak_mib": 564.734375
+}

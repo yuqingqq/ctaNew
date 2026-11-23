@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261123_maker_trace_review/supplement.py", line 19, in <module>
+    assert all(R['sources'].values())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+2026-11-23T01:28:06Z tag=codex_mt_review_supplement rc=1 peak_rss_mib=108 wall_s=0.31 cpu_user_s=0.24 memavail_start_gib=22 disk_free_gib=441->441 slot=codex

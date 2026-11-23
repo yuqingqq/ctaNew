@@ -1,0 +1,745 @@
+{
+  "target": "1af85c5691d5ca4c2f9565d94a13cd9680688d3c",
+  "markets": {
+    "20261024_3697902": {
+      "capacity": {
+        "n_rows": 25,
+        "n_hashes": 11,
+        "cases": [
+          {
+            "h": "0x07cfbd1a54e4ae236fc32dac88f453893e6a89df714e54a39b9d544ccd514cfe",
+            "t": 1792816895661,
+            "posted": [
+              1792816895631,
+              1792816895631,
+              1792816895631
+            ],
+            "cum": 10.0,
+            "shown": [
+              9.99
+            ],
+            "deficit": [
+              0.009999999999999787
+            ]
+          },
+          {
+            "h": "0x65b4360f6aee8c842c8bb7eb88a380ba399ea7e7111b6761438ceb3abfedd429",
+            "t": 1792816895661,
+            "posted": [
+              1792816895631,
+              1792816895631,
+              1792816895631
+            ],
+            "cum": 10.0,
+            "shown": [
+              9.99
+            ],
+            "deficit": [
+              0.009999999999999787
+            ]
+          },
+          {
+            "h": "0x0159aa5ffd6013e8bac897c4bc976a4c7b7226c3ef9f739c1c442619756d4ab4",
+            "t": 1792816895661,
+            "posted": [
+              1792816895631,
+              1792816895631,
+              1792816895631
+            ],
+            "cum": 10.0,
+            "shown": [
+              9.99
+            ],
+            "deficit": [
+              0.009999999999999787
+            ]
+          },
+          {
+            "h": "0x32b8a8094d096242d3540c2d40c7d153cb81a41561f25bfefe9ba959bf7b27d5",
+            "t": 1792816895661,
+            "posted": [
+              1792816895631,
+              1792816895631,
+              1792816895631
+            ],
+            "cum": 10.0,
+            "shown": [
+              9.99
+            ],
+            "deficit": [
+              0.009999999999999787
+            ]
+          }
+        ],
+        "max_deficit": 0.009999999999999787
+      },
+      "exhaustion": {
+        "n_rows": 4,
+        "n_hashes": 2,
+        "all_have_group_ties": true,
+        "examples": [
+          {
+            "h": "0x13c46bf84fa1d65593c4bb22a2c41b7576c2bbe59350011307d6dc6c1d3b8980",
+            "sid": "01a16c36-0bfb-7230-9c9a-bee644dea3df",
+            "own_settle": [
+              1792816843771,
+              1792816843771,
+              1792816843767
+            ],
+            "group_tied_hashes": [
+              "0x13c46bf84fa1d65593c4bb22a2c41b7576c2bbe59350011307d6dc6c1d3b8980"
+            ],
+            "status": [
+              "ok",
+              "ok"
+            ]
+          },
+          {
+            "h": "0x0f6299c760480a3a713f3cf68be256d5dd5ac95a9a46c2fbce7ea9bd51d51984",
+            "sid": "01a16c39-ea39-7160-af39-a99b16fcfb87",
+            "own_settle": [
+              1792817097273,
+              1792817097273,
+              1792817097269,
+              1792817097267,
+              1792817097265,
+              1792817097265,
+              1792817097265,
+              1792817097265,
+              1792817097259,
+              1792817097257,
+              1792817097256,
+              1792817096218,
+              1792817096138,
+              1792817096116,
+              1792817095438
+            ],
+            "group_tied_hashes": [
+              "0x0f6299c760480a3a713f3cf68be256d5dd5ac95a9a46c2fbce7ea9bd51d51984"
+            ],
+            "status": [
+              "ok",
+              "ok"
+            ]
+          }
+        ]
+      },
+      "ahead": {
+        "n_rows": 3,
+        "all_have_group_ties": true,
+        "examples": [
+          {
+            "h": "0x1b6921879feda33aa6a98de2cf7f7b62547b990dcada458c6608b4b31564c4ab",
+            "sid": "01a16c36-0bfb-7230-9c9a-bee644dea3df",
+            "expected": [
+              3.3607
+            ],
+            "got": [
+              0.0,
+              0.0
+            ],
+            "group_tied_hashes": [
+              "0x13c46bf84fa1d65593c4bb22a2c41b7576c2bbe59350011307d6dc6c1d3b8980"
+            ]
+          },
+          {
+            "h": "0xbe8a279d12948662711e1d5dc30e5c5d620b0184387f7558cdb932ee83c82555",
+            "sid": "01a16c39-ea39-7160-af39-a99b16fcfb87",
+            "expected": [
+              0.380699146567719
+            ],
+            "got": [
+              0.0
+            ],
+            "group_tied_hashes": [
+              "0x0f6299c760480a3a713f3cf68be256d5dd5ac95a9a46c2fbce7ea9bd51d51984"
+            ]
+          }
+        ]
+      },
+      "T2": {
+        "checker": 0,
+        "cases": []
+      },
+      "H2": {
+        "n_rows": 0,
+        "rows": []
+      },
+      "tob": {
+        "frames": 5917,
+        "tob": 5917,
+        "cartesian_rows": 5917,
+        "occurrence_rows": 5917,
+        "cartesian_differences": {
+          "bid": 0,
+          "ask": 39
+        },
+        "occurrence_differences": {
+          "bid": 0,
+          "ask": 39
+        },
+        "duplicate_receipt_keys": 0
+      }
+    },
+    "20261025_3734864": {
+      "capacity": {
+        "n_rows": 0,
+        "n_hashes": 0,
+        "cases": [],
+        "max_deficit": 0
+      },
+      "exhaustion": {
+        "n_rows": 8,
+        "n_hashes": 4,
+        "all_have_group_ties": true,
+        "examples": [
+          {
+            "h": "0xa507f7dad805c42d762a5fd90a41912f1c3c22b4a9b792032b861193c87bccb1",
+            "sid": "01a171e9-ae25-7e12-afb9-67efc72072fe",
+            "own_settle": [
+              1792912502309,
+              1792912502309,
+              1792912502238
+            ],
+            "group_tied_hashes": [
+              "0xa507f7dad805c42d762a5fd90a41912f1c3c22b4a9b792032b861193c87bccb1"
+            ],
+            "status": [
+              "ok",
+              "ok"
+            ]
+          },
+          {
+            "h": "0xe8f5dd099f2514b63af9dd719fe447de2386acac3e60d425bd0869bfafad66c3",
+            "sid": "01a171ec-4892-73c2-8ce5-fdcbf8bcb466",
+            "own_settle": [
+              1792912672914,
+              1792912672914,
+              1792912672913
+            ],
+            "group_tied_hashes": [
+              "0xe8f5dd099f2514b63af9dd719fe447de2386acac3e60d425bd0869bfafad66c3"
+            ],
+            "status": [
+              "ok",
+              "ok"
+            ]
+          },
+          {
+            "h": "0xd5c0f2b7a64053b3fb1ab055473472a0c69b3ac0b6f24d252bc0e38c4d0c7a6b",
+            "sid": "01a171ec-5a7f-7082-b629-ce2003869e08",
+            "own_settle": [
+              1792912677503,
+              1792912677500,
+              1792912677499
+            ],
+            "group_tied_hashes": [
+              "0xc3fb6f7f7d9c6290b9b7f442d4540eedd6e466957a902a7754aafa6bd1afe51f"
+            ],
+            "status": [
+              "ok",
+              "ok"
+            ]
+          }
+        ]
+      },
+      "ahead": {
+        "n_rows": 4,
+        "all_have_group_ties": true,
+        "examples": [
+          {
+            "h": "0x9d6836b1105a4e84b426e0a44758c565800ef09ee4e046e58ae16b8f8eea1a43",
+            "sid": "01a171e9-ae25-7e12-afb9-67efc72072fe",
+            "expected": [
+              5.4818
+            ],
+            "got": [
+              0.0,
+              0.0
+            ],
+            "group_tied_hashes": [
+              "0xa507f7dad805c42d762a5fd90a41912f1c3c22b4a9b792032b861193c87bccb1"
+            ]
+          },
+          {
+            "h": "0xdf7e38124ec33442c7c7af3894cef19e050d689af4badaf22550b3546dd598d3",
+            "sid": "01a171ec-4892-73c2-8ce5-fdcbf8bcb466",
+            "expected": [
+              2.2840889276373146
+            ],
+            "got": [
+              0.0,
+              0.0
+            ],
+            "group_tied_hashes": [
+              "0xe8f5dd099f2514b63af9dd719fe447de2386acac3e60d425bd0869bfafad66c3"
+            ]
+          }
+        ]
+      },
+      "T2": {
+        "checker": 1,
+        "cases": [
+          {
+            "sid": "01a171ec-fc9f-7de0-a3b2-e77b9c81b0a8",
+            "later_h": [
+              "0xa7af860929ab431188a52374044a7ccb3c7ee046f59cc82143f87936d9feaf4e",
+              "0x92583cb4828e486fb49f3fd79bb342ef172c072e7df9af94621a19301b122c65"
+            ],
+            "tied_group_hashes": [
+              "0x92583cb4828e486fb49f3fd79bb342ef172c072e7df9af94621a19301b122c65"
+            ]
+          }
+        ]
+      },
+      "H2": {
+        "n_rows": 0,
+        "rows": []
+      },
+      "tob": {
+        "frames": 6189,
+        "tob": 6189,
+        "cartesian_rows": 6189,
+        "occurrence_rows": 6189,
+        "cartesian_differences": {
+          "bid": 0,
+          "ask": 34
+        },
+        "occurrence_differences": {
+          "bid": 0,
+          "ask": 34
+        },
+        "duplicate_receipt_keys": 0
+      }
+    },
+    "20261108_4353706": {
+      "capacity": {
+        "n_rows": 1,
+        "n_hashes": 1,
+        "cases": [
+          {
+            "h": "0x76a5a1c9974467fe4c25427f6000657281857d6b1a19061991c3938c9701895f",
+            "t": 1794150014885,
+            "posted": [
+              -1
+            ],
+            "cum": 0.01,
+            "shown": [
+              0.0
+            ],
+            "deficit": [
+              0.01
+            ]
+          }
+        ],
+        "max_deficit": 0.01
+      },
+      "exhaustion": {
+        "n_rows": 8,
+        "n_hashes": 4,
+        "all_have_group_ties": true,
+        "examples": [
+          {
+            "h": "0x482c302901eab3e6c5c40245e1cbca3a982d17818bb397a526ed04bded91ea56",
+            "sid": "01a1bbac-d027-7d22-b8e0-496e90e72974",
+            "own_settle": [
+              1794150027303,
+              1794150027301,
+              1794150027301,
+              1794150027301
+            ],
+            "group_tied_hashes": [
+              "0xe0906d4a695a2a7f4e93441a1f319373b9b0605ad697c12967e436459d098350"
+            ],
+            "status": [
+              "ok",
+              "ok"
+            ]
+          },
+          {
+            "h": "0x6d75dd3f1df21309ae9aec89d76af8c7304780a56a3c2566a0c03434c2516c52",
+            "sid": "01a1bbac-d027-7d22-b8e0-496e90e72974",
+            "own_settle": [
+              1794150027303
+            ],
+            "group_tied_hashes": [
+              "0xe0906d4a695a2a7f4e93441a1f319373b9b0605ad697c12967e436459d098350"
+            ],
+            "status": [
+              "ok",
+              "ok"
+            ]
+          },
+          {
+            "h": "0x0e0cd951af9723612a8eb796daf450fefc51dbb0ef76d2851518721fe6790558",
+            "sid": "01a1bbac-d02c-7763-89e3-3dbe2a78d3bb",
+            "own_settle": [
+              1794150027308,
+              1794150027304
+            ],
+            "group_tied_hashes": [
+              "0xd23693e4a3695b15bb52477fc6c4772a688a25abbf7f9cc8d0eb684b3bfbb138"
+            ],
+            "status": [
+              "ok",
+              "ok"
+            ]
+          }
+        ]
+      },
+      "ahead": {
+        "n_rows": 2,
+        "all_have_group_ties": true,
+        "examples": [
+          {
+            "h": "0xfab81c1cccdf8043dfaec9c08d745560b7762ee74f4f685dca954bf4fd4a511f",
+            "sid": "01a1bbad-0355-7230-866c-175c39de1236",
+            "expected": [
+              4.069404761904762
+            ],
+            "got": [
+              0.0,
+              0.0
+            ],
+            "group_tied_hashes": [
+              "0x6256118724dd0ea0eae8fafab398e0646259477a28ecb0e5a223442694b64c10"
+            ]
+          }
+        ]
+      },
+      "T2": {
+        "checker": 1,
+        "cases": [
+          {
+            "sid": "01a1bbaf-a1ce-7eb3-9b1b-d99de9b01ec4",
+            "later_h": [
+              "0x4d24f4a9d5c39761c6119ef02306dbce3e0c8159d2ea8201e2490f6e140a72be",
+              "0xb0b7e33884a7f606f69ceeef2ad244b5189e0ef9963ad71495b32321788d6b3a"
+            ],
+            "tied_group_hashes": [
+              "0x4d24f4a9d5c39761c6119ef02306dbce3e0c8159d2ea8201e2490f6e140a72be"
+            ]
+          }
+        ]
+      },
+      "H2": {
+        "n_rows": 0,
+        "rows": []
+      },
+      "tob": {
+        "frames": 5348,
+        "tob": 5348,
+        "cartesian_rows": 5348,
+        "occurrence_rows": 5348,
+        "cartesian_differences": {
+          "bid": 0,
+          "ask": 44
+        },
+        "occurrence_differences": {
+          "bid": 0,
+          "ask": 44
+        },
+        "duplicate_receipt_keys": 0
+      }
+    },
+    "20261108_4334454": {
+      "capacity": {
+        "n_rows": 0,
+        "n_hashes": 0,
+        "cases": [],
+        "max_deficit": 0
+      },
+      "exhaustion": {
+        "n_rows": 32,
+        "n_hashes": 16,
+        "all_have_group_ties": true,
+        "examples": [
+          {
+            "h": "0xa5ee974bcce27d2d33a4cbc0b56cd163fe700bcae51fd8570a867a9f7c5cbf00",
+            "sid": "01a1b9c8-3248-7e93-8e2a-649f2cc06ae0",
+            "own_settle": [
+              1794118267464,
+              1794118267464
+            ],
+            "group_tied_hashes": [
+              "0xa5ee974bcce27d2d33a4cbc0b56cd163fe700bcae51fd8570a867a9f7c5cbf00"
+            ],
+            "status": [
+              "ok",
+              "ok"
+            ]
+          },
+          {
+            "h": "0x48c5715847ee920cad08ddddff4e1d5bd64d27a088d3e4e83b55f08dab82707e",
+            "sid": "01a1b9c8-6370-7c22-a816-9a90b2630246",
+            "own_settle": [
+              1794118280048,
+              1794118280048
+            ],
+            "group_tied_hashes": [
+              "0x48c5715847ee920cad08ddddff4e1d5bd64d27a088d3e4e83b55f08dab82707e"
+            ],
+            "status": [
+              "ok",
+              "ok"
+            ]
+          },
+          {
+            "h": "0xd065fd9b6373052d24b068527e81c956511e889b8cd4c5e33ae9d49fb5afbced",
+            "sid": "01a1b9c8-c0df-70f0-aba2-6df5b3a35a8a",
+            "own_settle": [
+              1794118303967,
+              1794118303967,
+              1794118303965
+            ],
+            "group_tied_hashes": [
+              "0xd065fd9b6373052d24b068527e81c956511e889b8cd4c5e33ae9d49fb5afbced"
+            ],
+            "status": [
+              "ok",
+              "ok"
+            ]
+          }
+        ]
+      },
+      "ahead": {
+        "n_rows": 16,
+        "all_have_group_ties": true,
+        "examples": [
+          {
+            "h": "0x440180414f7214039c08494b29eb6dc819ff84e27a289a773190ac8ca0831a86",
+            "sid": "01a1b9c8-3248-7e93-8e2a-649f2cc06ae0",
+            "expected": [
+              5.3595461538461535
+            ],
+            "got": [
+              0.0,
+              0.0
+            ],
+            "group_tied_hashes": [
+              "0xa5ee974bcce27d2d33a4cbc0b56cd163fe700bcae51fd8570a867a9f7c5cbf00"
+            ]
+          },
+          {
+            "h": "0x29a79b6cd6e028a870591902f1b213a3eef724f66530d3e754fecc1957808533",
+            "sid": "01a1b9c8-6370-7c22-a816-9a90b2630246",
+            "expected": [
+              8.62
+            ],
+            "got": [
+              0.0,
+              0.0
+            ],
+            "group_tied_hashes": [
+              "0x48c5715847ee920cad08ddddff4e1d5bd64d27a088d3e4e83b55f08dab82707e"
+            ]
+          },
+          {
+            "h": "0xcbacb511e2331ba3164baddeb9828d4683c029c6815ca16da13429a8aa216d62",
+            "sid": "01a1b9c8-c0df-70f0-aba2-6df5b3a35a8a",
+            "expected": [
+              1.9543
+            ],
+            "got": [
+              0.0,
+              0.0
+            ],
+            "group_tied_hashes": [
+              "0xd065fd9b6373052d24b068527e81c956511e889b8cd4c5e33ae9d49fb5afbced"
+            ]
+          }
+        ]
+      },
+      "T2": {
+        "checker": 0,
+        "cases": []
+      },
+      "H2": {
+        "n_rows": 3,
+        "rows": [
+          {
+            "h": "0x7f538ba598412e0521677e9392ad4285f949a86256d6bc034230552995570993",
+            "scenario": "S_FIFO",
+            "status": "leg_off_grid+subcent_price",
+            "n": 3,
+            "persist_lo_ms": -1,
+            "persist_hi_ms": -1,
+            "hmin": 1794118177927,
+            "Lmx": 1794118178702
+          },
+          {
+            "h": "0x7f538ba598412e0521677e9392ad4285f949a86256d6bc034230552995570993",
+            "scenario": "S_FIFO_LO",
+            "status": "leg_off_grid+subcent_price",
+            "n": 3,
+            "persist_lo_ms": -1,
+            "persist_hi_ms": -1,
+            "hmin": 1794118177927,
+            "Lmx": 1794118178702
+          },
+          {
+            "h": "0x7f538ba598412e0521677e9392ad4285f949a86256d6bc034230552995570993",
+            "scenario": "S_NOPRIO",
+            "status": "leg_off_grid+subcent_price",
+            "n": 3,
+            "persist_lo_ms": -1,
+            "persist_hi_ms": -1,
+            "hmin": 1794118177927,
+            "Lmx": 1794118178702
+          }
+        ]
+      },
+      "tob": {
+        "frames": 5642,
+        "tob": 5642,
+        "cartesian_rows": 5642,
+        "occurrence_rows": 5642,
+        "cartesian_differences": {
+          "bid": 39,
+          "ask": 0
+        },
+        "occurrence_differences": {
+          "bid": 39,
+          "ask": 0
+        },
+        "duplicate_receipt_keys": 0
+      }
+    }
+  },
+  "segments": {
+    "in": [
+      {
+        "dim": "depth",
+        "bucket": "d0",
+        "sh": 10753208.899702284,
+        "net_res": -17035.09490804484,
+        "c_1s": 0.36328264065105553,
+        "c_end": 0.5779129487586044
+      },
+      {
+        "dim": "depth",
+        "bucket": "d1",
+        "sh": 2406652.844536192,
+        "net_res": 6003.186045133633,
+        "c_1s": 0.4346790251452355,
+        "c_end": 0.18041128975808413
+      },
+      {
+        "dim": "depth",
+        "bucket": "d2",
+        "sh": 989043.4152435816,
+        "net_res": 8017.9429375346,
+        "c_1s": 0.7453763757719094,
+        "c_end": 1.9484329980041173
+      },
+      {
+        "dim": "depth",
+        "bucket": "d3p",
+        "sh": 776046.449536013,
+        "net_res": 6750.780270813363,
+        "c_1s": 1.1289570673633291,
+        "c_end": 0.31746154350890926
+      },
+      {
+        "dim": "depth",
+        "bucket": "inside",
+        "sh": 1046040.77371925,
+        "net_res": 4546.707959895724,
+        "c_1s": -0.2342659179686824,
+        "c_end": 2.3828982227539948
+      },
+      {
+        "dim": "depth",
+        "bucket": "unknown",
+        "sh": 183816.23731828568,
+        "net_res": -774.7822623166367,
+        "c_1s": -0.4986177347204905,
+        "c_end": -10.06116316419278
+      },
+      {
+        "dim": "sweep",
+        "bucket": "single_price",
+        "sh": 11242701.38391374,
+        "net_res": -64954.20901942837,
+        "c_1s": 0.25318185297661255,
+        "c_end": 0.6085702566330411
+      },
+      {
+        "dim": "sweep",
+        "bucket": "sweep",
+        "sh": 4912107.236141868,
+        "net_res": 72462.9490624442,
+        "c_1s": 0.7146598320449712,
+        "c_end": 0.8337090344819165
+      }
+    ],
+    "field": [
+      {
+        "dim": "depth",
+        "bucket": "d0",
+        "sh": 25986061.00925148,
+        "net_res": -45839.43492387381,
+        "c_1s": 0.15993557053975657,
+        "c_end": 0.8205798830442139
+      },
+      {
+        "dim": "depth",
+        "bucket": "d1",
+        "sh": 2766716.898615404,
+        "net_res": 9720.695158696397,
+        "c_1s": 0.07536314403379525,
+        "c_end": 1.1683637020148099
+      },
+      {
+        "dim": "depth",
+        "bucket": "d2",
+        "sh": 1087229.7839260343,
+        "net_res": 7735.186568351126,
+        "c_1s": 0.3504822629659186,
+        "c_end": 2.0411314094931616
+      },
+      {
+        "dim": "depth",
+        "bucket": "d3p",
+        "sh": 1165047.354495908,
+        "net_res": 11366.168175906876,
+        "c_1s": 1.174030068209934,
+        "c_end": 2.8651123612805236
+      },
+      {
+        "dim": "depth",
+        "bucket": "inside",
+        "sh": 3230361.44864838,
+        "net_res": -14679.951966832285,
+        "c_1s": -0.6583600798518001,
+        "c_end": 3.720093847520537
+      },
+      {
+        "dim": "depth",
+        "bucket": "unknown",
+        "sh": 2071594.032754704,
+        "net_res": 4958.083415647302,
+        "c_1s": -1.477386222192444,
+        "c_end": -4.128468298733186
+      },
+      {
+        "dim": "sweep",
+        "bucket": "single_price",
+        "sh": 27703213.21614721,
+        "net_res": -137322.18882423488,
+        "c_1s": -0.06968428787400116,
+        "c_end": 0.4016981037067837
+      },
+      {
+        "dim": "sweep",
+        "bucket": "sweep",
+        "sh": 8603797.3115447,
+        "net_res": 110582.93525213048,
+        "c_1s": 0.6356896616627065,
+        "c_end": 3.448632655491754
+      }
+    ]
+  },
+  "cpu_s": 10.905273463,
+  "peak_mib": 307.2734375
+}

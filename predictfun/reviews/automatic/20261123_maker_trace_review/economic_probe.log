@@ -1,0 +1,112 @@
+{
+  "pooled": [
+    {
+      "group": "field",
+      "role": "maker_d0",
+      "q": 25198523.513363913,
+      "net_c_1s": 0.15993557053975652,
+      "gross_c_1s": 0.15993557053975652,
+      "resolution_c_same_rows": -0.138114293540164
+    },
+    {
+      "group": "field",
+      "role": "taker",
+      "q": 12836785.995116297,
+      "net_c_1s": -0.42447046455027493,
+      "gross_c_1s": 0.155535874761297,
+      "resolution_c_same_rows": 1.0099965017142867
+    },
+    {
+      "group": "in",
+      "role": "maker_d0",
+      "q": 10714209.16623225,
+      "net_c_1s": 0.3632826406510553,
+      "gross_c_1s": 0.3632826406510553,
+      "resolution_c_same_rows": -0.1572875994285969
+    },
+    {
+      "group": "in",
+      "role": "taker",
+      "q": 3802655.5852887323,
+      "net_c_1s": 0.6008874563929569,
+      "gross_c_1s": 1.2080157990605176,
+      "resolution_c_same_rows": 0.7150201601479166
+    }
+  ],
+  "inventory": [
+    {
+      "day": "20261024",
+      "addr": "0x0CCF72d0f646971ADB346E3bcFE425847351669B",
+      "peak_abs_recorded_position": 504.086214226713,
+      "max_abs_terminal_position": 313.11336222821217
+    },
+    {
+      "day": "20261024",
+      "addr": "0x11EECAEc6aa40dE64e35DDEb3f8376F2AF25a927",
+      "peak_abs_recorded_position": 161.09719264875153,
+      "max_abs_terminal_position": 129.78224657246145
+    },
+    {
+      "day": "20261024",
+      "addr": "0x192495Cb5C3c8a43B18676e29706dB34f6e828e8",
+      "peak_abs_recorded_position": 152.22199173009415,
+      "max_abs_terminal_position": 143.99429318377264
+    },
+    {
+      "day": "20261025",
+      "addr": "0x0CCF72d0f646971ADB346E3bcFE425847351669B",
+      "peak_abs_recorded_position": 299.06608862176773,
+      "max_abs_terminal_position": 201.89031474399695
+    },
+    {
+      "day": "20261025",
+      "addr": "0x11EECAEc6aa40dE64e35DDEb3f8376F2AF25a927",
+      "peak_abs_recorded_position": 299.9969966467958,
+      "max_abs_terminal_position": 299.9969966467958
+    },
+    {
+      "day": "20261025",
+      "addr": "0x192495Cb5C3c8a43B18676e29706dB34f6e828e8",
+      "peak_abs_recorded_position": 281.5176588530149,
+      "max_abs_terminal_position": 239.99671361502348
+    },
+    {
+      "day": "20261026",
+      "addr": "0x0CCF72d0f646971ADB346E3bcFE425847351669B",
+      "peak_abs_recorded_position": 333.66617647058825,
+      "max_abs_terminal_position": 237.54847193646404
+    },
+    {
+      "day": "20261026",
+      "addr": "0x11EECAEc6aa40dE64e35DDEb3f8376F2AF25a927",
+      "peak_abs_recorded_position": 325.72898799313896,
+      "max_abs_terminal_position": 314.8617200184083
+    },
+    {
+      "day": "20261026",
+      "addr": "0x192495Cb5C3c8a43B18676e29706dB34f6e828e8",
+      "peak_abs_recorded_position": 359.99688906594827,
+      "max_abs_terminal_position": 359.99688906594827
+    },
+    {
+      "day": "20261027",
+      "addr": "0x0CCF72d0f646971ADB346E3bcFE425847351669B",
+      "peak_abs_recorded_position": 350.1,
+      "max_abs_terminal_position": 184.1627846594884
+    },
+    {
+      "day": "20261027",
+      "addr": "0x11EECAEc6aa40dE64e35DDEb3f8376F2AF25a927",
+      "peak_abs_recorded_position": 340.2541694554701,
+      "max_abs_terminal_position": 340.2541694554701
+    },
+    {
+      "day": "20261027",
+      "addr": "0x192495Cb5C3c8a43B18676e29706dB34f6e828e8",
+      "peak_abs_recorded_position": 333.9393778998779,
+      "max_abs_terminal_position": 299.9971854533757
+    }
+  ],
+  "cpu_s": 6.062598074
+}
+2026-11-23T01:30:45Z tag=codex_mt_review_economics rc=0 peak_rss_mib=915 wall_s=8.09 cpu_user_s=4.70 memavail_start_gib=22 disk_free_gib=440->440 slot=codex

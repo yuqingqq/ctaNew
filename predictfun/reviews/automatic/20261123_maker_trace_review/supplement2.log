@@ -1,0 +1,7 @@
+source_disagreements {"predictfun/reviews/maker_trace_20261122/declaration.md": {"actual": "f47e604a172ff69db0fea6e509cc443b3ad10d65567aee58b20476c45f6ffbdd", "declared": "46b717006087e55f90fe93b844aee8a3748a8bca62e62cd403cfbbab11ed27a9"}, "predictfun/reviews/maker_trace_20261122/launch_mt.sh": {"actual": "37e5c1223ff451152406acdc73bf654f8c2cee8d27f7a1b5aca47025e6e002ed", "declared": "f03417f5daedefead66f384c4d5f5a25613ac93229144f66124cd392b3fc6a08"}, "predictfun/reviews/maker_trace_20261122/tools/cpu_ledger.py": {"actual": "d43adfd7caead0fff46a1b5fd434b4f7a8949c4b1c1689f10d45776da90866be", "declared": "043691f66f2a49078ebcded4448b0f41c7f5374c6a95bac5cad8c99433aa408a"}, "predictfun/reviews/maker_trace_20261122/tools/project.py": {"actual": "fe0f243d6168baec4dbad12a922788f0917d01b43db413c83cd3ab47b071e896", "declared": "354c578736a2c08c00c80659bdb2354a71de528a603b826aa4da60ec22f629c4"}}
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261123_maker_trace_review/supplement.py", line 33, in <module>
+    assert queue_diff==queue_trivial
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+2026-11-23T01:28:26Z tag=codex_mt_review_supplement2 rc=1 peak_rss_mib=117 wall_s=7.78 cpu_user_s=7.70 memavail_start_gib=22 disk_free_gib=441->441 slot=codex
