@@ -118,3 +118,31 @@ Everything else is `unidentified` or `insufficient_support`. Point estimates ove
 ## Next (not in this contract)
 
 The posting decision logic — why they create, improve or re-establish levels given fair value, spread, inventory and BTC — on a decision-time population, after this result.
+
+## Amendment 1 (before the full run; reason: the Oct 24 pilot's status counts, not its readings)
+
+**Pilot (7 markets, 7,445 fresh levels):**
+
+| Status | Count |
+|---|---|
+| no_fill | 3,299 |
+| ambiguous_order | 2,921 |
+| unknown | 973 |
+| unexplained_decrease | 233 |
+| gap | 11 |
+| front_identified | **8** |
+
+Every fill's match time is known only to a 2-s hard window. 72% of first fills arrive within 2 s of creation, so any second fill at the cell overlaps the first. The rule as written treated even overlaps between fills of the SAME maker as ambiguity, and 610 levels are that case. The question is WHO holds the front, not the order among one maker's own fills, so the rule changes. No other definition, bin, null or reading threshold changes.
+
+1. **Earliest-overlap set:** the first fill at the cell (by hard-window start) plus every other fill at the cell whose hard window overlaps it.
+   - If every fill in that set belongs to one maker address, the status is `front_identified` with that holder.
+   - `ambiguous_order` remains only when the set spans ≥ 2 addresses. The address set is recorded.
+2. **Bounds:** each group's front share is reported as bounds.
+   - lower = `front_identified` levels held by the group;
+   - upper = lower + `ambiguous_order` levels whose address set contains the group.
+   - Both use the same denominator: identified + ambiguous.
+3. **Readings:** `wins_front_more_than_fills` and the market-consistency count use the LOWER bound vs the fill share. The upper bound is reported beside. `main_mechanism`, `faster_than_others` and `front_pays` use `front_identified` levels only.
+4. **Selftest additions:**
+   - a same-maker overlap gives `front_identified`;
+   - a two-maker overlap gives `ambiguous_order` with both addresses, and enters the upper bound only;
+   - an env mutant `MT_QF_MUT=same_maker_ambiguous` (the old rule) must be caught.
