@@ -1,0 +1,2439 @@
+{
+ "contract": {
+  "commit": "8e09f3391",
+  "file": "predictfun/reviews/maker_trace_20261122/posting_chain_contract.md",
+  "section": "5"
+ },
+ "days": [
+  "20261024",
+  "20261025",
+  "20261026",
+  "20261027"
+ ],
+ "descriptive_only": true,
+ "economics_pooled": [
+  {
+   "all_rows": 870,
+   "all_shares": 10333.405982694423,
+   "by": "candidate",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "self_trade:2|st_10s:158|st_1s:39|st_60s:346",
+   "group": "all",
+   "role": "earliest_set",
+   "scope": "pooled",
+   "v_10s_c_sh": 2.317743203567945,
+   "v_1s_c_sh": 1.4754077831006143,
+   "v_60s_c_sh": 1.6141956288266655,
+   "valid_row_share": 0.3735632183908046,
+   "valid_rows": 325,
+   "valid_share_share": 0.394617457444362,
+   "valid_shares": 4077.7423956312323
+  },
+  {
+   "all_rows": 475,
+   "all_shares": 7457.8596956450665,
+   "by": "candidate",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "st_10s:28|st_1s:12|st_60s:97",
+   "group": "all",
+   "role": "later_other",
+   "scope": "pooled",
+   "v_10s_c_sh": -2.0700117171294754,
+   "v_1s_c_sh": 0.13314733257429703,
+   "v_60s_c_sh": -0.2904485738718759,
+   "valid_row_share": 0.7115789473684211,
+   "valid_rows": 338,
+   "valid_share_share": 0.6789236613532376,
+   "valid_shares": 5063.317410426091
+  },
+  {
+   "all_rows": 380,
+   "all_shares": 7256.450142478189,
+   "by": "candidate",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "st_10s:97|st_1s:18|st_60s:104",
+   "group": "all",
+   "role": "later_same_hash",
+   "scope": "pooled",
+   "v_10s_c_sh": 0.055901639236011484,
+   "v_1s_c_sh": 0.4162815905794292,
+   "v_60s_c_sh": -3.290061065641646,
+   "valid_row_share": 0.4236842105263158,
+   "valid_rows": 161,
+   "valid_share_share": 0.3225066892361307,
+   "valid_shares": 2340.2537110576895
+  },
+  {
+   "all_rows": 39,
+   "all_shares": 518.9035289240732,
+   "by": "candidate",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "self_trade:1|st_10s:2|st_60s:27",
+   "group": "rank1",
+   "role": "earliest_set",
+   "scope": "pooled",
+   "v_10s_c_sh": -7.294335798307502,
+   "v_1s_c_sh": -1.641179552731501,
+   "v_60s_c_sh": -12.885893407200824,
+   "valid_row_share": 0.23076923076923078,
+   "valid_rows": 9,
+   "valid_share_share": 0.22302049788826278,
+   "valid_shares": 115.72612337662336
+  },
+  {
+   "all_rows": 25,
+   "all_shares": 453.0264935064935,
+   "by": "candidate",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "st_1s:3|st_60s:18",
+   "group": "rank1",
+   "role": "later_other",
+   "scope": "pooled",
+   "v_10s_c_sh": -2.499999999999999,
+   "v_1s_c_sh": -1.1592920353982297,
+   "v_60s_c_sh": 4.500000000000001,
+   "valid_row_share": 0.16,
+   "valid_rows": 4,
+   "valid_share_share": 0.14253344891958958,
+   "valid_shares": 64.57142857142857
+  },
+  {
+   "all_rows": 14,
+   "all_shares": 249.46392247662195,
+   "by": "candidate",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "st_10s:2|st_1s:1|st_60s:9",
+   "group": "rank1",
+   "role": "later_same_hash",
+   "scope": "pooled",
+   "v_10s_c_sh": -1.9399999999999973,
+   "v_1s_c_sh": -0.06000000000000006,
+   "v_60s_c_sh": 9.54,
+   "valid_row_share": 0.14285714285714285,
+   "valid_rows": 2,
+   "valid_share_share": 0.1431641311485937,
+   "valid_shares": 35.714285714285715
+  },
+  {
+   "all_rows": 89,
+   "all_shares": 1740.8686133650158,
+   "by": "candidate",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "self_trade:1|st_10s:15|st_1s:2|st_60s:40",
+   "group": "top3",
+   "role": "earliest_set",
+   "scope": "pooled",
+   "v_10s_c_sh": -6.372486741721386,
+   "v_1s_c_sh": -1.3947913123554694,
+   "v_60s_c_sh": -10.915444746006715,
+   "valid_row_share": 0.34831460674157305,
+   "valid_rows": 31,
+   "valid_share_share": 0.2675205554986787,
+   "valid_shares": 465.7181384976235
+  },
+  {
+   "all_rows": 67,
+   "all_shares": 942.5163439527439,
+   "by": "candidate",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "st_10s:9|st_1s:3|st_60s:21",
+   "group": "top3",
+   "role": "later_other",
+   "scope": "pooled",
+   "v_10s_c_sh": -3.060088114522375,
+   "v_1s_c_sh": 0.9883171577380346,
+   "v_60s_c_sh": 9.07436669407495,
+   "valid_row_share": 0.5074626865671642,
+   "valid_rows": 34,
+   "valid_share_share": 0.4630991547906849,
+   "valid_shares": 436.4785222609222
+  },
+  {
+   "all_rows": 30,
+   "all_shares": 699.6573295168168,
+   "by": "candidate",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "st_10s:8|st_1s:1|st_60s:12",
+   "group": "top3",
+   "role": "later_same_hash",
+   "scope": "pooled",
+   "v_10s_c_sh": 0.2663646979488099,
+   "v_1s_c_sh": 0.34210461745921283,
+   "v_60s_c_sh": 5.555989155192019,
+   "valid_row_share": 0.3,
+   "valid_rows": 9,
+   "valid_share_share": 0.10967333577044248,
+   "valid_shares": 76.73375322434897
+  },
+  {
+   "all_rows": 870,
+   "all_shares": 10333.405982694423,
+   "by": "filler",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "self_trade:2|st_10s:158|st_1s:39|st_60s:346",
+   "group": "all",
+   "role": "earliest_set",
+   "scope": "pooled",
+   "v_10s_c_sh": 2.317743203567945,
+   "v_1s_c_sh": 1.4754077831006143,
+   "v_60s_c_sh": 1.6141956288266655,
+   "valid_row_share": 0.3735632183908046,
+   "valid_rows": 325,
+   "valid_share_share": 0.394617457444362,
+   "valid_shares": 4077.7423956312323
+  },
+  {
+   "all_rows": 475,
+   "all_shares": 7457.8596956450665,
+   "by": "filler",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "st_10s:28|st_1s:12|st_60s:97",
+   "group": "all",
+   "role": "later_other",
+   "scope": "pooled",
+   "v_10s_c_sh": -2.0700117171294754,
+   "v_1s_c_sh": 0.13314733257429703,
+   "v_60s_c_sh": -0.2904485738718759,
+   "valid_row_share": 0.7115789473684211,
+   "valid_rows": 338,
+   "valid_share_share": 0.6789236613532376,
+   "valid_shares": 5063.317410426091
+  },
+  {
+   "all_rows": 380,
+   "all_shares": 7256.450142478189,
+   "by": "filler",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "st_10s:97|st_1s:18|st_60s:104",
+   "group": "all",
+   "role": "later_same_hash",
+   "scope": "pooled",
+   "v_10s_c_sh": 0.055901639236011484,
+   "v_1s_c_sh": 0.4162815905794292,
+   "v_60s_c_sh": -3.290061065641646,
+   "valid_row_share": 0.4236842105263158,
+   "valid_rows": 161,
+   "valid_share_share": 0.3225066892361307,
+   "valid_shares": 2340.2537110576895
+  },
+  {
+   "all_rows": 39,
+   "all_shares": 518.9035289240732,
+   "by": "filler",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "self_trade:1|st_10s:2|st_60s:27",
+   "group": "rank1",
+   "role": "earliest_set",
+   "scope": "pooled",
+   "v_10s_c_sh": -7.294335798307502,
+   "v_1s_c_sh": -1.641179552731501,
+   "v_60s_c_sh": -12.885893407200824,
+   "valid_row_share": 0.23076923076923078,
+   "valid_rows": 9,
+   "valid_share_share": 0.22302049788826278,
+   "valid_shares": 115.72612337662336
+  },
+  {
+   "all_rows": 38,
+   "all_shares": 719.4428735690992,
+   "by": "filler",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "st_1s:1|st_60s:5",
+   "group": "rank1",
+   "role": "later_other",
+   "scope": "pooled",
+   "v_10s_c_sh": -1.48323782081338,
+   "v_1s_c_sh": 0.347492055015384,
+   "v_60s_c_sh": 1.757634465370227,
+   "valid_row_share": 0.8421052631578947,
+   "valid_rows": 32,
+   "valid_share_share": 0.6360934139201614,
+   "valid_shares": 457.63287356909933
+  },
+  {
+   "all_rows": 14,
+   "all_shares": 249.46392247662195,
+   "by": "filler",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "st_10s:2|st_1s:1|st_60s:9",
+   "group": "rank1",
+   "role": "later_same_hash",
+   "scope": "pooled",
+   "v_10s_c_sh": -1.9399999999999973,
+   "v_1s_c_sh": -0.06000000000000006,
+   "v_60s_c_sh": 9.54,
+   "valid_row_share": 0.14285714285714285,
+   "valid_rows": 2,
+   "valid_share_share": 0.1431641311485937,
+   "valid_shares": 35.714285714285715
+  },
+  {
+   "all_rows": 89,
+   "all_shares": 1740.8686133650158,
+   "by": "filler",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "self_trade:1|st_10s:15|st_1s:2|st_60s:40",
+   "group": "top3",
+   "role": "earliest_set",
+   "scope": "pooled",
+   "v_10s_c_sh": -6.372486741721386,
+   "v_1s_c_sh": -1.3947913123554694,
+   "v_60s_c_sh": -10.915444746006715,
+   "valid_row_share": 0.34831460674157305,
+   "valid_rows": 31,
+   "valid_share_share": 0.2675205554986787,
+   "valid_shares": 465.7181384976235
+  },
+  {
+   "all_rows": 80,
+   "all_shares": 1412.573593086564,
+   "by": "filler",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "st_10s:2|st_1s:3|st_60s:10",
+   "group": "top3",
+   "role": "later_other",
+   "scope": "pooled",
+   "v_10s_c_sh": -2.449437165958838,
+   "v_1s_c_sh": 0.36529166347302783,
+   "v_60s_c_sh": 9.152159770202932,
+   "valid_row_share": 0.8125,
+   "valid_rows": 65,
+   "valid_share_share": 0.6288756622164274,
+   "valid_shares": 888.3331537817512
+  },
+  {
+   "all_rows": 30,
+   "all_shares": 699.6573295168168,
+   "by": "filler",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "st_10s:8|st_1s:1|st_60s:12",
+   "group": "top3",
+   "role": "later_same_hash",
+   "scope": "pooled",
+   "v_10s_c_sh": 0.2663646979488099,
+   "v_1s_c_sh": 0.34210461745921283,
+   "v_60s_c_sh": 5.555989155192019,
+   "valid_row_share": 0.3,
+   "valid_rows": 9,
+   "valid_share_share": 0.10967333577044248,
+   "valid_shares": 76.73375322434897
+  }
+ ],
+ "fill_to_cell": {
+  "addr_fv_vs_orders_mismatch": 0,
+  "cell_fv_vs_life_mismatch": 0,
+  "cellcheck_frames": 117907,
+  "cellcheck_gaps": 1408,
+  "cellcheck_grid_fills": 60760,
+  "cellcheck_grid_fills_not_shown_in_window": 531,
+  "cellcheck_grid_fills_not_shown_le_hi": 325,
+  "cellcheck_top3_grid_fills": 9080,
+  "cellcheck_top3_not_shown_in_window": 19,
+  "cellcheck_top3_not_shown_le_hi": 4,
+  "cellcheck_top3_offgrid_fills": 0,
+  "cellcheck_unknown_cells": 0,
+  "fv_rows_without_life_leg": 0,
+  "fv_top3_rows_without_life_leg": 0,
+  "legs": 60770,
+  "legs_addr_from_orders": 0,
+  "legs_grid": 60760,
+  "legs_no_address": 0,
+  "legs_offgrid": 10,
+  "legs_unbounded": 0,
+  "legs_with_fv_row": 60770,
+  "q_fv_vs_life_mismatch": 0
+ },
+ "intervals": null,
+ "kind": "run",
+ "labels": {
+  "alt": "alt_netting_possible: intervals where a masked cancellation / replenishment could hide (creation interval through the candidate interval, plus unexplained changes up to the candidate record hi); alt_first_addresses: every first-filler address the hard windows and the level life allow (conservative, may over-include)",
+  "days": "four consumed days: point estimates, no intervals (G = 4 < 5); QUEUE-FRONT v1 amendments 1-2 were adaptive consumed-day development",
+  "economics": "GROSS markouts from settle_ms; valid = chain_post_fill PNL cohort (status ok, not a self-trade, st_res valid, 1 s / 10 s / 60 s marks ok); inherited settlement-clock values, not values at an identified private match or posting decision; censoring and price / time composition are not matched",
+  "front_win": "a bound within the declared reconstruction scenario; unidentified unless no counted level carries alternative histories",
+  "mechanism": "creation_context = the anonymous cell-creation context associated with a candidate first filler",
+  "occupancy": "cell_occupied_at_window_lo / cell_empty_at_window_lo = the displayed size at the inferred posting-window lower endpoint, conditional on that window, with the post grade; never an actual-post queue label; population = top-3 orders that later filled",
+  "roles": "earliest_set = the earliest record(s) under the premise; later_same_hash = a later fill of an order hash of the earliest set (the same order: no queue loss shown); later_other = later fills of other hashes; \"does the front pay?\" withdrawn (contract 5.3)",
+  "speed": "speed_ms = the cell-event endpoint proxy with speed_lo_ms / speed_hi_ms; not a measured maker latency; endpoint ownership not assigned; no faster_than_others verdict",
+  "status": "front_candidate = the one-address earliest set under the no-netting premise; never certified (review finding 1)",
+  "timing": "book_candidate = the unique net decrease equal to the record quantity and claimed by no other record: a conditional timing candidate; an anonymous cancellation, replenishment or their netting inside a frame interval is not ruled out"
+ },
+ "markets": [
+  "20261024_3697902",
+  "20261024_3699278",
+  "20261024_3700070",
+  "20261024_3702960",
+  "20261024_3704004",
+  "20261024_3712725",
+  "20261024_3716727",
+  "20261025_3723774",
+  "20261025_3734864",
+  "20261025_3737919",
+  "20261025_3763401",
+  "20261025_3776314",
+  "20261026_3789484",
+  "20261026_3803131",
+  "20261026_3804696",
+  "20261026_3838531",
+  "20261026_3850428",
+  "20261027_3877472",
+  "20261027_3899224"
+ ],
+ "multiplicity": {
+  "all_listed": true,
+  "readings": 2,
+  "scopes": 2,
+  "selected": null
+ },
+ "null": {
+  "design": "v1's: within each market the maker labels of every attributed fill of the front_candidate levels permuted; the designated earliest fills keep their positions (a conditional label shuffle after selection)",
+  "n_perm": 500,
+  "seed": 20261123
+ },
+ "occupancy": [
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 90,
+    "G2_bound_constrained": 415,
+    "G3_constrained_status_flagged": 7,
+    "G4_scenario_only": 403
+   },
+   "day": "all",
+   "denom": 1868,
+   "group": "rank1",
+   "n": 915,
+   "n_front_candidate_hash": 12,
+   "occupancy": "cell_occupied_at_window_lo",
+   "scope": "pooled",
+   "share": 0.48982869379014987
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 113,
+    "G2_bound_constrained": 300,
+    "G3_constrained_status_flagged": 13,
+    "G4_scenario_only": 478
+   },
+   "day": "all",
+   "denom": 1868,
+   "group": "rank1",
+   "n": 904,
+   "n_front_candidate_hash": 27,
+   "occupancy": "cell_empty_at_window_lo",
+   "scope": "pooled",
+   "share": 0.48394004282655245
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "all",
+   "denom": 1868,
+   "group": "rank1",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_unknown",
+   "scope": "pooled",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 49,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "all",
+   "denom": 1868,
+   "group": "rank1",
+   "n": 49,
+   "n_front_candidate_hash": 0,
+   "occupancy": "window_unbounded",
+   "scope": "pooled",
+   "share": 0.026231263383297645
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "all",
+   "denom": 1868,
+   "group": "rank1",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_not_placeable",
+   "scope": "pooled",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 38,
+    "G2_bound_constrained": 267,
+    "G3_constrained_status_flagged": 10,
+    "G4_scenario_only": 164
+   },
+   "day": "all",
+   "denom": 959,
+   "group": "rank2",
+   "n": 479,
+   "n_front_candidate_hash": 6,
+   "occupancy": "cell_occupied_at_window_lo",
+   "scope": "pooled",
+   "share": 0.4994786235662148
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 50,
+    "G2_bound_constrained": 224,
+    "G3_constrained_status_flagged": 6,
+    "G4_scenario_only": 174
+   },
+   "day": "all",
+   "denom": 959,
+   "group": "rank2",
+   "n": 454,
+   "n_front_candidate_hash": 6,
+   "occupancy": "cell_empty_at_window_lo",
+   "scope": "pooled",
+   "share": 0.47340980187695514
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "all",
+   "denom": 959,
+   "group": "rank2",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_unknown",
+   "scope": "pooled",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 26,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "all",
+   "denom": 959,
+   "group": "rank2",
+   "n": 26,
+   "n_front_candidate_hash": 0,
+   "occupancy": "window_unbounded",
+   "scope": "pooled",
+   "share": 0.027111574556830033
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "all",
+   "denom": 959,
+   "group": "rank2",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_not_placeable",
+   "scope": "pooled",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 46,
+    "G2_bound_constrained": 179,
+    "G3_constrained_status_flagged": 8,
+    "G4_scenario_only": 156
+   },
+   "day": "all",
+   "denom": 1322,
+   "group": "rank3",
+   "n": 389,
+   "n_front_candidate_hash": 6,
+   "occupancy": "cell_occupied_at_window_lo",
+   "scope": "pooled",
+   "share": 0.29425113464447805
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 84,
+    "G2_bound_constrained": 389,
+    "G3_constrained_status_flagged": 10,
+    "G4_scenario_only": 425
+   },
+   "day": "all",
+   "denom": 1322,
+   "group": "rank3",
+   "n": 908,
+   "n_front_candidate_hash": 31,
+   "occupancy": "cell_empty_at_window_lo",
+   "scope": "pooled",
+   "share": 0.686838124054463
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "all",
+   "denom": 1322,
+   "group": "rank3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_unknown",
+   "scope": "pooled",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 25,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "all",
+   "denom": 1322,
+   "group": "rank3",
+   "n": 25,
+   "n_front_candidate_hash": 1,
+   "occupancy": "window_unbounded",
+   "scope": "pooled",
+   "share": 0.018910741301059002
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "all",
+   "denom": 1322,
+   "group": "rank3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_not_placeable",
+   "scope": "pooled",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 174,
+    "G2_bound_constrained": 861,
+    "G3_constrained_status_flagged": 25,
+    "G4_scenario_only": 723
+   },
+   "day": "all",
+   "denom": 4149,
+   "group": "top3",
+   "n": 1783,
+   "n_front_candidate_hash": 24,
+   "occupancy": "cell_occupied_at_window_lo",
+   "scope": "pooled",
+   "share": 0.42974210653169437
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 247,
+    "G2_bound_constrained": 913,
+    "G3_constrained_status_flagged": 29,
+    "G4_scenario_only": 1077
+   },
+   "day": "all",
+   "denom": 4149,
+   "group": "top3",
+   "n": 2266,
+   "n_front_candidate_hash": 64,
+   "occupancy": "cell_empty_at_window_lo",
+   "scope": "pooled",
+   "share": 0.5461557001687154
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "all",
+   "denom": 4149,
+   "group": "top3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_unknown",
+   "scope": "pooled",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 100,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "all",
+   "denom": 4149,
+   "group": "top3",
+   "n": 100,
+   "n_front_candidate_hash": 1,
+   "occupancy": "window_unbounded",
+   "scope": "pooled",
+   "share": 0.024102193299590263
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "all",
+   "denom": 4149,
+   "group": "top3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_not_placeable",
+   "scope": "pooled",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 33,
+    "G2_bound_constrained": 166,
+    "G3_constrained_status_flagged": 1,
+    "G4_scenario_only": 148
+   },
+   "day": "20261024",
+   "denom": 746,
+   "group": "rank1",
+   "n": 348,
+   "n_front_candidate_hash": 1,
+   "occupancy": "cell_occupied_at_window_lo",
+   "scope": "day",
+   "share": 0.46648793565683644
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 47,
+    "G2_bound_constrained": 125,
+    "G3_constrained_status_flagged": 6,
+    "G4_scenario_only": 200
+   },
+   "day": "20261024",
+   "denom": 746,
+   "group": "rank1",
+   "n": 378,
+   "n_front_candidate_hash": 10,
+   "occupancy": "cell_empty_at_window_lo",
+   "scope": "day",
+   "share": 0.5067024128686327
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261024",
+   "denom": 746,
+   "group": "rank1",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_unknown",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 20,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261024",
+   "denom": 746,
+   "group": "rank1",
+   "n": 20,
+   "n_front_candidate_hash": 0,
+   "occupancy": "window_unbounded",
+   "scope": "day",
+   "share": 0.02680965147453083
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261024",
+   "denom": 746,
+   "group": "rank1",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_not_placeable",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 23,
+    "G2_bound_constrained": 111,
+    "G3_constrained_status_flagged": 3,
+    "G4_scenario_only": 72
+   },
+   "day": "20261024",
+   "denom": 368,
+   "group": "rank2",
+   "n": 209,
+   "n_front_candidate_hash": 2,
+   "occupancy": "cell_occupied_at_window_lo",
+   "scope": "day",
+   "share": 0.5679347826086957
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 18,
+    "G2_bound_constrained": 56,
+    "G3_constrained_status_flagged": 3,
+    "G4_scenario_only": 67
+   },
+   "day": "20261024",
+   "denom": 368,
+   "group": "rank2",
+   "n": 144,
+   "n_front_candidate_hash": 5,
+   "occupancy": "cell_empty_at_window_lo",
+   "scope": "day",
+   "share": 0.391304347826087
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261024",
+   "denom": 368,
+   "group": "rank2",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_unknown",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 15,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261024",
+   "denom": 368,
+   "group": "rank2",
+   "n": 15,
+   "n_front_candidate_hash": 0,
+   "occupancy": "window_unbounded",
+   "scope": "day",
+   "share": 0.04076086956521739
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261024",
+   "denom": 368,
+   "group": "rank2",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_not_placeable",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 11,
+    "G2_bound_constrained": 58,
+    "G3_constrained_status_flagged": 2,
+    "G4_scenario_only": 49
+   },
+   "day": "20261024",
+   "denom": 471,
+   "group": "rank3",
+   "n": 120,
+   "n_front_candidate_hash": 2,
+   "occupancy": "cell_occupied_at_window_lo",
+   "scope": "day",
+   "share": 0.25477707006369427
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 22,
+    "G2_bound_constrained": 151,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 167
+   },
+   "day": "20261024",
+   "denom": 471,
+   "group": "rank3",
+   "n": 340,
+   "n_front_candidate_hash": 7,
+   "occupancy": "cell_empty_at_window_lo",
+   "scope": "day",
+   "share": 0.721868365180467
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261024",
+   "denom": 471,
+   "group": "rank3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_unknown",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 11,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261024",
+   "denom": 471,
+   "group": "rank3",
+   "n": 11,
+   "n_front_candidate_hash": 0,
+   "occupancy": "window_unbounded",
+   "scope": "day",
+   "share": 0.02335456475583864
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261024",
+   "denom": 471,
+   "group": "rank3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_not_placeable",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 67,
+    "G2_bound_constrained": 335,
+    "G3_constrained_status_flagged": 6,
+    "G4_scenario_only": 269
+   },
+   "day": "20261024",
+   "denom": 1585,
+   "group": "top3",
+   "n": 677,
+   "n_front_candidate_hash": 5,
+   "occupancy": "cell_occupied_at_window_lo",
+   "scope": "day",
+   "share": 0.42712933753943216
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 87,
+    "G2_bound_constrained": 332,
+    "G3_constrained_status_flagged": 9,
+    "G4_scenario_only": 434
+   },
+   "day": "20261024",
+   "denom": 1585,
+   "group": "top3",
+   "n": 862,
+   "n_front_candidate_hash": 22,
+   "occupancy": "cell_empty_at_window_lo",
+   "scope": "day",
+   "share": 0.5438485804416404
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261024",
+   "denom": 1585,
+   "group": "top3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_unknown",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 46,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261024",
+   "denom": 1585,
+   "group": "top3",
+   "n": 46,
+   "n_front_candidate_hash": 0,
+   "occupancy": "window_unbounded",
+   "scope": "day",
+   "share": 0.029022082018927444
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261024",
+   "denom": 1585,
+   "group": "top3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_not_placeable",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 29,
+    "G2_bound_constrained": 153,
+    "G3_constrained_status_flagged": 4,
+    "G4_scenario_only": 123
+   },
+   "day": "20261025",
+   "denom": 600,
+   "group": "rank1",
+   "n": 309,
+   "n_front_candidate_hash": 8,
+   "occupancy": "cell_occupied_at_window_lo",
+   "scope": "day",
+   "share": 0.515
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 32,
+    "G2_bound_constrained": 94,
+    "G3_constrained_status_flagged": 6,
+    "G4_scenario_only": 144
+   },
+   "day": "20261025",
+   "denom": 600,
+   "group": "rank1",
+   "n": 276,
+   "n_front_candidate_hash": 12,
+   "occupancy": "cell_empty_at_window_lo",
+   "scope": "day",
+   "share": 0.46
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261025",
+   "denom": 600,
+   "group": "rank1",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_unknown",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 15,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261025",
+   "denom": 600,
+   "group": "rank1",
+   "n": 15,
+   "n_front_candidate_hash": 0,
+   "occupancy": "window_unbounded",
+   "scope": "day",
+   "share": 0.025
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261025",
+   "denom": 600,
+   "group": "rank1",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_not_placeable",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 8,
+    "G2_bound_constrained": 30,
+    "G3_constrained_status_flagged": 3,
+    "G4_scenario_only": 9
+   },
+   "day": "20261025",
+   "denom": 82,
+   "group": "rank2",
+   "n": 50,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_occupied_at_window_lo",
+   "scope": "day",
+   "share": 0.6097560975609756
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 7,
+    "G2_bound_constrained": 13,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 11
+   },
+   "day": "20261025",
+   "denom": 82,
+   "group": "rank2",
+   "n": 31,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_empty_at_window_lo",
+   "scope": "day",
+   "share": 0.3780487804878049
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261025",
+   "denom": 82,
+   "group": "rank2",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_unknown",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 1,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261025",
+   "denom": 82,
+   "group": "rank2",
+   "n": 1,
+   "n_front_candidate_hash": 0,
+   "occupancy": "window_unbounded",
+   "scope": "day",
+   "share": 0.012195121951219513
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261025",
+   "denom": 82,
+   "group": "rank2",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_not_placeable",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 12,
+    "G2_bound_constrained": 45,
+    "G3_constrained_status_flagged": 5,
+    "G4_scenario_only": 39
+   },
+   "day": "20261025",
+   "denom": 394,
+   "group": "rank3",
+   "n": 101,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_occupied_at_window_lo",
+   "scope": "day",
+   "share": 0.2563451776649746
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 21,
+    "G2_bound_constrained": 145,
+    "G3_constrained_status_flagged": 10,
+    "G4_scenario_only": 110
+   },
+   "day": "20261025",
+   "denom": 394,
+   "group": "rank3",
+   "n": 286,
+   "n_front_candidate_hash": 1,
+   "occupancy": "cell_empty_at_window_lo",
+   "scope": "day",
+   "share": 0.7258883248730964
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261025",
+   "denom": 394,
+   "group": "rank3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_unknown",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 7,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261025",
+   "denom": 394,
+   "group": "rank3",
+   "n": 7,
+   "n_front_candidate_hash": 0,
+   "occupancy": "window_unbounded",
+   "scope": "day",
+   "share": 0.017766497461928935
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261025",
+   "denom": 394,
+   "group": "rank3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_not_placeable",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 49,
+    "G2_bound_constrained": 228,
+    "G3_constrained_status_flagged": 12,
+    "G4_scenario_only": 171
+   },
+   "day": "20261025",
+   "denom": 1076,
+   "group": "top3",
+   "n": 460,
+   "n_front_candidate_hash": 8,
+   "occupancy": "cell_occupied_at_window_lo",
+   "scope": "day",
+   "share": 0.4275092936802974
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 60,
+    "G2_bound_constrained": 252,
+    "G3_constrained_status_flagged": 16,
+    "G4_scenario_only": 265
+   },
+   "day": "20261025",
+   "denom": 1076,
+   "group": "top3",
+   "n": 593,
+   "n_front_candidate_hash": 13,
+   "occupancy": "cell_empty_at_window_lo",
+   "scope": "day",
+   "share": 0.5511152416356877
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261025",
+   "denom": 1076,
+   "group": "top3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_unknown",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 23,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261025",
+   "denom": 1076,
+   "group": "top3",
+   "n": 23,
+   "n_front_candidate_hash": 0,
+   "occupancy": "window_unbounded",
+   "scope": "day",
+   "share": 0.02137546468401487
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261025",
+   "denom": 1076,
+   "group": "top3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_not_placeable",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 15,
+    "G2_bound_constrained": 63,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 81
+   },
+   "day": "20261026",
+   "denom": 350,
+   "group": "rank1",
+   "n": 159,
+   "n_front_candidate_hash": 3,
+   "occupancy": "cell_occupied_at_window_lo",
+   "scope": "day",
+   "share": 0.4542857142857143
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 19,
+    "G2_bound_constrained": 61,
+    "G3_constrained_status_flagged": 1,
+    "G4_scenario_only": 101
+   },
+   "day": "20261026",
+   "denom": 350,
+   "group": "rank1",
+   "n": 182,
+   "n_front_candidate_hash": 3,
+   "occupancy": "cell_empty_at_window_lo",
+   "scope": "day",
+   "share": 0.52
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261026",
+   "denom": 350,
+   "group": "rank1",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_unknown",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 9,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261026",
+   "denom": 350,
+   "group": "rank1",
+   "n": 9,
+   "n_front_candidate_hash": 0,
+   "occupancy": "window_unbounded",
+   "scope": "day",
+   "share": 0.025714285714285714
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261026",
+   "denom": 350,
+   "group": "rank1",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_not_placeable",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 4,
+    "G2_bound_constrained": 69,
+    "G3_constrained_status_flagged": 2,
+    "G4_scenario_only": 47
+   },
+   "day": "20261026",
+   "denom": 288,
+   "group": "rank2",
+   "n": 122,
+   "n_front_candidate_hash": 2,
+   "occupancy": "cell_occupied_at_window_lo",
+   "scope": "day",
+   "share": 0.4236111111111111
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 13,
+    "G2_bound_constrained": 83,
+    "G3_constrained_status_flagged": 3,
+    "G4_scenario_only": 62
+   },
+   "day": "20261026",
+   "denom": 288,
+   "group": "rank2",
+   "n": 161,
+   "n_front_candidate_hash": 1,
+   "occupancy": "cell_empty_at_window_lo",
+   "scope": "day",
+   "share": 0.5590277777777778
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261026",
+   "denom": 288,
+   "group": "rank2",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_unknown",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 5,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261026",
+   "denom": 288,
+   "group": "rank2",
+   "n": 5,
+   "n_front_candidate_hash": 0,
+   "occupancy": "window_unbounded",
+   "scope": "day",
+   "share": 0.017361111111111112
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261026",
+   "denom": 288,
+   "group": "rank2",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_not_placeable",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 23,
+    "G2_bound_constrained": 76,
+    "G3_constrained_status_flagged": 1,
+    "G4_scenario_only": 68
+   },
+   "day": "20261026",
+   "denom": 457,
+   "group": "rank3",
+   "n": 168,
+   "n_front_candidate_hash": 4,
+   "occupancy": "cell_occupied_at_window_lo",
+   "scope": "day",
+   "share": 0.3676148796498906
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 41,
+    "G2_bound_constrained": 93,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 148
+   },
+   "day": "20261026",
+   "denom": 457,
+   "group": "rank3",
+   "n": 282,
+   "n_front_candidate_hash": 23,
+   "occupancy": "cell_empty_at_window_lo",
+   "scope": "day",
+   "share": 0.6170678336980306
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261026",
+   "denom": 457,
+   "group": "rank3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_unknown",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 7,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261026",
+   "denom": 457,
+   "group": "rank3",
+   "n": 7,
+   "n_front_candidate_hash": 1,
+   "occupancy": "window_unbounded",
+   "scope": "day",
+   "share": 0.015317286652078774
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261026",
+   "denom": 457,
+   "group": "rank3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_not_placeable",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 42,
+    "G2_bound_constrained": 208,
+    "G3_constrained_status_flagged": 3,
+    "G4_scenario_only": 196
+   },
+   "day": "20261026",
+   "denom": 1095,
+   "group": "top3",
+   "n": 449,
+   "n_front_candidate_hash": 9,
+   "occupancy": "cell_occupied_at_window_lo",
+   "scope": "day",
+   "share": 0.4100456621004566
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 73,
+    "G2_bound_constrained": 237,
+    "G3_constrained_status_flagged": 4,
+    "G4_scenario_only": 311
+   },
+   "day": "20261026",
+   "denom": 1095,
+   "group": "top3",
+   "n": 625,
+   "n_front_candidate_hash": 27,
+   "occupancy": "cell_empty_at_window_lo",
+   "scope": "day",
+   "share": 0.5707762557077626
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261026",
+   "denom": 1095,
+   "group": "top3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_unknown",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 21,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261026",
+   "denom": 1095,
+   "group": "top3",
+   "n": 21,
+   "n_front_candidate_hash": 1,
+   "occupancy": "window_unbounded",
+   "scope": "day",
+   "share": 0.019178082191780823
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261026",
+   "denom": 1095,
+   "group": "top3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_not_placeable",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 13,
+    "G2_bound_constrained": 33,
+    "G3_constrained_status_flagged": 2,
+    "G4_scenario_only": 51
+   },
+   "day": "20261027",
+   "denom": 172,
+   "group": "rank1",
+   "n": 99,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_occupied_at_window_lo",
+   "scope": "day",
+   "share": 0.5755813953488372
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 15,
+    "G2_bound_constrained": 20,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 33
+   },
+   "day": "20261027",
+   "denom": 172,
+   "group": "rank1",
+   "n": 68,
+   "n_front_candidate_hash": 2,
+   "occupancy": "cell_empty_at_window_lo",
+   "scope": "day",
+   "share": 0.3953488372093023
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261027",
+   "denom": 172,
+   "group": "rank1",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_unknown",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 5,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261027",
+   "denom": 172,
+   "group": "rank1",
+   "n": 5,
+   "n_front_candidate_hash": 0,
+   "occupancy": "window_unbounded",
+   "scope": "day",
+   "share": 0.029069767441860465
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261027",
+   "denom": 172,
+   "group": "rank1",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_not_placeable",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 3,
+    "G2_bound_constrained": 57,
+    "G3_constrained_status_flagged": 2,
+    "G4_scenario_only": 36
+   },
+   "day": "20261027",
+   "denom": 221,
+   "group": "rank2",
+   "n": 98,
+   "n_front_candidate_hash": 2,
+   "occupancy": "cell_occupied_at_window_lo",
+   "scope": "day",
+   "share": 0.4434389140271493
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 12,
+    "G2_bound_constrained": 72,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 34
+   },
+   "day": "20261027",
+   "denom": 221,
+   "group": "rank2",
+   "n": 118,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_empty_at_window_lo",
+   "scope": "day",
+   "share": 0.5339366515837104
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261027",
+   "denom": 221,
+   "group": "rank2",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_unknown",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 5,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261027",
+   "denom": 221,
+   "group": "rank2",
+   "n": 5,
+   "n_front_candidate_hash": 0,
+   "occupancy": "window_unbounded",
+   "scope": "day",
+   "share": 0.02262443438914027
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261027",
+   "denom": 221,
+   "group": "rank2",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_not_placeable",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261027",
+   "denom": 0,
+   "group": "rank3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_occupied_at_window_lo",
+   "scope": "day",
+   "share": null
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261027",
+   "denom": 0,
+   "group": "rank3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_empty_at_window_lo",
+   "scope": "day",
+   "share": null
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261027",
+   "denom": 0,
+   "group": "rank3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_unknown",
+   "scope": "day",
+   "share": null
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261027",
+   "denom": 0,
+   "group": "rank3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "window_unbounded",
+   "scope": "day",
+   "share": null
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261027",
+   "denom": 0,
+   "group": "rank3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_not_placeable",
+   "scope": "day",
+   "share": null
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 16,
+    "G2_bound_constrained": 90,
+    "G3_constrained_status_flagged": 4,
+    "G4_scenario_only": 87
+   },
+   "day": "20261027",
+   "denom": 393,
+   "group": "top3",
+   "n": 197,
+   "n_front_candidate_hash": 2,
+   "occupancy": "cell_occupied_at_window_lo",
+   "scope": "day",
+   "share": 0.5012722646310432
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 27,
+    "G2_bound_constrained": 92,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 67
+   },
+   "day": "20261027",
+   "denom": 393,
+   "group": "top3",
+   "n": 186,
+   "n_front_candidate_hash": 2,
+   "occupancy": "cell_empty_at_window_lo",
+   "scope": "day",
+   "share": 0.4732824427480916
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261027",
+   "denom": 393,
+   "group": "top3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_unknown",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 10,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261027",
+   "denom": 393,
+   "group": "top3",
+   "n": 10,
+   "n_front_candidate_hash": 0,
+   "occupancy": "window_unbounded",
+   "scope": "day",
+   "share": 0.02544529262086514
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261027",
+   "denom": 393,
+   "group": "top3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_not_placeable",
+   "scope": "day",
+   "share": 0.0
+  }
+ ],
+ "parity": {
+  "affected_transitions": {
+   "ambiguous_order->ambiguous_order": 54,
+   "ambiguous_order->unknown": 46,
+   "front_identified->ambiguous_order": 9,
+   "front_identified->unexplained_decrease": 6,
+   "front_identified->unknown": 28
+  },
+  "bad_levels": [],
+  "by_key": {
+   "amb": 0,
+   "att": 0,
+   "bookms": 0,
+   "fhi": 0,
+   "flo": 0,
+   "gm": 0,
+   "lead": 0,
+   "nbeh": 0,
+   "nset": 0,
+   "nun": 0,
+   "old": 0,
+   "one": 0,
+   "rs": 0,
+   "st": 0,
+   "strad": 0,
+   "timing": 0,
+   "unx": 0
+  },
+  "n_affected": 143,
+  "n_levels": 21385,
+  "n_violations": 0
+ },
+ "population": {
+  "alt": {
+   "alt_netting_possible": 5605,
+   "by_status": {
+    "ambiguous_order": {
+     "alt_first_other_address": 982,
+     "alt_netting_possible": 3382,
+     "n": 3382
+    },
+    "front_candidate": {
+     "alt_first_other_address": 233,
+     "alt_netting_possible": 845,
+     "n": 845
+    },
+    "gap": {
+     "alt_first_other_address": 0,
+     "alt_netting_possible": 0,
+     "n": 78
+    },
+    "no_fill": {
+     "alt_first_other_address": 0,
+     "alt_netting_possible": 0,
+     "n": 10684
+    },
+    "unexplained_decrease": {
+     "alt_first_other_address": 347,
+     "alt_netting_possible": 1378,
+     "n": 1378
+    },
+    "unknown": {
+     "alt_first_other_address": 0,
+     "alt_netting_possible": 0,
+     "n": 5018
+    }
+   },
+   "front_candidate_alt_first_other_address": 233,
+   "front_candidate_alt_first_other_share": 0.2757396449704142,
+   "front_candidate_alt_netting_possible": 845,
+   "front_candidate_alt_netting_share": 1.0,
+   "front_candidates": 845,
+   "levels_with_earliest_record": 5605
+  },
+  "attributed_fills": {
+   "earliest_set": 870,
+   "later_other": 475,
+   "later_same_hash": 380
+  },
+  "attributed_shares": {
+   "earliest_set": 10333.405982694423,
+   "later_other": 7457.8596956450665,
+   "later_same_hash": 7256.450142478189
+  },
+  "candidates_after_window_end": 123,
+  "candidates_rows": 21395,
+  "fresh_by_reason": {
+   "gap_before_fill": 78,
+   "ok": 845,
+   "returned_to_zero": 10446,
+   "sweep_several_makers": 505,
+   "unexplained_drop_before_fill": 1378,
+   "untimed_record_could_be_first": 2877,
+   "untimed_record_only": 5018,
+   "window_end_without_fill": 238
+  },
+  "fresh_by_status": {
+   "ambiguous_order": 3382,
+   "front_candidate": 845,
+   "gap": 78,
+   "no_fill": 10684,
+   "unexplained_decrease": 1378,
+   "unknown": 5018
+  },
+  "fresh_levels": 21385,
+  "front_candidate_by_basis": {
+   "book_candidate": 845,
+   "settlement": 0
+  },
+  "legs": {
+   "attributed": 1725,
+   "grid": 60760,
+   "member_of_a_fresh_level": 53992
+  },
+  "levels_old_life_excluded": 335,
+  "markets": 19,
+  "occupancy_orders": 4149,
+  "record_timing": {
+   "book_ambiguous": 4741,
+   "book_candidate": 11837,
+   "book_unmatched": 27002,
+   "settlement_only": 0
+  },
+  "records_unbounded_never_timed": 0,
+  "status_only": {
+   "gap": 10
+  },
+  "straddle": {
+   "levels_with_straddle_record": 143,
+   "v1_settlement_only_records": 201,
+   "v1_settlement_records_untimed_in_v2": 201
+  },
+  "supported_markets": 19
+ },
+ "readings": [
+  {
+   "beside": {
+    "fill_share_within_alt_bound": true,
+    "fill_share_within_scenario_bound": true
+   },
+   "description": "[scenario_lower, scenario_upper] is a bound within the declared reconstruction scenario (no-netting book candidates, one-address earliest sets), not a certified real-world bound; alt_* = the masked-netting first-filler sets over the same levels; fill share and p_hi over the attributed fills of front_candidate levels (a conditional label shuffle after selection, not an unconditional chance of winning a front)",
+   "predicates": {
+    "market_share_ge_2_3": false,
+    "no_alt_netting": false,
+    "p_hi_le_0_05": false,
+    "scenario_lower_gt_fill_share": false,
+    "supported_markets_ge_5": true
+   },
+   "reading": "front_win_scenario_bound",
+   "scope": "rank1",
+   "values": {
+    "alt_lower": 0.009462976105985333,
+    "alt_upper": 0.2252188313224509,
+    "bound_denominator": 4227,
+    "fill_share": 0.0527536231884058,
+    "fill_share_q": 0.05939904203692874,
+    "n_alt_lower": 40,
+    "n_alt_upper": 952,
+    "n_ambiguous_order": 3382,
+    "n_ambiguous_with_group": 808,
+    "n_bound_alt_netting_possible": 4227,
+    "n_fills": 1725,
+    "n_fills_group": 91,
+    "n_fresh": 21385,
+    "n_front_candidate": 845,
+    "n_front_group": 39,
+    "n_gap": 78,
+    "n_markets_lower_gt_fill": 0,
+    "n_no_fill": 10684,
+    "n_perm": 500,
+    "n_supported_markets": 19,
+    "n_unexplained_decrease": 1378,
+    "n_unknown": 5018,
+    "p_hi": 0.7065868263473054,
+    "scenario_lower": 0.009226401703335699,
+    "scenario_upper": 0.20037851904423942
+   },
+   "verdict": "unidentified"
+  },
+  {
+   "beside": {
+    "largest_is_majority": false
+   },
+   "description": "the anonymous cell-creation context (frame f - 1) associated with a candidate first filler; not the filler's posting action (the eventual first filler is not necessarily the creator)",
+   "predicates": {
+    "group_candidates_ge_5": true,
+    "supported_markets_ge_5": true,
+    "unique_largest": true
+   },
+   "reading": "largest_creation_context",
+   "scope": "rank1",
+   "values": {
+    "counts": {
+     "at_empty_touch": 0,
+     "deep": 10,
+     "improve": 16,
+     "other": 0,
+     "re_establish": 13
+    },
+    "n_front_candidates": 39,
+    "n_supported_markets": 19,
+    "shares": {
+     "at_empty_touch": 0.0,
+     "deep": 0.2564102564102564,
+     "improve": 0.41025641025641024,
+     "other": 0.0,
+     "re_establish": 0.3333333333333333
+    }
+   },
+   "verdict": "improve"
+  },
+  {
+   "beside": {
+    "fill_share_within_alt_bound": true,
+    "fill_share_within_scenario_bound": true
+   },
+   "description": "[scenario_lower, scenario_upper] is a bound within the declared reconstruction scenario (no-netting book candidates, one-address earliest sets), not a certified real-world bound; alt_* = the masked-netting first-filler sets over the same levels; fill share and p_hi over the attributed fills of front_candidate levels (a conditional label shuffle after selection, not an unconditional chance of winning a front)",
+   "predicates": {
+    "market_share_ge_2_3": false,
+    "no_alt_netting": false,
+    "p_hi_le_0_05": false,
+    "scenario_lower_gt_fill_share": false,
+    "supported_markets_ge_5": true
+   },
+   "reading": "front_win_scenario_bound",
+   "scope": "top3",
+   "values": {
+    "alt_lower": 0.02720605630470783,
+    "alt_upper": 0.3891648923586468,
+    "bound_denominator": 4227,
+    "fill_share": 0.11536231884057971,
+    "fill_share_q": 0.1538303757329443,
+    "n_alt_lower": 115,
+    "n_alt_upper": 1645,
+    "n_ambiguous_order": 3382,
+    "n_ambiguous_with_group": 1405,
+    "n_bound_alt_netting_possible": 4227,
+    "n_fills": 1725,
+    "n_fills_group": 199,
+    "n_fresh": 21385,
+    "n_front_candidate": 845,
+    "n_front_group": 89,
+    "n_gap": 78,
+    "n_markets_lower_gt_fill": 0,
+    "n_no_fill": 10684,
+    "n_perm": 500,
+    "n_supported_markets": 19,
+    "n_unexplained_decrease": 1378,
+    "n_unknown": 5018,
+    "p_hi": 0.9221556886227545,
+    "scenario_lower": 0.021055121835817366,
+    "scenario_upper": 0.3534421575585522
+   },
+   "verdict": "unidentified"
+  },
+  {
+   "beside": {
+    "largest_is_majority": false
+   },
+   "description": "the anonymous cell-creation context (frame f - 1) associated with a candidate first filler; not the filler's posting action (the eventual first filler is not necessarily the creator)",
+   "predicates": {
+    "group_candidates_ge_5": true,
+    "supported_markets_ge_5": true,
+    "unique_largest": true
+   },
+   "reading": "largest_creation_context",
+   "scope": "top3",
+   "values": {
+    "counts": {
+     "at_empty_touch": 0,
+     "deep": 23,
+     "improve": 42,
+     "other": 0,
+     "re_establish": 24
+    },
+    "n_front_candidates": 89,
+    "n_supported_markets": 19,
+    "shares": {
+     "at_empty_touch": 0.0,
+     "deep": 0.25842696629213485,
+     "improve": 0.47191011235955055,
+     "other": 0.0,
+     "re_establish": 0.2696629213483146
+    }
+   },
+   "verdict": "improve"
+  }
+ ],
+ "reconciliation": {
+  "candidates_eq_fresh": true,
+  "candidates_keyed_unique": true,
+  "economics_rows_eq_fills": true,
+  "economics_valid_shares_eq_fills": true,
+  "levels_later_eq_fills": true,
+  "one_earliest_fill_per_candidate": true,
+  "statuses_add_up": true
+ },
+ "review": {
+  "commit": "3f640ad9b",
+  "file": "predictfun/reviews/automatic/20261123_take_queue_review/report.md",
+  "findings": "1-6"
+ },
+ "rules": {
+  "gap_ms": 1000,
+  "market_share": "2/3",
+  "max_lag_ms": 2000,
+  "min_front_candidates_per_supported_market": 5,
+  "min_group_candidates": 5,
+  "min_supported_markets": 5,
+  "p_max": 0.05,
+  "reest_ms": 5000,
+  "tol_sh": 0.010000001
+ },
+ "v1": {
+  "amendments": [
+   "5c8a4b1a4",
+   "f4c7e5cbd"
+  ],
+  "contract_commit": "6436ee97c",
+  "version": "queue_front_v1"
+ },
+ "version": "queue_front_v2",
+ "withdrawn": {
+  "certified_front": "no level is certified: every holder is a front_candidate (contract 5.1)",
+  "faster_than_others": "not re-issued: the speed is a cell-event endpoint proxy (contract 5.5)",
+  "front_pays": "queue-effect inference withdrawn (contract 5.3): economics are descriptive by role"
+ }
+}

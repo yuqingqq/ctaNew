@@ -975,6 +975,18 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- MAKER_LOGIC_CHAINS_V4_20261123_DEV -->
+## 2026-11-23 18:39Z (session aea5bfb9) — LOGIC CHAINS v4: posting opportunities + queue-front v2 corrections + six complete chains (review 3f640ad9b's priority; USER goal: action chains and their logic)
+
+**Receipt:** [v2/report_logic_chains_v4.md](reviews/maker_trace_20261122/v2/report_logic_chains_v4.md).
+
+**Posting:** new levels follow wide spreads and thin best levels; re-posts follow fair value inside the touch; deep placements surge near the end. 96.5% of creators are unknown.
+
+**Queue:** the front holder is never certified, and the front-win share is unidentified.
+
+**Next:** ONE Codex review of 3f640ad9b..HEAD.
+<!-- /MAKER_LOGIC_CHAINS_V4_20261123_DEV -->
+
 <!-- MAKER_LOGIC_CHAINS_V3_20261123_DEV -->
 ## 2026-11-23 17:24Z (session aea5bfb9) — LOGIC CHAINS v3: TAKE-LOGIC v2 + QUEUE-FRONT v1 (USER goal: action chains and their logic; how they get to the queue front)
 

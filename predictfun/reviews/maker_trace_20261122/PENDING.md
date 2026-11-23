@@ -1,5 +1,18 @@
 # MAKER-TRACE-RECONSTRUCTION-v1 — pending work
 
+## STATE 2026-11-23 18:39Z — ROUND COMPLETE: LOGIC CHAINS v4 (posting opportunities + queue v2 + six chains) — review pending — read this first
+
+**Receipt:** `v2/report_logic_chains_v4.md`.
+
+**Runs:** `mt_x_qf2_v1`, `mt_x_po_v1`, `mt_x_ch3_v1` (rc 0).
+
+**Review:** ONE Codex review of 3f640ad9b..HEAD queued, with the USER goal stated; `review_watch.sh` armed.
+
+**Next for the USER goal:** whatever the review names. Candidate directions:
+- the posting logic at the maker layer, where identity allows;
+- the pull logic on a decision-time population.
+
+
 ## STATE 2026-11-23 17:46Z — POSTING-OPPORTUNITY-AND-CHAIN v1 (review 3f640ad9b's next priority) — read this first
 
 **Reviews processed:**

@@ -1,0 +1,473 @@
+{
+ "agreement": {
+  "1": {
+   "agree": [
+    "takes",
+    "value"
+   ],
+   "first_branch": "pre_state",
+   "hidden": {
+    "ending": "an unobserved cancel of the remainder (PL: withdrawn [0.01, inf] sh in [ws+78.506s, ws+80.524s]) vs exhaustion by the last fill (EX): if exhausted there was no pull decision; if pulled, the END context is a candidate trigger only",
+    "post": "the posting instant inside [ws+2.325s, ws+80.506s] (78181 ms; scenario union estimate only); the submitted size: exhausted at the filled size (EX) vs a cancelled remainder (PL)",
+    "pre_state": "the posting second inside k = 2..80 (ws+2..ws+81 s): features spread, depth_touch_own, depth_touch_opp, depth_2_own, btc_5s_aligned, fair_gap, time_left change across it",
+    "queue": "whether orders were ahead at the first fill (S_FIFO ahead [0.00, 320.00] sh at the first fill; [24.00, 442.97] sh at acceptance)",
+    "repost": "whether the successor 0x89e05c2583 was a new submission replacing this order (replace), a top-up (replenish), an order already resting (overlap) or unrelated: a sequential timing never identifies a repost or its intent"
+   },
+   "pending": [],
+   "tied": [
+    "pre_state",
+    "post",
+    "queue",
+    "ending",
+    "repost"
+   ]
+  },
+  "2": {
+   "agree": [
+    "takes",
+    "value"
+   ],
+   "first_branch": "pre_state",
+   "hidden": {
+    "ending": "an unobserved cancel of the remainder (PL: withdrawn [0.01, inf] sh in [ws+211.303s, ws+271.016s]) vs exhaustion by the last fill (EX): if exhausted there was no pull decision; if pulled, the END context is a candidate trigger only",
+    "post": "the posting instant inside [ws+211.237s, ws+213.303s] (2066 ms; scenario union estimate only); the submitted size: exhausted at the filled size (EX) vs a cancelled remainder (PL)",
+    "pre_state": "the posting second inside k = 211..213 (ws+211..ws+214 s): features spread, depth_touch_own, depth_touch_opp, depth_2_own change across it",
+    "queue": "whether orders were ahead at the first fill (S_FIFO ahead [0.00, 177.15] sh at the first fill; [0.00, 183.82] sh at acceptance); which fresh-level life the first fill matched in (level 236 (unknown), level 273 (unknown))",
+    "repost": "whether the successor 0xdef88dc345 was a new submission replacing this order (replace), a top-up (replenish), an order already resting (overlap) or unrelated: a sequential timing never identifies a repost or its intent"
+   },
+   "pending": [],
+   "tied": [
+    "pre_state",
+    "post",
+    "queue",
+    "ending",
+    "repost"
+   ]
+  },
+  "3": {
+   "agree": [
+    "pre_state",
+    "takes",
+    "value"
+   ],
+   "first_branch": "post",
+   "hidden": {
+    "ending": "an unobserved cancel of the remainder (PL: withdrawn [0.01, 1.96] sh in [ws+5.030s, ws+7.626s]) vs exhaustion by the last fill (EX): if exhausted there was no pull decision; if pulled, the END context is a candidate trigger only",
+    "post": "the posting instant inside [ws+4.027s, ws+4.785s] (758 ms; void: conflict flags); the submitted size: exhausted at the filled size (EX) vs a cancelled remainder (PL)",
+    "queue": "whether orders were ahead at the first fill (S_FIFO ahead [6.86, 26.63] sh at the first fill; [21.86, 151.86] sh at acceptance); a cancellation / replenishment masked inside a frame interval (net book change; section 5 finding 1)",
+    "repost": "whether the successor 0xd0f156e83a was a new submission replacing this order (replace), a top-up (replenish), an order already resting (overlap) or unrelated: a sequential timing never identifies a repost or its intent"
+   },
+   "pending": [],
+   "tied": [
+    "post",
+    "queue",
+    "ending",
+    "repost"
+   ]
+  },
+  "4": {
+   "agree": [
+    "takes",
+    "value"
+   ],
+   "first_branch": "pre_state",
+   "hidden": {
+    "ending": "an unobserved cancel of the remainder (PL: withdrawn [0.01, inf] sh in [ws+63.084s, ws+65.085s]) vs exhaustion by the last fill (EX): if exhausted there was no pull decision; if pulled, the END context is a candidate trigger only",
+    "post": "the submitted size: exhausted at the filled size (EX) vs a cancelled remainder (PL)",
+    "pre_state": "the posting second inside k = 62..65 (ws+62..ws+66 s): features depth_touch_own, depth_2_own, fair_gap change across it",
+    "queue": "whether orders were ahead at the first fill (S_FIFO ahead [0.00, 509.52] sh at the first fill; [0.00, 793.04] sh at acceptance); a cancellation / replenishment masked inside a frame interval (net book change; section 5 finding 1)",
+    "repost": "whether the successor 0x6f5fc55834 was a new submission replacing this order (replace), a top-up (replenish), an order already resting (overlap) or unrelated: a sequential timing never identifies a repost or its intent"
+   },
+   "pending": [],
+   "tied": [
+    "pre_state",
+    "post",
+    "queue",
+    "ending",
+    "repost"
+   ]
+  },
+  "5": {
+   "agree": [
+    "takes",
+    "value"
+   ],
+   "first_branch": "pre_state",
+   "hidden": {
+    "ending": "an unobserved cancel of the remainder (PL: withdrawn [0.01, 40.00] sh in [ws+193.961s, ws+196.082s]) vs exhaustion by the last fill (EX): if exhausted there was no pull decision; if pulled, the END context is a candidate trigger only",
+    "post": "the posting instant inside [ws+186.382s, ws+187.544s] (1162 ms; void: conflict flags); the submitted size: exhausted at the filled size (EX) vs a cancelled remainder (PL)",
+    "pre_state": "the posting second inside k = 186..187 (ws+186..ws+188 s): features depth_touch_own, depth_touch_opp, depth_2_own change across it",
+    "queue": "whether orders were ahead at the first fill (S_FIFO ahead [0.00, na] sh at the first fill; [8.00, 736.27] sh at acceptance); a cancellation / replenishment masked inside a frame interval (net book change; section 5 finding 1)",
+    "repost": "whether the order was pulled without a repost, reposted with an order that never filled, or exhausted (invisible in fills)"
+   },
+   "pending": [],
+   "tied": [
+    "pre_state",
+    "post",
+    "queue",
+    "ending",
+    "repost"
+   ]
+  },
+  "6": {
+   "agree": [
+    "takes",
+    "value"
+   ],
+   "first_branch": "pre_state",
+   "hidden": {
+    "ending": "an unobserved cancel of the remainder (PL: withdrawn [0.01, inf] sh in [ws+54.719s, ws+78.425s]) vs exhaustion by the last fill (EX): if exhausted there was no pull decision; if pulled, the END context is a candidate trigger only",
+    "post": "the posting instant inside [ws+0.896s, ws+56.719s] (55823 ms; lifecycle scenario-free bound (conditional on H1 / H2 / capacity and the maximum match lag)); the submitted size: exhausted at the filled size (EX) vs a cancelled remainder (PL)",
+    "pre_state": "the posting second inside k = 0..56 (ws+0..ws+57 s): features spread, depth_touch_own, depth_touch_opp, depth_2_own, fair_gap change across it",
+    "queue": "whether orders were ahead at the first fill (S_FIFO ahead [0.00, 272.32] sh at the first fill; [0.00, 318.65] sh at acceptance); a cancellation / replenishment masked inside a frame interval (net book change; section 5 finding 1)",
+    "repost": "whether the successor 0xc5d1f7e499 was a new submission replacing this order (replace), a top-up (replenish), an order already resting (overlap) or unrelated: a sequential timing never identifies a repost or its intent"
+   },
+   "pending": [],
+   "tied": [
+    "pre_state",
+    "post",
+    "queue",
+    "ending",
+    "repost"
+   ]
+  }
+ },
+ "bindings": {
+  "cases": "ok",
+  "census_graded": "ok",
+  "closes": "ok",
+  "closes_markets": "ok",
+  "episode_summary": "ok",
+  "episodes": "ok",
+  "episodes_post_regraded": "ok",
+  "events": "ok",
+  "fills_valued": "ok",
+  "life/20261024_3702960_fills.parquet": "ok",
+  "life/20261024_3712725_fills.parquet": "ok",
+  "life/20261024_3716727_fills.parquet": "ok",
+  "matched_gap": "ok",
+  "order_ledger": "ok",
+  "paths_md": "ok",
+  "post_orders": "ok",
+  "post_regrade_orders": "ok",
+  "pulls": "ok",
+  "qf1_fronts": "ok",
+  "qf1_levels": "ok"
+ },
+ "bindings_all_ok": true,
+ "contract": "posting_chain_contract.md section 4 (8e09f3391)",
+ "mode": "run",
+ "not_measured": "no model skill, policy, intent, validation or profitability: an accounting of saved public records and labels",
+ "pending": [],
+ "population": {
+  "days": [
+   "20261024"
+  ],
+  "episodes": [
+   {
+    "chain": 1,
+    "episode_id": "20261024_3716727_r1_e018",
+    "rank": 1
+   },
+   {
+    "chain": 2,
+    "episode_id": "20261024_3702960_r1_e006",
+    "rank": 1
+   },
+   {
+    "chain": 3,
+    "episode_id": "20261024_3702960_r2_e007",
+    "rank": 2
+   },
+   {
+    "chain": 4,
+    "episode_id": "20261024_3712725_r2_e015",
+    "rank": 2
+   },
+   {
+    "chain": 5,
+    "episode_id": "20261024_3712725_r3_e014",
+    "rank": 3
+   },
+   {
+    "chain": 6,
+    "episode_id": "20261024_3716727_r3_e017",
+    "rank": 3
+   }
+  ],
+  "n_chains": 6,
+  "n_links": 42,
+  "unit": "six predetermined episodes (correction_v1 paths.md selection), one row per link"
+ },
+ "predicates": {
+  "every_chain_has_every_link": true,
+  "every_link_graded": true,
+  "every_link_has_a_declared_reading": true,
+  "every_tied_link_names_its_hidden_action": true,
+  "no_link_asserts_an_identified_private_action": true,
+  "no_pending_link": true,
+  "rendering_verifier_clean": true,
+  "same_hash_fills_render_one_order": true,
+  "selection_equals_correction_v1_paths_md": true,
+  "six_chains": true,
+  "submitted_size_never_set": true,
+  "tied_links_never_rendered_identified": true
+ },
+ "queue_labels": {
+  "1": "filled",
+  "2": "filled",
+  "3": "filled",
+  "4": "filled",
+  "5": "filled",
+  "6": "filled"
+ },
+ "readings": {
+  "by_grade": {
+   "cancel_compatible_ending": 5,
+   "observed_execution": 6,
+   "observed_state": 6,
+   "post_window:G1_conflict": 2,
+   "post_window:G2_bound_constrained": 2,
+   "post_window:G4_scenario_only": 2,
+   "recorded_fill_accounting": 6,
+   "scenario_dependent_ending": 1,
+   "scenario_dependent_link": 5,
+   "scenario_queue_history": 6,
+   "unresolved_alternatives": 1
+  },
+  "by_link": {
+   "ending": {
+    "TIED": 6
+   },
+   "post": {
+    "TIED": 6
+   },
+   "pre_state": {
+    "ONE-HISTORY": 1,
+    "TIED": 5
+   },
+   "queue": {
+    "TIED": 6
+   },
+   "repost": {
+    "TIED": 6
+   },
+   "takes": {
+    "NO-EVENT": 1,
+    "ONE-HISTORY": 5
+   },
+   "value": {
+    "ONE-HISTORY": 6
+   }
+  },
+  "n_by_reading": {
+   "NO-EVENT": 1,
+   "ONE-HISTORY": 12,
+   "TIED": 29
+  }
+ },
+ "reconciliation": {
+  "census_cancel_possible_S_FIFO_equals_pulls_rows": {
+   "holds": true,
+   "n": 2,
+   "n_true": 2
+  },
+  "census_cancel_possible_S_NOPRIO_equals_pulls_rows": {
+   "holds": true,
+   "n": 5,
+   "n_true": 5
+  },
+  "census_post_grade_count_equals_orders": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "census_post_total_equals_orders": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "census_successor_count_equals_orders": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "census_successor_total_equals_orders": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "closes_markets_row_present": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "closes_per_episode_leg_equal_mq": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "episode_ep_fee_reconciles": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "episode_ep_mq_reconciles": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "episode_ep_n_excluded_reconciles": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "episode_ep_n_legs_reconciles": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "episode_ep_n_maker_reconciles": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "episode_ep_n_taker_reconciles": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "episode_ep_n_v_end_na_reconciles": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "episode_ep_net_res_reconciles": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "episode_ep_rq_reconciles": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "episode_ep_sh_reconciles": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "episode_ep_v_end_reconciles": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "episode_legs_on_the_chain_day": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "ledger_union_equals_post_fill_union": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "life_fills_at_the_order_cell": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "life_fills_count_equals_post_fill": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "life_fills_shares_equal_post_fill": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "matched_gap_carry_row_reconciles_episode_summary": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "own_fee_fill_reconciles_post_fill": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "own_mq_sh_reconciles_post_fill": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "own_n_own_rows_reconciles_post_fill": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "own_net_res_reconciles_post_fill": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "own_pnl_rows_reconciles_post_fill": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "own_pnl_shares_reconciles_post_fill": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "own_rq_sh_reconciles_post_fill": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "own_v_10s_reconciles_post_fill": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "own_v_1s_reconciles_post_fill": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "own_v_60s_reconciles_post_fill": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "pulls_views_equal_pl_feasible_views": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "selected_take_cases_in_window": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  },
+  "unrelated_in_every_saved_link_hypothesis": {
+   "holds": true,
+   "n": 6,
+   "n_true": 6
+  }
+ },
+ "reconciliation_all_hold": true,
+ "siblings": {
+  "posting_opportunity": {
+   "reason": "",
+   "status": "ok"
+  },
+  "queue_front_v2": {
+   "reason": "",
+   "status": "ok"
+  }
+ },
+ "version": "chains_v3"
+}
