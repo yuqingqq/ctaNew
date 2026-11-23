@@ -1,0 +1,448 @@
+head=3d9c6b0824fcadef08f64d6b68cbc14c3de6781d
+{
+ "allowed_claims": {
+  "n_bound_constrained_window_le_10s": 940,
+  "n_bound_constrained_window_le_1s": 6,
+  "n_orders_denominator": 4149,
+  "statement_form": "n orders have a bound-constrained posting window <= 10 s (conditional on H1 / H2 / capacity and the maximum match lag)"
+ },
+ "census": {
+  "all_rows_graded": true,
+  "by_grade": {
+   "cancel_compatible_ending": 26560,
+   "continued_execution": 19724,
+   "feasible_timing_sensitive_overlap": 19572,
+   "observed_execution": 78632,
+   "post_window:G0_unbounded_or_invalid": 400,
+   "post_window:G1_conflict": 1684,
+   "post_window:G2_bound_constrained": 7096,
+   "post_window:G3_constrained_status_flagged": 216,
+   "post_window:G4_scenario_only": 7200,
+   "scenario_dependent_ending": 6520,
+   "scenario_dependent_link": 36440,
+   "unresolved_alternatives": 2552
+  },
+  "identified_repost_rows": 0,
+  "n_rows": 773,
+  "tied_rows_identified": 0
+ },
+ "cpu_s": 1.098,
+ "git": {
+  "files": [
+   "predictfun/reviews/maker_trace_20261122/tools/chain_correct_post.py",
+   "predictfun/reviews/maker_trace_20261122/tools/chain_correct_post_selftest.py",
+   "predictfun/reviews/maker_trace_20261122/chain_correction_contract.md"
+  ],
+  "head": "3d9c6b0824fcadef08f64d6b68cbc14c3de6781d",
+  "tracked": false,
+  "unmodified": false
+ },
+ "grades": {
+  "by_grade": {
+   "G0_unbounded_or_invalid": 100,
+   "G1_conflict": 421,
+   "G2_bound_constrained": 1774,
+   "G3_constrained_status_flagged": 54,
+   "G4_scenario_only": 1800
+  },
+  "by_grade_bin": {
+   "G0_unbounded_or_invalid|gt_10s": 0,
+   "G0_unbounded_or_invalid|le_10s": 0,
+   "G0_unbounded_or_invalid|le_1s": 0,
+   "G0_unbounded_or_invalid|unbounded": 100,
+   "G1_conflict|gt_10s": 8,
+   "G1_conflict|le_10s": 278,
+   "G1_conflict|le_1s": 135,
+   "G1_conflict|unbounded": 0,
+   "G2_bound_constrained|gt_10s": 834,
+   "G2_bound_constrained|le_10s": 934,
+   "G2_bound_constrained|le_1s": 6,
+   "G2_bound_constrained|unbounded": 0,
+   "G3_constrained_status_flagged|gt_10s": 37,
+   "G3_constrained_status_flagged|le_10s": 16,
+   "G3_constrained_status_flagged|le_1s": 1,
+   "G3_constrained_status_flagged|unbounded": 0,
+   "G4_scenario_only|gt_10s": 253,
+   "G4_scenario_only|le_10s": 1113,
+   "G4_scenario_only|le_1s": 434,
+   "G4_scenario_only|unbounded": 0
+  },
+  "g1_scenario_short": 413,
+  "g2_scenario_short_equals_reviewer_constrained_ok": true,
+  "scenario_short_by_grade": {
+   "G0_unbounded_or_invalid": 0,
+   "G1_conflict": 413,
+   "G2_bound_constrained": 940,
+   "G3_constrained_status_flagged": 17,
+   "G4_scenario_only": 1547
+  }
+ },
+ "hard_checks": {
+  "constrained_implies_three_equal_scenario_bounds": {
+   "holds": true,
+   "n": 1828,
+   "n_true": 1828
+  },
+  "estimator_rank_equals_packet_rank": {
+   "holds": true,
+   "n": 4149,
+   "n_true": 4149
+  },
+  "estimator_union_width_equals_packet_width": {
+   "holds": true,
+   "n": 4149,
+   "n_true": 4149
+  },
+  "every_census_row_graded": {
+   "holds": true,
+   "n": 773,
+   "n_true": 773
+  },
+  "fifo_lower_is_the_S_FIFO_row": {
+   "holds": true,
+   "n": 4149,
+   "n_true": 4149
+  },
+  "lifecycle_signer_is_the_order_address": {
+   "holds": true,
+   "n": 4149,
+   "n_true": 4149
+  },
+  "link_split_sums": {
+   "holds": true,
+   "n": 38,
+   "n_true": 38
+  },
+  "post_class_is_the_union_width_class": {
+   "holds": true,
+   "n": 4149,
+   "n_true": 4149
+  },
+  "post_hi_is_every_scenario_row": {
+   "holds": true,
+   "n": 4149,
+   "n_true": 4149
+  },
+  "post_levels_rederived_equal": {
+   "holds": true,
+   "n": 38,
+   "n_true": 38
+  },
+  "post_rows_decision_window_is_the_union_window": {
+   "holds": true,
+   "n": 176,
+   "n_true": 176
+  },
+  "two_sided_split_sums": {
+   "holds": true,
+   "n": 19,
+   "n_true": 19
+  },
+  "union_lower_is_min_of_three_scenarios": {
+   "holds": true,
+   "n": 4149,
+   "n_true": 4149
+  },
+  "width_is_post_hi_minus_union_lower": {
+   "holds": true,
+   "n": 4149,
+   "n_true": 4149
+  }
+ },
+ "hard_failed": [],
+ "lifecycle_files": {
+  "n": 19,
+  "rows_used": 12447
+ },
+ "logic_rows": {
+  "evidence_grade_changed": 88,
+  "evidence_grade_corrected": {
+   "B_constrained": 88,
+   "C_scenario": 68,
+   "E_unresolved": 20
+  },
+  "evidence_grade_original": {
+   "B_constrained": 176
+  },
+  "n_post_orders": 44,
+  "n_post_rows": 176,
+  "post_grade_of_rows": {
+   "G1_conflict": 5,
+   "G2_bound_constrained": 22,
+   "G4_scenario_only": 17
+  },
+  "queue_contradicted_withdrawn": 17,
+  "queue_rows": 44,
+  "queue_status_corrected": {
+   "contradicted": 9,
+   "timing_sensitive": 30,
+   "unidentified": 5
+  },
+  "queue_status_original": {
+   "contradicted": 26,
+   "timing_sensitive": 18
+  }
+ },
+ "mode": "dry (nothing written)",
+ "paths": {
+  "episodes": [
+   {
+    "episode_id": "20261024_3716727_r1_e018",
+    "rank": 1
+   },
+   {
+    "episode_id": "20261024_3702960_r1_e006",
+    "rank": 1
+   },
+   {
+    "episode_id": "20261024_3702960_r2_e007",
+    "rank": 2
+   },
+   {
+    "episode_id": "20261024_3712725_r2_e015",
+    "rank": 2
+   },
+   {
+    "episode_id": "20261024_3712725_r3_e014",
+    "rank": 3
+   },
+   {
+    "episode_id": "20261024_3716727_r3_e017",
+    "rank": 3
+   }
+  ],
+  "selection": "per rank the first two episodes in cases.csv row order of first appearance"
+ },
+ "reviewer_reproduction": {
+  "late_post": {
+   "computed": 576,
+   "difference": 0,
+   "equal": true,
+   "reviewer": 576
+  },
+  "n_orders": {
+   "computed": 4149,
+   "difference": 0,
+   "equal": true,
+   "reviewer": 4149
+  },
+  "scenario_short": {
+   "computed": 2917,
+   "difference": 0,
+   "equal": true,
+   "reviewer": 2917
+  },
+  "short_assumption_sensitive": {
+   "computed": 1960,
+   "difference": 0,
+   "equal": true,
+   "reviewer": 1960
+  },
+  "short_conflict_flagged": {
+   "computed": 413,
+   "difference": 0,
+   "equal": true,
+   "reviewer": 413
+  },
+  "short_life_constrained": {
+   "computed": 957,
+   "difference": 0,
+   "equal": true,
+   "reviewer": 957
+  },
+  "short_life_constrained_status_ok": {
+   "computed": 940,
+   "difference": 0,
+   "equal": true,
+   "reviewer": 940
+  },
+  "short_rest": {
+   "computed": 2341,
+   "difference": 0,
+   "equal": true,
+   "reviewer": 2341
+  },
+  "successor_refill": {
+   "computed": 577,
+   "difference": 0,
+   "equal": true,
+   "reviewer": 577
+  },
+  "successor_refill_tied": {
+   "computed": 279,
+   "difference": 0,
+   "equal": true,
+   "reviewer": 279
+  },
+  "successor_reprice": {
+   "computed": 2962,
+   "difference": 0,
+   "equal": true,
+   "reviewer": 2962
+  },
+  "successor_reprice_tied": {
+   "computed": 2223,
+   "difference": 0,
+   "equal": true,
+   "reviewer": 2223
+  },
+  "successor_sequential": {
+   "computed": 1037,
+   "difference": 0,
+   "equal": true,
+   "reviewer": 1037
+  },
+  "successor_tied": {
+   "computed": 2502,
+   "difference": 0,
+   "equal": true,
+   "reviewer": 2502
+  }
+ },
+ "schema": {
+  "actions": {
+   "columns": 38,
+   "missing_columns": 0,
+   "required_columns": 11,
+   "rows": 469,
+   "sha256": "4dcbbdde133527cd"
+  },
+  "cases": {
+   "columns": 80,
+   "missing_columns": 0,
+   "required_columns": 35,
+   "rows": 88,
+   "sha256": "f512497123b67fc1"
+  },
+  "census_links": {
+   "columns": 9,
+   "missing_columns": 0,
+   "required_columns": 5,
+   "rows": 5571,
+   "sha256": "89e6f877463a9dd0"
+  },
+  "census_orders": {
+   "columns": 23,
+   "missing_columns": 0,
+   "required_columns": 9,
+   "rows": 4149,
+   "sha256": "91e83f06383891da"
+  },
+  "episode_summary": {
+   "columns": 29,
+   "missing_columns": 0,
+   "required_columns": 24,
+   "rows": 62,
+   "sha256": "19e9fe3a4d6a93e3"
+  },
+  "episodes": {
+   "columns": 42,
+   "missing_columns": 0,
+   "required_columns": 12,
+   "rows": 540,
+   "sha256": "52de26c05da71f9b"
+  },
+  "order_ledger": {
+   "columns": 30,
+   "missing_columns": 0,
+   "required_columns": 15,
+   "rows": 255,
+   "sha256": "cc6d26f479e0aa9a"
+  },
+  "post_orders": {
+   "columns": 123,
+   "missing_columns": 0,
+   "required_columns": 31,
+   "rows": 4149,
+   "sha256": "2ea44339d276f1bc"
+  },
+  "pulls": {
+   "columns": 138,
+   "missing_columns": 0,
+   "required_columns": 10,
+   "rows": 6640,
+   "sha256": "1b60b4a7027e2b2a"
+  }
+ },
+ "soft_checks": {
+  "estimator_class_equals_packet_class": {
+   "holds": true,
+   "n": 4149,
+   "n_true": 4149
+  },
+  "ladder_all_overlap_certain": {
+   "holds": true,
+   "n": 19,
+   "n_true": 19
+  },
+  "life_observed_post_class_rows": {
+   "n": 0
+  },
+  "life_post_class_identical_across_scenarios": {
+   "holds": true,
+   "n": 4149,
+   "n_true": 4149
+  },
+  "link_split_equals_census_links": {
+   "holds": true,
+   "n": 38,
+   "n_true": 38
+  },
+  "link_split_matches_mechanism_counts": {
+   "holds": true,
+   "n": 38,
+   "n_true": 38
+  },
+  "original_grade_is_B_for_every_bounded_union": {
+   "holds": true,
+   "n": 176,
+   "n_true": 176
+  },
+  "original_queue_contradicted_iff_union_le_10s": {
+   "holds": true,
+   "n": 44,
+   "n_true": 44
+  },
+  "pull_cancel_counts_equal_pulls_csv": {
+   "holds": true,
+   "n": 38,
+   "n_true": 38
+  },
+  "pull_identified_true_in_pulls_csv": {
+   "holds": true,
+   "n": 6640,
+   "n_true": 0
+  },
+  "rest_bin_equals_union_width_bin": {
+   "holds": true,
+   "n": 4149,
+   "n_true": 4149
+  },
+  "unrelated_in_every_ledger_link_hypothesis": {
+   "holds": true,
+   "n": 123,
+   "n_true": 123
+  },
+  "unrelated_in_every_saved_feasible_set": {
+   "holds": true,
+   "n": 38,
+   "n_true": 38
+  },
+  "unresolved_life_rows_are_unbounded": {
+   "holds": true,
+   "n": 76,
+   "n_true": 76
+  }
+ },
+ "vmhwm_mib": 157.7,
+ "would_write": [
+  "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/post_regrade.csv",
+  "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/post_regrade_orders.csv",
+  "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/episodes_post_regraded.csv",
+  "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/census_graded.csv",
+  "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/paths.md",
+  "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/claims_post.json",
+  "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/receipt_post.json"
+ ]
+}
+2026-11-23T12:27:46Z tag=mt_cc_post_dry1 rc=0 peak_rss_mib=158 wall_s=1.17 cpu_user_s=1.01 memavail_start_gib=22 disk_free_gib=430->430 slot=claude2

@@ -1,0 +1,97 @@
+head=3d9c6b0824fcadef08f64d6b68cbc14c3de6781d
+PASS precedence: the table order is G0, G1, G2, G3, G4
+PASS precedence: G0 before G1 / G2: unbounded window carrying conflict flags, constrained, ok
+PASS precedence: G0: a lifecycle INVALID flag on a bounded window beats a conflict flag
+PASS precedence: G0: packet reason invalid_order
+PASS precedence: G1 before G2: an estimator-only capacity flag on a constrained ok row
+PASS precedence: G1 before G3: post_after_first_fill on a constrained row
+PASS precedence: G1: clock_bad
+PASS precedence: G1: first_fill_clock reason
+PASS precedence: G1: flag capacity_bounds_void
+PASS precedence: G1: flag capacity_contradiction
+PASS precedence: G1: flag clock_capacity_conflict
+PASS precedence: G1: flag hi_from_receipt
+PASS precedence: G1: flag post_after_first_fill
+PASS precedence: G1: flag receipt_before_uuid
+PASS precedence: G2: constrained, ok
+PASS precedence: G2: observed, ok
+PASS precedence: G2 needs no estimator flag: constrained + estimator ahead_hi_negative -> G3
+PASS precedence: G3: constrained, status ahead_hi_negative
+PASS precedence: G3: observed, status flagged
+PASS precedence: G4: assumption_sensitive, ok
+PASS precedence: G4: unresolved, bounded
+PASS precedence: G4: scenario rows disagree
+PASS precedence: G4 when wide too
+PASS precedence mutant g2_before_g1 is caught (G1 row graded G2 under it)
+PASS grade falsifier: a union-short assumption_sensitive ok row is G4, never G2
+PASS grade falsifier: mutant grade_by_width is caught (it grades the row G2)
+PASS grade falsifier: scenario rows that disagree never grade G2
+PASS logic: G2_bound_constrained w=500 queue_priority_before_demand
+PASS logic: G2_bound_constrained w=20000 queue_priority_before_demand
+PASS logic: G4_scenario_only w=500 queue_priority_before_demand
+PASS logic: G4_scenario_only w=20000 queue_priority_before_demand
+PASS logic: G0_unbounded_or_invalid w=-1 queue_priority_before_demand
+PASS logic: G1_conflict w=800 queue_priority_before_demand
+PASS logic: G3_constrained_status_flagged w=3000 queue_priority_before_demand
+PASS logic: G4_scenario_only w=500 touch_join_or_improve
+PASS logic: G2_bound_constrained w=500 inventory_offset
+PASS paths: the first two episodes per rank by first appearance (not sorted ids), up to 6
+PASS world: every order graded as designed
+PASS world: every hard fact holds on a consistent world
+PASS world: another maker's lifecycle rows are never joined
+PASS world: life classes that disagree are counted and graded G4
+PASS world: G1 flags recorded per order
+PASS grade falsifier (world): no non-certified row graded G2
+PASS grade falsifier (world): mutant grade_by_width is caught
+PASS precedence (world): mutant g2_before_g1 is caught (the clock-flagged row becomes G2)
+PASS logic (world): 24 POST rows only (END / KEEP / TAKE rows left out)
+PASS logic (world): corrected queue grade / status per order
+PASS logic (world): originals kept beside
+PASS logic (world): other mechanisms keep their status with the corrected grade
+PASS logic (world): claims count the withdrawn contradictions
+PASS census falsifier: a tied link is never an identified repost (tied 3 / successor tied 2)
+PASS census falsifier: mutant tied_as_identified is caught
+PASS census: every row graded
+PASS census: sequential links counted apart and never as identified
+PASS census: post levels re-derived (11 new / 1 same) and split by the section-1 grade
+PASS census: two-sided split overlap_certain 1 / feasible_only 3, overlap family grade
+PASS census: cancel-compatible endings graded with pull_identified counted from pulls.csv
+PASS census: families per type
+PASS census: link split equals census_links
+PASS census writer refuses an ungraded action row (reason asserted)
+PASS census writer mutant ungraded_ok is caught (the refusal no longer fires)
+PASS census writer refuses a tied link counted as an identified repost
+PASS census writer passes the honest census
+PASS paths: five predetermined episodes in first-appearance order
+PASS paths: the E2 path shows post -> fills -> terminal -> successor -> take -> economics in order
+PASS paths: post / terminal / successor / take each carry their alternative
+PASS paths: the tied successor is shown tied, never as an identified repost
+PASS paths: the per-scenario terminal sets come from the ledger
+PASS paths: an order-less (take-only) episode is still a path
+PASS e2e: all seven files written
+PASS e2e: the sibling file is untouched
+PASS e2e: receipt binds the sha256 of every other output
+PASS e2e: receipt binds every input read (9 CSVs + 2 lifecycle files)
+PASS e2e: receipt carries sources, CPU and VmHWM
+PASS e2e: claims grade counts
+PASS e2e: allowed claim = G2 with a window <= 10 s (2; <= 1 s: 1)
+PASS e2e: reviewer predicates recorded (computed, not asserted equal on a synthetic world)
+PASS e2e: claims never state a resting share of all orders
+PASS e2e: census claims count each action once (pooled / all rows only)
+PASS e2e: census claims split links and successors tied / sequential
+PASS e2e: grid 4 scopes x 3 days x 5 grades x 4 bins with denominators
+PASS e2e: per-order file carries the grade and its inputs
+PASS e2e: episodes file = 24 POST rows with corrected columns beside
+PASS e2e: census file parses back with every row graded
+PASS e2e: paths file written
+PASS refusal: an existing output refuses the run (write-once, before any input is read)
+PASS refusal: nothing was overwritten
+PASS refusal: one existing name refuses and no other output is created
+PASS dry: nothing written (no directory created), hard checks pass
+PASS refusal: a mutant never runs in run mode
+PASS refusal: a non-measurement day in the orders
+PASS refusal: an order without one of its three scenario rows
+PASS refusal: a broken union fact (lower end not the scenario minimum) refuses before any output
+PASS refusal: an action type without a declared grade refuses the run
+{"checks": 94, "failed": 0, "vmhwm_mib": 123.9}
+2026-11-23T12:29:11Z tag=mt_cc_post_selftest2 rc=0 peak_rss_mib=125 wall_s=1.26 cpu_user_s=1.10 memavail_start_gib=22 disk_free_gib=429->429 slot=claude2

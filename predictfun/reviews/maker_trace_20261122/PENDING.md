@@ -14,6 +14,13 @@
 
 Each builder has ≤ 12 CPU s.
 
+**TAKE-LOGIC v1** (USER direction, 2026-11-23: solid proof of the take logic — inventory, time left, one-off vs repeated):
+- contract committed 3d9c6b082;
+- USER cap 1.85 → 1.90 (line 5.25 unchanged);
+- builder C: `tools/take_logic.py` (≤ 20 CPU s; pilot into `v2/chains/take_logic_pilot_20261024_r1`).
+
+The full run follows the freeze, bundled with the correction round under ONE combined review.
+
 **Next:** freeze-commit, then one real run of each into `v2/chains/correction_v1/`, then the superseding `v2/report_logic_chains_v2.md`, then commit + push, then ONE Codex review, then arm `scratchpad/review_watch.sh <SHA>`.
 
 **Auto-check:** cron 60c3d98d (:07 / :27 / :47) replaces 0a70a441.
