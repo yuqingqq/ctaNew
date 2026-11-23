@@ -1,0 +1,48 @@
+head=12d288cd208937e3e20318d60fc6a0f342345352
+{
+ "out": "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1",
+ "outputs": {
+  "pull_families.csv": 17556,
+  "pull_membership.csv": 140,
+  "take_relabelled.csv": 1152,
+  "take_case_alignment.csv": 5280,
+  "take_excluded_before.csv": 200,
+  "claims_pull_take.json": null
+ },
+ "cpu_s": {
+  "by_stage": {
+   "bind_read": 0.474,
+   "terminal_window": 0.239,
+   "take": 0.146,
+   "claims": 0.014,
+   "write": 0.377
+  },
+  "total": 1.251,
+  "cap": 30.0
+ },
+ "vmhwm_mib": 167.8,
+ "reproductions_all_match": true,
+ "predicates": {
+  "btc_against_1s_enriched_both_families_pooled_and_every_day": {
+   "value": true,
+   "missing_rows": []
+  },
+  "btc_against_1s_diff_positive_both_families_pooled_and_every_day": {
+   "value": true,
+   "missing_rows": []
+  },
+  "inventory_built_diff_positive_every_day_fill_anchored": {
+   "value": false,
+   "missing_rows": []
+  },
+  "inventory_built_diff_positive_every_day_presence": {
+   "value": true,
+   "missing_rows": []
+  },
+  "cancel_compatible_enrichment_exceeds_exhausted_every_day": {
+   "value": false,
+   "evaluable": true
+  }
+ }
+}
+2026-11-23T12:34:46Z tag=mt_x_cc_pt_v1 rc=0 peak_rss_mib=167 wall_s=1.58 cpu_user_s=1.39 memavail_start_gib=22 disk_free_gib=429->429 slot=claude2

@@ -1,5 +1,16 @@
 # MAKER-TRACE-RECONSTRUCTION-v1 — pending work
 
+## STATE 2026-11-23 12:54Z — ROUND COMPLETE: LOGIC CHAINS v2 (correction 6bb458b30 + TAKE-LOGIC v1) — review pending — read this first
+
+**Receipt:** `v2/report_logic_chains_v2.md`.
+
+**Runs:** `mt_x_cc_post_v1`, `mt_x_cc_pt_v1`, `mt_x_tl_v1` (all rc 0).
+
+**Review:** ONE Codex review of 6bb458b30..HEAD queued; `scratchpad/review_watch.sh <HEAD>` armed; auto-check cron 60c3d98d.
+
+**When the review lands:** list it under "Reviews processed", verify its findings, implement its ONE next priority. Stop and ask the USER for any new resource; the task cap is 1.90 (USER, 2026-11-23).
+
+
 ## STATE 2026-11-23 11:50Z — LOGIC-CHAIN CORRECTION v1 (review 6bb458b30's next priority) — read this first
 
 **Reviews processed:**

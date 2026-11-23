@@ -1,0 +1,43 @@
+head=12d288cd208937e3e20318d60fc6a0f342345352
+{
+ "cpu_s": {
+  "cap": 30.0,
+  "total": 1.159
+ },
+ "out": "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1",
+ "outputs": {
+  "census_graded.csv": {
+   "bytes": 218137,
+   "sha256": "3aba28ce72279b9d9eca2a196e09e6b26d4ccc0e4da9e31e58add60a041014aa"
+  },
+  "claims_post.json": {
+   "bytes": 8831,
+   "sha256": "cc4a6acf519c4cd1e7e826a59a482bb67d496bd6a872074e7560fc6e526ab021"
+  },
+  "episodes_post_regraded.csv": {
+   "bytes": 303252,
+   "sha256": "9f8fd480fbe5b69c638538ec2b2eab2f81ddc108fbdd2bcf89012f70cafcf9a0"
+  },
+  "paths.md": {
+   "bytes": 16715,
+   "sha256": "9606184cc902694c483aa205f19fac166f14285e39c33491622d44e6592be623"
+  },
+  "post_regrade.csv": {
+   "bytes": 81453,
+   "sha256": "a01c98759a176de0dd6bf90822adb665a768df737bba2c950b236e3c33f7d58f"
+  },
+  "post_regrade_orders.csv": {
+   "bytes": 2378793,
+   "sha256": "ced4f0e5b7d8473ab7939546ff2f60b31d980db359cab495f6d97a1d7631aa0c"
+  }
+ },
+ "reviewer_reproduction_all_equal": true,
+ "rows": {
+  "census_graded": 773,
+  "episodes_post_regraded": 176,
+  "post_regrade": 400,
+  "post_regrade_orders": 4149
+ },
+ "vmhwm_mib": 158.7
+}
+2026-11-23T12:34:44Z tag=mt_x_cc_post_v1 rc=0 peak_rss_mib=158 wall_s=1.23 cpu_user_s=1.09 memavail_start_gib=22 disk_free_gib=429->429 slot=claude

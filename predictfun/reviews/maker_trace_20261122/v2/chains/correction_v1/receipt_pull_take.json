@@ -1,0 +1,534 @@
+{
+ "asof_end": "2026-11-23T12:34:48Z",
+ "asof_start": "2026-11-23T12:34:46Z",
+ "bindings": {
+  "pull_rows_equal_pull_receipt": true,
+  "pull_sha256_equal_pull_receipt": true,
+  "take_rows_equal_take_receipt": true,
+  "take_sha256_equal_review_snapshot": true
+ },
+ "checks": {
+  "cancel_compatible_label_clean": {
+   "hits": [],
+   "ok": true
+  },
+  "cancel_possible_rows_tied_never_identified": {
+   "n_rows": 6640,
+   "ok": true
+  },
+  "membership_reconciles_summary_and_census": {
+   "n_rows": 140,
+   "n_unreconciled": 0,
+   "ok": true
+  },
+  "sign_falsifier": {
+   "failures": [],
+   "ok": true
+  },
+  "take_binary_n_takes_reconcile": {
+   "n_rows": 704,
+   "ok": true
+  },
+  "take_btc_obs_recomputed_from_takes": {
+   "first_mismatches": [],
+   "n_mismatch": 0,
+   "n_rows_checked": 512,
+   "n_rows_skipped_unreconstructible": 0,
+   "ok": true
+  },
+  "take_class_counts_equal_summary_and_actions": {
+   "first_mismatches": [],
+   "n_action_rows": 98,
+   "n_mismatch": 0,
+   "n_summary_rows": 20,
+   "ok": true
+  },
+  "take_class_equals_take_class_0": {
+   "ok": true
+  },
+  "take_excluded_before_flags_agree": {
+   "n": 248,
+   "ok": true,
+   "receipt": 248
+  },
+  "take_match_levels_additive": {
+   "ok": true
+  },
+  "take_match_levels_constant_per_group": {
+   "ok": true
+  },
+  "take_match_levels_equal_receipt_pools": {
+   "ok": true,
+   "pooled": {
+    "grp_n_takes": 4147,
+    "n_full_stratum": 3977,
+    "n_inventory_dropped": 45,
+    "n_no_claim": 0,
+    "n_no_control": 0,
+    "n_sign_dropped": 125
+   },
+   "receipt": {
+    "fallback1": 125,
+    "fallback2": 45,
+    "no_claim": 0,
+    "no_control": 0,
+    "stratum": 3977
+   }
+  },
+  "take_match_levels_nonnegative": {
+   "ok": true
+  },
+  "take_summary_tvc_equals_take_controls": {
+   "first_mismatches": [],
+   "n_mismatch": 0,
+   "n_rows_compared": 16,
+   "ok": true
+  }
+ },
+ "constants": {
+  "ALPHA": 0.05,
+  "D_HEAD": "250",
+  "D_TAKE": [
+   0,
+   50,
+   250,
+   1000
+  ],
+  "GROUP_LABEL": {
+   "cancel_possible": "cancel_compatible_terminal_window",
+   "cp_no_successor_5s": "cancel_compatible_no_successor_le5s",
+   "cp_successor_5s": "cancel_compatible_successor_le5s",
+   "exhausted_proven": "exhausted_proven_reference"
+  },
+  "INV_SIDE": {
+   "add": 1,
+   "full_close": -1,
+   "overshoot": -1,
+   "reduce_partial": -1,
+   "reversal_reducing": -1
+  },
+  "MIN_REPS": 200,
+  "PUB_GROUPS": [
+   "cancel_possible",
+   "cp_successor_5s",
+   "cp_no_successor_5s",
+   "exhausted_proven"
+  ],
+  "RENAME": {
+   "r_1s_against": "btc_against_take_side_1s",
+   "r_1s_with": "btc_with_take_side_1s",
+   "r_30s_against": "btc_against_take_side_30s",
+   "r_30s_with": "btc_with_take_side_30s",
+   "r_5s_against": "btc_against_take_side_5s",
+   "r_5s_flat": "btc_flat_5s",
+   "r_5s_mixed": "btc_mixed_5s",
+   "r_5s_with": "btc_with_take_side_5s"
+  },
+  "REVIEW_TAKE_SHA": {
+   "actions.csv": "4dcbbdde133527cdc43001513eddf651d6343b06a328cbe138073c45d83f1814",
+   "summary.csv": "ac5b38aec75963a017b7d2a726041da02c99b2ae823901a3d79184020f0713b5",
+   "take_controls.csv": "a38b93e7a0f24c6f7326f65dcd147eba508f1b32e466561f4e2f59bdfedca437",
+   "takes.csv": "33442969f9da3fcd1133b210462258ad12c40b11e07e47383c65c0ab324a20ec"
+  },
+  "SENS": [
+   [
+    "S_FIFO",
+    "0"
+   ],
+   [
+    "S_FIFO",
+    "1000"
+   ],
+   [
+    "S_FIFO",
+    "union"
+   ],
+   [
+    "S_NOPRIO",
+    "250"
+   ]
+  ]
+ },
+ "contract": "predictfun/reviews/maker_trace_20261122/chain_correction_contract.md (sections 2, 3; section 5 sign and omitted control)",
+ "counts": {
+  "groups_not_published": [
+   "capacity_tight",
+   "capacity_tight_view",
+   "unidentified"
+  ],
+  "groups_published": [
+   "cancel_possible",
+   "cp_successor_5s",
+   "cp_no_successor_5s",
+   "exhausted_proven"
+  ],
+  "reducing_vs_adding_rows_not_republished": 1088,
+  "tables": {
+   "pull_families": 17556,
+   "pull_membership": 140,
+   "take_case_alignment": 5280,
+   "take_excluded_before": 200,
+   "take_relabelled": 1152
+  },
+  "take_match_levels": {
+   "pooled|all": {
+    "grp_n_takes": 4147,
+    "n_full_stratum": 3977,
+    "n_inventory_dropped": 45,
+    "n_no_claim": 0,
+    "n_no_control": 0,
+    "n_sign_dropped": 125
+   },
+   "rank1|20261024": {
+    "grp_n_takes": 1416,
+    "n_full_stratum": 1380,
+    "n_inventory_dropped": 0,
+    "n_no_claim": 0,
+    "n_no_control": 0,
+    "n_sign_dropped": 36
+   },
+   "rank1|20261025": {
+    "grp_n_takes": 771,
+    "n_full_stratum": 741,
+    "n_inventory_dropped": 21,
+    "n_no_claim": 0,
+    "n_no_control": 0,
+    "n_sign_dropped": 9
+   },
+   "rank1|20261026": {
+    "grp_n_takes": 918,
+    "n_full_stratum": 895,
+    "n_inventory_dropped": 15,
+    "n_no_claim": 0,
+    "n_no_control": 0,
+    "n_sign_dropped": 8
+   },
+   "rank1|20261027": {
+    "grp_n_takes": 515,
+    "n_full_stratum": 463,
+    "n_inventory_dropped": 0,
+    "n_no_claim": 0,
+    "n_no_control": 0,
+    "n_sign_dropped": 52
+   },
+   "rank1|all": {
+    "grp_n_takes": 3620,
+    "n_full_stratum": 3479,
+    "n_inventory_dropped": 36,
+    "n_no_claim": 0,
+    "n_no_control": 0,
+    "n_sign_dropped": 105
+   },
+   "rank2|20261024": {
+    "grp_n_takes": 160,
+    "n_full_stratum": 150,
+    "n_inventory_dropped": 9,
+    "n_no_claim": 0,
+    "n_no_control": 0,
+    "n_sign_dropped": 1
+   },
+   "rank2|20261025": {
+    "grp_n_takes": 33,
+    "n_full_stratum": 33,
+    "n_inventory_dropped": 0,
+    "n_no_claim": 0,
+    "n_no_control": 0,
+    "n_sign_dropped": 0
+   },
+   "rank2|20261026": {
+    "grp_n_takes": 92,
+    "n_full_stratum": 92,
+    "n_inventory_dropped": 0,
+    "n_no_claim": 0,
+    "n_no_control": 0,
+    "n_sign_dropped": 0
+   },
+   "rank2|20261027": {
+    "grp_n_takes": 56,
+    "n_full_stratum": 54,
+    "n_inventory_dropped": 0,
+    "n_no_claim": 0,
+    "n_no_control": 0,
+    "n_sign_dropped": 2
+   },
+   "rank2|all": {
+    "grp_n_takes": 341,
+    "n_full_stratum": 329,
+    "n_inventory_dropped": 9,
+    "n_no_claim": 0,
+    "n_no_control": 0,
+    "n_sign_dropped": 3
+   },
+   "rank3|20261024": {
+    "grp_n_takes": 76,
+    "n_full_stratum": 76,
+    "n_inventory_dropped": 0,
+    "n_no_claim": 0,
+    "n_no_control": 0,
+    "n_sign_dropped": 0
+   },
+   "rank3|20261025": {
+    "grp_n_takes": 56,
+    "n_full_stratum": 50,
+    "n_inventory_dropped": 0,
+    "n_no_claim": 0,
+    "n_no_control": 0,
+    "n_sign_dropped": 6
+   },
+   "rank3|20261026": {
+    "grp_n_takes": 54,
+    "n_full_stratum": 43,
+    "n_inventory_dropped": 0,
+    "n_no_claim": 0,
+    "n_no_control": 0,
+    "n_sign_dropped": 11
+   },
+   "rank3|20261027": {
+    "grp_n_takes": 0,
+    "n_full_stratum": 0,
+    "n_inventory_dropped": 0,
+    "n_no_claim": 0,
+    "n_no_control": 0,
+    "n_sign_dropped": 0
+   },
+   "rank3|all": {
+    "grp_n_takes": 186,
+    "n_full_stratum": 169,
+    "n_inventory_dropped": 0,
+    "n_no_claim": 0,
+    "n_no_control": 0,
+    "n_sign_dropped": 17
+   }
+  }
+ },
+ "cpu_s": {
+  "by_stage": {
+   "bind_read": 0.474,
+   "claims": 0.014,
+   "take": 0.146,
+   "terminal_window": 0.239,
+   "write": 0.377
+  },
+  "cap": 30.0,
+  "total": 1.251
+ },
+ "git": {
+  "head": "12d288cd208937e3e20318d60fc6a0f342345352",
+  "tool_files": [
+   "predictfun/reviews/maker_trace_20261122/tools/chain_correct_pull_take.py",
+   "predictfun/reviews/maker_trace_20261122/tools/chain_correct_pull_take_selftest.py",
+   "predictfun/reviews/maker_trace_20261122/chain_correction_contract.md"
+  ],
+  "tracked": true,
+  "unmodified": true
+ },
+ "guard_mib": 1450.0,
+ "inputs": {
+  "predictfun/reviews/maker_trace_20261122/v2/chains/pull/census.csv": {
+   "bytes": 19435,
+   "rows": 212,
+   "sha256": "6698fdcbde9b1bb687ef579af65b5e336120ddb87f1d052a4801a8e4bf15fd28"
+  },
+  "predictfun/reviews/maker_trace_20261122/v2/chains/pull/controls.csv": {
+   "bytes": 5591559,
+   "rows": 16504,
+   "sha256": "58313b9b6adb85a4ebc877c0e37d4a0e5cb4e62c01a610ace1c50977a33e77e2"
+  },
+  "predictfun/reviews/maker_trace_20261122/v2/chains/pull/pulls.csv": {
+   "bytes": 11048416,
+   "rows": 6640,
+   "sha256": "1b60b4a7027e2b2ae5f3959a0f6d8594f07d1f4d7b11c37d9daabdec8735549d"
+  },
+  "predictfun/reviews/maker_trace_20261122/v2/chains/pull/receipt.json": {
+   "bytes": 51933,
+   "sha256": "b7ee2e38c08273242983415499270d374e8bcc1610d501b99edde460e8cbbd26"
+  },
+  "predictfun/reviews/maker_trace_20261122/v2/chains/pull/summary.csv": {
+   "bytes": 12454191,
+   "rows": 56760,
+   "sha256": "e37167dbbf737f5a6dfe98a78c13781efc3d39646be9dadf331d5f44d3790a8e"
+  },
+  "predictfun/reviews/maker_trace_20261122/v2/chains/take/actions.csv": {
+   "bytes": 418268,
+   "rows": 469,
+   "sha256": "4dcbbdde133527cdc43001513eddf651d6343b06a328cbe138073c45d83f1814"
+  },
+  "predictfun/reviews/maker_trace_20261122/v2/chains/take/receipt.json": {
+   "bytes": 21500,
+   "sha256": "7615b70487b4b5896048edaea25e229dca1db2699bd3419a363f2b94cf6e98c1"
+  },
+  "predictfun/reviews/maker_trace_20261122/v2/chains/take/summary.csv": {
+   "bytes": 21840,
+   "rows": 20,
+   "sha256": "ac5b38aec75963a017b7d2a726041da02c99b2ae823901a3d79184020f0713b5"
+  },
+  "predictfun/reviews/maker_trace_20261122/v2/chains/take/take_controls.csv": {
+   "bytes": 469830,
+   "rows": 2240,
+   "sha256": "a38b93e7a0f24c6f7326f65dcd147eba508f1b32e466561f4e2f59bdfedca437"
+  },
+  "predictfun/reviews/maker_trace_20261122/v2/chains/take/takes.csv": {
+   "bytes": 5648790,
+   "rows": 4147,
+   "sha256": "33442969f9da3fcd1133b210462258ad12c40b11e07e47383c65c0ab324a20ec"
+  }
+ },
+ "kind": "run",
+ "module": "predictfun/reviews/maker_trace_20261122/tools/chain_correct_pull_take.py",
+ "outputs": {
+  "claims_pull_take.json": {
+   "bytes": 63873,
+   "rows": null,
+   "sha256": "a6c0fa30c0fdc24688eea4be3b7cb330d37ee0eb513f9715c01e2a290d75b936"
+  },
+  "pull_families.csv": {
+   "bytes": 7472117,
+   "rows": 17556,
+   "sha256": "380daffa52c6e25031775fae9d82b1b03700128e1412af478d99b4279deb1916"
+  },
+  "pull_membership.csv": {
+   "bytes": 20379,
+   "rows": 140,
+   "sha256": "5091adb1c34917cc046a3d495c0edc81db3c53399f0d3210cc3a049086295b7a"
+  },
+  "take_case_alignment.csv": {
+   "bytes": 786276,
+   "rows": 5280,
+   "sha256": "cbf5a8dc34ec11926ffaaa8412cd96b8af45e6d0a3d06ed8f92b8358ed830d69"
+  },
+  "take_excluded_before.csv": {
+   "bytes": 14507,
+   "rows": 200,
+   "sha256": "2bac016d2e7295ebd15d8120b30c3375b48d4d8f1136bb476f170e6a44d8a2be"
+  },
+  "take_relabelled.csv": {
+   "bytes": 295341,
+   "rows": 1152,
+   "sha256": "71abaf6934b9aee7d7d7e6f0e7b0ddfdc30d13b308d18aa723edcfc68407a243"
+  }
+ },
+ "predicates": {
+  "S_FIFO_D0": {
+   "btc_against_1s_diff_positive_both_families_pooled_and_every_day": {
+    "missing_rows": [],
+    "value": true
+   },
+   "btc_against_1s_enriched_both_families_pooled_and_every_day": {
+    "missing_rows": [],
+    "value": false
+   },
+   "cancel_compatible_enrichment_exceeds_exhausted_every_day": {
+    "evaluable": true,
+    "value": false
+   },
+   "inventory_built_diff_positive_every_day_fill_anchored": {
+    "missing_rows": [],
+    "value": false
+   },
+   "inventory_built_diff_positive_every_day_presence": {
+    "missing_rows": [],
+    "value": true
+   }
+  },
+  "S_FIFO_D1000": {
+   "btc_against_1s_diff_positive_both_families_pooled_and_every_day": {
+    "missing_rows": [],
+    "value": false
+   },
+   "btc_against_1s_enriched_both_families_pooled_and_every_day": {
+    "missing_rows": [],
+    "value": false
+   },
+   "cancel_compatible_enrichment_exceeds_exhausted_every_day": {
+    "evaluable": true,
+    "value": false
+   },
+   "inventory_built_diff_positive_every_day_fill_anchored": {
+    "missing_rows": [],
+    "value": false
+   },
+   "inventory_built_diff_positive_every_day_presence": {
+    "missing_rows": [],
+    "value": true
+   }
+  },
+  "S_FIFO_Dunion": {
+   "btc_against_1s_diff_positive_both_families_pooled_and_every_day": {
+    "missing_rows": [],
+    "value": false
+   },
+   "btc_against_1s_enriched_both_families_pooled_and_every_day": {
+    "missing_rows": [],
+    "value": false
+   },
+   "cancel_compatible_enrichment_exceeds_exhausted_every_day": {
+    "evaluable": true,
+    "value": false
+   },
+   "inventory_built_diff_positive_every_day_fill_anchored": {
+    "missing_rows": [],
+    "value": false
+   },
+   "inventory_built_diff_positive_every_day_presence": {
+    "missing_rows": [],
+    "value": true
+   }
+  },
+  "S_NOPRIO_D250": {
+   "btc_against_1s_diff_positive_both_families_pooled_and_every_day": {
+    "missing_rows": [],
+    "value": true
+   },
+   "btc_against_1s_enriched_both_families_pooled_and_every_day": {
+    "missing_rows": [],
+    "value": true
+   },
+   "cancel_compatible_enrichment_exceeds_exhausted_every_day": {
+    "evaluable": false,
+    "value": false
+   },
+   "inventory_built_diff_positive_every_day_fill_anchored": {
+    "missing_rows": [],
+    "value": false
+   },
+   "inventory_built_diff_positive_every_day_presence": {
+    "missing_rows": [],
+    "value": true
+   }
+  },
+  "headline": {
+   "btc_against_1s_diff_positive_both_families_pooled_and_every_day": {
+    "missing_rows": [],
+    "value": true
+   },
+   "btc_against_1s_enriched_both_families_pooled_and_every_day": {
+    "missing_rows": [],
+    "value": true
+   },
+   "cancel_compatible_enrichment_exceeds_exhausted_every_day": {
+    "evaluable": true,
+    "value": false
+   },
+   "inventory_built_diff_positive_every_day_fill_anchored": {
+    "missing_rows": [],
+    "value": false
+   },
+   "inventory_built_diff_positive_every_day_presence": {
+    "missing_rows": [],
+    "value": true
+   }
+  }
+ },
+ "reproductions_all_match": true,
+ "review": "predictfun/reviews/automatic/20261123_logic_chains_review/report.md (6bb458b30), findings 2, 3, 4, 6",
+ "run": "v2",
+ "sources": {
+  "predictfun/research/pf_mt_common.py": "e54ccd15489ed41b23b1e1d62e11d26aacd7f1d778be47bdaf4154b2cb091f7b",
+  "predictfun/reviews/maker_trace_20261122/chain_correction_contract.md": "7f1f514d0ca0f4189786e782fb314ee439eb435f15e10b539c06b4672dc8ffea",
+  "predictfun/reviews/maker_trace_20261122/tools/chain_correct_pull_take.py": "47e17400475e919815aa65e033585e4ec75ad831322a7d583fda23d68058f363",
+  "predictfun/reviews/maker_trace_20261122/tools/chain_correct_pull_take_selftest.py": "93b820beba20810b6089989b7da6dba1c87a9bcc4debae5b431f68ebe8951f40"
+ },
+ "version": "chain_correct_pull_take_v1",
+ "vmhwm_mib": 167.8,
+ "wall_s": 1.27
+}

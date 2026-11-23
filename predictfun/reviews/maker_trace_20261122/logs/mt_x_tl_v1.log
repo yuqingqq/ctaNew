@@ -1,0 +1,255 @@
+head=5445e58f36bb42bc74337306f0dac988384f6239
+{
+ "cpu_s": {
+  "by_stage": {
+   "assemble": 0.005,
+   "context_load": 12.487,
+   "events": 0.007,
+   "imports": 0.363,
+   "inputs": 0.063,
+   "population": 0.009,
+   "preflight": 0.002,
+   "states": 0.046,
+   "tables": 0.265,
+   "write": 0.028
+  },
+  "process_total": 13.281
+ },
+ "days": [
+  "20261024",
+  "20261025",
+  "20261026",
+  "20261027"
+ ],
+ "events": {
+  "add": {
+   "event_seconds": 473,
+   "takes": 1195
+  },
+  "any": {
+   "event_seconds": 1359,
+   "takes": 4124
+  },
+  "other": {
+   "event_seconds": 28,
+   "takes": 38
+  },
+  "reduce": {
+   "event_seconds": 721,
+   "takes": 2076
+  },
+  "timing_sensitive": {
+   "event_seconds": 247,
+   "takes": 815
+  }
+ },
+ "kind": "run",
+ "maker_seconds": {
+  "pooled": 17100,
+  "rank1": 5700,
+  "rank2": 5700,
+  "rank3": 5700
+ },
+ "mechanisms": {
+  "burst_driven:pooled": {
+   "D0": "supported",
+   "D1000": "not_supported",
+   "final": "timing_sensitive",
+   "pend": "supported"
+  },
+  "burst_driven:rank1": {
+   "D0": "supported",
+   "D1000": "not_supported",
+   "final": "timing_sensitive",
+   "pend": "supported"
+  },
+  "directional:pooled": {
+   "D0": "not_supported",
+   "D1000": "not_supported",
+   "final": "not_supported",
+   "pend": "not_supported"
+  },
+  "directional:rank1": {
+   "D0": "insufficient_support",
+   "D1000": "insufficient_support",
+   "final": "insufficient_support",
+   "pend": "insufficient_support"
+  },
+  "edge_driven:pooled": {
+   "D0": "not_supported",
+   "D1000": "not_supported",
+   "final": "not_supported",
+   "pend": "not_supported"
+  },
+  "edge_driven:rank1": {
+   "D0": "insufficient_support",
+   "D1000": "insufficient_support",
+   "final": "insufficient_support",
+   "pend": "insufficient_support"
+  },
+  "end_of_market_flattening:pooled": {
+   "D0": "not_supported",
+   "D1000": "not_supported",
+   "final": "not_supported",
+   "pend": "not_supported"
+  },
+  "end_of_market_flattening:rank1": {
+   "D0": "not_supported",
+   "D1000": "insufficient_support",
+   "final": "timing_sensitive",
+   "pend": "not_supported"
+  },
+  "inventory_size_driven:pooled": {
+   "D0": "supported",
+   "D1000": "supported",
+   "final": "supported",
+   "pend": "supported"
+  },
+  "inventory_size_driven:rank1": {
+   "D0": "not_supported",
+   "D1000": "not_supported",
+   "final": "timing_sensitive",
+   "pend": "supported"
+  },
+  "stop_loss:pooled": {
+   "D0": "not_supported",
+   "D1000": "not_supported",
+   "final": "not_supported",
+   "pend": "not_supported"
+  },
+  "stop_loss:rank1": {
+   "D0": "insufficient_support",
+   "D1000": "insufficient_support",
+   "final": "insufficient_support",
+   "pend": "insufficient_support"
+  },
+  "take_profit:pooled": {
+   "D0": "not_supported",
+   "D1000": "not_supported",
+   "final": "not_supported",
+   "pend": "not_supported"
+  },
+  "take_profit:rank1": {
+   "D0": "insufficient_support",
+   "D1000": "insufficient_support",
+   "final": "insufficient_support",
+   "pend": "insufficient_support"
+  }
+ },
+ "out": "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/v2/chains/take_logic",
+ "projection": null,
+ "reduce_rank1_D0": {
+  "RR_against_5s": {
+   "RR_MH": 0.8954958529658328,
+   "T0": 4760.0,
+   "T1": 418.0,
+   "a": 44.0,
+   "b": 518.0,
+   "markets_rr_gt1": "1/4",
+   "n_events": 556,
+   "null_p50": 0.905999353063603,
+   "p_hi": 0.5229540918163673,
+   "p_lo": 0.47904191616766467
+  },
+  "RR_burst": {
+   "RR_MH": 1.4035843512008463,
+   "T0": 1992.0,
+   "T1": 2233.0,
+   "a": 312.0,
+   "b": 177.0,
+   "markets_rr_gt1": "15/19",
+   "n_events": 489,
+   "null_p50": 1.1031329404355623,
+   "p_hi": 0.01996007984031936,
+   "p_lo": 0.9820359281437125
+  },
+  "RR_edge": {
+   "RR_MH": 1.2270114622923276,
+   "T0": 212.0,
+   "T1": 2872.0,
+   "a": 322.0,
+   "b": 17.0,
+   "markets_rr_gt1": "1/1",
+   "n_events": 324,
+   "null_p50": 0.938908747369408,
+   "p_hi": 0.15568862275449102,
+   "p_lo": 0.846307385229541
+  },
+  "RR_end": {
+   "RR_MH": 0.5766182874420689,
+   "T0": 3420.0,
+   "T1": 570.0,
+   "a": 35.0,
+   "b": 378.0,
+   "markets_rr_gt1": "4/19",
+   "n_events": 404,
+   "null_p50": 1.0198804309193705,
+   "p_hi": 0.9940119760479041,
+   "p_lo": 0.007984031936127744
+  },
+  "RR_size": {
+   "RR_MH": 1.2710401731367498,
+   "T0": 1048.0,
+   "T1": 2157.0,
+   "a": 263.0,
+   "b": 89.0,
+   "markets_rr_gt1": "11/12",
+   "n_events": 343,
+   "null_p50": 1.0150924839722344,
+   "p_hi": 0.06387225548902195,
+   "p_lo": 0.93812375249501
+  },
+  "RR_with_5s": {
+   "RR_MH": 1.1204824038653918,
+   "T0": 4760.0,
+   "T1": 329.0,
+   "a": 44.0,
+   "b": 518.0,
+   "markets_rr_gt1": "3/4",
+   "n_events": 553,
+   "null_p50": 0.9023629496123113,
+   "p_hi": 0.10379241516966067,
+   "p_lo": 0.8982035928143712
+  }
+ },
+ "share_flattened": {
+  "pooled:D0": {
+   "n_flattened": 16,
+   "n_pairs": 57,
+   "n_q60_nonzero": 47,
+   "scope": "pooled",
+   "share": 0.3404255319148936,
+   "variant": "D0"
+  },
+  "rank1:D0": {
+   "n_flattened": 10,
+   "n_pairs": 19,
+   "n_q60_nonzero": 19,
+   "scope": "rank1",
+   "share": 0.5263157894736842,
+   "variant": "D0"
+  },
+  "rank2:D0": {
+   "n_flattened": 4,
+   "n_pairs": 19,
+   "n_q60_nonzero": 11,
+   "scope": "rank2",
+   "share": 0.36363636363636365,
+   "variant": "D0"
+  },
+  "rank3:D0": {
+   "n_flattened": 2,
+   "n_pairs": 19,
+   "n_q60_nonzero": 17,
+   "scope": "rank3",
+   "share": 0.11764705882352941,
+   "variant": "D0"
+  }
+ },
+ "take_status": {
+  "assigned": 4124,
+  "before_population": 23
+ },
+ "vmhwm_mib": 507.8
+}
+2026-11-23T12:51:44Z tag=mt_x_tl_v1 rc=0 peak_rss_mib=507 wall_s=13.40 cpu_user_s=12.07 memavail_start_gib=22 disk_free_gib=429->429 slot=claude3

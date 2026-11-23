@@ -948,6 +948,20 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- MAKER_LOGIC_CHAINS_V2_20261123_DEV -->
+## 2026-11-23 12:54Z (session aea5bfb9) — LOGIC CHAINS v2: correction of review 6bb458b30 + TAKE-LOGIC v1 (USER: solid proof of the take logic; cap 1.85 -> 1.90)
+
+**Receipt:** [v2/report_logic_chains_v2.md](reviews/maker_trace_20261122/v2/report_logic_chains_v2.md). It supersedes the first receipt's interpretation in-band.
+
+**Take logic:** inventory-size trimming (supported pooled) plus a fast fill-burst reaction (timing-sensitive). No BTC take-profit or stop-loss. Taking peaks 30–60 s before the end and stops in the last 30 s.
+
+**Pull:** adverse BTC within 1 s survives both reference families (timing-sensitive).
+
+**Posting:** 940 bound-constrained windows <= 10 s.
+
+**Next:** ONE Codex review of 6bb458b30..HEAD (auto-check cron 60c3d98d + `review_watch.sh` armed).
+<!-- /MAKER_LOGIC_CHAINS_V2_20261123_DEV -->
+
 <!-- MAKER_LOGIC_CHAINS_20261123_DEV -->
 ## 2026-11-23 11:25Z (session aea5bfb9) — TOP-3 MAKER LOGIC CHAINS: results (frozen 196af3323; 4 full runs rc 0; packet within the USER budget of 0.11 h)
 

@@ -1,0 +1,45 @@
+pattern,definition,scope,n_event_seconds,n_takes,maker_days,markets_ge1,markets_ge5,takes_denominator,share_of_takes,takes_in_population
+P1,sell reducing a long while a_5s with (sells when BTC rises),rank1,24,81,3,7,2,3620,0.022375690607734807,3620
+P1,sell reducing a long while a_5s with (sells when BTC rises),rank2,2,2,1,1,0,341,0.005865102639296188,341
+P1,sell reducing a long while a_5s with (sells when BTC rises),rank3,2,3,2,2,0,186,0.016129032258064516,163
+P1,sell reducing a long while a_5s with (sells when BTC rises),pooled,28,86,6,8,4,4147,0.020737882806848323,4124
+P2,sell reducing a long while a_5s against,rank1,20,61,4,9,2,3620,0.01685082872928177,3620
+P2,sell reducing a long while a_5s against,rank2,0,0,0,0,0,341,0.0,341
+P2,sell reducing a long while a_5s against,rank3,2,3,2,2,0,186,0.016129032258064516,163
+P2,sell reducing a long while a_5s against,pooled,22,64,6,10,2,4147,0.015432843019049916,4124
+P3,buy reducing a short while a_5s with,rank1,18,63,4,8,0,3620,0.017403314917127072,3620
+P3,buy reducing a short while a_5s with,rank2,0,0,0,0,0,341,0.0,341
+P3,buy reducing a short while a_5s with,rank3,1,1,1,1,0,186,0.005376344086021506,163
+P3,buy reducing a short while a_5s with,pooled,19,64,5,8,1,4147,0.015432843019049916,4124
+P4,buy reducing a short while a_5s against,rank1,23,75,4,14,0,3620,0.020718232044198894,3620
+P4,buy reducing a short while a_5s against,rank2,2,4,2,2,0,341,0.011730205278592375,341
+P4,buy reducing a short while a_5s against,rank3,0,0,0,0,0,186,0.0,163
+P4,buy reducing a short while a_5s against,pooled,25,79,6,14,1,4147,0.01904991560163974,4124
+P5,reduce while a_5s flat (q != 0),rank1,518,1542,4,19,19,3620,0.42596685082872926,3620
+P5,reduce while a_5s flat (q != 0),rank2,58,139,4,10,5,341,0.40762463343108507,341
+P5,reduce while a_5s flat (q != 0),rank3,43,87,3,15,1,186,0.46774193548387094,163
+P5,reduce while a_5s flat (q != 0),pooled,619,1768,11,19,19,4147,0.4263322884012539,4124
+P6,add while BTC 5 s moves with the take side,rank1,19,35,3,8,1,3620,0.009668508287292817,3620
+P6,add while BTC 5 s moves with the take side,rank2,0,0,0,0,0,341,0.0,341
+P6,add while BTC 5 s moves with the take side,rank3,2,7,2,2,0,186,0.03763440860215054,163
+P6,add while BTC 5 s moves with the take side,pooled,21,42,5,8,1,4147,0.010127803231251507,4124
+P7,any take with time left <= 30 s,rank1,36,117,4,16,2,3620,0.032320441988950274,3620
+P7,any take with time left <= 30 s,rank2,7,16,3,4,0,341,0.0469208211143695,341
+P7,any take with time left <= 30 s,rank3,0,0,0,0,0,186,0.0,163
+P7,any take with time left <= 30 s,pooled,43,133,7,16,3,4147,0.032071376898963104,4124
+P8,reduce with time left <= 30 s,rank1,35,110,4,15,2,3620,0.03038674033149171,3620
+P8,reduce with time left <= 30 s,rank2,6,12,3,3,0,341,0.03519061583577713,341
+P8,reduce with time left <= 30 s,rank3,0,0,0,0,0,186,0.0,163
+P8,reduce with time left <= 30 s,pooled,41,122,7,15,3,4147,0.0294188570050639,4124
+status:reduce_q0_at_t,"reduce take, q(t) = 0",rank1,0,0,0,0,0,3620,0.0,3620
+status:reduce_q0_at_t,"reduce take, q(t) = 0",rank2,0,0,0,0,0,341,0.0,341
+status:reduce_q0_at_t,"reduce take, q(t) = 0",rank3,0,0,0,0,0,186,0.0,163
+status:reduce_q0_at_t,"reduce take, q(t) = 0",pooled,0,0,0,0,0,4147,0.0,4124
+status:reduce_btc_missing,"reduce take, q != 0, BTC 5 s missing",rank1,5,8,1,1,1,3620,0.0022099447513812156,3620
+status:reduce_btc_missing,"reduce take, q != 0, BTC 5 s missing",rank2,0,0,0,0,0,341,0.0,341
+status:reduce_btc_missing,"reduce take, q != 0, BTC 5 s missing",rank3,0,0,0,0,0,186,0.0,163
+status:reduce_btc_missing,"reduce take, q != 0, BTC 5 s missing",pooled,5,8,1,1,1,4147,0.0019291053773812395,4124
+status:reduce_side_equals_inventory_sign,reduce take whose side equals the sign of q(t),rank1,12,43,4,10,0,3620,0.011878453038674033,3620
+status:reduce_side_equals_inventory_sign,reduce take whose side equals the sign of q(t),rank2,1,3,1,1,0,341,0.008797653958944282,341
+status:reduce_side_equals_inventory_sign,reduce take whose side equals the sign of q(t),rank3,0,0,0,0,0,186,0.0,163
+status:reduce_side_equals_inventory_sign,reduce take whose side equals the sign of q(t),pooled,13,46,5,11,0,4147,0.011092355919942128,4124
