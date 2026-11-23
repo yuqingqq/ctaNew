@@ -1,0 +1,54 @@
+head=9909beaccdd4c8759dbafd322c5dc41a822caf01
+PASS T1 population: 5 response links, 2 chains, 6 distinct orders
+PASS T1 H1 le10s = c1
+PASS T1 H1 le60s = c1 (c2 holds 70 s)
+PASS T1 H1 leEND = c1 + c2
+PASS T1 H1 afterEND (the later close) = c3
+PASS T1 H1 leEND by closing leg
+PASS T1 H1 residual kept apart
+PASS T1 H1 exact link available, attribution = mq, fees decompose
+PASS T1 H4 closing-earlier kept apart (never its completed close)
+PASS T1 H2 (rank 5) le10s = c5
+PASS T1 H3 unavailable (outside the closes population), residual kept
+PASS T1 H6 no close, residual 1 sh
+PASS T1 H7 le10s = c4
+PASS T1 pooled response_all
+PASS T1 pooled top3 / other split
+PASS T1 pooled chains
+PASS T1 every acceptance predicate and verifier check holds
+PASS T1 diagnostics: taker closes are recorded takes
+PASS T1 the five files written
+PASS T1 receipt sha256 = the written bytes
+PASS T1 links_econ / orders_econ shapes
+PASS T1 claims.json / chains_econ.md readable
+PASS T1 chains_v4 its-closes reconcile and chain parse counts
+PASS T2 take statuses (t10 straddles END, t9 after END)
+PASS T2 windows exclude the END-crossing takes
+PASS T2 the saved unbounded counts reproduced (4 subsequent, 2 inside END)
+PASS T2 a subsequent take is not automatically an exit
+PASS T2 verifier holds on the production build
+PASS T2 mutant no_end_bound caught
+PASS T2 a run with the mutant refuses naming the check
+PASS T3 H1 carries two links, one order row
+PASS T3 union counts each close once
+PASS T3 pooled takes distinct (one take after two linked creations counts once)
+PASS T3 the printed reconciliation carries the distinct-key take windows and the unavailable reasons
+PASS T3 mutant no_close_dedup caught
+PASS T3 a duplicated closes.parquet row refused
+PASS T4 the excluded legs are counted, never valued
+PASS T4 verifier holds on the production build
+PASS T4 mutant no_cohort caught
+PASS T5 deep creation -> contextual_only (tick_mismatch)
+PASS T5 a tick-equal restoring cell is kept
+PASS T5 verifier holds on the production build
+PASS T5 mutant no_tick_guard caught
+PASS T6 overwrite refused with its message
+PASS T6 run --dry writes nothing
+PASS T6 a mutant outside the selftest refused
+PASS T6 require_freeze=False outside the selftest refused
+PASS T6 an unknown mutant refused
+PASS T7 parser: a good line parsed, a malformed line flagged, lines outside the block ignored
+PASS T7 an input changed after its receipt fails inputs_bound
+PASS T7 a run refuses the unbound input
+continuation_econ_selftest: 51/51 passed
+2026-11-23T22:19:43Z tag=mt_ce_selftest2 rc=0 peak_rss_mib=127 wall_s=0.91 cpu_user_s=0.81 memavail_start_gib=22 disk_free_gib=420->420 slot=claude3

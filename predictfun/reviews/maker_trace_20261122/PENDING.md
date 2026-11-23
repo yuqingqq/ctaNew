@@ -12,7 +12,11 @@
 
 **Budget:** ≤ 0.030 h all-in; ledger 1.8947 of 2.00.
 
-**This is the last measurement in this line:** a thin or inconsistent answer ENDS it (review rule). Next: contract `competing_transition_contract.md`, then builders, then freeze, then runs, then the receipt `v2/report_logic_chains_v6.md`, then ONE review.
+**This is the last measurement in this line:** a thin or inconsistent answer ENDS it (review rule). Contract committed 9909beacc. Builders running:
+- `competing_transition.py` (claude2, ≤ 12 s);
+- `continuation_econ.py` (claude3, ≤ 15 s).
+
+Then: builders done, then freeze, then runs, then the receipt `v2/report_logic_chains_v6.md`, then ONE review.
 
 
 ## STATE 2026-11-23 21:22Z — ROUND COMPLETE: LOGIC CHAINS v5 (touch transitions + responses + chains v4) — review pending — read this first

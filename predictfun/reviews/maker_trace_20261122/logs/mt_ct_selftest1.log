@@ -1,0 +1,84 @@
+head=9909beaccdd4c8759dbafd322c5dc41a822caf01
+PASS selftest environment: MT_RUN=v2, no planted error set
+PASS S1 all-classes fixture: 18 declared outcomes mapped once each, mutual exclusion, totals, end-type identities; 4 known two-side sub-labels from 8 saved rows, 1 unknown without a row
+PASS S1 refused: a restoring response whose price overshoots (class-direction identity)
+PASS S1 refused: an other-side end carrying a same-side class (no declared outcome: mutual exclusion)
+PASS S1 refused: a bound population larger than the outcome rows (episode totals)
+PASS fixture: two saved rows of the both_up end pair
+PASS S1 two-side join refused: a time off the episode end pair
+PASS S1 two-side join refused: rows of another class
+PASS S1 two-side join refused: rows that disagree on the sub-label
+PASS S2 harmonic toy by hand: w = (2, 1.5, 0), RD_k = (0.5, -0.5, -), RD = 0.25 / 3.5 (equal weights would give 0, n-weights 0)
+PASS S2 a single-group stratum carries no weight (RD NaN, W 0)
+PASS planted D0 btc_with: harmonic RD 0.5 over 16 mixed strata (W 32), every day and side +
+PASS planted D0 btc_with: support 64 / 64 episodes, 48 / 16 responses, 16 / 48 competing, 8 markets -> adequate
+PASS planted D0 btc_with: concentration - each of the 8 markets carries 1/8 of the RD and of the weight
+PASS planted LAG btc_with: harmonic RD 0.5 over 16 mixed strata (W 32), every day and side +
+PASS planted LAG btc_with: support 64 / 64 episodes, 48 / 16 responses, 16 / 48 competing, 8 markets -> adequate
+PASS planted LAG btc_with: concentration - each of the 8 markets carries 1/8 of the RD and of the weight
+PASS planted: btc_with adequate_direction_consistent; the four other contrasts thin
+PASS planted: 16 episodes in another D0 bin are LAG state-missing (counted, never dropped)
+PASS planted claims: readings counted, D0 / LAG signs agree, 4 days carry the sign at both clocks, not timing-sensitive
+PASS fractions.csv: exposed same_restoring 0.75 (48 / 64); every populated (clock, contrast, group, scope, level) sums to 1
+PASS outcomes.csv: one row per episode with its outcome and the exposed / reference / out group per clock and contrast
+PASS rd.csv pooled row: RD 0.5 with the raw all-population counts beside it (64 / 64, risks 0.75 / 0.25, crude 0.5)
+PASS support.csv: one row per clock x contrast with the counts and the contrast reading
+PASS swapped-LAG world: D0 +0.5, LAG -0.5 (both adequate) -> adequate_inconsistent, timing_sensitive
+PASS every declared MT_CT_MUT has a case
+PASS base passes: S1 class-direction identity (all-classes fixture)
+PASS planted error swap_labels caught by: S1 class-direction identity (all-classes fixture)
+PASS base passes: S1 episode totals (all-classes fixture)
+PASS planted error drop_competitors caught by: S1 episode totals (all-classes fixture)
+PASS base passes: S1 mutual exclusion (all-classes fixture)
+PASS planted error blank_competitors caught by: S1 mutual exclusion (all-classes fixture)
+PASS base passes: S1 two-side sub-label provenance (all-classes fixture)
+PASS planted error guess_sub caught by: S1 two-side sub-label provenance (all-classes fixture)
+PASS base passes: S2 harmonic weights n1 n0 / (n1 + n0) (2-stratum toy and toy world)
+PASS planted error equal_weights caught by: S2 harmonic weights n1 n0 / (n1 + n0) (2-stratum toy and toy world)
+PASS base passes: S2 censor bounds (toy, toy world, population)
+PASS planted error censor_upper_drop caught by: S2 censor bounds (toy, toy world, population)
+PASS base passes: S4 timing bounds (hand values)
+PASS planted error timing_prev caught by: S4 timing bounds (hand values)
+PASS base passes: S3 floor within the mixed strata (too-small world -> thin)
+PASS planted error floor_all_population caught by: S3 floor within the mixed strata (too-small world -> thin)
+PASS base passes: S2 the time_left contrast omits its own bin (time-left world)
+PASS planted error tl_own_strata caught by: S2 the time_left contrast omits its own bin (time-left world)
+PASS base passes: S3 day rule >= 3 of 4 days (day-split world -> adequate_inconsistent)
+PASS planted error days_any caught by: S3 day rule >= 3 of 4 days (day-split world -> adequate_inconsistent)
+PASS binding: a file whose sha256 the producing receipt records is bound
+PASS binding refused: a different sha256
+PASS binding refused: no recorded sha256
+PASS binding refused: a missing file
+PASS producing receipt: the frozen definitions accepted (rehearsal)
+PASS producing receipt refused: a changed contrast description
+PASS producing receipt refused: a pilot receipt
+PASS producing receipt refused: a planted error in the producer
+PASS producing receipt refused: another day set
+PASS producing receipt refused: disagreeing episode counts
+PASS producing receipt refused: a missing TWO_SUB
+PASS producing receipt refused: not the contract population (3,796) outside a rehearsal
+PASS reader refused: episodes.parquet lacking a read column
+PASS reader refused: reconcile.csv lacking a read column
+PASS reader refused: a null in a string column
+PASS reader refused: a non-boolean next-frame flag
+PASS validate refused: a state label outside the frozen bins
+PASS validate refused: an undeclared end_type
+PASS validate refused: a time-left bin missing while the state is ok
+PASS validate: the all-classes fixture passes
+PASS e2e dry: bindings, parquet / csv readers and the analysis print the reconciliation and readings and write nothing
+PASS e2e run: exactly the seven outputs
+PASS e2e receipt: output sha256 / bytes / rows match the written files; rehearsal recorded; both inputs bound
+PASS e2e outcomes.csv read back: one row per episode, the in-process outcomes, every declared outcome present
+PASS e2e claims.json: computed readings, reconciliation and timing summary
+PASS e2e: a second run refuses write-once
+PASS e2e: outside a rehearsal the untracked synthetic producing receipt is refused
+PASS e2e: a tampered reconcile.csv is refused by its binding
+PASS e2e: nothing written by the refused calls
+PASS refuse: production with MT_CT_MUT=swap_labels before any input is read
+PASS refuse: production with MT_CT_MUT=bogus before any input is read
+PASS refuse: the full run before any input (freeze)
+PASS refuse: an unknown command line
+PASS refuse: nothing written by a refused production call
+PASS production paths: reads v2/chains/touch_transition, writes v2/chains/competing_transition
+{"checks": 81, "passed": 81, "failed": 0, "cpu_s": 0.341, "process_cpu_s": 0.614, "vmhwm_mib": 120.9}
+2026-11-23T22:08:35Z tag=mt_ct_selftest1 rc=0 peak_rss_mib=122 wall_s=0.80 cpu_user_s=0.61 memavail_start_gib=22 disk_free_gib=420->420 slot=claude2
