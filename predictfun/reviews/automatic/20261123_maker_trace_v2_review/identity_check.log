@@ -1,0 +1,27 @@
+{
+  "target": "0e21193f2d403d08bb5172aaf727a6a93110e8a9",
+  "byte_equal": {
+    "fills_valued.parquet": false,
+    "maker_market.parquet": true,
+    "identities.json": true
+  },
+  "fills_rows_compared": 8101346,
+  "changed_fields": {
+    "life_rep": 164,
+    "life_exh": 519,
+    "life_front": 164,
+    "life_status": 164
+  },
+  "economic_columns_exact": true,
+  "closes_output_hashes": {
+    "answer.json": true,
+    "closes.parquet": true,
+    "closes_markets.parquet": true,
+    "closes_summary.csv": true,
+    "cohorts.csv": true,
+    "residual_summary.csv": true
+  },
+  "cpu_s": 16.586530005,
+  "preceding_failure": "controls_check.log: inappropriate whole-file byte equality for lifecycle-enriched fills, after all synthetic controls passed"
+}
+2026-11-23T06:18:17Z tag=codex_mt2_identity_review rc=0 peak_rss_mib=599 wall_s=16.79 cpu_user_s=15.81 memavail_start_gib=22 disk_free_gib=435->435 slot=codex

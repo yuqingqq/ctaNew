@@ -23,6 +23,48 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- MAKER_TRACE_V2_REVIEW_20261123_CODEX -->
+## 2026-11-23 — Maker trace v2 accepted as descriptive accounting; next compare the same markets
+
+[Combined review](reviews/automatic/20261123_maker_trace_v2_review/report.md),
+pinned 0e21193f2d403d08bb5172aaf727a6a93110e8a9. Independent deque FIFO
+on 1,055,691 top-ten fill rows reproduces close shares/gross/fees within
+2.51e-9. Net completed turnover +$109,145.73; passive-exit cohorts earn,
+aggressive-exit cohorts lose. This does not show the aggressive exit caused
+the loss or that retaining its inventory would earn. Residual contributions
+are negative for the top three; their completed turnover is positive pooled.
+
+No result-invalidating blocker or full rerun. Accept the declared v2 FIFO
+tie amendment (strictly later settle ms; conflicting exhaustion refused),
+not as proof v1's conservative exclusion was wrong. The saved checker is
+39/39; pinned lifecycle 199, closes 239, decision 78 and identifiability 8
+controls pass. All 8,101,346 v1/v2 fill rows have identical economic/timing
+columns; only four lifecycle annotations differ. Whole fills-file byte
+equality was an overstrict review assertion; its failure and the exact
+follow-up comparison are retained. R4 totals unchanged, R3 reconciled with
+scenario qualifications, R1 not causal, R2 still 86 recorded own fills.
+
+Bundle these corrections, without a cleanup-only cycle: label opposing-side
+actions separately from actual absolute-position reduction (overshoots can
+increase risk; rank 1 maker majority flips); withdraw the causal taker-loss
+sentence; describe original-size exhaustion vs unseen-balance cancellation
+accurately. Retain the known receipt-earlier-than-UUID fallback limitation
+before reusing lifecycle on that input pattern. Relabelling the conditional
+take grid and fill-relative features is sufficient for this descriptive
+packet, not for a tradeable imitation policy.
+
+ONE next priority: MATCHED-MARKET-TURNOVER-GAP-v1. Saved-data comparison of
+CURRENT_ASYNC_FAST10 and ex-ante top-three/top-ten makers on the same 19 BOOK
+markets, same intervals and END marks, carried-in inventory explicit.
+Reconcile turnover, residual/carry, fees, holding time and exposure per
+market/day to locate the actual economic gap. Freeze before measuring;
+no new fitted/queue/latency variant. All-in next packet <=0.10 core-hours
+including review, inside task 1.85h / line 5.25h, needs no additional USER
+decision; amend resources first if it cannot fit. No new data/live use.
+This review charge <=0.025h; starting submitted task 1.68 -> <=1.705h,
+before any concurrent development use. Prior review 0.021h not counted twice.
+<!-- /MAKER_TRACE_V2_REVIEW_20261123_CODEX -->
+
 <!-- MAKER_TRACE_REVIEW_20261123_CODEX -->
 ## 2026-11-23 — Maker trace review: ledger accepted; horizon and inventory interpretation must be corrected
 

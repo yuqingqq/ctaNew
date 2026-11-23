@@ -1,0 +1,71 @@
+day done 20261024 cpu 9.49
+day done 20261025 cpu 16.9
+day done 20261026 cpu 26.82
+day done 20261027 cpu 35.57
+{
+  "cpu_s": 35.593232762,
+  "fifo_max_summary_abs_gap": 2.5029294192790985e-09,
+  "inventory": [
+    {
+      "rank": 1,
+      "role": "maker",
+      "our_n": 152352,
+      "published_n": 152352,
+      "our_direction": 77753,
+      "published_direction": 77753,
+      "actual": 74550,
+      "overshoot": 3203
+    },
+    {
+      "rank": 1,
+      "role": "taker",
+      "our_n": 156412,
+      "published_n": 156412,
+      "our_direction": 92142,
+      "published_direction": 92142,
+      "actual": 90256,
+      "overshoot": 1886
+    },
+    {
+      "rank": 2,
+      "role": "maker",
+      "our_n": 112615,
+      "published_n": 112615,
+      "our_direction": 55750,
+      "published_direction": 55750,
+      "actual": 54380,
+      "overshoot": 1370
+    },
+    {
+      "rank": 2,
+      "role": "taker",
+      "our_n": 16436,
+      "published_n": 16436,
+      "our_direction": 9730,
+      "published_direction": 9730,
+      "actual": 9593,
+      "overshoot": 137
+    },
+    {
+      "rank": 3,
+      "role": "maker",
+      "our_n": 104788,
+      "published_n": 104788,
+      "our_direction": 57847,
+      "published_direction": 57847,
+      "actual": 55746,
+      "overshoot": 2101
+    },
+    {
+      "rank": 3,
+      "role": "taker",
+      "our_n": 8581,
+      "published_n": 8581,
+      "our_direction": 5225,
+      "published_direction": 5225,
+      "actual": 5095,
+      "overshoot": 130
+    }
+  ]
+}
+2026-11-23T06:14:35Z tag=codex_mt2_saved_review rc=0 peak_rss_mib=401 wall_s=36.00 cpu_user_s=35.57 memavail_start_gib=22 disk_free_gib=435->435 slot=codex

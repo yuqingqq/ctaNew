@@ -1,4 +1,33 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+maker_trace_v2_review_20261123_codex:
+  target: 0e21193f2d403d08bb5172aaf727a6a93110e8a9
+  report: predictfun/reviews/automatic/20261123_maker_trace_v2_review/report.md
+  disposition: descriptive_economics_accepted_no_full_rerun
+  outcome_invalidating_blockers: 0
+  behavioral_policy_identified: false
+  R3_disposition: reconciled_with_declared_scenario_qualifications
+  saved_checker_passes: 39
+  independent_fifo_fill_rows: 1055691
+  independent_fifo_max_abs_gap: 2.503e-9
+  exact_v1_v2_fill_rows_compared: 8101346
+  changed_columns_lifecycle_annotations_only: true
+  verified_top10_close_net_fill_fee_usd: 109145.729845
+  lifecycle_controls: 199
+  closes_controls: 239
+  decision_controls: 78
+  identifiability_controls: 8
+  absolute_inventory_reduction_count_requires_supersession: true
+  causal_exit_policy_claim_supported: false
+  receipt_earlier_than_UUID_latent_issue: deferred_not_present_in_saved_population
+  next_priority: MATCHED_MARKET_TURNOVER_GAP_v1
+  next_packet_all_in_core_hours_cap: 0.10
+  next_packet_USER_decision_within_existing_scope_and_caps: false
+  maker_trace_task_cap_core_hours: 1.85
+  existing_line_ceiling_core_hours: 5.25
+  review_charge_upper_bound_core_hours: 0.025
+  task_upper_bound_after_review_before_concurrent_work: 1.705
+  next_packet_launched: false
+
 maker_trace_review_20261123_codex:
   target: 1af85c5691d5ca4c2f9565d94a13cd9680688d3c
   report: predictfun/reviews/automatic/20261123_maker_trace_review/report.md
