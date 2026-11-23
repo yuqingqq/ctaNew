@@ -1,5 +1,52 @@
 # MAKER-TRACE-RECONSTRUCTION-v1 — pending work
 
+## STATE 2026-11-23 11:13Z — LOGIC-CHAIN PACKET: USER raised the packet to 0.11 h (task about 1.82 of 1.85) — read this first
+
+**Done (tests pass):**
+- `chain_context` (173 / 173);
+- `order_estimator` + contract (75 / 75; pilot r2 OK);
+- `chain_take` (59 / 59; pilot OK).
+
+**Running:**
+- `chain_post_fill`: cost cut, then selftest2 + pilot2, which must give identical outputs;
+- `chain_pull` v2: selftest2 + pilot2 into a new folder.
+
+**Next:** one freeze commit (the contract + 5 tools + selftests), then full runs (estimator, take, pull, post_fill) under `MT_RUN=v2`, then one combined receipt and ONE Codex review.
+
+
+## STATE 2026-11-23 08:31Z — LOGIC-CHAIN PACKET IN PARALLEL (USER raised the packet ceiling to 0.08 h, task cap 1.85) — read this first
+
+**Five agents are running.** Resume any that a rate limit stopped.
+
+| Agent | Files | Slot |
+|---|---|---|
+| 1 | `order_estimator_contract.md` + `order_estimator.py` (detailed episodes) | claude4 / claude3 |
+| 2 | `chain_context.py` (shared helper) | claude3 |
+| 3 | `chain_post_fill.py` | claude2 |
+| 4 | `chain_pull.py` | claude4 |
+| 5 | `chain_take.py` + the action enumeration | claude |
+
+**Next:**
+1. Integrate the pieces.
+2. Freeze-commit the contract and all tools.
+3. Run every tool under `MT_RUN=v2`.
+4. One combined receipt and ONE Codex review.
+
+
+## STATE 2026-11-23 08:16Z — REVIEW 6ddad3533 ANSWERED (f1e75e6f9); USER-directed ORDER-ESTIMATOR / decision-logic packet BUILDING — read this first
+
+**Plans:** 7d71ca40c, 72c5e5841, 5cb2f0229.
+
+**Running:** the agent building `order_estimator_contract.md` + `tools/order_estimator.py` + its selftest, with one pilot. Resume it with SendMessage if a rate limit stopped it.
+
+**Next:**
+1. Freeze-commit the contract, tool and selftest.
+2. `MT_RUN=v2` full run (≤ 96 cases).
+3. Receipt, then ONE Codex review.
+
+**Budget:** ≤ 0.035 h all-in, including a 0.010 h review reserve (ledger 1.708 + review 0.010 → 1.718 before this packet; cap 1.85).
+
+
 ## STATE 2026-11-23 07:57Z — MATCHED-GAP RESULTS COMMITTED (55625bfa6); CODEX REVIEW QUEUED; nothing to run — read this first
 
 **Auto-continue:** reply "waiting" unless a `Predictfun-Review-Only` commit appears after 55625bfa6. Then read it, verify it at the code, and report to the USER. Run nothing until the USER's go (11-14 rule). CPU is about 1.71 of 1.85.

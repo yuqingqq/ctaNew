@@ -1,0 +1,79 @@
+20261024 3697902: orders 91 grid 6013 cells 55 cpu 1.42 s vmhwm 376 MiB
+20261024 3699278: orders 121 grid 6013 cells 65 cpu 1.35 s vmhwm 376 MiB
+20261024 3700070: orders 125 grid 6013 cells 42 cpu 1.27 s vmhwm 376 MiB
+20261024 3702960: orders 81 grid 6013 cells 49 cpu 0.94 s vmhwm 376 MiB
+20261024 3704004: orders 102 grid 6013 cells 65 cpu 1.28 s vmhwm 376 MiB
+20261024 3712725: orders 114 grid 6013 cells 75 cpu 1.32 s vmhwm 376 MiB
+20261024 3716727: orders 112 grid 6013 cells 67 cpu 1.23 s vmhwm 376 MiB
+{
+ "rows": {
+  "orders": 746,
+  "summary": 720
+ },
+ "counts": {
+  "check_grid_points": 136268,
+  "check_windows": 56,
+  "control_status:ok": 726,
+  "control_status:window_unbounded": 20,
+  "fv_groups_pruned": 83,
+  "fv_groups_read": 7,
+  "fv_rows_scanned": 601198,
+  "fv_rows_top3_book": 4492,
+  "legs_without_window": 0,
+  "orders_top3": 746,
+  "position_early_queue_builder_at_every_instant": 0
+ },
+ "cpu_stage_s": {
+  "preflight": 0.6749,
+  "fills_valued": 0.3537,
+  "context_load": 4.0504,
+  "estimator": 3.1463,
+  "context_series": 0.1619,
+  "orders": 1.0292,
+  "controls_draw": 0.0818,
+  "controls_eval": 0.3381,
+  "summary": 0.4149,
+  "hash": 0.047
+ },
+ "cpu_total_s": 10.301,
+ "vmhwm_mib": 375.5,
+ "projection": {
+  "fixed_s": 1.491,
+  "per_market_s": 0.6018,
+  "per_order_s": 0.00616,
+  "markets_in_pilot": 7,
+  "orders_in_pilot": 746,
+  "orders_full": 4149,
+  "full_run_s": 38.48,
+  "full_run_core_h": 0.01069,
+  "note": "one address-day: the per-market context cost is measured on its markets (each loads all three addresses); the per-order cost assumes the other addresses cost alike (one point, not a size-volume fit)"
+ },
+ "compare": {
+  "reference": "post_fill_pilot_20261024_r1",
+  "orders.csv": {
+   "rows_ref": 746,
+   "rows_new": 746,
+   "same_row_keys": true,
+   "columns_compared": 116,
+   "missing_columns": [],
+   "new_columns": [
+    "take_after_last_sid",
+    "take_after_first_sid",
+    "follow_first_lo_ms",
+    "follow_last_lo_ms"
+   ],
+   "mismatched": {}
+  },
+  "summary.csv": {
+   "rows_ref": 720,
+   "rows_new": 720,
+   "same_row_keys": true,
+   "columns_compared": 22,
+   "missing_columns": [],
+   "new_columns": [],
+   "mismatched": {}
+  },
+  "identical": true
+ }
+}
+2026-11-23T11:21:47Z tag=mt_pf_pilot2 rc=0 peak_rss_mib=375 wall_s=10.91 cpu_user_s=10.29 memavail_start_gib=22 disk_free_gib=431->431 slot=claude2

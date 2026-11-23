@@ -1,0 +1,35 @@
+{
+ "out": "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/v2/order_estimator_pilot_20261027_r1",
+ "cpu_s": 7.839,
+ "stage_cpu_s": {
+  "setup": 0.096,
+  "select": 0.951,
+  "census": 2.79,
+  "case_windows": 0.044,
+  "btc_load": 0.0,
+  "cases_market_01": 1.576,
+  "cases_market_02": 0.897,
+  "logic": 0.009,
+  "gt": 0.489,
+  "hash_inputs": 0.691,
+  "write": 0.296
+ },
+ "n_cases": 8,
+ "projection": {
+  "basis": "pilot process_time per stage: the fixed stages (setup, selection, census of every top-3 row, GT check, input hashing, write) already cover the full run; BTC per day x 4 days; the case stage (book + cases + context + episodes + logic) scaled by markets with cases (<= 19) and, separately, by cases (<= 96); the larger is the projection",
+  "fixed_s": 5.357,
+  "btc_per_day_s": 0.0,
+  "case_stage_s": 2.482,
+  "markets_in_pilot": 2,
+  "cases_in_pilot": 8,
+  "per_market_s": 1.241,
+  "per_case_s": 0.31,
+  "full_run_s_by_markets": 28.94,
+  "full_run_s_by_cases": 35.14,
+  "full_run_s": 35.14,
+  "full_run_core_h": 0.00976,
+  "note": "process_time excludes the interpreter start and imports before main (about 1 s, in run_light cpu_user_s)"
+ },
+ "vmhwm_mib": 532.6
+}
+2026-11-23T10:50:33Z tag=mt_oe_pilot_20261027_r2 rc=0 peak_rss_mib=532 wall_s=8.27 cpu_user_s=7.48 memavail_start_gib=22 disk_free_gib=431->431 slot=claude4

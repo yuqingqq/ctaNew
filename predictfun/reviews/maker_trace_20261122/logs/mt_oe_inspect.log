@@ -1,0 +1,33 @@
+fv rows 8101346 groups 90 book-hit groups 19 rows in them 1649076
+fv hit sample [(21, 105904, 3697141, 3698884), (22, 90954, 3698886, 3700048), (23, 77614, 3700065, 3700907), (26, 78048, 3702960, 3703978), (27, 87890, 3704000, 3705382)]
+markets_20261024.parquet ['day', 'mid', 'slug', 'ws', 'we', 'outcome', 'outcome_seen_ns', 'feeRateBps', 'makerFeeBps', 'spreadThreshold', 'shareThreshold', 'rewards', 'isBoosted', 'boostStartsAt', 'boostEndsAt', 'outcome_statuses', 'market_status', 'trading_status', 'resolution', 'category_slug', 'latest_recv_ns', 'n_pages', 'n_records', 'n_legs', 'changed_fields', 'rewards_variants', 'rest_lo_ms', 'rest_hi_ms', 'n_frames', 'first_upd_ms', 'last_upd_ms', 'n_legs_outside_ws', 'n_legs_in_missing_ws_hour', 'n_poll_incomplete', 'poll_incomplete_reasons', 'depth', 'status']
+orders ['scenario', 'mid', 'mk_hash', 'mk_signer', 'y_side', 'y_ptick', 'n_fills', 'cum_shares', 'first_hi_ms', 'last_hi_ms', 'size_lb', 'size_exact', 'size_class', 'post_lo_ms', 'post_hi_ms', 'post_class', 'post_method', 'persist_lo_ms', 'persist_hi_ms', 'persist_class', 'ahead_lo', 'ahead_hi', 'queue_class', 'removal_set', 'removal_lo_ms', 'removal_hi_ms', 'removal_class', 'removal_method', 'status', 'x_size_ub', 'x_post_cap_ms', 'x_post_fifo_ms', 'x_ahead_hi_raw', 'x_n_lo_unbounded', 'x_as_taker', 'x_capacity_violation_frames', 'x_clock_violation_frames']
+fills ['mid', 'sid', 'mk_hash', 'mk_idx', 'y_side', 'y_ptick', 'shares', 'hi_ms', 'lo_ms', 't_method', 'f_before', 'f_after', 'status', 'x_evidence_fid', 'x_drop_fid', 'x_lo_exact_ms', 'x_lo_hard_ms', 'x_rec_rank', 'x_exh_price', 'x_worst_k', 'x_exh_S_FIFO', 'x_exh_S_FIFO_LO', 'x_ahead_lo_S_FIFO', 'x_ahead_lo_S_FIFO_LO', 'x_ahead_hi_S_FIFO', 'x_ahead_hi_S_FIFO_LO']
+x_links ['mid', 'mk_signer', 'y_side', 'kind', 'prev_hash', 'next_hash', 'prev_ptick', 'next_ptick', 'prev_last_hi_ms', 'next_first_hi_ms', 'gap_ms', 'x_latest', 'label', 'status']
+frames ['mid', 'fid', 'upd_ms', 'recv_ns', 'conn', 'order_count', 'pend_bids', 'pend_asks', 'los_id', 'los_side', 'los_price', 'los_outcome', 'status', 'x_los_kind'] 5917
+levels ['mid', 'fid', 'side', 'ptick', 'shares', 'status', 'x_price'] 564779
+btc ['g_ms', 'bid', 'ask', 'mid', 'n_upd', 'age_ms', 'status'] 864000
+own_orders rows 42064
+20261024 3697902 orders [91, 0, 62] fills [162, 0, 86] cancel_possible [91, 0, 62] post_unbounded [0, 0, 0]
+20261024 3699278 orders [121, 0, 87] fills [185, 0, 118] cancel_possible [121, 0, 87] post_unbounded [1, 0, 5]
+20261024 3700070 orders [125, 0, 58] fills [189, 0, 69] cancel_possible [125, 0, 58] post_unbounded [0, 0, 0]
+20261024 3702960 orders [81, 64, 57] fills [158, 156, 81] cancel_possible [81, 64, 57] post_unbounded [8, 4, 3]
+20261024 3704004 orders [102, 145, 79] fills [155, 289, 104] cancel_possible [102, 145, 79] post_unbounded [3, 7, 2]
+20261024 3712725 orders [114, 72, 82] fills [204, 161, 241] cancel_possible [114, 72, 82] post_unbounded [2, 1, 0]
+20261024 3716727 orders [112, 87, 46] fills [222, 196, 64] cancel_possible [112, 87, 46] post_unbounded [1, 1, 0]
+20261025 3723774 orders [126, 0, 101] fills [213, 0, 133] cancel_possible [126, 0, 101] post_unbounded [2, 0, 1]
+20261025 3734864 orders [134, 0, 112] fills [238, 0, 144] cancel_possible [134, 0, 112] post_unbounded [1, 0, 1]
+20261025 3737919 orders [180, 0, 69] fills [300, 0, 102] cancel_possible [180, 0, 69] post_unbounded [3, 0, 3]
+20261025 3763401 orders [96, 82, 70] fills [173, 136, 186] cancel_possible [96, 82, 70] post_unbounded [5, 1, 2]
+20261025 3776314 orders [64, 0, 42] fills [138, 0, 52] cancel_possible [64, 0, 42] post_unbounded [1, 0, 0]
+20261026 3789484 orders [55, 0, 115] fills [133, 0, 312] cancel_possible [55, 0, 115] post_unbounded [2, 0, 1]
+20261026 3803131 orders [52, 41, 85] fills [102, 115, 202] cancel_possible [52, 41, 85] post_unbounded [3, 2, 1]
+20261026 3804696 orders [84, 47, 104] fills [163, 105, 244] cancel_possible [84, 47, 104] post_unbounded [1, 1, 2]
+20261026 3838531 orders [77, 105, 105] fills [232, 277, 374] cancel_possible [77, 105, 105] post_unbounded [1, 2, 1]
+20261026 3850428 orders [82, 95, 48] fills [286, 198, 70] cancel_possible [82, 95, 48] post_unbounded [0, 0, 1]
+20261027 3877472 orders [96, 139, 0] fills [440, 415, 0] cancel_possible [96, 139, 0] post_unbounded [1, 3, 0]
+20261027 3899224 orders [76, 82, 0] fills [454, 303, 0] cancel_possible [76, 82, 0] post_unbounded [1, 0, 0]
+totals {'orders': 4149, 'fills': 9080}
+frame status {'ok': 5838, 'gap': 79} dt p50 52.0
+cpu_s 0.31
+2026-11-23T08:27:03Z tag=mt_oe_inspect rc=0 peak_rss_mib=123 wall_s=0.45 cpu_user_s=0.37 memavail_start_gib=22 disk_free_gib=433->433 slot=claude4

@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/tools/order_estimator_selftest.py", line 443, in <module>
+    main()
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/tools/order_estimator_selftest.py", line 297, in main
+    ok('7_flagged', bool(cK.clock_bad.iloc[0]) and 'receipt_before_uuid' in cK.flags.iloc[0], f'{cK.flags.iloc[0]}')
+                                                                            ^^^^^^^^^^^^^
+AttributeError: 'Flags' object has no attribute 'iloc'
+2026-11-23T09:11:42Z tag=mt_oe_selftest1 rc=1 peak_rss_mib=145 wall_s=1.25 cpu_user_s=1.12 memavail_start_gib=22 disk_free_gib=433->433 slot=claude4

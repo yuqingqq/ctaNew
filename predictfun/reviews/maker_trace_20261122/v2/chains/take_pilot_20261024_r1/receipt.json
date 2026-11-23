@@ -1,0 +1,234 @@
+{
+ "addresses": [
+  "0x6Da6Cb464F92AE7aD4Ec3d239c81719Cb1D0Ae03",
+  "0x7d32c568a9bEA1714036972601c51F4902C67091",
+  "0x57FbC891E89184DA071AE9D97E745531cd7F718a"
+ ],
+ "asof_end": "2026-11-23T11:03:29Z",
+ "asof_start": "2026-11-23T11:03:21Z",
+ "class_names": {
+  "contract": [
+   "from_flat",
+   "add",
+   "reduce_partial",
+   "full_close",
+   "reversal_reducing",
+   "overshoot",
+   "no_change",
+   "unclassified",
+   "timing_sensitive"
+  ],
+  "dispatch": {
+   "add": "add",
+   "from_flat": "add (from flat)",
+   "full_close": "full_close",
+   "no_change": "no_change",
+   "overshoot": "opposing_not_reducing",
+   "reduce_partial": "reduce",
+   "reversal_reducing": "reversal_overshoot",
+   "timing_sensitive": "ambiguous_pending",
+   "unclassified": "unclassified"
+  }
+ },
+ "constants": {
+  "BURST_MS": 5000,
+  "BURST_N": 3,
+  "D_CONTRACT": [
+   0,
+   250,
+   1000
+  ],
+  "D_DISPATCH": [
+   0,
+   50,
+   250
+  ],
+  "D_PRIMARY": 0,
+  "D_PROFILES": [
+   0,
+   50,
+   250,
+   1000
+  ],
+  "EXCL_MS": 2000,
+  "KEEP_REACT_MS": 1000,
+  "MAX_LAG": 2000,
+  "MOVES": [
+   [
+    "r_1s",
+    0.5
+   ],
+   [
+    "r_5s",
+    1.0
+   ],
+   [
+    "r_30s",
+    2.0
+   ]
+  ],
+  "NO_CLAIM": [
+   "life_window_mismatch",
+   "no_life",
+   "receipt_before_uuid",
+   "side_mixed",
+   "window_unbounded"
+  ],
+  "N_DRAWS": 500,
+  "N_PERM": 500,
+  "POS_BINS": [
+   50.0,
+   200.0,
+   1000.0
+  ],
+  "POS_EPS": 1e-06,
+  "PRE_MS": 300000,
+  "REC_MS": [
+   1000,
+   5000
+  ],
+  "SEED": 20261123,
+  "STEP": 100
+ },
+ "context": "chain_context chain_context_v1",
+ "contract": "predictfun/reviews/maker_trace_20261122/order_estimator_contract.md (sections 2, 5, 6 TAKE rows, 7.0, 7.3)",
+ "counts": {
+  "control_candidates": 8923,
+  "control_candidates_near_take_excluded": 10692,
+  "grid_book_not_ok": 7574,
+  "grid_btc_not_ok": 610,
+  "grid_instants": 42581,
+  "legs_lo_unbounded": 0,
+  "legs_no_life": 0,
+  "legs_ok_nonself": 2649,
+  "legs_receipt_before_uuid": 0,
+  "markets": 7,
+  "pairs": 7,
+  "takes": 1416
+ },
+ "cpu_s": {
+  "by_stage": {
+   "context_load": 4.69,
+   "links": 0.028,
+   "pairs": 1.625,
+   "population": 0.002,
+   "tables": 1.931
+  },
+  "cap": 120.0,
+  "total": 8.282
+ },
+ "days": [
+  "20261024"
+ ],
+ "git": {
+  "head": "f1e75e6f9f5ba1fcd3d7590c6d6da909dad56099",
+  "tool_files": [
+   "predictfun/reviews/maker_trace_20261122/tools/chain_take.py",
+   "predictfun/reviews/maker_trace_20261122/tools/chain_take_selftest.py",
+   "predictfun/reviews/maker_trace_20261122/tools/chain_context.py",
+   "predictfun/reviews/maker_trace_20261122/order_estimator_contract.md"
+  ],
+  "tracked": false,
+  "unmodified": false
+ },
+ "guard_mib": 1450.0,
+ "inputs": {
+  "data/predict_fun/research/maker_trace_v2_20261123/btc/btc_20261024.parquet": "a593570942b1523d14ec6b0ac9dab7de25a5372b7d375657436cba43102befb4",
+  "data/predict_fun/research/maker_trace_v2_20261123/depth/20261024_3697902_frames.parquet": "d6a468499f93ea702c3142bfc4df9b850c13c9f13f8451b0d2fc9f90583fb80a",
+  "data/predict_fun/research/maker_trace_v2_20261123/depth/20261024_3697902_levels.parquet": "f9440d08334e68e810b7f48698e7cad5c2f93b071d82855de91bd8d6909cf35c",
+  "data/predict_fun/research/maker_trace_v2_20261123/depth/20261024_3699278_frames.parquet": "2fcab040f5893794cc2935d9d5a16966f5a5a9b054ba4d70ad947acc26fc844b",
+  "data/predict_fun/research/maker_trace_v2_20261123/depth/20261024_3699278_levels.parquet": "6f5b5b12853a41f146d6666bd766dd1848a59f3e77abef65b678d3e555fe943c",
+  "data/predict_fun/research/maker_trace_v2_20261123/depth/20261024_3700070_frames.parquet": "156491cf4379b1ccf38352f26ab0d786413d41096015374397f8b70cd7e12df3",
+  "data/predict_fun/research/maker_trace_v2_20261123/depth/20261024_3700070_levels.parquet": "6b67e0dd29a1d79884291db51fd5dfd523e000b4c4d4eea5e3a07ef488b2d4b4",
+  "data/predict_fun/research/maker_trace_v2_20261123/depth/20261024_3702960_frames.parquet": "3476ff14a85ee0ee112da2d86e75f805141da0b613f925ab4b787b5f758185fe",
+  "data/predict_fun/research/maker_trace_v2_20261123/depth/20261024_3702960_levels.parquet": "2dd652a752eeb2f68272bb18356fb8e1befe6269ac60dbd1b441deeb51749bfe",
+  "data/predict_fun/research/maker_trace_v2_20261123/depth/20261024_3704004_frames.parquet": "785b1cceac1a717775fdfc4aa61dbf6ecb8167e1730c3084fc192ccbee425592",
+  "data/predict_fun/research/maker_trace_v2_20261123/depth/20261024_3704004_levels.parquet": "961ae89623eebc217c8519ee6e65eb0e665ae82af470c31548666d88d843a0f5",
+  "data/predict_fun/research/maker_trace_v2_20261123/depth/20261024_3712725_frames.parquet": "da3833e951ea993ef6874c8d1d017897bd3e0e10e58c9a032cc1d014abdda6ad",
+  "data/predict_fun/research/maker_trace_v2_20261123/depth/20261024_3712725_levels.parquet": "e8183099521673b4c23dc9c8fc9ddda761e4a0a91a79b6544e73749482ea6416",
+  "data/predict_fun/research/maker_trace_v2_20261123/depth/20261024_3716727_frames.parquet": "ae0ca84d0d7b50ca9f0ec6d36a49f896f8ba379b806be4a30081ffa59f68020b",
+  "data/predict_fun/research/maker_trace_v2_20261123/depth/20261024_3716727_levels.parquet": "0e2c3e809d7fe31db7a64767de6fe61d7658670fe158dc078346b54263b8ad9a",
+  "data/predict_fun/research/maker_trace_v2_20261123/econ/fills_valued.parquet": "2a874707cc7801d6760e2de36075870700cc0be8e72cd9a6df0213424221cde6",
+  "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3697902_fills.parquet": "bb8634119ab6d34df28d926b5a19c530c1a7328446a94a71fb8159a051e8cdfa",
+  "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3697902_orders.parquet": "2a416e6b5652e0e49b89a6fefc44151602a0a4abd63d04d70bd7d2694ca0f80e",
+  "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3699278_fills.parquet": "66074e5e533030f28fdc9fdfe96bda529fa827b65ad81ba15758ec837c4b4738",
+  "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3699278_orders.parquet": "45692585130b1ebeada1635936fb197755df67c216f07379186fa7a6724971a0",
+  "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3700070_fills.parquet": "cf3d68522bf8a425c903edd49831724044ceb35e5946c21af42caa930ee48701",
+  "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3700070_orders.parquet": "1d969f82111e371feb5b26b6c6a2a0df1dc8d8134853cc14a3ab821c8ff305d7",
+  "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3702960_fills.parquet": "15198f2f01b2e6a0ffd12d31b960dc2874385abe8ed0e862632d2195077ae23f",
+  "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3702960_orders.parquet": "ba2868b21df9aa885975255f6ea427bdccde946bde6d59e1c61fd4c0b8b75427",
+  "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3704004_fills.parquet": "60adcd5e6b83e16b2eba761a0014948736d96641f839bd0d982999c1965b81a4",
+  "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3704004_orders.parquet": "9778694169dc4b263c4cbd698f70335db7430715946a2147d86c5bd479c9eea7",
+  "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3712725_fills.parquet": "56d0efd8b8cf9704e407d95ab6652e322ba95d69d13e25833b70f935df30efee",
+  "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3712725_orders.parquet": "6c5db109f7b6e6fb245503d25e28d6d56c8a989626091bf6acb9574abce71e95",
+  "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3716727_fills.parquet": "b07e74501e3341585271b40e4441589bcfab582e63c127282f0f42c69e6815d0",
+  "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3716727_orders.parquet": "0926cfd26674ee390f773204b669ed66d852936bc3a0131b13a4568aa291a200",
+  "data/predict_fun/research/maker_trace_v2_20261123/markets_20261024.parquet": "9ba05add8488e2dda53639a84a5bc6514242e88d6f9335c24ad8c83b8cefa82e",
+  "data/predict_fun/research/maker_trace_v2_20261123/tob_20261024.parquet": "52e24fa1c4c4fe2829a505747a47d7a9c9064b4a3ed3300707884d2ed718cc33",
+  "econ/fills_valued.parquet": "2a874707cc7801d6760e2de36075870700cc0be8e72cd9a6df0213424221cde6",
+  "econ/identities.json": "321c5274cc9cbc2151f94aad619ad199de41b98db4a410d12b83b61aa69aa239",
+  "life/20261024_3697902_x_links.parquet": "25d85aefd3e97f7b1533bde42aa14b7cab4e98e44388d67525f2f13db57da9a6",
+  "life/20261024_3699278_x_links.parquet": "8d605efa6567344723698d6493f165887da4cf0bdee996ac31ea768d398353ff",
+  "life/20261024_3700070_x_links.parquet": "174871f4771aa80b2795379543300202cfa21edf12c0bda6f57b4797c6245ec6",
+  "life/20261024_3702960_x_links.parquet": "74dcd0f68955cb2ed5aff5c38701c438399a28b2009d4a4e9b2611356ff9ed59",
+  "life/20261024_3704004_x_links.parquet": "e1c7e1e601de23c69c63f56f42b1d1e5b5e275b54c9eb5b78ea5b8a5d938a647",
+  "life/20261024_3712725_x_links.parquet": "1e630e055cdb2d87f2129160a6eba1ad622e68eeefd57d9198488b2f1d00d29f",
+  "life/20261024_3716727_x_links.parquet": "1c9c9cb311d40fb961fddd9487a4b41b2ce55436da55425c518127611b5a1e0a",
+  "manifest": "34444c8a1b85752069a27d8e884e7d116656c03a88d3ccd3eb1f584355e5a013",
+  "predictfun/reviews/ladder_async_fast_20261122/manifest.json": "34444c8a1b85752069a27d8e884e7d116656c03a88d3ccd3eb1f584355e5a013"
+ },
+ "kind": "pilot",
+ "link_hypotheses": "order_estimator",
+ "module": "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/tools/chain_take.py",
+ "outputs": {
+  "actions": 96,
+  "summary": 8,
+  "take_controls": 980,
+  "takes": 1416
+ },
+ "pilot": {
+  "day": "20261024",
+  "rank": 1
+ },
+ "pools": {
+  "pool_level": {
+   "fallback1": 36,
+   "fallback2": 0,
+   "no_claim": 0,
+   "no_control": 0,
+   "stratum": 1380
+  }
+ },
+ "population_labels": {
+  "orders": "outcome_selected_filled_orders (unfilled orders are invisible)",
+  "takes": "take_records_complete"
+ },
+ "projection": {
+  "full_run_cpu_s": 37.7,
+  "pilot_cpu_s": 8.277,
+  "rule": "population 0.00 + per-market (context + links) 0.674 x 19 + per-pair (pairs + tables) 0.508 x 49; the first market's load includes the one-off fills_valued sha256"
+ },
+ "pull_classes": "chain_pull",
+ "run": "v2",
+ "sources": {
+  "predictfun/research/pf_mt_common.py": "e54ccd15489ed41b23b1e1d62e11d26aacd7f1d778be47bdaf4154b2cb091f7b",
+  "predictfun/research/pf_mt_decision.py": "8423ed72031fd9d97198465402003f4fd38f54589a7d7b690780decf0ef376c0",
+  "predictfun/research/pf_mt_econ.py": "a0bd305326758d257def7d98279513928b721ed11562bdce6b5946b1f02f19e7",
+  "predictfun/research/pf_mt_lifecycle.py": "8915ed63a6b0965dfe4f08e540cbe90d57aa23863a73f8a2a94ff7349fcef62b",
+  "predictfun/reviews/maker_trace_20261122/order_estimator_contract.md": "606bb97959ebc3b6cc988769ac04233a2bfdc8ae23d71108ef5fa463d386cd1b",
+  "predictfun/reviews/maker_trace_20261122/tools/chain_context.py": "4c135afef64ab471c97e98edfdbfc1bfc700f5a831c0354ca7f42db42a3fe238",
+  "predictfun/reviews/maker_trace_20261122/tools/chain_pull.py": "e2226506475526cd624598c7b97cfa10e94dd22ee83b5cb49a273df36db6ca18",
+  "predictfun/reviews/maker_trace_20261122/tools/chain_take.py": "8a9aa3da2d4dba056c79e1de6bda091bd5f679c42645feee5b7129872d0b500e",
+  "predictfun/reviews/maker_trace_20261122/tools/chain_take_selftest.py": "b27841a6f81b466c08fd416c955176ddc33d2e60be3c35d3074f9e99cdca014f",
+  "predictfun/reviews/maker_trace_20261122/tools/closes.py": "44afcd91a8af29d1026ddde52e2a2506d55878359bf6e7d77a2950bf2beb877c",
+  "predictfun/reviews/maker_trace_20261122/tools/order_estimator.py": "0ef15a1bdfeb65728ed08ccbc6f74a42691142701f4a2848c78dd0545ae7245e"
+ },
+ "statuses": {
+  "ok": 463,
+  "self_trade": 21,
+  "simultaneous_action": 942
+ },
+ "version": "chain_take_v1",
+ "vmhwm_mib": 431.8,
+ "wall_s": 8.3
+}

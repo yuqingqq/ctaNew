@@ -1,0 +1,57 @@
+20261024 3697902: orders 91 cpu 1.70 s vmhwm 410 MiB
+20261024 3699278: orders 121 cpu 1.64 s vmhwm 471 MiB
+20261024 3700070: orders 125 cpu 1.47 s vmhwm 493 MiB
+20261024 3702960: orders 81 cpu 1.30 s vmhwm 496 MiB
+20261024 3704004: orders 102 cpu 1.44 s vmhwm 507 MiB
+20261024 3712725: orders 114 cpu 1.59 s vmhwm 512 MiB
+20261024 3716727: orders 112 cpu 1.52 s vmhwm 528 MiB
+{
+ "rows": {
+  "pulls": 1143,
+  "controls": 2984,
+  "summary": 12672,
+  "census": 32
+ },
+ "counts": {
+  "check_grid_points": 159258,
+  "check_windows": 42,
+  "controls:S_FIFO:fill_anchored:anchors": 501,
+  "controls:S_FIFO:fill_anchored:none": 245,
+  "controls:S_FIFO:presence:fallback": 412,
+  "controls:S_FIFO:presence:ok": 334,
+  "controls:S_NOPRIO:fill_anchored:anchors": 441,
+  "controls:S_NOPRIO:fill_anchored:none": 305,
+  "controls:S_NOPRIO:presence:fallback": 467,
+  "controls:S_NOPRIO:presence:ok": 279,
+  "draws_per_target_market_max": 2,
+  "orders_top3": 746
+ },
+ "cpu_stage_s": {
+  "preflight": 0.0013,
+  "hash_fills_valued": 0.6773,
+  "markets": 0.0124,
+  "life": 0.1361,
+  "census": 0.3299,
+  "context_load": 4.0391,
+  "context_series": 1.0025,
+  "events_controls": 5.1514,
+  "summary": 0.7274,
+  "hash": 0.22
+ },
+ "cpu_total_s": 12.299,
+ "vmhwm_mib": 527.9,
+ "projection": {
+  "fixed_s": 0.899,
+  "day_extra_s": 0.347,
+  "per_market_s": 0.739,
+  "events_controls_s": 5.151,
+  "pilot_orders": 746,
+  "summary_s": 0.727,
+  "full_run_s_by_orders": 48.62,
+  "full_run_s_by_address_days": 81.78,
+  "full_run_core_h": 0.0135,
+  "pilot_cpu_s": 12.299,
+  "note": "one point (no size-volume fit): events / controls scale with orders; context with markets"
+ }
+}
+2026-11-23T11:16:37Z tag=mt_pull_pilot2 rc=0 peak_rss_mib=527 wall_s=12.79 cpu_user_s=12.05 memavail_start_gib=22 disk_free_gib=431->431 slot=claude4

@@ -1,0 +1,726 @@
+{
+ "argv": [
+  "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/tools/chain_post_fill.py",
+  "pilot",
+  "20261024",
+  "1",
+  "--suffix",
+  "_v2",
+  "--compare",
+  "post_fill_pilot_20261024_r1"
+ ],
+ "asof_end": "2026-11-23T11:21:57Z",
+ "asof_start": "2026-11-23T11:21:47Z",
+ "chain_context": {
+  "module": "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/tools/chain_context.py",
+  "version": "chain_context_v1"
+ },
+ "compare": {
+  "identical": true,
+  "orders.csv": {
+   "columns_compared": 116,
+   "mismatched": {},
+   "missing_columns": [],
+   "new_columns": [
+    "take_after_last_sid",
+    "take_after_first_sid",
+    "follow_first_lo_ms",
+    "follow_last_lo_ms"
+   ],
+   "rows_new": 746,
+   "rows_ref": 746,
+   "same_row_keys": true
+  },
+  "reference": "post_fill_pilot_20261024_r1",
+  "summary.csv": {
+   "columns_compared": 22,
+   "mismatched": {},
+   "missing_columns": [],
+   "new_columns": [],
+   "rows_new": 720,
+   "rows_ref": 720,
+   "same_row_keys": true
+  }
+ },
+ "contract": "predictfun/reviews/maker_trace_20261122/order_estimator_contract.md",
+ "contract_sha256": "2eed119d556e1c6f7a30054508d4b218b80891cfad425f10211e1d99e0b2a7fd",
+ "counts": {
+  "check_grid_points": 136268,
+  "check_windows": 56,
+  "control_status:ok": 726,
+  "control_status:window_unbounded": 20,
+  "fv_groups_pruned": 83,
+  "fv_groups_read": 7,
+  "fv_rows_scanned": 601198,
+  "fv_rows_top3_book": 4492,
+  "legs_without_window": 0,
+  "orders_top3": 746,
+  "position_early_queue_builder_at_every_instant": 0
+ },
+ "cpu_stage_s": {
+  "context_load": 4.0504,
+  "context_series": 0.1619,
+  "controls_draw": 0.0818,
+  "controls_eval": 0.3381,
+  "estimator": 3.1463,
+  "fills_valued": 0.3537,
+  "hash": 0.047,
+  "orders": 1.0292,
+  "preflight": 0.6749,
+  "summary": 0.4149
+ },
+ "cpu_total_s": 10.301,
+ "days": [
+  "20261024"
+ ],
+ "declared": {
+  "BTC_CATS": [
+   "with",
+   "against",
+   "flat"
+  ],
+  "CHECK_EVERY": 37,
+  "CHECK_K": 8,
+  "CLASS_FIELDS": [
+   "post_class",
+   "post_position",
+   "window_class",
+   "window_width_bin",
+   "rest_bin",
+   "queue_class",
+   "nomask_class",
+   "early_queue_builder_possible",
+   "touch_joiner_possible",
+   "touch_joiner_only",
+   "touch_improver_possible",
+   "touch_improver_only",
+   "fresh_certain",
+   "early_possible",
+   "touch_cat",
+   "btc_5s_cat",
+   "inv_cat",
+   "inv_certain_cat",
+   "phase",
+   "n_fills_bin",
+   "next_kind",
+   "next_link_status",
+   "d_sensitive"
+  ],
+  "CTRL": [
+   [
+    "btc_1s_against_all",
+    "btc_1s",
+    [
+     "against"
+    ],
+    "all"
+   ],
+   [
+    "btc_1s_with_all",
+    "btc_1s",
+    [
+     "with"
+    ],
+    "all"
+   ],
+   [
+    "btc_1s_against_some",
+    "btc_1s",
+    [
+     "against"
+    ],
+    "some"
+   ],
+   [
+    "btc_1s_with_some",
+    "btc_1s",
+    [
+     "with"
+    ],
+    "some"
+   ],
+   [
+    "btc_5s_against_all",
+    "btc_5s",
+    [
+     "against"
+    ],
+    "all"
+   ],
+   [
+    "btc_5s_with_all",
+    "btc_5s",
+    [
+     "with"
+    ],
+    "all"
+   ],
+   [
+    "btc_5s_against_some",
+    "btc_5s",
+    [
+     "against"
+    ],
+    "some"
+   ],
+   [
+    "btc_5s_with_some",
+    "btc_5s",
+    [
+     "with"
+    ],
+    "some"
+   ],
+   [
+    "btc_30s_against_all",
+    "btc_30s",
+    [
+     "against"
+    ],
+    "all"
+   ],
+   [
+    "btc_30s_with_all",
+    "btc_30s",
+    [
+     "with"
+    ],
+    "all"
+   ],
+   [
+    "btc_30s_against_some",
+    "btc_30s",
+    [
+     "against"
+    ],
+    "some"
+   ],
+   [
+    "btc_30s_with_some",
+    "btc_30s",
+    [
+     "with"
+    ],
+    "some"
+   ],
+   [
+    "touch_at_or_inside_all",
+    "touch",
+    [
+     "at",
+     "inside"
+    ],
+    "all"
+   ],
+   [
+    "touch_behind_all",
+    "touch",
+    [
+     "behind"
+    ],
+    "all"
+   ],
+   [
+    "touch_crossing_some",
+    "touch",
+    [
+     "crossing"
+    ],
+    "some"
+   ],
+   [
+    "depth_empty_all",
+    "depth0",
+    [
+     "empty"
+    ],
+    "all"
+   ],
+   [
+    "depth_empty_some",
+    "depth0",
+    [
+     "empty"
+    ],
+    "some"
+   ],
+   [
+    "spread_tight_all",
+    "spread1",
+    [
+     "tight"
+    ],
+    "all"
+   ],
+   [
+    "inv_offsetting_all",
+    "inv",
+    [
+     "offsetting"
+    ],
+    "all"
+   ],
+   [
+    "inv_adding_all",
+    "inv",
+    [
+     "adding"
+    ],
+    "all"
+   ],
+   [
+    "inv_flat_all",
+    "inv",
+    [
+     "flat"
+    ],
+    "all"
+   ]
+  ],
+  "D_FAMILIES": [
+   "touch",
+   "btc_1s",
+   "btc_5s",
+   "btc_30s",
+   "inv"
+  ],
+  "D_PROFILES": [
+   0,
+   250,
+   1000
+  ],
+  "EARLY_MS": 10000,
+  "FOLLOW_MS": 30000,
+  "INV_CATS": [
+   "offsetting",
+   "adding",
+   "flat"
+  ],
+  "LATE_MS": 1000,
+  "MOVE_BP": [
+   [
+    "1s",
+    0.5
+   ],
+   [
+    "5s",
+    1.0
+   ],
+   [
+    "30s",
+    2.0
+   ]
+  ],
+  "N_DRAWS": 200,
+  "POST_CATS": [
+   "early_queue_builder",
+   "touch_joiner",
+   "behind_touch",
+   "crossing"
+  ],
+  "POST_CLASSES": [
+   "late_post",
+   "short_rest",
+   "early_or_late_unidentified",
+   "unidentified"
+  ],
+  "POS_EPS": 1e-06,
+  "PRE_MS": 300000,
+  "REDUCING": [
+   "full_close",
+   "reduce_partial",
+   "reversal_reducing"
+  ],
+  "RES_VALID": [
+   "ok",
+   "tie"
+  ],
+  "SEED": 20261123,
+  "STEP": 100,
+  "TOL": 0.01,
+  "TOUCH_CATS": [
+   "at",
+   "inside",
+   "behind",
+   "crossing"
+  ],
+  "controls": "chain_context.matched_times(n=N_DRAWS, phase pool, within = the active span, key = hash); no fallback",
+  "instants": "chain_context.over_window convention: lo, every 100 ms grid instant strictly inside, hi",
+  "p": "chain_context.null_summary: p_upper = (1 + #rep >= obs) / (1 + reps); p_lower = (1 + #rep <= obs) / (1 + reps)",
+  "post_hi_note": "post_hi = the first fill hi (lifecycle, checked): resting lower bound 0; an early post is never identified (early_queue_builder only as _possible); post_class = the width identification class",
+  "take_dropped": {
+   "columns": [
+    "n_takes_30s_after_last_reducing",
+    "take_after_last_class",
+    "take_after_last_opposing",
+    "n_takes_30s_after_first_reducing",
+    "take_after_first_class"
+   ],
+   "join": "chain_take take classes on (day, mid, address, sid): take_after_last_sid / take_after_first_sid, or every own take with settle_ms in (follow_*_lo_ms, + FOLLOW_MS]",
+   "summary_fields": [
+    "take_after_last_class",
+    "take_after_last_opposing"
+   ]
+  }
+ },
+ "git": {
+  "files": {
+   "predictfun/reviews/maker_trace_20261122/order_estimator_contract.md": {
+    "clean": false,
+    "sha256": "2eed119d556e1c6f7a30054508d4b218b80891cfad425f10211e1d99e0b2a7fd",
+    "tracked": false
+   },
+   "predictfun/reviews/maker_trace_20261122/tools/chain_context.py": {
+    "clean": false,
+    "sha256": "4c135afef64ab471c97e98edfdbfc1bfc700f5a831c0354ca7f42db42a3fe238",
+    "tracked": false
+   },
+   "predictfun/reviews/maker_trace_20261122/tools/chain_post_fill.py": {
+    "clean": false,
+    "sha256": "6547d93bf085272e22dc201212e81dff8d9009abd6ddbd0fe47f56489b3bd0f7",
+    "tracked": false
+   },
+   "predictfun/reviews/maker_trace_20261122/tools/chain_post_fill_selftest.py": {
+    "clean": false,
+    "sha256": "5bd1d7efd86ffbbe4b5681a49454880c13498c620a1fd8ae910d328a4d00f662",
+    "tracked": false
+   },
+   "predictfun/reviews/maker_trace_20261122/tools/order_estimator.py": {
+    "clean": false,
+    "sha256": "a040468e80eed37c93bb5920b72c34374b21f576092c2544066564d091c7f54f",
+    "tracked": false
+   }
+  },
+  "head": "f1e75e6f9f5ba1fcd3d7590c6d6da909dad56099"
+ },
+ "guard_mib": 1450.0,
+ "inputs": {
+  "data/predict_fun/research/maker_trace_v2_20261123/btc/btc_20261024.parquet": {
+   "bytes": 3823322,
+   "mtime_ns": 1795400721315076603,
+   "sha256": "a593570942b1523d14ec6b0ac9dab7de25a5372b7d375657436cba43102befb4"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/depth/20261024_3697902_frames.parquet": {
+   "bytes": 182622,
+   "mtime_ns": 1795379575184469798,
+   "sha256": "d6a468499f93ea702c3142bfc4df9b850c13c9f13f8451b0d2fc9f90583fb80a"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/depth/20261024_3697902_levels.parquet": {
+   "bytes": 463565,
+   "mtime_ns": 1795379575184469798,
+   "sha256": "f9440d08334e68e810b7f48698e7cad5c2f93b071d82855de91bd8d6909cf35c"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/depth/20261024_3699278_frames.parquet": {
+   "bytes": 212465,
+   "mtime_ns": 1795379575518471200,
+   "sha256": "2fcab040f5893794cc2935d9d5a16966f5a5a9b054ba4d70ad947acc26fc844b"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/depth/20261024_3699278_levels.parquet": {
+   "bytes": 575649,
+   "mtime_ns": 1795379575518471200,
+   "sha256": "6f5b5b12853a41f146d6666bd766dd1848a59f3e77abef65b678d3e555fe943c"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/depth/20261024_3700070_frames.parquet": {
+   "bytes": 192656,
+   "mtime_ns": 1795379575879472715,
+   "sha256": "156491cf4379b1ccf38352f26ab0d786413d41096015374397f8b70cd7e12df3"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/depth/20261024_3700070_levels.parquet": {
+   "bytes": 589216,
+   "mtime_ns": 1795379575879472715,
+   "sha256": "6b67e0dd29a1d79884291db51fd5dfd523e000b4c4d4eea5e3a07ef488b2d4b4"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/depth/20261024_3702960_frames.parquet": {
+   "bytes": 163476,
+   "mtime_ns": 1795379576231474192,
+   "sha256": "3476ff14a85ee0ee112da2d86e75f805141da0b613f925ab4b787b5f758185fe"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/depth/20261024_3702960_levels.parquet": {
+   "bytes": 386361,
+   "mtime_ns": 1795379576231474192,
+   "sha256": "2dd652a752eeb2f68272bb18356fb8e1befe6269ac60dbd1b441deeb51749bfe"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/depth/20261024_3704004_frames.parquet": {
+   "bytes": 208280,
+   "mtime_ns": 1795379576541475493,
+   "sha256": "785b1cceac1a717775fdfc4aa61dbf6ecb8167e1730c3084fc192ccbee425592"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/depth/20261024_3704004_levels.parquet": {
+   "bytes": 519268,
+   "mtime_ns": 1795379576541475493,
+   "sha256": "961ae89623eebc217c8519ee6e65eb0e665ae82af470c31548666d88d843a0f5"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/depth/20261024_3712725_frames.parquet": {
+   "bytes": 209957,
+   "mtime_ns": 1795379576888476949,
+   "sha256": "da3833e951ea993ef6874c8d1d017897bd3e0e10e58c9a032cc1d014abdda6ad"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/depth/20261024_3712725_levels.parquet": {
+   "bytes": 598030,
+   "mtime_ns": 1795379576888476949,
+   "sha256": "e8183099521673b4c23dc9c8fc9ddda761e4a0a91a79b6544e73749482ea6416"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/depth/20261024_3716727_frames.parquet": {
+   "bytes": 190044,
+   "mtime_ns": 1795379577242478428,
+   "sha256": "ae0ca84d0d7b50ca9f0ec6d36a49f896f8ba379b806be4a30081ffa59f68020b"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/depth/20261024_3716727_levels.parquet": {
+   "bytes": 536077,
+   "mtime_ns": 1795379577242478428,
+   "sha256": "0e2c3e809d7fe31db7a64767de6fe61d7658670fe158dc078346b54263b8ad9a"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/econ/fills_valued.parquet": {
+   "bytes": 1078229581,
+   "mtime_ns": 1795401021813350752,
+   "sha256": "2a874707cc7801d6760e2de36075870700cc0be8e72cd9a6df0213424221cde6"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3697902_fills.parquet": {
+   "bytes": 261669,
+   "mtime_ns": 1795400782496330564,
+   "sha256": "bb8634119ab6d34df28d926b5a19c530c1a7328446a94a71fb8159a051e8cdfa"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3697902_orders.parquet": {
+   "bytes": 241491,
+   "mtime_ns": 1795400782502330589,
+   "sha256": "2a416e6b5652e0e49b89a6fefc44151602a0a4abd63d04d70bd7d2694ca0f80e"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3699278_fills.parquet": {
+   "bytes": 361443,
+   "mtime_ns": 1795400706659015705,
+   "sha256": "66074e5e533030f28fdc9fdfe96bda529fa827b65ad81ba15758ec837c4b4738"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3699278_orders.parquet": {
+   "bytes": 327174,
+   "mtime_ns": 1795400706667015738,
+   "sha256": "45692585130b1ebeada1635936fb197755df67c216f07379186fa7a6724971a0"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3700070_fills.parquet": {
+   "bytes": 281663,
+   "mtime_ns": 1795400709470027386,
+   "sha256": "cf3d68522bf8a425c903edd49831724044ceb35e5946c21af42caa930ee48701"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3700070_orders.parquet": {
+   "bytes": 266660,
+   "mtime_ns": 1795400709477027415,
+   "sha256": "1d969f82111e371feb5b26b6c6a2a0df1dc8d8134853cc14a3ab821c8ff305d7"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3702960_fills.parquet": {
+   "bytes": 195895,
+   "mtime_ns": 1795400711558036063,
+   "sha256": "15198f2f01b2e6a0ffd12d31b960dc2874385abe8ed0e862632d2195077ae23f"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3702960_orders.parquet": {
+   "bytes": 166460,
+   "mtime_ns": 1795400711563036084,
+   "sha256": "ba2868b21df9aa885975255f6ea427bdccde946bde6d59e1c61fd4c0b8b75427"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3704004_fills.parquet": {
+   "bytes": 347776,
+   "mtime_ns": 1795400714921050037,
+   "sha256": "60adcd5e6b83e16b2eba761a0014948736d96641f839bd0d982999c1965b81a4"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3704004_orders.parquet": {
+   "bytes": 324724,
+   "mtime_ns": 1795400714929050070,
+   "sha256": "9778694169dc4b263c4cbd698f70335db7430715946a2147d86c5bd479c9eea7"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3712725_fills.parquet": {
+   "bytes": 345906,
+   "mtime_ns": 1795400718227063773,
+   "sha256": "56d0efd8b8cf9704e407d95ab6652e322ba95d69d13e25833b70f935df30efee"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3712725_orders.parquet": {
+   "bytes": 311548,
+   "mtime_ns": 1795400718234063802,
+   "sha256": "6c5db109f7b6e6fb245503d25e28d6d56c8a989626091bf6acb9574abce71e95"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3716727_fills.parquet": {
+   "bytes": 306052,
+   "mtime_ns": 1795400721254076350,
+   "sha256": "b07e74501e3341585271b40e4441589bcfab582e63c127282f0f42c69e6815d0"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3716727_orders.parquet": {
+   "bytes": 278829,
+   "mtime_ns": 1795400721262076383,
+   "sha256": "0926cfd26674ee390f773204b669ed66d852936bc3a0131b13a4568aa291a200"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/markets_20261024.parquet": {
+   "bytes": 67275,
+   "mtime_ns": 1795379577586479854,
+   "resolved": "data/predict_fun/research/maker_trace_v1_20261122/markets_20261024.parquet",
+   "sha256": "9ba05add8488e2dda53639a84a5bc6514242e88d6f9335c24ad8c83b8cefa82e"
+  },
+  "data/predict_fun/research/maker_trace_v2_20261123/tob_20261024.parquet": {
+   "bytes": 49103205,
+   "mtime_ns": 1795379575184469798,
+   "resolved": "data/predict_fun/research/maker_trace_v1_20261122/tob_20261024.parquet",
+   "sha256": "52e24fa1c4c4fe2829a505747a47d7a9c9064b4a3ed3300707884d2ed718cc33"
+  },
+  "econ/fills_valued.parquet": {
+   "bytes": 1078229581,
+   "sha256": "2a874707cc7801d6760e2de36075870700cc0be8e72cd9a6df0213424221cde6"
+  },
+  "econ/identities.json": {
+   "bytes": 80624,
+   "sha256": "321c5274cc9cbc2151f94aad619ad199de41b98db4a410d12b83b61aa69aa239"
+  },
+  "life/20261024_3697902_x_links.parquet": {
+   "bytes": 203549,
+   "sha256": "25d85aefd3e97f7b1533bde42aa14b7cab4e98e44388d67525f2f13db57da9a6"
+  },
+  "life/20261024_3699278_x_links.parquet": {
+   "bytes": 282999,
+   "sha256": "8d605efa6567344723698d6493f165887da4cf0bdee996ac31ea768d398353ff"
+  },
+  "life/20261024_3700070_x_links.parquet": {
+   "bytes": 226305,
+   "sha256": "174871f4771aa80b2795379543300202cfa21edf12c0bda6f57b4797c6245ec6"
+  },
+  "life/20261024_3702960_x_links.parquet": {
+   "bytes": 125878,
+   "sha256": "74dcd0f68955cb2ed5aff5c38701c438399a28b2009d4a4e9b2611356ff9ed59"
+  },
+  "life/20261024_3704004_x_links.parquet": {
+   "bytes": 275175,
+   "sha256": "e1c7e1e601de23c69c63f56f42b1d1e5b5e275b54c9eb5b78ea5b8a5d938a647"
+  },
+  "life/20261024_3712725_x_links.parquet": {
+   "bytes": 246416,
+   "sha256": "1e630e055cdb2d87f2129160a6eba1ad622e68eeefd57d9198488b2f1d00d29f"
+  },
+  "life/20261024_3716727_x_links.parquet": {
+   "bytes": 230754,
+   "sha256": "1c9c9cb311d40fb961fddd9487a4b41b2ce55436da55425c518127611b5a1e0a"
+  },
+  "predictfun/reviews/ladder_async_fast_20261122/manifest.json": {
+   "bytes": 6797,
+   "mtime_ns": 1795321338149732809,
+   "sha256": "34444c8a1b85752069a27d8e884e7d116656c03a88d3ccd3eb1f584355e5a013"
+  }
+ },
+ "labels": {
+  "clocks": "book upd_ms and Binance E_ms are venue state, not what a maker received; settle_ms is the UUIDv7 creation time (an upper bound of the match); submission is unidentified (no delay bound for other makers; D profiles are sensitivities)",
+  "controls": "descriptive association against width-matched windows of the same address / market / phase; not a cause, not an action rate",
+  "days": "four consumed days (Oct 24-27): point estimates, no intervals (G = 4 < 5)",
+  "inventory": "recorded / certain / possible VENUE positions (chain_context), never client-known inventory",
+  "net_res": "P&L to resolution of the maker legs, recorded fees deducted (pf_mt_econ); the same cohort as the markouts",
+  "nomask": "P_nomask is a prior-driven representative (no-masking / fewest hidden commands), never evidence",
+  "population": "outcome-selected: filled orders only; unfilled orders, non-actions and the opportunity population are not visible",
+  "post": "post_class is the window-width identification class: only late_post (window <= 1 s) is an identified posting time; a first fill never proves an early post (early / late stay compatible alternatives); the position categories are compatible alternatives over the feasible instants (early_queue_builder uses LATER prints: a reconstruction label); every context value uses data <= its instant",
+  "queue": "front classes hold under the S_FIFO price-time scenario only (S_NOPRIO has no queue); a first fill or zero bound never proves front at acceptance",
+  "v_h": "GROSS markout s q (m(settle_ms + h) - p), h = 1 s / 10 s / 60 s, from settle_ms; fees not deducted (fee_fill beside)"
+ },
+ "market_cpu": [
+  {
+   "cells": 55,
+   "cpu_s": 1.4196,
+   "day": "20261024",
+   "grid": 6013,
+   "mid": 3697902,
+   "orders": 91
+  },
+  {
+   "cells": 65,
+   "cpu_s": 1.3456,
+   "day": "20261024",
+   "grid": 6013,
+   "mid": 3699278,
+   "orders": 121
+  },
+  {
+   "cells": 42,
+   "cpu_s": 1.2656,
+   "day": "20261024",
+   "grid": 6013,
+   "mid": 3700070,
+   "orders": 125
+  },
+  {
+   "cells": 49,
+   "cpu_s": 0.9404,
+   "day": "20261024",
+   "grid": 6013,
+   "mid": 3702960,
+   "orders": 81
+  },
+  {
+   "cells": 65,
+   "cpu_s": 1.2771,
+   "day": "20261024",
+   "grid": 6013,
+   "mid": 3704004,
+   "orders": 102
+  },
+  {
+   "cells": 75,
+   "cpu_s": 1.3162,
+   "day": "20261024",
+   "grid": 6013,
+   "mid": 3712725,
+   "orders": 114
+  },
+  {
+   "cells": 67,
+   "cpu_s": 1.231,
+   "day": "20261024",
+   "grid": 6013,
+   "mid": 3716727,
+   "orders": 112
+  }
+ ],
+ "markets": [
+  "20261024_3697902",
+  "20261024_3699278",
+  "20261024_3700070",
+  "20261024_3702960",
+  "20261024_3704004",
+  "20261024_3712725",
+  "20261024_3716727"
+ ],
+ "module": "chain_post_fill",
+ "mt_run": "v2",
+ "outputs": {
+  "orders.csv": {
+   "bytes": 935736,
+   "sha256": "ba9777ffda371a1f4c2c2e887365547f92de6884a38dba57f1cbce115df9ae80"
+  },
+  "summary.csv": {
+   "bytes": 112931,
+   "sha256": "b22bef166c736c4c07a1cf8edd1b4f0d2f9bc91d6b97f7706cd8b17c144b4fb9"
+  }
+ },
+ "pilot": {
+  "day": "20261024",
+  "rank": 1
+ },
+ "projection": {
+  "fixed_s": 1.491,
+  "full_run_core_h": 0.01069,
+  "full_run_s": 38.48,
+  "markets_in_pilot": 7,
+  "note": "one address-day: the per-market context cost is measured on its markets (each loads all three addresses); the per-order cost assumes the other addresses cost alike (one point, not a size-volume fit)",
+  "orders_full": 4149,
+  "orders_in_pilot": 746,
+  "per_market_s": 0.6018,
+  "per_order_s": 0.00616
+ },
+ "ranks": [
+  "rank1"
+ ],
+ "rows": {
+  "orders": 746,
+  "summary": 720
+ },
+ "slot": "claude2",
+ "sources": {
+  "predictfun/reviews/maker_trace_20261122/order_estimator_contract.md": "2eed119d556e1c6f7a30054508d4b218b80891cfad425f10211e1d99e0b2a7fd",
+  "predictfun/reviews/maker_trace_20261122/tools/chain_context.py": "4c135afef64ab471c97e98edfdbfc1bfc700f5a831c0354ca7f42db42a3fe238",
+  "predictfun/reviews/maker_trace_20261122/tools/chain_post_fill.py": "6547d93bf085272e22dc201212e81dff8d9009abd6ddbd0fe47f56489b3bd0f7",
+  "predictfun/reviews/maker_trace_20261122/tools/chain_post_fill_selftest.py": "5bd1d7efd86ffbbe4b5681a49454880c13498c620a1fd8ae910d328a4d00f662",
+  "predictfun/reviews/maker_trace_20261122/tools/order_estimator.py": "a040468e80eed37c93bb5920b72c34374b21f576092c2544066564d091c7f54f"
+ },
+ "version": "chain_post_fill_v1",
+ "vmhwm_mib": 375.5,
+ "wall_s": 10.32
+}

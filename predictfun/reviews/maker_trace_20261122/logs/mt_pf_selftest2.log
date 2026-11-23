@@ -1,0 +1,9 @@
+{
+ "result": "PASS",
+ "checks": 251,
+ "failed": 0,
+ "failures": [],
+ "cpu_s": 3.45,
+ "vmhwm_mib": 171.1
+}
+2026-11-23T11:21:36Z tag=mt_pf_selftest2 rc=0 peak_rss_mib=171 wall_s=3.96 cpu_user_s=3.76 memavail_start_gib=22 disk_free_gib=431->431 slot=claude2

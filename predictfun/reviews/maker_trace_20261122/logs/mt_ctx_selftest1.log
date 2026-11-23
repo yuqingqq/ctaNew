@@ -1,0 +1,15 @@
+{
+ "version": "chain_context_v1",
+ "passed": 173,
+ "total": 173,
+ "failed": [],
+ "cpu_s": 2.18,
+ "wall_s": 2.19,
+ "vmhwm_mib": 434.2,
+ "synthetic_load": {
+  "load_cpu_s": 0.323,
+  "load_wall_s": 0.325
+ }
+}
+chain_context selftest: 173/173 passed
+2026-11-23T10:46:17Z tag=mt_ctx_selftest1 rc=0 peak_rss_mib=434 wall_s=2.63 cpu_user_s=2.10 memavail_start_gib=22 disk_free_gib=431->431 slot=claude3

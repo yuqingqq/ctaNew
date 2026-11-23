@@ -1,0 +1,52 @@
+20261024 3697902: orders 91 grid 6013 cells 55 cpu 2.72 s vmhwm 366 MiB
+20261024 3699278: orders 121 grid 6013 cells 65 cpu 4.24 s vmhwm 366 MiB
+20261024 3700070: orders 125 grid 6013 cells 42 cpu 4.01 s vmhwm 366 MiB
+20261024 3702960: orders 81 grid 6013 cells 49 cpu 1.57 s vmhwm 366 MiB
+20261024 3704004: orders 102 grid 6013 cells 65 cpu 2.55 s vmhwm 366 MiB
+20261024 3712725: orders 114 grid 6013 cells 75 cpu 2.33 s vmhwm 374 MiB
+20261024 3716727: orders 112 grid 6013 cells 67 cpu 2.37 s vmhwm 374 MiB
+{
+ "rows": {
+  "orders": 746,
+  "summary": 776
+ },
+ "counts": {
+  "check_grid_points": 136268,
+  "check_windows": 56,
+  "control_status:ok": 726,
+  "control_status:window_unbounded": 20,
+  "fv_groups_pruned": 83,
+  "fv_groups_read": 7,
+  "fv_rows_scanned": 601198,
+  "fv_rows_top3_book": 4492,
+  "legs_without_window": 0,
+  "orders_top3": 746,
+  "position_early_queue_builder_at_every_instant": 0
+ },
+ "cpu_stage_s": {
+  "preflight": 0.6763,
+  "fills_valued": 0.3425,
+  "context_load": 4.063,
+  "estimator": 3.2251,
+  "context_series": 0.1665,
+  "orders": 11.9009,
+  "controls_draw": 0.0808,
+  "controls_eval": 0.3418,
+  "summary": 0.444,
+  "hash": 0.0451
+ },
+ "cpu_total_s": 21.289,
+ "vmhwm_mib": 374.4,
+ "projection": {
+  "fixed_s": 1.508,
+  "per_market_s": 0.6042,
+  "per_order_s": 0.020843,
+  "markets_in_pilot": 7,
+  "orders_in_pilot": 746,
+  "orders_full": 4149,
+  "full_run_s": 99.46,
+  "full_run_core_h": 0.02763,
+  "note": "one address-day: the per-market context cost is measured on its markets (each loads all three addresses); the per-order cost assumes the other addresses cost alike (one point, not a size-volume fit)"
+ }
+}
+2026-11-23T11:08:20Z tag=mt_pf_pilot rc=0 peak_rss_mib=374 wall_s=21.82 cpu_user_s=21.19 memavail_start_gib=22 disk_free_gib=431->431 slot=claude2

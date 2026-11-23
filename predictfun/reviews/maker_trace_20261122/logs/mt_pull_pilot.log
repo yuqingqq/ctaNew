@@ -1,0 +1,56 @@
+20261024 3697902: orders 91 cpu 1.79 s vmhwm 385 MiB
+20261024 3699278: orders 121 cpu 1.84 s vmhwm 417 MiB
+20261024 3700070: orders 125 cpu 1.85 s vmhwm 417 MiB
+20261024 3702960: orders 81 cpu 1.32 s vmhwm 424 MiB
+20261024 3704004: orders 102 cpu 1.66 s vmhwm 434 MiB
+20261024 3712725: orders 114 cpu 1.83 s vmhwm 436 MiB
+20261024 3716727: orders 112 cpu 1.75 s vmhwm 436 MiB
+{
+ "rows": {
+  "pulls": 1143,
+  "controls": 2984,
+  "summary": 10560,
+  "census": 32
+ },
+ "counts": {
+  "orders_top3": 746,
+  "strata:S_FIFO:fill_anchored:anchors": 501,
+  "strata:S_FIFO:fill_anchored:none": 245,
+  "strata:S_FIFO:presence:active_span": 371,
+  "strata:S_FIFO:presence:same_order": 7,
+  "strata:S_FIFO:presence:same_side": 368,
+  "strata:S_NOPRIO:fill_anchored:anchors": 443,
+  "strata:S_NOPRIO:fill_anchored:none": 303,
+  "strata:S_NOPRIO:presence:active_span": 431,
+  "strata:S_NOPRIO:presence:same_order": 6,
+  "strata:S_NOPRIO:presence:same_side": 309
+ },
+ "cpu_stage_s": {
+  "preflight": 0.0013,
+  "hash_fills_valued": 0.674,
+  "markets": 0.0116,
+  "life": 0.1432,
+  "census": 0.3347,
+  "context_load": 4.0874,
+  "context_series": 0.9993,
+  "events_controls": 6.4919,
+  "summary": 0.1598,
+  "hash": 0.2041
+ },
+ "cpu_total_s": 13.109,
+ "vmhwm_mib": 435.7,
+ "projection": {
+  "fixed_s": 0.879,
+  "day_extra_s": 0.333,
+  "per_market_s": 0.749,
+  "per_address_day_s": 6.492,
+  "summary_s": 0.16,
+  "markets_in_pilot": 7,
+  "address_days_in_pilot": 1,
+  "full_run_s": 95.15,
+  "full_run_core_h": 0.02643,
+  "pilot_cpu_s": 13.109,
+  "note": "one point (no size-volume fit): events / controls scale with the pulls of an address-day; context with its markets"
+ }
+}
+2026-11-23T10:49:01Z tag=mt_pull_pilot rc=0 peak_rss_mib=435 wall_s=13.59 cpu_user_s=12.93 memavail_start_gib=22 disk_free_gib=431->431 slot=claude4
