@@ -1,0 +1,699 @@
+{
+ "census": {
+  "pairs": 43026,
+  "pooled_by_class": {
+   "gap": 0,
+   "improve_ask": 840,
+   "improve_bid": 919,
+   "outside_window": 3633,
+   "retreat_ask": 735,
+   "retreat_bid": 794,
+   "two_side": 1715,
+   "unchanged": 34287,
+   "unknown": 103
+  },
+  "population": "pairs wholly inside [ws, we]; others outside_window",
+  "zero_interval_pairs": 1
+ },
+ "continuation_orders": 47,
+ "contract": {
+  "commit": "668e560db",
+  "file": "predictfun/reviews/maker_trace_20261122/touch_response_contract.md",
+  "sections": "1-4"
+ },
+ "counts": {
+  "candidate_orders": 47,
+  "candidate_orders_without_legs": 0,
+  "creation_rows": 7449,
+  "creation_rows_frame_out_of_range": 0,
+  "creation_rows_time_mismatch": 0,
+  "episodes": 1529,
+  "fills_valued_groups_pruned": 83,
+  "fills_valued_groups_read": 7,
+  "fills_valued_rows_kept": 12996,
+  "fills_valued_rows_scanned": 601198,
+  "frames": 43033,
+  "fv_view_rows": 84,
+  "markets": 7,
+  "owner_cells": 420,
+  "owner_cells_unmatched_in_candidates": 0,
+  "owner_top3_without_regrade_row": 0,
+  "pairs": 43026,
+  "pairs_in_window": 39393
+ },
+ "days": [
+  "20261024"
+ ],
+ "dependency": {
+  "owner_grading": "posting_opportunity.identity (frozen section-3 code) on each response cell, queue_front_v2 candidates.csv as source",
+  "post_fill": {
+   "dir": "predictfun/reviews/maker_trace_20261122/v2/chains/post_fill",
+   "rows_run": 1585
+  },
+  "posting_opportunity": {
+   "dir": "predictfun/reviews/maker_trace_20261122/v2/chains/posting_opportunity",
+   "events_rows": 21395,
+   "events_run": 7449,
+   "kind": "run",
+   "levels_sha256": "3525f436bcf56e54fec1eba980ef24ae042662fa0d7439f2bb78891710090d1c",
+   "rows_rows": 11400,
+   "rows_run": 4200
+  },
+  "queue_front_v2": {
+   "candidates_sha256": "90355bbef9905225205e2f0547612a03915b693e82267538ce8fdff98fe48aec",
+   "dir": "predictfun/reviews/maker_trace_20261122/v2/chains/queue_front_v2",
+   "front_candidates_run": 344,
+   "levels_sha256": "3525f436bcf56e54fec1eba980ef24ae042662fa0d7439f2bb78891710090d1c",
+   "rows": 21385,
+   "rows_run": 7445
+  },
+  "regrade": {
+   "grades": {
+    "G0_unbounded_or_invalid": 100,
+    "G1_conflict": 421,
+    "G2_bound_constrained": 1774,
+    "G3_constrained_status_flagged": 54,
+    "G4_scenario_only": 1800
+   },
+   "rows": 4149,
+   "rows_run": 1585
+  },
+  "take_logic_v2": {
+   "dir": "predictfun/reviews/maker_trace_20261122/v2/chains/take_logic_v2",
+   "rows_run": 1652
+  }
+ },
+ "descriptive_only": true,
+ "episodes": {
+  "after_horizon_class_of_no_response": {
+   "unchanged": 3
+  },
+  "by_delta": {
+   "1": 1110,
+   "2": 222,
+   ">=3": 197
+  },
+  "by_side": {
+   "ask": 735,
+   "bid": 794
+  },
+  "exposure_s_total": 121.199,
+  "hazard_per_s_crude": 3.465375126857482,
+  "n_episodes": 1529,
+  "predicates": {
+   "all": true,
+   "bounds_ordered": true,
+   "exposure_le_horizon": true,
+   "exposure_nonnegative": true,
+   "one_end_type_each": true,
+   "responses_typed": true
+  },
+  "response_mix": {
+   "all": {
+    "overshoot": 36,
+    "partial": 54,
+    "restoring": 330
+   },
+   "delta:1": {
+    "overshoot": 22,
+    "partial": 0,
+    "restoring": 289
+   },
+   "delta:2": {
+    "overshoot": 11,
+    "partial": 21,
+    "restoring": 23
+   },
+   "delta:>=3": {
+    "overshoot": 3,
+    "partial": 33,
+    "restoring": 18
+   },
+   "side:ask": {
+    "overshoot": 12,
+    "partial": 24,
+    "restoring": 146
+   },
+   "side:bid": {
+    "overshoot": 24,
+    "partial": 30,
+    "restoring": 184
+   }
+  },
+  "responses": 420,
+  "state_status_LAG": {
+   "ok": 1529
+  },
+  "termination": {
+   "censored_gap": {
+    "by_reason": {
+     "empty_side": 3
+    },
+    "exposure_s": 0.764,
+    "n": 3
+   },
+   "censored_other": {
+    "by_reason": {
+     "other_side": 755,
+     "same_side_retreat": 69,
+     "two_side": 279
+    },
+    "exposure_s": 82.869,
+    "n": 1103
+   },
+   "no_response_1s": {
+    "by_reason": {
+     "horizon": 3
+    },
+    "exposure_s": 3.0,
+    "n": 3
+   },
+   "response": {
+    "by_reason": {
+     "response": 420
+    },
+    "exposure_s": 34.566,
+    "n": 420
+   }
+  },
+  "time_to_response": {
+   "exposure_ms_mean": 82.3,
+   "exposure_ms_n": 420,
+   "exposure_ms_p10": 45.0,
+   "exposure_ms_p25": 48.0,
+   "exposure_ms_p50": 54.0,
+   "exposure_ms_p75": 99.0,
+   "exposure_ms_p90": 144.10000000000002,
+   "lower_bound_ms_mean": 29.607142857142858,
+   "lower_bound_ms_n": 420,
+   "lower_bound_ms_p10": 0.0,
+   "lower_bound_ms_p25": 0.0,
+   "lower_bound_ms_p50": 0.0,
+   "lower_bound_ms_p75": 43.25,
+   "lower_bound_ms_p90": 94.10000000000002,
+   "no_frame_between": 292
+  }
+ },
+ "intervals": null,
+ "kind": "pilot",
+ "markets": [
+  "20261024_3697902",
+  "20261024_3699278",
+  "20261024_3700070",
+  "20261024_3702960",
+  "20261024_3704004",
+  "20261024_3712725",
+  "20261024_3716727"
+ ],
+ "multiplicity": {
+  "all_listed": true,
+  "contrasts": 5,
+  "selected": null,
+  "variants": 2
+ },
+ "null": {
+  "design": "within-stratum permutation of the exposure label across episodes (strata holding both labels)",
+  "generator": "Generator(PCG64(SeedSequence([20261123, variant index (D0 0 / LAG 1), contrast index])))",
+  "n_perm": 500,
+  "p": "(1 + #{null >= / <= obs}) / 501; ties within 1e-12 relative; NaN replicates on both sides (take_logic.tail_counts)",
+  "seed": 20261123
+ },
+ "owners": {
+  "alt_first_other_linked": {
+   "not_possible": 32,
+   "possible": 15
+  },
+  "alt_netting_linked": {
+   "possible": 47
+  },
+  "by_identity": {
+   "candidate_constrained": 0,
+   "candidate_scenario": 47,
+   "owner_unknown": 373
+  },
+  "linked_by_grade": {
+   "G1_conflict": 3,
+   "G4_scenario_only": 3,
+   "no_regrade_row": 41
+  },
+  "linked_by_group": {
+   "other": 41,
+   "rank1": 2,
+   "rank2": 3,
+   "rank3": 1
+  },
+  "po_parity": {
+   "equal": 420
+  },
+  "pre_state_link": {
+   "owner_unknown": 373,
+   "unresolved_outside_window": 47
+  },
+  "reading": "owner_unknown stays in every denominator and is never a maker WAIT; a candidate link carries its grade and is never the identified creator; continuations are recorded rows of the candidate order, not an identified maker policy",
+  "responses": 420,
+  "summary_all": {
+   "alt_first_other:not_evaluated": 0.0,
+   "alt_first_other:not_possible": 32.0,
+   "alt_first_other:possible": 15.0,
+   "alt_netting:not_evaluated": 0.0,
+   "alt_netting:not_possible": 0.0,
+   "alt_netting:possible": 47.0,
+   "filled_shares": 648.8793743562519,
+   "n_candidate_constrained": 0.0,
+   "n_candidate_scenario": 47.0,
+   "n_legs": 84.0,
+   "n_orders": 47.0,
+   "n_orders_linked_to_several_responses": 0.0,
+   "n_owner_unknown": 373.0,
+   "n_responses": 420.0,
+   "n_responses_all": 420.0,
+   "n_responses_in_shared_orders": 0.0,
+   "next_kind:": 41.0,
+   "next_kind:none": 1.0,
+   "next_kind:refill": 2.0,
+   "next_kind:reprice": 3.0,
+   "pooled_common_c_sh_10s": -0.608367339459461,
+   "pooled_common_c_sh_60s": -0.13083679976026558,
+   "pooled_common_c_sh_end": 1.3010763287179847,
+   "pooled_common_n": 29.0,
+   "pooled_common_sh": 269.3589185637892,
+   "pooled_fv_rows": 84.0,
+   "pooled_fv_rows_status_ok": 84.0,
+   "pooled_res_c_sh": -2.253730651113118,
+   "pooled_res_n_valid": 84.0,
+   "pooled_res_net": -14.623993348617883,
+   "pooled_res_sh_valid": 648.8793743562519,
+   "pooled_residual_rq_sh": 152.72560980373092,
+   "pooled_turnover_mq_sh": 496.15376455252095,
+   "pooled_v10s_c_sh": -2.0291036269615192,
+   "pooled_v10s_gross": -10.981862323283362,
+   "pooled_v10s_n_all": 84.0,
+   "pooled_v10s_n_valid": 63.0,
+   "pooled_v10s_net": -10.981862323283362,
+   "pooled_v10s_sh_all": 648.8793743562519,
+   "pooled_v10s_sh_valid": 541.217421198352,
+   "pooled_v60s_c_sh": -0.13083679976026558,
+   "pooled_v60s_gross": -0.35242058891772166,
+   "pooled_v60s_n_all": 84.0,
+   "pooled_v60s_n_valid": 29.0,
+   "pooled_v60s_net": -0.35242058891772166,
+   "pooled_v60s_sh_all": 648.8793743562519,
+   "pooled_v60s_sh_valid": 269.3589185637892,
+   "pooled_vend_c_sh": -2.471541894095181,
+   "pooled_vend_gross": -15.768668975469321,
+   "pooled_vend_n_all": 84.0,
+   "pooled_vend_n_valid": 82.0,
+   "pooled_vend_net": -15.768668975469321,
+   "pooled_vend_sh_all": 648.8793743562519,
+   "pooled_vend_sh_valid": 638.0093743562518,
+   "pre_state_link:episode_state_G2_conditional": 0.0,
+   "pre_state_link:owner_unknown": 373.0,
+   "pre_state_link:unresolved_outside_window": 47.0,
+   "share_of_all_responses": 1.0,
+   "successor_status:evaluated": 6.0,
+   "successor_status:not_evaluated": 41.0,
+   "takes_10s": 34.0,
+   "takes_60s": 66.0,
+   "takes_end": 123.0,
+   "takes_status:evaluated": 6.0,
+   "takes_status:not_evaluated": 41.0
+  },
+  "unknown_reasons": {
+   "no_front_candidate:ambiguous_order": 72,
+   "no_front_candidate:no_fill": 142,
+   "no_front_candidate:unexplained_decrease": 37,
+   "no_front_candidate:unknown": 118,
+   "window_not_containing": 4
+  }
+ },
+ "ratios": [
+  {
+   "D0": {
+    "RR_MH": 1.1028656586775312,
+    "RR_crude": 1.1948013556172599,
+    "T_exposed_s": 3.866,
+    "T_reference_s": 113.168,
+    "exposed": "btc_5s with",
+    "n_events_informative": 66,
+    "n_markets_rr_gt1": 0,
+    "n_markets_rr_lt1": 0,
+    "n_markets_supported": 0,
+    "p_hi": 0.35528942115768464,
+    "p_lo": 0.6467065868263473,
+    "predicates": {
+     "events_ge_30": true,
+     "inconsistent_hi": false,
+     "inconsistent_lo": false,
+     "p_hi_le_0_05": false,
+     "p_lo_le_0_05": false,
+     "rr_gt_1": true,
+     "rr_lt_1": false,
+     "supported_markets_ge_5": false
+    },
+    "reference": "btc_5s flat",
+    "verdict": "insufficient_support"
+   },
+   "LAG": {
+    "RR_MH": 0.9782052225342603,
+    "RR_crude": 1.1927660067640893,
+    "T_exposed_s": 3.874,
+    "T_reference_s": 113.209,
+    "exposed": "btc_5s with",
+    "n_events_informative": 64,
+    "n_markets_rr_gt1": 0,
+    "n_markets_rr_lt1": 0,
+    "n_markets_supported": 0,
+    "p_hi": 0.5588822355289421,
+    "p_lo": 0.4431137724550898,
+    "predicates": {
+     "events_ge_30": true,
+     "inconsistent_hi": false,
+     "inconsistent_lo": false,
+     "p_hi_le_0_05": false,
+     "p_lo_le_0_05": false,
+     "rr_gt_1": false,
+     "rr_lt_1": true,
+     "supported_markets_ge_5": false
+    },
+    "reference": "btc_5s flat",
+    "verdict": "insufficient_support"
+   },
+   "contrast": "btc_with",
+   "flips_at_LAG": false,
+   "verdict": "insufficient_support"
+  },
+  {
+   "D0": {
+    "RR_MH": 1.2046535602629356,
+    "RR_crude": 0.8317710757772498,
+    "T_exposed_s": 4.165,
+    "T_reference_s": 113.168,
+    "exposed": "btc_5s against",
+    "n_events_informative": 40,
+    "n_markets_rr_gt1": 0,
+    "n_markets_rr_lt1": 0,
+    "n_markets_supported": 0,
+    "p_hi": 0.36726546906187624,
+    "p_lo": 0.6347305389221557,
+    "predicates": {
+     "events_ge_30": true,
+     "inconsistent_hi": false,
+     "inconsistent_lo": false,
+     "p_hi_le_0_05": false,
+     "p_lo_le_0_05": false,
+     "rr_gt_1": true,
+     "rr_lt_1": false,
+     "supported_markets_ge_5": false
+    },
+    "reference": "btc_5s flat",
+    "verdict": "insufficient_support"
+   },
+   "LAG": {
+    "RR_MH": 1.2046535602629356,
+    "RR_crude": 0.8419780448622599,
+    "T_exposed_s": 4.116,
+    "T_reference_s": 113.209,
+    "exposed": "btc_5s against",
+    "n_events_informative": 40,
+    "n_markets_rr_gt1": 0,
+    "n_markets_rr_lt1": 0,
+    "n_markets_supported": 0,
+    "p_hi": 0.3592814371257485,
+    "p_lo": 0.6427145708582834,
+    "predicates": {
+     "events_ge_30": true,
+     "inconsistent_hi": false,
+     "inconsistent_lo": false,
+     "p_hi_le_0_05": false,
+     "p_lo_le_0_05": false,
+     "rr_gt_1": true,
+     "rr_lt_1": false,
+     "supported_markets_ge_5": false
+    },
+    "reference": "btc_5s flat",
+    "verdict": "insufficient_support"
+   },
+   "contrast": "btc_against",
+   "flips_at_LAG": false,
+   "verdict": "insufficient_support"
+  },
+  {
+   "D0": {
+    "RR_MH": 1.0928743125616438,
+    "RR_crude": 1.0264546181868393,
+    "T_exposed_s": 62.868,
+    "T_reference_s": 54.648,
+    "exposed": "fair_gap > 1 c",
+    "n_events_informative": 199,
+    "n_markets_rr_gt1": 0,
+    "n_markets_rr_lt1": 0,
+    "n_markets_supported": 0,
+    "p_hi": 0.27944111776447106,
+    "p_lo": 0.7225548902195609,
+    "predicates": {
+     "events_ge_30": true,
+     "inconsistent_hi": false,
+     "inconsistent_lo": false,
+     "p_hi_le_0_05": false,
+     "p_lo_le_0_05": false,
+     "rr_gt_1": true,
+     "rr_lt_1": false,
+     "supported_markets_ge_5": false
+    },
+    "reference": "fair_gap <= 0 c",
+    "verdict": "insufficient_support"
+   },
+   "LAG": {
+    "RR_MH": 1.0344312082975062,
+    "RR_crude": 1.0131637666801026,
+    "T_exposed_s": 63.205,
+    "T_reference_s": 54.518,
+    "exposed": "fair_gap > 1 c",
+    "n_events_informative": 194,
+    "n_markets_rr_gt1": 0,
+    "n_markets_rr_lt1": 0,
+    "n_markets_supported": 0,
+    "p_hi": 0.3992015968063872,
+    "p_lo": 0.6027944111776448,
+    "predicates": {
+     "events_ge_30": true,
+     "inconsistent_hi": false,
+     "inconsistent_lo": false,
+     "p_hi_le_0_05": false,
+     "p_lo_le_0_05": false,
+     "rr_gt_1": true,
+     "rr_lt_1": false,
+     "supported_markets_ge_5": false
+    },
+    "reference": "fair_gap <= 0 c",
+    "verdict": "insufficient_support"
+   },
+   "contrast": "fair_gap",
+   "flips_at_LAG": false,
+   "verdict": "insufficient_support"
+  },
+  {
+   "D0": {
+    "RR_MH": 1.2030954478150864,
+    "RR_crude": 1.0146351022449467,
+    "T_exposed_s": 97.859,
+    "T_reference_s": 4.95,
+    "exposed": "own touch depth <= 50 sh",
+    "n_events_informative": 82,
+    "n_markets_rr_gt1": 0,
+    "n_markets_rr_lt1": 0,
+    "n_markets_supported": 0,
+    "p_hi": 0.28542914171656686,
+    "p_lo": 0.716566866267465,
+    "predicates": {
+     "events_ge_30": true,
+     "inconsistent_hi": false,
+     "inconsistent_lo": false,
+     "p_hi_le_0_05": false,
+     "p_lo_le_0_05": false,
+     "rr_gt_1": true,
+     "rr_lt_1": false,
+     "supported_markets_ge_5": false
+    },
+    "reference": "own touch depth > 200 sh",
+    "verdict": "insufficient_support"
+   },
+   "LAG": {
+    "RR_MH": 0.6089588222445194,
+    "RR_crude": 0.7214679712189945,
+    "T_exposed_s": 85.751,
+    "T_reference_s": 9.567,
+    "exposed": "own touch depth <= 50 sh",
+    "n_events_informative": 164,
+    "n_markets_rr_gt1": 0,
+    "n_markets_rr_lt1": 0,
+    "n_markets_supported": 0,
+    "p_hi": 0.998003992015968,
+    "p_lo": 0.003992015968063872,
+    "predicates": {
+     "events_ge_30": true,
+     "inconsistent_hi": false,
+     "inconsistent_lo": false,
+     "p_hi_le_0_05": false,
+     "p_lo_le_0_05": true,
+     "rr_gt_1": false,
+     "rr_lt_1": true,
+     "supported_markets_ge_5": false
+    },
+    "reference": "own touch depth > 200 sh",
+    "verdict": "insufficient_support"
+   },
+   "contrast": "depth_own",
+   "flips_at_LAG": false,
+   "verdict": "insufficient_support"
+  },
+  {
+   "D0": {
+    "RR_MH": 1.0560832293022009,
+    "RR_crude": 0.9996068154816934,
+    "T_exposed_s": 36.707,
+    "T_reference_s": 41.723,
+    "exposed": "time left <= 30 s",
+    "n_events_informative": 265,
+    "n_markets_rr_gt1": 0,
+    "n_markets_rr_lt1": 0,
+    "n_markets_supported": 0,
+    "p_hi": 0.3253493013972056,
+    "p_lo": 0.6766467065868264,
+    "predicates": {
+     "events_ge_30": true,
+     "inconsistent_hi": false,
+     "inconsistent_lo": false,
+     "p_hi_le_0_05": false,
+     "p_lo_le_0_05": false,
+     "rr_gt_1": true,
+     "rr_lt_1": false,
+     "supported_markets_ge_5": false
+    },
+    "reference": "time left in (60,240] s",
+    "verdict": "insufficient_support"
+   },
+   "LAG": {
+    "RR_MH": 1.0551428059738988,
+    "RR_crude": 0.9954233556084696,
+    "T_exposed_s": 36.564,
+    "T_reference_s": 41.723,
+    "exposed": "time left <= 30 s",
+    "n_events_informative": 264,
+    "n_markets_rr_gt1": 0,
+    "n_markets_rr_lt1": 0,
+    "n_markets_supported": 0,
+    "p_hi": 0.2954091816367265,
+    "p_lo": 0.7065868263473054,
+    "predicates": {
+     "events_ge_30": true,
+     "inconsistent_hi": false,
+     "inconsistent_lo": false,
+     "p_hi_le_0_05": false,
+     "p_lo_le_0_05": false,
+     "rr_gt_1": true,
+     "rr_lt_1": false,
+     "supported_markets_ge_5": false
+    },
+    "reference": "time left in (60,240] s",
+    "verdict": "insufficient_support"
+   },
+   "contrast": "time_left",
+   "flips_at_LAG": false,
+   "verdict": "insufficient_support"
+  }
+ ],
+ "reconciliation": {
+  "anchor_excluded": 3264,
+  "anchor_excluded_by_role": {
+   "not_a_response": 2946,
+   "response_new_best": 281,
+   "response_other_cell": 37
+  },
+  "anchor_excluded_by_status": {
+   "class:improve_ask": 636,
+   "class:improve_bid": 760,
+   "class:two_side": 1854,
+   "unsupported:unknown:crossed": 1,
+   "unsupported:unknown:empty_side": 13
+  },
+  "anchor_in_by_status": {
+   "class:improve_ask": 259,
+   "class:improve_bid": 308,
+   "class:two_side": 509,
+   "unsupported:unknown:empty_side": 8
+  },
+  "anchor_mask_recount": {
+   "excluded_event_seconds": 1342,
+   "improve_event_seconds": 1645
+  },
+  "creation_rows": 7449,
+  "improve_by_role": {
+   "not_a_response": 3876,
+   "response_new_best": 406,
+   "response_other_cell": 66
+  },
+  "improve_by_status": {
+   "class:improve_ask": 895,
+   "class:improve_bid": 1068,
+   "class:two_side": 2363,
+   "unsupported:unknown:crossed": 1,
+   "unsupported:unknown:empty_side": 21
+  },
+  "improve_events": 4348,
+  "improve_rows_without_anchor_row": 0,
+  "predicates": {
+   "all": true,
+   "anchor_excluded_subset_of_improve": true,
+   "every_improve_event_has_pair_or_status": true,
+   "every_improve_event_one_row": true,
+   "improve_classes_consistent": true,
+   "improve_events_in_census_equal_pair_counts": true,
+   "response_new_best_rows_le_responses": true
+  }
+ },
+ "review": {
+  "commit": "01a72b4e2",
+  "file": "predictfun/reviews/automatic/20261123_posting_chain_review/report.md"
+ },
+ "rules": {
+  "gap_ms": 1000,
+  "horizon_ms": 1000,
+  "lag": "LAG = the whole state at frame f - 2",
+  "market": "within-market MH over its strata; supported = >= 30 exposed and >= 30 reference exposure-seconds and >= 1 response",
+  "strata": "market x side x delta bin (1 / 2 / >= 3) x time-left bin; time-left contrast: market x side x delta bin",
+  "verdict": "posting_opportunity.verdict: insufficient_support (< 5 supported markets or < 30 responses in informative strata) | supported (RR > 1, p_hi <= 0.05, RR > 1 in >= 2/3 of supported markets) | supported_lower (the mirror) | not_supported; timing_sensitive when the LAG verdict differs"
+ },
+ "two_side": {
+  "by_sublabel": {
+   "both_down": 753,
+   "both_up": 750,
+   "narrow": 178,
+   "widen": 34
+  },
+  "improve_creations": 2499,
+  "pairs": 1715
+ },
+ "verdict_lists": {
+  "insufficient_support": [
+   "btc_with",
+   "btc_against",
+   "fair_gap",
+   "depth_own",
+   "time_left"
+  ],
+  "not_supported": [],
+  "supported_associations": [],
+  "supported_lower_contradicting_the_exposure": [],
+  "timing_sensitive": []
+ },
+ "version": "touch_transition_v1",
+ "wording": {
+  "days": "four consumed days: point estimates, no intervals (G = 4 < 5)",
+  "episodes": "an observed spread opening and the next observed touch transition; not an identified maker reaction time",
+  "owners": "a candidate link with its grade; owner_unknown in every denominator; never the identified creator",
+  "p_fair": "the existing trailing BTC reference, not a maker belief",
+  "re_establish": "a recent cell reappearance with print-compatible clearing",
+  "transitions": "native frame pairs, net change only; never an invented intra-frame order"
+ }
+}

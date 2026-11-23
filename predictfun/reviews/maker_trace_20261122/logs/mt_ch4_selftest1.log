@@ -1,0 +1,52 @@
+head=668e560dbdf327bab82a6dc3f204433c035650f5
+PASS alt-netting state: True -> possible; False saved before the calculation -> not_evaluated; evaluated False (earliest record, zero sites) -> excluded; inconsistent False -> not_evaluated; missing / v1 -> not_evaluated
+PASS the verifier raw predicate (written apart from alt_state) agrees on the same cells
+PASS alt_raw reads a saved row (numpy bool, NaN timing basis) without interpreting it; its state is not_evaluated
+PASS chain state: no level -> not_evaluated; any possible -> possible; any not_evaluated keeps it; all excluded -> excluded
+PASS mutant alt_false is live (a False before the calculation -> excluded; no level -> excluded)
+PASS pre-state rule: G0 / G1 / G3 / G4 with ONE constant vector keep unresolved_outside_window (TIED, the hidden action named); G2 stays ONE-HISTORY; each carries its grade and the v3 reading beside
+PASS mutant v3_pre_state_rule is live (G1 with one vector -> ONE-HISTORY, no unresolved alternative)
+PASS a pending pre-state stays PENDING and still carries the post grade
+PASS window position: inside (lo <= upd(f-1) + 1 and upd(f) <= hi; unbounded lo) / straddles / before / after
+PASS gross label: every gross per-share markout reads 'gross c/sh' (common cohort too), the resolution view 'net c/sh'; none bare after net $ (v3's line is caught by the same pattern)
+PASS mutant v3_value_label is live (a bare c/sh after net $)
+PASS touch_transition columns resolve by their declared names; a missing logical column is None (named in the refusal)
+PASS draft writes exactly the four outputs into chains_v4_draft and touches nothing else (no partial directory left)
+PASS receipt: sha256 of every output = its bytes; CPU and VmHWM recorded; every input bound ok; the base module named
+PASS six chains x eight links; every link graded in its link vocabulary and with a declared reading
+PASS touch_transition absent: every TRANSITION link PENDING with the reason (draft)
+PASS pre-state G1 (chain 3) and G4 (chain 5) with constant features: TIED with unresolved_outside_window (v3 rule: ONE-HISTORY, recorded beside)
+PASS pre-state G2 with constant features (chains 2, 4): ONE-HISTORY allowed (positive control); chain 1 (G4, spread changes) TIED with unresolved
+PASS every pre-state carries the post grade of its regrade row (evidence observed_state:post_window:<G>)
+PASS claims predicates: no ONE-HISTORY pre-state unless G2; the unresolved alternative unless G2; the grade carried
+PASS queue chain 1: a False saved before the calculation -> not_evaluated, the masked-netting history kept (TIED)
+PASS queue chain 2: an evaluated False (earliest record, zero sites) -> excluded, ONE-HISTORY (positive control: the instrument can exclude)
+PASS queue chain 4: a gap level without an earliest record is not_evaluated beside possible levels -> possible (6 histories)
+PASS claims: no excluded alt-netting on a not-evaluated row; exclusion only with an evaluated False on every level
+PASS summary table recomputed from the graded records (chain 3: grade G1_conflict, PRE-STATE TIED, TRANSITION PENDING)
+PASS claims agreement = recomputed from the per-link records; the AGREEMENT lines equal them
+PASS value blocks: 'gross c/sh' on every gross markout, none bare after net $
+PASS draft records the six pending transition links (no_pending_link False) and returns the predicates it writes
+PASS overwrite: a second draft into the same directory is refused (write-once)
+PASS run without touch_transition/receipt.json refuses before any write, naming it and 'use run --draft'
+PASS a v4 mutant outside the selftest is refused
+PASS an unknown v4 mutant is refused
+PASS a v3 mutant (MT_CH3_MUT) is refused by chains_v4
+PASS no refused attempt left an output
+PASS mutant v3_pre_state_rule caught by the verifier before any write
+PASS mutant alt_false caught by the verifier before any write
+PASS mutant summary_ungraded caught by the verifier before any write
+PASS mutant v3_value_label caught by the verifier before any write
+PASS run with every sibling bound (touch_transition included): every predicate holds, no pending link, reconciliations and bindings ok
+PASS chain 4 (G2): its creation inside the post window matched to the census pair improve_bid and the response episode (restoring, 1 tick, 500 ms) with candidate grade candidate_constrained (this order); TIED with joined / masked kept
+PASS chain 4: creations before the window are context lines only (level 103 without a census pair keeps the status no_census_pair)
+PASS chain 2 (G2, creation before the window, masked netting excluded): TRANSITION ONE-HISTORY joined_shown_cell (positive control)
+PASS transition: G1 / G4 chains (1, 3, 5) keep unresolved_outside_window; chain 6 keeps a creation without a census pair as a status; a censored end at the creation frame is not a response (chain 1: two_side/widen, no response)
+PASS chain 3: a response episode at a creation before the window is shown as context (EP12B, partial), never a retained history
+PASS receipt binds the touch_transition files and posting_opportunity events.csv (chain markets read), with the resolved interface
+PASS a touch_transition file not matching its receipt: TRANSITION PENDING with the reason (draft)
+PASS a run refuses it before any write
+PASS a touch_transition census without its class column: TRANSITION PENDING naming it (draft)
+PASS a run refuses the schema mismatch before any write
+{"checks": 49, "failed": 0, "cpu_s": 2.656, "vmhwm_mib": 127.4}
+2026-11-23T20:56:46Z tag=mt_ch4_selftest1 rc=0 peak_rss_mib=128 wall_s=2.86 cpu_user_s=2.59 memavail_start_gib=22 disk_free_gib=421->421 slot=claude4

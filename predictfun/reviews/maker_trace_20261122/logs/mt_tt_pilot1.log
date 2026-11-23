@@ -1,0 +1,186 @@
+head=668e560dbdf327bab82a6dc3f204433c035650f5
+{
+ "cpu_s": {
+  "by_stage": {
+   "bindings": 0.0,
+   "context_load": 4.723,
+   "fills_valued": 0.278,
+   "imports": 0.382,
+   "inputs": 0.482,
+   "market": 1.134,
+   "preflight": 0.003,
+   "tables": 0.677,
+   "write": 0.058
+  },
+  "process_total": 7.741
+ },
+ "digest": {
+  "census": {
+   "gap": 0,
+   "improve_ask": 840,
+   "improve_bid": 919,
+   "outside_window": 3633,
+   "retreat_ask": 735,
+   "retreat_bid": 794,
+   "two_side": 1715,
+   "unchanged": 34287,
+   "unknown": 103
+  },
+  "continuation_orders": 47,
+  "episodes": {
+   "by_end_type": {
+    "censored_gap": 3,
+    "censored_other": 1103,
+    "no_response_1s": 3,
+    "response": 420
+   },
+   "by_reason": {
+    "censored_gap": {
+     "empty_side": 3
+    },
+    "censored_other": {
+     "other_side": 755,
+     "same_side_retreat": 69,
+     "two_side": 279
+    },
+    "no_response_1s": {
+     "horizon": 3
+    },
+    "response": {
+     "response": 420
+    }
+   },
+   "n": 1529,
+   "predicates": true,
+   "response_mix": {
+    "overshoot": 36,
+    "partial": 54,
+    "restoring": 330
+   },
+   "ttr_lower_median_ms": 0.0,
+   "ttr_median_ms": 54.0
+  },
+  "owners": {
+   "by_identity": {
+    "candidate_constrained": 0,
+    "candidate_scenario": 47,
+    "owner_unknown": 373
+   },
+   "linked_by_grade": {
+    "G1_conflict": 3,
+    "G4_scenario_only": 3,
+    "no_regrade_row": 41
+   },
+   "linked_by_group": {
+    "other": 41,
+    "rank1": 2,
+    "rank2": 3,
+    "rank3": 1
+   },
+   "po_parity": {
+    "equal": 420
+   },
+   "pre_state_link": {
+    "owner_unknown": 373,
+    "unresolved_outside_window": 47
+   },
+   "responses": 420
+  },
+  "ratios": {
+   "btc_against": {
+    "RR_D0": 1.2046535602629356,
+    "RR_LAG": 1.2046535602629356,
+    "markets": "0>1 0<1 /0",
+    "n_ev": 40,
+    "p_hi": 0.36726546906187624,
+    "p_lo": 0.6347305389221557,
+    "verdict": "insufficient_support"
+   },
+   "btc_with": {
+    "RR_D0": 1.1028656586775312,
+    "RR_LAG": 0.9782052225342603,
+    "markets": "0>1 0<1 /0",
+    "n_ev": 66,
+    "p_hi": 0.35528942115768464,
+    "p_lo": 0.6467065868263473,
+    "verdict": "insufficient_support"
+   },
+   "depth_own": {
+    "RR_D0": 1.2030954478150864,
+    "RR_LAG": 0.6089588222445194,
+    "markets": "0>1 0<1 /0",
+    "n_ev": 82,
+    "p_hi": 0.28542914171656686,
+    "p_lo": 0.716566866267465,
+    "verdict": "insufficient_support"
+   },
+   "fair_gap": {
+    "RR_D0": 1.0928743125616438,
+    "RR_LAG": 1.0344312082975062,
+    "markets": "0>1 0<1 /0",
+    "n_ev": 199,
+    "p_hi": 0.27944111776447106,
+    "p_lo": 0.7225548902195609,
+    "verdict": "insufficient_support"
+   },
+   "time_left": {
+    "RR_D0": 1.0560832293022009,
+    "RR_LAG": 1.0551428059738988,
+    "markets": "0>1 0<1 /0",
+    "n_ev": 265,
+    "p_hi": 0.3253493013972056,
+    "p_lo": 0.6766467065868264,
+    "verdict": "insufficient_support"
+   }
+  },
+  "reconciliation": {
+   "anchor_excluded": 3264,
+   "anchor_excluded_by_role": {
+    "not_a_response": 2946,
+    "response_new_best": 281,
+    "response_other_cell": 37
+   },
+   "anchor_excluded_by_status": {
+    "class:improve_ask": 636,
+    "class:improve_bid": 760,
+    "class:two_side": 1854,
+    "unsupported:unknown:crossed": 1,
+    "unsupported:unknown:empty_side": 13
+   },
+   "improve_by_role": {
+    "not_a_response": 3876,
+    "response_new_best": 406,
+    "response_other_cell": 66
+   },
+   "improve_by_status": {
+    "class:improve_ask": 895,
+    "class:improve_bid": 1068,
+    "class:two_side": 2363,
+    "unsupported:unknown:crossed": 1,
+    "unsupported:unknown:empty_side": 21
+   },
+   "improve_events": 4348,
+   "predicates": true
+  },
+  "two_side": {
+   "by_sublabel": {
+    "both_down": 753,
+    "both_up": 750,
+    "narrow": 178,
+    "widen": 34
+   },
+   "improve_creations": 2499,
+   "pairs": 1715
+  }
+ },
+ "out": "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/v2/chains/touch_transition_pilot_20261024_r1",
+ "projection": {
+  "full_run_cpu_s": 19.51,
+  "launch_allowed": true,
+  "limit_s": 120.0,
+  "pilot_cpu_s": 7.739,
+  "rule": "fixed (imports + preflight + inputs + bindings) 0.87 + (context_load + market + fills_valued + tables + write) 6.87 x 19/7; the first load carries the one-off input sha256s (scaled: conservative)"
+ },
+ "vmhwm_mib": 403.7
+}
+2026-11-23T21:14:28Z tag=mt_tt_pilot1 rc=0 peak_rss_mib=403 wall_s=7.85 cpu_user_s=6.48 memavail_start_gib=22 disk_free_gib=421->421 slot=claude2

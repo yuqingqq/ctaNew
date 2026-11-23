@@ -1,0 +1,57 @@
+head=668e560dbdf327bab82a6dc3f204433c035650f5
+PASS selftest environment: MT_RUN=v2, no planted error set
+PASS MH toy: hand-computed person-time MH 5/3 and crude 1.5 (equal to take_logic.mh_rr inside the block)
+PASS permutation: per-stratum exposed counts kept in every draw, labels move, the same seed gives the same draws
+PASS permutation: another contrast index gives another stream
+PASS planted hazard world: btc with (hazard x3) -> supported (RR > 2, p_hi <= 0.05, >= 5 supported markets, >= 2/3 above 1)
+PASS twin world: RR exactly 1 for btc_with / fair_gap / depth_own while testable (>= 5 supported markets, >= 30 responses); no verdict fires
+PASS ratio tables: final verdict = D0 unless LAG differs (identical states here -> no timing_sensitive); 10 blocks, consistency rows per market
+PASS readers: posting_opportunity / queue_front_v2 / regrade / post_fill / take_logic_v2 read back through their receipts (every file hashed)
+PASS gate G1 (base): passes
+PASS gate G2 (base): passes
+PASS gate G3 (base): passes
+PASS gate G4 (base): passes
+PASS gate G5 (base): passes
+PASS gate G6 (base): passes
+PASS gate G7 (base): passes
+PASS gate G8 (base): passes
+PASS census: every frame pair in exactly one class (pooled class rows sum to the pairs; the market rows equal the pooled ones)
+PASS episodes: 7 retreat episodes (5 responses, 2 censored_gap), one per retreat pair in the window
+PASS episodes: termination / bound predicates all true; every response typed restoring here
+PASS reconciliation: predicates all true; every improve event row has a frame pair with a class; the anchor-excluded ones counted
+PASS reconciliation: five improve creations are the responses' new best cells; the two_side and post-censoring refills are not responses
+PASS owners: every response graded; the planted four linked (G4 x2 scenario + G1 scenario + G2 constrained), one owner_unknown in the denominator; the grading reproduces the saved posting_opportunity identity of every response cell
+PASS ratios: 2 variants x 5 contrasts with declared verdicts; D0 time_left person-time and responses recounted from episodes.parquet
+PASS two_side.csv: separate descriptive table (no response column); its improve creations are the four two_side refills
+PASS continuations: one row per distinct candidate order (4 linked responses -> 4 orders), keyed by hash; non-candidate legs and the taker row stay out of the views
+PASS gate G1: MT_TT_MUT=anchor_mask is caught by check G1
+PASS gate G2: MT_TT_MUT=split_two_side is caught by check G2
+PASS gate G3: MT_TT_MUT=drop_alternatives is caught by check G3
+PASS gate G4: MT_TT_MUT=conflict_identified is caught by check G4
+PASS gate G5: MT_TT_MUT=split_same_hash is caught by check G5
+PASS gate G6: MT_TT_MUT=missing_as_unchanged is caught by check G6
+PASS gate G7: MT_TT_MUT=no_horizon is caught by check G7
+PASS gate G8: MT_TT_MUT=state_leak is caught by check G8
+PASS reader: a posting_opportunity events.csv unlike its receipt -> refused
+PASS reader: posting_opportunity bound to another fills_valued -> refused
+PASS reader: a queue_front_v2 levels.csv other than the one posting_opportunity read -> refused
+PASS reader: a candidates.csv without the alternatives column -> refused (interface)
+PASS reader: a post_fill orders.csv row count unlike its receipt -> refused
+PASS e2e: execute (pilot path, injected loader / inputs) writes exactly the nine outputs
+PASS e2e: receipt hashes every other output, the sources and the inputs; no mutant; a finite projection; pilot kind
+PASS e2e: the written episodes / reconcile rows equal the in-process gate analysis; claims carry the computed predicates
+PASS e2e: a second write into the written directory is refused (before any input is read)
+PASS e2e: a fills_valued unlike the binding -> refused
+PASS refuse: write-once on an existing output directory
+PASS refuse: production with MT_TT_MUT=state_leak before any input is read
+PASS refuse: production with MT_TT_MUT=bogus before any input is read
+PASS refuse: production with MT_PO_MUT=leak_1s before any input is read
+PASS refuse: production with MT_QF2_MUT=drop_no_fill before any input is read
+PASS refuse: a pilot day outside the measurement days
+PASS refuse: nothing written by a refused production call
+PASS refuse: the full run before any input (freeze)
+PASS refuse: a recorded pilot receipt p121.json
+PASS refuse: a recorded pilot receipt pother.json
+PASS preflight: a 40 s projection passes and the pilot receipt is hashed
+{"checks": 54, "failed": 0, "cpu_s": 2.772, "process_cpu_s": 3.194, "vmhwm_mib": 173.8}
+2026-11-23T21:13:03Z tag=mt_tt_selftest1 rc=0 peak_rss_mib=173 wall_s=3.33 cpu_user_s=2.92 memavail_start_gib=22 disk_free_gib=421->421 slot=claude2

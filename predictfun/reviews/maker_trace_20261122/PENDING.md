@@ -12,6 +12,10 @@
 
 **Caps:** 2.00 task / 5.30 line under the USER standing CPU authorization; ledger 1.8733 before this round.
 
+**Builders:** both stopped on the 5-hour usage limit at about 19:27Z (reset 20:40Z) and were resumed at 20:52Z.
+- chains_v4: tool + partial selftest on disk;
+- touch_transition: no files yet.
+
 **Next:** contract `touch_response_contract.md`, then builders `touch_transition.py` + `chains_v4.py`, then freeze, then runs, then the receipt `v2/report_logic_chains_v5.md` (findings 1–4 corrected in-band), then ONE review, then the watcher.
 
 
