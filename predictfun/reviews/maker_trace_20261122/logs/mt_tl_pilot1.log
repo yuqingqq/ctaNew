@@ -1,0 +1,257 @@
+head=12d288cd208937e3e20318d60fc6a0f342345352
+{
+ "cpu_s": {
+  "by_stage": {
+   "assemble": 0.002,
+   "context_load": 4.778,
+   "events": 0.004,
+   "imports": 0.364,
+   "inputs": 0.065,
+   "population": 0.008,
+   "preflight": 0.001,
+   "states": 0.017,
+   "tables": 0.145,
+   "write": 0.017
+  },
+  "process_total": 5.402
+ },
+ "days": [
+  "20261024"
+ ],
+ "events": {
+  "add": {
+   "event_seconds": 197,
+   "takes": 476
+  },
+  "any": {
+   "event_seconds": 562,
+   "takes": 1652
+  },
+  "other": {
+   "event_seconds": 18,
+   "takes": 21
+  },
+  "reduce": {
+   "event_seconds": 296,
+   "takes": 819
+  },
+  "timing_sensitive": {
+   "event_seconds": 112,
+   "takes": 336
+  }
+ },
+ "kind": "pilot",
+ "maker_seconds": {
+  "pooled": 6300,
+  "rank1": 2100,
+  "rank2": 2100,
+  "rank3": 2100
+ },
+ "mechanisms": {
+  "burst_driven:pooled": {
+   "D0": "not_supported",
+   "D1000": "not_supported",
+   "final": "not_supported",
+   "pend": "not_supported"
+  },
+  "burst_driven:rank1": {
+   "D0": "not_supported",
+   "D1000": "not_supported",
+   "final": "not_supported",
+   "pend": "not_supported"
+  },
+  "directional:pooled": {
+   "D0": "insufficient_support",
+   "D1000": "insufficient_support",
+   "final": "insufficient_support",
+   "pend": "insufficient_support"
+  },
+  "directional:rank1": {
+   "D0": "insufficient_support",
+   "D1000": "insufficient_support",
+   "final": "insufficient_support",
+   "pend": "insufficient_support"
+  },
+  "edge_driven:pooled": {
+   "D0": "insufficient_support",
+   "D1000": "insufficient_support",
+   "final": "insufficient_support",
+   "pend": "insufficient_support"
+  },
+  "edge_driven:rank1": {
+   "D0": "insufficient_support",
+   "D1000": "insufficient_support",
+   "final": "insufficient_support",
+   "pend": "insufficient_support"
+  },
+  "end_of_market_flattening:pooled": {
+   "D0": "not_supported",
+   "D1000": "not_supported",
+   "final": "not_supported",
+   "pend": "not_supported"
+  },
+  "end_of_market_flattening:rank1": {
+   "D0": "not_supported",
+   "D1000": "insufficient_support",
+   "final": "timing_sensitive",
+   "pend": "not_supported"
+  },
+  "inventory_size_driven:pooled": {
+   "D0": "not_supported",
+   "D1000": "not_supported",
+   "final": "not_supported",
+   "pend": "not_supported"
+  },
+  "inventory_size_driven:rank1": {
+   "D0": "not_supported",
+   "D1000": "not_supported",
+   "final": "not_supported",
+   "pend": "not_supported"
+  },
+  "stop_loss:pooled": {
+   "D0": "insufficient_support",
+   "D1000": "insufficient_support",
+   "final": "insufficient_support",
+   "pend": "insufficient_support"
+  },
+  "stop_loss:rank1": {
+   "D0": "insufficient_support",
+   "D1000": "insufficient_support",
+   "final": "insufficient_support",
+   "pend": "insufficient_support"
+  },
+  "take_profit:pooled": {
+   "D0": "insufficient_support",
+   "D1000": "insufficient_support",
+   "final": "insufficient_support",
+   "pend": "insufficient_support"
+  },
+  "take_profit:rank1": {
+   "D0": "insufficient_support",
+   "D1000": "insufficient_support",
+   "final": "insufficient_support",
+   "pend": "insufficient_support"
+  }
+ },
+ "out": "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/v2/chains/take_logic_pilot_20261024_r1",
+ "projection": {
+  "full_run_cpu_s": 13.91,
+  "launch_allowed": true,
+  "limit_s": 60.0,
+  "pilot_cpu_s": 5.401,
+  "rule": "fixed (imports + inputs + population) 0.44 + (context_load + states) 4.79 x 19/7 + (assemble + events + tables + write) 0.17 x max(market ratio, take ratio) 2.71; the first load carries the one-off fills_valued sha256 (scaled: conservative)"
+ },
+ "reduce_rank1_D0": {
+  "RR_against_5s": {
+   "RR_MH": 0.8014730139323923,
+   "T0": 1913.0,
+   "T1": 87.0,
+   "a": 8.0,
+   "b": 226.0,
+   "markets_rr_gt1": "0/0",
+   "n_events": 217,
+   "null_p50": 0.9563957620225378,
+   "p_hi": 0.6986027944111777,
+   "p_lo": 0.3033932135728543
+  },
+  "RR_burst": {
+   "RR_MH": 1.3988682966831674,
+   "T0": 596.0,
+   "T1": 888.0,
+   "a": 133.0,
+   "b": 59.0,
+   "markets_rr_gt1": "6/7",
+   "n_events": 190,
+   "null_p50": 1.0922503658548874,
+   "p_hi": 0.10179640718562874,
+   "p_lo": 0.9001996007984032
+  },
+  "RR_edge": {
+   "RR_MH": 1.2796378255064564,
+   "T0": 77.0,
+   "T1": 998.0,
+   "a": 121.0,
+   "b": 7.0,
+   "markets_rr_gt1": "0/0",
+   "n_events": 111,
+   "null_p50": 0.9082547981690687,
+   "p_hi": 0.18962075848303392,
+   "p_lo": 0.812375249500998
+  },
+  "RR_end": {
+   "RR_MH": 0.6822272817986168,
+   "T0": 1260.0,
+   "T1": 210.0,
+   "a": 18.0,
+   "b": 152.0,
+   "markets_rr_gt1": "2/7",
+   "n_events": 162,
+   "null_p50": 1.002205706032802,
+   "p_hi": 0.872255489021956,
+   "p_lo": 0.12974051896207583
+  },
+  "RR_size": {
+   "RR_MH": 1.2885055313075071,
+   "T0": 549.0,
+   "T1": 457.0,
+   "a": 69.0,
+   "b": 55.0,
+   "markets_rr_gt1": "5/6",
+   "n_events": 120,
+   "null_p50": 1.039264882032577,
+   "p_hi": 0.16167664670658682,
+   "p_lo": 0.8403193612774451
+  },
+  "RR_with_5s": {
+   "RR_MH": 2.469612510047839,
+   "T0": 1913.0,
+   "T1": 49.0,
+   "a": 14.0,
+   "b": 226.0,
+   "markets_rr_gt1": "0/0",
+   "n_events": 145,
+   "null_p50": 1.006517245017174,
+   "p_hi": 0.005988023952095809,
+   "p_lo": 0.9960079840319361
+  }
+ },
+ "share_flattened": {
+  "pooled:D0": {
+   "n_flattened": 7,
+   "n_pairs": 21,
+   "n_q60_nonzero": 18,
+   "scope": "pooled",
+   "share": 0.3888888888888889,
+   "variant": "D0"
+  },
+  "rank1:D0": {
+   "n_flattened": 4,
+   "n_pairs": 7,
+   "n_q60_nonzero": 7,
+   "scope": "rank1",
+   "share": 0.5714285714285714,
+   "variant": "D0"
+  },
+  "rank2:D0": {
+   "n_flattened": 2,
+   "n_pairs": 7,
+   "n_q60_nonzero": 4,
+   "scope": "rank2",
+   "share": 0.5,
+   "variant": "D0"
+  },
+  "rank3:D0": {
+   "n_flattened": 1,
+   "n_pairs": 7,
+   "n_q60_nonzero": 7,
+   "scope": "rank3",
+   "share": 0.14285714285714285,
+   "variant": "D0"
+  }
+ },
+ "take_status": {
+  "assigned": 1652
+ },
+ "vmhwm_mib": 381.7
+}
+2026-11-23T12:49:14Z tag=mt_tl_pilot1 rc=0 peak_rss_mib=381 wall_s=5.51 cpu_user_s=4.92 memavail_start_gib=22 disk_free_gib=429->429 slot=claude4

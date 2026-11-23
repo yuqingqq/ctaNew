@@ -1,0 +1,73 @@
+head=12d288cd208937e3e20318d60fc6a0f342345352
+PASS selftest environment: MT_RUN=v2 and no MT_TL_MUT
+PASS bins: |q| 0 | (0,50] | (50,200] | (200,500] | >500 at the edges
+PASS bins: sign long / short / flat (|q| <= 1e-6 flat)
+PASS bins: time left >300 | (240,300] | (120,240] | (60,120] | (30,60] | (10,30] | [0,10]
+PASS bins: a_5s dose <=-5 | (-5,-2] | (-2,-1] | (-1,1) | [1,2) | [2,5) | >=5 | missing
+PASS bins: own fills 0 | 1-2 | >=3
+PASS bins: a_5s = sign(q) r_5s with (>= 1 bp) / against (<= -1 bp) / flat / missing via chain_context.align_cat
+PASS bins: MOVE_THR is chain_context 0.5 / 1 / 2 bp
+PASS bins: unwind edge long 100 (bid - p_fair) / short 100 (p_fair - ask) cents and its bins (missing book / BTC, no inventory)
+PASS MH toy: (2*20/30 + 3*10/40) / (1*10/30 + 2*30/40) = 25/22 (crude 1.25 differs)
+PASS MH toy through the per-instant path (stratum_counts: person-time 10/20 + 30/10, events 2/1 + 3/2, one excluded) = 25/22
+PASS MH: exposed events without reference events -> inf; no events -> NaN; a stratum without exposed person-time is ignored
+PASS null: p counts 1 + #null >= obs (ties count) with a NaN replicate counted on both sides
+PASS null: an undefined observation has no p
+PASS null: an infinite observation counts only infinite or NaN replicates above it
+PASS verdict rule: supported / inconsistent / insufficient (< 5 markets or < 30 events) / not_supported at the p = 25/501 and 2/3 edges
+PASS end of market: a supported RR_end with share flattened < 0.5 reads not_supported, an undefined share insufficient_support
+PASS declared constants: 500 shifts, seed 20261123, p_hi <= 0.05 <=> c_hi <= 25
+PASS fixtures: planted takes (tp, sl, random)
+PASS F1: a planted take-profit maker reads take_profit supported and stop_loss not (rank 1 and pooled)
+PASS F2: a planted stop-loss maker reads stop_loss supported (rank 1 and pooled)
+PASS F3: a random-time maker reads no mechanism supported on the fixture seed
+PASS F3 is not vacuous: stop_loss / take_profit / directional have >= 5 supported markets and >= 30 events at D0
+PASS population: every pair x market instant (ws .. we - 1 s), the no-fill pair and the late-filled pair enter at q = 0
+PASS F4 causality: later BTC / later fill arrivals / later book leave every D0 and D1000 state at t <= t* unchanged; after t* they change
+PASS state: q(t) counts a leg with hi == t (hi <= t) and not one second before
+PASS state: D1000 reads the state one second earlier
+PASS state: q(t) after a maker sell and a take (+6 - 6 - 4 = 396)
+PASS state: own maker fills with hi in (t - 5 s, t] (a take leg never counts; hi = t - 5 s excluded)
+PASS state: inv_timing_sensitive when a pending leg (window holds t) moves |q| to another bin / sign; q pend = possible
+PASS state: inv_ledger_conditional from the excluded leg window start (ts + 8 s), never before; the pair stays at q = 0
+PASS state: edge (cents) of a long = 100 (best bid - p_fair) from book_tob and btc_ret; q = 0 -> no_inventory
+PASS state: r_5s at t is btc_ret on the grid row floor(t / 100) (the planted r5)
+PASS state: time left 300 s at ws -> (240,300]; 1 s at we - 1 s -> [0,10]; D1000 at ws -> 301 s -> >300
+PASS events: x_lo_hard = ws -> before_population; ws + 1 and ws + 1000 -> k 0; ws + 1001 -> 1; we -> 299; we + 1 -> after; -1 -> unbounded
+PASS events: an event-second counts once, its takes beside it (two reduce takes at k 0 -> 1 event-second, 2 takes)
+PASS F5: every shift replicate keeps each pair's event-second count per type
+PASS F5: a shifted event-second never leaves its own pair
+PASS F5: a shift is a bijection on the pair (no two event-seconds collide)
+PASS F5: the null bincount keeps the event count of every replicate
+PASS F5: offsets lie in [0, instant count) per pair
+PASS F5: offsets are deterministic (seed 20261123) and a pair's offsets do not depend on the other pairs
+PASS mutant flip_align: caught by F1/F2 evaluating False without raising (failed: ['F1', 'F2'])
+PASS mutant leak_1s: caught by F4 evaluating False without raising (failed: ['F4', 'POP'])
+PASS mutant active_span: caught by POP evaluating False without raising (failed: ['F4', 'POP'])
+PASS mutants: MT_TL_MUT unset after the suite
+PASS refuse: write-once on an existing output directory
+PASS write-once: a failed write leaves no output and no partial directory
+PASS refuse: production with MT_TL_MUT=flip_align before any input is read
+PASS refuse: production with MT_TL_MUT=bogus before any input is read
+PASS refuse: nothing written by a refused production call
+PASS refuse: a pilot day outside the measurement days (before any path is built)
+PASS refuse: the full run before any input (freeze)
+PASS refuse: the full run without a recorded pilot projection
+PASS refuse: a recorded pilot projection > 60 CPU s
+PASS preflight: a 30 s projection passes and the pilot receipt is hashed as an input
+PASS refuse: an unknown take class
+PASS refuse: a take whose address is not its rank's
+PASS reproduction: the dispatch counts (2065 / 1185 / 838 / 38 / 8 / 3 / 10) reproduce
+PASS refuse: a class column that does not reproduce the summary counts
+PASS refuse: summary.csv pooled / all disagrees with the class column
+PASS e2e: run_core writes exactly the nine contract outputs
+PASS e2e: claims.json carries 7 mechanisms x 2 scopes, each with a final verdict and D0 / D1000 / pend verdicts
+PASS e2e: the written verdicts equal the verdict path
+PASS e2e: receipt.json hashes every other output (sha256 = the file) and the sources
+PASS e2e: every csv parses with rows
+PASS e2e: ratios.csv = 10 ratios x 2 types x 2 scopes x 3 variants; verdicts only on the 7 mechanism ratios
+PASS e2e: M1 marginals add up to the maker-seconds and the event-seconds of the panel
+PASS e2e: patterns.csv holds P1-P8 and the status rows for every scope
+PASS e2e: a second write into the written directory is refused
+{"checks": 70, "failed": 0, "cpu_s": 1.575, "process_cpu_s": 1.951, "vmhwm_mib": 165.5}
+2026-11-23T12:47:55Z tag=mt_tl_selftest1 rc=0 peak_rss_mib=165 wall_s=2.05 cpu_user_s=1.73 memavail_start_gib=22 disk_free_gib=429->429 slot=claude4
