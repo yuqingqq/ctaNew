@@ -1,0 +1,383 @@
+{
+ "beside_readings": {
+  "fresh_levels": 21385,
+  "identified_front_timing": {
+   "book": 845,
+   "settlement": 43
+  },
+  "levels_old_life_excluded": 335,
+  "old_life_excluded_share": 0.015665185877951834,
+  "record_timing": {
+   "book_ambiguous": 4741,
+   "book_timed": 11837,
+   "book_unmatched": 26801,
+   "settlement_only": 201
+  },
+  "records_unbounded_never_timed": 0
+ },
+ "contract": {
+  "amendment": [
+   "5c8a4b1a4",
+   "f4c7e5cbd"
+  ],
+  "commit": "6436ee97c",
+  "file": "predictfun/reviews/maker_trace_20261122/queue_front_contract.md"
+ },
+ "days": [
+  "20261024",
+  "20261025",
+  "20261026",
+  "20261027"
+ ],
+ "descriptive_only": true,
+ "fill_to_cell": {
+  "addr_fv_vs_orders_mismatch": 0,
+  "cell_fv_vs_life_mismatch": 0,
+  "cellcheck_frames": 117907,
+  "cellcheck_gaps": 1408,
+  "cellcheck_grid_fills": 60760,
+  "cellcheck_grid_fills_not_shown_in_window": 531,
+  "cellcheck_grid_fills_not_shown_le_hi": 325,
+  "cellcheck_top3_grid_fills": 9080,
+  "cellcheck_top3_not_shown_in_window": 19,
+  "cellcheck_top3_not_shown_le_hi": 4,
+  "cellcheck_top3_offgrid_fills": 0,
+  "cellcheck_unknown_cells": 0,
+  "fv_rows_without_life_leg": 0,
+  "fv_top3_rows_without_life_leg": 0,
+  "legs": 60770,
+  "legs_addr_from_orders": 0,
+  "legs_grid": 60760,
+  "legs_no_address": 0,
+  "legs_offgrid": 10,
+  "legs_unbounded": 0,
+  "legs_with_fv_row": 60770,
+  "q_fv_vs_life_mismatch": 0
+ },
+ "intervals": null,
+ "kind": "run",
+ "labels": {
+  "days": "four consumed days: point estimates, no intervals (G = 4 < 5)",
+  "economics": "GROSS markouts from settle_ms, chain_post_fill PNL cohort; a later outcome is not the value of the action",
+  "unit": "held the front of a fresh level (creator or an order accepted in the same frame interval: not distinguished)"
+ },
+ "markets": [
+  "20261024_3697902",
+  "20261024_3699278",
+  "20261024_3700070",
+  "20261024_3702960",
+  "20261024_3704004",
+  "20261024_3712725",
+  "20261024_3716727",
+  "20261025_3723774",
+  "20261025_3734864",
+  "20261025_3737919",
+  "20261025_3763401",
+  "20261025_3776314",
+  "20261026_3789484",
+  "20261026_3803131",
+  "20261026_3804696",
+  "20261026_3838531",
+  "20261026_3850428",
+  "20261027_3877472",
+  "20261027_3899224"
+ ],
+ "multiplicity": {
+  "all_listed": true,
+  "readings": 4,
+  "scopes": 2,
+  "selected": null,
+  "tests": 8
+ },
+ "null": {
+  "design": "within each market the maker labels of every attributed fill (front and behind) of the identified levels permuted; the front fills keep their positions",
+  "draws": "Generator(PCG64(SeedSequence([seed, day, mid]))) per market",
+  "n_perm": 500,
+  "p_hi": "(1 + #{null front count >= observed}) / 501",
+  "seed": 20261123
+ },
+ "population": {
+  "attributed_fills": 1845,
+  "attribution_invariant_violations": 0,
+  "candidates_after_window_end": 123,
+  "candidates_rows": 21395,
+  "fresh_by_reason": {
+   "gap_before_fill": 78,
+   "ok": 888,
+   "overlapping_settlement_windows": 9,
+   "returned_to_zero": 10446,
+   "sweep_several_makers": 508,
+   "unexplained_drop_before_fill": 1372,
+   "untimed_record_could_be_first": 2902,
+   "untimed_record_only": 4944,
+   "window_end_without_fill": 238
+  },
+  "fresh_by_status": {
+   "ambiguous_order": 3419,
+   "front_identified": 888,
+   "gap": 78,
+   "no_fill": 10684,
+   "unexplained_decrease": 1372,
+   "unknown": 4944
+  },
+  "fresh_levels": 21385,
+  "front_fills": 919,
+  "identified_by_one_address_overlap": 174,
+  "identified_front_timing": {
+   "book": 845,
+   "settlement": 43
+  },
+  "levels_old_life_excluded": 335,
+  "markets": 19,
+  "old_life_excluded_share": 0.015665185877951834,
+  "record_timing": {
+   "book_ambiguous": 4741,
+   "book_timed": 11837,
+   "book_unmatched": 26801,
+   "settlement_only": 201
+  },
+  "records_unbounded_never_timed": 0,
+  "status_only": {
+   "gap": 10
+  },
+  "straddling_fronts": 45,
+  "supported_markets": 19
+ },
+ "readings": [
+  {
+   "predicates": {
+    "front_share_lower_gt_fill_share": false,
+    "market_share_ge_2_3": false,
+    "p_hi_le_0_05": false,
+    "supported_markets_ge_5": true
+   },
+   "reading": "wins_front_more_than_fills",
+   "scope": "rank1",
+   "values": {
+    "bound_denominator": 4307,
+    "fill_share": 0.053116531165311655,
+    "front_share_lower": 0.00975156721615974,
+    "front_share_upper": 0.1975853262131414,
+    "n_ambiguous": 3419,
+    "n_ambiguous_with_group": 809,
+    "n_fills": 1845,
+    "n_fills_group": 98,
+    "n_front_group": 42,
+    "n_front_identified": 888,
+    "n_markets_front_gt_fill": 0,
+    "n_perm": 500,
+    "n_supported_markets": 19,
+    "p_hi": 0.7245508982035929
+   },
+   "verdict": "unidentified"
+  },
+  {
+   "predicates": {
+    "group_front_wins_ge_5": true,
+    "supported_markets_ge_5": true,
+    "unique_largest": true
+   },
+   "reading": "main_mechanism",
+   "scope": "rank1",
+   "values": {
+    "counts": {
+     "at_empty_touch": 0,
+     "deep": 11,
+     "improve": 18,
+     "other": 0,
+     "re_establish": 13
+    },
+    "n_front_wins": 42,
+    "n_supported_markets": 19,
+    "shares": {
+     "at_empty_touch": 0.0,
+     "deep": 0.2619047619047619,
+     "improve": 0.42857142857142855,
+     "other": 0.0,
+     "re_establish": 0.30952380952380953
+    }
+   },
+   "verdict": "improve"
+  },
+  {
+   "predicates": {
+    "evaluable_markets_ge_5": true,
+    "market_share_ge_2_3": false,
+    "pooled_median_below_others": false
+   },
+   "reading": "faster_than_others",
+   "scope": "rank1",
+   "values": {
+    "median_speed_ms_group": 406.0,
+    "median_speed_ms_others": 329.5,
+    "n_evaluable_markets": 9,
+    "n_group": 13,
+    "n_markets_faster": 4,
+    "n_others": 282,
+    "n_supported_markets": 19,
+    "others": "identified holders outside the group"
+   },
+   "verdict": "unidentified"
+  },
+  {
+   "predicates": {
+    "evaluable_markets_ge_5": false,
+    "market_share_ge_2_3": false,
+    "pooled_front_v10_gt_behind": false
+   },
+   "reading": "front_pays",
+   "scope": "rank1",
+   "values": {
+    "behind": {
+     "cohort_rows": 9,
+     "cohort_shares": 149.2745142857143,
+     "excluded": "st_10s:2|st_1s:4|st_60s:27",
+     "n_fills": 42,
+     "shares": 751.4792159831154,
+     "v_10s_c_sh": -2.1291021259393994,
+     "v_1s_c_sh": 0.10684744195162552,
+     "v_60s_c_sh": 3.0913201526315475
+    },
+    "front": {
+     "cohort_rows": 11,
+     "cohort_shares": 150.84920029970027,
+     "excluded": "self_trade:1|st_10s:2|st_60s:28",
+     "n_fills": 42,
+     "shares": 559.9089587883265,
+     "v_10s_c_sh": -4.188282400198817,
+     "v_1s_c_sh": 0.9035570454123174,
+     "v_60s_c_sh": -7.4759403180416415
+    },
+    "n_evaluable_markets": 2,
+    "n_markets_front_gt_behind": 1,
+    "n_supported_markets": 19
+   },
+   "verdict": "insufficient_support"
+  },
+  {
+   "predicates": {
+    "front_share_lower_gt_fill_share": false,
+    "market_share_ge_2_3": false,
+    "p_hi_le_0_05": false,
+    "supported_markets_ge_5": true
+   },
+   "reading": "wins_front_more_than_fills",
+   "scope": "top3",
+   "values": {
+    "bound_denominator": 4307,
+    "fill_share": 0.11653116531165311,
+    "front_share_lower": 0.02205711632226608,
+    "front_share_upper": 0.3478058973763641,
+    "n_ambiguous": 3419,
+    "n_ambiguous_with_group": 1403,
+    "n_fills": 1845,
+    "n_fills_group": 215,
+    "n_front_group": 95,
+    "n_front_identified": 888,
+    "n_markets_front_gt_fill": 0,
+    "n_perm": 500,
+    "n_supported_markets": 19,
+    "p_hi": 0.874251497005988
+   },
+   "verdict": "unidentified"
+  },
+  {
+   "predicates": {
+    "group_front_wins_ge_5": true,
+    "supported_markets_ge_5": true,
+    "unique_largest": true
+   },
+   "reading": "main_mechanism",
+   "scope": "top3",
+   "values": {
+    "counts": {
+     "at_empty_touch": 0,
+     "deep": 25,
+     "improve": 46,
+     "other": 0,
+     "re_establish": 24
+    },
+    "n_front_wins": 95,
+    "n_supported_markets": 19,
+    "shares": {
+     "at_empty_touch": 0.0,
+     "deep": 0.2631578947368421,
+     "improve": 0.4842105263157895,
+     "other": 0.0,
+     "re_establish": 0.25263157894736843
+    }
+   },
+   "verdict": "improve"
+  },
+  {
+   "predicates": {
+    "evaluable_markets_ge_5": true,
+    "market_share_ge_2_3": false,
+    "pooled_median_below_others": true
+   },
+   "reading": "faster_than_others",
+   "scope": "top3",
+   "values": {
+    "median_speed_ms_group": 129.0,
+    "median_speed_ms_others": 348.0,
+    "n_evaluable_markets": 14,
+    "n_group": 24,
+    "n_markets_faster": 9,
+    "n_others": 271,
+    "n_supported_markets": 19,
+    "others": "identified holders outside the group"
+   },
+   "verdict": "unidentified"
+  },
+  {
+   "predicates": {
+    "evaluable_markets_ge_5": true,
+    "market_share_ge_2_3": false,
+    "pooled_front_v10_gt_behind": true
+   },
+   "reading": "front_pays",
+   "scope": "top3",
+   "values": {
+    "behind": {
+     "cohort_rows": 60,
+     "cohort_shares": 708.0423915061708,
+     "excluded": "st_10s:17|st_1s:4|st_60s:33",
+     "n_fills": 114,
+     "shares": 1837.0037894904603,
+     "v_10s_c_sh": -1.5873548989187156,
+     "v_1s_c_sh": 0.8259489485655785,
+     "v_60s_c_sh": 6.9594312533798615
+    },
+    "front": {
+     "cohort_rows": 36,
+     "cohort_shares": 716.1294516588646,
+     "excluded": "self_trade:1|st_10s:15|st_1s:2|st_60s:41",
+     "n_fills": 95,
+     "shares": 1997.162279467433,
+     "v_10s_c_sh": -1.5063362134756362,
+     "v_1s_c_sh": -0.021933590776324167,
+     "v_60s_c_sh": -4.7626683958534874
+    },
+    "n_evaluable_markets": 5,
+    "n_markets_front_gt_behind": 3,
+    "n_supported_markets": 19
+   },
+   "verdict": "unidentified"
+  }
+ ],
+ "rules": {
+  "front_holder": "amendment 2: records timed by the book decrease they caused; old-life records (book-timed at or before f - 1) excluded; the front = the new life earliest record; one maker address over it (and any untimed record that could precede it) -> front_identified, several -> ambiguous_order (set recorded)",
+  "front_share": "amendment 1: bounds over identified + ambiguous_order; lower = identified held by the group, upper = lower + ambiguous levels whose address set contains the group; wins_front_more_than_fills and its market count use the lower bound; main_mechanism / faster_than_others / front_pays use front_identified only",
+  "gap_ms": 1000,
+  "market_share": "2/3",
+  "max_lag_ms": 2000,
+  "mechanism_precedence": "re_establish > improve > deep > at_empty_touch > other",
+  "min_front_identified_per_supported_market": 5,
+  "min_group_wins": 5,
+  "min_supported_markets": 5,
+  "p_max": 0.05,
+  "reest_ms": 5000,
+  "tol_sh": 0.010000001
+ },
+ "version": "queue_front_v1"
+}

@@ -1,5 +1,48 @@
 # MAKER-TRACE-RECONSTRUCTION-v1 — pending work
 
+## STATE 2026-11-23 17:24Z — ROUND COMPLETE: LOGIC CHAINS v3 (TAKE-LOGIC v2 + QUEUE-FRONT v1) — review pending — read this first
+
+**Receipt:** `v2/report_logic_chains_v3.md`.
+
+**Runs:** `mt_x_tl2_v1`, `mt_x_qf_v1` (rc 0).
+
+**Review:** ONE Codex review of af916aba6..HEAD queued, with the USER goal stated; `review_watch.sh` armed.
+
+**Next (USER goal):** the posting decision logic on a decision-time population — fresh-level creation / improve / re-establish vs fair value, spread, BTC and inventory — unless the review's next priority blocks it.
+
+
+## STATE 2026-11-23 16:53Z — read this first
+
+**TAKE-LOGIC v2:** DONE. Frozen ba2833329; run `mt_x_tl2_v1` rc 0 (13.1 s).
+- Decision: inventory-size trigger WITHDRAWN (O1 0.91 pooled / 0.77 rank 1, all six views not supported).
+- Robust: same-direction takes 0.44–0.58× at > 200 sh (p_lo 0.002); same-direction takes 0.03× in the last 30 s.
+- Fill bursts: opposing takes 1.42× (18/19 markets), timing-sensitive (D1000 1.25, p 0.12).
+
+**QUEUE-FRONT v1:** amendment 1 (5c8a4b1a4) took pilot r2 only to 12 identified of 7,445, because of the 2-s settlement windows.
+
+Amendment 2 (f4c7e5cbd) times each taker record by the book decrease it caused and assigns fills to the cell's old vs new life. The builder is implementing it, then selftest4 + pilot3 (r3).
+
+**Next:**
+- freeze, full run;
+- ONE combined receipt `v2/report_logic_chains_v3.md` (take logic v2 + queue front + the af916aba6 findings 2–5 corrections);
+- commit + push;
+- ONE Codex review (state the USER goal);
+- arm the watcher.
+
+
+## STATE 2026-11-23 15:55Z — GOAL ALIGNED WITH THE USER — read this first
+
+**Goal (USER):** "figure out the logic chains of top makers ... why they do actions given market conditions and how do they get front in the queue".
+
+**Two builders run in parallel:**
+- TAKE-LOGIC v2 (`take_logic_v2_contract.md`, b298933fb; review af916aba6's priority);
+- QUEUE-FRONT v1 (`queue_front_contract.md`, 6436ee97c): who holds the front of fresh price levels (first fill under the venue's time priority), how (improve / re-establish / deep / joined), how fast, whether front fills pay.
+
+**Next for each:** freeze, then full run, then receipt. ONE combined Codex review of both. Tell Codex the USER's goal, so that its next priority serves the queue / posting-logic question.
+
+**After that:** the posting decision logic (why they create / improve / re-establish levels given fair value, spread, inventory and BTC), on a decision-time population.
+
+
 ## STATE 2026-11-23 13:11Z — TAKE-LOGIC v2 (ambiguity-aware; review af916aba6's next priority) — read this first
 
 **Reviews processed:**
@@ -8,7 +51,9 @@
 
 **Plan:** `take_logic_v2_contract.md` (≤ 0.025 h all-in; ledger 1.8164 of 1.90 before it).
 
-**Builder:** `tools/take_logic_v2.py`.
+**USER standing CPU authorization** (15:50Z): "Dont have to ask me for cpu time, just approve it as long as it doesnot take too long". Raise the ledger cap myself while a round stays ≤ ~0.25 core-h all-in and no run takes > ~30 min wall; above that, ask.
+
+**Builder:** `tools/take_logic_v2.py`. It stopped on the usage limit at about 13:15Z before creating files, and was resumed at 15:43Z after the 15:40Z reset.
 
 **Next:** freeze, then the full run, then `v2/report_logic_chains_v3.md` (with the findings 2–5 corrections), then commit + push, then ONE review, then the watcher.
 
@@ -19,7 +64,7 @@
 
 **Runs:** `mt_x_cc_post_v1`, `mt_x_cc_pt_v1`, `mt_x_tl_v1` (all rc 0).
 
-**Review:** ONE Codex review of 6bb458b30..HEAD queued; `scratchpad/review_watch.sh <HEAD>` armed; auto-check cron 60c3d98d.
+**Review:** ONE Codex review of 6bb458b30..HEAD queued; `scratchpad/review_watch.sh <HEAD>` armed; auto-check cron 7fe7060d.
 
 **When the review lands:** list it under "Reviews processed", verify its findings, implement its ONE next priority. Stop and ask the USER for any new resource; the task cap is 1.90 (USER, 2026-11-23).
 
@@ -47,7 +92,7 @@ The full run follows the freeze, bundled with the correction round under ONE com
 
 **Next:** freeze-commit, then one real run of each into `v2/chains/correction_v1/`, then the superseding `v2/report_logic_chains_v2.md`, then commit + push, then ONE Codex review, then arm `scratchpad/review_watch.sh <SHA>`.
 
-**Auto-check:** cron 60c3d98d (:07 / :27 / :47) replaces 0a70a441.
+**Auto-check:** cron 7fe7060d (:07 / :27 / :47; replaced 60c3d98d and 0a70a441; caps 1.90 / 5.25; one-shot resume at a stated usage-limit reset).
 
 
 ## STATE 2026-11-23 11:13Z — LOGIC-CHAIN PACKET: USER raised the packet to 0.11 h (task about 1.82 of 1.85) — read this first

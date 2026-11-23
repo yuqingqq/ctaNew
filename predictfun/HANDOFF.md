@@ -963,6 +963,18 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- MAKER_LOGIC_CHAINS_V3_20261123_DEV -->
+## 2026-11-23 17:24Z (session aea5bfb9) — LOGIC CHAINS v3: TAKE-LOGIC v2 + QUEUE-FRONT v1 (USER goal: action chains and their logic; how they get to the queue front)
+
+**Receipt:** [v2/report_logic_chains_v3.md](reviews/maker_trace_20261122/v2/report_logic_chains_v3.md).
+
+**Take:** the size trigger is withdrawn; large inventory halves adding; fill bursts lead to opposing takes (timing-sensitive); taking almost stops in the last 30 s.
+
+**Queue:** half of their filled orders sat at prices with no queue; no excess fresh-level front wins; their fronts come mostly from improving the price.
+
+**Next:** ONE Codex review of af916aba6..HEAD, then the posting decision logic.
+<!-- /MAKER_LOGIC_CHAINS_V3_20261123_DEV -->
+
 <!-- MAKER_LOGIC_CHAINS_V2_20261123_DEV -->
 ## 2026-11-23 12:54Z (session aea5bfb9) — LOGIC CHAINS v2: correction of review 6bb458b30 + TAKE-LOGIC v1 (USER: solid proof of the take logic; cap 1.85 -> 1.90)
 

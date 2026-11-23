@@ -180,3 +180,5 @@ mt_x_pull_v2 rc=0
 mt_x_cc_post_v1 rc=0
 mt_x_cc_pt_v1 rc=0
 mt_x_tl_v1 rc=0
+mt_x_tl2_v1 rc=0
+mt_x_qf_v1 rc=0
