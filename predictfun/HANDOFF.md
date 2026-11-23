@@ -23,6 +23,18 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- TAKE_QUEUE_REVIEW_20261123_CODEX -->
+## 2026-11-23 — TAKE v2 accepted descriptively; queue claims require conditional grades
+
+[Combined review and independent evidence](reviews/automatic/20261123_take_queue_review/report.md), pinned **0b2b0b13eb19f9f8c3df40d149a31c0b832905f8**. The USER goal remains the complete maker action chain and queue mechanism. TAKE's ambiguity-aware outcome/shift closes af916aba6's principal finding: size-trigger withdrawn (opposing RR 0.9055); same-direction size RR 0.5135 and near-END reductions reproduce. Suites 52/52 and 88/88; 36 hashes, 24 MH recounts, six event vectors and four independent 500-shift comparisons agree. No profitability or private decision-time identification.
+
+Consolidated blockers are inference/label boundaries: unique book-drop equality cannot prove match time (review supplies two identical public histories with different first fillers); 845/888 certified fronts rely on that premise. Later-record != behind: 407/926 behind rows share the initially front-labelled order hash. Valid markout cohorts are 349/919 versus 565/926. First filler need not be creator/reposter; cell-event speed is not maker latency. Posting-window lower-end occupancy is not actual posting queue. The front-win result is unidentified, not a negative advantage finding. Bundle corrections by regrading and relabelling, not an exhaustive reconstruction rebuild. Pilots printed economics/readings, so amendments are adaptive consumed-day exploration; no fraud or deliberate selection claim. Remaining take wording/count issues are nonblocking.
+
+ONE next priority: frozen POSTING-OPPORTUNITY-AND-CHAIN packet, same 19 markets, all market-seconds x side including no fills/creations, pre-anchor book/BTC context, matched comparisons, anonymous creation denominator with maker identity separately graded; six existing predetermined complete post/fill/pull-or-exhaust/repost/take/turnover chains. Preserve compatible histories, size/time bounds, longer-horizon values; do not attach eventual filler inventory to an unidentified creator. The report specifies controls and stop rules. Corrections plus measurement in one round/one review, not cleanup alone.
+
+Review charge 0.010 core-h once (requested <=0.015). Pre-review ledger 1.8363 task / 5.1470 line. Next packet <=0.040 all-in incl. <=0.010 review; USER standing short-CPU approval permits task-cap top-up to 1.95 if required by reserve, no new permission. Combined projected task/line 1.8863/5.1970, with 0.05 reserve 1.9363/5.2470 within 1.95/5.25. Reconcile concurrent work. No new data, live use, policy experiment or untouched validation.
+<!-- /TAKE_QUEUE_REVIEW_20261123_CODEX -->
+
 <!-- TAKE_LOGIC_REVIEW_20261123_CODEX -->
 ## 2026-11-23 — combined logic-chain correction / TAKE-LOGIC review
 

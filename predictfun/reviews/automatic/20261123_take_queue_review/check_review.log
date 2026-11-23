@@ -1,0 +1,131 @@
+{
+  "suites": [
+    {
+      "name": "take_logic_v2_selftest",
+      "rc": 0,
+      "last_lines": [
+        "FIXTURES {\"F1_O1_RR_size_full_D0\": {\"pooled\": {\"RR_MH\": 1.0118, \"events\": 180, \"markets\": \"8/8\", \"p_hi\": 0.45109780439121755, \"verdict\": \"not_supported\"}, \"rank1\": {\"RR_MH\": 1.0118, \"events\": 180, \"markets\": \"3/8\", \"p_hi\": 0.45109780439121755, \"verdict\": \"not_supported\"}}, \"F1_disagreement_shares_rank1_D0\": {\"fine_large\": 0.02247191011235955, \"fine_small\": 0.425531914893617, \"grouped_large\": 0.02247191011235955, \"grouped_small\": 0.425531914893617, \"takes_large\": 178, \"takes_small\": 188}, \"F1_reading\": \"withdrawn\", \"F1_v1_reduce_RR_size_D0\": {\"pooled\": {\"RR_MH\": 1.9179, \"p_hi\": 0.001996007984031936, \"verdict\": \"supported\"}, \"rank1\": {\"RR_MH\": 1.9179, \"p_hi\": 0.001996007984031936, \"verdict\": \"supported\"}}, \"F2_O1_RR_size_full_D0\": {\"pooled\": {\"RR_MH\": 5.564, \"events\": 223, \"markets\": \"8/8\", \"p_hi\": 0.001996007984031936, \"verdict\": \"supported\"}, \"rank1\": {\"RR_MH\": 5.564, \"events\": 223, \"markets\": \"8/8\", \"p_hi\": 0.001996007984031936, \"verdict\": \"supported\"}}, \"F2_reading\": {\"pooled\": \"qualified_candidate_association\", \"rank1\": \"qualified_candidate_association\"}, \"mutant_drop_ambiguous_failed_checks\": [\"F1\", \"COUNT\"], \"mutant_shift_labels_failed_checks\": [\"F3_DIR\"], \"mutant_sum_types_failed_checks\": [\"DEDUPE\"]}",
+        "{\"checks\": 52, \"failed\": 0, \"cpu_s\": 1.37, \"process_cpu_s\": 1.841, \"vmhwm_mib\": 181.4}"
+      ]
+    },
+    {
+      "name": "queue_front_selftest",
+      "rc": 0,
+      "last_lines": [
+        "PASS e2e: run_core over two days writes the nine outputs; shares carry pooled + 2 days + 6 markets per group; readings as in memory",
+        "{\"checks\": 88, \"failed\": 0, \"cpu_s\": 4.946, \"process_cpu_s\": 5.382, \"vmhwm_mib\": 191.6}"
+      ]
+    }
+  ],
+  "hash_checks": 36,
+  "bad_hashes": [],
+  "masked_timing_counterexample": {
+    "code_result": {
+      "unit": "E1",
+      "status": "front_identified",
+      "reason": "ok",
+      "holder_group": "rank1",
+      "holder": "0x6da6cb464f92ae7ad4ec3d239c81719cb1d0ae03",
+      "mechanism": "improve",
+      "n_members": 2,
+      "n_behind": 1,
+      "n_unattributed": 0,
+      "speed_ms": null,
+      "speed_lo_ms": null,
+      "speed_hi_ms": null,
+      "straddles_end": false,
+      "n_overlap": 1,
+      "overlap_one_address": false,
+      "amb_addresses": "",
+      "amb_gmask": 0,
+      "n_unexplained": 0,
+      "end_type": "book_end",
+      "best_prev_tick": 40.0,
+      "front_timing": "book",
+      "front_book_ms": 1792803603400,
+      "n_old_life": 0
+    },
+    "history_A_front": "0x6da6cb464f92ae7ad4ec3d239c81719cb1d0ae03",
+    "history_B_front": "0xabababababababababababababababababababab",
+    "public_frames_equal": true,
+    "both_actual_match_times_inside_hard_windows": true,
+    "wrongly_identified_in_history_B": true,
+    "history_A": [
+      [
+        1900,
+        100
+      ],
+      [
+        3300,
+        -30
+      ],
+      [
+        4100,
+        -20
+      ]
+    ],
+    "history_B": [
+      [
+        1900,
+        100
+      ],
+      [
+        3300,
+        -30
+      ],
+      [
+        4100,
+        -20
+      ],
+      [
+        4500,
+        -30
+      ],
+      [
+        4501,
+        30
+      ]
+    ],
+    "relative_ms": true
+  },
+  "same_order_counterexample": [
+    {
+      "sid": "919002-0001",
+      "mk_hash": "0xh9190020001",
+      "role": "front",
+      "q": 30.0
+    },
+    {
+      "sid": "919002-0002",
+      "mk_hash": "0xh9190020001",
+      "role": "behind",
+      "q": 20.0
+    }
+  ],
+  "real_later_same_hash": {
+    "behind_rows": 926,
+    "same_initial_front_hash": 407,
+    "same_hash_shares": 7488.580948976507,
+    "same_hash_cohort": 188
+  },
+  "economics": [
+    {
+      "role": "front",
+      "all_rows": 919,
+      "valid_rows": 349,
+      "valid_shares": 4518.206942594322,
+      "v_10s_c_sh": 2.5885497092002177
+    },
+    {
+      "role": "behind",
+      "all_rows": 926,
+      "valid_rows": 565,
+      "valid_shares": 8101.20849151595,
+      "v_10s_c_sh": -1.2616244218081456
+    }
+  ],
+  "bad_take_outcomes": [],
+  "bad_take_recounts": [],
+  "cpu_s": 0.48995597799999996
+}
+2026-11-23T17:32:19Z tag=codex_take_queue_saved rc=0 peak_rss_mib=169 wall_s=0.86 cpu_user_s=0.71 memavail_start_gib=22 disk_free_gib=424->424 slot=codex

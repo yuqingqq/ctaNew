@@ -1,4 +1,31 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+take_queue_review_20261123_codex:
+  target: 0b2b0b13eb19f9f8c3df40d149a31c0b832905f8
+  report: predictfun/reviews/automatic/20261123_take_queue_review/report.md
+  status: take_descriptive_accepted_queue_identification_not_established
+  take_size_trigger: withdrawn
+  queue_timing_counterexample: identical_public_histories_different_first_fillers
+  certified_fronts_using_book_timing: 845
+  certified_fronts_total: 888
+  behind_rows_with_initial_front_hash: 407
+  behind_rows_total: 926
+  gross_markout_valid_front_rows: 349
+  gross_markout_valid_later_rows: 565
+  synthetic_checks_passed: 140
+  artifact_source_checks_passed: 36
+  independent_mh_recounts_passed: 24
+  independent_event_vectors_passed: 6
+  independent_real_500_shift_comparisons_passed: 4
+  next_priority: posting_opportunity_and_complete_maker_chain_packet
+  next_packet_all_in_core_hours_cap: 0.040
+  review_charge_core_hours: 0.010
+  pre_review_task_core_hours: 1.8363
+  pre_review_line_core_hours: 5.1470
+  standing_small_cpu_topup_authorized: true
+  next_task_cap_with_reserve_core_hours: 1.95
+  line_core_hours_cap: 5.25
+  additional_user_decision_within_scope_and_caps: false
+
 take_logic_review_20261123_codex:
   target: cccac3665b967fc4858b2335add811779918b87a
   report: predictfun/reviews/automatic/20261123_take_logic_review/report.md

@@ -1,3 +1,11 @@
+<!-- TAKE_QUEUE_REVIEW_20261123_CODEX -->
+## 2026-11-23 — Codex TAKE-LOGIC v2 / QUEUE-FRONT v1 review
+
+Pinned **0b2b0b13eb19f9f8c3df40d149a31c0b832905f8**; [report, full checklist, evidence and ONE next priority](reviews/automatic/20261123_take_queue_review/report.md). TAKE arithmetic/outcome correction accepted descriptively: inventory-size trigger withdrawn; lower-tail ratios independently reproduce. Queue identification blocked: equal net book decrease is not proof of causal trade timing; identical public histories can have different first fillers. Real labels: 845/888 fronts book-timed; 407/926 later/behind rows share the first-front hash; economic cohorts 349/919 and 565/926. Creator/repost identity, posting-window endpoint occupancy and front-win-negative claims exceed their evidence. Preserve outputs with conditional grades and corrected units in the next measurement round; no exhaustive reconstruction rebuild is required. Amendments are adaptive exploration (pilot economics were printed), not validation. Nonblocking take fixes: event-second incidence, whole-state lag sensitivity, 2,765 extra records vs 3,669 records in 904 multirecord seconds.
+
+Suites 52/52 + 88/88; 36 hashes, 24 MH recounts, six event vectors and four independent 500-shift comparisons pass. ONE next priority is posting opportunities plus six full maker chains on consumed markets, <=0.040 core-h all-in; corrections bundled. USER's standing CPU top-up authorization applies; no additional decision within this scope. Current review charged 0.010 h once.
+<!-- /TAKE_QUEUE_REVIEW_20261123_CODEX -->
+
 <!-- TAKE_LOGIC_REVIEW_20261123_CODEX -->
 ## 2026-11-23 — Codex combined correction / TAKE-LOGIC review
 

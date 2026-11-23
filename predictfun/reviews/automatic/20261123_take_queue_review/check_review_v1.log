@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261123_take_queue_review/check_review.py", line 72, in <module>
+    nr=n.part()['fronts']
+       ^^^^^^^^
+  File "/tmp/pf-queue-review-0b2b0b13/predictfun/reviews/maker_trace_20261122/tools/queue_front_selftest.py", line 200, in part
+    return QF.market_pass(self.day, self.mid, M, fvm, pfm)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/pf-queue-review-0b2b0b13/predictfun/reviews/maker_trace_20261122/tools/queue_front.py", line 1072, in market_pass
+    fl, fcnt = market_fills(M, fvm)
+               ^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/pf-queue-review-0b2b0b13/predictfun/reviews/maker_trace_20261122/tools/queue_front.py", line 456, in market_fills
+    osig = orders_signer(M.orders, mk_hash)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/pf-queue-review-0b2b0b13/predictfun/reviews/maker_trace_20261122/tools/queue_front.py", line 420, in orders_signer
+    need(ix.is_unique, 'lifecycle orders: a hash twice among the S_NOPRIO rows (refused)')
+  File "/tmp/pf-queue-review-0b2b0b13/predictfun/research/pf_mt_common.py", line 43, in need
+    raise ValueError(msg)
+ValueError: lifecycle orders: a hash twice among the S_NOPRIO rows (refused)
+2026-11-23T17:31:42Z tag=codex_take_queue_review rc=1 peak_rss_mib=191 wall_s=7.97 cpu_user_s=7.49 memavail_start_gib=22 disk_free_gib=424->424 slot=codex
