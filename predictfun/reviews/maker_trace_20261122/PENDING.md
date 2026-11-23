@@ -1,5 +1,16 @@
 # MAKER-TRACE-RECONSTRUCTION-v1 — pending work
 
+## STATE 2026-11-23 22:22Z — ROUND COMPLETE: LOGIC CHAINS v6 (competing transitions + continuation economics) — review pending — read this first
+
+**Receipt:** `v2/report_logic_chains_v6.md`.
+
+**Runs:** `mt_x_ct_v1`, `mt_x_ce_v1` (rc 0).
+
+**Review:** ONE Codex review of a91f6bb52..HEAD queued; `review_watch.sh` armed.
+
+**The stop rule did NOT trigger:** 3 adequate consistent contrasts. This line is at its public-data identification limit. If the review's next priority needs new evidence (untouched days, own-order data) → that is a USER decision: stop and ask.
+
+
 ## STATE 2026-11-23 21:35Z — COMPETING-TRANSITION-AND-CONTINUATION v1 (review a91f6bb52's next priority) — read this first
 
 **Reviews processed:**

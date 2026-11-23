@@ -1,0 +1,11 @@
+variant,contrast,n_episodes,n_state_missing,n_other_bins,n_exposed_all,n_reference_all,n_strata_occupied,n_strata_mixed,n_strata_exposed_only,n_strata_reference_only,n_exposed_mixed,n_reference_mixed,n_exposed_single_group,n_reference_single_group,responses_exposed_mixed,responses_reference_mixed,competing_exposed_mixed,competing_reference_mixed,censored_exposed_mixed,censored_reference_mixed,horizon_exposed_mixed,horizon_reference_mixed,n_markets_mixed,n_markets_both_ge5,n_markets_exposed_ge5,n_markets_reference_ge5,floor_episodes,floor_responses,floor_competing,floor_markets,adequate_clock,reading
+D0,btc_with,3796,0,406,244,3146,537,96,16,425,215,725,29,2421,61,165,154,560,0,0,0,0,18,15,15,18,True,True,True,True,True,adequate_inconsistent
+D0,btc_against,3796,0,258,392,3146,555,113,34,408,336,767,56,2379,77,159,259,606,0,0,0,2,17,15,15,17,True,True,True,True,True,adequate_direction_consistent
+D0,fair_gap,3796,0,145,1927,1724,562,169,239,154,803,783,1124,941,204,213,599,570,0,0,0,0,19,18,19,18,True,True,True,True,True,adequate_inconsistent
+D0,depth_own,3796,0,721,2835,240,551,124,406,21,886,212,1949,28,195,64,690,148,0,0,1,0,19,15,19,15,True,True,True,True,True,adequate_direction_consistent
+D0,time_left,3796,0,1292,1065,1439,114,105,3,6,1024,1392,41,47,353,286,662,1105,3,0,6,1,19,19,19,19,True,True,True,True,True,adequate_direction_consistent
+LAG,btc_with,3796,0,399,245,3152,539,95,15,429,217,695,28,2457,60,157,157,538,0,0,0,0,18,15,15,18,True,True,True,True,True,adequate_inconsistent
+LAG,btc_against,3796,0,259,385,3152,557,112,33,412,332,753,53,2399,78,153,254,598,0,0,0,2,17,15,15,17,True,True,True,True,True,adequate_direction_consistent
+LAG,fair_gap,3796,0,140,1942,1714,564,168,240,156,809,766,1133,948,204,211,605,555,0,0,0,0,19,18,19,18,True,True,True,True,True,adequate_inconsistent
+LAG,depth_own,3796,0,876,2430,490,548,185,329,34,1146,454,1284,36,258,143,886,311,0,0,2,0,19,17,19,17,True,True,True,True,True,adequate_direction_consistent
+LAG,time_left,3796,0,1296,1060,1440,114,105,3,6,1019,1393,41,47,351,286,659,1106,3,0,6,1,19,19,19,19,True,True,True,True,True,adequate_direction_consistent

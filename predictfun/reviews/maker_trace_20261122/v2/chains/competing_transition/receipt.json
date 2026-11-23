@@ -1,0 +1,320 @@
+{
+ "argv": [
+  "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/tools/competing_transition.py",
+  "run"
+ ],
+ "asof_end": "2026-11-23T22:21:28Z",
+ "asof_start": "2026-11-23T22:21:28Z",
+ "constants": {
+  "COMPETING": [
+   "other_side",
+   "two_side",
+   "further_retreat"
+  ],
+  "CONTRASTS": [
+   [
+    "btc_with",
+    "btc_5s with",
+    "btc_5s flat",
+    "btc",
+    [
+     "with"
+    ],
+    [
+     "flat"
+    ]
+   ],
+   [
+    "btc_against",
+    "btc_5s against",
+    "btc_5s flat",
+    "btc",
+    [
+     "against"
+    ],
+    [
+     "flat"
+    ]
+   ],
+   [
+    "fair_gap",
+    "fair_gap > 1 c",
+    "fair_gap <= 0 c",
+    "fg",
+    [
+     "(1,3]",
+     ">3"
+    ],
+    [
+     "<=0"
+    ]
+   ],
+   [
+    "depth_own",
+    "own touch depth <= 50 sh",
+    "own touch depth > 200 sh",
+    "depth",
+    [
+     "0",
+     "(0,50]"
+    ],
+    [
+     ">200"
+    ]
+   ],
+   [
+    "time_left",
+    "time left <= 30 s",
+    "time left in (60,240] s",
+    "tl",
+    [
+     "(10,30]",
+     "[0,10]"
+    ],
+    [
+     "(120,240]",
+     "(60,120]"
+    ]
+   ]
+  ],
+  "CPU_CAP_S": 10.0,
+  "DAYS_RULE": [
+   3,
+   4
+  ],
+  "FLOOR": {
+   "MIN_COMP": 10,
+   "MIN_GROUP_EP": 30,
+   "MIN_MKT": 5,
+   "MIN_MKT_EP": 5,
+   "MIN_RESP": 10
+  },
+  "MUTANTS": [
+   "swap_labels",
+   "drop_competitors",
+   "blank_competitors",
+   "guess_sub",
+   "equal_weights",
+   "censor_upper_drop",
+   "timing_prev",
+   "floor_all_population",
+   "tl_own_strata",
+   "days_any"
+  ],
+  "N_EP_CONTRACT": 3796,
+  "N_MARKETS": 19,
+  "OUTCOMES": [
+   "same_restoring",
+   "same_partial",
+   "same_overshoot",
+   "other_improve",
+   "other_retreat",
+   "two_side_both_up",
+   "two_side_both_down",
+   "two_side_narrow",
+   "two_side_widen",
+   "two_side_sub_unknown",
+   "same_retreat_further",
+   "horizon_no_change",
+   "censored_gap",
+   "censored_unknown_touch",
+   "censored_empty_side",
+   "censored_crossed",
+   "censored_window_end",
+   "censored_book_end"
+  ],
+  "OUTCOME_GROUPS": [
+   [
+    "same_response",
+    [
+     "same_restoring",
+     "same_partial",
+     "same_overshoot"
+    ]
+   ],
+   [
+    "other_side",
+    [
+     "other_improve",
+     "other_retreat"
+    ]
+   ],
+   [
+    "two_side",
+    [
+     "two_side_both_up",
+     "two_side_both_down",
+     "two_side_narrow",
+     "two_side_widen",
+     "two_side_sub_unknown"
+    ]
+   ],
+   [
+    "further_retreat",
+    [
+     "same_retreat_further"
+    ]
+   ],
+   [
+    "horizon",
+    [
+     "horizon_no_change"
+    ]
+   ],
+   [
+    "censored",
+    [
+     "censored_gap",
+     "censored_unknown_touch",
+     "censored_empty_side",
+     "censored_crossed",
+     "censored_window_end",
+     "censored_book_end"
+    ]
+   ]
+  ],
+  "READINGS": [
+   "adequate_direction_consistent",
+   "adequate_inconsistent",
+   "thin"
+  ],
+  "VARIANTS": [
+   "D0",
+   "LAG"
+  ]
+ },
+ "contract": {
+  "commit": "9909beacc",
+  "file": "predictfun/reviews/maker_trace_20261122/competing_transition_contract.md",
+  "sections": "1-4 and their acceptance items",
+  "sha256": "b94ed2114114eff0ecc8dc4e0e3da2b440d2e8d4c9d127bf0323aa3c94f56f68"
+ },
+ "cpu_s": {
+  "by_stage": {
+   "analyse": 0.091,
+   "bindings": 0.007,
+   "preflight": 0.002,
+   "read": 0.128
+  },
+  "process_total": 0.536
+ },
+ "design": {
+  "intervals": false,
+  "note": "descriptive point estimates on four related consumed days; a thin or inconsistent answer ends this line",
+  "p_values": false,
+  "permutations": false,
+  "significance_verdicts": false
+ },
+ "git": {
+  "head": "bb4e64cf6e99d45a6092288ef40e48c22035dc93",
+  "tool_files": [
+   "predictfun/reviews/maker_trace_20261122/tools/competing_transition.py",
+   "predictfun/reviews/maker_trace_20261122/tools/competing_transition_selftest.py",
+   "predictfun/reviews/maker_trace_20261122/competing_transition_contract.md"
+  ],
+  "tracked": true,
+  "unmodified": true
+ },
+ "guard_mib": 1450.0,
+ "inputs": {
+  "predictfun/reviews/maker_trace_20261122/v2/chains/touch_transition/episodes.parquet": {
+   "bound_sha256": "d5eada06b3f00da6701c29328f625fe99f048aa5261efdc530c25e521188c45f",
+   "bytes": 623777,
+   "rows": 3796,
+   "sha256": "d5eada06b3f00da6701c29328f625fe99f048aa5261efdc530c25e521188c45f"
+  },
+  "predictfun/reviews/maker_trace_20261122/v2/chains/touch_transition/receipt.json": {
+   "bytes": 26545,
+   "role": "producing receipt (binds the two inputs)",
+   "sha256": "53ca4343aef1736772595da6b24eb516ad67ec0dac27cf736dc146043a259e4b",
+   "tracked": true,
+   "unmodified": true
+  },
+  "predictfun/reviews/maker_trace_20261122/v2/chains/touch_transition/reconcile.csv": {
+   "bound_sha256": "761a4e0335339c0c04eb37636b0c18935a9100aaf02d252bc1559df1b1f1e538",
+   "bytes": 4132293,
+   "rows": 21395,
+   "sha256": "761a4e0335339c0c04eb37636b0c18935a9100aaf02d252bc1559df1b1f1e538"
+  }
+ },
+ "kind": "run",
+ "mutant": "",
+ "outputs": {
+  "claims.json": {
+   "bytes": 15022,
+   "sha256": "aa2bc10036ed7abed563712a4a9ece614022af80b5b94d3c8224c1b211043903"
+  },
+  "fractions.csv": {
+   "bytes": 73471,
+   "rows": 984,
+   "sha256": "17ba134667dba601a383b794483d76ef341c01dbfc0751704ce97eff186b7d56"
+  },
+  "outcomes.csv": {
+   "bytes": 1191621,
+   "rows": 3796,
+   "sha256": "b75745a9f68552fb1c1bd885cda3cb72254c44be0a2d814e2e475145dcbf7661"
+  },
+  "rd.csv": {
+   "bytes": 49084,
+   "rows": 260,
+   "sha256": "0475aa32af0c32226d24059c02ca6f1da3df2c4d0ff6d112fec41b138cbe88e0"
+  },
+  "support.csv": {
+   "bytes": 2130,
+   "rows": 10,
+   "sha256": "5c058aaaea461c90cc078e4be71fe5dcc05fdb89a968de3b7436b6c112180e31"
+  },
+  "timing.csv": {
+   "bytes": 104886,
+   "rows": 999,
+   "sha256": "f255ea7addfdeae4f354ad38fd805ed3ce83562bfeb2279f7e0a18e901e387e6"
+  }
+ },
+ "peak_rss": "VmHWM of this process",
+ "population": {
+  "days": [
+   "20261024",
+   "20261025",
+   "20261026",
+   "20261027"
+  ],
+  "n_episodes": 3796,
+  "n_markets": 19
+ },
+ "readings": {
+  "btc_against": "adequate_direction_consistent",
+  "btc_with": "adequate_inconsistent",
+  "depth_own": "adequate_direction_consistent",
+  "fair_gap": "adequate_inconsistent",
+  "time_left": "adequate_direction_consistent"
+ },
+ "readings_declared": {
+  "censored": "censored = end_type censored_gap (gap / unknown_touch / empty_side / crossed / window_end / book_end); horizon_no_change is its own outcome (the contract table lists it apart): a non-response that is neither censored nor a competing transition",
+  "competing": "competing non-response transitions of the support floor = other_improve / other_retreat / two_side_* (sub_unknown included) / same_retreat_further",
+  "concentration": "c_m = sum over the mixed strata of market m of w RD / W (sum c_m = RD); top market = the largest contribution in the pooled direction, share = c_m / RD (above 1 under offsets); the largest absolute share and the top weight share beside",
+  "days": "the pooled sign (D0 = LAG, nonzero) must be carried by the day RD on >= 3 of the 4 measurement days at BOTH clocks; a day without mixed strata or with RD 0 does not carry it",
+  "markets": ">= 5 markets in each of which BOTH groups hold >= 5 episodes within the mixed strata",
+  "risk": "the RD risk = same-side responses / all episodes of the stratum-group (censored counted as non-responses: the lower convention); the censor bounds pair lower with upper risks",
+  "strata": "market (day, mid) x side x delta bin x time-left bin of the SAME clock (touch_transition.contrast_code); the time_left contrast omits its own bin",
+  "support_clocks": "a contrast is adequate only if the floor holds at BOTH D0 and LAG (the reading uses both clocks)",
+  "timing": "lower = max(0, resp_lo - t_start), upper = resp_hi - t_prev, endpoint = resp_hi - t_start, next frame = saved no_frame_between",
+  "two_side_sub": "from the reconcile.csv rows of the same (day, mid, end_frame): in the census population, class two_side, one sub-label, times equal to the end pair, else refused; no saved row -> two_side_sub_unknown"
+ },
+ "rehearsal": false,
+ "review": {
+  "commit": "a91f6bb52",
+  "file": "predictfun/reviews/automatic/20261123_touch_response_review/report.md",
+  "sha256": "b3df731835db1f554f36aca6447c4ad7495949ec4b62eef10a861b8862c655fb"
+ },
+ "run": "v2",
+ "sources": {
+  "predictfun/research/pf_mt_common.py": "e54ccd15489ed41b23b1e1d62e11d26aacd7f1d778be47bdaf4154b2cb091f7b",
+  "predictfun/reviews/automatic/20261123_touch_response_review/report.md": "b3df731835db1f554f36aca6447c4ad7495949ec4b62eef10a861b8862c655fb",
+  "predictfun/reviews/maker_trace_20261122/competing_transition_contract.md": "b94ed2114114eff0ecc8dc4e0e3da2b440d2e8d4c9d127bf0323aa3c94f56f68",
+  "predictfun/reviews/maker_trace_20261122/tools/competing_transition.py": "69e770b39a30204ed98c276451a78e7415688f56f814e66ca6c5f29dfee8e639",
+  "predictfun/reviews/maker_trace_20261122/tools/competing_transition_selftest.py": "f9a392e4f4e97ec03c30ca5eb99256715f414254da01e4f67b9b81ee32869134"
+ },
+ "version": "competing_transition_v1",
+ "vmhwm_mib": 139.8,
+ "wall_s": 0.3
+}

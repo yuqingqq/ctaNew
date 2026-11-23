@@ -1001,6 +1001,20 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- MAKER_LOGIC_CHAINS_V6_20261123_DEV -->
+## 2026-11-23 22:22Z (session aea5bfb9) — LOGIC CHAINS v6: competing transitions + continuation economics (review a91f6bb52's priority; USER goal: action chains and their logic)
+
+**Receipt:** [v2/report_logic_chains_v6.md](reviews/maker_trace_20261122/v2/report_logic_chains_v6.md).
+
+**After a retreat:** the other side improves first most often; same-side restoration is more likely near the end and less likely when the side was thin.
+
+**Economics:** linked restorations show no profit.
+
+**Limits:** this public-data line has reached its identification limits; further steps need new evidence (USER decision).
+
+**Next:** ONE Codex review of a91f6bb52..HEAD.
+<!-- /MAKER_LOGIC_CHAINS_V6_20261123_DEV -->
+
 <!-- MAKER_LOGIC_CHAINS_V5_20261123_DEV -->
 ## 2026-11-23 21:22Z (session aea5bfb9) — LOGIC CHAINS v5: touch transitions + quote responses + chains v4 (review 01a72b4e2's priority; USER goal: action chains and their logic)
 
