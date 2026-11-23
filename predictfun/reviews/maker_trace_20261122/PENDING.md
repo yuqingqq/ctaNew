@@ -1,5 +1,24 @@
 # MAKER-TRACE-RECONSTRUCTION-v1 — pending work
 
+## STATE 2026-11-23 06:58Z — USER GO for MATCHED-MARKET-TURNOVER-GAP-v1; contract frozen (46cd3cc56); tool agent building — read this first
+
+**Running:** the agent building `tools/matched_gap.py` + selftest. Resume it with SendMessage if a rate limit stopped it.
+
+**Next:**
+1. Freeze-commit the tool.
+2. `MT_RUN=v2` run via run_light (`tools/matched_gap.py run`).
+3. Receipt, then commit, then ONE Codex review.
+
+**Budget:** ≤ 0.10 h, including review (spent 1.705 of 1.85).
+
+
+## STATE 2026-11-23 06:49Z — REVIEW 8f2a2e753 ANSWERED (ed94b9d16); WAITING FOR THE USER'S GO on MATCHED-MARKET-TURNOVER-GAP-v1 — read this first
+
+**Nothing to run.** Auto-continue: reply "waiting for the USER's go" unless the USER has replied.
+
+**The proposal:** a saved-data comparison of our CURRENT_ASYNC_FAST10 ledger vs the ex-ante top 3 / top 10 on the same 19 BOOK markets and intervals (≤ 0.10 h including review; fits 1.85 / 5.25). Per the 11-14 rule, it does not start without the USER's go.
+
+
 ## STATE 2026-11-23 06:08Z — WAITING FOR THE CODEX REVIEW of 567f741d9..0e21193f2 (queued); nothing to run — read this first
 
 - **Done:** v2 (checker 39/39), the decision paths, the completed closes and the identifiability control, all committed and pushed.

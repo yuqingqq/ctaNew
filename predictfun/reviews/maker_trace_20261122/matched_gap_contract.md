@@ -83,3 +83,16 @@ Both are mapped to absolute ms. **A fill exactly at the boundary is assigned by 
 **Execution:** freeze-commit before the run, through run_light with `MT_RUN=v2`, memory self-guard 1,450 MiB.
 
 **Projected CPU:** < 60 s for the run plus ≤ 30 s of tests.
+
+## Amendment 1 (before the run) — interpretations settled at the build
+
+1. **Interval:** [start, END] is inclusive at both ends, matching our engine's 0 ≤ t ≤ end.
+2. **Self-trade fees:** a separate line in the identity (self-trades are out of the lots, their fees counted).
+3. **"Larger part in carry + residual":** means |Δ(carry + residual)| > |Δ completed-close net|.
+4. **Fewer than 5 both-active markets:** the party's readings are `mixed_unsupported`, with the per-market rule result kept beside it as `reading_raw`.
+
+**Format checks at the build** (selftest 359/359; Oct 24 no-write rehearsal):
+- our fill is `[t, gid, side (0 = buy YES), q, p (cents), it]`;
+- the absolute time is `ident.start_abs_ms + t`, and END = start + `end_rel` (298 s);
+- the mark is the YES mid in cents and equals the tob mid at END;
+- our recorded value is reproduced bit-exactly on 7 / 7 markets.

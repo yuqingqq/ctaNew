@@ -1,0 +1,9 @@
+{
+ "result": "PASS",
+ "checks": 359,
+ "failed": 0,
+ "failures": [],
+ "cpu_s": 0.94,
+ "vmhwm_mib": 124.953125
+}
+2026-11-23T07:43:20Z tag=mt_gap_selftest1 rc=0 peak_rss_mib=125 wall_s=1.51 cpu_user_s=1.22 memavail_start_gib=22 disk_free_gib=434->434 slot=claude4
