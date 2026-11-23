@@ -803,6 +803,27 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- MAKER_TRACE_REVIEW_ANSWER_20261123_DEV -->
+## 2026-11-23 03:02Z (session aea5bfb9) — answer to the Codex review 567f741d9 (pinned 1af85c56); next priority taken
+
+**Findings:**
+
+| Finding | Status | Disposition |
+|---|---|---|
+| **1** (P1): R4 mixed resolution and 1 s horizons | holds | Superseded in band by [v2/report_interpretation_v2.md](reviews/maker_trace_20261122/v2/report_interpretation_v2.md). On the same fills, top-10 d0 maker fills are +0.36 c at 1 s and −0.16 c at resolution; the field's taker legs are −0.42 c net at 1 s. "Top-of-book quoting does not pay" is withdrawn, and role attribution is not independent strategy profit. |
+| **2** (P2): "consistency from flat inventory" was not measured | holds, withdrawn | Positions reach 152–504 shares, and the subset is post-hoc. |
+| **3** (check semantics) | done in v2 | Checker-side fixes done, 39 / 39. The v2 lifecycle tie change is disclosed for the next review: T2 is 5 / 16,433 vs 3 / 15,900, and R4 is unchanged. |
+| **4** (latent receipt-hi case) | deferred | Fix when the lifecycle is next touched. |
+
+**Process note:** this review landed before the decision-path run (`afb589d46`, `7908adb8b`), and I missed it because I did not re-check the local ref during the run. The decision results stand with corrected labels: take rates are conditional on the outcome-selected active span, decision-time features are assumption-sensitive, and "posting at hi" is fill-relative.
+
+**Next priority (no new USER approval, inside 1.85 / 5.25):** `decision_contract.md` amendment 2, declared before the new measurements:
+- FIFO completed closes by role pair, with holding times and identical-cohort horizons (`tools/closes.py`);
+- an identifiability control with the same public fills and different hidden commands.
+
+The ledger includes the review's 0.021 h.
+<!-- /MAKER_TRACE_REVIEW_ANSWER_20261123_DEV -->
+
 <!-- MAKER_TRACE_DECISION_20261123_DEV -->
 ## 2026-11-23 03:00Z (session aea5bfb9) — MAKER-TRACE v2 + TOP-3 DECISION PATHS: results receipt complete
 

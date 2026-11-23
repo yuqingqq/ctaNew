@@ -103,3 +103,31 @@
 - A look-ahead falsifier catches a planted +150 ms leak.
 
 **Projected run:** 0.04–0.063 core-h, memory 0.65–0.92 GB.
+
+## Amendment 2 (2026-11-23, before any new measurement) — review 567f741d9's next priority
+
+### Already run (v2/decision), with labels corrected in `v2/report_interpretation_v2.md`
+
+- **Take rates** are conditional on the outcome-selected active span: the estimand is named, and no unconditional claim is made.
+- **Features at `match_bound − L`** and "posting at hi" are fill-relative and assumption-sensitive, not known decision inputs.
+
+### New measurements (declared here)
+
+**1. Completed closes: `tools/closes.py`** (v2 roots; output `v2/closes/`, write-once).
+- **Population:** the ex-ante top 3, with the ex-ante top 10 as the benchmark.
+- **Pairing:** chronological FIFO per address × market. Each completed close keeps the entry and closing leg identity (sid, hash, role, time, price) and prorated fees.
+- **Accounting:** every matched dollar is attributed once.
+
+**Tables:**
+- closes by role pair (maker→maker, maker→taker, taker→maker, taker→taker): count, shares, P&L per share, holding-time quantiles;
+- turnover per share, beside residual drift, resolution and the recorded inventory excursion (max |position| per address and market);
+- **identical cohorts:** rows with valid 1 s, 10 s, 60 s and END marks and a resolution, by role and depth, showing gross and net (fees valued at the mark) 1 s / 10 s / 60 s / END / resolution, on native and common denominators.
+
+**Primary computed question:** whether completed turnover is good and then lost through residual exposure, or whether the completed turnover itself is poor. It is answered by the sign of completed-close P&L per share against the sign of the residual, per address and day.
+
+**2. Identifiability control: `tools/decision_identifiability_control.py`** (synthetic only).
+- Two synthetic command histories that produce the SAME public fills and book frames, with different earlier posts and cancels.
+- The frozen decision functions run on both. The control must show identical outputs, so posting-decision claims are labelled unidentified wherever the outputs cannot differ.
+- It runs together with the frozen positive controls.
+
+**CPU:** ≤ 0.05 h for the closes run plus the tests. The task cap is 1.85 h (spent 1.674 h, including the review's 0.021 h).

@@ -10,6 +10,7 @@ import sys
 
 LOG = '/home/yuqing/ctaNew/predictfun/research/run_light.log'
 START, CAP, RESERVE, LINE_BEFORE, CEILING = '2026-11-22T08:00:00Z', 1.85, 0.05, 3.3107, 5.25   # USER top-ups: 0.90 -> 1.35 h (4.40 -> 4.85); -> 1.45 (amendment 1); -> 1.85 / line 5.25 for the lifecycle fix + top-3 decision paths (amendment 3)
+EXTRA_H = 0.021   # Codex review 567f741d9 runs (tags codex_mt_review_*, outside the mt_ prefix): its declared conservative charge
 PAT = re.compile(r'^(\S+) tag=(mt_\S+) rc=(\S+) .*?wall_s=(\S+) cpu_user_s=(\S+)')
 
 
@@ -33,7 +34,7 @@ def ledger(log=LOG):
 
 if __name__ == '__main__':
     need = float(sys.argv[sys.argv.index('--need') + 1]) if '--need' in sys.argv else 0.
-    rows = ledger(); spent = sum(r['cpu_s'] for r in rows) / 3600.
+    rows = ledger(); spent = sum(r['cpu_s'] for r in rows) / 3600. + EXTRA_H
     res = dict(runs=len(rows), spent_h=round(spent, 4), cap_h=CAP, reserve_h=RESERVE, need_h=need, fits=bool(spent + need + RESERVE <= CAP and LINE_BEFORE + spent + need + RESERVE <= CEILING),
                line_now_max=round(LINE_BEFORE + spent, 4), ceiling=CEILING, by_prefix={})
     for r in rows:
