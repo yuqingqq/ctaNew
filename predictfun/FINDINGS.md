@@ -1,3 +1,29 @@
+<!-- MAKER_DECISION_LOGIC_20261123_USER -->
+## 2026-11-23 — USER: reconstruct the economic chain of decisions
+
+[Decision-logic amendment](reviews/automatic/20261123_maker_decision_logic/plan.md).
+USER: "Yes we need the chain of logics, not just what they do at what time."
+This refines the primary deliverable of 7d71ca40c: timing is supporting
+evidence, not the objective. Continue the frozen matched-market comparison.
+
+For connected episodes show: available state/change -> feasible alternatives
+-> economic trade-off -> observed action -> resulting state -> next decision.
+Test rival explanations for early queue building, retaining valuable priority,
+selective pulling, inventory reduction versus directional taking, and re-entry.
+Use the remaining order/book economics, including later turnover and residual
+exposure; a short markout or completed profitable close alone is insufficient.
+Keep support, contradictions, timing sensitivity and competing explanations
+explicit. Private intent and missing counterfactual value stay unidentified.
+Unknown non-actions are not WAIT labels. No new model or replay is authorized.
+
+First output: complete logic tables on the predetermined timing sample, with
+observable evidence, alternatives, counterexamples and episode denominators.
+Do not spend on exact milliseconds if the economic explanation is unchanged.
+Same <=96 cases and <=0.035h all-in, no additional allowance; retain existing
+1.85h / 5.25h caps and comparison reservation. One bundled development/review
+round, no minor-fix loop. This note launches no measurement or implementation.
+<!-- /MAKER_DECISION_LOGIC_20261123_USER -->
+
 <!-- MAKER_DECISION_TIMING_20261123_USER -->
 ## 2026-11-23 — USER: estimate when makers quote and make decisions
 

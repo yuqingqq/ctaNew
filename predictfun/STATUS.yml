@@ -1,4 +1,19 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+maker_decision_logic_20261123_user:
+  plan: predictfun/reviews/automatic/20261123_maker_decision_logic/plan.md
+  status: user_requested_design_refinement_no_measurement
+  amends_primary_deliverable_of: 7d71ca40c
+  objective: economic_decision_chain_with_competing_explanations
+  timing_role: supporting_evidence
+  current_matched_gap_experiment: continue_unchanged
+  episode_unit: connected_orders_both_side_fills_takes_inventory
+  valuation: remaining_order_book_turnover_and_residual
+  private_intent_observed: false
+  additional_experiment_or_resource_allowance: false
+  inherited_packet_all_in_core_hours_cap: 0.035
+  inherited_maximum_detailed_cases: 96
+  no_new_fit_replay_or_data_launched: true
+
 maker_decision_timing_20261123_user:
   plan: predictfun/reviews/automatic/20261123_maker_decision_timing/plan.md
   status: user_requested_design_handoff_no_measurement
