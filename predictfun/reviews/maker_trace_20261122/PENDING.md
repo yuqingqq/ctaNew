@@ -1,5 +1,20 @@
 # MAKER-TRACE-RECONSTRUCTION-v1 — pending work
 
+## STATE 2026-11-23 21:35Z — COMPETING-TRANSITION-AND-CONTINUATION v1 (review a91f6bb52's next priority) — read this first
+
+**Reviews processed:**
+- a91f6bb52. Touch census, episode accounting and chain regrades accepted. Findings:
+  1. the 57% is of improvement creations, not of quote changes (4,897 two-side vs 8,298 one-side changed pairs);
+  2. 54 ms = frame endpoints, not latency;
+  3. exposure per market is 7.2–27.5 s (not 3–14) and the support failure is structural;
+  4. guards: END bound on takes, value cohort, response-context price join, completed-close decomposition.
+- Earlier: 01a72b4e2, 3f640ad9b, af916aba6, 6bb458b30, 6ddad3533, 8f2a2e753, 567f741d9.
+
+**Budget:** ≤ 0.030 h all-in; ledger 1.8947 of 2.00.
+
+**This is the last measurement in this line:** a thin or inconsistent answer ENDS it (review rule). Next: contract `competing_transition_contract.md`, then builders, then freeze, then runs, then the receipt `v2/report_logic_chains_v6.md`, then ONE review.
+
+
 ## STATE 2026-11-23 21:22Z — ROUND COMPLETE: LOGIC CHAINS v5 (touch transitions + responses + chains v4) — review pending — read this first
 
 **Receipt:** `v2/report_logic_chains_v5.md`.
