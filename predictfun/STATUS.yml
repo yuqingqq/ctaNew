@@ -605,7 +605,8 @@ ladder_async_fast_results_20261122_dev:
   batch_core_hours: 0.201
   line_core_hours: 2.375
 maker_trace_reconstruction_20261122_dev:
-  status: review_8f2a2e753_answered_waiting_user_go_matched_market_gap
+  status: matched_gap_results_done_review_pending
+  matched_gap: {our_close_c_sh: -1.90, rank1_close_c_sh: 0.75, top10_close_c_sh: 1.52, reading: our_turnover_loses_all_parties}
   closes_top10_c_sh: {maker_maker: 1.93, taker_maker: 3.95, maker_taker: -3.18, taker_taker: -1.59, all: 1.19}
   reading_top3: good_turnover_lost_to_residual
   v2: {checker: 39_of_39, r1: supported, t2: 5_of_16433, r2: no_defect, top10_net_usd: 35586}

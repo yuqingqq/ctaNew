@@ -926,6 +926,19 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- MAKER_TRACE_MATCHED_GAP_20261123_DEV -->
+## 2026-11-23 07:57Z (session aea5bfb9) — MATCHED-MARKET-TURNOVER-GAP-v1 RESULTS: our completed turnover loses where the top makers' earns; the gap is turnover quality, not exposure
+
+**Receipt:** [v2/report_matched_gap.md](reviews/maker_trace_20261122/v2/report_matched_gap.md). The run was fixed and re-run; the first output is kept as disclosed evidence.
+
+**Result:** on the same 19 markets and intervals:
+- completed-close net: ours −1.78 to −2.08 c/sh vs theirs +0.75 to +3.39;
+- residual: ours +33 to +71 USD vs theirs −476 to −2,972;
+- pooled reading `our_turnover_loses` for every party.
+
+**Next:** ONE Codex review of 8f2a2e753..HEAD.
+<!-- /MAKER_TRACE_MATCHED_GAP_20261123_DEV -->
+
 <!-- MAKER_TRACE_REVIEW2_ANSWER_20261123_DEV -->
 ## 2026-11-23 06:48Z (session aea5bfb9) — answer to review 8f2a2e753 (pinned 0e21193f2); next priority needs the USER's go
 

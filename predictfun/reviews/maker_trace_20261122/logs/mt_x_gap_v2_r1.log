@@ -1,0 +1,119 @@
+head=76921520ab40635cab08f1e5c845b2a06e843eca
+{
+ "outputs": {
+  "answer.json": null,
+  "closes_by_role.csv": 480,
+  "per_market.csv": 228
+ },
+ "checks": {
+  "accepted_value_c": {
+   "max_dev": 0.0,
+   "ok": true
+  },
+  "cross_view": {
+   "max_dev": 1.7053025658242404e-13,
+   "ok": true
+  },
+  "econ_fifo": {
+   "max_dev": 2.4211743721025414e-12,
+   "ok": true
+  },
+  "identity": {
+   "max_dev": 3.410605131648481e-13,
+   "ok": true
+  },
+  "mm_fee_fill": {
+   "max_dev": 7.105427357601002e-15,
+   "ok": true
+  },
+  "mm_net_pos": {
+   "max_dev": 1.4438228390645236e-11,
+   "ok": true
+  },
+  "party_identity": {
+   "max_dev": 3.410605131648481e-13,
+   "ok": true
+  },
+  "value_accounting": {
+   "max_dev": 4.263256414560601e-14,
+   "ok": true
+  },
+  "value_exact": {
+   "markets": 19,
+   "of": 19,
+   "ok": true
+  }
+ },
+ "statuses": {
+  "ours": {
+   "carry": {
+    "ok": 19
+   },
+   "zero": {
+    "ok": 19
+   }
+  },
+  "rank1": {
+   "carry": {
+    "ok": 19
+   },
+   "zero": {
+    "ok": 19
+   }
+  },
+  "rank2": {
+   "carry": {
+    "no_activity": 8,
+    "ok": 11
+   },
+   "zero": {
+    "no_activity": 8,
+    "ok": 11
+   }
+  },
+  "rank3": {
+   "carry": {
+    "ok": 17,
+    "no_activity": 2
+   },
+   "zero": {
+    "ok": 17,
+    "no_activity": 2
+   }
+  },
+  "top3": {
+   "carry": {
+    "ok": 19
+   },
+   "zero": {
+    "ok": 19
+   }
+  },
+  "top10": {
+   "carry": {
+    "ok": 19
+   },
+   "zero": {
+    "ok": 19
+   }
+  }
+ },
+ "vmhwm_mib": 192.11328125,
+ "cpu_s": {
+  "by_stage": {
+   "preflight": 0.002,
+   "ours": 0.328,
+   "markets": 0.018,
+   "fills_valued": 0.322,
+   "maker_market": 0.041,
+   "tob": 0.169,
+   "accounting": 0.18,
+   "tables": 0.095,
+   "hashes": 0.914,
+   "write": 0.017
+  },
+  "total": 2.085,
+  "cap": 120.0
+ }
+}
+2026-11-23T07:56:59Z tag=mt_x_gap_v2_r1 rc=0 peak_rss_mib=192 wall_s=2.43 cpu_user_s=2.13 memavail_start_gib=22 disk_free_gib=434->434 slot=claude
