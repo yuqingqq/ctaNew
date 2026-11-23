@@ -1,5 +1,11 @@
 # MAKER-TRACE-RECONSTRUCTION-v1 — pending work
 
+## STATE 2026-11-23 06:08Z — WAITING FOR THE CODEX REVIEW of 567f741d9..0e21193f2 (queued); nothing to run — read this first
+
+- **Done:** v2 (checker 39/39), the decision paths, the completed closes and the identifiability control, all committed and pushed.
+- **Auto-continue:** reply "waiting" unless a new commit with `Predictfun-Review-Only: true` appears after 0e21193f2. Then read it, verify it at the code, and report to the USER; start nothing that needs new resources (CPU 1.68 of 1.85).
+
+
 ## STATE 2026-11-23 01:47Z — AMENDMENT 3 IN PROGRESS (USER approved: lifecycle fix + top-3 decision paths; cap 1.85 h / line 5.25) — read this first
 
 **Running agents** (resume with SendMessage if a rate limit stopped them):

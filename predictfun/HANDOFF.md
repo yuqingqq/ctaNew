@@ -845,6 +845,22 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- MAKER_TRACE_REVIEW2_ANSWER_20261123_DEV -->
+## 2026-11-23 06:48Z (session aea5bfb9) — answer to review 8f2a2e753 (pinned 0e21193f2); next priority needs the USER's go
+
+**Review outcome:** it accepts the economics and the completed-close packet, and the v2 tie change as a declared scenario amendment. R4 is unchanged; only 4 lifecycle annotation columns differ.
+
+**Findings, all wording; superseded in [v2/report_interpretation_v3.md](reviews/maker_trace_20261122/v2/report_interpretation_v3.md):**
+1. Exit roles: replaced by "the value of replacing either action is unmeasured".
+2. Opposing-side vs absolute reduction: verified at the code. Takes still reduce |position| 58–59% of the time; rank 1's maker fills only 49%.
+3. Presentation wording fixed.
+4. The latent timing case is carried as a reuse limitation.
+
+The ledger now carries the review's ≤ 0.025 h, giving 1.705 of 1.85.
+
+**Next priority:** `MATCHED-MARKET-TURNOVER-GAP-v1`, a saved-data comparison of our CURRENT_ASYNC_FAST10 ledger vs the ex-ante top 3 / top 10 on the same 19 BOOK markets and intervals, with one FIFO accounting, carried-in inventory valued at the opening mark, and the same END mark. It needs ≤ 0.10 h including its review, which fits the caps. Per the USER's 11-14 rule (no run until the go after a review), it **waits for the USER's go**.
+<!-- /MAKER_TRACE_REVIEW2_ANSWER_20261123_DEV -->
+
 <!-- MAKER_TRACE_CLOSES_20261123_DEV -->
 ## 2026-11-23 06:07Z (session aea5bfb9) — MAKER-TRACE: review 567f741d9's next priority complete (completed closes + identifiability); combined receipt ready for ONE review
 
