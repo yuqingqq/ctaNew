@@ -1,0 +1,44 @@
+levels columns: ['mid', 'fid', 'side', 'ptick', 'shares', 'status', 'x_price']
+
+[1] posting_capacity_bound 20261024_3697902: failing ok rows 25 (hashes 11)
+  0x0159aa5ffd S_FIFO post_lo 1792816895631 cap 1792816895661 cum 10.0 cell ask 62 status ok [{'fid': 2128, 'fstatus': 'ok', 'n_levels': 99, 'cell_rows': [[9.99, 'ok']], 'in_my_book': True, 'my_shown': np.float64(9.99)}, {'contradicted_orders_at_cell': 0}]
+  0x07cfbd1a54 S_FIFO post_lo 1792816895631 cap 1792816895661 cum 10.0 cell ask 62 status ok [{'fid': 2128, 'fstatus': 'ok', 'n_levels': 99, 'cell_rows': [[9.99, 'ok']], 'in_my_book': True, 'my_shown': np.float64(9.99)}, {'contradicted_orders_at_cell': 0}]
+  0x15ed42807f S_FIFO post_lo 1792817028230 cap 1792817028329 cum 10.0 cell ask 59 status ok [{'fid': 4574, 'fstatus': 'ok', 'n_levels': 99, 'cell_rows': [[9.99, 'ok']], 'in_my_book': True, 'my_shown': np.float64(9.99)}, {'contradicted_orders_at_cell': 0}]
+  0x32b8a8094d S_FIFO post_lo 1792816895631 cap 1792816895661 cum 10.0 cell ask 62 status ok [{'fid': 2128, 'fstatus': 'ok', 'n_levels': 99, 'cell_rows': [[9.99, 'ok']], 'in_my_book': True, 'my_shown': np.float64(9.99)}, {'contradicted_orders_at_cell': 0}]
+  0x5e8f6b66d6 S_FIFO_LO post_lo 1792817001830 cap 1792817001968 cum 10.0 cell ask 46 status ok [{'fid': 4066, 'fstatus': 'ok', 'n_levels': 99, 'cell_rows': [[9.99, 'ok']], 'in_my_book': True, 'my_shown': np.float64(9.99)}, {'contradicted_orders_at_cell': 0}]
+  0x65b4360f6a S_FIFO post_lo 1792816895631 cap 1792816895661 cum 10.0 cell ask 62 status ok [{'fid': 2128, 'fstatus': 'ok', 'n_levels': 99, 'cell_rows': [[9.99, 'ok']], 'in_my_book': True, 'my_shown': np.float64(9.99)}, {'contradicted_orders_at_cell': 0}]
+  0x75ef9cd50b S_FIFO post_lo 1792816928724 cap 1792816928872 cum 15.0 cell bid 43 status ok [{'fid': 2740, 'fstatus': 'ok', 'n_levels': 99, 'cell_rows': [[14.99, 'ok']], 'in_my_book': True, 'my_shown': np.float64(14.99)}, {'contradicted_orders_at_cell': 0}]
+  0x95c6e080c0 S_FIFO post_lo 1792817028230 cap 1792817028329 cum 10.0 cell ask 59 status ok [{'fid': 4574, 'fstatus': 'ok', 'n_levels': 99, 'cell_rows': [[9.99, 'ok']], 'in_my_book': True, 'my_shown': np.float64(9.99)}, {'contradicted_orders_at_cell': 0}]
+  0xc5241991be S_FIFO_LO post_lo 1792816897479 cap 1792816897519 cum 10.0 cell ask 60 status ok [{'fid': 2162, 'fstatus': 'ok', 'n_levels': 99, 'cell_rows': [[9.99, 'ok']], 'in_my_book': True, 'my_shown': np.float64(9.99)}, {'contradicted_orders_at_cell': 0}]
+  0xd8f2e969c6 S_FIFO post_lo 1792817028230 cap 1792817028329 cum 10.0 cell ask 59 status ok [{'fid': 4574, 'fstatus': 'ok', 'n_levels': 99, 'cell_rows': [[9.99, 'ok']], 'in_my_book': True, 'my_shown': np.float64(9.99)}, {'contradicted_orders_at_cell': 0}]
+  0xf618fbf3f7 S_FIFO post_lo 1792817028230 cap 1792817028329 cum 10.0 cell ask 59 status ok [{'fid': 4574, 'fstatus': 'ok', 'n_levels': 99, 'cell_rows': [[9.99, 'ok']], 'in_my_book': True, 'my_shown': np.float64(9.99)}, {'contradicted_orders_at_cell': 0}]
+  cap-frame causes (first 40 hashes): {('cell_known', 'ok'): 11}
+
+[2] queue patterns among unresolved hashes (314): [(((np.float64(0.0), np.float64(0.0), np.float64(-99.0)), (np.float64(-99.0), np.float64(-99.0), np.float64(-99.0))), 314)]
+
+[3] priority_exhaustion 20261024_3697902: 4 rows; their statuses: [('ok', 4)]
+    0x0f6299c760 [['S_FIFO', 'cancelled_or_expired|exhausted', nan, 134.00000000000003, 'ok'], ['S_FIFO_LO', 'cancelled_or_expired|exhausted', nan, 134.00000000000003, 'ok']]
+     legs [['01a16c39-e30e-7723-a3dd-c951df1667f7', 1, 2, 99, 41.60414933828076, 1792817095438, 'ok'], ['01a16c39-e5b4-71d3-a82d-3b072e42d1cb', 0, 1, 99, 1.0101010101010102, 1792817096116, 'ok'], ['01a16c39-e5ca-7132-89b0-024d125f98a0', 0, 1, 99, 50.505050505050505, 1792817096138, 'ok'], ['01a16c39-e61a-7d00-8a1b-32d3ee52627e', 0, 1, 99, 30.3, 1792817096218, 'ok'], ['01a16c39-ea28-71e1-a651-24abb4b62911', 0, 1, 99, 1.02, 1792817097256, 'ok'], ['01a16c39-ea29-7f41-8e18-d8841c3e7cd5', 0, 1, 99, 1.02, 1792817097257, 'ok'], ['01a16c39-ea2b-77a0-a2fd-315a75c2ec08', 0, 1, 99, 1.02, 1792817097259, 'ok'], ['01a16c39-ea31-7391-a75b-e400fce4f715', 0, 1, 99, 1.02, 1792817097265, 'ok'], ['01a16c39-ea31-7391-a75b-e422ed20f729', 0, 1, 99, 1.02, 1792817097265, 'ok'], ['01a16c39-ea31-7391-a75b-e416a3c09518', 0, 1, 99, 1.02, 1792817097265, 'ok'], ['01a16c39-ea31-7391-a75b-e43f6c0643fe', 0, 1, 99, 1.02, 1792817097265, 'ok'], ['01a16c39-ea33-7a03-9aba-4b7dc06c6be9', 0, 1, 99, 1.02, 1792817097267, 'ok'], ['01a16c39-ea35-7891-9fcc-ce5344d08cb6', 0, 1, 99, 1.02, 1792817097269, 'ok'], ['01a16c39-ea39-7160-af39-a99b16fcfb87', 0, 2, 99, 0.380699146567719, 1792817097273, 'ok'], ['01a16c39-ea39-7160-af39-a98903c903ca', 0, 1, 99, 1.02, 1792817097273, 'ok']]
+    0x13c46bf84f [['S_FIFO', 'cancelled_or_expired|exhausted', nan, 10.0, 'ok'], ['S_FIFO_LO', 'cancelled_or_expired|exhausted', nan, 10.0, 'ok']]
+     legs [['01a16c36-0bf7-7f53-8cd3-e89e4574b527', 0, 2, 61, 1.6393, 1792816843767, 'ok'], ['01a16c36-0bfb-7230-9c9a-bed1740022df', 0, 1, 61, 5.0, 1792816843771, 'ok'], ['01a16c36-0bfb-7230-9c9a-bee644dea3df', 0, 2, 61, 3.3607, 1792816843771, 'ok']]
+
+[4] priority_ahead_lo 20261024_3697902: 3 rows (checker recount with pe_req only)
+    0x1b6921879f mine [['S_FIFO', 0.0, 'ok'], ['S_FIFO_LO', 0.0, 'ok']] checker [3.3607]
+     first-fill record [('0x13c46b', 0, 61, 3.3607), ('0x1b6921', 1, 61, 1.6393)] other fills of the group members: {'0x13c46b': [1792816843767, 1792816843771, 1792816843771], '0x1b6921': [1792816843771, 1792816843773, 1792816843773, 1792816843776, 1792816843778, 1792816843782, 1792816844006, 1792816844505]}
+    0xbe8a279d12 mine [['S_FIFO_LO', 0.0, 'ok']] checker [0.380699146567719]
+     first-fill record [('0x0f6299', 0, 99, 0.380699146567719), ('0xbe8a27', 1, 99, 0.639300853432281)] other fills of the group members: {'0x0f6299': [1792817095438, 1792817096116, 1792817096138, 1792817096218, 1792817097256, 1792817097257, 1792817097259, 1792817097265, 1792817097265, 1792817097265, 1792817097265, 1792817097267, 1792817097269, 1792817097273, 1792817097273], '0xbe8a27': [1792817097273, 1792817097274, 1792817097274, 1792817097280, 1792817097285, 1792817097708, 1792817097716, 1792817097718, 1792817097722, 1792817097722, 1792817097722, 1792817097726, 1792817097730, 1792817097733, 1792817097791, 1792817100182]}
+
+[5] T2 20261025_3734864: lifecycle {'groups': 379, 'violations': 0, 'rate': 0.0, 'violations_certain': 0, 'rate_certain': 0.0, 'survivor_groups': 166, 'no_survivor_groups': 213, 'min_exhausted_in_no_survivor_groups': 369, 'groups_tie': 12, 'groups_invalid': 0, 'unit': 'records with >= 2 makers at their worst price (valid orders, no tie); violation = >= 2 of them fill again later'}; checker groups with >= 2 refilling: 1
+    01a171ec-fc9 [('0xa7af86', 13.0, 1792912719007), ('0x92583c', 17.0, 1792912719007)] {'0xa7af86': [1792912719001, 1792912719001, 1792912719005, 1792912719007, 1792912719289], '0x92583c': [1792912719007, 1792912719007, 1792912719008]} [('0xa7af86', 'capacity_bounds_void+clock_capacity_conflict'), ('0x92583c', 'ok')]
+
+[5] T2 20261108_4353706: lifecycle {'groups': 223, 'violations': 0, 'rate': 0.0, 'violations_certain': 0, 'rate_certain': 0.0, 'survivor_groups': 118, 'no_survivor_groups': 105, 'min_exhausted_in_no_survivor_groups': 189, 'groups_tie': 15, 'groups_invalid': 0, 'unit': 'records with >= 2 makers at their worst price (valid orders, no tie); violation = >= 2 of them fill again later'}; checker groups with >= 2 refilling: 1
+    01a1bbaf-a1c [('0x4d24f4', 0.05, 1794150212046), ('0xb0b7e3', 9.95, 1794150212046)] {'0x4d24f4': [1794150212046, 1794150212046, 1794150212156], '0xb0b7e3': [1794150212046, 1794150212051]} [('0x4d24f4', 'ahead_hi_negative+capacity_bounds_void+clock_capacity_conflict'), ('0xb0b7e3', 'ahead_hi_negative')]
+
+[6] H2 20261108_4334454: 3 rows: [['S_FIFO', 3, -1, -1, 1794118177927, 1794118178702, 'unresolved', 'leg_off_grid+subcent_price'], ['S_FIFO_LO', 3, -1, -1, 1794118177927, 1794118178702, 'unresolved', 'leg_off_grid+subcent_price'], ['S_NOPRIO', 3, -1, -1, 1794118177927, 1794118178702, 'unresolved', 'leg_off_grid+subcent_price']]
+
+[7] tob best_ask_sh mismatches 0; frame statuses [] examples []
+
+[7] tob best_bid_sh mismatches 0; frame statuses [] examples []
+
+VmHWM 356.7
+2026-11-23T01:39:50Z tag=mt_life_fix4_diag rc=0 peak_rss_mib=356 wall_s=9.14 cpu_user_s=8.88 memavail_start_gib=22 disk_free_gib=440->440 slot=claude3

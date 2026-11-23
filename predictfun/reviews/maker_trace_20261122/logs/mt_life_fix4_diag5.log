@@ -1,0 +1,5 @@
+{'hash:boundary': 7, 'hash:display': 39, 'hash:violated': 69, 'rows:boundary': 7, 'rows:display': 91, 'rows:violated': 198}
+  display ('20261024_3697902', '0x0159aa5ffd', 1792816895661, 1792816917162, 10.0, 9.99, 0.0, 0, [['S_FIFO', 1792816895631], ['S_FIFO_LO', 1792816895631], ['S_NOPRIO', 1792816895631]])
+  boundary ('20261024_3699278', '0x160ea5c31d', 1792819700564, 1792819700564, 10.0, 4.0, 0.0, 0, [['S_FIFO_LO', 1792819700519]])
+  violated ('20261024_3700070', '0x4b2bbd4386', 1792824407691, 1792824418080, 2.0, 0.0, 2.4374, 1, [['S_FIFO', 1792824361143], ['S_FIFO_LO', 1792824361143], ['S_NOPRIO', 1792824361143]])
+2026-11-23T02:14:59Z tag=mt_life_fix4_diag5 rc=0 peak_rss_mib=313 wall_s=24.13 cpu_user_s=23.01 memavail_start_gib=22 disk_free_gib=440->440 slot=claude3

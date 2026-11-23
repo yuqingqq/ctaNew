@@ -1,0 +1,35 @@
+{
+ "amend3_commit": "9da9c2e61",
+ "amendment": "amend4_lifecycle_and_checker_fixes_plus_btc_grid",
+ "asof": "2026-11-23T02:24:50Z",
+ "changed": {
+  "predictfun/research/pf_mt_btc.py": "a97874087c987220eb7b359b1f04b35f7a5071cd822e1212ae54a9c77cac41d7",
+  "predictfun/research/pf_mt_btc_selftest.py": "f435ec1ef08e0a2a1c0868800613f6fc921d5938aec0579493e8d84b5846ae52",
+  "predictfun/research/pf_mt_lifecycle.py": "8915ed63a6b0965dfe4f08e540cbe90d57aa23863a73f8a2a94ff7349fcef62b",
+  "predictfun/research/pf_mt_lifecycle_selftest.py": "126a057ea5538f363a73fe01989b3421e96cdd87e8460d52bd34ddb7b0ed57fc",
+  "predictfun/reviews/maker_trace_20261122/launch_mt.sh": "95bdb4a28485c918a1f896c6f88991a02349e8d4344bdd96d68eee7513f3c257",
+  "predictfun/reviews/maker_trace_20261122/mt_checks.py": "7ca23c94c07947d6f0ed535c6628e628143112c3cdd7fcb0daf6ba8e052b68ec",
+  "predictfun/reviews/maker_trace_20261122/tools/rehearse_e2e.py": "c3c5c5b41a680841efede4b8f300aa214e9fec3273345ab33e3e6c0326e6bd10"
+ },
+ "evidence": {
+  "btc": "selftest 141/141; probe 1.94 CPU s for the largest hour (mt_btc_*)",
+  "checker": "rehearsal 39/39 checks, 76/76 falsifier (mt_checks_rehearse_v2fix)",
+  "e2e": "run 9: 39/39 checks, 22/22 reparse, 76/76 falsifier (mt_e2e_9)",
+  "lifecycle": "selftest 199/199; simulator 0 of 23,668 observed/constrained claims failed; targeted mutants 23/23 (logs mt_life_fix4_*)"
+ },
+ "manifest_sha256": "d8300bb6cd6709593a2e44b99cc702eefb34c0acaebe7f9ee2bec1b591a8460e",
+ "verdicts": {
+  "checker": [
+   "posting_capacity_bound / rp_capacity (0.01-share display tolerance, strict frame test, violated cells unknown)",
+   "tob_from_levels (empty side = size 0.0)"
+  ],
+  "extractor": "not wrong",
+  "lifecycle": [
+   "priority_exhaustion",
+   "priority_ahead_lo",
+   "priority_tests_T1_T2 (same-settle-ms groups voided)",
+   "class_scenario_consistency (S_NOPRIO trivial ahead_lo)",
+   "H2_presence (persistence span for every order)"
+  ]
+ }
+}

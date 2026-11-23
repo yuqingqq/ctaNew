@@ -28,11 +28,13 @@ Declared premises and rules (none fitted; constants below):
     maker on the taker's side gets no price-time inference.
  H1 a hash has one (signer, YES side, tick, price, quote, indexSet), also against its own taker legs, else identity_conflict; a hash twice
     in one record (dup_hash_in_record), with an unplaceable / off-grid / malformed leg (unplaceable_leg, subcent_price, malformed_identity)
-    is likewise kept, not used for presence / capacity, its classes unresolved.
+    is likewise kept, never used for book presence / capacity / priority (post / queue / removal unresolved); its persistence span needs
+    only its fills and is kept (observed) unless the hash may not be one order (NO_PRESENCE: identity_conflict, malformed_identity).
  H2 proven presence: frames [min f_after, max fb_h] (hard; fb_h = the last frame before hi - MAX_LAG_MS) / [min pos + 1, max pos] under
     a scenario's fill clock (pos = the last frame not reflecting the fill); persistence (persist_lo / hi) = the certain span [min hi, max
     x_lo_hard_ms], the same in every scenario row; observed only when it is non-empty (else -1 / -1, unresolved).
- H3 at every usable frame, shown(side, tick) >= the sum over the orders proven present there of their fills after it, else a status
+ H3 at every usable frame, shown(side, tick) >= the sum over the orders proven present there of their fills after it (less TOL_SH per
+    order accounted, _tol: the venue shows some orders 0.01 sh short and the shortfalls add up; a posting test adds the order itself), else a status
     (capacity_contradiction = hard window logic, clock_capacity_conflict = only under a scenario's clock), never fitted away: the order's
     capacity claims are then void in that context (capacity_bounds_void), the violated cells unknown for every other order, and none of
     its size / posting / removal classes is constrained. Under each scenario: posting lower bound = the latest frame before presence whose room (shown less the others' needs) < the order's fills
@@ -43,16 +45,19 @@ Declared premises and rules (none fitted; constants below):
     makers[] order (mk_idx) is data, never evidence (amendment 1: real records list makers worst-first 66 %, best-first 8 %, neither 26 %).
     price_time adds, from prices and later fills only: (1) in a record spanning >= 2 YES prices every maker strictly better for the taker
     than the record's worst maker price was consumed: exhausted there (size_exact = cum); (2) of the k >= 2 makers at the record's worst
-    price at most one keeps a balance: if exactly one fills again later (settle order; a tie voids the group) the other k - 1 are
-    exhausted there and the survivor had their shares ahead (ahead_lo), if none does only the count constraint is reported; (3) after a
+    price at most one keeps a balance: if exactly one fills again later (a strictly later settle ms; fills of one settle ms are unordered
+    and never 'later', so a tie never voids a group: FIFO itself orders a tied fill first) the other k - 1 are exhausted there and the
+    survivor had their shares ahead (ahead_lo), if none does only the count constraint is reported; an order exhausted at its last settle ms
+    is claimed whichever of its fills there carries the rule, but exhausted in two records of that ms it is FIFO-inconsistent
+    (fifo_tie_conflict, no claim); an order with a receipt-hi fill has no reliable sequence (no rule, out of T1 / T2); (3) after a
     fill an order with a balance is at the front of its price, so the first later record (taker of another signer) reaching its price on
     its side bounds its removal (fifo_front) and a later fill's queue frame has nothing ahead; a record trading strictly through its price
     before its first fill bounds its posting (fifo_through). Queue at the queue frame (f_before, else the clock's frame before the fill)
     of the first fill (min hi, then record order): [ahead_lo, ahead_hi] = [rule-2 shares else 0, shown there - the order's fills after it];
     a raw ahead_hi in [-TOL_SH, 0) is clipped to 0 (ahead_hi_clipped), below -TOL_SH the order was not resting there (H3): NaN
     (ahead_hi_negative). Priority tests: T1 price = rule-1 makers whose order fills again later; T2 time = rule-2 groups with >= 2 members
-    filling again later; each on the settle order and window-certain (x_lo_hard_j >= hi_i), with denominators (tied legs / groups
-    excluded). Contradictions: queue_contradiction (ahead_lo > ahead_hi), post_after_first_fill. Violators get statuses
+    filling again later; each on the settle order (strictly later settle ms) and window-certain (x_lo_hard_j >= hi_i), with
+    denominators (tied legs / groups counted and included; receipt-hi ones excluded). Contradictions: queue_contradiction (ahead_lo > ahead_hi), post_after_first_fill. Violators get statuses
     fifo_reappearance / fifo_time_violation and no exhaustion claim.
  R  removal_set = every REMOVAL member not excluded: exhausted always (original size unknown); cancelled_or_expired unless exhaustion is
     proven by an S_FIFO rule (fifo_price / fifo_time; the book - book_gone, capacity_tight - proves only GONE); end_censored when no removal bound up to the last usable frame (or the only bound is a
@@ -64,7 +69,8 @@ Declared premises and rules (none fitted; constants below):
     inside its window and any priority rule; each scenario reports the tighter of it and its own bound): persistence (>= 2 fills) and the
     size lower bound are observed; every scenario equal to a non-trivial scenario-free result = constrained; any scenario different =
     assumption_sensitive (two clocks agreeing by coincidence are not H1-H3: found by the selftest's FIFO simulator); no non-trivial bound
-    anywhere = unresolved (posting / queue / removal); queue has no scenario-free result.
+    anywhere = unresolved (posting / queue / removal); queue has no scenario-free result: S_NOPRIO reports the trivial [0, NaN], so the
+    queue is assumption_sensitive exactly when a FIFO scenario reports anything else, else unresolved.
  L  x_links per signer and YES side: each hash's latest predecessor (last fill strictly before its first fill) at the same tick (refill)
     and at another tick (reprice), with the gap; descriptive only (unfilled orders are invisible).
 Statuses: '+'-joined sorted flags ('ok' = none), extract flags carried as leg_<flag>; removal_set '|'-joined sorted REMOVAL members.
@@ -84,8 +90,11 @@ import pf_mt_common as C  # noqa: E402
 
 need = C.need
 GAP_MS = 1000                       # usable frames further apart bound an unknown span (contract section 5)
-TOL_SH = 0.01                       # displayed sizes are rounded to 0.01 sh (EXPLORATION_2026-11-01 sec. 11: 395.97 - 114.334 -> 281.64)
+TOL_SH = 0.01                       # displayed sizes are rounded to 0.01 sh (EXPLORATION_2026-11-01 sec. 11: 395.97 - 114.334 -> 281.64),
+#                                     PER ORDER: real BOOK cells show some orders 0.01 short and the shortfalls add up (2026-10-24 3697902
+#                                     ask 62: 10 -> 9.99, then 279.98 for 10 + 145 + 125), so H3 allows TOL_SH x the orders accounted (_tol)
 PEND_REL, PEND_ABS = 0.011, 0.01    # pending value match (pf_step1_timing)
+NO_PRESENCE = frozenset(('identity_conflict', 'malformed_identity'))   # the hash may not be one order: no persistence span from its fills
 DROP_REL, DROP_ABS = 0.10, 0.5      # drop size tolerance (pf_step1_booktime E4)
 USABLE_FRAME = frozenset(('dup', 'same_ms_changed', 'new_conn', 'gap', 'off_grid', 'dup_level'))
 NT = 101
@@ -397,7 +406,7 @@ def _orders(L, records, X, place, sub, xf):
         lb = X['lo_h'][ii][X['lo_h'][ii] >= 0]                       # removal_lo / persistence use the evidence-free lower ends (B2)
         O['rlo'][o] = int(lb.max()) if len(lb) else -1
         O['n_unb'][o] = int((lo[ii] < 0).sum())
-        if O['valid'][o] and len(ii) >= 2 and len(lb) and int(lb.max()) >= O['first_hi'][o]:
+        if not (fl & NO_PRESENCE) and len(ii) >= 2 and len(lb) and int(lb.max()) >= O['first_hi'][o]:     # H2 needs only the fills
             O['p_lo'][o], O['p_hi'][o] = O['first_hi'][o], int(lb.max())
     O['oid'] = oid
     return O
@@ -434,15 +443,28 @@ def _need(F, nc, start, end, c, q, m):
     return np.cumsum(d[:F], 0)
 
 
-def _room(SH, nd, vm):
+def _count(F, nc, a, b, oc, m):
+    """orders proven present per (frame, cell): +1 over each masked order's presence frames [a, b] (where its need is positive)."""
+    d = np.zeros((F + 1, nc), np.int64)
+    m = m & (a <= b) & (b >= 0) & (oc >= 0)
+    np.add.at(d, (a[m], oc[m]), 1); np.add.at(d, (b[m] + 1, oc[m]), -1)
+    return np.cumsum(d[:F], 0)
+
+
+def _tol(n):
+    """H3 display tolerance for n orders in the accounting: each may show up to TOL_SH short (+1e-9: exact 0.01 shortfalls in float)."""
+    return TOL_SH * np.maximum(n, 1) + 1e-9
+
+
+def _room(SH, nd, vm, nn):
     """room for an order not proven present: shown less the others' proven needs; NaN where the cell is unknown or the accounting is violated."""
-    r = np.where(nd <= SH + TOL_SH, SH - nd, SH)
+    r = np.where(nd <= SH + _tol(nn), SH - nd, SH)
     r[vm] = np.nan
     return r
 
 
-def _viol(SH, nd):
-    v = SH < nd - TOL_SH
+def _viol(SH, nd, nn):
+    v = SH < nd - _tol(nn)
     return v, np.vstack([np.zeros((1, SH.shape[1]), np.int64), np.cumsum(v, 0)])
 
 
@@ -463,9 +485,10 @@ def _hard(X, O, B, K, we_ms):
     aw = np.full(H, F + 1, np.int64); np.minimum.at(aw, oid, fa)
     bw = np.full(H, -2, np.int64); np.maximum.at(bw, oid, fb)
     nd = _need(F, K['nc'], aw[oid], np.minimum(bw[oid], fb), c, q, vf & (fb >= 0))
-    viol, P = _viol(SH, nd)
+    nn = _count(F, K['nc'], aw, bw, K['oc'], O['valid'])            # orders in the accounting: each may show TOL_SH short
+    viol, P = _viol(SH, nd, nn)
     slack = np.where(viol, np.nan, SH - nd)
-    room = _room(SH, nd, viol)
+    room = _room(SH, nd, viol, nn)
     out = dict(viol=np.zeros(H, np.int64), size_ub=np.full(H, NAN), tight=np.zeros(H, bool), post=np.full(H, -1, np.int64),
                rhi=np.full(H, -1, np.int64), rm=[[] for _ in range(H)], miss=np.zeros(H, bool), viol_cells=int(viol.sum()), vmask=viol)
     for o in range(H):
@@ -483,7 +506,8 @@ def _hard(X, O, B, K, we_ms):
                 own = np.zeros(min(ao, F))
                 for i in fi[fb[fi] >= 0]:
                     own[:min(int(fb[i]), len(own) - 1) + 1] += q[i]
-                j = np.flatnonzero((room[:len(own), co] < own - TOL_SH) & (own > TOL_SH))
+                shv = np.where(viol[:len(own), co], np.nan, SH[:len(own), co])          # the single-order form too: never looser than it
+                j = np.flatnonzero(((room[:len(own), co] < own - _tol(1 + nn[:len(own), co])) | (shv < own - _tol(1))) & (own > TOL_SH))
                 if len(j):
                     out['post'][o] = int(t[j[-1]])
             if g0 < F:
@@ -514,13 +538,16 @@ def _scenario(name, L, X, O, B, K, Hd, we_ms):
     a = np.full(H, F + 1, np.int64); np.minimum.at(a, oid, pos + 1)
     b = np.full(H, -2, np.int64); np.maximum.at(b, oid, pos)
     nd = _need(F, K['nc'], a[oid], np.minimum(b[oid], pos), c, q, vf)
-    viol, P = _viol(SH, nd)
+    nn = _count(F, K['nc'], a, b, K['oc'], O['valid'])                # orders in the accounting: each may show TOL_SH short
+    viol, P = _viol(SH, nd, nn)
     vm = viol | Hd['vmask']                                            # violated cells are unknown for every other order (B1)
     slack = np.where(vm, np.nan, SH - nd)
-    room = _room(SH, nd, vm)
-    rank = X['rank']; seq = hi                                         # event sequence: settle order, ties by record rank (never the clock)
+    room = _room(SH, nd, vm, nn)
+    rank = X['rank']; seq = hi                     # event sequence: settle order; the fills of one settle ms are unordered, none 'later'
     T = Counter()
     exh = np.zeros(N, bool); exh_p = np.zeros(N, bool); alo = np.zeros(N); later = np.zeros(N, bool); tie = np.zeros(N, bool); tviol = set()
+    unord = np.zeros(H, bool); np.logical_or.at(unord, oid, X['rcpt'])      # an order with a receipt-hi fill has no reliable sequence
+    tconf = np.zeros(H, bool)
     RS = {}
     if prio:
         later_c = np.zeros(N, bool)
@@ -528,28 +555,31 @@ def _scenario(name, L, X, O, B, K, Hd, we_ms):
             fi = O['fills'][o]
             if O['valid'][o] and len(fi) > 1:
                 sqf = seq[fi]
-                later[fi] = sqf < sqf.max()                                         # the order fills again later (settle order)
+                later[fi] = sqf < sqf.max()                                         # the order fills again STRICTLY later (a later settle ms)
                 later_c[fi] = ((lo_h[fi][None, :] >= hi[fi][:, None]) & (lo_h[fi][None, :] >= 0)).any(1)   # certainly later (B2 ends)
-                tie[fi] = (sqf[:, None] == sqf[None, :]).sum(1) >= 2
-        tie |= X['rcpt']                                                            # a receipt-hi fill has no reliable place in the sequence
+                tie[fi] = (sqf[:, None] == sqf[None, :]).sum(1) >= 2              # another fill in the same settle ms (counted, never voids)
         exh_p = X['exh_p'] & vf                                                     # rule 1 (price priority)
-        u1 = exh_p & ~tie
+        u1 = exh_p & ~unord[oid]
         T.update(T1_makers=int(u1.sum()), T1_violations=int((u1 & later).sum()), T1_violations_certain=int((u1 & later_c).sum()),
-                 T1_ties=int((exh_p & tie).sum()))
-        exh |= exh_p
+                 T1_ties=int((u1 & tie).sum()), T1_receipt_hi=int((exh_p & unord[oid]).sum()))
+        exh |= exh_p & ~unord[oid]
         for mem in X['groups'].values():                                            # rule 2 (time priority at the worst price)
             if not vf[mem].all():
                 T['T2_groups_invalid'] += 1; continue
-            if tie[mem].any():
-                T['T2_groups_tie'] += 1; continue
-            A = mem[later[mem]]
-            T['T2_groups'] += 1; T['T2_violations'] += int(len(A) >= 2); T['T2_violations_certain'] += int(later_c[mem].sum() >= 2)
+            if unord[oid[mem]].any():
+                T['T2_groups_receipt_hi'] += 1; continue
+            A = mem[later[mem]]            # strictly later: a member whose only other fill shares this settle ms is not (FIFO puts that fill first)
+            T['T2_groups'] += 1; T['T2_groups_tie'] += int(tie[mem].any())
+            T['T2_violations'] += int(len(A) >= 2); T['T2_violations_certain'] += int(later_c[mem].sum() >= 2)
             if len(A) >= 2:
                 tviol |= set(oid[A].tolist())
             elif len(A) == 1:
                 oth = mem[mem != A[0]]; exh[oth] = True; alo[A[0]] = float(q[oth].sum()); T['T2_survivor_groups'] += 1
             else:
                 T['T2_no_survivor_groups'] += 1; T['T2_min_exhausted'] += len(mem) - 1
+        smax = np.full(H, -1, np.int64); np.maximum.at(smax, oid, seq)
+        tconf = np.bincount(oid[exh & (seq == smax[oid])], minlength=H) >= 2     # exhausted in two records of its last settle ms: FIFO-inconsistent
+        T['tie_conflicts'] = int(tconf.sum())
         r = X['rec'][X['rec'].side >= 0].copy()
         r['ts'] = np.where(r.lo >= 0, np.maximum(r.lo, r.lo_h), r.lo_h) if loc else r.hi   # placement (the clock) of each record
         r = r.sort_values(['hi', 'rank'], kind='stable')                                 # sequence (settle order)
@@ -561,7 +591,7 @@ def _scenario(name, L, X, O, B, K, Hd, we_ms):
                ahi_raw=np.full(H, NAN), rm_set=np.full(H, '|'.join(sorted(C.REMOVAL)), object), rm_hi=np.full(H, -1, np.int64),
                rm_m=np.full(H, 'none', object), clock_viol=np.zeros(H, np.int64), flags=[set() for _ in range(H)],
                f_ahi=np.full(N, NAN), f_alo=np.where(prio, alo, NAN),
-               f_exh=exh & ~np.isin(oid, oid[exh_p & later]) & ~(exh_p & tie))
+               f_exh=exh & ~np.isin(oid, oid[exh_p & later]) & ~tconf[oid])
     for o in range(H):
         if not O['valid'][o]:
             continue
@@ -586,15 +616,17 @@ def _scenario(name, L, X, O, B, K, Hd, we_ms):
                 fl.add('fifo_reappearance')
             if o in tviol:
                 fl.add('fifo_time_violation')
-            if exh[fL] and tie[fL]:
-                fl.add('fill_order_tie')
-            exhL = bool(exh[fL]) and not tie[fL] and not t1 and o not in tviol
-            ekind = 'fifo_price' if exh_p[fL] else 'fifo_time'
+            if tconf[o]:
+                fl.add('fifo_tie_conflict')
+            xl = fi[exh[fi] & (sqf == sqf.max())]          # the exhausting fill among those of its last settle ms (FIFO orders the others first)
+            exhL = len(xl) == 1 and not t1 and o not in tviol
+            ekind = 'fifo_price' if (len(xl) and exh_p[xl[0]]) else 'fifo_time'
         ub = [x for x in ((cum + max(minsl, 0.)) if not np.isnan(minsl) else NAN, Hd['size_ub'][o]) if not np.isnan(x)]
         out['size_ub'][o] = cum if exhL else (min(ub) if ub else NAN)
         out['size_exact'][o] = cum if exhL else NAN                      # size_exact only from the S_FIFO price / survivor rules
         # posting: capacity (frames before presence, where all the order's fills are after the frame) and fifo_through
-        j = np.flatnonzero(room[:ao, co] < cum - TOL_SH) if (ao > 0 and cap_ok) else ()
+        j = (np.flatnonzero((room[:ao, co] < cum - _tol(1 + nn[:ao, co]))                                 # joint: this order + the others
+                            | (np.where(vm[:ao, co], np.nan, SH[:ao, co]) < cum - _tol(1))) if (ao > 0 and cap_ok) else ())   # single-order form
         pcap = int(t[j[-1]]) if len(j) else -1
         pff = -1
         if prio:
@@ -636,6 +668,8 @@ def _scenario(name, L, X, O, B, K, Hd, we_ms):
                     out['ahi'][o] = raw
             if not np.isnan(out['ahi'][o]) and out['alo'][o] > out['ahi'][o] + TOL_SH:
                 fl.add('queue_contradiction')
+        else:
+            out['alo'][o] = 0.                     # no priority: only the trivial [0, NaN], the value a FIFO scenario reports without evidence
         # removal
         if exhL:
             rset = {'exhausted'}; rhi = int(hi[fL]); rm = [ekind]
@@ -691,9 +725,10 @@ def _classes(O, S, Hd):
     assumption_sensitive; all trivial -> unresolved (size: observed, its lower bound being read directly)."""
     H = O['H']; cl = {f: np.empty(H, object) for f in ('size', 'post', 'persist', 'queue', 'removal')}
     for o in range(H):
+        span = C.OBSERVED if (O['n'][o] >= 2 and O['p_lo'][o] >= 0) else C.UNRESOLVED     # B3: a non-empty certain span (fills only)
         if not O['valid'][o]:
-            cl['size'][o] = C.OBSERVED
-            for f in ('post', 'persist', 'queue', 'removal'):
+            cl['size'][o], cl['persist'][o] = C.OBSERVED, span          # no book / priority use; the span is -1 / -1 under NO_PRESENCE
+            for f in ('post', 'queue', 'removal'):
                 cl[f][o] = C.UNRESOLVED
             continue
         hz = (NAN, float(Hd['size_ub'][o]))
@@ -701,10 +736,9 @@ def _classes(O, S, Hd):
         cl['size'][o] = (C.OBSERVED if np.isnan(hz[0]) and np.isnan(hz[1]) else C.CONSTRAINED) if _same(sz) else C.SENSITIVE
         pl = [int(Hd['post'][o])] + [int(S[s]['post_lo'][o]) for s in SCEN]
         cl['post'][o] = (C.UNRESOLVED if pl[0] < 0 else C.CONSTRAINED) if _same(pl) else C.SENSITIVE
-        cl['persist'][o] = C.OBSERVED if (O['n'][o] >= 2 and O['p_lo'][o] >= 0) else C.UNRESOLVED     # B3: a non-empty certain span
-        qu = [(float(S[s]['alo'][o]), float(S[s]['ahi'][o])) for s in SCEN]          # no scenario-free queue: (NaN, NaN)
-        nontriv = any((not np.isnan(x) and x > TOL_SH) or not np.isnan(y) for x, y in qu)
-        cl['queue'][o] = C.SENSITIVE if nontriv else C.UNRESOLVED
+        cl['persist'][o] = span
+        qu = [(float(S[s]['alo'][o]), float(S[s]['ahi'][o])) for s in SCEN]          # no scenario-free queue; S_NOPRIO = the trivial (0, NaN)
+        cl['queue'][o] = C.UNRESOLVED if _same(qu) else C.SENSITIVE                    # any FIFO value beyond the trivial one differs from it
         rw = Hd['rhi'][o]
         hset = ({'exhausted', 'cancelled_or_expired'} | ({'end_censored'} if rw < 0 else set()) | ({'missing_evidence'} if Hd['miss'][o] else set()))
         rv = [('|'.join(sorted(hset)), int(O['rlo'][o]), int(rw))] + [(S[s]['rm_set'][o], int(O['rlo'][o]), int(S[s]['rm_hi'][o])) for s in SCEN]
@@ -819,14 +853,19 @@ def run_market(legs, records, frames, levels, market):
         pt[s] = dict(
             T1_price=dict(makers=T['T1_makers'], violations=T['T1_violations'], rate=rate(T['T1_violations'], T['T1_makers']),
                           violations_certain=T['T1_violations_certain'], rate_certain=rate(T['T1_violations_certain'], T['T1_makers']), ties=T['T1_ties'],
-                          unit='maker legs strictly better than their record worst price (valid orders); violation = the order fills again later'),
+                          receipt_hi_excluded=T['T1_receipt_hi'],
+                          unit='maker legs strictly better than their record worst price (valid orders, none with a receipt-hi fill; tied legs '
+                               'included); violation = the order fills again in a later settle ms'),
             T2_time=dict(groups=T['T2_groups'], violations=T['T2_violations'], rate=rate(T['T2_violations'], T['T2_groups']),
                          violations_certain=T['T2_violations_certain'], rate_certain=rate(T['T2_violations_certain'], T['T2_groups']),
                          survivor_groups=T['T2_survivor_groups'], no_survivor_groups=T['T2_no_survivor_groups'],
                          min_exhausted_in_no_survivor_groups=T['T2_min_exhausted'], groups_tie=T['T2_groups_tie'], groups_invalid=T['T2_groups_invalid'],
-                         unit='records with >= 2 makers at their worst price (valid orders, no tie); violation = >= 2 of them fill again later'),
-            front_survivor_conflicts=T['front_survivor_conflicts'],
-            order='later = settle order (hi, then record rank); *_certain only from disjoint windows (lo_j >= hi_i)')
+                         groups_receipt_hi=T['T2_groups_receipt_hi'],
+                         unit='records with >= 2 makers at their worst price (valid orders, no receipt-hi fill; groups with a tied member included, '
+                              'groups_tie of them); violation = >= 2 of them fill again in a later settle ms'),
+            front_survivor_conflicts=T['front_survivor_conflicts'], tie_conflict_orders=T['tie_conflicts'],
+            order='later = a strictly later settle ms (hi); fills of one settle ms are unordered, never later, and never void a rule; '
+                  '*_certain only from disjoint windows (lo_j >= hi_i)')
     tt = X['tests']
     pt['makers_listing'] = dict(multi_price_records=tt['multi_price_records'], best_first=tt['listing_best_first'], worst_first=tt['listing_worst_first'],
                                 neither=tt['listing_neither'], multi_maker_records_without_price_time=tt['multi_maker_records_without_price_time'],

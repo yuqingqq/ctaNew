@@ -1,0 +1,2 @@
+{'run': 'v2', 'root': '/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123', 'links': 38, 'receipt': '/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/v2'}
+2026-11-23T01:35:14Z tag=mt_x_setup_v2 rc=0 peak_rss_mib=11 wall_s=0.02 cpu_user_s=0.01 memavail_start_gib=22 disk_free_gib=440->440 slot=claude

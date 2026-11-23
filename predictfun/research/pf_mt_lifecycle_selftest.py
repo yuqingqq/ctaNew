@@ -23,6 +23,12 @@ a check or the light simcheck. Cases (task list a-i plus controls):
  i H1 identity conflicts (two ticks; a taker leg of another signer)
  t book-drop timing takes the first (conservative) candidate; pending is preferred over an earlier drop (case b); k fifo_through posting;
    s fifo_front skips a record taken by the order's own signer
+ ty / hs / tw the real v1 failure patterns of mt_checks (checks_20261123T011521Z): ty1 a tie in one settle ms never voids a rule-2 group
+   (the tied member exhausted, the survivor's ahead_lo; priority_exhaustion / ahead_lo), ty2 a T2 violation certain despite a tie (T1_T2),
+   ty3 a survivor value below TOL_SH differs from S_NOPRIO's trivial [0, NaN] (class_scenario_consistency); hs a sub-cent order keeps the
+   persistence its fills prove, an identity conflict not (H2_presence); tw two orders shown 0.01 short each give neither a false posting
+   bound (tp2) nor a false overfill (tv2) (posting_capacity_bound); every hand case and simulator market also asserts the checker's class
+   property (cls_inv: a field group differing across scenarios is assumption_sensitive)
  R refusals with the reason asserted (extract invariants, pending text, CLI day, write-once, memory guard, x_ prefix); V venue oddities
    (bad_leg row, zero shares, bad_frame / unlocated dup_level / bad level frames, pending out of range, a doubled cell) kept as counted
    statuses; CLI rehearsal end to end (markets table, depth / no depth, write-once)."""
@@ -111,6 +117,21 @@ def win(*spans):
     return lambda tr: [[p, u] for a, b, p, u in spans if a <= tr < b]
 
 
+GROUPS_ = dict(size=('size_lb', 'size_exact'), post=('post_lo_ms', 'post_hi_ms'), persist=('persist_lo_ms', 'persist_hi_ms'),
+               queue=('ahead_lo', 'ahead_hi'), removal=('removal_set', 'removal_lo_ms', 'removal_hi_ms'))
+
+
+def cls_inv(o):
+    """the class property the independent checker evaluates (mt_checks _cls): a field group whose values differ across the scenario rows of
+    a hash is assumption_sensitive (NaN == NaN) -> [(hash, group)] breaking it (real v1: 0.0 vs NaN queue labelled unresolved)."""
+    g, out = o.groupby('mk_hash'), []
+    for grp, cols in GROUPS_.items():
+        diff = pd.concat([g[c].nunique(dropna=False) > 1 for c in cols], axis=1).any(axis=1)
+        sens = g[f'{grp}_class'].agg(lambda s: bool((s == C.SENSITIVE).all()))
+        out += [(h, grp) for h in diff.index[(diff & ~sens).to_numpy()]]
+    return out
+
+
 def main(X, quiet=False):  # noqa: C901
     bad, n = [], [0]
 
@@ -135,7 +156,11 @@ def main(X, quiet=False):  # noqa: C901
 
     PM = {}                                      # markets re-run with makers[] reversed (p: mk_idx is never evidence)
     eqn = lambda a, b: (isinstance(a, float) and math.isnan(a) and math.isnan(b)) or a == b  # noqa: E731
-    run = lambda m: X.run_market(*m.dfs(), m.market())  # noqa: E731
+    def run(m):                                  # every hand case also asserts the class property (cls_inv)
+        res = X.run_market(*m.dfs(), m.market())
+        inv = cls_inv(res[1])
+        ok(f'class property market {m.mid} ({inv[:3]})', not inv)
+        return res
     S_ALL = tuple(C.SCENARIOS)
 
     # ---- a: two histories, identical observables ----
@@ -172,7 +197,7 @@ def main(X, quiet=False):  # noqa: C901
         ok(f'a h7 classes ({r.size_class}, {r.post_class}, {r.persist_class}, {r.queue_class}, {r.removal_class})',
            (r.size_class, r.post_class, r.persist_class, r.queue_class, r.removal_class) == (C.OBSERVED, C.UNRESOLVED, C.UNRESOLVED, C.SENSITIVE, C.SENSITIVE))
         ok(f'a h7 S_FIFO queue [{r.ahead_lo}, {r.ahead_hi}] = [0, 50 - 5]', (r.ahead_lo, r.ahead_hi) == (0., 45.))
-        r = O(oA, 'S_NOPRIO', 'h7'); ok('a h7 S_NOPRIO queue NaN', math.isnan(r.ahead_lo) and math.isnan(r.ahead_hi))
+        r = O(oA, 'S_NOPRIO', 'h7'); ok('a h7 S_NOPRIO queue the trivial [0, NaN]', r.ahead_lo == 0. and math.isnan(r.ahead_hi))
         r = O(oA, 'S_FIFO', 'h9')
         ok(f'a h9 removal unresolved, queue [0, 35] ({r.removal_class}, {r.ahead_hi})', r.removal_class == C.UNRESOLVED and r.ahead_hi == 35.)
         ok('a size_lb / size_exact', O(oA, 'S_FIFO', 'h7').size_lb == 5. and math.isnan(O(oA, 'S_FIFO', 'h7').size_exact))
@@ -368,7 +393,7 @@ def main(X, quiet=False):  # noqa: C901
             r = O(o, s, 'x2')
             ok(f'g2 {s} the survivor x2 had x1 ahead ({r.ahead_lo}, exh {bool(x2r1[f"x_exh_{s}"])}, {x2r1[f"x_ahead_lo_{s}"]})',
                r.ahead_lo == 4. and not bool(x2r1[f'x_exh_{s}']) and x2r1[f'x_ahead_lo_{s}'] == 4. and math.isnan(r.size_exact))
-        ok('g2 S_NOPRIO no claim', math.isnan(O(o, 'S_NOPRIO', 'x1').size_exact) and math.isnan(O(o, 'S_NOPRIO', 'x2').ahead_lo)
+        ok('g2 S_NOPRIO no claim', math.isnan(O(o, 'S_NOPRIO', 'x1').size_exact) and O(o, 'S_NOPRIO', 'x2').ahead_lo == 0.
            and O(o, 'S_FIFO', 'x2').queue_class == C.SENSITIVE)
         t2 = s_['priority_tests']['S_FIFO']['T2_time']
         ok(f'g2 T2 units ({t2})', (t2['groups'], t2['violations'], t2['survivor_groups']) == (1, 0, 1))
@@ -395,8 +420,13 @@ def main(X, quiet=False):  # noqa: C901
         m.rec(6060, [('q6', 'MQ6', 'ask', 53, 1.), ('q5', 'MQ5', 'ask', 51, 1.)], tk='T4')
         f, o, lk, s_ = run(m)
         t1 = s_['priority_tests']['S_FIFO']['T1_price']
-        ok(f't1 a price-exhausted maker fills again; tied legs out of the units ({t1})',
-           (t1['makers'], t1['violations'], t1['rate'], t1['violations_certain'], t1['ties']) == (2, 1, 0.5, 1, 2))
+        ok(f't1 a price-exhausted maker fills again; tied legs in the units, never a later fill ({t1})',
+           (t1['makers'], t1['violations'], t1['rate'], t1['violations_certain'], t1['ties']) == (4, 1, 0.25, 1, 2))
+        r = O(o, 'S_FIFO', 'q5')     # exhausted by rule 1 in BOTH records of 6060: one of them came first and consumed it -> FIFO-inconsistent
+        ok(f't1 q5 exhausted twice in one settle ms: fifo_tie_conflict, no claim ({r.status}, {r.size_exact}, '
+           f'{s_["priority_tests"]["S_FIFO"]["tie_conflict_orders"]})', 'fifo_tie_conflict' in r.status and math.isnan(r.size_exact)
+           and 'exhausted' in r.removal_set and 'cancelled_or_expired' in r.removal_set and s_['priority_tests']['S_FIFO']['tie_conflict_orders'] == 1
+           and not f[f.mk_hash == 'q5'].x_exh_S_FIFO.any())
         ok('t1 no per-fill exhaustion for a T1 violator', not f[f.mk_hash == 'q1'].x_exh_S_FIFO.any())
         r = O(o, 'S_FIFO', 'q1')
         ok(f't1 q1 flagged, no exhaustion claim even at its last fill ({r.status}, {r.size_exact})', 'fifo_reappearance' in r.status
@@ -411,6 +441,105 @@ def main(X, quiet=False):  # noqa: C901
                                              and O(o, 'S_FIFO', h).ahead_lo == 0. for h in ('z1', 'z2')))
     except Exception as e:  # noqa: BLE001
         bad.append(f'T1/T2 stopped ({e!r})'[:300])
+
+    # ---- ty: real v1 failure patterns (checks 20261123T011521Z): a tie in one settle ms never voids a rule-2 group ----
+    try:
+        # ty1 (20261024_3697902 0x0f6299 / 0xbe8a27): yA fills in the group record Q and in P, both at 3060 (P ranked after Q); xB fills
+        #     again at 5060 -> xB the survivor, yA exhausted at Q (FIFO puts P first), xB had yA's 0.4 ahead at its first fill
+        m = Mk(140)
+        m.rec(3060, [('yA', 'MYA', 'ask', 60, .4), ('xB', 'MXB', 'ask', 60, .6)], tk='T1')
+        m.rec(3060, [('yA', 'MYA', 'ask', 60, 1.)], tk='T2'); m.rec(5060, [('xB', 'MXB', 'ask', 60, 2.)], tk='T3')
+        f, o, lk, s_ = run(m)
+        for s in ('S_FIFO', 'S_FIFO_LO'):
+            r, rx = O(o, s, 'yA'), O(o, s, 'xB')
+            ok(f'ty1 {s} tied yA exhausted by time priority ({r.size_exact}, {r.removal_set}, {r.removal_method}, {r.status}); xB ahead_lo {rx.ahead_lo}',
+               (r.removal_set, r.removal_method, r.removal_hi_ms) == ('exhausted', 'fifo_time', T0 + 3060) and abs(r.size_exact - 1.4) < 1e-12
+               and not ({'fill_order_tie', 'fifo_tie_conflict', 'fifo_time_violation'} & set(r.status.split('+'))) and abs(rx.ahead_lo - .4) < 1e-12 and rx.queue_class == C.SENSITIVE and math.isnan(rx.size_exact))
+        t2 = s_['priority_tests']['S_FIFO']['T2_time']
+        ok(f'ty1 the tie group is counted ({t2})', (t2['groups'], t2['violations'], t2['survivor_groups'], t2['groups_tie']) == (1, 0, 1, 1))
+        # ty2 (20261025_3734864 / 20261108_4353706): zX also fills in another 3060 record, but BOTH members fill again in a later ms -> T2
+        m = Mk(141)
+        m.rec(3060, [('zX', 'MZX', 'bid', 45, 1.), ('zY', 'MZY', 'bid', 45, 2.)], tk='T1'); m.rec(3060, [('zX', 'MZX', 'bid', 45, 1.)], tk='T2')
+        m.rec(4060, [('zY', 'MZY', 'bid', 45, 1.)], tk='T3'); m.rec(6060, [('zX', 'MZX', 'bid', 45, 1.)], tk='T4')
+        f, o, lk, s_ = run(m)
+        t2 = s_['priority_tests']['S_FIFO']['T2_time']
+        ok(f'ty2 a certain settle-order violation despite the tie ({t2})',
+           (t2['groups'], t2['violations'], t2['violations_certain'], t2['groups_tie']) == (1, 1, 0, 1))
+        ok('ty2 both flagged, no claims', all('fifo_time_violation' in O(o, 'S_FIFO', h).status and math.isnan(O(o, 'S_FIFO', h).size_exact)
+                                              and O(o, 'S_FIFO', h).ahead_lo == 0. for h in ('zX', 'zY')))
+        # ty3 (class_scenario_consistency): a survivor value below TOL_SH (0.005 ahead) still differs from S_NOPRIO's trivial 0 -> sensitive
+        m = Mk(142)
+        m.rec(2060, [('tS', 'MTS', 'ask', 58, 1.), ('tT', 'MTT', 'ask', 58, .005)], tk='T1'); m.rec(4060, [('tS', 'MTS', 'ask', 58, 1.)], tk='T2')
+        f, o, lk, s_ = run(m)
+        ok(f'ty3 a tiny survivor value is assumption_sensitive ({[O(o, s, "tS").ahead_lo for s in S_ALL]}, {O(o, "S_FIFO", "tS").queue_class})',
+           [O(o, s, 'tS').ahead_lo for s in S_ALL] == [.005, .005, 0.] and O(o, 'S_FIFO', 'tS').queue_class == C.SENSITIVE
+           and O(o, 'S_FIFO', 'tT').size_exact == .005)
+        ok('ty3 an order with no queue evidence is unresolved, identical [0, NaN] rows',
+           O(o, 'S_FIFO', 'tT').queue_class == C.UNRESOLVED and all(O(o, s, 'tT').ahead_lo == 0. and math.isnan(O(o, s, 'tT').ahead_hi) for s in S_ALL))
+    except Exception as e:  # noqa: BLE001
+        bad.append(f'ty stopped ({e!r})'[:300])
+
+    # ---- hs (H2_presence, 20261108_4334454): an invalid (sub-cent) order keeps the persistence its fills prove; an identity conflict not ----
+    try:
+        m = Mk(143)
+        for t_ in (1060, 3060, 6060):
+            m.rec(t_, [('sc', 'MSC', 'ask', 56, 1.)], tk='T1')
+        m.rec(1060, [('ic', 'MIC', 'ask', 57, 1.)], tk='T2'); m.rec(5060, [('ic', 'MIC', 'ask', 58, 1.)], tk='T3')
+        L, R, Fr, Lv = m.dfs()
+        L.loc[L.mk_hash == 'sc', ['mk_price', 'y_price', 'status']] = [.555, .555, 'off_grid']     # an extract off_grid leg (tick 56 = round(55.5))
+        f, o, lk, s_ = X.run_market(L, R, Fr, Lv, m.market())
+        ok(f'hs class property ({cls_inv(o)[:3]})', not cls_inv(o))
+        for s in S_ALL:
+            r, ri = O(o, s, 'sc'), O(o, s, 'ic')
+            ok(f'hs {s} sub-cent order: span [1060, 6060 - 2000] observed ({r.status}, {r.persist_lo_ms - T0}, {r.persist_hi_ms - T0}, {r.persist_class})',
+               'subcent_price' in r.status and (r.persist_lo_ms, r.persist_hi_ms, r.persist_class) == (T0 + 1060, T0 + 4060, C.OBSERVED)
+               and (r.post_class, r.queue_class, r.removal_class) == (C.UNRESOLVED,) * 3)
+            ok(f'hs {s} identity conflict: no span ({ri.status}, {ri.persist_lo_ms})', 'identity_conflict' in ri.status
+               and (ri.persist_lo_ms, ri.persist_hi_ms, ri.persist_class) == (-1, -1, C.UNRESOLVED))
+    except Exception as e:  # noqa: BLE001
+        bad.append(f'hs stopped ({e!r})'[:300])
+
+    # ---- tw (posting_capacity_bound, 20261024_3697902 ask 62): the venue shows some orders 0.01 short (10 -> 9.99) and the shortfalls add
+    #      up (279.98 for 10 + 145 + 125); H3 allows TOL_SH per order accounted ----
+    try:
+        # tp2: wZ (125, shown 124.99) rests from 500 beside wA (11 then 10, shown 10.99 / 9.99); at 1100..7000 shown 134.98 - wA's 10 = 124.98:
+        #      one 0.01 tolerance would bound wZ's posting at 5000 (hard) / 7000 (hi clock) although it rests from 500; the bound is 400
+        m = Mk(144)
+        m.frames(GRID, lambda tr: {('bid', 40): 10.99 if tr < 500 else (135.98 if tr < 1100 else (134.98 if tr < 7100 else (124.99 if tr < 8100 else 0.)))})
+        m.rec(1060, [('wA', 'MWA', 'bid', 40, 1.)], tk='T1'); m.rec(7060, [('wA', 'MWA', 'bid', 40, 10.)], tk='T2')
+        m.rec(8060, [('wZ', 'MWZ', 'bid', 40, 125.)], tk='T3')
+        f, o, lk, s_ = run(m)
+        ok(f'tp2 two short-shown orders give no false posting bound ({[int(O(o, s, "wZ").post_lo_ms - T0) for s in S_ALL]}, {O(o, "S_FIFO", "wZ").post_class})',
+           all((O(o, s, 'wZ').post_lo_ms, O(o, s, 'wZ').post_method) == (T0 + 400, 'capacity') for s in S_ALL)
+           and O(o, 'S_FIFO', 'wZ').post_class == C.CONSTRAINED and not o.status.str.contains('capacity').any())
+        # tv2: vA (11, shown 10.99) and vB (6, shown 5.99) both proven resting at bid 41 from 1300: needs 10 + 5 = 15 vs shown 14.98 is no overfill
+        m = Mk(145)
+        m.frames(GRID, lambda tr: {('bid', 41): 16.98 if tr < 1100 else (15.98 if tr < 1300 else (14.98 if tr < 7100 else (4.99 if tr < 7300 else 0.)))})
+        m.rec(1060, [('vA', 'MVA', 'bid', 41, 1.)], tk='T1'); m.rec(1260, [('vB', 'MVB', 'bid', 41, 1.)], tk='T2')
+        m.rec(7060, [('vA', 'MVA', 'bid', 41, 10.)], tk='T3'); m.rec(7260, [('vB', 'MVB', 'bid', 41, 5.)], tk='T4')
+        f, o, lk, s_ = run(m)
+        ok(f'tv2 two short-shown orders are no H3 contradiction ({sorted(set(o.status))}, {s_["capacity"]})',
+           not o.status.str.contains('capacity').any() and s_['capacity']['orders_contradicted'] == 0)
+        # tq2: a proven-resting order needing < 0.01 sh (tA 0.004) must not loosen the single-order bound: shown 4.989 < 5 - 0.01 proves wQ
+        #      absent, while the joint room 4.989 - 0.004 = 4.985 is above 5 - 0.02. a: wQ rests from 5600 (before its hard window) -> every
+        #      bound 5500, the hard one included (constrained); b: wQ rests from 7750 (inside it) -> the hi clock bounds at 7700, hard at 6000
+        for nm_, mid_, tk_, lastA, postQ in (('tq2a', 146, 63, 7560, 5600), ('tq2b', 147, 64, 8160, 7750)):
+            m = Mk(mid_)
+            bk = (lambda la, pq: lambda tr: 4.991 if tr < 1100 else (4.989 if tr < pq else (9.979 if tr < 8100 else (4.989 if tr < la + 40 else 4.985)))
+                  if la > 8100 else (4.991 if tr < 1100 else (4.989 if tr < pq else (9.979 if tr < la + 40 else (9.975 if tr < 8100 else 4.985)))))(lastA, postQ)
+            m.frames(GRID, lambda tr, bk=bk, tk_=tk_: {('ask', tk_): bk(tr)})
+            m.rec(1060, [('tA', 'MTA', 'ask', tk_, .002)], tk='T1'); m.rec(lastA, [('tA', 'MTA', 'ask', tk_, .004)], tk='T2')
+            m.rec(8060, [('wQ', 'MWQ', 'ask', tk_, 5.)], tk='T3')
+            f, o, lk, s_ = run(m)
+            pl = [int(O(o, s, 'wQ').post_lo_ms - T0) for s in S_ALL]
+            if nm_ == 'tq2a':
+                ok(f'tq2a the single-order bound survives a tiny proven order ({pl}, {O(o, "S_FIFO", "wQ").post_class})',
+                   pl == [5500, 5500, 5500] and O(o, 'S_FIFO', 'wQ').post_class == C.CONSTRAINED)
+            else:
+                ok(f'tq2b the scenario single-order bound ({pl}, {O(o, "S_FIFO", "wQ").post_class})', pl[0] == 7700 and pl[2] == 7700
+                   and O(o, 'S_FIFO', 'wQ').post_class == C.SENSITIVE)
+    except Exception as e:  # noqa: BLE001
+        bad.append(f'tw stopped ({e!r})'[:300])
 
     # ---- h: posting lower bound from capacity ----
     try:
@@ -722,10 +851,23 @@ MUTANTS = (  # (name, exact text in pf_mt_lifecycle.py, replacement): every plan
     ('rule 2 survivor gets no ahead_lo', "alo[A[0]] = float(q[oth].sum())", "alo[A[0]] = 0."),
     ('rule 2 exhausts the survivor too', "exh[oth] = True", "exh[mem] = True"),
     ('T1 violations not counted', "T1_violations=int((u1 & later).sum())", "T1_violations=0"),
-    ('T1 counts tied legs', "u1 = exh_p & ~tie", "u1 = exh_p"),
-    ('T1 violator still claimed exhausted', "exhL = bool(exh[fL]) and not tie[fL] and not t1 and o not in tviol",
-     "exhL = bool(exh[fL]) and not tie[fL] and o not in tviol"),
-    ('per-fill exhaustion kept for a T1 violator', "f_exh=exh & ~np.isin(oid, oid[exh_p & later]) & ~(exh_p & tie))", "f_exh=exh.copy())"),
+    ('T1 excludes tied legs (fix4 reverted)', "u1 = exh_p & ~unord[oid]", "u1 = exh_p & ~unord[oid] & ~tie"),
+    ('T1 violator still claimed exhausted', "exhL = len(xl) == 1 and not t1 and o not in tviol", "exhL = len(xl) == 1 and o not in tviol"),
+    ('per-fill exhaustion kept for a T1 violator', "f_exh=exh & ~np.isin(oid, oid[exh_p & later]) & ~tconf[oid])", "f_exh=exh & ~tconf[oid])"),
+    ('a tie voids the rule-2 group (fix4 reverted)', "            A = mem[later[mem]]", "            if tie[mem].any():\n                continue\n            A = mem[later[mem]]"),
+    ('exhaustion only at the last-ranked fill (fix4 reverted)', "xl = fi[exh[fi] & (sqf == sqf.max())]", "xl = np.array([fL])[exh[[fL]]]"),
+    ('a tie conflict claimed exhausted', "exhL = len(xl) == 1 and not t1", "exhL = len(xl) >= 1 and not t1"),
+    ('S_NOPRIO queue NaN (fix4 reverted)', "            out['alo'][o] = 0.                     # no priority", "            out['alo'][o] = NAN                    # no priority"),
+    ('queue class by a non-trivial value (fix4 reverted)', "cl['queue'][o] = C.UNRESOLVED if _same(qu) else C.SENSITIVE",
+     "cl['queue'][o] = C.SENSITIVE if any((not np.isnan(x) and x > TOL_SH) or not np.isnan(y) for x, y in qu) else C.UNRESOLVED"),
+    ('persistence only for valid orders (fix4 reverted)', "if not (fl & NO_PRESENCE) and len(ii) >= 2", "if O['valid'][o] and len(ii) >= 2"),
+    ('invalid-order persistence unresolved (fix4 reverted)', "cl['size'][o], cl['persist'][o] = C.OBSERVED, span", "cl['size'][o], cl['persist'][o] = C.OBSERVED, C.UNRESOLVED"),
+    ('persistence for an identity conflict', "NO_PRESENCE = frozenset(('identity_conflict', 'malformed_identity'))", "NO_PRESENCE = frozenset(('malformed_identity',))"),
+    ('one display tolerance for any number of orders (fix4 reverted)', "return TOL_SH * np.maximum(n, 1) + 1e-9", "return TOL_SH + 1e-9 + 0 * n"),
+    ('hard posting tolerance without the order itself', "own - _tol(1 + nn[:len(own), co])", "own - _tol(nn[:len(own), co])"),
+    ('scenario posting tolerance without the order itself', "cum - _tol(1 + nn[:ao, co])", "cum - _tol(nn[:ao, co])"),
+    ('hard posting without the single-order form', "| (shv < own - _tol(1))", "| False"),
+    ('scenario posting without the single-order form', "| (np.where(vm[:ao, co], np.nan, SH[:ao, co]) < cum - _tol(1))", "| False"),
     ('T2 violators not flagged', "tviol |= set(oid[A].tolist())", "pass"),
     ('exhausted dropped unless proven', "rset = ({'exhausted', 'cancelled_or_expired'} |", "rset = ({'cancelled_or_expired'} |"),
     ('end_censored never kept', "({'end_censored'} if (rhi < 0 or beyond) else set())", "set()"),
@@ -751,7 +893,7 @@ MUTANTS = (  # (name, exact text in pf_mt_lifecycle.py, replacement): every plan
      "thr = (R_['w'][:i1] >= p - 1e-9) if sd == 1 else (R_['w'][:i1] <= p + 1e-9)"),
     ('fifo_front ignores the taker signer', "jj = np.flatnonzero(reach & (R_['tk'][i0:] != g))", "jj = np.flatnonzero(reach)"),
     ('no unprinted-drop evidence', "if bo + 1 <= end_f and U[end_f + 1, co] - U[bo + 1, co] > 0:", "if False:"),
-    ('room ignores the other orders', "    r = np.where(nd <= SH + TOL_SH, SH - nd, SH)\n", "    r = SH.copy()\n"),
+    ('room ignores the other orders', "    r = np.where(nd <= SH + _tol(nn), SH - nd, SH)\n", "    r = SH.copy()\n"),
     ('queue frame = the clock frame', "qb = np.where(fb >= 0, fb, pos)", "qb = pos"),
     ('lo clock = hi clock', " if loc else pos_hi", " if False else pos_hi"),
     ('book evidence claims exhaustion (integrator decision reverted)', "        if exhL:\n            rset = {'exhausted'}",
@@ -889,6 +1031,10 @@ def simcheck(X, seeds=(11, 12, 13, 14), dur_ms=60_000, quiet=False):
         dfs = m.dfs(); c0 = time.process_time()
         f, o, lk, s_ = X.run_market(*dfs, m.market())
         cpu += time.process_time() - c0; sizes.append((len(dfs[2]), len(dfs[1]), len(dfs[0]), int(o.mk_hash.nunique())))
+        inv = cls_inv(o)                         # the checker's class property: a differing field group must be assumption_sensitive
+        add('orders', 'class_property', C.OBSERVED, False)
+        for h_, grp_ in inv:
+            add('orders', 'class_property', C.OBSERVED, True, f'{h_} {grp_} differs across scenarios, not labelled assumption_sensitive')
         for r in f.itertuples():
             tm = T0 + REC[r.sid]
             add('fills', 'window', C.OBSERVED, not ((r.x_lo_hard_ms < 0 or r.x_lo_hard_ms < tm) and tm <= r.hi_ms), f'{r.mk_hash} lo-m {r.x_lo_hard_ms - tm} hi-m {r.hi_ms - tm}')

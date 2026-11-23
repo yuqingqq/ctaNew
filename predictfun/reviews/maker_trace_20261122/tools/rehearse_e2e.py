@@ -741,7 +741,8 @@ def build_world(tmp_pmmm):
     e.take('V3', 80000, TZ, 'buy', .62, 4)
     e.take('V4', 120000, TX, 'buy', .62, 1)
     f = venue(D27, 140, 'B27', depth=True)
-    bg(f, MD, .25, MA, .45)
+    f.post('bg_ask', MA, 'ask', .45, 20, -90000)
+    f.post('bg_bid', MD, 'bid', .25, 20, -30000)                    # frames before -30 s show an EMPTY bid side (no bid level at all)
     f.post('e1', MC, 'ask', .35, 4, -20000)
     f.post('e2', MD, 'bid', .30, 4, -20000)
     f.take('W1', 30000, TX, 'buy', .35, 4)
@@ -1025,15 +1026,18 @@ def instrument_checker(M):
         finally:
             CAPT['lab'] = None
 
-    def h3(U, T, S):
-        r = h30(U, T, S)
+    def h3(*a, **k):                      # pass-through: the checker's signature may grow (e2e 8: h3_scan gained Uall)
+        r = h30(*a, **k)
         if CAPT['on'] and CAPT['lab']:
-            CAPT['data'][CAPT['lab']][('strict', 'permissive')[CAPT['n_h3']] if CAPT['n_h3'] < 2 else 'h3_x'] = dict(cap=r[2], zero=r[3], viol=r[0])
+            try:                                  # recording never alters or breaks the checker's call
+                CAPT['data'][CAPT['lab']][('strict', 'permissive')[CAPT['n_h3']] if CAPT['n_h3'] < 2 else 'h3_x'] = dict(cap=r[2], zero=r[3], viol=r[0])
+            except (IndexError, TypeError, KeyError):
+                pass
             CAPT['n_h3'] += 1
         return r
 
-    def pe(Ld, Lall=None):
-        r = pe0(Ld, Lall)
+    def pe(*a, **k):
+        r = pe0(*a, **k)
         if CAPT['on'] and CAPT['lab']:
             CAPT['data'][CAPT['lab']][('req', 'ok')[CAPT['n_pe']] if CAPT['n_pe'] < 2 else 'pe_x'] = r
             CAPT['n_pe'] += 1
@@ -1265,6 +1269,12 @@ def features(W, H):
         F = pd.concat([rd(p) for p in sorted((OUT / 'life').glob('*_fills.parquet'))], ignore_index=True)
         out['fills_lo_unbounded'] = int((F.lo_ms < 0).sum())
         out['identity_conflict_orders'] = int(fifo.status.astype(str).str.contains('identity_conflict').sum())
+    tb = OUT / 'tob_20261027.parquet'
+    if tb.exists():
+        TB = pd.read_parquet(tb, columns=['mid', 'n_bid', 'best_bid_sh'])
+        e_ = TB[(TB.mid == next(v.mid for v in W['V'] if v.label == 'B27')) & (TB.n_bid == 0)]
+        out['empty_bid_side_frames'] = int(len(e_))
+        out['empty_bid_side_size_not_zero'] = int((e_.best_bid_sh != 0.0).sum())
     T = None
     for p in (OUT / 'truth' / 'v2' / 'own_orders.parquet', OUT / 'truth' / 'own_orders.parquet'):
         if p.exists():
@@ -1281,12 +1291,12 @@ def features(W, H):
         out['econ_ok_rows_on_censored'] = int(((FV.mid == W['sealed_mid']) & (FV.status == 'ok')).sum())
     need_pos = ('multi_price_records', 'mint_legs', 'merge_legs', 'conflict_records', 'repolled_records', 'taker_addresses_also_makers',
                 'taker_hashes_also_makers', 'frames_with_gap_flag', 'fifo_price_exhaustions', 'survivors_with_ahead_lo', 'fills_lo_unbounded',
-                'identity_conflict_orders',
+                'identity_conflict_orders', 'empty_bid_side_frames',
                 'truth_scored_own_orders', 'own_hashes_in_gt_lifecycle', 'econ_tie_rows')
     bad = [k for k in need_pos if not (isinstance(out.get(k), int) and out[k] > 0)]
     bad += [f'boundary_censored.{k}' for k, x in cz.items() if x is not True]
     bad += [k for k in ('sealed_outcome_blank',) if out.get(k) is not True]
-    bad += [k for k in ('econ_ok_rows_on_censored',) if out.get(k) not in (0,)]
+    bad += [k for k in ('econ_ok_rows_on_censored', 'empty_bid_side_size_not_zero') if out.get(k) not in (0,)]
     out['not_exercised'] = bad
     return out
 

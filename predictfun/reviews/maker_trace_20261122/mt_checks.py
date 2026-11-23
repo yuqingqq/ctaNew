@@ -483,33 +483,50 @@ def units_of(F):
     return U
 
 
-def h3_scan(U, T, S):
+DISP_SH = 0.01        # venue display unit: shown sizes are rounded (9.99 shown for 10 shares) - one unit of slack PER ORDER (integrator, v2)
+
+
+def unit_need(u, T):
+    """A unit's need at every frame: the sum of its fills with lo >= T[i], over frames hmin <= T[i] <= lo (proven resting there)."""
+    nd = np.zeros(len(T) + 1)
+    for l, q in zip(u['lo'], u['sh']):
+        if l >= 0:
+            a, b = np.searchsorted(T, u['hmin'], 'left'), np.searchsorted(T, l, 'right')
+            if a < b:
+                nd[a] += q; nd[b] -= q
+    return np.cumsum(nd)[:-1]
+
+
+def h3_scan(U, T, S, Uall=None):
     """H3 at every ok frame u: the units proven resting at their price (a fill surely before: hi <= u; a fill surely after: lo >= u) need
-    shown(p, u) >= the sum of their fills with lo >= u. Also returns the capacity posting bound per unit (latest frame u <= every fill's lo
-    with shown(p, u) < cumulative fills) and shown-zero evidence (first frame at/after the last fill's hi shows 0 at p and no other unit
-    is proven resting there)."""
+    shown(p, u) >= the sum of their fills with lo >= u, less one display unit (0.01) per unit with a positive need. Also returns the
+    capacity posting bound per unit (latest frame u strictly before every fill's x_lo_hard with shown(p, u) < cumulative fills - 0.01),
+    never taken from a VIOLATED cell (amendment 2: shown < the needs of the OTHER proven-resting units - 0.01 per such unit, over Uall =
+    every hard-bounded fill, not only clean legs: an unknown cell), and shown-zero evidence (first frame at/after the last fill's hi shows 0
+    at p and no other unit is proven resting there)."""
     viol, members, cap, zero = [], set(), {}, {}
-    by_p = defaultdict(list)
+    by_p, by_pa = defaultdict(list), defaultdict(list)
     for k, u in U.items():
         by_p[k[1:]].append((k, u))
+    for k, u in (U if Uall is None else Uall).items():
+        by_pa[k[1:]].append((k, u))
+    z = np.zeros(len(T))
     for p, us in by_p.items():
-        sh, need_ = S[p], np.zeros(len(T) + 1)
-        for k, u in us:
-            for l, q in zip(u['lo'], u['sh']):
-                if l >= 0:
-                    a, b = np.searchsorted(T, u['hmin'], 'left'), np.searchsorted(T, l, 'right')
-                    if a < b:
-                        need_[a] += q; need_[b] -= q
-        need_ = np.cumsum(need_)[:-1]
-        bad = np.where(sh + TOL_SH < need_)[0]
+        sh, nk = S[p], {k: unit_need(u, T) for k, u in us}
+        need_, cnt = sum(nk.values(), z.copy()), sum(((v > TOL_SH).astype(int) for v in nk.values()), z.astype(int))
+        bad = np.where(sh < need_ - DISP_SH * cnt - TOL_SH)[0]
         if len(bad):
             bt = T[bad]
             mem = [k[0] for k, u in us if ((bt >= u['hmin']) & (bt <= u['maxlo'])).any()]
             members.update(mem)
             viol.append(dict(price=p, n_frames=int(len(bad)), need=float(need_[bad[0]]), shown=float(sh[bad[0]])))
+        na = {k: unit_need(u, T) for k, u in by_pa.get(p, [])}
+        need_a, cnt_a = sum(na.values(), z.copy()), sum(((v > TOL_SH).astype(int) for v in na.values()), z.astype(int))
         for k, u in us:
             if u['all_lo']:
-                m = np.where((T <= u['minlo']) & (sh < u['cum'] - TOL_SH))[0]
+                own = na.get(k, z)
+                known = ~(sh < (need_a - own) - DISP_SH * (cnt_a - (own > TOL_SH)) - TOL_SH)      # violated cells give no bound
+                m = np.where((T < u['minlo']) & (sh < u['cum'] - DISP_SH - TOL_SH) & known)[0]
                 if len(m):
                     cap[k] = int(T[m[-1]])
             j = int(np.searchsorted(T, u['hmax'], 'left'))
@@ -956,7 +973,7 @@ def _market_checks(A, E, day, mid, D, G, TB):
         Lmx = OO.Lmx.fillna(-1).to_numpy(float); hm = OO.hmin.to_numpy(float)
         empty = (OO.n.fillna(0).to_numpy() <= 1) | (Lmx < 0) | (hm > Lmx)
         b = (OO.persist_lo_ms.to_numpy() != np.where(empty, -1, hm)) | (OO.persist_hi_ms.to_numpy() != np.where(empty, -1, Lmx))
-        b &= ~hasf(OO.status, 'identity_conflict')          # pinned: identity_conflict rows are skipped (their fills span several identities)
+        b &= ~hasf(OO.status, 'identity_conflict') & ~hasf(OO.status, 'malformed_identity')   # pinned: skipped (fills span several identities)
         a.check(int(b.sum()), f'orders {lab}: {{n}} rows whose persistence window contradicts the certain span [min hi, max lo] (-1/-1 when empty)')
         a.check(int(((O.persist_class == C.OBSERVED) & (O.persist_lo_ms < 0)).sum()),
                 f'orders {lab}: {{n}} rows labelled observed persistence with an empty certain span (-1/-1)')
@@ -966,8 +983,9 @@ def _market_checks(A, E, day, mid, D, G, TB):
     U = units_of(Fb[np.array([k in cl_keys for k in zip(Fb.sid, Fb.mk_idx)], dtype=bool)])           # strict, HARD-bounded
     Up = units_of(Fb[np.array([k in rc_keys for k in zip(Fb.sid, Fb.mk_idx)], dtype=bool)])          # permissive, HARD-bounded
     T, S = book_arrays(FR, LV, {k[1:] for k in U} | {k[1:] for k in Up})
-    viol, members, cap, _z = h3_scan(U, T, S)              # strict: violations / capacity bounds that REQUIRE a flag or a bound
-    _v, _m, cap_p, zero = h3_scan(Up, T, S)                # permissive: shown-zero evidence and capacity bounds that ALLOW a claim
+    Ua = units_of(Fb)                                      # every hard-bounded fill: violated (unknown) cells, amendment 2
+    viol, members, cap, _z = h3_scan(U, T, S, Ua)          # strict: violations / capacity bounds that REQUIRE a flag or a bound
+    _v, _m, cap_p, zero = h3_scan(Up, T, S, Ua)            # permissive: shown-zero evidence and capacity bounds that ALLOW a claim
     capd, capp, zh = {k[0]: v for k, v in cap.items()}, {k[0]: v for k, v in cap_p.items()}, {k[0]: v for k, v in zero.items()}
 
     def _h3(a):
@@ -1108,8 +1126,9 @@ def _market_checks(A, E, day, mid, D, G, TB):
         sh = LV.set_index(['fid', 'side', 'ptick']).shares
         x = FR.merge(tb, on=['upd_ms', 'recv_ns', 'conn'], suffixes=('', '_t'))
         exp = dict(best_bid=x.fid.map(bb) / K, best_ask=x.fid.map(ba) / K,
-                   best_bid_sh=[sh.get((f, 'bid', int(p)), np.nan) if not isnull(p) else np.nan for f, p in zip(x.fid, x.fid.map(bb))],
-                   best_ask_sh=[sh.get((f, 'ask', int(p)), np.nan) if not isnull(p) else np.nan for f, p in zip(x.fid, x.fid.map(ba))],
+                   # contract §5: an absent price shows 0 -> a side with no level expects best_*_sh 0.0 (price NaN)
+                   best_bid_sh=[sh.get((f, 'bid', int(p)), np.nan) if not isnull(p) else 0.0 for f, p in zip(x.fid, x.fid.map(bb))],
+                   best_ask_sh=[sh.get((f, 'ask', int(p)), np.nan) if not isnull(p) else 0.0 for f, p in zip(x.fid, x.fid.map(ba))],
                    n_bid=x.fid.map(bid.groupby('fid').size()).fillna(0), n_ask=x.fid.map(ask.groupby('fid').size()).fillna(0),
                    order_count=x.order_count, pend_bid_usd=x.pend_bids.map(lambda s: sum(float(v) for _, v in json.loads(s))),
                    pend_ask_usd=x.pend_asks.map(lambda s: sum(float(v) for _, v in json.loads(s))))
@@ -2012,7 +2031,9 @@ def reparse(day, mid, E=None, raw_root=None, step1=None, window=None, pre_s=900,
                 Lm['lo_ms'] = [int(hmap.get(k, -1)) for k in zip(Lm.sid, Lm.mk_idx)]
             if len(frm) and hardr:
                 U = units_of(Lm)
-                viol, members, cap, _ = h3_scan(U, *book_arrays(frm, lvm, {k[1:] for k in U}))
+                La_ = L.assign(h=L.mk_hash.str.lower(), hi_ms=np.minimum(L.settle_ms.to_numpy(np.int64), L.first_recv_ns.to_numpy(np.int64) // 10 ** 6),
+                               y_ptick=np.round(L.y_price * K).astype(np.int64), lo_ms=[int(hmap.get(k, -1)) for k in zip(L.sid, L.mk_idx)])
+                viol, members, cap, _ = h3_scan(U, *book_arrays(frm, lvm, {k[1:] for k in U}), units_of(La_))   # violated cells: every raw leg
                 n = int(O[O.h.isin(members) & (O.status == C.STATUS_OK)].h.nunique())
                 (a.fail(f'orders {day}_{mid}: raw H3 overfill at {viol[0]["price"]} (need {viol[0]["need"]:.4g} > shown {viol[0]["shown"]:.4g}); '
                         f'{n} member hashes status ok') if n else a.ok())

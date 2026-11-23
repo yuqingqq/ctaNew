@@ -1,5 +1,23 @@
 # MAKER-TRACE-RECONSTRUCTION-v1 — pending work
 
+## STATE 2026-11-23 01:47Z — AMENDMENT 3 IN PROGRESS (USER approved: lifecycle fix + top-3 decision paths; cap 1.85 h / line 5.25) — read this first
+
+**Running agents** (resume with SendMessage if a rate limit stopped them):
+1. **lifecycle builder:** verdicts and lifecycle-side fixes for the 7 failing checks;
+2. **BTC grid builder:** `pf_mt_btc.py`;
+3. **decision-path builder:** `pf_mt_decision.py`.
+
+**Done:** the v2 root is set up (`maker_trace_v2_20261123`).
+
+**Next:**
+1. Send the checker author the checker-side fixes from the lifecycle verdicts.
+2. `MT_RUN=v2` chain: life for every day, then truth, econ, report, checks.
+3. `pf_mt_btc.py day` for Oct 24–27, then `pf_mt_decision.py run`.
+4. One combined receipt and review.
+
+CPU: tools/cpu_ledger.py, cap 1.85.
+
+
 ## STATE 2026-11-23 01:19Z — RESULTS COMMITTED (1af85c56); WAITING — read this first
 
 **Done:**

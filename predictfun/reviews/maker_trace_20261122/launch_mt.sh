@@ -6,7 +6,7 @@
 # logs/projection.json says run_rest true.
 # A retry suffix (_r<n>) is accepted by every stage; a run that run_light refused before starting (no summary line) does not consume its tag
 # (its log is kept as <tag>.refused.<epoch>.log). FREEZE_CHECK=0 is honoured only by the selftest stage.
-# Usage: launch_mt.sh selftest [sfx] | extract <day> <slot> [sfx] | life-prefix [sfx] | project [sfx] | life <day> <slot> [sfx] | truth [sfx] |
+# Usage: launch_mt.sh selftest [sfx] | extract <day> <slot> [sfx] | life-prefix [sfx] | project [sfx] | life <day> <slot> [sfx] | btc <day> <slot> [sfx] | truth [sfx] |
 #        econ [sfx] | report [sfx] | checks [sfx]
 set -u
 R=/home/yuqing/ctaNew; P=$R/predictfun/research; D=$R/predictfun/reviews/maker_trace_20261122; L=$D/logs; RL=$P/run_light.sh
@@ -25,7 +25,9 @@ SOURCES="predictfun/research/pf_mt_common.py predictfun/research/pf_mt_extract.p
  predictfun/reviews/maker_trace_20261122/mt_checks.py predictfun/reviews/maker_trace_20261122/tools/rehearse_checks.py
  predictfun/reviews/maker_trace_20261122/tools/cpu_ledger.py predictfun/reviews/maker_trace_20261122/tools/project.py
  predictfun/reviews/maker_trace_20261122/tools/build_manifest.py predictfun/reviews/maker_trace_20261122/tools/rehearse_e2e.py
- predictfun/research/pf_mt_report.py predictfun/research/pf_mt_report_selftest.py"
+ predictfun/research/pf_mt_report.py predictfun/research/pf_mt_report_selftest.py
+ predictfun/research/pf_mt_btc.py predictfun/research/pf_mt_btc_selftest.py predictfun/reviews/maker_trace_20261122/decision_contract.md
+ predictfun/reviews/maker_trace_20261122/tools/setup_run.py predictfun/reviews/maker_trace_20261122/tools/claims.py"
 frozen() {   # every source tracked and identical to HEAD (the freeze commit), else refuse
   git -C $R ls-files --error-unmatch $SOURCES > /dev/null 2>&1 && git -C $R diff --quiet HEAD -- $SOURCES \
     || { echo "REFUSED: a maker-trace source is untracked or differs from HEAD (freeze first)" >&2; exit 1; }
@@ -97,6 +99,9 @@ case "${1:-}" in
     git -C $R ls-files --error-unmatch $RS > /dev/null 2>&1 && git -C $R diff --quiet HEAD -- $RS \
       || { echo "REFUSED: the report module is untracked or differs from HEAD" >&2; exit 1; }
     run claude mt_x_report_selftest$TR$S python3 $P/pf_mt_report_selftest.py && run claude mt_x_report$TR$S python3 $P/pf_mt_report.py ;;
+  btc)   # amendment 3: the Binance 100 ms grid + the Chainlink reference for the decision-path study (writes under the v2 root only)
+    gate; [ "$MT_RUN" = v1 ] && { echo "REFUSED: btc runs under MT_RUN=v2 or later" >&2; exit 1; }
+    day=${2:?day}; slot=${3:?slot}; S=$(sfx "${4:-}") || exit 2; run $slot mt_x_btc${TR}_$day$S python3 $P/pf_mt_btc.py day $day ;;
   checks)
     gate; S=$(sfx "${2:-}") || exit 2; run claude mt_x_checks$TR$S python3 $D/mt_checks.py run ;;
   *) echo "usage: launch_mt.sh selftest | extract <day> <slot> [sfx] | life-prefix | project | life <day> <slot> [sfx] | truth | econ | report | checks" >&2; exit 2 ;;

@@ -1,0 +1,144 @@
+PASS plan 20261024: the previous day 23Z + the day 00Z..23Z, all allowed, no next-day stem
+PASS plan 20261025: the previous day 23Z + the day 00Z..23Z, all allowed, no next-day stem
+PASS plan 20261026: the previous day 23Z + the day 00Z..23Z, all allowed, no next-day stem
+PASS plan 20261027: the previous day 23Z + the day 00Z..23Z, all allowed, no next-day stem
+PASS allow-list: exactly 20261023_23 + 96 hours of 20261024..27
+PASS forbidden stem #0 (bookTicker) refused
+PASS forbidden stem #0 (reference_prices) refused
+PASS forbidden stem #1 (bookTicker) refused
+PASS forbidden stem #1 (reference_prices) refused
+PASS forbidden stem #2 (bookTicker) refused
+PASS forbidden stem #2 (reference_prices) refused
+PASS forbidden stem #3 (bookTicker) refused
+PASS forbidden stem #3 (reference_prices) refused
+PASS forbidden stem #4 (bookTicker) refused
+PASS forbidden stem #4 (reference_prices) refused
+PASS forbidden stem #5 (bookTicker) refused
+PASS forbidden stem #5 (reference_prices) refused
+PASS forbidden stem #6 (bookTicker) refused
+PASS forbidden stem #6 (reference_prices) refused
+PASS forbidden stem #7 (bookTicker) refused
+PASS forbidden stem #7 (reference_prices) refused
+PASS forbidden stem #8 (bookTicker) refused
+PASS forbidden stem #8 (reference_prices) refused
+PASS forbidden stem #9 (bookTicker) refused
+PASS forbidden stem #9 (reference_prices) refused
+PASS unknown family refused
+PASS forbidden day #0 refused (run_day)
+PASS forbidden day #1 refused (run_day)
+PASS forbidden day #2 refused (run_day)
+PASS forbidden day #3 refused (run_day)
+PASS forbidden day #4 refused (run_day)
+PASS probe: a next-day hour refused
+PASS probe: an hour of another measure day refused
+PASS every refusal above happened with ZERO filesystem calls
+PASS A: exactly the 25 planned hour files of each family were opened (missing ones attempted once), nothing else in a data dir
+PASS A: outputs published (btc, ref, receipt), no staging dir left
+PASS A: btc parquet has the declared columns / types and 864,000 rows
+PASS A: g_ms = D0 + 100 k
+PASS A: bid equals the reference at every grid point
+PASS A: ask equals the reference at every grid point
+PASS A: mid equals the reference at every grid point
+PASS A: n_upd equals the reference at every grid point
+PASS A: age_ms equals the reference at every grid point
+PASS A: status equals the reference at every grid point
+PASS A gold: D0: the row at D0 - 60 (sitting in the 00Z file), n_upd 1
+PASS A gold: a row exactly on a grid point
+PASS A gold: equal E_ms at D0 + 200: the later line wins; n_upd 4
+PASS A gold: age 1000 ms is still ok
+PASS A gold: age 1100 ms is stale
+PASS A gold: after the quiet second
+PASS A gold: out of order in a file (2050 then 2010): the E_ms max wins, n_upd 2
+PASS A gold: a late row in the next file (E 3,598,950) counted; the E_ms max wins
+PASS A gold: next hour
+PASS A gold: the missing 05Z file: the hole starts at the last E_ms read
+PASS A gold: first row after the hole (n_upd may miss rows): still gap
+PASS A gold: the hole ends at e_min + 100
+PASS A gold: before the day tail
+PASS A gold: the day tail after the last E_ms read is gap
+PASS A gold: the last grid point
+PASS A receipt: missing / fallback / unreadable / empty lists
+PASS A receipt: counts (malformed 3 = short line + header + unterminated tail; invalid price 1; e_decreases 1; late 1; crossed 1; pre-day 3)
+PASS A receipt: sha256 + bytes of every hour file read equal the fixture bytes
+PASS A receipt: parser per file (Arrow with parity rows; fallback for the header file; unterminated tail counted)
+PASS A receipt: status counts = the reference counts and sum to 864,000
+PASS A receipt: gap points by reason (missing hour 35,976; day tail 23)
+PASS A receipt: day lag p0 -4.877 / p50 70.1 (bin edge) / p100 1500.123 exact; n, negative 1, over 1 s 1
+PASS A receipt: per-file exact lag quantiles (hour 10: p0 -4.877, p50 70.123)
+PASS A receipt: era (min recv >= boundary; ledger: 1 torn fragment bounded before the span, no start inside)
+PASS A receipt: outputs sha256 / bytes equal the published files
+PASS A receipt: CPU / VmHWM / guard recorded
+PASS A: ref parquet has the declared columns / types and 86,400 rows
+PASS A: ref t_s = every second of the day
+PASS A: ref price equals the reference
+PASS A: ref price_str equals the reference (null when no_data)
+PASS A: ref age_s equals the reference
+PASS A: ref n_obs equals the reference
+PASS A: ref n_recv equals the reference
+PASS A: ref first_recv_ns equals the reference
+PASS A: ref status equals the reference
+PASS A ref gold: second 0: one payload received twice
+PASS A ref gold: a regressed arrival still lands on its own second
+PASS A ref gold: a missing second: stale, carried from the second before
+PASS A ref gold: two prices in one second: conflict, the latest received kept
+PASS A ref gold: two payloads of one price: ok, n_obs 2
+PASS A ref gold: inside the missing relay hour: gap
+PASS A ref gold: the last publish read
+PASS A ref gold: after the last publish read: gap
+PASS A ref receipt: written; missing relay hour; json fallback hour; counts (non-PRICE 1, malformed 1, duplicates 3, regressed 1)
+PASS A ref receipt: sha256 + bytes of every relay hour read
+PASS A ref receipt: identity from the manifest
+INFO day B (near-zero input bytes; no call recorder): cpu_s=0.165 cpu_stages_s={'ledger': 0.0, 'ref': 0.0, 'bn_files': 0.024, 'finalize': 0.04, 'write': 0.1} vmhwm_mib=282.4
+PASS B: relay skipped and said so; no ref parquet
+PASS B receipt: missing previous-day hour, unreadable 03Z, empty 08Z
+PASS B receipt: holes (head, unreadable, empty, tail, the ledger restart) exactly
+PASS B receipt: the ledger start inside the span is recorded
+PASS B: btc parquet has the declared columns / types and 864,000 rows
+PASS B: g_ms = D0 + 100 k
+PASS B: bid equals the reference at every grid point
+PASS B: ask equals the reference at every grid point
+PASS B: mid equals the reference at every grid point
+PASS B: n_upd equals the reference at every grid point
+PASS B: age_ms equals the reference at every grid point
+PASS B: status equals the reference at every grid point
+PASS B gold: no row read before D0 (previous-day hour missing): no_data, NaN prices
+PASS B gold: still no_data at D0 + 200
+PASS B gold: the first row: gap (the head hole ends at e_min + 100)
+PASS B gold: ok after the head hole
+PASS B gold: a ledger restart: gap from the last E_ms before it
+PASS B gold: ok again at e_b + 100
+PASS B gold: a row after the last grid point moves the tail hole past the day
+PASS C: the next-day trap files (both families) were never opened, listed or stat-ed
+PASS C: planned stems in the receipt = the day plan
+PASS C gold: D0 carries the previous day 23Z row (age 500, ok); D1 - 600 stale; D1 - 100 in the tail gap
+PASS C ref gold: second 0 carried from the previous day 23Z (stale, age 100); the day tail after the last publish is gap
+PASS write-once: a rerun of day A is refused
+PASS write-once: the refusal read no data (no hour file, relay or ledger touched)
+PASS write-once: the published files are unchanged
+PASS write-once: a partial earlier publish (receipt only) is refused
+PASS a missing run root is refused
+PASS a missing run root: nothing created
+PASS falsifier: a bookTicker parser mismatch raises (parity)
+PASS parity_bn: nothing published, no staging dir left
+PASS falsifier: a relay parser mismatch raises (parity)
+PASS falsifier: VmHWM >= GUARD_MIB stops the run
+PASS guard: nothing published, no staging dir left
+PASS falsifier: a row stamped before the hf_ws_v2 boundary is refused (era)
+PASS era_row: nothing published, no staging dir left
+PASS falsifier (ledger): schema change inside the span is refused
+PASS falsifier (ledger): schema change inside the span - refused before any hour file
+PASS falsifier (ledger): torn entry that could lie inside the span is refused
+PASS falsifier (ledger): torn entry that could lie inside the span - refused before any hour file
+PASS falsifier (ledger): a non-v2 schema in force at the span start is refused
+PASS falsifier (ledger): a non-v2 schema in force at the span start - refused before any hour file
+PASS falsifier (ledger): unsorted starts is refused
+PASS falsifier (ledger): unsorted starts - refused before any hour file
+PASS falsifier: a relay row of another feed is refused (identity)
+PASS falsifier: the identity refusal came before the bookTicker pass
+PASS probe: outputs + receipt (mode probe, one planned hour)
+PASS probe gold: inside the hour as the day run (D0 + 200: n_upd 4 ok); D0 is gap (head hole); D0 + 3,599,000 gap with n_upd 1 (no next file)
+PASS probe ref gold: second 0 as the day run
+PASS probe: a rerun is refused (write-once)
+PASS probe: an output dir under the run root is refused
+SELFTEST PASS: 141/141 checks passed
+2026-11-23T02:19:27Z tag=mt_btc_selftest1 rc=0 peak_rss_mib=313 wall_s=2.27 cpu_user_s=1.80 memavail_start_gib=22 disk_free_gib=440->440 slot=claude4

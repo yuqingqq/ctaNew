@@ -803,6 +803,30 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- MAKER_TRACE_AMEND4_20261123_DEV -->
+## 2026-11-23 02:24Z (session aea5bfb9) — MAKER-TRACE amendment 4: the 7 failing checks settled (5 lifecycle, 2 checker); BTC grid module; v2 chain next
+
+**Lifecycle bugs, fixed:**
+- same-settle-ms fills voided worst-price groups, which hid exhaustion and `ahead_lo` claims and 2 certain T2 violations;
+- S_NOPRIO's trivial `ahead_lo` was NaN, which mislabelled queue classes as unresolved;
+- one persistence span was not set;
+- joint H3 now allows 0.01 shares of venue display rounding.
+
+Tests: selftest 199/199; simulator 0 of 23,668 claims failed; mutants 23/23.
+
+**Checker bugs, fixed:**
+- no display tolerance on capacity / overfill;
+- an empty book side expected NaN instead of size 0.
+
+Tests: rehearsal 39/39, falsifier 76/76.
+
+**End-to-end run 9:** 39/39 checks, 22/22 re-parse, 76/76 falsifier.
+
+**BTC grid** (`pf_mt_btc.py`): selftest 141/141; probe 1.94 CPU s per hour. A Chainlink BTC/USD reference stream exists (1 s `publishTime`).
+
+**Next:** `MT_RUN=v2`: life for 71 markets, BTC for 4 days, truth, econ, report, checks; then the decision-path run.
+<!-- /MAKER_TRACE_AMEND4_20261123_DEV -->
+
 <!-- MAKER_TRACE_AMEND3_20261123_DEV -->
 ## 2026-11-23 01:34Z (session aea5bfb9) — MAKER-TRACE amendment 3: USER approved the lifecycle fix + a top-3 decision-path study (cap 1.85 h, line 5.25)
 

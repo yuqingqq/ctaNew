@@ -1,0 +1,98 @@
+LIFECYCLE SELFTEST PASSED: 195 checks; VmHWM 124 MiB
+SIMCHECK 4 markets x 60 s (frames, records, legs, hashes per market: [(1221, 1456, 2352, 1135), (1220, 1421, 2290, 1121), (1220, 1378, 2210, 1089), (1220, 1525, 2481, 1294)]); run_market cpu 4.66 s total
+  S_FIFO    persist         observed              n     51  failed     0
+  S_FIFO    post            assumption_sensitive  n   4573  failed  2524
+  S_FIFO    post            constrained           n     62  failed     0
+  S_FIFO    post            unresolved            n      4  failed     0
+  S_FIFO    queue           assumption_sensitive  n   1028  failed     3
+  S_FIFO    removal_member  assumption_sensitive  n   4575  failed    13
+  S_FIFO    removal_member  constrained           n     12  failed     0
+  S_FIFO    removal_member  unresolved            n     52  failed     0
+  S_FIFO    removal_window  assumption_sensitive  n   4575  failed    11
+  S_FIFO    removal_window  constrained           n     12  failed     0
+  S_FIFO    removal_window  unresolved            n     52  failed     0
+  S_FIFO    size_exact      assumption_sensitive  n   1799  failed    13
+  S_FIFO    size_lb         observed              n   4639  failed     0
+  S_FIFO    size_ub         assumption_sensitive  n   2523  failed    17
+  S_FIFO    size_ub         constrained           n      1  failed     0
+  S_FIFO_LO persist         observed              n     51  failed     0
+  S_FIFO_LO post            assumption_sensitive  n   4573  failed    67
+  S_FIFO_LO post            constrained           n     62  failed     0
+  S_FIFO_LO post            unresolved            n      4  failed     0
+  S_FIFO_LO queue           assumption_sensitive  n   1028  failed     3
+  S_FIFO_LO removal_member  assumption_sensitive  n   4575  failed    13
+  S_FIFO_LO removal_member  constrained           n     12  failed     0
+  S_FIFO_LO removal_member  unresolved            n     52  failed     0
+  S_FIFO_LO removal_window  assumption_sensitive  n   4575  failed   361
+  S_FIFO_LO removal_window  constrained           n     12  failed     0
+  S_FIFO_LO removal_window  unresolved            n     52  failed     0
+  S_FIFO_LO size_exact      assumption_sensitive  n   1799  failed    13
+  S_FIFO_LO size_lb         observed              n   4639  failed     0
+  S_FIFO_LO size_ub         assumption_sensitive  n   2471  failed    18
+  S_FIFO_LO size_ub         constrained           n      1  failed     0
+  S_NOPRIO  persist         observed              n     51  failed     0
+  S_NOPRIO  post            assumption_sensitive  n   4573  failed  1226
+  S_NOPRIO  post            constrained           n     62  failed     0
+  S_NOPRIO  post            unresolved            n      4  failed     0
+  S_NOPRIO  removal_member  assumption_sensitive  n   4575  failed     0
+  S_NOPRIO  removal_member  constrained           n     12  failed     0
+  S_NOPRIO  removal_member  unresolved            n     52  failed     0
+  S_NOPRIO  removal_window  assumption_sensitive  n   4575  failed     1
+  S_NOPRIO  removal_window  constrained           n     12  failed     0
+  S_NOPRIO  removal_window  unresolved            n     52  failed     0
+  S_NOPRIO  size_lb         observed              n   4639  failed     0
+  S_NOPRIO  size_ub         assumption_sensitive  n    881  failed     4
+  S_NOPRIO  size_ub         constrained           n      1  failed     0
+  fills     window          observed              n   9333  failed     0
+  orders    class_property  observed              n      4  failed     0
+  priority tests (T1 makers, T1 violations settle order, T1 certain, T2 groups, T2 violations settle order, T2 certain): [{'S_FIFO': (304, 62, 0, 409, 121, 0), 'S_FIFO_LO': (304, 62, 0, 409, 121, 0)}, {'S_FIFO': (321, 67, 0, 403, 112, 0), 'S_FIFO_LO': (321, 67, 0, 403, 112, 0)}, {'S_FIFO': (255, 47, 0, 411, 126, 0), 'S_FIFO_LO': (255, 47, 0, 411, 126, 0)}, {'S_FIFO': (381, 74, 0, 421, 110, 0), 'S_FIFO_LO': (381, 74, 0, 421, 110, 0)}]
+  evidence lo_ms (a scenario refinement) at or after the true match: 4 of 9328 bounded fills (0.0429%); lo < match on 9324 (99.9571%)
+SIMCHECK PASSED: 0 of 23668 observed / constrained claims failed; T1 / T2 certain = 0; assumption_sensitive misses 4287
+mutant: hard H3 contradiction silenced
+   3 of 195 checks fail, first: f contradiction in every scenario (['capacity_bounds_void', 'capacity_bounds_void', 'capacity_bounds_void'])
+mutant: violated cells known to the others (B1)
+   1 of 195 checks fail, first: f3 violated cells are unknown for another order (1100, cancelled_or_expired|exhausted, capacity_bounds_void+capacity_contradiction)
+mutant: persistence observed with an empty span (B3)
+   5 of 195 checks fail, first: hs S_FIFO identity conflict: no span (identity_conflict, -1)
+mutant: rule 2 survivor gets no ahead_lo
+   7 of 195 checks fail, first: g2 S_FIFO the survivor x2 had x1 ahead (0.0, exh False, 0.0)
+mutant: rule 2 exhausts the survivor too
+   2 of 195 checks fail, first: g2 S_FIFO the survivor x2 had x1 ahead (4.0, exh True, 4.0)
+mutant: T1 violations not counted
+   1 of 195 checks fail, first: t1 a price-exhausted maker fills again; tied legs in the units, never a later fill ({'makers': 4, 'violations': 0, 'rate': 0.0, 'violations_certain': 
+mutant: T1 excludes tied legs (fix4 reverted)
+   1 of 195 checks fail, first: t1 a price-exhausted maker fills again; tied legs in the units, never a later fill ({'makers': 2, 'violations': 1, 'rate': 0.5, 'violations_certain': 
+mutant: T1 violator still claimed exhausted
+   1 of 195 checks fail, first: t1 q1 flagged, no exhaustion claim even at its last fill (fifo_reappearance, 3.0)
+mutant: per-fill exhaustion kept for a T1 violator
+   1 of 195 checks fail, first: t1 no per-fill exhaustion for a T1 violator
+mutant: a tie voids the rule-2 group (fix4 reverted)
+   5 of 195 checks fail, first: ty1 S_FIFO tied yA exhausted by time priority (nan, cancelled_or_expired|end_censored|exhausted|missing_evidence, fifo_front, ok); xB ahead_lo 0.0
+mutant: exhaustion only at the last-ranked fill (fix4 reverted)
+   3 of 195 checks fail, first: t1 q5 exhausted twice in one settle ms: fifo_tie_conflict, no claim (ahead_hi_negative+fifo_tie_conflict, 2.0, 1)
+mutant: a tie conflict claimed exhausted
+   1 of 195 checks fail, first: t1 q5 exhausted twice in one settle ms: fifo_tie_conflict, no claim (ahead_hi_negative+fifo_tie_conflict, 2.0, 1)
+mutant: S_NOPRIO queue NaN (fix4 reverted)
+   4 of 195 checks fail, first: a h7 S_NOPRIO queue the trivial [0, NaN]
+mutant: queue class by a non-trivial value (fix4 reverted)
+   2 of 195 checks fail, first: class property market 142 ([('tS', 'queue')])
+mutant: persistence only for valid orders (fix4 reverted)
+   3 of 195 checks fail, first: hs S_FIFO sub-cent order: span [1060, 6060 - 2000] observed (leg_off_grid+subcent_price, -1792803600001, -1792803600001, unresolved)
+mutant: invalid-order persistence unresolved (fix4 reverted)
+   3 of 195 checks fail, first: hs S_FIFO sub-cent order: span [1060, 6060 - 2000] observed (leg_off_grid+subcent_price, 1060, 4060, unresolved)
+mutant: persistence for an identity conflict
+   3 of 195 checks fail, first: hs S_FIFO identity conflict: no span (identity_conflict, 1792803601060)
+mutant: one display tolerance for any number of orders (fix4 reverted)
+   2 of 195 checks fail, first: tp2 two short-shown orders give no false posting bound ([7000, 7000, 7000], assumption_sensitive)
+mutant: hard posting tolerance without the order itself
+   1 of 195 checks fail, first: tp2 two short-shown orders give no false posting bound ([5000, 5000, 5000], constrained)
+mutant: scenario posting tolerance without the order itself
+   1 of 195 checks fail, first: tp2 two short-shown orders give no false posting bound ([7000, 7000, 7000], assumption_sensitive)
+mutant: T2 violators not flagged
+   2 of 195 checks fail, first: t2 both flagged, no claims
+mutant: classes: every scenario identical
+   43 of 195 checks fail, first: class property market 101 ([('h7', 'queue'), ('h9', 'queue'), ('h7', 'removal')])
+mutant: room ignores the other orders
+   2 of 195 checks fail, first: n S_NOPRIO nA gone by accounting (cancelled_or_expired|exhausted, 4100, book_gone)
+MUTANTS: base passes None checks; killed 23 of 23
+2026-11-23T02:08:55Z tag=mt_life_fix4_mut rc=0 peak_rss_mib=202 wall_s=67.16 cpu_user_s=66.90 memavail_start_gib=22 disk_free_gib=440->440 slot=claude3
