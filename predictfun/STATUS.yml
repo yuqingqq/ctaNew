@@ -505,7 +505,7 @@ ladder_async_fast_results_20261122_dev:
   batch_core_hours: 0.201
   line_core_hours: 2.375
 maker_trace_reconstruction_20261122_dev:
-  status: results_receipt_complete_review_pending_r3_provisional
+  status: amend3_fix_and_decision_paths_approved_cap_1.85
   results_asof: "2026-11-23 01:18Z"
   checker: 32_of_39
   r1: supported

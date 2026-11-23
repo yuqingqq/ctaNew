@@ -10,6 +10,17 @@ REPO = Path('/home/yuqing/ctaNew')
 PF_RUN = REPO / 'data/predict_fun/runs/20261021T162823Z_0dd45f2d5a'
 OUT = REPO / 'data/predict_fun/research/maker_trace_v1_20261122'
 RECEIPT = REPO / 'predictfun/reviews/maker_trace_20261122'
+# amendment 3 (2026-11-23): a downstream re-run (MT_RUN=v<n>) switches the ROOTS, so no module path changes: OUT -> maker_trace_<run>_20261123
+# (tools/setup_run.py fills it with read-only links to the shared v1 extract outputs and the v2 truth table), RECEIPT -> the receipt's <run>/
+# subdirectory. Every v1 output stays untouched (write-once); after a fix only the re-run's numbers are reported.
+import os as _os
+RUN = _os.environ.get('MT_RUN', 'v1')
+if not (RUN == 'v1' or (RUN[:1] == 'v' and RUN[1:].isdigit())):
+    raise ValueError(f'bad MT_RUN {RUN!r}')
+OUT_V1, RECEIPT_V1 = OUT, RECEIPT
+if RUN != 'v1':
+    OUT = REPO / f'data/predict_fun/research/maker_trace_{RUN}_20261123'
+    RECEIPT = RECEIPT_V1 / RUN
 STEP1 = REPO / 'data/predict_fun/research/step1'
 E18 = 10 ** 18
 GUARD_MIB = 1450.                      # self-guard below the 1,536 MiB checkpoint (never raised)

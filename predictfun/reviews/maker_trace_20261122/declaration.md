@@ -138,3 +138,15 @@ These are the builders' declared conventions, adopted as they stand:
 If the projection does not fit, stop for a USER resource decision.
 
 **Amendment 1 (2026-11-23):** the first projection refused: 1.4046 h against 1.35, with the line at 4.7153 within 4.85 (`logs/projection.json`, kept). The USER approved **+0.10 h: cap 1.45**, with the line ceiling unchanged at 4.85. A write-once `logs/projection_v2.json` is computed from the same measurements and records the superseded file's sha256. The launcher's gate reads it. No builder, checker or reading rule changed.
+
+## Amendment 3 (2026-11-23) — USER: run the lifecycle fix; add the top-3 decision-path study
+
+**USER approval** (AskUserQuestion): +0.40 h, giving **cap 1.85 core-hours and line ceiling 5.25**.
+
+**Lifecycle fix** (the 7 failing checks of `checks_20261123T011521Z.json`):
+- each check is settled builder-side or checker-side and fixed;
+- the downstream chain (lifecycle → truth score → econ → report → checks) re-runs with `MT_RUN=v2` under switched roots: `OUT = data/predict_fun/research/maker_trace_v2_20261123` and `RECEIPT = reviews/maker_trace_20261122/v2/`. `tools/setup_run.py` fills the new data root with read-only links to the shared v1 extract outputs and the v2 truth table;
+- v1 outputs stay untouched, and only v2 numbers are reported after the fix;
+- the extract outputs are shared and are not re-run.
+
+**Decision-path study:** the ex-ante top 3 by Oct 23 maker shares (ranks 1–3 in `identities.json`). Conditions for posting (price vs a BTC-implied fair value and vs the best, level, size, time in window, refill / reprice, removal around BTC moves) and for taking (a hazard by the stale-quote gap, BTC momentum and time left), from Oct 24–27 public data and the Binance BTC tape. The contract is [decision_contract.md](decision_contract.md), frozen before its data run.

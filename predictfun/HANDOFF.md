@@ -764,6 +764,28 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- MAKER_TRACE_AMEND3_20261123_DEV -->
+## 2026-11-23 01:34Z (session aea5bfb9) — MAKER-TRACE amendment 3: USER approved the lifecycle fix + a top-3 decision-path study (cap 1.85 h, line 5.25)
+
+**USER:** "Yes we can run the fix. Besides, can we check like top 3 makers, totally understand what they are doing, like under what condition they post and what conditions they take, we need their decision path."
+
+**Approved** (AskUserQuestion): +0.40 h, giving cap 1.85 and line 5.25. The makers are the ex-ante top 3 by Oct 23 maker shares (ranks 1–3: 0x6Da6Cb, 0x7d32c5, 0x57FbC8). The option text had misnamed rank 3 as 0x5E4981; this is corrected, and the USER is told.
+
+**Mechanics:**
+- `MT_RUN=v2` switches the roots: `OUT` → `maker_trace_v2_20261123` and `RECEIPT` → `maker_trace_20261122/v2/`.
+- `tools/setup_run.py` links the shared v1 extract outputs and the v2 truth table read-only into the new root.
+- v1 stays untouched, and only v2 numbers are reported after the fix.
+
+**Study contract:** [decision_contract.md](reviews/maker_trace_20261122/decision_contract.md), with BTC features from the Binance bookTicker, a take hazard by stale gap / momentum / time left, the post path, and two synthetic positive controls.
+
+**Next:**
+- investigate the 7 failing checks;
+- fixes, then the v2 chain;
+- the decision-path modules, then their run.
+
+One combined receipt and review follow.
+<!-- /MAKER_TRACE_AMEND3_20261123_DEV -->
+
 <!-- MAKER_TRACE_RESULTS_20261123_DEV -->
 ## 2026-11-23 01:18Z (session aea5bfb9) — MAKER-TRACE-RECONSTRUCTION-v1 RESULTS: how the top makers make money (descriptive; 4 consumed days, no intervals)
 

@@ -11,6 +11,10 @@
 set -u
 R=/home/yuqing/ctaNew; P=$R/predictfun/research; D=$R/predictfun/reviews/maker_trace_20261122; L=$D/logs; RL=$P/run_light.sh
 OUT=$R/data/predict_fun/research/maker_trace_v1_20261122; PREFIX=20261024
+# amendment 3: MT_RUN=v<n> (exported by the caller) re-runs the downstream chain under the run's roots (pf_mt_common: OUT / RECEIPT switch); tags get _<run>
+MT_RUN=${MT_RUN:-v1}; export MT_RUN; TR=; [ "$MT_RUN" = v1 ] || { TR=_$MT_RUN; OUT=$R/data/predict_fun/research/maker_trace_${MT_RUN}_20261123; }
+LIFEDIR=$OUT/life
+[ -d "$OUT" ] || { echo "REFUSED: $OUT missing (MT_RUN=$MT_RUN: run tools/setup_run.py first)" >&2; exit 1; }
 mkdir -p $L
 
 SOURCES="predictfun/research/pf_mt_common.py predictfun/research/pf_mt_extract.py predictfun/research/pf_mt_extract_selftest.py
@@ -80,20 +84,20 @@ case "${1:-}" in
     ms=$(depth_mids $day); [ -n "$ms" ] || { echo "REFUSED: no depth market written for $day (extract it first)" >&2; exit 1; }
     for m in $ms; do
       [ "$day" = "$PREFIX" ] && [ "$m" = "$m0" ] && continue
-      [ -e "$OUT/life/${day}_${m}.json" ] && continue     # already built (write-once outputs); a rerun only fills the gaps
-      run $slot mt_life_${day}_$m$S python3 $P/pf_mt_lifecycle.py market $day $m || rc=1
+      [ -e "$LIFEDIR/${day}_${m}.json" ] && continue     # already built (write-once outputs); a rerun only fills the gaps
+      run $slot mt_life${TR}_${day}_$m$S python3 $P/pf_mt_lifecycle.py market $day $m || rc=1
     done; exit $rc ;;
   truth)
     gate; S=$(sfx "${2:-}") || exit 2
-    run claude mt_x_truth_dry$S python3 $P/pf_mt_truth.py dry && run claude mt_x_truth_score$S python3 $P/pf_mt_truth.py score ;;
+    run claude mt_x_truth_dry$TR$S python3 $P/pf_mt_truth.py dry && run claude mt_x_truth_score$TR$S python3 $P/pf_mt_truth.py score ;;
   econ)
-    gate; S=$(sfx "${2:-}") || exit 2; run claude mt_x_econ$S python3 $P/pf_mt_econ.py run ;;
+    gate; S=$(sfx "${2:-}") || exit 2; run claude mt_x_econ$TR$S python3 $P/pf_mt_econ.py run ;;
   report)   # the report module is frozen by its own later commit (before any reading); it must be tracked and equal HEAD
     gate; S=$(sfx "${2:-}") || exit 2; RS="predictfun/research/pf_mt_report.py predictfun/research/pf_mt_report_selftest.py"
     git -C $R ls-files --error-unmatch $RS > /dev/null 2>&1 && git -C $R diff --quiet HEAD -- $RS \
       || { echo "REFUSED: the report module is untracked or differs from HEAD" >&2; exit 1; }
-    run claude mt_x_report_selftest$S python3 $P/pf_mt_report_selftest.py && run claude mt_x_report$S python3 $P/pf_mt_report.py ;;
+    run claude mt_x_report_selftest$TR$S python3 $P/pf_mt_report_selftest.py && run claude mt_x_report$TR$S python3 $P/pf_mt_report.py ;;
   checks)
-    gate; S=$(sfx "${2:-}") || exit 2; run claude mt_x_checks$S python3 $D/mt_checks.py run ;;
+    gate; S=$(sfx "${2:-}") || exit 2; run claude mt_x_checks$TR$S python3 $D/mt_checks.py run ;;
   *) echo "usage: launch_mt.sh selftest | extract <day> <slot> [sfx] | life-prefix | project | life <day> <slot> [sfx] | truth | econ | report | checks" >&2; exit 2 ;;
 esac

@@ -1,4 +1,21 @@
-# MAKER-TRACE-RECONSTRUCTION-v1 — pending work (written when the usage limit was reached)
+# MAKER-TRACE-RECONSTRUCTION-v1 — pending work
+
+## STATE 2026-11-23 01:19Z — RESULTS COMMITTED (1af85c56); WAITING — read this first
+
+**Done:**
+- results receipt `report.md` (claims in `claims.json`), pushed;
+- ONE Codex review queued (message 01a205fc, range 5927971d..1af85c56).
+
+**Nothing to run.** Auto-continue: reply "waiting" unless a new review commit appears.
+
+**When a Codex review commit** (trailer `Predictfun-Review-Only: true`) lands on the local branch after 1af85c56:
+1. read it;
+2. verify its findings at the code;
+3. report them to the USER together with the resource question.
+
+The open item is the 7 failing lifecycle / book-size checks (R3 provisional). Fixing them and re-running the lifecycle, report and checks needs about 0.1 h beyond the remaining 0.05 h reserve (spent 1.341 of 1.45). That is a **USER decision**: start no run that needs it.
+
+# (older notes below)
 
 2026-11-22, session aea5bfb9. Nothing here is frozen or committed except the contract (5927971d).
 

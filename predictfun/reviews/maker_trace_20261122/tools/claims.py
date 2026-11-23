@@ -9,7 +9,9 @@ from pathlib import Path
 
 import pandas as pd
 
-D = Path('/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122'); O = D / 'outputs'; OUTP = D / 'claims.json'
+sys.path.insert(0, '/home/yuqing/ctaNew/predictfun/research')
+import pf_mt_common as C   # noqa: E402  amendment 3: the run's receipt root (MT_RUN)
+D = C.RECEIPT; O = D / 'outputs'; OUTP = D / 'claims.json'
 DAYS = ['20261024', '20261025', '20261026', '20261027']
 
 

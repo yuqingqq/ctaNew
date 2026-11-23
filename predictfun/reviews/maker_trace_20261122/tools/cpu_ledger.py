@@ -9,7 +9,7 @@ import re
 import sys
 
 LOG = '/home/yuqing/ctaNew/predictfun/research/run_light.log'
-START, CAP, RESERVE, LINE_BEFORE, CEILING = '2026-11-22T08:00:00Z', 1.45, 0.05, 3.3107, 4.85   # USER top-ups: 0.90 -> 1.35 h (4.40 -> 4.85), then 1.35 -> 1.45 h after the prefix gate (amendment 1)
+START, CAP, RESERVE, LINE_BEFORE, CEILING = '2026-11-22T08:00:00Z', 1.85, 0.05, 3.3107, 5.25   # USER top-ups: 0.90 -> 1.35 h (4.40 -> 4.85); -> 1.45 (amendment 1); -> 1.85 / line 5.25 for the lifecycle fix + top-3 decision paths (amendment 3)
 PAT = re.compile(r'^(\S+) tag=(mt_\S+) rc=(\S+) .*?wall_s=(\S+) cpu_user_s=(\S+)')
 
 
