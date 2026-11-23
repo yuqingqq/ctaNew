@@ -1,0 +1,490 @@
+{
+ "addresses": [
+  {
+   "addr": "0x6Da6Cb464F92AE7aD4Ec3d239c81719Cb1D0Ae03",
+   "rank": 1,
+   "top3": true
+  },
+  {
+   "addr": "0x7d32c568a9bEA1714036972601c51F4902C67091",
+   "rank": 2,
+   "top3": true
+  },
+  {
+   "addr": "0x57FbC891E89184DA071AE9D97E745531cd7F718a",
+   "rank": 3,
+   "top3": true
+  },
+  {
+   "addr": "0x5E498154448608C826E005c93533B827Cbb6377e",
+   "rank": 4,
+   "top3": false
+  },
+  {
+   "addr": "0x22EE0B771e624a62b38b6B6FFFB2ba50fb4EE61A",
+   "rank": 5,
+   "top3": false
+  },
+  {
+   "addr": "0xCc8A732777a7529Ea70df18831fAB1B148c22a9E",
+   "rank": 6,
+   "top3": false
+  },
+  {
+   "addr": "0x0CCF72d0f646971ADB346E3bcFE425847351669B",
+   "rank": 7,
+   "top3": false
+  },
+  {
+   "addr": "0x9b18a93da790BD6cD8223d16ef4508f5b6903087",
+   "rank": 8,
+   "top3": false
+  },
+  {
+   "addr": "0x11EECAEc6aa40dE64e35DDEb3f8376F2AF25a927",
+   "rank": 9,
+   "top3": false
+  },
+  {
+   "addr": "0x192495Cb5C3c8a43B18676e29706dB34f6e828e8",
+   "rank": 10,
+   "top3": false
+  }
+ ],
+ "answer_tally": {
+  "ranks4_10": {
+   "n_address_days": 28,
+   "n_fee_convention_sensitive": 0,
+   "reading": {
+    "good_turnover_lost_to_residual": 14,
+    "good_turnover_residual_not_negative": 10,
+    "no_closes": 0,
+    "no_resolved_markets": 0,
+    "no_rows": 2,
+    "turnover_itself_poor": 2
+   },
+   "reading_fee_res": {
+    "good_turnover_lost_to_residual": 14,
+    "good_turnover_residual_not_negative": 10,
+    "no_closes": 0,
+    "no_resolved_markets": 0,
+    "no_rows": 2,
+    "turnover_itself_poor": 2
+   }
+  },
+  "top10": {
+   "n_address_days": 40,
+   "n_fee_convention_sensitive": 0,
+   "reading": {
+    "good_turnover_lost_to_residual": 24,
+    "good_turnover_residual_not_negative": 10,
+    "no_closes": 0,
+    "no_resolved_markets": 0,
+    "no_rows": 2,
+    "turnover_itself_poor": 4
+   },
+   "reading_fee_res": {
+    "good_turnover_lost_to_residual": 24,
+    "good_turnover_residual_not_negative": 10,
+    "no_closes": 0,
+    "no_resolved_markets": 0,
+    "no_rows": 2,
+    "turnover_itself_poor": 4
+   }
+  },
+  "top3": {
+   "n_address_days": 12,
+   "n_fee_convention_sensitive": 0,
+   "reading": {
+    "good_turnover_lost_to_residual": 10,
+    "good_turnover_residual_not_negative": 0,
+    "no_closes": 0,
+    "no_resolved_markets": 0,
+    "no_rows": 0,
+    "turnover_itself_poor": 2
+   },
+   "reading_fee_res": {
+    "good_turnover_lost_to_residual": 10,
+    "good_turnover_residual_not_negative": 0,
+    "no_closes": 0,
+    "no_resolved_markets": 0,
+    "no_rows": 0,
+    "turnover_itself_poor": 2
+   }
+  },
+  "top3_pooled_days": {
+   "n_address_days": 3,
+   "n_fee_convention_sensitive": 0,
+   "reading": {
+    "good_turnover_lost_to_residual": 3,
+    "good_turnover_residual_not_negative": 0,
+    "no_closes": 0,
+    "no_resolved_markets": 0,
+    "no_rows": 0,
+    "turnover_itself_poor": 0
+   },
+   "reading_fee_res": {
+    "good_turnover_lost_to_residual": 3,
+    "good_turnover_residual_not_negative": 0,
+    "no_closes": 0,
+    "no_resolved_markets": 0,
+    "no_rows": 0,
+    "turnover_itself_poor": 0
+   }
+  }
+ },
+ "argv": [
+  "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/tools/closes.py",
+  "run"
+ ],
+ "asof_end": "2026-11-23T06:06:40Z",
+ "asof_start": "2026-11-23T06:06:32Z",
+ "checks": {
+  "attributed": {
+   "max_dev": 1.0913936421275139e-11,
+   "ok": true,
+   "tol": "1e-09 + 1e-12 x traded shares"
+  },
+  "close_sh_eq_cap": {
+   "max_dev": 4.547473508864641e-13,
+   "ok": true,
+   "tol": "1e-06 relative, floor 1"
+  },
+  "fee_fill": {
+   "max_dev": 6.394884621840902e-14,
+   "ok": true,
+   "tol": "1e-06 relative, floor 1"
+  },
+  "fee_fill_attribution": {
+   "max_dev": 7.105427357601002e-14,
+   "ok": true,
+   "tol": "1e-06 relative, floor 1"
+  },
+  "fee_res": {
+   "max_dev": 4.973799150320701e-14,
+   "ok": true,
+   "tol": "1e-06 relative, floor 1"
+  },
+  "fee_res_attribution": {
+   "max_dev": 8.526512829121202e-14,
+   "ok": true,
+   "tol": "1e-06 relative, floor 1"
+  },
+  "gross_identity": {
+   "max_dev": 1.1084466677857563e-12,
+   "ok": true,
+   "tol": "1e-06 relative, floor 1"
+  },
+  "gross_rows": {
+   "max_dev": 4.092726157978177e-12,
+   "ok": true,
+   "tol": "1e-06 relative, floor 1"
+  },
+  "net_identity": {
+   "max_dev": 1.0800249583553523e-12,
+   "ok": true,
+   "tol": "1e-06 relative, floor 1"
+  },
+  "net_pos": {
+   "max_dev": 2.8535396268125623e-11,
+   "ok": true,
+   "tol": "1e-06 relative, floor 1"
+  },
+  "resid_end": {
+   "max_dev": 8.141411779764504e-12,
+   "ok": true,
+   "tol": "1e-06 relative, floor 1"
+  },
+  "resid_res": {
+   "max_dev": 1.5143442055887135e-11,
+   "ok": true,
+   "tol": "1e-06 relative, floor 1"
+  },
+  "resid_sh_eq_abs_net_pos": {
+   "max_dev": 6.139089236967266e-12,
+   "ok": true,
+   "tol": "1e-06 relative, floor 1"
+  },
+  "rt_pnl": {
+   "max_dev": 1.4210854715202004e-11,
+   "ok": true,
+   "tol": "1e-06 relative, floor 1"
+  },
+  "rt_sh": {
+   "max_dev": 2.9103830456733704e-11,
+   "ok": true,
+   "tol": "1e-06 relative, floor 1"
+  }
+ },
+ "constants": {
+  "cpu_cap_s": 150.0,
+  "dust_sh": 1e-06,
+  "eps_usd": 1e-09,
+  "quants": [
+   0.1,
+   0.25,
+   0.5,
+   0.75,
+   0.9
+  ],
+  "rel_tol": 1e-06,
+  "sh_tol_abs": 1e-09,
+  "sh_tol_rel": 1e-12,
+  "top3": [
+   "0x6Da6Cb464F92AE7aD4Ec3d239c81719Cb1D0Ae03",
+   "0x7d32c568a9bEA1714036972601c51F4902C67091",
+   "0x57FbC891E89184DA071AE9D97E745531cd7F718a"
+  ]
+ },
+ "contract": "predictfun/reviews/maker_trace_20261122/decision_contract.md (Amendment 2, 1. Completed closes)",
+ "counts": {
+  "20261024": {
+   "closes": 247710,
+   "depth": {
+    "d0": 201450,
+    "d1": 26325,
+    "d2": 9646,
+    "d3p": 9679,
+    "inside": 13814,
+    "unknown": 857
+   },
+   "dust": 2,
+   "fills_valued_rows_scanned": 1449746,
+   "groups": 2008,
+   "lots": 260590,
+   "maker_market_rows_scanned": 205415,
+   "row_groups_fv": 18,
+   "row_groups_fv_mixed": 0,
+   "row_groups_mm": 18,
+   "rows": 261771,
+   "rows_excl": 131,
+   "rows_ok": 261640,
+   "rows_self": 1050,
+   "status": {
+    "ok": 261640,
+    "src_status": 131
+   }
+  },
+  "20261025": {
+   "closes": 191540,
+   "depth": {
+    "d0": 157106,
+    "d1": 19525,
+    "d2": 7846,
+    "d3p": 8195,
+    "inside": 10700,
+    "unknown": 932
+   },
+   "dust": 4,
+   "fills_valued_rows_scanned": 1474354,
+   "groups": 1877,
+   "lots": 203619,
+   "maker_market_rows_scanned": 204510,
+   "row_groups_fv": 18,
+   "row_groups_fv_mixed": 0,
+   "row_groups_mm": 18,
+   "rows": 204304,
+   "rows_excl": 267,
+   "rows_ok": 204037,
+   "rows_self": 418,
+   "status": {
+    "ok": 204037,
+    "src_status": 267
+   }
+  },
+  "20261026": {
+   "closes": 290832,
+   "depth": {
+    "d0": 248956,
+    "d1": 28094,
+    "d2": 9945,
+    "d3p": 7983,
+    "inside": 12035,
+    "unknown": 901
+   },
+   "dust": 2,
+   "fills_valued_rows_scanned": 1742982,
+   "groups": 2233,
+   "lots": 307085,
+   "maker_market_rows_scanned": 231968,
+   "row_groups_fv": 18,
+   "row_groups_fv_mixed": 0,
+   "row_groups_mm": 18,
+   "rows": 307914,
+   "rows_excl": 129,
+   "rows_ok": 307785,
+   "rows_self": 700,
+   "status": {
+    "ok": 307785,
+    "src_status": 129
+   }
+  },
+  "20261027": {
+   "closes": 267674,
+   "depth": {
+    "d0": 229581,
+    "d1": 27919,
+    "d2": 9372,
+    "d3p": 7707,
+    "inside": 9923,
+    "unknown": 1060
+   },
+   "dust": 6,
+   "fills_valued_rows_scanned": 1745046,
+   "groups": 2395,
+   "lots": 284397,
+   "maker_market_rows_scanned": 225677,
+   "row_groups_fv": 18,
+   "row_groups_fv_mixed": 0,
+   "row_groups_mm": 18,
+   "rows": 285562,
+   "rows_excl": 667,
+   "rows_ok": 284895,
+   "rows_self": 498,
+   "status": {
+    "boundary_censored": 590,
+    "ok": 284895,
+    "src_status": 77
+   }
+  }
+ },
+ "cpu_s": {
+  "by_day": {
+   "20261024": 1.35,
+   "20261025": 2.42,
+   "20261026": 3.91,
+   "20261027": 5.26
+  },
+  "cap": 150.0,
+  "total": 7.99
+ },
+ "days": [
+  "20261024",
+  "20261025",
+  "20261026",
+  "20261027"
+ ],
+ "depth_source": "dpt",
+ "depth_vocab": [
+  "d0",
+  "d1",
+  "d2",
+  "d3p",
+  "inside",
+  "unknown"
+ ],
+ "git": {
+  "head": "e2201c2585dc2dc4d3eba4300aa9fb1324960a4f",
+  "tool_files": [
+   "predictfun/reviews/maker_trace_20261122/tools/closes.py",
+   "predictfun/reviews/maker_trace_20261122/tools/closes_selftest.py"
+  ],
+  "tracked": true,
+  "unmodified": true
+ },
+ "inputs": {
+  "fills_valued": {
+   "bytes": 1078229581,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/econ/fills_valued.parquet",
+   "sha256": "2a874707cc7801d6760e2de36075870700cc0be8e72cd9a6df0213424221cde6"
+  },
+  "identities": {
+   "bytes": 80624,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/econ/identities.json",
+   "sha256": "321c5274cc9cbc2151f94aad619ad199de41b98db4a410d12b83b61aa69aa239"
+  },
+  "maker_market": {
+   "bytes": 153791175,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/econ/maker_market.parquet",
+   "sha256": "735fb019143dcb16cfefccd1417da6866dd7b67177eaa37935ab40f22ab2198d"
+  }
+ },
+ "memory": {
+  "by_day": {
+   "20261024": 434.140625,
+   "20261025": 434.140625,
+   "20261026": 513.18359375,
+   "20261027": 513.18359375
+  },
+  "guard_mib": 1450.0,
+  "process": "one process; one day at a time",
+  "vmhwm_mib": 513.18359375
+ },
+ "module": "tools/closes.py",
+ "not_measured": "no model skill, latent policy or profitability for us: an accounting of recorded fills",
+ "outputs": {
+  "answer.json": {
+   "bytes": 54303,
+   "rows": 60,
+   "sha256": "b128276adbbab91b3b3099e103440e9aa3095643f02b5280a16eaf3a8cf65b46"
+  },
+  "closes.parquet": {
+   "bytes": 79140275,
+   "rows": 997770,
+   "sha256": "5591461db1f00ae47c70acb8e9b9c657faa53f1ef13157afce6e42ee4b39e3ef"
+  },
+  "closes_markets.parquet": {
+   "bytes": 1241239,
+   "rows": 8513,
+   "sha256": "bd1fb1e33dcbae1650020c1b277d4c8ea58c0c83d318d6ba1a2011bb86b9b981"
+  },
+  "closes_summary.csv": {
+   "bytes": 73303,
+   "rows": 300,
+   "sha256": "37897bddda00fb09b146c9313318669f84ebc248b9682528ba2de355b4608feb"
+  },
+  "cohorts.csv": {
+   "bytes": 409386,
+   "rows": 525,
+   "sha256": "bf2ab03590e8c609e51a5b9abf855a0a15fcef2142e12984d4344f91425b0a1a"
+  },
+  "residual_summary.csv": {
+   "bytes": 33608,
+   "rows": 60,
+   "sha256": "79c990c114d6785717f9787eb6386864cbc3aea197d0dfaabe794b41ff36e81a"
+  }
+ },
+ "review": "predictfun/reviews/automatic/20261123_maker_trace_review/report.md (567f741d9), next priority item 2",
+ "row_groups": {
+  "fills_valued": {
+   "empty": 0,
+   "mixed": 0,
+   "no_stats": 0,
+   "row_groups": 90,
+   "skipped": 18
+  },
+  "maker_market": {
+   "empty": 0,
+   "mixed": 0,
+   "no_stats": 0,
+   "row_groups": 90,
+   "skipped": 18
+  }
+ },
+ "rules": {
+  "answer": "turnover_itself_poor: close net (fee_fill) <= 1e-09; good_turnover_lost_to_residual: close net > 1e-09 and residual value to resolution < -1e-09; else good_turnover_residual_not_negative; no_rows / no_resolved_markets / no_closes first; sensitivity: fees at resolution (close net_feeres; residual value - its fee_res)",
+  "cohorts": "lot rows with ok 1s / 10s / 60s / END marks and a resolution; scope x role x depth x day; net = gross - fee_fill at marks, gross - fee_res at resolution; per share on own cohort shares and on the common denominator (all resolved lot shares of the scope and day)",
+  "dust": "closes below 1e-06 shares stay in every sum, are flagged dust, never counted nor in holding-time quantiles",
+  "lots": "status ok rows, self-trades out (pf_mt_econ.fifo); per address x market x day",
+  "order": "econ FIFO order (settle_ms, sid, px_rank, mk_idx, maker first) and its per-side cumulative shares; unit j bought pairs unit j sold; a close = one interval of the merged boundaries in [0, min(bought, sold)], the cap taken from the final cumulative boundaries (never a separately rounded total); entry = the earlier leg, close = the later; hold = close settle_ms - entry settle_ms (UUIDv7 creation, the FIFO clock)",
+  "population": "econ/identities.json ex_ante.top10_shares (ranks 1-3 = the contract top 3, all 10 = the benchmark); their fills_valued rows (maker and taker legs) on the measurement days, read per day through the row-group statistics of day; ok / excluded counts = maker_market",
+  "reconcile": "vs econ maker_market per address x market x day, refusing: rows; attributed = mq / rq (tol 1e-09 + 1e-12 x traded shares); rt_pnl, rt_sh; gross identity; gross from rows; resid_res, resid_drift, net_pos, fee_fill, fee_res; net identity; fee proration; close shares = X; residual shares = |net position| (tolerance 1e-06 relative, floor 1)",
+  "residual": "rq = q - attributed; value to END sum s rq (m_end - p), to resolution sum s rq (V - p), END->resolution (V - m_end) x net position; prorated fees; max |position| along the chronological lot path (self-trades out)",
+  "summary": "closes in resolved markets (others counted); share-weighted holding-time quantiles (smallest hold reaching q of the shares) and the lower count median; residual_summary over resolved markets",
+  "values": "P&L = shares x (sell - buy price), YES space, V-free; leg fees prorated by shares at the fill price (fee_fill, primary) and at resolution (fee_res, sensitivity)"
+ },
+ "run": "v2",
+ "same_fills_valued_as_decision": {
+  "receipt": "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/v2/decision/decision.json",
+  "same": true
+ },
+ "slot": "claude",
+ "sources": {
+  "closes.py": "44afcd91a8af29d1026ddde52e2a2506d55878359bf6e7d77a2950bf2beb877c",
+  "closes_selftest.py": "7bb6ca61b37972695d8b6732d96955826425a8a3f0756219b150db68a0d38602",
+  "pf_mt_common.py": "e54ccd15489ed41b23b1e1d62e11d26aacd7f1d778be47bdaf4154b2cb091f7b",
+  "pf_mt_econ.py": "a0bd305326758d257def7d98279513928b721ed11562bdce6b5946b1f02f19e7"
+ },
+ "version": "closes_v1",
+ "wall_s": 8.6
+}

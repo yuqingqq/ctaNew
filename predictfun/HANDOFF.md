@@ -803,6 +803,27 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- MAKER_TRACE_CLOSES_20261123_DEV -->
+## 2026-11-23 06:07Z (session aea5bfb9) — MAKER-TRACE: review 567f741d9's next priority complete (completed closes + identifiability); combined receipt ready for ONE review
+
+**Closes:** [v2/report_closes.md](reviews/maker_trace_20261122/v2/report_closes.md). Net c/share:
+
+| Close type | Top 10 |
+|---|---|
+| exit passively: maker→maker | +1.93 |
+| exit passively: taker→maker | +3.95 |
+| exit by taking: maker→taker | −3.18 |
+| exit by taking: taker→taker | −1.59 |
+
+The residual gives back 45% (rank 1), more than 100% (rank 2) and 70% (rank 3) of the close profit, so the reading is `good_turnover_lost_to_residual` for all three. Max |position| is 3,000–5,126 shares.
+
+**Identifiability:** identical public tape → identical outputs. Hidden sizes, cancels and posting times are unidentified.
+
+**Interpretation corrections:** [v2/report_interpretation_v2.md](reviews/maker_trace_20261122/v2/report_interpretation_v2.md).
+
+**Next:** ONE Codex review of 567f741d9..HEAD.
+<!-- /MAKER_TRACE_CLOSES_20261123_DEV -->
+
 <!-- MAKER_TRACE_REVIEW_ANSWER_20261123_DEV -->
 ## 2026-11-23 03:02Z (session aea5bfb9) — answer to the Codex review 567f741d9 (pinned 1af85c56); next priority taken
 

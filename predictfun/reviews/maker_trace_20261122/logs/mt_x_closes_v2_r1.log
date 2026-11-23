@@ -1,0 +1,117 @@
+head=e2201c2585dc2dc4d3eba4300aa9fb1324960a4f
+[closes] 20261024 rows 261771 lots 260590 groups 2008 closes 247710 dust 2 hwm 434 MiB
+[closes] 20261025 rows 204304 lots 203619 groups 1877 closes 191540 dust 4 hwm 434 MiB
+[closes] 20261026 rows 307914 lots 307085 groups 2233 closes 290832 dust 2 hwm 513 MiB
+[closes] 20261027 rows 285562 lots 284397 groups 2395 closes 267674 dust 6 hwm 513 MiB
+{
+ "outputs": {
+  "answer.json": 60,
+  "closes.parquet": 997770,
+  "closes_markets.parquet": 8513,
+  "closes_summary.csv": 300,
+  "cohorts.csv": 525,
+  "residual_summary.csv": 60
+ },
+ "checks": {
+  "attributed": 1.0913936421275139e-11,
+  "close_sh_eq_cap": 4.547473508864641e-13,
+  "fee_fill": 6.394884621840902e-14,
+  "fee_fill_attribution": 7.105427357601002e-14,
+  "fee_res": 4.973799150320701e-14,
+  "fee_res_attribution": 8.526512829121202e-14,
+  "gross_identity": 1.1084466677857563e-12,
+  "gross_rows": 4.092726157978177e-12,
+  "net_identity": 1.0800249583553523e-12,
+  "net_pos": 2.8535396268125623e-11,
+  "resid_end": 8.141411779764504e-12,
+  "resid_res": 1.5143442055887135e-11,
+  "resid_sh_eq_abs_net_pos": 6.139089236967266e-12,
+  "rt_pnl": 1.4210854715202004e-11,
+  "rt_sh": 2.9103830456733704e-11
+ },
+ "tally": {
+  "top3": {
+   "n_address_days": 12,
+   "reading": {
+    "no_rows": 0,
+    "no_resolved_markets": 0,
+    "no_closes": 0,
+    "turnover_itself_poor": 2,
+    "good_turnover_lost_to_residual": 10,
+    "good_turnover_residual_not_negative": 0
+   },
+   "reading_fee_res": {
+    "no_rows": 0,
+    "no_resolved_markets": 0,
+    "no_closes": 0,
+    "turnover_itself_poor": 2,
+    "good_turnover_lost_to_residual": 10,
+    "good_turnover_residual_not_negative": 0
+   },
+   "n_fee_convention_sensitive": 0
+  },
+  "ranks4_10": {
+   "n_address_days": 28,
+   "reading": {
+    "no_rows": 2,
+    "no_resolved_markets": 0,
+    "no_closes": 0,
+    "turnover_itself_poor": 2,
+    "good_turnover_lost_to_residual": 14,
+    "good_turnover_residual_not_negative": 10
+   },
+   "reading_fee_res": {
+    "no_rows": 2,
+    "no_resolved_markets": 0,
+    "no_closes": 0,
+    "turnover_itself_poor": 2,
+    "good_turnover_lost_to_residual": 14,
+    "good_turnover_residual_not_negative": 10
+   },
+   "n_fee_convention_sensitive": 0
+  },
+  "top10": {
+   "n_address_days": 40,
+   "reading": {
+    "no_rows": 2,
+    "no_resolved_markets": 0,
+    "no_closes": 0,
+    "turnover_itself_poor": 4,
+    "good_turnover_lost_to_residual": 24,
+    "good_turnover_residual_not_negative": 10
+   },
+   "reading_fee_res": {
+    "no_rows": 2,
+    "no_resolved_markets": 0,
+    "no_closes": 0,
+    "turnover_itself_poor": 4,
+    "good_turnover_lost_to_residual": 24,
+    "good_turnover_residual_not_negative": 10
+   },
+   "n_fee_convention_sensitive": 0
+  },
+  "top3_pooled_days": {
+   "n_address_days": 3,
+   "reading": {
+    "no_rows": 0,
+    "no_resolved_markets": 0,
+    "no_closes": 0,
+    "turnover_itself_poor": 0,
+    "good_turnover_lost_to_residual": 3,
+    "good_turnover_residual_not_negative": 0
+   },
+   "reading_fee_res": {
+    "no_rows": 0,
+    "no_resolved_markets": 0,
+    "no_closes": 0,
+    "turnover_itself_poor": 0,
+    "good_turnover_lost_to_residual": 3,
+    "good_turnover_residual_not_negative": 0
+   },
+   "n_fee_convention_sensitive": 0
+  }
+ },
+ "vmhwm_mib": 513.18359375,
+ "cpu_s": 7.99
+}
+2026-11-23T06:06:32Z tag=mt_x_closes_v2_r1 rc=0 peak_rss_mib=513 wall_s=8.94 cpu_user_s=7.16 memavail_start_gib=22 disk_free_gib=436->436 slot=claude
