@@ -1,0 +1,199 @@
+head=b4fbf5de2ba9b409589ad917609214daccccc18c
+{
+ "cpu_s": {
+  "by_stage": {
+   "bindings": 0.0,
+   "context_load": 13.141,
+   "fills_valued": 0.708,
+   "imports": 0.379,
+   "inputs": 0.507,
+   "market": 2.949,
+   "preflight": 0.004,
+   "tables": 1.58,
+   "write": 0.126
+  },
+  "process_total": 19.397
+ },
+ "digest": {
+  "census": {
+   "gap": 0,
+   "improve_ask": 2168,
+   "improve_bid": 2334,
+   "outside_window": 10095,
+   "retreat_ask": 1890,
+   "retreat_bid": 1906,
+   "two_side": 4897,
+   "unchanged": 94246,
+   "unknown": 352
+  },
+  "continuation_orders": 89,
+  "episodes": {
+   "by_end_class": {
+    "censored_gap": {
+     "unknown": 3
+    },
+    "censored_other": {
+     "improve_ask": 910,
+     "improve_bid": 943,
+     "retreat_ask": 131,
+     "retreat_bid": 122,
+     "two_side": 681
+    },
+    "no_response_1s": {
+     "none": 7
+    },
+    "response": {
+     "improve_ask": 453,
+     "improve_bid": 546
+    }
+   },
+   "by_end_type": {
+    "censored_gap": 3,
+    "censored_other": 2787,
+    "no_response_1s": 7,
+    "response": 999
+   },
+   "by_reason": {
+    "censored_gap": {
+     "empty_side": 3
+    },
+    "censored_other": {
+     "other_side": 1922,
+     "same_side_retreat": 184,
+     "two_side": 681
+    },
+    "no_response_1s": {
+     "horizon": 7
+    },
+    "response": {
+     "response": 999
+    }
+   },
+   "n": 3796,
+   "predicates": true,
+   "response_mix": {
+    "overshoot": 107,
+    "partial": 139,
+    "restoring": 753
+   },
+   "ttr_lower_median_ms": 0.0,
+   "ttr_median_ms": 54.0
+  },
+  "owners": {
+   "by_identity": {
+    "candidate_constrained": 0,
+    "candidate_scenario": 89,
+    "owner_unknown": 910
+   },
+   "linked_by_grade": {
+    "G1_conflict": 4,
+    "G4_scenario_only": 8,
+    "no_regrade_row": 77
+   },
+   "linked_by_group": {
+    "other": 77,
+    "rank1": 4,
+    "rank2": 3,
+    "rank3": 5
+   },
+   "po_parity": {
+    "equal": 999
+   },
+   "pre_state_link": {
+    "owner_unknown": 910,
+    "unresolved_outside_window": 89
+   },
+   "responses": 999
+  },
+  "ratios": {
+   "btc_against": {
+    "RR_D0": 1.2188106359444784,
+    "RR_LAG": 1.2250755540821379,
+    "markets": "0>1 0<1 /0",
+    "n_ev": 236,
+    "p_hi": 0.08982035928143713,
+    "p_lo": 0.9121756487025948,
+    "verdict": "insufficient_support"
+   },
+   "btc_with": {
+    "RR_D0": 1.3394582789623002,
+    "RR_LAG": 1.2437988331087,
+    "markets": "0>1 0<1 /0",
+    "n_ev": 226,
+    "p_hi": 0.03992015968063872,
+    "p_lo": 0.9620758483033932,
+    "verdict": "insufficient_support"
+   },
+   "depth_own": {
+    "RR_D0": 0.7239175288717353,
+    "RR_LAG": 0.6079922348370634,
+    "markets": "0>1 0<1 /0",
+    "n_ev": 259,
+    "p_hi": 0.9840319361277445,
+    "p_lo": 0.017964071856287425,
+    "verdict": "insufficient_support"
+   },
+   "fair_gap": {
+    "RR_D0": 0.9820035581041124,
+    "RR_LAG": 0.9339174358485427,
+    "markets": "0>1 0<1 /0",
+    "n_ev": 417,
+    "p_hi": 0.5808383233532934,
+    "p_lo": 0.42115768463073855,
+    "verdict": "insufficient_support"
+   },
+   "time_left": {
+    "RR_D0": 1.2441282375720606,
+    "RR_LAG": 1.245682276474541,
+    "markets": "0>1 0<1 /0",
+    "n_ev": 639,
+    "p_hi": 0.003992015968063872,
+    "p_lo": 0.998003992015968,
+    "verdict": "insufficient_support"
+   }
+  },
+  "reconciliation": {
+   "anchor_excluded": 8821,
+   "anchor_excluded_by_role": {
+    "not_a_response": 8152,
+    "response_new_best": 598,
+    "response_other_cell": 71
+   },
+   "anchor_excluded_by_status": {
+    "class:improve_ask": 1601,
+    "class:improve_bid": 1824,
+    "class:two_side": 5362,
+    "unsupported:unknown:crossed": 10,
+    "unsupported:unknown:empty_side": 24
+   },
+   "improve_by_role": {
+    "not_a_response": 10702,
+    "response_new_best": 952,
+    "response_other_cell": 150
+   },
+   "improve_by_status": {
+    "class:improve_ask": 2354,
+    "class:improve_bid": 2678,
+    "class:two_side": 6723,
+    "unsupported:unknown:crossed": 10,
+    "unsupported:unknown:empty_side": 39
+   },
+   "improve_events": 11804,
+   "predicates": true
+  },
+  "two_side": {
+   "by_sublabel": {
+    "both_down": 2255,
+    "both_up": 2141,
+    "narrow": 400,
+    "widen": 101
+   },
+   "improve_creations": 7059,
+   "pairs": 4897
+  }
+ },
+ "out": "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/v2/chains/touch_transition",
+ "projection": null,
+ "vmhwm_mib": 526.6
+}
+2026-11-23T21:21:13Z tag=mt_x_tt_v1 rc=0 peak_rss_mib=526 wall_s=19.53 cpu_user_s=15.95 memavail_start_gib=22 disk_free_gib=421->421 slot=claude2

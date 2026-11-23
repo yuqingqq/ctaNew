@@ -185,3 +185,5 @@ mt_x_qf_v1 rc=0
 mt_x_qf2_v1 rc=0
 mt_x_po_v1 rc=0
 mt_x_ch3_v1 rc=0
+mt_x_tt_v1 rc=0
+mt_x_ch4_v1 rc=0

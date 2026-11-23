@@ -987,6 +987,20 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- MAKER_LOGIC_CHAINS_V5_20261123_DEV -->
+## 2026-11-23 21:22Z (session aea5bfb9) — LOGIC CHAINS v5: touch transitions + quote responses + chains v4 (review 01a72b4e2's priority; USER goal: action chains and their logic)
+
+**Receipt:** [v2/report_logic_chains_v5.md](reviews/maker_trace_20261122/v2/report_logic_chains_v5.md).
+
+**Quotes:** mostly reprice as a whole (57% of improvements in two-side frames).
+
+**Retreats:** answered within ms — the other side moves first in half the cases; same-side restorations take a median 54 ms.
+
+**Conditions and makers:** the state conditions are insufficient under the frozen support floor; makers are mostly unknown.
+
+**Next:** ONE Codex review of 01a72b4e2..HEAD.
+<!-- /MAKER_LOGIC_CHAINS_V5_20261123_DEV -->
+
 <!-- MAKER_LOGIC_CHAINS_V4_20261123_DEV -->
 ## 2026-11-23 18:39Z (session aea5bfb9) — LOGIC CHAINS v4: posting opportunities + queue-front v2 corrections + six complete chains (review 3f640ad9b's priority; USER goal: action chains and their logic)
 

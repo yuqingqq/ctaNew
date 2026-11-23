@@ -1,0 +1,760 @@
+{
+ "argv": [
+  "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/tools/chains_v4.py",
+  "run"
+ ],
+ "asof_end": "2026-11-23T21:21:35Z",
+ "asof_start": "2026-11-23T21:21:33Z",
+ "base_module": "predictfun/reviews/maker_trace_20261122/tools/chains_v3.py",
+ "constants": {
+  "ALT_STATES": [
+   "possible",
+   "excluded",
+   "not_evaluated"
+  ],
+  "CPU_CAP_S": 8.0,
+  "EVAL_BASES": [
+   "book_candidate",
+   "settlement"
+  ],
+  "GRADES": [
+   "observed_state:post_window:G0_unbounded_or_invalid",
+   "observed_state:post_window:G1_conflict",
+   "observed_state:post_window:G2_bound_constrained",
+   "observed_state:post_window:G3_constrained_status_flagged",
+   "observed_state:post_window:G4_scenario_only",
+   "pending",
+   "transition_context",
+   "post_window:G0_unbounded_or_invalid",
+   "post_window:G1_conflict",
+   "post_window:G2_bound_constrained",
+   "post_window:G3_constrained_status_flagged",
+   "post_window:G4_scenario_only",
+   "scenario_queue_history",
+   "cancel_compatible_ending",
+   "scenario_dependent_ending",
+   "unresolved_alternatives",
+   "scenario_dependent_link",
+   "observed_execution",
+   "recorded_fill_accounting"
+  ],
+  "HISTORIES": [
+   "joined_shown_cell",
+   "masked_recreation_in_window",
+   "creation_not_saved"
+  ],
+  "LINKS": [
+   [
+    "1",
+    "pre_state"
+   ],
+   [
+    "1b",
+    "transition"
+   ],
+   [
+    "2",
+    "post"
+   ],
+   [
+    "3",
+    "queue"
+   ],
+   [
+    "4a",
+    "ending"
+   ],
+   [
+    "4b",
+    "repost"
+   ],
+   [
+    "5",
+    "takes"
+   ],
+   [
+    "6",
+    "value"
+   ]
+  ],
+  "LINK_GRADES": {
+   "ending": [
+    "cancel_compatible_ending",
+    "scenario_dependent_ending",
+    "unresolved_alternatives"
+   ],
+   "post": [
+    "post_window:G0_unbounded_or_invalid",
+    "post_window:G1_conflict",
+    "post_window:G2_bound_constrained",
+    "post_window:G3_constrained_status_flagged",
+    "post_window:G4_scenario_only"
+   ],
+   "pre_state": [
+    "observed_state:post_window:G0_unbounded_or_invalid",
+    "observed_state:post_window:G1_conflict",
+    "observed_state:post_window:G2_bound_constrained",
+    "observed_state:post_window:G3_constrained_status_flagged",
+    "observed_state:post_window:G4_scenario_only",
+    "pending"
+   ],
+   "queue": [
+    "scenario_queue_history"
+   ],
+   "repost": [
+    "scenario_dependent_link",
+    "unresolved_alternatives"
+   ],
+   "takes": [
+    "observed_execution"
+   ],
+   "transition": [
+    "transition_context",
+    "pending"
+   ],
+   "value": [
+    "recorded_fill_accounting"
+   ]
+  },
+  "OUTSIDE": {
+   "G0_unbounded_or_invalid": "G0: the window is unbounded or the order invalid - the post may lie anywhere before the first fill",
+   "G1_conflict": "G1: conflict flags void the window - the post may lie outside it",
+   "G3_constrained_status_flagged": "G3: the bound carries a flagged status (not certified) - the post may lie outside it",
+   "G4_scenario_only": "G4: a scenario-only window - an earlier post masked by replenishment outside the enumerated seconds is possible"
+  },
+  "POSITIONS": [
+   "inside",
+   "straddles",
+   "before",
+   "after"
+  ],
+  "READINGS": [
+   "ONE-HISTORY",
+   "TIED",
+   "NO-EVENT",
+   "PENDING"
+  ],
+  "UNRESOLVED": "unresolved_outside_window"
+ },
+ "contract": {
+  "commit": "668e560db",
+  "file": "predictfun/reviews/maker_trace_20261122/touch_response_contract.md",
+  "sha256": "ce31e2368289b1d01c5991774cd7adcd4a13b04b88ffb8eda9eeeb65efcc484a"
+ },
+ "counts": {
+  "closes_groups_pruned": 3,
+  "closes_groups_read": 1,
+  "closes_rows_kept": 1883,
+  "closes_rows_scanned": 247712,
+  "fills_valued_groups_pruned": 87,
+  "fills_valued_groups_read": 3,
+  "fills_valued_rows_kept": 1940,
+  "fills_valued_rows_scanned": 238836
+ },
+ "cpu_s": {
+  "by_stage": {
+   "closes": 0.2674,
+   "csv_inputs": 0.3607,
+   "fills_valued": 0.8504,
+   "links": 0.9061,
+   "preflight": 0.0381,
+   "render": 0.0072,
+   "small_inputs": 0.3078
+  },
+  "cap": 8.0,
+  "process_total": 3.025
+ },
+ "git": {
+  "files": [
+   "predictfun/reviews/maker_trace_20261122/tools/chains_v4.py",
+   "predictfun/reviews/maker_trace_20261122/tools/chains_v4_selftest.py",
+   "predictfun/reviews/maker_trace_20261122/touch_response_contract.md",
+   "predictfun/reviews/maker_trace_20261122/tools/chains_v3.py",
+   "predictfun/reviews/maker_trace_20261122/tools/chains_v3_selftest.py"
+  ],
+  "head": "b4fbf5de2ba9b409589ad917609214daccccc18c",
+  "tracked": true,
+  "unmodified": true
+ },
+ "guard_mib": 1450.0,
+ "inputs": {
+  "cases": {
+   "binding": {
+    "key": "cases",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/receipt_post.json",
+    "receipt_sha256": "c612c23324e2d265f6ec97c45f243f60342a17304589c93e2c386089d2c9b8bf",
+    "recorded": "f512497123b67fc1d934f56d3b603345a636f4ab4981169ec7878ecd2c4b40af",
+    "section": "inputs",
+    "status": "ok"
+   },
+   "bytes": 72267,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/order_estimator/cases.csv",
+   "rows": 88,
+   "sha256": "f512497123b67fc1d934f56d3b603345a636f4ab4981169ec7878ecd2c4b40af"
+  },
+  "census_graded": {
+   "binding": {
+    "key": "census_graded.csv",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/receipt_post.json",
+    "receipt_sha256": "c612c23324e2d265f6ec97c45f243f60342a17304589c93e2c386089d2c9b8bf",
+    "recorded": "3aba28ce72279b9d9eca2a196e09e6b26d4ccc0e4da9e31e58add60a041014aa",
+    "section": "outputs",
+    "status": "ok"
+   },
+   "bytes": 218137,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/census_graded.csv",
+   "rows": 773,
+   "sha256": "3aba28ce72279b9d9eca2a196e09e6b26d4ccc0e4da9e31e58add60a041014aa"
+  },
+  "closes": {
+   "binding": {
+    "key": "closes.parquet",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/closes/closes_receipt.json",
+    "receipt_sha256": "1ea049d9c4fa8b0bf7b0ffd91305a03778a476620f50a89f01eb112866639e9b",
+    "recorded": "5591461db1f00ae47c70acb8e9b9c657faa53f1ef13157afce6e42ee4b39e3ef",
+    "section": "outputs",
+    "status": "ok"
+   },
+   "bytes": 79140275,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/closes/closes.parquet",
+   "rows": 1883,
+   "sha256": "5591461db1f00ae47c70acb8e9b9c657faa53f1ef13157afce6e42ee4b39e3ef"
+  },
+  "closes_markets": {
+   "binding": {
+    "key": "closes_markets.parquet",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/closes/closes_receipt.json",
+    "receipt_sha256": "1ea049d9c4fa8b0bf7b0ffd91305a03778a476620f50a89f01eb112866639e9b",
+    "recorded": "bd1fb1e33dcbae1650020c1b277d4c8ea58c0c83d318d6ba1a2011bb86b9b981",
+    "section": "outputs",
+    "status": "ok"
+   },
+   "bytes": 1241239,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/closes/closes_markets.parquet",
+   "rows": 8513,
+   "sha256": "bd1fb1e33dcbae1650020c1b277d4c8ea58c0c83d318d6ba1a2011bb86b9b981"
+  },
+  "episode_summary": {
+   "binding": {
+    "key": "episode_summary",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/receipt_post.json",
+    "receipt_sha256": "c612c23324e2d265f6ec97c45f243f60342a17304589c93e2c386089d2c9b8bf",
+    "recorded": "19e9fe3a4d6a93e36eaf0f30172e02e34ade1a439a1932da8f12b737585786c4",
+    "section": "inputs",
+    "status": "ok"
+   },
+   "bytes": 25875,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/order_estimator/episode_summary.csv",
+   "rows": 62,
+   "sha256": "19e9fe3a4d6a93e36eaf0f30172e02e34ade1a439a1932da8f12b737585786c4"
+  },
+  "episodes": {
+   "binding": {
+    "key": "episodes",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/receipt_post.json",
+    "receipt_sha256": "c612c23324e2d265f6ec97c45f243f60342a17304589c93e2c386089d2c9b8bf",
+    "recorded": "52de26c05da71f9bd1fb90894eb9a2206ed8928b518b357d6185265b89c7b05a",
+    "section": "inputs",
+    "status": "ok"
+   },
+   "bytes": 693381,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/order_estimator/episodes.csv",
+   "rows": 540,
+   "sha256": "52de26c05da71f9bd1fb90894eb9a2206ed8928b518b357d6185265b89c7b05a"
+  },
+  "episodes_post_regraded": {
+   "binding": {
+    "key": "episodes_post_regraded.csv",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/receipt_post.json",
+    "receipt_sha256": "c612c23324e2d265f6ec97c45f243f60342a17304589c93e2c386089d2c9b8bf",
+    "recorded": "9f8fd480fbe5b69c638538ec2b2eab2f81ddc108fbdd2bcf89012f70cafcf9a0",
+    "section": "outputs",
+    "status": "ok"
+   },
+   "bytes": 303252,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/episodes_post_regraded.csv",
+   "rows": 176,
+   "sha256": "9f8fd480fbe5b69c638538ec2b2eab2f81ddc108fbdd2bcf89012f70cafcf9a0"
+  },
+  "events": {
+   "binding": {
+    "key": "events.parquet",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/take_logic_v2/receipt.json",
+    "receipt_sha256": "564053df46379f1913237119a03f07de6857e7951de3300fe7cde6b57f919289",
+    "recorded": "4a0b6007d8d5b188d3d56ce6e6c98fa0d37def23004c0ccfbb42334021a4cc11",
+    "section": "outputs",
+    "status": "ok"
+   },
+   "bytes": 468635,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/chains/take_logic_v2/events.parquet",
+   "rows": 4147,
+   "sha256": "4a0b6007d8d5b188d3d56ce6e6c98fa0d37def23004c0ccfbb42334021a4cc11"
+  },
+  "fills_valued": {
+   "binding": {
+    "key": "econ/fills_valued.parquet",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/take_logic_v2/receipt.json",
+    "receipt_sha256": "564053df46379f1913237119a03f07de6857e7951de3300fe7cde6b57f919289",
+    "recorded": "2a874707cc7801d6760e2de36075870700cc0be8e72cd9a6df0213424221cde6",
+    "section": "inputs",
+    "status": "ok"
+   },
+   "bytes": 1078229581,
+   "path": "data/predict_fun/research/maker_trace_v2_20261123/econ/fills_valued.parquet",
+   "rows": 1940,
+   "sha256": "2a874707cc7801d6760e2de36075870700cc0be8e72cd9a6df0213424221cde6"
+  },
+  "life/20261024_3702960_fills.parquet": {
+   "binding": {
+    "key": "life/20261024_3702960_fills.parquet",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/take_logic_v2/receipt.json",
+    "receipt_sha256": "564053df46379f1913237119a03f07de6857e7951de3300fe7cde6b57f919289",
+    "recorded": "15198f2f01b2e6a0ffd12d31b960dc2874385abe8ed0e862632d2195077ae23f",
+    "section": "inputs",
+    "status": "ok"
+   },
+   "bytes": 195895,
+   "path": "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3702960_fills.parquet",
+   "rows": 4,
+   "sha256": "15198f2f01b2e6a0ffd12d31b960dc2874385abe8ed0e862632d2195077ae23f"
+  },
+  "life/20261024_3712725_fills.parquet": {
+   "binding": {
+    "key": "life/20261024_3712725_fills.parquet",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/take_logic_v2/receipt.json",
+    "receipt_sha256": "564053df46379f1913237119a03f07de6857e7951de3300fe7cde6b57f919289",
+    "recorded": "56d0efd8b8cf9704e407d95ab6652e322ba95d69d13e25833b70f935df30efee",
+    "section": "inputs",
+    "status": "ok"
+   },
+   "bytes": 345906,
+   "path": "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3712725_fills.parquet",
+   "rows": 8,
+   "sha256": "56d0efd8b8cf9704e407d95ab6652e322ba95d69d13e25833b70f935df30efee"
+  },
+  "life/20261024_3716727_fills.parquet": {
+   "binding": {
+    "key": "life/20261024_3716727_fills.parquet",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/take_logic_v2/receipt.json",
+    "receipt_sha256": "564053df46379f1913237119a03f07de6857e7951de3300fe7cde6b57f919289",
+    "recorded": "b07e74501e3341585271b40e4441589bcfab582e63c127282f0f42c69e6815d0",
+    "section": "inputs",
+    "status": "ok"
+   },
+   "bytes": 306052,
+   "path": "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3716727_fills.parquet",
+   "rows": 2,
+   "sha256": "b07e74501e3341585271b40e4441589bcfab582e63c127282f0f42c69e6815d0"
+  },
+  "matched_gap": {
+   "binding": {
+    "key": "per_market.csv",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/matched_gap_r1/receipt.json",
+    "receipt_sha256": "915bccf9e8432151661d18d2a9e13e2c4c27f723ff044786ebf902ce9ed986d8",
+    "recorded": "49d4730f33f89c6fb13eb663eea8f877e6ce6d8fec14816c4308ff0af706f4b5",
+    "section": "outputs",
+    "status": "ok"
+   },
+   "bytes": 158977,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/matched_gap_r1/per_market.csv",
+   "rows": 228,
+   "sha256": "49d4730f33f89c6fb13eb663eea8f877e6ce6d8fec14816c4308ff0af706f4b5"
+  },
+  "order_ledger": {
+   "binding": {
+    "key": "order_ledger",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/receipt_post.json",
+    "receipt_sha256": "c612c23324e2d265f6ec97c45f243f60342a17304589c93e2c386089d2c9b8bf",
+    "recorded": "cc6d26f479e0aa9a4584631dd998eae2fba3777a3bb5c0fb1a0e13b7500cdc16",
+    "section": "inputs",
+    "status": "ok"
+   },
+   "bytes": 78465,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/order_estimator/order_ledger.csv",
+   "rows": 255,
+   "sha256": "cc6d26f479e0aa9a4584631dd998eae2fba3777a3bb5c0fb1a0e13b7500cdc16"
+  },
+  "paths_md": {
+   "binding": {
+    "key": "paths.md",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/receipt_post.json",
+    "receipt_sha256": "c612c23324e2d265f6ec97c45f243f60342a17304589c93e2c386089d2c9b8bf",
+    "recorded": "9606184cc902694c483aa205f19fac166f14285e39c33491622d44e6592be623",
+    "section": "outputs",
+    "status": "ok"
+   },
+   "bytes": 16715,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/paths.md",
+   "rows": 90,
+   "sha256": "9606184cc902694c483aa205f19fac166f14285e39c33491622d44e6592be623"
+  },
+  "post_orders": {
+   "binding": {
+    "key": "orders.csv",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/post_fill/receipt.json",
+    "receipt_sha256": "455c97a6df4402daaa6c642d20689224ca0a38022bcaafd62a5395b2d27146b4",
+    "recorded": "2ea44339d276f1bcf9c690a5b2b71fc4f8ef5e5138fa3c1a6434acce1006b853",
+    "section": "outputs",
+    "status": "ok"
+   },
+   "bytes": 5208519,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/chains/post_fill/orders.csv",
+   "rows": 4149,
+   "sha256": "2ea44339d276f1bcf9c690a5b2b71fc4f8ef5e5138fa3c1a6434acce1006b853"
+  },
+  "post_regrade_orders": {
+   "binding": {
+    "key": "post_regrade_orders.csv",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/receipt_post.json",
+    "receipt_sha256": "c612c23324e2d265f6ec97c45f243f60342a17304589c93e2c386089d2c9b8bf",
+    "recorded": "ced4f0e5b7d8473ab7939546ff2f60b31d980db359cab495f6d97a1d7631aa0c",
+    "section": "outputs",
+    "status": "ok"
+   },
+   "bytes": 2378793,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/post_regrade_orders.csv",
+   "rows": 4149,
+   "sha256": "ced4f0e5b7d8473ab7939546ff2f60b31d980db359cab495f6d97a1d7631aa0c"
+  },
+  "pulls": {
+   "binding": {
+    "key": "pulls.csv",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/pull/receipt.json",
+    "receipt_sha256": "b7ee2e38c08273242983415499270d374e8bcc1610d501b99edde460e8cbbd26",
+    "recorded": "1b60b4a7027e2b2ae5f3959a0f6d8594f07d1f4d7b11c37d9daabdec8735549d",
+    "section": "outputs",
+    "status": "ok"
+   },
+   "bytes": 11048416,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/chains/pull/pulls.csv",
+   "rows": 6640,
+   "sha256": "1b60b4a7027e2b2ae5f3959a0f6d8594f07d1f4d7b11c37d9daabdec8735549d"
+  },
+  "qf1_fronts": {
+   "binding": {
+    "key": "fronts.csv",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/queue_front/receipt.json",
+    "receipt_sha256": "22cca4789c39155190dc579283d983a9da5554b233fd2ed5d5173d8965d9b1a9",
+    "recorded": "d788cb822621becf729a1dfe4a82e3a0106ae05ce7317107640395392498cac0",
+    "section": "outputs",
+    "status": "ok"
+   },
+   "bytes": 556458,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/chains/queue_front/fronts.csv",
+   "rows": 1845,
+   "sha256": "d788cb822621becf729a1dfe4a82e3a0106ae05ce7317107640395392498cac0"
+  },
+  "qf1_levels": {
+   "binding": {
+    "key": "levels.csv",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/queue_front/receipt.json",
+    "receipt_sha256": "22cca4789c39155190dc579283d983a9da5554b233fd2ed5d5173d8965d9b1a9",
+    "recorded": "590d70700f57d54e19de358521fa8fb300bfdb235c1b11cf6e09dc55f720b329",
+    "section": "outputs",
+    "status": "ok"
+   },
+   "bytes": 5686571,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/chains/queue_front/levels.csv",
+   "rows": 21395,
+   "sha256": "590d70700f57d54e19de358521fa8fb300bfdb235c1b11cf6e09dc55f720b329"
+  }
+ },
+ "interfaces": {
+  "posting_opportunity_events": {
+   "need": [
+    "day",
+    "mid",
+    "side",
+    "tick",
+    "t_open_ms",
+    "t_create_ms",
+    "status",
+    "identity",
+    "identity_reason",
+    "cand_hash",
+    "win_contains",
+    "grade"
+   ],
+   "read": true,
+   "show": [
+    "key",
+    "fid",
+    "cand_addr"
+   ]
+  },
+  "queue_front_v2_alt_evidence": [
+   "timing_basis",
+   "n_earliest_set",
+   "alt_sites_life",
+   "alt_sites_unexplained"
+  ],
+  "touch_transition": {
+   "columns": {
+    "census": {
+     "cls": [
+      "cls",
+      "class",
+      "transition"
+     ],
+     "day": [
+      "day"
+     ],
+     "hi": [
+      "t_create_ms",
+      "upd_ms",
+      "t_hi_ms",
+      "hi_ms"
+     ],
+     "lo": [
+      "t_open_ms",
+      "upd_prev_ms",
+      "t_lo_ms",
+      "lo_ms"
+     ],
+     "mid": [
+      "mid"
+     ]
+    },
+    "episodes": {
+     "day": [
+      "day"
+     ],
+     "delta": [
+      "delta_ticks",
+      "delta"
+     ],
+     "eid": [
+      "episode_id"
+     ],
+     "end": [
+      "end_type",
+      "end"
+     ],
+     "end_hi": [
+      "end_ms",
+      "end_hi_ms",
+      "t_end_ms"
+     ],
+     "exposure": [
+      "exposure_ms"
+     ],
+     "kind": [
+      "resp_type",
+      "response_kind",
+      "kind"
+     ],
+     "mid": [
+      "mid"
+     ],
+     "side": [
+      "side"
+     ],
+     "start": [
+      "start_ms",
+      "t_start_ms"
+     ]
+    }
+   },
+   "files": {
+    "census": [
+     "reconcile.csv",
+     "census.csv",
+     "census.parquet"
+    ],
+    "episodes": [
+     "episodes.csv",
+     "episodes.parquet"
+    ]
+   },
+   "optional": {
+    "census": {
+     "sub": [
+      "sublabel",
+      "sub",
+      "sub_label",
+      "two_side_sub"
+     ]
+    },
+    "episodes": {
+     "end_lo": [
+      "resp_lo_ms",
+      "end_lo_ms",
+      "response_lo_ms"
+     ]
+    }
+   },
+   "resolved": {
+    "census": {
+     "cls": "cls",
+     "day": "day",
+     "hi": "t_create_ms",
+     "lo": "t_open_ms",
+     "mid": "mid",
+     "sub": "sublabel"
+    },
+    "episodes": {
+     "day": "day",
+     "delta": "delta_ticks",
+     "eid": "episode_id",
+     "end": "end_type",
+     "end_hi": "t_end_ms",
+     "end_lo": "resp_lo_ms",
+     "exposure": "exposure_ms",
+     "kind": "resp_type",
+     "mid": "mid",
+     "side": "side",
+     "start": "t_start_ms"
+    }
+   },
+   "show": {
+    "census": [],
+    "episodes": [
+     "spread_bin_D0",
+     "depth_own_bin_D0",
+     "btc_5s_aligned_D0",
+     "fair_gap_bin_D0",
+     "time_left_s_D0",
+     "spread_bin",
+     "spread_ticks",
+     "delta_bin",
+     "depth_own_bin",
+     "depth_touch_own_bin",
+     "btc_5s_aligned",
+     "fair_gap_bin",
+     "time_left_bin",
+     "timing_sensitive",
+     "owner_status",
+     "owner_grade",
+     "owner_hash",
+     "owner_addr"
+    ]
+   }
+  }
+ },
+ "mode": "run",
+ "module": "predictfun/reviews/maker_trace_20261122/tools/chains_v4.py",
+ "mutant": null,
+ "out": "predictfun/reviews/maker_trace_20261122/v2/chains/chains_v4",
+ "outputs": {
+  "chain_links.csv": {
+   "bytes": 42748,
+   "sha256": "dacb9dc375517fd51a20f0bb614e1b41fc4c8b001906ca3e1230ea93680c21d7"
+  },
+  "chains.md": {
+   "bytes": 104744,
+   "sha256": "8a8186001721663b4d942742c707ae5d0e6063fd6b0b178186239a5b10f09691"
+  },
+  "claims.json": {
+   "bytes": 26046,
+   "sha256": "cfc2a57550745fc9b159106e05f1050f3855ea65a91ecf65618457409403f667"
+  }
+ },
+ "review": {
+  "commit": "01a72b4e2",
+  "file": "predictfun/reviews/automatic/20261123_posting_chain_review/report.md",
+  "findings": "3-4"
+ },
+ "rows": {
+  "chain_links": 48,
+  "chains": 6
+ },
+ "run": "v2",
+ "siblings": {
+  "posting_opportunity": {
+   "absent_optional": [],
+   "files": {
+    "events": {
+     "bytes": 5875073,
+     "path": "predictfun/reviews/maker_trace_20261122/v2/chains/posting_opportunity/events.csv",
+     "rows_used": 2892,
+     "sha256": "f4c0c610289c25002d04a5bb74b0f79173860fe7fb6b7e6c6e6b7b0272a9b5c7"
+    },
+    "rows": {
+     "bytes": 1540258,
+     "path": "predictfun/reviews/maker_trace_20261122/v2/chains/posting_opportunity/rows.parquet",
+     "rows_used": 1800,
+     "sha256": "2a18a505be8f480dcf11caa830a0c284dec8e8aa1f11a5e27342ee4174027344"
+    }
+   },
+   "notes": [],
+   "reason": "",
+   "receipt": {
+    "path": "predictfun/reviews/maker_trace_20261122/v2/chains/posting_opportunity/receipt.json",
+    "sha256": "8ea8f7ade7235165a069e931872d5e94d78cff3c636d85546cff5b3e9e3ab8e9"
+   },
+   "status": "ok"
+  },
+  "queue_front_v2": {
+   "absent_optional": [],
+   "files": {
+    "candidates": {
+     "bytes": 7406557,
+     "path": "predictfun/reviews/maker_trace_20261122/v2/chains/queue_front_v2/candidates.csv",
+     "rows_used": 2892,
+     "sha256": "90355bbef9905225205e2f0547612a03915b693e82267538ce8fdff98fe48aec"
+    },
+    "fills": {
+     "bytes": 529927,
+     "path": "predictfun/reviews/maker_trace_20261122/v2/chains/queue_front_v2/fills.csv",
+     "rows_used": 268,
+     "sha256": "0544904398c3253ea667689047cbaf7dd800701a550caa38b9cd9e393675299d"
+    },
+    "levels": {
+     "bytes": 9963430,
+     "path": "predictfun/reviews/maker_trace_20261122/v2/chains/queue_front_v2/levels.csv",
+     "rows_used": 2892,
+     "sha256": "3525f436bcf56e54fec1eba980ef24ae042662fa0d7439f2bb78891710090d1c"
+    },
+    "occupancy": {
+     "bytes": 1043915,
+     "path": "predictfun/reviews/maker_trace_20261122/v2/chains/queue_front_v2/occupancy.csv",
+     "rows_used": 715,
+     "sha256": "2b2c53ec5235aa8e83d75f5dd801b2df2a84a8be493e31735b75c7f97e9691ae"
+    }
+   },
+   "notes": [],
+   "reason": "",
+   "receipt": {
+    "path": "predictfun/reviews/maker_trace_20261122/v2/chains/queue_front_v2/receipt.json",
+    "sha256": "7cfdb27f096c3c36467b69d5d994f91043bceef7bd438d372e595e7722f2d0d0"
+   },
+   "status": "ok"
+  },
+  "touch_transition": {
+   "absent_optional": [],
+   "files": {
+    "census": {
+     "bytes": 4132293,
+     "path": "predictfun/reviews/maker_trace_20261122/v2/chains/touch_transition/reconcile.csv",
+     "rows_used": 1868,
+     "sha256": "761a4e0335339c0c04eb37636b0c18935a9100aaf02d252bc1559df1b1f1e538"
+    },
+    "episodes": {
+     "bytes": 623777,
+     "path": "predictfun/reviews/maker_trace_20261122/v2/chains/touch_transition/episodes.parquet",
+     "rows_used": 579,
+     "sha256": "d5eada06b3f00da6701c29328f625fe99f048aa5261efdc530c25e521188c45f"
+    }
+   },
+   "notes": [],
+   "reason": "",
+   "receipt": {
+    "path": "predictfun/reviews/maker_trace_20261122/v2/chains/touch_transition/receipt.json",
+    "sha256": "53ca4343aef1736772595da6b24eb516ad67ec0dac27cf736dc146043a259e4b"
+   },
+   "status": "ok"
+  }
+ },
+ "sources": {
+  "predictfun/research/pf_mt_common.py": "e54ccd15489ed41b23b1e1d62e11d26aacd7f1d778be47bdaf4154b2cb091f7b",
+  "predictfun/reviews/maker_trace_20261122/posting_chain_contract.md": "4fdc55081788ac0b9e14294c89798fc43e24ffec6d6ce25798234c8e87f2c286",
+  "predictfun/reviews/maker_trace_20261122/tools/chains_v3.py": "274823620d1c8274e322a261ddf9a0b4ed2d582af77b3eed98629868c980c923",
+  "predictfun/reviews/maker_trace_20261122/tools/chains_v3_selftest.py": "01b9fab98e21e28dd1d1f33e569f2dc21924e999526d8d2a518e3f00e5e98d48",
+  "predictfun/reviews/maker_trace_20261122/tools/chains_v4.py": "6facab04252cde2d3e619d909885f5e2282ba73b322fa03acd4cc1472de0acbb",
+  "predictfun/reviews/maker_trace_20261122/tools/chains_v4_selftest.py": "d26a4c0053da73d2f8c00c1e40ca505c46a0292fbe98f84ae866df3c35c6da9b",
+  "predictfun/reviews/maker_trace_20261122/touch_response_contract.md": "ce31e2368289b1d01c5991774cd7adcd4a13b04b88ffb8eda9eeeb65efcc484a"
+ },
+ "version": "chains_v4",
+ "vmhwm_mib": 286.1,
+ "wall_s": 2.76
+}

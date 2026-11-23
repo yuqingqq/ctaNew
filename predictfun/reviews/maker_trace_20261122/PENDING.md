@@ -1,5 +1,14 @@
 # MAKER-TRACE-RECONSTRUCTION-v1 — pending work
 
+## STATE 2026-11-23 21:22Z — ROUND COMPLETE: LOGIC CHAINS v5 (touch transitions + responses + chains v4) — review pending — read this first
+
+**Receipt:** `v2/report_logic_chains_v5.md`.
+
+**Runs:** `mt_x_tt_v1`, `mt_x_ch4_v1` (rc 0).
+
+**Review:** ONE Codex review of 01a72b4e2..HEAD queued, with the USER goal stated; `review_watch.sh` armed.
+
+
 ## STATE 2026-11-23 18:54Z — TOUCH-TRANSITION-AND-RESPONSE v1 (review 01a72b4e2's next priority) — read this first
 
 **Reviews processed:**
