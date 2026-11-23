@@ -1,0 +1,262 @@
+head=5c8a4b1a4f3def69ed4b98be69f88c6d68585961
+{
+ "cpu_s": {
+  "by_stage": {
+   "bindings": 0.0,
+   "context_load": 4.631,
+   "fills_valued": 0.329,
+   "imports": 0.363,
+   "market": 1.172,
+   "post_fill": 0.049,
+   "preflight": 0.004,
+   "tables": 0.355,
+   "write": 0.066
+  },
+  "process_total": 6.969
+ },
+ "digest": {
+  "economics": {
+   "all:behind": {
+    "cohort_shares": 241.85560784313725,
+    "n": 8,
+    "v_10s_c_sh": -6.977418547251818
+   },
+   "all:front": {
+    "cohort_shares": 165.7901256551724,
+    "n": 12,
+    "v_10s_c_sh": 2.4562845376263542
+   },
+   "other:behind": {
+    "cohort_shares": 241.85560784313725,
+    "n": 8,
+    "v_10s_c_sh": -6.977418547251818
+   },
+   "other:front": {
+    "cohort_shares": 165.7901256551724,
+    "n": 12,
+    "v_10s_c_sh": 2.4562845376263542
+   },
+   "rank1:behind": {
+    "cohort_shares": 0.0,
+    "n": 0,
+    "v_10s_c_sh": null
+   },
+   "rank1:front": {
+    "cohort_shares": 0.0,
+    "n": 0,
+    "v_10s_c_sh": null
+   },
+   "rank2:behind": {
+    "cohort_shares": 0.0,
+    "n": 0,
+    "v_10s_c_sh": null
+   },
+   "rank2:front": {
+    "cohort_shares": 0.0,
+    "n": 0,
+    "v_10s_c_sh": null
+   },
+   "rank3:behind": {
+    "cohort_shares": 0.0,
+    "n": 0,
+    "v_10s_c_sh": null
+   },
+   "rank3:front": {
+    "cohort_shares": 0.0,
+    "n": 0,
+    "v_10s_c_sh": null
+   },
+   "top3:behind": {
+    "cohort_shares": 0.0,
+    "n": 0,
+    "v_10s_c_sh": null
+   },
+   "top3:front": {
+    "cohort_shares": 0.0,
+    "n": 0,
+    "v_10s_c_sh": null
+   }
+  },
+  "fill_to_cell": {
+   "addr_fv_vs_orders_mismatch": 0,
+   "cell_fv_vs_life_mismatch": 0,
+   "cellcheck_frames": 43033,
+   "cellcheck_gaps": 531,
+   "cellcheck_grid_fills": 19637,
+   "cellcheck_grid_fills_not_shown_in_window": 182,
+   "cellcheck_grid_fills_not_shown_le_hi": 114,
+   "cellcheck_top3_grid_fills": 2840,
+   "cellcheck_top3_not_shown_in_window": 7,
+   "cellcheck_top3_not_shown_le_hi": 1,
+   "cellcheck_top3_offgrid_fills": 0,
+   "cellcheck_unknown_cells": 0,
+   "fv_rows_without_life_leg": 0,
+   "fv_top3_rows_without_life_leg": 0,
+   "legs": 19639,
+   "legs_addr_from_orders": 0,
+   "legs_grid": 19637,
+   "legs_no_address": 0,
+   "legs_offgrid": 2,
+   "legs_unbounded": 0,
+   "legs_with_fv_row": 19639,
+   "q_fv_vs_life_mismatch": 0
+  },
+  "mechanism_top3": {
+   "at_empty_touch": {
+    "n": 0,
+    "share": null
+   },
+   "deep": {
+    "n": 0,
+    "share": null
+   },
+   "improve": {
+    "n": 0,
+    "share": null
+   },
+   "other": {
+    "n": 0,
+    "share": null
+   },
+   "re_establish": {
+    "n": 0,
+    "share": null
+   }
+  },
+  "population": {
+   "attributed_fills": 20,
+   "attribution_invariant_violations": 0,
+   "candidates_after_window_end": 71,
+   "candidates_rows": 7449,
+   "fresh_by_reason": {
+    "fill_spans_two_levels": 436,
+    "fill_window_before_creation": 1013,
+    "gap_before_fill": 14,
+    "ok": 12,
+    "overlapping_fill_windows": 2311,
+    "returned_to_zero": 3245,
+    "unexplained_drop_before_fill": 360,
+    "window_end_without_fill": 54
+   },
+   "fresh_by_status": {
+    "ambiguous_order": 2311,
+    "front_identified": 12,
+    "gap": 14,
+    "no_fill": 3299,
+    "unexplained_decrease": 360,
+    "unknown": 1449
+   },
+   "fresh_levels": 7445,
+   "front_fills": 12,
+   "identified_by_one_address_overlap": 4,
+   "markets": 7,
+   "status_only": {
+    "gap": 4
+   },
+   "straddling_fronts": 0,
+   "supported_markets": 1
+  },
+  "readings": {
+   "rank1:faster_than_others": "insufficient_support",
+   "rank1:front_pays": "insufficient_support",
+   "rank1:main_mechanism": "insufficient_support",
+   "rank1:wins_front_more_than_fills": "insufficient_support",
+   "top3:faster_than_others": "insufficient_support",
+   "top3:front_pays": "insufficient_support",
+   "top3:main_mechanism": "insufficient_support",
+   "top3:wins_front_more_than_fills": "insufficient_support"
+  },
+  "reest_speed": {
+   "all_fresh": {
+    "n": 1654,
+    "p50": 262.0
+   },
+   "all_identified": {
+    "n": 5,
+    "p50": 1402.0
+   },
+   "other": {
+    "n": 5,
+    "p50": 1402.0
+   },
+   "rank1": {
+    "n": 0,
+    "p50": null
+   },
+   "rank2": {
+    "n": 0,
+    "p50": null
+   },
+   "rank3": {
+    "n": 0,
+    "p50": null
+   },
+   "top3": {
+    "n": 0,
+    "p50": null
+   }
+  },
+  "shares_pooled": {
+   "other": {
+    "denominator": 2323,
+    "fill_share": 1.0,
+    "front_share_lower": 0.005165733964700818,
+    "front_share_upper": 0.9870856650882479,
+    "n_ambiguous_with_group": 2281,
+    "n_fills_group": 20,
+    "n_identified": 12,
+    "p_hi": 1.0
+   },
+   "rank1": {
+    "denominator": 2323,
+    "fill_share": 0.0,
+    "front_share_lower": 0.0,
+    "front_share_upper": 0.23676280671545416,
+    "n_ambiguous_with_group": 550,
+    "n_fills_group": 0,
+    "n_identified": 0,
+    "p_hi": 1.0
+   },
+   "rank2": {
+    "denominator": 2323,
+    "fill_share": 0.0,
+    "front_share_lower": 0.0,
+    "front_share_upper": 0.09040034438226431,
+    "n_ambiguous_with_group": 210,
+    "n_fills_group": 0,
+    "n_identified": 0,
+    "p_hi": 1.0
+   },
+   "rank3": {
+    "denominator": 2323,
+    "fill_share": 0.0,
+    "front_share_lower": 0.0,
+    "front_share_upper": 0.1373224278949634,
+    "n_ambiguous_with_group": 319,
+    "n_fills_group": 0,
+    "n_identified": 0,
+    "p_hi": 1.0
+   },
+   "top3": {
+    "denominator": 2323,
+    "fill_share": 0.0,
+    "front_share_lower": 0.0,
+    "front_share_upper": 0.37408523461041754,
+    "n_ambiguous_with_group": 869,
+    "n_fills_group": 0,
+    "n_identified": 0,
+    "p_hi": 1.0
+   }
+  }
+ },
+ "out": "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/v2/chains/queue_front_pilot_20261024_r2",
+ "projection": {
+  "full_run_cpu_s": 18.2,
+  "launch_allowed": true,
+  "limit_s": 120.0,
+  "pilot_cpu_s": 6.968,
+  "rule": "fixed (imports + preflight + post_fill + bindings) 0.42 + (fills_valued + context_load + market + tables + write) 6.55 x 19/7; the first load carries the one-off fills_valued sha256 (scaled: conservative)"
+ },
+ "vmhwm_mib": 381.6
+}
+2026-11-23T17:00:36Z tag=mt_qf_pilot2 rc=0 peak_rss_mib=381 wall_s=7.07 cpu_user_s=5.93 memavail_start_gib=22 disk_free_gib=425->425 slot=claude3

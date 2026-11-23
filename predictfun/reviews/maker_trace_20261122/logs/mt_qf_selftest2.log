@@ -1,0 +1,79 @@
+head=ba28333298c28ca2a8d770479c11fb002a022c38
+PASS selftest environment: MT_RUN=v2 and no MT_QF_MUT
+PASS (1) a planted level creator filled first -> front_identified with the right holder (rank 1) and its behind fill
+PASS (2) a cancel ahead (unexplained drop before the first fill) -> unexplained_decrease, never identified
+PASS (3) overlapping fill windows -> ambiguous_order (same-holder flag set only when one maker)
+PASS (4) a cancelled level and a level never filled -> no_fill in levels, shares (n_fresh, n_no_fill) and the fresh-level mix
+PASS (5) mechanisms improve (800 ms) / deep / at_empty_touch / re_establish (1,000 ms, 800 / 1,200) / not re_establish x2 (improve, 800 / 6,000 ms) / other
+PASS (6) causality: frames after the front fill change nothing; a cancel before it changes the status (positive control)
+PASS status S1: bid 45 created +2000 ms -> E1 gap / gap_before_fill
+PASS status S2: bid 45 created +2600 ms -> status_only gap / creation_across_gap
+PASS status S2: bid 47 created +5200 ms -> status_only unknown / prev_cell_unknown
+PASS status S3: bid 45 created +2000 ms -> E1 unknown / unknown_cell_before_fill
+PASS status S3: bid 45 created +3200 ms -> status_only unknown / prev_cell_unknown
+PASS status S4: bid 45 created +2000 ms -> E1 unknown / fill_window_before_creation
+PASS status S5: bid 45 created +2000 ms -> E1 unknown / first_fill_unbounded
+PASS status S5: bid 47 created +2000 ms -> E1 ambiguous_order / overlapping_fill_windows
+PASS status S6: bid 45 created +2000 ms -> E1 front_identified / ok
+PASS status S7: bid 45 created +2000 ms -> E1 unknown / fill_spans_two_levels
+PASS status S7: bid 45 created +5200 ms -> E1 unknown / fill_window_before_creation
+PASS status S8: bid 45 created +2000 ms -> E1 gap / gap_after_level_end
+PASS status S10: bid 45 created +2000 ms -> E1 front_identified / ok
+PASS status S10: bid 45 created +8400 ms -> E1 unknown / fill_window_before_creation
+PASS S6: the front that emptied its level is attributed (straddles_end) to rank 1, no behind fill
+PASS S10: a member whose hi falls after the re-creation is unattributable (n_behind 0, n_unattributed 1)
+PASS S5: an unbounded member never leaves the bounded first fill identified (n_unbounded 1, same-holder flag off)
+PASS statuses: every E1 status is one of the six, every status_only row is gap / unknown, every row has a reason
+PASS statuses: an identified level always has a holder and group; the others never
+PASS fill-to-cell: F1 has 3 grid fills (2 top-3), the top-3 ask 80 fill is never shown (<= hi and in its window), the sub-cent leg is off grid
+PASS fill join: 4 legs, 1 off grid, 4 fills_valued rows, the lifecycle cell = the fills_valued (y_side, p) cell, addresses agree
+PASS fill join: a leg without a fills_valued row takes the lifecycle orders' signer and has no markout (reason no_fv_row)
+PASS (7) mutant first_fill_by_settle: caught by F3 evaluating False without raising (failed: ['F3'])
+PASS (7) mutant ignore_decrease: caught by F2/F6 evaluating False without raising (failed: ['F2', 'F6'])
+PASS (7) mutant drop_no_fill: caught by F4 evaluating False without raising (failed: ['F4', 'F5'])
+PASS (7) mutants: MT_QF_MUT unset after the suite
+PASS null: a planted front winner (40 / 40 fronts, 40 / 200 fills) -> p_hi = 1/501
+PASS null: exchangeable labels (front share = fill share = 0.2) -> p_hi > 0.2
+PASS null: deterministic per (seed, day, mid), another market draws differently, 500 replicates
+PASS null: every replicate keeps the front count and the label multiset
+PASS null: a market without identified fronts has k = 0 and no draws
+PASS markouts: the per-fill cohort reproduces chain_post_fill.pnl_rows (rows, shares, v_1s / v_10s / v_60s, exclusions by first reason)
+PASS markouts: c/sh = 100 x the cohort sum / the cohort shares
+PASS readings (planted): 4 readings x 2 scopes, every verdict computed from the declared set
+PASS readings (planted): 11 identified levels per market (9 improve + 2 re_establish), 6 supported markets
+PASS readings (planted): rank 1 wins the front more than its fills (p_hi = 1/501), main mechanism improve, faster re-establish, front pays
+PASS readings (planted): front share 60/66, fill share 60/174 (hand-computed)
+PASS readings (exch): 4 readings x 2 scopes, every verdict computed from the declared set
+PASS readings (exch): 11 identified levels per market (9 improve + 2 re_establish), 6 supported markets
+PASS readings (exchangeable): rank 1 reads none of wins / faster / front_pays (unidentified) ...
+PASS ... while each was testable (>= 5 supported / evaluable markets: the negative control could fire)
+PASS speed (planted): rank 1 re_establish median 400 ms (6 levels), others 3,000 ms
+PASS economics (planted): rank 1 front fills +30 c/sh (60 fills) vs behind -20 c/sh (108 fills)
+PASS refuse: write-once on an existing output directory (overwrite)
+PASS write-once: a failed write leaves no output and no partial directory
+PASS refuse: production with MT_QF_MUT=first_fill_by_settle before any input is read
+PASS refuse: production with MT_QF_MUT=drop_no_fill before any input is read
+PASS refuse: production with MT_QF_MUT=bogus before any input is read
+PASS refuse: nothing written by a refused production call
+PASS refuse: a pilot day outside the measurement days (before any path is built)
+PASS refuse: the full run before any input (freeze)
+PASS refuse: the full run without a recorded pilot projection
+PASS refuse: a recorded pilot projection > 120 CPU s
+PASS preflight: a 60 s projection passes and the pilot receipt is hashed as an input
+PASS reader: fills_valued maker rows of the run markets only (taker rows and other markets dropped; a row group pruned; dictionary columns)
+PASS reader: a maker leg twice in fills_valued -> refused
+PASS reader: a BOOK market row under another day -> refused
+PASS reader: chain_post_fill orders.csv bound to its receipt; the run's top-3 orders
+PASS reader: chain_post_fill with a tampered orders.csv -> refused
+PASS reader: chain_post_fill with another fills_valued binding -> refused
+PASS reader: chain_post_fill with a row count unlike its receipt -> refused
+PASS reader: chain_post_fill with an address unlike its rank -> refused
+PASS e2e: execute (pilot path, injected loader) writes exactly the nine contract outputs
+PASS e2e: receipt.json hashes every other output, the sources and inputs; a finite full-run projection; no mutant
+PASS e2e: levels.csv = every market part; shares pooled n_fresh = the E1 rows, n_no_fill counted, statuses add up
+PASS e2e: joined counts - the F3 rank-2 order joined an existing queue, the unbounded window is counted, the F1 front holder posted into an empty cell
+PASS e2e: consistency.csv = markets x 5 groups; claims.json carries 4 readings x 2 scopes with computed verdicts and the fill-to-cell counts
+PASS e2e: a second write into the written directory is refused (before any input is read)
+PASS e2e: run_core over two days writes the nine outputs; shares carry pooled + 2 days + 6 markets per group; readings as in memory
+{"checks": 76, "failed": 0, "cpu_s": 3.962, "process_cpu_s": 4.316, "vmhwm_mib": 186.4}
+2026-11-23T16:49:44Z tag=mt_qf_selftest2 rc=0 peak_rss_mib=186 wall_s=4.44 cpu_user_s=4.14 memavail_start_gib=22 disk_free_gib=424->424 slot=claude3

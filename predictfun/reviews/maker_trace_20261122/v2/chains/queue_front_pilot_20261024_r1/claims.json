@@ -1,0 +1,323 @@
+{
+ "contract": {
+  "commit": "6436ee97c",
+  "file": "predictfun/reviews/maker_trace_20261122/queue_front_contract.md"
+ },
+ "days": [
+  "20261024"
+ ],
+ "descriptive_only": true,
+ "fill_to_cell": {
+  "addr_fv_vs_orders_mismatch": 0,
+  "cell_fv_vs_life_mismatch": 0,
+  "cellcheck_frames": 43033,
+  "cellcheck_gaps": 531,
+  "cellcheck_grid_fills": 19637,
+  "cellcheck_grid_fills_not_shown_in_window": 182,
+  "cellcheck_grid_fills_not_shown_le_hi": 114,
+  "cellcheck_top3_grid_fills": 2840,
+  "cellcheck_top3_not_shown_in_window": 7,
+  "cellcheck_top3_not_shown_le_hi": 1,
+  "cellcheck_top3_offgrid_fills": 0,
+  "cellcheck_unknown_cells": 0,
+  "fv_rows_without_life_leg": 0,
+  "fv_top3_rows_without_life_leg": 0,
+  "legs": 19639,
+  "legs_addr_from_orders": 0,
+  "legs_grid": 19637,
+  "legs_no_address": 0,
+  "legs_offgrid": 2,
+  "legs_unbounded": 0,
+  "legs_with_fv_row": 19639,
+  "q_fv_vs_life_mismatch": 0
+ },
+ "intervals": null,
+ "kind": "pilot",
+ "labels": {
+  "days": "four consumed days: point estimates, no intervals (G = 4 < 5)",
+  "economics": "GROSS markouts from settle_ms, chain_post_fill PNL cohort; a later outcome is not the value of the action",
+  "unit": "held the front of a fresh level (creator or an order accepted in the same frame interval: not distinguished)"
+ },
+ "markets": [
+  "20261024_3697902",
+  "20261024_3699278",
+  "20261024_3700070",
+  "20261024_3702960",
+  "20261024_3704004",
+  "20261024_3712725",
+  "20261024_3716727"
+ ],
+ "multiplicity": {
+  "all_listed": true,
+  "readings": 4,
+  "scopes": 2,
+  "selected": null,
+  "tests": 8
+ },
+ "null": {
+  "design": "within each market the maker labels of every attributed fill (front and behind) of the identified levels permuted; the front fills keep their positions",
+  "draws": "Generator(PCG64(SeedSequence([seed, day, mid]))) per market",
+  "n_perm": 500,
+  "p_hi": "(1 + #{null front count >= observed}) / 501",
+  "seed": 20261123
+ },
+ "population": {
+  "attributed_fills": 12,
+  "attribution_invariant_violations": 0,
+  "candidates_after_window_end": 71,
+  "candidates_rows": 7449,
+  "fresh_by_reason": {
+   "fill_spans_two_levels": 315,
+   "fill_window_before_creation": 658,
+   "gap_before_fill": 11,
+   "ok": 8,
+   "overlapping_fill_windows": 2921,
+   "returned_to_zero": 3245,
+   "unexplained_drop_before_fill": 233,
+   "window_end_without_fill": 54
+  },
+  "fresh_by_status": {
+   "ambiguous_order": 2921,
+   "front_identified": 8,
+   "gap": 11,
+   "no_fill": 3299,
+   "unexplained_decrease": 233,
+   "unknown": 973
+  },
+  "fresh_levels": 7445,
+  "front_fills": 8,
+  "markets": 7,
+  "status_only": {
+   "gap": 4
+  },
+  "straddling_fronts": 0,
+  "supported_markets": 0
+ },
+ "readings": [
+  {
+   "predicates": {
+    "front_share_gt_fill_share": false,
+    "market_share_ge_2_3": false,
+    "p_hi_le_0_05": false,
+    "supported_markets_ge_5": false
+   },
+   "reading": "wins_front_more_than_fills",
+   "scope": "rank1",
+   "values": {
+    "fill_share": 0.0,
+    "front_share": 0.0,
+    "n_fills": 12,
+    "n_fills_group": 0,
+    "n_front_group": 0,
+    "n_front_identified": 8,
+    "n_markets_front_gt_fill": 0,
+    "n_perm": 500,
+    "n_supported_markets": 0,
+    "p_hi": 1.0
+   },
+   "verdict": "insufficient_support"
+  },
+  {
+   "predicates": {
+    "group_front_wins_ge_5": false,
+    "supported_markets_ge_5": false,
+    "unique_largest": false
+   },
+   "reading": "main_mechanism",
+   "scope": "rank1",
+   "values": {
+    "counts": {
+     "at_empty_touch": 0,
+     "deep": 0,
+     "improve": 0,
+     "other": 0,
+     "re_establish": 0
+    },
+    "n_front_wins": 0,
+    "n_supported_markets": 0,
+    "shares": {
+     "at_empty_touch": null,
+     "deep": null,
+     "improve": null,
+     "other": null,
+     "re_establish": null
+    }
+   },
+   "verdict": "insufficient_support"
+  },
+  {
+   "predicates": {
+    "evaluable_markets_ge_5": false,
+    "market_share_ge_2_3": false,
+    "pooled_median_below_others": false
+   },
+   "reading": "faster_than_others",
+   "scope": "rank1",
+   "values": {
+    "median_speed_ms_group": null,
+    "median_speed_ms_others": 1606.0,
+    "n_evaluable_markets": 0,
+    "n_group": 0,
+    "n_markets_faster": 0,
+    "n_others": 3,
+    "n_supported_markets": 0,
+    "others": "identified holders outside the group"
+   },
+   "verdict": "insufficient_support"
+  },
+  {
+   "predicates": {
+    "evaluable_markets_ge_5": false,
+    "market_share_ge_2_3": false,
+    "pooled_front_v10_gt_behind": false
+   },
+   "reading": "front_pays",
+   "scope": "rank1",
+   "values": {
+    "behind": {
+     "cohort_rows": 0,
+     "cohort_shares": 0.0,
+     "excluded": "",
+     "n_fills": 0,
+     "shares": 0.0,
+     "v_10s_c_sh": null,
+     "v_1s_c_sh": null,
+     "v_60s_c_sh": null
+    },
+    "front": {
+     "cohort_rows": 0,
+     "cohort_shares": 0.0,
+     "excluded": "",
+     "n_fills": 0,
+     "shares": 0.0,
+     "v_10s_c_sh": null,
+     "v_1s_c_sh": null,
+     "v_60s_c_sh": null
+    },
+    "n_evaluable_markets": 0,
+    "n_markets_front_gt_behind": 0,
+    "n_supported_markets": 0
+   },
+   "verdict": "insufficient_support"
+  },
+  {
+   "predicates": {
+    "front_share_gt_fill_share": false,
+    "market_share_ge_2_3": false,
+    "p_hi_le_0_05": false,
+    "supported_markets_ge_5": false
+   },
+   "reading": "wins_front_more_than_fills",
+   "scope": "top3",
+   "values": {
+    "fill_share": 0.0,
+    "front_share": 0.0,
+    "n_fills": 12,
+    "n_fills_group": 0,
+    "n_front_group": 0,
+    "n_front_identified": 8,
+    "n_markets_front_gt_fill": 0,
+    "n_perm": 500,
+    "n_supported_markets": 0,
+    "p_hi": 1.0
+   },
+   "verdict": "insufficient_support"
+  },
+  {
+   "predicates": {
+    "group_front_wins_ge_5": false,
+    "supported_markets_ge_5": false,
+    "unique_largest": false
+   },
+   "reading": "main_mechanism",
+   "scope": "top3",
+   "values": {
+    "counts": {
+     "at_empty_touch": 0,
+     "deep": 0,
+     "improve": 0,
+     "other": 0,
+     "re_establish": 0
+    },
+    "n_front_wins": 0,
+    "n_supported_markets": 0,
+    "shares": {
+     "at_empty_touch": null,
+     "deep": null,
+     "improve": null,
+     "other": null,
+     "re_establish": null
+    }
+   },
+   "verdict": "insufficient_support"
+  },
+  {
+   "predicates": {
+    "evaluable_markets_ge_5": false,
+    "market_share_ge_2_3": false,
+    "pooled_median_below_others": false
+   },
+   "reading": "faster_than_others",
+   "scope": "top3",
+   "values": {
+    "median_speed_ms_group": null,
+    "median_speed_ms_others": 1606.0,
+    "n_evaluable_markets": 0,
+    "n_group": 0,
+    "n_markets_faster": 0,
+    "n_others": 3,
+    "n_supported_markets": 0,
+    "others": "identified holders outside the group"
+   },
+   "verdict": "insufficient_support"
+  },
+  {
+   "predicates": {
+    "evaluable_markets_ge_5": false,
+    "market_share_ge_2_3": false,
+    "pooled_front_v10_gt_behind": false
+   },
+   "reading": "front_pays",
+   "scope": "top3",
+   "values": {
+    "behind": {
+     "cohort_rows": 0,
+     "cohort_shares": 0.0,
+     "excluded": "",
+     "n_fills": 0,
+     "shares": 0.0,
+     "v_10s_c_sh": null,
+     "v_1s_c_sh": null,
+     "v_60s_c_sh": null
+    },
+    "front": {
+     "cohort_rows": 0,
+     "cohort_shares": 0.0,
+     "excluded": "",
+     "n_fills": 0,
+     "shares": 0.0,
+     "v_10s_c_sh": null,
+     "v_1s_c_sh": null,
+     "v_60s_c_sh": null
+    },
+    "n_evaluable_markets": 0,
+    "n_markets_front_gt_behind": 0,
+    "n_supported_markets": 0
+   },
+   "verdict": "insufficient_support"
+  }
+ ],
+ "rules": {
+  "gap_ms": 1000,
+  "market_share": "2/3",
+  "max_lag_ms": 2000,
+  "mechanism_precedence": "re_establish > improve > deep > at_empty_touch > other",
+  "min_front_identified_per_supported_market": 5,
+  "min_group_wins": 5,
+  "min_supported_markets": 5,
+  "p_max": 0.05,
+  "reest_ms": 5000,
+  "tol_sh": 0.010000001
+ },
+ "version": "queue_front_v1"
+}
