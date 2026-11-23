@@ -1,5 +1,10 @@
 # MAKER-TRACE-RECONSTRUCTION-v1 — pending work
 
+## STATE 2026-11-23 07:57Z — MATCHED-GAP RESULTS COMMITTED (55625bfa6); CODEX REVIEW QUEUED; nothing to run — read this first
+
+**Auto-continue:** reply "waiting" unless a `Predictfun-Review-Only` commit appears after 55625bfa6. Then read it, verify it at the code, and report to the USER. Run nothing until the USER's go (11-14 rule). CPU is about 1.71 of 1.85.
+
+
 ## STATE 2026-11-23 07:47Z — MATCHED-GAP run done (c0f237ffe; v2/matched_gap/) but its PRIMARY carry view is DEFECTIVE — read this first
 
 **Defect:** carried lots are not in the FIFO, so the carry view equals the zero view. The agent is fixing it (resume it if rate-limited).
