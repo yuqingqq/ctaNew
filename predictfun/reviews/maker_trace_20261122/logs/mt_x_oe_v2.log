@@ -1,0 +1,37 @@
+head=196af3323803908ec7ac8487e86b4f05f92c8ae0
+{
+ "out": "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/v2/order_estimator",
+ "cpu_s": 25.62,
+ "stage_cpu_s": {
+  "setup": 0.094,
+  "select": 0.952,
+  "census": 2.804,
+  "case_windows": 0.27,
+  "btc_load": 0.0,
+  "cases_market_01": 1.345,
+  "cases_market_02": 0.776,
+  "cases_market_03": 1.104,
+  "cases_market_04": 1.098,
+  "cases_market_05": 0.969,
+  "cases_market_06": 1.524,
+  "cases_market_07": 1.021,
+  "cases_market_08": 1.074,
+  "cases_market_09": 1.272,
+  "cases_market_10": 0.957,
+  "cases_market_11": 1.365,
+  "cases_market_12": 0.94,
+  "cases_market_13": 1.07,
+  "cases_market_14": 1.185,
+  "cases_market_15": 1.144,
+  "cases_market_16": 1.739,
+  "cases_market_17": 1.166,
+  "logic": 0.029,
+  "gt": 0.497,
+  "hash_inputs": 0.705,
+  "write": 0.52
+ },
+ "n_cases": 88,
+ "projection": null,
+ "vmhwm_mib": 615.3
+}
+2026-11-23T11:23:24Z tag=mt_x_oe_v2 rc=0 peak_rss_mib=615 wall_s=26.18 cpu_user_s=24.52 memavail_start_gib=22 disk_free_gib=431->431 slot=claude

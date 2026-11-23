@@ -1,0 +1,1072 @@
+scope,rank,day,event,clock,category,n_units,n_exec,shares,unit
+census,1,20261024,posting,acceptance_union,250-1000,24,38,482.8102,orders
+census,1,20261024,posting,acceptance_union,50-250,8,13,177.5838,orders
+census,1,20261024,posting,acceptance_union,>1000,516,826,12049.0181,orders
+census,1,20261024,posting,acceptance_union,conflicting,178,361,4120.2416,orders
+census,1,20261024,posting,acceptance_union,unbounded,20,37,479.3861,orders
+census,1,20261025,posting,acceptance_union,250-1000,29,55,741.0334,orders
+census,1,20261025,posting,acceptance_union,50-250,14,26,466.4026,orders
+census,1,20261025,posting,acceptance_union,>1000,399,636,11763.5732,orders
+census,1,20261025,posting,acceptance_union,conflicting,143,313,3945.2812,orders
+census,1,20261025,posting,acceptance_union,unbounded,15,32,576.7854,orders
+census,1,20261026,posting,acceptance_union,250-1000,15,29,1022.6016,orders
+census,1,20261026,posting,acceptance_union,50-250,9,22,484.8569,orders
+census,1,20261026,posting,acceptance_union,>1000,236,590,14952.5644,orders
+census,1,20261026,posting,acceptance_union,conflicting,81,253,5607.8539,orders
+census,1,20261026,posting,acceptance_union,unbounded,9,22,305.6369,orders
+census,1,20261027,posting,acceptance_union,250-1000,5,35,531.9197,orders
+census,1,20261027,posting,acceptance_union,50-250,1,1,160.0,orders
+census,1,20261027,posting,acceptance_union,>1000,107,538,9485.6886,orders
+census,1,20261027,posting,acceptance_union,conflicting,54,307,5022.3113,orders
+census,1,20261027,posting,acceptance_union,unbounded,5,13,545.0,orders
+census,2,20261024,posting,acceptance_union,250-1000,14,37,531.3089,orders
+census,2,20261024,posting,acceptance_union,>1000,264,536,10089.9328,orders
+census,2,20261024,posting,acceptance_union,conflicting,75,203,2712.643,orders
+census,2,20261024,posting,acceptance_union,unbounded,15,26,593.0989,orders
+census,2,20261025,posting,acceptance_union,250-1000,1,1,50.0,orders
+census,2,20261025,posting,acceptance_union,50-250,2,9,100.0,orders
+census,2,20261025,posting,acceptance_union,>1000,58,83,2543.6984,orders
+census,2,20261025,posting,acceptance_union,conflicting,20,42,588.0334,orders
+census,2,20261025,posting,acceptance_union,unbounded,1,1,50.0,orders
+census,2,20261026,posting,acceptance_union,250-1000,13,31,495.7992,orders
+census,2,20261026,posting,acceptance_union,50-250,3,6,120.0,orders
+census,2,20261026,posting,acceptance_union,>1000,225,538,8766.4001,orders
+census,2,20261026,posting,acceptance_union,conflicting,42,108,1456.7701,orders
+census,2,20261026,posting,acceptance_union,unbounded,5,12,124.0815,orders
+census,2,20261027,posting,acceptance_union,250-1000,2,4,100.0,orders
+census,2,20261027,posting,acceptance_union,>1000,186,613,7744.4123,orders
+census,2,20261027,posting,acceptance_union,conflicting,28,88,1146.7023,orders
+census,2,20261027,posting,acceptance_union,unbounded,5,13,191.1009,orders
+census,3,20261024,posting,acceptance_union,250-1000,18,24,340.7538,orders
+census,3,20261024,posting,acceptance_union,50-250,6,7,89.6568,orders
+census,3,20261024,posting,acceptance_union,>1000,310,484,7419.6219,orders
+census,3,20261024,posting,acceptance_union,conflicting,126,232,2663.3787,orders
+census,3,20261024,posting,acceptance_union,unbounded,11,16,100.9946,orders
+census,3,20261025,posting,acceptance_union,250-1000,13,18,120.3325,orders
+census,3,20261025,posting,acceptance_union,50-250,6,8,51.3514,orders
+census,3,20261025,posting,acceptance_union,>1000,274,423,7561.5248,orders
+census,3,20261025,posting,acceptance_union,conflicting,94,158,2516.6885,orders
+census,3,20261025,posting,acceptance_union,unbounded,7,10,57.6525,orders
+census,3,20261026,posting,acceptance_union,250-1000,28,42,1868.5117,orders
+census,3,20261026,posting,acceptance_union,50-250,14,28,524.5405,orders
+census,3,20261026,posting,acceptance_union,>1000,276,710,21500.7519,orders
+census,3,20261026,posting,acceptance_union,conflicting,132,414,11014.7741,orders
+census,3,20261026,posting,acceptance_union,unbounded,7,8,101.298,orders
+census,1,20261024,posting,acceptance_S_FIFO,250-1000,90,140,1886.7243,orders
+census,1,20261024,posting,acceptance_S_FIFO,50-250,74,117,1619.5092,orders
+census,1,20261024,posting,acceptance_S_FIFO,<=50,14,24,307.6324,orders
+census,1,20261024,posting,acceptance_S_FIFO,>1000,375,604,9016.0354,orders
+census,1,20261024,posting,acceptance_S_FIFO,conflicting,178,361,4120.2416,orders
+census,1,20261024,posting,acceptance_S_FIFO,unbounded,15,29,358.8968,orders
+census,1,20261025,posting,acceptance_S_FIFO,250-1000,65,97,1593.6803,orders
+census,1,20261025,posting,acceptance_S_FIFO,50-250,66,121,1748.9429,orders
+census,1,20261025,posting,acceptance_S_FIFO,<=50,14,32,418.0033,orders
+census,1,20261025,posting,acceptance_S_FIFO,>1000,300,477,9340.3826,orders
+census,1,20261025,posting,acceptance_S_FIFO,conflicting,143,313,3945.2812,orders
+census,1,20261025,posting,acceptance_S_FIFO,unbounded,12,22,446.7854,orders
+census,1,20261026,posting,acceptance_S_FIFO,250-1000,40,84,2484.2479,orders
+census,1,20261026,posting,acceptance_S_FIFO,50-250,52,130,3001.4724,orders
+census,1,20261026,posting,acceptance_S_FIFO,<=50,16,57,1551.4881,orders
+census,1,20261026,posting,acceptance_S_FIFO,>1000,154,373,9541.5434,orders
+census,1,20261026,posting,acceptance_S_FIFO,conflicting,81,253,5607.8539,orders
+census,1,20261026,posting,acceptance_S_FIFO,unbounded,7,19,186.9081,orders
+census,1,20261027,posting,acceptance_S_FIFO,250-1000,18,101,1990.166,orders
+census,1,20261027,posting,acceptance_S_FIFO,50-250,19,117,2068.0632,orders
+census,1,20261027,posting,acceptance_S_FIFO,<=50,10,103,1127.7299,orders
+census,1,20261027,posting,acceptance_S_FIFO,>1000,69,258,5341.6491,orders
+census,1,20261027,posting,acceptance_S_FIFO,conflicting,54,307,5022.3113,orders
+census,1,20261027,posting,acceptance_S_FIFO,unbounded,2,8,195.0,orders
+census,2,20261024,posting,acceptance_S_FIFO,250-1000,33,78,1184.4592,orders
+census,2,20261024,posting,acceptance_S_FIFO,50-250,27,64,928.5822,orders
+census,2,20261024,posting,acceptance_S_FIFO,<=50,10,32,446.4086,orders
+census,2,20261024,posting,acceptance_S_FIFO,>1000,210,404,8146.4398,orders
+census,2,20261024,posting,acceptance_S_FIFO,conflicting,75,203,2712.643,orders
+census,2,20261024,posting,acceptance_S_FIFO,unbounded,13,21,508.4507,orders
+census,2,20261025,posting,acceptance_S_FIFO,250-1000,6,10,158.6674,orders
+census,2,20261025,posting,acceptance_S_FIFO,50-250,2,9,100.0,orders
+census,2,20261025,posting,acceptance_S_FIFO,<=50,1,3,50.0,orders
+census,2,20261025,posting,acceptance_S_FIFO,>1000,52,71,2385.0309,orders
+census,2,20261025,posting,acceptance_S_FIFO,conflicting,20,42,588.0334,orders
+census,2,20261025,posting,acceptance_S_FIFO,unbounded,1,1,50.0,orders
+census,2,20261026,posting,acceptance_S_FIFO,250-1000,27,49,1051.9756,orders
+census,2,20261026,posting,acceptance_S_FIFO,50-250,26,92,1153.8037,orders
+census,2,20261026,posting,acceptance_S_FIFO,<=50,11,22,270.6521,orders
+census,2,20261026,posting,acceptance_S_FIFO,>1000,177,412,6905.7679,orders
+census,2,20261026,posting,acceptance_S_FIFO,conflicting,42,108,1456.7701,orders
+census,2,20261026,posting,acceptance_S_FIFO,unbounded,5,12,124.0815,orders
+census,2,20261027,posting,acceptance_S_FIFO,250-1000,17,44,701.2355,orders
+census,2,20261027,posting,acceptance_S_FIFO,50-250,17,61,762.8597,orders
+census,2,20261027,posting,acceptance_S_FIFO,<=50,7,20,323.3245,orders
+census,2,20261027,posting,acceptance_S_FIFO,>1000,149,497,6102.6651,orders
+census,2,20261027,posting,acceptance_S_FIFO,conflicting,28,88,1146.7023,orders
+census,2,20261027,posting,acceptance_S_FIFO,unbounded,3,8,145.4283,orders
+census,3,20261024,posting,acceptance_S_FIFO,250-1000,41,55,1041.3477,orders
+census,3,20261024,posting,acceptance_S_FIFO,50-250,21,33,964.4652,orders
+census,3,20261024,posting,acceptance_S_FIFO,<=50,7,7,58.0936,orders
+census,3,20261024,posting,acceptance_S_FIFO,>1000,266,422,5796.126,orders
+census,3,20261024,posting,acceptance_S_FIFO,conflicting,126,232,2663.3787,orders
+census,3,20261024,posting,acceptance_S_FIFO,unbounded,10,14,90.9946,orders
+census,3,20261025,posting,acceptance_S_FIFO,250-1000,28,35,261.1671,orders
+census,3,20261025,posting,acceptance_S_FIFO,50-250,20,31,204.1069,orders
+census,3,20261025,posting,acceptance_S_FIFO,<=50,9,14,165.8755,orders
+census,3,20261025,posting,acceptance_S_FIFO,>1000,236,369,7102.0591,orders
+census,3,20261025,posting,acceptance_S_FIFO,conflicting,94,158,2516.6885,orders
+census,3,20261025,posting,acceptance_S_FIFO,unbounded,7,10,57.6525,orders
+census,3,20261026,posting,acceptance_S_FIFO,250-1000,49,80,3647.5078,orders
+census,3,20261026,posting,acceptance_S_FIFO,50-250,63,174,4334.9476,orders
+census,3,20261026,posting,acceptance_S_FIFO,<=50,12,50,914.4408,orders
+census,3,20261026,posting,acceptance_S_FIFO,>1000,196,478,14999.648,orders
+census,3,20261026,posting,acceptance_S_FIFO,conflicting,132,414,11014.7741,orders
+census,3,20261026,posting,acceptance_S_FIFO,unbounded,5,6,98.558,orders
+census,1,20261024,posting,submission_D250_declared,250-1000,29,43,570.394,orders
+census,1,20261024,posting,submission_D250_declared,>1000,519,834,12139.0181,orders
+census,1,20261024,posting,submission_D250_declared,conflicting,178,361,4120.2416,orders
+census,1,20261024,posting,submission_D250_declared,unbounded,20,37,479.3861,orders
+census,1,20261025,posting,submission_D250_declared,250-1000,34,65,973.0373,orders
+census,1,20261025,posting,submission_D250_declared,>1000,408,652,11997.9718,orders
+census,1,20261025,posting,submission_D250_declared,conflicting,143,313,3945.2812,orders
+census,1,20261025,posting,submission_D250_declared,unbounded,15,32,576.7854,orders
+census,1,20261026,posting,submission_D250_declared,250-1000,22,47,1441.0171,orders
+census,1,20261026,posting,submission_D250_declared,>1000,238,594,15019.0057,orders
+census,1,20261026,posting,submission_D250_declared,conflicting,81,253,5607.8539,orders
+census,1,20261026,posting,submission_D250_declared,unbounded,9,22,305.6369,orders
+census,1,20261027,posting,submission_D250_declared,250-1000,5,17,531.9197,orders
+census,1,20261027,posting,submission_D250_declared,>1000,108,557,9645.6886,orders
+census,1,20261027,posting,submission_D250_declared,conflicting,54,307,5022.3113,orders
+census,1,20261027,posting,submission_D250_declared,unbounded,5,13,545.0,orders
+census,2,20261024,posting,submission_D250_declared,250-1000,11,32,429.5,orders
+census,2,20261024,posting,submission_D250_declared,>1000,267,541,10191.7417,orders
+census,2,20261024,posting,submission_D250_declared,conflicting,75,203,2712.643,orders
+census,2,20261024,posting,submission_D250_declared,unbounded,15,26,593.0989,orders
+census,2,20261025,posting,submission_D250_declared,250-1000,3,10,150.0,orders
+census,2,20261025,posting,submission_D250_declared,>1000,58,83,2543.6984,orders
+census,2,20261025,posting,submission_D250_declared,conflicting,20,42,588.0334,orders
+census,2,20261025,posting,submission_D250_declared,unbounded,1,1,50.0,orders
+census,2,20261026,posting,submission_D250_declared,250-1000,15,36,565.7992,orders
+census,2,20261026,posting,submission_D250_declared,>1000,226,539,8816.4001,orders
+census,2,20261026,posting,submission_D250_declared,conflicting,42,108,1456.7701,orders
+census,2,20261026,posting,submission_D250_declared,unbounded,5,12,124.0815,orders
+census,2,20261027,posting,submission_D250_declared,250-1000,2,4,100.0,orders
+census,2,20261027,posting,submission_D250_declared,>1000,186,613,7744.4123,orders
+census,2,20261027,posting,submission_D250_declared,conflicting,28,88,1146.7023,orders
+census,2,20261027,posting,submission_D250_declared,unbounded,5,13,191.1009,orders
+census,3,20261024,posting,submission_D250_declared,250-1000,19,25,391.6314,orders
+census,3,20261024,posting,submission_D250_declared,>1000,315,490,7458.4011,orders
+census,3,20261024,posting,submission_D250_declared,conflicting,126,232,2663.3787,orders
+census,3,20261024,posting,submission_D250_declared,unbounded,11,16,100.9946,orders
+census,3,20261025,posting,submission_D250_declared,250-1000,12,19,111.3514,orders
+census,3,20261025,posting,submission_D250_declared,>1000,281,430,7621.8573,orders
+census,3,20261025,posting,submission_D250_declared,conflicting,94,158,2516.6885,orders
+census,3,20261025,posting,submission_D250_declared,unbounded,7,10,57.6525,orders
+census,3,20261026,posting,submission_D250_declared,250-1000,35,63,1903.7407,orders
+census,3,20261026,posting,submission_D250_declared,>1000,283,717,21990.0635,orders
+census,3,20261026,posting,submission_D250_declared,conflicting,132,414,11014.7741,orders
+census,3,20261026,posting,submission_D250_declared,unbounded,7,8,101.298,orders
+census,1,20261024,posting,submission_D1000_declared,>1000,548,877,12709.4121,orders
+census,1,20261024,posting,submission_D1000_declared,conflicting,178,361,4120.2416,orders
+census,1,20261024,posting,submission_D1000_declared,unbounded,20,37,479.3861,orders
+census,1,20261025,posting,submission_D1000_declared,>1000,442,717,12971.0091,orders
+census,1,20261025,posting,submission_D1000_declared,conflicting,143,313,3945.2812,orders
+census,1,20261025,posting,submission_D1000_declared,unbounded,15,32,576.7854,orders
+census,1,20261026,posting,submission_D1000_declared,>1000,260,641,16460.0228,orders
+census,1,20261026,posting,submission_D1000_declared,conflicting,81,253,5607.8539,orders
+census,1,20261026,posting,submission_D1000_declared,unbounded,9,22,305.6369,orders
+census,1,20261027,posting,submission_D1000_declared,>1000,113,574,10177.6083,orders
+census,1,20261027,posting,submission_D1000_declared,conflicting,54,307,5022.3113,orders
+census,1,20261027,posting,submission_D1000_declared,unbounded,5,13,545.0,orders
+census,2,20261024,posting,submission_D1000_declared,>1000,278,573,10621.2417,orders
+census,2,20261024,posting,submission_D1000_declared,conflicting,75,203,2712.643,orders
+census,2,20261024,posting,submission_D1000_declared,unbounded,15,26,593.0989,orders
+census,2,20261025,posting,submission_D1000_declared,>1000,61,93,2693.6984,orders
+census,2,20261025,posting,submission_D1000_declared,conflicting,20,42,588.0334,orders
+census,2,20261025,posting,submission_D1000_declared,unbounded,1,1,50.0,orders
+census,2,20261026,posting,submission_D1000_declared,>1000,241,575,9382.1993,orders
+census,2,20261026,posting,submission_D1000_declared,conflicting,42,108,1456.7701,orders
+census,2,20261026,posting,submission_D1000_declared,unbounded,5,12,124.0815,orders
+census,2,20261027,posting,submission_D1000_declared,>1000,188,617,7844.4123,orders
+census,2,20261027,posting,submission_D1000_declared,conflicting,28,88,1146.7023,orders
+census,2,20261027,posting,submission_D1000_declared,unbounded,5,13,191.1009,orders
+census,3,20261024,posting,submission_D1000_declared,>1000,334,515,7850.0325,orders
+census,3,20261024,posting,submission_D1000_declared,conflicting,126,232,2663.3787,orders
+census,3,20261024,posting,submission_D1000_declared,unbounded,11,16,100.9946,orders
+census,3,20261025,posting,submission_D1000_declared,>1000,293,449,7733.2086,orders
+census,3,20261025,posting,submission_D1000_declared,conflicting,94,158,2516.6885,orders
+census,3,20261025,posting,submission_D1000_declared,unbounded,7,10,57.6525,orders
+census,3,20261026,posting,submission_D1000_declared,>1000,318,780,23893.8042,orders
+census,3,20261026,posting,submission_D1000_declared,conflicting,132,414,11014.7741,orders
+census,3,20261026,posting,submission_D1000_declared,unbounded,7,8,101.298,orders
+census,1,20261024,posting_class,acceptance_union,early_possible,171,313,4206.8677,orders
+census,1,20261024,posting_class,acceptance_union,intermediate,473,764,10894.274,orders
+census,1,20261024,posting_class,acceptance_union,late_post,82,161,1728.512,orders
+census,1,20261024,posting_class,acceptance_union,window_unbounded,20,37,479.3861,orders
+census,1,20261025,posting_class,acceptance_union,early_possible,139,240,4241.153,orders
+census,1,20261025,posting_class,acceptance_union,intermediate,364,611,10440.2137,orders
+census,1,20261025,posting_class,acceptance_union,late_post,82,179,2234.9236,orders
+census,1,20261025,posting_class,acceptance_union,window_unbounded,15,32,576.7854,orders
+census,1,20261026,posting_class,acceptance_union,early_possible,77,220,3800.9937,orders
+census,1,20261026,posting_class,acceptance_union,intermediate,212,501,14775.5302,orders
+census,1,20261026,posting_class,acceptance_union,late_post,52,173,3491.3528,orders
+census,1,20261026,posting_class,acceptance_union,window_unbounded,9,22,305.6369,orders
+census,1,20261027,posting_class,acceptance_union,early_possible,53,378,4981.5518,orders
+census,1,20261027,posting_class,acceptance_union,intermediate,88,372,8360.4083,orders
+census,1,20261027,posting_class,acceptance_union,late_post,26,131,1857.9594,orders
+census,1,20261027,posting_class,acceptance_union,window_unbounded,5,13,545.0,orders
+census,2,20261024,posting_class,acceptance_union,early_possible,102,251,4151.0762,orders
+census,2,20261024,posting_class,acceptance_union,intermediate,207,396,7523.2033,orders
+census,2,20261024,posting_class,acceptance_union,late_post,44,129,1659.6052,orders
+census,2,20261024,posting_class,acceptance_union,window_unbounded,15,26,593.0989,orders
+census,2,20261025,posting_class,acceptance_union,early_possible,36,46,1737.8018,orders
+census,2,20261025,posting_class,acceptance_union,intermediate,30,56,1110.6701,orders
+census,2,20261025,posting_class,acceptance_union,late_post,15,33,433.2598,orders
+census,2,20261025,posting_class,acceptance_union,window_unbounded,1,1,50.0,orders
+census,2,20261026,posting_class,acceptance_union,early_possible,120,313,4536.0557,orders
+census,2,20261026,posting_class,acceptance_union,intermediate,131,285,5114.6289,orders
+census,2,20261026,posting_class,acceptance_union,late_post,32,85,1188.2848,orders
+census,2,20261026,posting_class,acceptance_union,window_unbounded,5,12,124.0815,orders
+census,2,20261027,posting_class,acceptance_union,early_possible,113,450,4768.5543,orders
+census,2,20261027,posting_class,acceptance_union,intermediate,91,208,3719.8889,orders
+census,2,20261027,posting_class,acceptance_union,late_post,12,47,502.6714,orders
+census,2,20261027,posting_class,acceptance_union,window_unbounded,5,13,191.1009,orders
+census,3,20261024,posting_class,acceptance_union,early_possible,127,168,1856.0136,orders
+census,3,20261024,posting_class,acceptance_union,intermediate,253,441,7043.6954,orders
+census,3,20261024,posting_class,acceptance_union,late_post,80,138,1613.7022,orders
+census,3,20261024,posting_class,acceptance_union,window_unbounded,11,16,100.9946,orders
+census,3,20261025,posting_class,acceptance_union,early_possible,110,156,2632.1712,orders
+census,3,20261025,posting_class,acceptance_union,intermediate,226,377,7030.4345,orders
+census,3,20261025,posting_class,acceptance_union,late_post,51,74,587.2914,orders
+census,3,20261025,posting_class,acceptance_union,window_unbounded,7,10,57.6525,orders
+census,3,20261026,posting_class,acceptance_union,early_possible,84,215,6039.6334,orders
+census,3,20261026,posting_class,acceptance_union,intermediate,266,724,22930.0086,orders
+census,3,20261026,posting_class,acceptance_union,late_post,100,255,5938.9364,orders
+census,3,20261026,posting_class,acceptance_union,window_unbounded,7,8,101.298,orders
+census,1,20261024,removal_PL,cancel_effect,>1000,554,880,12768.7982,orders
+census,1,20261024,removal_PL,cancel_effect,conflicting,163,305,3670.2416,orders
+census,1,20261025,removal_PL,cancel_effect,250-1000,1,4,30.0,orders
+census,1,20261025,removal_PL,cancel_effect,>1000,444,712,13169.2104,orders
+census,1,20261025,removal_PL,cancel_effect,conflicting,127,246,3365.2812,orders
+census,1,20261025,removal_PL,cancel_effect,unbounded,2,4,28.5841,orders
+census,1,20261026,removal_PL,cancel_effect,>1000,262,641,16326.6398,orders
+census,1,20261026,removal_PL,cancel_effect,conflicting,76,212,4917.8539,orders
+census,1,20261026,removal_PL,cancel_effect,unbounded,1,1,139.02,orders
+census,1,20261027,removal_PL,cancel_effect,>1000,113,512,9922.6083,orders
+census,1,20261027,removal_PL,cancel_effect,conflicting,51,254,4542.3113,orders
+census,2,20261024,removal_PL,cancel_effect,250-1000,1,6,50.0,orders
+census,2,20261024,removal_PL,cancel_effect,>1000,284,555,10764.3406,orders
+census,2,20261024,removal_PL,cancel_effect,conflicting,71,185,2512.643,orders
+census,2,20261025,removal_PL,cancel_effect,>1000,62,94,2743.6984,orders
+census,2,20261025,removal_PL,cancel_effect,conflicting,19,38,538.0334,orders
+census,2,20261026,removal_PL,cancel_effect,>1000,239,562,9156.2808,orders
+census,2,20261026,removal_PL,cancel_effect,conflicting,42,108,1456.7701,orders
+census,2,20261026,removal_PL,cancel_effect,unbounded,2,3,100.0,orders
+census,2,20261027,removal_PL,cancel_effect,250-1000,1,5,50.0,orders
+census,2,20261027,removal_PL,cancel_effect,>1000,188,604,7788.0481,orders
+census,2,20261027,removal_PL,cancel_effect,conflicting,27,84,1096.7023,orders
+census,3,20261024,removal_PL,cancel_effect,>1000,340,511,7691.0271,orders
+census,3,20261024,removal_PL,cancel_effect,conflicting,122,215,2413.3787,orders
+census,3,20261025,removal_PL,cancel_effect,>1000,298,455,7770.8612,orders
+census,3,20261025,removal_PL,cancel_effect,conflicting,90,148,2476.6885,orders
+census,3,20261026,removal_PL,cancel_effect,250-1000,1,27,220.0,orders
+census,3,20261026,removal_PL,cancel_effect,>1000,321,737,23325.1023,orders
+census,3,20261026,removal_PL,cancel_effect,conflicting,131,403,10794.7741,orders
+census,3,20261026,removal_PL,cancel_effect,unbounded,1,1,10.0,orders
+census,1,20261024,removal_PL,cancel_submission_D250_declared,>1000,554,880,12768.7982,orders
+census,1,20261024,removal_PL,cancel_submission_D250_declared,conflicting,163,305,3670.2416,orders
+census,1,20261025,removal_PL,cancel_submission_D250_declared,250-1000,1,4,30.0,orders
+census,1,20261025,removal_PL,cancel_submission_D250_declared,>1000,444,712,13169.2104,orders
+census,1,20261025,removal_PL,cancel_submission_D250_declared,conflicting,127,246,3365.2812,orders
+census,1,20261025,removal_PL,cancel_submission_D250_declared,unbounded,2,4,28.5841,orders
+census,1,20261026,removal_PL,cancel_submission_D250_declared,>1000,262,641,16326.6398,orders
+census,1,20261026,removal_PL,cancel_submission_D250_declared,conflicting,76,212,4917.8539,orders
+census,1,20261026,removal_PL,cancel_submission_D250_declared,unbounded,1,1,139.02,orders
+census,1,20261027,removal_PL,cancel_submission_D250_declared,>1000,113,512,9922.6083,orders
+census,1,20261027,removal_PL,cancel_submission_D250_declared,conflicting,51,254,4542.3113,orders
+census,2,20261024,removal_PL,cancel_submission_D250_declared,250-1000,1,6,50.0,orders
+census,2,20261024,removal_PL,cancel_submission_D250_declared,>1000,284,555,10764.3406,orders
+census,2,20261024,removal_PL,cancel_submission_D250_declared,conflicting,71,185,2512.643,orders
+census,2,20261025,removal_PL,cancel_submission_D250_declared,>1000,62,94,2743.6984,orders
+census,2,20261025,removal_PL,cancel_submission_D250_declared,conflicting,19,38,538.0334,orders
+census,2,20261026,removal_PL,cancel_submission_D250_declared,>1000,239,562,9156.2808,orders
+census,2,20261026,removal_PL,cancel_submission_D250_declared,conflicting,42,108,1456.7701,orders
+census,2,20261026,removal_PL,cancel_submission_D250_declared,unbounded,2,3,100.0,orders
+census,2,20261027,removal_PL,cancel_submission_D250_declared,250-1000,1,5,50.0,orders
+census,2,20261027,removal_PL,cancel_submission_D250_declared,>1000,188,604,7788.0481,orders
+census,2,20261027,removal_PL,cancel_submission_D250_declared,conflicting,27,84,1096.7023,orders
+census,3,20261024,removal_PL,cancel_submission_D250_declared,>1000,340,511,7691.0271,orders
+census,3,20261024,removal_PL,cancel_submission_D250_declared,conflicting,122,215,2413.3787,orders
+census,3,20261025,removal_PL,cancel_submission_D250_declared,>1000,298,455,7770.8612,orders
+census,3,20261025,removal_PL,cancel_submission_D250_declared,conflicting,90,148,2476.6885,orders
+census,3,20261026,removal_PL,cancel_submission_D250_declared,250-1000,1,27,220.0,orders
+census,3,20261026,removal_PL,cancel_submission_D250_declared,>1000,321,737,23325.1023,orders
+census,3,20261026,removal_PL,cancel_submission_D250_declared,conflicting,131,403,10794.7741,orders
+census,3,20261026,removal_PL,cancel_submission_D250_declared,unbounded,1,1,10.0,orders
+census,1,20261024,removal_PL,cancel_submission_D1000_declared,>1000,554,880,12768.7982,orders
+census,1,20261024,removal_PL,cancel_submission_D1000_declared,conflicting,163,305,3670.2416,orders
+census,1,20261025,removal_PL,cancel_submission_D1000_declared,>1000,445,716,13199.2104,orders
+census,1,20261025,removal_PL,cancel_submission_D1000_declared,conflicting,127,246,3365.2812,orders
+census,1,20261025,removal_PL,cancel_submission_D1000_declared,unbounded,2,4,28.5841,orders
+census,1,20261026,removal_PL,cancel_submission_D1000_declared,>1000,262,641,16326.6398,orders
+census,1,20261026,removal_PL,cancel_submission_D1000_declared,conflicting,76,212,4917.8539,orders
+census,1,20261026,removal_PL,cancel_submission_D1000_declared,unbounded,1,1,139.02,orders
+census,1,20261027,removal_PL,cancel_submission_D1000_declared,>1000,113,512,9922.6083,orders
+census,1,20261027,removal_PL,cancel_submission_D1000_declared,conflicting,51,254,4542.3113,orders
+census,2,20261024,removal_PL,cancel_submission_D1000_declared,>1000,285,561,10814.3406,orders
+census,2,20261024,removal_PL,cancel_submission_D1000_declared,conflicting,71,185,2512.643,orders
+census,2,20261025,removal_PL,cancel_submission_D1000_declared,>1000,62,94,2743.6984,orders
+census,2,20261025,removal_PL,cancel_submission_D1000_declared,conflicting,19,38,538.0334,orders
+census,2,20261026,removal_PL,cancel_submission_D1000_declared,>1000,239,562,9156.2808,orders
+census,2,20261026,removal_PL,cancel_submission_D1000_declared,conflicting,42,108,1456.7701,orders
+census,2,20261026,removal_PL,cancel_submission_D1000_declared,unbounded,2,3,100.0,orders
+census,2,20261027,removal_PL,cancel_submission_D1000_declared,>1000,189,609,7838.0481,orders
+census,2,20261027,removal_PL,cancel_submission_D1000_declared,conflicting,27,84,1096.7023,orders
+census,3,20261024,removal_PL,cancel_submission_D1000_declared,>1000,340,511,7691.0271,orders
+census,3,20261024,removal_PL,cancel_submission_D1000_declared,conflicting,122,215,2413.3787,orders
+census,3,20261025,removal_PL,cancel_submission_D1000_declared,>1000,298,455,7770.8612,orders
+census,3,20261025,removal_PL,cancel_submission_D1000_declared,conflicting,90,148,2476.6885,orders
+census,3,20261026,removal_PL,cancel_submission_D1000_declared,>1000,322,764,23545.1023,orders
+census,3,20261026,removal_PL,cancel_submission_D1000_declared,conflicting,131,403,10794.7741,orders
+census,3,20261026,removal_PL,cancel_submission_D1000_declared,unbounded,1,1,10.0,orders
+census,1,20261024,size_end,evidence,conflict,178,361,4120.2416,orders
+census,1,20261024,size_end,evidence,distinguished,14,34,420.0,orders
+census,1,20261024,size_end,evidence,distinguished_under_priority,190,266,5700.0,orders
+census,1,20261024,size_end,evidence,tied,364,614,7068.7982,orders
+census,1,20261025,size_end,evidence,conflict,143,313,3945.2812,orders
+census,1,20261025,size_end,evidence,distinguished,10,29,320.0,orders
+census,1,20261025,size_end,evidence,distinguished_under_priority,140,187,4920.0,orders
+census,1,20261025,size_end,evidence,tied,307,533,8307.7945,orders
+census,1,20261026,size_end,evidence,conflict,81,253,5607.8539,orders
+census,1,20261026,size_end,evidence,distinguished,6,21,300.0,orders
+census,1,20261026,size_end,evidence,distinguished_under_priority,45,89,4120.0,orders
+census,1,20261026,size_end,evidence,tied,218,553,12345.6598,orders
+census,1,20261027,size_end,evidence,conflict,54,307,5022.3113,orders
+census,1,20261027,size_end,evidence,distinguished,5,75,800.0,orders
+census,1,20261027,size_end,evidence,distinguished_under_priority,16,91,2560.0,orders
+census,1,20261027,size_end,evidence,tied,97,421,7362.6083,orders
+census,2,20261024,size_end,evidence,conflict,75,203,2712.643,orders
+census,2,20261024,size_end,evidence,distinguished,8,38,400.0,orders
+census,2,20261024,size_end,evidence,distinguished_under_priority,83,147,4150.0,orders
+census,2,20261024,size_end,evidence,tied,202,414,6664.3406,orders
+census,2,20261025,size_end,evidence,conflict,20,42,588.0334,orders
+census,2,20261025,size_end,evidence,distinguished_under_priority,20,32,1000.0,orders
+census,2,20261025,size_end,evidence,tied,42,62,1743.6984,orders
+census,2,20261026,size_end,evidence,conflict,42,108,1456.7701,orders
+census,2,20261026,size_end,evidence,distinguished,5,22,250.0,orders
+census,2,20261026,size_end,evidence,distinguished_under_priority,52,123,2600.0,orders
+census,2,20261026,size_end,evidence,tied,189,442,6656.2808,orders
+census,2,20261027,size_end,evidence,conflict,28,88,1146.7023,orders
+census,2,20261027,size_end,evidence,distinguished,4,21,197.4651,orders
+census,2,20261027,size_end,evidence,distinguished_under_priority,51,205,2471.8474,orders
+census,2,20261027,size_end,evidence,tied,138,404,5366.2007,orders
+census,3,20261024,size_end,evidence,conflict,126,232,2663.3787,orders
+census,3,20261024,size_end,evidence,distinguished,5,20,260.0,orders
+census,3,20261024,size_end,evidence,distinguished_under_priority,133,185,3632.0823,orders
+census,3,20261024,size_end,evidence,tied,207,326,4058.9448,orders
+census,3,20261025,size_end,evidence,conflict,94,158,2516.6885,orders
+census,3,20261025,size_end,evidence,distinguished,2,4,20.0,orders
+census,3,20261025,size_end,evidence,distinguished_under_priority,106,150,3364.0,orders
+census,3,20261025,size_end,evidence,tied,192,305,4406.8612,orders
+census,3,20261026,size_end,evidence,conflict,132,414,11014.7741,orders
+census,3,20261026,size_end,evidence,distinguished,2,23,440.0,orders
+census,3,20261026,size_end,evidence,distinguished_under_priority,46,89,6970.0,orders
+census,3,20261026,size_end,evidence,tied,277,676,16585.1023,orders
+census,1,20261024,hypotheses,evidence,EX,29,90,870.0,orders
+census,1,20261024,hypotheses,evidence,EX|PL,717,1185,16439.0398,orders
+census,1,20261025,hypotheses,evidence,EC|EX|PL,2,4,28.5841,orders
+census,1,20261025,hypotheses,evidence,EX,26,96,900.0,orders
+census,1,20261025,hypotheses,evidence,EX|PL,572,962,16564.4916,orders
+census,1,20261026,hypotheses,evidence,EC|EX|PL,1,1,139.02,orders
+census,1,20261026,hypotheses,evidence,EX,11,62,990.0,orders
+census,1,20261026,hypotheses,evidence,EX|PL,338,853,21244.4937,orders
+census,1,20261027,hypotheses,evidence,EC|EX|PL,1,3,22.21,orders
+census,1,20261027,hypotheses,evidence,EX,8,128,1280.0,orders
+census,1,20261027,hypotheses,evidence,EX|PL,163,763,14442.7096,orders
+census,2,20261024,hypotheses,evidence,EX,12,56,600.0,orders
+census,2,20261024,hypotheses,evidence,EX|PL,356,746,13326.9836,orders
+census,2,20261025,hypotheses,evidence,EX,1,4,50.0,orders
+census,2,20261025,hypotheses,evidence,EX|PL,81,132,3281.7318,orders
+census,2,20261026,hypotheses,evidence,EC|EX|PL,4,7,167.47,orders
+census,2,20261026,hypotheses,evidence,EX,5,22,250.0,orders
+census,2,20261026,hypotheses,evidence,EX|PL,279,666,10545.5809,orders
+census,2,20261027,hypotheses,evidence,EX,5,25,247.4651,orders
+census,2,20261027,hypotheses,evidence,EX|PL,216,693,8934.7504,orders
+census,3,20261024,hypotheses,evidence,EX,9,37,510.0,orders
+census,3,20261024,hypotheses,evidence,EX|PL,462,726,10104.4058,orders
+census,3,20261025,hypotheses,evidence,EX,6,14,60.0,orders
+census,3,20261025,hypotheses,evidence,EX|PL,388,603,10247.5497,orders
+census,3,20261026,hypotheses,evidence,EC|EX|PL,1,1,10.0,orders
+census,3,20261026,hypotheses,evidence,EX,3,34,660.0,orders
+census,3,20261026,hypotheses,evidence,EX|PL,453,1167,34339.8764,orders
+census,1,20261024,prior_P_cmd,prior,EX,746,1275,17309.0398,orders
+census,1,20261025,prior_P_cmd,prior,EX,600,1062,17493.0757,orders
+census,1,20261026,prior_P_cmd,prior,EX,350,916,22373.5137,orders
+census,1,20261027,prior_P_cmd,prior,EX,172,894,15744.9196,orders
+census,2,20261024,prior_P_cmd,prior,EX,368,802,13926.9836,orders
+census,2,20261025,prior_P_cmd,prior,EX,82,136,3331.7318,orders
+census,2,20261026,prior_P_cmd,prior,EX,288,695,10963.0509,orders
+census,2,20261027,prior_P_cmd,prior,EX,221,718,9182.2155,orders
+census,3,20261024,prior_P_cmd,prior,EX,471,763,10614.4058,orders
+census,3,20261025,prior_P_cmd,prior,EX,394,617,10307.5497,orders
+census,3,20261026,prior_P_cmd,prior,EX,457,1202,35009.8764,orders
+census,1,20261024,prior_sensitive,prior,False,471,828,14130.0,orders
+census,1,20261024,prior_sensitive,prior,True,275,447,3179.0398,orders
+census,1,20261025,prior_sensitive,prior,False,429,780,15190.0,orders
+census,1,20261025,prior_sensitive,prior,True,171,282,2303.0757,orders
+census,1,20261026,prior_sensitive,prior,False,161,498,15970.0,orders
+census,1,20261026,prior_sensitive,prior,True,189,418,6403.5137,orders
+census,1,20261027,prior_sensitive,prior,False,61,492,9760.0,orders
+census,1,20261027,prior_sensitive,prior,True,111,402,5984.9196,orders
+census,2,20261024,prior_sensitive,prior,False,225,530,11250.0,orders
+census,2,20261024,prior_sensitive,prior,True,143,272,2676.9836,orders
+census,2,20261025,prior_sensitive,prior,False,58,85,2900.0,orders
+census,2,20261025,prior_sensitive,prior,True,24,51,431.7318,orders
+census,2,20261026,prior_sensitive,prior,False,178,455,8900.0,orders
+census,2,20261026,prior_sensitive,prior,True,110,240,2063.0509,orders
+census,2,20261027,prior_sensitive,prior,False,150,516,7497.4651,orders
+census,2,20261027,prior_sensitive,prior,True,71,202,1684.7504,orders
+census,3,20261024,prior_sensitive,prior,False,334,513,7330.0,orders
+census,3,20261024,prior_sensitive,prior,True,137,250,3284.4058,orders
+census,3,20261025,prior_sensitive,prior,False,287,410,6440.0,orders
+census,3,20261025,prior_sensitive,prior,True,107,207,3867.5497,orders
+census,3,20261026,prior_sensitive,prior,False,118,304,16930.0,orders
+census,3,20261026,prior_sensitive,prior,True,339,898,18079.8764,orders
+census,1,20261024,queue,S_FIFO,behind_at_first_fill,52,150,1262.8006,orders
+census,1,20261024,queue,S_FIFO,conflicting,163,329,3859.1957,orders
+census,1,20261024,queue,S_FIFO,front_at_first_fill_fifo,5,8,125.0,orders
+census,1,20261024,queue,S_FIFO,unidentified,526,788,12062.0435,orders
+census,1,20261025,queue,S_FIFO,behind_at_first_fill,33,114,1061.5813,orders
+census,1,20261025,queue,S_FIFO,conflicting,126,272,3593.3567,orders
+census,1,20261025,queue,S_FIFO,front_at_first_fill_fifo,13,17,490.0,orders
+census,1,20261025,queue,S_FIFO,unidentified,428,659,12348.1377,orders
+census,1,20261026,queue,S_FIFO,behind_at_first_fill,32,130,1891.8377,orders
+census,1,20261026,queue,S_FIFO,conflicting,76,242,5391.2105,orders
+census,1,20261026,queue,S_FIFO,front_at_first_fill_fifo,2,7,320.0,orders
+census,1,20261026,queue,S_FIFO,unidentified,240,537,14770.4656,orders
+census,1,20261027,queue,S_FIFO,behind_at_first_fill,25,176,2164.2128,orders
+census,1,20261027,queue,S_FIFO,conflicting,48,267,4443.2161,orders
+census,1,20261027,queue,S_FIFO,front_at_first_fill_fifo,1,6,160.0,orders
+census,1,20261027,queue,S_FIFO,unidentified,98,445,8977.4907,orders
+census,2,20261024,queue,S_FIFO,behind_at_first_fill,30,97,1276.7373,orders
+census,2,20261024,queue,S_FIFO,conflicting,70,194,2597.5637,orders
+census,2,20261024,queue,S_FIFO,front_at_first_fill_fifo,3,11,150.0,orders
+census,2,20261024,queue,S_FIFO,unidentified,265,500,9902.6826,orders
+census,2,20261025,queue,S_FIFO,behind_at_first_fill,2,5,54.3833,orders
+census,2,20261025,queue,S_FIFO,conflicting,14,34,504.4371,orders
+census,2,20261025,queue,S_FIFO,front_at_first_fill_fifo,3,3,150.0,orders
+census,2,20261025,queue,S_FIFO,unidentified,63,94,2622.9114,orders
+census,2,20261026,queue,S_FIFO,behind_at_first_fill,20,67,776.3159,orders
+census,2,20261026,queue,S_FIFO,conflicting,40,97,1356.7701,orders
+census,2,20261026,queue,S_FIFO,front_at_first_fill_fifo,2,6,100.0,orders
+census,2,20261026,queue,S_FIFO,unidentified,226,525,8729.9649,orders
+census,2,20261027,queue,S_FIFO,behind_at_first_fill,15,70,625.4803,orders
+census,2,20261027,queue,S_FIFO,conflicting,26,82,1091.7023,orders
+census,2,20261027,queue,S_FIFO,unidentified,180,566,7465.0329,orders
+census,3,20261024,queue,S_FIFO,behind_at_first_fill,18,76,1031.9815,orders
+census,3,20261024,queue,S_FIFO,conflicting,120,222,2608.3787,orders
+census,3,20261024,queue,S_FIFO,front_at_first_fill_fifo,3,3,30.0,orders
+census,3,20261024,queue,S_FIFO,unidentified,330,462,6944.0456,orders
+census,3,20261025,queue,S_FIFO,behind_at_first_fill,16,43,684.8933,orders
+census,3,20261025,queue,S_FIFO,conflicting,87,149,2458.1314,orders
+census,3,20261025,queue,S_FIFO,front_at_first_fill_fifo,2,2,20.0,orders
+census,3,20261025,queue,S_FIFO,unidentified,289,423,7144.525,orders
+census,3,20261026,queue,S_FIFO,behind_at_first_fill,33,134,2855.8074,orders
+census,3,20261026,queue,S_FIFO,conflicting,119,363,10049.3179,orders
+census,3,20261026,queue,S_FIFO,front_at_first_fill_fifo,2,2,220.01,orders
+census,3,20261026,queue,S_FIFO,unidentified,303,703,21884.7412,orders
+census,1,20261024,fill_match,"hard [hi-2000, hi]",>1000,914,914,0.0,fills
+census,1,20261024,fill_match,"hard [hi-2000, hi]",conflicting,361,361,0.0,fills
+census,1,20261025,fill_match,"hard [hi-2000, hi]",>1000,749,749,0.0,fills
+census,1,20261025,fill_match,"hard [hi-2000, hi]",conflicting,313,313,0.0,fills
+census,1,20261026,fill_match,"hard [hi-2000, hi]",>1000,663,663,0.0,fills
+census,1,20261026,fill_match,"hard [hi-2000, hi]",conflicting,253,253,0.0,fills
+census,1,20261027,fill_match,"hard [hi-2000, hi]",>1000,587,587,0.0,fills
+census,1,20261027,fill_match,"hard [hi-2000, hi]",conflicting,307,307,0.0,fills
+census,2,20261024,fill_match,"hard [hi-2000, hi]",>1000,599,599,0.0,fills
+census,2,20261024,fill_match,"hard [hi-2000, hi]",conflicting,203,203,0.0,fills
+census,2,20261025,fill_match,"hard [hi-2000, hi]",>1000,94,94,0.0,fills
+census,2,20261025,fill_match,"hard [hi-2000, hi]",conflicting,42,42,0.0,fills
+census,2,20261026,fill_match,"hard [hi-2000, hi]",>1000,587,587,0.0,fills
+census,2,20261026,fill_match,"hard [hi-2000, hi]",conflicting,108,108,0.0,fills
+census,2,20261027,fill_match,"hard [hi-2000, hi]",>1000,630,630,0.0,fills
+census,2,20261027,fill_match,"hard [hi-2000, hi]",conflicting,88,88,0.0,fills
+census,3,20261024,fill_match,"hard [hi-2000, hi]",>1000,531,531,0.0,fills
+census,3,20261024,fill_match,"hard [hi-2000, hi]",conflicting,232,232,0.0,fills
+census,3,20261025,fill_match,"hard [hi-2000, hi]",>1000,459,459,0.0,fills
+census,3,20261025,fill_match,"hard [hi-2000, hi]",conflicting,158,158,0.0,fills
+census,3,20261026,fill_match,"hard [hi-2000, hi]",>1000,788,788,0.0,fills
+census,3,20261026,fill_match,"hard [hi-2000, hi]",conflicting,414,414,0.0,fills
+census,1,20261024,fill_match,"evidence [lo, hi] (scenario refinement)",250-1000,140,140,0.0,fills
+census,1,20261024,fill_match,"evidence [lo, hi] (scenario refinement)",50-250,31,31,0.0,fills
+census,1,20261024,fill_match,"evidence [lo, hi] (scenario refinement)",<=50,38,38,0.0,fills
+census,1,20261024,fill_match,"evidence [lo, hi] (scenario refinement)",>1000,705,705,0.0,fills
+census,1,20261024,fill_match,"evidence [lo, hi] (scenario refinement)",conflicting,361,361,0.0,fills
+census,1,20261025,fill_match,"evidence [lo, hi] (scenario refinement)",250-1000,137,137,0.0,fills
+census,1,20261025,fill_match,"evidence [lo, hi] (scenario refinement)",50-250,37,37,0.0,fills
+census,1,20261025,fill_match,"evidence [lo, hi] (scenario refinement)",<=50,62,62,0.0,fills
+census,1,20261025,fill_match,"evidence [lo, hi] (scenario refinement)",>1000,513,513,0.0,fills
+census,1,20261025,fill_match,"evidence [lo, hi] (scenario refinement)",conflicting,313,313,0.0,fills
+census,1,20261026,fill_match,"evidence [lo, hi] (scenario refinement)",250-1000,95,95,0.0,fills
+census,1,20261026,fill_match,"evidence [lo, hi] (scenario refinement)",50-250,56,56,0.0,fills
+census,1,20261026,fill_match,"evidence [lo, hi] (scenario refinement)",<=50,24,24,0.0,fills
+census,1,20261026,fill_match,"evidence [lo, hi] (scenario refinement)",>1000,488,488,0.0,fills
+census,1,20261026,fill_match,"evidence [lo, hi] (scenario refinement)",conflicting,253,253,0.0,fills
+census,1,20261027,fill_match,"evidence [lo, hi] (scenario refinement)",250-1000,124,124,0.0,fills
+census,1,20261027,fill_match,"evidence [lo, hi] (scenario refinement)",50-250,12,12,0.0,fills
+census,1,20261027,fill_match,"evidence [lo, hi] (scenario refinement)",<=50,8,8,0.0,fills
+census,1,20261027,fill_match,"evidence [lo, hi] (scenario refinement)",>1000,443,443,0.0,fills
+census,1,20261027,fill_match,"evidence [lo, hi] (scenario refinement)",conflicting,307,307,0.0,fills
+census,2,20261024,fill_match,"evidence [lo, hi] (scenario refinement)",250-1000,103,103,0.0,fills
+census,2,20261024,fill_match,"evidence [lo, hi] (scenario refinement)",50-250,14,14,0.0,fills
+census,2,20261024,fill_match,"evidence [lo, hi] (scenario refinement)",<=50,25,25,0.0,fills
+census,2,20261024,fill_match,"evidence [lo, hi] (scenario refinement)",>1000,456,456,0.0,fills
+census,2,20261024,fill_match,"evidence [lo, hi] (scenario refinement)",conflicting,203,203,0.0,fills
+census,2,20261024,fill_match,"evidence [lo, hi] (scenario refinement)",unbounded,1,1,0.0,fills
+census,2,20261025,fill_match,"evidence [lo, hi] (scenario refinement)",250-1000,19,19,0.0,fills
+census,2,20261025,fill_match,"evidence [lo, hi] (scenario refinement)",50-250,5,5,0.0,fills
+census,2,20261025,fill_match,"evidence [lo, hi] (scenario refinement)",<=50,14,14,0.0,fills
+census,2,20261025,fill_match,"evidence [lo, hi] (scenario refinement)",>1000,56,56,0.0,fills
+census,2,20261025,fill_match,"evidence [lo, hi] (scenario refinement)",conflicting,42,42,0.0,fills
+census,2,20261026,fill_match,"evidence [lo, hi] (scenario refinement)",250-1000,66,66,0.0,fills
+census,2,20261026,fill_match,"evidence [lo, hi] (scenario refinement)",50-250,15,15,0.0,fills
+census,2,20261026,fill_match,"evidence [lo, hi] (scenario refinement)",<=50,13,13,0.0,fills
+census,2,20261026,fill_match,"evidence [lo, hi] (scenario refinement)",>1000,493,493,0.0,fills
+census,2,20261026,fill_match,"evidence [lo, hi] (scenario refinement)",conflicting,108,108,0.0,fills
+census,2,20261027,fill_match,"evidence [lo, hi] (scenario refinement)",250-1000,134,134,0.0,fills
+census,2,20261027,fill_match,"evidence [lo, hi] (scenario refinement)",50-250,7,7,0.0,fills
+census,2,20261027,fill_match,"evidence [lo, hi] (scenario refinement)",<=50,1,1,0.0,fills
+census,2,20261027,fill_match,"evidence [lo, hi] (scenario refinement)",>1000,488,488,0.0,fills
+census,2,20261027,fill_match,"evidence [lo, hi] (scenario refinement)",conflicting,88,88,0.0,fills
+census,3,20261024,fill_match,"evidence [lo, hi] (scenario refinement)",250-1000,66,66,0.0,fills
+census,3,20261024,fill_match,"evidence [lo, hi] (scenario refinement)",50-250,15,15,0.0,fills
+census,3,20261024,fill_match,"evidence [lo, hi] (scenario refinement)",<=50,21,21,0.0,fills
+census,3,20261024,fill_match,"evidence [lo, hi] (scenario refinement)",>1000,429,429,0.0,fills
+census,3,20261024,fill_match,"evidence [lo, hi] (scenario refinement)",conflicting,232,232,0.0,fills
+census,3,20261025,fill_match,"evidence [lo, hi] (scenario refinement)",250-1000,68,68,0.0,fills
+census,3,20261025,fill_match,"evidence [lo, hi] (scenario refinement)",50-250,30,30,0.0,fills
+census,3,20261025,fill_match,"evidence [lo, hi] (scenario refinement)",<=50,19,19,0.0,fills
+census,3,20261025,fill_match,"evidence [lo, hi] (scenario refinement)",>1000,342,342,0.0,fills
+census,3,20261025,fill_match,"evidence [lo, hi] (scenario refinement)",conflicting,158,158,0.0,fills
+census,3,20261026,fill_match,"evidence [lo, hi] (scenario refinement)",250-1000,81,81,0.0,fills
+census,3,20261026,fill_match,"evidence [lo, hi] (scenario refinement)",50-250,28,28,0.0,fills
+census,3,20261026,fill_match,"evidence [lo, hi] (scenario refinement)",<=50,31,31,0.0,fills
+census,3,20261026,fill_match,"evidence [lo, hi] (scenario refinement)",>1000,648,648,0.0,fills
+census,3,20261026,fill_match,"evidence [lo, hi] (scenario refinement)",conflicting,414,414,0.0,fills
+sample,1,20261024,posting,acceptance_union,>1000,3,5,66.6666,orders
+sample,1,20261024,posting,acceptance_union,conflicting,1,1,30.0,orders
+sample,1,20261025,posting,acceptance_union,>1000,2,5,60.0,orders
+sample,1,20261025,posting,acceptance_union,conflicting,2,13,80.0,orders
+sample,1,20261026,posting,acceptance_union,>1000,3,8,228.4359,orders
+sample,1,20261026,posting,acceptance_union,conflicting,1,1,35.23,orders
+sample,1,20261027,posting,acceptance_union,>1000,3,11,146.8073,orders
+sample,1,20261027,posting,acceptance_union,conflicting,1,4,27.8164,orders
+sample,2,20261024,posting,acceptance_union,>1000,2,4,100.0,orders
+sample,2,20261024,posting,acceptance_union,conflicting,2,5,100.0,orders
+sample,2,20261025,posting,acceptance_union,>1000,3,4,123.0,orders
+sample,2,20261025,posting,acceptance_union,conflicting,1,1,6.9922,orders
+sample,2,20261026,posting,acceptance_union,250-1000,1,1,20.0,orders
+sample,2,20261026,posting,acceptance_union,>1000,3,6,66.8902,orders
+sample,2,20261027,posting,acceptance_union,>1000,4,21,200.0,orders
+sample,3,20261024,posting,acceptance_union,>1000,3,3,30.0,orders
+sample,3,20261024,posting,acceptance_union,conflicting,1,7,220.0,orders
+sample,3,20261025,posting,acceptance_union,>1000,3,10,99.7327,orders
+sample,3,20261025,posting,acceptance_union,conflicting,1,2,10.0,orders
+sample,3,20261026,posting,acceptance_union,>1000,3,11,105.228,orders
+sample,3,20261026,posting,acceptance_union,conflicting,1,4,90.7322,orders
+sample,1,20261024,posting,acceptance_S_FIFO,50-250,3,5,66.6666,orders
+sample,1,20261024,posting,acceptance_S_FIFO,conflicting,1,1,30.0,orders
+sample,1,20261025,posting,acceptance_S_FIFO,50-250,1,3,30.0,orders
+sample,1,20261025,posting,acceptance_S_FIFO,>1000,1,2,30.0,orders
+sample,1,20261025,posting,acceptance_S_FIFO,conflicting,2,13,80.0,orders
+sample,1,20261026,posting,acceptance_S_FIFO,250-1000,1,1,50.0,orders
+sample,1,20261026,posting,acceptance_S_FIFO,>1000,2,7,178.4359,orders
+sample,1,20261026,posting,acceptance_S_FIFO,conflicting,1,1,35.23,orders
+sample,1,20261027,posting,acceptance_S_FIFO,50-250,1,2,15.0,orders
+sample,1,20261027,posting,acceptance_S_FIFO,>1000,2,9,131.8073,orders
+sample,1,20261027,posting,acceptance_S_FIFO,conflicting,1,4,27.8164,orders
+sample,2,20261024,posting,acceptance_S_FIFO,>1000,2,4,100.0,orders
+sample,2,20261024,posting,acceptance_S_FIFO,conflicting,2,5,100.0,orders
+sample,2,20261025,posting,acceptance_S_FIFO,>1000,3,4,123.0,orders
+sample,2,20261025,posting,acceptance_S_FIFO,conflicting,1,1,6.9922,orders
+sample,2,20261026,posting,acceptance_S_FIFO,250-1000,1,1,20.0,orders
+sample,2,20261026,posting,acceptance_S_FIFO,>1000,3,6,66.8902,orders
+sample,2,20261027,posting,acceptance_S_FIFO,>1000,4,21,200.0,orders
+sample,3,20261024,posting,acceptance_S_FIFO,50-250,1,1,10.0,orders
+sample,3,20261024,posting,acceptance_S_FIFO,>1000,2,2,20.0,orders
+sample,3,20261024,posting,acceptance_S_FIFO,conflicting,1,7,220.0,orders
+sample,3,20261025,posting,acceptance_S_FIFO,250-1000,1,1,10.0,orders
+sample,3,20261025,posting,acceptance_S_FIFO,>1000,2,9,89.7327,orders
+sample,3,20261025,posting,acceptance_S_FIFO,conflicting,1,2,10.0,orders
+sample,3,20261026,posting,acceptance_S_FIFO,250-1000,1,4,22.4985,orders
+sample,3,20261026,posting,acceptance_S_FIFO,>1000,2,7,82.7295,orders
+sample,3,20261026,posting,acceptance_S_FIFO,conflicting,1,4,90.7322,orders
+sample,1,20261024,posting,submission_D250_declared,>1000,3,5,66.6666,orders
+sample,1,20261024,posting,submission_D250_declared,conflicting,1,1,30.0,orders
+sample,1,20261025,posting,submission_D250_declared,>1000,2,5,60.0,orders
+sample,1,20261025,posting,submission_D250_declared,conflicting,2,13,80.0,orders
+sample,1,20261026,posting,submission_D250_declared,>1000,3,8,228.4359,orders
+sample,1,20261026,posting,submission_D250_declared,conflicting,1,1,35.23,orders
+sample,1,20261027,posting,submission_D250_declared,>1000,3,11,146.8073,orders
+sample,1,20261027,posting,submission_D250_declared,conflicting,1,4,27.8164,orders
+sample,2,20261024,posting,submission_D250_declared,>1000,2,4,100.0,orders
+sample,2,20261024,posting,submission_D250_declared,conflicting,2,5,100.0,orders
+sample,2,20261025,posting,submission_D250_declared,>1000,3,4,123.0,orders
+sample,2,20261025,posting,submission_D250_declared,conflicting,1,1,6.9922,orders
+sample,2,20261026,posting,submission_D250_declared,250-1000,1,1,20.0,orders
+sample,2,20261026,posting,submission_D250_declared,>1000,3,6,66.8902,orders
+sample,2,20261027,posting,submission_D250_declared,>1000,4,21,200.0,orders
+sample,3,20261024,posting,submission_D250_declared,>1000,3,3,30.0,orders
+sample,3,20261024,posting,submission_D250_declared,conflicting,1,7,220.0,orders
+sample,3,20261025,posting,submission_D250_declared,>1000,3,10,99.7327,orders
+sample,3,20261025,posting,submission_D250_declared,conflicting,1,2,10.0,orders
+sample,3,20261026,posting,submission_D250_declared,>1000,3,11,105.228,orders
+sample,3,20261026,posting,submission_D250_declared,conflicting,1,4,90.7322,orders
+sample,1,20261024,posting,submission_D1000_declared,>1000,3,5,66.6666,orders
+sample,1,20261024,posting,submission_D1000_declared,conflicting,1,1,30.0,orders
+sample,1,20261025,posting,submission_D1000_declared,>1000,2,5,60.0,orders
+sample,1,20261025,posting,submission_D1000_declared,conflicting,2,13,80.0,orders
+sample,1,20261026,posting,submission_D1000_declared,>1000,3,8,228.4359,orders
+sample,1,20261026,posting,submission_D1000_declared,conflicting,1,1,35.23,orders
+sample,1,20261027,posting,submission_D1000_declared,>1000,3,11,146.8073,orders
+sample,1,20261027,posting,submission_D1000_declared,conflicting,1,4,27.8164,orders
+sample,2,20261024,posting,submission_D1000_declared,>1000,2,4,100.0,orders
+sample,2,20261024,posting,submission_D1000_declared,conflicting,2,5,100.0,orders
+sample,2,20261025,posting,submission_D1000_declared,>1000,3,4,123.0,orders
+sample,2,20261025,posting,submission_D1000_declared,conflicting,1,1,6.9922,orders
+sample,2,20261026,posting,submission_D1000_declared,>1000,4,7,86.8902,orders
+sample,2,20261027,posting,submission_D1000_declared,>1000,4,21,200.0,orders
+sample,3,20261024,posting,submission_D1000_declared,>1000,3,3,30.0,orders
+sample,3,20261024,posting,submission_D1000_declared,conflicting,1,7,220.0,orders
+sample,3,20261025,posting,submission_D1000_declared,>1000,3,10,99.7327,orders
+sample,3,20261025,posting,submission_D1000_declared,conflicting,1,2,10.0,orders
+sample,3,20261026,posting,submission_D1000_declared,>1000,3,11,105.228,orders
+sample,3,20261026,posting,submission_D1000_declared,conflicting,1,4,90.7322,orders
+sample,1,20261024,posting_class,acceptance_union,early_possible,2,4,60.0,orders
+sample,1,20261024,posting_class,acceptance_union,intermediate,2,2,36.6666,orders
+sample,1,20261025,posting_class,acceptance_union,intermediate,3,7,90.0,orders
+sample,1,20261025,posting_class,acceptance_union,late_post,1,11,50.0,orders
+sample,1,20261026,posting_class,acceptance_union,intermediate,3,8,228.4359,orders
+sample,1,20261026,posting_class,acceptance_union,late_post,1,1,35.23,orders
+sample,1,20261027,posting_class,acceptance_union,early_possible,3,7,47.8164,orders
+sample,1,20261027,posting_class,acceptance_union,intermediate,1,8,126.8073,orders
+sample,2,20261024,posting_class,acceptance_union,intermediate,3,6,150.0,orders
+sample,2,20261024,posting_class,acceptance_union,late_post,1,3,50.0,orders
+sample,2,20261025,posting_class,acceptance_union,early_possible,3,4,123.0,orders
+sample,2,20261025,posting_class,acceptance_union,late_post,1,1,6.9922,orders
+sample,2,20261026,posting_class,acceptance_union,early_possible,3,6,66.8902,orders
+sample,2,20261026,posting_class,acceptance_union,late_post,1,1,20.0,orders
+sample,2,20261027,posting_class,acceptance_union,early_possible,4,21,200.0,orders
+sample,3,20261024,posting_class,acceptance_union,early_possible,2,2,20.0,orders
+sample,3,20261024,posting_class,acceptance_union,intermediate,2,8,230.0,orders
+sample,3,20261025,posting_class,acceptance_union,intermediate,4,12,109.7327,orders
+sample,3,20261026,posting_class,acceptance_union,early_possible,1,1,10.0,orders
+sample,3,20261026,posting_class,acceptance_union,intermediate,3,14,185.9602,orders
+sample,1,20261024,removal_PL,cancel_effect,>1000,3,5,66.6666,orders
+sample,1,20261024,removal_PL,cancel_effect,conflicting,1,1,30.0,orders
+sample,1,20261025,removal_PL,cancel_effect,>1000,2,5,60.0,orders
+sample,1,20261025,removal_PL,cancel_effect,conflicting,1,2,30.0,orders
+sample,1,20261026,removal_PL,cancel_effect,>1000,3,8,228.4359,orders
+sample,1,20261026,removal_PL,cancel_effect,conflicting,1,1,35.23,orders
+sample,1,20261027,removal_PL,cancel_effect,>1000,3,11,146.8073,orders
+sample,1,20261027,removal_PL,cancel_effect,conflicting,1,4,27.8164,orders
+sample,2,20261024,removal_PL,cancel_effect,>1000,1,1,50.0,orders
+sample,2,20261024,removal_PL,cancel_effect,conflicting,2,5,100.0,orders
+sample,2,20261025,removal_PL,cancel_effect,>1000,3,4,123.0,orders
+sample,2,20261025,removal_PL,cancel_effect,conflicting,1,1,6.9922,orders
+sample,2,20261026,removal_PL,cancel_effect,>1000,4,7,86.8902,orders
+sample,2,20261027,removal_PL,cancel_effect,>1000,4,21,200.0,orders
+sample,3,20261024,removal_PL,cancel_effect,>1000,3,3,30.0,orders
+sample,3,20261024,removal_PL,cancel_effect,conflicting,1,7,220.0,orders
+sample,3,20261025,removal_PL,cancel_effect,>1000,3,10,99.7327,orders
+sample,3,20261025,removal_PL,cancel_effect,conflicting,1,2,10.0,orders
+sample,3,20261026,removal_PL,cancel_effect,>1000,3,11,105.228,orders
+sample,3,20261026,removal_PL,cancel_effect,conflicting,1,4,90.7322,orders
+sample,1,20261024,removal_PL,cancel_submission_D250_declared,>1000,3,5,66.6666,orders
+sample,1,20261024,removal_PL,cancel_submission_D250_declared,conflicting,1,1,30.0,orders
+sample,1,20261025,removal_PL,cancel_submission_D250_declared,>1000,2,5,60.0,orders
+sample,1,20261025,removal_PL,cancel_submission_D250_declared,conflicting,1,2,30.0,orders
+sample,1,20261026,removal_PL,cancel_submission_D250_declared,>1000,3,8,228.4359,orders
+sample,1,20261026,removal_PL,cancel_submission_D250_declared,conflicting,1,1,35.23,orders
+sample,1,20261027,removal_PL,cancel_submission_D250_declared,>1000,3,11,146.8073,orders
+sample,1,20261027,removal_PL,cancel_submission_D250_declared,conflicting,1,4,27.8164,orders
+sample,2,20261024,removal_PL,cancel_submission_D250_declared,>1000,1,1,50.0,orders
+sample,2,20261024,removal_PL,cancel_submission_D250_declared,conflicting,2,5,100.0,orders
+sample,2,20261025,removal_PL,cancel_submission_D250_declared,>1000,3,4,123.0,orders
+sample,2,20261025,removal_PL,cancel_submission_D250_declared,conflicting,1,1,6.9922,orders
+sample,2,20261026,removal_PL,cancel_submission_D250_declared,>1000,4,7,86.8902,orders
+sample,2,20261027,removal_PL,cancel_submission_D250_declared,>1000,4,21,200.0,orders
+sample,3,20261024,removal_PL,cancel_submission_D250_declared,>1000,3,3,30.0,orders
+sample,3,20261024,removal_PL,cancel_submission_D250_declared,conflicting,1,7,220.0,orders
+sample,3,20261025,removal_PL,cancel_submission_D250_declared,>1000,3,10,99.7327,orders
+sample,3,20261025,removal_PL,cancel_submission_D250_declared,conflicting,1,2,10.0,orders
+sample,3,20261026,removal_PL,cancel_submission_D250_declared,>1000,3,11,105.228,orders
+sample,3,20261026,removal_PL,cancel_submission_D250_declared,conflicting,1,4,90.7322,orders
+sample,1,20261024,removal_PL,cancel_submission_D1000_declared,>1000,3,5,66.6666,orders
+sample,1,20261024,removal_PL,cancel_submission_D1000_declared,conflicting,1,1,30.0,orders
+sample,1,20261025,removal_PL,cancel_submission_D1000_declared,>1000,2,5,60.0,orders
+sample,1,20261025,removal_PL,cancel_submission_D1000_declared,conflicting,1,2,30.0,orders
+sample,1,20261026,removal_PL,cancel_submission_D1000_declared,>1000,3,8,228.4359,orders
+sample,1,20261026,removal_PL,cancel_submission_D1000_declared,conflicting,1,1,35.23,orders
+sample,1,20261027,removal_PL,cancel_submission_D1000_declared,>1000,3,11,146.8073,orders
+sample,1,20261027,removal_PL,cancel_submission_D1000_declared,conflicting,1,4,27.8164,orders
+sample,2,20261024,removal_PL,cancel_submission_D1000_declared,>1000,1,1,50.0,orders
+sample,2,20261024,removal_PL,cancel_submission_D1000_declared,conflicting,2,5,100.0,orders
+sample,2,20261025,removal_PL,cancel_submission_D1000_declared,>1000,3,4,123.0,orders
+sample,2,20261025,removal_PL,cancel_submission_D1000_declared,conflicting,1,1,6.9922,orders
+sample,2,20261026,removal_PL,cancel_submission_D1000_declared,>1000,4,7,86.8902,orders
+sample,2,20261027,removal_PL,cancel_submission_D1000_declared,>1000,4,21,200.0,orders
+sample,3,20261024,removal_PL,cancel_submission_D1000_declared,>1000,3,3,30.0,orders
+sample,3,20261024,removal_PL,cancel_submission_D1000_declared,conflicting,1,7,220.0,orders
+sample,3,20261025,removal_PL,cancel_submission_D1000_declared,>1000,3,10,99.7327,orders
+sample,3,20261025,removal_PL,cancel_submission_D1000_declared,conflicting,1,2,10.0,orders
+sample,3,20261026,removal_PL,cancel_submission_D1000_declared,>1000,3,11,105.228,orders
+sample,3,20261026,removal_PL,cancel_submission_D1000_declared,conflicting,1,4,90.7322,orders
+sample,1,20261024,size_end,evidence,conflict,1,1,30.0,orders
+sample,1,20261024,size_end,evidence,tied,3,5,66.6666,orders
+sample,1,20261025,size_end,evidence,conflict,2,13,80.0,orders
+sample,1,20261025,size_end,evidence,distinguished_under_priority,1,2,30.0,orders
+sample,1,20261025,size_end,evidence,tied,1,3,30.0,orders
+sample,1,20261026,size_end,evidence,conflict,1,1,35.23,orders
+sample,1,20261026,size_end,evidence,distinguished_under_priority,1,1,50.0,orders
+sample,1,20261026,size_end,evidence,tied,2,7,178.4359,orders
+sample,1,20261027,size_end,evidence,conflict,1,4,27.8164,orders
+sample,1,20261027,size_end,evidence,tied,3,11,146.8073,orders
+sample,2,20261024,size_end,evidence,conflict,2,5,100.0,orders
+sample,2,20261024,size_end,evidence,distinguished,1,3,50.0,orders
+sample,2,20261024,size_end,evidence,distinguished_under_priority,1,1,50.0,orders
+sample,2,20261025,size_end,evidence,conflict,1,1,6.9922,orders
+sample,2,20261025,size_end,evidence,distinguished_under_priority,1,1,50.0,orders
+sample,2,20261025,size_end,evidence,tied,2,3,73.0,orders
+sample,2,20261026,size_end,evidence,distinguished_under_priority,1,1,50.0,orders
+sample,2,20261026,size_end,evidence,tied,3,6,36.8902,orders
+sample,2,20261027,size_end,evidence,distinguished_under_priority,1,11,50.0,orders
+sample,2,20261027,size_end,evidence,tied,3,10,150.0,orders
+sample,3,20261024,size_end,evidence,conflict,1,7,220.0,orders
+sample,3,20261024,size_end,evidence,distinguished_under_priority,3,3,30.0,orders
+sample,3,20261025,size_end,evidence,conflict,1,2,10.0,orders
+sample,3,20261025,size_end,evidence,distinguished_under_priority,2,2,20.0,orders
+sample,3,20261025,size_end,evidence,tied,1,8,79.7327,orders
+sample,3,20261026,size_end,evidence,conflict,1,4,90.7322,orders
+sample,3,20261026,size_end,evidence,tied,3,11,105.228,orders
+sample,1,20261024,hypotheses,evidence,EX|PL,4,6,96.6666,orders
+sample,1,20261025,hypotheses,evidence,EX,1,11,50.0,orders
+sample,1,20261025,hypotheses,evidence,EX|PL,3,7,90.0,orders
+sample,1,20261026,hypotheses,evidence,EX|PL,4,9,263.6659,orders
+sample,1,20261027,hypotheses,evidence,EX|PL,4,15,174.6237,orders
+sample,2,20261024,hypotheses,evidence,EX,1,3,50.0,orders
+sample,2,20261024,hypotheses,evidence,EX|PL,3,6,150.0,orders
+sample,2,20261025,hypotheses,evidence,EX|PL,4,5,129.9922,orders
+sample,2,20261026,hypotheses,evidence,EX|PL,4,7,86.8902,orders
+sample,2,20261027,hypotheses,evidence,EX|PL,4,21,200.0,orders
+sample,3,20261024,hypotheses,evidence,EX|PL,4,10,250.0,orders
+sample,3,20261025,hypotheses,evidence,EX|PL,4,12,109.7327,orders
+sample,3,20261026,hypotheses,evidence,EX|PL,4,15,195.9602,orders
+sample,1,20261024,prior_P_cmd,prior,EX,4,6,96.6666,orders
+sample,1,20261025,prior_P_cmd,prior,EX,4,18,140.0,orders
+sample,1,20261026,prior_P_cmd,prior,EX,4,9,263.6659,orders
+sample,1,20261027,prior_P_cmd,prior,EX,4,15,174.6237,orders
+sample,2,20261024,prior_P_cmd,prior,EX,4,9,200.0,orders
+sample,2,20261025,prior_P_cmd,prior,EX,4,5,129.9922,orders
+sample,2,20261026,prior_P_cmd,prior,EX,4,7,86.8902,orders
+sample,2,20261027,prior_P_cmd,prior,EX,4,21,200.0,orders
+sample,3,20261024,prior_P_cmd,prior,EX,4,10,250.0,orders
+sample,3,20261025,prior_P_cmd,prior,EX,4,12,109.7327,orders
+sample,3,20261026,prior_P_cmd,prior,EX,4,15,195.9602,orders
+sample,1,20261024,prior_sensitive,prior,False,3,5,90.0,orders
+sample,1,20261024,prior_sensitive,prior,True,1,1,6.6666,orders
+sample,1,20261025,prior_sensitive,prior,False,4,18,140.0,orders
+sample,1,20261026,prior_sensitive,prior,False,2,5,100.0,orders
+sample,1,20261026,prior_sensitive,prior,True,2,4,163.6659,orders
+sample,1,20261027,prior_sensitive,prior,True,4,15,174.6237,orders
+sample,2,20261024,prior_sensitive,prior,False,4,9,200.0,orders
+sample,2,20261025,prior_sensitive,prior,False,2,2,100.0,orders
+sample,2,20261025,prior_sensitive,prior,True,2,3,29.9922,orders
+sample,2,20261026,prior_sensitive,prior,False,1,1,50.0,orders
+sample,2,20261026,prior_sensitive,prior,True,3,6,36.8902,orders
+sample,2,20261027,prior_sensitive,prior,False,4,21,200.0,orders
+sample,3,20261024,prior_sensitive,prior,False,4,10,250.0,orders
+sample,3,20261025,prior_sensitive,prior,False,3,4,30.0,orders
+sample,3,20261025,prior_sensitive,prior,True,1,8,79.7327,orders
+sample,3,20261026,prior_sensitive,prior,False,1,1,10.0,orders
+sample,3,20261026,prior_sensitive,prior,True,3,14,185.9602,orders
+sample,1,20261024,queue,S_FIFO,behind_at_first_fill,1,3,30.0,orders
+sample,1,20261024,queue,S_FIFO,conflicting,1,1,30.0,orders
+sample,1,20261024,queue,S_FIFO,unidentified,2,2,36.6666,orders
+sample,1,20261025,queue,S_FIFO,behind_at_first_fill,1,3,30.0,orders
+sample,1,20261025,queue,S_FIFO,conflicting,2,13,80.0,orders
+sample,1,20261025,queue,S_FIFO,unidentified,1,2,30.0,orders
+sample,1,20261026,queue,S_FIFO,conflicting,1,1,35.23,orders
+sample,1,20261026,queue,S_FIFO,unidentified,3,8,228.4359,orders
+sample,1,20261027,queue,S_FIFO,behind_at_first_fill,1,8,126.8073,orders
+sample,1,20261027,queue,S_FIFO,conflicting,1,4,27.8164,orders
+sample,1,20261027,queue,S_FIFO,unidentified,2,3,20.0,orders
+sample,2,20261024,queue,S_FIFO,conflicting,2,5,100.0,orders
+sample,2,20261024,queue,S_FIFO,unidentified,2,4,100.0,orders
+sample,2,20261025,queue,S_FIFO,conflicting,1,1,6.9922,orders
+sample,2,20261025,queue,S_FIFO,unidentified,3,4,123.0,orders
+sample,2,20261026,queue,S_FIFO,behind_at_first_fill,1,4,11.2083,orders
+sample,2,20261026,queue,S_FIFO,unidentified,3,3,75.6818,orders
+sample,2,20261027,queue,S_FIFO,behind_at_first_fill,1,3,50.0,orders
+sample,2,20261027,queue,S_FIFO,unidentified,3,18,150.0,orders
+sample,3,20261024,queue,S_FIFO,conflicting,1,7,220.0,orders
+sample,3,20261024,queue,S_FIFO,unidentified,3,3,30.0,orders
+sample,3,20261025,queue,S_FIFO,conflicting,1,2,10.0,orders
+sample,3,20261025,queue,S_FIFO,unidentified,3,10,99.7327,orders
+sample,3,20261026,queue,S_FIFO,behind_at_first_fill,1,6,72.7295,orders
+sample,3,20261026,queue,S_FIFO,unidentified,3,9,123.2307,orders
+sample,1,20261024,front_class,S_FIFO + book,behind_at_first_fill,1,3,30.0,orders
+sample,1,20261024,front_class,S_FIFO + book,conflicting,1,1,30.0,orders
+sample,1,20261024,front_class,S_FIFO + book,unidentified,2,2,36.6666,orders
+sample,1,20261025,front_class,S_FIFO + book,behind_at_first_fill,1,3,30.0,orders
+sample,1,20261025,front_class,S_FIFO + book,conflicting,2,13,80.0,orders
+sample,1,20261025,front_class,S_FIFO + book,unidentified,1,2,30.0,orders
+sample,1,20261026,front_class,S_FIFO + book,conflicting,1,1,35.23,orders
+sample,1,20261026,front_class,S_FIFO + book,unidentified,3,8,228.4359,orders
+sample,1,20261027,front_class,S_FIFO + book,behind_at_first_fill,1,8,126.8073,orders
+sample,1,20261027,front_class,S_FIFO + book,conflicting,1,4,27.8164,orders
+sample,1,20261027,front_class,S_FIFO + book,unidentified,2,3,20.0,orders
+sample,2,20261024,front_class,S_FIFO + book,conflicting,2,5,100.0,orders
+sample,2,20261024,front_class,S_FIFO + book,unidentified,2,4,100.0,orders
+sample,2,20261025,front_class,S_FIFO + book,conflicting,1,1,6.9922,orders
+sample,2,20261025,front_class,S_FIFO + book,unidentified,3,4,123.0,orders
+sample,2,20261026,front_class,S_FIFO + book,behind_at_first_fill,1,4,11.2083,orders
+sample,2,20261026,front_class,S_FIFO + book,unidentified,3,3,75.6818,orders
+sample,2,20261027,front_class,S_FIFO + book,behind_at_first_fill,1,3,50.0,orders
+sample,2,20261027,front_class,S_FIFO + book,unidentified,3,18,150.0,orders
+sample,3,20261024,front_class,S_FIFO + book,conflicting,1,7,220.0,orders
+sample,3,20261024,front_class,S_FIFO + book,unidentified,3,3,30.0,orders
+sample,3,20261025,front_class,S_FIFO + book,conflicting,1,2,10.0,orders
+sample,3,20261025,front_class,S_FIFO + book,unidentified,3,10,99.7327,orders
+sample,3,20261026,front_class,S_FIFO + book,behind_at_first_fill,1,6,72.7295,orders
+sample,3,20261026,front_class,S_FIFO + book,unidentified,3,9,123.2307,orders
+sample,1,20261024,posting_prior,P_nomask (prior),conflict,1,1,30.0,orders
+sample,1,20261024,posting_prior,P_nomask (prior),multiple,3,5,66.6666,orders
+sample,1,20261025,posting_prior,P_nomask (prior),conflict,2,13,80.0,orders
+sample,1,20261025,posting_prior,P_nomask (prior),multiple,2,5,60.0,orders
+sample,1,20261026,posting_prior,P_nomask (prior),conflict,1,1,35.23,orders
+sample,1,20261026,posting_prior,P_nomask (prior),multiple,3,8,228.4359,orders
+sample,1,20261027,posting_prior,P_nomask (prior),conflict,1,4,27.8164,orders
+sample,1,20261027,posting_prior,P_nomask (prior),multiple,3,11,146.8073,orders
+sample,2,20261024,posting_prior,P_nomask (prior),conflict,2,5,100.0,orders
+sample,2,20261024,posting_prior,P_nomask (prior),multiple,2,4,100.0,orders
+sample,2,20261025,posting_prior,P_nomask (prior),conflict,1,1,6.9922,orders
+sample,2,20261025,posting_prior,P_nomask (prior),multiple,3,4,123.0,orders
+sample,2,20261026,posting_prior,P_nomask (prior),multiple,4,7,86.8902,orders
+sample,2,20261027,posting_prior,P_nomask (prior),multiple,4,21,200.0,orders
+sample,3,20261024,posting_prior,P_nomask (prior),conflict,1,7,220.0,orders
+sample,3,20261024,posting_prior,P_nomask (prior),multiple,3,3,30.0,orders
+sample,3,20261025,posting_prior,P_nomask (prior),conflict,1,2,10.0,orders
+sample,3,20261025,posting_prior,P_nomask (prior),multiple,3,10,99.7327,orders
+sample,3,20261026,posting_prior,P_nomask (prior),conflict,1,4,90.7322,orders
+sample,3,20261026,posting_prior,P_nomask (prior),multiple,3,11,105.228,orders
+sample,1,20261024,prior_sensitive4,"prior (P_cmd, P_drop, P_lot, P_clip)",False,2,4,60.0,orders
+sample,1,20261024,prior_sensitive4,"prior (P_cmd, P_drop, P_lot, P_clip)",True,2,2,36.6666,orders
+sample,1,20261025,prior_sensitive4,"prior (P_cmd, P_drop, P_lot, P_clip)",False,4,18,140.0,orders
+sample,1,20261026,prior_sensitive4,"prior (P_cmd, P_drop, P_lot, P_clip)",False,1,4,50.0,orders
+sample,1,20261026,prior_sensitive4,"prior (P_cmd, P_drop, P_lot, P_clip)",True,3,5,213.6659,orders
+sample,1,20261027,prior_sensitive4,"prior (P_cmd, P_drop, P_lot, P_clip)",True,4,15,174.6237,orders
+sample,2,20261024,prior_sensitive4,"prior (P_cmd, P_drop, P_lot, P_clip)",False,3,6,150.0,orders
+sample,2,20261024,prior_sensitive4,"prior (P_cmd, P_drop, P_lot, P_clip)",True,1,3,50.0,orders
+sample,2,20261025,prior_sensitive4,"prior (P_cmd, P_drop, P_lot, P_clip)",False,2,2,100.0,orders
+sample,2,20261025,prior_sensitive4,"prior (P_cmd, P_drop, P_lot, P_clip)",True,2,3,29.9922,orders
+sample,2,20261026,prior_sensitive4,"prior (P_cmd, P_drop, P_lot, P_clip)",False,1,1,50.0,orders
+sample,2,20261026,prior_sensitive4,"prior (P_cmd, P_drop, P_lot, P_clip)",True,3,6,36.8902,orders
+sample,2,20261027,prior_sensitive4,"prior (P_cmd, P_drop, P_lot, P_clip)",False,2,15,100.0,orders
+sample,2,20261027,prior_sensitive4,"prior (P_cmd, P_drop, P_lot, P_clip)",True,2,6,100.0,orders
+sample,3,20261024,prior_sensitive4,"prior (P_cmd, P_drop, P_lot, P_clip)",False,1,1,10.0,orders
+sample,3,20261024,prior_sensitive4,"prior (P_cmd, P_drop, P_lot, P_clip)",True,3,9,240.0,orders
+sample,3,20261025,prior_sensitive4,"prior (P_cmd, P_drop, P_lot, P_clip)",False,1,1,10.0,orders
+sample,3,20261025,prior_sensitive4,"prior (P_cmd, P_drop, P_lot, P_clip)",True,3,11,99.7327,orders
+sample,3,20261026,prior_sensitive4,"prior (P_cmd, P_drop, P_lot, P_clip)",True,4,15,195.9602,orders
+sample,1,20261024,fill_match,"hard [hi-2000, hi]",>1000,5,5,0.0,fills
+sample,1,20261024,fill_match,"hard [hi-2000, hi]",conflicting,1,1,0.0,fills
+sample,1,20261025,fill_match,"hard [hi-2000, hi]",>1000,5,5,0.0,fills
+sample,1,20261025,fill_match,"hard [hi-2000, hi]",conflicting,13,13,0.0,fills
+sample,1,20261026,fill_match,"hard [hi-2000, hi]",>1000,8,8,0.0,fills
+sample,1,20261026,fill_match,"hard [hi-2000, hi]",conflicting,1,1,0.0,fills
+sample,1,20261027,fill_match,"hard [hi-2000, hi]",>1000,11,11,0.0,fills
+sample,1,20261027,fill_match,"hard [hi-2000, hi]",conflicting,4,4,0.0,fills
+sample,2,20261024,fill_match,"hard [hi-2000, hi]",>1000,4,4,0.0,fills
+sample,2,20261024,fill_match,"hard [hi-2000, hi]",conflicting,5,5,0.0,fills
+sample,2,20261025,fill_match,"hard [hi-2000, hi]",>1000,4,4,0.0,fills
+sample,2,20261025,fill_match,"hard [hi-2000, hi]",conflicting,1,1,0.0,fills
+sample,2,20261026,fill_match,"hard [hi-2000, hi]",>1000,7,7,0.0,fills
+sample,2,20261027,fill_match,"hard [hi-2000, hi]",>1000,21,21,0.0,fills
+sample,3,20261024,fill_match,"hard [hi-2000, hi]",>1000,3,3,0.0,fills
+sample,3,20261024,fill_match,"hard [hi-2000, hi]",conflicting,7,7,0.0,fills
+sample,3,20261025,fill_match,"hard [hi-2000, hi]",>1000,10,10,0.0,fills
+sample,3,20261025,fill_match,"hard [hi-2000, hi]",conflicting,2,2,0.0,fills
+sample,3,20261026,fill_match,"hard [hi-2000, hi]",>1000,11,11,0.0,fills
+sample,3,20261026,fill_match,"hard [hi-2000, hi]",conflicting,4,4,0.0,fills
+sample,1,20261024,fill_match,"evidence [lo, hi] (scenario refinement)",250-1000,1,1,0.0,fills
+sample,1,20261024,fill_match,"evidence [lo, hi] (scenario refinement)",>1000,4,4,0.0,fills
+sample,1,20261024,fill_match,"evidence [lo, hi] (scenario refinement)",conflicting,1,1,0.0,fills
+sample,1,20261025,fill_match,"evidence [lo, hi] (scenario refinement)",>1000,5,5,0.0,fills
+sample,1,20261025,fill_match,"evidence [lo, hi] (scenario refinement)",conflicting,13,13,0.0,fills
+sample,1,20261026,fill_match,"evidence [lo, hi] (scenario refinement)",>1000,8,8,0.0,fills
+sample,1,20261026,fill_match,"evidence [lo, hi] (scenario refinement)",conflicting,1,1,0.0,fills
+sample,1,20261027,fill_match,"evidence [lo, hi] (scenario refinement)",250-1000,1,1,0.0,fills
+sample,1,20261027,fill_match,"evidence [lo, hi] (scenario refinement)",>1000,10,10,0.0,fills
+sample,1,20261027,fill_match,"evidence [lo, hi] (scenario refinement)",conflicting,4,4,0.0,fills
+sample,2,20261024,fill_match,"evidence [lo, hi] (scenario refinement)",250-1000,1,1,0.0,fills
+sample,2,20261024,fill_match,"evidence [lo, hi] (scenario refinement)",>1000,3,3,0.0,fills
+sample,2,20261024,fill_match,"evidence [lo, hi] (scenario refinement)",conflicting,5,5,0.0,fills
+sample,2,20261025,fill_match,"evidence [lo, hi] (scenario refinement)",>1000,4,4,0.0,fills
+sample,2,20261025,fill_match,"evidence [lo, hi] (scenario refinement)",conflicting,1,1,0.0,fills
+sample,2,20261026,fill_match,"evidence [lo, hi] (scenario refinement)",50-250,1,1,0.0,fills
+sample,2,20261026,fill_match,"evidence [lo, hi] (scenario refinement)",>1000,6,6,0.0,fills
+sample,2,20261027,fill_match,"evidence [lo, hi] (scenario refinement)",250-1000,1,1,0.0,fills
+sample,2,20261027,fill_match,"evidence [lo, hi] (scenario refinement)",>1000,20,20,0.0,fills
+sample,3,20261024,fill_match,"evidence [lo, hi] (scenario refinement)",>1000,3,3,0.0,fills
+sample,3,20261024,fill_match,"evidence [lo, hi] (scenario refinement)",conflicting,7,7,0.0,fills
+sample,3,20261025,fill_match,"evidence [lo, hi] (scenario refinement)",>1000,10,10,0.0,fills
+sample,3,20261025,fill_match,"evidence [lo, hi] (scenario refinement)",conflicting,2,2,0.0,fills
+sample,3,20261026,fill_match,"evidence [lo, hi] (scenario refinement)",>1000,11,11,0.0,fills
+sample,3,20261026,fill_match,"evidence [lo, hi] (scenario refinement)",conflicting,4,4,0.0,fills
+census,1,20261024,link,link_hypotheses,sequential_identified,469,469,0.0,pairs
+census,1,20261024,link,link_hypotheses,tied,582,582,0.0,pairs
+census,1,20261025,link,link_hypotheses,sequential_identified,363,363,0.0,pairs
+census,1,20261025,link,link_hypotheses,tied,479,479,0.0,pairs
+census,1,20261026,link,link_hypotheses,sequential_identified,186,186,0.0,pairs
+census,1,20261026,link,link_hypotheses,tied,248,248,0.0,pairs
+census,1,20261027,link,link_hypotheses,sequential_identified,72,72,0.0,pairs
+census,1,20261027,link,link_hypotheses,tied,134,134,0.0,pairs
+census,2,20261024,link,link_hypotheses,sequential_identified,163,163,0.0,pairs
+census,2,20261024,link,link_hypotheses,tied,330,330,0.0,pairs
+census,2,20261025,link,link_hypotheses,sequential_identified,45,45,0.0,pairs
+census,2,20261025,link,link_hypotheses,tied,62,62,0.0,pairs
+census,2,20261026,link,link_hypotheses,sequential_identified,115,115,0.0,pairs
+census,2,20261026,link,link_hypotheses,tied,248,248,0.0,pairs
+census,2,20261027,link,link_hypotheses,sequential_identified,86,86,0.0,pairs
+census,2,20261027,link,link_hypotheses,tied,211,211,0.0,pairs
+census,3,20261024,link,link_hypotheses,sequential_identified,250,250,0.0,pairs
+census,3,20261024,link,link_hypotheses,tied,386,386,0.0,pairs
+census,3,20261025,link,link_hypotheses,sequential_identified,181,181,0.0,pairs
+census,3,20261025,link,link_hypotheses,tied,356,356,0.0,pairs
+census,3,20261026,link,link_hypotheses,sequential_identified,239,239,0.0,pairs
+census,3,20261026,link,link_hypotheses,tied,366,366,0.0,pairs
+census,1,20261024,take_match,"hard [hi-2000, hi]",>1000,1416,1416,15861.8463,records
+census,1,20261025,take_match,"hard [hi-2000, hi]",>1000,771,771,11313.0508,records
+census,1,20261026,take_match,"hard [hi-2000, hi]",>1000,918,918,13730.9431,records
+census,1,20261027,take_match,"hard [hi-2000, hi]",>1000,515,515,9118.5368,records
+census,2,20261024,take_match,"hard [hi-2000, hi]",>1000,160,160,1882.3695,records
+census,2,20261025,take_match,"hard [hi-2000, hi]",>1000,33,33,780.038,records
+census,2,20261026,take_match,"hard [hi-2000, hi]",>1000,92,92,1590.9448,records
+census,2,20261027,take_match,"hard [hi-2000, hi]",>1000,56,56,925.3488,records
+census,3,20261024,take_match,"hard [hi-2000, hi]",>1000,76,76,684.1939,records
+census,3,20261025,take_match,"hard [hi-2000, hi]",>1000,56,56,588.0934,records
+census,3,20261026,take_match,"hard [hi-2000, hi]",>1000,54,54,1086.0913,records
+census,1,20261024,take_match,"evidence [lo, hi] (scenario refinement)",250-1000,239,239,2961.3757,records
+census,1,20261024,take_match,"evidence [lo, hi] (scenario refinement)",50-250,84,84,1371.0037,records
+census,1,20261024,take_match,"evidence [lo, hi] (scenario refinement)",<=50,19,19,849.2723,records
+census,1,20261024,take_match,"evidence [lo, hi] (scenario refinement)",>1000,1074,1074,10680.1946,records
+census,1,20261025,take_match,"evidence [lo, hi] (scenario refinement)",250-1000,173,173,3785.2487,records
+census,1,20261025,take_match,"evidence [lo, hi] (scenario refinement)",50-250,48,48,887.8819,records
+census,1,20261025,take_match,"evidence [lo, hi] (scenario refinement)",<=50,16,16,650.4615,records
+census,1,20261025,take_match,"evidence [lo, hi] (scenario refinement)",>1000,534,534,5989.4588,records
+census,1,20261026,take_match,"evidence [lo, hi] (scenario refinement)",250-1000,196,196,3913.3494,records
+census,1,20261026,take_match,"evidence [lo, hi] (scenario refinement)",50-250,35,35,1012.2467,records
+census,1,20261026,take_match,"evidence [lo, hi] (scenario refinement)",<=50,3,3,107.2344,records
+census,1,20261026,take_match,"evidence [lo, hi] (scenario refinement)",>1000,684,684,8698.1125,records
+census,1,20261027,take_match,"evidence [lo, hi] (scenario refinement)",250-1000,126,126,2495.1723,records
+census,1,20261027,take_match,"evidence [lo, hi] (scenario refinement)",50-250,29,29,785.8769,records
+census,1,20261027,take_match,"evidence [lo, hi] (scenario refinement)",<=50,10,10,345.4677,records
+census,1,20261027,take_match,"evidence [lo, hi] (scenario refinement)",>1000,350,350,5492.0199,records
+census,2,20261024,take_match,"evidence [lo, hi] (scenario refinement)",250-1000,34,34,507.8724,records
+census,2,20261024,take_match,"evidence [lo, hi] (scenario refinement)",50-250,2,2,14.0,records
+census,2,20261024,take_match,"evidence [lo, hi] (scenario refinement)",<=50,1,1,65.3243,records
+census,2,20261024,take_match,"evidence [lo, hi] (scenario refinement)",>1000,123,123,1295.1729,records
+census,2,20261025,take_match,"evidence [lo, hi] (scenario refinement)",250-1000,4,4,59.63,records
+census,2,20261025,take_match,"evidence [lo, hi] (scenario refinement)",50-250,2,2,110.0,records
+census,2,20261025,take_match,"evidence [lo, hi] (scenario refinement)",>1000,27,27,610.408,records
+census,2,20261026,take_match,"evidence [lo, hi] (scenario refinement)",250-1000,19,19,381.32,records
+census,2,20261026,take_match,"evidence [lo, hi] (scenario refinement)",50-250,10,10,154.79,records
+census,2,20261026,take_match,"evidence [lo, hi] (scenario refinement)",<=50,8,8,348.72,records
+census,2,20261026,take_match,"evidence [lo, hi] (scenario refinement)",>1000,55,55,706.1148,records
+census,2,20261027,take_match,"evidence [lo, hi] (scenario refinement)",250-1000,16,16,207.3541,records
+census,2,20261027,take_match,"evidence [lo, hi] (scenario refinement)",50-250,11,11,197.4338,records
+census,2,20261027,take_match,"evidence [lo, hi] (scenario refinement)",<=50,5,5,73.7514,records
+census,2,20261027,take_match,"evidence [lo, hi] (scenario refinement)",>1000,24,24,446.8095,records
+census,3,20261024,take_match,"evidence [lo, hi] (scenario refinement)",250-1000,8,8,66.0843,records
+census,3,20261024,take_match,"evidence [lo, hi] (scenario refinement)",50-250,8,8,136.8116,records
+census,3,20261024,take_match,"evidence [lo, hi] (scenario refinement)",<=50,2,2,26.5012,records
+census,3,20261024,take_match,"evidence [lo, hi] (scenario refinement)",>1000,58,58,454.7968,records
+census,3,20261025,take_match,"evidence [lo, hi] (scenario refinement)",250-1000,14,14,170.6082,records
+census,3,20261025,take_match,"evidence [lo, hi] (scenario refinement)",50-250,2,2,37.096,records
+census,3,20261025,take_match,"evidence [lo, hi] (scenario refinement)",<=50,1,1,36.5,records
+census,3,20261025,take_match,"evidence [lo, hi] (scenario refinement)",>1000,39,39,343.8892,records
+census,3,20261026,take_match,"evidence [lo, hi] (scenario refinement)",250-1000,11,11,192.4866,records
+census,3,20261026,take_match,"evidence [lo, hi] (scenario refinement)",50-250,2,2,108.5257,records
+census,3,20261026,take_match,"evidence [lo, hi] (scenario refinement)",>1000,41,41,785.079,records
+sample,1,20261024,take_match,"hard [hi-2000, hi]",>1000,4,4,81.3175,records
+sample,1,20261025,take_match,"hard [hi-2000, hi]",>1000,4,4,21.8907,records
+sample,1,20261026,take_match,"hard [hi-2000, hi]",>1000,4,4,43.905,records
+sample,1,20261027,take_match,"hard [hi-2000, hi]",>1000,4,4,140.5026,records
+sample,2,20261024,take_match,"hard [hi-2000, hi]",>1000,4,4,39.9257,records
+sample,2,20261025,take_match,"hard [hi-2000, hi]",>1000,4,4,80.1315,records
+sample,2,20261026,take_match,"hard [hi-2000, hi]",>1000,4,4,68.3077,records
+sample,2,20261027,take_match,"hard [hi-2000, hi]",>1000,4,4,32.0,records
+sample,3,20261024,take_match,"hard [hi-2000, hi]",>1000,4,4,23.505,records
+sample,3,20261025,take_match,"hard [hi-2000, hi]",>1000,4,4,33.2034,records
+sample,3,20261026,take_match,"hard [hi-2000, hi]",>1000,4,4,44.6667,records
+sample,1,20261024,take_match,"evidence [lo, hi] (scenario refinement)",250-1000,2,2,55.1638,records
+sample,1,20261024,take_match,"evidence [lo, hi] (scenario refinement)",>1000,2,2,26.1537,records
+sample,1,20261025,take_match,"evidence [lo, hi] (scenario refinement)",250-1000,2,2,8.7025,records
+sample,1,20261025,take_match,"evidence [lo, hi] (scenario refinement)",>1000,2,2,13.1882,records
+sample,1,20261026,take_match,"evidence [lo, hi] (scenario refinement)",250-1000,1,1,10.0,records
+sample,1,20261026,take_match,"evidence [lo, hi] (scenario refinement)",>1000,3,3,33.905,records
+sample,1,20261027,take_match,"evidence [lo, hi] (scenario refinement)",250-1000,1,1,60.0,records
+sample,1,20261027,take_match,"evidence [lo, hi] (scenario refinement)",50-250,1,1,30.0,records
+sample,1,20261027,take_match,"evidence [lo, hi] (scenario refinement)",>1000,2,2,50.5026,records
+sample,2,20261024,take_match,"evidence [lo, hi] (scenario refinement)",250-1000,2,2,27.0,records
+sample,2,20261024,take_match,"evidence [lo, hi] (scenario refinement)",>1000,2,2,12.9257,records
+sample,2,20261025,take_match,"evidence [lo, hi] (scenario refinement)",>1000,4,4,80.1315,records
+sample,2,20261026,take_match,"evidence [lo, hi] (scenario refinement)",50-250,1,1,27.0,records
+sample,2,20261026,take_match,"evidence [lo, hi] (scenario refinement)",>1000,3,3,41.3077,records
+sample,2,20261027,take_match,"evidence [lo, hi] (scenario refinement)",250-1000,1,1,5.0,records
+sample,2,20261027,take_match,"evidence [lo, hi] (scenario refinement)",>1000,3,3,27.0,records
+sample,3,20261024,take_match,"evidence [lo, hi] (scenario refinement)",<=50,1,1,12.2112,records
+sample,3,20261024,take_match,"evidence [lo, hi] (scenario refinement)",>1000,3,3,11.2938,records
+sample,3,20261025,take_match,"evidence [lo, hi] (scenario refinement)",250-1000,1,1,12.1674,records
+sample,3,20261025,take_match,"evidence [lo, hi] (scenario refinement)",50-250,1,1,13.146,records
+sample,3,20261025,take_match,"evidence [lo, hi] (scenario refinement)",>1000,2,2,7.89,records
+sample,3,20261026,take_match,"evidence [lo, hi] (scenario refinement)",250-1000,1,1,5.6132,records
+sample,3,20261026,take_match,"evidence [lo, hi] (scenario refinement)",>1000,3,3,39.0535,records
+sample,1,20261024,take_class,recorded inventory,add,1,1,11.1537,records
+sample,1,20261024,take_class,recorded inventory,reduce_partial,3,3,70.1638,records
+sample,1,20261025,take_class,recorded inventory,add,2,2,14.3082,records
+sample,1,20261025,take_class,recorded inventory,reduce_partial,2,2,7.5825,records
+sample,1,20261026,take_class,recorded inventory,add,1,1,10.0,records
+sample,1,20261026,take_class,recorded inventory,reduce_partial,3,3,33.905,records
+sample,1,20261027,take_class,recorded inventory,add,2,2,33.46,records
+sample,1,20261027,take_class,recorded inventory,reduce_partial,2,2,107.0426,records
+sample,2,20261024,take_class,recorded inventory,add,4,4,39.9257,records
+sample,2,20261025,take_class,recorded inventory,add,1,1,24.0,records
+sample,2,20261025,take_class,recorded inventory,reduce_partial,3,3,56.1315,records
+sample,2,20261026,take_class,recorded inventory,add,3,3,48.3077,records
+sample,2,20261026,take_class,recorded inventory,reduce_partial,1,1,20.0,records
+sample,2,20261027,take_class,recorded inventory,add,3,3,19.0,records
+sample,2,20261027,take_class,recorded inventory,from_flat,1,1,13.0,records
+sample,3,20261024,take_class,recorded inventory,reduce_partial,3,3,19.6647,records
+sample,3,20261024,take_class,recorded inventory,reversal_reducing,1,1,3.8403,records
+sample,3,20261025,take_class,recorded inventory,from_flat,1,1,13.146,records
+sample,3,20261025,take_class,recorded inventory,reduce_partial,3,3,20.0574,records
+sample,3,20261026,take_class,recorded inventory,add,2,2,21.8867,records
+sample,3,20261026,take_class,recorded inventory,reduce_partial,2,2,22.78,records
+sample,1,20261024,take_timing_sensitive,inventory variants,False,3,3,66.3175,records
+sample,1,20261024,take_timing_sensitive,inventory variants,True,1,1,15.0,records
+sample,1,20261025,take_timing_sensitive,inventory variants,False,3,3,10.7025,records
+sample,1,20261025,take_timing_sensitive,inventory variants,True,1,1,11.1882,records
+sample,1,20261026,take_timing_sensitive,inventory variants,False,3,3,34.3458,records
+sample,1,20261026,take_timing_sensitive,inventory variants,True,1,1,9.5592,records
+sample,1,20261027,take_timing_sensitive,inventory variants,False,4,4,140.5026,records
+sample,2,20261024,take_timing_sensitive,inventory variants,False,2,2,23.25,records
+sample,2,20261024,take_timing_sensitive,inventory variants,True,2,2,16.6757,records
+sample,2,20261025,take_timing_sensitive,inventory variants,False,4,4,80.1315,records
+sample,2,20261026,take_timing_sensitive,inventory variants,False,3,3,41.3077,records
+sample,2,20261026,take_timing_sensitive,inventory variants,True,1,1,27.0,records
+sample,2,20261027,take_timing_sensitive,inventory variants,False,3,3,27.0,records
+sample,2,20261027,take_timing_sensitive,inventory variants,True,1,1,5.0,records
+sample,3,20261024,take_timing_sensitive,inventory variants,False,3,3,19.6647,records
+sample,3,20261024,take_timing_sensitive,inventory variants,True,1,1,3.8403,records
+sample,3,20261025,take_timing_sensitive,inventory variants,False,3,3,20.0574,records
+sample,3,20261025,take_timing_sensitive,inventory variants,True,1,1,13.146,records
+sample,3,20261026,take_timing_sensitive,inventory variants,False,3,3,39.0535,records
+sample,3,20261026,take_timing_sensitive,inventory variants,True,1,1,5.6132,records

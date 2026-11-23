@@ -1,0 +1,60 @@
+head=196af3323803908ec7ac8487e86b4f05f92c8ae0
+20261024 3697902: orders 153 cpu 2.74 s vmhwm 445 MiB
+20261024 3699278: orders 208 cpu 2.17 s vmhwm 524 MiB
+20261024 3700070: orders 183 cpu 1.83 s vmhwm 524 MiB
+20261024 3702960: orders 202 cpu 2.13 s vmhwm 565 MiB
+20261024 3704004: orders 326 cpu 3.17 s vmhwm 732 MiB
+20261024 3712725: orders 268 cpu 2.74 s vmhwm 795 MiB
+20261024 3716727: orders 245 cpu 2.47 s vmhwm 795 MiB
+20261025 3723774: orders 227 cpu 2.68 s vmhwm 841 MiB
+20261025 3734864: orders 246 cpu 2.33 s vmhwm 841 MiB
+20261025 3737919: orders 249 cpu 2.42 s vmhwm 841 MiB
+20261025 3763401: orders 248 cpu 2.51 s vmhwm 841 MiB
+20261025 3776314: orders 106 cpu 1.39 s vmhwm 841 MiB
+20261026 3789484: orders 170 cpu 2.32 s vmhwm 865 MiB
+20261026 3803131: orders 178 cpu 2.05 s vmhwm 876 MiB
+20261026 3804696: orders 235 cpu 2.36 s vmhwm 883 MiB
+20261026 3838531: orders 287 cpu 3.00 s vmhwm 917 MiB
+20261026 3850428: orders 225 cpu 2.43 s vmhwm 917 MiB
+20261027 3877472: orders 235 cpu 2.94 s vmhwm 928 MiB
+20261027 3899224: orders 158 cpu 1.87 s vmhwm 941 MiB
+{
+ "rows": {
+  "pulls": 6640,
+  "controls": 16504,
+  "summary": 56760,
+  "census": 212
+ },
+ "counts": {
+  "check_grid_points": 623316,
+  "check_windows": 114,
+  "controls:S_FIFO:fill_anchored:anchors": 2417,
+  "controls:S_FIFO:fill_anchored:none": 1710,
+  "controls:S_FIFO:presence:fallback": 2573,
+  "controls:S_FIFO:presence:no_eligible": 7,
+  "controls:S_FIFO:presence:ok": 1547,
+  "controls:S_NOPRIO:fill_anchored:anchors": 2046,
+  "controls:S_NOPRIO:fill_anchored:none": 2079,
+  "controls:S_NOPRIO:presence:fallback": 2772,
+  "controls:S_NOPRIO:presence:no_eligible": 17,
+  "controls:S_NOPRIO:presence:ok": 1336,
+  "draws_per_target_market_max": 1,
+  "orders_top3": 4149
+ },
+ "cpu_stage_s": {
+  "preflight": 0.0013,
+  "hash_fills_valued": 0.6749,
+  "markets": 0.0253,
+  "life": 0.4229,
+  "census": 1.3737,
+  "context_load": 12.3036,
+  "context_series": 3.9233,
+  "events_controls": 27.5363,
+  "summary": 3.3204,
+  "hash": 1.1805
+ },
+ "cpu_total_s": 50.764,
+ "vmhwm_mib": 941.1,
+ "projection": null
+}
+2026-11-23T11:23:29Z tag=mt_x_pull_v2 rc=0 peak_rss_mib=941 wall_s=51.37 cpu_user_s=49.14 memavail_start_gib=22 disk_free_gib=431->431 slot=claude3

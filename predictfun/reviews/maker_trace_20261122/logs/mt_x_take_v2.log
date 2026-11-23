@@ -1,0 +1,23 @@
+head=196af3323803908ec7ac8487e86b4f05f92c8ae0
+{
+ "out": "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/v2/chains/take",
+ "outputs": {
+  "takes": 4147,
+  "take_controls": 2240,
+  "actions": 469,
+  "summary": 20
+ },
+ "cpu_s": {
+  "by_stage": {
+   "population": 0.002,
+   "context_load": 13.357,
+   "links": 0.092,
+   "pairs": 9.005,
+   "tables": 6.525
+  },
+  "total": 28.986,
+  "cap": 120.0
+ },
+ "vmhwm_mib": 645.1
+}
+2026-11-23T11:23:26Z tag=mt_x_take_v2 rc=0 peak_rss_mib=645 wall_s=29.88 cpu_user_s=28.03 memavail_start_gib=22 disk_free_gib=431->431 slot=claude2

@@ -936,6 +936,20 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- MAKER_LOGIC_CHAINS_20261123_DEV -->
+## 2026-11-23 11:25Z (session aea5bfb9) — TOP-3 MAKER LOGIC CHAINS: results (frozen 196af3323; 4 full runs rc 0; packet within the USER budget of 0.11 h)
+
+**Receipt:** [v2/report_logic_chains.md](reviews/maker_trace_20261122/v2/report_logic_chains.md).
+
+**Findings:**
+- **Post:** short-rest posts dominate.
+- **Pull:** follows adverse BTC, inventory build-up, being behind the touch, and the mid moving against the order; most pulls are followed by a re-quote.
+- **Take** (rank 1): inventory unwind after fill bursts and adverse BTC.
+- **Unidentified:** early posting, original sizes, pull vs exhaustion.
+
+**Next:** ONE Codex review of 6ddad3533..HEAD.
+<!-- /MAKER_LOGIC_CHAINS_20261123_DEV -->
+
 <!-- MAKER_TRACE_MATCHED_GAP_20261123_DEV -->
 ## 2026-11-23 07:57Z (session aea5bfb9) — MATCHED-MARKET-TURNOVER-GAP-v1 RESULTS: our completed turnover loses where the top makers' earns; the gap is turnover quality, not exposure
 

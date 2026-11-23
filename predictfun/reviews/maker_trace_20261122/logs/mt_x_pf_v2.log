@@ -1,0 +1,58 @@
+head=196af3323803908ec7ac8487e86b4f05f92c8ae0
+20261024 3697902: orders 153 grid 6013 cells 65 cpu 1.90 s vmhwm 387 MiB
+20261024 3699278: orders 208 grid 6013 cells 80 cpu 1.87 s vmhwm 387 MiB
+20261024 3700070: orders 183 grid 6013 cells 50 cpu 1.65 s vmhwm 387 MiB
+20261024 3702960: orders 202 grid 6013 cells 67 cpu 1.61 s vmhwm 387 MiB
+20261024 3704004: orders 326 grid 6013 cells 101 cpu 2.60 s vmhwm 387 MiB
+20261024 3712725: orders 268 grid 6013 cells 108 cpu 2.30 s vmhwm 387 MiB
+20261024 3716727: orders 245 grid 6013 cells 86 cpu 2.00 s vmhwm 392 MiB
+20261025 3723774: orders 227 grid 6013 cells 82 cpu 2.41 s vmhwm 490 MiB
+20261025 3734864: orders 246 grid 6013 cells 103 cpu 2.11 s vmhwm 490 MiB
+20261025 3737919: orders 249 grid 6013 cells 79 cpu 2.19 s vmhwm 490 MiB
+20261025 3763401: orders 248 grid 6013 cells 103 cpu 2.15 s vmhwm 490 MiB
+20261025 3776314: orders 106 grid 6013 cells 58 cpu 1.20 s vmhwm 490 MiB
+20261026 3789484: orders 170 grid 6013 cells 88 cpu 2.02 s vmhwm 548 MiB
+20261026 3803131: orders 178 grid 6013 cells 72 cpu 1.56 s vmhwm 548 MiB
+20261026 3804696: orders 235 grid 6013 cells 90 cpu 2.00 s vmhwm 548 MiB
+20261026 3838531: orders 287 grid 6013 cells 113 cpu 2.38 s vmhwm 548 MiB
+20261026 3850428: orders 225 grid 6013 cells 103 cpu 1.94 s vmhwm 548 MiB
+20261027 3877472: orders 235 grid 6020 cells 112 cpu 2.57 s vmhwm 573 MiB
+20261027 3899224: orders 158 grid 6013 cells 76 cpu 1.55 s vmhwm 573 MiB
+{
+ "rows": {
+  "orders": 4149,
+  "summary": 2626
+ },
+ "counts": {
+  "check_grid_points": 533336,
+  "check_windows": 152,
+  "control_status:no_eligible": 1,
+  "control_status:ok": 3995,
+  "control_status:straddle": 53,
+  "control_status:window_unbounded": 100,
+  "fv_groups_pruned": 71,
+  "fv_groups_read": 19,
+  "fv_rows_scanned": 1649076,
+  "fv_rows_top3_book": 13227,
+  "legs_without_window": 0,
+  "orders_top3": 4149,
+  "position_early_queue_builder_at_every_instant": 0
+ },
+ "cpu_stage_s": {
+  "preflight": 0.6794,
+  "fills_valued": 0.9618,
+  "context_load": 12.267,
+  "estimator": 17.4363,
+  "context_series": 0.6011,
+  "orders": 5.4403,
+  "controls_draw": 0.4345,
+  "controls_eval": 1.8881,
+  "summary": 2.0452,
+  "hash": 0.2417
+ },
+ "cpu_total_s": 41.999,
+ "vmhwm_mib": 573.4,
+ "projection": null,
+ "compare": null
+}
+2026-11-23T11:23:31Z tag=mt_x_pf_v2 rc=0 peak_rss_mib=573 wall_s=42.57 cpu_user_s=41.04 memavail_start_gib=21 disk_free_gib=431->431 slot=claude4
