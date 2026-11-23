@@ -1,0 +1,85 @@
+head=8e09f339178e4fa9c7b8ed3b717f4278fa64baf7
+{
+ "bindings": {
+  "cases": "ok",
+  "census_graded": "ok",
+  "closes": "ok",
+  "closes_markets": "ok",
+  "episode_summary": "ok",
+  "episodes": "ok",
+  "episodes_post_regraded": "ok",
+  "events": "ok",
+  "fills_valued": "ok",
+  "life/20261024_3702960_fills.parquet": "ok",
+  "life/20261024_3712725_fills.parquet": "ok",
+  "life/20261024_3716727_fills.parquet": "ok",
+  "matched_gap": "ok",
+  "order_ledger": "ok",
+  "paths_md": "ok",
+  "post_orders": "ok",
+  "post_regrade_orders": "ok",
+  "pulls": "ok",
+  "qf1_fronts": "ok",
+  "qf1_levels": "ok"
+ },
+ "counts": {
+  "closes_groups_pruned": 3,
+  "closes_groups_read": 1,
+  "closes_rows_kept": 1883,
+  "closes_rows_scanned": 247712,
+  "fills_valued_groups_pruned": 87,
+  "fills_valued_groups_read": 3,
+  "fills_valued_rows_kept": 1940,
+  "fills_valued_rows_scanned": 238836
+ },
+ "cpu_s": {
+  "by_stage": {
+   "closes": 0.2562,
+   "csv_inputs": 0.3579,
+   "fills_valued": 0.8546,
+   "links": 0.6323,
+   "preflight": 0.0019,
+   "render": 0.0045,
+   "small_inputs": 0.0166
+  },
+  "cap": 8.0,
+  "process_total": 2.413
+ },
+ "failed_reconciliation": [],
+ "mode": "draft",
+ "out": "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/v2/chains/chains_v3_draft",
+ "pending": 6,
+ "predicates": {
+  "every_chain_has_every_link": true,
+  "every_link_graded": true,
+  "every_link_has_a_declared_reading": true,
+  "every_tied_link_names_its_hidden_action": true,
+  "no_link_asserts_an_identified_private_action": true,
+  "no_pending_link": false,
+  "rendering_verifier_clean": true,
+  "same_hash_fills_render_one_order": true,
+  "selection_equals_correction_v1_paths_md": true,
+  "six_chains": true,
+  "submitted_size_never_set": true,
+  "tied_links_never_rendered_identified": true
+ },
+ "readings": {
+  "NO-EVENT": 1,
+  "ONE-HISTORY": 11,
+  "PENDING": 6,
+  "TIED": 24
+ },
+ "reconciliation_all_hold": true,
+ "siblings": {
+  "posting_opportunity": {
+   "reason": "posting_opportunity receipt absent (predictfun/reviews/maker_trace_20261122/v2/chains/posting_opportunity/receipt.json)",
+   "status": "absent"
+  },
+  "queue_front_v2": {
+   "reason": "queue_front_v2 receipt absent (predictfun/reviews/maker_trace_20261122/v2/chains/queue_front_v2/receipt.json)",
+   "status": "absent"
+  }
+ },
+ "vmhwm_mib": 268.4
+}
+2026-11-23T18:35:07Z tag=mt_ch3_draft rc=0 peak_rss_mib=268 wall_s=2.69 cpu_user_s=2.11 memavail_start_gib=22 disk_free_gib=423->423 slot=claude4

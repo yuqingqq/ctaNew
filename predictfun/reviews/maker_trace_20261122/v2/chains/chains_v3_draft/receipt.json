@@ -1,0 +1,488 @@
+{
+ "argv": [
+  "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/tools/chains_v3.py",
+  "run",
+  "--draft"
+ ],
+ "asof_end": "2026-11-23T18:35:10Z",
+ "asof_start": "2026-11-23T18:35:08Z",
+ "constants": {
+  "ABS_TOL": 1e-06,
+  "CLOCKS": [
+   "D0",
+   "D1000",
+   "pend"
+  ],
+  "CPU_CAP_S": 8.0,
+  "FEATURES": [
+   "spread",
+   "depth_touch_own",
+   "depth_touch_opp",
+   "depth_2_own",
+   "btc_5s_aligned",
+   "fair_gap",
+   "flow_5s",
+   "time_left"
+  ],
+  "GRADES": [
+   "observed_state",
+   "post_window:G0_unbounded_or_invalid",
+   "post_window:G1_conflict",
+   "post_window:G2_bound_constrained",
+   "post_window:G3_constrained_status_flagged",
+   "post_window:G4_scenario_only",
+   "scenario_queue_history",
+   "cancel_compatible_ending",
+   "scenario_dependent_ending",
+   "unresolved_alternatives",
+   "scenario_dependent_link",
+   "observed_execution",
+   "recorded_fill_accounting",
+   "pending"
+  ],
+  "HORIZONS": [
+   "10s",
+   "60s",
+   "end"
+  ],
+  "HYP": [
+   "EX",
+   "PL",
+   "EC"
+  ],
+  "QPOS": {
+   "behind_at_first_fill": [
+    "behind_at_first_fill"
+   ],
+   "conflicting": [
+    "front_at_first_fill",
+    "behind_at_first_fill"
+   ],
+   "front_at_acceptance": [
+    "front_at_acceptance"
+   ],
+   "front_at_acceptance_or_reached": [
+    "front_at_acceptance",
+    "front_reached_after_clearing"
+   ],
+   "front_reached_after_clearing": [
+    "front_reached_after_clearing"
+   ],
+   "unidentified": [
+    "front_at_first_fill",
+    "behind_at_first_fill"
+   ]
+  },
+  "READINGS": [
+   "ONE-HISTORY",
+   "TIED",
+   "NO-EVENT",
+   "PENDING"
+  ],
+  "REL_TOL": 1e-09,
+  "SCEN": [
+   "S_FIFO",
+   "S_FIFO_LO",
+   "S_NOPRIO"
+  ],
+  "TIME_ALTS": {
+   "('G2_bound_constrained', 'gt_10s')": [
+    "early_post_rest_gt_10s",
+    "late_post_rest_le_10s"
+   ],
+   "('G2_bound_constrained', 'le_10s')": [
+    "posted_le_10s_before_first_fill"
+   ],
+   "('G2_bound_constrained', 'le_1s')": [
+    "posted_le_1s_before_first_fill"
+   ],
+   "G0_unbounded_or_invalid": [
+    "unbounded_early",
+    "unbounded_late"
+   ],
+   "G1_conflict": [
+    "posting_time_unresolved_early",
+    "posting_time_unresolved_late"
+   ],
+   "G3_constrained_status_flagged": [
+    "early_post",
+    "late_post"
+   ],
+   "G4_scenario_only": [
+    "late_post_in_scenario_window",
+    "earlier_post_masked_by_replenishment"
+   ]
+  }
+ },
+ "contract": {
+  "commit": "8e09f3391",
+  "file": "predictfun/reviews/maker_trace_20261122/posting_chain_contract.md",
+  "sha256": "4fdc55081788ac0b9e14294c89798fc43e24ffec6d6ce25798234c8e87f2c286"
+ },
+ "counts": {
+  "closes_groups_pruned": 3,
+  "closes_groups_read": 1,
+  "closes_rows_kept": 1883,
+  "closes_rows_scanned": 247712,
+  "fills_valued_groups_pruned": 87,
+  "fills_valued_groups_read": 3,
+  "fills_valued_rows_kept": 1940,
+  "fills_valued_rows_scanned": 238836
+ },
+ "cpu_s": {
+  "by_stage": {
+   "closes": 0.2562,
+   "csv_inputs": 0.3579,
+   "fills_valued": 0.8546,
+   "links": 0.6323,
+   "preflight": 0.0019,
+   "render": 0.0045,
+   "small_inputs": 0.0166
+  },
+  "cap": 8.0,
+  "process_total": 2.413
+ },
+ "git": {
+  "files": [
+   "predictfun/reviews/maker_trace_20261122/tools/chains_v3.py",
+   "predictfun/reviews/maker_trace_20261122/tools/chains_v3_selftest.py",
+   "predictfun/reviews/maker_trace_20261122/posting_chain_contract.md"
+  ],
+  "head": "8e09f339178e4fa9c7b8ed3b717f4278fa64baf7",
+  "tracked": false,
+  "unmodified": false
+ },
+ "guard_mib": 1450.0,
+ "inputs": {
+  "cases": {
+   "binding": {
+    "key": "cases",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/receipt_post.json",
+    "receipt_sha256": "c612c23324e2d265f6ec97c45f243f60342a17304589c93e2c386089d2c9b8bf",
+    "recorded": "f512497123b67fc1d934f56d3b603345a636f4ab4981169ec7878ecd2c4b40af",
+    "section": "inputs",
+    "status": "ok"
+   },
+   "bytes": 72267,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/order_estimator/cases.csv",
+   "rows": 88,
+   "sha256": "f512497123b67fc1d934f56d3b603345a636f4ab4981169ec7878ecd2c4b40af"
+  },
+  "census_graded": {
+   "binding": {
+    "key": "census_graded.csv",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/receipt_post.json",
+    "receipt_sha256": "c612c23324e2d265f6ec97c45f243f60342a17304589c93e2c386089d2c9b8bf",
+    "recorded": "3aba28ce72279b9d9eca2a196e09e6b26d4ccc0e4da9e31e58add60a041014aa",
+    "section": "outputs",
+    "status": "ok"
+   },
+   "bytes": 218137,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/census_graded.csv",
+   "rows": 773,
+   "sha256": "3aba28ce72279b9d9eca2a196e09e6b26d4ccc0e4da9e31e58add60a041014aa"
+  },
+  "closes": {
+   "binding": {
+    "key": "closes.parquet",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/closes/closes_receipt.json",
+    "receipt_sha256": "1ea049d9c4fa8b0bf7b0ffd91305a03778a476620f50a89f01eb112866639e9b",
+    "recorded": "5591461db1f00ae47c70acb8e9b9c657faa53f1ef13157afce6e42ee4b39e3ef",
+    "section": "outputs",
+    "status": "ok"
+   },
+   "bytes": 79140275,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/closes/closes.parquet",
+   "rows": 1883,
+   "sha256": "5591461db1f00ae47c70acb8e9b9c657faa53f1ef13157afce6e42ee4b39e3ef"
+  },
+  "closes_markets": {
+   "binding": {
+    "key": "closes_markets.parquet",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/closes/closes_receipt.json",
+    "receipt_sha256": "1ea049d9c4fa8b0bf7b0ffd91305a03778a476620f50a89f01eb112866639e9b",
+    "recorded": "bd1fb1e33dcbae1650020c1b277d4c8ea58c0c83d318d6ba1a2011bb86b9b981",
+    "section": "outputs",
+    "status": "ok"
+   },
+   "bytes": 1241239,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/closes/closes_markets.parquet",
+   "rows": 8513,
+   "sha256": "bd1fb1e33dcbae1650020c1b277d4c8ea58c0c83d318d6ba1a2011bb86b9b981"
+  },
+  "episode_summary": {
+   "binding": {
+    "key": "episode_summary",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/receipt_post.json",
+    "receipt_sha256": "c612c23324e2d265f6ec97c45f243f60342a17304589c93e2c386089d2c9b8bf",
+    "recorded": "19e9fe3a4d6a93e36eaf0f30172e02e34ade1a439a1932da8f12b737585786c4",
+    "section": "inputs",
+    "status": "ok"
+   },
+   "bytes": 25875,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/order_estimator/episode_summary.csv",
+   "rows": 62,
+   "sha256": "19e9fe3a4d6a93e36eaf0f30172e02e34ade1a439a1932da8f12b737585786c4"
+  },
+  "episodes": {
+   "binding": {
+    "key": "episodes",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/receipt_post.json",
+    "receipt_sha256": "c612c23324e2d265f6ec97c45f243f60342a17304589c93e2c386089d2c9b8bf",
+    "recorded": "52de26c05da71f9bd1fb90894eb9a2206ed8928b518b357d6185265b89c7b05a",
+    "section": "inputs",
+    "status": "ok"
+   },
+   "bytes": 693381,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/order_estimator/episodes.csv",
+   "rows": 540,
+   "sha256": "52de26c05da71f9bd1fb90894eb9a2206ed8928b518b357d6185265b89c7b05a"
+  },
+  "episodes_post_regraded": {
+   "binding": {
+    "key": "episodes_post_regraded.csv",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/receipt_post.json",
+    "receipt_sha256": "c612c23324e2d265f6ec97c45f243f60342a17304589c93e2c386089d2c9b8bf",
+    "recorded": "9f8fd480fbe5b69c638538ec2b2eab2f81ddc108fbdd2bcf89012f70cafcf9a0",
+    "section": "outputs",
+    "status": "ok"
+   },
+   "bytes": 303252,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/episodes_post_regraded.csv",
+   "rows": 176,
+   "sha256": "9f8fd480fbe5b69c638538ec2b2eab2f81ddc108fbdd2bcf89012f70cafcf9a0"
+  },
+  "events": {
+   "binding": {
+    "key": "events.parquet",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/take_logic_v2/receipt.json",
+    "receipt_sha256": "564053df46379f1913237119a03f07de6857e7951de3300fe7cde6b57f919289",
+    "recorded": "4a0b6007d8d5b188d3d56ce6e6c98fa0d37def23004c0ccfbb42334021a4cc11",
+    "section": "outputs",
+    "status": "ok"
+   },
+   "bytes": 468635,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/chains/take_logic_v2/events.parquet",
+   "rows": 4147,
+   "sha256": "4a0b6007d8d5b188d3d56ce6e6c98fa0d37def23004c0ccfbb42334021a4cc11"
+  },
+  "fills_valued": {
+   "binding": {
+    "key": "econ/fills_valued.parquet",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/take_logic_v2/receipt.json",
+    "receipt_sha256": "564053df46379f1913237119a03f07de6857e7951de3300fe7cde6b57f919289",
+    "recorded": "2a874707cc7801d6760e2de36075870700cc0be8e72cd9a6df0213424221cde6",
+    "section": "inputs",
+    "status": "ok"
+   },
+   "bytes": 1078229581,
+   "path": "data/predict_fun/research/maker_trace_v2_20261123/econ/fills_valued.parquet",
+   "rows": 1940,
+   "sha256": "2a874707cc7801d6760e2de36075870700cc0be8e72cd9a6df0213424221cde6"
+  },
+  "life/20261024_3702960_fills.parquet": {
+   "binding": {
+    "key": "life/20261024_3702960_fills.parquet",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/take_logic_v2/receipt.json",
+    "receipt_sha256": "564053df46379f1913237119a03f07de6857e7951de3300fe7cde6b57f919289",
+    "recorded": "15198f2f01b2e6a0ffd12d31b960dc2874385abe8ed0e862632d2195077ae23f",
+    "section": "inputs",
+    "status": "ok"
+   },
+   "bytes": 195895,
+   "path": "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3702960_fills.parquet",
+   "rows": 4,
+   "sha256": "15198f2f01b2e6a0ffd12d31b960dc2874385abe8ed0e862632d2195077ae23f"
+  },
+  "life/20261024_3712725_fills.parquet": {
+   "binding": {
+    "key": "life/20261024_3712725_fills.parquet",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/take_logic_v2/receipt.json",
+    "receipt_sha256": "564053df46379f1913237119a03f07de6857e7951de3300fe7cde6b57f919289",
+    "recorded": "56d0efd8b8cf9704e407d95ab6652e322ba95d69d13e25833b70f935df30efee",
+    "section": "inputs",
+    "status": "ok"
+   },
+   "bytes": 345906,
+   "path": "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3712725_fills.parquet",
+   "rows": 8,
+   "sha256": "56d0efd8b8cf9704e407d95ab6652e322ba95d69d13e25833b70f935df30efee"
+  },
+  "life/20261024_3716727_fills.parquet": {
+   "binding": {
+    "key": "life/20261024_3716727_fills.parquet",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/take_logic_v2/receipt.json",
+    "receipt_sha256": "564053df46379f1913237119a03f07de6857e7951de3300fe7cde6b57f919289",
+    "recorded": "b07e74501e3341585271b40e4441589bcfab582e63c127282f0f42c69e6815d0",
+    "section": "inputs",
+    "status": "ok"
+   },
+   "bytes": 306052,
+   "path": "data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3716727_fills.parquet",
+   "rows": 2,
+   "sha256": "b07e74501e3341585271b40e4441589bcfab582e63c127282f0f42c69e6815d0"
+  },
+  "matched_gap": {
+   "binding": {
+    "key": "per_market.csv",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/matched_gap_r1/receipt.json",
+    "receipt_sha256": "915bccf9e8432151661d18d2a9e13e2c4c27f723ff044786ebf902ce9ed986d8",
+    "recorded": "49d4730f33f89c6fb13eb663eea8f877e6ce6d8fec14816c4308ff0af706f4b5",
+    "section": "outputs",
+    "status": "ok"
+   },
+   "bytes": 158977,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/matched_gap_r1/per_market.csv",
+   "rows": 228,
+   "sha256": "49d4730f33f89c6fb13eb663eea8f877e6ce6d8fec14816c4308ff0af706f4b5"
+  },
+  "order_ledger": {
+   "binding": {
+    "key": "order_ledger",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/receipt_post.json",
+    "receipt_sha256": "c612c23324e2d265f6ec97c45f243f60342a17304589c93e2c386089d2c9b8bf",
+    "recorded": "cc6d26f479e0aa9a4584631dd998eae2fba3777a3bb5c0fb1a0e13b7500cdc16",
+    "section": "inputs",
+    "status": "ok"
+   },
+   "bytes": 78465,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/order_estimator/order_ledger.csv",
+   "rows": 255,
+   "sha256": "cc6d26f479e0aa9a4584631dd998eae2fba3777a3bb5c0fb1a0e13b7500cdc16"
+  },
+  "paths_md": {
+   "binding": {
+    "key": "paths.md",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/receipt_post.json",
+    "receipt_sha256": "c612c23324e2d265f6ec97c45f243f60342a17304589c93e2c386089d2c9b8bf",
+    "recorded": "9606184cc902694c483aa205f19fac166f14285e39c33491622d44e6592be623",
+    "section": "outputs",
+    "status": "ok"
+   },
+   "bytes": 16715,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/paths.md",
+   "rows": 90,
+   "sha256": "9606184cc902694c483aa205f19fac166f14285e39c33491622d44e6592be623"
+  },
+  "post_orders": {
+   "binding": {
+    "key": "orders.csv",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/post_fill/receipt.json",
+    "receipt_sha256": "455c97a6df4402daaa6c642d20689224ca0a38022bcaafd62a5395b2d27146b4",
+    "recorded": "2ea44339d276f1bcf9c690a5b2b71fc4f8ef5e5138fa3c1a6434acce1006b853",
+    "section": "outputs",
+    "status": "ok"
+   },
+   "bytes": 5208519,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/chains/post_fill/orders.csv",
+   "rows": 4149,
+   "sha256": "2ea44339d276f1bcf9c690a5b2b71fc4f8ef5e5138fa3c1a6434acce1006b853"
+  },
+  "post_regrade_orders": {
+   "binding": {
+    "key": "post_regrade_orders.csv",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/receipt_post.json",
+    "receipt_sha256": "c612c23324e2d265f6ec97c45f243f60342a17304589c93e2c386089d2c9b8bf",
+    "recorded": "ced4f0e5b7d8473ab7939546ff2f60b31d980db359cab495f6d97a1d7631aa0c",
+    "section": "outputs",
+    "status": "ok"
+   },
+   "bytes": 2378793,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/chains/correction_v1/post_regrade_orders.csv",
+   "rows": 4149,
+   "sha256": "ced4f0e5b7d8473ab7939546ff2f60b31d980db359cab495f6d97a1d7631aa0c"
+  },
+  "pulls": {
+   "binding": {
+    "key": "pulls.csv",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/pull/receipt.json",
+    "receipt_sha256": "b7ee2e38c08273242983415499270d374e8bcc1610d501b99edde460e8cbbd26",
+    "recorded": "1b60b4a7027e2b2ae5f3959a0f6d8594f07d1f4d7b11c37d9daabdec8735549d",
+    "section": "outputs",
+    "status": "ok"
+   },
+   "bytes": 11048416,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/chains/pull/pulls.csv",
+   "rows": 6640,
+   "sha256": "1b60b4a7027e2b2ae5f3959a0f6d8594f07d1f4d7b11c37d9daabdec8735549d"
+  },
+  "qf1_fronts": {
+   "binding": {
+    "key": "fronts.csv",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/queue_front/receipt.json",
+    "receipt_sha256": "22cca4789c39155190dc579283d983a9da5554b233fd2ed5d5173d8965d9b1a9",
+    "recorded": "d788cb822621becf729a1dfe4a82e3a0106ae05ce7317107640395392498cac0",
+    "section": "outputs",
+    "status": "ok"
+   },
+   "bytes": 556458,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/chains/queue_front/fronts.csv",
+   "rows": 1845,
+   "sha256": "d788cb822621becf729a1dfe4a82e3a0106ae05ce7317107640395392498cac0"
+  },
+  "qf1_levels": {
+   "binding": {
+    "key": "levels.csv",
+    "receipt": "predictfun/reviews/maker_trace_20261122/v2/chains/queue_front/receipt.json",
+    "receipt_sha256": "22cca4789c39155190dc579283d983a9da5554b233fd2ed5d5173d8965d9b1a9",
+    "recorded": "590d70700f57d54e19de358521fa8fb300bfdb235c1b11cf6e09dc55f720b329",
+    "section": "outputs",
+    "status": "ok"
+   },
+   "bytes": 5686571,
+   "path": "predictfun/reviews/maker_trace_20261122/v2/chains/queue_front/levels.csv",
+   "rows": 21395,
+   "sha256": "590d70700f57d54e19de358521fa8fb300bfdb235c1b11cf6e09dc55f720b329"
+  }
+ },
+ "mode": "draft",
+ "module": "predictfun/reviews/maker_trace_20261122/tools/chains_v3.py",
+ "mutant": null,
+ "out": "predictfun/reviews/maker_trace_20261122/v2/chains/chains_v3_draft",
+ "outputs": {
+  "chain_links.csv": {
+   "bytes": 27827,
+   "sha256": "afcb2d363617c5669552a968283f0887218ff46af7642c0f30628b444e7c7199"
+  },
+  "chains.md": {
+   "bytes": 71225,
+   "sha256": "1f80e6163348ea5525cf56ebcab074c6bada06f2a10d3e3469a20c56119a55be"
+  },
+  "claims.json": {
+   "bytes": 14509,
+   "sha256": "fbe1f08d257d492004fb32d7e0086bf737cab69b63628810586b9019f9ba3161"
+  }
+ },
+ "rows": {
+  "chain_links": 42,
+  "chains": 6
+ },
+ "run": "v2",
+ "siblings": {
+  "posting_opportunity": {
+   "absent_optional": [],
+   "files": {},
+   "notes": [],
+   "reason": "posting_opportunity receipt absent (predictfun/reviews/maker_trace_20261122/v2/chains/posting_opportunity/receipt.json)",
+   "receipt": null,
+   "status": "absent"
+  },
+  "queue_front_v2": {
+   "absent_optional": [],
+   "files": {},
+   "notes": [],
+   "reason": "queue_front_v2 receipt absent (predictfun/reviews/maker_trace_20261122/v2/chains/queue_front_v2/receipt.json)",
+   "receipt": null,
+   "status": "absent"
+  }
+ },
+ "sources": {
+  "predictfun/research/pf_mt_common.py": "e54ccd15489ed41b23b1e1d62e11d26aacd7f1d778be47bdaf4154b2cb091f7b",
+  "predictfun/reviews/maker_trace_20261122/posting_chain_contract.md": "4fdc55081788ac0b9e14294c89798fc43e24ffec6d6ce25798234c8e87f2c286",
+  "predictfun/reviews/maker_trace_20261122/tools/chains_v3.py": "274823620d1c8274e322a261ddf9a0b4ed2d582af77b3eed98629868c980c923",
+  "predictfun/reviews/maker_trace_20261122/tools/chains_v3_selftest.py": "01b9fab98e21e28dd1d1f33e569f2dc21924e999526d8d2a518e3f00e5e98d48"
+ },
+ "version": "chains_v3",
+ "vmhwm_mib": 268.4,
+ "wall_s": 2.34
+}

@@ -1,0 +1,1404 @@
+{
+ "contract": {
+  "commit": "8e09f3391",
+  "file": "predictfun/reviews/maker_trace_20261122/posting_chain_contract.md",
+  "section": "5"
+ },
+ "days": [
+  "20261024"
+ ],
+ "descriptive_only": true,
+ "economics_pooled": [
+  {
+   "all_rows": 352,
+   "all_shares": 3599.960188305194,
+   "by": "candidate",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "st_10s:49|st_1s:11|st_60s:154",
+   "group": "all",
+   "role": "earliest_set",
+   "scope": "pooled",
+   "v_10s_c_sh": -0.10565860489609107,
+   "v_1s_c_sh": -0.36472463817760387,
+   "v_60s_c_sh": -2.3418459607382296,
+   "valid_row_share": 0.39204545454545453,
+   "valid_rows": 138,
+   "valid_share_share": 0.3310521282532598,
+   "valid_shares": 1191.7744819654404
+  },
+  {
+   "all_rows": 201,
+   "all_shares": 2830.7492325760236,
+   "by": "candidate",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "st_10s:7|st_60s:27",
+   "group": "all",
+   "role": "later_other",
+   "scope": "pooled",
+   "v_10s_c_sh": -1.27272303496609,
+   "v_1s_c_sh": 0.27225767560929665,
+   "v_60s_c_sh": -2.777049371762251,
+   "valid_row_share": 0.8308457711442786,
+   "valid_rows": 167,
+   "valid_share_share": 0.9040900126920042,
+   "valid_shares": 2559.2521096075384
+  },
+  {
+   "all_rows": 105,
+   "all_shares": 1175.1992638847062,
+   "by": "candidate",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "st_10s:22|st_1s:4|st_60s:37",
+   "group": "all",
+   "role": "later_same_hash",
+   "scope": "pooled",
+   "v_10s_c_sh": -2.057603129895747,
+   "v_1s_c_sh": -0.33074442431176243,
+   "v_60s_c_sh": -2.7174417173797756,
+   "valid_row_share": 0.4,
+   "valid_rows": 42,
+   "valid_share_share": 0.5181787467472132,
+   "valid_shares": 608.9632817380245
+  },
+  {
+   "all_rows": 11,
+   "all_shares": 105.28459129106189,
+   "by": "candidate",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "st_10s:1|st_60s:7",
+   "group": "rank1",
+   "role": "earliest_set",
+   "scope": "pooled",
+   "v_10s_c_sh": -8.633333333333333,
+   "v_1s_c_sh": -3.0777777777777757,
+   "v_60s_c_sh": -19.61111111111111,
+   "valid_row_share": 0.2727272727272727,
+   "valid_rows": 3,
+   "valid_share_share": 0.6105899590567325,
+   "valid_shares": 64.28571428571429
+  },
+  {
+   "all_rows": 5,
+   "all_shares": 66.57142857142857,
+   "by": "candidate",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "st_60s:1",
+   "group": "rank1",
+   "role": "later_other",
+   "scope": "pooled",
+   "v_10s_c_sh": -2.499999999999999,
+   "v_1s_c_sh": -1.1592920353982297,
+   "v_60s_c_sh": 4.500000000000001,
+   "valid_row_share": 0.8,
+   "valid_rows": 4,
+   "valid_share_share": 0.9699570815450643,
+   "valid_shares": 64.57142857142857
+  },
+  {
+   "all_rows": 5,
+   "all_shares": 35.96425194805195,
+   "by": "candidate",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "st_10s:1|st_60s:3",
+   "group": "rank1",
+   "role": "later_same_hash",
+   "scope": "pooled",
+   "v_10s_c_sh": -2.499999999999999,
+   "v_1s_c_sh": 0.5000000000000004,
+   "v_60s_c_sh": 4.500000000000001,
+   "valid_row_share": 0.2,
+   "valid_rows": 1,
+   "valid_share_share": 0.4369418203660676,
+   "valid_shares": 15.714285714285714
+  },
+  {
+   "all_rows": 27,
+   "all_shares": 318.7479709573239,
+   "by": "candidate",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "st_10s:1|st_1s:1|st_60s:7",
+   "group": "top3",
+   "role": "earliest_set",
+   "scope": "pooled",
+   "v_10s_c_sh": -3.115584367179872,
+   "v_1s_c_sh": -0.9290675180087706,
+   "v_60s_c_sh": -4.170631743615148,
+   "valid_row_share": 0.6666666666666666,
+   "valid_rows": 18,
+   "valid_share_share": 0.8497522137583754,
+   "valid_shares": 270.85679395197633
+  },
+  {
+   "all_rows": 32,
+   "all_shares": 334.41190321330316,
+   "by": "candidate",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "st_60s:2",
+   "group": "top3",
+   "role": "later_other",
+   "scope": "pooled",
+   "v_10s_c_sh": -2.138418226662895,
+   "v_1s_c_sh": 1.4410569669317017,
+   "v_60s_c_sh": -4.5654978273960305,
+   "valid_row_share": 0.9375,
+   "valid_rows": 30,
+   "valid_share_share": 0.9908795112533582,
+   "valid_shares": 331.36190321330315
+  },
+  {
+   "all_rows": 11,
+   "all_shares": 73.6437194581152,
+   "by": "candidate",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "st_10s:1|st_60s:3",
+   "group": "top3",
+   "role": "later_same_hash",
+   "scope": "pooled",
+   "v_10s_c_sh": 0.2252915795137721,
+   "v_1s_c_sh": 0.4599970934769406,
+   "v_60s_c_sh": 3.4596163333096697,
+   "valid_row_share": 0.6363636363636364,
+   "valid_rows": 7,
+   "valid_share_share": 0.7250279265798982,
+   "valid_shares": 53.39375322434897
+  },
+  {
+   "all_rows": 352,
+   "all_shares": 3599.960188305194,
+   "by": "filler",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "st_10s:49|st_1s:11|st_60s:154",
+   "group": "all",
+   "role": "earliest_set",
+   "scope": "pooled",
+   "v_10s_c_sh": -0.10565860489609107,
+   "v_1s_c_sh": -0.36472463817760387,
+   "v_60s_c_sh": -2.3418459607382296,
+   "valid_row_share": 0.39204545454545453,
+   "valid_rows": 138,
+   "valid_share_share": 0.3310521282532598,
+   "valid_shares": 1191.7744819654404
+  },
+  {
+   "all_rows": 201,
+   "all_shares": 2830.7492325760236,
+   "by": "filler",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "st_10s:7|st_60s:27",
+   "group": "all",
+   "role": "later_other",
+   "scope": "pooled",
+   "v_10s_c_sh": -1.27272303496609,
+   "v_1s_c_sh": 0.27225767560929665,
+   "v_60s_c_sh": -2.777049371762251,
+   "valid_row_share": 0.8308457711442786,
+   "valid_rows": 167,
+   "valid_share_share": 0.9040900126920042,
+   "valid_shares": 2559.2521096075384
+  },
+  {
+   "all_rows": 105,
+   "all_shares": 1175.1992638847062,
+   "by": "filler",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "st_10s:22|st_1s:4|st_60s:37",
+   "group": "all",
+   "role": "later_same_hash",
+   "scope": "pooled",
+   "v_10s_c_sh": -2.057603129895747,
+   "v_1s_c_sh": -0.33074442431176243,
+   "v_60s_c_sh": -2.7174417173797756,
+   "valid_row_share": 0.4,
+   "valid_rows": 42,
+   "valid_share_share": 0.5181787467472132,
+   "valid_shares": 608.9632817380245
+  },
+  {
+   "all_rows": 11,
+   "all_shares": 105.28459129106189,
+   "by": "filler",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "st_10s:1|st_60s:7",
+   "group": "rank1",
+   "role": "earliest_set",
+   "scope": "pooled",
+   "v_10s_c_sh": -8.633333333333333,
+   "v_1s_c_sh": -3.0777777777777757,
+   "v_60s_c_sh": -19.61111111111111,
+   "valid_row_share": 0.2727272727272727,
+   "valid_rows": 3,
+   "valid_share_share": 0.6105899590567325,
+   "valid_shares": 64.28571428571429
+  },
+  {
+   "all_rows": 15,
+   "all_shares": 279.476,
+   "by": "filler",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "st_60s:4",
+   "group": "rank1",
+   "role": "later_other",
+   "scope": "pooled",
+   "v_10s_c_sh": -0.47983300106902477,
+   "v_1s_c_sh": 0.8970799264203094,
+   "v_60s_c_sh": -3.7904953145916993,
+   "valid_row_share": 0.7333333333333333,
+   "valid_rows": 11,
+   "valid_share_share": 0.7430548598090713,
+   "valid_shares": 207.666
+  },
+  {
+   "all_rows": 5,
+   "all_shares": 35.96425194805195,
+   "by": "filler",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "st_10s:1|st_60s:3",
+   "group": "rank1",
+   "role": "later_same_hash",
+   "scope": "pooled",
+   "v_10s_c_sh": -2.499999999999999,
+   "v_1s_c_sh": 0.5000000000000004,
+   "v_60s_c_sh": 4.500000000000001,
+   "valid_row_share": 0.2,
+   "valid_rows": 1,
+   "valid_share_share": 0.4369418203660676,
+   "valid_shares": 15.714285714285714
+  },
+  {
+   "all_rows": 27,
+   "all_shares": 318.7479709573239,
+   "by": "filler",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "st_10s:1|st_1s:1|st_60s:7",
+   "group": "top3",
+   "role": "earliest_set",
+   "scope": "pooled",
+   "v_10s_c_sh": -3.115584367179872,
+   "v_1s_c_sh": -0.9290675180087706,
+   "v_60s_c_sh": -4.170631743615148,
+   "valid_row_share": 0.6666666666666666,
+   "valid_rows": 18,
+   "valid_share_share": 0.8497522137583754,
+   "valid_shares": 270.85679395197633
+  },
+  {
+   "all_rows": 32,
+   "all_shares": 481.11523846153847,
+   "by": "filler",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "st_60s:4",
+   "group": "top3",
+   "role": "later_other",
+   "scope": "pooled",
+   "v_10s_c_sh": -1.8864986187480866,
+   "v_1s_c_sh": 1.084237650287736,
+   "v_60s_c_sh": -1.50340218164435,
+   "valid_row_share": 0.875,
+   "valid_rows": 28,
+   "valid_share_share": 0.8507426199394,
+   "valid_shares": 409.30523846153847
+  },
+  {
+   "all_rows": 11,
+   "all_shares": 73.6437194581152,
+   "by": "filler",
+   "creation_context": "all",
+   "day": "all",
+   "excluded": "st_10s:1|st_60s:3",
+   "group": "top3",
+   "role": "later_same_hash",
+   "scope": "pooled",
+   "v_10s_c_sh": 0.2252915795137721,
+   "v_1s_c_sh": 0.4599970934769406,
+   "v_60s_c_sh": 3.4596163333096697,
+   "valid_row_share": 0.6363636363636364,
+   "valid_rows": 7,
+   "valid_share_share": 0.7250279265798982,
+   "valid_shares": 53.39375322434897
+  }
+ ],
+ "fill_to_cell": {
+  "addr_fv_vs_orders_mismatch": 0,
+  "cell_fv_vs_life_mismatch": 0,
+  "cellcheck_frames": 43033,
+  "cellcheck_gaps": 531,
+  "cellcheck_grid_fills": 19637,
+  "cellcheck_grid_fills_not_shown_in_window": 182,
+  "cellcheck_grid_fills_not_shown_le_hi": 114,
+  "cellcheck_top3_grid_fills": 2840,
+  "cellcheck_top3_not_shown_in_window": 7,
+  "cellcheck_top3_not_shown_le_hi": 1,
+  "cellcheck_top3_offgrid_fills": 0,
+  "cellcheck_unknown_cells": 0,
+  "fv_rows_without_life_leg": 0,
+  "fv_top3_rows_without_life_leg": 0,
+  "legs": 19639,
+  "legs_addr_from_orders": 0,
+  "legs_grid": 19637,
+  "legs_no_address": 0,
+  "legs_offgrid": 2,
+  "legs_unbounded": 0,
+  "legs_with_fv_row": 19639,
+  "q_fv_vs_life_mismatch": 0
+ },
+ "intervals": null,
+ "kind": "pilot",
+ "labels": {
+  "alt": "alt_netting_possible: intervals where a masked cancellation / replenishment could hide (creation interval through the candidate interval, plus unexplained changes up to the candidate record hi); alt_first_addresses: every first-filler address the hard windows and the level life allow (conservative, may over-include)",
+  "days": "four consumed days: point estimates, no intervals (G = 4 < 5); QUEUE-FRONT v1 amendments 1-2 were adaptive consumed-day development",
+  "economics": "GROSS markouts from settle_ms; valid = chain_post_fill PNL cohort (status ok, not a self-trade, st_res valid, 1 s / 10 s / 60 s marks ok); inherited settlement-clock values, not values at an identified private match or posting decision; censoring and price / time composition are not matched",
+  "front_win": "a bound within the declared reconstruction scenario; unidentified unless no counted level carries alternative histories",
+  "mechanism": "creation_context = the anonymous cell-creation context associated with a candidate first filler",
+  "occupancy": "cell_occupied_at_window_lo / cell_empty_at_window_lo = the displayed size at the inferred posting-window lower endpoint, conditional on that window, with the post grade; never an actual-post queue label; population = top-3 orders that later filled",
+  "roles": "earliest_set = the earliest record(s) under the premise; later_same_hash = a later fill of an order hash of the earliest set (the same order: no queue loss shown); later_other = later fills of other hashes; \"does the front pay?\" withdrawn (contract 5.3)",
+  "speed": "speed_ms = the cell-event endpoint proxy with speed_lo_ms / speed_hi_ms; not a measured maker latency; endpoint ownership not assigned; no faster_than_others verdict",
+  "status": "front_candidate = the one-address earliest set under the no-netting premise; never certified (review finding 1)",
+  "timing": "book_candidate = the unique net decrease equal to the record quantity and claimed by no other record: a conditional timing candidate; an anonymous cancellation, replenishment or their netting inside a frame interval is not ruled out"
+ },
+ "markets": [
+  "20261024_3697902",
+  "20261024_3699278",
+  "20261024_3700070",
+  "20261024_3702960",
+  "20261024_3704004",
+  "20261024_3712725",
+  "20261024_3716727"
+ ],
+ "multiplicity": {
+  "all_listed": true,
+  "readings": 2,
+  "scopes": 2,
+  "selected": null
+ },
+ "null": {
+  "design": "v1's: within each market the maker labels of every attributed fill of the front_candidate levels permuted; the designated earliest fills keep their positions (a conditional label shuffle after selection)",
+  "n_perm": 500,
+  "seed": 20261123
+ },
+ "occupancy": [
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 33,
+    "G2_bound_constrained": 166,
+    "G3_constrained_status_flagged": 1,
+    "G4_scenario_only": 148
+   },
+   "day": "all",
+   "denom": 746,
+   "group": "rank1",
+   "n": 348,
+   "n_front_candidate_hash": 1,
+   "occupancy": "cell_occupied_at_window_lo",
+   "scope": "pooled",
+   "share": 0.46648793565683644
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 47,
+    "G2_bound_constrained": 125,
+    "G3_constrained_status_flagged": 6,
+    "G4_scenario_only": 200
+   },
+   "day": "all",
+   "denom": 746,
+   "group": "rank1",
+   "n": 378,
+   "n_front_candidate_hash": 10,
+   "occupancy": "cell_empty_at_window_lo",
+   "scope": "pooled",
+   "share": 0.5067024128686327
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "all",
+   "denom": 746,
+   "group": "rank1",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_unknown",
+   "scope": "pooled",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 20,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "all",
+   "denom": 746,
+   "group": "rank1",
+   "n": 20,
+   "n_front_candidate_hash": 0,
+   "occupancy": "window_unbounded",
+   "scope": "pooled",
+   "share": 0.02680965147453083
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "all",
+   "denom": 746,
+   "group": "rank1",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_not_placeable",
+   "scope": "pooled",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 23,
+    "G2_bound_constrained": 111,
+    "G3_constrained_status_flagged": 3,
+    "G4_scenario_only": 72
+   },
+   "day": "all",
+   "denom": 368,
+   "group": "rank2",
+   "n": 209,
+   "n_front_candidate_hash": 2,
+   "occupancy": "cell_occupied_at_window_lo",
+   "scope": "pooled",
+   "share": 0.5679347826086957
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 18,
+    "G2_bound_constrained": 56,
+    "G3_constrained_status_flagged": 3,
+    "G4_scenario_only": 67
+   },
+   "day": "all",
+   "denom": 368,
+   "group": "rank2",
+   "n": 144,
+   "n_front_candidate_hash": 5,
+   "occupancy": "cell_empty_at_window_lo",
+   "scope": "pooled",
+   "share": 0.391304347826087
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "all",
+   "denom": 368,
+   "group": "rank2",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_unknown",
+   "scope": "pooled",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 15,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "all",
+   "denom": 368,
+   "group": "rank2",
+   "n": 15,
+   "n_front_candidate_hash": 0,
+   "occupancy": "window_unbounded",
+   "scope": "pooled",
+   "share": 0.04076086956521739
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "all",
+   "denom": 368,
+   "group": "rank2",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_not_placeable",
+   "scope": "pooled",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 11,
+    "G2_bound_constrained": 58,
+    "G3_constrained_status_flagged": 2,
+    "G4_scenario_only": 49
+   },
+   "day": "all",
+   "denom": 471,
+   "group": "rank3",
+   "n": 120,
+   "n_front_candidate_hash": 2,
+   "occupancy": "cell_occupied_at_window_lo",
+   "scope": "pooled",
+   "share": 0.25477707006369427
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 22,
+    "G2_bound_constrained": 151,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 167
+   },
+   "day": "all",
+   "denom": 471,
+   "group": "rank3",
+   "n": 340,
+   "n_front_candidate_hash": 7,
+   "occupancy": "cell_empty_at_window_lo",
+   "scope": "pooled",
+   "share": 0.721868365180467
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "all",
+   "denom": 471,
+   "group": "rank3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_unknown",
+   "scope": "pooled",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 11,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "all",
+   "denom": 471,
+   "group": "rank3",
+   "n": 11,
+   "n_front_candidate_hash": 0,
+   "occupancy": "window_unbounded",
+   "scope": "pooled",
+   "share": 0.02335456475583864
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "all",
+   "denom": 471,
+   "group": "rank3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_not_placeable",
+   "scope": "pooled",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 67,
+    "G2_bound_constrained": 335,
+    "G3_constrained_status_flagged": 6,
+    "G4_scenario_only": 269
+   },
+   "day": "all",
+   "denom": 1585,
+   "group": "top3",
+   "n": 677,
+   "n_front_candidate_hash": 5,
+   "occupancy": "cell_occupied_at_window_lo",
+   "scope": "pooled",
+   "share": 0.42712933753943216
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 87,
+    "G2_bound_constrained": 332,
+    "G3_constrained_status_flagged": 9,
+    "G4_scenario_only": 434
+   },
+   "day": "all",
+   "denom": 1585,
+   "group": "top3",
+   "n": 862,
+   "n_front_candidate_hash": 22,
+   "occupancy": "cell_empty_at_window_lo",
+   "scope": "pooled",
+   "share": 0.5438485804416404
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "all",
+   "denom": 1585,
+   "group": "top3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_unknown",
+   "scope": "pooled",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 46,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "all",
+   "denom": 1585,
+   "group": "top3",
+   "n": 46,
+   "n_front_candidate_hash": 0,
+   "occupancy": "window_unbounded",
+   "scope": "pooled",
+   "share": 0.029022082018927444
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "all",
+   "denom": 1585,
+   "group": "top3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_not_placeable",
+   "scope": "pooled",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 33,
+    "G2_bound_constrained": 166,
+    "G3_constrained_status_flagged": 1,
+    "G4_scenario_only": 148
+   },
+   "day": "20261024",
+   "denom": 746,
+   "group": "rank1",
+   "n": 348,
+   "n_front_candidate_hash": 1,
+   "occupancy": "cell_occupied_at_window_lo",
+   "scope": "day",
+   "share": 0.46648793565683644
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 47,
+    "G2_bound_constrained": 125,
+    "G3_constrained_status_flagged": 6,
+    "G4_scenario_only": 200
+   },
+   "day": "20261024",
+   "denom": 746,
+   "group": "rank1",
+   "n": 378,
+   "n_front_candidate_hash": 10,
+   "occupancy": "cell_empty_at_window_lo",
+   "scope": "day",
+   "share": 0.5067024128686327
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261024",
+   "denom": 746,
+   "group": "rank1",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_unknown",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 20,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261024",
+   "denom": 746,
+   "group": "rank1",
+   "n": 20,
+   "n_front_candidate_hash": 0,
+   "occupancy": "window_unbounded",
+   "scope": "day",
+   "share": 0.02680965147453083
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261024",
+   "denom": 746,
+   "group": "rank1",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_not_placeable",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 23,
+    "G2_bound_constrained": 111,
+    "G3_constrained_status_flagged": 3,
+    "G4_scenario_only": 72
+   },
+   "day": "20261024",
+   "denom": 368,
+   "group": "rank2",
+   "n": 209,
+   "n_front_candidate_hash": 2,
+   "occupancy": "cell_occupied_at_window_lo",
+   "scope": "day",
+   "share": 0.5679347826086957
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 18,
+    "G2_bound_constrained": 56,
+    "G3_constrained_status_flagged": 3,
+    "G4_scenario_only": 67
+   },
+   "day": "20261024",
+   "denom": 368,
+   "group": "rank2",
+   "n": 144,
+   "n_front_candidate_hash": 5,
+   "occupancy": "cell_empty_at_window_lo",
+   "scope": "day",
+   "share": 0.391304347826087
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261024",
+   "denom": 368,
+   "group": "rank2",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_unknown",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 15,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261024",
+   "denom": 368,
+   "group": "rank2",
+   "n": 15,
+   "n_front_candidate_hash": 0,
+   "occupancy": "window_unbounded",
+   "scope": "day",
+   "share": 0.04076086956521739
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261024",
+   "denom": 368,
+   "group": "rank2",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_not_placeable",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 11,
+    "G2_bound_constrained": 58,
+    "G3_constrained_status_flagged": 2,
+    "G4_scenario_only": 49
+   },
+   "day": "20261024",
+   "denom": 471,
+   "group": "rank3",
+   "n": 120,
+   "n_front_candidate_hash": 2,
+   "occupancy": "cell_occupied_at_window_lo",
+   "scope": "day",
+   "share": 0.25477707006369427
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 22,
+    "G2_bound_constrained": 151,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 167
+   },
+   "day": "20261024",
+   "denom": 471,
+   "group": "rank3",
+   "n": 340,
+   "n_front_candidate_hash": 7,
+   "occupancy": "cell_empty_at_window_lo",
+   "scope": "day",
+   "share": 0.721868365180467
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261024",
+   "denom": 471,
+   "group": "rank3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_unknown",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 11,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261024",
+   "denom": 471,
+   "group": "rank3",
+   "n": 11,
+   "n_front_candidate_hash": 0,
+   "occupancy": "window_unbounded",
+   "scope": "day",
+   "share": 0.02335456475583864
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261024",
+   "denom": 471,
+   "group": "rank3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_not_placeable",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 67,
+    "G2_bound_constrained": 335,
+    "G3_constrained_status_flagged": 6,
+    "G4_scenario_only": 269
+   },
+   "day": "20261024",
+   "denom": 1585,
+   "group": "top3",
+   "n": 677,
+   "n_front_candidate_hash": 5,
+   "occupancy": "cell_occupied_at_window_lo",
+   "scope": "day",
+   "share": 0.42712933753943216
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 87,
+    "G2_bound_constrained": 332,
+    "G3_constrained_status_flagged": 9,
+    "G4_scenario_only": 434
+   },
+   "day": "20261024",
+   "denom": 1585,
+   "group": "top3",
+   "n": 862,
+   "n_front_candidate_hash": 22,
+   "occupancy": "cell_empty_at_window_lo",
+   "scope": "day",
+   "share": 0.5438485804416404
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261024",
+   "denom": 1585,
+   "group": "top3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_unknown",
+   "scope": "day",
+   "share": 0.0
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 46,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261024",
+   "denom": 1585,
+   "group": "top3",
+   "n": 46,
+   "n_front_candidate_hash": 0,
+   "occupancy": "window_unbounded",
+   "scope": "day",
+   "share": 0.029022082018927444
+  },
+  {
+   "by_grade": {
+    "G0_unbounded_or_invalid": 0,
+    "G1_conflict": 0,
+    "G2_bound_constrained": 0,
+    "G3_constrained_status_flagged": 0,
+    "G4_scenario_only": 0
+   },
+   "day": "20261024",
+   "denom": 1585,
+   "group": "top3",
+   "n": 0,
+   "n_front_candidate_hash": 0,
+   "occupancy": "cell_not_placeable",
+   "scope": "day",
+   "share": 0.0
+  }
+ ],
+ "parity": {
+  "affected_transitions": {
+   "ambiguous_order->ambiguous_order": 17,
+   "ambiguous_order->unknown": 12,
+   "front_identified->ambiguous_order": 4,
+   "front_identified->unexplained_decrease": 3,
+   "front_identified->unknown": 7
+  },
+  "bad_levels": [],
+  "by_key": {
+   "amb": 0,
+   "att": 0,
+   "bookms": 0,
+   "fhi": 0,
+   "flo": 0,
+   "gm": 0,
+   "lead": 0,
+   "nbeh": 0,
+   "nset": 0,
+   "nun": 0,
+   "old": 0,
+   "one": 0,
+   "rs": 0,
+   "st": 0,
+   "strad": 0,
+   "timing": 0,
+   "unx": 0
+  },
+  "n_affected": 43,
+  "n_levels": 7445,
+  "n_violations": 0
+ },
+ "population": {
+  "alt": {
+   "alt_netting_possible": 2136,
+   "by_status": {
+    "ambiguous_order": {
+     "alt_first_other_address": 355,
+     "alt_netting_possible": 1215,
+     "n": 1215
+    },
+    "front_candidate": {
+     "alt_first_other_address": 109,
+     "alt_netting_possible": 344,
+     "n": 344
+    },
+    "gap": {
+     "alt_first_other_address": 0,
+     "alt_netting_possible": 0,
+     "n": 31
+    },
+    "no_fill": {
+     "alt_first_other_address": 0,
+     "alt_netting_possible": 0,
+     "n": 3572
+    },
+    "unexplained_decrease": {
+     "alt_first_other_address": 151,
+     "alt_netting_possible": 577,
+     "n": 577
+    },
+    "unknown": {
+     "alt_first_other_address": 0,
+     "alt_netting_possible": 0,
+     "n": 1706
+    }
+   },
+   "front_candidate_alt_first_other_address": 109,
+   "front_candidate_alt_first_other_share": 0.3168604651162791,
+   "front_candidate_alt_netting_possible": 344,
+   "front_candidate_alt_netting_share": 1.0,
+   "front_candidates": 344,
+   "levels_with_earliest_record": 2136
+  },
+  "attributed_fills": {
+   "earliest_set": 352,
+   "later_other": 201,
+   "later_same_hash": 105
+  },
+  "attributed_shares": {
+   "earliest_set": 3599.960188305194,
+   "later_other": 2830.7492325760236,
+   "later_same_hash": 1175.1992638847062
+  },
+  "candidates_after_window_end": 71,
+  "candidates_rows": 7449,
+  "fresh_by_reason": {
+   "gap_before_fill": 31,
+   "ok": 344,
+   "returned_to_zero": 3515,
+   "sweep_several_makers": 230,
+   "unexplained_drop_before_fill": 577,
+   "untimed_record_could_be_first": 985,
+   "untimed_record_only": 1706,
+   "window_end_without_fill": 57
+  },
+  "fresh_by_status": {
+   "ambiguous_order": 1215,
+   "front_candidate": 344,
+   "gap": 31,
+   "no_fill": 3572,
+   "unexplained_decrease": 577,
+   "unknown": 1706
+  },
+  "fresh_levels": 7445,
+  "front_candidate_by_basis": {
+   "book_candidate": 344,
+   "settlement": 0
+  },
+  "legs": {
+   "attributed": 658,
+   "grid": 19637,
+   "member_of_a_fresh_level": 17579
+  },
+  "levels_old_life_excluded": 133,
+  "markets": 7,
+  "occupancy_orders": 1585,
+  "record_timing": {
+   "book_ambiguous": 1473,
+   "book_candidate": 4443,
+   "book_unmatched": 7935,
+   "settlement_only": 0
+  },
+  "records_unbounded_never_timed": 0,
+  "status_only": {
+   "gap": 4
+  },
+  "straddle": {
+   "levels_with_straddle_record": 43,
+   "v1_settlement_only_records": 58,
+   "v1_settlement_records_untimed_in_v2": 58
+  },
+  "supported_markets": 7
+ },
+ "readings": [
+  {
+   "beside": {
+    "fill_share_within_alt_bound": true,
+    "fill_share_within_scenario_bound": true
+   },
+   "description": "[scenario_lower, scenario_upper] is a bound within the declared reconstruction scenario (no-netting book candidates, one-address earliest sets), not a certified real-world bound; alt_* = the masked-netting first-filler sets over the same levels; fill share and p_hi over the attributed fills of front_candidate levels (a conditional label shuffle after selection, not an unconditional chance of winning a front)",
+   "predicates": {
+    "market_share_ge_2_3": false,
+    "no_alt_netting": false,
+    "p_hi_le_0_05": false,
+    "scenario_lower_gt_fill_share": false,
+    "supported_markets_ge_5": true
+   },
+   "reading": "front_win_scenario_bound",
+   "scope": "rank1",
+   "values": {
+    "alt_lower": 0.005772931366260423,
+    "alt_upper": 0.24246311738293777,
+    "bound_denominator": 1559,
+    "fill_share": 0.04711246200607903,
+    "fill_share_q": 0.055315526477696844,
+    "n_alt_lower": 9,
+    "n_alt_upper": 378,
+    "n_ambiguous_order": 1215,
+    "n_ambiguous_with_group": 322,
+    "n_bound_alt_netting_possible": 1559,
+    "n_fills": 658,
+    "n_fills_group": 31,
+    "n_fresh": 7445,
+    "n_front_candidate": 344,
+    "n_front_group": 11,
+    "n_gap": 31,
+    "n_markets_lower_gt_fill": 0,
+    "n_no_fill": 3572,
+    "n_perm": 500,
+    "n_supported_markets": 7,
+    "n_unexplained_decrease": 577,
+    "n_unknown": 1706,
+    "p_hi": 0.9860279441117764,
+    "scenario_lower": 0.007055805003207184,
+    "scenario_upper": 0.21359846055163567
+   },
+   "verdict": "unidentified"
+  },
+  {
+   "beside": {
+    "largest_is_majority": true
+   },
+   "description": "the anonymous cell-creation context (frame f - 1) associated with a candidate first filler; not the filler's posting action (the eventual first filler is not necessarily the creator)",
+   "predicates": {
+    "group_candidates_ge_5": true,
+    "supported_markets_ge_5": true,
+    "unique_largest": true
+   },
+   "reading": "largest_creation_context",
+   "scope": "rank1",
+   "values": {
+    "counts": {
+     "at_empty_touch": 0,
+     "deep": 1,
+     "improve": 6,
+     "other": 0,
+     "re_establish": 4
+    },
+    "n_front_candidates": 11,
+    "n_supported_markets": 7,
+    "shares": {
+     "at_empty_touch": 0.0,
+     "deep": 0.09090909090909091,
+     "improve": 0.5454545454545454,
+     "other": 0.0,
+     "re_establish": 0.36363636363636365
+    }
+   },
+   "verdict": "improve"
+  },
+  {
+   "beside": {
+    "fill_share_within_alt_bound": true,
+    "fill_share_within_scenario_bound": true
+   },
+   "description": "[scenario_lower, scenario_upper] is a bound within the declared reconstruction scenario (no-netting book candidates, one-address earliest sets), not a certified real-world bound; alt_* = the masked-netting first-filler sets over the same levels; fill share and p_hi over the attributed fills of front_candidate levels (a conditional label shuffle after selection, not an unconditional chance of winning a front)",
+   "predicates": {
+    "market_share_ge_2_3": false,
+    "no_alt_netting": false,
+    "p_hi_le_0_05": false,
+    "scenario_lower_gt_fill_share": false,
+    "supported_markets_ge_5": true
+   },
+   "reading": "front_win_scenario_bound",
+   "scope": "top3",
+   "values": {
+    "alt_lower": 0.024374599101988453,
+    "alt_upper": 0.3983322642719692,
+    "bound_denominator": 1559,
+    "fill_share": 0.10638297872340426,
+    "fill_share_q": 0.11484583434804414,
+    "n_alt_lower": 38,
+    "n_alt_upper": 621,
+    "n_ambiguous_order": 1215,
+    "n_ambiguous_with_group": 533,
+    "n_bound_alt_netting_possible": 1559,
+    "n_fills": 658,
+    "n_fills_group": 70,
+    "n_fresh": 7445,
+    "n_front_candidate": 344,
+    "n_front_group": 27,
+    "n_gap": 31,
+    "n_markets_lower_gt_fill": 0,
+    "n_no_fill": 3572,
+    "n_perm": 500,
+    "n_supported_markets": 7,
+    "n_unexplained_decrease": 577,
+    "n_unknown": 1706,
+    "p_hi": 0.998003992015968,
+    "scenario_lower": 0.01731879409878127,
+    "scenario_upper": 0.359204618345093
+   },
+   "verdict": "unidentified"
+  },
+  {
+   "beside": {
+    "largest_is_majority": true
+   },
+   "description": "the anonymous cell-creation context (frame f - 1) associated with a candidate first filler; not the filler's posting action (the eventual first filler is not necessarily the creator)",
+   "predicates": {
+    "group_candidates_ge_5": true,
+    "supported_markets_ge_5": true,
+    "unique_largest": true
+   },
+   "reading": "largest_creation_context",
+   "scope": "top3",
+   "values": {
+    "counts": {
+     "at_empty_touch": 0,
+     "deep": 1,
+     "improve": 15,
+     "other": 0,
+     "re_establish": 11
+    },
+    "n_front_candidates": 27,
+    "n_supported_markets": 7,
+    "shares": {
+     "at_empty_touch": 0.0,
+     "deep": 0.037037037037037035,
+     "improve": 0.5555555555555556,
+     "other": 0.0,
+     "re_establish": 0.4074074074074074
+    }
+   },
+   "verdict": "improve"
+  }
+ ],
+ "reconciliation": {
+  "candidates_eq_fresh": true,
+  "candidates_keyed_unique": true,
+  "economics_rows_eq_fills": true,
+  "economics_valid_shares_eq_fills": true,
+  "levels_later_eq_fills": true,
+  "one_earliest_fill_per_candidate": true,
+  "statuses_add_up": true
+ },
+ "review": {
+  "commit": "3f640ad9b",
+  "file": "predictfun/reviews/automatic/20261123_take_queue_review/report.md",
+  "findings": "1-6"
+ },
+ "rules": {
+  "gap_ms": 1000,
+  "market_share": "2/3",
+  "max_lag_ms": 2000,
+  "min_front_candidates_per_supported_market": 5,
+  "min_group_candidates": 5,
+  "min_supported_markets": 5,
+  "p_max": 0.05,
+  "reest_ms": 5000,
+  "tol_sh": 0.010000001
+ },
+ "v1": {
+  "amendments": [
+   "5c8a4b1a4",
+   "f4c7e5cbd"
+  ],
+  "contract_commit": "6436ee97c",
+  "version": "queue_front_v1"
+ },
+ "version": "queue_front_v2",
+ "withdrawn": {
+  "certified_front": "no level is certified: every holder is a front_candidate (contract 5.1)",
+  "faster_than_others": "not re-issued: the speed is a cell-event endpoint proxy (contract 5.5)",
+  "front_pays": "queue-effect inference withdrawn (contract 5.3): economics are descriptive by role"
+ }
+}

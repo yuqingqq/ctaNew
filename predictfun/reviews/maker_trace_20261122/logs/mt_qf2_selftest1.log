@@ -1,0 +1,48 @@
+head=8e09f339178e4fa9c7b8ed3b717f4278fa64baf7
+PASS selftest environment: MT_RUN=v2, no MT_QF2_MUT / MT_QF_MUT
+PASS (C1) the reviewer's masked-cancellation / replenishment counterexample: identical public frames, both histories' first fillers remain (alt_first_addresses), alt_netting_possible, front_candidate by book_candidate; never certified
+PASS (C2) a creation-window straddle -> untimed (not settlement_only), the level ambiguous_order with both makers; settle_inside on hand values
+PASS (C3) same-hash partial fills -> later_same_hash (not later_other); economics earliest_set / later_other / later_same_hash with all / valid rows and shares as hand-computed
+PASS (C4) no-fill levels kept in levels, candidates, shares (n_fresh, n_no_fill) and the fresh-context mix
+PASS (C5) a later-frame perturbation leaves the earlier labels unchanged; a cancel before the fill changes the status
+PASS parity: every fixture level without a straddle record reproduces v1 exactly (status, reason, front record, set, counts, fills)
+PASS parity: the straddle levels are tabulated (C2 v1 front_identified -> v2 ambiguous_order; C5p v1 front_identified -> v2 unknown)
+PASS mutants: one control per declared mutant
+PASS mutant certify_net_decrease: caught by C1 evaluating False without raising
+PASS mutant lower_endpoint_settle: caught by C2 evaluating False without raising
+PASS mutant same_hash_behind: caught by C3 evaluating False without raising
+PASS mutant drop_no_fill: caught by C4 evaluating False without raising
+PASS mutant whole_life_unexplained: caught by C5 evaluating False without raising
+PASS mutants: MT_QF2_MUT unset after the suite
+PASS readings (planted world): every other predicate holds, no_alt_netting is False -> unidentified (alternative histories block it)
+PASS readings (positive control): the same world under certify_net_decrease -> wins_front_more_than_fills (the rule can fire)
+PASS readings: largest creation context of rank 1 front candidates = improve (54 of 60), computed with counts and denominators
+PASS readings: 66 front candidates (all book_candidate, every one alt_netting_possible), claims carry the withdrawn inferences
+PASS regrade: bound to its receipt and to the post_fill orders.csv read; every order carries its grade
+PASS regrade: a csv unlike its receipt -> refused
+PASS regrade: a receipt naming another post_fill orders.csv -> refused
+PASS regrade: a post_fill order without a regrade row -> refused
+PASS regrade: a regrade window unlike post_fill -> refused
+PASS refuse: write-once on an existing output directory (overwrite, v1 write_out)
+PASS refuse: execute into an existing output directory before any input is read
+PASS refuse: production with MT_QF2_MUT=certify_net_decrease before any input is read
+PASS refuse: production with MT_QF2_MUT=bogus before any input is read
+PASS refuse: v1's MT_QF_MUT set
+PASS refuse: a pilot day outside the measurement days
+PASS refuse: nothing written by a refused call
+PASS refuse: the full run before any input (freeze)
+PASS refuse: the full run without a recorded pilot projection
+PASS refuse: preflight on a projection > 120 CPU s
+PASS refuse: preflight on a pilot with parity violations
+PASS refuse: preflight on v1's pilot receipt
+PASS preflight: a 60 s projection with 0 parity violations passes; the pilot receipt is hashed as an input
+PASS e2e: execute (pilot path, injected loader) writes exactly the declared outputs
+PASS e2e: receipt.json hashes every other output, the sources and inputs (regrade + its receipt, post_fill, fills_valued); a finite projection; parity recorded; no mutant
+PASS e2e: levels.csv = every market part; candidates.csv = one keyed row per E1 level (day, mid, level_id unique); a candidate address exactly on front_candidate rows, each with alt_netting_possible and a timing basis
+PASS e2e: economics reconcile to fills.csv by role (all rows, valid shares); later_same_hash present (C3)
+PASS e2e: occupancy - one row per top-3 order with its post grade; the order at a cell never fresh is cell_occupied_at_window_lo (frame time and age carried), empty endpoints and the unbounded window counted; the claims summary = the keyed rows
+PASS e2e: claims - reconciliation all true, parity 0 violations with the two straddle levels, straddle counts, the no-creation legs outside every fresh level, computed verdicts, the withdrawn inferences
+PASS e2e: speed.csv carries the endpoint proxy with its lower / upper interval columns
+PASS e2e: a second write into the written directory is refused (before any input is read)
+{"checks": 45, "failed": 0, "cpu_s": 1.993, "process_cpu_s": 2.379, "vmhwm_mib": 159.5}
+2026-11-23T18:22:08Z tag=mt_qf2_selftest1 rc=0 peak_rss_mib=160 wall_s=2.49 cpu_user_s=2.31 memavail_start_gib=22 disk_free_gib=423->423 slot=claude3

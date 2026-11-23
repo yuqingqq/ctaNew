@@ -1,0 +1,3 @@
+head=8e09f339178e4fa9c7b8ed3b717f4278fa64baf7
+markets 7 rows 7449 front_candidate 344 with holder 344 info {'dir': 'predictfun/reviews/maker_trace_20261122/v2/chains/queue_front_v2_pilot_20261024_r1', 'levels_sha256': '4ded79cd0b7617e312dad44064f5f6388324e62f9fd56283d67b20eeaea67700', 'rows_run': 7449, 'candidates': 344}
+2026-11-23T18:36:08Z tag=mt_po_qf2check1 rc=0 peak_rss_mib=141 wall_s=0.49 cpu_user_s=0.40 memavail_start_gib=22 disk_free_gib=423->423 slot=claude2

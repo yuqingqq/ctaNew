@@ -1,5 +1,28 @@
 # MAKER-TRACE-RECONSTRUCTION-v1 — pending work
 
+## STATE 2026-11-23 17:46Z — POSTING-OPPORTUNITY-AND-CHAIN v1 (review 3f640ad9b's next priority) — read this first
+
+**Reviews processed:**
+- 3f640ad9b. Take v2 accepted. Queue inferences rejected: a net book drop does not certify the trade that caused it, plus three code issues verified: queue_front.py:629 straddle, :694 same-hash 'behind', :1044 endpoint occupancy.
+- Earlier: af916aba6, 6bb458b30, 6ddad3533, 8f2a2e753, 567f741d9.
+
+**Contract:** `posting_chain_contract.md` (8e09f3391; ≤ 0.040 h all-in; cap 1.95 under the standing authorization; ledger 1.8463 before).
+
+**Builders, in parallel:**
+- `posting_opportunity.py` (§1–§3, PF_SLOT claude2, ≤ 25 s);
+- `queue_front_v2.py` (§5, claude3, ≤ 15 s);
+- `chains_v3.py` (§4, claude4, ≤ 10 s; draft mode until its siblings run).
+
+**Builder status at 18:36Z:**
+- queue_front_v2 done (45/45; pilot r1);
+- posting_opportunity done (53/53; pilot r1). Its qf2 adapter was aligned by the integrator to queue_front_v2's real levels.csv header (candidate_addr / candidate_hash → holder / front_hash): selftest2 54/54; real-output check `mt_po_qf2check1` read 344/344 candidates;
+- chains_v3 pending.
+
+**Run order after one freeze:** queue_front_v2, then posting_opportunity (reads candidates.csv), then chains_v3.
+
+**Then:** the receipt `v2/report_logic_chains_v4.md` (with the §6 take wording), commit, push, ONE review stating the USER goal, the watcher.
+
+
 ## STATE 2026-11-23 17:24Z — ROUND COMPLETE: LOGIC CHAINS v3 (TAKE-LOGIC v2 + QUEUE-FRONT v1) — review pending — read this first
 
 **Receipt:** `v2/report_logic_chains_v3.md`.
