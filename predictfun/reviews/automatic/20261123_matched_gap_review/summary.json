@@ -1,0 +1,627 @@
+{
+  "clock_counts": {
+    "n_ok": 20932,
+    "at_start": 0,
+    "at_end": 0,
+    "lo_hi_straddle_start": 69,
+    "lo_hi_straddle_end": 20,
+    "n_no_earlier_anchor": 92,
+    "ours_engine_plus50_after_end": 0,
+    "near_end_50ms": 0,
+    "near_end_100ms": 1,
+    "near_end_2000ms": 45
+  },
+  "changed_totals": [
+    {
+      "key": [
+        "20261024",
+        3697902,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "n_members_no_activity",
+        "market_reason",
+        "unclosed_carried_sh",
+        "carry",
+        "total",
+        "direct",
+        "end_pos",
+        "exposure",
+        "identity_dev",
+        "max_abs_pos",
+        "d_exposure",
+        "d_total",
+        "exposure_larger"
+      ],
+      "total_delta": -710.8915340901962
+    },
+    {
+      "key": [
+        "20261024",
+        3699278,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "n_members_no_activity",
+        "market_reason",
+        "unclosed_carried_sh",
+        "carry",
+        "total",
+        "direct",
+        "end_pos",
+        "exposure",
+        "max_abs_pos",
+        "reading",
+        "reading_raw",
+        "d_exposure",
+        "d_total",
+        "exposure_larger"
+      ],
+      "total_delta": -704.5360000000003
+    },
+    {
+      "key": [
+        "20261024",
+        3700070,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "n_members_no_activity",
+        "market_reason",
+        "unclosed_carried_sh",
+        "carry",
+        "total",
+        "direct",
+        "end_pos",
+        "exposure",
+        "max_abs_pos",
+        "d_exposure",
+        "d_total",
+        "exposure_larger"
+      ],
+      "total_delta": -42.90376078431369
+    },
+    {
+      "key": [
+        "20261024",
+        3702960,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "n_members_no_activity",
+        "market_reason",
+        "unclosed_carried_sh",
+        "carry",
+        "total",
+        "direct",
+        "end_pos",
+        "exposure",
+        "identity_dev",
+        "d_exposure",
+        "d_total"
+      ],
+      "total_delta": 81.4226725
+    },
+    {
+      "key": [
+        "20261024",
+        3704004,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "n_members_no_activity",
+        "market_reason",
+        "unclosed_carried_sh",
+        "carry",
+        "total",
+        "direct",
+        "end_pos",
+        "exposure",
+        "identity_dev",
+        "max_abs_pos",
+        "d_exposure",
+        "d_total",
+        "exposure_larger"
+      ],
+      "total_delta": 704.5360000000001
+    },
+    {
+      "key": [
+        "20261024",
+        3712725,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "n_members_no_activity",
+        "market_reason",
+        "unclosed_carried_sh",
+        "carry",
+        "total",
+        "direct",
+        "end_pos",
+        "exposure",
+        "max_abs_pos",
+        "reading",
+        "reading_raw",
+        "d_exposure",
+        "d_total",
+        "exposure_larger"
+      ],
+      "total_delta": 727.5099999999999
+    },
+    {
+      "key": [
+        "20261025",
+        3723774,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "n_members_no_activity",
+        "market_reason",
+        "unclosed_carried_sh",
+        "carry",
+        "total",
+        "direct",
+        "end_pos",
+        "exposure",
+        "max_abs_pos",
+        "d_exposure",
+        "d_total"
+      ],
+      "total_delta": 500.88759607843133
+    },
+    {
+      "key": [
+        "20261025",
+        3734864,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "n_members_no_activity",
+        "market_reason",
+        "unclosed_carried_sh",
+        "carry",
+        "total",
+        "direct",
+        "end_pos",
+        "exposure",
+        "identity_dev",
+        "d_exposure",
+        "d_total"
+      ],
+      "total_delta": 251.4835650261438
+    },
+    {
+      "key": [
+        "20261025",
+        3737919,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "n_members_no_activity",
+        "market_reason",
+        "unclosed_carried_sh",
+        "carry",
+        "total",
+        "direct",
+        "end_pos",
+        "exposure",
+        "d_exposure",
+        "d_total"
+      ],
+      "total_delta": 64.99554326014191
+    },
+    {
+      "key": [
+        "20261025",
+        3763401,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "n_members_no_activity",
+        "market_reason",
+        "unclosed_carried_sh",
+        "carry",
+        "total",
+        "direct",
+        "end_pos",
+        "exposure",
+        "d_exposure",
+        "d_total"
+      ],
+      "total_delta": -243.01499318447395
+    },
+    {
+      "key": [
+        "20261025",
+        3776314,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "n_members_no_activity",
+        "market_reason",
+        "unclosed_carried_sh",
+        "carry",
+        "total",
+        "direct",
+        "end_pos",
+        "exposure",
+        "identity_dev",
+        "max_abs_pos",
+        "reading",
+        "reading_raw",
+        "d_exposure",
+        "d_total",
+        "exposure_larger"
+      ],
+      "total_delta": -582.008
+    },
+    {
+      "key": [
+        "20261026",
+        3789484,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "n_members_no_activity",
+        "market_reason",
+        "unclosed_carried_sh",
+        "carry",
+        "total",
+        "direct",
+        "end_pos",
+        "exposure",
+        "max_abs_pos",
+        "d_exposure",
+        "d_total"
+      ],
+      "total_delta": -89.27408823529413
+    },
+    {
+      "key": [
+        "20261027",
+        3899224,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "n_members_no_activity",
+        "market_reason",
+        "unclosed_carried_sh",
+        "carry",
+        "total",
+        "direct",
+        "end_pos",
+        "exposure",
+        "d_exposure",
+        "d_total"
+      ],
+      "total_delta": 63.670013921568625
+    }
+  ],
+  "corrected_top10_total_delta": 21.877014492007348,
+  "roles": [
+    {
+      "party": "ours",
+      "scope": "active",
+      "role_pair": "maker->maker",
+      "sh": 39698.28144177303,
+      "net": -753.8332823433515,
+      "fee": 0.0,
+      "c_net_sh": -1.8989065898205875,
+      "hold_p50_s": 6.402
+    },
+    {
+      "party": "ours",
+      "scope": "active",
+      "role_pair": "maker->taker",
+      "sh": 0.0,
+      "net": 0.0,
+      "fee": 0.0,
+      "c_net_sh": null,
+      "hold_p50_s": null
+    },
+    {
+      "party": "ours",
+      "scope": "active",
+      "role_pair": "taker->maker",
+      "sh": 0.0,
+      "net": 0.0,
+      "fee": 0.0,
+      "c_net_sh": null,
+      "hold_p50_s": null
+    },
+    {
+      "party": "ours",
+      "scope": "active",
+      "role_pair": "taker->taker",
+      "sh": 0.0,
+      "net": 0.0,
+      "fee": 0.0,
+      "c_net_sh": null,
+      "hold_p50_s": null
+    },
+    {
+      "party": "ours",
+      "scope": "active",
+      "role_pair": "all",
+      "sh": 39698.28144177303,
+      "net": -753.8332823433515,
+      "fee": 0.0,
+      "c_net_sh": -1.8989065898205875,
+      "hold_p50_s": 6.402
+    },
+    {
+      "party": "rank1",
+      "scope": "both_active",
+      "role_pair": "maker->maker",
+      "sh": 20316.07159683911,
+      "net": 911.8587249941249,
+      "fee": 0.0,
+      "c_net_sh": 4.488361446491442,
+      "hold_p50_s": 10.537
+    },
+    {
+      "party": "rank1",
+      "scope": "both_active",
+      "role_pair": "maker->taker",
+      "sh": 17394.104690168817,
+      "net": -395.65199070140284,
+      "fee": 109.37993154272716,
+      "c_net_sh": -2.2746326858951593,
+      "hold_p50_s": 9.11
+    },
+    {
+      "party": "rank1",
+      "scope": "both_active",
+      "role_pair": "taker->maker",
+      "sh": 10291.599112746042,
+      "net": 252.08407797276544,
+      "fee": 72.26578997700034,
+      "c_net_sh": 2.449416025742412,
+      "hold_p50_s": 10.717
+    },
+    {
+      "party": "rank1",
+      "scope": "both_active",
+      "role_pair": "taker->taker",
+      "sh": 10010.49567409959,
+      "net": -335.27574917743607,
+      "fee": 136.95928091266288,
+      "c_net_sh": -3.3492422362751086,
+      "hold_p50_s": 11.778
+    },
+    {
+      "party": "rank1",
+      "scope": "both_active",
+      "role_pair": "all",
+      "sh": 58012.27107385355,
+      "net": 433.0150630880512,
+      "fee": 318.6050024323904,
+      "c_net_sh": 0.746419774769365,
+      "hold_p50_s": 10.45
+    },
+    {
+      "party": "rank2",
+      "scope": "both_active",
+      "role_pair": "maker->maker",
+      "sh": 14927.74261784312,
+      "net": 664.6737353554848,
+      "fee": 0.0,
+      "c_net_sh": 4.452607151472459,
+      "hold_p50_s": 22.705
+    },
+    {
+      "party": "rank2",
+      "scope": "both_active",
+      "role_pair": "maker->taker",
+      "sh": 2139.2620779627223,
+      "net": -146.68093454092767,
+      "fee": 10.419881463369993,
+      "c_net_sh": -6.856613598302828,
+      "hold_p50_s": 31.075
+    },
+    {
+      "party": "rank2",
+      "scope": "both_active",
+      "role_pair": "taker->maker",
+      "sh": 2593.727150437849,
+      "net": -11.95082522343265,
+      "fee": 17.473277714157213,
+      "c_net_sh": -0.46075876644986435,
+      "hold_p50_s": 17.807
+    },
+    {
+      "party": "rank2",
+      "scope": "both_active",
+      "role_pair": "taker->taker",
+      "sh": 173.70903480080702,
+      "net": -29.864191428071187,
+      "fee": 1.9633623726901308,
+      "c_net_sh": -17.1920772355431,
+      "hold_p50_s": 13.351
+    },
+    {
+      "party": "rank2",
+      "scope": "both_active",
+      "role_pair": "all",
+      "sh": 19834.440881044502,
+      "net": 476.1777841630534,
+      "fee": 29.856521550217337,
+      "c_net_sh": 2.400762325587558,
+      "hold_p50_s": 21.884
+    },
+    {
+      "party": "rank3",
+      "scope": "both_active",
+      "role_pair": "maker->maker",
+      "sh": 23149.088354997555,
+      "net": 940.2542417100614,
+      "fee": 0.0,
+      "c_net_sh": 4.061733349024408,
+      "hold_p50_s": 13.525
+    },
+    {
+      "party": "rank3",
+      "scope": "both_active",
+      "role_pair": "maker->taker",
+      "sh": 1301.5420508182804,
+      "net": -101.130447431453,
+      "fee": 6.395250481356548,
+      "c_net_sh": -7.770048410489099,
+      "hold_p50_s": 36.007
+    },
+    {
+      "party": "rank3",
+      "scope": "both_active",
+      "role_pair": "taker->maker",
+      "sh": 857.3710442776436,
+      "net": 20.31165875232786,
+      "fee": 6.212558986690758,
+      "c_net_sh": 2.3690628331682153,
+      "hold_p50_s": 19.27
+    },
+    {
+      "party": "rank3",
+      "scope": "both_active",
+      "role_pair": "taker->taker",
+      "sh": 25.988088433589763,
+      "net": 0.06852071364833301,
+      "fee": 0.4319248941178978,
+      "c_net_sh": 0.26366199970202336,
+      "hold_p50_s": 5.453
+    },
+    {
+      "party": "rank3",
+      "scope": "both_active",
+      "role_pair": "all",
+      "sh": 25333.98953852707,
+      "net": 859.5039737445848,
+      "fee": 13.039734362165206,
+      "c_net_sh": 3.3926909634089824,
+      "hold_p50_s": 14.008
+    },
+    {
+      "party": "top3",
+      "scope": "both_active",
+      "role_pair": "maker->maker",
+      "sh": 58392.90256967978,
+      "net": 2516.7867020596714,
+      "fee": 0.0,
+      "c_net_sh": 4.310090081678009,
+      "hold_p50_s": 14.522
+    },
+    {
+      "party": "top3",
+      "scope": "both_active",
+      "role_pair": "maker->taker",
+      "sh": 20834.90881894982,
+      "net": -643.4633726737836,
+      "fee": 126.19506348745372,
+      "c_net_sh": -3.0883906345130683,
+      "hold_p50_s": 10.918
+    },
+    {
+      "party": "top3",
+      "scope": "both_active",
+      "role_pair": "taker->maker",
+      "sh": 13742.697307461536,
+      "net": 260.4449115016606,
+      "fee": 95.95162667784832,
+      "c_net_sh": 1.8951513351040135,
+      "hold_p50_s": 12.524
+    },
+    {
+      "party": "top3",
+      "scope": "both_active",
+      "role_pair": "taker->taker",
+      "sh": 10210.192797333986,
+      "net": -365.0714198918589,
+      "fee": 139.35456817947087,
+      "c_net_sh": -3.575558533891581,
+      "hold_p50_s": 11.784
+    },
+    {
+      "party": "top3",
+      "scope": "both_active",
+      "role_pair": "all",
+      "sh": 103180.70149342512,
+      "net": 1768.696820995689,
+      "fee": 361.5012583447729,
+      "c_net_sh": 1.7141740610363982,
+      "hold_p50_s": 13.063
+    },
+    {
+      "party": "top10",
+      "scope": "both_active",
+      "role_pair": "maker->maker",
+      "sh": 107186.97268528136,
+      "net": 2869.1246885091887,
+      "fee": 0.0,
+      "c_net_sh": 2.6767475716787077,
+      "hold_p50_s": 15.265
+    },
+    {
+      "party": "top10",
+      "scope": "both_active",
+      "role_pair": "maker->taker",
+      "sh": 23637.464473047294,
+      "net": -550.2676354072763,
+      "fee": 145.79553796178925,
+      "c_net_sh": -2.3279469590942,
+      "hold_p50_s": 11.86
+    },
+    {
+      "party": "top10",
+      "scope": "both_active",
+      "role_pair": "taker->maker",
+      "sh": 20348.813606039555,
+      "net": 464.4479416651739,
+      "fee": 140.94293859247836,
+      "c_net_sh": 2.282432532220577,
+      "hold_p50_s": 14.48
+    },
+    {
+      "party": "top10",
+      "scope": "both_active",
+      "role_pair": "taker->taker",
+      "sh": 11997.713946084681,
+      "net": -308.4277933249107,
+      "fee": 163.4817689484546,
+      "c_net_sh": -2.570721345007251,
+      "hold_p50_s": 12.244
+    },
+    {
+      "party": "top10",
+      "scope": "both_active",
+      "role_pair": "all",
+      "sh": 163170.96471045288,
+      "net": 2474.877201442176,
+      "fee": 450.22024550272215,
+      "c_net_sh": 1.5167387199271938,
+      "hold_p50_s": 14.204
+    }
+  ],
+  "independent": {
+    "rows_checked": 208,
+    "max_abs_deviation": 7.275957614183426e-12
+  },
+  "ledger_before_this_review_h": 1.708,
+  "line_before_this_review_h": 5.0187,
+  "this_review_charge_h": 0.01,
+  "queued_packet_cap_including_its_review_h": 0.035,
+  "task_after_both_h": 1.753,
+  "line_after_both_h": 5.0637
+}

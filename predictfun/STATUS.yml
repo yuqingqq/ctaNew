@@ -1,4 +1,22 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+matched_gap_review_20261123_codex:
+  target: 55625bfa6ce8cf44002c9cc23b8f4b2d79a82700
+  report: predictfun/reviews/automatic/20261123_matched_gap_review/report.md
+  status: accepted_descriptive_under_declared_clocks_and_costs
+  new_result_blockers: 0
+  nonblocking_interpretation_items: 2
+  independent_fifo_active_rows: 208
+  pinned_selftest_passed: 393
+  csv_reproduction: byte_exact
+  inactive_member_carry_fix: closed
+  inventory_policy_causality: unmeasured
+  latent_receipt_before_uuid_case: open_before_reuse
+  next_priority: existing_bounded_maker_order_estimator_and_economic_logic_packet
+  next_packet_all_in_core_hours_cap: 0.035
+  next_packet_max_cases: 96
+  review_charge_core_hours: 0.010
+  additional_user_decision_within_existing_limits: false
+
 maker_order_estimator_20261123_user:
   plan: predictfun/reviews/automatic/20261123_maker_order_estimator/plan.md
   status: user_requested_estimation_deliverable_no_measurement

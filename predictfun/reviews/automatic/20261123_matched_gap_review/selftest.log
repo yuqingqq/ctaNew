@@ -1,0 +1,9 @@
+{
+ "result": "PASS",
+ "checks": 393,
+ "failed": 0,
+ "failures": [],
+ "cpu_s": 1.01,
+ "vmhwm_mib": 128.4609375
+}
+2026-11-23T08:03:44Z tag=codex_gap_pinned_selftest rc=0 peak_rss_mib=128 wall_s=1.42 cpu_user_s=1.25 memavail_start_gib=22 disk_free_gib=434->434 slot=codex

@@ -1,0 +1,5091 @@
+{
+  "target": "55625bfa6ce8cf44002c9cc23b8f4b2d79a82700",
+  "output_reproduction": {
+    "per_market": {
+      "rows": 228,
+      "byte_equal": true
+    },
+    "closes_by_role": {
+      "rows": 480,
+      "byte_equal": true
+    }
+  },
+  "inputs_sources_answer_equal": true,
+  "independent_fifo": {
+    "rows_checked": 208,
+    "max_abs_deviation": 7.275957614183426e-12
+  },
+  "clock_boundary": [
+    {
+      "day": "20261024",
+      "m": 3697902,
+      "n_ok": 713,
+      "at_start": 0,
+      "at_end": 0,
+      "lo_hi_straddle_start": 0,
+      "lo_hi_straddle_end": 0,
+      "n_no_earlier_anchor": 8,
+      "ours_engine_plus50_after_end": 0,
+      "near_end_50ms": 0,
+      "near_end_100ms": 0,
+      "near_end_2000ms": 0
+    },
+    {
+      "day": "20261024",
+      "m": 3699278,
+      "n_ok": 1090,
+      "at_start": 0,
+      "at_end": 0,
+      "lo_hi_straddle_start": 0,
+      "lo_hi_straddle_end": 0,
+      "n_no_earlier_anchor": 6,
+      "ours_engine_plus50_after_end": 0,
+      "near_end_50ms": 0,
+      "near_end_100ms": 0,
+      "near_end_2000ms": 0
+    },
+    {
+      "day": "20261024",
+      "m": 3700070,
+      "n_ok": 1021,
+      "at_start": 0,
+      "at_end": 0,
+      "lo_hi_straddle_start": 0,
+      "lo_hi_straddle_end": 0,
+      "n_no_earlier_anchor": 2,
+      "ours_engine_plus50_after_end": 0,
+      "near_end_50ms": 0,
+      "near_end_100ms": 1,
+      "near_end_2000ms": 1
+    },
+    {
+      "day": "20261024",
+      "m": 3702960,
+      "n_ok": 620,
+      "at_start": 0,
+      "at_end": 0,
+      "lo_hi_straddle_start": 2,
+      "lo_hi_straddle_end": 0,
+      "n_no_earlier_anchor": 6,
+      "ours_engine_plus50_after_end": 0,
+      "near_end_50ms": 0,
+      "near_end_100ms": 0,
+      "near_end_2000ms": 0
+    },
+    {
+      "day": "20261024",
+      "m": 3704004,
+      "n_ok": 1222,
+      "at_start": 0,
+      "at_end": 0,
+      "lo_hi_straddle_start": 0,
+      "lo_hi_straddle_end": 0,
+      "n_no_earlier_anchor": 10,
+      "ours_engine_plus50_after_end": 0,
+      "near_end_50ms": 0,
+      "near_end_100ms": 0,
+      "near_end_2000ms": 0
+    },
+    {
+      "day": "20261024",
+      "m": 3712725,
+      "n_ok": 1410,
+      "at_start": 0,
+      "at_end": 0,
+      "lo_hi_straddle_start": 0,
+      "lo_hi_straddle_end": 0,
+      "n_no_earlier_anchor": 7,
+      "ours_engine_plus50_after_end": 0,
+      "near_end_50ms": 0,
+      "near_end_100ms": 0,
+      "near_end_2000ms": 1
+    },
+    {
+      "day": "20261024",
+      "m": 3716727,
+      "n_ok": 967,
+      "at_start": 0,
+      "at_end": 0,
+      "lo_hi_straddle_start": 0,
+      "lo_hi_straddle_end": 0,
+      "n_no_earlier_anchor": 3,
+      "ours_engine_plus50_after_end": 0,
+      "near_end_50ms": 0,
+      "near_end_100ms": 0,
+      "near_end_2000ms": 0
+    },
+    {
+      "day": "20261025",
+      "m": 3723774,
+      "n_ok": 904,
+      "at_start": 0,
+      "at_end": 0,
+      "lo_hi_straddle_start": 0,
+      "lo_hi_straddle_end": 5,
+      "n_no_earlier_anchor": 4,
+      "ours_engine_plus50_after_end": 0,
+      "near_end_50ms": 0,
+      "near_end_100ms": 0,
+      "near_end_2000ms": 5
+    },
+    {
+      "day": "20261025",
+      "m": 3734864,
+      "n_ok": 1058,
+      "at_start": 0,
+      "at_end": 0,
+      "lo_hi_straddle_start": 0,
+      "lo_hi_straddle_end": 0,
+      "n_no_earlier_anchor": 11,
+      "ours_engine_plus50_after_end": 0,
+      "near_end_50ms": 0,
+      "near_end_100ms": 0,
+      "near_end_2000ms": 0
+    },
+    {
+      "day": "20261025",
+      "m": 3737919,
+      "n_ok": 765,
+      "at_start": 0,
+      "at_end": 0,
+      "lo_hi_straddle_start": 0,
+      "lo_hi_straddle_end": 0,
+      "n_no_earlier_anchor": 6,
+      "ours_engine_plus50_after_end": 0,
+      "near_end_50ms": 0,
+      "near_end_100ms": 0,
+      "near_end_2000ms": 0
+    },
+    {
+      "day": "20261025",
+      "m": 3763401,
+      "n_ok": 1038,
+      "at_start": 0,
+      "at_end": 0,
+      "lo_hi_straddle_start": 1,
+      "lo_hi_straddle_end": 3,
+      "n_no_earlier_anchor": 4,
+      "ours_engine_plus50_after_end": 0,
+      "near_end_50ms": 0,
+      "near_end_100ms": 0,
+      "near_end_2000ms": 23
+    },
+    {
+      "day": "20261025",
+      "m": 3776314,
+      "n_ok": 650,
+      "at_start": 0,
+      "at_end": 0,
+      "lo_hi_straddle_start": 2,
+      "lo_hi_straddle_end": 0,
+      "n_no_earlier_anchor": 4,
+      "ours_engine_plus50_after_end": 0,
+      "near_end_50ms": 0,
+      "near_end_100ms": 0,
+      "near_end_2000ms": 0
+    },
+    {
+      "day": "20261026",
+      "m": 3789484,
+      "n_ok": 1027,
+      "at_start": 0,
+      "at_end": 0,
+      "lo_hi_straddle_start": 16,
+      "lo_hi_straddle_end": 0,
+      "n_no_earlier_anchor": 4,
+      "ours_engine_plus50_after_end": 0,
+      "near_end_50ms": 0,
+      "near_end_100ms": 0,
+      "near_end_2000ms": 0
+    },
+    {
+      "day": "20261026",
+      "m": 3803131,
+      "n_ok": 795,
+      "at_start": 0,
+      "at_end": 0,
+      "lo_hi_straddle_start": 2,
+      "lo_hi_straddle_end": 0,
+      "n_no_earlier_anchor": 0,
+      "ours_engine_plus50_after_end": 0,
+      "near_end_50ms": 0,
+      "near_end_100ms": 0,
+      "near_end_2000ms": 0
+    },
+    {
+      "day": "20261026",
+      "m": 3804696,
+      "n_ok": 1085,
+      "at_start": 0,
+      "at_end": 0,
+      "lo_hi_straddle_start": 10,
+      "lo_hi_straddle_end": 1,
+      "n_no_earlier_anchor": 0,
+      "ours_engine_plus50_after_end": 0,
+      "near_end_50ms": 0,
+      "near_end_100ms": 0,
+      "near_end_2000ms": 2
+    },
+    {
+      "day": "20261026",
+      "m": 3838531,
+      "n_ok": 1709,
+      "at_start": 0,
+      "at_end": 0,
+      "lo_hi_straddle_start": 17,
+      "lo_hi_straddle_end": 0,
+      "n_no_earlier_anchor": 0,
+      "ours_engine_plus50_after_end": 0,
+      "near_end_50ms": 0,
+      "near_end_100ms": 0,
+      "near_end_2000ms": 2
+    },
+    {
+      "day": "20261026",
+      "m": 3850428,
+      "n_ok": 1279,
+      "at_start": 0,
+      "at_end": 0,
+      "lo_hi_straddle_start": 10,
+      "lo_hi_straddle_end": 0,
+      "n_no_earlier_anchor": 0,
+      "ours_engine_plus50_after_end": 0,
+      "near_end_50ms": 0,
+      "near_end_100ms": 0,
+      "near_end_2000ms": 0
+    },
+    {
+      "day": "20261027",
+      "m": 3877472,
+      "n_ok": 2001,
+      "at_start": 0,
+      "at_end": 0,
+      "lo_hi_straddle_start": 2,
+      "lo_hi_straddle_end": 11,
+      "n_no_earlier_anchor": 10,
+      "ours_engine_plus50_after_end": 0,
+      "near_end_50ms": 0,
+      "near_end_100ms": 0,
+      "near_end_2000ms": 11
+    },
+    {
+      "day": "20261027",
+      "m": 3899224,
+      "n_ok": 1578,
+      "at_start": 0,
+      "at_end": 0,
+      "lo_hi_straddle_start": 7,
+      "lo_hi_straddle_end": 0,
+      "n_no_earlier_anchor": 7,
+      "ours_engine_plus50_after_end": 0,
+      "near_end_50ms": 0,
+      "near_end_100ms": 0,
+      "near_end_2000ms": 0
+    }
+  ],
+  "fee_token_END_minus_fill_price_USD": {
+    "rank1": -0.966390176064273,
+    "rank2": 1.512444955863757,
+    "rank3": 0.037950910517935865,
+    "top3": 0.5840056903174142,
+    "top10": 2.3877861774247444
+  },
+  "roles": [
+    {
+      "party": "ours",
+      "view": "carry",
+      "scope": "active",
+      "entry_kind": "all",
+      "role_pair": "maker->maker",
+      "n_markets": 19,
+      "n_closes": 7889,
+      "n_dust": 1,
+      "sh": 39698.28144177303,
+      "pnl": -753.8332823433515,
+      "fee": 0.0,
+      "net": -753.8332823433515,
+      "c_gross_sh": -1.8989065898205875,
+      "c_net_sh": -1.8989065898205875,
+      "hold_p10_s": 1.015,
+      "hold_p25_s": 2.5,
+      "hold_p50_s": 6.402,
+      "hold_p75_s": 13.0,
+      "hold_p90_s": 22.351,
+      "hold_mean_s": 9.712640658971711,
+      "hold_med_count_s": 6.547
+    },
+    {
+      "party": "ours",
+      "view": "carry",
+      "scope": "active",
+      "entry_kind": "all",
+      "role_pair": "maker->taker",
+      "n_markets": 19,
+      "n_closes": 0,
+      "n_dust": 0,
+      "sh": 0.0,
+      "pnl": 0.0,
+      "fee": 0.0,
+      "net": 0.0,
+      "c_gross_sh": null,
+      "c_net_sh": null,
+      "hold_p10_s": null,
+      "hold_p25_s": null,
+      "hold_p50_s": null,
+      "hold_p75_s": null,
+      "hold_p90_s": null,
+      "hold_mean_s": null,
+      "hold_med_count_s": null
+    },
+    {
+      "party": "ours",
+      "view": "carry",
+      "scope": "active",
+      "entry_kind": "all",
+      "role_pair": "taker->maker",
+      "n_markets": 19,
+      "n_closes": 0,
+      "n_dust": 0,
+      "sh": 0.0,
+      "pnl": 0.0,
+      "fee": 0.0,
+      "net": 0.0,
+      "c_gross_sh": null,
+      "c_net_sh": null,
+      "hold_p10_s": null,
+      "hold_p25_s": null,
+      "hold_p50_s": null,
+      "hold_p75_s": null,
+      "hold_p90_s": null,
+      "hold_mean_s": null,
+      "hold_med_count_s": null
+    },
+    {
+      "party": "ours",
+      "view": "carry",
+      "scope": "active",
+      "entry_kind": "all",
+      "role_pair": "taker->taker",
+      "n_markets": 19,
+      "n_closes": 0,
+      "n_dust": 0,
+      "sh": 0.0,
+      "pnl": 0.0,
+      "fee": 0.0,
+      "net": 0.0,
+      "c_gross_sh": null,
+      "c_net_sh": null,
+      "hold_p10_s": null,
+      "hold_p25_s": null,
+      "hold_p50_s": null,
+      "hold_p75_s": null,
+      "hold_p90_s": null,
+      "hold_mean_s": null,
+      "hold_med_count_s": null
+    },
+    {
+      "party": "ours",
+      "view": "carry",
+      "scope": "active",
+      "entry_kind": "all",
+      "role_pair": "all",
+      "n_markets": 19,
+      "n_closes": 7889,
+      "n_dust": 1,
+      "sh": 39698.28144177303,
+      "pnl": -753.8332823433515,
+      "fee": 0.0,
+      "net": -753.8332823433515,
+      "c_gross_sh": -1.8989065898205875,
+      "c_net_sh": -1.8989065898205875,
+      "hold_p10_s": 1.015,
+      "hold_p25_s": 2.5,
+      "hold_p50_s": 6.402,
+      "hold_p75_s": 13.0,
+      "hold_p90_s": 22.351,
+      "hold_mean_s": 9.712640658971711,
+      "hold_med_count_s": 6.547
+    },
+    {
+      "party": "ours",
+      "view": "carry",
+      "scope": "both_active_rank1",
+      "entry_kind": "all",
+      "role_pair": "maker->maker",
+      "n_markets": 19,
+      "n_closes": 7889,
+      "n_dust": 1,
+      "sh": 39698.28144177303,
+      "pnl": -753.8332823433515,
+      "fee": 0.0,
+      "net": -753.8332823433515,
+      "c_gross_sh": -1.8989065898205875,
+      "c_net_sh": -1.8989065898205875,
+      "hold_p10_s": 1.015,
+      "hold_p25_s": 2.5,
+      "hold_p50_s": 6.402,
+      "hold_p75_s": 13.0,
+      "hold_p90_s": 22.351,
+      "hold_mean_s": 9.712640658971711,
+      "hold_med_count_s": 6.547
+    },
+    {
+      "party": "ours",
+      "view": "carry",
+      "scope": "both_active_rank1",
+      "entry_kind": "all",
+      "role_pair": "maker->taker",
+      "n_markets": 19,
+      "n_closes": 0,
+      "n_dust": 0,
+      "sh": 0.0,
+      "pnl": 0.0,
+      "fee": 0.0,
+      "net": 0.0,
+      "c_gross_sh": null,
+      "c_net_sh": null,
+      "hold_p10_s": null,
+      "hold_p25_s": null,
+      "hold_p50_s": null,
+      "hold_p75_s": null,
+      "hold_p90_s": null,
+      "hold_mean_s": null,
+      "hold_med_count_s": null
+    },
+    {
+      "party": "ours",
+      "view": "carry",
+      "scope": "both_active_rank1",
+      "entry_kind": "all",
+      "role_pair": "taker->maker",
+      "n_markets": 19,
+      "n_closes": 0,
+      "n_dust": 0,
+      "sh": 0.0,
+      "pnl": 0.0,
+      "fee": 0.0,
+      "net": 0.0,
+      "c_gross_sh": null,
+      "c_net_sh": null,
+      "hold_p10_s": null,
+      "hold_p25_s": null,
+      "hold_p50_s": null,
+      "hold_p75_s": null,
+      "hold_p90_s": null,
+      "hold_mean_s": null,
+      "hold_med_count_s": null
+    },
+    {
+      "party": "ours",
+      "view": "carry",
+      "scope": "both_active_rank1",
+      "entry_kind": "all",
+      "role_pair": "taker->taker",
+      "n_markets": 19,
+      "n_closes": 0,
+      "n_dust": 0,
+      "sh": 0.0,
+      "pnl": 0.0,
+      "fee": 0.0,
+      "net": 0.0,
+      "c_gross_sh": null,
+      "c_net_sh": null,
+      "hold_p10_s": null,
+      "hold_p25_s": null,
+      "hold_p50_s": null,
+      "hold_p75_s": null,
+      "hold_p90_s": null,
+      "hold_mean_s": null,
+      "hold_med_count_s": null
+    },
+    {
+      "party": "ours",
+      "view": "carry",
+      "scope": "both_active_rank1",
+      "entry_kind": "all",
+      "role_pair": "all",
+      "n_markets": 19,
+      "n_closes": 7889,
+      "n_dust": 1,
+      "sh": 39698.28144177303,
+      "pnl": -753.8332823433515,
+      "fee": 0.0,
+      "net": -753.8332823433515,
+      "c_gross_sh": -1.8989065898205875,
+      "c_net_sh": -1.8989065898205875,
+      "hold_p10_s": 1.015,
+      "hold_p25_s": 2.5,
+      "hold_p50_s": 6.402,
+      "hold_p75_s": 13.0,
+      "hold_p90_s": 22.351,
+      "hold_mean_s": 9.712640658971711,
+      "hold_med_count_s": 6.547
+    },
+    {
+      "party": "ours",
+      "view": "carry",
+      "scope": "both_active_rank2",
+      "entry_kind": "all",
+      "role_pair": "maker->maker",
+      "n_markets": 11,
+      "n_closes": 4210,
+      "n_dust": 0,
+      "sh": 22040.72121800745,
+      "pnl": -459.4513180544517,
+      "fee": 0.0,
+      "net": -459.4513180544517,
+      "c_gross_sh": -2.084556641817493,
+      "c_net_sh": -2.084556641817493,
+      "hold_p10_s": 1.144,
+      "hold_p25_s": 2.706,
+      "hold_p50_s": 6.557,
+      "hold_p75_s": 13.095,
+      "hold_p90_s": 21.242,
+      "hold_mean_s": 9.720621232279818,
+      "hold_med_count_s": 6.834
+    },
+    {
+      "party": "ours",
+      "view": "carry",
+      "scope": "both_active_rank2",
+      "entry_kind": "all",
+      "role_pair": "maker->taker",
+      "n_markets": 11,
+      "n_closes": 0,
+      "n_dust": 0,
+      "sh": 0.0,
+      "pnl": 0.0,
+      "fee": 0.0,
+      "net": 0.0,
+      "c_gross_sh": null,
+      "c_net_sh": null,
+      "hold_p10_s": null,
+      "hold_p25_s": null,
+      "hold_p50_s": null,
+      "hold_p75_s": null,
+      "hold_p90_s": null,
+      "hold_mean_s": null,
+      "hold_med_count_s": null
+    },
+    {
+      "party": "ours",
+      "view": "carry",
+      "scope": "both_active_rank2",
+      "entry_kind": "all",
+      "role_pair": "taker->maker",
+      "n_markets": 11,
+      "n_closes": 0,
+      "n_dust": 0,
+      "sh": 0.0,
+      "pnl": 0.0,
+      "fee": 0.0,
+      "net": 0.0,
+      "c_gross_sh": null,
+      "c_net_sh": null,
+      "hold_p10_s": null,
+      "hold_p25_s": null,
+      "hold_p50_s": null,
+      "hold_p75_s": null,
+      "hold_p90_s": null,
+      "hold_mean_s": null,
+      "hold_med_count_s": null
+    },
+    {
+      "party": "ours",
+      "view": "carry",
+      "scope": "both_active_rank2",
+      "entry_kind": "all",
+      "role_pair": "taker->taker",
+      "n_markets": 11,
+      "n_closes": 0,
+      "n_dust": 0,
+      "sh": 0.0,
+      "pnl": 0.0,
+      "fee": 0.0,
+      "net": 0.0,
+      "c_gross_sh": null,
+      "c_net_sh": null,
+      "hold_p10_s": null,
+      "hold_p25_s": null,
+      "hold_p50_s": null,
+      "hold_p75_s": null,
+      "hold_p90_s": null,
+      "hold_mean_s": null,
+      "hold_med_count_s": null
+    },
+    {
+      "party": "ours",
+      "view": "carry",
+      "scope": "both_active_rank2",
+      "entry_kind": "all",
+      "role_pair": "all",
+      "n_markets": 11,
+      "n_closes": 4210,
+      "n_dust": 0,
+      "sh": 22040.72121800745,
+      "pnl": -459.4513180544517,
+      "fee": 0.0,
+      "net": -459.4513180544517,
+      "c_gross_sh": -2.084556641817493,
+      "c_net_sh": -2.084556641817493,
+      "hold_p10_s": 1.144,
+      "hold_p25_s": 2.706,
+      "hold_p50_s": 6.557,
+      "hold_p75_s": 13.095,
+      "hold_p90_s": 21.242,
+      "hold_mean_s": 9.720621232279818,
+      "hold_med_count_s": 6.834
+    },
+    {
+      "party": "ours",
+      "view": "carry",
+      "scope": "both_active_rank3",
+      "entry_kind": "all",
+      "role_pair": "maker->maker",
+      "n_markets": 17,
+      "n_closes": 7283,
+      "n_dust": 1,
+      "sh": 36887.14837576717,
+      "pnl": -657.0115079844778,
+      "fee": 0.0,
+      "net": -657.0115079844778,
+      "c_gross_sh": -1.781139331486243,
+      "c_net_sh": -1.781139331486243,
+      "hold_p10_s": 0.961,
+      "hold_p25_s": 2.363,
+      "hold_p50_s": 6.301,
+      "hold_p75_s": 12.663,
+      "hold_p90_s": 22.858,
+      "hold_mean_s": 9.586642925354562,
+      "hold_med_count_s": 6.451
+    },
+    {
+      "party": "ours",
+      "view": "carry",
+      "scope": "both_active_rank3",
+      "entry_kind": "all",
+      "role_pair": "maker->taker",
+      "n_markets": 17,
+      "n_closes": 0,
+      "n_dust": 0,
+      "sh": 0.0,
+      "pnl": 0.0,
+      "fee": 0.0,
+      "net": 0.0,
+      "c_gross_sh": null,
+      "c_net_sh": null,
+      "hold_p10_s": null,
+      "hold_p25_s": null,
+      "hold_p50_s": null,
+      "hold_p75_s": null,
+      "hold_p90_s": null,
+      "hold_mean_s": null,
+      "hold_med_count_s": null
+    },
+    {
+      "party": "ours",
+      "view": "carry",
+      "scope": "both_active_rank3",
+      "entry_kind": "all",
+      "role_pair": "taker->maker",
+      "n_markets": 17,
+      "n_closes": 0,
+      "n_dust": 0,
+      "sh": 0.0,
+      "pnl": 0.0,
+      "fee": 0.0,
+      "net": 0.0,
+      "c_gross_sh": null,
+      "c_net_sh": null,
+      "hold_p10_s": null,
+      "hold_p25_s": null,
+      "hold_p50_s": null,
+      "hold_p75_s": null,
+      "hold_p90_s": null,
+      "hold_mean_s": null,
+      "hold_med_count_s": null
+    },
+    {
+      "party": "ours",
+      "view": "carry",
+      "scope": "both_active_rank3",
+      "entry_kind": "all",
+      "role_pair": "taker->taker",
+      "n_markets": 17,
+      "n_closes": 0,
+      "n_dust": 0,
+      "sh": 0.0,
+      "pnl": 0.0,
+      "fee": 0.0,
+      "net": 0.0,
+      "c_gross_sh": null,
+      "c_net_sh": null,
+      "hold_p10_s": null,
+      "hold_p25_s": null,
+      "hold_p50_s": null,
+      "hold_p75_s": null,
+      "hold_p90_s": null,
+      "hold_mean_s": null,
+      "hold_med_count_s": null
+    },
+    {
+      "party": "ours",
+      "view": "carry",
+      "scope": "both_active_rank3",
+      "entry_kind": "all",
+      "role_pair": "all",
+      "n_markets": 17,
+      "n_closes": 7283,
+      "n_dust": 1,
+      "sh": 36887.14837576717,
+      "pnl": -657.0115079844778,
+      "fee": 0.0,
+      "net": -657.0115079844778,
+      "c_gross_sh": -1.781139331486243,
+      "c_net_sh": -1.781139331486243,
+      "hold_p10_s": 0.961,
+      "hold_p25_s": 2.363,
+      "hold_p50_s": 6.301,
+      "hold_p75_s": 12.663,
+      "hold_p90_s": 22.858,
+      "hold_mean_s": 9.586642925354562,
+      "hold_med_count_s": 6.451
+    },
+    {
+      "party": "ours",
+      "view": "carry",
+      "scope": "both_active_top3",
+      "entry_kind": "all",
+      "role_pair": "maker->maker",
+      "n_markets": 19,
+      "n_closes": 7889,
+      "n_dust": 1,
+      "sh": 39698.28144177303,
+      "pnl": -753.8332823433515,
+      "fee": 0.0,
+      "net": -753.8332823433515,
+      "c_gross_sh": -1.8989065898205875,
+      "c_net_sh": -1.8989065898205875,
+      "hold_p10_s": 1.015,
+      "hold_p25_s": 2.5,
+      "hold_p50_s": 6.402,
+      "hold_p75_s": 13.0,
+      "hold_p90_s": 22.351,
+      "hold_mean_s": 9.712640658971711,
+      "hold_med_count_s": 6.547
+    },
+    {
+      "party": "ours",
+      "view": "carry",
+      "scope": "both_active_top3",
+      "entry_kind": "all",
+      "role_pair": "maker->taker",
+      "n_markets": 19,
+      "n_closes": 0,
+      "n_dust": 0,
+      "sh": 0.0,
+      "pnl": 0.0,
+      "fee": 0.0,
+      "net": 0.0,
+      "c_gross_sh": null,
+      "c_net_sh": null,
+      "hold_p10_s": null,
+      "hold_p25_s": null,
+      "hold_p50_s": null,
+      "hold_p75_s": null,
+      "hold_p90_s": null,
+      "hold_mean_s": null,
+      "hold_med_count_s": null
+    },
+    {
+      "party": "ours",
+      "view": "carry",
+      "scope": "both_active_top3",
+      "entry_kind": "all",
+      "role_pair": "taker->maker",
+      "n_markets": 19,
+      "n_closes": 0,
+      "n_dust": 0,
+      "sh": 0.0,
+      "pnl": 0.0,
+      "fee": 0.0,
+      "net": 0.0,
+      "c_gross_sh": null,
+      "c_net_sh": null,
+      "hold_p10_s": null,
+      "hold_p25_s": null,
+      "hold_p50_s": null,
+      "hold_p75_s": null,
+      "hold_p90_s": null,
+      "hold_mean_s": null,
+      "hold_med_count_s": null
+    },
+    {
+      "party": "ours",
+      "view": "carry",
+      "scope": "both_active_top3",
+      "entry_kind": "all",
+      "role_pair": "taker->taker",
+      "n_markets": 19,
+      "n_closes": 0,
+      "n_dust": 0,
+      "sh": 0.0,
+      "pnl": 0.0,
+      "fee": 0.0,
+      "net": 0.0,
+      "c_gross_sh": null,
+      "c_net_sh": null,
+      "hold_p10_s": null,
+      "hold_p25_s": null,
+      "hold_p50_s": null,
+      "hold_p75_s": null,
+      "hold_p90_s": null,
+      "hold_mean_s": null,
+      "hold_med_count_s": null
+    },
+    {
+      "party": "ours",
+      "view": "carry",
+      "scope": "both_active_top3",
+      "entry_kind": "all",
+      "role_pair": "all",
+      "n_markets": 19,
+      "n_closes": 7889,
+      "n_dust": 1,
+      "sh": 39698.28144177303,
+      "pnl": -753.8332823433515,
+      "fee": 0.0,
+      "net": -753.8332823433515,
+      "c_gross_sh": -1.8989065898205875,
+      "c_net_sh": -1.8989065898205875,
+      "hold_p10_s": 1.015,
+      "hold_p25_s": 2.5,
+      "hold_p50_s": 6.402,
+      "hold_p75_s": 13.0,
+      "hold_p90_s": 22.351,
+      "hold_mean_s": 9.712640658971711,
+      "hold_med_count_s": 6.547
+    },
+    {
+      "party": "ours",
+      "view": "carry",
+      "scope": "both_active_top10",
+      "entry_kind": "all",
+      "role_pair": "maker->maker",
+      "n_markets": 19,
+      "n_closes": 7889,
+      "n_dust": 1,
+      "sh": 39698.28144177303,
+      "pnl": -753.8332823433515,
+      "fee": 0.0,
+      "net": -753.8332823433515,
+      "c_gross_sh": -1.8989065898205875,
+      "c_net_sh": -1.8989065898205875,
+      "hold_p10_s": 1.015,
+      "hold_p25_s": 2.5,
+      "hold_p50_s": 6.402,
+      "hold_p75_s": 13.0,
+      "hold_p90_s": 22.351,
+      "hold_mean_s": 9.712640658971711,
+      "hold_med_count_s": 6.547
+    },
+    {
+      "party": "ours",
+      "view": "carry",
+      "scope": "both_active_top10",
+      "entry_kind": "all",
+      "role_pair": "maker->taker",
+      "n_markets": 19,
+      "n_closes": 0,
+      "n_dust": 0,
+      "sh": 0.0,
+      "pnl": 0.0,
+      "fee": 0.0,
+      "net": 0.0,
+      "c_gross_sh": null,
+      "c_net_sh": null,
+      "hold_p10_s": null,
+      "hold_p25_s": null,
+      "hold_p50_s": null,
+      "hold_p75_s": null,
+      "hold_p90_s": null,
+      "hold_mean_s": null,
+      "hold_med_count_s": null
+    },
+    {
+      "party": "ours",
+      "view": "carry",
+      "scope": "both_active_top10",
+      "entry_kind": "all",
+      "role_pair": "taker->maker",
+      "n_markets": 19,
+      "n_closes": 0,
+      "n_dust": 0,
+      "sh": 0.0,
+      "pnl": 0.0,
+      "fee": 0.0,
+      "net": 0.0,
+      "c_gross_sh": null,
+      "c_net_sh": null,
+      "hold_p10_s": null,
+      "hold_p25_s": null,
+      "hold_p50_s": null,
+      "hold_p75_s": null,
+      "hold_p90_s": null,
+      "hold_mean_s": null,
+      "hold_med_count_s": null
+    },
+    {
+      "party": "ours",
+      "view": "carry",
+      "scope": "both_active_top10",
+      "entry_kind": "all",
+      "role_pair": "taker->taker",
+      "n_markets": 19,
+      "n_closes": 0,
+      "n_dust": 0,
+      "sh": 0.0,
+      "pnl": 0.0,
+      "fee": 0.0,
+      "net": 0.0,
+      "c_gross_sh": null,
+      "c_net_sh": null,
+      "hold_p10_s": null,
+      "hold_p25_s": null,
+      "hold_p50_s": null,
+      "hold_p75_s": null,
+      "hold_p90_s": null,
+      "hold_mean_s": null,
+      "hold_med_count_s": null
+    },
+    {
+      "party": "ours",
+      "view": "carry",
+      "scope": "both_active_top10",
+      "entry_kind": "all",
+      "role_pair": "all",
+      "n_markets": 19,
+      "n_closes": 7889,
+      "n_dust": 1,
+      "sh": 39698.28144177303,
+      "pnl": -753.8332823433515,
+      "fee": 0.0,
+      "net": -753.8332823433515,
+      "c_gross_sh": -1.8989065898205875,
+      "c_net_sh": -1.8989065898205875,
+      "hold_p10_s": 1.015,
+      "hold_p25_s": 2.5,
+      "hold_p50_s": 6.402,
+      "hold_p75_s": 13.0,
+      "hold_p90_s": 22.351,
+      "hold_mean_s": 9.712640658971711,
+      "hold_med_count_s": 6.547
+    },
+    {
+      "party": "rank1",
+      "view": "carry",
+      "scope": "active",
+      "entry_kind": "all",
+      "role_pair": "maker->maker",
+      "n_markets": 19,
+      "n_closes": 2309,
+      "n_dust": 0,
+      "sh": 20316.07159683911,
+      "pnl": 911.8587249941249,
+      "fee": 0.0,
+      "net": 911.8587249941249,
+      "c_gross_sh": 4.488361446491442,
+      "c_net_sh": 4.488361446491442,
+      "hold_p10_s": 1.461,
+      "hold_p25_s": 3.661,
+      "hold_p50_s": 10.537,
+      "hold_p75_s": 23.693,
+      "hold_p90_s": 39.327,
+      "hold_mean_s": 17.2544406396943,
+      "hold_med_count_s": 10.538
+    },
+    {
+      "party": "rank1",
+      "view": "carry",
+      "scope": "active",
+      "entry_kind": "all",
+      "role_pair": "maker->taker",
+      "n_markets": 19,
+      "n_closes": 2337,
+      "n_dust": 0,
+      "sh": 17394.104690168817,
+      "pnl": -286.2720591586757,
+      "fee": 109.37993154272716,
+      "net": -395.65199070140284,
+      "c_gross_sh": -1.6457993340725219,
+      "c_net_sh": -2.2746326858951593,
+      "hold_p10_s": 1.548,
+      "hold_p25_s": 3.442,
+      "hold_p50_s": 9.11,
+      "hold_p75_s": 20.916,
+      "hold_p90_s": 42.957,
+      "hold_mean_s": 16.598780152793747,
+      "hold_med_count_s": 8.84
+    },
+    {
+      "party": "rank1",
+      "view": "carry",
+      "scope": "active",
+      "entry_kind": "all",
+      "role_pair": "taker->maker",
+      "n_markets": 19,
+      "n_closes": 1387,
+      "n_dust": 0,
+      "sh": 10291.599112746042,
+      "pnl": 324.3498679497658,
+      "fee": 72.26578997700034,
+      "net": 252.08407797276544,
+      "c_gross_sh": 3.1515983512033787,
+      "c_net_sh": 2.449416025742412,
+      "hold_p10_s": 1.346,
+      "hold_p25_s": 4.363,
+      "hold_p50_s": 10.717,
+      "hold_p75_s": 25.495,
+      "hold_p90_s": 45.045,
+      "hold_mean_s": 18.301575362142724,
+      "hold_med_count_s": 10.519
+    },
+    {
+      "party": "rank1",
+      "view": "carry",
+      "scope": "active",
+      "entry_kind": "all",
+      "role_pair": "taker->taker",
+      "n_markets": 19,
+      "n_closes": 1432,
+      "n_dust": 0,
+      "sh": 10010.49567409959,
+      "pnl": -198.31646826477322,
+      "fee": 136.95928091266288,
+      "net": -335.27574917743607,
+      "c_gross_sh": -1.9810853999755722,
+      "c_net_sh": -3.3492422362751086,
+      "hold_p10_s": 1.226,
+      "hold_p25_s": 4.118,
+      "hold_p50_s": 11.778,
+      "hold_p75_s": 20.668,
+      "hold_p90_s": 42.394,
+      "hold_mean_s": 16.97040582533529,
+      "hold_med_count_s": 11.518
+    },
+    {
+      "party": "rank1",
+      "view": "carry",
+      "scope": "active",
+      "entry_kind": "all",
+      "role_pair": "all",
+      "n_markets": 19,
+      "n_closes": 7465,
+      "n_dust": 0,
+      "sh": 58012.27107385355,
+      "pnl": 751.6200655204416,
+      "fee": 318.6050024323904,
+      "net": 433.0150630880512,
+      "c_gross_sh": 1.29562254951815,
+      "c_net_sh": 0.746419774769365,
+      "hold_p10_s": 1.391,
+      "hold_p25_s": 3.843,
+      "hold_p50_s": 10.45,
+      "hold_p75_s": 22.772,
+      "hold_p90_s": 42.252,
+      "hold_mean_s": 17.194603891605347,
+      "hold_med_count_s": 10.226
+    },
+    {
+      "party": "rank1",
+      "view": "carry",
+      "scope": "both_active",
+      "entry_kind": "all",
+      "role_pair": "maker->maker",
+      "n_markets": 19,
+      "n_closes": 2309,
+      "n_dust": 0,
+      "sh": 20316.07159683911,
+      "pnl": 911.8587249941249,
+      "fee": 0.0,
+      "net": 911.8587249941249,
+      "c_gross_sh": 4.488361446491442,
+      "c_net_sh": 4.488361446491442,
+      "hold_p10_s": 1.461,
+      "hold_p25_s": 3.661,
+      "hold_p50_s": 10.537,
+      "hold_p75_s": 23.693,
+      "hold_p90_s": 39.327,
+      "hold_mean_s": 17.2544406396943,
+      "hold_med_count_s": 10.538
+    },
+    {
+      "party": "rank1",
+      "view": "carry",
+      "scope": "both_active",
+      "entry_kind": "all",
+      "role_pair": "maker->taker",
+      "n_markets": 19,
+      "n_closes": 2337,
+      "n_dust": 0,
+      "sh": 17394.104690168817,
+      "pnl": -286.2720591586757,
+      "fee": 109.37993154272716,
+      "net": -395.65199070140284,
+      "c_gross_sh": -1.6457993340725219,
+      "c_net_sh": -2.2746326858951593,
+      "hold_p10_s": 1.548,
+      "hold_p25_s": 3.442,
+      "hold_p50_s": 9.11,
+      "hold_p75_s": 20.916,
+      "hold_p90_s": 42.957,
+      "hold_mean_s": 16.598780152793747,
+      "hold_med_count_s": 8.84
+    },
+    {
+      "party": "rank1",
+      "view": "carry",
+      "scope": "both_active",
+      "entry_kind": "all",
+      "role_pair": "taker->maker",
+      "n_markets": 19,
+      "n_closes": 1387,
+      "n_dust": 0,
+      "sh": 10291.599112746042,
+      "pnl": 324.3498679497658,
+      "fee": 72.26578997700034,
+      "net": 252.08407797276544,
+      "c_gross_sh": 3.1515983512033787,
+      "c_net_sh": 2.449416025742412,
+      "hold_p10_s": 1.346,
+      "hold_p25_s": 4.363,
+      "hold_p50_s": 10.717,
+      "hold_p75_s": 25.495,
+      "hold_p90_s": 45.045,
+      "hold_mean_s": 18.301575362142724,
+      "hold_med_count_s": 10.519
+    },
+    {
+      "party": "rank1",
+      "view": "carry",
+      "scope": "both_active",
+      "entry_kind": "all",
+      "role_pair": "taker->taker",
+      "n_markets": 19,
+      "n_closes": 1432,
+      "n_dust": 0,
+      "sh": 10010.49567409959,
+      "pnl": -198.31646826477322,
+      "fee": 136.95928091266288,
+      "net": -335.27574917743607,
+      "c_gross_sh": -1.9810853999755722,
+      "c_net_sh": -3.3492422362751086,
+      "hold_p10_s": 1.226,
+      "hold_p25_s": 4.118,
+      "hold_p50_s": 11.778,
+      "hold_p75_s": 20.668,
+      "hold_p90_s": 42.394,
+      "hold_mean_s": 16.97040582533529,
+      "hold_med_count_s": 11.518
+    },
+    {
+      "party": "rank1",
+      "view": "carry",
+      "scope": "both_active",
+      "entry_kind": "all",
+      "role_pair": "all",
+      "n_markets": 19,
+      "n_closes": 7465,
+      "n_dust": 0,
+      "sh": 58012.27107385355,
+      "pnl": 751.6200655204416,
+      "fee": 318.6050024323904,
+      "net": 433.0150630880512,
+      "c_gross_sh": 1.29562254951815,
+      "c_net_sh": 0.746419774769365,
+      "hold_p10_s": 1.391,
+      "hold_p25_s": 3.843,
+      "hold_p50_s": 10.45,
+      "hold_p75_s": 22.772,
+      "hold_p90_s": 42.252,
+      "hold_mean_s": 17.194603891605347,
+      "hold_med_count_s": 10.226
+    },
+    {
+      "party": "rank2",
+      "view": "carry",
+      "scope": "active",
+      "entry_kind": "all",
+      "role_pair": "maker->maker",
+      "n_markets": 11,
+      "n_closes": 1973,
+      "n_dust": 1,
+      "sh": 14927.74261784312,
+      "pnl": 664.6737353554848,
+      "fee": 0.0,
+      "net": 664.6737353554848,
+      "c_gross_sh": 4.452607151472459,
+      "c_net_sh": 4.452607151472459,
+      "hold_p10_s": 5.309,
+      "hold_p25_s": 11.764,
+      "hold_p50_s": 22.705,
+      "hold_p75_s": 39.915,
+      "hold_p90_s": 59.317,
+      "hold_mean_s": 29.07552690103098,
+      "hold_med_count_s": 20.576
+    },
+    {
+      "party": "rank2",
+      "view": "carry",
+      "scope": "active",
+      "entry_kind": "all",
+      "role_pair": "maker->taker",
+      "n_markets": 11,
+      "n_closes": 254,
+      "n_dust": 0,
+      "sh": 2139.2620779627223,
+      "pnl": -136.26105307755768,
+      "fee": 10.419881463369993,
+      "net": -146.68093454092767,
+      "c_gross_sh": -6.3695352935589264,
+      "c_net_sh": -6.856613598302828,
+      "hold_p10_s": 3.778,
+      "hold_p25_s": 15.419,
+      "hold_p50_s": 31.075,
+      "hold_p75_s": 47.825,
+      "hold_p90_s": 73.765,
+      "hold_mean_s": 37.2524802370599,
+      "hold_med_count_s": 38.2
+    },
+    {
+      "party": "rank2",
+      "view": "carry",
+      "scope": "active",
+      "entry_kind": "all",
+      "role_pair": "taker->maker",
+      "n_markets": 11,
+      "n_closes": 321,
+      "n_dust": 0,
+      "sh": 2593.727150437849,
+      "pnl": 5.522452490724563,
+      "fee": 17.473277714157213,
+      "net": -11.95082522343265,
+      "c_gross_sh": 0.21291570664216988,
+      "c_net_sh": -0.46075876644986435,
+      "hold_p10_s": 2.093,
+      "hold_p25_s": 6.526,
+      "hold_p50_s": 17.807,
+      "hold_p75_s": 39.537,
+      "hold_p90_s": 49.774,
+      "hold_mean_s": 23.48996613065403,
+      "hold_med_count_s": 19.214
+    },
+    {
+      "party": "rank2",
+      "view": "carry",
+      "scope": "active",
+      "entry_kind": "all",
+      "role_pair": "taker->taker",
+      "n_markets": 11,
+      "n_closes": 22,
+      "n_dust": 0,
+      "sh": 173.70903480080702,
+      "pnl": -27.900829055381056,
+      "fee": 1.9633623726901308,
+      "net": -29.864191428071187,
+      "c_gross_sh": -16.061818020792682,
+      "c_net_sh": -17.1920772355431,
+      "hold_p10_s": 12.667,
+      "hold_p25_s": 13.351,
+      "hold_p50_s": 13.351,
+      "hold_p75_s": 42.55,
+      "hold_p90_s": 47.913,
+      "hold_mean_s": 27.333066301385333,
+      "hold_med_count_s": 39.202
+    },
+    {
+      "party": "rank2",
+      "view": "carry",
+      "scope": "active",
+      "entry_kind": "all",
+      "role_pair": "all",
+      "n_markets": 11,
+      "n_closes": 2570,
+      "n_dust": 1,
+      "sh": 19834.440881044502,
+      "pnl": 506.0343057132707,
+      "fee": 29.856521550217337,
+      "net": 476.1777841630534,
+      "c_gross_sh": 2.5512910030999696,
+      "c_net_sh": 2.400762325587558,
+      "hold_p10_s": 4.302,
+      "hold_p25_s": 11.711,
+      "hold_p50_s": 21.884,
+      "hold_p75_s": 40.285,
+      "hold_p90_s": 60.975,
+      "hold_mean_s": 29.21178203581172,
+      "hold_med_count_s": 21.02
+    },
+    {
+      "party": "rank2",
+      "view": "carry",
+      "scope": "both_active",
+      "entry_kind": "all",
+      "role_pair": "maker->maker",
+      "n_markets": 11,
+      "n_closes": 1973,
+      "n_dust": 1,
+      "sh": 14927.74261784312,
+      "pnl": 664.6737353554848,
+      "fee": 0.0,
+      "net": 664.6737353554848,
+      "c_gross_sh": 4.452607151472459,
+      "c_net_sh": 4.452607151472459,
+      "hold_p10_s": 5.309,
+      "hold_p25_s": 11.764,
+      "hold_p50_s": 22.705,
+      "hold_p75_s": 39.915,
+      "hold_p90_s": 59.317,
+      "hold_mean_s": 29.07552690103098,
+      "hold_med_count_s": 20.576
+    },
+    {
+      "party": "rank2",
+      "view": "carry",
+      "scope": "both_active",
+      "entry_kind": "all",
+      "role_pair": "maker->taker",
+      "n_markets": 11,
+      "n_closes": 254,
+      "n_dust": 0,
+      "sh": 2139.2620779627223,
+      "pnl": -136.26105307755768,
+      "fee": 10.419881463369993,
+      "net": -146.68093454092767,
+      "c_gross_sh": -6.3695352935589264,
+      "c_net_sh": -6.856613598302828,
+      "hold_p10_s": 3.778,
+      "hold_p25_s": 15.419,
+      "hold_p50_s": 31.075,
+      "hold_p75_s": 47.825,
+      "hold_p90_s": 73.765,
+      "hold_mean_s": 37.2524802370599,
+      "hold_med_count_s": 38.2
+    },
+    {
+      "party": "rank2",
+      "view": "carry",
+      "scope": "both_active",
+      "entry_kind": "all",
+      "role_pair": "taker->maker",
+      "n_markets": 11,
+      "n_closes": 321,
+      "n_dust": 0,
+      "sh": 2593.727150437849,
+      "pnl": 5.522452490724563,
+      "fee": 17.473277714157213,
+      "net": -11.95082522343265,
+      "c_gross_sh": 0.21291570664216988,
+      "c_net_sh": -0.46075876644986435,
+      "hold_p10_s": 2.093,
+      "hold_p25_s": 6.526,
+      "hold_p50_s": 17.807,
+      "hold_p75_s": 39.537,
+      "hold_p90_s": 49.774,
+      "hold_mean_s": 23.48996613065403,
+      "hold_med_count_s": 19.214
+    },
+    {
+      "party": "rank2",
+      "view": "carry",
+      "scope": "both_active",
+      "entry_kind": "all",
+      "role_pair": "taker->taker",
+      "n_markets": 11,
+      "n_closes": 22,
+      "n_dust": 0,
+      "sh": 173.70903480080702,
+      "pnl": -27.900829055381056,
+      "fee": 1.9633623726901308,
+      "net": -29.864191428071187,
+      "c_gross_sh": -16.061818020792682,
+      "c_net_sh": -17.1920772355431,
+      "hold_p10_s": 12.667,
+      "hold_p25_s": 13.351,
+      "hold_p50_s": 13.351,
+      "hold_p75_s": 42.55,
+      "hold_p90_s": 47.913,
+      "hold_mean_s": 27.333066301385333,
+      "hold_med_count_s": 39.202
+    },
+    {
+      "party": "rank2",
+      "view": "carry",
+      "scope": "both_active",
+      "entry_kind": "all",
+      "role_pair": "all",
+      "n_markets": 11,
+      "n_closes": 2570,
+      "n_dust": 1,
+      "sh": 19834.440881044502,
+      "pnl": 506.0343057132707,
+      "fee": 29.856521550217337,
+      "net": 476.1777841630534,
+      "c_gross_sh": 2.5512910030999696,
+      "c_net_sh": 2.400762325587558,
+      "hold_p10_s": 4.302,
+      "hold_p25_s": 11.711,
+      "hold_p50_s": 21.884,
+      "hold_p75_s": 40.285,
+      "hold_p90_s": 60.975,
+      "hold_mean_s": 29.21178203581172,
+      "hold_med_count_s": 21.02
+    },
+    {
+      "party": "rank3",
+      "view": "carry",
+      "scope": "active",
+      "entry_kind": "all",
+      "role_pair": "maker->maker",
+      "n_markets": 17,
+      "n_closes": 2191,
+      "n_dust": 6,
+      "sh": 23149.088354997555,
+      "pnl": 940.2542417100614,
+      "fee": 0.0,
+      "net": 940.2542417100614,
+      "c_gross_sh": 4.061733349024408,
+      "c_net_sh": 4.061733349024408,
+      "hold_p10_s": 1.722,
+      "hold_p25_s": 5.588,
+      "hold_p50_s": 13.525,
+      "hold_p75_s": 27.296,
+      "hold_p90_s": 42.566,
+      "hold_mean_s": 18.708071768068965,
+      "hold_med_count_s": 12.077
+    },
+    {
+      "party": "rank3",
+      "view": "carry",
+      "scope": "active",
+      "entry_kind": "all",
+      "role_pair": "maker->taker",
+      "n_markets": 17,
+      "n_closes": 180,
+      "n_dust": 0,
+      "sh": 1301.5420508182804,
+      "pnl": -94.73519695009645,
+      "fee": 6.395250481356548,
+      "net": -101.130447431453,
+      "c_gross_sh": -7.278688912934959,
+      "c_net_sh": -7.770048410489099,
+      "hold_p10_s": 3.431,
+      "hold_p25_s": 11.061,
+      "hold_p50_s": 36.007,
+      "hold_p75_s": 46.516,
+      "hold_p90_s": 71.149,
+      "hold_mean_s": 35.157381372260595,
+      "hold_med_count_s": 26.947
+    },
+    {
+      "party": "rank3",
+      "view": "carry",
+      "scope": "active",
+      "entry_kind": "all",
+      "role_pair": "taker->maker",
+      "n_markets": 17,
+      "n_closes": 133,
+      "n_dust": 0,
+      "sh": 857.3710442776436,
+      "pnl": 26.524217739018617,
+      "fee": 6.212558986690758,
+      "net": 20.31165875232786,
+      "c_gross_sh": 3.0936684783151187,
+      "c_net_sh": 2.3690628331682153,
+      "hold_p10_s": 4.049,
+      "hold_p25_s": 6.834,
+      "hold_p50_s": 19.27,
+      "hold_p75_s": 20.461,
+      "hold_p90_s": 23.798,
+      "hold_mean_s": 17.5297144648765,
+      "hold_med_count_s": 12.574
+    },
+    {
+      "party": "rank3",
+      "view": "carry",
+      "scope": "active",
+      "entry_kind": "all",
+      "role_pair": "taker->taker",
+      "n_markets": 17,
+      "n_closes": 6,
+      "n_dust": 0,
+      "sh": 25.988088433589763,
+      "pnl": 0.5004456077662308,
+      "fee": 0.4319248941178978,
+      "net": 0.06852071364833301,
+      "c_gross_sh": 1.9256730214885747,
+      "c_net_sh": 0.26366199970202336,
+      "hold_p10_s": 2.548,
+      "hold_p25_s": 2.548,
+      "hold_p50_s": 5.453,
+      "hold_p75_s": 9.273,
+      "hold_p90_s": 18.331,
+      "hold_mean_s": 6.437064713863871,
+      "hold_med_count_s": 5.453
+    },
+    {
+      "party": "rank3",
+      "view": "carry",
+      "scope": "active",
+      "entry_kind": "all",
+      "role_pair": "all",
+      "n_markets": 17,
+      "n_closes": 2510,
+      "n_dust": 6,
+      "sh": 25333.98953852707,
+      "pnl": 872.5437081067499,
+      "fee": 13.039734362165206,
+      "net": 859.5039737445848,
+      "c_gross_sh": 3.444162265796373,
+      "c_net_sh": 3.3926909634089824,
+      "hold_p10_s": 1.988,
+      "hold_p25_s": 5.771,
+      "hold_p50_s": 14.008,
+      "hold_p75_s": 28.946,
+      "hold_p90_s": 44.764,
+      "hold_mean_s": 19.500693817516915,
+      "hold_med_count_s": 12.408
+    },
+    {
+      "party": "rank3",
+      "view": "carry",
+      "scope": "both_active",
+      "entry_kind": "all",
+      "role_pair": "maker->maker",
+      "n_markets": 17,
+      "n_closes": 2191,
+      "n_dust": 6,
+      "sh": 23149.088354997555,
+      "pnl": 940.2542417100614,
+      "fee": 0.0,
+      "net": 940.2542417100614,
+      "c_gross_sh": 4.061733349024408,
+      "c_net_sh": 4.061733349024408,
+      "hold_p10_s": 1.722,
+      "hold_p25_s": 5.588,
+      "hold_p50_s": 13.525,
+      "hold_p75_s": 27.296,
+      "hold_p90_s": 42.566,
+      "hold_mean_s": 18.708071768068965,
+      "hold_med_count_s": 12.077
+    },
+    {
+      "party": "rank3",
+      "view": "carry",
+      "scope": "both_active",
+      "entry_kind": "all",
+      "role_pair": "maker->taker",
+      "n_markets": 17,
+      "n_closes": 180,
+      "n_dust": 0,
+      "sh": 1301.5420508182804,
+      "pnl": -94.73519695009645,
+      "fee": 6.395250481356548,
+      "net": -101.130447431453,
+      "c_gross_sh": -7.278688912934959,
+      "c_net_sh": -7.770048410489099,
+      "hold_p10_s": 3.431,
+      "hold_p25_s": 11.061,
+      "hold_p50_s": 36.007,
+      "hold_p75_s": 46.516,
+      "hold_p90_s": 71.149,
+      "hold_mean_s": 35.157381372260595,
+      "hold_med_count_s": 26.947
+    },
+    {
+      "party": "rank3",
+      "view": "carry",
+      "scope": "both_active",
+      "entry_kind": "all",
+      "role_pair": "taker->maker",
+      "n_markets": 17,
+      "n_closes": 133,
+      "n_dust": 0,
+      "sh": 857.3710442776436,
+      "pnl": 26.524217739018617,
+      "fee": 6.212558986690758,
+      "net": 20.31165875232786,
+      "c_gross_sh": 3.0936684783151187,
+      "c_net_sh": 2.3690628331682153,
+      "hold_p10_s": 4.049,
+      "hold_p25_s": 6.834,
+      "hold_p50_s": 19.27,
+      "hold_p75_s": 20.461,
+      "hold_p90_s": 23.798,
+      "hold_mean_s": 17.5297144648765,
+      "hold_med_count_s": 12.574
+    },
+    {
+      "party": "rank3",
+      "view": "carry",
+      "scope": "both_active",
+      "entry_kind": "all",
+      "role_pair": "taker->taker",
+      "n_markets": 17,
+      "n_closes": 6,
+      "n_dust": 0,
+      "sh": 25.988088433589763,
+      "pnl": 0.5004456077662308,
+      "fee": 0.4319248941178978,
+      "net": 0.06852071364833301,
+      "c_gross_sh": 1.9256730214885747,
+      "c_net_sh": 0.26366199970202336,
+      "hold_p10_s": 2.548,
+      "hold_p25_s": 2.548,
+      "hold_p50_s": 5.453,
+      "hold_p75_s": 9.273,
+      "hold_p90_s": 18.331,
+      "hold_mean_s": 6.437064713863871,
+      "hold_med_count_s": 5.453
+    },
+    {
+      "party": "rank3",
+      "view": "carry",
+      "scope": "both_active",
+      "entry_kind": "all",
+      "role_pair": "all",
+      "n_markets": 17,
+      "n_closes": 2510,
+      "n_dust": 6,
+      "sh": 25333.98953852707,
+      "pnl": 872.5437081067499,
+      "fee": 13.039734362165206,
+      "net": 859.5039737445848,
+      "c_gross_sh": 3.444162265796373,
+      "c_net_sh": 3.3926909634089824,
+      "hold_p10_s": 1.988,
+      "hold_p25_s": 5.771,
+      "hold_p50_s": 14.008,
+      "hold_p75_s": 28.946,
+      "hold_p90_s": 44.764,
+      "hold_mean_s": 19.500693817516915,
+      "hold_med_count_s": 12.408
+    },
+    {
+      "party": "top3",
+      "view": "carry",
+      "scope": "active",
+      "entry_kind": "all",
+      "role_pair": "maker->maker",
+      "n_markets": 19,
+      "n_closes": 6473,
+      "n_dust": 7,
+      "sh": 58392.90256967978,
+      "pnl": 2516.7867020596714,
+      "fee": 0.0,
+      "net": 2516.7867020596714,
+      "c_gross_sh": 4.310090081678009,
+      "c_net_sh": 4.310090081678009,
+      "hold_p10_s": 1.939,
+      "hold_p25_s": 5.829,
+      "hold_p50_s": 14.522,
+      "hold_p75_s": 29.932,
+      "hold_p90_s": 46.938,
+      "hold_mean_s": 20.852692470867616,
+      "hold_med_count_s": 13.747
+    },
+    {
+      "party": "top3",
+      "view": "carry",
+      "scope": "active",
+      "entry_kind": "all",
+      "role_pair": "maker->taker",
+      "n_markets": 19,
+      "n_closes": 2771,
+      "n_dust": 0,
+      "sh": 20834.90881894982,
+      "pnl": -517.2683091863299,
+      "fee": 126.19506348745372,
+      "net": -643.4633726737836,
+      "c_gross_sh": -2.4827001340935206,
+      "c_net_sh": -3.0883906345130683,
+      "hold_p10_s": 1.657,
+      "hold_p25_s": 3.917,
+      "hold_p50_s": 10.918,
+      "hold_p75_s": 26.58,
+      "hold_p90_s": 47.807,
+      "hold_mean_s": 19.87877901649092,
+      "hold_med_count_s": 10.408
+    },
+    {
+      "party": "top3",
+      "view": "carry",
+      "scope": "active",
+      "entry_kind": "all",
+      "role_pair": "taker->maker",
+      "n_markets": 19,
+      "n_closes": 1841,
+      "n_dust": 0,
+      "sh": 13742.697307461536,
+      "pnl": 356.3965381795089,
+      "fee": 95.95162667784832,
+      "net": 260.4449115016606,
+      "c_gross_sh": 2.5933521651968934,
+      "c_net_sh": 1.8951513351040135,
+      "hold_p10_s": 1.465,
+      "hold_p25_s": 4.862,
+      "hold_p50_s": 12.524,
+      "hold_p75_s": 25.875,
+      "hold_p90_s": 47.926,
+      "hold_mean_s": 19.232651593654815,
+      "hold_med_count_s": 11.703
+    },
+    {
+      "party": "top3",
+      "view": "carry",
+      "scope": "active",
+      "entry_kind": "all",
+      "role_pair": "taker->taker",
+      "n_markets": 19,
+      "n_closes": 1460,
+      "n_dust": 0,
+      "sh": 10210.192797333986,
+      "pnl": -225.71685171238806,
+      "fee": 139.35456817947087,
+      "net": -365.0714198918589,
+      "c_gross_sh": -2.210701170807721,
+      "c_net_sh": -3.575558533891581,
+      "hold_p10_s": 1.226,
+      "hold_p25_s": 4.205,
+      "hold_p50_s": 11.784,
+      "hold_p75_s": 20.845,
+      "hold_p90_s": 42.394,
+      "hold_mean_s": 17.119898237403707,
+      "hold_med_count_s": 11.775
+    },
+    {
+      "party": "top3",
+      "view": "carry",
+      "scope": "active",
+      "entry_kind": "all",
+      "role_pair": "all",
+      "n_markets": 19,
+      "n_closes": 12545,
+      "n_dust": 7,
+      "sh": 103180.70149342512,
+      "pnl": 2130.198079340462,
+      "fee": 361.5012583447729,
+      "net": 1768.696820995689,
+      "c_gross_sh": 2.0645314952391582,
+      "c_net_sh": 1.7141740610363982,
+      "hold_p10_s": 1.679,
+      "hold_p25_s": 4.917,
+      "hold_p50_s": 13.063,
+      "hold_p75_s": 28.075,
+      "hold_p90_s": 46.911,
+      "hold_mean_s": 20.07088272302131,
+      "hold_med_count_s": 12.492
+    },
+    {
+      "party": "top3",
+      "view": "carry",
+      "scope": "both_active",
+      "entry_kind": "all",
+      "role_pair": "maker->maker",
+      "n_markets": 19,
+      "n_closes": 6473,
+      "n_dust": 7,
+      "sh": 58392.90256967978,
+      "pnl": 2516.7867020596714,
+      "fee": 0.0,
+      "net": 2516.7867020596714,
+      "c_gross_sh": 4.310090081678009,
+      "c_net_sh": 4.310090081678009,
+      "hold_p10_s": 1.939,
+      "hold_p25_s": 5.829,
+      "hold_p50_s": 14.522,
+      "hold_p75_s": 29.932,
+      "hold_p90_s": 46.938,
+      "hold_mean_s": 20.852692470867616,
+      "hold_med_count_s": 13.747
+    },
+    {
+      "party": "top3",
+      "view": "carry",
+      "scope": "both_active",
+      "entry_kind": "all",
+      "role_pair": "maker->taker",
+      "n_markets": 19,
+      "n_closes": 2771,
+      "n_dust": 0,
+      "sh": 20834.90881894982,
+      "pnl": -517.2683091863299,
+      "fee": 126.19506348745372,
+      "net": -643.4633726737836,
+      "c_gross_sh": -2.4827001340935206,
+      "c_net_sh": -3.0883906345130683,
+      "hold_p10_s": 1.657,
+      "hold_p25_s": 3.917,
+      "hold_p50_s": 10.918,
+      "hold_p75_s": 26.58,
+      "hold_p90_s": 47.807,
+      "hold_mean_s": 19.87877901649092,
+      "hold_med_count_s": 10.408
+    },
+    {
+      "party": "top3",
+      "view": "carry",
+      "scope": "both_active",
+      "entry_kind": "all",
+      "role_pair": "taker->maker",
+      "n_markets": 19,
+      "n_closes": 1841,
+      "n_dust": 0,
+      "sh": 13742.697307461536,
+      "pnl": 356.3965381795089,
+      "fee": 95.95162667784832,
+      "net": 260.4449115016606,
+      "c_gross_sh": 2.5933521651968934,
+      "c_net_sh": 1.8951513351040135,
+      "hold_p10_s": 1.465,
+      "hold_p25_s": 4.862,
+      "hold_p50_s": 12.524,
+      "hold_p75_s": 25.875,
+      "hold_p90_s": 47.926,
+      "hold_mean_s": 19.232651593654815,
+      "hold_med_count_s": 11.703
+    },
+    {
+      "party": "top3",
+      "view": "carry",
+      "scope": "both_active",
+      "entry_kind": "all",
+      "role_pair": "taker->taker",
+      "n_markets": 19,
+      "n_closes": 1460,
+      "n_dust": 0,
+      "sh": 10210.192797333986,
+      "pnl": -225.71685171238806,
+      "fee": 139.35456817947087,
+      "net": -365.0714198918589,
+      "c_gross_sh": -2.210701170807721,
+      "c_net_sh": -3.575558533891581,
+      "hold_p10_s": 1.226,
+      "hold_p25_s": 4.205,
+      "hold_p50_s": 11.784,
+      "hold_p75_s": 20.845,
+      "hold_p90_s": 42.394,
+      "hold_mean_s": 17.119898237403707,
+      "hold_med_count_s": 11.775
+    },
+    {
+      "party": "top3",
+      "view": "carry",
+      "scope": "both_active",
+      "entry_kind": "all",
+      "role_pair": "all",
+      "n_markets": 19,
+      "n_closes": 12545,
+      "n_dust": 7,
+      "sh": 103180.70149342512,
+      "pnl": 2130.198079340462,
+      "fee": 361.5012583447729,
+      "net": 1768.696820995689,
+      "c_gross_sh": 2.0645314952391582,
+      "c_net_sh": 1.7141740610363982,
+      "hold_p10_s": 1.679,
+      "hold_p25_s": 4.917,
+      "hold_p50_s": 13.063,
+      "hold_p75_s": 28.075,
+      "hold_p90_s": 46.911,
+      "hold_mean_s": 20.07088272302131,
+      "hold_med_count_s": 12.492
+    },
+    {
+      "party": "top10",
+      "view": "carry",
+      "scope": "active",
+      "entry_kind": "all",
+      "role_pair": "maker->maker",
+      "n_markets": 19,
+      "n_closes": 12474,
+      "n_dust": 15,
+      "sh": 107186.97268528136,
+      "pnl": 2869.1246885091887,
+      "fee": 0.0,
+      "net": 2869.1246885091887,
+      "c_gross_sh": 2.6767475716787077,
+      "c_net_sh": 2.6767475716787077,
+      "hold_p10_s": 2.077,
+      "hold_p25_s": 6.102,
+      "hold_p50_s": 15.265,
+      "hold_p75_s": 32.516,
+      "hold_p90_s": 56.597,
+      "hold_mean_s": 23.878195702318045,
+      "hold_med_count_s": 14.389
+    },
+    {
+      "party": "top10",
+      "view": "carry",
+      "scope": "active",
+      "entry_kind": "all",
+      "role_pair": "maker->taker",
+      "n_markets": 19,
+      "n_closes": 3096,
+      "n_dust": 0,
+      "sh": 23637.464473047294,
+      "pnl": -404.47209744548707,
+      "fee": 145.79553796178925,
+      "net": -550.2676354072763,
+      "c_gross_sh": -1.711148409791109,
+      "c_net_sh": -2.3279469590942,
+      "hold_p10_s": 1.719,
+      "hold_p25_s": 4.142,
+      "hold_p50_s": 11.86,
+      "hold_p75_s": 33.588,
+      "hold_p90_s": 56.263,
+      "hold_mean_s": 23.28320088025197,
+      "hold_med_count_s": 11.134
+    },
+    {
+      "party": "top10",
+      "view": "carry",
+      "scope": "active",
+      "entry_kind": "all",
+      "role_pair": "taker->maker",
+      "n_markets": 19,
+      "n_closes": 2435,
+      "n_dust": 0,
+      "sh": 20348.813606039555,
+      "pnl": 605.3908802576523,
+      "fee": 140.94293859247836,
+      "net": 464.4479416651739,
+      "c_gross_sh": 2.9750672052840046,
+      "c_net_sh": 2.282432532220577,
+      "hold_p10_s": 2.086,
+      "hold_p25_s": 6.464,
+      "hold_p50_s": 14.48,
+      "hold_p75_s": 34.35,
+      "hold_p90_s": 53.088,
+      "hold_mean_s": 22.963065978868485,
+      "hold_med_count_s": 12.808
+    },
+    {
+      "party": "top10",
+      "view": "carry",
+      "scope": "active",
+      "entry_kind": "all",
+      "role_pair": "taker->taker",
+      "n_markets": 19,
+      "n_closes": 1641,
+      "n_dust": 0,
+      "sh": 11997.713946084681,
+      "pnl": -144.9460243764561,
+      "fee": 163.4817689484546,
+      "net": -308.4277933249107,
+      "c_gross_sh": -1.2081136875559333,
+      "c_net_sh": -2.570721345007251,
+      "hold_p10_s": 1.25,
+      "hold_p25_s": 4.638,
+      "hold_p50_s": 12.244,
+      "hold_p75_s": 24.6,
+      "hold_p90_s": 50.412,
+      "hold_mean_s": 21.63334214596632,
+      "hold_med_count_s": 12.185
+    },
+    {
+      "party": "top10",
+      "view": "carry",
+      "scope": "active",
+      "entry_kind": "all",
+      "role_pair": "all",
+      "n_markets": 19,
+      "n_closes": 19646,
+      "n_dust": 15,
+      "sh": 163170.96471045288,
+      "pnl": 2925.0974469448984,
+      "fee": 450.22024550272215,
+      "net": 2474.877201442176,
+      "c_gross_sh": 1.79265805784472,
+      "c_net_sh": 1.5167387199271938,
+      "hold_p10_s": 1.902,
+      "hold_p25_s": 5.61,
+      "hold_p50_s": 14.204,
+      "hold_p75_s": 32.387,
+      "hold_p90_s": 55.823,
+      "hold_mean_s": 23.51281768263294,
+      "hold_med_count_s": 13.472
+    },
+    {
+      "party": "top10",
+      "view": "carry",
+      "scope": "both_active",
+      "entry_kind": "all",
+      "role_pair": "maker->maker",
+      "n_markets": 19,
+      "n_closes": 12474,
+      "n_dust": 15,
+      "sh": 107186.97268528136,
+      "pnl": 2869.1246885091887,
+      "fee": 0.0,
+      "net": 2869.1246885091887,
+      "c_gross_sh": 2.6767475716787077,
+      "c_net_sh": 2.6767475716787077,
+      "hold_p10_s": 2.077,
+      "hold_p25_s": 6.102,
+      "hold_p50_s": 15.265,
+      "hold_p75_s": 32.516,
+      "hold_p90_s": 56.597,
+      "hold_mean_s": 23.878195702318045,
+      "hold_med_count_s": 14.389
+    },
+    {
+      "party": "top10",
+      "view": "carry",
+      "scope": "both_active",
+      "entry_kind": "all",
+      "role_pair": "maker->taker",
+      "n_markets": 19,
+      "n_closes": 3096,
+      "n_dust": 0,
+      "sh": 23637.464473047294,
+      "pnl": -404.47209744548707,
+      "fee": 145.79553796178925,
+      "net": -550.2676354072763,
+      "c_gross_sh": -1.711148409791109,
+      "c_net_sh": -2.3279469590942,
+      "hold_p10_s": 1.719,
+      "hold_p25_s": 4.142,
+      "hold_p50_s": 11.86,
+      "hold_p75_s": 33.588,
+      "hold_p90_s": 56.263,
+      "hold_mean_s": 23.28320088025197,
+      "hold_med_count_s": 11.134
+    },
+    {
+      "party": "top10",
+      "view": "carry",
+      "scope": "both_active",
+      "entry_kind": "all",
+      "role_pair": "taker->maker",
+      "n_markets": 19,
+      "n_closes": 2435,
+      "n_dust": 0,
+      "sh": 20348.813606039555,
+      "pnl": 605.3908802576523,
+      "fee": 140.94293859247836,
+      "net": 464.4479416651739,
+      "c_gross_sh": 2.9750672052840046,
+      "c_net_sh": 2.282432532220577,
+      "hold_p10_s": 2.086,
+      "hold_p25_s": 6.464,
+      "hold_p50_s": 14.48,
+      "hold_p75_s": 34.35,
+      "hold_p90_s": 53.088,
+      "hold_mean_s": 22.963065978868485,
+      "hold_med_count_s": 12.808
+    },
+    {
+      "party": "top10",
+      "view": "carry",
+      "scope": "both_active",
+      "entry_kind": "all",
+      "role_pair": "taker->taker",
+      "n_markets": 19,
+      "n_closes": 1641,
+      "n_dust": 0,
+      "sh": 11997.713946084681,
+      "pnl": -144.9460243764561,
+      "fee": 163.4817689484546,
+      "net": -308.4277933249107,
+      "c_gross_sh": -1.2081136875559333,
+      "c_net_sh": -2.570721345007251,
+      "hold_p10_s": 1.25,
+      "hold_p25_s": 4.638,
+      "hold_p50_s": 12.244,
+      "hold_p75_s": 24.6,
+      "hold_p90_s": 50.412,
+      "hold_mean_s": 21.63334214596632,
+      "hold_med_count_s": 12.185
+    },
+    {
+      "party": "top10",
+      "view": "carry",
+      "scope": "both_active",
+      "entry_kind": "all",
+      "role_pair": "all",
+      "n_markets": 19,
+      "n_closes": 19646,
+      "n_dust": 15,
+      "sh": 163170.96471045288,
+      "pnl": 2925.0974469448984,
+      "fee": 450.22024550272215,
+      "net": 2474.877201442176,
+      "c_gross_sh": 1.79265805784472,
+      "c_net_sh": 1.5167387199271938,
+      "hold_p10_s": 1.902,
+      "hold_p25_s": 5.61,
+      "hold_p50_s": 14.204,
+      "hold_p75_s": 32.387,
+      "hold_p90_s": 55.823,
+      "hold_mean_s": 23.51281768263294,
+      "hold_med_count_s": 13.472
+    }
+  ],
+  "frozen_readings": {
+    "rank1": {
+      "our_turnover_loses": 11,
+      "both_adverse": 4,
+      "mixed_unsupported": 3,
+      "exposure_gap": 1
+    },
+    "rank2": {
+      "our_turnover_loses": 7,
+      "both_adverse": 1,
+      "exposure_gap": 2,
+      "mixed_unsupported": 1
+    },
+    "rank3": {
+      "exposure_gap": 5,
+      "both_adverse": 3,
+      "mixed_unsupported": 1,
+      "our_turnover_loses": 8
+    },
+    "top3": {
+      "our_turnover_loses": 11,
+      "both_adverse": 2,
+      "mixed_unsupported": 2,
+      "exposure_gap": 4
+    },
+    "top10": {
+      "our_turnover_loses": 12,
+      "exposure_gap": 5,
+      "mixed_unsupported": 2
+    }
+  },
+  "old_fix_changed_rows": [
+    {
+      "key": [
+        "20261024",
+        3697902,
+        "ours",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3697902,
+        "ours",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3697902,
+        "rank1",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3697902,
+        "rank1",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3697902,
+        "rank2",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": null
+    },
+    {
+      "key": [
+        "20261024",
+        3697902,
+        "rank2",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": null
+    },
+    {
+      "key": [
+        "20261024",
+        3697902,
+        "rank3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3697902,
+        "rank3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3697902,
+        "top3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3697902,
+        "top3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3697902,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "n_members_no_activity",
+        "market_reason",
+        "unclosed_carried_sh",
+        "carry",
+        "total",
+        "direct",
+        "end_pos",
+        "exposure",
+        "identity_dev",
+        "max_abs_pos",
+        "d_exposure",
+        "d_total",
+        "exposure_larger"
+      ],
+      "total_delta": -710.8915340901962
+    },
+    {
+      "key": [
+        "20261024",
+        3697902,
+        "top10",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3699278,
+        "ours",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3699278,
+        "ours",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3699278,
+        "rank1",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3699278,
+        "rank1",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3699278,
+        "rank2",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": null
+    },
+    {
+      "key": [
+        "20261024",
+        3699278,
+        "rank2",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": null
+    },
+    {
+      "key": [
+        "20261024",
+        3699278,
+        "rank3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3699278,
+        "rank3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3699278,
+        "top3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3699278,
+        "top3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3699278,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "n_members_no_activity",
+        "market_reason",
+        "unclosed_carried_sh",
+        "carry",
+        "total",
+        "direct",
+        "end_pos",
+        "exposure",
+        "max_abs_pos",
+        "reading",
+        "reading_raw",
+        "d_exposure",
+        "d_total",
+        "exposure_larger"
+      ],
+      "total_delta": -704.5360000000003
+    },
+    {
+      "key": [
+        "20261024",
+        3699278,
+        "top10",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3700070,
+        "ours",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3700070,
+        "ours",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3700070,
+        "rank1",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3700070,
+        "rank1",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3700070,
+        "rank2",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": null
+    },
+    {
+      "key": [
+        "20261024",
+        3700070,
+        "rank2",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": null
+    },
+    {
+      "key": [
+        "20261024",
+        3700070,
+        "rank3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3700070,
+        "rank3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3700070,
+        "top3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3700070,
+        "top3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3700070,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "n_members_no_activity",
+        "market_reason",
+        "unclosed_carried_sh",
+        "carry",
+        "total",
+        "direct",
+        "end_pos",
+        "exposure",
+        "max_abs_pos",
+        "d_exposure",
+        "d_total",
+        "exposure_larger"
+      ],
+      "total_delta": -42.90376078431369
+    },
+    {
+      "key": [
+        "20261024",
+        3700070,
+        "top10",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3702960,
+        "ours",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3702960,
+        "ours",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3702960,
+        "rank1",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3702960,
+        "rank1",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3702960,
+        "rank2",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3702960,
+        "rank2",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3702960,
+        "rank3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3702960,
+        "rank3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3702960,
+        "top3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3702960,
+        "top3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3702960,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "n_members_no_activity",
+        "market_reason",
+        "unclosed_carried_sh",
+        "carry",
+        "total",
+        "direct",
+        "end_pos",
+        "exposure",
+        "identity_dev",
+        "d_exposure",
+        "d_total"
+      ],
+      "total_delta": 81.4226725
+    },
+    {
+      "key": [
+        "20261024",
+        3702960,
+        "top10",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3704004,
+        "ours",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3704004,
+        "ours",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3704004,
+        "rank1",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3704004,
+        "rank1",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3704004,
+        "rank2",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3704004,
+        "rank2",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3704004,
+        "rank3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3704004,
+        "rank3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3704004,
+        "top3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3704004,
+        "top3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3704004,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "n_members_no_activity",
+        "market_reason",
+        "unclosed_carried_sh",
+        "carry",
+        "total",
+        "direct",
+        "end_pos",
+        "exposure",
+        "identity_dev",
+        "max_abs_pos",
+        "d_exposure",
+        "d_total",
+        "exposure_larger"
+      ],
+      "total_delta": 704.5360000000001
+    },
+    {
+      "key": [
+        "20261024",
+        3704004,
+        "top10",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3712725,
+        "ours",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3712725,
+        "ours",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3712725,
+        "rank1",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3712725,
+        "rank1",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3712725,
+        "rank2",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3712725,
+        "rank2",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3712725,
+        "rank3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3712725,
+        "rank3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3712725,
+        "top3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3712725,
+        "top3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3712725,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "n_members_no_activity",
+        "market_reason",
+        "unclosed_carried_sh",
+        "carry",
+        "total",
+        "direct",
+        "end_pos",
+        "exposure",
+        "max_abs_pos",
+        "reading",
+        "reading_raw",
+        "d_exposure",
+        "d_total",
+        "exposure_larger"
+      ],
+      "total_delta": 727.5099999999999
+    },
+    {
+      "key": [
+        "20261024",
+        3712725,
+        "top10",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3716727,
+        "ours",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3716727,
+        "ours",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3716727,
+        "rank1",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3716727,
+        "rank1",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3716727,
+        "rank2",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3716727,
+        "rank2",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3716727,
+        "rank3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3716727,
+        "rank3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3716727,
+        "top3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3716727,
+        "top3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3716727,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261024",
+        3716727,
+        "top10",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3723774,
+        "ours",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3723774,
+        "ours",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3723774,
+        "rank1",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3723774,
+        "rank1",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3723774,
+        "rank2",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": null
+    },
+    {
+      "key": [
+        "20261025",
+        3723774,
+        "rank2",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": null
+    },
+    {
+      "key": [
+        "20261025",
+        3723774,
+        "rank3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3723774,
+        "rank3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3723774,
+        "top3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3723774,
+        "top3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3723774,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "n_members_no_activity",
+        "market_reason",
+        "unclosed_carried_sh",
+        "carry",
+        "total",
+        "direct",
+        "end_pos",
+        "exposure",
+        "max_abs_pos",
+        "d_exposure",
+        "d_total"
+      ],
+      "total_delta": 500.88759607843133
+    },
+    {
+      "key": [
+        "20261025",
+        3723774,
+        "top10",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3734864,
+        "ours",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3734864,
+        "ours",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3734864,
+        "rank1",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3734864,
+        "rank1",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3734864,
+        "rank2",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": null
+    },
+    {
+      "key": [
+        "20261025",
+        3734864,
+        "rank2",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": null
+    },
+    {
+      "key": [
+        "20261025",
+        3734864,
+        "rank3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3734864,
+        "rank3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3734864,
+        "top3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3734864,
+        "top3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3734864,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "n_members_no_activity",
+        "market_reason",
+        "unclosed_carried_sh",
+        "carry",
+        "total",
+        "direct",
+        "end_pos",
+        "exposure",
+        "identity_dev",
+        "d_exposure",
+        "d_total"
+      ],
+      "total_delta": 251.4835650261438
+    },
+    {
+      "key": [
+        "20261025",
+        3734864,
+        "top10",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3737919,
+        "ours",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3737919,
+        "ours",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3737919,
+        "rank1",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3737919,
+        "rank1",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3737919,
+        "rank2",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": null
+    },
+    {
+      "key": [
+        "20261025",
+        3737919,
+        "rank2",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": null
+    },
+    {
+      "key": [
+        "20261025",
+        3737919,
+        "rank3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3737919,
+        "rank3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3737919,
+        "top3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3737919,
+        "top3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3737919,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "n_members_no_activity",
+        "market_reason",
+        "unclosed_carried_sh",
+        "carry",
+        "total",
+        "direct",
+        "end_pos",
+        "exposure",
+        "d_exposure",
+        "d_total"
+      ],
+      "total_delta": 64.99554326014191
+    },
+    {
+      "key": [
+        "20261025",
+        3737919,
+        "top10",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3763401,
+        "ours",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3763401,
+        "ours",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3763401,
+        "rank1",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3763401,
+        "rank1",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3763401,
+        "rank2",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3763401,
+        "rank2",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3763401,
+        "rank3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3763401,
+        "rank3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3763401,
+        "top3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3763401,
+        "top3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3763401,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "n_members_no_activity",
+        "market_reason",
+        "unclosed_carried_sh",
+        "carry",
+        "total",
+        "direct",
+        "end_pos",
+        "exposure",
+        "d_exposure",
+        "d_total"
+      ],
+      "total_delta": -243.01499318447395
+    },
+    {
+      "key": [
+        "20261025",
+        3763401,
+        "top10",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3776314,
+        "ours",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3776314,
+        "ours",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3776314,
+        "rank1",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3776314,
+        "rank1",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3776314,
+        "rank2",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": null
+    },
+    {
+      "key": [
+        "20261025",
+        3776314,
+        "rank2",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": null
+    },
+    {
+      "key": [
+        "20261025",
+        3776314,
+        "rank3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3776314,
+        "rank3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3776314,
+        "top3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3776314,
+        "top3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261025",
+        3776314,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "n_members_no_activity",
+        "market_reason",
+        "unclosed_carried_sh",
+        "carry",
+        "total",
+        "direct",
+        "end_pos",
+        "exposure",
+        "identity_dev",
+        "max_abs_pos",
+        "reading",
+        "reading_raw",
+        "d_exposure",
+        "d_total",
+        "exposure_larger"
+      ],
+      "total_delta": -582.008
+    },
+    {
+      "key": [
+        "20261025",
+        3776314,
+        "top10",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3789484,
+        "ours",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3789484,
+        "ours",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3789484,
+        "rank1",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3789484,
+        "rank1",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3789484,
+        "rank2",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": null
+    },
+    {
+      "key": [
+        "20261026",
+        3789484,
+        "rank2",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": null
+    },
+    {
+      "key": [
+        "20261026",
+        3789484,
+        "rank3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3789484,
+        "rank3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3789484,
+        "top3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3789484,
+        "top3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3789484,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "n_members_no_activity",
+        "market_reason",
+        "unclosed_carried_sh",
+        "carry",
+        "total",
+        "direct",
+        "end_pos",
+        "exposure",
+        "max_abs_pos",
+        "d_exposure",
+        "d_total"
+      ],
+      "total_delta": -89.27408823529413
+    },
+    {
+      "key": [
+        "20261026",
+        3789484,
+        "top10",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3803131,
+        "ours",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3803131,
+        "ours",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3803131,
+        "rank1",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3803131,
+        "rank1",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3803131,
+        "rank2",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3803131,
+        "rank2",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3803131,
+        "rank3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3803131,
+        "rank3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3803131,
+        "top3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3803131,
+        "top3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3803131,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3803131,
+        "top10",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3804696,
+        "ours",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3804696,
+        "ours",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3804696,
+        "rank1",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3804696,
+        "rank1",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3804696,
+        "rank2",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3804696,
+        "rank2",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3804696,
+        "rank3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3804696,
+        "rank3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3804696,
+        "top3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3804696,
+        "top3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3804696,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3804696,
+        "top10",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3838531,
+        "ours",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3838531,
+        "ours",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3838531,
+        "rank1",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3838531,
+        "rank1",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3838531,
+        "rank2",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3838531,
+        "rank2",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3838531,
+        "rank3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3838531,
+        "rank3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3838531,
+        "top3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3838531,
+        "top3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3838531,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3838531,
+        "top10",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3850428,
+        "ours",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3850428,
+        "ours",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3850428,
+        "rank1",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3850428,
+        "rank1",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3850428,
+        "rank2",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3850428,
+        "rank2",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3850428,
+        "rank3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3850428,
+        "rank3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3850428,
+        "top3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3850428,
+        "top3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3850428,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261026",
+        3850428,
+        "top10",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261027",
+        3877472,
+        "ours",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261027",
+        3877472,
+        "ours",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261027",
+        3877472,
+        "rank1",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261027",
+        3877472,
+        "rank1",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261027",
+        3877472,
+        "rank2",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261027",
+        3877472,
+        "rank2",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261027",
+        3877472,
+        "rank3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": null
+    },
+    {
+      "key": [
+        "20261027",
+        3877472,
+        "rank3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": null
+    },
+    {
+      "key": [
+        "20261027",
+        3877472,
+        "top3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261027",
+        3877472,
+        "top3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261027",
+        3877472,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261027",
+        3877472,
+        "top10",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261027",
+        3899224,
+        "ours",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261027",
+        3899224,
+        "ours",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261027",
+        3899224,
+        "rank1",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261027",
+        3899224,
+        "rank1",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261027",
+        3899224,
+        "rank2",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261027",
+        3899224,
+        "rank2",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261027",
+        3899224,
+        "rank3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": null
+    },
+    {
+      "key": [
+        "20261027",
+        3899224,
+        "rank3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": null
+    },
+    {
+      "key": [
+        "20261027",
+        3899224,
+        "top3",
+        "carry"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261027",
+        3899224,
+        "top3",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    },
+    {
+      "key": [
+        "20261027",
+        3899224,
+        "top10",
+        "carry"
+      ],
+      "fields": [
+        "n_members_no_activity",
+        "market_reason",
+        "unclosed_carried_sh",
+        "carry",
+        "total",
+        "direct",
+        "end_pos",
+        "exposure",
+        "d_exposure",
+        "d_total"
+      ],
+      "total_delta": 63.670013921568625
+    },
+    {
+      "key": [
+        "20261027",
+        3899224,
+        "top10",
+        "zero"
+      ],
+      "fields": [
+        "market_reason"
+      ],
+      "total_delta": 0.0
+    }
+  ],
+  "independent_controls": [
+    "known profitable close",
+    "missing carried-only position differs",
+    "fee sign differs"
+  ],
+  "receipt_counts": {
+    "completeness_groups": 131,
+    "cross_view_checks": 104,
+    "econ_fifo_rows": 20856,
+    "excluded_rows:src_status": 17,
+    "fills_valued_groups_pruned": 53,
+    "fills_valued_groups_read": 19,
+    "fills_valued_rows_scanned": 1649076,
+    "identity_checks": 264,
+    "maker_market_groups_pruned": 53,
+    "maker_market_groups_read": 19,
+    "maker_market_rows_scanned": 220702,
+    "market_status:fills_outside_ws": 1,
+    "market_status:ok": 17,
+    "market_status:poll_incomplete": 1,
+    "member_carry_only": 13,
+    "open_status:ok": 19,
+    "ours_day_records": 7,
+    "ours_no_interval": 0,
+    "party_identity_checks": 170,
+    "rows_carried_pos": 13,
+    "rows_carried_pos_end_eq_open": 0,
+    "rows_carried_pos_views_differ": 13,
+    "tob_20261024_frames": 43033,
+    "tob_20261024_groups_pruned": 17,
+    "tob_20261024_groups_read": 7,
+    "tob_20261024_rows_scanned": 483081,
+    "tob_20261025_frames": 30668,
+    "tob_20261025_groups_pruned": 19,
+    "tob_20261025_groups_read": 5,
+    "tob_20261025_rows_scanned": 336436,
+    "tob_20261026_frames": 31735,
+    "tob_20261026_groups_pruned": 18,
+    "tob_20261026_groups_read": 6,
+    "tob_20261026_rows_scanned": 424366,
+    "tob_20261027_frames": 12471,
+    "tob_20261027_groups_pruned": 21,
+    "tob_20261027_groups_read": 3,
+    "tob_20261027_rows_scanned": 199269
+  }
+}

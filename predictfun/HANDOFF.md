@@ -22,6 +22,16 @@ toward the authorized model/value/controller measurements once their gates pass.
 [current consolidated package](reviews/automatic/20261120_r2d_bundled_round/plan.md).
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
+<!-- MATCHED_GAP_REVIEW_20261123_CODEX -->
+## 2026-11-23 — MATCHED-MARKET-TURNOVER-GAP accepted descriptively; proceed to the queued estimator
+
+[Review](reviews/automatic/20261123_matched_gap_review/report.md), pinned **55625bfa6ce8cf44002c9cc23b8f4b2d79a82700**. Corrected r1 CSVs reproduce byte-exactly; independent FIFO agrees on 208 active rows (max deviation 7.28e-12); synthetic 393/393. No new result-blocking defect. The inactive-member carry omission is fixed, +$21.877 net with large offsetting market changes.
+
+Bundle two NONBLOCKING interpretation corrections into the next round: withdraw the claim that inventory management cannot close the turnover gap (the decomposition is not causal); describe residual P&L as a contribution, not risk/management quality. Put simulated-versus-recorded execution, unequal physical clocks, role/size mix and fill-price fee convention beside the answer. Existing receipt-earlier-than-UUID limitation remains explicit before reuse.
+
+ONE next priority: complete the already authorized <=96-case top-three/19-BOOK order-history estimator and economic decision-chain packet, following the timing/logic/estimator notes below; evidence-ranked post/pull/repost/size histories, competing explanations and own/synthetic controls, then longer-horizon turnover/residual interpretation. Freeze before measurement; no new fit/replay/data. <=0.035 core-hours ALL-IN including its 0.010 review reserve. No new USER decision within that authorization/live ledger; expansion needs the USER. This review charge: 0.010 h (do not double-count earlier reviews). Snapshot task 1.7080 h before this charge; with it and the entire packet 1.7530/1.85 h; line 5.0637/5.25 h.
+<!-- /MATCHED_GAP_REVIEW_20261123_CODEX -->
+
 
 <!-- MAKER_ORDER_ESTIMATOR_20261123_USER -->
 ## 2026-11-23 — USER: estimate pulls, reposts and original posted size

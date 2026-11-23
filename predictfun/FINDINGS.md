@@ -1,3 +1,13 @@
+<!-- MATCHED_GAP_REVIEW_20261123_CODEX -->
+## 2026-11-23 — Codex matched-market turnover-gap review
+
+Pinned **55625bfa6ce8cf44002c9cc23b8f4b2d79a82700**; [report/evidence](reviews/automatic/20261123_matched_gap_review/report.md). Corrected carry result accepted under declared clocks/costs; byte-exact output reproduction, independent FIFO 208 active rows, 393/393 synthetic checks. No result blocker.
+
+P2 NONBLOCKING: report_matched_gap.md:35-36 overreaches from completed/residual accounting to an inventory-policy prescription; residual P&L does not establish lower risk, and inventory decisions can affect completed turnover. P2 NONBLOCKING: the summary must foreground simulated versus recorded fills, engine versus settlement clocks, different participation/roles and fill-price fee convention. Same numerical interval/mark is not proof of identical physical timing. Bundle these wording corrections with the already authorized bounded order-history estimator, not a new fix-only round.
+
+Carry omission closed (all member positions included); prior 8f2a2e753 interpretation findings superseded by v3; latent receipt-earlier-than-UUID timing remains explicit before reuse. Largest limitation: the turnover gap is evidenced, its causal maker mechanism is not. No new model skill/profitability claim.
+<!-- /MATCHED_GAP_REVIEW_20261123_CODEX -->
+
 <!-- MAKER_ORDER_ESTIMATOR_20261123_USER -->
 ## 2026-11-23 — USER: estimate pulls, reposts and original posted size
 

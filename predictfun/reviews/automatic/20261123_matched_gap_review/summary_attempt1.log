@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261123_matched_gap_review/summarize.py", line 10, in <module>
+    changes = [r for r in e['old_fix_changed_rows'] if abs(r['total_delta']) > 1e-8]
+                                                       ^^^^^^^^^^^^^^^^^^^^^
+TypeError: bad operand type for abs(): 'NoneType'
+2026-11-23T08:05:36Z tag=codex_gap_summary rc=1 peak_rss_mib=30 wall_s=0.09 cpu_user_s=0.06 memavail_start_gib=22 disk_free_gib=433->433 slot=codex

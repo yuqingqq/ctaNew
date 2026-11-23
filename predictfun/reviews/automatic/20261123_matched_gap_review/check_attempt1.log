@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261123_matched_gap_review/check.py", line 71, in <module>
+    cols = list(dict.fromkeys(G.FV_COLS + ['t_ms', 'fee_dy', 'fee_dc', 'fee_type']))
+                              ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+TypeError: can only concatenate tuple (not "list") to tuple
+2026-11-23T08:04:13Z tag=codex_gap_independent rc=1 peak_rss_mib=191 wall_s=2.39 cpu_user_s=2.09 memavail_start_gib=22 disk_free_gib=434->434 slot=codex
