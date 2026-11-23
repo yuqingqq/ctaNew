@@ -1,0 +1,50 @@
+PASS G classify: compatible / contradicted / timing_sensitive / unidentified (missing instants, empty window)
+PASS G range min / max equal brute force
+PASS G statistics by hand through null_summary: obs 1.5, null 0, p_upper 1/201, p_lower 1, n_ctl_valid 399, 200 replicates
+PASS G calibration: under exchangeability P(p <= 0.05) is ~5 % in each tail (8..36 of 400; null_summary)
+PASS F causality: every decision-time feature of windows ending before the cut is unchanged when later BTC rows, frames (values and arrival times) and own legs change (pending = the declared reconstruction exception)
+PASS F falsifier fires: a planted +150 ms look-ahead changes BTC / book features
+PASS J equivalence: eval_windows equals chain_context.over_window (MECH category sets, instant and valid counts, BTC min / max) on 24 random windows x 3 profiles
+PASS J matched_times: every primary draw lies inside its phase and inside the same-side certain-presence union
+PASS A census: classes per view (exhausted_proven only under S_FIFO, capacity_tight in every row, capacity_tight_view, end_censored, unidentified x3)
+PASS A census: unidentified reasons window_unbounded / missing_evidence / order_invalid
+PASS A census: an unbounded removal window carries window_status window_unbounded (ec, unb); an invalid order order_invalid
+PASS A census: end histories (ex EX / EX|PL, tight EX, ec EX|PL|EC, tight_view EX / EX|PL)
+PASS A census: of the status cases only ex and tight_view enter pulls.csv, and only under S_NOPRIO
+PASS A ties explicit: every pulls.csv row is an EX / PL tie (identification tied, end_histories EX|PL, pull_identified False)
+PASS A census: pulls.csv has exactly one row per cancel-possible (order, view)
+PASS A census: census.csv counts the status cases with reasons and denominators
+PASS A successor split: refill within 5 s found; an 8 s link and an invalid link ignored
+PASS A successor split: summary groups cp_successor_5s / cp_no_successor_5s partition the rank1 cancel-possible rows
+PASS A receipt: every output hashed, rows reconcile, context checks ran (grid points and over_window windows)
+INFO B D=0: n 70 a_1s_wmin obs -6.07 null -0.27 p_lower 0.0050; btc_against_1s_some obs 1.000 null 0.017 p_upper 0.0050; reps 200
+PASS B positive control D=0: the most adverse 1 s move is recovered (obs < -4 bp, null > -1.5, p_lower <= 0.01, >= 25 events, 200 replicates)
+PASS B positive control D=0: btc_against_1s at some instant: rate >= 0.9 vs control <= 0.3, p_upper <= 0.01
+INFO B D=250: n 70 a_1s_wmin obs -6.07 null -0.28 p_lower 0.0050; btc_against_1s_some obs 1.000 null 0.020 p_upper 0.0050; reps 200
+PASS B positive control D=250: the most adverse 1 s move is recovered (obs < -4 bp, null > -1.5, p_lower <= 0.01, >= 25 events, 200 replicates)
+PASS B positive control D=250: btc_against_1s at some instant: rate >= 0.9 vs control <= 0.3, p_upper <= 0.01
+INFO B D=1000: n 70 a_1s_wmin obs -6.07 null -0.29 p_lower 0.0050; btc_against_1s_some obs 1.000 null 0.025 p_upper 0.0050; reps 200
+PASS B positive control D=1000: the most adverse 1 s move is recovered (obs < -4 bp, null > -1.5, p_lower <= 0.01, >= 25 events, 200 replicates)
+PASS B positive control D=1000: btc_against_1s at some instant: rate >= 0.9 vs control <= 0.3, p_upper <= 0.01
+PASS B classes: a 1 s trigger inside a >= 2 s window is timing_sensitive, never compatible at every instant (>= 90 %)
+PASS B controls: the trigger events draw from the primary matched_times pool (status ok, 200 draws)
+PASS B controls.csv: the per-event control means average to the summary null mean (all draws valid); the events sit low in their own draws (mean percentile < 0.1)
+INFO C: n 60 a_1s_wmin obs -2.43 null -2.70 p_upper 0.244 p_lower 0.761; btc_against_1s_some obs 0.400 null 0.423 p_upper 0.721
+PASS C null: random pulls show no association (|diff a_1s_wmin| < 2 bp; |diff rate| < 0.25; >= 40 events)
+INFO D matched: n 31 obs -1.492 null -1.481 p_lower 0.393
+PASS D phase: the phase-matched control shows no live-drift "signal" (|diff| < 0.3 bp, >= 20 events)
+INFO D mismatched: obs -1.492 null -0.036 p_lower 0.0050
+PASS D phase: a phase-MISMATCHED control fakes the signal (diff < -0.6 bp, p_lower <= 0.01) - the declared control avoids it
+PASS D D-sensitivity: compatible at D 0 / 250, timing_sensitive at D 1000 (the window then reaches before the drift), flagged
+INFO E: presence obs -6.15 null -2.22 p_lower 0.0050; fill_anchored null -6.15 diff 0.00 p_lower 0.532 p_upper 0.473; n 66 / 66
+PASS E fill anchoring: the presence control shows the construction association (diff < -1.5 bp, p_lower <= 0.01)
+PASS E fill anchoring: the fill_anchored control removes it (|diff| < 1 bp, >= 20 events)
+PASS H refusal: a non-measurement day (before any path is built)
+PASS H refusal: write-once
+PASS H refusal: identities ranks 1-3 differ from the contract top 3
+PASS H refusal: a hash without exactly three scenario rows
+PASS H refusal: life fills disagree with n_fills
+PASS H refusal: a chain_context without matched_times
+PASS I pilot property: a one-address run reproduces the full run rows of that address exactly
+PASS I pilot receipt: projection present
+chain_pull selftest: 42/42 passed; cpu 5.85 s; vmhwm 410 MiB

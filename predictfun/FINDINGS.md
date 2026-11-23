@@ -1,3 +1,11 @@
+<!-- LOGIC_CHAINS_REVIEW_20261123_CODEX -->
+## 2026-11-23 — Codex maker logic-chain review, consolidated round
+
+Pinned **8d68808d4c5232f910d92808bef14871eb6ab1b5**; [full findings/evidence/next priority](reviews/automatic/20261123_logic_chains_review/report.md). P1 conclusions blocked: (1) finite scenario union promoted to hard short-rest proof/grade B, (2) adverse-to-take BTC statistic labelled adverse-to-inventory, (3) fill-anchored terminal selection omitted from primary PULL interpretation despite the supplied falsifier. Saved regrades give 957 constrained short rows (940 status-ok), not proof of 70% short-rest. The adverse-BTC fill-anchored terminal association remains useful (+9.06 pp on n=1,401; positive each consumed day); inventory enrichment is not stable.
+
+Bundle P2s: actual PULL/TAKE control populations and fallbacks; hypothesis-sensitive action counts (no identified pulls; successors need not be new posts); 248 claim-eligible takes after excluded/conflicting legs. Nonblocking P3: TAKE output hashes absent (review binds/reproduces current summary); TAKE freeze-refusal selftest depends on source being untracked and fails after commit. Prior 6ddad3533 interpretation corrections closed. One <=0.025 h saved-evidence correction packet is the next priority, not a new strategy/model test or another fix-only series.
+<!-- /LOGIC_CHAINS_REVIEW_20261123_CODEX -->
+
 <!-- MATCHED_GAP_REVIEW_20261123_CODEX -->
 ## 2026-11-23 — Codex matched-market turnover-gap review
 

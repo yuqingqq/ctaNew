@@ -1,0 +1,14 @@
+{
+ "version": "chain_context_v1",
+ "passed": 173,
+ "total": 173,
+ "failed": [],
+ "cpu_s": 2.05,
+ "wall_s": 2.05,
+ "vmhwm_mib": 438.2,
+ "synthetic_load": {
+  "load_cpu_s": 0.331,
+  "load_wall_s": 0.332
+ }
+}
+chain_context selftest: 173/173 passed

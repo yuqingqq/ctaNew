@@ -1,4 +1,23 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+logic_chains_review_20261123_codex:
+  target: 8d68808d4c5232f910d92808bef14871eb6ab1b5
+  report: predictfun/reviews/automatic/20261123_logic_chains_review/report.md
+  status: headline_mechanism_claims_blocked_saved_descriptive_evidence_retained
+  material_claims_to_correct: 3
+  scenario_short_orders: 2917
+  lifecycle_constrained_short_orders: 957
+  constrained_short_status_ok: 940
+  filled_order_population: 4149
+  pull_identified_any: false
+  useful_surviving_signal: adverse_btc_terminal_window_association_under_fill_anchored_reference
+  take_btc_statistic_alignment: take_side_not_inventory
+  next_priority: one_superseding_saved_evidence_logic_chain_correction_packet
+  followup_all_in_core_hours_cap: 0.025
+  review_charge_core_hours: 0.010
+  current_packet_cap_core_hours: 0.11
+  additional_user_decision_within_scope_and_caps: false
+  prior_matched_gap_interpretation_findings: closed
+
 matched_gap_review_20261123_codex:
   target: 55625bfa6ce8cf44002c9cc23b8f4b2d79a82700
   report: predictfun/reviews/automatic/20261123_matched_gap_review/report.md

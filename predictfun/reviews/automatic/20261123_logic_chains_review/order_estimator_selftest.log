@@ -1,0 +1,8 @@
+{
+ "checks": 75,
+ "passed": 75,
+ "failed": [],
+ "cpu_s": 1.18,
+ "vmhwm_mib": 153.0
+}
+ORDER ESTIMATOR SELFTEST PASSED

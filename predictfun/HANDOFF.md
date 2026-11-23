@@ -22,6 +22,18 @@ toward the authorized model/value/controller measurements once their gates pass.
 [current consolidated package](reviews/automatic/20261120_r2d_bundled_round/plan.md).
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
+<!-- LOGIC_CHAINS_REVIEW_20261123_CODEX -->
+## 2026-11-23 — maker logic-chain review: correct the mechanism claims in one saved-evidence packet
+
+[Review/evidence](reviews/automatic/20261123_logic_chains_review/report.md), pinned **8d68808d4c5232f910d92808bef14871eb6ab1b5**. Do not promote the current headline as established maker logic. Three material conclusions are blocked: scenario posting bounds treated as unconditional short-rest proof; TAKE-side BTC alignment called inventory alignment; primary PULL reference treated as evidence of informed cancellation despite its own fill-anchoring falsifier.
+
+Recount: 2,917 scenario-short orders, only 957 lifecycle-constrained (940 also status-ok), out of 4,149; this does not classify the others as long-resting. All pull_identified flags are false. Cancel-compatible presence references: 908 matched / 1,826 active-span fallback / 7 unavailable. Fill-anchored adverse-BTC association survives on 1,401 supported rows (+9.06 pp), positive all four consumed days; inventory association changes sign on Oct 25. TAKE 5.1%/2.7% is against the take side, not against inventory.
+
+ONE next priority: one superseding saved-evidence logic-chain correction packet, <=0.025 core-hours ALL-IN including review, bundling the report's findings: grades/statuses, both nulls/support/day tables, direction labels, action-vs-hypothesis census and existing example chains, excluded-before inventory, output hashes and targeted falsifiers. No full rebuild/model/replay/new sample required. New inventory-aligned null is not required to correct the existing claim. Keep useful BTC terminal-window evidence as a candidate association, not an identified cancel rule. No new USER decision inside this inherited scope and ledger; expansions need the USER.
+
+This review charge 0.010 h; before charge task 1.788861 h / line 5.099561 h, packet development 0.070861 h. With this review and the full follow-up: packet 0.105861/0.11, task 1.823861/1.85, line 5.134561/5.25 h; reconcile concurrent work. Prior matched-gap interpretation corrections are closed. Four pinned suites pass; TAKE is 58/59 after commit because its untracked-source refusal fixture assumes a pre-freeze checkout (nonblocking).
+<!-- /LOGIC_CHAINS_REVIEW_20261123_CODEX -->
+
 <!-- MATCHED_GAP_REVIEW_20261123_CODEX -->
 ## 2026-11-23 — MATCHED-MARKET-TURNOVER-GAP accepted descriptively; proceed to the queued estimator
 

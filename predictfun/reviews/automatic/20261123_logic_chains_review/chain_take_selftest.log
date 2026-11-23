@@ -1,0 +1,54 @@
+/tmp/pf-chains-review-8d68808d/predictfun/reviews/maker_trace_20261122/tools/chain_take_selftest.py:396: Pandas4Warning: Starting with pandas version 4.0 all arguments of all will be keyword-only.
+  ts = tk[['touch_start_0', 'spread_start_0', 'depth_taken_start_0']].notna().all(1)
+PASS classes: hand-computed (before, dq) cases
+PASS classes: equal to order_estimator.inv_class on a (before, dq) grid
+PASS combine: common class else timing_sensitive (absent variants ignored)
+PASS inventory_unwind: compatible / contradicted / unidentified / timing_sensitive
+PASS direction window category: with / against / flat / mixed / gap / missing
+PASS directional mechanism map
+PASS after_fill_burst mechanism
+PASS position bins = chain_context POS_EDGES
+PASS moves = chain_context MOVE_THR
+PASS A: 13 take records, one row each
+PASS A: hand-computed take classes (D = 0)
+PASS A: recorded position before = the hand-computed path (chain_context.position, reconciled)
+PASS A: pending take - recorded reduce_partial, certain reversal_reducing, one pending leg of +15
+PASS A: simultaneous actions flagged and evaluated both ways
+PASS A: the overshoot take is a sweep over two prices
+PASS A: self-trade leg nets out (dq +6), flagged
+PASS A: excluded take legs keep their size, flagged excluded_row
+PASS A: window_unbounded / receipt_before_uuid are no-claim with unidentified mechanisms
+PASS A: the multi-record taker order is listed with its two records
+PASS A: inventory_unwind statuses
+PASS A: burst counts at the 110 s take: certain 0, possible 1 (the pending leg) -> after_fill_burst timing_sensitive
+PASS A: no own fill near the 20 s take -> after_fill_burst contradicted
+PASS A: the book start state (touch, spread, depth at the taken touch) is read for every take
+PASS A: taken-side touch = chain_context.book bid at the window start (a sell), ticks through = bid - min leg tick
+PASS A: r_5s window categories (D 250, side +1) equal chain_context.over_window
+PASS A: r_5s window categories (D 250, side -1) equal chain_context.over_window
+PASS B: 20 burst takes, each with 3 certain own maker fills in the 5 s before its window, full_close
+PASS B: the burst association is recovered against matched no-take controls (obs 1, null <= 0.05, p_hi <= 0.01, >= 200 draws)
+PASS C: a random taker shows no burst association (|obs - null| < 0.2, p_hi and p_lo > 0.001)
+PASS C: reducing vs adding contrast rows carry both denominators and a permutation null
+PASS controls: every take drawn from its own stratum or a counted fallback
+PASS D: action counts on the ladder / two-sided / refill / reprice fixture
+PASS D: two-sided certain 3 (compatible) and possible-only 1 (timing_sensitive)
+PASS D: refill is tied (timing_sensitive), reprice sequential_identified (compatible) through order_estimator.link_hypotheses
+PASS D: the reprice pair keeps replace feasible (churn bound counted)
+PASS D: filled orders are labelled outcome-selected
+PASS D: keep_after_fill is observed persistence (compatible, not timing-sensitive at >= 2 s gaps)
+PASS D: logic rows carry the declared columns
+PASS falsifier: data after the decision window (BTC, book, own fills) leave every feature of the take unchanged
+PASS falsifier positive control: a BTC move inside the window changes its features
+PASS falsifier catches a planted look-ahead (window end read 5 s late)
+PASS refuse: a stub without book
+PASS refuse: a chain_context with other move thresholds
+PASS refuse: chain_context recorded position differs from the own action sum
+PASS refuse: a status-ok leg whose window is not MAX_LAG wide
+PASS refuse: a top-3 address under two spellings
+PASS refuse: an x_links path on a non-measurement day (never opened)
+PASS refuse: a pilot on a non-measurement day
+FAIL end to end: section crashed  :: ValueError: '/tmp/pf-chains-review-8d68808d/predictfun/reviews/maker_trace_20261122/tools/chain_take.py' is not in the subpath of '/home/yuqing/ctaNew' | ews/maker_trace_20261122/tools/chain_take.py", line 1367, in run
+    rec = receipt('run', days, cnt, hashes, ctx, git, stages, c0, t0, asof0, tk, ctrl, act, summ, info, link_fn, pull_fn)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+{"checks": 49, "failed": 1, "vmhwm_mib": 192.8}

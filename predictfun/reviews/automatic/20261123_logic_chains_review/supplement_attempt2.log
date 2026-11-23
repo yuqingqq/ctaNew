@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261123_logic_chains_review/supplement.py", line 60, in <module>
+    packet_tags=re.compile(r'^(mt_(?:ctx|oe|pf|pull|take)_|mt_x_(?:oe|pf|pull|take)_v2$)')
+                ^^^^^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/generic.py", line 6206, in __getattr__
+    return object.__getattribute__(self, name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'DataFrame' object has no attribute 'compile'. Did you mean: 'combine'?
+2026-11-23T11:34:18Z tag=codex_chains_supplement_r1 rc=1 peak_rss_mib=207 wall_s=1.66 cpu_user_s=1.48 memavail_start_gib=22 disk_free_gib=430->430 slot=codex

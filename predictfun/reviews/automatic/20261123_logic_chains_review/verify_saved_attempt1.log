@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/automatic/20261123_logic_chains_review/verify_saved.py", line 90, in <module>
+    assert out['post']['scenario_short_count']>0 and len(out['pull']['all_primary_rows'])>0
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+2026-11-23T11:30:40Z tag=codex_chains_saved rc=1 peak_rss_mib=202 wall_s=1.37 cpu_user_s=1.18 memavail_start_gib=22 disk_free_gib=430->430 slot=codex
