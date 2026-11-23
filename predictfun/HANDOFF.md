@@ -764,6 +764,27 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- MAKER_TRACE_AMEND1_20261123_DEV -->
+## 2026-11-23 00:29Z (session aea5bfb9) — MAKER-TRACE prefix measured; gate refused at 1.4046 h > 1.35; USER approved cap 1.45 (line 4.85 unchanged); amendment 1
+
+**Prefix, Oct 24:**
+- **Extraction:** 403.5 CPU s, peak 846 MiB. 476,897 unique records; 724,873 legs, equal to step1's independent count; 1.63 M top-of-book frames; 43,033 depth frames over 7 BOOK markets.
+- **Lifecycle:** 3697902 took 2.2 s.
+
+**Gate:** the write-once `logs/projection.json` projected 1.4046 h (spent 0.6156 + 0.739 + 0.05 reserve) against the 1.35 cap. The line, 4.7153, was within 4.85. The gate refused, as declared.
+
+**USER:** +0.10 h, giving cap **1.45**, line ceiling unchanged.
+
+**Amendment 1** (`amend1_manifest.json`):
+- the cap constant;
+- `project.py v2`, which writes a write-once `projection_v2.json` that records the superseded file;
+- the launcher's gate, which reads v2.
+
+No builder, checker or reading rule changed.
+
+**Next:** project-v2, then the rest.
+<!-- /MAKER_TRACE_AMEND1_20261123_DEV -->
+
 <!-- MAKER_TRACE_FREEZE_20261122_DEV -->
 ## 2026-11-22 20:25Z (session aea5bfb9) — MAKER-TRACE-RECONSTRUCTION-v1 FROZEN before any data run (builders, checker, declaration, launcher)
 

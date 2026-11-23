@@ -1,0 +1,15 @@
+{
+ "amended": {
+  "declaration.md": "f47e604a172ff69db0fea6e509cc443b3ad10d65567aee58b20476c45f6ffbdd",
+  "launch_mt.sh": "37e5c1223ff451152406acdc73bf654f8c2cee8d27f7a1b5aca47025e6e002ed",
+  "tools/cpu_ledger.py": "d43adfd7caead0fff46a1b5fd434b4f7a8949c4b1c1689f10d45776da90866be",
+  "tools/project.py": "fe0f243d6168baec4dbad12a922788f0917d01b43db413c83cd3ab47b071e896"
+ },
+ "amendment": "amend1_cap_topup_projection_v2",
+ "approval": "USER AskUserQuestion 2026-11-23: +0.10 h, cap 1.45, line ceiling 4.85 unchanged",
+ "asof": "2026-11-23T00:29:41Z",
+ "manifest_sha256": "d8300bb6cd6709593a2e44b99cc702eefb34c0acaebe7f9ee2bec1b591a8460e",
+ "projection_v1_sha256": "7538b01c580680e83b03fd1683b8fd014d67b8adf195e13ae7cfad59d2193c28",
+ "reason": "first projection refused: 1.4046 h > cap 1.35 (line 4.7153 <= 4.85)",
+ "unchanged": "every builder, checker, selftest and reading rule"
+}

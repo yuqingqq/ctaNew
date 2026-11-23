@@ -136,3 +136,5 @@ These are the builders' declared conventions, adopted as they stand:
 | 5 | the rest: extract Oct 23 / 25 / 26 / 27 / Nov 8 in parallel slots; lifecycle; truth (dry equivalence of the pre-built truth table, then score); econ; report; checks |
 
 If the projection does not fit, stop for a USER resource decision.
+
+**Amendment 1 (2026-11-23):** the first projection refused: 1.4046 h against 1.35, with the line at 4.7153 within 4.85 (`logs/projection.json`, kept). The USER approved **+0.10 h: cap 1.45**, with the line ceiling unchanged at 4.85. A write-once `logs/projection_v2.json` is computed from the same measurements and records the superseded file's sha256. The launcher's gate reads it. No builder, checker or reading rule changed.

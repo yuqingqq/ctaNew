@@ -24,6 +24,17 @@ PREFIX_DAY, LIFE_SAFETY = '20261024', 1.5
 OTHER_H = dict(econ=0.08, truth=0.01, report=0.01, checks=0.04, selftests_after=0.01)
 REST_DAYS, WS_DAYS = ('20261023', '20261025', '20261026', '20261027', C.GT_DAY), ('20261025', '20261026', '20261027', C.GT_DAY)
 OUTP = C.RECEIPT / 'logs' / 'projection.json'
+# AMENDMENT 1 (2026-11-23): the first projection refused (1.4046 h > 1.35); the USER approved cap 1.45 h, line 4.85 unchanged. 'project.py v2'
+# writes logs/projection_v2.json (write-once) from the same measurements, recording the superseded projection's sha256 and the approval.
+if len(sys.argv) > 1 and sys.argv[1] == 'v2':
+    import hashlib
+    _v1 = C.RECEIPT / 'logs' / 'projection.json'
+    C.need(_v1.exists() and json.loads(_v1.read_text()).get('run_rest') is False, 'v2 supersedes only a refused first projection')
+    SUPERSEDES = dict(path='logs/projection.json', sha256=hashlib.sha256(_v1.read_bytes()).hexdigest(),
+                      approval='USER AskUserQuestion 2026-11-23: +0.10 h, cap 1.45, line ceiling 4.85 unchanged')
+    OUTP = C.RECEIPT / 'logs' / 'projection_v2.json'
+else:
+    SUPERSEDES = None
 
 
 def plan_bytes(family, day):
@@ -67,6 +78,7 @@ def main():
                measured=dict(prefix_process_cpu_s=proc, per_hour_sum_cpu_s=rest_h + ws_h, rest_cpu_s=rest_cpu, rest_bytes=rest_b, ws_cpu_s=ws_cpu, ws_bytes=ws_b,
                              life_prefix=dict(day=PREFIX_DAY, mid=mid0, cpu_s=lc)),
                n_book=n_book, n_gt=n_gt, life_safety=LIFE_SAFETY, run_rest=bool(total <= LG.CAP and LG.LINE_BEFORE + total <= LG.CEILING))
+    res['supersedes'] = SUPERSEDES
     OUTP.write_text(json.dumps(res, indent=1) + '\n'); print(json.dumps(res, indent=1))
 
 

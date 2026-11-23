@@ -38,9 +38,10 @@ run() {   # run <slot> <tag> <cmd...>
   fi
   echo "$tag rc=$rc" >> $L/jobs_rc.txt; tail -2 "$L/$tag.log" | cut -c1-300; return $rc
 }
-gate() {
-  python3 -c "import json,sys; j=json.load(open('$L/projection.json')); sys.exit(0 if j.get('run_rest') is True else 1)" 2>/dev/null \
-    || { echo "REFUSED: logs/projection.json is missing or run_rest is not true" >&2; exit 1; }
+gate() {   # amendment 1: a write-once projection_v2.json (after a refused first projection and a USER top-up) supersedes projection.json
+  local pj=$L/projection.json; [ -e $L/projection_v2.json ] && pj=$L/projection_v2.json
+  python3 -c "import json,sys; j=json.load(open('$pj')); sys.exit(0 if j.get('run_rest') is True else 1)" 2>/dev/null \
+    || { echo "REFUSED: $(basename $pj) is missing or run_rest is not true" >&2; exit 1; }
 }
 book_mids() {   # BOOK markets of a day (the frozen complete list), sorted
   python3 -c "import json; print(' '.join(str(m) for m in sorted(json.load(open('$R/predictfun/reviews/ladder_async_fast_20261122/manifest.json'))['complete'].get('$1', []))))"
@@ -72,6 +73,8 @@ case "${1:-}" in
     run claude mt_life_${PREFIX}_$m$S python3 $P/pf_mt_lifecycle.py market $PREFIX $m ;;
   project)
     S=$(sfx "${2:-}") || exit 2; run claude mt_x_project$S python3 $D/tools/project.py ;;
+  project-v2)   # amendment 1: only after a refused first projection and a USER top-up
+    S=$(sfx "${2:-}") || exit 2; run claude mt_x_project_v2$S python3 $D/tools/project.py v2 ;;
   life)
     gate; day=${2:?day}; slot=${3:?slot}; S=$(sfx "${4:-}") || exit 2; m0=$(book_mids $PREFIX | awk '{print $1}'); rc=0
     ms=$(depth_mids $day); [ -n "$ms" ] || { echo "REFUSED: no depth market written for $day (extract it first)" >&2; exit 1; }

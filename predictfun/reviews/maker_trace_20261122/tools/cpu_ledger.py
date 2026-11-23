@@ -9,7 +9,7 @@ import re
 import sys
 
 LOG = '/home/yuqing/ctaNew/predictfun/research/run_light.log'
-START, CAP, RESERVE, LINE_BEFORE, CEILING = '2026-11-22T08:00:00Z', 1.35, 0.05, 3.3107, 4.85   # USER top-up 2026-11-22: 0.90 -> 1.35 h, 4.40 -> 4.85
+START, CAP, RESERVE, LINE_BEFORE, CEILING = '2026-11-22T08:00:00Z', 1.45, 0.05, 3.3107, 4.85   # USER top-ups: 0.90 -> 1.35 h (4.40 -> 4.85), then 1.35 -> 1.45 h after the prefix gate (amendment 1)
 PAT = re.compile(r'^(\S+) tag=(mt_\S+) rc=(\S+) .*?wall_s=(\S+) cpu_user_s=(\S+)')
 
 
