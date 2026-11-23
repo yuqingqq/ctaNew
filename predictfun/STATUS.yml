@@ -1,4 +1,18 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+maker_order_estimator_20261123_user:
+  plan: predictfun/reviews/automatic/20261123_maker_order_estimator/plan.md
+  status: user_requested_estimation_deliverable_no_measurement
+  refines_existing_timing_logic_packet: true
+  required_outputs: original_size_remaining_size_post_pull_repost_windows_and_links
+  estimation: evidence_ranked_feasible_histories_with_explicit_priors_and_ties
+  confidence_requires_applicable_calibration: true
+  economic_outcomes_used_to_choose_history: false
+  current_matched_gap_experiment: continue_unchanged
+  additional_experiment_or_resource_allowance: false
+  inherited_packet_all_in_core_hours_cap: 0.035
+  inherited_maximum_detailed_cases: 96
+  no_new_fit_replay_or_data_launched: true
+
 maker_decision_logic_20261123_user:
   plan: predictfun/reviews/automatic/20261123_maker_decision_logic/plan.md
   status: user_requested_design_refinement_no_measurement

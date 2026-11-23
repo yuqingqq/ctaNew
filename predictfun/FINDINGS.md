@@ -1,3 +1,29 @@
+<!-- MAKER_ORDER_ESTIMATOR_20261123_USER -->
+## 2026-11-23 — USER: estimate pulls, reposts and original posted size
+
+[Order-history estimator requirement](reviews/automatic/20261123_maker_order_estimator/plan.md).
+USER: "But we need to estimate when they pull, and repost, post size etc."
+Refine the same queued timing/logic packet: require estimated original size,
+remaining quantity, posting/activation windows, pull quantity/time, and
+candidate parent/child repost price/size/windows. Distinguish exhaustion,
+expiry, cancellation, replenishment and a previously resting second ladder.
+
+Search histories consistent with shared book capacity, identities, fills
+and timing; favor those distinguished by independent evidence. Expose any
+parsimony/clip-size prior separately. Equal-observation alternatives remain
+tied or prior-sensitive; no fabricated confidence or exact private commands.
+Own-order and synthetic truth test the instrument, not other makers' latency.
+Estimate the action history before assessing its economic logic; never choose
+timestamps to maximize apparent BTC anticipation or profitability.
+
+Deliver a useful reconstructed ledger and competing histories, not only
+"unknown" fields. Test identical-tape exhaustion/cancel and replacement/
+already-resting-ladder examples with both positive and ambiguity controls.
+Same <=96 cases and <=0.035h all-in, no extra allowance or new predictive fit.
+Continue the current frozen matched-market comparison; one combined review.
+This note launches no measurement or implementation.
+<!-- /MAKER_ORDER_ESTIMATOR_20261123_USER -->
+
 <!-- MAKER_DECISION_LOGIC_20261123_USER -->
 ## 2026-11-23 — USER: reconstruct the economic chain of decisions
 
