@@ -10,7 +10,7 @@ import sys
 
 LOG = '/home/yuqing/ctaNew/predictfun/research/run_light.log'
 START, CAP, RESERVE, LINE_BEFORE, CEILING = '2026-11-22T08:00:00Z', 2.00, 0.05, 3.3107, 5.30   # USER top-ups: 0.90 -> 1.35 h (4.40 -> 4.85); -> 1.45 (amendment 1); -> 1.85 / line 5.25 for the lifecycle fix + top-3 decision paths (amendment 3); -> 1.90 for TAKE-LOGIC v1 (USER 2026-11-23, line unchanged); -> 1.95 for POSTING-CHAIN v1 (USER standing CPU authorization 2026-11-23; review 3f640ad9b); -> 2.00 / line 5.30 for TOUCH-RESPONSE v1 (USER standing CPU authorization 2026-11-23; review 01a72b4e2)
-EXTRA_H = 0.021 + 0.025 + 0.010 + 0.010 + 0.010 + 0.010 + 0.010 + 0.010   # Codex reviews 567f741d9 (0.021), 8f2a2e753 (<= 0.025), 6ddad3533 (0.010), 6bb458b30 (0.010), af916aba6 (0.010), 3f640ad9b (0.010), 01a72b4e2 (0.010), a91f6bb52 (0.010): their declared conservative charges (runs outside the mt_ prefix)
+EXTRA_H = 0.021 + 0.025 + 0.010 + 0.010 + 0.010 + 0.010 + 0.010 + 0.010 + 0.010   # Codex reviews 567f741d9 (0.021), 8f2a2e753 (<= 0.025), 6ddad3533 (0.010), 6bb458b30 (0.010), af916aba6 (0.010), 3f640ad9b (0.010), 01a72b4e2 (0.010), a91f6bb52 (0.010), 0742bf95e (0.010): their declared conservative charges (runs outside the mt_ prefix)
 PAT = re.compile(r'^(\S+) tag=(mt_\S+) rc=(\S+) .*?wall_s=(\S+) cpu_user_s=(\S+)')
 
 

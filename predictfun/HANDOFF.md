@@ -1015,6 +1015,17 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- MAKER_LOGIC_CHAINS_V7_20261123_DEV -->
+## 2026-11-23 22:35Z (session aea5bfb9) — MAKER LOGIC-CHAIN LINE CLOSED (v7 corrections per review 0742bf95e) — WAITING FOR THE USER
+
+**Receipt:** [v2/report_logic_chains_v7.md](reviews/maker_trace_20261122/v2/report_logic_chains_v7.md) — wording corrections plus a summary table of the associations established.
+
+**Next — a USER decision:** review 0742bf95e's priority is an attributed order-lifecycle evidence gate, i.e. a maker-attributed order-lifecycle source.
+- Own-order logs validate our reconstruction only.
+- Untouched days validate the observable associations.
+- Otherwise the line stays closed.
+<!-- /MAKER_LOGIC_CHAINS_V7_20261123_DEV -->
+
 <!-- MAKER_LOGIC_CHAINS_V6_20261123_DEV -->
 ## 2026-11-23 22:22Z (session aea5bfb9) — LOGIC CHAINS v6: competing transitions + continuation economics (review a91f6bb52's priority; USER goal: action chains and their logic)
 
