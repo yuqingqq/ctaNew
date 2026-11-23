@@ -167,3 +167,5 @@ mt_x_econ_v2 rc=0
 mt_x_report_selftest_v2 rc=0
 mt_x_report_v2 rc=0
 mt_x_checks_v2 rc=0
+mt_x_dec_selftest_v2 rc=0
+mt_x_decision_v2 rc=0

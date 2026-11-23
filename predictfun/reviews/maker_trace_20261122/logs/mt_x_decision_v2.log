@@ -1,0 +1,65 @@
+head=afb589d4629f97d655f9a2b288bed722308ffb36
+[2026-11-23T02:57:05Z] fills_valued: cpu 2.47 s, VmHWM 506.6 MiB
+[2026-11-23T02:57:05Z] pairs: cpu 2.6 s, VmHWM 506.6 MiB
+[2026-11-23T02:57:08Z] day 20261024: cpu 5.99 s, VmHWM 573.5 MiB
+[2026-11-23T02:57:12Z] day 20261025: cpu 9.22 s, VmHWM 582.4 MiB
+[2026-11-23T02:57:16Z] day 20261026: cpu 13.69 s, VmHWM 636.2 MiB
+[2026-11-23T02:57:20Z] day 20261027: cpu 17.39 s, VmHWM 641.5 MiB
+logit L=0: rank1/buy=converged:7, rank1/sell=converged:6, rank2/buy=converged:6, rank2/sell=converged:5, rank3/buy=converged:6, rank3/sell=converged:6, pooled/buy=converged:6, pooled/sell=converged:6
+logit L=50: rank1/buy=converged:4, rank1/sell=converged:4, rank2/buy=converged:3, rank2/sell=converged:4, rank3/buy=converged:3, rank3/sell=converged:3, pooled/buy=converged:4, pooled/sell=converged:4
+logit L=250: rank1/buy=converged:4, rank1/sell=converged:4, rank2/buy=converged:5, rank2/sell=converged:4, rank3/buy=converged:4, rank3/sell=converged:4, pooled/buy=converged:4, pooled/sell=converged:4
+[2026-11-23T02:57:55Z] logit: cpu 51.88 s, VmHWM 641.5 MiB
+[2026-11-23T02:57:58Z] tables: cpu 55.11 s, VmHWM 641.5 MiB
+{
+ "rows": {
+  "take_hazard_1d.csv": 10916,
+  "take_hazard_2d.csv": 26760,
+  "take_threshold.csv": 720,
+  "take_logit.csv": 24,
+  "take_events.csv": 120,
+  "post_fill.csv": 120,
+  "post_fill_tau.csv": 120,
+  "post_posting.csv": 798,
+  "post_skew.csv": 192,
+  "links.csv": 48,
+  "removal.csv": 504,
+  "inventory.csv": 200,
+  "timeline_rank1_20261024_3703730.csv": 3242,
+  "timeline_rank1_20261027_3885429.csv": 3239,
+  "timeline_rank1_20261027_3899224.csv": 3249,
+  "timeline_rank2_20261024_3703728.csv": 3247,
+  "timeline_rank2_20261027_3863730.csv": 2915,
+  "timeline_rank2_20261027_3877472.csv": 3235,
+  "timeline_rank3_20261024_3710012.csv": 3281,
+  "timeline_rank3_20261026_3812657.csv": 3286,
+  "timeline_rank3_20261026_3838531.csv": 3282,
+  "address_summary.csv": 4,
+  "statuses.csv": 1218
+ },
+ "cpu_s": {
+  "fills_valued": 2.47,
+  "pairs": 2.6,
+  "day 20261024": 5.99,
+  "day 20261025": 9.22,
+  "day 20261026": 13.69,
+  "day 20261027": 17.39,
+  "logit": 51.88,
+  "tables": 55.11,
+  "total": 56.11
+ },
+ "memory": {
+  "guard_mib": 1450.0,
+  "vmhwm_mib_by_stage": {
+   "fills_valued": 506.6,
+   "pairs": 506.6,
+   "day 20261024": 573.5,
+   "day 20261025": 582.4,
+   "day 20261026": 636.2,
+   "day 20261027": 641.5,
+   "logit": 641.5,
+   "tables": 641.5
+  },
+  "vmhwm_mib": 641.5
+ }
+}
+2026-11-23T02:57:02Z tag=mt_x_decision_v2 rc=0 peak_rss_mib=641 wall_s=65.21 cpu_user_s=45.95 memavail_start_gib=22 disk_free_gib=438->438 slot=claude

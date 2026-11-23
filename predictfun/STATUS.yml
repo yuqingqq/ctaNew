@@ -528,7 +528,7 @@ ladder_async_fast_results_20261122_dev:
   batch_core_hours: 0.201
   line_core_hours: 2.375
 maker_trace_reconstruction_20261122_dev:
-  status: v2_results_checker_clean_decision_frozen_run_next
+  status: v2_and_decision_paths_receipt_complete_review_pending
   v2: {checker: 39_of_39, r1: supported, t2: 5_of_16433, r2: no_defect, top10_net_usd: 35586}
   results_asof: "2026-11-23 01:18Z"
   checker: 32_of_39

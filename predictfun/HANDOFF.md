@@ -803,6 +803,22 @@ Freeze before outputs; <=0.75 additional core-hours within the unused original
 allocation; one combined receipt. No further USER permission within this scope.
 <!-- /LADDER_AUDIT_REVIEW_20261121_CODEX -->
 
+<!-- MAKER_TRACE_DECISION_20261123_DEV -->
+## 2026-11-23 03:00Z (session aea5bfb9) — MAKER-TRACE v2 + TOP-3 DECISION PATHS: results receipt complete
+
+**Receipt:** [v2/report.md](reviews/maker_trace_20261122/v2/report.md), with the decision section from `v2/decision/` (claims in `claims_decision.json`).
+
+**Decision paths** (ranks 1–3 ex-ante; descriptive):
+1. Quotes centred on a BTC-implied fair value, skewed against inventory, with reprices tracking about 70% of fair-value changes.
+2. Ranks 1–2 pull on adverse BTC moves.
+3. Takes are driven by inventory unloading (about 10× more likely when not flat, right after their own fills) and by large 1 s BTC moves in the move's direction. Rank 1 reacts in under 250 ms.
+4. There is no fixed stale-gap rule.
+
+**Resources:** the CPU is in `tools/cpu_ledger.py`, cap 1.85.
+
+**Next:** ONE Codex review of the round 1af85c56..HEAD.
+<!-- /MAKER_TRACE_DECISION_20261123_DEV -->
+
 <!-- MAKER_TRACE_AMEND5_20261123_DEV -->
 ## 2026-11-23 02:56Z (session aea5bfb9) — MAKER-TRACE v2 results checker-clean (39/39); decision-path module frozen (amendment 5); decision run next
 

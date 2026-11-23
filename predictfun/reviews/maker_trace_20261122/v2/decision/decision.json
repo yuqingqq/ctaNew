@@ -1,0 +1,678 @@
+{
+ "addresses": {
+  "rank1": "0x6Da6Cb464F92AE7aD4Ec3d239c81719Cb1D0Ae03",
+  "rank2": "0x7d32c568a9bEA1714036972601c51F4902C67091",
+  "rank3": "0x57FbC891E89184DA071AE9D97E745531cd7F718a"
+ },
+ "argv": [
+  "/home/yuqing/ctaNew/predictfun/research/pf_mt_decision.py",
+  "run"
+ ],
+ "asof_end": "2026-11-23T02:57:58Z",
+ "asof_start": "2026-11-23T02:57:02Z",
+ "book": {
+  "20261024": [
+   3697902,
+   3699278,
+   3700070,
+   3702960,
+   3704004,
+   3712725,
+   3716727
+  ],
+  "20261025": [
+   3723774,
+   3734864,
+   3737919,
+   3763401,
+   3776314
+  ],
+  "20261026": [
+   3789484,
+   3803131,
+   3804696,
+   3838531,
+   3850428
+  ],
+  "20261027": [
+   3877472,
+   3899224
+  ]
+ },
+ "book_source": "predictfun/reviews/ladder_async_fast_20261122/manifest.json",
+ "btc_files": {
+  "20261024": {
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/btc/btc_20261024.parquet",
+   "sha256": "a593570942b1523d14ec6b0ac9dab7de25a5372b7d375657436cba43102befb4"
+  },
+  "20261025": {
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/btc/btc_20261025.parquet",
+   "sha256": "3c572dec6c78091d7aeea43f42584636d90aebeff005a3a02fa8deb4ad96d9c1"
+  },
+  "20261026": {
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/btc/btc_20261026.parquet",
+   "sha256": "312c3cbe252a08e5f9fbf10005aedd9e573106bb04fe09d22dc957662e95356c"
+  },
+  "20261027": {
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/btc/btc_20261027.parquet",
+   "sha256": "bcc3ee7039e598e7bbe8112d5f737e650ec6bd3469215a520773b971ebd2c059"
+  }
+ },
+ "constants_accepted": {
+  "btc_stale_after_ms": 1000,
+  "by": "integrator (coordinator) message, 2026-11-23: accepted as stated",
+  "logistic_gap_clip_c": 20.0,
+  "poll_incomplete": "markets kept and counted (counts.pairs_poll_incomplete_kept, statuses pairs_poll_incomplete_kept)",
+  "sig_60_floor_bps_per_sqrt_s": 0.2,
+  "threshold_split_min_rows_per_side": 200
+ },
+ "contract": "predictfun/reviews/maker_trace_20261122/decision_contract.md",
+ "counts": {
+  "btc_grid_points_missing": 0,
+  "btc_padding_file_missing:20261023": 1,
+  "btc_rows_age_missing": 0,
+  "btc_rows_before_padding": 0,
+  "btc_rows_read:20261024": 1728000,
+  "btc_rows_read:20261025": 1728000,
+  "btc_rows_read:20261026": 1728000,
+  "btc_rows_read:20261027": 864000,
+  "btc_rows_stale": 0,
+  "btc_status:gap": 137,
+  "btc_status:ok": 3563208,
+  "btc_status:stale": 655,
+  "fv_rows_scanned": 8101346,
+  "fv_rows_top3": 808164,
+  "fv_rows_top3_other_days": 193312,
+  "grid_buckets_multi_take": 45316,
+  "life_links_rows_read": 41596,
+  "life_orders_rows_read": 112725,
+  "links_pair_excluded": 371,
+  "pairs:20261024:fill_status_src_status": 40,
+  "pairs:20261024:ok": 702,
+  "pairs:20261025:fill_status_src_status": 59,
+  "pairs:20261025:ok": 569,
+  "pairs:20261026:fill_status_src_status": 36,
+  "pairs:20261026:ok": 795,
+  "pairs:20261027:fill_status_src_status": 20,
+  "pairs:20261027:market_boundary_censored": 2,
+  "pairs:20261027:ok": 549,
+  "pairs_poll_incomplete_kept": 171,
+  "removal_obs_invalid": 24,
+  "rest_orders_used": 150,
+  "take_records_self_trade": 1270,
+  "tob_frame_status:book_crossed": 1142,
+  "tob_frame_status:book_one_sided": 312882,
+  "tob_frame_status:ok": 6074602,
+  "tob_frames_kept": 6388626,
+  "tob_frames_scanned": 6601714
+ },
+ "cpu_s": {
+  "day 20261024": 5.99,
+  "day 20261025": 9.22,
+  "day 20261026": 13.69,
+  "day 20261027": 17.39,
+  "fills_valued": 2.47,
+  "logit": 51.88,
+  "pairs": 2.6,
+  "tables": 55.11,
+  "total": 56.11
+ },
+ "days": [
+  "20261024",
+  "20261025",
+  "20261026",
+  "20261027"
+ ],
+ "declared": {
+  "BTC_DAYS": [
+   "20261023",
+   "20261024",
+   "20261025",
+   "20261026",
+   "20261027"
+  ],
+  "BTC_END_MS": 1793145600000,
+  "BTC_MAX_AGE_MS": 1000,
+  "CENTRE_TOL_C": 0.5,
+  "FIT_CPU_CAP_S": 45.0,
+  "GCLIP_LOGIT": 20.0,
+  "G_EDGES": [
+   -10.0,
+   -9.5,
+   -9.0,
+   -8.5,
+   -8.0,
+   -7.5,
+   -7.0,
+   -6.5,
+   -6.0,
+   -5.5,
+   -5.0,
+   -4.5,
+   -4.0,
+   -3.5,
+   -3.0,
+   -2.5,
+   -2.0,
+   -1.5,
+   -1.0,
+   -0.5,
+   0.0,
+   0.5,
+   1.0,
+   1.5,
+   2.0,
+   2.5,
+   3.0,
+   3.5,
+   4.0,
+   4.5,
+   5.0,
+   5.5,
+   6.0,
+   6.5,
+   7.0,
+   7.5,
+   8.0,
+   8.5,
+   9.0,
+   9.5,
+   10.0
+  ],
+  "LOGIT_COLS": [
+   "const",
+   "g_c",
+   "r_1s_bps",
+   "r_5s_bps",
+   "tau_min",
+   "pos_long",
+   "pos_short"
+  ],
+  "LOGIT_MAX_IT": 30,
+  "LOGIT_MAX_PASS": 30,
+  "LOGIT_TOL": 1e-10,
+  "M1": [
+   [
+    -5.0,
+    -2.0,
+    -1.0,
+    -0.5
+   ],
+   [
+    0.5,
+    1.0,
+    2.0,
+    5.0
+   ]
+  ],
+  "M5": [
+   [
+    -10.0,
+    -5.0,
+    -2.0,
+    -1.0
+   ],
+   [
+    1.0,
+    2.0,
+    5.0,
+    10.0
+   ]
+  ],
+  "MIN_PLACE": 100,
+  "MKT_EXCLUDE": [
+   "boundary_censored",
+   "hour_missing",
+   "up_index_mismatch"
+  ],
+  "N_DRAWS": 500,
+  "N_MIN_SPLIT": 200,
+  "OLS_MIN": 30,
+  "ORDER_INVALID": [
+   "amount_mismatch",
+   "dup_hash_in_record",
+   "identity_conflict",
+   "leg_recon_mk_sum",
+   "leg_recon_tk_amount",
+   "malformed_identity",
+   "subcent_price",
+   "unplaceable_leg"
+  ],
+  "PAD_LO_MS": 1792796400000,
+  "PAD_MS": 30000,
+  "POS_B": [
+   50.0,
+   200.0,
+   1000.0
+  ],
+  "PRE_MS": 300000,
+  "PRIMARY": "S_FIFO",
+  "REM_METRICS": [
+   "adverse",
+   "abs",
+   "adverse_r"
+  ],
+  "R_STEPS": {
+   "r_1s": 10,
+   "r_30s": 300,
+   "r_5s": 50
+  },
+  "SEED": 20261123,
+  "SIG_FLOOR": 0.2,
+  "SIG_STEPS": 600,
+  "STALE_MS": 1000,
+  "STEP": 100,
+  "S_EDGES": [
+   500.0,
+   1000.0,
+   2000.0,
+   5000.0,
+   10000.0,
+   30000.0,
+   60000.0
+  ],
+  "TEN_X": 10.0,
+  "TOB_KEEP_BEFORE_MS": 305000
+ },
+ "inputs": {
+  "fv": {
+   "bytes": 1078229581,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/econ/fills_valued.parquet",
+   "sha256": "2a874707cc7801d6760e2de36075870700cc0be8e72cd9a6df0213424221cde6"
+  },
+  "identities": {
+   "bytes": 80624,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/econ/identities.json",
+   "sha256": "321c5274cc9cbc2151f94aad619ad199de41b98db4a410d12b83b61aa69aa239"
+  },
+  "markets/20261024": {
+   "bytes": 67275,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/markets_20261024.parquet",
+   "sha256": "9ba05add8488e2dda53639a84a5bc6514242e88d6f9335c24ad8c83b8cefa82e"
+  },
+  "markets/20261025": {
+   "bytes": 67404,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/markets_20261025.parquet",
+   "sha256": "e017d6d95f627786c7afdbee4e45db31fe788b086433ea1cce270bdcb3a16c29"
+  },
+  "markets/20261026": {
+   "bytes": 67285,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/markets_20261026.parquet",
+   "sha256": "b0f5bc74946c75bdbc7e3918cfc35713f05fe307b8f1a25f556c9cd3c2375877"
+  },
+  "markets/20261027": {
+   "bytes": 68030,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/markets_20261027.parquet",
+   "sha256": "b6139aefc4e45e4e02cc65868e18c0acb77cf272e354ad76794f39ffb4ea5a36"
+  },
+  "orders/20261024/3697902": {
+   "bytes": 241491,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3697902_orders.parquet",
+   "sha256": "2a416e6b5652e0e49b89a6fefc44151602a0a4abd63d04d70bd7d2694ca0f80e"
+  },
+  "orders/20261024/3699278": {
+   "bytes": 327174,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3699278_orders.parquet",
+   "sha256": "45692585130b1ebeada1635936fb197755df67c216f07379186fa7a6724971a0"
+  },
+  "orders/20261024/3700070": {
+   "bytes": 266660,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3700070_orders.parquet",
+   "sha256": "1d969f82111e371feb5b26b6c6a2a0df1dc8d8134853cc14a3ab821c8ff305d7"
+  },
+  "orders/20261024/3702960": {
+   "bytes": 166460,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3702960_orders.parquet",
+   "sha256": "ba2868b21df9aa885975255f6ea427bdccde946bde6d59e1c61fd4c0b8b75427"
+  },
+  "orders/20261024/3704004": {
+   "bytes": 324724,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3704004_orders.parquet",
+   "sha256": "9778694169dc4b263c4cbd698f70335db7430715946a2147d86c5bd479c9eea7"
+  },
+  "orders/20261024/3712725": {
+   "bytes": 311548,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3712725_orders.parquet",
+   "sha256": "6c5db109f7b6e6fb245503d25e28d6d56c8a989626091bf6acb9574abce71e95"
+  },
+  "orders/20261024/3716727": {
+   "bytes": 278829,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3716727_orders.parquet",
+   "sha256": "0926cfd26674ee390f773204b669ed66d852936bc3a0131b13a4568aa291a200"
+  },
+  "orders/20261025/3723774": {
+   "bytes": 266351,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261025_3723774_orders.parquet",
+   "sha256": "672d80cd9f727074e6767327d7316ae194fe82dd6f3885917ca117094c417f81"
+  },
+  "orders/20261025/3734864": {
+   "bytes": 330822,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261025_3734864_orders.parquet",
+   "sha256": "1af2a115d8ea4bae00702748b7e4d98d81e967a42e4f92b6623fedebfde05803"
+  },
+  "orders/20261025/3737919": {
+   "bytes": 325407,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261025_3737919_orders.parquet",
+   "sha256": "b74184df21d415d999aa76e82bdbcb2cd52627997ec05d5db73becc34bd30caa"
+  },
+  "orders/20261025/3763401": {
+   "bytes": 375430,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261025_3763401_orders.parquet",
+   "sha256": "62ac80e8b001694ae30ca5cd9100990e815224fad547d5f8a889bbd7a0dbb922"
+  },
+  "orders/20261025/3776314": {
+   "bytes": 272770,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261025_3776314_orders.parquet",
+   "sha256": "b63c00909cf7c66500eb7fc9972eb5000ffb3dc88f51badfdce3df1c79e0391f"
+  },
+  "orders/20261026/3789484": {
+   "bytes": 282508,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261026_3789484_orders.parquet",
+   "sha256": "39740123405332c95499b23b357e7c32afe195a389b003f5cdce79e7d1a55a36"
+  },
+  "orders/20261026/3803131": {
+   "bytes": 240050,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261026_3803131_orders.parquet",
+   "sha256": "9f0446f9531dadea7cccc72670326b0f6a8064b11b97a00fc6bf981a553fb295"
+  },
+  "orders/20261026/3804696": {
+   "bytes": 297218,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261026_3804696_orders.parquet",
+   "sha256": "84f452f57748b12b7d301b2cfb738cd86db89d1d42ff3d45ad0c382084408877"
+  },
+  "orders/20261026/3838531": {
+   "bytes": 359828,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261026_3838531_orders.parquet",
+   "sha256": "eba09e720be5209d60cf176041a30f6994f2ac522ea3a3d499b710b6f38230e5"
+  },
+  "orders/20261026/3850428": {
+   "bytes": 312910,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261026_3850428_orders.parquet",
+   "sha256": "6cba3591ab5b2b8729555018e607bb402c6f963b18130a6a83a1ee68cbe1a07e"
+  },
+  "orders/20261027/3877472": {
+   "bytes": 419274,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261027_3877472_orders.parquet",
+   "sha256": "21af388fbe004cc0375106248910e554eb1934d71253644b26e363aaff3c8555"
+  },
+  "orders/20261027/3899224": {
+   "bytes": 274537,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261027_3899224_orders.parquet",
+   "sha256": "69b47117e868f32aba04a5cb7118b74491611e3e326ae8efece681ddbc4d2cf5"
+  },
+  "tob/20261024": {
+   "bytes": 49103205,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/tob_20261024.parquet",
+   "sha256": "52e24fa1c4c4fe2829a505747a47d7a9c9064b4a3ed3300707884d2ed718cc33"
+  },
+  "tob/20261025": {
+   "bytes": 47728758,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/tob_20261025.parquet",
+   "sha256": "b111dd7302269a221c4d2bed722e37e714b2915fe86a3e1a3a38907c2fbc662f"
+  },
+  "tob/20261026": {
+   "bytes": 54822113,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/tob_20261026.parquet",
+   "sha256": "ad5b375958bc332b7efad67f9cea043b01f4c652547f1bad4538b1d856bc7aff"
+  },
+  "tob/20261027": {
+   "bytes": 53497457,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/tob_20261027.parquet",
+   "sha256": "f193ed73cfd37b9473809cf8c88e2d84d576ea7f8c5ba5158c91ad49659b6409"
+  },
+  "x_links/20261024/3697902": {
+   "bytes": 203549,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3697902_x_links.parquet",
+   "sha256": "25d85aefd3e97f7b1533bde42aa14b7cab4e98e44388d67525f2f13db57da9a6"
+  },
+  "x_links/20261024/3699278": {
+   "bytes": 282999,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3699278_x_links.parquet",
+   "sha256": "8d605efa6567344723698d6493f165887da4cf0bdee996ac31ea768d398353ff"
+  },
+  "x_links/20261024/3700070": {
+   "bytes": 226305,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3700070_x_links.parquet",
+   "sha256": "174871f4771aa80b2795379543300202cfa21edf12c0bda6f57b4797c6245ec6"
+  },
+  "x_links/20261024/3702960": {
+   "bytes": 125878,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3702960_x_links.parquet",
+   "sha256": "74dcd0f68955cb2ed5aff5c38701c438399a28b2009d4a4e9b2611356ff9ed59"
+  },
+  "x_links/20261024/3704004": {
+   "bytes": 275175,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3704004_x_links.parquet",
+   "sha256": "e1c7e1e601de23c69c63f56f42b1d1e5b5e275b54c9eb5b78ea5b8a5d938a647"
+  },
+  "x_links/20261024/3712725": {
+   "bytes": 246416,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3712725_x_links.parquet",
+   "sha256": "1e630e055cdb2d87f2129160a6eba1ad622e68eeefd57d9198488b2f1d00d29f"
+  },
+  "x_links/20261024/3716727": {
+   "bytes": 230754,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261024_3716727_x_links.parquet",
+   "sha256": "1c9c9cb311d40fb961fddd9487a4b41b2ce55436da55425c518127611b5a1e0a"
+  },
+  "x_links/20261025/3723774": {
+   "bytes": 213172,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261025_3723774_x_links.parquet",
+   "sha256": "4ccb4853d13ac227d20d6a27fa209837b21a93fee531283d3c4ed450e714da8a"
+  },
+  "x_links/20261025/3734864": {
+   "bytes": 288874,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261025_3734864_x_links.parquet",
+   "sha256": "0a461f01c8d9ff097f4daf1081a74c19505a6c29595d6e599e6c8e1e42e0ceb5"
+  },
+  "x_links/20261025/3737919": {
+   "bytes": 261372,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261025_3737919_x_links.parquet",
+   "sha256": "502ddf54b34e3a5caf41977adfe9360883b89867656f34cd348298bafa75a277"
+  },
+  "x_links/20261025/3763401": {
+   "bytes": 311543,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261025_3763401_x_links.parquet",
+   "sha256": "8ae7c5194a5e710910da4781cf0ce13df8fe1674493fdcdb2652a91b61e83dc1"
+  },
+  "x_links/20261025/3776314": {
+   "bytes": 224508,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261025_3776314_x_links.parquet",
+   "sha256": "a84ee681c4199078b58dcad8f820c0d84081d51596a004fd131197dda64d7817"
+  },
+  "x_links/20261026/3789484": {
+   "bytes": 226601,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261026_3789484_x_links.parquet",
+   "sha256": "5c5b2c0aac9e090011da9bef71732b8647da76ac00ba9323ac06ed7b3db8a37c"
+  },
+  "x_links/20261026/3803131": {
+   "bytes": 180394,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261026_3803131_x_links.parquet",
+   "sha256": "de79d132b8cbcfdd99bde8aadc31ab0b15cdf02051d019da8539ba6bf0a7036e"
+  },
+  "x_links/20261026/3804696": {
+   "bytes": 256770,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261026_3804696_x_links.parquet",
+   "sha256": "bd061cacdc700bef4c69e9613ff5aef4707c859c184d19be81715d81509825b6"
+  },
+  "x_links/20261026/3838531": {
+   "bytes": 306290,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261026_3838531_x_links.parquet",
+   "sha256": "5eed93ee806760c82b80726f8762fc14e5a39fc86f2f068b5547cfb1f9d279c7"
+  },
+  "x_links/20261026/3850428": {
+   "bytes": 261985,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261026_3850428_x_links.parquet",
+   "sha256": "2da436ed4c3c7e8d83af184da84576937706c6f34452084e8dd329e166d322ef"
+  },
+  "x_links/20261027/3877472": {
+   "bytes": 349431,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261027_3877472_x_links.parquet",
+   "sha256": "e9b7084526612f64e9f9ef6f0b3b6effb9107718dcafb725ac15033e433c63ba"
+  },
+  "x_links/20261027/3899224": {
+   "bytes": 226004,
+   "path": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/life/20261027_3899224_x_links.parquet",
+   "sha256": "96643c0e2bccad841c92a9e3f80c917aeae747f028f7e7d7f7fa098bb4f7f028"
+  }
+ },
+ "lags_ms": [
+  0,
+  50,
+  250
+ ],
+ "memory": {
+  "guard_mib": 1450.0,
+  "vmhwm_mib": 641.5,
+  "vmhwm_mib_by_stage": {
+   "day 20261024": 573.5,
+   "day 20261025": 582.4,
+   "day 20261026": 636.2,
+   "day 20261027": 641.5,
+   "fills_valued": 506.6,
+   "logit": 641.5,
+   "pairs": 506.6,
+   "tables": 641.5
+  }
+ },
+ "module": "pf_mt_decision",
+ "outputs": {
+  "address_summary.csv": {
+   "rows": 4,
+   "sha256": "585e7a37ffb5493ee60828cef1e43568e2ffcac73e6a452947689657c8d3e23d"
+  },
+  "claims_decision.json": {
+   "rows": 68,
+   "sha256": "3a0ed4a7136fa5c69c53b307b1d8879a91bddb2222c3155aaa0e78b1e56a03e9"
+  },
+  "inventory.csv": {
+   "rows": 200,
+   "sha256": "05cfc20a0d5ec6eb7f3589e0bbefb9f1d67380e6b7a7a559c634effb76dc6628"
+  },
+  "links.csv": {
+   "rows": 48,
+   "sha256": "73ddf934e4e6b341650dbd4a22f4e7f2dff9ad95a4faec3de18c505f0776b6a7"
+  },
+  "post_fill.csv": {
+   "rows": 120,
+   "sha256": "4127704291ddc4bbf9bd5b48ed750688d962e8ef0b85929616fa8bb435cf5e15"
+  },
+  "post_fill_tau.csv": {
+   "rows": 120,
+   "sha256": "b83cbff6ac9a02e78c923519a3383d7654bb093300ad23541b99e9d8899e6e47"
+  },
+  "post_posting.csv": {
+   "rows": 798,
+   "sha256": "203b35ad81715eddc62a8182eb1082adc7f2928f0bb514fc17c85af5662b7003"
+  },
+  "post_skew.csv": {
+   "rows": 192,
+   "sha256": "76418c46c75555e74875c0f066870d5d73e7b74abfbfea833503f84d7ea1f2e3"
+  },
+  "removal.csv": {
+   "rows": 504,
+   "sha256": "4f6c03acc39e41d2af7dac43d37d913660b7f135a25baa874559fae052b88224"
+  },
+  "statuses.csv": {
+   "rows": 1218,
+   "sha256": "2fe2cbf8fcf75af5ebeebeae1635fc24a3e467e557960ffca6e1316e33758ddc"
+  },
+  "take_events.csv": {
+   "rows": 120,
+   "sha256": "0c29e8f44716668440e9b0cebdc3f7bbbdb1bb17ae4964465c7c9e5cac775dc7"
+  },
+  "take_hazard_1d.csv": {
+   "rows": 10916,
+   "sha256": "e429ccae12e5ccd319765d1bc0631848fc7cbf22b68faa70b6ce353676c3e49b"
+  },
+  "take_hazard_2d.csv": {
+   "rows": 26760,
+   "sha256": "2afb2f67c7664eeb97da5cc8280c8ebf6dffa03e3e43ea4b4a9df3307d2f0dcf"
+  },
+  "take_logit.csv": {
+   "rows": 24,
+   "sha256": "27496f9f4075cb29634a1f5eed0ebac5078e4ab7c2bf9d4d47993e06db9ca217"
+  },
+  "take_threshold.csv": {
+   "rows": 720,
+   "sha256": "de46b35ee99faaab6ef9b757c5c656fde99a9278adb86386b77306701326c33b"
+  },
+  "timeline_rank1_20261024_3703730.csv": {
+   "rows": 3242,
+   "sha256": "b3762800dd1aaa3079fd18582acade1a747360fd65f716f45b87d8374c1de625"
+  },
+  "timeline_rank1_20261027_3885429.csv": {
+   "rows": 3239,
+   "sha256": "4a36012930f736c13f2d2efaec79e64f2930e1fb883b1f31b2ab0410320b8586"
+  },
+  "timeline_rank1_20261027_3899224.csv": {
+   "rows": 3249,
+   "sha256": "2212e05a9d667e942b5e2e44ac059005a91c6319aa3feb0a7223a1d31fbbe81b"
+  },
+  "timeline_rank2_20261024_3703728.csv": {
+   "rows": 3247,
+   "sha256": "e9785910c9c9189985e81d3c3898e55cb0ee8e73dd4e2d406251a240871f60e5"
+  },
+  "timeline_rank2_20261027_3863730.csv": {
+   "rows": 2915,
+   "sha256": "75ed71e472d14f0250413af8b79fce2483abec20daf6dfa85d259a7cff371db7"
+  },
+  "timeline_rank2_20261027_3877472.csv": {
+   "rows": 3235,
+   "sha256": "94fe90cd115229457a4d01355493891cd4c136a323b842582d72ddb074d6a05c"
+  },
+  "timeline_rank3_20261024_3710012.csv": {
+   "rows": 3281,
+   "sha256": "61822fcb2fe54267949795763c33c3aeeccd827cf9d091a8ef6e61f6bbff5227"
+  },
+  "timeline_rank3_20261026_3812657.csv": {
+   "rows": 3286,
+   "sha256": "cbad66684dc328d97a124d85f605a5d7e4d05abb1173e796f6d1471fb4febe8d"
+  },
+  "timeline_rank3_20261026_3838531.csv": {
+   "rows": 3282,
+   "sha256": "015ca06fc97601e1c47a66a16a275d8db5c326765126eaa6b994ddf63a3caed1"
+  }
+ },
+ "rows": {
+  "address_summary.csv": 4,
+  "inventory.csv": 200,
+  "links.csv": 48,
+  "post_fill.csv": 120,
+  "post_fill_tau.csv": 120,
+  "post_posting.csv": 798,
+  "post_skew.csv": 192,
+  "removal.csv": 504,
+  "statuses.csv": 1218,
+  "take_events.csv": 120,
+  "take_hazard_1d.csv": 10916,
+  "take_hazard_2d.csv": 26760,
+  "take_logit.csv": 24,
+  "take_threshold.csv": 720,
+  "timeline_rank1_20261024_3703730.csv": 3242,
+  "timeline_rank1_20261027_3885429.csv": 3239,
+  "timeline_rank1_20261027_3899224.csv": 3249,
+  "timeline_rank2_20261024_3703728.csv": 3247,
+  "timeline_rank2_20261027_3863730.csv": 2915,
+  "timeline_rank2_20261027_3877472.csv": 3235,
+  "timeline_rank3_20261024_3710012.csv": 3281,
+  "timeline_rank3_20261026_3812657.csv": 3286,
+  "timeline_rank3_20261026_3838531.csv": 3282
+ },
+ "rules": {
+  "btc_semantics": "pf_mt_btc 40ee591ea: row g = the last bookTicker with E_ms <= g (one file per day, its own grid only); age_ms = g - E_ms (-1 when none); status ok | stale | gap | no_data; usable = ok and 0 <= age_ms <= 1000 and a finite mid > 0; age_ms -1 or a non-ok status = missing (counted), never fresh; an ok row with age_ms < -1 refuses; a g_ms in two files: the usable row wins, else the own-day file; two usable rows must agree",
+  "doc": "TOP-3 DECISION PATHS (P-2026-005, MAKER-TRACE-RECONSTRUCTION-v1 amendment 3; session aea5bfb9 development, 2026-11-23). USER: \"check like\ntop 3 makers, totally understand what they are doing, like under what condition they post and what conditions they take, we need their\ndecision path.\" Binding spec: predictfun/reviews/maker_trace_20261122/decision_contract.md (frozen before its data run). DESCRIPTIVE ONLY, on\nconsumed days: no strategy, imitation, tradeable or profitability claim. p_fair is a descriptive reference, not a claim about the makers' model.\nEvery rule below is declared before any data run; synthetic proof (positive controls, refusals): pf_mt_decision_selftest.py.\nPOPULATION the contract's ex-ante top 3 (TOP3; econ/identities.json ex_ante.top10_shares ranks 1-3 must equal it, else refuse); their\n       econ/fills_valued rows (maker AND taker legs) on the measurement days; on BOOK markets (pf_mt_econ.load_book: the frozen 'complete'\n       list, every one required) their lifecycle rows life/<day>_<mid>_{orders,x_links}.parquet. A PAIR (address x market) is excluded whole,\n       with a status, when its market is missing or flagged MKT_EXCLUDE (no_market / market_<flag>), when any own row is not status ok\n       (fill_status_<s>), when a row has no settle_ms (no_settle) or when its span is empty (span_empty); its would-be grid rows are counted.\nCLOCKS never mixed. BTC: btc/btc_<day>.parquet (pf_mt_btc 40ee591ea: one file per day holding its own 100 ms grid on Binance E_ms; row g =\n       the last bookTicker with E_ms <= g, age_ms = g - E_ms (-1 when none), status ok | stale | gap | no_data; usable = ok, 0 <= age_ms <=\n       BTC_MAX_AGE_MS, finite mid > 0; age_ms -1 or a non-ok status is missing (counted), never fresh; an ok row with age_ms < -1 refuses; a\n       g_ms in two files: the usable row wins, else the own-day file, two usable rows must agree). Predict book: tob upd_ms. A fill: its\n       match bound hi = fills_valued.settle_ms (UUIDv7 creation: an upper bound of the match), on every market.\nLAG    every feature of a decision with bound b is evaluated at x = b - L, L in LAGS ms. A conclusion that differs across L is lag_sensitive.\nBTC    at x: grid row i = floor(x / 100); r_ws = 1e4 ln(mid_i / mid_ws) (0 before ws: the start is not set yet, so p_fair = 0.5);\n       r_1s / r_5s / r_30s = 1e4 ln(mid_i / mid_{i-10 / 50 / 300}); sig_60 = sqrt(sum of the 600 squared 100 ms returns (bps) in (i-600, i]\n       / 60 s) in bps/sqrt(s), floored at SIG_FLOOR; tau = (we - x) / 1000 s; z = r_ws / (max(sig_60, floor) sqrt(tau)); p_fair = Phi(z).\n       Every grid point in [i - 600, i] (and ws when x >= ws) must be usable (status 'ok', finite mid > 0, 0 <= age_ms <= BTC_MAX_AGE_MS),\n       else btc_invalid; outside the loaded grid btc_missing; tau <= 0 after_we. Only returns, never the level against the Chainlink start.\nBOOK   the last tob frame (upd_ms, recv_ns order) with upd_ms <= x in the market, with pf_mt_econ's MID rules: book_no_frame / book_frame_status\n       (a BAD_FRAME flag) / book_one_sided / book_crossed / book_stale (x - upd_ms > STALE_MS); best bid / ask, mid, spread, size at best,\n       imbalance (bid_sh - ask_sh) / (bid_sh + ask_sh); g_buy = 100 (p_fair - best_ask), g_sell = 100 (best_bid - p_fair), in cents.\n       Frames before ws - TOB_KEEP_BEFORE_MS are not loaded (a query whose last frame is older reads book_no_frame instead of book_stale).\nOWN    net YES position = sum of s q over the pair's own fills (both roles; fees excluded) with settle_ms < x; time since the last of them;\n       on BOOK the number of its proven-present orders per side (PRIMARY-scenario persistence window [persist_lo, persist_hi] covers x).\nTAKE   grid per pair: t = t0 + 100 k over [max(first - 30 s, ws - 300 s), min(last + 30 s, we)) (first / last own fill, any role; t0 = the\n       100 ms floor). Event: a take RECORD (unique sid with role taker - rows are actions) with settle_ms in [t, t + 100), buy (s = +1) and\n       sell (s = -1) separately; features at t - L; rows with a feature status are excluded and counted. Tables (rows, events, rate) per\n       address, pooled and per day (4 days: point estimates, no intervals): 1-D g / r_1s / r_5s / tau / own position sign / time since own fill /\n       BOOK resting state; 2-D g x sign(r_1s), g x sign(r_5s), g x position sign, g x tau (60 s). THRESHOLD: the maximum-likelihood two-rate\n       split of the g buckets (edges G_EDGES), both sides >= N_MIN_SPLIT rows, ties to the smallest edge, in the slices all / r1_aligned (sign\n       of r_1s = the side) / r1_against / r1_zero / r5_aligned / r5_against. LOGISTIC (one declared fit, no penalty, no tuning): y ~ 1 + g\n       (clipped +-GCLIP_LOGIT c) + r_1s + r_5s + tau (min) + pos_long + pos_short per L x side x (address, pooled); IRLS from the base-rate\n       intercept (warm start from the previous L when it converged), constant columns dropped and named, at most LOGIT_MAX_PASS data passes\n       and FIT_CPU_CAP_S CPU per L (then status cpu_cap; only converged fits enter a claim); point estimates only (no intervals: rows are\n       serially dependent and G = 4 days < 5).\nPOST   AT FILL (each maker leg = one order fill): offset = 100 (p - p_fair), edge = 100 s (p_fair - p), ticks behind the shown best on its side\n       (bid: best_bid - p, ask: p - best_ask; < 0 = inside), size, tau, position before. AT POSTING (BOOK lifecycle orders): the same at the\n       posting window hi (post_hi_ms = the first fill; scenario-free), with lo (post_lo_ms >= 0) and mid ((lo + hi) // 2) per scenario as\n       sensitivity, plus size_lb and post_class. SKEW: OLS offset = a + b (position / 100 sh) per side and clock. REFILL / REPRICE (x_links,\n       x_latest rows): gap quantiles; the tick change against dp = 100 (p_fair(next_first_hi - L) - p_fair(prev_last_hi - L)) (OLS slope,\n       correlation, sign agreement) and the BTC return. REMOVAL: orders whose removal_set holds cancelled_or_expired (cancel_possible) vs\n       those whose set is exactly {exhausted} (exhausted_only); window [removal_lo, removal_hi] (both bounded); adverse = -s dp, abs = |dp|,\n       adverse_r = -s r (BTC log return, bps); PHASE = pre-ws or live [ws, we) by the window start at L = 0 (windows straddling ws or ending\n       at / after we are statuses). NULL declared here: per order N_DRAWS windows of the same (100 ms-rounded) width drawn uniformly, with\n       replacement, from the usable placements entirely inside the SAME PHASE of the same market (pre: [ws - 300 s, ws)), or of the same\n       market-day pool when the market has < MIN_PLACE (no placement: a status); seeded per scenario x day; group-mean replicates, one-sided\n       p = (1 + #(null >= observed)) / (1 + draws), z, per-order mid-rank percentile; per phase and both; cancel minus exhausted paired.\nINVENTORY rows are actions (pair, record, role; self-trades excluded): does the action reduce |position before| (s x position < 0), by\n       |position| bucket; P(sell | long) vs P(sell | short).\nTIMELINES per address, chosen in code before any feature is computed: the BOOK pair with the most own rows; the non-BOOK pair with the most own\n       take records; the non-BOOK pair with the most own maker rows (not already chosen); ties to the smallest (day, mid). 100 ms rows at L = 0.\nGUARDS days: measurement days only (refused before any path is built); BTC files only for BTC_DAYS (pf_mt_common.Forbidden before access),\n       rows before Oct 23 23Z clipped (counted), any row at or after Oct 28 00:00Z refuses; a missing BTC grid of a measurement day refuses;\n       an address outside the contract's top 3 refuses; fills_valued rows on a non-consumed day refuse; outputs write-once (a partial\n       directory renamed at the end); VmHWM self-guard pf_mt_common.GUARD_MIB (never raised).\nOUTPUTS <out> = pf_mt_common.RECEIPT / 'decision': statuses.csv, take_hazard_1d.csv, take_hazard_2d.csv, take_threshold.csv, take_logit.csv,\n       take_events.csv, post_fill.csv, post_fill_tau.csv, post_posting.csv, post_skew.csv, links.csv, removal.csv, inventory.csv,\n       address_summary.csv, timeline_<scope>_<day>_<mid>.csv, claims_decision.json (computed predicates with n), decision.json (receipt).\nUsage (run_light): MT_RUN=v2 pf_mt_decision.py run      schemas: pf_mt_decision.py schemas [root]      selftest: pf_mt_decision_selftest.py",
+  "ref_files": "ref_<day>.parquet (Chainlink) is never read: returns only",
+  "removal_null": "per order: 500 windows of the same 100 ms-rounded width drawn uniformly (with replacement) from the usable placements of the SAME PHASE (pre-ws [ws - 300 s, ws) or live [ws, we), by the window start at L = 0) in the same market, or in the same market-day pool when the market has < 100; windows straddling ws, ending at or after we, unbounded or without a placement are statuses"
+ },
+ "run": "v2",
+ "slot": "claude",
+ "sources": {
+  "pf_mt_common.py": "e54ccd15489ed41b23b1e1d62e11d26aacd7f1d778be47bdaf4154b2cb091f7b",
+  "pf_mt_decision.py": "8423ed72031fd9d97198465402003f4fd38f54589a7d7b690780decf0ef376c0",
+  "pf_mt_decision_selftest.py": "6192c2e3409cff424befac3259fecc08c82aebc083318e1b3871fc925807bb60",
+  "pf_mt_econ.py": "a0bd305326758d257def7d98279513928b721ed11562bdce6b5946b1f02f19e7"
+ },
+ "version": "decision_v1",
+ "wall_s": 56.0
+}

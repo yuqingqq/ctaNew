@@ -1,0 +1,2255 @@
+{
+ "claims": [
+  {
+   "claim": "take_rate_above_gap_threshold_ge_10x_below",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "e_above": 14798,
+     "e_below": 20169,
+     "holds": false,
+     "n_above": 1022662,
+     "n_below": 1907880,
+     "rate_above": 0.014470079068157417,
+     "rate_below": 0.010571419586137493,
+     "threshold_c": 1.5
+    },
+    "250": {
+     "e_above": 13829,
+     "e_below": 21123,
+     "holds": false,
+     "n_above": 1022404,
+     "n_below": 1910367,
+     "rate_above": 0.013525964295914334,
+     "rate_below": 0.011057037731493477,
+     "threshold_c": 1.5
+    },
+    "50": {
+     "e_above": 14390,
+     "e_below": 20575,
+     "holds": false,
+     "n_above": 1022308,
+     "n_below": 1908685,
+     "rate_above": 0.014075992753651541,
+     "rate_below": 0.010779672916170033,
+     "threshold_c": 1.5
+    }
+   },
+   "scope": "rank1",
+   "side": "buy/all",
+   "statement": "max-likelihood g split (both sides >= 200 rows): rate above >= 10 x rate below"
+  },
+  {
+   "claim": "take_rate_above_gap_threshold_ge_10x_below",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "e_above": 4548,
+     "e_below": 3676,
+     "holds": false,
+     "n_above": 119115,
+     "n_below": 139375,
+     "rate_above": 0.038181589220501196,
+     "rate_below": 0.026374887892376683,
+     "threshold_c": 0.5
+    },
+    "250": {
+     "e_above": 1873,
+     "e_below": 1794,
+     "holds": false,
+     "n_above": 117314,
+     "n_below": 141363,
+     "rate_above": 0.01596569889356769,
+     "rate_below": 0.012690732369856328,
+     "threshold_c": 0.5
+    },
+    "50": {
+     "e_above": 3469,
+     "e_below": 3073,
+     "holds": false,
+     "n_above": 117286,
+     "n_below": 141222,
+     "rate_above": 0.02957727264976212,
+     "rate_below": 0.021760065712141168,
+     "threshold_c": 0.5
+    }
+   },
+   "scope": "rank1",
+   "side": "buy/r1_aligned",
+   "statement": "max-likelihood g split (both sides >= 200 rows): rate above >= 10 x rate below"
+  },
+  {
+   "claim": "take_rate_higher_when_r_1s_aligned",
+   "lag_sensitive": true,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "e_against": 4754,
+     "e_aligned": 8224,
+     "holds": true,
+     "n_against": 263161,
+     "n_aligned": 258490,
+     "rate_against": 0.01806498683315537,
+     "rate_aligned": 0.031815544121629465
+    },
+    "250": {
+     "e_against": 6209,
+     "e_aligned": 3667,
+     "holds": false,
+     "n_against": 263324,
+     "n_aligned": 258677,
+     "rate_against": 0.023579316735276693,
+     "rate_aligned": 0.01417598008326987
+    },
+    "50": {
+     "e_against": 5298,
+     "e_aligned": 6542,
+     "holds": true,
+     "n_against": 263181,
+     "n_aligned": 258508,
+     "rate_against": 0.020130632530463825,
+     "rate_aligned": 0.025306760332368824
+    }
+   },
+   "scope": "rank1",
+   "side": "buy",
+   "statement": "take rate with sign(r_1s) = the side > take rate with the opposite sign"
+  },
+  {
+   "claim": "logit_gap_coefficient_positive",
+   "lag_sensitive": true,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "b_g_c": 0.006374839061238829,
+     "events": 34967,
+     "holds": true,
+     "n": 2930542
+    },
+    "250": {
+     "b_g_c": -0.0009359359730269673,
+     "events": 34952,
+     "holds": false,
+     "n": 2932771
+    },
+    "50": {
+     "b_g_c": 0.0033482952857662616,
+     "events": 34965,
+     "holds": true,
+     "n": 2930993
+    }
+   },
+   "scope": "rank1",
+   "side": "buy",
+   "statement": "declared logistic fit converged and its g coefficient > 0"
+  },
+  {
+   "claim": "take_rate_above_gap_threshold_ge_10x_below",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "e_above": 16428,
+     "e_below": 19107,
+     "holds": false,
+     "n_above": 1122491,
+     "n_below": 1808051,
+     "rate_above": 0.014635306652792762,
+     "rate_below": 0.010567732879216349,
+     "threshold_c": 1.5
+    },
+    "250": {
+     "e_above": 15499,
+     "e_below": 20028,
+     "holds": false,
+     "n_above": 1122279,
+     "n_below": 1810492,
+     "rate_above": 0.013810291380307392,
+     "rate_below": 0.011062186411207561,
+     "threshold_c": 1.5
+    },
+    "50": {
+     "e_above": 16024,
+     "e_below": 19512,
+     "holds": false,
+     "n_above": 1122176,
+     "n_below": 1808817,
+     "rate_above": 0.01427940002281282,
+     "rate_below": 0.010787160890239312,
+     "threshold_c": 1.5
+    }
+   },
+   "scope": "rank1",
+   "side": "sell/all",
+   "statement": "max-likelihood g split (both sides >= 200 rows): rate above >= 10 x rate below"
+  },
+  {
+   "claim": "take_rate_above_gap_threshold_ge_10x_below",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "e_above": 2076,
+     "e_below": 6056,
+     "holds": false,
+     "n_above": 49181,
+     "n_below": 213980,
+     "rate_above": 0.04221142311055082,
+     "rate_below": 0.02830171044022806,
+     "threshold_c": 6.0
+    },
+    "250": {
+     "e_above": 1872,
+     "e_below": 1672,
+     "holds": false,
+     "n_above": 124552,
+     "n_below": 138772,
+     "rate_above": 0.015029867043483846,
+     "rate_below": 0.01204854005130718,
+     "threshold_c": 0.5
+    },
+    "50": {
+     "e_above": 3468,
+     "e_below": 2878,
+     "holds": false,
+     "n_above": 124536,
+     "n_below": 138645,
+     "rate_above": 0.027847369435343997,
+     "rate_below": 0.020758051137797974,
+     "threshold_c": 0.5
+    }
+   },
+   "scope": "rank1",
+   "side": "sell/r1_aligned",
+   "statement": "max-likelihood g split (both sides >= 200 rows): rate above >= 10 x rate below"
+  },
+  {
+   "claim": "take_rate_higher_when_r_1s_aligned",
+   "lag_sensitive": true,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "e_against": 4792,
+     "e_aligned": 8132,
+     "holds": true,
+     "n_against": 258490,
+     "n_aligned": 263161,
+     "rate_against": 0.018538434755696546,
+     "rate_aligned": 0.030901235365422688
+    },
+    "250": {
+     "e_against": 6278,
+     "e_aligned": 3544,
+     "holds": false,
+     "n_against": 258677,
+     "n_aligned": 263324,
+     "rate_against": 0.024269649021752996,
+     "rate_aligned": 0.013458704865488903
+    },
+    "50": {
+     "e_against": 5335,
+     "e_aligned": 6346,
+     "holds": true,
+     "n_against": 258508,
+     "n_aligned": 263181,
+     "rate_against": 0.02063765918269454,
+     "rate_aligned": 0.024112682906440815
+    }
+   },
+   "scope": "rank1",
+   "side": "sell",
+   "statement": "take rate with sign(r_1s) = the side > take rate with the opposite sign"
+  },
+  {
+   "claim": "logit_gap_coefficient_positive",
+   "lag_sensitive": true,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "b_g_c": 0.0060217540466028265,
+     "events": 35535,
+     "holds": true,
+     "n": 2930542
+    },
+    "250": {
+     "b_g_c": -0.0012920980574362287,
+     "events": 35527,
+     "holds": false,
+     "n": 2932771
+    },
+    "50": {
+     "b_g_c": 0.002932455811746997,
+     "events": 35536,
+     "holds": true,
+     "n": 2930993
+    }
+   },
+   "scope": "rank1",
+   "side": "sell",
+   "statement": "declared logistic fit converged and its g coefficient > 0"
+  },
+  {
+   "claim": "quotes_centred_on_p_fair",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "a_ask_c": 0.13327799684566408,
+     "a_bid_c": 0.3543649010520381,
+     "centre_c": 0.2438214489488511,
+     "half_spread_c": -0.11054345210318701,
+     "holds": true,
+     "n_ask": 82427,
+     "n_bid": 78651
+    },
+    "250": {
+     "a_ask_c": 1.6587481987744956,
+     "a_bid_c": -1.0191675727128013,
+     "centre_c": 0.31979031303084715,
+     "half_spread_c": 1.3389578857436484,
+     "holds": true,
+     "n_ask": 82431,
+     "n_bid": 78657
+    },
+    "50": {
+     "a_ask_c": 0.22617746045140166,
+     "a_bid_c": 0.27031570806781396,
+     "centre_c": 0.24824658425960783,
+     "half_spread_c": -0.02206912380820615,
+     "holds": true,
+     "n_ask": 82431,
+     "n_bid": 78655
+    }
+   },
+   "scope": "rank1",
+   "side": "fill",
+   "statement": "OLS intercepts (position 0): |(a_bid + a_ask) / 2| <= 0.5 c"
+  },
+  {
+   "claim": "quotes_skew_against_inventory",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "b_ask": -0.37293342334922686,
+     "b_bid": -0.3856779017326519,
+     "holds": true,
+     "n_ask": 82427,
+     "n_bid": 78651
+    },
+    "250": {
+     "b_ask": -0.2704417344840818,
+     "b_bid": -0.21322215183090795,
+     "holds": true,
+     "n_ask": 82431,
+     "n_bid": 78657
+    },
+    "50": {
+     "b_ask": -0.3929408913777248,
+     "b_bid": -0.3759519789785681,
+     "holds": true,
+     "n_ask": 82431,
+     "n_bid": 78655
+    }
+   },
+   "scope": "rank1",
+   "side": "fill",
+   "statement": "OLS slopes on position / 100 sh: b_bid < 0 and b_ask < 0"
+  },
+  {
+   "claim": "quotes_centred_on_p_fair",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "a_ask_c": 4.698277346231935,
+     "a_bid_c": 2.5646590093615775,
+     "centre_c": 3.631468177796756,
+     "half_spread_c": 1.0668091684351786,
+     "holds": false,
+     "n_ask": 842,
+     "n_bid": 807
+    },
+    "250": {
+     "a_ask_c": 5.818589052797746,
+     "a_bid_c": 1.377836171356328,
+     "centre_c": 3.5982126120770372,
+     "half_spread_c": 2.2203764407207087,
+     "holds": false,
+     "n_ask": 842,
+     "n_bid": 808
+    },
+    "50": {
+     "a_ask_c": 4.635011977077011,
+     "a_bid_c": 2.4902983873480697,
+     "centre_c": 3.5626551822125405,
+     "half_spread_c": 1.0723567948644706,
+     "holds": false,
+     "n_ask": 842,
+     "n_bid": 807
+    }
+   },
+   "scope": "rank1",
+   "side": "hi",
+   "statement": "OLS intercepts (position 0): |(a_bid + a_ask) / 2| <= 0.5 c"
+  },
+  {
+   "claim": "quotes_skew_against_inventory",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "b_ask": 0.31876602751132543,
+     "b_bid": -0.34408561916665015,
+     "holds": false,
+     "n_ask": 842,
+     "n_bid": 807
+    },
+    "250": {
+     "b_ask": 0.4790577538577766,
+     "b_bid": 0.24888034150473726,
+     "holds": false,
+     "n_ask": 842,
+     "n_bid": 808
+    },
+    "50": {
+     "b_ask": 0.4330132596323683,
+     "b_bid": -0.06668718481273737,
+     "holds": false,
+     "n_ask": 842,
+     "n_bid": 807
+    }
+   },
+   "scope": "rank1",
+   "side": "hi",
+   "statement": "OLS slopes on position / 100 sh: b_bid < 0 and b_ask < 0"
+  },
+  {
+   "claim": "next_maker_fill_reduces_position",
+   "lag_sensitive": false,
+   "n_L_evaluated": 1,
+   "per_L": {
+    "-": {
+     "holds": true,
+     "n": 152352,
+     "p_sell_long": 0.5240635705059808,
+     "p_sell_short": 0.5016887727429614,
+     "rate_reduce": 0.5103510291955472
+    }
+   },
+   "scope": "rank1",
+   "side": "maker",
+   "statement": "share of actions (position before != 0) that reduce |position| > 0.5"
+  },
+  {
+   "claim": "takes_reduce_position",
+   "lag_sensitive": false,
+   "n_L_evaluated": 1,
+   "per_L": {
+    "-": {
+     "holds": true,
+     "n": 156412,
+     "p_sell_long": 0.5965929435095161,
+     "p_sell_short": 0.41739659657748396,
+     "rate_reduce": 0.5890980231695778
+    }
+   },
+   "scope": "rank1",
+   "side": "taker",
+   "statement": "share of actions (position before != 0) that reduce |position| > 0.5"
+  },
+  {
+   "claim": "removal_windows_adverse_beyond_null",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "draws": 500,
+     "holds": true,
+     "n_orders": 1129,
+     "null_mean_c": -0.03631741891705812,
+     "obs_mean_c": 2.9291620544491788,
+     "p": 0.001996007984031936,
+     "z": 10.620738199751043
+    },
+    "250": {
+     "draws": 500,
+     "holds": true,
+     "n_orders": 1129,
+     "null_mean_c": -0.03631741891705812,
+     "obs_mean_c": 1.0555725206127784,
+     "p": 0.001996007984031936,
+     "z": 3.9105572285497994
+    },
+    "50": {
+     "draws": 500,
+     "holds": true,
+     "n_orders": 1129,
+     "null_mean_c": -0.03631741891705812,
+     "obs_mean_c": 2.746032024413075,
+     "p": 0.001996007984031936,
+     "z": 9.964865811156095
+    }
+   },
+   "scope": "rank1",
+   "side": "S_FIFO/cancel_possible/live",
+   "statement": "live phase: mean adverse p_fair move inside removal windows exceeds the phase-matched random-time null at one-sided p <= 0.05"
+  },
+  {
+   "claim": "removal_windows_move_beyond_null",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "draws": 500,
+     "holds": true,
+     "n_orders": 1129,
+     "null_mean_c": 3.7036364408914024,
+     "obs_mean_c": 6.577788212148467,
+     "p": 0.001996007984031936,
+     "z": 14.2797541848951
+    },
+    "250": {
+     "draws": 500,
+     "holds": true,
+     "n_orders": 1129,
+     "null_mean_c": 3.7036364408914024,
+     "obs_mean_c": 5.2547584258843205,
+     "p": 0.001996007984031936,
+     "z": 7.706496531600297
+    },
+    "50": {
+     "draws": 500,
+     "holds": true,
+     "n_orders": 1129,
+     "null_mean_c": 3.7036364408914024,
+     "obs_mean_c": 6.3622173732292495,
+     "p": 0.001996007984031936,
+     "z": 13.20872564006231
+    }
+   },
+   "scope": "rank1",
+   "side": "S_FIFO/cancel_possible/live",
+   "statement": "live phase: mean |p_fair move| inside removal windows exceeds the phase-matched random-time null at one-sided p <= 0.05"
+  },
+  {
+   "claim": "reprice_tracks_p_fair",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "holds": true,
+     "n": 1476,
+     "sign_agree": 0.712345562074767,
+     "slope": 0.6961533868291631
+    },
+    "250": {
+     "holds": true,
+     "n": 1477,
+     "sign_agree": 0.6746960204413152,
+     "slope": 0.6378050364323059
+    },
+    "50": {
+     "holds": true,
+     "n": 1476,
+     "sign_agree": 0.7109817790620861,
+     "slope": 0.707525030597909
+    }
+   },
+   "scope": "rank1",
+   "side": "both",
+   "statement": "n-weighted OLS slope of the tick change on dp > 0 and sign agreement > 0.5 (reprices)"
+  },
+  {
+   "claim": "take_rate_above_gap_threshold_ge_10x_below",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "e_above": 2553,
+     "e_below": 1755,
+     "holds": false,
+     "n_above": 848147,
+     "n_below": 1155336,
+     "rate_above": 0.0030100914110407747,
+     "rate_below": 0.001519038617337294,
+     "threshold_c": 0.5
+    },
+    "250": {
+     "e_above": 2404,
+     "e_below": 1900,
+     "holds": false,
+     "n_above": 847969,
+     "n_below": 1156737,
+     "rate_above": 0.002835009298688985,
+     "rate_below": 0.0016425514183431497,
+     "threshold_c": 0.5
+    },
+    "50": {
+     "e_above": 2513,
+     "e_below": 1795,
+     "holds": false,
+     "n_above": 847887,
+     "n_below": 1155856,
+     "rate_above": 0.0029638383416658114,
+     "rate_below": 0.0015529616145955898,
+     "threshold_c": 0.5
+    }
+   },
+   "scope": "rank2",
+   "side": "buy/all",
+   "statement": "max-likelihood g split (both sides >= 200 rows): rate above >= 10 x rate below"
+  },
+  {
+   "claim": "take_rate_above_gap_threshold_ge_10x_below",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "e_above": 857,
+     "e_below": 348,
+     "holds": false,
+     "n_above": 89111,
+     "n_below": 94113,
+     "rate_above": 0.009617218974088496,
+     "rate_below": 0.0036976825730770458,
+     "threshold_c": 0.5
+    },
+    "250": {
+     "e_above": 526,
+     "e_below": 257,
+     "holds": false,
+     "n_above": 87817,
+     "n_below": 95497,
+     "rate_above": 0.0059897286402405,
+     "rate_below": 0.0026911840162518194,
+     "threshold_c": 0.5
+    },
+    "50": {
+     "e_above": 787,
+     "e_below": 347,
+     "holds": false,
+     "n_above": 87813,
+     "n_below": 95416,
+     "rate_above": 0.008962226549599718,
+     "rate_below": 0.003636706632011403,
+     "threshold_c": 0.5
+    }
+   },
+   "scope": "rank2",
+   "side": "buy/r1_aligned",
+   "statement": "max-likelihood g split (both sides >= 200 rows): rate above >= 10 x rate below"
+  },
+  {
+   "claim": "take_rate_higher_when_r_1s_aligned",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "e_against": 546,
+     "e_aligned": 1205,
+     "holds": true,
+     "n_against": 187388,
+     "n_aligned": 183224,
+     "rate_against": 0.0029137404743099877,
+     "rate_aligned": 0.006576649347247086
+    },
+    "250": {
+     "e_against": 680,
+     "e_aligned": 783,
+     "holds": true,
+     "n_against": 187504,
+     "n_aligned": 183314,
+     "rate_against": 0.003626589299428279,
+     "rate_aligned": 0.004271359525186293
+    },
+    "50": {
+     "e_against": 592,
+     "e_aligned": 1134,
+     "holds": true,
+     "n_against": 187409,
+     "n_aligned": 183229,
+     "rate_against": 0.0031588664365105198,
+     "rate_aligned": 0.006188976635794552
+    }
+   },
+   "scope": "rank2",
+   "side": "buy",
+   "statement": "take rate with sign(r_1s) = the side > take rate with the opposite sign"
+  },
+  {
+   "claim": "logit_gap_coefficient_positive",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "b_g_c": 0.015856204803534408,
+     "events": 4308,
+     "holds": true,
+     "n": 2003483
+    },
+    "250": {
+     "b_g_c": 0.008140093191669593,
+     "events": 4304,
+     "holds": true,
+     "n": 2004706
+    },
+    "50": {
+     "b_g_c": 0.014719858665942762,
+     "events": 4308,
+     "holds": true,
+     "n": 2003743
+    }
+   },
+   "scope": "rank2",
+   "side": "buy",
+   "statement": "declared logistic fit converged and its g coefficient > 0"
+  },
+  {
+   "claim": "take_rate_above_gap_threshold_ge_10x_below",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "e_above": 1686,
+     "e_below": 1883,
+     "holds": false,
+     "n_above": 764209,
+     "n_below": 1239274,
+     "rate_above": 0.0022062027534352512,
+     "rate_below": 0.0015194379935349245,
+     "threshold_c": 1.5
+    },
+    "250": {
+     "e_above": 1342,
+     "e_below": 2224,
+     "holds": false,
+     "n_above": 622768,
+     "n_below": 1381938,
+     "rate_above": 0.0021548955630347096,
+     "rate_below": 0.0016093341380004024,
+     "threshold_c": 3.0
+    },
+    "50": {
+     "e_above": 1902,
+     "e_below": 1668,
+     "holds": false,
+     "n_above": 884835,
+     "n_below": 1118908,
+     "rate_above": 0.0021495533065486786,
+     "rate_below": 0.0014907391849910807,
+     "threshold_c": 0.5
+    }
+   },
+   "scope": "rank2",
+   "side": "sell/all",
+   "statement": "max-likelihood g split (both sides >= 200 rows): rate above >= 10 x rate below"
+  },
+  {
+   "claim": "take_rate_above_gap_threshold_ge_10x_below",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "e_above": 469,
+     "e_below": 307,
+     "holds": false,
+     "n_above": 89464,
+     "n_below": 97924,
+     "rate_above": 0.005242332111240275,
+     "rate_below": 0.0031350843511294474,
+     "threshold_c": 0.5
+    },
+    "250": {
+     "e_above": 296,
+     "e_below": 290,
+     "holds": false,
+     "n_above": 80273,
+     "n_below": 107231,
+     "rate_above": 0.00368741669054352,
+     "rate_below": 0.002704441812535554,
+     "threshold_c": 1.0
+    },
+    "50": {
+     "e_above": 442,
+     "e_below": 298,
+     "holds": false,
+     "n_above": 88325,
+     "n_below": 99084,
+     "rate_above": 0.005004245683555052,
+     "rate_below": 0.0030075491502159785,
+     "threshold_c": 0.5
+    }
+   },
+   "scope": "rank2",
+   "side": "sell/r1_aligned",
+   "statement": "max-likelihood g split (both sides >= 200 rows): rate above >= 10 x rate below"
+  },
+  {
+   "claim": "take_rate_higher_when_r_1s_aligned",
+   "lag_sensitive": true,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "e_against": 683,
+     "e_aligned": 776,
+     "holds": true,
+     "n_against": 183224,
+     "n_aligned": 187388,
+     "rate_against": 0.003727677596821377,
+     "rate_aligned": 0.004141140307810532
+    },
+    "250": {
+     "e_against": 810,
+     "e_aligned": 586,
+     "holds": false,
+     "n_against": 183314,
+     "n_aligned": 187504,
+     "rate_against": 0.004418647784675475,
+     "rate_aligned": 0.003125266660977899
+    },
+    "50": {
+     "e_against": 725,
+     "e_aligned": 740,
+     "holds": false,
+     "n_against": 183229,
+     "n_aligned": 187409,
+     "rate_against": 0.0039567972318792334,
+     "rate_aligned": 0.00394858304563815
+    }
+   },
+   "scope": "rank2",
+   "side": "sell",
+   "statement": "take rate with sign(r_1s) = the side > take rate with the opposite sign"
+  },
+  {
+   "claim": "logit_gap_coefficient_positive",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "b_g_c": 0.014929963828877532,
+     "events": 3569,
+     "holds": true,
+     "n": 2003483
+    },
+    "250": {
+     "b_g_c": 0.008897309286022819,
+     "events": 3566,
+     "holds": true,
+     "n": 2004706
+    },
+    "50": {
+     "b_g_c": 0.014448824910846817,
+     "events": 3570,
+     "holds": true,
+     "n": 2003743
+    }
+   },
+   "scope": "rank2",
+   "side": "sell",
+   "statement": "declared logistic fit converged and its g coefficient > 0"
+  },
+  {
+   "claim": "quotes_centred_on_p_fair",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "a_ask_c": 0.340216825583973,
+     "a_bid_c": -0.37078286731906057,
+     "centre_c": -0.015283020867543795,
+     "half_spread_c": 0.3554998464515168,
+     "holds": true,
+     "n_ask": 59330,
+     "n_bid": 57962
+    },
+    "250": {
+     "a_ask_c": 1.5115749605944337,
+     "a_bid_c": -1.587126407812234,
+     "centre_c": -0.037775723608900136,
+     "half_spread_c": 1.549350684203334,
+     "holds": true,
+     "n_ask": 59330,
+     "n_bid": 57964
+    },
+    "50": {
+     "a_ask_c": 0.40420630317082445,
+     "a_bid_c": -0.4610832822027827,
+     "centre_c": -0.028438489515979132,
+     "half_spread_c": 0.43264479268680356,
+     "holds": true,
+     "n_ask": 59330,
+     "n_bid": 57962
+    }
+   },
+   "scope": "rank2",
+   "side": "fill",
+   "statement": "OLS intercepts (position 0): |(a_bid + a_ask) / 2| <= 0.5 c"
+  },
+  {
+   "claim": "quotes_skew_against_inventory",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "b_ask": -0.1554523019754332,
+     "b_bid": -0.3075141551804753,
+     "holds": true,
+     "n_ask": 59330,
+     "n_bid": 57962
+    },
+    "250": {
+     "b_ask": -0.09182290690751102,
+     "b_bid": -0.1974250693122512,
+     "holds": true,
+     "n_ask": 59330,
+     "n_bid": 57964
+    },
+    "50": {
+     "b_ask": -0.1511646598385077,
+     "b_bid": -0.2949331931001106,
+     "holds": true,
+     "n_ask": 59330,
+     "n_bid": 57962
+    }
+   },
+   "scope": "rank2",
+   "side": "fill",
+   "statement": "OLS slopes on position / 100 sh: b_bid < 0 and b_ask < 0"
+  },
+  {
+   "claim": "quotes_centred_on_p_fair",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "a_ask_c": 6.99460215913761,
+     "a_bid_c": 1.9949756948169919,
+     "centre_c": 4.494788926977301,
+     "half_spread_c": 2.4998132321603093,
+     "holds": false,
+     "n_ask": 440,
+     "n_bid": 516
+    },
+    "250": {
+     "a_ask_c": 7.591153420081142,
+     "a_bid_c": 0.9311091038595387,
+     "centre_c": 4.26113126197034,
+     "half_spread_c": 3.3300221581108014,
+     "holds": false,
+     "n_ask": 440,
+     "n_bid": 516
+    },
+    "50": {
+     "a_ask_c": 6.962386085370407,
+     "a_bid_c": 1.9895444607810704,
+     "centre_c": 4.475965273075738,
+     "half_spread_c": 2.4864208122946683,
+     "holds": false,
+     "n_ask": 440,
+     "n_bid": 516
+    }
+   },
+   "scope": "rank2",
+   "side": "hi",
+   "statement": "OLS intercepts (position 0): |(a_bid + a_ask) / 2| <= 0.5 c"
+  },
+  {
+   "claim": "quotes_skew_against_inventory",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "b_ask": 0.5691590593447586,
+     "b_bid": 0.5798581143764386,
+     "holds": false,
+     "n_ask": 440,
+     "n_bid": 516
+    },
+    "250": {
+     "b_ask": 0.5861133986969723,
+     "b_bid": 0.6536354624903981,
+     "holds": false,
+     "n_ask": 440,
+     "n_bid": 516
+    },
+    "50": {
+     "b_ask": 0.5802562289374782,
+     "b_bid": 0.5655106848448387,
+     "holds": false,
+     "n_ask": 440,
+     "n_bid": 516
+    }
+   },
+   "scope": "rank2",
+   "side": "hi",
+   "statement": "OLS slopes on position / 100 sh: b_bid < 0 and b_ask < 0"
+  },
+  {
+   "claim": "next_maker_fill_reduces_position",
+   "lag_sensitive": false,
+   "n_L_evaluated": 1,
+   "per_L": {
+    "-": {
+     "holds": false,
+     "n": 112615,
+     "p_sell_long": 0.5012397052449068,
+     "p_sell_short": 0.5114488532945031,
+     "rate_reduce": 0.49504950495049505
+    }
+   },
+   "scope": "rank2",
+   "side": "maker",
+   "statement": "share of actions (position before != 0) that reduce |position| > 0.5"
+  },
+  {
+   "claim": "takes_reduce_position",
+   "lag_sensitive": false,
+   "n_L_evaluated": 1,
+   "per_L": {
+    "-": {
+     "holds": true,
+     "n": 16436,
+     "p_sell_long": 0.533788132320762,
+     "p_sell_short": 0.3558324679820007,
+     "rate_reduce": 0.5919931856899489
+    }
+   },
+   "scope": "rank2",
+   "side": "taker",
+   "statement": "share of actions (position before != 0) that reduce |position| > 0.5"
+  },
+  {
+   "claim": "removal_windows_adverse_beyond_null",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "draws": 500,
+     "holds": true,
+     "n_orders": 676,
+     "null_mean_c": -0.5966282862726671,
+     "obs_mean_c": 3.0355304494156328,
+     "p": 0.001996007984031936,
+     "z": 9.81401018604395
+    },
+    "250": {
+     "draws": 500,
+     "holds": true,
+     "n_orders": 676,
+     "null_mean_c": -0.5966282862726671,
+     "obs_mean_c": 1.1142686494557197,
+     "p": 0.001996007984031936,
+     "z": 4.622804556841014
+    },
+    "50": {
+     "draws": 500,
+     "holds": true,
+     "n_orders": 676,
+     "null_mean_c": -0.5966282862726671,
+     "obs_mean_c": 2.7545410005742728,
+     "p": 0.001996007984031936,
+     "z": 9.054783094451155
+    }
+   },
+   "scope": "rank2",
+   "side": "S_FIFO/cancel_possible/live",
+   "statement": "live phase: mean adverse p_fair move inside removal windows exceeds the phase-matched random-time null at one-sided p <= 0.05"
+  },
+  {
+   "claim": "removal_windows_move_beyond_null",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "draws": 500,
+     "holds": true,
+     "n_orders": 676,
+     "null_mean_c": 4.434081211866658,
+     "obs_mean_c": 6.61715902812027,
+     "p": 0.001996007984031936,
+     "z": 8.41974228299256
+    },
+    "250": {
+     "draws": 500,
+     "holds": true,
+     "n_orders": 676,
+     "null_mean_c": 4.434081211866658,
+     "obs_mean_c": 5.657344742091019,
+     "p": 0.001996007984031936,
+     "z": 4.717909545866725
+    },
+    "50": {
+     "draws": 500,
+     "holds": true,
+     "n_orders": 676,
+     "null_mean_c": 4.434081211866658,
+     "obs_mean_c": 6.411258086975869,
+     "p": 0.001996007984031936,
+     "z": 7.625619028496499
+    }
+   },
+   "scope": "rank2",
+   "side": "S_FIFO/cancel_possible/live",
+   "statement": "live phase: mean |p_fair move| inside removal windows exceeds the phase-matched random-time null at one-sided p <= 0.05"
+  },
+  {
+   "claim": "reprice_tracks_p_fair",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "holds": true,
+     "n": 843,
+     "sign_agree": 0.7380447216052451,
+     "slope": 0.6648731163252752
+    },
+    "250": {
+     "holds": true,
+     "n": 843,
+     "sign_agree": 0.7077536436217838,
+     "slope": 0.6774570358079125
+    },
+    "50": {
+     "holds": true,
+     "n": 843,
+     "sign_agree": 0.7404260015675319,
+     "slope": 0.6646633304754372
+    }
+   },
+   "scope": "rank2",
+   "side": "both",
+   "statement": "n-weighted OLS slope of the tick change on dp > 0 and sign agreement > 0.5 (reprices)"
+  },
+  {
+   "claim": "take_rate_above_gap_threshold_ge_10x_below",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "e_above": 1156,
+     "e_below": 1215,
+     "holds": false,
+     "n_above": 758297,
+     "n_below": 1448519,
+     "rate_above": 0.0015244686448713366,
+     "rate_below": 0.0008387877549414263,
+     "threshold_c": 1.5
+    },
+    "250": {
+     "e_above": 715,
+     "e_below": 1654,
+     "holds": false,
+     "n_above": 492321,
+     "n_below": 1715259,
+     "rate_above": 0.00145230449239419,
+     "rate_below": 0.0009642858600362978,
+     "threshold_c": 4.5
+    },
+    "50": {
+     "e_above": 920,
+     "e_below": 1451,
+     "holds": false,
+     "n_above": 568953,
+     "n_below": 1638044,
+     "rate_above": 0.0016170052710856608,
+     "rate_below": 0.0008858125911147686,
+     "threshold_c": 3.5
+    }
+   },
+   "scope": "rank3",
+   "side": "buy/all",
+   "statement": "max-likelihood g split (both sides >= 200 rows): rate above >= 10 x rate below"
+  },
+  {
+   "claim": "take_rate_above_gap_threshold_ge_10x_below",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "e_above": 255,
+     "e_below": 872,
+     "holds": false,
+     "n_above": 23631,
+     "n_below": 183471,
+     "rate_above": 0.01079091024501714,
+     "rate_below": 0.004752794719601463,
+     "threshold_c": 8.0
+    },
+    "250": {
+     "e_above": 136,
+     "e_below": 645,
+     "holds": false,
+     "n_above": 20230,
+     "n_below": 187026,
+     "rate_above": 0.0067226890756302525,
+     "rate_below": 0.0034487183600141157,
+     "threshold_c": 8.5
+    },
+    "50": {
+     "e_above": 434,
+     "e_below": 642,
+     "holds": false,
+     "n_above": 54951,
+     "n_below": 152192,
+     "rate_above": 0.007897945442303142,
+     "rate_below": 0.004218355761143818,
+     "threshold_c": 3.5
+    }
+   },
+   "scope": "rank3",
+   "side": "buy/r1_aligned",
+   "statement": "max-likelihood g split (both sides >= 200 rows): rate above >= 10 x rate below"
+  },
+  {
+   "claim": "take_rate_higher_when_r_1s_aligned",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "e_against": 188,
+     "e_aligned": 1127,
+     "holds": true,
+     "n_against": 214187,
+     "n_aligned": 207102,
+     "rate_against": 0.0008777376778235841,
+     "rate_aligned": 0.0054417629960116275
+    },
+    "250": {
+     "e_against": 224,
+     "e_aligned": 781,
+     "holds": true,
+     "n_against": 214305,
+     "n_aligned": 207256,
+     "rate_against": 0.0010452392617997714,
+     "rate_aligned": 0.0037682865634770524
+    },
+    "50": {
+     "e_against": 190,
+     "e_aligned": 1076,
+     "holds": true,
+     "n_against": 214214,
+     "n_aligned": 207143,
+     "rate_against": 0.0008869635037859337,
+     "rate_aligned": 0.005194479176221258
+    }
+   },
+   "scope": "rank3",
+   "side": "buy",
+   "statement": "take rate with sign(r_1s) = the side > take rate with the opposite sign"
+  },
+  {
+   "claim": "logit_gap_coefficient_positive",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "b_g_c": 0.04311094395790042,
+     "events": 2371,
+     "holds": true,
+     "n": 2206816
+    },
+    "250": {
+     "b_g_c": 0.029551595064114995,
+     "events": 2369,
+     "holds": true,
+     "n": 2207580
+    },
+    "50": {
+     "b_g_c": 0.04186315719808209,
+     "events": 2371,
+     "holds": true,
+     "n": 2206997
+    }
+   },
+   "scope": "rank3",
+   "side": "buy",
+   "statement": "declared logistic fit converged and its g coefficient > 0"
+  },
+  {
+   "claim": "take_rate_above_gap_threshold_ge_10x_below",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "e_above": 1361,
+     "e_below": 894,
+     "holds": false,
+     "n_above": 977568,
+     "n_below": 1229248,
+     "rate_above": 0.0013922305149104716,
+     "rate_below": 0.000727273910553444,
+     "threshold_c": 0.5
+    },
+    "250": {
+     "e_above": 1224,
+     "e_below": 1031,
+     "holds": false,
+     "n_above": 977176,
+     "n_below": 1230404,
+     "rate_above": 0.0012525890934693444,
+     "rate_below": 0.0008379361575547544,
+     "threshold_c": 0.5
+    },
+    "50": {
+     "e_above": 1344,
+     "e_below": 911,
+     "holds": false,
+     "n_above": 977370,
+     "n_below": 1229627,
+     "rate_above": 0.0013751189416495288,
+     "rate_below": 0.0007408750783774266,
+     "threshold_c": 0.5
+    }
+   },
+   "scope": "rank3",
+   "side": "sell/all",
+   "statement": "max-likelihood g split (both sides >= 200 rows): rate above >= 10 x rate below"
+  },
+  {
+   "claim": "take_rate_above_gap_threshold_ge_10x_below",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "e_above": 541,
+     "e_below": 511,
+     "holds": false,
+     "n_above": 74021,
+     "n_below": 140166,
+     "rate_above": 0.0073087367098526096,
+     "rate_below": 0.003645677268381776,
+     "threshold_c": 2.5
+    },
+    "250": {
+     "e_above": 262,
+     "e_below": 495,
+     "holds": false,
+     "n_above": 56815,
+     "n_below": 157490,
+     "rate_above": 0.004611458241661533,
+     "rate_below": 0.0031430567020128263,
+     "threshold_c": 4.0
+    },
+    "50": {
+     "e_above": 502,
+     "e_below": 506,
+     "holds": false,
+     "n_above": 72599,
+     "n_below": 141615,
+     "rate_above": 0.006914695794707916,
+     "rate_below": 0.0035730678247360803,
+     "threshold_c": 2.5
+    }
+   },
+   "scope": "rank3",
+   "side": "sell/r1_aligned",
+   "statement": "max-likelihood g split (both sides >= 200 rows): rate above >= 10 x rate below"
+  },
+  {
+   "claim": "take_rate_higher_when_r_1s_aligned",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "e_against": 220,
+     "e_aligned": 1052,
+     "holds": true,
+     "n_against": 207102,
+     "n_aligned": 214187,
+     "rate_against": 0.001062278490791977,
+     "rate_aligned": 0.004911595941863885
+    },
+    "250": {
+     "e_against": 291,
+     "e_aligned": 757,
+     "holds": true,
+     "n_against": 207256,
+     "n_aligned": 214305,
+     "rate_against": 0.0014040606785810784,
+     "rate_aligned": 0.0035323487552786914
+    },
+    "50": {
+     "e_against": 242,
+     "e_aligned": 1008,
+     "holds": true,
+     "n_against": 207143,
+     "n_aligned": 214214,
+     "rate_against": 0.0011682750563620301,
+     "rate_aligned": 0.004705574799032743
+    }
+   },
+   "scope": "rank3",
+   "side": "sell",
+   "statement": "take rate with sign(r_1s) = the side > take rate with the opposite sign"
+  },
+  {
+   "claim": "logit_gap_coefficient_positive",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "b_g_c": 0.04673757301451225,
+     "events": 2255,
+     "holds": true,
+     "n": 2206816
+    },
+    "250": {
+     "b_g_c": 0.029572312506219854,
+     "events": 2255,
+     "holds": true,
+     "n": 2207580
+    },
+    "50": {
+     "b_g_c": 0.045037563945077144,
+     "events": 2255,
+     "holds": true,
+     "n": 2206997
+    }
+   },
+   "scope": "rank3",
+   "side": "sell",
+   "statement": "declared logistic fit converged and its g coefficient > 0"
+  },
+  {
+   "claim": "quotes_centred_on_p_fair",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "a_ask_c": 1.0979701594043387,
+     "a_bid_c": -1.2336231901991677,
+     "centre_c": -0.06782651539741447,
+     "half_spread_c": 1.1657966748017532,
+     "holds": true,
+     "n_ask": 57694,
+     "n_bid": 53422
+    },
+    "250": {
+     "a_ask_c": 1.6210546688701775,
+     "a_bid_c": -1.6740539459225179,
+     "centre_c": -0.02649963852617021,
+     "half_spread_c": 1.6475543073963477,
+     "holds": true,
+     "n_ask": 57697,
+     "n_bid": 53423
+    },
+    "50": {
+     "a_ask_c": 1.1246096627259228,
+     "a_bid_c": -1.2639250075519097,
+     "centre_c": -0.06965767241299348,
+     "half_spread_c": 1.1942673351389161,
+     "holds": true,
+     "n_ask": 57695,
+     "n_bid": 53423
+    }
+   },
+   "scope": "rank3",
+   "side": "fill",
+   "statement": "OLS intercepts (position 0): |(a_bid + a_ask) / 2| <= 0.5 c"
+  },
+  {
+   "claim": "quotes_skew_against_inventory",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "b_ask": -0.18445166237464466,
+     "b_bid": -0.2933705723794633,
+     "holds": true,
+     "n_ask": 57694,
+     "n_bid": 53422
+    },
+    "250": {
+     "b_ask": -0.1746383419834201,
+     "b_bid": -0.2592855353787922,
+     "holds": true,
+     "n_ask": 57697,
+     "n_bid": 53423
+    },
+    "50": {
+     "b_ask": -0.1832905847284663,
+     "b_bid": -0.2866474932398759,
+     "holds": true,
+     "n_ask": 57695,
+     "n_bid": 53423
+    }
+   },
+   "scope": "rank3",
+   "side": "fill",
+   "statement": "OLS slopes on position / 100 sh: b_bid < 0 and b_ask < 0"
+  },
+  {
+   "claim": "quotes_centred_on_p_fair",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "a_ask_c": 3.795490834137702,
+     "a_bid_c": 0.9688286183300581,
+     "centre_c": 2.38215972623388,
+     "half_spread_c": 1.413331107903822,
+     "holds": false,
+     "n_ask": 597,
+     "n_bid": 554
+    },
+    "250": {
+     "a_ask_c": 4.201690343340221,
+     "a_bid_c": 0.5406560103466769,
+     "centre_c": 2.371173176843449,
+     "half_spread_c": 1.8305171664967723,
+     "holds": false,
+     "n_ask": 597,
+     "n_bid": 554
+    },
+    "50": {
+     "a_ask_c": 3.8281100967815473,
+     "a_bid_c": 0.9292724767900175,
+     "centre_c": 2.3786912867857826,
+     "half_spread_c": 1.449418809995765,
+     "holds": false,
+     "n_ask": 597,
+     "n_bid": 554
+    }
+   },
+   "scope": "rank3",
+   "side": "hi",
+   "statement": "OLS intercepts (position 0): |(a_bid + a_ask) / 2| <= 0.5 c"
+  },
+  {
+   "claim": "quotes_skew_against_inventory",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "b_ask": -0.10507062399429203,
+     "b_bid": 0.145067593020244,
+     "holds": false,
+     "n_ask": 597,
+     "n_bid": 554
+    },
+    "250": {
+     "b_ask": -0.1186049558122244,
+     "b_bid": 0.14349961043806847,
+     "holds": false,
+     "n_ask": 597,
+     "n_bid": 554
+    },
+    "50": {
+     "b_ask": -0.10409668749641043,
+     "b_bid": 0.14411105827912413,
+     "holds": false,
+     "n_ask": 597,
+     "n_bid": 554
+    }
+   },
+   "scope": "rank3",
+   "side": "hi",
+   "statement": "OLS slopes on position / 100 sh: b_bid < 0 and b_ask < 0"
+  },
+  {
+   "claim": "next_maker_fill_reduces_position",
+   "lag_sensitive": false,
+   "n_L_evaluated": 1,
+   "per_L": {
+    "-": {
+     "holds": true,
+     "n": 104788,
+     "p_sell_long": 0.5861021671119636,
+     "p_sell_short": 0.4724166762299785,
+     "rate_reduce": 0.5520384013436653
+    }
+   },
+   "scope": "rank3",
+   "side": "maker",
+   "statement": "share of actions (position before != 0) that reduce |position| > 0.5"
+  },
+  {
+   "claim": "takes_reduce_position",
+   "lag_sensitive": false,
+   "n_L_evaluated": 1,
+   "per_L": {
+    "-": {
+     "holds": true,
+     "n": 8581,
+     "p_sell_long": 0.6238864142538976,
+     "p_sell_short": 0.4018841451192624,
+     "rate_reduce": 0.6089033912131453
+    }
+   },
+   "scope": "rank3",
+   "side": "taker",
+   "statement": "share of actions (position before != 0) that reduce |position| > 0.5"
+  },
+  {
+   "claim": "removal_windows_adverse_beyond_null",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "draws": 500,
+     "holds": false,
+     "n_orders": 819,
+     "null_mean_c": -0.3045769744785098,
+     "obs_mean_c": -0.3716823008851996,
+     "p": 0.5968063872255489,
+     "z": -0.19946423092599305
+    },
+    "250": {
+     "draws": 500,
+     "holds": false,
+     "n_orders": 819,
+     "null_mean_c": -0.3045769744785098,
+     "obs_mean_c": -1.3471575917773075,
+     "p": 0.998003992015968,
+     "z": -3.0989722000237556
+    },
+    "50": {
+     "draws": 500,
+     "holds": false,
+     "n_orders": 819,
+     "null_mean_c": -0.3045769744785098,
+     "obs_mean_c": -0.6098633127928638,
+     "p": 0.8183632734530938,
+     "z": -0.9074347439283832
+    }
+   },
+   "scope": "rank3",
+   "side": "S_FIFO/cancel_possible/live",
+   "statement": "live phase: mean adverse p_fair move inside removal windows exceeds the phase-matched random-time null at one-sided p <= 0.05"
+  },
+  {
+   "claim": "removal_windows_move_beyond_null",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "draws": 500,
+     "holds": true,
+     "n_orders": 819,
+     "null_mean_c": 4.454104566018709,
+     "obs_mean_c": 5.348695751716496,
+     "p": 0.001996007984031936,
+     "z": 3.2533793752813693
+    },
+    "250": {
+     "draws": 500,
+     "holds": true,
+     "n_orders": 819,
+     "null_mean_c": 4.454104566018709,
+     "obs_mean_c": 4.99167160564514,
+     "p": 0.023952095808383235,
+     "z": 1.95498183696895
+    },
+    "50": {
+     "draws": 500,
+     "holds": true,
+     "n_orders": 819,
+     "null_mean_c": 4.454104566018709,
+     "obs_mean_c": 5.217324807424799,
+     "p": 0.005988023952095809,
+     "z": 2.7756197824049065
+    }
+   },
+   "scope": "rank3",
+   "side": "S_FIFO/cancel_possible/live",
+   "statement": "live phase: mean |p_fair move| inside removal windows exceeds the phase-matched random-time null at one-sided p <= 0.05"
+  },
+  {
+   "claim": "reprice_tracks_p_fair",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "holds": true,
+     "n": 1010,
+     "sign_agree": 0.7206906489540084,
+     "slope": 0.7621975864805941
+    },
+    "250": {
+     "holds": true,
+     "n": 1010,
+     "sign_agree": 0.6845433061625128,
+     "slope": 0.6840024051129332
+    },
+    "50": {
+     "holds": true,
+     "n": 1010,
+     "sign_agree": 0.7176332899166933,
+     "slope": 0.7612467687645696
+    }
+   },
+   "scope": "rank3",
+   "side": "both",
+   "statement": "n-weighted OLS slope of the tick change on dp > 0 and sign agreement > 0.5 (reprices)"
+  },
+  {
+   "claim": "take_rate_above_gap_threshold_ge_10x_below",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "e_above": 20901,
+     "e_below": 20745,
+     "holds": false,
+     "n_above": 2945251,
+     "n_below": 4195590,
+     "rate_above": 0.00709650892232954,
+     "rate_below": 0.004944477415572065,
+     "threshold_c": 0.5
+    },
+    "250": {
+     "e_above": 19609,
+     "e_below": 22016,
+     "holds": false,
+     "n_above": 2944268,
+     "n_below": 4200789,
+     "rate_above": 0.006660059478281189,
+     "rate_below": 0.00524092021760674,
+     "threshold_c": 0.5
+    },
+    "50": {
+     "e_above": 20428,
+     "e_below": 21216,
+     "holds": false,
+     "n_above": 2944189,
+     "n_below": 4197544,
+     "rate_above": 0.006938413260833459,
+     "rate_below": 0.005054384182750675,
+     "threshold_c": 0.5
+    }
+   },
+   "scope": "pooled",
+   "side": "buy/all",
+   "statement": "max-likelihood g split (both sides >= 200 rows): rate above >= 10 x rate below"
+  },
+  {
+   "claim": "take_rate_above_gap_threshold_ge_10x_below",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "e_above": 6060,
+     "e_below": 4496,
+     "holds": false,
+     "n_above": 300698,
+     "n_below": 348118,
+     "rate_above": 0.020153110429733487,
+     "rate_below": 0.012915160951171728,
+     "threshold_c": 0.5
+    },
+    "250": {
+     "e_above": 2784,
+     "e_below": 2447,
+     "holds": false,
+     "n_above": 296171,
+     "n_below": 353076,
+     "rate_above": 0.00939997501443423,
+     "rate_below": 0.006930519208329085,
+     "threshold_c": 0.5
+    },
+    "50": {
+     "e_above": 4867,
+     "e_below": 3885,
+     "holds": false,
+     "n_above": 296119,
+     "n_below": 352761,
+     "rate_above": 0.016435959867485708,
+     "rate_below": 0.011013122198882529,
+     "threshold_c": 0.5
+    }
+   },
+   "scope": "pooled",
+   "side": "buy/r1_aligned",
+   "statement": "max-likelihood g split (both sides >= 200 rows): rate above >= 10 x rate below"
+  },
+  {
+   "claim": "take_rate_higher_when_r_1s_aligned",
+   "lag_sensitive": true,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "e_against": 5488,
+     "e_aligned": 10556,
+     "holds": true,
+     "n_against": 664736,
+     "n_aligned": 648816,
+     "rate_against": 0.008255909112790642,
+     "rate_aligned": 0.01626963576730537
+    },
+    "250": {
+     "e_against": 7113,
+     "e_aligned": 5231,
+     "holds": false,
+     "n_against": 665133,
+     "n_aligned": 649247,
+     "rate_against": 0.01069410178114753,
+     "rate_aligned": 0.008057026062500095
+    },
+    "50": {
+     "e_against": 6080,
+     "e_aligned": 8752,
+     "holds": true,
+     "n_against": 664804,
+     "n_aligned": 648880,
+     "rate_against": 0.009145552674171635,
+     "rate_aligned": 0.01348785599802737
+    }
+   },
+   "scope": "pooled",
+   "side": "buy",
+   "statement": "take rate with sign(r_1s) = the side > take rate with the opposite sign"
+  },
+  {
+   "claim": "logit_gap_coefficient_positive",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "b_g_c": 0.010612483486009943,
+     "events": 41646,
+     "holds": true,
+     "n": 7140841
+    },
+    "250": {
+     "b_g_c": 0.003753623774343755,
+     "events": 41625,
+     "holds": true,
+     "n": 7145057
+    },
+    "50": {
+     "b_g_c": 0.008152234882555167,
+     "events": 41644,
+     "holds": true,
+     "n": 7141733
+    }
+   },
+   "scope": "pooled",
+   "side": "buy",
+   "statement": "declared logistic fit converged and its g coefficient > 0"
+  },
+  {
+   "claim": "take_rate_above_gap_threshold_ge_10x_below",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "e_above": 19328,
+     "e_below": 22031,
+     "holds": false,
+     "n_above": 2734378,
+     "n_below": 4406463,
+     "rate_above": 0.007068517959111725,
+     "rate_below": 0.0049997015747096935,
+     "threshold_c": 1.5
+    },
+    "250": {
+     "e_above": 18178,
+     "e_below": 23170,
+     "holds": false,
+     "n_above": 2733265,
+     "n_below": 4411792,
+     "rate_above": 0.006650654071229829,
+     "rate_below": 0.005251834175319235,
+     "threshold_c": 1.5
+    },
+    "50": {
+     "e_above": 18907,
+     "e_below": 22454,
+     "holds": false,
+     "n_above": 2733505,
+     "n_below": 4408228,
+     "rate_above": 0.006916760715637981,
+     "rate_below": 0.005093656680189863,
+     "threshold_c": 1.5
+    }
+   },
+   "scope": "pooled",
+   "side": "sell/all",
+   "statement": "max-likelihood g split (both sides >= 200 rows): rate above >= 10 x rate below"
+  },
+  {
+   "claim": "take_rate_above_gap_threshold_ge_10x_below",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "e_above": 5691,
+     "e_below": 4269,
+     "holds": false,
+     "n_above": 316971,
+     "n_below": 347765,
+     "rate_above": 0.017954323897138854,
+     "rate_below": 0.012275530890112575,
+     "threshold_c": 0.5
+    },
+    "250": {
+     "e_above": 2601,
+     "e_below": 2286,
+     "holds": false,
+     "n_above": 312734,
+     "n_below": 352399,
+     "rate_above": 0.008316972251178318,
+     "rate_below": 0.0064869650594922236,
+     "threshold_c": 0.5
+    },
+    "50": {
+     "e_above": 4523,
+     "e_below": 3571,
+     "holds": false,
+     "n_above": 312711,
+     "n_below": 352093,
+     "rate_above": 0.014463834019270188,
+     "rate_below": 0.010142206746512995,
+     "threshold_c": 0.5
+    }
+   },
+   "scope": "pooled",
+   "side": "sell/r1_aligned",
+   "statement": "max-likelihood g split (both sides >= 200 rows): rate above >= 10 x rate below"
+  },
+  {
+   "claim": "take_rate_higher_when_r_1s_aligned",
+   "lag_sensitive": true,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "e_against": 5695,
+     "e_aligned": 9960,
+     "holds": true,
+     "n_against": 648816,
+     "n_aligned": 664736,
+     "rate_against": 0.008777527064683979,
+     "rate_aligned": 0.014983391902950945
+    },
+    "250": {
+     "e_against": 7379,
+     "e_aligned": 4887,
+     "holds": false,
+     "n_against": 649247,
+     "n_aligned": 665133,
+     "rate_against": 0.011365474156984938,
+     "rate_aligned": 0.007347402699911146
+    },
+    "50": {
+     "e_against": 6302,
+     "e_aligned": 8094,
+     "holds": true,
+     "n_against": 648880,
+     "n_aligned": 664804,
+     "rate_against": 0.009712119344100604,
+     "rate_aligned": 0.01217501699749099
+    }
+   },
+   "scope": "pooled",
+   "side": "sell",
+   "statement": "take rate with sign(r_1s) = the side > take rate with the opposite sign"
+  },
+  {
+   "claim": "logit_gap_coefficient_positive",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "b_g_c": 0.011137519556308683,
+     "events": 41359,
+     "holds": true,
+     "n": 7140841
+    },
+    "250": {
+     "b_g_c": 0.004316706003096653,
+     "events": 41348,
+     "holds": true,
+     "n": 7145057
+    },
+    "50": {
+     "b_g_c": 0.008578434991681323,
+     "events": 41361,
+     "holds": true,
+     "n": 7141733
+    }
+   },
+   "scope": "pooled",
+   "side": "sell",
+   "statement": "declared logistic fit converged and its g coefficient > 0"
+  },
+  {
+   "claim": "quotes_centred_on_p_fair",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "a_ask_c": 0.47359885721916267,
+     "a_bid_c": -0.30817388779220534,
+     "centre_c": 0.08271248471347867,
+     "half_spread_c": 0.39088637250568403,
+     "holds": true,
+     "n_ask": 199451,
+     "n_bid": 190035
+    },
+    "250": {
+     "a_ask_c": 1.602174631800585,
+     "a_bid_c": -1.3726645403775835,
+     "centre_c": 0.11475504571150075,
+     "half_spread_c": 1.4874195860890842,
+     "holds": true,
+     "n_ask": 199458,
+     "n_bid": 190044
+    },
+    "50": {
+     "a_ask_c": 0.5317112256071984,
+     "a_bid_c": -0.37458371229964044,
+     "centre_c": 0.07856375665377899,
+     "half_spread_c": 0.4531474689534194,
+     "holds": true,
+     "n_ask": 199456,
+     "n_bid": 190040
+    }
+   },
+   "scope": "pooled",
+   "side": "fill",
+   "statement": "OLS intercepts (position 0): |(a_bid + a_ask) / 2| <= 0.5 c"
+  },
+  {
+   "claim": "quotes_skew_against_inventory",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "b_ask": -0.2218771320823562,
+     "b_bid": -0.30491788432953015,
+     "holds": true,
+     "n_ask": 199451,
+     "n_bid": 190035
+    },
+    "250": {
+     "b_ask": -0.17515471731291332,
+     "b_bid": -0.23237309204911952,
+     "holds": true,
+     "n_ask": 199458,
+     "n_bid": 190044
+    },
+    "50": {
+     "b_ask": -0.22441503324114168,
+     "b_bid": -0.29781696908720695,
+     "holds": true,
+     "n_ask": 199456,
+     "n_bid": 190040
+    }
+   },
+   "scope": "pooled",
+   "side": "fill",
+   "statement": "OLS slopes on position / 100 sh: b_bid < 0 and b_ask < 0"
+  },
+  {
+   "claim": "quotes_centred_on_p_fair",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "a_ask_c": 5.118092456760525,
+     "a_bid_c": 1.9665434160923243,
+     "centre_c": 3.542317936426425,
+     "half_spread_c": 1.5757745203341005,
+     "holds": false,
+     "n_ask": 1879,
+     "n_bid": 1877
+    },
+    "250": {
+     "a_ask_c": 5.944847700575093,
+     "a_bid_c": 1.0473286206660615,
+     "centre_c": 3.4960881606205776,
+     "half_spread_c": 2.4487595399545157,
+     "holds": false,
+     "n_ask": 1879,
+     "n_bid": 1878
+    },
+    "50": {
+     "a_ask_c": 5.121080987587636,
+     "a_bid_c": 1.932443350491245,
+     "centre_c": 3.5267621690394404,
+     "half_spread_c": 1.5943188185481953,
+     "holds": false,
+     "n_ask": 1879,
+     "n_bid": 1877
+    }
+   },
+   "scope": "pooled",
+   "side": "hi",
+   "statement": "OLS intercepts (position 0): |(a_bid + a_ask) / 2| <= 0.5 c"
+  },
+  {
+   "claim": "quotes_skew_against_inventory",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "b_ask": 0.07374332073794516,
+     "b_bid": 0.13141427241482698,
+     "holds": false,
+     "n_ask": 1879,
+     "n_bid": 1877
+    },
+    "250": {
+     "b_ask": 0.09730039995263844,
+     "b_bid": 0.2677409753039128,
+     "holds": false,
+     "n_ask": 1879,
+     "n_bid": 1878
+    },
+    "50": {
+     "b_ask": 0.09220823733217627,
+     "b_bid": 0.19454523070507987,
+     "holds": false,
+     "n_ask": 1879,
+     "n_bid": 1877
+    }
+   },
+   "scope": "pooled",
+   "side": "hi",
+   "statement": "OLS slopes on position / 100 sh: b_bid < 0 and b_ask < 0"
+  },
+  {
+   "claim": "next_maker_fill_reduces_position",
+   "lag_sensitive": false,
+   "n_L_evaluated": 1,
+   "per_L": {
+    "-": {
+     "holds": true,
+     "n": 369755,
+     "p_sell_long": 0.5321725132314962,
+     "p_sell_short": 0.4953491558451444,
+     "rate_reduce": 0.5175048342821598
+    }
+   },
+   "scope": "pooled",
+   "side": "maker",
+   "statement": "share of actions (position before != 0) that reduce |position| > 0.5"
+  },
+  {
+   "claim": "takes_reduce_position",
+   "lag_sensitive": false,
+   "n_L_evaluated": 1,
+   "per_L": {
+    "-": {
+     "holds": true,
+     "n": 181429,
+     "p_sell_long": 0.5919499851146175,
+     "p_sell_short": 0.4111273010856404,
+     "rate_reduce": 0.5902970307944154
+    }
+   },
+   "scope": "pooled",
+   "side": "taker",
+   "statement": "share of actions (position before != 0) that reduce |position| > 0.5"
+  },
+  {
+   "claim": "removal_windows_adverse_beyond_null",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "draws": 500,
+     "holds": true,
+     "n_orders": 2624,
+     "null_mean_c": -0.2643946759053282,
+     "obs_mean_c": 1.9263089705995096,
+     "p": 0.001996007984031936,
+     "z": 11.792188634829664
+    },
+    "250": {
+     "draws": 500,
+     "holds": true,
+     "n_orders": 2624,
+     "null_mean_c": -0.2643946759053282,
+     "obs_mean_c": 0.3207564463179416,
+     "p": 0.001996007984031936,
+     "z": 3.1497699034499815
+    },
+    "50": {
+     "draws": 500,
+     "holds": true,
+     "n_orders": 2624,
+     "null_mean_c": -0.2643946759053282,
+     "obs_mean_c": 1.7007857541056461,
+     "p": 0.001996007984031936,
+     "z": 10.57823515706368
+    }
+   },
+   "scope": "pooled",
+   "side": "S_FIFO/cancel_possible/live",
+   "statement": "live phase: mean adverse p_fair move inside removal windows exceeds the phase-matched random-time null at one-sided p <= 0.05"
+  },
+  {
+   "claim": "removal_windows_move_beyond_null",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "draws": 500,
+     "holds": true,
+     "n_orders": 2624,
+     "null_mean_c": 4.126050335578345,
+     "obs_mean_c": 6.20430800883412,
+     "p": 0.001996007984031936,
+     "z": 14.527669667379183
+    },
+    "250": {
+     "draws": 500,
+     "holds": true,
+     "n_orders": 2624,
+     "null_mean_c": 4.126050335578345,
+     "obs_mean_c": 5.276359128620539,
+     "p": 0.001996007984031936,
+     "z": 8.041017423320227
+    },
+    "50": {
+     "draws": 500,
+     "holds": true,
+     "n_orders": 2624,
+     "null_mean_c": 4.126050335578345,
+     "obs_mean_c": 6.017508726544367,
+     "p": 0.001996007984031936,
+     "z": 13.22188439246777
+    }
+   },
+   "scope": "pooled",
+   "side": "S_FIFO/cancel_possible/live",
+   "statement": "live phase: mean |p_fair move| inside removal windows exceeds the phase-matched random-time null at one-sided p <= 0.05"
+  },
+  {
+   "claim": "reprice_tracks_p_fair",
+   "lag_sensitive": false,
+   "n_L_evaluated": 3,
+   "per_L": {
+    "0": {
+     "holds": true,
+     "n": 3329,
+     "sign_agree": 0.7213854465778923,
+     "slope": 0.7011636690862618
+    },
+    "250": {
+     "holds": true,
+     "n": 3330,
+     "sign_agree": 0.6860348217268659,
+     "slope": 0.6621188200699909
+    },
+    "50": {
+     "holds": true,
+     "n": 3329,
+     "sign_agree": 0.7204777520769308,
+     "slope": 0.7056196752744414
+    }
+   },
+   "scope": "pooled",
+   "side": "both",
+   "statement": "n-weighted OLS slope of the tick change on dp > 0 and sign agreement > 0.5 (reprices)"
+  }
+ ],
+ "contract": "predictfun/reviews/maker_trace_20261122/decision_contract.md",
+ "rule": "computed predicates only (CLAUDE.md rule 10); per_L holds is None when the predicate cannot be evaluated; lag_sensitive = the evaluated values differ across L",
+ "version": "decision_v1"
+}
