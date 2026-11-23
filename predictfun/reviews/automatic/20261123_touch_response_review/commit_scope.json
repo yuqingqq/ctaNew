@@ -1,0 +1,100 @@
+{
+  "parent": "f81b5b0d61ca14eb6039231e9daaeaa954b647ee",
+  "preserved_dirty": {
+    "data/pm_5min/derived/be133_forward_population_era_split.json": {
+      "exists": false,
+      "sha256": null
+    },
+    "data/pm_5min/derived/be_tape_v2_builder_binding_proof_v1.json": {
+      "exists": false,
+      "sha256": null
+    },
+    "data/pm_5min/derived/be_validation_review_v1.json": {
+      "exists": false,
+      "sha256": null
+    },
+    "data/pm_5min/derived/p003_de_gate1_run_journal_de145day07__20260908T032816Z.json": {
+      "exists": false,
+      "sha256": null
+    },
+    "data/pm_5min/derived/p003_de_gate1_run_journal_deRR20260903__20260907T195646Z.json": {
+      "exists": false,
+      "sha256": null
+    },
+    "data/pm_5min/derived/p003_de_gate1_run_journal_deRR20260904__20260907T225517Z.json": {
+      "exists": false,
+      "sha256": null
+    },
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run__20260906T062115Z.json": {
+      "exists": false,
+      "sha256": null
+    },
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v2__20260906T064720Z.json": {
+      "exists": false,
+      "sha256": null
+    },
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v3__20260906T071214Z.json": {
+      "exists": false,
+      "sha256": null
+    },
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v4__20260906T074712Z.json": {
+      "exists": false,
+      "sha256": null
+    },
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v5__20260906T075707Z.json": {
+      "exists": false,
+      "sha256": null
+    },
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v6__20260906T081252Z.json": {
+      "exists": false,
+      "sha256": null
+    },
+    "data/pm_5min/derived/p003_de_launch_form_probe__20260906T121813Z.json": {
+      "exists": false,
+      "sha256": null
+    },
+    "data/pm_5min/derived/p003_de_r608_resolver_agreement__20260906T104000Z.json": {
+      "exists": false,
+      "sha256": null
+    },
+    "data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/README": {
+      "exists": false,
+      "sha256": null
+    },
+    "data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/linear_btc.json": {
+      "exists": false,
+      "sha256": null
+    },
+    "data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/linear_eth.json": {
+      "exists": false,
+      "sha256": null
+    },
+    "predictfun/handoffs/20261109_TODO.md": {
+      "exists": true,
+      "sha256": "8b7c104adae198927a9fecb04b5f57015fc2cef1afa09f48315b8c4ec413d7d8"
+    },
+    "predictfun/research/run_light.log": {
+      "exists": true,
+      "sha256": "040767f45f785390d76f594895dce7025b37e9f2fdda867cf26665cb4a1759cf"
+    }
+  },
+  "owned": {
+    "predictfun/HANDOFF.md": {
+      "before_work_sha256": "3c4cd8999220cb17b4105ec2e006ca420c6a45f9dbfa01c4a525bab96d231fc8",
+      "after_work_sha256": "87e59213f79e6c6817eed6094cf77112c83dd8a5c6b63f812a7fa36e98e55eda",
+      "expected_index_sha256": "aa95c01b65d1e798bd557b05dd0612769f8cc2979ed9487abc265b39026ef345"
+    },
+    "predictfun/FINDINGS.md": {
+      "before_work_sha256": "2af79a7364daf79944f621b041294ed09a76257fe10714641e7fe0d2d4faa4c4",
+      "after_work_sha256": "0cf466256c6b92086848c2d4cbcd96e5d2739f93f3af0f28fdbce5002c4f0bdd",
+      "expected_index_sha256": "c43f8d6164efe65f0ff4c3376be5d03a31f36fa48ee91ee7d9f8cabd84cffdad"
+    },
+    "predictfun/STATUS.yml": {
+      "before_work_sha256": "b08d7ee59c90b4c153649e94e39ec44b79ed642cd4fb7950c49fe7f2a9273f98",
+      "after_work_sha256": "3688b501f6f0addedfe2c606307ba31f263613b1f17496c3a6e4b975f063d240",
+      "expected_index_sha256": "0529dedea74dbd5343c761b74dfc81667276c17ca520103d91805ebcdeffb900"
+    }
+  },
+  "run_log_prefix_bytes": 1386540,
+  "run_log_prefix_sha256": "040767f45f785390d76f594895dce7025b37e9f2fdda867cf26665cb4a1759cf"
+}

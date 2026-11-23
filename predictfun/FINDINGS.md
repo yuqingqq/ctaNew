@@ -1,3 +1,15 @@
+<!-- TOUCH_RESPONSE_REVIEW_20261123_CODEX -->
+## 2026-11-23 — review of TOUCH-TRANSITION-AND-RESPONSE v1
+
+Pinned **f81b5b0d61ca14eb6039231e9daaeaa954b647ee**. [Full ranked review, evidence, ONE next priority](reviews/automatic/20261123_touch_response_review/report.md). Accept census/episode accounting, all10 MH ratios and chain regrades; no material saved-result defect requiring rerun.105 pinned synthetic checks pass;39 output/source hashes and saved take/economic inputs agree. Prior review01a72b4e2 findings1-4 closed.
+
+P2 inference blockers only: (1)57% is improvement creations, not all quote changes or a common maker's coordinated quote; (2)54ms is response-frame minus retreat-frame, not maker reaction latency. Independent bounds medians0/104ms. P2 design limitation: all frozen support verdicts remain insufficient; 30seconds/group cannot pass with7.189–27.483total seconds/market. Permutation labels break state chronology; no promoted p-values. Largest gap:910/999 responses owner unknown;12 top-three scenario links.
+
+P3 bundled reuse guards, no current output impact: post-END takes accepted by production falsifier40->41 but0 actual violations; value cohort clean on all160 rows; response join missing price condition but current49c match holds. Existing continuation supplies matched/residual shares, not completed-close profits.
+
+Next: frozen competing-next-transition probabilities on same3796episodes/all5contrasts, count-based support and interval bounds, plus existing candidate-chain exact-key FIFO/take/residual attribution; one combined packet. Stop on thin/inconsistent, no tuned floor or policy promotion. See report for fixed design and <=0.030core-h all-in bound; no new USER decision inside standing scope/caps.
+<!-- /TOUCH_RESPONSE_REVIEW_20261123_CODEX -->
+
 <!-- POSTING_CHAIN_REVIEW_20261123_CODEX -->
 ## 2026-11-23 — Codex posting/queue/chain combined review
 

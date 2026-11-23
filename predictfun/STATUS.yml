@@ -1,4 +1,23 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+touch_response_review_20261123_codex:
+  target: f81b5b0d61ca14eb6039231e9daaeaa954b647ee
+  report: predictfun/reviews/automatic/20261123_touch_response_review/report.md
+  result: descriptive_census_accepted_private_repricing_and_latency_not_identified
+  prior_findings_01a72b4e2: closed_for_descriptive_scenario_use
+  tests: {touch: "56/56", chains: "49/49", receipt_hashes: 39, mh_ratios: 10}
+  population: {markets: 19, consumed_days: 4, episodes: 3796, responses: 999, top3_candidate_responses: 12}
+  inference_blockers: [creation_denominator_not_maker_quote_majority, frame_gap_not_private_reaction_latency]
+  nonblocking: [frozen_support_design_mismatch, temporal_exchangeability_not_established, continuation_END_and_clean_cohort_guards, response_price_guard, missing_completed_profit_attribution]
+  next_priority: COMPETING_TRANSITION_AND_CONTINUATION_v1
+  next_scope: same_saved_episodes_all_five_contrasts_candidate_chain_economics
+  review_charge_core_hours_once: 0.010
+  next_packet_all_in_core_hours: 0.030
+  next_review_reserve_core_hours: 0.010
+  projected_task_with_standing_reserve_core_hours: 1.9747
+  projected_line_with_standing_reserve_core_hours: 5.2854
+  task_cap: 2.00
+  line_cap: 5.30
+  user_decision: not_needed_within_standing_saved_data_authorization
 posting_chain_review_20261123_codex:
   target: ed7d1ebaf34aa79cadec467ef41a894ea395423e
   report: predictfun/reviews/automatic/20261123_posting_chain_review/report.md

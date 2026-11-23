@@ -1,0 +1,729 @@
+{
+  "target": "f81b5b0d61ca14eb6039231e9daaeaa954b647ee",
+  "hashes": [
+    {
+      "sub": "touch_transition",
+      "kind": "output",
+      "name": "census.csv",
+      "ok": true
+    },
+    {
+      "sub": "touch_transition",
+      "kind": "output",
+      "name": "claims.json",
+      "ok": true
+    },
+    {
+      "sub": "touch_transition",
+      "kind": "output",
+      "name": "consistency.csv",
+      "ok": true
+    },
+    {
+      "sub": "touch_transition",
+      "kind": "output",
+      "name": "continuations.csv",
+      "ok": true
+    },
+    {
+      "sub": "touch_transition",
+      "kind": "output",
+      "name": "episodes.parquet",
+      "ok": true
+    },
+    {
+      "sub": "touch_transition",
+      "kind": "output",
+      "name": "ratios.csv",
+      "ok": true
+    },
+    {
+      "sub": "touch_transition",
+      "kind": "output",
+      "name": "reconcile.csv",
+      "ok": true
+    },
+    {
+      "sub": "touch_transition",
+      "kind": "output",
+      "name": "two_side.csv",
+      "ok": true
+    },
+    {
+      "sub": "touch_transition",
+      "kind": "source",
+      "name": "predictfun/research/pf_mt_common.py",
+      "ok": true
+    },
+    {
+      "sub": "touch_transition",
+      "kind": "source",
+      "name": "predictfun/research/pf_mt_decision.py",
+      "ok": true
+    },
+    {
+      "sub": "touch_transition",
+      "kind": "source",
+      "name": "predictfun/research/pf_mt_econ.py",
+      "ok": true
+    },
+    {
+      "sub": "touch_transition",
+      "kind": "source",
+      "name": "predictfun/research/pf_mt_lifecycle.py",
+      "ok": true
+    },
+    {
+      "sub": "touch_transition",
+      "kind": "source",
+      "name": "predictfun/reviews/automatic/20261123_posting_chain_review/report.md",
+      "ok": true
+    },
+    {
+      "sub": "touch_transition",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/posting_chain_contract.md",
+      "ok": true
+    },
+    {
+      "sub": "touch_transition",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/queue_front_contract.md",
+      "ok": true
+    },
+    {
+      "sub": "touch_transition",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/take_logic_contract.md",
+      "ok": true
+    },
+    {
+      "sub": "touch_transition",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/take_logic_v2_contract.md",
+      "ok": true
+    },
+    {
+      "sub": "touch_transition",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/chain_context.py",
+      "ok": true
+    },
+    {
+      "sub": "touch_transition",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/chain_take.py",
+      "ok": true
+    },
+    {
+      "sub": "touch_transition",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/chains_v3.py",
+      "ok": true
+    },
+    {
+      "sub": "touch_transition",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/closes.py",
+      "ok": true
+    },
+    {
+      "sub": "touch_transition",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/posting_opportunity.py",
+      "ok": true
+    },
+    {
+      "sub": "touch_transition",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/queue_front.py",
+      "ok": true
+    },
+    {
+      "sub": "touch_transition",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/queue_front_v2.py",
+      "ok": true
+    },
+    {
+      "sub": "touch_transition",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/take_logic.py",
+      "ok": true
+    },
+    {
+      "sub": "touch_transition",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/take_logic_v2.py",
+      "ok": true
+    },
+    {
+      "sub": "touch_transition",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/touch_transition.py",
+      "ok": true
+    },
+    {
+      "sub": "touch_transition",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/touch_transition_selftest.py",
+      "ok": true
+    },
+    {
+      "sub": "touch_transition",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/touch_response_contract.md",
+      "ok": true
+    },
+    {
+      "sub": "chains_v4",
+      "kind": "output",
+      "name": "chain_links.csv",
+      "ok": true
+    },
+    {
+      "sub": "chains_v4",
+      "kind": "output",
+      "name": "chains.md",
+      "ok": true
+    },
+    {
+      "sub": "chains_v4",
+      "kind": "output",
+      "name": "claims.json",
+      "ok": true
+    },
+    {
+      "sub": "chains_v4",
+      "kind": "source",
+      "name": "predictfun/research/pf_mt_common.py",
+      "ok": true
+    },
+    {
+      "sub": "chains_v4",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/posting_chain_contract.md",
+      "ok": true
+    },
+    {
+      "sub": "chains_v4",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/chains_v3.py",
+      "ok": true
+    },
+    {
+      "sub": "chains_v4",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/chains_v3_selftest.py",
+      "ok": true
+    },
+    {
+      "sub": "chains_v4",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/chains_v4.py",
+      "ok": true
+    },
+    {
+      "sub": "chains_v4",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/tools/chains_v4_selftest.py",
+      "ok": true
+    },
+    {
+      "sub": "chains_v4",
+      "kind": "source",
+      "name": "predictfun/reviews/maker_trace_20261122/touch_response_contract.md",
+      "ok": true
+    }
+  ],
+  "columns": {
+    "episodes": [
+      "day",
+      "mid",
+      "episode_id",
+      "side",
+      "frame",
+      "t_prev_ms",
+      "t_start_ms",
+      "best_prev",
+      "best_retreat",
+      "other_best",
+      "delta_ticks",
+      "delta_bin",
+      "end_type",
+      "end_reason",
+      "end_frame",
+      "end_class",
+      "t_end_ms",
+      "exposure_ms",
+      "exposure_lo_ms",
+      "exposure_hi_ms",
+      "no_frame_between",
+      "resp_type",
+      "resp_best",
+      "resp_lo_ms",
+      "resp_hi_ms",
+      "after_horizon_class",
+      "t_read_max_ms",
+      "state_status_D0",
+      "state_frame_D0",
+      "state_ms_D0",
+      "spread_D0",
+      "spread_bin_D0",
+      "depth_own_D0",
+      "depth_own_bin_D0",
+      "btc_r_5s_bp_D0",
+      "btc_5s_aligned_D0",
+      "p_fair_D0",
+      "fair_gap_c_D0",
+      "fair_gap_bin_D0",
+      "time_left_s_D0",
+      "time_left_bin_D0",
+      "state_status_LAG",
+      "state_frame_LAG",
+      "state_ms_LAG",
+      "spread_LAG",
+      "spread_bin_LAG",
+      "depth_own_LAG",
+      "depth_own_bin_LAG",
+      "btc_r_5s_bp_LAG",
+      "btc_5s_aligned_LAG",
+      "p_fair_LAG",
+      "fair_gap_c_LAG",
+      "fair_gap_bin_LAG",
+      "time_left_s_LAG",
+      "time_left_bin_LAG",
+      "qf2_status",
+      "cand_addr",
+      "cand_group",
+      "cand_hash",
+      "grade",
+      "identity",
+      "identity_reason",
+      "inv_relation",
+      "alt_netting",
+      "alt_first_addresses",
+      "alt_first_other",
+      "earliest_set_addresses",
+      "pre_state_link",
+      "po_parity",
+      "po_identity",
+      "win_lo_ms",
+      "win_hi_ms",
+      "alt_first_n_addresses",
+      "n_earliest_set",
+      "resp_tick",
+      "resp_fid",
+      "win_unbounded",
+      "win_contains",
+      "resp_size_shown"
+    ],
+    "continuations": [
+      "table",
+      "day",
+      "mid",
+      "cand_hash",
+      "unit_sid",
+      "cand_addr",
+      "cand_group",
+      "n_responses_linked",
+      "response_keys",
+      "identities",
+      "grades",
+      "pre_state_links",
+      "side",
+      "price_ticks",
+      "shown_size_at_creation",
+      "creation_lo_ms",
+      "creation_hi_ms",
+      "win_lo_ms",
+      "win_hi_ms",
+      "alt_netting",
+      "alt_first_other",
+      "alt_first_addresses",
+      "n_legs",
+      "n_records",
+      "filled_shares",
+      "first_fill_hi_ms",
+      "last_fill_hi_ms",
+      "n_legs_hi_before_creation",
+      "v10s_n_valid",
+      "v10s_n_all",
+      "v10s_sh_valid",
+      "v10s_sh_all",
+      "v10s_gross",
+      "v10s_net",
+      "v10s_c_sh",
+      "v60s_n_valid",
+      "v60s_n_all",
+      "v60s_sh_valid",
+      "v60s_sh_all",
+      "v60s_gross",
+      "v60s_net",
+      "v60s_c_sh",
+      "vend_n_valid",
+      "vend_n_all",
+      "vend_sh_valid",
+      "vend_sh_all",
+      "vend_gross",
+      "vend_net",
+      "vend_c_sh",
+      "common_n",
+      "common_sh",
+      "common_c_sh_10s",
+      "common_c_sh_60s",
+      "common_c_sh_end",
+      "res_n_valid",
+      "res_sh_valid",
+      "res_net",
+      "res_c_sh",
+      "turnover_mq_sh",
+      "residual_rq_sh",
+      "fv_rows",
+      "fv_rows_status_ok",
+      "successor_status",
+      "size_status",
+      "union_histories",
+      "next_kind",
+      "next_link_status",
+      "next_hash",
+      "n_children",
+      "pf_n_fills",
+      "pf_mq_sh",
+      "pf_rq_sh",
+      "takes_status",
+      "takes_unbounded_after",
+      "takes_end",
+      "takes_end_abs_dq",
+      "takes_end_dir_D0",
+      "takes_10s",
+      "takes_60s",
+      "scope",
+      "metric",
+      "value"
+    ]
+  },
+  "population": {
+    "episodes": 3796,
+    "markets": 19,
+    "days": 4,
+    "end_reasons": {
+      "other_side": 1922,
+      "response": 999,
+      "two_side": 681,
+      "same_side_retreat": 184,
+      "horizon": 7,
+      "empty_side": 3
+    },
+    "response_type": {
+      "restoring": 753,
+      "partial": 139,
+      "overshoot": 107
+    },
+    "episode_overlaps": 0
+  },
+  "exposure": {
+    "total_seconds": 292.26500000000004,
+    "market_min_seconds": 7.189,
+    "market_max_seconds": 27.483,
+    "by_market_seconds": {
+      "('20261024', 3697902)": 7.773,
+      "('20261024', 3699278)": 13.014,
+      "('20261024', 3700070)": 22.424,
+      "('20261024', 3702960)": 17.224,
+      "('20261024', 3704004)": 27.483,
+      "('20261024', 3712725)": 19.713,
+      "('20261024', 3716727)": 13.568,
+      "('20261025', 3723774)": 17.928,
+      "('20261025', 3734864)": 17.489,
+      "('20261025', 3737919)": 19.684,
+      "('20261025', 3763401)": 18.725,
+      "('20261025', 3776314)": 9.274,
+      "('20261026', 3789484)": 18.072,
+      "('20261026', 3803131)": 13.338,
+      "('20261026', 3804696)": 16.894,
+      "('20261026', 3838531)": 10.632,
+      "('20261026', 3850428)": 7.189,
+      "('20261027', 3877472)": 14.024,
+      "('20261027', 3899224)": 7.817
+    }
+  },
+  "timing": {
+    "n_response": 999,
+    "next_frame": 710,
+    "endpoint_median_ms": 54.0,
+    "physical_lower_median_ms": 0.0,
+    "physical_upper_median_ms": 104.0
+  },
+  "reconciliation": {
+    "improvements": 11804,
+    "improvement_classes": {
+      "two_side": 6723,
+      "improve_bid": 2678,
+      "improve_ask": 2354,
+      "unknown": 49
+    },
+    "excluded": 8821,
+    "excluded_classes": {
+      "two_side": 5362,
+      "improve_bid": 1824,
+      "improve_ask": 1601,
+      "unknown": 34
+    },
+    "keys_unique": true
+  },
+  "ratios": [
+    {
+      "variant": "D0",
+      "contrast": "btc_with",
+      "computed": 1.3394582789623002,
+      "stored": 1.3394582789623002,
+      "equal": true,
+      "verdict": "insufficient_support"
+    },
+    {
+      "variant": "LAG",
+      "contrast": "btc_with",
+      "computed": 1.2437988331087002,
+      "stored": 1.2437988331087,
+      "equal": true,
+      "verdict": "insufficient_support"
+    },
+    {
+      "variant": "D0",
+      "contrast": "btc_against",
+      "computed": 1.2188106359444784,
+      "stored": 1.2188106359444784,
+      "equal": true,
+      "verdict": "insufficient_support"
+    },
+    {
+      "variant": "LAG",
+      "contrast": "btc_against",
+      "computed": 1.2250755540821379,
+      "stored": 1.2250755540821379,
+      "equal": true,
+      "verdict": "insufficient_support"
+    },
+    {
+      "variant": "D0",
+      "contrast": "fair_gap",
+      "computed": 0.9820035581041124,
+      "stored": 0.9820035581041124,
+      "equal": true,
+      "verdict": "insufficient_support"
+    },
+    {
+      "variant": "LAG",
+      "contrast": "fair_gap",
+      "computed": 0.9339174358485427,
+      "stored": 0.9339174358485427,
+      "equal": true,
+      "verdict": "insufficient_support"
+    },
+    {
+      "variant": "D0",
+      "contrast": "depth_own",
+      "computed": 0.7239175288717354,
+      "stored": 0.7239175288717353,
+      "equal": true,
+      "verdict": "insufficient_support"
+    },
+    {
+      "variant": "LAG",
+      "contrast": "depth_own",
+      "computed": 0.6079922348370633,
+      "stored": 0.6079922348370634,
+      "equal": true,
+      "verdict": "insufficient_support"
+    },
+    {
+      "variant": "D0",
+      "contrast": "time_left",
+      "computed": 1.2441282375720608,
+      "stored": 1.2441282375720606,
+      "equal": true,
+      "verdict": "insufficient_support"
+    },
+    {
+      "variant": "LAG",
+      "contrast": "time_left",
+      "computed": 1.2456822764745414,
+      "stored": 1.245682276474541,
+      "equal": true,
+      "verdict": "insufficient_support"
+    }
+  ],
+  "take_columns": [
+    "day",
+    "mid",
+    "rank",
+    "addr",
+    "sid",
+    "s",
+    "dq",
+    "p_avg",
+    "x_lo_hard_ms",
+    "hi_ms",
+    "settle_ms",
+    "status",
+    "take_class",
+    "tk_hash",
+    "q_all",
+    "cls_rec",
+    "cls_sim",
+    "cls_cert_0",
+    "v1_type",
+    "pop_status",
+    "gi",
+    "k_anchor",
+    "t_anchor_ms",
+    "in_raw_schedule",
+    "o4_status",
+    "n_variants_available",
+    "ledger_conditional_at_anchor",
+    "q_D0",
+    "dir_D0",
+    "q_D1000",
+    "dir_D1000",
+    "q_pend",
+    "dir_pend"
+  ],
+  "continuation_takes": [
+    {
+      "mid": 3699278,
+      "hash": "0x9b95e4ff05117f699a9901f19001f7d824987e66e88a53d8503e3b8873ea6a28",
+      "selected": 40,
+      "end_ms": 1792819800000,
+      "definite_after_end": 0,
+      "straddle_end": 0,
+      "post_end_sids": []
+    },
+    {
+      "mid": 3700070,
+      "hash": "0x5427eef9f4dc2db1dc123fb8e57340d5bf5a7051c1b39c00ca2f5993d87bc4bd",
+      "selected": 18,
+      "end_ms": 1792824600000,
+      "definite_after_end": 0,
+      "straddle_end": 0,
+      "post_end_sids": []
+    },
+    {
+      "mid": 3702960,
+      "hash": "0x0123d287d651ddae72e38f91d447b36eefe8f1d23eb3449b6acac55838d6f9d3",
+      "selected": 12,
+      "end_ms": 1792838700000,
+      "definite_after_end": 0,
+      "straddle_end": 0,
+      "post_end_sids": []
+    },
+    {
+      "mid": 3702960,
+      "hash": "0xb41c199d28742d723675daa3aea8497f09fe44da0d0e8bb5a8600c8594a9cb6a",
+      "selected": 44,
+      "end_ms": 1792838700000,
+      "definite_after_end": 0,
+      "straddle_end": 0,
+      "post_end_sids": []
+    },
+    {
+      "mid": 3704004,
+      "hash": "0x5a2a58f412f5ab38a6ca81f241341d33b9479fc89abe2bb5f15e598c3a1c8f22",
+      "selected": 8,
+      "end_ms": 1792843800000,
+      "definite_after_end": 0,
+      "straddle_end": 0,
+      "post_end_sids": []
+    },
+    {
+      "mid": 3712725,
+      "hash": "0x83e130d7261b53d350e4b4ffd15f36bca49ac838f601df094f0879ef2f28c68c",
+      "selected": 1,
+      "end_ms": 1792866000000,
+      "definite_after_end": 0,
+      "straddle_end": 0,
+      "post_end_sids": []
+    },
+    {
+      "mid": 3763401,
+      "hash": "0x240298cf48c451c949443d9b2fad0525308ba0387cfdc8e6f18cffac7e97e887",
+      "selected": 20,
+      "end_ms": 1792948200000,
+      "definite_after_end": 0,
+      "straddle_end": 0,
+      "post_end_sids": []
+    },
+    {
+      "mid": 3789484,
+      "hash": "0x8a7ffc5664eb736a6e94562aa496af7d23294ba2f1e2d772b8e261dff7a89c11",
+      "selected": 0,
+      "end_ms": 1792977300000,
+      "definite_after_end": 0,
+      "straddle_end": 0,
+      "post_end_sids": []
+    },
+    {
+      "mid": 3803131,
+      "hash": "0xda64c89d761f3af97eb386203724e03c09acff201ea66ee167aef89f7954fa37",
+      "selected": 0,
+      "end_ms": 1793001600000,
+      "definite_after_end": 0,
+      "straddle_end": 0,
+      "post_end_sids": []
+    },
+    {
+      "mid": 3804696,
+      "hash": "0x8000ac84b45e2166a9cdac77aa980428a861d94df4ea52581ec13a514a090eae",
+      "selected": 0,
+      "end_ms": 1793007300000,
+      "definite_after_end": 0,
+      "straddle_end": 0,
+      "post_end_sids": []
+    },
+    {
+      "mid": 3804696,
+      "hash": "0x9bdd74991dee9e0f85b6bcec97dc84cecfab12bac52218dbc4f32d1bd1ff9e6f",
+      "selected": 0,
+      "end_ms": 1793007300000,
+      "definite_after_end": 0,
+      "straddle_end": 0,
+      "post_end_sids": []
+    },
+    {
+      "mid": 3804696,
+      "hash": "0xda632456518814bc64e7a1ae51f109184a85690585791f1c1bfe6d1873c14482",
+      "selected": 84,
+      "end_ms": 1793007300000,
+      "definite_after_end": 0,
+      "straddle_end": 0,
+      "post_end_sids": []
+    }
+  ],
+  "synthetic_end_predicate": {
+    "good_count": 40,
+    "with_post_END_count": 41,
+    "production_function_accepts_post_END": true
+  },
+  "chain3_response_price": [
+    {
+      "resp_tick": 49,
+      "resp_best": 49.0,
+      "resp_lo_ms": 1792838401277,
+      "resp_hi_ms": 1792838401321
+    }
+  ],
+  "economic_input_hash_ok": true,
+  "continuation_quality": {
+    "rows": 160,
+    "status": {
+      "ok": 160
+    },
+    "self_trade_rows": 0,
+    "invalid_rows": 0
+  },
+  "controls": {
+    "intact_ratio_pass": true,
+    "changed_ratio_refused": true,
+    "synthetic_END_violation_exposed": true
+  }
+}

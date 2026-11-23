@@ -23,6 +23,20 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- TOUCH_RESPONSE_REVIEW_20261123_CODEX -->
+## 2026-11-23 — touch/response census accepted; next compare competing transitions and complete candidate economics
+
+[Combined review / evidence / ONE next priority](reviews/automatic/20261123_touch_response_review/report.md), pinned **f81b5b0d61ca14eb6039231e9daaeaa954b647ee**. Suites56/56+49/49;39 output/source hashes plus take/economic input hashes; all10 MH ratios reproduce.3,796 episodes /999 same-side responses, no overlaps.11,804 improvements and8,821 anchor-excluded creations reconcile. Prior01a72b4e2 findings1-4 closed for descriptive/scenario use. No census rerun or cleanup-only round.
+
+Bundle interpretation limits:57% counts improvement creations, not most quote moves or coordinated maker repricing (4,897 two-side vs8,298 one-side changed-touch frames).54ms is observed-frame gap;710/999 next-frame, median elapsed bounds0/104ms, not private latency. Keep every frozen insufficient_support verdict; actual total exposure292.265s,7.189–27.483s/market. Label shuffles break temporal state dependence: conditional diagnostics, not rule significance.91% owner unknown;12 top-three links, all scenario-conditional.
+
+Nonblocking before wider reuse: explicit END bound on continuation takes (synthetic40->41 escape;0 current violations); clean value cohort (all160 current rows ok/non-self); response-price match (current chain3 matches49c). Complete matched/residual profit attribution rather than shares alone when exact saved keys permit. No broad rebuild.
+
+ONE next priority: COMPETING-TRANSITION-AND-CONTINUATION v1, same3,796episodes/19markets, all5 frozen contrasts+D0/LAG, mutually exclusive next transitions, common-support risk differences with fixed harmonic weights, censor bounds, day/side signs and interval-censored timing. Count-based reporting floor declared in report; no p-value promotion or tuned floor. Finish existing89candidate links/6chains with exact-leg FIFO/take/residual continuation; missing identification stays missing. Thin/inconsistent ends this measurement, not another variant. One freeze/combined receipt/review.
+
+Current review charge0.010 core-h once, <=0.015 request. Pre-review ledger1.8847task/5.1954line. Next packet<=0.030 ALL-IN incl.<=0.010review; projected1.9247/5.2354, with0.05reserve1.9747/5.2854 within2.00/5.30. Reconcile concurrent work. No new USER decision within standing saved-data/short-CPU authorization; new days, untouched validation, live use or substantive strategy experiment remain separate.
+<!-- /TOUCH_RESPONSE_REVIEW_20261123_CODEX -->
+
 <!-- POSTING_CHAIN_REVIEW_20261123_CODEX -->
 ## 2026-11-23 — posting panel accepted descriptively; next follow native touch/quote-response chains
 

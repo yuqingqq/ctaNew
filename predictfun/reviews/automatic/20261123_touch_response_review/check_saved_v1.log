@@ -1,0 +1,195 @@
+{
+  "population": {
+    "episodes": 3796,
+    "markets": 19,
+    "days": 4,
+    "end_reasons": {
+      "other_side": 1922,
+      "response": 999,
+      "two_side": 681,
+      "same_side_retreat": 184,
+      "horizon": 7,
+      "empty_side": 3
+    },
+    "response_type": {
+      "restoring": 753,
+      "partial": 139,
+      "overshoot": 107
+    },
+    "episode_overlaps": 0
+  },
+  "exposure": {
+    "total_seconds": 292.26500000000004,
+    "market_min_seconds": 7.189,
+    "market_max_seconds": 27.483,
+    "by_market_seconds": {
+      "('20261024', 3697902)": 7.773,
+      "('20261024', 3699278)": 13.014,
+      "('20261024', 3700070)": 22.424,
+      "('20261024', 3702960)": 17.224,
+      "('20261024', 3704004)": 27.483,
+      "('20261024', 3712725)": 19.713,
+      "('20261024', 3716727)": 13.568,
+      "('20261025', 3723774)": 17.928,
+      "('20261025', 3734864)": 17.489,
+      "('20261025', 3737919)": 19.684,
+      "('20261025', 3763401)": 18.725,
+      "('20261025', 3776314)": 9.274,
+      "('20261026', 3789484)": 18.072,
+      "('20261026', 3803131)": 13.338,
+      "('20261026', 3804696)": 16.894,
+      "('20261026', 3838531)": 10.632,
+      "('20261026', 3850428)": 7.189,
+      "('20261027', 3877472)": 14.024,
+      "('20261027', 3899224)": 7.817
+    }
+  },
+  "timing": {
+    "n_response": 999,
+    "next_frame": 710,
+    "endpoint_median_ms": 54.0,
+    "physical_lower_median_ms": 0.0,
+    "physical_upper_median_ms": 104.0
+  },
+  "reconciliation": {
+    "improvements": 12567,
+    "improvement_classes": {
+      "two_side": 7086,
+      "improve_bid": 2854,
+      "improve_ask": 2576,
+      "unknown": 51
+    },
+    "excluded": 8821,
+    "excluded_classes": {
+      "two_side": 5362,
+      "improve_bid": 1824,
+      "improve_ask": 1601,
+      "unknown": 34
+    },
+    "keys_unique": true
+  },
+  "continuation_takes": [
+    {
+      "mid": 3699278,
+      "hash": "0x9b95e4ff05117f699a9901f19001f7d824987e66e88a53d8503e3b8873ea6a28",
+      "selected": 40,
+      "end_ms": 1792819800000,
+      "definite_after_end": 0,
+      "straddle_end": 0,
+      "post_end_sids": []
+    },
+    {
+      "mid": 3700070,
+      "hash": "0x5427eef9f4dc2db1dc123fb8e57340d5bf5a7051c1b39c00ca2f5993d87bc4bd",
+      "selected": 18,
+      "end_ms": 1792824600000,
+      "definite_after_end": 0,
+      "straddle_end": 0,
+      "post_end_sids": []
+    },
+    {
+      "mid": 3702960,
+      "hash": "0x0123d287d651ddae72e38f91d447b36eefe8f1d23eb3449b6acac55838d6f9d3",
+      "selected": 12,
+      "end_ms": 1792838700000,
+      "definite_after_end": 0,
+      "straddle_end": 0,
+      "post_end_sids": []
+    },
+    {
+      "mid": 3702960,
+      "hash": "0xb41c199d28742d723675daa3aea8497f09fe44da0d0e8bb5a8600c8594a9cb6a",
+      "selected": 44,
+      "end_ms": 1792838700000,
+      "definite_after_end": 0,
+      "straddle_end": 0,
+      "post_end_sids": []
+    },
+    {
+      "mid": 3704004,
+      "hash": "0x5a2a58f412f5ab38a6ca81f241341d33b9479fc89abe2bb5f15e598c3a1c8f22",
+      "selected": 8,
+      "end_ms": 1792843800000,
+      "definite_after_end": 0,
+      "straddle_end": 0,
+      "post_end_sids": []
+    },
+    {
+      "mid": 3712725,
+      "hash": "0x83e130d7261b53d350e4b4ffd15f36bca49ac838f601df094f0879ef2f28c68c",
+      "selected": 1,
+      "end_ms": 1792866000000,
+      "definite_after_end": 0,
+      "straddle_end": 0,
+      "post_end_sids": []
+    },
+    {
+      "mid": 3763401,
+      "hash": "0x240298cf48c451c949443d9b2fad0525308ba0387cfdc8e6f18cffac7e97e887",
+      "selected": 20,
+      "end_ms": 1792948200000,
+      "definite_after_end": 0,
+      "straddle_end": 0,
+      "post_end_sids": []
+    },
+    {
+      "mid": 3789484,
+      "hash": "0x8a7ffc5664eb736a6e94562aa496af7d23294ba2f1e2d772b8e261dff7a89c11",
+      "selected": 0,
+      "end_ms": 1792977300000,
+      "definite_after_end": 0,
+      "straddle_end": 0,
+      "post_end_sids": []
+    },
+    {
+      "mid": 3803131,
+      "hash": "0xda64c89d761f3af97eb386203724e03c09acff201ea66ee167aef89f7954fa37",
+      "selected": 0,
+      "end_ms": 1793001600000,
+      "definite_after_end": 0,
+      "straddle_end": 0,
+      "post_end_sids": []
+    },
+    {
+      "mid": 3804696,
+      "hash": "0x8000ac84b45e2166a9cdac77aa980428a861d94df4ea52581ec13a514a090eae",
+      "selected": 0,
+      "end_ms": 1793007300000,
+      "definite_after_end": 0,
+      "straddle_end": 0,
+      "post_end_sids": []
+    },
+    {
+      "mid": 3804696,
+      "hash": "0x9bdd74991dee9e0f85b6bcec97dc84cecfab12bac52218dbc4f32d1bd1ff9e6f",
+      "selected": 0,
+      "end_ms": 1793007300000,
+      "definite_after_end": 0,
+      "straddle_end": 0,
+      "post_end_sids": []
+    },
+    {
+      "mid": 3804696,
+      "hash": "0xda632456518814bc64e7a1ae51f109184a85690585791f1c1bfe6d1873c14482",
+      "selected": 84,
+      "end_ms": 1793007300000,
+      "definite_after_end": 0,
+      "straddle_end": 0,
+      "post_end_sids": []
+    }
+  ],
+  "continuation_quality": {
+    "rows": 160,
+    "status": {
+      "ok": 160
+    },
+    "self_trade_rows": 0,
+    "invalid_rows": 0
+  },
+  "controls": {
+    "intact_ratio_pass": true,
+    "changed_ratio_refused": true,
+    "synthetic_END_violation_exposed": true
+  }
+}
+2026-11-23T21:28:51Z tag=codex_touch_saved rc=0 peak_rss_mib=433 wall_s=1.84 cpu_user_s=1.45 memavail_start_gib=22 disk_free_gib=420->420 slot=codex
