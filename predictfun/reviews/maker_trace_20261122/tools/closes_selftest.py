@@ -4,6 +4,11 @@ legs by pf_mt_econ's own fifo (mq / rq) and market_table (maker_market), so the 
 sum and reading below is computed by hand (comments), never by the tool.
 World (YES space; V = 1 Up / 0 Down; ms after 01:00Z; fills_valued row groups: ID day | D1 101-103 | D1 104-106 + D2 201 (mixed) | D2 202-203):
  ID 9001: never read (its row group lies outside the measurement days).
+ D1 100 rank 8 (V 0, END .50; the group sorts just before D1 101 rank 1): maker sells .1 @.60 / .2 @.59 / .3 @.58, taker buy 1.0 @.55 - the
+    real v2 pattern (Oct 24, rank 1, market 3695091: sells the smaller side): the plain sell total .6000000000000001 exceeds pandas' compensated
+    cumsum .6, so a cap from the plain total opened a 1.1e-16 sliver past the last sell boundary whose sell leg lay in the next group (the
+    refusal). Fixed cap: 3 m->t closes .1 / .2 / .3 (+.005 / +.008 / +.009), residual long .4 @.55 (END -.02, resolution -.22): good
+    turnover lost to residual.
  D1 101 rank 1 (V 1, END .80): maker buy 10 @.40, taker sell 4 @.45 (fee .02 C), a self-trade 2 @.47 (fee .01 C), maker sell 10 @.50 (10 s mark
     stale), taker buy 8 @.42 (fee .1 YES shares), an excluded leg -> 4 m->t +.20, 6 m->m +.60, 4 m->t +.32 (fees .021 / .05); residual long 4 @.42
     (END +1.52, resolution +2.32); econ gross 3.44 = 1.12 + 2.32, net 3.31; max |position| 10.
@@ -44,10 +49,10 @@ B0 = {D0: 1792717200000, D1: 1792803600000, D2: 1792890000000}          # 01:00Z
 NAN = float('nan')
 R = X.TOP3 + tuple('0x' + format(i, '040x') for i in range(4, 11))      # ex-ante ranks 1-10 (4-10 synthetic)
 FA = tuple('0xf' + format(i, '039x') for i in range(1, 10))            # field addresses (never read by the tool)
-r1, r2, r3, r4, r5, r6, r7 = R[:7]
-f1, f2, f3, f4, f5, f6 = FA[:6]
+r1, r2, r3, r4, r5, r6, r7, r8 = R[:8]
+f1, f2, f3, f4, f5, f6, f7 = FA[:7]
 # market -> (day, V, END mid, st_res, END status)
-MKT = {9001: (D0, 1., NAN, 'ok', 'id_day_no_book'), 101: (D1, 1., .80, 'ok', 'ok'), 102: (D1, 0., .10, 'ok', 'ok'), 103: (D1, 0., .30, 'ok', 'ok'),
+MKT = {9001: (D0, 1., NAN, 'ok', 'id_day_no_book'), 100: (D1, 0., .50, 'ok', 'ok'), 101: (D1, 1., .80, 'ok', 'ok'), 102: (D1, 0., .10, 'ok', 'ok'), 103: (D1, 0., .30, 'ok', 'ok'),
        104: (D1, 1., .90, 'ok', 'ok'), 105: (D1, 1., NAN, 'ok', 'stale'), 106: (D1, 1., .50, 'ok', 'ok'), 201: (D2, 0., .20, 'ok', 'ok'),
        202: (D2, 1., .70, 'ok', 'ok'), 203: (D2, NAN, .50, 'no_resolution', 'ok')}
 N_DUST = int((.1 + .2) != .3)                                         # 1 in IEEE doubles
@@ -62,6 +67,8 @@ def leg(mid, sid, t, maker, taker, s_mk, q, p, mk_idx=0, px=0, mfee=(0., 'COLLAT
 
 LEGS = [
     leg(9001, 'id-0001', 1000, r1, f1, +1, 1., .50), leg(9001, 'id-0002', 2000, r7, f2, -1, 1., .50),
+    leg(100, 'z8-0001', 100, r8, f1, -1, .1, .60), leg(100, 'z8-0002', 200, r8, f2, -1, .2, .59), leg(100, 'z8-0003', 300, r8, f3, -1, .3, .58),
+    leg(100, 'z8-0004', 400, f7, r8, -1, 1., .55),                                                              # the real cap pattern
     leg(101, 'a1-0001', 1000, r1, f1, +1, 10., .40, marks=(.41, .42, .43), dpt='d0', mm=.405),
     leg(101, 'a1-0002', 2000, f2, r1, +1, 4., .45, tfee=(.02, 'COLLATERAL'), marks=(.44, .46, .45), dpt='d0'),
     leg(101, 'a1-0003', 2500, r1, r1, +1, 2., .47, tfee=(.01, 'COLLATERAL'), dpt='d0'),                       # self-trade
@@ -86,6 +93,9 @@ LEGS = [
 # hand-computed closes: key (day, mid, rank, entry sid, entry mk_idx, entry role, close sid, close mk_idx, close role) ->
 #   shares, P&L = shares x (sell - buy), fee_fill entry / close, fee_res entry / close (prorated by shares), hold ms, entry side
 EXP = [
+    (D1, 100, 8, 'z8-0001', 0, 'maker', 'z8-0004', 0, 'taker', .1, .005, 0., 0., 0., 0., 300, 'sell'),         # .1 x (.60 - .55)
+    (D1, 100, 8, 'z8-0002', 0, 'maker', 'z8-0004', 0, 'taker', .2, .008, 0., 0., 0., 0., 200, 'sell'),         # .2 x (.59 - .55)
+    (D1, 100, 8, 'z8-0003', 0, 'maker', 'z8-0004', 0, 'taker', .3, .009, 0., 0., 0., 0., 100, 'sell'),         # .3 x (.58 - .55)
     (D1, 101, 1, 'a1-0001', 0, 'maker', 'a1-0002', 0, 'taker', 4., .20, 0., .02, 0., .02, 1000, 'buy'),        # 4 x (.45 - .40)
     (D1, 101, 1, 'a1-0001', 0, 'maker', 'a1-0004', 0, 'maker', 6., .60, 0., 0., 0., 0., 2000, 'buy'),          # 6 x (.50 - .40)
     (D1, 101, 1, 'a1-0004', 0, 'maker', 'a1-0005', 0, 'taker', 4., .32, 0., .021, 0., .05, 1000, 'sell'),      # 4 x (.50 - .42); .042 / .1 x 4/8
@@ -105,6 +115,7 @@ EXP = [
     (D2, 203, 2, 'u2-0001', 0, 'maker', 'u2-0002', 0, 'maker', 4., .08, 0., 0., 0., 0., 1000, 'buy'),
 ]
 DUST = (D1, 106, 6, 'h6-0002', 0, 'maker', 'h6-0004', 0, 'maker')
+RG1, RG2, RG3 = [100, 101, 102, 103], [104, 105, 106, 201], [202, 203]      # fills_valued row groups after the ID-day one
 OUTS = sorted(['answer.json', 'closes.parquet', 'closes_markets.parquet', 'closes_receipt.json', 'closes_summary.csv', 'cohorts.csv',
                'residual_summary.csv'])
 RES = dict(n=0, fail=[])
@@ -225,7 +236,7 @@ def world(root, F, MM, ranks=R, spec=None, extra=None):
     ec.mkdir(parents=True)
     spec = spec or E.FV
     w = pq.ParquetWriter(ec / 'fills_valued.parquet', E._arrow_schema(spec))
-    for m in (F['day'] == D0, F['mid'].isin([101, 102, 103]), F['mid'].isin([104, 105, 106, 201]), F['mid'].isin([202, 203])):
+    for m in (F['day'] == D0, F['mid'].isin(RG1), F['mid'].isin(RG2), F['mid'].isin(RG3)):
         w.write_table(E._to_arrow(F.loc[m.to_numpy(), list(spec)].reset_index(drop=True), spec))
     if extra is not None:
         w.write_table(E._to_arrow(extra[list(spec)].reset_index(drop=True), spec))
@@ -254,6 +265,17 @@ def chk_world(F, MM):
     check('world: econ D1 103 rank 3 residual -1.6', near(pick(MM, day=D1, mid=103, addr=r3)['resid_res'], -1.6))
     s = F[(F['sid'] == 'a1-0003').to_numpy()]
     check('world: the self-trade rows carry mq = rq = 0', len(s) == 2 and bool((s['mq'] == 0).all() and (s['rq'] == 0).all()))
+    # positive control of the real cap pattern in D1 100 rank 8: the plain sell total (np.add.at, the old cap) exceeds the compensated cumsum's
+    # last boundary, the larger side (buy 1.0) continues past it, and the next group (D1 101 rank 1) has a sell boundary (where the old pairing
+    # landed)
+    tb = np.zeros(1)
+    np.add.at(tb, np.zeros(3, np.int64), np.array([.1, .2, .3]))
+    kahan = float(pd.Series([.1, .2, .3]).groupby(np.zeros(3, np.int64)).cumsum().iloc[-1])
+    check('world: the real pattern is present (plain total .6000000000000001 > compensated last boundary .6 < buy 1.0)',
+          float(tb[0]) > kahan and kahan < 1. and float(tb[0]) == .1 + .2 + .3, f'(plain {float(tb[0])!r}, cumsum {kahan!r})')
+    z = pick(MM, day=D1, mid=100, addr=r8)
+    check('world: econ D1 100 rank 8 rt .022, gross -.198, residual -.22', near(z['rt_pnl'], .022) and near(z['gross_res_mk'] + z['gross_res_tk'], -.198)
+          and near(z['resid_res'], -.22))
 
 
 def chk_closes(out):
@@ -290,7 +312,11 @@ def chk_closes(out):
 
 def chk_markets(out):
     M = pq.read_table(out / 'closes_markets.parquet').to_pandas()
-    check('markets: 9 address x market x day rows', len(M) == 9, f'({len(M)})')
+    check('markets: 10 address x market x day rows', len(M) == 10, f'({len(M)})')
+    z = pick(M, day=D1, mid=100, rank=8)
+    for k, v in dict(n_closes=3, n_dust=0, close_sh=.6, close_pnl=.022, resid_sh=.4, net_pos=.4, resid_res=-.22, resid_end=-.02, resid_resol=-.2,
+                     max_abs_pos=.6, econ_gross=-.198, dev_gross=0., dev_net=0.).items():
+        check(f'markets: D1 100 rank 8 (real cap pattern) {k}', near(z[k], v), f'(got {z[k]!r}, hand {v!r})')
     a = pick(M, day=D1, mid=101, rank=1)
     for k, v in dict(n_rows_ok=6, n_rows_self=2, n_rows_excl=1, n_closes=3, n_dust=0, close_sh=14., close_pnl=1.12, close_fee_fill=.041,
                      close_fee_res=.07, resid_sh=4., resid_res=2.32, resid_end=1.52, resid_resol=.8, resid_fee_fill=.021, resid_fee_res=.05, self_sh=2.,
@@ -308,7 +334,7 @@ def chk_markets(out):
     check('markets: D2 203 rank 2 (no resolution): V-free close kept, resolution values blank', near(u['close_pnl'], .08) and not bool(u['res_ok'])
           and math.isnan(float(u['resid_res'])) and math.isnan(float(u['econ_gross'])) and near(u['econ_rt_pnl'], .08))
     r = M[M['res_ok'].to_numpy(bool)]
-    check('markets: every resolved market reconciles (|dev_gross|, |dev_net| <= 1e-9)', len(r) == 8 and bool((r['dev_gross'].abs() <= 1e-9).all())
+    check('markets: every resolved market reconciles (|dev_gross|, |dev_net| <= 1e-9)', len(r) == 9 and bool((r['dev_gross'].abs() <= 1e-9).all())
           and bool((r['dev_net'].abs() <= 1e-9).all()))
     d = pick(M, day=D1, mid=106, rank=6)
     check('markets: D1 106 rank 6: 3 closes + the dust, flat', int(d['n_closes']) == 3 and int(d['n_dust']) == N_DUST and abs(float(d['resid_sh'])) < 1e-12
@@ -339,7 +365,7 @@ def chk_summary(out):
     check('summary: rank6 D1: 3 closes, the dust not counted', int(b['n_closes']) == 3 and int(b['n_dust']) == N_DUST and near(b['sh'], 1.3)
           and near(b['gross'], .053))
     b = pick(S, scope='top10', day='all', role_pair='all')
-    check('summary: top10 all: 16 resolved closes, 1 unresolved', int(b['n_closes']) == 16 and int(b['n_closes_res_na']) == 1)
+    check('summary: top10 all: 19 resolved closes, 1 unresolved', int(b['n_closes']) == 19 and int(b['n_closes_res_na']) == 1)
     b = pick(S, scope='rank1', day='all', role_pair='all')
     check('summary: rank1 all days', int(b['n_closes']) == 7 and near(b['sh'], 27.) and near(b['gross'], 2.29) and near(b['fee_fill'], .1218))
 
@@ -370,7 +396,8 @@ def chk_answer(out):
     nn, lost, poor = 'good_turnover_residual_not_negative', 'good_turnover_lost_to_residual', 'turnover_itself_poor'
     for k, v in {('rank1', D1): nn, ('rank1', D2): nn, ('rank2', D1): nn, ('rank2', D2): 'no_resolved_markets', ('rank2', 'all'): nn,
                  ('rank3', D1): lost, ('rank3', D2): poor, ('rank3', 'all'): lost, ('rank4', D1): 'no_closes', ('rank4', D2): 'no_rows',
-                 ('rank5', D1): nn, ('rank6', D1): nn, ('rank7', D1): 'no_rows', ('rank7', 'all'): 'no_rows', ('top3', D1): nn}.items():
+                 ('rank5', D1): nn, ('rank6', D1): nn, ('rank7', D1): 'no_rows', ('rank7', 'all'): 'no_rows', ('top3', D1): nn,
+                 ('rank8', D1): lost}.items():
         check(f'answer: {k} reading', A[k]['reading'] == v, f"(got {A[k]['reading']})")
     e = A[('rank5', D1)]
     check('answer: rank5 D1 flips with the fee convention', e['reading_fee_res'] == poor and e['fee_convention_sensitive'] is True
@@ -419,14 +446,14 @@ def chk_receipt(rec, F, out):
     check('receipt: every reconciliation check ran and passed within 1e-9', set(ch) == names and all(v['ok'] and v['max_dev'] <= 1e-9 for v in ch.values()),
           str({k: v['max_dev'] for k, v in ch.items()}))
     c1, c2 = rec['counts'][D1], rec['counts'][D2]
-    n1, n2, n3 = (int(F['mid'].isin(m).sum()) for m in ([101, 102, 103], [104, 105, 106, 201], [202, 203]))
-    check('receipt: D1 counts', c1['rows'] == 21 and c1['rows_self'] == 2 and c1['rows_excl'] == 1 and c1['closes'] == 11 and c1['dust'] == N_DUST, str(c1))
+    n1, n2, n3 = (int(F['mid'].isin(m).sum()) for m in (RG1, RG2, RG3))
+    check('receipt: D1 counts', c1['rows'] == 25 and c1['rows_self'] == 2 and c1['rows_excl'] == 1 and c1['closes'] == 14 and c1['dust'] == N_DUST, str(c1))
     check('receipt: D2 counts', c2['rows'] == 10 and c2['closes'] == 6 and c2['dust'] == 0, str(c2))
     check('receipt: the ID-day row group never read; the mixed one read for both days', c1['fills_valued_rows_scanned'] == n1 + n2
           and c2['fills_valued_rows_scanned'] == n2 + n3 and c1['row_groups_fv_mixed'] == 1 and c2['row_groups_fv_mixed'] == 1)
     check('receipt: row-group statistics', rec['row_groups']['fills_valued'] == dict(row_groups=4, no_stats=0, skipped=1, mixed=1, empty=0)
           and rec['row_groups']['maker_market']['skipped'] == 1, str(rec['row_groups']))
-    check('receipt: output rows', rec['outputs']['closes.parquet']['rows'] == len(EXP) + N_DUST and rec['outputs']['closes_markets.parquet']['rows'] == 9)
+    check('receipt: output rows', rec['outputs']['closes.parquet']['rows'] == len(EXP) + N_DUST and rec['outputs']['closes_markets.parquet']['rows'] == 10)
     check('receipt: inputs hashed, depth source, top 3, no decision receipt', all(len(v['sha256']) == 64 for v in rec['inputs'].values())
           and rec['depth_source'] == 'dpt' and rec['addresses'][0]['addr'] == X.TOP3[0] and rec['same_fills_valued_as_decision']['same'] is None)
     check('receipt: memory under the guard', 0 < rec['memory']['vmhwm_mib'] < C.GUARD_MIB)

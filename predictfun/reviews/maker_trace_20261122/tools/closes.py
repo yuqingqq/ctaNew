@@ -11,7 +11,9 @@ POPULATION econ/identities.json ex_ante.top10_shares: ranks 1-3 = the contract's
 LOTS   status ok rows with self-trades out (as pf_mt_econ.fifo; a self-trade keeps its gross, fees and counts), per address x market x day.
 ORDER  econ's FIFO order (settle_ms, sid lexicographic, px_rank, mk_idx, maker before taker) and its per-side cumulative shares (the same float
        sums); unit j bought pairs unit j sold (= chronological FIFO across sign flips). A completed close = one interval of the merged cumulative
-       boundaries inside [0, X], X = min(bought, sold): its buy leg, sell leg and shares. ENTRY = the earlier leg in the order, CLOSE = the later.
+       boundaries inside [0, X], X = min(bought, sold) taken from the two sides' FINAL cumulative boundaries (the same floats as the events, never
+       a separately rounded total, so no interval can pass a side's last boundary): its buy leg, sell leg and shares. ENTRY = the earlier leg in
+       the order, CLOSE = the later.
        Holding time = settle_ms(close) - settle_ms(entry): the FIFO clock (UUIDv7 settlement-ID creation, an upper bound of each match; t_ms is
        never used). A leg = (day, sid, mk_idx, role) with its hash, side, settle_ms and YES price.
 VALUES YES space. P&L = shares x (sell price - buy price) (V-free). Fees of both legs prorated by shares (leg fee x shares / leg q), at the fill
@@ -125,7 +127,8 @@ RULES = dict(
                'and taker legs) on the measurement days, read per day through the row-group statistics of day; ok / excluded counts = maker_market',
     lots='status ok rows, self-trades out (pf_mt_econ.fifo); per address x market x day',
     order='econ FIFO order (settle_ms, sid, px_rank, mk_idx, maker first) and its per-side cumulative shares; unit j bought pairs unit j sold; a '
-          'close = one interval of the merged boundaries in [0, min(bought, sold)]; entry = the earlier leg, close = the later; hold = close settle_ms '
+          'close = one interval of the merged boundaries in [0, min(bought, sold)], the cap taken from the final cumulative boundaries (never a '
+          'separately rounded total); entry = the earlier leg, close = the later; hold = close settle_ms '
           '- entry settle_ms (UUIDv7 creation, the FIFO clock)',
     values='P&L = shares x (sell - buy price), YES space, V-free; leg fees prorated by shares at the fill price (fee_fill, primary) and at '
            'resolution (fee_res, sensitivity)',
@@ -372,10 +375,17 @@ def lots(A):
     gs, ss, qs = g[o2], s[o2], q[o2]
     blk = np.cumsum(np.r_[True, (gs[1:] != gs[:-1]) | (ss[1:] != ss[:-1])]) - 1
     cq = pd.Series(qs).groupby(blk).cumsum().to_numpy()
-    tb, ts_ = np.zeros(nG), np.zeros(nG)
+    tb, ts_ = np.zeros(nG), np.zeros(nG)                 # plain totals: only the tolerance scale (traded shares)
     np.add.at(tb, gs[ss == 1], qs[ss == 1])
     np.add.at(ts_, gs[ss == -1], qs[ss == -1])
-    X = np.minimum(tb, ts_)
+    # the cap X from each side's FINAL cumulative boundary (the same floats as the merged events): pandas' cumsum is compensated (Kahan) and
+    # a plain total is not; a cap above the smaller side's last boundary (<= 2.7e-12 sh in 523 of 1,902 two-sided groups on Oct 24) opened a
+    # sliver past it whose partner leg lay in the next group (the cross-group refusal of the first v2 run)
+    last = np.r_[blk[1:] != blk[:-1], True]
+    lb, ls = np.zeros(nG), np.zeros(nG)
+    lb[gs[last & (ss == 1)]] = cq[last & (ss == 1)]
+    ls[gs[last & (ss == -1)]] = cq[last & (ss == -1)]
+    X = np.minimum(lb, ls)
     typ = (ss == -1).astype(np.int8)                     # 0 = a buy boundary, 1 = a sell boundary (a buy first on equal values)
     e = np.lexsort((typ, cq, gs))
     ev, et, eg, er = cq[e], typ[e], gs[e], o2[e]         # er: position in the lot arrays

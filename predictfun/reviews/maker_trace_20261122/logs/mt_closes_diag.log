@@ -1,0 +1,18 @@
+day 20261024 row groups 18 rows 261771 groups 2008 ok 261640 self 1050
+lot rows 260590 q<=0 0 min q 0.001176470588235293
+groups with both sides 1902 | X(np.add.at) > last cumsum of the smaller side: 523 | <: 503 | max gap 2.7284841053187847e-12 | max |tb - last buy cumsum| 5.4569682106375694e-12 | max |ts - last sell cumsum| 5.4569682106375694e-12
+kept intervals 248235 | paired across groups (old rule) 523 | their lengths max 2.7284841053187847e-12 | all beyond the smaller side's last boundary: True
+OFFENDING day 20261024 rank 1 addr 0x6Da6Cb464F92AE7aD4Ec3d239c81719Cb1D0Ae03 mid 3695091: interval (np.float64(2170.6027352820784), np.float64(2170.6027352820793)] length np.float64(9.094947017729282e-13); buys n=190 sum(np.add.at)=np.float64(2170.603195109108) last cumsum=np.float64(2170.6031951091086); sells n=197 sum=np.float64(2170.6027352820793) last cumsum=np.float64(2170.6027352820784); X=np.float64(2170.6027352820793)
+   event 383 same group, sell boundary np.float64(2140.6027352820784) | row: maker s=-1 q=np.float64(30.0) p=0.04 settle_ms=1792800248834 sid=01a16b38-d402-78b2-8b35-b12ca540c7a4 mk_idx=0
+   event 384 same group, buy  boundary np.float64(2157.0635951091085) | row: taker s=+1 q=np.float64(25.7) p=0.02 settle_ms=1792800271085 sid=01a16b39-2aed-7cc1-bd74-867624ca9ad8 mk_idx=0
+   event 385 same group, sell boundary np.float64(2170.6027352820784) | row: maker s=-1 q=np.float64(30.0) p=0.03 settle_ms=1792800254319 sid=01a16b38-e96f-7f71-8c77-e29b333c3b45 mk_idx=0
+   event 386 same group, buy  boundary np.float64(2170.6031951091086) | row: taker s=+1 q=np.float64(13.5396) p=0.15 settle_ms=1792800273162 sid=01a16b39-330a-7e23-849a-8f05a3c321b0 mk_idx=0
+   event 387 NEXT group, buy  boundary np.float64(10.0) | row: maker s=+1 q=np.float64(10.0) p=0.52 settle_ms=1792800002277 sid=01a16b35-10e5-7c42-9d75-46bf71887a51 mk_idx=0
+OFFENDING day 20261024 rank 3 addr 0x57FbC891E89184DA071AE9D97E745531cd7F718a mid 3695091: interval (np.float64(409.38945138811056), np.float64(409.3894513881106)] length np.float64(5.684341886080802e-14); buys n=56 sum(np.add.at)=np.float64(409.389486470207) last cumsum=np.float64(409.38948647020715); sells n=59 sum=np.float64(409.3894513881106) last cumsum=np.float64(409.38945138811056); X=np.float64(409.3894513881106)
+   event 498 same group, sell boundary np.float64(400.56045138811055) | row: maker s=-1 q=np.float64(10.0) p=0.14 settle_ms=1792800171660 sid=01a16b37-a68c-7f50-bdcc-26ce09e2aff2 mk_idx=0
+   event 499 same group, buy  boundary np.float64(404.38948647020715) | row: maker s=+1 q=np.float64(5.0) p=0.31 settle_ms=1792800149378 sid=01a16b37-4f82-7e03-8699-f0622cdc9a11 mk_idx=0
+   event 500 same group, sell boundary np.float64(409.38945138811056) | row: maker s=-1 q=np.float64(8.829) p=0.15 settle_ms=1792800202233 sid=01a16b38-1df9-7b53-af76-10c52d497991 mk_idx=0
+   event 501 same group, buy  boundary np.float64(409.38948647020715) | row: maker s=+1 q=np.float64(5.0) p=0.31 settle_ms=1792800149381 sid=01a16b37-4f85-7721-b55b-8b0209bf59a2 mk_idx=0
+   event 502 NEXT group, buy  boundary np.float64(4.0816) | row: taker s=+1 q=np.float64(4.0816) p=0.51 settle_ms=1792800000173 sid=01a16b35-08ad-7790-80c4-66cbee26163a mk_idx=0
+FIX (X = min of the final cumulative boundaries): kept intervals 247712 | paired across groups 0 | max |X_fix - X_np.add.at| 5.4569682106375694e-12
+2026-11-23T06:01:41Z tag=mt_closes_diag rc=0 peak_rss_mib=366 wall_s=1.17 cpu_user_s=0.89 memavail_start_gib=22 disk_free_gib=436->436 slot=claude4

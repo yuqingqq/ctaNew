@@ -1,0 +1,8 @@
+{
+ "result": "PASS",
+ "checks": 239,
+ "failed": 0,
+ "failures": [],
+ "cpu_s": 0.88
+}
+2026-11-23T06:06:03Z tag=mt_closes_selftest_fix rc=0 peak_rss_mib=128 wall_s=1.22 cpu_user_s=1.09 memavail_start_gib=22 disk_free_gib=436->436 slot=claude4

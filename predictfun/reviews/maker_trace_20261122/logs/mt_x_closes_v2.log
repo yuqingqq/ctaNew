@@ -1,0 +1,14 @@
+head=cddafa8955afeac02305aa334c77be9a645e0ca2
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/tools/closes.py", line 890, in <module>
+    r = run()
+        ^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/tools/closes.py", line 797, in run
+    L = lots(A)
+        ^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker_trace_20261122/tools/closes.py", line 392, in lots
+    need(bool((eg[nb[kj]] == eg[kj]).all() and (eg[ns[kj]] == eg[kj]).all()), 'internal: a close paired across address x market groups')
+  File "/home/yuqing/ctaNew/predictfun/research/pf_mt_common.py", line 43, in need
+    raise ValueError(msg)
+ValueError: internal: a close paired across address x market groups
+2026-11-23T05:58:43Z tag=mt_x_closes_v2 rc=1 peak_rss_mib=351 wall_s=1.36 cpu_user_s=0.93 memavail_start_gib=22 disk_free_gib=436->436 slot=claude
