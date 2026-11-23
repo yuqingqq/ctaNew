@@ -1,5 +1,20 @@
 # MAKER-TRACE-RECONSTRUCTION-v1 — pending work
 
+## STATE 2026-11-23 18:54Z — TOUCH-TRANSITION-AND-RESPONSE v1 (review 01a72b4e2's next priority) — read this first
+
+**Reviews processed:**
+- 01a72b4e2. Posting measurements accepted. Findings verified:
+  - the improve anchor mask excluded 81.7% of improvement event-seconds;
+  - re_establish is a print-compatible reappearance, not proven clearing by fills;
+  - chains_v3 pre-state drops the post grade (chain 3: G1 POST but ONE-HISTORY);
+  - an unknown alt_netting state reads as False; gross labels missing.
+- Earlier: 3f640ad9b, af916aba6, 6bb458b30, 6ddad3533, 8f2a2e753, 567f741d9.
+
+**Caps:** 2.00 task / 5.30 line under the USER standing CPU authorization; ledger 1.8733 before this round.
+
+**Next:** contract `touch_response_contract.md`, then builders `touch_transition.py` + `chains_v4.py`, then freeze, then runs, then the receipt `v2/report_logic_chains_v5.md` (findings 1–4 corrected in-band), then ONE review, then the watcher.
+
+
 ## STATE 2026-11-23 18:39Z — ROUND COMPLETE: LOGIC CHAINS v4 (posting opportunities + queue v2 + six chains) — review pending — read this first
 
 **Receipt:** `v2/report_logic_chains_v4.md`.
