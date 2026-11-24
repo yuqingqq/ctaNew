@@ -1,0 +1,90 @@
+[
+  {
+    "group": "exhausted",
+    "scope": "all_existing_links",
+    "orders": 20,
+    "direction": {
+      "same_price": 3,
+      "away_from_spread": 13,
+      "toward_spread": 4
+    },
+    "kind": {
+      "refill": 3,
+      "reprice": 17
+    },
+    "successor_timing": {
+      "sequential_after_under_bounds": 5,
+      "refused_or_missing_window": 1,
+      "ordering_ambiguous": 14
+    }
+  },
+  {
+    "group": "exhausted",
+    "scope": "ordered_after_only",
+    "orders": 5,
+    "direction": {
+      "same_price": 3,
+      "toward_spread": 2
+    },
+    "kind": {
+      "refill": 3,
+      "reprice": 2
+    },
+    "successor_timing": {
+      "sequential_after_under_bounds": 5
+    }
+  },
+  {
+    "group": "conditional_withdrawal",
+    "scope": "all_existing_links",
+    "orders": 26,
+    "direction": {
+      "toward_spread": 4,
+      "away_from_spread": 22
+    },
+    "kind": {
+      "reprice": 26
+    },
+    "successor_timing": {
+      "ordering_ambiguous": 21,
+      "refused_or_missing_window": 3,
+      "sequential_after_under_bounds": 2
+    }
+  },
+  {
+    "group": "conditional_withdrawal",
+    "scope": "ordered_after_only",
+    "orders": 2,
+    "direction": {
+      "away_from_spread": 2
+    },
+    "kind": {
+      "reprice": 2
+    },
+    "successor_timing": {
+      "sequential_after_under_bounds": 2
+    }
+  },
+  {
+    "group": "unresolved",
+    "scope": "all_existing_links",
+    "orders": 3,
+    "direction": {
+      "away_from_spread": 3
+    },
+    "kind": {
+      "reprice": 3
+    },
+    "successor_timing": {
+      "refused_or_missing_window": 3
+    }
+  },
+  {
+    "group": "unresolved",
+    "scope": "ordered_after_only",
+    "orders": 0,
+    "direction": {},
+    "kind": {},
+    "successor_timing": {}
+  }
+]

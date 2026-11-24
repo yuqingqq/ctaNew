@@ -1,0 +1,19 @@
+{
+  "pass_all": true,
+  "orders": 88,
+  "competing_records": 29944,
+  "contexts": 528,
+  "falsifiers": {
+    "false_pull": "false_pull private_pull_observed",
+    "false_repost": "false_repost successor_relation",
+    "false_time": "false_time end_hi_ms",
+    "wrong_size": "wrong_size original_shares",
+    "wrong_actor": "wrong_actor maker",
+    "wrong_pending": "wrong_pending pending_max_shares",
+    "wrong_phase": "wrong_phase phase",
+    "future_context": "future_context window_lo_ms",
+    "invented_trigger": "invented_trigger context_identifies_trigger",
+    "omitted_order": "omitted order population"
+  },
+  "cpu_seconds": 3.9152863840000003
+}

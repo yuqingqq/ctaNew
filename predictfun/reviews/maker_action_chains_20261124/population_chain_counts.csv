@@ -1,0 +1,15 @@
+group,successor_relation,successor_kind,successor_direction,orders
+conditional_withdrawal,no_recorded_successor,unknown,unknown,14
+conditional_withdrawal,ordering_ambiguous,reprice,away_from_spread,18
+conditional_withdrawal,ordering_ambiguous,reprice,toward_spread,3
+conditional_withdrawal,refused_or_missing_window,reprice,away_from_spread,2
+conditional_withdrawal,refused_or_missing_window,reprice,toward_spread,1
+conditional_withdrawal,sequential_after_under_bounds,reprice,away_from_spread,2
+exhausted,no_recorded_successor,unknown,unknown,21
+exhausted,ordering_ambiguous,reprice,away_from_spread,12
+exhausted,ordering_ambiguous,reprice,toward_spread,2
+exhausted,refused_or_missing_window,reprice,away_from_spread,1
+exhausted,sequential_after_under_bounds,refill,same_price,3
+exhausted,sequential_after_under_bounds,reprice,toward_spread,2
+unresolved,no_recorded_successor,unknown,unknown,4
+unresolved,refused_or_missing_window,reprice,away_from_spread,3

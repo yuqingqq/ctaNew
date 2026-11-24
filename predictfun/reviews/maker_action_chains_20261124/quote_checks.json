@@ -1,0 +1,12 @@
+{
+  "pass_all": true,
+  "rows": 176,
+  "positive_control": true,
+  "falsifiers": {
+    "identity": "refused",
+    "side": "refused",
+    "direction": "refused",
+    "offset": "refused",
+    "book_status": "refused"
+  }
+}

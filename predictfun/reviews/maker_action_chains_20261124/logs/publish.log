@@ -1,0 +1,40 @@
+ predictfun/FINDINGS.md                             |  11 +
+ predictfun/HANDOFF.md                              |  11 +
+ predictfun/STATUS.yml                              |  21 ++
+ .../maker_action_chains_20261124/.gitignore        |   1 +
+ .../maker_action_chains_20261124/SHA256SUMS        |  51 ++++
+ .../maker_action_chains_20261124/archive.json      |  18 ++
+ .../maker_action_chains_20261124/checks.json       |  19 ++
+ .../maker_action_chains_20261124/commit_scope.json |  46 +++
+ .../finalize_publication.py                        |  41 +++
+ .../maker_action_chains_20261124/finish_report.py  | 123 ++++++++
+ .../maker_action_chains_20261124/logic_chains.md   | 116 ++++++++
+ .../maker_action_chains_20261124/logs/build.log    |  71 +++++
+ .../maker_action_chains_20261124/logs/check.log    |  20 ++
+ .../logs/finish_report.log                         |  43 +++
+ .../logs/population_readout.log                    |  91 ++++++
+ .../maker_action_chains_20261124/logs/present.log  | 217 ++++++++++++++
+ .../maker_action_chains_20261124/logs/publish.log  |   0
+ .../logs/quote_build.log                           | 121 ++++++++
+ .../logs/quote_check.log                           |   2 +
+ .../outputs/competing_events_part00.csv.gz         | Bin 0 -> 650031 bytes
+ .../outputs/competing_events_part01.csv.gz         | Bin 0 -> 625164 bytes
+ .../outputs/condition_chains.csv                   | 321 +++++++++++++++++++++
+ .../outputs/contexts.csv.gz                        | Bin 0 -> 17211 bytes
+ .../outputs/quote_relative.csv                     | 177 ++++++++++++
+ .../outputs/result.json                            |  52 ++++
+ .../population_chain_counts.csv                    |  15 +
+ .../population_readout.json                        |  90 ++++++
+ .../population_readout.py                          |  22 ++
+ .../maker_action_chains_20261124/present.py        | 106 +++++++
+ .../maker_action_chains_20261124/publish.py        |  62 ++++
+ .../maker_action_chains_20261124/quote_checks.json |  12 +
+ .../quote_readout.json                             | 101 +++++++
+ .../maker_action_chains_20261124/quote_result.json | 124 ++++++++
+ .../maker_action_chains_20261124/readout.json      | 216 ++++++++++++++
+ .../reviews/maker_action_chains_20261124/report.md |  41 +++
+ .../maker_action_chains_20261124/state_blocks.json |   6 +
+ predictfun/reviews/maker_trace_20261122/PENDING.md |  11 +
+ 37 files changed, 2379 insertions(+)
+
+2026-11-24T04:31:27Z tag=mt_chain_publish rc=0 peak_rss_mib=20 wall_s=0.27 cpu_user_s=0.17 memavail_start_gib=22 disk_free_gib=415->415 slot=codex

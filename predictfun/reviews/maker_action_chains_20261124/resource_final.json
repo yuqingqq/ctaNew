@@ -1,0 +1,10 @@
+{
+  "packet_charged_cpu_s_before_finalizer": 9.89,
+  "packet_cap_coreh": 0.006,
+  "task_charged_coreh_before_finalizer": 1.9345166666666664,
+  "task_cap": 2.0,
+  "line_max_before_finalizer": 5.245216666666667,
+  "line_cap": 5.3,
+  "standing_reserve": 0.05,
+  "finalizer_reserved_cpu_s": 1.0
+}

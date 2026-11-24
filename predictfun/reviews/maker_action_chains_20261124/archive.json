@@ -1,0 +1,18 @@
+{
+  "original": "competing_events.csv.gz",
+  "original_sha256": "74221c8232f1a9b41dbccba4a7dee3c19bcfd8213eee8c42666f1d393477bb0f",
+  "uncompressed_sha256": "96deeb2dd1740cdc4a5b487ad689f7a7e99544a77ba71c428bed90132674e208",
+  "parts": [
+    {
+      "file": "competing_events_part00.csv.gz",
+      "sha256": "82f518afa7d09c0df4e9bb9c21ce80d729d8d6e1d5cc90acd4262fc5950b1ceb",
+      "rows": 14972
+    },
+    {
+      "file": "competing_events_part01.csv.gz",
+      "sha256": "0913c3a5fa21359000be2bdd2989df00ef3d88a986bdfc09157ecee2b0709c61",
+      "rows": 14972
+    }
+  ],
+  "byte_identical_reconstruction": true
+}

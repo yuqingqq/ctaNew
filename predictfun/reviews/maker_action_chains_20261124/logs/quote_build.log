@@ -1,0 +1,121 @@
+[
+  {
+    "lag_ms": 0,
+    "group": "all",
+    "n": 88,
+    "status": {
+      "ok": 42,
+      "refused_window": 7,
+      "no_recorded_successor": 39
+    },
+    "comparison": {
+      "timing_ambiguous": 34,
+      "more_aggressive_relative_touch": 3,
+      "unknown": 46,
+      "less_aggressive_relative_touch": 5
+    }
+  },
+  {
+    "lag_ms": 0,
+    "group": "exhausted",
+    "n": 41,
+    "status": {
+      "ok": 19,
+      "refused_window": 1,
+      "no_recorded_successor": 21
+    },
+    "comparison": {
+      "more_aggressive_relative_touch": 3,
+      "unknown": 22,
+      "timing_ambiguous": 14,
+      "less_aggressive_relative_touch": 2
+    }
+  },
+  {
+    "lag_ms": 0,
+    "group": "conditional_withdrawal",
+    "n": 40,
+    "status": {
+      "ok": 23,
+      "no_recorded_successor": 14,
+      "refused_window": 3
+    },
+    "comparison": {
+      "timing_ambiguous": 20,
+      "unknown": 17,
+      "less_aggressive_relative_touch": 3
+    }
+  },
+  {
+    "lag_ms": 0,
+    "group": "unresolved",
+    "n": 7,
+    "status": {
+      "no_recorded_successor": 4,
+      "refused_window": 3
+    },
+    "comparison": {
+      "unknown": 7
+    }
+  },
+  {
+    "lag_ms": 1000,
+    "group": "all",
+    "n": 88,
+    "status": {
+      "ok": 42,
+      "refused_window": 7,
+      "no_recorded_successor": 39
+    },
+    "comparison": {
+      "timing_ambiguous": 31,
+      "more_aggressive_relative_touch": 5,
+      "unknown": 46,
+      "less_aggressive_relative_touch": 6
+    }
+  },
+  {
+    "lag_ms": 1000,
+    "group": "exhausted",
+    "n": 41,
+    "status": {
+      "ok": 19,
+      "refused_window": 1,
+      "no_recorded_successor": 21
+    },
+    "comparison": {
+      "more_aggressive_relative_touch": 5,
+      "unknown": 22,
+      "timing_ambiguous": 12,
+      "less_aggressive_relative_touch": 2
+    }
+  },
+  {
+    "lag_ms": 1000,
+    "group": "conditional_withdrawal",
+    "n": 40,
+    "status": {
+      "ok": 23,
+      "no_recorded_successor": 14,
+      "refused_window": 3
+    },
+    "comparison": {
+      "timing_ambiguous": 19,
+      "unknown": 17,
+      "less_aggressive_relative_touch": 4
+    }
+  },
+  {
+    "lag_ms": 1000,
+    "group": "unresolved",
+    "n": 7,
+    "status": {
+      "no_recorded_successor": 4,
+      "refused_window": 3
+    },
+    "comparison": {
+      "unknown": 7
+    }
+  }
+]
+2026-11-24T04:28:15Z tag=mt_chain_quote_build rc=0 peak_rss_mib=135 wall_s=0.47 cpu_user_s=0.39 memavail_start_gib=22 disk_free_gib=415->415 slot=codex

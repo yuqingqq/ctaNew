@@ -1,4 +1,25 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+action_chains_20261124_codex:
+  report: predictfun/reviews/maker_action_chains_20261124/report.md
+  readable_chain_map: predictfun/reviews/maker_action_chains_20261124/logic_chains.md
+  stage: conditional_action_chains_verified
+  orders: 88
+  markets: 18
+  ordered_successors: 7
+  ambiguous_successors: 35
+  unusable_successor_windows: 7
+  no_recorded_successor: 39
+  new_conditional_ending_bounds: 2
+  between_fill_separated_opportunities: 0
+  private_pulls_identified: 0
+  primary_check_pass: true
+  market_relative_check_pass: true
+  recovered_complete_private_policy: false
+  next_priority: coverage_gated_signed_chain_expansion_depletion_vs_partial_controls
+  packet_cap_coreh: 0.006
+  task_cap_coreh: 2.00
+  line_cap_coreh: 5.30
+  standing_reserve_coreh: 0.05
 quantity_linkage_20261124_codex:
   report: predictfun/reviews/maker_quantity_linkage_20261124/report.md
   stage: normalized_R01_R10_built_independently_verified

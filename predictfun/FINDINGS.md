@@ -1,4 +1,15 @@
 
+<!-- ACTION_CHAINS_20261124_CODEX -->
+## 2026-11-24 — action chains reconstructed and independently checked
+
+[Full chain map](reviews/maker_action_chains_20261124/logic_chains.md); [receipt](reviews/maker_action_chains_20261124/report.md). USER continuation fulfilled on all88 signed orders /18 consumed markets. Seven successors ordered after ending under bounds (3 depleted→refill,2 depleted→reprice,2 conditional ending→reprice),35 ambiguous,7 refused,39 absent. Two additional conditional ending bounds tighten;0 private pulls.25 repeated-fill hashes consume one signed budget. Between-fill competing test hasZERO separated opportunities; no claim of continuous queue retention.81 later-take references/68 distinct actions are not order-exit attribution.
+
+Independent check:29,944 competing evidence rows,88 chains,528 contexts;23 synthetic groups/10 corruptions. Declared market-relative extension:42 usable links, D0 5 less-aggressive/3 more-aggressive/34 ambiguous; lag6/5/31. Conditional-ending links3/0/20 at D0. Six synthetic groups,176 independent row checks,5 corruptions. Original direction enums compare prices only; do not infer a retreat from lower bid/higher ask alone. Keep prior neutral condition/action associations and identity gaps; no new profitability/controller claim.
+
+ONE next priority: Coverage-gated expansion of signed order chains to test observed depletion → same-side refill/reprice against partial-fill controls: census existing unused top-maker hashes and complete event membership first; freeze outcome-blind membership only if enough new successor windows can be ordered. Stop if the timing/identity gate fails. Preparation can use current saved data; full computation needs a bounded freeze within the remaining resource allowance, or a USER-approved top-up. New acquisition/days/live use are outside this packet.
+<!-- /ACTION_CHAINS_20261124_CODEX -->
+
+
 <!-- QUANTITY_LINKAGE_20261124_CODEX -->
 ## 2026-11-24 — normalized indirect linkage built and verified
 

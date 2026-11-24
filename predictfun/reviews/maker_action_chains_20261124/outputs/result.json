@@ -1,0 +1,52 @@
+{
+  "orders": 88,
+  "groups": {
+    "conditional_withdrawal": 40,
+    "exhausted": 41,
+    "unresolved": 7
+  },
+  "chain_classes": {
+    "conditional_ending_then_reprice": 2,
+    "conditional_unavailable_no_timed_successor": 17,
+    "exhausted_no_timed_successor": 22,
+    "exhaustion_then_refill": 3,
+    "exhaustion_then_reprice": 2,
+    "successor_ordering_unresolved": 35,
+    "unresolved_no_timed_successor": 7
+  },
+  "successors": {
+    "no_recorded_successor": 39,
+    "ordering_ambiguous": 35,
+    "refused_or_missing_window": 7,
+    "sequential_after_under_bounds": 7
+  },
+  "candidate_records": 29944,
+  "candidate_status": {
+    "clock_overlap_or_unknown": 1404,
+    "conditional_available_priority_violation": 13551,
+    "no_initial_time_priority": 93,
+    "no_remaining_required": 12590,
+    "own_execution_record": 152,
+    "record_refused": 7,
+    "reservation_can_explain": 1203,
+    "self_trade_prevention_possible": 944
+  },
+  "new_post_bounds": 0,
+  "new_end_bounds": 2,
+  "orders_with_between_fill_interruption": 0,
+  "bound_conflicts": 0,
+  "exhausted_terminal_pulls": 0,
+  "private_pulls_identified": 0,
+  "later_take_references": 81,
+  "distinct_later_takes": 68,
+  "contexts": 528,
+  "as_of_utc": "2026-11-24T04:18:56Z",
+  "source_commit": "46f83815e98568bcf2ec599c9385ffd246bdc17a",
+  "cpu_seconds": 3.087219416,
+  "hashes": {
+    "chains.csv": "88cb06576bcbecaa57c9484cd435e8b7fe11bb48f45670ca0939d2a1f8640c90",
+    "competing_events.csv.gz": "74221c8232f1a9b41dbccba4a7dee3c19bcfd8213eee8c42666f1d393477bb0f",
+    "condition_chains.csv": "d19996178a5b1e07e6d7ab132a9df7956366abb1e538f4f2959c29c5d16d091e",
+    "contexts.csv.gz": "bf991747cf077a3947d7b6fc09c2a19bf9b53c7e07406deb75aeb5989feb3562"
+  }
+}

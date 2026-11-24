@@ -1,0 +1,43 @@
+[
+  {
+    "group": "all",
+    "n": 88,
+    "counts": {
+      "timing_ambiguous": 30,
+      "more_aggressive_relative_touch": 3,
+      "unknown": 46,
+      "clock_sensitive": 5,
+      "less_aggressive_relative_touch": 4
+    }
+  },
+  {
+    "group": "exhausted",
+    "n": 41,
+    "counts": {
+      "more_aggressive_relative_touch": 3,
+      "unknown": 22,
+      "timing_ambiguous": 11,
+      "clock_sensitive": 4,
+      "less_aggressive_relative_touch": 1
+    }
+  },
+  {
+    "group": "conditional_withdrawal",
+    "n": 40,
+    "counts": {
+      "timing_ambiguous": 19,
+      "unknown": 17,
+      "less_aggressive_relative_touch": 3,
+      "clock_sensitive": 1
+    }
+  },
+  {
+    "group": "unresolved",
+    "n": 7,
+    "counts": {
+      "unknown": 7
+    }
+  }
+]
+report and owned handoff prepared
+2026-11-24T04:30:47Z tag=mt_chain_finish_report rc=0 peak_rss_mib=17 wall_s=0.03 cpu_user_s=0.02 memavail_start_gib=22 disk_free_gib=415->415 slot=codex

@@ -1,0 +1,101 @@
+{
+  "both_clocks": [
+    {
+      "group": "all",
+      "n": 88,
+      "counts": {
+        "timing_ambiguous": 30,
+        "more_aggressive_relative_touch": 3,
+        "unknown": 46,
+        "clock_sensitive": 5,
+        "less_aggressive_relative_touch": 4
+      }
+    },
+    {
+      "group": "exhausted",
+      "n": 41,
+      "counts": {
+        "more_aggressive_relative_touch": 3,
+        "unknown": 22,
+        "timing_ambiguous": 11,
+        "clock_sensitive": 4,
+        "less_aggressive_relative_touch": 1
+      }
+    },
+    {
+      "group": "conditional_withdrawal",
+      "n": 40,
+      "counts": {
+        "timing_ambiguous": 19,
+        "unknown": 17,
+        "less_aggressive_relative_touch": 3,
+        "clock_sensitive": 1
+      }
+    },
+    {
+      "group": "unresolved",
+      "n": 7,
+      "counts": {
+        "unknown": 7
+      }
+    }
+  ],
+  "ordered": [
+    {
+      "order_hash": "0x2c037693ba805701774d61472ef8760126e1826f396f44d0c843c8a6bb75e16d",
+      "group": "exhausted",
+      "sequence": "sequential_after_under_bounds",
+      "both_clocks": "more_aggressive_relative_touch",
+      "comparison_0": "more_aggressive_relative_touch",
+      "comparison_1000": "more_aggressive_relative_touch"
+    },
+    {
+      "order_hash": "0xda08d7801c36c7be5176fbe94abe1ba4f8f338a0960bf99fb4a852a32c0f5ed2",
+      "group": "exhausted",
+      "sequence": "sequential_after_under_bounds",
+      "both_clocks": "timing_ambiguous",
+      "comparison_0": "timing_ambiguous",
+      "comparison_1000": "timing_ambiguous"
+    },
+    {
+      "order_hash": "0x4be0f8768c964a85c61e578c77351a3fd5a63634b459ec93d0cb55ccb014ae9d",
+      "group": "exhausted",
+      "sequence": "sequential_after_under_bounds",
+      "both_clocks": "more_aggressive_relative_touch",
+      "comparison_0": "more_aggressive_relative_touch",
+      "comparison_1000": "more_aggressive_relative_touch"
+    },
+    {
+      "order_hash": "0xf0469b20c7bedac8f0c4cde44c6c7645fd901715e3b81968253114fd42feefde",
+      "group": "exhausted",
+      "sequence": "sequential_after_under_bounds",
+      "both_clocks": "more_aggressive_relative_touch",
+      "comparison_0": "more_aggressive_relative_touch",
+      "comparison_1000": "more_aggressive_relative_touch"
+    },
+    {
+      "order_hash": "0x3be8243bef0a3b21f0da4790da5a9e24e27c7549ecbd65f0918574808cacdc20",
+      "group": "conditional_withdrawal",
+      "sequence": "sequential_after_under_bounds",
+      "both_clocks": "timing_ambiguous",
+      "comparison_0": "timing_ambiguous",
+      "comparison_1000": "timing_ambiguous"
+    },
+    {
+      "order_hash": "0x45091f5e423ac9dca41b72e3d36769ed2f8d9b71304a14bc4684a4ab6ac3304b",
+      "group": "exhausted",
+      "sequence": "sequential_after_under_bounds",
+      "both_clocks": "clock_sensitive",
+      "comparison_0": "timing_ambiguous",
+      "comparison_1000": "more_aggressive_relative_touch"
+    },
+    {
+      "order_hash": "0x714e35d667157ccdcb43f46cd71afff4e8815c18c0da25a6e2d6889b861eefd9",
+      "group": "conditional_withdrawal",
+      "sequence": "sequential_after_under_bounds",
+      "both_clocks": "timing_ambiguous",
+      "comparison_0": "timing_ambiguous",
+      "comparison_1000": "timing_ambiguous"
+    }
+  ]
+}

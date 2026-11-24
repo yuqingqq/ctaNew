@@ -1,0 +1,216 @@
+{
+  "phases": {
+    "after_last": {
+      "records": 28251,
+      "orders": 84,
+      "statuses": {
+        "no_remaining_required": 12590,
+        "self_trade_prevention_possible": 907,
+        "reservation_can_explain": 1199,
+        "conditional_available_priority_violation": 13548,
+        "record_refused": 7
+      }
+    },
+    "overlap_or_tie": {
+      "records": 1593,
+      "orders": 88,
+      "statuses": {
+        "clock_overlap_or_unknown": 1404,
+        "own_execution_record": 152,
+        "self_trade_prevention_possible": 37
+      }
+    },
+    "pre_first": {
+      "records": 100,
+      "orders": 23,
+      "statuses": {
+        "no_initial_time_priority": 93,
+        "reservation_can_explain": 4,
+        "conditional_available_priority_violation": 3
+      }
+    }
+  },
+  "repeated_fill_orders": 25,
+  "repeated_with_between_record": 0,
+  "context": [
+    {
+      "stage": "post",
+      "group": "all",
+      "lag_ms": 0,
+      "orders": 88,
+      "coverage": {
+        "grid_interval_covered": 78,
+        "outside_grid_missing_or_refused": 10
+      },
+      "btc": {
+        "flat": 47,
+        "against|flat|with": 15,
+        "flat|with": 6,
+        "against|flat": 6,
+        "unknown": 10,
+        "against": 3,
+        "with": 1
+      },
+      "inventory": {
+        "offsetting": 34,
+        "adding": 21,
+        "adding|flat|offsetting": 6,
+        "flat|offsetting": 2,
+        "adding|offsetting": 13,
+        "unknown": 10,
+        "adding|flat": 2
+      },
+      "inventory_ledger": {
+        "clean": 77,
+        "conditional_or_unavailable": 11
+      }
+    },
+    {
+      "stage": "post",
+      "group": "all",
+      "lag_ms": 1000,
+      "orders": 88,
+      "coverage": {
+        "grid_interval_covered": 78,
+        "outside_grid_missing_or_refused": 10
+      },
+      "btc": {
+        "flat": 47,
+        "against|flat|with": 14,
+        "flat|with": 8,
+        "against|flat": 5,
+        "unknown": 10,
+        "against": 4
+      },
+      "inventory": {
+        "adding|offsetting": 16,
+        "adding": 20,
+        "adding|flat|offsetting": 6,
+        "offsetting": 32,
+        "flat|offsetting": 2,
+        "unknown": 10,
+        "adding|flat": 2
+      },
+      "inventory_ledger": {
+        "clean": 77,
+        "conditional_or_unavailable": 11
+      }
+    },
+    {
+      "stage": "ending",
+      "group": "conditional_withdrawal",
+      "lag_ms": 0,
+      "orders": 40,
+      "coverage": {
+        "grid_interval_covered": 40
+      },
+      "btc": {
+        "flat|with": 5,
+        "flat": 27,
+        "against|flat": 3,
+        "against|flat|with": 2,
+        "against": 3
+      },
+      "inventory": {
+        "offsetting": 19,
+        "adding": 17,
+        "adding|offsetting": 4
+      },
+      "inventory_ledger": {
+        "clean": 39,
+        "conditional_or_unavailable": 1
+      }
+    },
+    {
+      "stage": "ending",
+      "group": "conditional_withdrawal",
+      "lag_ms": 1000,
+      "orders": 40,
+      "coverage": {
+        "grid_interval_covered": 40
+      },
+      "btc": {
+        "flat|with": 4,
+        "flat": 27,
+        "against|flat": 3,
+        "against|flat|with": 3,
+        "against": 3
+      },
+      "inventory": {
+        "adding|offsetting": 5,
+        "adding": 17,
+        "flat|offsetting": 1,
+        "offsetting": 17
+      },
+      "inventory_ledger": {
+        "clean": 39,
+        "conditional_or_unavailable": 1
+      }
+    },
+    {
+      "stage": "successor_post",
+      "group": "sequential_after",
+      "lag_ms": 0,
+      "orders": 7,
+      "coverage": {
+        "grid_interval_covered": 7
+      },
+      "btc": {
+        "flat": 5,
+        "against": 1,
+        "against|flat": 1
+      },
+      "inventory": {
+        "adding": 2,
+        "offsetting": 4,
+        "adding|offsetting": 1
+      },
+      "inventory_ledger": {
+        "clean": 7
+      }
+    },
+    {
+      "stage": "successor_post",
+      "group": "sequential_after",
+      "lag_ms": 1000,
+      "orders": 7,
+      "coverage": {
+        "grid_interval_covered": 7
+      },
+      "btc": {
+        "flat": 5,
+        "against": 1,
+        "against|flat": 1
+      },
+      "inventory": {
+        "adding": 2,
+        "offsetting": 4,
+        "adding|offsetting": 1
+      },
+      "inventory_ledger": {
+        "clean": 7
+      }
+    }
+  ],
+  "ending_refinements": [
+    {
+      "order_hash": "0x7d51569cfb22c9327baa67917a3bfcfc38d08f977ebed0da8103a1b74b0fe842",
+      "day": "20261024",
+      "mid": "3704004",
+      "old_hi_ms": 1792843533122,
+      "new_hi_ms": 1792843524642,
+      "tightened_ms": 8480,
+      "witness": "01a16dcd-2a22-7660-ac14-8295e09a099d"
+    },
+    {
+      "order_hash": "0x68861c49f94f9e232bbc3b55b9fb730b634d224ad5217669d8baf7c33b38569a",
+      "day": "20261027",
+      "mid": "3899224",
+      "old_hi_ms": 1793141840052,
+      "new_hi_ms": 1793141837802,
+      "tightened_ms": 2250,
+      "witness": "01a17f95-0fea-77e0-8a7e-36e8ece83f32"
+    }
+  ],
+  "distinct_successors": 49
+}
