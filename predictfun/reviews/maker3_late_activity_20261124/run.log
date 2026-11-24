@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker3_late_activity_20261124/audit.py", line 123, in <module>
+    else:run()
+         ^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker3_late_activity_20261124/audit.py", line 54, in run
+    assert set(f.day)<=set(DAYS),set(f.day)
+           ^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'20261027', '20261026', '20261025', '20261024', '20261023'}
+2026-11-24T12:58:42Z tag=maker3_late_audit rc=1 peak_rss_mib=794 wall_s=3.91 cpu_user_s=3.29 memavail_start_gib=22 disk_free_gib=413->413 slot=codex

@@ -1,0 +1,1 @@
+Before any output: the initial source-membership guard refused because the canonical file also contains the Oct 23 rank-selection day. Add the declared Oct 24–27 filter at parquet loading (in addition to the assertion). No population or rule change; first attempt and CPU retained in run.log.

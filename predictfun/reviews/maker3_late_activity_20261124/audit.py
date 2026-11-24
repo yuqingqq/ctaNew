@@ -49,7 +49,7 @@ def run():
     inputs={}; bind=lambda p:inputs.update({str(p.relative_to(R)):sha(p)})
     fp=D/'econ/fills_valued.parquet'; bind(fp)
     cols=['day','mid','sid','mk_idx','role','addr','hash','y_side','s','q','p','self_trade','settle_ms','t_rel_s','status']
-    f=pq.read_table(fp,filters=[('addr','=',ADDR)],columns=cols,use_threads=False).to_pandas()
+    f=pq.read_table(fp,filters=[('addr','=',ADDR),('day','in',DAYS)],columns=cols,use_threads=False).to_pandas()
     for c in ['day','sid','role','addr','hash','y_side','status']: f[c]=f[c].astype(str)
     assert set(f.day)<=set(DAYS),set(f.day)
     assert not f.duplicated(['day','mid','sid','mk_idx','role']).any()
