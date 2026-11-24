@@ -1,3 +1,11 @@
+<!-- ENTRY_GATE_PILOT_20261124_CODEX -->
+## 2026-11-24 — entry gate helps two examples but largely suppresses activity
+
+[Frozen three-market replay and receipt](reviews/entry_gate_pilot_20261124/report.md), fa9d035d2. Both comparison arms share the inventory sign-crossing correction; original saved ledgers reproduce exactly. An unfitted favourable-Binance admission gate gives +21.27USD pooled versus -149.58 fixed default, but only1/3 markets positive and filled shares79.6% lower. Completed FIFO delta+146.47USD, residual delta+24.39. No activity-matched null, so not a demonstrated signal-selection or validation result.
+
+Our discussed3789484 opening no longer posts cheap asks at0ms: first bid at550ms; first-minute value+0.05 instead of-22.08, with only12 matched shares. Maker3's larger profitable early turnover remains unexplained by this rule. The original broken inventory restriction accidentally limited losing trading, especially3877472; do not preserve the bug because its numeric P&L was higher. Full data/code/identity checks and seven planted corruptions pass. No frozen implementation edited; resource and ownership details in HANDOFF.
+<!-- /ENTRY_GATE_PILOT_20261124_CODEX -->
+
 <!-- MARKET_DASHBOARD_20261124_CODEX -->
 ## 2026-11-24 — dashboard exposes sign-crossing inventory restriction trap
 

@@ -1,0 +1,27 @@
+{
+  "previous_packet_upper_cpu_s": 87.11,
+  "measured_cpu_s": 49.32,
+  "publication_and_operating_reserve_s": 3.0,
+  "packet_upper_cpu_s": 139.43,
+  "packet_cap_cpu_s": 180,
+  "runs": [
+    {
+      "tag": "entry_gate_check",
+      "cpu_user_s": 18.56
+    },
+    {
+      "tag": "entry_gate_prepare",
+      "cpu_user_s": 1.29
+    },
+    {
+      "tag": "entry_gate_prepare2",
+      "cpu_user_s": 1.21
+    },
+    {
+      "tag": "entry_gate_run",
+      "cpu_user_s": 28.26
+    }
+  ],
+  "new_strategy_replay_authorized_by_latest_user": true,
+  "new_days": false
+}

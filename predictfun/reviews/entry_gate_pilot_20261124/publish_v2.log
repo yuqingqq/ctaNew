@@ -1,0 +1,82 @@
+|3702960|+29.42|+4.28|-2.99|-7.26|
+|3789484|-17.90|-17.40|+31.92|+49.32|
+|3877472|-6.54|-136.46|-7.66|+128.79|
+{
+  "pooled": {
+    "ORIGINAL": {
+      "total_c": 498.9142056623757,
+      "completed_c": -6853.518667738007,
+      "residual_c": 7352.432873400382,
+      "filled_shares": 6061.511730928037,
+      "posts": 734,
+      "pulls": 193
+    },
+    "FIXED_DEFAULT": {
+      "total_c": -14958.122334849957,
+      "completed_c": -12932.330364850275,
+      "residual_c": -2025.7919699996673,
+      "filled_shares": 11548.719540520637,
+      "posts": 1088,
+      "pulls": 252
+    },
+    "DIRECTIONAL_ENTRY": {
+      "total_c": 2127.125621618313,
+      "completed_c": 1714.3493530662615,
+      "residual_c": 412.7762685520491,
+      "filled_shares": 2358.4532272498936,
+      "posts": 445,
+      "pulls": 71
+    }
+  },
+  "resources": {
+    "previous_packet_upper_cpu_s": 87.11,
+    "measured_cpu_s": 49.32,
+    "publication_and_operating_reserve_s": 3.0,
+    "packet_upper_cpu_s": 139.43,
+    "packet_cap_cpu_s": 180,
+    "runs": [
+      {
+        "tag": "entry_gate_check",
+        "cpu_user_s": 18.56
+      },
+      {
+        "tag": "entry_gate_prepare",
+        "cpu_user_s": 1.29
+      },
+      {
+        "tag": "entry_gate_prepare2",
+        "cpu_user_s": 1.21
+      },
+      {
+        "tag": "entry_gate_run",
+        "cpu_user_s": 28.26
+      }
+    ],
+    "new_strategy_replay_authorized_by_latest_user": true,
+    "new_days": false
+  },
+  "first_minute_3789484": {
+    "ORIGINAL": {
+      "matched_shares": 322.1197612371044,
+      "completed_c": -2057.4095189354603,
+      "residual_c": -150.98626388440923,
+      "total_c": -2208.3957828198704,
+      "net_shares": -80.86957749433948
+    },
+    "FIXED_DEFAULT": {
+      "matched_shares": 322.1197612371044,
+      "completed_c": -2057.4095189354603,
+      "residual_c": -150.98626388440923,
+      "total_c": -2208.3957828198704,
+      "net_shares": -80.86957749433948
+    },
+    "DIRECTIONAL_ENTRY": {
+      "matched_shares": 12.0,
+      "completed_c": 4.0,
+      "residual_c": 0.943548387096782,
+      "total_c": 4.943548387096707,
+      "net_shares": -0.04838709677419395
+    }
+  }
+}
+2026-11-24T12:03:29Z tag=entry_gate_publish2 rc=0 peak_rss_mib=16 wall_s=0.03 cpu_user_s=0.02 memavail_start_gib=22 disk_free_gib=414->414 slot=codex

@@ -1,0 +1,49 @@
+{
+  "checked": 9,
+  "corruptions_refused": [
+    "cash",
+    "total",
+    "shares",
+    "signal",
+    "gate_quantity",
+    "known_inventory",
+    "reservation"
+  ],
+  "contrasts": [
+    {
+      "day": "20261024",
+      "m": 3702960,
+      "inventory_fix_delta_c": -2514.5004378107556,
+      "entry_delta_c": -726.4041201980765,
+      "entry_completed_delta_c": -602.6535244533959,
+      "entry_residual_delta_c": -123.75059574468088,
+      "entry_total_c": -298.7905957446807,
+      "shares_delta": -2588.384134937165
+    },
+    {
+      "day": "20261026",
+      "m": 3789484,
+      "inventory_fix_delta_c": 49.66227109112515,
+      "entry_delta_c": 4932.263875985875,
+      "entry_completed_delta_c": 3549.611697037463,
+      "entry_residual_delta_c": 1382.652178948402,
+      "entry_total_c": 3192.331766923966,
+      "shares_delta": -2684.093662126405
+    },
+    {
+      "day": "20261027",
+      "m": 3877472,
+      "inventory_fix_delta_c": -12992.198373792702,
+      "entry_delta_c": 12879.388200680472,
+      "entry_completed_delta_c": 11699.72154533247,
+      "entry_residual_delta_c": 1179.6666553479954,
+      "entry_total_c": -766.4155495609724,
+      "shares_delta": -3917.7885162071743
+    }
+  ],
+  "entry_better_each": false,
+  "entry_positive_each": false,
+  "entry_pooled_delta_c": 17085.24795646827,
+  "selection_beyond_exposure_tested": false,
+  "validation": false
+}

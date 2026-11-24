@@ -1,3 +1,15 @@
+<!-- ENTRY_GATE_PILOT_20261124_CODEX -->
+## 2026-11-24 — USER-directed directional entry replay completed
+
+[Receipt](reviews/entry_gate_pilot_20261124/report.md), freeze fa9d035d2. Latest USER asks to set entry rule and replay; used only remaining180-CPU-second dashboard allowance, no cap increase/new days. Three fixed consumed markets, ORIGINAL / FIXED_DEFAULT / DIRECTIONAL_ENTRY, nine complete arms. Original tape and execution parity3/3; independent result checks9/9 and seven corruption refusals. Frozen strategy files unchanged; experiment wrapper corrects the sign-crossing hysteresis in both comparison arms.
+
+One unfitted rule gates new risk on the accepted opposite-side Binance q5 pressure (favourable direction), otherwise permits only unreserved reduction of client-known inventory. Live cancellation rules unchanged; no timer, no new thresholds or model. Full END USD fixed-default -> entry:3702960 +4.28 -> -2.99;3789484 -17.40 -> +31.92;3877472 -136.46 -> -7.66. Pooled -149.58 -> +21.27, completed-turnover delta +146.47 and residual +24.39. Filled shares -79.6%; only1/3 candidate markets positive. Selected examples, no validation/selection-beyond-activity claim.
+
+Opening3789484: first quote550ms/bid only; first-minute value -22.08 -> +0.05, only12 matched shares. Avoids the cheap initial asks but does not reproduce maker3's turnover. Old inventory bug accidentally suppressed losing trading; the fix's effect is separated from entry.
+
+ONE next priority: freeze an activity-matched entry control before tuning this rule, comparing complete turnover and residual on the same markets. No automatic follow-on replay: it needs a bounded resource plan. Packet upper139.43/180 CPU seconds including publication reserve; task/line caps2.05/5.35 and .05h standing reserve unchanged. No push/live use.
+<!-- /ENTRY_GATE_PILOT_20261124_CODEX -->
+
 <!-- MARKET_DASHBOARD_20261124_CODEX -->
 ## 2026-11-24 — three-market microscope and material inventory finding
 
