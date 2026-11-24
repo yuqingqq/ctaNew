@@ -1,0 +1,15 @@
+{
+  "files": {
+    "predictfun/reviews/maker_fill_age_20261124/contract.md": "0f5b2ea3fa65598c0da81271f3808f15fbe42293f1964bc5df485d7057d61e96",
+    "predictfun/reviews/maker_fill_age_20261124/study.py": "c23970d3b562b8093289237fdfb3b33c404d6a631a50f3a022a364855d5b7a8a",
+    "predictfun/reviews/maker_fill_age_20261124/check.py": "5e1f490964201c1f4b1c6a08476b564cb7dfc3bd52c748487c4bb39dbfd6d6e5",
+    "predictfun/reviews/maker_trace_20261122/v2/chains/post_fill/orders.csv": "2ea44339d276f1bcf9c690a5b2b71fc4f8ef5e5138fa3c1a6434acce1006b853",
+    "predictfun/reviews/maker_timing_estimates_20261124/outputs/post_estimates.csv.gz": "50554d8f964960b930755c03f7f938396a9c87e7b2952873fdb37275503c8112",
+    "predictfun/reviews/maker_trace_20261122/v2/chains/queue_front_v2/fills.csv": "0544904398c3253ea667689047cbaf7dd800701a550caa38b9cd9e393675299d",
+    "predictfun/reviews/maker_trace_20261122/v2/chains/post_fill/receipt.json": "455c97a6df4402daaa6c642d20689224ca0a38022bcaafd62a5395b2d27146b4",
+    "predictfun/reviews/maker_trace_20261122/v2/chains/queue_front_v2/receipt.json": "7cfdb27f096c3c36467b69d5d994f91043bceef7bd438d372e595e7722f2d0d0"
+  },
+  "task_before": 1.9382777777777775,
+  "cap_coreh": 0.0008,
+  "comparisons": 2
+}
