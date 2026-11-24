@@ -1,0 +1,82 @@
+{
+  "signed_orders": 88,
+  "all_view_withdrawal_estimates": 40,
+  "width_median_s": 3.161,
+  "width_le10s": 35,
+  "posting_grades_on_withdrawals": {
+    "G2_bound_constrained": 10,
+    "G4_scenario_only": 30
+  },
+  "successor_on_withdrawals": {
+    "no_usable_successor": 14,
+    "overlap_or_order_tied": 21,
+    "next_post_or_end_refused": 3,
+    "ordered_after_under_windows": 2
+  },
+  "posting_context_G2": {
+    "spread_cat": {
+      "timing_sensitive": 1519,
+      "tight": 255
+    },
+    "btc_1s_set": {
+      "flat": 811,
+      "against|flat": 174,
+      "flat|with": 284,
+      "against|flat|with": 499,
+      "": 4,
+      "with": 2
+    },
+    "btc_5s_set": {
+      "flat": 966,
+      "against|flat": 156,
+      "flat|with": 232,
+      "against|flat|with": 357,
+      "against": 29,
+      "with": 30,
+      "": 4
+    },
+    "btc_30s_set": {
+      "flat": 917,
+      "with": 145,
+      "against": 114,
+      "flat|with": 228,
+      "against|flat|with": 209,
+      "against|flat": 157,
+      "": 4
+    },
+    "inv_set": {
+      "flat|offsetting": 39,
+      "flat": 10,
+      "adding|flat": 58,
+      "offsetting": 622,
+      "adding|flat|offsetting": 235,
+      "adding|offsetting": 387,
+      "adding": 423
+    },
+    "inv_certain_cat": {
+      "timing_sensitive": 719,
+      "flat": 10,
+      "offsetting": 622,
+      "adding": 423
+    },
+    "touch_set": {
+      "at|behind": 633,
+      "at": 71,
+      "at|behind|inside": 207,
+      "at|inside": 50,
+      "behind|inside": 63,
+      "behind": 368,
+      "at|behind|crossing": 298,
+      "at|crossing": 29,
+      "behind|crossing": 44,
+      "at|behind|crossing|inside": 9,
+      "at|crossing|inside": 1,
+      "behind|crossing|inside": 1
+    },
+    "phase": {
+      "live": 1744,
+      "straddle": 30
+    }
+  },
+  "rendered_sha256": "342140b1c2942baa1f51a1cca8119a1040106c9004600b6ba10b9d683ab7e1e1"
+}

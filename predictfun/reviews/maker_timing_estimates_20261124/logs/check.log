@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker_timing_estimates_20261124/check.py", line 111, in <module>
+    if __name__=='__main__':run()
+                            ^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker_timing_estimates_20261124/check.py", line 105, in run
+    try:fn()
+        ^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker_timing_estimates_20261124/check.py", line 101, in <lambda>
+    tests.append(('exhausted_as_pull',lambda:check_pulls(e2,rr,gr,sd)))
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker_timing_estimates_20261124/check.py", line 57, in check_pulls
+    points(r,lo,hi,usable);eq(r['pull_midpoint_ms'],(lo+hi)/2 if pull else None,'pull point')
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker_timing_estimates_20261124/check.py", line 11, in eq
+    B.need(math.isclose(float(a),float(b),rel_tol=0,abs_tol=1e-8),msg)
+                                 ^^^^^^^^
+TypeError: float() argument must be a string or a real number, not 'NoneType'
+2026-11-24T02:50:23Z tag=mt_time_check rc=1 peak_rss_mib=252 wall_s=1.34 cpu_user_s=1.14 memavail_start_gib=22 disk_free_gib=416->416 slot=codex

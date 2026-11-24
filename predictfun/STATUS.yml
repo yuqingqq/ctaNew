@@ -1,4 +1,28 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+timing_estimates_20261124_codex:
+  report: predictfun/reviews/maker_timing_estimates_20261124/report.md
+  signed_chains: predictfun/reviews/maker_timing_estimates_20261124/outputs/signed_chain_estimates.csv
+  source_freeze: 6579a3c03e7a2b053480343631bb164d06f08881
+  checker_freeze: ce04e043735dae365f433573a5834686973bad65
+  user_authorizes_conditional_estimates: true
+  full_condition_rebuild_required: false
+  post_orders: 4149
+  posting_estimates: {bounded_conditional: 1774, scenario_only: 1800, refused: 575}
+  signed_terminal: {exhausted_no_terminal_pull: 41, conditional_withdrawal: 40, incomplete_refused: 7}
+  withdrawal_union_width_median_seconds: 3.161
+  withdrawal_union_width_le10s: 35
+  withdrawal_private_command_observed: false
+  withdrawal_estimate_assumptions: [complete_observed_fills, inherited_no_reentry, displayed_capacity, maximum_match_lag]
+  conditional_successors: {ordered_after: 2, overlap_or_tied: 21, next_post_refused: 3, no_usable_successor: 14}
+  independent_checks_pass: true
+  next_priority: local_refinement_40_windows_with_41_exhausted_negative_controls
+  next_all_in_core_hours_max: 0.015
+  next_within_current_user_scope: true
+  task_after_checks_core_hours: 1.9133
+  line_after_checks_core_hours: 5.2240
+  task_cap: 2.00
+  line_cap: 5.30
+  standing_reserve_core_hours: 0.05
 condition_action_map_20261124_codex:
   report: predictfun/reviews/maker_condition_action_20261124/report.md
   source_inventory: predictfun/reviews/maker_condition_action_20261124/source_inventory.md

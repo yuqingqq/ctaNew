@@ -1,0 +1,13 @@
+{
+  "pass_all": true,
+  "post_orders": 4149,
+  "ending_view_rows": 6640,
+  "unique_endings": 3897,
+  "falsifiers": {
+    "shifted_window": "lower changed",
+    "omitted_order": "post membership",
+    "private_pull_claim": "private cancel claim",
+    "exhausted_as_pull": "pull point",
+    "expiry_corruption": "cause/expiry gate"
+  }
+}

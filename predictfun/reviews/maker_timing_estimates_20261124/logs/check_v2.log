@@ -1,0 +1,15 @@
+{
+  "pass_all": true,
+  "post_orders": 4149,
+  "ending_view_rows": 6640,
+  "unique_endings": 3897,
+  "falsifiers": {
+    "shifted_window": "lower changed",
+    "omitted_order": "post membership",
+    "private_pull_claim": "private cancel claim",
+    "exhausted_as_pull": "pull point",
+    "expiry_corruption": "cause/expiry gate"
+  }
+}
+Renderer exact identity/window check PASS: 88
+2026-11-24T02:51:40Z tag=mt_time_check_v2 rc=0 peak_rss_mib=240 wall_s=1.41 cpu_user_s=1.24 memavail_start_gib=22 disk_free_gib=416->416 slot=codex

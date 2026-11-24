@@ -1,0 +1,88 @@
+{
+  "post_orders": 4149,
+  "post_grades": {
+    "G0_unbounded_or_invalid": 100,
+    "G1_conflict": 421,
+    "G2_bound_constrained": 1774,
+    "G3_constrained_status_flagged": 54,
+    "G4_scenario_only": 1800
+  },
+  "post_estimates": {
+    "bounded_conditional": 1774,
+    "estimate_refused": 575,
+    "scenario_only": 1800
+  },
+  "pull_views": {
+    "S_FIFO": {
+      "rows": 2754,
+      "classes": {
+        "conditional_withdrawal_before_expiry": 40,
+        "exhausted_no_terminal_pull": 41,
+        "timing_estimate_refused": 369,
+        "unsigned_exhaustion_or_withdrawal": 2304
+      },
+      "conditional_withdrawal_width": {
+        "n": 40,
+        "le_1s": 0,
+        "le_10s": 36,
+        "median_s": 2.5865
+      },
+      "successors": {
+        "next_post_or_end_refused": 183,
+        "no_usable_successor": 1394,
+        "ordered_after_under_windows": 151,
+        "overlap_or_order_tied": 1026
+      },
+      "expiry": {
+        "after_window": 47
+      }
+    },
+    "S_NOPRIO": {
+      "rows": 3886,
+      "classes": {
+        "conditional_withdrawal_before_expiry": 40,
+        "exhausted_no_terminal_pull": 41,
+        "timing_estimate_refused": 498,
+        "unsigned_exhaustion_or_withdrawal": 3307
+      },
+      "conditional_withdrawal_width": {
+        "n": 40,
+        "le_1s": 0,
+        "le_10s": 35,
+        "median_s": 3.161
+      },
+      "successors": {
+        "next_post_or_end_refused": 238,
+        "no_usable_successor": 2157,
+        "ordered_after_under_windows": 153,
+        "overlap_or_order_tied": 1338
+      },
+      "expiry": {
+        "after_window": 47
+      }
+    }
+  },
+  "signed_orders": 88,
+  "signed_statuses": {
+    "exhausted_by_observed_fills": 41,
+    "unresolved_remainder": 47
+  },
+  "union_statuses": {
+    "missing_view": 1154,
+    "three_view_union": 2743
+  },
+  "signed_union_statuses": {
+    "three_view_union": 88
+  },
+  "as_of_utc": "2026-11-24T02:50:14Z",
+  "source_commit": "6579a3c03e7a2b053480343631bb164d06f08881",
+  "cpu_seconds": 0.812424672,
+  "hashes": {
+    "posting_coverage.csv": "a4e35ba5409660efc6b52cb84912fc9e2e059e889008dc919dfe9e55651c1892",
+    "post_estimates.csv.gz": "50554d8f964960b930755c03f7f938396a9c87e7b2952873fdb37275503c8112",
+    "terminal_context.csv": "4695d28e03fdbfef927488dc3e9cf0fdfd1f526d82b8eebc8b20a79d76d966ad",
+    "union_windows.csv.gz": "da9b49f0b0a8af080a70b3f729f48b099c5e3bc7ea8e9f7423e51cc4831a0ece",
+    "ending_estimates.csv.gz": "fb634b3ede99e16eecb63b68fd11f57d2c9beba35ca895eed768fd484242e7ee"
+  }
+}
+2026-11-24T02:50:14Z tag=mt_time_run rc=0 peak_rss_mib=178 wall_s=0.89 cpu_user_s=0.76 memavail_start_gib=22 disk_free_gib=416->416 slot=codex
