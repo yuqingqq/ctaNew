@@ -1,0 +1,80 @@
+{
+  "orders": 88,
+  "transactions": 152,
+  "old_legs": 152,
+  "cells": [
+    {
+      "day": "20261024",
+      "rank": 1,
+      "population": 447,
+      "selected": 8
+    },
+    {
+      "day": "20261024",
+      "rank": 2,
+      "population": 233,
+      "selected": 8
+    },
+    {
+      "day": "20261024",
+      "rank": 3,
+      "population": 278,
+      "selected": 8
+    },
+    {
+      "day": "20261025",
+      "rank": 1,
+      "population": 354,
+      "selected": 8
+    },
+    {
+      "day": "20261025",
+      "rank": 2,
+      "population": 56,
+      "selected": 8
+    },
+    {
+      "day": "20261025",
+      "rank": 3,
+      "population": 246,
+      "selected": 8
+    },
+    {
+      "day": "20261026",
+      "rank": 1,
+      "population": 265,
+      "selected": 8
+    },
+    {
+      "day": "20261026",
+      "rank": 2,
+      "population": 204,
+      "selected": 8
+    },
+    {
+      "day": "20261026",
+      "rank": 3,
+      "population": 386,
+      "selected": 8
+    },
+    {
+      "day": "20261027",
+      "rank": 1,
+      "population": 133,
+      "selected": 8
+    },
+    {
+      "day": "20261027",
+      "rank": 2,
+      "population": 152,
+      "selected": 8
+    },
+    {
+      "day": "20261027",
+      "rank": 3,
+      "population": 0,
+      "selected": 0
+    }
+  ]
+}
+2026-11-24T02:07:32Z tag=mt_terminal_plan rc=0 peak_rss_mib=234 wall_s=3.72 cpu_user_s=2.29 memavail_start_gib=22 disk_free_gib=417->417 slot=codex
