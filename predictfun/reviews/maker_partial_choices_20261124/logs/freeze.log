@@ -1,0 +1,4 @@
+8 condition/boundary/unknown controls pass
+matched association positive and no-association controls pass
+frozen inputs, resource gate passed
+2026-11-24T05:18:03Z tag=mt_choices_freeze rc=0 peak_rss_mib=41 wall_s=0.10 cpu_user_s=0.08 memavail_start_gib=22 disk_free_gib=416->416 slot=codex
