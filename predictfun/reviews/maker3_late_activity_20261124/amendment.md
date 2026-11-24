@@ -1,1 +1,3 @@
 Before any output: the initial source-membership guard refused because the canonical file also contains the Oct 23 rank-selection day. Add the declared Oct 24–27 filter at parquet loading (in addition to the assertion). No population or rule change; first attempt and CPU retained in run.log.
+
+Second pre-output refusal: t_rel_s in pf_mt_extract is settle_ms/1000 - ws (epoch float subtraction). The proposed equivalent integer-difference formula was compared at a tighter-than-epoch-float tolerance. Validate the source's actual formula, then use integer milliseconds to implement the already-declared half-open bins. No time source or threshold change. Attempt in run_v2.log.

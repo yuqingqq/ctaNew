@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker3_late_activity_20261124/audit.py", line 123, in <module>
+    else:run()
+         ^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker3_late_activity_20261124/audit.py", line 70, in run
+    assert np.allclose(f.t_rel_s,(f.settle_ms-f.ws*1000)/1000,atol=1e-9,rtol=0)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+2026-11-24T12:59:14Z tag=maker3_late_audit_v2 rc=1 peak_rss_mib=666 wall_s=4.64 cpu_user_s=3.73 memavail_start_gib=22 disk_free_gib=413->413 slot=codex

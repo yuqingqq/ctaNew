@@ -67,7 +67,10 @@ def run():
         takes.append(t)
     markets=pd.concat(markets,ignore_index=True);t=pd.concat(takes,ignore_index=True)
     f=f.merge(markets[['day','mid','ws']],on=['day','mid'],validate='many_to_one')
-    assert np.allclose(f.t_rel_s,(f.settle_ms-f.ws*1000)/1000,atol=1e-9,rtol=0)
+    # Extract stores epoch-seconds subtraction; match that formula exactly,
+    # then bucket on integer-millisecond differences (avoid epoch float slivers).
+    assert np.allclose(f.t_rel_s,f.settle_ms/1000-f.ws,atol=1e-9,rtol=0)
+    f['t_rel_s']=(f.settle_ms-f.ws*1000)/1000
     # Record-level actor events; aggregate the taker's allocated counterparty legs once.
     f['dq']=f.s*f.q;f['qp']=f.q*f.p
     ev=f.groupby(['day','mid','sid','role'],observed=True,sort=False).agg(t=('t_rel_s','first'),settle_ms=('settle_ms','first'),
