@@ -1,0 +1,2 @@
+{"pairs": 19, "source_bytes": 546001583, "task_before": 1.9347166666666666, "gate": "input_identity_only"}
+2026-11-24T04:49:40Z tag=mt_actpop_preflight rc=0 peak_rss_mib=61 wall_s=0.96 cpu_user_s=0.44 memavail_start_gib=22 disk_free_gib=415->415 slot=codex
