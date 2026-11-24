@@ -1,0 +1,19 @@
+mode crossing, gate sign/tie/missing/reducing reservation, unchanged live, future input, FIFO controls PASS
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/entry_gate_pilot_20261124/replay.py", line 162, in <module>
+    if __name__=='__main__':{'selftest':selftest,'freeze':freeze,'run':run}[sys.argv[1]]()
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/entry_gate_pilot_20261124/replay.py", line 72, in freeze
+    sources={str(p.relative_to(R)):sha(p) for p in inputs()},multiplicity=dict(new_candidates=['DIRECTIONAL_ENTRY'],controls=['ORIGINAL','FIXED_DEFAULT','NO_TRADE accounting zero']),
+                                   ^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/entry_gate_pilot_20261124/replay.py", line 19, in sha
+    def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+                                     ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1021, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1015, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/yuqing/ctaNew/data/predict_fun/research/stop_model_20261114/day_20261024_imp.json'
+2026-11-24T11:58:05Z tag=entry_gate_prepare rc=1 peak_rss_mib=319 wall_s=5.10 cpu_user_s=1.29 memavail_start_gib=22 disk_free_gib=413->413 slot=codex

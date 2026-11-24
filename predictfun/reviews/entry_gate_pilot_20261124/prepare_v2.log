@@ -1,0 +1,3 @@
+mode crossing, gate sign/tie/missing/reducing reservation, unchanged live, future input, FIFO controls PASS
+manifest prepared; commit full pipeline before run
+2026-11-24T11:58:33Z tag=entry_gate_prepare2 rc=0 peak_rss_mib=320 wall_s=1.67 cpu_user_s=1.21 memavail_start_gib=22 disk_free_gib=413->413 slot=codex
