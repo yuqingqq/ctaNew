@@ -1,0 +1,29 @@
+{
+  "as_of_utc": "2026-11-24T02:08:07Z",
+  "source_commit": "335797b52963916d490e2f9c60428c882ab80416",
+  "orders": 88,
+  "transactions": 152,
+  "fill_events": 152,
+  "statuses": {
+    "exhausted_by_observed_fills": 41,
+    "unresolved_remainder": 47
+  },
+  "state_statuses": {
+    "archive_or_rpc_unavailable": 88
+  },
+  "successor_grades": {
+    "no_recorded_successor": 39,
+    "overlap_possible": 10,
+    "later_order_after_exhaustion_command_unidentified": 14,
+    "unresolved_replacement_or_parallel_order": 25
+  },
+  "linked_cancels": 0,
+  "transport_failure": "",
+  "state_transport_failure": "ValueError: state response membership",
+  "gate_pass": true,
+  "private_pull_identified": 0,
+  "queue_front_identified": 0,
+  "cpu_seconds": 0.19852211700000005,
+  "orders_sha256": "9ca857e82a13fc1ece4d9a0f73860d5afff72a9538755723fe95b1d771945400"
+}
+2026-11-24T02:08:05Z tag=mt_terminal_run rc=0 peak_rss_mib=42 wall_s=2.18 cpu_user_s=0.55 memavail_start_gib=22 disk_free_gib=417->417 slot=codex

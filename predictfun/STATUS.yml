@@ -1,4 +1,25 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+terminal_chain_20261124_codex:
+  report: predictfun/reviews/maker_terminal_chain_20261124/report.md
+  whole_chain: predictfun/reviews/maker_terminal_chain_20261124/whole_chain.md
+  source_freeze: 335797b52963916d490e2f9c60428c882ab80416
+  presentation_freeze: d2b86cd2703f22e4421aad83fd29bd2a4fcdd1b4
+  population: {orders: 88, transactions: 152, consumed_days: [20261024, 20261025, 20261026, 20261027]}
+  endings: {exhausted_by_observed_fills: 41, unresolved_remainder: 47}
+  historical_state: {prepared: 88, submitted_slots: 64, archive_errors: 48, batch_rate_limit_errors: 1, evaluable: 0}
+  whole_chains: 6
+  private_pull_identified: 0
+  queue_front_identified: 0
+  independent_recount_and_falsifiers_pass: true
+  no_profitable_policy_or_validation_claim: true
+  next_priority: attributed_terminal_event_source_gate_same_47_unresolved
+  source_gate_not_launched: true
+  task_after_checks_core_hours: 1.9108
+  line_after_checks_core_hours: 5.2215
+  task_cap: 2.00
+  line_cap: 5.30
+  standing_reserve_core_hours: 0.05
+  resource_note: mt_terminal_tags_already_counted_once
 signed_order_bridge_20261124_codex:
   report: predictfun/reviews/maker_signed_evidence_20261124/report.md
   user_resumed_identification: true

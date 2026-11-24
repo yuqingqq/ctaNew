@@ -1,0 +1,46 @@
+{
+  "parent": "d2b86cd2703f22e4421aad83fd29bd2a4fcdd1b4",
+  "preserved_dirty": {
+    "data/pm_5min/derived/be133_forward_population_era_split.json": null,
+    "data/pm_5min/derived/be_tape_v2_builder_binding_proof_v1.json": null,
+    "data/pm_5min/derived/be_validation_review_v1.json": null,
+    "data/pm_5min/derived/p003_de_gate1_run_journal_de145day07__20260908T032816Z.json": null,
+    "data/pm_5min/derived/p003_de_gate1_run_journal_deRR20260903__20260907T195646Z.json": null,
+    "data/pm_5min/derived/p003_de_gate1_run_journal_deRR20260904__20260907T225517Z.json": null,
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run__20260906T062115Z.json": null,
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v2__20260906T064720Z.json": null,
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v3__20260906T071214Z.json": null,
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v4__20260906T074712Z.json": null,
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v5__20260906T075707Z.json": null,
+    "data/pm_5min/derived/p003_de_gate1_synthetic_day_run_v6__20260906T081252Z.json": null,
+    "data/pm_5min/derived/p003_de_launch_form_probe__20260906T121813Z.json": null,
+    "data/pm_5min/derived/p003_de_r608_resolver_agreement__20260906T104000Z.json": null,
+    "data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/README": null,
+    "data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/linear_btc.json": null,
+    "data/pm_5min/derived/phase2_fits.QUARANTINED_pre_manifest/linear_eth.json": null,
+    "predictfun/handoffs/20261109_TODO.md": "8b7c104adae198927a9fecb04b5f57015fc2cef1afa09f48315b8c4ec413d7d8",
+    "predictfun/research/run_light.log": "f1aa9740ba9f49ad467fb7141469e8be9a91e071bc47ebf287256767f402e32c"
+  },
+  "owned_state": {
+    "predictfun/HANDOFF.md": {
+      "preexisting_work_sha": "0e5fbaedeb3e533868f965ad782145f6c575e9411608eda3ed9e9c8aba3c85ff",
+      "staged_sha": "bdf77a2aa5ee6e506a86666a1371d6b0c70e03698301fd51da03192a00633eae",
+      "post_work_sha": "80a17a64d00b89f65062b0873cf240b43f09540d03adb5ec1cf4f0625e3fe823"
+    },
+    "predictfun/FINDINGS.md": {
+      "preexisting_work_sha": "8528b371abf383273a799daa636516d58c5fd1e78fcf210909488d9e15e4c387",
+      "staged_sha": "8f8cb21422b446fafc71baa1ec6aeb4f60429271259c2a6240304c67149c4cb8",
+      "post_work_sha": "6f869660ecab6330bfd7748b3b327b9e73ab28bc67cea491c9b28923a7f63a5d"
+    },
+    "predictfun/STATUS.yml": {
+      "preexisting_work_sha": "af8d1cbae0124cfce579c11d8a3dd07b46da6cc32a2e59e5448d3ef40624a7e4",
+      "staged_sha": "a1b48b81dc0c98d369e0c19e8d7ac91be6e75b59360a53659b5992fd04b019d9",
+      "post_work_sha": "105144867041bbbaaa102e1fad4b1cf79f4fdd9b2c01290b14f09d6ac5476d37"
+    },
+    "predictfun/reviews/maker_trace_20261122/PENDING.md": {
+      "preexisting_work_sha": "e51131c6038b29128406e2ba7438dcbe9da23234ec7a1c1d23744410d260ff6a",
+      "staged_sha": "8d415d4a43660e8e796d54dc888adee82d578d859f7f43ef112c0e0645c36853",
+      "post_work_sha": "8d415d4a43660e8e796d54dc888adee82d578d859f7f43ef112c0e0645c36853"
+    }
+  }
+}

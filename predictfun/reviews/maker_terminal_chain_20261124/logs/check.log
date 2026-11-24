@@ -1,0 +1,30 @@
+{
+  "orders": 88,
+  "raw_events": 152,
+  "statuses": {
+    "exhausted_by_observed_fills": 41,
+    "unresolved_remainder": 47
+  },
+  "successor_grades": {
+    "no_recorded_successor": 39,
+    "overlap_possible": 10,
+    "later_order_after_exhaustion_command_unidentified": 14,
+    "unresolved_replacement_or_parallel_order": 25
+  },
+  "pass": true,
+  "state_prepared": 88,
+  "state_batches_saved": 4,
+  "state_requests_submitted": 64,
+  "state_responses_returned": 49,
+  "state_errors": {
+    "missing trie node": 48,
+    "method eth_call in batch triggered rate limit": 1
+  },
+  "falsifiers": {
+    "amount": "budget",
+    "private_pull": "unsupported action",
+    "queue": "unsupported action",
+    "omitted_event": "raw event membership"
+  }
+}
+2026-11-24T02:12:20Z tag=mt_terminal_check rc=0 peak_rss_mib=35 wall_s=0.23 cpu_user_s=0.20 memavail_start_gib=22 disk_free_gib=417->417 slot=codex

@@ -23,6 +23,17 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- TERMINAL_CHAIN_20261124_CODEX -->
+## 2026-11-24 — signed exhaustion and whole-book action chains
+
+[Combined evidence and next priority](reviews/maker_terminal_chain_20261124/report.md); [all six action chains](reviews/maker_terminal_chain_20261124/whole_chain.md). USER asked to continue bridging the gaps and show the full action/logic chain. New fixed sample: 88 orders / 152 transactions from the old cancel-compatible cohort, consumed Oct24–27, eight per nonempty day x rank. 41 signed budgets are fully consumed; 47 remain unresolved. No private pull or queue front newly identified. Repeated executions do not establish continuous rest. Old successor chronology is not a private replacement command.
+
+Optional historical state is unavailable: 88 prepared, 64 request slots submitted, 48 archive errors plus one batch-level rate-limit error, 24 unsubmitted. No latest-state substitution or retry. Integer raw-log recount and four falsifiers pass. All six prior examples retained: rank3's 220-share YES-equivalent ask32c completes seven fills; FIFO assigns 211.86 shares to closing earlier inventory for +$6.63 net. Later 58-share buys reduce other short exposure, not this order's FIFO remainder. Its private quote timing is G1-conflict/unidentified. Mixed economics across the six examples; no profitable-policy claim.
+
+ONE next priority: attributed terminal-event source gate for the same 47 unresolved orders, complete per-hash fills/cancel evidence through the declared endpoint, before another action-condition fit. Historical getter alone cannot reveal off-chain withdrawals. Stop if source adds no identification; no anonymous association-tuning loop. Same consumed-day bounded read-only work remains authorized within caps; paid/credentialed archive access, new days, live work or higher caps need USER. No new source/job launched. Ledger task1.9108/2.00h, line5.2215/5.30h, standing .05 reserve fits; mt_terminal tags already counted once. Source freeze335797b52963916d490e2f9c60428c882ab80416; presentation freeze d2b86cd2703f22e4421aad83fd29bd2a4fcdd1b4.
+<!-- /TERMINAL_CHAIN_20261124_CODEX -->
+
+
 <!-- SIGNED_EVIDENCE_20261124_CODEX -->
 ## 2026-11-24 — USER resumed maker-action identification; signed orders bridge a real gap
 
