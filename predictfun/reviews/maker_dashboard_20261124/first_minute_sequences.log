@@ -1,0 +1,534 @@
+maker3 {
+  "order_sequence": [
+    {
+      "key": "0x837f7a2a7ca0cc9734c61859bcae250a902c83d38baf1bccc4df977058ea6ca1",
+      "side": 0,
+      "price": 56.0,
+      "q": 20.1,
+      "first_s": 1.755,
+      "last_s": 1.755,
+      "fills": 1,
+      "post": [
+        1.038,
+        1.755
+      ],
+      "grade": "G4_scenario_only",
+      "first_hard_lo": -0.245
+    },
+    {
+      "key": "0xca809b73fb7cd38b40000c612b56be5d6fb2c4af8ff6dd2ed6c9700b653af430",
+      "side": 0,
+      "price": 56.0,
+      "q": 168.409,
+      "first_s": 3.999,
+      "last_s": 4.201,
+      "fills": 18,
+      "post": [
+        1.797,
+        3.999
+      ],
+      "grade": "G2_bound_constrained",
+      "first_hard_lo": 1.999
+    },
+    {
+      "key": "0xadd647426c430b7306680cc97390837afc0224a8638c67528fa1dd6366f14a3d",
+      "side": 1,
+      "price": 58.0,
+      "q": 90.327333,
+      "first_s": 7.428,
+      "last_s": 7.518,
+      "fills": 2,
+      "post": [
+        5.239,
+        7.428
+      ],
+      "grade": "G2_bound_constrained",
+      "first_hard_lo": 5.428
+    },
+    {
+      "key": "0x0f062c64c08f6fc1aebafcc64794d61d71e4e05662c94cb3278a0438fa3d2905",
+      "side": 1,
+      "price": 61.0,
+      "q": 14.590164,
+      "first_s": 8.537,
+      "last_s": 8.537,
+      "fills": 1,
+      "post": [
+        3.647,
+        8.537
+      ],
+      "grade": "G2_bound_constrained",
+      "first_hard_lo": 6.537
+    },
+    {
+      "key": "0x70d3ee3a032dca76f47697efb402735c8467c4823c0b11bc3d932610dddca13c",
+      "side": 1,
+      "price": 63.0,
+      "q": 160.0,
+      "first_s": 8.943,
+      "last_s": 8.954,
+      "fills": 2,
+      "post": [
+        1.601,
+        8.943
+      ],
+      "grade": "G2_bound_constrained",
+      "first_hard_lo": 6.943
+    },
+    {
+      "key": "0x0b3c436086f1f717c2f7d69a579da89bd0a3f3be0dd328da0c32adf5bf30affe",
+      "side": 0,
+      "price": 58.0,
+      "q": 118.310783,
+      "first_s": 17.94,
+      "last_s": 18.586,
+      "fills": 2,
+      "post": null,
+      "grade": "G1_conflict",
+      "first_hard_lo": 15.94
+    },
+    {
+      "key": "0x7e2246e1baec025dbcaf2f9cacbaa0f4d6ef9547d785d11b4118c0b3bdcbe4ea",
+      "side": 1,
+      "price": 60.0,
+      "q": 202.880179,
+      "first_s": 18.765,
+      "last_s": 19.808,
+      "fills": 6,
+      "post": [
+        11.838,
+        18.765
+      ],
+      "grade": "G4_scenario_only",
+      "first_hard_lo": 16.765
+    },
+    {
+      "key": "0x18bb98e216eef3f624c82121d2c8c08129af269514cf5c3d5e9c2da5f5a848eb",
+      "side": 0,
+      "price": 54.0,
+      "q": 2.173913,
+      "first_s": 22.668,
+      "last_s": 22.668,
+      "fills": 1,
+      "post": [
+        1.001,
+        22.668
+      ],
+      "grade": "G2_bound_constrained",
+      "first_hard_lo": 20.668
+    },
+    {
+      "key": "0x1c08963d767983ec6a9c4cf716c9e323b8bf5106875e2355e9c90c8151ab60d5",
+      "side": 0,
+      "price": 52.0,
+      "q": 58.287917,
+      "first_s": 24.792,
+      "last_s": 29.956,
+      "fills": 3,
+      "post": null,
+      "grade": "G1_conflict",
+      "first_hard_lo": 22.792
+    },
+    {
+      "key": "0xcb7016f668f1df198f1b43973a96b7980328c71a47a636f65c035affb632ec60",
+      "side": 0,
+      "price": 53.0,
+      "q": 41.276596,
+      "first_s": 26.695,
+      "last_s": 26.752,
+      "fills": 2,
+      "post": [
+        24.838,
+        26.695
+      ],
+      "grade": "G4_scenario_only",
+      "first_hard_lo": 24.695
+    },
+    {
+      "key": "0x41af4c1064b6c02f9f5eed6f2fd60d825392798a19615d1a4ec4f6812c64cefe",
+      "side": 0,
+      "price": 54.0,
+      "q": 78.7,
+      "first_s": 28.499,
+      "last_s": 28.499,
+      "fills": 1,
+      "post": [
+        26.736,
+        28.499
+      ],
+      "grade": "G4_scenario_only",
+      "first_hard_lo": 26.499
+    },
+    {
+      "key": "0x354e049a86d13067c5c5aa20d20b2c2c13d46584946fae2a3f1fe81ae6675ca8",
+      "side": 1,
+      "price": 57.0,
+      "q": 47.15219999999999,
+      "first_s": 31.352,
+      "last_s": 32.863,
+      "fills": 2,
+      "post": [
+        27.849,
+        31.352
+      ],
+      "grade": "G2_bound_constrained",
+      "first_hard_lo": 29.352
+    },
+    {
+      "key": "0x5704092c4d970e7a82a63cb1a905fe6ba899acb028e902c3bbee210adf3ae4b7",
+      "side": 1,
+      "price": 58.0,
+      "q": 10.250438,
+      "first_s": 36.977,
+      "last_s": 37.087,
+      "fills": 2,
+      "post": [
+        33.55,
+        36.977
+      ],
+      "grade": "G2_bound_constrained",
+      "first_hard_lo": 34.977
+    },
+    {
+      "key": "0x0ef548323ded251d1dfea7ff3718132d55571a041ce99c86111aa2be66c7f3cb",
+      "side": 1,
+      "price": 51.0,
+      "q": 3.17,
+      "first_s": 38.039,
+      "last_s": 38.039,
+      "fills": 1,
+      "post": [
+        37.786,
+        38.039
+      ],
+      "grade": "G4_scenario_only",
+      "first_hard_lo": 36.039
+    },
+    {
+      "key": "0x5108d3415987cb801f426fe10769403b70fcc8bd2656d629d2884b38cf156d39",
+      "side": 0,
+      "price": 37.0,
+      "q": 95.23809499999999,
+      "first_s": 46.536,
+      "last_s": 47.427,
+      "fills": 2,
+      "post": [
+        0.034,
+        46.536
+      ],
+      "grade": "G2_bound_constrained",
+      "first_hard_lo": 44.536
+    },
+    {
+      "key": "0xee47a7ee0afef7ed81d72871c6570d7fc9a42adb2e040dd2fed2c97c7030e7b5",
+      "side": 0,
+      "price": 38.0,
+      "q": 65.065161,
+      "first_s": 48.759,
+      "last_s": 48.759,
+      "fills": 1,
+      "post": [
+        46.791,
+        48.759
+      ],
+      "grade": "G4_scenario_only",
+      "first_hard_lo": 46.759
+    },
+    {
+      "key": "0x19495e1df73a0a176f1097f7f6b997c8ea05aadca52278f8a9048e9969f038ba",
+      "side": 1,
+      "price": 35.0,
+      "q": 171.524417,
+      "first_s": 54.465,
+      "last_s": 54.746,
+      "fills": 4,
+      "post": [
+        52.645,
+        54.465
+      ],
+      "grade": "G2_bound_constrained",
+      "first_hard_lo": 52.465
+    }
+  ],
+  "profitable_closed_shares": 528.370314,
+  "losing_closed_shares": 119.19115100000002,
+  "good_closed_gross_usd": 33.001669889999995,
+  "bad_closed_gross_usd": -3.03447463,
+  "all_rows_accounted": true,
+  "closing_quantities": 647.561465
+}
+ours {
+  "order_sequence": [
+    {
+      "key": 2,
+      "side": 1,
+      "price": 50.0,
+      "q": 100.0,
+      "first_s": 0.448,
+      "last_s": 0.448,
+      "fills": 6,
+      "post": null,
+      "grade": null,
+      "first_hard_lo": null
+    },
+    {
+      "key": 3,
+      "side": 1,
+      "price": 51.0,
+      "q": 91.24,
+      "first_s": 0.448,
+      "last_s": 0.448,
+      "fills": 6,
+      "post": null,
+      "grade": null,
+      "first_hard_lo": null
+    },
+    {
+      "key": 4,
+      "side": 0,
+      "price": 58.0,
+      "q": 2.0,
+      "first_s": 1.296,
+      "last_s": 1.296,
+      "fills": 2,
+      "post": null,
+      "grade": null,
+      "first_hard_lo": null
+    },
+    {
+      "key": 8,
+      "side": 0,
+      "price": 58.0,
+      "q": 6.414,
+      "first_s": 1.601,
+      "last_s": 1.601,
+      "fills": 1,
+      "post": null,
+      "grade": null,
+      "first_hard_lo": null
+    },
+    {
+      "key": 11,
+      "side": 0,
+      "price": 60.0,
+      "q": 2.0,
+      "first_s": 3.742,
+      "last_s": 3.742,
+      "fills": 1,
+      "post": null,
+      "grade": null,
+      "first_hard_lo": null
+    },
+    {
+      "key": 10,
+      "side": 0,
+      "price": 59.0,
+      "q": 100.0,
+      "first_s": 3.742,
+      "last_s": 3.742,
+      "fills": 11,
+      "post": null,
+      "grade": null,
+      "first_hard_lo": null
+    },
+    {
+      "key": 31,
+      "side": 0,
+      "price": 51.0,
+      "q": 5.0,
+      "first_s": 23.445,
+      "last_s": 23.445,
+      "fills": 1,
+      "post": null,
+      "grade": null,
+      "first_hard_lo": null
+    },
+    {
+      "key": 35,
+      "side": 0,
+      "price": 56.0,
+      "q": 5.0,
+      "first_s": 25.693,
+      "last_s": 25.693,
+      "fills": 1,
+      "post": null,
+      "grade": null,
+      "first_hard_lo": null
+    },
+    {
+      "key": 36,
+      "side": 0,
+      "price": 56.0,
+      "q": 10.0,
+      "first_s": 25.945,
+      "last_s": 25.945,
+      "fills": 1,
+      "post": null,
+      "grade": null,
+      "first_hard_lo": null
+    },
+    {
+      "key": 37,
+      "side": 0,
+      "price": 53.0,
+      "q": 15.0,
+      "first_s": 29.936,
+      "last_s": 29.936,
+      "fills": 2,
+      "post": null,
+      "grade": null,
+      "first_hard_lo": null
+    },
+    {
+      "key": 51,
+      "side": 0,
+      "price": 57.0,
+      "q": 56.467273,
+      "first_s": 34.442,
+      "last_s": 34.442,
+      "fills": 6,
+      "post": null,
+      "grade": null,
+      "first_hard_lo": null
+    },
+    {
+      "key": 65,
+      "side": 0,
+      "price": 50.0,
+      "q": 10.0,
+      "first_s": 38.396,
+      "last_s": 38.396,
+      "fills": 4,
+      "post": null,
+      "grade": null,
+      "first_hard_lo": null
+    },
+    {
+      "key": 68,
+      "side": 0,
+      "price": 48.0,
+      "q": 40.0,
+      "first_s": 41.496,
+      "last_s": 41.496,
+      "fills": 4,
+      "post": null,
+      "grade": null,
+      "first_hard_lo": null
+    },
+    {
+      "key": 74,
+      "side": 0,
+      "price": 42.0,
+      "q": 13.0,
+      "first_s": 42.298,
+      "last_s": 42.347,
+      "fills": 2,
+      "post": null,
+      "grade": null,
+      "first_hard_lo": null
+    },
+    {
+      "key": 77,
+      "side": 0,
+      "price": 41.0,
+      "q": 33.46,
+      "first_s": 43.142,
+      "last_s": 43.142,
+      "fills": 4,
+      "post": null,
+      "grade": null,
+      "first_hard_lo": null
+    },
+    {
+      "key": 81,
+      "side": 1,
+      "price": 38.0,
+      "q": 53.065128,
+      "first_s": 46.799,
+      "last_s": 47.496,
+      "fills": 7,
+      "post": null,
+      "grade": null,
+      "first_hard_lo": null
+    },
+    {
+      "key": 80,
+      "side": 1,
+      "price": 39.0,
+      "q": 100.0,
+      "first_s": 49.248,
+      "last_s": 49.61,
+      "fills": 3,
+      "post": null,
+      "grade": null,
+      "first_hard_lo": null
+    },
+    {
+      "key": 83,
+      "side": 0,
+      "price": 38.0,
+      "q": 4.539683,
+      "first_s": 50.147,
+      "last_s": 50.147,
+      "fills": 1,
+      "post": null,
+      "grade": null,
+      "first_hard_lo": null
+    },
+    {
+      "key": 91,
+      "side": 1,
+      "price": 34.0,
+      "q": 2.684211,
+      "first_s": 52.086,
+      "last_s": 52.086,
+      "fills": 2,
+      "post": null,
+      "grade": null,
+      "first_hard_lo": null
+    },
+    {
+      "key": 89,
+      "side": 1,
+      "price": 35.0,
+      "q": 10.0,
+      "first_s": 52.247,
+      "last_s": 52.247,
+      "fills": 1,
+      "post": null,
+      "grade": null,
+      "first_hard_lo": null
+    },
+    {
+      "key": 88,
+      "side": 0,
+      "price": 33.0,
+      "q": 19.238805,
+      "first_s": 53.199,
+      "last_s": 58.149,
+      "fills": 6,
+      "post": null,
+      "grade": null,
+      "first_hard_lo": null
+    },
+    {
+      "key": 92,
+      "side": 1,
+      "price": 36.0,
+      "q": 46.0,
+      "first_s": 58.541,
+      "last_s": 58.541,
+      "fills": 4,
+      "post": null,
+      "grade": null,
+      "first_hard_lo": null
+    }
+  ],
+  "profitable_closed_shares": 23.778488,
+  "losing_closed_shares": 293.341273,
+  "good_closed_gross_usd": 1.19972513,
+  "bad_closed_gross_usd": -21.773820419999996,
+  "all_rows_accounted": true,
+  "closing_quantities": 317.119761
+}
+2026-11-24T11:03:17Z tag=mt_dash_first_minute_sequences rc=0 peak_rss_mib=42 wall_s=0.14 cpu_user_s=0.11 memavail_start_gib=22 disk_free_gib=415->415 slot=codex

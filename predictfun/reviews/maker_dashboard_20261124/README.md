@@ -17,3 +17,5 @@ Read report.md before using the pictures for a research conclusion. In particula
 2026-11-24 clock clarification: [the user-named 63c fill](fill_clock_report.md) is a recorded multi-level execution. The older 59c/61c depth snapshot was 449ms before its marker. The viewer now states the underlying snapshot time and age explicitly; refresh the page to load the wording correction. Research data and accounting are unchanged.
 
 [61c follow-up](ask61_report.md): 24.59 shares traded earlier; the subsequent 205.41-share disappearance has no overlapping recorded execution and is a likely withdrawal, conditional on the existing clock/capture assumptions. Its owner and private cancel command remain unidentified.
+
+[Maker3 first-minute turnover](first_minute_report.md): the user-observed first30s buy-low/sell-high pattern reconciles to completed passive turnover. The full minute includes losing cycles and carried inventory; its common-mark value is +$28.14 versus our simulated −$22.08. This is an illustrative selected minute, not proof of long rest or an identified posting rule.

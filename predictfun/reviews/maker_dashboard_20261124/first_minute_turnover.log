@@ -1,0 +1,285 @@
+{
+  "maker3": {
+    "windows": [
+      {
+        "start_s": 0,
+        "end_s": 15,
+        "legs": 24,
+        "taker_legs": 0,
+        "self_legs": 0,
+        "buy": {
+          "shares": 188.50900000000001,
+          "vwap_c": 56.0,
+          "min_c": 56.0,
+          "max_c": 56.0,
+          "markout_1s_c_sh": 1.819878626484677,
+          "markout_valid_sh": 188.50900000000001
+        },
+        "sell": {
+          "shares": 264.917497,
+          "vwap_c": 61.18503119482516,
+          "min_c": 58.0,
+          "max_c": 63.0,
+          "markout_1s_c_sh": -0.9071022043515684,
+          "markout_valid_sh": 264.917497
+        },
+        "fifo_closes": {
+          "shares": 188.50900000000001,
+          "gross_usd": 8.387460070000001,
+          "cents_per_matched_share": 4.449368502299625,
+          "buy_then_sell_shares": 188.50900000000001,
+          "sell_then_buy_shares": 0,
+          "hard_ordered_shares": 188.50900000000001
+        },
+        "cum_net_flow_shares": -76.408497
+      },
+      {
+        "start_s": 15,
+        "end_s": 30,
+        "legs": 15,
+        "taker_legs": 0,
+        "self_legs": 0,
+        "buy": {
+          "shares": 298.749209,
+          "vwap_c": 55.05570388974654,
+          "min_c": 52.0,
+          "max_c": 58.0,
+          "markout_1s_c_sh": 1.8801163570612165,
+          "markout_valid_sh": 298.749209
+        },
+        "sell": {
+          "shares": 202.880179,
+          "vwap_c": 59.99999999999999,
+          "min_c": 60.0,
+          "max_c": 60.0,
+          "markout_1s_c_sh": 0.9107514761212825,
+          "markout_valid_sh": 202.880179
+        },
+        "fifo_closes": {
+          "shares": 279.28867599999995,
+          "gross_usd": 15.506457789999997,
+          "cents_per_matched_share": 5.552125496846138,
+          "buy_then_sell_shares": 41.90228600000002,
+          "sell_then_buy_shares": 237.38638999999995,
+          "hard_ordered_shares": 237.38638999999995
+        },
+        "cum_net_flow_shares": 19.460533000000016
+      },
+      {
+        "start_s": 30,
+        "end_s": 45,
+        "legs": 5,
+        "taker_legs": 0,
+        "self_legs": 0,
+        "buy": {
+          "shares": 0,
+          "vwap_c": null,
+          "min_c": null,
+          "max_c": null,
+          "markout_1s_c_sh": null,
+          "markout_valid_sh": 0
+        },
+        "sell": {
+          "shares": 60.572638,
+          "vwap_c": 56.855222386054905,
+          "min_c": 51.0,
+          "max_c": 58.0,
+          "markout_1s_c_sh": 1.568041712167134,
+          "markout_valid_sh": 60.572638
+        },
+        "fifo_closes": {
+          "shares": 19.46053300000002,
+          "gross_usd": 0.973026650000001,
+          "cents_per_matched_share": 5.0,
+          "buy_then_sell_shares": 19.46053300000002,
+          "sell_then_buy_shares": 0,
+          "hard_ordered_shares": 0
+        },
+        "cum_net_flow_shares": -41.112104999999985
+      },
+      {
+        "start_s": 45,
+        "end_s": 60,
+        "legs": 7,
+        "taker_legs": 0,
+        "self_legs": 0,
+        "buy": {
+          "shares": 160.303256,
+          "vwap_c": 37.40588795651162,
+          "min_c": 37.0,
+          "max_c": 38.0,
+          "markout_1s_c_sh": 0.9950933685339491,
+          "markout_valid_sh": 160.303256
+        },
+        "sell": {
+          "shares": 171.524417,
+          "vwap_c": 35.0,
+          "min_c": 35.0,
+          "max_c": 35.0,
+          "markout_1s_c_sh": 1.5,
+          "markout_valid_sh": 171.524417
+        },
+        "fifo_closes": {
+          "shares": 160.303256,
+          "gross_usd": 5.100250749999995,
+          "cents_per_matched_share": 3.1816264231089577,
+          "buy_then_sell_shares": 119.19115100000002,
+          "sell_then_buy_shares": 41.11210499999998,
+          "hard_ordered_shares": 160.303256
+        },
+        "cum_net_flow_shares": -52.33326599999997
+      }
+    ],
+    "total": {
+      "fifo_gross_usd": 29.967195259999993,
+      "matched_shares": 647.561465,
+      "net_flow_shares": -52.33326599999997,
+      "fees_usd": 0.0,
+      "mark60_c": 38.5,
+      "residual_usd": -1.831664309999999,
+      "total_marked_usd": 28.13553095000001
+    }
+  },
+  "ours": {
+    "windows": [
+      {
+        "start_s": 0,
+        "end_s": 15,
+        "legs": 27,
+        "taker_legs": 0,
+        "self_legs": 0,
+        "buy": {
+          "shares": 110.414,
+          "vwap_c": 58.94190954045682,
+          "min_c": 58.0,
+          "max_c": 60.0,
+          "markout_1s_c_sh": -1.2404676943141268,
+          "markout_valid_sh": 110.414
+        },
+        "sell": {
+          "shares": 191.24,
+          "vwap_c": 50.47709684166492,
+          "min_c": 50.0,
+          "max_c": 51.0,
+          "markout_1s_c_sh": -8.022903158335076,
+          "markout_valid_sh": 191.24
+        },
+        "fifo_closes": {
+          "shares": 110.414,
+          "gross_usd": -9.76898,
+          "cents_per_matched_share": -8.847591790896082,
+          "buy_then_sell_shares": 0,
+          "sell_then_buy_shares": 110.414,
+          "hard_ordered_shares": 110.414
+        },
+        "cum_net_flow_shares": -80.82600000000001
+      },
+      {
+        "start_s": 15,
+        "end_s": 30,
+        "legs": 5,
+        "taker_legs": 0,
+        "self_legs": 0,
+        "buy": {
+          "shares": 35.0,
+          "vwap_c": 54.0,
+          "min_c": 51.0,
+          "max_c": 56.0,
+          "markout_1s_c_sh": 0.5,
+          "markout_valid_sh": 35.0
+        },
+        "sell": {
+          "shares": 0,
+          "vwap_c": null,
+          "min_c": null,
+          "max_c": null,
+          "markout_1s_c_sh": null,
+          "markout_valid_sh": 0
+        },
+        "fifo_closes": {
+          "shares": 35.0,
+          "gross_usd": -1.05,
+          "cents_per_matched_share": -3.0,
+          "buy_then_sell_shares": 0,
+          "sell_then_buy_shares": 35.0,
+          "hard_ordered_shares": 35.0
+        },
+        "cum_net_flow_shares": -45.826
+      },
+      {
+        "start_s": 30,
+        "end_s": 45,
+        "legs": 20,
+        "taker_legs": 0,
+        "self_legs": 0,
+        "buy": {
+          "shares": 152.927273,
+          "vwap_c": 49.41234099557899,
+          "min_c": 41.0,
+          "max_c": 57.0,
+          "markout_1s_c_sh": -2.96775650671545,
+          "markout_valid_sh": 152.927273
+        },
+        "sell": {
+          "shares": 0,
+          "vwap_c": null,
+          "min_c": null,
+          "max_c": null,
+          "markout_1s_c_sh": null,
+          "markout_valid_sh": 0
+        },
+        "fifo_closes": {
+          "shares": 45.82600000000001,
+          "gross_usd": -2.7495600000000002,
+          "cents_per_matched_share": -5.999999999999999,
+          "buy_then_sell_shares": 0,
+          "sell_then_buy_shares": 45.82600000000001,
+          "hard_ordered_shares": 45.82600000000001
+        },
+        "cum_net_flow_shares": 107.10127299999999
+      },
+      {
+        "start_s": 45,
+        "end_s": 60,
+        "legs": 24,
+        "taker_legs": 0,
+        "self_legs": 0,
+        "buy": {
+          "shares": 23.778488,
+          "vwap_c": 33.954577725884,
+          "min_c": 33.0,
+          "max_c": 38.0,
+          "markout_1s_c_sh": -0.077967488933695,
+          "markout_valid_sh": 23.778488
+        },
+        "sell": {
+          "shares": 211.749339,
+          "vwap_c": 37.84539812896418,
+          "min_c": 34.0,
+          "max_c": 39.0,
+          "markout_1s_c_sh": 0.11716467034638542,
+          "markout_valid_sh": 211.749339
+        },
+        "fifo_closes": {
+          "shares": 130.879761,
+          "gross_usd": -7.00555529,
+          "cents_per_matched_share": -5.352665099992045,
+          "buy_then_sell_shares": 107.10127299999999,
+          "sell_then_buy_shares": 23.778488,
+          "hard_ordered_shares": 130.879761
+        },
+        "cum_net_flow_shares": -80.869578
+      }
+    ],
+    "total": {
+      "fifo_gross_usd": -20.57409529,
+      "matched_shares": 322.119761,
+      "net_flow_shares": -80.869578,
+      "fees_usd": 0.0,
+      "mark60_c": 38.5,
+      "residual_usd": -1.50986266,
+      "total_marked_usd": -22.083957950000013
+    }
+  }
+}
+2026-11-24T11:02:29Z tag=mt_dash_first_minute rc=0 peak_rss_mib=41 wall_s=0.16 cpu_user_s=0.13 memavail_start_gib=22 disk_free_gib=415->415 slot=codex
