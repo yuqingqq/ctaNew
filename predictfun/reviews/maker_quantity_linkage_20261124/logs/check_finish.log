@@ -1,0 +1,56 @@
+verified market 20261024 3697902 CPU 0.601
+verified market 20261024 3699278 CPU 1.448
+verified market 20261024 3700070 CPU 1.874
+verified market 20261024 3702960 CPU 2.254
+verified market 20261024 3704004 CPU 3.16
+verified market 20261024 3712725 CPU 3.807
+verified market 20261024 3716727 CPU 4.606
+verified market 20261025 3723774 CPU 5.065
+verified market 20261025 3734864 CPU 5.853
+verified market 20261025 3737919 CPU 6.7
+verified market 20261025 3763401 CPU 8.306
+verified market 20261026 3789484 CPU 8.901
+verified market 20261026 3803131 CPU 9.72
+verified market 20261026 3804696 CPU 10.317
+verified market 20261026 3838531 CPU 11.578
+verified market 20261026 3850428 CPU 12.379
+verified market 20261027 3877472 CPU 13.871
+verified market 20261027 3899224 CPU 14.835
+{
+  "pass_all": true,
+  "raw": {
+    "orders": 88,
+    "raw_events": 152,
+    "statuses": {
+      "exhausted_by_observed_fills": 41,
+      "unresolved_remainder": 47
+    },
+    "successor_grades": {
+      "no_recorded_successor": 39,
+      "overlap_possible": 10,
+      "later_order_after_exhaustion_command_unidentified": 14,
+      "unresolved_replacement_or_parallel_order": 25
+    },
+    "pass": true
+  },
+  "ledger_events": 152,
+  "orders": 88,
+  "relations": 880,
+  "normalized_points": 550102,
+  "book_edges": 5236,
+  "joint_conflicts": 0,
+  "falsifiers": {
+    "original_reset": "ledger amounts",
+    "double_count": "ledger amounts",
+    "wrong_remaining": "ledger amounts",
+    "duplicate_event": "ledger membership",
+    "omitted_order": "bounds population",
+    "invented_post": "bounds post_A_lo",
+    "invented_pull": "unsupported pull",
+    "exhausted_pull": "unsupported pull",
+    "wrong_clock": "bounds post_hi_unchanged",
+    "wrong_grade": "bounds bound_status"
+  },
+  "cpu_seconds": 14.862462943
+}
+2026-11-24T03:51:01Z tag=mt_qty_check_finish rc=0 peak_rss_mib=380 wall_s=15.24 cpu_user_s=14.60 memavail_start_gib=22 disk_free_gib=415->415 slot=codex

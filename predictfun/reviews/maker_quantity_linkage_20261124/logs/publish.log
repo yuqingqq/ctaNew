@@ -1,0 +1,30 @@
+ predictfun/FINDINGS.md                             |  13 +
+ predictfun/HANDOFF.md                              |  13 +
+ predictfun/STATUS.yml                              |  21 ++
+ .../maker_quantity_linkage_20261124/SHA256SUMS     |  66 +++++
+ .../maker_quantity_linkage_20261124/checks.json    |  37 +++
+ .../chronology_annotation.csv                      |  15 ++
+ .../commit_scope.json                              |  46 ++++
+ .../descriptive.json                               |  27 ++
+ .../finalize_publication.py                        |  26 ++
+ .../logs/check_finish.log                          |  56 ++++
+ .../logs/publish.log                               |   0
+ .../logs/readout.log                               |  29 +++
+ .../logs/report.log                                |  28 ++
+ .../outputs/book_edges.csv.gz                      | Bin 0 -> 97840 bytes
+ .../outputs/chain_bounds.csv                       |  89 +++++++
+ .../outputs/joint_conflicts.csv                    |   1 +
+ .../outputs/normalization.json                     | 287 +++++++++++++++++++++
+ .../outputs/order_ledger.csv                       | 153 +++++++++++
+ .../outputs/order_summary.csv                      |  89 +++++++
+ .../outputs/relation_edges.csv.gz                  | Bin 0 -> 8138 bytes
+ .../outputs/result.json                            |  74 ++++++
+ .../maker_quantity_linkage_20261124/publish.py     |  62 +++++
+ .../maker_quantity_linkage_20261124/readout.json   |  28 ++
+ .../maker_quantity_linkage_20261124/report.md      |  58 +++++
+ .../state_blocks.json                              |   6 +
+ .../write_report.py                                | 114 ++++++++
+ predictfun/reviews/maker_trace_20261122/PENDING.md |  13 +
+ 27 files changed, 1351 insertions(+)
+
+2026-11-24T03:55:14Z tag=mt_qty_publish rc=0 peak_rss_mib=20 wall_s=0.25 cpu_user_s=0.13 memavail_start_gib=22 disk_free_gib=415->415 slot=codex

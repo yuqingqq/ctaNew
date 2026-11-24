@@ -1,0 +1,27 @@
+{
+  "record_groups": 152,
+  "match_candidates_per_group": {
+    "multiple": 138,
+    "one": 14
+  },
+  "book_edge_kinds": {
+    "match_reflection_candidate": 1022,
+    "unattributed_add_or_restore": 3179,
+    "unexplained_drop_candidate": 1035
+  },
+  "refined_by_source_group": {
+    "conditional_withdrawal": {
+      "n": 40,
+      "narrowed": 20
+    },
+    "exhausted": {
+      "n": 41,
+      "narrowed": 0
+    },
+    "unresolved": {
+      "n": 7,
+      "narrowed": 0
+    }
+  },
+  "cpu_seconds_as_of_report": 62.22
+}

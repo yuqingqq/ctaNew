@@ -1,0 +1,37 @@
+{
+  "pass_all": true,
+  "raw": {
+    "orders": 88,
+    "raw_events": 152,
+    "statuses": {
+      "exhausted_by_observed_fills": 41,
+      "unresolved_remainder": 47
+    },
+    "successor_grades": {
+      "no_recorded_successor": 39,
+      "overlap_possible": 10,
+      "later_order_after_exhaustion_command_unidentified": 14,
+      "unresolved_replacement_or_parallel_order": 25
+    },
+    "pass": true
+  },
+  "ledger_events": 152,
+  "orders": 88,
+  "relations": 880,
+  "normalized_points": 550102,
+  "book_edges": 5236,
+  "joint_conflicts": 0,
+  "falsifiers": {
+    "original_reset": "ledger amounts",
+    "double_count": "ledger amounts",
+    "wrong_remaining": "ledger amounts",
+    "duplicate_event": "ledger membership",
+    "omitted_order": "bounds population",
+    "invented_post": "bounds post_A_lo",
+    "invented_pull": "unsupported pull",
+    "exhausted_pull": "unsupported pull",
+    "wrong_clock": "bounds post_hi_unchanged",
+    "wrong_grade": "bounds bound_status"
+  },
+  "cpu_seconds": 14.862462943
+}

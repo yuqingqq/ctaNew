@@ -1,4 +1,25 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+quantity_linkage_20261124_codex:
+  report: predictfun/reviews/maker_quantity_linkage_20261124/report.md
+  stage: normalized_R01_R10_built_independently_verified
+  orders: 88
+  raw_events: 152
+  normalized_points_checked: 550102
+  orders_with_conditional_refinement: 20
+  posting_weaker_A_refinements: 0
+  posting_original_size_B_refinements: 10
+  conditional_ending_refinements: 17
+  private_pulls_identified: 0
+  exhausted_controls: 41
+  conditional_withdrawal_candidates: 40
+  unresolved_orders: 7
+  reversal_chronology_changed: false
+  next_priority: same_88_availability_at_competing_executions_and_successor_timing_R11_R16
+  no_new_model_profitability_or_validation_claim: true
+  local_packet_cap_coreh: 0.022
+  task_cap_coreh: 2.00
+  line_cap_coreh: 5.30
+  standing_reserve_coreh: 0.05
 indirect_relations_20261124_codex:
   plan: predictfun/reviews/maker_indirect_relations_20261124/plan.md
   stage: design_catalog_complete_measurement_pending

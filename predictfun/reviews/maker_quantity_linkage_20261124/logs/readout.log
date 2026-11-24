@@ -1,0 +1,29 @@
+{
+  "post_A": {
+    "n": 79,
+    "n_narrowed": 0,
+    "old_median_s": 3.86,
+    "new_median_s": 3.86,
+    "max_reduction_s": 0.0
+  },
+  "post_B": {
+    "n": 79,
+    "n_narrowed": 10,
+    "old_median_s": 3.86,
+    "new_median_s": 3.054,
+    "max_reduction_s": 155.755
+  },
+  "end": {
+    "n": 40,
+    "n_narrowed": 17,
+    "old_median_s": 3.161,
+    "new_median_s": 3.0685000000000002,
+    "max_reduction_s": 17.274999999999995
+  },
+  "chronology_rows": 14,
+  "chronology_changed": 0,
+  "chronology_orders": 4,
+  "chronology_source_sha": "34e7b4ff8c760c1f71b65220d415ba6771800603db81db55a2ca4ccb0f281e94",
+  "repeated_fill_orders": 25
+}
+2026-11-24T03:51:35Z tag=mt_qty_readout rc=0 peak_rss_mib=17 wall_s=0.03 cpu_user_s=0.02 memavail_start_gib=22 disk_free_gib=415->415 slot=codex

@@ -23,6 +23,19 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- QUANTITY_LINKAGE_20261124_CODEX -->
+## 2026-11-24 — normalized indirect linkage built and verified
+
+[Report](reviews/maker_quantity_linkage_20261124/report.md). USER build/verify instruction fulfilled for the first R01–R10 packet: all88 signed hashes/152 raw events,18 markets on consumed Oct24–27. Full independent check passes (550,102 normalized points,5,236 book edges,880 relation rows);21 synthetic controls and10 corruption refusals. Partial fills consume one immutable signed budget;25 hashes have repeated fills.41 exhausted controls,40 conditional withdrawal candidates,7 unresolved remain distinct.
+
+20 orders gain conditional timing information: posting B10/79 (full original size/coverage/full display premise); weaker future-fill posting A0/79; ending17/40. Median post width3.860→3.054s only in B; ending3.161→3.0685s. Posting upper bounds unchanged; no private pulls identified. Three reversal-compatible orders still have uncertain post-before-reversal chronology; fourth timing-only hit is before earliest post. No new behavioural/profitability result. Failed settlement stream, pending per-order allocation, private withdrawals remain unknown.
+
+All resource refusals and watchdog stops retained/charged. Recovery reuses hash-bound normalized cells; independent checker verifies every cell against raw input. Verification-only packet allowance .022coreh under standing CPU authorization, unchanged task2.00/line5.30/.05reserve; final ledger in packet. Future jobs checkpoint markets and project cell multiplicity. No external messaging/push.
+
+ONE next priority: availability at competing executions and successor timing (R11–R16) across same88; distinguish reserved/exhausted/conditionally absent and sequential replenishment vs overlapping ladder. Freeze physical bounds before condition annotation. Count/runtime gate within remaining authorization; no tuned variant/new days/live use. Minor unused auxiliary edge fields deferred.
+<!-- /QUANTITY_LINKAGE_20261124_CODEX -->
+
+
 <!-- INDIRECT_RELATIONS_20261124_CODEX -->
 ## 2026-11-24 — USER: normalize, enumerate indirect relations, then connect events
 
