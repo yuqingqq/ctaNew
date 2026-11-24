@@ -1,0 +1,31 @@
+         4790414 function calls (4768739 primitive calls) in 2.255 seconds
+
+   Ordered by: cumulative time
+   List reduced from 1195 to 22 due to restriction <22>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.010    0.010    2.255    2.255 build.py:113(market)
+        1    0.080    0.080    1.894    1.894 build.py:93(normalized_book)
+        1    0.049    0.049    1.026    1.026 pf_mt_lifecycle.py:198(_book)
+    23944    0.021    0.000    0.848    0.000 generic.py:6191(__getattr__)
+    23919    0.043    0.000    0.602    0.000 frame.py:4337(__getitem__)
+    23911    0.014    0.000    0.495    0.000 frame.py:4966(_get_item)
+    24096    0.013    0.000    0.470    0.000 frame.py:4292(_ixs)
+    24096    0.028    0.000    0.312    0.000 frame.py:4954(_box_col_values)
+    43913    0.112    0.000    0.225    0.000 array.py:722(__getitem__)
+    23911    0.021    0.000    0.219    0.000 base.py:5446(_can_hold_identifiers_and_holds_name)
+    23668    0.038    0.000    0.213    0.000 pf_mt_lifecycle.py:154(_pend)
+       64    0.172    0.003    0.172    0.003 {method 'copy' of 'numpy.ndarray' objects}
+       14    0.000    0.000    0.166    0.012 generic.py:6560(copy)
+       19    0.000    0.000    0.166    0.009 managers.py:396(apply)
+       14    0.000    0.000    0.166    0.012 managers.py:718(copy)
+       90    0.000    0.000    0.165    0.002 blocks.py:639(copy)
+        1    0.000    0.000    0.149    0.149 build.py:25(write)
+    24096    0.062    0.000    0.145    0.000 managers.py:1205(iget)
+     1585    0.001    0.000    0.140    0.000 ops.py:615(get_iterator)
+     1585    0.001    0.000    0.138    0.000 ops.py:1247(__iter__)
+     1584    0.009    0.000    0.137    0.000 ops.py:1276(_chop)
+1333839/1333781    0.123    0.000    0.125    0.000 {built-in method builtins.isinstance}
+
+
+2026-11-24T03:43:39Z tag=mt_qty_profile_pilot rc=0 peak_rss_mib=272 wall_s=2.64 cpu_user_s=2.25 memavail_start_gib=22 disk_free_gib=415->415 slot=codex
