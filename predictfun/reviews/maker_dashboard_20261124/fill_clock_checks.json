@@ -1,0 +1,11 @@
+{
+  "checks_pass": true,
+  "corruptions_refused": 4,
+  "first_record_shares": 200,
+  "at_62_shares": 45,
+  "at_63_shares": 155,
+  "second_record_63_shares": 5,
+  "display_book_update_s": 8.494,
+  "display_age_ms": 449,
+  "payload_sha256": "02f54439174638ae5dc304886a49366f680418c2c44a8b85e5c105009a197640"
+}

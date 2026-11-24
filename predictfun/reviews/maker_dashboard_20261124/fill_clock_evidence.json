@@ -1,0 +1,382 @@
+{
+  "fills": [
+    {
+      "id": 32,
+      "t": 8.943,
+      "lo": 6.943,
+      "rank": 3,
+      "role": "maker",
+      "hash": "0x70d3ee3a032dca76f47697efb402735c8467c4823c0b11bc3d932610dddca13c",
+      "sid": "01a175c1-f92f-7443-b3c0-213b695326ac",
+      "mk_idx": 0,
+      "side": 1,
+      "price": 63.0,
+      "q": 155.0,
+      "fee": -0.0,
+      "self_trade": false,
+      "post": [
+        1.601,
+        8.943
+      ],
+      "post_grade": "G2_bound_constrained",
+      "original_size": null,
+      "markouts": {
+        "1s": -0.5,
+        "10s": 3.5,
+        "60s": 28.5
+      },
+      "end_value": 6.975,
+      "presence": {
+        "CURRENT_ASYNC_FAST10": {
+          "same": "none",
+          "equal_or_better": "none"
+        },
+        "FRONT_ASYNC_FAST10": {
+          "same": "partial",
+          "equal_or_better": "partial"
+        }
+      }
+    },
+    {
+      "id": 34,
+      "t": 8.954,
+      "lo": 6.954,
+      "rank": 3,
+      "role": "maker",
+      "hash": "0x70d3ee3a032dca76f47697efb402735c8467c4823c0b11bc3d932610dddca13c",
+      "sid": "01a175c1-f93a-72a2-b271-fdd992663bd2",
+      "mk_idx": 0,
+      "side": 1,
+      "price": 63.0,
+      "q": 5.0,
+      "fee": -0.0,
+      "self_trade": false,
+      "post": [
+        1.601,
+        8.943
+      ],
+      "post_grade": "G2_bound_constrained",
+      "original_size": null,
+      "markouts": {
+        "1s": -0.5,
+        "10s": 3.5,
+        "60s": 28.5
+      },
+      "end_value": 0.225,
+      "presence": {
+        "CURRENT_ASYNC_FAST10": {
+          "same": "none",
+          "equal_or_better": "none"
+        },
+        "FRONT_ASYNC_FAST10": {
+          "same": "partial",
+          "equal_or_better": "partial"
+        }
+      }
+    }
+  ],
+  "life": [
+    {
+      "mid": 3789484,
+      "sid": "01a175c1-f92f-7443-b3c0-213b695326ac",
+      "mk_hash": "0x70d3ee3a032dca76f47697efb402735c8467c4823c0b11bc3d932610dddca13c",
+      "mk_idx": 0,
+      "y_side": "ask",
+      "y_ptick": 63,
+      "shares": 155.0,
+      "hi_ms": 1792977008943,
+      "lo_ms": 1792977007645,
+      "t_method": "book_drop",
+      "f_before": 728,
+      "f_after": 754,
+      "status": "ok",
+      "x_evidence_fid": 729,
+      "x_drop_fid": 729,
+      "x_lo_exact_ms": 1792977008867,
+      "x_lo_hard_ms": 1792977006943,
+      "x_rec_rank": 197,
+      "x_exh_price": false,
+      "x_worst_k": 0,
+      "x_exh_S_FIFO": false,
+      "x_exh_S_FIFO_LO": false,
+      "x_ahead_lo_S_FIFO": 0.0,
+      "x_ahead_lo_S_FIFO_LO": 0.0,
+      "x_ahead_hi_S_FIFO": 463.0,
+      "x_ahead_hi_S_FIFO_LO": 468.0
+    },
+    {
+      "mid": 3789484,
+      "sid": "01a175c1-f93a-72a2-b271-fdd992663bd2",
+      "mk_hash": "0x70d3ee3a032dca76f47697efb402735c8467c4823c0b11bc3d932610dddca13c",
+      "mk_idx": 0,
+      "y_side": "ask",
+      "y_ptick": 63,
+      "shares": 5.0,
+      "hi_ms": 1792977008954,
+      "lo_ms": 1792977007044,
+      "t_method": "book_drop",
+      "f_before": 716,
+      "f_after": 755,
+      "status": "ok",
+      "x_evidence_fid": 717,
+      "x_drop_fid": 717,
+      "x_lo_exact_ms": 1792977008943,
+      "x_lo_hard_ms": 1792977006954,
+      "x_rec_rank": 198,
+      "x_exh_price": false,
+      "x_worst_k": 0,
+      "x_exh_S_FIFO": false,
+      "x_exh_S_FIFO_LO": false,
+      "x_ahead_lo_S_FIFO": 0.0,
+      "x_ahead_lo_S_FIFO_LO": 0.0,
+      "x_ahead_hi_S_FIFO": 453.0,
+      "x_ahead_hi_S_FIFO_LO": 453.0
+    }
+  ],
+  "frames": [
+    {
+      "fid": 741,
+      "venue_s": 8.301,
+      "receipt_s": 8.423362548828125,
+      "bid": 59,
+      "ask": 60,
+      "ask_shares": {
+        "60": 28.0,
+        "61": 340.0,
+        "62": 526.0,
+        "63": 601.0,
+        "64": 443.0
+      },
+      "pending_asks": "[]",
+      "status": "ok"
+    },
+    {
+      "fid": 742,
+      "venue_s": 8.348,
+      "receipt_s": 8.479012939453124,
+      "bid": 59,
+      "ask": 60,
+      "ask_shares": {
+        "60": 28.0,
+        "61": 340.0,
+        "62": 646.0,
+        "63": 601.0,
+        "64": 443.0
+      },
+      "pending_asks": "[]",
+      "status": "ok"
+    },
+    {
+      "fid": 743,
+      "venue_s": 8.387,
+      "receipt_s": 8.53637646484375,
+      "bid": 59,
+      "ask": 60,
+      "ask_shares": {
+        "60": 33.0,
+        "61": 340.0,
+        "62": 646.0,
+        "63": 541.0,
+        "64": 443.0
+      },
+      "pending_asks": "[]",
+      "status": "ok"
+    },
+    {
+      "fid": 744,
+      "venue_s": 8.443,
+      "receipt_s": 8.594423828125,
+      "bid": 59,
+      "ask": 60,
+      "ask_shares": {
+        "60": 33.0,
+        "61": 60.0,
+        "62": 466.0,
+        "63": 459.0,
+        "64": 463.0
+      },
+      "pending_asks": "[]",
+      "status": "ok"
+    },
+    {
+      "fid": 745,
+      "venue_s": 8.494,
+      "receipt_s": 8.654544677734375,
+      "bid": 59,
+      "ask": 61,
+      "ask_shares": {
+        "61": 60.0,
+        "62": 406.0,
+        "63": 519.0,
+        "64": 463.0
+      },
+      "pending_asks": "[]",
+      "status": "ok"
+    },
+    {
+      "fid": 746,
+      "venue_s": 8.539,
+      "receipt_s": 8.654908203125,
+      "bid": 60,
+      "ask": 61,
+      "ask_shares": {
+        "61": 205.4098360656,
+        "62": 466.0,
+        "63": 511.0,
+        "64": 353.0
+      },
+      "pending_asks": "[]",
+      "status": "ok"
+    },
+    {
+      "fid": 747,
+      "venue_s": 8.592,
+      "receipt_s": 8.7097578125,
+      "bid": 59,
+      "ask": 62,
+      "ask_shares": {
+        "62": 255.0,
+        "63": 461.0,
+        "64": 341.0
+      },
+      "pending_asks": "[]",
+      "status": "ok"
+    },
+    {
+      "fid": 748,
+      "venue_s": 8.644,
+      "receipt_s": 8.76741455078125,
+      "bid": 61,
+      "ask": 62,
+      "ask_shares": {
+        "62": 45.0,
+        "63": 270.0,
+        "64": 341.0
+      },
+      "pending_asks": "[]",
+      "status": "ok"
+    },
+    {
+      "fid": 749,
+      "venue_s": 8.698,
+      "receipt_s": 8.821599853515625,
+      "bid": 61,
+      "ask": 62,
+      "ask_shares": {
+        "62": 45.0,
+        "63": 270.0,
+        "64": 341.0
+      },
+      "pending_asks": "[]",
+      "status": "ok"
+    },
+    {
+      "fid": 750,
+      "venue_s": 8.728,
+      "receipt_s": 8.87486181640625,
+      "bid": 61,
+      "ask": 62,
+      "ask_shares": {
+        "62": 45.0,
+        "63": 270.0,
+        "64": 341.0
+      },
+      "pending_asks": "[]",
+      "status": "ok"
+    },
+    {
+      "fid": 751,
+      "venue_s": 8.795,
+      "receipt_s": 8.942720703125,
+      "bid": 61,
+      "ask": 62,
+      "ask_shares": {
+        "62": 45.0,
+        "63": 270.0,
+        "64": 341.0
+      },
+      "pending_asks": "[]",
+      "status": "ok"
+    },
+    {
+      "fid": 752,
+      "venue_s": 8.843,
+      "receipt_s": 8.999330810546875,
+      "bid": 61,
+      "ask": 62,
+      "ask_shares": {
+        "62": 45.0,
+        "63": 381.0,
+        "64": 591.0
+      },
+      "pending_asks": "[]",
+      "status": "ok"
+    },
+    {
+      "fid": 753,
+      "venue_s": 8.867,
+      "receipt_s": 8.99967724609375,
+      "bid": 61,
+      "ask": 62,
+      "ask_shares": {
+        "62": 45.0,
+        "63": 381.0,
+        "64": 591.0
+      },
+      "pending_asks": "[]",
+      "status": "ok"
+    },
+    {
+      "fid": 754,
+      "venue_s": 8.943,
+      "receipt_s": 9.0533076171875,
+      "bid": 61,
+      "ask": 63,
+      "ask_shares": {
+        "63": 226.0,
+        "64": 591.0
+      },
+      "pending_asks": "[]",
+      "status": "ok"
+    },
+    {
+      "fid": 755,
+      "venue_s": 8.999,
+      "receipt_s": 9.106755859375,
+      "bid": 62,
+      "ask": 63,
+      "ask_shares": {
+        "63": 221.0,
+        "64": 651.0
+      },
+      "pending_asks": "[]",
+      "status": "ok"
+    },
+    {
+      "fid": 756,
+      "venue_s": 9.043,
+      "receipt_s": 9.1609765625,
+      "bid": 62,
+      "ask": 63,
+      "ask_shares": {
+        "63": 251.0,
+        "64": 671.0
+      },
+      "pending_asks": "[]",
+      "status": "ok"
+    },
+    {
+      "fid": 757,
+      "venue_s": 9.076,
+      "receipt_s": 9.22338330078125,
+      "bid": 62,
+      "ask": 63,
+      "ask_shares": {
+        "63": 251.0,
+        "64": 721.0
+      },
+      "pending_asks": "[]",
+      "status": "ok"
+    }
+  ]
+}

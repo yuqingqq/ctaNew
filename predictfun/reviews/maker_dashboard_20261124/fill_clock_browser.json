@@ -1,0 +1,6 @@
+{
+  "errors": [],
+  "state": "Cursor 8.943 s · depth display sample 8.500 s\nUnderlying book update: 8.494 s (449 ms before cursor).\nHistorical depth, not an execution-time snapshot. The price chart samples every 100 ms; depth samples every 500 ms.\nOur venue inventory: -80.8 sh · known: -80.8 sh\nInventory mode: short restricted",
+  "detail": "Maker #3 · Ask 63¢\nThis fill\n155.000 shares\nHard match window\n6.943–8.943 s\nSettlement upper bound\n8.943 s\nInferred post window\n1.601–8.943 s\nPosting evidence\nG2 bound constrained\nSigned original size\nNot in this packet\nSame hash, shown interval\n2 fills · 160.00 sh\nOur quote at same price\nnone\nOur quote equal / better\nnone\n1 s gross markout\n-0.50 ¢/sh\n10 s / 60 s\n3.50 / 28.50 ¢/sh\nContribution at END\n$6.98\nThe marker is the settlement upper bound, not an exact match time. The depth panel can show an older sample; a buyer may also consume several ask levels in one trade. The post window is a scenario estimate, not an observed command. No maker pull or queue-front rank is identified. Quote presence is evaluated over the whole hard match window.\n0x70d3ee3a032dca76f47697efb402735c8467c4823c0b11bc3d932610dddca13c\nOur inventory during window\n-80.8 to -80.8 sh\nOur slot WAIT reasons\nrestricted\n\nSame-order fills:\n\n8.94 s · 155.0 sh 8.95 s · 5.0 sh",
+  "overflow": false
+}
