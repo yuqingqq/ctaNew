@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker_dashboard_20261124/check_v2.py", line 90, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker_dashboard_20261124/check_v2.py", line 61, in main
+    check_arm(m,a,raw[label],z);seen['arms']+=1;seen['fills']+=len(a['fills']);seen['orders']+=len(a['orders'])
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker_dashboard_20261124/check_v2.py", line 18, in check_arm
+    require(near(cash,raw['cash']) and near(pos,raw['position']),'cash inventory')
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker_dashboard_20261124/check_v2.py", line 11, in require
+    if not ok:raise ValueError(msg)
+              ^^^^^^^^^^^^^^^^^^^^^
+ValueError: cash inventory
+2026-11-24T05:58:59Z tag=mt_dash_check_v2 rc=1 peak_rss_mib=71 wall_s=1.01 cpu_user_s=0.80 memavail_start_gib=22 disk_free_gib=418->418 slot=codex

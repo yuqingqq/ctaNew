@@ -1,0 +1,3 @@
+# Checker precision amendment
+
+v2 failed the cash-sum check because the frozen compact frontend payload rounds each share quantity to six decimals. It had required a fixed 0.00002-cent tolerance on their sum. v3 uses the exact rounding-error upper bound: sum(price)*0.500001e-6 cents for cash, n*0.500001e-6 shares for position, and sum(abs(mark-price))*0.500001e-8 USD plus the final-value display rounding for END. Per-row source checks remain unchanged. This is a display check, not an accounting correction: extraction reconciled full-precision raw fills first. No source or projected data changed. Other checks and planted corruptions are unchanged. v2 failure remains in logs.
