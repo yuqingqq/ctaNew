@@ -1,0 +1,46 @@
+{
+  "order_table": [
+    {
+      "grade": "G2_bound_constrained",
+      "orders": 1774,
+      "valued_orders": 1553,
+      "good_aggregate_orders": 502,
+      "first_age_lower_all_zero": true,
+      "median_age_upper_s": 9.614,
+      "upper_le1": 1,
+      "upper_le5": 142,
+      "upper_le10": 258,
+      "upper_le30": 395,
+      "upper_gt30": 107
+    },
+    {
+      "grade": "G4_scenario_only",
+      "orders": 1800,
+      "valued_orders": 1316,
+      "good_aggregate_orders": 428,
+      "first_age_lower_all_zero": true,
+      "median_age_upper_s": 1.9609999999999999,
+      "upper_le1": 94,
+      "upper_le5": 325,
+      "upper_le10": 363,
+      "upper_le30": 391,
+      "upper_gt30": 37
+    }
+  ],
+  "good_fills": 19,
+  "good_orders": 14,
+  "good_days": {
+    "20261024": 5,
+    "20261025": 5,
+    "20261026": 4,
+    "20261027": 5
+  },
+  "all_good_min_lt5": true,
+  "good_min_gt0": 1,
+  "upper_le1": 4,
+  "upper_le5": 10,
+  "all_comparisons_insufficient": true
+}
+
+positive minimum examples: [{'day': '20261027', 'mid': '3877472', 'rank': '1', 'side': 'ask', 'price_c': '59', 'order_hash': '0xddd8ab1d85e704a84aad728770ddc1bed353830e6692fe2b14fdbfde8f827df9', 'sid': '01a17e65-5574-7e60-860a-feebac60d983', 'mk_idx': '0', 'grade': 'G4_scenario_only', 'record_class': 'later_record_time', 'age_min_s': '1.484', 'age_max_s': '9.409', 'shares': 3.389830508474576, 'gross10_c_share': 9.499999999999996, 'gross60_c_share': 7.499999999999995}]
+2026-11-24T05:36:51Z tag=mt_age_summary rc=0 peak_rss_mib=22 wall_s=0.06 cpu_user_s=0.04 memavail_start_gib=22 disk_free_gib=419->419 slot=codex

@@ -1,0 +1,43 @@
+{
+  "order_table": [
+    {
+      "grade": "G2_bound_constrained",
+      "orders": 1774,
+      "valued_orders": 1553,
+      "good_aggregate_orders": 502,
+      "first_age_lower_all_zero": true,
+      "median_age_upper_s": 9.614,
+      "upper_le1": 1,
+      "upper_le5": 142,
+      "upper_le10": 258,
+      "upper_le30": 395,
+      "upper_gt30": 107
+    },
+    {
+      "grade": "G4_scenario_only",
+      "orders": 1800,
+      "valued_orders": 1316,
+      "good_aggregate_orders": 428,
+      "first_age_lower_all_zero": true,
+      "median_age_upper_s": 1.9609999999999999,
+      "upper_le1": 94,
+      "upper_le5": 325,
+      "upper_le10": 363,
+      "upper_le30": 391,
+      "upper_gt30": 37
+    }
+  ],
+  "good_fills": 19,
+  "good_orders": 14,
+  "good_days": {
+    "20261024": 5,
+    "20261025": 5,
+    "20261026": 4,
+    "20261027": 5
+  },
+  "all_good_min_lt5": true,
+  "good_min_gt0": 1,
+  "upper_le1": 4,
+  "upper_le5": 10,
+  "all_comparisons_insufficient": true
+}

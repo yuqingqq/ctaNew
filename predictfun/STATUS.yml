@@ -1,4 +1,14 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+fill_age_20261124_codex:
+  report: predictfun/reviews/maker_fill_age_20261124/report.md
+  stage: conditional_posting_lead_and_fill_quality_checked
+  full_order_census: 4149
+  exact_top3_fill_subset: 199
+  timing_and_common_value_fills: 87
+  good10_and60_fills: 19
+  matched_early_recent_strata: 0
+  required_posting_lead_identified: false
+  next_priority: full_same_hash_fill_sequence_age_value_census_with_resource_gate
 partial_choices_20261124_codex:
   report: predictfun/reviews/maker_partial_choices_20261124/report.md
   stage: checked_partial_chains_and_observed_quote_choices

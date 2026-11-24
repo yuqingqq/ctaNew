@@ -1,0 +1,44 @@
+{
+  "runs": [
+    {
+      "t": "2026-11-24T05:34:29Z",
+      "tag": "mt_age_freeze",
+      "rc": "0",
+      "cpu_s": 0.06
+    },
+    {
+      "t": "2026-11-24T05:34:38Z",
+      "tag": "mt_age_run",
+      "rc": "0",
+      "cpu_s": 0.28
+    },
+    {
+      "t": "2026-11-24T05:35:07Z",
+      "tag": "mt_age_check",
+      "rc": "0",
+      "cpu_s": 0.28
+    },
+    {
+      "t": "2026-11-24T05:36:51Z",
+      "tag": "mt_age_summary",
+      "rc": "0",
+      "cpu_s": 0.04
+    },
+    {
+      "t": "2026-11-24T05:37:17Z",
+      "tag": "mt_age_publish",
+      "rc": "0",
+      "cpu_s": 0.13
+    }
+  ],
+  "measured_before_finalizer_seconds": 0.79,
+  "finalizer_conservative_seconds": 0.25,
+  "packet_upper_coreh": 0.0002888888888888889,
+  "packet_cap_coreh": 0.0008,
+  "task_upper_coreh": 1.9385666666666665,
+  "line_upper_coreh": 5.249266666666667,
+  "standing_reserve_coreh": 0.05,
+  "task_cap_coreh": 2,
+  "line_cap_coreh": 5.3,
+  "within_caps": true
+}

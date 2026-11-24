@@ -1,0 +1,22 @@
+[
+  {
+    "grade": "G2_bound_constrained",
+    "early": 0,
+    "recent": 0,
+    "common_markets": 0,
+    "common_strata": 0,
+    "matched_difference": null,
+    "p_exploratory": null,
+    "verdict": "insufficient"
+  },
+  {
+    "grade": "G4_scenario_only",
+    "early": 0,
+    "recent": 0,
+    "common_markets": 0,
+    "common_strata": 0,
+    "matched_difference": null,
+    "p_exploratory": null,
+    "verdict": "insufficient"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "asof": "2026-11-24T05:34:38Z",
+  "orders": 4149,
+  "source_fill_rows": 1725,
+  "unique_fills": 1725,
+  "duplicates": 0,
+  "status": {
+    "outside_top3_post_census": 1526,
+    "ok": 153,
+    "refused_post": 46
+  },
+  "matched": [
+    {
+      "grade": "G2_bound_constrained",
+      "early": 0,
+      "recent": 0,
+      "common_markets": 0,
+      "common_strata": 0,
+      "matched_difference": null,
+      "p_exploratory": null,
+      "verdict": "insufficient"
+    },
+    {
+      "grade": "G4_scenario_only",
+      "early": 0,
+      "recent": 0,
+      "common_markets": 0,
+      "common_strata": 0,
+      "matched_difference": null,
+      "p_exploratory": null,
+      "verdict": "insufficient"
+    }
+  ]
+}

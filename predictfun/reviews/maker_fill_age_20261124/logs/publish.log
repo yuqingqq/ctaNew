@@ -1,0 +1,26 @@
+ predictfun/FINDINGS.md                             |    9 +
+ predictfun/HANDOFF.md                              |    9 +
+ predictfun/STATUS.yml                              |   10 +
+ .../reviews/maker_fill_age_20261124/SHA256SUMS     |   23 +
+ .../reviews/maker_fill_age_20261124/cells.csv      |   41 +
+ .../reviews/maker_fill_age_20261124/checks.json    |   15 +
+ .../maker_fill_age_20261124/commit_scope.json      |   46 +
+ .../reviews/maker_fill_age_20261124/draws.csv      | 1001 ++++++++++++++++++++
+ .../reviews/maker_fill_age_20261124/fills.csv.gz   |  Bin 0 -> 107337 bytes
+ .../good_fill_intervals.csv                        |   20 +
+ .../reviews/maker_fill_age_20261124/logs/check.log |    2 +
+ .../maker_fill_age_20261124/logs/publish.log       |    0
+ .../reviews/maker_fill_age_20261124/logs/run.log   |  247 +++++
+ .../maker_fill_age_20261124/logs/summary.log       |   46 +
+ .../reviews/maker_fill_age_20261124/matched.json   |   22 +
+ .../reviews/maker_fill_age_20261124/orders.csv.gz  |  Bin 0 -> 250844 bytes
+ .../reviews/maker_fill_age_20261124/publish.py     |   62 ++
+ .../reviews/maker_fill_age_20261124/readings.json  |   43 +
+ .../reviews/maker_fill_age_20261124/report.md      |   58 ++
+ .../reviews/maker_fill_age_20261124/result.json    |   34 +
+ .../maker_fill_age_20261124/state_blocks.json      |    6 +
+ .../reviews/maker_fill_age_20261124/summarize.py   |   78 ++
+ predictfun/reviews/maker_trace_20261122/PENDING.md |    9 +
+ 23 files changed, 1781 insertions(+)
+
+2026-11-24T05:37:17Z tag=mt_age_publish rc=0 peak_rss_mib=20 wall_s=0.25 cpu_user_s=0.13 memavail_start_gib=22 disk_free_gib=419->419 slot=codex

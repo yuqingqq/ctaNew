@@ -1,0 +1,15 @@
+{
+  "pass_all": true,
+  "falsifiers": [
+    "age_max_s",
+    "gross10_usd",
+    "good_fill",
+    "private_queue_continuity",
+    "grade",
+    "duplicate"
+  ],
+  "source_fills": 1725,
+  "orders": 4149,
+  "unique_fills": 1725,
+  "scope": "Exact accepted-artifact recount; not raw tape or private commands."
+}

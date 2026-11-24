@@ -1,0 +1,2 @@
+independent timing/value/cells/matching checks pass; six corruptions refused
+2026-11-24T05:35:07Z tag=mt_age_check rc=0 peak_rss_mib=94 wall_s=0.36 cpu_user_s=0.28 memavail_start_gib=22 disk_free_gib=419->419 slot=codex

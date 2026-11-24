@@ -1,4 +1,13 @@
 
+<!-- FILL_AGE_20261124_CODEX -->
+## 2026-11-24 — posting lead versus longer-horizon good fills
+
+[Report](reviews/maker_fill_age_20261124/report.md). USER asks how early makers must post for good fills. All4149 order-level timing/aggregate-value rows retained; exact fill subset1725 rows,199 top-three,153 enabled G2/G4 timing,87 common-valued. Good at both gross10s/60s:6 G2 +13 G4 fills. All19 min-age<5s;four G4 max-age<=1s;one G4 positive minimum>1s. Not a required lead or continuous rest/front proof. First-fill lower bounds0 by construction; aggregate good-order economics do not label the first fill.
+
+Frozen min-age>=5s vs max-age<=1s comparison haszero common strata after market/maker/side/price/record-class/context matching. No threshold relaxation. Independent source/interval/value/cell/null checks pass;six corruptions refused. No new model/day/strategy/profitability claim. ONE next priority:full13227 top-three valued-fill sequence census using existing1GB artifact,whole sequences and hard windows,before queue counterfactual;needs bounded CPU top-up if beyond remaining resource allowance. Do not mistake median age upper bound for actual resting time.
+<!-- /FILL_AGE_20261124_CODEX -->
+
+
 <!-- PARTIAL_CHOICES_20261124_CODEX -->
 ## 2026-11-24 — concrete partial chains and observed quote choices
 
