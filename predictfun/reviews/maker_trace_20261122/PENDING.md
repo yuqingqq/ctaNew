@@ -1,4 +1,15 @@
 
+<!-- INDIRECT_RELATIONS_20261124_CODEX -->
+## 2026-11-24 — USER: normalize, enumerate indirect relations, then connect events
+
+[Plan and 20-relation catalog](../maker_indirect_relations_20261124/plan.md). Design only, no new empirical result. Supersedes narrowing only the three reversal examples: preserve all 88 fixed signed orders; three cases are annotations after blind reconstruction. Normalize exact identity/native budget/share and pending USD units/YES side/clock intervals/coverage. Existing code already separates displayed shares from pending values; verify historical raw conventions and avoid converting twice, not a new unit-bug claim.
+
+Relation families: immutable hash and cumulative fills; exhaustion; match/pending/settlement/release; first/later fill bounds; isolated additions and joint capacity; unexplained removal; price/time priority; reappearance; expiry/cancellation; replacement/replenishment/ladder overlap; inventory/turnover; market-condition hypotheses; queue progression. Observed links, conditional constraints, scenario links and behavioural hypotheses remain separate. Quantity conservation and joint allocation prevent counting one change several times. Never use BTC to manufacture the action timestamp later used to test BTC.
+
+ONE next packet: normalization + quantity/pending/book-capacity relations R01-R10 across all88, reusing signed evidence (40 conditional withdrawals,41 exhausted controls,7 unresolved), <=.015 coreh all-in with count/projection gate. Bind complete adapter/checks before measurement; retain all statuses/alternative histories. Old/new intervals and coverage, contradictions, negative-control false pulls, narrowing and assumptions are the deliverables. Later rules remain catalogued where unavailable; no minor-cleanup loop, no full condition rebuild. Current same-day authorization/caps suffice; no USER decision needed within them. Last result ledger task~1.9143/2.00, line~5.2250/5.30 with .05reserve; mt_relplan publication counted once. No new data/model/live activity or push.
+<!-- /INDIRECT_RELATIONS_20261124_CODEX -->
+
+
 <!-- REVERSAL_HYPOTHESIS_20261124_CODEX -->
 ## 2026-11-24 — USER-directed hypothesis-first action verification
 

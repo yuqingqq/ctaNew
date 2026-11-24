@@ -1,4 +1,18 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+indirect_relations_20261124_codex:
+  plan: predictfun/reviews/maker_indirect_relations_20261124/plan.md
+  stage: design_catalog_complete_measurement_pending
+  relations_catalogued: 20
+  order: normalization_then_identity_quantity_linkage_then_action_hypotheses
+  population: fixed_88_signed_orders
+  selected_reversal_examples_are_population: false
+  next_priority: normalized_quantity_pending_book_relations_R01_R10
+  new_empirical_results: false
+  next_within_current_user_scope: true
+  next_max_core_hours: 0.015
+  task_cap: 2.00
+  line_cap: 5.30
+  standing_reserve: 0.05
 reversal_hypothesis_20261124_codex:
   report: predictfun/reviews/maker_reversal_hypothesis_20261124/report.md
   source_freeze: 814f8fb5d12543c910355467a0c243b5afba57ab
