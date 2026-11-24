@@ -1,0 +1,17 @@
+{
+  "pass_all": true,
+  "cases": 88,
+  "alignment_rows": 704,
+  "signal_events": 43,
+  "draw_rows": 5000,
+  "falsifiers": {
+    "missing_case": "case membership",
+    "private_pull": "private action claim",
+    "clock": "anchor clock",
+    "window": "window changed",
+    "false_match": "match",
+    "exhausted_as_withdrawal": "ending identity",
+    "signal_corruption": "signal features"
+  },
+  "cpu_seconds": 1.094740121
+}

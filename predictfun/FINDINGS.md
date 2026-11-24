@@ -1,4 +1,17 @@
 
+<!-- REVERSAL_HYPOTHESIS_20261124_CODEX -->
+## 2026-11-24 — USER-directed hypothesis-first action verification
+
+[Report](reviews/maker_reversal_hypothesis_20261124/report.md). USER asks to hypothesize actions from conditions, then independently verify, without a full controller rebuild. Do not infer a cancel timestamp from BTC and then use BTC agreement as proof. One frozen H1: favourable-to-adverse BTC reversal -> withdrawal of that side within 5s; inherited 5s/1bp signal, neutral market-second detection, D0/D1000, wrong-side and 500 timing-placebo controls. No tuned variant or population cancellation-rate claim.
+
+43 reversals over 11,400 market-side seconds. Same fixed 88 signed endings: 40 conditional withdrawals / 41 exhausted / 7 unresolved. D0: 39 withdrawal windows evaluable, four timing-only matches vs three wrong-side; strict post-before-reversal matches zero at both delays. Frozen reading hypothesis_not_demonstrated, not evidence makers never react. Post-run independently declared lower-bound join: three matches remain possible (reversal inside posting window; two G2, one G4); one reversal precedes earliest posting and is not an already-resting reaction under those bounds. D1000 retains two possible plus that early case. Exhausted endings have one timing overlap: proximity alone does not prove pull. No private action or continuous rest certified.
+
+All 704 case/profile rows, 43 events and 5,000 draw rows reconcile; seven real-copy corruptions refused. Source814f8fb5d12543c910355467a0c243b5afba57ab; post-run chronology declaration4014fcf5f. About .0010 coreh, task1.9143/2.00, line5.2250/5.30, .05 reserve; mt_hyp counted once. No network/new days/model/live work or push.
+
+ONE next priority: independently tighten post-before-reversal for the three possible chains using saved book/fill constraints, retaining all40 candidate and41 exhausted control coverage. Never use the signal to force the timestamp; preserve grades and ambiguity, no threshold search if unsupported. <=.015 coreh with projection gate within current USER direction/caps, no new USER decision. This replaces the generic all40-window refinement with a specific hypothesis verification link.
+<!-- /REVERSAL_HYPOTHESIS_20261124_CODEX -->
+
+
 <!-- TIMING_ESTIMATES_20261124_CODEX -->
 ## 2026-11-24 — USER accepts bounded estimates; incremental post/pull bridge
 

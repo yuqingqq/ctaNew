@@ -1,4 +1,30 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+reversal_hypothesis_20261124_codex:
+  report: predictfun/reviews/maker_reversal_hypothesis_20261124/report.md
+  source_freeze: 814f8fb5d12543c910355467a0c243b5afba57ab
+  scope: hypothesis_first_saved_data_action_verification
+  hypothesis: adverse_BTC_reversal_then_withdrawal_within_5s
+  consumed_days: [20261024, 20261025, 20261026, 20261027]
+  signal_reversals: 43
+  fixed_signed_endings: 88
+  conditional_withdrawals: 40
+  evaluable_withdrawals: 39
+  timing_only_matches_D0: 4
+  wrong_side_matches_D0: 3
+  strict_post_before_reversal_matches: 0
+  post_run_chronology: {possible_inside_post_window: 3, reversal_before_earliest_post: 1}
+  reading: hypothesis_not_demonstrated
+  private_action_identified: false
+  population_cancel_probability_estimated: false
+  independent_checks_pass: true
+  next_priority: independent_post_before_reversal_constraints_for_three_possible_chains
+  next_within_current_user_scope: true
+  next_max_core_hours: 0.015
+  task_core_hours: 1.9143
+  line_core_hours: 5.2250
+  task_cap: 2.00
+  line_cap: 5.30
+  standing_reserve: 0.05
 timing_estimates_20261124_codex:
   report: predictfun/reviews/maker_timing_estimates_20261124/report.md
   signed_chains: predictfun/reviews/maker_timing_estimates_20261124/outputs/signed_chain_estimates.csv

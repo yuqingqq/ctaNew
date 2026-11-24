@@ -1,0 +1,51 @@
+{
+  "source_commit": "814f8fb5d12543c910355467a0c243b5afba57ab",
+  "as_of_utc": "2026-11-24T03:10:27Z",
+  "population": {
+    "signed_orders": 88,
+    "market_side_seconds": 11400
+  },
+  "reading": "hypothesis_not_demonstrated",
+  "profiles": [
+    {
+      "delay_ms": 0,
+      "n": 39,
+      "observed": 0.0,
+      "wrong_side": 0.0,
+      "null_mean": 0.004717948717948717,
+      "null_p05": 0.0,
+      "null_p95": 0.02564102564102564,
+      "upper_tail_rank": 1.0,
+      "draws": 500,
+      "days_supported": 4,
+      "days_above_null_mean": 0,
+      "sufficient": true,
+      "timing_enriched": false
+    },
+    {
+      "delay_ms": 1000,
+      "n": 39,
+      "observed": 0.0,
+      "wrong_side": 0.0,
+      "null_mean": 0.0018974358974358973,
+      "null_p05": 0.0,
+      "null_p95": 0.02564102564102564,
+      "upper_tail_rank": 1.0,
+      "draws": 500,
+      "days_supported": 4,
+      "days_above_null_mean": 0,
+      "sufficient": true,
+      "timing_enriched": false
+    }
+  ],
+  "private_action_identified": false,
+  "population_cancel_probability_estimated": false,
+  "cpu_seconds": 0.998475394,
+  "hashes": {
+    "case_alignment.csv": "472f03d0add3cb370a49d2799963c6fb8e8814ceba8d7fd6b88cf294a0a9bbf9",
+    "draws.csv.gz": "7a664ea8582627227b998e172add7a6ff2bcb784c009fe3d62ab9d2ee60727ed",
+    "reversals.csv": "dff31dd06a928f85efec7f4facc353cc5c910235047d7ca5f0a2b2f06fad8312",
+    "signal_census.csv": "bb5635c000fcd07234e7554a434415ac687ffb3534b9a952c1582554561ce285",
+    "summary.csv": "5237bbea74c0712f7839c336281029f5ae8e144833f2d4b360bd2ebc092573e1"
+  }
+}
