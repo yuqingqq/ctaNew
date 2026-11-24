@@ -1,5 +1,8 @@
 # MAKER-TRACE-RECONSTRUCTION-v1 — pending work
 
+## STATE 2026-11-24 01:05Z — CONCLUSION RECORDED (`CONCLUSION.md`; USER "Record first") — awaiting the USER's next direction; nothing running; auto-check paused
+
+
 ## STATE 2026-11-23 22:34Z — LINE CLOSED; WAITING FOR A USER DECISION — DO NOT START ANYTHING — read this first
 
 **Reviews processed:**
@@ -8,7 +11,7 @@
 
 **Its ONE next priority REQUIRES THE USER:** an attributed order-lifecycle evidence gate (new source).
 
-**Auto-check:** reply "auto-check: waiting for the USER decision on the lifecycle-evidence gate" and do nothing else, until the USER answers.
+**Auto-check:** cron 7fe7060d was PAUSED at 22:36Z (deleted) while waiting for the USER decision. Re-arm it when the USER answers and work resumes.
 
 
 ## STATE 2026-11-23 22:22Z — ROUND COMPLETE: LOGIC CHAINS v6 (competing transitions + continuation economics) — review pending — read this first
