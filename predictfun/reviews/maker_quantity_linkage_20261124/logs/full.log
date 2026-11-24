@@ -1,0 +1,2 @@
+{"previous_cpu_s": 6.66, "projected_remaining_cpu_s": 46.11547151452425, "launch_margin_s": 0.25, "all_in_cap_s": 54, "allowed": true, "basis": "measured_prior_charge_replaces_fixed_9_second_reserve", "pilot_parity": true}
+2026-11-24T03:47:41Z tag=mt_qty_full rc=152 peak_rss_mib=275 wall_s=21.15 cpu_user_s=18.84 memavail_start_gib=22 disk_free_gib=415->415 slot=codex

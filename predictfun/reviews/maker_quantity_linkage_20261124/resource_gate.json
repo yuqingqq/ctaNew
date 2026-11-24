@@ -1,0 +1,9 @@
+{
+  "previous_cpu_s": 6.66,
+  "projected_remaining_cpu_s": 46.11547151452425,
+  "launch_margin_s": 0.25,
+  "all_in_cap_s": 54,
+  "allowed": true,
+  "basis": "measured_prior_charge_replaces_fixed_9_second_reserve",
+  "pilot_parity": true
+}
