@@ -1,0 +1,56 @@
+<div id="pf-maker-microscope-inline">
+<style>
+#pf-maker-microscope-inline { color:var(--foreground); }
+#pf-maker-microscope-inline .gap { margin-top:var(--font-size-base); }
+#pf-maker-microscope-inline .panelhead { display:flex;justify-content:space-between;gap:var(--font-size-base);flex-wrap:wrap;margin-top:var(--font-size-base);margin-bottom:calc(var(--font-size-base)*.5); }
+#pf-maker-microscope-inline .legend { display:flex;flex-wrap:wrap;gap:var(--font-size-base); }
+#pf-maker-microscope-inline canvas { width:100%;display:block;touch-action:pan-y; }
+#pf-maker-microscope-inline .kv { display:flex;justify-content:space-between;gap:var(--font-size-base);padding:calc(var(--font-size-base)*.25) 0; }
+#pf-maker-microscope-inline .kv span:first-child { color:var(--muted-foreground); }
+#pf-maker-microscope-inline .kv b { font-weight:500;text-align:right; }
+#pf-maker-microscope-inline .hash { overflow-wrap:anywhere; }
+#pf-maker-microscope-inline .note { display:none; }
+#pf-maker-microscope-inline .queue { margin-top:var(--font-size-base); }
+#pf-maker-microscope-inline .bid { color:var(--viz-series-1); }
+#pf-maker-microscope-inline .ask { color:var(--viz-series-2); }
+#pf-maker-microscope-inline .ours { color:var(--viz-series-3); }
+#pf-maker-microscope-inline .maker { color:var(--viz-series-4); }
+#pf-maker-microscope-inline .sequence { display:flex;flex-wrap:wrap;gap:calc(var(--font-size-base)*.25); }
+#pf-maker-microscope-inline [hidden] { display:none!important; }
+#pf-maker-microscope-inline .selection { display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--font-size-base); }
+@media(max-width:650px) { #pf-maker-microscope-inline .selection { grid-template-columns:minmax(0,1fr); } #pf-maker-microscope-inline .kv { flex-wrap:wrap; } }
+</style>
+<h2>Our quotes and top-maker fills</h2>
+<div class="viz-controls gap" aria-label="Market and strategy selection">
+<label class="form-label">Market<select class="form-select" id="market"></select></label>
+<label class="form-label">Saved strategy<select class="form-select" id="arm"><option value="CURRENT_ASYNC_FAST10">Current queue · assumed 10 ms</option><option value="FRONT_ASYNC_FAST10">Hypothetical front · assumed 10 ms</option></select></label>
+<label class="form-label">Recorded makers<select class="form-select" id="maker"><option value="0">Top 3 together</option><option value="1">Maker #1</option><option value="2">Maker #2</option><option value="3">Maker #3</option></select></label>
+<label class="form-label">Side<select class="form-select" id="side"><option value="all">Bid + ask</option><option value="0">Bid</option><option value="1">Ask</option></select></label>
+</div>
+<div id="loading" role="status">Loading saved traces…</div>
+<div id="app" hidden>
+<div id="metrics" class="viz-row gap" aria-live="polite"></div><div id="insight" hidden></div>
+<div class="viz-row gap" aria-label="Time window"><button type="button" class="btn" data-span="298">Full market</button><button type="button" class="btn" data-span="60">60 s</button><button type="button" class="btn" data-span="15">15 s</button><button type="button" class="btn" id="prev" aria-label="Earlier window">←</button><button type="button" class="btn" id="next" aria-label="Later window">→</button><button type="button" class="btn btn-primary" id="example">Maker example</button><button type="button" class="btn" id="worst">Worst own order · hindsight</button></div>
+<label class="form-label gap" for="time">Time from opening · <output id="timeLabel">0.000 s</output><input class="form-range" id="time" type="range" min="0" max="298" step="0.05" value="0"></label>
+<div class="charts">
+<div class="panelhead"><h3>Price and execution · cents</h3><div class="legend text-small"><span class="bid">— bid</span><span class="ask">— ask</span><span class="ours">● our simulated fills</span><span class="maker">◆ recorded maker · × taker</span></div></div>
+<canvas id="price" height="310" class="cursor-interaction" role="img" aria-label="Price, our order segments, and maker fills. Use Maker example or the event table for exact details."></canvas>
+<p class="text-small text-muted">Maker marker = settlement upper bound; whisker = hard execution window; dashed box = inferred posting window.</p>
+<div class="panelhead"><h3>Our live orders · level 1 / 2</h3><span class="text-small text-muted">Dashed = cancel in flight · grey = withheld</span></div>
+<canvas id="life" height="160" class="cursor-interaction" role="img" aria-label="Our bid and ask quote lifetimes"></canvas>
+<div class="selection gap"><section class="card"><div class="viz-row"><h3>Selected event</h3><span id="selectionBadge" class="viz-badge">Maker fill</span></div><div id="detail" class="text-small" aria-live="polite"></div></section><section><h3>Book at inspection time</h3><canvas id="depth" height="220" role="img" aria-label="Public depth sampled every half second"></canvas><div id="state" class="text-small" aria-live="polite"></div></section></div>
+<details class="gap" open><summary>Market movement, inventory and value</summary>
+<div class="panelhead"><h3>BTC movement · bps since opening</h3></div><canvas id="btc" height="150" class="cursor-interaction" role="img" aria-label="Bitcoin movement with actual pressure intervention markers"></canvas>
+<p class="text-small text-muted">Triangles: actual pressure interventions. The guard used 250 ms returns, not this cumulative curve.</p>
+<div class="panelhead"><h3>Inventory and marked value</h3><span class="text-small"><span class="ours">Our simulation</span> · <span class="maker">Recorded maker net flow</span></span></div>
+<canvas id="inventory" height="150" class="cursor-interaction" role="img" aria-label="Our inventory and maker zero-start net flow, in shares"></canvas><canvas id="equity" height="150" class="cursor-interaction" role="img" aria-label="Marked value in US dollars"></canvas>
+<p class="text-small text-muted">Recorded flow is not wallet inventory. END uses a common mark and recorded fees; it is not settlement P&amp;L.</p>
+</details>
+</div>
+<details class="gap"><summary>Exact events · <span id="eventCount"></span></summary><div class="table-responsive"><table class="table table-sm"><thead><tr><th>Time</th><th>Action</th><th>Side</th><th>Price</th><th>Shares</th><th>1 s</th><th>Longer</th><th>ID</th></tr></thead><tbody id="events"></tbody></table></div></details>
+</div>
+<script type="application/json" id="pf-inline-payload">__PAYLOAD__</script>
+</div>
+<script>
+__PROGRAM__
+</script>

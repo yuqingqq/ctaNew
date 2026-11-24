@@ -1,0 +1,6 @@
+usage: render.py [-h] [--title TITLE] [--force] [--serve] [--port PORT]
+                 [--share] [--metadata METADATA] [--check]
+                 [--chart-state FILE] [--connector-mocks CONNECTOR_MOCKS]
+                 fragment [destination]
+render.py: error: destination already exists; pass --force to replace it
+2026-11-24T06:19:52Z tag=mt_dash_inline_render2 rc=2 peak_rss_mib=22 wall_s=0.06 cpu_user_s=0.04 memavail_start_gib=22 disk_free_gib=418->418 slot=codex

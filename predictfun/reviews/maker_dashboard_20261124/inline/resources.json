@@ -1,0 +1,59 @@
+{
+  "runs": [
+    {
+      "tag": "mt_dash_inline_build",
+      "rc": 0,
+      "cpu_user_s": 0.3
+    },
+    {
+      "tag": "mt_dash_inline_render",
+      "rc": 0,
+      "cpu_user_s": 0.08
+    },
+    {
+      "tag": "mt_dash_inline_browser",
+      "rc": 0,
+      "cpu_user_s": 0.56
+    },
+    {
+      "tag": "mt_dash_inline_build2",
+      "rc": 0,
+      "cpu_user_s": 0.3
+    },
+    {
+      "tag": "mt_dash_inline_render2",
+      "rc": 2,
+      "cpu_user_s": 0.04
+    },
+    {
+      "tag": "mt_dash_inline_browser2",
+      "rc": 1,
+      "cpu_user_s": 0.57
+    },
+    {
+      "tag": "mt_dash_inline_state",
+      "rc": 0,
+      "cpu_user_s": 0.4
+    },
+    {
+      "tag": "mt_dash_inline_render3",
+      "rc": 0,
+      "cpu_user_s": 0.08
+    },
+    {
+      "tag": "mt_dash_inline_browser3",
+      "rc": 0,
+      "cpu_user_s": 0.56
+    }
+  ],
+  "additional_browser_conservative_s": 20,
+  "finalizer_reserve_s": 1,
+  "additional_charge_s": 23.89,
+  "total_packet_charge_s": 62.46,
+  "packet_cap_s": 180,
+  "task_upper_coreh": 1.9559166666666665,
+  "line_upper_coreh": 5.266616666666667,
+  "task_cap_coreh": 2.05,
+  "line_cap_coreh": 5.35,
+  "standing_reserve_coreh": 0.05
+}

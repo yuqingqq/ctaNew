@@ -1,0 +1,69 @@
+{
+  "errors": [],
+  "checks": [
+    {
+      "state": {
+        "market": 3702960,
+        "arm": "CURRENT_ASYNC_FAST10",
+        "rank": 3,
+        "lo": 50.803,
+        "hi": 65.803,
+        "cursor": 58.303,
+        "selected": {
+          "kind": "maker",
+          "id": 176
+        }
+      },
+      "overflow": false,
+      "details": 552
+    },
+    {
+      "state": {
+        "market": 3789484,
+        "arm": "CURRENT_ASYNC_FAST10",
+        "rank": 1,
+        "lo": 263.535,
+        "hi": 278.535,
+        "cursor": 271.035,
+        "selected": {
+          "kind": "maker",
+          "id": 389
+        }
+      },
+      "overflow": false,
+      "details": 706
+    },
+    {
+      "state": {
+        "market": 3877472,
+        "arm": "CURRENT_ASYNC_FAST10",
+        "rank": 1,
+        "lo": 21.676,
+        "hi": 36.676,
+        "cursor": 29.176,
+        "selected": {
+          "kind": "maker",
+          "id": 87
+        }
+      },
+      "overflow": false,
+      "details": 718
+    }
+  ],
+  "narrow": {
+    "overflow": false,
+    "state": {
+      "market": 3789484,
+      "arm": "FRONT_ASYNC_FAST10",
+      "rank": 1,
+      "lo": 132.5,
+      "hi": 147.5,
+      "cursor": 140,
+      "selected": {
+        "kind": "order",
+        "id": 188
+      }
+    },
+    "canvasHeight": 310
+  }
+}
