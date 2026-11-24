@@ -1,0 +1,56 @@
+{
+  "source_commit": "abbc13d49b6bd2ed729a1569ae68d4118d3dd3a4",
+  "scope": "cached_20261023_1400_1415_with_saved_padding",
+  "as_of_utc": "2026-11-24T01:26:19Z",
+  "counts": {
+    "unbound_BTC_events": 19671,
+    "outside_known_BTC_tokens": 8904,
+    "failed_receipts": 85
+  },
+  "groups": {
+    "all": {
+      "orders": 0,
+      "repeated_events": 0,
+      "repeated_transactions": 0,
+      "budget_status": {},
+      "expiration_values": {}
+    },
+    "maker": {
+      "orders": 0,
+      "repeated_events": 0,
+      "repeated_transactions": 0,
+      "budget_status": {},
+      "expiration_values": {}
+    },
+    "top3_maker": {
+      "orders": 0,
+      "repeated_events": 0,
+      "repeated_transactions": 0,
+      "budget_status": {},
+      "expiration_values": {}
+    }
+  },
+  "cached_transactions": 8255,
+  "selectors": {
+    "0x92895911": 8255
+  },
+  "transaction_statuses": {
+    "unsupported selector": 8255
+  },
+  "cached_cancel_events": 124,
+  "gate_pass": false,
+  "population_limit": "one consumed Oct23 cached slice; executed orders only; no unfilled-order census",
+  "inference": {
+    "original_signed_terms": false,
+    "post_time": false,
+    "offchain_cancel_time": false,
+    "queue_front": false,
+    "remaining_exact_without_prior_coverage": false,
+    "profitability": false
+  },
+  "output_sha256": {
+    "transactions.csv": "61618d7624960850e7d6a9be854857cef1a4f19abdae8b57dfa0d69636d14c2a"
+  },
+  "cpu_seconds": 1.161361126
+}
+2026-11-24T01:26:18Z tag=mt_bridge_gate1 rc=0 peak_rss_mib=66 wall_s=1.24 cpu_user_s=1.17 memavail_start_gib=22 disk_free_gib=417->417 slot=codex
