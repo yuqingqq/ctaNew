@@ -1,0 +1,9 @@
+{
+  "projected_remaining_all_in_cpu_s": 46.11547151452425,
+  "cap_cpu_s": 54,
+  "run_full": false,
+  "pilot_sha": "692e8c12774f65595449edf3001a290c3a07d5cfac6674a4d37d2a3b0365c150",
+  "cpu_seconds": 1.14434505,
+  "pilot_content_equal": true,
+  "normalized_values_equal": true
+}

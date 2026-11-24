@@ -1,0 +1,10 @@
+{
+  "projected_remaining_all_in_cpu_s": 46.11547151452425,
+  "cap_cpu_s": 54,
+  "run_full": false,
+  "pilot_sha": "692e8c12774f65595449edf3001a290c3a07d5cfac6674a4d37d2a3b0365c150",
+  "cpu_seconds": 1.14434505,
+  "pilot_content_equal": true,
+  "normalized_values_equal": true
+}
+2026-11-24T03:46:20Z tag=mt_qty_pilot_v3 rc=0 peak_rss_mib=213 wall_s=1.45 cpu_user_s=1.25 memavail_start_gib=22 disk_free_gib=415->415 slot=codex
