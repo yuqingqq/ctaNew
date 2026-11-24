@@ -1,3 +1,13 @@
+<!-- SIGNED_EVIDENCE_20261124_CODEX -->
+## 2026-11-24 — USER continuation resumed by Codex; new signed-order evidence
+
+USER: “Can you take the handoffs and continue to identify actions and bridge the gap.” The prior wait below is superseded for bounded consumed-day lifecycle-evidence work. [New report and ONE next packet](../maker_signed_evidence_20261124/report.md).
+
+Source gate:13,834exact-hash signed orders,19,671reconciled fill events in cached Oct23 slice. Same six earlier chain examples now have original sizes:30/30/50/50/220/10shares; five fully exhausted, one30share order observed only6.6666filled. The220share order has7transactions. This narrows terminal alternatives, not hidden posting/cancel clocks or queue front. Two schema refusals kept; independent recounts pass. All work committed locally; nothing pushed, no automation rearmed.
+
+Next: freeze up to96 old cancel-compatible terminal orders (8 per day x rank by hash), attach exact signed terms/all recorded transactions, regrade exhaustion/explicit cancellation/unresolved endings and successor links. <=.025coreh all-in; actual task1.9097/2.00, line5.2204/5.30 with .05standing reserve still fits. Counts/projection gate first. Current USER direction suffices within these existing consumed-day/resource bounds; no new days/live/untouched test authorized. No job running at handoff.
+<!-- /SIGNED_EVIDENCE_20261124_CODEX -->
+
 # MAKER-TRACE-RECONSTRUCTION-v1 — pending work
 
 ## STATE 2026-11-24 01:05Z — CONCLUSION RECORDED (`CONCLUSION.md`; USER "Record first") — awaiting the USER's next direction; nothing running; auto-check paused

@@ -1,4 +1,22 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+signed_order_bridge_20261124_codex:
+  report: predictfun/reviews/maker_signed_evidence_20261124/report.md
+  user_resumed_identification: true
+  source_gate: exact_hash_pass
+  source_freeze: c125c3b63
+  attachment_freeze: ba09b710b
+  source_population: {consumed_day: 20261023, transactions: 8255, fill_events: 19671, orders: 13834, top3_maker_orders: 836, top3_repeated_transaction_orders: 430}
+  existing_chains: {orders: 6, transactions: 14, exhausted: 5, incomplete_observed_budget: 1, consumed_day: 20261024}
+  incomplete_is_not_cancel: true
+  post_cancel_times_and_queue_front_identified: false
+  next_priority: fixed_terminal_cohort_signed_term_reclassification
+  next_same_consumed_day_packet_authorized: true
+  next_all_in_core_hours_max: 0.025
+  task_after_checks_core_hours: 1.9097
+  line_after_checks_core_hours: 5.2204
+  task_cap: 2.00
+  line_cap: 5.30
+  budget_note: mt_bridge_tags_already_counted_no_extra_charge
 competing_transition_review_20261123_codex:
   target: 4eab1efe2aea01d8b7e8c7a530604537d1a87ee8
   report: predictfun/reviews/automatic/20261123_competing_transition_review/report.md

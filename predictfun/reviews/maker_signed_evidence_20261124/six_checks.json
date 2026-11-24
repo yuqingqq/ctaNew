@@ -1,0 +1,11 @@
+{
+  "chains": 6,
+  "raw_events": 14,
+  "pass": true,
+  "falsifiers": {
+    "size": "size",
+    "exhaustion": "classification",
+    "cancel": "unsupported action",
+    "missing_event": "raw membership"
+  }
+}

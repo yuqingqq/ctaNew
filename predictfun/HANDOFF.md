@@ -23,6 +23,19 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- SIGNED_EVIDENCE_20261124_CODEX -->
+## 2026-11-24 — USER resumed maker-action identification; signed orders bridge a real gap
+
+[Evidence, verification and next packet](reviews/maker_signed_evidence_20261124/report.md). Took the latest handoffs; this is development, not another review-only wait. The deferred signed calldata is useful: all19,671 known-token events bind to13,834 signed orders. Existing top-three volume makers:836 maker orders,430 repeat-transaction orders. Exact original terms are observed; continuous resting/queue front/private post-cancel clocks are not.
+
+Applied to the SAME six prior chains via14 public read-only settlement transaction/receipt lookups on consumed Oct24: five original budgets fully exhausted; chain2 was30shares with6.6666observed filled, remaining history unknown. Rank3's220-share order filled across7transactions; rank2's50share order across3. Remove the larger-cancelled-remainder terminal alternative for the five exhausted orders, without claiming no earlier temporary pull. Do not turn chain2's incomplete budget into a proven cancel or live remainder. Existing FIFO economics unchanged.124cached on-chain cancel hashes have zero joins to this decoded known-token population; they are not124BTC/top-maker pulls.
+
+Both mechanical refused attempts retained; v3 source and independent raw-event/6-chain recounts pass with corruption controls. No new day, strategy/model fit, replay or live action. Task1.9097/2.00h, line5.2204/5.30; all mt_bridge tags already counted, no extra review charge. Local commits only.
+
+ONE next priority: fixed original-terminal-cohort signed-term reclassification (up to8 hash-ranked orders per consumed day x top3 rank, <=96, declared before lookup; all recorded same-hash maker/taker transactions). Separate exhaustion, explicit linked on-chain cancel, unresolved remainder/expiry/withdrawal; grade successor links accordingly before another action-condition test. <=.025coreh all-in with projection/count gate fits current caps plus standing .05reserve. USER's current continuation authorizes this bounded same-day evidence work; no new permission within scope. New days, live use, untouched validation or exceeding caps remain separate decisions. Do not restart anonymous association tuning or infer optimal size from the220-share example.
+<!-- /SIGNED_EVIDENCE_20261124_CODEX -->
+
+
 <!-- COMPETING_TRANSITION_REVIEW_20261123_CODEX -->
 ## 2026-11-23 — competing transitions and continuation accounting accepted; new identification evidence is next
 

@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "chains": 6,
+  "transactions": 14,
+  "events": 14,
+  "budget_status": {
+    "exhausted_by_observed_fills": 5,
+    "observed_budget_incomplete": 1
+  },
+  "rest_maker_shares_reconciled": true,
+  "identity_falsifier": true,
+  "network_scope": "existing six chains on consumed days only",
+  "output_sha256": {
+    "batch_00.json": "115768359cd82c790717357d53cd6397db2eedb9c517c9dabb729117acd89728",
+    "batch_01.json": "61bb3db195c6692b2dfad00c7599583c6bce8ef38d4ec73f22ab4e70a67357b9",
+    "batch_02.json": "9fc760c2bc458e9b746121592057ac161e2ca4ac1c4d95f4bf1a6ca26338bf69",
+    "batch_03.json": "85e8595b3771c0df09f5c77b44967a537192dbc026e41f94e69aca7fc3bf27af",
+    "chain_events.json": "bf37ee1fc937ca0ac297d05f7559438c571727a675d86db0c39f70adb16990eb"
+  },
+  "six_chains_sha256": "6e4e13bf65e7a552981cf516812ce4a72cb936d5c35508af067f7843dba070d4",
+  "cpu_seconds": 0.04232121600000002
+}
+2026-11-24T01:34:01Z tag=mt_bridge_attach_run rc=0 peak_rss_mib=30 wall_s=0.43 cpu_user_s=0.16 memavail_start_gib=22 disk_free_gib=417->417 slot=codex
