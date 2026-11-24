@@ -1,0 +1,25 @@
+resources and evidence verified; packet staged, no push
+ predictfun/FINDINGS.md                             |   11 +
+ predictfun/HANDOFF.md                              |   11 +
+ predictfun/STATUS.yml                              |   12 +
+ .../maker_partial_choices_20261124/SHA256SUMS      |   24 +
+ .../maker_partial_choices_20261124/actions.csv.gz  |  Bin 0 -> 349650 bytes
+ .../maker_partial_choices_20261124/checks.json     |   15 +
+ .../commit_scope.json                              |   46 +
+ .../maker_partial_choices_20261124/draws.csv       | 4001 +++++++++++++++++++
+ .../maker_partial_choices_20261124/finalize.py     |   22 +
+ .../maker_partial_choices_20261124/finish.py       |  110 +
+ .../maker_partial_choices_20261124/links.csv       | 4150 ++++++++++++++++++++
+ .../logs/check_v2.log                              |    2 +
+ .../logs/publish.log                               |    3 +
+ .../maker_partial_choices_20261124/logs/run.log    |  167 +
+ .../maker_partial_choices_20261124/matched.csv     |    9 +
+ .../partial_cases.csv                              |   57 +
+ .../maker_partial_choices_20261124/report.md       |   58 +
+ .../maker_partial_choices_20261124/resources.json  |   44 +
+ .../maker_partial_choices_20261124/result.json     |   36 +
+ .../state_blocks.json                              |    6 +
+ predictfun/reviews/maker_trace_20261122/PENDING.md |   11 +
+ 21 files changed, 8795 insertions(+)
+
+2026-11-24T05:22:02Z tag=mt_choices_finalize rc=0 peak_rss_mib=22 wall_s=0.14 cpu_user_s=0.09 memavail_start_gib=22 disk_free_gib=416->416 slot=codex

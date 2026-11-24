@@ -1,0 +1,44 @@
+{
+  "runs": [
+    {
+      "t": "2026-11-24T05:18:03Z",
+      "tag": "mt_choices_freeze",
+      "rc": "0",
+      "cpu_s": 0.08
+    },
+    {
+      "t": "2026-11-24T05:18:17Z",
+      "tag": "mt_choices_run",
+      "rc": "0",
+      "cpu_s": 0.3
+    },
+    {
+      "t": "2026-11-24T05:18:24Z",
+      "tag": "mt_choices_check",
+      "rc": "1",
+      "cpu_s": 0.28
+    },
+    {
+      "t": "2026-11-24T05:18:42Z",
+      "tag": "mt_choices_check_v2",
+      "rc": "0",
+      "cpu_s": 1.34
+    },
+    {
+      "t": "2026-11-24T05:21:21Z",
+      "tag": "mt_choices_publish",
+      "rc": "0",
+      "cpu_s": 0.13
+    }
+  ],
+  "measured_before_finalizer_seconds": 2.13,
+  "finalizer_conservative_seconds": 0.1,
+  "packet_upper_coreh": 0.0006194444444444445,
+  "packet_cap_coreh": 0.0014,
+  "task_upper_coreh": 1.9382805555555553,
+  "line_upper_coreh": 5.248980555555555,
+  "standing_reserve_coreh": 0.05,
+  "task_cap_coreh": 2,
+  "line_cap_coreh": 5.3,
+  "within_caps": true
+}

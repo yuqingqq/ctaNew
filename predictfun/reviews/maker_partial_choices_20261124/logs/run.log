@@ -1,0 +1,167 @@
+{
+  "as_of_utc": "2026-11-24T05:18:17Z",
+  "orders": 4149,
+  "unique_successor_actions": 3286,
+  "physical_status": {
+    "post_order_ambiguous": 1361,
+    "refused_post_window": 828,
+    "ok": 1097
+  },
+  "price_actions": {
+    "less": 1807,
+    "same": 376,
+    "more": 1103
+  },
+  "ordered_valid_actions": 1097,
+  "offset_actions": {
+    "ambiguous": 1020,
+    "advance": 54,
+    "retreat": 15,
+    "unchanged": 8
+  },
+  "partial_cases": 56,
+  "partial_sequence": {
+    "unavailable": 21,
+    "ordering_ambiguous": 23,
+    "no_recorded_successor": 4,
+    "sequential_after_under_bounds": 8
+  },
+  "partial_ordered_prices": {
+    "less": 4,
+    "more": 3,
+    "same": 1
+  },
+  "matched_tests": 8,
+  "exploratory_patterns": 0
+}
+[
+  {
+    "hypothesis": "btc_against",
+    "outcome": "less",
+    "exposed": 3,
+    "reference": 4,
+    "common_strata": 3,
+    "common_markets": 2,
+    "matched_difference_pp": 0.0,
+    "raw_two_sided_p": 1.0,
+    "day_differences_pp": "{\"20261025\": 0.0, \"20261026\": 0.0}",
+    "positive_days": 0,
+    "negative_days": 0,
+    "max_market_absolute_share": 0.0,
+    "support": "insufficient",
+    "exploratory_pattern": false
+  },
+  {
+    "hypothesis": "btc_against",
+    "outcome": "same",
+    "exposed": 3,
+    "reference": 4,
+    "common_strata": 3,
+    "common_markets": 2,
+    "matched_difference_pp": -20.0,
+    "raw_two_sided_p": 1.0,
+    "day_differences_pp": "{\"20261025\": -28.571428571428577, \"20261026\": 0.0}",
+    "positive_days": 0,
+    "negative_days": 1,
+    "max_market_absolute_share": 1.0,
+    "support": "insufficient",
+    "exploratory_pattern": false
+  },
+  {
+    "hypothesis": "btc_against",
+    "outcome": "more",
+    "exposed": 3,
+    "reference": 4,
+    "common_strata": 3,
+    "common_markets": 2,
+    "matched_difference_pp": 20.0,
+    "raw_two_sided_p": 1.0,
+    "day_differences_pp": "{\"20261025\": 28.571428571428577, \"20261026\": 0.0}",
+    "positive_days": 1,
+    "negative_days": 0,
+    "max_market_absolute_share": 1.0,
+    "support": "insufficient",
+    "exploratory_pattern": false
+  },
+  {
+    "hypothesis": "btc_against",
+    "outcome": "offset_retreat",
+    "exposed": 3,
+    "reference": 4,
+    "common_strata": 3,
+    "common_markets": 2,
+    "matched_difference_pp": 0.0,
+    "raw_two_sided_p": 1.0,
+    "day_differences_pp": "{\"20261025\": 0.0, \"20261026\": 0.0}",
+    "positive_days": 0,
+    "negative_days": 0,
+    "max_market_absolute_share": 0.0,
+    "support": "insufficient",
+    "exploratory_pattern": false
+  },
+  {
+    "hypothesis": "inventory_adding",
+    "outcome": "less",
+    "exposed": 41,
+    "reference": 34,
+    "common_strata": 31,
+    "common_markets": 12,
+    "matched_difference_pp": -4.889741131351872,
+    "raw_two_sided_p": 0.7604790419161677,
+    "day_differences_pp": "{\"20261024\": -8.437067773167362, \"20261025\": 20.0, \"20261026\": -25.0}",
+    "positive_days": 1,
+    "negative_days": 2,
+    "max_market_absolute_share": 0.2583025830258302,
+    "support": "supported_descriptive",
+    "exploratory_pattern": false
+  },
+  {
+    "hypothesis": "inventory_adding",
+    "outcome": "same",
+    "exposed": 41,
+    "reference": 34,
+    "common_strata": 31,
+    "common_markets": 12,
+    "matched_difference_pp": 1.1505273250239694,
+    "raw_two_sided_p": 1.0,
+    "day_differences_pp": "{\"20261024\": -2.4896265560165975, \"20261025\": 15.000000000000002, \"20261026\": 0.0}",
+    "positive_days": 1,
+    "negative_days": 1,
+    "max_market_absolute_share": 0.4464285714285714,
+    "support": "supported_descriptive",
+    "exploratory_pattern": false
+  },
+  {
+    "hypothesis": "inventory_adding",
+    "outcome": "more",
+    "exposed": 41,
+    "reference": 34,
+    "common_strata": 31,
+    "common_markets": 12,
+    "matched_difference_pp": 3.739213806327904,
+    "raw_two_sided_p": 0.8043912175648703,
+    "day_differences_pp": "{\"20261024\": 10.92669432918396, \"20261025\": -35.0, \"20261026\": 25.0}",
+    "positive_days": 2,
+    "negative_days": 1,
+    "max_market_absolute_share": 0.29680365296803657,
+    "support": "supported_descriptive",
+    "exploratory_pattern": false
+  },
+  {
+    "hypothesis": "inventory_adding",
+    "outcome": "offset_retreat",
+    "exposed": 41,
+    "reference": 34,
+    "common_strata": 31,
+    "common_markets": 12,
+    "matched_difference_pp": 0.0,
+    "raw_two_sided_p": 1.0,
+    "day_differences_pp": "{\"20261024\": 0.0, \"20261025\": 0.0, \"20261026\": 0.0}",
+    "positive_days": 0,
+    "negative_days": 0,
+    "max_market_absolute_share": 0.0,
+    "support": "supported_descriptive",
+    "exploratory_pattern": false
+  }
+]
+2026-11-24T05:18:17Z tag=mt_choices_run rc=0 peak_rss_mib=83 wall_s=0.37 cpu_user_s=0.30 memavail_start_gib=22 disk_free_gib=416->416 slot=codex

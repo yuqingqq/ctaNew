@@ -1,0 +1,15 @@
+{
+  "positive": true,
+  "falsifiers": [
+    "price",
+    "pull",
+    "btc",
+    "offset",
+    "matched",
+    "null",
+    "budget",
+    "membership"
+  ],
+  "all_true": true,
+  "limitations": "Recounts accepted source artifacts, not raw tape or hidden cancellations."
+}

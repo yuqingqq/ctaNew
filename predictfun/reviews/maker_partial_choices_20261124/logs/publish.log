@@ -1,0 +1,3 @@
+report and owned state staged; all prior dirty changes preserved
+{'valid_price_actions': {'more': 709, 'less': 255, 'same': 133}, 'cost_seconds': 2.0, 'task_before_finalizer': 1.9382166666666665, 'line_before_finalizer': 5.248916666666666}
+2026-11-24T05:21:21Z tag=mt_choices_publish rc=0 peak_rss_mib=29 wall_s=0.22 cpu_user_s=0.13 memavail_start_gib=22 disk_free_gib=416->416 slot=codex

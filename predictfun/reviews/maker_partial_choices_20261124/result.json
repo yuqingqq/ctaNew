@@ -1,0 +1,36 @@
+{
+  "as_of_utc": "2026-11-24T05:18:17Z",
+  "orders": 4149,
+  "unique_successor_actions": 3286,
+  "physical_status": {
+    "post_order_ambiguous": 1361,
+    "refused_post_window": 828,
+    "ok": 1097
+  },
+  "price_actions": {
+    "less": 1807,
+    "same": 376,
+    "more": 1103
+  },
+  "ordered_valid_actions": 1097,
+  "offset_actions": {
+    "ambiguous": 1020,
+    "advance": 54,
+    "retreat": 15,
+    "unchanged": 8
+  },
+  "partial_cases": 56,
+  "partial_sequence": {
+    "unavailable": 21,
+    "ordering_ambiguous": 23,
+    "no_recorded_successor": 4,
+    "sequential_after_under_bounds": 8
+  },
+  "partial_ordered_prices": {
+    "less": 4,
+    "more": 3,
+    "same": 1
+  },
+  "matched_tests": 8,
+  "exploratory_patterns": 0
+}

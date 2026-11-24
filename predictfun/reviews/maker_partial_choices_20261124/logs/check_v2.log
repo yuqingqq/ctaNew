@@ -1,0 +1,2 @@
+independent source/action/rate/null/partial checks pass; 8 corruptions refused
+2026-11-24T05:18:42Z tag=mt_choices_check_v2 rc=0 peak_rss_mib=94 wall_s=1.54 cpu_user_s=1.34 memavail_start_gib=22 disk_free_gib=416->416 slot=codex

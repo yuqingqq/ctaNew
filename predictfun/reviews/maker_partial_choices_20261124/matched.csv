@@ -1,0 +1,9 @@
+hypothesis,outcome,exposed,reference,common_strata,common_markets,matched_difference_pp,raw_two_sided_p,day_differences_pp,positive_days,negative_days,max_market_absolute_share,support,exploratory_pattern
+btc_against,less,3,4,3,2,0.0,1.0,"{""20261025"": 0.0, ""20261026"": 0.0}",0,0,0.0,insufficient,False
+btc_against,same,3,4,3,2,-20.0,1.0,"{""20261025"": -28.571428571428577, ""20261026"": 0.0}",0,1,1.0,insufficient,False
+btc_against,more,3,4,3,2,20.0,1.0,"{""20261025"": 28.571428571428577, ""20261026"": 0.0}",1,0,1.0,insufficient,False
+btc_against,offset_retreat,3,4,3,2,0.0,1.0,"{""20261025"": 0.0, ""20261026"": 0.0}",0,0,0.0,insufficient,False
+inventory_adding,less,41,34,31,12,-4.889741131351872,0.7604790419161677,"{""20261024"": -8.437067773167362, ""20261025"": 20.0, ""20261026"": -25.0}",1,2,0.2583025830258302,supported_descriptive,False
+inventory_adding,same,41,34,31,12,1.1505273250239694,1.0,"{""20261024"": -2.4896265560165975, ""20261025"": 15.000000000000002, ""20261026"": 0.0}",1,1,0.4464285714285714,supported_descriptive,False
+inventory_adding,more,41,34,31,12,3.739213806327904,0.8043912175648703,"{""20261024"": 10.92669432918396, ""20261025"": -35.0, ""20261026"": 25.0}",2,1,0.29680365296803657,supported_descriptive,False
+inventory_adding,offset_retreat,41,34,31,12,0.0,1.0,"{""20261024"": 0.0, ""20261025"": 0.0, ""20261026"": 0.0}",0,0,0.0,supported_descriptive,False

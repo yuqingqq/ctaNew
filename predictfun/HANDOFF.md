@@ -23,6 +23,17 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- PARTIAL_CHOICES_20261124_CODEX -->
+## 2026-11-24 — concrete partial chains and observed quote choices
+
+[Report](reviews/maker_partial_choices_20261124/report.md). USER requests concrete partial decisions fulfilled. Full accepted4149 hashes→3286 deduplicated successors;1097 conditionally ordered posting windows. All56 signed positive remainders retained:8 conditional ending→later quote (4 less-aggressive/3 more/1 same),23 ambiguous,21 unavailable,4 no link. Report prints all8 with original/filled amounts,prices,timing and D0/lag contexts. No private pull or successor size inferred.
+
+Frozen matched action-choice test:BTC3vs4 in2markets is insufficient;inventory41vs34 in12markets has mixed day signs and no demonstrated repricing association. None of8 predeclared tests supports a general trigger. Post-to-post offset ranges:15 definite retreats/54 advances/8 unchanged/1020 ambiguous. Do not mistake absolute price changes for a deliberately more defensive quote. Underlying post bounds include G4 scenarios; observed quotes are fill-selected.
+
+Independent identities/physical rows/matched rates/null draws/56-case recount passed;8 falsifiers. Boolean-only checker supersession disclosed;outputs unchanged. No model,new day,replay,queue-value or profitability claim. ONE next priority:ending-anchored market-following-versus-retreat audit on these56 partial cases,not weaker matching or a fitted controller. Must fit remaining allowance or receive a bounded CPU top-up;new days/live not authorized by this packet.
+<!-- /PARTIAL_CHOICES_20261124_CODEX -->
+
+
 <!-- ACTION_POPULATION_20261124_CODEX -->
 ## 2026-11-24 — action-first expansion and subsequent condition mapping
 

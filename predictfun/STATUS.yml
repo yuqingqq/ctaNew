@@ -1,4 +1,16 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+partial_choices_20261124_codex:
+  report: predictfun/reviews/maker_partial_choices_20261124/report.md
+  stage: checked_partial_chains_and_observed_quote_choices
+  source_orders: 4149
+  deduplicated_successors: 3286
+  conditionally_ordered_posts: 1097
+  signed_partial_cases: 56
+  ordered_conditional_end_successors: 8
+  demonstrated_general_triggers: 0
+  private_cancellations_identified: 0
+  new_model_or_profitability_claim: false
+  next_priority: ending_anchored_market_following_vs_retreat_audit_with_resource_gate
 action_population_20261124_codex:
   report: predictfun/reviews/maker_action_population_20261124/report.md
   stage: expanded_actions_then_state_mapping_verified
