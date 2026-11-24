@@ -1,0 +1,17 @@
+{
+  "dashboard.html": {
+    "bytes": 984610,
+    "native_annotations": 13,
+    "served_exact": true
+  },
+  "opening.html": {
+    "bytes": 587863,
+    "native_annotations": 13,
+    "served_exact": true
+  },
+  "unchanged_decoded_payloads": [
+    "02f54439174638ae5dc304886a49366f680418c2c44a8b85e5c105009a197640",
+    "0fb96b9023677b586e176986ec752d3135d9da710a4146994b56d1fc22925c1b"
+  ]
+}
+2026-11-24T13:04:09Z tag=maker3_late_ui_check rc=0 peak_rss_mib=40 wall_s=0.12 cpu_user_s=0.10 memavail_start_gib=22 disk_free_gib=413->413 slot=codex

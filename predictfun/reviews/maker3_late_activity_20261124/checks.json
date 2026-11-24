@@ -1,0 +1,11 @@
+{
+  "raw_target_legs": 319,
+  "corruptions_refused": 4,
+  "native_take_events": 9562,
+  "minute_cells": 60,
+  "proxy_tie_batches": 9562,
+  "chart_maker3_legs": 319,
+  "chart_maker3_taker_legs": 7,
+  "passed": true,
+  "cpu_s": 1.71685207
+}

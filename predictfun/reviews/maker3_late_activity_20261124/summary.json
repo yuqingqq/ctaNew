@@ -1,0 +1,272 @@
+{
+  "pooled": {
+    "all": {
+      "legs": 128803,
+      "events": 122275,
+      "shares": 2747290.891480643,
+      "markets": 934,
+      "late_legs": 26814,
+      "late_events": 26213,
+      "late_shares": 828912.260942168,
+      "late_share_fraction": 0.3017198737536776
+    },
+    "maker": {
+      "legs": 119241,
+      "events": 112713,
+      "shares": 2586236.6881009983,
+      "markets": 934,
+      "late_legs": 24495,
+      "late_events": 23894,
+      "late_shares": 769262.3579986384,
+      "late_share_fraction": 0.2974446853754466
+    },
+    "taker": {
+      "legs": 9562,
+      "events": 9562,
+      "shares": 161054.20337964437,
+      "markets": 885,
+      "late_legs": 2319,
+      "late_events": 2319,
+      "late_shares": 59649.9029435295,
+      "late_share_fraction": 0.3703715996962837
+    }
+  },
+  "market3789484": {
+    "all": {
+      "legs": 319,
+      "events": 314,
+      "shares": 8142.59475131788,
+      "markets": 1,
+      "late_legs": 202,
+      "late_events": 200,
+      "late_shares": 4300.0281828196175,
+      "late_share_fraction": 0.5280906534276015
+    },
+    "maker": {
+      "legs": 312,
+      "events": 307,
+      "shares": 7936.630595762324,
+      "markets": 1,
+      "late_legs": 198,
+      "late_events": 196,
+      "late_shares": 4116.106227264062,
+      "late_share_fraction": 0.5186213693077527
+    },
+    "taker": {
+      "legs": 7,
+      "events": 7,
+      "shares": 205.96415555555552,
+      "markets": 1,
+      "late_legs": 4,
+      "late_events": 4,
+      "late_shares": 183.92195555555554,
+      "late_share_fraction": 0.8929804074862218
+    },
+    "taker_native": {
+      "BUY NO": {
+        "events": 5,
+        "shares": 188.87195555555553
+      },
+      "BUY YES": {
+        "events": 2,
+        "shares": 17.0922
+      }
+    }
+  },
+  "20261024": {
+    "all": {
+      "legs": 38224,
+      "events": 35632,
+      "shares": 747652.0614802088,
+      "markets": 288,
+      "late_legs": 5877,
+      "late_events": 5703,
+      "late_shares": 190057.85844937756,
+      "late_share_fraction": 0.25420629225993063
+    },
+    "maker": {
+      "legs": 34866,
+      "events": 32274,
+      "shares": 695453.9778353223,
+      "markets": 288,
+      "late_legs": 5288,
+      "late_events": 5114,
+      "late_shares": 176137.39206353185,
+      "late_share_fraction": 0.2532696593551439
+    },
+    "taker": {
+      "legs": 3358,
+      "events": 3358,
+      "shares": 52198.08364488648,
+      "markets": 278,
+      "late_legs": 589,
+      "late_events": 589,
+      "late_shares": 13920.466385845692,
+      "late_share_fraction": 0.2666853917578523
+    }
+  },
+  "20261025": {
+    "all": {
+      "legs": 30941,
+      "events": 28460,
+      "shares": 422686.69394859544,
+      "markets": 288,
+      "late_legs": 3274,
+      "late_events": 3173,
+      "late_shares": 89225.9219747488,
+      "late_share_fraction": 0.2110923368351877
+    },
+    "maker": {
+      "legs": 28226,
+      "events": 25745,
+      "shares": 388504.9405423143,
+      "markets": 288,
+      "late_legs": 2836,
+      "late_events": 2735,
+      "late_shares": 79795.41577654702,
+      "late_share_fraction": 0.20539099365161365
+    },
+    "taker": {
+      "legs": 2715,
+      "events": 2715,
+      "shares": 34181.75340628112,
+      "markets": 273,
+      "late_legs": 438,
+      "late_events": 438,
+      "late_shares": 9430.506198201758,
+      "late_share_fraction": 0.2758929913896354
+    }
+  },
+  "20261026": {
+    "all": {
+      "legs": 52009,
+      "events": 50777,
+      "shares": 1419444.1086179044,
+      "markets": 287,
+      "late_legs": 15921,
+      "late_events": 15615,
+      "late_shares": 500974.3874447389,
+      "late_share_fraction": 0.35293702964643786
+    },
+    "maker": {
+      "legs": 49237,
+      "events": 48005,
+      "shares": 1359356.8161271652,
+      "markets": 287,
+      "late_legs": 14888,
+      "late_events": 14582,
+      "late_shares": 470890.79814951355,
+      "late_share_fraction": 0.3464070599881868
+    },
+    "taker": {
+      "legs": 2772,
+      "events": 2772,
+      "shares": 60087.29249073928,
+      "markets": 267,
+      "late_legs": 1033,
+      "late_events": 1033,
+      "late_shares": 30083.589295225276,
+      "late_share_fraction": 0.5006647503690034
+    }
+  },
+  "20261027": {
+    "all": {
+      "legs": 7629,
+      "events": 7406,
+      "shares": 157508.0274339344,
+      "markets": 71,
+      "late_legs": 1742,
+      "late_events": 1722,
+      "late_shares": 48654.09307330277,
+      "late_share_fraction": 0.3088991327360149
+    },
+    "maker": {
+      "legs": 6912,
+      "events": 6689,
+      "shares": 142920.9535961969,
+      "markets": 71,
+      "late_legs": 1483,
+      "late_events": 1463,
+      "late_shares": 42438.75200904599,
+      "late_share_fraction": 0.2969386289497531
+    },
+    "taker": {
+      "legs": 717,
+      "events": 717,
+      "shares": 14587.073837737498,
+      "markets": 67,
+      "late_legs": 259,
+      "late_events": 259,
+      "late_shares": 6215.341064256778,
+      "late_share_fraction": 0.4260855284201946
+    }
+  },
+  "market_counts": {
+    "registry": 1152,
+    "observed_live": 934,
+    "majority_last2": 70,
+    "median_late_share_fraction": 0.03908979796306245,
+    "registry_status": {
+      "ok": 927,
+      "fills_outside_ws": 149,
+      "poll_incomplete": 68,
+      "fills_outside_ws+poll_incomplete": 7,
+      "boundary_censored+outcome_sealed": 1
+    }
+  },
+  "excluded": {
+    "rows": 128983,
+    "statuses": {
+      "ok": 128849,
+      "src_status": 134
+    },
+    "self_legs": 36,
+    "nonpositive": 0
+  },
+  "outside": {
+    "pre": {
+      "legs": 0,
+      "events": 0,
+      "shares": 0.0,
+      "markets": 0,
+      "late_legs": 0,
+      "late_events": 0,
+      "late_shares": 0.0,
+      "late_share_fraction": null
+    },
+    "post": {
+      "legs": 10,
+      "events": 10,
+      "shares": 500.84833333333324,
+      "markets": 5,
+      "late_legs": 10,
+      "late_events": 10,
+      "late_shares": 500.84833333333324,
+      "late_share_fraction": 1.0
+    }
+  },
+  "taker_native": {
+    "BUY NO": {
+      "events": 4809,
+      "shares": 79246.89378736753
+    },
+    "BUY YES": {
+      "events": 4752,
+      "shares": 81509.93959227683
+    },
+    "SELL YES": {
+      "events": 1,
+      "shares": 297.37
+    }
+  },
+  "taker_flow_proxy": {
+    "classes": {
+      "opposes_reduces_absolute": 5359,
+      "adds_same_direction": 3585,
+      "from_flat": 473,
+      "opposes_without_absolute_reduction": 145
+    },
+    "isolated": 3973,
+    "total": 9562
+  }
+}

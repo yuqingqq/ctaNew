@@ -1,3 +1,13 @@
+<!-- MAKER3_LATE_ACTIVITY_20261124_CODEX -->
+## 2026-11-24 — Maker3 late activity and native take direction verified
+
+[Receipt](reviews/maker3_late_activity_20261124/report.md). In3789484, last120s carries52.8% shares and89.3% taker shares; mostly the final minute.319 legs/8,142.595shares, seven takes/205.964shares; passive volume97.47%. All seven native actions BUY (5NO/2YES), not native YES sells. At202.668–202.705s, BUY NO90c109.387sh is chart ask10c, trimming recorded net+553.4→+444.0;248.630s BUY NO84c74.535sh trims+621.5→+547.0. All seven oppose/reduce the absolute captured trade-flow proxy; this is NOT private inventory or identified motive. Captured record order is not exact execution/decision order.
+
+Broader934 observed markets: last2m only30.2% total shares/37.0% taker shares;70/934 have majority volume there. Example late concentration is not a general market-entry timing rule.134 source-status legs/36self legs excluded; registry coverage statuses retained; Oct27 activity stop remains relevant. Checks:319raw/chart legs,9562native takes,60minute cells,4corruptions; chart13native annotations, unchanged embedded research payloads. No replay/model/newdays. All attempts charged45/90CPU seconds; standing-approved cap task2.10/line5.40/.05reserve, approximate usage2.02156/5.33226.
+
+Next priority: align these already observed takes with our contemporaneous inventory and executable prices in this market, before declaring an active-rebalancing rule; use whole-book longer-horizon value. First-quote versus first-position opening scope remains unresolved and unchanged. Do not add a last-two-minute rule or copy all NO buys from this descriptive audit.
+<!-- /MAKER3_LATE_ACTIVITY_20261124_CODEX -->
+
 <!-- OPENING_CHART_20261124_CODEX -->
 ## 2026-11-24 — opening comparison visible; first quote differs from first position
 

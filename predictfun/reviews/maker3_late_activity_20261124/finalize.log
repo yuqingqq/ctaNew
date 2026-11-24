@@ -1,0 +1,14 @@
+{
+  "cap_cpu_s": 90,
+  "charged_upper_cpu_s": 45,
+  "measured_one_core_wall_s": 40.44,
+  "measured_user_cpu_s": 36.56,
+  "upper_includes": "all attempted slot runs, static JS syntax checks and final publication; no browser process",
+  "task_cap_h": 2.1,
+  "line_cap_h": 5.4,
+  "standing_reserve_h": 0.05,
+  "task_charged_h": 2.0215588889,
+  "line_charged_h": 5.3322588889
+}
+Only new owned prefixes indexed; all pre-existing working-tree edits preserved
+2026-11-24T13:05:13Z tag=maker3_late_finalize rc=0 peak_rss_mib=18 wall_s=0.12 cpu_user_s=0.08 memavail_start_gib=22 disk_free_gib=413->413 slot=codex

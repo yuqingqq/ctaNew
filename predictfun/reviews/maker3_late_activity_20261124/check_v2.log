@@ -1,0 +1,12 @@
+{
+  "raw_target_legs": 319,
+  "corruptions_refused": 4,
+  "native_take_events": 9562,
+  "minute_cells": 60,
+  "proxy_tie_batches": 9562,
+  "chart_maker3_legs": 319,
+  "chart_maker3_taker_legs": 7,
+  "passed": true,
+  "cpu_s": 1.71685207
+}
+2026-11-24T13:01:25Z tag=maker3_late_check_v2 rc=0 peak_rss_mib=295 wall_s=2.13 cpu_user_s=1.94 memavail_start_gib=22 disk_free_gib=413->413 slot=codex

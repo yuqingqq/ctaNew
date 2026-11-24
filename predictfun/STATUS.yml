@@ -1,3 +1,15 @@
+maker3_late_activity_20261124_codex:
+  report: predictfun/reviews/maker3_late_activity_20261124/report.md
+  example_market: 3789484
+  last_120s_share_fraction: 0.5280906534
+  pooled_last_120s_share_fraction: 0.3017198738
+  example_takes: 7
+  example_native_actions: "5 BUY NO, 2 BUY YES"
+  example_takes_reduce_recorded_net_absolute: 7
+  private_inventory_or_motive_identified: false
+  new_replay: false
+  packet_charged_upper_cpu_s: 45
+  packet_cap_cpu_s: 90
 opening_chart_20261124_codex:
   report: predictfun/reviews/opening_chart_20261124/report.md
   chart: predictfun/reviews/maker_dashboard_20261124/opening.html

@@ -1,0 +1,11 @@
+{
+  "data/predict_fun/research/maker_trace_v2_20261123/econ/fills_valued.parquet": "2a874707cc7801d6760e2de36075870700cc0be8e72cd9a6df0213424221cde6",
+  "data/predict_fun/research/maker_trace_v2_20261123/markets_20261024.parquet": "9ba05add8488e2dda53639a84a5bc6514242e88d6f9335c24ad8c83b8cefa82e",
+  "data/predict_fun/research/maker_trace_v2_20261123/records_20261024.parquet": "b2b2f37398367a9e4ac9f33196d32c0600d1bada43785c3cba17af7fdc789df4",
+  "data/predict_fun/research/maker_trace_v2_20261123/markets_20261025.parquet": "e017d6d95f627786c7afdbee4e45db31fe788b086433ea1cce270bdcb3a16c29",
+  "data/predict_fun/research/maker_trace_v2_20261123/records_20261025.parquet": "891b271afc7b0cf4e18ea1436b1eba7124248768e387ecb953fcb0f9077e5142",
+  "data/predict_fun/research/maker_trace_v2_20261123/markets_20261026.parquet": "b0f5bc74946c75bdbc7e3918cfc35713f05fe307b8f1a25f556c9cd3c2375877",
+  "data/predict_fun/research/maker_trace_v2_20261123/records_20261026.parquet": "f68a5438757f0b9736da23444cabd36d389ec92062356c6d1925d53ac921ff14",
+  "data/predict_fun/research/maker_trace_v2_20261123/markets_20261027.parquet": "b6139aefc4e45e4e02cc65868e18c0acb77cf272e354ad76794f39ffb4ea5a36",
+  "data/predict_fun/research/maker_trace_v2_20261123/records_20261027.parquet": "9e5215968e5748432a845638702d6fbfb5933dd9a0b04ca31426fc29c8dbc843"
+}
