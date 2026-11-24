@@ -1,0 +1,45 @@
+legs_20261024.parquet 724873 day: string
+mid: int64
+sid: string
+tx: string
+settle_ms: int64
+exec_ms: int64
+first_recv_ns: int64
+mk_idx: int64
+n_makers: int64
+mk_hash: string
+mk_signer: string
+mk_quote: string
+mk_index_set: int64
+mk_price: double
+shares: double
+mk_fee: double
+mk_fee_type: string
+y_side: string
+y_price: double
+y_ptick: int64
+tk_hash: string
+tk_signer: string
+tk_y_side: string
+phase: string
+t_rel_s: double
+status: string
+x_match: string
+tob_20261024.parquet 1629797 day: string
+mid: int64
+upd_ms: int64
+recv_ns: int64
+conn: string
+order_count: int64
+n_bid: int64
+n_ask: int64
+best_bid: double
+best_bid_sh: double
+best_ask: double
+best_ask_sh: double
+pend_bid_usd: double
+pend_ask_usd: double
+status: string
+post columns ['day', 'mid', 'rank', 'maker', 'order_hash', 'side', 'tick', 'grade', 'estimate_class', 'estimate_enabled', 'ws_ms', 'first_record_ms', 'midpoint_is_observed_command', 'effect_lo_ms', 'effect_hi_ms', 'midpoint_ms', 'width_s', 'submit_lo_D0_ms', 'submit_hi_D0_ms', 'submit_lo_D250_ms', 'submit_hi_D250_ms', 'submit_lo_D1000_ms', 'submit_hi_D1000_ms', 'relative_midpoint_s', 'record_lead_from_midpoint_s', 'spread_cat', 'btc_1s_set', 'btc_5s_set', 'btc_30s_set', 'inv_set', 'inv_certain_cat', 'touch_set', 'phase']
+example {'day': '20261024', 'mid': '3697902', 'rank': '3', 'maker': '0x57fbc891e89184da071ae9d97e745531cd7f718a', 'order_hash': '0xd04d83bc424767f2acb00377e823fbf203a6392bd4c922228df496c7f252d7ca', 'side': 'ask', 'tick': '50', 'grade': 'G4_scenario_only', 'estimate_class': 'scenario_only', 'estimate_enabled': 'True', 'ws_ms': '1792816800000', 'first_record_ms': '1792816805190', 'midpoint_is_observed_command': 'False', 'effect_lo_ms': '1792816803381', 'effect_hi_ms': '1792816805190', 'midpoint_ms': '1792816804285.5', 'width_s': '1.809', 'submit_lo_D0_ms': '1792816803381', 'submit_hi_D0_ms': '1792816805190', 'submit_lo_D250_ms': '1792816803131', 'submit_hi_D250_ms': '1792816805190', 'submit_lo_D1000_ms': '1792816802381', 'submit_hi_D1000_ms': '1792816805190', 'relative_midpoint_s': '4.2855', 'record_lead_from_midpoint_s': '0.9045', 'spread_cat': 'tight', 'btc_1s_set': 'flat', 'btc_5s_set': 'flat', 'btc_30s_set': 'flat', 'inv_set': 'flat', 'inv_certain_cat': 'flat', 'touch_set': 'at|crossing', 'phase': 'live'}
+2026-11-24T12:27:10Z tag=maker3_entry_schema rc=0 peak_rss_mib=63 wall_s=0.11 cpu_user_s=0.08 memavail_start_gib=22 disk_free_gib=414->414 slot=codex

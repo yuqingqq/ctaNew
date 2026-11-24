@@ -1,0 +1,2 @@
+selftest: normalization, neutral, future frame, stale gap, changing direction pass
+2026-11-24T12:29:00Z tag=maker3_entry_selftest rc=0 peak_rss_mib=103 wall_s=0.29 cpu_user_s=0.24 memavail_start_gib=22 disk_free_gib=413->413 slot=codex
