@@ -1,0 +1,2 @@
+{"pass_all": true, "orders": 146, "contexts": 876, "falsifiers": 9, "cpu_seconds": 2.974713253}
+2026-11-24T04:50:09Z tag=mt_actpop_check rc=0 peak_rss_mib=283 wall_s=3.35 cpu_user_s=2.96 memavail_start_gib=22 disk_free_gib=415->415 slot=codex

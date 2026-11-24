@@ -1,0 +1,19 @@
+{
+  "pass_all": true,
+  "orders": 146,
+  "raw_events": 218,
+  "matched_feed_legs": 241,
+  "contexts": 876,
+  "falsifiers": {
+    "budget": "refused",
+    "false_pull": "refused",
+    "history": "refused",
+    "actor": "refused",
+    "successor": "refused",
+    "future_state": "refused",
+    "trigger": "refused",
+    "btc": "refused",
+    "omitted_order": "refused"
+  },
+  "cpu_seconds": 2.974448523
+}

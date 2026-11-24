@@ -1,0 +1,38 @@
+ predictfun/FINDINGS.md                             |   13 +
+ predictfun/HANDOFF.md                              |   13 +
+ predictfun/STATUS.yml                              |   22 +
+ .../maker_action_population_20261124/SHA256SUMS    |   47 +
+ .../maker_action_population_20261124/census.json   |   39 +
+ .../maker_action_population_20261124/checks.json   |   19 +
+ .../commit_scope.json                              |   46 +
+ .../evidence/decoded_events.csv                    |  219 ++
+ .../evidence/decoded_orders.json                   | 2630 ++++++++++++++++++
+ .../evidence/life.json                             | 2307 ++++++++++++++++
+ .../evidence/members.json                          | 2894 ++++++++++++++++++++
+ .../maker_action_population_20261124/finalize.py   |   31 +
+ .../logs/build.log                                 |   40 +
+ .../logs/check.log                                 |    2 +
+ .../maker_action_population_20261124/logs/map.log  |    2 +
+ .../logs/present.log                               |    2 +
+ .../logs/publish.log                               |    0
+ .../logs/readout.log                               |  167 ++
+ .../logs/reference_build.log                       |    2 +
+ .../logs/reference_check.log                       |    2 +
+ .../map_result.json                                |    8 +
+ .../outputs/ordered_chains.csv                     |   31 +
+ .../outputs/reference_comparison.csv               |   49 +
+ .../outputs/reference_draws.csv.gz                 |  Bin 0 -> 91204 bytes
+ .../outputs/reference_windows.csv.gz               |  Bin 0 -> 74679 bytes
+ .../outputs/state_cells.csv                        |  561 ++++
+ .../maker_action_population_20261124/present.py    |  110 +
+ .../maker_action_population_20261124/publish.py    |   62 +
+ .../maker_action_population_20261124/readout.json  | 2117 ++++++++++++++
+ .../reference_checks.json                          |   12 +
+ .../reference_result.json                          |    8 +
+ .../maker_action_population_20261124/report.md     |   62 +
+ .../state_blocks.json                              |    6 +
+ .../maker_action_population_20261124/summarize.py  |   29 +
+ predictfun/reviews/maker_trace_20261122/PENDING.md |   13 +
+ 35 files changed, 11565 insertions(+)
+
+2026-11-24T04:58:16Z tag=mt_actpop_publish rc=0 peak_rss_mib=21 wall_s=0.25 cpu_user_s=0.15 memavail_start_gib=22 disk_free_gib=415->415 slot=codex

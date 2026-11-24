@@ -1,0 +1,2117 @@
+{
+  "groups": [
+    {
+      "scope": "all",
+      "n": 146,
+      "budget": {
+        "exhausted": 78,
+        "positive_remainder_not_a_pull": 56,
+        "incomplete_recorded_history": 12
+      },
+      "successors": {
+        "no_recorded_successor": 37,
+        "unavailable": 32,
+        "ordering_ambiguous": 47,
+        "sequential_after_under_bounds": 30
+      },
+      "ordered_kinds": {
+        "exhausted \u2192 reprice": 15,
+        "exhausted \u2192 refill": 7,
+        "inherited_conditional_unavailability \u2192 reprice": 7,
+        "inherited_conditional_unavailability \u2192 refill": 1
+      }
+    },
+    {
+      "scope": "old88",
+      "n": 88,
+      "budget": {
+        "exhausted": 41,
+        "positive_remainder_not_a_pull": 47
+      },
+      "successors": {
+        "ordering_ambiguous": 39,
+        "no_recorded_successor": 13,
+        "sequential_after_under_bounds": 21,
+        "unavailable": 15
+      },
+      "ordered_kinds": {
+        "exhausted \u2192 reprice": 8,
+        "exhausted \u2192 refill": 5,
+        "inherited_conditional_unavailability \u2192 reprice": 7,
+        "inherited_conditional_unavailability \u2192 refill": 1
+      }
+    },
+    {
+      "scope": "new",
+      "n": 58,
+      "budget": {
+        "exhausted": 37,
+        "positive_remainder_not_a_pull": 9,
+        "incomplete_recorded_history": 12
+      },
+      "successors": {
+        "no_recorded_successor": 24,
+        "unavailable": 17,
+        "ordering_ambiguous": 8,
+        "sequential_after_under_bounds": 9
+      },
+      "ordered_kinds": {
+        "exhausted \u2192 reprice": 7,
+        "exhausted \u2192 refill": 2
+      }
+    }
+  ],
+  "conditions": [
+    {
+      "scope": "all",
+      "stage": "post",
+      "lag_ms": 0,
+      "action": "all",
+      "orders": 146,
+      "covered": 122,
+      "btc": {
+        "unknown": 24,
+        "flat": 75,
+        "against": 3,
+        "flat|with": 13,
+        "against|flat|with": 20,
+        "against|flat": 10,
+        "with": 1
+      },
+      "inventory": {
+        "unknown": 24,
+        "adding": 31,
+        "offsetting": 48,
+        "adding|offsetting": 28,
+        "adding|flat": 4,
+        "flat|offsetting": 2,
+        "adding|flat|offsetting": 8,
+        "flat": 1
+      },
+      "spread": {
+        "unknown": 24,
+        "tight|wide": 45,
+        "tight": 76,
+        "wide": 1
+      },
+      "depth": {
+        "unknown": 24,
+        "deep|middle": 22,
+        "deep|thin": 17,
+        "deep": 16,
+        "middle|thin": 9,
+        "deep|middle|thin": 55,
+        "middle": 2,
+        "thin": 1
+      },
+      "time_left": {
+        "unknown": 24,
+        "earlier": 103,
+        "last60s": 8,
+        "last30s": 3,
+        "earlier|last60s": 5,
+        "last30s|last60s": 3
+      }
+    },
+    {
+      "scope": "all",
+      "stage": "post",
+      "lag_ms": 0,
+      "action": "ordered_refill",
+      "orders": 8,
+      "covered": 8,
+      "btc": {
+        "flat": 4,
+        "flat|with": 4
+      },
+      "inventory": {
+        "adding": 2,
+        "offsetting": 3,
+        "adding|offsetting": 3
+      },
+      "spread": {
+        "tight": 6,
+        "tight|wide": 2
+      },
+      "depth": {
+        "deep|middle|thin": 5,
+        "middle": 1,
+        "middle|thin": 2
+      },
+      "time_left": {
+        "earlier": 6,
+        "last30s": 1,
+        "last60s": 1
+      }
+    },
+    {
+      "scope": "all",
+      "stage": "post",
+      "lag_ms": 0,
+      "action": "ordered_reprice",
+      "orders": 22,
+      "covered": 21,
+      "btc": {
+        "flat": 15,
+        "against|flat|with": 3,
+        "against|flat": 1,
+        "unknown": 1,
+        "flat|with": 2
+      },
+      "inventory": {
+        "offsetting": 8,
+        "flat|offsetting": 1,
+        "adding": 6,
+        "adding|flat": 2,
+        "adding|offsetting": 4,
+        "unknown": 1
+      },
+      "spread": {
+        "tight": 13,
+        "tight|wide": 8,
+        "unknown": 1
+      },
+      "depth": {
+        "deep|middle": 6,
+        "deep|thin": 3,
+        "deep|middle|thin": 8,
+        "deep": 3,
+        "unknown": 1,
+        "middle|thin": 1
+      },
+      "time_left": {
+        "earlier": 20,
+        "last30s|last60s": 1,
+        "unknown": 1
+      }
+    },
+    {
+      "scope": "all",
+      "stage": "post",
+      "lag_ms": 1000,
+      "action": "all",
+      "orders": 146,
+      "covered": 122,
+      "btc": {
+        "unknown": 24,
+        "flat": 71,
+        "against": 5,
+        "flat|with": 15,
+        "against|flat|with": 19,
+        "against|flat": 12
+      },
+      "inventory": {
+        "unknown": 24,
+        "adding": 30,
+        "offsetting": 46,
+        "adding|offsetting": 31,
+        "adding|flat": 4,
+        "flat|offsetting": 2,
+        "adding|flat|offsetting": 8,
+        "flat": 1
+      },
+      "spread": {
+        "unknown": 24,
+        "tight|wide": 50,
+        "tight": 72
+      },
+      "depth": {
+        "unknown": 24,
+        "middle": 3,
+        "deep|middle|thin": 62,
+        "middle|thin": 9,
+        "deep": 27,
+        "deep|middle": 11,
+        "deep|thin": 8,
+        "thin": 2
+      },
+      "time_left": {
+        "unknown": 24,
+        "earlier": 108,
+        "last60s": 10,
+        "last30s": 3,
+        "last30s|last60s": 1
+      }
+    },
+    {
+      "scope": "all",
+      "stage": "post",
+      "lag_ms": 1000,
+      "action": "ordered_refill",
+      "orders": 8,
+      "covered": 8,
+      "btc": {
+        "flat": 4,
+        "flat|with": 4
+      },
+      "inventory": {
+        "adding": 2,
+        "offsetting": 2,
+        "adding|offsetting": 4
+      },
+      "spread": {
+        "tight": 3,
+        "tight|wide": 5
+      },
+      "depth": {
+        "deep|middle|thin": 4,
+        "thin": 1,
+        "middle|thin": 2,
+        "deep|middle": 1
+      },
+      "time_left": {
+        "earlier": 6,
+        "last30s": 1,
+        "last60s": 1
+      }
+    },
+    {
+      "scope": "all",
+      "stage": "post",
+      "lag_ms": 1000,
+      "action": "ordered_reprice",
+      "orders": 22,
+      "covered": 21,
+      "btc": {
+        "flat": 15,
+        "flat|with": 3,
+        "against|flat": 1,
+        "unknown": 1,
+        "against|flat|with": 2
+      },
+      "inventory": {
+        "offsetting": 8,
+        "flat|offsetting": 1,
+        "adding": 6,
+        "adding|flat": 2,
+        "adding|offsetting": 4,
+        "unknown": 1
+      },
+      "spread": {
+        "tight": 14,
+        "tight|wide": 7,
+        "unknown": 1
+      },
+      "depth": {
+        "deep": 4,
+        "deep|thin": 2,
+        "deep|middle|thin": 10,
+        "deep|middle": 3,
+        "unknown": 1,
+        "middle|thin": 2
+      },
+      "time_left": {
+        "earlier": 20,
+        "last30s|last60s": 1,
+        "unknown": 1
+      }
+    },
+    {
+      "scope": "all",
+      "stage": "ending",
+      "lag_ms": 0,
+      "action": "all",
+      "orders": 146,
+      "covered": 117,
+      "btc": {
+        "flat": 96,
+        "unknown": 29,
+        "against": 7,
+        "against|flat|with": 2,
+        "against|flat": 7,
+        "flat|with": 5
+      },
+      "inventory": {
+        "offsetting": 61,
+        "unknown": 29,
+        "adding": 49,
+        "adding|offsetting": 7
+      },
+      "spread": {
+        "tight": 96,
+        "unknown": 29,
+        "tight|wide": 21
+      },
+      "depth": {
+        "deep": 39,
+        "unknown": 29,
+        "deep|thin": 24,
+        "middle|thin": 10,
+        "deep|middle": 27,
+        "deep|middle|thin": 11,
+        "middle": 4,
+        "thin": 2
+      },
+      "time_left": {
+        "earlier": 97,
+        "unknown": 29,
+        "last60s": 6,
+        "last30s": 3,
+        "earlier|last60s": 5,
+        "last30s|last60s": 5,
+        "earlier|last30s|last60s": 1
+      }
+    },
+    {
+      "scope": "all",
+      "stage": "ending",
+      "lag_ms": 0,
+      "action": "ordered_refill",
+      "orders": 8,
+      "covered": 8,
+      "btc": {
+        "flat": 8
+      },
+      "inventory": {
+        "adding": 2,
+        "offsetting": 6
+      },
+      "spread": {
+        "tight": 5,
+        "tight|wide": 3
+      },
+      "depth": {
+        "middle": 1,
+        "middle|thin": 2,
+        "deep": 3,
+        "thin": 1,
+        "deep|middle|thin": 1
+      },
+      "time_left": {
+        "earlier": 6,
+        "last30s": 1,
+        "last60s": 1
+      }
+    },
+    {
+      "scope": "all",
+      "stage": "ending",
+      "lag_ms": 0,
+      "action": "ordered_reprice",
+      "orders": 22,
+      "covered": 22,
+      "btc": {
+        "flat": 18,
+        "against|flat|with": 1,
+        "against|flat": 2,
+        "flat|with": 1
+      },
+      "inventory": {
+        "offsetting": 10,
+        "adding": 11,
+        "adding|offsetting": 1
+      },
+      "spread": {
+        "tight": 17,
+        "tight|wide": 5
+      },
+      "depth": {
+        "deep|middle": 6,
+        "deep|thin": 5,
+        "deep": 7,
+        "middle|thin": 3,
+        "deep|middle|thin": 1
+      },
+      "time_left": {
+        "earlier": 21,
+        "last30s|last60s": 1
+      }
+    },
+    {
+      "scope": "all",
+      "stage": "ending",
+      "lag_ms": 1000,
+      "action": "all",
+      "orders": 146,
+      "covered": 117,
+      "btc": {
+        "flat": 98,
+        "unknown": 29,
+        "against": 9,
+        "flat|with": 4,
+        "against|flat|with": 3,
+        "against|flat": 3
+      },
+      "inventory": {
+        "offsetting": 59,
+        "unknown": 29,
+        "adding|flat": 1,
+        "adding": 47,
+        "adding|offsetting": 9,
+        "flat|offsetting": 1
+      },
+      "spread": {
+        "tight": 98,
+        "unknown": 29,
+        "tight|wide": 19
+      },
+      "depth": {
+        "deep": 47,
+        "unknown": 29,
+        "deep|thin": 19,
+        "middle|thin": 12,
+        "deep|middle|thin": 17,
+        "deep|middle": 20,
+        "middle": 1,
+        "thin": 1
+      },
+      "time_left": {
+        "earlier": 101,
+        "unknown": 29,
+        "last60s": 8,
+        "last30s": 3,
+        "last30s|last60s": 3,
+        "earlier|last30s|last60s": 1,
+        "earlier|last60s": 1
+      }
+    },
+    {
+      "scope": "all",
+      "stage": "ending",
+      "lag_ms": 1000,
+      "action": "ordered_refill",
+      "orders": 8,
+      "covered": 8,
+      "btc": {
+        "flat": 8
+      },
+      "inventory": {
+        "adding": 2,
+        "offsetting": 6
+      },
+      "spread": {
+        "tight": 7,
+        "tight|wide": 1
+      },
+      "depth": {
+        "middle": 1,
+        "middle|thin": 3,
+        "deep": 3,
+        "deep|middle|thin": 1
+      },
+      "time_left": {
+        "earlier": 6,
+        "last30s": 1,
+        "last60s": 1
+      }
+    },
+    {
+      "scope": "all",
+      "stage": "ending",
+      "lag_ms": 1000,
+      "action": "ordered_reprice",
+      "orders": 22,
+      "covered": 22,
+      "btc": {
+        "flat": 19,
+        "flat|with": 2,
+        "against|flat": 1
+      },
+      "inventory": {
+        "offsetting": 11,
+        "adding": 11
+      },
+      "spread": {
+        "tight": 18,
+        "tight|wide": 4
+      },
+      "depth": {
+        "deep": 9,
+        "deep|thin": 4,
+        "deep|middle": 4,
+        "middle|thin": 3,
+        "deep|middle|thin": 2
+      },
+      "time_left": {
+        "earlier": 21,
+        "last30s|last60s": 1
+      }
+    },
+    {
+      "scope": "all",
+      "stage": "successor",
+      "lag_ms": 0,
+      "action": "all",
+      "orders": 146,
+      "covered": 89,
+      "btc": {
+        "unknown": 57,
+        "flat": 56,
+        "against": 4,
+        "against|flat|with": 10,
+        "with": 4,
+        "flat|with": 8,
+        "against|flat": 7
+      },
+      "inventory": {
+        "unknown": 57,
+        "adding": 28,
+        "offsetting": 38,
+        "adding|offsetting": 15,
+        "adding|flat|offsetting": 5,
+        "flat|offsetting": 1,
+        "adding|flat": 2
+      },
+      "spread": {
+        "unknown": 57,
+        "wide": 2,
+        "tight": 54,
+        "tight|wide": 33
+      },
+      "depth": {
+        "unknown": 57,
+        "deep": 11,
+        "deep|thin": 15,
+        "deep|middle|thin": 40,
+        "middle|thin": 4,
+        "deep|middle": 15,
+        "middle": 1,
+        "thin": 3
+      },
+      "time_left": {
+        "unknown": 57,
+        "earlier": 73,
+        "last60s": 9,
+        "last30s": 4,
+        "last30s|last60s": 3
+      }
+    },
+    {
+      "scope": "all",
+      "stage": "successor",
+      "lag_ms": 0,
+      "action": "ordered_refill",
+      "orders": 8,
+      "covered": 8,
+      "btc": {
+        "flat": 8
+      },
+      "inventory": {
+        "adding": 5,
+        "offsetting": 3
+      },
+      "spread": {
+        "tight": 6,
+        "wide": 1,
+        "tight|wide": 1
+      },
+      "depth": {
+        "middle": 1,
+        "deep": 2,
+        "deep|middle|thin": 2,
+        "thin": 1,
+        "deep|middle": 1,
+        "deep|thin": 1
+      },
+      "time_left": {
+        "earlier": 5,
+        "last30s": 1,
+        "last60s": 2
+      }
+    },
+    {
+      "scope": "all",
+      "stage": "successor",
+      "lag_ms": 0,
+      "action": "ordered_reprice",
+      "orders": 22,
+      "covered": 22,
+      "btc": {
+        "with": 2,
+        "against": 1,
+        "flat": 15,
+        "against|flat": 1,
+        "flat|with": 3
+      },
+      "inventory": {
+        "offsetting": 12,
+        "adding": 7,
+        "adding|offsetting": 3
+      },
+      "spread": {
+        "tight": 20,
+        "tight|wide": 2
+      },
+      "depth": {
+        "deep|middle": 3,
+        "deep|thin": 2,
+        "deep": 7,
+        "deep|middle|thin": 8,
+        "middle|thin": 1,
+        "thin": 1
+      },
+      "time_left": {
+        "earlier": 20,
+        "last30s": 1,
+        "last60s": 1
+      }
+    },
+    {
+      "scope": "all",
+      "stage": "successor",
+      "lag_ms": 1000,
+      "action": "all",
+      "orders": 146,
+      "covered": 89,
+      "btc": {
+        "unknown": 57,
+        "flat": 55,
+        "against|flat": 11,
+        "against|flat|with": 9,
+        "flat|with": 9,
+        "against": 3,
+        "with": 2
+      },
+      "inventory": {
+        "unknown": 57,
+        "adding": 26,
+        "offsetting": 37,
+        "adding|offsetting": 17,
+        "flat|offsetting": 2,
+        "adding|flat|offsetting": 5,
+        "adding|flat": 2
+      },
+      "spread": {
+        "unknown": 57,
+        "wide": 1,
+        "tight": 56,
+        "tight|wide": 32
+      },
+      "depth": {
+        "unknown": 57,
+        "middle": 5,
+        "deep|middle|thin": 41,
+        "deep|thin": 13,
+        "deep|middle": 13,
+        "thin": 2,
+        "deep": 13,
+        "middle|thin": 2
+      },
+      "time_left": {
+        "unknown": 57,
+        "earlier": 73,
+        "last60s": 11,
+        "last30s": 4,
+        "last30s|last60s": 1
+      }
+    },
+    {
+      "scope": "all",
+      "stage": "successor",
+      "lag_ms": 1000,
+      "action": "ordered_refill",
+      "orders": 8,
+      "covered": 8,
+      "btc": {
+        "flat": 8
+      },
+      "inventory": {
+        "adding": 3,
+        "offsetting": 3,
+        "adding|offsetting": 2
+      },
+      "spread": {
+        "tight": 6,
+        "tight|wide": 2
+      },
+      "depth": {
+        "deep|middle": 2,
+        "middle": 1,
+        "deep|middle|thin": 3,
+        "thin": 1,
+        "deep|thin": 1
+      },
+      "time_left": {
+        "earlier": 5,
+        "last30s": 1,
+        "last60s": 2
+      }
+    },
+    {
+      "scope": "all",
+      "stage": "successor",
+      "lag_ms": 1000,
+      "action": "ordered_reprice",
+      "orders": 22,
+      "covered": 22,
+      "btc": {
+        "flat|with": 3,
+        "against": 1,
+        "flat": 16,
+        "against|flat": 1,
+        "with": 1
+      },
+      "inventory": {
+        "offsetting": 11,
+        "adding|offsetting": 4,
+        "adding": 7
+      },
+      "spread": {
+        "tight": 19,
+        "tight|wide": 3
+      },
+      "depth": {
+        "deep|thin": 5,
+        "deep": 7,
+        "deep|middle|thin": 5,
+        "middle": 1,
+        "deep|middle": 4
+      },
+      "time_left": {
+        "earlier": 20,
+        "last30s": 1,
+        "last60s": 1
+      }
+    },
+    {
+      "scope": "old88",
+      "stage": "post",
+      "lag_ms": 0,
+      "action": "all",
+      "orders": 88,
+      "covered": 78,
+      "btc": {
+        "flat": 47,
+        "against": 3,
+        "unknown": 10,
+        "against|flat": 6,
+        "against|flat|with": 15,
+        "flat|with": 6,
+        "with": 1
+      },
+      "inventory": {
+        "offsetting": 34,
+        "adding": 21,
+        "adding|offsetting": 13,
+        "unknown": 10,
+        "adding|flat": 2,
+        "flat|offsetting": 2,
+        "adding|flat|offsetting": 6
+      },
+      "spread": {
+        "tight": 42,
+        "tight|wide": 35,
+        "unknown": 10,
+        "wide": 1
+      },
+      "depth": {
+        "deep|thin": 10,
+        "deep|middle": 15,
+        "deep": 9,
+        "middle|thin": 7,
+        "deep|middle|thin": 34,
+        "middle": 2,
+        "unknown": 10,
+        "thin": 1
+      },
+      "time_left": {
+        "earlier": 61,
+        "last60s": 8,
+        "last30s": 3,
+        "unknown": 10,
+        "earlier|last60s": 3,
+        "last30s|last60s": 3
+      }
+    },
+    {
+      "scope": "old88",
+      "stage": "post",
+      "lag_ms": 0,
+      "action": "ordered_refill",
+      "orders": 6,
+      "covered": 6,
+      "btc": {
+        "flat": 4,
+        "flat|with": 2
+      },
+      "inventory": {
+        "adding": 2,
+        "offsetting": 3,
+        "adding|offsetting": 1
+      },
+      "spread": {
+        "tight": 4,
+        "tight|wide": 2
+      },
+      "depth": {
+        "deep|middle|thin": 3,
+        "middle": 1,
+        "middle|thin": 2
+      },
+      "time_left": {
+        "earlier": 4,
+        "last30s": 1,
+        "last60s": 1
+      }
+    },
+    {
+      "scope": "old88",
+      "stage": "post",
+      "lag_ms": 0,
+      "action": "ordered_reprice",
+      "orders": 15,
+      "covered": 14,
+      "btc": {
+        "flat": 9,
+        "against|flat|with": 3,
+        "unknown": 1,
+        "flat|with": 2
+      },
+      "inventory": {
+        "offsetting": 6,
+        "flat|offsetting": 1,
+        "adding": 3,
+        "adding|offsetting": 4,
+        "unknown": 1
+      },
+      "spread": {
+        "tight": 8,
+        "tight|wide": 6,
+        "unknown": 1
+      },
+      "depth": {
+        "deep|middle": 6,
+        "deep|thin": 2,
+        "deep|middle|thin": 4,
+        "deep": 2,
+        "unknown": 1
+      },
+      "time_left": {
+        "earlier": 13,
+        "last30s|last60s": 1,
+        "unknown": 1
+      }
+    },
+    {
+      "scope": "old88",
+      "stage": "post",
+      "lag_ms": 1000,
+      "action": "all",
+      "orders": 88,
+      "covered": 78,
+      "btc": {
+        "flat": 47,
+        "against": 4,
+        "unknown": 10,
+        "against|flat": 5,
+        "flat|with": 8,
+        "against|flat|with": 14
+      },
+      "inventory": {
+        "offsetting": 32,
+        "adding": 20,
+        "unknown": 10,
+        "adding|offsetting": 16,
+        "adding|flat": 2,
+        "flat|offsetting": 2,
+        "adding|flat|offsetting": 6
+      },
+      "spread": {
+        "tight": 45,
+        "tight|wide": 33,
+        "unknown": 10
+      },
+      "depth": {
+        "deep|middle|thin": 39,
+        "middle|thin": 7,
+        "deep": 13,
+        "middle": 2,
+        "unknown": 10,
+        "deep|thin": 8,
+        "thin": 2,
+        "deep|middle": 7
+      },
+      "time_left": {
+        "earlier": 64,
+        "last60s": 10,
+        "last30s": 3,
+        "unknown": 10,
+        "last30s|last60s": 1
+      }
+    },
+    {
+      "scope": "old88",
+      "stage": "post",
+      "lag_ms": 1000,
+      "action": "ordered_refill",
+      "orders": 6,
+      "covered": 6,
+      "btc": {
+        "flat": 4,
+        "flat|with": 2
+      },
+      "inventory": {
+        "adding": 2,
+        "offsetting": 2,
+        "adding|offsetting": 2
+      },
+      "spread": {
+        "tight": 3,
+        "tight|wide": 3
+      },
+      "depth": {
+        "deep|middle|thin": 2,
+        "thin": 1,
+        "middle|thin": 2,
+        "deep|middle": 1
+      },
+      "time_left": {
+        "earlier": 4,
+        "last30s": 1,
+        "last60s": 1
+      }
+    },
+    {
+      "scope": "old88",
+      "stage": "post",
+      "lag_ms": 1000,
+      "action": "ordered_reprice",
+      "orders": 15,
+      "covered": 14,
+      "btc": {
+        "flat": 9,
+        "flat|with": 3,
+        "unknown": 1,
+        "against|flat|with": 2
+      },
+      "inventory": {
+        "offsetting": 6,
+        "flat|offsetting": 1,
+        "adding": 3,
+        "adding|offsetting": 4,
+        "unknown": 1
+      },
+      "spread": {
+        "tight": 9,
+        "tight|wide": 5,
+        "unknown": 1
+      },
+      "depth": {
+        "deep": 3,
+        "deep|thin": 2,
+        "deep|middle|thin": 6,
+        "deep|middle": 2,
+        "unknown": 1,
+        "middle|thin": 1
+      },
+      "time_left": {
+        "earlier": 13,
+        "last30s|last60s": 1,
+        "unknown": 1
+      }
+    },
+    {
+      "scope": "old88",
+      "stage": "ending",
+      "lag_ms": 0,
+      "action": "all",
+      "orders": 88,
+      "covered": 80,
+      "btc": {
+        "flat": 61,
+        "against": 6,
+        "unknown": 8,
+        "against|flat|with": 2,
+        "against|flat": 6,
+        "flat|with": 5
+      },
+      "inventory": {
+        "offsetting": 41,
+        "adding": 35,
+        "adding|offsetting": 4,
+        "unknown": 8
+      },
+      "spread": {
+        "tight": 60,
+        "tight|wide": 20,
+        "unknown": 8
+      },
+      "depth": {
+        "deep|thin": 14,
+        "deep|middle": 26,
+        "deep": 16,
+        "middle|thin": 7,
+        "deep|middle|thin": 11,
+        "middle": 4,
+        "unknown": 8,
+        "thin": 2
+      },
+      "time_left": {
+        "earlier": 62,
+        "last60s": 6,
+        "last30s": 3,
+        "unknown": 8,
+        "earlier|last60s": 3,
+        "last30s|last60s": 5,
+        "earlier|last30s|last60s": 1
+      }
+    },
+    {
+      "scope": "old88",
+      "stage": "ending",
+      "lag_ms": 0,
+      "action": "ordered_refill",
+      "orders": 6,
+      "covered": 6,
+      "btc": {
+        "flat": 6
+      },
+      "inventory": {
+        "adding": 2,
+        "offsetting": 4
+      },
+      "spread": {
+        "tight": 3,
+        "tight|wide": 3
+      },
+      "depth": {
+        "middle": 1,
+        "middle|thin": 2,
+        "thin": 1,
+        "deep|middle|thin": 1,
+        "deep": 1
+      },
+      "time_left": {
+        "earlier": 4,
+        "last30s": 1,
+        "last60s": 1
+      }
+    },
+    {
+      "scope": "old88",
+      "stage": "ending",
+      "lag_ms": 0,
+      "action": "ordered_reprice",
+      "orders": 15,
+      "covered": 15,
+      "btc": {
+        "flat": 12,
+        "against|flat|with": 1,
+        "flat|with": 1,
+        "against|flat": 1
+      },
+      "inventory": {
+        "offsetting": 8,
+        "adding": 6,
+        "adding|offsetting": 1
+      },
+      "spread": {
+        "tight": 11,
+        "tight|wide": 4
+      },
+      "depth": {
+        "deep|middle": 6,
+        "deep|thin": 3,
+        "deep": 4,
+        "middle|thin": 1,
+        "deep|middle|thin": 1
+      },
+      "time_left": {
+        "earlier": 14,
+        "last30s|last60s": 1
+      }
+    },
+    {
+      "scope": "old88",
+      "stage": "ending",
+      "lag_ms": 1000,
+      "action": "all",
+      "orders": 88,
+      "covered": 80,
+      "btc": {
+        "flat": 62,
+        "against": 8,
+        "unknown": 8,
+        "flat|with": 4,
+        "against|flat|with": 3,
+        "against|flat": 3
+      },
+      "inventory": {
+        "offsetting": 39,
+        "adding": 34,
+        "adding|offsetting": 6,
+        "unknown": 8,
+        "flat|offsetting": 1
+      },
+      "spread": {
+        "tight": 62,
+        "tight|wide": 18,
+        "unknown": 8
+      },
+      "depth": {
+        "deep|thin": 16,
+        "deep|middle|thin": 16,
+        "deep": 19,
+        "deep|middle": 18,
+        "middle|thin": 9,
+        "unknown": 8,
+        "middle": 1,
+        "thin": 1
+      },
+      "time_left": {
+        "earlier": 64,
+        "last60s": 8,
+        "last30s": 3,
+        "unknown": 8,
+        "last30s|last60s": 3,
+        "earlier|last30s|last60s": 1,
+        "earlier|last60s": 1
+      }
+    },
+    {
+      "scope": "old88",
+      "stage": "ending",
+      "lag_ms": 1000,
+      "action": "ordered_refill",
+      "orders": 6,
+      "covered": 6,
+      "btc": {
+        "flat": 6
+      },
+      "inventory": {
+        "adding": 2,
+        "offsetting": 4
+      },
+      "spread": {
+        "tight": 5,
+        "tight|wide": 1
+      },
+      "depth": {
+        "middle": 1,
+        "middle|thin": 3,
+        "deep|middle|thin": 1,
+        "deep": 1
+      },
+      "time_left": {
+        "earlier": 4,
+        "last30s": 1,
+        "last60s": 1
+      }
+    },
+    {
+      "scope": "old88",
+      "stage": "ending",
+      "lag_ms": 1000,
+      "action": "ordered_reprice",
+      "orders": 15,
+      "covered": 15,
+      "btc": {
+        "flat": 12,
+        "flat|with": 2,
+        "against|flat": 1
+      },
+      "inventory": {
+        "offsetting": 9,
+        "adding": 6
+      },
+      "spread": {
+        "tight": 12,
+        "tight|wide": 3
+      },
+      "depth": {
+        "deep": 5,
+        "deep|thin": 3,
+        "deep|middle": 4,
+        "deep|middle|thin": 2,
+        "middle|thin": 1
+      },
+      "time_left": {
+        "earlier": 14,
+        "last30s|last60s": 1
+      }
+    },
+    {
+      "scope": "old88",
+      "stage": "successor",
+      "lag_ms": 0,
+      "action": "all",
+      "orders": 88,
+      "covered": 64,
+      "btc": {
+        "flat": 35,
+        "against": 4,
+        "against|flat|with": 8,
+        "unknown": 24,
+        "with": 4,
+        "flat|with": 7,
+        "against|flat": 6
+      },
+      "inventory": {
+        "offsetting": 33,
+        "adding|offsetting": 10,
+        "adding": 16,
+        "unknown": 24,
+        "adding|flat|offsetting": 4,
+        "adding|flat": 1
+      },
+      "spread": {
+        "tight": 36,
+        "unknown": 24,
+        "tight|wide": 27,
+        "wide": 1
+      },
+      "depth": {
+        "deep|thin": 7,
+        "deep|middle|thin": 31,
+        "middle|thin": 3,
+        "unknown": 24,
+        "deep|middle": 12,
+        "middle": 1,
+        "thin": 2,
+        "deep": 8
+      },
+      "time_left": {
+        "earlier": 48,
+        "last60s": 9,
+        "unknown": 24,
+        "last30s": 4,
+        "last30s|last60s": 3
+      }
+    },
+    {
+      "scope": "old88",
+      "stage": "successor",
+      "lag_ms": 0,
+      "action": "ordered_refill",
+      "orders": 6,
+      "covered": 6,
+      "btc": {
+        "flat": 6
+      },
+      "inventory": {
+        "adding": 3,
+        "offsetting": 3
+      },
+      "spread": {
+        "tight": 4,
+        "wide": 1,
+        "tight|wide": 1
+      },
+      "depth": {
+        "middle": 1,
+        "deep": 2,
+        "thin": 1,
+        "deep|middle": 1,
+        "deep|thin": 1
+      },
+      "time_left": {
+        "earlier": 3,
+        "last30s": 1,
+        "last60s": 2
+      }
+    },
+    {
+      "scope": "old88",
+      "stage": "successor",
+      "lag_ms": 0,
+      "action": "ordered_reprice",
+      "orders": 15,
+      "covered": 15,
+      "btc": {
+        "with": 2,
+        "against": 1,
+        "flat": 9,
+        "against|flat": 1,
+        "flat|with": 2
+      },
+      "inventory": {
+        "offsetting": 11,
+        "adding": 3,
+        "adding|offsetting": 1
+      },
+      "spread": {
+        "tight": 14,
+        "tight|wide": 1
+      },
+      "depth": {
+        "deep|middle": 3,
+        "deep|thin": 1,
+        "deep": 5,
+        "middle|thin": 1,
+        "deep|middle|thin": 5
+      },
+      "time_left": {
+        "earlier": 13,
+        "last30s": 1,
+        "last60s": 1
+      }
+    },
+    {
+      "scope": "old88",
+      "stage": "successor",
+      "lag_ms": 1000,
+      "action": "all",
+      "orders": 88,
+      "covered": 64,
+      "btc": {
+        "flat": 37,
+        "against|flat": 7,
+        "against|flat|with": 7,
+        "unknown": 24,
+        "flat|with": 8,
+        "against": 3,
+        "with": 2
+      },
+      "inventory": {
+        "offsetting": 30,
+        "adding|offsetting": 12,
+        "adding": 16,
+        "unknown": 24,
+        "flat|offsetting": 1,
+        "adding|flat|offsetting": 4,
+        "adding|flat": 1
+      },
+      "spread": {
+        "tight": 38,
+        "unknown": 24,
+        "tight|wide": 26
+      },
+      "depth": {
+        "deep|middle|thin": 32,
+        "unknown": 24,
+        "middle": 4,
+        "deep|thin": 8,
+        "deep|middle": 9,
+        "thin": 2,
+        "deep": 8,
+        "middle|thin": 1
+      },
+      "time_left": {
+        "earlier": 48,
+        "last60s": 11,
+        "unknown": 24,
+        "last30s": 4,
+        "last30s|last60s": 1
+      }
+    },
+    {
+      "scope": "old88",
+      "stage": "successor",
+      "lag_ms": 1000,
+      "action": "ordered_refill",
+      "orders": 6,
+      "covered": 6,
+      "btc": {
+        "flat": 6
+      },
+      "inventory": {
+        "adding": 3,
+        "offsetting": 3
+      },
+      "spread": {
+        "tight": 4,
+        "tight|wide": 2
+      },
+      "depth": {
+        "deep|middle": 2,
+        "middle": 1,
+        "thin": 1,
+        "deep|middle|thin": 1,
+        "deep|thin": 1
+      },
+      "time_left": {
+        "earlier": 3,
+        "last30s": 1,
+        "last60s": 2
+      }
+    },
+    {
+      "scope": "old88",
+      "stage": "successor",
+      "lag_ms": 1000,
+      "action": "ordered_reprice",
+      "orders": 15,
+      "covered": 15,
+      "btc": {
+        "flat|with": 2,
+        "against": 1,
+        "flat": 10,
+        "against|flat": 1,
+        "with": 1
+      },
+      "inventory": {
+        "offsetting": 10,
+        "adding": 3,
+        "adding|offsetting": 2
+      },
+      "spread": {
+        "tight": 13,
+        "tight|wide": 2
+      },
+      "depth": {
+        "deep|thin": 4,
+        "deep": 5,
+        "middle": 1,
+        "deep|middle|thin": 2,
+        "deep|middle": 3
+      },
+      "time_left": {
+        "earlier": 13,
+        "last30s": 1,
+        "last60s": 1
+      }
+    },
+    {
+      "scope": "new",
+      "stage": "post",
+      "lag_ms": 0,
+      "action": "all",
+      "orders": 58,
+      "covered": 44,
+      "btc": {
+        "unknown": 14,
+        "flat": 28,
+        "flat|with": 7,
+        "against|flat|with": 5,
+        "against|flat": 4
+      },
+      "inventory": {
+        "unknown": 14,
+        "adding": 10,
+        "adding|offsetting": 15,
+        "offsetting": 14,
+        "adding|flat|offsetting": 2,
+        "adding|flat": 2,
+        "flat": 1
+      },
+      "spread": {
+        "unknown": 14,
+        "tight|wide": 10,
+        "tight": 34
+      },
+      "depth": {
+        "unknown": 14,
+        "deep|middle": 7,
+        "deep|middle|thin": 21,
+        "deep": 7,
+        "deep|thin": 7,
+        "middle|thin": 2
+      },
+      "time_left": {
+        "unknown": 14,
+        "earlier": 42,
+        "earlier|last60s": 2
+      }
+    },
+    {
+      "scope": "new",
+      "stage": "post",
+      "lag_ms": 0,
+      "action": "ordered_refill",
+      "orders": 2,
+      "covered": 2,
+      "btc": {
+        "flat|with": 2
+      },
+      "inventory": {
+        "adding|offsetting": 2
+      },
+      "spread": {
+        "tight": 2
+      },
+      "depth": {
+        "deep|middle|thin": 2
+      },
+      "time_left": {
+        "earlier": 2
+      }
+    },
+    {
+      "scope": "new",
+      "stage": "post",
+      "lag_ms": 0,
+      "action": "ordered_reprice",
+      "orders": 7,
+      "covered": 7,
+      "btc": {
+        "flat": 6,
+        "against|flat": 1
+      },
+      "inventory": {
+        "adding": 3,
+        "adding|flat": 2,
+        "offsetting": 2
+      },
+      "spread": {
+        "tight": 5,
+        "tight|wide": 2
+      },
+      "depth": {
+        "deep|middle|thin": 4,
+        "deep|thin": 1,
+        "deep": 1,
+        "middle|thin": 1
+      },
+      "time_left": {
+        "earlier": 7
+      }
+    },
+    {
+      "scope": "new",
+      "stage": "post",
+      "lag_ms": 1000,
+      "action": "all",
+      "orders": 58,
+      "covered": 44,
+      "btc": {
+        "unknown": 14,
+        "flat": 24,
+        "flat|with": 7,
+        "against|flat|with": 5,
+        "against|flat": 7,
+        "against": 1
+      },
+      "inventory": {
+        "unknown": 14,
+        "adding": 10,
+        "adding|offsetting": 15,
+        "offsetting": 14,
+        "adding|flat|offsetting": 2,
+        "adding|flat": 2,
+        "flat": 1
+      },
+      "spread": {
+        "unknown": 14,
+        "tight|wide": 17,
+        "tight": 27
+      },
+      "depth": {
+        "unknown": 14,
+        "middle": 1,
+        "deep|middle|thin": 23,
+        "deep|middle": 4,
+        "deep": 14,
+        "middle|thin": 2
+      },
+      "time_left": {
+        "unknown": 14,
+        "earlier": 44
+      }
+    },
+    {
+      "scope": "new",
+      "stage": "post",
+      "lag_ms": 1000,
+      "action": "ordered_refill",
+      "orders": 2,
+      "covered": 2,
+      "btc": {
+        "flat|with": 2
+      },
+      "inventory": {
+        "adding|offsetting": 2
+      },
+      "spread": {
+        "tight|wide": 2
+      },
+      "depth": {
+        "deep|middle|thin": 2
+      },
+      "time_left": {
+        "earlier": 2
+      }
+    },
+    {
+      "scope": "new",
+      "stage": "post",
+      "lag_ms": 1000,
+      "action": "ordered_reprice",
+      "orders": 7,
+      "covered": 7,
+      "btc": {
+        "flat": 6,
+        "against|flat": 1
+      },
+      "inventory": {
+        "adding": 3,
+        "adding|flat": 2,
+        "offsetting": 2
+      },
+      "spread": {
+        "tight": 5,
+        "tight|wide": 2
+      },
+      "depth": {
+        "deep|middle|thin": 4,
+        "deep": 1,
+        "deep|middle": 1,
+        "middle|thin": 1
+      },
+      "time_left": {
+        "earlier": 7
+      }
+    },
+    {
+      "scope": "new",
+      "stage": "ending",
+      "lag_ms": 0,
+      "action": "all",
+      "orders": 58,
+      "covered": 37,
+      "btc": {
+        "flat": 35,
+        "unknown": 21,
+        "against": 1,
+        "against|flat": 1
+      },
+      "inventory": {
+        "offsetting": 20,
+        "unknown": 21,
+        "adding": 14,
+        "adding|offsetting": 3
+      },
+      "spread": {
+        "tight": 36,
+        "unknown": 21,
+        "tight|wide": 1
+      },
+      "depth": {
+        "deep": 23,
+        "unknown": 21,
+        "middle|thin": 3,
+        "deep|thin": 10,
+        "deep|middle": 1
+      },
+      "time_left": {
+        "earlier": 35,
+        "unknown": 21,
+        "earlier|last60s": 2
+      }
+    },
+    {
+      "scope": "new",
+      "stage": "ending",
+      "lag_ms": 0,
+      "action": "ordered_refill",
+      "orders": 2,
+      "covered": 2,
+      "btc": {
+        "flat": 2
+      },
+      "inventory": {
+        "offsetting": 2
+      },
+      "spread": {
+        "tight": 2
+      },
+      "depth": {
+        "deep": 2
+      },
+      "time_left": {
+        "earlier": 2
+      }
+    },
+    {
+      "scope": "new",
+      "stage": "ending",
+      "lag_ms": 0,
+      "action": "ordered_reprice",
+      "orders": 7,
+      "covered": 7,
+      "btc": {
+        "flat": 6,
+        "against|flat": 1
+      },
+      "inventory": {
+        "adding": 5,
+        "offsetting": 2
+      },
+      "spread": {
+        "tight": 6,
+        "tight|wide": 1
+      },
+      "depth": {
+        "deep|thin": 2,
+        "deep": 3,
+        "middle|thin": 2
+      },
+      "time_left": {
+        "earlier": 7
+      }
+    },
+    {
+      "scope": "new",
+      "stage": "ending",
+      "lag_ms": 1000,
+      "action": "all",
+      "orders": 58,
+      "covered": 37,
+      "btc": {
+        "flat": 36,
+        "unknown": 21,
+        "against": 1
+      },
+      "inventory": {
+        "offsetting": 20,
+        "unknown": 21,
+        "adding|flat": 1,
+        "adding": 13,
+        "adding|offsetting": 3
+      },
+      "spread": {
+        "tight": 36,
+        "unknown": 21,
+        "tight|wide": 1
+      },
+      "depth": {
+        "deep": 28,
+        "unknown": 21,
+        "middle|thin": 3,
+        "deep|thin": 3,
+        "deep|middle": 2,
+        "deep|middle|thin": 1
+      },
+      "time_left": {
+        "earlier": 37,
+        "unknown": 21
+      }
+    },
+    {
+      "scope": "new",
+      "stage": "ending",
+      "lag_ms": 1000,
+      "action": "ordered_refill",
+      "orders": 2,
+      "covered": 2,
+      "btc": {
+        "flat": 2
+      },
+      "inventory": {
+        "offsetting": 2
+      },
+      "spread": {
+        "tight": 2
+      },
+      "depth": {
+        "deep": 2
+      },
+      "time_left": {
+        "earlier": 2
+      }
+    },
+    {
+      "scope": "new",
+      "stage": "ending",
+      "lag_ms": 1000,
+      "action": "ordered_reprice",
+      "orders": 7,
+      "covered": 7,
+      "btc": {
+        "flat": 7
+      },
+      "inventory": {
+        "adding": 5,
+        "offsetting": 2
+      },
+      "spread": {
+        "tight": 6,
+        "tight|wide": 1
+      },
+      "depth": {
+        "deep|thin": 1,
+        "deep": 4,
+        "middle|thin": 2
+      },
+      "time_left": {
+        "earlier": 7
+      }
+    },
+    {
+      "scope": "new",
+      "stage": "successor",
+      "lag_ms": 0,
+      "action": "all",
+      "orders": 58,
+      "covered": 25,
+      "btc": {
+        "unknown": 33,
+        "flat": 21,
+        "flat|with": 1,
+        "against|flat": 1,
+        "against|flat|with": 2
+      },
+      "inventory": {
+        "unknown": 33,
+        "adding": 12,
+        "adding|offsetting": 5,
+        "flat|offsetting": 1,
+        "offsetting": 5,
+        "adding|flat|offsetting": 1,
+        "adding|flat": 1
+      },
+      "spread": {
+        "unknown": 33,
+        "wide": 1,
+        "tight": 18,
+        "tight|wide": 6
+      },
+      "depth": {
+        "unknown": 33,
+        "deep": 3,
+        "deep|middle": 3,
+        "deep|thin": 8,
+        "deep|middle|thin": 9,
+        "thin": 1,
+        "middle|thin": 1
+      },
+      "time_left": {
+        "unknown": 33,
+        "earlier": 25
+      }
+    },
+    {
+      "scope": "new",
+      "stage": "successor",
+      "lag_ms": 0,
+      "action": "ordered_refill",
+      "orders": 2,
+      "covered": 2,
+      "btc": {
+        "flat": 2
+      },
+      "inventory": {
+        "adding": 2
+      },
+      "spread": {
+        "tight": 2
+      },
+      "depth": {
+        "deep|middle|thin": 2
+      },
+      "time_left": {
+        "earlier": 2
+      }
+    },
+    {
+      "scope": "new",
+      "stage": "successor",
+      "lag_ms": 0,
+      "action": "ordered_reprice",
+      "orders": 7,
+      "covered": 7,
+      "btc": {
+        "flat": 6,
+        "flat|with": 1
+      },
+      "inventory": {
+        "adding": 4,
+        "adding|offsetting": 2,
+        "offsetting": 1
+      },
+      "spread": {
+        "tight|wide": 1,
+        "tight": 6
+      },
+      "depth": {
+        "deep|middle|thin": 3,
+        "deep|thin": 1,
+        "deep": 2,
+        "thin": 1
+      },
+      "time_left": {
+        "earlier": 7
+      }
+    },
+    {
+      "scope": "new",
+      "stage": "successor",
+      "lag_ms": 1000,
+      "action": "all",
+      "orders": 58,
+      "covered": 25,
+      "btc": {
+        "unknown": 33,
+        "flat": 18,
+        "against|flat": 4,
+        "flat|with": 1,
+        "against|flat|with": 2
+      },
+      "inventory": {
+        "unknown": 33,
+        "adding": 10,
+        "offsetting": 7,
+        "adding|offsetting": 5,
+        "flat|offsetting": 1,
+        "adding|flat|offsetting": 1,
+        "adding|flat": 1
+      },
+      "spread": {
+        "unknown": 33,
+        "wide": 1,
+        "tight": 18,
+        "tight|wide": 6
+      },
+      "depth": {
+        "unknown": 33,
+        "middle": 1,
+        "deep|middle": 4,
+        "deep": 5,
+        "deep|middle|thin": 9,
+        "deep|thin": 5,
+        "middle|thin": 1
+      },
+      "time_left": {
+        "unknown": 33,
+        "earlier": 25
+      }
+    },
+    {
+      "scope": "new",
+      "stage": "successor",
+      "lag_ms": 1000,
+      "action": "ordered_refill",
+      "orders": 2,
+      "covered": 2,
+      "btc": {
+        "flat": 2
+      },
+      "inventory": {
+        "adding|offsetting": 2
+      },
+      "spread": {
+        "tight": 2
+      },
+      "depth": {
+        "deep|middle|thin": 2
+      },
+      "time_left": {
+        "earlier": 2
+      }
+    },
+    {
+      "scope": "new",
+      "stage": "successor",
+      "lag_ms": 1000,
+      "action": "ordered_reprice",
+      "orders": 7,
+      "covered": 7,
+      "btc": {
+        "flat": 6,
+        "flat|with": 1
+      },
+      "inventory": {
+        "adding|offsetting": 2,
+        "adding": 4,
+        "offsetting": 1
+      },
+      "spread": {
+        "tight|wide": 1,
+        "tight": 6
+      },
+      "depth": {
+        "deep|middle|thin": 3,
+        "deep|thin": 1,
+        "deep|middle": 1,
+        "deep": 2
+      },
+      "time_left": {
+        "earlier": 7
+      }
+    }
+  ],
+  "both_clocks": [
+    {
+      "stage": "post",
+      "field": "btc_side",
+      "n": 146,
+      "both_clock_counts": {
+        "unknown": 24,
+        "flat": 70,
+        "against": 2,
+        "timing_ambiguous": 36,
+        "clock_sensitive": 14
+      }
+    },
+    {
+      "stage": "post",
+      "field": "inventory_side",
+      "n": 146,
+      "both_clock_counts": {
+        "unknown": 24,
+        "adding": 29,
+        "offsetting": 46,
+        "clock_sensitive": 5,
+        "timing_ambiguous": 41,
+        "flat": 1
+      }
+    },
+    {
+      "stage": "post",
+      "field": "spread",
+      "n": 146,
+      "both_clock_counts": {
+        "unknown": 24,
+        "timing_ambiguous": 40,
+        "tight": 67,
+        "clock_sensitive": 15
+      }
+    },
+    {
+      "stage": "post",
+      "field": "own_depth",
+      "n": 146,
+      "both_clock_counts": {
+        "unknown": 24,
+        "clock_sensitive": 33,
+        "deep": 13,
+        "timing_ambiguous": 74,
+        "middle": 1,
+        "thin": 1
+      }
+    },
+    {
+      "stage": "successor",
+      "field": "btc_side",
+      "n": 30,
+      "both_clock_counts": {
+        "clock_sensitive": 2,
+        "flat": 23,
+        "against": 1,
+        "timing_ambiguous": 3,
+        "with": 1
+      }
+    },
+    {
+      "stage": "successor",
+      "field": "inventory_side",
+      "n": 30,
+      "both_clock_counts": {
+        "offsetting": 14,
+        "adding": 8,
+        "clock_sensitive": 7,
+        "timing_ambiguous": 1
+      }
+    },
+    {
+      "stage": "successor",
+      "field": "spread",
+      "n": 30,
+      "both_clock_counts": {
+        "tight": 24,
+        "timing_ambiguous": 3,
+        "clock_sensitive": 3
+      }
+    },
+    {
+      "stage": "successor",
+      "field": "own_depth",
+      "n": 30,
+      "both_clock_counts": {
+        "clock_sensitive": 13,
+        "timing_ambiguous": 10,
+        "deep": 6,
+        "thin": 1
+      }
+    }
+  ],
+  "ordered_days": {
+    "20261026": 5,
+    "20261024": 15,
+    "20261025": 8,
+    "20261027": 2
+  },
+  "ordered_markets": 15,
+  "new_ordered_markets": 4,
+  "next_test_gate": "no_observed_nonposting_controls",
+  "private_cancel_trigger_identified": false
+}

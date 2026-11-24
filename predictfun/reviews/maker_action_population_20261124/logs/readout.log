@@ -1,0 +1,167 @@
+{
+  "groups": [
+    {
+      "scope": "all",
+      "n": 146,
+      "budget": {
+        "exhausted": 78,
+        "positive_remainder_not_a_pull": 56,
+        "incomplete_recorded_history": 12
+      },
+      "successors": {
+        "no_recorded_successor": 37,
+        "unavailable": 32,
+        "ordering_ambiguous": 47,
+        "sequential_after_under_bounds": 30
+      },
+      "ordered_kinds": {
+        "exhausted \u2192 reprice": 15,
+        "exhausted \u2192 refill": 7,
+        "inherited_conditional_unavailability \u2192 reprice": 7,
+        "inherited_conditional_unavailability \u2192 refill": 1
+      }
+    },
+    {
+      "scope": "old88",
+      "n": 88,
+      "budget": {
+        "exhausted": 41,
+        "positive_remainder_not_a_pull": 47
+      },
+      "successors": {
+        "ordering_ambiguous": 39,
+        "no_recorded_successor": 13,
+        "sequential_after_under_bounds": 21,
+        "unavailable": 15
+      },
+      "ordered_kinds": {
+        "exhausted \u2192 reprice": 8,
+        "exhausted \u2192 refill": 5,
+        "inherited_conditional_unavailability \u2192 reprice": 7,
+        "inherited_conditional_unavailability \u2192 refill": 1
+      }
+    },
+    {
+      "scope": "new",
+      "n": 58,
+      "budget": {
+        "exhausted": 37,
+        "positive_remainder_not_a_pull": 9,
+        "incomplete_recorded_history": 12
+      },
+      "successors": {
+        "no_recorded_successor": 24,
+        "unavailable": 17,
+        "ordering_ambiguous": 8,
+        "sequential_after_under_bounds": 9
+      },
+      "ordered_kinds": {
+        "exhausted \u2192 reprice": 7,
+        "exhausted \u2192 refill": 2
+      }
+    }
+  ],
+  "both_clocks": [
+    {
+      "stage": "post",
+      "field": "btc_side",
+      "n": 146,
+      "both_clock_counts": {
+        "unknown": 24,
+        "flat": 70,
+        "against": 2,
+        "timing_ambiguous": 36,
+        "clock_sensitive": 14
+      }
+    },
+    {
+      "stage": "post",
+      "field": "inventory_side",
+      "n": 146,
+      "both_clock_counts": {
+        "unknown": 24,
+        "adding": 29,
+        "offsetting": 46,
+        "clock_sensitive": 5,
+        "timing_ambiguous": 41,
+        "flat": 1
+      }
+    },
+    {
+      "stage": "post",
+      "field": "spread",
+      "n": 146,
+      "both_clock_counts": {
+        "unknown": 24,
+        "timing_ambiguous": 40,
+        "tight": 67,
+        "clock_sensitive": 15
+      }
+    },
+    {
+      "stage": "post",
+      "field": "own_depth",
+      "n": 146,
+      "both_clock_counts": {
+        "unknown": 24,
+        "clock_sensitive": 33,
+        "deep": 13,
+        "timing_ambiguous": 74,
+        "middle": 1,
+        "thin": 1
+      }
+    },
+    {
+      "stage": "successor",
+      "field": "btc_side",
+      "n": 30,
+      "both_clock_counts": {
+        "clock_sensitive": 2,
+        "flat": 23,
+        "against": 1,
+        "timing_ambiguous": 3,
+        "with": 1
+      }
+    },
+    {
+      "stage": "successor",
+      "field": "inventory_side",
+      "n": 30,
+      "both_clock_counts": {
+        "offsetting": 14,
+        "adding": 8,
+        "clock_sensitive": 7,
+        "timing_ambiguous": 1
+      }
+    },
+    {
+      "stage": "successor",
+      "field": "spread",
+      "n": 30,
+      "both_clock_counts": {
+        "tight": 24,
+        "timing_ambiguous": 3,
+        "clock_sensitive": 3
+      }
+    },
+    {
+      "stage": "successor",
+      "field": "own_depth",
+      "n": 30,
+      "both_clock_counts": {
+        "clock_sensitive": 13,
+        "timing_ambiguous": 10,
+        "deep": 6,
+        "thin": 1
+      }
+    }
+  ],
+  "ordered_days": {
+    "20261026": 5,
+    "20261024": 15,
+    "20261025": 8,
+    "20261027": 2
+  },
+  "ordered_markets": 15
+}
+2026-11-24T04:51:22Z tag=mt_actpop_readout rc=0 peak_rss_mib=15 wall_s=0.03 cpu_user_s=0.03 memavail_start_gib=22 disk_free_gib=415->415 slot=codex

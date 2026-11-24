@@ -1,0 +1,39 @@
+{
+  "as_of_utc": "2026-11-24T04:49:57Z",
+  "orders": 146,
+  "new_orders": 58,
+  "new_usable_posting_chains": 44,
+  "annotation_gate": true,
+  "nonposting_controls_observed": 0,
+  "posting_propensity_gate": false,
+  "budget_counts": {
+    "exhausted": 78,
+    "positive_remainder_not_a_pull": 56,
+    "incomplete_recorded_history": 12
+  },
+  "end_counts": {
+    "exhausted": 78,
+    "unknown": 28,
+    "inherited_conditional_unavailability": 40
+  },
+  "successors": {
+    "no_recorded_successor": 37,
+    "unavailable": 32,
+    "ordering_ambiguous": 47,
+    "sequential_after_under_bounds": 30
+  },
+  "new_successors": {
+    "no_recorded_successor": 24,
+    "unavailable": 17,
+    "ordering_ambiguous": 8,
+    "sequential_after_under_bounds": 9
+  },
+  "hashes": {
+    "data/predict_fun/research/maker_action_population_20261124/decoded_orders.json": "f1cc1aef7e37ac014ce932e361d778ea57f26eccf56fbf37263e42f6fc7f63b7",
+    "data/predict_fun/research/maker_action_population_20261124/decoded_events.csv": "008b0d9bc0b5aae371e45828bfacec899dc313f59a058ed16efa035dfbb65a52",
+    "data/predict_fun/research/maker_action_population_20261124/members.json": "f8d84ee61650159b1c1f2efe834c74ff4f2ec08d29965e23b3a8118b82691df0",
+    "data/predict_fun/research/maker_action_population_20261124/life.json": "025f3091368f6ff934fab92bbbb76ceacf153449d7611761da2f04e3acae0ce9",
+    "predictfun/reviews/maker_action_population_20261124/outputs/orders.csv": "6367c82dec78d726148fc804ce08138c7c828ce8eac63931a701f1f7d08bca5d"
+  },
+  "cpu_seconds": 2.254973928
+}

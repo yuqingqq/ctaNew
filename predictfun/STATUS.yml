@@ -1,4 +1,26 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+action_population_20261124_codex:
+  report: predictfun/reviews/maker_action_population_20261124/report.md
+  stage: expanded_actions_then_state_mapping_verified
+  signed_orders: 146
+  added_orders: 58
+  new_usable_posting_chains: 44
+  exhausted: 78
+  positive_remainder_not_pull: 56
+  incomplete_histories: 12
+  ordered_successors: 30
+  newly_added_ordered_successors: 9
+  successor_rule: accepted_post_fill_next_hash
+  counts_comparable_to_prior_pull_successor_rule: false
+  context_rows: 876
+  reference_windows: 12127
+  matched_nonactions_available: false
+  new_trigger_or_profitability_claim: false
+  next_priority: full_observed_next_order_action_choice_census_with_support_gate
+  packet_cap_coreh: 0.004
+  task_cap_coreh: 2.00
+  line_cap_coreh: 5.30
+  standing_reserve_coreh: 0.05
 action_chains_20261124_codex:
   report: predictfun/reviews/maker_action_chains_20261124/report.md
   readable_chain_map: predictfun/reviews/maker_action_chains_20261124/logic_chains.md

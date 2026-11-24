@@ -1,0 +1,8 @@
+{
+  "rows": 876,
+  "physical_sha256": "6367c82dec78d726148fc804ce08138c7c828ce8eac63931a701f1f7d08bca5d",
+  "contexts_sha256": "20cd56e3e2cdeae03c8dee4beb39e897570f30277645eb60cfd80f464577320d",
+  "cells_sha256": "dc968ef5d8d13ecf56478e10260b645ac606a025a3fb25b53d12a0c97d41f475",
+  "new_descriptive_only": true,
+  "matched_posting_test_run": false
+}

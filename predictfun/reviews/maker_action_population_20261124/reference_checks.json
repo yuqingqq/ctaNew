@@ -1,0 +1,12 @@
+{
+  "pass_all": true,
+  "windows": 12127,
+  "case_clocks": 60,
+  "falsifiers": {
+    "state": "refused",
+    "width": "refused",
+    "future": "refused",
+    "phase": "refused",
+    "omission": "refused"
+  }
+}

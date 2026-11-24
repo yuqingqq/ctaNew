@@ -1,0 +1,8 @@
+{
+  "cases": 30,
+  "case_clocks": 60,
+  "reference_windows": 12127,
+  "draws_per_case_clock": 500,
+  "matched_nonactions": false,
+  "validation": false
+}

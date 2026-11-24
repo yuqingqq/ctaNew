@@ -23,6 +23,19 @@ toward the authorized model/value/controller measurements once their gates pass.
 Reliability, experiment freezes, resource limits and ownership remain in force.
 <!-- /STANDING_BATCH_RULE_20261120_USER -->
 
+<!-- ACTION_POPULATION_20261124_CODEX -->
+## 2026-11-24 — action-first expansion and subsequent condition mapping
+
+[Report](reviews/maker_action_population_20261124/report.md). USER proceed instruction fulfilled:146 signed hashes,58 new to the original88;44 new usable posting chains. All146:78 exhausted /56 positive remainders /12 incomplete histories. Independent raw checks218 events/241 feed legs/146 actions/876 contexts,9 falsifiers;14 synthetic groups. Physical table frozen before state mapping and unchanged afterward.
+
+30 successors ordered under full windows,9 from added hashes;22 exhaustion→successor (7 refill/15 reprice),8 inherited conditional ending→successor (1 refill/7 reprice). Uses accepted post_fill.next_hash, unlike the earlier pull-table successor, so30 vs7 is NOT a pure coverage improvement.47 ambiguous/32 unavailable/37 no observed successor. No private pulls or WAITs inferred.
+
+Equal-window phase-matched market-time reference:12,127 windows,500 diagnostic draws/case-clock, all categories retained, independent scalar check/five falsifiers. BTC-flat observed23/30 vs24.61 expected (lag24 vs24.62): raw calm count is not a repost trigger. Offsetting inventory15 vs12.97 expected (lag14 vs12.93); exploratory, not an identified rule. Tight spread26 vs22.78 (lag25 vs22.74), a successor population distinct from fresh-level posting. References can contain unseen actions; posting/nonposting control gate remains unavailable. No model, profit, validation or significance claim.
+
+ONE next priority: One action-choice study on the full already accepted next-order census: classify each observed same-side successor as same-price, more-aggressive-price or less-aggressive-price using identity/price only; retain posting-window grades. Compare these observed action types, with all feasible prior-state values, matching maker/market, starting price position and time remaining. This avoids inventing WAITs from missing fills. Freeze the action population and a support/runtime gate before condition results; if support is thin, stop without fitting a rule. A full run must fit the remaining resource allowance or receive a USER-approved top-up; no new days or live use are authorized here.
+<!-- /ACTION_POPULATION_20261124_CODEX -->
+
+
 <!-- ACTION_CHAINS_20261124_CODEX -->
 ## 2026-11-24 — action chains reconstructed and independently checked
 

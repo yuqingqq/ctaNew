@@ -1,0 +1,2307 @@
+{
+  "0x2c037693ba805701774d61472ef8760126e1826f396f44d0c843c8a6bb75e16d": [
+    {
+      "mk_hash": "0x2c037693ba805701774d61472ef8760126e1826f396f44d0c843c8a6bb75e16d",
+      "sid": "01a16c38-9037-7413-b272-f576f8a4d409",
+      "mk_idx": 0,
+      "shares": 30.0,
+      "x_lo_hard_ms": 1792817006695,
+      "hi_ms": 1792817008695,
+      "status": "ok"
+    }
+  ],
+  "0xd1a6164ac1f1b11a498f383fd755b6708f21cd6a98014d8765a150250264041c": [
+    {
+      "mk_hash": "0xd1a6164ac1f1b11a498f383fd755b6708f21cd6a98014d8765a150250264041c",
+      "sid": "01a16c39-59af-7111-8555-ee43be2615a5",
+      "mk_idx": 2,
+      "shares": 5.347368421052636,
+      "x_lo_hard_ms": 1792817058271,
+      "hi_ms": 1792817060271,
+      "status": "ok"
+    }
+  ],
+  "0x38ee9c28a929161b6d55bfc5c9bb51dbf5846357ba44c9ff10acee82d45a0550": [
+    {
+      "mk_hash": "0x38ee9c28a929161b6d55bfc5c9bb51dbf5846357ba44c9ff10acee82d45a0550",
+      "sid": "01a16c5e-a781-7650-9cfd-df8be0546488",
+      "mk_idx": 0,
+      "shares": 0.06358490566037736,
+      "x_lo_hard_ms": 1792819503025,
+      "hi_ms": 1792819505025,
+      "status": "ok"
+    }
+  ],
+  "0x9325239722425af45f295ee620e67bfe195071ae7f84bff918d5048eb11a7216": [
+    {
+      "mk_hash": "0x9325239722425af45f295ee620e67bfe195071ae7f84bff918d5048eb11a7216",
+      "sid": "01a16c60-7c9e-77d2-9489-fa4263c8764f",
+      "mk_idx": 1,
+      "shares": 7.692427848101266,
+      "x_lo_hard_ms": 1792819623118,
+      "hi_ms": 1792819625118,
+      "status": "ok"
+    }
+  ],
+  "0x7bc459df0603b8437f1bd77568a9755df18955550c4b09189fbc1112f58a9d86": [
+    {
+      "mk_hash": "0x7bc459df0603b8437f1bd77568a9755df18955550c4b09189fbc1112f58a9d86",
+      "sid": "01a16c60-9a93-73b1-bb4b-c5ddd2005cda",
+      "mk_idx": 0,
+      "shares": 10.0,
+      "x_lo_hard_ms": 1792819630787,
+      "hi_ms": 1792819632787,
+      "status": "ok"
+    }
+  ],
+  "0x93e60a387673a75d7903f050cf3383f260bae07b6502af020b6795fc83c072a2": [
+    {
+      "mk_hash": "0x93e60a387673a75d7903f050cf3383f260bae07b6502af020b6795fc83c072a2",
+      "sid": "01a16c60-b1d8-7012-8d73-44c1df292572",
+      "mk_idx": 0,
+      "shares": 10.0,
+      "x_lo_hard_ms": 1792819636744,
+      "hi_ms": 1792819638744,
+      "status": "ok"
+    }
+  ],
+  "0x3413d2dda5c3bac98ee6dfd673ecf86b3272a8fc85dec4a98c49ab2ae9cbeaba": [
+    {
+      "mk_hash": "0x3413d2dda5c3bac98ee6dfd673ecf86b3272a8fc85dec4a98c49ab2ae9cbeaba",
+      "sid": "01a16c62-00b6-7741-8b10-cdeecf26b1d7",
+      "mk_idx": 0,
+      "shares": 30.0,
+      "x_lo_hard_ms": 1792819722470,
+      "hi_ms": 1792819724470,
+      "status": "ok"
+    }
+  ],
+  "0x887554576afc96e5954dc26cb12d58af4c9af1693f1d0ba56bc237b9353d0cdf": [
+    {
+      "mk_hash": "0x887554576afc96e5954dc26cb12d58af4c9af1693f1d0ba56bc237b9353d0cdf",
+      "sid": "01a16ca8-83bc-7040-bebe-1bfd5f950bd8",
+      "mk_idx": 4,
+      "shares": 30.0,
+      "x_lo_hard_ms": 1792824343532,
+      "hi_ms": 1792824345532,
+      "status": "ok"
+    }
+  ],
+  "0x084be2d8a41e7076c69f91fe7581a4089c4be1fda60a3a1b52069da39f6c58ca": [
+    {
+      "mk_hash": "0x084be2d8a41e7076c69f91fe7581a4089c4be1fda60a3a1b52069da39f6c58ca",
+      "sid": "01a16d7f-0ab1-78e2-8789-7cbb592879e7",
+      "mk_idx": 1,
+      "shares": 13.138473923076923,
+      "x_lo_hard_ms": 1792838402785,
+      "hi_ms": 1792838404785,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x084be2d8a41e7076c69f91fe7581a4089c4be1fda60a3a1b52069da39f6c58ca",
+      "sid": "01a16d7f-0bbe-7351-9262-899e063732e2",
+      "mk_idx": 0,
+      "shares": 1.9607843137254901,
+      "x_lo_hard_ms": 1792838403054,
+      "hi_ms": 1792838405054,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x084be2d8a41e7076c69f91fe7581a4089c4be1fda60a3a1b52069da39f6c58ca",
+      "sid": "01a16d7f-1376-7833-8d7e-e0d6ad49feea",
+      "mk_idx": 0,
+      "shares": 34.90074176319759,
+      "x_lo_hard_ms": 1792838405030,
+      "hi_ms": 1792838407030,
+      "status": "ok"
+    }
+  ],
+  "0xd46662328c182230e845303715cee98cf59e50881dc8b8d353d212ce9f3becae": [
+    {
+      "mk_hash": "0xd46662328c182230e845303715cee98cf59e50881dc8b8d353d212ce9f3becae",
+      "sid": "01a16d7f-1376-7833-8d7e-e0d6ad49feea",
+      "mk_idx": 1,
+      "shares": 23.92278764856712,
+      "x_lo_hard_ms": 1792838405030,
+      "hi_ms": 1792838407030,
+      "status": "ok"
+    }
+  ],
+  "0x813e9cea87b139bfcd290c7ba4114f18b719a03f0392050815bb2f27827b2fda": [
+    {
+      "mk_hash": "0x813e9cea87b139bfcd290c7ba4114f18b719a03f0392050815bb2f27827b2fda",
+      "sid": "01a16d7f-9d5f-7771-8641-dd4e4f7d7f04",
+      "mk_idx": 0,
+      "shares": 12.01,
+      "x_lo_hard_ms": 1792838440335,
+      "hi_ms": 1792838442335,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x813e9cea87b139bfcd290c7ba4114f18b719a03f0392050815bb2f27827b2fda",
+      "sid": "01a16d7f-9d60-70d2-b894-f31f7e45a11d",
+      "mk_idx": 0,
+      "shares": 5.0,
+      "x_lo_hard_ms": 1792838440336,
+      "hi_ms": 1792838442336,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x813e9cea87b139bfcd290c7ba4114f18b719a03f0392050815bb2f27827b2fda",
+      "sid": "01a16d7f-9d60-70d2-b894-f32e76f7fb82",
+      "mk_idx": 0,
+      "shares": 12.99,
+      "x_lo_hard_ms": 1792838440336,
+      "hi_ms": 1792838442336,
+      "status": "ok"
+    }
+  ],
+  "0x8b2182c815d2f54168f5cf0fe27e0e0c37939e26a4c0647be5c1919eb7a0c68b": [
+    {
+      "mk_hash": "0x8b2182c815d2f54168f5cf0fe27e0e0c37939e26a4c0647be5c1919eb7a0c68b",
+      "sid": "01a16d80-24aa-7653-be02-46d0c2be7993",
+      "mk_idx": 0,
+      "shares": 30.0,
+      "x_lo_hard_ms": 1792838474970,
+      "hi_ms": 1792838476970,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x8b2182c815d2f54168f5cf0fe27e0e0c37939e26a4c0647be5c1919eb7a0c68b",
+      "sid": "01a16d80-24ab-7950-9fba-b1d290e17afb",
+      "mk_idx": 0,
+      "shares": 20.0,
+      "x_lo_hard_ms": 1792838474971,
+      "hi_ms": 1792838476971,
+      "status": "ok"
+    }
+  ],
+  "0x02fb943dae46a833559094e61ce64e8ac3ffcbde63f0db8abdc4c0ee9cc8521a": [
+    {
+      "mk_hash": "0x02fb943dae46a833559094e61ce64e8ac3ffcbde63f0db8abdc4c0ee9cc8521a",
+      "sid": "01a16d82-3937-72d3-b5b6-e681edfa8bd3",
+      "mk_idx": 0,
+      "shares": 6.6666,
+      "x_lo_hard_ms": 1792838611303,
+      "hi_ms": 1792838613303,
+      "status": "ok"
+    }
+  ],
+  "0x7d51569cfb22c9327baa67917a3bfcfc38d08f977ebed0da8103a1b74b0fe842": [
+    {
+      "mk_hash": "0x7d51569cfb22c9327baa67917a3bfcfc38d08f977ebed0da8103a1b74b0fe842",
+      "sid": "01a16dcd-1dfa-7e42-b1f8-561428cf5664",
+      "mk_idx": 1,
+      "shares": 22.182284980744544,
+      "x_lo_hard_ms": 1792843519530,
+      "hi_ms": 1792843521530,
+      "status": "ok"
+    }
+  ],
+  "0xddbe6da6bcb9636582f6fef42a1e06d5dd413385c6e8288d25e2e4dad6fafb78": [
+    {
+      "mk_hash": "0xddbe6da6bcb9636582f6fef42a1e06d5dd413385c6e8288d25e2e4dad6fafb78",
+      "sid": "01a16dce-7538-7003-9c50-7bdb04200c14",
+      "mk_idx": 0,
+      "shares": 10.0,
+      "x_lo_hard_ms": 1792843607400,
+      "hi_ms": 1792843609400,
+      "status": "ok"
+    }
+  ],
+  "0xae0ebf7da2b077ead8f7d301e5a3877bb51e158e758cf0f2b7023790ddf9eeb6": [
+    {
+      "mk_hash": "0xae0ebf7da2b077ead8f7d301e5a3877bb51e158e758cf0f2b7023790ddf9eeb6",
+      "sid": "01a16dce-7538-7003-9c50-7bdb04200c14",
+      "mk_idx": 1,
+      "shares": 50.0,
+      "x_lo_hard_ms": 1792843607400,
+      "hi_ms": 1792843609400,
+      "status": "ok"
+    }
+  ],
+  "0xeda20c2051b267f2f9dbd54b0487cda7f0e5244cb96d7488b653571d222e1d64": [
+    {
+      "mk_hash": "0xeda20c2051b267f2f9dbd54b0487cda7f0e5244cb96d7488b653571d222e1d64",
+      "sid": "01a16dce-aafe-7051-8b87-f39add801d66",
+      "mk_idx": 0,
+      "shares": 9.6121,
+      "x_lo_hard_ms": 1792843621166,
+      "hi_ms": 1792843623166,
+      "status": "ok"
+    }
+  ],
+  "0x0c9d03f80d64443b2ed7783113d3411ae9e9468df1aeee146439f4dbe089c5d6": [
+    {
+      "mk_hash": "0x0c9d03f80d64443b2ed7783113d3411ae9e9468df1aeee146439f4dbe089c5d6",
+      "sid": "01a16dcf-6317-7cd2-8daa-578cce13839c",
+      "mk_idx": 0,
+      "shares": 10.0,
+      "x_lo_hard_ms": 1792843668295,
+      "hi_ms": 1792843670295,
+      "status": "ok"
+    }
+  ],
+  "0x73c8db4afaabe6536343d3e31b5a1f254e34f69422864a0d1ff4dccb59389fab": [
+    {
+      "mk_hash": "0x73c8db4afaabe6536343d3e31b5a1f254e34f69422864a0d1ff4dccb59389fab",
+      "sid": "01a16dcf-6475-77e1-b01f-118322ade1ff",
+      "mk_idx": 0,
+      "shares": 10.0,
+      "x_lo_hard_ms": 1792843668645,
+      "hi_ms": 1792843670645,
+      "status": "ok"
+    }
+  ],
+  "0x6850eccfa234cf1deec5ac4218ede167aeeeed3c42555b55fc34ac3ee1bf7e98": [
+    {
+      "mk_hash": "0x6850eccfa234cf1deec5ac4218ede167aeeeed3c42555b55fc34ac3ee1bf7e98",
+      "sid": "01a16dcf-6475-77e1-b01f-118322ade1ff",
+      "mk_idx": 1,
+      "shares": 5.151515151515151,
+      "x_lo_hard_ms": 1792843668645,
+      "hi_ms": 1792843670645,
+      "status": "ok"
+    }
+  ],
+  "0xda08d7801c36c7be5176fbe94abe1ba4f8f338a0960bf99fb4a852a32c0f5ed2": [
+    {
+      "mk_hash": "0xda08d7801c36c7be5176fbe94abe1ba4f8f338a0960bf99fb4a852a32c0f5ed2",
+      "sid": "01a16dd0-1b34-7342-a7fa-a3dc8c064cbe",
+      "mk_idx": 0,
+      "shares": 50.0,
+      "x_lo_hard_ms": 1792843715428,
+      "hi_ms": 1792843717428,
+      "status": "ok"
+    }
+  ],
+  "0x2436688133529b64b52b1d91dc30be1527f4e42c0710979ecf922eb7555f0ff4": [
+    {
+      "mk_hash": "0x2436688133529b64b52b1d91dc30be1527f4e42c0710979ecf922eb7555f0ff4",
+      "sid": "01a16f20-8697-7910-b840-4e53d5116a08",
+      "mk_idx": 0,
+      "shares": 20.0,
+      "x_lo_hard_ms": 1792865763015,
+      "hi_ms": 1792865765015,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x2436688133529b64b52b1d91dc30be1527f4e42c0710979ecf922eb7555f0ff4",
+      "sid": "01a16f20-86dc-7261-9621-fa5d797afff7",
+      "mk_idx": 12,
+      "shares": 10.0,
+      "x_lo_hard_ms": 1792865763084,
+      "hi_ms": 1792865765084,
+      "status": "ok"
+    }
+  ],
+  "0x861f856c81b627ab754b1eeaeea1879d53b54d0c44622d1b943535eca8a29f01": [
+    {
+      "mk_hash": "0x861f856c81b627ab754b1eeaeea1879d53b54d0c44622d1b943535eca8a29f01",
+      "sid": "01a16f20-86dc-7261-9621-fa5d797afff7",
+      "mk_idx": 2,
+      "shares": 50.0,
+      "x_lo_hard_ms": 1792865763084,
+      "hi_ms": 1792865765084,
+      "status": "ok"
+    }
+  ],
+  "0x98c3f172135e50a5a2ae3dc66efa3621ac0e85613abd348c315ebbffa210f836": [
+    {
+      "mk_hash": "0x98c3f172135e50a5a2ae3dc66efa3621ac0e85613abd348c315ebbffa210f836",
+      "sid": "01a16f20-86dc-7261-9621-fa5d797afff7",
+      "mk_idx": 3,
+      "shares": 30.0,
+      "x_lo_hard_ms": 1792865763084,
+      "hi_ms": 1792865765084,
+      "status": "ok"
+    }
+  ],
+  "0xa0b9f067c827a91341c2a954774d4c2be2a097fbb2f368aabd6084b914751cc0": [
+    {
+      "mk_hash": "0xa0b9f067c827a91341c2a954774d4c2be2a097fbb2f368aabd6084b914751cc0",
+      "sid": "01a16f20-86dc-7261-9621-fa5d797afff7",
+      "mk_idx": 5,
+      "shares": 30.0,
+      "x_lo_hard_ms": 1792865763084,
+      "hi_ms": 1792865765084,
+      "status": "ok"
+    }
+  ],
+  "0xa46229318a1903bd49f5ac1cb2d7d155da80edcca4ca4af179fda9d61d6c4369": [
+    {
+      "mk_hash": "0xa46229318a1903bd49f5ac1cb2d7d155da80edcca4ca4af179fda9d61d6c4369",
+      "sid": "01a16f20-86dc-7261-9621-fa5d797afff7",
+      "mk_idx": 6,
+      "shares": 50.0,
+      "x_lo_hard_ms": 1792865763084,
+      "hi_ms": 1792865765084,
+      "status": "ok"
+    }
+  ],
+  "0x9b5c5e26dd5c611e19b6db32385c47f2d1e29298698b196ef7cfacd5e4642be8": [
+    {
+      "mk_hash": "0x9b5c5e26dd5c611e19b6db32385c47f2d1e29298698b196ef7cfacd5e4642be8",
+      "sid": "01a16f20-86dc-7261-9621-fa5d797afff7",
+      "mk_idx": 7,
+      "shares": 83.31396666666679,
+      "x_lo_hard_ms": 1792865763084,
+      "hi_ms": 1792865765084,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x9b5c5e26dd5c611e19b6db32385c47f2d1e29298698b196ef7cfacd5e4642be8",
+      "sid": "01a16f20-8705-7642-b3bd-c34a224c83aa",
+      "mk_idx": 0,
+      "shares": 1.34,
+      "x_lo_hard_ms": 1792865763125,
+      "hi_ms": 1792865765125,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x9b5c5e26dd5c611e19b6db32385c47f2d1e29298698b196ef7cfacd5e4642be8",
+      "sid": "01a16f20-8734-79c2-8883-1a016896a3cd",
+      "mk_idx": 0,
+      "shares": 1.694915254237288,
+      "x_lo_hard_ms": 1792865763172,
+      "hi_ms": 1792865765172,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x9b5c5e26dd5c611e19b6db32385c47f2d1e29298698b196ef7cfacd5e4642be8",
+      "sid": "01a16f20-8815-7cf2-91c3-549eb7230ecb",
+      "mk_idx": 0,
+      "shares": 16.949152542372882,
+      "x_lo_hard_ms": 1792865763397,
+      "hi_ms": 1792865765397,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x9b5c5e26dd5c611e19b6db32385c47f2d1e29298698b196ef7cfacd5e4642be8",
+      "sid": "01a16f20-887d-74d1-b867-e23dc9366a05",
+      "mk_idx": 0,
+      "shares": 16.949152542372882,
+      "x_lo_hard_ms": 1792865763501,
+      "hi_ms": 1792865765501,
+      "status": "ok"
+    }
+  ],
+  "0x8737a38e1587d45ec3fc960c4146423bcfeb6566ae4a39365344d7997ab29f0c": [
+    {
+      "mk_hash": "0x8737a38e1587d45ec3fc960c4146423bcfeb6566ae4a39365344d7997ab29f0c",
+      "sid": "01a16f20-86dc-7261-9621-fa5d797afff7",
+      "mk_idx": 8,
+      "shares": 220.0,
+      "x_lo_hard_ms": 1792865763084,
+      "hi_ms": 1792865765084,
+      "status": "ok"
+    }
+  ],
+  "0xc8ff83a71d49d750afce2c0ae4c38531033c5740c4e844d86950615ff7539e70": [
+    {
+      "mk_hash": "0xc8ff83a71d49d750afce2c0ae4c38531033c5740c4e844d86950615ff7539e70",
+      "sid": "01a16f20-86dc-7261-9621-fa5d797afff7",
+      "mk_idx": 13,
+      "shares": 30.0,
+      "x_lo_hard_ms": 1792865763084,
+      "hi_ms": 1792865765084,
+      "status": "ok"
+    }
+  ],
+  "0xe791783becfb55e16d0a14d8922bb8882b22601135bee7460a1bc98cb3e74b62": [
+    {
+      "mk_hash": "0xe791783becfb55e16d0a14d8922bb8882b22601135bee7460a1bc98cb3e74b62",
+      "sid": "01a16f20-cb43-7313-b000-7e0df71ee48b",
+      "mk_idx": 0,
+      "shares": 10.0,
+      "x_lo_hard_ms": 1792865780595,
+      "hi_ms": 1792865782595,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xe791783becfb55e16d0a14d8922bb8882b22601135bee7460a1bc98cb3e74b62",
+      "sid": "01a16f20-cb47-7632-a654-ecf1e1372fac",
+      "mk_idx": 0,
+      "shares": 30.0,
+      "x_lo_hard_ms": 1792865780599,
+      "hi_ms": 1792865782599,
+      "status": "ok"
+    }
+  ],
+  "0x6235e6769250b4fbc818e59f1df295d04753d66d9d6380665a68da1f93b205ec": [
+    {
+      "mk_hash": "0x6235e6769250b4fbc818e59f1df295d04753d66d9d6380665a68da1f93b205ec",
+      "sid": "01a16f21-be99-78d3-bcef-f939c43acf18",
+      "mk_idx": 0,
+      "shares": 6.809523809523809,
+      "x_lo_hard_ms": 1792865842889,
+      "hi_ms": 1792865844889,
+      "status": "ok"
+    }
+  ],
+  "0x01ebf81129c65381fd72b5b33ddf3f4aa5e0b84e52b146e789e224ee313344b6": [
+    {
+      "mk_hash": "0x01ebf81129c65381fd72b5b33ddf3f4aa5e0b84e52b146e789e224ee313344b6",
+      "sid": "01a16f22-6538-7390-8355-f62e6c6161dc",
+      "mk_idx": 0,
+      "shares": 54.285714285714285,
+      "x_lo_hard_ms": 1792865885544,
+      "hi_ms": 1792865887544,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x01ebf81129c65381fd72b5b33ddf3f4aa5e0b84e52b146e789e224ee313344b6",
+      "sid": "01a16f22-65c3-7933-a03c-aec64c401a29",
+      "mk_idx": 0,
+      "shares": 4.9503125,
+      "x_lo_hard_ms": 1792865885683,
+      "hi_ms": 1792865887683,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x01ebf81129c65381fd72b5b33ddf3f4aa5e0b84e52b146e789e224ee313344b6",
+      "sid": "01a16f22-67a8-7221-91fa-b86f0a64898c",
+      "mk_idx": 0,
+      "shares": 10.210526315789474,
+      "x_lo_hard_ms": 1792865886168,
+      "hi_ms": 1792865888168,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x01ebf81129c65381fd72b5b33ddf3f4aa5e0b84e52b146e789e224ee313344b6",
+      "sid": "01a16f22-69ae-7b93-9ad4-426be782a88f",
+      "mk_idx": 0,
+      "shares": 14.1075,
+      "x_lo_hard_ms": 1792865886686,
+      "hi_ms": 1792865888686,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x01ebf81129c65381fd72b5b33ddf3f4aa5e0b84e52b146e789e224ee313344b6",
+      "sid": "01a16f22-6d0e-7f80-9fc6-9f5fbeee8e96",
+      "mk_idx": 0,
+      "shares": 125.52512195121952,
+      "x_lo_hard_ms": 1792865887550,
+      "hi_ms": 1792865889550,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x01ebf81129c65381fd72b5b33ddf3f4aa5e0b84e52b146e789e224ee313344b6",
+      "sid": "01a16f22-6d4e-73a2-9b94-05e89961d261",
+      "mk_idx": 0,
+      "shares": 2.7777777777777777,
+      "x_lo_hard_ms": 1792865887614,
+      "hi_ms": 1792865889614,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x01ebf81129c65381fd72b5b33ddf3f4aa5e0b84e52b146e789e224ee313344b6",
+      "sid": "01a16f22-8619-7e33-bae0-03877378b5c3",
+      "mk_idx": 2,
+      "shares": 8.143047169498947,
+      "x_lo_hard_ms": 1792865893961,
+      "hi_ms": 1792865895961,
+      "status": "ok"
+    }
+  ],
+  "0xffa61ac35e0ad4104f446303391c188753f1f907028dcf05ea72abd9562dc57a": [
+    {
+      "mk_hash": "0xffa61ac35e0ad4104f446303391c188753f1f907028dcf05ea72abd9562dc57a",
+      "sid": "01a16f22-7cc3-7c11-8997-57d19cae9275",
+      "mk_idx": 0,
+      "shares": 3.125,
+      "x_lo_hard_ms": 1792865891571,
+      "hi_ms": 1792865893571,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xffa61ac35e0ad4104f446303391c188753f1f907028dcf05ea72abd9562dc57a",
+      "sid": "01a16f22-8239-7a61-a64a-203cf60417b9",
+      "mk_idx": 0,
+      "shares": 2.6315789473684212,
+      "x_lo_hard_ms": 1792865892969,
+      "hi_ms": 1792865894969,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xffa61ac35e0ad4104f446303391c188753f1f907028dcf05ea72abd9562dc57a",
+      "sid": "01a16f22-84fb-7fe1-bff1-4c7d9f77e481",
+      "mk_idx": 0,
+      "shares": 18.75,
+      "x_lo_hard_ms": 1792865893675,
+      "hi_ms": 1792865895675,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xffa61ac35e0ad4104f446303391c188753f1f907028dcf05ea72abd9562dc57a",
+      "sid": "01a16f22-8619-7e33-bae0-03877378b5c3",
+      "mk_idx": 5,
+      "shares": 195.4934210526316,
+      "x_lo_hard_ms": 1792865893961,
+      "hi_ms": 1792865895961,
+      "status": "ok"
+    }
+  ],
+  "0xf91420a7e22831011e044dadedc528ec12581ba9426cb2ab24def41a106eda28": [
+    {
+      "mk_hash": "0xf91420a7e22831011e044dadedc528ec12581ba9426cb2ab24def41a106eda28",
+      "sid": "01a16f22-8619-7e33-bae0-03877378b5c3",
+      "mk_idx": 1,
+      "shares": 210.83989205892286,
+      "x_lo_hard_ms": 1792865893961,
+      "hi_ms": 1792865895961,
+      "status": "ok"
+    }
+  ],
+  "0x92e0ead97ed3525093aa126c33c61342a0753d69ec819e9d86a48daae6a19046": [
+    {
+      "mk_hash": "0x92e0ead97ed3525093aa126c33c61342a0753d69ec819e9d86a48daae6a19046",
+      "sid": "01a16f22-8619-7e33-bae0-03877378b5c3",
+      "mk_idx": 9,
+      "shares": 50.0,
+      "x_lo_hard_ms": 1792865893961,
+      "hi_ms": 1792865895961,
+      "status": "ok"
+    }
+  ],
+  "0x8388018f9cad44148a936c27c489cbbb3cf2ed6fc88da190d14bb6a029c1b6a4": [
+    {
+      "mk_hash": "0x8388018f9cad44148a936c27c489cbbb3cf2ed6fc88da190d14bb6a029c1b6a4",
+      "sid": "01a16f22-8619-7e33-bae0-03877378b5c3",
+      "mk_idx": 10,
+      "shares": 50.0,
+      "x_lo_hard_ms": 1792865893961,
+      "hi_ms": 1792865895961,
+      "status": "ok"
+    }
+  ],
+  "0xd5a4bdf9145f886aedf82c1ed6492248976e925b5a6a73ac4825d3c40d79502f": [
+    {
+      "mk_hash": "0xd5a4bdf9145f886aedf82c1ed6492248976e925b5a6a73ac4825d3c40d79502f",
+      "sid": "01a16f22-8619-7e33-bae0-03877378b5c3",
+      "mk_idx": 14,
+      "shares": 30.0,
+      "x_lo_hard_ms": 1792865893961,
+      "hi_ms": 1792865895961,
+      "status": "ok"
+    }
+  ],
+  "0xde42ace036e25092df352b7fdcf8c53b08f139aca7044e2ed023a5fda061cacd": [
+    {
+      "mk_hash": "0xde42ace036e25092df352b7fdcf8c53b08f139aca7044e2ed023a5fda061cacd",
+      "sid": "01a16f22-8619-7e33-bae0-03877378b5c3",
+      "mk_idx": 19,
+      "shares": 220.0,
+      "x_lo_hard_ms": 1792865893961,
+      "hi_ms": 1792865895961,
+      "status": "ok"
+    }
+  ],
+  "0xf8a1df6fe1a260de306a812fee3248b6cc0a2ec4e712beff2239e2a41aeeeec3": [
+    {
+      "mk_hash": "0xf8a1df6fe1a260de306a812fee3248b6cc0a2ec4e712beff2239e2a41aeeeec3",
+      "sid": "01a16f22-de72-7f92-96a6-0d1d014581f5",
+      "mk_idx": 0,
+      "shares": 21.9508,
+      "x_lo_hard_ms": 1792865916578,
+      "hi_ms": 1792865918578,
+      "status": "ok"
+    }
+  ],
+  "0x620b1dbc26de2399a660cc40d6da283f285a51cc9f74415abd092c19c65b7aee": [
+    {
+      "mk_hash": "0x620b1dbc26de2399a660cc40d6da283f285a51cc9f74415abd092c19c65b7aee",
+      "sid": "01a16f57-5141-7572-b7a2-2f7f424c867e",
+      "mk_idx": 0,
+      "shares": 3.278688524590164,
+      "x_lo_hard_ms": 1792869353841,
+      "hi_ms": 1792869355841,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x620b1dbc26de2399a660cc40d6da283f285a51cc9f74415abd092c19c65b7aee",
+      "sid": "01a16f57-54af-7e53-aa1f-ed18c0c1c4ef",
+      "mk_idx": 0,
+      "shares": 26.721311475409838,
+      "x_lo_hard_ms": 1792869354719,
+      "hi_ms": 1792869356719,
+      "status": "ok"
+    }
+  ],
+  "0x66e4f311be20759a83daa0ab94f757740294138102f04e5e433393540f759bd1": [
+    {
+      "mk_hash": "0x66e4f311be20759a83daa0ab94f757740294138102f04e5e433393540f759bd1",
+      "sid": "01a16f57-54af-7e53-aa1f-ed18c0c1c4ef",
+      "mk_idx": 3,
+      "shares": 10.0,
+      "x_lo_hard_ms": 1792869354719,
+      "hi_ms": 1792869356719,
+      "status": "ok"
+    }
+  ],
+  "0xf4ceae3001b1c0714510a72fbe4959993e52441ad5f442b36ca42a4e9c003514": [
+    {
+      "mk_hash": "0xf4ceae3001b1c0714510a72fbe4959993e52441ad5f442b36ca42a4e9c003514",
+      "sid": "01a16f57-54af-7e53-aa1f-ed18c0c1c4ef",
+      "mk_idx": 5,
+      "shares": 4.485901639344262,
+      "x_lo_hard_ms": 1792869354719,
+      "hi_ms": 1792869356719,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xf4ceae3001b1c0714510a72fbe4959993e52441ad5f442b36ca42a4e9c003514",
+      "sid": "01a16f57-59f5-7560-b4b3-f561df068d56",
+      "mk_idx": 0,
+      "shares": 32.78688524590164,
+      "x_lo_hard_ms": 1792869356069,
+      "hi_ms": 1792869358069,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xf4ceae3001b1c0714510a72fbe4959993e52441ad5f442b36ca42a4e9c003514",
+      "sid": "01a16f57-5def-7020-a37f-515c7174ac04",
+      "mk_idx": 0,
+      "shares": 12.727213114754099,
+      "x_lo_hard_ms": 1792869357087,
+      "hi_ms": 1792869359087,
+      "status": "ok"
+    }
+  ],
+  "0xfbbf29b7654f09d03ce5bdc2c6a5f55aec9cda12cdb9ea2dcc57cd50fef60ae1": [
+    {
+      "mk_hash": "0xfbbf29b7654f09d03ce5bdc2c6a5f55aec9cda12cdb9ea2dcc57cd50fef60ae1",
+      "sid": "01a16f57-814b-7d93-92de-9eb4e62bc47b",
+      "mk_idx": 4,
+      "shares": 25.890464995178398,
+      "x_lo_hard_ms": 1792869366139,
+      "hi_ms": 1792869368139,
+      "status": "ok"
+    }
+  ],
+  "0x88c0095c1ea1e1350b55d25f19c83af8fac96c4b3a5d27f395b21f9bb52611a4": [
+    {
+      "mk_hash": "0x88c0095c1ea1e1350b55d25f19c83af8fac96c4b3a5d27f395b21f9bb52611a4",
+      "sid": "01a16f57-b19a-7ef0-a990-78fe64c832b5",
+      "mk_idx": 0,
+      "shares": 30.0,
+      "x_lo_hard_ms": 1792869378506,
+      "hi_ms": 1792869380506,
+      "status": "ok"
+    }
+  ],
+  "0x9ae4953f1d9fc5f580d9ee49b5be7578ecf587eb128b6a0f82cd97009de66a20": [
+    {
+      "mk_hash": "0x9ae4953f1d9fc5f580d9ee49b5be7578ecf587eb128b6a0f82cd97009de66a20",
+      "sid": "01a16f58-f323-7652-9de5-d55056ae2e90",
+      "mk_idx": 2,
+      "shares": 50.0,
+      "x_lo_hard_ms": 1792869460819,
+      "hi_ms": 1792869462819,
+      "status": "ok"
+    }
+  ],
+  "0x499f50afd770eb2a7fd6ec9bd5186569bdf3d7872e180b0981ecf55e02725b0c": [
+    {
+      "mk_hash": "0x499f50afd770eb2a7fd6ec9bd5186569bdf3d7872e180b0981ecf55e02725b0c",
+      "sid": "01a16f58-f323-7652-9de5-d55056ae2e90",
+      "mk_idx": 3,
+      "shares": 50.0,
+      "x_lo_hard_ms": 1792869460819,
+      "hi_ms": 1792869462819,
+      "status": "ok"
+    }
+  ],
+  "0x970480047643d8000a226a276c53d188d79e83660228413191af0dcbe124ea36": [
+    {
+      "mk_hash": "0x970480047643d8000a226a276c53d188d79e83660228413191af0dcbe124ea36",
+      "sid": "01a16f58-f323-7652-9de5-d55056ae2e90",
+      "mk_idx": 5,
+      "shares": 50.0,
+      "x_lo_hard_ms": 1792869460819,
+      "hi_ms": 1792869462819,
+      "status": "ok"
+    }
+  ],
+  "0x13f38b30ecd2af04d943446aa4d73fc299feebec893be96e3f10775f8dd98a0c": [
+    {
+      "mk_hash": "0x13f38b30ecd2af04d943446aa4d73fc299feebec893be96e3f10775f8dd98a0c",
+      "sid": "01a16f58-f323-7652-9de5-d55056ae2e90",
+      "mk_idx": 6,
+      "shares": 50.0,
+      "x_lo_hard_ms": 1792869460819,
+      "hi_ms": 1792869462819,
+      "status": "ok"
+    }
+  ],
+  "0xf0b9e078c3a047e8e2cfb49776cf47ea7dd5b5bd134e46e7ce924e17db73e5b1": [
+    {
+      "mk_hash": "0xf0b9e078c3a047e8e2cfb49776cf47ea7dd5b5bd134e46e7ce924e17db73e5b1",
+      "sid": "01a16f58-f323-7652-9de5-d55056ae2e90",
+      "mk_idx": 7,
+      "shares": 30.0,
+      "x_lo_hard_ms": 1792869460819,
+      "hi_ms": 1792869462819,
+      "status": "ok"
+    }
+  ],
+  "0x95fbce9d8f26f39942da52dd68f39b8c1048b80b006cda63513fd9b41f8b5203": [
+    {
+      "mk_hash": "0x95fbce9d8f26f39942da52dd68f39b8c1048b80b006cda63513fd9b41f8b5203",
+      "sid": "01a16f58-f323-7652-9de5-d55056ae2e90",
+      "mk_idx": 11,
+      "shares": 30.0,
+      "x_lo_hard_ms": 1792869460819,
+      "hi_ms": 1792869462819,
+      "status": "ok"
+    }
+  ],
+  "0x3f1e60b77bbab071e4ca3f95d4e30f63d82b481c7aae2d2400dd6ec19042b901": [
+    {
+      "mk_hash": "0x3f1e60b77bbab071e4ca3f95d4e30f63d82b481c7aae2d2400dd6ec19042b901",
+      "sid": "01a16f58-f323-7652-9de5-d55056ae2e90",
+      "mk_idx": 12,
+      "shares": 50.0,
+      "x_lo_hard_ms": 1792869460819,
+      "hi_ms": 1792869462819,
+      "status": "ok"
+    }
+  ],
+  "0x9623efb40b1da5d652e46bda25364dd775a254fc24cfeee0855663d0fb7c7654": [
+    {
+      "mk_hash": "0x9623efb40b1da5d652e46bda25364dd775a254fc24cfeee0855663d0fb7c7654",
+      "sid": "01a16f58-f323-7652-9de5-d55056ae2e90",
+      "mk_idx": 14,
+      "shares": 30.0,
+      "x_lo_hard_ms": 1792869460819,
+      "hi_ms": 1792869462819,
+      "status": "ok"
+    }
+  ],
+  "0xc539d83bb82dcdac97c0fa884f9e413f274651ef81d82a1bf6cbb6c5ad99ab08": [
+    {
+      "mk_hash": "0xc539d83bb82dcdac97c0fa884f9e413f274651ef81d82a1bf6cbb6c5ad99ab08",
+      "sid": "01a16f58-f323-7652-9de5-d55056ae2e90",
+      "mk_idx": 16,
+      "shares": 30.0,
+      "x_lo_hard_ms": 1792869460819,
+      "hi_ms": 1792869462819,
+      "status": "ok"
+    }
+  ],
+  "0xf178e736a0d93b70a0eb83a3e28b29af1d28bb9adcf8d741a9e3dcabc3e0bdfb": [
+    {
+      "mk_hash": "0xf178e736a0d93b70a0eb83a3e28b29af1d28bb9adcf8d741a9e3dcabc3e0bdfb",
+      "sid": "01a16f58-f323-7652-9de5-d55056ae2e90",
+      "mk_idx": 28,
+      "shares": 30.0,
+      "x_lo_hard_ms": 1792869460819,
+      "hi_ms": 1792869462819,
+      "status": "ok"
+    }
+  ],
+  "0x2f4ff032179873514e1b7c0b3bb958b99fae7d671c2dd48084e034b33c413671": [
+    {
+      "mk_hash": "0x2f4ff032179873514e1b7c0b3bb958b99fae7d671c2dd48084e034b33c413671",
+      "sid": "01a16f59-1c2f-72c3-8349-6d063f94c633",
+      "mk_idx": 0,
+      "shares": 18.0,
+      "x_lo_hard_ms": 1792869471327,
+      "hi_ms": 1792869473327,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x2f4ff032179873514e1b7c0b3bb958b99fae7d671c2dd48084e034b33c413671",
+      "sid": "01a16f59-1c30-7470-b9b2-c31380b24cd4",
+      "mk_idx": 0,
+      "shares": 12.0,
+      "x_lo_hard_ms": 1792869471328,
+      "hi_ms": 1792869473328,
+      "status": "ok"
+    }
+  ],
+  "0x657c5c8a06813fa33f80779a19bdd01322b3eb464d36b157620aad5822ff96b1": [
+    {
+      "mk_hash": "0x657c5c8a06813fa33f80779a19bdd01322b3eb464d36b157620aad5822ff96b1",
+      "sid": "01a16f59-8c3e-7283-ba37-5dd7dfae891e",
+      "mk_idx": 1,
+      "shares": 2.0,
+      "x_lo_hard_ms": 1792869500014,
+      "hi_ms": 1792869502014,
+      "status": "ok"
+    }
+  ],
+  "0xb59c72f4486b1749fdb61328101f6bb9b7697ef8e601375300349406aa973ec7": [
+    {
+      "mk_hash": "0xb59c72f4486b1749fdb61328101f6bb9b7697ef8e601375300349406aa973ec7",
+      "sid": "01a16f59-a383-7981-97ee-a108dcac2048",
+      "mk_idx": 1,
+      "shares": 29.931612903225805,
+      "x_lo_hard_ms": 1792869505971,
+      "hi_ms": 1792869507971,
+      "status": "ok"
+    }
+  ],
+  "0x353b63ca85e16f6705a8e7d8743a5b22686fc5b1403480cbb389b92c88337fbb": [
+    {
+      "mk_hash": "0x353b63ca85e16f6705a8e7d8743a5b22686fc5b1403480cbb389b92c88337fbb",
+      "sid": "01a17060-f6b2-7e93-bb94-e51337d73d17",
+      "mk_idx": 2,
+      "shares": 10.0,
+      "x_lo_hard_ms": 1792886763234,
+      "hi_ms": 1792886765234,
+      "status": "ok"
+    }
+  ],
+  "0x6a9e921f31174a431002097dcd1c762adb0c8771e30829c0904f5602a7facd54": [
+    {
+      "mk_hash": "0x6a9e921f31174a431002097dcd1c762adb0c8771e30829c0904f5602a7facd54",
+      "sid": "01a17061-a26f-78a1-b451-3d85378da3de",
+      "mk_idx": 0,
+      "shares": 30.0,
+      "x_lo_hard_ms": 1792886807199,
+      "hi_ms": 1792886809199,
+      "status": "ok"
+    }
+  ],
+  "0x2fe8638015591b18eae02faf95d1bdb86dc2a713f15eb713b7cb98f1010fe0f0": [
+    {
+      "mk_hash": "0x2fe8638015591b18eae02faf95d1bdb86dc2a713f15eb713b7cb98f1010fe0f0",
+      "sid": "01a171ea-0c0b-7c03-b108-ceac489741c5",
+      "mk_idx": 0,
+      "shares": 7.687058823529412,
+      "x_lo_hard_ms": 1792912524347,
+      "hi_ms": 1792912526347,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x2fe8638015591b18eae02faf95d1bdb86dc2a713f15eb713b7cb98f1010fe0f0",
+      "sid": "01a171ea-0c0f-7060-9d17-3c179d8e4bca",
+      "mk_idx": 0,
+      "shares": 7.0,
+      "x_lo_hard_ms": 1792912524351,
+      "hi_ms": 1792912526351,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x2fe8638015591b18eae02faf95d1bdb86dc2a713f15eb713b7cb98f1010fe0f0",
+      "sid": "01a171ea-0c0f-7060-9d17-3c2832c9264a",
+      "mk_idx": 0,
+      "shares": 7.06,
+      "x_lo_hard_ms": 1792912524351,
+      "hi_ms": 1792912526351,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x2fe8638015591b18eae02faf95d1bdb86dc2a713f15eb713b7cb98f1010fe0f0",
+      "sid": "01a171ea-0c19-70e3-b8dc-6205bb14bc0a",
+      "mk_idx": 0,
+      "shares": 8.25294117647059,
+      "x_lo_hard_ms": 1792912524361,
+      "hi_ms": 1792912526361,
+      "status": "ok"
+    }
+  ],
+  "0x25e60e8b37d30d86c4d817aed13c21ade7bc9f60b28c2d08751fdd7dedb790b7": [
+    {
+      "mk_hash": "0x25e60e8b37d30d86c4d817aed13c21ade7bc9f60b28c2d08751fdd7dedb790b7",
+      "sid": "01a171ea-2b50-7c11-8efc-33583a768aba",
+      "mk_idx": 0,
+      "shares": 10.0,
+      "x_lo_hard_ms": 1792912532352,
+      "hi_ms": 1792912534352,
+      "status": "ok"
+    }
+  ],
+  "0x5c0d34f8dbeb1bdd698b18fe1c44063587efd4a1cfddce98b286a2636bbf70bb": [
+    {
+      "mk_hash": "0x5c0d34f8dbeb1bdd698b18fe1c44063587efd4a1cfddce98b286a2636bbf70bb",
+      "sid": "01a171ea-2b50-7c11-8efc-33583a768aba",
+      "mk_idx": 2,
+      "shares": 30.0,
+      "x_lo_hard_ms": 1792912532352,
+      "hi_ms": 1792912534352,
+      "status": "ok"
+    }
+  ],
+  "0x1d9656fb17d2049cb3a6b0551d6df298e1afd10dbc45c34bc6e6e27f87c8bc6a": [
+    {
+      "mk_hash": "0x1d9656fb17d2049cb3a6b0551d6df298e1afd10dbc45c34bc6e6e27f87c8bc6a",
+      "sid": "01a171ea-2b50-7c11-8efc-33583a768aba",
+      "mk_idx": 6,
+      "shares": 30.0,
+      "x_lo_hard_ms": 1792912532352,
+      "hi_ms": 1792912534352,
+      "status": "ok"
+    }
+  ],
+  "0x531c57dc2ab8831433bfe9ec3341fd41670595e603912438f29c09d91381cf5c": [
+    {
+      "mk_hash": "0x531c57dc2ab8831433bfe9ec3341fd41670595e603912438f29c09d91381cf5c",
+      "sid": "01a171ea-2b50-7c11-8efc-33583a768aba",
+      "mk_idx": 15,
+      "shares": 10.0,
+      "x_lo_hard_ms": 1792912532352,
+      "hi_ms": 1792912534352,
+      "status": "ok"
+    }
+  ],
+  "0x4be0f8768c964a85c61e578c77351a3fd5a63634b459ec93d0cb55ccb014ae9d": [
+    {
+      "mk_hash": "0x4be0f8768c964a85c61e578c77351a3fd5a63634b459ec93d0cb55ccb014ae9d",
+      "sid": "01a171ea-3ad3-7f80-96e7-5082fd714ebb",
+      "mk_idx": 0,
+      "shares": 30.0,
+      "x_lo_hard_ms": 1792912536323,
+      "hi_ms": 1792912538323,
+      "status": "ok"
+    }
+  ],
+  "0x5dc27a7c76b489be8ea97fcb955f9723e82ba9acf8a57dbff6ddc615874021b0": [
+    {
+      "mk_hash": "0x5dc27a7c76b489be8ea97fcb955f9723e82ba9acf8a57dbff6ddc615874021b0",
+      "sid": "01a171ea-e4ec-7520-8ef0-569c2cfff017",
+      "mk_idx": 1,
+      "shares": 2.839769230769231,
+      "x_lo_hard_ms": 1792912579868,
+      "hi_ms": 1792912581868,
+      "status": "ok"
+    }
+  ],
+  "0xb50f04e54bec158ebe3ec32344c22f2825dbae2a93babcb6f35220376b1b0da8": [
+    {
+      "mk_hash": "0xb50f04e54bec158ebe3ec32344c22f2825dbae2a93babcb6f35220376b1b0da8",
+      "sid": "01a171eb-83b9-70b3-b2e2-60da9a214ac5",
+      "mk_idx": 0,
+      "shares": 1.4492753623188406,
+      "x_lo_hard_ms": 1792912620521,
+      "hi_ms": 1792912622521,
+      "status": "ok"
+    }
+  ],
+  "0x295f705a2106a9a09e593838b785aacb061200538334358c4d2e63143b6044ce": [
+    {
+      "mk_hash": "0x295f705a2106a9a09e593838b785aacb061200538334358c4d2e63143b6044ce",
+      "sid": "01a172af-43b9-7741-bc4b-270f3045c80a",
+      "mk_idx": 0,
+      "shares": 10.0,
+      "x_lo_hard_ms": 1792925449193,
+      "hi_ms": 1792925451193,
+      "status": "ok"
+    }
+  ],
+  "0x0fc7641a4ea5903208cabc755478532fdf6101a7ee2d34a713873e8556f13c4d": [
+    {
+      "mk_hash": "0x0fc7641a4ea5903208cabc755478532fdf6101a7ee2d34a713873e8556f13c4d",
+      "sid": "01a172af-dcab-7d23-9203-436275db9e1f",
+      "mk_idx": 0,
+      "shares": 10.0,
+      "x_lo_hard_ms": 1792925488347,
+      "hi_ms": 1792925490347,
+      "status": "ok"
+    }
+  ],
+  "0x1209c1c9bc9aba8f1273e04b84e8d9081b033ab3f5f3821bf83b714167016050": [
+    {
+      "mk_hash": "0x1209c1c9bc9aba8f1273e04b84e8d9081b033ab3f5f3821bf83b714167016050",
+      "sid": "01a172b1-2d60-7a30-b05f-c617b7a64b18",
+      "mk_idx": 4,
+      "shares": 5.454545454545454,
+      "x_lo_hard_ms": 1792925574544,
+      "hi_ms": 1792925576544,
+      "status": "ok"
+    }
+  ],
+  "0xf0469b20c7bedac8f0c4cde44c6c7645fd901715e3b81968253114fd42feefde": [
+    {
+      "mk_hash": "0xf0469b20c7bedac8f0c4cde44c6c7645fd901715e3b81968253114fd42feefde",
+      "sid": "01a172b1-c9c8-7433-b342-2fc4339643f3",
+      "mk_idx": 0,
+      "shares": 30.0,
+      "x_lo_hard_ms": 1792925614584,
+      "hi_ms": 1792925616584,
+      "status": "ok"
+    }
+  ],
+  "0xaebdbd61530d620d834a85ca5ee584b20472b3dd92590f403d6d8d462fb3524e": [
+    {
+      "mk_hash": "0xaebdbd61530d620d834a85ca5ee584b20472b3dd92590f403d6d8d462fb3524e",
+      "sid": "01a172b2-7606-75b3-8413-4047087924c2",
+      "mk_idx": 0,
+      "shares": 30.0,
+      "x_lo_hard_ms": 1792925658678,
+      "hi_ms": 1792925660678,
+      "status": "ok"
+    }
+  ],
+  "0x22703c60434a0271c9812b065ac087132108207bb5f183b27d684be568a6f092": [
+    {
+      "mk_hash": "0x22703c60434a0271c9812b065ac087132108207bb5f183b27d684be568a6f092",
+      "sid": "01a17406-58c8-7581-a7c5-e0f92ca0dcac",
+      "mk_idx": 1,
+      "shares": 7.273859649122807,
+      "x_lo_hard_ms": 1792947933432,
+      "hi_ms": 1792947935432,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x22703c60434a0271c9812b065ac087132108207bb5f183b27d684be568a6f092",
+      "sid": "01a17406-5aba-7523-95e0-f8e815822a9f",
+      "mk_idx": 0,
+      "shares": 1.7857142857142858,
+      "x_lo_hard_ms": 1792947933930,
+      "hi_ms": 1792947935930,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x22703c60434a0271c9812b065ac087132108207bb5f183b27d684be568a6f092",
+      "sid": "01a17406-5b7b-7131-8c11-c4bbf59f9ecb",
+      "mk_idx": 0,
+      "shares": 8.771929824561404,
+      "x_lo_hard_ms": 1792947934123,
+      "hi_ms": 1792947936123,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x22703c60434a0271c9812b065ac087132108207bb5f183b27d684be568a6f092",
+      "sid": "01a17406-5c7e-74b0-b8bd-05a7dbf77d77",
+      "mk_idx": 0,
+      "shares": 8.928571428571429,
+      "x_lo_hard_ms": 1792947934382,
+      "hi_ms": 1792947936382,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x22703c60434a0271c9812b065ac087132108207bb5f183b27d684be568a6f092",
+      "sid": "01a17406-606c-7fe3-a90b-afbf12ed7337",
+      "mk_idx": 0,
+      "shares": 1.7857142857142858,
+      "x_lo_hard_ms": 1792947935388,
+      "hi_ms": 1792947937388,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x22703c60434a0271c9812b065ac087132108207bb5f183b27d684be568a6f092",
+      "sid": "01a17406-619a-7051-a818-f03b0c1f1e52",
+      "mk_idx": 0,
+      "shares": 2.6315789473684212,
+      "x_lo_hard_ms": 1792947935690,
+      "hi_ms": 1792947937690,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x22703c60434a0271c9812b065ac087132108207bb5f183b27d684be568a6f092",
+      "sid": "01a17406-6377-7a70-a50b-5dd274b20a3b",
+      "mk_idx": 0,
+      "shares": 71.125,
+      "x_lo_hard_ms": 1792947936167,
+      "hi_ms": 1792947938167,
+      "status": "ok"
+    }
+  ],
+  "0x761c7aa3fbc8f517e9c6983803722fff8bf8b96c0c06ef602e0fe44832cad097": [
+    {
+      "mk_hash": "0x761c7aa3fbc8f517e9c6983803722fff8bf8b96c0c06ef602e0fe44832cad097",
+      "sid": "01a17407-77ec-7010-be70-98cdcf858344",
+      "mk_idx": 0,
+      "shares": 13.513513513513514,
+      "x_lo_hard_ms": 1792948006940,
+      "hi_ms": 1792948008940,
+      "status": "ok"
+    }
+  ],
+  "0x03987855a0937916e1451b8153931f7382671c4edaf1333b3e22ef86aa282dd7": [
+    {
+      "mk_hash": "0x03987855a0937916e1451b8153931f7382671c4edaf1333b3e22ef86aa282dd7",
+      "sid": "01a17407-7d0f-7e20-bccc-eb2007b082e7",
+      "mk_idx": 0,
+      "shares": 50.0,
+      "x_lo_hard_ms": 1792948008255,
+      "hi_ms": 1792948010255,
+      "status": "ok"
+    }
+  ],
+  "0x85a8c3a52ea5293d9f364c14ed839f7a4a19909ca1f2c22eaab43d809b376c8b": [
+    {
+      "mk_hash": "0x85a8c3a52ea5293d9f364c14ed839f7a4a19909ca1f2c22eaab43d809b376c8b",
+      "sid": "01a17407-bef4-7d73-b695-259260e4259f",
+      "mk_idx": 1,
+      "shares": 16.785403259005108,
+      "x_lo_hard_ms": 1792948025124,
+      "hi_ms": 1792948027124,
+      "status": "ok"
+    }
+  ],
+  "0xfcfa04eb64bd6eec421e76e1b86da073c14e80121bdcbc03451c08540a568051": [
+    {
+      "mk_hash": "0xfcfa04eb64bd6eec421e76e1b86da073c14e80121bdcbc03451c08540a568051",
+      "sid": "01a17407-bef4-7d73-b695-259260e4259f",
+      "mk_idx": 3,
+      "shares": 50.0,
+      "x_lo_hard_ms": 1792948025124,
+      "hi_ms": 1792948027124,
+      "status": "ok"
+    }
+  ],
+  "0x48a4abb2f57e3065d89e0bd5cdf3f34c829fe6ef2599ee63240a944cc3c1090f": [
+    {
+      "mk_hash": "0x48a4abb2f57e3065d89e0bd5cdf3f34c829fe6ef2599ee63240a944cc3c1090f",
+      "sid": "01a17407-db39-74c2-844c-46208ee1b4fe",
+      "mk_idx": 0,
+      "shares": 4.74,
+      "x_lo_hard_ms": 1792948032361,
+      "hi_ms": 1792948034361,
+      "status": "ok"
+    }
+  ],
+  "0x7a11a32cd1168eb6c862356e1b612b7f8bf4d3d24549da2d161c1f6225659d0b": [
+    {
+      "mk_hash": "0x7a11a32cd1168eb6c862356e1b612b7f8bf4d3d24549da2d161c1f6225659d0b",
+      "sid": "01a17408-1b78-7d31-9b63-d75f9d2d392c",
+      "mk_idx": 0,
+      "shares": 65.46268656716418,
+      "x_lo_hard_ms": 1792948048808,
+      "hi_ms": 1792948050808,
+      "status": "ok"
+    }
+  ],
+  "0xeedfd4507c3d27bced17023f19698e230588a2fd490de9a2a7919c39197ef26f": [
+    {
+      "mk_hash": "0xeedfd4507c3d27bced17023f19698e230588a2fd490de9a2a7919c39197ef26f",
+      "sid": "01a17408-25ed-72b0-8665-beea4b3b3bd3",
+      "mk_idx": 0,
+      "shares": 50.0,
+      "x_lo_hard_ms": 1792948051485,
+      "hi_ms": 1792948053485,
+      "status": "ok"
+    }
+  ],
+  "0x34675ea3d276a397b5c253930e518aa1cc8cf8a34f0b44a933cde74aa65293ab": [
+    {
+      "mk_hash": "0x34675ea3d276a397b5c253930e518aa1cc8cf8a34f0b44a933cde74aa65293ab",
+      "sid": "01a17408-d95c-74b0-b251-3bdba63caef2",
+      "mk_idx": 2,
+      "shares": 0.21666666666666667,
+      "x_lo_hard_ms": 1792948097420,
+      "hi_ms": 1792948099420,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x34675ea3d276a397b5c253930e518aa1cc8cf8a34f0b44a933cde74aa65293ab",
+      "sid": "01a17408-da86-7673-8927-f32a0a215e92",
+      "mk_idx": 0,
+      "shares": 4.166666666666667,
+      "x_lo_hard_ms": 1792948097718,
+      "hi_ms": 1792948099718,
+      "status": "ok"
+    }
+  ],
+  "0xeb408820afc135b8670bf17b649d057b9dd6a2f044aed6299200724835bb46ee": [
+    {
+      "mk_hash": "0xeb408820afc135b8670bf17b649d057b9dd6a2f044aed6299200724835bb46ee",
+      "sid": "01a17409-0d46-7d60-906c-940744df36c6",
+      "mk_idx": 0,
+      "shares": 1.2820512820512822,
+      "x_lo_hard_ms": 1792948110710,
+      "hi_ms": 1792948112710,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xeb408820afc135b8670bf17b649d057b9dd6a2f044aed6299200724835bb46ee",
+      "sid": "01a17409-0d52-7500-a6c3-61b08c293464",
+      "mk_idx": 0,
+      "shares": 6.410256410256411,
+      "x_lo_hard_ms": 1792948110722,
+      "hi_ms": 1792948112722,
+      "status": "ok"
+    }
+  ],
+  "0x7f0068072c4fe02c7d3425ba864b3701f5f0ffdf17f84bd049e6925447c5cf97": [
+    {
+      "mk_hash": "0x7f0068072c4fe02c7d3425ba864b3701f5f0ffdf17f84bd049e6925447c5cf97",
+      "sid": "01a17409-370b-76b1-99b7-e1d667e18d70",
+      "mk_idx": 1,
+      "shares": 2.62,
+      "x_lo_hard_ms": 1792948121403,
+      "hi_ms": 1792948123403,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x7f0068072c4fe02c7d3425ba864b3701f5f0ffdf17f84bd049e6925447c5cf97",
+      "sid": "01a17409-37bd-7241-9cc8-8cbe3bdbb72b",
+      "mk_idx": 0,
+      "shares": 1.2987012987012987,
+      "x_lo_hard_ms": 1792948121581,
+      "hi_ms": 1792948123581,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x7f0068072c4fe02c7d3425ba864b3701f5f0ffdf17f84bd049e6925447c5cf97",
+      "sid": "01a17409-3a20-7a21-ae43-c6f9f5eedcc7",
+      "mk_idx": 0,
+      "shares": 1.0,
+      "x_lo_hard_ms": 1792948122192,
+      "hi_ms": 1792948124192,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x7f0068072c4fe02c7d3425ba864b3701f5f0ffdf17f84bd049e6925447c5cf97",
+      "sid": "01a17409-3b8a-7fc2-980e-d551d42862ec",
+      "mk_idx": 0,
+      "shares": 2.7027027027027026,
+      "x_lo_hard_ms": 1792948122554,
+      "hi_ms": 1792948124554,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x7f0068072c4fe02c7d3425ba864b3701f5f0ffdf17f84bd049e6925447c5cf97",
+      "sid": "01a17409-3d62-73c1-9eec-3121cc61d9f3",
+      "mk_idx": 0,
+      "shares": 42.378595998596,
+      "x_lo_hard_ms": 1792948123026,
+      "hi_ms": 1792948125026,
+      "status": "ok"
+    }
+  ],
+  "0x26a95a0d2401a8e98c11e6b55a9fe7e543168e3d3d2903945235341e8e3b1828": [
+    {
+      "mk_hash": "0x26a95a0d2401a8e98c11e6b55a9fe7e543168e3d3d2903945235341e8e3b1828",
+      "sid": "01a17409-7b77-70f1-896e-c67c1948b0f6",
+      "mk_idx": 0,
+      "shares": 50.0,
+      "x_lo_hard_ms": 1792948138919,
+      "hi_ms": 1792948140919,
+      "status": "ok"
+    }
+  ],
+  "0x864dde06c858f4098595a341260aee1e4281aa2ea4dac1ea1079f7b4f1062445": [
+    {
+      "mk_hash": "0x864dde06c858f4098595a341260aee1e4281aa2ea4dac1ea1079f7b4f1062445",
+      "sid": "01a17409-7b77-70f1-896e-c67c1948b0f6",
+      "mk_idx": 1,
+      "shares": 50.0,
+      "x_lo_hard_ms": 1792948138919,
+      "hi_ms": 1792948140919,
+      "status": "ok"
+    }
+  ],
+  "0x53b0cb9498cea7fce98dfb002fad4929d8770575339d106c384b9b6fec91d93e": [
+    {
+      "mk_hash": "0x53b0cb9498cea7fce98dfb002fad4929d8770575339d106c384b9b6fec91d93e",
+      "sid": "01a17409-7b77-70f1-896e-c7c83f92eac6",
+      "mk_idx": 0,
+      "shares": 50.0,
+      "x_lo_hard_ms": 1792948138919,
+      "hi_ms": 1792948140919,
+      "status": "ok"
+    }
+  ],
+  "0x79d8b5bb80fd6e93668e94363a0736c0a2b99f21476a1af1e84a34b074e05441": [
+    {
+      "mk_hash": "0x79d8b5bb80fd6e93668e94363a0736c0a2b99f21476a1af1e84a34b074e05441",
+      "sid": "01a17409-7b77-70f1-896e-c7c83f92eac6",
+      "mk_idx": 1,
+      "shares": 50.0,
+      "x_lo_hard_ms": 1792948138919,
+      "hi_ms": 1792948140919,
+      "status": "ok"
+    }
+  ],
+  "0xf0872b401b4a578a34d85fe7649cc10388b8e6b2019ce57565b58aabfc19b22c": [
+    {
+      "mk_hash": "0xf0872b401b4a578a34d85fe7649cc10388b8e6b2019ce57565b58aabfc19b22c",
+      "sid": "01a175c5-dba0-7372-a0b2-7090944fe4b7",
+      "mk_idx": 2,
+      "shares": 10.0,
+      "x_lo_hard_ms": 1792977261520,
+      "hi_ms": 1792977263520,
+      "status": "ok"
+    }
+  ],
+  "0x3be8243bef0a3b21f0da4790da5a9e24e27c7549ecbd65f0918574808cacdc20": [
+    {
+      "mk_hash": "0x3be8243bef0a3b21f0da4790da5a9e24e27c7549ecbd65f0918574808cacdc20",
+      "sid": "01a175c5-f8fb-7091-8e99-803c48447a4e",
+      "mk_idx": 0,
+      "shares": 10.0,
+      "x_lo_hard_ms": 1792977269035,
+      "hi_ms": 1792977271035,
+      "status": "ok"
+    }
+  ],
+  "0x1f3b55da07977ccfed6291fa81b2f74d8229b8fc8359b289936f50210e1d4750": [
+    {
+      "mk_hash": "0x1f3b55da07977ccfed6291fa81b2f74d8229b8fc8359b289936f50210e1d4750",
+      "sid": "01a17735-0561-75b2-95e8-84557176a514",
+      "mk_idx": 1,
+      "shares": 50.0,
+      "x_lo_hard_ms": 1793001323921,
+      "hi_ms": 1793001325921,
+      "status": "ok"
+    }
+  ],
+  "0xa6dc7569b2def7dc4b07652784e5bbfd99b27519b2de145a0d23304f9a38e753": [
+    {
+      "mk_hash": "0xa6dc7569b2def7dc4b07652784e5bbfd99b27519b2de145a0d23304f9a38e753",
+      "sid": "01a17735-0561-75b2-95e8-84557176a514",
+      "mk_idx": 4,
+      "shares": 182.58,
+      "x_lo_hard_ms": 1793001323921,
+      "hi_ms": 1793001325921,
+      "status": "ok"
+    }
+  ],
+  "0xd695d538d62cf6b1f1838d04ebf082e91bcf8fff44a23012a8674f3841fcc103": [
+    {
+      "mk_hash": "0xd695d538d62cf6b1f1838d04ebf082e91bcf8fff44a23012a8674f3841fcc103",
+      "sid": "01a17735-8040-7e22-9900-f6ef6f8760ea",
+      "mk_idx": 0,
+      "shares": 2.028985507246377,
+      "x_lo_hard_ms": 1793001355376,
+      "hi_ms": 1793001357376,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xd695d538d62cf6b1f1838d04ebf082e91bcf8fff44a23012a8674f3841fcc103",
+      "sid": "01a17735-8144-7a80-b59f-e81681a2962c",
+      "mk_idx": 0,
+      "shares": 1.4492753623188406,
+      "x_lo_hard_ms": 1793001355636,
+      "hi_ms": 1793001357636,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xd695d538d62cf6b1f1838d04ebf082e91bcf8fff44a23012a8674f3841fcc103",
+      "sid": "01a17735-8148-7860-85e4-1a017e1e50d0",
+      "mk_idx": 0,
+      "shares": 14.492753623188406,
+      "x_lo_hard_ms": 1793001355640,
+      "hi_ms": 1793001357640,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xd695d538d62cf6b1f1838d04ebf082e91bcf8fff44a23012a8674f3841fcc103",
+      "sid": "01a17735-8226-7580-ae4e-50e886f41dce",
+      "mk_idx": 0,
+      "shares": 32.028985507246375,
+      "x_lo_hard_ms": 1793001355862,
+      "hi_ms": 1793001357862,
+      "status": "ok"
+    }
+  ],
+  "0x59dfa294a11e8ba403b54437fa6d386ff1b6125410348aae8633fea12034d639": [
+    {
+      "mk_hash": "0x59dfa294a11e8ba403b54437fa6d386ff1b6125410348aae8633fea12034d639",
+      "sid": "01a17736-5f18-75b2-9722-07d23d98ad8d",
+      "mk_idx": 0,
+      "shares": 34.397471264367816,
+      "x_lo_hard_ms": 1793001412424,
+      "hi_ms": 1793001414424,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x59dfa294a11e8ba403b54437fa6d386ff1b6125410348aae8633fea12034d639",
+      "sid": "01a17736-626d-7550-b01c-c0b66ecdf2ef",
+      "mk_idx": 0,
+      "shares": 1.1494252873563218,
+      "x_lo_hard_ms": 1793001413277,
+      "hi_ms": 1793001415277,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x59dfa294a11e8ba403b54437fa6d386ff1b6125410348aae8633fea12034d639",
+      "sid": "01a17736-6277-7220-a4cb-798d99271bf2",
+      "mk_idx": 0,
+      "shares": 14.453103448275861,
+      "x_lo_hard_ms": 1793001413287,
+      "hi_ms": 1793001415287,
+      "status": "ok"
+    }
+  ],
+  "0xab150bc10823d4a120d4f35329b47d3c314f2a164b547722dc6ff0a0b22912ee": [
+    {
+      "mk_hash": "0xab150bc10823d4a120d4f35329b47d3c314f2a164b547722dc6ff0a0b22912ee",
+      "sid": "01a17736-6277-7220-a4cb-798d99271bf2",
+      "mk_idx": 1,
+      "shares": 100.48942528735633,
+      "x_lo_hard_ms": 1793001413287,
+      "hi_ms": 1793001415287,
+      "status": "ok"
+    }
+  ],
+  "0x3801d072cdf7814dfa2c654a38b8c12fa7299e2bb7e0fa2f1ea3187afc9bdce1": [
+    {
+      "mk_hash": "0x3801d072cdf7814dfa2c654a38b8c12fa7299e2bb7e0fa2f1ea3187afc9bdce1",
+      "sid": "01a17738-c185-7760-abeb-141e438a5f62",
+      "mk_idx": 0,
+      "shares": 11.9419,
+      "x_lo_hard_ms": 1793001568693,
+      "hi_ms": 1793001570693,
+      "status": "ok"
+    }
+  ],
+  "0x45091f5e423ac9dca41b72e3d36769ed2f8d9b71304a14bc4684a4ab6ac3304b": [
+    {
+      "mk_hash": "0x45091f5e423ac9dca41b72e3d36769ed2f8d9b71304a14bc4684a4ab6ac3304b",
+      "sid": "01a17738-d08f-76c0-a795-a2ce1ce03bd6",
+      "mk_idx": 0,
+      "shares": 50.0,
+      "x_lo_hard_ms": 1793001572543,
+      "hi_ms": 1793001574543,
+      "status": "ok"
+    }
+  ],
+  "0x1a5297e5a71f3318bbe6ead0432364cbe4179ec7b74fea6a0e540b2c3e1e77a0": [
+    {
+      "mk_hash": "0x1a5297e5a71f3318bbe6ead0432364cbe4179ec7b74fea6a0e540b2c3e1e77a0",
+      "sid": "01a17739-0c67-7ca1-96de-5f27aceecf6b",
+      "mk_idx": 0,
+      "shares": 114.584,
+      "x_lo_hard_ms": 1793001587863,
+      "hi_ms": 1793001589863,
+      "status": "ok"
+    }
+  ],
+  "0x88bafd29dddb863a255009b6dc4b9a490b5bf0af96f5c6a69a9d20fd1908291f": [
+    {
+      "mk_hash": "0x88bafd29dddb863a255009b6dc4b9a490b5bf0af96f5c6a69a9d20fd1908291f",
+      "sid": "01a1778d-8520-79d2-b745-e3152663bf22",
+      "mk_idx": 1,
+      "shares": 38.17675675675678,
+      "x_lo_hard_ms": 1793007123792,
+      "hi_ms": 1793007125792,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x88bafd29dddb863a255009b6dc4b9a490b5bf0af96f5c6a69a9d20fd1908291f",
+      "sid": "01a1778d-8561-72c3-a6c1-5f20df517a59",
+      "mk_idx": 0,
+      "shares": 4.0,
+      "x_lo_hard_ms": 1793007123857,
+      "hi_ms": 1793007125857,
+      "status": "ok"
+    }
+  ],
+  "0x263c01d32750bb81536024c194823861da41f2b9c3369a77a9c3720f95a0daf3": [
+    {
+      "mk_hash": "0x263c01d32750bb81536024c194823861da41f2b9c3369a77a9c3720f95a0daf3",
+      "sid": "01a1778d-b7ca-7a03-9811-7a03cdac1ece",
+      "mk_idx": 0,
+      "shares": 1.2345679012345678,
+      "x_lo_hard_ms": 1793007136762,
+      "hi_ms": 1793007138762,
+      "status": "ok"
+    }
+  ],
+  "0xae94dc82d942118f29e82faf86b067690a7539d7e2da81d1426d133647f38ef1": [
+    {
+      "mk_hash": "0xae94dc82d942118f29e82faf86b067690a7539d7e2da81d1426d133647f38ef1",
+      "sid": "01a1778e-4a2e-7e33-80c3-194fccb6d4d8",
+      "mk_idx": 0,
+      "shares": 30.0,
+      "x_lo_hard_ms": 1793007174238,
+      "hi_ms": 1793007176238,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xae94dc82d942118f29e82faf86b067690a7539d7e2da81d1426d133647f38ef1",
+      "sid": "01a1778e-4fc2-7880-a158-72128bfad126",
+      "mk_idx": 0,
+      "shares": 0.8333333333333334,
+      "x_lo_hard_ms": 1793007175666,
+      "hi_ms": 1793007177666,
+      "status": "ok"
+    }
+  ],
+  "0x79565f68609bded1a2642e598a67f63a3b376c1c69e647e2cde63b3ddfc4cf6e": [
+    {
+      "mk_hash": "0x79565f68609bded1a2642e598a67f63a3b376c1c69e647e2cde63b3ddfc4cf6e",
+      "sid": "01a1799a-e707-7442-aec4-e898d8ff48e6",
+      "mk_idx": 0,
+      "shares": 9.25925925925926,
+      "x_lo_hard_ms": 1793041555255,
+      "hi_ms": 1793041557255,
+      "status": "ok"
+    }
+  ],
+  "0xfdab939c5560493b410028b9ecb471839034b1f2a03a572d6395650bde79623b": [
+    {
+      "mk_hash": "0xfdab939c5560493b410028b9ecb471839034b1f2a03a572d6395650bde79623b",
+      "sid": "01a1799b-ddaf-7720-910b-a264af65da82",
+      "mk_idx": 2,
+      "shares": 30.49,
+      "x_lo_hard_ms": 1793041618399,
+      "hi_ms": 1793041620399,
+      "status": "ok"
+    }
+  ],
+  "0xba5e111f505ea7080f270a9bb8c1ed1d97d20d0af137e937137652474e0fe9ca": [
+    {
+      "mk_hash": "0xba5e111f505ea7080f270a9bb8c1ed1d97d20d0af137e937137652474e0fe9ca",
+      "sid": "01a1799c-89d5-7d70-b8d3-c8500e16b304",
+      "mk_idx": 3,
+      "shares": 147.45881488081977,
+      "x_lo_hard_ms": 1793041662469,
+      "hi_ms": 1793041664469,
+      "status": "ok"
+    }
+  ],
+  "0xb53c20a7a0755c45e8248cd40b5ca0c528019b8ed9010dab92a24b2687344f05": [
+    {
+      "mk_hash": "0xb53c20a7a0755c45e8248cd40b5ca0c528019b8ed9010dab92a24b2687344f05",
+      "sid": "01a1799c-89d5-7d70-b8d3-c8500e16b304",
+      "mk_idx": 9,
+      "shares": 160.0,
+      "x_lo_hard_ms": 1793041662469,
+      "hi_ms": 1793041664469,
+      "status": "ok"
+    }
+  ],
+  "0x0a28aef0f335a807172441327f6435e1131eed19f2fb22df1f82d058aa89bbfb": [
+    {
+      "mk_hash": "0x0a28aef0f335a807172441327f6435e1131eed19f2fb22df1f82d058aa89bbfb",
+      "sid": "01a1799d-4a45-7270-bbed-da33ae5c706c",
+      "mk_idx": 0,
+      "shares": 50.0,
+      "x_lo_hard_ms": 1793041711733,
+      "hi_ms": 1793041713733,
+      "status": "ok"
+    }
+  ],
+  "0xc727c4f577d671f597f547a229bff58e2bc5170363e0f5c0db6dd6f44c7b75d6": [
+    {
+      "mk_hash": "0xc727c4f577d671f597f547a229bff58e2bc5170363e0f5c0db6dd6f44c7b75d6",
+      "sid": "01a1799d-a7be-7f00-a283-43afe36f8ab0",
+      "mk_idx": 0,
+      "shares": 7.644444444444445,
+      "x_lo_hard_ms": 1793041735662,
+      "hi_ms": 1793041737662,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xc727c4f577d671f597f547a229bff58e2bc5170363e0f5c0db6dd6f44c7b75d6",
+      "sid": "01a1799d-a7c5-7ef1-bb26-7369835dcedd",
+      "mk_idx": 0,
+      "shares": 42.355555555555554,
+      "x_lo_hard_ms": 1793041735669,
+      "hi_ms": 1793041737669,
+      "status": "ok"
+    }
+  ],
+  "0x247b0a503926d0d3ed7fb19b9d09540156561bcae8b98732982b8a26d2f46aaa": [
+    {
+      "mk_hash": "0x247b0a503926d0d3ed7fb19b9d09540156561bcae8b98732982b8a26d2f46aaa",
+      "sid": "01a1799d-a7c5-7ef1-bb26-7369835dcedd",
+      "mk_idx": 1,
+      "shares": 13.2,
+      "x_lo_hard_ms": 1793041735669,
+      "hi_ms": 1793041737669,
+      "status": "ok"
+    }
+  ],
+  "0xecef86a9113243f2ceae4bd297979021a84db8fedd890cc52710d3e7b27d11c3": [
+    {
+      "mk_hash": "0xecef86a9113243f2ceae4bd297979021a84db8fedd890cc52710d3e7b27d11c3",
+      "sid": "01a1799e-059d-7042-983f-04b18d92d247",
+      "mk_idx": 0,
+      "shares": 5.0,
+      "x_lo_hard_ms": 1793041759693,
+      "hi_ms": 1793041761693,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xecef86a9113243f2ceae4bd297979021a84db8fedd890cc52710d3e7b27d11c3",
+      "sid": "01a1799e-059e-7602-b835-1644c8d98929",
+      "mk_idx": 0,
+      "shares": 5.0,
+      "x_lo_hard_ms": 1793041759694,
+      "hi_ms": 1793041761694,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xecef86a9113243f2ceae4bd297979021a84db8fedd890cc52710d3e7b27d11c3",
+      "sid": "01a1799e-05bd-7c31-9316-f23147a9301d",
+      "mk_idx": 0,
+      "shares": 5.0,
+      "x_lo_hard_ms": 1793041759725,
+      "hi_ms": 1793041761725,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xecef86a9113243f2ceae4bd297979021a84db8fedd890cc52710d3e7b27d11c3",
+      "sid": "01a1799e-05bd-7c31-9316-f24008de0845",
+      "mk_idx": 0,
+      "shares": 5.0,
+      "x_lo_hard_ms": 1793041759725,
+      "hi_ms": 1793041761725,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xecef86a9113243f2ceae4bd297979021a84db8fedd890cc52710d3e7b27d11c3",
+      "sid": "01a1799e-05c1-7c83-8952-a8a9c8979ee9",
+      "mk_idx": 0,
+      "shares": 5.0,
+      "x_lo_hard_ms": 1793041759729,
+      "hi_ms": 1793041761729,
+      "status": "ok"
+    }
+  ],
+  "0xe25af25375c01f4b92f69cec20226f55906a427398f6320917aab307827b5c71": [
+    {
+      "mk_hash": "0xe25af25375c01f4b92f69cec20226f55906a427398f6320917aab307827b5c71",
+      "sid": "01a1799e-12c0-7072-a03f-9152ad95c9c5",
+      "mk_idx": 0,
+      "shares": 50.925925925925924,
+      "x_lo_hard_ms": 1793041763056,
+      "hi_ms": 1793041765056,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xe25af25375c01f4b92f69cec20226f55906a427398f6320917aab307827b5c71",
+      "sid": "01a1799e-12cc-76e1-9875-460c0ebdf216",
+      "mk_idx": 0,
+      "shares": 51.851851851851855,
+      "x_lo_hard_ms": 1793041763068,
+      "hi_ms": 1793041765068,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xe25af25375c01f4b92f69cec20226f55906a427398f6320917aab307827b5c71",
+      "sid": "01a1799e-12cd-7d93-9744-f7e6ae4a2fa1",
+      "mk_idx": 0,
+      "shares": 50.925925925925924,
+      "x_lo_hard_ms": 1793041763069,
+      "hi_ms": 1793041765069,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xe25af25375c01f4b92f69cec20226f55906a427398f6320917aab307827b5c71",
+      "sid": "01a1799e-12cf-7b72-8724-fb4f83f95da4",
+      "mk_idx": 0,
+      "shares": 6.296296296296297,
+      "x_lo_hard_ms": 1793041763071,
+      "hi_ms": 1793041765071,
+      "status": "ok"
+    }
+  ],
+  "0xdd5d647d17abca1b887da2ec7c44c0745cb734669a74533baa299fc3727ff3ad": [
+    {
+      "mk_hash": "0xdd5d647d17abca1b887da2ec7c44c0745cb734669a74533baa299fc3727ff3ad",
+      "sid": "01a1799e-52ba-7071-a9c3-33703ce76944",
+      "mk_idx": 2,
+      "shares": 25.16,
+      "x_lo_hard_ms": 1793041779434,
+      "hi_ms": 1793041781434,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xdd5d647d17abca1b887da2ec7c44c0745cb734669a74533baa299fc3727ff3ad",
+      "sid": "01a1799e-52cd-7aa1-97d4-4bb089f0e878",
+      "mk_idx": 0,
+      "shares": 13.369047619047619,
+      "x_lo_hard_ms": 1793041779453,
+      "hi_ms": 1793041781453,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xdd5d647d17abca1b887da2ec7c44c0745cb734669a74533baa299fc3727ff3ad",
+      "sid": "01a1799e-5413-7212-b42b-54b0421dabf9",
+      "mk_idx": 0,
+      "shares": 6.3164556962025316,
+      "x_lo_hard_ms": 1793041779779,
+      "hi_ms": 1793041781779,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xdd5d647d17abca1b887da2ec7c44c0745cb734669a74533baa299fc3727ff3ad",
+      "sid": "01a1799e-5425-7283-8907-b2fa3c8d5e38",
+      "mk_idx": 0,
+      "shares": 1.2658227848101267,
+      "x_lo_hard_ms": 1793041779797,
+      "hi_ms": 1793041781797,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xdd5d647d17abca1b887da2ec7c44c0745cb734669a74533baa299fc3727ff3ad",
+      "sid": "01a1799e-549f-7221-a88a-ad442a3ed8d9",
+      "mk_idx": 0,
+      "shares": 1.2658227848101267,
+      "x_lo_hard_ms": 1793041779919,
+      "hi_ms": 1793041781919,
+      "status": "ok"
+    }
+  ],
+  "0x61e24f3b1ee8b3edcbad181f3b868fc0c10f22c49b902dc439e03dea26f65507": [
+    {
+      "mk_hash": "0x61e24f3b1ee8b3edcbad181f3b868fc0c10f22c49b902dc439e03dea26f65507",
+      "sid": "01a17a64-c4cd-7021-a407-91d232e729c4",
+      "mk_idx": 2,
+      "shares": 50.0,
+      "x_lo_hard_ms": 1793054784765,
+      "hi_ms": 1793054786765,
+      "status": "ok"
+    }
+  ],
+  "0x635be6f6178dfe98b4160af4061259949b5ba1a54d12fa57c23515d605dd6266": [
+    {
+      "mk_hash": "0x635be6f6178dfe98b4160af4061259949b5ba1a54d12fa57c23515d605dd6266",
+      "sid": "01a17a64-c4cd-7021-a407-91d232e729c4",
+      "mk_idx": 3,
+      "shares": 50.0,
+      "x_lo_hard_ms": 1793054784765,
+      "hi_ms": 1793054786765,
+      "status": "ok"
+    }
+  ],
+  "0x4c2192bca400efe6c43a685a3676cad155a7d5ec3f168ac0116f8fc180f79f14": [
+    {
+      "mk_hash": "0x4c2192bca400efe6c43a685a3676cad155a7d5ec3f168ac0116f8fc180f79f14",
+      "sid": "01a17a64-c4cd-7021-a407-91d232e729c4",
+      "mk_idx": 4,
+      "shares": 10.0,
+      "x_lo_hard_ms": 1793054784765,
+      "hi_ms": 1793054786765,
+      "status": "ok"
+    }
+  ],
+  "0xaa3202e55190d3058226e75aa8d46abc1b473dad55d189133b52e632c95f1644": [
+    {
+      "mk_hash": "0xaa3202e55190d3058226e75aa8d46abc1b473dad55d189133b52e632c95f1644",
+      "sid": "01a17a64-c4cd-7021-a407-91d232e729c4",
+      "mk_idx": 6,
+      "shares": 84.0851512195122,
+      "x_lo_hard_ms": 1793054784765,
+      "hi_ms": 1793054786765,
+      "status": "ok"
+    }
+  ],
+  "0xe953dd8bf2052d51c2f67e4e27f07e6d39c1093415e89df08f6914eee94dc5d6": [
+    {
+      "mk_hash": "0xe953dd8bf2052d51c2f67e4e27f07e6d39c1093415e89df08f6914eee94dc5d6",
+      "sid": "01a17a64-c4cd-7021-a407-91d232e729c4",
+      "mk_idx": 9,
+      "shares": 50.0,
+      "x_lo_hard_ms": 1793054784765,
+      "hi_ms": 1793054786765,
+      "status": "ok"
+    }
+  ],
+  "0x5b33a8240ad38f078ba5b979a8df49927c6d0a61aedc18ae2b619dff4962d593": [
+    {
+      "mk_hash": "0x5b33a8240ad38f078ba5b979a8df49927c6d0a61aedc18ae2b619dff4962d593",
+      "sid": "01a17a66-d469-7503-8633-3aa3e7569f08",
+      "mk_idx": 0,
+      "shares": 18.94958006789958,
+      "x_lo_hard_ms": 1793054919833,
+      "hi_ms": 1793054921833,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x5b33a8240ad38f078ba5b979a8df49927c6d0a61aedc18ae2b619dff4962d593",
+      "sid": "01a17a66-d527-7751-8d72-8dc59c0222d6",
+      "mk_idx": 0,
+      "shares": 2.857142857142857,
+      "x_lo_hard_ms": 1793054920023,
+      "hi_ms": 1793054922023,
+      "status": "ok"
+    }
+  ],
+  "0x0885f29e2190e6d012b5c1a71d25f9b06b318b4a1c37d5231505b8b019f52970": [
+    {
+      "mk_hash": "0x0885f29e2190e6d012b5c1a71d25f9b06b318b4a1c37d5231505b8b019f52970",
+      "sid": "01a17a67-4b71-7fe3-acc5-68876c23725e",
+      "mk_idx": 0,
+      "shares": 2.0,
+      "x_lo_hard_ms": 1793054950305,
+      "hi_ms": 1793054952305,
+      "status": "ok"
+    }
+  ],
+  "0xc79be11d9f29765fb5dc3e9b9359b6ac59298c2e76bc2af4597225404bb7eed2": [
+    {
+      "mk_hash": "0xc79be11d9f29765fb5dc3e9b9359b6ac59298c2e76bc2af4597225404bb7eed2",
+      "sid": "01a17a67-5216-7453-8dbf-a27fa9525db9",
+      "mk_idx": 0,
+      "shares": 13.333333333333334,
+      "x_lo_hard_ms": 1793054952006,
+      "hi_ms": 1793054954006,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xc79be11d9f29765fb5dc3e9b9359b6ac59298c2e76bc2af4597225404bb7eed2",
+      "sid": "01a17a67-5217-7952-8dc2-d11c0eba6a5f",
+      "mk_idx": 0,
+      "shares": 13.333333333333334,
+      "x_lo_hard_ms": 1793054952007,
+      "hi_ms": 1793054954007,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xc79be11d9f29765fb5dc3e9b9359b6ac59298c2e76bc2af4597225404bb7eed2",
+      "sid": "01a17a67-5219-7381-be2b-f384f45e4f61",
+      "mk_idx": 0,
+      "shares": 20.0,
+      "x_lo_hard_ms": 1793054952009,
+      "hi_ms": 1793054954009,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xc79be11d9f29765fb5dc3e9b9359b6ac59298c2e76bc2af4597225404bb7eed2",
+      "sid": "01a17a67-5219-7381-be2b-f394979fdf39",
+      "mk_idx": 0,
+      "shares": 60.0,
+      "x_lo_hard_ms": 1793054952009,
+      "hi_ms": 1793054954009,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xc79be11d9f29765fb5dc3e9b9359b6ac59298c2e76bc2af4597225404bb7eed2",
+      "sid": "01a17a67-521b-7eb0-96de-32b08485d951",
+      "mk_idx": 0,
+      "shares": 28.87,
+      "x_lo_hard_ms": 1793054952011,
+      "hi_ms": 1793054954011,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xc79be11d9f29765fb5dc3e9b9359b6ac59298c2e76bc2af4597225404bb7eed2",
+      "sid": "01a17a67-521b-7eb0-96de-32cbd04330b6",
+      "mk_idx": 0,
+      "shares": 24.463333333333335,
+      "x_lo_hard_ms": 1793054952011,
+      "hi_ms": 1793054954011,
+      "status": "ok"
+    }
+  ],
+  "0xa7fbedf88574987f6483b5fb59b4a933667457da9323802e44e3a9bda6175890": [
+    {
+      "mk_hash": "0xa7fbedf88574987f6483b5fb59b4a933667457da9323802e44e3a9bda6175890",
+      "sid": "01a17a67-59dd-7ff3-ae39-235c5743b805",
+      "mk_idx": 0,
+      "shares": 1.2345679012345678,
+      "x_lo_hard_ms": 1793054953997,
+      "hi_ms": 1793054955997,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xa7fbedf88574987f6483b5fb59b4a933667457da9323802e44e3a9bda6175890",
+      "sid": "01a17a67-5f90-7be2-a9e2-3fc18f4b339c",
+      "mk_idx": 1,
+      "shares": 68.07407407407408,
+      "x_lo_hard_ms": 1793054955456,
+      "hi_ms": 1793054957456,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xa7fbedf88574987f6483b5fb59b4a933667457da9323802e44e3a9bda6175890",
+      "sid": "01a17a67-60a7-7991-9f17-277d05151890",
+      "mk_idx": 0,
+      "shares": 1.24,
+      "x_lo_hard_ms": 1793054955735,
+      "hi_ms": 1793054957735,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xa7fbedf88574987f6483b5fb59b4a933667457da9323802e44e3a9bda6175890",
+      "sid": "01a17a67-632a-7e23-8d83-f86aa89f999a",
+      "mk_idx": 0,
+      "shares": 9.0,
+      "x_lo_hard_ms": 1793054956378,
+      "hi_ms": 1793054958378,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xa7fbedf88574987f6483b5fb59b4a933667457da9323802e44e3a9bda6175890",
+      "sid": "01a17a67-6337-71f0-bc87-c93449ffa072",
+      "mk_idx": 0,
+      "shares": 24.691,
+      "x_lo_hard_ms": 1793054956391,
+      "hi_ms": 1793054958391,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xa7fbedf88574987f6483b5fb59b4a933667457da9323802e44e3a9bda6175890",
+      "sid": "01a17a67-6385-76b1-8fd7-c6f5db784ad3",
+      "mk_idx": 0,
+      "shares": 12.195121951219512,
+      "x_lo_hard_ms": 1793054956469,
+      "hi_ms": 1793054958469,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xa7fbedf88574987f6483b5fb59b4a933667457da9323802e44e3a9bda6175890",
+      "sid": "01a17a67-644b-7970-93a3-f9976d98d137",
+      "mk_idx": 0,
+      "shares": 1.2345679012345678,
+      "x_lo_hard_ms": 1793054956667,
+      "hi_ms": 1793054958667,
+      "status": "ok"
+    }
+  ],
+  "0x51b937cbfa5815e691fca2104f1bb5071848e4b8f1850e41c796fa56c5ac45f9": [
+    {
+      "mk_hash": "0x51b937cbfa5815e691fca2104f1bb5071848e4b8f1850e41c796fa56c5ac45f9",
+      "sid": "01a17e65-0524-70b2-b59a-b1ecf8f8d367",
+      "mk_idx": 6,
+      "shares": 160.0,
+      "x_lo_hard_ms": 1793121910100,
+      "hi_ms": 1793121912100,
+      "status": "ok"
+    }
+  ],
+  "0xaadf1ce7dedc3a7bd48d02ae8c782bfcf470cb45f6ee5c1f8b799087008f159c": [
+    {
+      "mk_hash": "0xaadf1ce7dedc3a7bd48d02ae8c782bfcf470cb45f6ee5c1f8b799087008f159c",
+      "sid": "01a17e65-0524-70b2-b59a-b1ecf8f8d367",
+      "mk_idx": 11,
+      "shares": 36.60141896551724,
+      "x_lo_hard_ms": 1793121910100,
+      "hi_ms": 1793121912100,
+      "status": "ok"
+    }
+  ],
+  "0x714e35d667157ccdcb43f46cd71afff4e8815c18c0da25a6e2d6889b861eefd9": [
+    {
+      "mk_hash": "0x714e35d667157ccdcb43f46cd71afff4e8815c18c0da25a6e2d6889b861eefd9",
+      "sid": "01a17e65-63d3-7f40-a73e-cf13062c9dae",
+      "mk_idx": 0,
+      "shares": 11.363636363636363,
+      "x_lo_hard_ms": 1793121934339,
+      "hi_ms": 1793121936339,
+      "status": "ok"
+    }
+  ],
+  "0xa0306599a1152ade32567dc5324e6af6575fbb49d055483e7de647fa7d735c5a": [
+    {
+      "mk_hash": "0xa0306599a1152ade32567dc5324e6af6575fbb49d055483e7de647fa7d735c5a",
+      "sid": "01a17e65-8d7a-7fb1-ac4e-55336f447604",
+      "mk_idx": 0,
+      "shares": 5.0,
+      "x_lo_hard_ms": 1793121945002,
+      "hi_ms": 1793121947002,
+      "status": "ok"
+    }
+  ],
+  "0x574def50e4b13b8f38e8866e505c5f0e369d37fc490f4530a854b3e91c1ecdd5": [
+    {
+      "mk_hash": "0x574def50e4b13b8f38e8866e505c5f0e369d37fc490f4530a854b3e91c1ecdd5",
+      "sid": "01a17e67-0a4b-74b0-bba1-2c0b90dc43b2",
+      "mk_idx": 0,
+      "shares": 50.0,
+      "x_lo_hard_ms": 1793122042491,
+      "hi_ms": 1793122044491,
+      "status": "ok"
+    }
+  ],
+  "0x257a37780d9a919831e952985d9ce1a7b8bd4ce74af7713d3abac573b89180aa": [
+    {
+      "mk_hash": "0x257a37780d9a919831e952985d9ce1a7b8bd4ce74af7713d3abac573b89180aa",
+      "sid": "01a17e67-0a4b-74b0-bba1-2c0b90dc43b2",
+      "mk_idx": 13,
+      "shares": 160.0,
+      "x_lo_hard_ms": 1793122042491,
+      "hi_ms": 1793122044491,
+      "status": "ok"
+    }
+  ],
+  "0x6f63e44d29d5767808472e0b78ee3b2808e68d8122165316ddd9e9b9b4e69c27": [
+    {
+      "mk_hash": "0x6f63e44d29d5767808472e0b78ee3b2808e68d8122165316ddd9e9b9b4e69c27",
+      "sid": "01a17e67-52c1-7690-9c99-88d35de53804",
+      "mk_idx": 0,
+      "shares": 5.0,
+      "x_lo_hard_ms": 1793122061041,
+      "hi_ms": 1793122063041,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x6f63e44d29d5767808472e0b78ee3b2808e68d8122165316ddd9e9b9b4e69c27",
+      "sid": "01a17e67-52c1-7690-9c99-88ede9605fe8",
+      "mk_idx": 0,
+      "shares": 5.0,
+      "x_lo_hard_ms": 1793122061041,
+      "hi_ms": 1793122063041,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x6f63e44d29d5767808472e0b78ee3b2808e68d8122165316ddd9e9b9b4e69c27",
+      "sid": "01a17e67-52c3-7bc3-94d9-011726470a41",
+      "mk_idx": 0,
+      "shares": 5.0,
+      "x_lo_hard_ms": 1793122061043,
+      "hi_ms": 1793122063043,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x6f63e44d29d5767808472e0b78ee3b2808e68d8122165316ddd9e9b9b4e69c27",
+      "sid": "01a17e67-52cc-7530-a360-2abb7e995257",
+      "mk_idx": 0,
+      "shares": 10.5,
+      "x_lo_hard_ms": 1793122061052,
+      "hi_ms": 1793122063052,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x6f63e44d29d5767808472e0b78ee3b2808e68d8122165316ddd9e9b9b4e69c27",
+      "sid": "01a17e67-52d3-7280-8d27-339414e8a250",
+      "mk_idx": 0,
+      "shares": 10.8,
+      "x_lo_hard_ms": 1793122061059,
+      "hi_ms": 1793122063059,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x6f63e44d29d5767808472e0b78ee3b2808e68d8122165316ddd9e9b9b4e69c27",
+      "sid": "01a17e67-52d8-7d60-bbef-833f47aae954",
+      "mk_idx": 0,
+      "shares": 5.0,
+      "x_lo_hard_ms": 1793122061064,
+      "hi_ms": 1793122063064,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x6f63e44d29d5767808472e0b78ee3b2808e68d8122165316ddd9e9b9b4e69c27",
+      "sid": "01a17e67-52d9-7700-a091-e43a3e2eca5b",
+      "mk_idx": 0,
+      "shares": 36.0,
+      "x_lo_hard_ms": 1793122061065,
+      "hi_ms": 1793122063065,
+      "status": "ok"
+    }
+  ],
+  "0xfabd90766834f319fa35d4d7999fddba00e876c405854d4dbeca9e5df76811f3": [
+    {
+      "mk_hash": "0xfabd90766834f319fa35d4d7999fddba00e876c405854d4dbeca9e5df76811f3",
+      "sid": "01a17e67-52ff-7e41-a111-8c5f88cdadf6",
+      "mk_idx": 0,
+      "shares": 13.3245,
+      "x_lo_hard_ms": 1793122061103,
+      "hi_ms": 1793122063103,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xfabd90766834f319fa35d4d7999fddba00e876c405854d4dbeca9e5df76811f3",
+      "sid": "01a17e67-5312-7d92-a449-df875ad3d9a3",
+      "mk_idx": 0,
+      "shares": 10.0,
+      "x_lo_hard_ms": 1793122061122,
+      "hi_ms": 1793122063122,
+      "status": "ok"
+    }
+  ],
+  "0xfd90fef72eb2013e1f5778167b2560da81092bc9d0aee72fcbb5e9f789fa4cb7": [
+    {
+      "mk_hash": "0xfd90fef72eb2013e1f5778167b2560da81092bc9d0aee72fcbb5e9f789fa4cb7",
+      "sid": "01a17e67-ad69-7d72-a403-e0f39c2383fa",
+      "mk_idx": 0,
+      "shares": 31.421793103448277,
+      "x_lo_hard_ms": 1793122084249,
+      "hi_ms": 1793122086249,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xfd90fef72eb2013e1f5778167b2560da81092bc9d0aee72fcbb5e9f789fa4cb7",
+      "sid": "01a17e67-ae26-7183-ae32-826a2293a8da",
+      "mk_idx": 0,
+      "shares": 1.546,
+      "x_lo_hard_ms": 1793122084438,
+      "hi_ms": 1793122086438,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xfd90fef72eb2013e1f5778167b2560da81092bc9d0aee72fcbb5e9f789fa4cb7",
+      "sid": "01a17e68-0602-7d40-a69a-a8050d621414",
+      "mk_idx": 0,
+      "shares": 2.7586,
+      "x_lo_hard_ms": 1793122106930,
+      "hi_ms": 1793122108930,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xfd90fef72eb2013e1f5778167b2560da81092bc9d0aee72fcbb5e9f789fa4cb7",
+      "sid": "01a17e68-0606-7d72-96e9-f848f776ca5f",
+      "mk_idx": 0,
+      "shares": 9.4827,
+      "x_lo_hard_ms": 1793122106934,
+      "hi_ms": 1793122108934,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xfd90fef72eb2013e1f5778167b2560da81092bc9d0aee72fcbb5e9f789fa4cb7",
+      "sid": "01a17e68-0606-7d72-96e9-f85ec3f9934d",
+      "mk_idx": 0,
+      "shares": 4.790906896551724,
+      "x_lo_hard_ms": 1793122106934,
+      "hi_ms": 1793122108934,
+      "status": "ok"
+    }
+  ],
+  "0xfa0e2285379150cced3e87a1b85557ce3c747a060674c0df10ce04fac3a572d1": [
+    {
+      "mk_hash": "0xfa0e2285379150cced3e87a1b85557ce3c747a060674c0df10ce04fac3a572d1",
+      "sid": "01a17e68-832f-7730-8d1c-5b7b17b91e7b",
+      "mk_idx": 0,
+      "shares": 1.38,
+      "x_lo_hard_ms": 1793122138975,
+      "hi_ms": 1793122140975,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xfa0e2285379150cced3e87a1b85557ce3c747a060674c0df10ce04fac3a572d1",
+      "sid": "01a17e68-832f-7730-8d1c-5b84d9c34520",
+      "mk_idx": 0,
+      "shares": 1.38,
+      "x_lo_hard_ms": 1793122138975,
+      "hi_ms": 1793122140975,
+      "status": "ok"
+    }
+  ],
+  "0xf0906b391d1b5c3935a170c03ba2b0808463c13804c7570f3a3f18989899ac82": [
+    {
+      "mk_hash": "0xf0906b391d1b5c3935a170c03ba2b0808463c13804c7570f3a3f18989899ac82",
+      "sid": "01a17e68-f342-7352-acbf-a4dab9a021aa",
+      "mk_idx": 1,
+      "shares": 0.30927835051546393,
+      "x_lo_hard_ms": 1793122167666,
+      "hi_ms": 1793122169666,
+      "status": "ok"
+    }
+  ],
+  "0x4eb9454f901fa8ad0644accda8ae7611dd18887615cc4be59450d2c234553b90": [
+    {
+      "mk_hash": "0x4eb9454f901fa8ad0644accda8ae7611dd18887615cc4be59450d2c234553b90",
+      "sid": "01a17e69-6c94-7843-8d19-eb84e4b36ab8",
+      "mk_idx": 0,
+      "shares": 50.0,
+      "x_lo_hard_ms": 1793122198724,
+      "hi_ms": 1793122200724,
+      "status": "ok"
+    }
+  ],
+  "0xf22ec9f8193756140ac7e4b2a7e454edce1d8da24b3c2eea34c2776175f00832": [
+    {
+      "mk_hash": "0xf22ec9f8193756140ac7e4b2a7e454edce1d8da24b3c2eea34c2776175f00832",
+      "sid": "01a17f94-f787-7392-8302-bb8537620375",
+      "mk_idx": 0,
+      "shares": 50.0,
+      "x_lo_hard_ms": 1793141829559,
+      "hi_ms": 1793141831559,
+      "status": "ok"
+    }
+  ],
+  "0x68861c49f94f9e232bbc3b55b9fb730b634d224ad5217669d8baf7c33b38569a": [
+    {
+      "mk_hash": "0x68861c49f94f9e232bbc3b55b9fb730b634d224ad5217669d8baf7c33b38569a",
+      "sid": "01a17f95-0749-74f3-a1d1-d42c62869329",
+      "mk_idx": 0,
+      "shares": 33.333333333333336,
+      "x_lo_hard_ms": 1793141833593,
+      "hi_ms": 1793141835593,
+      "status": "ok"
+    }
+  ],
+  "0xdf71cb61025ad295833abda688ab726f78f892b375883377163d4fcfacf8299a": [
+    {
+      "mk_hash": "0xdf71cb61025ad295833abda688ab726f78f892b375883377163d4fcfacf8299a",
+      "sid": "01a17f95-b024-7192-b3fa-f2f13d2a27d9",
+      "mk_idx": 1,
+      "shares": 18.57,
+      "x_lo_hard_ms": 1793141876820,
+      "hi_ms": 1793141878820,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0xdf71cb61025ad295833abda688ab726f78f892b375883377163d4fcfacf8299a",
+      "sid": "01a17f95-b112-7172-a23b-30239c6378f6",
+      "mk_idx": 0,
+      "shares": 2.1739130434782608,
+      "x_lo_hard_ms": 1793141877058,
+      "hi_ms": 1793141879058,
+      "status": "ok"
+    }
+  ],
+  "0x9f7028916e6267854e369b4aa0ec0eac5467a73fae526bce4b21d8ff765f4154": [
+    {
+      "mk_hash": "0x9f7028916e6267854e369b4aa0ec0eac5467a73fae526bce4b21d8ff765f4154",
+      "sid": "01a17f96-331f-7533-8c69-ca34a0f4a7b8",
+      "mk_idx": 0,
+      "shares": 50.0,
+      "x_lo_hard_ms": 1793141910351,
+      "hi_ms": 1793141912351,
+      "status": "ok"
+    }
+  ],
+  "0x3a36b78537d9fe5a85727ef5ce728307549177a1e08eb9d20be0f7fddb49eef8": [
+    {
+      "mk_hash": "0x3a36b78537d9fe5a85727ef5ce728307549177a1e08eb9d20be0f7fddb49eef8",
+      "sid": "01a17f96-331f-7533-8c69-ca34a0f4a7b8",
+      "mk_idx": 1,
+      "shares": 50.0,
+      "x_lo_hard_ms": 1793141910351,
+      "hi_ms": 1793141912351,
+      "status": "ok"
+    }
+  ],
+  "0x64bb40a357580cb9dfccff1f0f0bb1d37d2ef15f061b44f0bd50bf9d9068f179": [
+    {
+      "mk_hash": "0x64bb40a357580cb9dfccff1f0f0bb1d37d2ef15f061b44f0bd50bf9d9068f179",
+      "sid": "01a17f96-331f-7533-8c69-ca34a0f4a7b8",
+      "mk_idx": 17,
+      "shares": 50.0,
+      "x_lo_hard_ms": 1793141910351,
+      "hi_ms": 1793141912351,
+      "status": "ok"
+    }
+  ],
+  "0x78715d87aae0d53a03b5e2e74757c886b121dff2aac70e81d51ff8725d2c3694": [
+    {
+      "mk_hash": "0x78715d87aae0d53a03b5e2e74757c886b121dff2aac70e81d51ff8725d2c3694",
+      "sid": "01a17f96-331f-7533-8c69-ca34a0f4a7b8",
+      "mk_idx": 28,
+      "shares": 110.34909459459459,
+      "x_lo_hard_ms": 1793141910351,
+      "hi_ms": 1793141912351,
+      "status": "ok"
+    }
+  ],
+  "0xff36717d9eb582e3cb477029660d4004f37e602de7c568663ee73e202ce851e0": [
+    {
+      "mk_hash": "0xff36717d9eb582e3cb477029660d4004f37e602de7c568663ee73e202ce851e0",
+      "sid": "01a17f96-98a4-75a3-aeab-02622b9a03c2",
+      "mk_idx": 0,
+      "shares": 61.07142857142857,
+      "x_lo_hard_ms": 1793141936340,
+      "hi_ms": 1793141938340,
+      "status": "ok"
+    }
+  ],
+  "0x9f39b2809a3bc88e07eae1a99809b3fd5c2443c5a9fabaaa6f824074985e0866": [
+    {
+      "mk_hash": "0x9f39b2809a3bc88e07eae1a99809b3fd5c2443c5a9fabaaa6f824074985e0866",
+      "sid": "01a17f97-1513-70b3-b0c7-656ad1d83f5e",
+      "mk_idx": 2,
+      "shares": 96.14980392156863,
+      "x_lo_hard_ms": 1793141968195,
+      "hi_ms": 1793141970195,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x9f39b2809a3bc88e07eae1a99809b3fd5c2443c5a9fabaaa6f824074985e0866",
+      "sid": "01a17f97-1526-7b80-aa98-529ecffc3cb1",
+      "mk_idx": 0,
+      "shares": 59.523809523809526,
+      "x_lo_hard_ms": 1793141968214,
+      "hi_ms": 1793141970214,
+      "status": "ok"
+    },
+    {
+      "mk_hash": "0x9f39b2809a3bc88e07eae1a99809b3fd5c2443c5a9fabaaa6f824074985e0866",
+      "sid": "01a17f97-15a0-79e1-9837-60003147099a",
+      "mk_idx": 0,
+      "shares": 4.326386554621849,
+      "x_lo_hard_ms": 1793141968336,
+      "hi_ms": 1793141970336,
+      "status": "ok"
+    }
+  ]
+}
