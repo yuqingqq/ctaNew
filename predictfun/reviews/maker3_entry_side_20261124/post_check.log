@@ -1,0 +1,2 @@
+{'markets': 17, 'enabled_interval_views_checked': 39, 'conditional_not_private_post_order': True}
+2026-11-24T12:31:58Z tag=maker3_entry_post_check rc=0 peak_rss_mib=182 wall_s=0.71 cpu_user_s=0.60 memavail_start_gib=22 disk_free_gib=413->413 slot=codex

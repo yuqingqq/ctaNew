@@ -1,0 +1,32 @@
+{
+  "packet_cap_cpu_s": 90,
+  "measured_stage_wall_upper_s": [
+    {
+      "stage": "schema",
+      "wall_upper_s": 0.11
+    },
+    {
+      "stage": "selftest",
+      "wall_upper_s": 0.29
+    },
+    {
+      "stage": "run",
+      "wall_upper_s": 6.76
+    },
+    {
+      "stage": "check",
+      "wall_upper_s": 7.33
+    },
+    {
+      "stage": "post_check",
+      "wall_upper_s": 0.71
+    }
+  ],
+  "publication_reserve_s": 2,
+  "packet_upper_cpu_s": 17.2,
+  "prior_dashboard_packet_upper_cpu_s": 179.5,
+  "task_cap_coreh": 2.075,
+  "line_cap_coreh": 5.375,
+  "standing_reserve_coreh": 0.05,
+  "authorization": "maker_trace_20261122/PENDING.md USER standing short-CPU authorization; declaration.md"
+}

@@ -1,0 +1,128 @@
+{
+  "raw_first_records_and_public_books_verified": 934,
+  "market_membership": 1152,
+  "corruptions_refused": 6,
+  "first_any_supplement_not_declared_primary": {
+    "('maker_or_tied', 'higher_probability')": 305,
+    "('taker', 'lower_probability')": 160,
+    "('maker_or_tied', 'lower_probability')": 396,
+    "('taker', 'higher_probability')": 73
+  },
+  "example_3789484": {
+    "day": "20261026",
+    "mid": 3789484,
+    "ws_ms": 1792977000000,
+    "market_status": "ok",
+    "n_poll_incomplete": 0,
+    "status": "observed_first_maker",
+    "first_record_ms": 1792977001755,
+    "first_record_s": 1.755,
+    "first_side": "bid",
+    "first_source_ok": true,
+    "first_legs": [
+      {
+        "mid": 3789484,
+        "sid": "01a175c1-dd1b-75d3-b95e-2fd28090d01c",
+        "mk_idx": 1,
+        "settle_ms": 1792977001755,
+        "mk_hash": "0x837f7a2a7ca0cc9734c61859bcae250a902c83d38baf1bccc4df977058ea6ca1",
+        "mk_signer": "0x57FbC891E89184DA071AE9D97E745531cd7F718a",
+        "tk_signer": "0x8b551eE819e71cEdF764b42a6C19D7C177C73ee7",
+        "mk_quote": "Bid",
+        "mk_index_set": 1,
+        "mk_price": 0.56,
+        "shares": 20.1,
+        "y_side": "bid",
+        "y_price": 0.56,
+        "y_ptick": 56,
+        "status": "ok"
+      }
+    ],
+    "prior_taker": false,
+    "first_taker_record_s": 82.838,
+    "fill_context": {
+      "status": "ok",
+      "p": 0.565,
+      "availability_ms": 1792977001727.4932,
+      "venue_ms": 1792977001601,
+      "age_ms": 153,
+      "bid": 0.56,
+      "ask": 0.57
+    },
+    "opening_context": {
+      "status": "ok",
+      "p": 0.495,
+      "availability_ms": 1792976999865.8,
+      "venue_ms": 1792976999740,
+      "age_ms": 260,
+      "bid": 0.49,
+      "ask": 0.5
+    },
+    "first_posts": [
+      {
+        "hash": "0x837f7a2a7ca0cc9734c61859bcae250a902c83d38baf1bccc4df977058ea6ca1",
+        "side": "bid",
+        "grade": "G4_scenario_only",
+        "status": "enabled",
+        "first_record_s": 1.755,
+        "post_lo_s": 1.038,
+        "post_hi_s": 1.755,
+        "context": {
+          "status": "ok",
+          "n": 16,
+          "p_min": 0.555,
+          "p_max": 0.6,
+          "directions": [
+            "higher_probability"
+          ],
+          "stable_direction": "higher_probability"
+        }
+      }
+    ],
+    "fill_context_direction": "higher_probability",
+    "opening_context_direction": "lower_probability",
+    "native_first": "Bid",
+    "native_buy_probability": "higher_probability",
+    "first_filled_side_orders": {
+      "ask": {
+        "hash": "0xadd647426c430b7306680cc97390837afc0224a8638c67528fa1dd6366f14a3d",
+        "side": "ask",
+        "grade": "G2_bound_constrained",
+        "status": "enabled",
+        "first_record_s": 7.428,
+        "post_lo_s": 5.239,
+        "post_hi_s": 7.428,
+        "context": {
+          "status": "ok",
+          "n": 46,
+          "p_min": 0.555,
+          "p_max": 0.575,
+          "directions": [
+            "lower_probability"
+          ],
+          "stable_direction": "lower_probability"
+        }
+      },
+      "bid": {
+        "hash": "0x837f7a2a7ca0cc9734c61859bcae250a902c83d38baf1bccc4df977058ea6ca1",
+        "side": "bid",
+        "grade": "G4_scenario_only",
+        "status": "enabled",
+        "first_record_s": 1.755,
+        "post_lo_s": 1.038,
+        "post_hi_s": 1.755,
+        "context": {
+          "status": "ok",
+          "n": 16,
+          "p_min": 0.555,
+          "p_max": 0.6,
+          "directions": [
+            "higher_probability"
+          ],
+          "stable_direction": "higher_probability"
+        }
+      }
+    },
+    "bid_ask_post_relation": "bid_before_ask_conditional"
+  }
+}

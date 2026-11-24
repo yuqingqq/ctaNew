@@ -1,0 +1,242 @@
+{
+  "20261024": {
+    "markets": 288,
+    "statuses": {
+      "observed_first_maker": 288
+    },
+    "first_sides": {
+      "bid": 120,
+      "ask": 168
+    },
+    "preopen": 0,
+    "prior_taker": 82,
+    "first_record_s_quantiles": {
+      "min": 1.167,
+      "p25": 2.02,
+      "median": 2.7165,
+      "p75": 4.41,
+      "max": 47.115
+    },
+    "fill_context": {
+      "higher_probability": 124,
+      "lower_probability": 164
+    },
+    "opening_context": {
+      "unknown": 1,
+      "higher_probability": 82,
+      "lower_probability": 156,
+      "neutral": 49
+    },
+    "native_first": {
+      "Bid": 288
+    },
+    "native_buy_probability": {
+      "higher_probability": 124,
+      "lower_probability": 164
+    },
+    "post_first_context": {
+      "no_post_estimate": 328,
+      "changes_or_neutral": 2,
+      "higher_probability": 2,
+      "lower_probability": 4
+    },
+    "bid_ask_post_relation": {
+      "no_post_subset": 281,
+      "refused_or_unknown": 2,
+      "ask_before_bid_conditional": 2,
+      "overlapping_windows": 2,
+      "bid_before_ask_conditional": 1
+    }
+  },
+  "20261025": {
+    "markets": 288,
+    "statuses": {
+      "observed_first_maker": 288
+    },
+    "first_sides": {
+      "bid": 114,
+      "ask": 174
+    },
+    "preopen": 0,
+    "prior_taker": 71,
+    "first_record_s_quantiles": {
+      "min": 1.154,
+      "p25": 2.0515,
+      "median": 2.875,
+      "p75": 4.28675,
+      "max": 61.583
+    },
+    "fill_context": {
+      "lower_probability": 185,
+      "higher_probability": 103
+    },
+    "opening_context": {
+      "unknown": 1,
+      "lower_probability": 183,
+      "higher_probability": 81,
+      "neutral": 23
+    },
+    "native_first": {
+      "Bid": 288
+    },
+    "native_buy_probability": {
+      "lower_probability": 185,
+      "higher_probability": 103
+    },
+    "post_first_context": {
+      "no_post_estimate": 373,
+      "lower_probability": 2,
+      "higher_probability": 1,
+      "refused": 2,
+      "changes_or_neutral": 1
+    },
+    "bid_ask_post_relation": {
+      "no_post_subset": 283,
+      "ask_before_bid_conditional": 1,
+      "refused_or_unknown": 4
+    }
+  },
+  "20261026": {
+    "markets": 288,
+    "statuses": {
+      "observed_first_maker": 287,
+      "no_maker_fill": 1
+    },
+    "first_sides": {
+      "ask": 168,
+      "bid": 119
+    },
+    "preopen": 0,
+    "prior_taker": 60,
+    "first_record_s_quantiles": {
+      "min": 1.182,
+      "p25": 1.8955,
+      "median": 2.889,
+      "p75": 4.3165,
+      "max": 28.584
+    },
+    "fill_context": {
+      "higher_probability": 139,
+      "lower_probability": 148
+    },
+    "opening_context": {
+      "unknown": 1,
+      "lower_probability": 177,
+      "neutral": 18,
+      "higher_probability": 91
+    },
+    "native_first": {
+      "Bid": 287
+    },
+    "native_buy_probability": {
+      "higher_probability": 139,
+      "lower_probability": 148
+    },
+    "post_first_context": {
+      "no_post_estimate": 305,
+      "higher_probability": 1,
+      "changes_or_neutral": 2,
+      "refused": 2
+    },
+    "bid_ask_post_relation": {
+      "no_post_subset": 282,
+      "bid_before_ask_conditional": 1,
+      "overlapping_windows": 2,
+      "refused_or_unknown": 2
+    }
+  },
+  "20261027": {
+    "markets": 288,
+    "statuses": {
+      "observed_first_maker": 71,
+      "no_maker_fill": 217
+    },
+    "first_sides": {
+      "ask": 48,
+      "bid": 23
+    },
+    "preopen": 0,
+    "prior_taker": 20,
+    "first_record_s_quantiles": {
+      "min": 1.17,
+      "p25": 1.9015,
+      "median": 2.88,
+      "p75": 4.557,
+      "max": 22.037
+    },
+    "fill_context": {
+      "higher_probability": 42,
+      "lower_probability": 29
+    },
+    "opening_context": {
+      "unknown": 1,
+      "lower_probability": 44,
+      "higher_probability": 21,
+      "neutral": 5
+    },
+    "native_first": {
+      "Bid": 71
+    },
+    "native_buy_probability": {
+      "higher_probability": 42,
+      "lower_probability": 29
+    },
+    "post_first_context": {
+      "no_post_estimate": 76
+    },
+    "bid_ask_post_relation": {
+      "no_post_subset": 71
+    }
+  },
+  "pooled": {
+    "markets": 1152,
+    "statuses": {
+      "observed_first_maker": 934,
+      "no_maker_fill": 218
+    },
+    "first_sides": {
+      "bid": 376,
+      "ask": 558
+    },
+    "preopen": 0,
+    "prior_taker": 233,
+    "first_record_s_quantiles": {
+      "min": 1.154,
+      "p25": 1.96625,
+      "median": 2.858,
+      "p75": 4.3782499999999995,
+      "max": 61.583
+    },
+    "fill_context": {
+      "higher_probability": 408,
+      "lower_probability": 526
+    },
+    "opening_context": {
+      "unknown": 4,
+      "higher_probability": 275,
+      "lower_probability": 560,
+      "neutral": 95
+    },
+    "native_first": {
+      "Bid": 934
+    },
+    "native_buy_probability": {
+      "higher_probability": 408,
+      "lower_probability": 526
+    },
+    "post_first_context": {
+      "no_post_estimate": 1082,
+      "changes_or_neutral": 5,
+      "higher_probability": 4,
+      "lower_probability": 6,
+      "refused": 4
+    },
+    "bid_ask_post_relation": {
+      "no_post_subset": 917,
+      "refused_or_unknown": 8,
+      "ask_before_bid_conditional": 3,
+      "overlapping_windows": 4,
+      "bid_before_ask_conditional": 2
+    }
+  }
+}

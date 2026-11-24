@@ -1,3 +1,17 @@
+maker3_entry_side_20261124_codex:
+  report: predictfun/reviews/maker3_entry_side_20261124/report.md
+  freeze: 7a8b690c1
+  markets_with_first_maker_record: 934
+  higher_probability_first_fill: 408
+  lower_probability_first_fill: 526
+  private_first_quote_identified: false
+  earlier_taker_markets: 233
+  post_interval_markets: 17
+  packet_upper_cpu_s: 17.20
+  packet_cap_cpu_s: 90
+  task_cap_coreh: 2.075
+  line_cap_coreh: 5.375
+  standing_reserve_coreh: 0.05
 maker3_coverage_20261124_codex:
   report: predictfun/reviews/maker3_market_coverage_20261124/report.md
   accepted_maker_markets_by_day: [288, 288, 287, 71]

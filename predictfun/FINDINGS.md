@@ -1,3 +1,13 @@
+<!-- MAKER3_ENTRY_SIDE_20261124_CODEX -->
+## 2026-11-24 — Maker #3 first-fill side does not identify a favorite-first entry rule
+
+[Receipt](reviews/maker3_entry_side_20261124/report.md), freeze7a8b690c1. All1152 consumed Oct24–27 BTC5m markets;934 have maker3 first passive records. Higher-probability outcome purchases408/934 (43.7%), lower526/934 (56.3%) at nearby public book; all native Bid YES/NO, not necessarily sells of holdings. First passive record median2.858s after opening is not posting latency.233 markets have earlier takes. Opening-reference275higher/560lower/95neutral/4missing. First-fill selection and settlement-upper/public-clock caveats prevent recovery of a first-quote rule.
+
+Only17 first-filled markets have graded post intervals:2bid-before-ask/3ask-before-bid/4overlap/8refused for the first-filled side orders. Never-filled and later-filled earlier quotes remain unknown.3789484's first56c YES buy is consistent with favored-side entry (book55.5–60%) but its1.038–1.755s posting window is G4 scenario-only. No general rule/profit claim.934 raw first-record/book checks and17 posting comparisons pass;6 corruptions refused. New bounded packet upper17.20/90CPU seconds under documented standing short-CPU approval; task2.075/line5.375/.05reserve, prior dashboard179.50s unchanged.
+
+ONE next priority: existing three-market opening-only cycle/relative-price comparison, especially3877472. Keep probability>50 separate from favorable movement/quote edge; no favorite-first rule, expanded entry filter or new replay authorized by this census alone.
+<!-- /MAKER3_ENTRY_SIDE_20261124_CODEX -->
+
 <!-- MAKER3_COVERAGE_20261124_CODEX -->
 ## 2026-11-24 — Maker #3 participates broadly, with an Oct 27 activity stop
 
