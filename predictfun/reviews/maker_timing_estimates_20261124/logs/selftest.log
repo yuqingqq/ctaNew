@@ -1,0 +1,2 @@
+PASS: partial/exhausted/expiry/capacity/conflict gates, bounded estimates, delay interval, missing views, successor ambiguity
+2026-11-24T02:49:52Z tag=mt_time_selftest rc=0 peak_rss_mib=17 wall_s=0.03 cpu_user_s=0.02 memavail_start_gib=22 disk_free_gib=416->416 slot=codex
