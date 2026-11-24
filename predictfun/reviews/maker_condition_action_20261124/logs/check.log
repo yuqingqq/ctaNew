@@ -1,0 +1,15 @@
+{
+  "pass_all": true,
+  "maker_seconds": 17100,
+  "market_side_seconds": 11400,
+  "map_rows": 224,
+  "joint_cells": 7164,
+  "sequence_rows": 90,
+  "falsifiers": {
+    "missing_opportunity": "population size",
+    "false_creator": "maker attribution",
+    "event_count": "event count",
+    "changed_raw_action": "raw any-take schedule"
+  }
+}
+2026-11-24T02:31:27Z tag=mt_map_check rc=0 peak_rss_mib=182 wall_s=2.99 cpu_user_s=2.84 memavail_start_gib=22 disk_free_gib=416->416 slot=codex

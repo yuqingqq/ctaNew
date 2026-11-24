@@ -1,0 +1,35 @@
+{
+  "as_of_utc": "2026-11-24T02:31:19Z",
+  "source_commit": "02ceb47486928b91c6d78c2df32375f090ed22cc",
+  "maker_seconds": 17100,
+  "market_side_seconds": 11400,
+  "markets": 19,
+  "ranks": [
+    1,
+    2,
+    3
+  ],
+  "days": [
+    "20261024",
+    "20261025",
+    "20261026",
+    "20261027"
+  ],
+  "action_comparisons": 64,
+  "map_rows": 224,
+  "terminal_statuses": {
+    "exhausted_by_observed_fills": 41,
+    "unresolved_remainder": 47
+  },
+  "post_pull_queue_private_logic_identified": false,
+  "new_joint_cells_are_descriptive": true,
+  "cpu_seconds": 0.748226149,
+  "hashes": {
+    "joint_states.csv.gz": "fad615e61eedbec5a30b114250234b046fa16864a5bafae5c2ad6e28e63bebf2",
+    "overview.csv": "664eb11dcae8c54e86102993dfd9b32997816d1a08a9c8fdc867e4a29a0907ed",
+    "evidence_map.csv": "5d3f5234297ee1931a96a741ff0eb57590077bf6296399238f0225e1e91cc2a9",
+    "exclusions.csv": "0c336df1337bb5a732b2a7c5a96cbb097e05bd8b72bd6836fb5baafb42e21dfe",
+    "sequence_contrast.csv": "138b5091a23e9e9f21b4d1bdfcd9edbde250d3bbe17c1c74f93703229615cb65"
+  }
+}
+2026-11-24T02:31:18Z tag=mt_map_run rc=0 peak_rss_mib=171 wall_s=1.17 cpu_user_s=1.06 memavail_start_gib=22 disk_free_gib=416->416 slot=codex

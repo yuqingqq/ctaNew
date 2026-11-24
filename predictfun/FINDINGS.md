@@ -1,4 +1,19 @@
 
+<!-- CONDITION_ACTION_MAP_20261124_CODEX -->
+## 2026-11-24 — USER corrects scope: population condition/action chains, not examples
+
+[Full population report](reviews/maker_condition_action_20261124/report.md), [all 64 comparisons](reviews/maker_condition_action_20261124/outputs/overview.csv), [source coverage](reviews/maker_condition_action_20261124/source_inventory.md). This supersedes the prior 47-terminal-example next priority. USER wants repeatable market-condition -> maker-action logic across the population.
+
+All 17,100 maker-seconds, 11,400 market-side seconds and 3,796 inherited retreat episodes retained. 224 existing clock/panel comparison rows copied exactly; 7,164 new descriptive joint cells and 90 market/maker/state-matched sequence rows checked independently. New burst(>=3 own maker fills/5s) -> opposing-take difference +1.092pp D0 full, +0.126pp with state lag1s, +1.183pp pending; D0 days4positive, lag2positive/2negative, pending3/1. Timing-sensitive descriptive association, not a trigger. Original size/addition, END and anonymous quoting associations retained with all null/support grades, no new fitted rule or significance.
+
+Bridge now explicit: market quoting opportunity -> [creator/command join missing] -> maker executions -> inventory state -> observed takes -> turnover/residual. Current official docs confirm aggregate/coalesced book updates, own-wallet-only lifecycle events/hash lookup, and off-chain quote removal. Chain archive alone cannot recover ordinary private withdrawals. Documentation read only; no new network data/credentials/live collection.
+
+ONE next priority: obtain an authorized population-level maker/exchange lifecycle export including unfilled adds/cancels, IDs, size, venue sequence/time and pre-action context; coverage gate before another condition/action fit. Own logs validate only our reconstruction. No more example or ambiguous terminal-association loop. Acquiring nonpublic access, new days, live work or more compute needs USER; no external request sent. If unavailable, retain a partial policy map and make simulation of the economic hypotheses a separately declared task, not a claim of recovered competitor strategy.
+
+Freeze02ceb47486928b91c6d78c2df32375f090ed22cc; all cells/contrasts, raw take schedule and original receipt hashes pass; four real-copy falsifiers fire. Task1.9123/2.00h, line5.2230/5.30 with .05 reserve. mt_map tags counted once. This is adaptive consumed-day descriptive research.
+<!-- /CONDITION_ACTION_MAP_20261124_CODEX -->
+
+
 <!-- TERMINAL_CHAIN_20261124_CODEX -->
 ## 2026-11-24 — signed exhaustion and whole-book action chains
 

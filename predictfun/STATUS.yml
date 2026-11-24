@@ -1,4 +1,29 @@
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
+condition_action_map_20261124_codex:
+  report: predictfun/reviews/maker_condition_action_20261124/report.md
+  source_inventory: predictfun/reviews/maker_condition_action_20261124/source_inventory.md
+  freeze: 02ceb47486928b91c6d78c2df32375f090ed22cc
+  user_goal: population_market_condition_to_maker_action_chains
+  supersedes_example_only_next_priority: true
+  maker_seconds: 17100
+  market_side_seconds: 11400
+  inherited_retreat_episodes: 3796
+  comparisons: 64
+  clock_panel_rows: 224
+  joint_cells: 7164
+  sequence_contrast_rows: 90
+  burst_opposing_rd: {D0_full: 0.010920471991213081, D1000_full: 0.001255843235444533, pending_full: 0.011828525426645298}
+  new_sequence_result: descriptive_timing_sensitive
+  independent_checks_pass: true
+  documented_public_feed_closes_competitor_command_join: false
+  next_priority: authorized_maker_or_exchange_population_lifecycle_export
+  next_requires_user_for_nonpublic_access: true
+  no_external_message_or_collection_started: true
+  task_after_checks_core_hours: 1.9123
+  line_after_checks_core_hours: 5.2230
+  task_cap: 2.00
+  line_cap: 5.30
+  standing_reserve_core_hours: 0.05
 terminal_chain_20261124_codex:
   report: predictfun/reviews/maker_terminal_chain_20261124/report.md
   whole_chain: predictfun/reviews/maker_terminal_chain_20261124/whole_chain.md

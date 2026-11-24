@@ -1,0 +1,108 @@
+ALL 64 CONDITION / ACTION COMPARISONS; ratios except retreat risk differences
+anonymous_market_creation    any                      btc_against    effect=+1.0439 rates=47.85%/42.65% n=769/9742 same_sign=True original=not_supported range=+1.0221/+1.0439
+anonymous_market_creation    any                      btc_with       effect=+1.1260 rates=52.15%/42.65% n=769/9742 same_sign=True original=timing_sensitive range=+1.0174/+1.1260
+anonymous_market_creation    any                      depth_own      effect=+1.1232 rates=60.76%/36.74% n=2393/6048 same_sign=True original=supported range=+1.1195/+1.1232
+anonymous_market_creation    any                      fair_gap       effect=+1.0924 rates=45.88%/41.94% n=5375/5365 same_sign=True original=timing_sensitive range=+1.0310/+1.0924
+anonymous_market_creation    any                      flow           effect=+0.8881 rates=43.39%/41.46% n=11359/41 same_sign=True original=insufficient_support range=+0.6556/+0.8881
+anonymous_market_creation    any                      spread         effect=+1.3646 rates=79.03%/39.50% n=1116/10262 same_sign=True original=supported range=+1.0963/+1.3646
+anonymous_market_creation    any                      time_left      effect=+2.0447 rates=74.91%/36.64% n=1140/6840 same_sign=True original=supported range=+2.0254/+2.0447
+anonymous_market_creation    at_empty_touch           btc_against    effect=+nan rates=0.00%/0.00% n=769/9742 same_sign=False original=insufficient_support range=+nan/+nan
+anonymous_market_creation    at_empty_touch           btc_with       effect=+inf rates=0.13%/0.00% n=769/9742 same_sign=True original=insufficient_support range=+inf/+inf
+anonymous_market_creation    at_empty_touch           depth_own      effect=+nan rates=0.00%/0.00% n=2393/6048 same_sign=False original=insufficient_support range=+inf/+inf
+anonymous_market_creation    at_empty_touch           fair_gap       effect=+inf rates=0.02%/0.00% n=5375/5365 same_sign=True original=insufficient_support range=+inf/+inf
+anonymous_market_creation    at_empty_touch           flow           effect=+nan rates=0.01%/0.00% n=11359/41 same_sign=False original=insufficient_support range=+nan/+nan
+anonymous_market_creation    at_empty_touch           spread         effect=+inf rates=0.09%/0.00% n=1116/10262 same_sign=True original=insufficient_support range=+inf/+inf
+anonymous_market_creation    at_empty_touch           time_left      effect=+inf rates=0.09%/0.00% n=1140/6840 same_sign=True original=insufficient_support range=+inf/+inf
+anonymous_market_creation    deep                     btc_against    effect=+1.5031 rates=19.51%/15.78% n=769/9742 same_sign=True original=timing_sensitive range=+1.2213/+1.5031
+anonymous_market_creation    deep                     btc_with       effect=+1.4605 rates=18.21%/15.78% n=769/9742 same_sign=True original=timing_sensitive range=+1.1352/+1.4605
+anonymous_market_creation    deep                     depth_own      effect=+1.4867 rates=33.93%/8.83% n=2393/6048 same_sign=True original=supported range=+1.2695/+1.4867
+anonymous_market_creation    deep                     fair_gap       effect=+0.8858 rates=16.37%/16.29% n=5375/5365 same_sign=True original=not_supported range=+0.8469/+0.8858
+anonymous_market_creation    deep                     flow           effect=+0.9928 rates=16.14%/12.20% n=11359/41 same_sign=True original=insufficient_support range=+0.6584/+0.9928
+anonymous_market_creation    deep                     spread         effect=+1.3806 rates=47.67%/12.65% n=1116/10262 same_sign=True original=supported range=+1.1629/+1.3806
+anonymous_market_creation    deep                     time_left      effect=+7.5963 rates=60.53%/7.97% n=1140/6840 same_sign=True original=supported range=+7.4934/+7.5963
+anonymous_market_creation    improve                  btc_against    effect=+0.9384 rates=68.97%/72.60% n=87/938 same_sign=True original=insufficient_support range=+0.9357/+0.9384
+anonymous_market_creation    improve                  btc_with       effect=+1.1455 rates=86.21%/72.60% n=87/938 same_sign=True original=insufficient_support range=+1.0796/+1.1455
+anonymous_market_creation    improve                  depth_own      effect=+1.1953 rates=82.29%/61.28% n=525/297 same_sign=True original=insufficient_support range=+1.0936/+1.1953
+anonymous_market_creation    improve                  fair_gap       effect=+1.1380 rates=75.64%/71.60% n=587/493 same_sign=False original=not_supported range=+0.9720/+1.1380
+anonymous_market_creation    improve                  flow           effect=+1.0833 rates=73.58%/57.14% n=1109/7 same_sign=False original=insufficient_support range=+0.3871/+1.0833
+anonymous_market_creation    improve                  spread         effect=+1.2243 rates=80.76%/66.25% n=556/560 same_sign=True original=insufficient_support range=+1.1067/+1.2243
+anonymous_market_creation    improve                  time_left      effect=+1.2556 rates=78.51%/62.75% n=456/298 same_sign=True original=insufficient_support range=+1.2454/+1.2556
+anonymous_market_creation    re_establish             btc_against    effect=+1.5009 rates=26.66%/19.03% n=769/9742 same_sign=True original=supported range=+1.3293/+1.5009
+anonymous_market_creation    re_establish             btc_with       effect=+0.8641 rates=17.30%/19.03% n=769/9742 same_sign=True original=not_supported range=+0.8641/+0.9072
+anonymous_market_creation    re_establish             depth_own      effect=+1.4385 rates=32.47%/13.34% n=2393/6048 same_sign=True original=supported range=+1.4357/+1.4385
+anonymous_market_creation    re_establish             fair_gap       effect=+1.3762 rates=21.27%/17.84% n=5375/5365 same_sign=True original=supported range=+1.2284/+1.3762
+anonymous_market_creation    re_establish             flow           effect=+4.7328 rates=19.36%/2.44% n=11359/41 same_sign=True original=insufficient_support range=+2.4043/+4.7328
+anonymous_market_creation    re_establish             spread         effect=+1.4859 rates=43.73%/16.64% n=1116/10262 same_sign=True original=timing_sensitive range=+1.1529/+1.4859
+anonymous_market_creation    re_establish             time_left      effect=+2.6952 rates=39.56%/14.68% n=1140/6840 same_sign=True original=supported range=+2.6392/+2.6952
+anonymous_retreat_response   next_same_side_response  btc_against    effect=+0.0310 rates=22.92%/20.73% n=336/767 same_sign=True original=adequate_direction_consistent range=+0.0310/+0.0314
+anonymous_retreat_response   next_same_side_response  btc_with       effect=+0.0526 rates=28.37%/22.76% n=215/725 same_sign=True original=adequate_inconsistent range=+0.0389/+0.0526
+anonymous_retreat_response   next_same_side_response  depth_own      effect=-0.0969 rates=22.01%/30.19% n=886/212 same_sign=True original=adequate_direction_consistent range=-0.1121/-0.0969
+anonymous_retreat_response   next_same_side_response  fair_gap       effect=-0.0080 rates=25.40%/27.20% n=803/783 same_sign=True original=adequate_inconsistent range=-0.0160/-0.0080
+anonymous_retreat_response   next_same_side_response  time_left      effect=+0.1476 rates=34.47%/20.55% n=1024/1392 same_sign=True original=adequate_direction_consistent range=+0.1476/+0.1477
+identified_maker_take        O1                       RR_against_5s  effect=+0.7275 rates=4.77%/6.20% n=1027/11811 same_sign=True original=not_supported range=+0.7275/+0.8031
+identified_maker_take        O1                       RR_burst       effect=+1.4236 rates=8.43%/4.09% n=5163/5595 same_sign=True original=supported range=+1.2513/+1.6272
+identified_maker_take        O1                       RR_edge        effect=+1.0791 rates=6.30%/5.12% n=7108/527 same_sign=False original=not_supported range=+0.9737/+1.0959
+identified_maker_take        O1                       RR_end         effect=+0.4448 rates=2.98%/6.47% n=1408/8460 same_sign=True original=not_supported range=+0.4448/+0.5156
+identified_maker_take        O1                       RR_size        effect=+0.9055 rates=7.35%/4.18% n=4571/4255 same_sign=True original=not_supported range=+0.8995/+0.9318
+identified_maker_take        O1                       RR_with_5s     effect=+1.2062 rates=7.82%/6.20% n=844/11811 same_sign=False original=not_supported range=+0.9451/+1.2062
+identified_maker_take        O2                       RR_against_5s  effect=+0.8371 rates=3.31%/3.98% n=1027/11811 same_sign=False original=not_supported range=+0.8371/+1.3856
+identified_maker_take        O2                       RR_burst       effect=+1.0502 rates=4.55%/2.63% n=5163/5595 same_sign=True original=not_supported range=+1.0502/+1.3746
+identified_maker_take        O2                       RR_edge        effect=+0.7218 rates=3.69%/4.93% n=7108/527 same_sign=True original=not_supported range=+0.7218/+0.9355
+identified_maker_take        O2                       RR_end         effect=+0.0308 rates=0.14%/4.23% n=1408/8460 same_sign=True original=not_supported range=+0.0120/+0.0383
+identified_maker_take        O2                       RR_size        effect=+0.5135 rates=3.48%/3.38% n=4571/4255 same_sign=True original=not_supported range=+0.4400/+0.5833
+identified_maker_take        O2                       RR_with_5s     effect=+0.8818 rates=3.44%/3.98% n=844/11811 same_sign=False original=not_supported range=+0.7572/+1.1854
+identified_maker_take        O3                       RR_against_5s  effect=+0.7767 rates=7.89%/9.77% n=1027/11811 same_sign=True original=not_supported range=+0.7767/+0.9839
+identified_maker_take        O3                       RR_burst       effect=+1.2629 rates=12.42%/6.52% n=5163/5595 same_sign=True original=supported range=+1.1849/+1.5139
+identified_maker_take        O3                       RR_edge        effect=+0.9011 rates=9.61%/9.68% n=7108/527 same_sign=False original=not_supported range=+0.8613/+1.0203
+identified_maker_take        O3                       RR_end         effect=+0.2942 rates=3.05%/10.37% n=1408/8460 same_sign=True original=not_supported range=+0.2879/+0.3399
+identified_maker_take        O3                       RR_size        effect=+0.7550 rates=10.46%/7.12% n=4571/4255 same_sign=True original=not_supported range=+0.7262/+0.7955
+identified_maker_take        O3                       RR_with_5s     effect=+1.0846 rates=10.78%/9.77% n=844/11811 same_sign=False original=not_supported range=+0.9196/+1.1674
+identified_maker_take        O4                       RR_against_5s  effect=+0.8064 rates=4.67%/5.33% n=1027/11811 same_sign=True original=not_supported range=+0.7558/+0.8630
+identified_maker_take        O4                       RR_burst       effect=+1.4013 rates=7.22%/3.77% n=5163/5595 same_sign=True original=supported range=+1.2660/+1.4757
+identified_maker_take        O4                       RR_edge        effect=+1.0618 rates=5.42%/4.36% n=7108/527 same_sign=False original=not_supported range=+0.8141/+1.0618
+identified_maker_take        O4                       RR_end         effect=+0.5390 rates=2.91%/5.56% n=1408/8460 same_sign=True original=not_supported range=+0.5390/+0.6045
+identified_maker_take        O4                       RR_size        effect=+1.4359 rates=7.13%/2.66% n=4571/4255 same_sign=True original=supported range=+1.3732/+1.5278
+identified_maker_take        O4                       RR_with_5s     effect=+1.0130 rates=5.81%/5.33% n=844/11811 same_sign=False original=not_supported range=+0.9146/+1.0850
+
+ALL POOLED SEQUENCE CLOCK/PANEL ROWS
+day,outcome,strata,markets,exposed_all,reference_all,exposed_common,reference_common,exposed_events,reference_events,weight,rd,top_market_abs_share,descriptive_only,variant,panel
+all,O1,297,19,5160,5519,3739,4075,300,207,1438.9358934977308,0.010920471991213081,0.1386388272949555,True,D0,full
+all,O2,297,19,5160,5519,3739,4075,171,137,1438.9358934977308,-0.0017417673666199668,0.14252792725247634,True,D0,full
+all,O3,297,19,5160,5519,3739,4075,451,333,1438.9358934977308,0.009946073165632851,0.1634635857190564,True,D0,full
+all,O1,280,19,4824,5120,3473,3819,279,192,1344.895977533931,0.011980326615848644,0.1424890637880243,True,D0,clean
+all,O2,280,19,4824,5120,3473,3819,160,124,1344.895977533931,-0.0017932136971787254,0.1472640907657229,True,D0,clean
+all,O3,280,19,4824,5120,3473,3819,419,305,1344.895977533931,0.011008138600721383,0.1615398377390615,True,D0,clean
+all,O1,296,19,5155,5481,3738,4062,276,216,1435.557169641252,0.001255843235444533,0.17501986207734516,True,D1000,full
+all,O2,296,19,5155,5481,3738,4062,173,142,1435.557169641252,-0.0017189343921055007,0.17051430775419416,True,D1000,full
+all,O3,296,19,5155,5481,3738,4062,427,346,1435.557169641252,0.0006697889689979935,0.20882845700664496,True,D1000,full
+all,O1,279,19,4818,5085,3472,3805,257,200,1341.17003145523,0.002231902346616958,0.1846889984425394,True,D1000,clean
+all,O2,279,19,4818,5085,3472,3805,164,127,1341.17003145523,0.0003422670922394331,0.1920376809030884,True,D1000,clean
+all,O3,279,19,4818,5085,3472,3805,399,315,1341.17003145523,0.0037867779438117105,0.22816929459263793,True,D1000,clean
+all,O1,252,19,6607,4482,4278,3220,310,140,1304.458377386094,0.011828525426645298,0.12017258218475628,True,pend,full
+all,O2,252,19,6607,4482,4278,3220,184,83,1304.458377386094,0.01221781865299979,0.14392149585318204,True,pend,full
+all,O3,252,19,6607,4482,4278,3220,480,215,1304.458377386094,0.025180281074586048,0.15450580026147154,True,pend,full
+all,O1,239,19,6183,4144,3963,3027,293,130,1228.1853122022737,0.014019061976413276,0.12777472878203516,True,pend,clean
+all,O2,239,19,6183,4144,3963,3027,166,79,1228.1853122022737,0.010067400564761441,0.15275733610233355,True,pend,clean
+all,O3,239,19,6183,4144,3963,3027,445,201,1228.1853122022737,0.025290819569208565,0.15810825756139302,True,pend,clean
+
+
+ALL D0 FULL SEQUENCE DAY ROWS
+day,outcome,strata,markets,exposed_all,reference_all,exposed_common,reference_common,exposed_events,reference_events,weight,rd,top_market_abs_share,descriptive_only,variant,panel
+all,O1,297,19,5160,5519,3739,4075,300,207,1438.9358934977308,0.010920471991213081,0.1386388272949555,True,D0,full
+all,O2,297,19,5160,5519,3739,4075,171,137,1438.9358934977308,-0.0017417673666199668,0.14252792725247634,True,D0,full
+all,O3,297,19,5160,5519,3739,4075,451,333,1438.9358934977308,0.009946073165632851,0.1634635857190564,True,D0,full
+20261024,O1,94,7,1904,2136,1508,1503,134,75,555.5444958867836,0.0057579656429128405,0.29349071913812047,True,D0,full
+20261024,O2,94,7,1904,2136,1508,1503,83,42,555.5444958867836,-0.0002708662341275549,0.2806971158205208,True,D0,full
+20261024,O3,94,7,1904,2136,1508,1503,206,110,555.5444958867836,0.009723987004159006,0.3056982051093731,True,D0,full
+20261025,O1,60,5,1175,1292,936,947,70,36,344.2426385719891,0.012888877798714102,0.4093543756574604,True,D0,full
+20261025,O2,60,5,1175,1292,936,947,35,36,344.2426385719891,-0.015381829268752383,0.45641376495641156,True,D0,full
+20261025,O3,60,5,1175,1292,936,947,104,69,344.2426385719891,0.0013054804392068342,0.463245953390797,True,D0,full
+20261026,O1,113,5,1461,1687,925,1305,56,78,410.74031613923717,0.0035289975031657108,0.49122229726129,True,D0,full
+20261026,O2,113,5,1461,1687,925,1305,31,46,410.74031613923717,0.004200787181755792,0.31883271170859656,True,D0,full
+20261026,O3,113,5,1461,1687,925,1305,82,123,410.74031613923717,0.002880472081449219,0.49041691288253053,True,D0,full
+20261027,O1,30,2,620,404,370,320,40,18,128.40844289972085,0.051621606805700014,0.7683658368469575,True,D0,full
+20261027,O2,30,2,620,404,370,320,22,13,128.40844289972085,0.009452925949407581,0.6890064213332998,True,D0,full
+20261027,O3,30,2,620,404,370,320,59,31,128.40844289972085,0.056671711068641904,0.9262357692418607,True,D0,full
+
+O1 day signs (descriptive, no significance): {"('D0', 'clean')": {"days": 4, "positive": 4, "negative": 0}, "('D0', 'full')": {"days": 4, "positive": 4, "negative": 0}, "('D1000', 'clean')": {"days": 4, "positive": 2, "negative": 2}, "('D1000', 'full')": {"days": 4, "positive": 2, "negative": 2}, "('pend', 'clean')": {"days": 4, "positive": 3, "negative": 1}, "('pend', 'full')": {"days": 4, "positive": 3, "negative": 1}}
+2026-11-24T02:32:08Z tag=mt_map_readout rc=0 peak_rss_mib=105 wall_s=0.30 cpu_user_s=0.24 memavail_start_gib=22 disk_free_gib=416->416 slot=codex
