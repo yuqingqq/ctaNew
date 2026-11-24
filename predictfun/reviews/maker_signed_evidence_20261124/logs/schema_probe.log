@@ -1,0 +1,28 @@
+{
+  "mod32": {
+    "31": 8255
+  },
+  "examples": [
+    {
+      "tx": "0x000b886e3ad018ebba92f0a42117b1d2f2b16b760f9d8fddec48706aed7fe67b",
+      "byte_count": 1791,
+      "mod32": 31,
+      "order_offsets": [
+        256,
+        800
+      ],
+      "tail_hex": "3837222c22637265617465645f6174223a313739323736343231303539327d"
+    },
+    {
+      "tx": "0x00119b03296fd0798302445ada95a87ed46a4649af9daf8d71f08f38c8557172",
+      "byte_count": 1791,
+      "mod32": 31,
+      "order_offsets": [
+        256,
+        800
+      ],
+      "tail_hex": "3037222c22637265617465645f6174223a313739323736343333323231377d"
+    }
+  ]
+}
+2026-11-24T01:29:16Z tag=mt_bridge_schema_probe rc=0 peak_rss_mib=11 wall_s=0.14 cpu_user_s=0.14 memavail_start_gib=22 disk_free_gib=417->417 slot=codex

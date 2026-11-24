@@ -1,0 +1,22 @@
+{
+  "candidate_count": 0,
+  "inputs": {
+    "data/predict_fun/research/maker_trace_v1_20261122/econ/identities.json": "321c5274cc9cbc2151f94aad619ad199de41b98db4a410d12b83b61aa69aa239",
+    "data/predict_fun/research/onchain/20261023_1400_1415/blocks.jsonl.gz": "aa91cdc636bac499e4dcdb7ee1aa7b488529947a1fd09a0a9aa580d13cc69e4c",
+    "data/predict_fun/research/onchain/20261023_1400_1415/fetch_summary.json": "57c11557697f97526bec64815852788c689c158e42e4593b9a61ae124393a5f3",
+    "data/predict_fun/research/onchain/20261023_1400_1415/inputs.jsonl.gz": "09ca5b781f97885879a315146d49ca6b60dce4a3e34fd642899c3f1407cf418b",
+    "data/predict_fun/research/onchain/20261023_1400_1415/receipts.jsonl.gz": "fa443da6f88be837b8508416dab64e187a5cc3c89e56fe711b3d813051590fe5",
+    "data/predict_fun/research/onchain/20261023_1400_1415/tokens.json": "5ce1518e32ae47027c2c6704a2e1af588d0f25c4d06ecc46b9c37b11b5724591"
+  },
+  "pipeline_sha256": {
+    "predictfun/research/pf_mt_signed_evidence.py": "d37be84296661874e6983261dab2fbd106f3d27e32ee8d15e5e67c632390651d",
+    "predictfun/research/pf_mt_signed_evidence_selftest.py": "5120484520933356e66d9d75783b796b292b34f6c4e69b24f49408281cd67c9f",
+    "predictfun/research/pf_mt_signed_evidence_selftest_v3.py": "854d12bb38f1ec79052b2d3a9bdde586edaa7d6573f7aef21ac8e551ab2f92bd",
+    "predictfun/research/pf_mt_signed_evidence_v3.py": "de2bce44fd6af2b1cabff35c2cab2ae9f6b42fe7138f3c165cfa92d296aca08d",
+    "predictfun/reviews/maker_signed_evidence_20261124/v3/check.py": "929f7a9f3c9435ee3bd21117da6fb51e34e601390ab38bd57aac6862c8a01f03",
+    "predictfun/reviews/maker_signed_evidence_20261124/v3/declaration.md": "e93cad5d645e9f2bafec36f615373f13941da7bbb28caaa9ccd1d586c8950aad"
+  },
+  "scope": "cached_20261023_1400_1415_with_saved_padding",
+  "source_sha256": "de2bce44fd6af2b1cabff35c2cab2ae9f6b42fe7138f3c165cfa92d296aca08d",
+  "version": "signed_order_evidence_v3"
+}

@@ -1,0 +1,60 @@
+{
+  "as_of_utc": "2026-11-24T01:28:45Z",
+  "cached_cancel_events": 124,
+  "cached_transactions": 8255,
+  "cancel_links": {
+    "owner_unresolved": 124
+  },
+  "counts": {
+    "failed_receipts": 85,
+    "outside_known_BTC_tokens": 8904,
+    "unbound_BTC_events": 19671
+  },
+  "cpu_seconds": 1.165405797,
+  "gate_pass": false,
+  "groups": {
+    "all": {
+      "budget_status": {},
+      "expiration_values": {},
+      "orders": 0,
+      "repeated_events": 0,
+      "repeated_transactions": 0
+    },
+    "maker": {
+      "budget_status": {},
+      "expiration_values": {},
+      "orders": 0,
+      "repeated_events": 0,
+      "repeated_transactions": 0
+    },
+    "top3_maker": {
+      "budget_status": {},
+      "expiration_values": {},
+      "orders": 0,
+      "repeated_events": 0,
+      "repeated_transactions": 0
+    }
+  },
+  "inference": {
+    "offchain_cancel_time": false,
+    "original_signed_terms": false,
+    "post_time": false,
+    "profitability": false,
+    "queue_front": false,
+    "remaining_exact_without_prior_coverage": false
+  },
+  "output_sha256": {
+    "cancellations.csv": "47cf76e6faa25dad154dfaddf12e9c6c6d863d4a6f728b92a5220a0e74cf8f86",
+    "transactions.csv": "2543adada226249481febf3a321149a0ddc6534bfd84bb4fed6a8af39b8723ce"
+  },
+  "population_limit": "one consumed Oct23 cached slice; executed orders only; no unfilled-order census",
+  "scope": "cached_20261023_1400_1415_with_saved_padding",
+  "selectors": {
+    "0x92895911": 8255
+  },
+  "source_commit": "319a43ac9d7eed280167a587523f7140e8cba9a5",
+  "top3_linked_cancels": 0,
+  "transaction_statuses": {
+    "ABI length": 8255
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "source_commit": "319a43ac9d7eed280167a587523f7140e8cba9a5",
+  "scope": "cached_20261023_1400_1415_with_saved_padding",
+  "as_of_utc": "2026-11-24T01:28:45Z",
+  "counts": {
+    "unbound_BTC_events": 19671,
+    "outside_known_BTC_tokens": 8904,
+    "failed_receipts": 85
+  },
+  "groups": {
+    "all": {
+      "orders": 0,
+      "repeated_events": 0,
+      "repeated_transactions": 0,
+      "budget_status": {},
+      "expiration_values": {}
+    },
+    "maker": {
+      "orders": 0,
+      "repeated_events": 0,
+      "repeated_transactions": 0,
+      "budget_status": {},
+      "expiration_values": {}
+    },
+    "top3_maker": {
+      "orders": 0,
+      "repeated_events": 0,
+      "repeated_transactions": 0,
+      "budget_status": {},
+      "expiration_values": {}
+    }
+  },
+  "cached_transactions": 8255,
+  "selectors": {
+    "0x92895911": 8255
+  },
+  "transaction_statuses": {
+    "ABI length": 8255
+  },
+  "cached_cancel_events": 124,
+  "cancel_links": {
+    "owner_unresolved": 124
+  },
+  "top3_linked_cancels": 0,
+  "gate_pass": false,
+  "population_limit": "one consumed Oct23 cached slice; executed orders only; no unfilled-order census",
+  "inference": {
+    "original_signed_terms": false,
+    "post_time": false,
+    "offchain_cancel_time": false,
+    "queue_front": false,
+    "remaining_exact_without_prior_coverage": false,
+    "profitability": false
+  },
+  "output_sha256": {
+    "cancellations.csv": "47cf76e6faa25dad154dfaddf12e9c6c6d863d4a6f728b92a5220a0e74cf8f86",
+    "transactions.csv": "2543adada226249481febf3a321149a0ddc6534bfd84bb4fed6a8af39b8723ce"
+  },
+  "cpu_seconds": 1.165405797
+}
+2026-11-24T01:28:44Z tag=mt_bridge_gate_v2 rc=0 peak_rss_mib=66 wall_s=1.25 cpu_user_s=1.18 memavail_start_gib=22 disk_free_gib=417->417 slot=codex
