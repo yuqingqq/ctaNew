@@ -1,0 +1,3 @@
+# Canonical address adapter — before any results
+
+The first build refused immediately at the accepted rank3 accounting reconciliation: the exact lowercase Parquet address filter produced zero rows, while the file stores checksummed strings. No output dataset was written. run_v2 keeps the declared day/market filter, then compares canonical lowercase addresses, as the accepted extractor did. Mixed-case/lowercase/other-address controls included. Frozen core/build/risk/check files untouched; this adapter is committed before rerunning. Source/input identity checks and accepted per-market reconciliation remain unchanged. All failed compute retained in build.log.
