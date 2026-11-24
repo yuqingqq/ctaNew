@@ -1,0 +1,2 @@
+{"passed": true, "counts": {"arms": 6, "fills": 2297, "orders": 1819, "maker_legs": 2198}, "falsifiers_caught": 18, "no_profitability_or_causality_claim": true}
+2026-11-24T06:00:27Z tag=mt_dash_check_v4 rc=0 peak_rss_mib=78 wall_s=5.23 cpu_user_s=4.91 memavail_start_gib=22 disk_free_gib=418->418 slot=codex

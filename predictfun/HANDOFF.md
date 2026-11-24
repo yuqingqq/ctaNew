@@ -1,3 +1,13 @@
+<!-- MARKET_DASHBOARD_20261124_CODEX -->
+## 2026-11-24 — three-market microscope and material inventory finding
+
+[Interactive dashboard](reviews/maker_dashboard_20261124/dashboard.html); [report](reviews/maker_dashboard_20261124/report.md). USER-approved <=0.05coreh saved-data packet, no replay/new days. Six saved arms/three markets,2,297 own fills and2,198 maker legs; source/accounting and desktop/mobile checks pass. Prices,our orders/queue samples,cancel causes,inventory and maker hard/inferred windows are aligned; no private maker pull/queue rank claimed.
+
+P1: pf_branch_ladder.next_mode retains the old restriction when a fill jumps over abs(I)<=50 but does not reach the opposite100 threshold. Current traces have wrong-side restriction for268.15/27.85/165.65s (markets3702960/3789484/3877472), independently reconciled to noticed fills. At-99.93sh LONG_RESTRICTED blocks bids while sizing makes asks<1share: near-total inactivity. Our current END values+29.42/-17.90/-6.54USD and front+29.19/+47.90/-50.80 are as-ran,not corrected-controller values. Queue contrasts include this path-dependent controller trap.
+
+ONE next priority: development session fixes sign-crossing hysteresis release with a skipped-deadband batch-fill control,then reruns these exactthree CURRENT/FRONT pairs before further queue inference. No threshold tuning/day expansion. New replay needs its own bounded authorization; this packet only approved saved-data analysis. Resource receipt preserves old charges; task cap2.05,line5.35,standing.05reserve. No push/external messaging/implementation edit.
+<!-- /MARKET_DASHBOARD_20261124_CODEX -->
+
 <!-- STANDING_BATCH_RULE_20261120_USER -->
 ## Standing USER rule — comprehensive batches, one combined review
 

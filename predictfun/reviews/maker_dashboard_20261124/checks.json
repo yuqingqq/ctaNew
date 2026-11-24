@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "counts": {
+    "arms": 6,
+    "fills": 2297,
+    "orders": 1819,
+    "maker_legs": 2198
+  },
+  "falsifiers_caught": 18,
+  "no_profitability_or_causality_claim": true
+}

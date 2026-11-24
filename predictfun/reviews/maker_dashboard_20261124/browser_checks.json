@@ -1,0 +1,68 @@
+{
+  "errors": [],
+  "checks": [
+    {
+      "state": {
+        "market": 3702960,
+        "arm": "CURRENT_ASYNC_FAST10",
+        "rank": 3,
+        "lo": 50.803,
+        "hi": 65.803,
+        "cursor": 58.303,
+        "selected": {
+          "kind": "maker",
+          "id": 176
+        }
+      },
+      "detail": 728,
+      "events": 9,
+      "overflow": false,
+      "canvasHeight": 320
+    },
+    {
+      "state": {
+        "market": 3789484,
+        "arm": "CURRENT_ASYNC_FAST10",
+        "rank": 1,
+        "lo": 263.535,
+        "hi": 278.535,
+        "cursor": 271.035,
+        "selected": {
+          "kind": "maker",
+          "id": 389
+        }
+      },
+      "detail": 980,
+      "events": 150,
+      "overflow": false,
+      "canvasHeight": 320
+    },
+    {
+      "state": {
+        "market": 3877472,
+        "arm": "CURRENT_ASYNC_FAST10",
+        "rank": 1,
+        "lo": 21.676,
+        "hi": 36.676,
+        "cursor": 29.176,
+        "selected": {
+          "kind": "maker",
+          "id": 87
+        }
+      },
+      "detail": 894,
+      "events": 58,
+      "overflow": false,
+      "canvasHeight": 320
+    }
+  ],
+  "mobile": {
+    "overflow": false,
+    "detail": 980,
+    "canvasHeight": 320
+  },
+  "selfContained": true,
+  "requests": [
+    "file:///home/yuqing/ctaNew/predictfun/reviews/maker_dashboard_20261124/dashboard.html"
+  ]
+}

@@ -1,0 +1,2 @@
+{'book_samples': 450, 'maker_legs': 2198, 'hard_windows': 1685, 'inferred_post_windows': 1280, 'falsifiers': 3}
+2026-11-24T06:01:40Z tag=mt_dash_source_check rc=0 peak_rss_mib=275 wall_s=3.16 cpu_user_s=2.76 memavail_start_gib=22 disk_free_gib=419->419 slot=codex

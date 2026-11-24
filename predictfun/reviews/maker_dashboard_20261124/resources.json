@@ -1,0 +1,114 @@
+{
+  "runs": [
+    {
+      "tag": "mt_dash_schema",
+      "rc": 0,
+      "cpu_user_s": 0.14
+    },
+    {
+      "tag": "mt_dash_freeze",
+      "rc": 0,
+      "cpu_user_s": 0.73
+    },
+    {
+      "tag": "mt_dash_extract",
+      "rc": 1,
+      "cpu_user_s": 1.86
+    },
+    {
+      "tag": "mt_dash_diag",
+      "rc": 0,
+      "cpu_user_s": 0.59
+    },
+    {
+      "tag": "mt_dash_freeze_v2",
+      "rc": 0,
+      "cpu_user_s": 0.73
+    },
+    {
+      "tag": "mt_dash_extract_v2",
+      "rc": 0,
+      "cpu_user_s": 2.72
+    },
+    {
+      "tag": "mt_dash_check_v2",
+      "rc": 1,
+      "cpu_user_s": 0.8
+    },
+    {
+      "tag": "mt_dash_check_v3",
+      "rc": 1,
+      "cpu_user_s": 1.97
+    },
+    {
+      "tag": "mt_dash_check_v4",
+      "rc": 0,
+      "cpu_user_s": 4.91
+    },
+    {
+      "tag": "mt_dash_browser",
+      "rc": 1,
+      "cpu_user_s": 0.23
+    },
+    {
+      "tag": "mt_dash_source_check",
+      "rc": 0,
+      "cpu_user_s": 2.76
+    },
+    {
+      "tag": "mt_dash_browser_cdp",
+      "rc": 0,
+      "cpu_user_s": 0.44
+    },
+    {
+      "tag": "mt_dash_enrich",
+      "rc": 0,
+      "cpu_user_s": 0.35
+    },
+    {
+      "tag": "mt_dash_pack",
+      "rc": 0,
+      "cpu_user_s": 0.28
+    },
+    {
+      "tag": "mt_dash_browser_final",
+      "rc": 0,
+      "cpu_user_s": 0.43
+    },
+    {
+      "tag": "mt_dash_examples",
+      "rc": 0,
+      "cpu_user_s": 0.11
+    },
+    {
+      "tag": "mt_dash_inventory",
+      "rc": 0,
+      "cpu_user_s": 1.44
+    },
+    {
+      "tag": "mt_dash_enrich_final",
+      "rc": 0,
+      "cpu_user_s": 0.35
+    },
+    {
+      "tag": "mt_dash_pack_final",
+      "rc": 0,
+      "cpu_user_s": 0.28
+    },
+    {
+      "tag": "mt_dash_browser_verified",
+      "rc": 0,
+      "cpu_user_s": 0.45
+    }
+  ],
+  "measured_research_cpu_s": 21.57,
+  "browser_conservative_cpu_s": 15,
+  "publication_reserve_s": 2,
+  "packet_charged_cpu_s": 38.57,
+  "packet_cap_s": 180,
+  "task_upper_coreh": 1.9492805555555555,
+  "line_upper_coreh": 5.259980555555556,
+  "standing_reserve_coreh": 0.05,
+  "task_cap_coreh": 2.05,
+  "line_cap_coreh": 5.35
+}

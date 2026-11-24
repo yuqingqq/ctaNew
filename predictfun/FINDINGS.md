@@ -1,3 +1,9 @@
+<!-- MARKET_DASHBOARD_20261124_CODEX -->
+## 2026-11-24 — dashboard exposes sign-crossing inventory restriction trap
+
+[Evidence and source lines](reviews/maker_dashboard_20261124/report.md), [viewer](reviews/maker_dashboard_20261124/dashboard.html). P1: next_mode's absolute reset band can be jumped by grouped fills; old LONG_RESTRICTED survives short inventory between-50and-100 (symmetric SHORT case). Current saved traces:268.15/27.85/165.65s on the wrong side. Every known inventory grid reconciles to raw noticed fills; pure-function positive/control cases reproduce. This affects participation and the interpretation of prior queue/front feedback contrasts; accounting still describes the executed policy. No implementation or replay changed. Next priority: fix release semantics and repeat the same three pairs under a separately bounded replay authorization.
+<!-- /MARKET_DASHBOARD_20261124_CODEX -->
+
 
 <!-- FILL_AGE_20261124_CODEX -->
 ## 2026-11-24 — posting lead versus longer-horizon good fills

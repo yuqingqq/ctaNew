@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "counts": {
+    "book_samples": 450,
+    "maker_legs": 2198,
+    "hard_windows": 1685,
+    "inferred_post_windows": 1280,
+    "falsifiers": 3
+  }
+}

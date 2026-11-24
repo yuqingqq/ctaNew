@@ -1,3 +1,19 @@
+market_dashboard_20261124_codex:
+  report: predictfun/reviews/maker_dashboard_20261124/report.md
+  dashboard: predictfun/reviews/maker_dashboard_20261124/dashboard.html
+  stage: saved_trace_dashboard_verified_material_controller_issue
+  markets: [3702960, 3789484, 3877472]
+  own_fills_six_arms: 2297
+  recorded_maker_legs: 2198
+  implementation_changed: false
+  sign_crossing_hysteresis_defect: true
+  current_wrong_side_restriction_seconds: [268.15, 27.85, 165.65]
+  next_priority: fix_skipped_deadband_release_then_same_three_market_pairs
+  new_replay_requires_bounded_authorization: true
+  packet_cap_coreh: 0.05
+  task_cap_coreh: 2.05
+  line_cap_coreh: 5.35
+  standing_reserve_coreh: 0.05
 default_post_active_plan: predictfun/reviews/automatic/20261121_default_post_ladder/plan.md
 fill_age_20261124_codex:
   report: predictfun/reviews/maker_fill_age_20261124/report.md

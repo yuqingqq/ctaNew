@@ -1,0 +1,212 @@
+[
+  {
+    "m": 3702960,
+    "fill": {
+      "id": 176,
+      "t": 58.303,
+      "lo": 56.303,
+      "rank": 3,
+      "role": "maker",
+      "hash": "0x97e8d44bbc9437e86626ff3e77f705a6b0e42324cd8edaa2706d2c9dc168fd57",
+      "sid": "01a16d7f-dbbf-7f51-85da-055d8799e443",
+      "mk_idx": 0,
+      "side": 1,
+      "price": 24.0,
+      "q": 4.0,
+      "fee": -0.0,
+      "self_trade": false,
+      "post": [
+        57.653,
+        58.303
+      ],
+      "post_grade": "G4_scenario_only",
+      "original_size": null,
+      "markouts": {
+        "1s": 0.5,
+        "10s": 2.5,
+        "60s": 2.5
+      },
+      "end_value": 0.72,
+      "presence": {
+        "CURRENT_ASYNC_FAST10": {
+          "same": "none",
+          "equal_or_better": "none"
+        },
+        "FRONT_ASYNC_FAST10": {
+          "same": "none",
+          "equal_or_better": "none"
+        }
+      }
+    },
+    "own_sampled_inventory": [
+      -99.92717,
+      -99.92717
+    ],
+    "own_modes": [
+      1
+    ],
+    "wait_reasons": [
+      "zero_desired"
+    ],
+    "overlapping_orders": []
+  },
+  {
+    "m": 3789484,
+    "fill": {
+      "id": 389,
+      "t": 271.035,
+      "lo": 269.035,
+      "rank": 1,
+      "role": "maker",
+      "hash": "0x3be8243bef0a3b21f0da4790da5a9e24e27c7549ecbd65f0918574808cacdc20",
+      "sid": "01a175c5-f8fb-7091-8e99-803c48447a4e",
+      "mk_idx": 0,
+      "side": 0,
+      "price": 46.0,
+      "q": 10.0,
+      "fee": -0.0,
+      "self_trade": false,
+      "post": [
+        269.998,
+        271.035
+      ],
+      "post_grade": "G4_scenario_only",
+      "original_size": 50.0,
+      "markouts": {
+        "1s": 2.0,
+        "10s": 11.5,
+        "60s": null
+      },
+      "end_value": 1.25,
+      "presence": {
+        "CURRENT_ASYNC_FAST10": {
+          "same": "none",
+          "equal_or_better": "partial"
+        },
+        "FRONT_ASYNC_FAST10": {
+          "same": "none",
+          "equal_or_better": "partial"
+        }
+      }
+    },
+    "own_sampled_inventory": [
+      -19.909552,
+      30.090448
+    ],
+    "own_modes": [
+      0
+    ],
+    "wait_reasons": [
+      "exposure_full",
+      "pressure_withhold"
+    ],
+    "overlapping_orders": [
+      {
+        "gid": 406,
+        "price": 61.0,
+        "reason": "structural",
+        "act": 268.86,
+        "stop": 269.26
+      },
+      {
+        "gid": 408,
+        "price": 60.0,
+        "reason": "pressure_pull",
+        "act": 269.01,
+        "stop": 270.21
+      },
+      {
+        "gid": 411,
+        "price": 59.0,
+        "reason": "pressure_pull",
+        "act": 269.26,
+        "stop": 270.21
+      },
+      {
+        "gid": 412,
+        "price": 53.0,
+        "reason": "structural",
+        "act": 270.46,
+        "stop": 270.66
+      },
+      {
+        "gid": 413,
+        "price": 52.0,
+        "reason": "structural",
+        "act": 270.46,
+        "stop": 270.71
+      },
+      {
+        "gid": 416,
+        "price": 49.0,
+        "reason": "pressure_pull",
+        "act": 270.81,
+        "stop": 270.86
+      }
+    ]
+  },
+  {
+    "m": 3877472,
+    "fill": {
+      "id": 87,
+      "t": 29.176,
+      "lo": 27.176,
+      "rank": 1,
+      "role": "maker",
+      "hash": "0xddd8ab1d85e704a84aad728770ddc1bed353830e6692fe2b14fdbfde8f827df9",
+      "sid": "01a17e65-47d8-7f71-8d72-df7c12f254fa",
+      "mk_idx": 1,
+      "side": 1,
+      "price": 59.0,
+      "q": 50.187169,
+      "fee": -0.0,
+      "self_trade": false,
+      "post": [
+        23.251,
+        29.176
+      ],
+      "post_grade": "G4_scenario_only",
+      "original_size": null,
+      "markouts": {
+        "1s": 0.5,
+        "10s": 8.5,
+        "60s": 4.5
+      },
+      "end_value": 28.857622,
+      "presence": {
+        "CURRENT_ASYNC_FAST10": {
+          "same": "throughout",
+          "equal_or_better": "throughout"
+        },
+        "FRONT_ASYNC_FAST10": {
+          "same": "partial",
+          "equal_or_better": "partial"
+        }
+      }
+    },
+    "own_sampled_inventory": [
+      99.772659,
+      99.772659
+    ],
+    "own_modes": [
+      0
+    ],
+    "wait_reasons": [],
+    "overlapping_orders": [
+      {
+        "gid": 49,
+        "price": 59.0,
+        "reason": "structural",
+        "act": 24.71,
+        "stop": 37.51
+      },
+      {
+        "gid": 50,
+        "price": 60.0,
+        "reason": "structural",
+        "act": 26.61,
+        "stop": 36.91
+      }
+    ]
+  }
+]
