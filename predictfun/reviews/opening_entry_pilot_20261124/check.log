@@ -1,0 +1,17 @@
+{
+  "markets": 3,
+  "later_slot_calls_verified": 23577,
+  "refusals": [
+    "scope",
+    "late_action",
+    "cutoff",
+    "late_gate_log"
+  ],
+  "better_markets": 2,
+  "positive_markets": 2,
+  "pooled_delta_c": 2826.527722931487,
+  "pooled_baseline_c": -14958.122334849957,
+  "pooled_candidate_c": -12131.59461191847,
+  "validation": false
+}
+2026-11-24T12:13:44Z tag=opening_check rc=0 peak_rss_mib=262 wall_s=1.96 cpu_user_s=1.74 memavail_start_gib=22 disk_free_gib=414->414 slot=codex

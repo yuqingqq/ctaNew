@@ -1,3 +1,11 @@
+<!-- OPENING_ENTRY_PILOT_20261124_CODEX -->
+## 2026-11-24 — opening-only scope correction materially changes the answer
+
+[Opening-only receipt](reviews/opening_entry_pilot_20261124/report.md). USER intended only the initial quote batch; assistant's prior all-entry gate was overbroad. New freeze b1898f0b4 gates only through first submission tick, then permanently delegates original entries.23577 later callbacks checked; disabled parity and accounting pass; four scope corruptions refused. Prior receipt remains valid for its different estimand, not as the answer to the USER's opening-only question.
+
+Corrected-inventory baseline -149.58USD pooled -> opening-only -121.32USD, unlike the all-entry +21.27.3789484 improves -17.40 -> +9.73 full-market and -22.08 -> +2.08 first minute; filled shares slightly increase and both-side participation remains close.3702960 improves+1.14;3877472 value unchanged. Opening decisions help the named example but do not rescue the whole three-market policy. No new data, fit or validation; resources and next priority in HANDOFF.
+<!-- /OPENING_ENTRY_PILOT_20261124_CODEX -->
+
 <!-- ENTRY_GATE_PILOT_20261124_CODEX -->
 ## 2026-11-24 — entry gate helps two examples but largely suppresses activity
 

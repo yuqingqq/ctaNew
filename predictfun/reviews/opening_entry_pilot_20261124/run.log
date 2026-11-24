@@ -1,0 +1,4 @@
+3702960 checkpoint 8.0
+3789484 checkpoint 13.38
+3877472 checkpoint 19.47
+2026-11-24T12:13:09Z tag=opening_run rc=0 peak_rss_mib=869 wall_s=20.94 cpu_user_s=19.82 memavail_start_gib=22 disk_free_gib=414->414 slot=codex

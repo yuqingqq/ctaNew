@@ -1,0 +1,345 @@
+{
+  "markets": 3,
+  "later_slot_calls_verified": 23577,
+  "refusals": [
+    "scope",
+    "late_action",
+    "cutoff",
+    "late_gate_log"
+  ],
+  "rows": [
+    {
+      "m": 3702960,
+      "opening_batch_ms": 29050.0,
+      "later_slot_calls_verified": 6677,
+      "baseline": {
+        "matched_shares": 1323.011136040081,
+        "completed_c": 567.6135244533959,
+        "residual_c": -140.0,
+        "total_c": 427.6135244533959,
+        "net_shares": 68.03716072934512,
+        "filled_shares": 2714.0594328095053,
+        "generations": 141,
+        "posts": 141,
+        "pulls": 20,
+        "peak_abs_inventory": 127.77382739601178,
+        "mean_abs_inventory": 73.46421232455485,
+        "both_active_grid_share": 0.5090604026845638,
+        "first_post_ms": 0.0,
+        "first_post_sides": [
+          0,
+          1
+        ],
+        "markouts": {
+          "50": {
+            "value_c": 28.749094338228534,
+            "shares": 2714.0594328095053,
+            "common_cut_value_c": -68.38977232843813,
+            "common_cut_shares": 2570.1366661428383
+          },
+          "1000": {
+            "value_c": -407.8990446613111,
+            "shares": 2712.8894328095053,
+            "common_cut_value_c": -547.3170613279777,
+            "common_cut_shares": 2570.1366661428383
+          },
+          "5000": {
+            "value_c": -467.6856248095837,
+            "shares": 2712.8894328095053,
+            "common_cut_value_c": -475.0758414762504,
+            "common_cut_shares": 2570.1366661428383
+          },
+          "30000": {
+            "value_c": 3214.0099465298863,
+            "shares": 2570.1366661428383,
+            "common_cut_value_c": 3214.0099465298863,
+            "common_cut_shares": 2570.1366661428383
+          }
+        },
+        "first_minute": {
+          "matched_shares": 511.7791155954899,
+          "completed_c": -953.8746312960125,
+          "residual_c": 43.87707463340737,
+          "total_c": -909.9975566626049,
+          "net_shares": -12.536307038116362
+        }
+      },
+      "candidate": {
+        "matched_shares": 1198.2104680948137,
+        "completed_c": 759.8470149463587,
+        "residual_c": -218.55805458307447,
+        "total_c": 541.2889603632846,
+        "net_shares": 89.23778415180503,
+        "filled_shares": 2485.6587203414324,
+        "generations": 121,
+        "posts": 121,
+        "pulls": 17,
+        "peak_abs_inventory": 200.0,
+        "mean_abs_inventory": 69.3315897611949,
+        "both_active_grid_share": 0.36593959731543624,
+        "first_post_ms": 29050.0,
+        "first_post_sides": [
+          1
+        ],
+        "markouts": {
+          "50": {
+            "value_c": 86.82165312042488,
+            "shares": 2485.6587203414324,
+            "common_cut_value_c": 47.820435389928434,
+            "common_cut_shares": 2289.580655802425
+          },
+          "1000": {
+            "value_c": -728.9547159346184,
+            "shares": 2484.4887203414323,
+            "common_cut_value_c": -811.2950836651149,
+            "common_cut_shares": 2289.580655802425
+          },
+          "5000": {
+            "value_c": -1735.8747555665416,
+            "shares": 2484.4887203414323,
+            "common_cut_value_c": -1581.8767275523571,
+            "common_cut_shares": 2289.580655802425
+          },
+          "30000": {
+            "value_c": 2899.3258543527713,
+            "shares": 2289.580655802425,
+            "common_cut_value_c": 2899.3258543527713,
+            "common_cut_shares": 2289.580655802425
+          }
+        },
+        "first_minute": {
+          "matched_shares": 412.41403613144837,
+          "completed_c": 636.4492544439374,
+          "residual_c": 92.16724919228683,
+          "total_c": 728.6165036362252,
+          "net_shares": -20.4816109316193
+        }
+      },
+      "delta_c": 113.67543590988868
+    },
+    {
+      "m": 3789484,
+      "opening_batch_ms": 550.0,
+      "later_slot_calls_verified": 8208,
+      "baseline": {
+        "matched_shares": 1904.586725071618,
+        "completed_c": -1032.005434440065,
+        "residual_c": -707.9266746218374,
+        "total_c": -1739.9321090619087,
+        "net_shares": -50.54666721529922,
+        "filled_shares": 3859.7201173585413,
+        "generations": 598,
+        "posts": 598,
+        "pulls": 180,
+        "peak_abs_inventory": 191.24,
+        "mean_abs_inventory": 71.60009883041339,
+        "both_active_grid_share": 0.4323825503355705,
+        "first_post_ms": 0.0,
+        "first_post_sides": [
+          0,
+          1
+        ],
+        "markouts": {
+          "50": {
+            "value_c": -522.3810974394032,
+            "shares": 3859.7201173585413,
+            "common_cut_value_c": -614.4865399224917,
+            "common_cut_shares": 2622.058971090264
+          },
+          "1000": {
+            "value_c": -6329.999547461486,
+            "shares": 3853.8401173585416,
+            "common_cut_value_c": -3708.6869295895685,
+            "common_cut_shares": 2622.058971090264
+          },
+          "5000": {
+            "value_c": -9038.565805412196,
+            "shares": 3831.285979427507,
+            "common_cut_value_c": -5485.688837638472,
+            "common_cut_shares": 2622.058971090264
+          },
+          "30000": {
+            "value_c": -9960.675140556385,
+            "shares": 2622.058971090264,
+            "common_cut_value_c": -9960.675140556385,
+            "common_cut_shares": 2622.058971090264
+          }
+        },
+        "first_minute": {
+          "matched_shares": 322.1197612371044,
+          "completed_c": -2057.4095189354603,
+          "residual_c": -150.98626388440923,
+          "total_c": -2208.3957828198704,
+          "net_shares": -80.86957749433948
+        }
+      },
+      "candidate": {
+        "matched_shares": 1963.551579662737,
+        "completed_c": 1681.5884077963128,
+        "residual_c": -708.6682298366197,
+        "total_c": 972.9201779596897,
+        "net_shares": -50.59780895424974,
+        "filled_shares": 3977.70096827973,
+        "generations": 579,
+        "posts": 579,
+        "pulls": 177,
+        "peak_abs_inventory": 189.85876289970545,
+        "mean_abs_inventory": 82.53909673574545,
+        "both_active_grid_share": 0.41124161073825505,
+        "first_post_ms": 550.0,
+        "first_post_sides": [
+          0
+        ],
+        "markouts": {
+          "50": {
+            "value_c": -499.2484421143537,
+            "shares": 3977.70096827973,
+            "common_cut_value_c": -619.9853345974421,
+            "common_cut_shares": 2727.081822011453
+          },
+          "1000": {
+            "value_c": -4773.346364108408,
+            "shares": 3971.82096827973,
+            "common_cut_value_c": -2229.76129623649,
+            "common_cut_shares": 2727.081822011453
+          },
+          "5000": {
+            "value_c": -7766.903907751929,
+            "shares": 3949.2668303486957,
+            "common_cut_value_c": -4152.344439978206,
+            "common_cut_shares": 2727.081822011453
+          },
+          "30000": {
+            "value_c": -8568.461002200636,
+            "shares": 2727.081822011453,
+            "common_cut_value_c": -8568.461002200636,
+            "common_cut_shares": 2727.081822011453
+          }
+        },
+        "first_minute": {
+          "matched_shares": 420.1660786974219,
+          "completed_c": 633.2050643273168,
+          "residual_c": -424.8652339733427,
+          "total_c": 208.33983035397432,
+          "net_shares": -139.1116373164726
+        }
+      },
+      "delta_c": 2712.8522870215984
+    },
+    {
+      "m": 3877472,
+      "opening_batch_ms": 850.0,
+      "later_slot_calls_verified": 8692,
+      "baseline": {
+        "matched_shares": 2431.910634507694,
+        "completed_c": -12467.938454863606,
+        "residual_c": -1177.86529537783,
+        "total_c": -13645.803750241445,
+        "net_shares": 111.11872133720266,
+        "filled_shares": 4974.939990352591,
+        "generations": 349,
+        "posts": 349,
+        "pulls": 52,
+        "peak_abs_inventory": 199.84715768182681,
+        "mean_abs_inventory": 85.49680191541992,
+        "both_active_grid_share": 0.3278523489932886,
+        "first_post_ms": 0.0,
+        "first_post_sides": [
+          0,
+          1
+        ],
+        "markouts": {
+          "50": {
+            "value_c": 391.12851681106724,
+            "shares": 4974.939990352591,
+            "common_cut_value_c": 410.2218090151654,
+            "common_cut_shares": 4479.4424903525905
+          },
+          "1000": {
+            "value_c": -3363.785636917272,
+            "shares": 4974.939990352591,
+            "common_cut_value_c": -2995.148790232481,
+            "common_cut_shares": 4479.4424903525905
+          },
+          "5000": {
+            "value_c": -6015.518244705792,
+            "shares": 4974.939990352591,
+            "common_cut_value_c": -5504.353661372459,
+            "common_cut_shares": 4479.4424903525905
+          },
+          "30000": {
+            "value_c": -12901.64547076715,
+            "shares": 4479.4424903525905,
+            "common_cut_value_c": -12901.64547076715,
+            "common_cut_shares": 4479.4424903525905
+          }
+        },
+        "first_minute": {
+          "matched_shares": 371.9960050847457,
+          "completed_c": -2652.0475122226803,
+          "residual_c": -490.259195262702,
+          "total_c": -3142.3067074853843,
+          "net_shares": 133.15585368412764
+        }
+      },
+      "candidate": {
+        "matched_shares": 2431.910634507694,
+        "completed_c": -12467.938454863606,
+        "residual_c": -1177.86529537783,
+        "total_c": -13645.803750241445,
+        "net_shares": 111.11872133720266,
+        "filled_shares": 4974.939990352591,
+        "generations": 347,
+        "posts": 347,
+        "pulls": 50,
+        "peak_abs_inventory": 199.84715768182681,
+        "mean_abs_inventory": 85.49680191541992,
+        "both_active_grid_share": 0.325,
+        "first_post_ms": 850.0,
+        "first_post_sides": [
+          1
+        ],
+        "markouts": {
+          "50": {
+            "value_c": 391.12851681106724,
+            "shares": 4974.939990352591,
+            "common_cut_value_c": 410.2218090151654,
+            "common_cut_shares": 4479.4424903525905
+          },
+          "1000": {
+            "value_c": -3363.785636917272,
+            "shares": 4974.939990352591,
+            "common_cut_value_c": -2995.148790232481,
+            "common_cut_shares": 4479.4424903525905
+          },
+          "5000": {
+            "value_c": -6015.518244705792,
+            "shares": 4974.939990352591,
+            "common_cut_value_c": -5504.353661372459,
+            "common_cut_shares": 4479.4424903525905
+          },
+          "30000": {
+            "value_c": -12901.64547076715,
+            "shares": 4479.4424903525905,
+            "common_cut_value_c": -12901.64547076715,
+            "common_cut_shares": 4479.4424903525905
+          }
+        },
+        "first_minute": {
+          "matched_shares": 371.9960050847457,
+          "completed_c": -2652.0475122226803,
+          "residual_c": -490.259195262702,
+          "total_c": -3142.3067074853843,
+          "net_shares": 133.15585368412764
+        }
+      },
+      "delta_c": 0.0
+    }
+  ],
+  "better_markets": 2,
+  "positive_markets": 2,
+  "pooled_delta_c": 2826.527722931487,
+  "pooled_baseline_c": -14958.122334849957,
+  "pooled_candidate_c": -12131.59461191847,
+  "validation": false
+}

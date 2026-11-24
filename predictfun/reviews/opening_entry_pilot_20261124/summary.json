@@ -1,0 +1,200 @@
+{
+  "rows": [
+    {
+      "day": "20261024",
+      "m": 3702960,
+      "arm": "OPENING_ONLY",
+      "metrics": {
+        "matched_shares": 1198.2104680948137,
+        "completed_c": 759.8470149463587,
+        "residual_c": -218.55805458307447,
+        "total_c": 541.2889603632846,
+        "net_shares": 89.23778415180503,
+        "filled_shares": 2485.6587203414324,
+        "generations": 121,
+        "posts": 121,
+        "pulls": 17,
+        "peak_abs_inventory": 200.0,
+        "mean_abs_inventory": 69.3315897611949,
+        "both_active_grid_share": 0.36593959731543624,
+        "first_post_ms": 29050.0,
+        "first_post_sides": [
+          1
+        ],
+        "markouts": {
+          "50": {
+            "value_c": 86.82165312042488,
+            "shares": 2485.6587203414324,
+            "common_cut_value_c": 47.820435389928434,
+            "common_cut_shares": 2289.580655802425
+          },
+          "1000": {
+            "value_c": -728.9547159346184,
+            "shares": 2484.4887203414323,
+            "common_cut_value_c": -811.2950836651149,
+            "common_cut_shares": 2289.580655802425
+          },
+          "5000": {
+            "value_c": -1735.8747555665416,
+            "shares": 2484.4887203414323,
+            "common_cut_value_c": -1581.8767275523571,
+            "common_cut_shares": 2289.580655802425
+          },
+          "30000": {
+            "value_c": 2899.3258543527713,
+            "shares": 2289.580655802425,
+            "common_cut_value_c": 2899.3258543527713,
+            "common_cut_shares": 2289.580655802425
+          }
+        },
+        "first_minute": {
+          "matched_shares": 412.41403613144837,
+          "completed_c": 636.4492544439374,
+          "residual_c": 92.16724919228683,
+          "total_c": 728.6165036362252,
+          "net_shares": -20.4816109316193
+        }
+      },
+      "opening_batch_ms": 29050.0,
+      "sha256": "e3b1c0289f5aa9ba61af36befec4afe2fc48f1285dac89b9cecf425faf205cae",
+      "arrays_sha256": "e74841ac9603d97eb36cb5788084106354010ffc62a8f770ab2da5fed36a7555"
+    },
+    {
+      "day": "20261026",
+      "m": 3789484,
+      "arm": "OPENING_ONLY",
+      "metrics": {
+        "matched_shares": 1963.551579662737,
+        "completed_c": 1681.5884077963128,
+        "residual_c": -708.6682298366197,
+        "total_c": 972.9201779596897,
+        "net_shares": -50.59780895424974,
+        "filled_shares": 3977.70096827973,
+        "generations": 579,
+        "posts": 579,
+        "pulls": 177,
+        "peak_abs_inventory": 189.85876289970545,
+        "mean_abs_inventory": 82.53909673574545,
+        "both_active_grid_share": 0.41124161073825505,
+        "first_post_ms": 550.0,
+        "first_post_sides": [
+          0
+        ],
+        "markouts": {
+          "50": {
+            "value_c": -499.2484421143537,
+            "shares": 3977.70096827973,
+            "common_cut_value_c": -619.9853345974421,
+            "common_cut_shares": 2727.081822011453
+          },
+          "1000": {
+            "value_c": -4773.346364108408,
+            "shares": 3971.82096827973,
+            "common_cut_value_c": -2229.76129623649,
+            "common_cut_shares": 2727.081822011453
+          },
+          "5000": {
+            "value_c": -7766.903907751929,
+            "shares": 3949.2668303486957,
+            "common_cut_value_c": -4152.344439978206,
+            "common_cut_shares": 2727.081822011453
+          },
+          "30000": {
+            "value_c": -8568.461002200636,
+            "shares": 2727.081822011453,
+            "common_cut_value_c": -8568.461002200636,
+            "common_cut_shares": 2727.081822011453
+          }
+        },
+        "first_minute": {
+          "matched_shares": 420.1660786974219,
+          "completed_c": 633.2050643273168,
+          "residual_c": -424.8652339733427,
+          "total_c": 208.33983035397432,
+          "net_shares": -139.1116373164726
+        }
+      },
+      "opening_batch_ms": 550.0,
+      "sha256": "241190ac278f3fdf6e2419b36f9015a3841dbfabd4ab6dfb01b604d1c861b67a",
+      "arrays_sha256": "259eb80f1c7a4582aceaf9fbd54b34ae6cb51b1450285e56395dab5f6a4680a7"
+    },
+    {
+      "day": "20261027",
+      "m": 3877472,
+      "arm": "OPENING_ONLY",
+      "metrics": {
+        "matched_shares": 2431.910634507694,
+        "completed_c": -12467.938454863606,
+        "residual_c": -1177.86529537783,
+        "total_c": -13645.803750241445,
+        "net_shares": 111.11872133720266,
+        "filled_shares": 4974.939990352591,
+        "generations": 347,
+        "posts": 347,
+        "pulls": 50,
+        "peak_abs_inventory": 199.84715768182681,
+        "mean_abs_inventory": 85.49680191541992,
+        "both_active_grid_share": 0.325,
+        "first_post_ms": 850.0,
+        "first_post_sides": [
+          1
+        ],
+        "markouts": {
+          "50": {
+            "value_c": 391.12851681106724,
+            "shares": 4974.939990352591,
+            "common_cut_value_c": 410.2218090151654,
+            "common_cut_shares": 4479.4424903525905
+          },
+          "1000": {
+            "value_c": -3363.785636917272,
+            "shares": 4974.939990352591,
+            "common_cut_value_c": -2995.148790232481,
+            "common_cut_shares": 4479.4424903525905
+          },
+          "5000": {
+            "value_c": -6015.518244705792,
+            "shares": 4974.939990352591,
+            "common_cut_value_c": -5504.353661372459,
+            "common_cut_shares": 4479.4424903525905
+          },
+          "30000": {
+            "value_c": -12901.64547076715,
+            "shares": 4479.4424903525905,
+            "common_cut_value_c": -12901.64547076715,
+            "common_cut_shares": 4479.4424903525905
+          }
+        },
+        "first_minute": {
+          "matched_shares": 371.9960050847457,
+          "completed_c": -2652.0475122226803,
+          "residual_c": -490.259195262702,
+          "total_c": -3142.3067074853843,
+          "net_shares": 133.15585368412764
+        }
+      },
+      "opening_batch_ms": 850.0,
+      "sha256": "9d27e929c2667861b1d0ff7e67e82c8f2874b1290f4803fb6b5c67d90bda5cca",
+      "arrays_sha256": "0f015ebc118dceffa6172bd03c74471326f7a058973ee5ceec494624776f72aa"
+    }
+  ],
+  "parity": [
+    {
+      "m": 3702960,
+      "fields": {
+        "fingerprint": true,
+        "fills": true,
+        "orders": true,
+        "requests": true,
+        "value": true,
+        "guard_log": true,
+        "commands": true,
+        "closed": true,
+        "mode_log": true
+      }
+    }
+  ],
+  "cpu_s": 19.468152736,
+  "status": "COMPLETE",
+  "manifest_sha256": "62a729a5994cc23e758109b74ca81d8e18cdb9bacde9fc21761b19203e0f1a45"
+}

@@ -1,0 +1,21 @@
+{
+  "previous_packet_upper_cpu_s": 139.43,
+  "measured_cpu_s": 22.560000000000002,
+  "publication_reserve_s": 2,
+  "packet_upper_cpu_s": 163.99,
+  "packet_cap_cpu_s": 180,
+  "runs": [
+    {
+      "tag": "opening_prepare",
+      "cpu_s": 1.0
+    },
+    {
+      "tag": "opening_check",
+      "cpu_s": 1.74
+    },
+    {
+      "tag": "opening_run",
+      "cpu_s": 19.82
+    }
+  ]
+}

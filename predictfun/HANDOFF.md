@@ -1,3 +1,15 @@
+<!-- OPENING_ENTRY_PILOT_20261124_CODEX -->
+## 2026-11-24 — USER-corrected opening-only entry replay
+
+[Receipt](reviews/opening_entry_pilot_20261124/report.md), freeze b1898f0b4. This supersedes all-entry filtering as the active task: USER only wants market-open entries changed. Gate until and through the first actual submission tick; every subsequent tick permanently uses the original entry policy. No rearm after fill/cancel/refusal. Same inventory correction in baseline and candidate; frozen historical source untouched.
+
+Three complete consumed markets checked; disabled wrapper matches the saved fixed baseline;23577 later slot callbacks independently reproduce the original sizing/pressure decisions. Four scope corruptions refused. Full-market USD default -> opening-only:3702960 +4.28 -> +5.41;3789484 -17.40 -> +9.73;3877472 -136.46 -> -136.46. Pooled -149.58 -> -121.32, still losing. The earlier all-entry +21.27 is NOT this result.
+
+3789484: initial bid batch550ms; original entries restored600ms; first-minute value -22.08 -> +2.08; full-market filled shares3859.7 ->3977.7 and both-side grid participation43.2% ->41.1%. Thus this narrower change helps the discussed example without the old all-entry suppression. Selected examples only; no validation/general entry-skill claim. Other first-batch times29.05s and0.85s are signal-triggered, not fixed timers.
+
+ONE next priority: saved-ledger decomposition of the remaining losing market's first completed cycles and later turnover, comparing opening-only with fixed default. Keep opening scope fixed; no automatic all-entry filtering/threshold tuning/new replay. Packet upper163.99/180 CPU seconds, unchanged task2.05/line5.35 caps and .05h reserve. Other sessions' working changes preserved; no push/live use.
+<!-- /OPENING_ENTRY_PILOT_20261124_CODEX -->
+
 <!-- ENTRY_GATE_PILOT_20261124_CODEX -->
 ## 2026-11-24 — USER-directed directional entry replay completed
 

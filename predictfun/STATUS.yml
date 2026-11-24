@@ -1,3 +1,25 @@
+opening_entry_pilot_20261124_codex:
+  report: predictfun/reviews/opening_entry_pilot_20261124/report.md
+  freeze: b1898f0b4
+  stage: opening_only_replay_checked_still_pooled_negative
+  scope: first_actual_submission_tick_inclusive_then_original_entries_forever
+  later_admission_filter_active: false
+  markets: [3702960, 3789484, 3877472]
+  later_slot_callbacks_verified: 23577
+  scope_corruptions_refused: 4
+  disabled_full_market_parity: 1
+  reused_fixed_baselines: 3
+  baseline_total_usd: -149.58122334849958
+  opening_only_total_usd: -121.3159461191847
+  better_markets: 2
+  positive_markets: 2
+  validation: false
+  next_priority: saved_ledger_remaining_losing_cycles_without_scope_expansion
+  packet_upper_cpu_s: 163.99
+  packet_cap_cpu_s: 180
+  task_cap_coreh: 2.05
+  line_cap_coreh: 5.35
+  standing_reserve_coreh: 0.05
 directional_entry_pilot_20261124_codex:
   report: predictfun/reviews/entry_gate_pilot_20261124/report.md
   freeze: fa9d035d2
