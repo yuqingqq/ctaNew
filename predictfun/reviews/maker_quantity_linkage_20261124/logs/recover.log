@@ -1,0 +1,75 @@
+{
+  "orders": 88,
+  "markets": 18,
+  "groups": {
+    "conditional_withdrawal": 40,
+    "exhausted": 41,
+    "unresolved": 7
+  },
+  "raw_events": 152,
+  "refinements": {
+    "post_A": 0,
+    "post_B": 10,
+    "end": 17,
+    "any": 20
+  },
+  "bound_status": {
+    "conditional_only": 79,
+    "prior_grade_or_clock_or_role_refused": 9
+  },
+  "relations": {
+    "R01": {
+      "observed_budget_ledger": 88
+    },
+    "R02": {
+      "incomplete_budget_not_live": 47,
+      "exhausted": 41
+    },
+    "R03": {
+      "candidate_match_reflection": 88
+    },
+    "R04": {
+      "unknown_failure_stream": 88
+    },
+    "R05": {
+      "first_fill_execution_bound": 88
+    },
+    "R06": {
+      "single_recorded_fill": 63,
+      "repeated_execution_not_continuity": 25
+    },
+    "R07": {
+      "unattributed_add_restore_candidates": 88
+    },
+    "R08": {
+      "conditional_bound_narrowed": 20,
+      "no_bound_gain": 59,
+      "refused": 9
+    },
+    "R09": {
+      "no_selected_joint_conflict_no_unique_allocation": 88
+    },
+    "R10": {
+      "unexplained_drop_candidates": 78,
+      "no_unexplained_drop": 10
+    }
+  },
+  "exhausted_false_pulls": 0,
+  "private_actions_identified": 0,
+  "pending_display_convention": "bracketed_not_identified",
+  "joint_conflict_frames": 0,
+  "same_book_pair_competing_records": 606,
+  "as_of_utc": "2026-11-24T03:49:25Z",
+  "source_commit": "1408b402a2acc0554426c9e62505f7f705c0acd9",
+  "cpu_seconds": 6.7137930809999995,
+  "hashes": {
+    "book_edges.csv.gz": "dc62b5c4bc9414ba48c9446095f553bf6112e89662db16365abdba6624e15151",
+    "chain_bounds.csv": "9e0d656b829b13db83f2b567bf606c04c82be1c16e9da3aa12d5ef83b00d972b",
+    "joint_conflicts.csv": "ce8ecf18d1fc4db7320306235dbaec5ce1b929c36692282125ca9c9637c8a42f",
+    "normalization.json": "a719ad8e0e705f30327ab93d43200c12ecbf3279c1d70a2ba036fcb06e70c570",
+    "order_ledger.csv": "12636d059df07ef5ed918d6c54016640b5266c481ab4f820c24a94ca60be0912",
+    "order_summary.csv": "a368bbcc0dabbebb091b5b1d23800d8e9f76828f23de82e565f1a98e6daa01a4",
+    "relation_edges.csv.gz": "8636323f70b6ecbe6d9808cd2484e430878bf0506ebd2cc619829900e6fbeafa"
+  }
+}
+2026-11-24T03:49:18Z tag=mt_qty_recover rc=0 peak_rss_mib=251 wall_s=7.03 cpu_user_s=6.53 memavail_start_gib=22 disk_free_gib=415->415 slot=codex
