@@ -15,3 +15,5 @@ The compact payload was independently checked against saved source artifacts. `i
 Read report.md before using the pictures for a research conclusion. In particular, this packet found a material inventory-hysteresis defect in the saved controller. The quotes/values faithfully show that executed policy, not a corrected one. Maker timestamps remain bounded and inferred; their private pulls and queue positions are not observed.
 
 2026-11-24 clock clarification: [the user-named 63c fill](fill_clock_report.md) is a recorded multi-level execution. The older 59c/61c depth snapshot was 449ms before its marker. The viewer now states the underlying snapshot time and age explicitly; refresh the page to load the wording correction. Research data and accounting are unchanged.
+
+[61c follow-up](ask61_report.md): 24.59 shares traded earlier; the subsequent 205.41-share disappearance has no overlapping recorded execution and is a likely withdrawal, conditional on the existing clock/capture assumptions. Its owner and private cancel command remain unidentified.

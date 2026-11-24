@@ -1,0 +1,266 @@
+{
+  "all_market_61c_legs": 36,
+  "overlapping_61c_legs": 0,
+  "prior_fill_shares": 24.59016393442623,
+  "prior_upper_s": 8.537,
+  "book_before_s": 8.539,
+  "book_after_s": 8.592,
+  "removed_display_shares": 205.40983606557376,
+  "checks_pass": true,
+  "corruptions_refused": 3,
+  "inference": "nontrade removal under the existing complete-record and <=2s settlement-lag premises; private cancel command/owner not observed",
+  "canonical_61c_legs": [
+    {
+      "sid": "01a175c1-f799-7491-b36f-4221ca5d5243",
+      "settle_ms": 1792977008537,
+      "mk_hash": "0x5acc09911fc25f9a4c49c0f152078193a46c563039f1384dbc17ec3b1c8cbdb3",
+      "shares": 10.0,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c1-f799-7491-b36f-4221ca5d5243",
+      "settle_ms": 1792977008537,
+      "mk_hash": "0x0f062c64c08f6fc1aebafcc64794d61d71e4e05662c94cb3278a0438fa3d2905",
+      "shares": 14.59016393442623,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c1-e149-7d72-b4a4-c84fcb089595",
+      "settle_ms": 1792977002825,
+      "mk_hash": "0xd37a7e70c47e8dc15ff91c0a4a3130deca726f58268e4c732b8ea3eab35daf8f",
+      "shares": 2.0,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c1-e104-71c1-8bca-b0614211287c",
+      "settle_ms": 1792977002756,
+      "mk_hash": "0xd37a7e70c47e8dc15ff91c0a4a3130deca726f58268e4c732b8ea3eab35daf8f",
+      "shares": 5.0,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c1-e0fd-77d3-aa83-9e42c6b45bbd",
+      "settle_ms": 1792977002749,
+      "mk_hash": "0xd37a7e70c47e8dc15ff91c0a4a3130deca726f58268e4c732b8ea3eab35daf8f",
+      "shares": 5.0,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c1-e0fa-7610-a209-42a3f191fc45",
+      "settle_ms": 1792977002746,
+      "mk_hash": "0xd37a7e70c47e8dc15ff91c0a4a3130deca726f58268e4c732b8ea3eab35daf8f",
+      "shares": 5.0,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c1-e0f8-72f0-963b-acd0d5b7ddd4",
+      "settle_ms": 1792977002744,
+      "mk_hash": "0xd37a7e70c47e8dc15ff91c0a4a3130deca726f58268e4c732b8ea3eab35daf8f",
+      "shares": 5.0,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c1-df8a-7ae2-83d0-2f81ce1a0f67",
+      "settle_ms": 1792977002378,
+      "mk_hash": "0x8151717060ba3c006370b8f17f6b9783fa906c23f50cc3a9e3c49f8a1d86c496",
+      "shares": 10.0,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c1-df8a-7ae2-83d0-2f81ce1a0f67",
+      "settle_ms": 1792977002378,
+      "mk_hash": "0xf49210455819bf6c92d1368263e1175a6df12e00857f0171ed12ee96625d6084",
+      "shares": 10.0,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c1-df8a-7ae2-83d0-2f81ce1a0f67",
+      "settle_ms": 1792977002378,
+      "mk_hash": "0xb8160c5a8366dc8eb63b5940248437bcc4c1b073d8835ecd845db551686fbfcd",
+      "shares": 12.21311475409836,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c5-dae0-74e2-b3b1-5921e2a49f99",
+      "settle_ms": 1792977263328,
+      "mk_hash": "0x9d6540373d30095a9d36c81e9d40688e28cc0bd75f258d65005c44b783484c96",
+      "shares": 2.23,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c5-da93-75b2-a899-89b3ddfc78d3",
+      "settle_ms": 1792977263251,
+      "mk_hash": "0x9d6540373d30095a9d36c81e9d40688e28cc0bd75f258d65005c44b783484c96",
+      "shares": 47.75,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c5-d5ed-77a0-980e-fc44448b4757",
+      "settle_ms": 1792977262061,
+      "mk_hash": "0x9d6540373d30095a9d36c81e9d40688e28cc0bd75f258d65005c44b783484c96",
+      "shares": 43.82,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c5-d5d0-7ff2-993a-34ed87f5db1c",
+      "settle_ms": 1792977262032,
+      "mk_hash": "0x9d6540373d30095a9d36c81e9d40688e28cc0bd75f258d65005c44b783484c96",
+      "shares": 43.82,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c5-d528-7240-bbc1-825016c0068a",
+      "settle_ms": 1792977261864,
+      "mk_hash": "0xa01d17db6095654d027cdd315becff75f1c1b9fff57f4edfea6273bb4a2fe1ea",
+      "shares": 12.589,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c5-d525-7a93-a82d-df24d08727cd",
+      "settle_ms": 1792977261861,
+      "mk_hash": "0xab13ff106865e3b189d6a3d800288a6b93d646e28e8824389b54484e1bdf5d08",
+      "shares": 7.722061484831355,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c5-d525-7a93-a82d-df24d08727cd",
+      "settle_ms": 1792977261861,
+      "mk_hash": "0xa01d17db6095654d027cdd315becff75f1c1b9fff57f4edfea6273bb4a2fe1ea",
+      "shares": 1.0953385151686452,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c5-d50f-7cc0-a383-88571a77e6e5",
+      "settle_ms": 1792977261839,
+      "mk_hash": "0xab13ff106865e3b189d6a3d800288a6b93d646e28e8824389b54484e1bdf5d08",
+      "shares": 1.639344262295082,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c5-d504-7e11-9ac9-42cc41966fc5",
+      "settle_ms": 1792977261828,
+      "mk_hash": "0xab13ff106865e3b189d6a3d800288a6b93d646e28e8824389b54484e1bdf5d08",
+      "shares": 6.2982,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c5-d4fe-79c0-a673-b22e8f5ba753",
+      "settle_ms": 1792977261822,
+      "mk_hash": "0xab13ff106865e3b189d6a3d800288a6b93d646e28e8824389b54484e1bdf5d08",
+      "shares": 34.340394252873566,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c5-f5fe-7651-b906-49273f8b73d4",
+      "settle_ms": 1792977270270,
+      "mk_hash": "0xd057390dccf0f1c80ea140975e070e895bc4384af00cb910d3ac8b96575b80a7",
+      "shares": 8.19672131147541,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c5-f349-7141-aeb5-7918832d8a01",
+      "settle_ms": 1792977269577,
+      "mk_hash": "0xafcc941624fb6e98c12b3fe48fa6c437a16c2021244534e9746d5945a80eb1bd",
+      "shares": 1.4705882352941178,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c5-f2bf-7452-b01e-86d111ef83d5",
+      "settle_ms": 1792977269439,
+      "mk_hash": "0x5f4e8826afad77d46a14cdf7989a65522ad82e34e87bdbc3704ba765d7dffa5a",
+      "shares": 2.768823529411765,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c5-f2bf-7452-b01e-86edec35275d",
+      "settle_ms": 1792977269439,
+      "mk_hash": "0x27bac0f21fc1a9d17b8f426837253a473b55b34c1181baa9e5025ec61faa23b6",
+      "shares": 15.18,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c5-f2bf-7452-b01e-86ff395df066",
+      "settle_ms": 1792977269439,
+      "mk_hash": "0xafcc941624fb6e98c12b3fe48fa6c437a16c2021244534e9746d5945a80eb1bd",
+      "shares": 9.448176470588235,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c5-f296-7872-9482-4073946bd2bf",
+      "settle_ms": 1792977269398,
+      "mk_hash": "0x5f4e8826afad77d46a14cdf7989a65522ad82e34e87bdbc3704ba765d7dffa5a",
+      "shares": 7.251176470588235,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c5-f296-7872-9482-406f83addd24",
+      "settle_ms": 1792977269398,
+      "mk_hash": "0x058b9494b838c4401e220423594a1e227d9f180ecbf05aaa6c59be27c0a81a5b",
+      "shares": 12.748823529411764,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c5-f258-72f3-a133-c1c845ddb2c6",
+      "settle_ms": 1792977269336,
+      "mk_hash": "0x058b9494b838c4401e220423594a1e227d9f180ecbf05aaa6c59be27c0a81a5b",
+      "shares": 2.9411764705882355,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c6-2a3e-73a3-980a-36de37a04283",
+      "settle_ms": 1792977283646,
+      "mk_hash": "0x7719439207195aa44f2c82686197f18906c2210481a2a161a607d835bf45a388",
+      "shares": 15.0,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c6-2a33-7ec2-a575-0b96799e4f91",
+      "settle_ms": 1792977283635,
+      "mk_hash": "0x7719439207195aa44f2c82686197f18906c2210481a2a161a607d835bf45a388",
+      "shares": 5.0,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c6-2a31-7672-9932-22c8edbaebe4",
+      "settle_ms": 1792977283633,
+      "mk_hash": "0x7719439207195aa44f2c82686197f18906c2210481a2a161a607d835bf45a388",
+      "shares": 5.0,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c6-2a26-7fb2-bfdb-5b69e7d6f59b",
+      "settle_ms": 1792977283622,
+      "mk_hash": "0x7719439207195aa44f2c82686197f18906c2210481a2a161a607d835bf45a388",
+      "shares": 16.39344262295082,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c6-2a23-7ad3-80ef-6e42c1faf9ac",
+      "settle_ms": 1792977283619,
+      "mk_hash": "0x7719439207195aa44f2c82686197f18906c2210481a2a161a607d835bf45a388",
+      "shares": 16.39344262295082,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c6-29e8-72a1-b3d8-cc1db4141ada",
+      "settle_ms": 1792977283560,
+      "mk_hash": "0x7719439207195aa44f2c82686197f18906c2210481a2a161a607d835bf45a388",
+      "shares": 11.129032258064516,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c6-29b7-7223-8335-97f95ddae907",
+      "settle_ms": 1792977283511,
+      "mk_hash": "0x7719439207195aa44f2c82686197f18906c2210481a2a161a607d835bf45a388",
+      "shares": 16.473125000000003,
+      "status": "ok"
+    },
+    {
+      "sid": "01a175c6-45bf-7821-809f-34958fe2b416",
+      "settle_ms": 1792977290687,
+      "mk_hash": "0x8a7ffc5664eb736a6e94562aa496af7d23294ba2f1e2d772b8e261dff7a89c11",
+      "shares": 1.5,
+      "status": "ok"
+    }
+  ]
+}
