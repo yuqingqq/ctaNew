@@ -1,0 +1,29 @@
+{
+  "passed": 23,
+  "checks": {
+    "before": true,
+    "between": true,
+    "tie": true,
+    "after": true,
+    "unknown": true,
+    "insufficient pending": true,
+    "pending may cover": true,
+    "no future bracketing point": true,
+    "gap cannot prove absence": true,
+    "nan not zero": true,
+    "positive post lower": true,
+    "positive end upper": true,
+    "interruption not terminal": true,
+    "exhaustion suppresses terminal pull": true,
+    "expiry remains alternative": true,
+    "refused grade cannot improve": true,
+    "ordered successor": true,
+    "early successor": true,
+    "overlap not sequential": true,
+    "touching endpoints ambiguous": true,
+    "refused successor": true,
+    "BTC mixed cannot become trigger": true,
+    "unknown category preserved": true
+  }
+}
+2026-11-24T04:18:38Z tag=mt_chain_selftest rc=0 peak_rss_mib=102 wall_s=0.29 cpu_user_s=0.23 memavail_start_gib=22 disk_free_gib=416->416 slot=codex

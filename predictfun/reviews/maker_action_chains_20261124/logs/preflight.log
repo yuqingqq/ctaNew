@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker_action_chains_20261124/preflight.py", line 21, in <module>
+    assert result['total_bytes']<150*1024*1024 and not (H/'inputs.json').exists();(H/'inputs.json').write_text(json.dumps(result,indent=2)+'\n')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+2026-11-24T04:08:42Z tag=mt_chain_preflight rc=1 peak_rss_mib=176 wall_s=2.36 cpu_user_s=0.37 memavail_start_gib=22 disk_free_gib=416->416 slot=codex

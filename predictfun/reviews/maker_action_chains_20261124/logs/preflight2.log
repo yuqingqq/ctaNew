@@ -1,0 +1,13 @@
+{
+  "population": 88,
+  "total_bytes": 458288882,
+  "task_before": 1.9318722222222222,
+  "packet_cap_coreh": 0.006,
+  "task_cap": 2.0,
+  "line_cap": 5.3,
+  "reserve": 0.05
+}
+predictfun/reviews/maker_trace_20261122/v2/chains/take_logic_v2/panel.parquet ['day', 'mid', 'rank', 'pair', 'mkt', 'k', 't_ms', 'r_1s0', 'r_5s0', 'r_30s0', 'pf0', 'bok0', 'bst0', 'bid0', 'ask0', 'kok0', 'tl0', 'r_1s1', 'r_5s1', 'r_30s1', 'pf1', 'bok1', 'bst1', 'bid1', 'ask1', 'kok1', 'tl1', 'q0', 'q1', 'fl0', 'fl1', 'qp', 'flp', 'ts', 'lg', 'clean', 'qbin_D0', 'O1_D0', 'O2_D0', 'qbin_D1000', 'O1_D1000', 'O2_D1000', 'qbin_pend', 'O1_pend', 'O2_pend', 'O3', 'O4_reduces_all', 'O4_disagreement', 'O4_unavailable', 'v1_E_reduce', 'v1_N_reduce', 'v1_E_add', 'v1_N_add', 'v1_E_other', 'v1_N_other', 'v1_E_timing_sensitive', 'v1_N_timing_sensitive', 'v1_E_any', 'v1_N_any']
+predictfun/reviews/maker_trace_20261122/v2/chains/take_logic_v2/events.parquet ['day', 'mid', 'rank', 'addr', 'sid', 's', 'dq', 'p_avg', 'x_lo_hard_ms', 'hi_ms', 'settle_ms', 'status', 'take_class', 'tk_hash', 'q_all', 'cls_rec', 'cls_sim', 'cls_cert_0', 'v1_type', 'pop_status', 'gi', 'k_anchor', 't_anchor_ms', 'in_raw_schedule', 'o4_status', 'n_variants_available', 'ledger_conditional_at_anchor', 'q_D0', 'dir_D0', 'q_D1000', 'dir_D1000', 'q_pend', 'dir_pend']
+predictfun/reviews/maker_trace_20261122/v2/chains/posting_opportunity/rows.parquet ['day', 'mid', 'side', 'k', 't_ms', 'status_D0', 'book_age_ms_D0', 'spread_ticks_D0', 'spread_bin_D0', 'depth_touch_own_D0', 'depth_touch_own_bin_D0', 'depth_touch_opp_D0', 'depth_touch_opp_bin_D0', 'depth_2_own_D0', 'depth_2_own_bin_D0', 'btc_r_5s_bp_D0', 'btc_5s_aligned_D0', 'p_fair_D0', 'fair_gap_c_D0', 'fair_gap_bin_D0', 'flow_5s_sh_D0', 'flow_5s_bin_D0', 'time_left_s_D0', 'time_left_bin_D0', 'status_D1000', 'book_age_ms_D1000', 'spread_ticks_D1000', 'spread_bin_D1000', 'depth_touch_own_D1000', 'depth_touch_own_bin_D1000', 'depth_touch_opp_D1000', 'depth_touch_opp_bin_D1000', 'depth_2_own_D1000', 'depth_2_own_bin_D1000', 'btc_r_5s_bp_D1000', 'btc_5s_aligned_D1000', 'p_fair_D1000', 'fair_gap_c_D1000', 'fair_gap_bin_D1000', 'flow_5s_sh_D1000', 'flow_5s_bin_D1000', 'time_left_s_D1000', 'time_left_bin_D1000', 'improve_population', 'E_any', 'N_any', 'keys_any', 'E_improve', 'N_improve', 'keys_improve', 'E_re_establish', 'N_re_establish', 'keys_re_establish', 'E_deep', 'N_deep', 'keys_deep', 'E_at_empty_touch', 'N_at_empty_touch', 'keys_at_empty_touch', 'n_straddle', 'n_gap', 'n_unknown_cell', 'n_type_unknown']
+2026-11-24T04:09:27Z tag=mt_chain_preflight2 rc=0 peak_rss_mib=176 wall_s=0.65 cpu_user_s=0.37 memavail_start_gib=22 disk_free_gib=416->416 slot=codex

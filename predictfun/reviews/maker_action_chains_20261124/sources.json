@@ -1,0 +1,8 @@
+{
+  "predictfun/reviews/maker_action_chains_20261124/build.py": "db6c7754b3e18e19e3252af3b68b2fd2cf987e1492b58e6ed75e0fc3b28938b7",
+  "predictfun/reviews/maker_action_chains_20261124/check.py": "a2e1f8a2e3017f20ffc4458684d7fa8a130b3162d4e6caea31d0744a5a9434a1",
+  "predictfun/reviews/maker_action_chains_20261124/contract.md": "d0b3c840b7147c554c5abc9f073f44c0bf7d485488573724b42721b05640de6e",
+  "predictfun/reviews/maker_action_chains_20261124/inputs.json": "4bbb0823e31c242d74b4101dd635393a8eb796daa4ac8a054352a3a12ffc4dca",
+  "predictfun/reviews/maker_action_chains_20261124/preflight.py": "3921a1b7a955b3af1c6f51666719fe46c95e2f642426c25e4b37922d80851bdc",
+  "predictfun/reviews/maker_action_chains_20261124/selftest.py": "506d10ad881b66bd964508a9c355525914b8f2f5982ed298546da92d3a080c40"
+}
