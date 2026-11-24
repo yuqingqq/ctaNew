@@ -1,0 +1,82 @@
+{
+  "orders": 88,
+  "markets": 18,
+  "pairs": [
+    [
+      "20261024",
+      3697902
+    ],
+    [
+      "20261024",
+      3699278
+    ],
+    [
+      "20261024",
+      3700070
+    ],
+    [
+      "20261024",
+      3702960
+    ],
+    [
+      "20261024",
+      3704004
+    ],
+    [
+      "20261024",
+      3712725
+    ],
+    [
+      "20261024",
+      3716727
+    ],
+    [
+      "20261025",
+      3723774
+    ],
+    [
+      "20261025",
+      3734864
+    ],
+    [
+      "20261025",
+      3737919
+    ],
+    [
+      "20261025",
+      3763401
+    ],
+    [
+      "20261026",
+      3789484
+    ],
+    [
+      "20261026",
+      3803131
+    ],
+    [
+      "20261026",
+      3804696
+    ],
+    [
+      "20261026",
+      3838531
+    ],
+    [
+      "20261026",
+      3850428
+    ],
+    [
+      "20261027",
+      3877472
+    ],
+    [
+      "20261027",
+      3899224
+    ]
+  ],
+  "total_bytes": 34381943,
+  "cpu_seconds": 0.054825411000000004
+}
+Schemas: {'frames': ['mid', 'fid', 'upd_ms', 'recv_ns', 'conn', 'order_count', 'pend_bids', 'pend_asks', 'los_id', 'los_side', 'los_price', 'los_outcome', 'status', 'x_los_kind'], 'levels': ['mid', 'fid', 'side', 'ptick', 'shares', 'status', 'x_price'], 'fills': ['mid', 'sid', 'mk_hash', 'mk_idx', 'y_side', 'y_ptick', 'shares', 'hi_ms', 'lo_ms', 't_method', 'f_before', 'f_after', 'status', 'x_evidence_fid', 'x_drop_fid', 'x_lo_exact_ms', 'x_lo_hard_ms', 'x_rec_rank', 'x_exh_price', 'x_worst_k', 'x_exh_S_FIFO', 'x_exh_S_FIFO_LO', 'x_ahead_lo_S_FIFO', 'x_ahead_lo_S_FIFO_LO', 'x_ahead_hi_S_FIFO', 'x_ahead_hi_S_FIFO_LO'], 'orders': ['scenario', 'mid', 'mk_hash', 'mk_signer', 'y_side', 'y_ptick', 'n_fills', 'cum_shares', 'first_hi_ms', 'last_hi_ms', 'size_lb', 'size_exact', 'size_class', 'post_lo_ms', 'post_hi_ms', 'post_class', 'post_method', 'persist_lo_ms', 'persist_hi_ms', 'persist_class', 'ahead_lo', 'ahead_hi', 'queue_class', 'removal_set', 'removal_lo_ms', 'removal_hi_ms', 'removal_class', 'removal_method', 'status', 'x_size_ub', 'x_post_cap_ms', 'x_post_fifo_ms', 'x_ahead_hi_raw', 'x_n_lo_unbounded', 'x_as_taker', 'x_capacity_violation_frames', 'x_clock_violation_frames']}
+2026-11-24T03:31:45Z tag=mt_qty_preflight rc=0 peak_rss_mib=64 wall_s=0.17 cpu_user_s=0.13 memavail_start_gib=22 disk_free_gib=416->416 slot=codex

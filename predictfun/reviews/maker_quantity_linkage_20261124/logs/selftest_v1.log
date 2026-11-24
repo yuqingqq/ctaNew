@@ -1,0 +1,27 @@
+{
+  "checks": {
+    "partial partial exhaustion": true,
+    "settlement order not input order": true,
+    "duplicate execution refused": true,
+    "original size cannot reset": true,
+    "overfill refused": true,
+    "buy collateral converted to shares": true,
+    "NO buy complements to YES ask": true,
+    "wrong outcome mapping refused": true,
+    "pending then settlement not counted twice": true,
+    "failed pending release does not add order": true,
+    "overreserved refused": true,
+    "positive posting refinement": true,
+    "post-match disappearance not late posting": true,
+    "unknown is not empty": true,
+    "terminal remaining capacity": true,
+    "exhaustion cannot infer pull": true,
+    "pending envelope prevents premature absence": true,
+    "window tie excludes first possible match": true,
+    "masked netting arithmetic": true,
+    "pending USD must be divided by price once": true,
+    "joint demand can fail individual fits": true
+  },
+  "passed": 21
+}
+2026-11-24T03:41:49Z tag=mt_qty_selftest_v1 rc=0 peak_rss_mib=101 wall_s=0.35 cpu_user_s=0.24 memavail_start_gib=22 disk_free_gib=415->415 slot=codex

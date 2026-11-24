@@ -1,0 +1,12 @@
+{
+  "predictfun/research/pf_mt_common.py": "e54ccd15489ed41b23b1e1d62e11d26aacd7f1d778be47bdaf4154b2cb091f7b",
+  "predictfun/research/pf_mt_lifecycle.py": "8915ed63a6b0965dfe4f08e540cbe90d57aa23863a73f8a2a94ff7349fcef62b",
+  "predictfun/reviews/maker_quantity_linkage_20261124/build.py": "deb9834cfcb787072014b1cb1a0709bcd5c7a6bd48ab3e7eabf3d998939910a2",
+  "predictfun/reviews/maker_quantity_linkage_20261124/check.py": "b3c122a737940896c26db817a709718602569b70be2c68f534a3032ae8b4fc97",
+  "predictfun/reviews/maker_quantity_linkage_20261124/contract.md": "1ea9b302d72304fba8fd2a48e3cfe6386addd68f304218aa42909ae21ea00dda",
+  "predictfun/reviews/maker_quantity_linkage_20261124/inputs.json": "f63782c6bc6270fd6e8823e2e37bbd2b9b2dcde1880e31a8ad0e9e6baf200668",
+  "predictfun/reviews/maker_quantity_linkage_20261124/preflight.py": "4712da5002be21718eee7b0eebb6d6b2d89d30f21e7f15555f1c31eaeda1ae3f",
+  "predictfun/reviews/maker_quantity_linkage_20261124/readout.py": "92a819ef3e67af2a3c7de60d817865fa37448e63669c1784e51865fee6826983",
+  "predictfun/reviews/maker_quantity_linkage_20261124/selftest.py": "e6a5d756ba79fff92d2f813484b5bd40bc41ef0ca0554c8dc11e1b1e6b0f288f",
+  "predictfun/reviews/maker_reversal_hypothesis_20261124/outputs/chronology.csv": "34e7b4ff8c760c1f71b65220d415ba6771800603db81db55a2ca4ccb0f281e94"
+}
