@@ -1,0 +1,13 @@
+{
+  "orders": 13834,
+  "events": 19671,
+  "pass": true,
+  "cancel_events": 124,
+  "falsifiers": {
+    "original": "original amount",
+    "grade": "unsupported identification",
+    "span": "span",
+    "missing_event": "event membership"
+  }
+}
+2026-11-24T01:30:53Z tag=mt_bridge_check_v3 rc=0 peak_rss_mib=120 wall_s=2.49 cpu_user_s=2.39 memavail_start_gib=22 disk_free_gib=417->417 slot=codex
