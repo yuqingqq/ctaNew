@@ -21,3 +21,5 @@ Read report.md before using the pictures for a research conclusion. In particula
 [Maker3 first-minute turnover](first_minute_report.md): the user-observed first30s buy-low/sell-high pattern reconciles to completed passive turnover. The full minute includes losing cycles and carried inventory; its common-mark value is +$28.14 versus our simulated −$22.08. This is an illustrative selected minute, not proof of long rest or an identified posting rule.
 
 [Maker3 quote reconstruction](maker3_quotes_report.md): all17 filled-order hashes in that minute, with estimated posting windows and51 fills. Same-price bid replenishment and a later58c ask are conditionally ordered; a simultaneous ladder, exact original sizes and private cancels remain unidentified. The conversation's quote map shows uncertainty bars, not resting durations.
+
+[Opening-loss diagnosis](opening_fill_report.md): our50/51c asks fill before the executed pressure rule signals danger; no cancel is pending. Maker3's56c buys and later58–63c sales are different price/side opportunities. This establishes the saved replay's mechanism, not maker3's private warning signal or a measured latency advantage.

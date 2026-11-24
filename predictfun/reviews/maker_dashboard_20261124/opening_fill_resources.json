@@ -1,0 +1,10 @@
+{
+  "previous_packet_upper_cpu_s": 82.11,
+  "followup_conservative_cpu_s": 5,
+  "packet_upper_cpu_s": 87.11,
+  "packet_cap_cpu_s": 180,
+  "research_slot": "codex",
+  "tags": ["mt_dash_opening_probe", "mt_dash_opening_signal", "mt_dash_opening_check", "mt_dash_opening_check2", "mt_dash_opening_check3"],
+  "new_replay_or_market": false,
+  "source_payload_changed": false
+}

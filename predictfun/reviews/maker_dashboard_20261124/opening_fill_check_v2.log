@@ -1,0 +1,36 @@
+{
+  "market": 3789484,
+  "day": "20261026",
+  "arm": "CURRENT_ASYNC_FAST10",
+  "asof": "2026-11-24",
+  "population": "first own simulated fills before 800 ms; selected opening diagnostic",
+  "fill_clock": "saved M50 simulator assumption, not observed exchange execution time",
+  "first_fill_ms": 448.0,
+  "first_fill_legs": 12,
+  "by_price": {
+    "50.0": 100.0,
+    "51.0": 91.24000000000001
+  },
+  "ask_signal_threshold": 0.285456120967865,
+  "all_prefill_grid_status_ok": true,
+  "max_prefill_grid_signal": 0.0,
+  "first_positive_signal_ms": 450.0,
+  "first_on_signal_ms": 550.0,
+  "requests_before_first_fill": [],
+  "first_fill_notice_grid_ms": 550.0,
+  "first_fill_notice_position": -191.24,
+  "initial_ask_markout_1s_c_per_share": -8.022903158335076,
+  "checks": {
+    "raw_fill_reconciliation": true,
+    "intact_pass": true,
+    "corruptions_refused": [
+      "fill_time",
+      "quantity",
+      "warning_time",
+      "prefill_signal",
+      "cancel_pending",
+      "notice_time"
+    ]
+  }
+}
+2026-11-24T11:26:04Z tag=mt_dash_opening_check2 rc=0 peak_rss_mib=66 wall_s=0.27 cpu_user_s=0.22 memavail_start_gib=22 disk_free_gib=414->414 slot=codex

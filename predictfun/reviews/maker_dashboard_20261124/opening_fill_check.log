@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker_dashboard_20261124/opening_fill_check.py", line 43, in <module>
+    initial_ask_markout_1s_c_per_share=sum(f['q']*f['markouts']['1s'] for f in df)/sum(f['q'] for f in df),
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker_dashboard_20261124/opening_fill_check.py", line 43, in <genexpr>
+    initial_ask_markout_1s_c_per_share=sum(f['q']*f['markouts']['1s'] for f in df)/sum(f['q'] for f in df),
+                                                  ~~~~~~~~~~~~~^^^^^^
+KeyError: '1s'
+2026-11-24T11:25:40Z tag=mt_dash_opening_check rc=1 peak_rss_mib=66 wall_s=0.25 cpu_user_s=0.21 memavail_start_gib=22 disk_free_gib=414->414 slot=codex
