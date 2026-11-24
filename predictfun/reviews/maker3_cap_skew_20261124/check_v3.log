@@ -1,0 +1,3 @@
+PASS 12 ledgers; 68 size/state rows; 5700 neutral seconds; 0 raw IOC checks; 6 refusals
+PASS independent prior inventory/window context 68 rows
+2026-11-24T14:08:25Z tag=cs_check_v3 rc=0 peak_rss_mib=521 wall_s=4.02 cpu_user_s=3.31 memavail_start_gib=22 disk_free_gib=412->412 slot=codex

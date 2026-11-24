@@ -1,0 +1,12 @@
+{
+  "stages": 12,
+  "cpu_user_s": 96.38,
+  "wall_serial_upper_s": 101.64999999999999,
+  "charged_upper_s": 120,
+  "packet_cap_s": 540,
+  "task_approx_coreh": 2.088223333333333,
+  "line_approx_coreh": 5.398923333333333,
+  "task_cap": 2.35,
+  "line_cap": 5.65,
+  "standing_reserve_coreh": 0.05
+}

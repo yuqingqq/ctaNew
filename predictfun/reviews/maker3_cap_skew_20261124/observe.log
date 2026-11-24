@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker3_cap_skew_20261124/observe.py", line 109, in <module>
+    if __name__=='__main__':run()
+                            ^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker3_cap_skew_20261124/observe.py", line 97, in run
+    resource.setrlimit(resource.RLIMIT_CPU,(45,46));start=time.process_time();E.bound();p,o=rows_and_orders();s=size_rows(p,o);p,cov=passive_context(p)
+                                                                                                                ^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker3_cap_skew_20261124/observe.py", line 29, in size_rows
+    row=dict(hash=r.order_hash,day=r.day,mid=int(r.mid),size=float(r.original_shares),side=r.side,tick=r.tick,lag_ms=int(d)*1000,grade=r.post_grade,
+                                             ^^^^^^^^^^
+ValueError: cannot convert float NaN to integer
+2026-11-24T14:04:46Z tag=cs_observe rc=1 peak_rss_mib=309 wall_s=1.54 cpu_user_s=1.09 memavail_start_gib=22 disk_free_gib=413->413 slot=codex

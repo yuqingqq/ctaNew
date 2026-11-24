@@ -1,0 +1,161 @@
+{
+  "totals": {
+    "BASE": {
+      "net_c": -12131.59461191846,
+      "completed_c": -10026.503032120934,
+      "residual_c": -2105.0915797975244,
+      "maker_shares": 11438.299678973754,
+      "taker_shares": 0,
+      "take_requests": 0,
+      "passive_generations": 1047,
+      "passive_pulls": 244,
+      "mean_abs_inventory": 79.12249613745344,
+      "both_grid_fraction": 0.3673937360178971,
+      "peak_inventory": 200.0
+    },
+    "CAP_ONLY": {
+      "net_c": -12131.59461191846,
+      "completed_c": -10026.503032120934,
+      "residual_c": -2105.0915797975244,
+      "maker_shares": 11438.299678973754,
+      "taker_shares": 0,
+      "take_requests": 0,
+      "passive_generations": 1047,
+      "passive_pulls": 244,
+      "mean_abs_inventory": 79.12249613745344,
+      "both_grid_fraction": 0.3673937360178971,
+      "peak_inventory": 200.0
+    },
+    "WIDE_PASSIVE": {
+      "net_c": 4778.77341456402,
+      "completed_c": 10093.268907386395,
+      "residual_c": -5314.495492822361,
+      "maker_shares": 14659.330230817432,
+      "taker_shares": 0,
+      "take_requests": 0,
+      "passive_generations": 1550,
+      "passive_pulls": 342,
+      "mean_abs_inventory": 236.17203037245585,
+      "both_grid_fraction": 0.8843400447427293,
+      "peak_inventory": 495.97748997983825
+    },
+    "WIDE_TAKE": {
+      "net_c": 4778.77341456402,
+      "completed_c": 10093.268907386395,
+      "residual_c": -5314.495492822361,
+      "maker_shares": 14659.330230817432,
+      "taker_shares": 0,
+      "take_requests": 0,
+      "passive_generations": 1550,
+      "passive_pulls": 342,
+      "mean_abs_inventory": 236.17203037245585,
+      "both_grid_fraction": 0.8843400447427293,
+      "peak_inventory": 495.97748997983825
+    }
+  },
+  "exact_equalities": [
+    {
+      "mid": 3702960,
+      "cap_only": {
+        "fills": true,
+        "orders": true,
+        "requests": true,
+        "commands": true,
+        "guard_log": true,
+        "mode_log": true,
+        "closed": true,
+        "grid": true,
+        "cash": true,
+        "position": true,
+        "value": true
+      },
+      "wide_take_no_effect": {
+        "fills": true,
+        "orders": true,
+        "requests": true,
+        "commands": true,
+        "guard_log": true,
+        "mode_log": true,
+        "closed": true,
+        "grid": true,
+        "cash": true,
+        "position": true,
+        "value": true
+      }
+    },
+    {
+      "mid": 3789484,
+      "cap_only": {
+        "fills": true,
+        "orders": true,
+        "requests": true,
+        "commands": true,
+        "guard_log": true,
+        "mode_log": true,
+        "closed": true,
+        "grid": true,
+        "cash": true,
+        "position": true,
+        "value": true
+      },
+      "wide_take_no_effect": {
+        "fills": true,
+        "orders": true,
+        "requests": true,
+        "commands": true,
+        "guard_log": true,
+        "mode_log": true,
+        "closed": true,
+        "grid": true,
+        "cash": true,
+        "position": true,
+        "value": true
+      }
+    },
+    {
+      "mid": 3877472,
+      "cap_only": {
+        "fills": true,
+        "orders": true,
+        "requests": true,
+        "commands": true,
+        "guard_log": true,
+        "mode_log": true,
+        "closed": true,
+        "grid": true,
+        "cash": true,
+        "position": true,
+        "value": true
+      },
+      "wide_take_no_effect": {
+        "fills": true,
+        "orders": true,
+        "requests": true,
+        "commands": true,
+        "guard_log": true,
+        "mode_log": true,
+        "closed": true,
+        "grid": true,
+        "cash": true,
+        "position": true,
+        "value": true
+      }
+    }
+  ],
+  "identity_falsifiers": 3,
+  "wide_take_positive_control": true,
+  "signed_roles": {
+    "maker": 33,
+    "taker": 1
+  },
+  "signed_quote_sizes": {
+    "220.0": 17,
+    "10.0": 16
+  },
+  "maker_windows_covered": 28,
+  "wider_net_delta_c": 16910.36802648248,
+  "wider_pooled_positive": true,
+  "every_market_better": false,
+  "automatic_take_activated": false,
+  "validation": false
+}

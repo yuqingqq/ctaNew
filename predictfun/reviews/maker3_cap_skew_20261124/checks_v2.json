@@ -1,0 +1,11 @@
+{
+  "pass_all": true,
+  "records": 12,
+  "prior_parity_markets": 3,
+  "independent_ioc_requests": 0,
+  "corruptions_refused": 6,
+  "signed_state_rows": 68,
+  "neutral_seconds": 5700,
+  "named_take_records": 7,
+  "independent_prior_context_rows": 68
+}

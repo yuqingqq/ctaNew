@@ -1,0 +1,462 @@
+{
+  "rows": [
+    {
+      "mid": 3702960,
+      "day": "20261024",
+      "arm": "BASE",
+      "sha256": "6881d67951c09f076e79f73529a1a79e1e3733dd8e3c6da11ec26e873bfce0c9",
+      "metrics": {
+        "matched_shares": 1198.2104680948137,
+        "completed_c": 759.8470149463587,
+        "residual_c": -218.55805458307447,
+        "total_c": 541.2889603632846,
+        "net_shares": 89.23778415180503,
+        "net_c": 541.288960363284,
+        "fees_c": 0,
+        "maker_shares": 2485.6587203414324,
+        "taker_shares": 0,
+        "take_requests": 0,
+        "takes_filled": 0,
+        "peak_inventory": 200.0,
+        "mean_abs_inventory": 69.3315897611949,
+        "both_grid_fraction": 0.36593959731543624,
+        "passive_generations": 121,
+        "passive_pulls": 17,
+        "wait_reasons": {
+          "entry_wait": 2324,
+          "pressure_withhold": 63,
+          "exposure_full": 446,
+          "own_cross_blocked": 54,
+          "restricted": 6017,
+          "zero_desired": 34,
+          "unavailable_price": 254
+        },
+        "max_reserved_bid": 200.0,
+        "max_reserved_ask": 200.0
+      }
+    },
+    {
+      "mid": 3702960,
+      "day": "20261024",
+      "arm": "CAP_ONLY",
+      "sha256": "87b80f71fb8cda8bdbe1e1ad63dafb6ddd17386ea1dfb03544696624a74dc311",
+      "metrics": {
+        "matched_shares": 1198.2104680948137,
+        "completed_c": 759.8470149463587,
+        "residual_c": -218.55805458307447,
+        "total_c": 541.2889603632846,
+        "net_shares": 89.23778415180503,
+        "net_c": 541.288960363284,
+        "fees_c": 0,
+        "maker_shares": 2485.6587203414324,
+        "taker_shares": 0,
+        "take_requests": 0,
+        "takes_filled": 0,
+        "peak_inventory": 200.0,
+        "mean_abs_inventory": 69.3315897611949,
+        "both_grid_fraction": 0.36593959731543624,
+        "passive_generations": 121,
+        "passive_pulls": 17,
+        "wait_reasons": {
+          "entry_wait": 2324,
+          "pressure_withhold": 63,
+          "exposure_full": 446,
+          "own_cross_blocked": 54,
+          "restricted": 6017,
+          "zero_desired": 34,
+          "unavailable_price": 254
+        },
+        "max_reserved_bid": 200.0,
+        "max_reserved_ask": 200.0
+      }
+    },
+    {
+      "mid": 3702960,
+      "day": "20261024",
+      "arm": "WIDE_PASSIVE",
+      "sha256": "d984131ab4fdccd1eec3a3256ed45319ec93bb5c52869e8a44aa6ef65f68b118",
+      "metrics": {
+        "matched_shares": 1307.8755181390818,
+        "completed_c": 2811.3305807385377,
+        "residual_c": -373.72381699532167,
+        "total_c": 2437.6067637432134,
+        "net_shares": 398.54733863673744,
+        "net_c": 2437.606763743216,
+        "fees_c": 0,
+        "maker_shares": 3014.2983749149003,
+        "taker_shares": 0,
+        "take_requests": 0,
+        "takes_filled": 0,
+        "peak_inventory": 467.6173386367376,
+        "mean_abs_inventory": 231.74321811672638,
+        "both_grid_fraction": 0.886744966442953,
+        "passive_generations": 169,
+        "passive_pulls": 16,
+        "wait_reasons": {
+          "entry_wait": 2324,
+          "pressure_withhold": 73,
+          "exposure_full": 108,
+          "own_cross_blocked": 58,
+          "unavailable_price": 238
+        },
+        "max_reserved_bid": 479.6173386367376,
+        "max_reserved_ask": 447.70823421358244
+      }
+    },
+    {
+      "mid": 3702960,
+      "day": "20261024",
+      "arm": "WIDE_TAKE",
+      "sha256": "b0690f4fa4cb2394fcdd35883596881d22fef528765a0c64f23670c908ac611b",
+      "metrics": {
+        "matched_shares": 1307.8755181390818,
+        "completed_c": 2811.3305807385377,
+        "residual_c": -373.72381699532167,
+        "total_c": 2437.6067637432134,
+        "net_shares": 398.54733863673744,
+        "net_c": 2437.606763743216,
+        "fees_c": 0,
+        "maker_shares": 3014.2983749149003,
+        "taker_shares": 0,
+        "take_requests": 0,
+        "takes_filled": 0,
+        "peak_inventory": 467.6173386367376,
+        "mean_abs_inventory": 231.74321811672638,
+        "both_grid_fraction": 0.886744966442953,
+        "passive_generations": 169,
+        "passive_pulls": 16,
+        "wait_reasons": {
+          "entry_wait": 2324,
+          "pressure_withhold": 73,
+          "exposure_full": 108,
+          "own_cross_blocked": 58,
+          "unavailable_price": 238
+        },
+        "max_reserved_bid": 479.6173386367376,
+        "max_reserved_ask": 447.70823421358244
+      }
+    },
+    {
+      "mid": 3789484,
+      "day": "20261026",
+      "arm": "BASE",
+      "sha256": "08c6fdfae3dc9ed11a645528745e48325fb5b0a3a5c3dac23fcac9b8df63cf91",
+      "metrics": {
+        "matched_shares": 1963.551579662737,
+        "completed_c": 1681.5884077963128,
+        "residual_c": -708.6682298366197,
+        "total_c": 972.9201779596897,
+        "net_shares": -50.59780895424974,
+        "net_c": 972.9201779596933,
+        "fees_c": 0,
+        "maker_shares": 3977.70096827973,
+        "taker_shares": 0,
+        "take_requests": 0,
+        "takes_filled": 0,
+        "peak_inventory": 189.8587628997054,
+        "mean_abs_inventory": 82.53909673574546,
+        "both_grid_fraction": 0.41124161073825505,
+        "passive_generations": 579,
+        "passive_pulls": 177,
+        "wait_reasons": {
+          "entry_wait": 44,
+          "pressure_withhold": 614,
+          "exposure_full": 929,
+          "own_cross_blocked": 275,
+          "restricted": 5946,
+          "zero_desired": 144
+        },
+        "max_reserved_bid": 200.0,
+        "max_reserved_ask": 200.0
+      }
+    },
+    {
+      "mid": 3789484,
+      "day": "20261026",
+      "arm": "CAP_ONLY",
+      "sha256": "2c2619428270e1d80509676ade58e371210b3fd70999be791270805959912996",
+      "metrics": {
+        "matched_shares": 1963.551579662737,
+        "completed_c": 1681.5884077963128,
+        "residual_c": -708.6682298366197,
+        "total_c": 972.9201779596897,
+        "net_shares": -50.59780895424974,
+        "net_c": 972.9201779596933,
+        "fees_c": 0,
+        "maker_shares": 3977.70096827973,
+        "taker_shares": 0,
+        "take_requests": 0,
+        "takes_filled": 0,
+        "peak_inventory": 189.8587628997054,
+        "mean_abs_inventory": 82.53909673574546,
+        "both_grid_fraction": 0.41124161073825505,
+        "passive_generations": 579,
+        "passive_pulls": 177,
+        "wait_reasons": {
+          "entry_wait": 44,
+          "pressure_withhold": 614,
+          "exposure_full": 929,
+          "own_cross_blocked": 275,
+          "restricted": 5946,
+          "zero_desired": 144
+        },
+        "max_reserved_bid": 200.0,
+        "max_reserved_ask": 200.0
+      }
+    },
+    {
+      "mid": 3789484,
+      "day": "20261026",
+      "arm": "WIDE_PASSIVE",
+      "sha256": "aa08e69e236f0f8d12af346ea42542f400c435af74c28ab2d9466024a67f9da5",
+      "metrics": {
+        "matched_shares": 2436.9464402061053,
+        "completed_c": 25382.397407074954,
+        "residual_c": -502.52732524941746,
+        "total_c": 24879.87008182552,
+        "net_shares": 26.266324617905987,
+        "net_c": 24879.87008182552,
+        "fees_c": 0,
+        "maker_shares": 4900.1592050301215,
+        "taker_shares": 0,
+        "take_requests": 0,
+        "takes_filled": 0,
+        "peak_inventory": 464.2694016608112,
+        "mean_abs_inventory": 198.41942961340308,
+        "both_grid_fraction": 0.8451342281879195,
+        "passive_generations": 797,
+        "passive_pulls": 240,
+        "wait_reasons": {
+          "entry_wait": 44,
+          "pressure_withhold": 895,
+          "exposure_full": 589,
+          "own_cross_blocked": 240
+        },
+        "max_reserved_bid": 478.2694016608112,
+        "max_reserved_ask": 389.0362069777721
+      }
+    },
+    {
+      "mid": 3789484,
+      "day": "20261026",
+      "arm": "WIDE_TAKE",
+      "sha256": "4e74e2862b875cffff08d5e0751837b4fbc2b934220f37838dd9562197ab4db2",
+      "metrics": {
+        "matched_shares": 2436.9464402061053,
+        "completed_c": 25382.397407074954,
+        "residual_c": -502.52732524941746,
+        "total_c": 24879.87008182552,
+        "net_shares": 26.266324617905987,
+        "net_c": 24879.87008182552,
+        "fees_c": 0,
+        "maker_shares": 4900.1592050301215,
+        "taker_shares": 0,
+        "take_requests": 0,
+        "takes_filled": 0,
+        "peak_inventory": 464.2694016608112,
+        "mean_abs_inventory": 198.41942961340308,
+        "both_grid_fraction": 0.8451342281879195,
+        "passive_generations": 797,
+        "passive_pulls": 240,
+        "wait_reasons": {
+          "entry_wait": 44,
+          "pressure_withhold": 895,
+          "exposure_full": 589,
+          "own_cross_blocked": 240
+        },
+        "max_reserved_bid": 478.2694016608112,
+        "max_reserved_ask": 389.0362069777721
+      }
+    },
+    {
+      "mid": 3877472,
+      "day": "20261027",
+      "arm": "BASE",
+      "sha256": "255515751b92d00d10cad8338a2f8bca03825f00fc7ba141c28a50a117171f92",
+      "metrics": {
+        "matched_shares": 2431.910634507694,
+        "completed_c": -12467.938454863606,
+        "residual_c": -1177.86529537783,
+        "total_c": -13645.803750241445,
+        "net_shares": 111.11872133720266,
+        "net_c": -13645.803750241437,
+        "fees_c": 0,
+        "maker_shares": 4974.939990352591,
+        "taker_shares": 0,
+        "take_requests": 0,
+        "takes_filled": 0,
+        "peak_inventory": 199.84715768182681,
+        "mean_abs_inventory": 85.49680191541992,
+        "both_grid_fraction": 0.325,
+        "passive_generations": 347,
+        "passive_pulls": 50,
+        "wait_reasons": {
+          "entry_wait": 68,
+          "pressure_withhold": 175,
+          "exposure_full": 453,
+          "own_cross_blocked": 190,
+          "restricted": 7329,
+          "zero_desired": 392,
+          "unavailable_price": 117,
+          "fallback": 34
+        },
+        "max_reserved_bid": 200.0,
+        "max_reserved_ask": 200.0
+      }
+    },
+    {
+      "mid": 3877472,
+      "day": "20261027",
+      "arm": "CAP_ONLY",
+      "sha256": "9164abe65f0bec0beb6e30301ca29ac715769670dae8a08e852437147e24e80b",
+      "metrics": {
+        "matched_shares": 2431.910634507694,
+        "completed_c": -12467.938454863606,
+        "residual_c": -1177.86529537783,
+        "total_c": -13645.803750241445,
+        "net_shares": 111.11872133720266,
+        "net_c": -13645.803750241437,
+        "fees_c": 0,
+        "maker_shares": 4974.939990352591,
+        "taker_shares": 0,
+        "take_requests": 0,
+        "takes_filled": 0,
+        "peak_inventory": 199.84715768182681,
+        "mean_abs_inventory": 85.49680191541992,
+        "both_grid_fraction": 0.325,
+        "passive_generations": 347,
+        "passive_pulls": 50,
+        "wait_reasons": {
+          "entry_wait": 68,
+          "pressure_withhold": 175,
+          "exposure_full": 453,
+          "own_cross_blocked": 190,
+          "restricted": 7329,
+          "zero_desired": 392,
+          "unavailable_price": 117,
+          "fallback": 34
+        },
+        "max_reserved_bid": 200.0,
+        "max_reserved_ask": 200.0
+      }
+    },
+    {
+      "mid": 3877472,
+      "day": "20261027",
+      "arm": "WIDE_PASSIVE",
+      "sha256": "b78628e38d99bd15a26409f982f2c18c119f36631c7ee0965ada6c739ec0f43f",
+      "metrics": {
+        "matched_shares": 3133.3709820085487,
+        "completed_c": -18100.459080427096,
+        "residual_c": -4438.244350577622,
+        "total_c": -22538.70343100473,
+        "net_shares": 478.13068685531545,
+        "net_c": -22538.703431004717,
+        "fees_c": 0,
+        "maker_shares": 6744.872650872409,
+        "taker_shares": 0,
+        "take_requests": 0,
+        "takes_filled": 0,
+        "peak_inventory": 495.97748997983825,
+        "mean_abs_inventory": 278.3534433872381,
+        "both_grid_fraction": 0.9211409395973155,
+        "passive_generations": 584,
+        "passive_pulls": 86,
+        "wait_reasons": {
+          "entry_wait": 68,
+          "pressure_withhold": 300,
+          "exposure_full": 371,
+          "own_cross_blocked": 190,
+          "zero_desired": 16,
+          "unavailable_price": 114,
+          "fallback": 34
+        },
+        "max_reserved_bid": 496.97748997983825,
+        "max_reserved_ask": 483.0372494250024
+      }
+    },
+    {
+      "mid": 3877472,
+      "day": "20261027",
+      "arm": "WIDE_TAKE",
+      "sha256": "6475fbedcd7a5b0e0c0a464ce6841502eb5a4de4b038f4a8632b377522e44050",
+      "metrics": {
+        "matched_shares": 3133.3709820085487,
+        "completed_c": -18100.459080427096,
+        "residual_c": -4438.244350577622,
+        "total_c": -22538.70343100473,
+        "net_shares": 478.13068685531545,
+        "net_c": -22538.703431004717,
+        "fees_c": 0,
+        "maker_shares": 6744.872650872409,
+        "taker_shares": 0,
+        "take_requests": 0,
+        "takes_filled": 0,
+        "peak_inventory": 495.97748997983825,
+        "mean_abs_inventory": 278.3534433872381,
+        "both_grid_fraction": 0.9211409395973155,
+        "passive_generations": 584,
+        "passive_pulls": 86,
+        "wait_reasons": {
+          "entry_wait": 68,
+          "pressure_withhold": 300,
+          "exposure_full": 371,
+          "own_cross_blocked": 190,
+          "zero_desired": 16,
+          "unavailable_price": 114,
+          "fallback": 34
+        },
+        "max_reserved_bid": 496.97748997983825,
+        "max_reserved_ask": 483.0372494250024
+      }
+    }
+  ],
+  "parity": [
+    {
+      "mid": 3702960,
+      "fields": {
+        "fills": true,
+        "orders": true,
+        "requests": true,
+        "value": true,
+        "cash": true,
+        "position": true,
+        "commands": true,
+        "guard_log": true,
+        "closed": true,
+        "mode_log": true
+      }
+    },
+    {
+      "mid": 3789484,
+      "fields": {
+        "fills": true,
+        "orders": true,
+        "requests": true,
+        "value": true,
+        "cash": true,
+        "position": true,
+        "commands": true,
+        "guard_log": true,
+        "closed": true,
+        "mode_log": true
+      }
+    },
+    {
+      "mid": 3877472,
+      "fields": {
+        "fills": true,
+        "orders": true,
+        "requests": true,
+        "value": true,
+        "cash": true,
+        "position": true,
+        "commands": true,
+        "guard_log": true,
+        "closed": true,
+        "mode_log": true
+      }
+    }
+  ],
+  "cpu_s": 82.99749672
+}

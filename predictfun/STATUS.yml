@@ -1,3 +1,22 @@
+cap_maker_sizing_20261124_codex:
+  report: predictfun/reviews/maker3_cap_skew_20261124/report.md
+  freeze: 787d1a0f6
+  cap_only_exact_parity: 3
+  order_max_shares: 100
+  levels: 2
+  wider_hard_cap: 1000
+  wider_soft_band: 500
+  pooled_end_usd: [-121.315946, -121.315946, 47.787734, 47.787734]
+  arms: [BASE, CAP_ONLY, WIDE_PASSIVE, WIDE_TAKE]
+  wider_take_activated: false
+  validation: false
+  maker_signed_quote_hashes: 33
+  maker_quote_contexts_usable: 28
+  maker_private_skew_or_cap_identified: false
+  neutral_maker_seconds: 5700
+  matched_opposing_take_seconds: 52
+  packet_charged_upper_cpu_s: 120
+  next: fixed_wider_band_paired_replay_on_19_consumed_complete_markets
 inventory_take_pilot_20261124_codex:
   report: predictfun/reviews/inventory_take_pilot_20261124/report.md
   size_inventory_audit: predictfun/reviews/maker3_size_inventory_20261124/report.md

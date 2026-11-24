@@ -1,3 +1,15 @@
+<!-- CAP_MAKER_SIZING_20261124_CODEX -->
+## 2026-11-24 — raising the soft inventory band changes turnover; cap alone does not
+
+[Receipt](reviews/maker3_cap_skew_20261124/report.md), freeze787d1a0f6. USER asks higher cap,10/220 sizing vs conditions, skew and selective taking. Same3consumed examples, maximum100shares x2levels. C200→1000 alone EXACT fills/commands/grid parity3/3. Widening S100→500/R50→250 (Qside200 unchanged) gives END USD:3702960 +5.41→+24.38;3789484 +9.73→+248.80;3877472 −136.46→−225.39. Combined−121.32→+47.79; completed turnover−100.27→+100.93, residual−21.05→−53.14. Both-side grid uptime36.7→88.4%; meanabsI79→236; peak496. More generations/pulls: churn not solved. Wider TAKE identical because no threshold crossing; synthetic550-share control fires correctly. No claim taker performance or validated profitability.
+
+Source34signed rank3hashes =33maker (16x10/17x220) +1incomplete taker45.2805 unknown.28maker posting windows usable. Small quotes6alwaysadding/5reducing/4mixed;large3/7/3. Volatility-size rule not established (selected,day-confounded,uncertainposting); private cap/two-sided quote skew unknown. Full5,700neutral seconds/19markets:52opposing-take seconds; no passive reduction prior5s46.2% vsmatched53.0%, prior30s7.7% vs5.9%. Takes often follow passive fills too. In3789484,660same-direction shares before112s and220before200s precede partial trims; compatible with accumulation pressure,not identified motive/skew failure. Native/YES direction and timing variants retained.
+
+Checks12ledgers,3parentparities,68state rows/independentpriorcontext,9corruptions,positiveIOC control. Observation unknown-mid and CSVmissing/None instrument failures preserved/superseded, no replay change. Packetchargedupper120CPU; cumulative~2.08822/5.39892,caps2.35/5.65/.05reserve. No push; all other-session edits preserved.
+
+ONE next priority: fixed WIDE_PASSIVE vs opening-only baseline across all19already-consumed complete markets; same100size,C1000,S500,R250,full-END turnover/residual/risk/participation, no tuning. Determine generality beyond selected3 before a new volatility-sizing/taker trigger. Standing small-CPU authorization covers a bounded declaration; no new days/live.
+<!-- /CAP_MAKER_SIZING_20261124_CODEX -->
+
 <!-- INVENTORY_TAKE_PILOT_20261124_CODEX -->
 ## 2026-11-24 — final-minute quoting verified; simple active inventory reduction loses
 
