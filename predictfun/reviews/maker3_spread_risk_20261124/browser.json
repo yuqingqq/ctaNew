@@ -1,0 +1,33 @@
+{
+  "errors": [],
+  "checks": [
+    {
+      "mid": 3838531,
+      "markets": 19,
+      "detail": 556,
+      "overflow": false,
+      "canvas": 330
+    },
+    {
+      "mid": 3789484,
+      "markets": 19,
+      "detail": 658,
+      "overflow": false,
+      "canvas": 330
+    },
+    {
+      "mid": 3838531,
+      "markets": 19,
+      "detail": 556,
+      "overflow": true,
+      "canvas": 330
+    },
+    {
+      "mid": 3789484,
+      "markets": 19,
+      "detail": 658,
+      "overflow": true,
+      "canvas": 330
+    }
+  ]
+}

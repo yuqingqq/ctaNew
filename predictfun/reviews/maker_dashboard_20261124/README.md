@@ -1,5 +1,7 @@
 # Market microscope
 
+2026-11-24: [Maker #3 trend, spread and inventory](maker3-research.html) adds all19 complete markets, a public-price-selected trend, the last two minutes of3789484, native take directions, execution-window book clocks, completed turnover versus residual risk, and the matched taker-condition screens. [Receipt](../maker3_spread_risk_20261124/report.md). Through the existing SSH tunnel open `http://127.0.0.1:8765/maker3-research.html`. The page is self-contained and downloadable; the existing service remains loopback-only.
+
 Open `dashboard.html` directly in a modern browser. It is self-contained and was tested from `file://` with no network requests. Start with Oct26 /3789484 and “Inspect maker example”; follow the linked next order or click our fills/orders. All three markets have a saved current and hypothetical front arm.
 
 Optional local server:

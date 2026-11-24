@@ -1,0 +1,14 @@
+{
+  "asof": "2026-11-24",
+  "packet_cap_cpu_s": 540,
+  "charged_upper_cpu_s": 60,
+  "wrapper_user_s": 19.73,
+  "peak_rss_mib": 410,
+  "task_coreh": 2.104886666666667,
+  "line_coreh": 5.415586666666667,
+  "task_cap": 2.35,
+  "line_cap": 5.65,
+  "reserve_coreh": 0.05,
+  "browser_resource": "browser_resource_v2.log",
+  "validation": false
+}

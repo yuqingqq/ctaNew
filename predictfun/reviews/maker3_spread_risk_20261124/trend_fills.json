@@ -1,0 +1,4082 @@
+{
+  "market": {
+    "start_s": 245.0,
+    "end_s": 275.0,
+    "move_c": 71.0,
+    "efficiency": 0.806818181818182,
+    "qualifies": true,
+    "day": "20261026",
+    "mid": 3838531,
+    "legs": 76,
+    "maker_legs": 74,
+    "taker_legs": 2,
+    "buy_sh": 15.376344086021504,
+    "sell_sh": 1621.3552807320166,
+    "inventory_start": -64.849589886749,
+    "inventory_end": -1670.828526532744,
+    "close_net_usd": -0.36881720430107523,
+    "phases": [
+      {
+        "lo": 245.0,
+        "hi": 255.0,
+        "buy_sh": 15.376344086021504,
+        "sell_sh": 0,
+        "takes": 0
+      },
+      {
+        "lo": 255.0,
+        "hi": 265.0,
+        "buy_sh": 0,
+        "sell_sh": 0,
+        "takes": 0
+      },
+      {
+        "lo": 265.0,
+        "hi": 275.001,
+        "buy_sh": 0,
+        "sell_sh": 1621.3552807320166,
+        "takes": 2
+      }
+    ]
+  },
+  "fills": [
+    {
+      "id": "maker|01a1799d-d9f1-7be1-858a-86b51674bcde|0",
+      "sid": "01a1799d-d9f1-7be1-858a-86b51674bcde",
+      "mk_idx": 0,
+      "hash": "0x50cc845e702717f79bc3f85ff894877d1b072e5df8142b0b9d9dc05d82f376be",
+      "t": 250.513,
+      "hi_ms": 1793041750513,
+      "lo_ms": 1793041748513,
+      "lo": 248.513,
+      "s": 1,
+      "price": 12.0,
+      "q": 10.0,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 8.5,
+          "spread": 1.0,
+          "bid": 8.0,
+          "ask": 9.0,
+          "frame": 1793041748509,
+          "receipt": 1793041748629.7007,
+          "age": 3.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 12.5,
+          "spread": 1.0,
+          "bid": 12.0,
+          "ask": 13.0,
+          "frame": 1793041750509,
+          "receipt": 1793041750619.0083,
+          "age": 4.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 7.5,
+          "spread": 0.9999999999999991,
+          "bid": 7.000000000000001,
+          "ask": 8.0,
+          "frame": 1793041747463,
+          "receipt": 1793041747647.5479,
+          "age": 50.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        250.451,
+        250.513
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY YES"
+    },
+    {
+      "id": "maker|01a1799d-da9e-7690-9aa7-621b8940a1ab|0",
+      "sid": "01a1799d-da9e-7690-9aa7-621b8940a1ab",
+      "mk_idx": 0,
+      "hash": "0x694223ba7853c0754683ac0fdff45b982dbf1db2ba936b78ffc88eb703fa36cd",
+      "t": 250.686,
+      "hi_ms": 1793041750686,
+      "lo_ms": 1793041748686,
+      "lo": 248.686,
+      "s": 1,
+      "price": 16.0,
+      "q": 5.376344086021505,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 8.5,
+          "spread": 1.0,
+          "bid": 8.0,
+          "ask": 9.0,
+          "frame": 1793041748648,
+          "receipt": 1793041748789.2373,
+          "age": 37.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 16.5,
+          "spread": 1.0,
+          "bid": 16.0,
+          "ask": 17.0,
+          "frame": 1793041750657,
+          "receipt": 1793041750786.5073,
+          "age": 29.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 7.5,
+          "spread": 0.9999999999999991,
+          "bid": 7.000000000000001,
+          "ask": 8.0,
+          "frame": 1793041747636,
+          "receipt": 1793041747768.827,
+          "age": 50.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        250.6,
+        250.686
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY YES"
+    },
+    {
+      "id": "maker|01a1799e-21ec-7580-b7a1-dd2b67a78841|0",
+      "sid": "01a1799e-21ec-7580-b7a1-dd2b67a78841",
+      "mk_idx": 0,
+      "hash": "0xad151b7111e9b1cda23790d77c937f4c4d3881d1ad836e6415617e6afeb17ccc",
+      "t": 268.94,
+      "hi_ms": 1793041768940,
+      "lo_ms": 1793041766940,
+      "lo": 266.94,
+      "s": -1,
+      "price": 63.0,
+      "q": 60.0,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 59.5,
+          "spread": 1.0,
+          "bid": 59.0,
+          "ask": 60.0,
+          "frame": 1793041766900,
+          "receipt": 1793041766995.9956,
+          "age": 39.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768906,
+          "receipt": 1793041769026.8381,
+          "age": 34.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 56.5,
+          "spread": 0.9999999999999858,
+          "bid": 56.00000000000001,
+          "ask": 56.99999999999999,
+          "frame": 1793041765904,
+          "receipt": 1793041766039.4785,
+          "age": 36.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        265.904,
+        268.94
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-21ec-7580-b7a1-dd39c6af526d|0",
+      "sid": "01a1799e-21ec-7580-b7a1-dd39c6af526d",
+      "mk_idx": 0,
+      "hash": "0xad151b7111e9b1cda23790d77c937f4c4d3881d1ad836e6415617e6afeb17ccc",
+      "t": 268.94,
+      "hi_ms": 1793041768940,
+      "lo_ms": 1793041766940,
+      "lo": 266.94,
+      "s": -1,
+      "price": 63.0,
+      "q": 30.0,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 59.5,
+          "spread": 1.0,
+          "bid": 59.0,
+          "ask": 60.0,
+          "frame": 1793041766900,
+          "receipt": 1793041766995.9956,
+          "age": 39.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768906,
+          "receipt": 1793041769026.8381,
+          "age": 34.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 56.5,
+          "spread": 0.9999999999999858,
+          "bid": 56.00000000000001,
+          "ask": 56.99999999999999,
+          "frame": 1793041765904,
+          "receipt": 1793041766039.4785,
+          "age": 36.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        265.904,
+        268.94
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-21f0-78c1-99bd-31276330a216|0",
+      "sid": "01a1799e-21f0-78c1-99bd-31276330a216",
+      "mk_idx": 0,
+      "hash": "0xad151b7111e9b1cda23790d77c937f4c4d3881d1ad836e6415617e6afeb17ccc",
+      "t": 268.944,
+      "hi_ms": 1793041768944,
+      "lo_ms": 1793041766944,
+      "lo": 266.944,
+      "s": -1,
+      "price": 63.0,
+      "q": 1.58,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 59.5,
+          "spread": 1.0,
+          "bid": 59.0,
+          "ask": 60.0,
+          "frame": 1793041766900,
+          "receipt": 1793041766995.9956,
+          "age": 43.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768906,
+          "receipt": 1793041769026.8381,
+          "age": 38.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 56.5,
+          "spread": 0.9999999999999858,
+          "bid": 56.00000000000001,
+          "ask": 56.99999999999999,
+          "frame": 1793041765904,
+          "receipt": 1793041766039.4785,
+          "age": 40.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        265.904,
+        268.94
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-21f2-7ef2-97bf-9897c74bfd32|0",
+      "sid": "01a1799e-21f2-7ef2-97bf-9897c74bfd32",
+      "mk_idx": 0,
+      "hash": "0xad151b7111e9b1cda23790d77c937f4c4d3881d1ad836e6415617e6afeb17ccc",
+      "t": 268.946,
+      "hi_ms": 1793041768946,
+      "lo_ms": 1793041766946,
+      "lo": 266.946,
+      "s": -1,
+      "price": 63.0,
+      "q": 1.58,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 59.5,
+          "spread": 1.0,
+          "bid": 59.0,
+          "ask": 60.0,
+          "frame": 1793041766900,
+          "receipt": 1793041766995.9956,
+          "age": 45.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768906,
+          "receipt": 1793041769026.8381,
+          "age": 40.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 56.5,
+          "spread": 0.9999999999999858,
+          "bid": 56.00000000000001,
+          "ask": 56.99999999999999,
+          "frame": 1793041765904,
+          "receipt": 1793041766039.4785,
+          "age": 42.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        265.904,
+        268.94
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-21f4-78b1-a2ab-aa8fcf639029|0",
+      "sid": "01a1799e-21f4-78b1-a2ab-aa8fcf639029",
+      "mk_idx": 0,
+      "hash": "0xad151b7111e9b1cda23790d77c937f4c4d3881d1ad836e6415617e6afeb17ccc",
+      "t": 268.948,
+      "hi_ms": 1793041768948,
+      "lo_ms": 1793041766948,
+      "lo": 266.948,
+      "s": -1,
+      "price": 63.0,
+      "q": 47.0,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 59.5,
+          "spread": 1.0,
+          "bid": 59.0,
+          "ask": 60.0,
+          "frame": 1793041766900,
+          "receipt": 1793041766995.9956,
+          "age": 47.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768906,
+          "receipt": 1793041769026.8381,
+          "age": 42.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 56.5,
+          "spread": 0.9999999999999858,
+          "bid": 56.00000000000001,
+          "ask": 56.99999999999999,
+          "frame": 1793041765904,
+          "receipt": 1793041766039.4785,
+          "age": 44.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        265.904,
+        268.94
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-21f4-78b1-a2ab-aa9b199f3d99|0",
+      "sid": "01a1799e-21f4-78b1-a2ab-aa9b199f3d99",
+      "mk_idx": 0,
+      "hash": "0xad151b7111e9b1cda23790d77c937f4c4d3881d1ad836e6415617e6afeb17ccc",
+      "t": 268.948,
+      "hi_ms": 1793041768948,
+      "lo_ms": 1793041766948,
+      "lo": 266.948,
+      "s": -1,
+      "price": 63.0,
+      "q": 50.0,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 59.5,
+          "spread": 1.0,
+          "bid": 59.0,
+          "ask": 60.0,
+          "frame": 1793041766900,
+          "receipt": 1793041766995.9956,
+          "age": 47.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768906,
+          "receipt": 1793041769026.8381,
+          "age": 42.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 56.5,
+          "spread": 0.9999999999999858,
+          "bid": 56.00000000000001,
+          "ask": 56.99999999999999,
+          "frame": 1793041765904,
+          "receipt": 1793041766039.4785,
+          "age": 44.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        265.904,
+        268.94
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-21f8-77c3-a74f-2ea44c2fd386|0",
+      "sid": "01a1799e-21f8-77c3-a74f-2ea44c2fd386",
+      "mk_idx": 0,
+      "hash": "0xad151b7111e9b1cda23790d77c937f4c4d3881d1ad836e6415617e6afeb17ccc",
+      "t": 268.952,
+      "hi_ms": 1793041768952,
+      "lo_ms": 1793041766952,
+      "lo": 266.952,
+      "s": -1,
+      "price": 63.0,
+      "q": 20.0,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 59.5,
+          "spread": 1.0,
+          "bid": 59.0,
+          "ask": 60.0,
+          "frame": 1793041766900,
+          "receipt": 1793041766995.9956,
+          "age": 51.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768906,
+          "receipt": 1793041769026.8381,
+          "age": 46.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 56.5,
+          "spread": 0.9999999999999858,
+          "bid": 56.00000000000001,
+          "ask": 56.99999999999999,
+          "frame": 1793041765904,
+          "receipt": 1793041766039.4785,
+          "age": 48.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        265.904,
+        268.94
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-21fc-7c73-ac9a-aac488eed6d8|0",
+      "sid": "01a1799e-21fc-7c73-ac9a-aac488eed6d8",
+      "mk_idx": 0,
+      "hash": "0xad151b7111e9b1cda23790d77c937f4c4d3881d1ad836e6415617e6afeb17ccc",
+      "t": 268.956,
+      "hi_ms": 1793041768956,
+      "lo_ms": 1793041766956,
+      "lo": 266.956,
+      "s": -1,
+      "price": 63.0,
+      "q": 6.349206349206349,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 59.5,
+          "spread": 1.0,
+          "bid": 59.0,
+          "ask": 60.0,
+          "frame": 1793041766900,
+          "receipt": 1793041766995.9956,
+          "age": 55.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768906,
+          "receipt": 1793041769026.8381,
+          "age": 50.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 56.5,
+          "spread": 0.9999999999999858,
+          "bid": 56.00000000000001,
+          "ask": 56.99999999999999,
+          "frame": 1793041765955,
+          "receipt": 1793041766092.2961,
+          "age": 1.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        265.904,
+        268.94
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-21fe-7ed3-a180-0a270e0107e7|0",
+      "sid": "01a1799e-21fe-7ed3-a180-0a270e0107e7",
+      "mk_idx": 0,
+      "hash": "0xad151b7111e9b1cda23790d77c937f4c4d3881d1ad836e6415617e6afeb17ccc",
+      "t": 268.958,
+      "hi_ms": 1793041768958,
+      "lo_ms": 1793041766958,
+      "lo": 266.958,
+      "s": -1,
+      "price": 63.0,
+      "q": 3.490793650793651,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 60.0,
+          "spread": 2.0,
+          "bid": 59.0,
+          "ask": 61.0,
+          "frame": 1793041766956,
+          "receipt": 1793041767062.694,
+          "age": 1.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 63.0,
+          "spread": 2.0,
+          "bid": 62.0,
+          "ask": 64.0,
+          "frame": 1793041768958,
+          "receipt": 1793041769080.5107,
+          "age": 0.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 56.5,
+          "spread": 0.9999999999999858,
+          "bid": 56.00000000000001,
+          "ask": 56.99999999999999,
+          "frame": 1793041765955,
+          "receipt": 1793041766092.2961,
+          "age": 3.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        265.904,
+        268.94
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-220e-71e0-8dd0-4b8bceeeca7b|0",
+      "sid": "01a1799e-220e-71e0-8dd0-4b8bceeeca7b",
+      "mk_idx": 0,
+      "hash": "0xa6009984fdd268c9c9b8f6d7337bc69eaed8dac3921c748b58e02ded59b21c3c",
+      "t": 268.974,
+      "hi_ms": 1793041768974,
+      "lo_ms": 1793041766974,
+      "lo": 266.974,
+      "s": -1,
+      "price": 64.0,
+      "q": 2.965947,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 60.0,
+          "spread": 2.0,
+          "bid": 59.0,
+          "ask": 61.0,
+          "frame": 1793041766956,
+          "receipt": 1793041767062.694,
+          "age": 17.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 63.0,
+          "spread": 2.0,
+          "bid": 62.0,
+          "ask": 64.0,
+          "frame": 1793041768958,
+          "receipt": 1793041769080.5107,
+          "age": 16.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 56.5,
+          "spread": 0.9999999999999858,
+          "bid": 56.00000000000001,
+          "ask": 56.99999999999999,
+          "frame": 1793041765955,
+          "receipt": 1793041766092.2961,
+          "age": 19.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        265.306,
+        268.974
+      ],
+      "post_grade": "G2_bound_constrained",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-2211-7f61-9f60-3ac7a65e269a|0",
+      "sid": "01a1799e-2211-7f61-9f60-3ac7a65e269a",
+      "mk_idx": 0,
+      "hash": "0xa6009984fdd268c9c9b8f6d7337bc69eaed8dac3921c748b58e02ded59b21c3c",
+      "t": 268.977,
+      "hi_ms": 1793041768977,
+      "lo_ms": 1793041766977,
+      "lo": 266.977,
+      "s": -1,
+      "price": 64.0,
+      "q": 23.4375,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 60.0,
+          "spread": 2.0,
+          "bid": 59.0,
+          "ask": 61.0,
+          "frame": 1793041766956,
+          "receipt": 1793041767062.694,
+          "age": 20.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 63.0,
+          "spread": 2.0,
+          "bid": 62.0,
+          "ask": 64.0,
+          "frame": 1793041768958,
+          "receipt": 1793041769080.5107,
+          "age": 19.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 56.5,
+          "spread": 0.9999999999999858,
+          "bid": 56.00000000000001,
+          "ask": 56.99999999999999,
+          "frame": 1793041765955,
+          "receipt": 1793041766092.2961,
+          "age": 22.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        265.306,
+        268.974
+      ],
+      "post_grade": "G2_bound_constrained",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-2211-7f61-9f60-3adc0a3ae648|0",
+      "sid": "01a1799e-2211-7f61-9f60-3adc0a3ae648",
+      "mk_idx": 0,
+      "hash": "0xa6009984fdd268c9c9b8f6d7337bc69eaed8dac3921c748b58e02ded59b21c3c",
+      "t": 268.977,
+      "hi_ms": 1793041768977,
+      "lo_ms": 1793041766977,
+      "lo": 266.977,
+      "s": -1,
+      "price": 64.0,
+      "q": 4.1666,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 60.0,
+          "spread": 2.0,
+          "bid": 59.0,
+          "ask": 61.0,
+          "frame": 1793041766956,
+          "receipt": 1793041767062.694,
+          "age": 20.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 63.0,
+          "spread": 2.0,
+          "bid": 62.0,
+          "ask": 64.0,
+          "frame": 1793041768958,
+          "receipt": 1793041769080.5107,
+          "age": 19.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 56.5,
+          "spread": 0.9999999999999858,
+          "bid": 56.00000000000001,
+          "ask": 56.99999999999999,
+          "frame": 1793041765955,
+          "receipt": 1793041766092.2961,
+          "age": 22.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        265.306,
+        268.974
+      ],
+      "post_grade": "G2_bound_constrained",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-2212-7fc1-b0a4-fdd0d87fbe40|0",
+      "sid": "01a1799e-2212-7fc1-b0a4-fdd0d87fbe40",
+      "mk_idx": 0,
+      "hash": "0xa6009984fdd268c9c9b8f6d7337bc69eaed8dac3921c748b58e02ded59b21c3c",
+      "t": 268.978,
+      "hi_ms": 1793041768978,
+      "lo_ms": 1793041766978,
+      "lo": 266.978,
+      "s": -1,
+      "price": 64.0,
+      "q": 15.625,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 60.0,
+          "spread": 2.0,
+          "bid": 59.0,
+          "ask": 61.0,
+          "frame": 1793041766956,
+          "receipt": 1793041767062.694,
+          "age": 21.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 63.0,
+          "spread": 2.0,
+          "bid": 62.0,
+          "ask": 64.0,
+          "frame": 1793041768958,
+          "receipt": 1793041769080.5107,
+          "age": 20.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 56.5,
+          "spread": 0.9999999999999858,
+          "bid": 56.00000000000001,
+          "ask": 56.99999999999999,
+          "frame": 1793041765955,
+          "receipt": 1793041766092.2961,
+          "age": 23.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        265.306,
+        268.974
+      ],
+      "post_grade": "G2_bound_constrained",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-2217-7fd3-8f1b-0d5cb23a38d1|0",
+      "sid": "01a1799e-2217-7fd3-8f1b-0d5cb23a38d1",
+      "mk_idx": 0,
+      "hash": "0xa6009984fdd268c9c9b8f6d7337bc69eaed8dac3921c748b58e02ded59b21c3c",
+      "t": 268.983,
+      "hi_ms": 1793041768983,
+      "lo_ms": 1793041766983,
+      "lo": 266.983,
+      "s": -1,
+      "price": 64.0,
+      "q": 31.25,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 60.0,
+          "spread": 2.0,
+          "bid": 59.0,
+          "ask": 61.0,
+          "frame": 1793041766956,
+          "receipt": 1793041767062.694,
+          "age": 26.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 63.0,
+          "spread": 2.0,
+          "bid": 62.0,
+          "ask": 64.0,
+          "frame": 1793041768958,
+          "receipt": 1793041769080.5107,
+          "age": 25.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 56.5,
+          "spread": 0.9999999999999858,
+          "bid": 56.00000000000001,
+          "ask": 56.99999999999999,
+          "frame": 1793041765955,
+          "receipt": 1793041766092.2961,
+          "age": 28.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        265.306,
+        268.974
+      ],
+      "post_grade": "G2_bound_constrained",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-2219-7e80-aad6-c719585e3321|0",
+      "sid": "01a1799e-2219-7e80-aad6-c719585e3321",
+      "mk_idx": 0,
+      "hash": "0xa6009984fdd268c9c9b8f6d7337bc69eaed8dac3921c748b58e02ded59b21c3c",
+      "t": 268.985,
+      "hi_ms": 1793041768985,
+      "lo_ms": 1793041766985,
+      "lo": 266.985,
+      "s": -1,
+      "price": 64.0,
+      "q": 23.4375,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 60.0,
+          "spread": 2.0,
+          "bid": 59.0,
+          "ask": 61.0,
+          "frame": 1793041766956,
+          "receipt": 1793041767062.694,
+          "age": 28.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 63.0,
+          "spread": 2.0,
+          "bid": 62.0,
+          "ask": 64.0,
+          "frame": 1793041768958,
+          "receipt": 1793041769080.5107,
+          "age": 27.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 56.5,
+          "spread": 0.9999999999999858,
+          "bid": 56.00000000000001,
+          "ask": 56.99999999999999,
+          "frame": 1793041765955,
+          "receipt": 1793041766092.2961,
+          "age": 30.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        265.306,
+        268.974
+      ],
+      "post_grade": "G2_bound_constrained",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-221b-7ee1-ab9d-dd0a83ca0f66|0",
+      "sid": "01a1799e-221b-7ee1-ab9d-dd0a83ca0f66",
+      "mk_idx": 0,
+      "hash": "0xa6009984fdd268c9c9b8f6d7337bc69eaed8dac3921c748b58e02ded59b21c3c",
+      "t": 268.987,
+      "hi_ms": 1793041768987,
+      "lo_ms": 1793041766987,
+      "lo": 266.987,
+      "s": -1,
+      "price": 64.0,
+      "q": 5.0,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 60.0,
+          "spread": 2.0,
+          "bid": 59.0,
+          "ask": 61.0,
+          "frame": 1793041766956,
+          "receipt": 1793041767062.694,
+          "age": 30.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 63.0,
+          "spread": 2.0,
+          "bid": 62.0,
+          "ask": 64.0,
+          "frame": 1793041768958,
+          "receipt": 1793041769080.5107,
+          "age": 29.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 56.5,
+          "spread": 0.9999999999999858,
+          "bid": 56.00000000000001,
+          "ask": 56.99999999999999,
+          "frame": 1793041765955,
+          "receipt": 1793041766092.2961,
+          "age": 32.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        265.306,
+        268.974
+      ],
+      "post_grade": "G2_bound_constrained",
+      "native": "BUY NO"
+    },
+    {
+      "id": "taker|01a1799e-2305-7472-a835-eda68dbd96db|0",
+      "sid": "01a1799e-2305-7472-a835-eda68dbd96db",
+      "mk_idx": 0,
+      "hash": "0x164f77cc0c3820552d951dd1fec014c985a8e322a5592856d2163c59489b253c",
+      "t": 269.221,
+      "hi_ms": 1793041769221,
+      "lo_ms": 1793041767221,
+      "lo": 267.221,
+      "s": -1,
+      "price": 62.0,
+      "q": 6.099637735849057,
+      "fee_c": 4.635724679245283,
+      "role": "taker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 60.5,
+          "spread": 1.0,
+          "bid": 60.0,
+          "ask": 61.0,
+          "frame": 1793041767212,
+          "receipt": 1793041767329.9832,
+          "age": 8.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041769210,
+          "receipt": 1793041769347.0776,
+          "age": 11.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 58.5,
+          "spread": 1.000000000000007,
+          "bid": 57.99999999999999,
+          "ask": 59.0,
+          "frame": 1793041766208,
+          "receipt": 1793041766305.1738,
+          "age": 13.0
+        }
+      },
+      "original_size": null,
+      "post": null,
+      "post_grade": "unknown",
+      "native": "BUY NO"
+    },
+    {
+      "id": "taker|01a1799e-2305-7472-a835-edb7c63b26bd|0",
+      "sid": "01a1799e-2305-7472-a835-edb7c63b26bd",
+      "mk_idx": 0,
+      "hash": "0x164f77cc0c3820552d951dd1fec014c985a8e322a5592856d2163c59489b253c",
+      "t": 269.221,
+      "hi_ms": 1793041769221,
+      "lo_ms": 1793041767221,
+      "lo": 267.221,
+      "s": -1,
+      "price": 62.0,
+      "q": 16.273462264150943,
+      "fee_c": 12.367831320754716,
+      "role": "taker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 60.5,
+          "spread": 1.0,
+          "bid": 60.0,
+          "ask": 61.0,
+          "frame": 1793041767212,
+          "receipt": 1793041767329.9832,
+          "age": 8.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041769210,
+          "receipt": 1793041769347.0776,
+          "age": 11.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 58.5,
+          "spread": 1.000000000000007,
+          "bid": 57.99999999999999,
+          "ask": 59.0,
+          "frame": 1793041766208,
+          "receipt": 1793041766305.1738,
+          "age": 13.0
+        }
+      },
+      "original_size": null,
+      "post": null,
+      "post_grade": "unknown",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-23da-7983-a55f-4e3fcee0e005|0",
+      "sid": "01a1799e-23da-7983-a55f-4e3fcee0e005",
+      "mk_idx": 0,
+      "hash": "0x72df1308b6ae31c805160e681c4b7d806ec00a448e1878534f2e2263347aaae8",
+      "t": 269.434,
+      "hi_ms": 1793041769434,
+      "lo_ms": 1793041767434,
+      "lo": 267.434,
+      "s": -1,
+      "price": 63.0,
+      "q": 6.25,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041767404,
+          "receipt": 1793041767543.2515,
+          "age": 29.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041769408,
+          "receipt": 1793041769503.321,
+          "age": 26.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 58.5,
+          "spread": 1.000000000000007,
+          "bid": 57.99999999999999,
+          "ask": 59.0,
+          "frame": 1793041766404,
+          "receipt": 1793041766517.806,
+          "age": 30.0
+        }
+      },
+      "original_size": null,
+      "post": null,
+      "post_grade": "G1_conflict",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-23e2-7110-821d-fffd83fdf53b|0",
+      "sid": "01a1799e-23e2-7110-821d-fffd83fdf53b",
+      "mk_idx": 0,
+      "hash": "0x72df1308b6ae31c805160e681c4b7d806ec00a448e1878534f2e2263347aaae8",
+      "t": 269.442,
+      "hi_ms": 1793041769442,
+      "lo_ms": 1793041767442,
+      "lo": 267.442,
+      "s": -1,
+      "price": 63.0,
+      "q": 6.25,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041767404,
+          "receipt": 1793041767543.2515,
+          "age": 37.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041769408,
+          "receipt": 1793041769503.321,
+          "age": 34.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 58.5,
+          "spread": 1.000000000000007,
+          "bid": 57.99999999999999,
+          "ask": 59.0,
+          "frame": 1793041766404,
+          "receipt": 1793041766517.806,
+          "age": 38.0
+        }
+      },
+      "original_size": null,
+      "post": null,
+      "post_grade": "G1_conflict",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-2444-7250-b1ef-4718cfd84e52|0",
+      "sid": "01a1799e-2444-7250-b1ef-4718cfd84e52",
+      "mk_idx": 0,
+      "hash": "0x72df1308b6ae31c805160e681c4b7d806ec00a448e1878534f2e2263347aaae8",
+      "t": 269.54,
+      "hi_ms": 1793041769540,
+      "lo_ms": 1793041767540,
+      "lo": 267.54,
+      "s": -1,
+      "price": 63.0,
+      "q": 181.48,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041767503,
+          "receipt": 1793041767647.942,
+          "age": 36.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041769508,
+          "receipt": 1793041769609.0698,
+          "age": 32.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 58.5,
+          "spread": 1.000000000000007,
+          "bid": 57.99999999999999,
+          "ask": 59.0,
+          "frame": 1793041766507,
+          "receipt": 1793041766623.3726,
+          "age": 33.0
+        }
+      },
+      "original_size": null,
+      "post": null,
+      "post_grade": "G1_conflict",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-266d-7dd1-b4ad-e64822242128|0",
+      "sid": "01a1799e-266d-7dd1-b4ad-e64822242128",
+      "mk_idx": 0,
+      "hash": "0xf46e2f9cb904b49b086c7e16494ce81c924c63711e8ef13dbaebc76c52a6a526",
+      "t": 270.093,
+      "hi_ms": 1793041770093,
+      "lo_ms": 1793041768093,
+      "lo": 268.093,
+      "s": -1,
+      "price": 65.0,
+      "q": 20.0,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768049,
+          "receipt": 1793041768154.3232,
+          "age": 43.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 63.5,
+          "spread": 3.0,
+          "bid": 62.0,
+          "ask": 65.0,
+          "frame": 1793041770053,
+          "receipt": 1793041770199.4417,
+          "age": 40.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 60.5,
+          "spread": 1.0,
+          "bid": 60.0,
+          "ask": 61.0,
+          "frame": 1793041767066,
+          "receipt": 1793041767223.497,
+          "age": 27.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        265.655,
+        270.093
+      ],
+      "post_grade": "G2_bound_constrained",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-266e-7a52-b3e8-ef45ade37bbf|0",
+      "sid": "01a1799e-266e-7a52-b3e8-ef45ade37bbf",
+      "mk_idx": 0,
+      "hash": "0xf46e2f9cb904b49b086c7e16494ce81c924c63711e8ef13dbaebc76c52a6a526",
+      "t": 270.094,
+      "hi_ms": 1793041770094,
+      "lo_ms": 1793041768094,
+      "lo": 268.094,
+      "s": -1,
+      "price": 65.0,
+      "q": 19.0,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768049,
+          "receipt": 1793041768154.3232,
+          "age": 44.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 63.5,
+          "spread": 3.0,
+          "bid": 62.0,
+          "ask": 65.0,
+          "frame": 1793041770053,
+          "receipt": 1793041770199.4417,
+          "age": 41.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 60.5,
+          "spread": 1.0,
+          "bid": 60.0,
+          "ask": 61.0,
+          "frame": 1793041767066,
+          "receipt": 1793041767223.497,
+          "age": 28.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        265.655,
+        270.093
+      ],
+      "post_grade": "G2_bound_constrained",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-2670-7e73-8bb0-8e64f5da6ce2|0",
+      "sid": "01a1799e-2670-7e73-8bb0-8e64f5da6ce2",
+      "mk_idx": 0,
+      "hash": "0xf46e2f9cb904b49b086c7e16494ce81c924c63711e8ef13dbaebc76c52a6a526",
+      "t": 270.096,
+      "hi_ms": 1793041770096,
+      "lo_ms": 1793041768096,
+      "lo": 268.096,
+      "s": -1,
+      "price": 65.0,
+      "q": 20.0,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768049,
+          "receipt": 1793041768154.3232,
+          "age": 46.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 63.5,
+          "spread": 3.0,
+          "bid": 62.0,
+          "ask": 65.0,
+          "frame": 1793041770053,
+          "receipt": 1793041770199.4417,
+          "age": 43.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 60.5,
+          "spread": 1.0,
+          "bid": 60.0,
+          "ask": 61.0,
+          "frame": 1793041767066,
+          "receipt": 1793041767223.497,
+          "age": 30.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        265.655,
+        270.093
+      ],
+      "post_grade": "G2_bound_constrained",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-267b-77e0-b89d-7aafa26923ae|0",
+      "sid": "01a1799e-267b-77e0-b89d-7aafa26923ae",
+      "mk_idx": 0,
+      "hash": "0xf46e2f9cb904b49b086c7e16494ce81c924c63711e8ef13dbaebc76c52a6a526",
+      "t": 270.107,
+      "hi_ms": 1793041770107,
+      "lo_ms": 1793041768107,
+      "lo": 268.107,
+      "s": -1,
+      "price": 65.0,
+      "q": 10.0,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768106,
+          "receipt": 1793041768214.8682,
+          "age": 0.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 64.5,
+          "spread": 1.0,
+          "bid": 64.0,
+          "ask": 65.0,
+          "frame": 1793041770107,
+          "receipt": 1793041770200.5737,
+          "age": 0.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 60.5,
+          "spread": 1.0,
+          "bid": 60.0,
+          "ask": 61.0,
+          "frame": 1793041767066,
+          "receipt": 1793041767223.497,
+          "age": 41.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        265.655,
+        270.093
+      ],
+      "post_grade": "G2_bound_constrained",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-26ea-7e40-aaf1-848ba72a1548|0",
+      "sid": "01a1799e-26ea-7e40-aaf1-848ba72a1548",
+      "mk_idx": 0,
+      "hash": "0xf46e2f9cb904b49b086c7e16494ce81c924c63711e8ef13dbaebc76c52a6a526",
+      "t": 270.218,
+      "hi_ms": 1793041770218,
+      "lo_ms": 1793041768218,
+      "lo": 268.218,
+      "s": -1,
+      "price": 65.0,
+      "q": 2.0,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768200,
+          "receipt": 1793041768320.0042,
+          "age": 17.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 64.5,
+          "spread": 1.0,
+          "bid": 64.0,
+          "ask": 65.0,
+          "frame": 1793041770208,
+          "receipt": 1793041770360.4004,
+          "age": 10.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 60.5,
+          "spread": 1.0,
+          "bid": 60.0,
+          "ask": 61.0,
+          "frame": 1793041767212,
+          "receipt": 1793041767329.9832,
+          "age": 6.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        265.655,
+        270.093
+      ],
+      "post_grade": "G2_bound_constrained",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-26ef-7f70-8a29-52f1536fe621|0",
+      "sid": "01a1799e-26ef-7f70-8a29-52f1536fe621",
+      "mk_idx": 0,
+      "hash": "0xf46e2f9cb904b49b086c7e16494ce81c924c63711e8ef13dbaebc76c52a6a526",
+      "t": 270.223,
+      "hi_ms": 1793041770223,
+      "lo_ms": 1793041768223,
+      "lo": 268.223,
+      "s": -1,
+      "price": 65.0,
+      "q": 6.0,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768200,
+          "receipt": 1793041768320.0042,
+          "age": 22.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 64.5,
+          "spread": 1.0,
+          "bid": 64.0,
+          "ask": 65.0,
+          "frame": 1793041770208,
+          "receipt": 1793041770360.4004,
+          "age": 15.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 60.5,
+          "spread": 1.0,
+          "bid": 60.0,
+          "ask": 61.0,
+          "frame": 1793041767212,
+          "receipt": 1793041767329.9832,
+          "age": 11.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        265.655,
+        270.093
+      ],
+      "post_grade": "G2_bound_constrained",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-27a5-7f61-92cd-e710721f77ed|0",
+      "sid": "01a1799e-27a5-7f61-92cd-e710721f77ed",
+      "mk_idx": 0,
+      "hash": "0x0a4e9db53c0b7743d67e16f86d1f6115c3e92851562c8ec2d9b49698a139a7d3",
+      "t": 270.405,
+      "hi_ms": 1793041770405,
+      "lo_ms": 1793041768405,
+      "lo": 268.405,
+      "s": -1,
+      "price": 68.0,
+      "q": 53.6764705882353,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768355,
+          "receipt": 1793041768479.2734,
+          "age": 49.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 66.0,
+          "spread": 4.0,
+          "bid": 64.0,
+          "ask": 68.0,
+          "frame": 1793041770358,
+          "receipt": 1793041770465.3933,
+          "age": 47.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041767404,
+          "receipt": 1793041767543.2515,
+          "age": 1.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        267.046,
+        270.405
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-27a6-7ff0-ab5b-980efea448a7|0",
+      "sid": "01a1799e-27a6-7ff0-ab5b-980efea448a7",
+      "mk_idx": 0,
+      "hash": "0x0a4e9db53c0b7743d67e16f86d1f6115c3e92851562c8ec2d9b49698a139a7d3",
+      "t": 270.406,
+      "hi_ms": 1793041770406,
+      "lo_ms": 1793041768406,
+      "lo": 268.406,
+      "s": -1,
+      "price": 68.0,
+      "q": 52.94117647058823,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768355,
+          "receipt": 1793041768479.2734,
+          "age": 50.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 66.0,
+          "spread": 4.0,
+          "bid": 64.0,
+          "ask": 68.0,
+          "frame": 1793041770358,
+          "receipt": 1793041770465.3933,
+          "age": 48.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041767404,
+          "receipt": 1793041767543.2515,
+          "age": 2.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        267.046,
+        270.405
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-27a8-79f1-b9f8-116a320d99d2|0",
+      "sid": "01a1799e-27a8-79f1-b9f8-116a320d99d2",
+      "mk_idx": 0,
+      "hash": "0x0a4e9db53c0b7743d67e16f86d1f6115c3e92851562c8ec2d9b49698a139a7d3",
+      "t": 270.408,
+      "hi_ms": 1793041770408,
+      "lo_ms": 1793041768408,
+      "lo": 268.408,
+      "s": -1,
+      "price": 68.0,
+      "q": 53.6764705882353,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768355,
+          "receipt": 1793041768479.2734,
+          "age": 52.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 66.5,
+          "spread": 3.0,
+          "bid": 65.0,
+          "ask": 68.0,
+          "frame": 1793041770408,
+          "receipt": 1793041770520.578,
+          "age": 0.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041767404,
+          "receipt": 1793041767543.2515,
+          "age": 4.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        267.046,
+        270.405
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-27a8-79f1-b9f8-1175b3bb74d7|0",
+      "sid": "01a1799e-27a8-79f1-b9f8-1175b3bb74d7",
+      "mk_idx": 0,
+      "hash": "0x0a4e9db53c0b7743d67e16f86d1f6115c3e92851562c8ec2d9b49698a139a7d3",
+      "t": 270.408,
+      "hi_ms": 1793041770408,
+      "lo_ms": 1793041768408,
+      "lo": 268.408,
+      "s": -1,
+      "price": 68.0,
+      "q": 8.76,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768355,
+          "receipt": 1793041768479.2734,
+          "age": 52.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 66.5,
+          "spread": 3.0,
+          "bid": 65.0,
+          "ask": 68.0,
+          "frame": 1793041770408,
+          "receipt": 1793041770520.578,
+          "age": 0.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041767404,
+          "receipt": 1793041767543.2515,
+          "age": 4.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        267.046,
+        270.405
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-27ac-7c20-882d-afbbccd6529e|0",
+      "sid": "01a1799e-27ac-7c20-882d-afbbccd6529e",
+      "mk_idx": 0,
+      "hash": "0x0a4e9db53c0b7743d67e16f86d1f6115c3e92851562c8ec2d9b49698a139a7d3",
+      "t": 270.412,
+      "hi_ms": 1793041770412,
+      "lo_ms": 1793041768412,
+      "lo": 268.412,
+      "s": -1,
+      "price": 68.0,
+      "q": 50.945882352941176,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768409,
+          "receipt": 1793041768532.9304,
+          "age": 2.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 66.5,
+          "spread": 3.0,
+          "bid": 65.0,
+          "ask": 68.0,
+          "frame": 1793041770408,
+          "receipt": 1793041770520.578,
+          "age": 4.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041767404,
+          "receipt": 1793041767543.2515,
+          "age": 8.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        267.046,
+        270.405
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-27ac-7c20-882d-afc9ff8bffa1|0",
+      "sid": "01a1799e-27ac-7c20-882d-afc9ff8bffa1",
+      "mk_idx": 0,
+      "hash": "0x6d74b04bd699f13d30b796b3cb290300c1bf1a41f95b39fefa32842d2151885f",
+      "t": 270.412,
+      "hi_ms": 1793041770412,
+      "lo_ms": 1793041768412,
+      "lo": 268.412,
+      "s": -1,
+      "price": 69.0,
+      "q": 1.9663768115942029,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768409,
+          "receipt": 1793041768532.9304,
+          "age": 2.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 66.5,
+          "spread": 3.0,
+          "bid": 65.0,
+          "ask": 68.0,
+          "frame": 1793041770408,
+          "receipt": 1793041770520.578,
+          "age": 4.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041767404,
+          "receipt": 1793041767543.2515,
+          "age": 8.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        266.956,
+        270.412
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-27ae-7d22-9542-aecfdd372548|0",
+      "sid": "01a1799e-27ae-7d22-9542-aecfdd372548",
+      "mk_idx": 0,
+      "hash": "0x6d74b04bd699f13d30b796b3cb290300c1bf1a41f95b39fefa32842d2151885f",
+      "t": 270.414,
+      "hi_ms": 1793041770414,
+      "lo_ms": 1793041768414,
+      "lo": 268.414,
+      "s": -1,
+      "price": 69.0,
+      "q": 52.17391304347826,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768409,
+          "receipt": 1793041768532.9304,
+          "age": 4.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 66.5,
+          "spread": 3.0,
+          "bid": 65.0,
+          "ask": 68.0,
+          "frame": 1793041770408,
+          "receipt": 1793041770520.578,
+          "age": 6.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041767404,
+          "receipt": 1793041767543.2515,
+          "age": 10.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        266.956,
+        270.412
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-27ae-7d22-9542-aed07892159c|0",
+      "sid": "01a1799e-27ae-7d22-9542-aed07892159c",
+      "mk_idx": 0,
+      "hash": "0x6d74b04bd699f13d30b796b3cb290300c1bf1a41f95b39fefa32842d2151885f",
+      "t": 270.414,
+      "hi_ms": 1793041770414,
+      "lo_ms": 1793041768414,
+      "lo": 268.414,
+      "s": -1,
+      "price": 69.0,
+      "q": 52.89855072463768,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768409,
+          "receipt": 1793041768532.9304,
+          "age": 4.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 66.5,
+          "spread": 3.0,
+          "bid": 65.0,
+          "ask": 68.0,
+          "frame": 1793041770408,
+          "receipt": 1793041770520.578,
+          "age": 6.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041767404,
+          "receipt": 1793041767543.2515,
+          "age": 10.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        266.956,
+        270.412
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-27b0-76f3-8ec5-3cb2092225dc|0",
+      "sid": "01a1799e-27b0-76f3-8ec5-3cb2092225dc",
+      "mk_idx": 0,
+      "hash": "0x6d74b04bd699f13d30b796b3cb290300c1bf1a41f95b39fefa32842d2151885f",
+      "t": 270.416,
+      "hi_ms": 1793041770416,
+      "lo_ms": 1793041768416,
+      "lo": 268.416,
+      "s": -1,
+      "price": 69.0,
+      "q": 52.89855072463768,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768409,
+          "receipt": 1793041768532.9304,
+          "age": 6.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 66.5,
+          "spread": 3.0,
+          "bid": 65.0,
+          "ask": 68.0,
+          "frame": 1793041770408,
+          "receipt": 1793041770520.578,
+          "age": 8.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041767404,
+          "receipt": 1793041767543.2515,
+          "age": 12.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        266.956,
+        270.412
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-27b0-76f3-8ec5-3cc8bf43bd17|0",
+      "sid": "01a1799e-27b0-76f3-8ec5-3cc8bf43bd17",
+      "mk_idx": 0,
+      "hash": "0x6d74b04bd699f13d30b796b3cb290300c1bf1a41f95b39fefa32842d2151885f",
+      "t": 270.416,
+      "hi_ms": 1793041770416,
+      "lo_ms": 1793041768416,
+      "lo": 268.416,
+      "s": -1,
+      "price": 69.0,
+      "q": 52.89855072463768,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768409,
+          "receipt": 1793041768532.9304,
+          "age": 6.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 66.5,
+          "spread": 3.0,
+          "bid": 65.0,
+          "ask": 68.0,
+          "frame": 1793041770408,
+          "receipt": 1793041770520.578,
+          "age": 8.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041767404,
+          "receipt": 1793041767543.2515,
+          "age": 12.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        266.956,
+        270.412
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-27b0-76f3-8ec5-3cd94fd79858|0",
+      "sid": "01a1799e-27b0-76f3-8ec5-3cd94fd79858",
+      "mk_idx": 0,
+      "hash": "0x6d74b04bd699f13d30b796b3cb290300c1bf1a41f95b39fefa32842d2151885f",
+      "t": 270.416,
+      "hi_ms": 1793041770416,
+      "lo_ms": 1793041768416,
+      "lo": 268.416,
+      "s": -1,
+      "price": 69.0,
+      "q": 7.1640579710144925,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768409,
+          "receipt": 1793041768532.9304,
+          "age": 6.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 66.5,
+          "spread": 3.0,
+          "bid": 65.0,
+          "ask": 68.0,
+          "frame": 1793041770408,
+          "receipt": 1793041770520.578,
+          "age": 8.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041767404,
+          "receipt": 1793041767543.2515,
+          "age": 12.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        266.956,
+        270.412
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-27b0-76f3-8ec5-3ce306f1f852|0",
+      "sid": "01a1799e-27b0-76f3-8ec5-3ce306f1f852",
+      "mk_idx": 0,
+      "hash": "0x0aae383e54d08dfed36b532ff137b961ef483f5bcdc791af7e6fd512fb0177ac",
+      "t": 270.416,
+      "hi_ms": 1793041770416,
+      "lo_ms": 1793041768416,
+      "lo": 268.416,
+      "s": -1,
+      "price": 70.0,
+      "q": 44.36685714285714,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768409,
+          "receipt": 1793041768532.9304,
+          "age": 6.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 66.5,
+          "spread": 3.0,
+          "bid": 65.0,
+          "ask": 68.0,
+          "frame": 1793041770408,
+          "receipt": 1793041770520.578,
+          "age": 8.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041767404,
+          "receipt": 1793041767543.2515,
+          "age": 12.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        266.956,
+        270.416
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-27bd-7382-a97c-832e5900de94|0",
+      "sid": "01a1799e-27bd-7382-a97c-832e5900de94",
+      "mk_idx": 0,
+      "hash": "0x0aae383e54d08dfed36b532ff137b961ef483f5bcdc791af7e6fd512fb0177ac",
+      "t": 270.429,
+      "hi_ms": 1793041770429,
+      "lo_ms": 1793041768429,
+      "lo": 268.429,
+      "s": -1,
+      "price": 70.0,
+      "q": 51.42857142857143,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768409,
+          "receipt": 1793041768532.9304,
+          "age": 19.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 66.5,
+          "spread": 3.0,
+          "bid": 65.0,
+          "ask": 68.0,
+          "frame": 1793041770408,
+          "receipt": 1793041770520.578,
+          "age": 21.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041767404,
+          "receipt": 1793041767543.2515,
+          "age": 25.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        266.956,
+        270.416
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-27be-7ec1-b063-343247a86413|0",
+      "sid": "01a1799e-27be-7ec1-b063-343247a86413",
+      "mk_idx": 0,
+      "hash": "0x0aae383e54d08dfed36b532ff137b961ef483f5bcdc791af7e6fd512fb0177ac",
+      "t": 270.43,
+      "hi_ms": 1793041770430,
+      "lo_ms": 1793041768430,
+      "lo": 268.43,
+      "s": -1,
+      "price": 70.0,
+      "q": 5.0,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768409,
+          "receipt": 1793041768532.9304,
+          "age": 20.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 66.5,
+          "spread": 3.0,
+          "bid": 65.0,
+          "ask": 68.0,
+          "frame": 1793041770408,
+          "receipt": 1793041770520.578,
+          "age": 22.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041767404,
+          "receipt": 1793041767543.2515,
+          "age": 26.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        266.956,
+        270.416
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-283a-7e62-990c-83a16a8258d5|0",
+      "sid": "01a1799e-283a-7e62-990c-83a16a8258d5",
+      "mk_idx": 0,
+      "hash": "0x0aae383e54d08dfed36b532ff137b961ef483f5bcdc791af7e6fd512fb0177ac",
+      "t": 270.554,
+      "hi_ms": 1793041770554,
+      "lo_ms": 1793041768554,
+      "lo": 268.554,
+      "s": -1,
+      "price": 70.0,
+      "q": 5.5555,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768508,
+          "receipt": 1793041768638.4282,
+          "age": 45.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 69.0,
+          "spread": 2.0,
+          "bid": 68.0,
+          "ask": 70.0,
+          "frame": 1793041770554,
+          "receipt": 1793041770690.8574,
+          "age": 0.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041767553,
+          "receipt": 1793041767649.088,
+          "age": 1.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        266.956,
+        270.416
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-286e-7ca3-afde-a48969df7682|0",
+      "sid": "01a1799e-286e-7ca3-afde-a48969df7682",
+      "mk_idx": 0,
+      "hash": "0x0aae383e54d08dfed36b532ff137b961ef483f5bcdc791af7e6fd512fb0177ac",
+      "t": 270.606,
+      "hi_ms": 1793041770606,
+      "lo_ms": 1793041768606,
+      "lo": 268.606,
+      "s": -1,
+      "price": 70.0,
+      "q": 2.8326,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768555,
+          "receipt": 1793041768691.6682,
+          "age": 50.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 69.5,
+          "spread": 1.0,
+          "bid": 69.0,
+          "ask": 70.0,
+          "frame": 1793041770606,
+          "receipt": 1793041770745.6987,
+          "age": 0.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041767604,
+          "receipt": 1793041767707.544,
+          "age": 2.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        266.956,
+        270.416
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-287b-7ab2-8970-141d15a0af17|0",
+      "sid": "01a1799e-287b-7ab2-8970-141d15a0af17",
+      "mk_idx": 0,
+      "hash": "0x0aae383e54d08dfed36b532ff137b961ef483f5bcdc791af7e6fd512fb0177ac",
+      "t": 270.619,
+      "hi_ms": 1793041770619,
+      "lo_ms": 1793041768619,
+      "lo": 268.619,
+      "s": -1,
+      "price": 70.0,
+      "q": 21.052,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768606,
+          "receipt": 1793041768758.604,
+          "age": 12.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 69.5,
+          "spread": 1.0,
+          "bid": 69.0,
+          "ask": 70.0,
+          "frame": 1793041770606,
+          "receipt": 1793041770745.6987,
+          "age": 13.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041767604,
+          "receipt": 1793041767707.544,
+          "age": 15.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        266.956,
+        270.416
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-2887-7a33-b7ae-e1db4555660f|0",
+      "sid": "01a1799e-2887-7a33-b7ae-e1db4555660f",
+      "mk_idx": 0,
+      "hash": "0x0aae383e54d08dfed36b532ff137b961ef483f5bcdc791af7e6fd512fb0177ac",
+      "t": 270.631,
+      "hi_ms": 1793041770631,
+      "lo_ms": 1793041768631,
+      "lo": 268.631,
+      "s": -1,
+      "price": 70.0,
+      "q": 24.997,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768606,
+          "receipt": 1793041768758.604,
+          "age": 24.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 69.5,
+          "spread": 1.0,
+          "bid": 69.0,
+          "ask": 70.0,
+          "frame": 1793041770606,
+          "receipt": 1793041770745.6987,
+          "age": 25.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041767604,
+          "receipt": 1793041767707.544,
+          "age": 27.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        266.956,
+        270.416
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-291c-7bd2-a238-73151640c356|0",
+      "sid": "01a1799e-291c-7bd2-a238-73151640c356",
+      "mk_idx": 0,
+      "hash": "0x0aae383e54d08dfed36b532ff137b961ef483f5bcdc791af7e6fd512fb0177ac",
+      "t": 270.78,
+      "hi_ms": 1793041770780,
+      "lo_ms": 1793041768780,
+      "lo": 268.78,
+      "s": -1,
+      "price": 70.0,
+      "q": 1.4285714285714286,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768760,
+          "receipt": 1793041768865.0715,
+          "age": 19.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 69.5,
+          "spread": 1.0,
+          "bid": 69.0,
+          "ask": 70.0,
+          "frame": 1793041770755,
+          "receipt": 1793041770902.6729,
+          "age": 25.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041767774,
+          "receipt": 1793041767934.9949,
+          "age": 6.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        266.956,
+        270.416
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-2a0b-7993-bab1-0a648d1537c0|0",
+      "sid": "01a1799e-2a0b-7993-bab1-0a648d1537c0",
+      "mk_idx": 0,
+      "hash": "0x77517625d9a0577a38a369ddc33e75dbd4a6ea281c217b1cace4670052099a45",
+      "t": 271.019,
+      "hi_ms": 1793041771019,
+      "lo_ms": 1793041769019,
+      "lo": 269.019,
+      "s": -1,
+      "price": 71.0,
+      "q": 2.0,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041769004,
+          "receipt": 1793041769133.3284,
+          "age": 14.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 70.5,
+          "spread": 1.0,
+          "bid": 70.0,
+          "ask": 71.0,
+          "frame": 1793041771007,
+          "receipt": 1793041771114.6155,
+          "age": 12.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768005,
+          "receipt": 1793041768101.4934,
+          "age": 14.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        265.655,
+        271.019
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-2aa3-7bf1-aab8-4c27eb091398|0",
+      "sid": "01a1799e-2aa3-7bf1-aab8-4c27eb091398",
+      "mk_idx": 0,
+      "hash": "0x23654ab521e89ddc01e29a8ddb6b54dfdc838bf7c579dd71ec47a1392f6b4d54",
+      "t": 271.171,
+      "hi_ms": 1793041771171,
+      "lo_ms": 1793041769171,
+      "lo": 269.171,
+      "s": -1,
+      "price": 71.0,
+      "q": 15.789,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041769151,
+          "receipt": 1793041769244.4624,
+          "age": 19.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 70.5,
+          "spread": 1.0,
+          "bid": 70.0,
+          "ask": 71.0,
+          "frame": 1793041771155,
+          "receipt": 1793041771272.6367,
+          "age": 16.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768142,
+          "receipt": 1793041768267.7844,
+          "age": 29.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        266.956,
+        271.171
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-2ab9-7e02-9a4b-8bfc76b8c5cf|0",
+      "sid": "01a1799e-2ab9-7e02-9a4b-8bfc76b8c5cf",
+      "mk_idx": 0,
+      "hash": "0x23654ab521e89ddc01e29a8ddb6b54dfdc838bf7c579dd71ec47a1392f6b4d54",
+      "t": 271.193,
+      "hi_ms": 1793041771193,
+      "lo_ms": 1793041769193,
+      "lo": 269.193,
+      "s": -1,
+      "price": 71.0,
+      "q": 20.0,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041769151,
+          "receipt": 1793041769244.4624,
+          "age": 41.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 70.5,
+          "spread": 1.0,
+          "bid": 70.0,
+          "ask": 71.0,
+          "frame": 1793041771155,
+          "receipt": 1793041771272.6367,
+          "age": 38.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768142,
+          "receipt": 1793041768267.7844,
+          "age": 51.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        266.956,
+        271.171
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-2abc-7bc2-856c-75c3ef44f503|0",
+      "sid": "01a1799e-2abc-7bc2-856c-75c3ef44f503",
+      "mk_idx": 0,
+      "hash": "0x23654ab521e89ddc01e29a8ddb6b54dfdc838bf7c579dd71ec47a1392f6b4d54",
+      "t": 271.196,
+      "hi_ms": 1793041771196,
+      "lo_ms": 1793041769196,
+      "lo": 269.196,
+      "s": -1,
+      "price": 71.0,
+      "q": 11.687,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041769151,
+          "receipt": 1793041769244.4624,
+          "age": 44.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 70.5,
+          "spread": 1.0,
+          "bid": 70.0,
+          "ask": 71.0,
+          "frame": 1793041771155,
+          "receipt": 1793041771272.6367,
+          "age": 41.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768142,
+          "receipt": 1793041768267.7844,
+          "age": 54.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        266.956,
+        271.171
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-2b0c-71d2-a9f3-d29f1c9e5c2e|0",
+      "sid": "01a1799e-2b0c-71d2-a9f3-d29f1c9e5c2e",
+      "mk_idx": 0,
+      "hash": "0x23654ab521e89ddc01e29a8ddb6b54dfdc838bf7c579dd71ec47a1392f6b4d54",
+      "t": 271.276,
+      "hi_ms": 1793041771276,
+      "lo_ms": 1793041769276,
+      "lo": 269.276,
+      "s": -1,
+      "price": 71.0,
+      "q": 12.0,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041769259,
+          "receipt": 1793041769399.5107,
+          "age": 16.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 70.5,
+          "spread": 1.0,
+          "bid": 70.0,
+          "ask": 71.0,
+          "frame": 1793041771250,
+          "receipt": 1793041771381.0098,
+          "age": 26.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768258,
+          "receipt": 1793041768373.0984,
+          "age": 18.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        266.956,
+        271.171
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-2b5f-7852-acbb-f4230693a282|0",
+      "sid": "01a1799e-2b5f-7852-acbb-f4230693a282",
+      "mk_idx": 0,
+      "hash": "0x23654ab521e89ddc01e29a8ddb6b54dfdc838bf7c579dd71ec47a1392f6b4d54",
+      "t": 271.359,
+      "hi_ms": 1793041771359,
+      "lo_ms": 1793041769359,
+      "lo": 269.359,
+      "s": -1,
+      "price": 71.0,
+      "q": 1.3699,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041769349,
+          "receipt": 1793041769453.0059,
+          "age": 9.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 70.5,
+          "spread": 1.0,
+          "bid": 70.0,
+          "ask": 71.0,
+          "frame": 1793041771359,
+          "receipt": 1793041771509.3525,
+          "age": 0.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768355,
+          "receipt": 1793041768479.2734,
+          "age": 4.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        266.956,
+        271.171
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-2d21-7ee3-aa83-4be6d7213dea|0",
+      "sid": "01a1799e-2d21-7ee3-aa83-4be6d7213dea",
+      "mk_idx": 0,
+      "hash": "0x5dd4e04de2a64fa734dc238024cc81093a0d79d3d15204ec234ce70a51ca0999",
+      "t": 271.809,
+      "hi_ms": 1793041771809,
+      "lo_ms": 1793041769809,
+      "lo": 269.809,
+      "s": -1,
+      "price": 74.0,
+      "q": 14.08,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041769755,
+          "receipt": 1793041769875.8242,
+          "age": 53.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 73.0,
+          "spread": 2.0,
+          "bid": 72.0,
+          "ask": 74.0,
+          "frame": 1793041771808,
+          "receipt": 1793041771943.2366,
+          "age": 1.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768795,
+          "receipt": 1793041768920.9363,
+          "age": 14.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        269.299,
+        271.809
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-2d2e-7681-80a0-1453d382f4d2|0",
+      "sid": "01a1799e-2d2e-7681-80a0-1453d382f4d2",
+      "mk_idx": 0,
+      "hash": "0x5dd4e04de2a64fa734dc238024cc81093a0d79d3d15204ec234ce70a51ca0999",
+      "t": 271.822,
+      "hi_ms": 1793041771822,
+      "lo_ms": 1793041769822,
+      "lo": 269.822,
+      "s": -1,
+      "price": 74.0,
+      "q": 21.12,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041769809,
+          "receipt": 1793041770041.3064,
+          "age": 12.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 73.0,
+          "spread": 2.0,
+          "bid": 72.0,
+          "ask": 74.0,
+          "frame": 1793041771808,
+          "receipt": 1793041771943.2366,
+          "age": 14.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768795,
+          "receipt": 1793041768920.9363,
+          "age": 27.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        269.299,
+        271.809
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-2d9e-7113-93ca-c37b36501209|0",
+      "sid": "01a1799e-2d9e-7113-93ca-c37b36501209",
+      "mk_idx": 0,
+      "hash": "0x5dd4e04de2a64fa734dc238024cc81093a0d79d3d15204ec234ce70a51ca0999",
+      "t": 271.934,
+      "hi_ms": 1793041771934,
+      "lo_ms": 1793041769934,
+      "lo": 269.934,
+      "s": -1,
+      "price": 74.0,
+      "q": 1.3513027027027027,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041769903,
+          "receipt": 1793041770097.7344,
+          "age": 30.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 73.5,
+          "spread": 1.0,
+          "bid": 73.0,
+          "ask": 74.0,
+          "frame": 1793041771907,
+          "receipt": 1793041771996.6184,
+          "age": 27.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041768906,
+          "receipt": 1793041769026.8381,
+          "age": 28.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        269.299,
+        271.809
+      ],
+      "post_grade": "G4_scenario_only",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-2dc3-73e2-8cda-3d9796bc87fd|0",
+      "sid": "01a1799e-2dc3-73e2-8cda-3d9796bc87fd",
+      "mk_idx": 0,
+      "hash": "0x11d99cefd2a64d93e421c69b96ef22e3a3803c75f2eb3560043bc8329c335855",
+      "t": 271.971,
+      "hi_ms": 1793041771971,
+      "lo_ms": 1793041769971,
+      "lo": 269.971,
+      "s": -1,
+      "price": 75.0,
+      "q": 7.34,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041769949,
+          "receipt": 1793041770097.9797,
+          "age": 21.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 74.0,
+          "spread": 2.0,
+          "bid": 73.0,
+          "ask": 75.0,
+          "frame": 1793041771952,
+          "receipt": 1793041772104.1235,
+          "age": 19.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 63.0,
+          "spread": 2.0,
+          "bid": 62.0,
+          "ask": 64.0,
+          "frame": 1793041768958,
+          "receipt": 1793041769080.5107,
+          "age": 13.0
+        }
+      },
+      "original_size": null,
+      "post": null,
+      "post_grade": "G1_conflict",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-2df2-79e3-8da8-bd522ed1d583|0",
+      "sid": "01a1799e-2df2-79e3-8da8-bd522ed1d583",
+      "mk_idx": 0,
+      "hash": "0x11d99cefd2a64d93e421c69b96ef22e3a3803c75f2eb3560043bc8329c335855",
+      "t": 272.018,
+      "hi_ms": 1793041772018,
+      "lo_ms": 1793041770018,
+      "lo": 270.018,
+      "s": -1,
+      "price": 75.0,
+      "q": 30.0,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 63.5,
+          "spread": 3.0,
+          "bid": 62.0,
+          "ask": 65.0,
+          "frame": 1793041770002,
+          "receipt": 1793041770146.6091,
+          "age": 15.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 74.0,
+          "spread": 2.0,
+          "bid": 73.0,
+          "ask": 75.0,
+          "frame": 1793041772004,
+          "receipt": 1793041772105.0579,
+          "age": 14.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041769004,
+          "receipt": 1793041769133.3284,
+          "age": 14.0
+        }
+      },
+      "original_size": null,
+      "post": null,
+      "post_grade": "G1_conflict",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-2e31-7951-8c07-893d984076a4|0",
+      "sid": "01a1799e-2e31-7951-8c07-893d984076a4",
+      "mk_idx": 0,
+      "hash": "0x11d99cefd2a64d93e421c69b96ef22e3a3803c75f2eb3560043bc8329c335855",
+      "t": 272.081,
+      "hi_ms": 1793041772081,
+      "lo_ms": 1793041770081,
+      "lo": 270.081,
+      "s": -1,
+      "price": 75.0,
+      "q": 30.0,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 63.5,
+          "spread": 3.0,
+          "bid": 62.0,
+          "ask": 65.0,
+          "frame": 1793041770053,
+          "receipt": 1793041770199.4417,
+          "age": 27.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 74.5,
+          "spread": 1.0,
+          "bid": 74.0,
+          "ask": 75.0,
+          "frame": 1793041772054,
+          "receipt": 1793041772156.387,
+          "age": 27.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041769055,
+          "receipt": 1793041769191.1968,
+          "age": 26.0
+        }
+      },
+      "original_size": null,
+      "post": null,
+      "post_grade": "G1_conflict",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-2e32-75a3-8d25-e8797e61597a|0",
+      "sid": "01a1799e-2e32-75a3-8d25-e8797e61597a",
+      "mk_idx": 0,
+      "hash": "0x11d99cefd2a64d93e421c69b96ef22e3a3803c75f2eb3560043bc8329c335855",
+      "t": 272.082,
+      "hi_ms": 1793041772082,
+      "lo_ms": 1793041770082,
+      "lo": 270.082,
+      "s": -1,
+      "price": 75.0,
+      "q": 30.0,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 63.5,
+          "spread": 3.0,
+          "bid": 62.0,
+          "ask": 65.0,
+          "frame": 1793041770053,
+          "receipt": 1793041770199.4417,
+          "age": 28.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 74.5,
+          "spread": 1.0,
+          "bid": 74.0,
+          "ask": 75.0,
+          "frame": 1793041772054,
+          "receipt": 1793041772156.387,
+          "age": 28.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041769055,
+          "receipt": 1793041769191.1968,
+          "age": 27.0
+        }
+      },
+      "original_size": null,
+      "post": null,
+      "post_grade": "G1_conflict",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-2e33-75f1-bb94-badee3184f27|0",
+      "sid": "01a1799e-2e33-75f1-bb94-badee3184f27",
+      "mk_idx": 0,
+      "hash": "0x11d99cefd2a64d93e421c69b96ef22e3a3803c75f2eb3560043bc8329c335855",
+      "t": 272.083,
+      "hi_ms": 1793041772083,
+      "lo_ms": 1793041770083,
+      "lo": 270.083,
+      "s": -1,
+      "price": 75.0,
+      "q": 30.0,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 63.5,
+          "spread": 3.0,
+          "bid": 62.0,
+          "ask": 65.0,
+          "frame": 1793041770053,
+          "receipt": 1793041770199.4417,
+          "age": 29.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 74.5,
+          "spread": 1.0,
+          "bid": 74.0,
+          "ask": 75.0,
+          "frame": 1793041772054,
+          "receipt": 1793041772156.387,
+          "age": 29.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041769055,
+          "receipt": 1793041769191.1968,
+          "age": 28.0
+        }
+      },
+      "original_size": null,
+      "post": null,
+      "post_grade": "G1_conflict",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-2f47-7631-82ef-c271531d4d3c|0",
+      "sid": "01a1799e-2f47-7631-82ef-c271531d4d3c",
+      "mk_idx": 0,
+      "hash": "0x11d99cefd2a64d93e421c69b96ef22e3a3803c75f2eb3560043bc8329c335855",
+      "t": 272.359,
+      "hi_ms": 1793041772359,
+      "lo_ms": 1793041770359,
+      "lo": 270.359,
+      "s": -1,
+      "price": 75.0,
+      "q": 30.0,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 66.0,
+          "spread": 4.0,
+          "bid": 64.0,
+          "ask": 68.0,
+          "frame": 1793041770358,
+          "receipt": 1793041770465.3933,
+          "age": 0.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 74.5,
+          "spread": 1.0,
+          "bid": 74.0,
+          "ask": 75.0,
+          "frame": 1793041772358,
+          "receipt": 1793041772487.3923,
+          "age": 1.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041769349,
+          "receipt": 1793041769453.0059,
+          "age": 10.0
+        }
+      },
+      "original_size": null,
+      "post": null,
+      "post_grade": "G1_conflict",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-2f78-71f3-8344-78bf7dcf11c4|0",
+      "sid": "01a1799e-2f78-71f3-8344-78bf7dcf11c4",
+      "mk_idx": 0,
+      "hash": "0x11d99cefd2a64d93e421c69b96ef22e3a3803c75f2eb3560043bc8329c335855",
+      "t": 272.408,
+      "hi_ms": 1793041772408,
+      "lo_ms": 1793041770408,
+      "lo": 270.408,
+      "s": -1,
+      "price": 75.0,
+      "q": 10.0,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 66.0,
+          "spread": 4.0,
+          "bid": 64.0,
+          "ask": 68.0,
+          "frame": 1793041770358,
+          "receipt": 1793041770465.3933,
+          "age": 49.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 74.5,
+          "spread": 1.0,
+          "bid": 74.0,
+          "ask": 75.0,
+          "frame": 1793041772408,
+          "receipt": 1793041772536.9836,
+          "age": 0.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041769408,
+          "receipt": 1793041769503.321,
+          "age": 0.0
+        }
+      },
+      "original_size": null,
+      "post": null,
+      "post_grade": "G1_conflict",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-2fea-7842-b2bb-4f0a56ae0acd|0",
+      "sid": "01a1799e-2fea-7842-b2bb-4f0a56ae0acd",
+      "mk_idx": 0,
+      "hash": "0x11d99cefd2a64d93e421c69b96ef22e3a3803c75f2eb3560043bc8329c335855",
+      "t": 272.522,
+      "hi_ms": 1793041772522,
+      "lo_ms": 1793041770522,
+      "lo": 270.522,
+      "s": -1,
+      "price": 75.0,
+      "q": 10.0,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 69.0,
+          "spread": 2.0,
+          "bid": 68.0,
+          "ask": 70.0,
+          "frame": 1793041770508,
+          "receipt": 1793041770636.2136,
+          "age": 13.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 74.5,
+          "spread": 1.0,
+          "bid": 74.0,
+          "ask": 75.0,
+          "frame": 1793041772507,
+          "receipt": 1793041772641.8438,
+          "age": 15.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041769508,
+          "receipt": 1793041769609.0698,
+          "age": 14.0
+        }
+      },
+      "original_size": null,
+      "post": null,
+      "post_grade": "G1_conflict",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-302b-7e03-8bc1-1e8c07803636|0",
+      "sid": "01a1799e-302b-7e03-8bc1-1e8c07803636",
+      "mk_idx": 0,
+      "hash": "0x11d99cefd2a64d93e421c69b96ef22e3a3803c75f2eb3560043bc8329c335855",
+      "t": 272.587,
+      "hi_ms": 1793041772587,
+      "lo_ms": 1793041770587,
+      "lo": 270.587,
+      "s": -1,
+      "price": 75.0,
+      "q": 31.0,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 69.0,
+          "spread": 2.0,
+          "bid": 68.0,
+          "ask": 70.0,
+          "frame": 1793041770554,
+          "receipt": 1793041770690.8574,
+          "age": 32.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 74.5,
+          "spread": 1.0,
+          "bid": 74.0,
+          "ask": 75.0,
+          "frame": 1793041772527,
+          "receipt": 1793041772696.6255,
+          "age": 60.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041769555,
+          "receipt": 1793041769664.6528,
+          "age": 32.0
+        }
+      },
+      "original_size": null,
+      "post": null,
+      "post_grade": "G1_conflict",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-30da-7023-b6f9-883f231dc77b|0",
+      "sid": "01a1799e-30da-7023-b6f9-883f231dc77b",
+      "mk_idx": 0,
+      "hash": "0x11d99cefd2a64d93e421c69b96ef22e3a3803c75f2eb3560043bc8329c335855",
+      "t": 272.762,
+      "hi_ms": 1793041772762,
+      "lo_ms": 1793041770762,
+      "lo": 270.762,
+      "s": -1,
+      "price": 75.0,
+      "q": 6.666666666666667,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 69.5,
+          "spread": 1.0,
+          "bid": 69.0,
+          "ask": 70.0,
+          "frame": 1793041770755,
+          "receipt": 1793041770902.6729,
+          "age": 6.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 74.5,
+          "spread": 1.0,
+          "bid": 74.0,
+          "ask": 75.0,
+          "frame": 1793041772751,
+          "receipt": 1793041772857.7107,
+          "age": 11.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041769755,
+          "receipt": 1793041769875.8242,
+          "age": 7.0
+        }
+      },
+      "original_size": null,
+      "post": null,
+      "post_grade": "G1_conflict",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-31c6-76c3-823d-d48afe9ffe53|0",
+      "sid": "01a1799e-31c6-76c3-823d-d48afe9ffe53",
+      "mk_idx": 0,
+      "hash": "0x11d99cefd2a64d93e421c69b96ef22e3a3803c75f2eb3560043bc8329c335855",
+      "t": 272.998,
+      "hi_ms": 1793041772998,
+      "lo_ms": 1793041770998,
+      "lo": 270.998,
+      "s": -1,
+      "price": 75.0,
+      "q": 4.993333333333333,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 70.5,
+          "spread": 1.0,
+          "bid": 70.0,
+          "ask": 71.0,
+          "frame": 1793041770956,
+          "receipt": 1793041771062.2996,
+          "age": 41.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 74.5,
+          "spread": 1.0,
+          "bid": 74.0,
+          "ask": 75.0,
+          "frame": 1793041772930,
+          "receipt": 1793041773068.3264,
+          "age": 68.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041769949,
+          "receipt": 1793041770097.9797,
+          "age": 49.0
+        }
+      },
+      "original_size": null,
+      "post": null,
+      "post_grade": "G1_conflict",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-31c6-76c3-823d-d48afe9ffe53|1",
+      "sid": "01a1799e-31c6-76c3-823d-d48afe9ffe53",
+      "mk_idx": 1,
+      "hash": "0x21b1b745a9424897730b4b943bece5b0d4187a64dc1d9cca92ce77a2877929a8",
+      "t": 272.998,
+      "hi_ms": 1793041772998,
+      "lo_ms": 1793041770998,
+      "lo": 270.998,
+      "s": -1,
+      "price": 76.0,
+      "q": 1.6513157894736843,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 70.5,
+          "spread": 1.0,
+          "bid": 70.0,
+          "ask": 71.0,
+          "frame": 1793041770956,
+          "receipt": 1793041771062.2996,
+          "age": 41.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 74.5,
+          "spread": 1.0,
+          "bid": 74.0,
+          "ask": 75.0,
+          "frame": 1793041772930,
+          "receipt": 1793041773068.3264,
+          "age": 68.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 62.5,
+          "spread": 1.0,
+          "bid": 62.0,
+          "ask": 63.0,
+          "frame": 1793041769949,
+          "receipt": 1793041770097.9797,
+          "age": 49.0
+        }
+      },
+      "original_size": null,
+      "post": null,
+      "post_grade": "G1_conflict",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-31cf-7791-966d-34789d93f414|0",
+      "sid": "01a1799e-31cf-7791-966d-34789d93f414",
+      "mk_idx": 0,
+      "hash": "0x21b1b745a9424897730b4b943bece5b0d4187a64dc1d9cca92ce77a2877929a8",
+      "t": 273.007,
+      "hi_ms": 1793041773007,
+      "lo_ms": 1793041771007,
+      "lo": 271.007,
+      "s": -1,
+      "price": 76.0,
+      "q": 1.3157894736842106,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 70.5,
+          "spread": 1.0,
+          "bid": 70.0,
+          "ask": 71.0,
+          "frame": 1793041770956,
+          "receipt": 1793041771062.2996,
+          "age": 50.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 74.5,
+          "spread": 1.0,
+          "bid": 74.0,
+          "ask": 75.0,
+          "frame": 1793041772930,
+          "receipt": 1793041773068.3264,
+          "age": 77.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 63.5,
+          "spread": 3.0,
+          "bid": 62.0,
+          "ask": 65.0,
+          "frame": 1793041770002,
+          "receipt": 1793041770146.6091,
+          "age": 5.0
+        }
+      },
+      "original_size": null,
+      "post": null,
+      "post_grade": "G1_conflict",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-339b-7b32-98fd-82abbbd10f76|0",
+      "sid": "01a1799e-339b-7b32-98fd-82abbbd10f76",
+      "mk_idx": 0,
+      "hash": "0x21b1b745a9424897730b4b943bece5b0d4187a64dc1d9cca92ce77a2877929a8",
+      "t": 273.467,
+      "hi_ms": 1793041773467,
+      "lo_ms": 1793041771467,
+      "lo": 271.467,
+      "s": -1,
+      "price": 76.0,
+      "q": 13.157565789473685,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 70.5,
+          "spread": 1.0,
+          "bid": 70.0,
+          "ask": 71.0,
+          "frame": 1793041771446,
+          "receipt": 1793041771562.9517,
+          "age": 20.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 75.5,
+          "spread": 1.0,
+          "bid": 75.0,
+          "ask": 76.0,
+          "frame": 1793041773459,
+          "receipt": 1793041773557.8591,
+          "age": 8.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 68.0,
+          "spread": 4.0,
+          "bid": 66.0,
+          "ask": 70.0,
+          "frame": 1793041770444,
+          "receipt": 1793041770578.8452,
+          "age": 23.0
+        }
+      },
+      "original_size": null,
+      "post": null,
+      "post_grade": "G1_conflict",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-347e-70f1-a4c4-d11d585609fa|0",
+      "sid": "01a1799e-347e-70f1-a4c4-d11d585609fa",
+      "mk_idx": 0,
+      "hash": "0x21b1b745a9424897730b4b943bece5b0d4187a64dc1d9cca92ce77a2877929a8",
+      "t": 273.694,
+      "hi_ms": 1793041773694,
+      "lo_ms": 1793041771694,
+      "lo": 271.694,
+      "s": -1,
+      "price": 76.0,
+      "q": 1.3157894736842106,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 70.5,
+          "spread": 1.0,
+          "bid": 70.0,
+          "ask": 71.0,
+          "frame": 1793041771660,
+          "receipt": 1793041771780.5208,
+          "age": 33.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 75.5,
+          "spread": 1.0,
+          "bid": 75.0,
+          "ask": 76.0,
+          "frame": 1793041773659,
+          "receipt": 1793041773769.2803,
+          "age": 35.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 69.5,
+          "spread": 1.0,
+          "bid": 69.0,
+          "ask": 70.0,
+          "frame": 1793041770694,
+          "receipt": 1793041770850.1758,
+          "age": 0.0
+        }
+      },
+      "original_size": null,
+      "post": null,
+      "post_grade": "G1_conflict",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-3512-7373-8ad7-f817a41212e3|0",
+      "sid": "01a1799e-3512-7373-8ad7-f817a41212e3",
+      "mk_idx": 0,
+      "hash": "0x21b1b745a9424897730b4b943bece5b0d4187a64dc1d9cca92ce77a2877929a8",
+      "t": 273.842,
+      "hi_ms": 1793041773842,
+      "lo_ms": 1793041771842,
+      "lo": 271.842,
+      "s": -1,
+      "price": 76.0,
+      "q": 1.3157565789473684,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 73.0,
+          "spread": 2.0,
+          "bid": 72.0,
+          "ask": 74.0,
+          "frame": 1793041771841,
+          "receipt": 1793041771944.319,
+          "age": 0.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 75.5,
+          "spread": 1.0,
+          "bid": 75.0,
+          "ask": 76.0,
+          "frame": 1793041773803,
+          "receipt": 1793041773925.4531,
+          "age": 39.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 69.5,
+          "spread": 1.0,
+          "bid": 69.0,
+          "ask": 70.0,
+          "frame": 1793041770796,
+          "receipt": 1793041770903.9626,
+          "age": 46.0
+        }
+      },
+      "original_size": null,
+      "post": null,
+      "post_grade": "G1_conflict",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-361b-7a21-82ae-1ac730e86272|0",
+      "sid": "01a1799e-361b-7a21-82ae-1ac730e86272",
+      "mk_idx": 0,
+      "hash": "0x21b1b745a9424897730b4b943bece5b0d4187a64dc1d9cca92ce77a2877929a8",
+      "t": 274.107,
+      "hi_ms": 1793041774107,
+      "lo_ms": 1793041772107,
+      "lo": 272.107,
+      "s": -1,
+      "price": 76.0,
+      "q": 50.5,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 74.5,
+          "spread": 1.0,
+          "bid": 74.0,
+          "ask": 75.0,
+          "frame": 1793041772103,
+          "receipt": 1793041772211.3523,
+          "age": 3.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 75.5,
+          "spread": 1.0,
+          "bid": 75.0,
+          "ask": 76.0,
+          "frame": 1793041774057,
+          "receipt": 1793041774189.406,
+          "age": 50.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 70.5,
+          "spread": 1.0,
+          "bid": 70.0,
+          "ask": 71.0,
+          "frame": 1793041771106,
+          "receipt": 1793041771220.0557,
+          "age": 1.0
+        }
+      },
+      "original_size": null,
+      "post": null,
+      "post_grade": "G1_conflict",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-3921-7ee0-9aed-bc9e4f2de502|0",
+      "sid": "01a1799e-3921-7ee0-9aed-bc9e4f2de502",
+      "mk_idx": 0,
+      "hash": "0x375e5007a1cf50c70c2bf82578140ce068584b2d3d9b3a68212d30f0e1898dbd",
+      "t": 274.881,
+      "hi_ms": 1793041774881,
+      "lo_ms": 1793041772881,
+      "lo": 272.881,
+      "s": -1,
+      "price": 79.0,
+      "q": 6.329113924050633,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 74.5,
+          "spread": 1.0,
+          "bid": 74.0,
+          "ask": 75.0,
+          "frame": 1793041772854,
+          "receipt": 1793041772962.5686,
+          "age": 26.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 78.5,
+          "spread": 1.0,
+          "bid": 78.0,
+          "ask": 79.0,
+          "frame": 1793041774856,
+          "receipt": 1793041774989.3965,
+          "age": 25.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 73.0,
+          "spread": 2.0,
+          "bid": 72.0,
+          "ask": 74.0,
+          "frame": 1793041771841,
+          "receipt": 1793041771944.319,
+          "age": 40.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        270.893,
+        274.881
+      ],
+      "post_grade": "G2_bound_constrained",
+      "native": "BUY NO"
+    },
+    {
+      "id": "maker|01a1799e-397d-7823-9b84-be72ae94d0a9|0",
+      "sid": "01a1799e-397d-7823-9b84-be72ae94d0a9",
+      "mk_idx": 0,
+      "hash": "0x375e5007a1cf50c70c2bf82578140ce068584b2d3d9b3a68212d30f0e1898dbd",
+      "t": 274.973,
+      "hi_ms": 1793041774973,
+      "lo_ms": 1793041772973,
+      "lo": 272.973,
+      "s": -1,
+      "price": 79.0,
+      "q": 10.476,
+      "fee_c": -0.0,
+      "role": "maker",
+      "book": {
+        "pre": {
+          "status": "ok",
+          "mid": 74.5,
+          "spread": 1.0,
+          "bid": 74.0,
+          "ask": 75.0,
+          "frame": 1793041772930,
+          "receipt": 1793041773068.3264,
+          "age": 42.0
+        },
+        "upper": {
+          "status": "ok",
+          "mid": 78.5,
+          "spread": 1.0,
+          "bid": 78.0,
+          "ask": 79.0,
+          "frame": 1793041774958,
+          "receipt": 1793041775094.945,
+          "age": 15.0
+        },
+        "lag1": {
+          "status": "ok",
+          "mid": 74.0,
+          "spread": 2.0,
+          "bid": 73.0,
+          "ask": 75.0,
+          "frame": 1793041771952,
+          "receipt": 1793041772104.1235,
+          "age": 21.0
+        }
+      },
+      "original_size": null,
+      "post": [
+        270.893,
+        274.881
+      ],
+      "post_grade": "G2_bound_constrained",
+      "native": "BUY NO"
+    }
+  ]
+}

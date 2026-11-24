@@ -1,3 +1,17 @@
+<!-- MAKER3_SPREAD_RISK_20261124_CODEX -->
+## 2026-11-24 — maker3's late turnover, spread and risk chart
+
+[Receipt](reviews/maker3_spread_risk_20261124/report.md); [chart](reviews/maker_dashboard_20261124/maker3-research.html), existing localhost8765 tunnel. USER asks inventory rules, trending fills, late/wide-spread profits, sizing/skew/takes. All19 consumed complete markets, 2,759 actor legs. Frozen2b540b096; canonical mixed-case address adapter41b546811, after initial build refused before outputs. Completed turnover+$859.50; residual less remaining fees−$1,210.32; END−$350.81. Late exits+$953.10 vs early−$93.59, entries may precede180s. In3789484 late closes+$564.07 vs early−$55.44. Both legs>4c explain only0.41% pre-window/5.31% upper of positive completed value: mainly-wide hypothesis not supported. Edge-versus-midmove attribution is highly clock-sensitive.
+
+Public-price-only trend3838531,245–275s,+71c:76legs,15.38buys/1,621.36YES-equivalent sells, recorded net−64.85→−1,670.83; two NO-buy takes add negative recorded exposure. Not every take reduces. Full-market net still+$113.34; never equate the window with a losing whole market. Native/YES prices, bounded times and book ages explicit. Our baseline/wider overlays exist on3prior markets only.
+
+5,700neutral seconds,5predeclared taker conditions x D0/lag1,500raw-side shifts. No stable positive trigger: no-passive-reduction and executable-profit screens have counts but no positive association; burst/BTC-adverse/wide thin. No inferred private skew/threshold or sizing rule. Prior33signed quotes/28usable windows remain the size evidence, both10/220 on adding/reducing sides. Our wider S500/R250/C1000 uses quantity skew, no price skew; soft restriction and outstanding-reservation hard cap separate; wider IOC did not trigger in prior3 paths.
+
+Checks2,759raw legs/156cells/10screens/4corruptions. Desktop/mobile chart pass after UI overflow correction; scientific data unchanged. No fit/replay/new days/validation. Upper charge60CPU sec; cumulative task~2.10489/line5.41559, caps2.35/5.65, .05reserve. Local only; other-session edits preserved.
+
+ONE next priority remains unchanged WIDE_PASSIVE vs opening-only baseline across all19consumed complete markets, paired turnover/residual/risk/churn, before adding a sizing switch or taker trigger. Standing bounded CPU authorization suffices; no new days/live.
+<!-- /MAKER3_SPREAD_RISK_20261124_CODEX -->
+
 <!-- CAP_MAKER_SIZING_20261124_CODEX -->
 ## 2026-11-24 — raising the soft inventory band changes turnover; cap alone does not
 

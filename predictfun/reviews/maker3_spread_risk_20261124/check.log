@@ -1,0 +1,2 @@
+PASS 2759 raw fills; 156 cells;10 risk screens; 4 corruptions
+2026-11-24T14:55:41Z tag=msr_check rc=0 peak_rss_mib=371 wall_s=2.92 cpu_user_s=2.46 memavail_start_gib=22 disk_free_gib=410->410 slot=codex

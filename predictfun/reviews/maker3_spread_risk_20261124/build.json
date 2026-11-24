@@ -1,0 +1,83 @@
+{
+  "markets": 19,
+  "trend": {
+    "start_s": 245.0,
+    "end_s": 275.0,
+    "move_c": 71.0,
+    "efficiency": 0.806818181818182,
+    "qualifies": true,
+    "day": "20261026",
+    "mid": 3838531
+  },
+  "excluded": [
+    {
+      "day": "20261025",
+      "mid": 3723774,
+      "sid": "01a17061-bc78-7d83-a4f0-e90aa3b4fe3f",
+      "role": "maker",
+      "status": "src_status",
+      "self_trade": false
+    },
+    {
+      "day": "20261025",
+      "mid": 3723774,
+      "sid": "01a17061-bc78-7d83-a4f0-e90aa3b4fe3f",
+      "role": "maker",
+      "status": "src_status",
+      "self_trade": false
+    },
+    {
+      "day": "20261025",
+      "mid": 3723774,
+      "sid": "01a17061-bc78-7d83-a4f0-e90aa3b4fe3f",
+      "role": "maker",
+      "status": "src_status",
+      "self_trade": false
+    },
+    {
+      "day": "20261025",
+      "mid": 3723774,
+      "sid": "01a17061-bc78-7d83-a4f0-e90aa3b4fe3f",
+      "role": "maker",
+      "status": "src_status",
+      "self_trade": false
+    },
+    {
+      "day": "20261025",
+      "mid": 3723774,
+      "sid": "01a17061-bc78-7d83-a4f0-e90aa3b4fe3f",
+      "role": "maker",
+      "status": "src_status",
+      "self_trade": false
+    },
+    {
+      "day": "20261025",
+      "mid": 3723774,
+      "sid": "01a17061-bc78-7d83-a4f0-e90aa3b4fe3f",
+      "role": "maker",
+      "status": "src_status",
+      "self_trade": false
+    },
+    {
+      "day": "20261025",
+      "mid": 3723774,
+      "sid": "01a17061-bc78-7d83-a4f0-e90aa3b4fe3f",
+      "role": "maker",
+      "status": "src_status",
+      "self_trade": false
+    },
+    {
+      "day": "20261025",
+      "mid": 3763401,
+      "sid": "01a17405-f31b-7271-8bd2-c9271fbe019b",
+      "role": "maker",
+      "status": "src_status",
+      "self_trade": false
+    }
+  ],
+  "cpu_s": 7.061053644,
+  "hashes": {
+    "data.json.gz": "4227e7e5a9d99c69002efdc586f2d0712bd26aaee9f91d243b777896240026ca",
+    "state_fills.json.gz": "eec05b52a37ff6cddc195c99e1af5e7ada539568728bc6812deadff44646771a"
+  }
+}

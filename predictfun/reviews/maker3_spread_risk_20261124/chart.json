@@ -1,0 +1,17 @@
+{
+  "path": "predictfun/reviews/maker_dashboard_20261124/maker3-research.html",
+  "sha256": "366ba6c53b6b64e47a8911e792c18b98bab1b3e723407ca3d74f151b89e85130",
+  "bytes": 1281965,
+  "markets": 19,
+  "trend": {
+    "start_s": 245.0,
+    "end_s": 275.0,
+    "move_c": 71.0,
+    "efficiency": 0.806818181818182,
+    "qualifies": true,
+    "day": "20261026",
+    "mid": 3838531
+  },
+  "source_sha256": "4227e7e5a9d99c69002efdc586f2d0712bd26aaee9f91d243b777896240026ca",
+  "risk_sha256": "670cfadbc8fa9a38153d9e292db99cb3dd56e69ee6395e694d34f23af1173b5b"
+}

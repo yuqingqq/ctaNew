@@ -1,0 +1,16 @@
+2026-11-24T14:44:20Z tag=msr_schema rc=0 peak_rss_mib=95 wall_s=0.24 cpu_user_s=0.19 memavail_start_gib=22 disk_free_gib=411->411 slot=codex
+2026-11-24T14:50:33Z tag=msr_selftest rc=0 peak_rss_mib=108 wall_s=0.34 cpu_user_s=0.25 memavail_start_gib=22 disk_free_gib=411->411 slot=codex
+2026-11-24T14:50:53Z tag=msr_prepare rc=0 peak_rss_mib=129 wall_s=3.91 cpu_user_s=1.01 memavail_start_gib=22 disk_free_gib=411->411 slot=codex
+2026-11-24T14:51:16Z tag=msr_build rc=1 peak_rss_mib=325 wall_s=2.25 cpu_user_s=1.83 memavail_start_gib=22 disk_free_gib=411->411 slot=codex
+2026-11-24T14:52:06Z tag=msr_build_v2 rc=0 peak_rss_mib=410 wall_s=7.42 cpu_user_s=6.92 memavail_start_gib=22 disk_free_gib=411->411 slot=codex
+2026-11-24T14:55:12Z tag=msr_risk rc=0 peak_rss_mib=178 wall_s=1.49 cpu_user_s=1.19 memavail_start_gib=22 disk_free_gib=410->410 slot=codex
+2026-11-24T14:55:41Z tag=msr_check rc=0 peak_rss_mib=371 wall_s=2.92 cpu_user_s=2.46 memavail_start_gib=22 disk_free_gib=410->410 slot=codex
+2026-11-24T14:57:16Z tag=msr_describe rc=0 peak_rss_mib=136 wall_s=0.52 cpu_user_s=0.43 memavail_start_gib=22 disk_free_gib=410->410 slot=codex
+2026-11-24T14:57:24Z tag=msr_pack rc=0 peak_rss_mib=177 wall_s=0.95 cpu_user_s=0.82 memavail_start_gib=22 disk_free_gib=410->410 slot=codex
+2026-11-24T15:00:49Z tag=msr_pack_final rc=0 peak_rss_mib=177 wall_s=0.94 cpu_user_s=0.82 memavail_start_gib=22 disk_free_gib=412->412 slot=codex
+2026-11-24T15:02:00Z tag=msr_browser rc=1 peak_rss_mib=88 wall_s=4.11 cpu_user_s=0.69 memavail_start_gib=22 disk_free_gib=412->412 slot=codex
+2026-11-24T15:02:40Z tag=msr_pack_mobile rc=0 peak_rss_mib=177 wall_s=0.94 cpu_user_s=0.82 memavail_start_gib=22 disk_free_gib=412->412 slot=codex
+2026-11-24T15:02:41Z tag=msr_browser_v2 rc=0 peak_rss_mib=90 wall_s=3.33 cpu_user_s=0.68 memavail_start_gib=22 disk_free_gib=412->412 slot=codex
+2026-11-24T15:03:03Z tag=msr_browser_close rc=0 peak_rss_mib=84 wall_s=0.50 cpu_user_s=0.40 memavail_start_gib=22 disk_free_gib=412->412 slot=codex
+2026-11-24T15:04:14Z tag=msr_read rc=0 peak_rss_mib=133 wall_s=0.46 cpu_user_s=0.37 memavail_start_gib=22 disk_free_gib=412->412 slot=codex
+2026-11-24T15:04:43Z tag=msr_pack_native rc=0 peak_rss_mib=177 wall_s=0.94 cpu_user_s=0.85 memavail_start_gib=22 disk_free_gib=412->412 slot=codex

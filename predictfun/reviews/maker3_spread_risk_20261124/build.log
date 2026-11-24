@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker3_spread_risk_20261124/build.py", line 88, in <module>
+    if __name__=='__main__':build()
+                            ^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker3_spread_risk_20261124/build.py", line 46, in build
+    for key,val in [('net_c',ref.total*100),('completed_c',ref.close_net*100),('matched_shares',ref.close_sh),('position',ref.end_pos)]:assert abs(econ[key]-val)<1e-5*max(1,abs(val)),(mid,key,econ[key],val)
+                                                                                                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (3697902, 'net_c', 0.0, 3498.0534174652853)
+2026-11-24T14:51:16Z tag=msr_build rc=1 peak_rss_mib=325 wall_s=2.25 cpu_user_s=1.83 memavail_start_gib=22 disk_free_gib=411->411 slot=codex

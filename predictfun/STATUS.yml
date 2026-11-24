@@ -1,3 +1,24 @@
+maker3_spread_risk_20261124_codex:
+  report: predictfun/reviews/maker3_spread_risk_20261124/report.md
+  chart: predictfun/reviews/maker_dashboard_20261124/maker3-research.html
+  freeze: 2b540b096
+  adapter: 41b546811
+  consumed_complete_markets: 19
+  raw_actor_legs: 2759
+  completed_net_usd: 859.5039737
+  residual_less_unclosed_fees_usd: -1210.3151442
+  marked_total_usd: -350.8111704
+  mainly_wide_spreads_supported: false
+  stable_positive_active_take_trigger_identified: false
+  private_size_skew_cap_identified: false
+  validation: false
+  new_replay: false
+  packet_charged_upper_cpu_s: 60
+  task_coreh: 2.10489
+  line_coreh: 5.41559
+  task_cap_coreh: 2.35
+  line_cap_coreh: 5.65
+  next: fixed_wider_band_paired_replay_on_19_consumed_complete_markets
 cap_maker_sizing_20261124_codex:
   report: predictfun/reviews/maker3_cap_skew_20261124/report.md
   freeze: 787d1a0f6
