@@ -1,0 +1,2 @@
+PASS: first batch, both rungs, next-tick delegation on flat signal, refusal/no-fill/no-rearm, live handling
+2026-11-24T12:12:21Z tag=opening_prepare rc=0 peak_rss_mib=309 wall_s=1.44 cpu_user_s=1.00 memavail_start_gib=22 disk_free_gib=414->414 slot=codex
