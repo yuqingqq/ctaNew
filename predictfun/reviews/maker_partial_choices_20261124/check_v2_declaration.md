@@ -1,0 +1,3 @@
+# Checker supersession, 2026-11-24
+
+The frozen checker stopped before a verdict at eq('False', False): Python bool is a subclass of int, so its numeric comparator attempted float('False'). The measurement succeeded; no output is changed. check_v2.py overrides only eq's bool dispatch with an exact string comparison, including positive/negative controls, then invokes the frozen checker unchanged. The original checker, failed log, inputs, frozen matching rules and all eight hypotheses stay intact. This amendment is committed before the v2 check. It neither loosens numeric tolerances nor changes a predicate.

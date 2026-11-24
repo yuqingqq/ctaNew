@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker_partial_choices_20261124/check.py", line 103, in <module>
+    if __name__=='__main__':run()
+                            ^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker_partial_choices_20261124/check.py", line 91, in run
+    a=read(H/'actions.csv.gz');s=read(H/'matched.csv');d=read(H/'draws.csv');p=read(H/'partial_cases.csv');l=read(H/'links.csv');assert validate(a,s,d,p,l)
+                                                                                                                                        ^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker_partial_choices_20261124/check.py", line 74, in validate
+    for k,v in dict(exposed=n1,reference=n0,common_strata=ng,common_markets=len(markets),matched_difference_pp=rd*100,raw_two_sided_p=p,positive_days=positive,negative_days=negative,support='supported_descriptive' if support else 'insufficient',exploratory_pattern=bool(ok),max_market_absolute_share=max(map(abs,markets.values()),default=0)/sum(map(abs,markets.values())) if any(markets.values()) else 0.).items():eq(score[k],v)
+                                                                                                                                                                                                                                                                                                                                                                                                                              ^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker_partial_choices_20261124/check.py", line 20, in eq
+    if isinstance(b,(int,float)):assert math.isclose(number(a),b,rel_tol=1e-12,abs_tol=1e-12),(a,b)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('False', False)
+2026-11-24T05:18:24Z tag=mt_choices_check rc=1 peak_rss_mib=93 wall_s=0.33 cpu_user_s=0.28 memavail_start_gib=22 disk_free_gib=416->416 slot=codex
