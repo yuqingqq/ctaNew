@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker_dashboard_20261124/extract.py", line 139, in <module>
+    if __name__=='__main__':freeze() if '--freeze' in sys.argv else main()
+                                                                    ^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker_dashboard_20261124/extract.py", line 128, in main
+    a=next(x for x in accepted if int(x['m'])==mid and x['party']==f'rank{rank}' and x['view']=='zero');assert abs(totals[str(rank)]-float(a['total']))<1e-5
+                                                                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+2026-11-24T05:54:16Z tag=mt_dash_extract rc=1 peak_rss_mib=280 wall_s=2.41 cpu_user_s=1.86 memavail_start_gib=22 disk_free_gib=418->418 slot=codex

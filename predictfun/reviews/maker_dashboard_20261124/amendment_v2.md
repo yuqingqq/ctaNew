@@ -1,0 +1,5 @@
+# Pre-output adapter correction
+
+The frozen extraction refused at its accepted END-total reconciliation before writing dashboard output. diagnose.py (saved) establishes the mismatch: accepted matched-gap totals include self-trade gross/fees as a separate line. The projection had excluded them. The second/third markets also have a rank with no activity (blank accepted total, not a measured zero-valued strategy).
+
+extract_v2 / check_v2 retain every status-ok leg including flagged self trades, reconcile the full accepted totals, and permit display 0 for a verified empty rank. Self-trade legs are labelled; they are not evidence of independent good fills. No economic rule, data, sampling, threshold or target changes. Earlier source remains untouched. v2 overrides the contract's non-self-only projection; other declarations stand. No result output existed before this amendment. UI footer must distinguish no activity. Final observer point retains exact END value and leaves unobserved client state null.
