@@ -1,0 +1,32 @@
+20261024 3702960 outer ['CURRENT_ASYNC_FAST10', 'FRONT_ASYNC_FAST10', 'day', 'm', 'path_info']
+record ['cash', 'closed', 'constraints', 'end', 'fallbacks', 'fill_class', 'fill_mids', 'fills', 'fingerprint', 'guard_log', 'ident', 'mark', 'missing', 'mode_end', 'mode_log', 'n_commands', 'n_decisions', 'open_at_end', 'open_at_end_gid', 'orders', 'position', 'profile', 'queue_known', 'queue_venue', 'requests', 'settings', 'status', 'struct_log', 'tape_id', 'treatment', 'value']
+ident {'config': 'LADDER_REST_INVENTORY_v1', 'day': '20261024', 'end_abs_ms': 1792838698000.0, 'end_rel': 298000.0, 'instrument_id': 3702960, 'mark_source': 'QP.build_path supported-end mark', 'opening_ms': 1792838400000.0, 'start_abs_ms': 1792838400000.0, 'tape_id': '70f8e7c29a33b80930a0abb30862c9ed0522a1775472a678b03b4fedad25f434'}
+queue example shape {'ahead0': ('dict', 11), 'first': ('dict', 11), 'pull': ('dict', 0)}
+fill_mids list ['list']
+order_keys ['act', 'ahead_final', 'gid', 'price', 'refused', 'rem', 'remove', 'req', 'rung', 'side', 'size', 'submit', 'why']
+20261024_3702960_frames.parquet 5500 ['mid', 'fid', 'upd_ms', 'recv_ns', 'conn', 'order_count', 'pend_bids', 'pend_asks', 'los_id', 'los_side', 'los_price', 'los_outcome', 'status', 'x_los_kind']
+20261024_3702960_levels.parquet 528895 ['mid', 'fid', 'side', 'ptick', 'shares', 'status', 'x_price']
+20261024_3702960_fills.parquet 1802 ['mid', 'sid', 'mk_hash', 'mk_idx', 'y_side', 'y_ptick', 'shares', 'hi_ms', 'lo_ms', 't_method', 'f_before', 'f_after', 'status', 'x_evidence_fid', 'x_drop_fid', 'x_lo_exact_ms', 'x_lo_hard_ms', 'x_rec_rank', 'x_exh_price', 'x_worst_k', 'x_exh_S_FIFO', 'x_exh_S_FIFO_LO', 'x_ahead_lo_S_FIFO', 'x_ahead_lo_S_FIFO_LO', 'x_ahead_hi_S_FIFO', 'x_ahead_hi_S_FIFO_LO']
+btc_20261024.parquet 864000 ['g_ms', 'bid', 'ask', 'mid', 'n_upd', 'age_ms', 'status']
+20261026 3789484 outer ['CURRENT_ASYNC_FAST10', 'FRONT_ASYNC_FAST10', 'PARITY_BASELINE', 'day', 'm', 'parity', 'parity_all', 'path_info']
+record ['cash', 'closed', 'constraints', 'end', 'fallbacks', 'fill_class', 'fill_mids', 'fills', 'fingerprint', 'guard_log', 'ident', 'mark', 'missing', 'mode_end', 'mode_log', 'n_commands', 'n_decisions', 'open_at_end', 'open_at_end_gid', 'orders', 'position', 'profile', 'queue_known', 'queue_venue', 'requests', 'settings', 'status', 'struct_log', 'tape_id', 'treatment', 'value']
+ident {'config': 'LADDER_REST_INVENTORY_v1', 'day': '20261026', 'end_abs_ms': 1792977298000.0, 'end_rel': 298000.0, 'instrument_id': 3789484, 'mark_source': 'QP.build_path supported-end mark', 'opening_ms': 1792977000000.0, 'start_abs_ms': 1792977000000.0, 'tape_id': '391f0ec5b92a5ea721ae0103df2854bfd9f7bcf97ab3a0131620f3613819e194'}
+queue example shape {'ahead0': ('dict', 554), 'first': ('dict', 504), 'pull': ('dict', 161)}
+fill_mids list ['list']
+order_keys ['act', 'ahead_final', 'gid', 'price', 'refused', 'rem', 'remove', 'req', 'rung', 'side', 'size', 'submit', 'why']
+20261026_3789484_frames.parquet 6491 ['mid', 'fid', 'upd_ms', 'recv_ns', 'conn', 'order_count', 'pend_bids', 'pend_asks', 'los_id', 'los_side', 'los_price', 'los_outcome', 'status', 'x_los_kind']
+20261026_3789484_levels.parquet 612474 ['mid', 'fid', 'side', 'ptick', 'shares', 'status', 'x_price']
+20261026_3789484_fills.parquet 3039 ['mid', 'sid', 'mk_hash', 'mk_idx', 'y_side', 'y_ptick', 'shares', 'hi_ms', 'lo_ms', 't_method', 'f_before', 'f_after', 'status', 'x_evidence_fid', 'x_drop_fid', 'x_lo_exact_ms', 'x_lo_hard_ms', 'x_rec_rank', 'x_exh_price', 'x_worst_k', 'x_exh_S_FIFO', 'x_exh_S_FIFO_LO', 'x_ahead_lo_S_FIFO', 'x_ahead_lo_S_FIFO_LO', 'x_ahead_hi_S_FIFO', 'x_ahead_hi_S_FIFO_LO']
+btc_20261026.parquet 864000 ['g_ms', 'bid', 'ask', 'mid', 'n_upd', 'age_ms', 'status']
+20261027 3877472 outer ['CURRENT_ASYNC_FAST10', 'FRONT_ASYNC_FAST10', 'PARITY_BASELINE', 'day', 'm', 'parity', 'parity_all', 'path_info']
+record ['cash', 'closed', 'constraints', 'end', 'fallbacks', 'fill_class', 'fill_mids', 'fills', 'fingerprint', 'guard_log', 'ident', 'mark', 'missing', 'mode_end', 'mode_log', 'n_commands', 'n_decisions', 'open_at_end', 'open_at_end_gid', 'orders', 'position', 'profile', 'queue_known', 'queue_venue', 'requests', 'settings', 'status', 'struct_log', 'tape_id', 'treatment', 'value']
+ident {'config': 'LADDER_REST_INVENTORY_v1', 'day': '20261027', 'end_abs_ms': 1793122198000.0, 'end_rel': 298000.0, 'instrument_id': 3877472, 'mark_source': 'QP.build_path supported-end mark', 'opening_ms': 1793121900000.0, 'start_abs_ms': 1793121900000.0, 'tape_id': '22dcc01f67afc8fa9891fa9bf9ce254ffe9f5da15047ef7bcd7ec3358121cae9'}
+queue example shape {'ahead0': ('dict', 169), 'first': ('dict', 156), 'pull': ('dict', 24)}
+fill_mids list ['list']
+order_keys ['act', 'ahead_final', 'gid', 'price', 'refused', 'rem', 'remove', 'req', 'rung', 'side', 'size', 'submit', 'why']
+20261027_3877472_frames.parquet 6484 ['mid', 'fid', 'upd_ms', 'recv_ns', 'conn', 'order_count', 'pend_bids', 'pend_asks', 'los_id', 'los_side', 'los_price', 'los_outcome', 'status', 'x_los_kind']
+20261027_3877472_levels.parquet 612191 ['mid', 'fid', 'side', 'ptick', 'shares', 'status', 'x_price']
+20261027_3877472_fills.parquet 5111 ['mid', 'sid', 'mk_hash', 'mk_idx', 'y_side', 'y_ptick', 'shares', 'hi_ms', 'lo_ms', 't_method', 'f_before', 'f_after', 'status', 'x_evidence_fid', 'x_drop_fid', 'x_lo_exact_ms', 'x_lo_hard_ms', 'x_rec_rank', 'x_exh_price', 'x_worst_k', 'x_exh_S_FIFO', 'x_exh_S_FIFO_LO', 'x_ahead_lo_S_FIFO', 'x_ahead_lo_S_FIFO_LO', 'x_ahead_hi_S_FIFO', 'x_ahead_hi_S_FIFO_LO']
+btc_20261027.parquet 864000 ['g_ms', 'bid', 'ask', 'mid', 'n_upd', 'age_ms', 'status']
+valued_schema ['day', 'mid', 'sid', 'mk_idx', 'px_rank', 'role', 'addr', 'hash', 'cp_addr', 'kind', 'own_index_set', 'y_side', 's', 'q', 'p', 'px_gap', 'self_trade', 'settle_ms', 't_ms', 'win_ms', 't_status', 't_rel_s', 'tseg', 'pseg', 'V', 'st_res', 'gross_res', 'm_minus', 'age_ms', 'spr_w', 'st_spr', 'v_spr', 'st_spr_hi', 'v_spr_hi', 'st_1s', 'v_1s', 'st_10s', 'v_10s', 'st_60s', 'v_60s', 'm_end', 'st_end', 'v_end', 'fee', 'fee_type', 'fee_dy', 'fee_dc', 'fee_fill', 'fee_res', 'net_res', 'reb25_fill', 'reb25_res', 'mq', 'rq', 'life_rep', 'life_exh', 'life_front', 'life_status', 'dpt', 'sweep', 'cp', 'boost', 'src_status', 'status'] groups 90
+2026-11-24T05:43:54Z tag=mt_dash_schema rc=0 peak_rss_mib=77 wall_s=0.21 cpu_user_s=0.14 memavail_start_gib=22 disk_free_gib=419->419 slot=codex
