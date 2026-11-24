@@ -1,3 +1,17 @@
+<!-- INVENTORY_TAKE_PILOT_20261124_CODEX -->
+## 2026-11-24 — final-minute quoting verified; simple active inventory reduction loses
+
+[Maker3 size/position audit](reviews/maker3_size_inventory_20261124/report.md); [frozen IOC pilot](reviews/inventory_take_pilot_20261124/report.md), freeze7626e320f. USER asks to quote/accumulate/take like maker3. In3789484 OPENING_ONLY already quotes either side53.25/58final seconds, posts199 and fills1635.35sh. No scheduled final-minute cutoff. The historical ORIGINAL has an inventory-mode bug and must stay distinguished from corrected active baselines.
+
+Maker3 signed size known only33/61373filled hashes:16at10/17at220, selected sample; one220hash in3789484. Per-level aggregate and private cap unknown. Example captured flow−562→+934, take states−549to+622, maximum across934markets~3000 but only one>=2990 (not a proven cap). At82.838s maker3 cuts positive exposure while we are short: copying its action would add risk for us.
+
+Implemented/tested one unfitted IOC rule at our soft inventory thresholds, with matched100/220size arms and proportional caps200/440 (soft100/220, release50/110); existing opening-only entry unchanged. Causal known-state inputs,10ms effect/100ms notice, reservations/own-cross, depth-limited IOC and2%*min(p,1-p) cash-equivalent fee. Reducing resting orders preserved. Same3consumed markets; baseline parity3/3,12ledger checks,124IOC requests independently reconciled,15synthetic groups and12corruptions. External flow remains exogenous; conservative net-depth budget is a sensitivity, not measured achievable execution. One independent checker mistake (refused orders treated as live) corrected with raw evidence; replay unchanged.
+
+END net USD pooled: PASSIVE100−121.32 /TAKE100−171.75 /PASSIVE220−161.00 /TAKE220−318.15. Mean absolute inventory79.1→53.6 and149.7→115.3; whole-book gross completed turnover worsens58.24/153.65USD, residual improves22.85/14.51, fees15.03/18.00. Both active variants worse before fees too. All89filled takes reduce true inventory in these runs; hidden-fill counterexample tested. Reject this simple threshold rule on these selected examples; do NOT infer selective maker3 taking cannot work or promote220 from two positive examples. All pooled negative; no validation/tuning.
+
+ONE next priority: saved-ledger attribution of costly active closures versus passive continuation, comparing maker3's selective small trims with our automatic soft-limit-to-release actions. Decide economic worth of active reduction before adding a new threshold or expanding risk. Opening first-quote vs first-position scope stays unchanged. Resource upper audit10CPU +pilot110CPU; standing-approved task cap2.35/line5.65/.05reserve, cumulative charged~2.05489/5.36559. No frozen core source edits or push; other-session changes preserved.
+<!-- /INVENTORY_TAKE_PILOT_20261124_CODEX -->
+
 <!-- MAKER3_LATE_ACTIVITY_20261124_CODEX -->
 ## 2026-11-24 — Maker3 late activity and native take direction verified
 

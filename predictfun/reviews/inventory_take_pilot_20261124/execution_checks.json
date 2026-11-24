@@ -1,0 +1,6 @@
+{
+  "pass_all": true,
+  "raw_tape_markets": 3,
+  "ioc_requests_reconstructed": 124,
+  "corruptions_refused": 6
+}

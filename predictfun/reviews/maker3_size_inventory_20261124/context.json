@@ -1,0 +1,55 @@
+[
+  {
+    "day": "20261024",
+    "filled_orders": 19697,
+    "recorded_exactly_10": 11673,
+    "recorded_at_least_219": 1403,
+    "signed_size_counts": {
+      "10.0": 8,
+      "220.0": 7
+    },
+    "market_peak_abs_median": 96.17652457897368,
+    "market_peak_abs_max": 2930.0324368613246,
+    "markets_peak_at_least_2990": 0,
+    "markets": 288
+  },
+  {
+    "day": "20261025",
+    "filled_orders": 17998,
+    "recorded_exactly_10": 13092,
+    "recorded_at_least_219": 534,
+    "signed_size_counts": {
+      "10.0": 7,
+      "220.0": 2
+    },
+    "market_peak_abs_median": 107.2180295284859,
+    "market_peak_abs_max": 2948.2845838858225,
+    "markets_peak_at_least_2990": 0,
+    "markets": 288
+  },
+  {
+    "day": "20261026",
+    "filled_orders": 20247,
+    "recorded_exactly_10": 5483,
+    "recorded_at_least_219": 3025,
+    "signed_size_counts": {
+      "10.0": 1,
+      "220.0": 8
+    },
+    "market_peak_abs_median": 764.0974780140152,
+    "market_peak_abs_max": 2999.999991553403,
+    "markets_peak_at_least_2990": 1,
+    "markets": 287
+  },
+  {
+    "day": "20261027",
+    "filled_orders": 3431,
+    "recorded_exactly_10": 1896,
+    "recorded_at_least_219": 298,
+    "signed_size_counts": {},
+    "market_peak_abs_median": 154.52246363636365,
+    "market_peak_abs_max": 2964.101545425656,
+    "markets_peak_at_least_2990": 0,
+    "markets": 71
+  }
+]

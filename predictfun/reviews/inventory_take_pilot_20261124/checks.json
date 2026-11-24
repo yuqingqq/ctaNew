@@ -1,0 +1,6 @@
+{
+  "pass_all": true,
+  "records": 12,
+  "parity_markets": 3,
+  "corruptions_refused": 6
+}

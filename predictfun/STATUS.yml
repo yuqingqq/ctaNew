@@ -1,3 +1,22 @@
+inventory_take_pilot_20261124_codex:
+  report: predictfun/reviews/inventory_take_pilot_20261124/report.md
+  size_inventory_audit: predictfun/reviews/maker3_size_inventory_20261124/report.md
+  freeze: 7626e320f
+  stage: simple_inventory_take_rule_rejected_on_selected_consumed_examples
+  example_late_quoting_seconds: 53.25
+  example_late_supported_seconds: 58
+  maker3_private_cap_identified: false
+  source_signed_size_sample: 33
+  four_arms_three_markets: true
+  passive_100_parity_markets: 3
+  ioc_requests_independently_checked: 124
+  pooled_net_usd: [-121.315946, -171.746941, -161.002615, -318.152009]
+  arm_order: [PASSIVE_100, TAKE_100, PASSIVE_220, TAKE_220]
+  validation: false
+  audit_upper_cpu_s: 10
+  pilot_upper_cpu_s: 110
+  task_cap_coreh: 2.35
+  line_cap_coreh: 5.65
 maker3_late_activity_20261124_codex:
   report: predictfun/reviews/maker3_late_activity_20261124/report.md
   example_market: 3789484

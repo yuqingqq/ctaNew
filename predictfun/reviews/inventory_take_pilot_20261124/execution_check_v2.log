@@ -1,0 +1,2 @@
+124 requests independently reconciled; 6 corruptions refused
+2026-11-24T13:40:55Z tag=inventory_take_execution_check_v2 rc=0 peak_rss_mib=871 wall_s=5.42 cpu_user_s=4.49 memavail_start_gib=22 disk_free_gib=412->412 slot=codex

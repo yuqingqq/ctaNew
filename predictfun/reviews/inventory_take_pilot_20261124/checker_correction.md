@@ -1,0 +1,3 @@
+# Independent execution checker v2 — 2026-11-24
+
+The first independent execution check refused (3702960, TAKE_100 gid30): it reconstructed remaining size as original size minus fills but counted post-only-refused orders as live counterparties. Raw diagnostic identifies order23, refused=true, rem=0, no fills. The engine sets their remainder to0; a refused order cannot self-match. The independent predicate now also requires not refused. The first source is preserved as execution_check_v1.py and its failed log retained. No engine, policy, labels, fills or frozen check changed. The revised checker independently reconstructs all124 IOC prices, quantities, displayed-depth budgets and public depletion and refuses six corruptions.

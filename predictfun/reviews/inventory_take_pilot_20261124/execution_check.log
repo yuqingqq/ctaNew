@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/inventory_take_pilot_20261124/execution_check.py", line 47, in <module>
+    total+=verify(rec,path['frames'],path['trades'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/inventory_take_pilot_20261124/execution_check.py", line 37, in verify
+    assert z['reason']==reason and abs(z['filled']-q)<1e-7,(z['gid'],reason,z['reason'],q,z['filled'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (30, 'own_cross', 'partial', 0.0, 17.989999999999995)
+2026-11-24T13:39:53Z tag=inventory_take_execution_check rc=1 peak_rss_mib=811 wall_s=2.10 cpu_user_s=1.45 memavail_start_gib=22 disk_free_gib=412->412 slot=codex

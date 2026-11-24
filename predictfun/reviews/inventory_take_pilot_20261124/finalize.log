@@ -1,0 +1,2 @@
+Usage: {'one_core_wall_s': 92.88, 'cpu_user_s': 88.53, 'charged_upper_cpu_s': 110, 'cap_cpu_s': 720, 'includes': 'all attempts plus final publication reserve'} {'one_core_wall_s': 2.2800000000000002, 'cpu_user_s': 1.69, 'charged_upper_cpu_s': 10, 'cap_cpu_s': 60, 'includes': 'all attempts plus final publication reserve'} ; owned state prefixes staged; pre-existing dirty changes preserved
+2026-11-24T13:46:44Z tag=inventory_take_finalize rc=0 peak_rss_mib=23 wall_s=0.13 cpu_user_s=0.09 memavail_start_gib=22 disk_free_gib=412->412 slot=codex

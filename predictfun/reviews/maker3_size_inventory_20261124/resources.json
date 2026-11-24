@@ -1,0 +1,7 @@
+{
+  "one_core_wall_s": 2.2800000000000002,
+  "cpu_user_s": 1.69,
+  "charged_upper_cpu_s": 10,
+  "cap_cpu_s": 60,
+  "includes": "all attempts plus final publication reserve"
+}

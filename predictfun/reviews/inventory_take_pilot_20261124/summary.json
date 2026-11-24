@@ -1,0 +1,402 @@
+{
+  "rows": [
+    {
+      "m": 3702960,
+      "day": "20261024",
+      "arm": "PASSIVE_100",
+      "sha256": "3c51f8fdbeccd1200d557a85f7570bce2fa385390f76c38989f9b38e6c443736",
+      "metrics": {
+        "matched_shares": 1198.2104680948137,
+        "completed_c": 759.8470149463587,
+        "residual_c": -218.55805458307447,
+        "total_c": 541.2889603632846,
+        "net_shares": 89.23778415180503,
+        "net_c": 541.288960363284,
+        "fee2_net_c": 541.288960363284,
+        "fees_c": 0,
+        "maker_shares": 2485.6587203414324,
+        "taker_shares": 0,
+        "take_requests": 0,
+        "takes_filled": 0,
+        "risk_reducing_takes": 0,
+        "ioc_status": {},
+        "peak_inventory": 200.0,
+        "mean_abs_inventory": 69.3315897611949,
+        "both_grid_fraction": 0.36593959731543624,
+        "passive_generations": 121,
+        "passive_pulls": 17
+      }
+    },
+    {
+      "m": 3702960,
+      "day": "20261024",
+      "arm": "TAKE_100",
+      "sha256": "be0d15df038df0f8668b9f8af8e75e2854425bd2792b2d4ad2eb40ff0fafba5b",
+      "metrics": {
+        "matched_shares": 1727.787183363353,
+        "completed_c": -2577.00624978793,
+        "residual_c": 58.3010402491567,
+        "total_c": -2518.705209538773,
+        "net_shares": 29.150520124578378,
+        "net_c": -2752.625558110202,
+        "fee2_net_c": -2986.5459066816306,
+        "fees_c": 233.92034857142855,
+        "maker_shares": 2863.8070773274744,
+        "taker_shares": 620.9178095238095,
+        "take_requests": 11,
+        "takes_filled": 11,
+        "risk_reducing_takes": 11,
+        "ioc_status": {
+          "filled": 7,
+          "partial": 4
+        },
+        "peak_inventory": 200.0,
+        "mean_abs_inventory": 48.67715244150312,
+        "both_grid_fraction": 0.5370805369127517,
+        "passive_generations": 146,
+        "passive_pulls": 19
+      }
+    },
+    {
+      "m": 3702960,
+      "day": "20261024",
+      "arm": "PASSIVE_220",
+      "sha256": "b4b9ce9d9efae610adedccadf8f571f31036b65ad8be279c01de67f8c8f2a5d2",
+      "metrics": {
+        "matched_shares": 1471.9211076917634,
+        "completed_c": 4146.751334583476,
+        "residual_c": 331.6864062901648,
+        "total_c": 4478.437740873637,
+        "net_shares": 283.06073688886755,
+        "net_c": 4478.437740873639,
+        "fee2_net_c": 4478.437740873639,
+        "fees_c": 0,
+        "maker_shares": 3226.902952272395,
+        "taker_shares": 0,
+        "take_requests": 0,
+        "takes_filled": 0,
+        "risk_reducing_takes": 0,
+        "ioc_status": {},
+        "peak_inventory": 366.4502428571428,
+        "mean_abs_inventory": 133.10050392663902,
+        "both_grid_fraction": 0.449496644295302,
+        "passive_generations": 114,
+        "passive_pulls": 17
+      }
+    },
+    {
+      "m": 3702960,
+      "day": "20261024",
+      "arm": "TAKE_220",
+      "sha256": "ae7914b2300a81dfe9bcb8c265a347183f91d2df0392641cbe1338b789ee37f2",
+      "metrics": {
+        "matched_shares": 2479.056443219924,
+        "completed_c": -1190.5634615395652,
+        "residual_c": -155.5827216660175,
+        "total_c": -1346.146183205584,
+        "net_shares": 93.35307578775,
+        "net_c": -1832.2271935148613,
+        "fee2_net_c": -2318.3082038241396,
+        "fees_c": 486.08101030927827,
+        "maker_shares": 3929.5374570729614,
+        "taker_shares": 1121.928505154639,
+        "take_requests": 10,
+        "takes_filled": 9,
+        "risk_reducing_takes": 9,
+        "ioc_status": {
+          "filled": 5,
+          "partial": 4,
+          "empty": 1
+        },
+        "peak_inventory": 366.4502428571428,
+        "mean_abs_inventory": 100.70718254828874,
+        "both_grid_fraction": 0.5385906040268457,
+        "passive_generations": 142,
+        "passive_pulls": 26
+      }
+    },
+    {
+      "m": 3789484,
+      "day": "20261026",
+      "arm": "PASSIVE_100",
+      "sha256": "19f2b6a36272b8986c7c815e42cf6197e410fc84729acba23c7014b4e6ea0940",
+      "metrics": {
+        "matched_shares": 1963.551579662737,
+        "completed_c": 1681.5884077963128,
+        "residual_c": -708.6682298366197,
+        "total_c": 972.9201779596897,
+        "net_shares": -50.59780895424974,
+        "net_c": 972.9201779596933,
+        "fee2_net_c": 972.9201779596933,
+        "fees_c": 0,
+        "maker_shares": 3977.70096827973,
+        "taker_shares": 0,
+        "take_requests": 0,
+        "takes_filled": 0,
+        "risk_reducing_takes": 0,
+        "ioc_status": {},
+        "peak_inventory": 189.8587628997054,
+        "mean_abs_inventory": 82.53909673574546,
+        "both_grid_fraction": 0.41124161073825505,
+        "passive_generations": 579,
+        "passive_pulls": 177
+      }
+    },
+    {
+      "m": 3789484,
+      "day": "20261026",
+      "arm": "TAKE_100",
+      "sha256": "08499a23dde52688e4769726666d6dc02d2a13d525172a0fe589121dd19abca7",
+      "metrics": {
+        "matched_shares": 2494.2110499862265,
+        "completed_c": -2052.8034936276376,
+        "residual_c": 623.6079422314795,
+        "total_c": -1429.1955513961611,
+        "net_shares": -45.09466238751705,
+        "net_c": -1863.2356313961586,
+        "fee2_net_c": -2297.2757113961584,
+        "fees_c": 434.04007999999976,
+        "maker_shares": 4239.925762359974,
+        "taker_shares": 793.5909999999996,
+        "take_requests": 22,
+        "takes_filled": 12,
+        "risk_reducing_takes": 12,
+        "ioc_status": {
+          "limit_moved": 10,
+          "partial": 4,
+          "filled": 8
+        },
+        "peak_inventory": 187.03350422647677,
+        "mean_abs_inventory": 60.42144186888764,
+        "both_grid_fraction": 0.5310402684563759,
+        "passive_generations": 649,
+        "passive_pulls": 193
+      }
+    },
+    {
+      "m": 3789484,
+      "day": "20261026",
+      "arm": "PASSIVE_220",
+      "sha256": "4728d78111e1727d0cc08362adc2beeca8f80774cd917e3b7990bd29b055fd80",
+      "metrics": {
+        "matched_shares": 2484.64251971554,
+        "completed_c": 5647.13407247053,
+        "residual_c": 993.0228476442212,
+        "total_c": 6640.156920114756,
+        "net_shares": -210.69764843832957,
+        "net_c": 6640.156920114747,
+        "fee2_net_c": 6640.156920114747,
+        "fees_c": 0,
+        "maker_shares": 5179.982687869408,
+        "taker_shares": 0,
+        "take_requests": 0,
+        "takes_filled": 0,
+        "risk_reducing_takes": 0,
+        "ioc_status": {},
+        "peak_inventory": 398.9269283243819,
+        "mean_abs_inventory": 143.40489376891048,
+        "both_grid_fraction": 0.4974832214765101,
+        "passive_generations": 638,
+        "passive_pulls": 197
+      }
+    },
+    {
+      "m": 3789484,
+      "day": "20261026",
+      "arm": "TAKE_220",
+      "sha256": "5f70235a9ef1d6ee22df2e3de8652c673f26f04359b83b7d7acdf4d18cd3c8be",
+      "metrics": {
+        "matched_shares": 2899.647194778541,
+        "completed_c": -1739.2676679623014,
+        "residual_c": 1454.8394674198864,
+        "total_c": -284.42820054241747,
+        "net_shares": -110.98612406025768,
+        "net_c": -608.0480005424156,
+        "fee2_net_c": -931.6678005424156,
+        "fees_c": 323.6198,
+        "maker_shares": 5249.050513617343,
+        "taker_shares": 661.2299999999998,
+        "take_requests": 11,
+        "takes_filled": 7,
+        "risk_reducing_takes": 7,
+        "ioc_status": {
+          "filled": 3,
+          "partial": 4,
+          "limit_moved": 4
+        },
+        "peak_inventory": 382.9269283243819,
+        "mean_abs_inventory": 112.92680898843807,
+        "both_grid_fraction": 0.6028523489932885,
+        "passive_generations": 677,
+        "passive_pulls": 208
+      }
+    },
+    {
+      "m": 3877472,
+      "day": "20261027",
+      "arm": "PASSIVE_100",
+      "sha256": "f31dc67834af600d19fb40c4802f483a0782f7244ccc19c2feffd6ac0d3a33c4",
+      "metrics": {
+        "matched_shares": 2431.910634507694,
+        "completed_c": -12467.938454863606,
+        "residual_c": -1177.86529537783,
+        "total_c": -13645.803750241445,
+        "net_shares": 111.11872133720266,
+        "net_c": -13645.803750241437,
+        "fee2_net_c": -13645.803750241437,
+        "fees_c": 0,
+        "maker_shares": 4974.939990352591,
+        "taker_shares": 0,
+        "take_requests": 0,
+        "takes_filled": 0,
+        "risk_reducing_takes": 0,
+        "ioc_status": {},
+        "peak_inventory": 199.84715768182681,
+        "mean_abs_inventory": 85.49680191541992,
+        "both_grid_fraction": 0.325,
+        "passive_generations": 347,
+        "passive_pulls": 50
+      }
+    },
+    {
+      "m": 3877472,
+      "day": "20261027",
+      "arm": "TAKE_100",
+      "sha256": "bfe466c4525c3e6667b36082a296277fdfb0453c7be916eefd8db62d004f12d9",
+      "metrics": {
+        "matched_shares": 3965.594466887955,
+        "completed_c": -11221.182308094209,
+        "residual_c": -502.4298201570699,
+        "total_c": -11723.61212825129,
+        "net_shares": 73.530755377327,
+        "net_c": -12558.832941325947,
+        "fee2_net_c": -13394.053754400613,
+        "fees_c": 835.2208130746648,
+        "maker_shares": 6432.106599029415,
+        "taker_shares": 1572.6130901238207,
+        "take_requests": 43,
+        "takes_filled": 30,
+        "risk_reducing_takes": 30,
+        "ioc_status": {
+          "filled": 14,
+          "partial": 16,
+          "empty": 1,
+          "limit_moved": 12
+        },
+        "peak_inventory": 198.3775,
+        "mean_abs_inventory": 51.692849353065384,
+        "both_grid_fraction": 0.6167785234899329,
+        "passive_generations": 414,
+        "passive_pulls": 61
+      }
+    },
+    {
+      "m": 3877472,
+      "day": "20261027",
+      "arm": "PASSIVE_220",
+      "sha256": "ceac33c4c4440b4c88e98e8a8575ef4f335edd4e148baf2c9b574c865736bd87",
+      "metrics": {
+        "matched_shares": 3651.6324507065533,
+        "completed_c": -23777.3229143873,
+        "residual_c": -3441.5332665891706,
+        "total_c": -27218.856180976494,
+        "net_shares": 343.68884439277997,
+        "net_c": -27218.85618097647,
+        "fee2_net_c": -27218.85618097647,
+        "fees_c": 0,
+        "maker_shares": 7646.95374580589,
+        "taker_shares": 0,
+        "take_requests": 0,
+        "takes_filled": 0,
+        "risk_reducing_takes": 0,
+        "ioc_status": {},
+        "peak_inventory": 373.9618999483357,
+        "mean_abs_inventory": 172.56089289682072,
+        "both_grid_fraction": 0.46191275167785234,
+        "passive_generations": 353,
+        "passive_pulls": 58
+      }
+    },
+    {
+      "m": 3877472,
+      "day": "20261027",
+      "arm": "TAKE_220",
+      "sha256": "124f918766cd988e06a0fde87374d08acf28a893494674f7174393d39754ab2b",
+      "metrics": {
+        "matched_shares": 4302.52504323263,
+        "completed_c": -26418.807883755086,
+        "residual_c": -1965.414200163874,
+        "total_c": -28384.22208391898,
+        "net_shares": 187.1823047775117,
+        "net_c": -29374.92574301702,
+        "fee2_net_c": -30365.62940211508,
+        "fees_c": 990.7036590980624,
+        "maker_shares": 6957.579180554894,
+        "taker_shares": 1834.6532106878706,
+        "take_requests": 27,
+        "takes_filled": 20,
+        "risk_reducing_takes": 20,
+        "ioc_status": {
+          "partial": 13,
+          "filled": 7,
+          "limit_moved": 6,
+          "empty": 1
+        },
+        "peak_inventory": 437.6881262060087,
+        "mean_abs_inventory": 132.1533262665937,
+        "both_grid_fraction": 0.5431208053691275,
+        "passive_generations": 392,
+        "passive_pulls": 62
+      }
+    }
+  ],
+  "parities": [
+    {
+      "m": 3702960,
+      "fields": {
+        "fills": true,
+        "orders": true,
+        "requests": true,
+        "value": true,
+        "cash": true,
+        "position": true,
+        "commands": true,
+        "guard_log": true,
+        "closed": true,
+        "mode_log": true
+      }
+    },
+    {
+      "m": 3789484,
+      "fields": {
+        "fills": true,
+        "orders": true,
+        "requests": true,
+        "value": true,
+        "cash": true,
+        "position": true,
+        "commands": true,
+        "guard_log": true,
+        "closed": true,
+        "mode_log": true
+      }
+    },
+    {
+      "m": 3877472,
+      "fields": {
+        "fills": true,
+        "orders": true,
+        "requests": true,
+        "value": true,
+        "cash": true,
+        "position": true,
+        "commands": true,
+        "guard_log": true,
+        "closed": true,
+        "mode_log": true
+      }
+    }
+  ],
+  "cpu_s": 78.98054912799999,
+  "status": "COMPLETE"
+}

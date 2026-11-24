@@ -1,0 +1,7 @@
+{
+  "pass_all": true,
+  "independent_occupancy_arms": 6,
+  "windows": 12,
+  "flow_example": true,
+  "known_bad_uptime_refused": true
+}

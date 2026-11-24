@@ -1,0 +1,89 @@
+{
+  "pooled": {
+    "PASSIVE_100": {
+      "net_c": -12131.59461191846,
+      "fee2_net_c": -12131.59461191846,
+      "total_c": -12131.59461191847,
+      "completed_c": -10026.503032120934,
+      "residual_c": -2105.0915797975244,
+      "fees_c": 0,
+      "maker_shares": 11438.299678973754,
+      "taker_shares": 0,
+      "take_requests": 0,
+      "takes_filled": 0,
+      "risk_reducing_takes": 0,
+      "passive_generations": 1047,
+      "passive_pulls": 244,
+      "mean_abs_inventory": 79.12249613745342
+    },
+    "TAKE_100": {
+      "net_c": -17174.694130832308,
+      "fee2_net_c": -18677.875372478404,
+      "total_c": -15671.512889186224,
+      "completed_c": -15850.992051509777,
+      "residual_c": 179.47916232356624,
+      "fees_c": 1503.181241646093,
+      "maker_shares": 13535.839438716863,
+      "taker_shares": 2987.12189964763,
+      "take_requests": 76,
+      "takes_filled": 53,
+      "risk_reducing_takes": 53,
+      "passive_generations": 1209,
+      "passive_pulls": 273,
+      "mean_abs_inventory": 53.597147887818714
+    },
+    "PASSIVE_220": {
+      "net_c": -16100.261519988082,
+      "fee2_net_c": -16100.261519988082,
+      "total_c": -16100.2615199881,
+      "completed_c": -13983.437507333294,
+      "residual_c": -2116.8240126547844,
+      "fees_c": 0,
+      "maker_shares": 16053.839385947693,
+      "taker_shares": 0,
+      "take_requests": 0,
+      "takes_filled": 0,
+      "risk_reducing_takes": 0,
+      "passive_generations": 1105,
+      "passive_pulls": 272,
+      "mean_abs_inventory": 149.68876353079008
+    },
+    "TAKE_220": {
+      "net_c": -31815.200937074296,
+      "fee2_net_c": -33615.605406481634,
+      "total_c": -30014.79646766698,
+      "completed_c": -29348.63901325695,
+      "residual_c": -666.1574544100051,
+      "fees_c": 1800.4044694073407,
+      "maker_shares": 16136.1671512452,
+      "taker_shares": 3617.8117158425093,
+      "take_requests": 48,
+      "takes_filled": 36,
+      "risk_reducing_takes": 36,
+      "passive_generations": 1211,
+      "passive_pulls": 296,
+      "mean_abs_inventory": 115.2624392677735
+    }
+  },
+  "contrasts": {
+    "100": {
+      "delta_net_usd": -50.430995189138486,
+      "delta_completed_usd": -58.24489019388842,
+      "delta_residual_usd": 22.84570742121091,
+      "lower_mean_inventory": true,
+      "markets_better": 1
+    },
+    "220": {
+      "delta_net_usd": -157.14939417086214,
+      "delta_completed_usd": -153.65201505923656,
+      "delta_residual_usd": 14.506665582447793,
+      "lower_mean_inventory": true,
+      "markets_better": 0
+    }
+  },
+  "all_pooled_negative": true,
+  "taking_worse_pooled_both_sizes": true,
+  "asof": "2026-11-24",
+  "validation": false
+}
+2026-11-24T13:43:49Z tag=inventory_take_report rc=0 peak_rss_mib=12 wall_s=0.05 cpu_user_s=0.02 memavail_start_gib=22 disk_free_gib=412->412 slot=codex

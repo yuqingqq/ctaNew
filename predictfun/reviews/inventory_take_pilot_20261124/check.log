@@ -1,0 +1,2 @@
+PASS 12 ledgers and 6 corruptions
+2026-11-24T13:39:29Z tag=inventory_take_check rc=0 peak_rss_mib=461 wall_s=2.80 cpu_user_s=2.42 memavail_start_gib=22 disk_free_gib=412->412 slot=codex
