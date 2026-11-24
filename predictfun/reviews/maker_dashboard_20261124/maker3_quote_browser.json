@@ -1,0 +1,34 @@
+{
+  "errors": [],
+  "tests": [
+    {
+      "selected": "4",
+      "text": "#5 · Ask 63¢\nFilled quantity\t160.00 shares across 2 records; original size unknown\nPosting estimate\t1.601–8.943 s · Conditional bound\nFirst → last fill upper bounds\t8.943 → 8.954 s\nHistorical book across possible post window\tBid 55–61¢ · ask 56–63¢; 0 excluded frames\nQueue position / private cancel\tUnknown\n0x70d3ee3a032dca76f47697efb402735c8467c4823c0b11bc3d932610dddca13c",
+      "rows": 17,
+      "overflow": false
+    },
+    {
+      "selected": "5",
+      "text": "#6 · Bid 58¢\nFilled quantity\t118.31 shares across 2 records; original size unknown\nPosting estimate\tPosting estimate refused\nFirst → last fill upper bounds\t17.940 → 18.586 s\nHistorical book across possible post window\tUnavailable\nQueue position / private cancel\tUnknown\n0x0b3c436086f1f717c2f7d69a579da89bd0a3f3be0dd328da0c32adf5bf30affe",
+      "rows": 17,
+      "overflow": false
+    },
+    {
+      "selected": "1",
+      "text": "#2 · Bid 56¢\nFilled quantity\t168.41 shares across 18 records; original size unknown\nPosting estimate\t1.797–3.999 s · Conditional bound\nFirst → last fill upper bounds\t3.999 → 4.201 s\nHistorical book across possible post window\tBid 56–61¢ · ask 57–62¢; 0 excluded frames\nQueue position / private cancel\tUnknown\n0xca809b73fb7cd38b40000c612b56be5d6fb2c4af8ff6dd2ed6c9700b653af430",
+      "rows": 17,
+      "overflow": false
+    },
+    {
+      "selected": "16",
+      "text": "#17 · Ask 35¢\nFilled quantity\t171.52 shares across 4 records; original size unknown\nPosting estimate\t52.645–54.465 s · Conditional bound\nFirst → last fill upper bounds\t54.465 → 54.746 s\nHistorical book across possible post window\tBid 33–35¢ · ask 34–36¢; 0 excluded frames\nQueue position / private cancel\tUnknown\n0x19495e1df73a0a176f1097f7f6b997c8ea05aadca52278f8a9048e9969f038ba",
+      "rows": 17,
+      "overflow": false
+    }
+  ],
+  "mobile": {
+    "overflow": false,
+    "svgWidth": 293,
+    "rows": 17
+  }
+}

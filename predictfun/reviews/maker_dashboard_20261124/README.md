@@ -19,3 +19,5 @@ Read report.md before using the pictures for a research conclusion. In particula
 [61c follow-up](ask61_report.md): 24.59 shares traded earlier; the subsequent 205.41-share disappearance has no overlapping recorded execution and is a likely withdrawal, conditional on the existing clock/capture assumptions. Its owner and private cancel command remain unidentified.
 
 [Maker3 first-minute turnover](first_minute_report.md): the user-observed first30s buy-low/sell-high pattern reconciles to completed passive turnover. The full minute includes losing cycles and carried inventory; its common-mark value is +$28.14 versus our simulated −$22.08. This is an illustrative selected minute, not proof of long rest or an identified posting rule.
+
+[Maker3 quote reconstruction](maker3_quotes_report.md): all17 filled-order hashes in that minute, with estimated posting windows and51 fills. Same-price bid replenishment and a later58c ask are conditionally ordered; a simultaneous ladder, exact original sizes and private cancels remain unidentified. The conversation's quote map shows uncertainty bars, not resting durations.

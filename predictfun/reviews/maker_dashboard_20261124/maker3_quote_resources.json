@@ -1,0 +1,13 @@
+{
+  "previous_packet_upper_cpu_s": 74.29,
+  "run_light_cpu_user_s": 1.82,
+  "browser_conservative_cpu_s": 5,
+  "publication_reserve_s": 1,
+  "packet_upper_cpu_s": 82.11,
+  "packet_cap_cpu_s": 180,
+  "tags": ["mt_dash_maker3_quotes", "mt_dash_maker3_quotes2", "mt_dash_maker3_quote_check", "mt_dash_maker3_quote_present", "mt_dash_maker3_quote_render", "mt_dash_maker3_quote_browser", "mt_dash_maker3_quote_present2"],
+  "research_slot": "codex",
+  "new_replay_or_market": false,
+  "source_payload_changed": false,
+  "browser_note": "Rendering-only process pinned core8 outside address-space cap as in existing dashboard receipt; driver via run_light. Screenshot precedes final legend wording clarification only."
+}

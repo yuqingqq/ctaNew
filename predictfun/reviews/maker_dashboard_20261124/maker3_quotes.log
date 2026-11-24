@@ -1,0 +1,659 @@
+{
+  "counts": {
+    "orders": 17,
+    "fills": 51,
+    "signed_original_sizes": 0,
+    "grade": {
+      "G4_scenario_only": 6,
+      "G2_bound_constrained": 9,
+      "G1_conflict": 2
+    },
+    "two_or_more_fills": 11,
+    "later_orders_with_possible_post_before60": 1
+  },
+  "quotes": [
+    {
+      "hash": "0x837f7a2a7ca0cc9734c61859bcae250a902c83d38baf1bccc4df977058ea6ca1",
+      "side": "bid",
+      "price_c": 56.0,
+      "filled_first60_sh": 20.1,
+      "filled_displayed_market_sh": 20.1,
+      "n_fills_first60": 1,
+      "first_upper_s": 1.755,
+      "last_upper_s": 1.755,
+      "post_window_s": [
+        1.038,
+        1.755
+      ],
+      "post_grade": "G4_scenario_only",
+      "original_shares": null,
+      "end_kind": "unknown",
+      "known_private_cancel": false,
+      "conditional_presence_span_s": null,
+      "possible_post_book": {
+        "n_frames": 15,
+        "invalid_frames": 0,
+        "best_bid_range": [
+          55,
+          58
+        ],
+        "best_ask_range": [
+          56,
+          62
+        ],
+        "ticks_behind_same_side_best_range": [
+          -1.0,
+          2.0
+        ],
+        "classes": [
+          "at_touch",
+          "behind",
+          "improves_same_side"
+        ],
+        "clock": "historical native updates; not identified client decision information"
+      }
+    },
+    {
+      "hash": "0xca809b73fb7cd38b40000c612b56be5d6fb2c4af8ff6dd2ed6c9700b653af430",
+      "side": "bid",
+      "price_c": 56.0,
+      "filled_first60_sh": 168.409,
+      "filled_displayed_market_sh": 168.409,
+      "n_fills_first60": 18,
+      "first_upper_s": 3.999,
+      "last_upper_s": 4.201,
+      "post_window_s": [
+        1.797,
+        3.999
+      ],
+      "post_grade": "G2_bound_constrained",
+      "original_shares": null,
+      "end_kind": "unknown",
+      "known_private_cancel": false,
+      "conditional_presence_span_s": null,
+      "possible_post_book": {
+        "n_frames": 45,
+        "invalid_frames": 0,
+        "best_bid_range": [
+          56,
+          61
+        ],
+        "best_ask_range": [
+          57,
+          62
+        ],
+        "ticks_behind_same_side_best_range": [
+          0.0,
+          5.0
+        ],
+        "classes": [
+          "at_touch",
+          "behind"
+        ],
+        "clock": "historical native updates; not identified client decision information"
+      }
+    },
+    {
+      "hash": "0xadd647426c430b7306680cc97390837afc0224a8638c67528fa1dd6366f14a3d",
+      "side": "ask",
+      "price_c": 58.0,
+      "filled_first60_sh": 90.327333,
+      "filled_displayed_market_sh": 90.327333,
+      "n_fills_first60": 2,
+      "first_upper_s": 7.428,
+      "last_upper_s": 7.518,
+      "post_window_s": [
+        5.239,
+        7.428
+      ],
+      "post_grade": "G2_bound_constrained",
+      "original_shares": null,
+      "end_kind": "unknown",
+      "known_private_cancel": false,
+      "conditional_presence_span_s": null,
+      "possible_post_book": {
+        "n_frames": 44,
+        "invalid_frames": 0,
+        "best_bid_range": [
+          55,
+          57
+        ],
+        "best_ask_range": [
+          56,
+          58
+        ],
+        "ticks_behind_same_side_best_range": [
+          0.0,
+          2.0
+        ],
+        "classes": [
+          "at_touch",
+          "behind"
+        ],
+        "clock": "historical native updates; not identified client decision information"
+      }
+    },
+    {
+      "hash": "0x0f062c64c08f6fc1aebafcc64794d61d71e4e05662c94cb3278a0438fa3d2905",
+      "side": "ask",
+      "price_c": 61.0,
+      "filled_first60_sh": 14.590164,
+      "filled_displayed_market_sh": 14.590164,
+      "n_fills_first60": 1,
+      "first_upper_s": 8.537,
+      "last_upper_s": 8.537,
+      "post_window_s": [
+        3.647,
+        8.537
+      ],
+      "post_grade": "G2_bound_constrained",
+      "original_shares": null,
+      "end_kind": "unknown",
+      "known_private_cancel": false,
+      "conditional_presence_span_s": null,
+      "possible_post_book": {
+        "n_frames": 98,
+        "invalid_frames": 0,
+        "best_bid_range": [
+          55,
+          61
+        ],
+        "best_ask_range": [
+          56,
+          62
+        ],
+        "ticks_behind_same_side_best_range": [
+          -1.0,
+          5.0
+        ],
+        "classes": [
+          "at_touch",
+          "behind",
+          "improves_same_side"
+        ],
+        "clock": "historical native updates; not identified client decision information"
+      }
+    },
+    {
+      "hash": "0x70d3ee3a032dca76f47697efb402735c8467c4823c0b11bc3d932610dddca13c",
+      "side": "ask",
+      "price_c": 63.0,
+      "filled_first60_sh": 160.0,
+      "filled_displayed_market_sh": 160.0,
+      "n_fills_first60": 2,
+      "first_upper_s": 8.943,
+      "last_upper_s": 8.954,
+      "post_window_s": [
+        1.601,
+        8.943
+      ],
+      "post_grade": "G2_bound_constrained",
+      "original_shares": null,
+      "end_kind": "unknown",
+      "known_private_cancel": false,
+      "conditional_presence_span_s": null,
+      "possible_post_book": {
+        "n_frames": 148,
+        "invalid_frames": 0,
+        "best_bid_range": [
+          55,
+          61
+        ],
+        "best_ask_range": [
+          56,
+          63
+        ],
+        "ticks_behind_same_side_best_range": [
+          0.0,
+          7.0
+        ],
+        "classes": [
+          "at_touch",
+          "behind"
+        ],
+        "clock": "historical native updates; not identified client decision information"
+      }
+    },
+    {
+      "hash": "0x0b3c436086f1f717c2f7d69a579da89bd0a3f3be0dd328da0c32adf5bf30affe",
+      "side": "bid",
+      "price_c": 58.0,
+      "filled_first60_sh": 118.310783,
+      "filled_displayed_market_sh": 118.310783,
+      "n_fills_first60": 2,
+      "first_upper_s": 17.94,
+      "last_upper_s": 18.586,
+      "post_window_s": null,
+      "post_grade": "G1_conflict",
+      "original_shares": null,
+      "end_kind": "unknown",
+      "known_private_cancel": false,
+      "conditional_presence_span_s": null,
+      "possible_post_book": null
+    },
+    {
+      "hash": "0x7e2246e1baec025dbcaf2f9cacbaa0f4d6ef9547d785d11b4118c0b3bdcbe4ea",
+      "side": "ask",
+      "price_c": 60.0,
+      "filled_first60_sh": 202.880179,
+      "filled_displayed_market_sh": 202.880179,
+      "n_fills_first60": 6,
+      "first_upper_s": 18.765,
+      "last_upper_s": 19.808,
+      "post_window_s": [
+        11.838,
+        18.765
+      ],
+      "post_grade": "G4_scenario_only",
+      "original_shares": null,
+      "end_kind": "unknown",
+      "known_private_cancel": false,
+      "conditional_presence_span_s": null,
+      "possible_post_book": {
+        "n_frames": 138,
+        "invalid_frames": 0,
+        "best_bid_range": [
+          56,
+          59
+        ],
+        "best_ask_range": [
+          57,
+          60
+        ],
+        "ticks_behind_same_side_best_range": [
+          0.0,
+          3.0
+        ],
+        "classes": [
+          "at_touch",
+          "behind"
+        ],
+        "clock": "historical native updates; not identified client decision information"
+      }
+    },
+    {
+      "hash": "0x18bb98e216eef3f624c82121d2c8c08129af269514cf5c3d5e9c2da5f5a848eb",
+      "side": "bid",
+      "price_c": 54.0,
+      "filled_first60_sh": 2.173913,
+      "filled_displayed_market_sh": 2.173913,
+      "n_fills_first60": 1,
+      "first_upper_s": 22.668,
+      "last_upper_s": 22.668,
+      "post_window_s": [
+        1.001,
+        22.668
+      ],
+      "post_grade": "G2_bound_constrained",
+      "original_shares": null,
+      "end_kind": "unknown",
+      "known_private_cancel": false,
+      "conditional_presence_span_s": null,
+      "possible_post_book": {
+        "n_frames": 430,
+        "invalid_frames": 0,
+        "best_bid_range": [
+          53,
+          63
+        ],
+        "best_ask_range": [
+          55,
+          64
+        ],
+        "ticks_behind_same_side_best_range": [
+          -1.0,
+          9.0
+        ],
+        "classes": [
+          "at_touch",
+          "behind",
+          "improves_same_side"
+        ],
+        "clock": "historical native updates; not identified client decision information"
+      }
+    },
+    {
+      "hash": "0x1c08963d767983ec6a9c4cf716c9e323b8bf5106875e2355e9c90c8151ab60d5",
+      "side": "bid",
+      "price_c": 52.0,
+      "filled_first60_sh": 58.287917,
+      "filled_displayed_market_sh": 58.287917,
+      "n_fills_first60": 3,
+      "first_upper_s": 24.792,
+      "last_upper_s": 29.956,
+      "post_window_s": null,
+      "post_grade": "G1_conflict",
+      "original_shares": null,
+      "end_kind": "unknown",
+      "known_private_cancel": false,
+      "conditional_presence_span_s": [
+        24.792,
+        27.956
+      ],
+      "possible_post_book": null
+    },
+    {
+      "hash": "0xcb7016f668f1df198f1b43973a96b7980328c71a47a636f65c035affb632ec60",
+      "side": "bid",
+      "price_c": 53.0,
+      "filled_first60_sh": 41.276596,
+      "filled_displayed_market_sh": 41.276596,
+      "n_fills_first60": 2,
+      "first_upper_s": 26.695,
+      "last_upper_s": 26.752,
+      "post_window_s": [
+        24.838,
+        26.695
+      ],
+      "post_grade": "G4_scenario_only",
+      "original_shares": null,
+      "end_kind": "unknown",
+      "known_private_cancel": false,
+      "conditional_presence_span_s": null,
+      "possible_post_book": {
+        "n_frames": 38,
+        "invalid_frames": 0,
+        "best_bid_range": [
+          53,
+          56
+        ],
+        "best_ask_range": [
+          54,
+          57
+        ],
+        "ticks_behind_same_side_best_range": [
+          0.0,
+          3.0
+        ],
+        "classes": [
+          "at_touch",
+          "behind"
+        ],
+        "clock": "historical native updates; not identified client decision information"
+      }
+    },
+    {
+      "hash": "0x41af4c1064b6c02f9f5eed6f2fd60d825392798a19615d1a4ec4f6812c64cefe",
+      "side": "bid",
+      "price_c": 54.0,
+      "filled_first60_sh": 78.7,
+      "filled_displayed_market_sh": 78.7,
+      "n_fills_first60": 1,
+      "first_upper_s": 28.499,
+      "last_upper_s": 28.499,
+      "post_window_s": [
+        26.736,
+        28.499
+      ],
+      "post_grade": "G4_scenario_only",
+      "original_shares": null,
+      "end_kind": "unknown",
+      "known_private_cancel": false,
+      "conditional_presence_span_s": null,
+      "possible_post_book": {
+        "n_frames": 36,
+        "invalid_frames": 0,
+        "best_bid_range": [
+          54,
+          56
+        ],
+        "best_ask_range": [
+          55,
+          57
+        ],
+        "ticks_behind_same_side_best_range": [
+          0.0,
+          2.0
+        ],
+        "classes": [
+          "at_touch",
+          "behind"
+        ],
+        "clock": "historical native updates; not identified client decision information"
+      }
+    },
+    {
+      "hash": "0x354e049a86d13067c5c5aa20d20b2c2c13d46584946fae2a3f1fe81ae6675ca8",
+      "side": "ask",
+      "price_c": 57.0,
+      "filled_first60_sh": 47.15219999999999,
+      "filled_displayed_market_sh": 47.15219999999999,
+      "n_fills_first60": 2,
+      "first_upper_s": 31.352,
+      "last_upper_s": 32.863,
+      "post_window_s": [
+        27.849,
+        31.352
+      ],
+      "post_grade": "G2_bound_constrained",
+      "original_shares": null,
+      "end_kind": "unknown",
+      "known_private_cancel": false,
+      "conditional_presence_span_s": null,
+      "possible_post_book": {
+        "n_frames": 71,
+        "invalid_frames": 0,
+        "best_bid_range": [
+          52,
+          56
+        ],
+        "best_ask_range": [
+          53,
+          57
+        ],
+        "ticks_behind_same_side_best_range": [
+          0.0,
+          4.0
+        ],
+        "classes": [
+          "at_touch",
+          "behind"
+        ],
+        "clock": "historical native updates; not identified client decision information"
+      }
+    },
+    {
+      "hash": "0x5704092c4d970e7a82a63cb1a905fe6ba899acb028e902c3bbee210adf3ae4b7",
+      "side": "ask",
+      "price_c": 58.0,
+      "filled_first60_sh": 10.250438,
+      "filled_displayed_market_sh": 10.250438,
+      "n_fills_first60": 2,
+      "first_upper_s": 36.977,
+      "last_upper_s": 37.087,
+      "post_window_s": [
+        33.55,
+        36.977
+      ],
+      "post_grade": "G2_bound_constrained",
+      "original_shares": null,
+      "end_kind": "unknown",
+      "known_private_cancel": false,
+      "conditional_presence_span_s": null,
+      "possible_post_book": {
+        "n_frames": 69,
+        "invalid_frames": 0,
+        "best_bid_range": [
+          54,
+          58
+        ],
+        "best_ask_range": [
+          55,
+          59
+        ],
+        "ticks_behind_same_side_best_range": [
+          -1.0,
+          3.0
+        ],
+        "classes": [
+          "at_touch",
+          "behind",
+          "improves_same_side"
+        ],
+        "clock": "historical native updates; not identified client decision information"
+      }
+    },
+    {
+      "hash": "0x0ef548323ded251d1dfea7ff3718132d55571a041ce99c86111aa2be66c7f3cb",
+      "side": "ask",
+      "price_c": 51.0,
+      "filled_first60_sh": 3.17,
+      "filled_displayed_market_sh": 3.17,
+      "n_fills_first60": 1,
+      "first_upper_s": 38.039,
+      "last_upper_s": 38.039,
+      "post_window_s": [
+        37.786,
+        38.039
+      ],
+      "post_grade": "G4_scenario_only",
+      "original_shares": null,
+      "end_kind": "unknown",
+      "known_private_cancel": false,
+      "conditional_presence_span_s": null,
+      "possible_post_book": {
+        "n_frames": 6,
+        "invalid_frames": 0,
+        "best_bid_range": [
+          50,
+          51
+        ],
+        "best_ask_range": [
+          51,
+          52
+        ],
+        "ticks_behind_same_side_best_range": [
+          -1.0,
+          0.0
+        ],
+        "classes": [
+          "at_touch",
+          "improves_same_side"
+        ],
+        "clock": "historical native updates; not identified client decision information"
+      }
+    },
+    {
+      "hash": "0x5108d3415987cb801f426fe10769403b70fcc8bd2656d629d2884b38cf156d39",
+      "side": "bid",
+      "price_c": 37.0,
+      "filled_first60_sh": 95.23809499999999,
+      "filled_displayed_market_sh": 95.23809499999999,
+      "n_fills_first60": 2,
+      "first_upper_s": 46.536,
+      "last_upper_s": 47.427,
+      "post_window_s": [
+        0.034,
+        46.536
+      ],
+      "post_grade": "G2_bound_constrained",
+      "original_shares": null,
+      "end_kind": "unknown",
+      "known_private_cancel": false,
+      "conditional_presence_span_s": null,
+      "possible_post_book": {
+        "n_frames": 925,
+        "invalid_frames": 0,
+        "best_bid_range": [
+          37,
+          63
+        ],
+        "best_ask_range": [
+          38,
+          64
+        ],
+        "ticks_behind_same_side_best_range": [
+          0.0,
+          26.0
+        ],
+        "classes": [
+          "at_touch",
+          "behind"
+        ],
+        "clock": "historical native updates; not identified client decision information"
+      }
+    },
+    {
+      "hash": "0xee47a7ee0afef7ed81d72871c6570d7fc9a42adb2e040dd2fed2c97c7030e7b5",
+      "side": "bid",
+      "price_c": 38.0,
+      "filled_first60_sh": 65.065161,
+      "filled_displayed_market_sh": 65.065161,
+      "n_fills_first60": 1,
+      "first_upper_s": 48.759,
+      "last_upper_s": 48.759,
+      "post_window_s": [
+        46.791,
+        48.759
+      ],
+      "post_grade": "G4_scenario_only",
+      "original_shares": null,
+      "end_kind": "unknown",
+      "known_private_cancel": false,
+      "conditional_presence_span_s": null,
+      "possible_post_book": {
+        "n_frames": 40,
+        "invalid_frames": 0,
+        "best_bid_range": [
+          37,
+          38
+        ],
+        "best_ask_range": [
+          38,
+          39
+        ],
+        "ticks_behind_same_side_best_range": [
+          -1.0,
+          0.0
+        ],
+        "classes": [
+          "at_touch",
+          "improves_same_side"
+        ],
+        "clock": "historical native updates; not identified client decision information"
+      }
+    },
+    {
+      "hash": "0x19495e1df73a0a176f1097f7f6b997c8ea05aadca52278f8a9048e9969f038ba",
+      "side": "ask",
+      "price_c": 35.0,
+      "filled_first60_sh": 171.524417,
+      "filled_displayed_market_sh": 171.524417,
+      "n_fills_first60": 4,
+      "first_upper_s": 54.465,
+      "last_upper_s": 54.746,
+      "post_window_s": [
+        52.645,
+        54.465
+      ],
+      "post_grade": "G2_bound_constrained",
+      "original_shares": null,
+      "end_kind": "unknown",
+      "known_private_cancel": false,
+      "conditional_presence_span_s": null,
+      "possible_post_book": {
+        "n_frames": 37,
+        "invalid_frames": 0,
+        "best_bid_range": [
+          33,
+          35
+        ],
+        "best_ask_range": [
+          34,
+          36
+        ],
+        "ticks_behind_same_side_best_range": [
+          -1.0,
+          1.0
+        ],
+        "classes": [
+          "at_touch",
+          "behind",
+          "improves_same_side"
+        ],
+        "clock": "historical native updates; not identified client decision information"
+      }
+    }
+  ]
+}
+2026-11-24T11:09:28Z tag=mt_dash_maker3_quotes rc=0 peak_rss_mib=218 wall_s=0.70 cpu_user_s=0.53 memavail_start_gib=22 disk_free_gib=415->415 slot=codex

@@ -1,0 +1,17 @@
+{
+  "raw_legs": 51,
+  "orders": 17,
+  "checks_pass": true,
+  "corruptions_refused": [
+    "price",
+    "quantity",
+    "time",
+    "omit",
+    "promote",
+    "cancel",
+    "size"
+  ],
+  "later_56_post_after_first56_fill": true,
+  "ask58_post_after_all_56_fills": true,
+  "rule_or_private_queue_identified": false
+}

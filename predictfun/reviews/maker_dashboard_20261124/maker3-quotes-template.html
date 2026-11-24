@@ -1,0 +1,56 @@
+<div id="pf-maker3-quotes">
+  <style>
+    #pf-maker3-quotes { display:grid; gap:calc(var(--font-size-base) * .75); }
+    #pf-maker3-quotes .quote-chart { width:100%; display:block; }
+    #pf-maker3-quotes .quote-chart text { fill:var(--foreground); }
+    #pf-maker3-quotes .quote-chart .axis { stroke:var(--border); stroke-width:1; }
+    #pf-maker3-quotes .quote-chart .bid { fill:var(--viz-series-1); }
+    #pf-maker3-quotes .quote-chart .ask { fill:var(--viz-series-2); }
+    #pf-maker3-quotes .quote-chart .selected { fill:var(--accent); }
+    #pf-maker3-quotes .quote-chart .hint { fill:var(--muted-foreground); }
+    #pf-maker3-quotes .hash { overflow-wrap:anywhere; }
+  </style>
+  <div>
+    <h2>Maker #3’s visible quotes</h2>
+    <div class="text-small text-muted">Market 3789484 · first 60 seconds · 17 filled orders</div>
+  </div>
+  <div class="text-small">Shaded bar: posting-time uncertainty, not resting duration · dot: fill’s settlement upper bound · B: bid · A: ask</div>
+  <svg class="quote-chart" role="img" aria-label="Seventeen maker orders. Posting windows are uncertain; bars do not show resting durations."></svg>
+  <label class="form-label">Inspect an order<select class="form-select" id="quote-select"></select></label>
+  <div id="quote-detail" aria-live="polite"></div>
+  <div class="text-small text-muted">9 conditional bounds · 6 weaker scenarios · 2 refused posting estimates. Original sizes, private cancels and queue ranks unknown. Never-filled quotes are invisible.</div>
+  <script type="application/json" id="quote-data">__DATA__</script>
+  <script>
+  (()=>{
+    const root=document.getElementById('pf-maker3-quotes');
+    const data=JSON.parse(root.querySelector('#quote-data').textContent),rows=data.rows;
+    const svg=root.querySelector('svg'),select=root.querySelector('#quote-select'),detail=root.querySelector('#quote-detail');
+    const fmt=(n,d=3)=>n==null?'Unknown':Number(n).toFixed(d);
+    const grade=r=>r.post_grade==='G2_bound_constrained'?'Conditional bound':r.post_grade==='G4_scenario_only'?'Weaker scenario':'Posting estimate refused';
+    const prior=window.openai?.widgetState?.privateContent;let selected=Number.isInteger(prior?.order)&&prior.order>=0&&prior.order<rows.length?prior.order:4;
+    select.innerHTML=rows.map((r,i)=>`<option value="${i}">#${i+1} ${r.side==='bid'?'Buy':'Sell'} ${r.price_c}¢ · ${fmt(r.filled_first60_sh,2)} shares filled</option>`).join('');
+    function draw(){
+      const w=Math.max(260,svg.clientWidth),left=86,right=w-12,top=30,step=27,height=top+step*rows.length+25,x=t=>left+Math.max(0,Math.min(60,t))/60*(right-left);
+      svg.setAttribute('viewBox',`0 0 ${w} ${height}`);svg.setAttribute('height',height);
+      let s='<desc>Possible posting windows and recorded fill upper bounds. These bars are not continuous resting orders. Use the order selector for exact values.</desc>';
+      for(const t of (w<430?[0,30,60]:[0,15,30,45,60]))s+=`<line class="axis" x1="${x(t)}" x2="${x(t)}" y1="22" y2="${height-20}"/><text class="text-small" x="${x(t)}" y="14" text-anchor="${t===60?'end':t===0?'start':'middle'}">${t}s</text>`;
+      rows.forEach((r,i)=>{
+        const y=top+i*step,color=r.side==='bid'?'bid':'ask',tooltip=`Order ${i+1}, ${r.side} ${r.price_c} cents; ${fmt(r.filled_first60_sh,2)} shares filled; ${grade(r)}${r.post_window_s?': '+r.post_window_s.map(v=>fmt(v)).join('–')+' seconds':''}`;
+        s+=`<g data-order="${i}" class="cursor-interaction" data-tooltip="${tooltip}"><rect class="${i===selected?'selected':''}" x="0" y="${y-2}" width="${w}" height="25" ${i===selected?'':'fill="transparent"'}/><text class="text-small" x="0" y="${y+14}">#${i+1} ${r.side==='bid'?'B':'A'} ${r.price_c}¢</text>`;
+        if(r.post_window_s)s+=`<rect class="${color}" opacity="${r.post_grade==='G2_bound_constrained'?'.38':'.16'}" x="${x(r.post_window_s[0])}" y="${y+1}" width="${Math.max(.5,x(r.post_window_s[1])-x(r.post_window_s[0]))}" height="8"/>`;
+        else s+=`<text class="text-small hint" x="${left+3}" y="${y+8}">Post unknown</text>`;
+        for(const f of r.first60_fills)s+=`<circle class="${color}" cx="${x(f.t)}" cy="${y+16}" r="2.6"/>`;
+        s+='</g>';
+      });svg.innerHTML=s;
+      const r=rows[selected],b=r.possible_post_book;
+      const details=[['Filled quantity',`${fmt(r.filled_first60_sh,2)} shares across ${r.n_fills_first60} records; original size unknown`],['Posting estimate',r.post_window_s?`${r.post_window_s.map(v=>fmt(v)).join('–')} s · ${grade(r)}`:grade(r)],['First → last fill upper bounds',`${fmt(r.first_upper_s)} → ${fmt(r.last_upper_s)} s`],['Historical book across possible post window',b?`Bid ${b.best_bid_range.join('–')}¢ · ask ${b.best_ask_range.join('–')}¢; ${b.invalid_frames} excluded frames`:'Unavailable'],['Queue position / private cancel','Unknown']];
+      detail.innerHTML=`<h3>#${selected+1} · ${r.side==='bid'?'Bid':'Ask'} ${r.price_c}¢</h3><table class="table table-sm"><tbody>${details.map(([k,v])=>`<tr><th scope="row">${k}</th><td>${v}</td></tr>`).join('')}</tbody></table><div class="hash text-small">${r.hash}</div>`;
+      for(const g of svg.querySelectorAll('[data-order]'))g.onclick=()=>change(Number(g.dataset.order),true);
+    }
+    function change(i,persist){selected=i;select.value=String(i);draw();if(persist)window.openai?.setWidgetState?.({modelContent:{market:3789484,maker:3,order_hash:rows[i].hash,side:rows[i].side,price_c:rows[i].price_c},privateContent:{order:i}}).catch(()=>{});}
+    select.onchange=()=>change(Number(select.value),true);
+    window.addEventListener('openai:set_globals',e=>{const i=e.detail?.globals?.widgetState?.privateContent?.order;if(Number.isInteger(i)&&i>=0&&i<rows.length&&i!==selected)change(i,false);});
+    change(selected,false);new ResizeObserver(draw).observe(svg);root.quoteRows=rows;
+  })();
+  </script>
+</div>
