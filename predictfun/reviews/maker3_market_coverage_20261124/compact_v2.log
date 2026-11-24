@@ -1,0 +1,136 @@
+{
+  "asof": "2026-11-24",
+  "address": "0x57FbC891E89184DA071AE9D97E745531cd7F718a",
+  "identity_day": "20261023",
+  "days": [
+    {
+      "day": "20261024",
+      "missing_hours": [],
+      "clipped_hours": [],
+      "all": {
+        "markets": 288,
+        "accepted_maker": 288,
+        "accepted_taker": 278,
+        "accepted_any": 288,
+        "recorded": 288,
+        "excluded_only": 0,
+        "no_address_record": 0,
+        "poll_incomplete": 16
+      },
+      "coverage_ok": {
+        "markets": 288,
+        "accepted_maker": 288,
+        "accepted_taker": 278,
+        "accepted_any": 288,
+        "recorded": 288,
+        "excluded_only": 0,
+        "no_address_record": 0,
+        "poll_incomplete": 16
+      },
+      "no_record_runs": []
+    },
+    {
+      "day": "20261025",
+      "missing_hours": [],
+      "clipped_hours": [],
+      "all": {
+        "markets": 288,
+        "accepted_maker": 288,
+        "accepted_taker": 273,
+        "accepted_any": 288,
+        "recorded": 288,
+        "excluded_only": 0,
+        "no_address_record": 0,
+        "poll_incomplete": 10
+      },
+      "coverage_ok": {
+        "markets": 288,
+        "accepted_maker": 288,
+        "accepted_taker": 273,
+        "accepted_any": 288,
+        "recorded": 288,
+        "excluded_only": 0,
+        "no_address_record": 0,
+        "poll_incomplete": 10
+      },
+      "no_record_runs": []
+    },
+    {
+      "day": "20261026",
+      "missing_hours": [],
+      "clipped_hours": [],
+      "all": {
+        "markets": 288,
+        "accepted_maker": 287,
+        "accepted_taker": 267,
+        "accepted_any": 287,
+        "recorded": 287,
+        "excluded_only": 0,
+        "no_address_record": 1,
+        "poll_incomplete": 20
+      },
+      "coverage_ok": {
+        "markets": 288,
+        "accepted_maker": 287,
+        "accepted_taker": 267,
+        "accepted_any": 287,
+        "recorded": 287,
+        "excluded_only": 0,
+        "no_address_record": 1,
+        "poll_incomplete": 20
+      },
+      "no_record_runs": [
+        [
+          1792992600,
+          1792992900
+        ]
+      ]
+    },
+    {
+      "day": "20261027",
+      "missing_hours": [],
+      "clipped_hours": [
+        "20261028_00"
+      ],
+      "all": {
+        "markets": 288,
+        "accepted_maker": 71,
+        "accepted_taker": 67,
+        "accepted_any": 71,
+        "recorded": 71,
+        "excluded_only": 0,
+        "no_address_record": 217,
+        "poll_incomplete": 29
+      },
+      "coverage_ok": {
+        "markets": 287,
+        "accepted_maker": 71,
+        "accepted_taker": 67,
+        "accepted_any": 71,
+        "recorded": 71,
+        "excluded_only": 0,
+        "no_address_record": 216,
+        "poll_incomplete": 29
+      },
+      "no_record_runs": [
+        [
+          1793080500,
+          1793145300
+        ]
+      ]
+    }
+  ],
+  "sources": [
+    "econ/maker_market.parquet",
+    "econ/identities.json",
+    "markets_20261024..20261027.parquet",
+    "extract_20261024..20261027.json"
+  ],
+  "source_root": "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123",
+  "limitations": [
+    "Recorded includes excluded-only rows; accepted is the existing economics validity screen.",
+    "No address record is no recorded fill, not proof of no order.",
+    "One address, four consumed days, BTC 5m universe only."
+  ]
+}
+2026-11-24T12:22:17Z tag=maker3_coverage_compact_v2 rc=0 peak_rss_mib=224 wall_s=0.51 cpu_user_s=0.38 memavail_start_gib=22 disk_free_gib=414->414 slot=codex

@@ -1,0 +1,13 @@
+{
+  "census_reconciles": true,
+  "all_markets_have_other_trade_records": true,
+  "corruptions_refused": 2,
+  "sources": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/econ/maker_market.parquet": "735fb019143dcb16cfefccd1417da6866dd7b67177eaa37935ab40f22ab2198d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/econ/identities.json": "321c5274cc9cbc2151f94aad619ad199de41b98db4a410d12b83b61aa69aa239",
+    "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/markets_20261024.parquet": "9ba05add8488e2dda53639a84a5bc6514242e88d6f9335c24ad8c83b8cefa82e",
+    "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/markets_20261025.parquet": "e017d6d95f627786c7afdbee4e45db31fe788b086433ea1cce270bdcb3a16c29",
+    "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/markets_20261026.parquet": "b0f5bc74946c75bdbc7e3918cfc35713f05fe307b8f1a25f556c9cd3c2375877",
+    "/home/yuqing/ctaNew/data/predict_fun/research/maker_trace_v2_20261123/markets_20261027.parquet": "b6139aefc4e45e4e02cc65868e18c0acb77cf272e354ad76794f39ffb4ea5a36"
+  }
+}

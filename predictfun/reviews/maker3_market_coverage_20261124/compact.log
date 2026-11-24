@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/maker3_market_coverage_20261124/compact.py", line 22, in <module>
+    assert not ex['rest']['missing'] and not ex['rest']['clipped']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+2026-11-24T12:22:05Z tag=maker3_coverage_compact rc=1 peak_rss_mib=223 wall_s=0.51 cpu_user_s=0.37 memavail_start_gib=22 disk_free_gib=414->414 slot=codex

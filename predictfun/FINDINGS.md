@@ -1,3 +1,9 @@
+<!-- MAKER3_COVERAGE_20261124_CODEX -->
+## 2026-11-24 — Maker #3 participates broadly, with an Oct 27 activity stop
+
+[Census](reviews/maker3_market_coverage_20261124/report.md): fixed Oct23 rank3 address has accepted maker fills in 288/288, 288/288, 287/288 and 71/288 BTC5m markets on Oct24–27. First three days 863/864; Oct27 activity covers every opening through05:50UTC, then no recorded fills from05:55. Last market is boundary-censored; no-fill does not prove no quotes/offline/selection. Prior876 decision-path markets excluded58 and was not the full participation count934. Thus routine skipping of many markets does not explain the first-three-day comparison. Existing fill aggregate only, no replay/new data/skill claim; hashes and two count/membership refusals retained. Packet conservative upper179.50/180 CPU seconds, including the terminated raw-leg attempt. Existing opening-only scope and next priority unchanged.
+<!-- /MAKER3_COVERAGE_20261124_CODEX -->
+
 <!-- OPENING_ENTRY_PILOT_20261124_CODEX -->
 ## 2026-11-24 — opening-only scope correction materially changes the answer
 

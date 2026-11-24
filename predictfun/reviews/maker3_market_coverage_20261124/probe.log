@@ -1,0 +1,107 @@
+markets_20261024.parquet day: string
+mid: int64
+slug: string
+ws: int64
+we: int64
+outcome: string
+outcome_seen_ns: int64
+feeRateBps: int64
+makerFeeBps: int64
+spreadThreshold: double
+shareThreshold: double
+rewards: string
+isBoosted: int64
+boostStartsAt: string
+boostEndsAt: string
+outcome_statuses: string
+market_status: string
+trading_status: string
+resolution: string
+category_slug: string
+latest_recv_ns: int64
+n_pages: int64
+n_records: int64
+n_legs: int64
+changed_fields: string
+rewards_variants: string
+rest_lo_ms: int64
+rest_hi_ms: int64
+n_frames: int64
+first_upd_ms: int64
+last_upd_ms: int64
+n_legs_outside_ws: int64
+n_legs_in_missing_ws_hour: int64
+n_poll_incomplete: int64
+poll_incomplete_reasons: string
+depth: int64
+status: string
+[{'day': '20261024', 'mid': 3695091, 'slug': 'btc-updown-5m-1792800000', 'ws': 1792800000, 'we': 1792800300, 'outcome': 'Down', 'outcome_seen_ns': 1792800322914338225, 'feeRateBps': 200, 'makerFeeBps': 0, 'spreadThreshold': 0.06, 'shareThreshold': 100.0, 'rewards': '{"current":null,"schedule":[{"endsAt":"2026-10-24T00:05:00.000Z","hourlyRate":3000,"startsAt":"2026-10-24T00:00:00.000Z"}]}', 'isBoosted': 0, 'boostStartsAt': '2026-10-24T00:00:00.000Z', 'boostEndsAt': '2026-10-24T00:05:00.000Z', 'outcome_statuses': '[{"indexSet":1,"name":"Up","status":"LOST"},{"indexSet":2,"name":"Down","status":"WON"}]', 'market_status': 'RESOLVED', 'trading_status': 'CLOSED', 'resolution': 'Down', 'category_slug': 'btc-updown-5m-1792800000', 'latest_recv_ns': 1792802104099876200, 'n_pages': 325, 'n_records': 1985, 'n_legs': 2741, 'changed_fields': 'rewards', 'rewards_variants': '[{"first_recv_ns":1792799737311294595,"rewards":{"current":null,"schedule":[{"endsAt":"2026-10-24T00:05:00.000Z","hourlyRate":3000,"startsAt":"2026-10-24T00:00:00.000Z"}]}},{"first_recv_ns":1792800005107020991,"rewards":{"current":{"endsAt":"2026-10-24T00:05:00.000Z","hourlyRate":3000,"startsAt":"2026-10-24T00:00:00.000Z"},"schedule":[{"endsAt":"2026-10-24T00:05:00.000Z","hourlyRate":3000,"startsAt":"2026-10-24T00:00:00.000Z"}]}}]', 'rest_lo_ms': 1792799700000, 'rest_hi_ms': 1792800420000, 'n_frames': 5431, 'first_upd_ms': 1792799999869, 'last_upd_ms': 1792800302419, 'n_legs_outside_ws': 47, 'n_legs_in_missing_ws_hour': 0, 'n_poll_incomplete': 0, 'poll_incomplete_reasons': '{}', 'depth': 0, 'status': 'fills_outside_ws'}, {'day': '20261024', 'mid': 3695173, 'slug': 'btc-updown-5m-1792800300', 'ws': 1792800300, 'we': 1792800600, 'outcome': 'Down', 'outcome_seen_ns': 1792800635183918293, 'feeRateBps': 200, 'makerFeeBps': 0, 'spreadThreshold': 0.06, 'shareThreshold': 100.0, 'rewards': '{"current":null,"schedule":[{"endsAt":"2026-10-24T00:10:00.000Z","hourlyRate":3000,"startsAt":"2026-10-24T00:05:00.000Z"}]}', 'isBoosted': 0, 'boostStartsAt': '2026-10-24T00:05:00.000Z', 'boostEndsAt': '2026-10-24T00:10:00.000Z', 'outcome_statuses': '[{"indexSet":1,"name":"Up","status":"LOST"},{"indexSet":2,"name":"Down","status":"WON"}]', 'market_status': 'RESOLVED', 'trading_status': 'CLOSED', 'resolution': 'Down', 'category_slug': 'btc-updown-5m-1792800300', 'latest_recv_ns': 1792802358359437936, 'n_pages': 211, 'n_records': 1267, 'n_legs': 1808, 'changed_fields': 'rewards', 'rewards_variants': '[{"first_recv_ns":1792800012818255359,"rewards":{"current":null,"schedule":[{"endsAt":"2026-10-24T00:10:00.000Z","hourlyRate":3000,"startsAt":"2026-10-24T00:05:00.000Z"}]}},{"first_recv_ns":1792800303008544788,"rewards":{"current":{"endsAt":"2026-10-24T00:10:00.000Z","hourlyRate":3000,"startsAt":"2026-10-24T00:05:00.000Z"},"schedule":[{"endsAt":"2026-10-24T00:10:00.000Z","hourlyRate":3000,"startsAt":"2026-10-24T00:05:00.000Z"}]}}]', 'rest_lo_ms': 1792800000000, 'rest_hi_ms': 1792800720000, 'n_frames': 5036, 'first_upd_ms': 1792800007392, 'last_upd_ms': 1792800602165, 'n_legs_outside_ws': 10, 'n_legs_in_missing_ws_hour': 0, 'n_poll_incomplete': 0, 'poll_incomplete_reasons': '{}', 'depth': 0, 'status': 'fills_outside_ws'}, {'day': '20261024', 'mid': 3695216, 'slug': 'btc-updown-5m-1792800600', 'ws': 1792800600, 'we': 1792800900, 'outcome': 'Down', 'outcome_seen_ns': 1792800913352839425, 'feeRateBps': 200, 'makerFeeBps': 0, 'spreadThreshold': 0.06, 'shareThreshold': 100.0, 'rewards': '{"current":null,"schedule":[{"endsAt":"2026-10-24T00:15:00.000Z","hourlyRate":3000,"startsAt":"2026-10-24T00:10:00.000Z"}]}', 'isBoosted': 0, 'boostStartsAt': '2026-10-24T00:10:00.000Z', 'boostEndsAt': '2026-10-24T00:15:00.000Z', 'outcome_statuses': '[{"indexSet":1,"name":"Up","status":"LOST"},{"indexSet":2,"name":"Down","status":"WON"}]', 'market_status': 'RESOLVED', 'trading_status': 'CLOSED', 'resolution': 'Down', 'category_slug': 'btc-updown-5m-1792800600', 'latest_recv_ns': 1792802703243286807, 'n_pages': 247, 'n_records': 1386, 'n_legs': 1862, 'changed_fields': 'rewards', 'rewards_variants': '[{"first_recv_ns":1792800325922107258,"rewards":{"current":null,"schedule":[{"endsAt":"2026-10-24T00:15:00.000Z","hourlyRate":3000,"startsAt":"2026-10-24T00:10:00.000Z"}]}},{"first_recv_ns":1792800607302814162,"rewards":{"current":{"endsAt":"2026-10-24T00:15:00.000Z","hourlyRate":3000,"startsAt":"2026-10-24T00:10:00.000Z"},"schedule":[{"endsAt":"2026-10-24T00:15:00.000Z","hourlyRate":3000,"startsAt":"2026-10-24T00:10:00.000Z"}]}}]', 'rest_lo_ms': 1792800300000, 'rest_hi_ms': 1792801020000, 'n_frames': 5401, 'first_upd_ms': 1792800321475, 'last_upd_ms': 1792800904534, 'n_legs_outside_ws': 1, 'n_legs_in_missing_ws_hour': 0, 'n_poll_incomplete': 0, 'poll_incomplete_reasons': '{}', 'depth': 0, 'status': 'fills_outside_ws'}]
+econ/maker_market.parquet day: string
+mid: int64
+addr: string
+population: string
+book: bool
+res_status: string
+end_status: string
+is_maker: bool
+n_mk: int64
+sh_mk: double
+n_tk: int64
+sh_tk: double
+notional: double
+sh_buy: double
+sh_sell: double
+gross_res_mk: double
+gross_res_tk: double
+sh_res: double
+sh_res_mk: double
+fee_res: double
+fee_fill: double
+net_res: double
+net_res_mk: double
+reb25_res: double
+reb25_fill: double
+n_res_na: int64
+v_spr_mk: double
+sh_spr_mk: double
+v_spr_tk: double
+sh_spr_tk: double
+v_1s_mk: double
+sh_1s_mk: double
+v_1s_tk: double
+sh_1s_tk: double
+v_10s_mk: double
+sh_10s_mk: double
+v_10s_tk: double
+sh_10s_tk: double
+v_60s_mk: double
+sh_60s_mk: double
+v_60s_tk: double
+sh_60s_tk: double
+v_end_mk: double
+sh_end_mk: double
+v_end_tk: double
+sh_end_tk: double
+rt_sh: double
+rt_pnl: double
+net_pos: double
+resid_res: double
+resid_drift: double
+resid_resol: double
+fifo_status: string
+rew_bid_ms: double
+rew_ask_ms: double
+rew_both_ms: double
+rew_n_orders: int64
+rew_status: string
+n_excl: int64
+status: string
+[{'day': '20261023', 'mid': 3655838, 'addr': '0x00349b5924fD4B7dF61B4637Ba5343038B556Cd1', 'population': 'ID', 'book': False, 'res_status': 'censored', 'end_status': 'id_day_no_book', 'is_maker': False, 'n_mk': 0, 'sh_mk': 0.0, 'n_tk': 0, 'sh_tk': 0.0, 'notional': 0.0, 'sh_buy': 0.0, 'sh_sell': 0.0, 'gross_res_mk': 0.0, 'gross_res_tk': 0.0, 'sh_res': 0.0, 'sh_res_mk': 0.0, 'fee_res': 0.0, 'fee_fill': 0.0, 'net_res': 0.0, 'net_res_mk': 0.0, 'reb25_res': 0.0, 'reb25_fill': 0.0, 'n_res_na': 0, 'v_spr_mk': 0.0, 'sh_spr_mk': 0.0, 'v_spr_tk': 0.0, 'sh_spr_tk': 0.0, 'v_1s_mk': 0.0, 'sh_1s_mk': 0.0, 'v_1s_tk': 0.0, 'sh_1s_tk': 0.0, 'v_10s_mk': 0.0, 'sh_10s_mk': 0.0, 'v_10s_tk': 0.0, 'sh_10s_tk': 0.0, 'v_60s_mk': 0.0, 'sh_60s_mk': 0.0, 'v_60s_tk': 0.0, 'sh_60s_tk': 0.0, 'v_end_mk': 0.0, 'sh_end_mk': 0.0, 'v_end_tk': 0.0, 'sh_end_tk': 0.0, 'rt_sh': 0.0, 'rt_pnl': 0.0, 'net_pos': 0.0, 'resid_res': nan, 'resid_drift': nan, 'resid_resol': nan, 'fifo_status': 'censored', 'rew_bid_ms': 0.0, 'rew_ask_ms': 0.0, 'rew_both_ms': 0.0, 'rew_n_orders': 0, 'rew_status': 'not_book', 'n_excl': 1, 'status': 'all_rows_excluded'}, {'day': '20261023', 'mid': 3655838, 'addr': '0x00C28F228853422f346c0e5fda225ad96193D72c', 'population': 'ID', 'book': False, 'res_status': 'censored', 'end_status': 'id_day_no_book', 'is_maker': False, 'n_mk': 0, 'sh_mk': 0.0, 'n_tk': 0, 'sh_tk': 0.0, 'notional': 0.0, 'sh_buy': 0.0, 'sh_sell': 0.0, 'gross_res_mk': 0.0, 'gross_res_tk': 0.0, 'sh_res': 0.0, 'sh_res_mk': 0.0, 'fee_res': 0.0, 'fee_fill': 0.0, 'net_res': 0.0, 'net_res_mk': 0.0, 'reb25_res': 0.0, 'reb25_fill': 0.0, 'n_res_na': 0, 'v_spr_mk': 0.0, 'sh_spr_mk': 0.0, 'v_spr_tk': 0.0, 'sh_spr_tk': 0.0, 'v_1s_mk': 0.0, 'sh_1s_mk': 0.0, 'v_1s_tk': 0.0, 'sh_1s_tk': 0.0, 'v_10s_mk': 0.0, 'sh_10s_mk': 0.0, 'v_10s_tk': 0.0, 'sh_10s_tk': 0.0, 'v_60s_mk': 0.0, 'sh_60s_mk': 0.0, 'v_60s_tk': 0.0, 'sh_60s_tk': 0.0, 'v_end_mk': 0.0, 'sh_end_mk': 0.0, 'v_end_tk': 0.0, 'sh_end_tk': 0.0, 'rt_sh': 0.0, 'rt_pnl': 0.0, 'net_pos': 0.0, 'resid_res': nan, 'resid_drift': nan, 'resid_resol': nan, 'fifo_status': 'censored', 'rew_bid_ms': 0.0, 'rew_ask_ms': 0.0, 'rew_both_ms': 0.0, 'rew_n_orders': 0, 'rew_status': 'not_book', 'n_excl': 1, 'status': 'all_rows_excluded'}, {'day': '20261023', 'mid': 3655838, 'addr': '0x00F79947e13AE5Aa302Ff23FA3BB2d8ac077D17B', 'population': 'ID', 'book': False, 'res_status': 'censored', 'end_status': 'id_day_no_book', 'is_maker': False, 'n_mk': 0, 'sh_mk': 0.0, 'n_tk': 0, 'sh_tk': 0.0, 'notional': 0.0, 'sh_buy': 0.0, 'sh_sell': 0.0, 'gross_res_mk': 0.0, 'gross_res_tk': 0.0, 'sh_res': 0.0, 'sh_res_mk': 0.0, 'fee_res': 0.0, 'fee_fill': 0.0, 'net_res': 0.0, 'net_res_mk': 0.0, 'reb25_res': 0.0, 'reb25_fill': 0.0, 'n_res_na': 0, 'v_spr_mk': 0.0, 'sh_spr_mk': 0.0, 'v_spr_tk': 0.0, 'sh_spr_tk': 0.0, 'v_1s_mk': 0.0, 'sh_1s_mk': 0.0, 'v_1s_tk': 0.0, 'sh_1s_tk': 0.0, 'v_10s_mk': 0.0, 'sh_10s_mk': 0.0, 'v_10s_tk': 0.0, 'sh_10s_tk': 0.0, 'v_60s_mk': 0.0, 'sh_60s_mk': 0.0, 'v_60s_tk': 0.0, 'sh_60s_tk': 0.0, 'v_end_mk': 0.0, 'sh_end_mk': 0.0, 'v_end_tk': 0.0, 'sh_end_tk': 0.0, 'rt_sh': 0.0, 'rt_pnl': 0.0, 'net_pos': 0.0, 'resid_res': nan, 'resid_drift': nan, 'resid_resol': nan, 'fifo_status': 'censored', 'rew_bid_ms': 0.0, 'rew_ask_ms': 0.0, 'rew_both_ms': 0.0, 'rew_n_orders': 0, 'rew_status': 'not_book', 'n_excl': 1, 'status': 'all_rows_excluded'}]
+inventory_20261024.json keys ['day', 'version', 'role', 'mode', 'note', 'rest', 'ws', 'objects', 'leaves', 'counters']
+{"day": "20261024", "version": "maker_trace_v1", "role": "FILL", "mode": "day", "note": "computed from the hour files of extract_<day>.json; record-level items over UNIQUE records (first canonical content), market objects over the first page per market per hour, frame leaves over every 200th frame, string formats over the first 2000 new records per REST hour; key sets, types and counters otherwise over all", "rest": {"ids": {"unique_keys": 476897, "rows_with_sid": 476897, "distinct_sid": 476897, "sid_column_unique": true, "synthetic_sids": 0, "key_kinds": {"sid": 476897}, "records_per_transactionHash": {"1": 476897}, "records_per_taker_hash": {"1": 365712, "2": 25354, "3": 7402, "4": 2800, "5": 1257, "6": 719, "7": 417, "8": 256, "9": 199, "10": 135, "11": 103, "12": 65, "13": 56, "14": 34, "15": 34, "16": 33, "17": 24, "18": 15, "19": 13, "20": 8, "21": 12, "22": 13, "23": 9, "24": 6, "25": 7, "26": 4, "27": 4, "28": 4, "29": 3, "30": 3, "31": 2, "32": 3, "33": 4, "39": 2, "44": 1, "45": 1, "46": 1, "52": 1, "54": 1, "55": 1, "61": 1, "63": 2, "74": 1, "82": 1, "84": 1, "86": 1, "89": 2, "99": 1, "105": 1}, "n_recv": {"9": 106594, "10": 83457, "8": 61655, "11": 51750, "12": 28158, "7": 13445, "13": 12844, "37": 8307, "39": 8137, "38": 7911, "36": 7595, "6": 7084, "35": 6949, "40": 6913, "34": 6889, "41": 5780, "14": 5446, "33": 4895, "5": 4604, "42": 4214, "43": 3351, "50": 3030, "44": 2914, "32": 2885, "15": 2598, "45": 2362, "16": 1976, "46": 1656, "17": 1551, "4": 1348, "47": 1318, "18": 1260, "19": 1100, "48": 1020, "31": 889, "21": 852, "49": 815, "20": 712, "22": 500, "23": 491, "24": 361, "30": 259, "25": 236, "26": 216, "29": 198, "27": 196, "28": 176}, "keys_with_conflict": 14, "conflict_receipts": 165, "x_kept": {"only": 476883, "reconciles": 14}, "order_hashes": {"taker_hashes": 404729, "maker_hashes": 450187, "taker_hashes_also_maker": 2746, "maker_hashes_with_fills_in_several_records": 129750}}, "clocks_and_lags_ms": {"settle_minus_exec_ms": {"p0": -5749.0, "p0.1": -1987.104, "p1": -766.0, "p5": -517.0, "p50": 40.0, "p95": 563.0, "p99": 695.0, "p99.9": 778.0, "p100": 843.0, "n": 476897}, "taker_fee_over_q_min_p_1mp | COLLATERAL": {"p0": 0.017999999999999818, "p0.1": 0.018, "p1": 0.018, "p5": 0.018, "p50": 0.02, "p95": 0.02, "p99": 0.02, "p99.9": 0.02, "p100": 0.02, "n": 34897}, "taker_fee_over_q_min_p_1mp | SHARES": {"p0": 0.01818181818181534, "p0.1": 0.018181818181818177, "p1": 0.019148936170212762, "p5": 0.02040816326530612, "p50": 0.035294
+extract_20261024.json keys ['version', 'module', 'day', 'role', 'mode', 'asof', 'argv', 'sources', 'inputs', 'population', 'rest', 'ws', 'envelope', 'markets_flagged', 'ws_population', 'events', 'status_orders', 'counts', 'status_counts', 'flag_counts', 'outputs', 'definitions', 'cpu_s', 'wall_s', 'vmhwm_mib', 'guard_mib']
+{"version": "maker_trace_v1", "module": "pf_mt_extract", "day": "20261024", "role": "FILL", "mode": "day", "asof": "2026-11-22T20:33:00.397266+00:00", "argv": ["/home/yuqing/ctaNew/predictfun/research/pf_mt_extract.py", "day", "20261024"], "sources": {"/home/yuqing/ctaNew/predictfun/research/pf_mt_extract.py": "b25b3841ee408c5018803ee732c0f275fe3fa8a085929222122c99f54101b5ea", "/home/yuqing/ctaNew/predictfun/research/pf_mt_common.py": "eff4463b0e19faafd20aa1423f4d06824223cc3382d945b7bca14cbfb13da17c"}, "inputs": {"/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/registry.parquet": "21482f2cbec32188e80d5f80926f99bf87158507643c307ae4d177cb89e7c9c0", "/home/yuqing/ctaNew/predictfun/reviews/ladder_async_fast_20261122/manifest.json": "34444c8a1b85752069a27d8e884e7d116656c03a88d3ccd3eb1f584355e5a013"}, "population": {"n_markets": 288, "depth_mids": [3697902, 3699278, 3700070, 3702960, 3704004, 3712725, 3716727]}, "rest": {"planned": ["20261023_23", "20261024_00", "20261024_01", "20261024_02", "20261024_03", "20261024_04", "20261024_05", "20261024_06", "20261024_07", "20261024_08", "20261024_09", "20261024_10", "20261024_11", "20261024_12", "20261024_13", "20261024_14", "20261024_15", "20261024_16", "20261024_17", "20261024_18", "20261024_19", "20261024_20", "20261024_21", "20261024_22", "20261024_23", "20261025_00"], "read": ["20261023_23", "20261024_00", "20261024_01", "20261024_02", "20261024_03", "20261024_04", "20261024_05", "20261024_06", "20261024_07", "20261024_08", "20261024_09", "20261024_10", "20261024_11", "20261024_12", "20261024_13", "20261024_14", "20261024_15", "20261024_16", "20261024_17", "20261024_18", "20261024_19", "20261024_20", "20261024_21", "20261024_22", "20261024_23", "20261025_00"], "clipped": [], "missing": [], "hours": [{"family": "rest", "stem": "20261023_23", "bytes": 65524061, "sha256": "89e326168fdd5eefc3dcddabd5f430bc6ce8790f5c6c03a65b5aa0c2170a2c4b", "lines": 3962, "match_rows": 3126, "new_records": 25, "pages": 42, "pages_other_markets": 3084, "pages_payload_repeat": 21, "record_receipts": 453, "records_not_object": 0, "records_other_markets": 0, "repolls": 428, "cpu_s": 1.727, "vmhwm_mib": 117.8}, {"family": "rest", "stem": "20261024_00", "bytes": 69123888, "sha256": "152b3623bdf9cd6613018789a22ade1fb142db6eece6f260113d8dfddd2e11b8", "conflict_receipts": 9, "lines": 4119, "match_rows": 3275, "new_records": 19146, "new_variants": 1, "pages": 2978, "pages_other_markets": 297, "pages_payload_repeat": 816, "record_rec
+econ/econ.json keys ['argv', 'asof_end', 'asof_start', 'book', 'book_source', 'checks', 'counts', 'days', 'diagnostics', 'inputs', 'memory', 'module', 'rewards', 'rows', 'rules', 'slot', 'sources', 'version', 'wall_s']
+{"argv": ["/home/yuqing/ctaNew/predictfun/research/pf_mt_econ.py", "run"], "asof_end": "2026-11-23T02:30:24Z", "asof_start": "2026-11-23T02:27:08Z", "book": {"20261024": [3697902, 3699278, 3700070, 3702960, 3704004, 3712725, 3716727], "20261025": [3723774, 3734864, 3737919, 3763401, 3776314], "20261026": [3789484, 3803131, 3804696, 3838531, 3850428], "20261027": [3877472, 3899224]}, "book_source": "predictfun/reviews/ladder_async_fast_20261122/manifest.json", "checks": {"gross_eq_rt_plus_resid": {"max_dev": 2.944489096989855e-11, "ok": true, "tol": "1e-09 + 1e-12 x notional"}, "net_eq_gross_minus_fee": {"max_dev": 1.8189894035458565e-12, "ok": true, "tol": "1e-09 + 1e-12 x notional"}, "net_pos_eq_buys_minus_sells": {"max_dev": 2.9956481739645824e-11, "ok": true, "tol": "1e-09 + 1e-12 x notional"}, "resid_eq_drift_plus_resol": {"max_dev": 1.8189894035458565e-12, "ok": true, "tol": "1e-09 + 1e-12 x notional"}, "segment_zero_sum_gross_res": {"max_dev": 2.4556356947869062e-11, "ok": true, "tol": "1e-09 + 1e-12 x notional"}, "segment_zero_sum_v_10s": {"max_dev": 1.1368683772161603e-11, "ok": true, "tol": "1e-09 + 1e-12 x notional"}, "segment_zero_sum_v_1s": {"max_dev": 1.0913936421275139e-11, "ok": true, "tol": "1e-09 + 1e-12 x notional"}, "segment_zero_sum_v_60s": {"max_dev": 1.0913936421275139e-11, "ok": true, "tol": "1e-09 + 1e-12 x notional"}, "segment_zero_sum_v_end": {"max_dev": 1.0913936421275139e-11, "ok": true, "tol": "1e-09 + 1e-12 x notional"}, "segment_zero_sum_v_spr": {"max_dev": 2.9103830456733704e-11, "ok": true, "tol": "1e-09 + 1e-12 x notional"}, "zero_sum_gross": {"max_dev": 1.8189894035458565e-12, "ok": true, "tol": "1e-09 + 1e-12 x notional"}, "zero_sum_net_pos": {"max_dev": 4.220623850414995e-11, "ok": true, "tol": "1e-09 + 1e-12 x notional"}, "zero_sum_shares": {"max_dev": 1.4551915228366852e-11, "ok": true, "tol": "1e-09 + 1e-12 x notional"}, "zero_sum_v_10s": {"max_dev": 4.547473508864641e-13, "ok": true, "tol": "1e-09 + 1e-12 x notional"}, "zero_sum_v_1s": {"max_dev": 9.094947017729282e-13, "ok": true, "tol": "1e-09 + 1e-12 x notional"}, "zero_sum_v_60s": {"max_dev": 4.547473508864641e-13, "ok": true, "tol": "1e-09 + 1e-12 x notional"}, "zero_sum_v_end": {"max_dev": 1.8189894035458565e-12, "ok": true, "tol": "1e-09 + 1e-12 x notional"}, "zero_sum_v_spr": {"max_dev": 4.547473508864641e-13, "ok": true, "tol": "1e-09 + 1e-12 x notional"}}, "counts": {"20261023": {"kind": {"merge": 6410, "mint": 1447716, "regular": 235092}, "life_status": {
+TOP3 [{'addr': '0x6Da6Cb464F92AE7aD4Ec3d239c81719Cb1D0Ae03', 'mk_share': 0.6194096944356843, 'n_res_na': 0, 'net_res': 3490.1782518176065, 'net_res_mk': -2542.4229031911204, 'rank': 1, 'sh_mk': 1246786.2568846552, 'sh_tk': 766075.7762492386, 'value': 1246786.2568846552}, {'addr': '0x7d32c568a9bEA1714036972601c51F4902C67091', 'mk_share': 0.9704667604424754, 'n_res_na': 0, 'net_res': -947.2545824837534, 'net_res_mk': -1174.9971163776238, 'rank': 2, 'sh_mk': 851227.0093445687, 'sh_tk': 25904.536053709075, 'value': 851227.0093445687}, {'addr': '0x57FbC891E89184DA071AE9D97E745531cd7F718a', 'mk_share': 0.9179134679575043, 'n_res_na': 0, 'net_res': 268.64807692524926, 'net_res_mk': -287.78685616490327, 'rank': 3, 'sh_mk': 645075.5347954072, 'sh_tk': 57687.36967618468, 'value': 645075.5347954072}]
+2026-11-24T12:17:45Z tag=maker3_coverage_probe rc=0 peak_rss_mib=829 wall_s=1.33 cpu_user_s=0.89 memavail_start_gib=22 disk_free_gib=414->414 slot=codex

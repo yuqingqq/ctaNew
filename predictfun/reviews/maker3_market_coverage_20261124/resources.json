@@ -1,0 +1,10 @@
+{
+  "previous_packet_upper_cpu_s": 163.99,
+  "probe_wall_upper_s": 1.33,
+  "terminated_census_wall_upper_s": 12.16,
+  "compact_first_wall_upper_s": 0.51,
+  "compact_v2_wall_upper_s": 0.51,
+  "publication_reserve_s": 1.0,
+  "packet_upper_cpu_s": 179.5,
+  "packet_cap_cpu_s": 180
+}
