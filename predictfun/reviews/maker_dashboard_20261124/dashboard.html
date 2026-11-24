@@ -3,6 +3,7 @@
 </style></head>
 <body><header><a class="brand" href="#">PF <span>RESEARCH / MARKET MICROSCOPE</span></a><span class="badge">Saved evidence · Oct 2026</span></header>
 <main><div class="heading"><div><p class="eyebrow">OUR STRATEGY × TOP MAKERS</p><h1>Where did the good fills go?</h1><p class="intro">Follow the price, the queue and the order. Compare our simulated quotes with recorded maker fills — without turning uncertain timing into fact.</p></div><div class="scope">3 selected markets<br>100 shares × 2 levels<br>Assumed 10 ms execution</div></div>
+<p><a href="opening.html?market=3789484">New: compare the opening-only modification with default and maker #3</a></p>
 <section class="controls" aria-label="Chart controls"><label>Market<select id="market"></select></label><label>Our saved arm<select id="arm"><option value="CURRENT_ASYNC_FAST10">Current queue · async 10 ms</option><option value="FRONT_ASYNC_FAST10">Hypothetical front · async 10 ms</option></select></label><label>Recorded makers<select id="maker"><option value="0">Top 3 together</option><option value="1">Maker #1</option><option value="2">Maker #2</option><option value="3">Maker #3</option></select></label><label>Side<select id="side"><option value="all">Bid + ask</option><option value="0">Bid / buy YES</option><option value="1">Ask / sell YES</option></select></label></section>
 <div id="loading" role="status">Loading the verified saved traces…</div><div id="app" hidden>
 <section class="metrics" id="metrics"></section><section class="insight" id="insight"></section>

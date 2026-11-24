@@ -1,0 +1,2 @@
+{'passed': True, 'arms': 6, 'corruptions_refused': 6, 'fills': 2227, 'orders': 2135, 'maker3_legs': 406, 'no_replay': True}
+2026-11-24T12:45:21Z tag=opening_chart_check_v3 rc=0 peak_rss_mib=188 wall_s=1.60 cpu_user_s=1.46 memavail_start_gib=22 disk_free_gib=413->413 slot=codex

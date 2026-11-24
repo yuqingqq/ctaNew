@@ -1,0 +1,66 @@
+{
+  "packet_cap_cpu_s": 60,
+  "packet_upper_cpu_s": 57.07,
+  "stages": [
+    {
+      "log": "summary.log",
+      "wall_upper_s": 0.1
+    },
+    {
+      "log": "finalize.log",
+      "wall_upper_s": 0.2
+    },
+    {
+      "log": "browser_cdp.log",
+      "wall_upper_s": 2.93
+    },
+    {
+      "log": "browser_v2.log",
+      "wall_upper_s": 1.36
+    },
+    {
+      "log": "browser.log",
+      "wall_upper_s": 0.25
+    },
+    {
+      "log": "project_v2.log",
+      "wall_upper_s": 10.16
+    },
+    {
+      "log": "check_v2.log",
+      "wall_upper_s": 13.11
+    },
+    {
+      "log": "pack_final.log",
+      "wall_upper_s": 0.07
+    },
+    {
+      "log": "check.log",
+      "wall_upper_s": 0.72
+    },
+    {
+      "log": "nav.log",
+      "wall_upper_s": 0.3
+    },
+    {
+      "log": "pack.log",
+      "wall_upper_s": 0.04
+    },
+    {
+      "log": "project.log",
+      "wall_upper_s": 0.23
+    },
+    {
+      "log": "check_v3.log",
+      "wall_upper_s": 1.6
+    }
+  ],
+  "render_cpu_charge_s": 25,
+  "publication_and_final_browser_reserve_s": 1,
+  "task_cap_coreh": 2.075,
+  "line_cap_coreh": 5.375,
+  "standing_reserve_coreh": 0.05,
+  "prior_entry_side_packet_upper_cpu_s": 17.2,
+  "prior_dashboard_packet_upper_cpu_s": 179.5,
+  "render_charge_basis": "full25s timeout wall; one-core renderer; time recorder terminated before footer"
+}

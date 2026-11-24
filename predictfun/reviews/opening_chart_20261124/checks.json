@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "arms": 6,
+  "corruptions_refused": 6,
+  "fills": 2227,
+  "orders": 2135,
+  "maker3_legs": 406,
+  "no_replay": true
+}

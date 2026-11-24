@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/opening_chart_20261124/project.py", line 34, in <module>
+    assert inputs[str(ap.relative_to(R))]==expected[(mid,arm)]['arrays_sha256']
+                                           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: 'arrays_sha256'
+2026-11-24T12:39:38Z tag=opening_chart_project rc=1 peak_rss_mib=60 wall_s=0.23 cpu_user_s=0.17 memavail_start_gib=22 disk_free_gib=413->413 slot=codex

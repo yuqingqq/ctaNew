@@ -1,3 +1,12 @@
+opening_chart_20261124_codex:
+  report: predictfun/reviews/opening_chart_20261124/report.md
+  chart: predictfun/reviews/maker_dashboard_20261124/opening.html
+  new_replay: false
+  first_quote_is_not_first_position: true
+  example_initial_bids_filled: false
+  example_first_fill: "951ms ask55c 5shares; default-rule continuation"
+  packet_upper_cpu_s: 57.07
+  packet_cap_cpu_s: 60
 maker3_entry_side_20261124_codex:
   report: predictfun/reviews/maker3_entry_side_20261124/report.md
   freeze: 7a8b690c1

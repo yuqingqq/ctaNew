@@ -1,0 +1,46 @@
+{
+  "errors": [],
+  "checks": [
+    {
+      "state": {
+        "market": 3789484,
+        "lo": 0,
+        "hi": 3,
+        "cursor": 0.55,
+        "selected": null
+      },
+      "rule": "Opening signal at 0.55 s: BTC 250 ms return 0.3248 bps → submit bid 49¢ and bid 48¢. Active at 0.56 s. Original entry rules resume at 0.6 s. The gate never rearms. Later orders still follow the original pressure and inventory rules.",
+      "events": 79,
+      "overflow": false
+    },
+    {
+      "state": {
+        "market": 3702960,
+        "lo": 28.3,
+        "hi": 31.3,
+        "cursor": 29.05,
+        "selected": null
+      },
+      "rule": "Opening signal at 29.05 s: BTC 250 ms return -0.7811 bps → submit ask 49¢ and ask 50¢. Active at 29.06 s. Original entry rules resume at 29.1 s. The gate never rearms. Later orders still follow the original pressure and inventory rules.",
+      "events": 73,
+      "overflow": false
+    },
+    {
+      "state": {
+        "market": 3877472,
+        "lo": 0.09999999999999998,
+        "hi": 3.1,
+        "cursor": 0.85,
+        "selected": null
+      },
+      "rule": "Opening signal at 0.85 s: BTC 250 ms return -0.7803 bps → submit ask 48¢ and ask 49¢. Active at 0.86 s. Original entry rules resume at 0.9 s. The gate never rearms. Later orders still follow the original pressure and inventory rules.",
+      "events": 40,
+      "overflow": false
+    }
+  ],
+  "mobile": {
+    "overflow": false,
+    "canvas": 366,
+    "body": 390
+  }
+}

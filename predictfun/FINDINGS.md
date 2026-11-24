@@ -1,3 +1,13 @@
+<!-- OPENING_CHART_20261124_CODEX -->
+## 2026-11-24 — opening comparison visible; first quote differs from first position
+
+[Chart receipt](reviews/opening_chart_20261124/report.md); [self-contained page](reviews/maker_dashboard_20261124/opening.html), existing localhost8765 tunnel. Saved FIXED_DEFAULT vs OPENING_ONLY, same inventory correction, maker3;3market/3–298s views, actual cached signal, quotes/fills/inventory/value.6arms2227fills2135orders406maker legs verified,6 corruptions refused;desktop/mobile controls pass. No new replay.
+
+Important scope:3789484 gate triggers550ms(+0.32485bps), initial bids49/48 activate560ms, original entries resume600ms. Those initial bids NEVER FILL. The first acquired position is a later default-rule ask55c fill5sh at951ms, from a900ms submission. Thus information gates first quoting, not first-position direction. It avoids default191.24sh ask50/51 fills448ms; first-minute value-22.08→+2.08USD, full-17.40→+9.73. Pooled remainsnegative. Maker3 first passive upper1.755s is not a known private entry time.
+
+ONE next priority: clarify desired opening unit (first submitted batch vs first acquired position) before any new replay; do not silently broaden the gate. Resource packet<=60CPU seconds under standing short-CPU approval, prior charges intact, task2.075/line5.375/.05reserve; failures and browser renderer counted in receipt.
+<!-- /OPENING_CHART_20261124_CODEX -->
+
 <!-- MAKER3_ENTRY_SIDE_20261124_CODEX -->
 ## 2026-11-24 — Maker #3 first-fill side does not identify a favorite-first entry rule
 

@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/opening_chart_20261124/project.py", line 67, in <module>
+    summary=[dict(m=m['id'],gate=m['gate'],resume=m['resume'],first_fills={k:a['first_fill'] for k,a in m['arms'].items()},first_orders={k:a['first_orders'] for k,a in m['arms'].items()},maker_first=min(f['t'] for f in m['makers']),maker_first_passive=min(f['t'] for f in m['makers'] if f['role']=='maker')) for m in cases]
+                                                                                                                                                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: min() iterable argument is empty
+2026-11-24T12:39:57Z tag=opening_chart_project_v2 rc=1 peak_rss_mib=111 wall_s=10.16 cpu_user_s=9.75 memavail_start_gib=22 disk_free_gib=413->413 slot=codex

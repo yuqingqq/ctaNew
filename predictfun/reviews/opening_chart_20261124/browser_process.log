@@ -1,0 +1,5 @@
+
+DevTools listening on ws://127.0.0.1:9223/devtools/browser/7fd44579-fd83-4fcf-99fb-97e34fa422a3
+[1124/124612.940360:WARNING:sandbox/policy/linux/sandbox_linux.cc:414] InitializeSandbox() called with multiple threads in process gpu-process.
+[1124/124637.823585:ERROR:content/common/zygote/zygote_communication_linux.cc:293] Failed to send GetTerminationStatus message to zygote
+[1124/124637.823628:WARNING:content/common/zygote/zygote_communication_linux.cc:305] Socket closed prematurely.

@@ -1,0 +1,269 @@
+[
+  {
+    "m": 3702960,
+    "gate": 29.05,
+    "resume": 29.1,
+    "first_fills": {
+      "FIXED_DEFAULT": 0.881,
+      "OPENING_ONLY": 29.718
+    },
+    "first_orders": {
+      "FIXED_DEFAULT": [
+        {
+          "gid": 0,
+          "side": 0,
+          "rung": 0.0,
+          "price": 48.0,
+          "q": 100.0,
+          "submit": 0.0,
+          "act": 0.01,
+          "stop": 1.01,
+          "request": 1.0,
+          "refused": false
+        },
+        {
+          "gid": 1,
+          "side": 0,
+          "rung": 1.0,
+          "price": 47.0,
+          "q": 100.0,
+          "submit": 0.0,
+          "act": 0.01,
+          "stop": 10.46,
+          "request": 10.45,
+          "refused": false
+        },
+        {
+          "gid": 2,
+          "side": 1,
+          "rung": 0.0,
+          "price": 50.0,
+          "q": 100.0,
+          "submit": 0.0,
+          "act": 0.01,
+          "stop": 29.36,
+          "request": 29.35,
+          "refused": false
+        },
+        {
+          "gid": 3,
+          "side": 1,
+          "rung": 1.0,
+          "price": 51.0,
+          "q": 100.0,
+          "submit": 0.0,
+          "act": 0.01,
+          "stop": 29.36,
+          "request": 29.35,
+          "refused": false
+        }
+      ],
+      "OPENING_ONLY": [
+        {
+          "gid": 0,
+          "side": 1,
+          "rung": 0.0,
+          "price": 49.0,
+          "q": 100.0,
+          "submit": 29.05,
+          "act": 29.06,
+          "stop": 29.36,
+          "request": 29.35,
+          "refused": false
+        },
+        {
+          "gid": 1,
+          "side": 1,
+          "rung": 1.0,
+          "price": 50.0,
+          "q": 100.0,
+          "submit": 29.05,
+          "act": 29.06,
+          "stop": 29.36,
+          "request": 29.35,
+          "refused": false
+        }
+      ]
+    },
+    "maker_first": 1.274,
+    "maker_first_passive": 1.274
+  },
+  {
+    "m": 3789484,
+    "gate": 0.55,
+    "resume": 0.6,
+    "first_fills": {
+      "FIXED_DEFAULT": 0.448,
+      "OPENING_ONLY": 0.951
+    },
+    "first_orders": {
+      "FIXED_DEFAULT": [
+        {
+          "gid": 0,
+          "side": 0,
+          "rung": 0.0,
+          "price": 49.0,
+          "q": 100.0,
+          "submit": 0.0,
+          "act": 0.01,
+          "stop": 1.01,
+          "request": 1.0,
+          "refused": false
+        },
+        {
+          "gid": 1,
+          "side": 0,
+          "rung": 1.0,
+          "price": 48.0,
+          "q": 100.0,
+          "submit": 0.0,
+          "act": 0.01,
+          "stop": 1.01,
+          "request": 1.0,
+          "refused": false
+        },
+        {
+          "gid": 2,
+          "side": 1,
+          "rung": 0.0,
+          "price": 50.0,
+          "q": 100.0,
+          "submit": 0.0,
+          "act": 0.01,
+          "stop": 0.448,
+          "request": null,
+          "refused": false
+        },
+        {
+          "gid": 3,
+          "side": 1,
+          "rung": 1.0,
+          "price": 51.0,
+          "q": 100.0,
+          "submit": 0.0,
+          "act": 0.01,
+          "stop": 0.56,
+          "request": 0.55,
+          "refused": false
+        }
+      ],
+      "OPENING_ONLY": [
+        {
+          "gid": 0,
+          "side": 0,
+          "rung": 0.0,
+          "price": 49.0,
+          "q": 100.0,
+          "submit": 0.55,
+          "act": 0.56,
+          "stop": 1.01,
+          "request": 1.0,
+          "refused": false
+        },
+        {
+          "gid": 1,
+          "side": 0,
+          "rung": 1.0,
+          "price": 48.0,
+          "q": 100.0,
+          "submit": 0.55,
+          "act": 0.56,
+          "stop": 1.01,
+          "request": 1.0,
+          "refused": false
+        }
+      ]
+    },
+    "maker_first": 1.755,
+    "maker_first_passive": 1.755
+  },
+  {
+    "m": 3877472,
+    "gate": 0.85,
+    "resume": 0.9,
+    "first_fills": {
+      "FIXED_DEFAULT": 1.448,
+      "OPENING_ONLY": 1.448
+    },
+    "first_orders": {
+      "FIXED_DEFAULT": [
+        {
+          "gid": 0,
+          "side": 0,
+          "rung": 0.0,
+          "price": 45.0,
+          "q": 100.0,
+          "submit": 0.0,
+          "act": 0.01,
+          "stop": 0.86,
+          "request": 0.85,
+          "refused": false
+        },
+        {
+          "gid": 1,
+          "side": 0,
+          "rung": 1.0,
+          "price": 44.0,
+          "q": 100.0,
+          "submit": 0.0,
+          "act": 0.01,
+          "stop": 0.86,
+          "request": 0.85,
+          "refused": false
+        },
+        {
+          "gid": 2,
+          "side": 1,
+          "rung": 0.0,
+          "price": 48.0,
+          "q": 100.0,
+          "submit": 0.0,
+          "act": 0.01,
+          "stop": 1.16,
+          "request": 1.15,
+          "refused": false
+        },
+        {
+          "gid": 3,
+          "side": 1,
+          "rung": 1.0,
+          "price": 49.0,
+          "q": 100.0,
+          "submit": 0.0,
+          "act": 0.01,
+          "stop": 1.16,
+          "request": 1.15,
+          "refused": false
+        }
+      ],
+      "OPENING_ONLY": [
+        {
+          "gid": 0,
+          "side": 1,
+          "rung": 0.0,
+          "price": 48.0,
+          "q": 100.0,
+          "submit": 0.85,
+          "act": 0.86,
+          "stop": 1.16,
+          "request": 1.15,
+          "refused": false
+        },
+        {
+          "gid": 1,
+          "side": 1,
+          "rung": 1.0,
+          "price": 49.0,
+          "q": 100.0,
+          "submit": 0.85,
+          "act": 0.86,
+          "stop": 1.16,
+          "request": 1.15,
+          "refused": false
+        }
+      ]
+    },
+    "maker_first": null,
+    "maker_first_passive": null
+  }
+]

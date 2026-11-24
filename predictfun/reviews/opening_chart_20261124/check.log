@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/opening_chart_20261124/check.py", line 49, in <module>
+    verify(x)
+  File "/home/yuqing/ctaNew/predictfun/reviews/opening_chart_20261124/check.py", line 37, in verify
+    assert near(o['stop'],min(stop,v['remove']/1000))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+2026-11-24T12:44:01Z tag=opening_chart_check rc=1 peak_rss_mib=173 wall_s=0.72 cpu_user_s=0.60 memavail_start_gib=22 disk_free_gib=413->413 slot=codex
