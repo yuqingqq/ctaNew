@@ -1,3 +1,16 @@
+<!-- TAKE_EXIT_FLOOR_20261125_CLAUDE -->
+## 2026-11-25 — break-even floor on the maker exit, valued at settlement (development evidence on the consumed v3 days)
+
+[Report](reviews/take_exit_floor_20261125/report.md), [amendment](reviews/take_exit_floor_20261125/amendment.md) (declared and frozen at da209477c before the run), [checks](reviews/take_exit_floor_20261125/checks.json) all pass, parity exact on 11 markets (session 1622c91e). USER: "We test the limit price in the same days, check the spread capture and settlement pnl separately, and the risk we carry to settlement". 408 markets on the five v3 days. BASE = the saved v3 STRICT58 ledgers; FLOOR = the same rule except the maker exit is never offered beyond break-even (client-known average cost including the taker fee). Shares still open at 298 s settle on each market's resolved outcome.
+
+- **Total at settlement:** BASE +$1,881.72 (+$4.61 / market), FLOOR +$2,361.78 (+$5.79 / market), difference +$480.06. FLOOR is better on 5 / 5 days (+$21.19 to +$204.22); 200 markets better, 66 worse, 142 within ½ ¢; the top 10 markets carry 19.6 % of |difference|.
+- **Split, BASE → FLOOR:** round trips (spread capture) +$1,916.15 → +$2,620.02, of which closed by the maker exit +$2,009.47 → +$3,166.88 and by an opposite take −$93.33 → −$546.86; held to settlement −$34.43 → −$258.24.
+- **Risk carried to settlement, BASE → FLOOR:** shares held at END 1,242.8 (1.6 % of shares taken) → 2,284.6 (3.0 %); markets holding ≥ 1 share 44 → 73; loss if every held lot settles against us $798.90 → $1,495.18 (one market at most $49.51, bounded by the ±50 cap); held-lot settlement P&L per market with a position: std $2.19 → $4.69, worst −$22.95 → −$48.17.
+- **Where the gain is:** FLOOR exits posted at the touch +$3,139.36 on 42,883.7 shares (+7.32 ¢/sh); exits raised to the floor and resting away from the touch only +$27.52 on 6,855.0 shares, so the gain does not lean on the optimistic queue rule for resting orders. 2,652 of 8,883 BASE exit orders (29.9 %) were priced below break-even.
+- **Mechanism:** the floor removes below-break-even maker sales. Those positions are instead closed later at the touch after the price recovers, closed by an opposite-signal take (a stop at −4.68 ¢/sh), or carried to settlement.
+- **Mark vs settlement:** the 298 s mark is close on aggregate (settlement − mark −$19.93 BASE, −$8.51 FLOOR).
+- **Limits:** consumed days and one floor level declared before the run (no validation claim, no interval with 5 day clusters); the replay is path-coupled; exit queue rule and 10 ms exit latency are optimistic, and a cross cancels without a fill.
+<!-- /TAKE_EXIT_FLOOR_20261125_CLAUDE -->
 <!-- TAKE_EXIT_FLOW_20261125_CLAUDE -->
 ## 2026-11-25 — execution flow of the take + maker exit (descriptive page; no new replay result)
 

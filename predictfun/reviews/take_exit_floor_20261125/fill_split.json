@@ -1,0 +1,35 @@
+{
+  "asof": "2026-11-25",
+  "markets": 408,
+  "rt_net_usd_check": {
+    "split_sum": 2620.018289892542,
+    "account_total": 2620.0182898925395
+  },
+  "touch": {
+    "fills": 5272,
+    "fill_shares": 43044.2155318987,
+    "rt_shares": 42883.70531971817,
+    "rt_net_usd": 3139.3578203925067,
+    "rt_net_c_per_share": 7.320630987894165,
+    "fill_age_ms_p50": 554.0,
+    "fill_age_ms_p90": 5376.0
+  },
+  "floor": {
+    "fills": 760,
+    "fill_shares": 6911.756050905639,
+    "rt_shares": 6854.991345489676,
+    "rt_net_usd": 27.51763898251201,
+    "rt_net_c_per_share": 0.4014248537398603,
+    "fill_age_ms_p50": 1780.0,
+    "fill_age_ms_p90": 8570.1
+  },
+  "take": {
+    "fills": 0,
+    "fill_shares": 0,
+    "rt_shares": 11694.641448845055,
+    "rt_net_usd": -546.857169482477,
+    "rt_net_c_per_share": -4.676134551662409,
+    "fill_age_ms_p50": null,
+    "fill_age_ms_p90": null
+  }
+}

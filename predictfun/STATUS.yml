@@ -1,3 +1,16 @@
+take_exit_floor_20261125_claude:
+  report: predictfun/reviews/take_exit_floor_20261125/report.md
+  amendment: predictfun/reviews/take_exit_floor_20261125/amendment.md
+  freeze: da209477c
+  session: 1622c91e
+  kind: development_evidence_consumed_days
+  markets: 408
+  total_at_settlement_usd: {base: 1881.72, floor: 2361.78}
+  round_trips_usd: {base: 1916.15, floor: 2620.02}
+  held_to_settlement_usd: {base: -34.43, floor: -258.24}
+  shares_held_at_end: {base: 1242.8, floor: 2284.6}
+  floor_days_better_at_settlement: 5
+  checks_all_pass: true
 take_exit_flow_20261125_claude:
   page: predictfun/reviews/take_exit_flow_20261125/flow.html
   receipt: predictfun/reviews/take_exit_flow_20261125/receipt.json

@@ -1,0 +1,8 @@
+{
+  "asof": "2026-11-25",
+  "first_day": "20261023",
+  "spent_cpu_s": 124.354329538,
+  "projected_cpu_s": 683.948812459,
+  "cap_cpu_s": 900.0,
+  "go": true
+}

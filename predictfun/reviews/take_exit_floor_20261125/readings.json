@@ -1,0 +1,191 @@
+{
+  "asof": "2026-11-25",
+  "markets": 408,
+  "days": [
+    "20261023",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "base": {
+    "markets": 408,
+    "money_usd": {
+      "round_trips": 1916.1490050380653,
+      "round_trips_closed_by_exit": 2009.4740326571884,
+      "round_trips_closed_by_take": -93.32502761912284,
+      "held_to_settlement": -34.42868047391223,
+      "total_at_settlement": 1881.7203245641533,
+      "held_at_mark": -14.501516996407059,
+      "total_at_mark": 1901.6474880416583,
+      "fees": 444.67579802917334,
+      "carry_settlement_minus_mark": -19.92716347750543
+    },
+    "shares": {
+      "taken": 77780.70254954603,
+      "round_trips": 68076.37651693611,
+      "closed_by_exit": 59504.74387077306,
+      "closed_by_take": 8571.632646163058,
+      "held_to_settlement": 1242.8135013415508
+    },
+    "per_market_usd": {
+      "total_at_settlement": 4.612059619029788,
+      "total_at_mark": 4.6609007059844565
+    },
+    "day_total_at_settlement_usd": {
+      "20261023": 288.906690767191,
+      "20261031": 600.4765740392494,
+      "20261101": 367.18962448802796,
+      "20261102": 279.2777006731069,
+      "20261103": 345.86973459657776
+    },
+    "days_positive_at_settlement": 5,
+    "risk": {
+      "markets_with_position": 340,
+      "markets_with_1_share_or_more": 44,
+      "held_share_of_taken": 0.015978429875326508,
+      "held_shares_per_market_p50": 0.5659682600435509,
+      "held_shares_per_market_p90": 7.089414412397371,
+      "held_shares_per_market_max": 49.97999999999989,
+      "max_loss_if_all_settle_against_usd": 798.8993318579442,
+      "max_loss_one_market_usd": 49.17726889862083,
+      "held_settlement_usd_per_market_with_position": {
+        "mean": -0.10126082492327125,
+        "std": 2.1912430261164504,
+        "p5": -0.7761573165172707,
+        "min": -22.94680666666711,
+        "max": 18.691158588235293
+      },
+      "held_shares_won_share": 0.6151129276909422
+    }
+  },
+  "floor": {
+    "markets": 408,
+    "money_usd": {
+      "round_trips": 2620.0182898925395,
+      "round_trips_closed_by_exit": 3166.8754593750173,
+      "round_trips_closed_by_take": -546.8571694824773,
+      "held_to_settlement": -258.23832517956544,
+      "total_at_settlement": 2361.779964712974,
+      "held_at_mark": -249.73294676350895,
+      "total_at_mark": 2370.2853431290305,
+      "fees": 429.44212321238496,
+      "carry_settlement_minus_mark": -8.505378416056788
+    },
+    "shares": {
+      "taken": 75195.28197380196,
+      "round_trips": 61433.33811405289,
+      "closed_by_exit": 49738.69666520783,
+      "closed_by_take": 11694.641448845052,
+      "held_to_settlement": 2284.5773285005253
+    },
+    "per_market_usd": {
+      "total_at_settlement": 5.788676384100427,
+      "total_at_mark": 5.809522899826055
+    },
+    "day_total_at_settlement_usd": {
+      "20261023": 402.86536498408657,
+      "20261031": 621.6650471707181,
+      "20261101": 427.2202224938909,
+      "20261102": 359.93622937547696,
+      "20261103": 550.0931006888015
+    },
+    "days_positive_at_settlement": 5,
+    "risk": {
+      "markets_with_position": 337,
+      "markets_with_1_share_or_more": 73,
+      "held_share_of_taken": 0.030381923819322497,
+      "held_shares_per_market_p50": 0.6323000000001855,
+      "held_shares_per_market_p90": 29.211311008772014,
+      "held_shares_per_market_max": 50.0,
+      "max_loss_if_all_settle_against_usd": 1495.1785986908487,
+      "max_loss_one_market_usd": 49.51,
+      "held_settlement_usd_per_market_with_position": {
+        "mean": -0.7662858313933694,
+        "std": 4.68578528268844,
+        "p5": -5.904921418068043,
+        "min": -48.167326666666895,
+        "max": 18.691158588235293
+      },
+      "held_shares_won_share": 0.5414306874537466
+    }
+  },
+  "floor_minus_base": {
+    "settle_net_c": {
+      "total_usd": 480.0596401488209,
+      "by_day_usd": {
+        "20261023": 113.9586742168957,
+        "20261031": 21.188473131468744,
+        "20261101": 60.03059800586275,
+        "20261102": 80.65852870237003,
+        "20261103": 204.2233660922237
+      },
+      "days_positive": 5,
+      "markets_better": 200,
+      "markets_worse": 66,
+      "markets_within_half_cent": 142,
+      "top10_abs_share": 0.19599150850527713
+    },
+    "mark_net_c": {
+      "total_usd": 468.6378550873722,
+      "by_day_usd": {
+        "20261023": 128.19214825012875,
+        "20261031": 12.28918144497446,
+        "20261101": 50.57693178313708,
+        "20261102": 91.8102436437647,
+        "20261103": 185.76934996536718
+      },
+      "days_positive": 5,
+      "markets_better": 199,
+      "markets_worse": 68,
+      "markets_within_half_cent": 141,
+      "top10_abs_share": 0.20191060009932243
+    },
+    "rt_net_c": {
+      "total_usd": 703.8692848544742,
+      "by_day_usd": {
+        "20261023": 154.20732909147497,
+        "20261031": 58.16914833463343,
+        "20261101": 77.71920454250663,
+        "20261102": 215.4796842553982,
+        "20261103": 198.2939186304609
+      },
+      "days_positive": 5,
+      "markets_better": 213,
+      "markets_worse": 54,
+      "markets_within_half_cent": 141,
+      "top10_abs_share": 0.2163955899103065
+    },
+    "held_settle_net_c": {
+      "total_usd": -223.8096447056532,
+      "by_day_usd": {
+        "20261023": -40.24865487457926,
+        "20261031": -36.98067520316469,
+        "20261101": -17.688606536643878,
+        "20261102": -134.82115555302826,
+        "20261103": 5.929447461762822
+      },
+      "days_positive": 1,
+      "markets_better": 88,
+      "markets_worse": 82,
+      "markets_within_half_cent": 238,
+      "top10_abs_share": 0.6532220437297803
+    }
+  },
+  "floor_mechanics": {
+    "exit_posts": 7602,
+    "floor_bound_posts": 1457,
+    "floor_cancels": 0,
+    "cancel_cross": 1988,
+    "cancel_distance": 991,
+    "cancel_no_book": 7
+  },
+  "readings": {
+    "floor_better_at_settlement": true,
+    "floor_better_at_mark": true,
+    "floor_round_trips_higher": true,
+    "floor_carries_more": true,
+    "base_settlement_total_positive": true,
+    "floor_settlement_total_positive": true
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "K1_census_equals_v3": {
+    "ok": true,
+    "detail": "408 complete markets"
+  },
+  "K1_base_equals_v3": {
+    "ok": true,
+    "detail": "max |diff| 3.65e-11 c, pooled 1901.65 USD"
+  },
+  "K2_parity": {
+    "ok": true,
+    "detail": "11 markets, 260 exit posts"
+  },
+  "K3_floor_respected": {
+    "ok": true,
+    "detail": "7602 FLOOR exit orders, 0 below the floor, 0 without a basis"
+  },
+  "K3_falsifier_base_flagged": {
+    "ok": true,
+    "detail": "2652 of 8883 BASE exit orders beyond break-even; first (3655842, (38, 75.0, 77.0))"
+  },
+  "K4_logged_floor_rederived": {
+    "ok": true,
+    "detail": "7602 posts, 0 mismatches"
+  },
+  "K5_accounting_rederived": {
+    "ok": true,
+    "detail": "identities enforced inside account()"
+  },
+  "K6_yup_delays_rung0_bound": {
+    "ok": true,
+    "detail": "yup bad 0, delay 0, closing/rung0 0, floor-bound posts 1457"
+  },
+  "all_pass": true
+}
