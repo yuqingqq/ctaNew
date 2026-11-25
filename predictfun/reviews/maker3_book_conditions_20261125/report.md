@@ -180,3 +180,19 @@ One study on the same 934-market population, with the data checks first:
 1. **Skew.** Compare Maker3's passive fill-side mix with a side-neutral null: the market's contemporaneous maker flow on Maker3's reducing side (±5 s), by |position|, time and book class. Add fill-price position (inside / at / behind touch) on reducing vs adding sides.
 2. **Active taking.** Every market-second is a decision-time row (≈ 280 k). Features known at that time: position, time to end, book class, Predict mid move, own recent fills, BTC move. Target: take / no take, and its direction (add / reduce). Compare against matched non-take seconds and shift nulls (≥ 200 draws, declared first).
 3. **BTC data first.** The BTC 1 s grid in `maker_trace_v2/btc` shows the mid unchanged in 73–93 % of seconds, with a 1-tick spread and ~46-tick jumps. It must be verified against the raw bookTicker before any BTC-conditioned take rule.
+
+
+## Addendum (same day) — when the round trips close
+
+USER read-back: "most spread is captured before 270 s when the market is calm, mainly the turnovers". The per-fill values above do not show when round trips close: a late fill that closes earlier inventory at a good price earns round-trip profit even when its own value to resolution is negative. So Maker3's completed round trips were rebuilt with the econ FIFO rule ([fifo.py](fifo.py): same order, unit j bought pairs with unit j sold, self-trades out of the lots) on all 934 markets. They reconcile to `econ/maker_market` rt_pnl / rt_sh / resid_res on every market (max |diff| 1.6e-11 USD). Totals: completed round trips +15,818 USD gross on 1,257,994 matched shares, residual -10,499, fees −828.
+
+| Round trip closes | Gross USD (share) | Matched shares | ¢ / matched sh | Days 24/25/26/27 | Oct 26 share | Both legs spread ≤ 1 ¢, P / U | Both legs CALM, P / U | ¢/sh when a leg is WIDE, P / U |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| <270 | +11,239 (71%) | 94.2% | +0.95 | +++- | 76% | 80% / 45% | 40% / 13% | +2.13 / +2.30 |
+| >=270 | +4,580 (29%) | 5.8% | +6.33 | +-++ | 92% | -0% / -8% | -18% / -12% | +17.22 / +14.18 |
+
+- **Turnover is the money**, and most of it closes **before 270 s**. Passive-to-passive round trips closing before 270 s earn +14,744 USD (+1.40 ¢/sh); those with a taker leg -3,506 (-2.66 ¢/sh).
+- **"Calm" holds only as "tight spread"**, and only at the pre-trade clock. With both legs at ≤ 1 ¢ the early share is large at P and much smaller at U. With tight and deep (CALM) on both legs it is a minority. Round trips touching a wide book are a small volume at a much higher margin.
+- **The late window is net negative.** Closes after 270 s earn +4,580 USD at 6.3 ¢/sh. Inventory that is acquired late and never closed loses more at resolution: acquired ≥ 270 s -5,665, 240–270 s -5,446, 180–240 s -1,760; acquired before 180 s +2,371.
+- **Concentration.** Oct 26 dominates both windows; Oct 25's early round trips are small and Oct 27's negative.
+- **What FIFO is.** It is an accounting convention: it pairs the oldest open unit and does not identify which fill Maker3 meant to close with. Another pairing moves time attribution, not the totals.

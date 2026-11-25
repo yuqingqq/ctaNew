@@ -24,6 +24,8 @@ ONE next priority: saved-path attribution COST−WIDE on19markets, starting37894
 - Market level (class of most 240–299 s seconds): VOLATILE_LATE 276 markets +$9,145 (round trips +$14,051; earned before 270 s, fills ≥ 270 s −$2,458; Oct 26 +$8,173); CALM_LATE 192 markets −$6,510 on all 4 days, residual −$6,392. Total +$4,491 = round trips +$15,818, residual −$10,499, fees −$828. Mean |position| 215 sh at 240 s, 248 at END: no flattening into the close.
 - Takes before 270 s: position-adding +8.22 ¢/sh to END (+1.39 to resolution; informed-looking), reducing −4.41 ¢/sh to resolution; 20 taker legs after 270 s. Passive reducing share 49.5–52.4 % up to 1,000 sh, 43.8 % above: no visible fill-side skew (uncontrolled).
 
+- Addendum (FIFO round trips, reconciled to econ on all 934 markets): completed turnover +$15,818 gross; 71 % (+$11,239, 0.95 ¢/sh on 94 % of matched shares) closes before 270 s, 80 % of that with both legs at ≤ 1 ¢ spread at P (45 % at U; both CALM 40 % / 13 %). Closes ≥ 270 s earn +$4,580 at 6.3 ¢/sh (17 ¢/sh when a leg is wide), but inventory acquired ≥ 270 s and never closed loses −$5,665 (240–270 s −$5,446): the late window is net negative. Oct 26 is 76 % / 92 % of the two windows.
+
 Checks 13/13: independent merge_asof state on 4,000 legs, per-leg future-perturbation falsifier + positive control, 8 classifier cases, 934-market reconciliation (max 2.3e-13 USD), inventory loop on 40 markets, readings from legs, 3 corruptions. The first check run failed on the falsifier's own construction (union of several legs' futures); rewritten per leg, outputs unchanged. Descriptive, consumed days, no intervals, no rule adopted. CPU charged 90 s (0.025 core-h), claude slot.
 <!-- /MAKER3_BOOK_CONDITIONS_20261125_CLAUDE -->
 

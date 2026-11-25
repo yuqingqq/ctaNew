@@ -42,6 +42,13 @@ maker3_book_conditions_20261125_claude:
   rule_adopted: false
   charged_cpu_s: 90
   btc_grid_stickiness_verified: false
+  fifo_rt_total_usd: 15818.16
+  fifo_rt_share_exits_before_270: 0.7105
+  fifo_rt_early_share_both_spread_le1c_P: 0.801
+  fifo_rt_early_share_both_spread_le1c_U: 0.446
+  fifo_rt_exits_ge_270_usd: 4579.63
+  fifo_residual_acquired_ge_270_usd: -5664.99
+  fifo_residual_acquired_240_270_usd: -5445.81
   next: maker3_skew_and_active_taking_logic_study_934_markets_before_broad_test
 maker3_regime_spread_20261125_codex:
   report: predictfun/reviews/maker3_regime_spread_20261125/report.md

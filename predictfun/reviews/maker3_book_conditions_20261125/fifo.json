@@ -1,0 +1,33 @@
+{
+ "markets": 934,
+ "pairs": 119306,
+ "residual_rows": 8567,
+ "max_abs_rt_diff": 1.3699263945454732e-11,
+ "max_abs_rt_sh_diff": 2.9103830456733704e-11,
+ "max_abs_resid_diff": 1.5692336319261813e-11,
+ "reconciles": true,
+ "rt_total_usd": 15818.163151250465,
+ "rt_exit_before_270_usd": 11238.528615583395,
+ "rt_exit_ge_270_usd": 4579.63453566707,
+ "rt_exit_before_240_usd": 10969.3655717592,
+ "matched_sh_total": 1257994.0412857784,
+ "matched_sh_exit_before_270": 1185639.3560411846,
+ "rt_both_calm_exit_before_270_usd": 4488.898718554783,
+ "rt_both_calm_usd": 3682.3754053676007,
+ "rt_positive_gross_usd": 74020.4629741854,
+ "day_signs_exit_before_270": {
+  "20261024": 1.0,
+  "20261025": 1.0,
+  "20261026": 1.0,
+  "20261027": -1.0
+ },
+ "day_signs_exit_ge_270": {
+  "20261024": 1.0,
+  "20261025": -1.0,
+  "20261026": 1.0,
+  "20261027": 1.0
+ },
+ "resid_total_usd": -10499.405757742557,
+ "resid_acquired_ge_270_usd": -5664.990726959955,
+ "share_rt_from_exits_before_270": 0.7104825325243255
+}

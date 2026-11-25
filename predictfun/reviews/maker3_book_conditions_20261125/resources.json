@@ -67,11 +67,34 @@
    "disk_free_gib": "407->407",
    "slot": "claude",
    "start": "2026-11-25T02:58:40Z"
+  },
+  {
+   "tag": "mbc_fifo",
+   "rc": "0",
+   "peak_rss_mib": "407",
+   "wall_s": "2.87",
+   "cpu_user_s": "2.62",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "408->408",
+   "slot": "claude",
+   "start": "2026-11-25T03:08:46Z"
+  },
+  {
+   "tag": "mbc_fifo_add",
+   "rc": "0",
+   "peak_rss_mib": "201",
+   "wall_s": "0.66",
+   "cpu_user_s": "0.54",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "408->408",
+   "slot": "claude",
+   "start": "2026-11-25T03:10:13Z"
   }
  ],
- "wrapped_cpu_user_s": 42.51,
+ "wrapped_cpu_user_s": 45.67,
  "unwrapped_probes": "schema/stickiness/calibration probes run directly before the packet (each < 10 CPU s, read-only, consumed Oct 23-27 derived files and one raw Oct 24 04Z bookTicker hour)",
  "charged_upper_cpu_s": 90,
  "charged_coreh": 0.025,
- "ledger_note": "codex ledger before this packet task 2.12155 / line 5.43225 (caps 2.35 / 5.65, 0.05 reserve); after +0.025: 2.14655 / 5.45725"
+ "ledger_note": "codex ledger before this packet task 2.12155 / line 5.43225 (caps 2.35 / 5.65, 0.05 reserve); after +0.025: 2.14655 / 5.45725",
+ "note_addendum": "fifo.py + fifo_addendum.py added after the USER read-back; still within the 90 CPU s conservative charge"
 }
