@@ -1,3 +1,12 @@
+<!-- TAKE_STREAM_20261125_CLAUDE -->
+## 2026-11-25 — stream-decided takes and Binance book-shrinking triggers under venue rules: all negative (consumed days)
+
+[Report](reviews/take_stream_20261125/report.md), [declaration](reviews/take_stream_20261125/declaration.md) (frozen 4c5cf27de before any run; resource amendment R1 after the first-day projection refusal), [checks](reviews/take_stream_20261125/checks.json) all pass (K1 grid parity, take timing, 2,448 ledgers re-accounted, 1 USDT minimum). USER: use the stream price, test the book-shrinking signal, take only the best level (MARKET order at the known best, zero slippage). 408 complete markets, five v3 days.
+
+- **Race ([race_check.json](reviews/take_stream_20261125/race_check.json)):** stream decisions reach Predict before 62% of the tick-reacting competitor orders (grid 31%; 49% / 39% at +10 / +20 ms) and none of the early ones; any-size halving reaches 26% of the early ones.
+- **P&L at settlement:** GRID-172 −$372.07, STREAM-172 −$379.42 (limit moved 77% vs 86%; take value -0.30 ¢/sh at 1 s vs -0.49), STREAM-192 −$283.91, STREAM+DEPL-172 −$5,562.75 (371,025 taker shares), STREAM+DEPLS-172 −$2,319.53, STREAM+DEPLS-192 −$2,030.47. Readings: stream_beats_grid True (4 / 5 days, total −$7.35), depletion_adds False, strict_depletion_adds False, profitable_172 False, holds_at_192 False.
+- **Reading:** arriving earlier buys more fills but not value: our take is still worth ≈ 0 to −0.5 ¢/sh at 1 s, while the competitors' winning fills were worth +3.0. The winners are selective (which quotes are stale by more than the costs), not only fast; the shrinking-book signal taken on every halving is noise (most fires are false alarms).
+<!-- /TAKE_STREAM_20261125_CLAUDE -->
 <!-- TAKE_EXIT_VENUE_20261125_CLAUDE -->
 ## 2026-11-25 — take + maker exit under venue rules: loses on every setting (review 4e67e0856's next priority; consumed days)
 

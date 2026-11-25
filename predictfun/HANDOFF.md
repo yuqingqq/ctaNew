@@ -1,3 +1,10 @@
+<!-- TAKE_STREAM_20261125_CLAUDE -->
+## 2026-11-25 — TAKE-STREAM v1 done: stream decisions and book-shrinking triggers do not make the take pay
+
+[Report](reviews/take_stream_20261125/report.md): every config negative on the 408 complete markets (STREAM-172 −$379.42, GRID-172 −$372.07; shrinking-book triggers −$2,319.53 / −$5,562.75). Checks pass.
+
+Next (USER's call): find the winners' selection rule before any live step — compare their winning fills with ours by market state (distance to strike, time left, price level, size of the Binance move), then a declared fair-value-filtered take (take only when the stale quote is mispriced by more than fee + margin against an updated binary fair value). Tokyo shadow / latency probe stay on hold until a rule pays in replay.
+<!-- /TAKE_STREAM_20261125_CLAUDE -->
 <!-- TAKE_EXIT_VENUE_20261125_CLAUDE -->
 ## 2026-11-25 — venue-matched comparison done: the take line loses under the 150 ms speed bump
 

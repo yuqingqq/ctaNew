@@ -1,3 +1,12 @@
+take_stream_20261125_claude:
+  report: predictfun/reviews/take_stream_20261125/report.md
+  declaration: predictfun/reviews/take_stream_20261125/declaration.md
+  freeze: 4c5cf27de
+  session: 1622c91e
+  kind: development_evidence_consumed_days_complete_markets
+  total_at_settlement_usd: {grid_172: -372.07, stream_172: -379.42, stream_192: -283.91, stream_depl_172: -5562.75, stream_depls_172: -2319.53}
+  profitable_172: false
+  checks_all_pass: true
 take_exit_venue_20261125_claude:
   report: predictfun/reviews/take_exit_venue_20261125/report.md
   declaration: predictfun/reviews/take_exit_venue_20261125/declaration.md
