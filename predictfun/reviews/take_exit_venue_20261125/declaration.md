@@ -80,3 +80,11 @@ Stage 1 ≤ 1,400 CPU s; stage 2 ≤ 9,000 CPU s with a projection after the fir
 The Nov 14–24 forward test of TAKE_EXIT_FLOOR_v1 waits for this result. It will use the stage-2 harness through a superseding receipt
 (v2) declared before any of those days is read, and its input chain needs declared wrappers (the loader's forward boundary, the
 imputation-offset day list, padding hours), each proven on a consumed day into a separate output root first.
+
+## Resource-only amendment R1 (before any stage-2 run; nothing else changes)
+
+The stage-2 rehearsal (three consumed markets, nothing written; K1 path parity and K2 OFF parity both exact) measured 0.65–1.6 CPU s per
+market-run. Six runs (3 configs × 2 arms) on ~1,439 included markets project to ~8,500 CPU s plus loading, at the 9,000 s cap. New caps:
+stage 2 ≤ 11,000 CPU s (projection after 20261023 alone: cost × 5 × 1.1 ≤ 11,000, or stop) and ≤ 3,000 CPU s per day process. After the
+projection the other four days run in parallel research slots (claude / claude2 / claude3 / claude4; the launcher's 5-process cap holds).
+Merge, checks and the report live in a separate file (vm_report.py), so vm_replay.py stays byte-identical across the day runs.
