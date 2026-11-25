@@ -1,0 +1,5 @@
+# Unchanged urgency controller on October 27
+
+One existing candidate, zero new variants. Replay every complete market in the frozen October 27 census on the first consumed date after October 26. Use original ladder and unconditional distance retention as paired controls. Verify every recorded field of each arm on the lowest-ID complete October 26 market before replaying October 27. Use the original gate per day, report coverage and each comparison with the largest gain removed. This is a descriptive replication on reused development days. No selection null, skill claim or interval.
+
+On each day report completed and residual dollars for realized absolute holdings strictly above the already-declared 250-share allowance with 60 seconds left and for its complement. Separately report the largest ceiling(n/10) terminal exposures and overlap, with market ID breaking ties. This is a diagnostic of risk concentration. A counterfactual policy would have to act on delivered notices and be valued through a separate paired replay.
