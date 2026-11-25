@@ -31,7 +31,7 @@ def trace():
     flags=R.triggers(obs,R.MM.TR.T.P.frozen_edges())
     btc=R.BTC.load_btc(R.X.DATA/'maker_trace_v2_20261123/btc',day,Counter())
     t=info['t_start']+R.BE.STEP*np.arange(len(obs['x'][0]))
-    z=R.BTC.btc_feats(btc,t-1000,np.full(len(t),ws),np.full(len(t),ws+300000))['z']
+    z=R.BTC.btc_feats(btc,np.floor(t-1000).astype(np.int64),np.full(len(t),int(ws)),np.full(len(t),int(ws)+300000))['z']
     model=json.loads((R.HERE/'fit.json').read_text())['cells']
     stored=json.loads((R.OUT/'eval'/f'{day}_{m}.json').read_text())
     finish=R.LB.finish

@@ -248,7 +248,7 @@ def run(phase):
                 cache=MM.make_cache(info['t_start'],info['end_rel'])
                 flags=triggers(cache,edges)
                 n=len(cache['x'][0]); t=info['t_start']+BE.STEP*np.arange(n)
-                z=None if btc is None else BTC.btc_feats(btc,t-1000,np.full(n,ws),np.full(n,ws+300000))['z']
+                z=None if btc is None else BTC.btc_feats(btc,np.floor(t-1000).astype(np.int64),np.full(n,int(ws)),np.full(n,int(ws)+300000))['z']
                 payout=VM.V.payout_of(rg.loc[m])
                 data={a:one(p,info,ident,flags,a,model,z,payout,h%6==0) for a in (('B',) if phase=='train' else ARMS)}
                 write(OUT/phase/f'{day}_{m}.json',dict(source=sha(Path(__file__)),mid=m,day=day,hour=int(h),arms=data))
