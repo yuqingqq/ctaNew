@@ -2,7 +2,7 @@
 import json
 from collections import Counter
 import numpy as np
-import replay as R
+from controller_module import controller as R
 
 Base=R.Branch
 

@@ -6,7 +6,10 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from replay import ARMS, CENSUS, EVAL, HERE, OUT, forecast, sha, write
+from controller_module import controller
+
+ARMS, CENSUS, EVAL, HERE, OUT = controller.ARMS, controller.CENSUS, controller.EVAL, controller.HERE, controller.OUT
+forecast, sha, write = controller.forecast, controller.sha, controller.write
 
 
 def aggregate(rows):
