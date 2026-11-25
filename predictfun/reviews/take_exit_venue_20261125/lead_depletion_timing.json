@@ -1,0 +1,46 @@
+{
+  "asof": "2026-11-25",
+  "base_ms_before_arrival": 500.0,
+  "frac": 0.5,
+  "skipped": {
+    "window_outside_day": 2
+  },
+  "groups": {
+    "early": {
+      "events": 1748,
+      "depleted_before_arrival": 0.5154462242562929,
+      "placebo_rate": 0.25886727688787187,
+      "lift": 1.9911602209944752,
+      "reaction_ms_arrival_minus_depletion_p10_p25_p50_p75_p90": [
+        24.0,
+        51.0,
+        151.0,
+        323.0,
+        437.0
+      ],
+      "depletion_leads_futures_mid_ms_p25_p50_p75": [
+        135.0,
+        254.5,
+        427.25
+      ]
+    },
+    "late": {
+      "events": 3047,
+      "depleted_before_arrival": 1.0,
+      "placebo_rate": 0.22579586478503447,
+      "lift": 4.428779069767442,
+      "reaction_ms_arrival_minus_depletion_p10_p25_p50_p75_p90": [
+        26.0,
+        42.0,
+        76.0,
+        157.5,
+        376.4000000000001
+      ],
+      "depletion_leads_futures_mid_ms_p25_p50_p75": [
+        93.0,
+        223.0,
+        495.0
+      ]
+    }
+  }
+}

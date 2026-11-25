@@ -1,0 +1,48 @@
+{
+  "asof": "2026-11-25",
+  "base_ms_before_arrival": 300.0,
+  "window_end_ms_after_arrival": 0.0,
+  "frac": 0.5,
+  "same_price_only": true,
+  "skipped": {
+    "window_outside_day": 2
+  },
+  "groups": {
+    "early": {
+      "events": 1748,
+      "depleted_before_arrival": 0.41762013729977115,
+      "placebo_rate": 0.11413043478260869,
+      "lift": 3.6591478696741855,
+      "reaction_ms_arrival_minus_depletion_p10_p25_p50_p75_p90": [
+        16.0,
+        40.0,
+        85.0,
+        170.75,
+        243.20000000000005
+      ],
+      "depletion_leads_futures_mid_ms_p25_p50_p75": [
+        103.0,
+        174.5,
+        271.0
+      ]
+    },
+    "late": {
+      "events": 3047,
+      "depleted_before_arrival": 0.5425008204791598,
+      "placebo_rate": 0.09550377420413521,
+      "lift": 5.680412371134021,
+      "reaction_ms_arrival_minus_depletion_p10_p25_p50_p75_p90": [
+        29.0,
+        46.0,
+        79.0,
+        136.0,
+        215.79999999999995
+      ],
+      "depletion_leads_futures_mid_ms_p25_p50_p75": [
+        79.0,
+        165.0,
+        355.0
+      ]
+    }
+  }
+}
