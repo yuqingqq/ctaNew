@@ -1,0 +1,652 @@
+{
+  "asof": "2026-11-25",
+  "days": [
+    "20261023",
+    "20261031",
+    "20261101",
+    "20261102"
+  ],
+  "events": 4795,
+  "events_by_class": {
+    "late": 3047,
+    "early": 1748
+  },
+  "window_ms": [
+    -500.0,
+    300.0
+  ],
+  "placebo_shift_ms": [
+    -10000.0,
+    10000.0
+  ],
+  "thresholds": {
+    "ours": {
+      "1": 0.285456120967865,
+      "-1": 0.4666730940341952
+    },
+    "low": {
+      "1": 0.15,
+      "-1": 0.15
+    }
+  },
+  "trades_per_day": {
+    "binance_fut|20261023": 2596942,
+    "binance_spot|20261023": 674730,
+    "bybit_perp|20261023": 1249785,
+    "bybit_spot|20261023": 1065940,
+    "okx_swap|20261023": 2277312,
+    "okx_spot|20261023": 332314,
+    "coinbase|20261023": 428972,
+    "kraken|20261023": 135319,
+    "deribit|20261023": 432319,
+    "binance_fut|20261031": 1264634,
+    "binance_spot|20261031": 417528,
+    "bybit_perp|20261031": 397961,
+    "bybit_spot|20261031": 432430,
+    "okx_swap|20261031": 736688,
+    "okx_spot|20261031": 164339,
+    "coinbase|20261031": 344707,
+    "kraken|20261031": 69995,
+    "deribit|20261031": 192363,
+    "binance_fut|20261101": 1197107,
+    "binance_spot|20261101": 408526,
+    "bybit_perp|20261101": 360227,
+    "bybit_spot|20261101": 392323,
+    "okx_swap|20261101": 781943,
+    "okx_spot|20261101": 177587,
+    "coinbase|20261101": 317946,
+    "kraken|20261101": 66547,
+    "deribit|20261101": 191584,
+    "binance_fut|20261102": 2902603,
+    "binance_spot|20261102": 804536,
+    "bybit_perp|20261102": 1484448,
+    "bybit_spot|20261102": 1208240,
+    "okx_swap|20261102": 2300578,
+    "okx_spot|20261102": 387913,
+    "coinbase|20261102": 466867,
+    "kraken|20261102": 136387,
+    "deribit|20261102": 448529
+  },
+  "venues": {
+    "binance_fut|ours": {
+      "early": {
+        "events": 1748,
+        "onset_before_arrival": 0.04862700228832952,
+        "placebo_rate": 0.10840961098398169,
+        "lift": 0.4485488126649077,
+        "lead_ms_p25_p50_p75": [
+          124.0,
+          264.0,
+          414.0
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": [
+          -481.0,
+          -373.5,
+          -224.0
+        ]
+      },
+      "late": {
+        "events": 3047,
+        "onset_before_arrival": 0.8342632097144732,
+        "placebo_rate": 0.10584181161798491,
+        "lift": 7.8821705426356585,
+        "lead_ms_p25_p50_p75": [
+          26.0,
+          45.0,
+          75.0
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": null
+      }
+    },
+    "binance_fut|low": {
+      "early": {
+        "events": 1748,
+        "onset_before_arrival": 0.06350114416475973,
+        "placebo_rate": 0.125,
+        "lift": 0.5080091533180778,
+        "lead_ms_p25_p50_p75": [
+          198.5,
+          313.0,
+          457.5
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": [
+          -517.75,
+          -411.0,
+          -257.75
+        ]
+      },
+      "late": {
+        "events": 3047,
+        "onset_before_arrival": 0.9245159172957007,
+        "placebo_rate": 0.1207745323268789,
+        "lift": 7.654891304347826,
+        "lead_ms_p25_p50_p75": [
+          29.0,
+          49.0,
+          83.0
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": null
+      }
+    },
+    "binance_spot|ours": {
+      "early": {
+        "events": 1748,
+        "onset_before_arrival": 0.036041189931350116,
+        "placebo_rate": 0.04662471395881007,
+        "lift": 0.7730061349693251,
+        "lead_ms_p25_p50_p75": [
+          40.886474609375,
+          71.344970703125,
+          214.3289794921875
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": [
+          -334.13470458984375,
+          -197.281005859375,
+          -119.3841552734375
+        ]
+      },
+      "late": {
+        "events": 3047,
+        "onset_before_arrival": 0.31637676403019366,
+        "placebo_rate": 0.04085986215950115,
+        "lift": 7.742971887550201,
+        "lead_ms_p25_p50_p75": [
+          27.20416259765625,
+          47.0640869140625,
+          80.73577880859375
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": null
+      }
+    },
+    "binance_spot|low": {
+      "early": {
+        "events": 1748,
+        "onset_before_arrival": 0.07837528604118993,
+        "placebo_rate": 0.06836384439359268,
+        "lift": 1.1464435146443515,
+        "lead_ms_p25_p50_p75": [
+          43.407958984375,
+          99.762939453125,
+          279.888916015625
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": [
+          -407.5489501953125,
+          -201.916015625,
+          -131.138916015625
+        ]
+      },
+      "late": {
+        "events": 3047,
+        "onset_before_arrival": 0.45618641286511324,
+        "placebo_rate": 0.05513619954053167,
+        "lift": 8.273809523809524,
+        "lead_ms_p25_p50_p75": [
+          28.56793212890625,
+          50.0216064453125,
+          85.802490234375
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": null
+      }
+    },
+    "bybit_perp|ours": {
+      "early": {
+        "events": 1748,
+        "onset_before_arrival": 0.17906178489702518,
+        "placebo_rate": 0.09239130434782608,
+        "lift": 1.9380804953560373,
+        "lead_ms_p25_p50_p75": [
+          58.89990234375,
+          165.60009765625,
+          338.10009765625
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": [
+          -433.699951171875,
+          -265.300048828125,
+          -130.0
+        ]
+      },
+      "late": {
+        "events": 3047,
+        "onset_before_arrival": 0.4414177879881851,
+        "placebo_rate": 0.07646865769609452,
+        "lift": 5.772532188841201,
+        "lead_ms_p25_p50_p75": [
+          17.10009765625,
+          42.900146484375,
+          85.39990234375
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": null
+      }
+    },
+    "bybit_perp|low": {
+      "early": {
+        "events": 1748,
+        "onset_before_arrival": 0.2482837528604119,
+        "placebo_rate": 0.12299771167048056,
+        "lift": 2.0186046511627906,
+        "lead_ms_p25_p50_p75": [
+          59.22491455078125,
+          175.14990234375,
+          354.97509765625
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": [
+          -464.47491455078125,
+          -282.5,
+          -139.5
+        ]
+      },
+      "late": {
+        "events": 3047,
+        "onset_before_arrival": 0.5500492287495897,
+        "placebo_rate": 0.10420085329832622,
+        "lift": 5.278740157480315,
+        "lead_ms_p25_p50_p75": [
+          18.10009765625,
+          45.1500244140625,
+          96.49993896484375
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": null
+      }
+    },
+    "bybit_spot|ours": {
+      "early": {
+        "events": 1748,
+        "onset_before_arrival": 0.05205949656750572,
+        "placebo_rate": 0.060354691075514874,
+        "lift": 0.8625592417061612,
+        "lead_ms_p25_p50_p75": [
+          35.5,
+          114.0,
+          324.0
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": [
+          -432.5,
+          -235.0,
+          -109.5
+        ]
+      },
+      "late": {
+        "events": 3047,
+        "onset_before_arrival": 0.3406629471611421,
+        "placebo_rate": 0.05218247456514605,
+        "lift": 6.528301886792453,
+        "lead_ms_p25_p50_p75": [
+          15.25,
+          35.0,
+          65.75
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": null
+      }
+    },
+    "bybit_spot|low": {
+      "early": {
+        "events": 1748,
+        "onset_before_arrival": 0.10812356979405034,
+        "placebo_rate": 0.08695652173913043,
+        "lift": 1.243421052631579,
+        "lead_ms_p25_p50_p75": [
+          45.0,
+          189.0,
+          458.0
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": [
+          -514.0,
+          -316.0,
+          -136.0
+        ]
+      },
+      "late": {
+        "events": 3047,
+        "onset_before_arrival": 0.4867082376107647,
+        "placebo_rate": 0.07630456186412865,
+        "lift": 6.378494623655914,
+        "lead_ms_p25_p50_p75": [
+          17.0,
+          40.0,
+          80.0
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": null
+      }
+    },
+    "okx_swap|ours": {
+      "early": {
+        "events": 1748,
+        "onset_before_arrival": 0.09668192219679633,
+        "placebo_rate": 0.05606407322654462,
+        "lift": 1.7244897959183672,
+        "lead_ms_p25_p50_p75": [
+          35.0,
+          80.0,
+          235.0
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": [
+          -319.0,
+          -177.0,
+          -107.0
+        ]
+      },
+      "late": {
+        "events": 3047,
+        "onset_before_arrival": 0.5057433541188053,
+        "placebo_rate": 0.06022317033147358,
+        "lift": 8.397820163487738,
+        "lead_ms_p25_p50_p75": [
+          27.0,
+          50.0,
+          84.0
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": null
+      }
+    },
+    "okx_swap|low": {
+      "early": {
+        "events": 1748,
+        "onset_before_arrival": 0.13443935926773457,
+        "placebo_rate": 0.07522883295194507,
+        "lift": 1.787072243346008,
+        "lead_ms_p25_p50_p75": [
+          39.5,
+          97.0,
+          284.5
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": [
+          -385.5,
+          -198.0,
+          -126.0
+        ]
+      },
+      "late": {
+        "events": 3047,
+        "onset_before_arrival": 0.5940269117164424,
+        "placebo_rate": 0.07367902855267476,
+        "lift": 8.062360801781738,
+        "lead_ms_p25_p50_p75": [
+          29.0,
+          53.0,
+          90.0
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": null
+      }
+    },
+    "okx_spot|ours": {
+      "early": {
+        "events": 1748,
+        "onset_before_arrival": 0.10411899313501144,
+        "placebo_rate": 0.06378718535469108,
+        "lift": 1.632286995515695,
+        "lead_ms_p25_p50_p75": [
+          46.75,
+          138.5,
+          310.25
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": [
+          -387.0,
+          -253.0,
+          -131.0
+        ]
+      },
+      "late": {
+        "events": 3047,
+        "onset_before_arrival": 0.4958976042008533,
+        "placebo_rate": 0.05726944535608795,
+        "lift": 8.659025787965616,
+        "lead_ms_p25_p50_p75": [
+          27.0,
+          49.0,
+          85.5
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": null
+      }
+    },
+    "okx_spot|low": {
+      "early": {
+        "events": 1748,
+        "onset_before_arrival": 0.17105263157894737,
+        "placebo_rate": 0.09124713958810068,
+        "lift": 1.8746081504702194,
+        "lead_ms_p25_p50_p75": [
+          59.5,
+          203.0,
+          448.0
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": [
+          -510.0,
+          -304.0,
+          -141.5
+        ]
+      },
+      "late": {
+        "events": 3047,
+        "onset_before_arrival": 0.6048572366261897,
+        "placebo_rate": 0.08024286183130948,
+        "lift": 7.537832310838447,
+        "lead_ms_p25_p50_p75": [
+          30.0,
+          54.0,
+          100.0
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": null
+      }
+    },
+    "coinbase|ours": {
+      "early": {
+        "events": 1748,
+        "onset_before_arrival": 0.15331807780320367,
+        "placebo_rate": 0.09954233409610984,
+        "lift": 1.5402298850574714,
+        "lead_ms_p25_p50_p75": [
+          62.68341064453125,
+          203.3800048828125,
+          381.594482421875
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": [
+          -476.389892578125,
+          -298.35498046875,
+          -145.7025146484375
+        ]
+      },
+      "late": {
+        "events": 3047,
+        "onset_before_arrival": 0.23925172300623565,
+        "placebo_rate": 0.08270429931079751,
+        "lift": 2.892857142857143,
+        "lead_ms_p25_p50_p75": [
+          25.72607421875,
+          68.138916015625,
+          162.6298828125
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": null
+      }
+    },
+    "coinbase|low": {
+      "early": {
+        "events": 1748,
+        "onset_before_arrival": 0.2580091533180778,
+        "placebo_rate": 0.15903890160183065,
+        "lift": 1.6223021582733812,
+        "lead_ms_p25_p50_p75": [
+          88.73046875,
+          251.18310546875,
+          457.04248046875
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": [
+          -525.3803100585938,
+          -357.8160400390625,
+          -171.31353759765625
+        ]
+      },
+      "late": {
+        "events": 3047,
+        "onset_before_arrival": 0.3616672136527732,
+        "placebo_rate": 0.1342303905480801,
+        "lift": 2.6943765281173593,
+        "lead_ms_p25_p50_p75": [
+          31.8404541015625,
+          87.74853515625,
+          284.57958984375
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": null
+      }
+    },
+    "kraken|ours": {
+      "early": {
+        "events": 1748,
+        "onset_before_arrival": 0.018306636155606407,
+        "placebo_rate": 0.03975972540045766,
+        "lift": 0.460431654676259,
+        "lead_ms_p25_p50_p75": [
+          101.3857421875,
+          209.6044921875,
+          479.44793701171875
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": [
+          -534.1952514648438,
+          -303.9415283203125,
+          -166.20574951171875
+        ]
+      },
+      "late": {
+        "events": 3047,
+        "onset_before_arrival": 0.036101083032490974,
+        "placebo_rate": 0.037577945520183786,
+        "lift": 0.9606986899563319,
+        "lead_ms_p25_p50_p75": [
+          33.5126953125,
+          154.021484375,
+          457.20635986328125
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": null
+      }
+    },
+    "kraken|low": {
+      "early": {
+        "events": 1748,
+        "onset_before_arrival": 0.03775743707093822,
+        "placebo_rate": 0.05406178489702517,
+        "lift": 0.6984126984126985,
+        "lead_ms_p25_p50_p75": [
+          95.79901123046875,
+          422.0904541015625,
+          501.0
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": [
+          -545.0,
+          -490.126953125,
+          -174.58843994140625
+        ]
+      },
+      "late": {
+        "events": 3047,
+        "onset_before_arrival": 0.06596652445027897,
+        "placebo_rate": 0.053987528716770594,
+        "lift": 1.2218844984802433,
+        "lead_ms_p25_p50_p75": [
+          44.906005859375,
+          282.863037109375,
+          501.0
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": null
+      }
+    },
+    "deribit|ours": {
+      "early": {
+        "events": 1748,
+        "onset_before_arrival": 0.19279176201372997,
+        "placebo_rate": 0.10326086956521739,
+        "lift": 1.8670360110803323,
+        "lead_ms_p25_p50_p75": [
+          73.0,
+          236.0,
+          437.0
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": [
+          -528.0,
+          -342.5,
+          -185.75
+        ]
+      },
+      "late": {
+        "events": 3047,
+        "onset_before_arrival": 0.30817197243190025,
+        "placebo_rate": 0.08811946176567115,
+        "lift": 3.497206703910615,
+        "lead_ms_p25_p50_p75": [
+          20.5,
+          53.0,
+          228.0
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": null
+      }
+    },
+    "deribit|low": {
+      "early": {
+        "events": 1748,
+        "onset_before_arrival": 0.33466819221967964,
+        "placebo_rate": 0.14988558352402745,
+        "lift": 2.2328244274809164,
+        "lead_ms_p25_p50_p75": [
+          118.0,
+          368.0,
+          501.0
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": [
+          -566.0,
+          -463.5,
+          -241.0
+        ]
+      },
+      "late": {
+        "events": 3047,
+        "onset_before_arrival": 0.44732523793895634,
+        "placebo_rate": 0.1342303905480801,
+        "lift": 3.3325183374083127,
+        "lead_ms_p25_p50_p75": [
+          29.0,
+          127.0,
+          501.0
+        ],
+        "onset_rel_futures_move_ms_p25_p50_p75": null
+      }
+    }
+  },
+  "earliest_ours": {
+    "early_events": 1748,
+    "with_any_onset_before_arrival": 0.465675057208238,
+    "first_venue": {
+      "deribit": 188,
+      "coinbase": 159,
+      "bybit_perp": 157,
+      "okx_spot": 96,
+      "okx_swap": 88,
+      "binance_fut": 58,
+      "binance_spot": 27,
+      "bybit_spot": 27,
+      "kraken": 14
+    },
+    "reaction_ms_arrival_minus_earliest_p25_p50_p75": [
+      80.0,
+      256.5,
+      446.4793701171875
+    ]
+  },
+  "earliest_low": {
+    "early_events": 1748,
+    "with_any_onset_before_arrival": 0.6424485125858124,
+    "first_venue": {
+      "deribit": 315,
+      "coinbase": 226,
+      "bybit_perp": 175,
+      "okx_spot": 136,
+      "okx_swap": 86,
+      "binance_fut": 59,
+      "bybit_spot": 58,
+      "binance_spot": 39,
+      "kraken": 29
+    },
+    "reaction_ms_arrival_minus_earliest_p25_p50_p75": [
+      144.4500732421875,
+      394.389892578125,
+      501.0
+    ]
+  }
+}
