@@ -1,0 +1,22 @@
+anchor 60 eligible 816 BTC unavailable 0
+        markets  hit_in_60  later_passive_after_hit
+band                                               
+near        396        231                      231
+middle      281        121                      121
+far         139         38                       37
+matched near/far counts [396. 139.] hit probabilities and capped mean time (s) [ 0.43283694  0.30633655 43.86817741 49.42611426]
+anchor 150 eligible 842 BTC unavailable 0
+        markets  hit_in_60  later_passive_after_hit
+band                                               
+near        264        124                       56
+middle      276         79                       37
+far         302         60                       47
+matched near/far counts [264. 302.] hit probabilities and capped mean time (s) [ 0.44516611  0.22248349 44.59380222 51.31610752]
+anchor 240 eligible 619 BTC unavailable 0
+        markets  hit_in_60  later_passive_after_hit
+band                                               
+near        125         36                       22
+middle      178         31                       12
+far         316         17                       12
+matched near/far counts [125. 310.] hit probabilities and capped mean time (s) [ 0.30130325  0.05878924 47.45603669 57.70086684]
+2026-11-25T06:57:48Z tag=m3_neutral_sequence rc=0 peak_rss_mib=258 wall_s=1.46 cpu_user_s=1.32 memavail_start_gib=21 disk_free_gib=406->406 slot=codex
