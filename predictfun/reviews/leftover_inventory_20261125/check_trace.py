@@ -32,7 +32,7 @@ def trace():
     btc=R.BTC.load_btc(R.X.DATA/'maker_trace_v2_20261123/btc',day,Counter())
     t=info['t_start']+R.BE.STEP*np.arange(len(obs['x'][0]))
     z=R.BTC.btc_feats(btc,np.floor(t-1000).astype(np.int64),np.full(len(t),int(ws)),np.full(len(t),int(ws)+300000))['z']
-    model=json.loads((R.HERE/'fit.json').read_text())['cells']
+    model=json.loads((R.HERE/'fit_v2.json').read_text())['cells']
     stored=json.loads((R.OUT/'eval'/f'{day}_{m}.json').read_text())
     finish=R.LB.finish
     captures=[]
@@ -56,7 +56,10 @@ def trace():
             for k in ('anchors','proposals'):
                 assert len(x[k])==len(y[k])
                 if k=='proposals': assert np.allclose(x[k],y[k],atol=1e-7,rtol=0)
-                else: assert json.loads(json.dumps(x[k]))==y[k]
+                else:
+                    diff=[(i,r,t) for i,(r,t) in enumerate(zip(x[k],y[k])) if r!=t]
+                    if diff: print(a, len(diff), diff[:3],flush=True)
+                    assert not diff
             for k,val in x['metrics'].items():
                 assert abs(val-y['metrics'][k])<1e-7
             if a=='C':

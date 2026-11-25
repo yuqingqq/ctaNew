@@ -22,11 +22,11 @@ def aggregate(rows):
                 mean_forecast=float(cap.mean()),mean_actual=float(actual.mean()),
                 positive_mean_forecast=float(cap[positive].mean()) if positive.any() else None,
                 positive_mean_actual=float(actual[positive].mean()) if positive.any() else None,
-                all_fill_stress_over_50=int((residual>50+1e-7).sum()))
+                all_fill_stress_over_50=int((residual>50+1e-7).sum()) if unit.any() else None)
 
 
 def main():
-    fit=json.loads((HERE/'fit.json').read_text())
+    fit=json.loads((HERE/'fit_v2.json').read_text())
     assert sha(CENSUS)==fit['census_sha']
     for name,h in fit['inputs'].items():
         assert sha(OUT/'train'/name)==h
@@ -70,8 +70,8 @@ def main():
     for treatment,base in [('B','A'),('C','B')]:
         delta=frame[frame.arm==treatment].set_index('mid').settle-frame[frame.arm==base].set_index('mid').settle
         contrasts[treatment+'-'+base]=dict(net=float(delta.sum()),better=int((delta>1e-7).sum()),worse=int((delta< -1e-7).sum()),equal=int((delta.abs()<=1e-7).sum()))
-    frame.to_csv(HERE/'markets.csv',index=False)
-    write(HERE/'results.json',dict(day=EVAL,status=Counter(r['status'] for r in cen),training_markets=len(fit['inputs']),fit_sha=sha(HERE/'fit.json'),
+    frame.to_csv(HERE/'markets_v2.csv',index=False)
+    write(HERE/'results_v2.json',dict(day=EVAL,status=Counter(r['status'] for r in cen),training_markets=len(fit['inputs']),fit_sha=sha(HERE/'fit_v2.json'),
                                   rows=summary,contrasts=contrasts,capacity_on_clock={a:aggregate(data) for a,data in anchors.items()},
                                   capacity_at_C_submissions=aggregate(props),capacity_on_C_clock_by_abs_z={k:aggregate(v) for k,v in drift.items()},
                                   passes=summary['C']['settle']>0 and contrasts['C-B']['net']>0,inputs=inputs))

@@ -17,7 +17,7 @@ import vm_replay as VM
 import pf_mt_decision as BTC
 
 MM, X, LB, BE = VM.MM, VM.X, VM.LB, VM.BE
-OUT = X.DATA / 'leftover_inventory_20261125'
+OUT = X.DATA / 'leftover_inventory_v2_20261125'
 CENSUS = MM.OUT2 / 'census.json'
 ARMS = ('A', 'B', 'C')
 TRAIN = ('20261024', '20261025')
@@ -42,7 +42,7 @@ def max_new(signed, reserved, capacity, unit):
 
 def key_for(side, left_ms, flow, blocked):
     time_band = min(5, max(0, int((left_ms - 1e-7) // 50000)))
-    return (side, time_band, 0 if flow < EPS else 1 if flow <= 220 else 2, int(blocked))
+    return (side, time_band, 0 if flow < EPS else 1 if flow <= 220 + EPS else 2, int(blocked))
 
 
 def groups(key):
@@ -222,10 +222,10 @@ def one(path, info, ident, flags, arm, model, z, payout, parity=False):
 def run(phase):
     cen=json.loads(CENSUS.read_text())['rows']
     days = TRAIN if phase=='train' else (EVAL,)
-    model = {} if phase=='train' else json.loads((HERE/'fit.json').read_text())['cells']
+    model = {} if phase=='train' else json.loads((HERE/'fit_v2.json').read_text())['cells']
     if phase=='eval':
         import subprocess
-        assert subprocess.check_output(['git','show','HEAD:'+str((HERE/'fit.json').relative_to(HERE.parents[2]))]) == (HERE/'fit.json').read_bytes()
+        assert subprocess.check_output(['git','show','HEAD:'+str((HERE/'fit_v2.json').relative_to(HERE.parents[2]))]) == (HERE/'fit_v2.json').read_bytes()
     edges=MM.TR.T.P.frozen_edges()
     src=MM.KP.Tape()
     for day in days:
@@ -277,7 +277,7 @@ def fit():
                 buckets[name].append(y); markets[name].add(m)
     assert used==expected and all(d in TRAIN for d,m in used)
     cells={name:dict(q25=float(np.quantile(vals,.25,method='lower')), rows=len(vals), markets=len(markets[name])) for name,vals in buckets.items()}
-    write(HERE/'fit.json',dict(days=TRAIN,inputs=inputs,cells=cells,census_sha=sha(CENSUS)))
+    write(HERE/'fit_v2.json',dict(days=TRAIN,inputs=inputs,cells=cells,census_sha=sha(CENSUS)))
 
 
 def selftest():
@@ -286,6 +286,7 @@ def selftest():
     assert max_new(400,100,0,.5)==0
     key=key_for(0,50000,220,True)
     assert key==(0,0,1,1) and forecast({},key)==(0.,3)
+    assert key_for(1,1000,220+1e-11,False)[2]==1 and key_for(1,1000,220+.001,False)[2]==2
     assert forecast({groups(key)[2]:dict(markets=8,q25=10)},key)==(10,2)
     for k in (0,39,40,41):
         a=np.zeros(80,np.float32); a[k]=10
