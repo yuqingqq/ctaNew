@@ -1,0 +1,23 @@
+{
+  "G1_v1_parity_gates": {
+    "ok": true,
+    "detail": "38 gated ledgers"
+  },
+  "G2_exit_orders_closing_side_rung0": {
+    "ok": true,
+    "detail": "10699 posts, 0 violations (HOLD posts none)"
+  },
+  "G3_ioc_results_rederived": {
+    "ok": true,
+    "detail": "6617 filled IOCs, 0 mismatches"
+  },
+  "G4_ledger_identities": {
+    "ok": true,
+    "detail": "562 ledgers"
+  },
+  "G5_triggers_recomputed": {
+    "ok": true,
+    "detail": "562 ledgers"
+  },
+  "all_pass": true
+}

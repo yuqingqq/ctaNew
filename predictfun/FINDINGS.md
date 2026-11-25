@@ -1,3 +1,18 @@
+<!-- TAKE_EXIT_REPLAY_V2_20261125_CLAUDE -->
+## 2026-11-25 — take + maker exit on all 281 complete markets: +$3,934, 91 % of markets positive, every day and hour
+
+[Receipt](reviews/take_exit_replay_20261125/v2_report.md) (session 1622c91e), freeze 0e7882007 before the census; strategy code unchanged (ee0f16ee6). USER: "can we test take + maker exit on more markets".
+
+Census of all 1,152 consumed Oct 24–27 markets with the unchanged loader and path builder: 281 complete, 516 missing_endpoint, 355 stale_future_book. The signal cache is generated with the builder's exact convention (event + 4 ms inclusive). Gates: cache bits equal to the saved caches and ledgers exactly equal to v1 on its 19 markets (38 ledgers; the guard log without its logged age, which counts from any bookTicker update and is log-only).
+
+- PASSIVE_EXIT: **+$3,933.54 (+$14.00 / market)**, days +835 / +939 / +1,250 / +909, **256/281 markets positive**, every opening hour positive, top-10 markets 11 %. Completed +$4,687, open at END −$6, fees −$748, mean |position| 7.4 sh.
+- Without the value of exit fills on orders < 100 ms old (18,095 of 89,984 exit shares): +$4,054.
+- The 262 new markets earn +$14.18 per market vs +$11.50 on the v1 19, so v1 was representative.
+- HOLD: +$3,926.65, 4/4 days, but 199/281 markets and mean |position| 30.
+
+Checks 5/5: parity gates, 10,699 exit posts on the closing side at rung 0, 6,617 IOC fills re-derived, identities on 562 ledgers, triggers recomputed. Limits: complete (contested-to-the-end) markets only, 24 % of all markets; consumed days; replay fill model; Tokyo latency assumed; no live IOC path. CPU 752 s.
+<!-- /TAKE_EXIT_REPLAY_V2_20261125_CLAUDE -->
+
 <!-- TAKE_EXIT_REPLAY_20261125_CLAUDE -->
 ## 2026-11-25 — taking alone (signal take, maker exit) earns in the 19-market replay; guard on the exit is essential
 

@@ -1,3 +1,13 @@
+<!-- TAKE_EXIT_REPLAY_V2_20261125_CLAUDE -->
+## 2026-11-25 — take + maker exit holds on all 281 complete markets (+$14 / market, 91 % positive); next = untouched days (USER's call)
+
+[Receipt](reviews/take_exit_replay_20261125/v2_report.md) (session 1622c91e; freeze 0e7882007). The frozen standalone strategy on every complete market of consumed Oct 24–27 (281 of 1,152) earns +$3,933.54. It is positive on every day, in every opening hour and in 256/281 markets; top-10 concentration is 11 %, and it stays positive without young exit fills. The original 19 were representative.
+
+Watch out: only markets whose book stays two-sided to 298 s can be replayed (24 %). Decided-early markets need a settlement-based valuation before they can be included. The cache age field is log-only and unknown in v2 caches. pmmmrust has no IOC path.
+
+ONE next priority (needs the USER's go): the frozen rule on untouched days. Optionally add a settlement valuation for non-complete markets, then an IOC path in pmmmrust for a Tokyo shadow.
+<!-- /TAKE_EXIT_REPLAY_V2_20261125_CLAUDE -->
+
 <!-- TAKE_EXIT_REPLAY_20261125_CLAUDE -->
 ## 2026-11-25 — standalone signal-take strategy positive in replay (+$219, 4/4 days); next = untouched days (USER's call)
 

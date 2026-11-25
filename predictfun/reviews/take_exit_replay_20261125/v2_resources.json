@@ -1,0 +1,65 @@
+{
+ "asof": "2026-11-25",
+ "slot": "claude",
+ "runs": [
+  {
+   "tag": "txr2_census",
+   "rc": "0",
+   "peak_rss_mib": "926",
+   "wall_s": "85.48",
+   "cpu_user_s": "71.12",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "407->407",
+   "slot": "claude",
+   "start": "2026-11-25T05:30:00Z"
+  },
+  {
+   "tag": "txr2_run",
+   "rc": "0",
+   "peak_rss_mib": "973",
+   "wall_s": "668.48",
+   "cpu_user_s": "651.59",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "408->407",
+   "slot": "claude",
+   "start": "2026-11-25T05:31:40Z"
+  },
+  {
+   "tag": "txr2_check",
+   "rc": "0",
+   "peak_rss_mib": "255",
+   "wall_s": "29.03",
+   "cpu_user_s": "28.64",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "407->407",
+   "slot": "claude",
+   "start": "2026-11-25T05:42:54Z"
+  },
+  {
+   "tag": "txr2_report",
+   "rc": "0",
+   "peak_rss_mib": "205",
+   "wall_s": "0.93",
+   "cpu_user_s": "0.80",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "407->407",
+   "slot": "claude",
+   "start": "2026-11-25T05:43:29Z"
+  },
+  {
+   "tag": "txr2_write_report",
+   "rc": "0",
+   "peak_rss_mib": "11",
+   "wall_s": "0.02",
+   "cpu_user_s": "0.02",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "407->407",
+   "slot": "claude",
+   "start": "2026-11-25T05:44:04Z"
+  }
+ ],
+ "wrapped_cpu_user_s": 752.17,
+ "charged_upper_cpu_s": 840,
+ "charged_coreh": 0.2333,
+ "cap_cpu_s": 900
+}
