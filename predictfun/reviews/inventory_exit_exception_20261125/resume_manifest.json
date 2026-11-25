@@ -1,0 +1,15 @@
+{
+  "original_manifest_sha256": "61de00485e13cdd96091f64699983f6de3515a25c0347efd1f235edc3c7e19c8",
+  "projection_sha256": "20cd751551d7151f274216f24ecd81bc91336e5aa536ccb1d26958403aab857e",
+  "sources": {
+    "resume.py": "1a20d93814545f0c2d67117710efca9cf01a775fe51e8335bbaf17a3fa7b38b8",
+    "resource_amendment.md": "a8cb8d56a5a59d31287371d724eacb80c8c8808cf9d14f4c0ca74ef966583931"
+  },
+  "parts": {
+    "3697902_BASE.json.gz": "dcb9888438f3d964e977aa4312373884b2b88dc355a5441d2d577b70f1bd1ebe",
+    "3697902_WIDE.json.gz": "c45d948931b067961ed683f9d267bb38a89c4855ede1a8517c485f3e8efaea1e",
+    "3697902_WIDE_COST.json.gz": "e75afea2c402f78f8c8a572dea4e88f323219908e57f1334bb4b42143bc3eeda",
+    "3697902_WIDE_REDUCE.json.gz": "7be53e02624815a3006f794b7374160ee1722ed89a211e5ed4d0cd3cb5022ac3"
+  },
+  "remaining_cpu_cap": 570
+}

@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/inventory_exit_exception_20261125/launch.py", line 6, in <module>
+    if sys.argv[1] in ['prepare','run']:getattr(E,sys.argv[1])()
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/inventory_exit_exception_20261125/experiment.py", line 106, in run
+    projection=elapsed*len(m['cases'])*1.2;dump(H/'projection.json',dict(first_mid=mid,cpu_s=elapsed,projection_cpu_s=projection,limit=400,proceed=projection<=400));assert projection<=400,'projection stop'
+                                                                                                                                                                            ^^^^^^^^^^^^^^^
+AssertionError: projection stop
+2026-11-25T02:54:25Z tag=ix_run rc=1 peak_rss_mib=797 wall_s=25.86 cpu_user_s=24.87 memavail_start_gib=22 disk_free_gib=408->408 slot=codex
