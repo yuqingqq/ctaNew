@@ -1,0 +1,22 @@
+{
+  "asof": "2026-11-25",
+  "inputs": {
+    "data/predict_fun/research/maker3_spread_risk_20261124/data.json.gz": "4227e7e5a9d99c69002efdc586f2d0712bd26aaee9f91d243b777896240026ca",
+    "predictfun/reviews/maker3_spread_risk_20261124/build.json": "62165f2e69e11d0dfe2aa6224b76cee1b1d177902fd16e8159be3405243b5208",
+    "predictfun/reviews/maker3_spread_risk_20261124/checks.json": "d0aff3926d23955d53ea97f2768a904bbf5f329390664f0cb169b3c8f22e7a4f",
+    "predictfun/reviews/maker_trace_20261122/v2/chains/take_logic_v2/panel.parquet": "39397900c70e1762e0d2194f3329342ddb3450b7cda08331060e2d82824a62f1",
+    "predictfun/reviews/maker_trace_20261122/v2/matched_gap_r1/per_market.csv": "49d4730f33f89c6fb13eb663eea8f877e6ce6d8fec14816c4308ff0af706f4b5",
+    "predictfun/reviews/maker3_spread_risk_20261124/core.py": "0f8c0f07fdcb3766091156b5a888dd5514e3570595983a372132a0d8c255f814"
+  },
+  "sources": {
+    "predictfun/reviews/maker3_regime_spread_20261125/contract.md": "b8be0ce5cbc382a53cfb5e0e11f5c9f0ab7c2e882550ec30eab0b346b1e7e0f3",
+    "predictfun/reviews/maker3_regime_spread_20261125/common.py": "4e896c7ad62d4746fc8e54ed83fd3b4297a55612813a11842c3a3fd8e4ad50b0",
+    "predictfun/reviews/maker3_regime_spread_20261125/prepare.py": "62dd0429a2382e9eb115fb2d25de1ca398c86b8df850a72dd88ed9b450327050",
+    "predictfun/reviews/maker3_regime_spread_20261125/build.py": "fd505cb7bb259c4ee63400f6b2cfadb79117dcb7579d523d9b879108c12dfe9b",
+    "predictfun/reviews/maker3_regime_spread_20261125/check.py": "81ac165bbf618a04b14f4930cb0c927cdcc409ebec30338ca864bf30c196d035",
+    "predictfun/reviews/maker3_regime_spread_20261125/selftest.py": "c1b35dbfccb6f9b274740358984b2c70972e6c1d75a463a3116000cb4d0a57b0",
+    "predictfun/reviews/maker3_regime_spread_20261125/plot.py": "6dd7fa60272d9e17f9e3ae9c5394641ae42080a82c00d9141acef66e621722f4"
+  },
+  "new_candidates": 0,
+  "validation": false
+}
