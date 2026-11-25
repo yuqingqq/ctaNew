@@ -1,0 +1,86 @@
+{
+ "days": {
+  "20261024": {
+   "rows_read": 1449746,
+   "rows_kept": 727699,
+   "lo_rows": 19447,
+   "lo_rows_P_after_lo": 0,
+   "lo_win_max_ms": 2489
+  },
+  "20261025": {
+   "rows_read": 1474354,
+   "rows_kept": 738782,
+   "lo_rows": 15829,
+   "lo_rows_P_after_lo": 13,
+   "lo_win_max_ms": 2780
+  },
+  "20261026": {
+   "rows_read": 1742982,
+   "rows_kept": 873733,
+   "lo_rows": 16176,
+   "lo_rows_P_after_lo": 9,
+   "lo_win_max_ms": 2669
+  },
+  "20261027": {
+   "rows_read": 1745046,
+   "rows_kept": 870831,
+   "lo_rows": 8540,
+   "lo_rows_P_after_lo": 0,
+   "lo_win_max_ms": 2458
+  }
+ },
+ "exclusions": {
+  "20261024:status_not_ok": 1070,
+  "20261024:boundary_censored": 0,
+  "20261024:res_undefined": 0,
+  "20261025:status_not_ok": 2226,
+  "20261025:boundary_censored": 0,
+  "20261025:res_undefined": 0,
+  "20261026:status_not_ok": 1076,
+  "20261026:boundary_censored": 0,
+  "20261026:res_undefined": 0,
+  "20261027:status_not_ok": 4826,
+  "20261027:boundary_censored": 0,
+  "20261027:res_undefined": 0
+ },
+ "maker3_legs": 128849,
+ "maker3_roles": {
+  "maker": 119269,
+  "taker": 9580
+ },
+ "inv": {
+  "REDUCE": 64654,
+  "ADD": 58418,
+  "FLIP": 4580,
+  "OPEN": 1161,
+  "SELF": 36
+ },
+ "cells_all": 2169,
+ "cells_m3": 50687,
+ "markets": 1151,
+ "markets_m3_active": 934,
+ "p_lag_ms": 2500,
+ "thin_sh": 43.7,
+ "outputs": {
+  "legs_m3.parquet": "1f17cfb742e0a6e007cfdbf4a5951e79875141550776bdd9ede316d15c527306",
+  "cells_all.parquet": "5bc9b362bfa47eee05d1134650954c96dd767bdbb8e95d05e1db5feef34935ca",
+  "cells_m3.parquet": "e85b76b548b58910a22d485e56f336c33060f80bcd6718844ee578843ea6e938",
+  "markets.parquet": "b023764db3249a49a2bcf6fd4244cf2d886eb941e1eba38505582a4c49d833ab"
+ },
+ "inputs": {
+  "data/predict_fun/research/maker_trace_v2_20261123/econ/fills_valued.parquet": "2a874707cc7801d6760e2de36075870700cc0be8e72cd9a6df0213424221cde6",
+  "data/predict_fun/research/maker_trace_v2_20261123/econ/maker_market.parquet": "735fb019143dcb16cfefccd1417da6866dd7b67177eaa37935ab40f22ab2198d",
+  "data/predict_fun/research/maker_trace_v2_20261123/econ/identities.json": "321c5274cc9cbc2151f94aad619ad199de41b98db4a410d12b83b61aa69aa239",
+  "data/predict_fun/research/maker3_book_conditions_20261125/grid.parquet": "5b2b46196c313010d0038c496e4d12435926be21890888f7008943d3b9087436",
+  "data/predict_fun/research/maker_trace_v2_20261123/markets_20261024.parquet": "9ba05add8488e2dda53639a84a5bc6514242e88d6f9335c24ad8c83b8cefa82e",
+  "data/predict_fun/research/maker_trace_v2_20261123/tob_20261024.parquet": "52e24fa1c4c4fe2829a505747a47d7a9c9064b4a3ed3300707884d2ed718cc33",
+  "data/predict_fun/research/maker_trace_v2_20261123/markets_20261025.parquet": "e017d6d95f627786c7afdbee4e45db31fe788b086433ea1cce270bdcb3a16c29",
+  "data/predict_fun/research/maker_trace_v2_20261123/tob_20261025.parquet": "b111dd7302269a221c4d2bed722e37e714b2915fe86a3e1a3a38907c2fbc662f",
+  "data/predict_fun/research/maker_trace_v2_20261123/markets_20261026.parquet": "b0f5bc74946c75bdbc7e3918cfc35713f05fe307b8f1a25f556c9cd3c2375877",
+  "data/predict_fun/research/maker_trace_v2_20261123/tob_20261026.parquet": "ad5b375958bc332b7efad67f9cea043b01f4c652547f1bad4538b1d856bc7aff",
+  "data/predict_fun/research/maker_trace_v2_20261123/markets_20261027.parquet": "b6139aefc4e45e4e02cc65868e18c0acb77cf272e354ad76794f39ffb4ea5a36",
+  "data/predict_fun/research/maker_trace_v2_20261123/tob_20261027.parquet": "f193ed73cfd37b9473809cf8c88e2d84d576ea7f8c5ba5158c91ad49659b6409"
+ },
+ "cpu_s": 24.24,
+ "vmhwm_mib": 2099.3
+}

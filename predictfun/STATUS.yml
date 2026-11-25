@@ -1,3 +1,26 @@
+maker3_book_conditions_20261125_claude:
+  report: predictfun/reviews/maker3_book_conditions_20261125/report.md
+  session: 1622c91e
+  population_markets: 934
+  maker3_passive_legs: 119269
+  maker3_taker_legs: 9580
+  book_clock: settle_ms_minus_2500ms
+  thin_touch_shares: 43.7
+  calm_before_270_net_usd: 13551.41
+  calm_before_270_net_c_per_share: 0.774
+  thin_or_wide_ge270_net_usd: -3745.48
+  thin_or_wide_ge270_net_c_per_share: -4.522
+  calm_ge270_net_usd: -2890.86
+  late_loss_negative_all_days_both_clocks: true
+  volatile_late_markets_net_usd: 9144.91
+  calm_late_markets_net_usd: -6510.22
+  maker3_total_net_usd: 4490.53
+  checks_pass: 13
+  validation: false
+  rule_adopted: false
+  charged_cpu_s: 90
+  btc_grid_stickiness_verified: false
+  next: maker3_skew_and_active_taking_logic_study_934_markets_before_broad_test
 maker3_regime_spread_20261125_codex:
   report: predictfun/reviews/maker3_regime_spread_20261125/report.md
   figure: predictfun/reviews/maker3_regime_spread_20261125/regimes.png

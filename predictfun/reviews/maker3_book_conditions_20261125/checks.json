@@ -1,0 +1,55 @@
+{
+ "C1_independent_P_state": {
+  "ok": true,
+  "detail": "4000 legs, 0 mismatches"
+ },
+ "C2_future_perturbation_no_effect": {
+  "ok": true,
+  "detail": "300 legs one at a time, 907876 later frames perturbed, 0 fields changed"
+ },
+ "C2_positive_control_fires": {
+  "ok": true,
+  "detail": "269/300 states changed when the P frame is widened"
+ },
+ "C3_classifier_controls": {
+  "ok": true,
+  "detail": "['CALM', 'THIN', 'WIDE', 'ONE_SIDED', 'UNKNOWN', 'UNKNOWN', 'UNKNOWN', 'UNKNOWN']"
+ },
+ "C4_legs_equal_maker_market": {
+  "ok": true,
+  "detail": "934 markets, max |diff| 2.27e-13"
+ },
+ "C4_cells_m3_equal_legs": {
+  "ok": true,
+  "detail": "net 4490.5280 vs 4490.5280"
+ },
+ "C4_cells_all_maker3_equal_legs": {
+  "ok": true,
+  "detail": "q 2587301.695 vs 2587301.695"
+ },
+ "C5_inventory_loop": {
+  "ok": true,
+  "detail": "5650 legs in 40 markets, 0 mismatches"
+ },
+ "C6_headline_readings": {
+  "ok": true,
+  "detail": "{\"P|>=270|THIN_or_WIDE\": -3745.48, \"P|all|CALM\": 10660.55, \"P|<270|CALM\": 13551.41, \"P|all|THIN_or_WIDE\": -4513.6}"
+ },
+ "C6_volume_fraction": {
+  "ok": true,
+  "detail": "0.290514"
+ },
+ "C7_altered_leg_detected": {
+  "ok": true,
+  "detail": "max |diff| 0.500"
+ },
+ "C7_dropped_market_detected": {
+  "ok": true,
+  "detail": "one market missing"
+ },
+ "C7_clock_swap_detected": {
+  "ok": true,
+  "detail": "0.491 of legs change class between P and U (a P->U swap cannot pass C1)"
+ },
+ "all_pass": true
+}

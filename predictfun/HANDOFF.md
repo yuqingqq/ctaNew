@@ -1,3 +1,15 @@
+<!-- MAKER3_BOOK_CONDITIONS_20261125_CLAUDE -->
+## 2026-11-25 — thin/wide-book check done; next: skew and active-taking logic before broad testing (USER)
+
+[Receipt](reviews/maker3_book_conditions_20261125/report.md) (session 1622c91e). USER corrected "volatile" to mean a thin Predict book with a wide BBO, especially near the end, and directed: establish the skew / active-taking logic before broad testing. Done: check of the earlier spread / regime packets (19-market population, no depth measure, mid-movement volatility instead of the USER's notion) and a 934-market redo.
+
+Result: Maker3's profit is calm books early in the window (+$13,551, +0.77 ¢/sh before 270 s). Fills stamped ≥ 270 s lose on all 4 days in every book class (thin/wide −4.52 ¢/sh vs other top-10 +0.42). Contested markets (thin/wide last minute) pay +$9,145 via round trips earned before 270 s, 89 % on Oct 26; calm-late (decided) markets lose −$6,510 on residual inventory on all 4 days. Adding takes look informed (+8.22 ¢/sh to END); reducing takes cost −4.41 ¢/sh to resolution; no visible passive fill-side skew (uncontrolled).
+
+Watch out: P is up to 2.5 s before the match (stale near the close); U is post-trade and partly caused by the fill. The BTC 1 s grid (maker_trace_v2/btc) shows the mid unchanged in 73–93 % of seconds with a 1-tick spread and ~46-tick jumps; verify against raw bookTicker before any BTC-conditioned take rule (unverified, raised 11-25). The WIDE_PASSIVE 19-market replay stays queued behind the skew / take study (USER order).
+
+ONE next priority (USER direction): skew + active-taking logic study on the same 934 markets. (1) Fill-side mix vs a side-neutral market-flow null by |position| / time / book class, plus fill-price position on reducing vs adding sides. (2) Every market-second as a decision row (~280 k): take / no-take and add / reduce against state known at that time, matched non-take seconds and shift nulls (≥ 200 draws, declared first). BTC feed check first. Bounded saved-data work under the standing CPU authorization; no new days / live.
+<!-- /MAKER3_BOOK_CONDITIONS_20261125_CLAUDE -->
+
 <!-- MAKER3_REGIME_SPREAD_20261125_CODEX -->
 ## 2026-11-25 — volatile exits earn turnover; volatile entries leave costly residuals
 

@@ -1,0 +1,77 @@
+{
+ "asof": "2026-11-25",
+ "slot": "claude",
+ "runs": [
+  {
+   "tag": "mbc_grid",
+   "rc": "0",
+   "peak_rss_mib": "647",
+   "wall_s": "8.37",
+   "cpu_user_s": "6.74",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "408->408",
+   "slot": "claude",
+   "start": "2026-11-25T02:46:51Z"
+  },
+  {
+   "tag": "mbc_build",
+   "rc": "0",
+   "peak_rss_mib": "2099",
+   "wall_s": "24.73",
+   "cpu_user_s": "15.32",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "408->408",
+   "slot": "claude",
+   "start": "2026-11-25T02:50:47Z"
+  },
+  {
+   "tag": "mbc_sum",
+   "rc": "0",
+   "peak_rss_mib": "165",
+   "wall_s": "0.85",
+   "cpu_user_s": "0.75",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "408->408",
+   "slot": "claude",
+   "start": "2026-11-25T02:52:06Z"
+  },
+  {
+   "tag": "mbc_check",
+   "rc": "1",
+   "peak_rss_mib": "703",
+   "wall_s": "10.59",
+   "cpu_user_s": "9.50",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "408->408",
+   "slot": "claude",
+   "start": "2026-11-25T02:56:43Z"
+  },
+  {
+   "tag": "mbc_check2",
+   "rc": "0",
+   "peak_rss_mib": "624",
+   "wall_s": "10.11",
+   "cpu_user_s": "9.40",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "408->408",
+   "slot": "claude",
+   "start": "2026-11-25T02:57:12Z"
+  },
+  {
+   "tag": "mbc_tables",
+   "rc": "0",
+   "peak_rss_mib": "371",
+   "wall_s": "1.13",
+   "cpu_user_s": "0.80",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "407->407",
+   "slot": "claude",
+   "start": "2026-11-25T02:58:40Z"
+  }
+ ],
+ "wrapped_cpu_user_s": 42.51,
+ "unwrapped_probes": "schema/stickiness/calibration probes run directly before the packet (each < 10 CPU s, read-only, consumed Oct 23-27 derived files and one raw Oct 24 04Z bookTicker hour)",
+ "charged_upper_cpu_s": 90,
+ "charged_coreh": 0.025,
+ "ledger_note": "codex ledger before this packet task 2.12155 / line 5.43225 (caps 2.35 / 5.65, 0.05 reserve); after +0.025: 2.14655 / 5.45725"
+}

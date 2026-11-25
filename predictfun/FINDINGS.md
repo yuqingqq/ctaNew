@@ -1,3 +1,18 @@
+<!-- MAKER3_BOOK_CONDITIONS_20261125_CLAUDE -->
+## 2026-11-25 — thin/wide Predict books: Maker3 earns in calm early books and loses late in every book class
+
+[Receipt](reviews/maker3_book_conditions_20261125/report.md). USER: "volatile" = thin Predict book and wide BBO, especially near the end. Check of the earlier packets: maker3_spread_risk / maker3_regime_spread used only the 19 complete BOOK markets (17 active, 1.8 % of Maker3's 934), never measured depth, and the regime packet's "volatile" was Predict mid movement; they cannot carry a general claim. Redone on all 934 Maker3 markets (consumed Oct 24–27; 119,269 passive legs, 2.59 M shares; 9,580 taker legs). Book at P = stamp − 2.5 s (pre-trade on all but 22 / 59,992 lifecycle rows), U = stamp as sensitivity; classes CALM / THIN (touch ≤ 43.7 sh) / WIDE (> 1 ¢) / ONE_SIDED fixed outcome-blind.
+
+- Market-wide (outcome-blind): one-sided seconds 0 % before 120 s → 76 % in 295–300 s; spread > 4 ¢ 0.2–0.5 % → 35 %; median thinner touch 121–169 → 12 sh. One-sided books are pinned at 1 / 99 ¢.
+- Maker3 volume is front-loaded (27 % in the first minute, 5.8 % stamped ≥ 270 s); its share of all maker volume is a steady 4–6.5 %, 2 % in the last 5 s. Median market: 2.8 % of its passive shares after 180 s; 71 / 934 markets majority-late.
+- Passive economics at P (net to resolution): CALM +$10,661 (+0.59 ¢/sh), THIN −$2,976 (−0.53), WIDE −$1,537 (−0.82). Thin/wide: more edge (+2.09 / +3.96 vs +1.55 ¢), more adverse (−2.61 / −4.78 vs −0.96 ¢). Before 270 s CALM +$13,551 (+0.77 ¢; other top-10 +0.18, field −0.02; days +++-); thin/wide ≈ field and its sign flips at U (not read).
+- Stamped ≥ 270 s: thin/wide −$3,745 (−4.52 ¢; other top-10 +0.42, field −0.61) and calm −$2,891 (−5.05 ¢), negative on all 4 days at both clocks, top-3 markets 17–18 %. Concentrated in near-money (10–90 ¢) books (−3.3 to −8.0 ¢/sh): edge +7.6 / +8.6 ¢ vs the 2.5 s-old mid, adverse by 10 s and at resolution.
+- Market level (class of most 240–299 s seconds): VOLATILE_LATE 276 markets +$9,145 (round trips +$14,051; earned before 270 s, fills ≥ 270 s −$2,458; Oct 26 +$8,173); CALM_LATE 192 markets −$6,510 on all 4 days, residual −$6,392. Total +$4,491 = round trips +$15,818, residual −$10,499, fees −$828. Mean |position| 215 sh at 240 s, 248 at END: no flattening into the close.
+- Takes before 270 s: position-adding +8.22 ¢/sh to END (+1.39 to resolution; informed-looking), reducing −4.41 ¢/sh to resolution; 20 taker legs after 270 s. Passive reducing share 49.5–52.4 % up to 1,000 sh, 43.8 % above: no visible fill-side skew (uncontrolled).
+
+Checks 13/13: independent merge_asof state on 4,000 legs, per-leg future-perturbation falsifier + positive control, 8 classifier cases, 934-market reconciliation (max 2.3e-13 USD), inventory loop on 40 markets, readings from legs, 3 corruptions. The first check run failed on the falsifier's own construction (union of several legs' futures); rewritten per leg, outputs unchanged. Descriptive, consumed days, no intervals, no rule adopted. CPU charged 90 s (0.025 core-h), claude slot.
+<!-- /MAKER3_BOOK_CONDITIONS_20261125_CLAUDE -->
+
 <!-- MAKER3_REGIME_SPREAD_20261125_CODEX -->
 ## 2026-11-25 — volatile exits earn turnover; volatile entries leave costly residuals
 
