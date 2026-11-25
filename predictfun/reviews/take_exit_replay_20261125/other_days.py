@@ -45,6 +45,7 @@ def build_changes(stems, seg_start, out, rcpt):
     rows before a segment's start are dropped right after parsing (no row of a sealed or unlisted day is kept), and the carry is
     discarded at a segment start (no cross-gap continuity)."""
     BEV.ALLOWED = tuple(stems)
+    out.parent.mkdir(parents=True, exist_ok=True)
     assert not out.exists(), 'write-once'
     rec = dict(files={}, rows=0, dropped_before_segment=0, dup_u=0, invalid=0)
     buf, ek, em, emit_lo, last_mid = None, [], [], -np.inf, None
