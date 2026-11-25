@@ -12,7 +12,7 @@ def fixture(s, enabled, trade=True):
     trades=[[70,s,48 if s==0 else 52,20]] if trade else []
     b=Branch(dict(frames=[frame],trades=trades,mark=50.),500.,{})
     flags={i:np.zeros(10,dtype=bool) for i in (0,1)}
-    p=Policy(b,(flags,flags),{},enabled)
+    p=Policy(b,(flags,{side:arr.copy() for side,arr in flags.items()}),{},enabled)
     for price,q in [(48 if s==0 else 52,100),(49 if s==0 else 51,220)]:
         b.unclosed[s].append(b.E.add_order(s,price,0.,q,0))
     return b,p
