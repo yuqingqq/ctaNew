@@ -1,0 +1,54 @@
+{
+ "ioc_fills": 3575,
+ "ioc_shares": 121485.83160140569,
+ "ioc_by_class": {
+  "CANCEL_UNKNOWN": {
+   "fills": 1799,
+   "shares": 62160.15847733503,
+   "m3s_value_usd": 3003.468639145195,
+   "end_value_usd": 1884.2525995997453,
+   "frame_age_ms_p50": 27.0,
+   "next_gap_ms_p50": 24.0
+  },
+  "NO_NEXT_FRAME": {
+   "fills": 3,
+   "shares": 54.5749,
+   "m3s_value_usd": 0.0,
+   "end_value_usd": -1.2870054400000002,
+   "frame_age_ms_p50": 43.0,
+   "next_gap_ms_p50": NaN
+  },
+  "SURVIVED": {
+   "fills": 1731,
+   "shares": 58113.320979774595,
+   "m3s_value_usd": 1863.7831900362382,
+   "end_value_usd": 1779.0657495444552,
+   "frame_age_ms_p50": 25.0,
+   "next_gap_ms_p50": 25.0
+  },
+  "TRADED_AWAY": {
+   "fills": 42,
+   "shares": 1157.77724429606,
+   "m3s_value_usd": 68.15096831559462,
+   "end_value_usd": 68.59939912029256,
+   "frame_age_ms_p50": 9.5,
+   "next_gap_ms_p50": 46.0
+  }
+ },
+ "exit_fills": 10806,
+ "exit_shares": 89984.39939610334,
+ "exit_by_class": {
+  "AT_PRICE": {
+   "fills": 4965,
+   "shares": 43749.42472597006,
+   "value_vs_hold_usd": 427.3857884712046,
+   "young_shares": 3483.5510693711108
+  },
+  "THROUGH": {
+   "fills": 5841,
+   "shares": 46234.97467013328,
+   "value_vs_hold_usd": -224.47307980266632,
+   "young_shares": 14611.496967869265
+  }
+ }
+}
