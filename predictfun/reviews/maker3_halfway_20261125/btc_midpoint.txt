@@ -1,0 +1,11 @@
+selected 7 7 median abs net / range (bps) 1.7011089103698558 2.1357770596430754
+other_same_dates 857 850 median abs net / range (bps) 1.868754376927071 3.1467792123892186
+     day     mid  selected  mid_net  mid_range  start_s  end_s  yes_c  trend_net  trend_range  open_to_150_bps
+20261024 3699278      True    -4.38       4.48    110.0  140.0  -48.0      -4.48         4.48            -0.12
+20261025 3723774      True    -2.50       2.50    220.0  250.0   56.0       3.89         3.89            -1.02
+20261025 3734864      True     0.34       0.34    215.0  245.0   50.0       0.79         0.79            -0.76
+20261025 3763401      True     3.64       4.37    220.0  250.0  -59.0      -2.03         2.03             1.30
+20261025 3776314      True     1.43       2.14    165.0  195.0  -69.0      -4.63         4.63             1.64
+20261026 3838531      True    -0.14       1.16    245.0  275.0   71.0       5.70         5.70            -2.46
+20261026 3850428      True     1.70       1.70    245.0  275.0   49.0       2.14         2.14            -1.90
+2026-11-25T06:44:49Z tag=m3_btc_midpoint rc=0 peak_rss_mib=214 wall_s=0.81 cpu_user_s=0.67 memavail_start_gib=22 disk_free_gib=406->406 slot=codex
