@@ -1,3 +1,14 @@
+<!-- WHY_FILL_20261125_CLAUDE -->
+## 2026-11-25 — why we fill 2-3 %: the quotes leave the book before an order decided at our trigger can arrive; the takers who win ordered before Binance moved; 20 ms less network flips REPRICE positive in replay
+
+[why_markout](reviews/take_reprice_20261125/why_markout.json), [fill_rate](reviews/take_reprice_20261125/fill_rate.json), [stage L](reviews/take_reprice_20261125/latency_readings.json) (declared 24e49152a / d63878870, [checks](reviews/take_reprice_20261125/latency_checks.json) pass). USER: "why we only fill 2-3%, is it we miss some good signals or the latency issue". 408 complete markets, five consumed days; controls (parity with the engine's take marks, dFV >= D, t0) pass, falsifiers fire.
+
+- **Our signal is valuable; we fill the leftovers:** REPRICE-8 takes valued at our limit on arrival: all sent +8.98 ¢/sh at 1 s; filled +0.69, quotes other takers got +10.03, quotes makers pulled +8.11.
+- **When the aimed quote left the book (REPRICE-8, share of 3,789 sent takes):** before our decision 17%; within 150 ms after it (no order decided at our trigger arrives in time, at any network speed) 62%; inside our 22 ms network 7%; still shown on arrival, consumed / cancelled per the queue rules 12%; filled 2.6%.
+- **Our trigger is not late on its own data:** the move's first Binance tick is a median 9 ms before our trigger; a 2 / 4 ¢ threshold fires a median 5 / 3 ms earlier (>= 150 ms earlier for 7% / 4%).
+- **The takers who win ordered before Binance moved:** their orders (first trade − 150 ms) precede the move's first tick for 83% (median 57 ms before); at the latest instant they can have decided, no Binance mid tick in the previous 250 ms for 80% (placebo 2 s earlier 95%), next mid move their way within 150 ms for 80% (placebo 2%). Makers' cancels (not held) follow the tick (93%, median 84 ms after), so a clock offset does not explain the takers' lead. Their signal leads the Binance futures mid; not identified.
+- **Latency headroom (hypothetical path, not a measured latency):** 152 ms (2 ms network): REPRICE-16 +$43.94 (lower +$42.32, 4 / 5 days), REPRICE-8 +$77.83 (3 / 5); 162 ms +$8.64 / −$9.77; 172 ms −$23.67 / −$47.29. Fills 16 ¢: 30 → 55, 8 ¢: 99 → 162. pays_at_152 True, pays_at_162 False (multiplicity 4; thresholds informed by these days). A 2 ms path to Predict with a 1.5 ms Binance feed needs the two venues co-located.
+<!-- /WHY_FILL_20261125_CLAUDE -->
 <!-- TAKE_REPRICE_20261125_CLAUDE -->
 ## 2026-11-25 — takes only on large move-implied repricings: entries turn positive, totals stay negative (consumed days)
 

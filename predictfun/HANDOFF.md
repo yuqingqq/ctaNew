@@ -1,3 +1,10 @@
+<!-- WHY_FILL_20261125_CLAUDE -->
+## 2026-11-25 — why we fill 2-3 % answered; stage L: 20 ms less network flips REPRICE positive in replay
+
+See FINDINGS (same date). 79% of our REPRICE-8 misses left the book before any order decided at our trigger could arrive; 7% inside our network time. The winning takers order a median 57 ms before Binance futures' mid moves. REPRICE-16 at 152 ms +$43.94 (4 / 5 days) is the only passing config (consumed days, multiplicity 4).
+
+Next (USER's call): (1) identify the takers' earlier signal at ms resolution on these days (Binance futures bookTicker E vs T at these moves; aggTrade / depth before the bookTicker mid; Binance spot and other venues); (2) where Predict's matching engine is, i.e. which network path is physically achievable from a host that sees Binance in ~1.5 ms; (3) any passing config goes to untouched days before a live step.
+<!-- /WHY_FILL_20261125_CLAUDE -->
 <!-- TAKE_REPRICE_20261125_CLAUDE -->
 ## 2026-11-25 — TAKE-REPRICE v1 done: the winners' rule makes entries positive, but we win too few races and the exit leaks
 

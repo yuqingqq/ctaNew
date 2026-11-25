@@ -1,3 +1,11 @@
+why_fill_20261125_claude:
+  diagnostics: [predictfun/reviews/take_reprice_20261125/why_markout.json, predictfun/reviews/take_reprice_20261125/fill_rate.json]
+  stage_l: predictfun/reviews/take_reprice_20261125/latency_readings.json
+  session: 1622c91e
+  reprice8_loss_shares: {filled: 0.026, before_decision: 0.167, speed_bump: 0.620, network: 0.070, at_arrival: 0.118}
+  winners_order_before_binance_onset: 0.830
+  pays_at_152: true
+  pays_at_162: false
 take_reprice_20261125_claude:
   report: predictfun/reviews/take_reprice_20261125/report.md
   freeze: de5a3784e
