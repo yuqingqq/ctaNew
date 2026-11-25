@@ -1,0 +1,201 @@
+{
+  "20261026": {
+    "reference": {
+      "markets": 70,
+      "settlement": -2759.3296925506206,
+      "turnover": -2302.709521802895,
+      "residual": -456.62017074772456,
+      "mean_abs_end": 41.8857591792694,
+      "settle": -2759.3296925506206,
+      "closed": 193653.8652397114,
+      "per_matched": -1.1890852366682803,
+      "p90_end": 162.62113826836642,
+      "max_end": 368.7081593588392,
+      "positive": 26,
+      "pulls": 23617,
+      "both": 0.6169918504314479
+    },
+    "retain": {
+      "markets": 70,
+      "settlement": 1890.9623422477218,
+      "turnover": 5937.916997520845,
+      "residual": -4046.954655273122,
+      "mean_abs_end": 186.21939068527496,
+      "settle": 1890.9623422477218,
+      "closed": 84789.1892349405,
+      "per_matched": 7.003153410357071,
+      "p90_end": 539.3681400412846,
+      "max_end": 792.64216,
+      "positive": 42,
+      "pulls": 11185,
+      "both": 0.5380728667305851
+    },
+    "urgency": {
+      "markets": 70,
+      "settlement": 1774.4923767630655,
+      "turnover": 2259.8166931693763,
+      "residual": -485.3243164063104,
+      "mean_abs_end": 38.25300173953499,
+      "settle": 1774.4923767630655,
+      "closed": 104752.40119627296,
+      "per_matched": 2.15729345328819,
+      "p90_end": 188.34644573704352,
+      "max_end": 438.77275729729723,
+      "positive": 45,
+      "pulls": 13896,
+      "both": 0.5899520613614573
+    },
+    "inventory": {
+      "over_60": {
+        "markets": 35,
+        "settlement": -217.57842736114384,
+        "turnover": 248.64769979625993,
+        "residual": -466.2261271574038,
+        "mean_abs_end": 67.69270937975384
+      },
+      "within_60": {
+        "markets": 35,
+        "settlement": 1992.0708041242092,
+        "turnover": 2011.168993373116,
+        "residual": -19.09818924890656,
+        "mean_abs_end": 8.813294099316117
+      },
+      "tail": {
+        "markets": 7,
+        "settlement": -1099.1806821951252,
+        "turnover": -576.207416342297,
+        "residual": -522.9732658528281,
+        "mean_abs_end": 283.3524102804421
+      },
+      "tail_over_60": 6
+    },
+    "paired": {
+      "reference": {
+        "delta": 4533.8220693136855,
+        "better": 49,
+        "worse": 21,
+        "without_largest_gain": 4129.645748210228
+      },
+      "retain": {
+        "delta": -116.46996548465654,
+        "better": 37,
+        "worse": 32,
+        "without_largest_gain": -544.2216935481185
+      }
+    },
+    "gate": {
+      "positive_settlement": true,
+      "positive_turnover": true,
+      "improved_settlement": true,
+      "improved_turnover": true,
+      "within_inventory_limit": true
+    }
+  },
+  "20261027": {
+    "reference": {
+      "markets": 58,
+      "settlement": -2877.6290378100357,
+      "turnover": -2167.810559062567,
+      "residual": -709.8184787474682,
+      "mean_abs_end": 39.80949200736793,
+      "settle": -2877.6290378100357,
+      "closed": 157513.25790300168,
+      "per_matched": -1.3762718058930172,
+      "p90_end": 129.80430169978465,
+      "max_end": 637.7144994696171,
+      "positive": 25,
+      "pulls": 15483,
+      "both": 0.6375723212219394
+    },
+    "retain": {
+      "markets": 58,
+      "settlement": 2628.864597993594,
+      "turnover": 5451.593960334051,
+      "residual": -2822.729362340456,
+      "mean_abs_end": 171.09960968089737,
+      "settle": 2628.864597993594,
+      "closed": 64179.51067403184,
+      "per_matched": 8.494290316457432,
+      "p90_end": 558.0861293857836,
+      "max_end": 932.1463315978747,
+      "positive": 32,
+      "pulls": 6141,
+      "both": 0.5595695440870169
+    },
+    "urgency": {
+      "markets": 58,
+      "settlement": 903.9916065670305,
+      "turnover": 1769.090032365159,
+      "residual": -865.0984257981287,
+      "mean_abs_end": 54.957012393422076,
+      "settle": 903.9916065670305,
+      "closed": 82332.05144598047,
+      "per_matched": 2.1487258015499475,
+      "p90_end": 227.36536594333663,
+      "max_end": 557.2754322666092,
+      "positive": 32,
+      "pulls": 8215,
+      "both": 0.6080218699375145
+    },
+    "inventory": {
+      "over_60": {
+        "markets": 33,
+        "settlement": 354.9930313625216,
+        "turnover": 1159.068268930619,
+        "residual": -804.0752375680974,
+        "mean_abs_end": 89.2609182816036
+      },
+      "within_60": {
+        "markets": 25,
+        "settlement": 548.9985752045088,
+        "turnover": 610.0217634345399,
+        "residual": -61.02318823003124,
+        "mean_abs_end": 9.67585662102248
+      },
+      "tail": {
+        "markets": 6,
+        "settlement": -768.0582808558248,
+        "turnover": -108.15714401964924,
+        "residual": -659.9011368361753,
+        "mean_abs_end": 401.61504443887935
+      },
+      "tail_over_60": 6
+    },
+    "paired": {
+      "reference": {
+        "delta": 3781.6206443770666,
+        "better": 43,
+        "worse": 15,
+        "without_largest_gain": 3320.931559211172
+      },
+      "retain": {
+        "delta": -1724.8729914265639,
+        "better": 22,
+        "worse": 35,
+        "without_largest_gain": -1961.0433377360355
+      }
+    },
+    "gate": {
+      "positive_settlement": true,
+      "positive_turnover": true,
+      "improved_settlement": true,
+      "improved_turnover": true,
+      "within_inventory_limit": false
+    }
+  },
+  "coverage": {
+    "20261026": {
+      "missing_endpoint": 124,
+      "complete": 70,
+      "stale_future_book": 94
+    },
+    "20261027": {
+      "missing_endpoint": 139,
+      "stale_future_book": 91,
+      "complete": 58
+    }
+  },
+  "controller_sha": "1044d8680d07b47ed0af6350b6cc70fb6500771d874bd714e60d9204179b10d9",
+  "fit_sha": "ab3b76673ea36d57d21926d5c231e9bfbdf65684b725b62b30dbc2ff71fb9ddf",
+  "census_sha": "6340a5cfa4e18532762cffdbae311ffd8d4e5234b4106b06cc6847e277638600"
+}
