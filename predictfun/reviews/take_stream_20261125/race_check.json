@@ -1,0 +1,371 @@
+{
+  "asof": "2026-11-25",
+  "orders": 4795,
+  "by_class": {
+    "late": 3047,
+    "early": 1748
+  },
+  "window_ms": 300.0,
+  "results": {
+    "stream|22|late": {
+      "orders": 3047,
+      "trigger_in_window": 0.9911388250738431,
+      "we_arrive_first": 0.6153593698720052,
+      "margin_ms_p25_p50_p75": [
+        -10.5,
+        9.5,
+        38.5
+      ]
+    },
+    "stream|22|early": {
+      "orders": 1748,
+      "trigger_in_window": 0.9822654462242563,
+      "we_arrive_first": 0.0005720823798627002,
+      "margin_ms_p25_p50_p75": [
+        -181.5,
+        -118.5,
+        -72.5
+      ]
+    },
+    "stream|32|late": {
+      "orders": 3047,
+      "trigger_in_window": 0.9908106334099114,
+      "we_arrive_first": 0.4906465375779455,
+      "margin_ms_p25_p50_p75": [
+        -20.5,
+        -0.5,
+        28.5
+      ]
+    },
+    "stream|32|early": {
+      "orders": 1748,
+      "trigger_in_window": 0.977116704805492,
+      "we_arrive_first": 0.0005720823798627002,
+      "margin_ms_p25_p50_p75": [
+        -190.5,
+        -128.0,
+        -82.5
+      ]
+    },
+    "stream|42|late": {
+      "orders": 3047,
+      "trigger_in_window": 0.9908106334099114,
+      "we_arrive_first": 0.38726616343944864,
+      "margin_ms_p25_p50_p75": [
+        -30.5,
+        -10.5,
+        18.5
+      ]
+    },
+    "stream|42|early": {
+      "orders": 1748,
+      "trigger_in_window": 0.9725400457665904,
+      "we_arrive_first": 0.0005720823798627002,
+      "margin_ms_p25_p50_p75": [
+        -199.5,
+        -137.5,
+        -92.5
+      ]
+    },
+    "depl|22|late": {
+      "orders": 3047,
+      "trigger_in_window": 0.3734821135543157,
+      "we_arrive_first": 0.32326878897276007,
+      "margin_ms_p25_p50_p75": [
+        13.75,
+        43.5,
+        93.25
+      ]
+    },
+    "depl|22|early": {
+      "orders": 1748,
+      "trigger_in_window": 0.5177345537757437,
+      "we_arrive_first": 0.255720823798627,
+      "margin_ms_p25_p50_p75": [
+        -83.5,
+        -2.5,
+        80.5
+      ]
+    },
+    "depl|32|late": {
+      "orders": 3047,
+      "trigger_in_window": 0.3724975385625205,
+      "we_arrive_first": 0.29865441417787986,
+      "margin_ms_p25_p50_p75": [
+        5.5,
+        35.5,
+        86.5
+      ]
+    },
+    "depl|32|early": {
+      "orders": 1748,
+      "trigger_in_window": 0.5217391304347826,
+      "we_arrive_first": 0.2374141876430206,
+      "margin_ms_p25_p50_p75": [
+        -92.75,
+        -10.5,
+        75.5
+      ]
+    },
+    "depl|42|late": {
+      "orders": 3047,
+      "trigger_in_window": 0.3744666885461109,
+      "we_arrive_first": 0.2655070561207745,
+      "margin_ms_p25_p50_p75": [
+        -3.5,
+        26.5,
+        78.5
+      ]
+    },
+    "depl|42|early": {
+      "orders": 1748,
+      "trigger_in_window": 0.5245995423340961,
+      "we_arrive_first": 0.2202517162471396,
+      "margin_ms_p25_p50_p75": [
+        -101.5,
+        -19.5,
+        68.5
+      ]
+    },
+    "depls|22|late": {
+      "orders": 3047,
+      "trigger_in_window": 0.03839842468001313,
+      "we_arrive_first": 0.032819166393173616,
+      "margin_ms_p25_p50_p75": [
+        15.5,
+        49.5,
+        88.5
+      ]
+    },
+    "depls|22|early": {
+      "orders": 1748,
+      "trigger_in_window": 0.06693363844393593,
+      "we_arrive_first": 0.039473684210526314,
+      "margin_ms_p25_p50_p75": [
+        -47.5,
+        18.5,
+        131.5
+      ]
+    },
+    "depls|32|late": {
+      "orders": 3047,
+      "trigger_in_window": 0.03839842468001313,
+      "we_arrive_first": 0.031178208073514933,
+      "margin_ms_p25_p50_p75": [
+        5.5,
+        39.5,
+        78.5
+      ]
+    },
+    "depls|32|early": {
+      "orders": 1748,
+      "trigger_in_window": 0.06750572082379863,
+      "we_arrive_first": 0.03775743707093822,
+      "margin_ms_p25_p50_p75": [
+        -55.25,
+        9.5,
+        123.0
+      ]
+    },
+    "depls|42|late": {
+      "orders": 3047,
+      "trigger_in_window": 0.0390548080078766,
+      "we_arrive_first": 0.027568099770265836,
+      "margin_ms_p25_p50_p75": [
+        -4.0,
+        34.5,
+        79.5
+      ]
+    },
+    "depls|42|early": {
+      "orders": 1748,
+      "trigger_in_window": 0.06807780320366133,
+      "we_arrive_first": 0.034324942791762014,
+      "margin_ms_p25_p50_p75": [
+        -63.0,
+        0.5,
+        114.5
+      ]
+    },
+    "stream+depls|22|late": {
+      "orders": 3047,
+      "trigger_in_window": 0.9911388250738431,
+      "we_arrive_first": 0.6278306531014112,
+      "margin_ms_p25_p50_p75": [
+        -9.5,
+        10.5,
+        40.5
+      ]
+    },
+    "stream+depls|22|early": {
+      "orders": 1748,
+      "trigger_in_window": 0.9822654462242563,
+      "we_arrive_first": 0.04004576659038902,
+      "margin_ms_p25_p50_p75": [
+        -178.5,
+        -110.5,
+        -67.5
+      ]
+    },
+    "stream+depls|32|late": {
+      "orders": 3047,
+      "trigger_in_window": 0.9908106334099114,
+      "we_arrive_first": 0.5063997374466689,
+      "margin_ms_p25_p50_p75": [
+        -19.5,
+        0.5,
+        30.5
+      ]
+    },
+    "stream+depls|32|early": {
+      "orders": 1748,
+      "trigger_in_window": 0.9776887871853547,
+      "we_arrive_first": 0.03832951945080092,
+      "margin_ms_p25_p50_p75": [
+        -187.5,
+        -120.5,
+        -76.5
+      ]
+    },
+    "stream+depls|42|late": {
+      "orders": 3047,
+      "trigger_in_window": 0.9908106334099114,
+      "we_arrive_first": 0.4013784049885133,
+      "margin_ms_p25_p50_p75": [
+        -29.5,
+        -8.5,
+        20.5
+      ]
+    },
+    "stream+depls|42|early": {
+      "orders": 1748,
+      "trigger_in_window": 0.9731121281464531,
+      "we_arrive_first": 0.03489702517162471,
+      "margin_ms_p25_p50_p75": [
+        -196.5,
+        -129.5,
+        -86.5
+      ]
+    },
+    "stream+depl|22|late": {
+      "orders": 3047,
+      "trigger_in_window": 0.9934361667213653,
+      "we_arrive_first": 0.732523793895635,
+      "margin_ms_p25_p50_p75": [
+        -1.5,
+        22.5,
+        58.0
+      ]
+    },
+    "stream+depl|22|early": {
+      "orders": 1748,
+      "trigger_in_window": 0.9879862700228833,
+      "we_arrive_first": 0.2562929061784897,
+      "margin_ms_p25_p50_p75": [
+        -144.5,
+        -70.5,
+        4.5
+      ]
+    },
+    "stream+depl|32|late": {
+      "orders": 3047,
+      "trigger_in_window": 0.9931079750574335,
+      "we_arrive_first": 0.6252051197899573,
+      "margin_ms_p25_p50_p75": [
+        -10.5,
+        12.5,
+        48.5
+      ]
+    },
+    "stream+depl|32|early": {
+      "orders": 1748,
+      "trigger_in_window": 0.9856979405034325,
+      "we_arrive_first": 0.2379862700228833,
+      "margin_ms_p25_p50_p75": [
+        -153.0,
+        -79.5,
+        -2.5
+      ]
+    },
+    "stream+depl|42|late": {
+      "orders": 3047,
+      "trigger_in_window": 0.9931079750574335,
+      "we_arrive_first": 0.5244502789629143,
+      "margin_ms_p25_p50_p75": [
+        -20.5,
+        2.5,
+        39.5
+      ]
+    },
+    "stream+depl|42|early": {
+      "orders": 1748,
+      "trigger_in_window": 0.9822654462242563,
+      "we_arrive_first": 0.2208237986270023,
+      "margin_ms_p25_p50_p75": [
+        -159.5,
+        -89.5,
+        -11.5
+      ]
+    },
+    "grid|22|late": {
+      "orders": 3047,
+      "trigger_in_window": 1.0,
+      "we_arrive_first": 0.3130948473908763,
+      "margin_ms_p25_p50_p75": [
+        -43.0,
+        -16.0,
+        12.0
+      ]
+    },
+    "grid|22|early": {
+      "orders": 1748,
+      "trigger_in_window": 1.0,
+      "we_arrive_first": 0.0005720823798627002,
+      "margin_ms_p25_p50_p75": [
+        -211.0,
+        -146.0,
+        -100.0
+      ]
+    },
+    "grid|32|late": {
+      "orders": 3047,
+      "trigger_in_window": 1.0,
+      "we_arrive_first": 0.2573022645224811,
+      "margin_ms_p25_p50_p75": [
+        -53.0,
+        -26.0,
+        2.0
+      ]
+    },
+    "grid|32|early": {
+      "orders": 1748,
+      "trigger_in_window": 1.0,
+      "we_arrive_first": 0.0005720823798627002,
+      "margin_ms_p25_p50_p75": [
+        -221.0,
+        -156.0,
+        -110.0
+      ]
+    },
+    "grid|42|late": {
+      "orders": 3047,
+      "trigger_in_window": 1.0,
+      "we_arrive_first": 0.20183787331801772,
+      "margin_ms_p25_p50_p75": [
+        -63.0,
+        -36.0,
+        -8.0
+      ]
+    },
+    "grid|42|early": {
+      "orders": 1748,
+      "trigger_in_window": 1.0,
+      "we_arrive_first": 0.0005720823798627002,
+      "margin_ms_p25_p50_p75": [
+        -231.0,
+        -166.0,
+        -120.0
+      ]
+    }
+  }
+}
