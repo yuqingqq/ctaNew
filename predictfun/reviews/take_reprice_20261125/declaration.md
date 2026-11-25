@@ -49,3 +49,11 @@ The 20261101 day process stopped (rc 1) on a market whose window holds no Binanc
 empty input unless `otypes` is set. Fix: `otypes=[float]`; identical output for every non-empty input. Days 20261023, 20261031,
 20261102 and 20261103 ran the original file (sha256 4bfac424509103c89ddf20f505f0a0b6118f6c0e287dd1852a43f54034bdee60) to completion; 20261101 reruns with the fix, and the ledgers it wrote
 before the stop are rewritten only if byte-identical (write_once_gz).
+
+## Stage L — latency headroom (USER 2026-11-25: "Go ahead the test"; declared before its run)
+
+The frozen rule and code (reprice_replay.py at 2a5aa46fc), run by reprice_latency.py on the same 408 markets with a shorter network path:
+`REPRICE-8-152`, `REPRICE-16-152` (network 2 ms) and `REPRICE-8-162`, `REPRICE-16-162` (12 ms). Readings: totals at settlement, fills,
+limit-moved share and take value per config, against the 172 ms results; `pays_at_152` / `pays_at_162` = lower bound > 0 and ≥ 4 of 5
+days positive for either threshold (two thresholds × two latencies: multiplicity 4). Cap 2,000 CPU s, projection after the first day.
+This prices a hypothetical faster path to Predict; it is not a measured latency.
