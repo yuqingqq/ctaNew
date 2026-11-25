@@ -1,0 +1,6 @@
+early passive 934 BTC missing 0
+near n 310 book n/range 306 28.0 abs pos 52.343161675747226 exposed 264 shrunk 196 against take 102
+middle n 304 book n/range 297 19.0 abs pos 70.15828651818111 exposed 276 shrunk 171 against take 79
+far n 320 book n/range 224 14.0 abs pos 120.40522571941999 exposed 302 shrunk 144 against take 73
+overlap strata / counts 16 [264. 302.] matched shrink near/far and take near/far [0.71824076 0.42172765 0.3687347  0.22321203]
+2026-11-25T06:51:22Z tag=m3_midpoint_exposure rc=0 peak_rss_mib=309 wall_s=0.89 cpu_user_s=0.64 memavail_start_gib=22 disk_free_gib=406->406 slot=codex
