@@ -55,5 +55,7 @@ before the stop are rewritten only if byte-identical (write_once_gz).
 The frozen rule and code (reprice_replay.py at 2a5aa46fc), run by reprice_latency.py on the same 408 markets with a shorter network path:
 `REPRICE-8-152`, `REPRICE-16-152` (network 2 ms) and `REPRICE-8-162`, `REPRICE-16-162` (12 ms). Readings: totals at settlement, fills,
 limit-moved share and take value per config, against the 172 ms results; `pays_at_152` / `pays_at_162` = lower bound > 0 and ≥ 4 of 5
-days positive for either threshold (two thresholds × two latencies: multiplicity 4). Cap 2,000 CPU s, projection after the first day.
+days positive for either threshold (two thresholds × two latencies: multiplicity 4). Cap 2,600 CPU s (set before the run, from 2,000:
+REPRICE's first day projected 1,962 s for four configs and a shorter path fills more takes), projection after the first day. Checks before the
+readings: population 408, every take at decision + network + 150 ms, accounting re-derived from each ledger, 1 USDT minimum, bounds.
 This prices a hypothetical faster path to Predict; it is not a measured latency.

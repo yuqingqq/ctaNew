@@ -1,7 +1,9 @@
 """TAKE-REPRICE v1 stage L (declaration.md): the frozen repricing rule at a shorter network path (2 / 12 ms), same markets and harness.
-Usage: PF_SLOT=<slot> predictfun/research/run_light.sh <tag> -- python3 predictfun/reviews/take_reprice_20261125/reprice_latency.py day <day> | report
+Usage: PF_SLOT=<slot> predictfun/research/run_light.sh <tag> -- python3 predictfun/reviews/take_reprice_20261125/reprice_latency.py day <day> | check | report
 """
 import collections
+import gzip
+import hashlib
 import json
 import resource
 import subprocess
@@ -14,12 +16,14 @@ import numpy as np
 H = Path(__file__).resolve().parent
 R = H.parents[2]
 sys.path.insert(0, str(H))
+sys.path.insert(0, str(H.parent / 'take_exit_venue_20261125'))
 import reprice_replay as RP  # noqa: E402  (frozen at 2a5aa46fc)
+import vm_report as VMR  # noqa: E402
 
 S, VR, V, F, OD, MM, TR, C = RP.S, RP.VR, RP.V, RP.F, RP.OD, RP.MM, RP.TR, RP.C
 OUT = S.X.DATA / 'take_reprice_latency_20261125'
 CONFIGS = {'REPRICE-8-152': (8., 2.), 'REPRICE-16-152': (16., 2.), 'REPRICE-8-162': (8., 12.), 'REPRICE-16-162': (16., 12.)}
-DAY_CPU_CAP, TOTAL_CPU_CAP, FIRST_DAY = 700., 2000., '20261023'
+DAY_CPU_CAP, TOTAL_CPU_CAP, FIRST_DAY = 700., 2600., '20261023'
 FILES = ['declaration.md', 'reprice_replay.py', 'reprice_latency.py']
 
 
@@ -32,6 +36,7 @@ def bound():
 def day_run(day):
     resource.setrlimit(resource.RLIMIT_CPU, (int(DAY_CPU_CAP) + 60, int(DAY_CPU_CAP) + 61))
     bound()
+    C.require(day in OD.DAYS3, f'{day} is not a declared day')
     fn = OUT / f'day_{day}.json'
     C.require(not fn.exists(), f'{fn.name} exists (write-once)')
     if day != FIRST_DAY:
@@ -49,6 +54,7 @@ def day_run(day):
         if not mids:
             continue
         for m, W, lst in VR.worlds_all(day, mids, src, off, reg):
+            C.require(lst == 'loaded', f'{m} {lst}')
             ws = float(reg.loc[m, 'ws']) * 1000.
             p, st, info = VR.vm_path(W, ws, 50.)
             C.require(st == 'complete', f'{m} {st}')
@@ -67,6 +73,7 @@ def day_run(day):
                 a.update(sha256=sha, ioc_status=rec['metrics']['ioc_status'], take_value=S.take_value(rec))
                 row['arms'][name] = a
             rows.append(row)
+            C.require(F.rss_mib() < F.RSS_GUARD_MIB, 'RSS over the self-guard')
     spent = time.process_time() - t0c
     if day == FIRST_DAY:
         pfn = H / 'latency_projection.json'
@@ -76,7 +83,36 @@ def day_run(day):
     print(f'{day}: {len(rows)} markets, cpu {spent:.0f} s', flush=True)
 
 
+def check():
+    rows = [r for d in OD.DAYS3 for r in json.loads((OUT / f'day_{d}.json').read_text())['rows']]; res = {}
+
+    def ok(name, cond, detail=''):
+        res[name] = dict(ok=bool(cond), detail=detail); print(('PASS ' if cond else 'FAIL ') + name, detail)
+    ok('population', len(rows) == 408, f'{len(rows)} complete markets')
+    b = collections.Counter()
+    for r in rows:
+        for name, (D, net) in CONFIGS.items():
+            a = r['arms'][name]
+            raw = (OUT / f"{r['mid']}_{name}.json.gz").read_bytes()
+            C.require(hashlib.sha256(raw).hexdigest() == a['sha256'], 'a ledger changed')
+            rec = json.loads(gzip.decompress(raw))
+            a2 = VR.native_account(rec, r['payout'])
+            b['mismatch'] += int(any(abs(a2[k] - a[k]) > 1e-6 for k in a2))
+            b['timing'] += sum(abs(v['act'] - v['submit'] - net - S.HOLD) > 1e-9 for v in rec['iocs'].values())
+            b['below_min'] += VMR.sent_below_min(rec)
+            b['bound'] += int(not (a['unresolved_lo_c'] - 1e-6 <= a['total_c'] <= a['unresolved_hi_c'] + 1e-6))
+            b['ledgers'] += 1
+    ok('take_timing', b['timing'] == 0, f"{b['timing']} takes off decision + network + 150 ms")
+    ok('accounting_rederived', b['ledgers'] == 408 * len(CONFIGS) and b['mismatch'] == 0, f"{b['ledgers']} ledgers, {b['mismatch']} mismatches")
+    ok('min_buy', b['below_min'] == 0, f"{b['below_min']} sent takes below 1 USDT")
+    ok('bounds', b['bound'] == 0, f"{b['bound']} rows outside their bounds")
+    res['all_pass'] = all(v['ok'] for v in res.values() if isinstance(v, dict))
+    fn = H / 'latency_checks.json'; C.require(not fn.exists(), 'latency_checks.json exists (write-once)'); TR.dump(fn, res)
+    print('ALL PASS' if res['all_pass'] else 'SOME CHECK FAILED'); sys.exit(0 if res['all_pass'] else 1)
+
+
 def report():
+    C.require(json.loads((H / 'latency_checks.json').read_text())['all_pass'], 'checks did not pass')
     rows = [r for d in OD.DAYS3 for r in json.loads((OUT / f'day_{d}.json').read_text())['rows']]
     base = {(r['day'], int(r['mid'])): r['arms'] for d in OD.DAYS3 for r in json.loads((RP.OUT / f'day_{d}.json').read_text())['rows']}
     C.require(len(rows) == 408, 'population')
@@ -109,4 +145,4 @@ def report():
 
 
 if __name__ == '__main__':
-    day_run(sys.argv[2]) if sys.argv[1] == 'day' else report()
+    day_run(sys.argv[2]) if sys.argv[1] == 'day' else dict(check=check, report=report)[sys.argv[1]]()
