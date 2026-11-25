@@ -1,0 +1,25 @@
+{
+ "markets": 281,
+ "net_usd": 2021.1885025593522,
+ "per_market_usd": 7.192841646118691,
+ "days_positive": 4,
+ "day_net_usd": {
+  "20261024": 390.5879774718707,
+  "20261025": 511.0001786703225,
+  "20261026": 625.1874369992244,
+  "20261027": 494.41290941793466
+ },
+ "markets_positive": 233,
+ "completed_usd": 2484.353476433794,
+ "residual_usd": -8.075844582272527,
+ "fees_usd": 455.08912929216837,
+ "takes_filled": 2600,
+ "taker_shares": 75069.16342288844,
+ "strict_cuts": 1869,
+ "net_without_young_exit_value_usd": 2172.43433430101,
+ "v2_lenient_net_usd": 3933.5434514930316,
+ "v2_lenient_takes_filled": 3575,
+ "v2_lenient_taker_shares": 121485.83160140569,
+ "markets_better_strict": 0,
+ "cpu_s": 378.893200836
+}
