@@ -8,7 +8,7 @@ def finish():
     df=pd.read_csv(HERE/'markets.csv',float_precision='round_trip')
     tr=pd.read_csv(HERE/'replacement.csv',float_precision='round_trip')
     previous=S.read(BASE/'result.json')
-    old=pd.read_csv(BASE/'markets.csv',float_precision='round_trip')
+    old=pd.read_csv(BASE/'markets.csv')  # match the original runner's control loader
     assert R.sha(BASE/'markets.csv')==previous['market_hash']
     control=df[df.arm!='role'].reset_index(drop=True)
     pd.testing.assert_frame_equal(control,old,check_dtype=False,check_exact=True)

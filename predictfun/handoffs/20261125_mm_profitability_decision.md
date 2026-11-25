@@ -35,3 +35,7 @@ The [baseline FIFO replay](../reviews/cycle_spread_20261125/report.md) reproduce
 ## Current research decision after comparing quote retention
 
 The [single-switch replay](../reviews/distance_retention_20261125/report.md) kept distant quotes when no other cancellation rule applied. Settlement improved from −$2,759 to +$1,891 on 70 consumed October 26 markets, but mean absolute expiry inventory rose from 41.9 to 186.2 shares and residual P&L fell to −$4,047. The frozen verdict is reject for exposure. See [earlier research and the proposed role-specific test](../reviews/distance_retention_20261125/research_context.md). No new date was consumed.
+
+## Role-specific distance test
+
+[Paired receipt](../reviews/role_distance_20261125/report.md). Keeping distant risk-adding orders while replacing distant orders that could close any known stock passed the original 51.9-share mean exposure ceiling (33.1), but lost $1,777.94 at settlement, including −$1,514.33 on completed turnover. It improved settlement $981.39 over the original and lost $3,668.91 versus retaining all distant orders. The positive-turnover and positive-settlement gates both failed. Of 5,417 released exits, 3,058 had a mixed closing/adding role. The restatement of the score fixed a JSON scalar serialization issue and reproduced the original control CSV parser before checking exact equality. No strategy rule or test threshold changed.
