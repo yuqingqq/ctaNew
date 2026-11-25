@@ -11,6 +11,8 @@ Population test, consumed Oct 24–27, 1,151 markets. Every pressure-guard trigg
 - Maker3: 58 % of adding and 57 % of reducing takes have a same-direction trigger within 3.5 s before the stamp, vs 22 % in 500 circular shifts (none ≥ observed). Aligned adding takes +3.39 ¢/sh to resolution vs −1.77.
 - Declared split: the Oct 24–25 best cell, |bn_r250| ≥ 2 bps in all windows (+11.30 ¢, 57 fills), earns +6.98 ¢ on Oct 26–27 (60 fills, 37 markets), both days positive (thin).
 
+- Amendment 2 (signal strength; 366,251 BTC changes ≥ 0.05 bps; guard-rule parity 31,854/31,854): every threshold of "take when |bn_r250| ≥ θ" is positive in both halves. Per filled share at 3 s: +2.06 ¢ at θ 0.05 (37,502 triggers) → +3.76 at 1 bps (13,578) → +7.85 at 3 bps (799); exit by taking +1.06 → +6.89. Best strength measure = the implied Predict move (BTC bps × binary sensitivity, in ¢): < 0.5 ¢ gives −0.03..+0.24 in every time window, 0.5–1 ¢ +0.6..+1.2, 3–5 ¢ +2.5..+4.2, ≥ 10 ¢ +9..+16. Small ticks pay because BTC bursts continue (+0.4–0.5 bps more within 250 ms), so the delta-implied edge is too pessimistic. A 3 s trend agreeing with the jump beats a reversal in every band (≥ 1 bps: +4.6 vs +2.0 ¢). Unfilled events have bigger Predict moves (the fill rule works against us). No threshold adopted.
+
 Checks 8/8: raw rescan of 2,643 triggers, future-perturbation falsifiers + positive control, synthetic fill cases, cooldown rule on 259,826 events, reconciliation, readings. Not measured: integration with our passive strategy, sub-frame competition, own impact, capacity beyond the touch. Development evidence only. CPU charged 240 s.
 <!-- /TAKE_SIGNAL_20261125_CLAUDE -->
 

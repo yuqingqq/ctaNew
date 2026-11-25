@@ -100,10 +100,33 @@
    "disk_free_gib": "408->408",
    "slot": "claude",
    "start": "2026-11-25T03:37:14Z"
+  },
+  {
+   "tag": "ts_strength",
+   "rc": "0",
+   "peak_rss_mib": "801",
+   "wall_s": "18.36",
+   "cpu_user_s": "16.78",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "407->407",
+   "slot": "claude",
+   "start": "2026-11-25T04:37:45Z"
+  },
+  {
+   "tag": "ts_strength_report",
+   "rc": "0",
+   "peak_rss_mib": "105",
+   "wall_s": "0.31",
+   "cpu_user_s": "0.25",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "407->407",
+   "slot": "claude",
+   "start": "2026-11-25T04:40:22Z"
   }
  ],
- "wrapped_cpu_user_s": 177.05,
+ "wrapped_cpu_user_s": 194.08,
  "unwrapped_probes": "raw bookTicker stickiness and 3789484 timeline probes, each < 10 CPU s",
- "charged_upper_cpu_s": 240,
- "charged_coreh": 0.0667
+ "charged_upper_cpu_s": 300,
+ "charged_coreh": 0.0833,
+ "note_amendment_2": "strength.py + strength_report.py added after the USER asked about signal strength"
 }

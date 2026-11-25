@@ -20,6 +20,13 @@ take_signal_20261125_claude:
   validation: false
   strategy_integration_measured: false
   charged_cpu_s: 240
+  strength_events: 366251
+  strength_threshold_curve_all_positive_both_halves: true
+  strength_mark_3s_c_theta_0p05: 2.06
+  strength_mark_3s_c_theta_1: 3.76
+  strength_mark_3s_c_theta_3: 7.85
+  strength_implied_move_lt_0p5c_mark_3s_range_c: [-0.03, 0.24]
+  strength_continuation_beats_reversal: true
   next: signal_take_overlay_in_19_market_replay_needs_user_go
 inventory_exit_attribution_20261125_codex:
   report: predictfun/reviews/inventory_exit_attribution_20261125/report.md

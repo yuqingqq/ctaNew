@@ -116,3 +116,87 @@ On Oct 24–25 the best cell with ≥ 30 fills in ≥ 10 markets was |bn_r250| �
 1. Add a **SIGNAL_TAKE overlay** to our replay of the 19 complete markets: when the guard turns ON, also send an IOC at the known touch (size ≤ 50), then let the existing passive rules and inventory caps manage the position. Compare full-book value against the current arms.
 2. **Measure competition directly:** after each trigger, did the stale level disappear through trades (pending settlements) or cancels, and how fast? That calibrates the fill rule.
 3. **Untouched-day confirmation** and any Tokyo shadow run are the USER's call.
+
+
+## Amendment 2 — how strong must the signal be?
+
+Declared in [amendment_2_strength.md](amendment_2_strength.md) before any of these outcomes. It covers every BTC change with
+abs bn_r250 ≥ 0.05 bps (366,251 events), valued with the same parity-checked code: the guard's own rule reproduced all
+31,854 primary rows exactly.
+
+**The practical rule** (one trigger per market and direction per 2 s; Tokyo clock; ¢ per filled share). Every threshold is
+positive in both halves; a stronger threshold earns more per share but triggers less often:
+
+| Take when abs bn_r250 ≥ (bps) | Triggers | Fill rate | 1 s | 3 s | Exit by taking at 3 s | 3 s Oct 24–25 | 3 s Oct 26–27 | USD at 3 s, Q 50, 4 days |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| 0.05 | 37,502 | 55% | +2.02 | +2.06 | +1.06 | +2.16 | +2.00 | +14,317 |
+| 0.1 | 36,909 | 54% | +2.05 | +2.09 | +1.09 | +2.19 | +2.02 | +14,108 |
+| 0.15 | 36,281 | 54% | +2.08 | +2.12 | +1.12 | +2.23 | +2.05 | +13,875 |
+| 0.2 | 35,558 | 53% | +2.11 | +2.15 | +1.16 | +2.29 | +2.07 | +13,665 |
+| 0.25 | 34,659 | 53% | +2.16 | +2.20 | +1.21 | +2.39 | +2.09 | +13,427 |
+| 0.285 | 34,124 | 53% | +2.19 | +2.23 | +1.24 | +2.43 | +2.11 | +13,300 |
+| 0.35 | 32,742 | 52% | +2.25 | +2.31 | +1.32 | +2.52 | +2.19 | +13,015 |
+| 0.467 | 29,695 | 50% | +2.41 | +2.46 | +1.47 | +2.70 | +2.33 | +12,068 |
+| 0.5 | 28,075 | 49% | +2.45 | +2.53 | +1.54 | +2.75 | +2.41 | +11,499 |
+| 0.75 | 19,998 | 44% | +2.98 | +3.12 | +2.14 | +3.43 | +2.96 | +9,159 |
+| 1 | 13,578 | 40% | +3.58 | +3.76 | +2.79 | +4.06 | +3.60 | +6,823 |
+| 1.5 | 5,938 | 36% | +4.71 | +5.03 | +4.06 | +5.43 | +4.79 | +3,674 |
+| 2 | 2,659 | 37% | +5.80 | +6.09 | +5.14 | +6.66 | +5.67 | +2,169 |
+| 3 | 799 | 42% | +7.38 | +7.85 | +6.89 | +7.79 | +7.91 | +982 |
+
+**The best strength measure is the implied Predict move in cents**: BTC move (bps) × the contract's sensitivity (cents per bps,
+from the Predict price and time to expiry). Below ~0.5 ¢ a take earns about nothing in every part of the window; above it the
+value climbs steadily:
+
+| Implied Predict move (¢) | 0-60 s | 60-180 s | 180-270 s | 270-298 s |
+|---|---:|---:|---:|---:|
+| 0-0.5 | +0.17 | +0.09 | -0.03 | +0.24 |
+| 0.5-1 | +0.73 | +0.63 | +0.65 | +1.15 |
+| 1-1.5 | +1.16 | +1.06 | +1.29 | +1.98 |
+| 1.5-2 | +1.65 | +1.37 | +1.89 | +1.29 |
+| 2-3 | +2.00 | +2.03 | +2.41 | +1.50 |
+| 3-5 | +3.18 | +3.10 | +4.21 | +2.51 |
+| 5-10 | +5.29 | +5.55 | +6.84 | +2.43 |
+| >=10 | +9.32 | +10.79 | +15.39 | +16.03 |
+
+**Why even small BTC ticks pay.** A BTC change is usually the start of a burst: BTC moves on average another +0.4–0.5 bps in the
+same direction within 250 ms, and Predict follows about 0.3 s later. Near-money books, per event:
+
+| abs bn_r250 (bps) | Events | Fill rate | Implied move (¢) | 3 s | Exit by taking at 3 s |
+|---|---:|---:|---:|---:|---:|
+| 0.05-0.1 | 11,824 | 61% | +0.54 | +1.59 | +0.44 |
+| 0.1-0.2 | 22,998 | 58% | +1.03 | +1.77 | +0.62 |
+| 0.2-0.29 | 18,438 | 57% | +1.63 | +1.96 | +0.81 |
+| 0.29-0.5 | 48,105 | 54% | +2.62 | +2.17 | +1.02 |
+| 0.5-0.75 | 46,797 | 50% | +3.87 | +2.65 | +1.50 |
+| 0.75-1 | 31,780 | 46% | +5.22 | +3.53 | +2.38 |
+| 1-1.5 | 35,196 | 40% | +6.83 | +4.63 | +3.48 |
+| 1.5-2 | 15,085 | 37% | +8.57 | +5.75 | +4.63 |
+| 2-3 | 10,733 | 41% | +10.59 | +6.52 | +5.44 |
+| >=3 | 8,050 | 44% | +19.29 | +7.77 | +6.70 |
+
+**Trend agreement matters** (3 s value): when the 3 s BTC trend agrees with the jump, the take is worth more than when the jump
+reverses an earlier move. This holds in every band and both halves (reading d = True).
+
+| abs bn_r250 (bps) | 3 s trend agrees and is larger | Other | 3 s trend opposite |
+|---|---:|---:|---:|
+| <0.29 | +1.38 | +1.40 | +1.02 |
+| 0.29-1 | +2.13 | +1.95 | +1.29 |
+| >=1 | +4.64 | +4.11 | +2.01 |
+
+Readings, computed in `strength.py`:
+
+- (a) every bin is positive in both halves, so no break-even appears down to 0.05 bps at the mid mark (lowest bin passing: 0.05-0.1).
+- (b) monotone across strength bins: True.
+- (c) the delta-implied edge (implied move − cost) is too pessimistic. Even events with edge < −1 ¢ realise
+  +0.27 / +0.65 ¢ because of the burst continuation, so read the empirical curve, not the model's break-even.
+
+**What it means for a take rule.** Size the decision by the implied move:
+
+- ≳ 0.5 ¢ to beat the entry cost at the mid;
+- ≳ 1 ¢ if we must also exit by taking;
+- the edge per share grows roughly in proportion above that.
+
+Prefer jumps that continue a 3 s trend. All of this is consumed-day development evidence: any threshold chosen from this curve
+needs untouched days (rule 11). Capacity, competition below the ~50 ms frame resolution, inventory and our own impact are
+still unmeasured.
