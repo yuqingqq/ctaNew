@@ -1,0 +1,131 @@
+{
+  "asof": "2026-11-25",
+  "cases": [
+    [
+      "20261024",
+      3697902,
+      "pilot"
+    ],
+    [
+      "20261024",
+      3699278,
+      "pilot"
+    ],
+    [
+      "20261024",
+      3700070,
+      "rest"
+    ],
+    [
+      "20261024",
+      3702960,
+      "rest"
+    ],
+    [
+      "20261024",
+      3704004,
+      "rest"
+    ],
+    [
+      "20261024",
+      3712725,
+      "rest"
+    ],
+    [
+      "20261024",
+      3716727,
+      "rest"
+    ],
+    [
+      "20261025",
+      3723774,
+      "pilot"
+    ],
+    [
+      "20261025",
+      3734864,
+      "pilot"
+    ],
+    [
+      "20261025",
+      3737919,
+      "rest"
+    ],
+    [
+      "20261025",
+      3763401,
+      "rest"
+    ],
+    [
+      "20261025",
+      3776314,
+      "rest"
+    ],
+    [
+      "20261026",
+      3789484,
+      "pilot"
+    ],
+    [
+      "20261026",
+      3803131,
+      "pilot"
+    ],
+    [
+      "20261026",
+      3804696,
+      "rest"
+    ],
+    [
+      "20261026",
+      3838531,
+      "rest"
+    ],
+    [
+      "20261026",
+      3850428,
+      "rest"
+    ],
+    [
+      "20261027",
+      3877472,
+      "pilot"
+    ],
+    [
+      "20261027",
+      3899224,
+      "pilot"
+    ]
+  ],
+  "fees_bps": 200.0,
+  "arms": {
+    "PASSIVE_EXIT": {
+      "exit": true,
+      "guard": true
+    },
+    "PASSIVE_EXIT_NOGUARD": {
+      "exit": true,
+      "guard": false
+    },
+    "HOLD": {
+      "exit": false,
+      "guard": false
+    }
+  },
+  "cap": 50.0,
+  "take_q": 50.0,
+  "take_delay_ms": 40.0,
+  "quiet_ticks": 40,
+  "young_ms": 100.0,
+  "sources": {
+    "predictfun/reviews/take_exit_replay_20261125/contract.md": "b29fe769a0dfd85d579a73e31a43c08a2f1f3f673b48044541886a30a07fc3ea",
+    "predictfun/reviews/take_exit_replay_20261125/exit_replay.py": "0ae0e922b6911426600354b75573d69a71f254f044d4a469a5fdd117f9c7598c",
+    "predictfun/reviews/signal_take_replay_20261125/take_replay.py": "2c220b29d8539d07bf00ea02d201625c002b4bb4ebcd273e5cc798f9884d824b",
+    "predictfun/reviews/signal_take_replay_20261125/manifest.json": "d7bb86ef1e6bd26dcac1bba4cd587f7e5ced5525b86169d7f24f361c41d8816a",
+    "predictfun/reviews/maker3_cap_skew_20261124/experiment.py": "d25508f3d1b4e5cbef3564ab4cf3e7463d79e4991167a88350afb7934ff4bd60",
+    "predictfun/reviews/inventory_take_pilot_20261124/pilot.py": "662785a5a70dda3abc6bc9f58ea571a1bdf956f77d3774f535aedef279b871b4",
+    "predictfun/reviews/opening_entry_pilot_20261124/opening.py": "df9addfeab71cbed52351e5b88b9deecd0e62e803f6f516a42a7ae6016d89c1d"
+  },
+  "new_candidates": 2,
+  "validation": false
+}
