@@ -54,7 +54,7 @@ class Liquidate:
 
 
 def probe(path,info,ident,on,k,exit_side):
-    b=Branch(path,info['end_rel'],ident)
+    b=R.Branch(path,info['end_rel'],ident)
     policy=Liquidate(exit_side,on,b)
     stop=k+int(15000/R.BE.STEP)
     assert stop*R.BE.STEP < b.end
@@ -68,7 +68,7 @@ def probe(path,info,ident,on,k,exit_side):
 
 
 def training_rows(path,info,ident,flags,z,expected):
-    b=Branch(path,info['end_rel'],ident)
+    b=R.Branch(path,info['end_rel'],ident)
     teacher=R.Policy(b,*flags,'B',{})
     expiry=ident['opening_ms']+300000-ident['start_abs_ms']
     anchors={int(math.ceil((expiry-left*1000)/R.BE.STEP)) for left in TRAIN_TIMES}
