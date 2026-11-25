@@ -309,7 +309,11 @@ def resume():
     resource.setrlimit(resource.RLIMIT_CPU, (1160, 1161))
     bound()
     assert not (OUT3 / 'summary.json').exists()
-    spent = json.loads((H / 'v3_projection.json').read_text())['cpu_s']
+    spent = 0.
+    for line in open(R / 'predictfun/research/run_light.log'):
+        if line.startswith('2026-11-25T') and 'slot=claude' in line and (' tag=txr3_run ' in line or ' tag=txr3_resume ' in line):
+            spent += float(line.split('cpu_user_s=')[1].split()[0])
+    assert spent > 0
     cap_left = 1300. - spent
     edges = TR.T.P.frozen_edges()
     src, rows, census = MM.KP.Tape(), [], []
@@ -328,12 +332,14 @@ def resume():
         rec = json.loads(gzip.decompress(fn.read_bytes()))
         if rec.get('day') != day:
             continue
-        saved.setdefault((int(rec['mid']), int(rec['hour'])), {})[rec['setting']] = (rec, TR.sha(fn))
+        saved.setdefault((int(rec['mid']), int(rec['hour'])), {})[rec['setting']] = (rec['metrics'], TR.sha(fn))
+        del rec
     assert set(saved) == comp and all(set(v) == set(SETTINGS) for v in saved.values()), 'saved 20261023 ledgers differ from the fresh census'
     for (m, h), v in sorted(saved.items()):
         for setting in SETTINGS:
-            rec, hsh = v[setting]
-            rows.append(dict(day=day, mid=m, hour=h, setting=setting, metrics=rec['metrics'], sha256=hsh, reused=True))
+            met, hsh = v[setting]
+            rows.append(dict(day=day, mid=m, hour=h, setting=setting, metrics=met, sha256=hsh, reused=True))
+    redo = 0
     for di, day in enumerate(DAYS3[1:]):
         reg = MM.registry(day).set_index('mid')
         off = src.offset(day)
@@ -353,9 +359,14 @@ def resume():
                     rec = one(p, cache, old, edges, bps, setting)
                     rec.update(day=day, mid=m, hour=int(h), setting=setting)
                     fn = OUT3 / f'{m}_{setting}.json.gz'
-                    assert not fn.exists()
-                    fn.write_bytes(gzip.compress(json.dumps(rec, allow_nan=False).encode(), mtime=0))
+                    blob = gzip.compress(json.dumps(rec, allow_nan=False).encode(), mtime=0)
+                    if fn.exists():                                  # written by the stopped resume attempt: must be byte-identical
+                        assert fn.read_bytes() == blob, ('non-deterministic ledger', m, setting)
+                        redo += 1
+                    else:
+                        fn.write_bytes(blob)
                     rows.append(dict(day=day, mid=m, hour=int(h), setting=setting, metrics=rec['metrics'], sha256=TR.sha(fn)))
+                    del rec, blob
             assert resource.getrusage(resource.RUSAGE_SELF).ru_maxrss < 2500 * 1024
         el = time.process_time() - t0
         if di == 0:
@@ -363,7 +374,8 @@ def resume():
             TR.dump(H / 'v3_projection_r1.json', dict(first_resumed_day=day, cpu_s=el, spent_before=spent, projection_cpu_s=spent + proj, cap=1300., proceed=proj <= cap_left))
             assert proj <= cap_left, 'projection stop (R1)'
         print(day, 'done', len(rows), round(el, 1), flush=True)
-    TR.dump(OUT3 / 'summary.json', dict(rows=rows, census=census, cpu_s=spent + time.process_time() - t0, status='COMPLETE', amendment='R1'))
+    TR.dump(OUT3 / 'summary.json', dict(rows=rows, census=census, cpu_s=spent + time.process_time() - t0, status='COMPLETE', amendment='R1',
+                                        resume_byte_identical_rewrites=redo))
 
 
 if __name__ == '__main__':

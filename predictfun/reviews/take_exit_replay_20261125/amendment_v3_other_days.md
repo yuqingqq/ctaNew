@@ -75,3 +75,10 @@ Development evidence on consumed days; no validation or promotion claim.
 - **Resume:** runs 20261031..20261103 with the same code. Projection after 20261031 (cost × 3 remaining days × 1.1 plus spent
   ≤ 1,300) or stop.
 - **Unchanged:** no rule, setting, day or check changes.
+
+**R1 note (first resume attempt):**
+- **What happened:** it stopped at the 2,500 MiB RSS self-guard (peak 2,662 MiB, under the 4 GiB hard cap) after writing 2 Oct 31
+  markets × 2 settings. Cause: the resume kept the full 20261023 ledger records in memory.
+- **Fix:** keep only metrics and sha256.
+- **Existing ledgers:** any ledger already on disk is recomputed and must be byte-identical, a determinism check.
+- **CPU:** spent CPU now counts every txr3_run / txr3_resume attempt from run_light.log against the 1,300 s cap.
