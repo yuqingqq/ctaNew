@@ -1,3 +1,10 @@
+<!-- TAKE_REPRICE_20261125_CLAUDE -->
+## 2026-11-25 — TAKE-REPRICE v1 done: the winners' rule makes entries positive, but we win too few races and the exit leaks
+
+[Report](reviews/take_reprice_20261125/report.md): REPRICE-16 −$23.67, REPRICE-8 −$47.29 vs STREAM −$379.42; entries +1.2 ¢/sh at 1 s, fills 2-3.5 % of takes.
+
+Next (USER's call): (1) latency headroom — the same rule at a shorter network path (e.g. 2-12 ms) to see whether winning more races makes it pay (decides whether hosting next to Predict is worth anything); (2) an exit built for these entries (time-limited / priced at the repriced fair value instead of joining the touch). No live step until a rule pays in replay and then on untouched days.
+<!-- /TAKE_REPRICE_20261125_CLAUDE -->
 <!-- TAKE_STREAM_20261125_CLAUDE -->
 ## 2026-11-25 — TAKE-STREAM v1 done: stream decisions and book-shrinking triggers do not make the take pay
 

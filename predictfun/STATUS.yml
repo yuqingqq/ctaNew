@@ -1,3 +1,11 @@
+take_reprice_20261125_claude:
+  report: predictfun/reviews/take_reprice_20261125/report.md
+  freeze: de5a3784e
+  fix: 2a5aa46fc
+  session: 1622c91e
+  total_at_settlement_usd: {reprice_4: -130.44, reprice_8: -47.29, reprice_16: -23.67, reprice_8_192: -58.95, stream_172: -379.42}
+  profitable_any: false
+  checks_all_pass: true
 take_stream_20261125_claude:
   report: predictfun/reviews/take_stream_20261125/report.md
   declaration: predictfun/reviews/take_stream_20261125/declaration.md

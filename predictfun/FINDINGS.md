@@ -1,3 +1,12 @@
+<!-- TAKE_REPRICE_20261125_CLAUDE -->
+## 2026-11-25 — takes only on large move-implied repricings: entries turn positive, totals stay negative (consumed days)
+
+[Report](reviews/take_reprice_20261125/report.md), [declaration](reviews/take_reprice_20261125/declaration.md) (frozen de5a3784e; mechanical fix M1 2a5aa46fc for one day's empty input), [checks](reviews/take_reprice_20261125/checks.json) all pass. USER: "proceed to find their selection rules". 408 complete markets, venue-matched, thresholds informed by the winners on these days (optimistic).
+
+- **Totals at settlement:** REPRICE-4 −$130.44, REPRICE-8 −$47.29, REPRICE-16 −$23.67, REPRICE-8 at 192 ms −$58.95, vs STREAM-172 −$379.42; beats_stream on 4 / 5 days for every threshold; profitable_D false for all; holds_at_192 False.
+- **Entries:** take value after fee at 1 s +0.27 / +1.22 / +1.20 ¢/sh (4 / 8 / 16 ¢) vs -0.30 for STREAM: the winners' rule points the right way.
+- **Why still negative:** we win few of these races (fills 3.5% / 2.6% / 1.9% of takes sent; limit moved 85% at 8 ¢), and the maker exit plus the carry give the entry edge back (REPRICE-8: exits −$23.23, held −$21.74).
+<!-- /TAKE_REPRICE_20261125_CLAUDE -->
 <!-- TAKE_STREAM_20261125_CLAUDE -->
 ## 2026-11-25 — stream-decided takes and Binance book-shrinking triggers under venue rules: all negative (consumed days)
 
