@@ -97,3 +97,10 @@ Merge, checks and the report live in a separate file (vm_report.py), so vm_repla
   its original go flag) against the amended cap.
 - vm_replay.py changes only TOTAL_CPU_CAP and that gate line; the replay, accounting and parity code are unchanged (see the commit diff).
   Day 1 runs the R1 file (sha256 8de6bd1d589e27c4778012c8ad70ce00d1a47e1dd8a24478ac1f5540299c7b9d); days 2–5 run the R2 file.
+
+## Amendment R3 — stage 1 at 172 ms (USER 2026-11-25: "If it is 172 ms, what's the performance like"; before the run)
+
+172 ms = about 22 ms one way to Predict (half the measured 44 ms create round trip from Tokyo) + the 150 ms hold: the best arrival the
+speed bump allows if the hold starts when Predict receives the order. Stage 1 unchanged otherwise (408 complete markets, both arms,
+settlement with ties). stage1.py takes the delay as an argument; 208 ms keeps its original paths and files, 172 ms writes `_d172`
+files. Cap 1,400 CPU s with the same first-day projection.

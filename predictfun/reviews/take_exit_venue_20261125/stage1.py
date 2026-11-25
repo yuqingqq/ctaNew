@@ -21,9 +21,10 @@ sys.path.insert(0, str(H))
 import venue_common as V  # noqa: E402
 
 F, OD, MM, TR, C = V.F, V.OD, V.MM, V.TR, V.C
-OUT = F.X.DATA / 'take_exit_venue_s1_20261125'
 S1 = MM.S1
-DELAY = 208.
+DELAY = float(sys.argv[2]) if len(sys.argv) > 2 else 208.      # R3: 172 ms = the best arrival the speed bump allows
+SFX = '' if DELAY == 208. else f'_d{int(DELAY)}'                      # 208 keeps its original paths
+OUT = F.X.DATA / f'take_exit_venue_s1{SFX}_20261125'
 CPU_CAP = 1400.
 FILES = ['declaration.md', 'venue_common.py', 'stage1.py']
 REVIEW_EVIDENCE = H.parent / 'automatic/20261125_take_floor/evidence.log'   # review 4e67e0856: its independent recount (settlement_usd, ties corrected)
@@ -84,8 +85,8 @@ def run():
         print(f'{day}: {sum(r["day"] == day for r in rows)} markets, cpu {spent:.0f} s', flush=True)
         if di == 0:
             proj = spent * len(OD.DAYS3) * 1.1
-            fn = H / 'stage1_projection.json'
-            C.require(not fn.exists(), 'stage1_projection.json exists (write-once)')
+            fn = H / f'stage1{SFX}_projection.json'
+            C.require(not fn.exists(), f'{fn.name} exists (write-once)')
             TR.dump(fn, dict(asof='2026-11-25', spent_cpu_s=spent, projected_cpu_s=proj, cap_cpu_s=CPU_CAP, go=proj <= CPU_CAP))
             if proj > CPU_CAP:
                 sys.exit(f'REFUSED: projected {proj:.0f} CPU s > cap {CPU_CAP:.0f}')
@@ -123,8 +124,8 @@ def report():
     out['readings'] = {arm: dict(positive_at_208=out['arms'][arm]['at_208']['settle_net_usd'] > 0, days_positive_208=out['arms'][arm]['days_positive_208'],
                                  speed_bump_cost_usd=out['arms'][arm]['at_208']['settle_net_usd'] - out['arms'][arm]['at_58']['settle_net_usd'])
                        for arm in V.ARMS}
-    fn = H / 'stage1_readings.json'
-    C.require(not fn.exists(), 'stage1_readings.json exists (write-once)')
+    fn = H / f'stage1{SFX}_readings.json'
+    C.require(not fn.exists(), f'{fn.name} exists (write-once)')
     TR.dump(fn, out)
     print(json.dumps(dict(checks=out['checks'], readings=out['readings'], floor_minus_base_208=out['floor_minus_base_208']), indent=1))
 
