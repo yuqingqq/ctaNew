@@ -1,0 +1,72 @@
+{
+  "asof": "2026-11-25",
+  "source": "stage-1 172 ms BASE missed takes; websocket-timed consuming legs; Binance futures mid change points",
+  "legs": 20001,
+  "shares": 245830.53366926732,
+  "classes": {
+    "moved_our_way": {
+      "legs": 14384,
+      "legs_share": 0.7191640417979102,
+      "shares_share": 0.7252176050037151,
+      "last_change_age_ms_p50": 29.0,
+      "arrival_rel_our_decision_ms_p25_p50_p75": [
+        -13.0,
+        8.0,
+        27.0
+      ],
+      "futures_move_our_way_followed_within_2s": 0,
+      "ms_until_that_move_p25_p50_p75": null
+    },
+    "changed_no_net_move": {
+      "legs": 11,
+      "legs_share": 0.0005499725013749313,
+      "shares_share": 0.00023726235127997981,
+      "last_change_age_ms_p50": 48.0,
+      "arrival_rel_our_decision_ms_p25_p50_p75": [
+        -101.0,
+        -77.0,
+        -74.0
+      ],
+      "futures_move_our_way_followed_within_2s": 3,
+      "ms_until_that_move_p25_p50_p75": [
+        26.0,
+        26.0,
+        26.0
+      ]
+    },
+    "no_futures_change_250ms": {
+      "legs": 5459,
+      "legs_share": 0.2729363531823409,
+      "shares_share": 0.26780021905295076,
+      "last_change_age_ms_p50": 4487.0,
+      "arrival_rel_our_decision_ms_p25_p50_p75": [
+        -167.0,
+        -109.0,
+        -70.0
+      ],
+      "futures_move_our_way_followed_within_2s": 5458,
+      "ms_until_that_move_p25_p50_p75": [
+        34.0,
+        69.0,
+        129.0
+      ]
+    },
+    "moved_against": {
+      "legs": 147,
+      "legs_share": 0.0073496325183740815,
+      "shares_share": 0.006744913592054263,
+      "last_change_age_ms_p50": 94.0,
+      "arrival_rel_our_decision_ms_p25_p50_p75": [
+        -186.5,
+        -131.0,
+        -88.0
+      ],
+      "futures_move_our_way_followed_within_2s": 117,
+      "ms_until_that_move_p25_p50_p75": [
+        17.0,
+        85.0,
+        198.0
+      ]
+    }
+  }
+}
