@@ -1,0 +1,189 @@
+{
+ "asof": "2026-11-25",
+ "runs": [
+  {
+   "start": "2026-11-25T11:19:25Z",
+   "tag": "venue_s1_selftest",
+   "rc": "0",
+   "cpu_user_s": "0.77",
+   "wall_s": "0.94",
+   "peak_rss_mib": "198",
+   "slot": "claude"
+  },
+  {
+   "start": "2026-11-25T11:19:40Z",
+   "tag": "venue_s1_rehearse",
+   "rc": "0",
+   "cpu_user_s": "8.99",
+   "wall_s": "9.60",
+   "peak_rss_mib": "744",
+   "slot": "claude"
+  },
+  {
+   "start": "2026-11-25T11:25:20Z",
+   "tag": "venue_s2_selftest",
+   "rc": "0",
+   "cpu_user_s": "0.77",
+   "wall_s": "0.95",
+   "peak_rss_mib": "198",
+   "slot": "claude2"
+  },
+  {
+   "start": "2026-11-25T11:25:39Z",
+   "tag": "venue_s2_rehearse",
+   "rc": "0",
+   "cpu_user_s": "11.11",
+   "wall_s": "11.87",
+   "peak_rss_mib": "743",
+   "slot": "claude2"
+  },
+  {
+   "start": "2026-11-25T11:26:24Z",
+   "tag": "venue_s2_selftest2",
+   "rc": "0",
+   "cpu_user_s": "0.80",
+   "wall_s": "0.94",
+   "peak_rss_mib": "199",
+   "slot": "claude2"
+  },
+  {
+   "start": "2026-11-25T11:20:01Z",
+   "tag": "venue_s1_run",
+   "rc": "0",
+   "cpu_user_s": "912.68",
+   "wall_s": "931.96",
+   "peak_rss_mib": "906",
+   "slot": "claude"
+  },
+  {
+   "start": "2026-11-25T11:35:51Z",
+   "tag": "venue_s1_report",
+   "rc": "0",
+   "cpu_user_s": "0.81",
+   "wall_s": "0.99",
+   "peak_rss_mib": "199",
+   "slot": "claude"
+  },
+  {
+   "start": "2026-11-25T11:48:59Z",
+   "tag": "venue_s2_selftest_r2",
+   "rc": "0",
+   "cpu_user_s": "0.78",
+   "wall_s": "1.12",
+   "peak_rss_mib": "199",
+   "slot": "claude"
+  },
+  {
+   "start": "2026-11-25T11:26:28Z",
+   "tag": "venue_s2_20261023",
+   "rc": "0",
+   "cpu_user_s": "2208.67",
+   "wall_s": "2218.57",
+   "peak_rss_mib": "1037",
+   "slot": "claude2"
+  },
+  {
+   "start": "2026-11-25T12:18:21Z",
+   "tag": "venue_s1_selftest_r3",
+   "rc": "0",
+   "cpu_user_s": "0.89",
+   "wall_s": "2.17",
+   "peak_rss_mib": "198",
+   "slot": "claude"
+  },
+  {
+   "start": "2026-11-25T12:04:07Z",
+   "tag": "venue_s2_20261101",
+   "rc": "0",
+   "cpu_user_s": "1616.61",
+   "wall_s": "1629.41",
+   "peak_rss_mib": "974",
+   "slot": "claude2"
+  },
+  {
+   "start": "2026-11-25T12:04:06Z",
+   "tag": "venue_s2_20261031",
+   "rc": "0",
+   "cpu_user_s": "1714.97",
+   "wall_s": "1732.54",
+   "peak_rss_mib": "943",
+   "slot": "claude"
+  },
+  {
+   "start": "2026-11-25T12:04:10Z",
+   "tag": "venue_s2_20261103",
+   "rc": "0",
+   "cpu_user_s": "1985.69",
+   "wall_s": "2000.97",
+   "peak_rss_mib": "987",
+   "slot": "claude4"
+  },
+  {
+   "start": "2026-11-25T12:04:09Z",
+   "tag": "venue_s2_20261102",
+   "rc": "0",
+   "cpu_user_s": "2026.58",
+   "wall_s": "2034.97",
+   "peak_rss_mib": "965",
+   "slot": "claude3"
+  },
+  {
+   "start": "2026-11-25T12:38:11Z",
+   "tag": "venue_s2_merge",
+   "rc": "0",
+   "cpu_user_s": "1.19",
+   "wall_s": "1.47",
+   "peak_rss_mib": "287",
+   "slot": "claude"
+  },
+  {
+   "start": "2026-11-25T12:38:19Z",
+   "tag": "venue_s2_check",
+   "rc": "0",
+   "cpu_user_s": "317.73",
+   "wall_s": "327.05",
+   "peak_rss_mib": "274",
+   "slot": "claude"
+  },
+  {
+   "start": "2026-11-25T12:43:54Z",
+   "tag": "venue_s2_report",
+   "rc": "0",
+   "cpu_user_s": "0.88",
+   "wall_s": "1.08",
+   "peak_rss_mib": "223",
+   "slot": "claude"
+  },
+  {
+   "start": "2026-11-25T12:31:58Z",
+   "tag": "venue_s1_d172_run",
+   "rc": "0",
+   "cpu_user_s": "934.05",
+   "wall_s": "952.83",
+   "peak_rss_mib": "964",
+   "slot": "claude2"
+  },
+  {
+   "start": "2026-11-25T12:47:55Z",
+   "tag": "venue_s1_d172_report",
+   "rc": "0",
+   "cpu_user_s": "0.77",
+   "wall_s": "0.94",
+   "peak_rss_mib": "199",
+   "slot": "claude"
+  },
+  {
+   "start": "2026-11-25T12:48:06Z",
+   "tag": "venue_render",
+   "rc": "0",
+   "cpu_user_s": "0.76",
+   "wall_s": "0.92",
+   "peak_rss_mib": "198",
+   "slot": "claude"
+  }
+ ],
+ "cpu_user_s": 11745.5,
+ "charged_coreh": 3.262638888888889,
+ "stage2_cap_cpu_s": 12500,
+ "stage2_day_cpu_s": 9552.52
+}

@@ -1,0 +1,376 @@
+{
+  "asof": "2026-11-25",
+  "scheduled_markets": 1440,
+  "replayed_markets": 1439,
+  "path_status": {
+    "complete_no_mark": 546,
+    "complete": 408,
+    "truncated": 485
+  },
+  "census": {
+    "complete_no_mark": 546,
+    "complete": 408,
+    "truncated": 485,
+    "boundary_censored_forward_tail": 1
+  },
+  "configs": {
+    "VM208-M50": {
+      "BASE": {
+        "total_usd": -1118.0286844453967,
+        "per_scheduled_market_usd": -0.7764088086426366,
+        "lower_usd": -1130.2772167514572,
+        "upper_usd": -1063.853924980711,
+        "by_day_usd": {
+          "20261023": -387.86259428123196,
+          "20261031": 10.025801481640459,
+          "20261101": -45.30870811511733,
+          "20261102": -308.91796260821565,
+          "20261103": -385.96522092247227
+        },
+        "days_positive": 1,
+        "round_trips_usd": -1114.7991569297528,
+        "round_trips_exit_usd": -737.8034045339208,
+        "round_trips_take_usd": -376.995752395832,
+        "held_to_settlement_usd": -3.229527515643971,
+        "held_tokens": 15159.04337330964,
+        "held_cost_usd": 11321.884359645665,
+        "markets_holding_1_or_more": 355,
+        "fees_cash_usd": 26.1608064012872,
+        "fees_in_shares_usd_at_purchase": 348.6996227847522,
+        "taker_shares": 143918.3060022948,
+        "exit_shares": 83719.40307333964,
+        "oversell_shares": 298.10163456893747,
+        "c1_total_without_young_usd": -1001.3483463124871,
+        "c1_young_exit_usd": -116.6803381329096,
+        "c1_young_share_of_exit_shares": 0.09051874708678663,
+        "c3_cancel_pending_exit_usd": -450.3213165450769,
+        "c3_cancel_pending_share_of_exit_shares": 0.06616382348563654,
+        "signal_status": {
+          "sent": 28912,
+          "own_cross": 848,
+          "no_room": 729,
+          "no_fresh_book": 2636,
+          "near_end": 21,
+          "pending_ioc": 368,
+          "below_min": 275
+        },
+        "min_capped": 1026,
+        "ioc_status": {
+          "limit_moved": 24891,
+          "partial": 697,
+          "filled": 2693,
+          "strict_cancelled": 386,
+          "invalid_or_stale": 95,
+          "empty": 150
+        },
+        "unresolved_orders": 67,
+        "complete_markets": 408,
+        "complete_total_usd": -337.74190384090804
+      },
+      "FLOOR": {
+        "total_usd": -444.851736502105,
+        "per_scheduled_market_usd": -0.3089248170153507,
+        "lower_usd": -469.89709616475557,
+        "upper_usd": 205.17029311241137,
+        "by_day_usd": {
+          "20261023": -170.45971617301964,
+          "20261031": 68.5634543818833,
+          "20261101": 16.17740625551474,
+          "20261102": -271.5720917451269,
+          "20261103": -87.5607892213567
+        },
+        "days_positive": 2,
+        "round_trips_usd": 54.28575831812242,
+        "round_trips_exit_usd": 1698.570551107831,
+        "round_trips_take_usd": -1644.2847927897085,
+        "held_to_settlement_usd": -499.13749482022723,
+        "held_tokens": 20932.76557237659,
+        "held_cost_usd": 15727.568061391123,
+        "markets_holding_1_or_more": 488,
+        "fees_cash_usd": 42.91617387363722,
+        "fees_in_shares_usd_at_purchase": 314.024949471827,
+        "taker_shares": 137315.37522966208,
+        "exit_shares": 55768.345156450574,
+        "oversell_shares": 109.44409842256955,
+        "c1_total_without_young_usd": -349.0262744568359,
+        "c1_young_exit_usd": -95.8254620452691,
+        "c1_young_share_of_exit_shares": 0.09857759870717031,
+        "c3_cancel_pending_exit_usd": -350.14701282010975,
+        "c3_cancel_pending_share_of_exit_shares": 0.08736449051298724,
+        "signal_status": {
+          "sent": 28061,
+          "own_cross": 565,
+          "no_room": 1498,
+          "no_fresh_book": 2514,
+          "near_end": 21,
+          "pending_ioc": 340,
+          "below_min": 790
+        },
+        "min_capped": 1905,
+        "ioc_status": {
+          "limit_moved": 24194,
+          "partial": 657,
+          "filled": 2601,
+          "strict_cancelled": 376,
+          "invalid_or_stale": 88,
+          "empty": 145
+        },
+        "unresolved_orders": 115,
+        "complete_markets": 408,
+        "complete_total_usd": -38.19454580934599
+      },
+      "floor_minus_base": {
+        "total_usd": 673.1769479432917,
+        "by_day_usd": {
+          "20261023": 217.40287810821258,
+          "20261031": 58.53765290024294,
+          "20261101": 61.48611437063205,
+          "20261102": 37.34587086308858,
+          "20261103": 298.4044317011155
+        },
+        "days_positive": 5
+      }
+    },
+    "VM258-M50": {
+      "BASE": {
+        "total_usd": -1297.668200751721,
+        "per_scheduled_market_usd": -0.9011584727442508,
+        "lower_usd": -1308.6867330577816,
+        "upper_usd": -1243.2239412870354,
+        "by_day_usd": {
+          "20261023": -467.43554021135975,
+          "20261031": -21.306269655745442,
+          "20261101": -66.20135876103868,
+          "20261102": -361.29535859815337,
+          "20261103": -381.42967352542365
+        },
+        "days_positive": 0,
+        "round_trips_usd": -1281.1561567740198,
+        "round_trips_exit_usd": -902.5762212643234,
+        "round_trips_take_usd": -378.5799355096964,
+        "held_to_settlement_usd": -16.5120439777016,
+        "held_tokens": 15233.34459372282,
+        "held_cost_usd": 11086.57231505509,
+        "markets_holding_1_or_more": 348,
+        "fees_cash_usd": 24.58452100579233,
+        "fees_in_shares_usd_at_purchase": 342.82303659568026,
+        "taker_shares": 139492.15784614318,
+        "exit_shares": 81777.58373617234,
+        "oversell_shares": 164.28816782745864,
+        "c1_total_without_young_usd": -1169.5242884347697,
+        "c1_young_exit_usd": -128.1439123169514,
+        "c1_young_share_of_exit_shares": 0.08687614961884027,
+        "c3_cancel_pending_exit_usd": -479.34835885443596,
+        "c3_cancel_pending_share_of_exit_shares": 0.06513695861861002,
+        "signal_status": {
+          "sent": 28863,
+          "own_cross": 830,
+          "no_room": 739,
+          "no_fresh_book": 2627,
+          "near_end": 24,
+          "pending_ioc": 440,
+          "below_min": 266
+        },
+        "min_capped": 1044,
+        "ioc_status": {
+          "limit_moved": 25196,
+          "partial": 616,
+          "filled": 2622,
+          "strict_cancelled": 227,
+          "invalid_or_stale": 118,
+          "empty": 84
+        },
+        "unresolved_orders": 66,
+        "complete_markets": 408,
+        "complete_total_usd": -324.82259339921484
+      },
+      "FLOOR": {
+        "total_usd": -532.8065088795186,
+        "per_scheduled_market_usd": -0.3700045200552212,
+        "lower_usd": -556.2918685421691,
+        "upper_usd": 147.15552073499782,
+        "by_day_usd": {
+          "20261023": -209.7924304396537,
+          "20261031": 35.389789368070296,
+          "20261101": 4.79990642686971,
+          "20261102": -315.2627459159279,
+          "20261103": -47.94102831887701
+        },
+        "days_positive": 2,
+        "round_trips_usd": -0.2337336816596547,
+        "round_trips_exit_usd": 1621.5980660177436,
+        "round_trips_take_usd": -1621.831799699403,
+        "held_to_settlement_usd": -532.5727751978588,
+        "held_tokens": 20332.80315451585,
+        "held_cost_usd": 14865.362766062719,
+        "markets_holding_1_or_more": 473,
+        "fees_cash_usd": 43.70407706934715,
+        "fees_in_shares_usd_at_purchase": 306.5820730094025,
+        "taker_shares": 132783.17993432566,
+        "exit_shares": 53780.27832798059,
+        "oversell_shares": 60.11780712581739,
+        "c1_total_without_young_usd": -341.0886648890067,
+        "c1_young_exit_usd": -191.71784399051182,
+        "c1_young_share_of_exit_shares": 0.10183574906596868,
+        "c3_cancel_pending_exit_usd": -377.3521884244094,
+        "c3_cancel_pending_share_of_exit_shares": 0.07997115280450556,
+        "signal_status": {
+          "sent": 27958,
+          "own_cross": 545,
+          "no_room": 1391,
+          "no_fresh_book": 2569,
+          "near_end": 24,
+          "pending_ioc": 407,
+          "below_min": 895
+        },
+        "min_capped": 1901,
+        "ioc_status": {
+          "limit_moved": 24450,
+          "partial": 579,
+          "filled": 2516,
+          "strict_cancelled": 221,
+          "invalid_or_stale": 113,
+          "empty": 79
+        },
+        "unresolved_orders": 121,
+        "complete_markets": 408,
+        "complete_total_usd": -8.503537923114937
+      },
+      "floor_minus_base": {
+        "total_usd": 764.8616918722026,
+        "by_day_usd": {
+          "20261023": 257.64310977170635,
+          "20261031": 56.696059023815714,
+          "20261101": 71.00126518790842,
+          "20261102": 46.03261268222526,
+          "20261103": 333.4886452065469
+        },
+        "days_positive": 5
+      }
+    },
+    "VM208-M250": {
+      "BASE": {
+        "total_usd": -1694.2803047880284,
+        "per_scheduled_market_usd": -1.1765835449916864,
+        "lower_usd": -1703.5003047880282,
+        "upper_usd": -1648.3131453233425,
+        "by_day_usd": {
+          "20261023": -572.9734968788438,
+          "20261031": -121.59566460837284,
+          "20261101": -74.76076959892426,
+          "20261102": -464.6112765130832,
+          "20261103": -460.33909718880454
+        },
+        "days_positive": 0,
+        "round_trips_usd": -1672.3285916150521,
+        "round_trips_exit_usd": -1275.7238002177553,
+        "round_trips_take_usd": -396.6047913972968,
+        "held_to_settlement_usd": -21.95171317297582,
+        "held_tokens": 14491.236059700503,
+        "held_cost_usd": 11124.462723456429,
+        "markets_holding_1_or_more": 342,
+        "fees_cash_usd": 21.29298264819643,
+        "fees_in_shares_usd_at_purchase": 354.12004138851415,
+        "taker_shares": 145272.7079789158,
+        "exit_shares": 88728.47723984827,
+        "oversell_shares": 283.01063192185427,
+        "c1_total_without_young_usd": -1374.4403618456874,
+        "c1_young_exit_usd": -319.83994294234077,
+        "c1_young_share_of_exit_shares": 0.08109921120431136,
+        "c3_cancel_pending_exit_usd": -63.395176554004294,
+        "c3_cancel_pending_share_of_exit_shares": 0.04591773356127564,
+        "signal_status": {
+          "sent": 29283,
+          "own_cross": 657,
+          "no_room": 595,
+          "no_fresh_book": 2638,
+          "near_end": 21,
+          "pending_ioc": 380,
+          "below_min": 215
+        },
+        "min_capped": 914,
+        "ioc_status": {
+          "limit_moved": 25197,
+          "partial": 711,
+          "filled": 2718,
+          "strict_cancelled": 495,
+          "empty": 68,
+          "invalid_or_stale": 94
+        },
+        "unresolved_orders": 58,
+        "complete_markets": 408,
+        "complete_total_usd": -534.8871805425274
+      },
+      "FLOOR": {
+        "total_usd": -1055.8537566290108,
+        "per_scheduled_market_usd": -0.7332317754368131,
+        "lower_usd": -1069.4037566290108,
+        "upper_usd": -454.99932062313155,
+        "by_day_usd": {
+          "20261023": -386.1744889968539,
+          "20261031": -10.287321551509608,
+          "20261101": -14.305897189945364,
+          "20261102": -348.1799682783292,
+          "20261103": -296.90608061237276
+        },
+        "days_positive": 0,
+        "round_trips_usd": -513.2340846453092,
+        "round_trips_exit_usd": 1060.2243647618304,
+        "round_trips_take_usd": -1573.4584494071396,
+        "held_to_settlement_usd": -542.6196719837017,
+        "held_tokens": 19819.016228382807,
+        "held_cost_usd": 15089.528100431715,
+        "markets_holding_1_or_more": 461,
+        "fees_cash_usd": 38.19732147941298,
+        "fees_in_shares_usd_at_purchase": 320.24144606315065,
+        "taker_shares": 138589.2835959676,
+        "exit_shares": 61227.822693946604,
+        "oversell_shares": 303.3496576667061,
+        "c1_total_without_young_usd": -852.0229481825658,
+        "c1_young_exit_usd": -203.83080844644527,
+        "c1_young_share_of_exit_shares": 0.07074643479885884,
+        "c3_cancel_pending_exit_usd": 111.34680638702216,
+        "c3_cancel_pending_share_of_exit_shares": 0.0531173721364017,
+        "signal_status": {
+          "sent": 28492,
+          "own_cross": 394,
+          "no_room": 1273,
+          "no_fresh_book": 2535,
+          "near_end": 21,
+          "pending_ioc": 350,
+          "below_min": 724
+        },
+        "min_capped": 1699,
+        "ioc_status": {
+          "limit_moved": 24559,
+          "partial": 669,
+          "filled": 2627,
+          "strict_cancelled": 481,
+          "empty": 66,
+          "invalid_or_stale": 90
+        },
+        "unresolved_orders": 101,
+        "complete_markets": 408,
+        "complete_total_usd": -305.9641997387114
+      },
+      "floor_minus_base": {
+        "total_usd": 638.4265481590171,
+        "by_day_usd": {
+          "20261023": 186.79900788198964,
+          "20261031": 111.3083430568632,
+          "20261101": 60.45487240897882,
+          "20261102": 116.43130823475367,
+          "20261103": 163.4330165764318
+        },
+        "days_positive": 5
+      }
+    }
+  },
+  "readings": {
+    "survives_venue_match": false,
+    "floor_beats_base_venue": true,
+    "holds_at_258": false,
+    "holds_at_m250": false,
+    "base_survives_venue_match": false
+  }
+}

@@ -166,6 +166,13 @@ def render_md(out, ck):
     for arm in V.ARMS:
         a = s1['arms'][arm]
         L.append(f"| {arm} | {usd(a['at_58']['settle_net_usd'])} | {usd(a['at_208']['settle_net_usd'])} | {usd(a['at_208']['settle_net_usd'] - a['at_58']['settle_net_usd'])} |")
+    f172 = H / 'stage1_d172_readings.json'                              # amendment R3: the best arrival the speed bump allows
+    if f172.exists():
+        s172 = json.loads(f172.read_text()); C.require(s172['delay_ms'] == 172., 'not the 172 ms run')   # stage1 keys its values 'at_208' for any delay
+        L += ['', '| 172 ms (R3: ~22 ms one way + 150 ms hold) | total | days positive | takes with the limit moved |', '|---|---:|---:|---:|']
+        for arm in V.ARMS:
+            a = s172['arms'][arm]; io = a['ioc_208']
+            L.append(f"| {arm} | {usd(a['at_208']['settle_net_usd'])} | {a['days_positive_208']} / 5 | {io.get('limit_moved', 0) / io['sent']:.1%} of {io['sent']:,} sent |")
     L += ['', f"Stage 1 checks: ties = 8 {s1['checks']['ties_8']}; the 58 ms values reproduce the reviewer's independent recount "
           f"{s1['checks']['reviewer_recount_reproduced']}.", '',
           f"## Stage 2 — venue-matched ({out['replayed_markets']} of {out['scheduled_markets']} scheduled markets replayed)", '',
@@ -190,13 +197,20 @@ def render_md(out, ck):
     L += ['## Readings (computed)', ''] + [f'- `{k}`: {v}' for k, v in out['readings'].items()]
     L += ['', '## Checks', ''] + [f"- {'PASS' if v['ok'] else 'FAIL'} `{k}`: {v['detail']}" for k, v in ck.items() if isinstance(v, dict)]
     L += ['', '## Limits', '',
-          '- Consumed days; the speed bump\'s historical presence is unknown (the archived market objects lack the field), so the 208 / 258 ms arrival '
-          'is applied to a book recorded under whatever regime held then.',
+          '- Consumed days. The speed bump applied on these days: the venue changelog (read 2026-11-25) dates removalLockedUntil for non-post-only '
+          'orders on up/down markets with a speed bump to 2026-06-26 and the speedBump market field to 2026-11-10; the value on these days is not '
+          'recorded (150 ms now).',
           '- Our order is not in the recorded book: competitors\' reactions to it are not modelled. The strict two-frame IOC rule and queue L are '
           'conservative; the 1 s staleness rule truncates paths at recorder gaps.',
           '- A resting exit that would oversell after a take is dropped in the token accounting but not in the engine path (counted as oversell).']
     return '\n'.join(L) + '\n'
 
 
+def render():
+    """Re-render report.md from the write-once readings and checks (e.g. after the R3 stage-1 sensitivity lands)."""
+    (H / 'report.md').write_text(render_md(json.loads((H / 'stage2_readings.json').read_text()), json.loads((H / 'stage2_checks.json').read_text())))
+    print('rendered')
+
+
 if __name__ == '__main__':
-    dict(merge=merge, check=check, report=readings)[sys.argv[1]]()
+    dict(merge=merge, check=check, report=readings, render=render)[sys.argv[1]]()

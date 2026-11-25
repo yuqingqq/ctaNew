@@ -49,10 +49,11 @@ predictfun/research/run_light.sh <tag> -- python3 -m predictfun.research.pf_step
 | Settlement | Chainlink BTC/USDT = Binance **spot** top-of-book mid; end = close at window end; strictly higher = Up; equal = 50/50 |
 | Start / end price | `variantData.startPrice` / `endPrice` in category metadata |
 | Tick | 0.01 (`decimalPrecision 2`) |
-| Taker fee | 0.02 x min(p, 1-p) per share (`feeRateBps 200`); some takers pay 90% (invite discount) |
+| Taker fee | 0.02 x min(p, 1-p) per share (`feeRateBps 200`); some takers pay 90% (invite discount). A buy pays its fee in shares (fee / p of them), a sell in USDT (dev docs, read 2026-11-25) |
 | Maker fee | 0 (`makerFeeBps 0`); 25% taker-fee rebate advertised for Up/Down, not verified as paid |
 | Liquidity rewards | per-window schedule `hourlyRate 3000`, eligibility `spreadThreshold 0.06`, `shareThreshold 100` (units/payout unverified) |
-| Min order | about $1 notional (inferred from resting sizes), unverified |
+| Min order | a buy is worth >= 1 USDT; a limit sell >= 1 share; a market sell >= 0.01 share (dev docs, read 2026-11-25) |
+| Speed bump (taker delay) | every order except a post-only LIMIT waits `speedBump.delayMs` before it can match and cannot be removed meanwhile (`isRemovalLocked`); makers' removals are not delayed. BTC up/down: `delayMs 150, isRemovalLocked true` on every market object of 2026-11-25. In force since at least 2026-06-26 (changelog: `removalLockedUntil`); the market field exists since 2026-11-10, so earlier values are not recorded. MARKET orders cancel their unfilled part at once |
 | Book feed | WS full-depth snapshots ~10-20/s per market, ms `updateTimestampMs`, `settlementsPending` side book |
 | Trades | REST only: maker order hash/signer/price/amount, `executedAt` whole seconds, first seen p50 ~7 s late |
 | Up token | indexSet 1 on every checked market |

@@ -1,0 +1,43 @@
+{
+  "K9_census": {
+    "ok": true,
+    "detail": "1440 scheduled markets, statuses {'complete_no_mark': 546, 'complete': 408, 'truncated': 485, 'boundary_censored_forward_tail': 1}"
+  },
+  "K1_path_parity": {
+    "ok": true,
+    "detail": "408 / 408 complete markets identical"
+  },
+  "K2_off_parity": {
+    "ok": true,
+    "detail": "24 market-arms"
+  },
+  "K3_accounting_rederived": {
+    "ok": true,
+    "detail": "8634 ledgers re-accounted, 0 mismatches"
+  },
+  "K4_min_buy": {
+    "ok": true,
+    "detail": "0 sent takes with a buy part below 1 USDT"
+  },
+  "K4_falsifier_v1_flagged": {
+    "ok": true,
+    "detail": "81 below-minimum takes in the first 40 complete v1 FLOOR ledgers"
+  },
+  "K5_queue_and_native_selftests": {
+    "ok": true,
+    "detail": "queue L vs M, native book, minimum, accounting bounds"
+  },
+  "K6_ties": {
+    "ok": true,
+    "detail": "8 tie markets paid 50, payout mismatches 0"
+  },
+  "K7_bounds": {
+    "ok": true,
+    "detail": "0 rows outside their bounds"
+  },
+  "K8_delays": {
+    "ok": true,
+    "detail": "take delay mismatches 0, exit activation mismatches 0"
+  },
+  "all_pass": true
+}

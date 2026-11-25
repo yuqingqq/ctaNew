@@ -1,5 +1,16 @@
+<!-- TAKE_EXIT_VENUE_20261125_CLAUDE -->
+## 2026-11-25 — venue-matched comparison done: the take line loses under the 150 ms speed bump
+
+Done: review 4e67e0856 verified; [report](reviews/take_exit_venue_20261125/report.md) — every setting negative for both arms (VM208-M50 on 1,439 markets: BASE −$1,118.03, FLOOR −$444.85); the 172 ms best case is negative on the complete markets too. README venue facts now carry the speed bump, order minimums and fee denomination.
+
+Next (USER's call): (1) the Nov 14–24 forward test of TAKE_EXIT_FLOOR_v1 is not recommended — the frozen version assumes 58 ms takes, and its venue-matched harness already loses on consumed days; (2) log `speedBump` daily (the venue says it can change); (3) the speed bump protects makers (takers wait 150 ms, removals are instant): re-read the market-making line's adverse-fill and pressure-guard assumptions with it; (4) a tiny live marketable order would measure the real take arrival (`removalLockedUntil`) — live is the USER's call (exec session).
+
+Watch-outs: our order is not in the recorded book; the replay days' delay value is not recorded.
+<!-- /TAKE_EXIT_VENUE_20261125_CLAUDE -->
 <!-- TAKE_EXIT_FLOOR_20261125_CLAUDE -->
 ## 2026-11-25 — break-even exit floor (done; development evidence)
+
+**Superseded for economics by TAKE_EXIT_VENUE_20261125_CLAUDE** (Predict's 150 ms taker delay; both arms lose under venue rules).
 
 Done: [report](reviews/take_exit_floor_20261125/report.md). On the five v3 days the floor adds +$480.06 at settlement (+$5.79 vs +$4.61 per market, 5 / 5 days): round trips gain +$703.87 and the carry to settlement costs −$223.81; it nearly doubles the inventory carried to settlement (2,284.6 vs 1,242.8 shares; held-lot P&L −$258.24 vs −$34.43). Checks and falsifiers pass; parity exact.
 

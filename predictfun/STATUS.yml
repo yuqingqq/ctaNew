@@ -1,3 +1,15 @@
+take_exit_venue_20261125_claude:
+  report: predictfun/reviews/take_exit_venue_20261125/report.md
+  declaration: predictfun/reviews/take_exit_venue_20261125/declaration.md
+  session: 1622c91e
+  review: 4e67e0856
+  kind: development_evidence_consumed_days
+  speed_bump: {delay_ms: 150, removal_locked: true, read: '2026-11-25', in_force_since: '2026-06-26 changelog'}
+  stage1_complete_markets_usd: {base_58: 1880.64, floor_58: 2360.47, base_208: -230.03, floor_208: 73.56, base_172: -293.52, floor_172: -64.33}
+  stage2_vm208_m50_usd: {base: -1118.03, floor: -444.85}
+  survives_venue_match: false
+  checks_all_pass: true
+  forward_test_take_exit_floor_v1: not_recommended_pending_user
 take_exit_floor_20261125_claude:
   report: predictfun/reviews/take_exit_floor_20261125/report.md
   amendment: predictfun/reviews/take_exit_floor_20261125/amendment.md
@@ -13,7 +25,8 @@ take_exit_floor_20261125_claude:
   checks_all_pass: true
   frozen_as: TAKE_EXIT_FLOOR_v1
   freeze_receipt: predictfun/freeze/take_exit_floor_v1/RECEIPT.md
-  test_days: pending_user_choice
+  test_days: not_recommended_pending_user
+  superseded_by: take_exit_venue_20261125_claude
 take_exit_flow_20261125_claude:
   page: predictfun/reviews/take_exit_flow_20261125/flow.html
   receipt: predictfun/reviews/take_exit_flow_20261125/receipt.json

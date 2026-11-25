@@ -1,5 +1,19 @@
+<!-- TAKE_EXIT_VENUE_20261125_CLAUDE -->
+## 2026-11-25 — take + maker exit under venue rules: loses on every setting (review 4e67e0856's next priority; consumed days)
+
+[Report](reviews/take_exit_venue_20261125/report.md), [declaration](reviews/take_exit_venue_20261125/declaration.md) (declared before any run; amendments R1–R3 before their runs), [checks](reviews/take_exit_venue_20261125/stage2_checks.json) all pass (session 1622c91e). USER: "Can you also check the review commit and run the comparison tests".
+
+- **Venue fact:** Predict holds every order except a post-only LIMIT for `speedBump.delayMs` before it can match, and the order cannot be removed meanwhile; makers' removals are not delayed. BTC up/down: delayMs 150, isRemovalLocked true (every market object of 2026-11-25). The changelog dates the mechanism on up/down markets to 2026-06-26 and the market field to 2026-11-10, so it applied on every replay day (values then not recorded). Every earlier take result assumed the take reaches the book 58 ms after the decision.
+- **Stage 1 (speed bump only; 408 complete markets; settlement, ties 50 / 50):** BASE +$1,880.64 at 58 ms → −$230.03 at 208 ms (1 / 5 days) and −$293.52 at 172 ms (0 / 5); FLOOR +$2,360.47 → +$73.56 (2 / 5) and −$64.33 (2 / 5). 172 ms = ~22 ms one way + 150 ms, the best case. Takes with the limit moved: 86% at 172 ms, 91% at 208 ms (BASE).
+- **Stage 2 (venue-matched: 1,439 of 1,440 scheduled markets, 1 USDT buy minimum, buy fees in shares, sells of held tokens, exits 58 / 37 / 95 ms, queue L, unresolved orders bounded):** VM208-M50 BASE −$1,118.03 (−$0.78 per scheduled market, 1 / 5 days), FLOOR −$444.85 (−$0.31, 2 / 5; bounds −$469.90 / +$205.17); VM258-M50 BASE −$1,297.67, FLOOR −$532.81; VM208-M250 BASE −$1,694.28, FLOOR −$1,055.85 (0 / 5). Readings: survives_venue_match False, holds_at_258 False, holds_at_m250 False; floor_beats_base_venue True (5 / 5 days).
+- **Population:** the markets the complete-market filter dropped (decided markets without an end mark, recorder gaps) carry most of the take volume and loss; the 408 complete markets alone are negative too (VM208-M50 BASE −$337.74, FLOOR −$38.19).
+- **Review verified:** its recount reproduces exactly at 58 ms; 1 USDT buy minimum, fees in shares and 50 / 50 ties confirmed in the venue docs.
+- **Consequence:** the take signal does not survive the taker delay; the floor only shrinks the loss. The earlier take-line numbers (v1–v3, FLOOR v1, the flow page) assumed 58 ms takes and carry no economic claim.
+<!-- /TAKE_EXIT_VENUE_20261125_CLAUDE -->
 <!-- TAKE_EXIT_FLOOR_20261125_CLAUDE -->
 ## 2026-11-25 — break-even floor on the maker exit, valued at settlement (development evidence on the consumed v3 days)
+
+- **QUALIFIED 2026-11-25 by TAKE_EXIT_VENUE_20261125_CLAUDE:** these numbers assume the take reaches the book 58 ms after the decision; Predict holds takes 150 ms (speed bump, in force since at least 2026-06-26). Under venue rules both arms lose ([report](reviews/take_exit_venue_20261125/report.md)).
 
 [Report](reviews/take_exit_floor_20261125/report.md), [amendment](reviews/take_exit_floor_20261125/amendment.md) (declared and frozen at da209477c before the run), [checks](reviews/take_exit_floor_20261125/checks.json) all pass, parity exact on 11 markets (session 1622c91e). USER: "We test the limit price in the same days, check the spread capture and settlement pnl separately, and the risk we carry to settlement". 408 markets on the five v3 days. BASE = the saved v3 STRICT58 ledgers; FLOOR = the same rule except the maker exit is never offered beyond break-even (client-known average cost including the taker fee). Shares still open at 298 s settle on each market's resolved outcome.
 
@@ -13,6 +27,8 @@
 <!-- /TAKE_EXIT_FLOOR_20261125_CLAUDE -->
 <!-- TAKE_EXIT_FLOW_20261125_CLAUDE -->
 ## 2026-11-25 — execution flow of the take + maker exit (descriptive page; no new replay result)
+
+- **QUALIFIED 2026-11-25 by TAKE_EXIT_VENUE_20261125_CLAUDE:** these numbers assume the take reaches the book 58 ms after the decision; Predict holds takes 150 ms (speed bump, in force since at least 2026-06-26). Under venue rules both arms lose ([report](reviews/take_exit_venue_20261125/report.md)).
 
 [Page](reviews/take_exit_flow_20261125/flow.html) and [receipt](reviews/take_exit_flow_20261125/receipt.json) (session 1622c91e). USER: "can you show me the whole flow of the execution". Counts cover the 408 v3 STRICT58 markets, with three example markets picked by rule (net closest to the 10th / 50th / 90th percentile of the 292 markets with >= 3 filled takes). Each example was re-run and matches its saved ledger exactly.
 
@@ -33,6 +49,8 @@
 
 <!-- TAKE_EXIT_REPLAY_V3_20261125_CLAUDE -->
 ## 2026-11-25 — frozen take + maker exit on five other days: holds, at 81–104 % of in-sample, every day positive
+
+- **QUALIFIED 2026-11-25 by TAKE_EXIT_VENUE_20261125_CLAUDE:** these numbers assume the take reaches the book 58 ms after the decision; Predict holds takes 150 ms (speed bump, in force since at least 2026-06-26). Under venue rules both arms lose ([report](reviews/take_exit_venue_20261125/report.md)).
 
 [Receipt](reviews/take_exit_replay_20261125/v3_report.md) (session 1622c91e), frozen 99ac28e53 before any v3 data; rule unchanged (ee0f16ee6). USER: "rerun the frozen rule on other days as well. check the result".
 
