@@ -1,0 +1,146 @@
+{
+  "sha": "23282c33b600a34c7ca5f4d7210f5608d60be64c",
+  "markets": 408,
+  "census": {
+    "missing_endpoint": 546,
+    "complete": 408,
+    "stale_future_book": 485,
+    "boundary_censored_forward_tail": 1
+  },
+  "category_samples": {
+    "20261023": {
+      "mid": 3655842,
+      "fields": {},
+      "has_speedBump": false
+    },
+    "20261031": {
+      "mid": 4008836,
+      "fields": {},
+      "has_speedBump": false
+    },
+    "20261101": {
+      "mid": 4036868,
+      "fields": {},
+      "has_speedBump": false
+    },
+    "20261102": {
+      "mid": 4095663,
+      "fields": {},
+      "has_speedBump": false
+    },
+    "20261103": {
+      "mid": 4144451,
+      "fields": {},
+      "has_speedBump": false
+    }
+  },
+  "ties": [
+    {
+      "day": "20261023",
+      "mid": 3667409,
+      "yup": 1.0,
+      "canonical": 0.5
+    },
+    {
+      "day": "20261023",
+      "mid": 3695066,
+      "yup": 1.0,
+      "canonical": 0.5
+    },
+    {
+      "day": "20261031",
+      "mid": 4012260,
+      "yup": 1.0,
+      "canonical": 0.5
+    },
+    {
+      "day": "20261031",
+      "mid": 4030073,
+      "yup": 1.0,
+      "canonical": 0.5
+    },
+    {
+      "day": "20261101",
+      "mid": 4044495,
+      "yup": 1.0,
+      "canonical": 0.5
+    },
+    {
+      "day": "20261101",
+      "mid": 4045408,
+      "yup": 1.0,
+      "canonical": 0.5
+    },
+    {
+      "day": "20261101",
+      "mid": 4048413,
+      "yup": 1.0,
+      "canonical": 0.5
+    },
+    {
+      "day": "20261101",
+      "mid": 4061921,
+      "yup": 1.0,
+      "canonical": 0.5
+    }
+  ],
+  "arms": {
+    "base": {
+      "ioc_orders": 8053,
+      "exit_orders": 8883,
+      "exit_small_orders": 778,
+      "ioc_direct_usd": 637.41392477289,
+      "fee_c": 44467.57980291731,
+      "exit_direct_usd": 1243.2234660468775,
+      "exit_smallorder_filled_shares": 1547.0095037532258,
+      "exit_smallorder_direct_usd": 116.18799133004072,
+      "tie_correction_usd": -1.0829337443869307,
+      "settlement_usd": 1880.6373908197668,
+      "native_fee_adjustment_fixed_fills_usd": -77.62361457141961,
+      "ioc_small_orders": 25,
+      "ioc_smallorder_filled_shares": 322.02,
+      "ioc_smallorder_direct_usd": -1.5174080000000005,
+      "exit_fills_increasing_abs_position": 11
+    },
+    "floor": {
+      "ioc_orders": 7941,
+      "exit_orders": 7602,
+      "exit_small_orders": 664,
+      "ioc_direct_usd": 319.25046357424947,
+      "fee_c": 42944.2123212385,
+      "exit_direct_usd": 2041.2171472605803,
+      "exit_smallorder_filled_shares": 1275.053036000168,
+      "exit_smallorder_direct_usd": 116.66065015947774,
+      "tie_correction_usd": -1.3123538781456332,
+      "settlement_usd": 2360.4676108348294,
+      "native_fee_adjustment_fixed_fills_usd": -69.4440851284343,
+      "ioc_small_orders": 57,
+      "ioc_smallorder_filled_shares": 386.4565333333332,
+      "ioc_smallorder_direct_usd": 5.666841720000002,
+      "exit_fills_increasing_abs_position": 21
+    }
+  },
+  "days": {
+    "20261023": {
+      "base": 287.75183186752474,
+      "floor": 401.7350111059414
+    },
+    "20261031": {
+      "base": 600.5702383249643,
+      "floor": 621.4830471707187
+    },
+    "20261101": {
+      "base": 367.1678853575933,
+      "floor": 427.22022249389056
+    },
+    "20261102": {
+      "base": 279.2777006731076,
+      "floor": 359.93622937547735
+    },
+    "20261103": {
+      "base": 345.8697345965772,
+      "floor": 550.0931006888012
+    }
+  }
+}
+2026-11-25T10:53:27Z tag=review_take_floor_recount rc=0 peak_rss_mib=151 wall_s=30.42 cpu_user_s=30.22 memavail_start_gib=22 disk_free_gib=403->403 slot=codex
