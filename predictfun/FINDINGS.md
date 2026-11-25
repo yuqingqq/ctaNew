@@ -1,3 +1,14 @@
+<!-- WINNERS_TRIGGER_20261125_CLAUDE -->
+## 2026-11-25 — the winning takers' signal: Binance futures' best-level queue predicts the next tick ~150 ms ahead
+
+[winners_trigger](reviews/take_reprice_20261125/winners_trigger.json) (four venue-complete consumed days; taker of every leg from the REST match records, ambiguous keys excluded; send time = first trade − 150 ms, ±30 ms; declared 12-shift null). USER: "Proceed to find their signal".
+
+- **Who:** 11,675 takers, 344,555 orders, all takers -0.85 ¢/sh at 1 s. The most profitable, 0x7cab…c0AD, 6,189 orders, 182,781 shares, +1.93 ¢/sh (+$3,526 at 1 s over the days it traded; one order on 10-23). Ranks 2-10 together +0.79 ¢/sh over 49,019 sampled orders.
+- **Their bet comes true:** the Binance futures mid moves their way within 150 ms after the top taker's send for 51% of orders vs 2.5% at random times in the same markets (300 ms: 57% vs 4.2%); ranks 2-10 27% vs 2.1%; everyone else 7.1% vs 1.7%.
+- **What precedes their send (top taker, AUC vs null; steady across 10-31 / 11-01 / 11-02):** the opposite Binance best level depleting over 300 ms 0.72 (median 24% gone vs 0%); best-level imbalance their way 0.70 (+0.57 vs +0.06); a thin opposite best level 0.69 (inverted; 2.6 vs 5.7 BTC); aggressive flow their way over 300 ms 0.64; a thinner opposite quote on Predict 0.63 (inverted; 113 vs 221 shares). Past Binance mid returns and other venues are weaker.
+- **A combined model of their sends (logistic, leave-one-day-out):** top taker AUC 0.74-0.77 on the three days it traded (10-23 fold: one order, uninformative); ranks 2-10 0.67-0.74; everyone else 0.56-0.61.
+- **Reading:** the winning takers predict the next Binance futures tick from its best-level queue (thin, imbalanced, being eaten) and send ~150 ms ahead so their Predict order lands as the tick prints. The data we hold carries the signal; our own predictor and its take economics are not built or tested. Consumed days.
+<!-- /WINNERS_TRIGGER_20261125_CLAUDE -->
 <!-- EARLY_SIGNAL_20261125_CLAUDE -->
 ## 2026-11-25 — the takers who beat us anticipate Binance moves; no public venue's price shows it first
 

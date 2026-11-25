@@ -1,3 +1,11 @@
+winners_trigger_20261125_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/winners_trigger.json
+  session: 1622c91e
+  top_taker: "0x7cab…c0AD"
+  top_taker_bet_150ms: 0.513
+  top_taker_bet_null_150ms: 0.025
+  top_taker_cv_auc_days_traded: [0.773, 0.749, 0.742]
+  leading_features: [bt_depl300, bt_imb, bt_opp_log, fl300, p_opp_log]
 early_signal_20261125_claude:
   diagnostics: [predictfun/reviews/take_reprice_20261125/early_signal.json, predictfun/reviews/take_reprice_20261125/inflight.json]
   session: 1622c91e

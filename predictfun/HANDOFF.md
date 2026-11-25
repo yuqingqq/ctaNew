@@ -1,3 +1,10 @@
+<!-- WINNERS_TRIGGER_20261125_CLAUDE -->
+## 2026-11-25 — found the winning takers' signal: Binance futures best-level queue state, ~150 ms ahead
+
+See FINDINGS (same date). The top taker's sends are followed by a Binance tick their way within 150 ms 51% of the time (2.5% at random); queue depletion / imbalance / thin opposite level separate their sends (held-out-day AUC 0.74-0.77).
+
+Next (USER's call): build our own predictor of "Binance futures mid ticks our way within the hold" from bookTicker sizes, trade flow and depth20 on a dense time grid; score precision / recall on held-out consumed days; then replay the take under the venue rules (172 ms, one-level limit) against the existing anticipators; untouched days before any live step.
+<!-- /WINNERS_TRIGGER_20261125_CLAUDE -->
 <!-- EARLY_SIGNAL_20261125_CLAUDE -->
 ## 2026-11-25 — the winning takers anticipate Binance moves; the signal is not in public venue prices
 
