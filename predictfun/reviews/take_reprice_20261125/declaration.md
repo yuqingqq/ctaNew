@@ -42,3 +42,10 @@ days positive); `holds_at_192` (`profitable_8` rule for REPRICE-8-192). The best
 The dFV trigger on a synthetic path (a jump near the strike fires, the same jump far from the strike does not, quiet suppresses a
 repeat); every take arrives at decision + network + 150 ms; the venue checks of the comparison (accounting re-derived, 1 USDT minimum,
 bounds). Stage cap 2,800 CPU s (≤ 900 per day process), projection after the first day.
+
+## Mechanical fix M1 (during the run; no rule, config or reading changes)
+
+The 20261101 day process stopped (rc 1) on a market whose window holds no Binance breakpoint: `np.vectorize(math.erf)` raises on an
+empty input unless `otypes` is set. Fix: `otypes=[float]`; identical output for every non-empty input. Days 20261023, 20261031,
+20261102 and 20261103 ran the original file (sha256 4bfac424509103c89ddf20f505f0a0b6118f6c0e287dd1852a43f54034bdee60) to completion; 20261101 reruns with the fix, and the ledgers it wrote
+before the stop are rewritten only if byte-identical (write_once_gz).

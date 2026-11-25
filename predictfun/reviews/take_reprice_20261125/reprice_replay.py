@@ -25,7 +25,7 @@ SIG_WIN, QUIET, LAG = 300000., 2000., 250.
 CONFIGS = {'REPRICE-4-172': (4., 22.), 'REPRICE-8-172': (8., 22.), 'REPRICE-16-172': (16., 22.), 'REPRICE-8-192': (8., 42.)}
 DAY_CPU_CAP, TOTAL_CPU_CAP, FIRST_DAY = 900., 2800., '20261023'
 FILES = ['declaration.md', 'reprice_replay.py']
-ERF = np.vectorize(math.erf)
+ERF = np.vectorize(math.erf, otypes=[float])                                     # M1: an empty breakpoint set must not raise
 
 
 def Phi(z):
