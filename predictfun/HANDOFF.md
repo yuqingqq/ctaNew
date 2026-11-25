@@ -1,3 +1,17 @@
+<!-- INVENTORY_EXIT_EXCEPTION_20261125_CODEX -->
+## 2026-11-25 — acquisition-cost exit exception loses; full19 cap benefit is mixed
+
+[Receipt](reviews/inventory_exit_exception_20261125/report.md). USER proposes allowing reducing asks above acquisition cost in3789484. Frozen2273fa902; resource-only amendmentd47ff7a67 after first timing projection refused. Same19 complete consumed Oct24–27 markets, full298s, four arms;100max/two levels/opening gate/ASYNC_FAST10 unchanged. BASE C200/S100/R50, others C1000/S500/R250; REDUCE exempts pressure-blocked risk-reducing orders, COST adds>=1c over known remaining FIFO average basis (short side symmetric). Unclosed/cancel-pending reservations retained; no use of hidden fills; no taker/new days/fit/live.
+
+END USD BASE−916.05, WIDE−852.33, REDUCE−1624.34, COST−1153.19. WIDE−BASE+63.72 MIXED,9better/10worse; excluding3789484−175.35. Thus prior3 positive combined result does NOT generalize to this19. COST−WIDE−300.86,negative all4days; REDUCE−WIDE−772.01,negative all4. COST beats REDUCE+471.14 all4, but neither earns adoption. COST completed−936.11 versus WIDE−512.63; residual−217.09 versus−339.71. Both-side grid uptime89.5/89.0%; meanabsI183/197. Selling profitably by historical cost is insufficient for improved full-book value; immediate exit vs subsequent re-entry feedback not yet separated.
+
+3789484 WIDE+248.80 ->COST+173.29, REDUCE+109.74. BASE first qualifying ask at8.1s: known50.87shares at59c, ask60c, pressure withholds. This verifies the user's blockage observation; no claim Maker3’s posting clock/logic identified.76ledgers/16023pressure decisions independently checked,6prior controls exact,9corruptions refused; original projection and pre-freeze launcher failure retained/disclosed.
+
+Charge600CPU s; task2.28822/line5.59892, caps2.40/5.70 with.05reserve under standing CPU top-ups. No push; other-session files/hunks preserved.
+
+ONE next priority: saved-path attribution COST−WIDE on19markets, starting3789484’s first divergence, separating changed exits from subsequent re-entry turnover and residual value. Full difference must reconcile before another exit candidate; no cushion/cap tuning. No new evidence needed for that bounded step.
+<!-- /INVENTORY_EXIT_EXCEPTION_20261125_CODEX -->
+
 <!-- MAKER3_BOOK_CONDITIONS_20261125_CLAUDE -->
 ## 2026-11-25 — thin/wide-book check done; next: skew and active-taking logic before broad testing (USER)
 

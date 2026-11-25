@@ -1,0 +1,2 @@
+PASS 76 ledgers 16023 pressure decisions 9 corruptions 7.2 CPU s
+2026-11-25T03:05:48Z tag=ix_check rc=0 peak_rss_mib=299 wall_s=8.90 cpu_user_s=8.24 memavail_start_gib=22 disk_free_gib=408->408 slot=codex

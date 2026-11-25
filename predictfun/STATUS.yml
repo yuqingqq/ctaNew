@@ -1,3 +1,25 @@
+inventory_exit_exception_20261125_codex:
+  report: predictfun/reviews/inventory_exit_exception_20261125/report.md
+  freeze: 2273fa90264e208548d8289e8ed73c74e46d52ac
+  population_markets: 19
+  consumed_days: 4
+  arms: [BASE, WIDE, WIDE_REDUCE, WIDE_COST]
+  net_usd: {BASE: -916.05, WIDE: -852.33, WIDE_REDUCE: -1624.34, WIDE_COST: -1153.19}
+  cost_vs_wide_negative_every_day: true
+  reduce_vs_wide_negative_every_day: true
+  wide_vs_base_reading: MIXED
+  adopted: false
+  validation: false
+  ledgers_checked: 76
+  pressure_decisions_checked: 16023
+  parity_controls: 6
+  falsifiers_refused: 9
+  charged_cpu_s: 600
+  task_coreh: 2.28822
+  line_coreh: 5.59892
+  task_cap_coreh: 2.40
+  line_cap_coreh: 5.70
+  next: attribute_changed_exit_proceeds_vs_reentry_and_residual_from_saved_paths_before_new_rule
 maker3_book_conditions_20261125_claude:
   report: predictfun/reviews/maker3_book_conditions_20261125/report.md
   session: 1622c91e

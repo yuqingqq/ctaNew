@@ -1,0 +1,135 @@
+{
+  "totals": {
+    "BASE": {
+      "net_c": -91604.99770498548,
+      "completed_c": -85270.93436030981,
+      "residual_c": -6334.063344675686,
+      "maker_shares": 85423.81382078199,
+      "passive_generations": 6097,
+      "passive_pulls": 706,
+      "overrides": 0,
+      "override_posts": 0,
+      "override_keeps": 0,
+      "override_ask": 0,
+      "override_bid": 0,
+      "affected_gid_fills": 0,
+      "pressure_decisions": 2859,
+      "peak_inventory": 200.0,
+      "mean_abs_inventory": 71.67905059398213,
+      "both_grid_fraction": 0.4284881667255387
+    },
+    "WIDE": {
+      "net_c": -85233.21045072678,
+      "completed_c": -51262.64009052396,
+      "residual_c": -33970.57036020282,
+      "maker_shares": 109355.17552890252,
+      "passive_generations": 8610,
+      "passive_pulls": 920,
+      "overrides": 0,
+      "override_posts": 0,
+      "override_keeps": 0,
+      "override_ask": 0,
+      "override_bid": 0,
+      "affected_gid_fills": 0,
+      "pressure_decisions": 4288,
+      "peak_inventory": 496.73153114622266,
+      "mean_abs_inventory": 197.21650861564248,
+      "both_grid_fraction": 0.89012716354645
+    },
+    "WIDE_REDUCE": {
+      "net_c": -162433.8072496014,
+      "completed_c": -140185.08223833013,
+      "residual_c": -22248.725011271283,
+      "maker_shares": 118209.79803374528,
+      "passive_generations": 8727,
+      "passive_pulls": 731,
+      "overrides": 1291,
+      "override_posts": 281,
+      "override_keeps": 1010,
+      "override_ask": 796,
+      "override_bid": 495,
+      "affected_gid_fills": 9779.102603417703,
+      "pressure_decisions": 4473,
+      "peak_inventory": 495.8970727008391,
+      "mean_abs_inventory": 175.91467461104295,
+      "both_grid_fraction": 0.899814553161427
+    },
+    "WIDE_COST": {
+      "net_c": -115319.36923842887,
+      "completed_c": -93610.54285084984,
+      "residual_c": -21708.82638757905,
+      "maker_shares": 114278.1597374878,
+      "passive_generations": 8714,
+      "passive_pulls": 829,
+      "overrides": 788,
+      "override_posts": 197,
+      "override_keeps": 591,
+      "override_ask": 451,
+      "override_bid": 337,
+      "affected_gid_fills": 5252.902358644318,
+      "pressure_decisions": 4403,
+      "peak_inventory": 496.55660218030766,
+      "mean_abs_inventory": 183.04993083935554,
+      "both_grid_fraction": 0.8948869657364887
+    }
+  },
+  "contrasts": {
+    "WIDE minus BASE": {
+      "total": 6371.787254258699,
+      "days": {
+        "20261024": 20797.651142637646,
+        "20261025": -12348.686444130939,
+        "20261026": 6318.690663488281,
+        "20261027": -8395.868107736289
+      },
+      "better": 9,
+      "worse": 10,
+      "excluding_3789484": -17535.162649607126,
+      "top3_abs_share": 0.3957801650708866,
+      "reading": "MIXED"
+    },
+    "WIDE_REDUCE minus WIDE": {
+      "total": -77200.59679887461,
+      "days": {
+        "20261024": -14098.737544790425,
+        "20261025": -12971.13610968618,
+        "20261026": -33498.4069005612,
+        "20261027": -16632.31624383681
+      },
+      "better": 5,
+      "worse": 13,
+      "excluding_3789484": -63294.88591216241,
+      "top3_abs_share": 0.513189106967565,
+      "reading": "NEGATIVE_EVERY_DAY"
+    },
+    "WIDE_COST minus WIDE": {
+      "total": -30086.15878770209,
+      "days": {
+        "20261024": -4721.702131549041,
+        "20261025": -2193.6929057291636,
+        "20261026": -14281.379396968352,
+        "20261027": -8889.384353455533
+      },
+      "better": 8,
+      "worse": 10,
+      "excluding_3789484": -22534.948004893253,
+      "top3_abs_share": 0.4932389884994446,
+      "reading": "NEGATIVE_EVERY_DAY"
+    },
+    "WIDE_COST minus WIDE_REDUCE": {
+      "total": 47114.438011172526,
+      "days": {
+        "20261024": 9377.035413241385,
+        "20261025": 10777.443203957017,
+        "20261026": 19217.02750359285,
+        "20261027": 7742.931890381276
+      },
+      "better": 14,
+      "worse": 2,
+      "excluding_3789484": 40759.93790726916,
+      "top3_abs_share": 0.37143579539770594,
+      "reading": "POSITIVE_EVERY_DAY"
+    }
+  }
+}
+2026-11-25T03:06:02Z tag=ix_report rc=0 peak_rss_mib=298 wall_s=1.69 cpu_user_s=1.15 memavail_start_gib=22 disk_free_gib=408->408 slot=codex

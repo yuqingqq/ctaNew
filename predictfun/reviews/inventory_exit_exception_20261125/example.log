@@ -1,0 +1,119 @@
+{
+  "BASE": {
+    "eligible_ask_slot_decisions": 89,
+    "first_eligible_ask": {
+      "command_index": 649,
+      "t": 8100.0,
+      "side": 1,
+      "kind": "slot",
+      "gid": null,
+      "price": 60.0,
+      "q": 100.0,
+      "own": 0.0,
+      "I": 50.86814827586207,
+      "B": 0.0,
+      "A": 0.0,
+      "basis": 59.0,
+      "room": 50.86814827586207,
+      "size": 50.0,
+      "margin": 1.0,
+      "reducing": true,
+      "cost_ok": true,
+      "override": false,
+      "mode": "none",
+      "parent": [
+        "WAIT",
+        null,
+        "pressure_withhold"
+      ]
+    }
+  },
+  "WIDE": {
+    "eligible_ask_slot_decisions": 129,
+    "first_eligible_ask": {
+      "command_index": 637,
+      "t": 8100.0,
+      "side": 1,
+      "kind": "slot",
+      "gid": null,
+      "price": 60.0,
+      "q": 100.0,
+      "own": 0.0,
+      "I": 23.86814827586207,
+      "B": 190.0,
+      "A": 0.0,
+      "basis": 58.99999999999999,
+      "room": 23.868148275862072,
+      "size": 23.0,
+      "margin": 1.000000000000007,
+      "reducing": true,
+      "cost_ok": true,
+      "override": false,
+      "mode": "none",
+      "parent": [
+        "WAIT",
+        null,
+        "pressure_withhold"
+      ]
+    }
+  },
+  "WIDE_REDUCE": {
+    "eligible_ask_slot_decisions": 18,
+    "first_eligible_ask": {
+      "command_index": 637,
+      "t": 8100.0,
+      "side": 1,
+      "kind": "slot",
+      "gid": null,
+      "price": 60.0,
+      "q": 100.0,
+      "own": 0.0,
+      "I": 100.0,
+      "B": 160.0,
+      "A": 0.0,
+      "basis": 59.0,
+      "room": 100.0,
+      "size": 100.0,
+      "margin": 1.0,
+      "reducing": true,
+      "cost_ok": true,
+      "override": true,
+      "mode": "reduce",
+      "parent": [
+        "WAIT",
+        null,
+        "pressure_withhold"
+      ]
+    }
+  },
+  "WIDE_COST": {
+    "eligible_ask_slot_decisions": 17,
+    "first_eligible_ask": {
+      "command_index": 637,
+      "t": 8100.0,
+      "side": 1,
+      "kind": "slot",
+      "gid": null,
+      "price": 60.0,
+      "q": 100.0,
+      "own": 0.0,
+      "I": 23.86814827586207,
+      "B": 190.0,
+      "A": 0.0,
+      "basis": 58.99999999999999,
+      "room": 23.868148275862072,
+      "size": 23.0,
+      "margin": 1.000000000000007,
+      "reducing": true,
+      "cost_ok": true,
+      "override": true,
+      "mode": "cost",
+      "parent": [
+        "WAIT",
+        null,
+        "pressure_withhold"
+      ]
+    }
+  }
+}
+2026-11-25T03:06:10Z tag=ix_example rc=0 peak_rss_mib=240 wall_s=1.22 cpu_user_s=0.99 memavail_start_gib=22 disk_free_gib=408->408 slot=codex

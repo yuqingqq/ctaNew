@@ -1,0 +1,10 @@
+{
+  "measured_wall_s": 572.62,
+  "measured_user_cpu_s": 561.8,
+  "charged_cpu_s": 600,
+  "task_coreh": 2.2882166666666666,
+  "line_coreh": 5.598916666666667,
+  "task_cap": 2.4,
+  "line_cap": 5.7,
+  "reserve_coreh": 0.05
+}

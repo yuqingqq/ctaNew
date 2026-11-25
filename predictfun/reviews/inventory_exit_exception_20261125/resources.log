@@ -1,0 +1,9 @@
+2026-11-25T02:53:33Z tag=ix_selftest rc=1 peak_rss_mib=198 wall_s=0.91 cpu_user_s=0.76 memavail_start_gib=22 disk_free_gib=408->408 slot=codex
+2026-11-25T02:53:47Z tag=ix_selftest2 rc=0 peak_rss_mib=197 wall_s=0.89 cpu_user_s=0.75 memavail_start_gib=22 disk_free_gib=408->408 slot=codex
+2026-11-25T02:53:56Z tag=ix_prepare rc=0 peak_rss_mib=310 wall_s=3.18 cpu_user_s=2.00 memavail_start_gib=22 disk_free_gib=408->408 slot=codex
+2026-11-25T02:54:25Z tag=ix_run rc=1 peak_rss_mib=797 wall_s=25.86 cpu_user_s=24.87 memavail_start_gib=22 disk_free_gib=408->408 slot=codex
+2026-11-25T02:56:26Z tag=ix_resume_prepare rc=0 peak_rss_mib=298 wall_s=1.71 cpu_user_s=1.15 memavail_start_gib=22 disk_free_gib=407->407 slot=codex
+2026-11-25T02:56:42Z tag=ix_resume_run rc=0 peak_rss_mib=903 wall_s=528.26 cpu_user_s=521.89 memavail_start_gib=22 disk_free_gib=408->408 slot=codex
+2026-11-25T03:05:48Z tag=ix_check rc=0 peak_rss_mib=299 wall_s=8.90 cpu_user_s=8.24 memavail_start_gib=22 disk_free_gib=408->408 slot=codex
+2026-11-25T03:06:02Z tag=ix_report rc=0 peak_rss_mib=298 wall_s=1.69 cpu_user_s=1.15 memavail_start_gib=22 disk_free_gib=408->408 slot=codex
+2026-11-25T03:06:10Z tag=ix_example rc=0 peak_rss_mib=240 wall_s=1.22 cpu_user_s=0.99 memavail_start_gib=22 disk_free_gib=408->408 slot=codex
