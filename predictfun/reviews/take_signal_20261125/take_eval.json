@@ -1,0 +1,58 @@
+{
+ "days": {
+  "20261024": {
+   "markets": 288,
+   "censored": 0,
+   "outcomes": {
+    "Up": 151,
+    "Down": 137
+   }
+  },
+  "20261025": {
+   "markets": 288,
+   "censored": 0,
+   "outcomes": {
+    "Down": 152,
+    "Up": 136
+   }
+  },
+  "20261026": {
+   "markets": 288,
+   "censored": 0,
+   "outcomes": {
+    "Down": 148,
+    "Up": 140
+   }
+  },
+  "20261027": {
+   "markets": 287,
+   "censored": 1,
+   "outcomes": {
+    "Down": 146,
+    "Up": 141,
+    "": 1
+   }
+  }
+ },
+ "takes": 63708,
+ "by_clock_status": {
+  "slow|filled": 12149,
+  "slow|no_known_book": 4122,
+  "slow|not_executable": 15583,
+  "tokyo|filled": 16383,
+  "tokyo|no_known_book": 4131,
+  "tokyo|not_executable": 11340
+ },
+ "events_all": 259826,
+ "events_kept": 31854,
+ "inputs": {
+  "bn_changes.parquet": "7600031c92bea61f733be2cd27eae7bf32aba82e98e64c7f85fcdf05199417e3"
+ },
+ "prior_attempt": "2026-11-25T03:27:44Z ts_take rc=1: receipt json refused tuple keys after the two outputs were written; those partial outputs were removed and the run repeated with string keys (no input or rule change)",
+ "cpu_s": 9.45,
+ "vmhwm_mib": 611.4,
+ "outputs": {
+  "takes.parquet": "95b55a5b4094e3cd9a8bcde4ae0e4f96457408219927e51b399872aa2e0a593f",
+  "events_all.parquet": "096fe7b485a384a9e86ec86e8ae5649c84ab2097e338e93f4b2729338f3f2f11"
+ }
+}

@@ -1,0 +1,35 @@
+{
+ "K1_raw_rescan_r250": {
+  "ok": true,
+  "detail": "2643 kept triggers in hours ['20261024_15', '20261024_14', '20261026_08', '20261027_02'], 0 mismatches"
+ },
+ "K2_future_binance_no_effect": {
+  "ok": true,
+  "detail": "200 triggers, 0 r250 changes"
+ },
+ "K2_future_predict_no_effect": {
+  "ok": true,
+  "detail": "200 triggers, 0 limit changes"
+ },
+ "K2_positive_control": {
+  "ok": true,
+  "detail": "200/200 limits change when the known frame itself is moved"
+ },
+ "K3_synthetic_fill_cases": {
+  "ok": true,
+  "detail": "[np.True_, np.True_, np.True_, True, True]"
+ },
+ "K4_reconciliation": {
+  "ok": true,
+  "detail": "kept 31854, per clock {'slow': 31854, 'tokyo': 31854}"
+ },
+ "K5_cooldown_rule": {
+  "ok": true,
+  "detail": "259826 qualifying events, 0 violations"
+ },
+ "K6_pooled_mark_3s": {
+  "ok": true,
+  "detail": "2.348041 c/sh"
+ },
+ "all_pass": true
+}

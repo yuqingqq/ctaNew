@@ -1,3 +1,15 @@
+<!-- TAKE_SIGNAL_20261125_CLAUDE -->
+## 2026-11-25 — signal-driven taking: positive at Tokyo latency on all 1,151 markets; next = SIGNAL_TAKE overlay in the 19-market replay (USER's call)
+
+[Receipt](reviews/take_signal_20261125/report.md) (session 1622c91e). USER asked whether our uptrend signal (the pressure guard that withholds asks) can pay the taker fee, and whether we should take actively and early.
+
+Result: yes at Tokyo latency. A take earns +2.35 ¢ per filled share at 3 s after the fee (+1.36 ¢ even exiting by taking), with a 51 % fill rate, on every day and in both directions; stronger signals earn more. The edge vanishes by +150 ms arrival, and the random-time / shifted / opposite-direction controls are negative. Maker3's takes cluster after the same triggers (57 % vs 22 % null). The early-window edge equals the later one but fills are easier. Holding to resolution is noise: take and leave.
+
+Watch out: premise correction, in 3789484 Maker3's early fills are passive (its first take is at 82.8 s). The fill rule is conservative but frame-based (~50 ms snapshots); sub-frame competition, own impact and capacity beyond the touch are unmeasured. Raw BTC bookTicker moves in discrete bursts: a verified feed property, and the grid matches raw, which closes the stickiness item from the book-conditions block.
+
+ONE next priority (needs the USER's go): a SIGNAL_TAKE overlay in our replay of the 19 complete markets. On guard ON, also send an IOC at the known touch (≤ 50 sh); the existing passive rules / caps then manage the inventory; compare paired full-book value against the current arms. Add a competition calibration: after each trigger, do trades or cancels remove the stale level (from pending settlements)? Untouched-day confirmation / Tokyo shadow are the USER's call.
+<!-- /TAKE_SIGNAL_20261125_CLAUDE -->
+
 <!-- INVENTORY_EXIT_ATTRIBUTION_20261125_CODEX -->
 ## 2026-11-25 — cost-based exits mostly lose through worse exit prices
 

@@ -1,3 +1,26 @@
+take_signal_20261125_claude:
+  report: predictfun/reviews/take_signal_20261125/report.md
+  session: 1622c91e
+  markets: 1151
+  triggers_kept: 31854
+  signal: bn_r250_frozen_guard_edges_0.2855_up_0.4667_down
+  parity_with_guard_trigger_3789484: true
+  tokyo_fill_rate: 0.514
+  tokyo_mark_3s_c_per_share: 2.348
+  tokyo_rt_3s_c_per_share: 1.357
+  slow_mark_3s_c_per_share: 1.714
+  very_slow_mark_3s_c_per_share: 0.073
+  placebo_mark_3s_c_per_share: -1.198
+  opposite_mark_3s_c_per_share: -5.308
+  all_days_positive_short_horizons: true
+  maker3_takes_aligned: 0.573
+  maker3_takes_aligned_null_mean: 0.219
+  selection_holdout_mark_3s_c: 6.98
+  checks_pass: 8
+  validation: false
+  strategy_integration_measured: false
+  charged_cpu_s: 240
+  next: signal_take_overlay_in_19_market_replay_needs_user_go
 inventory_exit_attribution_20261125_codex:
   report: predictfun/reviews/inventory_exit_attribution_20261125/report.md
   freeze: ca16030cdb3770cf315263cfa8da022522d4ae66
@@ -62,7 +85,7 @@ maker3_book_conditions_20261125_claude:
   validation: false
   rule_adopted: false
   charged_cpu_s: 90
-  btc_grid_stickiness_verified: false
+  btc_grid_stickiness_verified: true   # feed property: raw bookTicker moves in bursts, grid matches raw (take_signal_20261125_claude)
   fifo_rt_total_usd: 15818.16
   fifo_rt_share_exits_before_270: 0.7105
   fifo_rt_early_share_both_spread_le1c_P: 0.801

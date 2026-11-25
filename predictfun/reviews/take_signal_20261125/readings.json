@@ -1,0 +1,146 @@
+{
+ "tokyo": {
+  "mark_1s": {
+   "pooled_c": 2.2985614167961406,
+   "positive": true,
+   "day_signs": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "positive_on_3_of_4_days": true
+  },
+  "mark_3s": {
+   "pooled_c": 2.3480405098234445,
+   "positive": true,
+   "day_signs": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "positive_on_3_of_4_days": true
+  },
+  "mark_10s": {
+   "pooled_c": 2.6341150113691225,
+   "positive": true,
+   "day_signs": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "positive_on_3_of_4_days": true
+  },
+  "monotone_mark_3s_across_strength": true,
+  "mark_3s_by_strength_c": {
+   "edge-0.5": 2.1964345216946426,
+   "0.5-1": 2.20026341370983,
+   "1-2": 3.9567470663922504,
+   ">=2": 9.130813185623094
+  },
+  "early_vs_later_mark_3s_c": {
+   "early": 2.465320964036343,
+   "later": 2.311148488863708,
+   "early_filled": 4056,
+   "later_filled": 12327
+  },
+  "fill_rate": 0.5143153136183839,
+  "end_c": 3.8695934520372566,
+  "res_c": 3.1082841936204475,
+  "selection": {
+   "chosen": {
+    "b": "2",
+    "b_val": 2.0,
+    "window": "all",
+    "dev_mark_3s_c": 11.29617640145555,
+    "dev_filled": 57.0,
+    "dev_markets": 36.0
+   },
+   "holdout_mark_3s_c": 6.981710823998275,
+   "holdout_filled": 60,
+   "holdout_markets": 37,
+   "holdout_mark_1s_c": 6.982968785292009,
+   "holdout_mark_10s_c": 8.757331660258687,
+   "holdout_end_c": 13.07332669510341,
+   "holdout_day_mark_3s_c": {
+    "20261026": 5.351160123450307,
+    "20261027": 11.324180869672904
+   },
+   "holdout_positive": true
+  }
+ },
+ "slow": {
+  "mark_1s": {
+   "pooled_c": 1.639426248534639,
+   "positive": true,
+   "day_signs": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "positive_on_3_of_4_days": true
+  },
+  "mark_3s": {
+   "pooled_c": 1.7139626032996205,
+   "positive": true,
+   "day_signs": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "positive_on_3_of_4_days": true
+  },
+  "mark_10s": {
+   "pooled_c": 2.0283410135085225,
+   "positive": true,
+   "day_signs": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "positive_on_3_of_4_days": true
+  },
+  "monotone_mark_3s_across_strength": true,
+  "mark_3s_by_strength_c": {
+   "edge-0.5": 1.548830714748086,
+   "0.5-1": 1.5683186032147258,
+   "1-2": 3.4486013676123313,
+   ">=2": 8.680905119681512
+  },
+  "early_vs_later_mark_3s_c": {
+   "early": 2.0135331057131745,
+   "later": 1.6259444952422701,
+   "early_filled": 2984,
+   "later_filled": 9165
+  },
+  "fill_rate": 0.3813963709424248,
+  "end_c": 2.0997080811276434,
+  "res_c": 2.145008880101934,
+  "selection": {
+   "chosen": {
+    "b": "2",
+    "b_val": 2.0,
+    "window": "all",
+    "dev_mark_3s_c": 10.426116443715463,
+    "dev_filled": 45.0,
+    "dev_markets": 31.0
+   },
+   "holdout_mark_3s_c": 6.860093481893713,
+   "holdout_filled": 47,
+   "holdout_markets": 31,
+   "holdout_mark_1s_c": 6.540851718167776,
+   "holdout_mark_10s_c": 9.007044204710617,
+   "holdout_end_c": 15.059214566005435,
+   "holdout_day_mark_3s_c": {
+    "20261026": 5.180756238835584,
+    "20261027": 11.677055906144805
+   },
+   "holdout_positive": true
+  }
+ }
+}

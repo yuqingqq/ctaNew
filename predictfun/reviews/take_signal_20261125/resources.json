@@ -1,0 +1,109 @@
+{
+ "asof": "2026-11-25",
+ "slot": "claude",
+ "runs": [
+  {
+   "tag": "ts_bn",
+   "rc": "0",
+   "peak_rss_mib": "642",
+   "wall_s": "79.38",
+   "cpu_user_s": "70.55",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "408->408",
+   "slot": "claude",
+   "start": "2026-11-25T03:25:00Z"
+  },
+  {
+   "tag": "ts_take",
+   "rc": "1",
+   "peak_rss_mib": "627",
+   "wall_s": "9.92",
+   "cpu_user_s": "8.88",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "408->408",
+   "slot": "claude",
+   "start": "2026-11-25T03:27:44Z"
+  },
+  {
+   "tag": "ts_take2",
+   "rc": "0",
+   "peak_rss_mib": "611",
+   "wall_s": "9.85",
+   "cpu_user_s": "8.85",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "408->408",
+   "slot": "claude",
+   "start": "2026-11-25T03:28:09Z"
+  },
+  {
+   "tag": "ts_sum",
+   "rc": "0",
+   "peak_rss_mib": "174",
+   "wall_s": "2.01",
+   "cpu_user_s": "1.88",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "408->408",
+   "slot": "claude",
+   "start": "2026-11-25T03:28:51Z"
+  },
+  {
+   "tag": "ts_ctrl",
+   "rc": "0",
+   "peak_rss_mib": "634",
+   "wall_s": "13.08",
+   "cpu_user_s": "12.11",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "408->408",
+   "slot": "claude",
+   "start": "2026-11-25T03:31:39Z"
+  },
+  {
+   "tag": "ts_m3",
+   "rc": "0",
+   "peak_rss_mib": "241",
+   "wall_s": "24.26",
+   "cpu_user_s": "24.05",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "408->408",
+   "slot": "claude",
+   "start": "2026-11-25T03:32:32Z"
+  },
+  {
+   "tag": "ts_check",
+   "rc": "0",
+   "peak_rss_mib": "1687",
+   "wall_s": "78.67",
+   "cpu_user_s": "50.17",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "408->407",
+   "slot": "claude",
+   "start": "2026-11-25T03:34:12Z"
+  },
+  {
+   "tag": "ts_report",
+   "rc": "0",
+   "peak_rss_mib": "141",
+   "wall_s": "0.36",
+   "cpu_user_s": "0.28",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "408->408",
+   "slot": "claude",
+   "start": "2026-11-25T03:36:59Z"
+  },
+  {
+   "tag": "ts_report2",
+   "rc": "0",
+   "peak_rss_mib": "141",
+   "wall_s": "0.36",
+   "cpu_user_s": "0.28",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "408->408",
+   "slot": "claude",
+   "start": "2026-11-25T03:37:14Z"
+  }
+ ],
+ "wrapped_cpu_user_s": 177.05,
+ "unwrapped_probes": "raw bookTicker stickiness and 3789484 timeline probes, each < 10 CPU s",
+ "charged_upper_cpu_s": 240,
+ "charged_coreh": 0.0667
+}

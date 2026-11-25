@@ -1,3 +1,19 @@
+<!-- TAKE_SIGNAL_20261125_CLAUDE -->
+## 2026-11-25 — taking on our Binance pressure signal pays at Tokyo latency; Maker3 times its takes on the same signal
+
+[Receipt](reviews/take_signal_20261125/report.md) (session 1622c91e). USER: in 3789484 Maker3 is active early while we withhold asks on our uptrend signal. Does the signal pay the taker fee, and should we take ourselves? Premise correction: Maker3's first fills there are passive (its bid raised to 56 ¢ within ~1 s of a +2.6 bps BTC burst); its first take is at 82.8 s.
+
+Population test, consumed Oct 24–27, 1,151 markets. Every pressure-guard trigger counts (bn_r250 ≥ 0.2855 / ≤ −0.4667 bps, the frozen edges), recomputed from raw bookTicker with exact parity to the guard's recorded +0.32485 at 3789484 550 ms. One per market × direction per 2 s gives 31,854 triggers, each valued as an IOC at the known touch with a conservative two-frame fill rule and the 200 bps fee.
+
+- Tokyo clock (decision E + 5 ms, book known at −63 ms, arrival +42 ms): fill 51 %. Net per filled share +2.30 / +2.35 / +2.63 ¢ at 1 / 3 / 10 s; taker round trip at 3 s +1.36 ¢. Every day and both directions positive. Rises with strength: +2.2 below 1 bps, +4.0 at 1–2, +9.1 at ≥ 2 bps. Near-money +3.15 vs extreme +0.61 ¢. Q 50: +$12,728 marked at 3 s over 4 days.
+- Latency decides it: +86 ms arrival +1.71 ¢ (fill 38 %), +150 ms +0.07 ¢ (fill 17 %). Controls (amendment 1, declared first): random times −1.20 ¢ (fill 85 %), +7 s −1.19, opposite direction −5.31.
+- Early window: the same edge (+2.47 vs +2.31 ¢), more fills (59 % vs 18 % in the last 30 s). Holding to resolution is outcome-driven noise: the 3789484 opening take is +10.5 ¢ at 3 s and −51 ¢ at resolution. Take and leave, do not accumulate.
+- Maker3: 58 % of adding and 57 % of reducing takes have a same-direction trigger within 3.5 s before the stamp, vs 22 % in 500 circular shifts (none ≥ observed). Aligned adding takes +3.39 ¢/sh to resolution vs −1.77.
+- Declared split: the Oct 24–25 best cell, |bn_r250| ≥ 2 bps in all windows (+11.30 ¢, 57 fills), earns +6.98 ¢ on Oct 26–27 (60 fills, 37 markets), both days positive (thin).
+
+Checks 8/8: raw rescan of 2,643 triggers, future-perturbation falsifiers + positive control, synthetic fill cases, cooldown rule on 259,826 events, reconciliation, readings. Not measured: integration with our passive strategy, sub-frame competition, own impact, capacity beyond the touch. Development evidence only. CPU charged 240 s.
+<!-- /TAKE_SIGNAL_20261125_CLAUDE -->
+
 <!-- INVENTORY_EXIT_ATTRIBUTION_20261125_CODEX -->
 ## 2026-11-25 — cost-based exits mostly lose through worse exit prices
 
