@@ -63,3 +63,15 @@ validation. Days from 2026-11-04 on are reserved for the pending forward races a
   - a no-trigger falsifier (takes disabled → no orders).
 
 Development evidence on consumed days; no validation or promotion claim.
+
+## Resource-only amendment R1 (after the first-day projection refusal, before any further run)
+
+- **Refusal:** the run refused at its declared gate. 20261023 took 202 CPU s, and the 5-day projection with a ×1.2 margin was
+  1,211 s against the 1,100 s cap (run_light 06:53:17Z, rc = 1; v3_projection.json). The gate worked as declared.
+- **New cap:** total ≤ 1,300 CPU s (≈ 0.36 core-h, under 30 min wall).
+- **Oct 23 reuse:** the 20261023 ledgers already written by the frozen code are reused. A fresh 20261023 census (paths only, no
+  strategy run) must show exactly the same complete-market set as the saved ledgers, with both settings present for each market.
+  Their sha256 are recorded at resume time.
+- **Resume:** runs 20261031..20261103 with the same code. Projection after 20261031 (cost × 3 remaining days × 1.1 plus spent
+  ≤ 1,300) or stop.
+- **Unchanged:** no rule, setting, day or check changes.

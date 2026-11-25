@@ -304,5 +304,67 @@ def report():
     print(json.dumps(out, indent=1, default=float))
 
 
+def resume():
+    """Resource-only amendment R1: reuse the 20261023 ledgers (verified against a fresh census), run 20261031..20261103."""
+    resource.setrlimit(resource.RLIMIT_CPU, (1160, 1161))
+    bound()
+    assert not (OUT3 / 'summary.json').exists()
+    spent = json.loads((H / 'v3_projection.json').read_text())['cpu_s']
+    cap_left = 1300. - spent
+    edges = TR.T.P.frozen_edges()
+    src, rows, census = MM.KP.Tape(), [], []
+    t0 = time.process_time()
+    day = DAYS3[0]
+    reg = MM.registry(day).set_index('mid')
+    off = src.offset(day)
+    comp = set()
+    for h, g in reg.groupby('hour'):
+        for m, st, p, info in MM.worlds(day, [int(x) for x in g.index], src, off, reg):
+            census.append(dict(day=day, mid=m, hour=int(h), status=st))
+            if st == 'complete':
+                comp.add((m, int(h)))
+    saved = {}
+    for fn in sorted(OUT3.glob('*_LENIENT40.json.gz')) + sorted(OUT3.glob('*_STRICT58.json.gz')):
+        rec = json.loads(gzip.decompress(fn.read_bytes()))
+        if rec.get('day') != day:
+            continue
+        saved.setdefault((int(rec['mid']), int(rec['hour'])), {})[rec['setting']] = (rec, TR.sha(fn))
+    assert set(saved) == comp and all(set(v) == set(SETTINGS) for v in saved.values()), 'saved 20261023 ledgers differ from the fresh census'
+    for (m, h), v in sorted(saved.items()):
+        for setting in SETTINGS:
+            rec, hsh = v[setting]
+            rows.append(dict(day=day, mid=m, hour=h, setting=setting, metrics=rec['metrics'], sha256=hsh, reused=True))
+    for di, day in enumerate(DAYS3[1:]):
+        reg = MM.registry(day).set_index('mid')
+        off = src.offset(day)
+        for h, g in reg.groupby('hour'):
+            for m, st, p, info in MM.worlds(day, [int(x) for x in g.index], src, off, reg):
+                ws = float(reg.loc[m, 'ws']) * 1000.
+                if ws + 300000. >= FWD_MS:
+                    st = 'boundary_censored_forward_tail'
+                census.append(dict(day=day, mid=m, hour=int(h), status=st))
+                if st != 'complete':
+                    continue
+                bps = float(reg.loc[m, 'fee_bps'])
+                assert bps == 200.
+                cache = make_cache3(float(info['t_start']), float(info['end_rel']), SEG_OF[day])
+                old = dict(end=float(info['end_rel']), ident=MM.ident_of(day, m, ws, info, p))
+                for setting in SETTINGS:
+                    rec = one(p, cache, old, edges, bps, setting)
+                    rec.update(day=day, mid=m, hour=int(h), setting=setting)
+                    fn = OUT3 / f'{m}_{setting}.json.gz'
+                    assert not fn.exists()
+                    fn.write_bytes(gzip.compress(json.dumps(rec, allow_nan=False).encode(), mtime=0))
+                    rows.append(dict(day=day, mid=m, hour=int(h), setting=setting, metrics=rec['metrics'], sha256=TR.sha(fn)))
+            assert resource.getrusage(resource.RUSAGE_SELF).ru_maxrss < 2500 * 1024
+        el = time.process_time() - t0
+        if di == 0:
+            proj = el * 3 * 1.1
+            TR.dump(H / 'v3_projection_r1.json', dict(first_resumed_day=day, cpu_s=el, spent_before=spent, projection_cpu_s=spent + proj, cap=1300., proceed=proj <= cap_left))
+            assert proj <= cap_left, 'projection stop (R1)'
+        print(day, 'done', len(rows), round(el, 1), flush=True)
+    TR.dump(OUT3 / 'summary.json', dict(rows=rows, census=census, cpu_s=spent + time.process_time() - t0, status='COMPLETE', amendment='R1'))
+
+
 if __name__ == '__main__':
-    {'bn': bn_build, 'bn_validate': bn_validate, 'run': run, 'check': check, 'report': report}[sys.argv[1]]()
+    {'bn': bn_build, 'bn_validate': bn_validate, 'run': run, 'resume': resume, 'check': check, 'report': report}[sys.argv[1]]()
