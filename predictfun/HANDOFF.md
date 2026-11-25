@@ -3,7 +3,7 @@
 
 Done: [report](reviews/take_exit_floor_20261125/report.md). On the five v3 days the floor adds +$480.06 at settlement (+$5.79 vs +$4.61 per market, 5 / 5 days): round trips gain +$703.87 and the carry to settlement costs −$223.81; it nearly doubles the inventory carried to settlement (2,284.6 vs 1,242.8 shares; held-lot P&L −$258.24 vs −$34.43). Checks and falsifiers pass; parity exact.
 
-Next (USER's call): adopt the floor into the candidate rule; a floor with a time limit to cap the carry; the C1–C3 / C12 / C15 checklist (queue sensitivity) for the take + exit line; forward days stay reserved.
+FROZEN (USER: "freeze current version, test on more days") as TAKE_EXIT_FLOOR_v1: [receipt](freeze/take_exit_floor_v1/RECEIPT.md), [manifest](freeze/take_exit_floor_v1/manifest.json) (108 sources, code da209477c). The test design is declared in the receipt; the day list is the USER's call (proposed Nov 14–24, no declared race) and needs the input chain built for those days (multi-core-hour).
 
 Watch-outs: the floor shares BASE's queue and latency assumptions; opposite takes now close 11,694.6 shares at a loss (−$546.86).
 <!-- /TAKE_EXIT_FLOOR_20261125_CLAUDE -->
