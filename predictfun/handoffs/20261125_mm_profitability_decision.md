@@ -27,3 +27,7 @@ No strategy parameters were changed and no new markets were replayed for this re
 ## Experiment disposition, November 25
 
 Completed [paired replay and verification](../reviews/passive_depletion_20261125/report.md). Stop the adding-side depletion override. It worsened settlement by $581.14 and completed turnover by $657.62 across the 70 reference markets. Total cancellations increased from 23,617 to 30,676. The subsequent fills on the originally flagged orders were adverse at one second, yet summed to positive contributions at settlement. Those contributions are fixed-path descriptions; the full paired policy is the relevant economic test. Retain the straight-line reference for research. The predeclared gate ends this candidate here.
+
+## Completed-cycle spread attribution
+
+The [baseline FIFO replay](../reviews/cycle_spread_20261125/report.md) reproduced all 70 market ledgers' checked aggregates. On matched shares the opening and closing execution prices together earned 0.991¢ versus the pre-fill mids. Signed mid movement cost 2.180¢, including 1.797¢ from opening through the earlier of one second and the close. Cycles opened by a public print at our limit earned $192.97; cycles opened by a print through it lost $2,495.68. This is a realized-path breakdown. The public print type becomes known on execution and cannot serve as a pre-fill cancellation signal.
