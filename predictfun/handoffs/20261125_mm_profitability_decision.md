@@ -31,3 +31,7 @@ Completed [paired replay and verification](../reviews/passive_depletion_20261125
 ## Completed-cycle spread attribution
 
 The [baseline FIFO replay](../reviews/cycle_spread_20261125/report.md) reproduced all 70 market ledgers' checked aggregates. On matched shares the opening and closing execution prices together earned 0.991¢ versus the pre-fill mids. Signed mid movement cost 2.180¢, including 1.797¢ from opening through the earlier of one second and the close. Cycles opened by a public print at our limit earned $192.97; cycles opened by a print through it lost $2,495.68. This is a realized-path breakdown. The public print type becomes known on execution and cannot serve as a pre-fill cancellation signal.
+
+## Current research decision after comparing quote retention
+
+The [single-switch replay](../reviews/distance_retention_20261125/report.md) kept distant quotes when no other cancellation rule applied. Settlement improved from −$2,759 to +$1,891 on 70 consumed October 26 markets, but mean absolute expiry inventory rose from 41.9 to 186.2 shares and residual P&L fell to −$4,047. The frozen verdict is reject for exposure. See [earlier research and the proposed role-specific test](../reviews/distance_retention_20261125/research_context.md). No new date was consumed.
