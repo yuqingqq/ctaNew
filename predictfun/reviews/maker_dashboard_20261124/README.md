@@ -1,10 +1,12 @@
 # Market microscope
 
+The [ten-market dashboard](dashboard.html?market=3838531) keeps the three original markets and adds seven with directional 30-second moves in the YES midpoint. Select an arrow-labelled market and click the signed price-change button to jump to that window. The [Maker #3 comparison](maker3-research.html?market=3838531&from=245&to=275) has baseline and wider-band overlays for the same ten markets. The seven windows were selected for illustration using public prices on a one-second grid. Each selected move covers at least 10¢ and its net change is at least 60% of the cumulative absolute movement.
+
 2026-11-25: [Maker3 calm/volatile versus book-spread figure](maker3-regimes.png), [vector version](maker3-regimes.svg), and [full attribution receipt](../maker3_regime_spread_20261125/report.md). Uses the same19 complete markets. Profitable volatile exits are concentrated in two Oct26 markets; volatile-entry residuals lose. These are accounting associations, not a recovered quote rule.
 
 2026-11-24: [Maker #3 trend, spread and inventory](maker3-research.html) adds all19 complete markets, a public-price-selected trend, the last two minutes of3789484, native take directions, execution-window book clocks, completed turnover versus residual risk, and the matched taker-condition screens. [Receipt](../maker3_spread_risk_20261124/report.md). Through the existing SSH tunnel open `http://127.0.0.1:8765/maker3-research.html`. The page is self-contained and downloadable; the existing service remains loopback-only.
 
-Open `dashboard.html` directly in a modern browser. It is self-contained and was tested from `file://` with no network requests. Start with Oct26 /3789484 and “Inspect maker example”; follow the linked next order or click our fills/orders. All three markets have a saved current and hypothetical front arm.
+Open `dashboard.html` directly in a modern browser. It is self-contained and was tested from `file://` with no network requests. Start with Oct26 /3789484 and “Inspect maker example”; follow the linked next order or click our fills/orders. All ten markets have a saved current and hypothetical front arm.
 
 Optional local server:
 
