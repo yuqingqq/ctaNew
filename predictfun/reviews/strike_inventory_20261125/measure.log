@@ -1,0 +1,27 @@
+day       status    
+20261024  no_book        331
+          no_btc          23
+          ok            1950
+20261025  no_book        391
+          no_btc          26
+          ok            1887
+20261026  no_book        382
+          no_btc           7
+          ok            1915
+20261027  no_book        425
+          no_btc           7
+          no_outcome       8
+          ok            1864
+          brier_book  brier_blend  score_book  score_blend
+day                                                       
+20261024    0.148240     0.149997    0.019492     0.019860
+20261025    0.139974     0.142204    0.017229     0.017589
+20261026    0.173462     0.175109    0.022131     0.022479
+20261027    0.156055     0.156571    0.020040     0.020202
+            n     long_c    short_c
+distance                           
+far       335   7.238806   7.494030
+middle    506  17.102767  16.830040
+near      288  25.314236  22.258681
+forecast gate False
+2026-11-25T07:52:12Z tag=strike_inventory_score rc=0 peak_rss_mib=361 wall_s=2.21 cpu_user_s=1.40 memavail_start_gib=22 disk_free_gib=405->405 slot=codex

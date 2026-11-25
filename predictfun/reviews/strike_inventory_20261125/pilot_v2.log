@@ -1,0 +1,9 @@
+3702960 parity ok
+3789484 parity ok
+3877472 parity ok
+        net_usd  turnover_usd  residual_usd  adjusted    passive_sh
+arm                                                                
+BOOK -47.360096    -19.668903    -27.691193      4734  12465.823820
+BTC  -48.975830    -26.010952    -22.964878      4704  12392.576093
+WIDE  47.787734    100.932689    -53.144955         0  14659.330231
+2026-11-25T07:52:42Z tag=strike_inventory_replay_v2 rc=0 peak_rss_mib=855 wall_s=56.82 cpu_user_s=55.38 memavail_start_gib=22 disk_free_gib=405->405 slot=codex

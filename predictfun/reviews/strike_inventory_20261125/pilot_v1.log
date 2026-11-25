@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/reviews/strike_inventory_20261125/replay_risk.py", line 105, in <module>
+    main('--extend' in sys.argv)
+  File "/home/yuqing/ctaNew/predictfun/reviews/strike_inventory_20261125/replay_risk.py", line 93, in main
+    metrics,fills=one(path,cache,old,edges,prob,arm)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/reviews/strike_inventory_20261125/replay_risk.py", line 51, in one
+    sides={b.E.o[i]['side'] for ids in b.unclosed for i in ids
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: 'int' object is not iterable
+2026-11-25T07:52:25Z tag=strike_inventory_replay rc=1 peak_rss_mib=766 wall_s=2.21 cpu_user_s=1.64 memavail_start_gib=22 disk_free_gib=405->405 slot=codex

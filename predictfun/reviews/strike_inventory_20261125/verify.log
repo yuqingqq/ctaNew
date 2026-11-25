@@ -1,0 +1,2 @@
+passed 175 room scenarios; ignored reservations rejected; squared loss identity; forecast gate; 9 replay decompositions; 3 baseline receipt comparisons
+2026-11-25T07:53:45Z tag=strike_inventory_check rc=0 peak_rss_mib=106 wall_s=0.32 cpu_user_s=0.26 memavail_start_gib=22 disk_free_gib=405->405 slot=codex
