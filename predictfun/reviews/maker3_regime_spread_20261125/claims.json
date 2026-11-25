@@ -1,0 +1,340 @@
+{
+  "passive_exit": {
+    "pre": {
+      "scope": "all19",
+      "day": "all",
+      "role": "MM",
+      "clock": "pre",
+      "asset": "pf",
+      "axis": "exit",
+      "rows": [
+        {
+          "vol": "calm",
+          "matched_shares": 3362.829871201412,
+          "net_usd": -50.00098022098471,
+          "positive_usd": 98.50935251261728,
+          "negative_usd": -148.51033273360198,
+          "positive_share": 0.05927669144691577,
+          "matched_share": 0.1452683500806383,
+          "net_c_per_share": -1.4868721325804464,
+          "markets": 17,
+          "hashes": 291
+        },
+        {
+          "vol": "typical",
+          "matched_shares": 11483.732708139272,
+          "net_usd": 208.2723064328428,
+          "positive_usd": 542.4247901178906,
+          "negative_usd": -334.1524836850478,
+          "positive_share": 0.32639689630340435,
+          "matched_share": 0.49607710385969045,
+          "net_c_per_share": 1.8136289978712812,
+          "markets": 17,
+          "hashes": 604
+        },
+        {
+          "vol": "volatile",
+          "matched_shares": 7534.443417547574,
+          "net_usd": 751.640871736156,
+          "positive_usd": 990.2226469696657,
+          "negative_usd": -238.58177523350977,
+          "positive_share": 0.5958532952559101,
+          "matched_share": 0.3254747358515739,
+          "net_c_per_share": 9.976063659667266,
+          "markets": 17,
+          "hashes": 391
+        },
+        {
+          "vol": "unknown",
+          "matched_shares": 768.0823581092945,
+          "net_usd": 30.342043762047478,
+          "positive_usd": 30.699668782556092,
+          "negative_usd": -0.35762502050861356,
+          "positive_share": 0.018473116993769797,
+          "matched_share": 0.033179810208097314,
+          "net_c_per_share": 3.950363322591761,
+          "markets": 11,
+          "hashes": 61
+        }
+      ],
+      "positive_leader": "volatile",
+      "majority": true
+    },
+    "upper": {
+      "scope": "all19",
+      "day": "all",
+      "role": "MM",
+      "clock": "upper",
+      "asset": "pf",
+      "axis": "exit",
+      "rows": [
+        {
+          "vol": "calm",
+          "matched_shares": 2969.512724647957,
+          "net_usd": -7.5738256885909605,
+          "positive_usd": 111.03755562409941,
+          "negative_usd": -118.61138131269036,
+          "positive_share": 0.0668153708847742,
+          "matched_share": 0.12827773945607157,
+          "net_c_per_share": -0.2550528113830142,
+          "markets": 15,
+          "hashes": 247
+        },
+        {
+          "vol": "typical",
+          "matched_shares": 11819.595169769986,
+          "net_usd": 30.533635934596397,
+          "positive_usd": 410.48413275713165,
+          "negative_usd": -379.9504968225353,
+          "positive_share": 0.2470033622257622,
+          "matched_share": 0.5105857729044567,
+          "net_c_per_share": 0.25833064073708534,
+          "markets": 17,
+          "hashes": 622
+        },
+        {
+          "vol": "volatile",
+          "matched_shares": 7638.65821675603,
+          "net_usd": 889.5233104082081,
+          "positive_usd": 1112.2060239251418,
+          "negative_usd": -222.68271351693386,
+          "positive_share": 0.6692551684081719,
+          "matched_share": 0.32997663232413876,
+          "net_c_per_share": 11.645020436402888,
+          "markets": 17,
+          "hashes": 410
+        },
+        {
+          "vol": "unknown",
+          "matched_shares": 721.3222438235802,
+          "net_usd": 27.77112105584802,
+          "positive_usd": 28.128746076356634,
+          "negative_usd": -0.35762502050861356,
+          "positive_share": 0.016926098481291646,
+          "matched_share": 0.03115985531533284,
+          "net_c_per_share": 3.8500297604353704,
+          "markets": 11,
+          "hashes": 51
+        }
+      ],
+      "positive_leader": "volatile",
+      "majority": true
+    },
+    "lag1": {
+      "scope": "all19",
+      "day": "all",
+      "role": "MM",
+      "clock": "lag1",
+      "asset": "pf",
+      "axis": "exit",
+      "rows": [
+        {
+          "vol": "calm",
+          "matched_shares": 3318.663009630963,
+          "net_usd": -52.077943683789165,
+          "positive_usd": 81.27506790438645,
+          "negative_usd": -133.35301158817558,
+          "positive_share": 0.04890619011914,
+          "matched_share": 0.143360419155103,
+          "net_c_per_share": -1.5692447088678718,
+          "markets": 16,
+          "hashes": 284
+        },
+        {
+          "vol": "typical",
+          "matched_shares": 12015.20343861464,
+          "net_usd": 259.39002119518614,
+          "positive_usd": 636.4460852939261,
+          "negative_usd": -377.05606409874,
+          "positive_share": 0.3829729589962884,
+          "matched_share": 0.5190357069081181,
+          "net_c_per_share": 2.158848350095801,
+          "markets": 17,
+          "hashes": 632
+        },
+        {
+          "vol": "volatile",
+          "matched_shares": 7030.1115923295,
+          "net_usd": 701.443592594949,
+          "positive_usd": 911.0597064514021,
+          "negative_usd": -209.61611385645315,
+          "positive_share": 0.5482180496732064,
+          "matched_share": 0.303688485892871,
+          "net_c_per_share": 9.977702108744456,
+          "markets": 17,
+          "hashes": 355
+        },
+        {
+          "vol": "unknown",
+          "matched_shares": 785.1103144224508,
+          "net_usd": 31.498571603715437,
+          "positive_usd": 33.07559873301472,
+          "negative_usd": -1.5770271292992888,
+          "positive_share": 0.01990280121136511,
+          "matched_share": 0.03391538804390786,
+          "net_c_per_share": 4.011993095121502,
+          "markets": 12,
+          "hashes": 67
+        }
+      ],
+      "positive_leader": "volatile",
+      "majority": true
+    }
+  },
+  "volatile_exit_majority_all_clocks": true,
+  "volatile_exit_by_day_usd": {
+    "20261024": -85.81031006031051,
+    "20261025": -10.321574211824197,
+    "20261026": 882.239178157165,
+    "20261027": null
+  },
+  "top_two_volatile_exit_usd": {
+    "3789484": 587.4937227592021,
+    "3803131": 268.2072492657497
+  },
+  "excluding_top_two_volatile_exit_usd": -69.59367813992151,
+  "top_three_abs_contribution_fraction": 0.9073917851736578,
+  "top_two_day_sensitive": true,
+  "volatile_entry_marked_usd": {
+    "pre": -416.03255343113005,
+    "upper": -713.2959654712956,
+    "lag1": -516.0353603379697
+  },
+  "volatile_entry_marked_negative_all_clocks": true,
+  "entry_calm_vs_volatile_not_clock_stable": true,
+  "btc_volatile_positive_share": {
+    "entry": {
+      "pre": 0.7494274435146616,
+      "upper": 0.7110298159882785,
+      "lag1": 0.7630211105169135
+    },
+    "exit": {
+      "pre": 0.8273047926184204,
+      "upper": 0.8340967259235331,
+      "lag1": 0.7884724342362359
+    }
+  },
+  "named_market": {
+    "entry": {
+      "scope": "3789484",
+      "day": "all",
+      "role": "all",
+      "clock": "pre",
+      "asset": "pf",
+      "axis": "entry",
+      "rows": [
+        {
+          "vol": "calm",
+          "matched_shares": 0.0,
+          "net_usd": 0.0,
+          "positive_usd": 0.0,
+          "negative_usd": 0.0,
+          "positive_share": 0.0,
+          "matched_share": 0.0,
+          "net_c_per_share": null,
+          "markets": 0,
+          "hashes": 0
+        },
+        {
+          "vol": "typical",
+          "matched_shares": 2107.5299887076676,
+          "net_usd": 138.16893168403664,
+          "positive_usd": 243.88230673059138,
+          "negative_usd": -105.71337504655476,
+          "positive_share": 0.394304762223944,
+          "matched_share": 0.521665499426599,
+          "net_c_per_share": 6.5559651546767075,
+          "markets": 1,
+          "hashes": 66
+        },
+        {
+          "vol": "volatile",
+          "matched_shares": 1667.555142191874,
+          "net_usd": 358.2580579865928,
+          "positive_usd": 362.4220103218894,
+          "negative_usd": -4.163952335296518,
+          "positive_share": 0.5859577372398664,
+          "matched_share": 0.4127609052938514,
+          "net_c_per_share": 21.48403065794214,
+          "markets": 1,
+          "hashes": 57
+        },
+        {
+          "vol": "unknown",
+          "matched_shares": 264.91749726775953,
+          "net_usd": 12.207884918032773,
+          "positive_usd": 12.207884918032773,
+          "negative_usd": 0.0,
+          "positive_share": 0.01973750053618952,
+          "matched_share": 0.06557359527954966,
+          "net_c_per_share": 4.608183696410933,
+          "markets": 1,
+          "hashes": 6
+        }
+      ],
+      "positive_leader": "volatile",
+      "majority": true
+    },
+    "exit": {
+      "scope": "3789484",
+      "day": "all",
+      "role": "all",
+      "clock": "pre",
+      "asset": "pf",
+      "axis": "exit",
+      "rows": [
+        {
+          "vol": "calm",
+          "matched_shares": 123.16174126984127,
+          "net_usd": -10.20945706984127,
+          "positive_usd": 0.0,
+          "negative_usd": -10.20945706984127,
+          "positive_share": 0.0,
+          "matched_share": 0.030485559690269837,
+          "net_c_per_share": -8.289471198261849,
+          "markets": 1,
+          "hashes": 5
+        },
+        {
+          "vol": "typical",
+          "matched_shares": 1684.87697133673,
+          "net_usd": -77.03685115534338,
+          "positive_usd": 20.115975881812822,
+          "negative_usd": -97.1528270371562,
+          "positive_share": 0.032523167397062624,
+          "matched_share": 0.41704848397612415,
+          "net_c_per_share": -4.5722537886089505,
+          "markets": 1,
+          "hashes": 56
+        },
+        {
+          "vol": "volatile",
+          "matched_shares": 2043.4549155607297,
+          "net_usd": 587.493722759202,
+          "positive_usd": 590.0087660340558,
+          "negative_usd": -2.515043274853801,
+          "positive_share": 0.9539161299556438,
+          "matched_share": 0.5058053431236798,
+          "net_c_per_share": 28.750021264745744,
+          "markets": 1,
+          "hashes": 62
+        },
+        {
+          "vol": "unknown",
+          "matched_shares": 188.50900000000001,
+          "net_usd": 8.387460054644787,
+          "positive_usd": 8.387460054644787,
+          "negative_usd": 0.0,
+          "positive_share": 0.013560702647293359,
+          "matched_share": 0.046660613209926274,
+          "net_c_per_share": 4.449368494154013,
+          "markets": 1,
+          "hashes": 5
+        }
+      ],
+      "positive_leader": "volatile",
+      "majority": true
+    }
+  },
+  "validation": false
+}

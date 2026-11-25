@@ -1,3 +1,24 @@
+maker3_regime_spread_20261125_codex:
+  report: predictfun/reviews/maker3_regime_spread_20261125/report.md
+  figure: predictfun/reviews/maker3_regime_spread_20261125/regimes.png
+  freeze: 0d620f34e
+  bounds_freeze: c7abba308
+  complete_markets: 19
+  active_markets: 17
+  observed_active_days: 3
+  parent_actor_legs: 2759
+  parent_fifo_allocations: 2510
+  passive_volatile_exit_net_c_per_matched_share: 9.97606
+  passive_calm_exit_net_c_per_matched_share: -1.48687
+  volatile_exit_positive_value_majority_all_clocks: true
+  volatile_exit_net_excluding_top_two_markets_usd: -69.59368
+  volatile_entry_marked_negative_all_clocks: true
+  validation: false
+  causal_quote_rule_identified: false
+  packet_charged_upper_cpu_s: 60
+  task_coreh: 2.12155
+  line_coreh: 5.43225
+  next: fixed_wider_band_19_market_replay_with_adding_vs_closing_attribution
 maker3_spread_risk_20261124_codex:
   report: predictfun/reviews/maker3_spread_risk_20261124/report.md
   chart: predictfun/reviews/maker_dashboard_20261124/maker3-research.html

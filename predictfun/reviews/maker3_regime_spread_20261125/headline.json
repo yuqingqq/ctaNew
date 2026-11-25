@@ -1,0 +1,366 @@
+{
+  "bounds": {
+    "pf": {
+      "q25": 0.9486832980505138,
+      "q75": 2.6457513110645907,
+      "n": 3477,
+      "unit": "cents_per_1s_change_rms"
+    },
+    "btc": {
+      "q25": 0.0,
+      "q75": 0.2008285379594914,
+      "n": 3411,
+      "unit": "bps_per_1s_return_rms"
+    }
+  },
+  "pf_entry": [
+    {
+      "vol": "calm",
+      "matched_shares": 4446.687736145615,
+      "net_usd": 219.50570467734175,
+      "positive_usd": 352.1720927143098,
+      "negative_usd": -132.6663880369681,
+      "positive_share": 0.2030974072006462,
+      "matched_share": 0.17552260094618122,
+      "net_c_per_share": 4.9363867602632485,
+      "markets": 16,
+      "hashes": 359
+    },
+    {
+      "vol": "typical",
+      "matched_shares": 12333.631811322197,
+      "net_usd": 443.98085286461355,
+      "positive_usd": 846.939684054012,
+      "negative_usd": -402.9588311893984,
+      "positive_share": 0.4884295418213158,
+      "matched_share": 0.4868412767189957,
+      "net_c_per_share": 3.5997576355169114,
+      "markets": 17,
+      "hashes": 662
+    },
+    {
+      "vol": "volatile",
+      "matched_shares": 6298.750603723038,
+      "net_usd": 290.2697468956614,
+      "positive_usd": 495.1797469373541,
+      "negative_usd": -204.91000004169277,
+      "positive_share": 0.28556982447451684,
+      "matched_share": 0.24862845207005843,
+      "net_c_per_share": 4.608370217485512,
+      "markets": 16,
+      "hashes": 364
+    },
+    {
+      "vol": "unknown",
+      "matched_shares": 2254.9193873362165,
+      "net_usd": -94.25233069303205,
+      "positive_usd": 39.714328798330456,
+      "negative_usd": -133.96665949136252,
+      "positive_share": 0.022903226503521095,
+      "matched_share": 0.08900767026476473,
+      "net_c_per_share": -4.179853666714636,
+      "markets": 16,
+      "hashes": 131
+    }
+  ],
+  "pf_exit": [
+    {
+      "vol": "calm",
+      "matched_shares": 3761.1288391066914,
+      "net_usd": -81.96080588522076,
+      "positive_usd": 99.8591702342019,
+      "negative_usd": -181.81997611942268,
+      "positive_share": 0.057588715799314856,
+      "matched_share": 0.14846176648912304,
+      "net_c_per_share": -2.1791544345151266,
+      "markets": 17,
+      "hashes": 326
+    },
+    {
+      "vol": "typical",
+      "matched_shares": 12595.279540331008,
+      "net_usd": 122.10632746284418,
+      "positive_usd": 549.2934779024184,
+      "negative_usd": -427.18715043957417,
+      "positive_share": 0.31677717644909115,
+      "matched_share": 0.497169209025548,
+      "net_c_per_share": 0.9694610355558269,
+      "markets": 17,
+      "hashes": 688
+    },
+    {
+      "vol": "volatile",
+      "matched_shares": 8130.651184758606,
+      "net_usd": 786.1072938850302,
+      "positive_usd": 1049.8484330700949,
+      "negative_usd": -263.7411391850644,
+      "positive_share": 0.605446879867246,
+      "matched_share": 0.320938444077029,
+      "net_c_per_share": 9.668441998331396,
+      "markets": 17,
+      "hashes": 447
+    },
+    {
+      "vol": "unknown",
+      "matched_shares": 846.9299743307613,
+      "net_usd": 33.25115828193092,
+      "positive_usd": 35.004771297291406,
+      "negative_usd": -1.7536130153604836,
+      "positive_share": 0.02018722788434794,
+      "matched_share": 0.03343058040830005,
+      "net_c_per_share": 3.926081174326812,
+      "markets": 13,
+      "hashes": 75
+    }
+  ],
+  "btc_entry": [
+    {
+      "vol": "calm",
+      "matched_shares": 4205.995514016034,
+      "net_usd": 71.03335700716521,
+      "positive_usd": 203.5356720655244,
+      "negative_usd": -132.5023150583592,
+      "positive_share": 0.1173788841436763,
+      "matched_share": 0.16602183827461126,
+      "net_c_per_share": 1.6888595522856382,
+      "markets": 16,
+      "hashes": 473
+    },
+    {
+      "vol": "typical",
+      "matched_shares": 4309.569927561322,
+      "net_usd": 86.03107716076818,
+      "positive_usd": 195.85386151114164,
+      "negative_usd": -109.82278435037342,
+      "positive_share": 0.11294878920294137,
+      "matched_share": 0.1701101960671246,
+      "net_c_per_share": 1.9962798749491695,
+      "markets": 16,
+      "hashes": 269
+    },
+    {
+      "vol": "volatile",
+      "matched_shares": 14603.52111761409,
+      "net_usd": 801.3014532222123,
+      "positive_usd": 1299.511573081539,
+      "negative_usd": -498.21011985932665,
+      "positive_share": 0.7494274435146616,
+      "matched_share": 0.5764398495312218,
+      "net_c_per_share": 5.487042794464958,
+      "markets": 16,
+      "hashes": 612
+    },
+    {
+      "vol": "unknown",
+      "matched_shares": 2214.902979335624,
+      "net_usd": -98.86191364556106,
+      "positive_usd": 35.10474584580143,
+      "negative_usd": -133.9666594913625,
+      "positive_share": 0.020244883138720735,
+      "matched_share": 0.0874281161270425,
+      "net_c_per_share": -4.463487320569472,
+      "markets": 16,
+      "hashes": 125
+    }
+  ],
+  "btc_exit": [
+    {
+      "vol": "calm",
+      "matched_shares": 4055.073719947824,
+      "net_usd": 87.24878623768683,
+      "positive_usd": 176.77324330318112,
+      "negative_usd": -89.5244570654943,
+      "positive_share": 0.10194500961338172,
+      "matched_share": 0.16006455334565473,
+      "net_c_per_share": 2.1515955630717722,
+      "markets": 16,
+      "hashes": 489
+    },
+    {
+      "vol": "typical",
+      "matched_shares": 4046.3291585198976,
+      "net_usd": -61.5581797318857,
+      "positive_usd": 104.88563120906764,
+      "negative_usd": -166.44381094095334,
+      "positive_share": 0.06048747243707777,
+      "matched_share": 0.1597193822302002,
+      "net_c_per_share": -1.5213339627170372,
+      "markets": 16,
+      "hashes": 262
+    },
+    {
+      "vol": "volatile",
+      "matched_shares": 16641.584836119182,
+      "net_usd": 817.7713544673408,
+      "positive_usd": 1434.5513522049544,
+      "negative_usd": -616.7799977376136,
+      "positive_share": 0.8273047926184204,
+      "matched_share": 0.6568876493302103,
+      "net_c_per_share": 4.914023288770164,
+      "markets": 17,
+      "hashes": 673
+    },
+    {
+      "vol": "unknown",
+      "matched_shares": 591.0018239401631,
+      "net_usd": 16.042012771442884,
+      "positive_usd": 17.79562578680337,
+      "negative_usd": -1.7536130153604836,
+      "positive_share": 0.010262725331120099,
+      "matched_share": 0.023328415093934882,
+      "net_c_per_share": 2.714376186606673,
+      "markets": 12,
+      "hashes": 66
+    }
+  ],
+  "passive_entry": [
+    {
+      "vol": "calm",
+      "matched_shares": 4191.464892957728,
+      "net_usd": 235.3562476199555,
+      "positive_usd": 348.7963830647161,
+      "negative_usd": -113.4401354447606,
+      "positive_share": 0.20988358008016808,
+      "matched_share": 0.18106392911377225,
+      "net_c_per_share": 5.615131073038171,
+      "markets": 16,
+      "hashes": 325
+    },
+    {
+      "vol": "typical",
+      "matched_shares": 11142.982298489887,
+      "net_usd": 468.9713511610844,
+      "positive_usd": 789.0872835758197,
+      "negative_usd": -320.11593241473537,
+      "positive_share": 0.4748227679926921,
+      "matched_share": 0.4813572840368151,
+      "net_c_per_share": 4.20866998258303,
+      "markets": 17,
+      "hashes": 573
+    },
+    {
+      "vol": "volatile",
+      "matched_shares": 5955.0604598871905,
+      "net_usd": 299.95337209089945,
+      "positive_usd": 488.701532322272,
+      "negative_usd": -188.74816023137257,
+      "positive_share": 0.29406964112764716,
+      "matched_share": 0.25724816323497157,
+      "net_c_per_share": 5.03694923185686,
+      "markets": 15,
+      "hashes": 318
+    },
+    {
+      "vol": "unknown",
+      "matched_shares": 1859.5807036627468,
+      "net_usd": -64.0267291618779,
+      "positive_usd": 35.27125941992167,
+      "negative_usd": -99.29798858179956,
+      "positive_share": 0.021224010799492658,
+      "matched_share": 0.08033062361444096,
+      "net_c_per_share": -3.4430734324015533,
+      "markets": 16,
+      "hashes": 104
+    }
+  ],
+  "passive_exit": [
+    {
+      "vol": "calm",
+      "matched_shares": 3362.829871201412,
+      "net_usd": -50.00098022098471,
+      "positive_usd": 98.50935251261728,
+      "negative_usd": -148.51033273360198,
+      "positive_share": 0.05927669144691577,
+      "matched_share": 0.1452683500806383,
+      "net_c_per_share": -1.4868721325804464,
+      "markets": 17,
+      "hashes": 291
+    },
+    {
+      "vol": "typical",
+      "matched_shares": 11483.732708139272,
+      "net_usd": 208.2723064328428,
+      "positive_usd": 542.4247901178906,
+      "negative_usd": -334.1524836850478,
+      "positive_share": 0.32639689630340435,
+      "matched_share": 0.49607710385969045,
+      "net_c_per_share": 1.8136289978712812,
+      "markets": 17,
+      "hashes": 604
+    },
+    {
+      "vol": "volatile",
+      "matched_shares": 7534.443417547574,
+      "net_usd": 751.640871736156,
+      "positive_usd": 990.2226469696657,
+      "negative_usd": -238.58177523350977,
+      "positive_share": 0.5958532952559101,
+      "matched_share": 0.3254747358515739,
+      "net_c_per_share": 9.976063659667266,
+      "markets": 17,
+      "hashes": 391
+    },
+    {
+      "vol": "unknown",
+      "matched_shares": 768.0823581092945,
+      "net_usd": 30.342043762047478,
+      "positive_usd": 30.699668782556092,
+      "negative_usd": -0.35762502050861356,
+      "positive_share": 0.018473116993769797,
+      "matched_share": 0.033179810208097314,
+      "net_c_per_share": 3.950363322591761,
+      "markets": 11,
+      "hashes": 61
+    }
+  ],
+  "acquisition": [
+    {
+      "scope": "all19",
+      "day": "all",
+      "role": "all",
+      "clock": "pre",
+      "asset": "pf",
+      "vol": "calm",
+      "completed_usd": 219.50570467734175,
+      "residual_usd": -58.12118744403578,
+      "marked_usd": 161.38451723330596,
+      "reference_seconds": 1270.0
+    },
+    {
+      "scope": "all19",
+      "day": "all",
+      "role": "all",
+      "clock": "pre",
+      "asset": "pf",
+      "vol": "typical",
+      "completed_usd": 443.98085286461355,
+      "residual_usd": -445.89165638840063,
+      "marked_usd": -1.9108035237871082,
+      "reference_seconds": 2654.0
+    },
+    {
+      "scope": "all19",
+      "day": "all",
+      "role": "all",
+      "clock": "pre",
+      "asset": "pf",
+      "vol": "volatile",
+      "completed_usd": 290.2697468956614,
+      "residual_usd": -706.3023003267914,
+      "marked_usd": -416.03255343113005,
+      "reference_seconds": 1526.0
+    },
+    {
+      "scope": "all19",
+      "day": "all",
+      "role": "all",
+      "clock": "pre",
+      "asset": "pf",
+      "vol": "unknown",
+      "completed_usd": -94.25233069303205,
+      "residual_usd": 0.0,
+      "marked_usd": -94.25233069303205,
+      "reference_seconds": 212.0
+    }
+  ]
+}

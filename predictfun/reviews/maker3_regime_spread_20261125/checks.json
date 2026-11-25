@@ -1,0 +1,15 @@
+{
+  "pass_all": true,
+  "feature_rows": 5700,
+  "parent_fills": 2759,
+  "parent_closes": 2510,
+  "tables": {
+    "pairs": 1543,
+    "fills": 826,
+    "residual": 365,
+    "exposure": 147,
+    "transitions": 1036
+  },
+  "corruptions_refused": 4,
+  "cpu_s": 13.015729373
+}

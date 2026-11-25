@@ -1,0 +1,17 @@
+{
+  "raw_rows": {
+    "pairs": 30120,
+    "fills": 16554,
+    "residual": 1362,
+    "exposure": 11324
+  },
+  "markets": 19,
+  "cpu_s": 5.346606594,
+  "hashes": {
+    "exposure.parquet": "d70ad23cba219bcb620a20de5383da429b043a8cadffe35830224d27c7261ebc",
+    "residual.parquet": "69c74f47658f29e0f638b9dc542c5e8a4f2060b29474b5806a722c5de91c54c1",
+    "features.parquet": "f0bc45c194982630793f110cebe1b925f0f850a14aeda30fcdcb0b2611b44ef3",
+    "pairs.parquet": "7899574444a06b5c0d9d2ad446bc7ed6fa1af1661799fe2a141579dc32a04fdf",
+    "fills.parquet": "97e60fa4b20eb5779c61e6136b400f04ea54e36458424bebcbd9877c829745b7"
+  }
+}

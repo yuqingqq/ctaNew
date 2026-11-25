@@ -1,0 +1,2 @@
+PASS {'pairs': 1543, 'fills': 826, 'residual': 365, 'exposure': 147, 'transitions': 1036} corruptions 4
+2026-11-25T02:07:58Z tag=mrs_check rc=0 peak_rss_mib=222 wall_s=13.35 cpu_user_s=13.22 memavail_start_gib=22 disk_free_gib=409->409 slot=codex

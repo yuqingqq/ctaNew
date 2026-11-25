@@ -1,0 +1,10 @@
+2026-11-25T02:01:02Z tag=mrs_schema rc=0 peak_rss_mib=62 wall_s=0.11 cpu_user_s=0.08 memavail_start_gib=22 disk_free_gib=409->409 slot=codex
+2026-11-25T02:06:39Z tag=mrs_selftest rc=0 peak_rss_mib=108 wall_s=0.49 cpu_user_s=0.43 memavail_start_gib=22 disk_free_gib=409->409 slot=codex
+2026-11-25T02:06:56Z tag=mrs_prepare rc=0 peak_rss_mib=101 wall_s=0.30 cpu_user_s=0.24 memavail_start_gib=22 disk_free_gib=409->409 slot=codex
+2026-11-25T02:06:56Z tag=mrs_bounds rc=0 peak_rss_mib=121 wall_s=0.46 cpu_user_s=0.39 memavail_start_gib=22 disk_free_gib=409->409 slot=codex
+2026-11-25T02:07:09Z tag=mrs_build rc=0 peak_rss_mib=227 wall_s=5.68 cpu_user_s=5.52 memavail_start_gib=22 disk_free_gib=409->409 slot=codex
+2026-11-25T02:07:58Z tag=mrs_check rc=0 peak_rss_mib=222 wall_s=13.35 cpu_user_s=13.22 memavail_start_gib=22 disk_free_gib=409->409 slot=codex
+2026-11-25T02:08:12Z tag=mrs_phase rc=0 peak_rss_mib=205 wall_s=1.66 cpu_user_s=1.52 memavail_start_gib=22 disk_free_gib=409->409 slot=codex
+2026-11-25T02:08:30Z tag=mrs_plot rc=0 peak_rss_mib=189 wall_s=1.72 cpu_user_s=1.44 memavail_start_gib=22 disk_free_gib=409->409 slot=codex
+2026-11-25T02:09:08Z tag=mrs_summary rc=0 peak_rss_mib=140 wall_s=0.39 cpu_user_s=0.31 memavail_start_gib=22 disk_free_gib=409->409 slot=codex
+2026-11-25T02:10:57Z tag=mrs_claims rc=0 peak_rss_mib=131 wall_s=0.35 cpu_user_s=0.27 memavail_start_gib=22 disk_free_gib=409->409 slot=codex
