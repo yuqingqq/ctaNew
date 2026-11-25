@@ -1,3 +1,15 @@
+<!-- INVENTORY_EXIT_ATTRIBUTION_20261125_CODEX -->
+## 2026-11-25 — cost-based exits mostly lose through worse exit prices
+
+[Receipt](reviews/inventory_exit_attribution_20261125/report.md); frozenca16030cdb3770cf315263cfa8da022522d4ae66. USER Continue; saved WIDE_COST−WIDE paths only, no replay/fit/new days.19markets,38ledgers,17424FIFO/event-unit interval pieces, common END. Common event quantities matched by prefix (canonical fungible-unit attribution, not physical-lot/motive identification). All deltas reconcile to accepted parent,4real corruptions refused; synthetic long/short/partial/residual/new-role controls pass.
+
+All19 delta−300.86USD = same-entry closed exits−232.09 +same-entry close-vs-residual+64.24 +changed entry/turnover chains−133.01. Common closed entries43472.26shares: exit2.27s earlier on average, directional exit price0.534c/share worse. In3789484−75.51 = −62.15+0.41−13.77; common1739.81shares exit7.75s earlier/3.572c worse. Thus giving up better exits is evidenced for common entries, while re-entry/role feedback also matters; this is accounting attribution, not an isolated causal exit treatment.
+
+First3789484 divergence8.1s: pressure WAIT becomesPOST23asks at60c, knownlong23.87shares at59c average basis; both paths' prior fills/commands identical. The trade can be positive vs acquisition cost yet inferior to holding. No exit exception adopted; no cost-threshold tuning. No identified private Maker3 post decision or unseen-day claim.
+
+Charge30CPU s; cumulative task2.29655/line5.60725, caps2.40/5.70 with.05reserve. ONE next priority: same19 saved-data reducing-side quote-price/depth and exit-timing audit at pressure-blocked states, with Maker3 fill/price bounds kept as separate contextual evidence. Establish whether price placement is the next lever; future prices remain outcomes, not live inputs. No replay/new days needed.
+<!-- /INVENTORY_EXIT_ATTRIBUTION_20261125_CODEX -->
+
 <!-- INVENTORY_EXIT_EXCEPTION_20261125_CODEX -->
 ## 2026-11-25 — acquisition-cost exit exception loses; full19 cap benefit is mixed
 

@@ -1,0 +1,8 @@
+{
+  "pass_all": true,
+  "ledgers": 38,
+  "pairs": 19,
+  "partitions": 17424,
+  "falsifiers": 4,
+  "cpu_s": 3.365383483
+}

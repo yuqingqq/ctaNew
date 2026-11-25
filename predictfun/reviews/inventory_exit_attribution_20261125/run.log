@@ -1,0 +1,207 @@
+{
+  "pooled": [
+    {
+      "category": "common_closed",
+      "n": 12010,
+      "shares": 43472.26457404631,
+      "delta_c": -23209.45182788136,
+      "positive_c": 51121.20846731179,
+      "negative_c": -74330.66029519316,
+      "signed_exit_price_diff": -0.5338910235133645,
+      "hold_ms_diff": -2269.0565424162714
+    },
+    {
+      "category": "common_close_vs_residual",
+      "n": 208,
+      "shares": 725.0578340974583,
+      "delta_c": 6424.221726830088,
+      "positive_c": 6675.844342782157,
+      "negative_c": -251.62261595206783,
+      "signed_exit_price_diff": 8.86028868969724,
+      "hold_ms_diff": -14028.518485913073
+    },
+    {
+      "category": "common_residual",
+      "n": 659,
+      "shares": 4469.218720082928,
+      "delta_c": 0.0,
+      "positive_c": 0,
+      "negative_c": 0,
+      "signed_exit_price_diff": 0.0,
+      "hold_ms_diff": 0.0
+    },
+    {
+      "category": "new_entry",
+      "n": 1563,
+      "shares": 7022.800358117526,
+      "delta_c": -10014.911757382944,
+      "positive_c": 32877.301112336616,
+      "negative_c": -42892.21286971956,
+      "signed_exit_price_diff": null,
+      "hold_ms_diff": null
+    },
+    {
+      "category": "foregone_entry",
+      "n": 1445,
+      "shares": 6037.985449928032,
+      "delta_c": 2482.4944489528684,
+      "positive_c": 42945.68334327206,
+      "negative_c": -40463.18889431919,
+      "signed_exit_price_diff": null,
+      "hold_ms_diff": null
+    },
+    {
+      "category": "new_role",
+      "n": 877,
+      "shares": 4205.786065242438,
+      "delta_c": -14797.240117209967,
+      "positive_c": 8308.638620298372,
+      "negative_c": -23105.87873750834,
+      "signed_exit_price_diff": null,
+      "hold_ms_diff": null
+    },
+    {
+      "category": "foregone_role",
+      "n": 662,
+      "shares": 2908.3400304303677,
+      "delta_c": 9028.728738989194,
+      "positive_c": 14413.242152205512,
+      "negative_c": -5384.513413216318,
+      "signed_exit_price_diff": null,
+      "hold_ms_diff": null
+    }
+  ],
+  "named": {
+    "day": "20261026",
+    "mid": 3789484,
+    "delta_c": -7551.210782808839,
+    "components": [
+      {
+        "category": "common_closed",
+        "n": 531,
+        "shares": 1739.8052390590408,
+        "delta_c": -6215.253393412155,
+        "positive_c": 4021.83397040167,
+        "negative_c": -10237.087363813826,
+        "signed_exit_price_diff": -3.5723845714900957,
+        "hold_ms_diff": -7746.616914486589
+      },
+      {
+        "category": "common_close_vs_residual",
+        "n": 2,
+        "shares": 3.022186686871584,
+        "delta_c": 40.79952027276639,
+        "positive_c": 40.79952027276639,
+        "negative_c": 0,
+        "signed_exit_price_diff": 13.5,
+        "hold_ms_diff": -5951.0
+      },
+      {
+        "category": "common_residual",
+        "n": 0,
+        "shares": 0,
+        "delta_c": 0,
+        "positive_c": 0,
+        "negative_c": 0,
+        "signed_exit_price_diff": null,
+        "hold_ms_diff": null
+      },
+      {
+        "category": "new_entry",
+        "n": 101,
+        "shares": 477.76954369313387,
+        "delta_c": 5030.882785000804,
+        "positive_c": 6335.35721359188,
+        "negative_c": -1304.4744285910765,
+        "signed_exit_price_diff": null,
+        "hold_ms_diff": null
+      },
+      {
+        "category": "foregone_entry",
+        "n": 112,
+        "shares": 521.8569692727525,
+        "delta_c": -7162.939921056432,
+        "positive_c": 759.1032936150682,
+        "negative_c": -7922.0432146715,
+        "signed_exit_price_diff": null,
+        "hold_ms_diff": null
+      },
+      {
+        "category": "new_role",
+        "n": 78,
+        "shares": 401.7781293150708,
+        "delta_c": 1097.3066588280367,
+        "positive_c": 1619.325642971838,
+        "negative_c": -522.0189841438014,
+        "signed_exit_price_diff": null,
+        "hold_ms_diff": null
+      },
+      {
+        "category": "foregone_role",
+        "n": 44,
+        "shares": 198.52836980534892,
+        "delta_c": -342.00643244185875,
+        "positive_c": 537.2716416573778,
+        "negative_c": -879.2780740992365,
+        "signed_exit_price_diff": null,
+        "hold_ms_diff": null
+      }
+    ]
+  },
+  "first": {
+    "day": "20261026",
+    "mid": 3789484,
+    "status": "first_override",
+    "command_index": 637,
+    "t": 8100.0,
+    "wide": [
+      8100.0,
+      1,
+      "slot",
+      -1,
+      0.0,
+      60.0,
+      null,
+      "WAIT",
+      "pressure_withhold"
+    ],
+    "cost": [
+      8100.0,
+      1,
+      "slot",
+      36,
+      0.0,
+      60.0,
+      23.0,
+      "POST",
+      "exit_override"
+    ],
+    "context": {
+      "command_index": 637,
+      "t": 8100.0,
+      "side": 1,
+      "kind": "slot",
+      "gid": null,
+      "price": 60.0,
+      "q": 100.0,
+      "own": 0.0,
+      "I": 23.86814827586207,
+      "B": 190.0,
+      "A": 0.0,
+      "basis": 58.99999999999999,
+      "room": 23.868148275862072,
+      "size": 23.0,
+      "margin": 1.000000000000007,
+      "reducing": true,
+      "cost_ok": true,
+      "override": true,
+      "mode": "cost",
+      "parent": [
+        "WAIT",
+        null,
+        "pressure_withhold"
+      ]
+    }
+  }
+}
+2026-11-25T03:17:22Z tag=ia_run rc=0 peak_rss_mib=134 wall_s=3.44 cpu_user_s=3.24 memavail_start_gib=22 disk_free_gib=408->408 slot=codex

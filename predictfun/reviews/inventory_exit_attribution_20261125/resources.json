@@ -1,0 +1,9 @@
+{
+  "measured_cpu_s": 3.29,
+  "charged_cpu_s": 30,
+  "task_coreh": 2.29655,
+  "line_coreh": 5.6072500000000005,
+  "task_cap": 2.4,
+  "line_cap": 5.7,
+  "reserve": 0.05
+}

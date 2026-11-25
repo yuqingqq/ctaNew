@@ -1,3 +1,24 @@
+inventory_exit_attribution_20261125_codex:
+  report: predictfun/reviews/inventory_exit_attribution_20261125/report.md
+  freeze: ca16030cdb3770cf315263cfa8da022522d4ae66
+  markets: 19
+  ledgers_checked: 38
+  interval_pieces_checked: 17424
+  falsifiers_refused: 4
+  total_delta_usd: -300.86
+  same_entry_closed_exit_delta_usd: -232.09
+  same_entry_close_residual_delta_usd: 64.24
+  changed_entry_chains_delta_usd: -133.01
+  common_exit_seconds_earlier: 2.27
+  common_exit_cents_worse: 0.534
+  named_market_exit_seconds_earlier: 7.75
+  named_market_exit_cents_worse: 3.572
+  strategy_adopted: false
+  validation: false
+  charged_cpu_s: 30
+  task_coreh: 2.29655
+  line_coreh: 5.60725
+  next: saved_reducing_quote_price_and_exit_timing_audit_before_new_variant
 inventory_exit_exception_20261125_codex:
   report: predictfun/reviews/inventory_exit_exception_20261125/report.md
   freeze: 2273fa90264e208548d8289e8ed73c74e46d52ac

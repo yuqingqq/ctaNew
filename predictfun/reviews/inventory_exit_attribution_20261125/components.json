@@ -1,0 +1,1830 @@
+{
+  "pooled": [
+    {
+      "category": "common_closed",
+      "n": 12010,
+      "shares": 43472.26457404631,
+      "delta_c": -23209.45182788136,
+      "positive_c": 51121.20846731179,
+      "negative_c": -74330.66029519316,
+      "signed_exit_price_diff": -0.5338910235133645,
+      "hold_ms_diff": -2269.0565424162714
+    },
+    {
+      "category": "common_close_vs_residual",
+      "n": 208,
+      "shares": 725.0578340974583,
+      "delta_c": 6424.221726830088,
+      "positive_c": 6675.844342782157,
+      "negative_c": -251.62261595206783,
+      "signed_exit_price_diff": 8.86028868969724,
+      "hold_ms_diff": -14028.518485913073
+    },
+    {
+      "category": "common_residual",
+      "n": 659,
+      "shares": 4469.218720082928,
+      "delta_c": 0.0,
+      "positive_c": 0,
+      "negative_c": 0,
+      "signed_exit_price_diff": 0.0,
+      "hold_ms_diff": 0.0
+    },
+    {
+      "category": "new_entry",
+      "n": 1563,
+      "shares": 7022.800358117526,
+      "delta_c": -10014.911757382944,
+      "positive_c": 32877.301112336616,
+      "negative_c": -42892.21286971956,
+      "signed_exit_price_diff": null,
+      "hold_ms_diff": null
+    },
+    {
+      "category": "foregone_entry",
+      "n": 1445,
+      "shares": 6037.985449928032,
+      "delta_c": 2482.4944489528684,
+      "positive_c": 42945.68334327206,
+      "negative_c": -40463.18889431919,
+      "signed_exit_price_diff": null,
+      "hold_ms_diff": null
+    },
+    {
+      "category": "new_role",
+      "n": 877,
+      "shares": 4205.786065242438,
+      "delta_c": -14797.240117209967,
+      "positive_c": 8308.638620298372,
+      "negative_c": -23105.87873750834,
+      "signed_exit_price_diff": null,
+      "hold_ms_diff": null
+    },
+    {
+      "category": "foregone_role",
+      "n": 662,
+      "shares": 2908.3400304303677,
+      "delta_c": 9028.728738989194,
+      "positive_c": 14413.242152205512,
+      "negative_c": -5384.513413216318,
+      "signed_exit_price_diff": null,
+      "hold_ms_diff": null
+    }
+  ],
+  "markets": [
+    {
+      "day": "20261024",
+      "mid": 3697902,
+      "delta_c": 181.6987022292072,
+      "components": [
+        {
+          "category": "common_closed",
+          "n": 637,
+          "shares": 1951.6556281665405,
+          "delta_c": -654.3869235403333,
+          "positive_c": 898.4142945353648,
+          "negative_c": -1552.8012180756982,
+          "signed_exit_price_diff": -0.33529835596820384,
+          "hold_ms_diff": -1763.156303234443
+        },
+        {
+          "category": "common_close_vs_residual",
+          "n": 7,
+          "shares": 17.76286515958188,
+          "delta_c": -35.644297739372824,
+          "positive_c": 0,
+          "negative_c": -35.644297739372824,
+          "signed_exit_price_diff": -2.006675016622817,
+          "hold_ms_diff": 8327.0
+        },
+        {
+          "category": "common_residual",
+          "n": 6,
+          "shares": 59.401446002598114,
+          "delta_c": 0.0,
+          "positive_c": 0,
+          "negative_c": 0,
+          "signed_exit_price_diff": 0.0,
+          "hold_ms_diff": 0.0
+        },
+        {
+          "category": "new_entry",
+          "n": 76,
+          "shares": 316.0653,
+          "delta_c": -1936.3513203156363,
+          "positive_c": 550.5418802888181,
+          "negative_c": -2486.8932006044543,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_entry",
+          "n": 74,
+          "shares": 296.55983555878083,
+          "delta_c": 2805.3505010600998,
+          "positive_c": 3177.597611181867,
+          "negative_c": -372.24711012176715,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "new_role",
+          "n": 6,
+          "shares": 5.243580921483245,
+          "delta_c": -7.1217904607416145,
+          "positive_c": 1.1217904607416251,
+          "negative_c": -8.24358092148324,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_role",
+          "n": 2,
+          "shares": 4.24358092148325,
+          "delta_c": 9.852533225191376,
+          "positive_c": 9.852533225191376,
+          "negative_c": 0,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        }
+      ]
+    },
+    {
+      "day": "20261024",
+      "mid": 3699278,
+      "delta_c": 2463.1109959491837,
+      "components": [
+        {
+          "category": "common_closed",
+          "n": 774,
+          "shares": 2419.1185127843264,
+          "delta_c": 2144.771507260956,
+          "positive_c": 4980.237071401597,
+          "negative_c": -2835.465564140641,
+          "signed_exit_price_diff": 0.8865921598824003,
+          "hold_ms_diff": -2817.810930270133
+        },
+        {
+          "category": "common_close_vs_residual",
+          "n": 9,
+          "shares": 63.55589067563763,
+          "delta_c": 539.8934014115988,
+          "positive_c": 539.8934014115988,
+          "negative_c": 0,
+          "signed_exit_price_diff": 8.494781454121794,
+          "hold_ms_diff": -8419.611613267129
+        },
+        {
+          "category": "common_residual",
+          "n": 53,
+          "shares": 260.8927122141062,
+          "delta_c": 0.0,
+          "positive_c": 0,
+          "negative_c": 0,
+          "signed_exit_price_diff": 0.0,
+          "hold_ms_diff": 0.0
+        },
+        {
+          "category": "new_entry",
+          "n": 88,
+          "shares": 338.63672781459434,
+          "delta_c": -547.4990843737967,
+          "positive_c": 2379.720040189141,
+          "negative_c": -2927.219124562938,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_entry",
+          "n": 48,
+          "shares": 155.43712900095107,
+          "delta_c": 492.48716420493486,
+          "positive_c": 910.24744381722,
+          "negative_c": -417.7602796122851,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "new_role",
+          "n": 26,
+          "shares": 90.00974572866433,
+          "delta_c": -128.94044404487232,
+          "positive_c": 82.83185958450449,
+          "negative_c": -211.7723036293768,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_role",
+          "n": 22,
+          "shares": 76.81652192576334,
+          "delta_c": -37.60154850963679,
+          "positive_c": 71.06625149036321,
+          "negative_c": -108.6678,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        }
+      ]
+    },
+    {
+      "day": "20261024",
+      "mid": 3700070,
+      "delta_c": 538.5957591597113,
+      "components": [
+        {
+          "category": "common_closed",
+          "n": 741,
+          "shares": 2680.064800355221,
+          "delta_c": -615.1583855031578,
+          "positive_c": 1249.3910933517025,
+          "negative_c": -1864.5494788548604,
+          "signed_exit_price_diff": -0.22953116112029212,
+          "hold_ms_diff": -1835.8508321282136
+        },
+        {
+          "category": "common_close_vs_residual",
+          "n": 17,
+          "shares": 45.415984855360165,
+          "delta_c": -27.407803119682185,
+          "positive_c": 80.0,
+          "negative_c": -107.40780311968219,
+          "signed_exit_price_diff": -0.6034836238159308,
+          "hold_ms_diff": -6976.838815091669
+        },
+        {
+          "category": "common_residual",
+          "n": 51,
+          "shares": 325.75316182881585,
+          "delta_c": 0.0,
+          "positive_c": 0,
+          "negative_c": 0,
+          "signed_exit_price_diff": 0.0,
+          "hold_ms_diff": 0.0
+        },
+        {
+          "category": "new_entry",
+          "n": 45,
+          "shares": 184.8949966777409,
+          "delta_c": 1021.8387419571195,
+          "positive_c": 1172.1408423653033,
+          "negative_c": -150.30210040818378,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_entry",
+          "n": 10,
+          "shares": 24.951950999999994,
+          "delta_c": -194.23350999999997,
+          "positive_c": 3.0,
+          "negative_c": -197.23350999999997,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "new_role",
+          "n": 14,
+          "shares": 51.67172093023253,
+          "delta_c": 103.76213436692495,
+          "positive_c": 103.76213436692495,
+          "negative_c": 0,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_role",
+          "n": 15,
+          "shares": 51.67172093023253,
+          "delta_c": 249.7945814585068,
+          "positive_c": 249.7945814585068,
+          "negative_c": 0,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        }
+      ]
+    },
+    {
+      "day": "20261024",
+      "mid": 3702960,
+      "delta_c": 1291.3805594744113,
+      "components": [
+        {
+          "category": "common_closed",
+          "n": 285,
+          "shares": 878.4876873087327,
+          "delta_c": 135.16364416615505,
+          "positive_c": 670.9393979621866,
+          "negative_c": -535.7757537960315,
+          "signed_exit_price_diff": 0.1538594633924034,
+          "hold_ms_diff": -1963.0334071227994
+        },
+        {
+          "category": "common_close_vs_residual",
+          "n": 34,
+          "shares": 129.8345726792908,
+          "delta_c": 377.6261961068099,
+          "positive_c": 409.5264930180045,
+          "negative_c": -31.90029691119458,
+          "signed_exit_price_diff": 2.908518034249617,
+          "hold_ms_diff": -43750.21373232844
+        },
+        {
+          "category": "common_residual",
+          "n": 28,
+          "shares": 193.75300766104544,
+          "delta_c": 0.0,
+          "positive_c": 0,
+          "negative_c": 0,
+          "signed_exit_price_diff": 0.0,
+          "hold_ms_diff": 0.0
+        },
+        {
+          "category": "new_entry",
+          "n": 66,
+          "shares": 405.98748382704673,
+          "delta_c": 111.62857846463002,
+          "positive_c": 544.257725886809,
+          "negative_c": -432.629147422179,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_entry",
+          "n": 73,
+          "shares": 258.95742694739016,
+          "delta_c": -132.08815950309133,
+          "positive_c": 338.97166951981416,
+          "negative_c": -471.0598290229055,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "new_role",
+          "n": 39,
+          "shares": 219.28228326099915,
+          "delta_c": 489.04725741877445,
+          "positive_c": 489.04725741877445,
+          "negative_c": 0,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_role",
+          "n": 42,
+          "shares": 245.39016217935963,
+          "delta_c": 310.00304282113314,
+          "positive_c": 642.2495167280664,
+          "negative_c": -332.2464739069332,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        }
+      ]
+    },
+    {
+      "day": "20261024",
+      "mid": 3704004,
+      "delta_c": -540.0631259296332,
+      "components": [
+        {
+          "category": "common_closed",
+          "n": 943,
+          "shares": 3305.343165852689,
+          "delta_c": -5323.056320836401,
+          "positive_c": 1273.4112752058734,
+          "negative_c": -6596.467596042274,
+          "signed_exit_price_diff": -1.6104398405069076,
+          "hold_ms_diff": -179.5679254081501
+        },
+        {
+          "category": "common_close_vs_residual",
+          "n": 54,
+          "shares": 120.72416075958752,
+          "delta_c": 3195.6989039381306,
+          "positive_c": 3195.6989039381306,
+          "negative_c": 0,
+          "signed_exit_price_diff": 26.471079888491488,
+          "hold_ms_diff": -7964.7205115493025
+        },
+        {
+          "category": "common_residual",
+          "n": 25,
+          "shares": 156.1865782870368,
+          "delta_c": 0.0,
+          "positive_c": 0,
+          "negative_c": 0,
+          "signed_exit_price_diff": 0.0,
+          "hold_ms_diff": 0.0
+        },
+        {
+          "category": "new_entry",
+          "n": 48,
+          "shares": 124.76807241701731,
+          "delta_c": -846.4142473807253,
+          "positive_c": 207.44803708581287,
+          "negative_c": -1053.8622844665383,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_entry",
+          "n": 51,
+          "shares": 114.7680724170173,
+          "delta_c": 1115.7782191913855,
+          "positive_c": 1218.8182483764429,
+          "negative_c": -103.04002918505732,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "new_role",
+          "n": 51,
+          "shares": 164.7541894614883,
+          "delta_c": -168.2786173840742,
+          "positive_c": 417.9929949142317,
+          "negative_c": -586.271612298306,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_role",
+          "n": 51,
+          "shares": 161.7541894614883,
+          "delta_c": 1486.2089365420509,
+          "positive_c": 1527.500715558516,
+          "negative_c": -41.291779016465235,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        }
+      ]
+    },
+    {
+      "day": "20261024",
+      "mid": 3712725,
+      "delta_c": 2835.750285105007,
+      "components": [
+        {
+          "category": "common_closed",
+          "n": 805,
+          "shares": 3041.2089858954337,
+          "delta_c": 2877.380610519256,
+          "positive_c": 5316.920482460673,
+          "negative_c": -2439.5398719414165,
+          "signed_exit_price_diff": 0.9461305105515657,
+          "hold_ms_diff": -2521.71806216183
+        },
+        {
+          "category": "common_close_vs_residual",
+          "n": 5,
+          "shares": 29.33066666666667,
+          "delta_c": 29.330666666666666,
+          "positive_c": 29.330666666666666,
+          "negative_c": 0,
+          "signed_exit_price_diff": 1.0,
+          "hold_ms_diff": -733.3150286389673
+        },
+        {
+          "category": "common_residual",
+          "n": 3,
+          "shares": 29.913467257821658,
+          "delta_c": 0.0,
+          "positive_c": 0,
+          "negative_c": 0,
+          "signed_exit_price_diff": 0.0,
+          "hold_ms_diff": 0.0
+        },
+        {
+          "category": "new_entry",
+          "n": 65,
+          "shares": 338.99244959075423,
+          "delta_c": 491.31840172496743,
+          "positive_c": 1389.8442847746812,
+          "negative_c": -898.5258830497138,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_entry",
+          "n": 61,
+          "shares": 153.6668804291676,
+          "delta_c": -366.5110725865936,
+          "positive_c": 1022.1876394771904,
+          "negative_c": -1388.6987120637841,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "new_role",
+          "n": 42,
+          "shares": 208.35043656578063,
+          "delta_c": -465.7228717475968,
+          "positive_c": 245.36955802537818,
+          "negative_c": -711.0924297729749,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_role",
+          "n": 64,
+          "shares": 301.4734742107821,
+          "delta_c": 269.9545505283073,
+          "positive_c": 855.6636038802154,
+          "negative_c": -585.7090533519081,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        }
+      ]
+    },
+    {
+      "day": "20261024",
+      "mid": 3716727,
+      "delta_c": -11492.175307536934,
+      "components": [
+        {
+          "category": "common_closed",
+          "n": 538,
+          "shares": 1919.027367762848,
+          "delta_c": -1146.8921902663103,
+          "positive_c": 4589.581509488006,
+          "negative_c": -5736.473699754317,
+          "signed_exit_price_diff": -0.5976424357112359,
+          "hold_ms_diff": 1812.3416815963953
+        },
+        {
+          "category": "common_close_vs_residual",
+          "n": 0,
+          "shares": 0,
+          "delta_c": 0,
+          "positive_c": 0,
+          "negative_c": 0,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "common_residual",
+          "n": 39,
+          "shares": 182.2142031282882,
+          "delta_c": 0.0,
+          "positive_c": 0,
+          "negative_c": 0,
+          "signed_exit_price_diff": 0.0,
+          "hold_ms_diff": 0.0
+        },
+        {
+          "category": "new_entry",
+          "n": 149,
+          "shares": 655.2077387840019,
+          "delta_c": 1816.7572579933783,
+          "positive_c": 4206.154656529916,
+          "negative_c": -2389.3973985365374,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_entry",
+          "n": 155,
+          "shares": 608.5060936208278,
+          "delta_c": -11799.988858254263,
+          "positive_c": 1479.993520563071,
+          "negative_c": -13279.982378817333,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "new_role",
+          "n": 180,
+          "shares": 737.5222731608083,
+          "delta_c": -918.1570652116085,
+          "positive_c": 2540.186182616996,
+          "negative_c": -3458.343247828605,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_role",
+          "n": 150,
+          "shares": 681.3695538078533,
+          "delta_c": 556.1055482018694,
+          "positive_c": 1752.4155178702742,
+          "negative_c": -1196.3099696684048,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        }
+      ]
+    },
+    {
+      "day": "20261025",
+      "mid": 3723774,
+      "delta_c": -2255.677982502422,
+      "components": [
+        {
+          "category": "common_closed",
+          "n": 737,
+          "shares": 2425.1064607564713,
+          "delta_c": -2176.4797020862393,
+          "positive_c": 4685.725763598979,
+          "negative_c": -6862.205465685219,
+          "signed_exit_price_diff": -0.8974780024326532,
+          "hold_ms_diff": -6443.1568332732895
+        },
+        {
+          "category": "common_close_vs_residual",
+          "n": 2,
+          "shares": 6.350000000000001,
+          "delta_c": -73.02500000000002,
+          "positive_c": 0,
+          "negative_c": -73.02500000000002,
+          "signed_exit_price_diff": -11.5,
+          "hold_ms_diff": 6090.851968503937
+        },
+        {
+          "category": "common_residual",
+          "n": 29,
+          "shares": 334.1814000756782,
+          "delta_c": 0.0,
+          "positive_c": 0,
+          "negative_c": 0,
+          "signed_exit_price_diff": 0.0,
+          "hold_ms_diff": 0.0
+        },
+        {
+          "category": "new_entry",
+          "n": 123,
+          "shares": 576.756734194924,
+          "delta_c": 457.89803615696104,
+          "positive_c": 3920.398392532853,
+          "negative_c": -3462.500356375892,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_entry",
+          "n": 85,
+          "shares": 402.00675742195597,
+          "delta_c": 286.699106164884,
+          "positive_c": 2462.3796846416312,
+          "negative_c": -2175.680578476747,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "new_role",
+          "n": 32,
+          "shares": 159.13432670198037,
+          "delta_c": -680.5046229623059,
+          "positive_c": 15.256962025316454,
+          "negative_c": -695.7615849876223,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_role",
+          "n": 30,
+          "shares": 103.8851076913323,
+          "delta_c": -70.26579977572173,
+          "positive_c": 89.5019488799573,
+          "negative_c": -159.76774865567904,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        }
+      ]
+    },
+    {
+      "day": "20261025",
+      "mid": 3734864,
+      "delta_c": -2243.6612320002164,
+      "components": [
+        {
+          "category": "common_closed",
+          "n": 597,
+          "shares": 2167.5312590233116,
+          "delta_c": 2348.3651042886268,
+          "positive_c": 4650.0662780055145,
+          "negative_c": -2301.7011737168878,
+          "signed_exit_price_diff": 1.0834284832167997,
+          "hold_ms_diff": -4228.516818190906
+        },
+        {
+          "category": "common_close_vs_residual",
+          "n": 12,
+          "shares": 77.08149856869248,
+          "delta_c": 541.5249600561083,
+          "positive_c": 541.5249600561083,
+          "negative_c": 0,
+          "signed_exit_price_diff": 7.02535589099269,
+          "hold_ms_diff": -9622.509641672457
+        },
+        {
+          "category": "common_residual",
+          "n": 26,
+          "shares": 167.7596681819827,
+          "delta_c": 0.0,
+          "positive_c": 0,
+          "negative_c": 0,
+          "signed_exit_price_diff": 0.0,
+          "hold_ms_diff": 0.0
+        },
+        {
+          "category": "new_entry",
+          "n": 71,
+          "shares": 368.09078089647267,
+          "delta_c": -2976.848887895432,
+          "positive_c": 427.96995139777704,
+          "negative_c": -3404.8188392932093,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_entry",
+          "n": 121,
+          "shares": 539.1657583780013,
+          "delta_c": 4547.206547621085,
+          "positive_c": 5463.668734427395,
+          "negative_c": -916.4621868063103,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "new_role",
+          "n": 58,
+          "shares": 276.8031120054377,
+          "delta_c": -6666.468956070605,
+          "positive_c": 196.85770130327282,
+          "negative_c": -6863.326657373877,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_role",
+          "n": 9,
+          "shares": 51.81,
+          "delta_c": -37.44,
+          "positive_c": 224.0,
+          "negative_c": -261.44,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        }
+      ]
+    },
+    {
+      "day": "20261025",
+      "mid": 3737919,
+      "delta_c": -320.21266784364377,
+      "components": [
+        {
+          "category": "common_closed",
+          "n": 825,
+          "shares": 3294.929156551802,
+          "delta_c": -1377.4145274197267,
+          "positive_c": 1232.3830928306363,
+          "negative_c": -2609.797620250363,
+          "signed_exit_price_diff": -0.41804071103647455,
+          "hold_ms_diff": -381.8213529673264
+        },
+        {
+          "category": "common_close_vs_residual",
+          "n": 7,
+          "shares": 23.4727681597615,
+          "delta_c": 11.73638407988075,
+          "positive_c": 11.73638407988075,
+          "negative_c": 0,
+          "signed_exit_price_diff": 0.5,
+          "hold_ms_diff": -2175.0
+        },
+        {
+          "category": "common_residual",
+          "n": 32,
+          "shares": 292.3838449689954,
+          "delta_c": 0.0,
+          "positive_c": 0,
+          "negative_c": 0,
+          "signed_exit_price_diff": 0.0,
+          "hold_ms_diff": 0.0
+        },
+        {
+          "category": "new_entry",
+          "n": 70,
+          "shares": 220.29511023311778,
+          "delta_c": 4557.891550377415,
+          "positive_c": 4759.069732195597,
+          "negative_c": -201.17818181818177,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_entry",
+          "n": 66,
+          "shares": 251.1856294494434,
+          "delta_c": -3676.5391739107004,
+          "positive_c": 234.0,
+          "negative_c": -3910.5391739107004,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "new_role",
+          "n": 3,
+          "shares": 54.70436634316246,
+          "delta_c": 164.1130990294874,
+          "positive_c": 164.1130990294874,
+          "negative_c": 0,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_role",
+          "n": 0,
+          "shares": 0,
+          "delta_c": 0,
+          "positive_c": 0,
+          "negative_c": 0,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        }
+      ]
+    },
+    {
+      "day": "20261025",
+      "mid": 3763401,
+      "delta_c": 2625.8589766171076,
+      "components": [
+        {
+          "category": "common_closed",
+          "n": 887,
+          "shares": 3488.2738964582213,
+          "delta_c": 976.3079932530934,
+          "positive_c": 3478.7689662188045,
+          "negative_c": -2502.4609729657113,
+          "signed_exit_price_diff": 0.27988283667873,
+          "hold_ms_diff": -1461.7828517922508
+        },
+        {
+          "category": "common_close_vs_residual",
+          "n": 3,
+          "shares": 13.819815441194988,
+          "delta_c": 27.639630882389977,
+          "positive_c": 27.639630882389977,
+          "negative_c": 0,
+          "signed_exit_price_diff": 2.0,
+          "hold_ms_diff": -154.0
+        },
+        {
+          "category": "common_residual",
+          "n": 33,
+          "shares": 281.97096436781607,
+          "delta_c": 0.0,
+          "positive_c": 0,
+          "negative_c": 0,
+          "signed_exit_price_diff": 0.0,
+          "hold_ms_diff": 0.0
+        },
+        {
+          "category": "new_entry",
+          "n": 111,
+          "shares": 453.9851474488842,
+          "delta_c": -3445.7342633025087,
+          "positive_c": 920.7314689729877,
+          "negative_c": -4366.4657322754965,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_entry",
+          "n": 67,
+          "shares": 304.08179536190477,
+          "delta_c": 4241.858478679542,
+          "positive_c": 4902.2392342,
+          "negative_c": -660.3807555204579,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "new_role",
+          "n": 22,
+          "shares": 126.5537888642572,
+          "delta_c": -666.3624016119326,
+          "positive_c": 77.93402695949534,
+          "negative_c": -744.2964285714279,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_role",
+          "n": 43,
+          "shares": 193.3976391579331,
+          "delta_c": 1492.1495387165235,
+          "positive_c": 1549.8555497437328,
+          "negative_c": -57.70601102720934,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        }
+      ]
+    },
+    {
+      "day": "20261025",
+      "mid": 3776314,
+      "delta_c": 0.0,
+      "components": [
+        {
+          "category": "common_closed",
+          "n": 397,
+          "shares": 1904.221531362504,
+          "delta_c": 0.0,
+          "positive_c": 0,
+          "negative_c": 0,
+          "signed_exit_price_diff": 0.0,
+          "hold_ms_diff": 0.0
+        },
+        {
+          "category": "common_close_vs_residual",
+          "n": 0,
+          "shares": 0,
+          "delta_c": 0,
+          "positive_c": 0,
+          "negative_c": 0,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "common_residual",
+          "n": 12,
+          "shares": 231.82394841446543,
+          "delta_c": 0.0,
+          "positive_c": 0,
+          "negative_c": 0,
+          "signed_exit_price_diff": 0.0,
+          "hold_ms_diff": 0.0
+        },
+        {
+          "category": "new_entry",
+          "n": 0,
+          "shares": 0,
+          "delta_c": 0,
+          "positive_c": 0,
+          "negative_c": 0,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_entry",
+          "n": 0,
+          "shares": 0,
+          "delta_c": 0,
+          "positive_c": 0,
+          "negative_c": 0,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "new_role",
+          "n": 0,
+          "shares": 0,
+          "delta_c": 0,
+          "positive_c": 0,
+          "negative_c": 0,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_role",
+          "n": 0,
+          "shares": 0,
+          "delta_c": 0,
+          "positive_c": 0,
+          "negative_c": 0,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        }
+      ]
+    },
+    {
+      "day": "20261026",
+      "mid": 3789484,
+      "delta_c": -7551.210782808839,
+      "components": [
+        {
+          "category": "common_closed",
+          "n": 531,
+          "shares": 1739.8052390590408,
+          "delta_c": -6215.253393412155,
+          "positive_c": 4021.83397040167,
+          "negative_c": -10237.087363813826,
+          "signed_exit_price_diff": -3.5723845714900957,
+          "hold_ms_diff": -7746.616914486589
+        },
+        {
+          "category": "common_close_vs_residual",
+          "n": 2,
+          "shares": 3.022186686871584,
+          "delta_c": 40.79952027276639,
+          "positive_c": 40.79952027276639,
+          "negative_c": 0,
+          "signed_exit_price_diff": 13.5,
+          "hold_ms_diff": -5951.0
+        },
+        {
+          "category": "common_residual",
+          "n": 0,
+          "shares": 0,
+          "delta_c": 0,
+          "positive_c": 0,
+          "negative_c": 0,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "new_entry",
+          "n": 101,
+          "shares": 477.76954369313387,
+          "delta_c": 5030.882785000804,
+          "positive_c": 6335.35721359188,
+          "negative_c": -1304.4744285910765,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_entry",
+          "n": 112,
+          "shares": 521.8569692727525,
+          "delta_c": -7162.939921056432,
+          "positive_c": 759.1032936150682,
+          "negative_c": -7922.0432146715,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "new_role",
+          "n": 78,
+          "shares": 401.7781293150708,
+          "delta_c": 1097.3066588280367,
+          "positive_c": 1619.325642971838,
+          "negative_c": -522.0189841438014,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_role",
+          "n": 44,
+          "shares": 198.52836980534892,
+          "delta_c": -342.00643244185875,
+          "positive_c": 537.2716416573778,
+          "negative_c": -879.2780740992365,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        }
+      ]
+    },
+    {
+      "day": "20261026",
+      "mid": 3803131,
+      "delta_c": 1703.677814509419,
+      "components": [
+        {
+          "category": "common_closed",
+          "n": 396,
+          "shares": 1639.6777921545154,
+          "delta_c": -3403.7137252477787,
+          "positive_c": 2202.44817967733,
+          "negative_c": -5606.1619049251085,
+          "signed_exit_price_diff": -2.0758430354632926,
+          "hold_ms_diff": -3310.271592067602
+        },
+        {
+          "category": "common_close_vs_residual",
+          "n": 8,
+          "shares": 50.28903045598739,
+          "delta_c": 712.8814792472683,
+          "positive_c": 712.8814792472683,
+          "negative_c": 0,
+          "signed_exit_price_diff": 14.17568548813398,
+          "hold_ms_diff": -8140.838637992796
+        },
+        {
+          "category": "common_residual",
+          "n": 16,
+          "shares": 110.23707273698331,
+          "delta_c": 0.0,
+          "positive_c": 0,
+          "negative_c": 0,
+          "signed_exit_price_diff": 0.0,
+          "hold_ms_diff": 0.0
+        },
+        {
+          "category": "new_entry",
+          "n": 66,
+          "shares": 351.2155097223145,
+          "delta_c": -611.0920432386391,
+          "positive_c": 1357.278408995047,
+          "negative_c": -1968.3704522336861,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_entry",
+          "n": 50,
+          "shares": 305.6386239851766,
+          "delta_c": 2137.1656308983506,
+          "positive_c": 2745.3326308983505,
+          "negative_c": -608.167,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "new_role",
+          "n": 47,
+          "shares": 315.4637561599148,
+          "delta_c": 534.2370560970746,
+          "positive_c": 822.2595909100492,
+          "negative_c": -288.0225348129746,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_role",
+          "n": 37,
+          "shares": 171.7519292450769,
+          "delta_c": 2334.1994167531434,
+          "positive_c": 2973.1994167531434,
+          "negative_c": -639.0,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        }
+      ]
+    },
+    {
+      "day": "20261026",
+      "mid": 3804696,
+      "delta_c": 2656.6982129673943,
+      "components": [
+        {
+          "category": "common_closed",
+          "n": 351,
+          "shares": 1176.5578807319764,
+          "delta_c": 239.44100634918365,
+          "positive_c": 3628.4439348083165,
+          "negative_c": -3389.002928459133,
+          "signed_exit_price_diff": 0.20350975525336612,
+          "hold_ms_diff": -12433.151199194523
+        },
+        {
+          "category": "common_close_vs_residual",
+          "n": 1,
+          "shares": 0.10081119734639898,
+          "delta_c": 0.6552727827515934,
+          "positive_c": 0.6552727827515934,
+          "negative_c": 0,
+          "signed_exit_price_diff": 6.5,
+          "hold_ms_diff": -2135.0
+        },
+        {
+          "category": "common_residual",
+          "n": 72,
+          "shares": 365.80660218030766,
+          "delta_c": 0.0,
+          "positive_c": 0,
+          "negative_c": 0,
+          "signed_exit_price_diff": 0.0,
+          "hold_ms_diff": 0.0
+        },
+        {
+          "category": "new_entry",
+          "n": 75,
+          "shares": 335.9699817658694,
+          "delta_c": -4779.779671132671,
+          "positive_c": 343.77594637200644,
+          "negative_c": -5123.555617504678,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_entry",
+          "n": 40,
+          "shares": 168.2453,
+          "delta_c": 4646.569569474765,
+          "positive_c": 4646.569569474765,
+          "negative_c": 0,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "new_role",
+          "n": 25,
+          "shares": 146.28670708204027,
+          "delta_c": -22.205165890496435,
+          "positive_c": 201.27268958735905,
+          "negative_c": -223.47785547785548,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_role",
+          "n": 23,
+          "shares": 107.51670708204028,
+          "delta_c": 2572.017201383861,
+          "positive_c": 2572.453519583798,
+          "negative_c": -0.4363181999369736,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        }
+      ]
+    },
+    {
+      "day": "20261026",
+      "mid": 3838531,
+      "delta_c": -9899.730473504032,
+      "components": [
+        {
+          "category": "common_closed",
+          "n": 498,
+          "shares": 1886.605109220815,
+          "delta_c": -7451.015589546255,
+          "positive_c": 3968.4330664895097,
+          "negative_c": -11419.448656035765,
+          "signed_exit_price_diff": -3.9494304097499198,
+          "hold_ms_diff": -3852.3142343864674
+        },
+        {
+          "category": "common_close_vs_residual",
+          "n": 16,
+          "shares": 40.41040250181479,
+          "delta_c": 323.2832200145183,
+          "positive_c": 323.2832200145183,
+          "negative_c": 0,
+          "signed_exit_price_diff": 8.0,
+          "hold_ms_diff": 245.85153333976527
+        },
+        {
+          "category": "common_residual",
+          "n": 57,
+          "shares": 357.08802947644585,
+          "delta_c": 0.0,
+          "positive_c": 0,
+          "negative_c": 0,
+          "signed_exit_price_diff": 0.0,
+          "hold_ms_diff": 0.0
+        },
+        {
+          "category": "new_entry",
+          "n": 147,
+          "shares": 773.972520351745,
+          "delta_c": -2862.2151409303315,
+          "positive_c": 1575.5879522155617,
+          "negative_c": -4437.803093145893,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_entry",
+          "n": 163,
+          "shares": 801.0174363746684,
+          "delta_c": 1929.1545866259426,
+          "positive_c": 5487.459748513193,
+          "negative_c": -3558.30516188725,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "new_role",
+          "n": 148,
+          "shares": 775.9177674664423,
+          "delta_c": -1924.460079657037,
+          "positive_c": 913.9230954027904,
+          "negative_c": -2838.3831750598274,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_role",
+          "n": 101,
+          "shares": 458.1536525516336,
+          "delta_c": 85.52252998913052,
+          "positive_c": 1025.4567313504244,
+          "negative_c": -939.9342013612938,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        }
+      ]
+    },
+    {
+      "day": "20261026",
+      "mid": 3850428,
+      "delta_c": -1190.8141681323011,
+      "components": [
+        {
+          "category": "common_closed",
+          "n": 725,
+          "shares": 3086.8137040956376,
+          "delta_c": -765.1649378658574,
+          "positive_c": 663.3486347039724,
+          "negative_c": -1428.5135725698299,
+          "signed_exit_price_diff": -0.24788180020408215,
+          "hold_ms_diff": -197.30892891047745
+        },
+        {
+          "category": "common_close_vs_residual",
+          "n": 8,
+          "shares": 40.24188468146109,
+          "delta_c": 221.330365748036,
+          "positive_c": 221.330365748036,
+          "negative_c": 0,
+          "signed_exit_price_diff": 5.500000000000001,
+          "hold_ms_diff": -19935.01121143648
+        },
+        {
+          "category": "common_residual",
+          "n": 46,
+          "shares": 349.62822913206884,
+          "delta_c": 0.0,
+          "positive_c": 0,
+          "negative_c": 0,
+          "signed_exit_price_diff": 0.0,
+          "hold_ms_diff": 0.0
+        },
+        {
+          "category": "new_entry",
+          "n": 51,
+          "shares": 166.98271489043145,
+          "delta_c": -93.1573162971367,
+          "positive_c": 309.97294095071953,
+          "negative_c": -403.1302572478562,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_entry",
+          "n": 54,
+          "shares": 242.36834015581397,
+          "delta_c": -636.1570608510352,
+          "positive_c": 193.72330024447555,
+          "negative_c": -829.8803610955107,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "new_role",
+          "n": 23,
+          "shares": 100.96102192378619,
+          "delta_c": -58.44927360676329,
+          "positive_c": 132.68234327437682,
+          "negative_c": -191.1316168811401,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_role",
+          "n": 10,
+          "shares": 39.76902679441024,
+          "delta_c": 140.78405474045547,
+          "positive_c": 140.78405474045547,
+          "negative_c": 0,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        }
+      ]
+    },
+    {
+      "day": "20261027",
+      "mid": 3877472,
+      "delta_c": -5458.644062546447,
+      "components": [
+        {
+          "category": "common_closed",
+          "n": 707,
+          "shares": 2435.777553373942,
+          "delta_c": -2204.592168267419,
+          "positive_c": 2173.3003521312535,
+          "negative_c": -4377.892520398672,
+          "signed_exit_price_diff": -0.9050876444828492,
+          "hold_ms_diff": -1313.0489547621437
+        },
+        {
+          "category": "common_close_vs_residual",
+          "n": 21,
+          "shares": 61.215150153657966,
+          "delta_c": 541.544044664036,
+          "positive_c": 541.544044664036,
+          "negative_c": 0,
+          "signed_exit_price_diff": 8.846568918065058,
+          "hold_ms_diff": -13781.97480784726
+        },
+        {
+          "category": "common_residual",
+          "n": 73,
+          "shares": 347.76468367642184,
+          "delta_c": 0.0,
+          "positive_c": 0,
+          "negative_c": 0,
+          "signed_exit_price_diff": 0.0,
+          "hold_ms_diff": 0.0
+        },
+        {
+          "category": "new_entry",
+          "n": 181,
+          "shares": 830.550454900387,
+          "delta_c": -5415.481266696605,
+          "positive_c": 2012.778910718975,
+          "negative_c": -7428.26017741558,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_entry",
+          "n": 172,
+          "shares": 743.0661141905439,
+          "delta_c": 4551.662915842836,
+          "positive_c": 7662.313636165603,
+          "negative_c": -3110.650720322767,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "new_role",
+          "n": 43,
+          "shares": 210.78848670001057,
+          "delta_c": -2878.3485612293175,
+          "positive_c": 242.1627324597446,
+          "negative_c": -3120.511293689062,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_role",
+          "n": 6,
+          "shares": 23.678167469296874,
+          "delta_c": -53.429026859977895,
+          "positive_c": 2.8690056491258282,
+          "negative_c": -56.29803250910372,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        }
+      ]
+    },
+    {
+      "day": "20261027",
+      "mid": 3899224,
+      "delta_c": -3430.7402909090915,
+      "components": [
+        {
+          "category": "common_closed",
+          "n": 636,
+          "shares": 2032.0588431322835,
+          "delta_c": -597.7538297269955,
+          "positive_c": 1437.5611040404046,
+          "negative_c": -2035.3149337674001,
+          "signed_exit_price_diff": -0.2941616733920942,
+          "hold_ms_diff": -589.1329193647331
+        },
+        {
+          "category": "common_close_vs_residual",
+          "n": 2,
+          "shares": 2.4301454545454817,
+          "delta_c": -3.6452181818182225,
+          "positive_c": 0,
+          "negative_c": -3.6452181818182225,
+          "signed_exit_price_diff": -1.4999999999999998,
+          "hold_ms_diff": 6452.609406096162
+        },
+        {
+          "category": "common_residual",
+          "n": 58,
+          "shares": 422.45970049204954,
+          "delta_c": 0.0,
+          "positive_c": 0,
+          "negative_c": 0,
+          "signed_exit_price_diff": 0.0,
+          "hold_ms_diff": 0.0
+        },
+        {
+          "category": "new_entry",
+          "n": 30,
+          "shares": 102.6590909090909,
+          "delta_c": 11.446132505263556,
+          "positive_c": 464.2727272727272,
+          "negative_c": -452.8265947674637,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_entry",
+          "n": 43,
+          "shares": 146.50533636363636,
+          "delta_c": -302.98051464884276,
+          "positive_c": 238.07737815597113,
+          "negative_c": -541.0578928048138,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "new_role",
+          "n": 40,
+          "shares": 160.56037265087858,
+          "delta_c": -2600.6864730729153,
+          "positive_c": 42.53895898709092,
+          "negative_c": -2643.2254320600064,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        },
+        {
+          "category": "foregone_role",
+          "n": 13,
+          "shares": 37.13022719633312,
+          "delta_c": 62.87961221621666,
+          "positive_c": 189.30756363636394,
+          "negative_c": -126.42795142014728,
+          "signed_exit_price_diff": null,
+          "hold_ms_diff": null
+        }
+      ]
+    }
+  ],
+  "days": {
+    "20261024": [
+      {
+        "category": "common_closed",
+        "n": 4723,
+        "shares": 16194.90614812579,
+        "delta_c": -2582.178058199835,
+        "positive_c": 18978.895124405404,
+        "negative_c": -21561.07318260524,
+        "signed_exit_price_diff": -0.15944384206874,
+        "hold_ms_diff": -1339.128744669793
+      },
+      {
+        "category": "common_close_vs_residual",
+        "n": 126,
+        "shares": 406.62414079612466,
+        "delta_c": 4079.497067264151,
+        "positive_c": 4254.4494650344,
+        "negative_c": -174.9523977702496,
+        "signed_exit_price_diff": 10.032599292498846,
+        "hold_ms_diff": -18118.446315688187
+      },
+      {
+        "category": "common_residual",
+        "n": 205,
+        "shares": 1208.1145763797122,
+        "delta_c": 0.0,
+        "positive_c": 0,
+        "negative_c": 0,
+        "signed_exit_price_diff": 0.0,
+        "hold_ms_diff": 0.0
+      },
+      {
+        "category": "new_entry",
+        "n": 537,
+        "shares": 2364.5527691111556,
+        "delta_c": 111.27832806993703,
+        "positive_c": 10450.10746712048,
+        "negative_c": -10338.829139050544,
+        "signed_exit_price_diff": null,
+        "hold_ms_diff": null
+      },
+      {
+        "category": "foregone_entry",
+        "n": 472,
+        "shares": 1612.8473889741347,
+        "delta_c": -8079.205715887527,
+        "positive_c": 8150.816132935605,
+        "negative_c": -16230.021848823133,
+        "signed_exit_price_diff": null,
+        "hold_ms_diff": null
+      },
+      {
+        "category": "new_role",
+        "n": 358,
+        "shares": 1476.8342300294564,
+        "delta_c": -1095.411397063194,
+        "positive_c": 3880.3117773875515,
+        "negative_c": -4975.723174450745,
+        "signed_exit_price_diff": null,
+        "hold_ms_diff": null
+      },
+      {
+        "category": "foregone_role",
+        "n": 346,
+        "shares": 1522.7192034369625,
+        "delta_c": 2844.317644267422,
+        "positive_c": 5108.542720211133,
+        "negative_c": -2264.2250759437115,
+        "signed_exit_price_diff": null,
+        "hold_ms_diff": null
+      }
+    ],
+    "20261025": [
+      {
+        "category": "common_closed",
+        "n": 3443,
+        "shares": 13280.06230415231,
+        "delta_c": -229.22113196424596,
+        "positive_c": 14046.944100653935,
+        "negative_c": -14276.165232618181,
+        "signed_exit_price_diff": -0.01726054642775094,
+        "hold_ms_diff": -2345.4676797500415
+      },
+      {
+        "category": "common_close_vs_residual",
+        "n": 24,
+        "shares": 120.72408216964897,
+        "delta_c": 507.87597501837905,
+        "positive_c": 580.9009750183791,
+        "negative_c": -73.02500000000002,
+        "signed_exit_price_diff": 4.206915189503618,
+        "hold_ms_diff": -6264.0532187649205
+      },
+      {
+        "category": "common_residual",
+        "n": 132,
+        "shares": 1308.119826008938,
+        "delta_c": 0.0,
+        "positive_c": 0,
+        "negative_c": 0,
+        "signed_exit_price_diff": 0.0,
+        "hold_ms_diff": 0.0
+      },
+      {
+        "category": "new_entry",
+        "n": 375,
+        "shares": 1619.1277727733986,
+        "delta_c": -1406.793564663565,
+        "positive_c": 10028.169545099214,
+        "negative_c": -11434.963109762779,
+        "signed_exit_price_diff": null,
+        "hold_ms_diff": null
+      },
+      {
+        "category": "foregone_entry",
+        "n": 339,
+        "shares": 1496.4399406113055,
+        "delta_c": 5399.224958554811,
+        "positive_c": 13062.287653269026,
+        "negative_c": -7663.062694714216,
+        "signed_exit_price_diff": null,
+        "hold_ms_diff": null
+      },
+      {
+        "category": "new_role",
+        "n": 115,
+        "shares": 617.1955939148377,
+        "delta_c": -7849.222881615356,
+        "positive_c": 454.161789317572,
+        "negative_c": -8303.384670932926,
+        "signed_exit_price_diff": null,
+        "hold_ms_diff": null
+      },
+      {
+        "category": "foregone_role",
+        "n": 82,
+        "shares": 349.0927468492654,
+        "delta_c": 1384.4437389408017,
+        "positive_c": 1863.35749862369,
+        "negative_c": -478.9137596828884,
+        "signed_exit_price_diff": null,
+        "hold_ms_diff": null
+      }
+    ],
+    "20261026": [
+      {
+        "category": "common_closed",
+        "n": 2501,
+        "shares": 9529.459725261986,
+        "delta_c": -17595.706639722863,
+        "positive_c": 14484.507786080798,
+        "negative_c": -32080.21442580366,
+        "signed_exit_price_diff": -1.8464537494269244,
+        "hold_ms_diff": -4345.5304236091215
+      },
+      {
+        "category": "common_close_vs_residual",
+        "n": 35,
+        "shares": 134.06431552348124,
+        "delta_c": 1298.9498580653405,
+        "positive_c": 1298.9498580653405,
+        "negative_c": 0,
+        "signed_exit_price_diff": 9.689005258359229,
+        "hold_ms_diff": -9099.234238404457
+      },
+      {
+        "category": "common_residual",
+        "n": 191,
+        "shares": 1182.7599335258058,
+        "delta_c": 0.0,
+        "positive_c": 0,
+        "negative_c": 0,
+        "signed_exit_price_diff": 0.0,
+        "hold_ms_diff": 0.0
+      },
+      {
+        "category": "new_entry",
+        "n": 440,
+        "shares": 2105.9102704234942,
+        "delta_c": -3315.3613865979746,
+        "positive_c": 9921.972462125215,
+        "negative_c": -13237.333848723189,
+        "signed_exit_price_diff": null,
+        "hold_ms_diff": null
+      },
+      {
+        "category": "foregone_entry",
+        "n": 419,
+        "shares": 2039.1266697884114,
+        "delta_c": 913.7928050915915,
+        "positive_c": 13832.188542745853,
+        "negative_c": -12918.39573765426,
+        "signed_exit_price_diff": null,
+        "hold_ms_diff": null
+      },
+      {
+        "category": "new_role",
+        "n": 321,
+        "shares": 1740.4073819472544,
+        "delta_c": -373.57080422918546,
+        "positive_c": 3689.4633621464136,
+        "negative_c": -4063.034166375599,
+        "signed_exit_price_diff": null,
+        "hold_ms_diff": null
+      },
+      {
+        "category": "foregone_role",
+        "n": 215,
+        "shares": 975.71968547851,
+        "delta_c": 4790.5167704247315,
+        "positive_c": 7249.165364085199,
+        "negative_c": -2458.648593660467,
+        "signed_exit_price_diff": null,
+        "hold_ms_diff": null
+      }
+    ],
+    "20261027": [
+      {
+        "category": "common_closed",
+        "n": 1343,
+        "shares": 4467.836396506225,
+        "delta_c": -2802.345997994414,
+        "positive_c": 3610.861456171658,
+        "negative_c": -6413.207454166072,
+        "signed_exit_price_diff": -0.627226637077804,
+        "hold_ms_diff": -983.7978697034114
+      },
+      {
+        "category": "common_close_vs_residual",
+        "n": 23,
+        "shares": 63.64529560820345,
+        "delta_c": 537.8988264822178,
+        "positive_c": 541.544044664036,
+        "negative_c": -3.6452181818182225,
+        "signed_exit_price_diff": 8.45150959457381,
+        "hold_ms_diff": -13009.364949063067
+      },
+      {
+        "category": "common_residual",
+        "n": 131,
+        "shares": 770.2243841684714,
+        "delta_c": 0.0,
+        "positive_c": 0,
+        "negative_c": 0,
+        "signed_exit_price_diff": 0.0,
+        "hold_ms_diff": 0.0
+      },
+      {
+        "category": "new_entry",
+        "n": 211,
+        "shares": 933.2095458094778,
+        "delta_c": -5404.035134191342,
+        "positive_c": 2477.0516379917026,
+        "negative_c": -7881.086772183044,
+        "signed_exit_price_diff": null,
+        "hold_ms_diff": null
+      },
+      {
+        "category": "foregone_entry",
+        "n": 215,
+        "shares": 889.5714505541803,
+        "delta_c": 4248.682401193993,
+        "positive_c": 7900.391014321574,
+        "negative_c": -3651.7086131275805,
+        "signed_exit_price_diff": null,
+        "hold_ms_diff": null
+      },
+      {
+        "category": "new_role",
+        "n": 83,
+        "shares": 371.34885935088914,
+        "delta_c": -5479.035034302233,
+        "positive_c": 284.7016914468355,
+        "negative_c": -5763.736725749069,
+        "signed_exit_price_diff": null,
+        "hold_ms_diff": null
+      },
+      {
+        "category": "foregone_role",
+        "n": 19,
+        "shares": 60.80839466562999,
+        "delta_c": 9.450585356238765,
+        "positive_c": 192.17656928548976,
+        "negative_c": -182.72598392925102,
+        "signed_exit_price_diff": null,
+        "hold_ms_diff": null
+      }
+    ]
+  },
+  "total_c": -30086.15878770212
+}
