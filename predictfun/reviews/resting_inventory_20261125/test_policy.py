@@ -18,6 +18,38 @@ def fixture(s, enabled, trade=True):
     return b,p
 
 
+def shrinking_exit_forecast(s):
+    b,p=fixture(s,True,False)
+    # Build a signed 350-share holding using two real passive fills before the review.
+    prices=[49,48] if s==0 else [51,52]
+    path=dict(frames=b.E.f, trades=[[70,s,47 if s==0 else 53,350]], mark=50.)
+    b=Branch(path,500.,{})
+    p=Policy(b,(p.on,p.trigger),{})
+    p.opened=0
+    for rung,price in enumerate(prices):
+        b.unclosed[s].append(b.E.add_order(s,price,0.,175,rung))
+    b.pre_tick(200)
+    assert b.reserve(200)[0]==(1-2*s)*350
+    gid=b.E.add_order(s,prices[0],200.,100,0)
+    b.unclosed[s].append(gid)
+    b.pre_tick(250)
+    b.k=5
+    name=R.groups(p.context(b.k,s))[0]
+    p.model[name]=dict(q25=600.,markets=10)
+    p.review(250,s)
+    assert b.E.o[gid]['req'] is None
+    p.model[name]['q25']=250.
+    b.side_commands(250,s,p)
+    assert b.E.o[gid]['req']==250 and b.reserve(250)[1+s]==100
+    p.model[name]['q25']=300.
+    b.pre_tick(300)
+    b.k=6
+    assert p.slot(b.side_view(300,s),1,prices[1])[0]=='WAIT'
+    b.pre_tick(400)
+    b.k=8
+    assert b.reserve(400)[1+s]==0 and p.slot(b.side_view(400,s),1,prices[1])[:2]==('POST',50)
+
+
 def main():
     keep=order(0,100)
     newer=order(1,220,120)
@@ -26,6 +58,7 @@ def main():
     assert excess_orders([order(0,80),order(1,100)],100)==[order(0,80)]
     assert excess_orders([keep],0)==[keep]
     for s in (0,1):
+        shrinking_exit_forecast(s)
         b,p=fixture(s,True)
         R.LB.step(b,1,p)
         assert [(x[1],x[2]) for x in p.trims]==[(1,'post_pending')]
