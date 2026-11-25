@@ -35,7 +35,7 @@ VMCFG = dict(VR.CONFIGS['VM208-M50'], delay=172.)                              #
 CONFIGS = {'GRID-172': dict(kinds=None, net=22.), 'STREAM-172': dict(kinds=('stream',), net=22.), 'STREAM-192': dict(kinds=('stream',), net=42.),
            'STREAM+DEPL-172': dict(kinds=('stream', 'depl'), net=22.), 'STREAM+DEPLS-172': dict(kinds=('stream', 'depls'), net=22.),
            'STREAM+DEPLS-192': dict(kinds=('stream', 'depls'), net=42.)}
-DAY_CPU_CAP, TOTAL_CPU_CAP, FIRST_DAY, PARITY_EVERY = 1200., 3600., '20261023', 40
+DAY_CPU_CAP, TOTAL_CPU_CAP, FIRST_DAY, PARITY_EVERY = 1800., 5400., '20261023', 40     # resource amendment R1 (declaration.md)
 SAME = VR.SAME
 FILES = ['declaration.md', 'stream_replay.py']
 EPS = V.EPS

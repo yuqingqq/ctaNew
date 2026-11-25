@@ -68,3 +68,11 @@ trigger build ≤ 600 CPU s. No forward or sealed day is read (the book loader r
 
 Causality: the replay steps on the 50 ms grid; at tick g it sends every take decided in [g, g + 50 ms) on the client state known at g
 (never later than the decision) and the Predict book known at the decision time.
+
+## Resource-only amendment R1 (after the first-day projection refusal; before any run of days 2–5; outcomes not read)
+
+Day 1 (20261023, 70 markets) cost 763 CPU s (about 11 s per market; the naive depletion config sends many takes). Its projection,
+scaled to 408 markets × 1.1, is 4,891 CPU s against the 3,600 s cap: the gate refused as declared. The USER asked to run the replay
+("Ok then we run the replay first, check if we can detect the signals early"). New caps: stage A ≤ 5,400 CPU s, ≤ 1,800 CPU s per day
+process (20261031 has 102 complete markets). stream_replay.py changes only these two constants; day 1 ran the original file
+(sha256 779db837a09ff5d485ccf3aa0bb468f03a10ee2b63b5e7fad9f4bd7e99bc19ec). No config, day, rule or check changes; the decision used costs only.
