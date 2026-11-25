@@ -1,0 +1,23 @@
+{
+  "E1_no_trigger_no_trading": {
+    "ok": true,
+    "detail": "3 arms with takes disabled"
+  },
+  "E2_exit_orders_closing_side_rung0": {
+    "ok": true,
+    "detail": "1293 posts, 0 violations (HOLD must post none)"
+  },
+  "E3_ioc_results_rederived": {
+    "ok": true,
+    "detail": "643 filled IOCs, 0 mismatches"
+  },
+  "E4_ledger_identities": {
+    "ok": true,
+    "detail": "57 ledgers"
+  },
+  "E5_trigger_set_equals_signal_take": {
+    "ok": true,
+    "detail": "57 ledgers vs WIDE_TAKE"
+  },
+  "all_pass": true
+}

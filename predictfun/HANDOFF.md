@@ -1,3 +1,13 @@
+<!-- TAKE_EXIT_REPLAY_20261125_CLAUDE -->
+## 2026-11-25 — standalone signal-take strategy positive in replay (+$219, 4/4 days); next = untouched days (USER's call)
+
+[Receipt](reviews/take_exit_replay_20261125/report.md) (session 1622c91e; freeze ee0f16ee6). Taking alone on the pressure-guard trigger, with a guarded maker exit, earns +$218.56 over the 19 consumed markets: every day positive, 16/19 markets, average position 6 sh. Maker exits close 80 % of shares at +4.6 ¢/sh in a median 2 s. Without the guard on the exit it earns +$137; holding to END +$292, with 5× the inventory. Our market-making arms lose on the same markets.
+
+Watch out: 20 % of exit shares fill on orders < 100 ms old (the replay's least reliable fills); the result is +$203 without them. The 298 s END mark is not settlement. The exec engine has no IOC path yet: pmmmrust builds only post-only BUY orders.
+
+ONE next priority (needs the USER's go): run this frozen rule unchanged on untouched days. Then decide with the exec session whether a Tokyo shadow or canary of an IOC take path is wanted. No tuning before that.
+<!-- /TAKE_EXIT_REPLAY_20261125_CLAUDE -->
+
 <!-- SIGNAL_TAKE_REPLAY_20261125_CLAUDE -->
 ## 2026-11-25 — signal take replay: helps the wide band (+$290, 4/4 days), not the base band; next = own-cross handling (USER's call)
 

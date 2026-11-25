@@ -1,3 +1,17 @@
+<!-- TAKE_EXIT_REPLAY_20261125_CLAUDE -->
+## 2026-11-25 — taking alone (signal take, maker exit) earns in the 19-market replay; guard on the exit is essential
+
+[Receipt](reviews/take_exit_replay_20261125/report.md) (session 1622c91e), frozen ee0f16ee6 before any replay. USER: "test on this taking alone ... we take, and exit by posting making orders". The entry is the SIGNAL-TAKE rule unchanged: guard trigger, 50-sh IOC, +40 ms, venue best inside the limit, 200 bps fee, one ±50 position. The exit is one post-only rung-0 order on the closing side sized to the position; nothing else is quoted. Same 19 complete consumed markets and engine.
+
+- PASSIVE_EXIT (guard on the exit): END net **+$218.56**, every day positive (+40 / +52 / +77 / +50), 16/19 markets, mean |position| 6 sh. Completed +$261.54, fees −$44.04. Passive exits close 4,898 sh at **+4.63 ¢/sh net in a median 2.0 s**; opposite-signal takes 1,208 sh at −0.76 ¢.
+- Exit fills on orders < 100 ms old: 993 of 4,945 sh. Without their value the result is still +$202.77.
+- NOGUARD: +$137.10. Its young exits are picked off (−$92.56 vs holding), so the guard is worth +$81.45.
+- HOLD control: +$291.84 (4/4 days, 14/19 markets) but mean |position| 29 sh; 628 sh held to END earn +23.8 ¢ each, few shares and outcome-dependent. Passive exit − HOLD = −$73.28 on these days.
+- The market-making arms on the same markets lose (−$562 .. −$944).
+
+Checks 5/5: no-trigger falsifier, exits on the closing side at rung 0 (1,293 posts), 643 IOC fills re-derived, identities on 57 ledgers, trigger set = SIGNAL-TAKE. Not measured: untouched days, live realism of the maker exit (age split only), M sensitivity, settlement vs END mark, size. Consumed selected markets; development evidence only. CPU 72 s.
+<!-- /TAKE_EXIT_REPLAY_20261125_CLAUDE -->
+
 <!-- SIGNAL_TAKE_REPLAY_20261125_CLAUDE -->
 ## 2026-11-25 — signal take inside our strategy: +$290 with the wide band (4/4 days), −$28 with the base band
 

@@ -1,0 +1,66 @@
+{
+ "HOLD|open_at_END": {
+  "shares": 627.8302403844732,
+  "net_c_per_share": 23.761009380097743,
+  "gross_c_per_share": 24.37306637440015,
+  "median_hold_s": 106.61856714174755,
+  "hold_p50_s": 79.21,
+  "net_usd": 149.17880230884487
+ },
+ "HOLD|take": {
+  "shares": 2426.8110309214935,
+  "net_c_per_share": 5.878452843901392,
+  "gross_c_per_share": 7.056837601823345,
+  "median_hold_s": 40.178527705804434,
+  "hold_p50_s": 26.425,
+  "net_usd": 142.65894206331723
+ },
+ "PASSIVE_EXIT|open_at_END": {
+  "shares": 65.54670779439127,
+  "net_c_per_share": 1.5069173270931107,
+  "gross_c_per_share": 1.6175518338557098,
+  "median_hold_s": 10.06056721477837,
+  "hold_p50_s": 42.91,
+  "net_usd": 0.9877346970927725
+ },
+ "PASSIVE_EXIT|passive": {
+  "shares": 4898.048667164578,
+  "net_c_per_share": 4.62970817187525,
+  "gross_c_per_share": 5.284979051727002,
+  "median_hold_s": 4.7636826533347465,
+  "hold_p50_s": 1.9955,
+  "net_usd": 226.76535940614522
+ },
+ "PASSIVE_EXIT|take": {
+  "shares": 1207.7880137618743,
+  "net_c_per_share": -0.7613494544458267,
+  "gross_c_per_share": 0.22160275531541637,
+  "median_hold_s": 9.626113941402618,
+  "hold_p50_s": 11.175,
+  "net_usd": -9.195487453638115
+ },
+ "PASSIVE_EXIT_NOGUARD|open_at_END": {
+  "shares": 106.04659212065752,
+  "net_c_per_share": 1.0315761980225915,
+  "gross_c_per_share": 1.1002043116613454,
+  "median_hold_s": 8.367109914639808,
+  "hold_p50_s": 40.61,
+  "net_usd": 1.093951403130804
+ },
+ "PASSIVE_EXIT_NOGUARD|passive": {
+  "shares": 5534.110112847687,
+  "net_c_per_share": 2.81449510756552,
+  "gross_c_per_share": 3.4606115783376366,
+  "median_hold_s": 2.8924707253211386,
+  "hold_p50_s": 1.027,
+  "net_usd": 155.75725837338683
+ },
+ "PASSIVE_EXIT_NOGUARD|take": {
+  "shares": 913.9248523447011,
+  "net_c_per_share": -2.1608136248797924,
+  "gross_c_per_share": -1.2282597688148862,
+  "median_hold_s": 8.298732368516259,
+  "hold_p50_s": 9.9,
+  "net_usd": -19.74821273062683
+ }
+}

@@ -1,3 +1,21 @@
+take_exit_replay_20261125_claude:
+  report: predictfun/reviews/take_exit_replay_20261125/report.md
+  session: 1622c91e
+  freeze: ee0f16ee6
+  markets: 19
+  passive_exit_net_usd: 218.56
+  passive_exit_days_positive: 4
+  passive_exit_markets_positive: 16
+  passive_exit_close_c_per_share: 4.63
+  passive_exit_median_hold_s: 2.0
+  passive_exit_without_young_exit_value_usd: 202.77
+  noguard_net_usd: 137.10
+  hold_net_usd: 291.84
+  mean_abs_position_passive_hold: [6.3, 29.0]
+  checks_pass: 5
+  validation: false
+  promoted: false
+  next: frozen_rule_on_untouched_days_needs_user_go
 signal_take_replay_20261125_claude:
   report: predictfun/reviews/signal_take_replay_20261125/report.md
   session: 1622c91e

@@ -1,0 +1,82 @@
+{
+  "PASSIVE_EXIT": {
+    "net_usd": 218.5576066496001,
+    "completed_usd": 261.5373375199072,
+    "residual_usd": 1.0602519739602194,
+    "fees_usd": 44.039982844267534,
+    "day_net_usd": {
+      "20261024": 40.30307891643433,
+      "20261025": 51.72957732536094,
+      "20261026": 76.99537759278729,
+      "20261027": 49.52957281501753
+    },
+    "days_positive": 4,
+    "markets_positive": 16,
+    "takes_sent": 349,
+    "takes_filled": 224,
+    "taker_shares": 7331.880928114945,
+    "exit_shares": 4945.339141532352,
+    "young_exit_shares": 993.4428880864652,
+    "young_exit_value_usd": 15.784152922623441,
+    "exit_value_vs_hold_usd": 30.316315790589652,
+    "net_usd_without_young_exit_value": 202.77345372697667,
+    "mean_abs_inventory": 6.3049166101890615,
+    "time_in_position": 0.7865330271988696
+  },
+  "PASSIVE_EXIT_NOGUARD": {
+    "net_usd": 137.10299704589076,
+    "completed_usd": 180.28868404461028,
+    "residual_usd": 1.1667291788813945,
+    "fees_usd": 44.35241617760087,
+    "day_net_usd": {
+      "20261024": 42.09268766939957,
+      "20261025": 25.158185670392903,
+      "20261026": 32.22855360536649,
+      "20261027": 37.62357010073181
+    },
+    "days_positive": 4,
+    "markets_positive": 17,
+    "takes_sent": 353,
+    "takes_filled": 227,
+    "taker_shares": 7426.672594781612,
+    "exit_shares": 5575.443927723823,
+    "young_exit_shares": 2108.050573188446,
+    "young_exit_value_usd": -92.55931994958253,
+    "exit_value_vs_hold_usd": -90.21877714645304,
+    "net_usd_without_young_exit_value": 229.6623169954733,
+    "mean_abs_inventory": 4.338069924789391,
+    "time_in_position": 0.813802543270929
+  },
+  "HOLD": {
+    "net_usd": 291.8377443721622,
+    "completed_usd": 171.25611335526472,
+    "residual_usd": 153.0214812074637,
+    "fees_usd": 32.43985019056627,
+    "day_net_usd": {
+      "20261024": 7.369941804515816,
+      "20261025": 80.80352110738367,
+      "20261026": 122.99153205109013,
+      "20261027": 80.67274940917257
+    },
+    "days_positive": 4,
+    "markets_positive": 14,
+    "takes_sent": 306,
+    "takes_filled": 192,
+    "taker_shares": 5481.452302227461,
+    "exit_shares": 0.0,
+    "young_exit_shares": 0.0,
+    "young_exit_value_usd": 0.0,
+    "exit_value_vs_hold_usd": 0.0,
+    "net_usd_without_young_exit_value": 291.8377443721622,
+    "mean_abs_inventory": 29.04234838895774,
+    "time_in_position": 0.8853585305545745
+  },
+  "readings": {
+    "passive_exit_positive": true,
+    "passive_exit_3_of_4_days": true,
+    "passive_exit_minus_hold_usd": -73.2801377225621,
+    "passive_exit_beats_hold": false,
+    "passive_exit_minus_noguard_usd": 81.45460960370934,
+    "sign_without_young_exit_value": true
+  }
+}
