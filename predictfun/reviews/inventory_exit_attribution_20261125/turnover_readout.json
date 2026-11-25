@@ -1,0 +1,52 @@
+{
+  "all19": {
+    "totals": {
+      "WIDE": {
+        "matched_shares": 51742.30892031741,
+        "maker_shares": 109355.17552890252,
+        "completed_c": -51262.64009052396,
+        "residual_c": -33970.57036020282,
+        "net_c": -85233.21045072678,
+        "completed_c_per_matched_share": -0.9907296593483654
+      },
+      "WIDE_COST": {
+        "matched_shares": 54383.03218590115,
+        "maker_shares": 114278.1597374878,
+        "completed_c": -93610.54285084984,
+        "residual_c": -21708.82638757905,
+        "net_c": -115319.36923842887,
+        "completed_c_per_matched_share": -1.7213189314427093
+      }
+    },
+    "matched_share_change_pct": 5.10360538732515,
+    "filled_share_change_pct": 4.501830100655946,
+    "completed_delta_usd": -423.4790276032589,
+    "residual_delta_usd": 122.61743972623772,
+    "net_delta_usd": -300.86158787702095
+  },
+  "3789484": {
+    "totals": {
+      "WIDE": {
+        "matched_shares": 2436.9464402061053,
+        "maker_shares": 4900.1592050301215,
+        "completed_c": 25382.397407074954,
+        "residual_c": -502.52732524941746,
+        "net_c": 24879.87008182552,
+        "completed_c_per_matched_share": 10.415656654697848
+      },
+      "WIDE_COST": {
+        "matched_shares": 2519.8094712790576,
+        "maker_shares": 5142.184570033172,
+        "completed_c": 16029.193328103353,
+        "residual_c": 1299.4659709133289,
+        "net_c": 17328.659299016683,
+        "completed_c_per_matched_share": 6.361271957584523
+      }
+    },
+    "matched_share_change_pct": 3.4002811758942153,
+    "filled_share_change_pct": 4.939132686844272,
+    "completed_delta_usd": -93.532040789716,
+    "residual_delta_usd": 18.019932961627465,
+    "net_delta_usd": -75.51210782808838
+  }
+}
