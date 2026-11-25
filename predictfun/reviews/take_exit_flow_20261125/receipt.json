@@ -2,10 +2,10 @@
  "asof": "2026-11-25",
  "what": "execution-flow page for the frozen take + maker-exit rule (descriptive; no new replay result)",
  "files": {
-  "build_flow.py": "03e3a09f4aa8bb7e10a3130d928b0ac909835e4a145f653eb76d1054a6f93b9f",
+  "build_flow.py": "71d44374c69fbad23bd5323e9d1590b026ca155155171a0261f210bb86b5eb38",
   "flow_template.html": "318be889885684fdf3bdf3430baf1fc134cb8e8da28ed132e561f3b69cbd7703",
-  "flow_data.json": "8e2f80863b90f86036638213649709e53951268fce7fda6451d96c1bc3fa1449",
-  "flow.html": "562707f9fb6e944c97a348cc0aa4fc164d11a664d7f6bbb9020852e24c9694a2",
+  "flow_data.json": "d7de43faa459d2b7809e5564a7b339580fd2ad62eeb097638b30ce5228bb6b5c",
+  "flow.html": "8b77812eef5ff094a54a87e647e9abb9cfee2c4bfd2537c915876400916dfa30",
   "check_dom.cjs": "0a88d0f8a553bb177d0eb3c5465154015328face3a2a54d961fd082b91590c30",
   "chart_typical_take.png": "ced116d36b5b7fc4d67a56ea73d29bef698ec30395a98a22659c821a3d692362",
   "chart_strong_take.png": "bd6119893a134fa437379592240e63b802211c87f56ce51ba8f1ebefef97e217",
@@ -55,8 +55,15 @@
    "txflow_data5",
    "txflow_html2",
    "txflow_data6",
-   "txflow_html3"
+   "txflow_html3",
+   "txflow_m3s",
+   "txflow_data7",
+   "txflow_html4",
+   "txflow_data7b",
+   "txflow_data8",
+   "txflow_html5"
   ],
-  "cpu_user_s": 129.57
- }
+  "cpu_user_s": 166.24
+ },
+ "revision": "markout precision 6 places (the 3 s value displayed +3.47 from double rounding; exact +3.4647)"
 }

@@ -335,7 +335,7 @@ def aggregates():
     return dict(
         markets=len(mids), triggers=dict(trig), triggers_by_dir={f'{a}|{b}': v for (a, b), v in sorted(trig_dir.items())},
         ioc_reasons=dict(ioc), ioc_shares={k: round(v, 2) for k, v in ioc_sh.items()},
-        take_markouts={h: dict(cents_per_share=round(v[0] / v[1], 3) if v[1] else None, shares=round(v[1], 2), censored_fills=v[2]) for h, v in mk.items()},
+        take_markouts={h: dict(cents_per_share=round(v[0] / v[1], 6) if v[1] else None, shares=round(v[1], 2), censored_fills=v[2]) for h, v in mk.items()},
         exit_orders=dict(posted=o_n, refused=o_ref, outcome=dict(o_end)), exit_fills=dict(fills=ex_n, shares=round(ex_sh, 2),
                                                                                          age_ms_p50=float(np.median(ag)), age_ms_p90=float(np.quantile(ag, .9)),
                                                                                          young_share=float(np.mean(ag < 100.))),
