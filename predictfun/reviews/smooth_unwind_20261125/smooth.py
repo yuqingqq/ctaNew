@@ -136,16 +136,16 @@ def curve(left,ratio=1.):
 class Smooth(E.EarlyUnwind):
     def __init__(self,b,flags,old_fit,arm,models,z):
         super().__init__(b,flags,old_fit)
-        self.arm,self.models,self.z=arm,models,z
+        self.schedule,self.models,self.z=arm,models,z
         self.active_side=0
         self.ratio_stats=[0,0.,0.]  # side reviews during ramp, sum ratio, sum |ratio-1|
         self.tick_ratio={}
 
     def limit(self,g):
         left=(self.b.ident['opening_ms']+300000-self.b.ident['start_abs_ms']-g)/1000
-        if self.arm.startswith('stair'):
+        if self.schedule.startswith('stair'):
             return E.band(left*1000)
-        if self.arm=='linear' or left<=30 or left>=150:
+        if self.schedule=='linear' or left<=30 or left>=150:
             return curve(left)
         s=self.active_side
         if self.tick_ratio.get(s,(None,None))[0]!=g:
@@ -163,7 +163,7 @@ class Smooth(E.EarlyUnwind):
     def review(self,g,s):
         self.active_side=s
         limit=self.limit(g)
-        self.cap=min(self.b.cap,limit+(22 if self.arm!='stair' and limit>0 else 0))
+        self.cap=min(self.b.cap,limit+(22 if self.schedule!='stair' and limit>0 else 0))
         E.Policy.review(self,g,s)
 
     def slot(self,v,rung,price):
@@ -215,7 +215,12 @@ def evaluate():
     f=HERE/'fit.json'
     assert subprocess.check_output(['git','show','HEAD:'+str(f.relative_to(HERE.parents[2]))])==f.read_bytes()
     fit=read(f)
-    assert fit['source']==R.sha(Path(__file__)) and fit['raw_sha']==R.sha(OUT/'probe_rows.json')
+    # Only the evaluator changed after fitting. Verify every training definition byte-for-byte.
+    original=subprocess.check_output(['git','show','20fdae672:'+str(Path(__file__).resolve().relative_to(HERE.parents[2]))])
+    import hashlib
+    assert hashlib.sha256(original).hexdigest()==fit['source'] and fit['raw_sha']==R.sha(OUT/'probe_rows.json')
+    boundary=b'class Smooth('
+    assert original.split(boundary)[0]==Path(__file__).read_bytes().split(boundary)[0]
     src=R.MM.KP.Tape(); day=R.EVAL
     ref=pd.read_csv(E.HERE/'markets.csv').query("arm=='scheduled'").set_index('mid')
     old=read(R.HERE/'fit_v2.json')

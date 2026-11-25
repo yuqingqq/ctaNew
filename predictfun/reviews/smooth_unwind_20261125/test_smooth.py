@@ -28,6 +28,7 @@ def main():
         b.ident.update(opening_ms=0.,start_abs_ms=210000.)
         model={str(i):dict(coef=[0,1,0,0],mean=[0]*4,scale=[1]*4) for i in (0,1)}
         p=Smooth(b,(flags,flags),{},'adaptive',model,np.ones(n))
+        assert p.arm=='C' and p.schedule=='adaptive'
         p.active_side=s
         assert math.isclose(p.limit(0),curve(90,2 if s==0 else .5))
         b.ident['start_abs_ms']=270000.
