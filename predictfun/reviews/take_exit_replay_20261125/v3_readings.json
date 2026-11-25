@@ -1,0 +1,109 @@
+{
+  "census": {
+    "20261023": {
+      "missing_endpoint": 187,
+      "complete": 70,
+      "stale_future_book": 31
+    },
+    "20261031": {
+      "stale_future_book": 99,
+      "complete": 102,
+      "missing_endpoint": 87
+    },
+    "20261101": {
+      "stale_future_book": 131,
+      "complete": 88,
+      "missing_endpoint": 69
+    },
+    "20261102": {
+      "stale_future_book": 102,
+      "missing_endpoint": 114,
+      "complete": 72
+    },
+    "20261103": {
+      "missing_endpoint": 89,
+      "stale_future_book": 122,
+      "complete": 76,
+      "boundary_censored_forward_tail": 1
+    }
+  },
+  "in_sample": {
+    "LENIENT40_per_market": 14.0,
+    "STRICT58_per_market": 5.76
+  },
+  "LENIENT40": {
+    "markets": 408,
+    "net_usd": 5923.126540916312,
+    "per_market_usd": 14.517467012049783,
+    "day_net_usd": {
+      "20261023": 788.8632489572868,
+      "20261031": 1537.2387628513288,
+      "20261101": 1084.5611740274574,
+      "20261102": 1260.1000013888938,
+      "20261103": 1252.3633536913449
+    },
+    "day_markets": {
+      "20261023": 70,
+      "20261031": 102,
+      "20261101": 88,
+      "20261102": 72,
+      "20261103": 76
+    },
+    "day_per_market_usd": {
+      "20261023": 11.269474985104099,
+      "20261031": 15.070968263248323,
+      "20261101": 12.324558795766562,
+      "20261102": 17.50138890817908,
+      "20261103": 16.478465180149275
+    },
+    "days_positive": 5,
+    "markets_positive": 362,
+    "top10_abs_share": 0.09796553764371425,
+    "takes_filled": 4567,
+    "fees_usd": 949.2895696060219,
+    "completed_usd": 6812.512333973935,
+    "net_without_young_exit_value_usd": 5569.965962335379,
+    "mean_abs_inventory": 7.612187806718281
+  },
+  "STRICT58": {
+    "markets": 408,
+    "net_usd": 1901.64748804166,
+    "per_market_usd": 4.660900705984461,
+    "day_net_usd": {
+      "20261023": 300.14719493950435,
+      "20261031": 596.9967642564193,
+      "20261101": 380.3154022426438,
+      "20261102": 281.3517631480212,
+      "20261103": 342.8363634550709
+    },
+    "day_markets": {
+      "20261023": 70,
+      "20261031": 102,
+      "20261101": 88,
+      "20261102": 72,
+      "20261103": 76
+    },
+    "day_per_market_usd": {
+      "20261023": 4.287817070564348,
+      "20261031": 5.8529094534943065,
+      "20261101": 4.321765934575498,
+      "20261102": 3.907663377055849,
+      "20261103": 4.511004782303564
+    },
+    "days_positive": 5,
+    "markets_positive": 293,
+    "top10_abs_share": 0.13246725690739738,
+    "takes_filled": 2731,
+    "fees_usd": 444.67579802917334,
+    "completed_usd": 2358.7189384592707,
+    "net_without_young_exit_value_usd": 1579.2346408550259,
+    "mean_abs_inventory": 4.122194389276463
+  },
+  "readings": {
+    "holds_out_of_sample": true,
+    "strict58_days_positive": 5,
+    "strict58_per_market_ratio_to_in_sample": 0.8091841503445245,
+    "similar_size": true,
+    "lenient40_per_market_ratio_to_in_sample": 1.0369619294321273
+  }
+}

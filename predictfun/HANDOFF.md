@@ -1,3 +1,18 @@
+<!-- TAKE_EXIT_REPLAY_V3_20261125_CLAUDE -->
+## 2026-11-25 — take + maker exit HOLDS on 5 other days (strict: +$4.66 / market, 5/5 days); next = untouched forward days (USER's call)
+
+[Receipt](reviews/take_exit_replay_20261125/v3_report.md) (session 1622c91e; freeze 99ac28e53). The frozen rule on 20261023 and 20261031..1103 (408 complete markets):
+
+- strict fills + measured 58 ms: +$1,902 (+$4.66 / market, 81 % of in-sample), every day positive;
+- lenient simulator: +$5,923 (+$14.52 / market, 104 %).
+
+Across all 9 days the conservative setting is positive every day.
+
+Watch out: consumed days, so this is out-of-sample for the rule, not untouched validation. Only complete markets are covered (24–35 % per day). The v3 Binance change points live in data/.../take_exit_replay_v3_20261125 (segments A = Oct 23, B = Oct 31–Nov 3; no sealed row kept).
+
+ONE next priority (needs the USER's go): the frozen rule under STRICT58 on the reserved forward days (Nov 4 →). This consumes them for the pending forward races. Add the full C1–C3 / C12 / C15 checklist, and the live facts with the exec session (an IOC / marketable path, real latency, a Tokyo shadow log of stale-quote lifetimes).
+<!-- /TAKE_EXIT_REPLAY_V3_20261125_CLAUDE -->
+
 <!-- TAKE_EXIT_REVIEW_20261125_CLAUDE -->
 ## 2026-11-25 — take + maker exit REVIEWED: positive under every stress, but expect ~$6–7 / market (strict fills), not $14
 

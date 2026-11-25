@@ -1,3 +1,18 @@
+<!-- TAKE_EXIT_REPLAY_V3_20261125_CLAUDE -->
+## 2026-11-25 — frozen take + maker exit on five other days: holds, at 81–104 % of in-sample, every day positive
+
+[Receipt](reviews/take_exit_replay_20261125/v3_report.md) (session 1622c91e), frozen 99ac28e53 before any v3 data; rule unchanged (ee0f16ee6). USER: "rerun the frozen rule on other days as well. check the result".
+
+The days are 20261023 and 20261031..1103: the loader-permitted project days not used to develop the rule. They are consumed days, so this is out-of-sample, not untouched validation. The sealed 10-28..30 and the reserved forward days from 11-04 were not read. 408 complete markets.
+
+- **STRICT58** (strict two-frame fills + measured 58 ms): **+$1,901.65, +$4.66 / market** (in-sample +$5.76 → 81 %). 5/5 days positive (+300 / +597 / +380 / +281 / +343), 293/408 markets, top-10 13 %; +$1,579 without young exit value.
+- **LENIENT40** (frozen v2 simulator): +$5,923.13, +$14.52 / market (in-sample +$14.00 → 104 %), 5/5 days, 362/408 markets.
+- **Computed:** holds out of sample, similar size. With in-sample, all 9 days are positive under STRICT58.
+- **Binance builder:** reproduced the original Oct 24 change points exactly (97,270 / 97,270) and dropped 446 pre-segment rows, including the sealed Oct 30 flush tail.
+
+Checks 8/8: stems = allow-list, delays 40 / 58, strict cap, 7,298 IOC fills re-derived, 23,441 exit posts on the closing side at rung 0, identities, triggers, falsifier. Operational stops disclosed: CPU gate → resource-only R1 (cap 1,300 s); RSS self-guard in the resume → fixed, with 4 byte-identical rewrites. CPU 1,182 s in total. Limits as in the review: complete markets only, replay fill model, Tokyo latency, no live IOC path, checklist open.
+<!-- /TAKE_EXIT_REPLAY_V3_20261125_CLAUDE -->
+
 <!-- TAKE_EXIT_REVIEW_20261125_CLAUDE -->
 ## 2026-11-25 — review of take + maker exit: no invalidating defect, but v2's +$3,934 is the upper bound; conservative bound +$1,619
 

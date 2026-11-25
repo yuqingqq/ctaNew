@@ -1,3 +1,22 @@
+take_exit_replay_v3_20261125_claude:
+  report: predictfun/reviews/take_exit_replay_20261125/v3_report.md
+  session: 1622c91e
+  freeze: 99ac28e53
+  days: [20261023, 20261031, 20261101, 20261102, 20261103]
+  untouched_validation: false
+  complete_markets: 408
+  strict58_net_usd: 1901.65
+  strict58_per_market_usd: 4.66
+  strict58_days_positive: 5
+  strict58_markets_positive: 293
+  strict58_ratio_to_in_sample: 0.81
+  lenient40_net_usd: 5923.13
+  lenient40_per_market_usd: 14.52
+  lenient40_days_positive: 5
+  holds_out_of_sample: true
+  checks_pass: 8
+  cpu_s_total: 1182.41
+  next: strict58_on_reserved_forward_days_needs_user_go
 take_exit_review_20261125_claude:
   report: predictfun/reviews/take_exit_review_20261125/report.md
   reviewer_report: predictfun/reviews/take_exit_review_20261125/reviewer_report.md

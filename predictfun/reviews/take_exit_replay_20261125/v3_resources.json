@@ -1,0 +1,130 @@
+{
+ "asof": "2026-11-25",
+ "slot": "claude",
+ "runs": [
+  {
+   "tag": "txr3_bnval",
+   "rc": "1",
+   "peak_rss_mib": "718",
+   "wall_s": "21.87",
+   "cpu_user_s": "17.22",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "406->406",
+   "slot": "claude",
+   "start": "2026-11-25T06:50:42Z"
+  },
+  {
+   "tag": "txr3_bnval2",
+   "rc": "0",
+   "peak_rss_mib": "696",
+   "wall_s": "19.63",
+   "cpu_user_s": "17.33",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "406->406",
+   "slot": "claude",
+   "start": "2026-11-25T06:51:16Z"
+  },
+  {
+   "tag": "txr3_bn",
+   "rc": "0",
+   "peak_rss_mib": "811",
+   "wall_s": "88.74",
+   "cpu_user_s": "78.81",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "406->406",
+   "slot": "claude",
+   "start": "2026-11-25T06:51:41Z"
+  },
+  {
+   "tag": "txr3_run",
+   "rc": "1",
+   "peak_rss_mib": "949",
+   "wall_s": "203.52",
+   "cpu_user_s": "198.48",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "406->406",
+   "slot": "claude",
+   "start": "2026-11-25T06:53:17Z"
+  },
+  {
+   "tag": "txr3_check",
+   "rc": "1",
+   "peak_rss_mib": "198",
+   "wall_s": "0.96",
+   "cpu_user_s": "0.81",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "406->406",
+   "slot": "claude",
+   "start": "2026-11-25T06:56:47Z"
+  },
+  {
+   "tag": "txr3_resume",
+   "rc": "1",
+   "peak_rss_mib": "2662",
+   "wall_s": "36.37",
+   "cpu_user_s": "31.64",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "406->406",
+   "slot": "claude",
+   "start": "2026-11-25T06:57:45Z"
+  },
+  {
+   "tag": "txr3_check2",
+   "rc": "1",
+   "peak_rss_mib": "198",
+   "wall_s": "0.94",
+   "cpu_user_s": "0.77",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "406->406",
+   "slot": "claude",
+   "start": "2026-11-25T06:58:26Z"
+  },
+  {
+   "tag": "txr3_resume",
+   "rc": "0",
+   "peak_rss_mib": "971",
+   "wall_s": "810.37",
+   "cpu_user_s": "792.13",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "406->406",
+   "slot": "claude",
+   "start": "2026-11-25T06:59:22Z"
+  },
+  {
+   "tag": "txr3_check3",
+   "rc": "0",
+   "peak_rss_mib": "830",
+   "wall_s": "45.71",
+   "cpu_user_s": "44.41",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "406->406",
+   "slot": "claude",
+   "start": "2026-11-25T07:13:20Z"
+  },
+  {
+   "tag": "txr3_report",
+   "rc": "0",
+   "peak_rss_mib": "207",
+   "wall_s": "0.98",
+   "cpu_user_s": "0.80",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "406->406",
+   "slot": "claude",
+   "start": "2026-11-25T07:14:11Z"
+  },
+  {
+   "tag": "txr3_write_report",
+   "rc": "0",
+   "peak_rss_mib": "11",
+   "wall_s": "0.02",
+   "cpu_user_s": "0.01",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "406->406",
+   "slot": "claude",
+   "start": "2026-11-25T07:14:42Z"
+  }
+ ],
+ "wrapped_cpu_user_s": 1182.41,
+ "cap_run_cpu_s": 1300,
+ "charged_coreh": 0.3284
+}

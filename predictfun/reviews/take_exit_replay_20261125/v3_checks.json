@@ -1,0 +1,35 @@
+{
+  "V1_binance_stems_equal_allow_list": {
+    "ok": true,
+    "detail": "121 stems"
+  },
+  "V2_delays_40_58": {
+    "ok": true,
+    "detail": "816 ledgers"
+  },
+  "V3_strict_cap_respected": {
+    "ok": true,
+    "detail": "cap violations 0, lenient rows with a cap 0"
+  },
+  "V4_ioc_rederived": {
+    "ok": true,
+    "detail": "7298 filled IOCs, 0 mismatches"
+  },
+  "V5_exit_posts_closing_rung0": {
+    "ok": true,
+    "detail": "23441 posts, 0 violations"
+  },
+  "V6_ledger_identities": {
+    "ok": true,
+    "detail": "816 ledgers"
+  },
+  "V7_triggers_recomputed": {
+    "ok": true,
+    "detail": "816 ledgers"
+  },
+  "V8_no_trigger_falsifier": {
+    "ok": true,
+    "detail": "market 3655842, takes disabled"
+  },
+  "all_pass": true
+}
