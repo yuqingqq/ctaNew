@@ -12,7 +12,8 @@ Checks: a jsdom DOM check (298 checks) and two falsifiers, in [receipt.json](rev
 Watch-outs the page surfaces:
 - the exit re-pegs to the touch with no profit target;
 - the queue rule on exits is optimistic;
-- exit post and cancel latency is still 10 ms in the replay.
+- exit post and cancel latency is still 10 ms in the replay;
+- the trigger's 2 s quiet window starts at each market's first tick, so a live port must reset it at market start (FINDINGS, quiet_window_example.json).
 
 Next is unchanged and the USER's call: STRICT58 on the reserved forward days, the C1–C3 / C12 / C15 checklist, and an exec-side IOC path.
 <!-- /TAKE_EXIT_FLOW_20261125_CLAUDE -->

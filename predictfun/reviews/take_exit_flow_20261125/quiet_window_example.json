@@ -1,0 +1,28 @@
+{
+ "asof": "2026-11-25",
+ "market": 4125703,
+ "day": "20261102",
+ "edge_up_bps": 0.285456120967865,
+ "quiet_ms": 2000.0,
+ "stream_cross_ms": 78.0,
+ "grid_fire_ms": 100.0,
+ "earlier_by_ms": 22.0,
+ "ioc_landed_ms": 158.0,
+ "take_delay_ms": 58.0,
+ "grid_r250_up_from_first_tick": [
+  0.0,
+  0.0,
+  1.175973
+ ],
+ "stream_on_in_prior_2s_ms": [
+  -1922.0,
+  -1825.0,
+  -1824.0
+ ],
+ "stream_on_max_bps": 1.27951280462842,
+ "readings": {
+  "grid_quiet_passes": true,
+  "stream_quiet_passes": false,
+  "stream_fires_before_grid": true
+ }
+}

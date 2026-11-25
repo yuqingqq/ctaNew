@@ -15,6 +15,7 @@
   - An opposite signal reduces (212) or flips (554) the position.
   - Exit fills rely on the replay's optimistic queue rule: shrinking shown size is assumed to be ahead of us.
 - **Per-market net is path-dominated:** the typical market's value had a median of −$12.31 over 0–270 s (below −$5 for 93 % of that time) and ended +$4.78 on a position held into the late jump to 98 ¢.
+- **Live parity, quiet window** ([quiet_window_example.json](reviews/take_exit_flow_20261125/quiet_window_example.json)): the frozen trigger counts its 2 s quiet window from the market's first 50 ms tick only (take_replay.triggers). In the typical market's first take, Binance crossed the UP edge at 0.078 s on the stream; the grid fired at 0.100 s (22 ms later). The 2 s before the crossing held pre-window ON states (r250 up to +1.28 bps), so a quiet check on the continuous stream would skip that take. A live port must reset the quiet window at each market start to match the replay; an event-driven variant must declare its choice. How many triggers this touches is not counted.
 <!-- /TAKE_EXIT_FLOW_20261125_CLAUDE -->
 
 <!-- TAKE_EXIT_REPLAY_V3_20261125_CLAUDE -->
