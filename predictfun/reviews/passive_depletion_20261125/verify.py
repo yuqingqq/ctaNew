@@ -3,6 +3,7 @@ import copy
 import csv
 import hashlib
 import math
+from types import SimpleNamespace
 from collections import Counter
 from unittest.mock import patch
 
@@ -38,6 +39,7 @@ def validate_market(record, reference):
 def test_slot():
     class Branch:
         k=0
+        E=SimpleNamespace(o=[])
     p=T.Guard.__new__(T.Guard)
     p.enabled=True; p.b=Branch(); p.dep=np.ones((2,1)); p.count=Counter()
     def ordinary(policy,v,rung,price):
