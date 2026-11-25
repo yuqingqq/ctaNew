@@ -48,7 +48,7 @@ def one(path,cache,old,edges,prob,arm):
     for k in range(LB.n_ticks(b)):
         LB.step(b,k,pol)
         t=k*BE.STEP
-        sides={b.E.o[i]['side'] for ids in b.unclosed for i in ids
+        sides={b.E.o[i]['side'] for ids in b.unclosed.values() for i in ids
                if not b.E.o[i]['refused'] and b.E.o[i]['act']<=t<b.E.o[i]['remove'] and b.E.o[i]['rem']>1e-9}
         both+=len(sides)==2
     lg=LB.finish(b)
