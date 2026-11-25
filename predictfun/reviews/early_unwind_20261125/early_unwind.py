@@ -12,10 +12,13 @@ HERE = Path(__file__).resolve().parent
 PARENT = HERE.parent / 'resting_inventory_20261125'
 sys.path.insert(0, str(PARENT))
 from policy import Branch, Policy, R
-from experiment import read
 
 OUT = R.X.DATA / 'early_unwind_20261125'
 TIMES = (150, 120, 90, 60, 30, 10, 5)
+
+
+def read(path):
+    return json.loads(path.read_text())
 
 
 def band(left_ms):
