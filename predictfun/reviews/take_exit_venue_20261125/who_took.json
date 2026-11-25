@@ -1,0 +1,157 @@
+{
+  "asof": "2026-11-25",
+  "source": "stage-1 172 ms BASE ledgers, 408 complete markets",
+  "takes": 8228,
+  "by_reason": {
+    "empty": {
+      "n": 235,
+      "shown_shares": 74172.214441,
+      "vanished_before_arrival": 11,
+      "vanished_before_our_decision": 0,
+      "tight": {
+        "levels": 11,
+        "taken_by_trades": 4,
+        "mixed": 2,
+        "pulled_no_trade": 5,
+        "share_of_shown_traded": 0.44439615998434817
+      },
+      "wide": {
+        "levels": 11,
+        "taken_by_trades": 7,
+        "mixed": 3,
+        "pulled_no_trade": 1,
+        "share_of_shown_traded": 0.6979694939895515
+      },
+      "vanish_ms_after_decision_p25_p50_p75": [
+        35.5,
+        82.0,
+        99.0
+      ]
+    },
+    "filled": {
+      "n": 431,
+      "shown_shares": 297002.0890048269,
+      "vanished_before_arrival": 17,
+      "vanished_before_our_decision": 6,
+      "tight": {
+        "levels": 17,
+        "taken_by_trades": 3,
+        "mixed": 2,
+        "pulled_no_trade": 12,
+        "share_of_shown_traded": 0.0484650965209193
+      },
+      "wide": {
+        "levels": 17,
+        "taken_by_trades": 9,
+        "mixed": 1,
+        "pulled_no_trade": 7,
+        "share_of_shown_traded": 0.27495769613423554
+      },
+      "vanish_ms_after_decision_p25_p50_p75": [
+        -7.0,
+        12.0,
+        22.0
+      ]
+    },
+    "invalid_or_stale": {
+      "n": 4,
+      "shown_shares": 3487.4636952027204,
+      "vanished_before_arrival": 2,
+      "vanished_before_our_decision": 0,
+      "tight": {
+        "levels": 2,
+        "taken_by_trades": 1,
+        "mixed": 0,
+        "pulled_no_trade": 1,
+        "share_of_shown_traded": 0.38484507042253524
+      },
+      "wide": {
+        "levels": 2,
+        "taken_by_trades": 1,
+        "mixed": 0,
+        "pulled_no_trade": 1,
+        "share_of_shown_traded": 0.38484507042253524
+      },
+      "vanish_ms_after_decision_p25_p50_p75": [
+        38.5,
+        67.0,
+        95.5
+      ]
+    },
+    "limit_moved": {
+      "n": 7058,
+      "shown_shares": 1359218.9900553743,
+      "vanished_before_arrival": 7058,
+      "vanished_before_our_decision": 1279,
+      "tight": {
+        "levels": 7058,
+        "taken_by_trades": 2616,
+        "mixed": 1705,
+        "pulled_no_trade": 2737,
+        "share_of_shown_traded": 0.3241415502265378
+      },
+      "wide": {
+        "levels": 7058,
+        "taken_by_trades": 4217,
+        "mixed": 1765,
+        "pulled_no_trade": 1076,
+        "share_of_shown_traded": 0.5096375334165837
+      },
+      "vanish_ms_after_decision_p25_p50_p75": [
+        13.25,
+        50.0,
+        107.0
+      ]
+    },
+    "partial": {
+      "n": 186,
+      "shown_shares": 43431.5208906022,
+      "vanished_before_arrival": 12,
+      "vanished_before_our_decision": 3,
+      "tight": {
+        "levels": 12,
+        "taken_by_trades": 0,
+        "mixed": 1,
+        "pulled_no_trade": 11,
+        "share_of_shown_traded": 0.036262567093571174
+      },
+      "wide": {
+        "levels": 12,
+        "taken_by_trades": 4,
+        "mixed": 2,
+        "pulled_no_trade": 6,
+        "share_of_shown_traded": 0.13184927312640654
+      },
+      "vanish_ms_after_decision_p25_p50_p75": [
+        -0.5,
+        32.5,
+        58.25
+      ]
+    },
+    "strict_cancelled": {
+      "n": 314,
+      "shown_shares": 109193.01023915468,
+      "vanished_before_arrival": 12,
+      "vanished_before_our_decision": 5,
+      "tight": {
+        "levels": 12,
+        "taken_by_trades": 4,
+        "mixed": 0,
+        "pulled_no_trade": 8,
+        "share_of_shown_traded": 0.15601502213215898
+      },
+      "wide": {
+        "levels": 12,
+        "taken_by_trades": 7,
+        "mixed": 1,
+        "pulled_no_trade": 4,
+        "share_of_shown_traded": 0.22922357981772684
+      },
+      "vanish_ms_after_decision_p25_p50_p75": [
+        -11.5,
+        28.0,
+        55.0
+      ]
+    }
+  }
+}
