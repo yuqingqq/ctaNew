@@ -19,7 +19,7 @@ sys.path.insert(0, str(HERE.parent/'smooth_unwind_20261125'))
 import smooth as S
 
 R = S.R
-OUT = R.X.DATA/'passive_depletion_20261125'
+OUT = R.X.DATA/'passive_depletion_v2_20261125'
 HOUR = 3600000
 EPS = 1e-7
 
@@ -73,10 +73,10 @@ def signal(t, book, grid):
     return out
 
 
-def closing_room(v,gid=None):
+def closing_room(v,gid=None,retiring=()):
     room = max(0.,(2*v['side']-1)*v['position'])
     # Retiring reservations first, then standing orders in submission order.
-    for o in sorted(v['orders'],key=lambda o:(o['state']!='cancel_pending',o['submit'],o['gid'])):
+    for o in sorted(v['orders'],key=lambda o:(o['state']!='cancel_pending' and o['gid'] not in retiring,o['submit'],o['gid'])):
         if o['gid']==gid:
             break
         room -= o['size']-o['known_filled']
@@ -120,7 +120,8 @@ class Guard(S.Smooth):
             self.count['old_pull_and_on']+=int(f==1)
             return action,why
         q=o['size']-o['known_filled']
-        room=closing_room(v,o['gid'])
+        retiring={x['gid'] for x in v['orders'] if self.b.E.o[x['gid']]['req'] is not None}
+        room=closing_room(v,o['gid'],retiring)
         if room>EPS:
             if f==1:
                 self.count['protected_live_mixed' if room<q-EPS else 'protected_live_reduce']+=1
@@ -356,9 +357,12 @@ def test():
     v=dict(side=1,position=60,orders=orders)
     assert [closing_room(v,i) for i in [0,1,None]]==[40,0,0]
     assert closing_room(dict(v,position=-60),0)==0
+    # A locally requested cancellation before post activation still retires first.
+    pending=[dict(o,state='post_pending') if o['gid']==2 else o for o in orders]
+    assert closing_room(dict(v,orders=pending),0,{2})==40 and closing_room(dict(v,orders=pending),0)==60
     # Treatment must override a purely adding ask and keep a mixed ask; parent pressure wins.
     from types import SimpleNamespace
-    bb=SimpleNamespace(k=0)
+    bb=SimpleNamespace(k=0,E=SimpleNamespace(o=[dict(req=None),dict(req=None),dict(req=0)]))
     p=Guard.__new__(Guard)
     p.b=bb; p.arm='C'; p.on=[[False],[False]]; p.dep=np.array([[0],[1]]); p.enabled=True
     p.count=Counter(); p.age_ms=0
