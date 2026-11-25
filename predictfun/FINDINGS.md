@@ -1,3 +1,22 @@
+<!-- TAKE_EXIT_FLOW_20261125_CLAUDE -->
+## 2026-11-25 — execution flow of the take + maker exit (descriptive page; no new replay result)
+
+[Page](reviews/take_exit_flow_20261125/flow.html) and [receipt](reviews/take_exit_flow_20261125/receipt.json) (session 1622c91e). USER: "can you show me the whole flow of the execution". Counts cover the 408 v3 STRICT58 markets, with three example markets picked by rule (net closest to the 10th / 50th / 90th percentile of the 292 markets with >= 3 filled takes). Each example was re-run and matches its saved ledger exactly.
+
+- **Take value after fee:** +3.45 / +3.46 / +3.48 ¢/sh at 1 / 3 / 10 s, and +0.96 at END. The edge is there within 1 s and does not grow. Exits beat holding to END by +$1,155.72; that comparison is noisy, because the END mark carries the market's remaining path.
+- **Money split:** FIFO round trips +$2,358.72 on 68,076 shares; fees −$444.68; still open at END −$12.40 (1.6 % of shares taken). Net +$1,901.65.
+- **Funnel:**
+  - 8,611 triggers → 8,053 takes sent → 2,731 got shares. On the same orders, the strict rule keeps 60 % of the shares the lenient rule fills.
+  - 8,883 exit posts: 1,034 post-only rejections and 4,597 re-pegs (distance 1,998, cross 2,595).
+  - Guard: 1,454 pulls and 7,533 ticks withheld.
+  - 7,224 exit fills (77 % of shares taken).
+- **What the page makes visible:**
+  - The exit has no profit target: it re-pegs to the touch and follows the market down as well as up. The typical market's first clean cycle lost −$3.24 this way.
+  - An opposite signal reduces (212) or flips (554) the position.
+  - Exit fills rely on the replay's optimistic queue rule: shrinking shown size is assumed to be ahead of us.
+- **Per-market net is path-dominated:** the typical market's value had a median of −$12.31 over 0–270 s (below −$5 for 93 % of that time) and ended +$4.78 on a position held into the late jump to 98 ¢.
+<!-- /TAKE_EXIT_FLOW_20261125_CLAUDE -->
+
 <!-- TAKE_EXIT_REPLAY_V3_20261125_CLAUDE -->
 ## 2026-11-25 — frozen take + maker exit on five other days: holds, at 81–104 % of in-sample, every day positive
 

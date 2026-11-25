@@ -1,0 +1,62 @@
+{
+ "asof": "2026-11-25",
+ "what": "execution-flow page for the frozen take + maker-exit rule (descriptive; no new replay result)",
+ "files": {
+  "build_flow.py": "03e3a09f4aa8bb7e10a3130d928b0ac909835e4a145f653eb76d1054a6f93b9f",
+  "flow_template.html": "318be889885684fdf3bdf3430baf1fc134cb8e8da28ed132e561f3b69cbd7703",
+  "flow_data.json": "8e2f80863b90f86036638213649709e53951268fce7fda6451d96c1bc3fa1449",
+  "flow.html": "562707f9fb6e944c97a348cc0aa4fc164d11a664d7f6bbb9020852e24c9694a2",
+  "check_dom.cjs": "0a88d0f8a553bb177d0eb3c5465154015328face3a2a54d961fd082b91590c30",
+  "chart_typical_take.png": "ced116d36b5b7fc4d67a56ea73d29bef698ec30395a98a22659c821a3d692362",
+  "chart_strong_take.png": "bd6119893a134fa437379592240e63b802211c87f56ce51ba8f1ebefef97e217",
+  "chart_typical_whole.png": "c9d9b861ac5ffd3a893a3f3e1cc13e631d4eb387e40e555f0eeeb36883db6da4"
+ },
+ "data_checks": {
+  "examples_rederived": true,
+  "examples_net_rebuilt": true,
+  "take_plus_exit_equals_net_all": true,
+  "fifo_round_trips_plus_residual_minus_fees_equals_net": true,
+  "net_matches_v3_readings": true
+ },
+ "dom_check": {
+  "page": {
+   "n_errors": 0,
+   "n_checks": 298,
+   "n_bad": 0
+  },
+  "falsifier_missing_market": {
+   "n_errors": 6,
+   "n_checks": 0,
+   "n_bad": 0,
+   "planted": "pickMarket(9)",
+   "must": "fail"
+  },
+  "falsifier_missing_field": {
+   "n_errors": 0,
+   "n_checks": 52,
+   "n_bad": 50,
+   "planted": "table time reads e.tt (NaN)",
+   "must": "fail"
+  },
+  "tools": "jsdom 26 + @resvg/resvg-js 2.6.2 (scratch install, not committed)",
+  "instrument_fixes": [
+   "read <main> text, not body (the page script source contains Infinity / FAIL)",
+   "no \\b in the NaN pattern (textContent joins cells)"
+  ]
+ },
+ "browser": "headless Chromium cannot start under this box's 12 GiB address-space soft limit (SIGTRAP); the limit was not raised (USER 2026-09-28)",
+ "run_light": {
+  "tags": [
+   "txflow_data",
+   "txflow_data2",
+   "txflow_data3",
+   "txflow_data4",
+   "txflow_html",
+   "txflow_data5",
+   "txflow_html2",
+   "txflow_data6",
+   "txflow_html3"
+  ],
+  "cpu_user_s": 129.57
+ }
+}

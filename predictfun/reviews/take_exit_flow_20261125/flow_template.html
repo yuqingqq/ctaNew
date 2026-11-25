@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Signal take + maker exit: execution flow</title>
+<style>
+.viz-root{color-scheme:light;--page:#f9f9f7;--surface-1:#fcfcfb;--text-primary:#0b0b0b;--text-secondary:#52514e;--muted:#898781;
+  --grid:#e1e0d9;--axis:#c3c2b7;--border:rgba(11,11,11,0.10);--bid:#2a78d6;--ask:#eb6834;--ours:#0b0b0b;--ours-wash:rgba(11,11,11,0.18);
+  --wash:rgba(11,11,11,0.04);--pos:#006300;--neg:#d03b3b}
+@media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])) .viz-root{color-scheme:dark;--page:#0d0d0d;--surface-1:#1a1a19;
+  --text-primary:#f0efec;--text-secondary:#c3c2b7;--muted:#898781;--grid:#2c2c2a;--axis:#383835;--border:rgba(255,255,255,0.10);--bid:#3987e5;
+  --ask:#d95926;--ours:#f0efec;--ours-wash:rgba(240,239,236,0.22);--wash:rgba(255,255,255,0.05);--pos:#0ca30c;--neg:#e66767}}
+:root[data-theme="dark"] .viz-root{color-scheme:dark;--page:#0d0d0d;--surface-1:#1a1a19;--text-primary:#f0efec;--text-secondary:#c3c2b7;
+  --muted:#898781;--grid:#2c2c2a;--axis:#383835;--border:rgba(255,255,255,0.10);--bid:#3987e5;--ask:#d95926;--ours:#f0efec;
+  --ours-wash:rgba(240,239,236,0.22);--wash:rgba(255,255,255,0.05);--pos:#0ca30c;--neg:#e66767}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--page);color:var(--text-primary);font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:1180px;margin:0 auto;padding:24px 20px 64px}
+header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+h1{font-size:22px;font-weight:600;margin:0 0 4px}
+h2{font-size:17px;font-weight:600;margin:36px 0 6px}
+p{margin:0 0 10px}
+.sub{color:var(--text-secondary);margin:0}
+.lede{color:var(--text-secondary);margin:0 0 12px;max-width:860px}
+.card{background:var(--surface-1);border:1px solid var(--border);border-radius:10px;padding:16px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:18px 0 0}
+.tile .label{color:var(--text-secondary);font-size:12px}
+.tile .value{font-size:24px;font-weight:600;line-height:1.3}
+.tile .note{color:var(--muted);font-size:12px}
+.theme{display:flex;gap:4px}
+button,select{font:inherit;font-size:13px;color:var(--text-primary);background:var(--surface-1);border:1px solid var(--border);border-radius:7px;
+  padding:5px 10px;cursor:pointer}
+button:hover,select:hover{background:var(--wash)}
+button[aria-pressed="true"]{border-color:var(--text-primary);font-weight:600}
+button:focus-visible,select:focus-visible,tr:focus-visible{outline:2px solid var(--bid);outline-offset:1px}
+.flow{list-style:none;margin:0;padding:0}
+.step{display:grid;grid-template-columns:118px 1fr;gap:0 16px}
+.step .when{font-size:12px;color:var(--text-secondary);text-align:right;padding-top:3px;font-variant-numeric:tabular-nums}
+.step .body{border-left:2px solid var(--axis);padding:0 0 18px 20px;position:relative}
+.step:last-child .body{border-left-color:transparent}
+.step .num{position:absolute;left:-12px;top:0;width:22px;height:22px;border-radius:50%;background:var(--surface-1);border:2px solid var(--text-primary);
+  font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.step .title{font-weight:600}
+.step .rule{color:var(--text-primary)}
+.step .count{color:var(--text-secondary);font-size:13px;margin-top:2px}
+.step ul{margin:4px 0 0;padding-left:18px}
+.step li{margin:2px 0}
+.phase{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin:0 0 8px 134px}
+table{border-collapse:collapse;width:100%}
+th,td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
+th{font-size:12px;color:var(--text-secondary);font-weight:600}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 10px}
+.controls .sep{width:1px;height:22px;background:var(--border);margin:0 4px}
+.controls label{font-size:12px;color:var(--text-secondary)}
+.info{color:var(--text-secondary);margin:0 0 6px;font-size:13px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--text-secondary);margin:0 0 6px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend svg{flex:none}
+#chart{position:relative;width:100%;touch-action:pan-y}
+#chart svg{display:block;width:100%}
+.grid{stroke:var(--grid);stroke-width:1}
+.axis{stroke:var(--axis);stroke-width:1}
+.ln{fill:none;stroke-linejoin:round;stroke-linecap:round}
+.ln-bn{stroke:var(--text-secondary);stroke-width:1.5}
+.ln-bid{stroke:var(--bid);stroke-width:2}
+.ln-ask{stroke:var(--ask);stroke-width:2}
+.ln-ours{stroke:var(--ours);stroke-width:2}
+.thr{stroke:var(--muted);stroke-width:1;stroke-dasharray:4 3}
+.tk{fill:var(--muted);font-size:11px;font-variant-numeric:tabular-nums}
+.halo{stroke:var(--surface-1);stroke-width:4;stroke-linejoin:round;paint-order:stroke}
+.ttl{fill:var(--text-secondary);font-size:12px;font-weight:600}
+.mk-fill{fill:var(--ours);stroke:var(--surface-1);stroke-width:2}
+.mk-hollow{fill:var(--surface-1);stroke:var(--ours);stroke-width:1.5}
+.ord{fill:var(--ours-wash)}
+.ref{stroke:var(--ours);stroke-width:1.6;stroke-linecap:round}
+.trd{fill:var(--muted);opacity:.6}
+.cross{stroke:var(--text-secondary);stroke-width:1}
+.selln{stroke:var(--bid);stroke-width:1.5}
+#tip{position:absolute;pointer-events:none;background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:8px 10px;
+  font-size:12px;line-height:1.45;box-shadow:0 2px 10px rgba(0,0,0,.12);max-width:320px;display:none;z-index:2}
+#tip .ev{font-weight:600;margin-bottom:4px;color:var(--text-primary)}
+#tip .row{display:flex;justify-content:space-between;gap:14px;color:var(--text-secondary)}
+#tip .row b{color:var(--text-primary);font-weight:600;font-variant-numeric:tabular-nums}
+.tablewrap{max-height:460px;overflow:auto;border:1px solid var(--grid);border-radius:8px;margin-top:10px}
+.tablewrap thead th{position:sticky;top:0;background:var(--surface-1);z-index:1}
+#events tr{cursor:pointer}
+#events tr:hover td{background:var(--wash)}
+#events tr.on td{background:var(--wash);box-shadow:inset 3px 0 0 var(--bid)}
+#events td.t{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--text-secondary)}
+#events td.k{white-space:nowrap;font-weight:600}
+.small{font-size:12px;color:var(--muted)}
+.note{font-size:13px;color:var(--text-secondary)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:760px){.two{grid-template-columns:1fr}.step{grid-template-columns:72px 1fr}.phase{margin-left:88px}main{padding:16px 12px 48px}}
+</style>
+</head>
+<body class="viz-root">
+<main>
+<header>
+  <div>
+    <h1>Signal take + maker exit: how the rule executes</h1>
+    <p class="sub" id="subtitle"></p>
+  </div>
+  <div class="theme" role="group" aria-label="Colour theme">
+    <button data-th="auto" aria-pressed="true">Auto</button><button data-th="light" aria-pressed="false">Light</button><button data-th="dark" aria-pressed="false">Dark</button>
+  </div>
+</header>
+<div class="tiles" id="tiles"></div>
+
+<h2>The loop</h2>
+<p class="lede">One take starts when Binance moves and Predict has not repriced yet; the exit is a resting maker order. Counts are over all
+<span id="nmk"></span> out-of-sample markets under the conservative setting.</p>
+<div class="card"><div id="flow"></div></div>
+
+<h2>Where the money comes from</h2>
+<div class="two">
+  <div class="card"><table id="money"></table><p class="small" id="money-note" style="margin:8px 0 0"></p></div>
+  <div class="card"><table id="marks"></table><p class="small" id="marks-note" style="margin:8px 0 0"></p></div>
+</div>
+
+<h2>One market, step by step</h2>
+<p class="lede">Real replay output: every order, cancel and fill below is the saved ledger's own (re-run and matched exactly). Pick a take to
+see one cycle; hover the chart for values, or click a row to jump to it.</p>
+<div class="card">
+  <div class="controls" id="mk-controls" role="group" aria-label="Example market"></div>
+  <div class="controls">
+    <button id="whole">Whole market</button>
+    <button id="prev" aria-label="Previous take">&#9664; Take</button>
+    <select id="episode" aria-label="Choose a take"></select>
+    <button id="next" aria-label="Next take">Take &#9654;</button>
+    <span class="sep"></span>
+    <button id="zin" aria-label="Zoom in">Zoom in</button><button id="zout" aria-label="Zoom out">Zoom out</button>
+  </div>
+  <p class="info" id="info"></p>
+  <p class="info" id="epinfo"></p>
+  <div class="legend" id="legend"></div>
+  <div id="chart" role="img" aria-label="Aligned panels: Binance 250 ms move, Predict book with our orders, our position, value so far"><div id="tip"></div></div>
+  <div class="tablewrap"><table id="events"><thead><tr><th class="n">Time (s)</th><th>Step</th><th>What happened</th><th class="n">Position after</th></tr></thead><tbody></tbody></table></div>
+  <p class="small" id="evcount" style="margin:6px 0 0"></p>
+</div>
+
+<h2>What the replay assumes</h2>
+<div class="card"><table id="assume"></table><p class="small" id="assume-note" style="margin:8px 0 0"></p></div>
+<p class="small" id="foot" style="margin-top:18px"></p>
+</main>
+<script>
+const D = /*__FLOW_DATA__*/null;
+const AG = D.agg, RU = D.rule, V3 = D.v3;
+const $ = id => document.getElementById(id);
+const nf0 = new Intl.NumberFormat('en-US', {maximumFractionDigits: 0});
+const num = (v, d = 0) => (v == null ? '–' : new Intl.NumberFormat('en-US', {minimumFractionDigits: d, maximumFractionDigits: d}).format(v));
+const sgn = (v, d = 2) => (v == null ? '–' : (v < 0 ? '−' : '+') + num(Math.abs(v), d));
+const usd = (c, d = 2) => (c == null ? '–' : (c < 0 ? '−' : '+') + '$' + num(Math.abs(c) / 100, d));
+const pct = (a, b, d = 0) => num(100 * a / b, d) + '%';
+const sh = v => num(v, Math.abs(v - Math.round(v)) < 0.005 ? 0 : 2);
+const secs = (ms, d = 3) => num(ms / 1000, d);
+const el = (tag, attrs = {}, text) => { const e = document.createElement(tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); if (text != null) e.textContent = text; return e; };
+const sideName = s => (s === 0 ? 'bid' : 'ask');
+const sum = o => Object.values(o).reduce((a, b) => a + b, 0);
+
+// ---------------------------------------------------------------- header
+$('subtitle').textContent = `Frozen rule, conservative replay setting (strict take fills, ${RU.take_delay_ms} ms to the venue). ` +
+  `Out-of-sample run: ${V3.markets} complete markets on Oct 23, Oct 31 and Nov 1–3, 2026.`;
+$('nmk').textContent = num(AG.markets);
+[
+  ['Net, five days', usd(V3.net_usd * 100), `${V3.markets} markets`],
+  ['Per market', usd(V3.per_market_usd * 100), `${V3.markets_positive} of ${V3.markets} markets positive`],
+  ['Days positive', `${V3.days_positive} of 5`, 'every day positive'],
+  ['Take value after fee, +1 s', sgn(AG.take_markouts.m1s_c.cents_per_share) + '¢/share', `on ${nf0.format(AG.take_markouts.m1s_c.shares)} of ${nf0.format(AG.totals.taker_shares)} shares taken`],
+].forEach(([l, v, n]) => { const t = el('div', {class: 'tile card'}); t.append(el('div', {class: 'label'}, l), el('div', {class: 'value'}, v), el('div', {class: 'note'}, n)); $('tiles').append(t); });
+if (V3.days_positive !== 5) $('tiles').children[2].querySelector('.note').textContent = '';
+
+// ---------------------------------------------------------------- the loop
+(function flow() {
+  const T = AG.triggers, I = AG.ioc_reasons, TE = AG.take_position_effect, EX = AG.exit_orders, EF = AG.exit_fills, G = AG.guard,
+        PR = AG.pulls_by_reason, SR = AG.structural_by_reason, TO = AG.totals, IS = AG.ioc_shares;
+  const nTrig = sum(T), got = (I.filled || 0) + (I.partial || 0);
+  const blocked = [['own_cross', 'would trade against our own resting exit'], ['no_room', 'no room under the ±' + RU.cap + ' cap'],
+                   ['no_fresh_book', 'Predict book older than 1 s'], ['pending_ioc', 'previous take not yet confirmed'],
+                   ['near_end', `less than ${RU.take_delay_ms} ms to END`]];
+  const steps = [
+    {phase: 'Entry'},
+    {when: `every ${RU.step_ms} ms`, title: 'Read Binance', rule: `BTCUSDT futures best bid and ask give a mid. The signal is r250: the mid's move over the last 250 ms, in basis points. A Binance update is used ${RU.bn_in_ms} ms after its own timestamp.`},
+    {when: 'same tick', title: 'Trigger', rule: `UP when r250 ≥ +${num(RU.edge_up_bps, 2)} bps; DOWN when r250 ≤ −${num(Math.abs(RU.edge_down_bps), 2)} bps (the frozen top-fifth bins of the pressure guard). Only the first such tick after ${secs(RU.quiet_ms, 0)} s with no signal on that side.`,
+     count: `${num(nTrig)} triggers, ${num(nTrig / AG.markets, 1)} per market.`},
+    {when: 'same tick', title: 'Size and checks', rule: `Size ${RU.take_q} YES shares, cut to the room left under the ±${RU.cap} position cap (orders not yet confirmed count as filled). No take when:`,
+     list: blocked.map(([k, txt]) => `${txt}: ${num(T[k] || 0)}`), count: `${num(T.sent)} takes sent (${pct(T.sent, nTrig)} of triggers).`},
+    {when: `+${RU.take_delay_ms} ms`, title: 'Take: immediate-or-cancel', rule: `UP: buy YES at the best ask we last saw. DOWN: sell YES at the best bid (on Predict this can be sent as a buy of NO at 100 − bid). The limit is that price: it fills there or better, one price level only, and the rest is cancelled. ${RU.take_delay_ms} ms is the measured order-live latency (p50).`},
+    {when: 'at the venue', title: 'What fills', rule: `The size shown at the venue's best price, minus public trades since that snapshot, if the best is still within our limit. Strict rule: that size must still be shown in the next snapshot (about 50 ms later) or have traded there; a quote that vanished without a trade is treated as cancelled before we arrived. Taker fee 2% × min(p, 100 − p) per share.`,
+     list: [`all ${RU.take_q} filled: ${num(I.filled || 0)}`, `part filled: ${num(I.partial || 0)}`, `price moved past the limit: ${num(I.limit_moved || 0)}`,
+            `size gone from the next snapshot (strict): ${num(I.strict_cancelled || 0)}`, `nothing left at the price: ${num(I.empty || 0)}`, `book invalid or stale: ${num(I.invalid_or_stale || 0)}`],
+     count: `${num(got)} takes got shares (${pct(got, T.sent)}): ${num(TO.taker_shares)} shares, ${usd(TO.fees_c).slice(1)} in fees. On the same orders the lenient rule (last snapshot only) would fill ${num(IS.lenient_would_fill)} shares; the strict rule keeps ${pct(IS.filled, IS.lenient_would_fill)}.`},
+    {when: `+${RU.fill_notice_ms} ms`, title: 'Fill confirmed', rule: `The client learns the fill ${RU.fill_notice_ms} ms after the match; only then is the position known and the exit sized. A take can start from flat, add, or cut or flip an open position (an opposite signal):`,
+     list: [`from flat: ${num(TE.from_flat || 0)}`, `adds to the position: ${num(TE.adds || 0)}`, `reduces it: ${num(TE.reduces || 0)}`, `flips it: ${num(TE.flips || 0)}`]},
+    {phase: 'Exit'},
+    {when: `next ${RU.step_ms} ms tick`, title: 'Exit: post-only maker order', rule: `One order on the closing side at the best price (sell at the best ask when long, buy at the best bid when short), sized to the open position. There is no profit target: it rests at the touch. Live ${RU.post_activation_ms} ms after the decision in this replay; rejected if the price has already crossed it (post-only). Maker fee 0.`,
+     count: `${num(EX.posted)} exit orders posted; ${num(EX.refused)} rejected as post-only.`},
+    {when: `every ${RU.step_ms} ms`, title: 'Manage the exit', rule: 'While the exit is open:',
+     list: [`Guard: while Binance keeps moving our way on the closing side (same thresholds), do not post (${num(G.pressure_withhold || 0)} ticks withheld) and pull a resting exit (${num(PR.pressure_pull || 0)} pulls).`,
+            `Re-peg: cancel and re-post at the new best when the book moves more than 3 ticks away (${num(SR.distance || 0)}) or reaches our price (${num(SR.cross || 0)}). This is how the exit follows the market down as well as up.`,
+            `Pulled when a take already closed or flipped the position (${num(PR.exit_not_needed || 0)}).`],
+     count: `Cancels take effect ${RU.cancel_effect_ms} ms after the request in this replay.`},
+    {when: 'any time', title: 'Exit fills', rule: 'We queue behind the size shown at our price when the order went live; that queue also shrinks when the shown size shrinks (cancels are assumed to be ahead of us). Public trades at our price use up the queue first; trades through our price fill us.',
+     count: `${num(EF.fills)} exit fills, ${num(EF.shares)} shares (${pct(EF.shares, TO.taker_shares)} of the shares taken). Order age at fill: median ${secs(EF.age_ms_p50, 2)} s, 90th percentile ${secs(EF.age_ms_p90, 1)} s; ${pct(EF.young_share, 1)} of fills within 100 ms of going live.`},
+    {when: `${secs(RU.end_ms, 0)} s`, title: 'END', rule: `Whatever is still open is valued at the book's mark at ${secs(RU.end_ms, 0)} s (not at settlement).`,
+     count: `${num(TO.abs_end_position)} shares open at END over all markets (${pct(TO.abs_end_position, TO.taker_shares, 1)} of the shares taken).`},
+  ];
+  const root = $('flow'); let n = 0, ol = null;
+  for (const s of steps) {
+    if (s.phase) { root.append(el('div', {class: 'phase'}, s.phase)); ol = el('ol', {class: 'flow'}); root.append(ol); continue; }
+    n += 1; const li = el('li', {class: 'step'}); li.append(el('div', {class: 'when'}, s.when));
+    const b = el('div', {class: 'body'}); b.append(el('div', {class: 'num'}, String(n)), el('div', {class: 'title'}, s.title), el('div', {class: 'rule'}, s.rule));
+    if (s.list) { const ul = el('ul'); s.list.forEach(x => ul.append(el('li', {}, x))); b.append(ul); }
+    if (s.count) b.append(el('div', {class: 'count'}, s.count));
+    li.append(b); ol.append(li);
+  }
+})();
+
+// ---------------------------------------------------------------- money
+(function money() {
+  const TO = AG.totals, M = AG.take_markouts;
+  const t = $('money');
+  const head = el('tr'); ['', 'Shares', 'Value', '¢/share'].forEach((h, i) => head.append(el('th', i ? {class: 'n'} : {}, h))); t.append(head);
+  const rows = [['Round trips, matched first-in first-out', TO.matched_shares, TO.completed_c],
+                ['Taker fees', TO.taker_shares, -TO.fees_c],
+                ['Still open at END, at the end mark', TO.abs_end_position, TO.residual_c],
+                ['Net', null, TO.net_c]];
+  for (const [l, s, v] of rows) {
+    const tr = el('tr'); tr.append(el('td', l === 'Net' ? {style: 'font-weight:600'} : {}, l), el('td', {class: 'n'}, s == null ? '' : num(s)),
+      el('td', {class: 'n', style: l === 'Net' ? 'font-weight:600' : ''}, usd(v)), el('td', {class: 'n'}, s ? sgn(v / s, 2) : ''));
+    t.append(tr);
+  }
+  const ok = Math.abs(TO.completed_c - TO.fees_c + TO.residual_c - TO.net_c) < 1e-3;
+  $('money-note').textContent = (ok ? 'Rows add up to the net. ' : 'ROWS DO NOT ADD UP. ') + 'Fees are per share taken; a round trip is an entry share matched with a later opposite share (an exit fill or an opposite take).';
+  const k = $('marks');
+  const h2 = el('tr'); ['Value of a take, after its fee', 'Shares', '¢/share'].forEach((h, i) => h2.append(el('th', i ? {class: 'n'} : {}, h))); k.append(h2);
+  [['1 s later (at the mid)', 'm1s_c'], ['3 s later', 'm3s_c'], ['10 s later', 'm10s_c'], [`At END (${secs(RU.end_ms, 0)} s mark)`, 'end_c']].forEach(([l, key]) => {
+    const tr = el('tr'); tr.append(el('td', {}, l), el('td', {class: 'n'}, num(M[key].shares)), el('td', {class: 'n'}, sgn(M[key].cents_per_share, 2))); k.append(tr);
+  });
+  const d = M.m10s_c.cents_per_share - M.m1s_c.cents_per_share;
+  $('marks-note').textContent = `From 1 s to 10 s the value changes by ${sgn(d, 2)}¢/share: the edge is there within a second. Held to END the same shares are worth ` +
+    `${sgn(M.end_c.cents_per_share, 2)}¢/share; the exits ${TO.exit_vs_hold_c >= 0 ? 'beat' : 'trailed'} holding to END by ${usd(Math.abs(TO.exit_vs_hold_c)).slice(1)} in total. Takes too close to END for a horizon are left out of it (` +
+    `${M.m1s_c.censored_fills} / ${M.m3s_c.censored_fills} / ${M.m10s_c.censored_fills} fills).`;
+})();
+
+// ---------------------------------------------------------------- assumptions
+(function assume() {
+  const ME = D.measured, t = $('assume');
+  const shares = Object.values(D.census).map(c => (c.complete || 0) / sum(c));
+  const cr = `${num(100 * Math.min(...shares), 0)}–${num(100 * Math.max(...shares), 0)}%`;
+  const head = el('tr'); ['Step', 'In this replay', 'Measured or known', 'Direction'].forEach(h => head.append(el('th', {}, h))); t.append(head);
+  [['Decision clock', `${RU.step_ms} ms grid`, 'an event-driven client could act sooner', 'adds ~25 ms average delay (conservative)'],
+   ['Take reaches the venue', `${RU.take_delay_ms} ms`, `p50 ${ME.order_live_p50_ms} ms, lower bound ${ME.order_live_lower_bound_ms} ms`, 'matches the measurement'],
+   ['Take availability', 'strict: shown size must survive to the next snapshot or trade', 'real IOC behaviour on Predict not confirmed', 'lower bound on take fills'],
+   ['Exit order goes live', `${RU.post_activation_ms} ms`, `about ${ME.order_live_p50_ms} ms`, 'optimistic: live, an exit joins the queue later'],
+   ['Cancel takes effect', `${RU.cancel_effect_ms} ms`, `${ME.cancel_effect_ms} ms`, 'optimistic: live, guard pulls and re-pegs land later'],
+   ['Fill and cancel confirmations', `${RU.fill_notice_ms} ms / ${RU.cancel_ack_ms} ms`, 'not measured', 'assumption'],
+   ['Exit fills', 'queue behind the shown size; trades at the price use the queue first', 'the replay over-credits passive fills 1.5–2× (C4)', 'exits may fill less live'],
+   ['Valuation', `book mark at ${secs(RU.end_ms, 0)} s`, 'settlement can differ', `small: ${pct(AG.totals.abs_end_position, AG.totals.taker_shares, 1)} of the shares taken are still open`],
+   ['Population', 'complete markets only (the book stays two-sided and fresh to the end, a future property)', `${cr} of markets per day on these days; the review found a lower per-share edge in the rest`, 'untested on the rest'],
+  ].forEach(r => { const tr = el('tr'); r.forEach(c => tr.append(el('td', {}, c))); t.append(tr); });
+  $('assume-note').textContent = `Measured latencies: ${ME.source}.`;
+  const S = D.source;
+  $('foot').textContent = `Source: ${S.ledgers} ledgers (freeze ${S.freeze}, results ${S.results}; report ${S.report}). Built ${D.asof} by take_exit_flow_20261125/build_flow.py; ` +
+    `checks: ${Object.entries(D.checks).map(([k, v]) => `${k.replaceAll('_', ' ')} ${v ? 'pass' : 'FAIL'}`).join('; ')}. Examples: ${D.example_rule}.`;
+})();
+
+// ---------------------------------------------------------------- example explorer
+const LABEL = {typical: 'Typical', weak: 'Weak', strong: 'Strong'};
+const KIND = {trigger: 'Trigger', take: 'Take', notice: 'Fill known', withhold: 'Exit held', post: 'Exit posted', cancel: 'Exit cancelled', exit_fill: 'Exit fill', end: 'END'};
+const state = {ex: 0, t0: 0, t1: 0, sel: null, ep: null};
+const EXS = D.examples;
+const ex = () => EXS[state.ex];
+
+function evText(e) {
+  const S = e.side;
+  switch (e.kind) {
+    case 'trigger': {
+      const mv = `BTC ${sgn(e.r250, 2)} bps in 250 ms (${e.dir})`;
+      if (e.status === 'sent') return `${mv}: send take, ${S === 0 ? 'buy' : 'sell'} ${sh(e.q)} YES at ${e.limit}¢ (best ${S === 0 ? 'ask' : 'bid'} we last saw)`;
+      const why = {no_room: `no room (position ${sgn(e.known_I, 0)} at the ±${RU.cap} cap)`, pending_ioc: 'previous take not yet confirmed', near_end: 'too close to END',
+                   no_fresh_book: 'Predict book older than 1 s', own_cross: 'would trade against our own resting exit'}[e.status] || e.status;
+      return `${mv}: no take, ${why}`;
+    }
+    case 'take': {
+      const verb = S === 0 ? 'Bought' : 'Sold', opp = S === 0 ? 'ask' : 'bid';
+      if (e.filled > 0) {
+        let t = `${verb} ${sh(e.filled)} @ ${e.price}¢, fee ${num(e.fee_c / e.filled, 2)}¢/share`;
+        if (e.filled < e.q - 1e-6) t += ` (asked ${sh(e.q)}; ${e.lenient_q != null && e.lenient_q > e.filled + 1e-6 ? `the lenient rule would fill ${sh(e.lenient_q)}; only ${sh(e.strict_cap)} was still shown or traded in the next snapshot` : 'no more shown at the price'})`;
+        return t;
+      }
+      return {limit_moved: `Nothing: the best ${opp} had moved past our ${e.limit}¢ limit`,
+              strict_cancelled: `Nothing (strict): ${sh(e.lenient_q)} shown at ${e.price}¢ was gone in the next snapshot with no trade, so treated as cancelled before we arrived`,
+              empty: `Nothing: no size left at ${e.price}¢`, invalid_or_stale: 'Nothing: Predict book invalid or stale', own_cross: 'Nothing: would cross our own order',
+              price_boundary: 'Nothing: price at the 1–99¢ boundary', no_venue_book: 'Nothing: no venue book'}[e.reason] || e.reason;
+    }
+    case 'notice': return `Fill confirmed (${RU.fill_notice_ms} ms after the match): the client now knows the position`;
+    case 'withhold': return `Exit held back: BTC still moving our way (${sgn(e.r250, 2)} bps)` + (e.ticks > 1 ? ` for ${e.ticks} ticks (${num((e.t_end - e.t) / 1000 + RU.step_ms / 1000, 2)} s)` : '');
+    case 'post': {
+      const t = `${S === 1 ? 'Sell' : 'Buy'} ${sh(e.q)} @ ${e.price}¢, joining the best ${sideName(S)}`;
+      return e.refused ? `${t}: rejected at +${RU.post_activation_ms} ms, the ${S === 1 ? 'bid' : 'ask'} had reached ${e.price}¢ (post-only)`
+                       : `${t}: live at +${RU.post_activation_ms} ms with ${sh(e.ahead)} shares ahead in the queue`;
+    }
+    case 'cancel': {
+      const at = ` (effective +${RU.cancel_effect_ms} ms)`;
+      if (e.reason === 'structural_cross') return `Re-peg: the ${S === 1 ? 'bid' : 'ask'} reached our ${e.price}¢, cancel` + at;
+      if (e.reason === 'structural_distance') return `Re-peg: best ${sideName(S)} moved to ${e.best}¢, more than 3 ticks from our ${e.price}¢, cancel` + at;
+      if (e.reason === 'structural_no_book') return 'Cancel: no Predict book' + at;
+      if (e.reason === 'pressure_pull') return `Guard pull: BTC moving our way (${sgn(e.r250, 2)} bps), cancel the ${e.price}¢ exit` + at;
+      if (e.reason === 'exit_not_needed') return 'Pull: a take already closed or flipped the position' + at;
+      return e.reason;
+    }
+    case 'exit_fill': return `${S === 1 ? 'Sold' : 'Bought'} ${sh(e.q)} @ ${e.price}¢ as maker: ` +
+      (e.through ? `a public trade went through our price at ${e.trade_price}¢` : 'a public trade at our price, once the queue ahead of us was gone (traded, or shrunk by cancels assumed ahead of us)');
+    case 'end': return `END: position ${sgn(e.position, 2)} valued at the ${e.mark}¢ mark; market net ${usd(e.net_c)}`;
+  }
+  return e.kind;
+}
+
+function setWindow(t0, t1) {
+  const E = ex().end; const span = Math.max(300, t1 - t0);
+  t0 = Math.max(0, Math.min(t0, E - span)); t1 = Math.min(E, t0 + span);
+  state.t0 = t0; state.t1 = t1; draw(); table();
+}
+function showEpisode(i) {
+  const eps = ex().episodes; if (!eps.length) { state.ep = null; setWindow(0, ex().end); return; }
+  state.ep = Math.max(0, Math.min(eps.length - 1, i)); const e = eps[state.ep];
+  $('episode').value = String(state.ep); state.sel = null; setWindow(e.t0, e.t1); epinfo();
+}
+function epinfo() {
+  const eps = ex().episodes;
+  if (state.ep == null || !eps.length) { $('epinfo').textContent = 'Whole market: zoom into a take to see each step.'; return; }
+  const e = eps[state.ep];
+  let t = `Take ${e.n} of ${eps.length}: ${e.side === 0 ? 'bought' : 'sold'} ${sh(e.q)} @ ${e.price}¢ at ${secs(e.t, 3)} s.`;
+  t += e.clean ? ` A clean cycle: flat again (under one share) at ${secs(e.flat_t, 2)} s through exit fills only; the exited ${sh(e.rt_shares)} shares made ${usd(e.rt_c)} after the take fee.`
+               : ' No separate round-trip result: the position did not get back to flat through exit fills alone.';
+  $('epinfo').textContent = t;
+}
+function marketControls() {
+  const c = $('mk-controls'); c.replaceChildren(el('label', {}, 'Example market:'));
+  EXS.forEach((x, i) => { const b = el('button', {'aria-pressed': String(i === state.ex)}, `${LABEL[x.name]} (${usd(x.net_c)})`); b.onclick = () => pickMarket(i); c.append(b); });
+}
+function pickMarket(i) {
+  state.ex = i; state.sel = null; marketControls();
+  const x = ex(); const d = new Date(x.start_abs_ms), d2 = new Date(x.start_abs_ms + 300000);
+  const hm = z => z.toISOString().slice(11, 16), mo = d.toLocaleString('en-US', {month: 'short', day: 'numeric', timeZone: 'UTC'});
+  const where = {typical: 'median', weak: '10th percentile', strong: '90th percentile'}[x.name];
+  $('info').textContent = `${mo}, ${hm(d)}–${hm(d2)} UTC · market ${x.mid} · ${num(x.metrics.takes_filled)} takes filled of ${num(x.metrics.takes_sent)} sent, ` +
+    `${num(x.metrics.exit_fills)} exit fills · YES ended at ${x.mark}¢ · net ${usd(x.net_c)}, closest to the ${where} of the ${x.pool} markets with at least 3 filled takes.`;
+  const s = $('episode'); s.replaceChildren();
+  x.episodes.forEach((e, j) => s.append(el('option', {value: String(j)}, `Take ${e.n} · ${secs(e.t, 1)} s · ${e.side === 0 ? 'buy' : 'sell'} ${sh(e.q)} @ ${e.price}¢` + (e.clean ? ` · cycle ${usd(e.rt_c)}` : ''))));
+  const first = x.episodes.findIndex(e => e.clean);
+  if (x.episodes.length) showEpisode(first >= 0 ? first : 0); else { state.ep = null; setWindow(0, x.end); epinfo(); }
+}
+
+// ------------------------------------------------ drawing
+const SVGNS = 'http://www.w3.org/2000/svg';
+let G = null;   // geometry of the last draw (for hover)
+function bsearch(arr, t) { let lo = 0, hi = arr.length - 1, r = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (arr[m][0] <= t) { r = m; lo = m + 1; } else hi = m - 1; } return r; }
+function niceStep(span, n) { const raw = span / n, mag = Math.pow(10, Math.floor(Math.log10(raw))), f = raw / mag; return (f < 1.5 ? 1 : f < 3 ? 2 : f < 7 ? 5 : 10) * mag; }
+function ticks(lo, hi, n) { const st = niceStep(hi - lo, n); const out = []; for (let v = Math.ceil(lo / st - 1e-9) * st; v <= hi + 1e-9; v += st) out.push(+v.toFixed(10)); return out; }
+const tri = (x, y, s, up) => up ? `M${x},${y - s}L${x + s * 0.9},${y + s * 0.62}L${x - s * 0.9},${y + s * 0.62}Z` : `M${x},${y + s}L${x + s * 0.9},${y - s * 0.62}L${x - s * 0.9},${y - s * 0.62}Z`;
+function stepPath(rows, col, t0, t1, X, Y) {
+  let i = Math.max(0, bsearch(rows, t0)); let d = '', open = false;
+  for (; i < rows.length && rows[i][0] <= t1; i++) {
+    const v = rows[i][col], ta = Math.max(rows[i][0], t0), tb = i + 1 < rows.length ? Math.min(rows[i + 1][0], t1) : t1;
+    if (v == null) { open = false; continue; }
+    const xa = X(ta).toFixed(1), xb = X(tb).toFixed(1), y = Y(v).toFixed(1);
+    d += open ? `V${y}H${xb}` : `M${xa},${y}H${xb}`; open = true;
+    if (i + 1 < rows.length && rows[i + 1][col] == null) open = false;
+  }
+  return d;
+}
+
+function draw() {
+  const x = ex(), S = x.series, t0 = state.t0, t1 = state.t1, span = t1 - t0;
+  const box = $('chart'); const W = Math.max(320, box.clientWidth), ml = 50, mr = 10, w = W - ml - mr;
+  const X = t => ml + (t - t0) / span * w;
+  const nar = W < 600;
+  const P = [{k: 'bn', h: 96, title: nar ? 'Binance: 250 ms move (bps)' : 'Binance BTC futures: mid move over the last 250 ms (bps)'},
+             {k: 'book', h: nar ? 190 : 230, title: nar ? 'Predict YES book (¢), our orders' : 'Predict.fun YES book (¢) and our orders'},
+             {k: 'pos', h: 78, title: nar ? 'Position (shares)' : 'Our position (YES shares)'},
+             {k: 'val', h: 92, title: nar ? 'Value so far ($, at mid, after fees)' : 'Value so far: marked at the Predict mid, after fees ($)'}];
+  let y = 0; for (const p of P) { p.top = y + 20; p.bot = p.top + p.h; y = p.bot + 14; }
+  const H = y - 14 + 26; const parts = []; const marks = [];
+  const xt = ticks(t0 / 1000, t1 / 1000, Math.max(3, Math.floor(w / 90)));
+  const evs = x.events.filter(e => e.t >= t0 && e.t <= t1);
+  // y scales
+  const k0 = Math.max(0, Math.floor(t0 / S.bn_step) - 1), k1 = Math.min(S.bn.length - 1, Math.ceil(t1 / S.bn_step) + 1);
+  let M = 0.8; for (let k = k0; k <= k1; k++) if (S.bn[k] != null) M = Math.max(M, Math.abs(S.bn[k]));
+  M = Math.max(M, RU.edge_up_bps, -RU.edge_down_bps) * 1.12;
+  const bk = S.book; let lo = 101, hi = -1;
+  for (let i = Math.max(0, bsearch(bk, t0)); i < bk.length && bk[i][0] <= t1; i++) { if (bk[i][1] != null) { lo = Math.min(lo, bk[i][1]); hi = Math.max(hi, bk[i][1]); } if (bk[i][3] != null) { lo = Math.min(lo, bk[i][3]); hi = Math.max(hi, bk[i][3]); } }
+  const ords = x.orders.filter(o => o.act <= t1 && o.until >= t0);
+  ords.forEach(o => { lo = Math.min(lo, o.price); hi = Math.max(hi, o.price); });
+  evs.forEach(e => { const p = e.kind === 'take' ? (e.price ?? e.limit) : e.kind === 'exit_fill' ? e.price : null; if (p != null) { lo = Math.min(lo, p); hi = Math.max(hi, p); } });
+  if (hi < lo) { lo = 40; hi = 60; }
+  if (hi - lo < 4) { const c = (hi + lo) / 2; lo = c - 2; hi = c + 2; }
+  lo = Math.max(0, lo - 1.5); hi = Math.min(100, hi + 1.5);
+  let vlo = 0, vhi = 0; const vr = S.value;
+  for (let i = Math.max(0, bsearch(vr, t0)); i < vr.length && vr[i][0] <= t1; i++) if (vr[i][1] != null) { vlo = Math.min(vlo, vr[i][1] / 100); vhi = Math.max(vhi, vr[i][1] / 100); }
+  if (vhi - vlo < 0.5) { vhi += 0.25; vlo -= 0.25; }
+  const pad = (vhi - vlo) * 0.08; vlo -= pad; vhi += pad;
+  const dom = {bn: [-M, M], book: [lo, hi], pos: [-RU.cap * 1.15, RU.cap * 1.15], val: [vlo, vhi]};
+  const Ys = {}; for (const p of P) { const [a, b] = dom[p.k]; Ys[p.k] = v => p.bot - (v - a) / (b - a) * p.h; }
+  // frames, grid, axes
+  for (const p of P) {
+    parts.push(`<text class="ttl" x="${ml}" y="${p.top - 7}">${p.title}</text>`);
+    const [a, b] = dom[p.k]; const yt = p.k === 'pos' ? [-RU.cap, 0, RU.cap] : ticks(a, b, p.h > 150 ? 6 : 3);
+    for (const v of yt) { if (v < a || v > b) continue; const yy = Ys[p.k](v).toFixed(1); parts.push(`<line class="grid" x1="${ml}" x2="${ml + w}" y1="${yy}" y2="${yy}"/><text class="tk" x="${ml - 6}" y="${(+yy + 4).toFixed(1)}" text-anchor="end">${p.k === 'val' ? (v < 0 ? '−' : '') + '$' + num(Math.abs(v), Math.abs(b - a) < 3 ? 2 : 0) : (v < 0 ? '−' : '') + num(Math.abs(v), p.k === 'bn' && M < 3 ? 1 : 0)}</text>`); }
+    for (const v of xt) { const xx = X(v * 1000).toFixed(1); parts.push(`<line class="grid" x1="${xx}" x2="${xx}" y1="${p.top}" y2="${p.bot}"/>`); }
+    if (p.k !== 'book') { const z = Ys[p.k](0).toFixed(1); parts.push(`<line class="axis" x1="${ml}" x2="${ml + w}" y1="${z}" y2="${z}"/>`); }
+  }
+  const last = P[P.length - 1];
+  const dx = xt.length > 1 ? xt[1] - xt[0] : 1, dd = dx < 0.1 ? 2 : dx < 1 ? 1 : 0;
+  for (const v of xt) parts.push(`<text class="tk" x="${X(v * 1000).toFixed(1)}" y="${last.bot + 16}" text-anchor="middle">${num(v, dd)} s</text>`);
+  parts.push(`<clipPath id="clip"><rect x="${ml}" y="0" width="${w}" height="${H}"/></clipPath><g clip-path="url(#clip)">`);
+  // panel A: Binance
+  { const p = P[0], Y = Ys.bn;
+    const thr = [[RU.edge_up_bps, `UP ${sgn(RU.edge_up_bps, 2)}`], [RU.edge_down_bps, `DOWN ${sgn(RU.edge_down_bps, 2)}`]];
+    for (const [v] of thr) { const yy = Y(v).toFixed(1); parts.push(`<line class="thr" x1="${ml}" x2="${ml + w}" y1="${yy}" y2="${yy}"/>`); }
+    let d = ''; const n = k1 - k0 + 1;
+    if (n > 2 * w) { const per = n / w; for (let px = 0; px < w; px++) { let a = Infinity, b = -Infinity; for (let k = Math.floor(k0 + px * per); k < Math.floor(k0 + (px + 1) * per); k++) { const v = S.bn[k]; if (v != null) { a = Math.min(a, v); b = Math.max(b, v); } } if (a <= b) d += `${d ? 'L' : 'M'}${(ml + px).toFixed(1)},${Y(a).toFixed(1)}L${(ml + px).toFixed(1)},${Y(b).toFixed(1)}`; } }
+    else { let open = false; for (let k = k0; k <= k1; k++) { const v = S.bn[k]; if (v == null) { open = false; continue; } d += `${open ? 'L' : 'M'}${X(k * S.bn_step).toFixed(1)},${Y(v).toFixed(1)}`; open = true; } }
+    parts.push(`<path class="ln ln-bn" d="${d}"/>`);
+    for (const [v, lab] of thr) { const yy = Y(v); parts.push(`<text class="tk halo" x="${ml + w - 4}" y="${(yy + (v > 0 ? -4 : 12)).toFixed(1)}" text-anchor="end">${lab}</text>`); }
+    for (const e of evs) if (e.kind === 'trigger') { const xx = X(e.t), yy = Math.max(p.top + 6, Math.min(p.bot - 6, Y(e.r250))); parts.push(`<path class="${e.status === 'sent' ? 'mk-fill' : 'mk-hollow'}" d="${tri(xx, yy, 6, e.dir === 'UP')}"/>`); marks.push({x: xx, y: yy, e}); }
+  }
+  // panel B: book and our orders
+  { const Y = Ys.book;
+    if (span <= 90000) for (const r of S.trades) { if (r[0] < t0 || r[0] > t1) continue; parts.push(`<circle class="trd" cx="${X(r[0]).toFixed(1)}" cy="${Y(r[2]).toFixed(1)}" r="1.8"/>`); }
+    for (const o of ords) {
+      if (o.refused) { const xx = X(o.act), yy = Y(o.price); parts.push(`<path class="ref" d="M${xx - 3.5},${yy - 3.5}L${xx + 3.5},${yy + 3.5}M${xx + 3.5},${yy - 3.5}L${xx - 3.5},${yy + 3.5}"/>`); continue; }
+      const xa = X(Math.max(o.act, t0)), xb = X(Math.min(o.until, t1)); parts.push(`<rect class="ord" x="${xa.toFixed(1)}" y="${(Y(o.price) - 4).toFixed(1)}" width="${Math.max(2, xb - xa).toFixed(1)}" height="8" rx="2"/>`);
+    }
+    parts.push(`<path class="ln ln-bid" d="${stepPath(bk, 1, t0, t1, X, Y)}"/><path class="ln ln-ask" d="${stepPath(bk, 3, t0, t1, X, Y)}"/>`);
+    for (const e of evs) {
+      if (e.kind === 'take') { const xx = X(e.t), yy = Y(e.price ?? e.limit); parts.push(`<path class="${e.filled > 0 ? 'mk-fill' : 'mk-hollow'}" d="${tri(xx, yy, 7, e.side === 0)}"/>`); marks.push({x: xx, y: yy, e}); }
+      else if (e.kind === 'exit_fill') { const xx = X(e.t), yy = Y(e.price); parts.push(`<circle class="mk-fill" cx="${xx.toFixed(1)}" cy="${yy.toFixed(1)}" r="5"/>`); marks.push({x: xx, y: yy, e}); }
+      else if (e.kind === 'post' || e.kind === 'cancel' || e.kind === 'withhold') { marks.push({x: X(e.t), y: Y(e.price ?? (e.side === 1 ? hi - 1 : lo + 1)), e, soft: true}); }
+    }
+  }
+  // panel C: position; panel D: value
+  parts.push(`<path class="ln ln-ours" d="${stepPath(S.pos, 1, t0, t1, X, Ys.pos)}"/>`);
+  parts.push(`<path class="ln ln-ours" d="${stepPath(S.value, 1, t0, t1, X, v => Ys.val(v / 100))}"/>`);
+  if (state.sel != null) { const e = x.events[state.sel]; if (e && e.t >= t0 && e.t <= t1) { const xx = X(e.t).toFixed(1); parts.push(`<line class="selln" x1="${xx}" x2="${xx}" y1="${P[0].top}" y2="${last.bot}"/>`); } }
+  parts.push(`</g><line class="cross" id="cross" x1="0" x2="0" y1="${P[0].top}" y2="${last.bot}" style="display:none"/>`);
+  box.querySelector('svg')?.remove();
+  const svg = document.createElementNS(SVGNS, 'svg'); svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('height', H); svg.innerHTML = parts.join('');
+  box.prepend(svg);
+  G = {X, ml, w, t0, t1, span, P, marks, W, H};
+}
+
+// ------------------------------------------------ hover
+function valueAt(rows, t, col = 1) { const i = bsearch(rows, t); return i < 0 ? null : rows[i][col]; }
+function hover(ev) {
+  if (!G) return; const box = $('chart'), r = box.getBoundingClientRect(), sx = G.W / r.width;
+  const px = (ev.clientX - r.left) * sx, py = (ev.clientY - r.top) * sx;
+  if (px < G.ml || px > G.ml + G.w || py > G.P[G.P.length - 1].bot) { leave(); return; }
+  const t = G.t0 + (px - G.ml) / G.w * G.span, x = ex(), S = x.series;
+  const cr = box.querySelector('#cross'); cr.setAttribute('x1', px); cr.setAttribute('x2', px); cr.style.display = '';
+  let best = null, bd = 12;
+  for (const m of G.marks) { const d = Math.hypot(m.x - px, m.soft ? 0 : m.y - py) + (m.soft ? 4 : 0); if (d < bd) { bd = d; best = m; } }
+  const tip = $('tip'); tip.replaceChildren();
+  if (best) tip.append(el('div', {class: 'ev'}, `${KIND[best.e.kind]} · ${secs(best.e.t, 3)} s: ${evText(best.e)}`));
+  const k = Math.min(S.bn.length - 1, Math.max(0, Math.floor(t / S.bn_step))), b = S.book[bsearch(S.book, t)] || [];
+  const rows = [['Time', `${secs(t, 3)} s`], ['BTC 250 ms move', S.bn[k] == null ? '–' : `${sgn(S.bn[k], 2)} bps`],
+                ['Best bid', b[1] == null ? '–' : `${b[1]}¢ × ${sh(b[2])}`], ['Best ask', b[3] == null ? '–' : `${b[3]}¢ × ${sh(b[4])}`],
+                ['Position', sgn(valueAt(S.pos, t), 2)], ['Value so far', usd(valueAt(S.value, t))]];
+  for (const [a, v] of rows) { const d = el('div', {class: 'row'}); d.append(el('span', {}, a), el('b', {}, v)); tip.append(d); }
+  tip.style.display = 'block';
+  const cx = ev.clientX - r.left, cy = ev.clientY - r.top, tw = tip.offsetWidth, th = tip.offsetHeight;
+  tip.style.left = `${cx + 14 + tw > r.width ? Math.max(0, cx - 14 - tw) : cx + 14}px`; tip.style.top = `${Math.max(0, Math.min(cy - 10, r.height - th))}px`;
+}
+function leave() { const tip = $('tip'); tip.style.display = 'none'; const cr = $('chart').querySelector('#cross'); if (cr) cr.style.display = 'none'; }
+
+// ------------------------------------------------ table
+function table() {
+  const x = ex(), tb = $('events').tBodies[0]; tb.replaceChildren(); let n = 0;
+  x.events.forEach((e, i) => {
+    if (e.t < state.t0 || e.t > state.t1) return; n += 1;
+    const tr = el('tr', {tabindex: '0'}); if (i === state.sel) tr.className = 'on';
+    tr.append(el('td', {class: 't n'}, secs(e.t, 3)), el('td', {class: 'k'}, KIND[e.kind]), el('td', {}, evText(e)), el('td', {class: 'n'}, sgn(e.pos_after, 2)));
+    const go = () => { state.sel = i; const half = Math.min(4000, Math.max(1500, (state.t1 - state.t0) / 2)); if (e.t < state.t0 + 200 || e.t > state.t1 - 200 || state.t1 - state.t0 > 60000) setWindow(e.t - half, e.t + half); else { draw(); table(); } };
+    tr.onclick = go; tr.onkeydown = k => { if (k.key === 'Enter' || k.key === ' ') { k.preventDefault(); go(); } };
+    tb.append(tr);
+  });
+  $('evcount').textContent = `${n} of ${x.events.length} events of this market in the window ${secs(state.t0, 2)}–${secs(state.t1, 2)} s.`;
+}
+
+// ------------------------------------------------ wiring
+$('whole').onclick = () => { state.ep = null; state.sel = null; setWindow(0, ex().end); epinfo(); };
+$('prev').onclick = () => showEpisode((state.ep ?? 0) - 1);
+$('next').onclick = () => showEpisode(state.ep == null ? 0 : state.ep + 1);
+$('episode').onchange = e => showEpisode(+e.target.value);
+$('zin').onclick = () => { const c = (state.t0 + state.t1) / 2, h = (state.t1 - state.t0) / 4; setWindow(c - h, c + h); };
+$('zout').onclick = () => { const c = (state.t0 + state.t1) / 2, h = (state.t1 - state.t0); setWindow(c - h, c + h); };
+$('chart').addEventListener('pointermove', hover); $('chart').addEventListener('pointerleave', leave);
+document.querySelectorAll('.theme button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.theme button').forEach(c => c.setAttribute('aria-pressed', String(c === b)));
+  if (b.dataset.th === 'auto') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = b.dataset.th;
+});
+(function legend() {
+  const L = $('legend'), sw = (svg, t) => { const s = el('span'); s.innerHTML = svg; s.append(document.createTextNode(t)); L.append(s); };
+  const box = (inner) => `<svg width="22" height="12" viewBox="0 0 22 12" aria-hidden="true">${inner}</svg>`;
+  sw(box('<line class="ln ln-bn" x1="1" x2="21" y1="6" y2="6"/>'), 'BTC 250 ms move');
+  sw(box('<line class="thr" x1="1" x2="21" y1="6" y2="6"/>'), 'Trigger thresholds');
+  sw(box('<line class="ln ln-bid" x1="1" x2="21" y1="6" y2="6"/>'), 'Best bid');
+  sw(box('<line class="ln ln-ask" x1="1" x2="21" y1="6" y2="6"/>'), 'Best ask');
+  sw(box(`<path class="mk-fill" d="${tri(6, 6, 5, true)}"/><path class="mk-fill" d="${tri(16, 6, 5, false)}"/>`), 'Trigger / take: up = buy, down = sell (hollow = blocked or no fill)');
+  sw(box('<rect class="ord" x="1" y="2" width="20" height="8" rx="2"/>'), 'Our resting exit');
+  sw(box('<path class="ref" d="M7,2.5L15,9.5M15,2.5L7,9.5"/>'), 'Exit rejected (post-only)');
+  sw(box('<circle class="mk-fill" cx="11" cy="6" r="5"/>'), 'Exit fill');
+  sw(box('<circle class="trd" cx="11" cy="6" r="2"/>'), 'Public trade (windows ≤ 90 s)');
+})();
+let rz = null; window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { draw(); }, 120); });
+pickMarket(0);
+</script>
+</body>
+</html>

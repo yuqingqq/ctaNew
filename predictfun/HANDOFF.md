@@ -1,3 +1,22 @@
+<!-- TAKE_EXIT_FLOW_20261125_CLAUDE -->
+## 2026-11-25 — execution-flow page for take + maker exit (descriptive, no new result)
+
+[flow.html](reviews/take_exit_flow_20261125/flow.html) (session 1622c91e) is self-contained; open it locally. It shows:
+- the loop step by step, with the v3 STRICT58 counts;
+- the money split;
+- three real markets tick by tick, each re-run and matched to its ledger exactly;
+- the replay's assumptions.
+
+Checks: a jsdom DOM check (298 checks) and two falsifiers, in [receipt.json](reviews/take_exit_flow_20261125/receipt.json). There is no browser on this box: Chromium needs more address space than the session's 12 GiB soft limit, and the limit was not raised.
+
+Watch-outs the page surfaces:
+- the exit re-pegs to the touch with no profit target;
+- the queue rule on exits is optimistic;
+- exit post and cancel latency is still 10 ms in the replay.
+
+Next is unchanged and the USER's call: STRICT58 on the reserved forward days, the C1–C3 / C12 / C15 checklist, and an exec-side IOC path.
+<!-- /TAKE_EXIT_FLOW_20261125_CLAUDE -->
+
 <!-- TAKE_EXIT_REPLAY_V3_20261125_CLAUDE -->
 ## 2026-11-25 — take + maker exit HOLDS on 5 other days (strict: +$4.66 / market, 5/5 days); next = untouched forward days (USER's call)
 

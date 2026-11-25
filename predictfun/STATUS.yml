@@ -1,3 +1,12 @@
+take_exit_flow_20261125_claude:
+  page: predictfun/reviews/take_exit_flow_20261125/flow.html
+  receipt: predictfun/reviews/take_exit_flow_20261125/receipt.json
+  session: 1622c91e
+  kind: descriptive_visualization_no_new_result
+  source_ledgers: take_exit_replay_v3_20261125_STRICT58
+  take_value_after_fee_c_per_share: {s1: 3.453, s3: 3.465, s10: 3.479, end: 0.959}
+  dom_checks: 298
+  falsifiers_fail_as_required: 2
 take_exit_replay_v3_20261125_claude:
   report: predictfun/reviews/take_exit_replay_20261125/v3_report.md
   session: 1622c91e
