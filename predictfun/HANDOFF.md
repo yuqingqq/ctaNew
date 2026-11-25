@@ -1,3 +1,21 @@
+<!-- TAKE_EXIT_REVIEW_20261125_CLAUDE -->
+## 2026-11-25 — take + maker exit REVIEWED: positive under every stress, but expect ~$6–7 / market (strict fills), not $14
+
+[Receipt](reviews/take_exit_review_20261125/report.md) (session 1622c91e). An independent agent review plus declared full-path sensitivities on the 281 complete markets. All positive on 4/4 days:
+
+| Take fill rule and delay | Net | Per market | Markets positive |
+|---|---:|---:|---:|
+| Lenient, 40 ms (v2) | +$3,934 | +$14.00 | 256/281 |
+| Strict two-frame, 40 ms | +$2,021 | +$7.19 | 233/281 |
+| Strict + measured 58 ms | +$1,619 | +$5.76 | 217/281 |
+
+The value is the taker leg; maker exits add consistency. The complete-market population is favourable: 2× the per-share edge, and 65 % end at extreme marks (v2's "contested" wording withdrawn).
+
+Watch out: use the strict IOC rule and the 58 ms latency for any further replay. The 50 ms decision grid adds ~25 ms that an event-driven client would not have. Non-complete markets (76 %) still need a settlement valuation.
+
+ONE next priority (needs the USER's go): the frozen rule with the strict IOC rule and the 58 ms latency on untouched days, plus the full C1–C3 / C12 / C15 checklist (including M 250 on the exits). Then the live facts for the exec session: whether Predict has a true IOC / marketable path, and how fast stale quotes vanish (Tokyo shadow log).
+<!-- /TAKE_EXIT_REVIEW_20261125_CLAUDE -->
+
 <!-- TAKE_EXIT_REPLAY_V2_20261125_CLAUDE -->
 ## 2026-11-25 — take + maker exit holds on all 281 complete markets (+$14 / market, 91 % positive); next = untouched days (USER's call)
 

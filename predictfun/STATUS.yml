@@ -1,3 +1,22 @@
+take_exit_review_20261125_claude:
+  report: predictfun/reviews/take_exit_review_20261125/report.md
+  reviewer_report: predictfun/reviews/take_exit_review_20261125/reviewer_report.md
+  session: 1622c91e
+  invalidating_defect: false
+  v2_headline_is_upper_bound: true
+  ioc_fills_vanished_next_frame: 1799
+  ioc_fills_total: 3575
+  s1_strict_40ms_net_usd: 2021.19
+  s1_markets_positive: 233
+  s2_strict_58ms_net_usd: 1618.55
+  s2_per_market_usd: 5.76
+  s2_markets_positive: 217
+  all_versions_days_positive: 4
+  complete_market_end_mark_extreme_share: 0.648
+  complete_vs_excluded_c_per_share_3s: [3.81, 2.22, 1.75]
+  passive_exit_beats_hold_robust: false
+  findings_checklist_c1_c3_c12_c15_complete: false
+  next: strict_58ms_rule_on_untouched_days_plus_full_checklist_needs_user_go
 take_exit_replay_v2_20261125_claude:
   report: predictfun/reviews/take_exit_replay_20261125/v2_report.md
   session: 1622c91e
@@ -17,6 +36,7 @@ take_exit_replay_v2_20261125_claude:
   validation: false
   promoted: false
   next: frozen_rule_on_untouched_days_needs_user_go
+  superseded_by: take_exit_review_20261125_claude   # headline = lenient upper bound; population wording withdrawn
 take_exit_replay_20261125_claude:
   report: predictfun/reviews/take_exit_replay_20261125/report.md
   session: 1622c91e

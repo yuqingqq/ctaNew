@@ -1,0 +1,76 @@
+{
+ "asof": "2026-11-25",
+ "slot": "claude",
+ "runs": [
+  {
+   "tag": "txrv_diag",
+   "rc": "0",
+   "peak_rss_mib": "919",
+   "wall_s": "85.25",
+   "cpu_user_s": "68.69",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "407->407",
+   "slot": "claude",
+   "start": "2026-11-25T06:12:35Z"
+  },
+  {
+   "tag": "txrv_parity",
+   "rc": "0",
+   "peak_rss_mib": "875",
+   "wall_s": "5.71",
+   "cpu_user_s": "4.53",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "407->407",
+   "slot": "claude",
+   "start": "2026-11-25T06:15:33Z"
+  },
+  {
+   "tag": "txrv_strict",
+   "rc": "0",
+   "peak_rss_mib": "904",
+   "wall_s": "380.17",
+   "cpu_user_s": "364.66",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "407->407",
+   "slot": "claude",
+   "start": "2026-11-25T06:15:43Z"
+  },
+  {
+   "tag": "txrv_summary",
+   "rc": "0",
+   "peak_rss_mib": "203",
+   "wall_s": "0.96",
+   "cpu_user_s": "0.78",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "407->407",
+   "slot": "claude",
+   "start": "2026-11-25T06:22:11Z"
+  },
+  {
+   "tag": "txrv_s2",
+   "rc": "0",
+   "peak_rss_mib": "931",
+   "wall_s": "376.14",
+   "cpu_user_s": "359.15",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "406->406",
+   "slot": "claude",
+   "start": "2026-11-25T06:36:34Z"
+  },
+  {
+   "tag": "txrv_s2sum",
+   "rc": "0",
+   "peak_rss_mib": "201",
+   "wall_s": "0.95",
+   "cpu_user_s": "0.75",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "406->406",
+   "slot": "claude",
+   "start": "2026-11-25T06:42:55Z"
+  }
+ ],
+ "wrapped_cpu_user_s": 798.56,
+ "reviewer_agent_cpu_s_claude2": 80,
+ "charged_upper_cpu_s": 900,
+ "charged_coreh": 0.25
+}

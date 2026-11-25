@@ -1,3 +1,20 @@
+<!-- TAKE_EXIT_REVIEW_20261125_CLAUDE -->
+## 2026-11-25 — review of take + maker exit: no invalidating defect, but v2's +$3,934 is the upper bound; conservative bound +$1,619
+
+[Receipt](reviews/take_exit_review_20261125/report.md) (session 1622c91e). USER: "review the result". The review has two parts: an independent fresh-agent code review given code and outputs only ([reviewer_report.md](reviewer_report.md)), and quantitative checks plus full-path sensitivities, each declared in review_plan.md before it ran.
+
+- **Accounting:** reconciles (takes +$3,731 + exits +$203). Every take and exit fill re-derives from the raw book and tape. Settlement vs the END mark barely matters.
+- **Material — take fills:** the replay's IOC fills against the last snapshot before its effect and never checks the next. 1,799 of 3,575 take fills (62,160 sh) hit depth that vanished without trades before the next frame. TAKE-SIGNAL's two-frame rule had been dropped.
+  - S1 (strict two-frame, 40 ms): +$2,021 (+$7.19 / market, 233/281 positive).
+  - S2 (strict + the measured 58 ms order-live latency, pf_clock_rl): **+$1,618.55 (+$5.76 / market, 217/281 positive)**.
+  - All three versions are positive on 4/4 days.
+- **Material — population:** "complete" requires the book to stay two-sided and fresh to 298 s, which cannot be known live. Those markets carry twice the per-share take edge (+3.81 vs +2.22 / +1.75 ¢ at 3 s). v2's "mostly contested at the close" is WRONG: 65 % of complete markets end at ≤ 5 or ≥ 95.
+- **Exits:** add consistency, not total. PASSIVE_EXIT − HOLD is not robust.
+- **Checklist and checks:** FINDINGS C1–C3 / C12 / C15 were not run in full (the partial results don't flip the sign); the v2 checks lacked a falsifier.
+
+Corrections supersede v2's readings; v2 stays as provenance. CPU ~0.25 core-h.
+<!-- /TAKE_EXIT_REVIEW_20261125_CLAUDE -->
+
 <!-- TAKE_EXIT_REPLAY_V2_20261125_CLAUDE -->
 ## 2026-11-25 — take + maker exit on all 281 complete markets: +$3,934, 91 % of markets positive, every day and hour
 
