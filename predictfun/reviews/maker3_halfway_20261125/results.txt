@@ -1,0 +1,25 @@
+dashboard active 9 early {'markets': 9, 'no_later_passive': 2, 'any_later_passive': 7, 'no_later_trade': 2} both shares [18046.68188999829, 11888.972376923024] first-majority markets 7
+10 flat {'markets': 1, 'no_later_passive': 1, 'any_later_passive': 0, 'no_later_trade': 1} other {'markets': 8, 'no_later_passive': 1, 'any_later_passive': 7, 'no_later_trade': 1}
+50 flat {'markets': 3, 'no_later_passive': 1, 'any_later_passive': 2, 'no_later_trade': 1} other {'markets': 6, 'no_later_passive': 1, 'any_later_passive': 5, 'no_later_trade': 1}
+100 flat {'markets': 5, 'no_later_passive': 2, 'any_later_passive': 3, 'no_later_trade': 2} other {'markets': 4, 'no_later_passive': 0, 'any_later_passive': 4, 'no_later_trade': 0}
+returned {'markets': 1, 'no_later_passive': 1, 'any_later_passive': 0, 'no_later_trade': 1}
+interior {'markets': 9, 'no_later_passive': 2, 'any_later_passive': 7, 'no_later_trade': 2}
+    mid      day       first      second         pos       peak    last  late_take     book
+3699278 20261024  763.021058   15.304700   15.304766 135.079172 160.277      False interior
+3702960 20261024  512.202542   10.000000  -74.820204  94.820204 152.156      False interior
+3723774 20261025  886.741837    0.000000  -70.249488 140.889988 144.345      False interior
+3734864 20261025  912.855787   83.214349  110.084923 113.752160 219.511       True interior
+3763401 20261025 5774.759989 1574.778332 -308.260268 480.295867 237.329       True interior
+3776314 20261025  391.230983   10.000000   15.478717  96.579200 152.355       True interior
+3789484 20261026 3736.624552 4200.006044  211.608176 562.494778 294.901       True interior
+3838531 20261026 4616.657707 5995.668951 -398.111398 959.437557 294.814       True interior
+3850428 20261026  452.587436    0.000000    1.799364  61.940789 146.404      False interior
+all active 934 early {'markets': 934, 'no_later_passive': 196, 'any_later_passive': 738, 'no_later_trade': 146} both shares [1581207.4815606172, 1005029.2065403813] first-majority markets 800
+10 flat {'markets': 92, 'no_later_passive': 56, 'any_later_passive': 36, 'no_later_trade': 48} other {'markets': 842, 'no_later_passive': 140, 'any_later_passive': 702, 'no_later_trade': 98}
+50 flat {'markets': 346, 'no_later_passive': 124, 'any_later_passive': 222, 'no_later_trade': 89} other {'markets': 588, 'no_later_passive': 72, 'any_later_passive': 516, 'no_later_trade': 57}
+100 flat {'markets': 567, 'no_later_passive': 176, 'any_later_passive': 391, 'no_later_trade': 130} other {'markets': 367, 'no_later_passive': 20, 'any_later_passive': 347, 'no_later_trade': 16}
+returned {'markets': 77, 'no_later_passive': 47, 'any_later_passive': 30, 'no_later_trade': 41}
+extreme {'markets': 198, 'no_later_passive': 80, 'any_later_passive': 118, 'no_later_trade': 59}
+interior {'markets': 724, 'no_later_passive': 110, 'any_later_passive': 614, 'no_later_trade': 81}
+one_sided {'markets': 12, 'no_later_passive': 6, 'any_later_passive': 6, 'no_later_trade': 6}
+2026-11-25T06:39:49Z tag=m3_halfway rc=0 peak_rss_mib=246 wall_s=3.03 cpu_user_s=2.88 memavail_start_gib=22 disk_free_gib=406->406 slot=codex

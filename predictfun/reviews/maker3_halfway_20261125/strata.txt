@@ -1,0 +1,14 @@
+book extreme False 70 182
+book extreme True 10 16
+book interior False 64 648
+book interior True 46 76
+book one_sided False 6 12
+day 20261024 False 46 250
+day 20261024 True 23 38
+day 20261025 False 59 252
+day 20261025 True 23 36
+day 20261026 False 24 277
+day 20261026 True 5 10
+day 20261027 False 11 63
+day 20261027 True 5 8
+2026-11-25T06:40:00Z tag=m3_halfway_strata rc=0 peak_rss_mib=11 wall_s=0.02 cpu_user_s=0.01 memavail_start_gib=22 disk_free_gib=406->406 slot=codex
