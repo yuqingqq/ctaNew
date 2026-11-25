@@ -1,3 +1,13 @@
+<!-- SIGNAL_TAKE_REPLAY_20261125_CLAUDE -->
+## 2026-11-25 — signal take replay: helps the wide band (+$290, 4/4 days), not the base band; next = own-cross handling (USER's call)
+
+[Receipt](reviews/signal_take_replay_20261125/report.md) (session 1622c91e; freeze 7e37888c8). Adding an IOC on the pressure guard's own trigger to our 19-market replay improves WIDE by +$289.97 over the hosts (every day, 12/19 markets), mostly as completed turnover, and does not help BASE (−$28.06, 2/4 days). Take fills earn +4.3 / +6.2 ¢ per share at 3 s after the fee. Both strategies remain negative overall.
+
+Watch out: 41–61 % of triggers are refused as own_cross: our opposite quotes are being pulled by the same guard but are still live, as cancel-pending orders are. The take therefore depends on the host's inventory room: the base band's 100-share soft band undoes it. Consumed days only.
+
+ONE next priority (needs the USER's go): own-cross handling for the take. Either cancel opposite quotes at the trigger and send the take once gone, or take only when no own quote is in the way. Judge it on the full book with the wide band, then untouched days before any live use.
+<!-- /SIGNAL_TAKE_REPLAY_20261125_CLAUDE -->
+
 <!-- TAKE_SIGNAL_20261125_CLAUDE -->
 ## 2026-11-25 — signal-driven taking: positive at Tokyo latency on all 1,151 markets; next = SIGNAL_TAKE overlay in the 19-market replay (USER's call)
 

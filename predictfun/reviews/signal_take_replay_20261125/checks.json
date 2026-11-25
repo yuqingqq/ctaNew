@@ -1,0 +1,31 @@
+{
+ "S1_triggers_recomputed": {
+  "ok": true,
+  "detail": "12 market-arms, 0 mismatches"
+ },
+ "S2_sent_limits_and_delay": {
+  "ok": true,
+  "detail": "74 sent IOCs, 0 mismatches"
+ },
+ "fifo_keys": [
+  "completed_c",
+  "residual_c"
+ ],
+ "S3_ioc_results_rederived": {
+  "ok": true,
+  "detail": "235 filled IOCs, 0 mismatches"
+ },
+ "S4_ledger_identities": {
+  "ok": true,
+  "detail": "38 take ledgers, 0 mismatches"
+ },
+ "S5_synthetic_falsifiers": {
+  "ok": true,
+  "detail": "first sent then pending_ioc, delay40 True, no_room True, near_end True, disabled True"
+ },
+ "S6_corruption_detected": {
+  "ok": true,
+  "detail": "one ledger +1 c shifts the pooled sum by exactly 1 c"
+ },
+ "all_pass": true
+}

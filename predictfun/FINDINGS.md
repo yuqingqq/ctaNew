@@ -1,3 +1,16 @@
+<!-- SIGNAL_TAKE_REPLAY_20261125_CLAUDE -->
+## 2026-11-25 — signal take inside our strategy: +$290 with the wide band (4/4 days), −$28 with the base band
+
+[Receipt](reviews/signal_take_replay_20261125/report.md) (session 1622c91e), frozen 7e37888c8 before any take-arm replay. USER: "Yes add the take to test". The test uses the same 19 complete consumed markets, the opening-only gate and ASYNC_FAST10 as inventory_exit_exception_20261125, whose saved BASE / WIDE ledgers are the hosts (hash-bound; exact take-disabled parity on 3 markets × 2 hosts). The take: when the pressure guard's own signal turns ON after 2 s quiet, an IOC in its direction (buy YES on ask-side, sell YES = native BUY NO on bid-side), 50 sh within the hard cap, effective 40 ms after the tick, venue best inside the limit with depth not reused, 200 bps fee. Inventory afterwards is managed by the unchanged host rules.
+
+- WIDE (C1000/S500/R250): END net −$852.33 → −$562.36 (**+$289.97**), every day positive (+22 / +85 / +125 / +58), 12/19 markets, top-3 35 %, without 3789484 +$252.63. Completed turnover +$277.83, remaining +$30.77, fees −$18.63: the taken inventory is sold back passively at better prices.
+- BASE (C200/S100/R50): −$916.05 → −$944.11 (−$28.06), 2/4 days, 9/19 markets. The takes' own value is offset by the changed passive path in the tight 100-share soft band.
+- Take fills after the fee: +4.30 / +6.23 ¢ per share at 3 s (BASE / WIDE), consistent with TAKE-SIGNAL.
+- 376 triggers per arm; own_cross refused 156 / 228 (our own opposite quotes, still live while being pulled, sit at the take price). Sent 197 / 148, filled any 135 / 100.
+
+Checks 6/6: triggers recomputed, limits and the 40 ms delay, 235 IOC fills re-derived, ledger and FIFO identities, synthetic statuses, corruption. Both strategies still lose overall. Development evidence on consumed days, no promotion. CPU 306 s run.
+<!-- /SIGNAL_TAKE_REPLAY_20261125_CLAUDE -->
+
 <!-- TAKE_SIGNAL_20261125_CLAUDE -->
 ## 2026-11-25 — taking on our Binance pressure signal pays at Tokyo latency; Maker3 times its takes on the same signal
 

@@ -1,0 +1,84 @@
+{
+ "BASE": {
+  "pooled_delta_c": -2805.525957305823,
+  "positive": false,
+  "day_delta_c": {
+   "20261024": -6636.930675467487,
+   "20261025": 2809.1540801930864,
+   "20261026": 1862.919351356646,
+   "20261027": -840.6687133880678
+  },
+  "days_positive": 2,
+  "robust_3_of_4": false,
+  "markets_improved": 9,
+  "top3_abs_share": 0.3144348870446024,
+  "leave_out_3789484_c": -2413.9143282884247,
+  "d_completed_c": -975.5370027368695,
+  "d_residual_c": 485.66508836287653,
+  "d_fees_c": 2315.654042931838,
+  "gain_only_in_residual": false,
+  "take_m1s_c": 4.464352138646317,
+  "take_m3s_c": 4.302835248190225,
+  "take_m10s_c": 4.938199415201577,
+  "take_end_c": 4.662148192823338,
+  "take_m3s_positive": true,
+  "filled_take_shares": 4251.609429479851,
+  "triggers": 376,
+  "sent": 197,
+  "filled": 135
+ },
+ "WIDE": {
+  "pooled_delta_c": 28997.29121667782,
+  "positive": true,
+  "day_delta_c": {
+   "20261024": 2230.641244521761,
+   "20261025": 8453.084500544821,
+   "20261026": 12472.919836356054,
+   "20261027": 5840.645635255185
+  },
+  "days_positive": 4,
+  "robust_3_of_4": true,
+  "markets_improved": 12,
+  "top3_abs_share": 0.3534847817182238,
+  "leave_out_3789484_c": 25262.61426902334,
+  "d_completed_c": 27782.65176884818,
+  "d_residual_c": 3077.159957242253,
+  "d_fees_c": 1862.5205094125781,
+  "gain_only_in_residual": false,
+  "take_m1s_c": 6.258618468522539,
+  "take_m3s_c": 6.232658305791201,
+  "take_m10s_c": 7.442720579073856,
+  "take_end_c": 7.306666582930139,
+  "take_m3s_positive": true,
+  "filled_take_shares": 3152.7634804383415,
+  "triggers": 376,
+  "sent": 148,
+  "filled": 100
+ },
+ "trigger_status": {
+  "BASE": {
+   "no_room": 23.0,
+   "own_cross": 156.0,
+   "sent": 197
+  },
+  "WIDE": {
+   "no_room": 0.0,
+   "own_cross": 228.0,
+   "sent": 148
+  }
+ },
+ "ioc_status": {
+  "BASE": {
+   "partial": 60.0,
+   "limit_moved": 57.0,
+   "empty": 5.0,
+   "filled": 75.0
+  },
+  "WIDE": {
+   "partial": 53.0,
+   "limit_moved": 45.0,
+   "empty": 3.0,
+   "filled": 47.0
+  }
+ }
+}

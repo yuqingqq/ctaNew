@@ -1,0 +1,84 @@
+{
+ "asof": "2026-11-25",
+ "slot": "claude",
+ "runs": [
+  {
+   "tag": "str_selftest",
+   "rc": "0",
+   "peak_rss_mib": "197",
+   "wall_s": "0.96",
+   "cpu_user_s": "0.76",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "406->406",
+   "slot": "claude",
+   "start": "2026-11-25T04:51:01Z"
+  },
+  {
+   "tag": "str_prepare",
+   "rc": "0",
+   "peak_rss_mib": "198",
+   "wall_s": "0.92",
+   "cpu_user_s": "0.77",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "406->406",
+   "slot": "claude",
+   "start": "2026-11-25T04:51:02Z"
+  },
+  {
+   "tag": "str_run",
+   "rc": "0",
+   "peak_rss_mib": "962",
+   "wall_s": "312.93",
+   "cpu_user_s": "305.91",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "406->406",
+   "slot": "claude",
+   "start": "2026-11-25T04:51:17Z"
+  },
+  {
+   "tag": "str_check",
+   "rc": "0",
+   "peak_rss_mib": "883",
+   "wall_s": "15.32",
+   "cpu_user_s": "12.49",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "407->407",
+   "slot": "claude",
+   "start": "2026-11-25T04:56:39Z"
+  },
+  {
+   "tag": "str_report",
+   "rc": "0",
+   "peak_rss_mib": "289",
+   "wall_s": "5.43",
+   "cpu_user_s": "4.84",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "407->407",
+   "slot": "claude",
+   "start": "2026-11-25T04:57:02Z"
+  },
+  {
+   "tag": "str_write_report",
+   "rc": "0",
+   "peak_rss_mib": "11",
+   "wall_s": "0.02",
+   "cpu_user_s": "0.01",
+   "memavail_start_gib": "22",
+   "disk_free_gib": "406->406",
+   "slot": "claude",
+   "start": "2026-11-25T04:58:05Z"
+  }
+ ],
+ "wrapped_cpu_user_s": 324.78,
+ "charged_upper_cpu_s": 360,
+ "charged_coreh": 0.1,
+ "run_cap_cpu_s": 450,
+ "projection": {
+  "first_mid": 3697902,
+  "runs": 4,
+  "cpu_s": 22.830190889,
+  "projection_cpu_s": 301.3585197348,
+  "limit": 450.0,
+  "proceed": true
+ }
+}

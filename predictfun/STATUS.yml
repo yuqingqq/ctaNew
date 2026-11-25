@@ -1,3 +1,23 @@
+signal_take_replay_20261125_claude:
+  report: predictfun/reviews/signal_take_replay_20261125/report.md
+  session: 1622c91e
+  freeze: 7e37888c8
+  markets: 19
+  host_parity_exact_runs: 6
+  wide_delta_usd: 289.97
+  wide_days_positive: 4
+  wide_markets_improved: 12
+  wide_delta_completed_usd: 277.83
+  base_delta_usd: -28.06
+  base_days_positive: 2
+  take_m3s_c_per_share_base_wide: [4.30, 6.23]
+  triggers_per_arm: 376
+  own_cross_refused_base_wide: [156, 228]
+  checks_pass: 6
+  validation: false
+  promoted: false
+  run_cpu_s: 306
+  next: own_cross_handling_for_signal_take_then_untouched_days_needs_user_go
 take_signal_20261125_claude:
   report: predictfun/reviews/take_signal_20261125/report.md
   session: 1622c91e
