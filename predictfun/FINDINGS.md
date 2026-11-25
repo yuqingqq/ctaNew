@@ -1,3 +1,13 @@
+<!-- EARLY_SIGNAL_20261125_CLAUDE -->
+## 2026-11-25 — the takers who beat us anticipate Binance moves; no public venue's price shows it first
+
+[early_signal](reviews/take_reprice_20261125/early_signal.json) (four days, every venue present), [inflight](reviews/take_reprice_20261125/inflight.json) (five days). USER: "check how do we find the earlier signals". REPRICE-8 events; declared 12-shift nulls (+-5..30 s); positive control passes.
+
+- **Clocks first:** the path's Predict receipt times are Tokyo-equivalent (raw receipt on this us-east-1 research server, median 129 ms after Predict's stamp, shifted ~74 ms; matches the Tokyo host's own measurement, median 53 ms); Predict stamps are at most ~8 ms early (Tokyo receipt − stamp >= 13 ms). The websocket-timed legs run ~50 ms after the book-stamped trades, so the earlier venue test (lead_venues, takers_timing) placed the takers' orders ~50 ms late.
+- **Anticipation, not orders that happen to be in flight:** the stale side's best level is mostly consumed within 150 ms after the Binance onset (orders sent before the move) in 40% of events vs 5% at random times in the same markets (any trade on it 78% vs 21%); in the 150 ms before the onset (orders sent 150-300 ms before) 12% / 33%. Value of those trades at 1 s after fee: +4.2 / +6.6 ¢/sh vs -0.8 at random times.
+- **No public precursor explains it:** in the 400 ms before the winning takers' orders, each feed exceeds its null q95 in 6%-24% of events (null 5%; highest depl_binance_fut, px_binance_fut, flow_binance_fut); any of the 11 in 50% vs 25% at random times. Other venues move before the Binance onset as often when nobody came early as when they did (largest gap 0.05).
+- **What it implies:** the anticipating flow is profitable with low precision (about +4 ¢/sh when right vs about −0.8 when wrong), so a weak combined predictor of the Binance move over the next ~150 ms (Binance order-book and trade microstructure, other venues) is the candidate signal; not built or tested.
+<!-- /EARLY_SIGNAL_20261125_CLAUDE -->
 <!-- WHY_FILL_20261125_CLAUDE -->
 ## 2026-11-25 — why we fill 2-3 %: the quotes leave the book before an order decided at our trigger can arrive; the takers who win ordered before Binance moved; 20 ms less network flips REPRICE positive in replay
 

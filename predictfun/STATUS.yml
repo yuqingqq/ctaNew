@@ -1,3 +1,10 @@
+early_signal_20261125_claude:
+  diagnostics: [predictfun/reviews/take_reprice_20261125/early_signal.json, predictfun/reviews/take_reprice_20261125/inflight.json]
+  session: 1622c91e
+  stale_level_hit_after_onset: 0.398
+  stale_level_hit_random_times: 0.053
+  any_public_signal_before_order_q95: 0.502
+  any_public_signal_null_q95: 0.252
 why_fill_20261125_claude:
   diagnostics: [predictfun/reviews/take_reprice_20261125/why_markout.json, predictfun/reviews/take_reprice_20261125/fill_rate.json]
   stage_l: predictfun/reviews/take_reprice_20261125/latency_readings.json

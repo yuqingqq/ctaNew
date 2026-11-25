@@ -1,3 +1,10 @@
+<!-- EARLY_SIGNAL_20261125_CLAUDE -->
+## 2026-11-25 — the winning takers anticipate Binance moves; the signal is not in public venue prices
+
+See FINDINGS (same date). Orders sent before Binance moves eat the stale level 8x as often as at random times; no single public feed flags more than 24% of their orders (null 5%).
+
+Next (USER's call): (1) learn the top takers' trigger: per-leg taker identity (takers.py REST join, ~0.5 core-h), then where in Binance / other-venue feature space the top 10 send their orders vs random times; (2) build and test a short-horizon predictor of the Binance move over the hold (Binance bookTicker sizes, trade flow, depth20, OKX / Binance spot), trained on some consumed days and scored on others, priced as a take under the venue rules; untouched days before any live step.
+<!-- /EARLY_SIGNAL_20261125_CLAUDE -->
 <!-- WHY_FILL_20261125_CLAUDE -->
 ## 2026-11-25 — why we fill 2-3 % answered; stage L: 20 ms less network flips REPRICE positive in replay
 
