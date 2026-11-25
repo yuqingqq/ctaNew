@@ -1,0 +1,172 @@
+{
+  "asof": "2026-11-25",
+  "cases": [
+    [
+      "20261024",
+      3697902,
+      "pilot"
+    ],
+    [
+      "20261024",
+      3699278,
+      "pilot"
+    ],
+    [
+      "20261024",
+      3700070,
+      "rest"
+    ],
+    [
+      "20261024",
+      3702960,
+      "rest"
+    ],
+    [
+      "20261024",
+      3704004,
+      "rest"
+    ],
+    [
+      "20261024",
+      3712725,
+      "rest"
+    ],
+    [
+      "20261024",
+      3716727,
+      "rest"
+    ],
+    [
+      "20261025",
+      3723774,
+      "pilot"
+    ],
+    [
+      "20261025",
+      3734864,
+      "pilot"
+    ],
+    [
+      "20261025",
+      3737919,
+      "rest"
+    ],
+    [
+      "20261025",
+      3763401,
+      "rest"
+    ],
+    [
+      "20261025",
+      3776314,
+      "rest"
+    ],
+    [
+      "20261026",
+      3789484,
+      "pilot"
+    ],
+    [
+      "20261026",
+      3803131,
+      "pilot"
+    ],
+    [
+      "20261026",
+      3804696,
+      "rest"
+    ],
+    [
+      "20261026",
+      3838531,
+      "rest"
+    ],
+    [
+      "20261026",
+      3850428,
+      "rest"
+    ],
+    [
+      "20261027",
+      3877472,
+      "pilot"
+    ],
+    [
+      "20261027",
+      3899224,
+      "pilot"
+    ]
+  ],
+  "fees_bps": 200.0,
+  "hosts": {
+    "BASE": [
+      200.0,
+      100.0,
+      50.0
+    ],
+    "WIDE": [
+      1000.0,
+      500.0,
+      250.0
+    ]
+  },
+  "take_q": 50.0,
+  "take_delay_ms": 40.0,
+  "quiet_ticks": 40,
+  "parity_mids": [
+    3697902,
+    3789484,
+    3899224
+  ],
+  "sources": {
+    "predictfun/reviews/signal_take_replay_20261125/contract.md": "a57fd43e86ae5f831b835ae4551578f55119e5b9828eb2db2a9cd0cf39c2cf6f",
+    "predictfun/reviews/signal_take_replay_20261125/take_replay.py": "2c220b29d8539d07bf00ea02d201625c002b4bb4ebcd273e5cc798f9884d824b",
+    "predictfun/reviews/signal_take_replay_20261125/check.py": "50fb4ce1a7387c8760ac716ea62c62e0f02a76acb6f73ca3cf6890da61f87e39",
+    "predictfun/reviews/signal_take_replay_20261125/report.py": "d45eeb48cafd5a1e8b5b291e537b61ed05dd428fd7782cf8d38d60965b6b311d",
+    "predictfun/reviews/maker3_cap_skew_20261124/experiment.py": "d25508f3d1b4e5cbef3564ab4cf3e7463d79e4991167a88350afb7934ff4bd60",
+    "predictfun/reviews/inventory_take_pilot_20261124/pilot.py": "662785a5a70dda3abc6bc9f58ea571a1bdf956f77d3774f535aedef279b871b4",
+    "predictfun/reviews/opening_entry_pilot_20261124/opening.py": "df9addfeab71cbed52351e5b88b9deecd0e62e803f6f516a42a7ae6016d89c1d",
+    "predictfun/reviews/inventory_exit_exception_20261125/manifest.json": "61de00485e13cdd96091f64699983f6de3515a25c0347efd1f235edc3c7e19c8",
+    "predictfun/reviews/inventory_exit_exception_20261125/summary.json": "1b1828547102289c47252a36b49a868567e9386ccf0f0123046d82e234e03740",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3697902_BASE.json.gz": "dcb9888438f3d964e977aa4312373884b2b88dc355a5441d2d577b70f1bd1ebe",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3697902_WIDE.json.gz": "c45d948931b067961ed683f9d267bb38a89c4855ede1a8517c485f3e8efaea1e",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3699278_BASE.json.gz": "0cecc46bc3870185c62c7b3c7c57d19c219537ebdea8a47f63e04268f39bca68",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3699278_WIDE.json.gz": "c5819a0a05eba6cbeb4d3c6116cc409a679d401bf214c2d486f8109ed9c2c6d3",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3700070_BASE.json.gz": "4e950cac1af77ba794982207079fc2d74f1aada93fa473a5b6444e209e89c359",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3700070_WIDE.json.gz": "caf127bb3ad8464ff27928b850050e21248a4a6a9584fa30673c8274c7d75901",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3702960_BASE.json.gz": "51aa3f6d91a3d0d18137133ecb402435d517e4e98185f655857ba90164d750c3",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3702960_WIDE.json.gz": "93598c912298ea96d7fb85718663efcebd22ec0fa03436990eca54bcd7c6c2e1",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3704004_BASE.json.gz": "0ac9afb1b08064c7c8719b71bc310624a86c66773c83c96b589b185e83084c1f",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3704004_WIDE.json.gz": "8ab851e0c4ea039616061f300d19fd17f872e7ef7db49783b842986c40cd35b9",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3712725_BASE.json.gz": "de43f874e556ce810f028305e4efe7a77b6fbe10211ae66742cd3004ccfd7cfc",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3712725_WIDE.json.gz": "9181c1cb0263b457a8fa23612c4ab55816c4d565993e4d5dd0c58da7dde3485f",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3716727_BASE.json.gz": "24dad25e42f0615d32c7e158fb9bfd7fb87c4373dcab843ac7e2b75587455bf2",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3716727_WIDE.json.gz": "8ac00a3542b05f97e4527f97def33eb16975e130b5533eed821e3064ae37a95e",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3723774_BASE.json.gz": "e61d6231a7cb7dda2674649c315babec3de0c02baf4993b86082bdb790537f91",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3723774_WIDE.json.gz": "58612e6452469807de2b97a320d92e2df219dff482d78fadbee237a89b4a9d02",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3734864_BASE.json.gz": "970b058efb29643c6d37653152f648ee86c6aba6541aa121716f6ed4e33be576",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3734864_WIDE.json.gz": "f83d8d974adc8d8724cb718ddbaf98bc09a5a97fbbb120aeee3395aa3f20402f",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3737919_BASE.json.gz": "5ced5fd469438334a4b0966f05e1ada8cbf9de2bb8057be172eaf8a634fce176",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3737919_WIDE.json.gz": "d75b12e6a2b9bf0727ccdefd8b12bf690d55462cdde65e6ca41fa3058dbedda0",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3763401_BASE.json.gz": "08d9d9cccc851512fae699c734e04dfda40abbef5a5b86e16ca9e135e07d5ba9",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3763401_WIDE.json.gz": "b1215b2de26b4f53810c516c7b658431e9420335f2e220ef1a4d4d53acca3ace",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3776314_BASE.json.gz": "5a3fe4a387b93d746f4735018d5e13809c09af32484638ea46d5e56b82522447",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3776314_WIDE.json.gz": "0261b4420afb7e372bdc8ab85fe7b596022837c47b8e0600e0563b6ff2321d0e",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3789484_BASE.json.gz": "c07ad6a9b386ebcaa6b296265260929ccf6d270bd011f9b854dbec6e17349a35",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3789484_WIDE.json.gz": "c730e15f446e73019cabfa46b82b50e225a2a6b5bc8f0426a0048d215d897743",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3803131_BASE.json.gz": "e17cff63744b136906d7bff59e84108916f875ce98df57662fb808cd5e0c2b68",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3803131_WIDE.json.gz": "4dbb87189a9e9c1c89f96ef5f4084e25ff2455b0a71e5324c4e480d5ceafb6ef",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3804696_BASE.json.gz": "2cb1c922b537f4fd4bce3a2d6ec3367286ed242a170bfd92a4f9feddbf7d6f88",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3804696_WIDE.json.gz": "a59affd2f3a9ef4d26515242c36fc416a9e9630589bbcde0f6322a7318921cb6",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3838531_BASE.json.gz": "5effa28fce8729d38ccb27ac1b9e4ba4f854b04b9a48017d4773054c1b2ec443",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3838531_WIDE.json.gz": "e9dcf130c48756c96348ade4b40ebde777bd125edf117eba04f18dbcc0c948e1",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3850428_BASE.json.gz": "ee7887d6822f299596be8c44b1e805497b37fb2d88bc0a35a638ce1ea7e543fa",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3850428_WIDE.json.gz": "bf3a765afa6b6291ebbeb3f801b4f6f4f665343eee9ea6170f889e7adbc071d0",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3877472_BASE.json.gz": "287a4df982509eb784bc1b4a70b07a16f31bde9b130260906f097dbb45d75efc",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3877472_WIDE.json.gz": "265ba6f7632f0297df5445efdb4d1b7b65cc50e470a2a81e050b815aab5e1ab4",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3899224_BASE.json.gz": "8ed746ce98bb45d4da0d2f461f9c1559a34096dc165f97840dc248910a59c771",
+    "data/predict_fun/research/inventory_exit_exception_20261125/3899224_WIDE.json.gz": "ac85d545be6d86ddb931660315e38fe40236323efe11b47454a54647d4281259"
+  },
+  "new_candidates": 2,
+  "validation": false
+}
