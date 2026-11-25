@@ -41,7 +41,7 @@ MIN_BUY_C = 100.          # a buy is worth at least 1 USDT
 MIN_MSELL = 0.01          # a market sell is at least 0.01 share
 YOUNG_MS = 100.
 SCHEDULED = 1440
-FIRST_DAY, DAY_CPU_CAP, TOTAL_CPU_CAP = '20261023', 3000., 11000.     # resource amendment R1 (declaration.md), before any stage-2 run
+FIRST_DAY, DAY_CPU_CAP, TOTAL_CPU_CAP = '20261023', 3000., 12500.     # resource amendments R1 / R2 (declaration.md)
 PARITY_EVERY = 40
 SAME = ['fills', 'orders', 'commands', 'value', 'cash', 'position', 'signal_log', 'struct_log']
 FILES = ['declaration.md', 'venue_common.py', 'vm_replay.py']
@@ -375,7 +375,7 @@ def day_run(day):
     C.require(not fn.exists(), f'{fn.name} exists (write-once)')
     if day != FIRST_DAY:
         pj = json.loads((H / 'stage2_projection.json').read_text())
-        C.require(pj['go'], 'the first-day projection refused')
+        C.require(pj['projected_cpu_s'] <= TOTAL_CPU_CAP, 'the first-day projection exceeds the cap')   # R2: re-evaluated against the amended cap
     OUT.mkdir(parents=True, exist_ok=True)
     v1 = {int(r['mid']): r for r in json.loads((F.OUT / 'summary.json').read_text())['rows'] if r['day'] == day}
     v3 = {int(r['mid']): r for r in json.loads((OD.OUT3 / 'summary.json').read_text())['rows'] if r['setting'] == 'STRICT58' and r['day'] == day}

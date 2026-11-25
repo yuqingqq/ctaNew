@@ -88,3 +88,12 @@ market-run. Six runs (3 configs × 2 arms) on ~1,439 included markets project to
 stage 2 ≤ 11,000 CPU s (projection after 20261023 alone: cost × 5 × 1.1 ≤ 11,000, or stop) and ≤ 3,000 CPU s per day process. After the
 projection the other four days run in parallel research slots (claude / claude2 / claude3 / claude4; the launcher's 5-process cap holds).
 Merge, checks and the report live in a separate file (vm_report.py), so vm_replay.py stays byte-identical across the day runs.
+
+## Resource-only amendment R2 (USER 2026-11-25: "Ok on cpu need"; before any run of days 2–5)
+
+- Day 1's measured pace (about 7.4 CPU s per market, 288 markets) projects about 11,700 CPU s with the declared ×1.1 margin, above R1's
+  11,000 s; the expected total without the margin is about 10,700 s. The USER approved the need after the progress report that named it.
+- New stage-2 cap 12,500 CPU s. For days 2–5 the gate re-evaluates day 1's write-once projection (stage2_projection.json, which keeps
+  its original go flag) against the amended cap.
+- vm_replay.py changes only TOTAL_CPU_CAP and that gate line; the replay, accounting and parity code are unchanged (see the commit diff).
+  Day 1 runs the R1 file (sha256 8de6bd1d589e27c4778012c8ad70ce00d1a47e1dd8a24478ac1f5540299c7b9d); days 2–5 run the R2 file.
