@@ -53,7 +53,8 @@ def main():
         k=legs[legs.mid==x.mid]
         for c in KEYS[1:]:
             k=k[k[c]==getattr(x,c)]
-        k=k[k.signer.str.lower()==x.maker.lower()]
+        # Step 1 encodes signer as an integer. Require a unique public row on
+        # all eight shared identity fields from the wallet-clock ledger.
         jobs.append(dict(cohort='wallet',market=x.mid,cid=x.cid,leg=int(k.index[0]) if len(k)==1 else -1,q=x.shares))
     assert abs(sum(x['q'] for x in jobs if x['cohort']=='disputed')-119.48615384615368)<1e-7
     # Candidate uniqueness is checked against the full market, before looking at the wallet lifecycle.
