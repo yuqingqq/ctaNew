@@ -1,0 +1,96 @@
+{
+  "20261026": {
+    "ahead": {
+      "settle": 2103.023645713617,
+      "turnover": 2694.9162356576685,
+      "residual": -591.8925899440519,
+      "closed": 99450.14637585494,
+      "posts": 14756.0,
+      "all_pulls": 13365.0,
+      "window_posts": 1264.0,
+      "mean_end": 41.938382832369406,
+      "p90_end": 188.95882944722266,
+      "mean_60": 258.9393147869696,
+      "over_60": 24,
+      "cents_per_matched": 2.7098162585630496
+    },
+    "urgency": {
+      "settle": 1774.4923767630655,
+      "turnover": 2259.8166931693763,
+      "residual": -485.3243164063104,
+      "closed": 104752.40119627296,
+      "posts": 15345.0,
+      "all_pulls": 13896.0,
+      "window_posts": 1871.0,
+      "mean_end": 38.25300173953499,
+      "p90_end": 188.34644573704352,
+      "mean_60": 255.41164038769207,
+      "over_60": 35,
+      "cents_per_matched": 2.15729345328819
+    },
+    "gate": {
+      "higher_settlement": true,
+      "lower_ending": false,
+      "positive_completed": true
+    },
+    "passed": false,
+    "better": 23,
+    "worse": 28,
+    "equal": 19,
+    "delta_ex_largest": 207.04963594483849
+  },
+  "20261027": {
+    "ahead": {
+      "settle": 905.5407654729397,
+      "turnover": 1766.1945054626178,
+      "residual": -860.6537399896782,
+      "closed": 77791.01934738542,
+      "posts": 8932.0,
+      "all_pulls": 7821.0,
+      "window_posts": 896.0,
+      "mean_end": 54.725995009681206,
+      "p90_end": 227.36536594333663,
+      "mean_60": 287.20994154534526,
+      "over_60": 24,
+      "cents_per_matched": 2.270434968303292
+    },
+    "urgency": {
+      "settle": 903.9916065670305,
+      "turnover": 1769.090032365159,
+      "residual": -865.0984257981287,
+      "closed": 82332.05144598047,
+      "posts": 9384.0,
+      "all_pulls": 8215.0,
+      "window_posts": 1361.0,
+      "mean_end": 54.957012393422076,
+      "p90_end": 227.36536594333663,
+      "mean_60": 282.5728195940062,
+      "over_60": 33,
+      "cents_per_matched": 2.1487258015499475
+    },
+    "gate": {
+      "higher_settlement": true,
+      "lower_ending": true,
+      "positive_completed": true
+    },
+    "passed": true,
+    "better": 21,
+    "worse": 19,
+    "equal": 18,
+    "delta_ex_largest": -111.80339709850064
+  },
+  "passed_both_days": false,
+  "coverage": {
+    "20261026": {
+      "missing_endpoint": 124,
+      "complete": 70,
+      "stale_future_book": 94
+    },
+    "20261027": {
+      "missing_endpoint": 139,
+      "stale_future_book": 91,
+      "complete": 58
+    }
+  },
+  "source_sha": "21b556a98b8c1826aa1ddee75c4554f72bda218cda746ccaa7aa8de28423bd97"
+}

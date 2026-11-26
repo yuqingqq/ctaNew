@@ -47,3 +47,7 @@ The [single-switch replay](../reviews/distance_retention_20261125/report.md) kep
 ## October 27 replication of the unchanged urgency controller
 
 [Paired replication and inventory breakdown](../reviews/urgency_replication_20261125/report.md). Completed turnover stayed positive at 2.15¢ per matched share and settlement was +$904 across 58 of 288 eligible-by-schedule markets (139 missing endpoints, 91 stale books). The inventory gate failed at 55.0 mean absolute ending shares against a ceiling of 49.8. The 33 markets above 250 shares at 60 seconds carried −$804 of the −$865 residual, yet earned +$355 at settlement. The next candidate limits only newly proposed risk-adding size from 90 to 60 seconds using the upcoming 250-share budget. Compare against urgency on both consumed dates. No new variant has been scored.
+
+## November 26 decision on bringing forward the 250-share limit
+
+[Paired test on October 26 and 27](../reviews/early_add_limit_20261126/report.md). Keep urgency as the research baseline. Limiting only new submissions from 90 to 60 seconds improved daily settlement by $328.53 and $1.55, but mean absolute ending shares moved from 38.25 to 41.94 and from 54.96 to 54.73. The two-day gate failed. Mean absolute holdings at 60 seconds also rose on both dates despite fewer markets exceeding 250. The next diagnostic is to trace the large remaining positions back to inventory already held at 90 seconds, fills from older and newer orders, and whether passive exits were available. No timing variant was selected.
