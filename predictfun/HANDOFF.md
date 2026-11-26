@@ -1,9 +1,14 @@
+<!-- TIMELINE_20261126_CLAUDE -->
+## 2026-11-26 — one race on one clock (chart): top taker arrives -49 ms from the Binance move, REPRICE +34.5 ms; corrects FIRE_TIMING's ~15 ms
+
+See FINDINGS (same date) and reviews/take_reprice_20261125/timeline_chart.html. We land 83.5 ms after the top taker; arriving with it means deciding ~74 ms before the move on our assumed path.
+<!-- /TIMELINE_20261126_CLAUDE -->
 <!-- FIRE_TIMING_20261126_CLAUDE -->
-## 2026-11-26 — the winners' fire times to ~15 ms (settlement ids): orders land ~15 ms ahead of the Binance tick, on a 300 ms imbalance build-up
+## 2026-11-26 — the winners' fire times to ~15 ms (settlement ids): orders land ahead of the Binance tick (median 49 ms: TIMELINE), on a 300 ms imbalance build-up
 
 See FINDINGS (same date). Settlement creation (UUIDv7) for every order; arrival = settlement − 150 − 34 ms. M50 times were off for book-timed legs (35% of the top taker's orders): earlier studies on M50 are approximate (the withdrawn-vs-traded split re-read at arrival holds: 28% traded). 49% of its orders have no Binance event in the last 10 ms; imbalance +0.20 → +0.42 over 300 ms (random +0.04).
 
-Next (USER's call): the predictor of the Binance tick ~20-25 ms ahead from the build-up (imbalance level and slope, opposite-side refill rate, near-side posts, trades their way, time since the last tick), on the settlement-clock arrival times; precision at the top taker's firing rate on held-out consumed days; then the take replay under the venue rules; untouched days before any live step.
+Next (USER's call): the predictor of the Binance tick ~50-75 ms ahead (TIMELINE) from the build-up (imbalance level and slope, opposite-side refill rate, near-side posts, trades their way, time since the last tick), on the settlement-clock arrival times; precision at the top taker's firing rate on held-out consumed days; then the take replay under the venue rules; untouched days before any live step.
 <!-- /FIRE_TIMING_20261126_CLAUDE -->
 <!-- TRIGGER_LOGIC_20261126_CLAUDE -->
 ## 2026-11-26 — the top taker's trigger: imbalance, trades their way, a growing near side, a just-printed tick; no single threshold

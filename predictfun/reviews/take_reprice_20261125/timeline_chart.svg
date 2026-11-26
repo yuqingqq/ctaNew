@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 864" width="1240" height="864" font-family="system-ui, -apple-system, 'Segoe UI', 'DejaVu Sans', sans-serif" role="img" aria-label="Timeline of one race: Binance move at 0 ms, top taker order at −49 ms, our order at +34.5 ms"><rect width="1240" height="864" fill="#fcfcfb"/>
+<text x="24.0" y="34.0" font-size="19" font-weight="600" fill="#0b0b0b" text-anchor="start">One race on one clock: t = 0 is when Binance&#x27;s top level empties (the price moves)</text>
+<text x="24.0" y="58.0" font-size="13" font-weight="400" fill="#52514e" text-anchor="start">Dots are medians; whiskers and pale bars span the middle half (25th–75th percentile). Top taker: 2,743 of its orders that reached Predict before a move that came within 300 ms.</text>
+<text x="24.0" y="78.0" font-size="13" font-weight="400" fill="#52514e" text-anchor="start">Us: the REPRICE-8 replay (decision = trigger + 3.5 ms, 22 ms assumed path). Predict makers: when the stale quotes REPRICE aimed at were pulled. Four already-used days.</text>
+<line x1="245.0" y1="122.0" x2="245.0" y2="520.0" stroke="#e1e0d9" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<line x1="245.0" y1="634.0" x2="245.0" y2="790.0" stroke="#e1e0d9" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<text x="245.0" y="552.0" font-size="12" font-weight="400" fill="#898781" text-anchor="middle">−300</text>
+<line x1="332.5" y1="122.0" x2="332.5" y2="520.0" stroke="#e1e0d9" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<line x1="332.5" y1="634.0" x2="332.5" y2="790.0" stroke="#e1e0d9" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<text x="332.5" y="552.0" font-size="12" font-weight="400" fill="#898781" text-anchor="middle">−250</text>
+<line x1="420.0" y1="122.0" x2="420.0" y2="520.0" stroke="#e1e0d9" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<line x1="420.0" y1="634.0" x2="420.0" y2="790.0" stroke="#e1e0d9" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<text x="420.0" y="552.0" font-size="12" font-weight="400" fill="#898781" text-anchor="middle">−200</text>
+<line x1="507.5" y1="122.0" x2="507.5" y2="520.0" stroke="#e1e0d9" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<line x1="507.5" y1="634.0" x2="507.5" y2="790.0" stroke="#e1e0d9" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<text x="507.5" y="552.0" font-size="12" font-weight="400" fill="#898781" text-anchor="middle">−150</text>
+<line x1="595.0" y1="122.0" x2="595.0" y2="520.0" stroke="#e1e0d9" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<line x1="595.0" y1="634.0" x2="595.0" y2="790.0" stroke="#e1e0d9" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<text x="595.0" y="552.0" font-size="12" font-weight="400" fill="#898781" text-anchor="middle">−100</text>
+<line x1="682.5" y1="122.0" x2="682.5" y2="520.0" stroke="#e1e0d9" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<line x1="682.5" y1="634.0" x2="682.5" y2="790.0" stroke="#e1e0d9" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<text x="682.5" y="552.0" font-size="12" font-weight="400" fill="#898781" text-anchor="middle">−50</text>
+<line x1="770.0" y1="122.0" x2="770.0" y2="520.0" stroke="#e1e0d9" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<line x1="770.0" y1="634.0" x2="770.0" y2="790.0" stroke="#e1e0d9" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<text x="770.0" y="552.0" font-size="12" font-weight="400" fill="#898781" text-anchor="middle">0</text>
+<line x1="857.5" y1="122.0" x2="857.5" y2="520.0" stroke="#e1e0d9" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<line x1="857.5" y1="634.0" x2="857.5" y2="790.0" stroke="#e1e0d9" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<text x="857.5" y="552.0" font-size="12" font-weight="400" fill="#898781" text-anchor="middle">+50</text>
+<line x1="945.0" y1="122.0" x2="945.0" y2="520.0" stroke="#e1e0d9" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<line x1="945.0" y1="634.0" x2="945.0" y2="790.0" stroke="#e1e0d9" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<text x="945.0" y="552.0" font-size="12" font-weight="400" fill="#898781" text-anchor="middle">+100</text>
+<line x1="1032.5" y1="122.0" x2="1032.5" y2="520.0" stroke="#e1e0d9" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<line x1="1032.5" y1="634.0" x2="1032.5" y2="790.0" stroke="#e1e0d9" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<text x="1032.5" y="552.0" font-size="12" font-weight="400" fill="#898781" text-anchor="middle">+150</text>
+<line x1="1120.0" y1="122.0" x2="1120.0" y2="520.0" stroke="#e1e0d9" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<line x1="1120.0" y1="634.0" x2="1120.0" y2="790.0" stroke="#e1e0d9" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<text x="1120.0" y="552.0" font-size="12" font-weight="400" fill="#898781" text-anchor="middle">+200</text>
+<text x="1190.0" y="570.0" font-size="12" font-weight="400" fill="#898781" text-anchor="end">ms from the Binance move</text>
+<line x1="770.0" y1="104.0" x2="770.0" y2="790.0" stroke="#52514e" stroke-width="1.5" stroke-opacity="1.0" stroke-linecap="round"/>
+<text x="778.0" y="112.0" font-size="12" font-weight="600" fill="#0b0b0b" text-anchor="start">Binance top level empties</text>
+<text x="184.0" y="158.0" font-size="14" font-weight="600" fill="#0b0b0b" text-anchor="end">Binance futures</text>
+<text x="184.0" y="175.0" font-size="12" font-weight="400" fill="#52514e" text-anchor="end">top of book</text>
+<line x1="210.0" y1="215.0" x2="1190.0" y2="215.0" stroke="#e1e0d9" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<text x="184.0" y="248.0" font-size="14" font-weight="600" fill="#0b0b0b" text-anchor="end">Top taker</text>
+<text x="184.0" y="265.0" font-size="12" font-weight="400" fill="#52514e" text-anchor="end">its order on Predict</text>
+<line x1="210.0" y1="305.0" x2="1190.0" y2="305.0" stroke="#e1e0d9" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<text x="184.0" y="338.0" font-size="14" font-weight="600" fill="#0b0b0b" text-anchor="end">Predict makers</text>
+<text x="184.0" y="355.0" font-size="12" font-weight="400" fill="#52514e" text-anchor="end">the stale quote</text>
+<line x1="210.0" y1="395.0" x2="1190.0" y2="395.0" stroke="#e1e0d9" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<text x="184.0" y="428.0" font-size="14" font-weight="600" fill="#0b0b0b" text-anchor="end">Us (REPRICE-8)</text>
+<text x="184.0" y="445.0" font-size="12" font-weight="400" fill="#52514e" text-anchor="end">our order on Predict</text>
+<g><title>book leans toward the move: imbalance +0.28 at -300 ms -&gt; +0.62 at -5 ms</title><rect x="245.0" y="155.0" width="525.0" height="10" rx="4" fill="#898781" fill-opacity="0.22"/><rect x="245.0" y="148.0" width="525.0" height="24" fill="transparent"/></g>
+<text x="245.0" y="146.0" font-size="12" font-weight="400" fill="#52514e" text-anchor="start">book leans toward the move: imbalance +0.28 at −300 ms → +0.62 at −5 ms</text>
+<g><title>Binance: the top level on the far side empties, the mid moves</title><circle cx="770.0" cy="160.0" r="8.0" fill="#fcfcfb"/><circle cx="770.0" cy="160.0" r="6.0" fill="#52514e" stroke="#52514e" stroke-width="0"/><circle cx="770.0" cy="160.0" r="14" fill="transparent"/></g>
+<g><title>top taker order reaches Predict: middle half −94 to −17 ms</title>
+<line x1="605.5" y1="250.0" x2="740.2" y2="250.0" stroke="#eb6834" stroke-width="2" stroke-opacity="1.0" stroke-linecap="round"/>
+<line x1="605.5" y1="244.0" x2="605.5" y2="256.0" stroke="#eb6834" stroke-width="2" stroke-opacity="1.0" stroke-linecap="round"/>
+<line x1="740.2" y1="244.0" x2="740.2" y2="256.0" stroke="#eb6834" stroke-width="2" stroke-opacity="1.0" stroke-linecap="round"/>
+<rect x="605.5" y="238.0" width="134.8" height="24" fill="transparent"/></g>
+<g><title>top taker: 150 ms speed bump, −49 to +101 ms</title><rect x="684.2" y="270.0" width="262.5" height="8" rx="4" fill="#eb6834" fill-opacity="0.25"/><rect x="684.2" y="262.0" width="262.5" height="24" fill="transparent"/></g>
+<g><title>top taker order reaches Predict: median −49 ms</title><circle cx="684.2" cy="250.0" r="7.5" fill="#fcfcfb"/><circle cx="684.2" cy="250.0" r="5.5" fill="#eb6834" stroke="#eb6834" stroke-width="0"/><circle cx="684.2" cy="250.0" r="14" fill="transparent"/></g>
+<g><title>top taker order matches the stale quote: median +101 ms</title><circle cx="946.8" cy="274.0" r="7.5" fill="#fcfcfb"/><circle cx="946.8" cy="274.0" r="5.5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2.5"/><circle cx="946.8" cy="274.0" r="14" fill="transparent"/></g>
+<text x="684.2" y="234.0" font-size="13" font-weight="600" fill="#0b0b0b" text-anchor="middle">order reaches Predict −49 ms</text>
+<text x="815.5" y="296.0" font-size="12" font-weight="400" fill="#52514e" text-anchor="middle">150 ms speed bump</text>
+<text x="958.8" y="278.0" font-size="13" font-weight="600" fill="#0b0b0b" text-anchor="start">matches +101 ms</text>
+<text x="245.0" y="296.0" font-size="12" font-weight="400" fill="#52514e" text-anchor="start">25% of its orders land just after a move (median 28 ms after)</text>
+<g><title>Predict makers pull the stale quote: middle half +50 to +135 ms</title><rect x="857.5" y="336.0" width="148.8" height="8" rx="4" fill="#898781" fill-opacity="0.35"/><rect x="857.5" y="328.0" width="148.8" height="24" fill="transparent"/></g>
+<g><title>Predict makers pull the stale quote: median +84 ms</title><circle cx="917.0" cy="340.0" r="7.5" fill="#fcfcfb"/><circle cx="917.0" cy="340.0" r="5.5" fill="#52514e" stroke="#52514e" stroke-width="0"/><circle cx="917.0" cy="340.0" r="14" fill="transparent"/></g>
+<text x="917.0" y="324.0" font-size="13" font-weight="600" fill="#0b0b0b" text-anchor="middle">pull the stale quote +84 ms</text>
+<g><title>our order reaches Predict: middle half +26.5 to +75.5 ms</title>
+<line x1="816.4" y1="430.0" x2="902.1" y2="430.0" stroke="#2a78d6" stroke-width="2" stroke-opacity="1.0" stroke-linecap="round"/>
+<line x1="816.4" y1="424.0" x2="816.4" y2="436.0" stroke="#2a78d6" stroke-width="2" stroke-opacity="1.0" stroke-linecap="round"/>
+<line x1="902.1" y1="424.0" x2="902.1" y2="436.0" stroke="#2a78d6" stroke-width="2" stroke-opacity="1.0" stroke-linecap="round"/>
+<rect x="816.4" y="418.0" width="85.8" height="24" fill="transparent"/></g>
+<g><title>our 150 ms speed bump, +34.5 to +184.5 ms</title><rect x="830.4" y="450.0" width="262.5" height="8" rx="4" fill="#2a78d6" fill-opacity="0.25"/><rect x="830.4" y="442.0" width="262.5" height="24" fill="transparent"/></g>
+<line x1="785.8" y1="423.0" x2="785.8" y2="437.0" stroke="#2a78d6" stroke-width="2" stroke-opacity="1.0" stroke-linecap="round"/>
+<g><title>our order reaches Predict: median +34.5 ms</title><circle cx="830.4" cy="430.0" r="7.5" fill="#fcfcfb"/><circle cx="830.4" cy="430.0" r="5.5" fill="#2a78d6" stroke="#2a78d6" stroke-width="0"/><circle cx="830.4" cy="430.0" r="14" fill="transparent"/></g>
+<g><title>our order matches if the quote is still there: median +184.5 ms</title><circle cx="1092.9" cy="454.0" r="7.5" fill="#fcfcfb"/><circle cx="1092.9" cy="454.0" r="5.5" fill="#fcfcfb" stroke="#2a78d6" stroke-width="2.5"/><circle cx="1092.9" cy="454.0" r="14" fill="transparent"/></g>
+<text x="762.0" y="434.0" font-size="12" font-weight="400" fill="#52514e" text-anchor="end">sees the move +9 ms, decides +12.5 ms</text>
+<text x="840.4" y="414.0" font-size="13" font-weight="600" fill="#0b0b0b" text-anchor="start">order reaches Predict +34.5 ms</text>
+<text x="961.6" y="476.0" font-size="12" font-weight="400" fill="#52514e" text-anchor="middle">150 ms speed bump</text>
+<text x="1080.9" y="436.0" font-size="13" font-weight="600" fill="#0b0b0b" text-anchor="end">matches +184.5 ms</text>
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0b0b0b"/></marker></defs>
+<line x1="684.2" y1="512.0" x2="826.4" y2="512.0" stroke="#0b0b0b" stroke-width="1.5" marker-end="url(#ah)"/>
+<text x="674.2" y="516.0" font-size="13" font-weight="600" fill="#0b0b0b" text-anchor="end">we land 83.5 ms after the top taker</text>
+<text x="840.4" y="516.0" font-size="12" font-weight="400" fill="#52514e" text-anchor="start">and match 83.5 ms after it (+101 vs +184.5 ms)</text>
+<line x1="684.2" y1="258.0" x2="684.2" y2="504.0" stroke="#eb6834" stroke-width="1" stroke-opacity="0.45" stroke-linecap="round"/>
+<line x1="684.2" y1="634.0" x2="684.2" y2="790.0" stroke="#eb6834" stroke-width="1" stroke-opacity="0.45" stroke-linecap="round"/>
+<line x1="830.4" y1="438.0" x2="830.4" y2="504.0" stroke="#2a78d6" stroke-width="1" stroke-opacity="0.45" stroke-linecap="round"/>
+<line x1="830.4" y1="634.0" x2="830.4" y2="790.0" stroke="#2a78d6" stroke-width="1" stroke-opacity="0.45" stroke-linecap="round"/>
+<text x="24.0" y="614.0" font-size="14" font-weight="600" fill="#0b0b0b" text-anchor="start">Best-level imbalance toward the move before it happens (mean; +1 = the far side is empty)</text>
+<line x1="210.0" y1="790.0" x2="1190.0" y2="790.0" stroke="#c3c2b7" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<text x="202.0" y="794.0" font-size="12" font-weight="400" fill="#898781" text-anchor="end">0</text>
+<line x1="210.0" y1="752.5" x2="1190.0" y2="752.5" stroke="#e1e0d9" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<text x="202.0" y="756.5" font-size="12" font-weight="400" fill="#898781" text-anchor="end">+0.25</text>
+<line x1="210.0" y1="715.0" x2="1190.0" y2="715.0" stroke="#e1e0d9" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<text x="202.0" y="719.0" font-size="12" font-weight="400" fill="#898781" text-anchor="end">+0.50</text>
+<line x1="210.0" y1="677.5" x2="1190.0" y2="677.5" stroke="#e1e0d9" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<text x="202.0" y="681.5" font-size="12" font-weight="400" fill="#898781" text-anchor="end">+0.75</text>
+<line x1="210.0" y1="640.0" x2="1190.0" y2="640.0" stroke="#e1e0d9" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<text x="202.0" y="644.0" font-size="12" font-weight="400" fill="#898781" text-anchor="end">+1.00</text>
+<line x1="210.0" y1="784.7" x2="770.0" y2="784.7" stroke="#898781" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<text x="245.0" y="778.7" font-size="12" font-weight="400" fill="#52514e" text-anchor="start">random times +0.04</text>
+<polyline points="245.0,726.5 420.0,720.1 595.0,708.4 682.5,698.9 735.0,686.4 752.5,676.5 761.2,668.4" fill="none" stroke="#52514e" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<g><title>before every Binance move (40,000 sampled): +0.42 at −300 ms</title><circle cx="245.0" cy="726.5" r="6.0" fill="#fcfcfb"/><circle cx="245.0" cy="726.5" r="4.0" fill="#52514e" stroke="#52514e" stroke-width="0"/><circle cx="245.0" cy="726.5" r="14" fill="transparent"/></g>
+<g><title>before every Binance move (40,000 sampled): +0.47 at −200 ms</title><circle cx="420.0" cy="720.1" r="6.0" fill="#fcfcfb"/><circle cx="420.0" cy="720.1" r="4.0" fill="#52514e" stroke="#52514e" stroke-width="0"/><circle cx="420.0" cy="720.1" r="14" fill="transparent"/></g>
+<g><title>before every Binance move (40,000 sampled): +0.54 at −100 ms</title><circle cx="595.0" cy="708.4" r="6.0" fill="#fcfcfb"/><circle cx="595.0" cy="708.4" r="4.0" fill="#52514e" stroke="#52514e" stroke-width="0"/><circle cx="595.0" cy="708.4" r="14" fill="transparent"/></g>
+<g><title>before every Binance move (40,000 sampled): +0.61 at −50 ms</title><circle cx="682.5" cy="698.9" r="6.0" fill="#fcfcfb"/><circle cx="682.5" cy="698.9" r="4.0" fill="#52514e" stroke="#52514e" stroke-width="0"/><circle cx="682.5" cy="698.9" r="14" fill="transparent"/></g>
+<g><title>before every Binance move (40,000 sampled): +0.69 at −20 ms</title><circle cx="735.0" cy="686.4" r="6.0" fill="#fcfcfb"/><circle cx="735.0" cy="686.4" r="4.0" fill="#52514e" stroke="#52514e" stroke-width="0"/><circle cx="735.0" cy="686.4" r="14" fill="transparent"/></g>
+<g><title>before every Binance move (40,000 sampled): +0.76 at −10 ms</title><circle cx="752.5" cy="676.5" r="6.0" fill="#fcfcfb"/><circle cx="752.5" cy="676.5" r="4.0" fill="#52514e" stroke="#52514e" stroke-width="0"/><circle cx="752.5" cy="676.5" r="14" fill="transparent"/></g>
+<g><title>before every Binance move (40,000 sampled): +0.81 at −5 ms</title><circle cx="761.2" cy="668.4" r="6.0" fill="#fcfcfb"/><circle cx="761.2" cy="668.4" r="4.0" fill="#52514e" stroke="#52514e" stroke-width="0"/><circle cx="761.2" cy="668.4" r="14" fill="transparent"/></g>
+<polyline points="245.0,748.2 420.0,741.3 595.0,727.0 682.5,717.1 735.0,709.0 752.5,702.9 761.2,696.6" fill="none" stroke="#eb6834" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<g><title>before the moves the top taker caught: +0.28 at −300 ms</title><circle cx="245.0" cy="748.2" r="6.0" fill="#fcfcfb"/><circle cx="245.0" cy="748.2" r="4.0" fill="#eb6834" stroke="#eb6834" stroke-width="0"/><circle cx="245.0" cy="748.2" r="14" fill="transparent"/></g>
+<g><title>before the moves the top taker caught: +0.32 at −200 ms</title><circle cx="420.0" cy="741.3" r="6.0" fill="#fcfcfb"/><circle cx="420.0" cy="741.3" r="4.0" fill="#eb6834" stroke="#eb6834" stroke-width="0"/><circle cx="420.0" cy="741.3" r="14" fill="transparent"/></g>
+<g><title>before the moves the top taker caught: +0.42 at −100 ms</title><circle cx="595.0" cy="727.0" r="6.0" fill="#fcfcfb"/><circle cx="595.0" cy="727.0" r="4.0" fill="#eb6834" stroke="#eb6834" stroke-width="0"/><circle cx="595.0" cy="727.0" r="14" fill="transparent"/></g>
+<g><title>before the moves the top taker caught: +0.49 at −50 ms</title><circle cx="682.5" cy="717.1" r="6.0" fill="#fcfcfb"/><circle cx="682.5" cy="717.1" r="4.0" fill="#eb6834" stroke="#eb6834" stroke-width="0"/><circle cx="682.5" cy="717.1" r="14" fill="transparent"/></g>
+<g><title>before the moves the top taker caught: +0.54 at −20 ms</title><circle cx="735.0" cy="709.0" r="6.0" fill="#fcfcfb"/><circle cx="735.0" cy="709.0" r="4.0" fill="#eb6834" stroke="#eb6834" stroke-width="0"/><circle cx="735.0" cy="709.0" r="14" fill="transparent"/></g>
+<g><title>before the moves the top taker caught: +0.58 at −10 ms</title><circle cx="752.5" cy="702.9" r="6.0" fill="#fcfcfb"/><circle cx="752.5" cy="702.9" r="4.0" fill="#eb6834" stroke="#eb6834" stroke-width="0"/><circle cx="752.5" cy="702.9" r="14" fill="transparent"/></g>
+<g><title>before the moves the top taker caught: +0.62 at −5 ms</title><circle cx="761.2" cy="696.6" r="6.0" fill="#fcfcfb"/><circle cx="761.2" cy="696.6" r="4.0" fill="#eb6834" stroke="#eb6834" stroke-width="0"/><circle cx="761.2" cy="696.6" r="14" fill="transparent"/></g>
+<text x="773.2" y="672.4" font-size="12" font-weight="600" fill="#0b0b0b" text-anchor="start">+0.81 every move</text>
+<text x="773.2" y="700.6" font-size="12" font-weight="600" fill="#0b0b0b" text-anchor="start">+0.62 the top taker&#x27;s moves</text>
+<g><title>imbalance when the top taker order lands: +0.49</title><circle cx="684.2" cy="716.8" r="7.0" fill="#fcfcfb"/><circle cx="684.2" cy="716.8" r="5.0" fill="#eb6834" stroke="#eb6834" stroke-width="0"/><circle cx="684.2" cy="716.8" r="14" fill="transparent"/></g>
+<line x1="684.2" y1="723.8" x2="654.2" y2="757.0" stroke="#52514e" stroke-width="1" stroke-opacity="1.0" stroke-linecap="round"/>
+<text x="650.2" y="767.0" font-size="12" font-weight="400" fill="#52514e" text-anchor="end">imbalance +0.49 when the top taker order lands</text>
+<line x1="245.0" y1="652.0" x2="267.0" y2="652.0" stroke="#eb6834" stroke-width="2" stroke-opacity="1.0" stroke-linecap="round"/>
+<text x="275.0" y="656.0" font-size="12" font-weight="400" fill="#52514e" text-anchor="start">before the moves the top taker caught</text>
+<line x1="245.0" y1="672.0" x2="267.0" y2="672.0" stroke="#52514e" stroke-width="2" stroke-opacity="1.0" stroke-linecap="round"/>
+<text x="275.0" y="676.0" font-size="12" font-weight="400" fill="#52514e" text-anchor="start">before every Binance move (40,000 sampled)</text>
+<line x1="245.0" y1="692.0" x2="267.0" y2="692.0" stroke="#898781" stroke-width="2" stroke-opacity="1.0" stroke-linecap="round"/>
+<text x="275.0" y="696.0" font-size="12" font-weight="400" fill="#52514e" text-anchor="start">random times</text>
+<text x="24.0" y="834.0" font-size="12" font-weight="400" fill="#898781" text-anchor="start">Clocks: Binance event time; Predict from settlement ids (arrival = settlement − 150 − 34 ms, about ±15 ms per order); the Binance / Predict clock offset is not measured.</text>
+<text x="24.0" y="852.0" font-size="12" font-weight="400" fill="#898781" text-anchor="start">Only the top taker&#x27;s filled orders are visible. Point estimates on Oct 23, Oct 31, Nov 1 and Nov 2.</text>
+</svg>

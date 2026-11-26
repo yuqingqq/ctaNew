@@ -1,0 +1,162 @@
+{
+  "asof": "2026-11-26",
+  "arrival_offset_ms": 34.0,
+  "ahead_ms": 250.0,
+  "max_lag_ms": 300.0,
+  "top1": {
+    "sends": 5930,
+    "ahead": 0.7526138279932546,
+    "after_a_move": 0.24738617200674537,
+    "ahead_move_within_150": 0.5780864889088058,
+    "ahead_move_within_300": 0.6146090073941295,
+    "ahead_lag_ms": {
+      "p10": 8.0,
+      "p25": 17.0,
+      "p50": 49.0,
+      "p75": 94.0,
+      "p90": 132.0
+    },
+    "after_a_move_since_ms": {
+      "p10": 0.0,
+      "p25": 5.0,
+      "p50": 28.0,
+      "p75": 70.0,
+      "p90": 130.0
+    },
+    "arrival_rel_move_ms": {
+      "p10": -132.0,
+      "p25": -94.0,
+      "p50": -49.0,
+      "p75": -17.0,
+      "p90": -8.0
+    }
+  },
+  "build_up": {
+    "top1": {
+      "300.0": {
+        "imb_mean": 0.27865750470864514,
+        "opp_median": 3.844,
+        "near_median": 7.836
+      },
+      "200.0": {
+        "imb_mean": 0.32471774779027973,
+        "opp_median": 3.382,
+        "near_median": 8.13
+      },
+      "100.0": {
+        "imb_mean": 0.4203045599709337,
+        "opp_median": 2.548,
+        "near_median": 8.543
+      },
+      "50.0": {
+        "imb_mean": 0.4859601769648465,
+        "opp_median": 1.979,
+        "near_median": 8.955
+      },
+      "20.0": {
+        "imb_mean": 0.5401398604936395,
+        "opp_median": 1.661,
+        "near_median": 9.405
+      },
+      "10.0": {
+        "imb_mean": 0.5808402233808918,
+        "opp_median": 1.424,
+        "near_median": 9.76
+      },
+      "5.0": {
+        "imb_mean": 0.6227593410160829,
+        "opp_median": 1.177,
+        "near_median": 9.986
+      },
+      "0.0": {
+        "imb_mean": 0.8539664735593372,
+        "opp_median": 0.006,
+        "near_median": 3.347
+      },
+      "n": 2743
+    },
+    "all": {
+      "300.0": {
+        "imb_mean": 0.42360433178521917,
+        "opp_median": 2.236,
+        "near_median": 8.515
+      },
+      "200.0": {
+        "imb_mean": 0.4659807286129584,
+        "opp_median": 1.935,
+        "near_median": 8.930499999999999
+      },
+      "100.0": {
+        "imb_mean": 0.5442477594071148,
+        "opp_median": 1.4575,
+        "near_median": 9.674
+      },
+      "50.0": {
+        "imb_mean": 0.6070855482270794,
+        "opp_median": 1.134,
+        "near_median": 10.347
+      },
+      "20.0": {
+        "imb_mean": 0.6904224149554088,
+        "opp_median": 0.729,
+        "near_median": 11.165
+      },
+      "10.0": {
+        "imb_mean": 0.756516622312017,
+        "opp_median": 0.472,
+        "near_median": 11.728
+      },
+      "5.0": {
+        "imb_mean": 0.8109782541437296,
+        "opp_median": 0.252,
+        "near_median": 11.9505
+      },
+      "0.0": {
+        "imb_mean": 0.833385210375439,
+        "opp_median": 0.022,
+        "near_median": 5.4765
+      },
+      "n": 40000
+    }
+  },
+  "reprice8": {
+    "source": "fill_rate.json REPRICE-8-172 (REPRICE events, onset = first tick of the move; quantiles p25 / p50 / p75)",
+    "trigger_after_move_ms": [
+      1.0,
+      9.0,
+      50.0
+    ],
+    "decision_after_move_ms": [
+      4.5,
+      12.5,
+      53.5
+    ],
+    "feed_ms": 1.5,
+    "decide_ms": 2.0,
+    "net_ms_assumed": 22.0,
+    "arrival_after_move_ms": [
+      26.5,
+      34.5,
+      75.5
+    ],
+    "match_after_move_ms": [
+      176.5,
+      184.5,
+      225.5
+    ],
+    "predict_makers_pull_after_move_ms": {
+      "p5": -11.0,
+      "p10": 14.200000000000017,
+      "p25": 50.0,
+      "p50": 84.0,
+      "p75": 135.0
+    },
+    "other_takers_arrival_after_move_ms_m50": {
+      "p5": -203.0,
+      "p10": -177.0,
+      "p25": -126.0,
+      "p50": -57.0,
+      "p75": -11.0
+    }
+  }
+}

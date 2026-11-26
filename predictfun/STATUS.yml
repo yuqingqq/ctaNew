@@ -1,3 +1,11 @@
+timeline_20261126_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/timeline.json
+  chart: predictfun/reviews/take_reprice_20261125/timeline_chart.html
+  session: 1622c91e
+  top1_arrival_rel_move_ms_p50: -49
+  reprice8_arrival_rel_move_ms_p50: 34.5
+  gap_ms: 83.5
+  corrects: fire_timing_20261126_claude tick lead (peak bin read as typical)
 fire_timing_20261126_claude:
   diagnostics: [predictfun/reviews/take_reprice_20261125/fire_times.json, predictfun/reviews/take_reprice_20261125/fire_events.json, predictfun/reviews/take_reprice_20261125/fire_arrival.json]
   session: 1622c91e
