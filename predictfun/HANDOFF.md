@@ -1,3 +1,8 @@
+<!-- FIRES_EXPORT_20261126_CLAUDE -->
+## 2026-11-26 — smart takers' fires exported with a handoff (reviews/take_reprice_20261125/smart_fires/HANDOFF.md) for a cross-venue order-book check by another analyst (USER)
+
+Files in OUT/smart_fires_export (5,930 fires, 23,714 controls, 49,524 ranks 2-10 fires); results from the other venues' books to be reviewed when they come back.
+<!-- /FIRES_EXPORT_20261126_CLAUDE -->
 <!-- GROWTH_20261126_CLAUDE -->
 ## 2026-11-26 — growth rates / acceleration of the build-up add little: imitation +0.005 AUC, public score trees 0.839 → 0.842 (top 0.1% 41% → 47%, small n)
 

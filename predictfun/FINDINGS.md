@@ -1,3 +1,10 @@
+<!-- FIRES_EXPORT_20261126_CLAUDE -->
+## 2026-11-26 — the smart takers' fires exported for a cross-venue order-book check; the top taker's bets win at settlement only 52%: it trades Predict's short-term reaction, not the 5-minute outcome
+
+[smart_fires/HANDOFF.md](reviews/take_reprice_20261125/smart_fires/HANDOFF.md) (the handoff for another analyst: definitions, clocks, our Binance findings, four seeded examples with tapes, the metrics to compute on other venues' books, fires vs control moments). Files (OUT/smart_fires_export, not in git): 5,930 top-taker fires, 23,714 control moments (±10 / ±20 s), 49,524 ranks 2-10 fires. USER: "can you also generate a Md, list the timestamps of the fires, and to check what kind of metrics in other exchanges books, I will give it to another guy". No naive fair value exported: Predict's reference differs from the Binance mid by up to ~10 bps (late October).
+
+- **Its fills:** UP price median 50c (middle half 34.5-66c), time left median 140 s (middle half 78-215), its side wins at settlement 51.8%.
+<!-- /FIRES_EXPORT_20261126_CLAUDE -->
 <!-- GROWTH_20261126_CLAUDE -->
 ## 2026-11-26 — growth rates of the build-up (slopes, acceleration, steadiness, fit, late share, flow growth over 3 s) add little: best separation 0.65 against 0.68 for the plain 300 ms change; imitation of the smart takers +0.005 AUC; public score trees AUC 0.839 → 0.842, top 0.1% 41% → 47%
 
