@@ -1,3 +1,14 @@
+<!-- STATE_VALUE_20261126_CLAUDE -->
+## 2026-11-26 — which of the top taker's bets pay, and how much of its edge the Binance book explains: 26% of its decisions come with a visibly leaning book and a far side <= 3 BTC; 41% come with a thick, quiet book and precede large aggressive sweeps by ~55 ms
+
+[state_value](reviews/take_reprice_20261125/state_value.json), [sweep_print](reviews/take_reprice_20261125/sweep_print.json) (its 5,930 decisions on the settlement clock; random times = 30,000 per day, both directions; book state rule and buckets written from what its sends showed on these days: in-sample, descriptive). USER: "keep these findings recorded, any other more information we can find".
+
+- **All three kinds of bet pay at 1 s (cents per share after fee):** ahead of a move within 300 ms 46% of decisions, move within 150 ms 94%, +3.37; just after a move 25%, 70%, +1.24; no move within 300 ms 29%, +0.47.
+- **The book state alone is weak at random times:** the declared state (lean >= 0.3, no trade against in 100 ms, far-side refill at or below the random median, no move their way in 300 ms) holds 16% of the time and is followed by a move within 100 ms 1.8% (outside 1.3%); the top taker in the same state 65%. Lean >= 0.6 buckets 2.9%-5.0% at random times; trades against in the last 100 ms do not lower it.
+- **Far-side size is where book precision lives:** far <= 0.2 BTC with lean >= 0.6: random 13.9% (time share 0.9%), the top taker 87% but only +0.85 c/sh; far 0.2-1: random 4.9%, top taker 75%, +1.98; far > 3 BTC with lean < 0.6 (73% of random time): random 0.3%, yet 41% of the top taker's decisions, right 33%, +2.33 c/sh.
+- **How those thick-book moves happen:** after its sends the move comes a median 57 ms later, made by aggressive buying of 3.09 BTC (median; largest single-ms sweep 2.42, p75 5.06); moves after random times with a thick book: 1.48 BTC, largest sweep 1.19, 8% cancel-only (after its sends 0%). Its largest sweep lands a median 47 ms after its arrival; no concentration at round sizes.
+- **Reading:** 26% of its decisions come with a visibly leaning (>= 0.6) Binance level of <= 3 BTC on the far side (random-time precision 1.7-13.9%); for about 41% the Binance best level shows nothing and its order precedes a large aggressive sweep by ~55 ms: an information source we do not see (another venue's flow, a client's order, or its own trading), not reconstructable from public Binance best-level data. A predictor from our data can only target the visible-book share.
+<!-- /STATE_VALUE_20261126_CLAUDE -->
 <!-- WINNERS_SUMMARY_20261126_CLAUDE -->
 ## 2026-11-26 — SUMMARY: how the top Predict taker trades BTC 5m (supersedes the earlier framings in WINNERS_TRIGGER / EARLY_SIGNAL / FIRE_TIMING where they differ)
 

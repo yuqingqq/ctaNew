@@ -1,3 +1,11 @@
+state_value_20261126_claude:
+  diagnostics: [predictfun/reviews/take_reprice_20261125/state_value.json, predictfun/reviews/take_reprice_20261125/sweep_print.json]
+  session: 1622c91e
+  v1_by_class_c_per_share: {ahead_move: 3.37, after_move: 1.24, no_move: 0.47}
+  random_move100_thin_lean: 0.1394
+  random_move100_thick: 0.0028
+  top_share_thick: 0.406
+  thick_sweep_max_btc_p50_top_vs_random: [2.42, 1.19]
 winners_summary_20261126_claude:
   findings_blocks: [WINNERS_SUMMARY_20261126_CLAUDE, ORDERBOOK_20261126_CLAUDE, PRETREND_20261126_CLAUDE, AT_SEND_20261126_CLAUDE, TIMELINE_20261126_CLAUDE, FIRE_TIMING_20261126_CLAUDE]
   session: 1622c91e

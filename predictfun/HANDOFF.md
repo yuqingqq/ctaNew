@@ -1,3 +1,8 @@
+<!-- STATE_VALUE_20261126_CLAUDE -->
+## 2026-11-26 — 26% of the top taker's decisions have a visible Binance book signal; 41% precede large sweeps with no visible signal
+
+See FINDINGS (same date). Book-state precision at random times: lean + far <= 0.2 BTC 13.9% within 100 ms, thick book 0.3%; the top taker 87% / 33%. A predictor from our data can only target the visible-book share; the thick-book share needs an information source we do not see.
+<!-- /STATE_VALUE_20261126_CLAUDE -->
 <!-- WINNERS_SUMMARY_20261126_CLAUDE -->
 ## 2026-11-26 — winners' signal summarized (FINDINGS WINNERS_SUMMARY + ORDERBOOK): order-book dynamics in a quiet market, its order ~49 ms ahead of the Binance move, REPRICE ~84 ms behind
 
