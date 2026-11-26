@@ -168,7 +168,7 @@ def main():
     Fo.to_csv(out_dir / 'top_taker_fires.csv.gz', index=False)
     Fo.head(50).to_csv(rv / 'top_taker_fires_sample.csv', index=False)
     Cx[['dec', 'shift_ms'] + base].rename(columns=dict(ren, shift_ms='shift_from_fire_ms')).to_csv(out_dir / 'top_taker_controls.csv.gz', index=False)
-    Rk[['rank', 'taker_short', 'utc_time', 't', 'bet'] + base[3:]].rename(columns=ren).to_csv(out_dir / 'ranks2_10_fires.csv.gz', index=False)
+    Rk[['rank', 'taker_short', 'utc_time', 't', 'bet'] + [c for c in base[3:] if c != 'imb_1_20']].rename(columns=ren).to_csv(out_dir / 'ranks2_10_fires.csv.gz', index=False)   # depth20 not computed for ranks 2-10
     ex = []
     for gi, (gname, rows) in enumerate(EX_GROUPS):
         pool = Fx[Fx.row.isin(rows)].reset_index(drop=True)
