@@ -1,3 +1,8 @@
+<!-- STALE_PAID_SPLIT_20261126_CLAUDE -->
+## 2026-11-26 — top taker: move 7.3c - slippage 4.7c - fee 0.65c = +1.93c per share at 1 s; 59% of the slippage = makers' repriced quotes; our fills: move -0.63c
+
+See FINDINGS STALE_PAID_SPLIT (same date).
+<!-- /STALE_PAID_SPLIT_20261126_CLAUDE -->
 <!-- STALE_QUOTES_20261126_CLAUDE -->
 ## 2026-11-26 — stale quotes: the paying ones go stale during the 150 ms hold (15% of the top taker's volume, +3.8 c/sh; ours 4.4%); the top taker pays a median 3c through the arrival best and fills after makers reprice; our IOC never pays through
 

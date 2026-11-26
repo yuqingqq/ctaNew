@@ -1,3 +1,24 @@
+<!-- STALE_PAID_SPLIT_20261126_CLAUDE -->
+## 2026-11-26 — the top taker eats the slippage and still profits: the Predict price moves 7.3c its way (1 s after the fill, from the best its order found on arrival), it gives up 4.7c to slippage and 0.65c to fees and keeps +1.93c per share; 59% of the slippage is makers' repriced quotes; on our fills the price moves -0.63c
+
+[stale_paid_split](reviews/take_reprice_20261125/stale_paid_split.json) (STALE_QUOTES' fill rows and STALE_PAID's rows, aligned; fills with a best on arrival and a value 1 s later; the identity checked per group; declared before the run). USER: "You mean the smart takers even pay higher than best price, so he eats the slippage and it still profits". Consumed days, point estimates; its limits are not seen (only its fills).
+
+| per share, share-weighted (c) | top taker | takers ranked 2-10 | other takers | our score's takes | random takes |
+|---|---:|---:|---:|---:|---:|
+| move: the mid 1 s after the fill against the best its order found on arrival | +7.27 | +2.93 | +0.60 | -0.63 | -0.93 |
+| slippage: paid above that best | +4.68 | +1.54 | +1.09 | -0.07 | -0.09 |
+| fee | +0.65 | +0.68 | +0.59 | +0.56 | +0.62 |
+| value kept (= move - slippage - fee) | +1.93 | +0.71 | -1.09 | -1.12 | -1.46 |
+
+| the top taker's fills by where the slippage came from | volume share | mean slippage | part of its 4.68c | value kept |
+|---|---:|---:|---:|---:|
+| quotes posted while its order waited (makers repricing) | 37% | +7.50c | 2.76c | +1.70c |
+| levels already on the book above the arrival best | 50% | +3.85c | 1.93c | +1.76c |
+| at the arrival best or better | 13% | -0.05c | -0.01c | +3.26c |
+
+- **Per order:** top taker 7,839 orders, median 30 shares, 38% take more than one price level, 85% pay above the arrival best (median 3.5c, p90 10c); value at 1 s per order median +0.58c (middle half -1.18 to +3.75), 57% positive. Ranks 2-10: 57,701 orders, 49% pay above (median 0.2c), 48% positive.
+- **Reading:** slippage is what the top taker pays to be filled when makers reprice during its 150 ms wait; the moves it trades are larger than what it pays. Our fills pay no slippage but come with no move (-0.63c): we are filled when the price does not move.
+<!-- /STALE_PAID_SPLIT_20261126_CLAUDE -->
 <!-- STALE_QUOTES_20261126_CLAUDE -->
 ## 2026-11-26 — stale quotes: the ones that pay go stale while the order waits in the speed bump (15% of the top taker's fill volume, +3.8 c/sh; ours 4.4%); quotes already stale on arrival lose for other takers and for us; the top taker pays through the book (median 3c above the best it found on arrival, 84% of its volume) and fills after makers reprice; our IOC never pays above the best (0.4%)
 
