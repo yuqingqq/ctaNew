@@ -15,7 +15,8 @@ share, per order). State rules (list below) read at random times: how often the 
 Models of the sends, winners_trigger's protocol (median fill from the null, standardized, balanced logistic, C = 1, leave-one-day-out,
 150,000-row cap): LOGIC (the six inputs + opposite size), BASE (winners_trigger's 30 features; the top taker's folds must reproduce the
 stored AUCs), BASE+ (BASE + the four new inputs). A depth-3 tree on the LOGIC inputs (top taker; leaves >= 1 % of rows) read as rules,
-with its leave-one-day-out AUC. Top taker's order size (winners_legs, analyze's filters, matched to its sends) by imbalance and amount.
+with its leave-one-day-out AUC. Top taker's size per decision (its orders sharing market and first-trade time, a burst; winners_legs with
+analyze's filters, matched to its sends): orders and shares by imbalance and amount bucket, Spearman rho.
 Output (write-once): trigger_logic.json.
 Usage: PF_SLOT=<slot> predictfun/research/run_light.sh <tag> -- python3 predictfun/reviews/take_reprice_20261125/trigger_logic.py [dir]
 """
@@ -157,14 +158,15 @@ def top1_orders(X):
         out.append(O[['day', 'mid', 's', 'd', 'shares']])
     C.require(who is not None, 'the top taker was not found')
     O = pd.concat(out, ignore_index=True)
-    S = X[(X.grp == 'TOP1') & (X.y == 1)][['day', 'mid', 's', 'd', 'bt_imb', 'fl300']]
     key = ['day', 'mid', 's']
-    dup = O.duplicated(key, keep=False)                    # two orders with one market and first-trade time: excluded, counted
-    M = S.merge(O[~dup], on=key, how='left', suffixes=('', '_o'), validate='many_to_one')
-    in_dup = pd.MultiIndex.from_frame(M[key]).isin(pd.MultiIndex.from_frame(O.loc[dup, key]))
-    got = M.shares.notna().to_numpy()
-    C.require(len(M) == len(S) and (got | in_dup).all() and (M.d[got] == M.d_o[got]).all(), 'the top taker orders do not match its sends one to one')
-    return M[got].copy(), int((~got).sum())
+    B = O.groupby(key).agg(orders=('shares', 'size'), shares=('shares', 'sum'), d=('d', 'first'), dn=('d', 'nunique')).reset_index()
+    S = X[(X.grp == 'TOP1') & (X.y == 1)][key + ['d', 'bt_imb', 'fl300']]
+    U = S.drop_duplicates(key)                             # one decision = the orders sharing market and first-trade time (a burst)
+    M = U.merge(B, on=key, how='left', suffixes=('', '_o'), validate='one_to_one')
+    C.require(len(M) == len(U) and M.shares.notna().all() and int(M.orders.sum()) == len(S), 'the top taker bursts do not match its sends')
+    mixed = (M.dn > 1).to_numpy()                          # both directions in one burst: excluded, counted
+    C.require((M.d[~mixed] == M.d_o[~mixed]).all(), 'a burst direction differs from its sends')
+    return M[~mixed].copy(), int(mixed.sum())
 
 
 def main():
@@ -221,17 +223,18 @@ def main():
         out['groups'][g] = r
         C.require(DC.F.rss_mib() < DC.F.RSS_GUARD_MIB, 'RSS over the self-guard')
         print(g, json.dumps({k: v['cv_auc_by_day'] for k, v in r['models'].items()}), flush=True)
-    M, n_dup = top1_orders(X)
+    M, n_mixed = top1_orders(X)
     ok = M.bt_imb.notna()
     bi, bf = bucket(M, 'bt_imb'), bucket(M, 'fl300')
-    out['top1_order_size'] = dict(orders=int(len(M)), excluded_same_key=n_dup, median_shares=float(M.shares.median()), mean_shares=float(M.shares.mean()),
-                                  by_imbalance={nm: dict(orders=int((bi == i).sum()), median_shares=float(M.shares[bi == i].median()) if (bi == i).any() else None)
-                                                for i, nm in enumerate(BUCKETS['bt_imb'][0])},
-                                  by_amount={nm: dict(orders=int((bf == i).sum()), median_shares=float(M.shares[bf == i].median()) if (bf == i).any() else None)
-                                             for i, nm in enumerate(BUCKETS['fl300'][0])},
-                                  spearman_imbalance=float(spearmanr(M.shares[ok], M.bt_imb[ok])[0]), spearman_amount=float(spearmanr(M.shares, M.fl300)[0]))
+    sz = lambda m: dict(bursts=int(m.sum()), median_orders=float(M.orders[m].median()), mean_orders=float(M.orders[m].mean()), median_shares=float(M.shares[m].median()),
+                        mean_shares=float(M.shares[m].mean())) if m.any() else None
+    out['top1_size_per_decision'] = dict(bursts=int(len(M)), excluded_mixed_direction=n_mixed, **sz(np.ones(len(M), bool)),
+                                         orders_per_burst={k: int((M.orders == k).sum()) for k in (1, 2, 3)} | {'4+': int((M.orders >= 4).sum())},
+                                         by_imbalance={nm: sz(bi == i) for i, nm in enumerate(BUCKETS['bt_imb'][0])},
+                                         by_amount={nm: sz(bf == i) for i, nm in enumerate(BUCKETS['fl300'][0])},
+                                         spearman_shares_imbalance=float(spearmanr(M.shares[ok], M.bt_imb[ok])[0]), spearman_shares_amount=float(spearmanr(M.shares, M.fl300)[0]))
     TR.dump(fn, out)
-    print(json.dumps(dict(top1_order_size=out['top1_order_size']), indent=1))
+    print(json.dumps(dict(top1_size_per_decision=out['top1_size_per_decision']), indent=1))
 
 
 if __name__ == '__main__':
