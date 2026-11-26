@@ -16,7 +16,8 @@ Readings per group, sends vs null: (1) event rates (count and BTC per ms) by tim
 1 ms bins over [-50, +20); (2) time since the last event of each kind; (3) which of opp trade / opp cancel / opp gone / near add occurred
 in the last 10 / 25 / 50 ms: share of sends and of random times per combination, lift, the Binance mid moving their way within 150 ms and
 the sends' 1 s value (winners_trigger points, where sampled); (4) imbalance, opposite and near best size at fire - 300 .. 0 ms; (5) the same
-1 ms profile around the M50 send time of the same orders (which clock aligns the events more sharply).
+1 ms profile around the M50 send time of the same orders, all and by how the first leg was timed (websocket / book drop): which clock
+aligns the events more sharply (toward-event excess over random times in the last 20 ms).
 Output (write-once): fire_events.json.
 Usage: PF_SLOT=<slot> predictfun/research/run_light.sh <tag> -- python3 predictfun/reviews/take_reprice_20261125/fire_events.py \
        selftest | run [<rehearsal dir> <day>]
@@ -215,8 +216,8 @@ def run(argv):
     V1 = pd.read_parquet(OUT / 'winners_trigger_points.parquet', columns=['day', 'mid', 's', 'y', 'grp', 'v1'])
     V1 = V1[(V1.y == 1) & V1.grp.isin(['TOP1', 'TOP2_10'])].drop_duplicates(['day', 'mid', 's', 'grp'])
     B = B.merge(V1[['day', 'mid', 's', 'grp', 'v1']].rename(columns={'s': 's_m50'}), on=['day', 'mid', 's_m50', 'grp'], how='left', validate='many_to_one')
-    pts = [pd.DataFrame(dict(day=B.day, grp=B.grp, y=1, t=B.fire, d=B.d.astype(float), v1=B.v1, t_m50=B.s_m50))]
-    pts += [pd.DataFrame(dict(day=B.day, grp=B.grp, y=0, t=B.fire + s, d=B.d.astype(float), v1=np.nan, t_m50=np.nan)) for s in WT.SHIFTS]
+    pts = [pd.DataFrame(dict(day=B.day, grp=B.grp, y=1, t=B.fire, d=B.d.astype(float), v1=B.v1, t_m50=B.s_m50, how=B.how2_first))]
+    pts += [pd.DataFrame(dict(day=B.day, grp=B.grp, y=0, t=B.fire + s, d=B.d.astype(float), v1=np.nan, t_m50=np.nan, how=0)) for s in WT.SHIFTS]
     P = pd.concat(pts, ignore_index=True)
     d0 = P.day.map({x: float(WT.OD_day_ms(x)) for x in days})
     P = P[P.t.between(d0 + 2000., d0 + 86400000. - 2000.)].reset_index(drop=True)
@@ -239,10 +240,14 @@ def run(argv):
                     acc[key][(res, k, 'n')] = acc[key].get((res, k, 'n'), 0.) + n
                     acc[key][(res, k, 'v')] = acc[key].get((res, k, 'v'), 0.) + v
             if y == 1:
-                tm = G.t_m50.to_numpy(float)
-                acc[key]['n_m50'] += len(G)
-                for k, (n, v) in peri(ev, tm, d, FINE).items():
-                    acc[key][('m50', k, 'n')] = acc[key].get(('m50', k, 'n'), 0.) + n
+                for hw in ('all', 1, 3):                # the first leg timed by websocket (1) or by a book drop (3)
+                    m = np.ones(len(G), bool) if hw == 'all' else (G.how.to_numpy() == hw)
+                    if not m.any():
+                        continue
+                    acc[key][f'n_m50_{hw}'] += int(m.sum())
+                    for clk, tt in (('m50', G.t_m50.to_numpy(float)[m]), ('fire', t[m])):
+                        for k, (n, v) in peri(ev, tt, d[m], FINE).items():
+                            acc[key][(f'{clk}_{hw}', k, 'n')] = acc[key].get((f'{clk}_{hw}', k, 'n'), 0.) + n
         Gok = Pd[ok].copy()
         t, d = Gok.t.to_numpy(float), Gok.d.to_numpy(float)
         for k, x in per_point(ev, t, d, since_last).items():
@@ -274,13 +279,18 @@ def run(argv):
                                                         random_btc_per_ms=(n[(res, f'{role}_{kind}', 'v')] / n['n'] / w).tolist())
                                  for role in ROLES for kind in KINDS}
         tw = lambda src, key, nn: sum(np.asarray(src[(key, f'{ro}_{ki}', 'n')]) for ro, ki in TOWARD) / nn
-        r['toward_fine'] = dict(around_fire=tw(s, 'fine', s['n']).tolist(), around_m50=tw(s, 'm50', s['n_m50']).tolist(), random=tw(n, 'fine', n['n']).tolist())
-        ex_f, ex_m = r['toward_fine']['around_fire'], r['toward_fine']['around_m50']
-        base = np.asarray(r['toward_fine']['random'])
-        i0 = np.searchsorted(FINE, -20.)
-        r['toward_excess_last20ms'] = dict(fire=float((np.asarray(ex_f) - base)[i0:np.searchsorted(FINE, 0.)].sum()),
-                                           m50=float((np.asarray(ex_m) - base)[i0:np.searchsorted(FINE, 0.)].sum()))
-        r['fire_clock_sharper'] = r['toward_excess_last20ms']['fire'] > r['toward_excess_last20ms']['m50']
+        base = tw(n, 'fine', n['n'])
+        i0, i1 = np.searchsorted(FINE, -20.), np.searchsorted(FINE, 0.)
+        r['toward_fine'] = dict(random=base.tolist())
+        r['toward_excess_last20ms'] = {}
+        for hw in ('all', 1, 3):
+            if not s.get(f'n_m50_{hw}'):
+                continue
+            pf, pm = tw(s, f'fire_{hw}', s[f'n_m50_{hw}']), tw(s, f'm50_{hw}', s[f'n_m50_{hw}'])
+            r['toward_fine'][f'around_fire_{hw}'], r['toward_fine'][f'around_m50_{hw}'] = pf.tolist(), pm.tolist()
+            r['toward_excess_last20ms'][str(hw)] = dict(sends=int(s[f'n_m50_{hw}']), fire=float((pf - base)[i0:i1].sum()), m50=float((pm - base)[i0:i1].sum()))
+        e = r['toward_excess_last20ms']
+        r['fire_clock_sharper'] = {k: v['fire'] > v['m50'] for k, v in e.items()}
         G = X[X.grp == g]
         S, N = G[G.y == 1], G[G.y == 0]
         r['since_last_ms'] = {k[6:]: dict(send=qs(S[k]), random=qs(N[k]), send_within={str(int(w)): mean(S[k] <= w) for w in (5., 10., 20., 50., 100.)},
