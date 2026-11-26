@@ -1,3 +1,11 @@
+quiet_before_20261126_claude:
+  diagnostics: [predictfun/reviews/take_reprice_20261125/quiet_before.json, predictfun/reviews/take_reprice_20261125/quiet_local.json]
+  session: 1622c91e
+  unchanged_top_of_book_ahead_vs_local: [0.067, 0.120]
+  far_halved_ahead_vs_local: [0.255, 0.049]
+  no_trade_ahead_vs_local: [0.294, 0.313]
+  unchanged_thick_vs_local: [0.090, 0.152]
+  top_taker_decisions_by_day: {20261023: 1, 20261031: 1096, 20261101: 1075, 20261102: 3758}
 clearing_20261126_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/example_events.json
   session: 1622c91e

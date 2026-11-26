@@ -1,3 +1,8 @@
+<!-- QUIET_BEFORE_20261126_CLAUDE -->
+## 2026-11-26 — before the top taker's decisions the Binance price is flat and trades are as rare as at nearby times, but the queues move; the top of the book is unchanged before only 7% of its ahead decisions (nearby 12%)
+
+See FINDINGS QUIET_BEFORE (same date). Comparator for book activity = the same times shifted ±5..30 s (uniform random times include quieter hours). The top taker traded on three of the four consumed days (63% of its decisions on 11-02).
+<!-- /QUIET_BEFORE_20261126_CLAUDE -->
 <!-- CLEARING_20261126_CLAUDE -->
 ## 2026-11-26 — thick Binance levels are cleared about half bought, half cancelled after the top taker's decisions, as after any thick-level move; matched on the book state, random moments see a move 1.7% vs its 48%
 

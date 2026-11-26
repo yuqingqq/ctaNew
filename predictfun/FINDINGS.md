@@ -1,3 +1,12 @@
+<!-- QUIET_BEFORE_20261126_CLAUDE -->
+## 2026-11-26 — the Binance book before the top taker's decisions: the price is flat and trades are as rare as at nearby times, but the queues move (the far side at least halved before 26% of its ahead decisions vs 5%); the top of the book is unchanged before only 7% (nearby 12%)
+
+[quiet_before](reviews/take_reprice_20261125/quiet_before.json), [quiet_local](reviews/take_reprice_20261125/quiet_local.json) (the 300 ms before its arrival at Predict; comparator = the same times shifted ±5..30 s in the same state at their own time, since uniform random times include quieter hours: book updates median 15 vs 19 per 300 ms; declared before the run: unchanged = no best price change, no trade, far and near size within 1%). USER: "you mean 46% of such cases, in -300ms - 0, nothing happened in binance orderbook? the orderbook remains the same?" The top taker traded on three of the four consumed days (one order on 10-23; 63% of its decisions on 11-02); point estimates.
+
+- **The 46% are its decisions that land ahead of a move within 300 ms (2,709), not a still book.** Over the 300 ms before them: best price unchanged 98.4%; no trade 29% (nearby 31%; median 1 trade); far side at least halved 26% (nearby 4.9%), median change -6.4% (nearby +0.0%); near side's top quarter +16% or more (nearby +1.5%); size churn 1.39 BTC far, 2.01 near (nearby 0.70 / 0.76); book updates 25 vs 19. Top of the book unchanged: 6.7% (nearby 12.0%).
+- **Thick book (2,408 decisions):** unchanged 9.0% (nearby 15.2%); far side halved 4.8% (0.7%), median -0.6%; near side's top quarter +16% (+1.0%); no trade 33% (35%). Thin book (864): far side halved 50% (nearby, same state 28%), median -50%.
+- **Reading:** before its ahead decisions the price is flat and trades are as rare as usual; what moves is the queues (the far side drains, the near side is posted), strongly in thin books and weakly in thick ones, where the book looks almost as at nearby times. CLEARING's first example (unchanged for 300 ms) is one of the 9% of thick-book decisions with an unchanged top of the book.
+<!-- /QUIET_BEFORE_20261126_CLAUDE -->
 <!-- CLEARING_20261126_CLAUDE -->
 ## 2026-11-26 — a thick Binance far side is cleared about half by aggressive orders and half by cancels, after the top taker's decisions as after any thick-level move; matched on the book state, random moments are followed by a move 1.7% of the time vs its 48% (CORRECTS STATE_VALUE's sweep contrast)
 
