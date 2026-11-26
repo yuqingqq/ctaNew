@@ -1,3 +1,13 @@
+depletion_cause_20261126_claude:
+  diagnostics: [predictfun/reviews/take_reprice_20261125/depletion_cause.json, predictfun/reviews/take_reprice_20261125/depletion_readout.json, predictfun/reviews/take_reprice_20261125/depletion_probe.json]
+  session: 1622c91e
+  top_taker_traded_share_300ms: 0.330
+  top_taker_traded_share_level_kept: 0.110
+  top_taker_traded_share_level_gone: 0.514
+  top_taker_auc_withdrawn_part: 0.668
+  top_taker_auc_traded_part: 0.638
+  reconcile_unreflected_share: 0.102
+  split_reliable_declared: false
 winners_trigger_20261125_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/winners_trigger.json
   session: 1622c91e

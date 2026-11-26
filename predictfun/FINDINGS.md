@@ -1,3 +1,17 @@
+<!-- DEPLETION_CAUSE_20261126_CLAUDE -->
+## 2026-11-26 — the opposite Binance level before the winners' sends: makers mostly withdraw it; when it empties, trades take about half
+
+[depletion_cause](reviews/take_reprice_20261125/depletion_cause.json), [readout](reviews/take_reprice_20261125/depletion_readout.json), [probe](reviews/take_reprice_20261125/depletion_probe.json) (the winners_trigger points, four consumed days; bookTicker on E as bt_feats; aggressive trades at exactly that price, de-duplicated by id). USER: "When opposite price level disappears causing imbalance, does it correspond to a trade, or the best level shrinks because maker withdraws". Point estimates (four days, no interval).
+
+- **Top taker, the opposite best level at s − 300 ms followed to the send s (6,086 of 6,188 sends):** mean 5.78 BTC, of which 2.08 goes in the 300 ms: traded 0.69, withdrawn net of re-adds 1.39 (traded 33%). At random times 0.23 BTC goes (traded 45%).
+  - Level still there at the send (4,414 sends): 5,764 BTC shrink, traded 11% (random times 46%).
+  - Level gone before the send (27.5% of sends vs 4.5% at random times): traded 51% of its volume; emptied with no trade at all 0.2%.
+  - In the hold (s, s + 150] the level at s goes for 51.5% of sends (2.5% at random): traded 56% of its volume, fully swept 41%, emptied with no trade 0.9%. After a level went before the send the next goes in the hold 64% of the time (47% otherwise; random 21% / 1.7%).
+- **Both parts carry the signal:** AUC vs null of the withdrawn part 0.668, the traded part 0.638 (the depletion feature 0.725); the withdrawn part separates more on 11-01 and 11-02, the traded part on 10-31 (0.677 vs 0.666). Ranks 2-10 alike (traded 15% while the level stays, 56% when it goes; AUC 0.649 vs 0.619); everyone else leans on trades (traded part 0.544 vs withdrawn 0.530).
+- **The imbalance:** at the top taker's sends the best-level imbalance their way rises from +0.20 at s − 300 to +0.43 at s (random +0.06 / +0.06); 0.156 of the 0.227 rise from the opposite level shrinking, 0.070 from the near level growing (median 7.3 → 9.1 BTC; random 6.4 → 6.4).
+- **Checks:** bt_depl300 recomputed on all 1,174,578 points (0 mismatches) and its stored AUC reproduced per group; V matches a brute-force sum on 282 points (max diff 5.9e-11); one trade-id gap per day (220 / 19 / 171 / 4459 ids), windows over it excluded. The declared reliability test FAILED: 10.2% of the aggressive volume at the best price (296,953 BTC) has no equal visible drop within (E − 2, E + 1] ms (> 5%), so the traded shares are upper bounds. A probe built after that failure (10-31): the share does not fall with a wider window (11.7% / 12.9% / 12.5% / 13.2% at 1 / 2 / 5 / 20 ms) or on T (11.4%), so not timing; 93% of that volume is a smaller drop than traded (the full drop shows within 5 ms in 74% of those trade-ms: refilled at once), 6% no quote update; trades inside the shown spread 0.2% of aggressive volume.
+- **Reading:** a shrinking opposite Binance level is mainly makers pulling (net of re-adds); a vanishing one is about half traded, and a trade almost always takes the last of it. A predictor needs the bookTicker size stream (cancels), not only trades. 27.5% of the top taker's sends follow a tick that already printed, betting on the next. Consumed days.
+<!-- /DEPLETION_CAUSE_20261126_CLAUDE -->
 <!-- WINNERS_TRIGGER_20261125_CLAUDE -->
 ## 2026-11-25 — the winning takers' signal: Binance futures' best-level queue predicts the next tick ~150 ms ahead
 

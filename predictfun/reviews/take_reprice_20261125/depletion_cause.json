@@ -1,0 +1,625 @@
+{
+  "asof": "2026-11-26",
+  "days": [
+    "20261023",
+    "20261031",
+    "20261101",
+    "20261102"
+  ],
+  "points": 1174578,
+  "declared": {
+    "pre_ms": 300.0,
+    "hold_ms": 150.0,
+    "edge_ms": 1000.0,
+    "tol_btc": 0.0005,
+    "lost": 0.2,
+    "reliable_unreflected": 0.05
+  },
+  "checks": {
+    "parity_points": 1174578,
+    "parity_mismatches": 0,
+    "brute_points": 282,
+    "brute_max_diff": 5.890614385162252e-11,
+    "stored_auc_reproduced": true,
+    "tape": {
+      "20261023": {
+        "rows": 2596974,
+        "duplicates": 0,
+        "missing_ids": 220,
+        "gaps": 1
+      },
+      "20261031": {
+        "rows": 1264639,
+        "duplicates": 0,
+        "missing_ids": 19,
+        "gaps": 1
+      },
+      "20261101": {
+        "rows": 1197107,
+        "duplicates": 0,
+        "missing_ids": 171,
+        "gaps": 1
+      },
+      "20261102": {
+        "rows": 2902675,
+        "duplicates": 0,
+        "missing_ids": 4459,
+        "gaps": 1
+      }
+    },
+    "reconcile": {
+      "by_day": {
+        "20261023": {
+          "groups": 498949,
+          "volume": 96545.37599969149,
+          "unreflected_volume": 9764.250000467207,
+          "exact": 282320,
+          "drop_less": 125526,
+          "drop_more": 91103,
+          "unreflected_share": 0.10113638172063683
+        },
+        "20261031": {
+          "groups": 312290,
+          "volume": 44869.562999726346,
+          "unreflected_volume": 5237.435000017105,
+          "exact": 198638,
+          "drop_less": 71600,
+          "drop_more": 42052,
+          "unreflected_share": 0.11672578580827828
+        },
+        "20261101": {
+          "groups": 318371,
+          "volume": 48421.99499957533,
+          "unreflected_volume": 5918.750999986092,
+          "exact": 205112,
+          "drop_less": 70516,
+          "drop_more": 42743,
+          "unreflected_share": 0.12223269611336751
+        },
+        "20261102": {
+          "groups": 582876,
+          "volume": 107116.17499974574,
+          "unreflected_volume": 9408.849000537302,
+          "exact": 345212,
+          "drop_less": 133721,
+          "drop_more": 103943,
+          "unreflected_share": 0.08783779854498759
+        }
+      },
+      "all": {
+        "groups": 1712486,
+        "volume": 296953.1089987389,
+        "unreflected_volume": 30329.28500100771,
+        "exact": 1031282,
+        "drop_less": 401363,
+        "drop_more": 279841,
+        "unreflected_share": 0.10213493000046855
+      }
+    },
+    "split_reliable": false
+  },
+  "groups": {
+    "TOP1": {
+      "send": {
+        "n": 6188,
+        "pre_status": {
+          "same": 0.7133160956690369,
+          "gone": 0.27020038784744665,
+          "improved": 0.016483516483516484,
+          "no_book": 0.0,
+          "edge": 0.0,
+          "trade_gap": 0.0
+        },
+        "hold_status": {
+          "same": 0.4819004524886878,
+          "gone": 0.5111506140917905,
+          "improved": 0.006948933419521654,
+          "no_book": 0.0,
+          "edge": 0.0,
+          "trade_gap": 0.0
+        },
+        "pre": {
+          "n": 6086,
+          "mean_size_btc": 5.777075418994414,
+          "mean_shrink_btc": 2.078192244495564,
+          "mean_traded_btc": 0.6852191915846285,
+          "mean_withdrawn_btc": 1.392973052910935,
+          "traded_share_of_mean_shrink": 0.32971886667344896,
+          "med_feature": 0.2686621844768524,
+          "med_traded_frac": 0.001306604978116778,
+          "med_withdrawn_frac": 0.03209794837855724,
+          "share_any_trade": 0.6125534012487677,
+          "share_gone": 0.27472888596779493,
+          "share_lost20": 0.5292474531712126,
+          "lost20": {
+            "n": 3221,
+            "trade_led": 0.3384042222912139,
+            "no_trade": 0.20149022042843837
+          },
+          "gone": {
+            "n": 1672,
+            "mean_size_btc": 4.117276315789474,
+            "traded_frac_mean": 0.7502200635953565,
+            "withdrawn_frac_mean": 0.24977993640464355,
+            "traded_share_of_volume": 0.5139142654502121,
+            "swept": 0.29784688995215314,
+            "pulled": 0.0017942583732057417
+          }
+        },
+        "near": {
+          "med_near_start_btc": 7.343,
+          "med_near_send_btc": 9.1385,
+          "med_opp_start_btc": 4.4485,
+          "med_opp_send_btc": 2.5309999999999997
+        },
+        "hold": {
+          "n": 6145,
+          "share_gone": 0.5147274206672091,
+          "mean_size_btc": 4.218010577705451,
+          "mean_shrink_btc": 2.0189096826688364,
+          "mean_traded_btc": 0.8403762408427916,
+          "mean_withdrawn_btc": 1.1785334418260447,
+          "gone": {
+            "n": 3163,
+            "mean_size_btc": 2.600020866266203,
+            "traded_frac_mean": 0.9148465759624089,
+            "withdrawn_frac_mean": 0.08515342403759105,
+            "traded_share_of_volume": 0.5578964929609219,
+            "swept": 0.4091052797976604,
+            "pulled": 0.008852355358836548
+          }
+        }
+      },
+      "null": {
+        "n": 72542,
+        "pre_status": {
+          "same": 0.9160210636596731,
+          "gone": 0.04303713710677952,
+          "improved": 0.040362824294891235,
+          "no_book": 0.0,
+          "edge": 2.7570235174106035e-05,
+          "trade_gap": 0.0005514047034821207
+        },
+        "hold_status": {
+          "same": 0.9488158583992722,
+          "gone": 0.02463400512806374,
+          "improved": 0.026026302004356097,
+          "no_book": 0.0,
+          "edge": 2.7570235174106035e-05,
+          "trade_gap": 0.0004962642331339086
+        },
+        "pre": {
+          "n": 69572,
+          "mean_size_btc": 6.650622060599091,
+          "mean_shrink_btc": 0.22597749094463293,
+          "mean_traded_btc": 0.10199703903832971,
+          "mean_withdrawn_btc": 0.12398045190630318,
+          "traded_share_of_mean_shrink": 0.4513592863252037,
+          "med_feature": 0.0,
+          "med_traded_frac": 0.0,
+          "med_withdrawn_frac": -9.990522181489727e-05,
+          "share_any_trade": 0.44561030299545795,
+          "share_gone": 0.04487437474846202,
+          "share_lost20": 0.1462657390904387,
+          "lost20": {
+            "n": 10176,
+            "trade_led": 0.21933962264150944,
+            "no_trade": 0.30021619496855345
+          },
+          "gone": {
+            "n": 3122,
+            "mean_size_btc": 2.8490666239590006,
+            "traded_frac_mean": 0.7578788090031026,
+            "withdrawn_frac_mean": 0.2421211909968974,
+            "traded_share_of_volume": 0.4424605606021375,
+            "swept": 0.3475336322869955,
+            "pulled": 0.0064061499039077515
+          }
+        },
+        "near": {
+          "med_near_start_btc": 6.437,
+          "med_near_send_btc": 6.4475,
+          "med_opp_start_btc": 5.55,
+          "med_opp_send_btc": 5.501
+        },
+        "hold": {
+          "n": 70616,
+          "share_gone": 0.025305879687322987,
+          "mean_size_btc": 6.69472987708168,
+          "mean_shrink_btc": 0.1108073666024697,
+          "mean_traded_btc": 0.05055039934277045,
+          "mean_withdrawn_btc": 0.06025696725969923,
+          "gone": {
+            "n": 1787,
+            "mean_size_btc": 1.9844700615556796,
+            "traded_frac_mean": 0.8120848434815643,
+            "withdrawn_frac_mean": 0.18791515651843574,
+            "traded_share_of_volume": 0.44626658936389924,
+            "swept": 0.3961947397873531,
+            "pulled": 0.005595970900951315
+          }
+        }
+      },
+      "auc": {
+        "feature_all": 0.7242751193490886,
+        "feature": 0.7251455646872491,
+        "traded_frac": 0.6378549910415118,
+        "withdrawn_frac": 0.668126106112886
+      },
+      "auc_by_day": {
+        "20261031": {
+          "feature_all": 0.762547168776367,
+          "feature": 0.7632044827874331,
+          "traded_frac": 0.6771688478303254,
+          "withdrawn_frac": 0.6656925702335859
+        },
+        "20261101": {
+          "feature_all": 0.7288727211263452,
+          "feature": 0.7304180877377031,
+          "traded_frac": 0.6515622524465048,
+          "withdrawn_frac": 0.6633175721248219
+        },
+        "20261102": {
+          "feature_all": 0.7117927396342227,
+          "feature": 0.7117360779187301,
+          "traded_frac": 0.6198729047728438,
+          "withdrawn_frac": 0.6704947848482752
+        }
+      },
+      "withdrawn_part_separates_more": true,
+      "withdrawn_exceeds_traded_at_sends": true
+    },
+    "TOP2_10": {
+      "send": {
+        "n": 49019,
+        "pre_status": {
+          "same": 0.7283910320487974,
+          "gone": 0.22166914869744384,
+          "improved": 0.04955221444745915,
+          "no_book": 0.0,
+          "edge": 4.0800505926273486e-05,
+          "trade_gap": 0.0003468043003733246
+        },
+        "hold_status": {
+          "same": 0.7178645015198188,
+          "gone": 0.264060874354842,
+          "improved": 0.017687019319039557,
+          "no_book": 0.0,
+          "edge": 4.0800505926273486e-05,
+          "trade_gap": 0.0003468043003733246
+        },
+        "pre": {
+          "n": 46571,
+          "mean_size_btc": 6.087948272530116,
+          "mean_shrink_btc": 1.5246145025874471,
+          "mean_traded_btc": 0.5648191578432641,
+          "mean_withdrawn_btc": 0.959795344744183,
+          "traded_share_of_mean_shrink": 0.37046686679465574,
+          "med_feature": 0.1055392399430275,
+          "med_traded_frac": 0.0004657971785738021,
+          "med_withdrawn_frac": 0.004405286343672496,
+          "share_any_trade": 0.5649653217667647,
+          "share_gone": 0.23332116553219814,
+          "share_lost20": 0.4486912456249597,
+          "lost20": {
+            "n": 20896,
+            "trade_led": 0.35576186830015316,
+            "no_trade": 0.21429938744257274
+          },
+          "gone": {
+            "n": 10866,
+            "mean_size_btc": 3.493681759617155,
+            "traded_frac_mean": 0.7520571173839642,
+            "withdrawn_frac_mean": 0.2479428826160358,
+            "traded_share_of_volume": 0.5642162894763462,
+            "swept": 0.3360942389103626,
+            "pulled": 0.0020246640898214613
+          }
+        },
+        "near": {
+          "med_near_start_btc": 5.943,
+          "med_near_send_btc": 7.233,
+          "med_opp_start_btc": 4.558,
+          "med_opp_send_btc": 3.323
+        },
+        "hold": {
+          "n": 48133,
+          "share_gone": 0.2689215299274926,
+          "mean_size_btc": 5.193091454926973,
+          "mean_shrink_btc": 0.9860451665177735,
+          "mean_traded_btc": 0.3993975235273459,
+          "mean_withdrawn_btc": 0.5866476429904277,
+          "gone": {
+            "n": 12944,
+            "mean_size_btc": 1.8256443912237332,
+            "traded_frac_mean": 1.561390672904762,
+            "withdrawn_frac_mean": -0.5613906729047619,
+            "traded_share_of_volume": 0.6469861527192551,
+            "swept": 0.5017768850432633,
+            "pulled": 0.013056242274412856
+          }
+        }
+      },
+      "null": {
+        "n": 565844,
+        "pre_status": {
+          "same": 0.9300354868126197,
+          "gone": 0.03588975053194873,
+          "improved": 0.03381143919525523,
+          "no_book": 0.0,
+          "edge": 8.836357724037014e-06,
+          "trade_gap": 0.000254487102452266
+        },
+        "hold_status": {
+          "same": 0.9583701514905169,
+          "gone": 0.021288553028749973,
+          "improved": 0.020097412007549786,
+          "no_book": 0.0,
+          "edge": 8.836357724037014e-06,
+          "trade_gap": 0.00023504711545938457
+        },
+        "pre": {
+          "n": 546563,
+          "mean_size_btc": 6.232119590971214,
+          "mean_shrink_btc": 0.16413668323688213,
+          "mean_traded_btc": 0.08211045753158422,
+          "mean_withdrawn_btc": 0.0820262257052979,
+          "traded_share_of_mean_shrink": 0.5002565904970943,
+          "med_feature": 0.0,
+          "med_traded_frac": 0.0,
+          "med_withdrawn_frac": -9.279881217515272e-05,
+          "share_any_trade": 0.41032781216437997,
+          "share_gone": 0.037155826501245055,
+          "share_lost20": 0.12895860129573353,
+          "lost20": {
+            "n": 70484,
+            "trade_led": 0.23060552749560184,
+            "no_trade": 0.3205550195789115
+          },
+          "gone": {
+            "n": 20308,
+            "mean_size_btc": 2.2423514870986803,
+            "traded_frac_mean": 1.0839245025198374,
+            "withdrawn_frac_mean": -0.08392450251983738,
+            "traded_share_of_volume": 0.48048123845660823,
+            "swept": 0.3855130982863896,
+            "pulled": 0.00344691747094741
+          }
+        },
+        "near": {
+          "med_near_start_btc": 5.618,
+          "med_near_send_btc": 5.62,
+          "med_opp_start_btc": 5.111,
+          "med_opp_send_btc": 5.078
+        },
+        "hold": {
+          "n": 554334,
+          "share_gone": 0.02173058120194684,
+          "mean_size_btc": 6.279427262264264,
+          "mean_shrink_btc": 0.08466867628541638,
+          "mean_traded_btc": 0.043552791277305075,
+          "mean_withdrawn_btc": 0.04111588500811131,
+          "gone": {
+            "n": 12046,
+            "mean_size_btc": 1.8774384027893076,
+            "traded_frac_mean": 1.0295337206239736,
+            "withdrawn_frac_mean": -0.029533720623973737,
+            "traded_share_of_volume": 0.5197358038723947,
+            "swept": 0.4152415739664619,
+            "pulled": 0.0034866345674912833
+          }
+        }
+      },
+      "auc": {
+        "feature_all": 0.6804174597590502,
+        "feature": 0.7045761860956335,
+        "traded_frac": 0.6194170545993382,
+        "withdrawn_frac": 0.6485182618655139
+      },
+      "auc_by_day": {
+        "20261023": {
+          "feature_all": 0.7310021578715127,
+          "feature": 0.7407708358077694,
+          "traded_frac": 0.6480677786636377,
+          "withdrawn_frac": 0.6688832577354145
+        },
+        "20261031": {
+          "feature_all": 0.6518992194656776,
+          "feature": 0.6678927058146367,
+          "traded_frac": 0.5941964546779135,
+          "withdrawn_frac": 0.6192253395158632
+        },
+        "20261101": {
+          "feature_all": 0.6352687400450113,
+          "feature": 0.6607223388339836,
+          "traded_frac": 0.5878759217818047,
+          "withdrawn_frac": 0.6150130975564922
+        },
+        "20261102": {
+          "feature_all": 0.673835569091087,
+          "feature": 0.7202769193858461,
+          "traded_frac": 0.6304129714244879,
+          "withdrawn_frac": 0.6664315293358343
+        }
+      },
+      "withdrawn_part_separates_more": true,
+      "withdrawn_exceeds_traded_at_sends": true
+    },
+    "REST": {
+      "send": {
+        "n": 39680,
+        "pre_status": {
+          "same": 0.8575100806451613,
+          "gone": 0.10181451612903226,
+          "improved": 0.04024697580645161,
+          "no_book": 0.0,
+          "edge": 0.00012600806451612903,
+          "trade_gap": 0.0003024193548387097
+        },
+        "hold_status": {
+          "same": 0.9096774193548387,
+          "gone": 0.07104334677419355,
+          "improved": 0.018850806451612905,
+          "no_book": 0.0,
+          "edge": 0.00012600806451612903,
+          "trade_gap": 0.0003024193548387097
+        },
+        "pre": {
+          "n": 38066,
+          "mean_size_btc": 6.377652314401303,
+          "mean_shrink_btc": 0.4920706930068827,
+          "mean_traded_btc": 0.23224982924273618,
+          "mean_withdrawn_btc": 0.25982086376414654,
+          "traded_share_of_mean_shrink": 0.4719846813544891,
+          "med_feature": 0.00015137762238737196,
+          "med_traded_frac": 0.0,
+          "med_withdrawn_frac": 0.0,
+          "share_any_trade": 0.45310776020595805,
+          "share_gone": 0.10613145589239742,
+          "share_lost20": 0.20790206483476067,
+          "lost20": {
+            "n": 7914,
+            "trade_led": 0.37667424816780387,
+            "no_trade": 0.21165024008086936
+          },
+          "gone": {
+            "n": 4040,
+            "mean_size_btc": 2.889865594059406,
+            "traded_frac_mean": 0.9022868827490899,
+            "withdrawn_frac_mean": 0.09771311725091017,
+            "traded_share_of_volume": 0.5936381295580824,
+            "swept": 0.37574257425742574,
+            "pulled": 0.0022277227722772275
+          }
+        },
+        "near": {
+          "med_near_start_btc": 6.074,
+          "med_near_send_btc": 6.299,
+          "med_opp_start_btc": 5.14,
+          "med_opp_send_btc": 4.934
+        },
+        "hold": {
+          "n": 38915,
+          "share_gone": 0.07243993318771681,
+          "mean_size_btc": 6.281773223692664,
+          "mean_shrink_btc": 0.2108053192856225,
+          "mean_traded_btc": 0.11054138506954167,
+          "mean_withdrawn_btc": 0.10026393421608083,
+          "gone": {
+            "n": 2819,
+            "mean_size_btc": 1.642614047534587,
+            "traded_frac_mean": 1.2985817222854845,
+            "withdrawn_frac_mean": -0.29858172228548446,
+            "traded_share_of_volume": 0.6834847595139611,
+            "swept": 0.49840368925150763,
+            "pulled": 0.009223128769067045
+          }
+        }
+      },
+      "null": {
+        "n": 441305,
+        "pre_status": {
+          "same": 0.9404720091546662,
+          "gone": 0.029371976297571975,
+          "improved": 0.029979266040493537,
+          "no_book": 0.0,
+          "edge": 2.266006503438665e-05,
+          "trade_gap": 0.0001540884422338292
+        },
+        "hold_status": {
+          "same": 0.9648587711446732,
+          "gone": 0.017192191341589152,
+          "improved": 0.01778361903898664,
+          "no_book": 0.0,
+          "edge": 2.266006503438665e-05,
+          "trade_gap": 0.00014275840971663588
+        },
+        "pre": {
+          "n": 427997,
+          "mean_size_btc": 6.516434650242874,
+          "mean_shrink_btc": 0.14191071900036678,
+          "mean_traded_btc": 0.07522797356024087,
+          "mean_withdrawn_btc": 0.06668274544012595,
+          "traded_share_of_mean_shrink": 0.530107761345684,
+          "med_feature": 0.0,
+          "med_traded_frac": 0.0,
+          "med_withdrawn_frac": -6.588917440872519e-05,
+          "share_any_trade": 0.3967597903723624,
+          "share_gone": 0.030285259008824828,
+          "share_lost20": 0.11198910272735557,
+          "lost20": {
+            "n": 47931,
+            "trade_led": 0.22638793265318896,
+            "no_trade": 0.3307045544637082
+          },
+          "gone": {
+            "n": 12962,
+            "mean_size_btc": 2.3274043357506558,
+            "traded_frac_mean": 1.0772238631959832,
+            "withdrawn_frac_mean": -0.07722386319598327,
+            "traded_share_of_volume": 0.509888700920511,
+            "swept": 0.38018824255516126,
+            "pulled": 0.0027773491745101066
+          }
+        },
+        "near": {
+          "med_near_start_btc": 5.797,
+          "med_near_send_btc": 5.812,
+          "med_opp_start_btc": 5.368,
+          "med_opp_send_btc": 5.337
+        },
+        "hold": {
+          "n": 433384,
+          "share_gone": 0.01750641463459657,
+          "mean_size_btc": 6.553929801284774,
+          "mean_shrink_btc": 0.0705318885791815,
+          "mean_traded_btc": 0.038899793254778665,
+          "mean_withdrawn_btc": 0.031632095324402844,
+          "gone": {
+            "n": 7587,
+            "mean_size_btc": 1.906308554105707,
+            "traded_frac_mean": 1.1982343835078642,
+            "withdrawn_frac_mean": -0.198234383507864,
+            "traded_share_of_volume": 0.5279120480063525,
+            "swept": 0.4208514564386451,
+            "pulled": 0.004481349677079215
+          }
+        }
+      },
+      "auc": {
+        "feature_all": 0.5449182535012999,
+        "feature": 0.5536124777831604,
+        "traded_frac": 0.5442132963830418,
+        "withdrawn_frac": 0.5302598083830788
+      },
+      "auc_by_day": {
+        "20261023": {
+          "feature_all": 0.5337089900029852,
+          "feature": 0.5402200108673181,
+          "traded_frac": 0.5298858717008127,
+          "withdrawn_frac": 0.5248993773463224
+        },
+        "20261031": {
+          "feature_all": 0.5422377678447703,
+          "feature": 0.5498319212050795,
+          "traded_frac": 0.5476613737846147,
+          "withdrawn_frac": 0.524031143148428
+        },
+        "20261101": {
+          "feature_all": 0.539040204739087,
+          "feature": 0.5457148232702171,
+          "traded_frac": 0.5418500037143589,
+          "withdrawn_frac": 0.524313227746201
+        },
+        "20261102": {
+          "feature_all": 0.5634499254630453,
+          "feature": 0.5784545358241366,
+          "traded_frac": 0.5588452419199726,
+          "withdrawn_frac": 0.5474649786331213
+        }
+      },
+      "withdrawn_part_separates_more": false,
+      "withdrawn_exceeds_traded_at_sends": true
+    }
+  }
+}

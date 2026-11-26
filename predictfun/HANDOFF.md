@@ -1,3 +1,10 @@
+<!-- DEPLETION_CAUSE_20261126_CLAUDE -->
+## 2026-11-26 — the opposite Binance level before the winners' sends: mostly makers withdrawing; vanishing levels about half traded
+
+See FINDINGS (same date). Top taker: of 2.08 BTC lost in the 300 ms before its send, 33% traded (while the level survives 11%; when it empties 51%). Withdrawn part AUC 0.668 vs traded 0.638. The declared reconciliation test failed (10.2% > 5%; mostly immediate refills per a post-hoc probe), so traded shares are upper bounds.
+
+Next (USER's call): the predictor of "the opposite Binance futures level goes within the hold" from bookTicker sizes and their changes (cancels), trade flow and a just-printed tick, on a dense time grid; precision / recall on held-out consumed days; then the take replay under the venue rules (172 ms, one-level limit) against the anticipators; untouched days before any live step.
+<!-- /DEPLETION_CAUSE_20261126_CLAUDE -->
 <!-- WINNERS_TRIGGER_20261125_CLAUDE -->
 ## 2026-11-25 — found the winning takers' signal: Binance futures best-level queue state, ~150 ms ahead
 
