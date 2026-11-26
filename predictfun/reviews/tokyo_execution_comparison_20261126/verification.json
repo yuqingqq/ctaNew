@@ -1,0 +1,14 @@
+{
+  "markets": 220,
+  "wallet_legs": 99,
+  "by_run": {
+    "basis": -11.69244012,
+    "v6": 14.589803660000001
+  },
+  "sha256": {
+    "orders.parquet": "4ebabf6ddec6ec5ffa99b69eb2cec23f38eeceeba6a1d9e84ec5f7d8e3b86c07",
+    "fixed_markets.csv": "c5a9ba1b5e3ee01ad046acc7f8af68c59dbfb95d2254595082c0ccb5d7aa899c",
+    "fixed.json": "2fb95eec0e07ac237161a117b55f7bab6c92158ea061ebc8ea0f80fc17097043",
+    "cap_markets.csv": "173518427e42f2bbb2e082f4c7796162537f29aec0d186c0088ede180e7a6c55"
+  }
+}
