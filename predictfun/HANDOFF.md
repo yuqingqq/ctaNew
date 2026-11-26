@@ -1,3 +1,8 @@
+<!-- COPY_LATENCY_20261126_CLAUDE -->
+## 2026-11-26 — held taker orders are invisible; first trace ~201 ms after arrival (pending settlement); a copy matches no sooner than ~168 ms after the original (typically ~262 ms); top-10 orders near its fires are mostly too early to be copies
+
+See FINDINGS COPY_LATENCY (same date).
+<!-- /COPY_LATENCY_20261126_CLAUDE -->
 <!-- SAME_GROUP_20261126_CLAUDE -->
 ## 2026-11-26 — ranks 4 and 9 share the top taker's 30-share sizing and rank 4 never bets against it (possibly one group); ranks 5 and 7 co-fire with other sizing: the trigger is shared beyond one group
 
