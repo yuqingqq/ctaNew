@@ -1,0 +1,1548 @@
+{
+  "asof": "2026-11-26",
+  "days": [
+    "20261023",
+    "20261031",
+    "20261101",
+    "20261102"
+  ],
+  "factors": [
+    {
+      "factor": "x_imb_d300",
+      "direction": "up",
+      "label": "imbalance rising (300 ms)",
+      "threshold": 0.05007674059071813
+    },
+    {
+      "factor": "x_far_r300",
+      "direction": "down",
+      "label": "far side shrinking (300 ms)",
+      "threshold": -0.05039204218102896
+    },
+    {
+      "factor": "x_far_replace_dev",
+      "direction": "down",
+      "label": "far side not replaced",
+      "threshold": -1.029345209669248
+    },
+    {
+      "factor": "x_near_new_r300",
+      "direction": "up",
+      "label": "near-side new orders above normal",
+      "threshold": -0.5050085204244055
+    },
+    {
+      "factor": "x_near_r300",
+      "direction": "up",
+      "label": "near side growing (300 ms)",
+      "threshold": 0.038528039721096446
+    },
+    {
+      "factor": "b_imb1",
+      "direction": "up",
+      "label": "imbalance its way now",
+      "threshold": 0.5490721782945268
+    },
+    {
+      "factor": "b_lfar1",
+      "direction": "down",
+      "label": "thin far side now",
+      "threshold": 0.9936220748104786
+    },
+    {
+      "factor": "z_imb_d300",
+      "direction": "up",
+      "label": "depth imbalance rising (300 ms)",
+      "threshold": 0.05263539584544563
+    }
+  ],
+  "combos": {
+    "TOP1": {
+      "n_fires": 4425,
+      "n_nearby": 67810,
+      "by_count": {
+        "0": {
+          "fires_share": 0.18598870056497174,
+          "nearby_share": 0.42001179766996016,
+          "fires_at_least": 1.0,
+          "nearby_at_least": 1.0,
+          "fires_move300": 0.45929526123936815,
+          "nearby_move300": 0.014606228713879428
+        },
+        "1": {
+          "fires_share": 0.11728813559322034,
+          "nearby_share": 0.1910632650051615,
+          "fires_at_least": 0.8140112994350283,
+          "nearby_at_least": 0.5799882023300398,
+          "fires_move300": 0.5048169556840078,
+          "nearby_move300": 0.01867860450756406
+        },
+        "2": {
+          "fires_share": 0.12180790960451977,
+          "nearby_share": 0.13121958413213392,
+          "fires_at_least": 0.6967231638418079,
+          "nearby_at_least": 0.3889249373248783,
+          "fires_move300": 0.7012987012987013,
+          "nearby_move300": 0.04045853000674309
+        },
+        "3": {
+          "fires_share": 0.10983050847457627,
+          "nearby_share": 0.08311458486948828,
+          "fires_at_least": 0.5749152542372882,
+          "nearby_at_least": 0.25770535319274446,
+          "fires_move300": 0.6522633744855967,
+          "nearby_move300": 0.053229240596167494
+        },
+        "4": {
+          "fires_share": 0.10711864406779661,
+          "nearby_share": 0.06721722459814186,
+          "fires_at_least": 0.46508474576271186,
+          "nearby_at_least": 0.17459076832325615,
+          "fires_move300": 0.609704641350211,
+          "nearby_move300": 0.055945590171127685
+        },
+        "5": {
+          "fires_share": 0.11615819209039548,
+          "nearby_share": 0.05195398908715529,
+          "fires_at_least": 0.3579661016949153,
+          "nearby_at_least": 0.10737354372511429,
+          "fires_move300": 0.6070038910505836,
+          "nearby_move300": 0.06585296622196991
+        },
+        "6": {
+          "fires_share": 0.10350282485875706,
+          "nearby_share": 0.030600206459224302,
+          "fires_at_least": 0.24180790960451978,
+          "nearby_at_least": 0.055419554637959,
+          "fires_move300": 0.6026200873362445,
+          "nearby_move300": 0.08771084337349398
+        },
+        "7": {
+          "fires_share": 0.07028248587570622,
+          "nearby_share": 0.014378410263972866,
+          "fires_at_least": 0.13830508474576272,
+          "nearby_at_least": 0.0248193481787347,
+          "fires_move300": 0.7942122186495176,
+          "nearby_move300": 0.19076923076923077
+        },
+        "8": {
+          "fires_share": 0.0680225988700565,
+          "nearby_share": 0.010440937914761835,
+          "fires_at_least": 0.0680225988700565,
+          "nearby_at_least": 0.010440937914761835,
+          "fires_move300": 0.8305647840531561,
+          "nearby_move300": 0.24293785310734464
+        }
+      }
+    },
+    "RANK2": {
+      "n_fires": 8136,
+      "n_nearby": 33025,
+      "by_count": {
+        "0": {
+          "fires_share": 0.2334070796460177,
+          "nearby_share": 0.41962149886449657,
+          "fires_at_least": 1.0,
+          "nearby_at_least": 1.0,
+          "fires_move300": 0.057925223802001054,
+          "nearby_move300": 0.011040554192524173
+        },
+        "1": {
+          "fires_share": 0.1467551622418879,
+          "nearby_share": 0.19785011355034066,
+          "fires_at_least": 0.7665929203539823,
+          "nearby_at_least": 0.5803785011355034,
+          "fires_move300": 0.07788944723618091,
+          "nearby_move300": 0.014386287113559841
+        },
+        "2": {
+          "fires_share": 0.12991642084562438,
+          "nearby_share": 0.13174867524602574,
+          "fires_at_least": 0.6198377581120944,
+          "nearby_at_least": 0.3825283875851628,
+          "fires_move300": 0.15042573320719016,
+          "nearby_move300": 0.03263617559181797
+        },
+        "3": {
+          "fires_share": 0.119960668633235,
+          "nearby_share": 0.08959878879636639,
+          "fires_at_least": 0.48992133726647,
+          "nearby_at_least": 0.25077971233913704,
+          "fires_move300": 0.13422131147540983,
+          "nearby_move300": 0.047989185535653935
+        },
+        "4": {
+          "fires_share": 0.1289331366764995,
+          "nearby_share": 0.06443603330809992,
+          "fires_at_least": 0.369960668633235,
+          "nearby_at_least": 0.16118092354277064,
+          "fires_move300": 0.14489990467111535,
+          "nearby_move300": 0.044172932330827065
+        },
+        "5": {
+          "fires_share": 0.11430678466076696,
+          "nearby_share": 0.04744890234670704,
+          "fires_at_least": 0.24102753195673549,
+          "nearby_at_least": 0.0967448902346707,
+          "fires_move300": 0.14301075268817204,
+          "nearby_move300": 0.06381620931716656
+        },
+        "6": {
+          "fires_share": 0.0700589970501475,
+          "nearby_share": 0.029220287660862983,
+          "fires_at_least": 0.12672074729596852,
+          "nearby_at_least": 0.04929598788796367,
+          "fires_move300": 0.19649122807017544,
+          "nearby_move300": 0.08186528497409326
+        },
+        "7": {
+          "fires_share": 0.031342182890855455,
+          "nearby_share": 0.010931112793338381,
+          "fires_at_least": 0.05666175024582104,
+          "nearby_at_least": 0.02007570022710068,
+          "fires_move300": 0.4,
+          "nearby_move300": 0.20221606648199447
+        },
+        "8": {
+          "fires_share": 0.025319567354965586,
+          "nearby_share": 0.009144587433762301,
+          "fires_at_least": 0.025319567354965586,
+          "nearby_at_least": 0.009144587433762301,
+          "fires_move300": 0.3155339805825243,
+          "nearby_move300": 0.2185430463576159
+        }
+      }
+    },
+    "RANKS3_10": {
+      "n_fires": 7127,
+      "n_nearby": 43651,
+      "by_count": {
+        "0": {
+          "fires_share": 0.16823347832187457,
+          "nearby_share": 0.40642826052095027,
+          "fires_at_least": 1.0,
+          "nearby_at_least": 1.0,
+          "fires_move300": 0.21601334445371143,
+          "nearby_move300": 0.012964319936869398
+        },
+        "1": {
+          "fires_share": 0.10747860249754455,
+          "nearby_share": 0.18959474009759228,
+          "fires_at_least": 0.8317665216781255,
+          "nearby_at_least": 0.5935717394790497,
+          "fires_move300": 0.26109660574412535,
+          "nearby_move300": 0.017520541324311262
+        },
+        "2": {
+          "fires_share": 0.11533604602216922,
+          "nearby_share": 0.13470481775904333,
+          "fires_at_least": 0.7242879191805809,
+          "nearby_at_least": 0.4039769993814575,
+          "fires_move300": 0.51338199513382,
+          "nearby_move300": 0.04064625850340136
+        },
+        "3": {
+          "fires_share": 0.12150975164866003,
+          "nearby_share": 0.09154429451788046,
+          "fires_at_least": 0.6089518731584117,
+          "nearby_at_least": 0.2692721816224142,
+          "fires_move300": 0.5080831408775982,
+          "nearby_move300": 0.05930930930930931
+        },
+        "4": {
+          "fires_share": 0.11407324259856882,
+          "nearby_share": 0.06838331309706536,
+          "fires_at_least": 0.48744212150975164,
+          "nearby_at_least": 0.1777278871045337,
+          "fires_move300": 0.37023370233702335,
+          "nearby_move300": 0.05896147403685092
+        },
+        "5": {
+          "fires_share": 0.12038725971657079,
+          "nearby_share": 0.05358411032966026,
+          "fires_at_least": 0.3733688789111828,
+          "nearby_at_least": 0.10934457400746833,
+          "fires_move300": 0.38344988344988346,
+          "nearby_move300": 0.06883283454467722
+        },
+        "6": {
+          "fires_share": 0.10354988073523222,
+          "nearby_share": 0.030125312134888088,
+          "fires_at_least": 0.25298161919461204,
+          "nearby_at_least": 0.05576046367780807,
+          "fires_move300": 0.44037940379403795,
+          "nearby_move300": 0.08212927756653993
+        },
+        "7": {
+          "fires_share": 0.07282166409428932,
+          "nearby_share": 0.014936656663077592,
+          "fires_at_least": 0.14943173845937982,
+          "nearby_at_least": 0.025635151542919978,
+          "fires_move300": 0.6127167630057804,
+          "nearby_move300": 0.20552147239263804
+        },
+        "8": {
+          "fires_share": 0.0766100743650905,
+          "nearby_share": 0.010698494879842386,
+          "fires_at_least": 0.0766100743650905,
+          "nearby_at_least": 0.010698494879842386,
+          "fires_move300": 0.6575091575091575,
+          "nearby_move300": 0.23554603854389722
+        }
+      }
+    },
+    "random": {
+      "n": 232087,
+      "by_count": {
+        "0": {
+          "share": 0.42688302231490777,
+          "at_least": 1.0,
+          "move300": 0.008468417546480408,
+          "move300_at_least": 0.02482258808119369
+        },
+        "1": {
+          "share": 0.20606927574573328,
+          "at_least": 0.5731169776850922,
+          "move300": 0.012566386484339062,
+          "move300_at_least": 0.03700390187425289
+        },
+        "2": {
+          "share": 0.13043815465752068,
+          "at_least": 0.36704770193935893,
+          "move300": 0.0312820004624583,
+          "move300_at_least": 0.050723701973305786
+        },
+        "3": {
+          "share": 0.08525682179527505,
+          "at_least": 0.23660954728183828,
+          "move300": 0.04659625006317279,
+          "move300_at_least": 0.06144152675091962
+        },
+        "4": {
+          "share": 0.06251534984725556,
+          "at_least": 0.15135272548656323,
+          "move300": 0.04424839754635054,
+          "move300_at_least": 0.06980385458479232
+        },
+        "5": {
+          "share": 0.0432079349554262,
+          "at_least": 0.08883737563930767,
+          "move300": 0.0532508974870363,
+          "move300_at_least": 0.087787370258997
+        },
+        "6": {
+          "share": 0.02701142244072266,
+          "at_least": 0.04562944068388147,
+          "move300": 0.07991705216142926,
+          "move300_at_least": 0.12049102927289897
+        },
+        "7": {
+          "share": 0.011056198753053812,
+          "at_least": 0.018618018243158816,
+          "move300": 0.15744349181605613,
+          "move300_at_least": 0.1793566304096274
+        },
+        "8": {
+          "share": 0.0075618194901050035,
+          "at_least": 0.0075618194901050035,
+          "move300": 0.21139601139601139,
+          "move300_at_least": 0.21139601139601139
+        }
+      }
+    }
+  },
+  "pairs_triples": {
+    "2": {
+      "by_lift": [
+        {
+          "factors": [
+            "near side growing (300 ms)",
+            "imbalance its way now"
+          ],
+          "fires_share": 0.1624858757062147,
+          "random_share": 0.02851516888063528,
+          "lift": 5.698225964797257,
+          "random_move300": 0.16636446056210336,
+          "random_n": 6618
+        },
+        {
+          "factors": [
+            "imbalance rising (300 ms)",
+            "imbalance its way now"
+          ],
+          "fires_share": 0.20745762711864407,
+          "random_share": 0.03965323348571872,
+          "lift": 5.231795969258366,
+          "random_move300": 0.1360425948060415,
+          "random_n": 9203
+        },
+        {
+          "factors": [
+            "near side growing (300 ms)",
+            "thin far side now"
+          ],
+          "fires_share": 0.17672316384180792,
+          "random_share": 0.03382352307539845,
+          "lift": 5.224859735866709,
+          "random_move300": 0.1513375796178344,
+          "random_n": 7850
+        },
+        {
+          "factors": [
+            "imbalance rising (300 ms)",
+            "thin far side now"
+          ],
+          "fires_share": 0.22824858757062147,
+          "random_share": 0.048063872599499326,
+          "lift": 4.748859699103794,
+          "random_move300": 0.12460779919318692,
+          "random_n": 11155
+        },
+        {
+          "factors": [
+            "imbalance its way now",
+            "depth imbalance rising (300 ms)"
+          ],
+          "fires_share": 0.16858757062146892,
+          "random_share": 0.037033526220770656,
+          "lift": 4.552295928193701,
+          "random_move300": 0.12914485165794065,
+          "random_n": 8595
+        },
+        {
+          "factors": [
+            "far side not replaced",
+            "near side growing (300 ms)"
+          ],
+          "fires_share": 0.24587570621468927,
+          "random_share": 0.05638833713219612,
+          "lift": 4.360400017440864,
+          "random_move300": 0.0703751814778024,
+          "random_n": 13087
+        },
+        {
+          "factors": [
+            "far side shrinking (300 ms)",
+            "imbalance its way now"
+          ],
+          "fires_share": 0.2409039548022599,
+          "random_share": 0.05600055151731893,
+          "lift": 4.301813969238447,
+          "random_move300": 0.12895283526967763,
+          "random_n": 12997
+        },
+        {
+          "factors": [
+            "far side shrinking (300 ms)",
+            "near side growing (300 ms)"
+          ],
+          "fires_share": 0.2994350282485876,
+          "random_share": 0.07126206982726305,
+          "lift": 4.20188508380978,
+          "random_move300": 0.07715097647983554,
+          "random_n": 16539
+        }
+      ],
+      "by_move": [
+        {
+          "factors": [
+            "near side growing (300 ms)",
+            "imbalance its way now"
+          ],
+          "fires_share": 0.1624858757062147,
+          "random_share": 0.02851516888063528,
+          "lift": 5.698225964797257,
+          "random_move300": 0.16636446056210336,
+          "random_n": 6618
+        },
+        {
+          "factors": [
+            "near side growing (300 ms)",
+            "thin far side now"
+          ],
+          "fires_share": 0.17672316384180792,
+          "random_share": 0.03382352307539845,
+          "lift": 5.224859735866709,
+          "random_move300": 0.1513375796178344,
+          "random_n": 7850
+        },
+        {
+          "factors": [
+            "imbalance rising (300 ms)",
+            "imbalance its way now"
+          ],
+          "fires_share": 0.20745762711864407,
+          "random_share": 0.03965323348571872,
+          "lift": 5.231795969258366,
+          "random_move300": 0.1360425948060415,
+          "random_n": 9203
+        },
+        {
+          "factors": [
+            "imbalance its way now",
+            "depth imbalance rising (300 ms)"
+          ],
+          "fires_share": 0.16858757062146892,
+          "random_share": 0.037033526220770656,
+          "lift": 4.552295928193701,
+          "random_move300": 0.12914485165794065,
+          "random_n": 8595
+        },
+        {
+          "factors": [
+            "far side shrinking (300 ms)",
+            "imbalance its way now"
+          ],
+          "fires_share": 0.2409039548022599,
+          "random_share": 0.05600055151731893,
+          "lift": 4.301813969238447,
+          "random_move300": 0.12895283526967763,
+          "random_n": 12997
+        },
+        {
+          "factors": [
+            "imbalance rising (300 ms)",
+            "thin far side now"
+          ],
+          "fires_share": 0.22824858757062147,
+          "random_share": 0.048063872599499326,
+          "lift": 4.748859699103794,
+          "random_move300": 0.12460779919318692,
+          "random_n": 11155
+        },
+        {
+          "factors": [
+            "far side shrinking (300 ms)",
+            "thin far side now"
+          ],
+          "fires_share": 0.2605649717514124,
+          "random_share": 0.06389845187365083,
+          "lift": 4.07779788259407,
+          "random_move300": 0.12231962238705327,
+          "random_n": 14830
+        },
+        {
+          "factors": [
+            "near-side new orders above normal",
+            "thin far side now"
+          ],
+          "fires_share": 0.2302824858757062,
+          "random_share": 0.07248144014959908,
+          "lift": 3.1771234870666403,
+          "random_move300": 0.11568184520271074,
+          "random_n": 16822
+        }
+      ],
+      "n": 28
+    },
+    "3": {
+      "by_lift": [
+        {
+          "factors": [
+            "far side not replaced",
+            "near side growing (300 ms)",
+            "imbalance its way now"
+          ],
+          "fires_share": 0.1168361581920904,
+          "random_share": 0.014335141563293076,
+          "lift": 8.150331664060019,
+          "random_move300": 0.19657348963029755,
+          "random_n": 3327
+        },
+        {
+          "factors": [
+            "imbalance rising (300 ms)",
+            "near side growing (300 ms)",
+            "imbalance its way now"
+          ],
+          "fires_share": 0.13898305084745763,
+          "random_share": 0.018247467544498398,
+          "lift": 7.6165665459348055,
+          "random_move300": 0.1860684769775679,
+          "random_n": 4235
+        },
+        {
+          "factors": [
+            "far side shrinking (300 ms)",
+            "near side growing (300 ms)",
+            "imbalance its way now"
+          ],
+          "fires_share": 0.143954802259887,
+          "random_share": 0.01912213954249915,
+          "lift": 7.528174446167281,
+          "random_move300": 0.19851284362325372,
+          "random_n": 4438
+        },
+        {
+          "factors": [
+            "far side not replaced",
+            "near side growing (300 ms)",
+            "thin far side now"
+          ],
+          "fires_share": 0.12474576271186441,
+          "random_share": 0.017252151132980304,
+          "lift": 7.230736720906213,
+          "random_move300": 0.17532467532467533,
+          "random_n": 4004
+        },
+        {
+          "factors": [
+            "near side growing (300 ms)",
+            "imbalance its way now",
+            "depth imbalance rising (300 ms)"
+          ],
+          "fires_share": 0.10598870056497176,
+          "random_share": 0.015291679413323453,
+          "lift": 6.931135403782079,
+          "random_move300": 0.18117779656241195,
+          "random_n": 3549
+        },
+        {
+          "factors": [
+            "far side shrinking (300 ms)",
+            "near side growing (300 ms)",
+            "thin far side now"
+          ],
+          "fires_share": 0.15593220338983052,
+          "random_share": 0.022952599671674845,
+          "lift": 6.793661965108991,
+          "random_move300": 0.1777736061573118,
+          "random_n": 5327
+        },
+        {
+          "factors": [
+            "imbalance rising (300 ms)",
+            "near side growing (300 ms)",
+            "thin far side now"
+          ],
+          "fires_share": 0.152090395480226,
+          "random_share": 0.0230215393365419,
+          "lift": 6.6064390072654335,
+          "random_move300": 0.16189406700355605,
+          "random_n": 5343
+        },
+        {
+          "factors": [
+            "imbalance rising (300 ms)",
+            "near-side new orders above normal",
+            "imbalance its way now"
+          ],
+          "fires_share": 0.14463276836158193,
+          "random_share": 0.022357995062196503,
+          "lift": 6.468950724751294,
+          "random_move300": 0.1641934862208518,
+          "random_n": 5189
+        }
+      ],
+      "by_move": [
+        {
+          "factors": [
+            "far side shrinking (300 ms)",
+            "near side growing (300 ms)",
+            "imbalance its way now"
+          ],
+          "fires_share": 0.143954802259887,
+          "random_share": 0.01912213954249915,
+          "lift": 7.528174446167281,
+          "random_move300": 0.19851284362325372,
+          "random_n": 4438
+        },
+        {
+          "factors": [
+            "far side not replaced",
+            "near side growing (300 ms)",
+            "imbalance its way now"
+          ],
+          "fires_share": 0.1168361581920904,
+          "random_share": 0.014335141563293076,
+          "lift": 8.150331664060019,
+          "random_move300": 0.19657348963029755,
+          "random_n": 3327
+        },
+        {
+          "factors": [
+            "imbalance rising (300 ms)",
+            "near side growing (300 ms)",
+            "imbalance its way now"
+          ],
+          "fires_share": 0.13898305084745763,
+          "random_share": 0.018247467544498398,
+          "lift": 7.6165665459348055,
+          "random_move300": 0.1860684769775679,
+          "random_n": 4235
+        },
+        {
+          "factors": [
+            "near side growing (300 ms)",
+            "imbalance its way now",
+            "depth imbalance rising (300 ms)"
+          ],
+          "fires_share": 0.10598870056497176,
+          "random_share": 0.015291679413323453,
+          "lift": 6.931135403782079,
+          "random_move300": 0.18117779656241195,
+          "random_n": 3549
+        },
+        {
+          "factors": [
+            "far side shrinking (300 ms)",
+            "near side growing (300 ms)",
+            "thin far side now"
+          ],
+          "fires_share": 0.15593220338983052,
+          "random_share": 0.022952599671674845,
+          "lift": 6.793661965108991,
+          "random_move300": 0.1777736061573118,
+          "random_n": 5327
+        },
+        {
+          "factors": [
+            "near-side new orders above normal",
+            "near side growing (300 ms)",
+            "imbalance its way now"
+          ],
+          "fires_share": 0.13220338983050847,
+          "random_share": 0.021388531025003554,
+          "lift": 6.181041123205725,
+          "random_move300": 0.177276390008058,
+          "random_n": 4964
+        },
+        {
+          "factors": [
+            "near side growing (300 ms)",
+            "imbalance its way now",
+            "thin far side now"
+          ],
+          "fires_share": 0.15457627118644068,
+          "random_share": 0.026429744018406892,
+          "lift": 5.848572391726028,
+          "random_move300": 0.17574176719921747,
+          "random_n": 6134
+        },
+        {
+          "factors": [
+            "far side not replaced",
+            "near side growing (300 ms)",
+            "thin far side now"
+          ],
+          "fires_share": 0.12474576271186441,
+          "random_share": 0.017252151132980304,
+          "lift": 7.230736720906213,
+          "random_move300": 0.17532467532467533,
+          "random_n": 4004
+        }
+      ],
+      "n": 56
+    }
+  },
+  "long_windows": {
+    "TOP1": {
+      "imb_change_300": {
+        "separation": 0.6824396315061109,
+        "direction": "up",
+        "fires_present": 0.46350282485875705,
+        "nearby_present": 0.2,
+        "fires_median": 0.031572860175433134,
+        "nearby_median": 0.0
+      },
+      "imb_change_1000": {
+        "separation": 0.6784915912440626,
+        "direction": "up",
+        "fires_present": 0.4449717514124294,
+        "nearby_present": 0.2,
+        "fires_median": 0.10629362693756716,
+        "nearby_median": -0.0002886633756464807
+      },
+      "imb_change_3000": {
+        "separation": 0.6765040521163737,
+        "direction": "up",
+        "fires_present": 0.43254237288135594,
+        "nearby_present": 0.2,
+        "fires_median": 0.20085769862849434,
+        "nearby_median": -0.006239079403800418
+      },
+      "imb_change_10000": {
+        "separation": 0.6488698464457126,
+        "direction": "up",
+        "fires_present": 0.37333333333333335,
+        "nearby_present": 0.2,
+        "fires_median": 0.25997412025176303,
+        "nearby_median": -0.026547447625431903
+      },
+      "far_change_300": {
+        "separation": 0.6769462197882584,
+        "direction": "down",
+        "fires_present": 0.48338983050847456,
+        "nearby_present": 0.2,
+        "fires_median": -0.03844273096921185,
+        "nearby_median": 0.0
+      },
+      "far_change_1000": {
+        "separation": 0.6738789938987051,
+        "direction": "down",
+        "fires_present": 0.4689265536723164,
+        "nearby_present": 0.19997050582509954,
+        "fires_median": -0.1575762668785254,
+        "nearby_median": 0.0
+      },
+      "far_change_3000": {
+        "separation": 0.6722134645074265,
+        "direction": "down",
+        "fires_present": 0.4510734463276836,
+        "nearby_present": 0.2,
+        "fires_median": -0.3027946841572146,
+        "nearby_median": 0.002098108276694515
+      },
+      "far_change_10000": {
+        "separation": 0.6528809791732308,
+        "direction": "down",
+        "fires_present": 0.40790960451977404,
+        "nearby_present": 0.2,
+        "fires_median": -0.40068459413601665,
+        "nearby_median": 0.022394217862005017
+      },
+      "near_change_300": {
+        "separation": 0.6437653280143838,
+        "direction": "up",
+        "fires_present": 0.3954802259887006,
+        "nearby_present": 0.19998525291254976,
+        "fires_median": 0.008726652936030012,
+        "nearby_median": 0.0
+      },
+      "near_change_1000": {
+        "separation": 0.6385749881065157,
+        "direction": "up",
+        "fires_present": 0.35615819209039545,
+        "nearby_present": 0.2,
+        "fires_median": 0.051246594875551756,
+        "nearby_median": -0.00020101912818769937
+      },
+      "near_change_3000": {
+        "separation": 0.6407893574352399,
+        "direction": "up",
+        "fires_present": 0.343954802259887,
+        "nearby_present": 0.2,
+        "fires_median": 0.125242819467404,
+        "nearby_median": -0.00726219604178456
+      },
+      "near_change_10000": {
+        "separation": 0.615073051230885,
+        "direction": "up",
+        "fires_present": 0.30033898305084744,
+        "nearby_present": 0.1999852463853644,
+        "fires_median": 0.19906695395415547,
+        "nearby_median": -0.032630482163469435
+      },
+      "far_replace_300": {
+        "separation": 0.6582686819353178,
+        "direction": "down",
+        "fires_present": 0.4232768361581921,
+        "nearby_present": 0.2,
+        "fires_median": -0.5256183748674457,
+        "nearby_median": 0.0
+      },
+      "far_replace_1000": {
+        "separation": 0.661180411868656,
+        "direction": "down",
+        "fires_present": 0.40700564971751413,
+        "nearby_present": 0.2,
+        "fires_median": -0.3195941988762599,
+        "nearby_median": 0.0020982420718832803
+      },
+      "far_replace_3000": {
+        "separation": 0.643694227056823,
+        "direction": "down",
+        "fires_present": 0.39005649717514124,
+        "nearby_present": 0.2,
+        "fires_median": -0.15396908442274956,
+        "nearby_median": 0.015676729352806645
+      },
+      "far_replace_10000": {
+        "separation": 0.5643810980664652,
+        "direction": "down",
+        "fires_present": 0.2974011299435028,
+        "nearby_present": 0.2,
+        "fires_median": -0.008722188258002849,
+        "nearby_median": 0.04797208475858693
+      },
+      "near_replace_300": {
+        "separation": 0.628938939559437,
+        "direction": "up",
+        "fires_present": 0.32949152542372884,
+        "nearby_present": 0.2,
+        "fires_median": 0.18482468693574672,
+        "nearby_median": 0.0
+      },
+      "near_replace_1000": {
+        "separation": 0.6430202501672586,
+        "direction": "up",
+        "fires_present": 0.35163841807909607,
+        "nearby_present": 0.19998525291254976,
+        "fires_median": 0.18468042126562556,
+        "nearby_median": -0.0003882934610143561
+      },
+      "near_replace_3000": {
+        "separation": 0.6324391449355419,
+        "direction": "up",
+        "fires_present": 0.3344632768361582,
+        "nearby_present": 0.2,
+        "fires_median": 0.1418893724598989,
+        "nearby_median": 0.0003702332581124614
+      },
+      "near_replace_10000": {
+        "separation": 0.5365527708277615,
+        "direction": "up",
+        "fires_present": 0.2151412429378531,
+        "nearby_present": 0.2,
+        "fires_median": 0.10501280023977351,
+        "nearby_median": 0.07197806168416254
+      },
+      "near_new_vs_normal_300": {
+        "separation": 0.6400264547751819,
+        "direction": "up",
+        "fires_present": 0.3835028248587571,
+        "nearby_present": 0.2,
+        "fires_median": -1.060679087595857,
+        "nearby_median": -2.548580877608026
+      },
+      "near_new_vs_normal_1000": {
+        "separation": 0.6065878688958931,
+        "direction": "up",
+        "fires_present": 0.3213559322033898,
+        "nearby_present": 0.2,
+        "fires_median": -0.8792480103942366,
+        "nearby_median": -1.5512566153098257
+      },
+      "near_new_vs_normal_3000": {
+        "separation": 0.57066553522346,
+        "direction": "up",
+        "fires_present": 0.287909604519774,
+        "nearby_present": 0.2,
+        "fires_median": -0.669789602925692,
+        "nearby_median": -1.0597605313535032
+      },
+      "near_new_vs_normal_10000": {
+        "separation": 0.5094224740613729,
+        "direction": "up",
+        "fires_present": 0.2,
+        "nearby_present": 0.2,
+        "fires_median": -0.3139970906409013,
+        "nearby_median": -0.31569333485499734
+      },
+      "far_cxl_vs_normal_300": {
+        "separation": 0.5944439306570285,
+        "direction": "up",
+        "fires_present": 0.3107344632768362,
+        "nearby_present": 0.2,
+        "fires_median": -1.0335873676153742,
+        "nearby_median": -2.4201669718067587
+      },
+      "far_cxl_vs_normal_1000": {
+        "separation": 0.5676161174834636,
+        "direction": "up",
+        "fires_present": 0.24338983050847457,
+        "nearby_present": 0.2,
+        "fires_median": -0.7785922909247822,
+        "nearby_median": -1.2196015308146375
+      },
+      "far_cxl_vs_normal_3000": {
+        "separation": 0.5397536169939771,
+        "direction": "up",
+        "fires_present": 0.2135593220338983,
+        "nearby_present": 0.2,
+        "fires_median": -0.5678471712509646,
+        "nearby_median": -0.7457963945642136
+      },
+      "far_cxl_vs_normal_10000": {
+        "separation": 0.5152103359586482,
+        "direction": "up",
+        "fires_present": 0.21807909604519773,
+        "nearby_present": 0.2,
+        "fires_median": -0.24769370171571695,
+        "nearby_median": -0.3229589577216068
+      },
+      "depth_imb_change_300": {
+        "separation": 0.630871967049196,
+        "direction": "up",
+        "fires_present": 0.3727396021699819,
+        "nearby_present": 0.20000592083839072,
+        "fires_median": 0.014840150522969886,
+        "nearby_median": 0.0
+      },
+      "depth_imb_change_1000": {
+        "separation": 0.6307729261714815,
+        "direction": "up",
+        "fires_present": 0.37093128390596747,
+        "nearby_present": 0.20000592083839072,
+        "fires_median": 0.0512689793687193,
+        "nearby_median": -0.0008394268386371639
+      },
+      "depth_imb_change_3000": {
+        "separation": 0.6393224735641697,
+        "direction": "up",
+        "fires_present": 0.3670886075949367,
+        "nearby_present": 0.2,
+        "fires_median": 0.13043922694979201,
+        "nearby_median": -0.008306846200898804
+      },
+      "depth_imb_change_10000": {
+        "separation": 0.6140710262125122,
+        "direction": "up",
+        "fires_present": 0.3202983725135624,
+        "nearby_present": 0.1999970375198116,
+        "fires_median": 0.18684587345309464,
+        "nearby_median": -0.023423583897959732
+      }
+    },
+    "RANK2": {
+      "imb_change_300": {
+        "separation": 0.6691155373785689,
+        "direction": "up",
+        "fires_present": 0.43731563421828906,
+        "nearby_present": 0.2,
+        "fires_median": 0.016900422765914858,
+        "nearby_median": 0.0
+      },
+      "imb_change_1000": {
+        "separation": 0.6452104403043789,
+        "direction": "up",
+        "fires_present": 0.4094149459193707,
+        "nearby_present": 0.2,
+        "fires_median": 0.05666365724430761,
+        "nearby_median": -0.00018135944396672696
+      },
+      "imb_change_3000": {
+        "separation": 0.5669311001394164,
+        "direction": "up",
+        "fires_present": 0.3136676499508358,
+        "nearby_present": 0.2,
+        "fires_median": 0.04635562804316068,
+        "nearby_median": -0.002353042427252143
+      },
+      "imb_change_10000": {
+        "separation": 0.5059874806704305,
+        "direction": "up",
+        "fires_present": 0.2230419279478667,
+        "nearby_present": 0.2000121164389786,
+        "fires_median": -0.0046638855801061085,
+        "nearby_median": -0.012160041912117725
+      },
+      "far_change_300": {
+        "separation": 0.6360440099683131,
+        "direction": "down",
+        "fires_present": 0.40216322517207476,
+        "nearby_present": 0.2,
+        "fires_median": -0.005691863922818743,
+        "nearby_median": 0.0
+      },
+      "far_change_1000": {
+        "separation": 0.6126063543529864,
+        "direction": "down",
+        "fires_present": 0.3640609636184857,
+        "nearby_present": 0.2,
+        "fires_median": -0.03544432052982911,
+        "nearby_median": 0.0
+      },
+      "far_change_3000": {
+        "separation": 0.5465064698758502,
+        "direction": "down",
+        "fires_present": 0.29264995083579154,
+        "nearby_present": 0.2,
+        "fires_median": -0.02691383852145636,
+        "nearby_median": 0.0
+      },
+      "far_change_10000": {
+        "separation": 0.5011921053392449,
+        "direction": "down",
+        "fires_present": 0.23349317594983401,
+        "nearby_present": 0.2000121164389786,
+        "fires_median": 0.019927481818528135,
+        "nearby_median": 0.0033773306776999166
+      },
+      "near_change_300": {
+        "separation": 0.6474264174439525,
+        "direction": "up",
+        "fires_present": 0.41764995083579154,
+        "nearby_present": 0.2,
+        "fires_median": 0.0057915275026143645,
+        "nearby_median": 0.0
+      },
+      "near_change_1000": {
+        "separation": 0.6340122571842641,
+        "direction": "up",
+        "fires_present": 0.4016715830875123,
+        "nearby_present": 0.2,
+        "fires_median": 0.04645729672060596,
+        "nearby_median": -8.724100332679376e-05
+      },
+      "near_change_3000": {
+        "separation": 0.5697403005827504,
+        "direction": "up",
+        "fires_present": 0.31317600786627336,
+        "nearby_present": 0.2,
+        "fires_median": 0.04371965558430253,
+        "nearby_median": -0.0037105793965356015
+      },
+      "near_change_10000": {
+        "separation": 0.5138550578398877,
+        "direction": "up",
+        "fires_present": 0.22771425058404032,
+        "nearby_present": 0.2000121164389786,
+        "fires_median": -0.007473746441931853,
+        "nearby_median": -0.022569469542293497
+      },
+      "far_replace_300": {
+        "separation": 0.6075713811458052,
+        "direction": "down",
+        "fires_present": 0.3364060963618486,
+        "nearby_present": 0.2,
+        "fires_median": -0.102466501692281,
+        "nearby_median": 0.0
+      },
+      "far_replace_1000": {
+        "separation": 0.5716066721897314,
+        "direction": "down",
+        "fires_present": 0.2971976401179941,
+        "nearby_present": 0.2,
+        "fires_median": -0.04783028639646713,
+        "nearby_median": 0.0007539346307114919
+      },
+      "far_replace_3000": {
+        "separation": 0.51081138436139,
+        "direction": "up",
+        "fires_present": 0.24545231071779744,
+        "nearby_present": 0.2,
+        "fires_median": 0.012363526574253877,
+        "nearby_median": 0.003061649061038288
+      },
+      "far_replace_10000": {
+        "separation": 0.5599963694409275,
+        "direction": "up",
+        "fires_present": 0.2921583087512291,
+        "nearby_present": 0.2,
+        "fires_median": 0.07635674567976768,
+        "nearby_median": 0.021608547775190032
+      },
+      "near_replace_300": {
+        "separation": 0.6227418685525477,
+        "direction": "up",
+        "fires_present": 0.3387413962635202,
+        "nearby_present": 0.19957607872823618,
+        "fires_median": 0.17605864855264472,
+        "nearby_median": 0.0
+      },
+      "near_replace_1000": {
+        "separation": 0.5953423574405433,
+        "direction": "up",
+        "fires_present": 0.3051868239921337,
+        "nearby_present": 0.2,
+        "fires_median": 0.08350006711644695,
+        "nearby_median": -4.8427322186492535e-05
+      },
+      "near_replace_3000": {
+        "separation": 0.5222882924425568,
+        "direction": "up",
+        "fires_present": 0.22468043264503443,
+        "nearby_present": 0.2,
+        "fires_median": 0.011505565294938862,
+        "nearby_median": -0.0002167551968244763
+      },
+      "near_replace_10000": {
+        "separation": 0.5375785696899864,
+        "direction": "down",
+        "fires_present": 0.2527040314650934,
+        "nearby_present": 0.2,
+        "fires_median": 0.0032105121451292606,
+        "nearby_median": 0.025882119458173654
+      },
+      "near_new_vs_normal_300": {
+        "separation": 0.6014887562460131,
+        "direction": "up",
+        "fires_present": 0.3254670599803343,
+        "nearby_present": 0.2,
+        "fires_median": -1.4308016332392892,
+        "nearby_median": -2.6670791878290867
+      },
+      "near_new_vs_normal_1000": {
+        "separation": 0.5825032323327058,
+        "direction": "up",
+        "fires_present": 0.2662241887905605,
+        "nearby_present": 0.2,
+        "fires_median": -0.946431915492906,
+        "nearby_median": -1.5618232512416739
+      },
+      "near_new_vs_normal_3000": {
+        "separation": 0.5441129656550228,
+        "direction": "up",
+        "fires_present": 0.22037856440511308,
+        "nearby_present": 0.2,
+        "fires_median": -0.7852580485249332,
+        "nearby_median": -1.000878495279644
+      },
+      "near_new_vs_normal_10000": {
+        "separation": 0.5070861348744322,
+        "direction": "down",
+        "fires_present": 0.19469026548672566,
+        "nearby_present": 0.2,
+        "fires_median": -0.4579538377924457,
+        "nearby_median": -0.35782145280433103
+      },
+      "far_cxl_vs_normal_300": {
+        "separation": 0.6096288083652845,
+        "direction": "up",
+        "fires_present": 0.34255162241887904,
+        "nearby_present": 0.19996971990915974,
+        "fires_median": -1.0929472279695336,
+        "nearby_median": -2.56867077316841
+      },
+      "far_cxl_vs_normal_1000": {
+        "separation": 0.6276098155728095,
+        "direction": "up",
+        "fires_present": 0.3762291052114061,
+        "nearby_present": 0.2,
+        "fires_median": -0.3330172914141652,
+        "nearby_median": -1.2856460471441113
+      },
+      "far_cxl_vs_normal_3000": {
+        "separation": 0.6304317592598796,
+        "direction": "up",
+        "fires_present": 0.3824975417895772,
+        "nearby_present": 0.2,
+        "fires_median": 0.004267085291915351,
+        "nearby_median": -0.7738343905998151
+      },
+      "far_cxl_vs_normal_10000": {
+        "separation": 0.5972598229790755,
+        "direction": "up",
+        "fires_present": 0.3247295968534907,
+        "nearby_present": 0.2,
+        "fires_median": 0.0767771250242202,
+        "nearby_median": -0.3273919636686046
+      },
+      "depth_imb_change_300": {
+        "separation": 0.6274051538467794,
+        "direction": "up",
+        "fires_present": 0.3665804703854205,
+        "nearby_present": 0.2000121514065253,
+        "fires_median": 0.011807308741544013,
+        "nearby_median": 0.0
+      },
+      "depth_imb_change_1000": {
+        "separation": 0.6120388747151159,
+        "direction": "up",
+        "fires_present": 0.3638714444033986,
+        "nearby_present": 0.2000121514065253,
+        "fires_median": 0.037464444044368356,
+        "nearby_median": -0.00047580809609584773
+      },
+      "depth_imb_change_3000": {
+        "separation": 0.5419276287774581,
+        "direction": "up",
+        "fires_present": 0.2818618396749169,
+        "nearby_present": 0.1999939239275732,
+        "fires_median": 0.026810038710189166,
+        "nearby_median": -0.003442759089455738
+      },
+      "depth_imb_change_10000": {
+        "separation": 0.5224858013464216,
+        "direction": "down",
+        "fires_present": 0.241370808678501,
+        "nearby_present": 0.19999392115741163,
+        "fires_median": -0.040449296207132515,
+        "nearby_median": -0.00536998795225424
+      }
+    },
+    "RANKS3_10": {
+      "imb_change_300": {
+        "separation": 0.6926464708400489,
+        "direction": "up",
+        "fires_present": 0.48028623544268273,
+        "nearby_present": 0.19999541820347758,
+        "fires_median": 0.04049820524430145,
+        "nearby_median": 0.0
+      },
+      "imb_change_1000": {
+        "separation": 0.6785955965631023,
+        "direction": "up",
+        "fires_present": 0.4461905430054722,
+        "nearby_present": 0.19999541820347758,
+        "fires_median": 0.1066945451262944,
+        "nearby_median": -8.14804844911643e-05
+      },
+      "imb_change_3000": {
+        "separation": 0.6514444582838372,
+        "direction": "up",
+        "fires_present": 0.38838220850287636,
+        "nearby_present": 0.19999541820347758,
+        "fires_median": 0.16595729328080686,
+        "nearby_median": -0.0034227895171575207
+      },
+      "imb_change_10000": {
+        "separation": 0.6537983498522972,
+        "direction": "up",
+        "fires_present": 0.3841506252634537,
+        "nearby_present": 0.1999954166284719,
+        "fires_median": 0.2157508367463693,
+        "nearby_median": -0.07422468817972466
+      },
+      "far_change_300": {
+        "separation": 0.6791625448632502,
+        "direction": "down",
+        "fires_present": 0.4898274168654413,
+        "nearby_present": 0.19999541820347758,
+        "fires_median": -0.04231943187891193,
+        "nearby_median": 0.0
+      },
+      "far_change_1000": {
+        "separation": 0.6741587177581101,
+        "direction": "down",
+        "fires_present": 0.4672372667321454,
+        "nearby_present": 0.19999541820347758,
+        "fires_median": -0.1669732798471552,
+        "nearby_median": 0.0
+      },
+      "far_change_3000": {
+        "separation": 0.655787587694642,
+        "direction": "down",
+        "fires_present": 0.4296337870071559,
+        "nearby_present": 0.19999541820347758,
+        "fires_median": -0.28074104309754633,
+        "nearby_median": 0.0
+      },
+      "far_change_10000": {
+        "separation": 0.6650326880621995,
+        "direction": "down",
+        "fires_present": 0.42405507938738235,
+        "nearby_present": 0.1999954166284719,
+        "fires_median": -0.35270008281634035,
+        "nearby_median": 0.09475757091451359
+      },
+      "near_change_300": {
+        "separation": 0.651279926337158,
+        "direction": "up",
+        "fires_present": 0.42317945839764276,
+        "nearby_present": 0.19999541820347758,
+        "fires_median": 0.012084626179984381,
+        "nearby_median": 0.0
+      },
+      "near_change_1000": {
+        "separation": 0.6375839436054971,
+        "direction": "up",
+        "fires_present": 0.3709835835554932,
+        "nearby_present": 0.19999541820347758,
+        "fires_median": 0.05519051037855086,
+        "nearby_median": 0.0
+      },
+      "near_change_3000": {
+        "separation": 0.610823691650147,
+        "direction": "up",
+        "fires_present": 0.30742247790094007,
+        "nearby_present": 0.19999541820347758,
+        "fires_median": 0.10223835591314834,
+        "nearby_median": -0.00584871343019443
+      },
+      "near_change_10000": {
+        "separation": 0.6180274663674747,
+        "direction": "up",
+        "fires_present": 0.32822818603344106,
+        "nearby_present": 0.19997249977083142,
+        "fires_median": 0.16977489800807405,
+        "nearby_median": -0.08281200269013037
+      },
+      "far_replace_300": {
+        "separation": 0.6581594549214047,
+        "direction": "down",
+        "fires_present": 0.42682755717693277,
+        "nearby_present": 0.19988087329041718,
+        "fires_median": -0.5101174080115707,
+        "nearby_median": 0.0
+      },
+      "far_replace_1000": {
+        "separation": 0.6540686055787658,
+        "direction": "down",
+        "fires_present": 0.4024133576539919,
+        "nearby_present": 0.19999541820347758,
+        "fires_median": -0.32154310468198627,
+        "nearby_median": 0.00025107431287257995
+      },
+      "far_replace_3000": {
+        "separation": 0.6174475618386391,
+        "direction": "down",
+        "fires_present": 0.3514802862354427,
+        "nearby_present": 0.19994960023825342,
+        "fires_median": -0.1213872586854664,
+        "nearby_median": 0.004833262421463956
+      },
+      "far_replace_10000": {
+        "separation": 0.5638644849364953,
+        "direction": "down",
+        "fires_present": 0.2925494598007577,
+        "nearby_present": 0.19999541820347758,
+        "fires_median": -0.009309710784551785,
+        "nearby_median": 0.03668227106723089
+      },
+      "near_replace_300": {
+        "separation": 0.6325434466990891,
+        "direction": "up",
+        "fires_present": 0.33730882559281605,
+        "nearby_present": 0.19926233075989094,
+        "fires_median": 0.16966315996313344,
+        "nearby_median": 0.0
+      },
+      "near_replace_1000": {
+        "separation": 0.6343548104847101,
+        "direction": "up",
+        "fires_present": 0.34320190823628455,
+        "nearby_present": 0.19994960023825342,
+        "fires_median": 0.14099557943485694,
+        "nearby_median": -7.865896823087857e-11
+      },
+      "near_replace_3000": {
+        "separation": 0.6041474798847833,
+        "direction": "up",
+        "fires_present": 0.310088396239652,
+        "nearby_present": 0.19999541820347758,
+        "fires_median": 0.09170356626444089,
+        "nearby_median": -0.00010147928940197959
+      },
+      "near_replace_10000": {
+        "separation": 0.5339296400823969,
+        "direction": "up",
+        "fires_present": 0.22758523923109303,
+        "nearby_present": 0.1999725092208655,
+        "fires_median": 0.06985102320486017,
+        "nearby_median": 0.03934001706400329
+      },
+      "near_new_vs_normal_300": {
+        "separation": 0.6649049931189961,
+        "direction": "up",
+        "fires_present": 0.43258032832889015,
+        "nearby_present": 0.19999541820347758,
+        "fires_median": -0.8029883406104296,
+        "nearby_median": -2.562767843821155
+      },
+      "near_new_vs_normal_1000": {
+        "separation": 0.6272787844174315,
+        "direction": "up",
+        "fires_present": 0.3514802862354427,
+        "nearby_present": 0.19999541820347758,
+        "fires_median": -0.6822921813430948,
+        "nearby_median": -1.589407198463153
+      },
+      "near_new_vs_normal_3000": {
+        "separation": 0.5818864563255193,
+        "direction": "up",
+        "fires_present": 0.2787989336326645,
+        "nearby_present": 0.19999541820347758,
+        "fires_median": -0.5570033674511419,
+        "nearby_median": -1.0456497836679075
+      },
+      "near_new_vs_normal_10000": {
+        "separation": 0.5109409228318715,
+        "direction": "up",
+        "fires_present": 0.20738038445348675,
+        "nearby_present": 0.1999725092208655,
+        "fires_median": -0.24392960820181517,
+        "nearby_median": -0.274954547628904
+      },
+      "far_cxl_vs_normal_300": {
+        "separation": 0.6071167051815834,
+        "direction": "up",
+        "fires_present": 0.3382910060333941,
+        "nearby_present": 0.19999541820347758,
+        "fires_median": -1.0145303015497618,
+        "nearby_median": -2.5270213771822125
+      },
+      "far_cxl_vs_normal_1000": {
+        "separation": 0.5783029009609002,
+        "direction": "up",
+        "fires_present": 0.27893924512417567,
+        "nearby_present": 0.19999541820347758,
+        "fires_median": -0.7587713164431137,
+        "nearby_median": -1.3135198049702805
+      },
+      "far_cxl_vs_normal_3000": {
+        "separation": 0.553909646426131,
+        "direction": "up",
+        "fires_present": 0.2643468500070156,
+        "nearby_present": 0.19999541820347758,
+        "fires_median": -0.5333313477771924,
+        "nearby_median": -0.8151137024330731
+      },
+      "far_cxl_vs_normal_10000": {
+        "separation": 0.5362158614010345,
+        "direction": "up",
+        "fires_present": 0.2444226182124316,
+        "nearby_present": 0.19999541820347758,
+        "fires_median": -0.21225768264846778,
+        "nearby_median": -0.36550552198110847
+      },
+      "depth_imb_change_300": {
+        "separation": 0.6310639772023147,
+        "direction": "up",
+        "fires_present": 0.3787281935846933,
+        "nearby_present": 0.19996324205109356,
+        "fires_median": 0.014108319501991956,
+        "nearby_median": 0.0
+      },
+      "depth_imb_change_1000": {
+        "separation": 0.6263274869120914,
+        "direction": "up",
+        "fires_present": 0.3527011817670231,
+        "nearby_present": 0.20000918948722662,
+        "fires_median": 0.04813850451469323,
+        "nearby_median": -0.0004487299318484128
+      },
+      "depth_imb_change_3000": {
+        "separation": 0.6066549121996782,
+        "direction": "up",
+        "fires_present": 0.31981981981981983,
+        "nearby_present": 0.19997702469844916,
+        "fires_median": 0.08824018416009957,
+        "nearby_median": -0.005212728347084417
+      },
+      "depth_imb_change_10000": {
+        "separation": 0.609187397809435,
+        "direction": "up",
+        "fires_present": 0.31228861330326946,
+        "nearby_present": 0.19997241442725455,
+        "fires_median": 0.13021309398959924,
+        "nearby_median": -0.05650188699086234
+      }
+    }
+  },
+  "long_coverage": {
+    "imb_change_300": 1.0,
+    "imb_change_1000": 1.0,
+    "imb_change_3000": 1.0,
+    "imb_change_10000": 0.9995736231071911,
+    "far_change_300": 1.0,
+    "far_change_1000": 1.0,
+    "far_change_3000": 1.0,
+    "far_change_10000": 0.9995736231071911,
+    "near_change_300": 1.0,
+    "near_change_1000": 1.0,
+    "near_change_3000": 1.0,
+    "near_change_10000": 0.9995736231071911,
+    "far_replace_300": 1.0,
+    "far_replace_1000": 1.0,
+    "far_replace_3000": 1.0,
+    "far_replace_10000": 1.0,
+    "near_replace_300": 1.0,
+    "near_replace_1000": 1.0,
+    "near_replace_3000": 1.0,
+    "near_replace_10000": 1.0,
+    "near_new_vs_normal_300": 1.0,
+    "near_new_vs_normal_1000": 1.0,
+    "near_new_vs_normal_3000": 1.0,
+    "near_new_vs_normal_10000": 1.0,
+    "far_cxl_vs_normal_300": 1.0,
+    "far_cxl_vs_normal_1000": 1.0,
+    "far_cxl_vs_normal_3000": 1.0,
+    "far_cxl_vs_normal_10000": 1.0,
+    "depth_imb_change_300": 0.9968509020916833,
+    "depth_imb_change_1000": 0.9968509020916833,
+    "depth_imb_change_3000": 0.9967778089100588,
+    "depth_imb_change_10000": 0.9961686990631891
+  }
+}

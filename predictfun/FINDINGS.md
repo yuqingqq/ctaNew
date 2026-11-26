@@ -1,3 +1,33 @@
+<!-- SMART_COMBO_20261126_CLAUDE -->
+## 2026-11-26 — combinations and longer windows of the smart takers' factors: with all eight present a move follows 24% of nearby moments (1.6% with none or one) and the top taker fires there 7x as often, but its fires with none or one are still followed by a move 48% of the time; the build-up is as visible over 1-3 s as over 300 ms, the activity bursts only in the last 300 ms
+
+[smart_combo](reviews/take_reprice_20261125/smart_combo.json) (the eight distinct factors of SMART_FACTORS' top twelve, present beyond the top taker's nearby 80th / 20th percentile, one rule for every group; fires and nearby / random moments with no move their way in the previous 300 ms; longer windows from bookTicker / fire_events' events / depth20, normal = (t − 60 s, t − 10 s]; declared before the run; one rehearsal day seen). USER: "Yea we can test the combinations, can we also look back a longer window". Consumed days, in-sample; filled orders only.
+
+| factors present (of 8) | its fires | nearby moments | move within 300 ms after its fires | after nearby moments |
+|---|---:|---:|---:|---:|
+| none or 1 | 30% | 61% | 48% | 1.6% |
+| 2-3 | 23% | 21% | 68% | 4.5% |
+| 4-5 | 22% | 12% | 61% | 6.0% |
+| 6-7 | 17% | 4% | 68% | 12.1% |
+| all 8 | 7% | 1% | 83% | 24.3% |
+
+- **Random moments with >= 6 / >= 8 present:** 4.6% / 0.76% of the time, a move within 300 ms 12% / 21% (base 2.5%).
+- **Best triples by the move rate at random moments:** far side shrinking (300 ms) + near side growing (300 ms) + imbalance its way now: 14% of its fires vs 1.9% of random moments, move 20%; far side not replaced + near side growing (300 ms) + imbalance its way now: 12% of its fires vs 1.4% of random moments, move 20%; imbalance rising (300 ms) + near side growing (300 ms) + imbalance its way now: 14% of its fires vs 1.8% of random moments, move 19%.
+- **Ranks 3-10 and rank 2** show the same count pattern (fires with all eight 7.7% / 2.5%).
+
+| factor (top taker: separation of fires from nearby moments) | 0.3 s | 1 s | 3 s | 10 s |
+|---|---:|---:|---:|---:|
+| imbalance change | 0.68 | 0.68 | 0.68 | 0.65 |
+| far-side size change | 0.68 | 0.67 | 0.67 | 0.65 |
+| near-side size change | 0.64 | 0.64 | 0.64 | 0.62 |
+| far-side replacement | 0.66 | 0.66 | 0.64 | 0.56 |
+| near-side replacement | 0.63 | 0.64 | 0.63 | 0.54 |
+| near-side new orders vs normal | 0.64 | 0.61 | 0.57 | 0.51 |
+| far-side cancels vs normal | 0.59 | 0.57 | 0.54 | 0.52 |
+| depth imbalance change | 0.63 | 0.63 | 0.64 | 0.61 |
+
+- **Reading:** stacking the factors raises the chance of a move at ordinary moments about 15-fold, and the smart takers fire more often when more are present, yet the top taker's fires with almost none of them are followed by a move 48% of the time: the combination tells where it tends to fire, not why it is right. The state changes (imbalance, far / near size, depth imbalance) separate as well over 1-3 s as over 300 ms (a build-up over seconds, weaker at 10 s); the flow rates (near-side new orders, far-side cancels) are sharpest in the last 300 ms and fade over longer windows.
+<!-- /SMART_COMBO_20261126_CLAUDE -->
 <!-- SMART_FACTORS_20261126_CLAUDE -->
 ## 2026-11-26 — the factors at the smart takers' fires: the order book building their way over 100-300 ms (imbalance rising, far side shrinking and not replaced, near side posted); each factor alone separates fires from nearby moments weakly (best AUC 0.68) and is present at 41%-48% of the top taker's fires (nearby 20%)
 

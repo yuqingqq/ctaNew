@@ -1,3 +1,8 @@
+<!-- SMART_COMBO_20261126_CLAUDE -->
+## 2026-11-26 — combinations: all eight factors -> a move after 24% of nearby moments, yet the top taker's fires with none or one -> 48%; longer windows: the build-up spans 1-3 s, the activity bursts the last 300 ms
+
+See FINDINGS SMART_COMBO (same date).
+<!-- /SMART_COMBO_20261126_CLAUDE -->
 <!-- SMART_FACTORS_20261126_CLAUDE -->
 ## 2026-11-26 — factors at the smart takers' fires: the build-up of the last 100-300 ms (imbalance rising, far side shrinking unreplaced, near side posted) leads for the top taker and ranks 3-10; each a partial marker (AUC <= 0.68)
 

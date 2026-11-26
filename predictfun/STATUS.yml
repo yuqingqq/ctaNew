@@ -1,3 +1,10 @@
+smart_combo_20261126_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/smart_combo.json
+  points: data/predict_fun/research/take_reprice_20261125/smart_combo_points.parquet
+  session: 1622c91e
+  nearby_move300_none_vs_all8: [0.0159, 0.2429]
+  fires_move300_none_vs_all8: [0.477, 0.831]
+  share_fires_vs_nearby_all8: [0.0680, 0.0104]
 smart_factors_20261126_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/smart_factors.json
   points: data/predict_fun/research/take_reprice_20261125/smart_factors_points.parquet
