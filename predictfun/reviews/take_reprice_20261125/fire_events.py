@@ -9,8 +9,8 @@ volume at that price in the interval: drop = cancel, rise = add; the untraded re
 one update net out, so both are lower bounds), gone (the best price moves away from the book: the level emptied), improve (a better price
 appears). Signed by the taker's direction d: opp = the side that must empty for the price to move their way (the ask for d = +1), near =
 the other; toward them: opp trade / cancel / gone, near add / improve; against them: opp add / improve, near trade / cancel / gone.
-Points: each burst (one taker, one market, fires within 2 ms; its first fire) of the top taker (TOP1) and ranks 2-10 (TOP2_10); null = the
-same fire shifted by +-5, 10, .., 30 s, same d (declared with winners_trigger). Excluded, counted: points within 1.5 s of an hour file
+Points: each burst (one taker, one market, fires within 2 ms; its first fire) of the top taker (TOP1, all) and ranks 2-10 (TOP2_10, a seeded
+sample of 20,000 bursts over the four days); null = the same fire shifted by +-5, 10, .., 30 s, same d (declared with winners_trigger). Excluded, counted: points within 1.5 s of an hour file
 boundary or in an hour without a bookTicker file.
 Readings per group, sends vs null: (1) event rates (count and BTC per ms) by time relative to the fire, 5 ms bins over [-300, +150) and
 1 ms bins over [-50, +20); (2) time since the last event of each kind; (3) which of opp trade / opp cancel / opp gone / near add occurred
@@ -42,7 +42,7 @@ PATTERN = (('opp', 'trade'), ('opp', 'cancel'), ('opp', 'gone'), ('near', 'add')
 TOWARD = (('opp', 'trade'), ('opp', 'cancel'), ('opp', 'gone'), ('near', 'add'), ('near', 'improve'))
 COARSE, FINE = np.arange(-300., 151., 5.), np.arange(-50., 21., 1.)
 LAGS, WINS = (300., 200., 100., 50., 20., 10., 5., 0.), (10., 25., 50.)
-EDGE_MS, KEEP, CHUNK, HIT_MS = 1500., 200., 20000, 150.
+EDGE_MS, KEEP, CHUNK, HIT_MS, CAP_2_10 = 1500., 200., 20000, 150., 20000
 QS = (.05, .25, .5, .75, .95)
 
 
@@ -195,7 +195,7 @@ def per_point(ev, t, d, fn):
 
 
 def run(argv):
-    resource.setrlimit(resource.RLIMIT_CPU, (1500, 1501))
+    resource.setrlimit(resource.RLIMIT_CPU, (2400, 2401))
     if argv[:1] == ['rehearse']:
         days, fj = [argv[2]], Path(argv[1]) / 'fire_events.json'
         C.require(days[0] in WT.DAYS, f'{days[0]} is not a declared day')
@@ -206,6 +206,12 @@ def run(argv):
     A = A[A.t_set.notna() & A.day.isin(days)].copy()
     A['grp'] = np.where(A['rank'] == 1, 'TOP1', 'TOP2_10')
     B = A.sort_values(['burst', 'fire'], kind='stable').drop_duplicates('burst', keep='first').reset_index(drop=True)
+    n2 = int((B.grp == 'TOP2_10').sum())
+    if n2 > CAP_2_10:                                   # ranks 2-10 are the contrast: a seeded sample keeps the run small
+        keep = np.zeros(len(B), bool)
+        keep[(B.grp == 'TOP1').to_numpy()] = True
+        keep[np.random.default_rng(WT.SEED).choice(np.flatnonzero((B.grp == 'TOP2_10').to_numpy()), CAP_2_10, replace=False)] = True
+        B = B[keep].reset_index(drop=True)
     V1 = pd.read_parquet(OUT / 'winners_trigger_points.parquet', columns=['day', 'mid', 's', 'y', 'grp', 'v1'])
     V1 = V1[(V1.y == 1) & V1.grp.isin(['TOP1', 'TOP2_10'])].drop_duplicates(['day', 'mid', 's', 'grp'])
     B = B.merge(V1[['day', 'mid', 's', 'grp', 'v1']].rename(columns={'s': 's_m50'}), on=['day', 'mid', 's_m50', 'grp'], how='left', validate='many_to_one')
@@ -245,6 +251,9 @@ def run(argv):
             cnt_w = per_point(ev, t, d, lambda E, tt: count_in(E, tt, w))
             for role, kind in PATTERN:
                 Gok[f'in{int(w)}_{role}_{kind}'] = cnt_w[f'{role}_{kind}'] > 0
+        for c in Gok.columns:
+            if Gok[c].dtype == np.float64 and c not in ('t', 't_m50', 'd'):
+                Gok[c] = Gok[c].astype(np.float32)
         rows.append(Gok)
         cnt = Pd.groupby(['grp', 'y', 'status']).size()
         acc['status'][day] = {f'{g}|{y}|{s}': int(v) for (g, y, s), v in cnt.items()}
