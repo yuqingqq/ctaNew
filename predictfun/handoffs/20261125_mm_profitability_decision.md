@@ -59,3 +59,7 @@ The unchanged passive urgency controller was positive on October 31 and November
 ## November 26 retrospective on the three remaining prepared dates
 
 [October 23–25 paired results and fit overlap](../reviews/urgency_earlier_dates_20261126/report.md). The retained controller earned positive completed turnover and settlement on each date. October 24 missed its mean absolute ending inventory ceiling (31.5 versus 21.8 shares). October 23 predates the capacity fit; October 24 and 25 supplied 23 fit markets each. The other 107 markets on those two dates also earned positive settlement in aggregate. These are retrospective stress results. All nine currently prepared unreserved dates have now been replayed. The user kept the untouched November block reserved.
+
+## November 26 order-size sensitivity
+
+[100 versus 220 shares per order](../reviews/urgency_size100_20261126/report.md). With two rungs and the same frozen inventory controller, smaller orders earned $22,244.34 versus $18,260.40 across 689 complete markets. At 100 the strategy earned positive settlement on all nine consumed days and beat 220 on six. Completed FIFO rose from $25,071.86 to $28,515.68 on fewer matched shares. Mean absolute ending inventory fell from 50.95 to 47.38, while the pooled p90 rose from 189.11 to 202.34. The four later dates also favored 100 in total dollars. Prefer 100 as the research candidate for a future independent comparison; the reserved block stays closed.

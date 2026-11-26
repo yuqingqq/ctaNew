@@ -1,0 +1,415 @@
+{
+  "days": {
+    "20261023": {
+      "arms": {
+        "100": {
+          "settle": 2173.4283231900226,
+          "turnover": 2472.5610636351767,
+          "residual": -299.13274044515344,
+          "closed": 77351.4283948283,
+          "posts": 13781.0,
+          "all_pulls": 11963.0,
+          "n": 70,
+          "mean_abs_end": 28.370563912787933,
+          "p90_end": 94.29066668677706,
+          "cents_per_matched": 3.196529288398366
+        },
+        "220": {
+          "settle": 1642.5642015997473,
+          "turnover": 1985.2352071051919,
+          "residual": -342.6710055054448,
+          "closed": 96426.17548065686,
+          "posts": 13944.0,
+          "all_pulls": 12392.0,
+          "n": 70,
+          "mean_abs_end": 30.138892629415178,
+          "p90_end": 54.017991342905624,
+          "cents_per_matched": 2.0588135920660164
+        }
+      },
+      "delta": 530.8641215902758,
+      "without_best": 355.4950043958489,
+      "better": 44,
+      "worse": 26,
+      "positive_100": true,
+      "coverage": {
+        "missing_endpoint": 187,
+        "complete": 70,
+        "stale_future_book": 31
+      }
+    },
+    "20261024": {
+      "arms": {
+        "100": {
+          "settle": 1476.8846545854285,
+          "turnover": 2032.9423438679223,
+          "residual": -556.0576892824939,
+          "closed": 78021.85381188507,
+          "posts": 11661.0,
+          "all_pulls": 9943.0,
+          "n": 81,
+          "mean_abs_end": 30.90482960679935,
+          "p90_end": 97.75629251419386,
+          "cents_per_matched": 2.6056063071373012
+        },
+        "220": {
+          "settle": 1592.919511278998,
+          "turnover": 2230.7670927948425,
+          "residual": -637.8475815158432,
+          "closed": 93427.96435941412,
+          "posts": 11966.0,
+          "all_pulls": 10389.0,
+          "n": 81,
+          "mean_abs_end": 31.478521709073924,
+          "p90_end": 75.21490468608116,
+          "cents_per_matched": 2.3876867146683827
+        }
+      },
+      "delta": -116.0348566935696,
+      "without_best": -271.8603477207986,
+      "better": 46,
+      "worse": 35,
+      "positive_100": true,
+      "coverage": {
+        "complete": 81,
+        "stale_future_book": 70,
+        "missing_endpoint": 137
+      }
+    },
+    "20261025": {
+      "arms": {
+        "100": {
+          "settle": 3355.072587817008,
+          "turnover": 3760.242195995251,
+          "residual": -405.16960817824236,
+          "closed": 62309.453378286235,
+          "posts": 9174.0,
+          "all_pulls": 7751.0,
+          "n": 72,
+          "mean_abs_end": 28.178048777459843,
+          "p90_end": 108.33674761515336,
+          "cents_per_matched": 6.034786043084805
+        },
+        "220": {
+          "settle": 3524.4611507603477,
+          "turnover": 3996.8979358912475,
+          "residual": -472.43678513089935,
+          "closed": 75969.32604867543,
+          "posts": 9614.0,
+          "all_pulls": 8356.0,
+          "n": 72,
+          "mean_abs_end": 31.314179747069986,
+          "p90_end": 122.41398070414888,
+          "cents_per_matched": 5.261199675945968
+        }
+      },
+      "delta": -169.38856294333937,
+      "without_best": -276.3734336044756,
+      "better": 38,
+      "worse": 32,
+      "positive_100": true,
+      "coverage": {
+        "stale_future_book": 100,
+        "complete": 72,
+        "missing_endpoint": 116
+      }
+    },
+    "20261026": {
+      "arms": {
+        "100": {
+          "settle": 2636.076338376374,
+          "turnover": 3403.6015950926385,
+          "residual": -767.5252567162651,
+          "closed": 82639.48869967477,
+          "posts": 15380.0,
+          "all_pulls": 13701.0,
+          "n": 70,
+          "mean_abs_end": 47.06161424201447,
+          "p90_end": 166.748033458747,
+          "cents_per_matched": 4.118614053218403
+        },
+        "220": {
+          "settle": 1774.4923767630655,
+          "turnover": 2259.8166931693763,
+          "residual": -485.3243164063104,
+          "closed": 104752.40119627296,
+          "posts": 15345.0,
+          "all_pulls": 13896.0,
+          "n": 70,
+          "mean_abs_end": 38.25300173953499,
+          "p90_end": 188.34644573704352,
+          "cents_per_matched": 2.15729345328819
+        }
+      },
+      "delta": 861.5839616133079,
+      "without_best": 523.7768978616236,
+      "better": 43,
+      "worse": 27,
+      "positive_100": true,
+      "coverage": {
+        "missing_endpoint": 124,
+        "complete": 70,
+        "stale_future_book": 94
+      }
+    },
+    "20261027": {
+      "arms": {
+        "100": {
+          "settle": 1710.95758891031,
+          "turnover": 2244.7010888055197,
+          "residual": -533.7434998952095,
+          "closed": 68604.57504081905,
+          "posts": 9321.0,
+          "all_pulls": 7919.0,
+          "n": 58,
+          "mean_abs_end": 38.49156371392235,
+          "p90_end": 116.6691872141443,
+          "cents_per_matched": 3.271940810754887
+        },
+        "220": {
+          "settle": 903.9916065670305,
+          "turnover": 1769.090032365159,
+          "residual": -865.0984257981287,
+          "closed": 82332.05144598047,
+          "posts": 9384.0,
+          "all_pulls": 8215.0,
+          "n": 58,
+          "mean_abs_end": 54.957012393422076,
+          "p90_end": 227.36536594333663,
+          "cents_per_matched": 2.1487258015499475
+        }
+      },
+      "delta": 806.9659823432792,
+      "without_best": 559.7466071983927,
+      "better": 33,
+      "worse": 25,
+      "positive_100": true,
+      "coverage": {
+        "missing_endpoint": 139,
+        "stale_future_book": 91,
+        "complete": 58
+      }
+    },
+    "20261031": {
+      "arms": {
+        "100": {
+          "settle": 2278.778056005844,
+          "turnover": 5018.589682782447,
+          "residual": -2739.8116267766027,
+          "closed": 64854.62724396573,
+          "posts": 9406.0,
+          "all_pulls": 8093.0,
+          "n": 102,
+          "mean_abs_end": 122.58782949859986,
+          "p90_end": 359.65644724803076,
+          "cents_per_matched": 7.738213749812881
+        },
+        "220": {
+          "settle": 2308.880702888427,
+          "turnover": 5352.239878503779,
+          "residual": -3043.3591756153537,
+          "closed": 77808.55199062452,
+          "posts": 9821.0,
+          "all_pulls": 8737.0,
+          "n": 102,
+          "mean_abs_end": 132.23127384799594,
+          "p90_end": 403.1877731998495,
+          "cents_per_matched": 6.878729576086563
+        }
+      },
+      "delta": -30.10264688258252,
+      "without_best": -274.48628588258254,
+      "better": 48,
+      "worse": 53,
+      "positive_100": true,
+      "coverage": {
+        "stale_future_book": 99,
+        "complete": 102,
+        "missing_endpoint": 87
+      }
+    },
+    "20261101": {
+      "arms": {
+        "100": {
+          "settle": 3396.7101828180716,
+          "turnover": 4133.436983026419,
+          "residual": -736.7268002083473,
+          "closed": 46630.35949407121,
+          "posts": 7215.0,
+          "all_pulls": 6151.0,
+          "n": 88,
+          "mean_abs_end": 48.156630787429556,
+          "p90_end": 186.83013178228043,
+          "cents_per_matched": 8.864261455140534
+        },
+        "220": {
+          "settle": 2664.967872205415,
+          "turnover": 3579.8003792180166,
+          "residual": -914.8325070126011,
+          "closed": 60202.15087017888,
+          "posts": 7760.0,
+          "all_pulls": 6816.0,
+          "n": 88,
+          "mean_abs_end": 51.00430401678715,
+          "p90_end": 155.4200694232285,
+          "cents_per_matched": 5.946299804034527
+        }
+      },
+      "delta": 731.7423106126569,
+      "without_best": 466.96625996647117,
+      "better": 44,
+      "worse": 38,
+      "positive_100": true,
+      "coverage": {
+        "stale_future_book": 131,
+        "complete": 88,
+        "missing_endpoint": 69
+      }
+    },
+    "20261102": {
+      "arms": {
+        "100": {
+          "settle": 2146.658320818754,
+          "turnover": 2081.488950035927,
+          "residual": 65.16937078282795,
+          "closed": 71314.73808557627,
+          "posts": 14086.0,
+          "all_pulls": 12569.0,
+          "n": 72,
+          "mean_abs_end": 28.358715782128574,
+          "p90_end": 41.08023652041103,
+          "cents_per_matched": 2.918736022753363
+        },
+        "220": {
+          "settle": 1640.5298171962756,
+          "turnover": 1229.1996360557505,
+          "residual": 411.3301811405254,
+          "closed": 90648.91011365193,
+          "posts": 14630.0,
+          "all_pulls": 13202.0,
+          "n": 72,
+          "mean_abs_end": 24.829493913032806,
+          "p90_end": 19.788125106280077,
+          "cents_per_matched": 1.3560004577160716
+        }
+      },
+      "delta": 506.1285036224785,
+      "without_best": 283.16864816391234,
+      "better": 41,
+      "worse": 31,
+      "positive_100": true,
+      "coverage": {
+        "stale_future_book": 102,
+        "missing_endpoint": 114,
+        "complete": 72
+      }
+    },
+    "20261103": {
+      "arms": {
+        "100": {
+          "settle": 3069.7691458360355,
+          "turnover": 3368.1188862263793,
+          "residual": -298.3497403903442,
+          "closed": 75596.91556913799,
+          "posts": 14094.0,
+          "all_pulls": 12456.0,
+          "n": 76,
+          "mean_abs_end": 23.85765770206155,
+          "p90_end": 91.32783150531525,
+          "cents_per_matched": 4.455365487955695
+        },
+        "220": {
+          "settle": 2207.5927290064615,
+          "turnover": 2668.812878521446,
+          "residual": -461.2201495149851,
+          "closed": 91051.46671054633,
+          "posts": 14230.0,
+          "all_pulls": 12796.0,
+          "n": 76,
+          "mean_abs_end": 33.69152792019542,
+          "p90_end": 92.25660916624214,
+          "cents_per_matched": 2.9311036658043443
+        }
+      },
+      "delta": 862.176416829574,
+      "without_best": 435.5207215248859,
+      "better": 44,
+      "worse": 32,
+      "positive_100": true,
+      "coverage": {
+        "missing_endpoint": 89,
+        "stale_future_book": 122,
+        "complete": 76,
+        "boundary_censored_forward_tail": 1
+      }
+    }
+  },
+  "all_dates": {
+    "arms": {
+      "100": {
+        "settle": 22244.335198357847,
+        "turnover": 28515.68278946768,
+        "residual": -6271.34759110983,
+        "closed": 627323.4397182446,
+        "posts": 104118.0,
+        "all_pulls": 90546.0,
+        "n": 689,
+        "mean_abs_end": 47.37536359389324,
+        "p90_end": 202.34100965785953,
+        "cents_per_matched": 4.54561092158061
+      },
+      "220": {
+        "settle": 18260.399968265767,
+        "turnover": 25071.85973362481,
+        "residual": -6811.45976535904,
+        "closed": 772618.9982160014,
+        "posts": 106694.0,
+        "all_pulls": 94799.0,
+        "n": 689,
+        "mean_abs_end": 50.948576044288956,
+        "p90_end": 189.1144409807753,
+        "cents_per_matched": 3.245048308612191
+      }
+    },
+    "delta": 3983.935230092081,
+    "without_best": 3557.279534787393,
+    "better": 381,
+    "worse": 299,
+    "positive_100": true
+  },
+  "four_later_dates": {
+    "arms": {
+      "100": {
+        "settle": 10891.915705478707,
+        "turnover": 14601.63450207117,
+        "residual": -3709.718796592467,
+        "closed": 258396.6403927512,
+        "posts": 44801.0,
+        "all_pulls": 39269.0,
+        "n": 338,
+        "mean_abs_end": 60.937135029055995,
+        "p90_end": 231.51277573604654,
+        "cents_per_matched": 5.650860816099368
+      },
+      "220": {
+        "settle": 8821.971121296578,
+        "turnover": 12830.052772298994,
+        "residual": -4008.0816510024138,
+        "closed": 319711.07968500163,
+        "posts": 46441.0,
+        "all_pulls": 41551.0,
+        "n": 338,
+        "mean_abs_end": 66.04807209954457,
+        "p90_end": 263.88377226664255,
+        "cents_per_matched": 4.013014745982505
+      }
+    },
+    "delta": 2069.944584182127,
+    "without_best": 1643.288888877439,
+    "better": 177,
+    "worse": 154,
+    "positive_100": true
+  },
+  "profitable_days": 9,
+  "higher_pnl_days": 6
+}
