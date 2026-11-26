@@ -1,0 +1,16 @@
+{
+  "control_markets": 70,
+  "paired_markets": 619,
+  "arms": 2,
+  "screen": "consider_prospective_validation",
+  "sha256": {
+    "markets_20261023.csv": "4f023028f725043d1e7d6c1fff55f0ad53f04a1832ef47709a4e71e7320f4147",
+    "markets_20261024.csv": "293f53c988858c74fd3c6df5bd8ad314c202b3dc9c98dcc3d20aa32efca39b19",
+    "markets_20261025.csv": "b66876413ae35dd6ff6b156da22eb39d2cfdfe47a5a6eda6c0d3806afa9b8515",
+    "markets_20261027.csv": "752db9eeaa3f1fb4dc25a999d819f4156a20baa9911074ab47aca2265606d92c",
+    "markets_20261031.csv": "c3c40a0709ade2a7608ddd1c0c6fac2beac0f6e88e408d6df1c7137704462c10",
+    "markets_20261101.csv": "7f3aa3b777a18990382297d2ae79b6d00f087b844bf7bcfe56710b11ebd9050f",
+    "markets_20261102.csv": "effabb4494db16236c8f8e419bdbe664631750710f2add354104004430a59687",
+    "markets_20261103.csv": "a90cff26eaf949a720ee6c42f315be5b289e34c9cdbbe75b846b40588541fef3"
+  }
+}

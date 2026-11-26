@@ -1,0 +1,85 @@
+{
+  "arms": {
+    "nominal": {
+      "settle": 1511.3559979716279,
+      "turnover": 3445.468821592852,
+      "residual": -1934.1128236212235,
+      "closed": 270806.62694628735,
+      "shares": 549874.1484856418,
+      "post_request_shares": 49525.286527034434,
+      "markets": 619,
+      "cents_per_matched": 1.2722985624263312,
+      "mean_abs_end": 13.345548615617142,
+      "max_abs_end": 150.0,
+      "without_best_market": 1364.9069727515944,
+      "zero_fill_markets": 8,
+      "positive_days": 6,
+      "without_best_day": 845.955206026166
+    },
+    "short": {
+      "settle": 2594.560112090535,
+      "turnover": 4687.6609219732745,
+      "residual": -2093.1008098827388,
+      "closed": 252406.52207459687,
+      "shares": 513390.9726129327,
+      "post_request_shares": 0.0,
+      "markets": 619,
+      "cents_per_matched": 1.8571869234773066,
+      "mean_abs_end": 13.85771965062845,
+      "max_abs_end": 150.0,
+      "without_best_market": 2460.3848047017846,
+      "zero_fill_markets": 8,
+      "positive_days": 5,
+      "without_best_day": 1693.9394414274525
+    }
+  },
+  "screen": "consider_prospective_validation",
+  "coverage": {
+    "20261026": {
+      "missing_endpoint": 124,
+      "complete": 70,
+      "stale_future_book": 94
+    },
+    "20261023": {
+      "missing_endpoint": 187,
+      "complete": 70,
+      "stale_future_book": 31
+    },
+    "20261024": {
+      "complete": 81,
+      "stale_future_book": 70,
+      "missing_endpoint": 137
+    },
+    "20261025": {
+      "stale_future_book": 100,
+      "complete": 72,
+      "missing_endpoint": 116
+    },
+    "20261027": {
+      "missing_endpoint": 139,
+      "stale_future_book": 91,
+      "complete": 58
+    },
+    "20261031": {
+      "stale_future_book": 99,
+      "complete": 102,
+      "missing_endpoint": 87
+    },
+    "20261101": {
+      "stale_future_book": 131,
+      "complete": 88,
+      "missing_endpoint": 69
+    },
+    "20261102": {
+      "stale_future_book": 102,
+      "missing_endpoint": 114,
+      "complete": 72
+    },
+    "20261103": {
+      "missing_endpoint": 89,
+      "stale_future_book": 122,
+      "complete": 76,
+      "boundary_censored_forward_tail": 1
+    }
+  }
+}
