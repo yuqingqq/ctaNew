@@ -1,0 +1,53 @@
+{
+  "zero_wallet": {
+    "markets": 13,
+    "orders": 15,
+    "legs": 20,
+    "closed": 119.48615384615368,
+    "by_price": {
+      "same_price": 47.0,
+      "through_price": 72.48615384615368
+    },
+    "by_timing": {
+      "after_ack_before_cancel_request": 42.46,
+      "at_or_after_cancel_request": 77.02615384615369
+    },
+    "robust_clock": 0.0,
+    "imputed": 10.46,
+    "at_price_initial_queue_zero": 12.0,
+    "at_price_queue_unknown": 0.0,
+    "same_id_retained_closing": {
+      "clock_hi": 15.0,
+      "clock_lo": 0.0,
+      "long": 114.48615384615368,
+      "primary": 119.48615384615368,
+      "short": 37.46,
+      "timed_only": 109.02615384615369
+    }
+  },
+  "positive_wallet": {
+    "markets": 6,
+    "orders": 8,
+    "legs": 8,
+    "closed": 75.44999999999993,
+    "by_price": {
+      "same_price": 44.99999999999993,
+      "through_price": 30.45
+    },
+    "by_timing": {
+      "after_ack_before_cancel_request": 75.44999999999993
+    },
+    "robust_clock": 25.0,
+    "imputed": 0.0,
+    "at_price_initial_queue_zero": 0.0,
+    "at_price_queue_unknown": 0.0,
+    "same_id_retained_closing": {
+      "clock_hi": 40.0,
+      "clock_lo": 25.0,
+      "long": 50.44999999999993,
+      "primary": 75.44999999999993,
+      "short": 75.44999999999993,
+      "timed_only": 65.44999999999993
+    }
+  }
+}
