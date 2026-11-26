@@ -18,6 +18,13 @@ in the last 10 / 25 / 50 ms: share of sends and of random times per combination,
 the sends' 1 s value (winners_trigger points, where sampled); (4) imbalance, opposite and near best size at fire - 300 .. 0 ms; (5) the same
 1 ms profile around the M50 send time of the same orders, all and by how the first leg was timed (websocket / book drop): which clock
 aligns the events more sharply (toward-event excess over random times in the last 20 ms).
+Arrival at Predict: the settlement id is created a median c ms after the book-stamped trade (c = median of fire - M50 send time on the orders
+whose first leg is websocket-timed, per group; FINDINGS: those legs sit on the book stamp + 50 ms convention), so the estimated arrival is
+fire - c and every profile is also read on that axis (relative to arrival = relative to fire + c); the venue / Binance clock offset is
+unknown (both in AWS Tokyo). Timing readouts, declared before the four-day run (one day, 10-31, was seen in the rehearsal): per toward kind
+(volume for trade / cancel / add, count for gone / improve) the 5 ms bin with the largest excess over random times (send - random per ms);
+the onset = the earliest bin start from which the send / random ratio stays >= 2 up to that peak; the share of the excess accumulated from
+-300 ms that is in by 100 / 50 / 20 / 10 / 0 ms before the estimated arrival.
 Output (write-once): fire_events.json.
 Usage: PF_SLOT=<slot> predictfun/research/run_light.sh <tag> -- python3 predictfun/reviews/take_reprice_20261125/fire_events.py \
        selftest | run [<rehearsal dir> <day>]
@@ -311,6 +318,24 @@ def run(argv):
         r['trajectory'] = {k: dict(send_mean=mean(S[k]), random_mean=mean(N[k]), send_median=float(np.nanmedian(S[k])), random_median=float(np.nanmedian(N[k])))
                            for k in G.columns if k.split('_')[0] in ('imb', 'opp', 'near') and k[-1].isdigit()}
         r['hit150'] = dict(send=mean(S.hit150), random=mean(N.hit150))
+        c = float(np.median((B.fire - B.s_m50)[(B.grp == g) & (B.how2_first == 1)]))
+        r['arrival_offset_ms'] = c
+        lo_e = COARSE[:-1]
+        r['timing'] = {}
+        for ro, ki in TOWARD:
+            q = 'v' if ki in ('trade', 'cancel', 'add') else 'n'
+            sv, nv = s[('coarse', f'{ro}_{ki}', q)] / s['n'], n[('coarse', f'{ro}_{ki}', q)] / n['n']
+            ex, ratio = sv - nv, np.where(nv > 0, sv / np.maximum(nv, 1e-300), np.inf)
+            ip = int(np.argmax(ex))
+            io = ip
+            while io > 0 and ratio[io - 1] >= 2.:
+                io -= 1
+            cum = np.cumsum(ex)
+            tot = float(np.interp(-c, COARSE[1:], cum))                       # excess from -300 up to the arrival (fire axis: -c)
+            r['timing'][f'{ro}_{ki}'] = dict(measure='btc' if q == 'v' else 'count', peak_bin_rel_fire=float(lo_e[ip]), peak_bin_rel_arrival=float(lo_e[ip] + c),
+                                             onset_rel_fire=float(lo_e[io]), onset_rel_arrival=float(lo_e[io] + c), peak_ratio=float(ratio[ip]),
+                                             excess_to_arrival=tot, share_in_by={str(int(x)): (float(np.interp(-c - x, COARSE[1:], cum)) / tot if tot > 0 else None)
+                                                                                 for x in (100., 50., 20., 10., 0.)})
         out['groups'][g] = r
     TR.dump(fj, out)
     for g, r in out['groups'].items():
