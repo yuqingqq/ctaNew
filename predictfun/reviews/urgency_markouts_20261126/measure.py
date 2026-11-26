@@ -67,6 +67,7 @@ def run():
     fit = U.S.read(R.HERE / "fit_v2.json")["cells"]
     src = R.MM.KP.Tape()
     edges = R.MM.TR.T.P.frozen_edges()
+    census = U.S.read(R.CENSUS)["rows"]
     writer = None
     for day in S["DAYS"]:
         reference = pd.read_csv(PARENT / f"markets_{day}.csv", float_precision="round_trip")
@@ -77,6 +78,10 @@ def run():
         rg = pd.read_parquet(R.MM.S1 / day / "registry.parquet").set_index("mid")
         off = src.offset(day)
         seg = OD.SEG_OF.get(day)
+        tape_ids = original.tape_id.to_dict() if seg else {
+            r["mid"]: r["tape_id"] for r in census if r["day"] == day and r["status"] == "complete"
+        }
+        assert set(tape_ids) == set(reference.index)
         seen = set()
         for _, group in reg.groupby("hour"):
             ids = sorted(set(group.index) & set(reference.index))
@@ -86,7 +91,7 @@ def run():
                 assert status == "complete" and mid in ids and mid not in seen
                 seen.add(mid)
                 ident = R.MM.ident_of(day, mid, 1000. * reg.at[mid, "ws"], info, path)
-                assert ident["tape_id"] == original.at[mid, "tape_id"]
+                assert ident["tape_id"] == tape_ids[mid]
                 start, end = info["t_start"], info["end_rel"]
                 cache = OD.make_cache3(start, end, seg) if seg else R.MM.make_cache(start, end)
                 marks = []
