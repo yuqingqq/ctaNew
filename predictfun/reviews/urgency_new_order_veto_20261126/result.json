@@ -1,0 +1,18 @@
+{
+  "verdicts": {
+    "nominal": "risk_tradeoff",
+    "short": "risk_tradeoff"
+  },
+  "candidate_passes": false,
+  "sha256": {
+    "comparison.csv": "3f6caeded9306a5a148f55a133613af299426ad2bcbdfc34492bba2da038ff33",
+    "markets_20261023.csv": "73ec24b02ff521041f00958e5fd4287cef78145942012b272e19a7d6c267e2b2",
+    "markets_20261024.csv": "42194c708eea60cc620266028a6b33f7f102c36cc7496d8e45db8ed05f45bf79",
+    "markets_20261025.csv": "8baa338c1bca22721e73756d6adebc084719559963f15575c26841f08661629a",
+    "markets_20261027.csv": "81271b3ef97558761fb70f4d59c2eae7f13af3d30e9ea1fced22f1d4932229f9",
+    "markets_20261031.csv": "c458e295926def88b10326478b4d4abe1a1d8591345cc809c3e76cd71c9e2b0a",
+    "markets_20261101.csv": "1919dd85792b32567c2461c5585f0dde0710699054f79508c094b1ebeaf4e601",
+    "markets_20261102.csv": "e72baa94ef1082d6289d1f39e465d62883df154793c366c18a2559575f4d375e",
+    "markets_20261103.csv": "51f41272c858bce6a4dfd0d3035a79111c6bf83deae3ec8e3153ca4dec4e4797"
+  }
+}
