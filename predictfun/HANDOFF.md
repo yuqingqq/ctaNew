@@ -1,3 +1,8 @@
+<!-- SMART_FACTORS_20261126_CLAUDE -->
+## 2026-11-26 — factors at the smart takers' fires: the build-up of the last 100-300 ms (imbalance rising, far side shrinking unreplaced, near side posted) leads for the top taker and ranks 3-10; each a partial marker (AUC <= 0.68)
+
+See FINDINGS SMART_FACTORS (same date).
+<!-- /SMART_FACTORS_20261126_CLAUDE -->
 <!-- SCORE_REPLAY_20261126_CLAUDE -->
 ## 2026-11-26 — the public score's top-1% moments as takes under Predict's rules: -1.12 c/sh at 1 s, ledger $-256, every day negative; the price moved away before 31% of its takes matched
 

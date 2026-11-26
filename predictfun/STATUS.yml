@@ -1,3 +1,10 @@
+smart_factors_20261126_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/smart_factors.json
+  points: data/predict_fun/research/take_reprice_20261125/smart_factors_points.parquet
+  session: 1622c91e
+  top_factor_top1: x_imb_d300
+  top_factor_auc_top1: 0.682
+  shared_top12_top1_ranks3_10: 11
 score_replay_20261126_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/score_replay.json
   ledgers: data/predict_fun/research/take_score_20261126

@@ -1,3 +1,28 @@
+<!-- SMART_FACTORS_20261126_CLAUDE -->
+## 2026-11-26 — the factors at the smart takers' fires: the order book building their way over 100-300 ms (imbalance rising, far side shrinking and not replaced, near side posted); each factor alone separates fires from nearby moments weakly (best AUC 0.68) and is present at 41%-48% of the top taker's fires (nearby 20%)
+
+[smart_factors](reviews/take_reprice_20261125/smart_factors.json) (v3 factors from public_score / public_score3's builders; fires with no move their way in the previous 300 ms against nearby moments; top taker 4,425 fires / 67,810 nearby (±5..30 s), rank 2 8,136 / 33,025 and ranks 3-10 7,127 / 43,651 from a seeded 20,000-burst sample (±10 / ±20 s); 'present' = beyond the nearby 80th (or 20th) percentile in the fires' direction, 20% of nearby moments by construction; declared before the run). USER: "Can we first measure the factors on smart takers fires, check what are the most existing critical factors". Consumed days, in-sample; their filled orders only.
+
+| factor (direction at fires) | top taker: AUC / present | ranks 3-10 | rank 2 |
+|---|---:|---:|---:|
+| imbalance change, 300 ms (up) | 0.68 / 46% | 0.69 / 48% | 0.67 / 44% |
+| far-side size change, 300 ms (down) | 0.32 / 48% | 0.32 / 49% | 0.36 / 40% |
+| far-side replacement (300 ms) (down) | 0.34 / 42% | 0.34 / 43% | 0.39 / 34% |
+| far-side replacement vs normal (down) | 0.34 / 43% | 0.35 / 43% | 0.39 / 34% |
+| near-side new orders vs normal (300 ms) (up) | 0.66 / 41% | 0.68 / 45% | 0.61 / 34% |
+| imbalance change, 100 ms (up) | 0.65 / 43% | 0.66 / 45% | 0.64 / 40% |
+| near-side new orders vs normal (100 ms) (up) | 0.65 / 42% | 0.67 / 45% | 0.59 / 32% |
+| near-side size change, 300 ms (up) | 0.64 / 40% | 0.65 / 42% | 0.65 / 42% |
+| best-level imbalance its way (up) | 0.64 / 39% | 0.63 / 39% | 0.49 / 21% |
+| far-side size at the best (log) (down) | 0.37 / 41% | 0.38 / 41% | 0.52 / 27% |
+| near-side replacement vs normal (up) | 0.63 / 33% | 0.63 / 34% | 0.62 / 34% |
+| depth imbalance change, 300 ms (up) | 0.63 / 37% | 0.63 / 38% | 0.63 / 37% |
+
+- **Their fires' Binance move within 300 ms:** top taker 61% (nearby 3.5%), ranks 3-10 41% (3.5%), rank 2 13% (2.9%).
+- **Strongest factor per family (|AUC - 0.5|):** TOP1: best-level flows 0.18, state 0.14, deep levels 0.13, other venues 0.08, Predict 0.04; RANKS3_10: best-level flows 0.19, deep levels 0.13, state 0.13, other venues 0.09, Predict 0.05; RANK2: best-level flows 0.17, deep levels 0.13, other venues 0.12, Predict 0.09, state 0.03.
+- **Weakest at the top taker's fires:** spread (ticks) 0.50; deribit trades against it vs normal (300 ms) 0.50; okx swap price moved ahead of Binance, 5 s 0.51; coinbase trades against it vs normal (300 ms) 0.49; time left in the window 0.49; deep near-side removals vs normal (1 s) 0.51. Rank 2 also leans on binance spot price moved ahead of Binance, 5 s, near-side replacement (300 ms), depth imbalance change, 1 s.
+- **Reading:** the top taker and ranks 3-10 fire on the same build-up: the imbalance rising their way, the far side shrinking without replacement, the near side posted, the depth imbalance following; trades, other venues and Predict barely mark their fires. Rank 2 fires on a slower mix (moves within 300 ms 13%). Every factor is a partial marker: present at roughly two in five fires and one in five ordinary moments.
+<!-- /SMART_FACTORS_20261126_CLAUDE -->
 <!-- SCORE_REPLAY_20261126_CLAUDE -->
 ## 2026-11-26 — taking at the public score's top-1% moments under Predict's rules loses: -1.12 c/sh at 1 s (random moments -1.46), ledger $-256 on 332 markets, every day negative; the Predict price moved away before 31% of its takes matched (random 8%)
 
