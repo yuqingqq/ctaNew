@@ -1,3 +1,7 @@
+take_model_insample_20261126_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/take_model_insample.json
+  session: 1622c91e
+  top1_c: {oracle: 11.55, insample: 0.99, leave_one_day_out: -0.037}
 take_model_20261126_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/take_model.json
   rows: data/predict_fun/research/take_reprice_20261125/take_model/

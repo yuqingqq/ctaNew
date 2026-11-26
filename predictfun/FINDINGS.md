@@ -1,3 +1,17 @@
+<!-- TAKE_MODEL_INSAMPLE_20261126_CLAUDE -->
+## 2026-11-26 — the take model in hindsight: fitted and scored on the same days its top 1% nets +0.99c (+1.3 to +4.3c fitted per day); on a day it has not seen -0.04c: memorisation, not signal; perfect foresight's top 1% is worth +11.5c
+
+[take_model_insample](reviews/take_reprice_20261125/take_model_insample.json) (TAKE_MODEL's labels, features and settings; target: the take at our 172 ms path; declared before the run). USER: "You mean even in sample, the performance is not good". Consumed days.
+
+| ranking the moments by | top 1% | top 0.3% | top 0.1% |
+|---|---:|---:|---:|
+| perfect hindsight (the realised value itself) | +11.5c | +18.5c | +26.1c |
+| the model, fitted and scored on the same four days (in-sample) | +0.99c (fill 23%) | +2.11c | +4.18c |
+| the model on a day it was not trained on (leave-one-day-out) | -0.04c | -0.22c | -0.22c |
+
+- **Per day, fitted and scored on that day (top 1%):** 10-23 +1.98c, 10-31 +2.86c, 11-01 +1.27c, 11-02 +4.27c. At 152 ms: in-sample top 1% +1.29c, leave-one-day-out -0.03c.
+- **Reading:** paying moments exist (hindsight +12c a share in the top 1%), and the trees can fit them on the days they were trained on, but what they fit does not carry to another day: the leave-one-day-out figure is the honest one.
+<!-- /TAKE_MODEL_INSAMPLE_20261126_CLAUDE -->
 <!-- TAKE_MODEL_20261126_CLAUDE -->
 ## 2026-11-26 — a predictor trained on the take's own outcome under Predict's rules finds no paying takes: its top 1% of moments nets -0.04c per intended share (all moments -1.15c), by choosing moments where the take mostly does not fill (26%); the same with a 2 ms network; no harness replay (declared rule)
 

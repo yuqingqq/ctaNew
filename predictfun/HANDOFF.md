@@ -1,3 +1,8 @@
+<!-- TAKE_MODEL_INSAMPLE_20261126_CLAUDE -->
+## 2026-11-26 — take model in-sample top 1% +0.99c vs -0.04c on an unseen day (memorisation); hindsight top 1% +11.5c
+
+See FINDINGS TAKE_MODEL_INSAMPLE (same date).
+<!-- /TAKE_MODEL_INSAMPLE_20261126_CLAUDE -->
 <!-- TAKE_MODEL_20261126_CLAUDE -->
 ## 2026-11-26 — take-outcome predictor: top 1% -0.04c per intended share (all -1.15c), by picking moments that rarely fill; same at 2 ms; no paying takes; no replay
 
