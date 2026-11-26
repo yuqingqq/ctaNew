@@ -1,3 +1,21 @@
+<!-- EXIT_TIMES_20261126_CLAUDE -->
+## 2026-11-26 — the top taker exits by taking or not at all: of what it opens (97% by taking), 48% is closed by a later opposite take after a median 39 s, 51% is held to settlement (winning 69%), under 1% by its own resting orders; 7% of its entry volume is closed within 1 s. SCOPE CORRECTION: the fire sets of this line hold 6,189 of its 22,116 taker orders
+
+[exit_times](reviews/take_reprice_20261125/exit_times.json), [fire_times_all](reviews/take_reprice_20261125/smart_fires/fire_times_all.json) (every match record with the top taker as taker or maker over the four days' hour stems; legs de-duplicated by transaction + maker order hash; settlement-id timed; per market its UP-space position, exits matched first-in first-out; fees 2% x min(p, 100 - p) on taker legs; shares open at the window end valued at the payout; the FIFO logic checked on a synthetic case; declared before the run). USER: "Can we check their exiting time at predict as well"; "Ok. Then we check their exit times". Consumed days.
+
+- **Its fills:** 47,321 taker legs (723,148 shares) and 1,663 maker legs (19,561 shares); 97% of the volume it opens is opened by taking.
+
+| how a position it opened ends | share of its entry volume | holding time, median (middle half) | net per share |
+|---|---:|---:|---:|
+| closed by a later opposite take | 48% | 39 s (16-75 s) | -1.7c |
+| held to settlement | 51% | 110 s (52-183 s) | +4.3c |
+| closed by its own resting order | 1% | 84 s (39-158 s) | +28.7c |
+
+- **Held to settlement:** its side wins 69% of those shares (its side's entry price averages 64c). **Closed by taking:** exit minus entry -0.41c its way before fees. Positions it opened by taking: +1.68c per share net overall.
+- **How fast:** 7% of its entry volume is closed within 1 s, 11% within 5 s, 29% within 30 s, 47% within 60 s (entries in the window's last moments, held to its end, included). Per taker order (14,553): the first exit a median 69 s after the entry, by taking for 54%, 45% held to settlement.
+- **Scope correction (FIRE_TIMING ... SMART_COMBO and the first exported fire list):** those fire sets hold its 6,189 taker orders with timed legs in the 332 markets with a complete Predict recording; over the four days it placed 22,116 taker orders (20,788 fires) in 861 of the 1,152 markets (7,882 of them in the complete markets). The findings describe that subset; the complete fire list is smart_fires/top_taker_fire_times_all.csv.
+- **Reading:** it trades the Predict reaction over tens of seconds, not milliseconds: it takes, then either takes back (at a small loss after fees) or keeps to the end the positions that are winning; resting orders play almost no part.
+<!-- /EXIT_TIMES_20261126_CLAUDE -->
 <!-- FIRES_EXPORT_20261126_CLAUDE -->
 ## 2026-11-26 — the smart takers' fires exported for a cross-venue order-book check; the top taker's bets win at settlement only 52%: it trades Predict's short-term reaction, not the 5-minute outcome
 

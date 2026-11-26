@@ -1,0 +1,21 @@
+{
+  "asof": "2026-11-26",
+  "legs_raw": 51424,
+  "taker_legs": 45089,
+  "orders": 22116,
+  "fires": 20788,
+  "fires_with_both_sides": 0,
+  "markets": 861,
+  "markets_of_the_days": 1152,
+  "complete_markets": 332,
+  "orders_in_complete_markets": 7882,
+  "fires_in_complete_markets": 7440,
+  "by_day": {
+    "2026-10-23": 27,
+    "2026-10-31": 3769,
+    "2026-11-01": 4117,
+    "2026-11-02": 12875
+  },
+  "file_bytes": 986246,
+  "burst_ms": 2.0
+}

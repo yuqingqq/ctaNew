@@ -10,7 +10,7 @@ The most profitable taker on Predict.fun's BTC 5-minute up/down markets (address
 
 | file | rows | content |
 |---|---:|---|
-| top_taker_fires.csv.gz | 5,930 | every fire (order burst) of the top taker, with context and outcome |
+| top_taker_fires.csv.gz | 5,930 | the top taker's fires in the 332 markets with a complete Predict recording (of its 20,788 fires over the four days; complete list: top_taker_fire_times_all.csv), with context and outcome |
 | top_taker_controls.csv.gz | 23,714 | control moments: each fire's time shifted -20 / -10 / +10 / +20 s, same direction (compare fires against these) |
 | ranks2_10_fires.csv.gz | 49,524 | every fire of the next nine most profitable takers (rank 2 trades a slower style) |
 | top_taker_fires_sample.csv | 50 | the first 50 rows of the fires file, for a quick look |

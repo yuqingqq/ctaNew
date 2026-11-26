@@ -2,7 +2,9 @@
 
 ## The list
 
-`top_taker_fire_times.csv`: the 5,930 fires (order bursts) of the most profitable taker on Predict.fun's BTC 5-minute up/down markets, 2026-10-23 to 2026-11-02 (2026-10-23: 1, 2026-10-31: 1,096, 2026-11-01: 1,075, 2026-11-02: 3,758).
+`top_taker_fire_times_all.csv`: **all 20,788 fires** (order bursts; 22,116 orders in 861 markets) of the most profitable taker on Predict.fun's BTC 5-minute up/down markets, 2026-10-23 to 2026-11-02 (2026-10-23: 27, 2026-10-31: 3,769, 2026-11-01: 4,117, 2026-11-02: 12,875). Same columns as below. (The earlier `top_taker_fire_times.csv` held only the 5,930 fires in the 332 markets where we have a complete Predict recording.)
+
+`top_taker_fire_times.csv`: the 5,930 fires (order bursts) of the most profitable taker on Predict.fun's BTC 5-minute up/down markets, in the markets with a complete Predict recording, 2026-10-23 to 2026-11-02 (2026-10-23: 1, 2026-10-31: 1,096, 2026-11-01: 1,075, 2026-11-02: 3,758).
 
 | column | meaning |
 |---|---|

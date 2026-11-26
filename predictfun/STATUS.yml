@@ -1,3 +1,10 @@
+exit_times_20261126_claude:
+  diagnostics: [predictfun/reviews/take_reprice_20261125/exit_times.json, predictfun/reviews/take_reprice_20261125/smart_fires/fire_times_all.json]
+  trips: data/predict_fun/research/take_reprice_20261125/exit_trips.parquet
+  session: 1622c91e
+  endings_share: {taker_exit: 0.484, settlement: 0.507, maker_exit: 0.009}
+  hold_median_s: {taker_exit: 38.6, settlement: 109.8}
+  fire_set_scope: {orders_in_fire_sets: 6189, orders_all: 22116, fires_all: 20788}
 fires_export_20261126_claude:
   handoff: predictfun/reviews/take_reprice_20261125/smart_fires/HANDOFF.md
   files: data/predict_fun/research/take_reprice_20261125/smart_fires_export

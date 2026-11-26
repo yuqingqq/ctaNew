@@ -1,3 +1,8 @@
+<!-- EXIT_TIMES_20261126_CLAUDE -->
+## 2026-11-26 — top taker's exits: 48% by a later opposite take (median 39 s), 51% held to settlement (win 69%), <1% passive; SCOPE: earlier fire sets = 6,189 of its 22,116 orders (complete markets)
+
+See FINDINGS EXIT_TIMES (same date). Complete fire list: reviews/take_reprice_20261125/smart_fires/top_taker_fire_times_all.csv (20,788 fires).
+<!-- /EXIT_TIMES_20261126_CLAUDE -->
 <!-- FIRES_EXPORT_20261126_CLAUDE -->
 ## 2026-11-26 — smart takers' fires exported with a handoff (reviews/take_reprice_20261125/smart_fires/HANDOFF.md) for a cross-venue order-book check by another analyst (USER)
 
