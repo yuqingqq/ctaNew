@@ -1,3 +1,13 @@
+<!-- AT_SEND_20261126_CLAUDE -->
+## 2026-11-26 — Binance at the top taker's send: no trigger event; trades against them and far-side refills have stopped, the trades their way come 20-40 ms later
+
+[timeline2](reviews/take_reprice_20261125/timeline2.json), [chart](reviews/take_reprice_20261125/timeline_chart2.html). USER: "You mean they send at around -50ms right? Then we check what happens in Binance around that time". Moves = first moves (no move in the same direction in the previous 300 ms): the 2,736 the top taker's orders landed ahead of vs 7,454 sampled; flows as a multiple of the same flow at the same times ±5..30 s; four consumed days, point estimates.
+
+- **Send timing:** its order reaches Predict a median 49 ms before the move (middle half 94 to 17 ms before); the most common 5 ms bin is 20-15 ms before.
+- **At its send (the 20 ms around −50) vs all first moves:** trades their way 1.2x normal (all 0.5x); trades against them 0.2x (all 1.4x); new orders on the far side 0.3x (all 0.6x); far-side cancels 1.0x (all 0.8x); new orders on their side 1.9x (all 1.8x); imbalance their way +0.49 (all +0.56; random +0.04).
+- **After its send:** trades their way 3.6x at −40..−20 ms, 14x at −20..−10, 42x at −10..−5; far-side cancels 2.3x / 4.1x in the last 20 / 10 ms.
+- **Reading:** at its send nothing fires on Binance; what marks the moves it catches is what has stopped: almost no selling against the lean and few new orders refilling the far side (both below the rate before other first moves), with the book leaning about as much as before any first move. Imbalance alone does not separate them; the absence of counter-flow does. Outcome-selected (its filled orders only).
+<!-- /AT_SEND_20261126_CLAUDE -->
 <!-- TIMELINE_20261126_CLAUDE -->
 ## 2026-11-26 — one race on one clock: the top taker's order reaches Predict a median 49 ms before the Binance move, ours +34.5 ms after (CORRECTS the "~15 ms" of FIRE_TIMING)
 

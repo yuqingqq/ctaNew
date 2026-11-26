@@ -1,3 +1,8 @@
+<!-- AT_SEND_20261126_CLAUDE -->
+## 2026-11-26 — Binance at the top taker's send (chart 2): no trigger event; counter-trades 0.2x and far-side refills 0.3x normal, trades their way start 20-40 ms later
+
+See FINDINGS (same date), reviews/take_reprice_20261125/timeline_chart2.html. For the predictor: counter-flow (trades against, far-side refill rate) beside imbalance.
+<!-- /AT_SEND_20261126_CLAUDE -->
 <!-- TIMELINE_20261126_CLAUDE -->
 ## 2026-11-26 — one race on one clock (chart): top taker arrives -49 ms from the Binance move, REPRICE +34.5 ms; corrects FIRE_TIMING's ~15 ms
 

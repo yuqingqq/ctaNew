@@ -1,3 +1,9 @@
+at_send_20261126_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/timeline2.json
+  chart: predictfun/reviews/take_reprice_20261125/timeline_chart2.html
+  session: 1622c91e
+  at_send_ratio_top_vs_all: {trades_their_way: [1.20, 0.51], trades_against: [0.17, 1.41], far_new_orders: [0.30, 0.64], far_cancels: [0.97, 0.82], near_new_orders: [1.91, 1.82]}
+  imbalance_at_send_top_vs_all: [0.485, 0.560]
 timeline_20261126_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/timeline.json
   chart: predictfun/reviews/take_reprice_20261125/timeline_chart.html
