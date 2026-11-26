@@ -1,3 +1,8 @@
+<!-- TAKE_MODEL_20261126_CLAUDE -->
+## 2026-11-26 — take-outcome predictor: top 1% -0.04c per intended share (all -1.15c), by picking moments that rarely fill; same at 2 ms; no paying takes; no replay
+
+See FINDINGS TAKE_MODEL (same date).
+<!-- /TAKE_MODEL_20261126_CLAUDE -->
 <!-- NORM_WINDOWS_20261126_CLAUDE -->
 ## 2026-11-26 — normal windows: 30 s ratio already best for spotting its fires (30 s - 60 min tested; z-scores no better); imbalance vs its last 30 s 0.685 (raw 0.638); for predicting moves raw rates beat ratios
 

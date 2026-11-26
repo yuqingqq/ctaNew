@@ -1,3 +1,20 @@
+<!-- TAKE_MODEL_20261126_CLAUDE -->
+## 2026-11-26 — a predictor trained on the take's own outcome under Predict's rules finds no paying takes: its top 1% of moments nets -0.04c per intended share (all moments -1.15c), by choosing moments where the take mostly does not fill (26%); the same with a 2 ms network; no harness replay (declared rule)
+
+[take_model](reviews/take_reprice_20261125/take_model.json) (public_score3's random moments, both directions, inside the 332 complete markets' recorded paths: 66,353 labelled; outside the path 925, invalid known book 161, no mid after 60; target = a 50-share IOC decided at the moment + 3.5 ms at the best known, matched against the venue book after the network and the 150 ms hold, valued 1 s after the match net of fee, no fill = 0, c per intended share; trees with public_score's pinned settings on 79 features (state, v3 factors, Predict's book at the decision, NORM_WINDOWS' raw rates), leave-one-day-out; declared before the run). USER: "can we train a predictor to estimate 150ms later price ... or we use predict price as the target based on our factors". Consumed days, all seen: development evidence.
+
+| take decided now, matched after | all moments | model's top 1% | top 0.3% | top 0.1% | Binance-move score's top 1% | random 1% |
+|---|---:|---:|---:|---:|---:|---:|
+| 172 ms (22 ms network, our path), limit = best | -1.15c (fill 87%) | -0.04c (fill 26%) | -0.22c | -0.22c (66) | -0.54c | -1.15c |
+| 162 ms (12 ms network), limit = best | -1.15c (fill 87%) | -0.04c (fill 27%) | -0.09c | -0.05c (66) | -0.55c | -1.15c |
+| 152 ms (2 ms network), limit = best | -1.16c (fill 87%) | -0.03c (fill 28%) | -0.16c | -0.13c (66) | -0.56c | -1.15c |
+| 172 ms, limit = best + 3c | -1.32c (fill 99%) | -0.42c (fill 92%) | -0.23c | +0.27c (66) | -0.90c | -1.33c |
+
+- **Label against the harness** (score_replay's 1,132 decisions, same limit and match time): same fill status 96.2%; the simple rule fills where the harness does not 43 times and never the reverse (slightly optimistic); same price 98.4% of joint fills.
+- **What the model picks:** its top 1% has a far-side best of median 15 shares (all moments 239) and our side's price median 38.5c (all 49.5c): it learns where a take will lose least, mostly where little can fill (-0.15c per filled share). Rank correlation of prediction and outcome 0.42. Top 1% by day: 10-23 +0.05c, 10-31 -0.21c, 11-01 -0.10c, 11-02 -0.14c.
+- **The 150 ms Binance price as target** is what the public score predicts (a Binance move within 300 ms): its top 1% nets -0.54c here and lost in the full replay (SCORE_REPLAY).
+- **Reading:** with everything we measure, a take at our latency (and at 2 ms) cannot be timed to pay: Predict's price after our match does not move our way by more than the spread and fee. The declared condition for a harness replay (a positive top-1% value on the simplified, slightly optimistic target) is not met.
+<!-- /TAKE_MODEL_20261126_CLAUDE -->
 <!-- NORM_WINDOWS_20261126_CLAUDE -->
 ## 2026-11-26 — longer normal windows and z-scores: no gain for spotting the top taker's fires (the 30 s ratio is already the best of 30 s - 60 min for every flow); the imbalance against its own last 30 s separates better than the raw imbalance (0.685 vs 0.638), no better than the best factors; for predicting a move, normalising hurts: raw rates beat ratios
 
