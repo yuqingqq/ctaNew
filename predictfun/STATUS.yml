@@ -1,3 +1,7 @@
+winners_summary_20261126_claude:
+  findings_blocks: [WINNERS_SUMMARY_20261126_CLAUDE, ORDERBOOK_20261126_CLAUDE, PRETREND_20261126_CLAUDE, AT_SEND_20261126_CLAUDE, TIMELINE_20261126_CLAUDE, FIRE_TIMING_20261126_CLAUDE]
+  session: 1622c91e
+  at_send_x_normal_top: {new_asks: 0.30, ask_cancels: 0.97, new_bids: 1.91, buy_trades: 1.20, sell_trades: 0.17, total_traded: 0.63}
 pretrend_20261126_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/pretrend.json
   session: 1622c91e

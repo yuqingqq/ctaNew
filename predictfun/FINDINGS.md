@@ -1,3 +1,31 @@
+<!-- WINNERS_SUMMARY_20261126_CLAUDE -->
+## 2026-11-26 — SUMMARY: how the top Predict taker trades BTC 5m (supersedes the earlier framings in WINNERS_TRIGGER / EARLY_SIGNAL / FIRE_TIMING where they differ)
+
+Sources: FIRE_TIMING, TIMELINE, AT_SEND, PRETREND, ORDERBOOK, DEPLETION_CAUSE, TRIGGER_LOGIC (all 2026-11-26), four consumed days (10-23, 10-31, 11-01, 11-02), point estimates, its filled orders only.
+
+1. **Clock:** fire times from settlement ids (UUIDv7) for every order; arrival at Predict = settlement − 150 − 34 ms (±~15 ms). The M50 send times were off for the 35% of its orders with book-timed fills; studies on M50 are approximate.
+2. **Race (ms from the Binance move, medians):** its order reaches Predict -49 (middle half -94 to -17) and matches +101; Predict makers pull REPRICE's aimed quotes +84; REPRICE-8 decides +12.5, arrives +34.5 (22 ms assumed path), matches +184.5: 83.5 ms behind.
+3. **What it bets on (46% of decisions land ahead of a move within 300 ms; 25% just after a move; 29% see none within 300 ms):** a quiet book where sellers step away (sell trades 0.17x, new asks 0.30x normal from ~200 ms before), bids are added (1.9x) and the imbalance leans its way (+0.42 at arrival, random +0.04); not a price trend (flat over the prior second 83%) and not a bounce (1.1%). No trigger event at its send; buying only surges 20-40 ms after it (3.6x → 26x), then the ask empties.
+4. **The far side's shrink** is mostly withdrawal net of re-adds (72% at arrival), which the flow view shows as missing refills rather than extra cancels.
+5. **For us:** the inputs are per-side refill / posting rates, the share of sell trades and the lean, not volume or recent drift; the decision has to come ~50-75 ms before the move (TIMELINE). Not yet measured: how often this state leads to a move at random times (precision), and which of its bets make money.
+<!-- /WINNERS_SUMMARY_20261126_CLAUDE -->
+<!-- ORDERBOOK_20261126_CLAUDE -->
+## 2026-11-26 — the winners' signal is order-book dynamics in a quiet market: asks stop being refilled (cancels normal), bids are added, sellers vanish; traded volume is below normal
+
+[timeline2](reviews/take_reprice_20261125/timeline2.json) (first moves, the 20 ms around the top taker's median send = 60-40 ms before the move; x normal = vs the same times ±5..30 s). USER: "Do you mean it is mainly Orderbook dynamics? ... no big difference in executed trades or volume"; "keep these findings recorded".
+
+| Binance at its send | moves it caught | all first moves |
+|---|---:|---:|
+| new asks | 0.30x | 0.64x |
+| ask cancels | 0.97x | 0.82x |
+| new bids | 1.91x | 1.82x |
+| buy trades | 1.20x | 0.51x |
+| sell trades | 0.17x | 1.41x |
+| total traded | 0.63x | 0.94x |
+| net buy − sell volume per move | +0.011 BTC | -0.021 BTC |
+
+- **Reading:** the ask side thins because what leaves is not replaced (new asks 0.30x, cancels 0.97x), not because makers pull harder; bids are added (1.9x); selling nearly stops (0.17x) while buying is about normal (1.20x), so total volume is 0.63x normal and the net flow their way is small in BTC. A volume trigger would not see it; per-side refill / posting rates and the share of sell trades do. Consumed days; its filled orders only.
+<!-- /ORDERBOOK_20261126_CLAUDE -->
 <!-- PRETREND_20261126_CLAUDE -->
 ## 2026-11-26 — the moves the top taker catches are not trend continuations: sellers step away from a quiet book (less prior drift than other first moves)
 

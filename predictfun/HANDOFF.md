@@ -1,3 +1,8 @@
+<!-- WINNERS_SUMMARY_20261126_CLAUDE -->
+## 2026-11-26 — winners' signal summarized (FINDINGS WINNERS_SUMMARY + ORDERBOOK): order-book dynamics in a quiet market, its order ~49 ms ahead of the Binance move, REPRICE ~84 ms behind
+
+Next (in progress, research only): which of its bets make money (state bets / after a move / no move) and how often the book state leads to a move at random times (precision), on the settlement clock. Then the predictor and the take replay (USER's call).
+<!-- /WINNERS_SUMMARY_20261126_CLAUDE -->
 <!-- PRETREND_20261126_CLAUDE -->
 ## 2026-11-26 — not momentum: before the moves the top taker catches, sellers step away from a quiet book
 
