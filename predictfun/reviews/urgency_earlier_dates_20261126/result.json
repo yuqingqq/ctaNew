@@ -1,0 +1,349 @@
+{
+  "days": {
+    "20261023": {
+      "arms": {
+        "original": {
+          "markets": 70,
+          "settle": -4101.695692248718,
+          "turnover": -3813.68547772536,
+          "residual": -288.01021452335846,
+          "matched": 194986.59649792901,
+          "cents_per_matched": -1.9558705809636847,
+          "mean_abs_end": 21.141539253412265,
+          "p90_end": 45.16674122684548,
+          "max_end": 577.6545634840522,
+          "positive": 19
+        },
+        "urgency": {
+          "markets": 70,
+          "settle": 1642.5642015997473,
+          "turnover": 1985.2352071051919,
+          "residual": -342.6710055054448,
+          "matched": 96426.17548065686,
+          "cents_per_matched": 2.0588135920660164,
+          "mean_abs_end": 30.138892629415178,
+          "p90_end": 54.017991342905624,
+          "max_end": 462.52080324009063,
+          "positive": 37
+        }
+      },
+      "gate": {
+        "positive_settlement": true,
+        "positive_turnover": true,
+        "improved_settlement": true,
+        "improved_turnover": true,
+        "within_inventory_limit": true
+      },
+      "passed": true,
+      "delta": 5744.259893848464,
+      "delta_without_best": 5262.131856947793,
+      "better": 48,
+      "worse": 22,
+      "coverage": {
+        "missing_endpoint": 187,
+        "complete": 70,
+        "stale_future_book": 31
+      },
+      "capacity_fit_markets": 0,
+      "fit_overlap_breakdown": {
+        "False": {
+          "arms": {
+            "original": {
+              "markets": 70,
+              "settle": -4101.695692248718,
+              "turnover": -3813.68547772536,
+              "residual": -288.01021452335846,
+              "matched": 194986.59649792901,
+              "cents_per_matched": -1.9558705809636847,
+              "mean_abs_end": 21.141539253412265,
+              "p90_end": 45.16674122684548,
+              "max_end": 577.6545634840522,
+              "positive": 19
+            },
+            "urgency": {
+              "markets": 70,
+              "settle": 1642.5642015997473,
+              "turnover": 1985.2352071051919,
+              "residual": -342.6710055054448,
+              "matched": 96426.17548065686,
+              "cents_per_matched": 2.0588135920660164,
+              "mean_abs_end": 30.138892629415178,
+              "p90_end": 54.017991342905624,
+              "max_end": 462.52080324009063,
+              "positive": 37
+            }
+          },
+          "gate": {
+            "positive_settlement": true,
+            "positive_turnover": true,
+            "improved_settlement": true,
+            "improved_turnover": true,
+            "within_inventory_limit": true
+          },
+          "passed": true,
+          "delta": 5744.259893848464,
+          "delta_without_best": 5262.131856947793,
+          "better": 48,
+          "worse": 22
+        }
+      }
+    },
+    "20261024": {
+      "arms": {
+        "original": {
+          "markets": 81,
+          "settle": -2331.3330733003395,
+          "turnover": -2094.09737721468,
+          "residual": -237.23569608565884,
+          "matched": 216682.78132760752,
+          "cents_per_matched": -0.9664346028716364,
+          "mean_abs_end": 11.753425966487859,
+          "p90_end": 13.576893157217704,
+          "max_end": 338.64913037079515,
+          "positive": 39
+        },
+        "urgency": {
+          "markets": 81,
+          "settle": 1592.919511278998,
+          "turnover": 2230.7670927948425,
+          "residual": -637.8475815158432,
+          "matched": 93427.96435941412,
+          "cents_per_matched": 2.3876867146683827,
+          "mean_abs_end": 31.478521709073924,
+          "p90_end": 75.21490468608116,
+          "max_end": 653.3250976575256,
+          "positive": 43
+        }
+      },
+      "gate": {
+        "positive_settlement": true,
+        "positive_turnover": true,
+        "improved_settlement": true,
+        "improved_turnover": true,
+        "within_inventory_limit": false
+      },
+      "passed": false,
+      "delta": 3924.252584579337,
+      "delta_without_best": 3330.0992812535537,
+      "better": 50,
+      "worse": 31,
+      "coverage": {
+        "complete": 81,
+        "stale_future_book": 70,
+        "missing_endpoint": 137
+      },
+      "capacity_fit_markets": 23,
+      "fit_overlap_breakdown": {
+        "False": {
+          "arms": {
+            "original": {
+              "markets": 58,
+              "settle": -1394.7548181020409,
+              "turnover": -1194.5685505766075,
+              "residual": -200.1862675254329,
+              "matched": 150730.10799197693,
+              "cents_per_matched": -0.792521525056024,
+              "mean_abs_end": 14.727889394534413,
+              "p90_end": 15.546557183997987,
+              "max_end": 338.64913037079515,
+              "positive": 29
+            },
+            "urgency": {
+              "markets": 58,
+              "settle": 1227.8155562543282,
+              "turnover": 1793.2043995945996,
+              "residual": -565.3888433402706,
+              "matched": 65165.88844808275,
+              "cents_per_matched": 2.7517531676457296,
+              "mean_abs_end": 38.95691970908137,
+              "p90_end": 112.46780231175681,
+              "max_end": 653.3250976575256,
+              "positive": 32
+            }
+          },
+          "gate": {
+            "positive_settlement": true,
+            "positive_turnover": true,
+            "improved_settlement": true,
+            "improved_turnover": true,
+            "within_inventory_limit": false
+          },
+          "passed": false,
+          "delta": 2622.5703743563686,
+          "delta_without_best": 2145.441732823096,
+          "better": 34,
+          "worse": 24
+        },
+        "True": {
+          "arms": {
+            "original": {
+              "markets": 23,
+              "settle": -936.5782551982988,
+              "turnover": -899.5288266380726,
+              "residual": -37.049428560225905,
+              "matched": 65952.67333563059,
+              "cents_per_matched": -1.3639004776355392,
+              "mean_abs_end": 4.252605147935675,
+              "p90_end": 0.9419484430589671,
+              "max_end": 46.22168179845071,
+              "positive": 10
+            },
+            "urgency": {
+              "markets": 23,
+              "settle": 365.10395502466986,
+              "turnover": 437.56269320024245,
+              "residual": -72.45873817557263,
+              "matched": 28262.075911331365,
+              "cents_per_matched": 1.5482326725504496,
+              "mean_abs_end": 12.619952839489915,
+              "p90_end": 22.379653405583024,
+              "max_end": 179.54063730558022,
+              "positive": 11
+            }
+          },
+          "gate": {
+            "positive_settlement": true,
+            "positive_turnover": true,
+            "improved_settlement": true,
+            "improved_turnover": true,
+            "within_inventory_limit": true
+          },
+          "passed": true,
+          "delta": 1301.6822102229687,
+          "delta_without_best": 707.5289068971854,
+          "better": 16,
+          "worse": 7
+        }
+      }
+    },
+    "20261025": {
+      "arms": {
+        "original": {
+          "markets": 72,
+          "settle": -3062.371381678276,
+          "turnover": -2554.675146012323,
+          "residual": -507.6962356659519,
+          "matched": 172827.7405176201,
+          "cents_per_matched": -1.4781626713171483,
+          "mean_abs_end": 29.44208633612973,
+          "p90_end": 99.02610474265171,
+          "max_end": 411.4473177762868,
+          "positive": 26
+        },
+        "urgency": {
+          "markets": 72,
+          "settle": 3524.4611507603477,
+          "turnover": 3996.8979358912475,
+          "residual": -472.43678513089935,
+          "matched": 75969.32604867543,
+          "cents_per_matched": 5.261199675945968,
+          "mean_abs_end": 31.314179747069986,
+          "p90_end": 122.41398070414888,
+          "max_end": 325.86382278481017,
+          "positive": 44
+        }
+      },
+      "gate": {
+        "positive_settlement": true,
+        "positive_turnover": true,
+        "improved_settlement": true,
+        "improved_turnover": true,
+        "within_inventory_limit": true
+      },
+      "passed": true,
+      "delta": 6586.832532438624,
+      "delta_without_best": 6033.088594005444,
+      "better": 52,
+      "worse": 18,
+      "coverage": {
+        "stale_future_book": 100,
+        "complete": 72,
+        "missing_endpoint": 116
+      },
+      "capacity_fit_markets": 23,
+      "fit_overlap_breakdown": {
+        "False": {
+          "arms": {
+            "original": {
+              "markets": 49,
+              "settle": -607.6163065282612,
+              "turnover": -169.88559431329236,
+              "residual": -437.73071221496826,
+              "matched": 110626.66659326866,
+              "cents_per_matched": -0.15356658529529393,
+              "mean_abs_end": 35.9904550913745,
+              "p90_end": 155.32820837637715,
+              "max_end": 411.4473177762868,
+              "positive": 21
+            },
+            "urgency": {
+              "markets": 49,
+              "settle": 2652.4401810850613,
+              "turnover": 3067.402450504933,
+              "residual": -414.96226941987095,
+              "matched": 48598.34493240781,
+              "cents_per_matched": 6.311742621628736,
+              "mean_abs_end": 37.74869473672686,
+              "p90_end": 157.45166683939235,
+              "max_end": 325.86382278481017,
+              "positive": 30
+            }
+          },
+          "gate": {
+            "positive_settlement": true,
+            "positive_turnover": true,
+            "improved_settlement": true,
+            "improved_turnover": true,
+            "within_inventory_limit": true
+          },
+          "passed": true,
+          "delta": 3260.056487613322,
+          "delta_without_best": 2861.317324792076,
+          "better": 32,
+          "worse": 16
+        },
+        "True": {
+          "arms": {
+            "original": {
+              "markets": 23,
+              "settle": -2454.755075150015,
+              "turnover": -2384.7895516990307,
+              "residual": -69.96552345098372,
+              "matched": 62201.07392435145,
+              "cents_per_matched": -3.8340006068052723,
+              "mean_abs_end": 15.491213770608264,
+              "p90_end": 66.25751226193842,
+              "max_end": 144.41096787386363,
+              "positive": 5
+            },
+            "urgency": {
+              "markets": 23,
+              "settle": 872.0209696752867,
+              "turnover": 929.4954853863152,
+              "residual": -57.47451571102834,
+              "matched": 27370.98111626762,
+              "cents_per_matched": 3.3959158476561897,
+              "mean_abs_end": 17.60586520388795,
+              "p90_end": 66.46988156479821,
+              "max_end": 122.6377027448314,
+              "positive": 14
+            }
+          },
+          "gate": {
+            "positive_settlement": true,
+            "positive_turnover": true,
+            "improved_settlement": true,
+            "improved_turnover": true,
+            "within_inventory_limit": true
+          },
+          "passed": true,
+          "delta": 3326.776044825301,
+          "delta_without_best": 2773.032106392121,
+          "better": 20,
+          "worse": 2
+        }
+      }
+    }
+  },
+  "direct_fit_overlap": 46
+}

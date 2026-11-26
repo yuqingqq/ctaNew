@@ -55,3 +55,7 @@ The [single-switch replay](../reviews/distance_retention_20261125/report.md) kep
 ## November 26 replication on four later research dates
 
 The unchanged passive urgency controller was positive on October 31 and November 1–3: +$8,821.97 across 338 complete markets out of 1,152 scheduled. Completed FIFO earned $12,830.05 (4.01¢ per matched share); inventory at settlement cost $4,008.08. The matched original ladder lost $14,772.13. Three of four dates passed every original criterion. October 31 missed the mean absolute ending-inventory limit (132.23 vs 122.74 shares) and carried −$3,043.36 residual. This gives a specific additional day for the outstanding inventory diagnostic. These dates were already used elsewhere in the project. [Four-date receipt and coverage](../reviews/urgency_later_dates_20261126/report.md).
+
+## November 26 retrospective on the three remaining prepared dates
+
+[October 23–25 paired results and fit overlap](../reviews/urgency_earlier_dates_20261126/report.md). The retained controller earned positive completed turnover and settlement on each date. October 24 missed its mean absolute ending inventory ceiling (31.5 versus 21.8 shares). October 23 predates the capacity fit; October 24 and 25 supplied 23 fit markets each. The other 107 markets on those two dates also earned positive settlement in aggregate. These are retrospective stress results. All nine currently prepared unreserved dates have now been replayed. The user kept the untouched November block reserved.
