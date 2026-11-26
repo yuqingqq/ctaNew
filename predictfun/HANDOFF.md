@@ -1,3 +1,8 @@
+<!-- SCORE_V2_20261126_CLAUDE -->
+## 2026-11-26 — public score v2 (our order-book flows added): AUC 0.811 → 0.814, top 1% 29%; driven by the best level; its top moments are near-empty far levels, the top taker's fires are not; FINDINGS WINNERS_SUMMARY rewritten
+
+See FINDINGS SCORE_V2 and WINNERS_SUMMARY (same date). Next (USER's call): the take replay under venue rules at the score's top moments.
+<!-- /SCORE_V2_20261126_CLAUDE -->
 <!-- PUBLIC_SCORE_20261126_CLAUDE -->
 ## 2026-11-26 — combined public score: a move within 300 ms 29% (top 1%) to 44% (top 0.1%) of moments vs 2.5%; 92% of the top taker's fires fall outside its top 1%
 

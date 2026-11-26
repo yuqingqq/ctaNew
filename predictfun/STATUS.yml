@@ -1,3 +1,12 @@
+score_v2_20261126_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/public_score2.json
+  points: data/predict_fun/research/take_reprice_20261125/public_score2_points.parquet
+  session: 1622c91e
+  auc_random_v1_v2_gbm: [0.811, 0.814, 0.836]
+  top1_v1_v2: [0.290, 0.293]
+  permutation_auc_drop_best: 0.139
+  far_size_median_top1_fires_all: [0.229, 3.655, 5.692]
+  winners_summary: rewritten 2026-11-26 (FINDINGS WINNERS_SUMMARY_20261126_CLAUDE)
 public_score_20261126_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/public_score.json
   points: data/predict_fun/research/take_reprice_20261125/public_score_points.parquet

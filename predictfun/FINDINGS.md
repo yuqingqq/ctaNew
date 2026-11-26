@@ -1,3 +1,33 @@
+<!-- SCORE_V2_20261126_CLAUDE -->
+## 2026-11-26 — public score v2: the order-book flows of our findings add little on top of the best-level state (AUC 0.811 → 0.814, top 1% 29.0% → 29.3%); its top moments are near-empty far levels, the top taker's fires are not
+
+[public_score2](reviews/take_reprice_20261125/public_score2.json) (PUBLIC_SCORE's points, labels and evaluation; added family 'flow': far / near new orders, cancels and trades over 0-20 / 20-100 / 100-300 ms, time since the last new order / cancel each side, the far shrink split into withdrawn and traded, imbalance 20 ms before and its 100 / 300 ms change; declared before the run). USER: "do we include binance ob refill rate, far side shrink, near side new posts, and everything we need"; "show me the sauce of the score". Development evidence; G = 4 days.
+
+| model | AUC random / nearby | top 1% | top 0.1% | its fires in the top 1% |
+|---|---:|---:|---:|---:|
+| logistic v1 | 0.811 / 0.788 | 29.0% | 44.0% | 8.4% |
+| logistic v1 + flow | 0.814 / 0.789 | 29.3% | 44.4% | 8.9% |
+| trees v1 + flow | 0.836 / 0.811 | 28.1% | 48.7% | 7.6% |
+| logistic flow only | 0.780 / 0.752 | 25.3% | 34.2% | 7.4% |
+
+- **What drives it (trees, held-out, a family shuffled; AUC drop):** best 0.139, long 0.027, venues 0.005, flow 0.004, depth 0.003, trades 0.002, predict 0.001. Logistic (standardized, refit on all days), largest weights: b_lfar1 -0.63, d_lfarcush -0.30, b_lupd +0.23, b_imb1 +0.19, f_far_wd_share__missing -0.16, d_lnearcush -0.16, d_lnear220 +0.15, t_since_ag -0.14.
+- **Its top moments against the top taker's fires** (2,324 top-1% random moments, 232,087 random, 4,425 fires):
+
+| median | score's top 1% | all moments | top taker's fires |
+|---|---:|---:|---:|
+| best-level imbalance its way | +0.96 | -0.02 | +0.35 |
+| far side at the best (BTC) | 0.23 | 5.69 | 3.65 |
+| near side at the best (BTC) | 12.1 | 5.4 | 7.5 |
+| far side now / 300 ms ago | x0.42 | x1.00 | x0.96 |
+| near-side new orders, last 100 ms (BTC) | 4.970 | 0.003 | 0.124 |
+| far-side cancels, last 100 ms (BTC) | 0.039 | 0.001 | 0.037 |
+| far-side refills, last 100 ms (BTC) | 0.004 | 0.003 | 0.005 |
+| far shrink withdrawn, not traded (300 ms) | 95% | 67% | 100% |
+| depth imbalance, 20 levels | +0.88 | -0.02 | +0.23 |
+| ms since the last far-side refill | 50 | 66 | 57 |
+
+- **Reading:** the flows we found carry the same information as the best-level state (flow alone AUC 0.780) and add little to it; the score's best moments are far levels nearly gone (0.23 BTC, imbalance +0.96, near side posted 5.0 BTC in 100 ms); the top taker fires on books that look much closer to ordinary (3.7 BTC, +0.35).
+<!-- /SCORE_V2_20261126_CLAUDE -->
 <!-- PUBLIC_SCORE_20261126_CLAUDE -->
 ## 2026-11-26 — a combined public score finds moments where Binance moves within 300 ms 29% (top 1%) to 44% (top 0.1%) of the time (base 2.5%), but not the top taker's: 92% of its fires are outside its top 1%, scored 7.7% on average while 61% are followed by a move
 
@@ -87,15 +117,19 @@
 - **Reading:** 26% of its decisions come with a visibly leaning (>= 0.6) Binance level of <= 3 BTC on the far side (random-time precision 1.7-13.9%); for about 41% the Binance best level shows nothing and its order precedes the level's clearing by ~50 ms (cleared as any thick level is: CLEARING): an information source we do not see (another venue's flow, a client's order, or its own trading), not reconstructable from public Binance best-level data. A predictor from our data can only target the visible-book share.
 <!-- /STATE_VALUE_20261126_CLAUDE -->
 <!-- WINNERS_SUMMARY_20261126_CLAUDE -->
-## 2026-11-26 — SUMMARY: how the top Predict taker trades BTC 5m (supersedes the earlier framings in WINNERS_TRIGGER / EARLY_SIGNAL / FIRE_TIMING where they differ)
+## 2026-11-26 — SUMMARY: how the top Predict taker trades BTC 5m, and how much public data reproduces (rewritten after SCORE_V2; supersedes this block's earlier text and the framings of WINNERS_TRIGGER / EARLY_SIGNAL / FIRE_TIMING where they differ)
 
-Sources: FIRE_TIMING, TIMELINE, AT_SEND, PRETREND, ORDERBOOK, DEPLETION_CAUSE, TRIGGER_LOGIC (all 2026-11-26), four consumed days (10-23, 10-31, 11-01, 11-02), point estimates, its filled orders only.
+Sources: FIRE_TIMING, TIMELINE, AT_SEND, PRETREND, ORDERBOOK, STATE_VALUE, CLEARING, QUIET_BEFORE, FIRE_BREAKDOWN, PUBLIC_SOURCES, DEPTH, PUBLIC_SCORE, SCORE_V2 (all 2026-11-26). The top taker (0x7cab…c0AD): 5,930 decisions on the three days it traded (one order on 10-23; most on 11-02), its filled orders only; four consumed days; point estimates; development evidence, not validation.
 
-1. **Clock:** fire times from settlement ids (UUIDv7) for every order; arrival at Predict = settlement − 150 − 34 ms (±~15 ms). The M50 send times were off for the 35% of its orders with book-timed fills; studies on M50 are approximate.
-2. **Race (ms from the Binance move, medians):** its order reaches Predict -49 (middle half -94 to -17) and matches +101; Predict makers pull REPRICE's aimed quotes +84; REPRICE-8 decides +12.5, arrives +34.5 (22 ms assumed path), matches +184.5: 83.5 ms behind.
-3. **What it bets on (46% of decisions land ahead of a move within 300 ms; 25% just after a move; 29% see none within 300 ms):** a quiet book where sellers step away (sell trades 0.17x, new asks 0.30x normal from ~200 ms before), bids are added (1.9x) and the imbalance leans its way (+0.42 at arrival, random +0.04); not a price trend (flat over the prior second 83%) and not a bounce (1.1%). No trigger event at its send; buying only surges 20-40 ms after it (3.6x → 26x), then the ask empties.
-4. **The far side's shrink** is mostly withdrawal net of re-adds (72% at arrival), which the flow view shows as missing refills rather than extra cancels.
-5. **For us:** the inputs are per-side refill / posting rates, the share of sell trades and the lean, not volume or recent drift; the decision has to come ~50-75 ms before the move (TIMELINE). Measured since (STATE_VALUE, same date): all three kinds of bet pay at 1 s; the visible book explains 26% of its decisions (random-time precision 1.7-13.9% within 100 ms); 41% come with a thick, quiet book that is cleared ~50 ms after its arrival as any thick level is, about half bought and half cancelled (CLEARING); matched on far-side size and lean, random moments are followed by a move within 100 ms 1.7% of the time vs its 48% (a source we do not see).
+1. **Clock:** settlement ids (UUIDv7) time every order; arrival at Predict = settlement − 150 − 34 ms (±~15 ms; the Predict / Binance clock offset is not measured).
+2. **Race (ms from the Binance move, medians):** its order reaches Predict -49 (middle half -94 to -17) and matches +101; Predict makers pull +84; REPRICE-8 decides +12.5, arrives +34.5, matches +184.5.
+3. **Its bets (1 s value, c/sh after fee):** 46% land before a move within 300 ms (+3.37), 25% just after a move started (+1.24), 29% see none within 300 ms (+0.47); all +1.99.
+4. **Binance in the 300 ms before its fires (FIRE_BREAKDOWN):** 24% with no or little best-level activity (a move follows 52%-57%; nearby moments 1.6%-2.3%); 31% with the far side shrinking under a flat price (68% vs 9%); 25% after a move started; 19% other. Around its send: trades against it 0.17x, far-side new orders 0.30x, far cancels 0.97x, near-side new orders 1.91x normal: order-book dynamics, not trading; over the 5 s before its quiet fires the price was flat 83% (nearby 86%).
+5. **Thick far side (> 3 BTC, 41% of its decisions):** matched random moments see a move within 100 ms 0.30%, its decisions 33%; such levels are cleared about half bought, half cancelled (53% / 51% bought after its fires / random moments); Binance's far-side cancels peak 14 ms after its arrival (FIRE_TIMING).
+6. **The book state alone explains little:** random moments matched on far size x lean are followed by a move 1.7% of the time, its decisions 48%.
+7. **Other public sources:** other venues' trade bursts before 29% of its fires vs 6% (quiet fires 6.8% vs 2.1%); Predict: no fill-back (others' flow against it 48% vs 51%), its price had moved its way 52% vs 42%; depth behind the best leans its way before quiet fires (20% in the nearby top decile).
+8. **Public score (all sources, v2 with the flows):** top 1% of moments 29% followed by a move within 300 ms (base 2.5%), top 0.1% 44% (trees 49%); 58% of top-1% hits leave the 75 ms our path needs; driven by the best level; its top moments are near-empty far levels (0.23 BTC, imbalance +0.96), the top taker's fires are not (3.7 BTC, +0.35); 91% of its fires fall outside the score's top 1%.
+9. **For us:** public data ranks moments usefully but catches a level's end, not the top taker's earlier timing; its source remains unseen (candidates: other venues' order books, not recorded; private flow). Predict taking at the score's top moments is not yet tested: the take replay under venue rules is the next measurement.
 <!-- /WINNERS_SUMMARY_20261126_CLAUDE -->
 <!-- ORDERBOOK_20261126_CLAUDE -->
 ## 2026-11-26 — the winners' signal is order-book dynamics in a quiet market: asks stop being refilled (cancels normal), bids are added, sellers vanish; traded volume is below normal
