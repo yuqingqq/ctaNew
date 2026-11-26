@@ -1,3 +1,30 @@
+<!-- NORM_WINDOWS_20261126_CLAUDE -->
+## 2026-11-26 — longer normal windows and z-scores: no gain for spotting the top taker's fires (the 30 s ratio is already the best of 30 s - 60 min for every flow); the imbalance against its own last 30 s separates better than the raw imbalance (0.685 vs 0.638), no better than the best factors; for predicting a move, normalising hurts: raw rates beat ratios
+
+[norm_windows](reviews/take_reprice_20261125/norm_windows.json) (public_score3's points with fire_events' best-level events unchanged; 4,321 of the top taker's fires, 66,279 nearby moments, 222,425 random moments (5,461 followed by a move within 300 ms); one population for every version: the first hour of each day dropped; declared before the run). USER: "how do we get the normal rate, what's the window we use? Can we try longer window and see the effect". Separation = max(AUC, 1 - AUC). Consumed days, in-sample, point estimates.
+
+- **How 'normal' was defined:** the same quantity's mean rate over (t - 30 s, t - 1 s], factor = log((rate over the last 300 ms + e) / (normal + e)); the imbalance and the size changes were not normalised. Tested here: the ratio against (t - B, t - 1 s] for B = 30 s, 2, 5, 15, 60 min, and z = (value - mean) / sd over the same baseline's 300 ms bins.
+
+| factor (300 ms) | its fires vs nearby: raw | ratio to the 30 s normal (used so far) | best longer ratio | best z-score | a move within 300 ms (random moments): raw | ratio 30 s | best longer ratio | best z-score |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| far-side refills | 0.519 | 0.525 | 0.521 (2m) | 0.524 (60m) | 0.527 | 0.547 | 0.539 (2m) | 0.622 (15m) |
+| far-side cancels | 0.589 | 0.594 | 0.597 (15m) | 0.581 (60m) | 0.579 | 0.517 | 0.546 (60m) | 0.556 (5m) |
+| trades its way | 0.528 | 0.564 | 0.539 (2m) | 0.532 (30s) | 0.592 | 0.572 | 0.548 (2m) | 0.561 (2m) |
+| near-side new orders | 0.620 | 0.656 | 0.638 (2m) | 0.621 (30s) | 0.722 | 0.634 | 0.691 (60m) | 0.590 (60m) |
+| near-side cancels | 0.541 | 0.568 | 0.551 (2m) | 0.553 (30s) | 0.704 | 0.627 | 0.675 (60m) | 0.587 (60m) |
+| trades against it | 0.519 | 0.531 | 0.526 (15m) | 0.521 (30s) | 0.547 | 0.566 | 0.575 (2m) | 0.569 (5m) |
+| all book activity | 0.575 | 0.598 | 0.588 (2m) | 0.587 (30s) | 0.693 | 0.555 | 0.614 (60m) | 0.583 (60m) |
+| far replacement | 0.660 | 0.658 | 0.658 (60m) | - | 0.590 | 0.594 | 0.603 (60m) | - |
+| near replacement | 0.630 | 0.632 | 0.628 (2m) | - | 0.545 | 0.500 | 0.524 (15m) | - |
+| best-level imbalance | 0.638 | - | - | 0.685 (30s) | 0.757 | - | - | 0.750 (60m) |
+| imbalance change 300 ms | 0.683 | - | - | 0.686 (15m) | 0.602 | - | - | 0.598 (60m) |
+| far size change 300 ms | 0.678 | - | - | 0.678 (5m) | 0.612 | - | - | 0.607 (60m) |
+| near size change 300 ms | 0.644 | - | - | 0.646 (60m) | 0.569 | - | - | 0.565 (60m) |
+
+- **Spotting its fires:** the 30 s ratio is the best or tied for every flow (longer baselines lower it, e.g. near-side new orders 0.656 at 30 s, 0.628 at 60 min); z-scores are no better than ratios; the one gain is the imbalance against its own last 30 s (0.685; at 2 min 0.645), the same "change from just before" information as the imbalance change (0.683). Best of all versions 0.686.
+- **Predicting a move at random moments:** raw rates beat their ratios (near-side new orders 0.722 vs 0.634, activity 0.693 vs 0.555; the raw imbalance 0.757); among ratios the longest baseline is best: a busy book moves more often, and a short baseline removes that level.
+- **Reading:** the short baseline is right for what distinguishes its fires (a local change from the last seconds); longer windows or z-scores do not reveal more of it. A move predictor should keep the raw levels next to the normalised changes; timing, not prediction, remained our take line's limit (SCORE_REPLAY).
+<!-- /NORM_WINDOWS_20261126_CLAUDE -->
 <!-- COPY_LATENCY_20261126_CLAUDE -->
 ## 2026-11-26 — copying the top taker: a taker order shows nowhere public during its 150 ms hold; its first trace (the pending settlement in Predict's book) is stamped a median 201 ms after it reached Predict (p5 159); a copy can match no sooner than ~168 ms after the original (typically ~262 ms); the other top takers' orders sit mostly 0-150 ms after its (too early to be copies)
 

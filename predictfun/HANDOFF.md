@@ -1,3 +1,8 @@
+<!-- NORM_WINDOWS_20261126_CLAUDE -->
+## 2026-11-26 — normal windows: 30 s ratio already best for spotting its fires (30 s - 60 min tested; z-scores no better); imbalance vs its last 30 s 0.685 (raw 0.638); for predicting moves raw rates beat ratios
+
+See FINDINGS NORM_WINDOWS (same date).
+<!-- /NORM_WINDOWS_20261126_CLAUDE -->
 <!-- COPY_LATENCY_20261126_CLAUDE -->
 ## 2026-11-26 — held taker orders are invisible; first trace ~201 ms after arrival (pending settlement); a copy matches no sooner than ~168 ms after the original (typically ~262 ms); top-10 orders near its fires are mostly too early to be copies
 

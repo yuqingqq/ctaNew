@@ -1,3 +1,9 @@
+norm_windows_20261126_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/norm_windows.json
+  rows: data/predict_fun/research/take_reprice_20261125/norm_windows/
+  session: 1622c91e
+  best_sep_fires_all_versions: 0.686
+  imbalance_sep_fires: {raw: 0.638, z_30s: 0.685}
 copy_latency_20261126_claude:
   sources: [predictfun/reviews/take_reprice_20261125/info2.json, predictfun/reviews/take_reprice_20261125/fire_times.json, predictfun/reviews/take_reprice_20261125/fire_info.json]
   session: 1622c91e
