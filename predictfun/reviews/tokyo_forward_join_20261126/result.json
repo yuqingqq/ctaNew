@@ -1,0 +1,83 @@
+{
+  "pinned_code": "d0440d63a190f627ae960a7e4cd7cf425fbde22e",
+  "pinned_data": "e773da51753bcac087dae50794f6838fc943d753",
+  "research_cutoff": "2026-11-26T13:50:00Z",
+  "research_prefix_sha256": "4e5ae17f3b7da18a8c6f6a6cd64b1fec19e3228298ce1d55117915e5bc986bd8",
+  "markets": {
+    "4806349": {
+      "research_only": {
+        "legs": 0,
+        "shares": 0.0
+      },
+      "tokyo_only": {
+        "legs": 4,
+        "shares": 150.78048780487805
+      },
+      "ambiguous": {
+        "legs": 0,
+        "shares": 0.0
+      },
+      "field_mismatch": {
+        "legs": 0,
+        "shares": 0.0
+      },
+      "verified": {
+        "legs": 4121,
+        "shares": 74994.38848938434
+      },
+      "median_first_seen_minus_uuid_ms": 2240.511
+    },
+    "4806407": {
+      "research_only": {
+        "legs": 0,
+        "shares": 0.0
+      },
+      "tokyo_only": {
+        "legs": 0,
+        "shares": 0.0
+      },
+      "ambiguous": {
+        "legs": 0,
+        "shares": 0.0
+      },
+      "field_mismatch": {
+        "legs": 0,
+        "shares": 0.0
+      },
+      "verified": {
+        "legs": 3398,
+        "shares": 66648.95769921082
+      },
+      "median_first_seen_minus_uuid_ms": 2212.262
+    },
+    "4806813": {
+      "research_only": {
+        "legs": 0,
+        "shares": 0.0
+      },
+      "tokyo_only": {
+        "legs": 25,
+        "shares": 1276.9072121212123
+      },
+      "ambiguous": {
+        "legs": 0,
+        "shares": 0.0
+      },
+      "field_mismatch": {
+        "legs": 0,
+        "shares": 0.0
+      },
+      "verified": {
+        "legs": 4376,
+        "shares": 83529.62071914895
+      },
+      "median_first_seen_minus_uuid_ms": 2230.848
+    }
+  },
+  "timing": {
+    "near_canceled_order": 3861,
+    "first_seen_before_all_cancels": 799,
+    "uuid_pm50": 3766,
+    "executed_pm1000": 1560
+  }
+}
