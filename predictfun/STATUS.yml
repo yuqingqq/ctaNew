@@ -1,3 +1,13 @@
+fire_timing_20261126_claude:
+  diagnostics: [predictfun/reviews/take_reprice_20261125/fire_times.json, predictfun/reviews/take_reprice_20261125/fire_events.json, predictfun/reviews/take_reprice_20261125/fire_arrival.json]
+  session: 1622c91e
+  arrival_offset_ms: 34
+  m50_offtime_share_top1: 0.348
+  tick_peak_after_arrival_ms: 14
+  hit150_after_arrival_top1: 0.606
+  no_event_last10ms_top1: 0.486
+  imbalance_at_arrival_top1: 0.417
+  traded_share_at_arrival_top1: 0.276
 trigger_logic_20261126_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/trigger_logic.json
   session: 1622c91e

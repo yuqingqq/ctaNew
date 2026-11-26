@@ -1,0 +1,146 @@
+{
+  "asof": "2026-11-26",
+  "burst_ms": 2.0,
+  "groups": {
+    "TOP1": {
+      "orders": 6189,
+      "with_settlement": 6189,
+      "none": 0,
+      "several": 4039,
+      "several_span_gt0": 3,
+      "several_span_gt10ms": 0,
+      "t_set_before_exec_second_end": 1.0,
+      "fire_minus_m50_ms": {
+        "p5": -27.0,
+        "p25": 18.0,
+        "p50": 36.0,
+        "p75": 50.0,
+        "p95": 403.59999999999945
+      },
+      "fire_minus_m50_ms_by_first_leg_timing": {
+        "1": {
+          "p5": 4.0,
+          "p25": 19.0,
+          "p50": 33.0,
+          "p75": 47.0,
+          "p95": 75.39999999999964
+        },
+        "3": {
+          "p5": -172.5,
+          "p25": 15.0,
+          "p50": 55.0,
+          "p75": 198.25,
+          "p95": 695.25
+        }
+      },
+      "first_leg_timing": {
+        "1": 4033,
+        "3": 2156
+      },
+      "within_10ms": 0.09436096299886897,
+      "within_30ms": 0.38067539182420423,
+      "bursts": 5930,
+      "orders_per_burst": {
+        "1": 5678,
+        "2": 247,
+        "3": 3,
+        "4": 2
+      },
+      "by_day": {
+        "20261023": {
+          "orders": 1,
+          "with_fire": 1,
+          "fire_minus_m50_p50": 37.0
+        },
+        "20261031": {
+          "orders": 1096,
+          "with_fire": 1096,
+          "fire_minus_m50_p50": 31.0
+        },
+        "20261101": {
+          "orders": 1187,
+          "with_fire": 1187,
+          "fire_minus_m50_p50": 30.0
+        },
+        "20261102": {
+          "orders": 3905,
+          "with_fire": 3905,
+          "fire_minus_m50_p50": 40.0
+        }
+      }
+    },
+    "TOP2_10": {
+      "orders": 57836,
+      "with_settlement": 57836,
+      "none": 0,
+      "several": 20436,
+      "several_span_gt0": 34,
+      "several_span_gt10ms": 1,
+      "t_set_before_exec_second_end": 1.0,
+      "fire_minus_m50_ms": {
+        "p5": -130.0,
+        "p25": 18.0,
+        "p50": 36.0,
+        "p75": 50.0,
+        "p95": 439.0
+      },
+      "fire_minus_m50_ms_by_first_leg_timing": {
+        "1": {
+          "p5": 6.0,
+          "p25": 20.0,
+          "p50": 34.0,
+          "p75": 46.0,
+          "p95": 50.0
+        },
+        "3": {
+          "p5": -356.0,
+          "p25": 14.0,
+          "p50": 44.0,
+          "p75": 179.0,
+          "p95": 655.0
+        }
+      },
+      "first_leg_timing": {
+        "1": 33007,
+        "3": 24829
+      },
+      "within_10ms": 0.07970814025866242,
+      "within_30ms": 0.3475171173663462,
+      "bursts": 49524,
+      "orders_per_burst": {
+        "1": 43209,
+        "2": 4864,
+        "3": 1133,
+        "4": 178,
+        "5": 88,
+        "6": 29,
+        "7": 17,
+        "8": 3,
+        "10": 2,
+        "11": 1
+      },
+      "by_day": {
+        "20261023": {
+          "orders": 22008,
+          "with_fire": 22008,
+          "fire_minus_m50_p50": 38.0
+        },
+        "20261031": {
+          "orders": 11939,
+          "with_fire": 11939,
+          "fire_minus_m50_p50": 34.0
+        },
+        "20261101": {
+          "orders": 7313,
+          "with_fire": 7313,
+          "fire_minus_m50_p50": 34.0
+        },
+        "20261102": {
+          "orders": 16576,
+          "with_fire": 16576,
+          "fire_minus_m50_p50": 37.0
+        }
+      }
+    }
+  }
+}
