@@ -1,0 +1,125 @@
+{
+  "asof": "2026-11-26",
+  "days": [
+    "20261023",
+    "20261031",
+    "20261101",
+    "20261102"
+  ],
+  "net_ms": 22.0,
+  "configs": {
+    "SCORE1": {
+      "markets": 332,
+      "triggers": 2324,
+      "triggers_in_markets": 567,
+      "sig_status": {
+        "sent": 501,
+        "own_cross": 37,
+        "no_fresh_book": 2,
+        "no_room": 24,
+        "below_min": 3
+      },
+      "taker_shares": 13438.91558235217,
+      "takes_filled": 315,
+      "total_usd": -255.69429652149972,
+      "take_rt_usd": -19.472476296078963,
+      "exit_rt_usd": -191.17812572573928,
+      "held_usd": -45.04369449968155,
+      "unresolved_lo_usd": -256.6742965214997,
+      "unresolved_hi_usd": -237.6242965214997,
+      "by_day": {
+        "20261023": {
+          "total_usd": -70.85934577350827,
+          "markets": 70,
+          "takes": 69
+        },
+        "20261031": {
+          "total_usd": -61.519636682339595,
+          "markets": 102,
+          "takes": 101
+        },
+        "20261101": {
+          "total_usd": -66.35476947957793,
+          "markets": 88,
+          "takes": 83
+        },
+        "20261102": {
+          "total_usd": -56.96054458607393,
+          "markets": 72,
+          "takes": 62
+        }
+      },
+      "take_m1s_c_per_share": -1.1222561674842733,
+      "take_m10s_c_per_share": -0.2562814584371618,
+      "by_kind": {
+        "top03": {
+          "takes": 61,
+          "shares": 2538.1613156826693,
+          "m1s_c": -0.9460900249706897,
+          "m10s_c": -1.475806442957786,
+          "price_mean": 51.868852459016395
+        },
+        "top1": {
+          "takes": 254,
+          "shares": 10900.7542666695,
+          "m1s_c": null,
+          "m10s_c": 0.03628598297232518,
+          "price_mean": 51.2992125984252
+        }
+      }
+    },
+    "RAND1": {
+      "markets": 332,
+      "triggers": 2324,
+      "triggers_in_markets": 658,
+      "sig_status": {
+        "sent": 631,
+        "own_cross": 10,
+        "pending_ioc": 3,
+        "no_room": 8,
+        "below_min": 6
+      },
+      "taker_shares": 25594.717111551352,
+      "takes_filled": 569,
+      "total_usd": -892.4878367457271,
+      "take_rt_usd": -34.30278992249341,
+      "exit_rt_usd": -799.4162241105253,
+      "held_usd": -58.768822712708506,
+      "unresolved_lo_usd": -893.5178367457271,
+      "unresolved_hi_usd": -858.0736367457271,
+      "by_day": {
+        "20261023": {
+          "total_usd": -140.85115146207715,
+          "markets": 70,
+          "takes": 112
+        },
+        "20261031": {
+          "total_usd": -353.15569362712137,
+          "markets": 102,
+          "takes": 199
+        },
+        "20261101": {
+          "total_usd": -190.29819190980857,
+          "markets": 88,
+          "takes": 146
+        },
+        "20261102": {
+          "total_usd": -208.18279974671998,
+          "markets": 72,
+          "takes": 112
+        }
+      },
+      "take_m1s_c_per_share": -1.4588449225155555,
+      "take_m10s_c_per_share": -1.9320655576728387,
+      "by_kind": {
+        "rand": {
+          "takes": 569,
+          "shares": 25594.71711155135,
+          "m1s_c": null,
+          "m10s_c": -1.8984621185098192,
+          "price_mean": 51.41476274165202
+        }
+      }
+    }
+  }
+}

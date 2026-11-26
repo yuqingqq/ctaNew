@@ -1,3 +1,12 @@
+score_replay_20261126_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/score_replay.json
+  ledgers: data/predict_fun/research/take_score_20261126
+  session: 1622c91e
+  m1s_c_score_vs_random: [-1.122, -1.459]
+  ledger_usd_score_vs_random: [-255.7, -892.5]
+  fully_filled_score_vs_random: [0.473, 0.772]
+  price_moved_away_score_vs_random: [0.311, 0.078]
+  ioc_status_score: {'partial': 78, 'empty': 9, 'filled': 237, 'limit_moved': 156, 'strict_cancelled': 21}
 score_v3_20261126_claude:
   diagnostics: [predictfun/reviews/take_reprice_20261125/public_score3.json, predictfun/reviews/take_reprice_20261125/score3_profile.json]
   points: data/predict_fun/research/take_reprice_20261125/public_score3_points.parquet

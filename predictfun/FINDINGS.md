@@ -1,3 +1,24 @@
+<!-- SCORE_REPLAY_20261126_CLAUDE -->
+## 2026-11-26 — taking at the public score's top-1% moments under Predict's rules loses: -1.12 c/sh at 1 s (random moments -1.46), ledger $-256 on 332 markets, every day negative; the Predict price moved away before 31% of its takes matched (random 8%)
+
+[score_replay](reviews/take_reprice_20261125/score_replay.json) (take_stream's StreamBranch / one_stream and the venue-matched harness unchanged: decision = the moment + 1.5 ms feed + 2 ms, network 22 ms, the 150 ms speed bump, a marketable IOC at the Predict best known at the decision, 50-share takes, the PASSIVE_EXIT line, native tokens and fees, settlement value; decisions = the held-out trees v3 score's top 1% of each day's random moments, control = a seeded draw of as many; every complete market, 332 over the four days, holding 24% of the decisions; CPU projected on the first day and inside the small-round budget). USER: "we run the replay test first". Development evidence on consumed days; G = 4.
+
+| | score's top 1% | random moments (control) |
+|---|---:|---:|
+| decisions in markets with a complete Predict book | 567 | 658 |
+| takes sent | 501 | 631 |
+| fully filled | 47% | 77% |
+| partly filled | 16% | 13% |
+| no fill: the Predict price moved away during the hold | 31% | 8% |
+| no fill: other (book empty at the limit, cancelled) | 6% | 2% |
+| value per share 1 s after the fill (after fee) | -1.12 c | -1.46 c |
+| value per share 10 s after the fill | -0.26 c | -1.93 c |
+| ledger at settlement (takes + exits + held) | $-256 | $-892 |
+
+- **By day (score):** 10-23 $-71, 10-31 $-62, 11-01 $-66, 11-02 $-57. Ledger parts (score): take round trips $-19, exits $-191, held at settlement $-45; unresolved bound $-257 to $-238.
+- **Top 0.3% of the score:** 61 takes, -0.95 c/sh at 1 s, -1.48 at 10 s.
+- **Reading:** the score's moments are better than random ones (+0.34 c/sh at 1 s) but still lose: when its prediction is right, Predict's quotes move during our 172 ms (the price moved away before 31% of its takes matched, against 8% at random moments; fully filled 47% vs 77%), and the takes that do fill lose -1.12 c/sh at 1 s. At our latency the public score does not beat Predict's makers; the top taker's +2.0 c/sh on its filled orders fits acting about 50 ms before the move (TIMELINE), earlier than our path allows.
+<!-- /SCORE_REPLAY_20261126_CLAUDE -->
 <!-- SCORE_V3_20261126_CLAUDE -->
 ## 2026-11-26 — public score v3 on the direct factors (rates against each moment's own normal, replacement, deep-level dynamics, venue price gaps): the same as on raw amounts (trees AUC 0.836 → 0.839, top 1% 28.1% → 27.7%); its fires carry every pattern we found, more weakly than the score's top moments
 
@@ -158,7 +179,7 @@ Sources: FIRE_TIMING, TIMELINE, AT_SEND, PRETREND, ORDERBOOK, STATE_VALUE, CLEAR
 6. **The book state alone explains little:** random moments matched on far size x lean are followed by a move 1.7% of the time, its decisions 48%.
 7. **Other public sources:** other venues' trade bursts before 29% of its fires vs 6% (quiet fires 6.8% vs 2.1%); Predict: no fill-back (others' flow against it 48% vs 51%), its price had moved its way 52% vs 42%; depth behind the best leans its way before quiet fires (20% in the nearby top decile).
 8. **Public score (all sources, v2 with the flows):** top 1% of moments 29% followed by a move within 300 ms (base 2.5%), top 0.1% 44% (trees 49%); 58% of top-1% hits leave the 75 ms our path needs; driven by the best level; its top moments are near-empty far levels (0.23 BTC, imbalance +0.96), the top taker's fires are not (3.7 BTC, +0.35); 91% of its fires fall outside the score's top 1%. v3 on the direct factors (rates against normal, deep dynamics, venue gaps): the same (trees AUC 0.839, top 1% 28%; SCORE_V3); its fires show every pattern we found, each a modest shift from ordinary moments.
-9. **For us:** public data ranks moments usefully but catches a level's end, not the top taker's earlier timing; its source remains unseen (candidates: other venues' order books, not recorded; private flow). Predict taking at the score's top moments is not yet tested: the take replay under venue rules is the next measurement.
+9. **For us:** public data ranks moments usefully but catches a level's end, not the top taker's earlier timing; its source remains unseen (candidates: other venues' order books, not recorded; private flow). Taking at the score's top-1% moments under Predict's rules (SCORE_REPLAY): -1.12 c/sh at 1 s, ledger $-256 on 332 markets, every day negative; the price moved away before 31% of its takes matched (random 8%).
 <!-- /WINNERS_SUMMARY_20261126_CLAUDE -->
 <!-- ORDERBOOK_20261126_CLAUDE -->
 ## 2026-11-26 — the winners' signal is order-book dynamics in a quiet market: asks stop being refilled (cancels normal), bids are added, sellers vanish; traded volume is below normal

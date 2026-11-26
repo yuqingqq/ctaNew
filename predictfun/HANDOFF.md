@@ -1,3 +1,8 @@
+<!-- SCORE_REPLAY_20261126_CLAUDE -->
+## 2026-11-26 — the public score's top-1% moments as takes under Predict's rules: -1.12 c/sh at 1 s, ledger $-256, every day negative; the price moved away before 31% of its takes matched
+
+See FINDINGS SCORE_REPLAY (same date). Options for the USER: a faster path (the 2 ms network variant), recording other venues' order books (forward data), or closing the public-score take line.
+<!-- /SCORE_REPLAY_20261126_CLAUDE -->
 <!-- SCORE_V3_20261126_CLAUDE -->
 ## 2026-11-26 — public score v3 on the direct factors: the same as on raw amounts (trees AUC 0.839, top 1% 28%); the top taker's fires show our patterns weakly
 
