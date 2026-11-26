@@ -1,3 +1,14 @@
+trigger_logic_20261126_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/trigger_logic.json
+  session: 1622c91e
+  top_taker_lift_imbalance_ge_0p8: 3.44
+  top_taker_lift_amount_ge_2btc: 9.27
+  top_taker_share_sends_imbalance_against: 0.236
+  top_taker_share_sends_no_trades_their_way: 0.440
+  top_taker_cv_auc: {logic7: 0.727, base30: 0.755, base30_plus_new4: 0.760}
+  best_state_rule_hit_random: 0.326
+  top_taker_hit: 0.513
+  top_taker_median_shares_per_decision: 30
 depletion_cause_20261126_claude:
   diagnostics: [predictfun/reviews/take_reprice_20261125/depletion_cause.json, predictfun/reviews/take_reprice_20261125/depletion_readout.json, predictfun/reviews/take_reprice_20261125/depletion_probe.json]
   session: 1622c91e

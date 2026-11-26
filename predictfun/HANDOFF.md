@@ -1,3 +1,10 @@
+<!-- TRIGGER_LOGIC_20261126_CLAUDE -->
+## 2026-11-26 — the top taker's trigger: imbalance, trades their way, a growing near side, a just-printed tick; no single threshold
+
+See FINDINGS (same date). Imbalance >= 0.8 lift 3.4, >= 2 BTC traded their way 9.3, both 19; but 24% of its sends have the imbalance against it and 44% no trades their way. The four new inputs raise held-out AUC 0.755 → 0.760; the best state rule is followed by the tick 33% of the time vs its 51%. Size flat at 30 shares.
+
+Next (USER's call): the predictor of the Binance tick over the hold on a dense time grid with the 30 features + traded / withdrawn shrink, near growth and the tick flag (plus within-window timing: time since the last trade / cancel / tick); precision / recall on held-out consumed days; then the take replay under the venue rules (172 ms, one-level limit) against the anticipators; untouched days before any live step.
+<!-- /TRIGGER_LOGIC_20261126_CLAUDE -->
 <!-- DEPLETION_CAUSE_20261126_CLAUDE -->
 ## 2026-11-26 — the opposite Binance level before the winners' sends: mostly makers withdrawing; vanishing levels about half traded
 

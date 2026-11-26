@@ -1,3 +1,15 @@
+<!-- TRIGGER_LOGIC_20261126_CLAUDE -->
+## 2026-11-26 — the top taker's trigger is not one threshold: imbalance, trades their way, a growing near side and a just-printed tick all raise its firing rate; no state rule reaches its accuracy
+
+[trigger_logic](reviews/take_reprice_20261125/trigger_logic.json) (winners_trigger points + the depletion_cause split, rows aligned; the stored AUCs, hit rates and the top taker's held-out model AUCs reproduced). USER: "you mean the logic is when it shows a big imbalance, they fire. is it related to trades, like trading amount"; "add these inputs as well". Buckets and rules fixed before the result; lift = share of sends / share of random times; "tick" = the Binance futures mid moves their way within 150 ms. Point estimates, four consumed days.
+
+- **Imbalance:** at >= 0.8 their way the top taker fires 3.4x as often as at random times (35% of its sends vs 10%), tick 73% vs 14%; but 24% of its sends come with the imbalance against it (lift 0.51; tick 23% vs 0.4%).
+- **Traded amount (aggressive their way over 300 ms, net):** >= 2 BTC lift 9.3 (14% of sends vs 1.5%; tick 59% vs 22%); 44% of sends follow no net trades their way (lift 0.73; tick 45% vs 1.3%). Imbalance >= 0.8 with >= 2 BTC: lift 19 (10% of sends).
+- **The added inputs:** near side grown >= 3 BTC lift 6.3 (26% of sends), withdrawn >= half the opposite level 4.4 (24%), traded >= half 6.1 (17%), a tick just printed 6.3 (27%). A depth-3 tree (held-out AUC 0.759 / 0.737 / 0.698): strongest leaf near growth > 2.93 BTC and imbalance > 0.47, lift 8.6, 23% of sends (tick 66% vs 26%).
+- **Models of the sends (held-out AUC, days with >= 50 sends):** the seven inputs 0.727; winners_trigger's 30 features 0.755; the 30 + the four new 0.760 (ranks 2-10 0.704 → 0.712; the rest 0.581 → 0.581). In the seven-input model the withdrawn share has the largest weight (1.05 standardized; traded amount 0.33, near growth 0.31, opposite size -0.30).
+- **No state rule reaches its accuracy:** the best of the ten declared rules (imbalance >= 0.8 and >= 0.5 BTC their way, 1.4% of random times) is followed by the tick 33% of the time; the top taker hits 51% overall and 71% inside that state. In the tree's quietest leaf (28% of its sends, 65% of random times) it hits 32% vs 0.6%. Its timing inside a state carries information these inputs do not show (or our ±30 ms send-time error).
+- **Its size does not follow the signal:** 5,368 decisions (its orders sharing market and first fill time), 86% a single order, median 30 shares in every imbalance and amount bucket (Spearman -0.03 / -0.02).
+<!-- /TRIGGER_LOGIC_20261126_CLAUDE -->
 <!-- DEPLETION_CAUSE_20261126_CLAUDE -->
 ## 2026-11-26 — the opposite Binance level before the winners' sends: makers mostly withdraw it; when it empties, trades take about half
 
