@@ -47,56 +47,64 @@ def main():
     days = (sys.argv[2],) if len(sys.argv) > 2 else DAYS
     fn = od / 'same_maker.json'
     C.require(not fn.exists(), 'same_maker.json exists (write-once)')
-    L = legs(days)
-    by_order = {h: g for h, g in L.groupby('taker_hash')}
-    O = pd.read_parquet(WT.OUT / 'fire_times_orders.parquet', columns=['taker_hash', 'taker', 'mid', 'd', 't_set', 'rank', 'day'])
-    O = O[O.t_set.notna() & O.day.isin(days) & O.taker_hash.isin(by_order)]
-    T1, Rk = O[O['rank'] == 1], O[O['rank'] > 1]
-    rk_by = {k: g.sort_values('t_set') for k, g in Rk.groupby(['mid', 'd'])}
+    O_all = pd.read_parquet(WT.OUT / 'fire_times_orders.parquet', columns=['taker_hash', 'taker', 'mid', 'd', 't_set', 'rank', 'day'])
+    O_all = O_all[O_all.t_set.notna() & O_all.day.isin(days)]
+    addr = {int(r_): a.lower() for r_, a in O_all.groupby('rank').taker.first().items()}
     res = {c: collections.Counter() for c in ('CO-TIMED', 'CONTROL')}
     share_num = {c: 0. for c in res}; share_den = {c: 0. for c in res}
     by_rank = collections.defaultdict(collections.Counter)
     first = collections.Counter()
-    for r in T1.itertuples():
-        g = rk_by.get((r.mid, r.d))
-        if g is None:
-            continue
-        lag = g.t_set.to_numpy(float) - float(r.t_set)
-        A = by_order[r.taker_hash]
-        ma, mpa = set(A.maker), set(zip(A.maker, A.ptick))
-        for cls, sel in (('CO-TIMED', np.abs(lag) <= CO_MS), ('CONTROL', (np.abs(lag) >= CTL_LO) & (np.abs(lag) <= CTL_HI))):
-            for j in np.flatnonzero(sel):
-                o = g.iloc[j]
-                B = by_order[o.taker_hash]
-                mb, mpb = set(B.maker), set(zip(B.maker, B.ptick))
-                cm = bool(ma & mb)
-                res[cls]['pairs'] += 1; res[cls]['common_maker'] += int(cm); res[cls]['common_maker_price'] += int(bool(mpa & mpb))
-                share_num[cls] += float(A.shares[A.maker.isin(mb)].sum()); share_den[cls] += float(A.shares.sum())
-                if cls == 'CO-TIMED':
-                    by_rank[int(o['rank'])]['pairs'] += 1; by_rank[int(o['rank'])]['common_maker'] += int(cm)
-                    first['top_first' if lag[j] > 0 else ('other_first' if lag[j] < 0 else 'same_ms')] += 1
-    out = dict(asof='2026-11-26', days=list(days), co_ms=CO_MS, control_ms=[CTL_LO, CTL_HI], legs_joined=int(len(L)),
-               top_orders_with_legs=int(len(T1)), classes={}, by_rank={}, cotimed_order=dict(first))
+    vol = collections.defaultdict(float)                     # (group, maker) -> shares
+    n_legs, n_top = 0, 0
+    for d_ in days:                                          # pairs never cross days: one day in memory at a time
+        L = legs([d_])
+        n_legs += len(L)
+        grp = L.taker.map({a: f'rank{r_}' for r_, a in addr.items()}).fillna('other_takers')
+        for (g_, m_), v in L.groupby([grp, L.maker]).shares.sum().items():
+            vol[(g_, m_)] += float(v)
+        Od = O_all[O_all.day == d_]
+        Ld = L[L.taker_hash.isin(set(Od.taker_hash))].copy()
+        del L
+        Ld['mp'] = Ld.maker + '@' + Ld.ptick.astype(str)
+        mk = Ld.groupby('taker_hash').maker.agg(frozenset).to_dict()
+        mkp = Ld.groupby('taker_hash').mp.agg(frozenset).to_dict()
+        T1 = Od[(Od['rank'] == 1) & Od.taker_hash.isin(mk)]
+        sh1 = {h: g.groupby('maker').shares.sum().to_dict() for h, g in Ld[Ld.taker_hash.isin(set(T1.taker_hash))].groupby('taker_hash')}
+        Rk = Od[(Od['rank'] > 1) & Od.taker_hash.isin(mk)]
+        rk_by = {k: (g.t_set.to_numpy(float), g.taker_hash.to_numpy(), g['rank'].to_numpy(int)) for k, g in Rk.groupby(['mid', 'd'])}
+        n_top += len(T1)
+        for r in T1.itertuples():
+            if (r.mid, r.d) not in rk_by:
+                continue
+            ts, hs, rs = rk_by[(r.mid, r.d)]
+            lag = ts - float(r.t_set)
+            ma, mpa, sa = mk[r.taker_hash], mkp[r.taker_hash], sh1[r.taker_hash]
+            tot = sum(sa.values())
+            for cls, sel in (('CO-TIMED', np.abs(lag) <= CO_MS), ('CONTROL', (np.abs(lag) >= CTL_LO) & (np.abs(lag) <= CTL_HI))):
+                for j in np.flatnonzero(sel):
+                    mb, mpb = mk[hs[j]], mkp[hs[j]]
+                    cm = bool(ma & mb)
+                    res[cls]['pairs'] += 1; res[cls]['common_maker'] += int(cm); res[cls]['common_maker_price'] += int(bool(mpa & mpb))
+                    share_num[cls] += sum(v for m_, v in sa.items() if m_ in mb); share_den[cls] += tot
+                    if cls == 'CO-TIMED':
+                        by_rank[int(rs[j])]['pairs'] += 1; by_rank[int(rs[j])]['common_maker'] += int(cm)
+                        first['top_first' if lag[j] > 0 else ('other_first' if lag[j] < 0 else 'same_ms')] += 1
+        del Ld, mk, mkp, sh1
+        C.require(FI.F.rss_mib() < FI.F.RSS_GUARD_MIB, 'RSS over the self-guard')
+    out = dict(asof='2026-11-26', days=list(days), co_ms=CO_MS, control_ms=[CTL_LO, CTL_HI], legs_joined=int(n_legs),
+               top_orders_with_legs=int(n_top), classes={}, by_rank={}, cotimed_order=dict(first))
     for cls, c in res.items():
         out['classes'][cls] = dict(pairs=int(c['pairs']), common_maker=c['common_maker'] / c['pairs'] if c['pairs'] else None,
                                    common_maker_price=c['common_maker_price'] / c['pairs'] if c['pairs'] else None,
                                    top_shares_on_common_makers=share_num[cls] / share_den[cls] if share_den[cls] else None)
     out['by_rank'] = {r_: dict(pairs=int(c['pairs']), common_maker=c['common_maker'] / c['pairs']) for r_, c in sorted(by_rank.items()) if c['pairs']}
-    top = O.groupby('rank').taker.first().to_dict()
-    vol = L.groupby(['taker', 'maker']).shares.sum()
-    tt = top.get(1, '').lower()
-    pt = vol.loc[tt] / vol.loc[tt].sum() if tt in vol.index.get_level_values(0) else pd.Series(dtype=float)
+    V = pd.Series(vol)
+    V.index = pd.MultiIndex.from_tuples(V.index, names=['grp', 'maker'])
+    pt = V.loc['rank1'] / V.loc['rank1'].sum()
     sim = {}
-    for r_, a in sorted(top.items()):
-        if r_ == 1:
-            continue
-        a = a.lower()
-        if a in vol.index.get_level_values(0):
-            pr = vol.loc[a] / vol.loc[a].sum()
-            sim[f'rank{r_}'] = float(np.minimum(pt, pr.reindex(pt.index).fillna(0.)).sum())
-    oth = L[~L.taker.isin([x.lower() for x in top.values()])].groupby('maker').shares.sum()
-    oth = oth / oth.sum()
-    sim['other_takers'] = float(np.minimum(pt, oth.reindex(pt.index).fillna(0.)).sum())
+    for g_ in sorted(set(V.index.get_level_values(0)) - {'rank1'}):
+        pr = V.loc[g_] / V.loc[g_].sum()
+        sim[g_] = float(np.minimum(pt, pr.reindex(pt.index).fillna(0.)).sum())
     out['similarity_to_top'] = sim
     TR.dump(fn, out)
     print(json.dumps(out, indent=1))
