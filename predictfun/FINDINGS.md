@@ -1,3 +1,19 @@
+<!-- SAME_MAKER_20261126_CLAUDE -->
+## 2026-11-26 — the top takers that fire together take the same quotes: within 50 ms of each other they took from a common maker in 56% of pairs and from the same maker at the same price in 34% (the same takers 2-30 s apart: 14% / 0.8%); the top taker settles first in 54%; their counterparty mix overall is no closer to its than other takers'
+
+[same_maker](reviews/take_reprice_20261125/same_maker.json) (step1 maker legs joined to their taker order, a maker = (day, code); fire_times_orders' orders in complete markets, 5,750 top-taker orders with joined legs; declared before the run; the first four-day run hit the 4 GiB cap and was restructured to one day at a time before the result). USER: "Do they target same maker?". Consumed days, point estimates.
+
+| pairs of a top-taker order and another top-10 taker's order (same market, direction) | settled within 50 ms of each other | 2-30 s apart (control) |
+|---|---:|---:|
+| pairs | 4,814 | 114,546 |
+| took from at least one common maker | 56% | 14% |
+| took from the same maker at the same price | 34% | 0.8% |
+| the top taker's shares from makers the other order also hit | 43% | 8% |
+
+- **Who settles first in the co-timed pairs:** the top taker 54%, the other 41%, the same ms 5%. Common-maker share by rank (pairs): rank 4 61% (1,695), rank 7 62% (983), rank 5 57% (955), rank 2 45% (381).
+- **Overall counterparty mix** (sum over makers of the smaller of the two volume shares): ranks 2-10 against the top taker 0.32-0.52, other takers 0.49: no shared favourite makers.
+- **Reading:** when the top takers fire together they go for the same quotes at the same moment, the top taker usually first: a race for the same quote that has just become worth taking (STALE_QUOTES), seen by several takers at once; one firm splitting an order across accounts would look the same.
+<!-- /SAME_MAKER_20261126_CLAUDE -->
 <!-- INFO_BATCH2_20261126_CLAUDE -->
 ## 2026-11-26 — the rest of the data we hold: it trades every market and more when BTC is active; ETH moves precede some fires; it trades disproportionately against a few makers (5-6x their share); the top takers fire within tens of ms of each other (a common trigger or one firm); no coin, Polymarket or the window opening shows its trigger
 

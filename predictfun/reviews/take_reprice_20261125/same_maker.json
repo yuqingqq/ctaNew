@@ -1,0 +1,85 @@
+{
+  "asof": "2026-11-26",
+  "days": [
+    "20261023",
+    "20261031",
+    "20261101",
+    "20261102"
+  ],
+  "co_ms": 50.0,
+  "control_ms": [
+    2000.0,
+    30000.0
+  ],
+  "legs_joined": 1820317,
+  "top_orders_with_legs": 5750,
+  "classes": {
+    "CO-TIMED": {
+      "pairs": 4814,
+      "common_maker": 0.5637723307021189,
+      "common_maker_price": 0.3433734939759036,
+      "top_shares_on_common_makers": 0.4319748141731982
+    },
+    "CONTROL": {
+      "pairs": 114546,
+      "common_maker": 0.13812791367660154,
+      "common_maker_price": 0.007621392279084385,
+      "top_shares_on_common_makers": 0.08283700560712655
+    }
+  },
+  "by_rank": {
+    "2": {
+      "pairs": 381,
+      "common_maker": 0.4461942257217848
+    },
+    "3": {
+      "pairs": 78,
+      "common_maker": 0.48717948717948717
+    },
+    "4": {
+      "pairs": 1695,
+      "common_maker": 0.6100294985250737
+    },
+    "5": {
+      "pairs": 955,
+      "common_maker": 0.5706806282722513
+    },
+    "6": {
+      "pairs": 312,
+      "common_maker": 0.47435897435897434
+    },
+    "7": {
+      "pairs": 983,
+      "common_maker": 0.6185147507629705
+    },
+    "8": {
+      "pairs": 263,
+      "common_maker": 0.41064638783269963
+    },
+    "9": {
+      "pairs": 112,
+      "common_maker": 0.375
+    },
+    "10": {
+      "pairs": 35,
+      "common_maker": 0.6
+    }
+  },
+  "cotimed_order": {
+    "other_first": 1994,
+    "top_first": 2596,
+    "same_ms": 224
+  },
+  "similarity_to_top": {
+    "other_takers": 0.49184413248017406,
+    "rank10": 0.32330362438385274,
+    "rank2": 0.4228271318433612,
+    "rank3": 0.3537256228927281,
+    "rank4": 0.46647221485216894,
+    "rank5": 0.46267560832193183,
+    "rank6": 0.5204435487841754,
+    "rank7": 0.47641061510042104,
+    "rank8": 0.4178192585050998,
+    "rank9": 0.4728799884447719
+  }
+}

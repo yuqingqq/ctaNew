@@ -1,3 +1,8 @@
+<!-- SAME_MAKER_20261126_CLAUDE -->
+## 2026-11-26 — co-timed top takers take the same quotes (34% same maker and price within 50 ms vs 0.8% 2-30 s apart); top taker first 54%; no shared favourite makers overall
+
+See FINDINGS SAME_MAKER (same date).
+<!-- /SAME_MAKER_20261126_CLAUDE -->
 <!-- INFO_BATCH2_20261126_CLAUDE -->
 ## 2026-11-26 — items 1-6: always active, more with BTC activity; ETH precedes some fires; 5-6x concentration on a few makers; top takers fire within tens of ms of each other (shared trigger or one firm); no coin / Polymarket / opening trigger
 
