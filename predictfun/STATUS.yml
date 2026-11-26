@@ -1,3 +1,12 @@
+public_score_20261126_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/public_score.json
+  points: data/predict_fun/research/take_reprice_20261125/public_score_points.parquet
+  session: 1622c91e
+  auc_random_logit_gbm: [0.811, 0.836]
+  precision_top1_top01_logit: [0.290, 0.440]
+  base_rate: 0.0248
+  fires_in_top1: 0.084
+  fires_mean_score_vs_label: [0.077, 0.612]
 depth_20261126_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/depth_deep.json
   points: data/predict_fun/research/take_reprice_20261125/depth_deep_points.parquet

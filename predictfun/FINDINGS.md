@@ -1,3 +1,20 @@
+<!-- PUBLIC_SCORE_20261126_CLAUDE -->
+## 2026-11-26 — a combined public score finds moments where Binance moves within 300 ms 29% (top 1%) to 44% (top 0.1%) of the time (base 2.5%), but not the top taker's: 92% of its fires are outside its top 1%, scored 7.7% on average while 61% are followed by a move
+
+[public_score](reviews/take_reprice_20261125/public_score.json) (decision moments with no prior move its way: 232,087 random, 67,810 nearby, 4,425 of its fires; label = a move its way within 300 ms; six feature families, logistic and gradient-boosted trees declared before the run; trained on random + nearby moments, never on its fires, leave-one-day-out over the four days). USER: "yes we can build that score to check". Development evidence: the features were chosen from descriptive studies on these days; G = 4 days, point estimates; its fires are its filled orders only.
+
+| logistic, all features | random moments | move within 300 ms | hits with the move >= 75 ms later | its fires above the threshold | their move rate |
+|---|---:|---:|---:|---:|---:|
+| top 1% | 2,324 | 29.0% | 58% | 8.4% | 88% |
+| top 0.3% | 698 | 38.3% | 49% | 3.8% | 88% |
+| top 0.1% | 234 | 44.0% | 52% | 1.9% | 87% |
+| all | 232,087 | 2.5% | | 100% | 61% |
+
+- **Ranking:** AUC 0.811 on random and 0.788 on nearby moments (gradient-boosted trees 0.836 / 0.810; top 1% 28.3%, top 0.1% 47.0%). Families alone (AUC / top-1% precision): best 0.79 / 27%; depth 0.74 / 16%; trades 0.56 / 8%; venues 0.54 / 17%; predict 0.54 / 6%; long 0.51 / 10%: the best level carries most of it.
+- **Lead:** for top-1% hits the move comes a median 96 ms later (p25 38); 58% leave the >= 75 ms our path needs (TIMELINE).
+- **Against the top taker:** its fires score 7.7% on average while 61% are followed by a move; 8.4% of them are in the score's top 1% (those: 88% followed by a move).
+- **Reading:** public data yields a usable ranking (12x the base rate in its top 1%), mostly from the Binance best level, but it picks other moments than the top taker, at lower precision, and about half its hits come too late for our path. Whether taking at its top moments pays depends on Predict's quotes at our match time: the take replay under venue rules is the next measurement.
+<!-- /PUBLIC_SCORE_20261126_CLAUDE -->
 <!-- DEPTH_20261126_CLAUDE -->
 ## 2026-11-26 — the Binance book behind the best level leans the top taker's way before its quiet fires (20-level imbalance median +0.18 vs +0.06 nearby; 20% in the nearby top decile); depth imbalance is the strongest public signal so far (top decile: a move within 300 ms 12.3% vs 2.7%), still far below its fires (88% in the same decile)
 
