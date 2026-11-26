@@ -3,13 +3,13 @@ of makers, it looks smart takers can take those stale quotes, and their mark out
 days over score_replay's saved records and the recorded books; no new replay, no strategy change.
 A quote is stale when its price stays on the Predict book while Binance moves the taker's way. Per quote hit (or aimed at) at time t on
 book side b at price L (UP space, cents; d = +1 when the taker buys Up): its appearance = the first frame of the run of consecutive frames
-showing size at L on side b that contains the frame 25 ms before t (frame clock; 'not_shown' when that frame does not show it: posted
-within 25 ms, beyond the 5 shown levels, or the clock; counted and kept in the value tables; 'age_censored' when the run starts at the
-path's first frame); staleness (cents) = d x 100 x (Phi(z(t)) - Phi(z(appearance))), z(x) = 1e4 ln(bm(x) / bm(window start)) /
+showing size at L on side b that contains the frame 25 ms before t (frame clock); when that frame does not show it, the frame 25 ms after t
+('appeared_late': the level appeared within ~25 ms of the fill, a fresh quote; else 'not_shown': beyond the 5 shown levels or the clock;
+counted and kept in the value tables); 'age_censored' when the run starts at the path's first frame; staleness (cents) = d x 100 x (Phi(z(t)) - Phi(z(appearance))), z(x) = 1e4 ln(bm(x) / bm(window start)) /
 (sigma sqrt(tau)), sigma (300 s ending 250 ms before t) and tau taken at t: reprice_replay's dFV between two instants
 (100 x (Phi(z(t)) - Phi(z(t - 250))) = why_markout.dfv_at(t), checked on every row; falsifier: t - 500 must differ); split additively at
 the taker's arrival at Predict (t - 150 ms, the speed bump) into stale on arrival and gone stale during the hold; the Binance mid move its
-way (bps) over the same span.
+way (bps) over the same span; the implied repricing its way in the 1 s after t (the move it anticipated, not staleness).
 Groups (declared before the run):
 - fills: TOP = the top taker's taker legs (exit_times' scan, de-duplicated by transaction + maker order) in the day's complete markets, at
   t_set - 34 ms; RANKS2_10 = the legs of the takers ranked 2-10 (winners_legs, not ambiguous) at their order's t_set - 34 ms
@@ -19,9 +19,11 @@ Groups (declared before the run):
 - our sent takes (SCORE1, RAND1): why_markout.takes_of unchanged (filled / taken by other takers before us / pulled by makers / other;
   would-be value at our limit on arrival; the other takers' own trades on the quotes they took and their first trade - our decision),
   plus the aimed level's staleness (appearance in the frame known at our decision) on our arrival (decision + 22 ms) and during our hold.
-Readings (merge): per group the shares and value per share by staleness bucket (<= 0, 0-0.5, 0.5-1, 1-2, 2-4, > 4 c), share-weighted
+Readings (merge): per group a partition of the fill volume (not visible / fresh: posted during the hold / stale on arrival >= 0.5 c /
+went stale during the hold >= 0.5 c / not stale) with value per share and the share followed by >= 0.5 c of repricing its way within 1 s;
+value per share by status; the shares and value per share by staleness bucket (<= 0, 0-0.5, 0.5-1, 1-2, 2-4, > 4 c), share-weighted
 quantiles of age / staleness / Binance bps, the share of fill volume on quotes stale by >= 1 c (total, on arrival, during the hold); our
-sent takes by class and by staleness during our hold. Point estimates, G = 4 days; the Predict / Binance clock offset is not measured
+sent takes by class, by staleness during our hold and by the same partition of the aimed quote. Point estimates, G = 4 days; the Predict / Binance clock offset is not measured
 (TOP and RANKS2_10 +-15 ms, OTHERS M50 +-30 ms).
 Outputs (write-once): OUT/stale_quotes/<day>_fills.parquet, <day>_sent.parquet, <day>.json; stale_quotes.json (merge).
 Usage: PF_SLOT=<slot> predictfun/research/run_light.sh <tag> -- python3 predictfun/reviews/take_reprice_20261125/stale_quotes.py \
@@ -145,6 +147,11 @@ def fill_row(f, rs, btc, t0, ws, end, grp, t_rel, b, L, q, ctl, extra=None):
     r.update(v1=wb['1'], v10=wb['10'])
     j = int(np.searchsorted(f[:, 0], t_rel - PRE_MS, side='right') - 1)
     ta, st = appear(f, rs[b], j, L)
+    if st == 'not_shown':
+        j2 = int(np.searchsorted(f[:, 0], t_rel + PRE_MS, side='right') - 1)
+        ta2, st2 = appear(f, rs[b], j2, L)
+        if ta2 is not None:
+            ta, st = min(ta2, t_rel), 'appeared_late'
     r['status'] = st
     if ta is not None:
         r['age_ms'] = t_rel - ta
@@ -152,9 +159,28 @@ def fill_row(f, rs, btc, t0, ws, end, grp, t_rel, b, L, q, ctl, extra=None):
         sp = stale_parts(btc, ws, d, t0 + ta, t0 + t_rel - HOLD, t0 + t_rel, ctl)
         if sp is not None:
             r.update(sp)
+            r['st_after_1s'] = after_1s(btc, ws, d, t0 + t_rel)
         else:
             ctl['stale_undefined'] += 1
     return r
+
+
+def after_1s(btc, ws, d, t):
+    """The implied repricing its way from t to t + 1 s (sigma and tau at t); None where undefined."""
+    z = zfun(btc, ws, t)
+    if z is None:
+        return None
+    a, b = z(t), z(t + 1000.)
+    return None if a is None or b is None else 100. * d * (phi(b) - phi(a))
+
+
+def part_of(X, pre=''):
+    """The declared partition of rows (columns with prefix pre): not visible / fresh / stale on arrival / went stale in the hold / not stale."""
+    st = pd.to_numeric(X.get(pre + 'st_total'), errors='coerce')
+    ar, ho = pd.to_numeric(X.get(pre + 'st_arrival'), errors='coerce'), pd.to_numeric(X.get(pre + 'st_hold'), errors='coerce')
+    fresh = X[pre + 'posted_during_hold'].astype('boolean').fillna(False).astype(bool) if (pre + 'posted_during_hold') in X else pd.Series(False, index=X.index)
+    out = np.where(st.isna(), 'not visible', np.where(fresh, 'fresh: posted during the hold', np.where(ar >= .5, 'stale on arrival', np.where(ho >= .5, 'went stale during the hold', 'not stale'))))
+    return pd.Series(out, index=X.index)
 
 
 def legs_of_day(day, comp):
@@ -240,6 +266,7 @@ def day_run(day, out=None, limit=None):
                     r.update(config=cfg, aimed_status=st_, day=day, mid=m)
                     if ta is not None:
                         r['aimed_age_ms'] = r['g'] - ta
+                        r['aimed_posted_during_hold'] = False
                         sp = stale_parts(btc, ws, r['d'], t0 + ta, t0 + r['g'] + NET, t0 + r['a'], ctl)
                         if sp is not None:
                             r.update({f'aimed_{k}': v for k, v in sp.items()})
@@ -299,6 +326,12 @@ def merge(od=None, days=None):
                                        for k, G in V.groupby(bb, observed=True)}
             bh = pd.cut(V.st_hold.astype(float), BUCKETS, labels=BLAB)
             o['by_hold_staleness'] = {str(k): dict(share=float(G.q.sum() / V.q.sum()), v1=wavg(G.v1, G.q), fills=int(len(G))) for k, G in V.groupby(bh, observed=True)}
+        pt = part_of(X)
+        sa = pd.to_numeric(X.get('st_after_1s'), errors='coerce')
+        o['partition'] = {k: dict(share=float(G.q.sum() / q.sum()), v1=wavg(G.v1, G.q), v10=wavg(G.v10, G.q), fills=int(len(G)),
+                                  repriced_its_way_after=float(G.q[sa[G.index] >= .5].sum() / G.q[sa[G.index].notna()].sum()) if sa[G.index].notna().any() else None)
+                          for k, G in X.groupby(pt)}
+        o['v1_by_status'] = {k: dict(share=float(G.q.sum() / q.sum()), v1=wavg(G.v1, G.q)) for k, G in X.groupby('status')}
         out['groups'][g] = o
     for cfg in SRy.CONFIGS:
         X = Sd[Sd.config == cfg]
@@ -319,6 +352,9 @@ def merge(od=None, days=None):
                                                      pulled=float((G.cls == 'pulled').mean()), other=float((G.cls == 'other').mean()), wb1=WM_mean(G.wb1))
                                         for k, G in X[hv.notna()].groupby(bh[hv.notna()], observed=True)}
         b['aimed_status'] = {k: int(v) for k, v in X.aimed_status.value_counts().items()}
+        pa = part_of(X, 'aimed_')
+        b['by_aimed_partition'] = {k: dict(n=int(len(G)), filled=float((G.cls == 'filled').mean()), taken=float((G.cls == 'taken').mean()),
+                                           pulled=float((G.cls == 'pulled').mean()), other=float((G.cls == 'other').mean()), wb1=WM_mean(G.wb1)) for k, G in X.groupby(pa)}
         out['sent'][cfg] = b
     TR.dump(fn, out)
     print(json.dumps(out, indent=1, default=str)[:6000])
@@ -368,6 +404,10 @@ def selftest():
     assert abs(b['st_total'] + c['st_total']) < 1e-12 and abs(b['bn_bps'] + c['bn_bps']) < 1e-12
     e = stale_parts(btc, ws, 1, t - 100., t - 150., t)                               # posted during the hold: nothing on arrival
     assert e['st_arrival'] == 0. and abs(e['st_hold'] - e['st_total']) < 1e-12
+    g = after_1s(btc, ws, 1, t)
+    assert g is not None and abs(g + after_1s(btc, ws, -1, t)) < 1e-12
+    Xp = pd.DataFrame(dict(st_total=[np.nan, 1., 1., 1., .1], st_arrival=[np.nan, 0., .6, .1, .05], st_hold=[np.nan, 1., .4, .9, .05], posted_during_hold=[None, True, False, False, False]))
+    assert part_of(Xp).tolist() == ['not visible', 'fresh: posted during the hold', 'stale on arrival', 'went stale during the hold', 'not stale'], part_of(Xp).tolist()
     flat = (bk, np.full(len(bk), 1e5), np.zeros(len(bk)))
     assert stale_parts(flat, ws, 1, t - 3000., t - 150., t) is None                  # no volatility: undefined, as dfv_at
     print('stale_quotes selftest PASS')
