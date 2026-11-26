@@ -1,3 +1,11 @@
+public_sources_20261126_claude:
+  diagnostics: [predictfun/reviews/take_reprice_20261125/cross_venue.json, predictfun/reviews/take_reprice_20261125/before_long.json]
+  session: 1622c91e
+  any_other_venue_burst_quiet_fires_vs_nearby: [0.068, 0.021]
+  trend5s_quiet_fires_vs_nearby: [0.174, 0.139]
+  predict_moved_its_way_quiet_fires_vs_nearby: [0.523, 0.401]
+  public_pattern_move300_range: [0.048, 0.091]
+  masked_prints_fire_rows_changed: 14
 fire_breakdown_20261126_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/fire_breakdown.json
   points: data/predict_fun/research/take_reprice_20261125/fire_breakdown_points.parquet

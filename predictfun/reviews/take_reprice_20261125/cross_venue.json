@@ -1,0 +1,612 @@
+{
+  "asof": "2026-11-26",
+  "days": [
+    "20261023",
+    "20261031",
+    "20261101",
+    "20261102"
+  ],
+  "n_fires": 5930,
+  "n_nearby": 71119,
+  "windows_ms": [
+    50.0,
+    100.0,
+    300.0
+  ],
+  "stale_ms": 60000.0,
+  "q_hi": 0.99,
+  "q_lo": 0.95,
+  "venues": {
+    "binance_spot": {
+      "coverage_fires": 1.0,
+      "coverage_nearby": 1.0,
+      "v100_p99_nearby": 0.13599000000021988,
+      "v100_p95_nearby": 0.0038209999999195624,
+      "r100_p99_nearby_bps": 0.2563796244069875,
+      "fires_burst99": 0.0954468802698145,
+      "nearby_burst99": 0.009997328421378253,
+      "fires_burst95": 0.21585160202360876,
+      "nearby_burst95": 0.050000703047005726,
+      "fires_ret99": 0.10236087689713322,
+      "nearby_ret99": 0.01001138936149271,
+      "fires_v100_mean": 0.10872638954475355,
+      "nearby_v100_mean": 0.008388681365044753,
+      "burst_time_before_t_ms": {
+        "p10": 5.0,
+        "p25": 11.0,
+        "p50": 32.0,
+        "p75": 62.0,
+        "p90": 84.60000000000002
+      },
+      "by_group": {
+        "quiet": {
+          "fires_burst99": 0.0034458993797381117,
+          "nearby_burst99": 0.0022731700980710527
+        },
+        "far_shrank": {
+          "fires_burst99": 0.03978494623655914,
+          "nearby_burst99": 0.015606121627064035
+        },
+        "other_flat": {
+          "fires_burst99": 0.012567324955116697,
+          "nearby_burst99": 0.004726037512922759
+        },
+        "moved_its_way": {
+          "fires_burst99": 0.3142857142857143,
+          "nearby_burst99": 0.10818978543366577
+        }
+      },
+      "follow": {
+        "nearby_burst": 0.09631728045325778,
+        "nearby_no_burst": 0.03425886120046845,
+        "n_nearby_burst": 353,
+        "fires_burst": 0.6881720430107527,
+        "fires_no_burst": 0.6105724838411819
+      }
+    },
+    "bybit_perp": {
+      "coverage_fires": 1.0,
+      "coverage_nearby": 1.0,
+      "v100_p99_nearby": 0.3962800000013219,
+      "v100_p95_nearby": 0.013100000002296292,
+      "r100_p99_nearby_bps": 0.5587356569396644,
+      "fires_burst99": 0.06981450252951096,
+      "nearby_burst99": 0.01001138936149271,
+      "fires_burst95": 0.1993254637436762,
+      "nearby_burst95": 0.050000703047005726,
+      "fires_ret99": 0.08853288364249579,
+      "nearby_ret99": 0.01001138936149271,
+      "fires_v100_mean": 0.22433288364334536,
+      "nearby_v100_mean": 0.02384833870005684,
+      "burst_time_before_t_ms": {
+        "p10": 8.0,
+        "p25": 19.0,
+        "p50": 40.0,
+        "p75": 65.75,
+        "p90": 87.69999999999999
+      },
+      "by_group": {
+        "quiet": {
+          "fires_burst99": 0.02067539627842867,
+          "nearby_burst99": 0.0025004871078781583
+        },
+        "far_shrank": {
+          "fires_burst99": 0.047311827956989246,
+          "nearby_burst99": 0.015606121627064035
+        },
+        "other_flat": {
+          "fires_burst99": 0.02064631956912029,
+          "nearby_burst99": 0.005242947865898686
+        },
+        "moved_its_way": {
+          "fires_burst99": 0.1813953488372093,
+          "nearby_burst99": 0.10214566334239952
+        }
+      },
+      "follow": {
+        "nearby_burst": 0.12032085561497326,
+        "nearby_no_burst": 0.034106412005457026,
+        "n_nearby_burst": 374,
+        "fires_burst": 0.5390070921985816,
+        "fires_no_burst": 0.6146125116713352
+      }
+    },
+    "bybit_spot": {
+      "coverage_fires": 1.0,
+      "coverage_nearby": 1.0,
+      "v100_p99_nearby": 0.15694282000035817,
+      "v100_p95_nearby": 0.0,
+      "r100_p99_nearby_bps": 0.3468786318323199,
+      "fires_burst99": 0.09747048903878583,
+      "nearby_burst99": 0.01001138936149271,
+      "fires_burst95": 0.1981450252951096,
+      "nearby_burst95": 0.047511916646747004,
+      "fires_ret99": 0.08111298482293423,
+      "nearby_ret99": 0.01001138936149271,
+      "fires_v100_mean": 0.06113352917368895,
+      "nearby_v100_mean": 0.005425546928385194,
+      "burst_time_before_t_ms": {
+        "p10": 6.0,
+        "p25": 20.0,
+        "p50": 40.0,
+        "p75": 66.0,
+        "p90": 86.0
+      },
+      "by_group": {
+        "quiet": {
+          "fires_burst99": 0.008270158511371467,
+          "nearby_burst99": 0.0011041111904916542
+        },
+        "far_shrank": {
+          "fires_burst99": 0.046236559139784944,
+          "nearby_burst99": 0.008759565042287556
+        },
+        "other_flat": {
+          "fires_burst99": 0.00718132854578097,
+          "nearby_burst99": 0.002141485748043125
+        },
+        "moved_its_way": {
+          "fires_burst99": 0.3136212624584718,
+          "nearby_burst99": 0.1610758537322454
+        }
+      },
+      "follow": {
+        "nearby_burst": 0.16759776536312848,
+        "nearby_no_burst": 0.034229865002735435,
+        "n_nearby_burst": 179,
+        "fires_burst": 0.7830188679245284,
+        "fires_no_burst": 0.6080111136837231
+      }
+    },
+    "okx_swap": {
+      "coverage_fires": 0.8600337268128162,
+      "coverage_nearby": 0.8599389755199033,
+      "v100_p99_nearby": 0.5602150000167423,
+      "v100_p95_nearby": 0.03431500000438006,
+      "r100_p99_nearby_bps": 0.44682735289580194,
+      "fires_burst99": 0.08372549019607843,
+      "nearby_burst99": 0.010006867458059452,
+      "fires_burst95": 0.2096078431372549,
+      "nearby_burst95": 0.050001635109061776,
+      "fires_ret99": 0.11725490196078431,
+      "nearby_ret99": 0.010006867458059452,
+      "fires_v100_mean": 0.48033960784536417,
+      "nearby_v100_mean": 0.03837462637790637,
+      "burst_time_before_t_ms": {
+        "p10": 3.6000000000000014,
+        "p25": 12.0,
+        "p50": 36.0,
+        "p75": 65.0,
+        "p90": 85.40000000000003
+      },
+      "by_group": {
+        "quiet": {
+          "fires_burst99": 0.006872852233676976,
+          "nearby_burst99": 0.0023414556710850067
+        },
+        "far_shrank": {
+          "fires_burst99": 0.04709480122324159,
+          "nearby_burst99": 0.01193021947101857
+        },
+        "other_flat": {
+          "fires_burst99": 0.01646090534979424,
+          "nearby_burst99": 0.007882225373258821
+        },
+        "moved_its_way": {
+          "fires_burst99": 0.24529721595184348,
+          "nearby_burst99": 0.08330642557313529
+        }
+      },
+      "follow": {
+        "nearby_burst": 0.1016949152542373,
+        "nearby_no_burst": 0.036650666296983034,
+        "n_nearby_burst": 354,
+        "fires_burst": 0.7227722772277227,
+        "fires_no_burst": 0.6133514986376022
+      }
+    },
+    "okx_spot": {
+      "coverage_fires": 0.8600337268128162,
+      "coverage_nearby": 0.8599389755199033,
+      "v100_p99_nearby": 0.058869690000165065,
+      "v100_p95_nearby": 1.0666000031278366e-05,
+      "r100_p99_nearby_bps": 0.48661186838834686,
+      "fires_burst99": 0.09588235294117647,
+      "nearby_burst99": 0.009990516367441709,
+      "fires_burst95": 0.22431372549019607,
+      "nearby_burst95": 0.050001635109061776,
+      "fires_ret99": 0.1084313725490196,
+      "nearby_ret99": 0.010006867458059452,
+      "fires_v100_mean": 0.055090251349004346,
+      "nearby_v100_mean": 0.0042453152630888185,
+      "burst_time_before_t_ms": {
+        "p10": 4.0,
+        "p25": 15.0,
+        "p50": 34.0,
+        "p75": 67.0,
+        "p90": 86.0
+      },
+      "by_group": {
+        "quiet": {
+          "fires_burst99": 0.00429553264604811,
+          "nearby_burst99": 0.0023017699817445827
+        },
+        "far_shrank": {
+          "fires_burst99": 0.05137614678899083,
+          "nearby_burst99": 0.012605514912774339
+        },
+        "other_flat": {
+          "fires_burst99": 0.012345679012345678,
+          "nearby_burst99": 0.004420718992409709
+        },
+        "moved_its_way": {
+          "fires_burst99": 0.29194883370955604,
+          "nearby_burst99": 0.10816919599612529
+        }
+      },
+      "follow": {
+        "nearby_burst": 0.11956521739130435,
+        "nearby_no_burst": 0.0366531106688587,
+        "n_nearby_burst": 276,
+        "fires_burst": 0.7326732673267327,
+        "fires_no_burst": 0.6130790190735694
+      }
+    },
+    "coinbase": {
+      "coverage_fires": 1.0,
+      "coverage_nearby": 1.0,
+      "v100_p99_nearby": 0.08059097380002295,
+      "v100_p95_nearby": 0.001218710000102874,
+      "r100_p99_nearby_bps": 0.5792990794667323,
+      "fires_burst99": 0.06846543001686341,
+      "nearby_burst99": 0.01001138936149271,
+      "fires_burst95": 0.14839797639123103,
+      "nearby_burst95": 0.049986642106891264,
+      "fires_ret99": 0.059190556492411464,
+      "nearby_ret99": 0.01001138936149271,
+      "fires_v100_mean": 0.049276100613831586,
+      "nearby_v100_mean": 0.004796268581392254,
+      "burst_time_before_t_ms": {
+        "p10": 10.400000000000006,
+        "p25": 22.0,
+        "p50": 41.0,
+        "p75": 70.0,
+        "p90": 88.0
+      },
+      "by_group": {
+        "quiet": {
+          "fires_burst99": 0.022053756030323914,
+          "nearby_burst99": 0.004319023186335
+        },
+        "far_shrank": {
+          "fires_burst99": 0.054838709677419356,
+          "nearby_burst99": 0.014297221103503826
+        },
+        "other_flat": {
+          "fires_burst99": 0.04578096947935368,
+          "nearby_burst99": 0.007236744941662975
+        },
+        "moved_its_way": {
+          "fires_burst99": 0.146843853820598,
+          "nearby_burst99": 0.07283167119975824
+        }
+      },
+      "follow": {
+        "nearby_burst": 0.11677282377919321,
+        "nearby_no_burst": 0.03400703901156833,
+        "n_nearby_burst": 471,
+        "fires_burst": 0.8432432432432433,
+        "fires_no_burst": 0.602122641509434
+      }
+    },
+    "kraken": {
+      "coverage_fires": 1.0,
+      "coverage_nearby": 1.0,
+      "v100_p99_nearby": 0.0015288024000028576,
+      "v100_p95_nearby": 0.0,
+      "r100_p99_nearby_bps": 0.013021575984277832,
+      "fires_burst99": 0.0193929173693086,
+      "nearby_burst99": 0.01001138936149271,
+      "fires_burst95": 0.04654300168634064,
+      "nearby_burst95": 0.02715167536101464,
+      "fires_ret99": 0.025801011804384485,
+      "nearby_ret99": 0.01001138936149271,
+      "fires_v100_mean": 0.0012805854435068687,
+      "nearby_v100_mean": 0.0012962542663703801,
+      "burst_time_before_t_ms": {
+        "p10": 11.0,
+        "p25": 20.5,
+        "p50": 43.0,
+        "p75": 62.5,
+        "p90": 87.0
+      },
+      "by_group": {
+        "quiet": {
+          "fires_burst99": 0.006891798759476223,
+          "nearby_burst99": 0.006949405728388647
+        },
+        "far_shrank": {
+          "fires_burst99": 0.00913978494623656,
+          "nearby_burst99": 0.011880789367700362
+        },
+        "other_flat": {
+          "fires_burst99": 0.008976660682226212,
+          "nearby_burst99": 0.008122876975335992
+        },
+        "moved_its_way": {
+          "fires_burst99": 0.051827242524916946,
+          "nearby_burst99": 0.04835297673012995
+        }
+      },
+      "follow": {
+        "nearby_burst": 0.03985507246376811,
+        "nearby_no_burst": 0.034538642243301915,
+        "n_nearby_burst": 552,
+        "fires_burst": 0.7567567567567568,
+        "fires_no_burst": 0.6109845031905196
+      }
+    },
+    "deribit": {
+      "coverage_fires": 0.9974704890387859,
+      "coverage_nearby": 0.9983408090664941,
+      "v100_p99_nearby": 0.3961434699995152,
+      "v100_p95_nearby": 0.0,
+      "r100_p99_nearby_bps": 0.5146018269511268,
+      "fires_burst99": 0.05967878275570583,
+      "nearby_burst99": 0.009999859156913283,
+      "fires_burst95": 0.1584108199492815,
+      "nearby_burst95": 0.04091491669131421,
+      "fires_ret99": 0.057480980557903634,
+      "nearby_ret99": 0.009999859156913283,
+      "fires_v100_mean": 0.08266084810312882,
+      "nearby_v100_mean": 0.013289321228996885,
+      "burst_time_before_t_ms": {
+        "p10": 7.0,
+        "p25": 16.0,
+        "p50": 40.0,
+        "p75": 67.0,
+        "p90": 85.0
+      },
+      "by_group": {
+        "quiet": {
+          "fires_burst99": 0.003465003465003465,
+          "nearby_burst99": 0.0012698619432143787
+        },
+        "far_shrank": {
+          "fires_burst99": 0.052262931034482756,
+          "nearby_burst99": 0.022067714631197097
+        },
+        "other_flat": {
+          "fires_burst99": 0.011690647482014389,
+          "nearby_burst99": 0.004435245416913069
+        },
+        "moved_its_way": {
+          "fires_burst99": 0.15824468085106383,
+          "nearby_burst99": 0.10033242671501964
+        }
+      },
+      "follow": {
+        "nearby_burst": 0.12169312169312169,
+        "nearby_no_burst": 0.034153370769825,
+        "n_nearby_burst": 378,
+        "fires_burst": 0.6782608695652174,
+        "fires_no_burst": 0.611731843575419
+      }
+    },
+    "eth_fut": {
+      "coverage_fires": 1.0,
+      "coverage_nearby": 1.0,
+      "v100_p99_nearby": 26.84499999997206,
+      "v100_p95_nearby": 2.679999999940628,
+      "r100_p99_nearby_bps": 0.742667794115541,
+      "fires_burst99": 0.0775716694772344,
+      "nearby_burst99": 0.009997328421378253,
+      "fires_burst95": 0.2323777403035413,
+      "nearby_burst95": 0.050000703047005726,
+      "fires_ret99": 0.10252951096121417,
+      "nearby_ret99": 0.009997328421378253,
+      "fires_v100_mean": 13.883149409841343,
+      "nearby_v100_mean": 1.7341856466019379,
+      "burst_time_before_t_ms": {
+        "p10": 4.900000000000006,
+        "p25": 14.0,
+        "p50": 38.0,
+        "p75": 66.0,
+        "p90": 84.0
+      },
+      "by_group": {
+        "quiet": {
+          "fires_burst99": 0.009648518263266712,
+          "nearby_burst99": 0.002338117815158797
+        },
+        "far_shrank": {
+          "fires_burst99": 0.06989247311827956,
+          "nearby_burst99": 0.020438985098670964
+        },
+        "other_flat": {
+          "fires_burst99": 0.02064631956912029,
+          "nearby_burst99": 0.006129079899571703
+        },
+        "moved_its_way": {
+          "fires_burst99": 0.1946843853820598,
+          "nearby_burst99": 0.0815956482320943
+        }
+      },
+      "follow": {
+        "nearby_burst": 0.09977324263038549,
+        "nearby_no_burst": 0.03415517522896288,
+        "n_nearby_burst": 441,
+        "fires_burst": 0.7065868263473054,
+        "fires_no_burst": 0.6085016439643025
+      }
+    },
+    "btc_fut": {
+      "coverage_fires": 1.0,
+      "coverage_nearby": 1.0,
+      "v100_p99_nearby": 1.0320000000010623,
+      "v100_p95_nearby": 0.0750000000007276,
+      "r100_p99_nearby_bps": 0.4135040071713708,
+      "fires_burst99": 0.1205733558178752,
+      "nearby_burst99": 0.009997328421378253,
+      "fires_burst95": 0.2517706576728499,
+      "nearby_burst95": 0.049986642106891264,
+      "fires_ret99": 0.13035413153456998,
+      "nearby_ret99": 0.009983267481263797,
+      "fires_v100_mean": 1.0285888701418793,
+      "nearby_v100_mean": 0.06350632039123949,
+      "burst_time_before_t_ms": {
+        "p10": 3.0,
+        "p25": 8.0,
+        "p50": 28.0,
+        "p75": 59.5,
+        "p90": 85.60000000000002
+      },
+      "by_group": {
+        "quiet": {
+          "fires_burst99": 0.0,
+          "nearby_burst99": 0.0
+        },
+        "far_shrank": {
+          "fires_burst99": 0.03387096774193549,
+          "nearby_burst99": 0.013995167136528394
+        },
+        "other_flat": {
+          "fires_burst99": 0.00807899461400359,
+          "nearby_burst99": 0.002658396101019052
+        },
+        "moved_its_way": {
+          "fires_burst99": 0.42724252491694353,
+          "nearby_burst99": 0.1511030522816561
+        }
+      },
+      "follow": {
+        "nearby_burst": 0.0947867298578199,
+        "nearby_no_burst": 0.03439399991124129,
+        "n_nearby_burst": 211,
+        "fires_burst": 0.5833333333333334,
+        "fires_no_burst": 0.6126809097174363
+      }
+    }
+  },
+  "any_other": {
+    "fires": 0.2902192242833052,
+    "nearby": 0.0565671620804567,
+    "by_group": {
+      "quiet": {
+        "fires": 0.06822880771881461,
+        "nearby": 0.020913164902253686
+      },
+      "far_shrank": {
+        "fires": 0.25053763440860216,
+        "nearby": 0.09575110753121224
+      },
+      "other_flat": {
+        "fires": 0.1059245960502693,
+        "nearby": 0.04094668438930734
+      },
+      "moved_its_way": {
+        "fires": 0.6897009966777409,
+        "nearby": 0.3986098519190088
+      }
+    },
+    "follow": {
+      "nearby_burst": 0.09097633136094675,
+      "nearby_no_burst": 0.032239732129143245,
+      "n_nearby_burst": 2704,
+      "fires_burst": 0.6998535871156661,
+      "fires_no_burst": 0.5962052378407269
+    }
+  },
+  "masked_prints": {
+    "rows_per_venue_day": {
+      "binance_spot|20261023": 0,
+      "bybit_perp|20261023": 0,
+      "bybit_spot|20261023": 0,
+      "okx_swap|20261023": 0,
+      "okx_spot|20261023": 0,
+      "coinbase|20261023": 0,
+      "kraken|20261023": 0,
+      "deribit|20261023": 0,
+      "eth_fut|20261023": 13118,
+      "btc_fut|20261023": 10679,
+      "binance_spot|20261031": 0,
+      "bybit_perp|20261031": 0,
+      "bybit_spot|20261031": 0,
+      "okx_swap|20261031": 0,
+      "okx_spot|20261031": 0,
+      "coinbase|20261031": 0,
+      "kraken|20261031": 0,
+      "deribit|20261031": 0,
+      "eth_fut|20261031": 7179,
+      "btc_fut|20261031": 7014,
+      "binance_spot|20261101": 0,
+      "bybit_perp|20261101": 0,
+      "bybit_spot|20261101": 0,
+      "okx_swap|20261101": 0,
+      "okx_spot|20261101": 0,
+      "coinbase|20261101": 0,
+      "kraken|20261101": 0,
+      "deribit|20261101": 0,
+      "eth_fut|20261101": 7369,
+      "btc_fut|20261101": 6605,
+      "binance_spot|20261102": 0,
+      "bybit_perp|20261102": 0,
+      "bybit_spot|20261102": 0,
+      "okx_swap|20261102": 0,
+      "okx_spot|20261102": 0,
+      "coinbase|20261102": 0,
+      "kraken|20261102": 0,
+      "deribit|20261102": 0,
+      "eth_fut|20261102": 12890,
+      "btc_fut|20261102": 10443
+    },
+    "fires_with_one_in_300ms": 0.03322091062394604,
+    "nearby_with_one": 0.03325412337068857,
+    "rows_changed_fires": 14,
+    "rows_changed_nearby": 380,
+    "corrected_shares": {
+      "flat_far_shrank": {
+        "fires": 0.3136593591905565,
+        "fires_before": 0.3136593591905565,
+        "nearby": 0.13965325721677752,
+        "nearby_before": 0.13965325721677752
+      },
+      "flat_near_grew": {
+        "fires": 0.055986509274873524,
+        "fires_before": 0.055986509274873524,
+        "nearby": 0.06920794724335269,
+        "nearby_before": 0.06920794724335269
+      },
+      "flat_other_activity": {
+        "fires": 0.11973018549747048,
+        "fires_before": 0.12074198988195615,
+        "nearby": 0.27148863172991744,
+        "nearby_before": 0.27372432120811596
+      },
+      "flat_small_changes": {
+        "fires": 0.18617200674536255,
+        "fires_before": 0.18650927487352445,
+        "nearby": 0.30236645622126296,
+        "nearby_before": 0.30323823450835924
+      },
+      "flat_unchanged": {
+        "fires": 0.05952782462057336,
+        "fires_before": 0.0581787521079258,
+        "nearby": 0.13286182314149525,
+        "nearby_before": 0.12975435537620045
+      },
+      "moved_against_only": {
+        "fires": 0.011129848229342328,
+        "fires_before": 0.011129848229342328,
+        "nearby": 0.03789423360845906,
+        "nearby_before": 0.03789423360845906
+      },
+      "moved_its_way": {
+        "fires": 0.25379426644182124,
+        "fires_before": 0.25379426644182124,
+        "nearby": 0.04652765083873508,
+        "nearby_before": 0.04652765083873508
+      }
+    }
+  }
+}

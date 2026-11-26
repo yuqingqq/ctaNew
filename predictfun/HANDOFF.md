@@ -1,3 +1,8 @@
+<!-- PUBLIC_SOURCES_20261126_CLAUDE -->
+## 2026-11-26 — other venues' trades, longer windows and Predict fills do not explain the top taker's quiet fires; each public pattern alone lifts a Binance move to 5%-9% (base ~3%), its fires 52%-75%
+
+See FINDINGS PUBLIC_SOURCES (same date). Next candidates: Binance depth20 (recorded, not yet used); other venues' order books are not recorded (starting a recorder = USER's call; any new days it writes are forward data).
+<!-- /PUBLIC_SOURCES_20261126_CLAUDE -->
 <!-- FIRE_BREAKDOWN_20261126_CLAUDE -->
 ## 2026-11-26 — the top taker's fires by Binance activity in the 300 ms before: 24% no or little activity (move follows 52%-57%, nearby ~2%), 31% far side shrinking (68% vs 9%), 25% after a move started
 
