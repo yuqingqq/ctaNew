@@ -1,3 +1,31 @@
+<!-- GROWTH_20261126_CLAUDE -->
+## 2026-11-26 — growth rates of the build-up (slopes, acceleration, steadiness, fit, late share, flow growth over 3 s) add little: best separation 0.65 against 0.68 for the plain 300 ms change; imitation of the smart takers +0.005 AUC; public score trees AUC 0.839 → 0.842, top 0.1% 41% → 47%
+
+[growth_dyn](reviews/take_reprice_20261125/growth_dyn.json) (series sampled every 100 ms over [t − 3 s, t]: best-level imbalance, log far / near size, depth imbalance; flow growth from fire_events' events; the sampled state reconciled with the v3 factors; imitation = fire vs nearby, logistic, leave-one-day-out; prediction = public_score's evaluation against public_score3's held-out v3 scores; declared before the run; one two-day rehearsal seen). USER: "In the longer window, can we further check the dynamics growth rate, etc, and check if they help". Consumed days; G = 4; depth series cover 94% of points.
+
+| growth factor (top taker) | separation | at fires | present at its fires (nearby 20%) |
+|---|---:|---:|---:|
+| imbalance: growth rate over the last 1 s | 0.65 | up | 40% |
+| far-side size: growth rate over the last 1 s | 0.65 | down | 43% |
+| near-side size: growth rate over the last 1 s | 0.62 | up | 32% |
+| imbalance: growth rate over 3 s | 0.62 | up | 32% |
+| far-side size: growth rate over 3 s | 0.61 | down | 33% |
+| depth imbalance: growth rate over the last 1 s | 0.61 | up | 33% |
+| depth imbalance: growth rate over 3 s | 0.60 | up | 30% |
+| near-side size: growth rate over 3 s | 0.60 | up | 28% |
+
+- **Acceleration, steadiness, fit, late share, flow growth (top taker):** far-side size: late share (last 300 ms of the 3 s change) 0.59; near-side new orders speeding up (last 300 ms vs the 700 ms before) 0.59; far-side size: acceleration (last 1 s vs the 2 s before) 0.58; imbalance: late share (last 300 ms of the 3 s change) 0.58. Rank 2 is the one group where acceleration ranks high (imbalance: acceleration (last 1 s vs the 2 s before) 0.60, depth imbalance: acceleration (last 1 s vs the 2 s before) 0.59).
+- **Imitation (held-out AUC, fire vs nearby):** top taker 0.745 → 0.749 (growth alone 0.693); rank 2 0.736 → 0.741 (growth alone 0.659); ranks 3-10 0.754 → 0.759 (growth alone 0.692).
+
+| public score (held-out) | AUC random / nearby | top 1% | top 0.1% | its fires in the top 1% |
+|---|---:|---:|---:|---:|
+| logistic, v3 | 0.809 / 0.783 | 25.8% | 41.5% (n 234) | 6.2% |
+| logistic, v3 + growth | 0.821 / 0.799 | 26.2% | 46.2% (n 234) | 5.8% |
+| trees, v3 | 0.839 / 0.817 | 27.7% | 40.6% (n 234) | 7.4% |
+| trees, v3 + growth | 0.842 / 0.819 | 28.3% | 46.6% (n 234) | 7.8% |
+
+- **Reading:** how fast the build-up grows carries the information of how far it has gone, no more: the 1 s growth rates separate slightly less than the plain 300 ms change, acceleration and steadiness less still; they leave the imitation of the smart takers unchanged and lift the public score a little at its very top (small n), without bringing it closer to their fires.
+<!-- /GROWTH_20261126_CLAUDE -->
 <!-- SMART_COMBO_20261126_CLAUDE -->
 ## 2026-11-26 — combinations and longer windows of the smart takers' factors: with all eight present a move follows 24% of nearby moments (1.6% with none or one) and the top taker fires there 7x as often, but its fires with none or one are still followed by a move 48% of the time; the build-up is as visible over 1-3 s as over 300 ms, the activity bursts only in the last 300 ms
 

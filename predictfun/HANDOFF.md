@@ -1,3 +1,8 @@
+<!-- GROWTH_20261126_CLAUDE -->
+## 2026-11-26 — growth rates / acceleration of the build-up add little: imitation +0.005 AUC, public score trees 0.839 → 0.842 (top 0.1% 41% → 47%, small n)
+
+See FINDINGS GROWTH (same date).
+<!-- /GROWTH_20261126_CLAUDE -->
 <!-- SMART_COMBO_20261126_CLAUDE -->
 ## 2026-11-26 — combinations: all eight factors -> a move after 24% of nearby moments, yet the top taker's fires with none or one -> 48%; longer windows: the build-up spans 1-3 s, the activity bursts the last 300 ms
 

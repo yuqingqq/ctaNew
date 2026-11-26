@@ -1,3 +1,10 @@
+growth_20261126_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/growth_dyn.json
+  points: data/predict_fun/research/take_reprice_20261125/growth_dyn_points.parquet
+  session: 1622c91e
+  best_growth_separation_vs_plain: [0.654, 0.682]
+  imitation_auc_v3_v3g_top1: [0.745, 0.749]
+  score_auc_gbm_v3_v3g: [0.839, 0.842]
 smart_combo_20261126_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/smart_combo.json
   points: data/predict_fun/research/take_reprice_20261125/smart_combo_points.parquet
