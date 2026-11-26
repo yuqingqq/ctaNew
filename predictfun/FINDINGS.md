@@ -1,3 +1,22 @@
+<!-- FIRE_BREAKDOWN_20261126_CLAUDE -->
+## 2026-11-26 — all of the top taker's fires by what Binance did in the 300 ms before: 24% with no or little book activity (a move follows 52%-57% vs 1.6%-2.3% at nearby moments), 31% with the far side shrinking (68% vs 9%), 25% after the price already moved its way; the 46% = fires with no prior move followed by one within 300 ms
+
+[fire_breakdown](reviews/take_reprice_20261125/fire_breakdown.json) (5,930 fires, t = arrival at Predict; nearby = the same times ±5..30 s, 71,119; rows declared before the run, a partition, thresholds from quiet_before's rules; moves reconciled with the points table). USER: "can you tell me what does this 46% mean exactly? ... a part of them shows no activity, a part of them shows notable activity, can you show these data clearly". Three trading days (63% of its fires on 11-02); its filled orders only; point estimates.
+
+| Binance in the 300 ms before | its fires | nearby | move its way within 300 ms (fires / nearby) | 1 s value c/sh | part of the 46% |
+|---|---:|---:|---:|---:|---:|
+| nothing changed (no trade, both best sizes within 1%) | 5.8% | 13.0% | 52% / 1.6% | +2.31 | 3.1% |
+| small changes only (<= 2 trades, sizes within 10%) | 18.7% | 30.3% | 57% / 2.3% | +2.33 | 10.6% |
+| price flat, far side shrank > 10% | 31.4% | 14.0% | 68% / 9.0% | +2.15 | 21.3% |
+| price flat, near side grew > 10% | 5.6% | 6.9% | 38% / 3.0% | +1.78 | 2.1% |
+| price flat, other changes (more trades, sizes the other way) | 12.1% | 27.4% | 65% / 2.9% | +2.60 | 7.9% |
+| price moved against it | 1.1% | 3.8% | 65% / 3.9% | +1.54 | 0.7% |
+| price already moved its way | 25.4% | 4.7% | 75% / 26.6% | +1.24 | 0.0% |
+| all | 100% | 100% | 65% / 4.5% | +1.99 | 45.7% |
+
+- **The 46%:** state_value's 'ahead' class = no move its way in the 300 ms before its arrival and one within 300 ms after (45.7%); 25.4% fired after a move its way had started, 28.9% saw none within 300 ms. A statement about price moves before and after, not about book activity.
+- **Reading:** 24% of its fires (nearby 43%) come with no or little activity on the Binance best level and are still followed by a move 52%-57% of the time (nearby 1.6%-2.3%): the book does not show what it acts on. The far side shrinking under a flat price is the commonest pattern before its fires (31%, 2.2x its nearby share), yet at nearby moments with the same pattern a move follows 9% of the time, against 68% after its fires.
+<!-- /FIRE_BREAKDOWN_20261126_CLAUDE -->
 <!-- QUIET_BEFORE_20261126_CLAUDE -->
 ## 2026-11-26 — the Binance book before the top taker's decisions: the price is flat and trades are as rare as at nearby times, but the queues move (the far side at least halved before 26% of its ahead decisions vs 5%); the top of the book is unchanged before only 7% (nearby 12%)
 

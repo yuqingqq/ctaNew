@@ -1,3 +1,8 @@
+<!-- FIRE_BREAKDOWN_20261126_CLAUDE -->
+## 2026-11-26 — the top taker's fires by Binance activity in the 300 ms before: 24% no or little activity (move follows 52%-57%, nearby ~2%), 31% far side shrinking (68% vs 9%), 25% after a move started
+
+See FINDINGS FIRE_BREAKDOWN (same date; the table the USER asked for, one partition of all fires). The 46% = no move its way before and one within 300 ms after.
+<!-- /FIRE_BREAKDOWN_20261126_CLAUDE -->
 <!-- QUIET_BEFORE_20261126_CLAUDE -->
 ## 2026-11-26 — before the top taker's decisions the Binance price is flat and trades are as rare as at nearby times, but the queues move; the top of the book is unchanged before only 7% of its ahead decisions (nearby 12%)
 

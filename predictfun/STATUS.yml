@@ -1,3 +1,11 @@
+fire_breakdown_20261126_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/fire_breakdown.json
+  points: data/predict_fun/research/take_reprice_20261125/fire_breakdown_points.parquet
+  session: 1622c91e
+  fires_share_no_or_little_activity_vs_nearby: [0.245, 0.433]
+  far_shrank_share_vs_nearby: [0.314, 0.140]
+  far_shrank_move300_fires_vs_nearby: [0.679, 0.090]
+  ahead_share: 0.4568
 quiet_before_20261126_claude:
   diagnostics: [predictfun/reviews/take_reprice_20261125/quiet_before.json, predictfun/reviews/take_reprice_20261125/quiet_local.json]
   session: 1622c91e
