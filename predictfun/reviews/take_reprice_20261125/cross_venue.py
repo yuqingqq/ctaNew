@@ -98,8 +98,11 @@ def load(v, day):
         d = pd.read_csv(EP / f'{v}/{day}.csv.gz', usecols=['t_ms', 'price', 'size_btc', 'taker']).rename(columns={'t_ms': 't', 'price': 'p', 'size_btc': 'q'})
         d['s'] = np.sign(d.taker).astype(int)
     d = d[(d.t >= lo) & (d.t < hi)].sort_values('t', kind='stable')
+    bad = (d.p <= 0) | (d.q <= 0)                      # Binance futures files carry masked prints (price and size 0): dropped, counted
+    t_masked = d.t[bad].to_numpy(float)
+    d = d[~bad]
     C.require(len(d) > 0 and np.isin(d.s.unique(), [-1, 1]).all(), f'{v} {day}: empty or unsided')
-    return d.t.to_numpy(float), d.p.to_numpy(float), d.q.to_numpy(float), d.s.to_numpy(int), (lo, hi)
+    return d.t.to_numpy(float), d.p.to_numpy(float), d.q.to_numpy(float), d.s.to_numpy(int), (lo, hi), t_masked
 
 
 def feats(tv, pv, qv, sv, cov, t, d):
@@ -157,17 +160,22 @@ def main():
     C.require(not fn.exists() and not fp.exists(), 'an output exists (write-once)')
     days = WT.DAYS if len(sys.argv) < 3 else (sys.argv[2],)
     C.require(all(x in WT.DAYS for x in days), 'not a declared day')
-    P = pd.read_parquet(WT.OUT / 'fire_breakdown_points.parquet', columns=['dec', 'day', 't', 'd', 'shift_ms', 'row', 'their_prior', 'move300', 'next_ms'])
+    P = pd.read_parquet(WT.OUT / 'fire_breakdown_points.parquet', columns=['dec', 'day', 't', 'd', 'shift_ms', 'row', 'their_prior', 'move300', 'next_ms',
+                                                                         'price_changed', 'n_tr', 'far0', 'far1', 'near0', 'near1'])
     P = P[P.day.isin(days)].reset_index(drop=True)
     P['grp'] = P.row.map(ROWG)
     C.require(P.grp.notna().all(), 'a row without a group')
     P['fire'] = P.shift_ms == 0.
-    cols = {}
+    cols, masked = {}, {}
+    P['btc_masked300'] = np.nan
     for day in days:
         m = (P.day == day).to_numpy()
         t, d = P.t.to_numpy(float)[m], P.d.to_numpy(float)[m]
         for v in VENUES:
-            tv, pv, qv, sv, cov = load(v, day)
+            tv, pv, qv, sv, cov, tm = load(v, day)
+            masked[f'{v}|{day}'] = int(len(tm))
+            if v == 'btc_fut':
+                P.loc[m, 'btc_masked300'] = np.searchsorted(tm, t, 'right') - np.searchsorted(tm, t - 300., 'right')
             for k, x in feats(tv, pv, qv, sv, cov, t, d).items():
                 cols.setdefault(f'{v}__{k}', np.full(len(P), np.nan))[m] = x
             del tv, pv, qv, sv
@@ -208,6 +216,23 @@ def main():
                             follow=dict(nearby_burst=share(Z.move300[~Z.fire & noprior & Z.any_burst]), nearby_no_burst=share(Z.move300[~Z.fire & noprior & ~Z.any_burst]),
                                         n_nearby_burst=int((~Z.fire & noprior & Z.any_burst).sum()),
                                         fires_burst=share(Z.move300[Z.fire & noprior & Z.any_burst]), fires_no_burst=share(Z.move300[Z.fire & noprior & ~Z.any_burst])))
+    # side check: fire_breakdown counted the masked Binance prints as trades; its rows with real trades only
+    n_real = Z.n_tr - Z.btc_masked300
+    rf, rn = (Z.far1 - Z.far0).abs() / Z.far0, (Z.near1 - Z.near0).abs() / Z.near0
+    flat = ~Z.price_changed.astype(bool)
+    q_real = flat & (n_real <= 2) & (rf <= .10) & (rn <= .10)
+    s_real = flat & (n_real == 0) & (rf <= .01) & (rn <= .01)
+    fs, ng = Z.far1 < .9 * Z.far0, Z.near1 > 1.1 * Z.near0
+    row_real = np.select([~flat & Z.their_prior.astype(bool), ~flat, flat & fs, flat & ng, flat & ~q_real, flat & q_real & ~s_real, flat & s_real],
+                         ['moved_its_way', 'moved_against_only', 'flat_far_shrank', 'flat_near_grew', 'flat_other_activity', 'flat_small_changes', 'flat_unchanged'], 'none')
+    C.require((row_real != 'none').all(), 'the corrected rows are not a partition')
+    Z['row_real'] = row_real
+    C.require(not ((Z.row_real != Z.row) & (Z.btc_masked300 == 0)).any(), 'the recomputed rows differ from fire_breakdown without a masked print')
+    out['masked_prints'] = dict(rows_per_venue_day=masked, fires_with_one_in_300ms=share(Z.btc_masked300[Z.fire] > 0), nearby_with_one=share(Z.btc_masked300[~Z.fire] > 0),
+                                rows_changed_fires=int((Z.row_real != Z.row)[Z.fire].sum()), rows_changed_nearby=int((Z.row_real != Z.row)[~Z.fire].sum()),
+                                corrected_shares={r: dict(fires=share((Z.row_real == r)[Z.fire]), fires_before=share((Z.row == r)[Z.fire]),
+                                                          nearby=share((Z.row_real == r)[~Z.fire]), nearby_before=share((Z.row == r)[~Z.fire]))
+                                                  for r in sorted(set(Z.row))})
     Z.to_parquet(fp, index=False)
     TR.dump(fn, out)
     for v, o in out['venues'].items():
