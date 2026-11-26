@@ -338,19 +338,22 @@ def merge(od=None):
         n0 = len(S) + len(Wl)
         S = S[S.mid.isin(reg)].drop_duplicates(KEY, keep=False); Wl = Wl[Wl.mid.isin(reg) & ~Wl.ambiguous & Wl.taker.notna()].drop_duplicates(KEY, keep=False)
         dups += n0 - len(S) - len(Wl)
-        parts.append(S.merge(Wl, on=KEY, how='inner'))
+        parts.append(S.merge(Wl, on=KEY, how='inner').assign(day=d_))
     J = pd.concat(parts, ignore_index=True)
-    J['taker'] = J.taker.str.lower(); J['maker'] = J.signer.astype(str).str.lower()
+    J['taker'] = J.taker.str.lower(); J['maker'] = J.day + ':' + J.signer.astype(str)          # step1 numbers signers per day: a maker is (day, code)
     J['grp'] = np.where(J.taker == TOP, 'TOP', np.where(J.taker.isin(r210), 'RANKS2_10', 'OTHERS'))
     cp = dict(legs_joined=int(len(J)), rows_dropped_or_outside=int(dups), groups={})
     tot = J.groupby('maker').shares.sum(); tot_all = tot.sum()
     for g_, G in J.groupby('grp'):
         s = G.groupby('maker').shares.sum().sort_values(ascending=False)
-        cp['groups'][g_] = dict(makers=int(len(s)), shares=float(s.sum()), top1=float(s.iloc[:1].sum() / s.sum()), top5=float(s.iloc[:5].sum() / s.sum()), top10=float(s.iloc[:10].sum() / s.sum()))
+        pd_ = {d_: (lambda z: dict(top1=float(z.iloc[:1].sum() / z.sum()), top5=float(z.iloc[:5].sum() / z.sum()), top10=float(z.iloc[:10].sum() / z.sum())))(x.groupby('maker').shares.sum().sort_values(ascending=False))
+               for d_, x in G.groupby('day') if x.shares.sum() > 0}
+        cp['groups'][g_] = dict(maker_days=int(len(s)), shares=float(s.sum()), top1=float(s.iloc[:1].sum() / s.sum()), top5=float(s.iloc[:5].sum() / s.sum()), top10=float(s.iloc[:10].sum() / s.sum()),
+                                per_day=pd_)
     st = J[J.grp == 'TOP'].groupby('maker').shares.sum().sort_values(ascending=False)
     sr2 = J[J.grp == 'RANKS2_10'].groupby('maker').shares.sum()
-    cp['top_makers'] = [dict(maker=f'{m_[:6]}…{m_[-4:]}', share_of_top=float(v / st.sum()), share_of_ranks2_10=float(sr2.get(m_, 0.) / sr2.sum()), share_of_all=float(tot.get(m_, 0.) / tot_all),
-                             lift=float((v / st.sum()) / (tot.get(m_, 0.) / tot_all)) if tot.get(m_, 0.) > 0 else None, top_taker_is_maker=bool(m_ == TOP)) for m_, v in st.iloc[:10].items()]
+    cp['top_makers'] = [dict(maker_day=m_, share_of_top=float(v / st.sum()), share_of_ranks2_10=float(sr2.get(m_, 0.) / sr2.sum()), share_of_all=float(tot.get(m_, 0.) / tot_all),
+                             lift=float((v / st.sum()) / (tot.get(m_, 0.) / tot_all)) if tot.get(m_, 0.) > 0 else None) for m_, v in st.iloc[:10].items()]
     out['counterparties'] = cp
     # 6 order among the top takers
     O = pd.read_parquet(WT.OUT / 'fire_times_orders.parquet', columns=['mid', 'rank', 'burst', 'fire', 't_set', 'd', 'day'])
@@ -363,7 +366,9 @@ def merge(od=None):
     rk_by = {k_: (g.a.to_numpy(float), g.d.to_numpy(float), g['rank'].to_numpy(int)) for k_, g in Rk.groupby('mid')}
     rng = np.random.default_rng(SEED)
 
-    def scan(mids, aa, dd):
+    fine = collections.defaultdict(list)
+
+    def scan(mids, aa, dd, keep_fine=False):
         bef, aft, lags, rb = np.zeros(len(aa), bool), np.zeros(len(aa), bool), [], collections.Counter()
         for i, (m_, a_, d0) in enumerate(zip(mids, aa, dd)):
             if m_ not in rk_by:
@@ -374,13 +379,16 @@ def merge(od=None):
             bef[i] = bool(np.any(sel & (lg >= -1000.) & (lg <= -20.)))
             aft[i] = bool(np.any(sel & (lg >= 20.) & (lg <= 1000.)))
             lags.extend(lg[sel].tolist())
+            if keep_fine:
+                for r_, l_ in zip(rr[sel], lg[sel]):
+                    fine[int(r_)].append(float(l_))
             for r_ in np.unique(rr[sel & (lg >= -1000.) & (lg <= -20.)]):
                 rb[f'before_rank{int(r_)}'] += 1
             for r_ in np.unique(rr[sel & (lg >= 20.) & (lg <= 1000.)]):
                 rb[f'after_rank{int(r_)}'] += 1
         return bef, aft, np.asarray(lags), rb
     m1, a1, d1 = T1.mid.to_numpy(int), T1.a.to_numpy(float), T1.d.to_numpy(float)
-    bef, aft, lags, rb = scan(m1, a1, d1)
+    bef, aft, lags, rb = scan(m1, a1, d1, keep_fine=True)
     nm_, na_, nd_ = [], [], []
     for s in SHIFTS:
         u = rng.uniform(-500., 500., len(a1))
@@ -391,7 +399,11 @@ def merge(od=None):
     nb, nf, nlags, _ = scan(np.concatenate(nm_), np.concatenate(na_), np.concatenate(nd_))
     hist = np.histogram(lags, bins=40, range=(-1000., 1000.))[0]
     out['order'] = dict(fires=int(len(T1)), before=float(bef.mean()), after=float(aft.mean()), null_before=float(nb.mean()), null_after=float(nf.mean()), null_n=int(len(nb)),
-                        lag_hist_50ms=[int(x) for x in hist], lag_median=float(np.median(lags)) if len(lags) else None, per_rank={k_: float(v / len(T1)) for k_, v in sorted(rb.items())})
+                        lag_hist_50ms=[int(x) for x in hist],
+                        per_rank_fine={r_: dict(pairs_1s=int(len(v)), within_5ms=float(np.mean(np.abs(v) <= 5.)), within_50ms=float(np.mean(np.abs(v) <= 50.)),
+                                                hist_5ms_150=[int(x) for x in np.histogram(v, bins=60, range=(-150., 150.))[0]], median=float(np.median(v)))
+                                       for r_, v in sorted(fine.items())},
+                        lag_median=float(np.median(lags)) if len(lags) else None, per_rank={k_: float(v / len(T1)) for k_, v in sorted(rb.items())})
     TR.dump(fn, out)
     print(json.dumps({k: (v if k != 'coins' else '...') for k, v in out.items() if k in ('order', 'counterparties')}, indent=1, default=str)[:3000])
 
