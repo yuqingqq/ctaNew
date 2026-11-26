@@ -7,8 +7,8 @@ Rows: every fire of the top taker (fire_breakdown_points, its 5,930 bursts), its
 - 150 - 34 ms (Predict's clock, estimate +-15 ms); fire = settlement - 150 ms; Binance times on Binance futures' E clock.
 Context per row: the market (window start, time left), Binance futures best bid / ask and sizes at t (bookTicker states), imbalance its way,
 depth imbalance (20 levels, depth_deep where computed), the mid drift since the window opened and over the last 30 s (bps its way), the
-realized volatility over the previous 300 s and the Binance-implied fair UP probability = N(drift / (vol sqrt(time left))) (winners_trigger's
-convention, the Binance mid at the window open as the strike: Predict settles on its own reference, not Binance), the market's payout; for
+realized volatility over the previous 300 s (no fair value is exported: Predict settles on its own reference, which differed from the
+Binance mid by up to ~10 bps in late October), the market's payout; for
 fires: its average fill price (UP space), shares, 1 s value, the breakdown row, the number of SMART_COMBO's eight factors present, the next
 Binance move its way.
 Examples (declared before the run): one top-taker fire per breakdown group (no activity, far side shrinking, other changes, after a move),
@@ -159,8 +159,8 @@ def main():
     Fx['edge_vs_fair_c'] = Fx.d * (100. * Fx.fair_up_prob - Fx.avg_price_up_c)
     Fx['next_move_ms'] = Fx.next_ms.where(np.isfinite(Fx.next_ms))
     base = ['utc_time', 't', 'bet', 'mid', 'window_start_utc', 'time_left_s', 'bn_bid', 'bn_ask', 'bn_bid_size', 'bn_ask_size', 'imbalance_its_way', 'far_size_btc',
-            'near_size_btc', 'imb_1_20', 'drift_since_open_bps_its_way', 'drift_last_30s_bps_its_way', 'vol_300s_bps_per_sqrt_s', 'fair_up_prob', 'payout_up']
-    fcols = ['dec'] + base[:1] + ['settlement_utc'] + base[1:] + ['avg_price_up_c', 'sh', 'orders', 'v1', 'edge_vs_fair_c', 'bet_won', 'row', 'n_on', 'next_move_ms', 'binance_move_utc']
+            'near_size_btc', 'imb_1_20', 'drift_since_open_bps_its_way', 'drift_last_30s_bps_its_way', 'vol_300s_bps_per_sqrt_s', 'payout_up']   # no naive fair value: Predict's reference differs from Binance
+    fcols = ['dec'] + base[:1] + ['settlement_utc'] + base[1:] + ['avg_price_up_c', 'sh', 'orders', 'v1', 'bet_won', 'row', 'n_on', 'next_move_ms', 'binance_move_utc']
     ren = dict(dec='fire_id', t='t_ms', mid='market_id', imb_1_20='depth_imbalance_20_its_way', sh='shares', v1='value_1s_c_per_share', row='binance_300ms_breakdown',
                n_on='factors_present_of_8')
     out_dir.mkdir(parents=True, exist_ok=True); rv.mkdir(parents=True, exist_ok=True)
@@ -179,12 +179,12 @@ def main():
                                                            for k, v in r[fcols].rename(ren).items()}, tape=tape(r.day, float(r.t), float(r.d)), day=r.day))
     TR.dump(rv / 'examples.json', dict(asof='2026-11-26', examples=ex))
     summ = dict(fires=int(len(Fo)), controls=int(len(Cx)), ranks=int(len(Rk)), fires_with_price=float(Fo.avg_price_up_c.notna().mean()),
-                fair_coverage=float(Fo.fair_up_prob.notna().mean()), edge_vs_fair_c=dict(mean=float(Fo.edge_vs_fair_c.mean()), median=float(Fo.edge_vs_fair_c.median())),
+                drift_coverage=float(Fo.drift_since_open_bps_its_way.notna().mean()), price_up_c=dict(p25=float(Fo.avg_price_up_c.quantile(.25)), p50=float(Fo.avg_price_up_c.median()), p75=float(Fo.avg_price_up_c.quantile(.75))),
                 bet_won=float(np.nanmean(Fo.bet_won.astype(float))), time_left_s=dict(p25=float(Fo.time_left_s.quantile(.25)), p50=float(Fo.time_left_s.median()), p75=float(Fo.time_left_s.quantile(.75))))
     TR.dump(rv / 'export_summary.json', summ)
     print(json.dumps(summ, indent=1))
     for e in ex:
-        print(e['group'], e['utc_time'], e['bet'], 'left', e['time_left_s'], 'price', e['avg_price_up_c'], 'fair', e['fair_up_prob'], 'drift', e['drift_since_open_bps_its_way'], 'row', e['binance_300ms_breakdown'], 'move', e['next_move_ms'], 'won', e['bet_won'], 'v1', e['value_1s_c_per_share'])
+        print(e['group'], e['utc_time'], e['bet'], 'left', e['time_left_s'], 'price', e['avg_price_up_c'], 'drift', e['drift_since_open_bps_its_way'], 'row', e['binance_300ms_breakdown'], 'move', e['next_move_ms'], 'won', e['bet_won'], 'v1', e['value_1s_c_per_share'])
 
 
 if __name__ == '__main__':
