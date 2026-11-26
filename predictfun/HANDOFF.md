@@ -1,3 +1,8 @@
+<!-- STALE_QUOTES_20261126_CLAUDE -->
+## 2026-11-26 — stale quotes: the paying ones go stale during the 150 ms hold (15% of the top taker's volume, +3.8 c/sh; ours 4.4%); the top taker pays a median 3c through the arrival best and fills after makers reprice; our IOC never pays through
+
+See FINDINGS STALE_QUOTES (same date). Next test, not run: score takes with a limit through the book (a take-limit offset in the harness).
+<!-- /STALE_QUOTES_20261126_CLAUDE -->
 <!-- EXIT_OPTIONS_20261126_CLAUDE -->
 ## 2026-11-26 — exits for our takes: hold to settlement +1.7c/share vs passive -1.9c (random takes held +2.5c too); take-backs and the top taker's style lose: no exit rescues the entry
 

@@ -1,3 +1,35 @@
+<!-- STALE_QUOTES_20261126_CLAUDE -->
+## 2026-11-26 — stale quotes: the ones that pay go stale while the order waits in the speed bump (15% of the top taker's fill volume, +3.8 c/sh; ours 4.4%); quotes already stale on arrival lose for other takers and for us; the top taker pays through the book (median 3c above the best it found on arrival, 84% of its volume) and fills after makers reprice; our IOC never pays above the best (0.4%)
+
+[stale_quotes](reviews/take_reprice_20261125/stale_quotes.json), [stale_paid](reviews/take_reprice_20261125/stale_paid.json) (332 complete markets, four consumed days; a quote's staleness = the Binance-implied repricing its way (reprice_replay's dFV between two instants, parity with dfv_at on 717,319 rows, 0 mismatches, falsifier fires) from the moment its price level appeared on the Predict book to the fill, split at the order's arrival (fill - 150 ms); our fills reproduce the engine's take marks (884 checked, 0 mismatches); top taker = its 16,399 taker legs (7,882 orders) at settlement - 34 ms; ranks 2-10 = 92,217 legs; other takers = 642,872 public trades not within 100 ms of theirs; declared before the run; the late-appearing-level status, the 1 s repricing and the partition added after a 4-market rehearsal, before the full run; paid-through declared after STALE_QUOTES, before its run). USER: "In current fires, do we catch the stale quotes of makers, it looks smart takers can take those stale quotes, and their mark out prices are much better". Point estimates; Predict / Binance clock offset not measured (top taker ±15 ms).
+
+| the quote at the fill (share of fill volume, value per share 1 s later) | top taker | takers ranked 2-10 | other takers | our score's takes | random takes |
+|---|---:|---:|---:|---:|---:|
+| went stale while the order waited (Binance moved its way >= 0.5c during the 150 ms hold) | 15% (+3.8c) | 11% (+2.5c) | 1.4% (+1.9c) | 4.4% (-2.1c, 15 fills) | 0.2% (-1.3c, 1 fill) |
+| already stale when the order arrived (>= 0.5c) | 8.8% (+1.5c) | 17% (+1.3c) | 7.2% (-0.8c) | 31% (-1.2c) | 5.0% (-1.4c, 27 fills) |
+| posted while the order waited | 32% (+1.7c) | 14% (+1.1c) | 10% (-1.1c) | 5.9% (-3.0c, 20 fills) | 6.3% (-3.3c) |
+| not stale (< 0.5c) | 26% (+1.2c) | 54% (+0.1c) | 76% (-1.1c) | 59% (-0.8c) | 88% (-1.3c) |
+| not visible (beyond 5 levels / outside the recording; value where recorded) | 18% (+2.4c) | 3.2% (+0.7c) | 5.4% (-2.2c) | - | 0.0% (+0.2c, 1 fill) |
+| all fills, value per share 1 s later | +1.93c | +0.71c | -1.09c | -1.12c | -1.46c |
+
+| price paid against the best its order found on arrival | top taker | takers ranked 2-10 | other takers | our score's takes | random takes |
+|---|---:|---:|---:|---:|---:|
+| paid more than that best | 84% | 48% | 36% | 0.4% | 0.4% |
+| paid above it: median / mean | 3 / +4.7c | 0 / +1.6c | 0 / +1.1c | 0 / -0.1c | 0 / -0.1c |
+| that best had left the book by the fill | 50% | 27% | 11% | 0.7% | 0.4% |
+| value per share 1 s later, fills paid >= 3c above it | +1.75c | +1.33c | -1.45c | - | - |
+
+| our score's sent takes: the aimed quote | sent | we filled | taken by other takers first | pulled by makers | value at our limit 1 s after arrival |
+|---|---:|---:|---:|---:|---:|
+| went stale while the order waited | 36 | 47% | 22% | 31% | -0.45c |
+| already stale when the order arrived | 140 | 68% | 12% | 20% | -0.28c |
+| not stale | 325 | 62% | 14% | 23% | +0.06c |
+| all | 501 | 63% (-0.99c) | 14% (+1.86c) | 23% (+1.26c) | |
+
+- **Taken by other takers first:** 99% of them had their orders in before our decision (first trade a median -0.5 ms from our decision; the hold alone is 150 ms).
+- **The top taker's quotes posted while its order waited:** it paid a mean +7.5c above the best it found on arrival (92% paid more), and that best had left the book for 68%: makers repriced during its hold and it took the new quotes, still +1.7 c/sh at 1 s.
+- **Reading:** stale quotes explain the top taker's best fills but only about a quarter of its volume (24%); the larger part is position and price: its orders are waiting before Binance moves, with a limit through the book, so it fills whether makers hold or reprice. Our IOC at the best known at the decision fills only when the book does not move: the quotes our score aimed at that would have paid were pulled by makers or taken by orders already waiting, and quotes already stale when our order arrives mostly stay on the book (we fill 68%) and lose (-1.2 c/sh at 1 s). Next test (not run): the score's takes with a limit through the book; needs a take-limit offset in the harness (its slack parameter is the exit floor's).
+<!-- /STALE_QUOTES_20261126_CLAUDE -->
 <!-- EXIT_OPTIONS_20261126_CLAUDE -->
 ## 2026-11-26 — for our takes no exit rescues the entry: holding to settlement beats the replayed passive exit (+1.7 vs -1.9 c/share for the score's takes) but random takes held to settlement gain too (+2.5c: the days' outcomes, not our signal); take-backs pay fees and spread; the top taker's style fails for us (-5.5c) because our favourites win 64%, not 90%
 
