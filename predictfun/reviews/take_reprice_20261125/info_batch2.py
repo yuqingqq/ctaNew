@@ -65,21 +65,21 @@ def day_stems(day):
 
 
 def bn_changes(sym, day):
+    """Mid change points (E clock) of one symbol-day, reduced per chunk of each hour file (bounded memory)."""
     ks, ms = [], []
+    names = ['recv', 'E', 'T', 'u', 'bid', 'bq', 'ask', 'aq']
     for s in day_stems(day):
         p = DATA / 'mm_hf/raw/bookTicker' / sym / f'{s}.csv.gz'
         if not p.exists():
             continue
-        cols = dict(header=None, names=['recv', 'E', 'T', 'u', 'bid', 'bq', 'ask', 'aq'], usecols=['E', 'u', 'bid', 'ask'], on_bad_lines='skip')
-        try:
-            df = pd.read_csv(p, dtype={'E': 'float64', 'u': 'float64', 'bid': 'float64', 'ask': 'float64'}, **cols)
-        except ValueError:
-            df = pd.read_csv(p, dtype=str, **cols).apply(pd.to_numeric, errors='coerce')
-        df = df.dropna()
-        df = df[(df.bid > 0) & (df.ask > df.bid)].drop_duplicates('u')
-        e, m = df.E.to_numpy(float), ((df.bid + df.ask) / 2.).to_numpy(float)
-        o = np.argsort(e, kind='stable')
-        ks.append(e[o]); ms.append(m[o])
+        for ch in pd.read_csv(p, header=None, names=names, usecols=['E', 'u', 'bid', 'ask'], on_bad_lines='skip', dtype=str, chunksize=200000):
+            df = ch.apply(pd.to_numeric, errors='coerce').dropna()
+            df = df[(df.bid > 0) & (df.ask > df.bid)].drop_duplicates('u')
+            e, m = df.E.to_numpy(float), ((df.bid + df.ask) / 2.).to_numpy(float)
+            o = np.argsort(e, kind='stable'); e, m = e[o], m[o]
+            keep = np.r_[True, np.diff(m) != 0]
+            ks.append(e[keep]); ms.append(m[keep])
+        C.require(FI.F.rss_mib() < FI.F.RSS_GUARD_MIB, 'RSS over the self-guard')
     k, m = np.concatenate(ks), np.concatenate(ms)
     o = np.argsort(k, kind='stable'); k, m = k[o], m[o]
     keep = np.r_[True, np.diff(m) != 0]
