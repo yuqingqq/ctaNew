@@ -9,6 +9,8 @@ over (t - 5 s, t - 300 ms] (the trend before the 300 ms window), in bps; declare
 Predict (winners_legs, timed legs only: websocket or book-drop timed; untimed legs counted as coverage): fills by other takers in the same
 market over (t - 5 s, t] and (t - 1 s, t], shares in its direction / against it (a leg's direction = +1 when it buys UP); its own earlier
 fills in the market over (t - 5 s, t]. Declared: 'others against' = other takers' shares against its direction > those with it in 5 s.
+Added after the one-day rehearsal (11-01 seen: other takers fill within 5 s at ~every moment): the Predict price move its way
+over 5 s = d x (median UP-space fill price of timed legs in (t - 1 s, t] - the median in (t - 5 s, t - 4 s]), c; against <= -1 c, its way >= +1 c.
 Readings per row group (quiet / far side shrank / other flat / moved its way) and all: fires vs nearby shares; for nearby moments with no
 prior Binance move its way, the Binance move within 300 ms after by condition (a public signal?), and after its fires.
 Outputs (write-once): before_long.json; OUT/before_long_points.parquet.
@@ -97,7 +99,7 @@ def main():
     P = P.merge(Mk[['dec', 'mid']], on='dec', how='left', validate='many_to_one')
     Q = P[P.fire].merge(S[['dec', 'day', 't', 'd']], on='dec', suffixes=('', '_s'))
     C.require(len(Q) == int(P.fire.sum()) and (Q.day == Q.day_s).all() and (Q.t == Q.t_s).all() and (Q.d == Q.d_s).all(), 'the fire numbering differs from fire_breakdown')
-    cols = {k: np.full(len(P), np.nan) for k in ('r1s', 'r30s', 'r5s_pre', 'oth5_with', 'oth5_against', 'oth1_with', 'oth1_against', 'own5', 'n_oth5')}
+    cols = {k: np.full(len(P), np.nan) for k in ('r1s', 'r30s', 'r5s_pre', 'oth5_with', 'oth5_against', 'oth1_with', 'oth1_against', 'own5', 'n_oth5', 'pf5')}
     inwin = np.zeros(len(P), bool)
     cov = {}
     for day in days:
@@ -114,22 +116,26 @@ def main():
         C.require(np.isfinite(ws).all(), 'a market without its window')
         iw = (t >= ws) & (t < ws + 300000.)
         inwin[m] = iw
-        L = pd.read_parquet(WT.OUT / f'winners_legs_{day}.parquet', columns=['mid', 'side', 'shares', 't_ms2', 'how2', 'taker', 'ambiguous'])
+        L = pd.read_parquet(WT.OUT / f'winners_legs_{day}.parquet', columns=['mid', 'side', 'shares', 't_ms2', 'how2', 'taker', 'ambiguous', 'ptick'])
         cov[day] = dict(legs=int(len(L)), timed=float(L.how2.isin([1, 3]).mean()))
         cov[day]['ambiguous'] = float(L.ambiguous.mean())
         L = L[L.how2.isin([1, 3]) & L.t_ms2.notna() & ~L.ambiguous].copy()          # ambiguous legs: taker unknown, left out
         L['ld'] = np.where(L.side == 1, 1., -1.)
         L['own'] = L.taker == TOP
         L = L.sort_values(['mid', 't_ms2'], kind='stable')
-        G = {int(k): (g.t_ms2.to_numpy(float), g.ld.to_numpy(), g.shares.to_numpy(float), g.own.to_numpy(bool)) for k, g in L.groupby('mid')}
-        res = {k: np.full(len(t), np.nan) for k in ('oth5_with', 'oth5_against', 'oth1_with', 'oth1_against', 'own5', 'n_oth5')}
+        G = {int(k): (g.t_ms2.to_numpy(float), g.ld.to_numpy(), g.shares.to_numpy(float), g.own.to_numpy(bool), g.ptick.to_numpy(float)) for k, g in L.groupby('mid')}
+        res = {k: np.full(len(t), np.nan) for k in ('oth5_with', 'oth5_against', 'oth1_with', 'oth1_against', 'own5', 'n_oth5', 'pf5')}
         for i in np.flatnonzero(iw):
             g = G.get(int(mids[i]))
             for k in res:
-                res[k][i] = 0.
+                res[k][i] = 0. if k != 'pf5' else np.nan
             if g is None:
                 continue
-            tl, ld, sh, own = g
+            tl, ld, sh, own, pk = g
+            a1, b1 = np.searchsorted(tl, t[i] - W1, 'right'), np.searchsorted(tl, t[i], 'right')
+            a0, b0 = np.searchsorted(tl, t[i] - W5, 'right'), np.searchsorted(tl, t[i] - W5 + W1, 'right')
+            if b1 > a1 and b0 > a0:
+                res['pf5'][i] = d[i] * (np.median(pk[a1:b1]) - np.median(pk[a0:b0]))
             for w, tag in ((W5, '5'), (W1, '1')):
                 a, b = np.searchsorted(tl, t[i] - w, 'right'), np.searchsorted(tl, t[i], 'right')
                 o, l_, s_ = own[a:b], ld[a:b], sh[a:b]
@@ -148,6 +154,7 @@ def main():
     Z = Z[Z.in_window | Z.fire].reset_index(drop=True)
     Z['trend'] = np.select([Z.r5s_pre <= -BP, Z.r5s_pre >= BP, Z.r5s_pre.notna()], ['against', 'its_way', 'flat'], 'none')
     Z['oth_against'] = Z.oth5_against > Z.oth5_with
+    Z['pf_move'] = np.select([Z.pf5 <= -1., Z.pf5 >= 1., Z.pf5.notna()], ['against', 'its_way', 'flat'], 'none')
     Z['any_oth5'] = Z.n_oth5 > 0
     Fz, N = Z[Z.fire], Z[~Z.fire]
 
@@ -163,7 +170,10 @@ def main():
                     others_against_5s=dict(fires=share(F_.oth_against), nearby=share(N_.oth_against)),
                     others_against_shares_5s=dict(fires=float(F_.oth5_against.mean()), nearby=float(N_.oth5_against.mean())),
                     others_with_shares_5s=dict(fires=float(F_.oth5_with.mean()), nearby=float(N_.oth5_with.mean())),
-                    own_fill_5s=dict(fires=share(F_.own5 > 0), nearby=share(N_.own5 > 0)))
+                    own_fill_5s=dict(fires=share(F_.own5 > 0), nearby=share(N_.own5 > 0)),
+                    predict_moved_against_5s=dict(fires=share(F_.pf_move[F_.pf_move != 'none'] == 'against'), nearby=share(N_.pf_move[N_.pf_move != 'none'] == 'against')),
+                    predict_moved_its_way_5s=dict(fires=share(F_.pf_move[F_.pf_move != 'none'] == 'its_way'), nearby=share(N_.pf_move[N_.pf_move != 'none'] == 'its_way')),
+                    predict_move_5s_c=dict(fires=qs(F_.pf5), nearby=qs(N_.pf5)), predict_move_coverage=dict(fires=share(F_.pf5.notna()), nearby=share(N_.pf5.notna())))
     out = dict(asof='2026-11-26', days=list(days), n_fires=int(len(Fz)), n_nearby=int(len(N)), n_nearby_outside_market=int((~inwin & ~P.fire.to_numpy()).sum()),
                fires_sharing_a_ms_with_another_burst=n_multi, fires_outside_market_window=n_fire_out, legs_coverage=cov, thresholds=dict(trend_bp=BP), all=blk(Fz, N), by_group={})
     for g in GROUPS:
@@ -171,7 +181,8 @@ def main():
     npr = ~Z.their_prior.astype(bool)
     fol = {}
     for nm, cond in (('trend_against', Z.trend == 'against'), ('trend_its_way', Z.trend == 'its_way'), ('trend_flat', Z.trend == 'flat'),
-                     ('others_against_5s', Z.oth_against), ('any_other_fill_5s', Z.any_oth5), ('no_other_fill_5s', ~Z.any_oth5)):
+                     ('others_against_5s', Z.oth_against), ('predict_moved_against_5s', Z.pf_move == 'against'), ('predict_moved_its_way_5s', Z.pf_move == 'its_way'),
+                     ('predict_flat_5s', Z.pf_move == 'flat')):
         fol[nm] = dict(nearby=share(Z.move300[~Z.fire & npr & cond]), nearby_n=int((~Z.fire & npr & cond).sum()), fires=share(Z.move300[Z.fire & npr & cond]),
                        fires_n=int((Z.fire & npr & cond).sum()))
     out['follow_no_prior_move'] = fol
@@ -183,7 +194,7 @@ def main():
         print(f"{g:14s} n {b['fires_n']}/{b['nearby_n']} | trend against {b['trend_against']['fires']:.3f}/{b['trend_against']['nearby']:.3f} its way {b['trend_its_way']['fires']:.3f}/{b['trend_its_way']['nearby']:.3f} "
               f"flat {b['trend_flat']['fires']:.3f}/{b['trend_flat']['nearby']:.3f} | other fill 5s {b['any_other_fill_5s']['fires']:.3f}/{b['any_other_fill_5s']['nearby']:.3f} "
               f"1s {b['other_fill_1s']['fires']:.3f}/{b['other_fill_1s']['nearby']:.3f} | others against {b['others_against_5s']['fires']:.3f}/{b['others_against_5s']['nearby']:.3f} "
-              f"| own 5s {b['own_fill_5s']['fires']:.3f}/{b['own_fill_5s']['nearby']:.3f}")
+              f"| own 5s {b['own_fill_5s']['fires']:.3f}/{b['own_fill_5s']['nearby']:.3f} | pf against {b['predict_moved_against_5s']['fires']:.3f}/{b['predict_moved_against_5s']['nearby']:.3f} its way {b['predict_moved_its_way_5s']['fires']:.3f}/{b['predict_moved_its_way_5s']['nearby']:.3f}")
     print(json.dumps(fol, indent=0))
 
 
