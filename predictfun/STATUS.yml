@@ -1,3 +1,8 @@
+exit_options_20261126_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/exit_options.json
+  session: 1622c91e
+  score_c_per_share: {passive: -1.90, hold: 1.74, back10s_ub: -0.82, style_ub: -5.50}
+  random_hold_c: 2.49
 exit_profile_20261126_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/exit_profile.json
   session: 1622c91e

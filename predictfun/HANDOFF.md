@@ -1,3 +1,8 @@
+<!-- EXIT_OPTIONS_20261126_CLAUDE -->
+## 2026-11-26 — exits for our takes: hold to settlement +1.7c/share vs passive -1.9c (random takes held +2.5c too); take-backs and the top taker's style lose: no exit rescues the entry
+
+See FINDINGS EXIT_OPTIONS (same date).
+<!-- /EXIT_OPTIONS_20261126_CLAUDE -->
 <!-- EXIT_PROFILE_20261126_CLAUDE -->
 ## 2026-11-26 — top taker's exits in detail: take-backs 45% at a gain / 52% at a loss (losses cut sooner), mid-window; holds to settlement mostly favourites (won 90% above 60c)
 

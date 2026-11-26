@@ -1,3 +1,25 @@
+<!-- EXIT_OPTIONS_20261126_CLAUDE -->
+## 2026-11-26 — for our takes no exit rescues the entry: holding to settlement beats the replayed passive exit (+1.7 vs -1.9 c/share for the score's takes) but random takes held to settlement gain too (+2.5c: the days' outcomes, not our signal); take-backs pay fees and spread; the top taker's style fails for us (-5.5c) because our favourites win 64%, not 90%
+
+[exit_options](reviews/take_reprice_20261125/exit_options.json) (SCORE_REPLAY's filled takes under other exits, no new replay; take-backs are upper bounds: mid markout minus the exit fee, no spread and no 150 ms hold on the exit; declared before the run). USER: "Ok, then for us, how do we exit". G = 4 days, binary settlements: point estimates, noisy.
+
+| exit (our replayed takes) | score's top 1% (315 takes) | random control (569) |
+|---|---:|---:|
+| passive exit, as replayed (ledger) | -1.90c | -3.49c |
+| hold to settlement | +1.74c | +2.49c |
+| take back at 1 s (upper bound) | -1.68c | -2.07c |
+| take back at 10 s (upper bound) | -0.82c | -2.56c |
+| top taker's style (hold if our side >= 60c, else take back at 10 s) | -5.50c | -3.39c |
+
+| our side's entry price (score takes) | takes | won at settlement | hold to settlement |
+|---|---:|---:|---:|
+| our side < 40c | 89 | 46% | +21.9c |
+| 40-60c | 73 | 55% | +7.5c |
+| >= 60c | 153 | 64% | -12.6c |
+
+- **Noise:** the random control's hold-to-settlement value by day: 10-23 +6.6c, 10-31 +5.9c, 11-01 -2.7c, 11-02 -1.5c. With half a cent of spread the take-backs lose another 0.5c.
+- **Reading:** the passive exit is the worst choice (the top taker barely uses one); quick take-backs pay the fee and spread twice; holding to settlement is the best of these here but its gain is shared by random takes, so it is not ours. The top taker's split (keep favourites, cut the rest) works for it because its kept positions win 90%: an exit rule needs a view on whether the bet is still right, and our entries carry too little of one.
+<!-- /EXIT_OPTIONS_20261126_CLAUDE -->
 <!-- EXIT_PROFILE_20261126_CLAUDE -->
 ## 2026-11-26 — how the top taker exits: its taker exits split about evenly between gains (+15c) and losses (-14c), losses cut sooner (33 s vs 46 s), mid-window (median 152 s left); what it holds to settlement is mostly favourites (60% above 60c, winning 90%)
 
