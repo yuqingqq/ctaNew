@@ -44,7 +44,11 @@ def main():
     bounds={int(r['market']):(ms(r['utc_start']),ms(r['utc_end_exclusive'])) for r in windows}
     tok={}; res={}; amb=set(); aux={}
     for r in csv.DictReader(io.StringIO(read('attempt2/report/legs_dedup.csv.gz'))):
-        m=int(r['market']); ex=ms(r['executedAt']); a,b=bounds[m]
+        m=int(r['market'])
+        if m not in bounds:
+            assert r['in_window']=='False'
+            continue
+        ex=ms(r['executedAt']); a,b=bounds[m]
         assert (a<=ex<b)==(r['in_window']=='True')
         if not a<=ex<b: continue
         key=(r['transactionHash'],r['maker_hash'],int(r['leg']))
