@@ -228,7 +228,7 @@ def main():
     bi, bf = bucket(M, 'bt_imb'), bucket(M, 'fl300')
     sz = lambda m: dict(bursts=int(m.sum()), median_orders=float(M.orders[m].median()), mean_orders=float(M.orders[m].mean()), median_shares=float(M.shares[m].median()),
                         mean_shares=float(M.shares[m].mean())) if m.any() else None
-    out['top1_size_per_decision'] = dict(bursts=int(len(M)), excluded_mixed_direction=n_mixed, **sz(np.ones(len(M), bool)),
+    out['top1_size_per_decision'] = dict(excluded_mixed_direction=n_mixed, **sz(np.ones(len(M), bool)),          # sz carries the burst count
                                          orders_per_burst={k: int((M.orders == k).sum()) for k in (1, 2, 3)} | {'4+': int((M.orders >= 4).sum())},
                                          by_imbalance={nm: sz(bi == i) for i, nm in enumerate(BUCKETS['bt_imb'][0])},
                                          by_amount={nm: sz(bf == i) for i, nm in enumerate(BUCKETS['fl300'][0])},
