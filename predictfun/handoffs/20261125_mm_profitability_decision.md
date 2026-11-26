@@ -63,3 +63,7 @@ The unchanged passive urgency controller was positive on October 31 and November
 ## November 26 order-size sensitivity
 
 [100 versus 220 shares per order](../reviews/urgency_size100_20261126/report.md). With two rungs and the same frozen inventory controller, smaller orders earned $22,244.34 versus $18,260.40 across 689 complete markets. At 100 the strategy earned positive settlement on all nine consumed days and beat 220 on six. Completed FIFO rose from $25,071.86 to $28,515.68 on fewer matched shares. Mean absolute ending inventory fell from 50.95 to 47.38, while the pooled p90 rose from 189.11 to 202.34. The four later dates also favored 100 in total dollars. Prefer 100 as the research candidate for a future independent comparison; the reserved block stays closed.
+
+## November 26 order-level recount and 50-share replay
+
+[50, 100 and 220 shares on the same 689 markets](../reviews/urgency_size50_20261126/report.md). At 100 versus 220, 158 more distinct orders received fills, while matched volume fell by about 145,296 shares. There were 40 fewer distinct FIFO opening/closing order pairs. The improvement came from $11,593 less gross matched loss against $8,149 less gross matched gain. At 50, round trips earned 5.79¢ per matched share but completed only 445,764 shares. Settled P&L was $20,064, compared with $22,244 at 100. The 100-share candidate remains the highest-dollar arm among the three on this consumed cohort and beat 50 on seven of nine dates.
