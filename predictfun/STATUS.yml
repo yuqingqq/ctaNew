@@ -1,3 +1,11 @@
+depth_20261126_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/depth_deep.json
+  points: data/predict_fun/research/take_reprice_20261125/depth_deep_points.parquet
+  session: 1622c91e
+  imb20_quiet_median_fires_vs_nearby: [0.176, 0.057]
+  imb20_quiet_fires_above_nearby_p90: 0.199
+  imb20_move300_nearby_bottom_mid_top: [0.0112, 0.0265, 0.1229]
+  imb20_move300_fires_bottom_mid_top: [0.368, 0.559, 0.876]
 public_sources_20261126_claude:
   diagnostics: [predictfun/reviews/take_reprice_20261125/cross_venue.json, predictfun/reviews/take_reprice_20261125/before_long.json]
   session: 1622c91e

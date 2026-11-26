@@ -1,3 +1,8 @@
+<!-- DEPTH_20261126_CLAUDE -->
+## 2026-11-26 — Binance depth behind the best level leans its way before the top taker's quiet fires (20% in the nearby top decile); 20-level imbalance is the best public signal so far (12% in its top decile vs ~3%), its fires 88%
+
+See FINDINGS DEPTH (same date). Next (USER's call): one combined public score (best level, depth, other venues, Predict) and how precise and how early it gets against the top taker.
+<!-- /DEPTH_20261126_CLAUDE -->
 <!-- PUBLIC_SOURCES_20261126_CLAUDE -->
 ## 2026-11-26 — other venues' trades, longer windows and Predict fills do not explain the top taker's quiet fires; each public pattern alone lifts a Binance move to 5%-9% (base ~3%), its fires 52%-75%
 

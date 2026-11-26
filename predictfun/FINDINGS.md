@@ -1,3 +1,12 @@
+<!-- DEPTH_20261126_CLAUDE -->
+## 2026-11-26 — the Binance book behind the best level leans the top taker's way before its quiet fires (20-level imbalance median +0.18 vs +0.06 nearby; 20% in the nearby top decile); depth imbalance is the strongest public signal so far (top decile: a move within 300 ms 12.3% vs 2.7%), still far below its fires (88% in the same decile)
+
+[depth_deep](reviews/take_reprice_20261125/depth_deep.json) (depth20: top 20 levels per side, a snapshot every ~102 ms on E; the last snapshot at or before t, t − 300 ms and t − 1 s; FIRE_BREAKDOWN's fires, nearby moments and row groups; deciles from nearby moments, declared before the run). USER: "an we check deeper level in binance first". Checks: level-1 prices equal the bookTicker best at the snapshot's E for 98.8% / 99.8% of points; no snapshot within 250 ms for 1 fire / 253 nearby moments. Three trading days, its filled orders only; point estimates.
+
+- **Before its quiet fires (quiet at the best level), the depth behind leans its way:** imbalance over levels 1-20 median +0.18 vs +0.06 (nearby quiet moments); 20% above the nearby 90th percentile, 5.4% below the 10th; levels 2-20 on its side 1.61 vs 1.28 BTC, on the far side 0.93 vs 1.12; far-side size within $2 behind the best 0.62 vs 0.73. Over 1 s the imbalance rose more often: 18% above the nearby 90th percentile.
+- **As a public signal (nearby moments with no prior Binance move; a move its way within 300 ms):** 20-level imbalance bottom decile 1.1%, deciles 2-9 2.7%, top decile 12.3% (n 6,756); 5-level 12.7%; thinnest far-side cushion decile 9.5%; 1 s imbalance rise top decile 9.5%. After its fires in the same 20-level bins: 37% / 56% / 88%.
+- **Reading:** the quiet fires are quiet only at the best level; behind it the book leans its way about twice as often as at nearby moments. Depth imbalance is the best single public signal measured (12% in its top decile against ~3% base; other venues, trends and Predict 5-9%, PUBLIC_SOURCES), and its fires in the same decile are right 88% of the time: depth explains part of where it fires, not when.
+<!-- /DEPTH_20261126_CLAUDE -->
 <!-- PUBLIC_SOURCES_20261126_CLAUDE -->
 ## 2026-11-26 — other venues' trades, longer windows and Predict fills do not explain the top taker's quiet fires: before them a trade burst elsewhere 6.8% (nearby 2.1%), a 5 s Binance trend 17% (14%), and the Predict price had moved its way 52% (40%), not against it; each public pattern alone lifts a Binance move to 5%-9% (base 2.7%-3.2%)
 
