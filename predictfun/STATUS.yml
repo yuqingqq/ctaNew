@@ -1,3 +1,10 @@
+fire_info_20261126_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/fire_info.json
+  rows: data/predict_fun/research/take_reprice_20261125/fire_info/
+  session: 1622c91e
+  predict_offset_ms: 1.1
+  best_new_feature: [binance_spot_flow_its_r300, 0.645]
+  next: Binance spot book and other venues' books need recording (USER decision)
 stale_paid_split_20261126_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/stale_paid_split.json
   session: 1622c91e

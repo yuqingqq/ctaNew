@@ -1,3 +1,36 @@
+<!-- FIRE_INFO_20261126_CLAUDE -->
+## 2026-11-26 — the data we hold does not show the top taker's signal: Predict's and Binance's clocks agree (the 49 ms head start is real); no venue's price moves first before the futures moves it catches; Predict's reference relay follows the moves; Predict's own book shows others trading the same way just before (24% vs 12%); timing is selection, not a trigger
+
+[fire_info](reviews/take_reprice_20261125/fire_info.json) (all 20,767 of its fires inside their windows, 855 markets, reproducing top_taker_fire_times_all.csv; 201,444 nearby moments, the same times ±5..30 s with the sub-second phase randomised, >= 1 s from its fires; 17,100 random moments; Predict's own book on the 7,420 fires in complete markets; declared before the run, one 4-market / 3,000-point rehearsal day seen). USER: "Check the items that we have information first" (items 2-6, 9). Consumed days, point estimates, its filled orders only; each venue on its own clock.
+
+| information (we hold it) | at its fires | explains them? |
+|---|---|---|
+| Predict's and Binance's clocks (9) | Predict's heartbeat reaches us 70.5 ms (min) after its stamp, half its 143.2 ms websocket round trip: Predict's clock agrees with ours (+1.1 ms, symmetric paths); Binance's bookTicker reaches us 70.4 ms after its event time, the same path length | the head start is not a clock artifact |
+| Predict's reference relay (2) | its price changes rarely (time since the last change at random moments median 10.1 s); at its fires the time since the last change is as at nearby moments (5.5 vs 5.6 s) and the next change comes sooner (2.0 vs 6.8 s: the moves it trades trigger updates); spot >= 1 bp its way from the last relay price at 11% of its fires (nearby 3.5%) | no: it follows the moves |
+| other venues' prices (4) | before the futures moves it catches, a venue had moved its way first no more often than before other futures moves (table) | no venue leads |
+| Binance spot taker flow (4) | aggressive volume its way over 300 ms against normal: separation 0.65 | a partial marker, as the futures book factors (0.68) |
+| Hyperliquid book (3) | best-level imbalance change 0.54; its 10-level book is sampled every ~5 s | no |
+| Predict's own book (5) | a fill its way in the last 300 ms before 49% (nearby 32%); 5-level imbalance its way median +0.12 (nearby -0.01, separation 0.63); a top-2..10 taker's order its way matched 20-1000 ms before for 24% (nearby 12%) | partly: others trade the same way just before |
+| timing (6) | arrival phase per 50 ms of the second 4.6%-5.6% (uniform 5%; other top takers 4.6%-5.4%: a shared unevenness, no sharp trigger); fires in the window's last minute 10% (random moments 20%); absolute distance from the start price p90 5.7 bps (random 8.4); the side currently ahead 47% (random 50%) | selection, not a trigger |
+
+| venue | moved first before the futures moves it catches | before other futures moves (nearby) |
+|---|---:|---:|
+| Binance spot | 3.3% | 5.9% |
+| Bybit perp | 10.6% | 11.9% |
+| Bybit spot | 5.1% | 7.1% |
+| OKX swap | 6.1% | 8.7% |
+| OKX spot | 7.9% | 8.2% |
+| Coinbase | 13.1% | 13.9% |
+| Kraken | 1.9% | 4.6% |
+| Deribit | 9.7% | 9.4% |
+| Hyperliquid | 5.1% | 9.9% |
+
+- **Lead table population:** points with no futures mid change in the previous 300 ms and a futures move its way within 300 ms after (its fires 9,101, nearby 4,133 with Coinbase data); moved first = last trade price >= 0.2 bps its way over the previous 300 ms (Hyperliquid mid > 0).
+- **Best backward-looking new feature:** binance_spot_flow_its_r300 (separation 0.645); the relay's next change (0.678) looks forward and follows the move. Venue returns over 1 s separate at 0.60-0.64, carried by the fires that came after a move started.
+- **Our recording host:** Binance's and Predict's data reach it ~72 ms after their own stamps (Binance REST answers 451 here): the host is not in Tokyo; Predict sits about as far from it as Binance.
+- **Clock caveats:** the agreement assumes similar one-way paths to the two venues (bounds without that: Predict offset -71 to +73 ms); Predict's fills in item 5 are on its frame stamps, visible to a trader up to ~100 ms later (snapshot cadence).
+- **Reading:** none of the data we hold carries what the top taker acts on: its moves are not announced by any recorded venue's price, the reference relay or the timing. What remains: the Binance spot book (the settlement input; not recorded) and other venues' order books (not recorded).
+<!-- /FIRE_INFO_20261126_CLAUDE -->
 <!-- STALE_PAID_SPLIT_20261126_CLAUDE -->
 ## 2026-11-26 — the top taker eats the slippage and still profits: the Predict price moves 7.3c its way (1 s after the fill, from the best its order found on arrival), it gives up 4.7c to slippage and 0.65c to fees and keeps +1.93c per share; 59% of the slippage is makers' repriced quotes; on our fills the price moves -0.63c
 

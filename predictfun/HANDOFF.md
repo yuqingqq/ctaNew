@@ -1,3 +1,8 @@
+<!-- FIRE_INFO_20261126_CLAUDE -->
+## 2026-11-26 — the data we hold does not show its signal: clocks agree (head start real), no venue moves first, the relay follows the moves, Predict shows others trading the same way just before (24% vs 12%), timing is selection; left: Binance spot book, other venues' books (not recorded)
+
+See FINDINGS FIRE_INFO (same date). Recording host is ~72 ms from both venues (not Tokyo).
+<!-- /FIRE_INFO_20261126_CLAUDE -->
 <!-- STALE_PAID_SPLIT_20261126_CLAUDE -->
 ## 2026-11-26 — top taker: move 7.3c - slippage 4.7c - fee 0.65c = +1.93c per share at 1 s; 59% of the slippage = makers' repriced quotes; our fills: move -0.63c
 
