@@ -1,3 +1,21 @@
+<!-- SAME_GROUP_20261126_CLAUDE -->
+## 2026-11-26 — same group? ranks 4 and 9 share the top taker's sizing (30 shares in 31% / 50% of their orders; the top taker 77%, the others' most common sizes are 5-10 shares) and rank 4 almost never bets against it within 50 ms (2 of 2,034); ranks 5 and 7 fire as close with other sizing: the shared trigger is not one group's
+
+[same_group](reviews/take_reprice_20261125/same_group.json) (fire_times_orders' orders in complete markets, settlement ms; winners_legs; the top taker's maker legs; declared before the run). USER: "they take almost in the same ms, so they probably run by the same group, other takers actually do not fire at the exact same time". Consumed days, point estimates.
+
+| rank | same-direction orders within 50 ms of its orders | opposite-direction | at exactly 0 ms vs the mean of 1-5 ms | most common order size (share of its orders) |
+|---|---:|---:|---:|---:|
+| 1 (top taker) | - | - | - | 30 shares (77%) |
+| 4 | 2,032 | 2 (0.1%) | 118 vs 58.0 (2.0x) | 30 shares (31.2%) |
+| 9 | 120 | 7 (5.5%) | 13 vs 3.9 (3.3x) | 30 shares (50.0%) |
+| 5 | 1,027 | 27 (2.6%) | 45 vs 19.0 (2.4x) | 5 shares (1.7%) |
+| 7 | 1,055 | 23 (2.1%) | 39 vs 22.1 (1.8x) | 5 shares (1.4%) |
+| 2 | 412 | 22 (5.1%) | 17 vs 11.3 (1.5x) | 10 shares (2.6%) |
+
+- **Timing resolution:** a settlement stamp trails its match by a variable delay (p5 4, p95 75 ms; FIRE_TIMING), so "the same ms" cannot be resolved; the peaks around 0 ms are about +-5 ms wide for ranks 4, 5 and 7.
+- **Trading with each other:** of the top taker's 1,663 resting fills, rank 4's takes hit 30 (730 shares), rank 2's 17, rank 7's 5, rank 5's 4.
+- **Reading:** ranks 4 and 9 look like the top taker's own group or software (the same 30-share size, rank 4 never on the other side), not proven: a shared default size and a shared signal would look the same, and rank 4 sometimes takes the top taker's resting orders. Ranks 5 and 7 fire as close in time with different sizing and some opposite bets: independent takers see the same moment, so the trigger is not private to one group.
+<!-- /SAME_GROUP_20261126_CLAUDE -->
 <!-- SAME_MAKER_20261126_CLAUDE -->
 ## 2026-11-26 — the top takers that fire together take the same quotes: within 50 ms of each other they took from a common maker in 56% of pairs and from the same maker at the same price in 34% (the same takers 2-30 s apart: 14% / 0.8%); the top taker settles first in 54%; their counterparty mix overall is no closer to its than other takers'
 

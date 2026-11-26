@@ -1,3 +1,8 @@
+<!-- SAME_GROUP_20261126_CLAUDE -->
+## 2026-11-26 — ranks 4 and 9 share the top taker's 30-share sizing and rank 4 never bets against it (possibly one group); ranks 5 and 7 co-fire with other sizing: the trigger is shared beyond one group
+
+See FINDINGS SAME_GROUP (same date).
+<!-- /SAME_GROUP_20261126_CLAUDE -->
 <!-- SAME_MAKER_20261126_CLAUDE -->
 ## 2026-11-26 — co-timed top takers take the same quotes (34% same maker and price within 50 ms vs 0.8% 2-30 s apart); top taker first 54%; no shared favourite makers overall
 

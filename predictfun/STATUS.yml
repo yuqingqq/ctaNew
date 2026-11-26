@@ -1,3 +1,8 @@
+same_group_20261126_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/same_group.json
+  session: 1622c91e
+  size30_share: {rank1: 0.770, rank4: 0.312, rank9: 0.500}
+  rank4_opposite_within_50ms: [2, 2032]
 same_maker_20261126_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/same_maker.json
   session: 1622c91e
