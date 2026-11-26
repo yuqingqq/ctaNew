@@ -1,3 +1,8 @@
+exit_profile_20261126_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/exit_profile.json
+  session: 1622c91e
+  take_back_gain_loss_share: [0.453, 0.520]
+  held_favourites_share_won: [0.597, 0.897]
 exit_times_20261126_claude:
   diagnostics: [predictfun/reviews/take_reprice_20261125/exit_times.json, predictfun/reviews/take_reprice_20261125/smart_fires/fire_times_all.json]
   trips: data/predict_fun/research/take_reprice_20261125/exit_trips.parquet

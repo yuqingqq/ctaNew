@@ -1,3 +1,31 @@
+<!-- EXIT_PROFILE_20261126_CLAUDE -->
+## 2026-11-26 — how the top taker exits: its taker exits split about evenly between gains (+15c) and losses (-14c), losses cut sooner (33 s vs 46 s), mid-window (median 152 s left); what it holds to settlement is mostly favourites (60% above 60c, winning 90%)
+
+[exit_profile](reviews/take_reprice_20261125/exit_profile.json) (EXIT_TIMES' round trips of the positions it opened by taking; declared before the run). USER: "I just want to check how they exit".
+
+| its taker exits | share of exit volume | price change its way (before fees) | net per share | median hold |
+|---|---:|---:|---:|---:|
+| at a gain | 45% | +15.4c | +14.1c | 46 s |
+| at a flat | 3% | +0.0c | -1.4c | 22 s |
+| at a loss | 52% | -14.2c | -15.6c | 33 s |
+
+| holding time | share of exit volume | net per share |
+|---|---:|---:|
+| <= 5 s | 8% | -4.2c |
+| 5-30 s | 34% | -3.0c |
+| 30-60 s | 25% | -2.6c |
+| 60-120 s | 25% | +0.5c |
+| > 120 s | 8% | +1.8c |
+
+| held to settlement, its side's entry price | share of held volume | won | net per share |
+|---|---:|---:|---:|
+| its side < 40c | 22% | 22% | -2.8c |
+| 40-60c | 19% | 55% | +5.7c |
+| > 60c | 60% | 90% | +7.0c |
+
+- **When:** time left in the window at its taker exits, median 152 s (middle half 87-214 s); 3% of the exit volume in the last 30 s. Of what it holds to settlement, 17% was entered in the window's last 30 s.
+- **Reading:** a take-back is a stop or a profit-take of similar size and frequency, not a scalp: the quick ones (<= 5 s) lose most; what it keeps to the end are mostly favourites that go on to win.
+<!-- /EXIT_PROFILE_20261126_CLAUDE -->
 <!-- EXIT_TIMES_20261126_CLAUDE -->
 ## 2026-11-26 — the top taker exits by taking or not at all: of what it opens (97% by taking), 48% is closed by a later opposite take after a median 39 s, 51% is held to settlement (winning 69%), under 1% by its own resting orders; 7% of its entry volume is closed within 1 s. SCOPE CORRECTION: the fire sets of this line hold 6,189 of its 22,116 taker orders
 

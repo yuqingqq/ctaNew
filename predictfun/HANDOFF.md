@@ -1,3 +1,8 @@
+<!-- EXIT_PROFILE_20261126_CLAUDE -->
+## 2026-11-26 — top taker's exits in detail: take-backs 45% at a gain / 52% at a loss (losses cut sooner), mid-window; holds to settlement mostly favourites (won 90% above 60c)
+
+See FINDINGS EXIT_PROFILE (same date).
+<!-- /EXIT_PROFILE_20261126_CLAUDE -->
 <!-- EXIT_TIMES_20261126_CLAUDE -->
 ## 2026-11-26 — top taker's exits: 48% by a later opposite take (median 39 s), 51% held to settlement (win 69%), <1% passive; SCOPE: earlier fire sets = 6,189 of its 22,116 orders (complete markets)
 
