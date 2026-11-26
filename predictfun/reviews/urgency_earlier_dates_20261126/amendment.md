@@ -1,0 +1,1 @@
+The initial wrapper stopped during module imports before reading any test data. Two existing modules share the name replay. The v2 wrapper loads the frozen runner and checker by absolute path under distinct module identities. Policies, metrics, cohorts and test criteria are identical.
