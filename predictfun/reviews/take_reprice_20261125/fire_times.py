@@ -9,8 +9,9 @@ signer is one of the top-10 takers by 1 s value (winners_trigger.json, matched b
 string before parsing; one row per (taker order hash, settlementId): t_set, executedAt second, transaction, market, amount, first receipt.
 Output (write-once): OUT/fire_times_<day>.parquet + .json (counts).
 Stage `join`: their orders exactly as winners_trigger.analyze builds them (winners_legs, the same filters), each joined to its settlement
-by order hash. Checks and readings: orders with exactly one settlement / none / several; the settlement's market equals the order's;
-t_set inside its executedAt second; fire time t_set - 150 against the M50 send time (quantiles of the difference per group); bursts (one
+by order hash (an order filled by several makers has several settlements, normally in one ms: the earliest is its release, the span is
+reported). Checks and readings: orders with a settlement / none / several; the settlements' market equals the order's; t_set inside its
+executedAt second; fire time t_set - 150 against the M50 send time (quantiles of the difference per group); bursts (one
 taker, one market, fire times within 2 ms of the previous). Output (write-once): fire_times.json + OUT/fire_times_orders.parquet.
 Usage: PF_SLOT=<slot> predictfun/research/run_light.sh <tag> -- python3 predictfun/reviews/take_reprice_20261125/fire_times.py \
        scan <day> [<rehearsal dir> <stems>] | join [<rehearsal dir>]
@@ -137,15 +138,16 @@ def join(out_dir=None):
         O = J.groupby('taker_hash').agg(taker=('taker', 'first'), mid=('mid', 'first'), t=('t_v', 'min'), d=('d', 'first'), dn=('d', 'nunique'),
                                         shares=('shares', 'sum'), exec_s=('exec_s', 'min')).reset_index()
         O = O[O.dn == 1].drop(columns='dn')
-        ns = S.groupby('taker_hash').sid.nunique()
-        O['n_settlements'] = O.taker_hash.map(ns).fillna(0).astype(int)
-        one = S[S.taker_hash.map(ns) == 1].drop_duplicates('taker_hash')[['taker_hash', 'sid', 't_set', 'exec_s', 'mid']]
-        O = O.merge(one, on='taker_hash', how='left', suffixes=('', '_rest'), validate='one_to_one')
+        agg = S.groupby('taker_hash').agg(t_set=('t_set', 'min'), t_last=('t_set', 'max'), n_settlements=('sid', 'nunique'), mid_rest=('mid', 'first'),
+                                          n_mid=('mid', 'nunique'), exec_s_rest=('exec_s', 'min')).reset_index()
+        O = O.merge(agg, on='taker_hash', how='left', validate='one_to_one')       # several makers -> several settlements; the first is the release
+        O['n_settlements'] = O.n_settlements.fillna(0).astype(int)
         O['day'], O['rank'] = day, O.taker.map(rank)
         parts.append(O)
     A = pd.concat(parts, ignore_index=True)
     got = A.t_set.notna()
-    C.require((A.mid[got] == A.mid_rest[got]).all(), 'a settlement market differs from its order market')
+    C.require((A.mid[got] == A.mid_rest[got]).all() and (A.n_mid[got] == 1).all(), 'a settlement market differs from its order market')
+    A['span_ms'] = A.t_last - A.t_set
     A['fire'] = A.t_set - WT.HOLD
     A['s_m50'] = A.t - WT.HOLD
     A['diff_ms'] = A.fire - A.s_m50
@@ -157,14 +159,15 @@ def join(out_dir=None):
     for g, m in (('TOP1', A['rank'] == 1), ('TOP2_10', A['rank'] > 1)):
         G = A[m]
         Gg = G[G.t_set.notna()]
-        out['groups'][g] = dict(orders=int(len(G)), one_settlement=int((G.n_settlements == 1).sum()), none=int((G.n_settlements == 0).sum()),
-                                several=int((G.n_settlements > 1).sum()), t_set_in_exec_second=float(Gg.in_exec_second.mean()),
+        out['groups'][g] = dict(orders=int(len(G)), with_settlement=int((G.n_settlements > 0).sum()), none=int((G.n_settlements == 0).sum()),
+                                several=int((G.n_settlements > 1).sum()), several_span_gt0=int((Gg.span_ms > 0).sum()), several_span_gt10ms=int((Gg.span_ms > 10).sum()),
+                                t_set_in_exec_second=float(Gg.in_exec_second.mean()),
                                 fire_minus_m50_ms=qs(Gg.diff_ms), within_10ms=float((Gg.diff_ms.abs() <= 10).mean()), within_30ms=float((Gg.diff_ms.abs() <= 30).mean()),
                                 bursts=int(Gg.burst.nunique()), orders_per_burst={str(k): int(v) for k, v in Gg.groupby('burst').size().value_counts().sort_index().items()},
                                 by_day={dy: dict(orders=int(len(D)), with_fire=int(D.t_set.notna().sum()), fire_minus_m50_p50=float(D.diff_ms.median()) if D.t_set.notna().any() else None)
                                         for dy, D in G.groupby('day')})
-    C.require(out['groups']['TOP1']['one_settlement'] > 0, 'no top taker order has a settlement')
-    A.drop(columns=['mid_rest']).to_parquet(fp, index=False)
+    C.require(out['groups']['TOP1']['with_settlement'] > 0, 'no top taker order has a settlement')
+    A.drop(columns=['mid_rest', 'n_mid']).to_parquet(fp, index=False)
     TR.dump(fj, out)
     print(json.dumps(out, indent=1))
 
