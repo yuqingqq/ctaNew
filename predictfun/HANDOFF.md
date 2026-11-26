@@ -1,5 +1,10 @@
+<!-- CLEARING_20261126_CLAUDE -->
+## 2026-11-26 — thick Binance levels are cleared about half bought, half cancelled after the top taker's decisions, as after any thick-level move; matched on the book state, random moments see a move 1.7% vs its 48%
+
+See FINDINGS CLEARING (same date): corrects STATE_VALUE's sweep-size contrast (not like for like). Real examples ms by ms in reviews/take_reprice_20261125/example_events.json. Its edge is the timing of a book-wide reaction that Binance's best level does not show beforehand; proposed next check (USER's call): other venues' large trades and moves in the 100 ms before its sends, on their own clocks.
+<!-- /CLEARING_20261126_CLAUDE -->
 <!-- STATE_VALUE_20261126_CLAUDE -->
-## 2026-11-26 — 26% of the top taker's decisions have a visible Binance book signal; 41% precede large sweeps with no visible signal
+## 2026-11-26 — 26% of the top taker's decisions have a visible Binance book signal; 41% come with a thick book and no visible signal (sweep contrast CORRECTED: CLEARING)
 
 See FINDINGS (same date). Book-state precision at random times: lean + far <= 0.2 BTC 13.9% within 100 ms, thick book 0.3%; the top taker 87% / 33%. A predictor from our data can only target the visible-book share; the thick-book share needs an information source we do not see.
 <!-- /STATE_VALUE_20261126_CLAUDE -->

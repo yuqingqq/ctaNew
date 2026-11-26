@@ -1,3 +1,11 @@
+clearing_20261126_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/example_events.json
+  session: 1622c91e
+  move100_book_matched_vs_top_all: [0.0174, 0.4809]
+  move100_book_matched_vs_top_thick: [0.0030, 0.3318]
+  thick_bought_share_of_left_top_vs_random: [0.529, 0.507]
+  thick_largest_over_level_p50_top_vs_random: [0.420, 0.410]
+  corrects: state_value_20261126_claude thick sweep contrast (not like for like)
 state_value_20261126_claude:
   diagnostics: [predictfun/reviews/take_reprice_20261125/state_value.json, predictfun/reviews/take_reprice_20261125/sweep_print.json]
   session: 1622c91e
@@ -6,6 +14,7 @@ state_value_20261126_claude:
   random_move100_thick: 0.0028
   top_share_thick: 0.406
   thick_sweep_max_btc_p50_top_vs_random: [2.42, 1.19]
+  thick_sweep_corrected_by: clearing_20261126_claude (not like for like)
 winners_summary_20261126_claude:
   findings_blocks: [WINNERS_SUMMARY_20261126_CLAUDE, ORDERBOOK_20261126_CLAUDE, PRETREND_20261126_CLAUDE, AT_SEND_20261126_CLAUDE, TIMELINE_20261126_CLAUDE, FIRE_TIMING_20261126_CLAUDE]
   session: 1622c91e
