@@ -1,3 +1,12 @@
+<!-- PRETREND_20261126_CLAUDE -->
+## 2026-11-26 — the moves the top taker catches are not trend continuations: sellers step away from a quiet book (less prior drift than other first moves)
+
+[pretrend](reviews/take_reprice_20261125/pretrend.json) (timeline2's first-move sets reproduced: 2,736 caught, 7,454 sampled). USER: "You mean mainly the other side decreases the flow? For example, if the bid side is trending, the trend continues and the selling side slows down, is this the case". Windows end 300 ms before the move; four consumed days, point estimates.
+
+- **No price trend behind them:** over the second before (to −300 ms) the price did not move for 83% of the caught moves (all first moves 72%); over 5 s it had drifted their way for 33%, against for 24% (all first moves 48% / 18%); net ticks their way +0.8 vs +2.9. A tick against them in the last 300 ms (a bounce): 1.1% vs 7.6%.
+- **The selling side goes quiet (x normal, caught vs all first moves):** trades against them 0.5 / 0.2 / 0.17 / 0.12 at −300..−200 / −200..−100 / −60..−40 / −20..−5 ms (all 0.7 / 0.8 / 1.4 / 21); new orders on the far side 0.5 / 0.3 / 0.3 / 0.2 (all 0.7 / 0.6 / 0.6 / 2.0); the bid side builds: new orders on their side 0.9 → 1.9; trades their way stay below or near normal until −40 ms (0.3 → 1.2), then 3.6 and 26.
+- **Reading:** the signature is one-sided absence: sellers stop hitting bids and stop posting asks while bids keep arriving, so the far side drains and a little buying finishes it. Other first moves come with more prior drift and sellers still active right up to the move. Outcome-selected (its filled orders only).
+<!-- /PRETREND_20261126_CLAUDE -->
 <!-- AT_SEND_20261126_CLAUDE -->
 ## 2026-11-26 — Binance at the top taker's send: no trigger event; trades against them and far-side refills have stopped, the trades their way come 20-40 ms later
 

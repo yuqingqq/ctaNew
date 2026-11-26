@@ -1,3 +1,8 @@
+<!-- PRETREND_20261126_CLAUDE -->
+## 2026-11-26 — not momentum: before the moves the top taker catches, sellers step away from a quiet book
+
+See FINDINGS (same date). 5 s drift their way 33% vs 48% for other first moves; trades against them 0.17x normal at its send; bounces 1.1%.
+<!-- /PRETREND_20261126_CLAUDE -->
 <!-- AT_SEND_20261126_CLAUDE -->
 ## 2026-11-26 — Binance at the top taker's send (chart 2): no trigger event; counter-trades 0.2x and far-side refills 0.3x normal, trades their way start 20-40 ms later
 

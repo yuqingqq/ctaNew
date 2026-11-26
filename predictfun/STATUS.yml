@@ -1,3 +1,9 @@
+pretrend_20261126_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/pretrend.json
+  session: 1622c91e
+  drift5s_their_way_top_vs_all: [0.331, 0.481]
+  flat1s_top_vs_all: [0.829, 0.723]
+  bounce_top_vs_all: [0.011, 0.076]
 at_send_20261126_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/timeline2.json
   chart: predictfun/reviews/take_reprice_20261125/timeline_chart2.html
