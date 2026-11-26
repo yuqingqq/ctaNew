@@ -1,0 +1,55 @@
+{
+  "asof": "2026-11-26",
+  "n": {
+    "top1": 2324,
+    "all_random": 232087,
+    "fires": 4425
+  },
+  "rows": {
+    "far_refill_above_normal": {
+      "top1": 0.0878174773999139,
+      "all_random": 0.18988367432258288,
+      "fires": 0.151864406779661
+    },
+    "far_cancels_above_normal": {
+      "top1": 0.282393456736978,
+      "all_random": 0.20877420578309722,
+      "fires": 0.3193220338983051
+    },
+    "near_posts_above_normal": {
+      "top1": 0.688334050796384,
+      "all_random": 0.1735532559552799,
+      "fires": 0.3134463276836158
+    },
+    "counter_trades_above_normal": {
+      "top1": 0.07232027550581145,
+      "all_random": 0.10042194456536262,
+      "fires": 0.0743502824858757
+    },
+    "trades_its_way_above_normal": {
+      "top1": 0.1459319845027981,
+      "all_random": 0.07966089276401705,
+      "fires": 0.12497175141242937
+    },
+    "far_replacement_below_normal": {
+      "top1": 0.8260869565217391,
+      "all_random": 0.5632464302800178,
+      "fires": 0.7577401129943503
+    },
+    "deep_far_removals_above_normal": {
+      "top1": 0.3290267011197244,
+      "all_random": 0.2789797568749216,
+      "fires": 0.314873417721519
+    },
+    "deep_near_additions_above_normal": {
+      "top1": 0.4263565891472868,
+      "all_random": 0.23942328067497265,
+      "fires": 0.3069620253164557
+    },
+    "any_venue_ahead_05bp": {
+      "top1": 0.32142857142857145,
+      "all_random": 0.04072179829115806,
+      "fires": 0.13491525423728815
+    }
+  }
+}

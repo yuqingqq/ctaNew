@@ -1,3 +1,10 @@
+score_v3_20261126_claude:
+  diagnostics: [predictfun/reviews/take_reprice_20261125/public_score3.json, predictfun/reviews/take_reprice_20261125/score3_profile.json]
+  points: data/predict_fun/research/take_reprice_20261125/public_score3_points.parquet
+  session: 1622c91e
+  auc_random_gbm_v2_v3: [0.836, 0.839]
+  top1_gbm_v2_v3: [0.281, 0.277]
+  near_posts_above_normal_top1_all_fires: [0.688, 0.174, 0.313]
 score_v2_20261126_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/public_score2.json
   points: data/predict_fun/research/take_reprice_20261125/public_score2_points.parquet

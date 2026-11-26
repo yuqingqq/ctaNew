@@ -1,3 +1,32 @@
+<!-- SCORE_V3_20261126_CLAUDE -->
+## 2026-11-26 — public score v3 on the direct factors (rates against each moment's own normal, replacement, deep-level dynamics, venue price gaps): the same as on raw amounts (trees AUC 0.836 → 0.839, top 1% 28.1% → 27.7%); its fires carry every pattern we found, more weakly than the score's top moments
+
+[public_score3](reviews/take_reprice_20261125/public_score3.json), [score3_profile](reviews/take_reprice_20261125/score3_profile.json) (PUBLIC_SCORE's points, labels and evaluation; normal = the same rate over (t − 30 s, t − 1 s]; deep dynamics from every depth20 snapshot against the one before, the matching logic checked on synthetic snapshots; declared before the run). USER: "if refill rate is critical, we should use refill rate instead of raw amounts ... we should use the direct factors, not the raw amoutns". Development evidence; G = 4 days.
+
+| model | AUC random / nearby | top 1% | top 0.1% | its fires in the top 1% |
+|---|---:|---:|---:|---:|
+| logistic v2 (raw amounts) | 0.814 / 0.789 | 29.3% | 44.4% | 8.9% |
+| trees v2 (raw amounts) | 0.836 / 0.811 | 28.1% | 48.7% | 7.6% |
+| logistic v3 (direct factors) | 0.809 / 0.783 | 25.8% | 41.5% | 6.2% |
+| trees v3 (direct factors) | 0.839 / 0.817 | 27.7% | 40.6% | 7.4% |
+
+- **What drives it (trees, held-out, a family shuffled; AUC drop):** state 0.162, venues 0.032, best flow 0.019, deep 0.004, predict 0.001.
+- **The factors at the score's top moments and at its fires** (2,324 top-1% random moments of the trees, 232,087 random, 4,425 fires):
+
+| share of moments with the factor above its normal rate | score's top 1% | all moments | top taker's fires |
+|---|---:|---:|---:|
+| far-side refills (300 ms) | 9% | 19% | 15% |
+| far-side cancels (300 ms) | 28% | 21% | 32% |
+| near-side new orders (300 ms) | 69% | 17% | 31% |
+| trades against it (300 ms) | 7% | 10% | 7% |
+| trades its way (300 ms) | 15% | 8% | 12% |
+| far-side replacement BELOW normal (300 ms) | 83% | 56% | 76% |
+| deep far-side removals, levels 2-20 (1 s) | 33% | 28% | 31% |
+| deep near-side additions, levels 2-20 (1 s) | 43% | 24% | 31% |
+| another venue moved >= 0.5 bp ahead of Binance its way (300 ms) | 32% | 4% | 13% |
+
+- **Reading:** read as rates against normal, the order-book flows carry the information the raw amounts carried, no more; the state (far size, imbalance) still does most of the work. The top taker's fires show every direction we found (refills and counter-trades below normal more often, cancels, near-side posts and deep near-side additions above, replacement below, other venues ahead), each a modest shift from ordinary moments, while the score's top moments show them strongly: the public patterns mark where a level is ending, not when the top taker fires.
+<!-- /SCORE_V3_20261126_CLAUDE -->
 <!-- SCORE_V2_20261126_CLAUDE -->
 ## 2026-11-26 — public score v2: the order-book flows of our findings add little on top of the best-level state (AUC 0.811 → 0.814, top 1% 29.0% → 29.3%); its top moments are near-empty far levels, the top taker's fires are not
 
@@ -128,7 +157,7 @@ Sources: FIRE_TIMING, TIMELINE, AT_SEND, PRETREND, ORDERBOOK, STATE_VALUE, CLEAR
 5. **Thick far side (> 3 BTC, 41% of its decisions):** matched random moments see a move within 100 ms 0.30%, its decisions 33%; such levels are cleared about half bought, half cancelled (53% / 51% bought after its fires / random moments); Binance's far-side cancels peak 14 ms after its arrival (FIRE_TIMING).
 6. **The book state alone explains little:** random moments matched on far size x lean are followed by a move 1.7% of the time, its decisions 48%.
 7. **Other public sources:** other venues' trade bursts before 29% of its fires vs 6% (quiet fires 6.8% vs 2.1%); Predict: no fill-back (others' flow against it 48% vs 51%), its price had moved its way 52% vs 42%; depth behind the best leans its way before quiet fires (20% in the nearby top decile).
-8. **Public score (all sources, v2 with the flows):** top 1% of moments 29% followed by a move within 300 ms (base 2.5%), top 0.1% 44% (trees 49%); 58% of top-1% hits leave the 75 ms our path needs; driven by the best level; its top moments are near-empty far levels (0.23 BTC, imbalance +0.96), the top taker's fires are not (3.7 BTC, +0.35); 91% of its fires fall outside the score's top 1%.
+8. **Public score (all sources, v2 with the flows):** top 1% of moments 29% followed by a move within 300 ms (base 2.5%), top 0.1% 44% (trees 49%); 58% of top-1% hits leave the 75 ms our path needs; driven by the best level; its top moments are near-empty far levels (0.23 BTC, imbalance +0.96), the top taker's fires are not (3.7 BTC, +0.35); 91% of its fires fall outside the score's top 1%. v3 on the direct factors (rates against normal, deep dynamics, venue gaps): the same (trees AUC 0.839, top 1% 28%; SCORE_V3); its fires show every pattern we found, each a modest shift from ordinary moments.
 9. **For us:** public data ranks moments usefully but catches a level's end, not the top taker's earlier timing; its source remains unseen (candidates: other venues' order books, not recorded; private flow). Predict taking at the score's top moments is not yet tested: the take replay under venue rules is the next measurement.
 <!-- /WINNERS_SUMMARY_20261126_CLAUDE -->
 <!-- ORDERBOOK_20261126_CLAUDE -->

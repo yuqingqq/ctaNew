@@ -1,3 +1,8 @@
+<!-- SCORE_V3_20261126_CLAUDE -->
+## 2026-11-26 — public score v3 on the direct factors: the same as on raw amounts (trees AUC 0.839, top 1% 28%); the top taker's fires show our patterns weakly
+
+See FINDINGS SCORE_V3 (same date). Recorded data now used in its direct form except Predict's own order book and other coins' order books; not recorded: other venues' and Binance spot's order books. Next (USER's call): the take replay under venue rules.
+<!-- /SCORE_V3_20261126_CLAUDE -->
 <!-- SCORE_V2_20261126_CLAUDE -->
 ## 2026-11-26 — public score v2 (our order-book flows added): AUC 0.811 → 0.814, top 1% 29%; driven by the best level; its top moments are near-empty far levels, the top taker's fires are not; FINDINGS WINNERS_SUMMARY rewritten
 
