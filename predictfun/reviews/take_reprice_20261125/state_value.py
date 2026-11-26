@@ -12,7 +12,9 @@ Declared before the result: the STATE = imbalance their way >= 0.3, no trade aga
 against 0 / >= 1 x far-side new orders <= / > the random-time median.
 Readings: the decisions by class (ahead of a move within 300 ms / ahead, none within 300 ms / just after a move: share, move within 150 ms,
 1 s value); decisions and random times in / out of the STATE and per bucket (share, move within 100 / 150 ms, decisions' value).
-Output (write-once): state_value.json.
+Added before the four-day run (the first rehearsal's tables were seen): buckets by the far-side best size at t (<= 0.2 / 0.2-1 / 1-3 /
+> 3 BTC) x imbalance < / >= 0.6, and the per-point table (write-once) for further cuts.
+Output (write-once): state_value.json + state_value_points.parquet (OUT, or the rehearsal dir).
 Usage: PF_SLOT=<slot> predictfun/research/run_light.sh <tag> -- python3 predictfun/reviews/take_reprice_20261125/state_value.py [dir]
 """
 import json
@@ -71,7 +73,8 @@ def mean(x):
 def main():
     resource.setrlimit(resource.RLIMIT_CPU, (1200, 1201))
     fn = (Path(sys.argv[1]) if len(sys.argv) > 1 else H) / 'state_value.json'
-    C.require(not fn.exists(), 'state_value.json exists (write-once)')
+    fp = (Path(sys.argv[1]) if len(sys.argv) > 1 else WT.OUT) / 'state_value_points.parquet'
+    C.require(not fn.exists() and not fp.exists(), 'an output exists (write-once)')
     c = float(json.loads((H / 'fire_events.json').read_text())['groups']['TOP1']['arrival_offset_ms'])
     A = pd.read_parquet(WT.OUT / 'fire_times_orders.parquet')
     A = A[A.t_set.notna() & (A['rank'] == 1)]
@@ -122,6 +125,14 @@ def main():
                 key = f"imb {nm} | {sl} | refill {'low' if rl else 'high'}"
                 out['buckets'][key] = dict(random_share=mean(mr), random=blk(R[mr]), decisions_share=mean(ss), decisions=blk(S[ss]))
     out['random_baseline'] = blk(R[~R.momentum])
+    out['by_far_size'] = {}
+    for fl, flo, fhi in (('<=0.2', -1., .2), ('0.2-1', .2, 1.), ('1-3', 1., 3.), ('>3', 3., 1e9)):
+        for il, ilo, ihi in (('imb<0.6', -9., .6), ('imb>=0.6', .6, 9.)):
+            mr = (R.far > flo) & (R.far <= fhi) & (R.imb >= ilo) & (R.imb < ihi) & ~R.momentum
+            ss = (S.far > flo) & (S.far <= fhi) & (S.imb >= ilo) & (S.imb < ihi) & ~S.momentum
+            out['by_far_size'][f'far {fl} | {il}'] = dict(random_share=mean(mr), random=blk(R[mr]), decisions_share=mean(ss), decisions=blk(S[ss]))
+    keep = ['day', 'kind', 't', 'd', 'v1', 'imb', 'far', 'near', 'buys', 'sells', 'far_adds', 'far_cxl', 'near_adds', 'next_move', 'momentum', 'bounce', 'state']
+    X[keep].to_parquet(fp, index=False)
     TR.dump(fn, out)
     print(json.dumps(dict(decisions=out['decisions'], state=out['state']), indent=1))
 
