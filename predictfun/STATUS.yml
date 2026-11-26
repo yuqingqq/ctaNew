@@ -1,3 +1,8 @@
+take_model_why_20261126_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/take_model_why.json
+  session: 1622c91e
+  insample_top1_by_capacity: [-0.06, 0.01, 0.99, 4.69]
+  top1_by_predicted_move: {move_c: 3.18, value_c: -0.181, fill: 0.199}
 take_model_insample_20261126_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/take_model_insample.json
   session: 1622c91e

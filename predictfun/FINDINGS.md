@@ -1,3 +1,27 @@
+<!-- TAKE_MODEL_WHY_20261126_CLAUDE -->
+## 2026-11-26 — why the take model does not generalise: the in-sample profit grows with model size (-0.06c linear to +4.69c large trees) while every model loses on unseen data, even on other markets of the same day (-0.19c): it fits noise; what does generalise is Predict's next move (top 1% by predicted move: +3.2c its way) and the fill, but they oppose each other: where the move is predicted our take fills 20% and nets -0.18c
+
+[take_model_why](reviews/take_reprice_20261125/take_model_why.json) (TAKE_MODEL's 66,353 labelled moments, features and target (the take at our 172 ms path, c per intended share); declared before the run). USER: "Can you check why it can't generalize on untouched data". The held-out days are consumed days the model was not trained on, not untouched data.
+
+| model | top 1%, fitted and scored on the same days | top 1%, on a day it has not seen | rank correlation, same days / unseen day |
+|---|---:|---:|---:|
+| ridge (linear) | -0.06c | -0.13c | 0.36 / 0.35 |
+| small trees (4 leaves) | +0.01c | -0.14c | 0.42 / 0.40 |
+| trees as used (15 leaves) | +0.99c | -0.04c | 0.47 / 0.42 |
+| large trees (63 leaves, 800 rounds) | +4.69c | -0.21c | 0.54 / 0.41 |
+
+| trained on \ scored on | 10-23 | 10-31 | 11-01 | 11-02 |
+|---|---:|---:|---:|---:|
+| 10-23 | +1.98c | -0.25c | -0.34c | -0.28c |
+| 10-31 | -0.22c | +2.86c | -0.29c | -0.51c |
+| 11-01 | +0.11c | -0.11c | +1.27c | -0.07c |
+| 11-02 | +0.17c | -0.47c | -0.32c | +4.27c |
+
+- **Not a change between days:** within each day, a model trained on half the markets nets -0.19c on the other half (by day 10-23 -0.27c, 10-31 -0.12c, 11-01 -0.44c, 11-02 +0.03c). Simple models find no paying takes even on their own training data; only large models do, and only there. The top 1% is spread over 259 of 332 markets in-sample (ten largest 12%), 222 held out: not a few memorised markets but noise fitted everywhere.
+- **What generalises (unseen days):** the fill (rank correlation 0.56) and the Predict mid's move from the decision to 1 s after the match (0.33; the top 1% by predicted move moves +3.2c our way, all moments -0.08c, hindsight's top 1% +16.2c). Value 0.42, from the fill and spread cost.
+- **Why the two do not add up:** at the moments with the largest predicted move, our take fills 20% of the time (all moments 87%) and nets -0.18c: when the move is coming the quote leaves before our order matches (pulled, or taken by orders already waiting), and when the quote stays, the move mostly does not come. A paying take needs both, and that joint event is the race we lose by ~85 ms (TIMELINE).
+- **Reading:** more data, other models or regularisation will not fix this: the public data does predict Predict's next move, but not in a way a 172 ms (or 152 ms) take can collect.
+<!-- /TAKE_MODEL_WHY_20261126_CLAUDE -->
 <!-- TAKE_MODEL_INSAMPLE_20261126_CLAUDE -->
 ## 2026-11-26 — the take model in hindsight: fitted and scored on the same days its top 1% nets +0.99c (+1.3 to +4.3c fitted per day); on a day it has not seen -0.04c: memorisation, not signal; perfect foresight's top 1% is worth +11.5c
 

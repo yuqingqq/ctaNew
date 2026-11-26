@@ -1,3 +1,8 @@
+<!-- TAKE_MODEL_WHY_20261126_CLAUDE -->
+## 2026-11-26 — take model fails to generalise because it fits noise (in-sample profit grows with model size, losses on unseen markets of the same day); the predictable move (+3.2c) comes when our take does not fill (20%)
+
+See FINDINGS TAKE_MODEL_WHY (same date).
+<!-- /TAKE_MODEL_WHY_20261126_CLAUDE -->
 <!-- TAKE_MODEL_INSAMPLE_20261126_CLAUDE -->
 ## 2026-11-26 — take model in-sample top 1% +0.99c vs -0.04c on an unseen day (memorisation); hindsight top 1% +11.5c
 
