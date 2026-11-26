@@ -1,8 +1,10 @@
 """What happens on Binance around the top taker's send, on the move clock (USER 2026-11-26: "You mean they send at around -50ms right? Then
 we check what happens in Binance around that time"). Readout; four consumed days; no strategy change.
 t = 0 = the first Binance futures mid change in the taker's direction (timeline.py's move). Sets: the moves the top taker caught (its 'ahead'
-sends with the move within 300 ms, timeline.py's definition) and a seeded sample of all Binance moves (5,000 per direction per day); each
-with its own random baseline = the same times shifted by +-5, 10, .., 30 s (same direction). Points within 1.5 s of an hour file boundary or
+sends with the move within 300 ms, timeline.py's definition), a seeded sample of all Binance moves (5,000 per direction per day), and both
+restricted to first moves (no move in the same direction in the previous 300 ms: the caught moves are such by construction, so only the
+'first' sets compare like with like); each with its own random baseline = the same times shifted by +-5, 10, .., 30 s (same direction).
+Book state (imbalance, far / near best size) at move - 300 .. 0 ms per set. Points within 1.5 s of an hour file boundary or
 in an hour without a bookTicker file are excluded.
 Per set, 5 ms bins over [-300, +100) ms: the rate of every fire_events event kind (count and BTC; opp = the far side that empties at the
 move, near = the other) around the move and around its random times; the top taker's arrival at Predict relative to its move (histogram,
@@ -26,6 +28,7 @@ import timeline as TL  # noqa: E402
 
 DC, C, TR, WT = FE.DC, FE.C, FE.TR, FE.WT
 EDGES = np.arange(-300., 101., 5.)
+QUIET = 300.
 
 
 def good(day, t):
@@ -76,6 +79,26 @@ def main():
             mt.append(pick)
             md.append(np.full(len(pick), dv))
         sets['all_moves'] = (np.concatenate(mt), np.concatenate(md))
+        for name in ('top_caught', 'all_moves'):                          # first moves: no same-direction move in the previous QUIET ms
+            tt, dd = sets[name]
+            first = np.zeros(len(tt), bool)
+            for dv in (1., -1.):
+                m = dd == dv
+                M = TL.moves(ev, dv)
+                j = np.searchsorted(M, tt[m], 'left')                     # moves strictly before t
+                first[m] = (j == 0) | (tt[m] - M[np.maximum(j - 1, 0)] > QUIET)
+            sets[name.replace('moves', 'first').replace('caught', 'caught_first')] = (tt[first], dd[first])
+        Q = pd.concat([pd.DataFrame(dict(t=tt, d=dd, set=name)) for name, (tt, dd) in sets.items()], ignore_index=True)
+        _, st2, traj, _ = FE.day_data(day, Q)
+        Q['status'] = st2
+        for k, v in traj.items():
+            Q[k] = v
+        for name in sets:
+            G = Q[(Q.set == name) & (Q.status == 'ok')]
+            for k in traj:
+                acc[(name, 'state')][(k, 'sum')] = acc[(name, 'state')].get((k, 'sum'), 0.) + float(G[k].sum())
+                acc[(name, 'state')][(k, 'vals')] = acc[(name, 'state')].get((k, 'vals'), []) + [G[k].to_numpy()]
+            acc[(name, 'state')]['n'] += len(G)
         for name, (tt, dd) in sets.items():
             keep = good(day, tt)
             tt, dd = tt[keep], dd[keep]
@@ -94,9 +117,12 @@ def main():
     out = dict(asof='2026-11-26', edges_ms=EDGES.tolist(), arrival_offset_ms=c,
                top1_arrival_rel_move=dict(n=int(len(L)), hist_5ms=h.tolist(), p25=float(np.quantile(L, .25)), p50=float(np.quantile(L, .5)), p75=float(np.quantile(L, .75))),
                sets={})
-    for name in ('top_caught', 'all_moves'):
-        e, r = acc[(name, 'event')], acc[(name, 'random')]
-        o = dict(n_events=int(e['n']), n_random=int(r['n']), rates={})
+    for name in ('top_caught', 'all_moves', 'top_caught_first', 'all_first'):
+        e, r, sa = acc[(name, 'event')], acc[(name, 'random')], acc[(name, 'state')]
+        o = dict(n_events=int(e['n']), n_random=int(r['n']), rates={}, state={})
+        for k in sorted({kk[0] for kk in sa if isinstance(kk, tuple)}):
+            v = np.concatenate(sa[(k, 'vals')])
+            o['state'][k] = dict(mean=float(np.nanmean(v)), median=float(np.nanmedian(v)), n=int(np.isfinite(v).sum()))
         for role in FE.ROLES:
             for kind in FE.KINDS:
                 k = f'{role}_{kind}'
