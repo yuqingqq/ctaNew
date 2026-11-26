@@ -1,3 +1,8 @@
+<!-- INFO_BATCH2_20261126_CLAUDE -->
+## 2026-11-26 — items 1-6: always active, more with BTC activity; ETH precedes some fires; 5-6x concentration on a few makers; top takers fire within tens of ms of each other (shared trigger or one firm); no coin / Polymarket / opening trigger
+
+See FINDINGS INFO_BATCH2 (same date). Open: which makers it targets (resolve codes to addresses, their quote behaviour); record the Binance spot book / other venues' books (USER decision).
+<!-- /INFO_BATCH2_20261126_CLAUDE -->
 <!-- FIRE_INFO_20261126_CLAUDE -->
 ## 2026-11-26 — the data we hold does not show its signal: clocks agree (head start real), no venue moves first, the relay follows the moves, Predict shows others trading the same way just before (24% vs 12%), timing is selection; left: Binance spot book, other venues' books (not recorded)
 

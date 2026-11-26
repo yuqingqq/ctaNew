@@ -1,3 +1,10 @@
+info_batch2_20261126_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/info2.json
+  rows: data/predict_fun/research/take_reprice_20261125/info2/
+  session: 1622c91e
+  markets_with_fires_share: 0.972
+  makers_lift_ge5: 3
+  top_takers_cotiming_after_vs_null: [0.475, 0.151]
 fire_info_20261126_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/fire_info.json
   rows: data/predict_fun/research/take_reprice_20261125/fire_info/

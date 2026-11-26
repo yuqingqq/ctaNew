@@ -1,3 +1,47 @@
+<!-- INFO_BATCH2_20261126_CLAUDE -->
+## 2026-11-26 — the rest of the data we hold: it trades every market and more when BTC is active; ETH moves precede some fires; it trades disproportionately against a few makers (5-6x their share); the top takers fire within tens of ms of each other (a common trigger or one firm); no coin, Polymarket or the window opening shows its trigger
+
+[info2](reviews/take_reprice_20261125/info2.json) (fire_info's points and lead-test population; Binance futures ETH / SOL / XRP / BNB / DOGE change points, Hyperliquid ETH / SOL; Polymarket's same-window BTC 5m book on a seeded 300 of its markets (290 loaded); step1 maker codes joined to winners_legs' takers, a maker = (day, code); fire_times_orders' rank-1 bursts in complete markets; declared before the run; the maker key and the per-rank fine lags changed after the merge rehearsal, before the real merge, which reproduced it exactly). USER: "Yes check items 1-6". Consumed days, point estimates; its filled orders only.
+
+- **1 When it is active:** it fires in 840 of the 864 markets of its three days (97%) and in every UTC hour; fires per market rise with BTC activity (Spearman: Binance mid changes +0.58, Predict volume +0.59, realised volatility +0.52, futures volume +0.45, Predict best size -0.30); 11-02 (median volatility 3.7 bps per window vs 2.1 / 1.8) holds 12,875 of its fires. Predict volume includes its own fills (small).
+
+| Binance BTC realised volatility quintile (bps per window, median) | 1.0 | 1.7 | 2.4 | 3.4 | 5.3 |
+|---|---:|---:|---:|---:|---:|
+| its fires per market | 9.8 | 15.0 | 21.1 | 28.7 | 45.4 |
+| markets with a fire | 97% | 98% | 98% | 97% | 98% |
+
+| coin (moved its way first, previous 300 ms) | before the BTC moves it catches | before other BTC moves | at its fires with no BTC move after | at nearby moments with no move |
+|---|---:|---:|---:|---:|
+| Binance ETH | 20.1% | 18.0% | 13.0% | 3.3% |
+| Binance SOL | 13.0% | 10.4% | 7.8% | 1.9% |
+| Binance XRP | 9.4% | 8.6% | 5.1% | 1.5% |
+| Binance BNB | 8.9% | 8.9% | 4.9% | 2.3% |
+| Binance DOGE | 8.9% | 7.2% | 4.9% | 1.2% |
+| Hyperliquid ETH | 6.8% | 10.9% | 4.2% | 3.0% |
+| Hyperliquid SOL | 12.1% | 16.0% | 6.5% | 6.1% |
+| Polymarket BTC 5m (290 markets; >= 0.5c) | 20.8% | 20.3% | 18.0% | 9.9% |
+
+- **2 Other coins and 3 Polymarket:** no coin and not Polymarket moves first before the BTC moves it catches more than before other BTC moves; but at its fires that are not followed by a BTC move, ETH had moved its way 13% of the time (nearby 3.3%): some fires follow ETH. ETH's 1 s return separates its fires from nearby moments at 0.66 (the best Binance BTC factor 0.68).
+
+| since the window opened | 5-15 s | 15-30 s | 30-60 s | 1-2 min | 2-4 min | last minute |
+|---|---:|---:|---:|---:|---:|---:|
+| its fire density / random moments' | 0.85 | 1.37 | 1.29 | 1.24 | 1.06 | 0.52 |
+| its 1 s value per share (c) | +1.3 | +1.4 | +1.4 | +1.3 | +1.8 | +3.5 |
+| distance from the start price, median abs (bps): its fires / random | 0.9 / 0.0 | 1.1 / 0.6 | 2.0 / 1.3 | 2.2 / 1.9 | 2.3 / 2.9 | 1.9 / 3.4 |
+| bets on the side currently ahead: its fires / random | 59% / 47% | 52% / 48% | 52% / 52% | 49% / 50% | 45% / 51% | 35% / 50% |
+
+- **4 Window opening:** no rush at the open (no fire in the first 5 s); most active 15 s - 2 min, least in the last minute, where its fills are worth the most. Early it trades after BTC has moved away from the start price and backs the side ahead; late it trades near the start price and backs the side behind.
+
+| makers' share of the taker group's volume, per day | 20261031 | 20261101 | 20261102 |
+|---|---:|---:|---:|
+| top taker: its 10 largest makers | 62% | 62% | 59% |
+| ranks 2-10 | 52% | 44% | 42% |
+| other takers | 49% | 50% | 48% |
+
+- **5 Counterparties:** maker-days with lift >= 5 (share of the top taker's volume / share of all takers'): 20261102:375 6.6% of its volume vs 1.3% of all (5.3x; ranks 2-10 1.1%), 20261102:605 2.6% of its volume vs 0.4% of all (6.0x; ranks 2-10 0.6%), 20261102:87 2.5% of its volume vs 0.5% of all (5.1x; ranks 2-10 0.6%). Joined: 509,069 of its taker shares (step1 coverage). Addresses not resolved (codes are per day).
+- **6 Order among the top takers:** another top-10 taker's same-direction order comes 20-1000 ms after 47% of its fires (shifted times 15%) and before 33% (15%); lags cluster within +-50 ms: rank 4 41% of 4,586 pairs (median +41 ms), rank 7 27% of 3,818 pairs (median +35 ms), rank 5 28% of 3,539 pairs (median +26 ms), rank 2 16% of 2,424 pairs (median -102 ms). With ~+-15 ms of timing error per order, a shared trigger and one firm behind several addresses cannot be told apart.
+- **Reading:** still no recorded source carries its trigger. New: it is active all the time and scales with BTC activity; it concentrates on a few makers; several top takers act within tens of ms of each other, so the trigger is shared (or the takers are one firm), which points to data others can see and we do not record.
+<!-- /INFO_BATCH2_20261126_CLAUDE -->
 <!-- FIRE_INFO_20261126_CLAUDE -->
 ## 2026-11-26 — the data we hold does not show the top taker's signal: Predict's and Binance's clocks agree (the 49 ms head start is real); no venue's price moves first before the futures moves it catches; Predict's reference relay follows the moves; Predict's own book shows others trading the same way just before (24% vs 12%); timing is selection, not a trigger
 
