@@ -30,8 +30,9 @@ Items:
   receipt); REST round trip; book frames' receipt minus their source stamp (step1 tables; the part file of a sealed hour is never opened).
   The Predict clock offset against ours is bounded by heartbeat lag and round trip; our clock against Binance's from futures bookTicker
   receipt minus event time.
-Readings (merge): per feature AUC FIRE vs NEARBY, direction, medians, n; the lead table; relay, timing, clock and Predict-book readings as
-stated; counts and statuses. Point estimates, consumed days, its filled orders only.
+Readings (merge): per feature AUC FIRE vs NEARBY, direction, medians, n; the lead table; relay (FIRE / NEARBY / RANDOM), timing, clock and
+Predict-book readings as stated; counts and statuses. Hyperliquid's l2Book is sampled about every 5 s (bbo every ~150-200 ms): its
+10-level imbalance exists only within 2 s of a snapshot (coverage reported). Point estimates, consumed days, its filled orders only.
 Outputs (write-once): OUT/fire_info/points.parquet + points.json, <day>_feats.parquet, <day>_pbook.parquet, <day>_clock.json;
 fire_info.json (merge).
 Usage: PF_SLOT=<slot> predictfun/research/run_light.sh <tag> -- python3 predictfun/reviews/take_reprice_20261125/fire_info.py \
@@ -542,7 +543,7 @@ def merge(od=None, days=None):
         q = X[X.fut_quiet_300.astype(bool)]
         out.setdefault('quiet_futures', {})[lab] = dict(n=int(len(q)), share_of_points=float(len(q) / len(X)), move_after=float(q.y300.astype(bool).mean()))
     rel = {}
-    for lab, X in (('fires', Fz), ('nearby', N)):
+    for lab, X in (('fires', Fz), ('nearby', N), ('random', Rn)):
         a = pd.to_numeric(X.relay_age_ms, errors='coerce'); g = pd.to_numeric(X.relay_gap_spot_bps, errors='coerce')
         rel[lab] = dict(age_ms=[float(x) for x in a.quantile([.1, .25, .5, .75, .9])], next_ms=[float(x) for x in pd.to_numeric(X.relay_next_ms, errors='coerce').quantile([.1, .25, .5, .75, .9])],
                         gap_spot_bps=[float(x) for x in g.quantile([.1, .25, .5, .75, .9])], gap_its_ge1=float((g[g.notna()] >= 1.).mean()), gap_against_ge1=float((g[g.notna()] <= -1.).mean()))
