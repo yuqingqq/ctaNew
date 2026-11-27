@@ -21,8 +21,11 @@ top-10 % / 1 % action, and that action lands before its order; our model's perce
 by that percentile; (4) what we still miss: the moves it chases against 5 un-chased moves each, same day and direction within 30 min, with
 the nearest model edge at the onset: AUC of each of CHASE_TAKES' inputs at the onset; null: the largest |AUC - 0.5| over the inputs with
 the chased label shuffled within matched sets (200 draws), inputs beyond its 95th percentile; the realised Predict move and the
-conservative / optimistic value of taking at the onset, chased vs matched; the moves' later size (not an input); (5) our model's top-10 %
-actions on moves it chased or not: value on both books.
+conservative / optimistic value of taking at the onset, chased vs matched; the moves' later size (not an input); the same at its decision
+tick (our last tick before its arrival) against un-chased moves at the same tick index; (5) our model's top-10 % actions on moves it chased
+or not: value on both books; (6) speed: its group-3 fires by arrival after the last tick (<= 10 ms, <= our 25.5 ms, later), their share and
+1 s value. Added after the two-day rehearsal (declared before the real run): (4) at its decision tick, (6), and the export's drift since the
+window opened and 20-level depth imbalance in (1).
 Outputs (write-once): OUT/group3_profile/<day>.parquet (labels), group3_profile.json (read).
 Usage: PF_SLOT=<slot> predictfun/research/run_light.sh <tag> -- python3 predictfun/reviews/take_reprice_20261125/group3_profile.py \
        selftest | labels <day> [<dir>] | read [<dir>]
@@ -53,7 +56,8 @@ EDGES = dict(time_left_s=[0, 30, 60, 120, 180, 240, 300.01], side_best_c=[0, 10,
              arrival_after_last_tick_ms=[0, 5, 10, 25, 50, 100, 200, 300.01], predict_move_since_onset_c=[-INF, -.5, .5, 2, 5, 10, INF],
              chase_gap_c=[-INF, -2, 0, 2, 5, 10, INF], fv_gap_c=[-INF, -10, -5, 0, 5, 10, INF], imbalance=[-1, -.6, -.3, 0, .3, .6, 1.0001],
              far_size_btc=[0, .1, .5, 1, 3, 10, INF], sweep_100ms_btc=[0, 1e-9, .5, 1, 3, 10, INF], spread_c=[0, 1.5, 2.5, 5, 10, INF],
-             pay_through_c=[-INF, -.5, .5, 2, 5, 10, INF], shares=[0, 10, 29.5, 30.5, 50, 100, INF], value_1s_c=[-INF, -5, -1, 0, 1, 5, INF])
+             pay_through_c=[-INF, -.5, .5, 2, 5, 10, INF], shares=[0, 10, 29.5, 30.5, 50, 100, INF], value_1s_c=[-INF, -5, -1, 0, 1, 5, INF],
+             drift_since_open_bps=[-INF, -10, -5, -2, 0, 2, 5, 10, INF], depth_imbalance_20=[-1, -.6, -.3, 0, .3, .6, 1.0001])
 QS = (.1, .25, .5, .75, .9)
 
 
@@ -230,13 +234,15 @@ def dist(x, edges):
                 buckets=[dict(lo=float(lo), hi=float(hi), share=float(c_ / len(x))) for lo, hi, c_ in zip(edges[:-1], edges[1:], h)])
 
 
-def match_sets(day, d, t, e, pos, cand, k=K_MATCH, win=WIN_MS):
-    """For each positive row: up to k candidate rows of the same day and direction within win ms with the nearest e -> (n_pos x k) indices, -1 empty."""
+def match_sets(day, d, t, e, pos, cand, k=K_MATCH, win=WIN_MS, exact=None):
+    """For each positive row: up to k candidate rows of the same day and direction (and the same exact value, if given) within win ms with
+    the nearest e -> (positive rows, n_pos x k indices, -1 empty)."""
     out = np.full((int(pos.sum()), k), -1, np.int64)
     ip = np.flatnonzero(pos)
-    groups = pd.Series(np.flatnonzero(cand)).groupby([day[cand], d[cand]]).apply(np.asarray).to_dict()
+    ex = np.zeros(len(day)) if exact is None else np.asarray(exact, float)
+    groups = pd.Series(np.flatnonzero(cand)).groupby([day[cand], d[cand], ex[cand]]).apply(np.asarray).to_dict()
     for r, i in enumerate(ip):
-        c_ = groups.get((day[i], d[i]))
+        c_ = groups.get((day[i], d[i], ex[i]))
         if c_ is None:
             continue
         c_ = c_[np.abs(t[c_] - t[i]) <= win]
@@ -294,17 +300,21 @@ def read(od=None):
                label_status={f'group{g}': G[G.group == g].status.value_counts().to_dict() for g in (1, 2, 3)}, chase_reproduced=True,
                distributions={}, firing_probability={}, coverage={}, what_we_miss={}, our_top10_by_chase={})
     # ---- (1) distributions
+    Bx = bursts()[['day', 't', 'd', 'drift_since_open_bps_its_way', 'depth_imbalance_20_its_way']]
+    G = G.merge(Bx, on=['day', 't', 'd'], how='left', validate='1:1')
     okG = G.status.to_numpy() == 'ok'
     gd = G.d.to_numpy(float)
     side = lambda x, dd: np.where(dd > 0, x, 100. - x)
     fG = dict(time_left_s=G.fv_tau_s, side_best_c=side(G.lim_known.to_numpy(float), gd), side_mid_c=side(G.md_a.to_numpy(float), gd), move_bps=G.mv_bps,
               tick_index=G.k, arrival_after_onset_ms=G.t - G.onset, arrival_after_last_tick_ms=G.last_tick_ms, predict_move_since_onset_c=G.pf_move_since_onset_c,
               chase_gap_c=G.chase_gap_c, fv_gap_c=G.fv_gap_its, imbalance=G.imb_0, far_size_btc=G.far_0, sweep_100ms_btc=G.its_100_btc, spread_c=G.spread_a,
-              pay_through_c=G.pay_through_c, shares=G.shares, value_1s_c=G.v1)
+              pay_through_c=G.pay_through_c, shares=G.shares, value_1s_c=G.v1, drift_since_open_bps=G.drift_since_open_bps_its_way,
+              depth_imbalance_20=G.depth_imbalance_20_its_way)
     fX = dict(time_left_s=X.fv_tau_s, side_best_c=side(lim, d), side_mid_c=X.pf_its_price, move_bps=X.mv_bps, tick_index=X.mv_k,
               arrival_after_onset_ms=X.mv_since_ms + OUR_ARRIVAL, arrival_after_last_tick_ms=pd.Series(np.full(len(X), OUR_ARRIVAL)),
               predict_move_since_onset_c=X.pf_mid_ret_onset, chase_gap_c=X.chase_gap_c, fv_gap_c=X.fv_gap_its, imbalance=X.b_imb1,
-              far_size_btc=np.exp(X.b_lfar1.to_numpy(float)), sweep_100ms_btc=X.its_100_btc, spread_c=X.pf_spread)
+              far_size_btc=np.exp(X.b_lfar1.to_numpy(float)), sweep_100ms_btc=X.its_100_btc, spread_c=X.pf_spread, drift_since_open_bps=X.fv_drift_its,
+              depth_imbalance_20=X.d_imb20)
     sets = dict(its_group3=('G', okG & (G.group.to_numpy() == 3)), its_group2=('G', okG & (G.group.to_numpy() == 2)),
                 every_move_onset=('X', on_i), our_model_top10=('X', t10))
     for fld, edges in EDGES.items():
@@ -346,6 +356,7 @@ def read(od=None):
     ours_first10 = has10 & (a10.reindex(G3.key).to_numpy() + OUR_ARRIVAL < G3.t.to_numpy())
     Xt = X[['key', 't']].assign(p=pctl)
     last_p = np.full(len(G3), np.nan)
+    dec_i = np.full(len(G3), -1, np.int64)
     by_key = Xt.groupby('key').indices
     tt_ = Xt.t.to_numpy(float); pp = Xt.p.to_numpy(float)
     for r, (k_, aa) in enumerate(zip(G3.key, G3.t.to_numpy(float))):
@@ -354,7 +365,8 @@ def read(od=None):
             continue
         ii = ii[tt_[ii] + TM.FEED + TM.DECIDE <= aa]                     # our decisions before its arrival
         if len(ii):
-            last_p[r] = pp[ii[np.argmax(tt_[ii])]]
+            dec_i[r] = ii[np.argmax(tt_[ii])]
+            last_p[r] = pp[dec_i[r]]
     v1g = G3.v1.to_numpy(float)
     pb = np.digitize(last_p, [.5, .9, .99])
     out['coverage'] = dict(group3_ok=int(len(G3)), move_in_our_population=float(in_pop.mean()), with_model_top10_action=float(has10.mean()),
@@ -409,6 +421,39 @@ def read(od=None):
                                later_size_mean=dict(chased={k_: float(np.nanmean(v_[lab == 1])) for k_, v_ in later.items()},
                                                     matched={k_: float(np.nanmean(v_[lab == 0])) for k_, v_ in later.items()}),
                                value_taking_at_onset={grp: {f'{b}_s{int(s)}': value(ix, b, s) for b in ('A', 'AB') for s in (0., 3., 10.)} for grp, ix in (('chased', pos_i), ('matched', neg_i))})
+    # ---- (4b) at its decision tick: chased moves against un-chased moves at the same tick index and the nearest edge
+    di = dec_i[dec_i >= 0]
+    posm = np.zeros(len(X), bool); posm[di] = True
+    ipd, Md = match_sets(day, d, X.t.to_numpy(float), e1, posm, ~chased, exact=X.mv_k.to_numpy(float))
+    fulld = (Md >= 0).all(1)
+    ipd, Md = ipd[fulld], Md[fulld]
+    rowsd = np.r_[ipd, Md.ravel()]
+    labd = np.r_[np.ones(len(ipd)), np.zeros(Md.size)]
+    oned, Ad = auc_matrix(X.iloc[rowsd][feats].to_numpy(float), labd)
+    nulld = []
+    for _ in range(N_NULL if not reh else 20):
+        o_ = rng.permuted(np.c_[np.ones(len(ipd)), np.zeros((len(ipd), K_MATCH))], axis=1)
+        nulld.append(float(np.nanmax(np.abs(oned(np.r_[o_[:, 0], o_[:, 1:].ravel()]) - .5))))
+    p95d = float(np.quantile(nulld, .95))
+    rkd = sorted(((feats[j], float(Ad[j])) for j in range(len(feats)) if np.isfinite(Ad[j])), key=lambda x: -abs(x[1] - .5))
+    pd_i, nd_i = rowsd[labd == 1], rowsd[labd == 0]
+    keys_d = X.key.to_numpy()[rowsd]
+    out['what_we_miss_at_its_decision'] = dict(matched_sets=int(len(ipd)), fires_with_a_decision_tick=int(len(di)), null_draws=len(nulld), null_p95=p95d,
+                                               inputs_beyond_null=[dict(input=f_, auc=a_) for f_, a_ in rkd if abs(a_ - .5) > p95d], top_inputs=[dict(input=f_, auc=a_) for f_, a_ in rkd[:15]],
+                                               tick_index_median=float(np.median(X.mv_k.to_numpy(float)[pd_i])), edge_mean_c=dict(chased=float(e1[pd_i].mean()), matched=float(e1[nd_i].mean())),
+                                               realised_predict_move_1s_c=dict(chased=float(mo1[pd_i].mean()), matched=float(mo1[nd_i].mean())),
+                                               later_move_size_first_300ms_bps=dict(chased=float(win_size.loc[keys_d[labd == 1]].mean()), matched=float(win_size.loc[keys_d[labd == 0]].mean())),
+                                               value_taking_at_that_tick={grp: {f'{b}_s{int(s)}': value(ix, b, s) for b in ('A', 'AB') for s in (0., 3., 10.)} for grp, ix in (('chased', pd_i), ('matched', nd_i))})
+    # ---- (6) speed: how soon after the last tick its group-3 orders land
+    lt = G3.last_tick_ms.to_numpy(float)
+    sp = {}
+    for nm, lo_, hi_ in (('within_10ms', -1., 10.), ('10ms_to_our_25.5ms', 10., OUR_ARRIVAL), ('after_our_25.5ms', OUR_ARRIVAL, 1e9)):
+        m_ = (lt > lo_) & (lt <= hi_)
+        sp[nm] = dict(share=float(m_.mean()), fires=int(m_.sum()), v1_mean_c=float(np.nanmean(v1g[m_])) if m_.any() else None,
+                      markout_1s_mean_c=float(np.nanmean(G3.markout_1s_c.to_numpy(float)[m_])) if m_.any() else None,
+                      pay_through_median_c=float(np.nanmedian(G3.pay_through_c.to_numpy(float)[m_])) if m_.any() else None,
+                      tick_index_median=float(np.nanmedian(G3.k.to_numpy(float)[m_])) if m_.any() else None)
+    out['speed'] = sp
     # ---- (5) our model's top-10 % actions on moves it chased or not
     ch10 = chased[t10]
     out['our_top10_by_chase'] = {grp: dict(actions=int(m_.sum()), **{f'{b}_s{int(s)}': value(t10[m_], b, s) for b in ('A', 'AB') for s in (0., 3., 10.)})
