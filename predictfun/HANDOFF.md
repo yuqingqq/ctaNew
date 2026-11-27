@@ -1,3 +1,8 @@
+<!-- GROUP3_PROFILE_20261127_CLAUDE -->
+## 2026-11-27 — the top taker's group-3 fires: mid-window, near-50c, a few ticks in; it chases 1.9% of moves; 47% land faster than our 25.5 ms and earn most; at the same model edge its chases move Predict +10.3c vs +7.5c (thicker far side, other venues lagging)
+
+See FINDINGS GROUP3_PROFILE and reviews/take_reprice_20261125/group3_profile_chart.html (same date). Next (USER's call): an imitation model of its chases / these factors on the chase population, CHASE_TAKES' robustness round, then untouched days.
+<!-- /GROUP3_PROFILE_20261127_CLAUDE -->
 <!-- CHASE_TAKES_20261127_CLAUDE -->
 ## 2026-11-27 — chasing a move under way (group 3): every move loses; the held-out model's top 10% / 1% of moves earn +0.17c / +0.69c per intended share taken back after 1 s on the conservative book (4/4, 4/4 days), +2.34c / +7.50c on the optimistic one
 

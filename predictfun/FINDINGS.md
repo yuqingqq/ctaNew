@@ -1,3 +1,46 @@
+<!-- GROUP3_PROFILE_20261127_CLAUDE -->
+## 2026-11-27 — the top taker's group-3 fires (1,505, its order landing after a move its way had started): mid-window (median 163 s left), mid-priced sides (median 47c), a few ticks into the move; it chases 1.9% of moves, 7.0% of our model's top decile; 47% land sooner after the last tick than our 25.5 ms; at the same model edge and tick its chases move Predict +10.3c vs +7.5c and show a thicker Binance far side
+
+[group3_profile](reviews/take_reprice_20261125/group3_profile.json), [chart](reviews/take_reprice_20261125/group3_profile_chart.html) (script `group3_profile.py`, committed before use; additions after a two-day rehearsal declared before the real run). USER: "can we check group 3 fires of top taker, what's the distribution of remaining time, firing probability, include more information for analysis, check what we still miss". Its 5,930 decisions in STATE_VALUE's classes (joined exactly; group 3 reproduced from the ticks: a check); Predict at its arrival from its market's recorded path; against CHASE_TAKES' moves (every move at its first tick) and its model's top-10% actions (counts reproduced). 'Chases a move' = an order of its landing after the onset and within 300 ms of the move's last tick. Four consumed days (it traded on three); descriptive, point estimates.
+
+| median (middle half) | its group-3 fires | every move, first tick | our model's top 10% |
+|---|---:|---:|---:|
+| time left in the window, s | 163 (98-233) | 177 (110-239) | 129 (61-209) |
+| best price of its side, c | 47 (31-62) | 57 (34-78) | 40 (26-52) |
+| BTC since the window opened, its way, bps | 0.1 (-2.2-1.9) | 0.4 (-2.9-3.7) | -1.0 (-2.3-0.0) |
+| Binance move so far, bps | 0.71 (0.37-1.27) | 0.07 (0.01-0.23) | 0.58 (0.23-1.05) |
+| tick of the move | 5 (2-10) | 1 (1-1) | 3 (1-6) |
+| lands after the onset, ms | 77 (22-166) | 26 (26-26) | 30 (26-54) |
+| lands after the last tick, ms | 29 (5-75) | 26 (26-26) | 26 (26-26) |
+| Binance far side left, BTC | 0.52 (0.11-1.84) | 0.03 (0.00-0.39) | 0.01 (0.00-0.13) |
+| best-level imbalance its way | 0.94 (0.77-0.99) | 0.99 (0.83-1.00) | 0.99 (0.94-1.00) |
+| bought / sold its way in the last 100 ms, BTC | 0.70 (0.17-2.66) | 0.56 (0.17-1.69) | 2.94 (1.09-7.27) |
+| Predict moved since the onset, c | -0.0 (0.0-1.0) | 0.0 (0.0-0.0) | 0.0 (0.0-0.0) |
+| Predict still to catch up (implied - actual), c | 3.2 (1.5-6.4) | 0.2 (0.1-0.9) | 5.2 (2.4-8.2) |
+| its pay-through above the best it could see, c | 6.0 (3.8-9.0) | | |
+
+| its side's best price, c | 0-10 | 10-20 | 20-35 | 35-50 | 50-65 | 65-80 | 80-90 | 90-100 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| share of moves it chases | 0.8% | 2.2% | 3.6% | 3.1% | 2.2% | 1.8% | 1.0% | 0.1% |
+
+| the move's size in its first 300 ms, bps (known later) | < 0.1 | 0.1-0.25 | 0.25-0.5 | 0.5-1 | 1-2 | 2-4 | >= 4 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| share of moves it chases | 0.3% | 0.6% | 0.9% | 1.7% | 4.3% | 9.9% | 4.6% |
+
+| the move's best edge in our model, decile | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| share of moves it chases | 0.1% | 0.1% | 0.2% | 0.5% | 0.6% | 1.3% | 1.8% | 3.1% | 4.3% | 7.0% |
+
+- **When:** spread over the window like the moves themselves; it chases 2.5% of moves with 30-60 s left and least in the last 30 s (1.4%); our model's top 10% sits later (median 129 s left).
+- **At what price:** sides priced 20-35c are chased most; above 90c almost never (0.1%). It fires when BTC sits near the window's start (drift since the open: median +0.1 bps), where Predict moves most per bp. Our model's top 10% buys cheaper sides (median 40c).
+- **After which moves:** it fires a few ticks in (median tick 5, 77 ms after the onset) with a large lean its way and buying under way; the far side left is larger than at our picks (median 0.52 vs 0.01 BTC). When it lands Predict has mostly not moved yet (median 0.0c, three quarters at most 1c). It pays a median 6c above the best shown when its order landed (group 2: 4c), usually 30 shares; Predict's mid moves +10.0c its way by 1 s after its match; it marks +1.24c per share at 1 s and wins 54% at settlement.
+- **Firing probability:** 1.9% of moves; up with the move's eventual size and with our model's rating (decile 1 0.06%, decile 10 7.0%).
+- **What we miss, 1 speed:** 34% of its group-3 orders land within 10 ms of the last tick and 13% more before our 25.5 ms; these earn the most (+1.60c / +1.26c per share at 1 s against +1.01c for the slower 53%). Its arrival times are estimates (settlement - 150 - 34 ms, about +-15 ms), so the split is approximate; an order landing within 10 ms of a Binance tick was sent before that tick unless its path from Binance to Predict is that short.
+- **What we miss, 2 coverage:** our model's top 10% acts on the move of 29% of its group-3 fires (top 1%: 3.7%) and lands first on 14%; at our last tick before its order it rates them at a median percentile of 70. Its value rises with our rating (below p50 +0.58c, p50-p90 +1.21c, p90-p99 +2.45c, top 1% +2.53c): our score points the right way but misses most of its picks.
+- **What we miss, 3 selection:** at its decision tick (median tick 5), against 5,315 matched ticks of un-chased moves (same tick index, nearest model edge: +6.6c vs +5.9c), the moves it chases move Predict +10.3c vs +7.5c by 1 s after our match, though the Binance move goes on about as far (1.34 vs 1.26 bps in the first 300 ms). 39 inputs pass the shuffle null (its 95th percentile 0.031 from 0.5), the strongest: Binance far-side size higher (AUC 0.69); far-side size vs 300 ms before higher (AUC 0.68); best-level imbalance its way lower (AUC 0.35); Binance spread lower (AUC 0.40); near-side size higher (AUC 0.59); OKX price minus futures, change over 300 ms lower (AUC 0.41). Taking at that tick on the conservative book: +0.76c vs -0.37c at known best + 10c. At the onset, matched on the edge there, its moves grow more (1.28 vs 0.78 bps; AUC 0.71) but only price-level inputs separate them, weakly.
+- **Our picks that it also chases:** our top-10% actions on moves it chased (281) earn +1.13c on the conservative book at + 10c against +0.38c on the rest (3,396).
+- **Reading:** its group-3 chase is a selection: near-50c markets where Predict moves most per bp, moves where the next Binance level is thick, landing within ~10 ms of the latest tick for about a third of them. Our inputs carry part of that picture (the book shape, the other venues lagging the futures, the price level), but our model, trained on the Predict markout of every tick, weighs it differently. Speed is the part we cannot model away. A model trained to pick its chases (imitation) or with these as explicit factors can be tried on the same days; untouched days decide.
+<!-- /GROUP3_PROFILE_20261127_CLAUDE -->
 <!-- CHASE_TAKES_20261127_CLAUDE -->
 ## 2026-11-27 — chasing a Binance move already under way (group 3): every move loses on the conservative book (-0.76c to -0.31c per intended share at its first tick); the held-out model's top 10% of moves earns +0.44c (known best + 10c, 4/4 days) and +0.17c taken back after 1 s (+ 3c, 4/4), its top 1% +0.69c taken back (+ 10c, 4/4); the same on the optimistic book +2.34c / +7.50c: the value turns on winning quotes that vanish around our match
 

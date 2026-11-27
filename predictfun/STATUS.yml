@@ -1,3 +1,12 @@
+group3_profile_20261127_claude:
+  diagnostic: [predictfun/reviews/take_reprice_20261125/group3_profile.json, predictfun/reviews/take_reprice_20261125/group3_profile_chart.html]
+  rows: data/predict_fun/research/take_reprice_20261125/group3_profile/
+  session: 1622c91e
+  group3_fires: 1505
+  median: {time_left_s: 163.4, side_best_c: 47.0, tick_index: 5.0, pay_through_c: 6.00}
+  chase_rate: {all_moves: 0.0190, our_top_decile: 0.0704}
+  faster_than_our_25_5ms: 0.4684
+  matched_at_its_tick_predict_move_1s_c: {chased: 10.321, matched: 7.496}
 chase_takes_20261127_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/chase_takes.json
   rows: data/predict_fun/research/take_reprice_20261125/chase_takes/
