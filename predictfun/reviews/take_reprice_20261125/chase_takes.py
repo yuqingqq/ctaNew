@@ -432,6 +432,10 @@ def read(od=None):
     k_ = X.mv_k.to_numpy(float)
     R = rule_masks(X)
     tt_chased, tt_ant = np.isfinite(X.tt_chase_lag_ms.to_numpy(float)), X.tt_anticipated.to_numpy(float) > 0
+    our_arrival = TM.FEED + TM.DECIDE + NET                         # ms after the tick
+    ttn, ttp = X.tt_next_ms.to_numpy(float), X.tt_prev_ms.to_numpy(float)
+    tt_ahead = (ttp <= GAP_MS) | (ttn <= our_arrival)               # its order (same direction) lands before ours: it matches first
+    tt_behind = ~tt_ahead & (ttn <= GAP_MS)
 
     def topq(score, okh, q):
         thr = np.quantile(score[okh], 1. - q)
@@ -453,8 +457,10 @@ def read(od=None):
     sels['oracle1s_top1'] = ('oracle', first_per_move(topq(MO['1s'] - cost, ok, .01), key))
     predh = {'1s': preds['1s'], '5s': preds['5s'], 'oracle': MO['1s']}
 
-    def secondary(idx, b='A'):
+    def secondary(idx, b):
         o_ = {}
+        if b == 'AB':
+            idx = idx[okB[idx]]
         for k in ORDERS_X:
             fl, co, fe_ = W[b][k]
             for h in ('5s', '30s'):
@@ -490,7 +496,19 @@ def read(od=None):
                     cc = TK.cell(sb, fire, wfull, d, MK['1s'], lim, day, mid)
                     cc['limit_beyond_known_best_c_median'] = float(np.median((d * (al - lim))[sb][fire])) if fire.any() else None
                     s['orders'][b][f'adaptive_m{int(mg)}'] = cc
-        s['secondary_A'] = secondary(idx)
+        s['secondary_A'] = secondary(idx, 'A')
+        s['secondary_AB'] = secondary(idx, 'AB')
+        fa, fb = W['A']['any'][0][idx], W['AB']['any'][0][idx]
+        race = dict(top_taker_ahead_share=float(tt_ahead[idx].mean()), top_taker_behind_share=float(tt_behind[idx].mean()))
+        for b in ('A', 'AB'):
+            fl, co, fe_ = W[b]['any']
+            v = (d * (MK['1s'] * fl - co) - fe_) / Q
+            for gnm, gm in (('ahead', tt_ahead[idx]), ('not_ahead', ~tt_ahead[idx])):
+                gi = idx[gm & (okB[idx] if b == 'AB' else True)]
+                race[f'{b}_any_1s_when_{gnm}_c'] = float(v[gi].mean()) if len(gi) else None
+                race[f'{b}_any_fill_when_{gnm}'] = float(fl[gi].sum() / (Q * len(gi))) if len(gi) else None
+        s['race'] = race
+        s['contested_share_any'] = float(1. - fb.sum() / max(fa.sum(), 1e-9))          # shares A fills that the next snapshot no longer shows
         there = np.where(d > 0, (PA[:, 0] >= 0) & (PA[:, 0] <= lim), (PA[:, 0] >= 0) & (PA[:, 0] >= lim))[idx]
         s['known_best_still_shown_at_match'] = float(there.mean())
         s['predict_moved_its_way_since_onset'] = float((X.pf_mid_ret_onset.to_numpy(float)[idx] > 0).mean())
@@ -536,8 +554,8 @@ def read(od=None):
     big = [x for x in held if x[3]['orders'] >= MIN_ORDERS]
     best = max(big, key=lambda x: x[3]['value_per_intended_c']) if big else None
     orc = [x for x in cells if x[0].startswith('oracle')]
-    sec = [(nm, k, c['value_per_intended_c'], c['paying']) for nm, s in out['selections'].items() if not nm.startswith(('oracle', 'top_taker')) and 'secondary_A' in s
-           for k, c in s['secondary_A'].items() if c.get('value_per_intended_c') is not None]
+    sec = [(nm, b, k, c['value_per_intended_c'], c['paying']) for nm, s in out['selections'].items() if not nm.startswith(('oracle', 'top_taker'))
+           for b in ('A', 'AB') if f'secondary_{b}' in s for k, c in s[f'secondary_{b}'].items() if c.get('value_per_intended_c') is not None]
     beats = {nm: [k for k, v in o_['orders'].items() if v['model_c'] is not None and v['model_c'] > v['p97_5_c']] for nm, o_ in out['null'].items()}
     out['verdict'] = dict(
         cells=len(cells), heldout_cells=len(held), heldout_cells_with_min_actions=len(big),
@@ -545,7 +563,9 @@ def read(od=None):
         any_paying=bool(any(c['paying'] for *_, c in held)),
         best=dict(selection=best[0], book=best[1], order=best[2], value_c=best[3]['value_per_intended_c'], actions=best[3]['orders'], fill=best[3]['fill'],
                   days_positive=best[3]['days_positive']) if best else None,
-        secondary_paying=[x for x in sec if x[3]], secondary_best=max(sec, key=lambda x: x[2]) if sec else None,
+        secondary_paying=[x for x in sec if x[4]], secondary_best=max(sec, key=lambda x: x[3]) if sec else None,
+        paying_AB=[dict(selection=a, order=k, value_c=c['value_per_intended_c'], actions=c['orders'], fill=c['fill'], days_positive=c['days_positive']) for a, b, k, c in held
+                   if c['paying'] and b == 'AB'],
         model_beats_null_orders=beats,
         positive_control_oracle_pays=bool(any(c['paying'] for *_, c in orc)),
         oracle_best=max(((b, k, c['value_per_intended_c']) for _, b, k, c in orc), key=lambda x: x[2]) if orc else None)
