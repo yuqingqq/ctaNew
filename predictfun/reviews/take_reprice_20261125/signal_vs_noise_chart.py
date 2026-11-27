@@ -14,11 +14,11 @@ import numpy as np
 
 H = Path(__file__).resolve().parent
 OUTD = Path(sys.argv[1]) if len(sys.argv) > 1 else H
-EX = json.loads((H / 'signal_vs_noise_examples.json').read_text())
-RES = json.loads((H / 'signal_vs_noise.json').read_text())
 ORDER = ('typical_fire', 'lookalike_no_move', 'ordinary_moment')
 TITLES = {'typical_fire': "Typical fire: the top taker's order", 'lookalike_no_move': 'Look-alike: same score, no fire, no move',
           'ordinary_moment': 'Ordinary moment'}
+HEAD = ('What the top taker reacts to, next to a moment our model cannot tell apart from it',
+        'Binance futures best level from 1 s before to 0.3 s after each moment (t = 0: for the fire, its order reaching Predict). All three are bets on up: the far side is the ask.')
 LIGHT = dict(surf='#fcfcfb', ink='#0b0b0b', ink2='#52514e', muted='#898781', grid='#e1e0d9', s1='#2a78d6', s2='#eb6834')
 DARK = dict(surf='#1a1a19', ink='#f0efec', ink2='#c3c2b7', muted='#a3a29b', grid='#383835', s1='#3987e5', s2='#d95926')
 FONT = "system-ui, -apple-system, 'Segoe UI', 'DejaVu Sans', sans-serif"
@@ -70,7 +70,7 @@ def steps(t, v, sx, sy, j):
     return d_ + f' H{sx(XMAX):.1f}', last
 
 
-def build():
+def build(EX, ORDER, TITLES, HEAD, lines):
     S = {k: summary(EX[k]) for k in ORDER}
     lo = {k: max(idx_at(EX[k], XMIN), 0) for k in ORDER}
     ymax_size = nice(max(max(EX[k]['far_size'][lo[k]:] + EX[k]['near_size'][lo[k]:]) for k in ORDER) * 1.05)
@@ -93,9 +93,8 @@ def build():
     a('<title id="svn-t">The Binance book before a top-taker fire, a look-alike our model scores the same, and an ordinary moment</title>')
     a('<desc id="svn-d">Three columns of three panels: best-level sizes, aggressive trades and the Binance mid change, from -1000 to +300 ms around each moment.</desc>')
     a(f'<rect class="bg" x="0" y="0" width="{W}" height="{HT}"/>')
-    a(f'<text class="t1" x="{ML}" y="34" font-size="21" font-weight="600">What the top taker reacts to, next to a moment our model cannot tell apart from it</text>')
-    a(f'<text class="t2" x="{ML}" y="58" font-size="14">Binance futures best level from 1 s before to 0.3 s after each moment (t = 0: for the fire, its order reaching Predict). '
-      f'All three are bets on up: the far side is the ask.</text>')
+    a(f'<text class="t1" x="{ML}" y="34" font-size="21" font-weight="600">{html.escape(HEAD[0])}</text>')
+    a(f'<text class="t2" x="{ML}" y="58" font-size="14">{html.escape(HEAD[1])}</text>')
     lx = ML
     for cls, lab in (('s1', 'Far side (must empty for the price to move their way); trades hitting it'), ('s2', 'Near side; trades hitting it')):
         a(f'<rect class="{cls}f" x="{lx}" y="78" width="16" height="4" rx="2"/><text class="t2" x="{lx + 22}" y="84" font-size="13">{html.escape(lab)}</text>')
@@ -166,13 +165,7 @@ def build():
                     a(f'<text class="t2" x="{sx(s_["move"]) - 8:.1f}" y="{sy(vm) - 10:.1f}" font-size="11.5" text-anchor="end">moves their way, +{s_["move"]:.0f} ms</text>')
         a(f'<text class="t3" x="{x0 + colw / 2:.1f}" y="{tops[-1] + ROWS[-1][2] + 34}" font-size="11.5" text-anchor="middle">ms from t</text>')
         a(f'<line class="xh" id="xh{c}" x1="0" y1="{MT}" x2="0" y2="{tops[-1] + ROWS[-1][2]}" stroke-width="1" visibility="hidden"/>')
-    la, tog, imi = RES['lookalikes'], RES['all_together'], RES['imitation']
     yb = tops[-1] + ROWS[-1][2] + 70
-    lines = [(f"Across all {la['fires']:,} of its fires on these days, Binance moved their way within 300 ms after {100 * la['fire_move_rate']:.0f}%; after the {la['controls']:,} look-alikes "
-              f"our public score rates the same, {100 * la['lookalike_move_rate']:.1f}%.", 't1'),
-             (f"A model can tell its fires from the look-alikes (held-out AUC {tog['auc']:.2f}): more imbalance building, more of the far side withdrawn, as in the left column.", 't1'),
-             (f"But that look does not predict moves at ordinary moments (AUC {imi['auc_fire_likeness_for_moves']:.2f}): what tells it when to fire is not in the data we record.", 't1'),
-             ('Four consumed days; development evidence. Examples: the fire nearest the median fire on nine key book inputs, and its nearest look-alike.', 't3')]
     for i_, (ln, cls) in enumerate(lines):
         a(f'<text class="{cls}" x="{ML}" y="{yb + 22 * i_}" font-size="{13.5 if cls == "t1" else 11.5}">{html.escape(ln)}</text>')
     a('</svg>')
@@ -199,9 +192,23 @@ svg.addEventListener('mouseleave', () => {tip.style.display = 'none'; G.forEach(
 </script>"""
 
 
+def footer():
+    RES = json.loads((H / 'signal_vs_noise.json').read_text())
+    la, tog, imi = RES['lookalikes'], RES['all_together'], RES['imitation']
+    return [(f"Across all {la['fires']:,} of its fires on these days, Binance moved their way within 300 ms after {100 * la['fire_move_rate']:.0f}%; after the {la['controls']:,} look-alikes "
+             f"our public score rates the same, {100 * la['lookalike_move_rate']:.1f}%.", 't1'),
+            (f"A model can tell its fires from the look-alikes (held-out AUC {tog['auc']:.2f}): more imbalance building, more of the far side withdrawn, as in the left column.", 't1'),
+            (f"But that look does not predict moves at ordinary moments (AUC {imi['auc_fire_likeness_for_moves']:.2f}): what tells it when to fire is not in the data we record.", 't1'),
+            ('Four consumed days; development evidence. Examples: the fire nearest the median fire on nine key book inputs, and its nearest look-alike.', 't3')]
+
+
 def main():
-    svg, S, geo, tops = build()
-    fs, fh = OUTD / 'signal_vs_noise_chart.svg', OUTD / 'signal_vs_noise_chart.html'
+    draw(json.loads((H / 'signal_vs_noise_examples.json').read_text()), ORDER, TITLES, HEAD, footer(), 'signal_vs_noise_chart', OUTD)
+
+
+def draw(EX, ORDER, TITLES, HEAD, lines, stem, outd):
+    svg, S, geo, tops = build(EX, ORDER, TITLES, HEAD, lines)
+    fs, fh = outd / f'{stem}.svg', outd / f'{stem}.html'
     if fs.exists() or fh.exists():
         raise SystemExit('chart exists (write-once)')
     lit = RULES
@@ -226,7 +233,7 @@ def main():
     data = [dict(t=EX[k]['t_rel_ms'], far=EX[k]['far_size'], near=EX[k]['near_size'], mid=EX[k]['mid_bps'], tt=EX[k]['trades_t_rel_ms'], q=EX[k]['trades_btc'],
                  w=EX[k]['trades_their_way']) for k in ORDER]
     js = JS % (json.dumps(data), json.dumps(geo), XMIN, XMAX, tops[0], tops[-1] + ROWS[-1][2])
-    fh.write_text(f'<!DOCTYPE html><html><head><meta charset="utf-8"><title>Signal vs noise: a top-taker fire, a look-alike, an ordinary moment</title><style>{style}</style></head>'
+    fh.write_text(f'<!DOCTYPE html><html><head><meta charset="utf-8"><title>{html.escape(HEAD[0])}</title><style>{style}</style></head>'
                   f'<body><div class="viz-root">{svg}{table}<div id="tip"></div></div>{js}</body></html>')
     print('wrote', fs.name, fh.name)
     print(json.dumps(S, indent=1))
