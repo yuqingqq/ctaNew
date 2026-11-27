@@ -1,3 +1,8 @@
+<!-- DRIFT_VALUE_20261127_CLAUDE -->
+## 2026-11-27 — drift + time left as a fair value: Predict already prices it (rank correlation 0.97, better calibrated than FV); the FV gap predicts nothing; no help for the 1 s take; settlement-outcome models' top picks gained +1.4c to +5.3c held (weak lead, untouched days needed)
+
+See FINDINGS DRIFT_VALUE (same date). Next (USER's call): the settlement lead on untouched days (or drop it); the take line is otherwise closed on the data we hold.
+<!-- /DRIFT_VALUE_20261127_CLAUDE -->
 <!-- REGIME_TAKES_20261127_CLAUDE -->
 ## 2026-11-27 — regimes: no taking rate, top-taker activity, BTC volatility, spread or book-activity regime makes taking pay (all markets; 2 of 180 cells at noise size, within the time-roll null); regime inputs add nothing (0.354 → 0.355); quiet regimes fill without the move, busy ones move without fills
 

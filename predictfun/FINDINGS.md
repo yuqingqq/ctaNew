@@ -1,3 +1,40 @@
+<!-- DRIFT_VALUE_20261127_CLAUDE -->
+## 2026-11-27 — BTC's drift and the time left as a fair value (Phi(drift / (vol sqrt(time left)))): Predict already prices it (rank correlation 0.97; Predict's mid is the better calibrated, Brier 0.163 vs 0.167); the gap between them predicts nothing (rank correlation 0.004 with the 1 s move); drift inputs do not help the 1 s take; models of the settlement outcome pick sides near 60c with 2-3 min left that gained +1.4c to +5.3c held (weak, untested)
+
+[drift_value](reviews/take_reprice_20261125/drift_value.json) (REGIME_TAKES' 201,847 moments on every market, 201,119 with a volatility; Binance spot 100 ms late against the registry start; REGIME_TAKES' 30 s-return volatility; TAKE_MODEL's take at 172 ms; REGIME_TAKES reproduced; declared before the run). USER: "You mean other takers lead 85ms, and their signal is much better than ours? How do we integrate price drift and remaining time". The fair value FV = 100 x Phi(z), z = drift / (vol x sqrt(time left)); Predict should move delta = 100 phi(z) / (vol sqrt(time left)) cents per bp of BTC: the same drift matters more as time runs out and near the start price. REPRICE fired on FV's 250 ms change (futures-based); the take model had never had FV. Consumed days, point estimates.
+
+| price bucket (Up) | fair value: mean / Up won | Predict mid: mean / Up won |
+|---|---:|---:|
+| 0-10c | 4.0c / 4.4% | 4.7c / 3.9% |
+| 10-20c | 15.0c / 12.5% | 15.0c / 11.3% |
+| 20-35c | 28.0c / 24.1% | 27.7c / 24.8% |
+| 35-65c | 49.9c / 50.1% | 49.9c / 49.7% |
+| 65-80c | 72.0c / 75.0% | 72.1c / 72.7% |
+| 80-90c | 84.9c / 84.9% | 85.1c / 85.9% |
+| 90-100c | 96.1c / 96.8% | 95.3c / 96.5% |
+
+| fair value minus Predict, quintile (mean) | taken, valued 1 s after the match | held to settlement (days > 0) |
+|---|---:|---:|
+| 1 (-9.3c) | -1.06c | -2.15c (0) |
+| 2 (-2.9c) | -1.04c | -1.91c (0) |
+| 3 (+0.1c) | -0.98c | -0.92c (0) |
+| 4 (+3.0c) | -1.07c | -0.30c (2) |
+| 5 (+9.5c) | -1.11c | -0.49c (2) |
+
+| model (leave-one-day-out), target | rank correlation | top 1% at the known best (filled; days > 0) | every shown level | markets |
+|---|---:|---:|---:|---:|
+| TAKE_MODEL's 79 inputs, 1 s markout | 0.354 | -0.06c (19%; 0) | -0.69c | 833 |
+| 79 + the 9 drift inputs, 1 s markout | 0.355 | -0.05c (19%; 2) | -0.70c | 834 |
+| TAKE_MODEL's 79 inputs, settlement | 0.067 | +1.36c (80%; 3) | +1.67c | 535 |
+| 79 + the 9 drift inputs, settlement | 0.058 | +5.25c (80%; 3) | +6.12c | 436 |
+| the 9 drift inputs alone, settlement | 0.052 | +4.45c (82%; 4) | +5.60c | 276 |
+| Predict's price + time left + the 9, settlement | 0.053 | +3.16c (82%; 4) | +3.80c | 297 |
+
+- **Predict already prices drift and time left:** its mid ranks with FV at 0.968 and is better calibrated on every day (Brier by day: Predict 0.158, 0.154, 0.159, 0.180; FV 0.161, 0.160, 0.166, 0.181). Where FV says Predict is cheapest (top 1% by the gap, +25.6c), taking loses (-1.24c at 1 s, -2.41c held; top 5% -1.10c held): FV is the worse price there.
+- **The 1 s race:** the 9 drift inputs change the rank correlation 0.354 → 0.355 and the top 1% -0.06c → -0.05c: no help (REPRICE's own use of FV lost to the speed bump, 11-25).
+- **The one positive, weak:** trained on the settlement outcome, every model's top 1% gained held to settlement (+1.36c to +5.25c; 276-535 markets; medians 56-60c, 139-193 s left; all moments -2.15c to -0.30c by gap quintile). 10 of the 30 cells pass the declared rule, all of them settlement models (correlated: they pick similar moments). Settlement values are one binary outcome per market over a few hundred markets and four days; the direct FV gap shows nothing; found among 30 cells: a lead to test on untouched days, not a result.
+- **Defect (readout only):** the rank correlation of Predict's lag (FV's 1 s change minus Predict's) with the 1 s move came out undefined (rows without a 1 s Predict move not dropped); the lag is among the model inputs above.
+<!-- /DRIFT_VALUE_20261127_CLAUDE -->
 <!-- REGIME_TAKES_20261127_CLAUDE -->
 ## 2026-11-27 — no market regime makes taking pay: on every market, by taking rate, the top takers' activity, BTC volatility, Predict's spread and book activity (quintiles, known at the decision), random takes lose -1.1c and the model's top 1% nets -0.33c to +0.05c at the known best in every quintile; 2 of 180 cells pass at noise size (a time-roll null expects up to 2); regime inputs do not help the model (0.354 → 0.355)
 
