@@ -1,0 +1,17 @@
+{
+  "asof": "2026-11-27",
+  "day": "20261101",
+  "actions": 1997,
+  "max_abs_diff_c": 0.0,
+  "status": {
+    "day": "20261101",
+    "actions": 1997,
+    "legs": {
+      "legs": 479777,
+      "untimed_legs": 111028,
+      "untimed_share_of_shares": 0.18694787361630769
+    },
+    "capped_loops": 0,
+    "unloaded": {}
+  }
+}

@@ -1,0 +1,764 @@
+{
+  "asof": "2026-11-27",
+  "cells": {
+    "MOVE_top10|L0_AB_s3|HOLD": {
+      "total_usd": 411.2018146741306,
+      "sharpe_day_equiv": 0.762980624413954,
+      "daily_usd": [
+        240.86833149438135,
+        12.514494737931045,
+        -49.596097539999995,
+        207.4150859818182
+      ],
+      "days_positive": 3,
+      "max_drawdown_usd": 155.31535525918554,
+      "actions": 3016,
+      "filled": 222
+    },
+    "MOVE_top10|L0_AB_s3|TB1S": {
+      "total_usd": 266.80412572542986,
+      "sharpe_day_equiv": 2.428247535814321,
+      "daily_usd": [
+        104.81171197663154,
+        52.19269122758621,
+        32.46737884000001,
+        77.33234368121212
+      ],
+      "days_positive": 4,
+      "max_drawdown_usd": 8.256946280000008,
+      "actions": 3016,
+      "filled": 222
+    },
+    "MOVE_top10|L0_AB_s3|FAV_ONLY": {
+      "total_usd": 505.3743634885329,
+      "sharpe_day_equiv": 1.198502515407089,
+      "daily_usd": [
+        245.0864721703354,
+        56.575487841379314,
+        43.381993255,
+        160.33041022181817
+      ],
+      "days_positive": 4,
+      "max_drawdown_usd": 111.97564213691473,
+      "actions": 3016,
+      "filled": 222
+    },
+    "MOVE_top10|L0_AB_s3|TAKE_C1000": {
+      "total_usd": 315.4239773831921,
+      "sharpe_day_equiv": 2.307474695080966,
+      "daily_usd": [
+        116.52734505378771,
+        57.09154730758619,
+        35.72314435999999,
+        106.08194066181818
+      ],
+      "days_positive": 4,
+      "max_drawdown_usd": 15.846502069259998,
+      "actions": 3016,
+      "filled": 222
+    },
+    "MOVE_top10|L0_AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 335.3511542247194,
+      "sharpe_day_equiv": 2.151605590859804,
+      "daily_usd": [
+        160.48975764126243,
+        42.54883283034482,
+        17.784546195897434,
+        114.5280175572147
+      ],
+      "days_positive": 4,
+      "max_drawdown_usd": 24.695071679999984,
+      "actions": 3016,
+      "filled": 222
+    },
+    "MOVE_top10|L0_AB_s10|HOLD": {
+      "total_usd": 842.7160125124997,
+      "sharpe_day_equiv": 0.5273650295801564,
+      "daily_usd": [
+        329.11471009002383,
+        44.54131767625779,
+        -252.18205131502918,
+        721.2420360612473
+      ],
+      "days_positive": 3,
+      "max_drawdown_usd": 459.7080353516213,
+      "actions": 3016,
+      "filled": 1540
+    },
+    "MOVE_top10|L0_AB_s10|TB1S": {
+      "total_usd": -323.1389990445829,
+      "sharpe_day_equiv": -1.398217734772483,
+      "daily_usd": [
+        -118.09094487454408,
+        57.08462165227034,
+        -98.52983949868236,
+        -163.60283632362678
+      ],
+      "days_positive": 1,
+      "max_drawdown_usd": 323.76628720849595,
+      "actions": 3016,
+      "filled": 1540
+    },
+    "MOVE_top10|L0_AB_s10|FAV_ONLY": {
+      "total_usd": 232.17227507673246,
+      "sharpe_day_equiv": 0.1971998383963384,
+      "daily_usd": [
+        -75.53559956377245,
+        168.19682244068812,
+        -210.15805093901548,
+        349.66910313883227
+      ],
+      "days_positive": 2,
+      "max_drawdown_usd": 352.99227726931076,
+      "actions": 3016,
+      "filled": 1540
+    },
+    "MOVE_top10|L0_AB_s10|TAKE_C1000": {
+      "total_usd": -195.32292684234312,
+      "sharpe_day_equiv": -0.7750750855288375,
+      "daily_usd": [
+        -63.6653689615613,
+        68.14509983242795,
+        -106.981643393691,
+        -92.82101431951875
+      ],
+      "days_positive": 1,
+      "max_drawdown_usd": 230.64216560372756,
+      "actions": 3016,
+      "filled": 1540
+    },
+    "MOVE_top10|L0_AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": -270.31063538912866,
+      "sharpe_day_equiv": -0.7383745570001271,
+      "daily_usd": [
+        -77.20836061663917,
+        -3.6059032533309647,
+        -99.54427394784983,
+        -89.95209757130867
+      ],
+      "days_positive": 0,
+      "max_drawdown_usd": 307.83174104178795,
+      "actions": 3016,
+      "filled": 1540
+    },
+    "MOVE_top1|L0_AB_s3|HOLD": {
+      "total_usd": 40.34716,
+      "sharpe_day_equiv": 0.5830595157796649,
+      "daily_usd": [
+        48.2797,
+        -3.57,
+        -4.362539999999998,
+        0.0
+      ],
+      "days_positive": 1,
+      "max_drawdown_usd": 7.932539999999996,
+      "actions": 204,
+      "filled": 4
+    },
+    "MOVE_top1|L0_AB_s3|TB1S": {
+      "total_usd": 15.184474000000002,
+      "sharpe_day_equiv": 0.6230998294559126,
+      "daily_usd": [
+        16.404700000000002,
+        -0.63,
+        -0.5902259999999998,
+        0.0
+      ],
+      "days_positive": 1,
+      "max_drawdown_usd": 1.2202260000000003,
+      "actions": 204,
+      "filled": 4
+    },
+    "MOVE_top1|L0_AB_s3|FAV_ONLY": {
+      "total_usd": 40.34716,
+      "sharpe_day_equiv": 0.5830595157796649,
+      "daily_usd": [
+        48.2797,
+        -3.57,
+        -4.362539999999998,
+        0.0
+      ],
+      "days_positive": 1,
+      "max_drawdown_usd": 7.932539999999996,
+      "actions": 204,
+      "filled": 4
+    },
+    "MOVE_top1|L0_AB_s3|TAKE_C1000": {
+      "total_usd": 19.265596,
+      "sharpe_day_equiv": 0.6314344252036721,
+      "daily_usd": [
+        20.485822,
+        -0.63,
+        -0.5902259999999998,
+        0.0
+      ],
+      "days_positive": 1,
+      "max_drawdown_usd": 1.2202260000000003,
+      "actions": 204,
+      "filled": 4
+    },
+    "MOVE_top1|L0_AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 38.102128,
+      "sharpe_day_equiv": 0.8150357041997883,
+      "daily_usd": [
+        21.7797,
+        16.93,
+        -0.6075719999999997,
+        0.0
+      ],
+      "days_positive": 2,
+      "max_drawdown_usd": 0.6075719999999976,
+      "actions": 204,
+      "filled": 4
+    },
+    "MOVE_top1|L0_AB_s10|HOLD": {
+      "total_usd": 216.39541616366722,
+      "sharpe_day_equiv": 1.0505272936145755,
+      "daily_usd": [
+        111.13043856,
+        -8.947067717894738,
+        36.064454,
+        78.14759132156198
+      ],
+      "days_positive": 3,
+      "max_drawdown_usd": 30.15187626,
+      "actions": 204,
+      "filled": 25
+    },
+    "MOVE_top1|L0_AB_s10|TB1S": {
+      "total_usd": 47.82278669735144,
+      "sharpe_day_equiv": 1.0851942821029001,
+      "daily_usd": [
+        23.670689199999998,
+        -2.3776309642105278,
+        4.194453999999996,
+        22.335274461561973
+      ],
+      "days_positive": 3,
+      "max_drawdown_usd": 4.911867620000002,
+      "actions": 204,
+      "filled": 25
+    },
+    "MOVE_top1|L0_AB_s10|FAV_ONLY": {
+      "total_usd": 212.85791000868807,
+      "sharpe_day_equiv": 1.2454102296134224,
+      "daily_usd": [
+        148.04026571765246,
+        -14.188692677894739,
+        10.564453999999994,
+        68.44188296893037
+      ],
+      "days_positive": 3,
+      "max_drawdown_usd": 17.44138518000001,
+      "actions": 204,
+      "filled": 25
+    },
+    "MOVE_top1|L0_AB_s10|TAKE_C1000": {
+      "total_usd": 44.55773205068474,
+      "sharpe_day_equiv": 0.9877946017343202,
+      "daily_usd": [
+        21.075944759999974,
+        -1.8944609108771948,
+        4.194453999999996,
+        21.181794201561967
+      ],
+      "days_positive": 3,
+      "max_drawdown_usd": 4.47086762,
+      "actions": 204,
+      "filled": 25
+    },
+    "MOVE_top1|L0_AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 73.70275157629881,
+      "sharpe_day_equiv": 0.9755828577392073,
+      "daily_usd": [
+        21.02886272,
+        13.08092161263158,
+        0.6762539999999954,
+        38.91671324366724
+      ],
+      "days_positive": 4,
+      "max_drawdown_usd": 7.410867620000001,
+      "actions": 204,
+      "filled": 25
+    },
+    "DECOMP_s10_top1|L0_AB_s3|HOLD": {
+      "total_usd": 617.6609221295704,
+      "sharpe_day_equiv": 1.1525602078030062,
+      "daily_usd": [
+        179.5087584002667,
+        136.7525626137736,
+        16.89900288783783,
+        284.5005982276923
+      ],
+      "days_positive": 4,
+      "max_drawdown_usd": 92.89960162622637,
+      "actions": 452,
+      "filled": 159
+    },
+    "DECOMP_s10_top1|L0_AB_s3|TB1S": {
+      "total_usd": 44.64119603589906,
+      "sharpe_day_equiv": 0.6224784381517248,
+      "daily_usd": [
+        -19.93219482587004,
+        37.128077413773575,
+        -17.34567884837839,
+        44.790992296373915
+      ],
+      "days_positive": 2,
+      "max_drawdown_usd": 25.13385684837838,
+      "actions": 452,
+      "filled": 159
+    },
+    "DECOMP_s10_top1|L0_AB_s3|FAV_ONLY": {
+      "total_usd": 162.38621769742332,
+      "sharpe_day_equiv": 0.42170201718989775,
+      "daily_usd": [
+        -11.441429993873935,
+        123.89497247377358,
+        -55.63669192587989,
+        105.56936714340358
+      ],
+      "days_positive": 2,
+      "max_drawdown_usd": 91.77477204000002,
+      "actions": 452,
+      "filled": 159
+    },
+    "DECOMP_s10_top1|L0_AB_s3|TAKE_C1000": {
+      "total_usd": 75.68353375547377,
+      "sharpe_day_equiv": 0.8754391383590013,
+      "daily_usd": [
+        -16.002594865870044,
+        42.01679323899095,
+        -12.067194212162175,
+        61.73652959451505
+      ],
+      "days_positive": 2,
+      "max_drawdown_usd": 21.585254000000003,
+      "actions": 452,
+      "filled": 159
+    },
+    "DECOMP_s10_top1|L0_AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 131.19637394537085,
+      "sharpe_day_equiv": 1.1729518489045219,
+      "daily_usd": [
+        28.372116757066667,
+        27.217533013773576,
+        -5.055865018828829,
+        80.66258919335942
+      ],
+      "days_positive": 3,
+      "max_drawdown_usd": 32.706044218828836,
+      "actions": 452,
+      "filled": 159
+    },
+    "DECOMP_s10_top1|L0_AB_s10|HOLD": {
+      "total_usd": 828.3766480594632,
+      "sharpe_day_equiv": 1.1179703582813076,
+      "daily_usd": [
+        258.2370749471323,
+        206.64529430013891,
+        18.509633874504473,
+        344.9846449376874
+      ],
+      "days_positive": 4,
+      "max_drawdown_usd": 196.7243382882353,
+      "actions": 452,
+      "filled": 313
+    },
+    "DECOMP_s10_top1|L0_AB_s10|TB1S": {
+      "total_usd": 41.08259843301891,
+      "sharpe_day_equiv": 0.4133229519400999,
+      "daily_usd": [
+        -4.6654799939297416,
+        50.661621406805594,
+        -20.63583521732147,
+        15.72229223746453
+      ],
+      "days_positive": 2,
+      "max_drawdown_usd": 47.415859150240095,
+      "actions": 452,
+      "filled": 313
+    },
+    "DECOMP_s10_top1|L0_AB_s10|FAV_ONLY": {
+      "total_usd": 240.74860309560052,
+      "sharpe_day_equiv": 0.4593904702557728,
+      "daily_usd": [
+        33.09279180851412,
+        209.29309176013896,
+        -79.77973967703095,
+        78.14245920397838
+      ],
+      "days_positive": 3,
+      "max_drawdown_usd": 204.61074761841076,
+      "actions": 452,
+      "filled": 313
+    },
+    "DECOMP_s10_top1|L0_AB_s10|TAKE_C1000": {
+      "total_usd": 72.46747850159377,
+      "sharpe_day_equiv": 0.6419426816260554,
+      "daily_usd": [
+        7.738969882786664,
+        54.55214917202295,
+        -12.990392977295716,
+        23.166752424079874
+      ],
+      "days_positive": 3,
+      "max_drawdown_usd": 53.3490885485994,
+      "actions": 452,
+      "filled": 313
+    },
+    "DECOMP_s10_top1|L0_AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 60.797568090497705,
+      "sharpe_day_equiv": 0.35703719881761664,
+      "daily_usd": [
+        33.15304336214129,
+        22.055654522361138,
+        -15.516448379515564,
+        21.10531858551084
+      ],
+      "days_positive": 3,
+      "max_drawdown_usd": 68.77611493659256,
+      "actions": 452,
+      "filled": 313
+    },
+    "DIRECT_TB_s3_top10|L0_AB_s3|HOLD": {
+      "total_usd": 740.1516885974473,
+      "sharpe_day_equiv": 0.7568400502969436,
+      "daily_usd": [
+        460.1615125413057,
+        102.29077716275111,
+        -59.23806913490788,
+        236.93746802829844
+      ],
+      "days_positive": 3,
+      "max_drawdown_usd": 250.29739207999978,
+      "actions": 3601,
+      "filled": 642
+    },
+    "DIRECT_TB_s3_top10|L0_AB_s3|TB1S": {
+      "total_usd": 200.47597205012374,
+      "sharpe_day_equiv": 1.5333164907107302,
+      "daily_usd": [
+        55.643931784883804,
+        36.07960136811852,
+        42.26203582887592,
+        66.49040306824548
+      ],
+      "days_positive": 4,
+      "max_drawdown_usd": 33.43494036,
+      "actions": 3601,
+      "filled": 642
+    },
+    "DIRECT_TB_s3_top10|L0_AB_s3|FAV_ONLY": {
+      "total_usd": 516.542838359929,
+      "sharpe_day_equiv": 0.7358854620749342,
+      "daily_usd": [
+        461.6005204505774,
+        113.4013222482057,
+        -60.652285926201344,
+        2.193281587347208
+      ],
+      "days_positive": 3,
+      "max_drawdown_usd": 305.2216503194711,
+      "actions": 3601,
+      "filled": 642
+    },
+    "DIRECT_TB_s3_top10|L0_AB_s3|TAKE_C1000": {
+      "total_usd": 298.33389118089093,
+      "sharpe_day_equiv": 1.8134806502298884,
+      "daily_usd": [
+        77.37021878583056,
+        56.438297419229585,
+        40.21083252509212,
+        124.31454245073868
+      ],
+      "days_positive": 4,
+      "max_drawdown_usd": 37.94319924000003,
+      "actions": 3601,
+      "filled": 642
+    },
+    "DIRECT_TB_s3_top10|L0_AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 336.0460457550164,
+      "sharpe_day_equiv": 1.5612499881133357,
+      "daily_usd": [
+        175.35236072446656,
+        13.302012603558445,
+        49.34760111432291,
+        98.04407131266845
+      ],
+      "days_positive": 4,
+      "max_drawdown_usd": 64.87919355777774,
+      "actions": 3601,
+      "filled": 642
+    },
+    "DIRECT_TB_s3_top10|L0_AB_s10|HOLD": {
+      "total_usd": 1077.7899445496641,
+      "sharpe_day_equiv": 0.5772930657708302,
+      "daily_usd": [
+        599.4178632690196,
+        267.1183712175919,
+        -245.32742728100504,
+        456.5811373440579
+      ],
+      "days_positive": 3,
+      "max_drawdown_usd": 412.65665792902985,
+      "actions": 3601,
+      "filled": 2304
+    },
+    "DIRECT_TB_s3_top10|L0_AB_s10|TB1S": {
+      "total_usd": -536.0653751495875,
+      "sharpe_day_equiv": -2.174675500225525,
+      "daily_usd": [
+        -95.11509795300677,
+        -54.768703923078604,
+        -142.8801421418337,
+        -243.30143113166838
+      ],
+      "days_positive": 0,
+      "max_drawdown_usd": 537.0833943719872,
+      "actions": 3601,
+      "filled": 2304
+    },
+    "DIRECT_TB_s3_top10|L0_AB_s10|FAV_ONLY": {
+      "total_usd": 509.6264436267309,
+      "sharpe_day_equiv": 0.3245933777641567,
+      "daily_usd": [
+        455.92856607965695,
+        360.5391796458167,
+        -416.44852509871623,
+        109.60722299997354
+      ],
+      "days_positive": 3,
+      "max_drawdown_usd": 599.9605260209596,
+      "actions": 3601,
+      "filled": 2304
+    },
+    "DIRECT_TB_s3_top10|L0_AB_s10|TAKE_C1000": {
+      "total_usd": -315.92874996807,
+      "sharpe_day_equiv": -1.0819658904846623,
+      "daily_usd": [
+        -4.595251044237745,
+        -24.34623801846712,
+        -141.4341248057397,
+        -145.55313609962542
+      ],
+      "days_positive": 0,
+      "max_drawdown_usd": 384.9824790899166,
+      "actions": 3601,
+      "filled": 2304
+    },
+    "DIRECT_TB_s3_top10|L0_AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": -474.0752685696659,
+      "sharpe_day_equiv": -1.15276274605285,
+      "daily_usd": [
+        -82.14452393799436,
+        -72.07077976872401,
+        -121.82070475994257,
+        -198.03926010300495
+      ],
+      "days_positive": 0,
+      "max_drawdown_usd": 510.749638116986,
+      "actions": 3601,
+      "filled": 2304
+    },
+    "CONTROL_onset|L0_AB_s3|HOLD": {
+      "total_usd": -961.0002680742896,
+      "sharpe_day_equiv": -0.37125230773320816,
+      "daily_usd": [
+        -1119.618028835451,
+        -302.28459906506174,
+        447.45758213657075,
+        13.44477768965237
+      ],
+      "days_positive": 2,
+      "max_drawdown_usd": 1898.3921627795926,
+      "actions": 4681,
+      "filled": 3558
+    },
+    "CONTROL_onset|L0_AB_s3|TB1S": {
+      "total_usd": -3308.0550209210223,
+      "sharpe_day_equiv": -10.55156257280174,
+      "daily_usd": [
+        -1296.1233398596464,
+        -358.0117840633444,
+        -315.0144745559006,
+        -1338.9054224421309
+      ],
+      "days_positive": 0,
+      "max_drawdown_usd": 3308.0550209210223,
+      "actions": 4681,
+      "filled": 3558
+    },
+    "CONTROL_onset|L0_AB_s3|FAV_ONLY": {
+      "total_usd": -1632.6401590944063,
+      "sharpe_day_equiv": -0.6403397139468001,
+      "daily_usd": [
+        -311.4538904645753,
+        -228.340444204606,
+        291.5026635135057,
+        -1384.3484879387306
+      ],
+      "days_positive": 1,
+      "max_drawdown_usd": 2081.184935207247,
+      "actions": 4681,
+      "filled": 3558
+    },
+    "CONTROL_onset|L0_AB_s3|TAKE_C1000": {
+      "total_usd": -3205.6177477280025,
+      "sharpe_day_equiv": -9.465301007538955,
+      "daily_usd": [
+        -1232.5998566467879,
+        -342.08811438613515,
+        -296.4086140750064,
+        -1334.5211626200733
+      ],
+      "days_positive": 0,
+      "max_drawdown_usd": 3205.6177477280057,
+      "actions": 4681,
+      "filled": 3558
+    },
+    "CONTROL_onset|L0_AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": -2794.638979359697,
+      "sharpe_day_equiv": -6.003521959857133,
+      "daily_usd": [
+        -970.9455434349127,
+        -273.37077196458233,
+        -214.88556930571448,
+        -1335.4370946544873
+      ],
+      "days_positive": 0,
+      "max_drawdown_usd": 2800.9700793596953,
+      "actions": 4681,
+      "filled": 3558
+    },
+    "CONTROL_onset|L0_AB_s10|HOLD": {
+      "total_usd": -475.10523859075533,
+      "sharpe_day_equiv": -0.16157343483821052,
+      "daily_usd": [
+        -1011.3643489661108,
+        -188.2947910075208,
+        554.6978765480923,
+        169.85602483478408
+      ],
+      "days_positive": 2,
+      "max_drawdown_usd": 1691.6606541170013,
+      "actions": 4681,
+      "filled": 4473
+    },
+    "CONTROL_onset|L0_AB_s10|TB1S": {
+      "total_usd": -4288.26171494771,
+      "sharpe_day_equiv": -11.324005491535027,
+      "daily_usd": [
+        -1569.1350224750402,
+        -486.4979811828905,
+        -449.59868710452633,
+        -1783.0300241852524
+      ],
+      "days_positive": 0,
+      "max_drawdown_usd": 4288.2617149477055,
+      "actions": 4681,
+      "filled": 4473
+    },
+    "CONTROL_onset|L0_AB_s10|FAV_ONLY": {
+      "total_usd": -1692.2259724408748,
+      "sharpe_day_equiv": -0.5527790421779595,
+      "daily_usd": [
+        -499.5759982108145,
+        74.65728805896639,
+        386.9346285388857,
+        -1654.2418908279124
+      ],
+      "days_positive": 2,
+      "max_drawdown_usd": 2402.386920453255,
+      "actions": 4681,
+      "filled": 4473
+    },
+    "CONTROL_onset|L0_AB_s10|TAKE_C1000": {
+      "total_usd": -4140.948010789692,
+      "sharpe_day_equiv": -10.497765578274146,
+      "daily_usd": [
+        -1504.9856375461695,
+        -460.587142078943,
+        -426.45513120971646,
+        -1748.9200999548625
+      ],
+      "days_positive": 0,
+      "max_drawdown_usd": 4140.948010789693,
+      "actions": 4681,
+      "filled": 4473
+    },
+    "CONTROL_onset|L0_AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": -3786.8471199561072,
+      "sharpe_day_equiv": -6.73050697237009,
+      "daily_usd": [
+        -1294.9495905516628,
+        -384.9624978751691,
+        -340.09097177322303,
+        -1766.8440597560525
+      ],
+      "days_positive": 0,
+      "max_drawdown_usd": 3792.5743187561065,
+      "actions": 4681,
+      "filled": 4473
+    }
+  },
+  "candidates": {
+    "MOVE_top10|AB_s3": {
+      "total_usd": 315.4239773831921,
+      "sharpe_day_equiv": 2.307474695080966,
+      "daily_usd": [
+        116.52734505378771,
+        57.09154730758619,
+        35.72314435999999,
+        106.08194066181818
+      ],
+      "days_positive": 4,
+      "max_drawdown_usd": 15.846502069259998,
+      "actions": 3016,
+      "filled": 222
+    },
+    "DIRECT_TB_s3_top10|AB_s3": {
+      "total_usd": 298.33389118089093,
+      "sharpe_day_equiv": 1.8134806502298884,
+      "daily_usd": [
+        77.37021878583056,
+        56.438297419229585,
+        40.21083252509212,
+        124.31454245073868
+      ],
+      "days_positive": 4,
+      "max_drawdown_usd": 37.94319924000003,
+      "actions": 3601,
+      "filled": 642
+    },
+    "DECOMP_s10_top1|AB_s3": {
+      "total_usd": 75.68353375547377,
+      "sharpe_day_equiv": 0.8754391383590013,
+      "daily_usd": [
+        -16.002594865870044,
+        42.01679323899095,
+        -12.067194212162175,
+        61.73652959451505
+      ],
+      "days_positive": 2,
+      "max_drawdown_usd": 21.585254000000003,
+      "actions": 452,
+      "filled": 159
+    },
+    "DECOMP_s10_top1|AB_s10": {
+      "total_usd": 72.46747850159377,
+      "sharpe_day_equiv": 0.6419426816260554,
+      "daily_usd": [
+        7.738969882786664,
+        54.55214917202295,
+        -12.990392977295716,
+        23.166752424079874
+      ],
+      "days_positive": 3,
+      "max_drawdown_usd": 53.3490885485994,
+      "actions": 452,
+      "filled": 313
+    }
+  },
+  "primary": "MOVE_top10|AB_s3"
+}

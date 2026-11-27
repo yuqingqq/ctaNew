@@ -1,0 +1,10 @@
+{
+  "asof": "2026-11-27",
+  "rows": 257836,
+  "max_abs_diff": {
+    "pred_1s": 0.0,
+    "MOVE": 0.0,
+    "DIRECT_TB_s3": 0.0,
+    "DECOMP_s10": 0.0
+  }
+}

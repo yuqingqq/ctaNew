@@ -1,0 +1,16 @@
+{
+  "asof": "2026-11-27",
+  "day": "20261101",
+  "points": {
+    "rows": 34272,
+    "columns_compared": 63,
+    "differing": [],
+    "kept_inputs_present": 52
+  },
+  "labels": {
+    "rows": 27134,
+    "columns_compared": 78,
+    "differing": [],
+    "kept_inputs_present": 14
+  }
+}
