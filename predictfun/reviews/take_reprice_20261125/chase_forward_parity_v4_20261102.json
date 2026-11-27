@@ -1,0 +1,17 @@
+{
+  "asof": "2026-11-27",
+  "day": "20261102",
+  "batches": 9,
+  "label_json_differing": [],
+  "grid_drops": {},
+  "points": {
+    "rows": 132472,
+    "columns_compared": 63,
+    "differing": []
+  },
+  "labels": {
+    "rows": 109437,
+    "columns_compared": 78,
+    "differing": []
+  }
+}

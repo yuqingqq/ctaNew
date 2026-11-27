@@ -24,11 +24,14 @@ module's hour list for the declared forward days is the day's 24 hours plus the 
 consumed days' convention), replacing its forward refusal; (v3) fire_events.day_data is replaced by a lean copy with identical outputs
 (the day's book events concatenated, sorted and freed one kind at a time, the freed heap returned to the system) because a busy forward day
 crossed the memory self-guard in the original; Binance futures trade prints and bookTicker rows with a finite price off the 0.1 grid are
-dropped and counted (11-21: 44 trades, 6 book prices; none on the other forward days or the consumed days).
-Receipts: RECEIPT.md (v1, the freeze), RECEIPT_v2.md and RECEIPT_v3.md (each supersedes the previous one's procedure only; candidate,
+dropped and counted (11-21: 44 trades, 6 book prices; none on the other forward days or the consumed days); (v4) public_score.day_features
+and public_score3.day_v3 run in a fresh child process each (the same patches, the points' t / d in, their dicts out, exact), and the labels
+are built in hour batches (a window's market lies in one hour), each batch's chase_takes.labels in a child process, concatenated in hour
+order with its statuses summed; the selection and the null read only the columns they use.
+Receipts: RECEIPT.md (v1, the freeze), RECEIPT_v2.md, RECEIPT_v3.md and RECEIPT_v4.md (each supersedes the previous one's procedure only; candidate,
 models, thresholds, PASS rule unchanged). Forward stages pin the latest receipt.
 Stages: selftest | parity_scores | parity_paths <day> | parity_rows <day> [<dir>] | parity_exits <day> [<dir>] | refit | check <day> |
-        parity_rows_v3 <day> <dir> | freeze | freeze_v2 | freeze_v3 | build <day> | points <day> | labels <day> | select | exits <day> | read
+        parity_rows_v3 <day> <dir> | parity_v4 <day> <dir> | child_feats ... | child_labels ... | freeze | freeze_v2 | freeze_v3 | build <day> | points <day> | labels <day> | select | exits <day> | read
 Outputs (write-once): OUT/chase_forward/..., chase_forward_*.json, predictfun/freeze/chase_forward_1120_1126/RECEIPT.md.
 Usage: PF_SLOT=<slot> predictfun/research/run_light.sh <tag> -- python3 predictfun/reviews/take_reprice_20261125/chase_forward.py <stage> ...
 """
@@ -81,12 +84,14 @@ PAD_NEXT = '20261127'
 ORIG_STEMS = WT.TK.stems
 FE, DCm = CT.FE, CT.FE.DC
 ORIG_READ_TRADES, ORIG_BOOK_HOURS = DCm.read_trades, DCm.book_hours
+ORIG_PS_FEATS, ORIG_P3_V3 = PS.day_features, P3.day_v3
+LAB_BATCH = int(os.environ.get('CF_LAB_BATCH', '60000'))
 GRID_DROPS = collections.Counter()
 
 
 def receipt_path():
     """The latest receipt (each version supersedes the previous one's procedure), or None."""
-    for nm in ('RECEIPT_v3.md', 'RECEIPT_v2.md', 'RECEIPT.md'):
+    for nm in ('RECEIPT_v4.md', 'RECEIPT_v3.md', 'RECEIPT_v2.md', 'RECEIPT.md'):
         if (FREEZE / nm).exists():
             return FREEZE / nm
     return None
@@ -210,6 +215,82 @@ def lean_day_data(day, P):
     return ev, st, traj, hit
 
 
+def in_child(kind, day, P):
+    """public_score.day_features ('ps') / public_score3.day_v3 ('p3') for the points P in a fresh process with the same patches."""
+    tmp = FOUT / 'tmp'
+    tmp.mkdir(parents=True, exist_ok=True)
+    tag = f'{day}_{kind}_{os.getpid()}'
+    fi, fo = tmp / f'{tag}_in.parquet', tmp / f'{tag}_out.parquet'
+    pd.DataFrame(dict(t=P.t.to_numpy(float), d=P.d.to_numpy(float))).to_parquet(fi, index=False)
+    r = subprocess.run([sys.executable, str(H / 'chase_forward.py'), 'child_feats', kind, day, str(fi), str(fo)], env=os.environ.copy(),
+                       capture_output=True, text=True)
+    C.require(r.returncode == 0, f'child {kind} {day} failed: {(r.stdout + r.stderr).strip().splitlines()[-1:]}')
+    out = pd.read_parquet(fo)
+    fi.unlink(); fo.unlink()
+    C.require(len(out) == len(P), f'child {kind} {day}: {len(out)} rows for {len(P)} points')
+    return {c: out[c].to_numpy() for c in out.columns}
+
+
+def child_feats(kind, day, fi, fo):
+    C.require(kind in ('ps', 'p3') and (day in DAYS0 or day in FWD), f'child_feats: {kind} {day}')
+    if day in FWD:
+        frozen()
+    forward_mode((day,) if day in FWD else ())
+    P = pd.read_parquet(fi)
+    F_ = (ORIG_PS_FEATS if kind == 'ps' else ORIG_P3_V3)(day, P)
+    pd.DataFrame({k: np.asarray(v) for k, v in F_.items()}).to_parquet(fo, index=False)
+
+
+def child_labels(day, bd):
+    C.require(day in DAYS0 or day in FWD, f'child_labels: {day}')
+    if day in FWD:
+        frozen()
+    forward_mode((day,) if day in FWD else ())
+    CT.labels(day, Path(bd))
+
+
+def labels_batched(day, src, od, batch=None):
+    """chase_takes.labels in hour batches, each in a child process; the batches' rows concatenated in hour order, statuses summed."""
+    batch = batch or LAB_BATCH
+    fp, fj = Path(od) / f'{day}_labels.parquet', Path(od) / f'{day}_labels.json'
+    C.require(not fp.exists() and not fj.exists(), f'{fp.name} exists (write-once)')
+    Z = pd.read_parquet(Path(src) / f'{day}_points.parquet', columns=['day', 't', 'd', 'onset'])
+    day0 = float(WT.OD_day_ms(day))
+    hr = np.clip(((Z.t.to_numpy(float) - day0) // 3600000.).astype(int), 0, 23)
+    groups, cur, n = [], [], 0
+    for h in range(24):
+        k = int((hr == h).sum())
+        if cur and n + k > batch:
+            groups.append(cur); cur, n = [], 0
+        cur.append(h); n += k
+    if cur:
+        groups.append(cur)
+    parts, st, pst, n_m, pts = [], collections.Counter(), collections.Counter(), 0, 0
+    for gi, hs in enumerate(groups):
+        bd = FOUT / 'tmp' / f'{day}_labels_b{gi:02d}_{os.getpid()}'
+        C.require(not bd.exists(), f'{bd.name} exists')
+        bd.mkdir(parents=True)
+        Z[np.isin(hr, hs)].to_parquet(bd / f'{day}_points.parquet', index=False)
+        r = subprocess.run([sys.executable, str(H / 'chase_forward.py'), 'child_labels', day, str(bd)], env=os.environ.copy(), capture_output=True, text=True)
+        C.require(r.returncode == 0, f'labels batch {gi} ({hs[0]}-{hs[-1]}h) failed: {(r.stdout + r.stderr).strip().splitlines()[-1:]}')
+        Lb = pd.read_parquet(bd / f'{day}_labels.parquet') if (bd / f'{day}_labels.parquet').exists() else None
+        jb = json.loads((bd / f'{day}_labels.json').read_text())
+        if Lb is not None and len(Lb):
+            parts.append(Lb)
+        st.update(jb['status']); pst.update(jb['path_status']); n_m += int(jb['markets']); pts += int(jb['points'])
+        for f_ in bd.iterdir():
+            f_.unlink()
+        bd.rmdir()
+        print(day, 'labels batch', gi, f'{hs[0]:02d}-{hs[-1]:02d}h', 0 if Lb is None else len(Lb), 'rows', flush=True)
+    L = pd.concat(parts, ignore_index=True)
+    C.require(not L.duplicated(['day', 't', 'd']).any(), 'a tick labelled twice')
+    st['fv_nan'] = int(np.isnan(L.fv_gap_its.to_numpy()).sum())
+    L.to_parquet(fp, index=False)
+    TR.dump(fj, dict(asof='2026-11-27', day=day, markets=n_m, points=pts, status=dict(st), path_status=dict(pst),
+                     dtA_ms_q=[float(x) for x in np.quantile(L.dtA, [.5, .9])], batches=len(groups)))
+    return L
+
+
 def spot_off(v, day):
     """chase_takes.labels' fair value without Binance spot: one NaN print -> NaN fair-value inputs (dropped)."""
     C.require(v == 'binance_spot', f'forward mode: {v} is off')
@@ -282,6 +363,8 @@ def forward_mode(days=()):
     DCm.read_trades = read_trades_grid
     DCm.book_hours = book_hours_grid
     FE.day_data = lean_day_data
+    PS.day_features = lambda day_, P_: in_child('ps', day_, P_)
+    P3.day_v3 = lambda day_, Z_: in_child('p3', day_, Z_)
     VR.worlds_all = light_worlds_all
     MM.KP.Tape.offset = lambda self, day: 0.0
 
@@ -301,6 +384,12 @@ def targets(X):
     filled10 = okB & (W10[0] > 0)
     return dict(cost=cost, mo1=d * (mk - md), okB=okB, ytb=TE.exit_values(*W3, d, eP, eS, pay)[0] / Q, fl10=W10[0] / Q, filled10=filled10,
                 net10=np.where(filled10, (d * (mk * W10[0] - W10[1]) - W10[2]) / np.maximum(W10[0], 1e-9), np.nan))
+
+
+def cost_of(X):
+    """targets()' cost: half spread + fee at the known best."""
+    d, lim, md = X.d.to_numpy(float), X.lim.to_numpy(float), X.md.to_numpy(float)
+    return d * (lim - md) + CT.fee(lim)
 
 
 def hgb():
@@ -596,6 +685,31 @@ def parity_rows_v3(day, od):
     C.require(not out['points']['differing'] and not out['labels']['differing'] and not GRID_DROPS, 'v3 forward-mode rows differ or rows were dropped')
 
 
+def parity_v4(day, od):
+    """v4's forward mode on a consumed day: points with the child feature builders and labels in small hour batches equal CHASE_TAKES'."""
+    fn = H / f'chase_forward_parity_v4_{day}.json'
+    C.require(day in DAYS0, f'{day} is not a consumed day')
+    C.require(not fn.exists(), f'{fn.name} exists (write-once)')
+    resource.setrlimit(resource.RLIMIT_CPU, (3600, 3601))
+    od = Path(od)
+    forward_mode(())
+    CT.points(day, od)
+    labels_batched(day, od, od, batch=20000)
+    out = {}
+    for kind in ('points', 'labels'):
+        A = pd.read_parquet(CT.OUT / f'{day}_{kind}.parquet')
+        B = pd.read_parquet(od / f'{day}_{kind}.parquet')
+        C.require(len(A) == len(B) and (A[['t', 'd']].to_numpy() == B[['t', 'd']].to_numpy()).all(), f'{kind}: rows differ')
+        cols = [c for c in A.columns if c in B.columns and not (c.startswith('u_') or c in CT.FV or c in DROP_Q)]
+        bad = [c for c in cols if not (A[c].equals(B[c]) or (np.issubdtype(A[c].dtype, np.number) and np.allclose(A[c].to_numpy(float), B[c].to_numpy(float), rtol=0, atol=0, equal_nan=True)))]
+        out[kind] = dict(rows=int(len(A)), columns_compared=len(cols), differing=bad)
+    ja, jb = json.loads((CT.OUT / f'{day}_labels.json').read_text()), json.loads((od / f'{day}_labels.json').read_text())
+    jdiff = [k for k in ('markets', 'points', 'status', 'path_status', 'dtA_ms_q') if ja[k] != jb[k] and not (k == 'status' and {a: b for a, b in ja[k].items() if a != 'fv_nan'} == {a: b for a, b in jb[k].items() if a != 'fv_nan'})]
+    TR.dump(fn, dict(asof='2026-11-27', day=day, batches=jb['batches'], label_json_differing=jdiff, grid_drops=dict(GRID_DROPS), **out))
+    print(day, out, 'batches', jb['batches'], 'json differing', jdiff, flush=True)
+    C.require(not out['points']['differing'] and not out['labels']['differing'] and not jdiff and not GRID_DROPS, 'v4 forward-mode rows differ')
+
+
 def parity_exits(day, od):
     """exits_day on EXIT_FIXED's actions of a consumed day must reproduce EXIT_FIXED's P&L for every policy and latency."""
     C.require(day in DAYS0, f'{day} is not a consumed day')
@@ -831,14 +945,23 @@ def fwd_points(day):
 def fwd_labels(day):
     C.require(day in FWD, f'{day} is not a declared forward day')
     frozen()
-    forward_mode((day,))
-    CT.labels(day, FOUT / 'rows')
+    labels_batched(day, FOUT / 'rows', FOUT / 'rows')
 
 
-def fwd_frame(days=FWD):
+def parquet_cols(fp):
+    import pyarrow.parquet as pq
+    return list(pq.read_schema(fp).names)
+
+
+def fwd_frame(days=FWD, extra=()):
+    """Points + labels of the days with only the identity columns, the selection's / exits' columns and `extra` (inputs)."""
     src = FOUT / 'rows'
-    Pp = pd.concat([pd.read_parquet(src / f'{d}_points.parquet') for d in days], ignore_index=True)
-    Lb = pd.concat([pd.read_parquet(src / f'{d}_labels.parquet') for d in days], ignore_index=True)
+    pn, ln = parquet_cols(src / f'{days[0]}_points.parquet'), parquet_cols(src / f'{days[0]}_labels.parquet')
+    pc = ['day', 't', 'd', 'mkey', 'mv_k'] + [c for c in extra if c in pn and c not in ('day', 't', 'd')]
+    lc = ['day', 't', 'd', 'mid', 'lim', 'md', 'payout'] + [c for c in extra if c in ln and c not in pn and c not in ('day', 't', 'd')]
+    C.require(set(extra) <= set(pc) | set(lc), 'an input in neither points nor labels')
+    Pp = pd.concat([pd.read_parquet(src / f'{d}_points.parquet', columns=pc) for d in days], ignore_index=True)
+    Lb = pd.concat([pd.read_parquet(src / f'{d}_labels.parquet', columns=lc) for d in days], ignore_index=True)
     X = Lb.merge(Pp, on=['day', 't', 'd'], how='inner', validate='1:1')
     C.require(len(X) == len(Lb), 'a labelled tick without its point')
     X['key'] = X.day.astype(str) + ':' + X.mkey.astype(str)
@@ -856,9 +979,8 @@ def fwd_select():
     kf = R['inputs']
     parts, scs, n_rows, acts, above = [], [], 0, collections.Counter(), collections.Counter()
     for i, d in enumerate(FWD):                                         # day by day: thresholds are fixed, actions are per move
-        X = fwd_frame((d,))
-        T = targets(X)
-        Sc = scores_final(Mo, X, kf, T['cost'])
+        X = fwd_frame((d,), kf)
+        Sc = scores_final(Mo, X, kf, cost_of(X))
         flags = select(Sc, X.key.to_numpy(), X.mv_k.to_numpy(float), R['thresholds'], {d: SEED + i}, X.day.to_numpy())
         parts.append(flags_frame(X, flags))
         P = X[['day', 't', 'd', 'key', 'mid', 'lim', 'payout']].copy()
@@ -1000,6 +1122,14 @@ def selftest():
     rp = receipt_path()
     assert rp is None or rp.name in ('RECEIPT_v3.md', 'RECEIPT_v2.md', 'RECEIPT.md')
     assert off_grid(np.array([57086.83, 91000.1, 0., np.nan, 91000.15])).tolist() == [True, False, False, False, True]
+    Xc = pd.DataFrame(dict(d=[1., -1.], lim=[52., 48.], md=[51., 49.]))
+    assert np.allclose(cost_of(Xc), [1. + CT.fee(52.), 1. + CT.fee(48.)])
+    for bad_ in (('xx', '20261102'), ('ps', '20261104')):
+        try:
+            child_feats(bad_[0], bad_[1], 'a', 'b')
+            raise AssertionError('child_feats accepted ' + str(bad_))
+        except ValueError as e_:
+            assert 'child_feats' in str(e_)
     print('chase_forward selftest PASS')
 
 
@@ -1008,6 +1138,7 @@ if __name__ == '__main__':
     dict(selftest=selftest, parity_scores=parity_scores, refit=refit, freeze=freeze, freeze_v2=freeze_v2, select=fwd_select, read=fwd_read)[cmd]() if cmd in (
         'selftest', 'parity_scores', 'refit', 'freeze', 'freeze_v2', 'select', 'read') else dict(
         parity_paths=lambda: parity_paths(a_[0]), parity_rows=lambda: parity_rows(a_[0], a_[1]), parity_exits=lambda: parity_exits(a_[0], a_[1]),
-        parity_rows_v3=lambda: parity_rows_v3(a_[0], a_[1]),
+        parity_rows_v3=lambda: parity_rows_v3(a_[0], a_[1]), parity_v4=lambda: parity_v4(a_[0], a_[1]),
+        child_feats=lambda: child_feats(a_[0], a_[1], a_[2], a_[3]), child_labels=lambda: child_labels(a_[0], a_[1]),
         check=lambda: check(a_[0]), build=lambda: build(a_[0], a_[1] if len(a_) > 1 else os.environ.get('PF_SLOT', 'claude')),
         winners=lambda: winners(a_[0]), points=lambda: fwd_points(a_[0]), labels=lambda: fwd_labels(a_[0]), exits=lambda: fwd_exits(a_[0]))[cmd]()
