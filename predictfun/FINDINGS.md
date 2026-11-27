@@ -1,3 +1,51 @@
+<!-- PREDICT_INPUTS_20261127_CLAUDE -->
+## 2026-11-27 — how much the models use from Predict: 13 of the 79 inputs, and they carry most of the information: alone they reach 80% (1 s) to 94% (30 s) of the full model's held-out rank correlation; Predict's book leads at 1 s and 5 s, its price level at 30 s and settlement; Binance's factors add mostly at 1 s; unused: the window's start price, the price path, depth shape, pending orders, who trades, Polymarket's price
+
+[predict_inputs](reviews/take_reprice_20261125/predict_inputs.json) (TAKE_MODEL's 66,353 moments and 79 inputs, TAKE_MARKOUT's targets at 172 ms; pinned trees, leave-one-day-out, the full model reproducing TAKE_MARKOUT's predictions; declared before the run). USER: "So if we consider predict fun market conditions, together with the factors, we can actually decide better, can you check how much information we are using from predict". Consumed days, point estimates.
+
+**What we use from Predict (13 inputs):** its book at the decision (mid, spread, best-level and 5-level sizes on each side, the side's price, distance from 50, the mid's move over the last 1 s), time left, and three summaries of other takers' trades (fill-price move over 5 s, net share over 5 s, fills in the last 1 s; the top taker's own trades left out). The other 66 are Binance futures' book and flows and five other venues' prices and trade volumes.
+
+Held-out rank correlation with the markout move (its way, after the match):
+
+| inputs (count) | 1 s | 5 s | 30 s | settlement |
+|---|---:|---:|---:|---:|
+| all (79) | 0.327 | 0.127 | 0.096 | 0.123 |
+| Predict only (13) | 0.260 | 0.108 | 0.090 | 0.134 |
+| without Predict (66) | 0.243 | 0.107 | 0.046 | 0.044 |
+| price level + time left (2) | -0.024 | -0.031 | 0.066 | 0.147 |
+| all but other takers' trades (76) | 0.323 | 0.128 | 0.095 | 0.122 |
+
+Top 1% by predicted edge, an order at the known best, value per intended share (days > 0):
+
+| inputs | 1 s: sold back after 1 s | 5 s: sold back after 5 s | 30 s: sold back after 30 s | settlement: held |
+|---|---:|---:|---:|---:|
+| all | -0.25c (0) | +0.30c (2) | +4.79c (4) | +4.68c (2) |
+| Predict only | -0.69c (0) | -0.42c (1) | +4.70c (4) | +11.35c (3) |
+| without Predict | -0.38c (0) | -0.34c (0) | -0.20c (3) | +5.28c (4) |
+| price level + time left | -1.33c (0) | -0.03c (2) | +3.95c (4) | +11.41c (4) |
+| all but other takers' trades | -0.27c (0) | +0.13c (2) | +4.37c (4) | +4.22c (2) |
+
+Drop in held-out rank correlation when a family is shuffled (the full model):
+
+| family (inputs) | 1 s | 5 s | 30 s | settlement |
+|---|---:|---:|---:|---:|
+| Predict's book at the decision (spread, best and 5-level sizes) (5) | +0.142 | +0.065 | +0.017 | +0.002 |
+| Predict's price level (mid, side's price, distance from 50) (3) | -0.002 | -0.011 | +0.078 | +0.109 |
+| time left (1) | +0.005 | +0.000 | -0.008 | +0.003 |
+| Predict's mid, 1 s move (1) | +0.002 | +0.001 | +0.001 | -0.000 |
+| other takers' trades on Predict (3) | +0.005 | +0.004 | -0.001 | +0.000 |
+| Binance flows (adds, cancels, trades, rates) (31) | +0.087 | +0.034 | +0.007 | +0.003 |
+| Binance deep book (9) | +0.016 | +0.006 | +0.004 | -0.001 |
+| Binance best level (6) | +0.002 | +0.008 | -0.006 | +0.002 |
+| other venues (20) | +0.013 | +0.004 | +0.018 | +0.009 |
+| control: every input shuffled | +0.329 | +0.127 | +0.094 | +0.126 |
+
+- **Predict already carries most of it:** Predict's 13 inputs alone reach 80% / 85% / 94% / 109% of the full model's rank correlation (1 s / 5 s / 30 s / settlement). At 1 s and 5 s Predict's book is the most informative family; at 30 s and settlement its price level is nearly all of it: price level + time left alone pick takes worth +3.95c sold back after 30 s (4 of 4 days) and +11.41c held (4 of 4): TAKE_MARKOUT's cheap sides.
+- **Binance's factors add mostly at 1 s** (+0.067 rank correlation on top of Predict's; 5 s +0.019; 30 s +0.006), and at 1 s nothing pays (TAKE_MARKOUT: the race). At settlement the full model ranks worse than price level + time left: the extra inputs fit noise there.
+- **Timing caveat, no effect here:** the three trade inputs use fills on the venue's match clock, and 16-48% of the volume (by day) is REST trades timed afterwards from book drops (WS-timed 51-57%): not all known at the decision. Without them the rank correlation moves by at most 0.004. They need rebuilding on the receipt clock before any live use.
+- **In our data, not used:** depth shape (levels 2-5 one by one), the book's order count and pending (held) orders on each side (books' pend_bid / pend_ask; pend_inc); the book's own changes over time (adds, cancels, refills, quote ages), where the price has been this window (range, swings, time at the current level; only the 1 s move is used); who trades (each fill's maker and taker codes, sizes; the top takers' recent activity); the window's start price (registry), so nothing compares Predict's price with where BTC stands against the start (the price BTC implies); Polymarket's price for the same window.
+- **Reading:** Predict's market conditions are already the main input; what is missing is how they relate to BTC (the start price) and their history within the window. Those are the candidates for deciding better, most of all at 30 s and settlement, where the cheap-side effect lives (development evidence; untouched days needed).
+<!-- /PREDICT_INPUTS_20261127_CLAUDE -->
 <!-- TAKE_MARKOUT_20261127_CLAUDE -->
 ## 2026-11-27 — the markout price as the target, slippage to get filled: at our 1 s markout paying through fills more but costs more than it gains (top 1%: filled 22% → 100%, -0.02c → -0.70c per intended share); trained on the 30 s markout the model picks cheap sides late in the window, which pay even sold back 30 s later through the speed bump (+4.8c, every day): on these days Predict's cheap sides won far more often than their price (bought at 6.0c, won 16%); found after looking
 

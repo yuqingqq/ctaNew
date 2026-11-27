@@ -1,3 +1,10 @@
+predict_inputs_20261127_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/predict_inputs.json
+  session: 1622c91e
+  predict_only_share_of_rank_correlation: {s1: 0.796, s5: 0.849, s30: 0.940, settlement: 1.093}
+  largest_family: {s1: predict_book, s5: predict_book, s30: predict_price_level, settlement: predict_price_level}
+  price_level_time_left_top1_c: {sold_back_30s: 3.947, held: 11.409}
+  caveat: Predict trade inputs on the venue match clock incl. REST-timed fills; removing them moves rank correlation <= 0.004
 take_markout_20261127_claude:
   diagnostic: [predictfun/reviews/take_reprice_20261125/take_markout.json, predictfun/reviews/take_reprice_20261125/take_markout_exit.json, predictfun/reviews/take_reprice_20261125/take_markout_longshot.json]
   rows: [data/predict_fun/research/take_reprice_20261125/take_markout/, data/predict_fun/research/take_reprice_20261125/take_markout_exit/]

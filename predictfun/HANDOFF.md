@@ -1,3 +1,8 @@
+<!-- PREDICT_INPUTS_20261127_CLAUDE -->
+## 2026-11-27 — Predict inputs: 13 of 79, they carry 80-94% of the held-out rank correlation (book leads at 1 s / 5 s, price level at 30 s / settlement); Binance adds mostly at 1 s; unused: start price vs BTC, price path, depth shape, pending orders, who trades, Polymarket's price
+
+See FINDINGS PREDICT_INPUTS (same date). Caveat: the three Predict trade inputs use the venue's match clock and REST-timed fills (no effect on these results; rebuild before live use). Next (USER's call): add the unused Predict inputs, starting with the start price (Predict's price against the price BTC implies) and the window's price path, and re-test at 30 s / settlement.
+<!-- /PREDICT_INPUTS_20261127_CLAUDE -->
 <!-- TAKE_MARKOUT_20261127_CLAUDE -->
 ## 2026-11-27 — markout target + slippage: no help for the 1 s race (top 1% -0.02c at the known best, -0.70c paying through every level); the 30 s markout model picks cheap sides late in the window that pay sold back after 30 s (+4.8c, every day); cheap sides won 16% bought at 6.0c (found after looking, consumed days)
 
