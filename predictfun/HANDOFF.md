@@ -1,3 +1,8 @@
+<!-- SHARPE_EXITS_20261127_CLAUDE -->
+## 2026-11-27 — Sharpe instead of P&L: selling back after 1 s has the best Sharpe in 6 of 8 conservative entry cells (top: move model, top 10% + 3c, 2.50 a day day-equivalent, +$312 over four days); holding favourites earns more but lumpier
+
+See FINDINGS SHARPE_EXITS (same date). Next (USER's call): fix one entry + exit by Sharpe, a position cap, latency + 10 / + 25 ms, then untouched days.
+<!-- /SHARPE_EXITS_20261127_CLAUDE -->
 <!-- EXIT_HALF_20261127_CLAUDE -->
 ## 2026-11-27 — POST HOC exit half: selling half lands between selling all and holding (never the top total); non-favourites + half of favourites at 39 s cuts the per-market spread 4%-30% vs keeping favourites whole for up to 50% less profit (8% more in 1 cell)
 

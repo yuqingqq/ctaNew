@@ -1,3 +1,9 @@
+sharpe_exits_20261127_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/sharpe_exits.json
+  session: 1622c91e
+  unit: 5-minute window, all 1152 windows, no action = 0
+  tb1s_best_sharpe_cells: 6
+  top_cell: {cell: 'MOVE_top10|AB_s3|TB1S', sharpe_day_equiv: 2.499, total_usd: 311.9, max_drawdown_usd: 15.5}
 exit_half_20261127_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/exit_half.json
   session: 1622c91e

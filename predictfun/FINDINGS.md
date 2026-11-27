@@ -1,3 +1,22 @@
+<!-- SHARPE_EXITS_20261127_CLAUDE -->
+## 2026-11-27 — Sharpe instead of P&L: per 5-minute window (every window, no action = 0), selling back after 1 s has the best Sharpe in 6 of 8 conservative entry cells (small, steady, no settlement risk); keeping favourites or holding has more P&L but lumpier; the best and the most profitable exit agree in 1 of 8; the top cell (move model, top 10%, + 3c, sell after 1 s) 2.50 a day on +$312 over four days
+
+[sharpe_exits](reviews/take_reprice_20261125/sharpe_exits.json) (script `sharpe_exits.py`, committed before use; read-only over EXIT_FOLLOW / EXIT_FOLLOW2 / EXIT_HALF's per-action P&L, their shared policies equal: a check). USER: "We check sharpe ratio instead of pure pnl". Unit: the 5-minute market window, all 1,152 windows of the four days, P&L summed per window; Sharpe per window x sqrt(288) as a day equivalent (the top cells' lag-1 autocorrelation -0.04 to +0.04); the Sharpe of the four daily totals in brackets (G = 4: shown, not relied on). Entries, exits and their parameters were chosen on these days (300 cells): the best Sharpe is biased upward. Point estimates.
+
+| conservative entry | best exit by Sharpe: day-equivalent Sharpe (4-day), total, max drawdown | best exit by P&L: same | keep favourites | sell after 1 s |
+|---|---|---|---:|---:|
+| move model, top 10%, + 3c | sell after 1 s: +2.50 (+1.69), +$312, -$15 | keep favourites: +0.83 (+1.82), +$383, -$161 | +0.83, +$383 | +2.50, +$312 |
+| move model, top 10%, + 10c | keep favourites: +0.84 (+0.68), +$1,098, -$282 | hold all: +0.66 (+0.50), +$1,125, -$576 | +0.84, +$1,098 | -0.86, -$223 |
+| taken-back value model, top 10%, + 3c | sell after 1 s: +2.00 (+4.02), +$280, -$26 | hold all: +0.76 (+0.97), +$719, -$388 | +0.64, +$471 | +2.00, +$280 |
+| taken-back value model, top 10%, + 10c | keep favourites: +0.80 (+0.83), +$1,265, -$486 | keep favourites: +0.80 (+0.83), +$1,265, -$486 | +0.80, +$1,265 | -1.58, -$409 |
+| move model, top 1%, + 3c | sell after 1 s: +0.89 (+1.32), +$42, -$4 | keep favourites: +0.70 (+1.48), +$87, -$14 | +0.70, +$87 | +0.89, +$42 |
+| move model, top 1%, + 10c | sell after 1 s: +1.62 (+2.56), +$110, -$7 | hold all: +1.09 (+1.39), +$272, -$58 | +0.95, +$203 | +1.62, +$110 |
+| fill x net, top 1%, + 3c | sell after 1 s: +1.51 (+1.07), +$107, -$15 | stop + favourites: +0.78 (+0.84), +$203, -$59 | +0.40, +$129 | +1.51, +$107 |
+| fill x net, top 1%, + 10c | sell after 1 s: +1.55 (+1.57), +$178, -$25 | keep favourites: +0.69 (+1.35), +$335, -$118 | +0.69, +$335 | +1.55, +$178 |
+
+- **Sharpe favours the quick sell-back:** without settlement risk the window P&L is small and steady (drawdowns of tens of dollars); holding favourites or everything adds P&L with settlement swings (drawdowns up to several hundred dollars). At + 10c the top-10% selections lose when sold after 1 s, and keeping favourites has the best Sharpe there.
+- **Scale:** the best cells earn tens of dollars a day at a 50-share order size; a day-equivalent Sharpe of 2-2.5 from four seen days, an assumed co-located latency and the best of 300 cells is an upper bound, not an estimate. Untouched days decide.
+<!-- /SHARPE_EXITS_20261127_CLAUDE -->
 <!-- EXIT_HALF_20261127_CLAUDE -->
 ## 2026-11-27 — POST HOC, exit half and hold half (the top taker's split): selling half lands between selling all and holding all (8 of 8 cells at 39 s) and is never the top total (0 of 8); selling non-favourites and half of the favourites at 39 s lowers the per-market spread against keeping favourites whole in 8 of 8 cells (4%-30% lower) for up to 50% less profit (8% more in 1 cell)
 
