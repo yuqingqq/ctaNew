@@ -27,11 +27,12 @@ crossed the memory self-guard in the original; Binance futures trade prints and 
 dropped and counted (11-21: 44 trades, 6 book prices; none on the other forward days or the consumed days); (v4) public_score.day_features
 and public_score3.day_v3 run in a fresh child process each (the same patches, the points' t / d in, their dicts out, exact), and the labels
 are built in hour batches (a window's market lies in one hour), each batch's chase_takes.labels in a child process, concatenated in hour
-order with its statuses summed; the selection and the null read only the columns they use.
-Receipts: RECEIPT.md (v1, the freeze), RECEIPT_v2.md, RECEIPT_v3.md and RECEIPT_v4.md (each supersedes the previous one's procedure only; candidate,
+order with its statuses summed; the selection and the null read only the columns they use; (v5) those column lists are de-duplicated
+(mv_k is both an identity column and an input) and the input width is asserted.
+Receipts: RECEIPT.md (v1, the freeze), RECEIPT_v2.md .. RECEIPT_v5.md (each supersedes the previous one's procedure only; candidate,
 models, thresholds, PASS rule unchanged). Forward stages pin the latest receipt.
 Stages: selftest | parity_scores | parity_paths <day> | parity_rows <day> [<dir>] | parity_exits <day> [<dir>] | refit | check <day> |
-        parity_rows_v3 <day> <dir> | parity_v4 <day> <dir> | child_feats ... | child_labels ... | freeze | freeze_v2 | freeze_v3 | build <day> | points <day> | labels <day> | select | exits <day> | read
+        parity_rows_v3 <day> <dir> | parity_v4 <day> <dir> | dry_select <day> <dir> | child_feats ... | child_labels ... | freeze | freeze_v2 | freeze_v3 | build <day> | points <day> | labels <day> | select | exits <day> | read
 Outputs (write-once): OUT/chase_forward/..., chase_forward_*.json, predictfun/freeze/chase_forward_1120_1126/RECEIPT.md.
 Usage: PF_SLOT=<slot> predictfun/research/run_light.sh <tag> -- python3 predictfun/reviews/take_reprice_20261125/chase_forward.py <stage> ...
 """
@@ -91,7 +92,7 @@ GRID_DROPS = collections.Counter()
 
 def receipt_path():
     """The latest receipt (each version supersedes the previous one's procedure), or None."""
-    for nm in ('RECEIPT_v4.md', 'RECEIPT_v3.md', 'RECEIPT_v2.md', 'RECEIPT.md'):
+    for nm in ('RECEIPT_v5.md', 'RECEIPT_v4.md', 'RECEIPT_v3.md', 'RECEIPT_v2.md', 'RECEIPT.md'):
         if (FREEZE / nm).exists():
             return FREEZE / nm
     return None
@@ -423,6 +424,7 @@ def final_models(X, feats, T):
 
 
 def scores_final(Mo, X, feats, cost):
+    C.require(X[feats].shape[1] == len(feats) == len(set(feats)), 'the input width differs from the models\' inputs')
     Xf = X[feats].to_numpy(np.float32)
     pm = Mo['move'].predict(X[feats])
     return dict(pred_1s=pm, MOVE=pm - cost, DIRECT_TB_s3=Mo['tb'].predict(Xf), DECOMP_s10=np.clip(Mo['fill'].predict(Xf), 0., 1.) * Mo['net'].predict(Xf))
@@ -710,6 +712,28 @@ def parity_v4(day, od):
     C.require(not out['points']['differing'] and not out['labels']['differing'] and not jdiff and not GRID_DROPS, 'v4 forward-mode rows differ')
 
 
+def dry_select(day, src):
+    """The forward selection path (frame columns, frozen models, fixed thresholds, one action per move) on a consumed day's forward-mode
+    rows (a parity directory): runs end to end; the final models' MOVE scores against the leave-one-day-out scores of that day."""
+    C.require(day in DAYS0, f'{day} is not a consumed day')
+    R = json.loads((H / 'chase_forward_refit.json').read_text())
+    with open(FOUT / 'refit' / 'models.pkl', 'rb') as fh:
+        Mo = pickle.load(fh)
+    kf = R['inputs']
+    X = fwd_frame((day,), kf, src)
+    Sc = scores_final(Mo, X, kf, cost_of(X))
+    flags = select(Sc, X.key.to_numpy(), X.mv_k.to_numpy(float), R['thresholds'], {day: SEED}, X.day.to_numpy())
+    S = flags_frame(X, flags)
+    lo = pd.read_parquet(FOUT / 'refit' / 'lodo_scores.parquet', columns=['day', 't', 'd', 'MOVE'])
+    m = X[['day', 't', 'd']].merge(lo[lo.day == day], on=['day', 't', 'd'], how='left', validate='1:1')
+    rho = float(spearmanr(Sc['MOVE'], m.MOVE.to_numpy(float), nan_policy='omit').correlation)
+    out = dict(asof='2026-11-27', day=day, rows=int(len(X)), actions={k: int(len(v)) for k, v in flags.items()}, selections_rows=int(len(S)),
+               spearman_final_vs_lodo_move=rho, width=int(X[kf].shape[1]))
+    TR.dump(H / f'chase_forward_dry_select_{day}.json', out)
+    print(out, flush=True)
+    C.require(out['width'] == len(kf) and rho > 0.5, 'the dry selection is off')
+
+
 def parity_exits(day, od):
     """exits_day on EXIT_FIXED's actions of a consumed day must reproduce EXIT_FIXED's P&L for every policy and latency."""
     C.require(day in DAYS0, f'{day} is not a consumed day')
@@ -953,17 +977,23 @@ def parquet_cols(fp):
     return list(pq.read_schema(fp).names)
 
 
-def fwd_frame(days=FWD, extra=()):
-    """Points + labels of the days with only the identity columns, the selection's / exits' columns and `extra` (inputs)."""
-    src = FOUT / 'rows'
-    pn, ln = parquet_cols(src / f'{days[0]}_points.parquet'), parquet_cols(src / f'{days[0]}_labels.parquet')
-    pc = ['day', 't', 'd', 'mkey', 'mv_k'] + [c for c in extra if c in pn and c not in ('day', 't', 'd')]
-    lc = ['day', 't', 'd', 'mid', 'lim', 'md', 'payout'] + [c for c in extra if c in ln and c not in pn and c not in ('day', 't', 'd')]
+def frame_cols(pn, ln, extra):
+    """The points / labels columns a frame reads: identity, selection and exit columns plus `extra`, each once."""
+    pc = list(dict.fromkeys(['day', 't', 'd', 'mkey', 'mv_k'] + [c for c in extra if c in pn]))
+    lc = list(dict.fromkeys(['day', 't', 'd', 'mid', 'lim', 'md', 'payout'] + [c for c in extra if c in ln and c not in pn]))
     C.require(set(extra) <= set(pc) | set(lc), 'an input in neither points nor labels')
+    return pc, lc
+
+
+def fwd_frame(days=FWD, extra=(), src=None):
+    """Points + labels of the days with only the identity columns, the selection's / exits' columns and `extra` (inputs)."""
+    src = Path(src) if src else FOUT / 'rows'
+    pc, lc = frame_cols(parquet_cols(src / f'{days[0]}_points.parquet'), parquet_cols(src / f'{days[0]}_labels.parquet'), extra)
     Pp = pd.concat([pd.read_parquet(src / f'{d}_points.parquet', columns=pc) for d in days], ignore_index=True)
     Lb = pd.concat([pd.read_parquet(src / f'{d}_labels.parquet', columns=lc) for d in days], ignore_index=True)
     X = Lb.merge(Pp, on=['day', 't', 'd'], how='inner', validate='1:1')
     C.require(len(X) == len(Lb), 'a labelled tick without its point')
+    C.require(not X.columns.duplicated().any(), 'a column twice in the frame')
     X['key'] = X.day.astype(str) + ':' + X.mkey.astype(str)
     return X.sort_values(['day', 'd', 't'], kind='stable').reset_index(drop=True)
 
@@ -1120,8 +1150,10 @@ def selftest():
     except ValueError as e_:
         assert 'permitted hours' in str(e_)
     rp = receipt_path()
-    assert rp is None or rp.name in ('RECEIPT_v3.md', 'RECEIPT_v2.md', 'RECEIPT.md')
+    assert rp is None or rp.name in ('RECEIPT_v5.md', 'RECEIPT_v4.md', 'RECEIPT_v3.md', 'RECEIPT_v2.md', 'RECEIPT.md')
     assert off_grid(np.array([57086.83, 91000.1, 0., np.nan, 91000.15])).tolist() == [True, False, False, False, True]
+    pc_, lc_ = frame_cols(['day', 't', 'd', 'mkey', 'mv_k', 'x1'], ['day', 't', 'd', 'mid', 'lim', 'md', 'payout', 'pf_mid'], ['mv_k', 'x1', 'pf_mid'])
+    assert pc_.count('mv_k') == 1 and pc_ == ['day', 't', 'd', 'mkey', 'mv_k', 'x1'] and lc_[-1] == 'pf_mid' and len(set(lc_)) == len(lc_), (pc_, lc_)
     Xc = pd.DataFrame(dict(d=[1., -1.], lim=[52., 48.], md=[51., 49.]))
     assert np.allclose(cost_of(Xc), [1. + CT.fee(52.), 1. + CT.fee(48.)])
     for bad_ in (('xx', '20261102'), ('ps', '20261104')):
@@ -1138,7 +1170,7 @@ if __name__ == '__main__':
     dict(selftest=selftest, parity_scores=parity_scores, refit=refit, freeze=freeze, freeze_v2=freeze_v2, select=fwd_select, read=fwd_read)[cmd]() if cmd in (
         'selftest', 'parity_scores', 'refit', 'freeze', 'freeze_v2', 'select', 'read') else dict(
         parity_paths=lambda: parity_paths(a_[0]), parity_rows=lambda: parity_rows(a_[0], a_[1]), parity_exits=lambda: parity_exits(a_[0], a_[1]),
-        parity_rows_v3=lambda: parity_rows_v3(a_[0], a_[1]), parity_v4=lambda: parity_v4(a_[0], a_[1]),
+        parity_rows_v3=lambda: parity_rows_v3(a_[0], a_[1]), parity_v4=lambda: parity_v4(a_[0], a_[1]), dry_select=lambda: dry_select(a_[0], a_[1]),
         child_feats=lambda: child_feats(a_[0], a_[1], a_[2], a_[3]), child_labels=lambda: child_labels(a_[0], a_[1]),
         check=lambda: check(a_[0]), build=lambda: build(a_[0], a_[1] if len(a_) > 1 else os.environ.get('PF_SLOT', 'claude')),
         winners=lambda: winners(a_[0]), points=lambda: fwd_points(a_[0]), labels=lambda: fwd_labels(a_[0]), exits=lambda: fwd_exits(a_[0]))[cmd]()

@@ -1,0 +1,15 @@
+{
+  "asof": "2026-11-27",
+  "day": "20261102",
+  "rows": 109437,
+  "actions": {
+    "MOVE_top10": 1051,
+    "MOVE_top1": 77,
+    "DECOMP_s10_top1": 131,
+    "DIRECT_TB_s3_top10": 1165,
+    "CONTROL_onset": 1250
+  },
+  "selections_rows": 3412,
+  "spearman_final_vs_lodo_move": 0.9815492800358067,
+  "width": 66
+}
