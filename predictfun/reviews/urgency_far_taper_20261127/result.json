@@ -1,0 +1,13 @@
+{
+  "tests": {
+    "nominal": "passes",
+    "short": "passes"
+  },
+  "passes": true,
+  "sha256": {
+    "comparison.csv": "38756a19cebd7180af10941a175bd33d4f1ba159fd555514f264dbbe7c45afcc",
+    "markets_20261024.csv": "81bb60af207b41cf5c0629a38db230887fc8a665b507b93682b7c728fca73df1",
+    "markets_20261025.csv": "49cda5a2ef7b668c15a7e974b94c310f4bd15ecd5c3f44fdd148356af7f40280",
+    "markets_20261027.csv": "0c484ac3899184a417a6c6f683fb85bc6aa36565cd0f3f98f88d2749ed77f449"
+  }
+}
