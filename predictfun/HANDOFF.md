@@ -1,3 +1,8 @@
+<!-- GROUP3_HALVES_20261127_CLAUDE -->
+## 2026-11-27 — POST HOC halves: its group-3 fires 55% first half (moves 61%); our top 10% 43%, earning +0.77c vs +0.19c (conservative, + 10c): a filter to declare next, not a result
+
+See FINDINGS GROUP3_HALVES (same date).
+<!-- /GROUP3_HALVES_20261127_CLAUDE -->
 <!-- GROUP3_PROFILE_20261127_CLAUDE -->
 ## 2026-11-27 — the top taker's group-3 fires: mid-window, near-50c, a few ticks in; it chases 1.9% of moves; 47% land faster than our 25.5 ms and earn most; at the same model edge its chases move Predict +10.3c vs +7.5c (thicker far side, other venues lagging)
 

@@ -1,3 +1,24 @@
+<!-- GROUP3_HALVES_20261127_CLAUDE -->
+## 2026-11-27 — POST HOC, halves of the window: 55% of its group-3 fires come in the first half, as do 61% of all moves; per move it chases a little more in the second half (2.2% vs 1.7%); our model's top 10% leans late (43% in the first half) and earns more in the first half on the conservative book (+0.77c vs +0.19c at known best + 10c)
+
+[group3_halves](reviews/take_reprice_20261125/group3_halves.json) (script `group3_halves.py`, committed before use; GROUP3_PROFILE's labels, CHASE_TAKES' rows and predictions, its selections reproduced). USER: "it looks our top 10% picks look similar to top takers fires in the chart, and they mostly fire in former half of the window?". The 150 s split was chosen after seeing the chart: post hoc, consumed days, point estimates.
+
+| set | n | first half (> 150 s left) | first minute (> 240 s) | last minute (< 60 s) |
+|---|---:|---:|---:|---:|
+| its group-3 fires | 1,503 | 55% | 22% | 11% |
+| its group-2 fires (ahead of a move) | 2,709 | 47% | 17% | 18% |
+| its group-1 fires (no move) | 1,715 | 40% | 13% | 23% |
+| every move, first tick | 50,030 | 61% | 24% | 10% |
+| our model's top 10% | 3,677 | 43% | 16% | 24% |
+
+| our model's top 10%, value per intended share at 1 s | actions | conservative: known best / + 3c / + 10c | optimistic: known best / + 10c |
+|---|---:|---:|---:|
+| first half | 1,599 | +0.11c (3/4) / +0.36c (4/4) / +0.77c (4/4) | +1.29c / +5.05c |
+| second half | 2,078 | +0.08c (3/4) / +0.15c (4/4) / +0.19c (3/4) | +0.98c / +3.99c |
+
+- **Its fires:** slightly more in the first half, as the moves in our population are (fewer late moves qualify: a decision needs a two-sided Predict book and the mid 1 s after the match inside the market's recorded path); per available move it chases a little more in the second half. Its other groups lean later.
+- **Our picks:** our model's top 10% leans to the end of the window (last minute 24% vs its 11%) and earns less there. A first-half filter is a candidate to declare for the next test, not a result.
+<!-- /GROUP3_HALVES_20261127_CLAUDE -->
 <!-- GROUP3_PROFILE_20261127_CLAUDE -->
 ## 2026-11-27 — the top taker's group-3 fires (1,505, its order landing after a move its way had started): mid-window (median 163 s left), mid-priced sides (median 47c), a few ticks into the move; it chases 1.9% of moves, 7.0% of our model's top decile; 47% land sooner after the last tick than our 25.5 ms; at the same model edge and tick its chases move Predict +10.3c vs +7.5c and show a thicker Binance far side
 

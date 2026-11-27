@@ -1,3 +1,9 @@
+group3_halves_20261127_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/group3_halves.json
+  session: 1622c91e
+  post_hoc: true
+  first_half_share: {its_group3: 0.5536, every_move: 0.6089, our_top10: 0.4349}
+  our_top10_conservative_s10_1s_c: {first_half: 0.773, second_half: 0.186}
 group3_profile_20261127_claude:
   diagnostic: [predictfun/reviews/take_reprice_20261125/group3_profile.json, predictfun/reviews/take_reprice_20261125/group3_profile_chart.html]
   rows: data/predict_fun/research/take_reprice_20261125/group3_profile/
