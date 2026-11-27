@@ -1,3 +1,8 @@
+<!-- ABSORPTION_20261127_CLAUDE -->
+## 2026-11-27 — the near side building against trades: present at its fires and nearly as much at look-alikes (which move 5.8%); as filters 3-12%, graded up to 21.8% on 0.4% of moments vs its 61%
+
+See FINDINGS ABSORPTION (same date).
+<!-- /ABSORPTION_20261127_CLAUDE -->
 <!-- FIRE_ACTIVITY_20261127_CLAUDE -->
 ## 2026-11-27 — the USER's reading (busy both sides, large imbalance, far-side trades) is equally present at the moments that look like its fires, which move 5.8% vs its 61%; the far-side burst comes after its order lands; as a rule it reaches 12.3%-21.7%; the USER's nine-venue report: same picture everywhere, no venue first
 

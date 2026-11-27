@@ -1,3 +1,35 @@
+<!-- ABSORPTION_20261127_CLAUDE -->
+## 2026-11-27 — the near side building against trades (the USER's reading): at its fires the near side grows more (net +4.2 BTC in 1 s vs +0.8 at random moments), but the look-alikes show it too (+2.5) and move 5.8%; as rules, absorption and two-sided pressure reach 2.9%-3.9%, with a large imbalance 9.6%-11.1%, the best graded version 21.8% on 0.4% of moments, against its 61%
+
+[absorption](reviews/take_reprice_20261125/absorption.json) (SIGNAL_VS_NOISE's points; Binance futures best level from bookTicker and trades with fire_events' decomposition: adds / cancels at an unchanged best price net of the aggressive volume there; far = the side that must empty for a move their way; declared before the run, the rules marked * added after the rehearsal). USER: "I feel they are reading the book better, if the near side keep accumulating even when there are far side sell trades, it shows a stronger trend for near side". Two readings tested: (A) absorption, sells hit the near side and it is refilled; (B) buys lift the far side while the near side keeps growing. Consumed days, point estimates.
+
+| last 1 s (mean, BTC) | its fires | look-alikes, same picture | look-alikes, same score | random moments |
+|---|---:|---:|---:|---:|
+| near-side adds | 17.64 | 14.35 | 20.14 | 8.79 |
+| trades against, hitting the near side | 0.35 | 0.45 | 0.56 | 0.41 |
+| trades their way, hitting the far side | 0.73 | 0.45 | 0.59 | 0.32 |
+| near side net growth (adds - cancels - trades against) | 4.20 | 2.49 | 3.63 | 0.85 |
+| meets (A) absorption | 75% | 74% | 74% | 67% |
+| meets (B) two-sided pressure | 58% | 50% | 49% | 37% |
+| meets (B) + imbalance >= 0.6 | 26% | 20% | 25% | 9% |
+| moved their way within 300 ms | 61.2% | 5.8% | 7.8% | 2.5% |
+
+| rule (last 1 s) | random moments meeting | their move rate (lift) | its fires meeting | those fires' move rate | look-alikes meeting |
+|---|---:|---:|---:|---:|---:|
+| (A) absorption: trades against refilled at least in full | 66.7% | 2.9% (1.2x) | 75.2% | 63% | 73.9% |
+| (B) far side lifted while the near side grows | 37.3% | 3.9% (1.6x) | 58.2% | 64% | 50.0% |
+| imbalance >= 0.6 alone | 16.1% | 8.5% (3.4x) | 36.5% | 83% | 32.5% |
+| (A) + imbalance | 11.1% | 9.6% (3.9x) | 27.7% | 84% | 24.5% |
+| (B) + imbalance | 8.6% | 11.1% (4.5x) | 25.5% | 84% | 20.1% |
+| near growth in the top 10% + imbalance + far side lifted * | 3.6% | 16.1% (6.5x) | 14.6% | 87% | 10.5% |
+| near growth in the top 1% + imbalance + far side lifted * | 0.5% | 16.4% (6.6x) | 2.1% | 89% | 1.3% |
+| strong absorption (heavy sells, top 10%, fully refilled) * | 2.4% | 7.0% (2.8x) | 4.0% | 74% | 4.7% |
+| strong absorption + imbalance * | 0.4% | 21.8% (8.8x) | 1.5% | 99% | 1.4% |
+
+- **Seen at its fires, and at the look-alikes:** the near side builds more before its fires than at random moments, and more than half as much at the moments that look like them (net +2.5 BTC same picture, +3.6 same score, vs +4.2), which rarely move. Simple absorption is met at two thirds of random moments (most see only tiny sells), so it says little.
+- **As filters:** with a large imbalance the readings reach about 10-12% of moments followed by a move; the graded versions 16-22% on 0.4-4% of moments. Its fires that meet the imbalance versions move 83-99%: inside the same conditions it still picks the right ones; most of its fires are outside each of them (72-98%).
+- **Reading:** the near side building against trades is part of the picture at its fires, like the imbalance and the busy book (FIRE_ACTIVITY), and it raises the odds of a move 4-9x; it does not get near its 61%. What separates the build-ups that get swept is not in how the near side builds.
+<!-- /ABSORPTION_20261127_CLAUDE -->
 <!-- FIRE_ACTIVITY_20261127_CLAUDE -->
 ## 2026-11-27 — the USER's reading (both book sides busy, large imbalance, far-side trades) is just as present at the moments that look like its fires: look-alikes are as busy (33 / 39 changes in 1 s vs its fires' 34 / 41) and lean as much, yet move 5.8% vs 61%; the far-side trade burst comes after its order lands (18 in the next 100 ms vs 0); as a rule it lifts moves to 12.3%-21.7% of random moments; the USER's nine-venue report: same picture everywhere, no venue first
 
