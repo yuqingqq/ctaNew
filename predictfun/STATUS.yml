@@ -1,3 +1,10 @@
+cheap_side_all_20261127_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/cheap_side_all.json
+  rows: data/predict_fun/research/take_reprice_20261125/cheap_side_all/
+  session: 1622c91e
+  corrects: [take_markout_20261127_claude (5 s / 30 s), take_markout_exit, take_markout_longshot, predict_inputs_20261127_claude (30 s / settlement)]
+  btc_end_move_sd_bps: {complete: 1.60, not_complete: 9.81}
+  cheap_under_10c_all_markets: {paid_c: 5.09, won_pct: 3.50, held_c: -1.606, sold_back_30s_c: -0.941}
 predict_inputs_20261127_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/predict_inputs.json
   session: 1622c91e
@@ -13,7 +20,7 @@ take_markout_20261127_claude:
   top1_30s_model_sold_back_30s_c: 4.787
   cheap_side_under_10c_sold_back_30s_c: {up: 6.071, down: 5.505}
   cheap_side_paid_vs_won_c: [6.0, 16.0]
-  status: development evidence, found after looking; untouched days needed
+  status: 5 s / 30 s / cheap-side values CORRECTED by cheap_side_all_20261127_claude (outcome-selected 'complete' markets); the 1 s result stands on that population
 take_model_why_20261126_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/take_model_why.json
   session: 1622c91e

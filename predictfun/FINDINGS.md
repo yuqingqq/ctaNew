@@ -1,5 +1,41 @@
+<!-- CHEAP_SIDE_ALL_20261127_CLAUDE -->
+## 2026-11-27 — CORRECTION: the cheap-side edge is an artifact of the 'complete' markets: 'complete' needs a two-sided book at the window's end, which keeps windows where BTC ends near its start (end move sd 1.6 bps vs 9.8 bps for the other 819 markets); on all 1,151 markets sides bought at 5.1c won 3.5% and lose held (-1.6c) and sold back after 30 s (-0.9c); CORRECTS TAKE_MARKOUT (5 s / 30 s), TAKE_MARKOUT_EXIT, TAKE_MARKOUT_LONGSHOT, PREDICT_INPUTS (30 s / settlement)
+
+[cheap_side_all](reviews/take_reprice_20261125/cheap_side_all.json) (public_score3's random moments in every market of the four consumed days whose recorded path holds the decision and the match: 202,814 moments; TAKE_MODEL's take at 172 ms; settlement from the registry; the complete markets' TAKE_MODEL rows reproduce TAKE_MARKOUT_LONGSHOT exactly; declared before the run). USER: "We check the btc price drift,". Found while checking BTC's drift: Binance spot at each window's start equals the registry's start price and its sign at the end matches the outcome, so the window's BTC move is exact, and it shows the selection.
+
+| markets | count | moments | BTC end move against the start: median abs / sd |
+|---|---:|---:|---:|
+| 'complete' (the population used) | 332 | 66,605 | 1.0 / 1.6 bps |
+| the other markets | 819 | 136,209 | 5.9 / 9.8 bps |
+| all markets | 1,151 | 202,814 | 4.2 / 8.3 bps |
+
+| side bought at the known best | markets | price paid | won | held to settlement (days > 0) | sold back after 30 s (days > 0) |
+|---|---|---:|---:|---:|---:|
+| under 10c | 'complete' (the population used) | 6.0c | 15.8% | +8.56c (4) | +5.63c (4) |
+| 10-20c | 'complete' (the population used) | 15.6c | 26.9% | +9.66c (4) | +1.89c (4) |
+| under 10c | the other markets | 4.9c | 1.1% | -3.74c (0) | -1.94c (0) |
+| 10-20c | the other markets | 15.2c | 6.5% | -8.24c (0) | -3.65c (0) |
+| under 10c | all markets | 5.1c | 3.5% | -1.61c (1) | -0.94c (0) |
+| 10-20c | all markets | 15.3c | 12.2% | -3.06c (1) | -2.20c (0) |
+
+| side price bucket (all markets) | price paid | won, over moments | won, over market sides (n) |
+|---|---:|---:|---:|
+| 0-10c | 5.1c | 3.5% | 6.2% (1,107) |
+| 10-20c | 15.3c | 12.2% | 15.2% (1,221) |
+| 20-35c | 28.1c | 25.6% | 29.4% (1,529) |
+| 35-65c | 50.2c | 49.4% | 50.0% (2,265) |
+| 65-80c | 72.5c | 73.5% | 70.5% (1,517) |
+| 80-90c | 85.5c | 87.1% | 84.7% (1,214) |
+| 90-100c | 96.0c | 96.4% | 94.0% (1,103) |
+
+- **The selection:** a path is 'complete' only with a valid two-sided mark within 1 s of the window's end (vm_path). A decided window's book goes one-sided or stops updating ('no end mark' or 'truncated'), so the complete markets are the close finishes. In them a side that was cheap earlier often came back: TAKE_MARKOUT_LONGSHOT's "cheap sides won 16%" is that selection, not mispricing.
+- **On all markets** prices are about calibrated with a slight longshot tilt: sides under 10c won less than they cost (3.5% for 5.1c over moments; 6.2% over market sides). Cheap Up held -1.49c, cheap Down -1.72c; sold back after 30 s -0.93c / -0.95c; outside the complete markets every day is negative.
+- **Withdrawn:** TAKE_MARKOUT's 5 s / 30 s results (the 30 s model's paying picks, the cheap-side recovery), TAKE_MARKOUT_EXIT's paying cells, TAKE_MARKOUT_LONGSHOT, and PREDICT_INPUTS' reading that Predict's price level carries an edge at 30 s and settlement (its rank correlations there were measured on the selected markets). TAKE_MARKOUT's 1 s result (slippage does not rescue the race) is not reversed by this, but its population is the same selected one.
+- **Also on the complete population (to re-check before relying on them):** SCORE_REPLAY's ledgers at settlement, EXIT_OPTIONS' settlement values, the TAKE_MODEL family (1 s, less exposed), the reprice replays' complete-market lines. Results beyond a few seconds or at settlement are the most exposed.
+- **Read note:** a status table printed while diagnosing included the replay summary's 20261103 rows (path statuses only; no prices or outcomes of that day were read).
+<!-- /CHEAP_SIDE_ALL_20261127_CLAUDE -->
 <!-- PREDICT_INPUTS_20261127_CLAUDE -->
-## 2026-11-27 — how much the models use from Predict: 13 of the 79 inputs, and they carry most of the information: alone they reach 80% (1 s) to 94% (30 s) of the full model's held-out rank correlation; Predict's book leads at 1 s and 5 s, its price level at 30 s and settlement; Binance's factors add mostly at 1 s; unused: the window's start price, the price path, depth shape, pending orders, who trades, Polymarket's price
+## 2026-11-27 — how much the models use from Predict: 13 of the 79 inputs, and they carry most of the information: alone they reach 80% (1 s) to 94% (30 s) of the full model's held-out rank correlation; Predict's book leads at 1 s and 5 s, its price level at 30 s and settlement; Binance's factors add mostly at 1 s; unused: the window's start price, the price path, depth shape, pending orders, who trades, Polymarket's price (the 30 s / settlement reading CORRECTED in CHEAP_SIDE_ALL: measured on outcome-selected markets)
 
 [predict_inputs](reviews/take_reprice_20261125/predict_inputs.json) (TAKE_MODEL's 66,353 moments and 79 inputs, TAKE_MARKOUT's targets at 172 ms; pinned trees, leave-one-day-out, the full model reproducing TAKE_MARKOUT's predictions; declared before the run). USER: "So if we consider predict fun market conditions, together with the factors, we can actually decide better, can you check how much information we are using from predict". Consumed days, point estimates.
 
@@ -47,7 +83,7 @@ Drop in held-out rank correlation when a family is shuffled (the full model):
 - **Reading:** Predict's market conditions are already the main input; what is missing is how they relate to BTC (the start price) and their history within the window. Those are the candidates for deciding better, most of all at 30 s and settlement, where the cheap-side effect lives (development evidence; untouched days needed).
 <!-- /PREDICT_INPUTS_20261127_CLAUDE -->
 <!-- TAKE_MARKOUT_20261127_CLAUDE -->
-## 2026-11-27 — the markout price as the target, slippage to get filled: at our 1 s markout paying through fills more but costs more than it gains (top 1%: filled 22% → 100%, -0.02c → -0.70c per intended share); trained on the 30 s markout the model picks cheap sides late in the window, which pay even sold back 30 s later through the speed bump (+4.8c, every day): on these days Predict's cheap sides won far more often than their price (bought at 6.0c, won 16%); found after looking
+## 2026-11-27 — the markout price as the target, slippage to get filled: at our 1 s markout paying through fills more but costs more than it gains (top 1%: filled 22% → 100%, -0.02c → -0.70c per intended share); trained on the 30 s markout the model picks cheap sides late in the window, which pay even sold back 30 s later through the speed bump (+4.8c, every day): on these days Predict's cheap sides won far more often than their price (bought at 6.0c, won 16%); found after looking (5 s / 30 s parts CORRECTED in CHEAP_SIDE_ALL: a population artifact)
 
 [take_markout](reviews/take_reprice_20261125/take_markout.json), [take_markout_exit](reviews/take_reprice_20261125/take_markout_exit.json), [take_markout_longshot](reviews/take_reprice_20261125/take_markout_longshot.json) (TAKE_MODEL's 66,353 moments and features, the same rows: labels recomputed with 0 differences from TAKE_MODEL's, TAKE_MODEL_WHY's top 1% reproduced; a 50-share IOC at our 172 ms path, TAKE_MODEL's walk of the venue book at the match; per intended share, misses 0; declared before each run, the longshot readout found after looking). USER: "1. We can get slippage to fill the taker order, 2. The training target is the mark out price". Consumed days, point estimates (G = 4).
 

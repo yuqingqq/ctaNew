@@ -1,10 +1,15 @@
+<!-- CHEAP_SIDE_ALL_20261127_CLAUDE -->
+## 2026-11-27 — CORRECTION: the cheap-side edge was the 'complete'-market selection (a two-sided book at the end = BTC ends near its start; end move sd 1.6 vs 9.8 bps); on all 1,151 markets cheap sides lose (held -1.6c, sold back after 30 s -0.9c)
+
+See FINDINGS CHEAP_SIDE_ALL (same date). Withdrawn: TAKE_MARKOUT 5 s / 30 s, TAKE_MARKOUT_EXIT, TAKE_MARKOUT_LONGSHOT, PREDICT_INPUTS 30 s / settlement. Watch out: TAKE_MODEL's / the reprice line's 'complete' markets are outcome-selected; use every market (cheap_side_all's population) for anything beyond seconds. Drafted, not run: btc_drift.py (Predict vs the price BTC implies; it reads TAKE_MODEL's rows: re-point it to every market first; vol from 30 s returns, 1 s returns are autocorrelated). Next (USER's call).
+<!-- /CHEAP_SIDE_ALL_20261127_CLAUDE -->
 <!-- PREDICT_INPUTS_20261127_CLAUDE -->
-## 2026-11-27 — Predict inputs: 13 of 79, they carry 80-94% of the held-out rank correlation (book leads at 1 s / 5 s, price level at 30 s / settlement); Binance adds mostly at 1 s; unused: start price vs BTC, price path, depth shape, pending orders, who trades, Polymarket's price
+## 2026-11-27 — Predict inputs: 13 of 79, they carry 80-94% of the held-out rank correlation (book leads at 1 s / 5 s, price level at 30 s / settlement); Binance adds mostly at 1 s; unused: start price vs BTC, price path, depth shape, pending orders, who trades, Polymarket's price (30 s / settlement reading CORRECTED in CHEAP_SIDE_ALL)
 
 See FINDINGS PREDICT_INPUTS (same date). Caveat: the three Predict trade inputs use the venue's match clock and REST-timed fills (no effect on these results; rebuild before live use). Next (USER's call): add the unused Predict inputs, starting with the start price (Predict's price against the price BTC implies) and the window's price path, and re-test at 30 s / settlement.
 <!-- /PREDICT_INPUTS_20261127_CLAUDE -->
 <!-- TAKE_MARKOUT_20261127_CLAUDE -->
-## 2026-11-27 — markout target + slippage: no help for the 1 s race (top 1% -0.02c at the known best, -0.70c paying through every level); the 30 s markout model picks cheap sides late in the window that pay sold back after 30 s (+4.8c, every day); cheap sides won 16% bought at 6.0c (found after looking, consumed days)
+## 2026-11-27 — markout target + slippage: no help for the 1 s race (top 1% -0.02c at the known best, -0.70c paying through every level); the 30 s markout model picks cheap sides late in the window that pay sold back after 30 s (+4.8c, every day); cheap sides won 16% bought at 6.0c (found after looking, consumed days) (5 s / 30 s parts CORRECTED in CHEAP_SIDE_ALL)
 
 See FINDINGS TAKE_MARKOUT (same date). Next (USER's call): test the cheap-side recovery (side under 10c, sold back after 30 s or held) on untouched days; size at those prices.
 <!-- /TAKE_MARKOUT_20261127_CLAUDE -->
