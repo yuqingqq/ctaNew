@@ -1,0 +1,31 @@
+{
+  "decisions": {
+    "extension5": {
+      "nominal": "risk_tradeoff",
+      "short": "risk_tradeoff"
+    },
+    "all8": {
+      "nominal": "risk_tradeoff",
+      "short": "risk_tradeoff"
+    },
+    "pilot3": {
+      "nominal": "passes",
+      "short": "passes"
+    }
+  },
+  "extension_passes": false,
+  "sha256": {
+    "comparison.csv": "1a63447d4d42fde92026e1cc582aa0f664e3579db003fb1de1557366c128bb8e",
+    "grid_20261023.json": "8b9c7a9d99186e1ef168af99deb8517947d12923bfa56c3f85ffb56780a55e7b",
+    "grid_20261024.json": "b5f765dab07925aaf5726a9c9bbd32a14a537cdbf3628e1fe57362ec05904d8b",
+    "grid_20261031.json": "81e62612f50814453a7bf50a486094185877df4b76c62a02ecc9dbd6896dfafa",
+    "grid_20261101.json": "1e2661a9994a0fc24000736fa57dfd3c843bf8d4a17d54cb6443d548dab856cc",
+    "grid_20261102.json": "6e17ca8e279d4ed6169bbc937ae9b6e81e8828040e1d9d0fa2fbde0c25bc8f2a",
+    "grid_20261103.json": "bd5ae5b2acf82ba0cc485b116225fbcd646e7225bdc7a28a4092be0367805b0c",
+    "markets_20261023.csv": "9b8269d6e6ea86edf959260b2ac1e8ad84c69dac1368bab9e9eaf54f49404c65",
+    "markets_20261031.csv": "a3e8bfe3dd68dee65dd70baffd7c1ee8f478e17f8eeaf091acb2c95f7a7372c2",
+    "markets_20261101.csv": "f9a2387c74f5e570b7e90b70509abface998225d3ec3df9f98dad047c7e11e8f",
+    "markets_20261102.csv": "16203b5880bb612fdaf351407632b66cf8d58f0b8476a70e939aadd357752d1c",
+    "markets_20261103.csv": "8ef3f72039ee2d23e20d435cf1ad4ef053371052f7bf58352dce6612f535e8f7"
+  }
+}
