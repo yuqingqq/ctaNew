@@ -1,0 +1,19 @@
+{
+  "tests": {
+    "nominal": {
+      "benchmark": "no_inventory_improvement",
+      "beats_time": true
+    },
+    "short": {
+      "benchmark": "passes",
+      "beats_time": true
+    }
+  },
+  "passes": false,
+  "sha256": {
+    "comparison.csv": "53514387b7e9ec2f0931fdf4554dad803f154dca12ae8e8772654e1d2348a510",
+    "markets_20261024.csv": "8320fd845803a98435e849d206fed2662d6d94711ea35499a7e389a3e702f649",
+    "markets_20261025.csv": "c3577125b3d0116080564218e39803a1f93fb46d9603736a1a75fdc538e64c65",
+    "markets_20261027.csv": "c6c6b77968ab571ede3f5c39b1db02a0644bc9458cd78a9bec223aa87c12370d"
+  }
+}
