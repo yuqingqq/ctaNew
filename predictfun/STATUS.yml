@@ -1,3 +1,9 @@
+fire_gallery_20261127_claude:
+  diagnostic: [predictfun/reviews/take_reprice_20261125/fire_gallery_chart.html, predictfun/reviews/take_reprice_20261125/fire_gallery_examples.json]
+  session: 1622c91e
+  fires_drawn: 8
+  fires_moved: 4
+  comparison_moments_moved: 0
 absorption_20261127_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/absorption.json
   rows: data/predict_fun/research/take_reprice_20261125/absorption/

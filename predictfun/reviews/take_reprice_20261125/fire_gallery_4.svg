@@ -1,0 +1,149 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1260 830" width="1260" height="830" font-family="system-ui, -apple-system, 'Segoe UI', 'DejaVu Sans', sans-serif" role="img" aria-labelledby="g3t g3d" class="viz"><style>.viz .bg{fill:#fcfcfb} .viz .t1{fill:#0b0b0b} .viz .t2{fill:#52514e} .viz .t3{fill:#898781} .viz .gr{stroke:#e1e0d9}
+.viz .mk{stroke:#898781} .viz .s1l{stroke:#2a78d6} .viz .s2l{stroke:#eb6834} .viz .s1f{fill:#2a78d6} .viz .s2f{fill:#eb6834}
+.viz .inkl{stroke:#0b0b0b} .viz .dot{fill:#fcfcfb;stroke:#0b0b0b} .viz .xh{stroke:#52514e}</style>
+<title id="g3t">The Binance book before a top-taker fire, a look-alike our model scores the same, and an ordinary moment</title>
+<desc id="g3d">Three columns of three panels: best-level sizes, aggressive trades and the Binance mid change, from -1000 to +300 ms around each moment.</desc>
+<rect class="bg" x="0" y="0" width="1260" height="830"/>
+<text class="t1" x="70" y="34" font-size="21" font-weight="600">Fire 4 of 8 · 11-01 22:38:41 UTC · bet up</text>
+<text class="t2" x="70" y="58" font-size="14">Binance futures best level, 1 s before to 0.3 s after each moment; far side = the ask (must empty for a move their way).</text>
+<rect class="s1f" x="70" y="78" width="16" height="4" rx="2"/><text class="t2" x="92" y="84" font-size="13">Far side (must empty for the price to move their way); trades hitting it</text>
+<rect class="s2f" x="590" y="78" width="16" height="4" rx="2"/><text class="t2" x="612" y="84" font-size="13">Near side; trades hitting it</text>
+<line class="mk" x1="820" y1="80" x2="838" y2="80" stroke-width="1.5" stroke-dasharray="3 3"/><text class="t2" x="844" y="84" font-size="13">t = 0</text>
+<text class="t1" x="70.0" y="122" font-size="15" font-weight="600">Fire 4: the top taker&#x27;s order</text>
+<text class="t2" x="70.0" y="140" font-size="12.5">public score 5.6% · imbalance their way +0.16</text>
+<text class="t2" x="70.0" y="156" font-size="12.5">far 3.58 · near 4.93 BTC · no move in 300 ms</text>
+<line class="gr" x1="70.0" y1="414.0" x2="426.7" y2="414.0" stroke-width="1"/>
+<text class="t3" x="62.0" y="418.0" font-size="11" text-anchor="end">0.1</text>
+<line class="gr" x1="70.0" y1="373.3" x2="426.7" y2="373.3" stroke-width="1"/>
+<text class="t3" x="62.0" y="377.3" font-size="11" text-anchor="end">0.3</text>
+<line class="gr" x1="70.0" y1="328.8" x2="426.7" y2="328.8" stroke-width="1"/>
+<text class="t3" x="62.0" y="332.8" font-size="11" text-anchor="end">1</text>
+<line class="gr" x1="70.0" y1="288.1" x2="426.7" y2="288.1" stroke-width="1"/>
+<text class="t3" x="62.0" y="292.1" font-size="11" text-anchor="end">3</text>
+<line class="gr" x1="70.0" y1="243.6" x2="426.7" y2="243.6" stroke-width="1"/>
+<text class="t3" x="62.0" y="247.6" font-size="11" text-anchor="end">10</text>
+<line class="gr" x1="70.0" y1="202.9" x2="426.7" y2="202.9" stroke-width="1"/>
+<text class="t3" x="62.0" y="206.9" font-size="11" text-anchor="end">30</text>
+<text class="t2" x="70.0" y="177" font-size="12">Best-level size, BTC (log scale; under 0.1 drawn at 0.1)</text>
+<line class="mk" x1="344.4" y1="184" x2="344.4" y2="414" stroke-width="1.5" stroke-dasharray="3 3"/>
+<path class="s1l" d="M70.0,256.4 H97.7 V256.4 H98.3 V257.1 H113.9 V257.1 H114.4 V256.4 H163.0 V256.4 H170.4 V256.4 H172.6 V256.4 H173.4 V256.4 H234.1 V256.8 H234.9 V256.4 H322.4 V256.7 H322.7 V257.2 H323.0 V257.8 H323.2 V257.8 H323.5 V258.0 H323.8 V263.7 H324.1 V263.8 H329.0 V263.8 H329.3 V263.8 H329.5 V263.8 H330.1 V263.8 H333.7 V263.8 H340.8 V263.8 H343.3 V264.2 H343.5 V271.5 H343.8 V273.9 H344.1 V281.6 H344.9 V281.6 H350.7 V281.6 H350.9 V281.6 H351.2 V281.7 H352.3 V286.5 H352.6 V303.7 H352.9 V307.0 H353.1 V307.0 H353.4 V307.0 H353.7 V307.0 H354.0 V309.7 H354.2 V309.7 H354.5 V309.7 H355.1 V309.9 H355.3 V309.9 H355.6 V309.9 H355.9 V310.7 H356.2 V310.7 H356.4 V310.7 H356.7 V310.7 H357.5 V310.8 H357.8 V310.8 H358.1 V310.9 H358.4 V310.9 H358.6 V310.9 H360.8 V310.9 H361.1 V310.9 H362.5 V310.9 H362.7 V310.9 H363.8 V310.9 H364.1 V310.9 H366.9 V310.9 H367.1 V310.9 H368.2 V328.0 H368.8 V328.0 H369.1 V328.0 H371.8 V328.0 H372.1 V328.0 H372.3 V328.0 H375.9 V328.0 H377.6 V328.0 H383.0 V328.0 H384.4 V328.0 H384.7 V328.0 H385.5 V328.0 H385.8 V328.0 H386.1 V328.0 H386.3 V328.0 H386.9 V328.1 H387.4 V328.1 H387.7 V328.2 H388.0 V328.3 H388.3 V328.3 H388.8 V328.3 H389.1 V328.3 H389.6 V328.3 H389.9 V328.3 H390.5 V328.3 H390.7 V328.3 H391.0 V328.3 H391.3 V328.3 H391.5 V328.3 H391.8 V328.3 H393.7 V328.3 H399.8 V328.3 H401.4 V328.3 H404.4 V328.8 H405.5 V328.8 H405.8 V328.8 H406.1 V328.8 H408.6 V328.8 H408.8 V328.8 H412.4 V328.2 H415.7 V328.2 H416.0 V328.2 H416.2 V328.2 H417.1 V328.2 H423.1 V328.2 H423.4 V328.2 H426.7" fill="none" stroke-width="2" stroke-linejoin="round"><title>far side size</title></path>
+<path class="s2l" d="M70.0,276.7 H97.7 V276.7 H98.3 V276.7 H113.9 V276.7 H114.4 V276.7 H163.0 V276.7 H170.4 V276.7 H172.6 V276.7 H173.4 V276.7 H234.1 V276.7 H234.9 V276.7 H322.4 V271.5 H322.7 V271.4 H323.0 V271.4 H323.2 V270.5 H323.5 V270.5 H323.8 V270.5 H324.1 V270.5 H329.0 V270.5 H329.3 V269.7 H329.5 V269.7 H330.1 V269.7 H333.7 V269.7 H340.8 V269.7 H343.3 V269.7 H343.5 V269.7 H343.8 V269.7 H344.1 V269.7 H344.9 V269.7 H350.7 V269.7 H350.9 V269.7 H351.2 V269.7 H352.3 V269.7 H352.6 V269.7 H352.9 V257.1 H353.1 V248.9 H353.4 V251.1 H353.7 V251.3 H354.0 V254.6 H354.2 V253.9 H354.5 V254.6 H355.1 V254.6 H355.3 V253.4 H355.6 V252.8 H355.9 V253.4 H356.2 V253.4 H356.4 V253.4 H356.7 V253.4 H357.5 V253.4 H357.8 V253.4 H358.1 V253.4 H358.4 V253.4 H358.6 V253.4 H360.8 V253.3 H361.1 V253.3 H362.5 V253.3 H362.7 V253.3 H363.8 V252.1 H364.1 V252.1 H366.9 V251.2 H367.1 V251.2 H368.2 V251.2 H368.8 V251.2 H369.1 V251.2 H371.8 V251.1 H372.1 V250.1 H372.3 V250.1 H375.9 V250.1 H377.6 V250.1 H383.0 V253.8 H384.4 V253.8 H384.7 V253.8 H385.5 V248.7 H385.8 V248.7 H386.1 V248.7 H386.3 V248.7 H386.9 V248.7 H387.4 V248.1 H387.7 V248.1 H388.0 V247.7 H388.3 V248.7 H388.8 V248.2 H389.1 V248.7 H389.6 V250.5 H389.9 V248.7 H390.5 V248.2 H390.7 V248.7 H391.0 V248.7 H391.3 V253.7 H391.5 V253.5 H391.8 V253.7 H393.7 V253.7 H399.8 V253.7 H401.4 V253.7 H404.4 V253.7 H405.5 V253.2 H405.8 V253.7 H406.1 V253.7 H408.6 V253.7 H408.8 V253.7 H412.4 V253.7 H415.7 V250.0 H416.0 V250.0 H416.2 V250.0 H417.1 V250.0 H423.1 V253.7 H423.4 V253.7 H426.7" fill="none" stroke-width="2" stroke-linejoin="round"><title>near side size</title></path>
+<text class="t2" x="430.7" y="332.2" font-size="11">far</text>
+<text class="t2" x="430.7" y="257.7" font-size="11">near</text>
+<line class="gr" x1="70.0" y1="590.0" x2="426.7" y2="590.0" stroke-width="1"/>
+<text class="t3" x="62.0" y="594.0" font-size="11" text-anchor="end">0.1</text>
+<line class="gr" x1="70.0" y1="552.5" x2="426.7" y2="552.5" stroke-width="1"/>
+<text class="t3" x="62.0" y="556.5" font-size="11" text-anchor="end">0.05</text>
+<line class="gr" x1="70.0" y1="515.0" x2="426.7" y2="515.0" stroke-width="1"/>
+<text class="t3" x="62.0" y="519.0" font-size="11" text-anchor="end">0</text>
+<line class="gr" x1="70.0" y1="477.5" x2="426.7" y2="477.5" stroke-width="1"/>
+<text class="t3" x="62.0" y="481.5" font-size="11" text-anchor="end">0.05</text>
+<line class="gr" x1="70.0" y1="440.0" x2="426.7" y2="440.0" stroke-width="1"/>
+<text class="t3" x="62.0" y="444.0" font-size="11" text-anchor="end">0.1</text>
+<text class="t2" x="70.0" y="433" font-size="12">Aggressive trades, BTC per 10 ms</text>
+<line class="mk" x1="344.4" y1="440" x2="344.4" y2="590" stroke-width="1.5" stroke-dasharray="3 3"/>
+<rect class="s1f" x="97.9" y="513.5" width="1.7" height="1.5" rx="1"><title>-900 ms: 0.002 BTC their way</title></rect>
+<rect class="s2f" x="114.4" y="515.0" width="1.7" height="0.8" rx="1"><title>-840 ms: 0.001 BTC against</title></rect>
+<rect class="s2f" x="169.3" y="515.0" width="1.7" height="0.8" rx="1"><title>-640 ms: 0.001 BTC against</title></rect>
+<rect class="s1f" x="386.0" y="512.8" width="1.7" height="2.2" rx="1"><title>+150 ms: 0.003 BTC their way</title></rect>
+<text class="t3" x="74.0" y="452" font-size="10.5">their way</text><text class="t3" x="74.0" y="586" font-size="10.5">against</text>
+<line class="gr" x1="70.0" y1="746.0" x2="426.7" y2="746.0" stroke-width="1"/>
+<text class="t3" x="62.0" y="750.0" font-size="11" text-anchor="end">-1</text>
+<line class="gr" x1="70.0" y1="713.5" x2="426.7" y2="713.5" stroke-width="1"/>
+<text class="t3" x="62.0" y="717.5" font-size="11" text-anchor="end">-0.5</text>
+<line class="gr" x1="70.0" y1="681.0" x2="426.7" y2="681.0" stroke-width="1"/>
+<text class="t3" x="62.0" y="685.0" font-size="11" text-anchor="end">0</text>
+<line class="gr" x1="70.0" y1="648.5" x2="426.7" y2="648.5" stroke-width="1"/>
+<text class="t3" x="62.0" y="652.5" font-size="11" text-anchor="end">0.5</text>
+<line class="gr" x1="70.0" y1="616.0" x2="426.7" y2="616.0" stroke-width="1"/>
+<text class="t3" x="62.0" y="620.0" font-size="11" text-anchor="end">1</text>
+<text class="t2" x="70.0" y="609" font-size="12">Binance mid since t, bps</text>
+<text class="t3" x="70.0" y="762" font-size="11" text-anchor="middle">-1000</text>
+<text class="t3" x="138.6" y="762" font-size="11" text-anchor="middle">-750</text>
+<text class="t3" x="207.2" y="762" font-size="11" text-anchor="middle">-500</text>
+<text class="t3" x="275.8" y="762" font-size="11" text-anchor="middle">-250</text>
+<text class="t3" x="344.4" y="762" font-size="11" text-anchor="middle">0</text>
+<text class="t3" x="412.9" y="762" font-size="11" text-anchor="middle">+250</text>
+<line class="mk" x1="344.4" y1="616" x2="344.4" y2="746" stroke-width="1.5" stroke-dasharray="3 3"/>
+<path class="inkl" d="M70.0,681.0 H97.7 V681.0 H98.3 V681.0 H113.9 V681.0 H114.4 V681.0 H163.0 V681.0 H170.4 V681.0 H172.6 V681.0 H173.4 V681.0 H234.1 V681.0 H234.9 V681.0 H322.4 V681.0 H322.7 V681.0 H323.0 V681.0 H323.2 V681.0 H323.5 V681.0 H323.8 V681.0 H324.1 V681.0 H329.0 V681.0 H329.3 V681.0 H329.5 V681.0 H330.1 V681.0 H333.7 V681.0 H340.8 V681.0 H343.3 V681.0 H343.5 V681.0 H343.8 V681.0 H344.1 V681.0 H344.9 V681.0 H350.7 V681.0 H350.9 V681.0 H351.2 V681.0 H352.3 V681.0 H352.6 V681.0 H352.9 V681.0 H353.1 V681.0 H353.4 V681.0 H353.7 V681.0 H354.0 V681.0 H354.2 V681.0 H354.5 V681.0 H355.1 V681.0 H355.3 V681.0 H355.6 V681.0 H355.9 V681.0 H356.2 V681.0 H356.4 V681.0 H356.7 V681.0 H357.5 V681.0 H357.8 V681.0 H358.1 V681.0 H358.4 V681.0 H358.6 V681.0 H360.8 V681.0 H361.1 V681.0 H362.5 V681.0 H362.7 V681.0 H363.8 V681.0 H364.1 V681.0 H366.9 V681.0 H367.1 V681.0 H368.2 V681.0 H368.8 V681.0 H369.1 V681.0 H371.8 V681.0 H372.1 V681.0 H372.3 V681.0 H375.9 V681.0 H377.6 V681.0 H383.0 V681.0 H384.4 V681.0 H384.7 V681.0 H385.5 V681.0 H385.8 V681.0 H386.1 V681.0 H386.3 V681.0 H386.9 V681.0 H387.4 V681.0 H387.7 V681.0 H388.0 V681.0 H388.3 V681.0 H388.8 V681.0 H389.1 V681.0 H389.6 V681.0 H389.9 V681.0 H390.5 V681.0 H390.7 V681.0 H391.0 V681.0 H391.3 V681.0 H391.5 V681.0 H391.8 V681.0 H393.7 V681.0 H399.8 V681.0 H401.4 V681.0 H404.4 V681.0 H405.5 V681.0 H405.8 V681.0 H406.1 V681.0 H408.6 V681.0 H408.8 V681.0 H412.4 V681.0 H415.7 V681.0 H416.0 V681.0 H416.2 V681.0 H417.1 V681.0 H423.1 V681.0 H423.4 V681.0 H426.7" fill="none" stroke-width="2" stroke-linejoin="round"><title>Binance mid since t, bps</title></path>
+<text class="t3" x="248.3" y="780" font-size="11.5" text-anchor="middle">ms from t</text>
+<line class="xh" id="g3xh0" x1="0" y1="184" x2="0" y2="746" stroke-width="1" visibility="hidden"/>
+<text class="t1" x="466.6666666666667" y="122" font-size="15" font-weight="600">Closest look-alike (no fire)</text>
+<text class="t2" x="466.6666666666667" y="140" font-size="12.5">public score 1.7% · imbalance their way +0.45</text>
+<text class="t2" x="466.6666666666667" y="156" font-size="12.5">far 3.19 · near 8.40 BTC · no move in 300 ms</text>
+<line class="gr" x1="466.6666666666667" y1="414.0" x2="823.3" y2="414.0" stroke-width="1"/>
+<line class="gr" x1="466.6666666666667" y1="373.3" x2="823.3" y2="373.3" stroke-width="1"/>
+<line class="gr" x1="466.6666666666667" y1="328.8" x2="823.3" y2="328.8" stroke-width="1"/>
+<line class="gr" x1="466.6666666666667" y1="288.1" x2="823.3" y2="288.1" stroke-width="1"/>
+<line class="gr" x1="466.6666666666667" y1="243.6" x2="823.3" y2="243.6" stroke-width="1"/>
+<line class="gr" x1="466.6666666666667" y1="202.9" x2="823.3" y2="202.9" stroke-width="1"/>
+<line class="mk" x1="741.0" y1="184" x2="741.0" y2="414" stroke-width="1.5" stroke-dasharray="3 3"/>
+<path class="s1l" d="M466.7,254.0 H550.9 V254.0 H551.4 V254.0 H582.7 V253.7 H583.3 V254.0 H583.5 V253.7 H598.9 V253.7 H599.2 V253.7 H612.9 V254.0 H613.2 V253.7 H613.7 V253.7 H642.0 V253.7 H642.8 V253.8 H643.1 V254.1 H665.3 V258.7 H665.9 V262.4 H673.3 V262.4 H697.4 V274.3 H697.7 V274.3 H698.0 V274.3 H704.5 V279.0 H704.8 V279.0 H705.1 V279.0 H705.6 V279.1 H707.6 V279.1 H708.4 V279.1 H727.0 V279.1 H729.5 V285.9 H729.8 V285.9 H730.1 V285.9 H737.5 V285.9 H737.7 V285.9 H766.8 V286.8 H768.2 V286.8 H800.6 V286.8 H801.9 V286.8 H807.7 V286.8 H808.8 V286.8 H811.0 V286.8 H811.3 V286.8 H823.3" fill="none" stroke-width="2" stroke-linejoin="round"><title>far side size</title></path>
+<path class="s2l" d="M466.7,251.0 H550.9 V251.0 H551.4 V251.0 H582.7 V251.0 H583.3 V251.0 H583.5 V251.0 H598.9 V251.3 H599.2 V251.0 H612.9 V251.0 H613.2 V251.0 H613.7 V251.0 H642.0 V251.0 H642.8 V251.0 H643.1 V251.0 H665.3 V251.0 H665.9 V251.0 H673.3 V251.0 H697.4 V251.0 H697.7 V250.1 H698.0 V250.0 H704.5 V250.0 H704.8 V250.0 H705.1 V250.0 H705.6 V250.0 H707.6 V250.0 H708.4 V250.0 H727.0 V250.1 H729.5 V250.1 H729.8 V249.6 H730.1 V250.1 H737.5 V250.0 H737.7 V250.0 H766.8 V250.0 H768.2 V250.0 H800.6 V250.0 H801.9 V250.0 H807.7 V250.0 H808.8 V250.0 H811.0 V250.0 H811.3 V250.0 H823.3" fill="none" stroke-width="2" stroke-linejoin="round"><title>near side size</title></path>
+<text class="t2" x="827.3" y="290.8" font-size="11">far</text>
+<text class="t2" x="827.3" y="254.0" font-size="11">near</text>
+<line class="gr" x1="466.6666666666667" y1="590.0" x2="823.3" y2="590.0" stroke-width="1"/>
+<line class="gr" x1="466.6666666666667" y1="552.5" x2="823.3" y2="552.5" stroke-width="1"/>
+<line class="gr" x1="466.6666666666667" y1="515.0" x2="823.3" y2="515.0" stroke-width="1"/>
+<line class="gr" x1="466.6666666666667" y1="477.5" x2="823.3" y2="477.5" stroke-width="1"/>
+<line class="gr" x1="466.6666666666667" y1="440.0" x2="823.3" y2="440.0" stroke-width="1"/>
+<line class="mk" x1="741.0" y1="440" x2="741.0" y2="590" stroke-width="1.5" stroke-dasharray="3 3"/>
+<rect class="s1f" x="640.0" y="510.5" width="1.7" height="4.5" rx="1"><title>-370 ms: 0.006 BTC their way</title></rect>
+<rect class="s2f" x="672.9" y="515.0" width="1.7" height="1.5" rx="1"><title>-250 ms: 0.002 BTC against</title></rect>
+<line class="gr" x1="466.6666666666667" y1="746.0" x2="823.3" y2="746.0" stroke-width="1"/>
+<line class="gr" x1="466.6666666666667" y1="713.5" x2="823.3" y2="713.5" stroke-width="1"/>
+<line class="gr" x1="466.6666666666667" y1="681.0" x2="823.3" y2="681.0" stroke-width="1"/>
+<line class="gr" x1="466.6666666666667" y1="648.5" x2="823.3" y2="648.5" stroke-width="1"/>
+<line class="gr" x1="466.6666666666667" y1="616.0" x2="823.3" y2="616.0" stroke-width="1"/>
+<text class="t3" x="466.7" y="762" font-size="11" text-anchor="middle">-1000</text>
+<text class="t3" x="535.3" y="762" font-size="11" text-anchor="middle">-750</text>
+<text class="t3" x="603.8" y="762" font-size="11" text-anchor="middle">-500</text>
+<text class="t3" x="672.4" y="762" font-size="11" text-anchor="middle">-250</text>
+<text class="t3" x="741.0" y="762" font-size="11" text-anchor="middle">0</text>
+<text class="t3" x="809.6" y="762" font-size="11" text-anchor="middle">+250</text>
+<line class="mk" x1="741.0" y1="616" x2="741.0" y2="746" stroke-width="1.5" stroke-dasharray="3 3"/>
+<path class="inkl" d="M466.7,681.0 H550.9 V681.0 H551.4 V681.0 H582.7 V681.0 H583.3 V681.0 H583.5 V681.0 H598.9 V681.0 H599.2 V681.0 H612.9 V681.0 H613.2 V681.0 H613.7 V681.0 H642.0 V681.0 H642.8 V681.0 H643.1 V681.0 H665.3 V681.0 H665.9 V681.0 H673.3 V681.0 H697.4 V681.0 H697.7 V681.0 H698.0 V681.0 H704.5 V681.0 H704.8 V681.0 H705.1 V681.0 H705.6 V681.0 H707.6 V681.0 H708.4 V681.0 H727.0 V681.0 H729.5 V681.0 H729.8 V681.0 H730.1 V681.0 H737.5 V681.0 H737.7 V681.0 H766.8 V681.0 H768.2 V681.0 H800.6 V681.0 H801.9 V681.0 H807.7 V681.0 H808.8 V681.0 H811.0 V681.0 H811.3 V681.0 H823.3" fill="none" stroke-width="2" stroke-linejoin="round"><title>Binance mid since t, bps</title></path>
+<text class="t3" x="645.0" y="780" font-size="11.5" text-anchor="middle">ms from t</text>
+<line class="xh" id="g3xh1" x1="0" y1="184" x2="0" y2="746" stroke-width="1" visibility="hidden"/>
+<text class="t1" x="863.3333333333334" y="122" font-size="15" font-weight="600">Ordinary moment (within 30 min)</text>
+<text class="t2" x="863.3333333333334" y="140" font-size="12.5">public score 0.3% · imbalance their way -0.97</text>
+<text class="t2" x="863.3333333333334" y="156" font-size="12.5">far 22.84 · near 0.33 BTC · no move in 300 ms</text>
+<line class="gr" x1="863.3333333333334" y1="414.0" x2="1220.0" y2="414.0" stroke-width="1"/>
+<line class="gr" x1="863.3333333333334" y1="373.3" x2="1220.0" y2="373.3" stroke-width="1"/>
+<line class="gr" x1="863.3333333333334" y1="328.8" x2="1220.0" y2="328.8" stroke-width="1"/>
+<line class="gr" x1="863.3333333333334" y1="288.1" x2="1220.0" y2="288.1" stroke-width="1"/>
+<line class="gr" x1="863.3333333333334" y1="243.6" x2="1220.0" y2="243.6" stroke-width="1"/>
+<line class="gr" x1="863.3333333333334" y1="202.9" x2="1220.0" y2="202.9" stroke-width="1"/>
+<line class="mk" x1="1137.7" y1="184" x2="1137.7" y2="414" stroke-width="1.5" stroke-dasharray="3 3"/>
+<path class="s1l" d="M863.3,213.0 H886.1 V213.0 H886.4 V213.0 H902.8 V213.0 H903.1 V213.0 H903.4 V213.0 H903.7 V212.8 H905.9 V212.5 H906.1 V212.8 H906.4 V213.0 H911.6 V213.0 H911.9 V213.0 H918.8 V212.7 H941.0 V212.7 H941.3 V213.0 H942.1 V213.0 H943.4 V213.0 H945.9 V213.0 H946.2 V212.4 H946.5 V213.0 H946.7 V212.8 H947.0 V212.8 H947.3 V212.5 H947.6 V213.0 H961.6 V213.0 H963.2 V213.0 H963.5 V212.4 H963.7 V211.4 H964.0 V210.9 H964.3 V211.4 H964.6 V211.4 H967.0 V212.5 H969.2 V213.0 H969.8 V213.0 H970.1 V212.1 H970.3 V212.7 H970.6 V213.0 H971.4 V213.0 H973.1 V213.0 H994.8 V213.0 H995.0 V212.3 H995.3 V212.9 H995.6 V213.0 H998.3 V213.0 H998.6 V212.4 H998.9 V213.0 H999.1 V212.7 H1033.7 V212.7 H1034.0 V212.5 H1034.3 V212.8 H1034.5 V213.0 H1041.1 V213.0 H1041.4 V212.7 H1041.7 V213.0 H1085.0 V210.0 H1085.3 V210.4 H1085.6 V210.1 H1085.8 V210.6 H1086.1 V210.4 H1086.4 V210.4 H1086.7 V211.4 H1086.9 V212.7 H1091.1 V212.7 H1102.8 V212.6 H1103.1 V212.7 H1103.4 V213.0 H1111.4 V213.0 H1111.9 V212.5 H1112.2 V213.0 H1113.3 V213.0 H1113.5 V212.1 H1113.8 V213.0 H1115.2 V213.0 H1115.5 V213.0 H1120.7 V213.0 H1121.0 V212.7 H1121.2 V213.0 H1152.8 V213.0 H1199.1 V213.0 H1199.4 V212.9 H1199.7 V213.0 H1205.5 V213.0 H1212.9 V213.0 H1214.2 V213.0 H1214.5 V213.0 H1214.8 V212.7 H1215.1 V213.0 H1220.0" fill="none" stroke-width="2" stroke-linejoin="round"><title>far side size</title></path>
+<path class="s2l" d="M863.3,359.3 H886.1 V359.3 H886.4 V359.3 H902.8 V359.3 H903.1 V359.3 H903.4 V359.3 H903.7 V359.3 H905.9 V359.3 H906.1 V359.3 H906.4 V359.3 H911.6 V359.3 H911.9 V359.3 H918.8 V359.3 H941.0 V359.2 H941.3 V359.3 H942.1 V359.1 H943.4 V359.1 H945.9 V369.4 H946.2 V369.4 H946.5 V369.4 H946.7 V369.4 H947.0 V357.9 H947.3 V358.0 H947.6 V357.9 H961.6 V357.8 H963.2 V366.0 H963.5 V366.0 H963.7 V359.5 H964.0 V359.5 H964.3 V359.5 H964.6 V359.5 H967.0 V359.5 H969.2 V359.5 H969.8 V363.5 H970.1 V363.6 H970.3 V363.5 H970.6 V363.5 H971.4 V363.1 H973.1 V363.1 H994.8 V371.3 H995.0 V371.3 H995.3 V371.3 H995.6 V371.3 H998.3 V375.9 H998.6 V375.9 H998.9 V375.9 H999.1 V375.9 H1033.7 V376.2 H1034.0 V376.2 H1034.3 V376.2 H1034.5 V376.2 H1041.1 V376.3 H1041.4 V376.3 H1041.7 V376.3 H1085.0 V376.3 H1085.3 V376.3 H1085.6 V376.3 H1085.8 V376.3 H1086.1 V376.3 H1086.4 V376.3 H1086.7 V376.3 H1086.9 V376.3 H1091.1 V376.3 H1102.8 V376.3 H1103.1 V376.3 H1103.4 V376.3 H1111.4 V397.5 H1111.9 V397.5 H1112.2 V397.5 H1113.3 V372.2 H1113.5 V372.4 H1113.8 V372.2 H1115.2 V369.9 H1115.5 V369.9 H1120.7 V369.9 H1121.0 V369.9 H1121.2 V369.9 H1152.8 V369.9 H1199.1 V369.9 H1199.4 V369.9 H1199.7 V369.9 H1205.5 V369.9 H1212.9 V369.9 H1214.2 V370.0 H1214.5 V370.0 H1214.8 V370.0 H1215.1 V370.0 H1220.0" fill="none" stroke-width="2" stroke-linejoin="round"><title>near side size</title></path>
+<text class="t2" x="1224.0" y="217.0" font-size="11">far</text>
+<text class="t2" x="1224.0" y="374.0" font-size="11">near</text>
+<line class="gr" x1="863.3333333333334" y1="590.0" x2="1220.0" y2="590.0" stroke-width="1"/>
+<line class="gr" x1="863.3333333333334" y1="552.5" x2="1220.0" y2="552.5" stroke-width="1"/>
+<line class="gr" x1="863.3333333333334" y1="515.0" x2="1220.0" y2="515.0" stroke-width="1"/>
+<line class="gr" x1="863.3333333333334" y1="477.5" x2="1220.0" y2="477.5" stroke-width="1"/>
+<line class="gr" x1="863.3333333333334" y1="440.0" x2="1220.0" y2="440.0" stroke-width="1"/>
+<line class="mk" x1="1137.7" y1="440" x2="1137.7" y2="590" stroke-width="1.5" stroke-dasharray="3 3"/>
+<rect class="s1f" x="905.0" y="513.5" width="1.7" height="1.5" rx="1"><title>-850 ms: 0.002 BTC their way</title></rect>
+<rect class="s2f" x="962.6" y="515.0" width="1.7" height="67.5" rx="1"><title>-640 ms: 0.090 BTC against</title></rect>
+<rect class="s2f" x="1033.9" y="515.0" width="1.7" height="1.5" rx="1"><title>-380 ms: 0.002 BTC against</title></rect>
+<rect class="s2f" x="1113.5" y="515.0" width="1.7" height="3.0" rx="1"><title>-90 ms: 0.004 BTC against</title></rect>
+<rect class="s2f" x="1212.3" y="515.0" width="1.7" height="0.8" rx="1"><title>+270 ms: 0.001 BTC against</title></rect>
+<line class="gr" x1="863.3333333333334" y1="746.0" x2="1220.0" y2="746.0" stroke-width="1"/>
+<line class="gr" x1="863.3333333333334" y1="713.5" x2="1220.0" y2="713.5" stroke-width="1"/>
+<line class="gr" x1="863.3333333333334" y1="681.0" x2="1220.0" y2="681.0" stroke-width="1"/>
+<line class="gr" x1="863.3333333333334" y1="648.5" x2="1220.0" y2="648.5" stroke-width="1"/>
+<line class="gr" x1="863.3333333333334" y1="616.0" x2="1220.0" y2="616.0" stroke-width="1"/>
+<text class="t3" x="863.3" y="762" font-size="11" text-anchor="middle">-1000</text>
+<text class="t3" x="931.9" y="762" font-size="11" text-anchor="middle">-750</text>
+<text class="t3" x="1000.5" y="762" font-size="11" text-anchor="middle">-500</text>
+<text class="t3" x="1069.1" y="762" font-size="11" text-anchor="middle">-250</text>
+<text class="t3" x="1137.7" y="762" font-size="11" text-anchor="middle">0</text>
+<text class="t3" x="1206.3" y="762" font-size="11" text-anchor="middle">+250</text>
+<line class="mk" x1="1137.7" y1="616" x2="1137.7" y2="746" stroke-width="1.5" stroke-dasharray="3 3"/>
+<path class="inkl" d="M863.3,681.0 H886.1 V681.0 H886.4 V681.0 H902.8 V681.0 H903.1 V681.0 H903.4 V681.0 H903.7 V681.0 H905.9 V681.0 H906.1 V681.0 H906.4 V681.0 H911.6 V681.0 H911.9 V681.0 H918.8 V681.0 H941.0 V681.0 H941.3 V681.0 H942.1 V681.0 H943.4 V681.0 H945.9 V681.0 H946.2 V681.0 H946.5 V681.0 H946.7 V681.0 H947.0 V681.0 H947.3 V681.0 H947.6 V681.0 H961.6 V681.0 H963.2 V681.0 H963.5 V681.0 H963.7 V681.0 H964.0 V681.0 H964.3 V681.0 H964.6 V681.0 H967.0 V681.0 H969.2 V681.0 H969.8 V681.0 H970.1 V681.0 H970.3 V681.0 H970.6 V681.0 H971.4 V681.0 H973.1 V681.0 H994.8 V681.0 H995.0 V681.0 H995.3 V681.0 H995.6 V681.0 H998.3 V681.0 H998.6 V681.0 H998.9 V681.0 H999.1 V681.0 H1033.7 V681.0 H1034.0 V681.0 H1034.3 V681.0 H1034.5 V681.0 H1041.1 V681.0 H1041.4 V681.0 H1041.7 V681.0 H1085.0 V681.0 H1085.3 V681.0 H1085.6 V681.0 H1085.8 V681.0 H1086.1 V681.0 H1086.4 V681.0 H1086.7 V681.0 H1086.9 V681.0 H1091.1 V681.0 H1102.8 V681.0 H1103.1 V681.0 H1103.4 V681.0 H1111.4 V681.0 H1111.9 V681.0 H1112.2 V681.0 H1113.3 V681.0 H1113.5 V681.0 H1113.8 V681.0 H1115.2 V681.0 H1115.5 V681.0 H1120.7 V681.0 H1121.0 V681.0 H1121.2 V681.0 H1152.8 V681.0 H1199.1 V681.0 H1199.4 V681.0 H1199.7 V681.0 H1205.5 V681.0 H1212.9 V681.0 H1214.2 V681.0 H1214.5 V681.0 H1214.8 V681.0 H1215.1 V681.0 H1220.0" fill="none" stroke-width="2" stroke-linejoin="round"><title>Binance mid since t, bps</title></path>
+<text class="t3" x="1041.7" y="780" font-size="11.5" text-anchor="middle">ms from t</text>
+<line class="xh" id="g3xh2" x1="0" y1="184" x2="0" y2="746" stroke-width="1" visibility="hidden"/>
+<text class="t3" x="70" y="816" font-size="11.5">Look-alike: 11-01 11:01:14 UTC, distance 1.10 on the nine key inputs. Ordinary moment: 11-01 22:15:47 UTC.</text>
+</svg>

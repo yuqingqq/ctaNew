@@ -1,3 +1,8 @@
+<!-- FIRE_GALLERY_20261127_CLAUDE -->
+## 2026-11-27 — fire gallery: 8 random fires (4 moved) with their closest look-alikes and ordinary moments (0 of 16 moved); see reviews/take_reprice_20261125/fire_gallery_chart.html
+
+See FINDINGS FIRE_GALLERY (same date).
+<!-- /FIRE_GALLERY_20261127_CLAUDE -->
 <!-- ABSORPTION_20261127_CLAUDE -->
 ## 2026-11-27 — the near side building against trades: present at its fires and nearly as much at look-alikes (which move 5.8%); as filters 3-12%, graded up to 21.8% on 0.4% of moments vs its 61%
 

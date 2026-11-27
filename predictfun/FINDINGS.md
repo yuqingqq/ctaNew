@@ -1,3 +1,22 @@
+<!-- FIRE_GALLERY_20261127_CLAUDE -->
+## 2026-11-27 — a gallery of 8 real fires (drawn at random) against normal conditions: 4 were followed by a Binance move within 300 ms, none of their 16 comparison moments; two of the moving fires are followed by a burst of trades their way within ~10 ms of the order landing, from books that look like their look-alikes'
+
+[chart](reviews/take_reprice_20261125/fire_gallery_chart.html), [examples](reviews/take_reprice_20261125/fire_gallery_examples.json) (8 of the top taker's 4,424 fires drawn with seed 20261127; next to each, its nearest look-alike on the nine key book inputs (VISUAL_TWINS) and a random ordinary moment of the same day and bet within 30 min; SIGNAL_VS_NOISE's chart per fire; declared before the run). USER: "can you show me more charts of real fires vs normal conditions". Consumed days.
+
+| fire | time (UTC), bet | fire: imbalance, score, outcome | buys/sells their way in the 100 ms after t / the 1 s before, BTC | closest look-alike: imbalance, outcome | ordinary moment: imbalance, outcome |
+|---|---|---|---:|---|---|
+| 1 | 10-31 17:42:49, down | +0.12, 2.9%, no move | 0.0 / 0.4 | +0.10, no move | +0.91, no move |
+| 2 | 11-01 16:25:49, up | +0.19, 1.9%, +8 ms | 46.0 / 0.0 | +0.19, no move | +0.58, no move |
+| 3 | 11-01 16:26:55, up | +0.03, 0.9%, no move | 0.0 / 0.0 | +0.17, no move | -0.32, no move |
+| 4 | 11-01 22:38:41, up | +0.16, 5.6%, no move | 0.0 / 0.0 | +0.45, no move | -0.97, no move |
+| 5 | 11-02 04:26:55, down | -0.73, 1.5%, no move | 0.0 / 0.9 | -0.61, no move | -0.63, no move |
+| 6 | 11-02 16:58:54, down | -0.73, 0.5%, +285 ms | 0.0 / 0.0 | -0.68, no move | -0.77, no move |
+| 7 | 11-02 17:01:46, down | +0.63, 5.0%, +9 ms | 4.0 / 7.3 | +0.63, no move | -0.67, no move |
+| 8 | 11-02 17:35:37, up | +0.93, 28.3%, +66 ms | 1.8 / 0.1 | +0.94, no move | +0.08, no move |
+
+- 0 of the 16 comparison moments moved within 300 ms. Fires 5 and 6 bet against a book leaning the other way (imbalance -0.73 their way); fire 6 still moved (+285 ms). Some look-alikes have the fire's imbalance to the second decimal and some ordinary moments lean harder; the difference is what follows the order: a burst of trades their way (the sweep) right after t, with little or nothing before.
+- The charts are examples, not evidence on their own; the rates are in SIGNAL_VS_NOISE, VISUAL_TWINS and FIRE_ACTIVITY.
+<!-- /FIRE_GALLERY_20261127_CLAUDE -->
 <!-- ABSORPTION_20261127_CLAUDE -->
 ## 2026-11-27 — the near side building against trades (the USER's reading): at its fires the near side grows more (net +4.2 BTC in 1 s vs +0.8 at random moments), but the look-alikes show it too (+2.5) and move 5.8%; as rules, absorption and two-sided pressure reach 2.9%-3.9%, with a large imbalance 9.6%-11.1%, the best graded version 21.8% on 0.4% of moments, against its 61%
 
