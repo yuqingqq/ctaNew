@@ -19,9 +19,13 @@ PASS) and + 10 / + 25 ms (reported); entries matched >= 15.022 s before the wind
 Forward-mode patches (declared, in-process only, the same in the consumed-day parity runs): the day guards admit exactly the declared
 days; public_score / public_score3's other-venue loops are empty; chase_takes.labels' Binance-spot fair value returns NaN (inputs dropped);
 the Predict paths come from a light loader (the frozen loader's book reading and frame clock, the fixed 50 ms grid, no market-making model
-inputs; its forward bound lifted for the declared days only); the trade-imputation offset (unused by these paths) is 0.
+inputs; its forward bound lifted for the declared days only); the trade-imputation offset (unused by these paths) is 0; (v2) the takers
+module's hour list for the declared forward days is the day's 24 hours plus the next day's 00-01Z when that day is declared or 11-27 (the
+consumed days' convention), replacing its forward refusal.
+Receipts: RECEIPT.md (v1, the freeze) and RECEIPT_v2.md (supersedes v1's procedure only: the takers patch and a build that resumes from
+per-step completion markers; candidate, models, thresholds, PASS rule unchanged). Forward stages pin the latest receipt.
 Stages: selftest | parity_scores | parity_paths <day> | parity_rows <day> [<dir>] | parity_exits <day> [<dir>] | refit | check <day> |
-        freeze | build <day> | points <day> | labels <day> | select | exits <day> | read
+        freeze | freeze_v2 | build <day> | points <day> | labels <day> | select | exits <day> | read
 Outputs (write-once): OUT/chase_forward/..., chase_forward_*.json, predictfun/freeze/chase_forward_1120_1126/RECEIPT.md.
 Usage: PF_SLOT=<slot> predictfun/research/run_light.sh <tag> -- python3 predictfun/reviews/take_reprice_20261125/chase_forward.py <stage> ...
 """
@@ -68,6 +72,27 @@ N_NULL, SEED, CONTROL_PER_DAY = 200, 20261127, 1250
 LATS = (0., 10., 25.)
 GRID_MS, GRID_N = 50., 5996
 POL = ('HOLD', 'TB1S', 'FAV_ONLY', 'TAKE_C1000', EF.FIXED)
+PAD_NEXT = '20261127'
+ORIG_STEMS = WT.TK.stems
+
+
+def receipt_path():
+    """The latest receipt (v2 supersedes v1's procedure), or None."""
+    for nm in ('RECEIPT_v2.md', 'RECEIPT.md'):
+        if (FREEZE / nm).exists():
+            return FREEZE / nm
+    return None
+
+
+def fwd_stems(day):
+    """takers.stems for a declared forward day: its 24 hours and the next day's 00-01Z when that day is declared or 11-27; else the original."""
+    if day not in FWD:
+        return ORIG_STEMS(day)
+    nxt = (dt.datetime.strptime(day, '%Y%m%d') + dt.timedelta(days=1)).strftime('%Y%m%d')
+    out = [f'{day}_{h:02d}' for h in range(24)]
+    if nxt in FWD or nxt == PAD_NEXT:
+        out += [f'{nxt}_00', f'{nxt}_01']
+    return out
 
 
 def feats_all():
@@ -148,9 +173,10 @@ def forward_mode(days=()):
     """The declared in-process patches (see the docstring). days: forward days the guards must admit (empty in the consumed-day parity runs)."""
     C.require(set(days) <= set(FWD), 'an undeclared forward day')
     if days:
-        C.require((FREEZE / 'RECEIPT.md').exists(), 'no freeze receipt: forward stages refuse to run')
+        C.require(receipt_path() is not None, 'no freeze receipt: forward stages refuse to run')
         WT.DAYS = tuple(DAYS0) + tuple(days)
         CT.DAYS = tuple(DAYS0) + tuple(days)
+        WT.TK.stems = fwd_stems
     PS.VEN = ()
     P3.VEN3 = ()
     CV.load = spot_off
@@ -593,9 +619,43 @@ def freeze():
     print('\n'.join(lines))
 
 
+def freeze_v2():
+    """The superseding receipt: v1's candidate unchanged, the procedure corrected (the takers patch, the resumable build)."""
+    fn = FREEZE / 'RECEIPT_v2.md'
+    C.require(not fn.exists(), 'RECEIPT_v2.md exists (write-once)')
+    v1 = (FREEZE / 'RECEIPT.md').read_text()
+    C.require(sha(FOUT / 'refit' / 'models.pkl') in v1, 'the models changed since v1')
+    built = {d: [tag for tag, _, _, done in build_steps(d) if done.exists()] for d in FWD}
+    rows = [d for d in FWD if (FOUT / 'rows' / f'{d}_points.parquet').exists() or (FOUT / 'rows' / f'{d}_labels.parquet').exists()]
+    C.require(not rows and not (FOUT / 'forward_selections.parquet').exists() and not (FOUT / 'exits').exists(), 'forward rows / selections / exits exist')
+    C.require(not any(f'cf_w_{d}' in v for d, v in built.items()), 'a taker join exists')
+    head = [
+        '# Forward test receipt v2: the chase line on 2026-11-20 .. 2026-11-26 (P-2026-005; supersedes RECEIPT.md\'s procedure only)',
+        '',
+        f'- Builder: predictfun/reviews/take_reprice_20261125/chase_forward.py, sha256 {sha(H / "chase_forward.py")} (this commit).',
+        '- Why: v1\'s build stopped at the taker join on both slots: the takers module refuses every hour >= 11-04 (stems(): "a stem outside',
+        '  the permitted hours"), a forward guard v1\'s declared patches did not lift; and v1\'s build refused to resume a day whose step-1',
+        '  inputs existed.',
+        '- Change: one more declared forward-mode patch (takers.stems for the declared forward days: the day\'s 24 hours and the next day\'s',
+        '  00-01Z when that day is declared or 11-27, the consumed days\' convention) and a build that resumes from each builder\'s',
+        '  completion marker. Nothing else: models, thresholds, inputs, entries, exits, the primary cell, the PASS rule, the null and the',
+        '  multiplicity are v1\'s, copied below unchanged.',
+        '- State at this receipt: ' + '; '.join(f'{d[4:6]}-{d[6:]}: ' + (', '.join(t.split('_')[1] for t in v) if v else 'nothing') for d, v in built.items())
+        + ' (step-1 inputs only). No taker join, points, labels, selection, exit or outcome exists for any forward day; nothing has been read',
+        '  into a decision.',
+        '',
+        '## v1 (unchanged)',
+        '',
+    ]
+    fn.write_text('\n'.join(head) + v1)
+    print('\n'.join(head))
+
+
 # ------------------------------------------------------------------------------------------------------------------ forward stages
 def frozen():
-    r = (FREEZE / 'RECEIPT.md').read_text()
+    rp = receipt_path()
+    C.require(rp is not None, 'no freeze receipt')
+    r = rp.read_text()
     C.require(sha(H / 'chase_forward.py') in r, 'the builder changed after the freeze')
     C.require(sha(FOUT / 'refit' / 'models.pkl') in r, 'the models changed after the freeze')
     return r
@@ -605,18 +665,27 @@ def build(day, slot):
     """The day's Predict inputs (pf_step1, timing, booktime, the clock) and the taker join, each a run_light job."""
     C.require(day in FWD, f'{day} is not a declared forward day')
     frozen()
-    C.require(not (MM.S1 / day).exists(), f'step1 for {day} exists: refusing to rebuild')
     rl = str(REPO / 'predictfun' / 'research' / 'run_light.sh')
     env = dict(os.environ, PF_SLOT=slot)
-    for tag, cmd, extra in ((f'cf_s1_{day}', ['python3', '-m', 'predictfun.research.pf_step1', day], {}),
-                            (f'cf_t_{day}', ['python3', '-m', 'predictfun.research.pf_step1_timing', day], {}),
-                            (f'cf_bt_{day}', ['python3', '-m', 'predictfun.research.pf_step1_booktime', day], {}),
-                            (f'cf_f_{day}', ['python3', '-m', 'predictfun.research.pf_step5_features_rl', day], {'PF_RL_DDEC': '2'}),
-                            (f'cf_w_{day}', ['python3', str(H / 'chase_forward.py'), 'winners', day], {})):
+    for tag, cmd, extra, done in build_steps(day):
+        if done.exists():
+            print(tag, 'done before', flush=True)
+            continue
         r = subprocess.run([rl, tag, '--'] + cmd, cwd=str(REPO), env=dict(env, **extra), capture_output=True, text=True)
         tail = (r.stdout + r.stderr).strip().splitlines()[-1:] if (r.stdout + r.stderr).strip() else ['']
         C.require(r.returncode == 0, f'{tag} failed: {tail}')
+        C.require(done.exists(), f'{tag}: its completion marker is missing')
         print(tag, 'ok', flush=True)
+
+
+def build_steps(day):
+    """(tag, command, extra environment, completion marker = the file each builder writes last)."""
+    S1, S5 = MM.S1 / day, Path(I.IO) / 'step5' / day
+    return ((f'cf_s1_{day}', ['python3', '-m', 'predictfun.research.pf_step1', day], {}, S1 / 'summary.json'),
+            (f'cf_t_{day}', ['python3', '-m', 'predictfun.research.pf_step1_timing', day], {}, S1 / 'timing.json'),
+            (f'cf_bt_{day}', ['python3', '-m', 'predictfun.research.pf_step1_booktime', day], {}, S1 / 'booktime.json'),
+            (f'cf_f_{day}', ['python3', '-m', 'predictfun.research.pf_step5_features_rl', day], {'PF_RL_DDEC': '2'}, S5 / 'rows_rl_d2.parquet'),
+            (f'cf_w_{day}', ['python3', str(H / 'chase_forward.py'), 'winners', day], {}, WT.OUT / f'winners_legs_{day}.json'))
 
 
 def winners(day):
@@ -707,6 +776,7 @@ def fwd_read():
     resource.setrlimit(resource.RLIMIT_CPU, (1800, 1801))
     rc = frozen()
     fn = H / 'chase_forward_result.json'
+    rec = receipt_path().name
     C.require(not fn.exists(), f'{fn.name} exists (write-once)')
     import re
     primary = re.search(r'\*\*([A-Za-z0-9_]+\|AB_s\d+)\*\*', rc).group(1)
@@ -738,7 +808,7 @@ def fwd_read():
                 c_days_positive_ge_4=bool(pc['days_positive'] >= 4), d_filled_ge_30=bool(pc['filled'] >= 30))
     verdict = 'PASS' if all(PASS.values()) else ('INSUFFICIENT' if not PASS['d_filled_ge_30'] else 'FAIL')
     daily = np.array(pc['daily_usd'])
-    out = dict(asof=dt.datetime.now(dt.timezone.utc).isoformat(), primary=primary, verdict=verdict, predicates=PASS, primary_cell=pc,
+    out = dict(asof=dt.datetime.now(dt.timezone.utc).isoformat(), receipt=rec, primary=primary, verdict=verdict, predicates=PASS, primary_cell=pc,
                null=dict(draws=N_NULL, seed=SEED, p95_usd=p95, mean_usd=float(tot.mean()), actions_per_day=n_d),
                day_cluster=dict(mean_usd=float(daily.mean()), sd_usd=float(daily.std(ddof=1)), t=float(daily.mean() / (daily.std(ddof=1) / np.sqrt(len(daily)))) if daily.std(ddof=1) > 0 else None),
                cells=cells)
@@ -790,13 +860,25 @@ def selftest():
             raise AssertionError(f'{fn_.__name__} accepted a forward day')
         except ValueError as e_:
             assert 'not a consumed day' in str(e_), e_
+    st = fwd_stems('20261120')
+    assert len(st) == 26 and st[0] == '20261120_00' and st[-2:] == ['20261121_00', '20261121_01'], st
+    st = fwd_stems('20261126')
+    assert st[-2:] == ['20261127_00', '20261127_01'] and len(st) == 26, st
+    assert fwd_stems('20261102') == ORIG_STEMS('20261102')
+    try:
+        ORIG_STEMS('20261120')
+        raise AssertionError('the original stems accepted a forward day')
+    except ValueError as e_:
+        assert 'permitted hours' in str(e_)
+    rp = receipt_path()
+    assert rp is None or rp.name in ('RECEIPT_v2.md', 'RECEIPT.md')
     print('chase_forward selftest PASS')
 
 
 if __name__ == '__main__':
     cmd, a_ = sys.argv[1], sys.argv[2:]
-    dict(selftest=selftest, parity_scores=parity_scores, refit=refit, freeze=freeze, select=fwd_select, read=fwd_read)[cmd]() if cmd in (
-        'selftest', 'parity_scores', 'refit', 'freeze', 'select', 'read') else dict(
+    dict(selftest=selftest, parity_scores=parity_scores, refit=refit, freeze=freeze, freeze_v2=freeze_v2, select=fwd_select, read=fwd_read)[cmd]() if cmd in (
+        'selftest', 'parity_scores', 'refit', 'freeze', 'freeze_v2', 'select', 'read') else dict(
         parity_paths=lambda: parity_paths(a_[0]), parity_rows=lambda: parity_rows(a_[0], a_[1]), parity_exits=lambda: parity_exits(a_[0], a_[1]),
         check=lambda: check(a_[0]), build=lambda: build(a_[0], a_[1] if len(a_) > 1 else os.environ.get('PF_SLOT', 'claude')),
         winners=lambda: winners(a_[0]), points=lambda: fwd_points(a_[0]), labels=lambda: fwd_labels(a_[0]), exits=lambda: fwd_exits(a_[0]))[cmd]()
