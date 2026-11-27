@@ -21,16 +21,21 @@ days; public_score / public_score3's other-venue loops are empty; chase_takes.la
 the Predict paths come from a light loader (the frozen loader's book reading and frame clock, the fixed 50 ms grid, no market-making model
 inputs; its forward bound lifted for the declared days only); the trade-imputation offset (unused by these paths) is 0; (v2) the takers
 module's hour list for the declared forward days is the day's 24 hours plus the next day's 00-01Z when that day is declared or 11-27 (the
-consumed days' convention), replacing its forward refusal.
-Receipts: RECEIPT.md (v1, the freeze) and RECEIPT_v2.md (supersedes v1's procedure only: the takers patch and a build that resumes from
-per-step completion markers; candidate, models, thresholds, PASS rule unchanged). Forward stages pin the latest receipt.
+consumed days' convention), replacing its forward refusal; (v3) fire_events.day_data is replaced by a lean copy with identical outputs
+(the day's book events concatenated, sorted and freed one kind at a time, the freed heap returned to the system) because a busy forward day
+crossed the memory self-guard in the original; Binance futures trade prints and bookTicker rows with a finite price off the 0.1 grid are
+dropped and counted (11-21: 44 trades, 6 book prices; none on the other forward days or the consumed days).
+Receipts: RECEIPT.md (v1, the freeze), RECEIPT_v2.md and RECEIPT_v3.md (each supersedes the previous one's procedure only; candidate,
+models, thresholds, PASS rule unchanged). Forward stages pin the latest receipt.
 Stages: selftest | parity_scores | parity_paths <day> | parity_rows <day> [<dir>] | parity_exits <day> [<dir>] | refit | check <day> |
-        freeze | freeze_v2 | build <day> | points <day> | labels <day> | select | exits <day> | read
+        parity_rows_v3 <day> <dir> | freeze | freeze_v2 | freeze_v3 | build <day> | points <day> | labels <day> | select | exits <day> | read
 Outputs (write-once): OUT/chase_forward/..., chase_forward_*.json, predictfun/freeze/chase_forward_1120_1126/RECEIPT.md.
 Usage: PF_SLOT=<slot> predictfun/research/run_light.sh <tag> -- python3 predictfun/reviews/take_reprice_20261125/chase_forward.py <stage> ...
 """
 import collections
+import ctypes
 import datetime as dt
+import gc
 import glob
 import hashlib
 import json
@@ -74,11 +79,14 @@ GRID_MS, GRID_N = 50., 5996
 POL = ('HOLD', 'TB1S', 'FAV_ONLY', 'TAKE_C1000', EF.FIXED)
 PAD_NEXT = '20261127'
 ORIG_STEMS = WT.TK.stems
+FE, DCm = CT.FE, CT.FE.DC
+ORIG_READ_TRADES, ORIG_BOOK_HOURS = DCm.read_trades, DCm.book_hours
+GRID_DROPS = collections.Counter()
 
 
 def receipt_path():
-    """The latest receipt (v2 supersedes v1's procedure), or None."""
-    for nm in ('RECEIPT_v2.md', 'RECEIPT.md'):
+    """The latest receipt (each version supersedes the previous one's procedure), or None."""
+    for nm in ('RECEIPT_v3.md', 'RECEIPT_v2.md', 'RECEIPT.md'):
         if (FREEZE / nm).exists():
             return FREEZE / nm
     return None
@@ -111,6 +119,97 @@ def sha(p):
 
 
 # ------------------------------------------------------------------------------------------------------------------ forward mode
+def off_grid(x):
+    tk = np.asarray(x, float) * 10.
+    return np.isfinite(tk) & (np.abs(tk - np.rint(tk)) >= 1e-6)
+
+
+def read_trades_grid(day, raw=DCm.RAW):
+    """depletion_cause.read_trades without the prints whose finite price is off the 0.1 grid (counted)."""
+    tr = ORIG_READ_TRADES(day, raw)
+    bad = off_grid(tr.p.to_numpy())
+    if bad.any():
+        GRID_DROPS[f'trades_{day}'] += int(bad.sum())
+        tr = tr[~bad].reset_index(drop=True)
+    return tr
+
+
+def book_hours_grid(day, raw=DCm.RAW):
+    """depletion_cause.book_hours without the rows whose finite bid or ask is off the 0.1 grid (counted per yielded hour)."""
+    for h, bk in ORIG_BOOK_HOURS(day, raw):
+        bad = off_grid(bk[1]) | off_grid(bk[3])
+        if bad.any():
+            GRID_DROPS[f'book_rows_{day}'] += int(bad.sum())
+            bk = tuple(x[~bad] for x in bk)
+        yield h, bk
+
+
+def trim():
+    gc.collect()
+    try:
+        ctypes.CDLL('libc.so.6').malloc_trim(0)
+    except OSError:
+        pass
+
+
+def lean_day_data(day, P):
+    """fire_events.day_data with identical outputs and a lower peak: the hour loop unchanged; the book events concatenated, sorted and freed
+    one kind at a time (the trade events after them, as the original's update), the freed heap returned to the system."""
+    day0 = WT.OD_day_ms(day)
+    ix = DCm.build_index(DCm.read_trades(day), day0)
+    trim()
+    parts = collections.defaultdict(list)
+    t, d = P.t.to_numpy(float), P.d.to_numpy(float)
+    hour = ((t - day0) // 3600000).astype(int)
+    edge = (np.abs(t - (day0 + np.rint((t - day0) / 3600000.) * 3600000.)) < FE.EDGE_MS)
+    st = np.where(edge, 'edge', 'no_book').astype(object)
+    traj = {f'{k}_{int(x)}': np.full(len(t), np.nan) for k in ('imb', 'opp', 'near') for x in FE.LAGS}
+    hit = np.full(len(t), np.nan)
+    tail = None
+    for h, bk in DCm.book_hours(day):
+        h0 = day0 + h * 3600000.
+        lo = h0 - FE.KEEP if h > 0 and tail == h - 1 else h0
+        tail = h
+        E, bid, bq, ask, aq = FE.collapse(*bk)
+        evh = FE.book_events((E, bid, bq, ask, aq), ix)
+        for k, (e, a) in evh.items():
+            keep = (e >= lo) & (e < h0 + 3600000. - FE.KEEP)
+            parts[k].append((e[keep], a[keep]))
+        del evh, bk
+        sel = np.flatnonzero((hour == h) & ~edge)
+        if not len(sel):
+            continue
+        st[sel] = 'ok'
+        tt, dd = t[sel], d[sel]
+        up = dd > 0
+        for x in FE.LAGS:
+            j = np.maximum(WT.last_idx(E, tt - x), 0)
+            opp, near = np.where(up, aq[j], bq[j]), np.where(up, bq[j], aq[j])
+            traj[f'imb_{int(x)}'][sel] = (near - opp) / np.maximum(near + opp, 1e-9)
+            traj[f'opp_{int(x)}'][sel], traj[f'near_{int(x)}'][sel] = opp, near
+        j0, j1 = np.maximum(WT.last_idx(E, tt), 0), np.maximum(WT.last_idx(E, tt + FE.HIT_MS), 0)
+        hit[sel] = (dd * ((bid[j1] + ask[j1]) - (bid[j0] + ask[j0])) > 1e-9).astype(float)
+    C.require(len(parts) > 0, f'{day}: no bookTicker hour')
+    tev = FE.trade_events(ix)
+    del ix
+    ev = {}
+    for k in list(parts.keys()):
+        v = parts.pop(k)
+        e = np.concatenate([x for x, _ in v]); a = np.concatenate([y for _, y in v])
+        del v
+        o = np.argsort(e, kind='stable')
+        ev[k] = (e[o], np.r_[0., np.cumsum(a[o])])
+        del e, a, o
+        trim()
+    for k, (e, a) in tev.items():
+        o = np.argsort(e, kind='stable')
+        ev[k] = (e[o], np.r_[0., np.cumsum(a[o])])
+    del tev
+    trim()
+    C.require(DCm.F.rss_mib() < DCm.F.RSS_GUARD_MIB, 'RSS over the self-guard')
+    return ev, st, traj, hit
+
+
 def spot_off(v, day):
     """chase_takes.labels' fair value without Binance spot: one NaN print -> NaN fair-value inputs (dropped)."""
     C.require(v == 'binance_spot', f'forward mode: {v} is off')
@@ -180,6 +279,9 @@ def forward_mode(days=()):
     PS.VEN = ()
     P3.VEN3 = ()
     CV.load = spot_off
+    DCm.read_trades = read_trades_grid
+    DCm.book_hours = book_hours_grid
+    FE.day_data = lean_day_data
     VR.worlds_all = light_worlds_all
     MM.KP.Tape.offset = lambda self, day: 0.0
 
@@ -471,6 +573,29 @@ def parity_rows(day, od):
     C.require(not out['points']['differing'] and not out['labels']['differing'], 'forward-mode rows differ from CHASE_TAKES')
 
 
+def parity_rows_v3(day, od):
+    """v3's forward mode (the lean day_data, the grid filters) on a consumed day: rows equal to CHASE_TAKES', no row dropped."""
+    fn = H / f'chase_forward_parity_rows_v3_{day}.json'
+    C.require(day in DAYS0, f'{day} is not a consumed day')
+    C.require(not fn.exists(), f'{fn.name} exists (write-once)')
+    resource.setrlimit(resource.RLIMIT_CPU, (2400, 2401))
+    od = Path(od)
+    forward_mode(())
+    CT.points(day, od)
+    CT.labels(day, od)
+    out = {}
+    for kind in ('points', 'labels'):
+        A = pd.read_parquet(CT.OUT / f'{day}_{kind}.parquet')
+        B = pd.read_parquet(od / f'{day}_{kind}.parquet')
+        C.require(len(A) == len(B) and (A[['t', 'd']].to_numpy() == B[['t', 'd']].to_numpy()).all(), f'{kind}: rows differ')
+        cols = [c for c in A.columns if c in B.columns and not (c.startswith('u_') or c in CT.FV or c in DROP_Q)]
+        bad = [c for c in cols if not (A[c].equals(B[c]) or (np.issubdtype(A[c].dtype, np.number) and np.allclose(A[c].to_numpy(float), B[c].to_numpy(float), rtol=0, atol=0, equal_nan=True)))]
+        out[kind] = dict(rows=int(len(A)), columns_compared=len(cols), differing=bad)
+    TR.dump(fn, dict(asof='2026-11-27', day=day, grid_drops=dict(GRID_DROPS), peak_rss_mib_selfreport=float(F.rss_mib()), **out))
+    print(day, out, dict(GRID_DROPS), flush=True)
+    C.require(not out['points']['differing'] and not out['labels']['differing'] and not GRID_DROPS, 'v3 forward-mode rows differ or rows were dropped')
+
+
 def parity_exits(day, od):
     """exits_day on EXIT_FIXED's actions of a consumed day must reproduce EXIT_FIXED's P&L for every policy and latency."""
     C.require(day in DAYS0, f'{day} is not a consumed day')
@@ -700,6 +825,7 @@ def fwd_points(day):
     frozen()
     forward_mode((day,))
     CT.points(day, FOUT / 'rows')
+    TR.dump(FOUT / 'rows' / f'{day}_grid_drops.json', dict(asof='2026-11-27', day=day, drops=dict(GRID_DROPS)))
 
 
 def fwd_labels(day):
@@ -762,6 +888,7 @@ def fwd_exits(day):
     C.require(not fp.exists(), f'{fp.name} exists (write-once)')
     S = pd.read_parquet(FOUT / 'forward_selections.parquet')
     X, st = exits_day(day, S, od)
+    st['grid_drops'] = dict(GRID_DROPS)
     X.to_parquet(fp, index=False)
     Xa = fwd_frame((day,))
     for s in (3., 10.):
@@ -871,7 +998,8 @@ def selftest():
     except ValueError as e_:
         assert 'permitted hours' in str(e_)
     rp = receipt_path()
-    assert rp is None or rp.name in ('RECEIPT_v2.md', 'RECEIPT.md')
+    assert rp is None or rp.name in ('RECEIPT_v3.md', 'RECEIPT_v2.md', 'RECEIPT.md')
+    assert off_grid(np.array([57086.83, 91000.1, 0., np.nan, 91000.15])).tolist() == [True, False, False, False, True]
     print('chase_forward selftest PASS')
 
 
@@ -880,5 +1008,6 @@ if __name__ == '__main__':
     dict(selftest=selftest, parity_scores=parity_scores, refit=refit, freeze=freeze, freeze_v2=freeze_v2, select=fwd_select, read=fwd_read)[cmd]() if cmd in (
         'selftest', 'parity_scores', 'refit', 'freeze', 'freeze_v2', 'select', 'read') else dict(
         parity_paths=lambda: parity_paths(a_[0]), parity_rows=lambda: parity_rows(a_[0], a_[1]), parity_exits=lambda: parity_exits(a_[0], a_[1]),
+        parity_rows_v3=lambda: parity_rows_v3(a_[0], a_[1]),
         check=lambda: check(a_[0]), build=lambda: build(a_[0], a_[1] if len(a_) > 1 else os.environ.get('PF_SLOT', 'claude')),
         winners=lambda: winners(a_[0]), points=lambda: fwd_points(a_[0]), labels=lambda: fwd_labels(a_[0]), exits=lambda: fwd_exits(a_[0]))[cmd]()

@@ -1,0 +1,9 @@
+{
+ "asof": "2026-11-27",
+ "day": "20261101",
+ "identical": true,
+ "kinds": 10,
+ "events": 6824918,
+ "points_sampled": 20000,
+ "builder_sha256": "b6fb1ebbf68e93ec75c4b08b7340588847bc409a2f3001732ce3f8f7f5fe08d2"
+}

@@ -1,0 +1,16 @@
+{
+  "asof": "2026-11-27",
+  "day": "20261102",
+  "grid_drops": {},
+  "peak_rss_mib_selfreport": 1464.28125,
+  "points": {
+    "rows": 132472,
+    "columns_compared": 63,
+    "differing": []
+  },
+  "labels": {
+    "rows": 109437,
+    "columns_compared": 78,
+    "differing": []
+  }
+}
