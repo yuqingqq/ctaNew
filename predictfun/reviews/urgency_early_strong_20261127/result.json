@@ -1,0 +1,19 @@
+{
+  "tests": {
+    "nominal": {
+      "benchmark": "passes",
+      "beats_time": true
+    },
+    "short": {
+      "benchmark": "passes",
+      "beats_time": true
+    }
+  },
+  "passes": true,
+  "sha256": {
+    "comparison.csv": "b2e0df47f150cc6ffdb1653f42ebc9ad7edf579d4c57f7508b3b25a02d4c008f",
+    "markets_20261024.csv": "12d5ebad1e5b32c72c0fe6895eecae759b62f3b8714f02bd786156cc3cefc8e8",
+    "markets_20261025.csv": "91853e70c0bcad6dd6af39d29fba09930d2457d8d165e2634055945bd3eb490d",
+    "markets_20261027.csv": "7595d2f4ba27c226d5e9fd38762ba49488cb186df3f38dc5b217d2d055ed92b4"
+  }
+}
