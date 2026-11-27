@@ -5,8 +5,10 @@ Entries: EXIT_FOLLOW's (FILL_AWARE's selections, a 50-share IOC at the known bes
 Maker exit: we learn the fill 22 ms after the match and our post-only order rests 22 ms later (no speed bump for post-only orders, no maker
 fee); one order for the whole filled size, never moved. Price (on the exit side: an ask for a long UP, a bid on UP for a long DOWN), from
 the book known when it is sent: JOIN = the best price on that side (queue ahead = its shown size); IMP = one tick inside if the spread is
->= 2c, else JOIN (queue ahead 0 inside); TGT = our entry price + 2c on our side (whole cent), not crossing (at least one tick from the other
-side), queue ahead = the shown size at that price if shown, else 0.
+>= 2c, else JOIN (queue ahead 0 inside); TGT2 / TGT5 / TGT10 = our entry price + 2 / 5 / 10c on our side (whole cent, at most 99c), not
+crossing (at least one tick from the other side), queue ahead = the shown size at that price if shown, else 0 (beyond the five shown levels
+the queue is unknown: counted). TGT5 / TGT10 added after the one-day rehearsal (JOIN / IMP filled within ~50 ms at about our entry price,
+the side's mid 6-10c higher 5 s later: selling back into the chase), declared before the real run.
 Fills from Predict's prints after the order rests (winners_legs: taker side and UP-space price; a leg without a time takes its order's
 earliest time; legs still without one are dropped, counted per day): prints at our price consume the queue ahead, then us; a print beyond
 our price (a buyer paying more than our ask, a seller taking less than our bid) means our level was cleared and fills the rest. Cancels
@@ -39,7 +41,7 @@ CT, C, TR, TK, TE, TM, WT, F, VR, MM = E.CT, E.C, E.TR, E.TK, E.TE, E.TM, E.WT, 
 OUT = WT.OUT / 'exit_maker'
 DAYS, Q = E.DAYS, E.Q
 LEARN = 22.
-PRICES = ('JOIN', 'IMP', 'TGT')
+PRICES = ('JOIN', 'IMP', 'TGT2', 'TGT5', 'TGT10')
 TAILS = (('T10_TAKE', 10000., 'TAKE'), ('T39_TAKE', 39000., 'TAKE'), ('T39_HOLD', 39000., 'HOLD'), ('T39_FAV', 39000., 'FAV'))
 MAKER = [f'{p}_{t}' for p in PRICES for t, _, _ in TAILS]
 REPRO = ('HOLD', 'TB1S', 'FAV_ONLY')
@@ -156,15 +158,19 @@ def labels(day, od=None):
                             else:
                                 px, ahead = (ask, f[jr, 17]) if d > 0 else (bid, f[jr, 7])
                         else:
-                            tgt = math.ceil(e + 2. - 1e-9)
+                            tgt = min(math.ceil(e + float(pr_[3:]) - 1e-9), 99)
                             if d > 0:
                                 px = max(float(tgt), bid + 1.)
                                 lv = np.flatnonzero(np.isclose(f[jr, 12:17], px))
                                 ahead = float(f[jr, 17 + lv[0]]) if len(lv) else 0.
+                                deepest = f[jr, 12:17][f[jr, 12:17] >= 0].max() if (f[jr, 12:17] >= 0).any() else -1.
+                                o[f'{pre}_{pr_}_beyond_shown'][i] = float(px > deepest)
                             else:
                                 px = min(100. - tgt, ask - 1.)
                                 lv = np.flatnonzero(np.isclose(f[jr, 2:7], px))
                                 ahead = float(f[jr, 7 + lv[0]]) if len(lv) else 0.
+                                shown = f[jr, 2:7][f[jr, 2:7] >= 0]
+                                o[f'{pre}_{pr_}_beyond_shown'][i] = float(px < shown.min()) if len(shown) else 1.
                         o[f'{pre}_{pr_}_price_its_way'][i] = (px if d > 0 else 100. - px) - e if np.isfinite(px) else np.nan
                         for tl_, T_, tail in TAILS:
                             dl = min(t_rest + T_, cut)
@@ -239,6 +245,9 @@ def read(od=None):
                 c = dict(total_usd=st['total_usd'], per_intended_c=float(pn[ii].sum() * 100. / (Q * len(ii))), sharpe_day_equiv=st['sharpe_day_equiv'],
                          max_drawdown_usd=st['max_drawdown_usd'], daily_usd=st['daily_usd'], days_positive=int(sum(v > 0 for v in st['daily_usd'])))
                 if pol in MAKER:
+                    pr_ = pol.split('_')[0]
+                    if pr_.startswith('TGT') and f'{pre}_{pr_}_beyond_shown' in X:
+                        c['target_beyond_shown_depth'] = float(np.nanmean(X[f'{pre}_{pr_}_beyond_shown'].to_numpy(float)[filled]))
                     ms = X[f'{pre}_{pol}_maker_share'].to_numpy(float)[filled]
                     c.update(maker_closed_share=float(np.nansum(ms * fl[filled]) / fl[filled].sum()) if len(filled) else None,
                              maker_wait_s_median=float(np.nanmedian(X[f'{pre}_{pol}_maker_wait_ms'].to_numpy(float)[filled]) / 1000.) if np.isfinite(X[f'{pre}_{pol}_maker_wait_ms'].to_numpy(float)[filled]).any() else None,
