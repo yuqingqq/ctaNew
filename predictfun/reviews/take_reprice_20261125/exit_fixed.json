@@ -1,0 +1,5601 @@
+{
+  "asof": "2026-11-27",
+  "post_hoc": true,
+  "rehearsal": false,
+  "days": [
+    "20261023",
+    "20261031",
+    "20261101",
+    "20261102"
+  ],
+  "inputs": {
+    "20261023": {
+      "asof": "2026-11-27",
+      "day": "20261023",
+      "actions": 3882,
+      "legs": {
+        "legs": 802157,
+        "untimed_legs": 6106,
+        "untimed_share_of_shares": 0.005190135447536415
+      },
+      "capped_loops": 0
+    },
+    "20261031": {
+      "asof": "2026-11-27",
+      "day": "20261031",
+      "actions": 2377,
+      "legs": {
+        "legs": 446330,
+        "untimed_legs": 105257,
+        "untimed_share_of_shares": 0.20336475624022232
+      },
+      "capped_loops": 0
+    },
+    "20261101": {
+      "asof": "2026-11-27",
+      "day": "20261101",
+      "actions": 1997,
+      "legs": {
+        "legs": 479777,
+        "untimed_legs": 111028,
+        "untimed_share_of_shares": 0.18694787361630769
+      },
+      "capped_loops": 0
+    },
+    "20261102": {
+      "asof": "2026-11-27",
+      "day": "20261102",
+      "actions": 3994,
+      "legs": {
+        "legs": 659585,
+        "untimed_legs": 3998,
+        "untimed_share_of_shares": 0.004463201931173959
+      },
+      "capped_loops": 0
+    }
+  },
+  "parity_max_abs_c": {
+    "AB_s3_HOLD": 0.0,
+    "AB_s3_TB1S": 0.0,
+    "AB_s3_FAV_ONLY": 0.0,
+    "AB_s3_TAKE_C1000": 0.0,
+    "AB_s3_CX_OURS_C1000_JOIN_T10_TAKE": 0.0,
+    "AB_s10_HOLD": 0.0,
+    "AB_s10_TB1S": 0.0,
+    "AB_s10_FAV_ONLY": 0.0,
+    "AB_s10_TAKE_C1000": 0.0,
+    "AB_s10_CX_OURS_C1000_JOIN_T10_TAKE": 0.0
+  },
+  "fixed": "CX_OURS_C1000_JOIN_T10_TAKE",
+  "rule_median_sharpe": {
+    "CX_OURS_C300_JOIN_T10_TAKE": 0.5610542641413933,
+    "CX_OURS_C300_JOIN_T39_FAV": 0.4786240714167167,
+    "CX_OURS_C300_IMP_T10_TAKE": 0.5095850552122143,
+    "CX_OURS_C300_IMP_T39_FAV": 0.49000781247175185,
+    "CX_OURS_C1000_JOIN_T10_TAKE": 1.3356273450371683,
+    "CX_OURS_C1000_JOIN_T39_FAV": 0.6948236002820682,
+    "CX_OURS_C1000_IMP_T10_TAKE": 1.3098656281254377,
+    "CX_OURS_C1000_IMP_T39_FAV": 0.6619420074618325,
+    "CX_OURS_C3000_JOIN_T10_TAKE": 1.1051827620799186,
+    "CX_OURS_C3000_JOIN_T39_FAV": 0.8999893910900382,
+    "CX_OURS_C3000_IMP_T10_TAKE": 1.1084173687814285,
+    "CX_OURS_C3000_IMP_T39_FAV": 0.907318498137081
+  },
+  "latencies_ms": [
+    0.0,
+    10.0,
+    25.0
+  ],
+  "cells": {
+    "L0|ALL|MOVE_top10|AB_s3|HOLD": {
+      "total_usd": 99.31072822540074,
+      "sharpe_day_equiv": 0.17657011100546816,
+      "max_drawdown_usd": 404.25828956339006,
+      "daily_usd": [
+        46.20906466979861,
+        -32.56912736439787,
+        -21.359393480000016,
+        107.03018440000001
+      ],
+      "days_positive": 2,
+      "filled_entries": 244,
+      "filled_shares": 9543.559628797337,
+      "entry_fee_usd": 61.45718590295954,
+      "exit_fee_usd": 0.0
+    },
+    "L0|ALL|MOVE_top10|AB_s3|TB1S": {
+      "total_usd": 311.86754185853783,
+      "sharpe_day_equiv": 2.498546485310379,
+      "max_drawdown_usd": 15.49174950501677,
+      "daily_usd": [
+        125.70335939447206,
+        109.2446974496886,
+        41.310228494983214,
+        35.60925651939394
+      ],
+      "days_positive": 4,
+      "filled_entries": 244,
+      "filled_shares": 9543.559628797337,
+      "entry_fee_usd": 61.45718590295954,
+      "exit_fee_usd": 60.388627775260154
+    },
+    "L0|ALL|MOVE_top10|AB_s3|FAV_ONLY": {
+      "total_usd": 383.3514351387557,
+      "sharpe_day_equiv": 0.8293787972668221,
+      "max_drawdown_usd": 161.06114487923074,
+      "daily_usd": [
+        174.90802775197798,
+        70.50685089905043,
+        72.07716818772727,
+        65.8593883
+      ],
+      "days_positive": 4,
+      "filled_entries": 244,
+      "filled_shares": 9543.559628797337,
+      "entry_fee_usd": 61.45718590295954,
+      "exit_fee_usd": 23.33261555886978
+    },
+    "L0|ALL|MOVE_top10|AB_s3|TAKE_C1000": {
+      "total_usd": 223.99524999491018,
+      "sharpe_day_equiv": 1.195747866372929,
+      "max_drawdown_usd": 60.36113844384924,
+      "daily_usd": [
+        38.275757349652864,
+        87.96873472525729,
+        41.822214820000006,
+        55.9285431
+      ],
+      "days_positive": 4,
+      "filled_entries": 244,
+      "filled_shares": 9543.559628797337,
+      "entry_fee_usd": 61.45718590295954,
+      "exit_fee_usd": 55.000425163697955
+    },
+    "L0|ALL|MOVE_top10|AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 220.63711247349423,
+      "sharpe_day_equiv": 1.1117035107199578,
+      "max_drawdown_usd": 50.60778528522859,
+      "daily_usd": [
+        69.92661359624755,
+        61.79811908801594,
+        32.964011149230764,
+        55.94836864
+      ],
+      "days_positive": 4,
+      "filled_entries": 244,
+      "filled_shares": 9543.559628797337,
+      "entry_fee_usd": 61.45718590295954,
+      "exit_fee_usd": 21.438942246399908,
+      "maker_closed_share": 0.4684037001664979,
+      "in_flight_share": 0.005664842981098283,
+      "pre_move_fill_share": 0.02287573621213395,
+      "pre_move_time_share": 0.008771828994594657,
+      "cancels_mean": 0.36885245901639346,
+      "top_share_of_maker": 0.006711051108586138,
+      "top_gain5_c": -2.5,
+      "top2_10_share_of_maker": 0.2515731385174483,
+      "top2_10_gain5_c": 2.125445733639279,
+      "others_share_of_maker": 0.7417158103739656,
+      "others_gain5_c": 0.9035738140377139
+    },
+    "L0|ALL|MOVE_top10|AB_s10|HOLD": {
+      "total_usd": 1124.970308182077,
+      "sharpe_day_equiv": 0.6640244291387198,
+      "max_drawdown_usd": 576.1705514344555,
+      "daily_usd": [
+        72.80776604440865,
+        142.98858287866804,
+        -193.68347502542284,
+        1102.857434284423
+      ],
+      "days_positive": 3,
+      "filled_entries": 1733,
+      "filled_shares": 72079.42418414747,
+      "entry_fee_usd": 492.95429041987484,
+      "exit_fee_usd": 0.0
+    },
+    "L0|ALL|MOVE_top10|AB_s10|TB1S": {
+      "total_usd": -223.4485091751899,
+      "sharpe_day_equiv": -0.8613597685436319,
+      "max_drawdown_usd": 277.9767764305977,
+      "daily_usd": [
+        -163.0982716863842,
+        -14.058816163369006,
+        -74.04294689433912,
+        27.75152556890243
+      ],
+      "days_positive": 1,
+      "filled_entries": 1733,
+      "filled_shares": 72079.42418414747,
+      "entry_fee_usd": 492.95429041987484,
+      "exit_fee_usd": 477.82481770146927
+    },
+    "L0|ALL|MOVE_top10|AB_s10|FAV_ONLY": {
+      "total_usd": 1097.6118454029584,
+      "sharpe_day_equiv": 0.8416410391517344,
+      "max_drawdown_usd": 282.01310282740866,
+      "daily_usd": [
+        80.49666231718513,
+        268.8187017056668,
+        -87.12542751104084,
+        835.4219088911473
+      ],
+      "days_positive": 3,
+      "filled_entries": 1733,
+      "filled_shares": 72079.42418414747,
+      "entry_fee_usd": 492.95429041987484,
+      "exit_fee_usd": 203.26854137110232
+    },
+    "L0|ALL|MOVE_top10|AB_s10|TAKE_C1000": {
+      "total_usd": -244.30552365140437,
+      "sharpe_day_equiv": -0.4483786398496519,
+      "max_drawdown_usd": 492.6779320669206,
+      "daily_usd": [
+        -193.8297784576692,
+        -147.00422815413134,
+        -107.38493181232728,
+        203.91341477272346
+      ],
+      "days_positive": 1,
+      "filled_entries": 1733,
+      "filled_shares": 72079.42418414747,
+      "entry_fee_usd": 492.95429041987484,
+      "exit_fee_usd": 447.26598642264383
+    },
+    "L0|ALL|MOVE_top10|AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": -528.276413877448,
+      "sharpe_day_equiv": -0.8540301905455165,
+      "max_drawdown_usd": 739.2942008115779,
+      "daily_usd": [
+        -303.72610577258297,
+        -231.175627022446,
+        -108.5077998290715,
+        115.13311874665236
+      ],
+      "days_positive": 1,
+      "filled_entries": 1733,
+      "filled_shares": 72079.42418414747,
+      "entry_fee_usd": 492.95429041987484,
+      "exit_fee_usd": 198.37142036020796,
+      "maker_closed_share": 0.4611472843880804,
+      "in_flight_share": 0.01672541716252957,
+      "pre_move_fill_share": 0.05018612407307122,
+      "pre_move_time_share": 0.007949448450391272,
+      "cancels_mean": 0.41315637622619733,
+      "top_share_of_maker": 0.034959193458017256,
+      "top_gain5_c": 5.004594750736209,
+      "top2_10_share_of_maker": 0.22627573114448116,
+      "top2_10_gain5_c": 3.125490433239152,
+      "others_share_of_maker": 0.7387650753975015,
+      "others_gain5_c": 1.4343809172478517
+    },
+    "L0|EARLY|MOVE_top10|AB_s3|HOLD": {
+      "total_usd": 203.84845171207093,
+      "sharpe_day_equiv": 0.399787950470736,
+      "max_drawdown_usd": 259.2768783181616,
+      "daily_usd": [
+        212.78459591502727,
+        -49.87191956295631,
+        -68.51572104000002,
+        109.45149640000001
+      ],
+      "days_positive": 2,
+      "filled_entries": 192,
+      "filled_shares": 7608.494851931492,
+      "entry_fee_usd": 54.30827983225018,
+      "exit_fee_usd": 0.0
+    },
+    "L0|EARLY|MOVE_top10|AB_s3|TB1S": {
+      "total_usd": 316.07265041796217,
+      "sharpe_day_equiv": 2.756441882630734,
+      "max_drawdown_usd": 10.755807879999992,
+      "daily_usd": [
+        136.4478711318694,
+        94.57631086669883,
+        44.49085338000001,
+        40.55761503939394
+      ],
+      "days_positive": 4,
+      "filled_entries": 192,
+      "filled_shares": 7608.494851931492,
+      "entry_fee_usd": 54.30827983225018,
+      "exit_fee_usd": 53.21597858479147
+    },
+    "L0|EARLY|MOVE_top10|AB_s3|FAV_ONLY": {
+      "total_usd": 487.8891586254258,
+      "sharpe_day_equiv": 1.2148486742085187,
+      "max_drawdown_usd": 108.66372087923077,
+      "daily_usd": [
+        341.48355899720656,
+        53.20405870049197,
+        24.92084062772728,
+        68.2807003
+      ],
+      "days_positive": 4,
+      "filled_entries": 192,
+      "filled_shares": 7608.494851931492,
+      "entry_fee_usd": 54.30827983225018,
+      "exit_fee_usd": 23.332615558869776
+    },
+    "L0|EARLY|MOVE_top10|AB_s3|TAKE_C1000": {
+      "total_usd": 349.3096077815803,
+      "sharpe_day_equiv": 2.7095439125678826,
+      "max_drawdown_usd": 11.061807879999975,
+      "daily_usd": [
+        137.12376659488146,
+        102.92688902669883,
+        50.90909706,
+        58.3498551
+      ],
+      "days_positive": 4,
+      "filled_entries": 192,
+      "filled_shares": 7608.494851931492,
+      "entry_fee_usd": 54.30827983225018,
+      "exit_fee_usd": 52.413825863697966
+    },
+    "L0|EARLY|MOVE_top10|AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 336.20221820016434,
+      "sharpe_day_equiv": 2.3159897130467044,
+      "max_drawdown_usd": 24.154632730769237,
+      "daily_usd": [
+        170.29821484147612,
+        75.99532688945746,
+        31.538995829230764,
+        58.369680640000006
+      ],
+      "days_positive": 4,
+      "filled_entries": 192,
+      "filled_shares": 7608.494851931492,
+      "entry_fee_usd": 54.30827983225018,
+      "exit_fee_usd": 20.404376006399904,
+      "maker_closed_share": 0.5546745742775829,
+      "in_flight_share": 0.006000418967461304,
+      "pre_move_fill_share": 0.024230857222333393,
+      "pre_move_time_share": 0.008762609699563427,
+      "cancels_mean": 0.453125,
+      "top_share_of_maker": 0.007108602744670465,
+      "top_gain5_c": -2.5,
+      "top2_10_share_of_maker": 0.254628246467585,
+      "top2_10_gain5_c": 1.2937554342823527,
+      "others_share_of_maker": 0.7382631507877444,
+      "others_gain5_c": 1.4308543220079728
+    },
+    "L0|EARLY|MOVE_top10|AB_s10|HOLD": {
+      "total_usd": 1245.2763572037943,
+      "sharpe_day_equiv": 0.8331739421495096,
+      "max_drawdown_usd": 523.4741454318109,
+      "daily_usd": [
+        330.0380131747001,
+        291.9928307748357,
+        -269.44584705536823,
+        892.6913603096266
+      ],
+      "days_positive": 3,
+      "filled_entries": 1463,
+      "filled_shares": 61995.47517736768,
+      "entry_fee_usd": 438.32815957433326,
+      "exit_fee_usd": 0.0
+    },
+    "L0|EARLY|MOVE_top10|AB_s10|TB1S": {
+      "total_usd": -43.60957985257525,
+      "sharpe_day_equiv": -0.2031019879363222,
+      "max_drawdown_usd": 99.0121981023819,
+      "daily_usd": [
+        -23.732790122139562,
+        0.6055929099270934,
+        -43.25921531416652,
+        22.77683267380373
+      ],
+      "days_positive": 2,
+      "filled_entries": 1463,
+      "filled_shares": 61995.47517736768,
+      "entry_fee_usd": 438.32815957433326,
+      "exit_fee_usd": 428.14169513542964
+    },
+    "L0|EARLY|MOVE_top10|AB_s10|FAV_ONLY": {
+      "total_usd": 1217.917894424676,
+      "sharpe_day_equiv": 1.0881738842348674,
+      "max_drawdown_usd": 237.43695031742914,
+      "daily_usd": [
+        337.72690944747666,
+        417.8229496018346,
+        -162.88779954098635,
+        625.2558349163511
+      ],
+      "days_positive": 3,
+      "filled_entries": 1463,
+      "filled_shares": 61995.47517736768,
+      "entry_fee_usd": 438.32815957433326,
+      "exit_fee_usd": 203.26854137110232
+    },
+    "L0|EARLY|MOVE_top10|AB_s10|TAKE_C1000": {
+      "total_usd": 79.7416802168037,
+      "sharpe_day_equiv": 0.35029785955851567,
+      "max_drawdown_usd": 73.11124889072589,
+      "daily_usd": [
+        48.16794316754063,
+        9.37802299018447,
+        -40.52238932727273,
+        62.71810338635133
+      ],
+      "days_positive": 3,
+      "filled_entries": 1463,
+      "filled_shares": 61995.47517736768,
+      "entry_fee_usd": 438.32815957433326,
+      "exit_fee_usd": 426.7510551481058
+    },
+    "L0|EARLY|MOVE_top10|AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": -191.53223493946243,
+      "sharpe_day_equiv": -0.5329854646615276,
+      "max_drawdown_usd": 257.7031530210383,
+      "daily_usd": [
+        -57.73482346722653,
+        -81.3470452603997,
+        -49.29545270992605,
+        -3.1549135019101655
+      ],
+      "days_positive": 0,
+      "filled_entries": 1463,
+      "filled_shares": 61995.47517736768,
+      "entry_fee_usd": 438.32815957433326,
+      "exit_fee_usd": 189.3995473645951,
+      "maker_closed_share": 0.5083691145970312,
+      "in_flight_share": 0.016053135287666852,
+      "pre_move_fill_share": 0.04816981806814608,
+      "pre_move_time_share": 0.00789601593674043,
+      "cancels_mean": 0.46616541353383456,
+      "top_share_of_maker": 0.03260050868265791,
+      "top_gain5_c": 5.124481330862424,
+      "top2_10_share_of_maker": 0.226291131291371,
+      "top2_10_gain5_c": 2.856213037821032,
+      "others_share_of_maker": 0.7411083600259711,
+      "others_gain5_c": 1.5994807932937125
+    },
+    "L0|ALL|MOVE_top1|AB_s3|HOLD": {
+      "total_usd": 79.05970267477142,
+      "sharpe_day_equiv": 0.6305856038692704,
+      "max_drawdown_usd": 13.590582000000001,
+      "daily_usd": [
+        30.75330471477143,
+        25.52,
+        22.78639795999999,
+        0.0
+      ],
+      "days_positive": 3,
+      "filled_entries": 8,
+      "filled_shares": 361.28999999999996,
+      "entry_fee_usd": 2.342554849514286,
+      "exit_fee_usd": 0.0
+    },
+    "L0|ALL|MOVE_top1|AB_s3|TB1S": {
+      "total_usd": 42.40766959477142,
+      "sharpe_day_equiv": 0.8917592401975304,
+      "max_drawdown_usd": 3.979134000000002,
+      "daily_usd": [
+        8.817752714771423,
+        15.772518919999998,
+        17.817397959999997,
+        0.0
+      ],
+      "days_positive": 3,
+      "filled_entries": 8,
+      "filled_shares": 361.28999999999996,
+      "entry_fee_usd": 2.342554849514286,
+      "exit_fee_usd": 2.20327908
+    },
+    "L0|ALL|MOVE_top1|AB_s3|FAV_ONLY": {
+      "total_usd": 86.89970267477142,
+      "sharpe_day_equiv": 0.7042912450433211,
+      "max_drawdown_usd": 13.590582000000001,
+      "daily_usd": [
+        30.75330471477143,
+        25.52,
+        30.62639795999999,
+        0.0
+      ],
+      "days_positive": 3,
+      "filled_entries": 8,
+      "filled_shares": 361.28999999999996,
+      "entry_fee_usd": 2.342554849514286,
+      "exit_fee_usd": 0.16
+    },
+    "L0|ALL|MOVE_top1|AB_s3|TAKE_C1000": {
+      "total_usd": 26.869327594771445,
+      "sharpe_day_equiv": 0.43030288596997046,
+      "max_drawdown_usd": 25.024089285228555,
+      "daily_usd": [
+        -11.444389285228551,
+        15.772518919999998,
+        22.541197959999998,
+        0.0
+      ],
+      "days_positive": 2,
+      "filled_entries": 8,
+      "filled_shares": 361.28999999999996,
+      "entry_fee_usd": 2.342554849514286,
+      "exit_fee_usd": 1.74372108
+    },
+    "L0|ALL|MOVE_top1|AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 35.59970267477143,
+      "sharpe_day_equiv": 0.5346793992134429,
+      "max_drawdown_usd": 20.486395285228568,
+      "daily_usd": [
+        -6.206695285228568,
+        16.02,
+        25.786397959999995,
+        0.0
+      ],
+      "days_positive": 2,
+      "filled_entries": 8,
+      "filled_shares": 361.28999999999996,
+      "entry_fee_usd": 2.342554849514286,
+      "exit_fee_usd": 0.4600000000000001,
+      "maker_closed_share": 0.553571922832074,
+      "in_flight_share": 0.0,
+      "pre_move_fill_share": 0.0,
+      "pre_move_time_share": 0.006822678583611926,
+      "cancels_mean": 0.125,
+      "top_share_of_maker": 0.0,
+      "top_gain5_c": null,
+      "top2_10_share_of_maker": 0.25,
+      "top2_10_gain5_c": 5.5,
+      "others_share_of_maker": 0.75,
+      "others_gain5_c": 0.1666666666666665
+    },
+    "L0|ALL|MOVE_top1|AB_s10|HOLD": {
+      "total_usd": 272.4816650090055,
+      "sharpe_day_equiv": 1.0931592903746128,
+      "max_drawdown_usd": 58.33010399999999,
+      "daily_usd": [
+        141.03875592163712,
+        45.33828200000001,
+        49.24505595999999,
+        36.859571127368426
+      ],
+      "days_positive": 4,
+      "filled_entries": 39,
+      "filled_shares": 1313.1190641086762,
+      "entry_fee_usd": 8.166593440653326,
+      "exit_fee_usd": 0.0
+    },
+    "L0|ALL|MOVE_top1|AB_s10|TB1S": {
+      "total_usd": 109.94640663695901,
+      "sharpe_day_equiv": 1.6209100211883976,
+      "max_drawdown_usd": 7.023664867368424,
+      "daily_usd": [
+        40.8250630433837,
+        29.987818506206896,
+        23.776715959999997,
+        15.356809127368422
+      ],
+      "days_positive": 4,
+      "filled_entries": 39,
+      "filled_shares": 1313.1190641086762,
+      "entry_fee_usd": 8.166593440653326,
+      "exit_fee_usd": 8.26383539154283
+    },
+    "L0|ALL|MOVE_top1|AB_s10|FAV_ONLY": {
+      "total_usd": 203.34407583189633,
+      "sharpe_day_equiv": 0.9548235666930025,
+      "max_drawdown_usd": 58.33010399999999,
+      "daily_usd": [
+        127.44988185715951,
+        29.148282000000002,
+        31.58505595999999,
+        15.160856014736844
+      ],
+      "days_positive": 4,
+      "filled_entries": 39,
+      "filled_shares": 1313.1190641086762,
+      "entry_fee_usd": 8.166593440653326,
+      "exit_fee_usd": 2.4592364159151607
+    },
+    "L0|ALL|MOVE_top1|AB_s10|TAKE_C1000": {
+      "total_usd": 69.92608935827306,
+      "sharpe_day_equiv": 0.6634346355616302,
+      "max_drawdown_usd": 38.100522,
+      "daily_usd": [
+        10.520864989442156,
+        21.650218919999997,
+        23.525565601462482,
+        14.229439847368422
+      ],
+      "days_positive": 4,
+      "filled_entries": 39,
+      "filled_shares": 1313.1190641086762,
+      "entry_fee_usd": 8.166593440653326,
+      "exit_fee_usd": 5.9978077831050465
+    },
+    "L0|ALL|MOVE_top1|AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 71.00081116931975,
+      "sharpe_day_equiv": 0.6269575285901781,
+      "max_drawdown_usd": 39.198076,
+      "daily_usd": [
+        15.323356459846067,
+        22.43663277999999,
+        18.068919959999995,
+        15.171901969473684
+      ],
+      "days_positive": 4,
+      "filled_entries": 39,
+      "filled_shares": 1313.1190641086762,
+      "entry_fee_usd": 8.166593440653326,
+      "exit_fee_usd": 2.1158295623880594,
+      "maker_closed_share": 0.41374774571593187,
+      "in_flight_share": 0.0,
+      "pre_move_fill_share": 0.0,
+      "pre_move_time_share": 0.004411623669320034,
+      "cancels_mean": 0.1794871794871795,
+      "top_share_of_maker": 0.0,
+      "top_gain5_c": null,
+      "top2_10_share_of_maker": 0.2620502610702373,
+      "top2_10_gain5_c": 1.2053728984640428,
+      "others_share_of_maker": 0.7379497389297626,
+      "others_gain5_c": 0.9363201732124901
+    },
+    "L0|EARLY|MOVE_top1|AB_s3|HOLD": {
+      "total_usd": 70.86312,
+      "sharpe_day_equiv": 0.7142870099746181,
+      "max_drawdown_usd": 11.730000000000004,
+      "daily_usd": [
+        57.07312,
+        25.52,
+        -11.73,
+        0.0
+      ],
+      "days_positive": 2,
+      "filled_entries": 4,
+      "filled_shares": 200.0,
+      "entry_fee_usd": 1.52288,
+      "exit_fee_usd": 0.0
+    },
+    "L0|EARLY|MOVE_top1|AB_s3|TB1S": {
+      "total_usd": 41.328638919999996,
+      "sharpe_day_equiv": 0.938366540818479,
+      "max_drawdown_usd": 0.0,
+      "daily_usd": [
+        15.726119999999998,
+        15.772518919999998,
+        9.83,
+        0.0
+      ],
+      "days_positive": 3,
+      "filled_entries": 4,
+      "filled_shares": 200.0,
+      "entry_fee_usd": 1.52288,
+      "exit_fee_usd": 1.3281270800000002
+    },
+    "L0|EARLY|MOVE_top1|AB_s3|FAV_ONLY": {
+      "total_usd": 78.70312,
+      "sharpe_day_equiv": 0.8140188068123617,
+      "max_drawdown_usd": 3.8900000000000006,
+      "daily_usd": [
+        57.07312,
+        25.52,
+        -3.89,
+        0.0
+      ],
+      "days_positive": 2,
+      "filled_entries": 4,
+      "filled_shares": 200.0,
+      "entry_fee_usd": 1.52288,
+      "exit_fee_usd": 0.16
+    },
+    "L0|EARLY|MOVE_top1|AB_s3|TAKE_C1000": {
+      "total_usd": 43.927944920000016,
+      "sharpe_day_equiv": 0.8892424575836663,
+      "max_drawdown_usd": 0.0,
+      "daily_usd": [
+        14.875426000000019,
+        15.772518919999998,
+        13.28,
+        0.0
+      ],
+      "days_positive": 3,
+      "filled_entries": 4,
+      "filled_shares": 200.0,
+      "entry_fee_usd": 1.52288,
+      "exit_fee_usd": 1.24852108
+    },
+    "L0|EARLY|MOVE_top1|AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 50.40312,
+      "sharpe_day_equiv": 0.9548434058347509,
+      "max_drawdown_usd": 0.0,
+      "daily_usd": [
+        20.113120000000002,
+        16.02,
+        14.27,
+        0.0
+      ],
+      "days_positive": 3,
+      "filled_entries": 4,
+      "filled_shares": 200.0,
+      "entry_fee_usd": 1.52288,
+      "exit_fee_usd": 0.4600000000000001,
+      "maker_closed_share": 0.75,
+      "in_flight_share": 0.0,
+      "pre_move_fill_share": 0.0,
+      "pre_move_time_share": 0.009705439899063426,
+      "cancels_mean": 0.25,
+      "top_share_of_maker": 0.0,
+      "top_gain5_c": null,
+      "top2_10_share_of_maker": 0.3333333333333333,
+      "top2_10_gain5_c": 5.5,
+      "others_share_of_maker": 0.6666666666666666,
+      "others_gain5_c": -1.5
+    },
+    "L0|EARLY|MOVE_top1|AB_s10|HOLD": {
+      "total_usd": 251.29597833423412,
+      "sharpe_day_equiv": 1.2795293056229025,
+      "max_drawdown_usd": 19.51595111263157,
+      "daily_usd": [
+        142.1615492068657,
+        48.684799999999996,
+        23.590057999999996,
+        36.859571127368426
+      ],
+      "days_positive": 4,
+      "filled_entries": 18,
+      "filled_shares": 680.0921675569522,
+      "entry_fee_usd": 4.121822591139042,
+      "exit_fee_usd": 0.0
+    },
+    "L0|EARLY|MOVE_top1|AB_s10|TB1S": {
+      "total_usd": 87.93302961930871,
+      "sharpe_day_equiv": 1.480740784640166,
+      "max_drawdown_usd": 1.8834820000000008,
+      "daily_usd": [
+        33.425363571940295,
+        26.24613892,
+        12.904718,
+        15.356809127368422
+      ],
+      "days_positive": 4,
+      "filled_entries": 18,
+      "filled_shares": 680.0921675569522,
+      "entry_fee_usd": 4.121822591139042,
+      "exit_fee_usd": 4.523437281304006
+    },
+    "L0|EARLY|MOVE_top1|AB_s10|FAV_ONLY": {
+      "total_usd": 182.1583891571249,
+      "sharpe_day_equiv": 1.234159717122157,
+      "max_drawdown_usd": 9.863666225263131,
+      "daily_usd": [
+        128.57267514238805,
+        32.4948,
+        5.930057999999999,
+        15.160856014736844
+      ],
+      "days_positive": 4,
+      "filled_entries": 18,
+      "filled_shares": 680.0921675569522,
+      "entry_fee_usd": 4.121822591139042,
+      "exit_fee_usd": 2.4592364159151607
+    },
+    "L0|EARLY|MOVE_top1|AB_s10|TAKE_C1000": {
+      "total_usd": 91.46172305602515,
+      "sharpe_day_equiv": 1.4365734195299977,
+      "max_drawdown_usd": 1.8834820000000008,
+      "daily_usd": [
+        35.88082828865674,
+        24.996736919999996,
+        16.354718,
+        14.229439847368422
+      ],
+      "days_positive": 4,
+      "filled_entries": 18,
+      "filled_shares": 680.0921675569522,
+      "entry_fee_usd": 4.121822591139042,
+      "exit_fee_usd": 4.454043292348782
+    },
+    "L0|EARLY|MOVE_top1|AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 91.5851244945483,
+      "sharpe_day_equiv": 1.2566343649870497,
+      "max_drawdown_usd": 4.464746494925375,
+      "daily_usd": [
+        39.136149745074626,
+        25.783150779999993,
+        11.493922,
+        15.171901969473684
+      ],
+      "days_positive": 4,
+      "filled_entries": 18,
+      "filled_shares": 680.0921675569522,
+      "entry_fee_usd": 4.121822591139042,
+      "exit_fee_usd": 1.8458295623880598,
+      "maker_closed_share": 0.5783040467064977,
+      "in_flight_share": 0.0,
+      "pre_move_fill_share": 0.0,
+      "pre_move_time_share": 0.004326420047885896,
+      "cancels_mean": 0.3333333333333333,
+      "top_share_of_maker": 0.0,
+      "top_gain5_c": null,
+      "top2_10_share_of_maker": 0.361993139026973,
+      "top2_10_gain5_c": 1.2053728984640428,
+      "others_share_of_maker": 0.6380068609730271,
+      "others_gain5_c": -1.9910198909064527
+    },
+    "L0|ALL|DECOMP_s10_top1|AB_s3|HOLD": {
+      "total_usd": 102.70093616866811,
+      "sharpe_day_equiv": 0.24353817995879787,
+      "max_drawdown_usd": 116.97150324640006,
+      "daily_usd": [
+        -108.30150324640003,
+        102.61864746000003,
+        16.935053293333326,
+        91.44873866173478
+      ],
+      "days_positive": 3,
+      "filled_entries": 116,
+      "filled_shares": 5355.165097504274,
+      "entry_fee_usd": 26.764763262622388,
+      "exit_fee_usd": 0.0
+    },
+    "L0|ALL|DECOMP_s10_top1|AB_s3|TB1S": {
+      "total_usd": 107.04529334696154,
+      "sharpe_day_equiv": 1.5060816117615805,
+      "max_drawdown_usd": 14.589654200000005,
+      "daily_usd": [
+        -3.2235135741656733,
+        55.811809479999994,
+        19.17862009555555,
+        35.27837734557167
+      ],
+      "days_positive": 3,
+      "filled_entries": 116,
+      "filled_shares": 5355.165097504274,
+      "entry_fee_usd": 26.764763262622388,
+      "exit_fee_usd": 27.411041057013836
+    },
+    "L0|ALL|DECOMP_s10_top1|AB_s3|FAV_ONLY": {
+      "total_usd": 128.59415422005065,
+      "sharpe_day_equiv": 0.4024112234518242,
+      "max_drawdown_usd": 116.81130687895568,
+      "daily_usd": [
+        -8.178498847147551,
+        117.31239426000002,
+        -23.211096326486526,
+        42.6713551336847
+      ],
+      "days_positive": 2,
+      "filled_entries": 116,
+      "filled_shares": 5355.165097504274,
+      "entry_fee_usd": 26.764763262622388,
+      "exit_fee_usd": 14.49808608268128
+    },
+    "L0|ALL|DECOMP_s10_top1|AB_s3|TAKE_C1000": {
+      "total_usd": 136.1766687873826,
+      "sharpe_day_equiv": 1.410207146731002,
+      "max_drawdown_usd": 19.418043797600006,
+      "daily_usd": [
+        7.803691742399973,
+        61.60631139999998,
+        23.61928579555555,
+        43.1473798494271
+      ],
+      "days_positive": 4,
+      "filled_entries": 116,
+      "filled_shares": 5355.165097504274,
+      "entry_fee_usd": 26.764763262622388,
+      "exit_fee_usd": 26.92248871906325
+    },
+    "L0|ALL|DECOMP_s10_top1|AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 179.08903999076725,
+      "sharpe_day_equiv": 1.372268223359301,
+      "max_drawdown_usd": 46.579613120000005,
+      "daily_usd": [
+        19.24858955039998,
+        61.68698317999999,
+        47.051877075555566,
+        51.10159018481171
+      ],
+      "days_positive": 4,
+      "filled_entries": 116,
+      "filled_shares": 5355.165097504274,
+      "entry_fee_usd": 26.764763262622388,
+      "exit_fee_usd": 8.134787346447863,
+      "maker_closed_share": 0.4893614953573163,
+      "in_flight_share": 0.017149622630076123,
+      "pre_move_fill_share": 0.019079515636731516,
+      "pre_move_time_share": 0.009003144812830058,
+      "cancels_mean": 0.43103448275862066,
+      "top_share_of_maker": 0.09298939987902059,
+      "top_gain5_c": 1.9944299929705513,
+      "top2_10_share_of_maker": 0.22925932860804019,
+      "top2_10_gain5_c": 4.480385727268502,
+      "others_share_of_maker": 0.6777512715129391,
+      "others_gain5_c": 1.755621753187593
+    },
+    "L0|ALL|DECOMP_s10_top1|AB_s10|HOLD": {
+      "total_usd": -16.695500920041013,
+      "sharpe_day_equiv": -0.024650800094077427,
+      "max_drawdown_usd": 435.6804270318528,
+      "daily_usd": [
+        -105.97615274064073,
+        -185.02407385924153,
+        -2.017720395031688,
+        276.3224460748729
+      ],
+      "days_positive": 1,
+      "filled_entries": 297,
+      "filled_shares": 13188.9344149903,
+      "entry_fee_usd": 76.08955660036659,
+      "exit_fee_usd": 0.0
+    },
+    "L0|ALL|DECOMP_s10_top1|AB_s10|TB1S": {
+      "total_usd": 178.08610487627175,
+      "sharpe_day_equiv": 1.5498934366026949,
+      "max_drawdown_usd": 24.95703043705268,
+      "daily_usd": [
+        30.099901584235806,
+        83.76519928553563,
+        18.893269013656493,
+        45.32773499284384
+      ],
+      "days_positive": 4,
+      "filled_entries": 297,
+      "filled_shares": 13188.9344149903,
+      "entry_fee_usd": 76.08955660036659,
+      "exit_fee_usd": 76.7352975258337
+    },
+    "L0|ALL|DECOMP_s10_top1|AB_s10|FAV_ONLY": {
+      "total_usd": 334.76083874336393,
+      "sharpe_day_equiv": 0.6936549453302365,
+      "max_drawdown_usd": 117.6490483643561,
+      "daily_usd": [
+        51.043599934134136,
+        149.11506610395332,
+        14.546021077506197,
+        120.05615162777026
+      ],
+      "days_positive": 4,
+      "filled_entries": 297,
+      "filled_shares": 13188.9344149903,
+      "entry_fee_usd": 76.08955660036659,
+      "exit_fee_usd": 38.864959029115646
+    },
+    "L0|ALL|DECOMP_s10_top1|AB_s10|TAKE_C1000": {
+      "total_usd": 216.10475646890154,
+      "sharpe_day_equiv": 1.5526428630923097,
+      "max_drawdown_usd": 29.07680175705272,
+      "daily_usd": [
+        41.153805509950296,
+        79.39321883041367,
+        28.035774433656503,
+        67.52195769488105
+      ],
+      "days_positive": 4,
+      "filled_entries": 297,
+      "filled_shares": 13188.9344149903,
+      "entry_fee_usd": 76.08955660036659,
+      "exit_fee_usd": 75.65375141871455
+    },
+    "L0|ALL|DECOMP_s10_top1|AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 256.25132324415426,
+      "sharpe_day_equiv": 1.3502498761992998,
+      "max_drawdown_usd": 44.758537093314544,
+      "daily_usd": [
+        58.66097041436822,
+        90.74575000320922,
+        45.26685235283747,
+        61.57775047373935
+      ],
+      "days_positive": 4,
+      "filled_entries": 297,
+      "filled_shares": 13188.9344149903,
+      "entry_fee_usd": 76.08955660036659,
+      "exit_fee_usd": 29.898507268372242,
+      "maker_closed_share": 0.48867634803685167,
+      "in_flight_share": 0.015515614182018977,
+      "pre_move_fill_share": 0.008812868855386779,
+      "pre_move_time_share": 0.00913079279215067,
+      "cancels_mean": 0.5016835016835017,
+      "top_share_of_maker": 0.08599547779121035,
+      "top_gain5_c": 1.4990740660552475,
+      "top2_10_share_of_maker": 0.23727223960142596,
+      "top2_10_gain5_c": 5.340827603449895,
+      "others_share_of_maker": 0.6767322826073638,
+      "others_gain5_c": 1.7727194838450335
+    },
+    "L0|EARLY|DECOMP_s10_top1|AB_s3|HOLD": {
+      "total_usd": 39.3255682086681,
+      "sharpe_day_equiv": 0.09830677557151885,
+      "max_drawdown_usd": 128.6355278066667,
+      "daily_usd": [
+        -103.09047324640002,
+        66.91864746000003,
+        -18.56134466666667,
+        94.05873866173476
+      ],
+      "days_positive": 2,
+      "filled_entries": 101,
+      "filled_shares": 4605.165097504274,
+      "entry_fee_usd": 24.86923322262239,
+      "exit_fee_usd": 0.0
+    },
+    "L0|EARLY|DECOMP_s10_top1|AB_s3|TB1S": {
+      "total_usd": 90.08560042352721,
+      "sharpe_day_equiv": 1.4448254624103645,
+      "max_drawdown_usd": 14.059654200000002,
+      "daily_usd": [
+        5.154894462399994,
+        39.046609479999994,
+        11.231222135555555,
+        34.65287434557166
+      ],
+      "days_positive": 4,
+      "filled_entries": 101,
+      "filled_shares": 4605.165097504274,
+      "entry_fee_usd": 24.86923322262239,
+      "exit_fee_usd": 25.362381363882523
+    },
+    "L0|EARLY|DECOMP_s10_top1|AB_s3|FAV_ONLY": {
+      "total_usd": 65.21878626005065,
+      "sharpe_day_equiv": 0.22442906010772265,
+      "max_drawdown_usd": 116.81130687895566,
+      "daily_usd": [
+        -2.96746884714754,
+        81.61239426000002,
+        -58.707494286486515,
+        45.2813551336847
+      ],
+      "days_positive": 2,
+      "filled_entries": 101,
+      "filled_shares": 4605.165097504274,
+      "entry_fee_usd": 24.86923322262239,
+      "exit_fee_usd": 14.49808608268128
+    },
+    "L0|EARLY|DECOMP_s10_top1|AB_s3|TAKE_C1000": {
+      "total_usd": 110.89502332738263,
+      "sharpe_day_equiv": 1.4476776440725139,
+      "max_drawdown_usd": 14.731150200000005,
+      "daily_usd": [
+        6.154721742399984,
+        45.60483389999999,
+        13.378087835555558,
+        45.757379849427096
+      ],
+      "days_positive": 4,
+      "filled_entries": 101,
+      "filled_shares": 4605.165097504274,
+      "entry_fee_usd": 24.86923322262239,
+      "exit_fee_usd": 25.668891219063248
+    },
+    "L0|EARLY|DECOMP_s10_top1|AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 155.86367203076725,
+      "sharpe_day_equiv": 1.3454375529023639,
+      "max_drawdown_usd": 47.069613120000014,
+      "daily_usd": [
+        17.45961955039999,
+        50.13698318,
+        34.55547911555556,
+        53.71159018481171
+      ],
+      "days_positive": 4,
+      "filled_entries": 101,
+      "filled_shares": 4605.165097504274,
+      "entry_fee_usd": 24.86923322262239,
+      "exit_fee_usd": 7.984787346447863,
+      "maker_closed_share": 0.5364870851946058,
+      "in_flight_share": 0.01819083987139055,
+      "pre_move_fill_share": 0.020237903845347443,
+      "pre_move_time_share": 0.009187918510772712,
+      "cancels_mean": 0.49504950495049505,
+      "top_share_of_maker": 0.09863513147918515,
+      "top_gain5_c": 1.9944299929705513,
+      "top2_10_share_of_maker": 0.22294060950674804,
+      "top2_10_gain5_c": 3.0715600222373376,
+      "others_share_of_maker": 0.6784242590140668,
+      "others_gain5_c": 1.7410417808615106
+    },
+    "L0|EARLY|DECOMP_s10_top1|AB_s10|HOLD": {
+      "total_usd": -115.78604178004099,
+      "sharpe_day_equiv": -0.18009517889792395,
+      "max_drawdown_usd": 447.95458503185284,
+      "daily_usd": [
+        -88.53618074064073,
+        -210.53090785924152,
+        -33.050158355031684,
+        216.33120517487293
+      ],
+      "days_positive": 1,
+      "filled_entries": 269,
+      "filled_shares": 11923.459314990301,
+      "entry_fee_usd": 73.07940446036659,
+      "exit_fee_usd": 0.0
+    },
+    "L0|EARLY|DECOMP_s10_top1|AB_s10|TB1S": {
+      "total_usd": 167.97387597283745,
+      "sharpe_day_equiv": 1.5599503545276256,
+      "max_drawdown_usd": 24.602016357052662,
+      "daily_usd": [
+        39.675727620801474,
+        70.46193728553564,
+        12.9324410536565,
+        44.90377001284382
+      ],
+      "days_positive": 4,
+      "filled_entries": 269,
+      "filled_shares": 11923.459314990301,
+      "entry_fee_usd": 73.07940446036659,
+      "exit_fee_usd": 73.63015491270238
+    },
+    "L0|EARLY|DECOMP_s10_top1|AB_s10|FAV_ONLY": {
+      "total_usd": 235.67029788336396,
+      "sharpe_day_equiv": 0.5306004687360574,
+      "max_drawdown_usd": 119.04243836435612,
+      "daily_usd": [
+        68.48357193413415,
+        123.60823210395334,
+        -16.486416882493806,
+        60.06491072777026
+      ],
+      "days_positive": 3,
+      "filled_entries": 269,
+      "filled_shares": 11923.459314990301,
+      "entry_fee_usd": 73.07940446036659,
+      "exit_fee_usd": 38.864959029115646
+    },
+    "L0|EARLY|DECOMP_s10_top1|AB_s10|TAKE_C1000": {
+      "total_usd": 188.63315104890154,
+      "sharpe_day_equiv": 1.5811357579454348,
+      "max_drawdown_usd": 28.60618443705266,
+      "daily_usd": [
+        40.463777509950305,
+        69.66490733041367,
+        22.258536473656505,
+        56.24592973488106
+      ],
+      "days_positive": 4,
+      "filled_entries": 269,
+      "filled_shares": 11923.459314990301,
+      "entry_fee_usd": 73.07940446036659,
+      "exit_fee_usd": 73.48114397871454
+    },
+    "L0|EARLY|DECOMP_s10_top1|AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 239.24109685521807,
+      "sharpe_day_equiv": 1.3258171371719727,
+      "max_drawdown_usd": 45.24853709331455,
+      "daily_usd": [
+        59.67094241436823,
+        86.82167005427303,
+        37.23441439283747,
+        55.51406999373936
+      ],
+      "days_positive": 4,
+      "filled_entries": 269,
+      "filled_shares": 11923.459314990301,
+      "entry_fee_usd": 73.07940446036659,
+      "exit_fee_usd": 29.533683073904157,
+      "maker_closed_share": 0.5195740716476834,
+      "in_flight_share": 0.01614173657430576,
+      "pre_move_fill_share": 0.009168506374205672,
+      "pre_move_time_share": 0.009164121528570792,
+      "cancels_mean": 0.5353159851301115,
+      "top_share_of_maker": 0.08946576866392855,
+      "top_gain5_c": 1.4990740660552475,
+      "top2_10_share_of_maker": 0.23070546799722466,
+      "top2_10_gain5_c": 4.402629950903715,
+      "others_share_of_maker": 0.6798287633388469,
+      "others_gain5_c": 1.6344542456290705
+    },
+    "L0|ALL|DIRECT_TB_s3_top10|AB_s3|HOLD": {
+      "total_usd": 718.862484436877,
+      "sharpe_day_equiv": 0.7618918462027499,
+      "max_drawdown_usd": 387.8121352370671,
+      "daily_usd": [
+        216.38396774910711,
+        364.25919064212,
+        -78.11784823061274,
+        216.33717427626257
+      ],
+      "days_positive": 3,
+      "filled_entries": 595,
+      "filled_shares": 25852.66840441477,
+      "entry_fee_usd": 130.548673746883,
+      "exit_fee_usd": 0.0
+    },
+    "L0|ALL|DIRECT_TB_s3_top10|AB_s3|TB1S": {
+      "total_usd": 280.444957238735,
+      "sharpe_day_equiv": 1.9991448317349507,
+      "max_drawdown_usd": 25.904766993380044,
+      "daily_usd": [
+        58.360157525002066,
+        59.08731283058001,
+        67.46865355363227,
+        95.5288333295207
+      ],
+      "days_positive": 4,
+      "filled_entries": 595,
+      "filled_shares": 25852.66840441477,
+      "entry_fee_usd": 130.548673746883,
+      "exit_fee_usd": 127.945594909467
+    },
+    "L0|ALL|DIRECT_TB_s3_top10|AB_s3|FAV_ONLY": {
+      "total_usd": 470.7285044828849,
+      "sharpe_day_equiv": 0.6413789274675878,
+      "max_drawdown_usd": 336.8972268593174,
+      "daily_usd": [
+        198.27705776792703,
+        256.6792759136936,
+        19.98785895203315,
+        -4.215688150768841
+      ],
+      "days_positive": 3,
+      "filled_entries": 595,
+      "filled_shares": 25852.66840441477,
+      "entry_fee_usd": 130.548673746883,
+      "exit_fee_usd": 63.647151412241094
+    },
+    "L0|ALL|DIRECT_TB_s3_top10|AB_s3|TAKE_C1000": {
+      "total_usd": 326.4005709235113,
+      "sharpe_day_equiv": 1.8188557768497757,
+      "max_drawdown_usd": 59.91597206217771,
+      "daily_usd": [
+        29.74915654315955,
+        72.87795634712323,
+        61.6923774249428,
+        162.08108060828567
+      ],
+      "days_positive": 4,
+      "filled_entries": 595,
+      "filled_shares": 25852.66840441477,
+      "entry_fee_usd": 130.548673746883,
+      "exit_fee_usd": 125.83933419880086
+    },
+    "L0|ALL|DIRECT_TB_s3_top10|AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 373.7717707052782,
+      "sharpe_day_equiv": 1.716080429284638,
+      "max_drawdown_usd": 47.74849744522857,
+      "daily_usd": [
+        92.06365368476034,
+        44.40423237397165,
+        69.13001555639579,
+        168.1738690901504
+      ],
+      "days_positive": 4,
+      "filled_entries": 595,
+      "filled_shares": 25852.66840441477,
+      "entry_fee_usd": 130.548673746883,
+      "exit_fee_usd": 48.8610255186503,
+      "maker_closed_share": 0.5113670828650597,
+      "in_flight_share": 0.00756418001016952,
+      "pre_move_fill_share": 0.05747196814963407,
+      "pre_move_time_share": 0.010654232266758733,
+      "cancels_mean": 0.5445378151260504,
+      "top_share_of_maker": 0.03329544025526343,
+      "top_gain5_c": 3.023698095632962,
+      "top2_10_share_of_maker": 0.17821628546398016,
+      "top2_10_gain5_c": 3.099414345798104,
+      "others_share_of_maker": 0.7884882742807563,
+      "others_gain5_c": 0.7904253801296399
+    },
+    "L0|ALL|DIRECT_TB_s3_top10|AB_s10|HOLD": {
+      "total_usd": 742.8420796471552,
+      "sharpe_day_equiv": 0.3844844027896354,
+      "max_drawdown_usd": 899.3284938546981,
+      "daily_usd": [
+        337.65502869068297,
+        623.2699073935282,
+        -537.3299630158542,
+        319.24710657879825
+      ],
+      "days_positive": 3,
+      "filled_entries": 2376,
+      "filled_shares": 105950.33824195863,
+      "entry_fee_usd": 621.910650496927,
+      "exit_fee_usd": 0.0
+    },
+    "L0|ALL|DIRECT_TB_s3_top10|AB_s10|TB1S": {
+      "total_usd": -409.1396501975929,
+      "sharpe_day_equiv": -1.5774956823605621,
+      "max_drawdown_usd": 412.6004298019844,
+      "daily_usd": [
+        -57.399756070577624,
+        23.73737593607938,
+        -101.83039019542866,
+        -273.64687986766603
+      ],
+      "days_positive": 1,
+      "filled_entries": 2376,
+      "filled_shares": 105950.33824195863,
+      "entry_fee_usd": 621.910650496927,
+      "exit_fee_usd": 616.0951940616125
+    },
+    "L0|ALL|DIRECT_TB_s3_top10|AB_s10|FAV_ONLY": {
+      "total_usd": 1265.194330497683,
+      "sharpe_day_equiv": 0.8027153346135681,
+      "max_drawdown_usd": 485.7477318636774,
+      "daily_usd": [
+        493.9791909034133,
+        751.2078153988825,
+        -103.60749025670202,
+        123.61481445208912
+      ],
+      "days_positive": 3,
+      "filled_entries": 2376,
+      "filled_shares": 105950.33824195863,
+      "entry_fee_usd": 621.910650496927,
+      "exit_fee_usd": 289.6377205829747
+    },
+    "L0|ALL|DIRECT_TB_s3_top10|AB_s10|TAKE_C1000": {
+      "total_usd": -229.61051755221538,
+      "sharpe_day_equiv": -0.5958981456136393,
+      "max_drawdown_usd": 288.0247044060489,
+      "daily_usd": [
+        -76.83390734866386,
+        -36.908700367377335,
+        -117.53189792173082,
+        1.6639880855566247
+      ],
+      "days_positive": 1,
+      "filled_entries": 2376,
+      "filled_shares": 105950.33824195863,
+      "entry_fee_usd": 621.910650496927,
+      "exit_fee_usd": 604.4102494071835
+    },
+    "L0|ALL|DIRECT_TB_s3_top10|AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": -485.01177867928925,
+      "sharpe_day_equiv": -0.9947127360593434,
+      "max_drawdown_usd": 514.9357981478834,
+      "daily_usd": [
+        -207.76237749326827,
+        -74.91127372122293,
+        -66.74482691178984,
+        -135.5933005530082
+      ],
+      "days_positive": 0,
+      "filled_entries": 2376,
+      "filled_shares": 105950.33824195863,
+      "entry_fee_usd": 621.910650496927,
+      "exit_fee_usd": 270.15543560567517,
+      "maker_closed_share": 0.4996238040295131,
+      "in_flight_share": 0.020892292469187952,
+      "pre_move_fill_share": 0.04843133585780437,
+      "pre_move_time_share": 0.009433699867651898,
+      "cancels_mean": 0.5180976430976431,
+      "top_share_of_maker": 0.04862013685299641,
+      "top_gain5_c": 3.7151896173404477,
+      "top2_10_share_of_maker": 0.1963489348123321,
+      "top2_10_gain5_c": 2.8672518024633447,
+      "others_share_of_maker": 0.7550309283346717,
+      "others_gain5_c": 0.9852085419325481
+    },
+    "L0|EARLY|DIRECT_TB_s3_top10|AB_s3|HOLD": {
+      "total_usd": 745.2418065071172,
+      "sharpe_day_equiv": 0.8136729702274087,
+      "max_drawdown_usd": 322.9146044591888,
+      "daily_usd": [
+        291.2324620321134,
+        342.29269064211996,
+        -99.21436819061276,
+        210.9310220234966
+      ],
+      "days_positive": 3,
+      "filled_entries": 551,
+      "filled_shares": 23965.28840441477,
+      "entry_fee_usd": 126.00347405543017,
+      "exit_fee_usd": 0.0
+    },
+    "L0|EARLY|DIRECT_TB_s3_top10|AB_s3|TB1S": {
+      "total_usd": 271.6864267160462,
+      "sharpe_day_equiv": 2.0221727686379207,
+      "max_drawdown_usd": 25.281516993380066,
+      "daily_usd": [
+        64.88369851507912,
+        46.60991353058004,
+        60.91553359363226,
+        99.27728107675475
+      ],
+      "days_positive": 4,
+      "filled_entries": 551,
+      "filled_shares": 23965.28840441477,
+      "entry_fee_usd": 126.00347405543017,
+      "exit_fee_usd": 123.25829179532556
+    },
+    "L0|EARLY|DIRECT_TB_s3_top10|AB_s3|FAV_ONLY": {
+      "total_usd": 497.1078265531253,
+      "sharpe_day_equiv": 0.7063694603553287,
+      "max_drawdown_usd": 253.9958063118907,
+      "daily_usd": [
+        273.1255520509334,
+        234.71277591369352,
+        -1.1086610079668304,
+        -9.621840403534776
+      ],
+      "days_positive": 2,
+      "filled_entries": 551,
+      "filled_shares": 23965.28840441477,
+      "entry_fee_usd": 126.00347405543017,
+      "exit_fee_usd": 63.647151412241094
+    },
+    "L0|EARLY|DIRECT_TB_s3_top10|AB_s3|TAKE_C1000": {
+      "total_usd": 370.70668013375166,
+      "sharpe_day_equiv": 2.3248606460310564,
+      "max_drawdown_usd": 24.329705882268996,
+      "daily_usd": [
+        84.1655654661659,
+        63.149728847123214,
+        63.135457464942796,
+        160.25592835551973
+      ],
+      "days_positive": 4,
+      "filled_entries": 551,
+      "filled_shares": 23965.28840441477,
+      "entry_fee_usd": 126.00347405543017,
+      "exit_fee_usd": 123.24930405880086
+    },
+    "L0|EARLY|DIRECT_TB_s3_top10|AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 412.7361427755186,
+      "sharpe_day_equiv": 2.0270492570783305,
+      "max_drawdown_usd": 41.748136503559266,
+      "daily_usd": [
+        140.4384479677667,
+        39.12748237397166,
+        68.27349559639579,
+        164.89671683738445
+      ],
+      "days_positive": 4,
+      "filled_entries": 551,
+      "filled_shares": 23965.28840441477,
+      "entry_fee_usd": 126.00347405543017,
+      "exit_fee_usd": 47.9584755186503,
+      "maker_closed_share": 0.5369517532646408,
+      "in_flight_share": 0.00777109244650598,
+      "pre_move_fill_share": 0.05904407047069262,
+      "pre_move_time_share": 0.010686715694735026,
+      "cancels_mean": 0.5789473684210527,
+      "top_share_of_maker": 0.03420621189909654,
+      "top_gain5_c": 3.023698095632962,
+      "top2_10_share_of_maker": 0.17920571124967066,
+      "top2_10_gain5_c": 2.7163644856362796,
+      "others_share_of_maker": 0.7865880768512327,
+      "others_gain5_c": 0.7373884627020967
+    },
+    "L0|EARLY|DIRECT_TB_s3_top10|AB_s10|HOLD": {
+      "total_usd": 626.0944094790937,
+      "sharpe_day_equiv": 0.3281738645446838,
+      "max_drawdown_usd": 1009.2000414991305,
+      "daily_usd": [
+        434.89372897620007,
+        644.3526853935282,
+        -541.7660814057996,
+        88.61407651516497
+      ],
+      "days_positive": 3,
+      "filled_entries": 2195,
+      "filled_shares": 98406.04694930387,
+      "entry_fee_usd": 595.8996169393074,
+      "exit_fee_usd": 0.0
+    },
+    "L0|EARLY|DIRECT_TB_s3_top10|AB_s10|TB1S": {
+      "total_usd": -444.2337031371278,
+      "sharpe_day_equiv": -1.851253959652958,
+      "max_drawdown_usd": 447.69448274151927,
+      "daily_usd": [
+        -55.91130889408382,
+        -12.567789743920578,
+        -91.96145978123775,
+        -283.7931447178857
+      ],
+      "days_positive": 0,
+      "filled_entries": 2195,
+      "filled_shares": 98406.04694930387,
+      "entry_fee_usd": 595.8996169393074,
+      "exit_fee_usd": 590.9045149871567
+    },
+    "L0|EARLY|DIRECT_TB_s3_top10|AB_s10|FAV_ONLY": {
+      "total_usd": 1148.4466603296214,
+      "sharpe_day_equiv": 0.7317534848224667,
+      "max_drawdown_usd": 615.7197761068135,
+      "daily_usd": [
+        591.2178911889307,
+        772.2905933988826,
+        -108.04360864664747,
+        -107.01821561154424
+      ],
+      "days_positive": 2,
+      "filled_entries": 2195,
+      "filled_shares": 98406.04694930387,
+      "entry_fee_usd": 595.8996169393074,
+      "exit_fee_usd": 289.6377205829747
+    },
+    "L0|EARLY|DIRECT_TB_s3_top10|AB_s10|TAKE_C1000": {
+      "total_usd": -226.53392722978595,
+      "sharpe_day_equiv": -0.8564537579051971,
+      "max_drawdown_usd": 292.31742030727423,
+      "daily_usd": [
+        22.109823171647427,
+        3.907215752622669,
+        -85.18330831167627,
+        -167.36765784237974
+      ],
+      "days_positive": 2,
+      "filled_entries": 2195,
+      "filled_shares": 98406.04694930387,
+      "entry_fee_usd": 595.8996169393074,
+      "exit_fee_usd": 589.3427483955455
+    },
+    "L0|EARLY|DIRECT_TB_s3_top10|AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": -471.15468824605216,
+      "sharpe_day_equiv": -1.1663236331240834,
+      "max_drawdown_usd": 507.9956674058247,
+      "daily_usd": [
+        -111.74445803268614,
+        -32.61849572122293,
+        -39.74496930173531,
+        -287.04676519040777
+      ],
+      "days_positive": 0,
+      "filled_entries": 2195,
+      "filled_shares": 98406.04694930387,
+      "entry_fee_usd": 595.8996169393074,
+      "exit_fee_usd": 265.6666212771037,
+      "maker_closed_share": 0.5162829664217589,
+      "in_flight_share": 0.020784025125900274,
+      "pre_move_fill_share": 0.04836532979916411,
+      "pre_move_time_share": 0.009352368857386875,
+      "cancels_mean": 0.5421412300683371,
+      "top_share_of_maker": 0.04829651408752007,
+      "top_gain5_c": 3.909108382853793,
+      "top2_10_share_of_maker": 0.19501499442856712,
+      "top2_10_gain5_c": 2.650012787976956,
+      "others_share_of_maker": 0.7566884914839127,
+      "others_gain5_c": 0.9598706908376532
+    },
+    "L0|ALL|CONTROL_onset|AB_s3|HOLD": {
+      "total_usd": -1160.8809255897372,
+      "sharpe_day_equiv": -0.4476646696364563,
+      "max_drawdown_usd": 1990.780991130053,
+      "daily_usd": [
+        -1184.7273427259124,
+        -366.5874595250617,
+        421.57134693657076,
+        -31.13747027533384
+      ],
+      "days_positive": 1,
+      "filled_entries": 3751,
+      "filled_shares": 179116.32259098423,
+      "entry_fee_usd": 826.6225992646048,
+      "exit_fee_usd": 0.0
+    },
+    "L0|ALL|CONTROL_onset|AB_s3|TB1S": {
+      "total_usd": -3536.634013431096,
+      "sharpe_day_equiv": -10.084584647447862,
+      "max_drawdown_usd": 3536.634013431093,
+      "daily_usd": [
+        -1409.5165981414493,
+        -371.5858325233445,
+        -313.72840156323196,
+        -1441.80318120307
+      ],
+      "days_positive": 0,
+      "filled_entries": 3751,
+      "filled_shares": 179116.32259098423,
+      "entry_fee_usd": 826.6225992646048,
+      "exit_fee_usd": 825.7754592482889
+    },
+    "L0|ALL|CONTROL_onset|AB_s3|FAV_ONLY": {
+      "total_usd": -1832.5208166098535,
+      "sharpe_day_equiv": -0.7131085801974325,
+      "max_drawdown_usd": 2304.6560735877106,
+      "daily_usd": [
+        -376.56320435503665,
+        -292.643304664606,
+        265.61642831350565,
+        -1428.9307359037164
+      ],
+      "days_positive": 1,
+      "filled_entries": 3751,
+      "filled_shares": 179116.32259098423,
+      "entry_fee_usd": 826.6225992646048,
+      "exit_fee_usd": 403.842853159653
+    },
+    "L0|ALL|CONTROL_onset|AB_s3|TAKE_C1000": {
+      "total_usd": -3363.58782823633,
+      "sharpe_day_equiv": -6.94363782180764,
+      "max_drawdown_usd": 3382.7507673377854,
+      "daily_usd": [
+        -1361.2024414116677,
+        -337.5741508461352,
+        -240.97680727500642,
+        -1423.8344287035206
+      ],
+      "days_positive": 0,
+      "filled_entries": 3751,
+      "filled_shares": 179116.32259098423,
+      "entry_fee_usd": 826.6225992646048,
+      "exit_fee_usd": 817.028008432721
+    },
+    "L0|ALL|CONTROL_onset|AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": -2956.5956973400034,
+      "sharpe_day_equiv": -5.138663655274321,
+      "max_drawdown_usd": 2986.886236441449,
+      "daily_usd": [
+        -1103.022497325374,
+        -267.9236324245823,
+        -155.6265465057145,
+        -1430.0230210843326
+      ],
+      "days_positive": 0,
+      "filled_entries": 3751,
+      "filled_shares": 179116.32259098423,
+      "entry_fee_usd": 826.6225992646048,
+      "exit_fee_usd": 372.6096306739957,
+      "maker_closed_share": 0.47392017945679904,
+      "in_flight_share": 0.02641892592628529,
+      "pre_move_fill_share": 0.06643935829338939,
+      "pre_move_time_share": 0.016535209280817375,
+      "cancels_mean": 0.8744334844041589,
+      "top_share_of_maker": 0.0306069712860324,
+      "top_gain5_c": 5.0377156269578185,
+      "top2_10_share_of_maker": 0.1334994326479358,
+      "top2_10_gain5_c": 0.9437645641361423,
+      "others_share_of_maker": 0.835893596066032,
+      "others_gain5_c": 0.5970658366993581
+    },
+    "L0|ALL|CONTROL_onset|AB_s10|HOLD": {
+      "total_usd": -449.99275388172566,
+      "sharpe_day_equiv": -0.15383764274508543,
+      "max_drawdown_usd": 1741.7303329125623,
+      "daily_usd": [
+        -963.9521053849581,
+        -312.9274754675209,
+        533.7959973480922,
+        293.0908296226611
+      ],
+      "days_positive": 2,
+      "filled_entries": 4746,
+      "filled_shares": 234147.81085933876,
+      "entry_fee_usd": 1175.0207074505838,
+      "exit_fee_usd": 0.0
+    },
+    "L0|ALL|CONTROL_onset|AB_s10|TB1S": {
+      "total_usd": -4594.848594824436,
+      "sharpe_day_equiv": -10.800745145843019,
+      "max_drawdown_usd": 4594.848594824436,
+      "daily_usd": [
+        -1706.365386649829,
+        -498.47632727379954,
+        -448.54023283031927,
+        -1941.4666480704886
+      ],
+      "days_positive": 0,
+      "filled_entries": 4746,
+      "filled_shares": 234147.81085933876,
+      "entry_fee_usd": 1175.0207074505838,
+      "exit_fee_usd": 1176.6538840276999
+    },
+    "L0|ALL|CONTROL_onset|AB_s10|FAV_ONLY": {
+      "total_usd": -1667.1134877318452,
+      "sharpe_day_equiv": -0.5465307506282292,
+      "max_drawdown_usd": 2427.398278305263,
+      "daily_usd": [
+        -452.16375462966175,
+        -49.97539640103372,
+        366.03274933888565,
+        -1531.0070860400353
+      ],
+      "days_positive": 1,
+      "filled_entries": 4746,
+      "filled_shares": 234147.81085933876,
+      "entry_fee_usd": 1175.0207074505838,
+      "exit_fee_usd": 568.3020726639816
+    },
+    "L0|ALL|CONTROL_onset|AB_s10|TAKE_C1000": {
+      "total_usd": -4366.336936059256,
+      "sharpe_day_equiv": -7.324239413873402,
+      "max_drawdown_usd": 4385.49987516071,
+      "daily_usd": [
+        -1650.4195148394354,
+        -508.15817053894307,
+        -363.2527304097165,
+        -1844.5065202711614
+      ],
+      "days_positive": 0,
+      "filled_entries": 4746,
+      "filled_shares": 234147.81085933876,
+      "entry_fee_usd": 1175.0207074505838,
+      "exit_fee_usd": 1159.7920459156728
+    },
+    "L0|ALL|CONTROL_onset|AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": -4058.7415514010545,
+      "sharpe_day_equiv": -5.686645041257149,
+      "max_drawdown_usd": 4088.4281893025036,
+      "daily_usd": [
+        -1452.0053812739143,
+        -441.035182335169,
+        -272.931592973223,
+        -1892.7693948187484
+      ],
+      "days_positive": 0,
+      "filled_entries": 4746,
+      "filled_shares": 234147.81085933876,
+      "entry_fee_usd": 1175.0207074505838,
+      "exit_fee_usd": 532.4226098547085,
+      "maker_closed_share": 0.4774708326169743,
+      "in_flight_share": 0.025232387000353438,
+      "pre_move_fill_share": 0.06404713375079159,
+      "pre_move_time_share": 0.015537084040985607,
+      "cancels_mean": 0.8316477033291193,
+      "top_share_of_maker": 0.0352555253022789,
+      "top_gain5_c": 4.4123247684842015,
+      "top2_10_share_of_maker": 0.1421811810801263,
+      "top2_10_gain5_c": 1.4193600971003202,
+      "others_share_of_maker": 0.8225632936175946,
+      "others_gain5_c": 0.7633193213839373
+    },
+    "L0|EARLY|CONTROL_onset|AB_s3|HOLD": {
+      "total_usd": -961.0002680742896,
+      "sharpe_day_equiv": -0.37125230773320816,
+      "max_drawdown_usd": 1898.3921627795926,
+      "daily_usd": [
+        -1119.618028835451,
+        -302.28459906506174,
+        447.45758213657075,
+        13.44477768965237
+      ],
+      "days_positive": 2,
+      "filled_entries": 3558,
+      "filled_shares": 170100.22500924254,
+      "entry_fee_usd": 810.4378945800461,
+      "exit_fee_usd": 0.0
+    },
+    "L0|EARLY|CONTROL_onset|AB_s3|TB1S": {
+      "total_usd": -3308.0550209210223,
+      "sharpe_day_equiv": -10.55156257280174,
+      "max_drawdown_usd": 3308.0550209210223,
+      "daily_usd": [
+        -1296.1233398596464,
+        -358.0117840633444,
+        -315.0144745559006,
+        -1338.9054224421309
+      ],
+      "days_positive": 0,
+      "filled_entries": 3558,
+      "filled_shares": 170100.22500924254,
+      "entry_fee_usd": 810.4378945800461,
+      "exit_fee_usd": 809.9044818017522
+    },
+    "L0|EARLY|CONTROL_onset|AB_s3|FAV_ONLY": {
+      "total_usd": -1632.6401590944063,
+      "sharpe_day_equiv": -0.6403397139468001,
+      "max_drawdown_usd": 2081.184935207247,
+      "daily_usd": [
+        -311.4538904645753,
+        -228.340444204606,
+        291.5026635135057,
+        -1384.3484879387306
+      ],
+      "days_positive": 1,
+      "filled_entries": 3558,
+      "filled_shares": 170100.22500924254,
+      "entry_fee_usd": 810.4378945800461,
+      "exit_fee_usd": 403.84285315965303
+    },
+    "L0|EARLY|CONTROL_onset|AB_s3|TAKE_C1000": {
+      "total_usd": -3205.6177477280025,
+      "sharpe_day_equiv": -9.465301007538955,
+      "max_drawdown_usd": 3205.6177477280057,
+      "daily_usd": [
+        -1232.5998566467879,
+        -342.08811438613515,
+        -296.4086140750064,
+        -1334.5211626200733
+      ],
+      "days_positive": 0,
+      "filled_entries": 3558,
+      "filled_shares": 170100.22500924254,
+      "entry_fee_usd": 810.4378945800461,
+      "exit_fee_usd": 807.6152081369188
+    },
+    "L0|EARLY|CONTROL_onset|AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": -2794.638979359697,
+      "sharpe_day_equiv": -6.003521959857133,
+      "max_drawdown_usd": 2800.9700793596953,
+      "daily_usd": [
+        -970.9455434349127,
+        -273.37077196458233,
+        -214.88556930571448,
+        -1335.4370946544873
+      ],
+      "days_positive": 0,
+      "filled_entries": 3558,
+      "filled_shares": 170100.22500924254,
+      "entry_fee_usd": 810.4378945800461,
+      "exit_fee_usd": 368.0513864681758,
+      "maker_closed_share": 0.4891370569406377,
+      "in_flight_share": 0.02695380415453843,
+      "pre_move_fill_share": 0.06566284009873576,
+      "pre_move_time_share": 0.016557117057724818,
+      "cancels_mean": 0.9052838673412029,
+      "top_share_of_maker": 0.03002475127138931,
+      "top_gain5_c": 5.099270317925392,
+      "top2_10_share_of_maker": 0.1335581085374303,
+      "top2_10_gain5_c": 1.0597823796376478,
+      "others_share_of_maker": 0.8364171401911805,
+      "others_gain5_c": 0.6031466398089201
+    },
+    "L0|EARLY|CONTROL_onset|AB_s10|HOLD": {
+      "total_usd": -475.10523859075533,
+      "sharpe_day_equiv": -0.16157343483821052,
+      "max_drawdown_usd": 1691.6606541170013,
+      "daily_usd": [
+        -1011.3643489661108,
+        -188.2947910075208,
+        554.6978765480923,
+        169.85602483478408
+      ],
+      "days_positive": 2,
+      "filled_entries": 4473,
+      "filled_shares": 221162.7488058589,
+      "entry_fee_usd": 1142.2109700891751,
+      "exit_fee_usd": 0.0
+    },
+    "L0|EARLY|CONTROL_onset|AB_s10|TB1S": {
+      "total_usd": -4288.26171494771,
+      "sharpe_day_equiv": -11.324005491535027,
+      "max_drawdown_usd": 4288.2617149477055,
+      "daily_usd": [
+        -1569.1350224750402,
+        -486.4979811828905,
+        -449.59868710452633,
+        -1783.0300241852524
+      ],
+      "days_positive": 0,
+      "filled_entries": 4473,
+      "filled_shares": 221162.7488058589,
+      "entry_fee_usd": 1142.2109700891751,
+      "exit_fee_usd": 1144.0749214335735
+    },
+    "L0|EARLY|CONTROL_onset|AB_s10|FAV_ONLY": {
+      "total_usd": -1692.2259724408748,
+      "sharpe_day_equiv": -0.5527790421779595,
+      "max_drawdown_usd": 2402.386920453255,
+      "daily_usd": [
+        -499.5759982108145,
+        74.65728805896639,
+        386.9346285388857,
+        -1654.2418908279124
+      ],
+      "days_positive": 2,
+      "filled_entries": 4473,
+      "filled_shares": 221162.7488058589,
+      "entry_fee_usd": 1142.2109700891751,
+      "exit_fee_usd": 568.3020726639816
+    },
+    "L0|EARLY|CONTROL_onset|AB_s10|TAKE_C1000": {
+      "total_usd": -4140.948010789692,
+      "sharpe_day_equiv": -10.497765578274146,
+      "max_drawdown_usd": 4140.948010789693,
+      "daily_usd": [
+        -1504.9856375461695,
+        -460.587142078943,
+        -426.45513120971646,
+        -1748.9200999548625
+      ],
+      "days_positive": 0,
+      "filled_entries": 4473,
+      "filled_shares": 221162.7488058589,
+      "entry_fee_usd": 1142.2109700891751,
+      "exit_fee_usd": 1141.6244061103469
+    },
+    "L0|EARLY|CONTROL_onset|AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": -3786.8471199561072,
+      "sharpe_day_equiv": -6.73050697237009,
+      "max_drawdown_usd": 3792.5743187561065,
+      "daily_usd": [
+        -1294.9495905516628,
+        -384.9624978751691,
+        -340.09097177322303,
+        -1766.8440597560525
+      ],
+      "days_positive": 0,
+      "filled_entries": 4473,
+      "filled_shares": 221162.7488058589,
+      "entry_fee_usd": 1142.2109700891751,
+      "exit_fee_usd": 524.2409568544002,
+      "maker_closed_share": 0.494099373560005,
+      "in_flight_share": 0.025814814179634916,
+      "pre_move_fill_share": 0.06305746019943223,
+      "pre_move_time_share": 0.015573999324765091,
+      "cancels_mean": 0.8647440196735972,
+      "top_share_of_maker": 0.03501693430316851,
+      "top_gain5_c": 4.498543325355974,
+      "top2_10_share_of_maker": 0.14299228223988028,
+      "top2_10_gain5_c": 1.4984695053152706,
+      "others_share_of_maker": 0.8219907834569511,
+      "others_gain5_c": 0.7476471472202639
+    },
+    "L10|ALL|MOVE_top10|AB_s3|HOLD": {
+      "total_usd": 69.37138641293268,
+      "sharpe_day_equiv": 0.13469885550014754,
+      "max_drawdown_usd": 245.77163339295902,
+      "daily_usd": [
+        19.817845954374206,
+        31.66246833855846,
+        -65.67886036,
+        83.56993248000002
+      ],
+      "days_positive": 3,
+      "filled_entries": 202,
+      "filled_shares": 7884.8392843232705,
+      "entry_fee_usd": 49.50893493889649,
+      "exit_fee_usd": 0.0
+    },
+    "L10|ALL|MOVE_top10|AB_s3|TB1S": {
+      "total_usd": 184.11454910273488,
+      "sharpe_day_equiv": 1.7728165255461812,
+      "max_drawdown_usd": 16.051349505016788,
+      "daily_usd": [
+        97.7234920847619,
+        43.50363626298975,
+        22.066860814983215,
+        20.820559940000006
+      ],
+      "days_positive": 4,
+      "filled_entries": 202,
+      "filled_shares": 7884.8392843232705,
+      "entry_fee_usd": 49.50893493889649,
+      "exit_fee_usd": 48.12451438199221
+    },
+    "L10|ALL|MOVE_top10|AB_s3|FAV_ONLY": {
+      "total_usd": 304.4151104332458,
+      "sharpe_day_equiv": 0.7028139234219167,
+      "max_drawdown_usd": 165.01180015923075,
+      "daily_usd": [
+        130.41022968696004,
+        118.27656349855849,
+        13.21535206772728,
+        42.51296518
+      ],
+      "days_positive": 4,
+      "filled_entries": 202,
+      "filled_shares": 7884.8392843232705,
+      "entry_fee_usd": 49.50893493889649,
+      "exit_fee_usd": 16.98550317048258
+    },
+    "L10|ALL|MOVE_top10|AB_s3|TAKE_C1000": {
+      "total_usd": 118.52732482855042,
+      "sharpe_day_equiv": 0.6193500084619724,
+      "max_drawdown_usd": 56.57690858679683,
+      "daily_usd": [
+        44.535258729991966,
+        33.425030818558454,
+        20.394846819999994,
+        20.17218846
+      ],
+      "days_positive": 4,
+      "filled_entries": 202,
+      "filled_shares": 7884.8392843232705,
+      "entry_fee_usd": 49.50893493889649,
+      "exit_fee_usd": 42.7661047940312
+    },
+    "L10|ALL|MOVE_top10|AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 112.94388174977101,
+      "sharpe_day_equiv": 0.5383740226565685,
+      "max_drawdown_usd": 53.442710546796846,
+      "daily_usd": [
+        67.70279141121253,
+        17.03218371855847,
+        9.048875499999996,
+        19.160031120000006
+      ],
+      "days_positive": 4,
+      "filled_entries": 202,
+      "filled_shares": 7884.8392843232705,
+      "entry_fee_usd": 49.50893493889649,
+      "exit_fee_usd": 17.315482705169135,
+      "maker_closed_share": 0.43633895644788223,
+      "in_flight_share": 0.00736040566295561,
+      "pre_move_fill_share": 0.02292215042792916,
+      "pre_move_time_share": 0.008245874856376697,
+      "cancels_mean": 0.33663366336633666,
+      "top_share_of_maker": 0.008719757767133234,
+      "top_gain5_c": -2.5,
+      "top2_10_share_of_maker": 0.23173135905518677,
+      "top2_10_gain5_c": 1.8348131968312704,
+      "others_share_of_maker": 0.75954888317768,
+      "others_gain5_c": 1.0333546736186376
+    },
+    "L10|ALL|MOVE_top10|AB_s10|HOLD": {
+      "total_usd": 893.1848737633262,
+      "sharpe_day_equiv": 0.5171495197446423,
+      "max_drawdown_usd": 585.9480218537474,
+      "daily_usd": [
+        -170.22180989918303,
+        215.70478709666685,
+        -143.421205195582,
+        991.1231017614243
+      ],
+      "days_positive": 2,
+      "filled_entries": 1678,
+      "filled_shares": 70750.02391735667,
+      "entry_fee_usd": 485.5089185718521,
+      "exit_fee_usd": 0.0
+    },
+    "L10|ALL|MOVE_top10|AB_s10|TB1S": {
+      "total_usd": -554.8238731765016,
+      "sharpe_day_equiv": -2.2737898926554747,
+      "max_drawdown_usd": 579.4744908301309,
+      "daily_usd": [
+        -259.85827318686245,
+        -155.68649216158408,
+        -104.32853966901487,
+        -34.950568159040174
+      ],
+      "days_positive": 0,
+      "filled_entries": 1678,
+      "filled_shares": 70750.02391735667,
+      "entry_fee_usd": 485.5089185718521,
+      "exit_fee_usd": 469.95954681851885
+    },
+    "L10|ALL|MOVE_top10|AB_s10|FAV_ONLY": {
+      "total_usd": 811.8424853605321,
+      "sharpe_day_equiv": 0.621727984777475,
+      "max_drawdown_usd": 377.5687121282911,
+      "daily_usd": [
+        -31.66404893443473,
+        288.2365958196548,
+        -164.1791457461699,
+        719.4490842214819
+      ],
+      "days_positive": 2,
+      "filled_entries": 1678,
+      "filled_shares": 70750.02391735667,
+      "entry_fee_usd": 485.5089185718521,
+      "exit_fee_usd": 200.33489731143266
+    },
+    "L10|ALL|MOVE_top10|AB_s10|TAKE_C1000": {
+      "total_usd": -589.3974605684797,
+      "sharpe_day_equiv": -1.1367905747575457,
+      "max_drawdown_usd": 742.2141796453459,
+      "daily_usd": [
+        -307.0485976305978,
+        -240.20664197679145,
+        -144.07477893814257,
+        101.93255797705217
+      ],
+      "days_positive": 1,
+      "filled_entries": 1678,
+      "filled_shares": 70750.02391735667,
+      "entry_fee_usd": 485.5089185718521,
+      "exit_fee_usd": 440.9428183650957
+    },
+    "L10|ALL|MOVE_top10|AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": -860.6717800291676,
+      "sharpe_day_equiv": -1.4435849477578633,
+      "max_drawdown_usd": 979.2848435286115,
+      "daily_usd": [
+        -422.03855575702516,
+        -298.5203672896377,
+        -151.04002769793908,
+        10.927170715434215
+      ],
+      "days_positive": 1,
+      "filled_entries": 1678,
+      "filled_shares": 70750.02391735667,
+      "entry_fee_usd": 485.5089185718521,
+      "exit_fee_usd": 191.60753775413724,
+      "maker_closed_share": 0.46773023418240384,
+      "in_flight_share": 0.02976556946752319,
+      "pre_move_fill_share": 0.04563051395463736,
+      "pre_move_time_share": 0.007891234818880329,
+      "cancels_mean": 0.40464839094159716,
+      "top_share_of_maker": 0.03375496253591693,
+      "top_gain5_c": 5.311400158956157,
+      "top2_10_share_of_maker": 0.2219183945450871,
+      "top2_10_gain5_c": 3.1504728998214895,
+      "others_share_of_maker": 0.7443266429189959,
+      "others_gain5_c": 1.4040085418449233
+    },
+    "L10|EARLY|MOVE_top10|AB_s3|HOLD": {
+      "total_usd": 166.7934955411711,
+      "sharpe_day_equiv": 0.3605323174444521,
+      "max_drawdown_usd": 196.9402128392308,
+      "daily_usd": [
+        147.8322848811711,
+        12.829676140000004,
+        -93.28070996000001,
+        99.41224448000001
+      ],
+      "days_positive": 3,
+      "filled_entries": 150,
+      "filled_shares": 5942.864507457427,
+      "entry_fee_usd": 42.2421703261956,
+      "exit_fee_usd": 0.0
+    },
+    "L10|EARLY|MOVE_top10|AB_s3|TB1S": {
+      "total_usd": 204.15139700372748,
+      "sharpe_day_equiv": 2.136167007137691,
+      "max_drawdown_usd": 10.415810339999979,
+      "daily_usd": [
+        108.32520750372748,
+        40.45289537999999,
+        30.575227660000007,
+        24.79806646
+      ],
+      "days_positive": 4,
+      "filled_entries": 150,
+      "filled_shares": 5942.864507457427,
+      "entry_fee_usd": 42.2421703261956,
+      "exit_fee_usd": 41.135076491523535
+    },
+    "L10|EARLY|MOVE_top10|AB_s3|FAV_ONLY": {
+      "total_usd": 401.8372195614842,
+      "sharpe_day_equiv": 1.0742079300274947,
+      "max_drawdown_usd": 124.80812145923082,
+      "daily_usd": [
+        258.4246686137569,
+        99.44377130000001,
+        -14.38649753227272,
+        58.35527718
+      ],
+      "days_positive": 3,
+      "filled_entries": 150,
+      "filled_shares": 5942.864507457427,
+      "entry_fee_usd": 42.2421703261956,
+      "exit_fee_usd": 16.985503170482577
+    },
+    "L10|EARLY|MOVE_top10|AB_s3|TAKE_C1000": {
+      "total_usd": 223.74706425678878,
+      "sharpe_day_equiv": 2.089064954190972,
+      "max_drawdown_usd": 9.724370000000008,
+      "daily_usd": [
+        104.8221756567888,
+        46.85318511999998,
+        36.057203019999996,
+        36.01450046000001
+      ],
+      "days_positive": 4,
+      "filled_entries": 150,
+      "filled_shares": 5942.864507457427,
+      "entry_fee_usd": 42.2421703261956,
+      "exit_fee_usd": 40.438709494031194
+    },
+    "L10|EARLY|MOVE_top10|AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 209.35977311800937,
+      "sharpe_day_equiv": 1.5608438462528262,
+      "max_drawdown_usd": 33.14737459999999,
+      "daily_usd": [
+        129.51330033800937,
+        29.69939152,
+        15.144738139999996,
+        35.002343120000006
+      ],
+      "days_positive": 4,
+      "filled_entries": 150,
+      "filled_shares": 5942.864507457427,
+      "entry_fee_usd": 42.2421703261956,
+      "exit_fee_usd": 16.28091646516914,
+      "maker_closed_share": 0.5412579305896157,
+      "in_flight_share": 0.007872605394352616,
+      "pre_move_fill_share": 0.024517268934958914,
+      "pre_move_time_share": 0.008212521646936252,
+      "cancels_mean": 0.43333333333333335,
+      "top_share_of_maker": 0.009326552798642291,
+      "top_gain5_c": -2.5,
+      "top2_10_share_of_maker": 0.23231294653854687,
+      "top2_10_gain5_c": 0.619365268069063,
+      "others_share_of_maker": 0.7583605006628109,
+      "others_gain5_c": 1.7439114357613388
+    },
+    "L10|EARLY|MOVE_top10|AB_s10|HOLD": {
+      "total_usd": 972.4812000383312,
+      "sharpe_day_equiv": 0.6340524893429429,
+      "max_drawdown_usd": 509.41562915799966,
+      "daily_usd": [
+        109.79576047267666,
+        311.57854271213284,
+        -211.04306573558205,
+        762.1499625891038
+      ],
+      "days_positive": 3,
+      "filled_entries": 1422,
+      "filled_shares": 60978.91286196119,
+      "entry_fee_usd": 432.75434072178547,
+      "exit_fee_usd": 0.0
+    },
+    "L10|EARLY|MOVE_top10|AB_s10|TB1S": {
+      "total_usd": -325.2898083019702,
+      "sharpe_day_equiv": -1.580610444021999,
+      "max_drawdown_usd": 344.185838544675,
+      "daily_usd": [
+        -93.4053073529251,
+        -139.2453969198988,
+        -71.28172406969983,
+        -21.357379959446416
+      ],
+      "days_positive": 0,
+      "filled_entries": 1422,
+      "filled_shares": 60978.91286196119,
+      "entry_fee_usd": 432.75434072178547,
+      "exit_fee_usd": 422.64029981252935
+    },
+    "L10|EARLY|MOVE_top10|AB_s10|FAV_ONLY": {
+      "total_usd": 891.1388116355374,
+      "sharpe_day_equiv": 0.7903128835581068,
+      "max_drawdown_usd": 316.6804989085873,
+      "daily_usd": [
+        248.3535214374251,
+        384.1103514351207,
+        -231.80100628616992,
+        490.4759450491615
+      ],
+      "days_positive": 3,
+      "filled_entries": 1422,
+      "filled_shares": 60978.91286196119,
+      "entry_fee_usd": 432.75434072178547,
+      "exit_fee_usd": 200.33489731143266
+    },
+    "L10|EARLY|MOVE_top10|AB_s10|TAKE_C1000": {
+      "total_usd": -229.6955700706201,
+      "sharpe_day_equiv": -1.0635606174555463,
+      "max_drawdown_usd": 260.91896907161254,
+      "daily_usd": [
+        -18.10955876381975,
+        -134.84276911317733,
+        -82.05072896314257,
+        5.307486769519521
+      ],
+      "days_positive": 1,
+      "filled_entries": 1422,
+      "filled_shares": 60978.91286196119,
+      "entry_fee_usd": 432.75434072178547,
+      "exit_fee_usd": 421.2772770778305
+    },
+    "L10|EARLY|MOVE_top10|AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": -493.85122969789427,
+      "sharpe_day_equiv": -1.3763930154367783,
+      "max_drawdown_usd": 522.5043979112511,
+      "daily_usd": [
+        -131.58915621010047,
+        -199.62567780829315,
+        -95.72076908884817,
+        -66.9156265906525
+      ],
+      "days_positive": 0,
+      "filled_entries": 1422,
+      "filled_shares": 60978.91286196119,
+      "entry_fee_usd": 432.75434072178547,
+      "exit_fee_usd": 182.54007561852436,
+      "maker_closed_share": 0.516039035144392,
+      "in_flight_share": 0.02971319676149995,
+      "pre_move_fill_share": 0.04321924477373876,
+      "pre_move_time_share": 0.007857122829613403,
+      "cancels_mean": 0.45639943741209565,
+      "top_share_of_maker": 0.031062420503460968,
+      "top_gain5_c": 5.565650814650041,
+      "top2_10_share_of_maker": 0.22263126934490218,
+      "top2_10_gain5_c": 2.978779080046754,
+      "others_share_of_maker": 0.7463063101516368,
+      "others_gain5_c": 1.5679089668379844
+    },
+    "L10|ALL|MOVE_top1|AB_s3|HOLD": {
+      "total_usd": 34.189958144314296,
+      "sharpe_day_equiv": 0.354210523628053,
+      "max_drawdown_usd": 13.590582000000001,
+      "daily_usd": [
+        30.590838144314297,
+        0.0,
+        3.5991199999999974,
+        0.0
+      ],
+      "days_positive": 2,
+      "filled_entries": 7,
+      "filled_shares": 285.13,
+      "entry_fee_usd": 1.7290204285428574,
+      "exit_fee_usd": 0.0
+    },
+    "L10|ALL|MOVE_top1|AB_s3|TB1S": {
+      "total_usd": 22.942452144314284,
+      "sharpe_day_equiv": 0.6714519018937907,
+      "max_drawdown_usd": 3.744424000000004,
+      "daily_usd": [
+        8.791996144314286,
+        0.0,
+        14.150455999999998,
+        0.0
+      ],
+      "days_positive": 2,
+      "filled_entries": 7,
+      "filled_shares": 285.13,
+      "entry_fee_usd": 1.7290204285428574,
+      "exit_fee_usd": 1.797806
+    },
+    "L10|ALL|MOVE_top1|AB_s3|FAV_ONLY": {
+      "total_usd": 42.02995814431429,
+      "sharpe_day_equiv": 0.44741556847837677,
+      "max_drawdown_usd": 13.590582000000001,
+      "daily_usd": [
+        30.590838144314297,
+        0.0,
+        11.439119999999997,
+        0.0
+      ],
+      "days_positive": 2,
+      "filled_entries": 7,
+      "filled_shares": 285.13,
+      "entry_fee_usd": 1.7290204285428574,
+      "exit_fee_usd": 0.16
+    },
+    "L10|ALL|MOVE_top1|AB_s3|TAKE_C1000": {
+      "total_usd": 4.7260681443143095,
+      "sharpe_day_equiv": 0.09239867829554753,
+      "max_drawdown_usd": 25.18655585568569,
+      "daily_usd": [
+        -11.606855855685689,
+        0.0,
+        16.332924,
+        0.0
+      ],
+      "days_positive": 1,
+      "filled_entries": 7,
+      "filled_shares": 285.13,
+      "entry_fee_usd": 1.7290204285428574,
+      "exit_fee_usd": 1.29339
+    },
+    "L10|ALL|MOVE_top1|AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 12.26355814431429,
+      "sharpe_day_equiv": 0.2249757003860965,
+      "max_drawdown_usd": 20.64886185568571,
+      "daily_usd": [
+        -6.369161855685709,
+        0.0,
+        18.63272,
+        0.0
+      ],
+      "days_positive": 1,
+      "filled_entries": 7,
+      "filled_shares": 285.13,
+      "entry_fee_usd": 1.7290204285428574,
+      "exit_fee_usd": 0.4600000000000001,
+      "maker_closed_share": 0.43432820117139553,
+      "in_flight_share": 0.0,
+      "pre_move_fill_share": 0.0,
+      "pre_move_time_share": 0.006853774716425071,
+      "cancels_mean": 0.14285714285714285,
+      "top_share_of_maker": 0.0,
+      "top_gain5_c": null,
+      "top2_10_share_of_maker": 0.0,
+      "top2_10_gain5_c": null,
+      "others_share_of_maker": 1.0,
+      "others_gain5_c": -0.537467700258398
+    },
+    "L10|ALL|MOVE_top1|AB_s10|HOLD": {
+      "total_usd": 210.20715044294468,
+      "sharpe_day_equiv": 0.9012479703026329,
+      "max_drawdown_usd": 58.33010399999999,
+      "daily_usd": [
+        113.8394824429447,
+        20.89989,
+        38.217777999999996,
+        37.25
+      ],
+      "days_positive": 4,
+      "filled_entries": 32,
+      "filled_shares": 1140.7121879476854,
+      "entry_fee_usd": 6.996044761167967,
+      "exit_fee_usd": 0.0
+    },
+    "L10|ALL|MOVE_top1|AB_s10|TB1S": {
+      "total_usd": 85.38639579089818,
+      "sharpe_day_equiv": 1.5053104085690383,
+      "max_drawdown_usd": 5.945664867368427,
+      "daily_usd": [
+        42.09017118469127,
+        9.008947586206904,
+        20.527774,
+        13.759503019999995
+      ],
+      "days_positive": 4,
+      "filled_entries": 32,
+      "filled_shares": 1140.7121879476854,
+      "entry_fee_usd": 6.996044761167967,
+      "exit_fee_usd": 7.572042129747165
+    },
+    "L10|ALL|MOVE_top1|AB_s10|FAV_ONLY": {
+      "total_usd": 151.10792637846708,
+      "sharpe_day_equiv": 0.7947271906711805,
+      "max_drawdown_usd": 58.330104,
+      "daily_usd": [
+        112.1012583784671,
+        4.709890000000001,
+        20.557777999999995,
+        13.739
+      ],
+      "days_positive": 4,
+      "filled_entries": 32,
+      "filled_shares": 1140.7121879476854,
+      "entry_fee_usd": 6.996044761167967,
+      "exit_fee_usd": 2.6733243032835823
+    },
+    "L10|ALL|MOVE_top1|AB_s10|TAKE_C1000": {
+      "total_usd": 56.37544055074972,
+      "sharpe_day_equiv": 0.6018561487802273,
+      "max_drawdown_usd": 31.360104,
+      "daily_usd": [
+        17.429890550749725,
+        6.959307999999999,
+        18.706242,
+        13.28
+      ],
+      "days_positive": 4,
+      "filled_entries": 32,
+      "filled_shares": 1140.7121879476854,
+      "entry_fee_usd": 6.996044761167967,
+      "exit_fee_usd": 5.595002154748921
+    },
+    "L10|ALL|MOVE_top1|AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 44.789861898800694,
+      "sharpe_day_equiv": 0.44158276712809363,
+      "max_drawdown_usd": 34.806852,
+      "daily_usd": [
+        7.624729898800691,
+        7.7598899999999995,
+        15.155242,
+        14.25
+      ],
+      "days_positive": 4,
+      "filled_entries": 32,
+      "filled_shares": 1140.7121879476854,
+      "entry_fee_usd": 6.996044761167967,
+      "exit_fee_usd": 2.37561054238806,
+      "maker_closed_share": 0.36594040186562143,
+      "in_flight_share": 0.0,
+      "pre_move_fill_share": 0.0,
+      "pre_move_time_share": 0.004412140958766062,
+      "cancels_mean": 0.21875,
+      "top_share_of_maker": 0.0,
+      "top_gain5_c": null,
+      "top2_10_share_of_maker": 0.2135524433633574,
+      "top2_10_gain5_c": -1.5400330396624025,
+      "others_share_of_maker": 0.7864475566366426,
+      "others_gain5_c": 1.6950831528012327
+    },
+    "L10|EARLY|MOVE_top1|AB_s3|HOLD": {
+      "total_usd": 45.34312,
+      "sharpe_day_equiv": 0.5327033631342055,
+      "max_drawdown_usd": 11.730000000000004,
+      "daily_usd": [
+        57.07312,
+        0.0,
+        -11.73,
+        0.0
+      ],
+      "days_positive": 1,
+      "filled_entries": 3,
+      "filled_shares": 150.0,
+      "entry_fee_usd": 1.04288,
+      "exit_fee_usd": 0.0
+    },
+    "L10|EARLY|MOVE_top1|AB_s3|TB1S": {
+      "total_usd": 26.928120000000003,
+      "sharpe_day_equiv": 0.8240764185465037,
+      "max_drawdown_usd": 0.0,
+      "daily_usd": [
+        15.628120000000003,
+        0.0,
+        11.3,
+        0.0
+      ],
+      "days_positive": 2,
+      "filled_entries": 3,
+      "filled_shares": 150.0,
+      "entry_fee_usd": 1.04288,
+      "exit_fee_usd": 1.165
+    },
+    "L10|EARLY|MOVE_top1|AB_s3|FAV_ONLY": {
+      "total_usd": 53.18312,
+      "sharpe_day_equiv": 0.6472153811146553,
+      "max_drawdown_usd": 3.8900000000000006,
+      "daily_usd": [
+        57.07312,
+        0.0,
+        -3.89,
+        0.0
+      ],
+      "days_positive": 1,
+      "filled_entries": 3,
+      "filled_shares": 150.0,
+      "entry_fee_usd": 1.04288,
+      "exit_fee_usd": 0.16
+    },
+    "L10|EARLY|MOVE_top1|AB_s3|TAKE_C1000": {
+      "total_usd": 28.15542600000002,
+      "sharpe_day_equiv": 0.7398348788632775,
+      "max_drawdown_usd": 0.0,
+      "daily_usd": [
+        14.875426000000019,
+        0.0,
+        13.28,
+        0.0
+      ],
+      "days_positive": 2,
+      "filled_entries": 3,
+      "filled_shares": 150.0,
+      "entry_fee_usd": 1.04288,
+      "exit_fee_usd": 1.057394
+    },
+    "L10|EARLY|MOVE_top1|AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 34.383120000000005,
+      "sharpe_day_equiv": 0.8187124980725543,
+      "max_drawdown_usd": 0.0,
+      "daily_usd": [
+        20.113120000000002,
+        0.0,
+        14.27,
+        0.0
+      ],
+      "days_positive": 2,
+      "filled_entries": 3,
+      "filled_shares": 150.0,
+      "entry_fee_usd": 1.04288,
+      "exit_fee_usd": 0.4600000000000001,
+      "maker_closed_share": 0.6666666666666666,
+      "in_flight_share": 0.0,
+      "pre_move_fill_share": 0.0,
+      "pre_move_time_share": 0.009758953840148335,
+      "cancels_mean": 0.3333333333333333,
+      "top_share_of_maker": 0.0,
+      "top_gain5_c": null,
+      "top2_10_share_of_maker": 0.0,
+      "top2_10_gain5_c": null,
+      "others_share_of_maker": 1.0,
+      "others_gain5_c": -1.5
+    },
+    "L10|EARLY|MOVE_top1|AB_s10|HOLD": {
+      "total_usd": 193.04968229863036,
+      "sharpe_day_equiv": 1.0179956270505124,
+      "max_drawdown_usd": 20.876748000000006,
+      "daily_usd": [
+        109.04482429863037,
+        23.164799999999996,
+        23.590057999999996,
+        37.25
+      ],
+      "days_positive": 4,
+      "filled_entries": 15,
+      "filled_shares": 646.2452913959613,
+      "entry_fee_usd": 3.72503433262511,
+      "exit_fee_usd": 0.0
+    },
+    "L10|EARLY|MOVE_top1|AB_s10|TB1S": {
+      "total_usd": 73.161978723705,
+      "sharpe_day_equiv": 1.4268717183183948,
+      "max_drawdown_usd": 1.8834820000000008,
+      "daily_usd": [
+        33.82893770370501,
+        11.198820000000007,
+        14.374718000000001,
+        13.759503019999995
+      ],
+      "days_positive": 4,
+      "filled_entries": 15,
+      "filled_shares": 646.2452913959613,
+      "entry_fee_usd": 3.72503433262511,
+      "exit_fee_usd": 4.563523599508341
+    },
+    "L10|EARLY|MOVE_top1|AB_s10|FAV_ONLY": {
+      "total_usd": 133.9504582341528,
+      "sharpe_day_equiv": 1.0066420480816103,
+      "max_drawdown_usd": 9.808142000000004,
+      "daily_usd": [
+        107.30660023415278,
+        6.9748,
+        5.930057999999999,
+        13.739
+      ],
+      "days_positive": 4,
+      "filled_entries": 15,
+      "filled_shares": 646.2452913959613,
+      "entry_fee_usd": 3.72503433262511,
+      "exit_fee_usd": 2.6733243032835823
+    },
+    "L10|EARLY|MOVE_top1|AB_s10|TAKE_C1000": {
+      "total_usd": 75.73133842042145,
+      "sharpe_day_equiv": 1.365803784168298,
+      "max_drawdown_usd": 1.8834820000000008,
+      "daily_usd": [
+        36.872402420421444,
+        9.224217999999999,
+        16.354718,
+        13.28
+      ],
+      "days_positive": 4,
+      "filled_entries": 15,
+      "filled_shares": 646.2452913959613,
+      "entry_fee_usd": 3.72503433262511,
+      "exit_fee_usd": 4.448626350553116
+    },
+    "L10|EARLY|MOVE_top1|AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 61.288793754486385,
+      "sharpe_day_equiv": 0.9296197822489649,
+      "max_drawdown_usd": 9.606747999999998,
+      "daily_usd": [
+        25.520071754486388,
+        10.0248,
+        11.493922,
+        14.25
+      ],
+      "days_positive": 4,
+      "filled_entries": 15,
+      "filled_shares": 646.2452913959613,
+      "entry_fee_usd": 3.72503433262511,
+      "exit_fee_usd": 2.1856105423880603,
+      "maker_closed_share": 0.45430532396823436,
+      "in_flight_share": 0.0,
+      "pre_move_fill_share": 0.0,
+      "pre_move_time_share": 0.005053132643236875,
+      "cancels_mean": 0.4666666666666667,
+      "top_share_of_maker": 0.0,
+      "top_gain5_c": null,
+      "top2_10_share_of_maker": 0.30363076174664155,
+      "top2_10_gain5_c": -1.5400330396624025,
+      "others_share_of_maker": 0.6963692382533584,
+      "others_gain5_c": -1.1101208790882373
+    },
+    "L10|ALL|DECOMP_s10_top1|AB_s3|HOLD": {
+      "total_usd": 122.96408622129229,
+      "sharpe_day_equiv": 0.2969783173999177,
+      "max_drawdown_usd": 118.95688274640004,
+      "daily_usd": [
+        -110.28688274640001,
+        128.9330683,
+        1.2834419999999938,
+        103.0344586676923
+      ],
+      "days_positive": 3,
+      "filled_entries": 112,
+      "filled_shares": 5137.485597504274,
+      "entry_fee_usd": 25.719798595962594,
+      "exit_fee_usd": 0.0
+    },
+    "L10|ALL|DECOMP_s10_top1|AB_s3|TB1S": {
+      "total_usd": 101.29957127958576,
+      "sharpe_day_equiv": 1.426980621051001,
+      "max_drawdown_usd": 17.182425360000003,
+      "daily_usd": [
+        -3.5754916741656677,
+        56.07817539999999,
+        16.352344802222223,
+        32.444542751529205
+      ],
+      "days_positive": 3,
+      "filled_entries": 112,
+      "filled_shares": 5137.485597504274,
+      "entry_fee_usd": 25.719798595962594,
+      "exit_fee_usd": 26.167159177013836
+    },
+    "L10|ALL|DECOMP_s10_top1|AB_s3|FAV_ONLY": {
+      "total_usd": 113.02206273267487,
+      "sharpe_day_equiv": 0.36058830923793883,
+      "max_drawdown_usd": 117.00608087299813,
+      "daily_usd": [
+        -10.028442347147546,
+        124.61043156000002,
+        -39.15670761981985,
+        37.59678113964223
+      ],
+      "days_positive": 2,
+      "filled_entries": 112,
+      "filled_shares": 5137.485597504274,
+      "entry_fee_usd": 25.719798595962594,
+      "exit_fee_usd": 13.766754622681278
+    },
+    "L10|ALL|DECOMP_s10_top1|AB_s3|TAKE_C1000": {
+      "total_usd": 129.88819608000682,
+      "sharpe_day_equiv": 1.3531336501232487,
+      "max_drawdown_usd": 19.259403797600008,
+      "daily_usd": [
+        8.347619482399985,
+        60.28767223999999,
+        20.946678502222227,
+        40.306225855384625
+      ],
+      "days_positive": 4,
+      "filled_entries": 112,
+      "filled_shares": 5137.485597504274,
+      "entry_fee_usd": 25.719798595962594,
+      "exit_fee_usd": 25.777289479063246
+    },
+    "L10|ALL|DECOMP_s10_top1|AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 170.42237004339148,
+      "sharpe_day_equiv": 1.3125242834651136,
+      "max_drawdown_usd": 47.612592280000015,
+      "daily_usd": [
+        18.19039005039999,
+        60.51240401999999,
+        43.433865782222234,
+        48.285710190769244
+      ],
+      "days_positive": 4,
+      "filled_entries": 112,
+      "filled_shares": 5137.485597504274,
+      "entry_fee_usd": 25.719798595962594,
+      "exit_fee_usd": 7.7155873464478635,
+      "maker_closed_share": 0.4857302376112256,
+      "in_flight_share": 0.018009906981640577,
+      "pre_move_fill_share": 0.020036610092496607,
+      "pre_move_time_share": 0.00904850839433919,
+      "cancels_mean": 0.4375,
+      "top_share_of_maker": 0.07761745951733169,
+      "top_gain5_c": 0.5731910055857558,
+      "top2_10_share_of_maker": 0.24075976900290816,
+      "top2_10_gain5_c": 4.480385727268502,
+      "others_share_of_maker": 0.68162277147976,
+      "others_gain5_c": 1.7932338322835124
+    },
+    "L10|ALL|DECOMP_s10_top1|AB_s10|HOLD": {
+      "total_usd": 3.597954542934758,
+      "sharpe_day_equiv": 0.005351144267126366,
+      "max_drawdown_usd": 361.9967629008725,
+      "daily_usd": [
+        -105.16688626064072,
+        -132.4971022082611,
+        -21.16686134899384,
+        262.42880436083044
+      ],
+      "days_positive": 1,
+      "filled_entries": 289,
+      "filled_shares": 12976.526681424333,
+      "entry_fee_usd": 74.65656127101289,
+      "exit_fee_usd": 0.0
+    },
+    "L10|ALL|DECOMP_s10_top1|AB_s10|TB1S": {
+      "total_usd": 153.9550960819691,
+      "sharpe_day_equiv": 1.3384559675373102,
+      "max_drawdown_usd": 28.34038551705268,
+      "daily_usd": [
+        27.62047538423582,
+        75.21348208749643,
+        12.138192873253654,
+        38.982945736983176
+      ],
+      "days_positive": 4,
+      "filled_entries": 289,
+      "filled_shares": 12976.526681424333,
+      "entry_fee_usd": 74.65656127101289,
+      "exit_fee_usd": 74.93458552724341
+    },
+    "L10|ALL|DECOMP_s10_top1|AB_s10|FAV_ONLY": {
+      "total_usd": 318.166733002026,
+      "sharpe_day_equiv": 0.6638804953382157,
+      "max_drawdown_usd": 116.05042052261564,
+      "daily_usd": [
+        50.36959721413415,
+        140.25931177062003,
+        -4.135993076455989,
+        131.6738170937278
+      ],
+      "days_positive": 3,
+      "filled_entries": 289,
+      "filled_shares": 12976.526681424333,
+      "entry_fee_usd": 74.65656127101289,
+      "exit_fee_usd": 38.2027348412725
+    },
+    "L10|ALL|DECOMP_s10_top1|AB_s10|TAKE_C1000": {
+      "total_usd": 178.4918452614026,
+      "sharpe_day_equiv": 1.3109801166378134,
+      "max_drawdown_usd": 34.28672400285919,
+      "daily_usd": [
+        38.41664770995035,
+        68.75256593237447,
+        22.870027558239194,
+        48.452604060838596
+      ],
+      "days_positive": 4,
+      "filled_entries": 289,
+      "filled_shares": 12976.526681424333,
+      "entry_fee_usd": 74.65656127101289,
+      "exit_fee_usd": 73.71150589168424
+    },
+    "L10|ALL|DECOMP_s10_top1|AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 208.33688721328934,
+      "sharpe_day_equiv": 1.118922574907771,
+      "max_drawdown_usd": 49.22589215357894,
+      "daily_usd": [
+        52.06077169436823,
+        74.5810801562811,
+        37.8058302029431,
+        43.8892051596969
+      ],
+      "days_positive": 4,
+      "filled_entries": 289,
+      "filled_shares": 12976.526681424333,
+      "entry_fee_usd": 74.65656127101289,
+      "exit_fee_usd": 29.306678563586598,
+      "maker_closed_share": 0.48331346733890507,
+      "in_flight_share": 0.015944563674639728,
+      "pre_move_fill_share": 0.009056512167195366,
+      "pre_move_time_share": 0.008943828148308878,
+      "cancels_mean": 0.48788927335640137,
+      "top_share_of_maker": 0.08837293550145478,
+      "top_gain5_c": 1.4990740660552475,
+      "top2_10_share_of_maker": 0.2362104940975476,
+      "top2_10_gain5_c": 4.902842641360247,
+      "others_share_of_maker": 0.6754165704009978,
+      "others_gain5_c": 1.8579824662207758
+    },
+    "L10|EARLY|DECOMP_s10_top1|AB_s3|HOLD": {
+      "total_usd": 80.24599622129232,
+      "sharpe_day_equiv": 0.20222381609107878,
+      "max_drawdown_usd": 105.94023724640002,
+      "daily_usd": [
+        -105.07585274640002,
+        93.23306830000003,
+        -15.025678000000005,
+        107.1144586676923
+      ],
+      "days_positive": 2,
+      "filled_entries": 98,
+      "filled_shares": 4463.645597504274,
+      "entry_fee_usd": 23.990988595962595,
+      "exit_fee_usd": 0.0
+    },
+    "L10|EARLY|DECOMP_s10_top1|AB_s3|TB1S": {
+      "total_usd": 90.02882031615141,
+      "sharpe_day_equiv": 1.406949816175256,
+      "max_drawdown_usd": 16.65242536,
+      "daily_usd": [
+        4.9049163624,
+        39.312975399999985,
+        13.541888802222225,
+        32.2690397515292
+      ],
+      "days_positive": 4,
+      "filled_entries": 98,
+      "filled_shares": 4463.645597504274,
+      "entry_fee_usd": 23.990988595962595,
+      "exit_fee_usd": 24.383635483882525
+    },
+    "L10|EARLY|DECOMP_s10_top1|AB_s3|FAV_ONLY": {
+      "total_usd": 70.30397273267488,
+      "sharpe_day_equiv": 0.24200256431455489,
+      "max_drawdown_usd": 117.00608087299813,
+      "daily_usd": [
+        -4.817412347147535,
+        88.91043156000002,
+        -55.46582761981984,
+        41.67678113964223
+      ],
+      "days_positive": 2,
+      "filled_entries": 98,
+      "filled_shares": 4463.645597504274,
+      "entry_fee_usd": 23.990988595962595,
+      "exit_fee_usd": 13.766754622681278
+    },
+    "L10|EARLY|DECOMP_s10_top1|AB_s3|TAKE_C1000": {
+      "total_usd": 112.28482458000684,
+      "sharpe_day_equiv": 1.4417250744245262,
+      "max_drawdown_usd": 17.487189360000002,
+      "daily_usd": [
+        6.698649482399998,
+        44.286194739999985,
+        16.913754502222226,
+        44.38622585538462
+      ],
+      "days_positive": 4,
+      "filled_entries": 98,
+      "filled_shares": 4463.645597504274,
+      "entry_fee_usd": 23.990988595962595,
+      "exit_fee_usd": 24.78289597906325
+    },
+    "L10|EARLY|DECOMP_s10_top1|AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 155.8206800433915,
+      "sharpe_day_equiv": 1.3312032288423645,
+      "max_drawdown_usd": 48.102592280000025,
+      "daily_usd": [
+        16.40142005039999,
+        48.96240402,
+        38.091145782222235,
+        52.36571019076925
+      ],
+      "days_positive": 4,
+      "filled_entries": 98,
+      "filled_shares": 4463.645597504274,
+      "entry_fee_usd": 23.990988595962595,
+      "exit_fee_usd": 7.565587346447863,
+      "maker_closed_share": 0.5313128133035497,
+      "in_flight_share": 0.01895034985147741,
+      "pre_move_fill_share": 0.021082883519472004,
+      "pre_move_time_share": 0.009238307737801143,
+      "cancels_mean": 0.5,
+      "top_share_of_maker": 0.08167049468582731,
+      "top_gain5_c": 0.5731910055857558,
+      "top2_10_share_of_maker": 0.23224889978274177,
+      "top2_10_gain5_c": 3.0715600222373376,
+      "others_share_of_maker": 0.686080605531431,
+      "others_gain5_c": 1.8079669998254515
+    },
+    "L10|EARLY|DECOMP_s10_top1|AB_s10|HOLD": {
+      "total_usd": -81.85626635706521,
+      "sharpe_day_equiv": -0.12733137180715903,
+      "max_drawdown_usd": 374.27092090087257,
+      "daily_usd": [
+        -87.72691426064071,
+        -157.3948942082611,
+        -33.01202134899384,
+        196.27756346083044
+      ],
+      "days_positive": 1,
+      "filled_entries": 261,
+      "filled_shares": 11735.021581424333,
+      "entry_fee_usd": 71.9311871710129,
+      "exit_fee_usd": 0.0
+    },
+    "L10|EARLY|DECOMP_s10_top1|AB_s10|TB1S": {
+      "total_usd": 155.07920347853474,
+      "sharpe_day_equiv": 1.438322604566328,
+      "max_drawdown_usd": 26.560449317052672,
+      "daily_usd": [
+        37.29830142080149,
+        62.39049008749643,
+        11.314306873253656,
+        44.07610509698317
+      ],
+      "days_positive": 4,
+      "filled_entries": 261,
+      "filled_shares": 11735.021581424333,
+      "entry_fee_usd": 71.9311871710129,
+      "exit_fee_usd": 72.3102595741121
+    },
+    "L10|EARLY|DECOMP_s10_top1|AB_s10|FAV_ONLY": {
+      "total_usd": 232.71251210202604,
+      "sharpe_day_equiv": 0.5202091131755245,
+      "max_drawdown_usd": 116.54042052261565,
+      "daily_usd": [
+        67.80956921413417,
+        115.36151977062005,
+        -15.981153076455982,
+        65.5225761937278
+      ],
+      "days_positive": 3,
+      "filled_entries": 261,
+      "filled_shares": 11735.021581424333,
+      "entry_fee_usd": 71.9311871710129,
+      "exit_fee_usd": 38.20273484127251
+    },
+    "L10|EARLY|DECOMP_s10_top1|AB_s10|TAKE_C1000": {
+      "total_usd": 179.1865558014026,
+      "sharpe_day_equiv": 1.4971821800165088,
+      "max_drawdown_usd": 29.812057397052683,
+      "daily_usd": [
+        37.726619709950356,
+        59.63329643237446,
+        23.301063558239193,
+        58.525576100838585
+      ],
+      "days_positive": 4,
+      "filled_entries": 261,
+      "filled_shares": 11735.021581424333,
+      "entry_fee_usd": 71.9311871710129,
+      "exit_fee_usd": 72.23910245168425
+    },
+    "L10|EARLY|DECOMP_s10_top1|AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 218.92938078435316,
+      "sharpe_day_equiv": 1.2364044565932788,
+      "max_drawdown_usd": 48.041653331353785,
+      "daily_usd": [
+        53.07074369436825,
+        71.26604220734492,
+        36.927070202943106,
+        57.66552467969689
+      ],
+      "days_positive": 4,
+      "filled_entries": 261,
+      "filled_shares": 11735.021581424333,
+      "entry_fee_usd": 71.9311871710129,
+      "exit_fee_usd": 28.94185436911851,
+      "maker_closed_share": 0.5196317758859104,
+      "in_flight_share": 0.0163991148229447,
+      "pre_move_fill_share": 0.00931469721943259,
+      "pre_move_time_share": 0.009012434942207706,
+      "cancels_mean": 0.524904214559387,
+      "top_share_of_maker": 0.09089229069554887,
+      "top_gain5_c": 1.4990740660552475,
+      "top2_10_share_of_maker": 0.234744877703508,
+      "top2_10_gain5_c": 4.375504154901128,
+      "others_share_of_maker": 0.6743628316009433,
+      "others_gain5_c": 1.7299299940959814
+    },
+    "L10|ALL|DIRECT_TB_s3_top10|AB_s3|HOLD": {
+      "total_usd": 573.8161916827596,
+      "sharpe_day_equiv": 0.6322741211605782,
+      "max_drawdown_usd": 338.9571795970085,
+      "daily_usd": [
+        173.09648213870548,
+        400.8841564098328,
+        -145.01458765061278,
+        144.85014078483405
+      ],
+      "days_positive": 3,
+      "filled_entries": 542,
+      "filled_shares": 23904.546847357582,
+      "entry_fee_usd": 117.16222166235443,
+      "exit_fee_usd": 0.0
+    },
+    "L10|ALL|DIRECT_TB_s3_top10|AB_s3|TB1S": {
+      "total_usd": 143.9856269227939,
+      "sharpe_day_equiv": 1.191970814491839,
+      "max_drawdown_usd": 40.844024991361835,
+      "daily_usd": [
+        47.24484140651677,
+        9.112897994069717,
+        19.79396714872659,
+        67.83392037348081
+      ],
+      "days_positive": 4,
+      "filled_entries": 542,
+      "filled_shares": 23904.546847357582,
+      "entry_fee_usd": 117.16222166235443,
+      "exit_fee_usd": 114.77475319519293
+    },
+    "L10|ALL|DIRECT_TB_s3_top10|AB_s3|FAV_ONLY": {
+      "total_usd": 385.7341394475068,
+      "sharpe_day_equiv": 0.5582883451123192,
+      "max_drawdown_usd": 275.19616971041904,
+      "daily_usd": [
+        214.65123731500722,
+        270.01297129795796,
+        -87.79522970796685,
+        -11.134839457491523
+      ],
+      "days_positive": 2,
+      "filled_entries": 542,
+      "filled_shares": 23904.546847357582,
+      "entry_fee_usd": 117.16222166235443,
+      "exit_fee_usd": 57.85009645377893
+    },
+    "L10|ALL|DIRECT_TB_s3_top10|AB_s3|TAKE_C1000": {
+      "total_usd": 179.51352289643611,
+      "sharpe_day_equiv": 1.1185300963996658,
+      "max_drawdown_usd": 62.04394195257939,
+      "daily_usd": [
+        14.970766524674254,
+        22.449802325180844,
+        11.502675444942799,
+        130.5902786016382
+      ],
+      "days_positive": 4,
+      "filled_entries": 542,
+      "filled_shares": 23904.546847357582,
+      "entry_fee_usd": 117.16222166235443,
+      "exit_fee_usd": 112.76829254032216
+    },
+    "L10|ALL|DIRECT_TB_s3_top10|AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 245.3623471311232,
+      "sharpe_day_equiv": 1.1898008840035474,
+      "max_drawdown_usd": 69.44555041295153,
+      "daily_usd": [
+        91.03963713857442,
+        -1.8197999507293545,
+        14.631511367165025,
+        141.5109985761131
+      ],
+      "days_positive": 3,
+      "filled_entries": 542,
+      "filled_shares": 23904.546847357582,
+      "entry_fee_usd": 117.16222166235443,
+      "exit_fee_usd": 42.39518947521663,
+      "maker_closed_share": 0.511384099920104,
+      "in_flight_share": 0.022425085674257387,
+      "pre_move_fill_share": 0.05762193838798451,
+      "pre_move_time_share": 0.010882921059961916,
+      "cancels_mean": 0.551660516605166,
+      "top_share_of_maker": 0.04335589277975346,
+      "top_gain5_c": 4.10377358490566,
+      "top2_10_share_of_maker": 0.167293220229932,
+      "top2_10_gain5_c": 3.06961412424411,
+      "others_share_of_maker": 0.7893508869903146,
+      "others_gain5_c": 0.8289945316970236
+    },
+    "L10|ALL|DIRECT_TB_s3_top10|AB_s10|HOLD": {
+      "total_usd": 561.3588305110754,
+      "sharpe_day_equiv": 0.2886845667710993,
+      "max_drawdown_usd": 966.8064247543247,
+      "daily_usd": [
+        224.2893845742433,
+        610.3078454107583,
+        -427.4162603885972,
+        154.17786091467104
+      ],
+      "days_positive": 3,
+      "filled_entries": 2320,
+      "filled_shares": 104265.20191533599,
+      "entry_fee_usd": 608.2308905172574,
+      "exit_fee_usd": 0.0
+    },
+    "L10|ALL|DIRECT_TB_s3_top10|AB_s10|TB1S": {
+      "total_usd": -772.6314601442677,
+      "sharpe_day_equiv": -3.0289902916691416,
+      "max_drawdown_usd": 772.6314601442672,
+      "daily_usd": [
+        -137.9938623747467,
+        -92.58504731603054,
+        -153.30089654298757,
+        -388.7516539105029
+      ],
+      "days_positive": 0,
+      "filled_entries": 2320,
+      "filled_shares": 104265.20191533599,
+      "entry_fee_usd": 608.2308905172574,
+      "exit_fee_usd": 603.2694023673301
+    },
+    "L10|ALL|DIRECT_TB_s3_top10|AB_s10|FAV_ONLY": {
+      "total_usd": 860.4341486414015,
+      "sharpe_day_equiv": 0.5454228053516463,
+      "max_drawdown_usd": 629.7569334951191,
+      "daily_usd": [
+        483.1874792069001,
+        632.9231741161127,
+        -201.3584569370513,
+        -54.31804774455989
+      ],
+      "days_positive": 2,
+      "filled_entries": 2320,
+      "filled_shares": 104265.20191533599,
+      "entry_fee_usd": 608.2308905172574,
+      "exit_fee_usd": 283.01379388801354
+    },
+    "L10|ALL|DIRECT_TB_s3_top10|AB_s10|TAKE_C1000": {
+      "total_usd": -632.8911668034357,
+      "sharpe_day_equiv": -1.8284757607158832,
+      "max_drawdown_usd": 638.5407839048415,
+      "daily_usd": [
+        -162.33841262264647,
+        -121.77497967300444,
+        -169.78153803586173,
+        -178.99623647192305
+      ],
+      "days_positive": 0,
+      "filled_entries": 2320,
+      "filled_shares": 104265.20191533599,
+      "entry_fee_usd": 608.2308905172574,
+      "exit_fee_usd": 592.3873105861376
+    },
+    "L10|ALL|DIRECT_TB_s3_top10|AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": -932.7612633362191,
+      "sharpe_day_equiv": -2.01655325395277,
+      "max_drawdown_usd": 949.4379890149665,
+      "daily_usd": [
+        -284.3279438932671,
+        -169.54617996685005,
+        -125.93593618515379,
+        -352.95120329094823
+      ],
+      "days_positive": 0,
+      "filled_entries": 2320,
+      "filled_shares": 104265.20191533599,
+      "entry_fee_usd": 608.2308905172574,
+      "exit_fee_usd": 261.91402295601904,
+      "maker_closed_share": 0.5050570348775183,
+      "in_flight_share": 0.0349095659267766,
+      "pre_move_fill_share": 0.04785943545271719,
+      "pre_move_time_share": 0.0093835351935894,
+      "cancels_mean": 0.5099137931034483,
+      "top_share_of_maker": 0.04989116207746418,
+      "top_gain5_c": 4.311718305547011,
+      "top2_10_share_of_maker": 0.19181765109142032,
+      "top2_10_gain5_c": 2.986757102631002,
+      "others_share_of_maker": 0.7582911868311156,
+      "others_gain5_c": 1.0512722535174694
+    },
+    "L10|EARLY|DIRECT_TB_s3_top10|AB_s3|HOLD": {
+      "total_usd": 618.8071582834572,
+      "sharpe_day_equiv": 0.700654525591572,
+      "max_drawdown_usd": 324.8237618192307,
+      "daily_usd": [
+        248.10744299216896,
+        377.96395640983286,
+        -146.70822965061276,
+        139.4439885320681
+      ],
+      "days_positive": 3,
+      "filled_entries": 499,
+      "filled_shares": 22064.02684735758,
+      "entry_fee_usd": 112.77365639187303,
+      "exit_fee_usd": 0.0
+    },
+    "L10|EARLY|DIRECT_TB_s3_top10|AB_s3|TB1S": {
+      "total_usd": 141.58140043056213,
+      "sharpe_day_equiv": 1.2374509700797012,
+      "max_drawdown_usd": 40.22077499136185,
+      "daily_usd": [
+        55.27831646705095,
+        -3.768421305930266,
+        18.36898914872659,
+        71.70251612071485
+      ],
+      "days_positive": 3,
+      "filled_entries": 499,
+      "filled_shares": 22064.02684735758,
+      "entry_fee_usd": 112.77365639187303,
+      "exit_fee_usd": 110.40056558105151
+    },
+    "L10|EARLY|DIRECT_TB_s3_top10|AB_s3|FAV_ONLY": {
+      "total_usd": 430.72510604820434,
+      "sharpe_day_equiv": 0.6474838192670948,
+      "max_drawdown_usd": 250.73563563189072,
+      "daily_usd": [
+        289.66219816847064,
+        247.09277129795802,
+        -89.48887170796684,
+        -16.540991710257472
+      ],
+      "days_positive": 2,
+      "filled_entries": 499,
+      "filled_shares": 22064.02684735758,
+      "entry_fee_usd": 112.77365639187303,
+      "exit_fee_usd": 57.85009645377893
+    },
+    "L10|EARLY|DIRECT_TB_s3_top10|AB_s3|TAKE_C1000": {
+      "total_usd": 229.22787263713366,
+      "sharpe_day_equiv": 1.6443933844474872,
+      "max_drawdown_usd": 39.21996388025075,
+      "daily_usd": [
+        69.54964201813775,
+        11.767874825180844,
+        19.145229444942803,
+        128.7651263488723
+      ],
+      "days_positive": 4,
+      "filled_entries": 499,
+      "filled_shares": 22064.02684735758,
+      "entry_fee_usd": 112.77365639187303,
+      "exit_fee_usd": 110.44186640032216
+    },
+    "L10|EARLY|DIRECT_TB_s3_top10|AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 290.72476373182076,
+      "sharpe_day_equiv": 1.5145090732424544,
+      "max_drawdown_usd": 70.0241118485072,
+      "daily_usd": [
+        139.5768979920379,
+        -8.050249950729357,
+        20.964269367165027,
+        138.23384632334717
+      ],
+      "days_positive": 3,
+      "filled_entries": 499,
+      "filled_shares": 22064.02684735758,
+      "entry_fee_usd": 112.77365639187303,
+      "exit_fee_usd": 41.492639475216635,
+      "maker_closed_share": 0.5393650604154855,
+      "in_flight_share": 0.023035320536119414,
+      "pre_move_fill_share": 0.05918995539015715,
+      "pre_move_time_share": 0.01091886108791602,
+      "cancels_mean": 0.5891783567134269,
+      "top_share_of_maker": 0.04453569996647601,
+      "top_gain5_c": 4.10377358490566,
+      "top2_10_share_of_maker": 0.16764414780172068,
+      "top2_10_gain5_c": 2.6229162645211748,
+      "others_share_of_maker": 0.7878201522318035,
+      "others_gain5_c": 0.7813485185037325
+    },
+    "L10|EARLY|DIRECT_TB_s3_top10|AB_s10|HOLD": {
+      "total_usd": 482.78965374584084,
+      "sharpe_day_equiv": 0.2514555967358039,
+      "max_drawdown_usd": 1063.008743768811,
+      "daily_usd": [
+        321.17016276355093,
+        606.8106134107584,
+        -419.60645638859717,
+        -25.584666039871337
+      ],
+      "days_positive": 2,
+      "filled_entries": 2147,
+      "filled_shares": 96947.46617118879,
+      "entry_fee_usd": 583.7509714503609,
+      "exit_fee_usd": 0.0
+    },
+    "L10|EARLY|DIRECT_TB_s3_top10|AB_s10|TB1S": {
+      "total_usd": -766.6862520021423,
+      "sharpe_day_equiv": -3.250623594040919,
+      "max_drawdown_usd": 766.6862520021426,
+      "daily_usd": [
+        -117.57584167258771,
+        -123.5313066160305,
+        -138.02809654298756,
+        -387.55100717053654
+      ],
+      "days_positive": 0,
+      "filled_entries": 2147,
+      "filled_shares": 96947.46617118879,
+      "entry_fee_usd": 583.7509714503609,
+      "exit_fee_usd": 579.81805259572
+    },
+    "L10|EARLY|DIRECT_TB_s3_top10|AB_s10|FAV_ONLY": {
+      "total_usd": 781.864971876167,
+      "sharpe_day_equiv": 0.4979820541366923,
+      "max_drawdown_usd": 824.9426490913114,
+      "daily_usd": [
+        580.0682573962077,
+        629.4259421161125,
+        -193.5486529370512,
+        -234.0805746991022
+      ],
+      "days_positive": 2,
+      "filled_entries": 2147,
+      "filled_shares": 96947.46617118879,
+      "entry_fee_usd": 583.7509714503609,
+      "exit_fee_usd": 283.0137938880136
+    },
+    "L10|EARLY|DIRECT_TB_s3_top10|AB_s10|TAKE_C1000": {
+      "total_usd": -575.3687257981794,
+      "sharpe_day_equiv": -2.2525190236267885,
+      "max_drawdown_usd": 578.5289132205792,
+      "daily_usd": [
+        -42.86089019854474,
+        -105.53907355300444,
+        -139.7340300358617,
+        -287.23473201076854
+      ],
+      "days_positive": 0,
+      "filled_entries": 2147,
+      "filled_shares": 96947.46617118879,
+      "entry_fee_usd": 583.7509714503609,
+      "exit_fee_usd": 578.0620082944996
+    },
+    "L10|EARLY|DIRECT_TB_s3_top10|AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": -855.8577954801551,
+      "sharpe_day_equiv": -2.1344507031521087,
+      "max_drawdown_usd": 881.8286906396825,
+      "daily_usd": [
+        -171.95634852889452,
+        -151.83341196685006,
+        -99.70375618515378,
+        -432.36427879925685
+      ],
+      "days_positive": 0,
+      "filled_entries": 2147,
+      "filled_shares": 96947.46617118879,
+      "entry_fee_usd": 583.7509714503609,
+      "exit_fee_usd": 257.6468416074476,
+      "maker_closed_share": 0.5217925988194967,
+      "in_flight_share": 0.03436360201163439,
+      "pre_move_fill_share": 0.047715570165043415,
+      "pre_move_time_share": 0.009302507435806589,
+      "cancels_mean": 0.5333022822543083,
+      "top_share_of_maker": 0.048575484296381394,
+      "top_gain5_c": 4.184744523088871,
+      "top2_10_share_of_maker": 0.1913800315002307,
+      "top2_10_gain5_c": 2.737281199784421,
+      "others_share_of_maker": 0.7600444842033879,
+      "others_gain5_c": 1.032382871406839
+    },
+    "L10|ALL|CONTROL_onset|AB_s3|HOLD": {
+      "total_usd": -1018.7119149558819,
+      "sharpe_day_equiv": -0.39567959525182433,
+      "max_drawdown_usd": 1910.7043007945426,
+      "daily_usd": [
+        -1143.8393441504008,
+        -308.3922122624976,
+        411.51017435430407,
+        22.009467102712506
+      ],
+      "days_positive": 2,
+      "filled_entries": 3703,
+      "filled_shares": 177331.53368392514,
+      "entry_fee_usd": 815.68097423912,
+      "exit_fee_usd": 0.0
+    },
+    "L10|ALL|CONTROL_onset|AB_s3|TB1S": {
+      "total_usd": -3566.2944652438546,
+      "sharpe_day_equiv": -10.166763309217597,
+      "max_drawdown_usd": 3566.2944652438523,
+      "daily_usd": [
+        -1433.806984305857,
+        -364.46230203896215,
+        -318.65447182305377,
+        -1449.3707070759817
+      ],
+      "days_positive": 0,
+      "filled_entries": 3703,
+      "filled_shares": 177331.53368392514,
+      "entry_fee_usd": 815.68097423912,
+      "exit_fee_usd": 815.2684080984499
+    },
+    "L10|ALL|CONTROL_onset|AB_s3|FAV_ONLY": {
+      "total_usd": -1854.9542699133003,
+      "sharpe_day_equiv": -0.7306919210344818,
+      "max_drawdown_usd": 2339.757491757055,
+      "daily_usd": [
+        -389.59377889733406,
+        -315.0195642311328,
+        216.81942385617052,
+        -1367.160350641004
+      ],
+      "days_positive": 1,
+      "filled_entries": 3703,
+      "filled_shares": 177331.53368392514,
+      "entry_fee_usd": 815.68097423912,
+      "exit_fee_usd": 398.81206625008394
+    },
+    "L10|ALL|CONTROL_onset|AB_s3|TAKE_C1000": {
+      "total_usd": -3457.567138412878,
+      "sharpe_day_equiv": -7.265615634130288,
+      "max_drawdown_usd": 3476.6490231143293,
+      "daily_usd": [
+        -1385.9627876237582,
+        -334.3671673817529,
+        -286.9908921829447,
+        -1450.2462912244223
+      ],
+      "days_positive": 0,
+      "filled_entries": 3703,
+      "filled_shares": 177331.53368392514,
+      "entry_fee_usd": 815.68097423912,
+      "exit_fee_usd": 806.7740133642395
+    },
+    "L10|ALL|CONTROL_onset|AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": -3060.5865082538967,
+      "sharpe_day_equiv": -5.404934949558826,
+      "max_drawdown_usd": 3090.641885115345,
+      "daily_usd": [
+        -1119.0868386211953,
+        -271.9812071929273,
+        -215.41304872692223,
+        -1454.1054137128517
+      ],
+      "days_positive": 0,
+      "filled_entries": 3703,
+      "filled_shares": 177331.53368392514,
+      "entry_fee_usd": 815.68097423912,
+      "exit_fee_usd": 361.50404502503267,
+      "maker_closed_share": 0.4789592492147231,
+      "in_flight_share": 0.04253303079171038,
+      "pre_move_fill_share": 0.06560043277757144,
+      "pre_move_time_share": 0.016435896681919377,
+      "cancels_mean": 0.8638941398865785,
+      "top_share_of_maker": 0.03409472828183752,
+      "top_gain5_c": 5.372389895688893,
+      "top2_10_share_of_maker": 0.13713616235483692,
+      "top2_10_gain5_c": 0.8828299505104696,
+      "others_share_of_maker": 0.8287691093633257,
+      "others_gain5_c": 0.6272746648801576
+    },
+    "L10|ALL|CONTROL_onset|AB_s10|HOLD": {
+      "total_usd": -344.70417750677666,
+      "sharpe_day_equiv": -0.11785397759744079,
+      "max_drawdown_usd": 1670.3967110107922,
+      "daily_usd": [
+        -903.143263212419,
+        -257.14762968925936,
+        488.4538525165152,
+        327.1328628783866
+      ],
+      "days_positive": 2,
+      "filled_entries": 4749,
+      "filled_shares": 234307.49102401623,
+      "entry_fee_usd": 1175.3305045848901,
+      "exit_fee_usd": 0.0
+    },
+    "L10|ALL|CONTROL_onset|AB_s10|TB1S": {
+      "total_usd": -4731.959874774106,
+      "sharpe_day_equiv": -11.09083231887924,
+      "max_drawdown_usd": 4731.959874774113,
+      "daily_usd": [
+        -1762.4690093221843,
+        -512.5300420714224,
+        -478.8293607613221,
+        -1978.1314626191768
+      ],
+      "days_positive": 0,
+      "filled_entries": 4749,
+      "filled_shares": 234307.49102401623,
+      "entry_fee_usd": 1175.3305045848901,
+      "exit_fee_usd": 1177.4866891534991
+    },
+    "L10|ALL|CONTROL_onset|AB_s10|FAV_ONLY": {
+      "total_usd": -1753.5041728643685,
+      "sharpe_day_equiv": -0.5744097782769062,
+      "max_drawdown_usd": 2520.4873235883906,
+      "daily_usd": [
+        -464.6268947876299,
+        -1.1451158610998107,
+        271.1762269806036,
+        -1558.9083891962423
+      ],
+      "days_positive": 1,
+      "filled_entries": 4749,
+      "filled_shares": 234307.49102401623,
+      "entry_fee_usd": 1175.3305045848901,
+      "exit_fee_usd": 568.2151920016174
+    },
+    "L10|ALL|CONTROL_onset|AB_s10|TAKE_C1000": {
+      "total_usd": -4551.229110904953,
+      "sharpe_day_equiv": -7.580709620753967,
+      "max_drawdown_usd": 4570.0529190464,
+      "daily_usd": [
+        -1715.996183184079,
+        -505.31232662372486,
+        -441.9966533541515,
+        -1887.9239477429978
+      ],
+      "days_positive": 0,
+      "filled_entries": 4749,
+      "filled_shares": 234307.49102401623,
+      "entry_fee_usd": 1175.3305045848901,
+      "exit_fee_usd": 1162.124222672671
+    },
+    "L10|ALL|CONTROL_onset|AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": -4286.289212720329,
+      "sharpe_day_equiv": -5.933045516587407,
+      "max_drawdown_usd": 4315.100622961782,
+      "daily_usd": [
+        -1520.3031697009665,
+        -437.57479217246254,
+        -368.18989938350757,
+        -1960.2213514633918
+      ],
+      "days_positive": 0,
+      "filled_entries": 4749,
+      "filled_shares": 234307.49102401623,
+      "entry_fee_usd": 1175.3305045848901,
+      "exit_fee_usd": 525.4267427363321,
+      "maker_closed_share": 0.4834274925245727,
+      "in_flight_share": 0.040507065158375155,
+      "pre_move_fill_share": 0.06196038957719752,
+      "pre_move_time_share": 0.01539792086564161,
+      "cancels_mean": 0.8189092440513792,
+      "top_share_of_maker": 0.037843187294614784,
+      "top_gain5_c": 4.288739297757289,
+      "top2_10_share_of_maker": 0.14392825944018486,
+      "top2_10_gain5_c": 1.4340071960751724,
+      "others_share_of_maker": 0.8182285532652003,
+      "others_gain5_c": 0.8066214652201579
+    },
+    "L10|EARLY|CONTROL_onset|AB_s3|HOLD": {
+      "total_usd": -776.1694710748204,
+      "sharpe_day_equiv": -0.30247657972375747,
+      "max_drawdown_usd": 1817.0938501640803,
+      "daily_usd": [
+        -1077.5084079799396,
+        -244.08935180249762,
+        478.26540955430414,
+        67.16287915331259
+      ],
+      "days_positive": 2,
+      "filled_entries": 3511,
+      "filled_shares": 168352.78170218348,
+      "entry_fee_usd": 799.5962350634017,
+      "exit_fee_usd": 0.0
+    },
+    "L10|EARLY|CONTROL_onset|AB_s3|TB1S": {
+      "total_usd": -3339.945367688167,
+      "sharpe_day_equiv": -10.692302042110093,
+      "max_drawdown_usd": 3339.9453676881653,
+      "daily_usd": [
+        -1318.1168898440542,
+        -351.08425357896215,
+        -321.4255448157224,
+        -1349.3186794494286
+      ],
+      "days_positive": 0,
+      "filled_entries": 3511,
+      "filled_shares": 168352.78170218348,
+      "entry_fee_usd": 799.5962350634017,
+      "exit_fee_usd": 799.4452226385797
+    },
+    "L10|EARLY|CONTROL_onset|AB_s3|FAV_ONLY": {
+      "total_usd": -1612.4118260322389,
+      "sharpe_day_equiv": -0.640762726422338,
+      "max_drawdown_usd": 2073.3185670109783,
+      "daily_usd": [
+        -323.2628427268725,
+        -250.71670377113284,
+        283.5746590561705,
+        -1322.0069385904042
+      ],
+      "days_positive": 1,
+      "filled_entries": 3511,
+      "filled_shares": 168352.78170218348,
+      "entry_fee_usd": 799.5962350634017,
+      "exit_fee_usd": 398.81206625008394
+    },
+    "L10|EARLY|CONTROL_onset|AB_s3|TAKE_C1000": {
+      "total_usd": -3257.149731538937,
+      "sharpe_day_equiv": -9.629026376653988,
+      "max_drawdown_usd": 3257.1497315389356,
+      "daily_usd": [
+        -1256.1385805788786,
+        -338.8811309217529,
+        -301.3496989829447,
+        -1360.7803210553607
+      ],
+      "days_positive": 0,
+      "filled_entries": 3511,
+      "filled_shares": 168352.78170218348,
+      "entry_fee_usd": 799.5962350634017,
+      "exit_fee_usd": 797.3486730684375
+    },
+    "L10|EARLY|CONTROL_onset|AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": -2855.7250039079763,
+      "sharpe_day_equiv": -6.175554813853937,
+      "max_drawdown_usd": 2861.8209416679765,
+      "daily_usd": [
+        -985.494262450734,
+        -277.42834673292725,
+        -233.8540715269222,
+        -1358.9483231973927
+      ],
+      "days_positive": 0,
+      "filled_entries": 3511,
+      "filled_shares": 168352.78170218348,
+      "entry_fee_usd": 799.5962350634017,
+      "exit_fee_usd": 356.9528008192127,
+      "maker_closed_share": 0.4944976916545267,
+      "in_flight_share": 0.043393661786948305,
+      "pre_move_fill_share": 0.06480738469851537,
+      "pre_move_time_share": 0.016456533101572055,
+      "cancels_mean": 0.8943320991170607,
+      "top_share_of_maker": 0.03358341485484895,
+      "top_gain5_c": 5.439360908859211,
+      "top2_10_share_of_maker": 0.13726839169557561,
+      "top2_10_gain5_c": 0.9944354409566001,
+      "others_share_of_maker": 0.8291481934495754,
+      "others_gain5_c": 0.6339215499556683
+    },
+    "L10|EARLY|CONTROL_onset|AB_s10|HOLD": {
+      "total_usd": -314.47929654352583,
+      "sharpe_day_equiv": -0.10718650841067646,
+      "max_drawdown_usd": 1638.4470901272011,
+      "daily_usd": [
+        -930.2793718735716,
+        -155.25946522925923,
+        562.5257317165151,
+        208.53380884278977
+      ],
+      "days_positive": 2,
+      "filled_entries": 4478,
+      "filled_shares": 221443.63087529826,
+      "entry_fee_usd": 1143.50889018756,
+      "exit_fee_usd": 0.0
+    },
+    "L10|EARLY|CONTROL_onset|AB_s10|TB1S": {
+      "total_usd": -4417.9787213388645,
+      "sharpe_day_equiv": -11.655397579050353,
+      "max_drawdown_usd": 4417.978721338866,
+      "daily_usd": [
+        -1622.4637536273954,
+        -501.3311156114224,
+        -476.6912150355292,
+        -1817.4926370645173
+      ],
+      "days_positive": 0,
+      "filled_entries": 4478,
+      "filled_shares": 221443.63087529826,
+      "entry_fee_usd": 1143.50889018756,
+      "exit_fee_usd": 1145.7556405259527
+    },
+    "L10|EARLY|CONTROL_onset|AB_s10|FAV_ONLY": {
+      "total_usd": -1723.2792919011185,
+      "sharpe_day_equiv": -0.563331024507716,
+      "max_drawdown_usd": 2439.8326000641014,
+      "daily_usd": [
+        -491.76300344878274,
+        100.74304859890022,
+        345.2481061806036,
+        -1677.5074432318395
+      ],
+      "days_positive": 2,
+      "filled_entries": 4478,
+      "filled_shares": 221443.63087529826,
+      "entry_fee_usd": 1143.50889018756,
+      "exit_fee_usd": 568.2151920016174
+    },
+    "L10|EARLY|CONTROL_onset|AB_s10|TAKE_C1000": {
+      "total_usd": -4272.2768502488225,
+      "sharpe_day_equiv": -10.809705836529666,
+      "max_drawdown_usd": 4272.2768502488225,
+      "daily_usd": [
+        -1548.2126549708132,
+        -482.2257101637249,
+        -451.8250541541514,
+        -1790.013430960133
+      ],
+      "days_positive": 0,
+      "filled_entries": 4478,
+      "filled_shares": 221443.63087529826,
+      "entry_fee_usd": 1143.50889018756,
+      "exit_fee_usd": 1143.6730893435356
+    },
+    "L10|EARLY|CONTROL_onset|AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": -3958.8542955722187,
+      "sharpe_day_equiv": -6.969130724937502,
+      "max_drawdown_usd": 3963.7062667122223,
+      "daily_usd": [
+        -1338.8217463621193,
+        -406.35982771246245,
+        -382.23027818350755,
+        -1831.4424433141298
+      ],
+      "days_positive": 0,
+      "filled_entries": 4478,
+      "filled_shares": 221443.63087529826,
+      "entry_fee_usd": 1143.50889018756,
+      "exit_fee_usd": 517.2901878105122,
+      "maker_closed_share": 0.49984475896319097,
+      "in_flight_share": 0.04145242677835876,
+      "pre_move_fill_share": 0.060969852963817926,
+      "pre_move_time_share": 0.015428897999840919,
+      "cancels_mean": 0.8506029477445288,
+      "top_share_of_maker": 0.03728086700793675,
+      "top_gain5_c": 4.450182280145249,
+      "top2_10_share_of_maker": 0.14481184565097635,
+      "top2_10_gain5_c": 1.5123504410040702,
+      "others_share_of_maker": 0.817907287341087,
+      "others_gain5_c": 0.7893366309388171
+    },
+    "L25|ALL|MOVE_top10|AB_s3|HOLD": {
+      "total_usd": 56.55723648690105,
+      "sharpe_day_equiv": 0.11440382955615273,
+      "max_drawdown_usd": 272.55222317687753,
+      "daily_usd": [
+        143.86363508899225,
+        -23.547601361441536,
+        -118.23872972064969,
+        54.479932480000016
+      ],
+      "days_positive": 2,
+      "filled_entries": 178,
+      "filled_shares": 7073.039215739063,
+      "entry_fee_usd": 42.84120389638065,
+      "exit_fee_usd": 0.0
+    },
+    "L25|ALL|MOVE_top10|AB_s3|TB1S": {
+      "total_usd": 100.62474098946281,
+      "sharpe_day_equiv": 1.171979396746778,
+      "max_drawdown_usd": 21.593032980000018,
+      "daily_usd": [
+        72.56731755348781,
+        10.579704621641465,
+        1.9139588743335167,
+        15.563759940000008
+      ],
+      "days_positive": 4,
+      "filled_entries": 178,
+      "filled_shares": 7073.039215739063,
+      "entry_fee_usd": 42.84120389638065,
+      "exit_fee_usd": 41.48142605521994
+    },
+    "L25|ALL|MOVE_top10|AB_s3|FAV_ONLY": {
+      "total_usd": 245.91621197916254,
+      "sharpe_day_equiv": 0.6084864467595843,
+      "max_drawdown_usd": 143.86172389478637,
+      "daily_usd": [
+        154.28744633997806,
+        84.44837495855849,
+        -6.242574499374025,
+        13.422965179999998
+      ],
+      "days_positive": 3,
+      "filled_entries": 178,
+      "filled_shares": 7073.039215739063,
+      "entry_fee_usd": 42.84120389638065,
+      "exit_fee_usd": 14.882130792359076
+    },
+    "L25|ALL|MOVE_top10|AB_s3|TAKE_C1000": {
+      "total_usd": 19.244041649313022,
+      "sharpe_day_equiv": 0.10715896616830901,
+      "max_drawdown_usd": 76.32173991564702,
+      "daily_usd": [
+        12.132980376019646,
+        -9.944229041441528,
+        1.8978508793502957,
+        15.15743943538461
+      ],
+      "days_positive": 3,
+      "filled_entries": 178,
+      "filled_shares": 7073.039215739063,
+      "entry_fee_usd": 42.84120389638065,
+      "exit_fee_usd": 36.446367546098415
+    },
+    "L25|ALL|MOVE_top10|AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 5.4923530706058035,
+      "sharpe_day_equiv": 0.028148234200888203,
+      "max_drawdown_usd": 92.50908917464453,
+      "daily_usd": [
+        25.976033592697007,
+        -24.88391178144152,
+        -10.009549860649688,
+        14.409781120000003
+      ],
+      "days_positive": 2,
+      "filled_entries": 178,
+      "filled_shares": 7073.039215739063,
+      "entry_fee_usd": 42.84120389638065,
+      "exit_fee_usd": 14.216507677990567,
+      "maker_closed_share": 0.4154413664922468,
+      "in_flight_share": 0.017015871619022516,
+      "pre_move_fill_share": 0.02683838560633298,
+      "pre_move_time_share": 0.007002309228493127,
+      "cancels_mean": 0.2752808988764045,
+      "top_share_of_maker": 0.010209522971413509,
+      "top_gain5_c": -2.5,
+      "top2_10_share_of_maker": 0.22416315330093248,
+      "top2_10_gain5_c": 2.7846262136621425,
+      "others_share_of_maker": 0.765627323727654,
+      "others_gain5_c": 2.117911760056715
+    },
+    "L25|ALL|MOVE_top10|AB_s10|HOLD": {
+      "total_usd": 679.9732089875492,
+      "sharpe_day_equiv": 0.3957192777815403,
+      "max_drawdown_usd": 695.2155089426303,
+      "daily_usd": [
+        -315.2626811116355,
+        193.18878591425988,
+        -242.35131035924024,
+        1044.398414544165
+      ],
+      "days_positive": 2,
+      "filled_entries": 1675,
+      "filled_shares": 71056.69423520542,
+      "entry_fee_usd": 487.6992770144397,
+      "exit_fee_usd": 0.0
+    },
+    "L25|ALL|MOVE_top10|AB_s10|TB1S": {
+      "total_usd": -787.9466459188419,
+      "sharpe_day_equiv": -3.258954710100648,
+      "max_drawdown_usd": 830.148983171474,
+      "daily_usd": [
+        -372.64259787255565,
+        -218.72042387110346,
+        -145.79759713679235,
+        -50.7860270383904
+      ],
+      "days_positive": 0,
+      "filled_entries": 1675,
+      "filled_shares": 71056.69423520542,
+      "entry_fee_usd": 487.6992770144397,
+      "exit_fee_usd": 472.97942528255675
+    },
+    "L25|ALL|MOVE_top10|AB_s10|FAV_ONLY": {
+      "total_usd": 612.4089606012535,
+      "sharpe_day_equiv": 0.4772759957850691,
+      "max_drawdown_usd": 427.8307387464178,
+      "daily_usd": [
+        -158.08938759372916,
+        213.3986358502849,
+        -183.64258899055272,
+        740.7423013352505
+      ],
+      "days_positive": 2,
+      "filled_entries": 1675,
+      "filled_shares": 71056.69423520542,
+      "entry_fee_usd": 487.6992770144397,
+      "exit_fee_usd": 206.43608327942965
+    },
+    "L25|ALL|MOVE_top10|AB_s10|TAKE_C1000": {
+      "total_usd": -843.2245227456982,
+      "sharpe_day_equiv": -1.7047668090314936,
+      "max_drawdown_usd": 965.1521009840992,
+      "daily_usd": [
+        -443.3140564092796,
+        -264.72203154311677,
+        -191.5711163055423,
+        56.382681512240474
+      ],
+      "days_positive": 1,
+      "filled_entries": 1675,
+      "filled_shares": 71056.69423520542,
+      "entry_fee_usd": 487.6992770144397,
+      "exit_fee_usd": 445.5301937618171
+    },
+    "L25|ALL|MOVE_top10|AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": -1209.0174595552915,
+      "sharpe_day_equiv": -2.064954222822337,
+      "max_drawdown_usd": 1298.7254248604208,
+      "daily_usd": [
+        -628.5781863244697,
+        -353.5555255408802,
+        -195.2058391591943,
+        -31.677908530747345
+      ],
+      "days_positive": 0,
+      "filled_entries": 1675,
+      "filled_shares": 71056.69423520542,
+      "entry_fee_usd": 487.6992770144397,
+      "exit_fee_usd": 187.98148687560897,
+      "maker_closed_share": 0.47802117787457976,
+      "in_flight_share": 0.05718188552051687,
+      "pre_move_fill_share": 0.04719869037616925,
+      "pre_move_time_share": 0.007766546426249475,
+      "cancels_mean": 0.3844776119402985,
+      "top_share_of_maker": 0.04008821764120184,
+      "top_gain5_c": 7.5387963064936,
+      "top2_10_share_of_maker": 0.20152742008405825,
+      "top2_10_gain5_c": 3.4373206593514367,
+      "others_share_of_maker": 0.7583843622747398,
+      "others_gain5_c": 1.596105270147619
+    },
+    "L25|EARLY|MOVE_top10|AB_s3|HOLD": {
+      "total_usd": 154.5730876151394,
+      "sharpe_day_equiv": 0.3505248192886754,
+      "max_drawdown_usd": 250.06411497543604,
+      "daily_usd": [
+        266.1464900157891,
+        -36.05506756,
+        -145.8405793206497,
+        70.32224448000001
+      ],
+      "days_positive": 2,
+      "filled_entries": 127,
+      "filled_shares": 5150.594438873219,
+      "entry_fee_usd": 35.56279728367976,
+      "exit_fee_usd": 0.0
+    },
+    "L25|EARLY|MOVE_top10|AB_s3|TB1S": {
+      "total_usd": 125.14155882833087,
+      "sharpe_day_equiv": 1.6555278151809016,
+      "max_drawdown_usd": 15.943340980000016,
+      "daily_usd": [
+        81.30041822898056,
+        13.73897642,
+        10.65889771935031,
+        19.443266460000004
+      ],
+      "days_positive": 4,
+      "filled_entries": 127,
+      "filled_shares": 5150.594438873219,
+      "entry_fee_usd": 35.56279728367976,
+      "exit_fee_usd": 34.559932792535044
+    },
+    "L25|EARLY|MOVE_top10|AB_s3|FAV_ONLY": {
+      "total_usd": 343.9320631074009,
+      "sharpe_day_equiv": 0.9959632019279312,
+      "max_drawdown_usd": 105.43198389478636,
+      "daily_usd": [
+        276.5703012667749,
+        71.94090876000001,
+        -33.844424099374024,
+        29.26527718
+      ],
+      "days_positive": 3,
+      "filled_entries": 127,
+      "filled_shares": 5150.594438873219,
+      "entry_fee_usd": 35.56279728367976,
+      "exit_fee_usd": 14.882130792359078
+    },
+    "L25|EARLY|MOVE_top10|AB_s3|TAKE_C1000": {
+      "total_usd": 125.05752307755138,
+      "sharpe_day_equiv": 1.4970947144312943,
+      "max_drawdown_usd": 24.25288410000001,
+      "daily_usd": [
+        66.68831330281648,
+        9.809251259999995,
+        17.560207079350292,
+        30.999751435384606
+      ],
+      "days_positive": 4,
+      "filled_entries": 127,
+      "filled_shares": 5150.594438873219,
+      "entry_fee_usd": 35.56279728367976,
+      "exit_fee_usd": 34.11897224609841
+    },
+    "L25|EARLY|MOVE_top10|AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 102.50198643884416,
+      "sharpe_day_equiv": 0.9368143422850166,
+      "max_drawdown_usd": 43.27859266000002,
+      "daily_usd": [
+        82.05495851949382,
+        -5.891377979999994,
+        -3.9136872206496895,
+        30.252093120000005
+      ],
+      "days_positive": 2,
+      "filled_entries": 127,
+      "filled_shares": 5150.594438873219,
+      "entry_fee_usd": 35.56279728367976,
+      "exit_fee_usd": 13.181941437990567,
+      "maker_closed_share": 0.5270446177147954,
+      "in_flight_share": 0.018418966887855708,
+      "pre_move_fill_share": 0.029051426037671736,
+      "pre_move_time_share": 0.006903350935874409,
+      "cancels_mean": 0.36220472440944884,
+      "top_share_of_maker": 0.011051380132713423,
+      "top_gain5_c": -2.5,
+      "top2_10_share_of_maker": 0.22422823864885258,
+      "top2_10_gain5_c": 1.370489432125065,
+      "others_share_of_maker": 0.7647203812184339,
+      "others_gain5_c": 3.043697430339677
+    },
+    "L25|EARLY|MOVE_top10|AB_s10|HOLD": {
+      "total_usd": 739.2191675425543,
+      "sharpe_day_equiv": 0.4788324948841036,
+      "max_drawdown_usd": 555.3679311026088,
+      "daily_usd": [
+        -27.94109163977579,
+        248.16429552972588,
+        -303.79973129924025,
+        822.7956949518444
+      ],
+      "days_positive": 2,
+      "filled_entries": 1429,
+      "filled_shares": 61654.30171511539,
+      "entry_fee_usd": 437.7592808843731,
+      "exit_fee_usd": 0.0
+    },
+    "L25|EARLY|MOVE_top10|AB_s10|TB1S": {
+      "total_usd": -535.4108034457159,
+      "sharpe_day_equiv": -2.626484750116474,
+      "max_drawdown_usd": 572.0163552874236,
+      "daily_usd": [
+        -201.3236034170395,
+        -192.7827877524025,
+        -109.67089605747731,
+        -31.633516218796654
+      ],
+      "days_positive": 0,
+      "filled_entries": 1429,
+      "filled_shares": 61654.30171511539,
+      "entry_fee_usd": 437.7592808843731,
+      "exit_fee_usd": 427.813206211974
+    },
+    "L25|EARLY|MOVE_top10|AB_s10|FAV_ONLY": {
+      "total_usd": 671.6549191562588,
+      "sharpe_day_equiv": 0.5990346820755797,
+      "max_drawdown_usd": 318.606514139179,
+      "daily_usd": [
+        129.23220187813058,
+        268.37414546575087,
+        -245.09100993055273,
+        519.1395817429301
+      ],
+      "days_positive": 3,
+      "filled_entries": 1429,
+      "filled_shares": 61654.30171511539,
+      "entry_fee_usd": 437.7592808843731,
+      "exit_fee_usd": 206.43608327942965
+    },
+    "L25|EARLY|MOVE_top10|AB_s10|TAKE_C1000": {
+      "total_usd": -482.1655305121951,
+      "sharpe_day_equiv": -2.3073302491081016,
+      "max_drawdown_usd": 506.77129009535264,
+      "daily_usd": [
+        -135.2758507964876,
+        -195.34967284987303,
+        -129.45156243054228,
+        -22.08844443529216
+      ],
+      "days_positive": 0,
+      "filled_entries": 1429,
+      "filled_shares": 61654.30171511539,
+      "entry_fee_usd": 437.7592808843731,
+      "exit_fee_usd": 426.5423516556788
+    },
+    "L25|EARLY|MOVE_top10|AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": -833.9188366832773,
+      "sharpe_day_equiv": -2.2923489025257937,
+      "max_drawdown_usd": 863.4095468183187,
+      "daily_usd": [
+        -317.609793677545,
+        -287.88270731879487,
+        -138.7626237501034,
+        -89.66371193683402
+      ],
+      "days_positive": 0,
+      "filled_entries": 1429,
+      "filled_shares": 61654.30171511539,
+      "entry_fee_usd": 437.7592808843731,
+      "exit_fee_usd": 179.02684392899081,
+      "maker_closed_share": 0.5258807232326883,
+      "in_flight_share": 0.058362448270681544,
+      "pre_move_fill_share": 0.044819659739245434,
+      "pre_move_time_share": 0.007743482354012821,
+      "cancels_mean": 0.43037088873338,
+      "top_share_of_maker": 0.037692620930572976,
+      "top_gain5_c": 7.9965118119928835,
+      "top2_10_share_of_maker": 0.20007966162806975,
+      "top2_10_gain5_c": 3.289781291575703,
+      "others_share_of_maker": 0.7622277174413571,
+      "others_gain5_c": 1.7812968743334048
+    },
+    "L25|ALL|MOVE_top1|AB_s3|HOLD": {
+      "total_usd": 32.9502581443143,
+      "sharpe_day_equiv": 0.34565271421398336,
+      "max_drawdown_usd": 13.590582000000001,
+      "daily_usd": [
+        29.351138144314298,
+        0.0,
+        3.5991199999999974,
+        0.0
+      ],
+      "days_positive": 2,
+      "filled_entries": 7,
+      "filled_shares": 285.13,
+      "entry_fee_usd": 1.7037204285428573,
+      "exit_fee_usd": 0.0
+    },
+    "L25|ALL|MOVE_top1|AB_s3|TB1S": {
+      "total_usd": 23.368248144314283,
+      "sharpe_day_equiv": 0.6719092408581411,
+      "max_drawdown_usd": 3.6337820000000036,
+      "daily_usd": [
+        9.454364144314281,
+        0.0,
+        13.913884000000001,
+        0.0
+      ],
+      "days_positive": 2,
+      "filled_entries": 7,
+      "filled_shares": 285.13,
+      "entry_fee_usd": 1.7037204285428573,
+      "exit_fee_usd": 1.76011
+    },
+    "L25|ALL|MOVE_top1|AB_s3|FAV_ONLY": {
+      "total_usd": 40.79025814431429,
+      "sharpe_day_equiv": 0.4399785021657202,
+      "max_drawdown_usd": 13.590582000000001,
+      "daily_usd": [
+        29.351138144314298,
+        0.0,
+        11.439119999999997,
+        0.0
+      ],
+      "days_positive": 2,
+      "filled_entries": 7,
+      "filled_shares": 285.13,
+      "entry_fee_usd": 1.7037204285428573,
+      "exit_fee_usd": 0.16
+    },
+    "L25|ALL|MOVE_top1|AB_s3|TAKE_C1000": {
+      "total_usd": 3.4863681443143086,
+      "sharpe_day_equiv": 0.0699012412161417,
+      "max_drawdown_usd": 25.18655585568569,
+      "daily_usd": [
+        -12.84655585568569,
+        0.0,
+        16.332924,
+        0.0
+      ],
+      "days_positive": 1,
+      "filled_entries": 7,
+      "filled_shares": 285.13,
+      "entry_fee_usd": 1.7037204285428573,
+      "exit_fee_usd": 1.29339
+    },
+    "L25|ALL|MOVE_top1|AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 7.48385814431429,
+      "sharpe_day_equiv": 0.14347096121479394,
+      "max_drawdown_usd": 24.18886185568571,
+      "daily_usd": [
+        -11.148861855685709,
+        0.0,
+        18.63272,
+        0.0
+      ],
+      "days_positive": 1,
+      "filled_entries": 7,
+      "filled_shares": 285.13,
+      "entry_fee_usd": 1.7037204285428573,
+      "exit_fee_usd": 0.0,
+      "maker_closed_share": 0.6096868095254796,
+      "in_flight_share": 0.2876208007363093,
+      "pre_move_fill_share": 0.0,
+      "pre_move_time_share": 0.008825346394845997,
+      "cancels_mean": 0.0,
+      "top_share_of_maker": 0.0,
+      "top_gain5_c": null,
+      "top2_10_share_of_maker": 0.2876208007363093,
+      "top2_10_gain5_c": 8.5,
+      "others_share_of_maker": 0.7123791992636908,
+      "others_gain5_c": -0.537467700258398
+    },
+    "L25|ALL|MOVE_top1|AB_s10|HOLD": {
+      "total_usd": 119.09505526654466,
+      "sharpe_day_equiv": 0.593328522209461,
+      "max_drawdown_usd": 57.158149432085715,
+      "daily_usd": [
+        27.136826866544666,
+        20.89989,
+        33.80833839999999,
+        37.25
+      ],
+      "days_positive": 4,
+      "filled_entries": 30,
+      "filled_shares": 991.2676879476855,
+      "entry_fee_usd": 5.807772117567967,
+      "exit_fee_usd": 0.0
+    },
+    "L25|ALL|MOVE_top1|AB_s10|TB1S": {
+      "total_usd": 62.80750577449816,
+      "sharpe_day_equiv": 1.2339549740305635,
+      "max_drawdown_usd": 5.086764947368428,
+      "daily_usd": [
+        20.476153068291257,
+        9.008947586206904,
+        19.562902100000002,
+        13.759503019999995
+      ],
+      "days_positive": 4,
+      "filled_entries": 30,
+      "filled_shares": 991.2676879476855,
+      "entry_fee_usd": 5.807772117567967,
+      "exit_fee_usd": 6.321860263864812
+    },
+    "L25|ALL|MOVE_top1|AB_s10|FAV_ONLY": {
+      "total_usd": 64.89583120206706,
+      "sharpe_day_equiv": 0.4494837847038549,
+      "max_drawdown_usd": 42.026852000000005,
+      "daily_usd": [
+        30.298602802067066,
+        4.709890000000001,
+        16.148338399999993,
+        13.739
+      ],
+      "days_positive": 4,
+      "filled_entries": 30,
+      "filled_shares": 991.2676879476855,
+      "entry_fee_usd": 5.807772117567967,
+      "exit_fee_usd": 2.773324303283582
+    },
+    "L25|ALL|MOVE_top1|AB_s10|TAKE_C1000": {
+      "total_usd": -6.577017911664264,
+      "sharpe_day_equiv": -0.0867287785579892,
+      "max_drawdown_usd": 55.16636923208569,
+      "daily_usd": [
+        -44.794268011664265,
+        6.959307999999999,
+        17.9779421,
+        13.28
+      ],
+      "days_positive": 3,
+      "filled_entries": 30,
+      "filled_shares": 991.2676879476855,
+      "entry_fee_usd": 5.807772117567967,
+      "exit_fee_usd": 4.704570650553116
+    },
+    "L25|ALL|MOVE_top1|AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": -21.81413627759932,
+      "sharpe_day_equiv": -0.26260698077035655,
+      "max_drawdown_usd": 62.813905192085706,
+      "daily_usd": [
+        -58.02811147759932,
+        7.7598899999999995,
+        14.204085199999998,
+        14.25
+      ],
+      "days_positive": 3,
+      "filled_entries": 30,
+      "filled_shares": 991.2676879476855,
+      "entry_fee_usd": 5.807772117567967,
+      "exit_fee_usd": 1.6842485423880598,
+      "maker_closed_share": 0.386109807798746,
+      "in_flight_share": 0.13063760835429045,
+      "pre_move_fill_share": 0.0,
+      "pre_move_time_share": 0.002579145588107342,
+      "cancels_mean": 0.13333333333333333,
+      "top_share_of_maker": 0.0,
+      "top_gain5_c": null,
+      "top2_10_share_of_maker": 0.48325142191352133,
+      "top2_10_gain5_c": 0.6999162753938764,
+      "others_share_of_maker": 0.5167485780864788,
+      "others_gain5_c": -0.4639449208062804
+    },
+    "L25|EARLY|MOVE_top1|AB_s3|HOLD": {
+      "total_usd": 44.10342,
+      "sharpe_day_equiv": 0.5265457354646039,
+      "max_drawdown_usd": 11.730000000000004,
+      "daily_usd": [
+        55.833420000000004,
+        0.0,
+        -11.73,
+        0.0
+      ],
+      "days_positive": 1,
+      "filled_entries": 3,
+      "filled_shares": 150.0,
+      "entry_fee_usd": 1.0175800000000002,
+      "exit_fee_usd": 0.0
+    },
+    "L25|EARLY|MOVE_top1|AB_s3|TB1S": {
+      "total_usd": 27.479846,
+      "sharpe_day_equiv": 0.8224102428200871,
+      "max_drawdown_usd": 0.0,
+      "daily_usd": [
+        16.179845999999998,
+        0.0,
+        11.3,
+        0.0
+      ],
+      "days_positive": 2,
+      "filled_entries": 3,
+      "filled_shares": 150.0,
+      "entry_fee_usd": 1.0175800000000002,
+      "exit_fee_usd": 1.129874
+    },
+    "L25|EARLY|MOVE_top1|AB_s3|FAV_ONLY": {
+      "total_usd": 51.94342,
+      "sharpe_day_equiv": 0.6431500656086699,
+      "max_drawdown_usd": 3.8900000000000006,
+      "daily_usd": [
+        55.833420000000004,
+        0.0,
+        -3.89,
+        0.0
+      ],
+      "days_positive": 1,
+      "filled_entries": 3,
+      "filled_shares": 150.0,
+      "entry_fee_usd": 1.0175800000000002,
+      "exit_fee_usd": 0.16
+    },
+    "L25|EARLY|MOVE_top1|AB_s3|TAKE_C1000": {
+      "total_usd": 26.915726000000017,
+      "sharpe_day_equiv": 0.7408641244745156,
+      "max_drawdown_usd": 0.0,
+      "daily_usd": [
+        13.635726000000018,
+        0.0,
+        13.28,
+        0.0
+      ],
+      "days_positive": 2,
+      "filled_entries": 3,
+      "filled_shares": 150.0,
+      "entry_fee_usd": 1.0175800000000002,
+      "exit_fee_usd": 1.057394
+    },
+    "L25|EARLY|MOVE_top1|AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 29.60342,
+      "sharpe_day_equiv": 0.7608126791876996,
+      "max_drawdown_usd": 0.0,
+      "daily_usd": [
+        15.333419999999998,
+        0.0,
+        14.27,
+        0.0
+      ],
+      "days_positive": 2,
+      "filled_entries": 3,
+      "filled_shares": 150.0,
+      "entry_fee_usd": 1.0175800000000002,
+      "exit_fee_usd": 0.0,
+      "maker_closed_share": 1.0,
+      "in_flight_share": 0.33333333333333337,
+      "pre_move_fill_share": 0.0,
+      "pre_move_time_share": 0.014280614066404856,
+      "cancels_mean": 0.0,
+      "top_share_of_maker": 0.0,
+      "top_gain5_c": null,
+      "top2_10_share_of_maker": 0.33333333333333337,
+      "top2_10_gain5_c": 8.5,
+      "others_share_of_maker": 0.6666666666666666,
+      "others_gain5_c": -1.5
+    },
+    "L25|EARLY|MOVE_top1|AB_s10|HOLD": {
+      "total_usd": 177.0433107222304,
+      "sharpe_day_equiv": 0.9343479295823728,
+      "max_drawdown_usd": 20.876748000000006,
+      "daily_usd": [
+        93.03845272223037,
+        23.164799999999996,
+        23.590057999999996,
+        37.25
+      ],
+      "days_positive": 4,
+      "filled_entries": 15,
+      "filled_shares": 642.0602913959614,
+      "entry_fee_usd": 3.90721808902511,
+      "exit_fee_usd": 0.0
+    },
+    "L25|EARLY|MOVE_top1|AB_s10|TB1S": {
+      "total_usd": 63.532930487305,
+      "sharpe_day_equiv": 1.3289257554937068,
+      "max_drawdown_usd": 1.8834820000000008,
+      "daily_usd": [
+        24.199889467305,
+        11.198820000000007,
+        14.374718000000001,
+        13.759503019999995
+      ],
+      "days_positive": 4,
+      "filled_entries": 15,
+      "filled_shares": 642.0602913959614,
+      "entry_fee_usd": 3.90721808902511,
+      "exit_fee_usd": 4.5269290242142235
+    },
+    "L25|EARLY|MOVE_top1|AB_s10|FAV_ONLY": {
+      "total_usd": 122.84408665775277,
+      "sharpe_day_equiv": 0.9568926958201257,
+      "max_drawdown_usd": 9.808142000000004,
+      "daily_usd": [
+        96.20022865775277,
+        6.9748,
+        5.930057999999999,
+        13.739
+      ],
+      "days_positive": 4,
+      "filled_entries": 15,
+      "filled_shares": 642.0602913959614,
+      "entry_fee_usd": 3.90721808902511,
+      "exit_fee_usd": 2.773324303283582
+    },
+    "L25|EARLY|MOVE_top1|AB_s10|TAKE_C1000": {
+      "total_usd": 60.59869384402144,
+      "sharpe_day_equiv": 1.2384330131827916,
+      "max_drawdown_usd": 1.8834820000000008,
+      "daily_usd": [
+        21.73975784402144,
+        9.224217999999999,
+        16.354718,
+        13.28
+      ],
+      "days_positive": 4,
+      "filled_entries": 15,
+      "filled_shares": 642.0602913959614,
+      "entry_fee_usd": 3.90721808902511,
+      "exit_fee_usd": 4.381049350553116
+    },
+    "L25|EARLY|MOVE_top1|AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 44.24223637808638,
+      "sharpe_day_equiv": 0.7466913283606291,
+      "max_drawdown_usd": 9.606747999999998,
+      "daily_usd": [
+        8.473514378086383,
+        10.0248,
+        11.493922,
+        14.25
+      ],
+      "days_positive": 4,
+      "filled_entries": 15,
+      "filled_shares": 642.0602913959614,
+      "entry_fee_usd": 3.90721808902511,
+      "exit_fee_usd": 1.6136713423880595,
+      "maker_closed_share": 0.5558639605240555,
+      "in_flight_share": 0.14009598058038963,
+      "pre_move_fill_share": 0.0,
+      "pre_move_time_share": 0.002837509828723804,
+      "cancels_mean": 0.26666666666666666,
+      "top_share_of_maker": 0.0,
+      "top_gain5_c": null,
+      "top2_10_share_of_maker": 0.5182395993980157,
+      "top2_10_gain5_c": 0.6999162753938761,
+      "others_share_of_maker": 0.4817604006019841,
+      "others_gain5_c": -1.0364043565409993
+    },
+    "L25|ALL|DECOMP_s10_top1|AB_s3|HOLD": {
+      "total_usd": 43.56731817935032,
+      "sharpe_day_equiv": 0.11250635595633993,
+      "max_drawdown_usd": 157.58799658000004,
+      "daily_usd": [
+        -147.31021876,
+        91.45219218000003,
+        -21.623581320649706,
+        121.04892608
+      ],
+      "days_positive": 2,
+      "filled_entries": 103,
+      "filled_shares": 4688.959888888889,
+      "entry_fee_usd": 23.365815957267642,
+      "exit_fee_usd": 0.0
+    },
+    "L25|ALL|DECOMP_s10_top1|AB_s3|TB1S": {
+      "total_usd": 67.42821574157252,
+      "sharpe_day_equiv": 1.0661282348033623,
+      "max_drawdown_usd": 18.555071480000002,
+      "daily_usd": [
+        -5.015847320000019,
+        31.44209927999999,
+        14.985212581572522,
+        26.016751200000016
+      ],
+      "days_positive": 3,
+      "filled_entries": 103,
+      "filled_shares": 4688.959888888889,
+      "entry_fee_usd": 23.365815957267642,
+      "exit_fee_usd": 23.73836321555556
+    },
+    "L25|ALL|DECOMP_s10_top1|AB_s3|FAV_ONLY": {
+      "total_usd": 30.8806034042197,
+      "sharpe_day_equiv": 0.11155002298156147,
+      "max_drawdown_usd": 128.66701831299815,
+      "daily_usd": [
+        -46.24333554234755,
+        79.92459544000002,
+        -30.424732146921148,
+        27.62407565348838
+      ],
+      "days_positive": 2,
+      "filled_entries": 103,
+      "filled_shares": 4688.959888888889,
+      "entry_fee_usd": 23.365815957267642,
+      "exit_fee_usd": 13.363801739283051
+    },
+    "L25|ALL|DECOMP_s10_top1|AB_s3|TAKE_C1000": {
+      "total_usd": 70.48470677738266,
+      "sharpe_day_equiv": 0.8983278618784715,
+      "max_drawdown_usd": 21.11789894000001,
+      "daily_usd": [
+        -7.923309660000003,
+        27.57014845999999,
+        19.42079718157252,
+        31.417070795810147
+      ],
+      "days_positive": 3,
+      "filled_entries": 103,
+      "filled_shares": 4688.959888888889,
+      "entry_fee_usd": 23.365815957267642,
+      "exit_fee_usd": 23.58918192115294
+    },
+    "L25|ALL|DECOMP_s10_top1|AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 99.87714696157254,
+      "sharpe_day_equiv": 0.8804877937246867,
+      "max_drawdown_usd": 49.822349200000005,
+      "daily_usd": [
+        -3.0563628800000124,
+        17.0844171,
+        43.817130461572546,
+        42.03196228000001
+      ],
+      "days_positive": 3,
+      "filled_entries": 103,
+      "filled_shares": 4688.959888888889,
+      "entry_fee_usd": 23.365815957267642,
+      "exit_fee_usd": 6.1910859955555555,
+      "maker_closed_share": 0.48551108432268053,
+      "in_flight_share": 0.019741564179356234,
+      "pre_move_fill_share": 0.02196313531663374,
+      "pre_move_time_share": 0.008385227626384653,
+      "cancels_mean": 0.4077669902912621,
+      "top_share_of_maker": 0.10704353356977381,
+      "top_gain5_c": 5.482480956267637,
+      "top2_10_share_of_maker": 0.23210384111050525,
+      "top2_10_gain5_c": 3.138198930870309,
+      "others_share_of_maker": 0.660852625319721,
+      "others_gain5_c": 1.723569905917747
+    },
+    "L25|ALL|DECOMP_s10_top1|AB_s10|HOLD": {
+      "total_usd": 38.86002071861975,
+      "sharpe_day_equiv": 0.057138554732267616,
+      "max_drawdown_usd": 405.4719492724724,
+      "daily_usd": [
+        -142.17937507224073,
+        -123.65214906826112,
+        -27.47449557828551,
+        332.1660404374071
+      ],
+      "days_positive": 1,
+      "filled_entries": 282,
+      "filled_shares": 12817.638406521935,
+      "entry_fee_usd": 74.08052654447891,
+      "exit_fee_usd": 0.0
+    },
+    "L25|ALL|DECOMP_s10_top1|AB_s10|TB1S": {
+      "total_usd": 92.39394971815591,
+      "sharpe_day_equiv": 0.8322501737097238,
+      "max_drawdown_usd": 36.5388460711864,
+      "daily_usd": [
+        18.514640180401486,
+        52.72730750749642,
+        6.47758709285087,
+        14.674414937407143
+      ],
+      "days_positive": 4,
+      "filled_entries": 282,
+      "filled_shares": 12817.638406521935,
+      "entry_fee_usd": 74.08052654447891,
+      "exit_fee_usd": 73.91841821369546
+    },
+    "L25|ALL|DECOMP_s10_top1|AB_s10|FAV_ONLY": {
+      "total_usd": 338.7274174369171,
+      "sharpe_day_equiv": 0.7204525058911058,
+      "max_drawdown_usd": 118.3306801408379,
+      "daily_usd": [
+        43.82675648093415,
+        138.47787907728664,
+        7.844845207800773,
+        148.5779366708955
+      ],
+      "days_positive": 4,
+      "filled_entries": 282,
+      "filled_shares": 12817.638406521935,
+      "entry_fee_usd": 74.08052654447891,
+      "exit_fee_usd": 38.06686080338305
+    },
+    "L25|ALL|DECOMP_s10_top1|AB_s10|TAKE_C1000": {
+      "total_usd": 105.94215455297848,
+      "sharpe_day_equiv": 0.8400090772335006,
+      "max_drawdown_usd": 38.268172576567366,
+      "daily_usd": [
+        28.028442629550362,
+        39.196490952374475,
+        18.28112609783641,
+        20.436094873217247
+      ],
+      "days_positive": 4,
+      "filled_entries": 282,
+      "filled_shares": 12817.638406521935,
+      "entry_fee_usd": 74.08052654447891,
+      "exit_fee_usd": 72.64980056168427
+    },
+    "L25|ALL|DECOMP_s10_top1|AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 164.5796217108957,
+      "sharpe_day_equiv": 0.9221985666745579,
+      "max_drawdown_usd": 49.94586225135378,
+      "daily_usd": [
+        37.23713614596822,
+        50.969269537819535,
+        43.94234952970082,
+        32.43086649740712
+      ],
+      "days_positive": 4,
+      "filled_entries": 282,
+      "filled_shares": 12817.638406521935,
+      "entry_fee_usd": 74.08052654447891,
+      "exit_fee_usd": 26.952334636625913,
+      "maker_closed_share": 0.5055344414984955,
+      "in_flight_share": 0.024573588709851206,
+      "pre_move_fill_share": 0.01648209784791839,
+      "pre_move_time_share": 0.009096678367055185,
+      "cancels_mean": 0.4787234042553192,
+      "top_share_of_maker": 0.1093682874799888,
+      "top_gain5_c": 3.412351837218491,
+      "top2_10_share_of_maker": 0.21323827574946355,
+      "top2_10_gain5_c": 4.65837969834142,
+      "others_share_of_maker": 0.6773934367705474,
+      "others_gain5_c": 2.0431304063735327
+    },
+    "L25|EARLY|DECOMP_s10_top1|AB_s3|HOLD": {
+      "total_usd": 63.63045417935028,
+      "sharpe_day_equiv": 0.16657866272126653,
+      "max_drawdown_usd": 128.65234726000003,
+      "daily_usd": [
+        -127.78796276000003,
+        104.22219218000001,
+        -37.9327013206497,
+        125.12892608
+      ],
+      "days_positive": 2,
+      "filled_entries": 90,
+      "filled_shares": 4105.119888888888,
+      "entry_fee_usd": 21.97947995726764,
+      "exit_fee_usd": 0.0
+    },
+    "L25|EARLY|DECOMP_s10_top1|AB_s3|TB1S": {
+      "total_usd": 68.7490847415725,
+      "sharpe_day_equiv": 1.138045827519535,
+      "max_drawdown_usd": 18.02507148000001,
+      "daily_usd": [
+        3.3944086799999877,
+        27.10209927999999,
+        12.411328581572523,
+        25.84124820000001
+      ],
+      "days_positive": 4,
+      "filled_entries": 90,
+      "filled_shares": 4105.119888888888,
+      "entry_fee_usd": 21.97947995726764,
+      "exit_fee_usd": 22.52648021555556
+    },
+    "L25|EARLY|DECOMP_s10_top1|AB_s3|FAV_ONLY": {
+      "total_usd": 50.94373940421973,
+      "sharpe_day_equiv": 0.18890960966071307,
+      "max_drawdown_usd": 128.66701831299815,
+      "daily_usd": [
+        -26.721079542347542,
+        92.69459544000003,
+        -46.733852146921144,
+        31.704075653488378
+      ],
+      "days_positive": 2,
+      "filled_entries": 90,
+      "filled_shares": 4105.119888888888,
+      "entry_fee_usd": 21.97947995726764,
+      "exit_fee_usd": 13.36380173928305
+    },
+    "L25|EARLY|DECOMP_s10_top1|AB_s3|TAKE_C1000": {
+      "total_usd": 83.96923077738266,
+      "sharpe_day_equiv": 1.1693195986179388,
+      "max_drawdown_usd": 19.58081364,
+      "daily_usd": [
+        4.738946340000007,
+        28.34534045999999,
+        15.387873181572521,
+        35.497070795810146
+      ],
+      "days_positive": 4,
+      "filled_entries": 90,
+      "filled_shares": 4105.119888888888,
+      "entry_fee_usd": 21.97947995726764,
+      "exit_fee_usd": 22.96839392115294
+    },
+    "L25|EARLY|DECOMP_s10_top1|AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 116.55668296157253,
+      "sharpe_day_equiv": 1.0698380424344387,
+      "max_drawdown_usd": 50.31234920000001,
+      "daily_usd": [
+        9.465893119999993,
+        22.5044171,
+        38.47441046157254,
+        46.111962280000014
+      ],
+      "days_positive": 4,
+      "filled_entries": 90,
+      "filled_shares": 4105.119888888888,
+      "entry_fee_usd": 21.97947995726764,
+      "exit_fee_usd": 6.041085995555554,
+      "maker_closed_share": 0.5365743412176431,
+      "in_flight_share": 0.020403350067326406,
+      "pre_move_fill_share": 0.022699393744591873,
+      "pre_move_time_share": 0.00857215119745154,
+      "cancels_mean": 0.4666666666666667,
+      "top_share_of_maker": 0.11063189664330446,
+      "top_gain5_c": 5.482480956267637,
+      "top2_10_share_of_maker": 0.2398845339266918,
+      "top2_10_gain5_c": 3.138198930870309,
+      "others_share_of_maker": 0.6494835694300038,
+      "others_gain5_c": 1.7367309257605423
+    },
+    "L25|EARLY|DECOMP_s10_top1|AB_s10|HOLD": {
+      "total_usd": -48.25463374138036,
+      "sharpe_day_equiv": -0.07416175330080597,
+      "max_drawdown_usd": 419.92982327247233,
+      "daily_usd": [
+        -128.96311907224072,
+        -146.50994106826118,
+        -34.91021597828551,
+        262.12864237740706
+      ],
+      "days_positive": 1,
+      "filled_entries": 255,
+      "filled_shares": 11624.062806521935,
+      "entry_fee_usd": 71.47020800447892,
+      "exit_fee_usd": 0.0
+    },
+    "L25|EARLY|DECOMP_s10_top1|AB_s10|TB1S": {
+      "total_usd": 95.35275097815591,
+      "sharpe_day_equiv": 0.9222101281483137,
+      "max_drawdown_usd": 34.83076487118639,
+      "daily_usd": [
+        29.100896180401495,
+        39.23951550749642,
+        7.25557299285087,
+        19.75676629740713
+      ],
+      "days_positive": 4,
+      "filled_entries": 255,
+      "filled_shares": 11624.062806521935,
+      "entry_fee_usd": 71.47020800447892,
+      "exit_fee_usd": 71.35977649369546
+    },
+    "L25|EARLY|DECOMP_s10_top1|AB_s10|FAV_ONLY": {
+      "total_usd": 251.61276297691705,
+      "sharpe_day_equiv": 0.5737726659380707,
+      "max_drawdown_usd": 110.02088517520829,
+      "daily_usd": [
+        57.04301248093415,
+        115.62008707728666,
+        0.409124807800783,
+        78.54053861089548
+      ],
+      "days_positive": 4,
+      "filled_entries": 255,
+      "filled_shares": 11624.062806521935,
+      "entry_fee_usd": 71.47020800447892,
+      "exit_fee_usd": 38.06686080338305
+    },
+    "L25|EARLY|DECOMP_s10_top1|AB_s10|TAKE_C1000": {
+      "total_usd": 111.7914161329785,
+      "sharpe_day_equiv": 1.00231462362494,
+      "max_drawdown_usd": 33.792170650760866,
+      "daily_usd": [
+        28.99469862955037,
+        32.68483745237446,
+        19.440461997836405,
+        30.671418053217256
+      ],
+      "days_positive": 4,
+      "filled_entries": 255,
+      "filled_shares": 11624.062806521935,
+      "entry_fee_usd": 71.47020800447892,
+      "exit_fee_usd": 71.28088252168428
+    },
+    "L25|EARLY|DECOMP_s10_top1|AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 175.75852176195954,
+      "sharpe_day_equiv": 1.0292747568413942,
+      "max_drawdown_usd": 50.4358622513538,
+      "daily_usd": [
+        37.45339214596824,
+        49.69423158888337,
+        44.01474632970082,
+        44.59615169740712
+      ],
+      "days_positive": 4,
+      "filled_entries": 255,
+      "filled_shares": 11624.062806521935,
+      "entry_fee_usd": 71.47020800447892,
+      "exit_fee_usd": 26.59776840215783,
+      "maker_closed_share": 0.5424882657750832,
+      "in_flight_share": 0.0252510274083448,
+      "pre_move_fill_share": 0.01693647230035894,
+      "pre_move_time_share": 0.009129040477257351,
+      "cancels_mean": 0.5137254901960784,
+      "top_share_of_maker": 0.11238332574736304,
+      "top_gain5_c": 3.412351837218491,
+      "top2_10_share_of_maker": 0.21118771644724998,
+      "top2_10_gain5_c": 4.082377310875064,
+      "others_share_of_maker": 0.6764289578053869,
+      "others_gain5_c": 1.9250559010734827
+    },
+    "L25|ALL|DIRECT_TB_s3_top10|AB_s3|HOLD": {
+      "total_usd": 763.9820078900486,
+      "sharpe_day_equiv": 0.8798218360759223,
+      "max_drawdown_usd": 262.6512194370086,
+      "daily_usd": [
+        325.3836005999773,
+        382.7300717098328,
+        -158.09640990566635,
+        213.96474548590493
+      ],
+      "days_positive": 3,
+      "filled_entries": 494,
+      "filled_shares": 22194.187447769018,
+      "entry_fee_usd": 105.89695833705711,
+      "exit_fee_usd": 0.0
+    },
+    "L25|ALL|DIRECT_TB_s3_top10|AB_s3|TB1S": {
+      "total_usd": 60.0581154912016,
+      "sharpe_day_equiv": 0.5646803801760513,
+      "max_drawdown_usd": 49.03151983136186,
+      "daily_usd": [
+        24.358676216930267,
+        -11.54984412593026,
+        6.380920089369237,
+        40.86836331083235
+      ],
+      "days_positive": 3,
+      "filled_entries": 494,
+      "filled_shares": 22194.187447769018,
+      "entry_fee_usd": 105.89695833705711,
+      "exit_fee_usd": 103.81748374933741
+    },
+    "L25|ALL|DIRECT_TB_s3_top10|AB_s3|FAV_ONLY": {
+      "total_usd": 434.51264470357813,
+      "sharpe_day_equiv": 0.6711542998584393,
+      "max_drawdown_usd": 208.22278897269985,
+      "daily_usd": [
+        293.9558299418585,
+        244.32271736273609,
+        -101.97897824040969,
+        -1.7869243606067187
+      ],
+      "days_positive": 2,
+      "filled_entries": 494,
+      "filled_shares": 22194.187447769018,
+      "entry_fee_usd": 105.89695833705711,
+      "exit_fee_usd": 53.428674624988545
+    },
+    "L25|ALL|DIRECT_TB_s3_top10|AB_s3|TAKE_C1000": {
+      "total_usd": 78.02277235434083,
+      "sharpe_day_equiv": 0.5356246208477993,
+      "max_drawdown_usd": 67.18817607050893,
+      "daily_usd": [
+        -16.244820513084264,
+        -2.4381099348191366,
+        -1.2244816144145565,
+        97.93018441665879
+      ],
+      "days_positive": 1,
+      "filled_entries": 494,
+      "filled_shares": 22194.187447769018,
+      "entry_fee_usd": 105.89695833705711,
+      "exit_fee_usd": 102.07624366479656
+    },
+    "L25|ALL|DIRECT_TB_s3_top10|AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 146.1001803027195,
+      "sharpe_day_equiv": 0.7672480223310888,
+      "max_drawdown_usd": 101.67450919407678,
+      "daily_usd": [
+        55.130594762401515,
+        -22.83606367295159,
+        0.0370214523646375,
+        113.76862776090495
+      ],
+      "days_positive": 3,
+      "filled_entries": 494,
+      "filled_shares": 22194.187447769018,
+      "entry_fee_usd": 105.89695833705711,
+      "exit_fee_usd": 38.209266233033766,
+      "maker_closed_share": 0.5019411337186501,
+      "in_flight_share": 0.03541236815546014,
+      "pre_move_fill_share": 0.0529294997142089,
+      "pre_move_time_share": 0.01089117260821898,
+      "cancels_mean": 0.5526315789473685,
+      "top_share_of_maker": 0.04757555164104911,
+      "top_gain5_c": 4.009433962264151,
+      "top2_10_share_of_maker": 0.17637937339979914,
+      "top2_10_gain5_c": 2.8026051112286683,
+      "others_share_of_maker": 0.7760450749591519,
+      "others_gain5_c": 1.0504849794285511
+    },
+    "L25|ALL|DIRECT_TB_s3_top10|AB_s10|HOLD": {
+      "total_usd": 181.29540814187828,
+      "sharpe_day_equiv": 0.09277998010124464,
+      "max_drawdown_usd": 1272.1823866535046,
+      "daily_usd": [
+        316.5802537986439,
+        589.6351762110712,
+        -610.9825879850036,
+        -113.93743388283329
+      ],
+      "days_positive": 2,
+      "filled_entries": 2309,
+      "filled_shares": 104758.65183674174,
+      "entry_fee_usd": 609.9595115531771,
+      "exit_fee_usd": 0.0
+    },
+    "L25|ALL|DIRECT_TB_s3_top10|AB_s10|TB1S": {
+      "total_usd": -1139.1967483019116,
+      "sharpe_day_equiv": -4.670771519065025,
+      "max_drawdown_usd": 1139.1967483019118,
+      "daily_usd": [
+        -250.73629685136748,
+        -162.40491225976254,
+        -220.06283964522277,
+        -505.99269954555865
+      ],
+      "days_positive": 0,
+      "filled_entries": 2309,
+      "filled_shares": 104758.65183674174,
+      "entry_fee_usd": 609.9595115531771,
+      "exit_fee_usd": 606.9926376548941
+    },
+    "L25|ALL|DIRECT_TB_s3_top10|AB_s10|FAV_ONLY": {
+      "total_usd": 534.5040751977081,
+      "sharpe_day_equiv": 0.3402158931474779,
+      "max_drawdown_usd": 782.9829201860334,
+      "daily_usd": [
+        387.1150624281024,
+        598.6965992909709,
+        -297.38205745084707,
+        -153.92552907051817
+      ],
+      "days_positive": 2,
+      "filled_entries": 2309,
+      "filled_shares": 104758.65183674174,
+      "entry_fee_usd": 609.9595115531771,
+      "exit_fee_usd": 286.76831242879155
+    },
+    "L25|ALL|DIRECT_TB_s3_top10|AB_s10|TAKE_C1000": {
+      "total_usd": -1030.7126699840824,
+      "sharpe_day_equiv": -3.1524738117760522,
+      "max_drawdown_usd": 1030.7126699840826,
+      "daily_usd": [
+        -300.39932229639214,
+        -175.01490899269155,
+        -253.85278505761687,
+        -301.445653637382
+      ],
+      "days_positive": 0,
+      "filled_entries": 2309,
+      "filled_shares": 104758.65183674174,
+      "entry_fee_usd": 609.9595115531771,
+      "exit_fee_usd": 597.100506313393
+    },
+    "L25|ALL|DIRECT_TB_s3_top10|AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": -1390.7174224397736,
+      "sharpe_day_equiv": -3.049032795449079,
+      "max_drawdown_usd": 1394.9324762678943,
+      "daily_usd": [
+        -448.02615824793753,
+        -226.31253943086466,
+        -209.7206755425188,
+        -506.6580492184525
+      ],
+      "days_positive": 0,
+      "filled_entries": 2309,
+      "filled_shares": 104758.65183674174,
+      "entry_fee_usd": 609.9595115531771,
+      "exit_fee_usd": 258.4275333459233,
+      "maker_closed_share": 0.5132318335047711,
+      "in_flight_share": 0.06207426101443812,
+      "pre_move_fill_share": 0.045614568255830476,
+      "pre_move_time_share": 0.009522397688828026,
+      "cancels_mean": 0.5036812472932005,
+      "top_share_of_maker": 0.05781055030582944,
+      "top_gain5_c": 5.047830093504668,
+      "top2_10_share_of_maker": 0.18720878599933935,
+      "top2_10_gain5_c": 3.0898979257137715,
+      "others_share_of_maker": 0.7549806636948311,
+      "others_gain5_c": 1.1272646795322079
+    },
+    "L25|EARLY|DIRECT_TB_s3_top10|AB_s3|HOLD": {
+      "total_usd": 796.4991904907461,
+      "sharpe_day_equiv": 0.9430185116840327,
+      "max_drawdown_usd": 248.51780165923077,
+      "daily_usd": [
+        398.1207774534408,
+        349.60987170983276,
+        -159.7900519056663,
+        208.55859323313894
+      ],
+      "days_positive": 3,
+      "filled_entries": 452,
+      "filled_shares": 20420.20744776902,
+      "entry_fee_usd": 101.75297706657574,
+      "exit_fee_usd": 0.0
+    },
+    "L25|EARLY|DIRECT_TB_s3_top10|AB_s3|TB1S": {
+      "total_usd": 61.428937947858714,
+      "sharpe_day_equiv": 0.6106626935829572,
+      "max_drawdown_usd": 50.12932563136185,
+      "daily_usd": [
+        31.737534166353356,
+        -21.31193736593026,
+        5.1925140893692365,
+        45.81082705806639
+      ],
+      "days_positive": 3,
+      "filled_entries": 452,
+      "filled_shares": 20420.20744776902,
+      "entry_fee_usd": 101.75297706657574,
+      "exit_fee_usd": 99.73193306212409
+    },
+    "L25|EARLY|DIRECT_TB_s3_top10|AB_s3|FAV_ONLY": {
+      "total_usd": 467.02982730427584,
+      "sharpe_day_equiv": 0.7508761299395481,
+      "max_drawdown_usd": 213.8297212254658,
+      "daily_usd": [
+        366.693006795322,
+        211.2025173627361,
+        -103.67262024040969,
+        -7.193076613372654
+      ],
+      "days_positive": 2,
+      "filled_entries": 452,
+      "filled_shares": 20420.20744776902,
+      "entry_fee_usd": 101.75297706657574,
+      "exit_fee_usd": 53.428674624988545
+    },
+    "L25|EARLY|DIRECT_TB_s3_top10|AB_s3|TAKE_C1000": {
+      "total_usd": 129.04976209503835,
+      "sharpe_day_equiv": 1.0456157624011935,
+      "max_drawdown_usd": 51.81149268025074,
+      "daily_usd": [
+        37.28427098037921,
+        -10.757613434819145,
+        6.418072385585443,
+        96.10503216389283
+      ],
+      "days_positive": 3,
+      "filled_entries": 452,
+      "filled_shares": 20420.20744776902,
+      "entry_fee_usd": 101.75297706657574,
+      "exit_fee_usd": 99.98219352479657
+    },
+    "L25|EARLY|DIRECT_TB_s3_top10|AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": 186.33881290341702,
+      "sharpe_day_equiv": 1.0766563000580827,
+      "max_drawdown_usd": 96.2949591940767,
+      "daily_usd": [
+        101.39407161586499,
+        -31.916513672951584,
+        6.369779452364636,
+        110.49147550813899
+      ],
+      "days_positive": 3,
+      "filled_entries": 452,
+      "filled_shares": 20420.20744776902,
+      "entry_fee_usd": 101.75297706657574,
+      "exit_fee_usd": 37.45671623303376,
+      "maker_closed_share": 0.5296878416717132,
+      "in_flight_share": 0.03647261089546856,
+      "pre_move_fill_share": 0.054514203610822355,
+      "pre_move_time_share": 0.010899856442912513,
+      "cancels_mean": 0.5929203539823009,
+      "top_share_of_maker": 0.0489999588709717,
+      "top_gain5_c": 4.009433962264151,
+      "top2_10_share_of_maker": 0.1770375164658797,
+      "top2_10_gain5_c": 2.328820839873532,
+      "others_share_of_maker": 0.7739625246631487,
+      "others_gain5_c": 1.004378744658035
+    },
+    "L25|EARLY|DIRECT_TB_s3_top10|AB_s10|HOLD": {
+      "total_usd": 43.06842446433575,
+      "sharpe_day_equiv": 0.022209748518300335,
+      "max_drawdown_usd": 1426.9381890319223,
+      "daily_usd": [
+        424.9551879879516,
+        557.1542942110711,
+        -596.5093443850036,
+        -342.5317133496834
+      ],
+      "days_positive": 2,
+      "filled_entries": 2143,
+      "filled_shares": 97769.79989259457,
+      "entry_fee_usd": 587.6782730139729,
+      "exit_fee_usd": 0.0
+    },
+    "L25|EARLY|DIRECT_TB_s3_top10|AB_s10|TB1S": {
+      "total_usd": -1102.8221880273982,
+      "sharpe_day_equiv": -4.8523303145072605,
+      "max_drawdown_usd": 1102.8221880273982,
+      "daily_usd": [
+        -218.7983004208766,
+        -186.80345235976256,
+        -201.70799174522276,
+        -495.5124435015363
+      ],
+      "days_positive": 0,
+      "filled_entries": 2143,
+      "filled_shares": 97769.79989259457,
+      "entry_fee_usd": 587.6782730139729,
+      "exit_fee_usd": 585.2008566574352
+    },
+    "L25|EARLY|DIRECT_TB_s3_top10|AB_s10|FAV_ONLY": {
+      "total_usd": 396.27709152016564,
+      "sharpe_day_equiv": 0.2513033328253431,
+      "max_drawdown_usd": 1020.9380700088207,
+      "daily_usd": [
+        495.48999661741004,
+        566.2157172909709,
+        -282.9088138508471,
+        -382.51980853736814
+      ],
+      "days_positive": 2,
+      "filled_entries": 2143,
+      "filled_shares": 97769.79989259457,
+      "entry_fee_usd": 587.6782730139729,
+      "exit_fee_usd": 286.7683124287915
+    },
+    "L25|EARLY|DIRECT_TB_s3_top10|AB_s10|TAKE_C1000": {
+      "total_usd": -964.8031857687563,
+      "sharpe_day_equiv": -3.9465662404426864,
+      "max_drawdown_usd": 965.0871634157123,
+      "daily_usd": [
+        -156.20118388627645,
+        -177.51484449269157,
+        -222.79137315761682,
+        -408.2957842321715
+      ],
+      "days_positive": 0,
+      "filled_entries": 2143,
+      "filled_shares": 97769.79989259457,
+      "entry_fee_usd": 587.6782730139729,
+      "exit_fee_usd": 583.6331350532234
+    },
+    "L25|EARLY|DIRECT_TB_s3_top10|AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": -1293.5802498335172,
+      "sharpe_day_equiv": -3.2320756071982073,
+      "max_drawdown_usd": 1298.29228898374,
+      "daily_usd": [
+        -310.05228442106494,
+        -226.71342143086463,
+        -181.8745387425188,
+        -574.9400052390688
+      ],
+      "days_positive": 0,
+      "filled_entries": 2143,
+      "filled_shares": 97769.79989259457,
+      "entry_fee_usd": 587.6782730139729,
+      "exit_fee_usd": 253.91698337651854,
+      "maker_closed_share": 0.5303413254070782,
+      "in_flight_share": 0.06243716264488542,
+      "pre_move_fill_share": 0.045244312513590644,
+      "pre_move_time_share": 0.009450526086834984,
+      "cancels_mean": 0.5244983667755483,
+      "top_share_of_maker": 0.056666043025740784,
+      "top_gain5_c": 4.984230563069986,
+      "top2_10_share_of_maker": 0.18664754432223352,
+      "top2_10_gain5_c": 2.812402823761847,
+      "others_share_of_maker": 0.7566864126520257,
+      "others_gain5_c": 1.116928634169841
+    },
+    "L25|ALL|CONTROL_onset|AB_s3|HOLD": {
+      "total_usd": -806.2279237550442,
+      "sharpe_day_equiv": -0.31484329750979784,
+      "max_drawdown_usd": 1773.6299834036963,
+      "daily_usd": [
+        -1030.8639866226326,
+        -288.98868186515926,
+        382.286549454304,
+        131.33819527844378
+      ],
+      "days_positive": 2,
+      "filled_entries": 3645,
+      "filled_shares": 175278.1815653763,
+      "entry_fee_usd": 802.8856423970823,
+      "exit_fee_usd": 0.0
+    },
+    "L25|ALL|CONTROL_onset|AB_s3|TB1S": {
+      "total_usd": -3568.6462551903314,
+      "sharpe_day_equiv": -10.234941142394092,
+      "max_drawdown_usd": 3568.646255190327,
+      "daily_usd": [
+        -1422.9521248560457,
+        -366.2321978979089,
+        -333.5645500393549,
+        -1445.8973823970223
+      ],
+      "days_positive": 0,
+      "filled_entries": 3645,
+      "filled_shares": 175278.1815653763,
+      "entry_fee_usd": 802.8856423970823,
+      "exit_fee_usd": 802.9918831216816
+    },
+    "L25|ALL|CONTROL_onset|AB_s3|FAV_ONLY": {
+      "total_usd": -1708.444366191638,
+      "sharpe_day_equiv": -0.6773550169463781,
+      "max_drawdown_usd": 2232.751502864345,
+      "daily_usd": [
+        -300.1391832728076,
+        -321.0981277686562,
+        204.82715131055357,
+        -1292.0342064607278
+      ],
+      "days_positive": 1,
+      "filled_entries": 3645,
+      "filled_shares": 175278.1815653763,
+      "entry_fee_usd": 802.8856423970823,
+      "exit_fee_usd": 392.72935916334563
+    },
+    "L25|ALL|CONTROL_onset|AB_s3|TAKE_C1000": {
+      "total_usd": -3453.754574553159,
+      "sharpe_day_equiv": -7.391200188616346,
+      "max_drawdown_usd": 3473.0732201531605,
+      "daily_usd": [
+        -1393.6052191916224,
+        -340.5821838457667,
+        -292.54454306294474,
+        -1427.0226284528248
+      ],
+      "days_positive": 0,
+      "filled_entries": 3645,
+      "filled_shares": 175278.1815653763,
+      "entry_fee_usd": 802.8856423970823,
+      "exit_fee_usd": 795.1527482517331
+    },
+    "L25|ALL|CONTROL_onset|AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": -3109.3292734885554,
+      "sharpe_day_equiv": -5.575056699096209,
+      "max_drawdown_usd": 3140.2538112485577,
+      "daily_usd": [
+        -1149.7778760462556,
+        -287.79189750453224,
+        -221.07098938240557,
+        -1450.6885105553622
+      ],
+      "days_positive": 0,
+      "filled_entries": 3645,
+      "filled_shares": 175278.1815653763,
+      "entry_fee_usd": 802.8856423970823,
+      "exit_fee_usd": 356.53655853830276,
+      "maker_closed_share": 0.47653184955082495,
+      "in_flight_share": 0.06275713632066326,
+      "pre_move_fill_share": 0.06371273914514759,
+      "pre_move_time_share": 0.01642894037147813,
+      "cancels_mean": 0.8674897119341564,
+      "top_share_of_maker": 0.0386048098365177,
+      "top_gain5_c": 4.798532476040159,
+      "top2_10_share_of_maker": 0.13729097259696404,
+      "top2_10_gain5_c": 0.9975754898843763,
+      "others_share_of_maker": 0.8241042175665183,
+      "others_gain5_c": 0.6830167849366517
+    },
+    "L25|ALL|CONTROL_onset|AB_s10|HOLD": {
+      "total_usd": -615.6775845256008,
+      "sharpe_day_equiv": -0.21002017359689718,
+      "max_drawdown_usd": 1778.4573994799043,
+      "daily_usd": [
+        -969.5824233542871,
+        -363.5702383483306,
+        456.9128684059268,
+        260.5622087710901
+      ],
+      "days_positive": 2,
+      "filled_entries": 4757,
+      "filled_shares": 234645.47737532706,
+      "entry_fee_usd": 1176.2941331507757,
+      "exit_fee_usd": 0.0
+    },
+    "L25|ALL|CONTROL_onset|AB_s10|TB1S": {
+      "total_usd": -4851.357444107486,
+      "sharpe_day_equiv": -11.240563141244646,
+      "max_drawdown_usd": 4851.357444107484,
+      "daily_usd": [
+        -1773.4344382794602,
+        -530.0417721642965,
+        -514.3838188766279,
+        -2033.4974147871012
+      ],
+      "days_positive": 0,
+      "filled_entries": 4757,
+      "filled_shares": 234645.47737532706,
+      "entry_fee_usd": 1176.2941331507757,
+      "exit_fee_usd": 1179.2681383899371
+    },
+    "L25|ALL|CONTROL_onset|AB_s10|FAV_ONLY": {
+      "total_usd": -1956.0396915687593,
+      "sharpe_day_equiv": -0.6377112208121286,
+      "max_drawdown_usd": 2666.8262729211133,
+      "daily_usd": [
+        -469.29445937067067,
+        -76.24993921322482,
+        259.31526441012545,
+        -1669.810557394989
+      ],
+      "days_positive": 1,
+      "filled_entries": 4757,
+      "filled_shares": 234645.47737532706,
+      "entry_fee_usd": 1176.2941331507757,
+      "exit_fee_usd": 569.9014035302575
+    },
+    "L25|ALL|CONTROL_onset|AB_s10|TAKE_C1000": {
+      "total_usd": -4685.284309757077,
+      "sharpe_day_equiv": -7.839138701488372,
+      "max_drawdown_usd": 4704.34487879707,
+      "daily_usd": [
+        -1738.0643329547302,
+        -523.3107585947807,
+        -460.84742560086784,
+        -1963.0617926066973
+      ],
+      "days_positive": 0,
+      "filled_entries": 4757,
+      "filled_shares": 234645.47737532706,
+      "entry_fee_usd": 1176.2941331507757,
+      "exit_fee_usd": 1165.4172280324049
+    },
+    "L25|ALL|CONTROL_onset|AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": -4445.956710286067,
+      "sharpe_day_equiv": -6.207803675450018,
+      "max_drawdown_usd": 4475.63728142607,
+      "daily_usd": [
+        -1560.068296406108,
+        -461.30063599463483,
+        -378.0393392407681,
+        -2046.548438644556
+      ],
+      "days_positive": 0,
+      "filled_entries": 4757,
+      "filled_shares": 234645.47737532706,
+      "entry_fee_usd": 1176.2941331507757,
+      "exit_fee_usd": 522.5595756874495,
+      "maker_closed_share": 0.48577802056656516,
+      "in_flight_share": 0.06171138104403118,
+      "pre_move_fill_share": 0.06104926114399299,
+      "pre_move_time_share": 0.015358400444303233,
+      "cancels_mean": 0.8118562118982552,
+      "top_share_of_maker": 0.04329663504421825,
+      "top_gain5_c": 3.622781336713551,
+      "top2_10_share_of_maker": 0.1444104936194886,
+      "top2_10_gain5_c": 1.4553582640569687,
+      "others_share_of_maker": 0.8122928713362931,
+      "others_gain5_c": 0.8629929374094211
+    },
+    "L25|EARLY|CONTROL_onset|AB_s3|HOLD": {
+      "total_usd": -587.687052600613,
+      "sharpe_day_equiv": -0.22985835963880444,
+      "max_drawdown_usd": 1681.0781327732348,
+      "daily_usd": [
+        -965.5916504521715,
+        -225.28504740515922,
+        443.17832265430405,
+        160.01132260241377
+      ],
+      "days_positive": 2,
+      "filled_entries": 3457,
+      "filled_shares": 166419.61986227238,
+      "entry_fee_usd": 787.1717249424293,
+      "exit_fee_usd": 0.0
+    },
+    "L25|EARLY|CONTROL_onset|AB_s3|TB1S": {
+      "total_usd": -3343.7753493291657,
+      "sharpe_day_equiv": -10.79315748774337,
+      "max_drawdown_usd": 3343.7753493291616,
+      "daily_usd": [
+        -1303.5618222748394,
+        -353.36576343790887,
+        -335.7175694918677,
+        -1351.13019412455
+      ],
+      "days_positive": 0,
+      "filled_entries": 3457,
+      "filled_shares": 166419.61986227238,
+      "entry_fee_usd": 787.1717249424293,
+      "exit_fee_usd": 787.5823779387044
+    },
+    "L25|EARLY|CONTROL_onset|AB_s3|FAV_ONLY": {
+      "total_usd": -1489.9034950372065,
+      "sharpe_day_equiv": -0.5957347246344782,
+      "max_drawdown_usd": 1977.513558749446,
+      "daily_usd": [
+        -234.86684710234627,
+        -257.39449330865614,
+        265.7189245105536,
+        -1263.3610791367578
+      ],
+      "days_positive": 1,
+      "filled_entries": 3457,
+      "filled_shares": 166419.61986227238,
+      "entry_fee_usd": 787.1717249424293,
+      "exit_fee_usd": 392.72935916334563
+    },
+    "L25|EARLY|CONTROL_onset|AB_s3|TAKE_C1000": {
+      "total_usd": -3277.089726085847,
+      "sharpe_day_equiv": -10.031285213910014,
+      "max_drawdown_usd": 3277.0897260858483,
+      "daily_usd": [
+        -1264.8396121467422,
+        -345.2117590657667,
+        -313.1748118629447,
+        -1353.8635430103932
+      ],
+      "days_positive": 0,
+      "filled_entries": 3457,
+      "filled_shares": 166419.61986227238,
+      "entry_fee_usd": 787.1717249424293,
+      "exit_fee_usd": 785.741877635931
+    },
+    "L25|EARLY|CONTROL_onset|AB_s3|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": -2934.8980392692656,
+      "sharpe_day_equiv": -6.471353039273563,
+      "max_drawdown_usd": 2941.6263770292653,
+      "daily_usd": [
+        -1018.0478998757943,
+        -299.33826304453225,
+        -247.20521618240554,
+        -1370.3066601665332
+      ],
+      "days_positive": 0,
+      "filled_entries": 3457,
+      "filled_shares": 166419.61986227238,
+      "entry_fee_usd": 787.1717249424293,
+      "exit_fee_usd": 352.44764173248274,
+      "maker_closed_share": 0.4914752227828893,
+      "in_flight_share": 0.0628653788281246,
+      "pre_move_fill_share": 0.06351692919066129,
+      "pre_move_time_share": 0.016443889802592863,
+      "cancels_mean": 0.8978883424934915,
+      "top_share_of_maker": 0.037589548909209666,
+      "top_gain5_c": 5.130223078874772,
+      "top2_10_share_of_maker": 0.13751267673634157,
+      "top2_10_gain5_c": 1.1132505662692795,
+      "others_share_of_maker": 0.8248977743544488,
+      "others_gain5_c": 0.7147456245742176
+    },
+    "L25|EARLY|CONTROL_onset|AB_s10|HOLD": {
+      "total_usd": -557.2555842316538,
+      "sharpe_day_equiv": -0.18930619753323688,
+      "max_drawdown_usd": 1705.6303427992884,
+      "daily_usd": [
+        -1007.83013145544,
+        -264.2139958883306,
+        520.6006456059268,
+        194.18789750618987
+      ],
+      "days_positive": 2,
+      "filled_entries": 4486,
+      "filled_shares": 221914.05681273353,
+      "entry_fee_usd": 1145.2635352407137,
+      "exit_fee_usd": 0.0
+    },
+    "L25|EARLY|CONTROL_onset|AB_s10|TB1S": {
+      "total_usd": -4528.872784365943,
+      "sharpe_day_equiv": -11.773792639382863,
+      "max_drawdown_usd": 4528.872784365941,
+      "daily_usd": [
+        -1632.0313109613435,
+        -519.6597677042964,
+        -508.26670041067905,
+        -1868.9150052896239
+      ],
+      "days_positive": 0,
+      "filled_entries": 4486,
+      "filled_shares": 221914.05681273353,
+      "entry_fee_usd": 1145.2635352407137,
+      "exit_fee_usd": 1148.2149165756775
+    },
+    "L25|EARLY|CONTROL_onset|AB_s10|FAV_ONLY": {
+      "total_usd": -1897.6176912748124,
+      "sharpe_day_equiv": -0.61804621215827,
+      "max_drawdown_usd": 2560.7398979146355,
+      "daily_usd": [
+        -507.5421674718236,
+        23.106303246775298,
+        323.0030416101254,
+        -1736.1848686598894
+      ],
+      "days_positive": 2,
+      "filled_entries": 4486,
+      "filled_shares": 221914.05681273353,
+      "entry_fee_usd": 1145.2635352407137,
+      "exit_fee_usd": 569.9014035302575
+    },
+    "L25|EARLY|CONTROL_onset|AB_s10|TAKE_C1000": {
+      "total_usd": -4414.954395650248,
+      "sharpe_day_equiv": -11.1514038217114,
+      "max_drawdown_usd": 4414.954395650245,
+      "daily_usd": [
+        -1576.671470181464,
+        -502.3004503747808,
+        -481.46792840086783,
+        -1854.514546693136
+      ],
+      "days_positive": 0,
+      "filled_entries": 4486,
+      "filled_shares": 221914.05681273353,
+      "entry_fee_usd": 1145.2635352407137,
+      "exit_fee_usd": 1146.8485545832693
+    },
+    "L25|EARLY|CONTROL_onset|AB_s10|CX_OURS_C1000_JOIN_T10_TAKE": {
+      "total_usd": -4130.57824620726,
+      "sharpe_day_equiv": -7.337956214029599,
+      "max_drawdown_usd": 4136.062617347264,
+      "daily_usd": [
+        -1385.7174725072607,
+        -438.11759353463486,
+        -404.29356204076805,
+        -1902.4496181245972
+      ],
+      "days_positive": 0,
+      "filled_entries": 4486,
+      "filled_shares": 221914.05681273353,
+      "entry_fee_usd": 1145.2635352407137,
+      "exit_fee_usd": 514.6764731616296,
+      "maker_closed_share": 0.5018046065535526,
+      "in_flight_share": 0.0621856184319049,
+      "pre_move_fill_share": 0.06051715469043049,
+      "pre_move_time_share": 0.0153809787072905,
+      "cancels_mean": 0.8435131520285332,
+      "top_share_of_maker": 0.04243264950437239,
+      "top_gain5_c": 3.9171151142468346,
+      "top2_10_share_of_maker": 0.14535814463297814,
+      "top2_10_gain5_c": 1.53329635472514,
+      "others_share_of_maker": 0.8122092058626496,
+      "others_gain5_c": 0.8650395022446714
+    }
+  },
+  "counts_early": {
+    "cells": 6,
+    "cells_list": [
+      "MOVE_top10|AB_s3",
+      "MOVE_top10|AB_s10",
+      "DECOMP_s10_top1|AB_s3",
+      "DECOMP_s10_top1|AB_s10",
+      "DIRECT_TB_s3_top10|AB_s3",
+      "DIRECT_TB_s3_top10|AB_s10"
+    ],
+    "L0_fixed_beats_HOLD_pnl": 3,
+    "L0_fixed_beats_HOLD_sharpe": 4,
+    "L0_fixed_beats_TB1S_pnl": 4,
+    "L0_fixed_beats_TB1S_sharpe": 2,
+    "L0_fixed_beats_FAV_ONLY_pnl": 2,
+    "L0_fixed_beats_FAV_ONLY_sharpe": 4,
+    "L0_fixed_beats_TAKE_C1000_pnl": 3,
+    "L0_fixed_beats_TAKE_C1000_sharpe": 0,
+    "L0_HOLD_positive": 5,
+    "L0_TB1S_positive": 4,
+    "L0_FAV_ONLY_positive": 6,
+    "L0_TAKE_C1000_positive": 5,
+    "L0_CX_OURS_C1000_JOIN_T10_TAKE_positive": 4,
+    "L10_fixed_beats_HOLD_pnl": 3,
+    "L10_fixed_beats_HOLD_sharpe": 4,
+    "L10_fixed_beats_TB1S_pnl": 4,
+    "L10_fixed_beats_TB1S_sharpe": 3,
+    "L10_fixed_beats_FAV_ONLY_pnl": 1,
+    "L10_fixed_beats_FAV_ONLY_sharpe": 4,
+    "L10_fixed_beats_TAKE_C1000_pnl": 3,
+    "L10_fixed_beats_TAKE_C1000_sharpe": 1,
+    "L10_HOLD_positive": 5,
+    "L10_TB1S_positive": 4,
+    "L10_FAV_ONLY_positive": 6,
+    "L10_TAKE_C1000_positive": 4,
+    "L10_CX_OURS_C1000_JOIN_T10_TAKE_positive": 4,
+    "L25_fixed_beats_HOLD_pnl": 2,
+    "L25_fixed_beats_HOLD_sharpe": 4,
+    "L25_fixed_beats_TB1S_pnl": 3,
+    "L25_fixed_beats_TB1S_sharpe": 4,
+    "L25_fixed_beats_FAV_ONLY_pnl": 1,
+    "L25_fixed_beats_FAV_ONLY_sharpe": 3,
+    "L25_fixed_beats_TAKE_C1000_pnl": 3,
+    "L25_fixed_beats_TAKE_C1000_sharpe": 4,
+    "L25_HOLD_positive": 5,
+    "L25_TB1S_positive": 4,
+    "L25_FAV_ONLY_positive": 6,
+    "L25_TAKE_C1000_positive": 4,
+    "L25_CX_OURS_C1000_JOIN_T10_TAKE_positive": 4
+  }
+}

@@ -1,3 +1,8 @@
+<!-- EXIT_FIXED_20261127_CLAUDE -->
+## 2026-11-27 — the fixed maker exit (cancel when the trend continues, re-post at calm) under + 0 / + 10 / + 25 ms: positive in 4, 4, 4 of 6 cells; Sharpe above taking at the 1 s calm in 0 / 1 / 4 of 6; most maker fills go to ordinary takers
+
+See FINDINGS EXIT_FIXED (same date). Fixed exit = CX_OURS_C1000_JOIN_T10_TAKE (rule re-checked in the read). Next (USER's call): untouched days for a frozen candidate (entries x this exit, comparators taking at the 1 s calm / selling after 1 s / keeping favourites), declared null and minimum days first; forward days stay unread until then.
+<!-- /EXIT_FIXED_20261127_CLAUDE -->
 <!-- EXIT_MAKER3_20261127_CLAUDE -->
 ## 2026-11-27 — maker exit with cancels on Binance moves: beats the single maker order (6 of 6 cells at 1 s / 3 s calm) and its fills are less picked off; against taking at the same calm 2-4 of 6 at 1 s; best maker beats the best taking / holding exit in 1 of 6 by Sharpe, 2 by P&L; fees were always in the P&L
 

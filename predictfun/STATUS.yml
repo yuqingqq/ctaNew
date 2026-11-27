@@ -1,3 +1,12 @@
+exit_fixed_20261127_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/exit_fixed.json
+  session: 1622c91e
+  fixed_exit: CX_OURS_C1000_JOIN_T10_TAKE
+  latencies_ms: [0, 10, 25]
+  fixed_positive_cells: {L0: 4, L10: 4, L25: 4, cells: 6}
+  fixed_sharpe_above_take_at_1s_calm: {L0: 0, L10: 1, L25: 4}
+  maker_fill_takers_others_share: [0.68, 0.79]
+  pre_move_fill_to_time_ratio: [1.00, 6.10]
 exit_maker3_20261127_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/exit_maker3.json
   session: 1622c91e

@@ -1,3 +1,34 @@
+<!-- EXIT_FIXED_20261127_CLAUDE -->
+## 2026-11-27 — POST HOC, the fixed maker exit (the USER's: cancel when the trend continues, re-post at calm) under added latency: selling after 1 s, taking at the 1 s calm and the maker exit earn less at + 25 ms in 6 of 6 cells (keeping favourites in 5); the maker exit is positive in 4 of 6 conservative cells at every latency and its Sharpe passes taking at the 1 s calm in 0 / 1 / 4 of 6 at + 0 / + 10 / + 25 ms; our maker fills go mostly to ordinary takers (68-79%), the day's other largest takers buy 18-25% and gain more in 5 s in 5 of 6
+
+[exit_fixed](reviews/take_reprice_20261125/exit_fixed.json) (script `exit_fixed.py`, committed before use; at + 0 ms it reproduces EXIT_MAKER3 exactly). USER: "Sure we can cancel maker order and repost when the trend continues, and proceed". The fixed exit, chosen by a rule declared before the run (of EXIT_MAKER3's 12 trend-cancel variants, the best median Sharpe over its well-filled cells: 1.34; the rule is re-checked in the read): from the first moment after our fill notice with no Binance futures mid change for 1 s, a post-only order at the best on the exit side; cancelled when Binance moves our way (the trend continues), re-posted at the next 1 s calm at the new best; whatever is left 10 s after the first order rests is taken. Extra latency is added to every message between us and Predict, each way (entry and exit IOCs, fill notices, posts, cancels, refusals); the Binance feed is unchanged. Entries matched >= 15 s before the window's last-30 s cut; counts over the 6 cells with >= 30 filled positions. Post hoc: the exit was chosen on these four seen days.
+
+| conservative entry, matched >= 15 s before the cut: total, day-equivalent Sharpe | extra latency | filled | sell after 1 s | take at 1 s calm | keep favourites | the fixed maker exit |
+|---|---:|---:|---:|---:|---:|---:|
+| move model, top 10%, + 3c | +0 ms | 192 | +$316, +2.76 | +$349, +2.71 | +$488, +1.21 | +$336, +2.32 |
+|  | +10 ms | 150 | +$204, +2.14 | +$224, +2.09 | +$402, +1.07 | +$209, +1.56 |
+|  | +25 ms | 127 | +$125, +1.66 | +$125, +1.50 | +$344, +1.00 | +$103, +0.94 |
+| move model, top 10%, + 10c | +0 ms | 1,463 | -$44, -0.20 | +$80, +0.35 | +$1,218, +1.09 | -$192, -0.53 |
+|  | +10 ms | 1,422 | -$325, -1.58 | -$230, -1.06 | +$891, +0.79 | -$494, -1.38 |
+|  | +25 ms | 1,429 | -$535, -2.63 | -$482, -2.31 | +$672, +0.60 | -$834, -2.29 |
+| fill x net, top 1%, + 3c | +0 ms | 101 | +$90, +1.44 | +$111, +1.45 | +$65, +0.22 | +$156, +1.35 |
+|  | +10 ms | 98 | +$90, +1.41 | +$112, +1.44 | +$70, +0.24 | +$156, +1.33 |
+|  | +25 ms | 90 | +$69, +1.14 | +$84, +1.17 | +$51, +0.19 | +$117, +1.07 |
+| fill x net, top 1%, + 10c | +0 ms | 269 | +$168, +1.56 | +$189, +1.58 | +$236, +0.53 | +$239, +1.33 |
+|  | +10 ms | 261 | +$155, +1.44 | +$179, +1.50 | +$233, +0.52 | +$219, +1.24 |
+|  | +25 ms | 255 | +$95, +0.92 | +$112, +1.00 | +$252, +0.57 | +$176, +1.03 |
+| taken-back value model, top 10%, + 3c | +0 ms | 551 | +$272, +2.02 | +$371, +2.32 | +$497, +0.71 | +$413, +2.03 |
+|  | +10 ms | 499 | +$142, +1.24 | +$229, +1.64 | +$431, +0.65 | +$291, +1.51 |
+|  | +25 ms | 452 | +$61, +0.61 | +$129, +1.05 | +$467, +0.75 | +$186, +1.08 |
+| taken-back value model, top 10%, + 10c | +0 ms | 2,195 | -$444, -1.85 | -$227, -0.86 | +$1,148, +0.73 | -$471, -1.17 |
+|  | +10 ms | 2,147 | -$767, -3.25 | -$575, -2.25 | +$782, +0.50 | -$856, -2.13 |
+|  | +25 ms | 2,143 | -$1,103, -4.85 | -$965, -3.95 | +$396, +0.25 | -$1,294, -3.23 |
+
+- **Latency:** from + 0 to + 25 ms the fixed maker exit's total changes by -$822 to -$39 (selling after 1 s -$659 to -$21, keeping favourites -$752 to +$16); the entry fills 1-32% fewer shares. The maker exit is positive in 4, 4, 4 of 6 cells at + 0 / + 10 / + 25 ms. Against taking at the 1 s calm it earns more in 3, 3, 3 of 6 cells with a higher Sharpe in 0, 1, 4; against selling after 1 s, more in 4, 4, 3, Sharpe higher in 2, 3, 4; against keeping favourites, more in 2, 1, 1, Sharpe higher in 4, 4, 3 (each at + 0 / + 10 / + 25 ms).
+- **Who buys from our maker order (+ 0 ms):** the maker order closes 51-55% of the position. Ordinary takers buy 68-79% of those shares and gain +0.7 to +1.7c over the next 5 s; the day's ten largest takers other than the top taker buy 18-25% and gain +1.3 to +4.4c (more than ordinary takers in 5 of 6 cells); the top taker buys 1-10% (-2.5 to +5.1c, few fills).
+- **Just before Binance moves:** fills in the 100 ms before the Binance change that cancels the order are 0.9-5.9% of maker shares against 0.8-1.1% of its resting time (1.0-6.1x; at least twice the time share in 5 of 6 cells): fills crowd in just before the move, but those fills are a small share of all maker fills. Fills between the change and the cancel landing: 0.6-2.1% at + 0 ms, 1.8-6.2% at + 25 ms.
+- **Limits:** seen days; the exit was chosen on them (best of 12 trend-cancel variants); extra latency on the Predict side only; prints without a time are dropped (about a fifth of shares on 10-31 and 11-01); the taker groups are by the day's volume (in-sample ranking); co-located Binance feed assumed. CPU 3 min.
+<!-- /EXIT_FIXED_20261127_CLAUDE -->
 <!-- EXIT_MAKER3_20261127_CLAUDE -->
 ## 2026-11-27 — POST HOC, maker exit with cancels (the USER's request): resting only while Binance is calm (cancelled on the next Binance mid change, re-posted at the next calm) beats the single resting order in 6 of 6 conservative cells at 1 s and 3 s calm, and its buyers' 5 s gain is lower in 23 of 24 comparisons; against taking at the same calm it wins 2-4 of 6 at 1 s; the best maker variant beats the best taking or holding exit by Sharpe in 1 of 6 and by P&L in 2; fees were always in the P&L (entry and exit takes 2% x min(p, 1 - p), maker 0)
 
