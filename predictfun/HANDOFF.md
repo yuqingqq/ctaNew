@@ -1,3 +1,8 @@
+<!-- CHASE_TAKES_20261127_CLAUDE -->
+## 2026-11-27 — chasing a move under way (group 3): every move loses; the held-out model's top 10% / 1% of moves earn +0.17c / +0.69c per intended share taken back after 1 s on the conservative book (4/4, 4/4 days), +2.34c / +7.50c on the optimistic one
+
+See FINDINGS CHASE_TAKES (same date). Next (USER's call, beyond the small-round CPU): robustness on the same days (decision +10 / +25 ms, the venues family dropped, thresholds from training days, input importance), then untouched days.
+<!-- /CHASE_TAKES_20261127_CLAUDE -->
 <!-- FIRE_GALLERY_20261127_CLAUDE -->
 ## 2026-11-27 — fire gallery: 8 random fires (4 moved) with their closest look-alikes and ordinary moments (0 of 16 moved); see reviews/take_reprice_20261125/fire_gallery_chart.html
 

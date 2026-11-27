@@ -1,3 +1,15 @@
+chase_takes_20261127_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/chase_takes.json
+  rows: data/predict_fun/research/take_reprice_20261125/chase_takes/
+  session: 1622c91e
+  labelled_ticks: 257836
+  moves: 50049
+  model_spearman_lodo: {1s: 0.736, 5s: 0.517}
+  every_move_onset_conservative_1s_c: {s0: -0.306, any: -0.764}
+  model_top10_conservative_c: {s10_1s: 0.441, s3_take_back_1s: 0.170}
+  model_top1_conservative_c: {s10_take_back_1s: 0.691}
+  model_top10_optimistic_s10_take_back_1s_c: 2.345
+  status: development evidence (seen days; fill bracketed; latency assumed)
 fire_gallery_20261127_claude:
   diagnostic: [predictfun/reviews/take_reprice_20261125/fire_gallery_chart.html, predictfun/reviews/take_reprice_20261125/fire_gallery_examples.json]
   session: 1622c91e
