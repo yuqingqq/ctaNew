@@ -15,9 +15,12 @@ against OURS, leave-one-day-out: held-out AUC; per family the held-out AUC drop 
 with and without the top taker's own state; (3) outcomes per set: Predict's move 1 s after our match from that tick, the Binance move's size
 in its first 300 ms, the value of taking there on both books (known best + 0 / 3 / 10c), the share of the optimistic fill gone by the next
 snapshot; for ITS its own 1 s value and pay-through; (4) the overlap: moves in both sets against those in one only.
-Outputs (write-once): OUT/ours_vs_its/<day>.parquet (extras), ours_vs_its.json (read).
+SCOPE (added after the first read, before this one): its orders with exact arrival times (fire_times_orders) cover only the markets
+of the fire set (the venue-complete markets: about a third of its orders; it trades nearly every market), so 'read fireset' restricts OURS
+and REF to those markets (same days, same markets as ITS); 'read' (all markets) is kept as run, with that caveat.
+Outputs (write-once): OUT/ours_vs_its/<day>.parquet (extras), ours_vs_its.json (read), ours_vs_its_fireset.json (read fireset).
 Usage: PF_SLOT=<slot> predictfun/research/run_light.sh <tag> -- python3 predictfun/reviews/take_reprice_20261125/ours_vs_its.py \
-       selftest | extras <day> [<dir>] | read [<dir>]
+       selftest | extras <day> [<dir>] | read [<dir>] | read fireset [<dir>]
 """
 import json
 import resource
@@ -138,11 +141,11 @@ def auc_cols(V, y):
     return one, A
 
 
-def read(od=None):
+def read(od=None, scope='all'):
     resource.setrlimit(resource.RLIMIT_CPU, (1500, 1501))
     reh = od is not None
     od = Path(od) if od else None
-    fn = (od or H) / 'ours_vs_its.json'
+    fn = (od or H) / ('ours_vs_its.json' if scope == 'all' else 'ours_vs_its_fireset.json')
     C.require(not fn.exists(), 'ours_vs_its.json exists (write-once)')
     src = od or OUT
     X, feats, _ = CT.frame(CT.OUT)
@@ -177,9 +180,16 @@ def read(od=None):
     its_rows = np.unique(G3[G3.day.isin(D3)].dec.to_numpy())
     ours = t10[np.isin(day[t10], D3)]
     ref = on[np.isin(day[on], D3)]
+    if scope == 'fireset':                                                # the markets where its orders have exact arrival times
+        A = pd.read_parquet(WT.OUT / 'fire_times_orders.parquet', columns=['day', 'rank', 't_set', 'mid'])
+        A = A[(A['rank'] == 1) & A.t_set.notna()]
+        fm = set(zip(A.day, A.mid.astype(np.int64)))
+        inm = np.array([(dy, int(mi)) in fm for dy, mi in zip(day, X.mid.to_numpy())])
+        C.require(inm[its_rows].all(), 'a fire of its outside the fire-set markets')
+        ours, ref = ours[inm[ours]], ref[inm[ref]]
     cols = list(feats) + EXTRA
     C.require(set(cols) <= set(X.columns), 'an input or extra missing')
-    out = dict(asof='2026-11-27', rehearsal=reh, days=D3, fires_by_day={k: int(v) for k, v in fires_by_day.items()}, its_fires=int(G3.day.isin(D3).sum()),
+    out = dict(asof='2026-11-27', rehearsal=reh, scope=scope, days=D3, fires_by_day={k: int(v) for k, v in fires_by_day.items()}, its_fires=int(G3.day.isin(D3).sum()),
                its_rows=int(len(its_rows)), ours_rows=int(len(ours)), ref_rows=int(len(ref)), overlap_rows=int(np.intersect1d(its_rows, ours).size),
                inputs={}, null={}, classifier={}, outcomes={}, overlap={})
     # ---- (1) per input
@@ -282,6 +292,8 @@ if __name__ == '__main__':
     if cmd == 'extras':
         extras(a_[0], a_[1] if len(a_) > 1 else None)
     elif cmd == 'read':
-        read(a_[0] if a_ else None)
+        sc = 'fireset' if a_ and a_[0] == 'fireset' else 'all'
+        rest = a_[1:] if sc == 'fireset' else a_
+        read(rest[0] if rest else None, sc)
     else:
         dict(selftest=selftest)[cmd]()
