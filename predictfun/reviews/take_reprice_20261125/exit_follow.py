@@ -5,11 +5,12 @@ taken back after a median 39 s (middle half 16-75 s), 51 % is held to settlement
 take-backs are gains of about +15c and losses of about -14c, losses cut sooner; 3 % of its exit volume falls in the window's last 30 s.
 Entries (CHASE_TAKES' rules, decided 3.5 ms after the tick, matched 175.5 ms after it): a 50-share IOC at the known best + 3c / + 10c on
 FILL_AWARE's selections (scores and pooled thresholds reproduced: a check): MOVE top 10 % / top 1 %, DECOMP_s10 top 1 %, DIRECT_TB_s3 top 10 %;
-control: 5,000 moves at their first tick (seeded). Books: optimistic = entry and exit on the last snapshot at or before each match;
-conservative = A's levels at their size in the next snapshot, for entry and exit.
+control: 5,000 moves at their first tick (seeded). Entry books: optimistic = the last snapshot at or before the match; conservative = its
+levels at their size in the next snapshot. Exits on the last snapshot at or before the exit match for both (CHASE_TAKES' take-back rule;
+changed after the one-day rehearsal: the next-snapshot rule on exits sends unsold shares to settlement, which is not conservative).
 Exit policies (declared; the side's mid on the known clock against our entry price, its way; every exit an IOC at every shown level,
-decided 2 ms after the frame that triggers it, matched 172 ms later; the rest held to settlement, ties 50; fees 2 % x min(p, 100 - p)):
-  HOLD: to settlement. TB1S: taken back 1 s after the entry match. TB39: taken back 39 s after it.
+decided at the known time of the frame that triggers it, matched 172 ms later; the rest held to settlement, ties 50; fees 2 % x min(p, 100 - p)):
+  HOLD: to settlement. TB1S: taken back 1 s after the entry match (FILL_AWARE's take-back, reproduced: a check). TB39: 39 s after it.
   TPSL: taken back when the side's mid is >= entry + 15c or <= entry - 14c, until 30 s before the window's end; then held.
   FAV_ONLY: at 39 s, taken back if the side's mid is below 60c, else held to settlement.
   FOLLOW: TPSL, and at 39 s taken back if the side's mid is below 60c (a favourite stays under TPSL); the last 30 s held.
@@ -40,7 +41,7 @@ C, TR, TK, TE, TM, WT, F, VR, MM, DV = CT.C, CT.TR, CT.TK, CT.TE, CT.TM, CT.WT, 
 OUT = WT.OUT / 'exit_follow'
 DAYS, Q, fee = CT.DAYS, CT.Q, CT.fee
 TP, SL, T_MED, T_UQ, FAV, LAST_MS = 15., 14., 39000., 75000., 60., 30000.
-DEC, NET, HOLD = 2., CT.NET, TM.HOLD
+DEC, NET, HOLD = 0., CT.NET, TM.HOLD
 POLICIES = ('HOLD', 'TB1S', 'TB39', 'TPSL', 'FAV_ONLY', 'FOLLOW', 'FOLLOW_T75', 'FOLLOW_FAV50')
 SELS = ('MOVE_top10', 'MOVE_top1', 'DECOMP_s10_top1', 'DIRECT_TB_s3_top10', 'CONTROL_onset')
 N_CONTROL, MIN_ORDERS, SEED = 5000, 150, 20261127
@@ -172,10 +173,6 @@ def labels(day, od=None):
                             else:
                                 je = int(np.searchsorted(f0, mt, 'right') - 1)
                                 eP, eS = TK.side_levels(f[je], 0 if d > 0 else 1)
-                                if b == 'AB':
-                                    nP, nS = TK.side_levels(f[je + 1], 0 if d > 0 else 1) if je + 1 < len(f) else (np.full(5, -1.), np.zeros(5))
-                                    eP, eS = TK.minbook(eP[None], eS[None], nP[None], nS[None])
-                                    eP, eS = eP[0], eS[0]
                                 xq_, xc_, xf_ = TE.walk_q(eP[None], eS[None], np.array([-d]), np.array([1. if d > 0 else 99.]), np.array([fl]))
                                 xq, xc, xf = float(xq_[0]), float(xc_[0]), float(xf_[0])
                                 kd = 'tb' if pol in ('TB1S', 'TB39') else ('time' if (pol != 'TPSL' and abs(x - (act + (T_UQ if pol == 'FOLLOW_T75' else T_MED))) < 1e-6) else 'trigger')
@@ -229,6 +226,17 @@ def read(od=None):
                                                   exit_hold_s_median=float(np.nanmedian(hm) / 1000.) if np.isfinite(hm).any() else None,
                                                   paying=bool(val is not None and val > 0 and dp >= 3 and len(ii) >= MIN_ORDERS))
         out['selections'][sel] = so
+    # the 1 s take-back against FILL_AWARE's (same entries, same exit rule)
+    FJ = json.loads((H / 'fill_aware.json').read_text())
+    par = {}
+    for sel in SELS[:-1]:
+        for b, s in COMBOS:
+            mine = out['selections'][sel]['cells'][f'{b}_s{int(s)}_TB1S']['per_intended_c']
+            ref = FJ['selections'][sel]['books'][b][f's{int(s)}_take_back_1s']['value_c']
+            par[f'{sel}_{b}_s{int(s)}'] = dict(here=mine, fill_aware=ref)
+            if not reh:
+                C.require(abs(mine - ref) < 1e-9, f'{sel} {b} s{int(s)}: the 1 s take-back differs from FILL_AWARE ({mine} vs {ref})')
+    out['take_back_parity'] = par
     cells = [(sel, k, c) for sel, so in out['selections'].items() for k, c in so['cells'].items()]
     strat = [x for x in cells if x[0] != 'CONTROL_onset']
     out['verdict'] = dict(cells=len(cells), paying=[dict(selection=a, cell=k, per_intended_c=c['per_intended_c'], total_usd=c['total_usd'], days_positive=c['days_positive'])
