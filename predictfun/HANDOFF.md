@@ -1,3 +1,8 @@
+<!-- FIRE_ACTIVITY_20261127_CLAUDE -->
+## 2026-11-27 — the USER's reading (busy both sides, large imbalance, far-side trades) is equally present at the moments that look like its fires, which move 5.8% vs its 61%; the far-side burst comes after its order lands; as a rule it reaches 12.3%-21.7%; the USER's nine-venue report: same picture everywhere, no venue first
+
+See FINDINGS FIRE_ACTIVITY (same date). The report's L2 data (nine venues) are on another machine; testing them at look-alike moments needs that data here (USER's call).
+<!-- /FIRE_ACTIVITY_20261127_CLAUDE -->
 <!-- VISUAL_TWINS_20261127_CLAUDE -->
 ## 2026-11-27 — visual twins: the ordinary moments that look most like its fires move 5.8% (nearest 8.1%) vs its fires 61%; our model sees the picture (look-alikes score 5.5% vs random 2.5%), not which pictures move
 

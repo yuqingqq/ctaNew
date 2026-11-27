@@ -1,3 +1,30 @@
+<!-- FIRE_ACTIVITY_20261127_CLAUDE -->
+## 2026-11-27 — the USER's reading (both book sides busy, large imbalance, far-side trades) is just as present at the moments that look like its fires: look-alikes are as busy (33 / 39 changes in 1 s vs its fires' 34 / 41) and lean as much, yet move 5.8% vs 61%; the far-side trade burst comes after its order lands (18 in the next 100 ms vs 0); as a rule it lifts moves to 12.3%-21.7% of random moments; the USER's nine-venue report: same picture everywhere, no venue first
+
+[fire_activity](reviews/take_reprice_20261125/fire_activity.json) (SIGNAL_VS_NOISE's points; raw Binance futures bookTicker, last state per ms, and trades, masked prints dropped, on Binance's clock; far = the side that must empty for a move their way; look-alikes from VISUAL_TWINS and SIGNAL_VS_NOISE; declared before the run). USER: "I don't think they have extra information, but we have not interpreted the signals well enough, it looks the signal they fire will have active activities in Orderbook, both ask/bid are changing fast. The imbalance is large, and there are frequent far side trades?" Consumed days, point estimates.
+
+| median | its fires | look-alikes, same picture | look-alikes, same score | random moments |
+|---|---:|---:|---:|---:|
+| far-side book changes, last 1 s | 34 | 33 | 35 | 26 |
+| near-side book changes, last 1 s | 41 | 39 | 45 | 26 |
+| best-level imbalance their way at t | 0.35 | 0.30 | 0.39 | -0.02 |
+| far-side trades, last 1 s | 2 | 2 | 3 | 2 |
+| far-side trades, first 100 ms after t | 18 | 0 | 0 | 0 |
+| moved their way within 300 ms | 61.2% | 5.8% | 7.8% | 2.5% |
+
+The USER's rule (far-side and near-side changes over the last 1 s at or above the random moments' quantile, imbalance their way >= 0.6, >= 1 far-side trade in the last 1 s; base move rate 2.5%):
+
+| busy threshold (both sides, last 1 s, random quantile) | random moments meeting the rule | their move rate (lift) | its fires meeting the rule | those fires' move rate |
+|---|---:|---:|---:|---:|
+| 50% (26 / 26 changes) | 6.8% | 12.3% (5.0x) | 20.7% | 84% |
+| 75% (53 / 51 changes) | 2.7% | 16.3% (6.6x) | 10.3% | 88% |
+| 90% (109 / 99 changes) | 0.5% | 21.7% (8.8x) | 2.3% | 95% |
+
+- **Present at the look-alikes too:** busy book, lean and trades before t are the same at the moments that look like its fires (and at those our score rates the same); what differs is after t: a median 18 far-side trades in the 100 ms after its order lands (look-alikes 0): the sweep that is the move.
+- **As a filter:** the rule finds conditions where moves are 5-9x more likely, but its precision (12.3% at the median threshold, 21.7% at the 90th percentile) stays far below its fires' 61%; most of its fires do not meet it (79% at the median threshold), and those that do move 84%-95%: inside the same conditions it still picks the right instances. The imbalance does the work: at the median threshold without far busy 10.6%; without near busy 11.9%; without imbalance 4.7%; without far trades 11.9%.
+- **The USER's report** (predictfun/research/ttf_report_zh.html, another analysis: nine venues' order books from tardis, fires against moments 10-20 s away; its data are not on this machine): every venue shows the same build-up at its fires, most factors weaker than Binance futures; moving the window earlier the signal fades smoothly everywhere and no venue moves first (Binance futures strongest within 0-100 ms); on the 41% of fires where Binance futures is quiet the other venues are quiet too, apart from a slow 3-10 s drift and trades its way on all venues at once in the last 50 ms. It compares fires with nearby times, not with look-alikes, so it does not measure how often the picture moves.
+- **Reading:** the public picture around its fires (here and, per the report, on the other venues) is common and mostly followed by nothing; its fires are followed by a sweep that starts right after its order lands and that nothing public announces. Which build-ups will be swept is what it knows and we cannot read. Its order lands ~50 ms before the Binance move (TIMELINE), the sweep follows right after, and per the report only weak trades its way show on all venues at once in the last 50 ms: this fits knowing the coming flow (its own or a partner's orders, SAME_GROUP) better than reading the book better. Not proven.
+<!-- /FIRE_ACTIVITY_20261127_CLAUDE -->
 <!-- VISUAL_TWINS_20261127_CLAUDE -->
 ## 2026-11-27 — why our model cannot tell its fires apart: for each top-taker fire, the 20 ordinary moments whose Binance book looks most like it moved their way within 300 ms 5.8% of the time (the nearest 8.1%) against 61% after its fires; a fire's nearest ordinary look-alike is closer to it than its nearest other fire; our model already rates these pictures high (5.5% vs random 2.5%): it sees the picture, not which pictures move
 

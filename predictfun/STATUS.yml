@@ -1,3 +1,10 @@
+fire_activity_20261127_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/fire_activity.json
+  rows: data/predict_fun/research/take_reprice_20261125/fire_activity/
+  session: 1622c91e
+  move_rate: {fires: 0.6122, visual_lookalikes: 0.0584, score_lookalikes: 0.0783}
+  rule_precision_random: {q50: 0.1231, q75: 0.1627, q90: 0.2175}
+  user_report: predictfun/research/ttf_report_zh.html (nine venues, same picture, no venue first; data on another machine)
 visual_twins_20261127_claude:
   diagnostic: [predictfun/reviews/take_reprice_20261125/visual_twins.json, predictfun/reviews/take_reprice_20261125/visual_twins_chart.html]
   session: 1622c91e
