@@ -1,3 +1,8 @@
+<!-- REGIME_TAKES_20261127_CLAUDE -->
+## 2026-11-27 — regimes: no taking rate, top-taker activity, BTC volatility, spread or book-activity regime makes taking pay (all markets; 2 of 180 cells at noise size, within the time-roll null); regime inputs add nothing (0.354 → 0.355); quiet regimes fill without the move, busy ones move without fills
+
+See FINDINGS REGIME_TAKES (same date). The 1 s take result now holds on every market (top 1% -0.06c at the known best). Next (USER's call).
+<!-- /REGIME_TAKES_20261127_CLAUDE -->
 <!-- CHEAP_SIDE_ALL_20261127_CLAUDE -->
 ## 2026-11-27 — CORRECTION: the cheap-side edge was the 'complete'-market selection (a two-sided book at the end = BTC ends near its start; end move sd 1.6 vs 9.8 bps); on all 1,151 markets cheap sides lose (held -1.6c, sold back after 30 s -0.9c)
 

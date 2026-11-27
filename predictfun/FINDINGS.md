@@ -1,3 +1,28 @@
+<!-- REGIME_TAKES_20261127_CLAUDE -->
+## 2026-11-27 — no market regime makes taking pay: on every market, by taking rate, the top takers' activity, BTC volatility, Predict's spread and book activity (quintiles, known at the decision), random takes lose -1.1c and the model's top 1% nets -0.33c to +0.05c at the known best in every quintile; 2 of 180 cells pass at noise size (a time-roll null expects up to 2); regime inputs do not help the model (0.354 → 0.355)
+
+[regime_takes](reviews/take_reprice_20261125/regime_takes.json) (public_score3's random moments in every market of the four consumed days, any path status: 201,847 moments; TAKE_MODEL's take at our 172 ms path, valued 1 s after the match; TAKE_MODEL's 66,353 rows recomputed with 0 differences; regimes from data known at the decision: WS-visible fills only, BTC spot 100 ms late; declared before the run, quintiles over all moments). USER: "If the model can't generalize, maybe it is the market regime issue, some market regime is better for taking, we can also check the taking rate, etc to consider market regime, what do you think"; "Ok go". Consumed days, point estimates.
+
+| takes (all markets, 172 ms, value 1 s after the match) | rank correlation | at the known best (filled) | known best + 3c | every shown level | days > 0 at the known best |
+|---|---:|---:|---:|---:|---:|
+| every moment (random takes) | | -1.05c (89%) | -1.18c | -1.20c | 0 of 4 |
+| model's top 1%, TAKE_MODEL's 79 inputs | 0.354 | -0.06c (19%) | -0.48c | -0.69c | 0 of 4 |
+| model's top 1%, + 6 regime inputs | 0.355 | -0.11c (19%) | -0.57c | -0.77c | 0 of 4 |
+
+| regime (quintile means low → high) | model top 1% at the known best, q1 / q2 / q3 / q4 / q5 (days > 0) | filled, q1 → q5 | move its way, q1 → q5 | random takes, q1 → q5 |
+|---|---|---:|---:|---:|
+| taking rate, last 60 s (orders / min): 63.8 → 236 | -0.11c (1) / -0.13c (0) / -0.11c (0) / -0.03c (1) / -0.03c (0) | 36% → 14% | +1.92c → +3.58c | -1.01c → -1.13c |
+| taking rate, last 5 min: 75.5 → 214 | -0.09c (1) / -0.16c (0) / -0.22c (0) / -0.01c (1) / -0.05c (0) | 30% → 13% | +2.08c → +3.29c | -1.03c → -1.10c |
+| top ten takers' rate, last 5 min (in-sample identities): 9.15 → 38.3 | -0.11c (0) / -0.17c (0) / -0.21c (1) / +0.04c (3) / -0.08c (0) | 25% → 14% | +2.08c → +2.87c | -1.02c → -1.12c |
+| BTC volatility, 15 min (bps / sqrt s): 0.161 → 0.754 | -0.33c (1) / -0.16c (1) / -0.17c (2) / -0.05c (1) / -0.03c (1) | 30% → 15% | +2.03c → +2.92c | -1.03c → -1.06c |
+| Predict's spread, last 60 s: 1.01 → 1.17 | -0.09c (0) / +0.00c (2) / +0.02c (2) / +0.05c (3) / -0.23c (0) | 34% → 19% | +1.65c → +3.32c | -0.93c → -1.12c |
+| Predict's book updates, last 60 s (per s): 15.4 → 19.7 | -0.16c (1) / -0.29c (1) / -0.07c (0) / -0.00c (2) / -0.17c (0) | 45% → 14% | +1.61c → +3.35c | -0.85c → -1.15c |
+
+- **Verdict:** 2 of 180 cells (6 regimes x 5 quintiles x random / model x 3 limits) pass the declared rule (> 0 pooled, >= 3 of 4 days, >= 150 orders): top10_rate_300s quintile 4, the model's top 1% at the known best: +0.04c on 401 orders, 3 of 4 days; spread_60s quintile 4, the model's top 1% at the known best: +0.05c on 390 orders, 3 of 4 days. Rolling each day's regime values in time (200 draws) gives 0.88 such cells on average, 95th percentile 2: the regimes do not beat chance.
+- **The same trade-off in every regime:** where taking is quiet the model's picks fill more but the price moves less (taking rate, last 60 s: filled 36% → 14%, move +1.92c → +3.58c from the quietest to the busiest fifth). Quiet periods give fills without the move, busy periods the move without fills; no regime gives both to a 172 ms take.
+- **The 1 s result now on every market:** CHEAP_SIDE_ALL's caveat (the 1 s conclusion measured on outcome-selected markets) is closed: on all markets the model's top 1% nets -0.06c at the known best and -0.69c paying through every level, random takes -1.05c.
+- **Limits:** the top ten takers were ranked by profit on these same days (that regime is in-sample); quintile edges pooled over the four days; a regime measured over minutes cannot see the 100-300 ms build-up the top taker trades on (SMART_FACTORS), which the model already has.
+<!-- /REGIME_TAKES_20261127_CLAUDE -->
 <!-- CHEAP_SIDE_ALL_20261127_CLAUDE -->
 ## 2026-11-27 — CORRECTION: the cheap-side edge is an artifact of the 'complete' markets: 'complete' needs a two-sided book at the window's end, which keeps windows where BTC ends near its start (end move sd 1.6 bps vs 9.8 bps for the other 819 markets); on all 1,151 markets sides bought at 5.1c won 3.5% and lose held (-1.6c) and sold back after 30 s (-0.9c); CORRECTS TAKE_MARKOUT (5 s / 30 s), TAKE_MARKOUT_EXIT, TAKE_MARKOUT_LONGSHOT, PREDICT_INPUTS (30 s / settlement)
 

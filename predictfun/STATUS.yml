@@ -1,3 +1,10 @@
+regime_takes_20261127_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/regime_takes.json
+  rows: data/predict_fun/research/take_reprice_20261125/regime_takes/
+  session: 1622c91e
+  all_markets_top1_c: {known_best: -0.060, every_level: -0.687, with_regime_inputs_known_best: -0.108}
+  paying_cells: {observed: 2, of: 180, null_p95: 2.0}
+  rank_correlation: {take_model_inputs: 0.354, with_regime_inputs: 0.355}
 cheap_side_all_20261127_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/cheap_side_all.json
   rows: data/predict_fun/research/take_reprice_20261125/cheap_side_all/
