@@ -1,3 +1,8 @@
+<!-- EXIT_MAKER3_20261127_CLAUDE -->
+## 2026-11-27 — maker exit with cancels on Binance moves: beats the single maker order (6 of 6 cells at 1 s / 3 s calm) and its fills are less picked off; against taking at the same calm 2-4 of 6 at 1 s; best maker beats the best taking / holding exit in 1 of 6 by Sharpe, 2 by P&L; fees were always in the P&L
+
+See FINDINGS EXIT_MAKER3 (same date). Done: cancel on the next Binance mid change (any / our way), re-post at calm, fees stored per position, fee-in-shares sensitivity (max $24). Watch out: prints without a time dropped (about a fifth on 10-31, 11-01); post hoc, 36 variants. Next (USER's call): fix one entry + exit (candidates: take at the 1 s calm; maker with cancels, 39 s then favourites), then latency + 10 / + 25 ms, untouched days.
+<!-- /EXIT_MAKER3_20261127_CLAUDE -->
 <!-- EXIT_MAKER2_20261127_CLAUDE -->
 ## 2026-11-27 — maker exit after Binance calms (USER's design): earns less than taking at the same calm moment (5-6 of 6 cells at 1 s, 4-6 of 6 at 3 s); best maker exit beats the best taking / holding exit by Sharpe in 0 of 6, by P&L in 0; EXIT_MAKER (immediate post) VOID
 

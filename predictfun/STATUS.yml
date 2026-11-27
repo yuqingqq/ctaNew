@@ -1,3 +1,12 @@
+exit_maker3_20261127_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/exit_maker3.json
+  session: 1622c91e
+  scope: conservative entry book, entries matched >= 15 s before the cut, 6 cells with >= 30 filled positions
+  cancels_beat_single_order_t10: {c300: [5, 3, 5, 3], c1000: [6, 6, 6, 6], c3000: [6, 6, 6, 6]}
+  cancels_beat_take_at_same_calm: {c300: [5, 6], c1000: [2, 4], c3000: [0, 2]}
+  best_maker_beats_best_comparator: {sharpe: 1, pnl: 2, cells: 6}
+  fees_in_pnl: true
+  fee_in_shares_max_change_usd: 23.6
 exit_maker2_20261127_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/exit_maker2.json
   session: 1622c91e
