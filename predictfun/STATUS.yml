@@ -1,3 +1,11 @@
+exit_maker2_20261127_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/exit_maker2.json
+  session: 1622c91e
+  supersedes: exit_maker.json (VOID — receipt-clock prints, 22 ms price look-ahead, no post-only refusal)
+  scope: conservative entry book, entries matched >= 15 s before the cut, 6 cells with >= 30 filled positions
+  maker_beats_best_comparator: {sharpe: 0, pnl: 0, cells: 6}
+  maker_beats_take_at_same_calm_t10: {c300: [3, 4], c1000: [0, 0], c3000: [0, 0]}
+  take_at_1s_calm_vs_tb1s: {pnl_at_least: 6, sharpe_higher: 5, cells: 6, post_hoc: true}
 sharpe_exits_20261127_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/sharpe_exits.json
   session: 1622c91e

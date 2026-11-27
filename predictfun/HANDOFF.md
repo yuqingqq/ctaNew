@@ -1,3 +1,8 @@
+<!-- EXIT_MAKER2_20261127_CLAUDE -->
+## 2026-11-27 — maker exit after Binance calms (USER's design): earns less than taking at the same calm moment (5-6 of 6 cells at 1 s, 4-6 of 6 at 3 s); best maker exit beats the best taking / holding exit by Sharpe in 0 of 6, by P&L in 0; EXIT_MAKER (immediate post) VOID
+
+See FINDINGS EXIT_MAKER2 (same date). Done: calm = Binance futures quiet 0.3 / 1 / 3 s from the fill notice; one post-only order at the best or one tick inside, 10 s / 39 s then take / hold / favourites; three EXIT_MAKER defects corrected (receipt-clock prints, a 22 ms look-ahead on the price, no post-only refusal). Side reading (post hoc): taking at the 1 s calm earns at least as much as selling after 1 s in 6 of 6 cells, Sharpe higher in 5. Watch out: exit_maker.json is void; prints without a time are dropped (about a fifth of shares on 10-31, 11-01). Next (USER's call): re-pegging maker exit or a calm-timed take, a fixed entry + exit, position cap, latency + 10 / + 25 ms, untouched days.
+<!-- /EXIT_MAKER2_20261127_CLAUDE -->
 <!-- SHARPE_EXITS_20261127_CLAUDE -->
 ## 2026-11-27 — Sharpe instead of P&L: selling back after 1 s has the best Sharpe in 6 of 8 conservative entry cells (top: move model, top 10% + 3c, 2.50 a day day-equivalent, +$312 over four days); holding favourites earns more but lumpier
 
