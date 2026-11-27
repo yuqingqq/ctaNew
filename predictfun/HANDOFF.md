@@ -1,3 +1,8 @@
+<!-- CHASE_FORWARD_20261127_CLAUDE -->
+## 2026-11-27 — FORWARD 11-20 .. 11-26 (frozen a50692dfc, receipt v5 9588f318f): primary (move model, top 10%, + 3c, take at the 1 s calm) PASS: +$738 over 7 days, 7/7 days > 0, null p95 -$2,037
+
+See FINDINGS CHASE_FORWARD (same date). The forward days 11-20 .. 11-26 (and 11-19 23Z, 11-27 00-01Z for padding) are now read by this line. Watch out: the replay assumes ~24 ms to Predict; this host is ~72 ms from both venues. Next (USER's call): latency closer to this host's, a further untouched block, live-readiness of the take-at-calm exit (no orders from here).
+<!-- /CHASE_FORWARD_20261127_CLAUDE -->
 <!-- EXIT_FIXED_READING_20261127_CLAUDE -->
 ## 2026-11-27 — EXIT_FIXED reading: the maker exit is not the best exit under latency (best Sharpe 0 / 0 / 2 of 6 cells at + 0 / + 10 / + 25 ms, most P&L 2 / 1 / 1); it and taking at the 1 s calm are not separable on four days
 

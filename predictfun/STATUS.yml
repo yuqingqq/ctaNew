@@ -1,3 +1,14 @@
+chase_forward_20261127_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/chase_forward_result.json
+  receipt: predictfun/freeze/chase_forward_1120_1126/RECEIPT_v5.md
+  freeze_commits: [a50692dfc, 3b03b5aa6, e102a5e1b, 801839073, 9588f318f]
+  session: 1622c91e
+  days_read: [20261120, 20261121, 20261122, 20261123, 20261124, 20261125, 20261126]
+  padding_hours_read: [20261119_23, 20261127_00, 20261127_01]
+  primary: 'MOVE_top10|AB_s3'
+  verdict: PASS
+  primary_total_usd: 737.93
+  null_p95_usd: -2037.42
 exit_fixed_20261127_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/exit_fixed.json
   session: 1622c91e

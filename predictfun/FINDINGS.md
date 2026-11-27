@@ -1,3 +1,29 @@
+<!-- CHASE_FORWARD_20261127_CLAUDE -->
+## 2026-11-27 — FORWARD (untouched 11-20 .. 11-26, frozen a50692dfc, receipt v5 9588f318f): the chase line's primary cell (move model, top 10%, + 3c, taken at the 1 s calm) PASS: +$738 over 7 days (7/7 days > 0, 332 filled), against a null 95th percentile of -$2,037
+
+[result](reviews/take_reprice_20261125/chase_forward_result.json), [receipt](freeze/chase_forward_1120_1126/RECEIPT_v5.md) (builder `chase_forward.py`; the candidate, models, thresholds and PASS rule frozen at a50692dfc before any forward read; four procedure-only superseding receipts followed before any outcome existed: 3b03b5aa6 (v2), e102a5e1b (v3), 801839073 (v4), 9588f318f (v5) - the takers module's own forward guard, a memory self-guard on the busiest days, 44 trade prints / 6 book prices off the price grid on 11-21, the feature builders in child processes with labels in hour batches, a duplicated input column; each with consumed-day parity). USER: "Agree, and we test on more dates"; days "different from our test days previously"; inputs "Refit without them"; budget "Approve, two slots". The three entry models refit on the four consumed days without the other-venue, Binance-spot and venue-clock fill inputs (66 inputs), fixed thresholds; entries at least 15 s before the window's last-30 s cut; conservative entry book; EXIT_FIXED's exits. Consumed-day parity: the refit reproduced the original scores exactly; the light Predict loader reproduced every market's path on all four days; forward-mode rows and exits reproduced CHASE_TAKES / EXIT_FIXED exactly (11-01; v3 / v4 rows on 11-02 too); the selection path dry-ran on 11-02; the null's per-tick valuation matched EXIT_FIXED's take-at-calm P&L on 11-02's 3,994 actions (scratch check, run tag cf_null_dry_20261102). Seen-day reading of the same cell (orientation): +$315 over 4 days (+$79 a day), forward +$105 a day.
+
+- **PASS rule (declared):** total > 0 (True), above the null's 95th percentile (True; null mean -$2,341, 200 draws), at least 4 of 7 days positive (True), at least 30 filled positions (True). Daily: 11-20 +$106, 11-21 +$97, 11-22 +$118, 11-23 +$88, 11-24 +$144, 11-25 +$82, 11-26 +$103. Day-clustered mean +$105 a day (sd $21, t 13.56, 7 days).
+
+| entry (conservative book, + 0 ms): total over 7 days, day-equivalent Sharpe, days > 0 | actions / filled | take at 1 s calm | maker exit | sell after 1 s | keep favourites | hold all |
+|---|---:|---:|---:|---:|---:|---:|
+| move model, top 10%, + 3c (primary) | 2,754 / 332 | +$738, +2.67, 7/7 | +$713, +2.14, 7/7 | +$659, +3.37, 7/7 | +$824, +1.31, 7/7 | +$548, +0.60, 6/7 |
+| taken-back value model, top 10%, + 3c | 5,210 / 2,097 | +$649, +1.71, 6/7 | +$689, +1.25, 6/7 | +$450, +1.69, 6/7 | +$991, +0.58, 6/7 | +$913, +0.38, 6/7 |
+| fill x net, top 1%, + 3c | 623 / 269 | +$260, +1.37, 6/7 | +$422, +1.55, 7/7 | +$238, +1.58, 7/7 | +$146, +0.19, 5/7 | +$4, +0.00, 2/7 |
+| fill x net, top 1%, + 10c | 623 / 504 | +$347, +1.39, 6/7 | +$558, +1.58, 7/7 | +$321, +1.68, 7/7 | +$334, +0.30, 4/7 | +$76, +0.06, 2/7 |
+| control: random move onsets, + 3c | 8,133 / 7,440 | -$5,805, -5.22, 0/7 | -$5,372, -4.09, 0/7 | -$6,720, -14.36, 0/7 | -$2,425, -0.62, 3/7 | -$2,901, -0.64, 2/7 |
+
+| primary cell, extra latency | take at 1 s calm | maker exit | sell after 1 s | keep favourites |
+|---|---:|---:|---:|---:|
+| + 0 ms | +$738, +2.67, 7/7 | +$713, +2.14, 7/7 | +$659, +3.37, 7/7 | +$824, +1.31, 7/7 |
+| + 10 ms | +$540, +2.12, 7/7 | +$554, +1.78, 7/7 | +$471, +2.76, 7/7 | +$587, +1.01, 7/7 |
+| + 25 ms | +$344, +1.49, 7/7 | +$352, +1.31, 7/7 | +$282, +2.04, 7/7 | +$249, +0.51, 5/7 |
+
+- **Maker challenger:** against taking at the 1 s calm on the same entries it earns more in 3 of 4 cells (-$25 to +$211 over 7 days).
+- **Selection on the forward days:** 352,403 labelled ticks a day against 64,459 on the consumed days; the frozen thresholds (the consumed days' top 10% / 1%) pass MOVE_top10 1.7%, MOVE_top1 0.1%, DECOMP_s10_top1 0.2%, DIRECT_TB_s3_top10 1.5% of them, so the primary cell takes 795 actions a day against 946 (all selections: MOVE_top10 5,567, MOVE_top1 439, DECOMP_s10_top1 892, DIRECT_TB_s3_top10 6,187, CONTROL_onset 8,750). On the conservative book 12% of the primary cell's actions got shares (332 of 2,754).
+- **Statuses:** 2,930,349 points, 2,466,823 labelled ticks; actions in markets without a path: 0; Binance rows off the 0.1 price grid (unique, dropped at every read): 11-21: 44 trade prints, 6 bookTicker rows, none on the other days; per-day label statuses in the rows' json.
+- **Limits:** a replay, not live trading: the same fill rules as the seen days (the conservative entry book; exits on the snapshot before the exit match; the maker challenger filled from Predict's prints with the shown queue ahead, cancels ahead not credited, prints without a time dropped). The latency assumed is ~24 ms each way to Predict; + 25 ms is shown, but this host measured ~72 ms to both Binance and Predict (FIRE_INFO, 11-26), far beyond it. One 7-day block; the PASS is the declared rule on the primary cell (multiplicity 8); the other cells are point estimates.
+<!-- /CHASE_FORWARD_20261127_CLAUDE -->
 <!-- EXIT_FIXED_READING_20261127_CLAUDE -->
 ## 2026-11-27 — EXIT_FIXED, how to read it: the maker exit is NOT the best exit under latency. Of the five exits it has the best Sharpe in 0 / 0 / 2 of 6 cells at + 0 / + 10 / + 25 ms (by +0.03) and the most P&L in 2 / 1 / 1; 2 of the 4 cells where its Sharpe beats taking at the 1 s calm at + 25 ms lose money under both
 

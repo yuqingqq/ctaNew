@@ -1,0 +1,33 @@
+{
+ "asof": "2026-11-27",
+ "unique_rows_off_the_0_1_grid": {
+  "20261120": {
+   "trade_prints": 0,
+   "book_rows": 0
+  },
+  "20261121": {
+   "trade_prints": 44,
+   "book_rows": 6
+  },
+  "20261122": {
+   "trade_prints": 0,
+   "book_rows": 0
+  },
+  "20261123": {
+   "trade_prints": 0,
+   "book_rows": 0
+  },
+  "20261124": {
+   "trade_prints": 0,
+   "book_rows": 0
+  },
+  "20261125": {
+   "trade_prints": 0,
+   "book_rows": 0
+  },
+  "20261126": {
+   "trade_prints": 0,
+   "book_rows": 0
+  }
+ }
+}
