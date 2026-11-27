@@ -1,0 +1,1 @@
+The first run stopped on the first market before any market table was written. The overlay assigned a tick array to the parent's existing limits counter. The v2 runner stores the array in admission_curve. The formula, population, comparator, timings and screen are identical. Use run_v2.py for reproduction.
