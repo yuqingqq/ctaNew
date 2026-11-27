@@ -1,3 +1,8 @@
+<!-- EXIT_FIXED_READING_20261127_CLAUDE -->
+## 2026-11-27 — EXIT_FIXED reading: the maker exit is not the best exit under latency (best Sharpe 0 / 0 / 2 of 6 cells at + 0 / + 10 / + 25 ms, most P&L 2 / 1 / 1); it and taking at the 1 s calm are not separable on four days
+
+See FINDINGS EXIT_FIXED_READING (same date).
+<!-- /EXIT_FIXED_READING_20261127_CLAUDE -->
 <!-- EXIT_FIXED_20261127_CLAUDE -->
 ## 2026-11-27 — the fixed maker exit (cancel when the trend continues, re-post at calm) under + 0 / + 10 / + 25 ms: positive in 4, 4, 4 of 6 cells; Sharpe above taking at the 1 s calm in 0 / 1 / 4 of 6; most maker fills go to ordinary takers
 
