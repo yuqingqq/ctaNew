@@ -1,3 +1,8 @@
+<!-- EXIT_FOLLOW_20261127_CLAUDE -->
+## 2026-11-27 — top-taker exits on our chase entries: its full rule falls below keeping favourites in 7 of 8 cells; keeping favourites (>= 60c at 39 s) to settlement and selling the rest is the best or second-best exit in 7 of 8 conservative cells (e.g. model top 10% + 3c: +$383 over four days, 4/4 days)
+
+See FINDINGS EXIT_FOLLOW (same date). Next (USER's call): one entry + the keep-favourites exit, a position cap, latency checks, then untouched days. Note: the complete list of its orders with settlement times is smart_fires/top_taker_fire_times_all.csv (EXIT_TIMES); SCOPE_FIRESET's fix can use it instead of WS-timed legs.
+<!-- /EXIT_FOLLOW_20261127_CLAUDE -->
 <!-- FILL_AWARE_20261127_CLAUDE -->
 ## 2026-11-27 — fill-aware chase ranking: no gain at the top 10%; at the top 1% fill x net beats the move ranking at 1 s (+1.38c vs +0.95c, conservative + 10c) and taken back at + 3c (+0.43c vs +0.27c), equal at + 10c
 

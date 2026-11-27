@@ -1,3 +1,10 @@
+exit_follow_20261127_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/exit_follow.json
+  rows: data/predict_fun/research/take_reprice_20261125/exit_follow/
+  session: 1622c91e
+  conservative_usd_4days: {move_top10_s3: {tb1s: 311.9, fav_only: 383.4, follow: 52.7}, decomp_top1_s10: {tb1s: 178.1, fav_only: 334.8, follow: 311.9}}
+  fav_only_top2_cells: 7
+  follow_below_tb1s_cells: 3
 fill_aware_20261127_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/fill_aware.json
   rows: data/predict_fun/research/take_reprice_20261125/fill_aware/predictions.parquet

@@ -1,3 +1,29 @@
+<!-- EXIT_FOLLOW_20261127_CLAUDE -->
+## 2026-11-27 — exits that follow the top taker, on our chase entries: its full rule (+15c / -14c bands, decide at 39 s, keep favourites, nothing in the last 30 s) falls below keeping favourites in 7 of 8 conservative cells (below selling back after 1 s in 3); the part that helps is keeping favourites (>= 60c at 39 s) to settlement and selling the rest: positive in 8 of 8 and first or second of six exits in 7; chasing every move loses under every exit
+
+[exit_follow](reviews/take_reprice_20261125/exit_follow.json) (script `exit_follow.py`, committed before use; exit book rule changed after a one-day rehearsal, before the real run). USER: "Design an exit mechanism, follow what top takers do, then check the pnl performance". Its exits (EXIT_TIMES / EXIT_PROFILE, every match record): only by taking; half taken back after a median 39 s, half held to settlement, mostly favourites above 60c; take-backs about +15c / -14c; almost nothing in the last 30 s. Entries: FILL_AWARE's selections (reproduced), a 50-share IOC at the known best + 3c / + 10c, conservative entry book (A's levels at their size in the next snapshot); exits are IOCs at every shown level through the 172 ms hold on the snapshot before the exit match, the rest held to settlement (ties 50); the 1 s take-back reproduces FILL_AWARE's exactly. Eight policies declared; the table shows six. Seen days; point estimates; positions independent.
+
+| conservative entry, known best + 3c: total over four days (days > 0) | actions | hold to settlement | sell back after 1 s | sell back after 39 s | keep favourites, sell the rest at 39 s | its full rule | +15c / -14c bands only |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| move model, top 10% | 3,677 | +$99 (2/4) | +$312 (4/4) | +$147 (4/4) | +$383 (4/4) | +$53 (3/4) | +$47 (3/4) |
+| taken-back value model, top 10% | 3,866 | +$719 (3/4) | +$280 (4/4) | +$461 (4/4) | +$471 (3/4) | +$284 (3/4) | +$194 (3/4) |
+| move model, top 1% | 318 | +$79 (3/4) | +$42 (3/4) | +$64 (3/4) | +$87 (3/4) | +$18 (2/4) | +$18 (2/4) |
+| fill x net, top 1% | 497 | +$103 (3/4) | +$107 (3/4) | +$148 (3/4) | +$129 (2/4) | +$130 (3/4) | +$69 (3/4) |
+| every move, first tick (control) | 5,000 | -$1,161 (1/4) | -$3,537 (0/4) | -$3,129 (0/4) | -$1,833 (1/4) | -$3,331 (0/4) | -$3,175 (0/4) |
+
+| conservative entry, known best + 10c: total over four days (days > 0) | actions | hold to settlement | sell back after 1 s | sell back after 39 s | keep favourites, sell the rest at 39 s | its full rule | +15c / -14c bands only |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| move model, top 10% | 3,677 | +$1,125 (3/4) | -$223 (1/4) | -$16 (1/4) | +$1,098 (3/4) | -$271 (1/4) | -$324 (1/4) |
+| taken-back value model, top 10% | 3,866 | +$743 (3/4) | -$409 (1/4) | +$29 (2/4) | +$1,265 (3/4) | -$309 (1/4) | -$566 (1/4) |
+| move model, top 1% | 318 | +$272 (4/4) | +$110 (4/4) | +$162 (4/4) | +$203 (4/4) | +$119 (4/4) | +$111 (4/4) |
+| fill x net, top 1% | 497 | -$17 (1/4) | +$178 (4/4) | +$284 (3/4) | +$335 (4/4) | +$312 (3/4) | +$206 (3/4) |
+| every move, first tick (control) | 5,000 | -$450 (2/4) | -$4,595 (0/4) | -$3,666 (0/4) | -$1,667 (1/4) | -$4,139 (0/4) | -$3,964 (0/4) |
+
+- **Its bands fire early:** the +15c / -14c bands close 49%-80% of the positions, a median 1-25 s in; the bands alone do worse than holding to settlement in 7 of 8 cells, and its full rule (bands + the 39 s favourite check) worse than the favourite check alone in 7.
+- **Keeping favourites helps:** at 39 s a side at or above 60c is held to settlement and the rest sold; that is the top taker's habit (what it holds to the end are favourites) and our best or second-best exit in 7 of 8 cells. Holding everything to settlement is the most variable (model top 10% at + 10c by day: 1023 +$73, 1031 +$143, 1101 -$194, 1102 +$1,103).
+- **Entries decide:** chasing every move loses under every exit; our selections earn under most exits; the best exit adds at most 1.02c per intended share over selling back after 1 s. In dollars: model top 10% at + 3c keeping favourites +$383 over four days (1023 +$175, 1031 +$71, 1101 +$72, 1102 +$66), fill x net top 1% at + 10c +$335.
+- **Caveats:** positions are independent (no cap; several in one market share its settlement), the exit parameters are the top taker's measured on these days, eight policies x four selections x two limits; settlement-held P&L rests on a few hundred market outcomes. Next (USER's call): fix one entry and the keep-favourites exit, add a position cap and the latency checks, then untouched days.
+<!-- /EXIT_FOLLOW_20261127_CLAUDE -->
 <!-- FILL_AWARE_20261127_CLAUDE -->
 ## 2026-11-27 — fill-aware chase ranking (how far Predict moves x how much we get): it ranks the conservative take value better (held-out rank correlation 0.21-0.30 vs 0.18) and moves the picks earlier and to less contested moments, but at the top 10% the value is no better (+0.47c vs +0.44c at + 10c; taken back +0.15c vs +0.17c at + 3c); at the top 1% fill x net is better at 1 s (+1.38c vs +0.95c, better on 4/4 days) on 497 vs 318 actions, about the same taken back
 
