@@ -1,3 +1,23 @@
+<!-- EXIT_HALF_20261127_CLAUDE -->
+## 2026-11-27 — POST HOC, exit half and hold half (the top taker's split): selling half lands between selling all and holding all (8 of 8 cells at 39 s) and is never the top total (0 of 8); selling non-favourites and half of the favourites at 39 s lowers the per-market spread against keeping favourites whole in 8 of 8 cells (4%-30% lower) for up to 50% less profit (8% more in 1 cell)
+
+[exit_half](reviews/take_reprice_20261125/exit_half.json) (script `exit_half.py`, committed before use; EXIT_FOLLOW's entries, books and exit rule, its shared policies reproduced exactly). USER: "We check if we can exit half like top takers, then hold to settlement. Check the performance". Post hoc, seen days, point estimates; positions independent; risk = the standard deviation of P&L summed per market.
+
+| conservative entry: total over four days (days > 0; per-market standard deviation) | hold all | sell all after 1 s | keep favourites at 39 s | sell half after 1 s | sell half at 39 s | sell non-favourites, half of favourites, at 39 s |
+|---|---:|---:|---:|---:|---:|---:|
+| move model, top 10%, + 3c | +$99 (2/4; $9) | +$312 (4/4; $2) | +$383 (4/4; $7) | +$208 (4/4; $5) | +$124 (4/4; $7) | +$266 (4/4; $6) |
+| move model, top 10%, + 10c | +$1,125 (3/4; $27) | -$223 (1/4; $4) | +$1,098 (3/4; $21) | +$481 (2/4; $14) | +$569 (1/4; $21) | +$544 (2/4; $18) |
+| taken-back value model, top 10%, + 3c | +$719 (3/4; $15) | +$280 (4/4; $2) | +$471 (3/4; $11) | +$503 (3/4; $8) | +$594 (4/4; $10) | +$467 (4/4; $8) |
+| taken-back value model, top 10%, + 10c | +$743 (3/4; $30) | -$409 (1/4; $4) | +$1,265 (3/4; $24) | +$190 (3/4; $15) | +$405 (3/4; $20) | +$653 (3/4; $17) |
+| move model, top 1%, + 3c | +$79 (3/4; $4) | +$42 (3/4; $2) | +$87 (3/4; $4) | +$61 (3/4; $3) | +$72 (3/4; $4) | +$76 (3/4; $4) |
+| move model, top 1%, + 10c | +$272 (4/4; $8) | +$110 (4/4; $2) | +$203 (4/4; $7) | +$194 (4/4; $5) | +$218 (4/4; $7) | +$183 (4/4; $6) |
+| fill x net, top 1%, + 3c | +$103 (3/4; $11) | +$107 (3/4; $2) | +$129 (2/4; $9) | +$107 (3/4; $6) | +$126 (3/4; $8) | +$139 (3/4; $7) |
+| fill x net, top 1%, + 10c | -$17 (1/4; $18) | +$178 (4/4; $3) | +$335 (4/4; $13) | +$86 (2/4; $10) | +$136 (2/4; $13) | +$310 (4/4; $11) |
+
+- **What splitting buys:** a blend of selling and holding: selling half at 39 s has a smaller per-market spread than holding everything in 8 of 8 cells and a better worst day in 6; no half rule gives the top total, one of them is among the top three of seven exits in 8 of 8 cells.
+- **Keeping favourites, half size:** selling the non-favourites and half of each favourite at 39 s has as many positive days as keeping favourites whole or more in 7 of 8 cells, a 4%-30% smaller per-market spread and up to 50% less profit (8% more in 1 cell).
+- **Control:** chasing every move loses under every exit, split or not. Choosing between these exits is a risk choice made on a few hundred settlements; the entry carries the profit.
+<!-- /EXIT_HALF_20261127_CLAUDE -->
 <!-- EXIT_FOLLOW2_20261127_CLAUDE -->
 ## 2026-11-27 — POST HOC, stop-loss or hold (the top taker's two exits): a -14c stop without a profit-take, otherwise holding, is positive in 7 of 8 conservative cells but best in 0; the best exit varies by entry (keep favourites at 39 s best in 4, hold everything in 3, stop + favourite check in 2, ties counted); judging the favourite on the bid instead of the mid changes nothing (8 of 8 cells identical)
 

@@ -1,3 +1,8 @@
+<!-- EXIT_HALF_20261127_CLAUDE -->
+## 2026-11-27 — POST HOC exit half: selling half lands between selling all and holding (never the top total); non-favourites + half of favourites at 39 s cuts the per-market spread 4%-30% vs keeping favourites whole for up to 50% less profit (8% more in 1 cell)
+
+See FINDINGS EXIT_HALF (same date).
+<!-- /EXIT_HALF_20261127_CLAUDE -->
 <!-- EXIT_FOLLOW2_20261127_CLAUDE -->
 ## 2026-11-27 — POST HOC stop-loss or hold: a -14c stop else hold is positive in 7/8 cells, best in 0; the best exit varies by entry (keep favourites 4, hold 3, stop + favourites 2); bid-based favourite = mid-based
 

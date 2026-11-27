@@ -1,3 +1,9 @@
+exit_half_20261127_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/exit_half.json
+  session: 1622c91e
+  post_hoc: true
+  half_policy_best_cells: 0
+  half_fav_vs_fav_only: {lower_sd_cells: 8, sd_cut: [0.042, 0.295], profit_cut: [-0.078, 0.504]}
 exit_follow2_20261127_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/exit_follow2.json
   session: 1622c91e
