@@ -1,3 +1,18 @@
+scope_fireset_20261127_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/scope_fireset.json
+  session: 1622c91e
+  fire_set: {orders: 6189, markets: 258}
+  its_orders_in_fire_set_markets: {'20261031': 0.4278, '20261101': 0.3860, '20261102': 0.3302}
+  chase_rate: {all_markets: 0.0190, fire_set_markets: 0.1042}
+  corrects: [GROUP3_PROFILE_20261127_CLAUDE, GROUP3_HALVES_20261127_CLAUDE, CHASE_TAKES_20261127_CLAUDE (top-taker diagnostics only)]
+ours_vs_its_20261127_claude:
+  diagnostic: [predictfun/reviews/take_reprice_20261125/ours_vs_its_fireset.json, predictfun/reviews/take_reprice_20261125/ours_vs_its.json]
+  rows: data/predict_fun/research/take_reprice_20261125/ours_vs_its/
+  session: 1622c91e
+  scope: fire-set markets (its exact-time orders), days it traded
+  classifier_heldout_auc: 0.8708
+  gone_by_next_snapshot: {its: 0.1449, ours: 0.3732}
+  conservative_s10_c: {its: 0.826, ours: 0.325, its_only: 0.654}
 group3_halves_20261127_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/group3_halves.json
   session: 1622c91e

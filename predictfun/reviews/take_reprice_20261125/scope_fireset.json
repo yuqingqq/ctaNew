@@ -1,0 +1,165 @@
+{
+  "asof": "2026-11-27",
+  "fire_set_orders": 6189,
+  "fire_set_markets": 258,
+  "by_day": {
+    "20261023": {
+      "its_orders": 1,
+      "its_markets": 1,
+      "registry_markets": 288,
+      "orders_in_fire_set_markets": 1.0,
+      "fire_set_markets": 1
+    },
+    "20261031": {
+      "its_orders": 3364,
+      "its_markets": 284,
+      "registry_markets": 288,
+      "orders_in_fire_set_markets": 0.4277645659928656,
+      "fire_set_markets": 100
+    },
+    "20261101": {
+      "its_orders": 4202,
+      "its_markets": 274,
+      "registry_markets": 288,
+      "orders_in_fire_set_markets": 0.3860066634935745,
+      "fire_set_markets": 87
+    },
+    "20261102": {
+      "its_orders": 12047,
+      "its_markets": 278,
+      "registry_markets": 288,
+      "orders_in_fire_set_markets": 0.3302066904623558,
+      "fire_set_markets": 70
+    }
+  },
+  "moves": {
+    "all": 50030,
+    "in_fire_set_markets": 9127,
+    "chased_all": 0.019008594843094143,
+    "chased_in_fire_set": 0.10419634052810343
+  },
+  "chase_rate_by_side_best_c": [
+    {
+      "lo": 0.0,
+      "hi": 10.0,
+      "all_markets": 0.007606490872210953,
+      "fire_set_markets": 0.05628517823639775,
+      "moves_fire_set": 533,
+      "moves_all": 3944
+    },
+    {
+      "lo": 10.0,
+      "hi": 20.0,
+      "all_markets": 0.021725826193390453,
+      "fire_set_markets": 0.11451612903225807,
+      "moves_fire_set": 620,
+      "moves_all": 3268
+    },
+    {
+      "lo": 20.0,
+      "hi": 35.0,
+      "all_markets": 0.03638690802706162,
+      "fire_set_markets": 0.15190839694656488,
+      "moves_fire_set": 1310,
+      "moves_all": 5469
+    },
+    {
+      "lo": 35.0,
+      "hi": 50.0,
+      "all_markets": 0.03083816552451239,
+      "fire_set_markets": 0.1452513966480447,
+      "moves_fire_set": 1611,
+      "moves_all": 7588
+    },
+    {
+      "lo": 50.0,
+      "hi": 65.0,
+      "all_markets": 0.021741318570709614,
+      "fire_set_markets": 0.10516066212268745,
+      "moves_fire_set": 2054,
+      "moves_all": 9935
+    },
+    {
+      "lo": 65.0,
+      "hi": 80.0,
+      "all_markets": 0.01754170755642787,
+      "fire_set_markets": 0.0896551724137931,
+      "moves_fire_set": 1595,
+      "moves_all": 8152
+    },
+    {
+      "lo": 80.0,
+      "hi": 90.0,
+      "all_markets": 0.010437986082685223,
+      "fire_set_markets": 0.06623376623376623,
+      "moves_fire_set": 770,
+      "moves_all": 4886
+    },
+    {
+      "lo": 90.0,
+      "hi": 100.01,
+      "all_markets": 0.0010312315851502651,
+      "fire_set_markets": 0.011041009463722398,
+      "moves_fire_set": 634,
+      "moves_all": 6788
+    }
+  ],
+  "chase_rate_by_time_left_s": [
+    {
+      "lo": 0.0,
+      "hi": 30.0,
+      "all_markets": 0.013812154696132596,
+      "fire_set_markets": 0.03415300546448088,
+      "moves_fire_set": 732,
+      "moves_all": 1810
+    },
+    {
+      "lo": 30.0,
+      "hi": 60.0,
+      "all_markets": 0.025212547639988273,
+      "fire_set_markets": 0.10630407911001236,
+      "moves_fire_set": 809,
+      "moves_all": 3411
+    },
+    {
+      "lo": 60.0,
+      "hi": 120.0,
+      "all_markets": 0.022031823745410038,
+      "fire_set_markets": 0.11431870669745958,
+      "moves_fire_set": 1732,
+      "moves_all": 8987
+    },
+    {
+      "lo": 120.0,
+      "hi": 180.0,
+      "all_markets": 0.02055033089515848,
+      "fire_set_markets": 0.12209001551991723,
+      "moves_fire_set": 1933,
+      "moves_all": 11484
+    },
+    {
+      "lo": 180.0,
+      "hi": 240.0,
+      "all_markets": 0.0167699297810822,
+      "fire_set_markets": 0.10583941605839416,
+      "moves_fire_set": 1918,
+      "moves_all": 12105
+    },
+    {
+      "lo": 240.0,
+      "hi": 300.01,
+      "all_markets": 0.0165944576146489,
+      "fire_set_markets": 0.10134797803295058,
+      "moves_fire_set": 2003,
+      "moves_all": 12233
+    }
+  ],
+  "moves_first_half": {
+    "all_markets": 0.6088546871876874,
+    "fire_set_markets": 0.5381834118549359
+  },
+  "side_price_median": {
+    "all_markets": 57.0,
+    "fire_set_markets": 53.0
+  }
+}

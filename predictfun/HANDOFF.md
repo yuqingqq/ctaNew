@@ -1,3 +1,13 @@
+<!-- SCOPE_FIRESET_20261127_CLAUDE -->
+## 2026-11-27 — SCOPE CORRECTION: its exact-time orders cover only the fire-set markets (33%-43% of its orders); there it chases 10.4% of moves (GROUP3_PROFILE's 1.9% was diluted); its group-3 profile is of those markets only
+
+See FINDINGS SCOPE_FIRESET (same date). Fix (USER's call): its orders in every market from WS-timed legs.
+<!-- /SCOPE_FIRESET_20261127_CLAUDE -->
+<!-- OURS_VS_ITS_20261127_CLAUDE -->
+## 2026-11-27 — ours vs its (same markets): our top 10% = late-window explosive bursts after calm, contested (37% of optimistic fills vanish); its group 3 = mid-window, volatile, deep, a few ticks in (14%); conservative value at its ticks +0.83c vs ours +0.33c
+
+See FINDINGS OURS_VS_ITS (same date). Next (USER's call): a fill-aware chase model (target = the conservative take value); its orders in every market from WS-timed legs; then untouched days.
+<!-- /OURS_VS_ITS_20261127_CLAUDE -->
 <!-- GROUP3_HALVES_20261127_CLAUDE -->
 ## 2026-11-27 — POST HOC halves: its group-3 fires 55% first half (moves 61%); our top 10% 43%, earning +0.77c vs +0.19c (conservative, + 10c): a filter to declare next, not a result
 

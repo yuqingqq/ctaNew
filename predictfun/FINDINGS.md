@@ -1,3 +1,65 @@
+<!-- SCOPE_FIRESET_20261127_CLAUDE -->
+## 2026-11-27 — SCOPE CORRECTION to GROUP3_PROFILE, GROUP3_HALVES and CHASE_TAKES' top-taker diagnostics: its orders with exact arrival times (the fire set) cover only 258 venue-complete markets, 33%-43% of its orders on days it traded 274-284 of 288 markets; its 'chased' flags are zero elsewhere by construction: in those markets it chases 10.4% of moves, not 1.9%; its price preference holds there
+
+[scope_fireset](reviews/take_reprice_20261125/scope_fireset.json) (script `scope_fireset.py`, committed before use). Found while comparing our picks with its fires (OURS_VS_ITS): fire_times_orders (rank 1, with settlement times) holds 6,189 of its orders, all in the fire-set markets, where WINNERS_TRIGGER built it (EXIT_TIMES' scope note); STATE_VALUE's 5,930 decisions, GROUP3_PROFILE's 1,505 group-3 fires and CHASE_TAKES' tt_* flags all come from it. Those markets are venue-complete, i.e. BTC ended near its start (CHEAP_SIDE_ALL).
+
+| day | its orders (every leg of its address) | markets it traded | in fire-set markets |
+|---|---:|---:|---:|
+| 20261031 | 3,364 | 284 of 288 | 43% (100 markets) |
+| 20261101 | 4,202 | 274 of 288 | 39% (87 markets) |
+| 20261102 | 12,047 | 278 of 288 | 33% (70 markets) |
+
+| chase rate (moves it chases) | 0-10 | 10-20 | 20-35 | 35-50 | 50-65 | 65-80 | 80-90 | 90-100 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| by its side's best price, c: all markets (as GROUP3_PROFILE) | 0.8% | 2.2% | 3.6% | 3.1% | 2.2% | 1.8% | 1.0% | 0.1% |
+| fire-set markets only | 5.6% | 11.5% | 15.2% | 14.5% | 10.5% | 9.0% | 6.6% | 1.1% |
+
+| chase rate by time left, s | 0-30 | 30-60 | 60-120 | 120-180 | 180-240 | 240-300 |
+|---|---:|---:|---:|---:|---:|---:|
+| all markets | 1.4% | 2.5% | 2.2% | 2.1% | 1.7% | 1.7% |
+| fire-set markets only | 3.4% | 10.6% | 11.4% | 12.2% | 10.6% | 10.1% |
+
+- **What changes:** GROUP3_PROFILE's firing probability is diluted about 5.5x (its chases in the other markets are not seen): overall 10.4% of the 9,127 moves in the fire-set markets. Its by-price shape holds there (mid-priced sides most, above 90c rarely); by time left it is flat except the last 30 s. The rates by move size and by our model's decile are diluted the same way (not recomputed). The preference itself holds within those markets; the price and drift distributions of its fires also reflect that those are markets where BTC ended near its start. GROUP3_HALVES: the moves in those markets fall 54% in the first half (all markets 61%). CHASE_TAKES' 'moves it chased / anticipated / neither' and its-order-ahead shares count only those markets.
+- **What does not:** CHASE_TAKES' own takes (every market) and OURS_VS_ITS (both sets in the same markets). The speed of its orders after a tick is measured in those markets only.
+- **Fix, USER's call:** rebuild its orders in every market from its WS-timed legs (arrival from the print time, less exact than the settlement clock) and repeat GROUP3_PROFILE / OURS_VS_ITS there.
+<!-- /SCOPE_FIRESET_20261127_CLAUDE -->
+<!-- OURS_VS_ITS_20261127_CLAUDE -->
+## 2026-11-27 — our chase model's top 10% vs the top taker's group-3 fires: easily told apart (held-out AUC 0.87 in the same markets); ours come late in the window at the first explosive burst after calm with the next Binance level gone, its mid-window in volatile, deep markets a few ticks into the move; ours move Predict more (+17.11c vs +10.83c) but 37% of our optimistic fills vanish (14% at its ticks): on the conservative book its ticks are worth more (+0.83c vs +0.33c at known best + 10c)
+
+[ours_vs_its_fireset](reviews/take_reprice_20261125/ours_vs_its_fireset.json), all-market read [ours_vs_its](reviews/take_reprice_20261125/ours_vs_its.json) (script `ours_vs_its.py`, committed before each read). USER: "What's the main dif between our top 10 percentile fires against top taker fires? Check all information we have". Its orders with exact arrival times exist only in the fire-set markets (SCOPE_FIRESET: 258 markets), so both sets are taken there, on the days it traded (20261031, 20261101, 20261102): its 1,401 group-3 fires at their decision tick (1,111 ticks: our last tick of its move decided before its order landed), our model's 1,177 top-10% picks in the same markets, every move there at its first tick (9,014). Information: CHASE_TAKES' 97 inputs plus ETH futures, the top taker's own orders in the market (not public in real time; its fills show after settlement) and Predict's traded volume. 72 of 105 inputs pass the shuffle null (95th percentile 0.042 from 0.5). Consumed days, descriptive.
+
+| input (family) | its group-3 fires | our top 10% | every move | AUC, its vs ours |
+|---|---:|---:|---:|---:|
+| Predict's sensitivity to BTC, c per bp (fair value and time) | 5.6 | 10.4 | 5.5 | 0.24 |
+| BTC volatility, bps per sqrt(s) (fair value and time) | 0.50 | 0.32 | 0.48 | 0.72 |
+| buying its way over 100 ms, x its normal rate (Binance flows) | 30x | 182x | 14x | 0.28 |
+| far side now vs 300 ms before (Binance flows) | 6.5% | 0.4% | 1.5% | 0.71 |
+| Predict depth, near side (5 levels), shares (Predict book) | 2,490 | 1,526 | 2,339 | 0.71 |
+| Binance far side left, BTC (Binance best level) | 0.141 | 0.010 | 0.025 | 0.69 |
+| tick of the move (the move) | 5 | 2 | 1 | 0.69 |
+| Predict book updates per second (Predict book) | 19.4 | 18.7 | 19.2 | 0.69 |
+| ms since the move started (the move) | 14 | 2 | 0 | 0.69 |
+| Predict depth, far side (5 levels), shares (Predict book) | 1,726 | 968 | 1,930 | 0.69 |
+| quiet before the move started, s (the move) | 5.8 | 23.0 | 3.6 | 0.32 |
+| Predict shares traded, last 30 s (Predict volume) | 3,287 | 1,933 | 2,932 | 0.68 |
+| time left in the window, s (fair value and time) | 164 | 97 | 162 | 0.67 |
+| imbalance change, last 100 ms (Binance flows) | +0.13 | +0.49 | +0.14 | 0.33 |
+| bought its way, last 100 ms, BTC (the move) | 1.24 | 3.03 | 0.62 | 0.35 |
+
+| outcome (taking at that tick, our speed) | its group-3 fires | our top 10% | every move |
+|---|---:|---:|---:|
+| Predict move by 1 s after our match | +10.83c | +17.11c | +4.45c |
+| Binance move in its first 300 ms, bps | 1.41 | 1.22 | 0.67 |
+| optimistic fills gone by the next snapshot | 14% | 37% | 9% |
+| optimistic book, known best / + 3c / + 10c, per intended share | +0.70c / +1.99c / +3.07c | +1.39c / +2.97c / +4.87c | -0.09c / +0.10c / +0.34c |
+| conservative book, known best / + 3c / + 10c, per intended share | +0.18c / +0.40c / +0.83c | +0.11c / +0.17c / +0.33c | -0.27c / -0.59c / -0.77c |
+
+- **Told apart by:** a leave-one-day-out classifier separates the two at AUC 0.87 (by day 0.83, 0.85, 0.92), carried by Binance flows (0.060), the move (0.052), Binance best level (0.052), fair value and time (0.052), Predict book (0.027), other venues (0.010) (AUC lost when the family is shuffled); its own earlier orders, ETH, Predict volume, Predict fills and the deep book add nothing beyond these. In the all-market read (our picks in every market) its own earlier orders looked decisive (0.169): an artifact of its orders being recorded only in the fire-set markets.
+- **Ours:** late in the window (median 97 s left, Predict at its most sensitive), the first big burst after a calm spell: buying its way at 182x its normal rate, the next Binance level all but gone, low volatility, thin Predict books: the moves Predict reacts to most.
+- **Its:** mid-window (median 164 s left), volatile, busier and deeper Predict books; a smaller burst (30x normal), the next Binance level still there, the deep Binance book leaning its way, a few ticks into the move, ETH moving its way more.
+- **Overlap:** on the 264 of our picks that are on its moves the conservative value at + 10c is +1.16c against +0.09c for our other picks; the 770 of its moves our top 10% skips are worth +0.65c taken at our speed, with 7% of the optimistic fill vanishing.
+- **Reading:** our model ranks by the size of Predict's coming move, which is largest exactly where every chaser races, so a third of what it aims at is gone at the match; the top taker picks moves it gets filled on (its own fills: +1.28c per share at 1 s, median 6c paid through). Candidates, USER's call: train the chase model on the conservative take value instead of the mid markout (fill-aware ranking); rebuild its orders in every market from its WS-timed legs to repeat this beyond the fire-set markets; then untouched days.
+<!-- /OURS_VS_ITS_20261127_CLAUDE -->
 <!-- GROUP3_HALVES_20261127_CLAUDE -->
 ## 2026-11-27 — POST HOC, halves of the window: 55% of its group-3 fires come in the first half, as do 61% of all moves; per move it chases a little more in the second half (2.2% vs 1.7%); our model's top 10% leans late (43% in the first half) and earns more in the first half on the conservative book (+0.77c vs +0.19c at known best + 10c)
 
