@@ -1,3 +1,10 @@
+exit_follow2_20261127_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/exit_follow2.json
+  session: 1622c91e
+  post_hoc: true
+  best_exit_counts: {"FAV_ONLY": 4, "HOLD": 3, "SL_FAV": 2}
+  sl_only_positive_cells: 7
+  fav_bid_equals_fav_mid_cells: 8
 exit_follow_20261127_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/exit_follow.json
   rows: data/predict_fun/research/take_reprice_20261125/exit_follow/

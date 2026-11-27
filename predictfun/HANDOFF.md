@@ -1,3 +1,8 @@
+<!-- EXIT_FOLLOW2_20261127_CLAUDE -->
+## 2026-11-27 — POST HOC stop-loss or hold: a -14c stop else hold is positive in 7/8 cells, best in 0; the best exit varies by entry (keep favourites 4, hold 3, stop + favourites 2); bid-based favourite = mid-based
+
+See FINDINGS EXIT_FOLLOW2 (same date).
+<!-- /EXIT_FOLLOW2_20261127_CLAUDE -->
 <!-- EXIT_FOLLOW_20261127_CLAUDE -->
 ## 2026-11-27 — top-taker exits on our chase entries: its full rule falls below keeping favourites in 7 of 8 cells; keeping favourites (>= 60c at 39 s) to settlement and selling the rest is the best or second-best exit in 7 of 8 conservative cells (e.g. model top 10% + 3c: +$383 over four days, 4/4 days)
 

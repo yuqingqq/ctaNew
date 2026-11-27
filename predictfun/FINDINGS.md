@@ -1,3 +1,23 @@
+<!-- EXIT_FOLLOW2_20261127_CLAUDE -->
+## 2026-11-27 — POST HOC, stop-loss or hold (the top taker's two exits): a -14c stop without a profit-take, otherwise holding, is positive in 7 of 8 conservative cells but best in 0; the best exit varies by entry (keep favourites at 39 s best in 4, hold everything in 3, stop + favourite check in 2, ties counted); judging the favourite on the bid instead of the mid changes nothing (8 of 8 cells identical)
+
+[exit_follow2](reviews/take_reprice_20261125/exit_follow2.json) (script `exit_follow2.py`, committed before use; EXIT_FOLLOW's entries, books and exit rule; its shared policies reproduced exactly). USER: "So smart takers either stop loss by taking or holding to settlement? If we do so, the profit looks best?". Added after seeing EXIT_FOLLOW: post hoc, seen days, point estimates; positions independent.
+
+| conservative entry: total over four days (days > 0) | hold to settlement | sell back after 1 s | stop at -14c, else hold | keep favourites at 39 s | stop + favourite check |
+|---|---:|---:|---:|---:|---:|
+| move model, top 10%, + 3c | +$99 (2/4) | +$312 (4/4) | +$184 (3/4) | +$383 (4/4) | +$297 (4/4) |
+| move model, top 10%, + 10c | +$1,125 (3/4) | -$223 (1/4) | +$715 (2/4) | +$1,098 (3/4) | +$669 (3/4) |
+| taken-back value model, top 10%, + 3c | +$719 (3/4) | +$280 (4/4) | +$548 (3/4) | +$471 (3/4) | +$626 (4/4) |
+| taken-back value model, top 10%, + 10c | +$743 (3/4) | -$409 (1/4) | -$400 (1/4) | +$1,265 (3/4) | +$255 (2/4) |
+| move model, top 1%, + 3c | +$79 (3/4) | +$42 (3/4) | +$82 (3/4) | +$87 (3/4) | +$87 (3/4) |
+| move model, top 1%, + 10c | +$272 (4/4) | +$110 (4/4) | +$218 (4/4) | +$203 (4/4) | +$205 (4/4) |
+| fill x net, top 1%, + 3c | +$103 (3/4) | +$107 (3/4) | +$116 (2/4) | +$129 (2/4) | +$203 (4/4) |
+| fill x net, top 1%, + 10c | -$17 (1/4) | +$178 (4/4) | +$12 (2/4) | +$335 (4/4) | +$305 (4/4) |
+
+- **What it does:** half of what it opens is sold back by taking (about half of those sales at a loss, half at a gain), half held to settlement (EXIT_TIMES / EXIT_PROFILE).
+- **For us:** every sell-some-hold-the-rest rule beats selling everything after 1 s in most cells (hold 5, stop-or-hold 6, keep favourites 8, stop + favourites 7 of 8); stop + favourite check is positive in 8 of 8; which one is best depends on the entry, and the margins between them rest on a few hundred settlements.
+- **Correction (EXIT_FOLLOW's follow-up):** the favourite judged on the bid gives the same result as on the mid in 8 of 8 cells, so wide books do not explain why positions kept below their entry price won rarely; those are sides that had already fallen since our entry.
+<!-- /EXIT_FOLLOW2_20261127_CLAUDE -->
 <!-- EXIT_FOLLOW_20261127_CLAUDE -->
 ## 2026-11-27 — exits that follow the top taker, on our chase entries: its full rule (+15c / -14c bands, decide at 39 s, keep favourites, nothing in the last 30 s) falls below keeping favourites in 7 of 8 conservative cells (below selling back after 1 s in 3); the part that helps is keeping favourites (>= 60c at 39 s) to settlement and selling the rest: positive in 8 of 8 and first or second of six exits in 7; chasing every move loses under every exit
 
