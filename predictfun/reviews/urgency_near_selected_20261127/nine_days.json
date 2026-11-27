@@ -1,0 +1,50 @@
+[
+  {
+    "arm": "nominal",
+    "policy": "near",
+    "markets": 689,
+    "settle": 1892.9272660560946,
+    "turnover": 3816.517584915147,
+    "residual": -1923.590318859053,
+    "closed": 276944.2840899846,
+    "shares": 561597.3677819575,
+    "mean_end": 11.18838839185529,
+    "positive_days": 6
+  },
+  {
+    "arm": "nominal",
+    "policy": "original",
+    "markets": 689,
+    "settle": 1576.7972679016266,
+    "turnover": 3729.2248759979043,
+    "residual": -2152.4276080962773,
+    "closed": 312666.6589760624,
+    "shares": 634320.7308876354,
+    "mean_end": 13.04414069014603,
+    "positive_days": 7
+  },
+  {
+    "arm": "short",
+    "policy": "near",
+    "markets": 689,
+    "settle": 3135.9602240972235,
+    "turnover": 5149.4580468635195,
+    "residual": -2013.4978227662966,
+    "closed": 257648.19856175187,
+    "shares": 523108.0681485681,
+    "mean_end": 11.337693795449072,
+    "positive_days": 8
+  },
+  {
+    "arm": "short",
+    "policy": "original",
+    "markets": 689,
+    "settle": 2903.9222511456046,
+    "turnover": 5183.221034957843,
+    "residual": -2279.298783812238,
+    "closed": 291065.6052627358,
+    "shares": 591357.754070423,
+    "mean_end": 13.391209789479545,
+    "positive_days": 6
+  }
+]
