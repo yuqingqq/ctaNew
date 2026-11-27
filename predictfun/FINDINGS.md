@@ -1,3 +1,37 @@
+<!-- SIGNAL_VS_NOISE_20261127_CLAUDE -->
+## 2026-11-27 — signal vs noise: at the same public score a Binance move follows the top taker's fires 61% of the time and look-alike moments 7.8%; its fires do look different (held-out AUC 0.75: more imbalance building, the far side withdrawn and not refilled, the near side growing), but that look predicts moves at ordinary moments no better than chance (AUC 0.50); all 298 inputs filter our noise little better than the score (top 0.1%: 47% vs 41%, 234 moments)
+
+[signal_vs_noise](reviews/take_reprice_20261125/signal_vs_noise.json), [chart](reviews/take_reprice_20261125/signal_vs_noise_chart.html) (public_score3's decision moments, no Binance move their way in the previous 300 ms: the top taker's 4,425 fires (t = its order's arrival at Predict; the fire sets of the complete markets, 10-31 to 11-02) and 232,001 random moments (86 with a repeated key dropped); 298 inputs from public_score v2 / v3, growth_dyn and norm_windows (9,762 rows without norm_windows' inputs); look-alikes = each fire's 5 random moments of the same day and direction within 30 min with the nearest held-out public score (median score gap 0.0001); declared before the run). USER: "So they react to Orderbook dynamics, and filter out the noise, an you show me a typical signal they extract and a normal one without the signal, can we check deeply whether there is any difference, is it possible for us to filter out the noise in normal conditions as well". Consumed days, point estimates.
+
+| day | fires | move within 300 ms after its fires | after its look-alikes (same score) |
+|---|---:|---:|---:|
+| 10-31 | 849 | 53.5% | 4.0% |
+| 11-01 | 847 | 53.6% | 4.3% |
+| 11-02 | 2,729 | 66.0% | 10.1% |
+| all | 4,425 | 61.2% | 7.8% (random moments 2.5%) |
+
+| input (one of each kind) | AUC, fires vs look-alikes | median: fires | look-alikes | random moments |
+|---|---:|---:|---:|---:|
+| imbalance change over 300 ms (against its last 2 min) | 0.634 | +0.179 | +0.007 | -0.000 |
+| far side withdrawn, net, 300 ms | 0.625 | +0.056 | +0.000 | -0.001 |
+| far side size change over 300 ms (against its last 2 min) | 0.385 | -0.079 | -0.004 | -0.001 |
+| far side refilled / taken away (against its last 2 min) | 0.387 | -0.719 | -0.260 | -0.125 |
+| near side size change over 300 ms (against its last 5 min) | 0.613 | +0.018 | +0.001 | -0.000 |
+| near side added / taken away, 300 ms | 0.612 | +0.194 | +0.003 | +0.000 |
+
+| at random moments, held out | AUC for a move | precision, top 1% (moments) | precision, top 0.1% (moments) | its fires above the top-1% line |
+|---|---:|---:|---:|---:|
+| public score v3 (60 inputs) | 0.839 | 27.6% (2,322) | 40.6% (234) | 7.4% |
+| trees on all 298 inputs | 0.848 | 28.4% (2,322) | 47.0% (234) | 8.2% |
+| fire-likeness (trees: fires vs look-alikes) | 0.501 | 5.5% (2,322) | 6.8% (234) | |
+| the top taker's fires | | | | 61.2% move (4,425 fires) |
+
+- **The fires look different:** 192 of 298 inputs separate fires from their look-alikes beyond the shuffle null (95th percentile |AUC - 0.5| = 0.017, 200 draws), all of them the build-up already known (SMART_FACTORS): imbalance rising, the far side withdrawn and not refilled, the near side growing. Together, trees tell fires from look-alikes at held-out AUC 0.748 (SE 0.004; shuffled labels 0.501).
+- **But the look is not the signal:** trained to find fire-like moments, the same trees rank moves at ordinary moments at AUC 0.501; inside the score's top 5% (17.0% move), picking the top fifth by fire-likeness gives 20.5%, by the score 27.6%. The build-up is where it fires, not what tells it which build-ups will move.
+- **Filtering our own noise:** trees on every input rank moves at AUC 0.848 (score 0.839); top 1% 28.4% vs 27.6%, top 0.1% 47.0% vs 40.6% on 234 moments over four days, against its 61.2% on 4,425 fires over three.
+- **The chart:** the fire nearest the median fire on nine key book inputs, its nearest look-alike without a move and the most ordinary random moment: the fire's ask (the far side of an up bet) thins to under 0.1 BTC more than once against a 10-30 BTC bid, the price had stepped up before and moves 6 ms after its order reaches Predict; the look-alike's ask never empties.
+- **Reading:** what lets the top taker filter is not in the data we record (Binance futures book and trades, nine venues' trades, Predict): candidates stay the Binance spot book, other venues' books, or seeing the same book earlier from a closer location (FIRE_INFO). Its fire set is the complete-market subset: CHEAP_SIDE_ALL's selection bears mainly on Predict outcomes; its effect on these 300 ms Binance moves is untested.
+<!-- /SIGNAL_VS_NOISE_20261127_CLAUDE -->
 <!-- DRIFT_VALUE_20261127_CLAUDE -->
 ## 2026-11-27 — BTC's drift and the time left as a fair value (Phi(drift / (vol sqrt(time left)))): Predict already prices it (rank correlation 0.97; Predict's mid is the better calibrated, Brier 0.163 vs 0.167); the gap between them predicts nothing (rank correlation 0.004 with the 1 s move); drift inputs do not help the 1 s take; models of the settlement outcome pick sides near 60c with 2-3 min left that gained +1.4c to +5.3c held (weak, untested)
 

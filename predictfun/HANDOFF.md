@@ -1,3 +1,8 @@
+<!-- SIGNAL_VS_NOISE_20261127_CLAUDE -->
+## 2026-11-27 — signal vs noise: same public score, a move follows its fires 61% vs look-alikes 7.8%; its fires look different (AUC 0.75, the known build-up) but that look predicts moves at ordinary moments at AUC 0.50; all 298 inputs filter our noise little better than the score
+
+See FINDINGS SIGNAL_VS_NOISE and reviews/take_reprice_20261125/signal_vs_noise_chart.html (same date). Next (USER's call): record the Binance spot book / other venues' books, or close the take line.
+<!-- /SIGNAL_VS_NOISE_20261127_CLAUDE -->
 <!-- DRIFT_VALUE_20261127_CLAUDE -->
 ## 2026-11-27 — drift + time left as a fair value: Predict already prices it (rank correlation 0.97, better calibrated than FV); the FV gap predicts nothing; no help for the 1 s take; settlement-outcome models' top picks gained +1.4c to +5.3c held (weak lead, untouched days needed)
 

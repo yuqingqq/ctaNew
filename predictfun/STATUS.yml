@@ -1,3 +1,10 @@
+signal_vs_noise_20261127_claude:
+  diagnostic: [predictfun/reviews/take_reprice_20261125/signal_vs_noise.json, predictfun/reviews/take_reprice_20261125/signal_vs_noise_chart.html]
+  session: 1622c91e
+  move_rate: {fires: 0.6122, lookalikes_same_score: 0.0783}
+  fire_vs_lookalike_auc: 0.7475
+  fire_likeness_auc_for_moves: 0.5014
+  top01_precision: {all_inputs: 0.4701, public_score: 0.4060}
 drift_value_20261127_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/drift_value.json
   rows: data/predict_fun/research/take_reprice_20261125/drift_value/
