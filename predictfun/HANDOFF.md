@@ -1,3 +1,8 @@
+<!-- VISUAL_TWINS_20261127_CLAUDE -->
+## 2026-11-27 — visual twins: the ordinary moments that look most like its fires move 5.8% (nearest 8.1%) vs its fires 61%; our model sees the picture (look-alikes score 5.5% vs random 2.5%), not which pictures move
+
+See FINDINGS VISUAL_TWINS and reviews/take_reprice_20261125/visual_twins_chart.html (same date).
+<!-- /VISUAL_TWINS_20261127_CLAUDE -->
 <!-- SIGNAL_VS_NOISE_20261127_CLAUDE -->
 ## 2026-11-27 — signal vs noise: same public score, a move follows its fires 61% vs look-alikes 7.8%; its fires look different (AUC 0.75, the known build-up) but that look predicts moves at ordinary moments at AUC 0.50; all 298 inputs filter our noise little better than the score
 

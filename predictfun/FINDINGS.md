@@ -1,3 +1,30 @@
+<!-- VISUAL_TWINS_20261127_CLAUDE -->
+## 2026-11-27 — why our model cannot tell its fires apart: for each top-taker fire, the 20 ordinary moments whose Binance book looks most like it moved their way within 300 ms 5.8% of the time (the nearest 8.1%) against 61% after its fires; a fire's nearest ordinary look-alike is closer to it than its nearest other fire; our model already rates these pictures high (5.5% vs random 2.5%): it sees the picture, not which pictures move
+
+[visual_twins](reviews/take_reprice_20261125/visual_twins.json), [chart](reviews/take_reprice_20261125/visual_twins_chart.html) (SIGNAL_VS_NOISE's points: its fires and random moments with no Binance move their way in the previous 300 ms; look = SIGNAL_VS_NOISE's nine key book inputs, standardized by the random moments' median and IQR; look-alikes = nearest random moments of the same day and direction, whatever their outcome; declared before the run). USER: "Do they fire at 0 in the chart? It looks the cases they fire are very different from normal cases, why our model can't differentiate". Consumed days, point estimates.
+
+| moments | moved their way within 300 ms |
+|---|---:|
+| the top taker's fires (4,424) | 61.2% |
+| their 20 nearest ordinary look-alikes, same day, any time | 5.8% |
+| ... within 30 min | 5.2% |
+| ... the single nearest | 8.1% |
+| random moments | 2.5% |
+
+| look-alike distance fifth (median distance) | moved |
+|---|---:|
+| 1 (0.57) | 3.1% |
+| 2 (0.81) | 3.7% |
+| 3 (1.04) | 4.5% |
+| 4 (1.33) | 6.6% |
+| 5 (1.94) | 11.3% |
+
+- **t = 0** in the charts is its order's arrival at Predict (settlement id - 150 ms hold - 34 ms, the fire clock); it decided earlier by its own network time (unknown; small if it sits near Predict).
+- **Different from ordinary moments, not from look-alikes:** our model scores its fires 7.2% on average against 2.5% for random moments, so it does see the picture; the ordinary moments that look most like its fires score 5.5% and move 5.8% of the time. The nearest look-alike is closer to a fire (median distance 0.71) than the nearest other fire (0.96), and the closest fifth of look-alikes move least: the picture is common, the move is rare.
+- **The chart:** the typical fire (imbalance +0.79) and its two nearest look-alikes (imbalance +0.75 and +0.86, the same day): a big bid against a 1-2 BTC ask in all three; neither look-alike moved (its 20 look-alikes: 15%). The fire's last second is busier (the ask emptying more than once, bids posted and pulled, the price stepping up); those are in SIGNAL_VS_NOISE's 298 inputs (1 s / 5 s activity and returns), where the fire look predicts moves at AUC 0.50.
+- **By day:** 10-31 53% vs 2.9%; 11-01 54% vs 2.7%; 11-02 66% vs 7.7%.
+- **Reading:** the top taker fires at a picture that is common in our data and mostly harmless; what tells it which ones will move is not in what we record (SIGNAL_VS_NOISE).
+<!-- /VISUAL_TWINS_20261127_CLAUDE -->
 <!-- SIGNAL_VS_NOISE_20261127_CLAUDE -->
 ## 2026-11-27 — signal vs noise: at the same public score a Binance move follows the top taker's fires 61% of the time and look-alike moments 7.8%; its fires do look different (held-out AUC 0.75: more imbalance building, the far side withdrawn and not refilled, the near side growing), but that look predicts moves at ordinary moments no better than chance (AUC 0.50); all 298 inputs filter our noise little better than the score (top 0.1%: 47% vs 41%, 234 moments)
 

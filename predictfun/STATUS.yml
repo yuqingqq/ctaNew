@@ -1,3 +1,8 @@
+visual_twins_20261127_claude:
+  diagnostic: [predictfun/reviews/take_reprice_20261125/visual_twins.json, predictfun/reviews/take_reprice_20261125/visual_twins_chart.html]
+  session: 1622c91e
+  move_rate: {fires: 0.6123, twins_any_time: 0.0584, nearest_twin: 0.0814, random: 0.0248}
+  distance_median: {fire_to_nearest_twin: 0.713, fire_to_nearest_fire: 0.963}
 signal_vs_noise_20261127_claude:
   diagnostic: [predictfun/reviews/take_reprice_20261125/signal_vs_noise.json, predictfun/reviews/take_reprice_20261125/signal_vs_noise_chart.html]
   session: 1622c91e
