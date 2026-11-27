@@ -1,3 +1,12 @@
+take_markout_20261127_claude:
+  diagnostic: [predictfun/reviews/take_reprice_20261125/take_markout.json, predictfun/reviews/take_reprice_20261125/take_markout_exit.json, predictfun/reviews/take_reprice_20261125/take_markout_longshot.json]
+  rows: [data/predict_fun/research/take_reprice_20261125/take_markout/, data/predict_fun/research/take_reprice_20261125/take_markout_exit/]
+  session: 1622c91e
+  top1_1s_c_per_intended_share: {known_best: -0.017, every_level: -0.697, adaptive: -0.229}
+  top1_30s_model_sold_back_30s_c: 4.787
+  cheap_side_under_10c_sold_back_30s_c: {up: 6.071, down: 5.505}
+  cheap_side_paid_vs_won_c: [6.0, 16.0]
+  status: development evidence, found after looking; untouched days needed
 take_model_why_20261126_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/take_model_why.json
   session: 1622c91e

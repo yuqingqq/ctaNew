@@ -1,3 +1,57 @@
+<!-- TAKE_MARKOUT_20261127_CLAUDE -->
+## 2026-11-27 — the markout price as the target, slippage to get filled: at our 1 s markout paying through fills more but costs more than it gains (top 1%: filled 22% → 100%, -0.02c → -0.70c per intended share); trained on the 30 s markout the model picks cheap sides late in the window, which pay even sold back 30 s later through the speed bump (+4.8c, every day): on these days Predict's cheap sides won far more often than their price (bought at 6.0c, won 16%); found after looking
+
+[take_markout](reviews/take_reprice_20261125/take_markout.json), [take_markout_exit](reviews/take_reprice_20261125/take_markout_exit.json), [take_markout_longshot](reviews/take_reprice_20261125/take_markout_longshot.json) (TAKE_MODEL's 66,353 moments and features, the same rows: labels recomputed with 0 differences from TAKE_MODEL's, TAKE_MODEL_WHY's top 1% reproduced; a 50-share IOC at our 172 ms path, TAKE_MODEL's walk of the venue book at the match; per intended share, misses 0; declared before each run, the longshot readout found after looking). USER: "1. We can get slippage to fill the taker order, 2. The training target is the mark out price". Consumed days, point estimates (G = 4).
+
+**1. The 1 s markout as the target, with slippage.** Trained on the Predict mid's move from the decision to 1 s after the match (rank correlation on unseen days 0.33), the top 1% by predicted edge sees the price move +2.94c its way (+1.86c beyond the known best's half spread and fee, if it could be bought there):
+
+| order limit (top 1% by predicted markout edge, unseen day) | filled | move from the known best (per filled share) | slippage above it | fee | value per intended share | days > 0 | pessimistic book |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| at the known best | 22% | +0.24c | -0.06c | +0.38c | -0.02c | 2 of 4 | -0.06c |
+| known best + 1c | 46% | +0.55c | +0.49c | +0.43c | -0.17c | 0 of 4 | -0.22c |
+| + 3c | 76% | +1.29c | +1.27c | +0.49c | -0.36c | 0 of 4 | -0.49c |
+| + 5c | 88% | +1.60c | +1.69c | +0.51c | -0.52c | 0 of 4 | -0.68c |
+| + 10c | 98% | +2.05c | +2.27c | +0.52c | -0.72c | 0 of 4 | -0.93c |
+| every shown level | 100% | +2.37c | +2.54c | +0.53c | -0.70c | 0 of 4 | -0.90c |
+| up to the predicted markout (adaptive) | 52% | +0.70c | +0.70c | +0.44c | -0.23c | 0 of 4 | -0.29c |
+
+- **Why slippage does not help:** each extra cent buys a level that has already moved: at every shown level the move per filled share is +2.37c, the slippage +2.54c, the fee +0.53c. By the time the order matches, the book has repriced to the move. The same at 152 ms (every level -0.67c). The pessimistic book (a quote missing from the next snapshot counts as gone) is worse at every limit.
+- **Comparators (top 1%, at the known best / every level / adaptive):** hindsight +8.87c / +12.99c / +13.16c; in-sample +0.45c / +0.51c / +0.61c; the Binance-move score -0.54c / -1.11c; random -1.16c / -1.35c (200 draws, 97.5th percentile -0.95c). 1 of the 80 held-out cells passes the declared rule (> 0 pooled, >= 3 of 4 days, >= 150 orders): the top 0.3% at the known best, +0.06c per intended share on 199 orders (fill 12%), noise-sized.
+
+**2. Longer markouts.** The same model trained on the 5 s and 30 s markout picks something else: cheap sides late in the window. The 30 s picks pay even when sold back; the 5 s picks pay at the mid and at settlement, not sold back (sold back = a second 50-share IOC decided h after the match, through the same speed bump, fee per level):
+
+| markout trained on | its picks: side price, time left (medians) | order | filled | value at the mid after h (days > 0) | sold back after h through the speed bump | held to settlement | spread after h, median / p90 |
+|---|---|---|---:|---:|---:|---:|---:|
+| 1 s | 40.0c, 91 s | at the known best | 22% | -0.02c (2) | -0.25c (0) | +2.50c (4) | 1c / 2c |
+| 1 s | 40.0c, 91 s | every shown level | 100% | -0.70c (0) | -2.07c (0) | +3.40c (4) | 1c / 2c |
+| 5 s | 8.5c, 27 s | at the known best | 55% | +1.02c (3) | +0.30c (2) | +3.46c (3) | 1c / 4c |
+| 5 s | 8.5c, 27 s | every shown level | 100% | +0.98c (3) | -0.60c (2) | +3.69c (2) | 1c / 4c |
+| 30 s | 8.5c, 48 s | at the known best | 82% | +6.31c (4) | +4.79c (4) | +5.87c (3) | 1c / 4c |
+| 30 s | 8.5c, 48 s | every shown level | 100% | +6.96c (4) | +4.99c (4) | +6.83c (3) | 1c / 4c |
+
+- Every moment the 30 s model predicts positive (19,113): sold back after 30 s +0.63c at the known best (4 of 4 days, filled 86%), held +5.93c. Slippage is not needed: at the known best the 30 s picks fill 82%. The spread after 30 s is 1c (median) for them, so the mid is not the cause. Held to settlement even the 1 s picks gain, as random takes did in EXIT_OPTIONS: settlement values carry the days' outcomes (binary per market, noisy).
+
+**3. No model: cheap sides recover.** A take of the side priced under 10c at the known best:
+
+| side bought at the known best (no model) | moments | markets | sold back after 30 s | days > 0 | markets > 0 | ten largest markets' share | held to settlement |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Up (YES) under 10c | 1,071 | 74 | +6.07c | 4 of 4 | 70% | 61% | +9.31c (4 of 4) |
+| Down (NO) under 10c | 1,085 | 98 | +5.51c | 4 of 4 | 58% | 57% | +8.31c (4 of 4) |
+
+| side price bucket | price paid (mean) | won, over moments | won, over market sides (n) |
+|---|---:|---:|---:|
+| 0-10c | 6.0c | 16.0% | 17.1% (296) |
+| 10-20c | 15.6c | 26.9% | 27.2% (369) |
+| 20-35c | 28.3c | 35.4% | 39.8% (508) |
+| 35-65c | 50.2c | 49.6% | 50.0% (660) |
+| 65-80c | 72.3c | 63.3% | 60.0% (503) |
+| 80-90c | 85.2c | 71.8% | 72.6% (370) |
+| 90-100c | 95.2c | 84.0% | 83.3% (296) |
+
+- **Calibration on these days:** prices are overconfident at both ends: cheap sides won about 2.7x their price, sides bought at 95.2c won 84.0%. The 30 s recovery of sides under 10c holds from 30 to 200 s before the end (sold back after 30 s: +7.57c / +4.38c / +6.31c for 0-60 / 60-120 / 120-200 s left; 200-300 s 59 moments). Tie markets (8 of 332, paid 50c) change the cheap sides' settlement value by under 0.2c.
+- **Limits:** found after looking on four consumed days (the price table came out of TAKE_MARKOUT_EXIT), not a test. The moments overlap within markets: the cheap cells rest on 74 / 98 markets, the ten largest carry 61% / 57% of the value (a few big reversals carry much of it). A 50-share take at 6c is $3: the size is the depth at those prices, measured only in the 5 shown levels, with no impact of our own orders. It needs untouched days (forward days are the USER's call).
+- **Reading:** for the 150 ms race neither the markout target nor slippage helps: what we predict is already in the book when the order matches. Separately, a slow effect on these days: Predict's cheap sides were underpriced and recovered within 30 s. It plays out over tens of seconds, not the 150 ms race, and pays at the known best (no slippage needed).
+<!-- /TAKE_MARKOUT_20261127_CLAUDE -->
 <!-- TAKE_MODEL_WHY_20261126_CLAUDE -->
 ## 2026-11-26 — why the take model does not generalise: the in-sample profit grows with model size (-0.06c linear to +4.69c large trees) while every model loses on unseen data, even on other markets of the same day (-0.19c): it fits noise; what does generalise is Predict's next move (top 1% by predicted move: +3.2c its way) and the fill, but they oppose each other: where the move is predicted our take fills 20% and nets -0.18c
 

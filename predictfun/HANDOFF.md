@@ -1,3 +1,8 @@
+<!-- TAKE_MARKOUT_20261127_CLAUDE -->
+## 2026-11-27 — markout target + slippage: no help for the 1 s race (top 1% -0.02c at the known best, -0.70c paying through every level); the 30 s markout model picks cheap sides late in the window that pay sold back after 30 s (+4.8c, every day); cheap sides won 16% bought at 6.0c (found after looking, consumed days)
+
+See FINDINGS TAKE_MARKOUT (same date). Next (USER's call): test the cheap-side recovery (side under 10c, sold back after 30 s or held) on untouched days; size at those prices.
+<!-- /TAKE_MARKOUT_20261127_CLAUDE -->
 <!-- TAKE_MODEL_WHY_20261126_CLAUDE -->
 ## 2026-11-26 — take model fails to generalise because it fits noise (in-sample profit grows with model size, losses on unseen markets of the same day); the predictable move (+3.2c) comes when our take does not fill (20%)
 
