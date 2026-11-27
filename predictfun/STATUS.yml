@@ -1,3 +1,9 @@
+fill_aware_20261127_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/fill_aware.json
+  rows: data/predict_fun/research/take_reprice_20261125/fill_aware/predictions.parquet
+  session: 1622c91e
+  spearman_conservative_value: {move: 0.183, direct_s10: 0.207, decomp_s10: 0.212, direct_s3: 0.285, decomp_s3: 0.297}
+  top1_decomp_s10_vs_move_c: {s10_1s: [1.384, 0.949], s3_take_back: [0.431, 0.267], s10_take_back: [0.717, 0.691]}
 scope_fireset_20261127_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/scope_fireset.json
   session: 1622c91e

@@ -1,3 +1,8 @@
+<!-- FILL_AWARE_20261127_CLAUDE -->
+## 2026-11-27 — fill-aware chase ranking: no gain at the top 10%; at the top 1% fill x net beats the move ranking at 1 s (+1.38c vs +0.95c, conservative + 10c) and taken back at + 3c (+0.43c vs +0.27c), equal at + 10c
+
+See FINDINGS FILL_AWARE (same date). Next (USER's call): latency + 10 / + 25 ms and no-venues checks on that selection, then untouched days.
+<!-- /FILL_AWARE_20261127_CLAUDE -->
 <!-- SCOPE_FIRESET_20261127_CLAUDE -->
 ## 2026-11-27 — SCOPE CORRECTION: its exact-time orders cover only the fire-set markets (33%-43% of its orders); there it chases 10.4% of moves (GROUP3_PROFILE's 1.9% was diluted); its group-3 profile is of those markets only
 

@@ -1,3 +1,27 @@
+<!-- FILL_AWARE_20261127_CLAUDE -->
+## 2026-11-27 — fill-aware chase ranking (how far Predict moves x how much we get): it ranks the conservative take value better (held-out rank correlation 0.21-0.30 vs 0.18) and moves the picks earlier and to less contested moments, but at the top 10% the value is no better (+0.47c vs +0.44c at + 10c; taken back +0.15c vs +0.17c at + 3c); at the top 1% fill x net is better at 1 s (+1.38c vs +0.95c, better on 4/4 days) on 497 vs 318 actions, about the same taken back
+
+[fill_aware](reviews/take_reprice_20261125/fill_aware.json) (script `fill_aware.py`, committed before use; rehearsal on 4,000 moves in scratch). USER: "You mean we need to consider both how far it can move and the size to take, yea go ahead". CHASE_TAKES' 257,836 labelled ticks, inputs and fill rules; targets on the conservative book (A's levels at their size in the next snapshot): the value per intended share at 1 s (known best + 3 / + 10c), the value taken back after 1 s (+ 3c), and the fill fraction x the net value per filled share (the decomposition); trees leave-one-day-out; CHASE_TAKES' move-model selections reproduced. Development evidence on seen days; point estimates (G = 4).
+
+| selection (one action per move) | actions | time left, s | fills gone by next snapshot | Predict move 1 s, c | conservative 1 s: + 3c / + 10c | conservative taken back after 1 s: + 3c / + 10c | optimistic 1 s, + 10c |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| move model (CHASE_TAKES), top 10% | 3,677 | 129 | 31% | +14.4 | +0.24c (4/4) / +0.44c (4/4) | +0.17c (4/4) / -0.12c (1/4) | +4.45c |
+| taken-back value model, top 10% | 3,866 | 171 | 24% | +12.1 | +0.28c (4/4) / +0.47c (4/4) | +0.15c (4/4) / -0.21c (1/4) | +3.81c |
+| value model (+ 10c), top 10% | 3,646 | 166 | 21% | +11.1 | +0.26c (4/4) / +0.43c (4/4) | +0.01c (2/4) / -0.26c (1/4) | +3.56c |
+| fill x net per share (+ 10c), top 10% | 4,102 | 163 | 21% | +10.9 | +0.26c (4/4) / +0.39c (4/4) | +0.04c (2/4) / -0.33c (0/4) | +3.36c |
+| move model, top 10%, other-day threshold | 3,564 | 132 | 31% | +14.3 | +0.23c (4/4) / +0.37c (4/4) | +0.15c (4/4) / -0.17c (1/4) | +4.45c |
+| taken-back value model, top 10%, other-day threshold | 3,654 | 171 | 25% | +12.4 | +0.28c (4/4) / +0.46c (4/4) | +0.15c (4/4) / -0.18c (2/4) | +3.94c |
+| move model, top 1% | 318 | 62 | 52% | +30.0 | +0.30c (3/4) / +0.95c (4/4) | +0.27c (3/4) / +0.69c (4/4) | +8.32c |
+| fill x net per share (+ 10c), top 1% | 497 | 179 | 18% | +13.3 | +0.67c (4/4) / +1.38c (4/4) | +0.43c (3/4) / +0.72c (4/4) | +4.37c |
+| value model (+ 10c), top 1% | 382 | 163 | 26% | +16.0 | +0.70c (4/4) / +0.96c (4/4) | +0.39c (3/4) / +0.40c (3/4) | +5.11c |
+| taken-back value model, top 1% | 462 | 150 | 26% | +12.7 | +0.65c (4/4) / +0.77c (4/4) | +0.31c (3/4) / +0.13c (2/4) | +4.36c |
+
+- **The models:** the fill is predictable (rank correlation 0.72 at + 3c, 0.44 at + 10c), the net per filled share much less (0.22 / 0.17); the taken-back value model reaches 0.44 on its own target. Every top-10% selection sits far above random actions of the same count (conservative + 10c: random mean -0.93c, 97.5th percentile -0.83c).
+- **Where the picks move:** ranking on the value moves the picks earlier in the window and to moments where fewer of the optimistic fills vanish, with smaller Predict moves (the top taker's side of OURS_VS_ITS), but at the top 10% that gives no more value than the move ranking, at 1 s or taken back, with pooled or other-day thresholds.
+- **At the top 1%:** fill x net per share (+ 10c) earns +1.38c vs +0.95c at 1 s and +0.43c vs +0.27c taken back at + 3c (better on 3/4 days), +0.72c vs +0.69c at + 10c (better on 1/4), on more actions with fewer fills vanishing.
+- **Settlement:** held to the end the top-1% selections range from -0.11c to +4.16c per intended share across the four top-1% selections: a few hundred binary market outcomes, too noisy to read.
+- **Reading:** weighing the fill alongside the move helps only at the very top; what we can collect after selling back stays a fraction of a cent per intended share on a few hundred actions over four days. The race at our assumed speed binds either way. Next (USER's call): latency sensitivity (decisions + 10 / + 25 ms) and the venues family dropped for the top-1% fill x net selection, then untouched days.
+<!-- /FILL_AWARE_20261127_CLAUDE -->
 <!-- SCOPE_FIRESET_20261127_CLAUDE -->
 ## 2026-11-27 — SCOPE CORRECTION to GROUP3_PROFILE, GROUP3_HALVES and CHASE_TAKES' top-taker diagnostics: its orders with exact arrival times (the fire set) cover only 258 venue-complete markets, 33%-43% of its orders on days it traded 274-284 of 288 markets; its 'chased' flags are zero elsewhere by construction: in those markets it chases 10.4% of moves, not 1.9%; its price preference holds there
 
