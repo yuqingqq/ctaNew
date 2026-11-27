@@ -193,7 +193,7 @@ def selftest():
 if __name__ == '__main__':
     cmd, a = sys.argv[1], sys.argv[2:]
     if cmd == 'points':
-        points(a[0], a[1] if a else None)
+        points(a[0], a[1] if len(a) > 1 else None)
     elif cmd == 'read':
         read(a[0] if a else None, float(a[1]) if len(a) > 1 else None)
     else:
