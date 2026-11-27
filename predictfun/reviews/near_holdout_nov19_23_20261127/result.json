@@ -1,0 +1,70 @@
+{
+  "coverage": {
+    "20261119": {
+      "missing_endpoint": 168,
+      "complete": 76,
+      "stale_future_book": 44
+    },
+    "20261120": {
+      "missing_endpoint": 176,
+      "complete": 59,
+      "stale_future_book": 53
+    },
+    "20261121": {
+      "missing_endpoint": 193,
+      "complete": 66,
+      "stale_future_book": 29
+    },
+    "20261122": {
+      "missing_endpoint": 164,
+      "complete": 77,
+      "stale_future_book": 47
+    },
+    "20261123": {
+      "missing_endpoint": 171,
+      "complete": 74,
+      "stale_future_book": 42,
+      "missing_future_book": 1
+    }
+  },
+  "checks": {
+    "nominal": {
+      "positive": true,
+      "without_best_market": true,
+      "without_best_day": false,
+      "majority": false,
+      "lower_average_inventory": true,
+      "lower_tail_inventory": true,
+      "no_worse_tail_loss": true,
+      "no_worse_settlement": true,
+      "no_fewer_winning_days": true,
+      "beats_time_only": true
+    },
+    "short": {
+      "positive": true,
+      "without_best_market": true,
+      "without_best_day": true,
+      "majority": true,
+      "lower_average_inventory": true,
+      "lower_tail_inventory": true,
+      "no_worse_tail_loss": true,
+      "no_worse_settlement": false,
+      "no_fewer_winning_days": true,
+      "beats_time_only": false
+    }
+  },
+  "sufficient": true,
+  "passes": false,
+  "hashes": {
+    "census_20261119.csv": "22d0936b1edbe6d35d00a464b8e61560bba44b1ec787656e6a40dea5a7343ef4",
+    "markets_20261119.csv": "62add78f6fdaa95781964f198c1cf51aef0e621360844a4216c05200dfe1a775",
+    "census_20261120.csv": "f5362fead545ebcf503dadb5582d11e8334ac8fcb33da4def97b1f1c067f5ec5",
+    "markets_20261120.csv": "95798a82e0e85be6d85adc11f6f9b746a266966af83a3abe91b57116dc230b2e",
+    "census_20261121.csv": "b105ff0aec32891342291ef23c5b35ff07638fb34c9963598976160d4f5789b4",
+    "markets_20261121.csv": "fc219c0c98d7151503ec574345a36ffff7155928dff617f61ac3ea13c991207f",
+    "census_20261122.csv": "cc73b627f88f122ec5b6c96e0da8ca098ab9788e730b0f9c42de298dd673c655",
+    "markets_20261122.csv": "0f21229da142b7a91feed98df054546984e1c022f5aaeb8c87227c395e81eb28",
+    "census_20261123.csv": "ae91c662e5448452fa26dce70040bce56a92972c09b0c20829776da7a84c0476",
+    "markets_20261123.csv": "7310e9e538cb2699a73a23e86e7a249d29a3014bde16a9a88a1a8970e7917070"
+  }
+}
