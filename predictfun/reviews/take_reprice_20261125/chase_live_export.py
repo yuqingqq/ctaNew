@@ -11,14 +11,18 @@ Exports (write-once, OUT/chase_live_export/):
                        the move key, t, d, mv_k, the 66 inputs, lim, md, the prediction, MOVE, above (MOVE >= threshold) and act (the
                        move's action); floats with 17 significant digits;
   eval_move.py         a standard-library scorer of the two files (live_export/eval_move.py);
-  reference/           chase_forward.py and every research module it imports, copied at the pinned commit, with MANIFEST.json.
+  reference/           the files that define the decision points, the 66 inputs, the score and the action (REF: the frozen builder, the
+                       research modules on its input path, the refit JSON, the freeze receipt, this export), copied at the pinned commit,
+                       with MANIFEST.json; each module must be one the frozen builder loads. Its other imports (the Predict path loader,
+                       other studies) are left out: the live rule reads Tokyo's own received book.
 Checks (the run refuses to write otherwise):
   - the models' sha256 is the freeze receipt's, and the builder is the frozen one (chase_forward.frozen);
   - eval_trees (numpy, the trees summed in sklearn's order) equals sklearn's predict exactly on every row of the day;
   - sklearn's prediction and MOVE equal the stored forward scores (forward_scores.parquet) exactly on every row of the day;
   - the day's actions (the first row per move with a finite MOVE >= the threshold) equal forward_selections' MOVE_top10 rows of the day;
   - eval_move.py reproduces every fixture row and every fixture move's action (a subprocess, exit 0);
-  - every copied file is tracked and unchanged at the pinned commit, and no file holds a credential-shaped string.
+  - every copied file is tracked and unchanged at the pinned commit, every copied module is loaded by the frozen builder, and no file
+    holds a credential-shaped string.
 Stages: selftest | run.  Output: chase_live_export.json (write-once).
 Usage: PF_SLOT=<slot> predictfun/research/run_light.sh <tag> -- python3 predictfun/reviews/take_reprice_20261125/chase_live_export.py <stage>
 """
@@ -50,6 +54,11 @@ OUTD = Path(os.environ['CLE_OUT']) if os.environ.get('CLE_OUT') else CF.WT.OUT /
 RESULT = OUTD / 'result.json' if os.environ.get('CLE_OUT') else H / 'chase_live_export.json'
 EVAL = H / 'live_export' / 'eval_move.py'
 DAY, SEL, N_ACT, N_OTHER, SEED = '20261120', 'MOVE_top10', 200, 200, 20261128
+TR_DIR = 'predictfun/reviews/take_reprice_20261125'
+REF = tuple(f'{TR_DIR}/{f}' for f in ('chase_forward.py', 'chase_takes.py', 'public_score.py', 'public_score3.py', 'fire_events.py', 'timeline.py',
+                                      'quiet_before.py', 'depth_deep.py', 'before_long.py', 'winners_trigger.py', 'take_markout.py', 'take_model.py',
+                                      'depletion_cause.py', 'chase_forward_refit.json', 'chase_live_export.py', 'live_export/eval_move.py')) + \
+      ('predictfun/freeze/chase_forward_1120_1126/RECEIPT_v5.md',)
 SECRET = (r'-----BEGIN [A-Z ]*PRIVATE KEY-----', r'eyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}', r'AKIA[0-9A-Z]{16}',
           r'(?i)(api[_-]?key|secret|passw(or)?d|private[_-]?key)\s*[:=]\s*["\'][A-Za-z0-9+/=_-]{12,}["\']', r'\b0x[0-9a-fA-F]{64}\b')
 
@@ -187,8 +196,10 @@ def run():
     keep = np.r_[rng.choice(ka, min(N_ACT, len(ka)), replace=False), rng.choice(ko, min(N_OTHER, len(ko)), replace=False)]
     cols = ['key', 'day', 't', 'd', 'mv_k'] + [c for c in kf if c != 'mv_k'] + ['lim', 'md', 'pred', 'MOVE', 'above', 'act']
     Fx = fixtures(X, keep, cols)
-    rels = ref_modules() + [EVAL.relative_to(REPO), Path(__file__).resolve().relative_to(REPO)]
-    rels = sorted(set(rels))
+    loaded = {str(r) for r in ref_modules()}
+    rels = [Path(r) for r in REF]
+    C.require(all(str(r) in loaded for r in rels if r.suffix == '.py' and r.name not in ('chase_live_export.py', 'eval_move.py')),
+              f'a reference module the frozen builder does not load: {[str(r) for r in rels if r.suffix == ".py" and str(r) not in loaded]}')
     head, dirty = git_clean(rels)
     C.require(not dirty, f'files not committed at HEAD: {dirty[:5]}')
     hits = secrets({str(r): (REPO / r).read_text(errors='replace') for r in rels})
