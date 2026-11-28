@@ -1,3 +1,25 @@
+<!-- AT_FRAME_20261128_CLAUDE -->
+## 2026-11-28 — chase line priced on the live port's at-frame rule: R1 +$184 (7/7, Sharpe 1.25), R5 +$124 (7/7, Sharpe 1.01); within a few dollars of addendum 1's wait, which is withdrawn
+
+USER: "Check Tokyo response, it decides based on the information received, don't manually wait a few ms". Tokyo's response is pmmmrust `df8e942`: live decides at the tick frame's receipt f + compute, on what it has received, which is the user's decision. Research's answer is pmmmrust `fa49fe2`. The script `chase_decision_atframe.py` (`eb7669f83`) was committed before use; the Tokyo record is `ed46042df`, the result `ed46042df`. This updates DECISION_DELAY (same date): D = max(t + 3.5, f + 2 ms) is withdrawn as the live rule and kept as the comparator.
+- **Timing (research's days, 2,754 actions).**
+  - X = f + c - (t + 3.5 ms). f - t is Tokyo's, in the same burst quintile; c is the shadow's published receipt-to-decision quantiles (median 0.34, p90 1.25, p99 2.65, max 3.75 ms).
+  - Exits are replayed at -3..120 ms, with x = 0 parity exact on every day. D and D×2 reproduce DECISION_DELAY's MATCHED and MATCHED_X2.
+  - Mean delay against the replay: at frame 3.7 ms, D 5.1 ms. The median point is 0.96 ms earlier than the replay.
+- **At frame vs D:**
+  - R1 +$178 -> +$184 (+$5.7; bootstrap +$5.3..+$6.0), R4 +$5.9, R5 +$1.1.
+  - R2 -$0.6, R3 -$4.5: matched on the burst after, an earlier send meets more burst and slower acceptance.
+  - Pilot compute: R1 +$183. ×2 delays: R1 +$166, R5 +$112; all 7/7 days.
+- **Information at the frame (Tokyo's hour, frozen model, 28 in-scope actions):**
+  - its/ag volumes as received at f (exact): 207 scores change, 0 flips, 28/28 actions kept.
+  - Plus the stage-1 port's flows (pessimistic, never re-netted): 911 change, 1 flip, 27/28 kept, 1 move at another tick.
+  - pf_age_ms at the earlier instant (approximate): 0 flips, 28/28 kept.
+  - Control: its_100 zeroed changes 3,558 scores.
+- **The port acts at the first crossing frame:** 29 of the stage-1 replay's 30 actions were on a frame that is not its millisecond's last. Research's timing uses the last frame, so live is, if anything, earlier.
+- **Exact checks on Tokyo's next replay** (fix 1 + fix 2, inputs at the decision and at D per row): the port at D against research's rows, and the inputs at the decision scored for action changes.
+- **Limits:** one Tokyo hour; c drawn independently of the burst; the Predict inputs and the limit stay at t + 3.5 ms's known frame on research's days.
+- **CPU:** 10.6 min. Days read: research's 11-20..26 (consumed by this line) and Tokyo's stage-1 hour.
+<!-- /AT_FRAME_20261128_CLAUDE -->
 <!-- DECISION_DELAY_20261128_CLAUDE -->
 ## 2026-11-28 — chase decision delay: stage 2b's "research look-ahead" withdrawn; the frozen line re-priced with Tokyo's measured decision delays (R1 +$210 (7/7 days, Sharpe 1.35) -> +$178 (7/7 days, Sharpe 1.22))
 

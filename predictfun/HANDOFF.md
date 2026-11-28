@@ -1,3 +1,18 @@
+<!-- AT_FRAME_20261128_CLAUDE -->
+## 2026-11-28 — live rule settled: decide at the tick frame's receipt + compute, on what has been received (USER; Tokyo `df8e942`, research's answer `fa49fe2`)
+
+See FINDINGS AT_FRAME (same date). It supersedes DECISION_DELAY's rule D (kept as a comparator only). The frozen line on this rule: R1 +$184, R5 +$124 (7/7 days each).
+
+Next:
+- **Tokyo:** the replay with fix 1 + fix 2 (per row: f, the decision instant, D, late-trade counts, the inputs at D).
+- **Research:** on it, (a) check the port at D against research's rows (expected equal); (b) score the inputs at the decision instant and count action changes.
+- **Then the 2-hour shadow.** Its per-decision lag shows whether compute grows in bursts.
+- **The pilot go** comes after these, and after the user's.
+
+Watch out:
+- Never ask the port to wait for data: the user decides on what has been received.
+- The pricing's compute c is the shadow's unconditional distribution.
+<!-- /AT_FRAME_20261128_CLAUDE -->
 <!-- DECISION_DELAY_20261128_CLAUDE -->
 ## 2026-11-28 — chase decision delay done; supersedes STAGE2B's research item
 

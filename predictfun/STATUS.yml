@@ -1,3 +1,16 @@
+at_frame_20261128_claude:
+  script_commit: eb7669f83
+  tokyo_record_commit: ed46042df
+  result_commit: ed46042df
+  pmmmrust: {tokyo_response: df8e942, research_answer: fa49fe2}
+  session: 1622c91e
+  days_read: [20261120, 20261121, 20261122, 20261123, 20261124, 20261125, 20261126]
+  live_rule: decide_at_frame_receipt_plus_compute_on_received_data
+  supersedes: decision_delay_20261128_claude.rule_D
+  r1_usd: {D: 178.04, at_frame: 183.73, at_frame_x2: 166.35}
+  r5_usd: {D: 122.71, at_frame: 123.85, at_frame_x2: 112.47}
+  information_actions_changed_on_tokyo_hour: {volumes_exact: 0, flows_pessimistic: 1}
+  next: [tokyo_replay_fix1_fix2, research_check_port_at_D_and_at_decision, shadow_2h]
 decision_delay_20261128_claude:
   script_commit: 8dd0efec6
   tokyo_record_commit: bfa1fa94a
