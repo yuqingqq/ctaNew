@@ -1,3 +1,14 @@
+<!-- STAGE3_GATE_20261128_CLAUDE -->
+## 2026-11-28 — research's GO for stage 4 (pmmmrust `14b25bf`); the pilot waits for the USER's caps and go
+
+See FINDINGS STAGE3_GATE (same date). Build f608e51 with the frozen export; any other build needs the replay check again.
+
+Next:
+- **USER:** set the caps and give the go. Terms: any date, the live wallet with pfmm live stopped.
+- **Tokyo:** stage 4 on the go.
+- **Research, on the pilot's streams:** decisions against its pipeline (the gate's convert / run / check); fills against the replay's fill rule; exit timing and value per share; the line re-priced on the pilot's acceptance; the added moves reported apart.
+<!-- /STAGE3_GATE_20261128_CLAUDE -->
+
 <!-- SHADOW_GATE_20261128_CLAUDE -->
 ## 2026-11-28 — research's stage-3 gate is ready: `chase_tokyo_shadow.py` (`65616fb7c`), rehearsed on the stage-1 hour (`f4f05f6da`; pmmmrust `0c96f62` tells Tokyo what it reads)
 

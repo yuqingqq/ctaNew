@@ -10796,3 +10796,4 @@
 2026-11-28T18:09:15Z tag=cts_sh_run rc=0 peak_rss_mib=598 wall_s=18.23 cpu_user_s=16.78 memavail_start_gib=23 disk_free_gib=340->340 slot=claude
 2026-11-28T18:09:41Z tag=cts_sh_check rc=0 peak_rss_mib=1284 wall_s=39.46 cpu_user_s=38.37 memavail_start_gib=23 disk_free_gib=340->340 slot=claude
 2026-11-28T18:10:28Z tag=cts_sh_reprice rc=0 peak_rss_mib=640 wall_s=5.28 cpu_user_s=4.06 memavail_start_gib=23 disk_free_gib=340->340 slot=claude
+2026-11-28T18:16:17Z tag=cts_selftest2 rc=0 peak_rss_mib=217 wall_s=1.01 cpu_user_s=0.83 memavail_start_gib=23 disk_free_gib=340->340 slot=claude

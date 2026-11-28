@@ -1,3 +1,14 @@
+stage3_gate_20261128_claude:
+  pmmmrust: {tokyo_shadow: 3d9756a, data: 1d263f8, research_go: 14b25bf}
+  result_commit: 980eea335
+  script_commits: [65616fb7c, 04983a7c3]
+  session: 1622c91e
+  gate: {G1: true, G2: true, G3: true, G4: true, G5: true}
+  go_for_stage4: true
+  r1_usd_live: 189.24
+  r5_usd_live: 126.94
+  churn_pooled: 0.1250
+  next: [user_caps_and_go, tokyo_stage4_pilot, research_pilot_check]
 pilot_terms_20261128_claude:
   pmmmrust: 3d13206
   session: 1622c91e

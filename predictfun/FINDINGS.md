@@ -1,3 +1,18 @@
+<!-- STAGE3_GATE_20261128_CLAUDE -->
+## 2026-11-28 — stage 3 gate on Tokyo's 2-hour live shadow: GO for stage 4. G1-G5 hold; R1 +$189 / R5 +$127 on the live delays (7/7 days); signed orders wait for the USER's caps and go
+
+USER: "coordinate both sessions, when shadow run is done, proceed next". Tokyo's shadow is pmmmrust `3d9756a`, data `1d263f8` (16:00-18:00Z, one continuous run, build f608e51); research's answer is pmmmrust `14b25bf`. The gate `chase_tokyo_shadow.py` (`65616fb7c`) was declared before the data and rehearsed (`f4f05f6da`); the result is `980eea335`.
+- **G1:** the port at D equals research on all 10,881 rows, all inputs exact, with 36 of 36 actions and D exact on all 243,422 rows.
+- **G2:** the frozen model and the re-derived line reproduce all 243,422 live and replay rows (41 actions).
+- **G3:** live equals replay. **G4:** no input differs without its cause, and the late counts recount exactly (the replay's columns).
+- **G5:** on the live decision delays by burst stratum, R1 +$189 (Sharpe 1.27) and R5 +$127, 7/7 days each, against the at-frame pricing's +$184 / +$124. Bootstrap (200 draws, 134 blocks): R1 +$182..+$196. Mean X: 2.8 ms live, against 3.7 assumed.
+- **Burst:** the lag shrinks in bursts (median 0.15 ms quietest, 0.07 ms busiest; Spearman -0.18). The tick frame's arrival grows (p90 2.7 -> 29.2 ms), and the price carries it.
+- **Frame line vs research:** 35 same tick, 1 a tick later, 5 added, 0 lost. All the added moves are provisional frames; one is a 2.5 us ask flicker that the millisecond's last frame undid, so the port's move has a tick research's lacks. Pooled with stage 1: 12.5% churn; stress R1 +$166 / R5 +$111.
+- **Fix (in-band):** the check JSON's `last_frame_of_its_ms` is a tick's last row. The script now records `ms_last_frame` from the tape (`04983a7c3`); the answer reads the tape.
+- **Limits:** three Tokyo hours (one Saturday); the added moves are unpriced.
+- **CPU:** 2.1 min. Days read: Tokyo's shadow (11-28 16:00-18:00Z); research's 11-20..26 stored exits (consumed by this line).
+<!-- /STAGE3_GATE_20261128_CLAUDE -->
+
 <!-- PILOT_TERMS_20261128_CLAUDE -->
 ## 2026-11-28 — USER's stage-4 terms for the chase pilot: any date, the live wallet, caps set by the USER (pmmmrust `3d13206`)
 
