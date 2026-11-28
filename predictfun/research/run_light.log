@@ -10792,3 +10792,7 @@
 2026-11-28T17:04:51Z tag=cts_reh_check rc=0 peak_rss_mib=826 wall_s=23.93 cpu_user_s=23.28 memavail_start_gib=23 disk_free_gib=341->341 slot=claude
 2026-11-28T17:05:29Z tag=cts_reh_reprice rc=0 peak_rss_mib=636 wall_s=5.51 cpu_user_s=3.90 memavail_start_gib=23 disk_free_gib=341->341 slot=claude
 2026-11-28T17:05:34Z tag=cts_reh_rehearsal rc=0 peak_rss_mib=228 wall_s=1.03 cpu_user_s=0.88 memavail_start_gib=23 disk_free_gib=341->341 slot=claude
+2026-11-28T18:08:07Z tag=cts_sh_convert rc=0 peak_rss_mib=949 wall_s=67.94 cpu_user_s=66.61 memavail_start_gib=23 disk_free_gib=340->340 slot=claude
+2026-11-28T18:09:15Z tag=cts_sh_run rc=0 peak_rss_mib=598 wall_s=18.23 cpu_user_s=16.78 memavail_start_gib=23 disk_free_gib=340->340 slot=claude
+2026-11-28T18:09:41Z tag=cts_sh_check rc=0 peak_rss_mib=1284 wall_s=39.46 cpu_user_s=38.37 memavail_start_gib=23 disk_free_gib=340->340 slot=claude
+2026-11-28T18:10:28Z tag=cts_sh_reprice rc=0 peak_rss_mib=640 wall_s=5.28 cpu_user_s=4.06 memavail_start_gib=23 disk_free_gib=340->340 slot=claude
