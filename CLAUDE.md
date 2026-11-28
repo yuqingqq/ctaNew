@@ -226,10 +226,19 @@ research (code, analyses, results) can be pushed here.
 - **Model info:** a frozen candidate's receipt or manifest, a fitted model or its parameters (coefficients, weights, trees, calibrators),
   a model export, a live rule's thresholds. Keep such files untracked here (list them in `.gitignore`) and commit them to pmmmrust.
   Freeze receipts follow this too: the builder code may stay here, the receipt goes to pmmmrust.
-- **The guard:** `.git/hooks/pre-push` (local to this clone, not versioned) refuses a push to this repo that adds model-info paths, JSON
-  with fitted parameters or credential-shaped lines. Fix the commit; do not bypass it.
+- **The guard:** `.git/hooks/pre-push` (local to this clone, not versioned) refuses a push to this repo that carries model info whose content
+  is not already public (model-info paths, JSON with fitted parameters, tree dumps, coefficient columns) or credential-shaped lines.
+  Content removed from the public history is no longer public, so pushing it back is refused. Fix the commit; do not bypass it.
 - **The 2026-11-28 rewrite:** the then-unpushed history (468 commits) was rewritten to drop 36 such files. Old -> new commit hashes are in
   `predictfun/commit_map_20261128.tsv`; the original history is the local-only ref `refs/backup/mm-research-pre-scrub-20261128`.
+- **The public rewrite (2026-11-28, USER's choice of scope):** 25 public branches were rewritten from 2026-11-06 and force-pushed, dropping
+  the Predict.fun live freezes (pm_ladder v1-v3 receipts, `params.json`, the guard model dumps, `forward_20261104_08`). Byte-identical copies
+  are in pmmmrust `docs/ctanew_freezes/predictfun/`, and the files stay on disk here, ignored.
+  - **Maps:** old -> new hashes are in `predictfun/commit_map_20261128_public.tsv`. For a hash cited before the first rewrite, apply
+    `commit_map_20261128.tsv` first.
+  - **Backups:** the old tips are the local-only refs `refs/backup/public-pre-rewrite-20261128/*` and `refs/backup/local-pre-rewrite-20261128/*`.
+  - **Left public by the USER's choice:** other model info pushed before 2026-11-24 (Predict.fun fit records, P-003 fits and gate
+    thresholds, the P-001 CTA models).
 
 ## What's in/out of scope
 

@@ -142,3 +142,13 @@ live/V4_MODEL_REGIME_EDGE_24H_AUDIT.csv
 /predictfun/reviews/take_reprice_20261125/winners_trigger.json
 /predictfun/freeze/take_exit_floor_v1/RECEIPT.md
 /predictfun/freeze/take_exit_floor_v1/manifest.json
+
+# Predict.fun freeze artifacts removed from the public history on 2026-11-28 (kept on disk; private copies in pmmmrust docs/ctanew_freezes/predictfun)
+/predictfun/freeze/pm_ladder_v1/RECEIPT.md
+/predictfun/freeze/pm_ladder_v1/guard_ask.txt
+/predictfun/freeze/pm_ladder_v1/guard_bid.txt
+/predictfun/freeze/pm_ladder_v1/params.json
+/predictfun/freeze/pm_ladder_v2/RECEIPT.md
+/predictfun/freeze/pm_ladder_v3/RECEIPT.md
+/predictfun/freeze/pm_ladder_v3/params.json
+/predictfun/freeze/forward_20261104_08/RECEIPT.md
