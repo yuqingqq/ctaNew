@@ -1,3 +1,13 @@
+tokyo_live_pilot_request_20261128_claude:
+  pmmmrust_commits: {reading: 5f3688f, request: 8cd543e}
+  pushed_to: feature/pfmm-passive-urgency-100
+  session: 1622c91e
+  days_read: []
+  reading: pmmmrust/docs/receipts/20261128_tokyo_bigmove_acceptance_request/research/README.md
+  request: pmmmrust/docs/receipts/20261128_tokyo_chase_live_pilot_request/README.md
+  stages: [tokyo_record_1h, research_export, tokyo_port_shadow_2h, pilot_signed_after_research_go]
+  pilot_caps: {buys: 200, usdt_per_buy: 3.0, hours: 12, loss_stop_usdt: 20, positions: 2}
+  next: research_stage2_export
 tokyo_bigmove_check_20261128_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/tokyo_bigmove_check.json
   repricing: predictfun/reviews/take_reprice_20261125/chase_forward_bigmove.json

@@ -1,3 +1,17 @@
+<!-- TOKYO_LIVE_PILOT_REQUEST_20261128_CLAUDE -->
+## 2026-11-28 — research's reading of the big-move answer and a four-stage live pilot request for the frozen chase line committed to pmmmrust (5f3688f, 8cd543e, pushed)
+
+USER: "Can you commit your read on the results, then commit the request to proceed live test right?" Both on pmmmrust `feature/pfmm-passive-urgency-100`.
+- **The reading:** `docs/receipts/20261128_tokyo_bigmove_acceptance_request/research/README.md` (5f3688f). It covers the check (TOKYO_BIGMOVE_CHECK, same date: nothing to correct), the fill rule, the delay following the burst after the send, the counting note, and the re-pricing (+$134 to +$210, 7/7 in every reading).
+- **The request:** `docs/receipts/20261128_tokyo_chase_live_pilot_request/README.md` (8cd543e). Signed orders only in stage 4, after research's go.
+  1. Tokyo records one UTC hour of `btcusdt@bookTicker` / `@trade` / `@depth20@100ms` and every BTC five-minute market's book, with no orders.
+  2. Research exports the frozen MOVE trees (JSON, scored fixture rows), the 66 inputs and decision-point rules with its code at a pinned commit, and fixtures computed from stage 1's recording.
+  3. Tokyo ports the rule to pfmm, reproduces the fixtures and runs a 2-hour shadow; research checks it and commits a go or the mismatches.
+  4. The pilot: the frozen line at about 2 USDT per BUY.
+- **Pilot caps:** 200 BUYs, 3 USDT per BUY, 12 h, one BUY in flight, at most 2 positions, stop at a 20 USDT net loss. Outside December 1–5 UTC (another study's reserved block) unless the USER decides otherwise.
+- **CPU:** none (documents only).
+- **Next:** research's stage 2 export. Fixtures need Tokyo's stage 1 data.
+<!-- /TOKYO_LIVE_PILOT_REQUEST_20261128_CLAUDE -->
 <!-- TOKYO_BIGMOVE_CHECK_20261128_CLAUDE -->
 ## 2026-11-28 — Tokyo's big-move answer checked from its raw records (99 values, 0 differ): BUYs sent into Binance moves of at least $3.5 in 100 ms are accepted a median 71.2 ms after sending (p90 150.4, max 262.9); the frozen chase line re-priced at these delays: +$210 over 7 days (7/7 days > 0), +$134 to +$146 (7/7) when each entry takes the delays measured after a Binance burst like its own
 

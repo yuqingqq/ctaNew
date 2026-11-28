@@ -1,3 +1,18 @@
+<!-- TOKYO_LIVE_PILOT_REQUEST_20261128_CLAUDE -->
+## 2026-11-28 — live pilot request for the frozen chase line committed to pmmmrust (8cd543e, pushed), with research's reading of the big-move answer (5f3688f)
+
+See FINDINGS TOKYO_LIVE_PILOT_REQUEST (same date). Supersedes TOKYO_BIGMOVE_CHECK's next step.
+
+Next, research (stage 2):
+- the MOVE trees from `OUT/chase_forward/refit/models.pkl` as JSON, with fixture rows scored by sklearn;
+- `inputs.md` for the 66 inputs, with the reference code copied at a pinned ctaNew commit;
+- once Tokyo's stage 1 data lands, convert it to the `data/mm_hf/raw` layout and run the frozen points / inputs / score path on it for fixtures.
+
+Watch out:
+- the frozen builder's day guards refuse undeclared days, so a Tokyo-data mode needs a declared patch and parity on a consumed day first;
+- Tokyo's recording is Tokyo's data, not this host's forward days;
+- signed orders only after research's written go.
+<!-- /TOKYO_LIVE_PILOT_REQUEST_20261128_CLAUDE -->
 <!-- TOKYO_BIGMOVE_CHECK_20261128_CLAUDE -->
 ## 2026-11-28 — Tokyo's big-move answer checked (99 values, 0 differ); the chase line re-priced at the big-move delays: +$210 (7/7), +$134 to +$146 (7/7) matched on the burst after entry
 
