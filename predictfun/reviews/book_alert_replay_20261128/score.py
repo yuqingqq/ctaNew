@@ -104,6 +104,12 @@ def main():
         text+=['',f'Baseline fills with enough cancel lead had a net one-second markout of {timing["eligible_alert_mark"]:+.3f} cents per valued share. Remaining baseline fills averaged {timing["remaining_mark"]:+.3f}. The timely cohort contained {100*timing["gross_adverse_share"]:.1f}% of baseline gross adverse dollars and {100*timing["gross_favorable_share"]:.1f}% of gross favorable dollars.']
     text+=['','The original grid and event controls reproduced their archived market panels. Earlier raw feature vectors matched the source vectors in both directions, and truncating future updates preserved earlier features. Removing one dollar from a lost-fill subtotal failed the reconciliation. Live execution, market impact and unobserved markets remain outside this replay.',
            '', '[Protocol](protocol.md) · [Paired markets](paired_markets.csv) · [Computed metrics](results.json)']
+    text[-2:-2]=['','## Daily source of the difference','',
+                 '| UTC date | Change in completed FIFO USD | Change in residual USD | Current / alert +1s cents per share |',
+                 '|---|---:|---:|---:|']
+    for day,r in by.items():
+        a,b=r['current'],r['alert']
+        text.insert(-2,f'| {day} | {b["turnover"]-a["turnover"]:+,.2f} | {b["residual"]-a["residual"]:+,.2f} | {a["mark_1s"]:.3f} / {b["mark_1s"]:.3f} |')
     (HERE/'report.md').write_text('\n'.join(text)+'\n')
     print('\n'.join(text))
 if __name__=='__main__':
