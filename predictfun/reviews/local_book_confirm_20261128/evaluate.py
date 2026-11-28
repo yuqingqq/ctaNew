@@ -1,11 +1,10 @@
 """Verify saved market-level accounting and grade the one declared development candidate."""
 import json
-import sys
-from pathlib import Path
+from runpy import run_path
 import numpy as np
 import pandas as pd
 from run import HERE,OLD,DATA,DAYS,KEYS,load_day,metrics,digest,HASHES
-from score import validate
+validate=run_path(str(OLD/'score.py'))['validate']
 
 def main():
     path=OLD/'paired_markets.csv'
@@ -23,7 +22,6 @@ def main():
             pass
         else:
             raise AssertionError('corrupted adverse subtotal accepted')
-        cols=KEYS+('mark',)
         sub=blanket.loc[blanket.day.eq(int(day))].copy()
         for key in KEYS:
             sub['blanket_'+key]=sub['alert_'+key]
