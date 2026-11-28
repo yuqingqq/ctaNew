@@ -1,3 +1,35 @@
+<!-- CHASE_FORWARD_LATENCY_20261128_CLAUDE -->
+## 2026-11-28 — the chase forward candidate at Tokyo's measured order latency: + 36 ms (an order live 58 ms after sending, median, against the replay's 22) +$265 over 7 days, 7/7 days > 0; + 50 ms +$208, 7/7; the 11-27 caveat that compared the replay with this research server's ~72 ms is withdrawn (live runs from Tokyo)
+
+[latency](reviews/take_reprice_20261125/chase_forward_latency.json) (script `chase_forward_latency.py`, committed before use at 1487155be; `chase_forward.exits_day` unchanged; the + 25 ms re-run equals the stored exits exactly on every day (39 columns, every row) and the stored result's 50 cells at + 25 ms). USER: "Host you mean this server? We will run live in Tokyo"; "We can rerun the test again". **Correction to CHASE_FORWARD's limits:** they set the replay's ~24 ms against this research server's ~72 ms. This server is in us-east-1; Binance and Predict are in AWS Tokyo, and live runs from Tokyo. The replays already run on the Tokyo clock (`research/pf_clock_rl.py`, from the exec port's Tokyo probe of 11-02): Binance known 1.5 ms after its event time, Predict's book at Tokyo's 53.1 ms median after its stamp, our order at Predict 22 ms after sending (half the 44 ms create round trip). The probe's corrected stamps (11-03) have an order live 58 ms after sending (median; at least 46) and a cancel in effect after 37 ms (at least 25): the order path is + 24 to + 36 ms slower than the replay's. A sensitivity of the frozen candidate on the same forward days (re-read by this line): nothing chosen, no PASS rule, no null at these latencies (the PASS rule's null was at + 0 ms).
+
+| primary cell (move model, top 10%, + 3c, take at 1 s calm), latency added to every message to and from Predict | total over 7 days | day-equivalent Sharpe | days > 0 | max drawdown | filled / actions |
+|---|---:|---:|---:|---:|---:|
+| + 0 ms | +$738 | +2.67 | 7/7 | $13 | 332 / 2,754 |
+| + 10 ms | +$540 | +2.12 | 7/7 | $13 | 276 / 2,754 |
+| + 25 ms | +$344 | +1.49 | 7/7 | $11 | 223 / 2,754 |
+| + 36 ms (Tokyo median order path) | +$265 | +1.53 | 7/7 | $18 | 197 / 2,754 |
+| + 50 ms | +$208 | +1.29 | 7/7 | $19 | 172 / 2,754 |
+
+| entry (conservative book): total, Sharpe, days > 0 at + 36 / + 50 ms | take at 1 s calm | maker exit | sell after 1 s | keep favourites |
+|---|---:|---:|---:|---:|
+| move model, top 10%, + 3c (+ 36 ms) | +$265, +1.53, 7/7 | +$275, +1.27, 7/7 | +$223, +1.78, 7/7 | +$159, +0.36, 5/7 |
+|  (+ 50 ms) | +$208, +1.29, 7/7 | +$219, +1.07, 7/7 | +$171, +1.51, 7/7 | +$168, +0.39, 5/7 |
+| taken-back value model, top 10%, + 3c (+ 36 ms) | -$203, -0.60, 3/7 | -$200, -0.40, 4/7 | -$320, -1.49, 2/7 | +$43, +0.03, 3/7 |
+|  (+ 50 ms) | -$351, -1.05, 0/7 | -$353, -0.74, 2/7 | -$456, -2.21, 0/7 | -$151, -0.10, 2/7 |
+| fill x net, top 1%, + 3c (+ 36 ms) | +$79, +0.50, 6/7 | +$223, +0.99, 6/7 | +$75, +0.64, 5/7 | -$182, -0.25, 3/7 |
+|  (+ 50 ms) | +$28, +0.20, 5/7 | +$166, +0.82, 6/7 | +$32, +0.33, 4/7 | -$197, -0.28, 3/7 |
+| fill x net, top 1%, + 10c (+ 36 ms) | +$90, +0.40, 5/7 | +$316, +0.97, 5/7 | +$87, +0.52, 4/7 | +$0, +0.00, 4/7 |
+|  (+ 50 ms) | +$7, +0.03, 3/7 | +$224, +0.72, 5/7 | +$12, +0.08, 3/7 | -$78, -0.07, 4/7 |
+| control: random move onsets, + 3c (+ 36 ms) | -$5,938, -5.34, 0/7 | -$5,670, -4.35, 0/7 | -$6,830, -14.70, 0/7 | -$2,397, -0.62, 3/7 |
+|  (+ 50 ms) | -$5,948, -5.36, 0/7 | -$5,671, -4.36, 0/7 | -$6,814, -14.65, 0/7 | -$2,320, -0.60, 3/7 |
+
+- **Across entries at + 36 / + 50 ms:** taking at the 1 s calm is positive in 3 / 3 of 4 cells; the maker exit earns more than it in 4 / 3 of 4; the control loses under every exit at both latencies.
+- **Fill notice:** a 100 ms wallet notice (latency test L2c) instead of the replay's 22 ms + L would move the primary's 1 s calm on 0 of 197 / 0 of 172 filled entries at + 36 / + 50 ms.
+- **Statuses:** actions in markets without a path 0; Binance bookTicker rows off the 0.1 price grid dropped at each read: 11-21: 6 (the forward run's unique rows; counted per read 11-21 12: the exits and the notice check each read the day's mids). CPU 11 min (the rehearsal included).
+- **Limits:** one L on every message: at + 36 ms it overstates the measured cancel (58 against 37 ms) and understates the wallet fill notice; the primary exit sends no cancel. The taker path itself is unmeasured: the probe timed post-only orders, and when Predict's 150 ms hold starts for a take is not known. The forward days were read on 11-27; the same replay fill rules as CHASE_FORWARD.
+- **Next:** Tokyo request `pmmmrust/docs/receipts/20261128_tokyo_taker_timing_request/README.md` (cd97f9a on `feature/pfmm-passive-urgency-100`): a few minimum-size marketable orders, timed leg by leg (send to acceptance, the hold, match to notice), with their fills compared with the replay on research's own tape.
+<!-- /CHASE_FORWARD_LATENCY_20261128_CLAUDE -->
 <!-- CHASE_FORWARD_20261127_CLAUDE -->
 ## 2026-11-27 — FORWARD (untouched 11-20 .. 11-26, frozen a50692dfc, receipt v5 9588f318f): the chase line's primary cell (move model, top 10%, + 3c, taken at the 1 s calm) PASS: +$738 over 7 days (7/7 days > 0, 332 filled), against a null 95th percentile of -$2,037
 

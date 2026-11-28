@@ -1,3 +1,14 @@
+chase_forward_latency_20261128_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/chase_forward_latency.json
+  script_commit: 1487155be
+  result_commit: 05b141214
+  session: 1622c91e
+  days_read: [20261120, 20261121, 20261122, 20261123, 20261124, 20261125, 20261126]
+  latencies_ms: [25, 36, 50]
+  primary_total_usd: {L36: 265.35, L50: 208.39}
+  primary_days_positive: {L36: 7, L50: 7}
+  tokyo_request: pmmmrust/docs/receipts/20261128_tokyo_taker_timing_request/README.md
+  tokyo_request_commit: cd97f9a
 chase_forward_20261127_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/chase_forward_result.json
   receipt: predictfun/freeze/chase_forward_1120_1126/RECEIPT_v5.md

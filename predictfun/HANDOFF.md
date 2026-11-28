@@ -1,3 +1,8 @@
+<!-- CHASE_FORWARD_LATENCY_20261128_CLAUDE -->
+## 2026-11-28 — chase forward candidate at Tokyo's measured order latency: + 36 ms +$265 (7/7 days > 0), + 50 ms +$208 (7/7); Tokyo taker-timing request pushed (pmmmrust cd97f9a on feature/pfmm-passive-urgency-100)
+
+See FINDINGS CHASE_FORWARD_LATENCY (same date). Supersedes CHASE_FORWARD's watch-out: this research server (us-east-1, ~72 ms) is not the live latency; live runs from Tokyo, and the replay is already on the Tokyo clock except the order path (22 ms in the replay against 58 ms measured, median). Next: Tokyo's answer to `pmmmrust/docs/receipts/20261128_tokyo_taker_timing_request/README.md` (cd97f9a), then re-run the frozen candidate at the measured taker path.
+<!-- /CHASE_FORWARD_LATENCY_20261128_CLAUDE -->
 <!-- CHASE_FORWARD_20261127_CLAUDE -->
 ## 2026-11-27 — FORWARD 11-20 .. 11-26 (frozen a50692dfc, receipt v5 9588f318f): primary (move model, top 10%, + 3c, take at the 1 s calm) PASS: +$738 over 7 days, 7/7 days > 0, null p95 -$2,037
 
