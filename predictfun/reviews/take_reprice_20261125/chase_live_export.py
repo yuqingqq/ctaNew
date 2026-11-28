@@ -265,8 +265,8 @@ def selftest():
         no = subprocess.run([sys.executable, '-I', str(EVAL), str(Path(td) / 'm.json'), str(Path(td) / 'f.csv.gz')], capture_output=True, text=True)
         C.require(no.returncode == 1, 'eval_move.py accepted a corrupted fixture')
     # the credential scan flags a planted key and passes plain code
-    C.require(secrets({'x': 'k = 1\n'}) == [] and len(secrets({'x': '-----BEGIN RSA PRIVATE KEY-----'})) == 1
-              and len(secrets({'x': 'api_key = "abcdefghijklmnop"'})) == 1, 'the credential scan')
+    pem, kv = '-----BEGIN RSA ' + 'PRIVATE KEY-----', 'api_' + 'key = "abcdefghijklmnop"'     # built here so this file holds neither
+    C.require(secrets({'x': 'k = 1\n'}) == [] and len(secrets({'x': pem})) == 1 and len(secrets({'x': kv})) == 1, 'the credential scan')
     # write-once
     global RESULT
     keep = RESULT
