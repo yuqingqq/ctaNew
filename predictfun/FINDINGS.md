@@ -1,3 +1,22 @@
+<!-- TOKYO_BIGMOVE_REQUEST_20261128_CLAUDE -->
+## 2026-11-28 — the chase line enters after a median $7.0 Binance move in 100 ms; the Tokyo probe's after-move BUYs went out after $0.4, so the probe timed a move's first tick; research's reading and a big-move request committed to pmmmrust (21ae192, pushed)
+
+[move sizes](reviews/take_reprice_20261125/chase_move_size.json) (script `chase_move_size.py`, committed before use at 04b32234c; result 1ac2e0529). USER: "Ok, can you commit your request/result to pmmm Tokyo repo". The frozen forward actions (11-20..26, already read by this line; EARLY scope) and the probe's BUYs (Tokyo's own Binance stream), by Binance event time.
+
+| entries | move in our direction over the last 100 ms, USD (p25 / **p50** / p75) | mid changes in the last 100 ms (p50) | mid changes in the next 200 ms (p50) | move in the next 200 ms (p50) | n |
+|---|---:|---:|---:|---:|---:|
+| the line (MOVE_top10) | 3.5 / **7.0** / 11.3 | 7 | 6.0 | 2.9 | 2,754 |
+| random move onsets (the control) | 0.1 / **0.5** / 1.4 | 1 | 4.0 | 2.9 | 8,133 |
+| the probe's after-move BUYs | 0.1 / **0.4** / 0.9 | 1 | 7.5 | 4.2 | 10 |
+
+- **The probe sampled move onsets, as the control does, not the line's entries.** 95% of the line's entries came after a larger move than the probe's median.
+- **The burst after the send is alike** (median 6.0 vs 7.5 changes in the next 200 ms). That burst is what tracked the probe's acceptance delay: Spearman 0.52, against -0.67 for the move before. Which of the two governs acceptance at the line's entries is open.
+- **Committed to pmmmrust** `feature/pfmm-passive-urgency-100` (`21ae192`, pushed):
+  - research's reading of Tokyo's answer, `docs/receipts/20261128_tokyo_taker_timing_request/research/README.md`: the check, its two corrections and the measured-execution replay;
+  - the next request, `docs/receipts/20261128_tokyo_bigmove_acceptance_request/README.md`: 20 minimum-size MARKET BUYs, each triggered by a Binance move of at least $3.5 in 100 ms (the line's 25th percentile), with the first probe's exit, records and caps (checks now counted inside them).
+- **CPU:** 4.3 min.
+- **Next:** Tokyo's answer, then a re-run of the frozen line with the new acceptance delays, weighted to the line's move sizes.
+<!-- /TOKYO_BIGMOVE_REQUEST_20261128_CLAUDE -->
 <!-- CHASE_FORWARD_TOKYO_20261128_CLAUDE -->
 ## 2026-11-28 — the frozen chase candidate under Tokyo's measured taker execution: expected +$190 over 7 days, 7/7 days > 0 (the replay's +$738); the after-move entry delay alone +$190, the settlement-gated exit alone +$745
 

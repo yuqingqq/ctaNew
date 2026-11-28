@@ -1,3 +1,8 @@
+<!-- TOKYO_BIGMOVE_REQUEST_20261128_CLAUDE -->
+## 2026-11-28 — big-move acceptance request committed to pmmmrust (21ae192, pushed) with research's reading of the first probe
+
+See FINDINGS TOKYO_BIGMOVE_REQUEST (same date). The line enters after a median $7.0 Binance move in 100 ms; the first probe's after-move BUYs went out after $0.4. The request triggers at $3.5 in 100 ms. Next: Tokyo's answer under `docs/receipts/20261128_tokyo_bigmove_acceptance_request/tokyo/`, then a re-run of the frozen line with the new delays (`chase_forward_tokyo.py`'s method, new input). Watch out: count checks inside the caps.
+<!-- /TOKYO_BIGMOVE_REQUEST_20261128_CLAUDE -->
 <!-- CHASE_FORWARD_TOKYO_20261128_CLAUDE -->
 ## 2026-11-28 — chase candidate under Tokyo's measured execution: expected +$190 over 7 days, 7/7 days > 0 (replay +$738)
 
