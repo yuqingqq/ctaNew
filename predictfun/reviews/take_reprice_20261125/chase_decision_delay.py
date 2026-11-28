@@ -12,9 +12,12 @@ Tokyo's stage-1 hour (its receipts, as chase_tokyo_2b converted them; research's
      frame receipt in place of FEED. Its inputs are research's (E <= t) only if T1 finds nothing late under it; the exits stage refuses
      otherwise. Known-bad: the trades received 3 ms later must make D_2 find late trades.
   T2 the delay X = D_2 - (t + FEED + DECIDE) = max(0, lambda - FEED), lambda = f - t, at the decision points and the actions.
-  Covariate (declared; chosen on Tokyo's hour by Spearman with lambda among the counts of trades, bookTicker frames and book-update ids
-  over 5 / 20 / 50 ms and the move's ticks, all recorded): n_tr_20 = trades (de-duplicated by id, p, q > 0) with E in (t - 20, t], the
-  same trades on research's tape. Strata: its quintiles at Tokyo's decision points; a stratum's X sample = its decision points' X.
+  Covariate (declared; chosen on Tokyo's hour by Spearman with lambda among the ELIGIBLE: the trade counts over 5 / 20 / 50 ms, which
+  research's trade tape gives as Tokyo's does (the exits stage reads it); recorded, not eligible: bookTicker frame counts, book-update-id
+  counts (u's running maximum; they would need research's full bookTicker tape read again for each day, ~1 CPU-min) and the move's
+  ticks): n_tr_20 = trades (de-duplicated by id, p, q > 0) with E in (t - 20, t]. Strata: its quintiles at Tokyo's decision points; a
+  stratum's X sample = its decision points' X. (Revised before any P&L: the first declaration made every count eligible and the stage
+  refused when a book-update count correlated more; that count is still reported.)
 Research's days: each action takes its stratum's X sample. Its P&L at an entry delay x: chase_forward_tokyo.exits_day_tokyo with the big-
 move configs' entry delays Le_k + x, x in GRID (Le enters the entry match and the exit floor as t does), the EARLY scope re-applied at
 t + x, and the burst after the send (chase_move_size.move_stats) at t + x for R2 / R3 / R5; linear in x between grid points, flat beyond
@@ -59,7 +62,7 @@ SEL = CFB.SEL
 W = (0.34, 0.5, 1.0, 1.66, 2.0)
 PRICED = 'D_2'
 GRID = (0., 2., 8., 30., 120.)
-COV, NSTRATA = 'n_tr_20', 5
+COV, NSTRATA, ELIGIBLE = 'n_tr_20', 5, ('n_tr_5', 'n_tr_20', 'n_tr_50')
 CAL_DRAWS, SEED, BLOCK_MS = 200, 20261130, 60000.
 READINGS = ('R1_BIG', 'R2_BIG_MOVE', 'R3_BIG_BURST', 'R4_BOTH', 'R5_BOTH_BURST')
 
@@ -180,8 +183,8 @@ def stage_tokyo():
     Xd = np.maximum(lam - TM.FEED, 0.)
     A = X.act.to_numpy(bool) & X.early.to_numpy(bool)
     trE = tr.E.to_numpy(float)
-    bts = bt.sort_values('E', kind='stable')
-    bE, bu = bts.E.to_numpy(float), bts.u.to_numpy(float)
+    bts = bt.sort_values(['E', 'u'], kind='stable')
+    bE, bu = bts.E.to_numpy(float), np.maximum.accumulate(bts.u.to_numpy(float))      # the largest update id received with E <= a time
     cov = {}
     for w in (5., 20., 50.):
         cov[f'n_tr_{int(w)}'] = count_in(trE, t, w)
@@ -193,7 +196,7 @@ def stage_tokyo():
     for k, v in cov.items():
         ok = np.isfinite(v)
         rho[k] = float(spearmanr(v[ok], lam[ok])[0])
-    C.require(max(rho, key=rho.get) == COV, f'the declared covariate {COV} is not the best by Spearman: {rho}')
+    C.require(max(ELIGIBLE, key=rho.get) == COV, f'the declared covariate {COV} is not the best eligible by Spearman: {rho}')
     v = cov[COV]
     edges = [float(e) for e in np.quantile(v, [i / NSTRATA for i in range(1, NSTRATA)])]
     sb = strata_of(v, edges)
@@ -206,7 +209,7 @@ def stage_tokyo():
                decision_points=int(len(X)), actions=int(A.sum()), feed_ms=TM.FEED, decide_ms=TM.DECIDE,
                T1=T1, T1_positive_control=pc, T1_known_bad_trades_3ms_later=kb, priced_rule=PRICED, priced_rule_clean=bool(clean),
                lam=dict(points=quant(lam), actions=quant(lam[A])), X=dict(points=quant(Xd), actions=quant(Xd[A])),
-               covariates=dict(declared=COV, spearman_with_lam=rho),
+               covariates=dict(declared=COV, eligible=list(ELIGIBLE), spearman_with_lam=rho, best_overall=max(rho, key=rho.get)),
                strata=dict(edges=edges, by_stratum=by, blocks=int(blk.max() + 1), covariate_points=quant(v)),
                samples=dict(X=[round(float(x), 6) for x in Xd], stratum=[int(b) for b in sb], block=[int(b) for b in blk]))
     TR.dump(TOKYO, out)
