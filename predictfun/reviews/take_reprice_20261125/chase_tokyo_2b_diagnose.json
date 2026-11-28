@@ -1,0 +1,48 @@
+{
+  "its_100": {
+    "rows": 6370,
+    "differ": 1799,
+    "tokyo_smaller": 1799,
+    "tokyo_larger": 0,
+    "differ_explained_by_late_same_ms_trades": 1798,
+    "research_volume_received_after_its_decision_time": {
+      "rows": 1168,
+      "share_of_research_volume": 0.08115739735936774
+    }
+  },
+  "spread_60s": {
+    "nan_one_side": 427,
+    "research_nan_tokyo_value": 427,
+    "tokyo_nan_research_value": 0,
+    "seconds_since_window_start_where_research_nan": {
+      "p10": 1.7374,
+      "p50": 5.085,
+      "p90": 8.9798,
+      "max": 9.931
+    },
+    "value_differ": 1419
+  },
+  "book_updates_60s": {
+    "nan_one_side": 427,
+    "research_nan_tokyo_value": 427,
+    "tokyo_nan_research_value": 0,
+    "seconds_since_window_start_where_research_nan": {
+      "p10": 1.7374,
+      "p50": 5.085,
+      "p90": 8.9798,
+      "max": 9.931
+    },
+    "value_differ": 1456
+  },
+  "pf_age_ms": {
+    "differ": 100,
+    "research_older": 98,
+    "research_newer": 2,
+    "research_minus_tokyo_ms": {
+      "p10": 31.8,
+      "p50": 50.0,
+      "p90": 67.20000000000002
+    }
+  },
+  "asof": "2026-11-28T12:03:50.993919+00:00"
+}
