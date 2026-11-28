@@ -1,3 +1,19 @@
+<!-- DECISION_DELAY_20261128_CLAUDE -->
+## 2026-11-28 — chase decision delay done; supersedes STAGE2B's research item
+
+See FINDINGS DECISION_DELAY (same date).
+- **No input re-pricing is needed.** A port deciding at max(t + 3.5, frame + 2 ms) has all of research's inputs.
+- **The decision delay** moves R1 +$210 -> +$178 (matched), +$161 (×2).
+
+Next:
+- **Tokyo:** fixes 1 (as amended by addendum 1 `168acaa`) and 2; replay the stage-1 hour; research reruns `chase_tokyo_2b.py compare` in a new output dir.
+- **Then the 2-hour shadow.** Its per-decision f / D measure the delay live; compare them with `chase_decision_delay_tokyo.json`'s X by stratum.
+- **The pilot go** waits for both.
+
+Watch out:
+- Never infer Tokyo's receipt times from research's (collector backlog: p99 ~0.9 s).
+- At t + 3.5 ms even depth frames are late in bursts.
+<!-- /DECISION_DELAY_20261128_CLAUDE -->
 <!-- STAGE2B_20261128_CLAUDE -->
 ## 2026-11-28 — chase pilot stage 2b done; research's response in pmmmrust `ffc2101`
 

@@ -1,3 +1,15 @@
+decision_delay_20261128_claude:
+  script_commit: 8dd0efec6
+  tokyo_record_commit: bfa1fa94a
+  result_commit: 05ed245b8
+  pmmmrust: {request: 7d44d62, addendum_1: 168acaa, stage2b_correction: c5a2be2}
+  session: 1622c91e
+  days_read: [20261120, 20261121, 20261122, 20261123, 20261124, 20261125, 20261126]
+  supersedes: stage2b_20261128_claude.research_lookahead_its_volume_share
+  information_late_at_frame_plus_2ms: 0
+  r1_usd: {x0: 210.07, matched: 178.04, matched_x2: 161.16}
+  r5_usd: {x0: 133.67, matched: 122.71, matched_x2: 111.31}
+  next: [tokyo_fixes_with_addendum_1_and_replay, research_rerun_2b_compare, shadow_2h]
 stage2b_20261128_claude:
   script_commit: 8102b7fea
   result_commit: 9308d85ef

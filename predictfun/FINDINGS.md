@@ -1,3 +1,25 @@
+<!-- DECISION_DELAY_20261128_CLAUDE -->
+## 2026-11-28 — chase decision delay: stage 2b's "research look-ahead" withdrawn; the frozen line re-priced with Tokyo's measured decision delays (R1 +$210 (7/7 days, Sharpe 1.35) -> +$178 (7/7 days, Sharpe 1.22))
+
+USER: "Yes do the request commit then do the local work". The request is pmmmrust `7d44d62`, with addendum 1 `168acaa`. The script `chase_decision_delay.py` was committed before use (`ec8fd8b7b`; the covariate rule `8dd0efec6`, revised before any P&L). The Tokyo record is `bfa1fa94a`, the result `05ed245b8`. The stage-2b correction is pmmmrust `c5a2be2`.
+- **Supersedes STAGE2B's "research's own finding".** The 8.1% of its-way volume received after t + 3.5 ms is in bursts where the tick's bookTicker frame is itself late: its receipt minus E is p50 1.78, p90 10.2, p99 64.4 ms at the 6,370 decision points. Those trades arrive with the frame.
+- **Information is complete under the right rule.** At D = max(t + 3.5, frame + 2 ms), Tokyo's hour shows 0 late trades (300 ms, both sides) and 0 late depth frames (1 s); the same holds at frame + 1.66 ms. At frame + 0.34 ms, 454 trades are late in 47 rows; at t + 3.5 ms, 180 depth frames are late too. The positive control reproduces 2b; the known-bad tape (trades 3 ms later) fires.
+- **The frozen inputs need no re-pricing.** What live loses is the decision instant: X = max(0, frame receipt − E − 1.5 ms) has mean 3.9 ms at the decision points (p90 8.7, p99 63) and 1.6 ms at Tokyo's 28 actions.
+- **Re-priced.**
+  - **Method:** the 2,754 EARLY actions of 11-20..26 under the big-move execution. Each action's entry and exit floor are delayed by Tokyo's X for the same burst: quintiles of trades in the 20 ms before the tick, the best trade-count covariate, Spearman 0.43.
+  - **Evaluation:** exits at delays of 0 / 2 / 8 / 30 / 120 ms, linear in between. The x = 0 parity holds exactly, on 2,166 columns a day and on every reading.
+  - **R1:** +$210 (7/7 days, Sharpe 1.35) -> matched +$178 (7/7 days, Sharpe 1.22), ×2 +$161 (7/7 days, Sharpe 1.17).
+  - **R5:** +$134 (7/7 days, Sharpe 1.07) -> matched +$123 (7/7 days, Sharpe 1.01), ×2 +$111 (7/7 days, Sharpe 0.97).
+  - **Calibration:** 200 block-bootstrap draws of Tokyo's hour give R1 +$169..+$190.
+  - **Expected delay per action:** 5.1 ms.
+- **Research's days are burstier than Tokyo's Saturday hour:** 968 of 2,754 actions are in Tokyo's top quintile, where 20% are expected. So ×2 is the cautious reading.
+- **Research's own Binance receipts cannot stand in for Tokyo's.** On a consumed hour, research's bookTicker latency is p10 74.8, p50 82.3, p99 922 ms: its collector's backlog, which swamps 1-5 ms effects.
+- **Limits:**
+  - one Tokyo hour;
+  - the Predict inputs and the limit stay at t + 3.5 ms's known frame;
+  - the action set is the frozen run's, which is correct since the inputs do not change.
+- **CPU:** 11.6 min logged, plus about 2 min of exploration run outside run_light. Days read: research's 11-20..26 (consumed by this line) and Tokyo's stage-1 hour.
+<!-- /DECISION_DELAY_20261128_CLAUDE -->
 <!-- STAGE2B_20261128_CLAUDE -->
 ## 2026-11-28 — chase pilot stage 2b: research's frozen pipeline on Tokyo's stage-1 hour against Tokyo's port. Decision points match (6,342 matched, 0 research-only); the trade-volume gaps are same-millisecond trades the port decides before (1,798 of 1,799); research's own inputs hold 8.1% of its-way volume received after research's decision time
 
