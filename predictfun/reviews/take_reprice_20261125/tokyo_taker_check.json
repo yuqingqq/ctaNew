@@ -1,0 +1,2432 @@
+{
+ "asof": "2026-11-28T05:23:18+00:00",
+ "receipt_commit": "f3b3db4e2fdd80db0b1867784c13039fab5eedb8",
+ "data_commit": "1185f658ac9d6afa0d79a5a19546274524991fb5",
+ "request_commit": "cd97f9a54aa44caf6641ce0e79e096c68d88bfaa",
+ "parity": {
+  "values_compared": 187,
+  "mismatched": 0,
+  "orders": 37
+ },
+ "pooled": {
+  "BUY_after_move": {
+   "create_rtt_ms": {
+    "n": 10,
+    "median": 114.7013085,
+    "p90": 230.637448,
+    "max": 357.724959,
+    "min": 47.151846
+   },
+   "accept_wallet_after_send_ms": {
+    "n": 10,
+    "median": 85.9481201171875,
+    "p90": 193.569580078125,
+    "max": 196.349365234375,
+    "min": 28.48681640625
+   },
+   "accept_wallet_to_match_ms": {
+    "n": 2,
+    "median": 151.0,
+    "p90": 151.0,
+    "max": 151.0,
+    "min": 151.0
+   },
+   "accept_to_not_accepted_ms": {
+    "n": 8,
+    "median": 151.0,
+    "p90": 151.0,
+    "max": 175.0,
+    "min": 150.0
+   },
+   "send_to_match_ms": {
+    "n": 2,
+    "median": 190.45556640625,
+    "p90": 201.42431640625,
+    "max": 201.42431640625,
+    "min": 179.48681640625
+   },
+   "match_to_first_notice_ms": {
+    "n": 2,
+    "median": 165.1251220703125,
+    "p90": 223.617919921875,
+    "max": 223.617919921875,
+    "min": 106.63232421875
+   },
+   "match_to_wallet_success_ms": {
+    "n": 2,
+    "median": 2238.646240234375,
+    "p90": 2580.18115234375,
+    "max": 2580.18115234375,
+    "min": 1897.111328125
+   },
+   "accepted_notice_lag_ms": {
+    "n": 10,
+    "median": 312.2657470703125,
+    "p90": 331.9326171875,
+    "max": 374.0986328125,
+    "min": 257.21875
+   },
+   "orders": 10,
+   "matched": 2
+  },
+  "BUY_quiet": {
+   "create_rtt_ms": {
+    "n": 10,
+    "median": 42.812113,
+    "p90": 49.250614,
+    "max": 60.388388,
+    "min": 36.110515
+   },
+   "accept_wallet_after_send_ms": {
+    "n": 10,
+    "median": 26.5294189453125,
+    "p90": 30.123779296875,
+    "max": 35.986083984375,
+    "min": 20.708251953125
+   },
+   "accept_wallet_to_match_ms": {
+    "n": 10,
+    "median": 151.0,
+    "p90": 151.0,
+    "max": 151.0,
+    "min": 151.0
+   },
+   "accept_to_not_accepted_ms": {
+    "n": 0
+   },
+   "send_to_match_ms": {
+    "n": 10,
+    "median": 177.5294189453125,
+    "p90": 181.123779296875,
+    "max": 186.986083984375,
+    "min": 171.708251953125
+   },
+   "match_to_first_notice_ms": {
+    "n": 10,
+    "median": 146.6514892578125,
+    "p90": 265.544677734375,
+    "max": 419.0068359375,
+    "min": 49.771728515625
+   },
+   "match_to_wallet_success_ms": {
+    "n": 10,
+    "median": 1920.3658447265625,
+    "p90": 2040.471923828125,
+    "max": 2297.94140625,
+    "min": 1651.91943359375
+   },
+   "accepted_notice_lag_ms": {
+    "n": 10,
+    "median": 265.130859375,
+    "p90": 362.993408203125,
+    "max": 569.5439453125,
+    "min": 200.312744140625
+   },
+   "orders": 10,
+   "matched": 10
+  },
+  "SELL": {
+   "create_rtt_ms": {
+    "n": 12,
+    "median": 39.201575500000004,
+    "p90": 50.393455,
+    "max": 53.173075,
+    "min": 35.58372
+   },
+   "accept_wallet_after_send_ms": {
+    "n": 12,
+    "median": 24.6939697265625,
+    "p90": 27.47412109375,
+    "max": 28.025146484375,
+    "min": 21.7890625
+   },
+   "accept_wallet_to_match_ms": {
+    "n": 12,
+    "median": 151.0,
+    "p90": 152.0,
+    "max": 152.0,
+    "min": 150.0
+   },
+   "accept_to_not_accepted_ms": {
+    "n": 0
+   },
+   "send_to_match_ms": {
+    "n": 12,
+    "median": 176.4434814453125,
+    "p90": 178.47412109375,
+    "max": 180.025146484375,
+    "min": 172.7890625
+   },
+   "match_to_first_notice_ms": {
+    "n": 12,
+    "median": 116.9947509765625,
+    "p90": 351.56982421875,
+    "max": 385.523193359375,
+    "min": 75.932373046875
+   },
+   "match_to_wallet_success_ms": {
+    "n": 12,
+    "median": 1758.2252197265625,
+    "p90": 2089.027099609375,
+    "max": 2178.423828125,
+    "min": 1600.04052734375
+   },
+   "accepted_notice_lag_ms": {
+    "n": 12,
+    "median": 266.947021484375,
+    "p90": 503.095947265625,
+    "max": 534.9716796875,
+    "min": 226.3046875
+   },
+   "orders": 12,
+   "matched": 12
+  },
+  "run_all": {
+   "create_rtt_ms": {
+    "n": 32,
+    "median": 45.722145999999995,
+    "p90": 139.502044,
+    "max": 357.724959,
+    "min": 35.58372
+   },
+   "accept_wallet_after_send_ms": {
+    "n": 32,
+    "median": 27.285400390625,
+    "p90": 114.094482421875,
+    "max": 196.349365234375,
+    "min": 20.708251953125
+   },
+   "accept_wallet_to_match_ms": {
+    "n": 24,
+    "median": 151.0,
+    "p90": 152.0,
+    "max": 152.0,
+    "min": 150.0
+   },
+   "accept_to_not_accepted_ms": {
+    "n": 8,
+    "median": 151.0,
+    "p90": 151.0,
+    "max": 175.0,
+    "min": 150.0
+   },
+   "send_to_match_ms": {
+    "n": 24,
+    "median": 177.09521484375,
+    "p90": 181.123779296875,
+    "max": 201.42431640625,
+    "min": 171.708251953125
+   },
+   "match_to_first_notice_ms": {
+    "n": 24,
+    "median": 120.4073486328125,
+    "p90": 351.56982421875,
+    "max": 419.0068359375,
+    "min": 49.771728515625
+   },
+   "match_to_wallet_success_ms": {
+    "n": 24,
+    "median": 1879.571044921875,
+    "p90": 2178.423828125,
+    "max": 2580.18115234375,
+    "min": 1600.04052734375
+   },
+   "accepted_notice_lag_ms": {
+    "n": 32,
+    "median": 285.551513671875,
+    "p90": 374.0986328125,
+    "max": 569.5439453125,
+    "min": 200.312744140625
+   },
+   "orders": 32,
+   "matched": 24
+  }
+ },
+ "hold": {
+  "lock_minus_accept_ms": [
+   150
+  ],
+  "sid_eq_submitted_stamp": 26,
+  "fills": 26,
+  "one_match_ms_per_order": true
+ },
+ "settlement": {
+  "match_to_success_notice_all_fills": {
+   "n": 26,
+   "median": 1858.58251953125,
+   "p90": 2089.027099609375,
+   "max": 2580.18115234375,
+   "min": 1600.04052734375
+  },
+  "match_to_success_notice_buy_fills": {
+   "n": 13,
+   "median": 1901.83740234375,
+   "p90": 2297.94140625,
+   "max": 2580.18115234375,
+   "min": 1605.523681640625
+  },
+  "success_stamp_whole_seconds": true,
+  "check4_refused": {
+   "code": "create_order_insufficient_shares_balance",
+   "sent_after_buy_match_ms": 304.2646484375,
+   "sent_before_buy_success_notice_ms": 1301.259033203125
+  },
+  "check5_filled": {
+   "sent_after_buy_match_ms": 1825.45556640625,
+   "sent_after_buy_success_notice_ms": 219.931884765625
+  },
+  "failed_settlements": 0
+ },
+ "feeds": {
+  "binance_E_to_recv_run": {
+   "median": 1.310791015625,
+   "p99": 3.5049975585937503,
+   "n": 148754
+  },
+  "binance_after_move_sends": {
+   "max_of_window_max": 3.773193359375,
+   "max_of_window_median": 1.6409912109375,
+   "min_window_n": 303,
+   "max_window_n": 1887
+  },
+  "predict_update_to_recv_run": {
+   "median": 67.796142578125,
+   "p90": 114.79204101562502,
+   "n": 11893
+  },
+  "replay_predict_p50_ms": 53.1,
+  "per_order": [
+   {
+    "n": 0,
+    "kind": "Move",
+    "side": "BUY",
+    "accept_after_send_ms": 128.950927734375,
+    "bn_lag_n": 759,
+    "bn_lag_median": 1.50830078125,
+    "bn_lag_max": 3.450927734375
+   },
+   {
+    "n": 1,
+    "kind": "Quiet",
+    "side": "BUY",
+    "accept_after_send_ms": 30.123779296875,
+    "bn_lag_n": 52,
+    "bn_lag_median": 1.472900390625,
+    "bn_lag_max": 2.0986328125
+   },
+   {
+    "n": 1,
+    "kind": "Quiet",
+    "side": "SELL",
+    "accept_after_send_ms": 26.916259765625,
+    "bn_lag_n": 32,
+    "bn_lag_median": 1.2264404296875,
+    "bn_lag_max": 2.009521484375
+   },
+   {
+    "n": 2,
+    "kind": "Move",
+    "side": "BUY",
+    "accept_after_send_ms": 78.470947265625,
+    "bn_lag_n": 1707,
+    "bn_lag_median": 1.48779296875,
+    "bn_lag_max": 3.773193359375
+   },
+   {
+    "n": 3,
+    "kind": "Quiet",
+    "side": "BUY",
+    "accept_after_send_ms": 27.15283203125,
+    "bn_lag_n": 282,
+    "bn_lag_median": 1.187255859375,
+    "bn_lag_max": 2.4560546875
+   },
+   {
+    "n": 3,
+    "kind": "Quiet",
+    "side": "SELL",
+    "accept_after_send_ms": 28.025146484375,
+    "bn_lag_n": 301,
+    "bn_lag_median": 1.19482421875,
+    "bn_lag_max": 1.952880859375
+   },
+   {
+    "n": 4,
+    "kind": "Move",
+    "side": "BUY",
+    "accept_after_send_ms": 193.569580078125,
+    "bn_lag_n": 1396,
+    "bn_lag_median": 1.5006103515625,
+    "bn_lag_max": 3.552490234375
+   },
+   {
+    "n": 5,
+    "kind": "Quiet",
+    "side": "BUY",
+    "accept_after_send_ms": 25.392578125,
+    "bn_lag_n": 239,
+    "bn_lag_median": 1.2109375,
+    "bn_lag_max": 1.962646484375
+   },
+   {
+    "n": 5,
+    "kind": "Quiet",
+    "side": "SELL",
+    "accept_after_send_ms": 27.41796875,
+    "bn_lag_n": 149,
+    "bn_lag_median": 1.3125,
+    "bn_lag_max": 2.1142578125
+   },
+   {
+    "n": 6,
+    "kind": "Move",
+    "side": "BUY",
+    "accept_after_send_ms": 64.087158203125,
+    "bn_lag_n": 1180,
+    "bn_lag_median": 1.4613037109375,
+    "bn_lag_max": 2.72509765625
+   },
+   {
+    "n": 7,
+    "kind": "Quiet",
+    "side": "BUY",
+    "accept_after_send_ms": 28.8017578125,
+    "bn_lag_n": 184,
+    "bn_lag_median": 1.218505859375,
+    "bn_lag_max": 4.19970703125
+   },
+   {
+    "n": 7,
+    "kind": "Quiet",
+    "side": "SELL",
+    "accept_after_send_ms": 24.452392578125,
+    "bn_lag_n": 148,
+    "bn_lag_median": 1.2470703125,
+    "bn_lag_max": 3.7060546875
+   },
+   {
+    "n": 8,
+    "kind": "Move",
+    "side": "BUY",
+    "accept_after_send_ms": 93.42529296875,
+    "bn_lag_n": 1887,
+    "bn_lag_median": 1.476806640625,
+    "bn_lag_max": 2.28564453125
+   },
+   {
+    "n": 9,
+    "kind": "Quiet",
+    "side": "BUY",
+    "accept_after_send_ms": 22.624755859375,
+    "bn_lag_n": 45,
+    "bn_lag_median": 1.2880859375,
+    "bn_lag_max": 2.0537109375
+   },
+   {
+    "n": 9,
+    "kind": "Quiet",
+    "side": "SELL",
+    "accept_after_send_ms": 26.5126953125,
+    "bn_lag_n": 42,
+    "bn_lag_median": 1.2552490234375,
+    "bn_lag_max": 1.880615234375
+   },
+   {
+    "n": 10,
+    "kind": "Move",
+    "side": "BUY",
+    "accept_after_send_ms": 50.42431640625,
+    "bn_lag_n": 443,
+    "bn_lag_median": 1.43212890625,
+    "bn_lag_max": 2.00439453125
+   },
+   {
+    "n": 10,
+    "kind": "Move",
+    "side": "SELL",
+    "accept_after_send_ms": 24.374267578125,
+    "bn_lag_n": 14,
+    "bn_lag_median": 1.1734619140625,
+    "bn_lag_max": 2.05419921875
+   },
+   {
+    "n": 11,
+    "kind": "Quiet",
+    "side": "BUY",
+    "accept_after_send_ms": 23.045166015625,
+    "bn_lag_n": 63,
+    "bn_lag_median": 1.220703125,
+    "bn_lag_max": 1.833984375
+   },
+   {
+    "n": 11,
+    "kind": "Quiet",
+    "side": "SELL",
+    "accept_after_send_ms": 21.7890625,
+    "bn_lag_n": 33,
+    "bn_lag_median": 1.15283203125,
+    "bn_lag_max": 1.747802734375
+   },
+   {
+    "n": 12,
+    "kind": "Move",
+    "side": "BUY",
+    "accept_after_send_ms": 28.48681640625,
+    "bn_lag_n": 303,
+    "bn_lag_median": 1.31787109375,
+    "bn_lag_max": 1.830810546875
+   },
+   {
+    "n": 12,
+    "kind": "Move",
+    "side": "SELL",
+    "accept_after_send_ms": 24.722412109375,
+    "bn_lag_n": 523,
+    "bn_lag_median": 1.369384765625,
+    "bn_lag_max": 1.830322265625
+   },
+   {
+    "n": 13,
+    "kind": "Quiet",
+    "side": "BUY",
+    "accept_after_send_ms": 26.533935546875,
+    "bn_lag_n": 380,
+    "bn_lag_median": 1.4171142578125,
+    "bn_lag_max": 2.092041015625
+   },
+   {
+    "n": 13,
+    "kind": "Quiet",
+    "side": "SELL",
+    "accept_after_send_ms": 24.66552734375,
+    "bn_lag_n": 40,
+    "bn_lag_median": 1.1470947265625,
+    "bn_lag_max": 1.77685546875
+   },
+   {
+    "n": 14,
+    "kind": "Move",
+    "side": "BUY",
+    "accept_after_send_ms": 40.52880859375,
+    "bn_lag_n": 756,
+    "bn_lag_median": 1.459716796875,
+    "bn_lag_max": 2.010498046875
+   },
+   {
+    "n": 15,
+    "kind": "Quiet",
+    "side": "BUY",
+    "accept_after_send_ms": 35.986083984375,
+    "bn_lag_n": 34,
+    "bn_lag_median": 1.281005859375,
+    "bn_lag_max": 1.94384765625
+   },
+   {
+    "n": 15,
+    "kind": "Quiet",
+    "side": "SELL",
+    "accept_after_send_ms": 24.054443359375,
+    "bn_lag_n": 42,
+    "bn_lag_median": 1.2384033203125,
+    "bn_lag_max": 2.016845703125
+   },
+   {
+    "n": 16,
+    "kind": "Move",
+    "side": "BUY",
+    "accept_after_send_ms": 114.094482421875,
+    "bn_lag_n": 340,
+    "bn_lag_median": 1.3995361328125,
+    "bn_lag_max": 2.030029296875
+   },
+   {
+    "n": 17,
+    "kind": "Quiet",
+    "side": "BUY",
+    "accept_after_send_ms": 26.52490234375,
+    "bn_lag_n": 35,
+    "bn_lag_median": 1.213134765625,
+    "bn_lag_max": 1.91064453125
+   },
+   {
+    "n": 17,
+    "kind": "Quiet",
+    "side": "SELL",
+    "accept_after_send_ms": 21.88330078125,
+    "bn_lag_n": 12,
+    "bn_lag_median": 1.592529296875,
+    "bn_lag_max": 1.699462890625
+   },
+   {
+    "n": 18,
+    "kind": "Move",
+    "side": "BUY",
+    "accept_after_send_ms": 196.349365234375,
+    "bn_lag_n": 844,
+    "bn_lag_median": 1.6409912109375,
+    "bn_lag_max": 3.041748046875
+   },
+   {
+    "n": 19,
+    "kind": "Quiet",
+    "side": "BUY",
+    "accept_after_send_ms": 20.708251953125,
+    "bn_lag_n": 11,
+    "bn_lag_median": 1.11376953125,
+    "bn_lag_max": 1.635009765625
+   },
+   {
+    "n": 19,
+    "kind": "Quiet",
+    "side": "SELL",
+    "accept_after_send_ms": 27.47412109375,
+    "bn_lag_n": 13,
+    "bn_lag_median": 1.119140625,
+    "bn_lag_max": 1.6650390625
+   }
+  ],
+  "host_not_slow": true
+ },
+ "fill_rule": {
+  "groups": {
+   "BUY_after_move": {
+    "n": 10,
+    "live_fills": 2,
+    "actual_A": {
+     "agree": 9,
+     "fills": 3
+    },
+    "actual_AB": {
+     "agree": 9,
+     "fills": 3
+    },
+    "nominal_A": {
+     "agree": 4,
+     "fills": 8
+    },
+    "nominal_AB": {
+     "agree": 8,
+     "fills": 4
+    }
+   },
+   "BUY_quiet": {
+    "n": 10,
+    "live_fills": 10,
+    "actual_A": {
+     "agree": 10,
+     "fills": 10
+    },
+    "actual_AB": {
+     "agree": 10,
+     "fills": 10
+    },
+    "nominal_A": {
+     "agree": 10,
+     "fills": 10
+    },
+    "nominal_AB": {
+     "agree": 10,
+     "fills": 10
+    }
+   },
+   "SELL": {
+    "n": 12,
+    "live_fills": 12,
+    "actual_A": {
+     "agree": 12,
+     "fills": 12
+    },
+    "actual_AB": {
+     "agree": 12,
+     "fills": 12
+    },
+    "nominal_A": {
+     "agree": 12,
+     "fills": 12
+    },
+    "nominal_AB": {
+     "agree": 12,
+     "fills": 12
+    }
+   },
+   "checks": {
+    "n": 4,
+    "live_fills": 2,
+    "actual_A": {
+     "agree": 4,
+     "fills": 2
+    },
+    "actual_AB": {
+     "agree": 4,
+     "fills": 2
+    },
+    "nominal_A": {
+     "agree": 4,
+     "fills": 2
+    },
+    "nominal_AB": {
+     "agree": 4,
+     "fills": 2
+    }
+   },
+   "all": {
+    "n": 36,
+    "live_fills": 26,
+    "actual_A": {
+     "agree": 35,
+     "fills": 27
+    },
+    "actual_AB": {
+     "agree": 35,
+     "fills": 27
+    },
+    "nominal_A": {
+     "agree": 30,
+     "fills": 32
+    },
+    "nominal_AB": {
+     "agree": 34,
+     "fills": 28
+    }
+   }
+  },
+  "hold_live_ms": 151.0,
+  "nominal_ms": 172.0,
+  "rows": [
+   {
+    "tag": "run1",
+    "n": 0,
+    "kind": "Move",
+    "side": "BUY",
+    "live": false,
+    "actual_A": false,
+    "actual_AB": false,
+    "nominal_A": true,
+    "nominal_AB": false
+   },
+   {
+    "tag": "run1",
+    "n": 1,
+    "kind": "Quiet",
+    "side": "BUY",
+    "live": true,
+    "actual_A": true,
+    "actual_AB": true,
+    "nominal_A": true,
+    "nominal_AB": true
+   },
+   {
+    "tag": "run1",
+    "n": 1,
+    "kind": "Quiet",
+    "side": "SELL",
+    "live": true,
+    "actual_A": true,
+    "actual_AB": true,
+    "nominal_A": true,
+    "nominal_AB": true
+   },
+   {
+    "tag": "run1",
+    "n": 2,
+    "kind": "Move",
+    "side": "BUY",
+    "live": false,
+    "actual_A": false,
+    "actual_AB": false,
+    "nominal_A": false,
+    "nominal_AB": false
+   },
+   {
+    "tag": "run1",
+    "n": 3,
+    "kind": "Quiet",
+    "side": "BUY",
+    "live": true,
+    "actual_A": true,
+    "actual_AB": true,
+    "nominal_A": true,
+    "nominal_AB": true
+   },
+   {
+    "tag": "run1",
+    "n": 3,
+    "kind": "Quiet",
+    "side": "SELL",
+    "live": true,
+    "actual_A": true,
+    "actual_AB": true,
+    "nominal_A": true,
+    "nominal_AB": true
+   },
+   {
+    "tag": "run1",
+    "n": 4,
+    "kind": "Move",
+    "side": "BUY",
+    "live": false,
+    "actual_A": false,
+    "actual_AB": false,
+    "nominal_A": true,
+    "nominal_AB": false
+   },
+   {
+    "tag": "run1",
+    "n": 5,
+    "kind": "Quiet",
+    "side": "BUY",
+    "live": true,
+    "actual_A": true,
+    "actual_AB": true,
+    "nominal_A": true,
+    "nominal_AB": true
+   },
+   {
+    "tag": "run1",
+    "n": 5,
+    "kind": "Quiet",
+    "side": "SELL",
+    "live": true,
+    "actual_A": true,
+    "actual_AB": true,
+    "nominal_A": true,
+    "nominal_AB": true
+   },
+   {
+    "tag": "run1",
+    "n": 6,
+    "kind": "Move",
+    "side": "BUY",
+    "live": false,
+    "actual_A": false,
+    "actual_AB": false,
+    "nominal_A": false,
+    "nominal_AB": false
+   },
+   {
+    "tag": "run1",
+    "n": 7,
+    "kind": "Quiet",
+    "side": "BUY",
+    "live": true,
+    "actual_A": true,
+    "actual_AB": true,
+    "nominal_A": true,
+    "nominal_AB": true
+   },
+   {
+    "tag": "run1",
+    "n": 7,
+    "kind": "Quiet",
+    "side": "SELL",
+    "live": true,
+    "actual_A": true,
+    "actual_AB": true,
+    "nominal_A": true,
+    "nominal_AB": true
+   },
+   {
+    "tag": "run1",
+    "n": 8,
+    "kind": "Move",
+    "side": "BUY",
+    "live": false,
+    "actual_A": false,
+    "actual_AB": false,
+    "nominal_A": true,
+    "nominal_AB": false
+   },
+   {
+    "tag": "run1",
+    "n": 9,
+    "kind": "Quiet",
+    "side": "BUY",
+    "live": true,
+    "actual_A": true,
+    "actual_AB": true,
+    "nominal_A": true,
+    "nominal_AB": true
+   },
+   {
+    "tag": "run1",
+    "n": 9,
+    "kind": "Quiet",
+    "side": "SELL",
+    "live": true,
+    "actual_A": true,
+    "actual_AB": true,
+    "nominal_A": true,
+    "nominal_AB": true
+   },
+   {
+    "tag": "run1",
+    "n": 10,
+    "kind": "Move",
+    "side": "BUY",
+    "live": true,
+    "actual_A": true,
+    "actual_AB": true,
+    "nominal_A": true,
+    "nominal_AB": true
+   },
+   {
+    "tag": "run1",
+    "n": 10,
+    "kind": "Move",
+    "side": "SELL",
+    "live": true,
+    "actual_A": true,
+    "actual_AB": true,
+    "nominal_A": true,
+    "nominal_AB": true
+   },
+   {
+    "tag": "run1",
+    "n": 11,
+    "kind": "Quiet",
+    "side": "BUY",
+    "live": true,
+    "actual_A": true,
+    "actual_AB": true,
+    "nominal_A": true,
+    "nominal_AB": true
+   },
+   {
+    "tag": "run1",
+    "n": 11,
+    "kind": "Quiet",
+    "side": "SELL",
+    "live": true,
+    "actual_A": true,
+    "actual_AB": true,
+    "nominal_A": true,
+    "nominal_AB": true
+   },
+   {
+    "tag": "run1",
+    "n": 12,
+    "kind": "Move",
+    "side": "BUY",
+    "live": true,
+    "actual_A": true,
+    "actual_AB": true,
+    "nominal_A": true,
+    "nominal_AB": true
+   },
+   {
+    "tag": "run1",
+    "n": 12,
+    "kind": "Move",
+    "side": "SELL",
+    "live": true,
+    "actual_A": true,
+    "actual_AB": true,
+    "nominal_A": true,
+    "nominal_AB": true
+   },
+   {
+    "tag": "run1",
+    "n": 13,
+    "kind": "Quiet",
+    "side": "BUY",
+    "live": true,
+    "actual_A": true,
+    "actual_AB": true,
+    "nominal_A": true,
+    "nominal_AB": true
+   },
+   {
+    "tag": "run1",
+    "n": 13,
+    "kind": "Quiet",
+    "side": "SELL",
+    "live": true,
+    "actual_A": true,
+    "actual_AB": true,
+    "nominal_A": true,
+    "nominal_AB": true
+   },
+   {
+    "tag": "run1",
+    "n": 14,
+    "kind": "Move",
+    "side": "BUY",
+    "live": false,
+    "actual_A": true,
+    "actual_AB": true,
+    "nominal_A": true,
+    "nominal_AB": true
+   },
+   {
+    "tag": "run1",
+    "n": 15,
+    "kind": "Quiet",
+    "side": "BUY",
+    "live": true,
+    "actual_A": true,
+    "actual_AB": true,
+    "nominal_A": true,
+    "nominal_AB": true
+   },
+   {
+    "tag": "run1",
+    "n": 15,
+    "kind": "Quiet",
+    "side": "SELL",
+    "live": true,
+    "actual_A": true,
+    "actual_AB": true,
+    "nominal_A": true,
+    "nominal_AB": true
+   },
+   {
+    "tag": "run1",
+    "n": 16,
+    "kind": "Move",
+    "side": "BUY",
+    "live": false,
+    "actual_A": false,
+    "actual_AB": false,
+    "nominal_A": true,
+    "nominal_AB": false
+   },
+   {
+    "tag": "run1",
+    "n": 17,
+    "kind": "Quiet",
+    "side": "BUY",
+    "live": true,
+    "actual_A": true,
+    "actual_AB": true,
+    "nominal_A": true,
+    "nominal_AB": true
+   },
+   {
+    "tag": "run1",
+    "n": 17,
+    "kind": "Quiet",
+    "side": "SELL",
+    "live": true,
+    "actual_A": true,
+    "actual_AB": true,
+    "nominal_A": true,
+    "nominal_AB": true
+   },
+   {
+    "tag": "run1",
+    "n": 18,
+    "kind": "Move",
+    "side": "BUY",
+    "live": false,
+    "actual_A": false,
+    "actual_AB": false,
+    "nominal_A": true,
+    "nominal_AB": true
+   },
+   {
+    "tag": "run1",
+    "n": 19,
+    "kind": "Quiet",
+    "side": "BUY",
+    "live": true,
+    "actual_A": true,
+    "actual_AB": true,
+    "nominal_A": true,
+    "nominal_AB": true
+   },
+   {
+    "tag": "run1",
+    "n": 19,
+    "kind": "Quiet",
+    "side": "SELL",
+    "live": true,
+    "actual_A": true,
+    "actual_AB": true,
+    "nominal_A": true,
+    "nominal_AB": true
+   },
+   {
+    "tag": "checks1",
+    "n": null,
+    "kind": "check:resting_market_buy",
+    "side": "BUY",
+    "live": false,
+    "actual_A": false,
+    "actual_AB": false,
+    "nominal_A": false,
+    "nominal_AB": false
+   },
+   {
+    "tag": "checks1",
+    "n": null,
+    "kind": "check:resting_market_buy_fok",
+    "side": "BUY",
+    "live": false,
+    "actual_A": false,
+    "actual_AB": false,
+    "nominal_A": false,
+    "nominal_AB": false
+   },
+   {
+    "tag": "checks1",
+    "n": null,
+    "kind": "check:crossing_market_buy",
+    "side": "BUY",
+    "live": true,
+    "actual_A": true,
+    "actual_AB": true,
+    "nominal_A": true,
+    "nominal_AB": true
+   },
+   {
+    "tag": "checks1",
+    "n": null,
+    "kind": "check:sell_after_settlement",
+    "side": "SELL",
+    "live": true,
+    "actual_A": true,
+    "actual_AB": true,
+    "nominal_A": true,
+    "nominal_AB": true
+   }
+  ]
+ },
+ "signed": {
+  "buys": 23,
+  "sells": 14,
+  "run": {
+   "buys": 20,
+   "sells": 12
+  },
+  "request_caps": {
+   "buys": 20,
+   "sells": 20,
+   "usdt": 40
+  },
+  "buy_cap_exceeded_by": 3,
+  "sell_cap_exceeded_by": 0,
+  "usdt_signed_buys": 34.698584,
+  "usdt_cap_held": true
+ },
+ "cash_usdt": {
+  "recomputed": {
+   "run1": -0.5206298400000005,
+   "checks1": -0.03476799999999991
+  },
+  "report": {
+   "run1": -0.5206298400000011,
+   "checks1": -0.03476799999999991
+  },
+  "cash_matches_report": true
+ },
+ "fees": {
+  "buy_shares": 0.5592411195769404,
+  "sell_usdt": 0.21763784,
+  "buy_fee_types": [
+   "SHARES"
+  ],
+  "sell_fee_types": [
+   "COLLATERAL"
+  ]
+ },
+ "orders": [
+  {
+   "tag": "run1",
+   "hash": "0x9cbf24c4dd33a9d3bc07b0e2152330472543fd4fb660f8acab31cf23aef371df",
+   "n": 0,
+   "kind": "Move",
+   "side": "BUY",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 152.372627,
+   "trigger_to_send_us": 568,
+   "market": 4847604,
+   "outcome": "Down",
+   "limit": 59,
+   "shares": 2.0,
+   "usdt_signed": 1.17992,
+   "n_fail": 0,
+   "accept_ms": 1795839058443,
+   "accept_wallet_after_send_ms": 128.950927734375,
+   "accepted_notice_lag_ms": 327.286865234375,
+   "lock_minus_accept_ms": 150,
+   "not_accepted_reason": "noMarketMatch",
+   "accept_to_not_accepted_ms": 151,
+   "sent_ms": 1795839058314.049
+  },
+  {
+   "tag": "run1",
+   "hash": "0xae738b1596a04c94395cd2ab62afd99248607df99155388d6c83c550fa0a5725",
+   "n": 1,
+   "kind": "Quiet",
+   "side": "BUY",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 44.662579,
+   "trigger_to_send_us": null,
+   "market": 4847604,
+   "outcome": "Up",
+   "limit": 36,
+   "shares": 4.0,
+   "usdt_signed": 1.439988,
+   "n_fail": 0,
+   "accept_ms": 1795839069117,
+   "accept_wallet_after_send_ms": 30.123779296875,
+   "accepted_notice_lag_ms": 320.5595703125,
+   "lock_minus_accept_ms": 150,
+   "match_ms": 1795839069268,
+   "settlements": 1,
+   "one_match_ms": true,
+   "sid_eq_stamp": true,
+   "accept_wallet_to_match_ms": 151,
+   "send_to_match_ms": 181.123779296875,
+   "match_to_first_notice_ms": 170.175048828125,
+   "filled": 4.0,
+   "value": 1.32,
+   "prices": [
+    33.0
+   ],
+   "match_to_wallet_success_ms": 1943.64794921875,
+   "success_notice_ms": 1795839071211.648,
+   "fee": 0.08,
+   "fee_type": [
+    "SHARES"
+   ],
+   "sent_ms": 1795839069086.8762
+  },
+  {
+   "tag": "run1",
+   "hash": "0x24f5d6bc1ffbffe74ac781b015f8bf6f6cabe5911e19c87480763b6022942b8a",
+   "n": 1,
+   "kind": "Quiet",
+   "side": "SELL",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 37.184733,
+   "trigger_to_send_us": null,
+   "market": 4847604,
+   "outcome": "Up",
+   "limit": 29,
+   "shares": 3.92,
+   "usdt_signed": 1.1368627199999999,
+   "n_fail": 0,
+   "accept_ms": 1795839071575,
+   "accept_wallet_after_send_ms": 26.916259765625,
+   "accepted_notice_lag_ms": 250.214599609375,
+   "lock_minus_accept_ms": 150,
+   "match_ms": 1795839071726,
+   "settlements": 1,
+   "one_match_ms": true,
+   "sid_eq_stamp": true,
+   "accept_wallet_to_match_ms": 151,
+   "send_to_match_ms": 177.916259765625,
+   "match_to_first_notice_ms": 99.695556640625,
+   "filled": 3.92,
+   "value": 1.2544,
+   "prices": [
+    32.0
+   ],
+   "match_to_wallet_success_ms": 1684.1708984375,
+   "success_notice_ms": 1795839073410.171,
+   "fee": 0.025088,
+   "fee_type": [
+    "COLLATERAL"
+   ],
+   "sent_ms": 1795839071548.0837
+  },
+  {
+   "tag": "run1",
+   "hash": "0x35175ac6428ebb5bba508eb5905350c356d00b276e8b75c93815156362f4e8f0",
+   "n": 2,
+   "kind": "Move",
+   "side": "BUY",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 108.175671,
+   "trigger_to_send_us": 650,
+   "market": 4847604,
+   "outcome": "Down",
+   "limit": 70,
+   "shares": 2.0,
+   "usdt_signed": 1.3998979999999999,
+   "n_fail": 0,
+   "accept_ms": 1795839116757,
+   "accept_wallet_after_send_ms": 78.470947265625,
+   "accepted_notice_lag_ms": 306.300537109375,
+   "lock_minus_accept_ms": 150,
+   "not_accepted_reason": "noMarketMatch",
+   "accept_to_not_accepted_ms": 150,
+   "sent_ms": 1795839116678.529
+  },
+  {
+   "tag": "run1",
+   "hash": "0xe45b485b88b206743eba2b1c879a37e94c845bbc7bc5421fa17e49771ad3a76f",
+   "n": 3,
+   "kind": "Quiet",
+   "side": "BUY",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 41.77712,
+   "trigger_to_send_us": null,
+   "market": 4847604,
+   "outcome": "Down",
+   "limit": 78,
+   "shares": 2.0,
+   "usdt_signed": 1.56,
+   "n_fail": 0,
+   "accept_ms": 1795839127432,
+   "accept_wallet_after_send_ms": 27.15283203125,
+   "accepted_notice_lag_ms": 569.5439453125,
+   "lock_minus_accept_ms": 150,
+   "match_ms": 1795839127583,
+   "settlements": 1,
+   "one_match_ms": true,
+   "sid_eq_stamp": true,
+   "accept_wallet_to_match_ms": 151,
+   "send_to_match_ms": 178.15283203125,
+   "match_to_first_notice_ms": 419.0068359375,
+   "filled": 2.0,
+   "value": 1.5,
+   "prices": [
+    75.0
+   ],
+   "match_to_wallet_success_ms": 2297.94140625,
+   "success_notice_ms": 1795839129880.9414,
+   "fee": 0.013333333333333332,
+   "fee_type": [
+    "SHARES"
+   ],
+   "sent_ms": 1795839127404.8472
+  },
+  {
+   "tag": "run1",
+   "hash": "0x57f6a193091a45f96bb2dfe63213720371e51167b0ed41106060894945d4831d",
+   "n": 3,
+   "kind": "Quiet",
+   "side": "SELL",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 47.029277,
+   "trigger_to_send_us": null,
+   "market": 4847604,
+   "outcome": "Down",
+   "limit": 72,
+   "shares": 1.9866000000000001,
+   "usdt_signed": 1.430352,
+   "n_fail": 0,
+   "accept_ms": 1795839130117,
+   "accept_wallet_after_send_ms": 28.025146484375,
+   "accepted_notice_lag_ms": 503.095947265625,
+   "lock_minus_accept_ms": 150,
+   "match_ms": 1795839130269,
+   "settlements": 1,
+   "one_match_ms": true,
+   "sid_eq_stamp": true,
+   "accept_wallet_to_match_ms": 152,
+   "send_to_match_ms": 180.025146484375,
+   "match_to_first_notice_ms": 351.56982421875,
+   "filled": 1.9866,
+   "value": 1.48995,
+   "prices": [
+    75.0
+   ],
+   "match_to_wallet_success_ms": 1644.173095703125,
+   "success_notice_ms": 1795839131913.173,
+   "fee": 0.009933,
+   "fee_type": [
+    "COLLATERAL"
+   ],
+   "sent_ms": 1795839130088.9749
+  },
+  {
+   "tag": "run1",
+   "hash": "0xfd562a052c859604449fdc7e6fe2cff0e51dfc7d8f247147dd2795e503f27045",
+   "n": 4,
+   "kind": "Move",
+   "side": "BUY",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 230.637448,
+   "trigger_to_send_us": 620,
+   "market": 4847604,
+   "outcome": "Up",
+   "limit": 27,
+   "shares": 6.0,
+   "usdt_signed": 1.62,
+   "n_fail": 0,
+   "accept_ms": 1795839161271,
+   "accept_wallet_after_send_ms": 193.569580078125,
+   "accepted_notice_lag_ms": 318.23095703125,
+   "lock_minus_accept_ms": 150,
+   "not_accepted_reason": "noMarketMatch",
+   "accept_to_not_accepted_ms": 151,
+   "sent_ms": 1795839161077.4304
+  },
+  {
+   "tag": "run1",
+   "hash": "0x32f7e9b0a6ba6f077ec1e76d76969b8a58283ba4e63907ffc119eecdf96d442c",
+   "n": 5,
+   "kind": "Quiet",
+   "side": "BUY",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 43.847106,
+   "trigger_to_send_us": null,
+   "market": 4847604,
+   "outcome": "Up",
+   "limit": 46,
+   "shares": 3.0,
+   "usdt_signed": 1.379913,
+   "n_fail": 0,
+   "accept_ms": 1795839171992,
+   "accept_wallet_after_send_ms": 25.392578125,
+   "accepted_notice_lag_ms": 264.62060546875,
+   "lock_minus_accept_ms": 150,
+   "match_ms": 1795839172143,
+   "settlements": 2,
+   "one_match_ms": true,
+   "sid_eq_stamp": true,
+   "accept_wallet_to_match_ms": 151,
+   "send_to_match_ms": 176.392578125,
+   "match_to_first_notice_ms": 114.077392578125,
+   "filled": 3.0,
+   "value": 1.29,
+   "prices": [
+    43.0
+   ],
+   "match_to_wallet_success_ms": 1651.91943359375,
+   "success_notice_ms": 1795839173794.9194,
+   "fee": 0.06,
+   "fee_type": [
+    "SHARES"
+   ],
+   "sent_ms": 1795839171966.6074
+  },
+  {
+   "tag": "run1",
+   "hash": "0x1c9c28a496e687884a471dbeaa9ce2bbefdfb3fd02517b328575a3527d3946c3",
+   "n": 5,
+   "kind": "Quiet",
+   "side": "SELL",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 39.812143,
+   "trigger_to_send_us": null,
+   "market": 4847604,
+   "outcome": "Up",
+   "limit": 39,
+   "shares": 2.94,
+   "usdt_signed": 1.14663528,
+   "n_fail": 0,
+   "accept_ms": 1795839174681,
+   "accept_wallet_after_send_ms": 27.41796875,
+   "accepted_notice_lag_ms": 354.9091796875,
+   "lock_minus_accept_ms": 150,
+   "match_ms": 1795839174832,
+   "settlements": 2,
+   "one_match_ms": true,
+   "sid_eq_stamp": true,
+   "accept_wallet_to_match_ms": 151,
+   "send_to_match_ms": 178.41796875,
+   "match_to_first_notice_ms": 204.401611328125,
+   "filled": 2.94,
+   "value": 1.2348,
+   "prices": [
+    42.0
+   ],
+   "match_to_wallet_success_ms": 2178.423828125,
+   "success_notice_ms": 1795839177010.4238,
+   "fee": 0.024696,
+   "fee_type": [
+    "COLLATERAL"
+   ],
+   "sent_ms": 1795839174653.582
+  },
+  {
+   "tag": "run1",
+   "hash": "0x0c1eb74c06f6459b0212ec61c0e83dc1c230a850acf242f2741a4a0695a8b70a",
+   "n": 6,
+   "kind": "Move",
+   "side": "BUY",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 83.747279,
+   "trigger_to_send_us": 455,
+   "market": 4847604,
+   "outcome": "Up",
+   "limit": 25,
+   "shares": 6.0,
+   "usdt_signed": 1.499916,
+   "n_fail": 0,
+   "accept_ms": 1795839204841,
+   "accept_wallet_after_send_ms": 64.087158203125,
+   "accepted_notice_lag_ms": 331.9326171875,
+   "lock_minus_accept_ms": 150,
+   "not_accepted_reason": "noMarketMatch",
+   "accept_to_not_accepted_ms": 151,
+   "sent_ms": 1795839204776.9128
+  },
+  {
+   "tag": "run1",
+   "hash": "0xeb5a17f326db14fe5173064e347114609945c4e7d0bc27c9884042d52bae9a5b",
+   "n": 7,
+   "kind": "Quiet",
+   "side": "BUY",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 45.773112,
+   "trigger_to_send_us": null,
+   "market": 4847604,
+   "outcome": "Down",
+   "limit": 78,
+   "shares": 2.0,
+   "usdt_signed": 1.56,
+   "n_fail": 0,
+   "accept_ms": 1795839215509,
+   "accept_wallet_after_send_ms": 28.8017578125,
+   "accepted_notice_lag_ms": 233.151123046875,
+   "lock_minus_accept_ms": 150,
+   "match_ms": 1795839215660,
+   "settlements": 1,
+   "one_match_ms": true,
+   "sid_eq_stamp": true,
+   "accept_wallet_to_match_ms": 151,
+   "send_to_match_ms": 179.8017578125,
+   "match_to_first_notice_ms": 123.668701171875,
+   "filled": 2.0,
+   "value": 1.5,
+   "prices": [
+    75.0
+   ],
+   "match_to_wallet_success_ms": 1828.950927734375,
+   "success_notice_ms": 1795839217488.951,
+   "fee": 0.013333333333333332,
+   "fee_type": [
+    "SHARES"
+   ],
+   "sent_ms": 1795839215480.1982
+  },
+  {
+   "tag": "run1",
+   "hash": "0x45c2e31f5c1683582f616d049fd76f12f1706ec36594416ee27b40abccb6a39d",
+   "n": 7,
+   "kind": "Quiet",
+   "side": "SELL",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 37.214704,
+   "trigger_to_send_us": null,
+   "market": 4847604,
+   "outcome": "Down",
+   "limit": 71,
+   "shares": 1.9866000000000001,
+   "usdt_signed": 1.4105455980000001,
+   "n_fail": 0,
+   "accept_ms": 1795839217876,
+   "accept_wallet_after_send_ms": 24.452392578125,
+   "accepted_notice_lag_ms": 267.28857421875,
+   "lock_minus_accept_ms": 150,
+   "match_ms": 1795839218027,
+   "settlements": 1,
+   "one_match_ms": true,
+   "sid_eq_stamp": true,
+   "accept_wallet_to_match_ms": 151,
+   "send_to_match_ms": 175.452392578125,
+   "match_to_first_notice_ms": 116.843505859375,
+   "filled": 1.9866,
+   "value": 1.470084,
+   "prices": [
+    74.0
+   ],
+   "match_to_wallet_success_ms": 1699.560791015625,
+   "success_notice_ms": 1795839219726.5608,
+   "fee": 0.01033032,
+   "fee_type": [
+    "COLLATERAL"
+   ],
+   "sent_ms": 1795839217851.5476
+  },
+  {
+   "tag": "run1",
+   "hash": "0xe9696ac0aa5f259a14d97050a6ae2c6844b6d4ee79e6cc38d1458687b363ab7d",
+   "n": 8,
+   "kind": "Move",
+   "side": "BUY",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 121.226946,
+   "trigger_to_send_us": 263,
+   "market": 4847656,
+   "outcome": "Up",
+   "limit": 53,
+   "shares": 3.0,
+   "usdt_signed": 1.5899999999999999,
+   "n_fail": 0,
+   "accept_ms": 1795839322787,
+   "accept_wallet_after_send_ms": 93.42529296875,
+   "accepted_notice_lag_ms": 276.765625,
+   "lock_minus_accept_ms": 150,
+   "not_accepted_reason": "noMarketMatch",
+   "accept_to_not_accepted_ms": 150,
+   "sent_ms": 1795839322693.5747
+  },
+  {
+   "tag": "run1",
+   "hash": "0x77c61018d0d0539daaca3c04494e44be22ad5395caa3034de71a94d65ae6c0ee",
+   "n": 9,
+   "kind": "Quiet",
+   "side": "BUY",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 36.110515,
+   "trigger_to_send_us": null,
+   "market": 4847656,
+   "outcome": "Up",
+   "limit": 67,
+   "shares": 2.0,
+   "usdt_signed": 1.339904,
+   "n_fail": 0,
+   "accept_ms": 1795839333463,
+   "accept_wallet_after_send_ms": 22.624755859375,
+   "accepted_notice_lag_ms": 265.64111328125,
+   "lock_minus_accept_ms": 150,
+   "match_ms": 1795839333614,
+   "settlements": 1,
+   "one_match_ms": true,
+   "sid_eq_stamp": true,
+   "accept_wallet_to_match_ms": 151,
+   "send_to_match_ms": 173.624755859375,
+   "match_to_first_notice_ms": 169.63427734375,
+   "filled": 2.0,
+   "value": 1.28,
+   "prices": [
+    64.0
+   ],
+   "match_to_wallet_success_ms": 2040.471923828125,
+   "success_notice_ms": 1795839335654.472,
+   "fee": 0.0225,
+   "fee_type": [
+    "SHARES"
+   ],
+   "sent_ms": 1795839333440.3752
+  },
+  {
+   "tag": "run1",
+   "hash": "0xe847af04fcdc29711260cb9997520e6a954fcb474c0ec111a180a17e83597ac3",
+   "n": 9,
+   "kind": "Quiet",
+   "side": "SELL",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 40.960222,
+   "trigger_to_send_us": null,
+   "market": 4847656,
+   "outcome": "Up",
+   "limit": 61,
+   "shares": 1.9775,
+   "usdt_signed": 1.20636992,
+   "n_fail": 0,
+   "accept_ms": 1795839335839,
+   "accept_wallet_after_send_ms": 26.5126953125,
+   "accepted_notice_lag_ms": 534.9716796875,
+   "lock_minus_accept_ms": 150,
+   "match_ms": 1795839335989,
+   "settlements": 1,
+   "one_match_ms": true,
+   "sid_eq_stamp": true,
+   "accept_wallet_to_match_ms": 150,
+   "send_to_match_ms": 176.5126953125,
+   "match_to_first_notice_ms": 385.523193359375,
+   "filled": 1.9775,
+   "value": 1.2656,
+   "prices": [
+    64.0
+   ],
+   "match_to_wallet_success_ms": 2089.027099609375,
+   "success_notice_ms": 1795839338078.027,
+   "fee": 0.014238,
+   "fee_type": [
+    "COLLATERAL"
+   ],
+   "sent_ms": 1795839335812.4873
+  },
+  {
+   "tag": "run1",
+   "hash": "0x2c0a12a4b10d527a746e5b0a4b9bbc745b86e3a2d3cf7031c1bf1a518b5ee344",
+   "n": 10,
+   "kind": "Move",
+   "side": "BUY",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 107.165745,
+   "trigger_to_send_us": 243,
+   "market": 4847656,
+   "outcome": "Up",
+   "limit": 68,
+   "shares": 2.0,
+   "usdt_signed": 1.35993,
+   "n_fail": 0,
+   "accept_ms": 1795839360563,
+   "accept_wallet_after_send_ms": 50.42431640625,
+   "accepted_notice_lag_ms": 374.0986328125,
+   "lock_minus_accept_ms": 150,
+   "match_ms": 1795839360714,
+   "settlements": 1,
+   "one_match_ms": true,
+   "sid_eq_stamp": true,
+   "accept_wallet_to_match_ms": 151,
+   "send_to_match_ms": 201.42431640625,
+   "match_to_first_notice_ms": 223.617919921875,
+   "filled": 2.0,
+   "value": 1.34,
+   "prices": [
+    67.0
+   ],
+   "match_to_wallet_success_ms": 2580.18115234375,
+   "success_notice_ms": 1795839363294.1812,
+   "fee": 0.01970149253731343,
+   "fee_type": [
+    "SHARES"
+   ],
+   "sent_ms": 1795839360512.5757
+  },
+  {
+   "tag": "run1",
+   "hash": "0xe8d801c2720d8b0e058851be045acb6834dd538d51cb2fbb733c6f77d16f229b",
+   "n": 10,
+   "kind": "Move",
+   "side": "SELL",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 38.591008,
+   "trigger_to_send_us": null,
+   "market": 4847656,
+   "outcome": "Up",
+   "limit": 72,
+   "shares": 1.9802,
+   "usdt_signed": 1.425744,
+   "n_fail": 0,
+   "accept_ms": 1795839363767,
+   "accept_wallet_after_send_ms": 24.374267578125,
+   "accepted_notice_lag_ms": 231.190673828125,
+   "lock_minus_accept_ms": 150,
+   "match_ms": 1795839363919,
+   "settlements": 1,
+   "one_match_ms": true,
+   "sid_eq_stamp": true,
+   "accept_wallet_to_match_ms": 152,
+   "send_to_match_ms": 176.374267578125,
+   "match_to_first_notice_ms": 79.614501953125,
+   "filled": 1.9802,
+   "value": 1.48515,
+   "prices": [
+    75.0
+   ],
+   "match_to_wallet_success_ms": 1962.813720703125,
+   "success_notice_ms": 1795839365881.8137,
+   "fee": 0.009901,
+   "fee_type": [
+    "COLLATERAL"
+   ],
+   "sent_ms": 1795839363742.6257
+  },
+  {
+   "tag": "run1",
+   "hash": "0x1346e1b379ae6f3ef34e5a415b4ef045178771f809600985d1aab9fb02cf5a43",
+   "n": 11,
+   "kind": "Quiet",
+   "side": "BUY",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 38.315419,
+   "trigger_to_send_us": null,
+   "market": 4847656,
+   "outcome": "Down",
+   "limit": 20,
+   "shares": 8.0,
+   "usdt_signed": 1.599904,
+   "n_fail": 0,
+   "accept_ms": 1795839376152,
+   "accept_wallet_after_send_ms": 23.045166015625,
+   "accepted_notice_lag_ms": 200.312744140625,
+   "lock_minus_accept_ms": 150,
+   "match_ms": 1795839376303,
+   "settlements": 1,
+   "one_match_ms": true,
+   "sid_eq_stamp": true,
+   "accept_wallet_to_match_ms": 151,
+   "send_to_match_ms": 174.045166015625,
+   "match_to_first_notice_ms": 49.771728515625,
+   "filled": 8.0,
+   "value": 1.36,
+   "prices": [
+    17.0
+   ],
+   "match_to_wallet_success_ms": 1944.287353515625,
+   "success_notice_ms": 1795839378247.2874,
+   "fee": 0.16,
+   "fee_type": [
+    "SHARES"
+   ],
+   "sent_ms": 1795839376128.9548
+  },
+  {
+   "tag": "run1",
+   "hash": "0xaf4aa9803062ea9753ee80809059a53f785423e9b57ed57412d4f6d0d37d07cc",
+   "n": 11,
+   "kind": "Quiet",
+   "side": "SELL",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 35.58372,
+   "trigger_to_send_us": null,
+   "market": 4847656,
+   "outcome": "Down",
+   "limit": 14,
+   "shares": 7.84,
+   "usdt_signed": 1.09769408,
+   "n_fail": 0,
+   "accept_ms": 1795839378515,
+   "accept_wallet_after_send_ms": 21.7890625,
+   "accepted_notice_lag_ms": 226.3046875,
+   "lock_minus_accept_ms": 150,
+   "match_ms": 1795839378666,
+   "settlements": 1,
+   "one_match_ms": true,
+   "sid_eq_stamp": true,
+   "accept_wallet_to_match_ms": 151,
+   "send_to_match_ms": 172.7890625,
+   "match_to_first_notice_ms": 75.932373046875,
+   "filled": 7.84,
+   "value": 1.3328,
+   "prices": [
+    17.0
+   ],
+   "match_to_wallet_success_ms": 1773.486572265625,
+   "success_notice_ms": 1795839380439.4866,
+   "fee": 0.026656,
+   "fee_type": [
+    "COLLATERAL"
+   ],
+   "sent_ms": 1795839378493.211
+  },
+  {
+   "tag": "run1",
+   "hash": "0x208c954e0cdd93b976a017d772d5dc5d6b012cc864f5100dd35891af74424f84",
+   "n": 12,
+   "kind": "Move",
+   "side": "BUY",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 47.151846,
+   "trigger_to_send_us": 190,
+   "market": 4847656,
+   "outcome": "Up",
+   "limit": 82,
+   "shares": 2.0,
+   "usdt_signed": 1.639882,
+   "n_fail": 0,
+   "accept_ms": 1795839408974,
+   "accept_wallet_after_send_ms": 28.48681640625,
+   "accepted_notice_lag_ms": 257.21875,
+   "lock_minus_accept_ms": 150,
+   "match_ms": 1795839409125,
+   "settlements": 1,
+   "one_match_ms": true,
+   "sid_eq_stamp": true,
+   "accept_wallet_to_match_ms": 151,
+   "send_to_match_ms": 179.48681640625,
+   "match_to_first_notice_ms": 106.63232421875,
+   "filled": 2.0,
+   "value": 1.6,
+   "prices": [
+    80.0
+   ],
+   "match_to_wallet_success_ms": 1897.111328125,
+   "success_notice_ms": 1795839411022.1113,
+   "fee": 0.01,
+   "fee_type": [
+    "SHARES"
+   ],
+   "sent_ms": 1795839408945.5132
+  },
+  {
+   "tag": "run1",
+   "hash": "0x01cc561678e2461b814bdf5aeba14c26fa2de04dca38a5d638bddba65ff6e673",
+   "n": 12,
+   "kind": "Move",
+   "side": "SELL",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 35.685698,
+   "trigger_to_send_us": null,
+   "market": 4847656,
+   "outcome": "Up",
+   "limit": 76,
+   "shares": 1.99,
+   "usdt_signed": 1.51251741,
+   "n_fail": 0,
+   "accept_ms": 1795839411355,
+   "accept_wallet_after_send_ms": 24.722412109375,
+   "accepted_notice_lag_ms": 282.76220703125,
+   "lock_minus_accept_ms": 150,
+   "match_ms": 1795839411506,
+   "settlements": 2,
+   "one_match_ms": true,
+   "sid_eq_stamp": true,
+   "accept_wallet_to_match_ms": 151,
+   "send_to_match_ms": 175.722412109375,
+   "match_to_first_notice_ms": 132.330810546875,
+   "filled": 1.99,
+   "value": 1.6119,
+   "prices": [
+    81.0
+   ],
+   "match_to_wallet_success_ms": 1742.9638671875,
+   "success_notice_ms": 1795839413248.9639,
+   "fee": 0.007561999999999999,
+   "fee_type": [
+    "COLLATERAL"
+   ],
+   "sent_ms": 1795839411330.2776
+  },
+  {
+   "tag": "run1",
+   "hash": "0xb362ff73e7a5a8fb3c5d046fa9915555278661317a0735d5e07159162ae6b9fd",
+   "n": 13,
+   "kind": "Quiet",
+   "side": "BUY",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 39.010082,
+   "trigger_to_send_us": null,
+   "market": 4847656,
+   "outcome": "Up",
+   "limit": 81,
+   "shares": 2.0,
+   "usdt_signed": 1.619904,
+   "n_fail": 0,
+   "accept_ms": 1795839423757,
+   "accept_wallet_after_send_ms": 26.533935546875,
+   "accepted_notice_lag_ms": 362.993408203125,
+   "lock_minus_accept_ms": 150,
+   "match_ms": 1795839423908,
+   "settlements": 1,
+   "one_match_ms": true,
+   "sid_eq_stamp": true,
+   "accept_wallet_to_match_ms": 151,
+   "send_to_match_ms": 177.533935546875,
+   "match_to_first_notice_ms": 265.544677734375,
+   "filled": 2.0,
+   "value": 1.56,
+   "prices": [
+    78.0
+   ],
+   "match_to_wallet_success_ms": 1888.835693359375,
+   "success_notice_ms": 1795839425796.8357,
+   "fee": 0.011282051282051281,
+   "fee_type": [
+    "SHARES"
+   ],
+   "sent_ms": 1795839423730.466
+  },
+  {
+   "tag": "run1",
+   "hash": "0xc6e6efb3cf73c2d6acf48f5c2e6837870c29771c4cb28802f9fdb66012eb81f8",
+   "n": 13,
+   "kind": "Quiet",
+   "side": "SELL",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 37.884498,
+   "trigger_to_send_us": null,
+   "market": 4847656,
+   "outcome": "Up",
+   "limit": 71,
+   "shares": 1.9887000000000001,
+   "usdt_signed": 1.4120366610000001,
+   "n_fail": 0,
+   "accept_ms": 1795839426125,
+   "accept_wallet_after_send_ms": 24.66552734375,
+   "accepted_notice_lag_ms": 308.795654296875,
+   "lock_minus_accept_ms": 150,
+   "match_ms": 1795839426277,
+   "settlements": 1,
+   "one_match_ms": true,
+   "sid_eq_stamp": true,
+   "accept_wallet_to_match_ms": 152,
+   "send_to_match_ms": 176.66552734375,
+   "match_to_first_notice_ms": 157.254638671875,
+   "filled": 1.9887,
+   "value": 1.471638,
+   "prices": [
+    74.0
+   ],
+   "match_to_wallet_success_ms": 1870.306396484375,
+   "success_notice_ms": 1795839428147.3064,
+   "fee": 0.01034124,
+   "fee_type": [
+    "COLLATERAL"
+   ],
+   "sent_ms": 1795839426100.3345
+  },
+  {
+   "tag": "run1",
+   "hash": "0x4bf6c3247a40f9223e50ce2d95cd9432d7af4162d72eda979fdc9bf59f4a9252",
+   "n": 14,
+   "kind": "Move",
+   "side": "BUY",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 76.792266,
+   "trigger_to_send_us": 184,
+   "market": 4847656,
+   "outcome": "Up",
+   "limit": 88,
+   "shares": 2.0,
+   "usdt_signed": 1.75984,
+   "n_fail": 0,
+   "accept_ms": 1795839450298,
+   "accept_wallet_after_send_ms": 40.52880859375,
+   "accepted_notice_lag_ms": 321.406005859375,
+   "lock_minus_accept_ms": 150,
+   "not_accepted_reason": "noMarketMatch",
+   "accept_to_not_accepted_ms": 151,
+   "sent_ms": 1795839450257.4712
+  },
+  {
+   "tag": "run1",
+   "hash": "0xe9a1910269727c212e1f13805ac40ac72300b0d85293cbb4e05ea89cb176e042",
+   "n": 15,
+   "kind": "Quiet",
+   "side": "BUY",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 60.388388,
+   "trigger_to_send_us": null,
+   "market": 4847692,
+   "outcome": "Down",
+   "limit": 44,
+   "shares": 3.0,
+   "usdt_signed": 1.3199130000000001,
+   "n_fail": 0,
+   "accept_ms": 1795839606100,
+   "accept_wallet_after_send_ms": 35.986083984375,
+   "accepted_notice_lag_ms": 211.96826171875,
+   "lock_minus_accept_ms": 150,
+   "match_ms": 1795839606251,
+   "settlements": 1,
+   "one_match_ms": true,
+   "sid_eq_stamp": true,
+   "accept_wallet_to_match_ms": 151,
+   "send_to_match_ms": 186.986083984375,
+   "match_to_first_notice_ms": 102.57080078125,
+   "filled": 3.0,
+   "value": 1.26,
+   "prices": [
+    42.0
+   ],
+   "match_to_wallet_success_ms": 1741.904296875,
+   "success_notice_ms": 1795839607992.9043,
+   "fee": 0.06,
+   "fee_type": [
+    "SHARES"
+   ],
+   "sent_ms": 1795839606064.014
+  },
+  {
+   "tag": "run1",
+   "hash": "0x43bf9c4586ab45a4d545dd1cb344553c9928076360b62a4f55bb8c0cb39d3192",
+   "n": 15,
+   "kind": "Quiet",
+   "side": "SELL",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 53.173075,
+   "trigger_to_send_us": null,
+   "market": 4847692,
+   "outcome": "Down",
+   "limit": 38,
+   "shares": 2.94,
+   "usdt_signed": 1.11728526,
+   "n_fail": 0,
+   "accept_ms": 1795839608497,
+   "accept_wallet_after_send_ms": 24.054443359375,
+   "accepted_notice_lag_ms": 266.60546875,
+   "lock_minus_accept_ms": 150,
+   "match_ms": 1795839608647,
+   "settlements": 1,
+   "one_match_ms": true,
+   "sid_eq_stamp": true,
+   "accept_wallet_to_match_ms": 150,
+   "send_to_match_ms": 174.054443359375,
+   "match_to_first_notice_ms": 117.14599609375,
+   "filled": 2.94,
+   "value": 1.2054,
+   "prices": [
+    41.0
+   ],
+   "match_to_wallet_success_ms": 1715.371826171875,
+   "success_notice_ms": 1795839610362.3718,
+   "fee": 0.024108,
+   "fee_type": [
+    "COLLATERAL"
+   ],
+   "sent_ms": 1795839608472.9456
+  },
+  {
+   "tag": "run1",
+   "hash": "0xd724828c073401e6eebc63e98f4dd51cb7814f5966adbada3b0d47e72aec8f0d",
+   "n": 16,
+   "kind": "Move",
+   "side": "BUY",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 139.502044,
+   "trigger_to_send_us": 199,
+   "market": 4847692,
+   "outcome": "Down",
+   "limit": 42,
+   "shares": 3.0,
+   "usdt_signed": 1.259973,
+   "n_fail": 0,
+   "accept_ms": 1795839635792,
+   "accept_wallet_after_send_ms": 114.094482421875,
+   "accepted_notice_lag_ms": 290.631591796875,
+   "lock_minus_accept_ms": 150,
+   "not_accepted_reason": "noMarketMatch",
+   "accept_to_not_accepted_ms": 151,
+   "sent_ms": 1795839635677.9055
+  },
+  {
+   "tag": "run1",
+   "hash": "0xde3268d55c7dfdfef5dc66134e138c721d383bed718b2888e911da2c7c7813c1",
+   "n": 17,
+   "kind": "Quiet",
+   "side": "BUY",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 49.250614,
+   "trigger_to_send_us": null,
+   "market": 4847692,
+   "outcome": "Up",
+   "limit": 58,
+   "shares": 3.0,
+   "usdt_signed": 1.739925,
+   "n_fail": 0,
+   "accept_ms": 1795839646516,
+   "accept_wallet_after_send_ms": 26.52490234375,
+   "accepted_notice_lag_ms": 241.55712890625,
+   "lock_minus_accept_ms": 150,
+   "match_ms": 1795839646667,
+   "settlements": 1,
+   "one_match_ms": true,
+   "sid_eq_stamp": true,
+   "accept_wallet_to_match_ms": 151,
+   "send_to_match_ms": 177.52490234375,
+   "match_to_first_notice_ms": 91.307373046875,
+   "filled": 3.0,
+   "value": 1.65,
+   "prices": [
+    55.0
+   ],
+   "match_to_wallet_success_ms": 1938.894287109375,
+   "success_notice_ms": 1795839648605.8943,
+   "fee": 0.04909090909090909,
+   "fee_type": [
+    "SHARES"
+   ],
+   "sent_ms": 1795839646489.475
+  },
+  {
+   "tag": "run1",
+   "hash": "0x60df0401e2c66aab912a8a562b5b2994229b9fcf33e8bd9f8b35a9ccc3373ef1",
+   "n": 17,
+   "kind": "Quiet",
+   "side": "SELL",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 45.67118,
+   "trigger_to_send_us": null,
+   "market": 4847692,
+   "outcome": "Up",
+   "limit": 51,
+   "shares": 2.9509,
+   "usdt_signed": 1.5050475269999999,
+   "n_fail": 0,
+   "accept_ms": 1795839648883,
+   "accept_wallet_after_send_ms": 21.88330078125,
+   "accepted_notice_lag_ms": 260.8193359375,
+   "lock_minus_accept_ms": 150,
+   "match_ms": 1795839649035,
+   "settlements": 1,
+   "one_match_ms": true,
+   "sid_eq_stamp": true,
+   "accept_wallet_to_match_ms": 152,
+   "send_to_match_ms": 173.88330078125,
+   "match_to_first_notice_ms": 109.28955078125,
+   "filled": 2.9509,
+   "value": 1.593486,
+   "prices": [
+    54.0
+   ],
+   "match_to_wallet_success_ms": 1600.04052734375,
+   "success_notice_ms": 1795839650635.0405,
+   "fee": 0.02714828,
+   "fee_type": [
+    "COLLATERAL"
+   ],
+   "sent_ms": 1795839648861.1167
+  },
+  {
+   "tag": "run1",
+   "hash": "0x23507c52f0306466880750e2051e872c2ec6e7ace481a86ceb123bc1ce4fe6a6",
+   "n": 18,
+   "kind": "Move",
+   "side": "BUY",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 357.724959,
+   "trigger_to_send_us": 1274,
+   "market": 4847692,
+   "outcome": "Up",
+   "limit": 50,
+   "shares": 3.0,
+   "usdt_signed": 1.499958,
+   "n_fail": 0,
+   "accept_ms": 1795839661989,
+   "accept_wallet_after_send_ms": 196.349365234375,
+   "accepted_notice_lag_ms": 288.3408203125,
+   "lock_minus_accept_ms": 150,
+   "not_accepted_reason": "noMarketMatch",
+   "accept_to_not_accepted_ms": 175,
+   "sent_ms": 1795839661792.6506
+  },
+  {
+   "tag": "run1",
+   "hash": "0x124f7c79522bb6885d6ebba05fef8e7103083b5f3548865e6dff70ece86e9732",
+   "n": 19,
+   "kind": "Quiet",
+   "side": "BUY",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 40.537603,
+   "trigger_to_send_us": null,
+   "market": 4847692,
+   "outcome": "Down",
+   "limit": 49,
+   "shares": 3.0,
+   "usdt_signed": 1.469976,
+   "n_fail": 0,
+   "accept_ms": 1795839673008,
+   "accept_wallet_after_send_ms": 20.708251953125,
+   "accepted_notice_lag_ms": 335.1796875,
+   "lock_minus_accept_ms": 150,
+   "match_ms": 1795839673159,
+   "settlements": 1,
+   "one_match_ms": true,
+   "sid_eq_stamp": true,
+   "accept_wallet_to_match_ms": 151,
+   "send_to_match_ms": 171.708251953125,
+   "match_to_first_notice_ms": 184.87158203125,
+   "filled": 3.0,
+   "value": 1.44,
+   "prices": [
+    48.0
+   ],
+   "match_to_wallet_success_ms": 1901.83740234375,
+   "success_notice_ms": 1795839675060.8374,
+   "fee": 0.06,
+   "fee_type": [
+    "SHARES"
+   ],
+   "sent_ms": 1795839672987.2917
+  },
+  {
+   "tag": "run1",
+   "hash": "0x04a11a507b24a37709fecc2e98c53028674f5e2a06d147ba5e3b21462c171527",
+   "n": 19,
+   "kind": "Quiet",
+   "side": "SELL",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 50.393455,
+   "trigger_to_send_us": null,
+   "market": 4847692,
+   "outcome": "Down",
+   "limit": 44,
+   "shares": 2.94,
+   "usdt_signed": 1.29364116,
+   "n_fail": 0,
+   "accept_ms": 1795839675377,
+   "accept_wallet_after_send_ms": 27.47412109375,
+   "accepted_notice_lag_ms": 239.9853515625,
+   "lock_minus_accept_ms": 150,
+   "match_ms": 1795839675528,
+   "settlements": 1,
+   "one_match_ms": true,
+   "sid_eq_stamp": true,
+   "accept_wallet_to_match_ms": 151,
+   "send_to_match_ms": 178.47412109375,
+   "match_to_first_notice_ms": 89.538818359375,
+   "filled": 2.94,
+   "value": 1.3818,
+   "prices": [
+    47.0
+   ],
+   "match_to_wallet_success_ms": 1810.435546875,
+   "success_notice_ms": 1795839677338.4355,
+   "fee": 0.027636,
+   "fee_type": [
+    "COLLATERAL"
+   ],
+   "sent_ms": 1795839675349.526
+  },
+  {
+   "tag": "checks1",
+   "hash": "0xb5c4b0f3e4f6cc30cd59cd0d45792a54a51022f8467f134c0ec2c336caaa9c6b",
+   "n": null,
+   "kind": "check:resting_market_buy",
+   "side": "BUY",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 135.165452,
+   "trigger_to_send_us": null,
+   "market": 4847565,
+   "outcome": "Up",
+   "limit": 77,
+   "shares": 2.0,
+   "usdt_signed": 1.54,
+   "n_fail": 0,
+   "accept_ms": 1795838515154,
+   "accept_wallet_after_send_ms": 105.987548828125,
+   "accepted_notice_lag_ms": 225.356689453125,
+   "lock_minus_accept_ms": 150,
+   "not_accepted_reason": "noMarketMatch",
+   "accept_to_not_accepted_ms": 151,
+   "sent_ms": 1795838515048.0125
+  },
+  {
+   "tag": "checks1",
+   "hash": "0xb5631267fb2bccc125c63a2d23adc1c9454dc88ea0e74e8a555a09911e55f545",
+   "n": null,
+   "kind": "check:resting_market_buy_fok",
+   "side": "BUY",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 47.499507,
+   "trigger_to_send_us": null,
+   "market": 4847565,
+   "outcome": "Up",
+   "limit": 78,
+   "shares": 2.0,
+   "usdt_signed": 1.56,
+   "n_fail": 0,
+   "accept_ms": 1795838517833,
+   "accept_wallet_after_send_ms": 28.637939453125,
+   "accepted_notice_lag_ms": 257.70556640625,
+   "lock_minus_accept_ms": 150,
+   "not_accepted_reason": "noMarketMatch",
+   "accept_to_not_accepted_ms": 152,
+   "sent_ms": 1795838517804.362
+  },
+  {
+   "tag": "checks1",
+   "hash": "0x0ae3e6ecb78dba4c75d4c91b847ba939402a30d5e029e5fbd97dd857c0e8ab19",
+   "n": null,
+   "kind": "check:crossing_market_buy",
+   "side": "BUY",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 50.982056,
+   "trigger_to_send_us": null,
+   "market": 4847565,
+   "outcome": "Up",
+   "limit": 88,
+   "shares": 2.0,
+   "usdt_signed": 1.75984,
+   "n_fail": 0,
+   "accept_ms": 1795838550108,
+   "accept_wallet_after_send_ms": 34.7646484375,
+   "accepted_notice_lag_ms": 291.165771484375,
+   "lock_minus_accept_ms": 150,
+   "match_ms": 1795838550259,
+   "settlements": 1,
+   "one_match_ms": true,
+   "sid_eq_stamp": true,
+   "accept_wallet_to_match_ms": 151,
+   "send_to_match_ms": 185.7646484375,
+   "match_to_first_notice_ms": 186.589111328125,
+   "filled": 2.0,
+   "value": 1.7,
+   "prices": [
+    85.0
+   ],
+   "match_to_wallet_success_ms": 1605.523681640625,
+   "success_notice_ms": 1795838551864.5237,
+   "fee": 0.007058823529411764,
+   "fee_type": [
+    "SHARES"
+   ],
+   "sent_ms": 1795838550073.2354
+  },
+  {
+   "tag": "checks1",
+   "hash": "0xf4104d172fd6e2c0d251b3437ec38157bd16bfe84af2ba8ca3e4dc0f8d9cfe32",
+   "n": null,
+   "kind": "check:sell_at_match",
+   "side": "SELL",
+   "status": 400,
+   "code": "create_order_insufficient_shares_balance",
+   "create_rtt_ms": 31.743023,
+   "trigger_to_send_us": null,
+   "market": 4847565,
+   "outcome": "Up",
+   "limit": 81,
+   "shares": 1.96,
+   "usdt_signed": 1.58762352,
+   "n_fail": 0,
+   "sent_ms": 1795838550563.2646
+  },
+  {
+   "tag": "checks1",
+   "hash": "0x6bafb90afb0912e46c68e89aa9b6f8cfca48bd2e0e7b74cc39cb52d9728b4317",
+   "n": null,
+   "kind": "check:sell_after_settlement",
+   "side": "SELL",
+   "status": 201,
+   "code": "OK",
+   "create_rtt_ms": 33.110918,
+   "trigger_to_send_us": null,
+   "market": 4847565,
+   "outcome": "Up",
+   "limit": 81,
+   "shares": 1.99,
+   "usdt_signed": 1.61192388,
+   "n_fail": 0,
+   "accept_ms": 1795838552104,
+   "accept_wallet_after_send_ms": 19.54443359375,
+   "accepted_notice_lag_ms": 193.091552734375,
+   "lock_minus_accept_ms": 150,
+   "match_ms": 1795838552255,
+   "settlements": 1,
+   "one_match_ms": true,
+   "sid_eq_stamp": true,
+   "accept_wallet_to_match_ms": 151,
+   "send_to_match_ms": 170.54443359375,
+   "match_to_first_notice_ms": 42.17138671875,
+   "filled": 1.99,
+   "value": 1.6716,
+   "prices": [
+    84.0
+   ],
+   "match_to_wallet_success_ms": 1846.858642578125,
+   "success_notice_ms": 1795838554101.8586,
+   "fee": 0.006368,
+   "fee_type": [
+    "COLLATERAL"
+   ],
+   "sent_ms": 1795838552084.4556
+  }
+ ]
+}
