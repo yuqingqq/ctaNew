@@ -1,3 +1,16 @@
+stage2b_20261128_claude:
+  script_commit: 8102b7fea
+  result_commit: 9308d85ef
+  pmmmrust_commit: ffc2101
+  session: 1622c91e
+  days_read: [20261102]
+  tokyo_data: data/tokyo-chase-stage1-20261128
+  matched: 6342
+  research_only: 0
+  inputs_equal_everywhere: 29
+  its_gap_explained_by_late_same_ms_trades: 1798/1799
+  research_lookahead_its_volume_share: 0.0812
+  next: [tokyo_decide_at_t_plus_3p5_and_predict_path, research_reprice_receipt_gated_trades]
 live_export_20261128_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/chase_live_export.json
   script_commit: 9a8716327

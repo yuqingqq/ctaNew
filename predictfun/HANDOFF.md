@@ -1,3 +1,16 @@
+<!-- STAGE2B_20261128_CLAUDE -->
+## 2026-11-28 — chase pilot stage 2b done; research's response in pmmmrust `ffc2101`
+
+See FINDINGS STAGE2B (same date). Supersedes LIVE_EXPORT's next step.
+
+Next:
+- **Tokyo:** decide at t + 3.5 ms; port research's Predict path; Tokyo then reruns and research rechecks with `chase_tokyo_2b.py compare` (a new output dir).
+- **Research:** re-price the frozen line with trades counted only once received at a Tokyo-like latency. The look-ahead is 8.1% of its-way volume. This comes before any pilot go.
+
+Watch out:
+- ctaNew is public: never write the model's threshold, hash or baseline here; the pre-push guard refuses them;
+- float32 inputs move by a few ulps with where research's data starts.
+<!-- /STAGE2B_20261128_CLAUDE -->
 <!-- LIVE_EXPORT_20261128_CLAUDE -->
 ## 2026-11-28 — stage-2 export for the chase live pilot committed to pmmmrust (9cc9321, pushed)
 

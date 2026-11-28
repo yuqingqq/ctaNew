@@ -1,3 +1,24 @@
+<!-- STAGE2B_20261128_CLAUDE -->
+## 2026-11-28 — chase pilot stage 2b: research's frozen pipeline on Tokyo's stage-1 hour against Tokyo's port. Decision points match (6,342 matched, 0 research-only); the trade-volume gaps are same-millisecond trades the port decides before (1,798 of 1,799); research's own inputs hold 8.1% of its-way volume received after research's decision time
+
+Script `chase_tokyo_2b.py` (8102b7fea, committed before each use); validation and diagnosis 9308d85ef. The full comparison JSON carries the model's threshold, so it is kept off this public repo: on disk, ignored, and in pmmmrust. USER: "Check Tokyo session question commit, do the response". Tokyo had answered stage 1 with one recorded UTC hour (pmmmrust data `0fec30b`), the model and inputs ported, the shadow and pilot built, and 8 questions. Research's response is pmmmrust `ffc2101` (`research/stage2b/`).
+- **Mode:** Tokyo's frames rewritten in research's raw and step-1 layouts; the frozen points / labels / scores run unchanged, with Tokyo's receipt as the Predict clock (shift 0).
+- **Validated first on 11-02** (hour 14): the same 10,162 decision points; Predict and move inputs equal; trade-flow inputs within float32 rounding (≤ 9.5e-07; running sums counted from the first file read).
+- **Result:**
+  - 113 matched rows have all 66 inputs equal, but 29 of the 66 inputs are equal on every row (state, depth, move shape);
+  - predictions equal on 4,177 rows, the threshold side the same on 6,337;
+  - in-scope actions: research 28 / Tokyo 30 / both 24 on this hour, so the higher rate is the hour's, not the inputs'.
+- **Diagnosis:**
+  - **Trades:** Tokyo's 100 ms its-way volume is smaller in all 1,799 differing rows, 1,798 of them exactly the tick millisecond's trades received after its last bookTicker frame.
+  - **Predict:** the known frame and the 60 s window follow research's known-time rule (+2 ms) and the path start t0. All 427 one-sided NaNs are research's, within 10 s of the window start.
+- **Requested of the port:**
+  - decide at t + 3.5 ms with every frame and trade of E ≤ t received by then;
+  - port research's Predict path: known time max(stamp + 13.2, receipt) + 2 ms with a running max, t0 on the 50 ms grid, frames from t0, the 60 s inputs over them, decisions from t0 + 1 s;
+  - then a rerun of the comparison, then the 2-hour shadow.
+- **Research's own finding:** a look-ahead. 8.1% of research's its-way 100 ms volume (1,168 rows) arrived at Tokyo after t + 3.5 ms. The frozen line was scored with information live cannot have; re-price it with receipt-gated trades before the pilot's go.
+- **Incident:** the first push of these results put the comparison JSON, with the threshold, on the public repo for about 2 minutes. It was amended out and force-pushed, and the guard now refuses outgoing lines with the private model values (thresholds, model hash, baseline); tested.
+- **CPU:** 1.4 min. No research-host forward day read (11-02 is consumed).
+<!-- /STAGE2B_20261128_CLAUDE -->
 <!-- LIVE_EXPORT_20261128_CLAUDE -->
 ## 2026-11-28 — research's stage-2 export for the chase live pilot committed to pmmmrust (9cc9321, pushed): the frozen MOVE trees as JSON equal sklearn on all 436,944 rows of 11-20, and the scores and 830 actions equal the stored forward run
 
