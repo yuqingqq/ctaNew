@@ -1,3 +1,8 @@
+<!-- TOKYO_TAKER_CHECK_20261128_CLAUDE -->
+## 2026-11-28 — Tokyo's taker-timing answer checked: it reproduces (187 values, 0 differ); after-move BUYs accepted 85.9 ms after sending (median; the replay 22); shares sellable only after settlement, 1.86 s after the match (median)
+
+See FINDINGS TOKYO_TAKER_CHECK (same date). Supersedes CHASE_FORWARD_LATENCY's next step: re-running at a uniform latency is not enough. Two corrections are needed: the after-move entry acceptance and the settlement floor on the exit. Next (USER's go): re-run the frozen candidate with the measured execution, parity with the stored exits first. Watch out: the receipt's "about 1.6 s" settlement is the minimum, not the median. The checks put BUYs 3 over the request's 20.
+<!-- /TOKYO_TAKER_CHECK_20261128_CLAUDE -->
 <!-- CHASE_FORWARD_LATENCY_20261128_CLAUDE -->
 ## 2026-11-28 — chase forward candidate at Tokyo's measured order latency: + 36 ms +$265 (7/7 days > 0), + 50 ms +$208 (7/7); Tokyo taker-timing request pushed (pmmmrust cd97f9a on feature/pfmm-passive-urgency-100)
 

@@ -1,3 +1,36 @@
+<!-- TOKYO_TAKER_CHECK_20261128_CLAUDE -->
+## 2026-11-28 — Tokyo's taker timing checked from its raw records: the hold is 150 ms from acceptance and a quiet take matches 5.5 ms later than the replay's 172; but a BUY sent after a Binance move is accepted a median 85.9 ms after sending (the replay: 22), and bought shares can be sold only after settlement, a median 1.86 s after the match; the chase line's replay assumes neither
+
+[check](reviews/take_reprice_20261125/tokyo_taker_check.json) (script `tokyo_taker_check.py`, committed before use at 755b7e8af; result 1c1d85553). Tokyo's receipt is pmmmrust `f3b3db4` (`docs/receipts/20261128_tokyo_taker_timing_request/tokyo/README.md`), raw records on `data/tokyo-taker-timing-20261128` `1185f65`, answering the request `cd97f9a`. USER: "Tokyo answers, check the commit". The check reads both commits straight from git, verifies every raw file against the manifest and the hashes the receipt names, and recomputes each order from the create records and the raw wallet frames, not from the probe's own pair summaries: **187 values over 37 orders equal Tokyo's report, 0 differ.** Cash -0.5206 USDT (run) and -0.0348 (checks), as reported. Signed on mainnet: 23 BUYs and 14 SELLs (the run 20 + 12, the venue checks the rest). The request capped BUYs at 20, so the checks went 3 over. The USDT cap held (34.70 signed against 40).
+
+| leg (ms) | replay | Tokyo, median / p90 / max |
+|---|---:|---:|
+| Binance known after its event time | 1.5 | 1.31 (p99 3.50) |
+| Predict book known after its stamp | 53.1 | 67.8 (p90 114.8) |
+| send → acceptance, BUY when quiet | 22 | 26.5 / 30.1 / 36.0 (n 10) |
+| **send → acceptance, BUY after a Binance move** | 22 | **85.9 / 193.6 / 196.3 (n 10)** |
+| send → acceptance, SELL | 22 | 24.7 / 27.5 / 28.0 (n 12) |
+| acceptance → match (the hold) | 150 | 151.0 / 152.0 / 152.0 (n 24) |
+| match → first fill notice | 22 | 120.4 / 351.6 / 419.0 (n 24) |
+| **match → shares sellable (the settlement notice)** | at the fill notice | **1,858.6 / 2,089.0 / 2,580.2 (n 26), min 1,600.0** |
+
+- **The hold** is `delayMs` from acceptance. `removalLockedUntil` minus the acceptance stamp is 150 on every order, and the settlementId time equals the `orderTransactionSubmitted` stamp on 26 of 26 fills.
+- **Settlement gates the exit.** Check 4's SELL was sent 304.3 ms after its BUY matched, 1,301.3 ms before the settlement notice, and was refused (`create_order_insufficient_shares_balance`). Check 5's, sent 219.9 ms after the notice, filled. The receipt's "about 1.6 s" is the fastest; the median is 1.86 s. No settlement failed.
+- **The slow after-move acceptance is the venue's, not Tokyo's host.** In the 400 ms after each after-move send, Binance reached the probe within 3.8 ms at most (window medians at most 1.64 ms), while 303 to 1,887 messages arrived in each window.
+- **Given the right timing, the replay's fill rule is right.** Applied to Tokyo's own book frames (`take_markout.minbook` + `vwalk`, at the probe's sizes), it agrees with 35 of 36 live outcomes at the actual match time (acceptance + 151 ms). At the replay's nominal 172 ms after sending, it predicts 4 fills for the 10 after-move BUYs (8 on the snapshot alone), where live had 2. Quiet BUYs and SELLs agree at either time (22 of 22).
+- **Implication for CHASE_FORWARD** (+$738 at + 0, +$265 at + 36 ms):
+  - Its entries are takes right after Binance moves, exactly where acceptance is slow: + 63.9 ms over the replay at the median and + 174.3 at the max, beyond the + 50 ms tested.
+  - Its exit, a take at the first 1 s calm after the fill notice, cannot be sent before the settlement notice, so every exit the replay placed earlier is infeasible.
+  - Neither is in any result so far: the forward PASS holds only under the replay's execution model.
+- **Limits.** One 11-minute run, 2026-11-28 04:10-04:21Z, a Saturday. The 10 after-move BUYs used any Binance mid change as the trigger, while the line's top-10% moves may load the venue more. Point estimates, no interval. The + 14.7 ms book-feed gap was seen on this day only. No forward data of this research host was read.
+- **Next (USER's go).** Re-run the frozen candidate on 11-20..26 with the measured execution:
+  - entry acceptance at each of the 10 measured after-move delays, and their mixture;
+  - hold 151 ms;
+  - the exit decided no earlier than the settlement notice (the 26 measured delays);
+  - exit acceptance 24.7 ms after sending.
+
+  Parity with the stored + 0/10/25 ms exits comes first.
+<!-- /TOKYO_TAKER_CHECK_20261128_CLAUDE -->
 <!-- CHASE_FORWARD_LATENCY_20261128_CLAUDE -->
 ## 2026-11-28 — the chase forward candidate at Tokyo's measured order latency: + 36 ms (an order live 58 ms after sending, median, against the replay's 22) +$265 over 7 days, 7/7 days > 0; + 50 ms +$208, 7/7; the 11-27 caveat that compared the replay with this research server's ~72 ms is withdrawn (live runs from Tokyo)
 
