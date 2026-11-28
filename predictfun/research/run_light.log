@@ -10755,3 +10755,10 @@
 2026-11-28T09:41:46Z tag=cle_rehearsal2 rc=0 peak_rss_mib=856 wall_s=13.79 cpu_user_s=12.26 memavail_start_gib=23 disk_free_gib=345->345 slot=claude
 2026-11-28T09:43:02Z tag=cle_rehearsal3 rc=0 peak_rss_mib=776 wall_s=12.33 cpu_user_s=11.60 memavail_start_gib=23 disk_free_gib=345->345 slot=claude
 2026-11-28T09:43:21Z tag=cle_run rc=0 peak_rss_mib=905 wall_s=12.59 cpu_user_s=11.60 memavail_start_gib=23 disk_free_gib=345->345 slot=claude
+2026-11-28T11:56:24Z tag=c2b_convert rc=0 peak_rss_mib=772 wall_s=38.13 cpu_user_s=37.31 memavail_start_gib=23 disk_free_gib=343->343 slot=claude
+2026-11-28T11:57:02Z tag=c2b_validate rc=1 peak_rss_mib=414 wall_s=1.37 cpu_user_s=0.98 memavail_start_gib=23 disk_free_gib=343->343 slot=claude
+2026-11-28T11:57:17Z tag=c2b_validate2 rc=1 peak_rss_mib=209 wall_s=0.99 cpu_user_s=0.81 memavail_start_gib=23 disk_free_gib=343->343 slot=claude
+2026-11-28T11:57:33Z tag=c2b_validate3 rc=0 peak_rss_mib=841 wall_s=27.21 cpu_user_s=25.37 memavail_start_gib=23 disk_free_gib=343->343 slot=claude
+2026-11-28T12:00:17Z tag=c2b_run rc=0 peak_rss_mib=516 wall_s=11.42 cpu_user_s=10.33 memavail_start_gib=23 disk_free_gib=344->344 slot=claude
+2026-11-28T12:00:45Z tag=c2b_compare rc=0 peak_rss_mib=617 wall_s=5.61 cpu_user_s=5.13 memavail_start_gib=23 disk_free_gib=344->344 slot=claude
+2026-11-28T12:03:44Z tag=c2b_diagnose rc=0 peak_rss_mib=451 wall_s=6.28 cpu_user_s=5.90 memavail_start_gib=23 disk_free_gib=344->344 slot=claude
