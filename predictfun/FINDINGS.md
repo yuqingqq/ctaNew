@@ -1,3 +1,32 @@
+<!-- REPLAY_FIXES_20261128_CLAUDE -->
+## 2026-11-28 — Tokyo's replay with both port fixes: the port at D equals research exactly; the at-frame line (the line that trades) keeps 27 of research's 28 moves on Tokyo's hour, loses 1 (an older Predict book at the frame), adds 2 (provisional frames); stage 3 can go ahead
+
+USER: "Check the new request". Tokyo's replay is pmmmrust `ba5aae4` (corrected `cb32854`), data `21d543b` replay-fixes/; research's answer is pmmmrust `e1b80f2`. The script `chase_tokyo_replay_fixes.py` (`4f0af1bac`) was committed before use; the result is `282a7a786` (counts only; the MOVE margins stay in data/, never in this repo). This closes AT_FRAME's "exact check on Tokyo's next replay".
+- **Check 1, the port at D:**
+  - 6,370/6,370 research rows matched, none research-only. All 66 inputs, lim and md are exactly equal; the prediction and MOVE are bit-equal.
+  - The D line acts on research's 28 in-scope actions. D_ms = max(t + 3.5, f + 2) is exact on all 141,865 rows.
+  - Controls: research's rows against the at-frame columns differ on every row; a planted 0.01 BTC on 10 rows is counted 10 times.
+- **Check 2, the at-frame line:**
+  - The frozen model reproduces Tokyo's at-frame prediction bit for bit on all 141,865 rows (known-bad: its_100 zeroed changes 81,601).
+  - The line re-derived from research's scores, in Pilot::decide's order, equals Tokyo's decision on every row (29 actions; the D line 28).
+  - Tokyo's late-trade counts recount exactly from the tape.
+- **Information at the frame (research's 6,370 rows):**
+  - 1,875 rows lack 12,835 trades (1.47% of the its-way 100 ms volume), all received by D. No depth20 or bookTicker frame with E <= t arrives in (f, D].
+  - Binance inputs differ only where trades arrive after f.
+  - The known Predict frame differs in 548 rows (369 newer at the frame, 179 older).
+  - No input group differs without its cause on any of the 141,865 rows.
+- **Moves against research's 28:** 25 at the same tick, 2 acting 1-2 ms sooner, 1 lost, 2 added.
+  - 4 come from deciding on provisional frames: the millisecond's intermediate flows and book state, which research's per-tick rows never see. This is part of the user's no-wait rule.
+  - 1 comes from the Predict instant: at 1.7 ms after the tick the port knows the book stamped 57 ms before D's.
+- **Price:** the 7-day price (R1 +$184, R5 +$124) assumes research's action set; the 3/28 membership change is not priced. Stress, with the lost move worth the line's mean action and each added move losing as much: R1 +$164, R5 +$111. One hour.
+- **Correction (in-band):** addendum 1's f + 0.34 ms row (0.02%) is not the port's information; its inputs are those received by f (1.47%). The at-frame pricing used f's volumes, so it stands.
+- **Tokyo's questions:**
+  - Stamp gap: confirmed, from the frame known at t0, in stamp order. Two differences noted: stamp vs arrival order, and research's act + 1 s <= end.
+  - Live gap rule: agreed. 0 of 2,754 forward actions had a known Predict frame over 1 s old; 0 research rows are OffPath.
+  - Onset rule: agreed. 0 of 1,355 research rows differ.
+- **Limits:** one Tokyo hour, 28 actions.
+- **CPU:** 0.3 min. Days read: Tokyo's stage-1 hour; research's 11-20..26 stored labels (pf_age_ms only; consumed by this line).
+<!-- /REPLAY_FIXES_20261128_CLAUDE -->
 <!-- AT_FRAME_20261128_CLAUDE -->
 ## 2026-11-28 — chase line priced on the live port's at-frame rule: R1 +$184 (7/7, Sharpe 1.25), R5 +$124 (7/7, Sharpe 1.01); within a few dollars of addendum 1's wait, which is withdrawn
 

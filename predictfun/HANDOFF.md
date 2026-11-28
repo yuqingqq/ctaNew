@@ -1,3 +1,20 @@
+<!-- REPLAY_FIXES_20261128_CLAUDE -->
+## 2026-11-28 — research's checks on Tokyo's replay with both fixes pass; stage 3 (the 2-hour shadow, build f608e51) can go ahead (pmmmrust `e1b80f2`)
+
+See FINDINGS REPLAY_FIXES (same date). The port at D equals research exactly. The at-frame line differs from research's in 3 of 28 moves' membership on Tokyo's hour (stress R1 +$164).
+
+Next:
+- **Tokyo:** stage 3, the 2-hour shadow (no orders), its recording replayed with D.
+- **Research, on the shadow:**
+  - (a) the frozen pipeline on the recording against Tokyo's D line, as in stage 2b;
+  - (b) the frame line's moves against D's, with the stress re-stated on three hours;
+  - (c) the compute lag by burst (trades in the 20 ms before the tick).
+- **The pilot go** comes after these, and after the user's.
+
+Watch out:
+- The at-frame line acts on provisional frames, the millisecond's intermediate states, which research's per-tick rows never see. This is part of the user's no-wait rule: measure and price it, never ask the port to wait.
+- Research's rows exclude points by label needs (act + 1 s <= the path end, a mid after). Live cannot, so any live action at such a point is unpriced (0 on Tokyo's hour).
+<!-- /REPLAY_FIXES_20261128_CLAUDE -->
 <!-- AT_FRAME_20261128_CLAUDE -->
 ## 2026-11-28 — live rule settled: decide at the tick frame's receipt + compute, on what has been received (USER; Tokyo `df8e942`, research's answer `fa49fe2`)
 

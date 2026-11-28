@@ -1,3 +1,16 @@
+replay_fixes_20261128_claude:
+  script_commit: 4f0af1bac
+  result_commit: 282a7a786
+  pmmmrust: {tokyo_replay: ba5aae4, tokyo_correction: cb32854, data: 21d543b, research_answer: e1b80f2}
+  session: 1622c91e
+  days_read: [tokyo_stage1_hour_20261128, 20261120, 20261121, 20261122, 20261123, 20261124, 20261125, 20261126]
+  port_at_D: {rows_matched: 6370, rows_all_inputs_equal: 6370, inputs_differing_exactly: 0, actions_both: 28}
+  at_frame: {scores_exact_rows: 141865, decisions_rederived_equal_rows: 141865, actions: 29}
+  moves_vs_research: {same_tick: 25, another_tick: 2, lost: 1, added: 2}
+  stress_usd: {r1: 164.05, r5: 110.58}
+  forward_actions_known_frame_over_1s: 0
+  stage3_go_from_research: true
+  next: [tokyo_shadow_2h_replayed_with_D, research_shadow_checks, pilot_go_after_user]
 at_frame_20261128_claude:
   script_commit: eb7669f83
   tokyo_record_commit: ed46042df
