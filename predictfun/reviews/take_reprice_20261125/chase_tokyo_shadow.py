@@ -287,8 +287,10 @@ def live_vs_replay(Tl, Tk, kf):
     return o, bool(ok)
 
 
-def moves_and_attribution(X, Tk, der, last, both, G, score, thr, warm, mid):
-    """chase_tokyo_replay_fixes 2c / 2d on the run: the at-frame moves against research's in-scope actions (outside the midnight band)."""
+def moves_and_attribution(X, Tk, der, last, both, G, score, thr, warm, mid, lastbook):
+    """chase_tokyo_replay_fixes 2c / 2d on the run: the at-frame moves against research's in-scope actions (outside the midnight band).
+    A deciding row's last_row_of_its_tick: no later row of its (t, d); ms_last_frame: it is its millisecond's last bookTicker frame in the tape
+    (a tick's only row can be a provisional state that a later frame of the millisecond undoes)."""
     kp = both.groupby('key_t').key_r.agg(lambda s: sorted(set(s)))
     C.require(all(len(v) == 1 for v in kp), 'a move key pairs with more than one move')
     t2r = {k: v[0] for k, v in kp.items()}
@@ -322,7 +324,8 @@ def moves_and_attribution(X, Tk, der, last, both, G, score, thr, warm, mid):
         B = {c: float(rw[f'D_{c}']) for c in A if c != 'd'}
         B['d'] = float(rw.d)
         at, pv = CTRF.attribute(A, B, G, score, thr)
-        m.update(deciding_row=dict(t=float(rw.t), recv_ns=int(rw.recv_ns), last_frame_of_its_ms=bool(is_last[i]), frame_decision=str(rw.decision),
+        m.update(deciding_row=dict(t=float(rw.t), recv_ns=int(rw.recv_ns), last_row_of_its_tick=bool(is_last[i]),
+                                   ms_last_frame=bool(int(lastbook.get(int(rw.t), -1)) == int(rw.recv_ns)), frame_decision=str(rw.decision),
                                    D_decision=str(rw.D_decision)), **at)
         moves.append(m)
         priv.append(dict(move=k, cls=cls, t=float(rw.t), d=float(rw.d), **pv))
@@ -425,7 +428,7 @@ def stage_check(rec, tag, replay_fp, live_fp):
     out['G2_at_frame'] = dict(replay=rs, live=ls, known_bad_changed=kb)
     out['G3_live_vs_replay'], g3 = live_vs_replay(Tl, Tk, kf)
     out['late'], out['G4_at_frame_vs_D'], g4, _ = information(Tk, X, last, raw, f32, G, mid)
-    out['moves'], priv = moves_and_attribution(X, Tk, der, last, both, G, score, thr, warm, mid)
+    out['moves'], priv = moves_and_attribution(X, Tk, der, last, both, G, score, thr, warm, mid, bt.groupby('E').r.max())
     st1 = json.loads(CTRF.RESULT.read_text())
     same_hour = abs(st1['start_ms'] - start_ms) < 1.
     c0, c1 = out['moves']['counts'], st1['moves']['counts']
