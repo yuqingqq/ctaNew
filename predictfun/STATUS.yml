@@ -1,3 +1,11 @@
+pilot_terms_20261128_claude:
+  pmmmrust: 3d13206
+  session: 1622c91e
+  dates: any
+  withdrawn: outside_dec_1_5_utc
+  why_withdrawn: the block is the event-pressure maker study's forward replay; the taker strategy has no December 1-5 plan (USER)
+  wallet: live_wallet_with_pfmm_live_stopped
+  caps: set_by_user_at_pilot_start
 replay_fixes_20261128_claude:
   script_commit: 4f0af1bac
   result_commit: 282a7a786

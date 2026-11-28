@@ -1,3 +1,9 @@
+<!-- PILOT_TERMS_20261128_CLAUDE -->
+## 2026-11-28 — USER: the chase pilot may run on any date, with the live wallet; the USER sets the caps at the start (pmmmrust `3d13206`)
+
+See FINDINGS PILOT_TERMS (same date). The December 1–5 rule was the maker study's and is withdrawn for the taker pilot. Stage 3 (the 2-hour shadow) and research's gate are unchanged.
+<!-- /PILOT_TERMS_20261128_CLAUDE -->
+
 <!-- REPLAY_FIXES_20261128_CLAUDE -->
 ## 2026-11-28 — research's checks on Tokyo's replay with both fixes pass; stage 3 (the 2-hour shadow, build f608e51) can go ahead (pmmmrust `e1b80f2`)
 

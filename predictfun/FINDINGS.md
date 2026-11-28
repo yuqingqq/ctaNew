@@ -1,3 +1,13 @@
+<!-- PILOT_TERMS_20261128_CLAUDE -->
+## 2026-11-28 — USER's stage-4 terms for the chase pilot: any date, the live wallet, caps set by the USER (pmmmrust `3d13206`)
+
+USER: "don't have to stay outside the dates, not sure why we use these dates. we have a live wallet and will set cap then"; then "we don't have a plan of Dec 1-5 run for taker strategy".
+- **Dates:** any. The "outside December 1–5 UTC" rule in PILOT caps (above) and in the pilot request is withdrawn. It came from the event-pressure maker study's forward block (`event_pressure_dec01_05_20261127`) and never applied to the taker line.
+- **Wallet:** the live wallet: the request's funded wallet, with `pfmm live` stopped while the pilot trades.
+- **Caps:** the USER sets them at the pilot's start. The request's caps (200 BUYs, 3 USDT, 12 h, 1 in flight, 2 positions, a 20 USDT stop) are research's proposal.
+- **Reads:** if the pilot falls on December 1–5, research's stage-4 check reads Tokyo's streams of those days; record the read in the maker study's history.
+<!-- /PILOT_TERMS_20261128_CLAUDE -->
+
 <!-- REPLAY_FIXES_20261128_CLAUDE -->
 ## 2026-11-28 — Tokyo's replay with both port fixes: the port at D equals research exactly; the at-frame line (the line that trades) keeps 27 of research's 28 moves on Tokyo's hour, loses 1 (an older Predict book at the frame), adds 2 (provisional frames); stage 3 can go ahead
 
