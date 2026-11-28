@@ -1,0 +1,329 @@
+{
+  "asof": "2026-11-28T16:03:15.397482+00:00",
+  "inputs": {
+    "research_rows_sha256": "49ae17aa47d70b3c2d555ec81812b8737fa229c09eb522e5e431572f66174408",
+    "tokyo_decisions_sha256": "33bf271ec6beea508449b2d7479814683534ca8fcc91358fc731420bccfd1cec",
+    "tokyo": "pmmmrust ba5aae4 / cb32854, data 21d543b replay-fixes/, build f608e51"
+  },
+  "rows": 141865,
+  "start_ms": 1795859419003.769,
+  "warm_ms": 60000.0,
+  "groups": {
+    "trades": 4,
+    "flows": 23,
+    "depth": 11,
+    "book": 14,
+    "predict": 16
+  },
+  "at_D": {
+    "matched": 6370,
+    "research_only": 0,
+    "tokyo_only_last_frames": 1459,
+    "rows_all_inputs_equal": 6370,
+    "inputs_differ": {},
+    "inputs_differ_exactly": {},
+    "pred_exact": 6370,
+    "move_exact": 6370,
+    "D_decision_on_research_rows": {
+      "WarmUp": 28,
+      "BelowThreshold": 5865,
+      "MoveActed": 475,
+      "act": 1,
+      "WindowEnding": 1
+    },
+    "research_in_scope_actions": 28,
+    "D_line_actions": 28,
+    "actions_both": 28,
+    "D_ms_exact": 141865,
+    "dec_is_receipt": 141865,
+    "receipt_is_last_book_frame": 6370,
+    "control_at_frame_rows_all_equal": 0,
+    "control_at_frame_inputs_differ": {
+      "x_far_new_r100": 31,
+      "x_far_new_r300": 31,
+      "x_far_cxl_r100": 934,
+      "x_far_cxl_r300": 934,
+      "x_far_trade_r100": 1792,
+      "x_far_trade_r300": 1793,
+      "x_near_new_r100": 20,
+      "x_near_new_r300": 20,
+      "x_near_cxl_r100": 22,
+      "x_near_cxl_r300": 22,
+      "x_near_trade_r100": 127,
+      "x_near_trade_r300": 127,
+      "x_far_replace": 1391,
+      "x_far_replace_dev": 1391,
+      "x_near_replace": 110,
+      "x_near_replace_dev": 110,
+      "x_counter_share": 1158,
+      "x_counter_share_dev": 1158,
+      "x_activity_r300": 1787,
+      "mv_its_btc": 1799,
+      "mv_ag_btc": 129,
+      "its_100_btc": 1799,
+      "ag_100_btc": 129,
+      "pf_mid": 101,
+      "pf_spread": 40,
+      "pf_far1": 471,
+      "pf_near1": 440,
+      "pf_far5": 507,
+      "pf_near5": 493,
+      "pf_mid_ret_300": 145,
+      "pf_mid_ret_1000": 143,
+      "pf_mid_ret_onset": 95,
+      "pf_extreme": 98,
+      "pf_its_price": 101,
+      "pf_age_ms": 6370,
+      "spread_60s": 635,
+      "book_updates_60s": 1731,
+      "lim": 92,
+      "md": 101
+    },
+    "control_planted_counted": 10
+  },
+  "at_frame_scores": {
+    "rows": 141865,
+    "pred_exact": 141865,
+    "move_exact": 141865,
+    "pred_max_abs_diff": 0.0,
+    "known_bad_changed": 81601
+  },
+  "line_rederived": {
+    "rows_equal": 141865,
+    "mismatches": [],
+    "actions": 29,
+    "tokyo_actions": 29,
+    "D_rows_equal": 141865,
+    "D_mismatches": [],
+    "D_actions": 28
+  },
+  "moves": {
+    "counts": {
+      "lost": 1,
+      "same_tick": 25,
+      "added": 2,
+      "another_tick": 2
+    },
+    "research_in_scope": 28,
+    "at_frame": 29,
+    "differing": [
+      {
+        "move": "20261128:1054",
+        "cls": "lost",
+        "research_t": 1795863381338.0,
+        "frame_t": null,
+        "d": -1.0,
+        "deciding_row": {
+          "t": 1795863381338.0,
+          "recv_ns": 1795863381339713450,
+          "last_frame_of_its_ms": true,
+          "frame_decision": "BelowThreshold",
+          "D_decision": "MoveActed"
+        },
+        "sides_differ": true,
+        "frame_above": false,
+        "D_above": true,
+        "sufficient": [
+          "predict"
+        ],
+        "necessary": [
+          "predict"
+        ]
+      },
+      {
+        "move": "20261128:1369",
+        "cls": "added",
+        "research_t": null,
+        "frame_t": 1795863535968.0,
+        "d": 1.0,
+        "research_row_at_frame_tick": true,
+        "research_above_at_frame_tick": false,
+        "research_move_acted_out_of_scope": false,
+        "deciding_row": {
+          "t": 1795863535968.0,
+          "recv_ns": 1795863535969267843,
+          "last_frame_of_its_ms": false,
+          "frame_decision": "act",
+          "D_decision": "BelowThreshold"
+        },
+        "sides_differ": true,
+        "frame_above": true,
+        "D_above": false,
+        "sufficient": [
+          "flows"
+        ],
+        "necessary": [
+          "flows"
+        ]
+      },
+      {
+        "move": "20261128:28",
+        "cls": "another_tick",
+        "research_t": 1795859639957.0,
+        "frame_t": 1795859639955.0,
+        "d": -1.0,
+        "deciding_row": {
+          "t": 1795859639955.0,
+          "recv_ns": 1795859639956268812,
+          "last_frame_of_its_ms": false,
+          "frame_decision": "act",
+          "D_decision": "BelowThreshold"
+        },
+        "sides_differ": true,
+        "frame_above": true,
+        "D_above": false,
+        "sufficient": [
+          "flows"
+        ],
+        "necessary": [
+          "flows"
+        ]
+      },
+      {
+        "move": "20261128:288",
+        "cls": "added",
+        "research_t": null,
+        "frame_t": 1795860840231.0,
+        "d": -1.0,
+        "research_row_at_frame_tick": true,
+        "research_above_at_frame_tick": false,
+        "research_move_acted_out_of_scope": false,
+        "deciding_row": {
+          "t": 1795860840231.0,
+          "recv_ns": 1795860840232184250,
+          "last_frame_of_its_ms": false,
+          "frame_decision": "act",
+          "D_decision": "BelowThreshold"
+        },
+        "sides_differ": true,
+        "frame_above": true,
+        "D_above": false,
+        "sufficient": [],
+        "necessary": [
+          "flows",
+          "book"
+        ]
+      },
+      {
+        "move": "20261128:640",
+        "cls": "another_tick",
+        "research_t": 1795862497192.0,
+        "frame_t": 1795862497191.0,
+        "d": -1.0,
+        "deciding_row": {
+          "t": 1795862497191.0,
+          "recv_ns": 1795862497192399272,
+          "last_frame_of_its_ms": false,
+          "frame_decision": "act",
+          "D_decision": "BelowThreshold"
+        },
+        "sides_differ": true,
+        "frame_above": true,
+        "D_above": false,
+        "sufficient": [
+          "book"
+        ],
+        "necessary": [
+          "book"
+        ]
+      }
+    ]
+  },
+  "late": {
+    "rows_equal": {
+      "n": 141865,
+      "its": 141865,
+      "ag": 141865,
+      "after_D": 141865
+    },
+    "rows": 141865,
+    "known_bad_rows_changed": 63184,
+    "research_rows": {
+      "n": 6370,
+      "rows_with_late_trades": 1875,
+      "late_trades": 12835,
+      "late_after_D": 0,
+      "its_share_tokyo_def": 0.014720637432692583,
+      "its100_share_f_to_D": 0.014720637432692583,
+      "rows_trades_fD": 1875,
+      "rows_depth_fD": 0,
+      "rows_book_fD": 0
+    },
+    "all_rows": {
+      "rows_with_late_trades": 63639,
+      "rows_depth_fD": 2,
+      "rows_book_fD": 134231,
+      "provisional_rows": 134036
+    }
+  },
+  "at_frame_vs_D": {
+    "trades": {
+      "rows_differ": 63563,
+      "research_rows_differ": 1875,
+      "unexplained": 0,
+      "research_rows_unexplained": 0,
+      "unexplained_examples": []
+    },
+    "flows": {
+      "rows_differ": 136417,
+      "research_rows_differ": 1875,
+      "unexplained": 0,
+      "research_rows_unexplained": 0,
+      "unexplained_examples": []
+    },
+    "depth": {
+      "rows_differ": 2,
+      "research_rows_differ": 0,
+      "unexplained": 0,
+      "research_rows_unexplained": 0,
+      "unexplained_examples": []
+    },
+    "book": {
+      "rows_differ": 134196,
+      "research_rows_differ": 0,
+      "unexplained": 0,
+      "research_rows_unexplained": 0,
+      "unexplained_examples": []
+    },
+    "predict": {
+      "rows_differ": 141863,
+      "research_rows_differ": 6370,
+      "rows_other_known_frame": 7283,
+      "research_rows_other_known_frame": 548,
+      "research_rows_frame_newer": 369,
+      "research_rows_frame_older": 179
+    }
+  },
+  "questions": {
+    "stamp_gap": "vm_path: seg = the stamps from the frame known at t0 (j = searchsorted(kf, t0) - 1) to ws + 298 s; end = min(ws + 298 s, the frame before the first gap > 1 s, else the last such frame, + 1 s); a point needs g >= t0 + 1 s and act + 1 s <= end",
+    "offpath_on_research_rows": {
+      "at_frame": 0,
+      "at_D": 0
+    },
+    "forward_stale": {
+      "actions": 2754,
+      "over_1s": 0,
+      "share": 0.0,
+      "pf_age_ms": {
+        "n": 2754,
+        "mean": 75.95969498910675,
+        "p10": 39.5,
+        "p25": 54.5,
+        "p50": 72.0,
+        "p75": 92.5,
+        "p90": 113.5,
+        "p95": 128.5,
+        "p99": 190.4399999999996,
+        "max": 332.5,
+        "share_positive": 1.0
+      }
+    },
+    "onset": {
+      "rows_frame_before_onset_plus_3p5": 35574,
+      "of_them_differ_from_D": 48,
+      "differ_from_D_otherwise": 668,
+      "research_rows_before": 1355,
+      "research_rows_before_differ": 0
+    }
+  }
+}

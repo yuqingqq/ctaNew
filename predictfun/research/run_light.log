@@ -10784,3 +10784,5 @@
 2026-11-28T13:25:41Z tag=cdf_exits_20261124 rc=0 peak_rss_mib=1253 wall_s=99.97 cpu_user_s=85.10 memavail_start_gib=22 disk_free_gib=343->343 slot=claude2
 2026-11-28T13:27:17Z tag=cdf_exits_20261126 rc=0 peak_rss_mib=863 wall_s=69.25 cpu_user_s=65.93 memavail_start_gib=22 disk_free_gib=343->343 slot=claude
 2026-11-28T13:28:36Z tag=cdf_read rc=0 peak_rss_mib=623 wall_s=7.61 cpu_user_s=6.60 memavail_start_gib=23 disk_free_gib=343->343 slot=claude
+2026-11-28T16:02:43Z tag=ctrf_selftest rc=0 peak_rss_mib=213 wall_s=1.01 cpu_user_s=0.83 memavail_start_gib=23 disk_free_gib=342->342 slot=claude
+2026-11-28T16:03:06Z tag=ctrf_check rc=0 peak_rss_mib=770 wall_s=17.52 cpu_user_s=16.81 memavail_start_gib=23 disk_free_gib=342->342 slot=claude
