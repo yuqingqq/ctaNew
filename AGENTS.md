@@ -125,6 +125,9 @@ lookback that uses the current bar's close in the feature.
   conclusions are framed against VIP-0 retail cost (~12 bps RT naked).
 - **Don't delete `cache/` files casually** — `xs_feats_*.parquet` take
   ~7 minutes to rebuild from klines.
+- **Don't push model info or credentials here: ctaNew is a PUBLIC repo** (USER 2026-11-28). Frozen receipts, fitted
+  parameters, model exports and live thresholds go to the private pmmmrust; a local pre-push hook refuses them. See
+  CLAUDE.md, "Public repo: no model info or credentials".
 - **Don't push large data files (parquets, CSVs > 1 MB) into git.** The
   `.gitignore` excludes `data/`. If you need to publish a dataset, use
   HuggingFace or a separate data release.

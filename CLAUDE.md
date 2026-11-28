@@ -219,6 +219,18 @@ For Predict.fun, maintain the consolidated checklist and next measurement in
 the combined review. The current package is
 `predictfun/reviews/automatic/20261120_r2d_bundled_round/plan.md`.
 
+## Public repo: no model info or credentials
+
+**USER, 2026-11-28:** ctaNew is a **public** GitHub repo; pmmmrust is private. Model info and credentials go to the private pmmmrust only;
+research (code, analyses, results) can be pushed here.
+- **Model info:** a frozen candidate's receipt or manifest, a fitted model or its parameters (coefficients, weights, trees, calibrators),
+  a model export, a live rule's thresholds. Keep such files untracked here (list them in `.gitignore`) and commit them to pmmmrust.
+  Freeze receipts follow this too: the builder code may stay here, the receipt goes to pmmmrust.
+- **The guard:** `.git/hooks/pre-push` (local to this clone, not versioned) refuses a push to this repo that adds model-info paths, JSON
+  with fitted parameters or credential-shaped lines. Fix the commit; do not bypass it.
+- **The 2026-11-28 rewrite:** the then-unpushed history (468 commits) was rewritten to drop 36 such files. Old -> new commit hashes are in
+  `predictfun/commit_map_20261128.tsv`; the original history is the local-only ref `refs/backup/mm-research-pre-scrub-20261128`.
+
 ## What's in/out of scope
 
 **In scope** (free to edit):
