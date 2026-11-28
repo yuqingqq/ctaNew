@@ -6066,6 +6066,7 @@ evaluated, no new skill claim, and the controls do not exclude every other
 possible data/model/simulator defect.
 <!-- /WAIT_POST_WHY_20261114 -->
 
+
 <!-- WAIT_POST_V2_20261114 -->
 ## 2026-11-14 15:01Z — wait/post v2 target fixes complete; five-day candidate REJECTED
 
@@ -6148,6 +6149,88 @@ coverage under the frozen learned keeper before integrating entry with keep/pull
 Integration changes continuation values and requires new labels and replay.
 No timer or threshold adjustment was selected from these outcomes.
 <!-- /WAIT_POST_V2_20261114 -->
+
+
+<!-- WAIT_POST_REVIEW_20261114 -->
+## 2026-11-14 12:43Z — wait/post review complete; bounded pilot loses, candidate not advanced
+
+USER: "Review the model first, then check how it performs." Evidence merged
+**3afd62f0**; review source 9308e26e, freeze af5ac39c. Review:
+`reviews/wait_post_review_20261114/review.json`. Current result (supersedes v1
+summary): `reviews/wait_post_review_20261114/performance_v2.json`; complete
+source/result hashes and controls in the same directory.
+
+Main target issue: POST now versus neutral POST next decision can label both
+a profitable entry and a losing entry zero. It is a valid one-step queue
+advantage diagnostic, but not a complete admission/waiting model. Runtime can
+repeatedly wait in states absent from the neutral training population. Bid/ask
+routing and client-state accounting controls pass. Acceptance also lacks a
+required participation-matched timing test; the local null was diagnostic only.
+
+Predeclared pilot, as of **2026-11-14 12:39:11 UTC**: train first24 eligible
+windows each on Oct23/24/25 (72 total), test first12 on Oct27 (one PARTIAL day,
+no intervals). 974 training actions, only92 nonzero targets (90.55% zeros).
+Bid model:200 two-leaf trees; ask:one constant leaf, so no ask timing learned.
+The minimum-row gate allowed this; require capacity/variation diagnostics and
+adequate support before interpreting model timing skill.
+
+M50 gross simulated terminal cash+inventory, same neutral keeper for every arm:
+VALUE **-$271.53**, ALWAYS **-$310.01**, SCHEDULED guard-clear **-$65.82**,
+TIMER guard+250ms **+$66.94**, FLAT $0. VALUE's both-side-at-least-one-live-quote
+share99.70%; inventory-square exposure higher than both guard controls.
+VALUE loses at M0/M50/M250, also excluding fills younger than100ms. Bid local
+selection fails the500-draw matched null; ask posts on all65 labeled test actions.
+These prefix results do not estimate full-day or combined keep/pull performance,
+and do not select a250ms timer as optimal. Full v1 study was not relaunched.
+
+Operational repair: original queued driver2030852 was absent and never trained
+full models; stale status superseded in-band. The bounded run completed under
+user service `pf-wait-post-review-20261114`, exit0. ExecStopPost plus finally
+resume hooks verified; older size driver1576587 resumed, other session/core9
+unchanged. No review job remains running. Raw data/models:
+`data/predict_fun/research/wait_post_review_20261114_v1/pilot/`.
+
+Next: define POST and continued-WAIT values under the SAME frozen continuation
+policy (including the keeper), an absolute-admission/never-post control, and
+causal waiting-state support; preserve test-day exclusion throughout training.
+Then retrain and test on complete chronological development days before any
+forward validation. No parameter tuning or target repair was mixed into this
+frozen-model diagnostic.
+<!-- /WAIT_POST_REVIEW_20261114 -->
+
+
+<!-- WAIT_POST_ENTRY_20261114 -->
+## 2026-11-14 12:16Z — separate bid/ask wait-versus-post candidate built; chronological run queued
+
+USER assigned the keep/pull + scheduled repost study to the other session and
+requested wait/post here in parallel, with different behavior on the two sides.
+Merged **1c030518** (source 7d82571f, freeze 99ba6a63). Separate bid and ask entry
+regressors, 69 causal inputs including side-aligned flow/returns and known
+inventory, per-rung price/queue features; shared joint position and hard cap.
+POST when predicted POST-minus-WAIT value is positive; otherwise reconsider at
+each 50 ms decision, with no timer that forces a post. Resting orders use the
+same neutral keeper across all entry arms; this does not reproduce or claim the
+other session's learned keep/pull policy. Combine only under a new declaration.
+
+Verification: 26 synthetic tests passed. Historical smoke at 2026-11-14
+12:13:23 UTC: two consumed 2026-10-23 windows, 147 entry generations, 37 sampled
+eligible labels (6 positive, 1 negative, 30 zero), 110 not sampled; no model
+performance inference or interval from this smoke. Target is one-step improvement
+under neutral continuation, not an optimal waiting value; repeated-wait state
+coverage and sparse nonzero labels remain explicit limitations.
+
+Full nine-day labels / five chronological fits and joint replays are **queued**
+in codex/core8 after the current older size stage finishes. Driver PID 2030852;
+older size queue PID 1576587 is suspended between stages (current worker left
+running) and automatically resumes when this driver completes/fails. Claude/core9
+continues the other study. Status lives in
+`data/predict_fun/research/wait_post_20261114_v1/driver_full/status.json`.
+Run executes frozen sources in `/tmp/cta-entry-value-20261114`; do not edit that
+checkout while running. No trained model/performance result yet; no forward
+validation or protected-date read. Design, freeze and verification:
+`reviews/wait_post_20261114/`. No keep/pull outputs changed.
+<!-- /WAIT_POST_ENTRY_20261114 -->
+
 
 <!-- ORDER_HARM_CLIENT50_FIX_20261114 -->
 Integration: merged into `mm-research` on 2026-11-14 10:16:29 UTC; no push or research run.
@@ -6512,3 +6595,488 @@ Statuses:
 - The fill clock: when trades match relative to their report (C2).
 - Our real place in the queue (C5).
 - All three need a live run with the A4b capture (USER D2).
+
+<!-- MODEL_UPGRADE_LOCAL_20261112 -->
+
+2026-11-14 09:47Z: [ORDER-HARM v3 / POLICY v2 fix review](handoffs/20261114_order_harm_v3_fix_review.md), source f481b01b.
+Same-cadence baseline, separate chronological model/calibration folds and a
+broader portfolio gate are present. Two actual-source synthetic defects remain:
+legacy label engine sets tc on an unseen fill, dropping a 450 ms decision before
+its 500 ms notification; portfolio vend includes a 60.010 s fill but marks it
+at 60.000 s. Both defect checkers fire, with positive/repair controls. Generate
+labels on client-known state and use a common post-cancellation terminal for
+cash/inventory. EVERY=5 still means 250 ms; the discussed 50 ms policy is not
+implemented. Upstream guard/FRONT-PULL remain LODO. User's no-run instruction
+respected: tiny synthetic cases only, no fit/replay, no new performance result,
+no research source or worker changed. Receipt as-of 09:47:14 UTC.
+
+
+2026-11-14 08:35Z: [v3 repair and ORDER-HARM policy review](handoffs/20261114_joint_v3_policy_review.md).
+The prior future-rejection admission defect is superseded by v3: actual-lane
+prefix invariance passes the earlier example, the old-bug mutant is caught,
+and a known cap increase changes admission as expected. No additional critical
+execution-causality defect confirmed. Main evaluation gaps: OH 250 ms versus
+FB25 50 ms cadence; all-date/reference-state threshold matching; WS-subset
+success criterion despite adverse all-trades/timing sensitivity; blind-keep
+labels used for an adaptive policy. Add a cadence-matched baseline and whole
+portfolio acceptance criterion; current dates remain development only.
+Saved receipts: 6,912 invariance checks, 163,296 replay runs, zero reported
+violations. True-exposure check 7/9 dates (72,576 runs), zero hard overshoots;
+policy thresholds/results absent as of 08:34:52. New caps 300/600/1,500 shares
+and uncapped. No research worker or frozen source changed.
+
+
+2026-11-14 06:41Z: [ORDER-HARM v2 fixes verified](handoffs/20261114_order_harm_v2_fix_review.md).
+Supersedes the three open v1 findings below: earlier future-queue cases now
+pass with both mutants caught; R622 is removed; boundary censor is applied.
+Historical diagnostic receipts/hashes match, not an independent refit.
+NEW: JOINT-LADDER v2 admission uses a future post-only refusal to remove a
+pending request from reservation immediately. Same t=0 known book but a
+changed t=40 opposite best changes the second t=0 submission; full-lane
+synthetic control confirms it and all seven accounting counters stay zero.
+Reserve from send through client-known acknowledgement; causal admission needs
+its own falsifier. Historical effect unmeasured. Existing workers unchanged.
+
+
+2026-11-14 05:57Z: [critical ORDER-HARM source review](handoffs/20261114_joint_order_harm_critical_review.md)
+confirmed with actual-function synthetic controls: an update at 300 ms changes
+queue features at a 250 ms decision; one physical fill contributes to two
+summed decision labels; the 59 s pull fork ends at 64 s while KEEP cancels at
+60 s. No historical prevalence estimate. Require causal feature snapshots,
+action/fill identity and common observed terminal horizons before relying on
+ORDER-HARM scores. Joint replay progresses (6 days, zero parity differences at
+05:56:43), but most interaction paths skip parity; soft caps are not hard
+exposure limits and settlement still inherits the tie issue. No worker/source
+mutation or new historical replay.
+
+
+2026-11-14 05:41Z: [TARGET-TEST operational/result review](handoffs/20261114_target_test_status_review.md).
+Nine days completed, receipt controls clean, saved reports match runtime/hash
+copies. Model improvement not established; primary gains reverse under timing
+stress and on all-trade marks. FULL's missing-score fallback affects 12.12% of
+2,290,842 guard steps vs 40 missing OLD scores; match coverage/fallback before
+attributing model effects. Joint-ladder/order-harm next steps acknowledged by
+the other session; shared taker-volume accounting and fixed-risk comparisons
+remain necessary. Source/receipt review only; no new replay or live change.
+
+
+2026-11-14 05:25Z: [influence alignment review](handoffs/20261114_influence_alignment_review.md)
+checks NEXT-PRICE / INFLUENCE report identities and actual labels, fitting,
+scoring and per-order decision code. Through-price cancellation preserves a
+possible future-best order, but original-best and missing-prediction pulls
+remain; onset-to-step transport, future-conditioned eligibility, oracle target
+mismatch and independent-rung economics prevent a full objective claim.
+The 97% without a >=0.5c fair-price move are not causally identified as local.
+Reported model gains are small; TARGET-TEST has no final verdict yet.
+No numerical refit/replay or live change; frozen experiments remain intact.
+
+
+2026-11-13 13:55Z: [FUTURE-BEST source review](handoffs/20261113_future_best_model_integration_review.md)
+binds producer037ed9de and43 unchanged inherited artifacts. The one-tick
+reaching-versus-passing rule passes six synthetic cases/three mutations; the
+inherited depth target and transitive training dependencies remain unchanged.
+R500/R501 omit the declared minimum-fill gate (source-loop counterexample);
+historical effect is unmeasured. No new performance claim. Native depth bundle
+a50aa572 has46 controls queued under2422704 behind owner chain2364799; prior38
+component controls pass. Recovery10/18 complete, Nov2/stress2177940 active;
+size1576587 waiting. Frozen experiments and live policy unchanged.
+
+
+2026-11-13 13:39Z: [independent cached-book provenance](handoffs/20261113_action_depth_target_preparation.md)
+at d57977b8 passes 38 combined synthetic controls as of 13:38:21.311976 UTC.
+Saved book/clock arrays reconstruct from authenticated shards, native clock
+configuration and registry starts; rehashed prices/clocks and changed/missing
+sources refuse. This does not audit the upstream collector/parser. Composition
+with the depth writer, complete historical construction, chronological fitting
+and economic comparison remain. Recovery 10/18 complete; Nov 2/stress 2177940
+active, size 1576587 waiting. No historical depth result or policy improvement.
+
+
+2026-11-13 13:32Z: [depth training-table integration](handoffs/20261113_action_depth_target_preparation.md)
+at 03cf41a3 passes 30 synthetic checks as of 13:30:53.887887 UTC. Saved depth,
+economic targets and causal size features join by exact native action identity;
+all sampled rows and separate missingness statuses remain. Future labels are
+excluded from the explicit feature allowlist. No historical depth model fit;
+raw-source book provenance and complete frozen historical evaluation remain.
+Recovery 10/18 complete with Nov 2/stress 2177940 active, size 1576587 waiting.
+All frozen experiment sources unchanged; no improved-policy verdict.
+
+
+2026-11-13 13:25Z: [saved depth evidence](handoffs/20261113_action_depth_target_preparation.md)
+at 5c4d2c28 passes 22 synthetic controls as of 13:24:07.993442 UTC. Each label
+reconstructs from saved book frames and native captures; every neutral order
+and exact original capture link verifies. Rehashed corrupt labels/captures,
+omissions and changed external identities refuse. Complete raw-tape provenance,
+historical features/fits and policy evaluation remain. Recovery **10/18** full
+scenario-days complete: Nov 1/stress 508 inference rows, four policies x 288
+windows, 25 artifacts reviewed. Nov 2/stress PID 2177940 active; size driver
+1576587 waiting. No new performance verdict or change to frozen experiments.
+
+
+2026-11-13 13:10Z: [native depth-target integration](handoffs/20261113_action_depth_target_preparation.md)
+at a0456b5c passes 13 synthetic tests as of 13:07:48.482668 UTC. Depth labels
+use reconstructed PULL cancellation events cross-checked against RESET, the
+native book's actual source/known clocks, and complete neutral populations.
+Unknown/censored depth and empty windows remain explicit. In-memory only;
+historical artifact extraction, features and fits remain outstanding. Recovery
+9/18 complete, Nov 1/stress PID 1867188 active; size driver 1576587 waiting.
+All frozen sources unchanged; no stronger-model or performance claim.
+
+
+2026-11-13 12:58Z: [post-intervention depth target preparation](handoffs/20261113_action_depth_target_preparation.md)
+adds a recorded-book target primitive at 2f6df830. Eight synthetic tests pass
+as of 12:55:40.046611 UTC: recovered pre-deadline moves are excluded, persistent
+versus additional depth separated, unknown future coverage retained as statuses.
+This is price-depth measurement, not a fill-loss forecast or cancellation rule.
+Native action/clock joins and historical fitting remain unimplemented. Existing
+recovery/size/computational freezes are unchanged; recovery 9/18 complete,
+Nov 1/stress PID 1867188 active, size driver 1576587 waiting.
+
+
+2026-11-13 12:50Z: recovery **9/18** full scenario-days complete. Oct 31/stress
+finished at 12:48:31.107964 UTC, with four policies × 288 windows and 268 sampled
+inferences reconstructed. [Artifact review](reviews/model_recovery_20261113/run_stress_20261031_artifact_review.json)
+verifies 25 hashes and three receipt copies; reusable instrument 4379a7a3 accepts
+the real record and rejects 11 corrupt variants. Numerical checks are inherited
+from the frozen runner. Nov 1/stress PID 1867188 continues under driver 3159222;
+size driver 1576587 waits for final recovery evidence. Original scientific and
+computational sources remain frozen. No final improvement or size verdict.
+
+
+2026-11-13 12:29Z: [PULL-DEPTH integration review](handoffs/20261113_pull_depth_model_integration_review.md)
+binds 200 artifacts from the report as of 12:16:21Z, nine consumed days. Source-bound
+synthetic controls reproduce that the depth label can count a move already
+recovered before the decision, and codes no valid future frames as zero. A
+source-derived dependency audit shows the outer day entering upstream models
+used for downstream training features; historical effect size is unknown.
+The selected-fill gains motivate a price-level forecasting hypothesis, but
+not a validated multilayer advantage: rungs have separate trade budgets,
+actual inventory risk is unmatched, and full-timing results differ. Future
+work needs intervention-deadline targets and earlier-only upstream training.
+Existing scientific and computational freezes unchanged. Recovery 8/18 remains
+complete; Oct 31/stress PID 1556263 and queued size driver PID 1576587 continue.
+
+
+2026-11-13 12:19Z: recovery8/18 full scenario-days complete. Oct27/stress runner
+asof12:14:50.600508Z covers four modes x288 windows/393 inference samples;
+eighth artifact review verifies25 hashes/three receipt mirrors/correction links.
+Oct31/stress1556263 continues. [Size optimization handoff](handoffs/20261113_size_fast_handoff.md)
+is complete: supplemental declaration3fb7540f, old idle driver1167074 retired,
+replacement1576587 live and waiting for full recovery evidence. Handoff review
+binds22 artifacts and five three-way receipt mirrors; original302/385 scientific
+sources unchanged. All169 historical size tasks remain; no new model/size
+performance claim or live change. PULL-DEPTH is now published; its integration
+review remains pending and does not alter this freeze.
+
+
+2026-11-13 12:00Z: exact-container size inference is implemented and checked,
+with8 synthetic controls PASS asof11:56:03Z.400 queries x112 features agree
+exactly; four native five/50 policy windows preserve requests/fills/generations
+and full score/trade evidence. Component benchmark10.87x; no whole-replay or
+strategy performance claim. [Optimization checkpoint](handoffs/20261113_size_fast_execution.md).
+Pure preparer1413387 waits for other-owner chain1381042 before a supplemental
+computational freeze and verified replacement of the idle size driver. Original
+size driver1167074 remains live; no size historical stage started. Recovery7/18
+complete, Oct27/stress continues. Scientific302/385 source sets unchanged.
+
+
+2026-11-13 11:44Z: recovery7/18 complete; Oct26/stress verified at the25
+named artifacts/three receipt mirrors/correction chain, runner as-of11:39:37Z.
+Oct27/stress continues. Sized model experiment remains frozen and queued.
+[Queue placement integration review](handoffs/20261113_queue_place_model_integration_review.md)
+binds126 artifacts and reproduces a post-hoc classification defect: the exact
+WHY-LATE state_at excludes the first pending target-price order and can call
+it OUT. Historical affected count unknown; no replacement percentage claimed.
+Queue decomposition conditions on aged at-best fills, not neutral actions;
+its KEEP ghost omits finite-size exhaustion and the rungs lack joint trade and
+inventory budgets. This does not overturn the partial-fill retention mechanism
+or establish a complete size/layer policy advantage. Both scientific freezes
+unchanged, no historical sized-model result and no live change.
+
+
+2026-11-13 11:33Z: complete sized model experiment is frozen and queued,
+source8a8f4c18; declaration as-of11:30:43.831598Z, SHA
+cea782c5c074158c44b52f302e79907f23808123535e6cbf01a77f5c40b5183c.
+Twelve synthetic pipeline controls passed11:28:40.361760Z, receipt SHA
+eac19559a35e20122dd043f712f37501a09ee3b24c480870a56c99fb67942948.
+Five/50 quotes share cap50; three chronological model heads;50 SELECTIVE primary
+versus size-matched HISTORY/earlier-only guard. Separate realized-risk gates
+for model improvement and size advantage; three execution scenarios. Native
+capture/features/target joins, models, matched nulls, portfolio/presence/taker
+accounting and complete report reconstruction are in-repo. All385 source/857
+input identities,9 registries and169 ordered stages are frozen. Driver1167074
+is confirmed live, waiting for recovery driver3159222 and core8. Recovery6/18
+complete; Oct26/stress worker911474 live. No historical size stage, model gain,
+larger-order profitability or live change established. See
+handoffs/20261113_size_experiment_frozen.md. Goal remains active.
+
+
+2026-11-13 11:10Z: sized native runtime/accounting verified. Seven runtime
+controls pass as-of11:04:36.394501Z; two native integration controls (six
+synthetic windows) pass as-of11:09:15.407718Z, source022f6e91, receipt SHA
+f355e1a805ff9a1f7a3f4fe087ceab84ab796cf4dbbbdae3fbb885646a6b009f.
+Actual five/50 quantities and common50 cap are reflected in native arm labels.
+Capture/reference economics match;50 retains a residual through the second
+taker while5 exhausts; age0 parity and age500 suppression pass. This verifies
+the mechanism/instrument only, not historical profitability or matched risk.
+Failed age-construction adapter attempt and incorrect fixture gate argument
+remain preserved. See handoffs/20261113_size_runtime.md. No live change.
+Recovery Nov3/X completed11:03:48.631717Z:4x288 windows,438 sampled inferences;
+25 artifact hashes/correction links/three mirrors checked, not a second replay.
+All6 primary dates complete,6/18 total; Oct26/stress worker911474 now active.
+
+
+2026-11-13 10:52Z: full sized policy now persists original taker/timing
+provenance and global native fill order. Five synthetic controls pass, including
+five/50 residual-retention mechanism, unchanged learned requests/fills,
+same/unknown taker handling, saved corruption refusals and empty windows.
+Receipt size_priority_full_policy_trades_controls.json SHA
+6a63a5aa148ec4dcc557f7f497c03ec003f3d50b859ecc224f6eb7712f58a9e8,
+as-of10:52:25.536251Z; source c9dcfb61. Source/log/three mirrors checked.
+This establishes instrumentation/mechanism only; no historical size benefit,
+risk-matched gain or live change. Next historical runner/full declaration.
+
+## 2026-11-13 — original model upgrade complete and negative; recovery build running
+
+As of 2026-11-12T22:40:51.901377+00:00, all six primary and six conservative execution dates are complete (1,728 windows per policy/scenario). HISTORY10 versus the chronological guard loses 645.80 USD on 1,517 common marked windows (211 missing; day interval [-767.61, -517.42]) with 84.45% higher inventory-square exposure; under stress it loses 1,153.97 USD on 1,538 common windows (190 missing; interval [-1292.14, -1016.82]) with 30.65% higher exposure. Small gains over STATIC10 are inconclusive and carry higher risk. The declared improvement predicate fails.
+
+The earlier matched-count local gain over STATIC10 did not establish a sequential policy gain. The candidate still has a 132 ms median positive accepted lifetime in primary replay, and its local kept region was miscalibrated. Settlement/carry reporting is corrected in `result_settlement_v3.json`; marked values and predicates are unchanged. Read [the complete three-scenario review](handoffs/20261113_model_upgrade_complete_review.md) for exact populations, caveats and receipt links. Live calibration and recovery-policy performance remain unresolved; no live change or model promotion.
+
+Completion 2026-11-13T02:37:37.072135+00:00: all eighteen original full scenario-day runs are complete, with 7,625 saved inference samples reconstructed and 1,011 artifacts bound by the final integrity check. Primary/stress, age500 and combined improvement predicates are all false. Age500 HISTORY10 versus the chronological guard has -9.34 USD common marked value (1,654 common / 74 missing windows; six-day interval [-53.25, +24.63]) and 219.06% higher inventory-square exposure. Full presence is as of 02:37:22.045021: HISTORY10 has any quote in 25.82% / 31.97% / 26.68% of the entry minute under primary / stress / age500, and both sides in only 2.83% / 4.35% / 3.28% (1,728 windows each).
+
+At 2026-11-13T02:37:37.167875+00:00 the [frozen recovery experiment](handoffs/20261113_model_recovery_plan.md) started its first full Oct23 seed build on core 8. Its fifteen controls and historical seed smoke (279 generations/16 actions) pass; full recovery/value fitting and policy evaluation remain. No new fitted-model gain is established. Prior partial checkpoints remain in the execution history; no frozen source or criterion has changed.
+
+Seed progress, 2026-11-13T03:03:26.769881+00:00: the full Oct23 build and feature attachment pass (receipts as of 03:03:23.002351 and 03:03:26.601858 UTC). All 288 windows, 18,115 neutral generations and 1,939 sampled actions remain accounted for; 1,927 ten-second targets are eligible and 12 missing marks remain explicit. All short targets are available. Oct24 is running; full-day saved-capture reconstruction and fitting/evaluation remain. This is construction evidence, not model-performance evidence. The plan explicitly distinguishes the ten-second endpoint-inventory penalty from the full-path inventory exposure used in the final risk gate.
+
+Recovery update, 2026-11-13T03:30:26.179371+00:00: both full seed days and their 3,741 saved captured targets now pass independent reconstruction (`seed_evidence.json`, as of 03:28:09.487422 UTC, 29 artifacts). All short targets are available; the ten-second targets retain 19 missing-mark statuses. The fixed recovery proxy was fitted at 03:29:15.608728 UTC and its actual four-window integration smoke passes (279 generations / 16 actions, feature receipt as of 03:30:26.011099 UTC). The first full recovery-label build is active. The [proxy forecast audit](handoffs/20261113_recovery_proxy_audit_plan.md) was declared before fitting with seven control groups passed; run it after the recovery data builds. No forecast-quality or strategy-improvement result is established yet. The temporary audit boundary is complete and the same driver has resumed.
+
+Timing supplement as of 2026-11-13T01:50:14.984899+00:00: [descriptive accounting over the same six primary/stress dates](handoffs/20261113_model_cancel_timing_review.md) finds negative realized fill-mark value before the fitted policies' earliest learned cancellation effect (100 ms minimum score age plus configured cancel latency). The guard can withhold before placement. This exposes an entry/re-entry issue, but does not identify counterfactual avoidability, fresh-entry value or an alternative policy gain. All 60 populations and missing-mark counts remain in the receipt; the next frozen experiment is unchanged.
+
+Source review 2026-11-13T02:15:29.597599+00:00: the [guard benchmark includes immediate G1/G2 movement responses and entry gating](handoffs/20261113_model_guard_comparison_review.md); STATIC10/HISTORY10 first score accepted orders at age 100 ms. The incumbent comparison therefore covers whole policies, not only prediction quality. The separate STATIC10/HISTORY10 comparison shares timing. No frozen policy changes.
+Training-support audit as of 2026-11-13T03:54:16.600667+00:00: the fixed recovery proxy's exact 3,741 seed actions and serialized model pass five control groups. All 25–500 ms raw/signed Binance returns have zero constructed bins under the pinned settings despite valid, varying inputs. Only 65 of 83 features are available; 64 receive splits. Its 300 trees have four or five leaves. This is a training support limitation, not a forecast-performance result or evidence that lowering the minimum leaf size would help. Read [the descriptive review](handoffs/20261113_recovery_training_support_review.md). No model/settings change; full recovery labels and the declared later-day forecast audit continue.
+
+First full recovery day, as of 2026-11-13T03:57:31.945411+00:00: Oct23 build/data pass (288 windows, 18,115 neutral generations, 1,939 actions; 1,927 eligible ten-second targets / 12 missing marks; all short targets available). `first_recovery_evidence.json` independently reconstructs every full-day and smoke captured target, binding 34 artifacts; recovery gate/send timing is checked from recorded estimates, without independently recomputing each such estimate from market inputs. Oct24 is running. These are construction checks; forecast quality and sequential strategy improvement remain unresolved.
+
+Operational update as of 2026-11-13T04:03:24.911686+00:00: the declared proxy forecast audit has a separate live launcher (PID 1289091, source `2f30cab9`) waiting for all nine recovery-data receipts and a free auxiliary slot; no manual duplicate is needed. Also, the fixed model uses 13 splits on `s_return_accel`, containing the 250 ms return (same 3,741 training actions; audit as of 03:54:16.600667 UTC). Exclusion of direct return inputs must not be interpreted as total absence of short-term return information. Numeric receipts and the frozen experiment are unchanged.
+
+Latest separate front-pull result reviewed (report as of 2026-11-13T03:54:02Z; nine consumed dates, 5,184 window-sides): its saved policy-improvement readings fail. [Integration review](handoffs/20261113_front_pull_integration_review.md) binds the inspected report/source identities and distinguishes its future-survival-conditioned level target, other-date fits, inherited guard-score exposure and S4 queue assumptions from our causal order-value experiment. Its report wording should read zero days **better** than the guard, rather than zero days losing. This is a read-only interpretation of existing results, not an independent rerun or evidence that the recovery candidate works. No score, threshold or variant imported.
+
+Recovery builds 2/9 complete, as of 2026-11-13T04:20:22.652841+00:00: full Oct24 build/data pass (288 windows, 15,372 neutral generations, 1,802 actions; 1,796 eligible ten-second targets / six explicit missing marks; all short targets available). Neutral parity and all KEEP forks reconcile. Oct24 independent saved-capture reconstruction remains in the final verifier; the early independent checkpoint covers Oct23/smoke only. Oct25 is running, and the live proxy-audit launcher waits for seven remaining data days. Forecast and strategy performance are still unresolved; no frozen changes.
+
+Recovery builds 3/9 complete, as of 2026-11-13T04:43:50.233156+00:00: full Oct25 build/data pass (288 windows, 14,973 neutral generations, 1,714 sampled actions; all short and ten-second targets eligible). One separate neutral generation is explicitly `censored_30s`. Neutral parity and all KEEP forks reconcile. Oct24/25 independent saved-capture reconstruction remains in the final verifier; the early checkpoint covers Oct23/smoke only. Oct26 is running and the proxy-audit launcher waits for six remaining data days. Forecast and policy improvement remain unproven.
+
+Recovery builds 4/9 complete, as of 2026-11-13T05:10:46.161300+00:00: full Oct26 build/data pass (288 windows, 19,116 neutral generations, 2,033 sampled actions; 2,020 eligible ten-second targets / 13 explicit missing marks; all short targets available). One separate neutral generation is `censored_30s`. Neutral parity and all KEEP forks reconcile; independent saved-capture reconstruction for Oct24/25/26 remains in the final verifier. Oct27 is running, and the live proxy-audit launcher waits for five remaining data days. No model or policy improvement is established yet.
+
+Recovery builds 5/9 complete, as of 2026-11-13T05:34:38.126849+00:00: full Oct27 build/data pass (288 windows, 15,992 neutral generations, 1,762 sampled actions; 1,759 eligible ten-second targets / three missing marks; all short targets available). One separate neutral generation is `censored_30s`. Neutral parity and all KEEP forks reconcile; independent saved-capture reconstruction for the later dates remains in the final verifier. Oct31 is running and the proxy-audit launcher waits for four remaining data days. Built dates include training/calibration data, not five completed outer evaluation folds. Forecast and policy improvement remain unproven.
+
+Recovery builds 6/9 complete, as of 2026-11-13T05:53:36.246067+00:00: full Oct31 build/data pass (288 windows, 9,475 neutral generations, 1,225 sampled actions; all ten-second and short targets eligible, no missing-target or neutral censoring statuses). Neutral parity and all KEEP forks reconcile. The three copies of each receipt and all eleven saved file hashes match; independent saved-capture reconstruction remains in the final verifier. Nov1 is running and the proxy-audit launcher waits for three remaining data days. Built dates include training/calibration data, not six evaluated outer folds. Forecast and policy improvement remain unproven.
+
+Public-order source review, report as of 2026-11-13T06:04:01Z (nine consumed dates; 911,353 observed order records): [integration review](handoffs/20261113_public_orders_integration_review.md) records the reported repeated-fill and sole-maker-stop differences without equating them to a causal retention gain. Fill spans/gaps are not quote lifetimes or cancel-to-repost delays; groups are ranked by volume and not size-matched. The creator and at-best populations have different coverage. The summary zero for `legs_unmapped` defaults an absent field in all nine daily receipts; it does not show complete identity coverage. The review binds inspected report/source identities; no independent rerun, new model or frozen policy change. Nov1 recovery data are still building; no forecast/strategy gain established.
+
+Recovery builds 7/9 complete, as of 2026-11-13T06:13:02.134922+00:00: full Nov1 build/data pass (288 windows, 10,653 neutral generations, 1,305 sampled actions; 1,301 eligible ten-second targets / four missing marks; all short targets eligible and no neutral censoring). Neutral parity and all KEEP forks reconcile. Receipt copies and all eleven saved file hashes match; independent captured-target reconstruction remains in the final verifier. Nov2 is running and the live proxy-audit launcher waits for two remaining data days. No model, threshold or criterion change; no demonstrated forecast or policy improvement.
+
+Public-order publication clarification, 2026-11-13T06:25:39Z: the [integration review](handoffs/20261113_public_orders_integration_review.md) now binds the published prose and confirms its machine review copy matches the data. The claim that the pull signal is already right exceeds a score/disappearance association; the existing front-pull policy result remains negative. The frozen engine supports partial fills that can leave a five-share order resting, so exhaustion on every first fill does not follow mechanically from size. No empirical depletion frequency or equal-risk larger-size benefit is inferred. No imported size, timer, signal or policy; the Nov2 data worker continues.
+
+Recovery builds 8/9 complete, as of 2026-11-13T06:37:37.850608+00:00: full Nov2 build/data pass (288 windows, 17,944 neutral generations, 1,829 sampled actions; 1,823 eligible ten-second targets / six missing marks; all short targets eligible and no neutral censoring). Neutral parity and all KEEP forks reconcile. Receipt copies and all eleven saved file hashes match; independent captured-target reconstruction remains in the final verifier. Nov3 is running and the proxy-audit launcher waits for its data. Forecast and full-policy evaluations remain pending; no frozen or live change.
+
+
+
+## 2026-11-13 07:23 UTC — all data, local fits, and accounting failure preserved
+
+All nine full recovery data days completed at 07:02:13.217731 UTC: 2,592 windows,
+138,743 neutral generations, 15,432 sampled actions, 15,382 ten-second eligible /
+50 missing marks; all short targets eligible, four separate neutral censored
+statuses. All six chronological value fits and saved-model prediction checks
+completed by 07:02:38.076419 UTC. Local report as of 07:02:52.217695 covers
+9,945 eligible / 32 missing test actions. SELECTIVE10 does not beat DIRECT10
+at matched counts; its confidence interval crosses zero. See the local review.
+
+All-data reconstruction passed at 07:08:13.800158 UTC on 15,432 captured targets,
+125 artifacts (wrapper rc=0, 180 MiB, 23.46 seconds). This operational checkpoint
+used temporarily free core8 while the pure driver was held; no worker was
+interrupted. The same driver resumed at 07:08:59.659753 UTC, superseding the
+hold receipt. X/stress/age0 integration smokes pass. The age500 smoke simulation
+finished but settlement correction raised TypeError on its empty direct10 fill
+table. Original driver 3592076 terminated at 07:12:56.478932 UTC. Its log and
+partial output are preserved by empty_fill_age500_failure.json. No canonical
+age500 success receipt exists. A versioned accounting adapter must prove raw
+replay parity before a corrected receipt; no model or strategy change.
+
+The separately queued fixed-proxy audit completed at 07:23:08.921632 UTC,
+11,691 saved actions including 9,977 test actions across six dates; all short
+labels available. Forecast RMSE 5.19342 vs constant 5.19597 c, equal-day MSE
+improvement interval [-0.09024,+0.17810] c². Nonnegative predictions on 3,399
+test actions sum to +1,480.99 c vs observed -527.27 c. No reliable forecast gain
+is established. Audit and runner receipts, all their bound file hashes, and
+three mirrored copies match. No live changes; full policy evaluation pending.
+
+
+
+## 2026-11-13 07:31 UTC — corrected smoke exact; full recovery replay started
+
+Supplemental source a4c190ec and declaration c38f6acd preserve the entire
+scientific freeze and normalize numeric types only for empty fill tables.
+Seven control groups passed at 07:28:02.056099 UTC, including the actual failed
+empty case and nonempty original parity. The initial replacement launcher used
+system Python and failed import before starting work; its log/failure receipt
+are preserved and superseded by the project-venv launcher 3159222.
+
+Corrected age500 smoke raw parity passed at 07:31:17.944617 UTC: 18 raw parquet
+tables and the decompressed event stream exactly match the failed attempt.
+All four policies retain eight windows; DIRECT10 still has zero fills. The
+canonical smoke receipt carries correction provenance and supersedes the old
+failure in-band. Wrapper rc=0, 1,893 MiB, 116.36 seconds. Mirrored receipts and
+all parity/top-level/presence hashes match; corrupted provenance links refuse.
+
+The same driver started full Oct26 primary replay at 07:31:18.208066 UTC on
+core8, worker 3178539. Eighteen full scenario-day runs, report and final verifier
+remain. Scientific settings and success predicates are unchanged. No model
+improvement or live benefit has been demonstrated. See the correction review.
+
+
+
+## 2026-11-13 — size/ladder results integrated without changing the freeze
+
+Reviewed the separate report as of 07:22:49 UTC (nine consumed dates, 2,592
+windows / 5,184 window-sides; 15,984 untimed first-minute legs retained as
+statuses). Its size-per-share improvement is not shown; the tested ladder
+loses on all nine dates. Source inspection identifies summed independent rung
+allocation without shared trade volume/inventory, fill-record counts versus
+the public study's distinct-event repeat counts, and post-hoc removal of young
+fills rather than full-path suppression. R410's machine count is 5/3 dates
+improving, not the published 5/4. Negative reported readings are preserved;
+no corrected historical result is claimed. Read the size integration review.
+
+Own full Oct26 primary recovery replay remains live under driver 3159222,
+worker 3178539 on core8. No frozen model, policy, criterion or live change.
+
+
+User clarification 2026-11-13: larger orders are intended to preserve earned queue priority across partial fills, reducing exhaustion-driven requeueing. Negative size returns do not refute that mechanism. The current five-share/cap-ten model has no training support for a 50-share residual. [The size-priority objective](handoffs/20261113_size_priority_objective.md) separates residual KEEP versus cancel/repost from practical size comparisons under an explicit common exposure budget, with distinct-event retention and risk reporting. The current frozen replay remains unchanged; a synthetic mechanism check is queued behind the other owner's auxiliary worker.
+
+
+
+## 2026-11-13 07:46 UTC — user queue-retention mechanism verified
+
+The user clarified that larger resting orders preserve earned priority through
+partial fills, avoiding exhaustion-driven requeueing. The current five-share
+training population cannot establish the value of a 50-share residual. Recorded
+an explicit next comparison of residual KEEP versus cancel/repost, plus practical
+size comparison under a common exposure budget that genuinely permits 50 shares.
+The current cap-ten frozen experiment remains unchanged.
+
+Synthetic checker as of 07:46:35.686593 UTC: four cases (five/50 shares, M/U),
+two taker events each. Under M the small order exhausts and re-enters behind
+new depth; the large residual keeps priority and takes the next fill. Under U,
+both receive the same total quantity; a false advantage claim refuses. The
+public report's exact repeat-fill counter also counts three same-event legs
+as three fills, whereas distinct taker identities number one. The mismatch is
+proved on fixtures, not measured historically. All tests pass, wrapper rc=0,
+125 MiB, 0.44 seconds. Earlier admission refusal preserved; no work ran on a
+busy core. Version-two receipt corrects displayed-versus-modeled queue metadata
+in-band, with paths/outcomes unchanged and positive/refusal schema controls.
+
+The full Oct26 primary recovery replay remains live on core8, worker 3178539,
+under the single replacement driver 3159222. No model, criterion or live change.
+
+
+Larger-order integration preparation (2026-11-13 08:20 UTC): source18d25ce1 preserves the installed late-fill reservation wrapper while parameterizing quantity/budget, and records first client-known partial-fill decisions plus every neutral generation. Native notification capture retains exhausted orders before the known slot clears. The v1 quantity helper refuses the installed wrapper; v2 composes beneath it instead of dropping reservations. Eight original controls and 23 new installed-stack/ledger/native controls remain queued; syntax only has passed. No historical size labels, new fit or value claim. See `handoffs/20261113_size_priority_objective.md`.
+
+Recovery first full run completed at 2026-11-13T08:08:19.617350+00:00: Oct26/X, four policies each with 288 windows; published receipt reports default parity and recovery/inference reconstruction. `first_full_run_review.json` checks 25 named artifacts, three receipt copies and the correction provenance. One of eighteen scenario-days complete; Oct27 is active. No multi-day portfolio or model-improvement verdict yet.
+
+
+2026-11-13 08:48 UTC size preparation: original8 quantity controls pass. The corrected native-observation/reservation/ledger/reset groups pass30 cases, but the36-case attempt failed on six new fork source anchors before fork execution. Both source-indentation defects are now corrected and M/L generated engines compile;38 runtime cases wait under3820900 for keep-place chain3771985/core9. All failed sources/logs remain preserved. Strict residual-value labels are implemented, with seven analytic tests unrun. See `handoffs/20261113_size_priority_native_controls.md`. No historical larger-order labels, new fit or performance claim.
+
+Recovery2/18 full scenario-days complete as of2026-11-13T08:44:10.876717+00:00: Oct27/X covers four arms ×288 windows, exact default parity and457 sampled inference reconstructions;25 artifact hashes/three receipt copies/correction links checked in `second_full_run_review.json`. Oct31/X is active. No change to the frozen experiment or live strategy.
+
+At 2026-11-13T09:07:29.651536+00:00, all 22 synthetic residual target/lifecycle/dataset/artifact checks pass, after the 38 native fork controls passed at09:06:38. Saved captures reconstruct every label, empty windows and late notices remain visible, and corrupt identities/economics refuse. Receipts `size_priority_native_controls_v4.json` and `size_priority_dataset_controls.json` bind sources/logs; historical size labels, fits and full-policy performance remain unbuilt. Partial-only actions cannot prevent the initial exhausting sweep. No strategy improvement or live change is implied.
+
+Recovery 3/18 full scenario-days complete as of2026-11-13T09:17:36.987175+00:00: Oct31/X covers four arms x288 windows, exact default parity and300 sampled inference reconstructions. `third_full_run_review.json` verifies25 hashes, three receipt copies and all correction links; Nov1/X is active. Shared size features262c2ab5 are committed, with10 controls queued under4153363 behind the other owner's timing-split chain. The first direct launch was refused before tests because core9 was busy; no test result was produced then. [KEEP-PLACE integration review](handoffs/20261113_keep_place_model_integration_review.md) preserves its negative trigger variants while explaining why repeated-record counts, independent ladders and population differences do not close the maker gaps. No size history/fits or live changes.
+
+At2026-11-13T09:29:00.835805+00:00, size shared-feature10, native-manager6 and saved-feature5 synthetic controls pass. Features use client-known quantities and the same causal market history at training/inference. Native captured/reference requests, fills and window accounting match; all saved features and unchanged targets reconstruct, including empty populations. Corrupted economic/feature values refuse even with a rehashed output file. These are implementation checks, not historical size performance. Full size runner/fits, pre-fill timing coverage and matched-risk replay remain. No control jobs remain pending; frozen recovery Nov1/X continues on core8.
+
+At2026-11-13T09:59:29.996203+00:00, the new assigned-action, native three-way, capture identity, shared re-entry and linked target suites pass (see [size timing checkpoint](handoffs/20261113_size_timing_pipeline.md) for exact overlapping test counts/as-of/source receipts). Native age actions cover an initial exhausting sweep that has no partial-only action; saved KEEP/RESET/PULL values and features reconstruct. This remains synthetic implementation evidence, with no historical size fit or performance claim. Source inspection finds the existing post-retiming `how`/generic `timed` flag is not original websocket provenance; preserve the original taker group/anchor source before new historical capture. Recovery4/18 runs complete: Nov1/X asof09:52:44.045554 covers four arms x288 windows and503 reconstructed inference rows; fourth-run review verifies25 artifact hashes and correction chain. Nov2/X is active. No live changes.
+
+At2026-11-13T10:19:04.246489+00:00, seven original-taker/timing-provenance controls and four chronological size-fit controls pass. The new size pipeline preserves pre-retiming clock sources, counts distinct identified takers, and verifies native/saved fill linkage; five/50-share samples receive separate identities. Pinned static/history/short fits reconstruct saved forecasts on synthetic data and reject chronological/identity/parameter corruption. Read the [updated checkpoint](handoffs/20261113_size_timing_pipeline.md) for source/receipt identities and limits. No historical size training, policy gain or live change is claimed. Recovery4/18 full runs remain complete; Nov2/X is active under3159222.
+
+At2026-11-13T10:44:22.767727+00:00, the native size-model policy, chronological guard benchmark and complete deterministic inference-sampling controls pass; see [policy checkpoint](handoffs/20261113_size_model_policy.md) for exact overlapping counts and preserved failed attempts. Positive estimates retain partial orders on the native path; learned withdrawals share the target's pressure-clear re-entry and keep native reservations. Strict model profile binding refuses quantity/budget extrapolation. These remain synthetic correctness results. Full-policy taker provenance, historical runner/freeze, historical fitting and matched-risk evaluation remain. Recovery5/18 runs complete: Nov2/X asof10:28:15.667677 covers four arms x288 windows and454 reconstructed inference rows; fifth review verifies25 hashes/three receipt copies/correction links. Nov3/X591257 is active under3159222. No live changes.
+
+At 2026-11-13T14:06:29.638543+00:00, the FUTURE-BEST aggregate audit reconstructed all published comparisons on nine consumed dates (1,383,411 reused variant fill records). The minimum WS cell is 657; applying the missing 30-fill rule changes no observed verdict. Main 1s/5s and level 1s missing counts are zero. WS improvements reverse in combined values versus PD and under timing stress; these selected-fill marks are not joint-portfolio P&L. See [review](handoffs/20261113_future_best_model_integration_review.md). Separately, 46 synthetic source/native/depth/training controls pass; historical depth fitting remains unbuilt. Recovery 11/18 full scenario-days verified, Nov 3/stress running, size experiment queued. No live change.
+
+At 2026-11-13T14:42:09.952078+00:00, the complete saved-native action-depth forecast experiment is frozen at 0e246af6 (416 sources, 26 stages; 76 synthetic controls pass). See [frozen handoff](handoffs/20261113_action_depth_forecast_frozen.md). It reconstructs targets from immutable size captures, trains earlier-only static/history depth heads and reports fixed day-weighted prediction metrics; no historical depth fit or economic benefit exists yet. Driver 2900451 waits for final size evidence. Recovery 12/18 full runs verified; first age500 date is active, size 169 tasks remain queued. Existing freezes and live settings unchanged.
+
+At 2026-11-13T14:51:28.012859+00:00, the [SIDE-MOVES integration review](handoffs/20261113_side_moves_model_integration_review.md) binds exact producer source and 72 artifact identities. Five synthetic counterexamples separate observed MOVE/KEPT/RESTED/ahead patterns from cancellation, one-second survival, pre-birth resting and queue depth at posting; historical affected frequencies are unknown. Asymmetric move/retain is a candidate hypothesis, not an identified maker policy. The current sized KEEP/PULL experiment has no explicit immediate new-best move action. Recovery 12/18 complete; size and depth queues/frozen designs unchanged. No historical depth gain or live change.
+
+At 2026-11-13T15:02:39.250143+00:00, the [MOVE-DOWN integration review](handoffs/20261113_move_down_model_integration_review.md) reconstructs all published R520/R521/R522 readings from 65 bound inputs on nine consumed dates. Immediate moved-price entry raises presence but worsens fill marks; MDP repeats entry/pull and loses heavily on young fills. R521 omits its declared count gate, but zero historical cells fail it and no reading changes. WHY-GONE attributes request time rather than effective order ending; exact controls and 137 negative reported durations among 31,744 held-other rows show the distinction. Full corrected historical reasons remain unknown. These are legacy fill marks, not joint-budget policy P&L. Current freezes/queues remain unchanged.
+
+At 2026-11-13T15:09:44.660504+00:00, recovery advances to **13/18** verified scenario-days: Oct 26/age500, four policies x 288 windows, 410 runner-reconstructed inference rows, 25 artifact hashes and three receipt copies with 11 refusal controls. Oct 27/age500 worker 3143408 is active; size/depth drivers remain queued with 169/26 tasks. All scientific/computational freezes intact; no improved-policy verdict. See [recovery progress](handoffs/20261112_model_recovery_progress.md).
+
+At 2026-11-13T15:19:22.055598+00:00, the [SIDE-MOVES posthoc supplement](handoffs/20261113_side_moves_model_integration_review.md) reconstructs prior same-hash proof and high-future-volume refill fractions from 41 bound identities on nine consumed dates. Proof supports some pre-positioned residuals, not a demonstrated majority. Exact-code controls show the separate preceding-second market-volume share has a different denominator and does not identify the transition-causing taker; future-volume-conditioned non-refills do not directly observe cancellation. Current size/depth designs remain unchanged; recovery 13/18 with Oct 27/age500 live.
+
+At 2026-11-13T15:39:36.887969+00:00, the [recovery primary/stress review](handoffs/20261113_recovery_primary_stress_review.md) reconstructs fixed comparisons on six consumed dates and 1,728 windows per policy/scenario. SELECTIVE10 vs chronological guard: X -$252.57 (1,521 common / 207 missing; day interval [-432.23,-72.31], inventory-square +59.56%); stress -$507.70 (1,516 / 212; [-625.04,-398.12], +38.45%). It also loses to DIRECT10. It improves value over the old HISTORY10 but has less entry presence despite fewer learned pulls. Covered value/risk, uncertainty and participation gates all fail. Partial report only; age500/final evidence continue and no candidate is selected.
+
+At 2026-11-13T15:44:12.197950+00:00, recovery advances to **14/18** verified full scenario-days: Oct 27/age500, four policies x 288 windows, 374 runner-reconstructed inference samples, 25 artifact hashes and three receipt copies with 11 refusal controls. Oct 31/age500 worker 3455831 is live. Completed primary/stress results are negative under all covered frozen gates; age500/final reconstruction and queued size/depth studies remain. See [progress](handoffs/20261112_model_recovery_progress.md) and [partial results](handoffs/20261113_recovery_primary_stress_review.md).
+
+At 2026-11-13T16:00:57.453496+00:00, the [native recovery absence diagnostic](handoffs/20261113_recovery_absence_overlap.md) reconstructs all 13,824 policy-windows in twelve completed X/stress runs. SELECTIVE10 has both recovery gates closed during 76.66% / 69.69% of entry no-quote time (1,728 windows per scenario), equivalent to 61.65% / 54.12% of all entry time. Actual accepted lifetimes include cancellation-pending exposure; all windows and generation statuses remain. This is overlap, not avoidable absence or profit from earlier re-entry. Positive/native and known-bad controls pass; 313 named inputs and three receipt mirrors match. Recovery remains 14/18, with Oct 31/age500 active and size/depth waiting. No live change.
+
+At 2026-11-13T16:09:38.900898+00:00, the [corrected maker-study integration review](handoffs/20261113_robust_v2_model_integration_review.md) exactly reconstructs the v2 K1–K7 text and verdicts from 66 bound inputs on nine consumed dates. At >=300 future old-price shares, top-maker same-hash refills are 251/1,004 UP and 351/1,450 DOWN, versus 234/2,808 and 325/3,731 for the field. Exact-code controls show that pre_q < 10 neither proves remaining quantity nor uses lifetime fills; a fully exhausted five-share order qualifies. Nearby common takers do not uniquely identify the transition, and unknown first takers retain a row-sensitive fallback whose frequency is not saved. These are order-event observations, not cancellation labels or joint-budget PnL. Current size/depth designs remain fixed; recovery 14/18 with Oct 31/age500 active.
+
+At 2026-11-13T16:15:55.857203+00:00, recovery advances to **15/18** verified full scenario-days: Oct 31/age500, four policies x 288 windows, 219 runner-reconstructed inference samples, 25 artifact hashes and three receipt copies with 11 refusal controls. Nov 1/age500 worker 3739610 is live under 3159222. Three age500 dates plus final reporting/reconstruction remain; size/depth drivers 1576587/2900451 wait for full integrity evidence. All four source freezes match. The existing negative portfolio result and descriptive queue/re-entry evidence remain distinct; no improved-model or live claim. See [progress](handoffs/20261112_model_recovery_progress.md).
+
+At 2026-11-13T16:49:45.564260+00:00, recovery advances to **16/18** verified full scenario-days: Nov 1/age500, four policies x 288 windows, 387 runner-reconstructed inference samples, 25 artifact hashes and three receipt copies with 11 refusal controls. Nov 2/age500 worker 4049823 is live under 3159222. Two age500 dates plus final reporting/reconstruction remain; size/depth drivers 1576587/2900451 wait for full predecessor integrity. All four source freezes match. Existing negative primary/stress performance is unchanged; no improved-model or live claim. See [progress](handoffs/20261112_model_recovery_progress.md).
+
+At 2026-11-13T17:23:56.660912+00:00, recovery advances to **17/18** verified full scenario-days: Nov 2/age500, four policies x 288 windows, 375 runner-reconstructed inference samples, 25 artifact hashes and three receipt copies with 11 refusal controls. Nov 3/age500 worker 166333 is live under 3159222. One age500 date plus final reporting/reconstruction remain; size/depth drivers 1576587/2900451 wait for full predecessor integrity. All four source freezes match. Existing negative primary/stress performance is unchanged; no improved-model or live claim. See [progress](handoffs/20261112_model_recovery_progress.md).
+
+At 2026-11-13T17:32:09.017067+00:00, the [primary/stress review](handoffs/20261113_recovery_primary_stress_review.md) adds the unchanged original partial receipt’s DEFAULT comparisons (receipt as of 15:39:36 UTC, six consumed dates, 1,728 windows per policy/scenario). SELECTIVE10 gains paired marked value +$2,153.30 in X / +$1,994.99 in stress, on 1,559 / 1,554 common windows (169 / 174 missing either mark), while inventory-square exposure changes -0.36% / +9.66%. DEFAULT entry presence is 89.01% / 88.60%; less presence does not necessarily mean less inventory risk. Original negative guard/DIRECT10 comparisons remain. This reads existing outputs only; no new fit, replay, selection or frozen-artifact mutation.
+
+At 2026-11-13T17:39:41.719097+00:00, the [LEARN-PULL integration audit](handoffs/20261113_learn_pull_model_integration_review.md) reconstructs the published descriptive report exactly (producer as of 16:48:15 UTC; nine consumed dates; 193,153 observations, 78,294 top-five / 114,859 field). It preserves reported next-trade non-refill fractions but does not interpret them as cancellations: exact producer-code counterexamples admit exhausted/no-cancel and residual/cancel worlds with identical observations, and same-signer replacement as STAYED. The frame predicate does not establish best-price or maker residual identity. Next-trade-relative features may follow the action, gap uses future timing, and classifier folds include later dates. R554 numbers are reused, not independently reproduced. Three original mutation controls and artifact/metadata refusals pass; 39 inputs, eight producer sources, three review sources and three receipt copies match. No frozen model/policy change; size/depth remain queued.
+
+At 2026-11-13T17:46:07.922570+00:00, the [MOVE-CASES integration audit](handoffs/20261113_move_cases_model_integration_review.md) reconstructs its original report and post-hoc table exactly (producer as of 16:12:36 UTC, nine consumed dates, 100,719 events / 1,233,693 real segment records / 21,738 simulated segments). Exact source controls show overlapping event attribution can count the same physical fills twice; saved rows lack event/fill/order/signer IDs needed for historical deduplication or maker-level hedge attribution. Missing future endpoint coverage can also receive a trend label; historical affected counts are unknown. Side offsets remain event-weighted five-second marks, not verified portfolio P&L. The first audit-wrapper failure occurred before declaration/table evaluation and is preserved in the corrected v2 declaration. All source/input hashes and three receipt copies match; no frozen model or policy change.
+
+At 2026-11-13T17:57:20.071955+00:00, recovery reaches **18/18** verified full scenario-days: Nov 3/age500, four policies × 288 windows, 311 runner-reconstructed inference samples, 25 artifact hashes, three receipt copies and 11 refusal controls. Full portfolio report worker 466916 is live under recovery driver 3159222; final evidence reconstruction follows. Size/depth drivers 1576587/2900451 remain waiting for full predecessor integrity. All four source freezes match. Existing negative primary/stress results remain; no improved-model claim. See [progress](handoffs/20261112_model_recovery_progress.md).
+
+Recovery full portfolio report as of **2026-11-13T18:01:17.599349+00:00** is published; final verifier 506024 is running. All three improvement gates are false. On six consumed dates and 1,728 windows per policy/scenario, SELECTIVE10 loses to guard and DIRECT10 in X, stress and age500, with negative day intervals and higher all-window inventory-square exposure. Age500 versus guard: -$53.85 [-$102.13, -$10.01], 1,659 common / 69 missing windows, +246.64% inventory-square exposure; versus DIRECT10: -$30.55 [-$60.16, -$5.02], 1,669 / 59, +286.30%. Fewer learned pulls still coincide with lower presence than old HISTORY10 in every scenario. X/stress values exactly match the earlier partial receipt. [Full review](handoffs/20261113_recovery_complete_review.md) distinguishes report publication from pending final verification. Size/depth declarations unchanged; no promotion or live claim.
+
+Recovery final verification passed at **2026-11-13T18:18:37.057835+00:00** with `objective_pass=false`: 876 named hashes, three receipt copies and accounting links match; 13 build records and 22 replay records (four smoke / 18 full), 7,113 saved inference samples reconstructed. [Complete review](handoffs/20261113_recovery_complete_review.md) preserves failure in every value/risk and participation scenario. The size driver started at 18:18:56 UTC. Its q5/q50 DEFAULT runs and captures each cover four Oct23 windows and pass native reconstruction; q5/q50 capture has 34/43 eligible paired actions. All 12/24/12/24 named artifact hashes, fast-execution provenance and receipt copies match. [Size progress](handoffs/20261113_size_experiment_progress.md) records 4/169 stages as of 18:22:10 UTC; the first full q5 DEFAULT reference run is active; no economic selection from smokes. Goal active through remaining size/depth evidence; no live changes.
+
+Size experiment first full q5 DEFAULT reference completed at **2026-11-13T18:32:06.399938+00:00**: Oct23, 288 windows, 26,808 generations and 16,555 native fill records, with 19 missing marked windows retained. All 12 named hashes, exact artifact coverage, three copies and fast-execution provenance match; the runner reconstructs policy events and original trade provenance. DEFAULT has zero forecast scores/learned pulls, so this is not predictor validation. [Size progress](handoffs/20261113_size_experiment_progress.md) records 5/169 stages; full q5 capture worker 787752 is live under 1576587. No size advantage or improved-model claim; depth remains queued and the goal active.
+
+
+Size experiment first full q5 capture completed at **2026-11-13T19:06:37.270602+00:00**: Oct23, 288 windows, 26,808 neutral generations and 2,995 paired actions. Exact neutral requests/fills/windows/generation economics match the independent reference; 2,980 targets are training-eligible and 15 missing continuation marks remain explicit (all short targets eligible). The published stage reconstructs targets, features and original trade provenance; review checks all 24 named hashes, exact coverage, three copies and fast-execution provenance. [Size progress](handoffs/20261113_size_experiment_progress.md) records 6/169 stages and receipt SHA `dcfb1b2e7e4874598b3d38bb54f4883963672a51166cb424a9f0de0551b37895`. Full q50 DEFAULT worker 1098260 is live under 1576587; depth remains queued. This one-day construction check establishes no size or model advantage; the goal remains active.
+
+
+Size experiment first full q50 DEFAULT reference completed at **2026-11-13T19:15:55.564626+00:00**: Oct23, 288 windows, 16,864 generations, 22,861 native fill records and two missing marked windows retained. The stage reconstructs all policy events and original trade provenance; review checks all 12 named hashes, exact coverage, three copies and fast-execution provenance. DEFAULT has no forecast scores or learned pulls but retains 12,725 native cancellation requests; this is not fitted-model validation or an isolated queue-value result. [Size progress](handoffs/20261113_size_experiment_progress.md) records 7/169 stages and receipt SHA `82963848e5bb113c0075fdd739caea32fda936771f2aaab8cb13b197f9655274`. Full q50 capture worker 1185906 is live under 1576587; depth remains queued. No size/model advantage is claimed and the goal remains active.
+
+
+Size experiment first full q50 capture completed at **2026-11-13T19:42:16.216885+00:00**: Oct23, 288 windows, 16,864 neutral generations and 2,151 paired actions. Exact native requests/fills/windows/generation economics match the independent reference. There are 2,142 training-eligible targets and nine explicit missing continuation marks; all short targets are eligible. The stage reconstructs labels, features, metadata and original fill provenance; the review checks all 24 artifact hashes, exact coverage, three copies and fast-execution provenance. [Size progress](handoffs/20261113_size_experiment_progress.md) records 8/169 stages and receipt SHA `5298fae30d8dd6afb2367394d0070b164b594fc3a66c2f5412c7d95a78e6352f`. Both first-day profile captures are verified but their action populations differ; no causal size/queue benefit or model gain is inferred. Oct24/q5 DEFAULT worker 1419992 is live under 1576587; depth remains queued and the goal active.
+
+
+Size Oct24/q5 DEFAULT reference completed at **2026-11-13T19:51:48.130995+00:00**: 288 windows, 23,187 generations, 15,215 fill records and 22 missing marked windows retained. Its policy/trade-provenance checks pass; all 12 artifacts, exact coverage, three receipt copies and fast-execution provenance were verified. [Size progress](handoffs/20261113_size_experiment_progress.md) records receipt SHA `8306113b624449db0b7e5bcf614b22299c827074f4ba9f37234b25176d843c64` and 9/169 completed stages. Oct24/q5 capture worker 1507410 is active under 1576587; depth remains queued. No model or size advantage claimed; goal active.
+
+Size Oct24/q5 capture completed at **2026-11-13T20:23:57.288179+00:00**: 288 windows, 23,187 neutral generations and 2,709 paired actions. Exact native requests/fills/windows/generation economics match the independent reference; 2,698 training-eligible targets and 11 missing continuation marks remain explicit, with all short targets eligible. Saved labels, features, metadata and original fill provenance reconstruct. Review at 2026-11-13T20:24:16.622115+00:00 checks all 24 artifact hashes, exact coverage, three receipt copies and frozen fast-execution provenance. [Size progress](handoffs/20261113_size_experiment_progress.md) records receipt SHA `cf2dac0c32fc84c9738128530d76b5057d0945ad6bdc83778fb138a65ead1fdc` and 10/169 completed stages. Oct24/q50 DEFAULT worker 1799173 is active under 1576587; depth remains queued. This is construction evidence, with no size/model improvement established; goal active.
+
+Size Oct24/q50 DEFAULT reference completed at **2026-11-13T20:33:01.076606+00:00**: 288 windows, 14,336 generations, 21,205 fill records and one missing marked window. Policy events and original trade provenance reconstruct; review at 2026-11-13T20:33:13.917199+00:00 verifies all 12 artifact hashes, exact coverage, three receipt copies and frozen fast-execution provenance. DEFAULT has zero model scores/learned pulls and retains 10,537 native cancellation requests. [Size progress](handoffs/20261113_size_experiment_progress.md) records SHA `2a14edc520a258e150443a366e57c0313d929fe53f59cd1d2f1dcb826f7a3b9f` and 11/169 completed stages. Q50 capture worker 1877076 is active under 1576587; depth remains queued. No one-day size or model improvement is inferred; goal active.
+
+Size Oct24/q50 capture completed at **2026-11-13T20:57:18.351444+00:00**: 288 windows, 14,336 neutral generations and 1,927 paired actions. Its native requests/fills/windows/generation economics exactly match the independent reference. The training ledger retains 1,925 eligible targets and two missing continuation marks; all short targets are eligible. Saved labels, features, metadata and original fill provenance reconstruct. Review at 2026-11-13T20:58:07.411944+00:00 verifies all 24 artifact hashes, exact coverage, three receipt copies and frozen fast-execution provenance. [Size progress](handoffs/20261113_size_experiment_progress.md) records SHA `68b9889508dafce31987882964a949bce57f0e8c2c79a8d14e7a79a842934fe1` and 12/169 completed stages. Both sizes now have verified construction on Oct23/24, with distinct action populations and no economic or forecast improvement established. Oct25/q5 DEFAULT worker 2099872 is active under 1576587; depth remains queued and the goal active.
+
+Size Oct25/q5 DEFAULT reference completed at **2026-11-13T21:06:31.745207+00:00**: 288 windows, 22,068 generations, 13,471 fill records and 22 missing marked windows. Policy events and original trade provenance reconstruct; review at 2026-11-13T21:07:28.827713+00:00 checks all 12 artifact hashes, exact coverage, three receipt copies and frozen fast-execution provenance. DEFAULT has zero model scores/learned pulls and retains 14,490 native cancellations. [Size progress](handoffs/20261113_size_experiment_progress.md) records SHA `26d66dcf46385fa22c0f9aa2e2bcc402ead15676514ddf39fcf4bed0a7eb52ba` and 13/169 completed stages. Oct25/q5 capture worker 2185392 is active under 1576587; depth remains queued. No size/model improvement established; goal active.
+
+Size Oct25/q5 capture completed at **2026-11-13T21:37:50.397635+00:00**: 288 windows, 22,068 neutral generations and 2,638 paired actions. Native requests/fills/windows/generation economics exactly match the independent reference. The training ledger retains 2,630 eligible targets and eight missing continuation marks; all short targets are eligible. Saved labels, features, metadata and original fill provenance reconstruct. Review at 2026-11-13T21:38:29.705013+00:00 checks all 24 artifact hashes, exact coverage, three receipt copies and frozen fast-execution provenance. [Size progress](handoffs/20261113_size_experiment_progress.md) records SHA `443cf0f622d40d04f544d64c8b66306aa34d0e444a2886eb8f48c4cdba677724` and 14/169 completed stages. Oct25/q50 DEFAULT worker 2469564 is active under 1576587; depth remains queued. No size/model improvement established; goal active.
+
+Size Oct25/q50 DEFAULT reference completed at **2026-11-13T21:46:39.420688+00:00**: 288 windows, 14,328 generations, 19,151 fill records and three missing marked windows. Policy events and original trade provenance reconstruct; review at 2026-11-13T21:46:49.906409+00:00 checks all 12 artifact hashes, exact coverage, three receipt copies and frozen fast-execution provenance. DEFAULT has no model scores/learned pulls and retains 10,803 native cancellation requests. [Size progress](handoffs/20261113_size_experiment_progress.md) records SHA `b938627e56f50427c9d873b288d7355668250dc7aade28c6bf5cb6b5c7dad312` and 15/169 completed stages. Oct25/q50 capture worker 2547342 is active under 1576587; depth remains queued. No size/model improvement established; goal active.
+
+
+
+**2026-11-13T22:13:37.689857+00:00 — Oct25/q50 capture verified; size 16/169.** Receipt as of 2026-11-13T22:11:07.612584+00:00 (SHA `34c7c84a65e5348f2c8a50803ba59be2dbf245fac176ac283e12eb8e4991228e`) retains 288 windows, 1,926 sampled actions, 1,922 eligible withdrawal targets and four missing continuation marks; all short targets eligible. Exact neutral parity covers 14,328 generations, 19,151 fill records and 25,131 requests, with three missing marked windows. All 24 artifact hashes/coverage, three receipt copies and frozen fast provenance checked. The feature KEEP/RESET status has one additional eligible row (`20261025:3763401:default:18`); its PULL path has three missing-mark legs, and the training join correctly retains withdrawal ineligibility. This saved-evidence review is not another numerical replay or a model/size performance result. Both profiles now have verified construction on three consumed dates; Oct26/q5 reference worker 2770179 is active under driver 1576587. Depth driver 2900451 remains waiting. Full comparisons and improvement evidence remain pending. See `handoffs/20261113_size_experiment_progress.md`.
+
+
+**2026-11-13T22:21:42.846786+00:00 — Oct26/q5 reference verified; size 17/169.** Receipt as of 2026-11-13T22:21:08.892373+00:00 (SHA `0dd58b8fbb05a3f589216662103f765c1d26eed8f7d63d023d040dd1992e9749`) retains 288 windows, 28,107 generations, 16,840 fill records and 11 missing marked windows. Statuses: 23,610 accepted/no-cancel and 4,497 post-only refused. Policy events and original provenance reconstruct against 818,939 source trade legs; DEFAULT has no model scores, learned pulls or guard decisions and retains 19,187 native cancellation requests. All 12 artifact hashes/coverage, three receipt copies and frozen computation provenance checked. This saved-evidence review is not another numerical replay or a model/size performance result. Capture worker 2858592 is active under size driver 1576587; depth 2900451 waits. Remaining datasets, fits and sequential comparisons remain pending. See `handoffs/20261113_size_experiment_progress.md`.
+
+
+**2026-11-13T22:58:40.578523+00:00 — Oct26/q5 capture verified; size 18/169.** Receipt as of 2026-11-13T22:57:52.254541+00:00 (SHA `d5acb244dfc2cde38dce80058fe41a560b177047603732c165fb0073ae38491d`) retains 288 windows and 3,096 sampled actions: 3,080 eligible withdrawal targets and 16 missing continuation marks. Short targets retain 3,095 eligible actions and one missing mark; training statuses retain 15 withdrawal-only missing marks and one with both targets missing. Exact neutral parity covers 28,107 generations, 16,840 fill records and 47,294 requests, with 11 missing marked windows. Labels/features/original fill provenance reconstruct against 818,939 source trade legs. All 24 artifact hashes/coverage, three receipt copies and frozen fast provenance checked. This saved-evidence review is not another numerical replay or a model/size performance result. Oct26/q50 reference worker 3188647 is active under size driver 1576587; depth 2900451 waits. Remaining datasets, fits and sequential comparisons remain pending. See `handoffs/20261113_size_experiment_progress.md`.
+
+
+**2026-11-13T23:08:11.465151+00:00 — Oct26/q50 reference verified; size 19/169.** Receipt as of 2026-11-13T23:07:21.228460+00:00 (SHA `81c7c9720dfa53f7932226e3766e2777b06969e1d366f68fd83984bbd8affabc`) retains 288 windows, 17,930 generations, 22,718 fill records and two missing marked windows. Statuses: 16,023 accepted/no-cancel and 1,907 post-only refused. Policy events and original provenance reconstruct against 818,939 source trade legs; DEFAULT has no model scores, learned pulls or guard decisions and retains 14,010 native cancellation requests. All 12 artifact hashes/coverage, three receipt copies and frozen computation provenance checked. This saved-evidence review is not another numerical replay or a model/size performance result. Capture worker 3275815 is active under size driver 1576587; depth 2900451 waits. Remaining datasets, fits and sequential comparisons remain pending. See `handoffs/20261113_size_experiment_progress.md`.
+
+
+**2026-11-13T23:34:44.662483+00:00 — Oct26/q50 capture verified; size 20/169.** Receipt as of 2026-11-13T23:34:32.558755+00:00 (SHA `7ed79e0564caf1ca4287996ba6a437a17f3ef3115973815aabaa4e9caaeeb22d`) retains 288 windows and 2,225 sampled actions: 2,212 eligible withdrawal targets and 13 missing continuation marks; all short targets eligible. The training join retains all statuses. Exact neutral parity covers 17,930 generations, 22,718 fill records and 31,940 requests, with two missing marked windows. Labels/features/original fill provenance reconstruct against 818,939 source trade legs. All 24 artifact hashes/coverage, three receipt copies and frozen fast provenance checked. This saved-evidence review is not another numerical replay or a model/size performance result. Both profiles now have verified reference/capture construction on four consumed dates. Oct27/q5 reference worker 3519770 is active under size driver 1576587; depth 2900451 waits. Remaining datasets, fits and sequential comparisons remain pending. See `handoffs/20261113_size_experiment_progress.md`.
+<!-- /MODEL_UPGRADE_LOCAL_20261112 -->

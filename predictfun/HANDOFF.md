@@ -7125,6 +7125,14 @@ Course correction (proposed, USER's call): (1) first find out whether the E2 los
 - Done: research/pf_model_audit.py (a1b88d8b, before the run), 16:23Z. Report handoffs/20261114_model_audit_results.md; copies reviews/model_audit_20261114/; FINDINGS row.
 - Proposal (USER's call): an aligned target - keep vs pull valued over the order's life (to its fill or the 60.2 s mark, the pulled branch re-entering at the back), every fill scored (STOP fills included), an economic pull rule with hysteresis, rung-specific risk, on-policy (joint ladder) labels.
 
+## 2026-11-14 15:57Z (session ce68ebe0) — ORDER-HARM WHY DONE (post hoc): the model swaps re-post losses for kept-order losses; against the top makers it is NOT timing of presence (our state mix is better) but same-state fill quality (a third to a half fewer STOP fills = queue place, the rest worse same-type fills), growing with our reaction delay; the model keeps through visible moves when the cushion is thick and cannot see later moves
+
+- USER: "yes check why it suffers loss and performs worse. Check against top makers, is it timing issue, then check the model why it picks the wrong time".
+- Done: research/pf_order_harm_why.py + run_order_harm_why.sh (38995519, before the run), 15:38-15:52Z; post hoc follow-up a83af1f2 (15:54Z). Report handoffs/20261114_order_harm_why_results.md; copies reviews/order_harm_why_20261114/; FINDINGS row added.
+- Controls: 512,172 fill rows equal POLICY v2's saved fills row for row; legs aligned; violations 0; look-ahead 0 / 231,895; 4 planted errors caught; the follow-up reconciles on 12 / 12 cells with its falsifier.
+- Watch out: the losses sit on E2-timed trades (anchors +-250 ms, C12); OHQ0's WS-timed classes are positive at M 50 apart from KEPT-ON, PEND and a few OTHER-ON fills.
+- Next (USER's call): (a) a visible-move override for the keep model (pull when dfv250 > 0.5 c whatever the cushion, or a monotone constraint), about $34 a day at M 50; (b) re-post timing = the other session's post-vs-wait model; (c) the dominant gap (same-state fill quality, queue place) needs speed and earlier queue joining; (d) a check of our E2-timed fills.
+
 <!-- WAIT_POST_WHY_20261114 -->
 ## 2026-11-14 — wait/post failure diagnosis COMPLETE
 
@@ -7199,13 +7207,6 @@ evaluated, no new skill claim, and the controls do not exclude every other
 possible data/model/simulator defect.
 <!-- /WAIT_POST_WHY_20261114 -->
 
-## 2026-11-14 15:57Z (session ce68ebe0) — ORDER-HARM WHY DONE (post hoc): the model swaps re-post losses for kept-order losses; against the top makers it is NOT timing of presence (our state mix is better) but same-state fill quality (a third to a half fewer STOP fills = queue place, the rest worse same-type fills), growing with our reaction delay; the model keeps through visible moves when the cushion is thick and cannot see later moves
-
-- USER: "yes check why it suffers loss and performs worse. Check against top makers, is it timing issue, then check the model why it picks the wrong time".
-- Done: research/pf_order_harm_why.py + run_order_harm_why.sh (38995519, before the run), 15:38-15:52Z; post hoc follow-up a83af1f2 (15:54Z). Report handoffs/20261114_order_harm_why_results.md; copies reviews/order_harm_why_20261114/; FINDINGS row added.
-- Controls: 512,172 fill rows equal POLICY v2's saved fills row for row; legs aligned; violations 0; look-ahead 0 / 231,895; 4 planted errors caught; the follow-up reconciles on 12 / 12 cells with its falsifier.
-- Watch out: the losses sit on E2-timed trades (anchors +-250 ms, C12); OHQ0's WS-timed classes are positive at M 50 apart from KEPT-ON, PEND and a few OTHER-ON fills.
-- Next (USER's call): (a) a visible-move override for the keep model (pull when dfv250 > 0.5 c whatever the cushion, or a monotone constraint), about $34 a day at M 50; (b) re-post timing = the other session's post-vs-wait model; (c) the dominant gap (same-state fill quality, queue place) needs speed and earlier queue joining; (d) a check of our E2-timed fills.
 
 ## 2026-11-14 14:34Z (session ce68ebe0) — ORDER-HARM v3 + POLICY v2 DONE (keep-vs-cancel, scheduled re-post): the model ranks (R661 SKILL, IC +0.137, 5 / 5 days) but is NOT ACCEPTED on the whole portfolio (R652 REJECT, both arms, every cap); R654 FEWER, R655 MORE, R656 NOT-YET
 
@@ -7297,6 +7298,88 @@ coverage under the frozen learned keeper before integrating entry with keep/pull
 Integration changes continuation values and requires new labels and replay.
 No timer or threshold adjustment was selected from these outcomes.
 <!-- /WAIT_POST_V2_20261114 -->
+
+
+<!-- WAIT_POST_REVIEW_20261114 -->
+## 2026-11-14 12:43Z — wait/post review complete; bounded pilot loses, candidate not advanced
+
+USER: "Review the model first, then check how it performs." Evidence merged
+**3afd62f0**; review source 9308e26e, freeze af5ac39c. Review:
+`reviews/wait_post_review_20261114/review.json`. Current result (supersedes v1
+summary): `reviews/wait_post_review_20261114/performance_v2.json`; complete
+source/result hashes and controls in the same directory.
+
+Main target issue: POST now versus neutral POST next decision can label both
+a profitable entry and a losing entry zero. It is a valid one-step queue
+advantage diagnostic, but not a complete admission/waiting model. Runtime can
+repeatedly wait in states absent from the neutral training population. Bid/ask
+routing and client-state accounting controls pass. Acceptance also lacks a
+required participation-matched timing test; the local null was diagnostic only.
+
+Predeclared pilot, as of **2026-11-14 12:39:11 UTC**: train first24 eligible
+windows each on Oct23/24/25 (72 total), test first12 on Oct27 (one PARTIAL day,
+no intervals). 974 training actions, only92 nonzero targets (90.55% zeros).
+Bid model:200 two-leaf trees; ask:one constant leaf, so no ask timing learned.
+The minimum-row gate allowed this; require capacity/variation diagnostics and
+adequate support before interpreting model timing skill.
+
+M50 gross simulated terminal cash+inventory, same neutral keeper for every arm:
+VALUE **-$271.53**, ALWAYS **-$310.01**, SCHEDULED guard-clear **-$65.82**,
+TIMER guard+250ms **+$66.94**, FLAT $0. VALUE's both-side-at-least-one-live-quote
+share99.70%; inventory-square exposure higher than both guard controls.
+VALUE loses at M0/M50/M250, also excluding fills younger than100ms. Bid local
+selection fails the500-draw matched null; ask posts on all65 labeled test actions.
+These prefix results do not estimate full-day or combined keep/pull performance,
+and do not select a250ms timer as optimal. Full v1 study was not relaunched.
+
+Operational repair: original queued driver2030852 was absent and never trained
+full models; stale status superseded in-band. The bounded run completed under
+user service `pf-wait-post-review-20261114`, exit0. ExecStopPost plus finally
+resume hooks verified; older size driver1576587 resumed, other session/core9
+unchanged. No review job remains running. Raw data/models:
+`data/predict_fun/research/wait_post_review_20261114_v1/pilot/`.
+
+Next: define POST and continued-WAIT values under the SAME frozen continuation
+policy (including the keeper), an absolute-admission/never-post control, and
+causal waiting-state support; preserve test-day exclusion throughout training.
+Then retrain and test on complete chronological development days before any
+forward validation. No parameter tuning or target repair was mixed into this
+frozen-model diagnostic.
+<!-- /WAIT_POST_REVIEW_20261114 -->
+
+
+<!-- WAIT_POST_ENTRY_20261114 -->
+## 2026-11-14 12:16Z — separate bid/ask wait-versus-post candidate built; chronological run queued
+
+USER assigned the keep/pull + scheduled repost study to the other session and
+requested wait/post here in parallel, with different behavior on the two sides.
+Merged **1c030518** (source 7d82571f, freeze 99ba6a63). Separate bid and ask entry
+regressors, 69 causal inputs including side-aligned flow/returns and known
+inventory, per-rung price/queue features; shared joint position and hard cap.
+POST when predicted POST-minus-WAIT value is positive; otherwise reconsider at
+each 50 ms decision, with no timer that forces a post. Resting orders use the
+same neutral keeper across all entry arms; this does not reproduce or claim the
+other session's learned keep/pull policy. Combine only under a new declaration.
+
+Verification: 26 synthetic tests passed. Historical smoke at 2026-11-14
+12:13:23 UTC: two consumed 2026-10-23 windows, 147 entry generations, 37 sampled
+eligible labels (6 positive, 1 negative, 30 zero), 110 not sampled; no model
+performance inference or interval from this smoke. Target is one-step improvement
+under neutral continuation, not an optimal waiting value; repeated-wait state
+coverage and sparse nonzero labels remain explicit limitations.
+
+Full nine-day labels / five chronological fits and joint replays are **queued**
+in codex/core8 after the current older size stage finishes. Driver PID 2030852;
+older size queue PID 1576587 is suspended between stages (current worker left
+running) and automatically resumes when this driver completes/fails. Claude/core9
+continues the other study. Status lives in
+`data/predict_fun/research/wait_post_20261114_v1/driver_full/status.json`.
+Run executes frozen sources in `/tmp/cta-entry-value-20261114`; do not edit that
+checkout while running. No trained model/performance result yet; no forward
+validation or protected-date read. Design, freeze and verification:
+`reviews/wait_post_20261114/`. No keep/pull outputs changed.
+<!-- /WAIT_POST_ENTRY_20261114 -->
+
 
 ## 2026-11-14 12:04Z (session ce68ebe0) — keep-vs-cancel with a SCHEDULED re-post runs first (USER), the model-decided posting next; level diagnostics added (c5f4557c)
 
@@ -7583,6 +7666,157 @@ fill-model calibration and a real 50 ms inference benchmark remain unresolved.
 - Done (USER: "Can we recheck our quoting logic ... skew/inventory related logics ... will that influence our profit test, if we optimize the timing now, we can disable those first"): read the v3 arm's rules in pf_step4_ladder_v3.py; research/pf_inv_rules_posthoc.py (0a1262f0, committed before its run) on the existing in-sample runs i2J / i2X, whose four arms differ only in CAP10 and RO60 vs S60. Report handoffs/20261112_inv_rules_results.md; copies reviews/inv_rules_20261112/; FINDINGS updated.
 - Proposal (user's call): a timing base on the frozen engine = first 60 s, CAP10 and G6 off (new runs via PF_ARMS, engine unedited), venue rules kept; re-measure the order path on it; inventory control added back afterwards with settlement as its check.
 
+<!-- MODEL_INFLUENCE_REVIEW_20261114 -->
+## 2026-11-14T05:25:28.982994+00:00 — Influence target alignment reviewed
+
+[Review](handoffs/20261114_influence_alignment_review.md): selective through-price
+cancellation is implemented for deeper resting orders. Remaining gaps are the
+original-best blanket pull, onset-trained predictions used at every step,
+future-conditioned label eligibility, oracle/clean-target mismatch, and
+independent-rung economics. Small historical model gains do not establish a
+policy improvement. TARGET-TEST is still running; no final report at review.
+Six report hashes and runtime copies match; source/receipt checks only.
+Existing freezes and workers unchanged. Goal service: usageLimited.
+
+2026-11-14 05:41Z update: [TARGET-TEST completed review](handoffs/20261114_target_test_status_review.md).
+All nine dates completed; control receipts clean. Rebuilt model improvement
+not established; gains versus blanket cancellation reverse at M250 and when
+estimated-time trades are included. Missing-score fallback differs across
+models (FULL 12.12% of guard steps); match coverage in the next comparison.
+Other session records JOINT-LADDER in progress and ORDER-HARM next.
+
+2026-11-14 05:57Z: [critical JOINT-LADDER / ORDER-HARM review](handoffs/20261114_joint_order_harm_critical_review.md).
+Synthetic source controls confirm future-book leakage into a0/ahead at an
+earlier decision, repeated labels reusing one fill, and unequal terminal
+horizons. ORDER-HARM requires a superseding construction before interpreting
+skill/value. Joint replay 6/9 dates at 05:56:43; no parity mismatches, most
+interaction paths skipped. The cap is soft; exposure and settlement tie
+accounting remain material. Sources/workers unchanged.
+
+2026-11-14 06:41Z: [v2 repair verification](handoffs/20261114_order_harm_v2_fix_review.md).
+The three specific ORDER-HARM v1 findings are superseded: known-clock queue
+features pass the earlier future perturbation cases; R622 summed economics is
+removed; primary boundary rows are censored. Saved receipts reconcile (114,383
+queue perturbation checks, zero differences). New critical JOINT-LADDER v2
+finding: future post-only rejection frees hard-cap capacity at submission,
+allowing another request before rejection is known. Full-lane synthetic case
+reproduces it with all conservation counters zero. Reserve every submission
+until its acknowledgement; add decision-prefix invariance. No source/worker
+change. Joint v2 2/9 evaluation dates, 3 parity dates at 06:40:52.
+
+2026-11-14 08:35Z: [v3 repair and ORDER-HARM policy review](handoffs/20261114_joint_v3_policy_review.md).
+The prior future-rejection admission defect is superseded by v3: actual-lane
+prefix invariance passes the earlier example, the old-bug mutant is caught,
+and a known cap increase changes admission as expected. No additional critical
+execution-causality defect confirmed. Main evaluation gaps: OH 250 ms versus
+FB25 50 ms cadence; all-date/reference-state threshold matching; WS-subset
+success criterion despite adverse all-trades/timing sensitivity; blind-keep
+labels used for an adaptive policy. Add a cadence-matched baseline and whole
+portfolio acceptance criterion; current dates remain development only.
+Saved receipts: 6,912 invariance checks, 163,296 replay runs, zero reported
+violations. True-exposure check 7/9 dates (72,576 runs), zero hard overshoots;
+policy thresholds/results absent as of 08:34:52. New caps 300/600/1,500 shares
+and uncapped. No research worker or frozen source changed.
+
+2026-11-14 09:47Z: [ORDER-HARM v3 / POLICY v2 fix review](handoffs/20261114_order_harm_v3_fix_review.md), source f481b01b.
+Same-cadence baseline, separate chronological model/calibration folds and a
+broader portfolio gate are present. Two actual-source synthetic defects remain:
+legacy label engine sets tc on an unseen fill, dropping a 450 ms decision before
+its 500 ms notification; portfolio vend includes a 60.010 s fill but marks it
+at 60.000 s. Both defect checkers fire, with positive/repair controls. Generate
+labels on client-known state and use a common post-cancellation terminal for
+cash/inventory. EVERY=5 still means 250 ms; the discussed 50 ms policy is not
+implemented. Upstream guard/FRONT-PULL remain LODO. User's no-run instruction
+respected: tiny synthetic cases only, no fit/replay, no new performance result,
+no research source or worker changed. Receipt as-of 09:47:14 UTC.
+<!-- /MODEL_INFLUENCE_REVIEW_20261114 -->
+
+<!-- MODEL_UPGRADE_20261112 -->
+## 2026-11-15T09:19:18.799103+00:00 — Better prediction model goal: running
+
+Stage `depth_forecast_awaiting_review`. Forecast evidence complete; economic-policy goal and live calibration remain.
+
+Branch `research/predict-model-upgrade-20261112`; plan `handoffs/20261112_model_upgrade_plan.md`; receipts `reviews/model_upgrade_20261112_v2/`. Default quoting/useful priority objective. No live changes.
+<!-- /MODEL_UPGRADE_20261112 -->
+
+<!-- CONTINUATION_20261112 -->
+## 2026-11-12T14:25:28.720027+00:00 — Full-engine continuation: awaiting_review
+
+Stage `awaiting_human_review`. All declared builds, forecasts, artifact reconstruction and component diagnostics are complete. Results ready for interpretation; no candidate promoted.
+
+Branch `research/predict-continuation-20261112`; receipts `reviews/continuation_20261112_v3/`. Default resting and useful queue retention remain the objective. Live calibration awaits a new capture.
+<!-- /CONTINUATION_20261112 -->
+
+## 2026-11-12 10:42Z — Independent new-results review: QR fast-entry clock finding; no candidate promoted
+
+- Read handoffs/20261112_new_results_insights.md; machine correction reviews/results_review_20261112/review.json.
+  Source/test 9053263d, saved review f0a3b17e on research/predict-results-review-20261112.
+- Synthetic test confirms QR's 30 ms arm uses the future birth price in a decision 10 ms BEFORE the birth
+  (send = birth + 30 - unchanged 40 ms placement). Mutating the future price changes the earlier action.
+  QR's original selftests/mutations pass; new causal control and known-bad refusals pass. No historical rerun.
+- Qualify actionable fast-entry/speed P&L interpretations until observation, decision and activation clocks are explicit.
+  QR part A/C late-entry decomposition is separate and unaffected by this scheduling finding; original artifacts preserved.
+- Full default-pull portfolios remain negative for learned policies; joint fill-rate consistency/calibration has improved,
+  but value selection has not. Next isolate causal early acquisition and KEEP/PULL/recovery with aligned re-entry and tail value.
+  Preserve the default-rest/useful-priority objective; an old-entry-gate restoration is not implied. No live changes.
+- Verified B21/S4/QR manifests and portfolio/joint result identities. Repaired STATUS.yml's malformed updated scalar
+  into a block scalar while preserving its history so the machine state can be read again.
+
+<!-- JOINT_FILL_20261112 -->
+## 2026-11-12T10:18:30.477289+00:00 — Coherent fill/value model: complete
+
+Stage `human_review`. Shared outcome consistency passes; earlier-day calibration improves aggregate fill rates but not pull selection. No candidate promoted. Open gaps and next target study: handoffs/20261112_joint_fill_review.md.
+
+Default resting / useful queue retention remains the objective. Receipts: `reviews/joint_fill_20261112/`; branch `research/predict-fill-value-20261112`. No live changes.
+<!-- /JOINT_FILL_20261112 -->
+
+<!-- FILL_VALUE_20261112 -->
+
+## 2026-11-12T09:21:58.611027+00:00 — Fill opportunity / value diagnostic: complete
+
+Stage `human_review`. First-stage review complete: KEEP fill prediction improves, RESET forecasts and component pull value do not. Physical-support failures recorded; no model promoted. See handoffs/20261112_fill_value_review.md.
+
+Default quoting and useful queue retention remain the objective. Same saved short-horizon neutral labels; no entry-gate restoration or live changes. Source/declaration and receipts: `reviews/fill_value_20261112/`; branch `research/predict-fill-value-20261112`.
+
+<!-- /FILL_VALUE_20261112 -->
+
+<!-- QUEUE_PRIORITY_OBJECTIVE -->
+
+## 2026-11-12T08:12:12.938767+00:00 — User clarified the objective: acquire and retain useful queue priority
+
+Quote early by default, selectively withdraw from adverse flow; the current model is replaceable. Do not treat restoring the old entry gate as the agreed direction. The existing local label captures queue loss only through fills inside its short horizon and assigns no terminal value to unfilled queue progress. This limitation is verified in code, but its contribution to losses is unmeasured. Read [objective and proposed study](handoffs/20261112_queue_priority_objective.md). No new experiment launched; prior negative results remain unchanged.
+
+<!-- /QUEUE_PRIORITY_OBJECTIVE -->
+
+<!-- DEFAULT_PULL_QUALITY -->
+
+## 2026-11-12T07:40:34.789008+00:00 — Current pull-model quality audit complete
+
+- Saved-action diagnostic, result as of 2026-11-12T07:35:39.607254+00:00: 40,059 neutral test actions across six consumed dates; no retraining or new strategy variant.
+- Local selection beats matched random pulling, but shows no incremental benefit over matched ranking by the existing guard value margin. Keep predictions are poorly calibrated. Entry permission plus this model remains untested.
+- Read [pull-quality review](handoffs/20261112_default_pull_quality.md); canonical receipt `reviews/default_pull_quality_20261112_v2/result.json`. Full original portfolio result remains negative and unchanged.
+- 500-draw nulls reproduced; source/input, action/decomposition and positive/refusal checks PASS. v2 corrects output serialization only; failed v1 retained. Numerical work finished; no live changes.
+
+<!-- /DEFAULT_PULL_QUALITY -->
+
+<!-- DEFAULT_PULL_LOOP -->
+
+## 2026-11-12T07:22:32.194451+00:00 — Quote-default / learned-pull research loop: complete
+
+- Stage `human_review`. Final review complete: no candidate preserves trading value with no higher inventory exposure across both scenarios. Six primary and six stress replays, independent audit and integrity checks passed. See handoffs/20261112_default_pull_review.md. No live promotion; numerical work finished.
+- 31 stages complete. Tracked plan, receipts and failures: handoffs/20261111_default_pull_progress.md.
+- Prior own-order/calm test remains COMPLETE, no promotion; comparison_v4.json / d475eccb.
+- Branch research/predict-default-pull-20261111; Codex slot/core 8, global cap two research workers; no live changes/protected-day reads.
+
+<!-- /DEFAULT_PULL_LOOP -->
+
+<!-- DEFAULT_PULL_PRIMARY_FINDING -->
+
+Final finding (numerical report as of 2026-11-12 05:42:48 UTC; review complete): all six primary and six stress replays and independent audits passed. No candidate meets the declared trading-value/inventory objective under both execution scenarios. Learned pulls lose paired marked value on every test day in both scenarios; the pressure rule's favorable primary estimate reverses under stress. This supersedes the pending-stress primary snapshot. Final interpretation, populations, limits and next data requirements: [completed review](handoffs/20261112_default_pull_review.md). Canonical result: `reviews/default_pull_20261111_v4/comparison_final.json`; final integrity: `final_review_integrity_v2.json`. No live changes or candidate promotion.
+
+<!-- /DEFAULT_PULL_PRIMARY_FINDING -->
+
+
 ## 2026-11-12 14:11Z (session ce68ebe0) — FA DONE: the guard's alarms are 94% "false" inside its own 500 ms, but staying through them loses afterwards (-1.7 to -1.9 c per moment over 4.5 s, 9 of 9 days): they are mostly early, not false; the guard tracks activity more than harm; longer-term flow for a back-of-queue order is negative in every state
 
 - Done (USER: "proceed" with the false-alarm measurement): research/pf_false_alarm.py + run_fa.sh (5dff3d9f), 14:08-14:10Z.
@@ -7770,6 +8004,74 @@ fill-model calibration and a real 50 ms inference benchmark remain unresolved.
   - Another session's progress updater replaced STATUS.yml's `updated: >-` header with a quoted timestamp in the working tree
     (uncommitted, not ours), so the working-tree file no longer parses as YAML. Left as found.
 
+## 2026-11-11 17:45Z — Own-order continuation + calm posting COMPLETE: no variant meets the objective
+
+- USER request implemented and tested on actual frozen-v3 admitted order generations. Read handoffs/20261111_own_orders_calm_review.md;
+  full tables handoffs/20261111_own_orders_calm_results_v4.md; canonical machine receipt reviews/own_orders_calm_20261111/comparison_v4.json.
+- Six consumed test days /1,728 windows. Paired marked delta vs baseline: learned continuation -5.60USD on1,578 common windows,
+  inventory-square time +0.007%; early calm quotes -15.77USD on1,578, exposure -1.288%; combined -21.38USD on1,577, exposure -1.281%.
+  Strict calm gate -142.14USD on1,579, exposure -97.733% but only75 fills vs3,095 baseline: it sacrifices trading activity.
+- Stress: continuation -15.51USD marked on1,559 common windows, exposure +0.849%; early calm -1.48USD on1,558, exposure +0.013%.
+  No promotion. Only92/12,757 reference neutral decisions have incremental fills; queue matched-null p=.735/500 draws.
+  Early seeds:13/3,494 generations filled (54.29shares), own1s/5s values only~0.03/0.23USD; full path effects matter.
+-9 exact baseline parities;21 original/dedup controls; all portfolios independently reconciled;12 model artifacts reconstructed.
+  Causal warm-up fix:70,115 feature decisions audited directly against cache rows; zero affected original decisions. Report serialization
+  fixed in v4 without numerical changes. Original sources/artifacts retained. Live/frozen v3 unchanged; conditional LODO-guard caveat applies.
+- Single light slot RELEASED. Peak replay RSS1,648MiB; outputs138MiB. Branch research/predict-own-orders-calm-20261111.
+
+## 2026-11-11 17:42Z — Guard status review: admission/retention mismatch confirmed; own-order v4 available
+
+- Review: handoffs/20261111_guard_status_review.md. PM90 is a historical percentile cutoff applied to both POST and KEEP;
+  its first-minute line is +0.0492 c. Approximate 11% presence is a per-side first-minute replay measure, not current live uptime.
+- Latest own-order receipt comparison_v4.json (17:40:25Z) supersedes the failed JSON write; repair completed by the existing
+  research session. Six consumed test days / 1,728 windows: continuation marked delta -$5.60 on 1,578 common windows
+  (150 missing either mark), stress -$15.51 on 1,559 (169 missing); no candidate passes value/exposure predicates.
+- This is narrow-band retention, not broad rest-by-default. B21 is prepared; no completed result at this cutoff.
+  Review flags its unknown-as-false pressure inputs and lack of same-price/elapsed-time thinning identity before interpretation.
+- B12g/B13bc/B20 manifests and v4 named-artifact hashes verified. No new replay, frozen/live change or protected-day read.
+  Next: separate POST/WAIT and actual-order KEEP/CANCEL values; preserve hard exits and calibrate against own match/cancel clocks.
+
+## 2026-11-11 17:15Z — Own-order study: primary replay complete; causal warm-up audit, stress RUNNING
+
+- All six primary test days PASS independent generation/fill/cash/inventory checks, in addition to9/9 exact baseline rebuilds.
+- Review found a bug in the NEW experimental feature harness: imbalance deltas before250ms used x[-1].
+  Calm already masks the boundary; continuation features required an explicit unknown value. Frozen originals preserved.
+- Audit bd61f96d + causal declaration c47a2e71:70,115 feature decisions across42 neutral/primary populations checked;
+  ZERO affected early decisions. Primary models/decisions/fills/results are unchanged and usable. Additional actual-clock
+  identity check includes float32 feature quantization tolerance; future-clock and future-data falsifiers pass.
+- Corrected wrapper pf_own_order_runner_v3 / run_own_order_v3.sh is now running six stress days. Canonical final
+  receipt will be comparison_v3.json and handoffs/20261111_own_orders_calm_results_v3.md. No tuning / no live changes.
+- Single light slot remains reserved; /tmp/own_orders_calm_run_20261111.log. Full report pending.
+
+## 2026-11-11 16:50Z — Own-order study: all nine neutral days reconciled; chronological fits complete
+
+-9/9 full baseline win/fill/request identities PASS; reference and calm-seed generation/fill/cash/inventory checks PASS.
+- Unique-action trainer v2 completed all six expanding folds, 5,895..17,659 distinct training actions. Both
+  queue and market+age models are saved. Shared-action conflicting-label refusal passed on the actual population.
+- Primary six-policy comparisons and four-policy stress replays are RUNNING serially. Source frozen; no tuning.
+  Single light slot remains reserved. Log /tmp/own_orders_calm_run_20261111.log. Full report still pending.
+- Added descriptive mechanism/saved-model reconstruction script1f91ea3b before policy outcomes; no new candidate.
+
+## 2026-11-11 16:38Z — Own-order study: four builders verified; unique-action training frozen before fits
+
+- Baseline win/fill/request parity exact on Oct23..26; independent generation/fill/cash/inventory checks PASS.
+-21 controls PASS. Training v2 (f167d50b, declaration64001a70) deduplicates identical decisions shared by the two
+  neutral paths; conflicting labels for the same causal action refuse the fit. No original model was trained.
+  Original source/declaration retained. Policy thresholds, labels, features, nulls and test dates unchanged.
+- Single light slot remains reserved, now run_own_order_v2.sh. Same log /tmp/own_orders_calm_run_20261111.log.
+  Remaining five builders, fits, primary/stress replays, then report. Partial outcomes are not a verdict.
+
+## 2026-11-11 16:28Z — Own-order continuation + calm-entry experiment prepared; single light slot reserved
+
+- USER: learn continuation on our admitted orders and also test posting during calm periods.
+- Isolated branch research/predict-own-orders-calm-20261111; worktree /tmp/cta-own-orders-calm-20261111.
+  Frozen v3 stays unchanged. Full pipeline adds actual-generation tracing, causal queue history, cancel-effective
+  shadow labels, chronological continuation, calm-only new entries and small early calm quotes; primary and stress replays.
+-18 controls PASS (including future-data invariance, pending-cancel competition, retained queue, known-bad accounting,
+  and planted model signal). Next: freeze declaration, exact reference parity smoke, nine consumed builders and six test days.
+- Reserve the single numeric slot for run_order_policy.sh. Log /tmp/own_orders_calm_run_20261111.log.
+  No protected-day payload reads, no live changes, no promotion claim. Results pending.
+
 ## 2026-11-11 16:08Z (session ce68ebe0) — B20 DONE: pre-positioned / held orders do NOT solve the queue position (R210 NOT-IMPROVED, all guarded arms)
 
 - Done (USER "post in advance ... until our guard says to withdraw"; "check if we solved the position issue"):
@@ -7783,6 +8085,32 @@ fill-model calibration and a real 50 ms inference benchmark remain unresolved.
 - Next: the live run with A4b (the fill clock and our real queue place) decides the next step; holding at the guard's rhythm cannot
   build priority, and resting through weak guard states takes the losing fills.
 
+## 2026-11-11 15:50Z — Queue continuation model TESTED; objective not met, not promoted
+
+- Branch research/predict-queue-policy-20261111. Report handoffs/20261111_queue_policy_results.md.
+  Fixed5-share entries; learn KEEP/CANCEL/REJOIN with current market/inventory and causal queue estimates.
+  Nine consumed dates, expanding training, six test days/1,728 windows per scenario; age-matched baseline added
+  before inspecting aggregate PnL. Full v3 integration remains untested; frozen/live code unchanged.
+- Queue vs market+age, primary L50: +$59.13 marked on1,376 common-mark windows; +$139.35 full settlement,
+  inventory-square time +0.69%. M50: +$23.21 marked on1,372 windows, exposure -0.41%; slow timing:
+  -$11.50 marked on1,376 windows, exposure -1.57%. Primary action-matched null p=0.236 (500 draws/3 scenarios).
+- All fixed-entry arms lose: primary full settlement queue -$1,047.29, market+age -$1,186.64,
+  scheduled-cancel -$862.99. Keep existing selective admission in the next experiment; use actual v3 neutral
+  generations and age-matched controls. A queue-only continuation layer has not solved the objective.
+-15 controls passed. Independent verification exposed a flat-position float residue; accounting_v2 supersedes
+  the original receipt without changing models/labels/decisions/fills. Reconciled31,104 policy-window results
+  and264,795 fill records, plus5,184 age-control windows. Canonical receipts reviews/queue_accounting_v2_20261111/
+  and reviews/queue_age_control_20261111/; comparison.json explicitly matches available marks and records exclusions.
+- Single light slot released after report; peak job RSS1,394MiB. Protected days unread; rebates excluded.
+
+## 2026-11-11 15:38Z — Queue study: age-matched baseline queued next in the same light slot
+
+- All9 day builders completed; chronological portfolio tests running. Before reading PnL, committed
+  pf_queue_age_control.py (a7842678): add order age to the market baseline to distinguish remaining
+  lease time from queue-size/progress value. Reuses original labels and unchanged queue candidate.
+- This addendum runs immediately after the original verifier, followed by common-population reporting.
+  Keep the single numeric slot reserved through those phases. No outcomes inspected yet; no tuning.
+
 ## 2026-11-11 15:29Z (session ce68ebe0) — B16c / B19a DONE: a combined 1 s / 5 s / 60 s target makes the guard worse; at the back of the queue our fills lose ~1.7 c/sh in EVERY regime (favourable and calm included) - the lever is queue position, not a regime model
 
 - Done: research/pf_b16c_combined_guard.py + run_b16c.sh (5deb1103), research/pf_b19a_regimes.py (4d169c27), committed before their
@@ -7795,6 +8123,44 @@ fill-model calibration and a real 50 ms inference benchmark remain unresolved.
   (vs -0.11..-0.41 skipped); it quotes favourable moments most (50% of its quotes).
 - Next: no regime-aware guard for now (its ceiling is ~0 at the back of the queue); queue position first - the live run with the
   churn fix, then staying after fills and inside-the-spread entry (B12: 1.9% of the top 5's volume at +1.30 c/sh) as candidates.
+
+## 2026-11-11 15:28Z — Queue continuation experiment RUNNING
+
+- Source68769426; frozen declaration/input hashes9f8b09a8 on research/predict-queue-policy-20261111.
+  All15 controls PASS (including planted model signal and known-bad artifact refusals).
+- B16c/B19a finished; the single light slot now belongs to run_queue_model.sh in
+  /tmp/cta-queue-policy-20261111. Log /tmp/queue_model_run_20261111.log; artifacts
+  data/predict_fun/research/queue_model_20261111. Nine day builders, six chronological model folds,
+  three assumptions, sequential portfolios and independent verifier run serially. Results pending.
+
+## 2026-11-11 15:16Z — Queue continuation model prepared; awaiting B16c/B19a compute slot
+
+- USER requested a reasonable order-state model and an actual test. Isolated branch
+  research/predict-queue-policy-20261111, worktree /tmp/cta-queue-policy-20261111.
+- Prepared fixed-entry5-share KEEP/CANCEL/sequential REJOIN experiment, with causal queue estimates,
+  cancel/notice latency, chronological market-only vs queue-feature models, matched-action500-draw null,
+  sequential inventory portfolios, controls and independent saved-fill reconciliation. Not run yet.
+- Uses only the9 consumed Oct23–27/31 and Nov1–3 dates. Full pipeline/declaration will be committed
+  before outcomes. No frozen-v3/live edits. Fixed-entry continuation study, not full strategy parity.
+- B16c and its already queued B19a own the single light slot first. This study runs after both;
+  please avoid starting another numeric job in that interval. Every numeric phase uses run_light.sh.
+
+## 2026-11-11 14:22Z — Independent maker/model comparison review COMPLETE; B16c continues separately
+
+- Reviewed frozen B12–B18 source/artifacts through ea2f107a; all8 SHA256SUMS manifests pass. Report:
+  handoffs/20261111_maker_comparison_review.md. Branch research/predict-maker-comparison-20261111.
+- Structural gap: B16 still labels a generic5-share order at the back on every grid row, without actual age/queue progress,
+  outstanding orders or inventory. It does not test earned queue continuation value. Prioritize action-specific keep vs
+  cancel/repost value with effective cancellation latency; post and keep have different alternatives.
+- B16 qb's +1s improvement/longer-horizon loss does not isolate extra fills or prove horizon causality; similar absolute
+  terminal inventory cannot rule out signed/path inventory effects. Top-makers' target/cancels are not observable.
+- Qualify B18: filled-share pressure fractions are not exposure/cancel rates; public-vs-simulated populations do not alone
+  identify fill-model bias. Burst uses a log/geometric baseline (not2x arithmetic mean); thinning lacks same-price identity
+  and includes executions; NaN inputs become false flags. Historical impacts not measured; superseding definitions needed.
+- B16c design5deb1103 read, outcomes not read: R190's qlm remains rule-M simulated own fills, so its tape input is not an
+  independent fill-model validation. Combined horizons do not resolve the missing order state. B1 remains open.
+- No new raw-data/model/replay pass, protected reads or strategy/live changes. Optional artifact/synthetic audit helper
+  b6a44a72 is prepared but NOT RUN: run_light refused while B16c owns the single slot. Do not interrupt B16c.
 
 ## 2026-11-11 14:09Z (session ce68ebe0) — B18 DONE: top makers do not avoid pressure moments (63% of their fills, base 48%) but break even there; our replay is as exposed (R180 SIMILAR, qb the same) and the replay cannot value those fills
 
@@ -8232,6 +8598,32 @@ fill-model calibration and a real 50 ms inference benchmark remain unresolved.
   at 1 s for shifts 0 / 50 / 250 ms); the fill rule is not validated (B1a); Binance guards, CAP10 / RO60, size-up,
   rung and throttle are not modelled; 60 s and settlement values do not separate the arms. Do not build a band token
   into the engine on this evidence.
+
+## 2026-11-10 07:47Z — Polymarket/Predict price lead-lag COMPLETE
+
+- Fixed 72 scheduled windows / 9 consumed dates (Oct 23–27, 31, Nov 1–3); 71 available, missing Nov 1 06:00 stays excluded.
+  As of 07:38:30Z: receipt-clock peaks show Predict first by 100/100/200 ms in phases 5–60/60–180/180–240 s.
+  The 200 ms asymmetry has that direction on all 9 sampled dates in each phase; source-clock diagnostic peaks at -200 ms.
+- Final-minute peak -500 ms is weakly representative: only 6018/39050 scheduled changes (15.4%) have eligible books.
+  This is a partial-day sample, not complete days or independent validation; no intervals, causality or trading claim.
+- Adding PM moves to Predict/Binance controls reduces primary 1 s MSE by 0.395% on 10108 observations / 47 windows /
+  6 chronological test dates (5/6 improve). Small complementary signal; no new fair-value anchor or strategy promoted.
+- Seven controls pass; independent verifier 2b65b516 checks 240 correlations and 30305 prediction rows/targets/MSE.
+  Sources e4034cad, declaration 966c0faf; receipt/verification/summary and chart in reviews/polymarket_leadlag_20261110.
+  Findings: handoffs/20261110_polymarket_leadlag.md. Branch research/predict-polymarket-leadlag-20261110.
+- All jobs complete, presentation finished 07:45:02Z; peak build RSS 227 MiB. Slot released (recheck). Protected data unread;
+  live/native/frozen strategy unchanged; B1 fill/queue calibration remains open. Equal UTC window is not equal payoff.
+
+## 2026-11-10 07:36Z — Polymarket/Predict price lead-lag study RUNNING
+
+- User requested cross-venue price timing. Fixed sampled cohort:8 scheduled BTC5m windows/day across9 consumed
+  dates (Oct23–27,31,Nov1–3),72 expected/71 prestart PM identities. Missing coverage remains a status; no backfill.
+- Source e4034cad/declaration966c0faf;7 planted/falsifier controls pass. Receipt-clock primary, source-clock
+  diagnostic,1s/5s freshness, four window phases, fixed ±0.1..5s lags;500 phase-matched shift nulls and expanding
+  chronological prediction controls against Predict history + Binance. No strategy fills/PnL or full-day intervals.
+- PM historical metadata names BTC/USD TWAP; Predict uses its own round reference. Same window is not equal payoff.
+  Branch research/predict-polymarket-leadlag-20261110; checkout /tmp/cta-pm-leadlag-20261110.
+  Data/logs data/predict_fun/research/polymarket_leadlag_20261110. Numeric slot occupied; protected prices unread.
 
 ## 2026-11-10 04:56Z (session 62f3ce33) — repo/disk cleanup done; B1a approved, not started; live not running
 
@@ -9924,3 +10316,72 @@ The driver only uses run_light.sh (core 8, one process); P-2026-003 must not pin
   model run before). Peaks: step 1 ~1.0 GiB, step 4 ~1.5 GiB, features ~1.7 GiB, model ~1.4 GiB.
 - 10-28..10-30: do not read (Binance tape sealed for P-2026-003's order-flow test). Read days now: 10-22 (partial), 10-23..27, 10-31.
 - Results are gross at 5 shares with a modelled fill (FIFO behind displayed size, no own impact); no real-fill calibration.
+
+## 2026-11-11 — Default-pull completion audit prepared
+
+- Checker source63704e50 and reviews/default_pull_20261111_v2/completion_audit_plan.json; run after all26 v2 stages.
+- Reconstruct actual saved policy scores/actions, all replay/source/input/feature identities and paired report totals.
+- Distinguish union of resting intervals from aggregate order-time, which can overlap during cancellation.
+- PREPARED, not run while the neutral build owns the shared numeric slot. No policy/threshold/null changes.
+
+## 2026-11-11 18:31Z — Default-pull runtime gate and canonical v3 tracking
+
+- Canonical active path: data/predict_fun/research/default_pull_20261111_v3; declaration39c8fa44.
+- Original v2 full day PASS (288 windows x2 paths,7221 feature identities,840.73s). Retained as immutable comparison.
+- Cached feature sourceb3820276:13 original controls, late-fill reservation regressions,9180 original/cache queries and smoke PASS.
+- Full-day exact old/new equality RUNNING; no further day/model fit before it passes. No policy or model-design change.
+- Superseding final auditor: pf_default_pull_completion_v3 (4652b475), queued after all26 stages; v2 audit plan is historical.
+- Read handoffs/20261111_default_pull_v3_plan.md and the auto-updated progress tracker. Live unchanged.
+
+## 2026-11-11 18:36Z — Default-pull v3 full-day runtime parity PASS
+
+- Oct23: all288 windows for reference/default; all8 generation/window/fill/request artifacts and independent accounting match v2 exactly.
+-7,221 direct feature identities also PASS. Runtime840.73s ->474.03s, peakRSS1,555MiB; no policy or model changes.
+- Canonical receipt reviews/default_pull_20261111_v3/runtime_parity.json, plus build_20261023_checks/feature_check/source.json.
+- Full loop advanced to Oct24 neutral build. All six-day fitted-policy comparisons, stress and completion audit remain pending.
+
+## 2026-11-11 18:45Z — Default-pull neutral builds2/9 PASS
+
+- Oct23-24:288 windows per day per reference/default path, exact saved-baseline parity and independent accounting/cap checks PASS.
+-13,656 direct saved-feature identities checked across these two full days. Missing label marks remain explicit statuses.
+- Oct25 is RUNNING in the single numeric slot. Model fitting, full six-day primary/stress comparisons and final audit remain pending.
+- Source/receipts/progress on research/predict-default-pull-20261111; canonical data default_pull_20261111_v3. No live changes.
+
+## 2026-11-11 18:55Z — Default-pull neutral builds3/9 PASS; final plot prepared
+
+- Oct23-25:288 windows per day per reference/default path; exact baseline, accounting and inventory cap checks PASS.
+-19,941 saved feature decisions checked directly against causal inputs. Oct26 is running in the single numeric slot.
+- After all26 driver stages, run pf_default_pull_completion_v3; then pf_default_pull_plot (source05d5a936) through run_light.
+- Plot requires the verified final report/audit identities and writes PNG/PDF plus exact point populations/as-of. No new model selection.
+- Canonical data: default_pull_20261111_v3. All policy/stress conclusions remain pending; live unchanged.
+
+## 2026-11-11 19:02Z — Default-pull neutral builds4/9 PASS
+
+- Oct23-26 complete:288 windows/day/path, exact baseline parity, accounting/cap checks and27,392 direct feature identities PASS.
+- Oct27 is running in the single numeric slot. No model, threshold, label or policy changes.
+- Receipts in reviews/default_pull_20261111_v3; automatic stage tracker in handoffs/20261111_default_pull_progress.md.
+- Models, six-day primary/stress portfolios, completion audit and figure remain pending. No live changes.
+
+## 2026-11-11T19:17:20.070468+00:00 — quote-default v4 restarted before model fitting
+
+Known-empty price levels were incorrectly treated as missing by the v3 pull-policy state. Six verified v3 neutral days are preserved; no learned model was fit. Corrected v4 source/declaration are frozen at 36093438 /531836a5. The controls pass, including a newly formed level and the planted old admission delay, late-fill inventory reservations,13 original controls and9,180 exact cached feature queries. The eight-window smoke and full loop now run serially; canonical data default_pull_20261111_v4. See handoffs/20261111_default_pull_v4_plan.md and live progress handoff. No current strategy result or promotion claim.
+
+## 2026-11-11T19:27:54.651089+00:00 — first corrected default-pull day verified
+
+V4 Oct23 build:288 windows per arm, exact frozen reference, independent accounting/inventory checks PASS and7,842 direct feature identities. The neutral default path has18,115 sent generations:7,838 eligible,7,722 ended-before-probe/unknown,2,551 post-only refusals and4 missing-label-mark statuses. As-of and artifact identities are in reviews/default_pull_20261111_v4/first_day_verified.json. One of nine build days complete; Oct24 is running; no model fit or performance claim yet.
+
+## 2026-11-11T20:39:43.385636+00:00 — complete default-pull neutral dataset and models
+
+All9 neutral build days passed exact reference parity, independent accounting/inventory checks and61,628 direct feature identities (smoke excluded). Fit contains61,605 eligible neutral actions and40,059 test actions across6 consumed chronological folds, with2 saved models per fold. All12 model identities and prediction artifact identity checked; fitting reloads every model and verifies scores with a corrupted-score refusal. First full policy replay (Oct26) is running. Remaining:6 primary days, primary report,6 stress days, final report, artifact audit and figure. No policy performance or validation conclusion yet. See reviews/default_pull_20261111_v4/neutral_and_fit_verified.json and fit.json.
+
+## 2026-11-11T20:55:08.234812+00:00 — neutral diagnostic scheduled at the next stage boundary
+
+Current Oct26 eval child941372 continues under the resource cap. Driver199624/session45627 is SIGSTOP-held so it cannot start the next numeric job. After the child finishes: verify rc0, checks.json and feature_check.json; ensure the numeric slot is free; run pf_default_pull_model_diagnostic_v4 through run_light from /tmp/cta-default-pull-20261111; then verify driver identity and SIGCONT199624 (do not retire it or replace its logs). The committed wrapper d50f8323 calls the unchanged frozen report diagnostic with500 matched-count shuffles. No model/threshold/null change. Preserve and report local diagnostic limits; full portfolio and stress results remain pending. Boundary receipt and model_diagnostic_plan.json identify the state.
+
+## 2026-11-11T21:24:15.371036+00:00 — neutral selection signal; portfolio study still active
+
+The neutral diagnostic passed on40,059 eligible actions across6 consumed dates. Market, queue and queue-with-margin policies exceed their declared500 matched-count shuffles on local cancellation value; added queue features show little descriptive excess over market/age and no formal incremental advantage is established. These overlapping local scores are not portfolio P&L. First Oct26 policy replay passed all6 arms/288 windows each and90,294 feature identities; one-day settlement favors matched_guard over all learned policies. See handoffs/20261111_default_pull_early_readout.md for counts/as-of, exact values and limits. Main driver199624 resumed after the diagnostic; Oct27 is running. All remaining primary/stress runs and final audit remain required.
+
+## 2026-11-11T22:10:09.995310+00:00 — persistent receipt publication watcher active
+
+Metadata watcher PID 1763547 / session94120 observes driver199624 / session45627. It verifies actual per-run artifacts with default_pull_checkpoint.py and commits/pushes completed primary and stress days, the primary report, and final artifacts after the full audit and figure stages pass. It never starts numeric jobs or marks the research goal complete. Poll session94120 for concise state/publication output; use data/predict_fun/research/default_pull_20261111_v4/publication_log.jsonl and reviews/default_pull_20261111_v4/publication_watcher_launch.json for provenance. The first2 primary days are complete; Oct31 is running. Final human comparison, risk interpretation and chart inspection remain required.
