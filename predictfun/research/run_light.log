@@ -10786,3 +10786,9 @@
 2026-11-28T13:28:36Z tag=cdf_read rc=0 peak_rss_mib=623 wall_s=7.61 cpu_user_s=6.60 memavail_start_gib=23 disk_free_gib=343->343 slot=claude
 2026-11-28T16:02:43Z tag=ctrf_selftest rc=0 peak_rss_mib=213 wall_s=1.01 cpu_user_s=0.83 memavail_start_gib=23 disk_free_gib=342->342 slot=claude
 2026-11-28T16:03:06Z tag=ctrf_check rc=0 peak_rss_mib=770 wall_s=17.52 cpu_user_s=16.81 memavail_start_gib=23 disk_free_gib=342->342 slot=claude
+2026-11-28T17:03:39Z tag=cts_selftest rc=0 peak_rss_mib=219 wall_s=1.03 cpu_user_s=0.82 memavail_start_gib=23 disk_free_gib=341->341 slot=claude
+2026-11-28T17:03:55Z tag=cts_reh_convert rc=0 peak_rss_mib=774 wall_s=37.96 cpu_user_s=37.02 memavail_start_gib=23 disk_free_gib=341->341 slot=claude
+2026-11-28T17:04:33Z tag=cts_reh_run rc=0 peak_rss_mib=507 wall_s=11.31 cpu_user_s=10.28 memavail_start_gib=23 disk_free_gib=341->341 slot=claude
+2026-11-28T17:04:51Z tag=cts_reh_check rc=0 peak_rss_mib=826 wall_s=23.93 cpu_user_s=23.28 memavail_start_gib=23 disk_free_gib=341->341 slot=claude
+2026-11-28T17:05:29Z tag=cts_reh_reprice rc=0 peak_rss_mib=636 wall_s=5.51 cpu_user_s=3.90 memavail_start_gib=23 disk_free_gib=341->341 slot=claude
+2026-11-28T17:05:34Z tag=cts_reh_rehearsal rc=0 peak_rss_mib=228 wall_s=1.03 cpu_user_s=0.88 memavail_start_gib=23 disk_free_gib=341->341 slot=claude

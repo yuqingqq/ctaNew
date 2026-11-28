@@ -1,0 +1,59 @@
+{
+  "asof": "2026-11-28T17:05:35.637453+00:00",
+  "tag": "rehearsal_stage1",
+  "rows": [
+    6370,
+    6370
+  ],
+  "same_columns": true,
+  "columns_equal": 80,
+  "columns_differ": [],
+  "check_vs_replay_fixes": {
+    "matched": {
+      "shadow": 6370,
+      "replay_fixes": 6370,
+      "equal": true
+    },
+    "actions_both": {
+      "shadow": 28,
+      "replay_fixes": 28,
+      "equal": true
+    },
+    "replay_actions": {
+      "shadow": 29,
+      "replay_fixes": 29,
+      "equal": true
+    },
+    "moves": {
+      "shadow": {
+        "lost": 1,
+        "same_tick": 25,
+        "added": 2,
+        "another_tick": 2
+      },
+      "replay_fixes": {
+        "lost": 1,
+        "same_tick": 25,
+        "added": 2,
+        "another_tick": 2
+      },
+      "equal": true
+    },
+    "late_rows": {
+      "shadow": 1875,
+      "replay_fixes": 1875,
+      "equal": true
+    },
+    "its_share": {
+      "shadow": 0.014720637433,
+      "replay_fixes": 0.014720637433,
+      "equal": true
+    },
+    "other_known_frame": {
+      "shadow": 548,
+      "replay_fixes": 548,
+      "equal": true
+    }
+  },
+  "reproduced": true
+}
