@@ -14,8 +14,8 @@ ROOT=HERE.parents[2]
 OLD=HERE.parent/'book_alert_replay_20261128'
 sys.path.insert(0,str(OLD))
 from book_signal import DATA, DAYS, OUT, digest
-from replay import load_day
-from diagnose import metrics
+sys.path.insert(0,str(HERE.parent/'pressure_market_sharpe_20261128'))
+from diagnose import load_day, metrics
 spec=spec_from_file_location('event_control', HERE.parent/'event_pressure_cancel_20261127/run.py')
 ev=module_from_spec(spec)
 spec.loader.exec_module(ev)
