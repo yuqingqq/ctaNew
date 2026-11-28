@@ -1,3 +1,18 @@
+<!-- SHADOW_GATE_20261128_CLAUDE -->
+## 2026-11-28 — research's stage-3 gate is ready: `chase_tokyo_shadow.py` (`65616fb7c`), rehearsed on the stage-1 hour (`f4f05f6da`; pmmmrust `0c96f62` tells Tokyo what it reads)
+
+The rehearsal reproduced stage 2b's rows exactly, the replay-fixes counts, and chase_decision_atframe's AT_FRAME price (its control). When Tokyo's shadow lands:
+1. Extract the data branch to the scratchpad and check its MANIFEST. One continuous run per tag.
+2. Run each stage as `PF_SLOT=claude predictfun/research/run_light.sh <log tag> -- python3 predictfun/reviews/take_reprice_20261125/chase_tokyo_shadow.py <stage> <args>`, with `<tag>` the run's own tag (e.g. `shadow_20261128`):
+   - `convert <run dir> <tag>`
+   - `run <tag> <day>`, once per day in its `convert.json` `days_with_markets`, in separate processes
+   - `check <run dir> <tag> <replay decisions.csv.gz> <live decisions.csv.gz>`
+   - `reprice <tag>`
+3. A go needs G1-G4, and R1 and R5 positive on the live delays (`go` in `chase_tokyo_shadow_<tag>_reprice.json`). Compose the answer from the JSONs; signed orders still need the USER's go.
+
+Measured for 1 h: about 1.5 CPU-min, peak 0.83 GiB.
+<!-- /SHADOW_GATE_20261128_CLAUDE -->
+
 <!-- PILOT_TERMS_20261128_CLAUDE -->
 ## 2026-11-28 — USER: the chase pilot may run on any date, with the live wallet; the USER sets the caps at the start (pmmmrust `3d13206`)
 
