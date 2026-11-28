@@ -295,8 +295,7 @@ def compare(Rx, Tk, kf, f32, start_ms):
 def stage_validate():
     """The mode on a consumed day's research data (two hours of 11-02 through a raw root of links), against CHASE_TAKES' stored rows."""
     C.require(not VRESULT.exists(), f'{VRESULT.name} exists (write-once)')
-    resource.setrlimit(resource.RLIMIT_CPU, (1500, 1501))
-    CF.frozen()
+    CF.frozen()                                                              # the frozen points / labels set their own CPU limits
     root = OUT / 'validate'
     C.require(not root.exists(), f'{root} exists (write-once)')
     raw = root / 'raw'
@@ -336,8 +335,7 @@ def stage_validate():
 
 def stage_run():
     C.require(not (OUT / 'rows').exists(), 'rows exist (write-once)')
-    resource.setrlimit(resource.RLIMIT_CPU, (1500, 1501))
-    CF.frozen()
+    CF.frozen()                                                              # the frozen points / labels set their own CPU limits
     root = OUT / 'data'
     C.require((root / 'convert.json').exists(), 'run convert first')
     ck = json.load(open(root / 'step1' / DAY / 'clock_rl_d2.json'))
