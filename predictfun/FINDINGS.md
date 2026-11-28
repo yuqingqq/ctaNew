@@ -1,3 +1,81 @@
+<!-- TOKYO_BIGMOVE_CHECK_20261128_CLAUDE -->
+## 2026-11-28 — Tokyo's big-move answer checked from its raw records (99 values, 0 differ): BUYs sent into Binance moves of at least $3.5 in 100 ms are accepted a median 71.2 ms after sending (p90 150.4, max 262.9); the frozen chase line re-priced at these delays: +$210 over 7 days (7/7 days > 0), +$134 to +$146 (7/7) when each entry takes the delays measured after a Binance burst like its own
+
+[check](reviews/take_reprice_20261125/tokyo_bigmove_check.json) (script `tokyo_bigmove_check.py`, committed before use at 3b16de346; result a00d85877) · [re-pricing](reviews/take_reprice_20261125/chase_forward_bigmove.json) (script `chase_forward_bigmove.py`, committed before use at 24784979f; result 2e7317a73). USER: "Check the Tokyo live commit". Tokyo's receipt is pmmmrust `2d53b0b` with raw records on `bd65d08`, answering research's request `21ae192`.
+
+**The check:**
+- **Orders:** every order recomputes from the raw wallet frames: 99 values over 24 orders, 0 differ. The hashes, the report and the config verify, and the config is the first probe's.
+- **Triggers:** each recomputes from the raw Binance stream with the probe's own rule. 20 of 20 were at least $3.5 over 100 ms and bought the move's way. Each was sent at most 2.6 ms after its trigger frame.
+- **Spacing:** at least 10.0 s from a pair's end to the next BUY, and at least 106.6 s before the window's end. The run took 9.1 min.
+- **Caps held:** 20 BUYs, 4 SELLs and 31.47 USDT signed, against caps of 20, 20 and 40.
+- **Cash:** -1.8526 USDT, equal to the on-chain change to the wei. Pair 19's shares are held to settlement and counted at 0.
+
+| | orders | matched | send → accept, ms (p50 / p90 / max) | accept → match | send → match | match → settlement notice (p50) |
+|---|---:|---:|---|---|---|---:|
+| BUY on a ≥ $3.5 move | 20 | 5 | 71.2 / 150.4 / 262.9 | 151.0 / 152.0 / 152.0 | 229.6 / 258.6 / 258.6 | 1,981 |
+| — filled | 5 | 5 | 77.6 / 107.6 / 107.6 | 151.0 / 152.0 / 152.0 | 229.6 / 258.6 / 258.6 | 1,981 |
+| — killed (noMarketMatch) | 15 | 0 | 67.3 / 256.6 / 262.9 | — | — | — |
+| SELL (quiet exit) | 4 | 4 | 30.5 / 55.1 / 55.1 | 150.5 / 151.0 / 151.0 | 180.5 / 206.1 / 206.1 | 1,924 |
+
+- **The hold is unchanged:** removalLockedUntil − acceptance is 150 ms on every order. Matches come 150–152 ms after acceptance, kills 151–152 ms.
+- **Kills come from the book:**
+  - On 13 of 15 killed BUYs, the best ask at the hold's end was past the limit. On all 5 filled BUYs, the limit still reached it.
+  - Our book at the hold's end equals Tokyo's on 24 of 24 orders.
+- **The replay's fill rule holds at the measured timing:**
+  - At the actual match, the AB bracket agrees with 23 of 24 live outcomes: 19/20 BUYs and 4/4 SELLs. It fills pair 7, whose 85c limit still reached the ask at the hold's end.
+  - At the replay's own timing (send + 172 ms), it predicts 10 BUY fills against 5 live.
+  - Together with the first probe, 58 of 60.
+- **What the delay tracks** (Spearman, n 20):
+  - the Binance changes in the 200 ms after the send: 0.54 by the line's count, and 0.55 / 0.56 by Tokyo's two counts (reproduced);
+  - the move before: 0.16.
+  - Pooled with the first probe (n 30): 0.55 with the changes after, and -0.04 with the move before.
+
+The probe's sends against the line's entries, by the line's own definitions (Binance mid collapsed to one state per event-time ms):
+
+| | move before, 100 ms (p50, USD) | changes before (p50) | changes in the 200 ms after (p50 / p75) | move after (p50) | n |
+|---|---:|---:|---:|---:|---:|
+| the line (MOVE_top10, EARLY) | 7.0 | 7.0 | 6.0 / 13.0 | 2.9 | 2,754 |
+| big-move sends | 4.0 | 4.5 | 2.5 / 10.2 | 1.0 | 20 |
+| late triggers (36, from 8 moves) | 6.1 | 3.0 | 2.0 / 3.0 | 0.3 | 36 |
+| first probe's after-move sends | 0.4 | 1.0 | 7.5 / 12.2 | 4.2 | 10 |
+
+- **The line's entries are followed by more Binance activity** than these sends (median 6.0 changes against 2.5), and that activity is what the delay tracks. The 36 triggers skipped as late were not busier afterwards (median 2.0).
+- **Counting:** our counts keep one state per event-time millisecond, as the line's mid series does, and are applied alike to the line and both probes. On this run, counting every change in our window instead matches Tokyo's by-receipt count within 1 on 20 of 20 BUYs, so the difference Tokyo pointed out is the per-millisecond collapse. (The JSON's `line_high_share` counts every MOVE_top10 row, EARLY or not; the shares quoted here are the EARLY entries', from the day files.)
+
+**The re-pricing:**
+- **What is fixed:** the frozen candidate's selections, limits and models.
+- **Data:** 11-20..26, already read by this line. The primary is MOVE_top10 + 3c, taken at the 1 s calm after the settlement notice, EARLY scope.
+- **Method:** each action's P&L is averaged over its set of measured acceptance delays and the 35 measured settlement delays. The parity configs equal the stored exits on every day (637 column checks), and their cells equal `chase_forward_result.json`'s (30 cells, 0 differ).
+
+| acceptance delays | mean delay (ms) | total | days > 0 | Sharpe (day eq.) | max DD | filled / actions |
+|---|---:|---:|---:|---:|---:|---:|
+| replay (22 ms, no settlement gate) | — | +$738 | 7/7 | 2.67 | $13 | 332 / 2,754 |
+| first probe, 10 delays (CHASE_FORWARD_TOKYO) | 98.8 | +$190 | 7/7 | 1.29 | $19 | 162.9 / 2,754 |
+| big-move probe, 20 delays | 94.5 | +$210 | 7/7 | 1.35 | $18 | 171.1 / 2,754 |
+| big-move probe, matched on the move before (split $4, probe median; 8 / 12 probe BUYs below / at or above; 72% of the line's entries at or above) | 95.4 | +$202 | 7/7 | 1.30 | $19 | 168.5 / 2,754 |
+| big-move probe, matched on the burst after (split 6, line median; 12 / 8 probe BUYs below / at or above; 53% of the line's entries at or above) | 99.0 | +$146 | 7/7 | 1.10 | $22 | 161.1 / 2,754 |
+| both probes, 30 delays | 95.9 | +$203 | 7/7 | 1.33 | $19 | 168.4 / 2,754 |
+| both probes, matched on the burst after (split 6, line median; 16 / 14 probe BUYs below / at or above; 53% of the line's entries at or above) | 98.8 | +$134 | 7/7 | 1.07 | $23 | 160.0 / 2,754 |
+
+By acceptance delay (each over the 35 settlement delays; * = first probe):
+
+| accepted after (ms) | 28.5* | 30.3 | 32.1 | 35.0 | 39.8 | 40.5* | 42.9 | 50.4* | 56.1 | 59.1 | 60.2 | 64.1* | 65.6 | 67.3 | 75.1 | 77.6 | 78.5* | 84.3 | 93.4* | 107.6 | 114.1* | 127.7 | 129.0* | 129.5 | 129.8 | 150.4 | 193.6* | 196.3* | 256.6 | 262.9 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| total | +$591 | +$542 | +$546 | +$458 | +$407 | +$385 | +$386 | +$325 | +$270 | +$243 | +$240 | +$232 | +$226 | +$225 | +$175 | +$168 | +$168 | +$124 | +$111 | +$104 | +$94 | +$72 | +$72 | +$72 | +$71 | +$48 | -$42 | -$43 | -$90 | -$89 |
+| days > 0 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 6 | 6 | 6 | 5 | 5 | 5 | 5 | 3 | 2 | 2 | 0 | 0 |
+
+- **Breakeven:** the line is positive at every measured delay up to 150.4 ms, and negative from 193.6 ms.
+- **Execution luck:** 200 draws, each giving every action one delay of its set and one settlement delay at random.
+  - Big-move probe, 20 delays: +$154 / +$205 / +$252 (p5 / median / p95), positive in 100% of draws.
+  - Both probes matched on the burst after: +$87 / +$137 / +$175, positive in 100%.
+  - This is execution randomness only, not a sampling interval.
+- **Statuses and CPU:** 0 actions unloaded. 7.8 CPU min, rehearsals included.
+- **Limits:**
+  - There are two probes, 9 and 11 minutes on one Saturday: 30 after-move delays, 7 fills.
+  - The big-move sends were at $3.5-6.5. The line's median move is $7.0, and the move before barely tracks the delay.
+  - Matching assumes the delay depends on the burst after the send, as both probes show, and on nothing else that differs between the probes and the line.
+  - The book feed keeps the replay's 53.1 ms. The exit IOC keeps the replay's rule.
+<!-- /TOKYO_BIGMOVE_CHECK_20261128_CLAUDE -->
 <!-- TOKYO_BIGMOVE_REQUEST_20261128_CLAUDE -->
 ## 2026-11-28 — the chase line enters after a median $7.0 Binance move in 100 ms; the Tokyo probe's after-move BUYs went out after $0.4, so the probe timed a move's first tick; research's reading and a big-move request committed to pmmmrust (21ae192, pushed)
 

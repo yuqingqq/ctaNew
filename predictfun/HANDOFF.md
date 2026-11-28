@@ -1,3 +1,8 @@
+<!-- TOKYO_BIGMOVE_CHECK_20261128_CLAUDE -->
+## 2026-11-28 — Tokyo's big-move answer checked (99 values, 0 differ); the chase line re-priced at the big-move delays: +$210 (7/7), +$134 to +$146 (7/7) matched on the burst after entry
+
+See FINDINGS TOKYO_BIGMOVE_CHECK (same date). Supersedes TOKYO_BIGMOVE_REQUEST's next step (done). The replay's fill rule agrees with 23/24 live outcomes at the actual match. The delay tracks the Binance burst after the send (Spearman 0.54), not the move before (0.16); the line's entries see more of that burst than the probe's sends (6.0 vs 2.5 changes). Watch out: n 30 after-move delays in all; the line turns negative at about 194 ms. Next: USER's call (a live pilot of the line at the venue minimum, or a probe that sends on the line's own entry rule).
+<!-- /TOKYO_BIGMOVE_CHECK_20261128_CLAUDE -->
 <!-- TOKYO_BIGMOVE_REQUEST_20261128_CLAUDE -->
 ## 2026-11-28 — big-move acceptance request committed to pmmmrust (21ae192, pushed) with research's reading of the first probe
 

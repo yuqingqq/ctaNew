@@ -1,3 +1,19 @@
+tokyo_bigmove_check_20261128_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/tokyo_bigmove_check.json
+  repricing: predictfun/reviews/take_reprice_20261125/chase_forward_bigmove.json
+  script_commits: [3b16de346, 24784979f]
+  result_commits: [a00d85877, 2e7317a73]
+  session: 1622c91e
+  tokyo_receipt_commit: 2d53b0b
+  tokyo_data_commit: bd65d08
+  days_read: [20261120, 20261121, 20261122, 20261123, 20261124, 20261125, 20261126]
+  parity: {values: 99, mismatched: 0}
+  accept_after_send_ms: {median: 71.2, p90: 150.4, max: 262.9, n: 20}
+  buys_filled: 5
+  fill_rule_agree_actual: 23/24
+  spearman_accept: {burst_after: 0.54, move_before: 0.16}
+  primary_total_usd: {R1_BIG: 210.07, R2_BIG_MOVE: 201.70, R3_BIG_BURST: 146.47, R4_BOTH: 203.19, R5_BOTH_BURST: 133.67}
+  primary_days_positive: {R1_BIG: 7, R2_BIG_MOVE: 7, R3_BIG_BURST: 7, R4_BOTH: 7, R5_BOTH_BURST: 7}
 tokyo_bigmove_request_20261128_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/chase_move_size.json
   script_commit: 04b32234c
