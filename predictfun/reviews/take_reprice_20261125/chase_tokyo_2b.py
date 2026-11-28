@@ -18,7 +18,7 @@ Comparison: Tokyo's row at each (t, d)'s last frame against research's row of th
 warm-up). The 52 float32 inputs are compared as float32, exactly. The 14 Predict inputs are float64, within 1e-9 relative. Points only one
 side has are listed with Tokyo's decision and research's status. Then the prediction, MOVE and the action (the first finite MOVE >= the
 threshold in a move) and the forward test's scope (expected match >= 15.022 s before the window's last 30 s).
-Stages: selftest | convert <tokyo root> | validate | run | compare <tokyo root>.  Outputs (write-once): OUT/chase_tokyo_2b/...,
+Stages: selftest | convert <tokyo root> | validate | run | compare <tokyo root> | diagnose <tokyo root>.  Outputs (write-once): OUT/chase_tokyo_2b/...,
 chase_tokyo_2b.json, chase_tokyo_2b_validate.json.
 Usage: PF_SLOT=<slot> predictfun/research/run_light.sh <tag> -- python3 predictfun/reviews/take_reprice_20261125/chase_tokyo_2b.py <stage> ...
 """
@@ -405,6 +405,62 @@ def stage_compare(src):
           'inputs that differ:', bad, flush=True)
 
 
+def stage_diagnose(src):
+    """Why the inputs differ (write-once chase_tokyo_2b_diagnose.json), on the matched rows of compare:
+    1. trade volume its way over 100 ms: the share of rows where Tokyo's is smaller / larger; the part of research - Tokyo explained by
+       its-way trades of the tick's own millisecond received after that millisecond's last bookTicker frame (what a decision at the frame
+       cannot know); and research's own look-ahead: its-way volume in (t - 100, t] received after research's decision time t + 3.5 ms;
+    2. the Predict 60 s inputs: which side is NaN where only one is, against the time since the window start;
+    3. the known Predict frame: pf_age_ms, research - Tokyo, where they differ."""
+    fp = H / 'chase_tokyo_2b_diagnose.json'
+    C.require(not fp.exists(), f'{fp.name} exists (write-once)')
+    hd = Path(src) / 'tokyo-chase-stage1-20261128'
+    X = pd.read_parquet(OUT / 'research_rows.parquet')
+    Tk = pd.read_csv(hd / 'replay' / 'decisions.csv.gz', float_precision='round_trip')
+    T = Tk.assign(t=Tk.t.astype(float), d=Tk.d.astype(float)).sort_values(['t', 'd', 'recv_ns'], kind='stable').groupby(['t', 'd']).tail(1)
+    m = X.assign(t=X.t.astype(float), d=X.d.astype(float)).merge(T, on=['t', 'd'], suffixes=('_r', '_t'))
+    raw = OUT / 'data' / 'raw'
+    tr = pd.concat([pd.read_csv(f, header=None, names=['recv', 'E', 'T', 'id', 'p', 'q', 'm']) for f in sorted(glob.glob(str(raw / 'trade' / 'BTCUSDT' / '*.csv.gz')))])
+    bk = pd.concat([pd.read_csv(f, header=None, usecols=[0, 1], names=['recv', 'E']) for f in sorted(glob.glob(str(raw / 'bookTicker' / 'BTCUSDT' / '*.csv.gz')))])
+    lastbook = bk.groupby('E').recv.max()
+    out = {}
+    d_its = m.its_100_btc_t.to_numpy(float) - m.its_100_btc_r.to_numpy(float)
+    mis = ~same_values(m.its_100_btc_r, m.its_100_btc_t, True, TOL32)
+    late, ahead = np.zeros(len(m)), np.zeros(len(m))
+    for side, dv in ((0, 1.), (1, -1.)):                                     # its way: buyer-taker (m = 0) for d = +1
+        g = tr[tr.m == side]
+        E, R, q = g.E.to_numpy(float), g.recv.to_numpy(float) / 1e6, g.q.to_numpy(float)
+        o = np.argsort(E, kind='stable'); E, R, q = E[o], R[o], q[o]
+        rows = np.flatnonzero(m.d.to_numpy(float) == dv)
+        for i in rows:
+            t = float(m.t.iat[i])
+            a, b = np.searchsorted(E, t - 100., 'right'), np.searchsorted(E, t, 'right')
+            lb = float(lastbook.get(t, np.nan)) / 1e6
+            same = (E[a:b] == t) & (R[a:b] > lb) if np.isfinite(lb) else np.zeros(b - a, bool)
+            late[i] = q[a:b][same].sum()
+            ahead[i] = q[a:b][R[a:b] > t + CF.TM.FEED + CF.TM.DECIDE].sum()
+    expl = np.abs((-d_its) - late) <= TOL32 * np.maximum(1., np.abs(m.its_100_btc_r.to_numpy(float)))
+    out['its_100'] = dict(rows=int(len(m)), differ=int(mis.sum()), tokyo_smaller=int((mis & (d_its < 0)).sum()), tokyo_larger=int((mis & (d_its > 0)).sum()),
+                          differ_explained_by_late_same_ms_trades=int((mis & expl).sum()),
+                          research_volume_received_after_its_decision_time=dict(rows=int((ahead > 0).sum()), share_of_research_volume=float(ahead.sum() / max(m.its_100_btc_r.sum(), 1e-12))))
+    ws = m.mid_r.map(pd.read_parquet(OUT / 'data' / 'step1' / DAY / 'registry.parquet').set_index('mid').ws * 1000.).to_numpy(float) if 'mid_r' in m else \
+        m.mid.map(pd.read_parquet(OUT / 'data' / 'step1' / DAY / 'registry.parquet').set_index('mid').ws * 1000.).to_numpy(float)
+    since = (m.t.to_numpy(float) - ws) / 1000.
+    for c in ('spread_60s', 'book_updates_60s'):
+        rn, tn = np.isnan(m[f'{c}_r'].to_numpy(float)), np.isnan(m[f'{c}_t'].to_numpy(float))
+        one = rn != tn
+        out[c] = dict(nan_one_side=int(one.sum()), research_nan_tokyo_value=int((one & rn).sum()), tokyo_nan_research_value=int((one & tn).sum()),
+                      seconds_since_window_start_where_research_nan=dict(zip(('p10', 'p50', 'p90', 'max'), [float(x) for x in np.quantile(since[one & rn], [.1, .5, .9, 1.])])) if (one & rn).any() else None,
+                      value_differ=int((~one & ~same_values(m[f'{c}_r'], m[f'{c}_t'], False)).sum()))
+    pa = m.pf_age_ms_r.to_numpy(float) - m.pf_age_ms_t.to_numpy(float)
+    dif = ~same_values(m.pf_age_ms_r, m.pf_age_ms_t, False)
+    out['pf_age_ms'] = dict(differ=int(dif.sum()), research_older=int((dif & (pa > 0)).sum()), research_newer=int((dif & (pa < 0)).sum()),
+                            research_minus_tokyo_ms=dict(zip(('p10', 'p50', 'p90'), [float(x) for x in np.quantile(pa[dif], [.1, .5, .9])])) if dif.any() else None)
+    out['asof'] = dt.datetime.now(dt.timezone.utc).isoformat()
+    TR.dump(fp, out)
+    print(json.dumps(TR.clean(out))[:1500], flush=True)
+
+
 def selftest():
     fr = [[1795860000032282948, 0, json.dumps(dict(stream='btcusdt@bookTicker', data=dict(e='bookTicker', u=7, b='59562.80', B='0.118', a='59562.90', A='9.497', T=11, E=12)))],
           [1795860000042312343, 0, json.dumps(dict(stream='btcusdt@trade', data=dict(e='trade', E=41, T=40, t=99, p='59562.80', q='0.001', m=True)))],
@@ -453,4 +509,5 @@ def selftest():
 
 if __name__ == '__main__':
     cmd, a_ = sys.argv[1], sys.argv[2:]
-    dict(selftest=selftest, convert=lambda: stage_convert(a_[0]), validate=stage_validate, run=stage_run, compare=lambda: stage_compare(a_[0]))[cmd]()
+    dict(selftest=selftest, convert=lambda: stage_convert(a_[0]), validate=stage_validate, run=stage_run, compare=lambda: stage_compare(a_[0]),
+         diagnose=lambda: stage_diagnose(a_[0]))[cmd]()
