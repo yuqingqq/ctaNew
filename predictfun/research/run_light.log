@@ -10766,3 +10766,11 @@
 2026-11-28T13:01:18Z tag=cdd_tokyo rc=1 peak_rss_mib=340 wall_s=3.04 cpu_user_s=2.75 memavail_start_gib=23 disk_free_gib=343->343 slot=claude
 2026-11-28T13:02:46Z tag=cdd_selftest2 rc=0 peak_rss_mib=215 wall_s=0.99 cpu_user_s=0.83 memavail_start_gib=23 disk_free_gib=343->343 slot=claude
 2026-11-28T13:02:48Z tag=cdd_tokyo2 rc=0 peak_rss_mib=353 wall_s=3.43 cpu_user_s=3.11 memavail_start_gib=23 disk_free_gib=343->343 slot=claude
+2026-11-28T13:03:19Z tag=cdd_exits_20261122 rc=0 peak_rss_mib=1115 wall_s=113.12 cpu_user_s=105.25 memavail_start_gib=22 disk_free_gib=343->343 slot=claude3
+2026-11-28T13:03:12Z tag=cdd_exits_20261120 rc=0 peak_rss_mib=1613 wall_s=125.04 cpu_user_s=105.72 memavail_start_gib=23 disk_free_gib=343->343 slot=claude
+2026-11-28T13:03:15Z tag=cdd_exits_20261121 rc=0 peak_rss_mib=1487 wall_s=146.36 cpu_user_s=129.74 memavail_start_gib=22 disk_free_gib=343->343 slot=claude2
+2026-11-28T13:05:12Z tag=cdd_exits_20261125 rc=0 peak_rss_mib=1598 wall_s=101.88 cpu_user_s=85.11 memavail_start_gib=22 disk_free_gib=343->343 slot=claude3
+2026-11-28T13:05:17Z tag=cdd_exits_20261123 rc=0 peak_rss_mib=1474 wall_s=114.12 cpu_user_s=93.53 memavail_start_gib=22 disk_free_gib=343->343 slot=claude
+2026-11-28T13:05:42Z tag=cdd_exits_20261124 rc=0 peak_rss_mib=1283 wall_s=111.13 cpu_user_s=92.93 memavail_start_gib=22 disk_free_gib=343->343 slot=claude2
+2026-11-28T13:07:11Z tag=cdd_exits_20261126 rc=0 peak_rss_mib=874 wall_s=76.83 cpu_user_s=72.95 memavail_start_gib=22 disk_free_gib=343->343 slot=claude
+2026-11-28T13:08:36Z tag=cdd_read rc=0 peak_rss_mib=518 wall_s=3.35 cpu_user_s=2.65 memavail_start_gib=23 disk_free_gib=343->343 slot=claude
