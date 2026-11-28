@@ -1,3 +1,16 @@
+live_export_20261128_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/chase_live_export.json
+  script_commit: 9a8716327
+  result_commit: 13493b5cc
+  pmmmrust_commit: 9cc9321
+  session: 1622c91e
+  days_read: [20261120]
+  trees: 200
+  trees_equal_sklearn_rows: 436944
+  day_actions_equal_selections: 830
+  fixture_rows: 4351
+  reference_files: 17
+  next: stage2b_tokyo_input_fixtures
 tokyo_live_pilot_request_20261128_claude:
   pmmmrust_commits: {reading: 5f3688f, request: 8cd543e}
   pushed_to: feature/pfmm-passive-urgency-100

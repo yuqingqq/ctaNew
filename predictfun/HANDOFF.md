@@ -1,3 +1,19 @@
+<!-- LIVE_EXPORT_20261128_CLAUDE -->
+## 2026-11-28 — stage-2 export for the chase live pilot committed to pmmmrust (9cc9321, pushed)
+
+See FINDINGS LIVE_EXPORT (same date). Supersedes TOKYO_LIVE_PILOT_REQUEST's next step (2a is done).
+
+Next (stage 2b, after Tokyo's stage-1 data lands):
+- convert Tokyo's raw records to the `data/mm_hf/raw` layout, with the Predict frames known at Tokyo's receipt times;
+- run the frozen points / labels / inputs path in a declared Tokyo-data mode, after parity on a consumed day;
+- commit the decision points, inputs, scores and actions under `research/`.
+
+Watch out:
+- the frozen builder's day guards;
+- hour-edge exclusions;
+- the deep family's first snapshot of each hour;
+- the float32 rounding of 52 inputs.
+<!-- /LIVE_EXPORT_20261128_CLAUDE -->
 <!-- TOKYO_LIVE_PILOT_REQUEST_20261128_CLAUDE -->
 ## 2026-11-28 — live pilot request for the frozen chase line committed to pmmmrust (8cd543e, pushed), with research's reading of the big-move answer (5f3688f)
 

@@ -1,3 +1,26 @@
+<!-- LIVE_EXPORT_20261128_CLAUDE -->
+## 2026-11-28 — research's stage-2 export for the chase live pilot committed to pmmmrust (9cc9321, pushed): the frozen MOVE trees as JSON equal sklearn on all 436,944 rows of 11-20, and the scores and 830 actions equal the stored forward run
+
+[export](reviews/take_reprice_20261125/chase_live_export.json) (script `chase_live_export.py`, committed before use at 9a8716327; result 13493b5cc). USER: "When the live session is recording. Can we export model and commit what it needs from here first". Committed under `pmmmrust/docs/receipts/20261128_tokyo_chase_live_pilot_request/research/`:
+- **`move_model.json`:** 200 trees (5,800 nodes) and the baseline, with the 66 inputs in order (52 rounded to float32), the cost, the threshold and the action rule.
+- **`move_fixtures.csv.gz`:** 4,351 rows, 400 complete moves of 11-20 (200 with an action, 95 rows with a NaN input).
+- **`eval_move.py`:** a standard-library scorer. It prints "4351 rows, 0 differ; 400 moves, 0 with a different action".
+- **`inputs.md`:** the decision points, the score and action, every input defined with its reference function, and the research artifacts to keep or flag (hour-edge ticks, the first 60 s of a UTC day, the deep family's hour files, float32).
+- **`reference/`:** 17 files at ctaNew 9a8716327 (the input-path modules, the refit JSON, the freeze receipt and the export).
+
+How it was checked:
+- **Model hash:** the models' sha256 is the receipt's.
+- **Exactness:** the JSON trees equal sklearn 1.8.0's predictions exactly on all 436,944 rows of 11-20.
+- **Reproduction:** the predictions and MOVE equal `forward_scores.parquet`, and the actions equal `forward_selections.parquet`.
+- **Hygiene:** every copied file is committed and clean, and none holds a credential-shaped string. The scan caught its own planted test strings in the first rehearsal (fixed, 2b2f94181).
+- **Scope:** the full import closure (150 files) was narrowed to the input path (9a8716327).
+
+CPU 0.8 min, rehearsals included. No new days: 11-20 was already read by this line.
+
+**Next:** stage 2b, input fixtures on Tokyo's stage-1 recording.
+- It needs a declared Tokyo-data mode for the frozen code: Tokyo's jsonl to the `data/mm_hf/raw` layout, plus Predict frames with Tokyo's receipt times as the known clock.
+- That mode must first show parity on a consumed day.
+<!-- /LIVE_EXPORT_20261128_CLAUDE -->
 <!-- TOKYO_LIVE_PILOT_REQUEST_20261128_CLAUDE -->
 ## 2026-11-28 — research's reading of the big-move answer and a four-stage live pilot request for the frozen chase line committed to pmmmrust (5f3688f, 8cd543e, pushed)
 
