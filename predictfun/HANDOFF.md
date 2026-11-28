@@ -1,3 +1,8 @@
+<!-- CHASE_FORWARD_TOKYO_20261128_CLAUDE -->
+## 2026-11-28 — chase candidate under Tokyo's measured execution: expected +$190 over 7 days, 7/7 days > 0 (replay +$738)
+
+See FINDINGS CHASE_FORWARD_TOKYO (same date). Supersedes TOKYO_TAKER_CHECK's next step (done). The entry delay alone is +$190; the settlement-gated exit alone is +$745. Watch out: the delays come from one 11-minute probe; the line's large-move entries may be slower than the probe's. Next: USER's call.
+<!-- /CHASE_FORWARD_TOKYO_20261128_CLAUDE -->
 <!-- TOKYO_TAKER_CHECK_20261128_CLAUDE -->
 ## 2026-11-28 — Tokyo's taker-timing answer checked: it reproduces (187 values, 0 differ); after-move BUYs accepted 85.9 ms after sending (median; the replay 22); shares sellable only after settlement, 1.86 s after the match (median)
 

@@ -1,3 +1,13 @@
+chase_forward_tokyo_20261128_claude:
+  diagnostic: predictfun/reviews/take_reprice_20261125/chase_forward_tokyo.json
+  script_commit: a741321db
+  result_commit: 9b6934d1d
+  session: 1622c91e
+  days_read: [20261120, 20261121, 20261122, 20261123, 20261124, 20261125, 20261126]
+  measured_from: 1c1d85553
+  primary_total_usd: {replay_L0: 737.93, entry_only: 190.44, exit_only: 744.73, both: 189.66}
+  primary_days_positive: {replay_L0: 7, entry_only: 7, exit_only: 7, both: 7}
+  draws_total_usd: {p5: 120.12, median: 189.31, p95: 246.01}
 tokyo_taker_check_20261128_claude:
   diagnostic: predictfun/reviews/take_reprice_20261125/tokyo_taker_check.json
   script_commit: 755b7e8af

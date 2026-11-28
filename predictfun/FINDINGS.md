@@ -1,3 +1,42 @@
+<!-- CHASE_FORWARD_TOKYO_20261128_CLAUDE -->
+## 2026-11-28 — the frozen chase candidate under Tokyo's measured taker execution: expected +$190 over 7 days, 7/7 days > 0 (the replay's +$738); the after-move entry delay alone +$190, the settlement-gated exit alone +$745
+
+[result](reviews/take_reprice_20261125/chase_forward_tokyo.json) (script `chase_forward_tokyo.py`, committed before use at a741321db; result 9b6934d1d). USER: "You mean you will do the replay right?" The frozen candidate's selections, limits and models are unchanged; only the execution changes, to the values measured in TOKYO_TAKER_CHECK (1c1d85553). The day stage copies `chase_forward.exits_day`'s loop. Its L0 / L10 / L25 configs equal the stored forward exits on every day (637 column checks, 0 mismatched), and their cells equal `chase_forward_result.json`'s (L0 50, L10 50, L25 50 cells, 0 mismatched).
+
+The execution:
+- **Entry:** each BUY is accepted after one of the 10 after-move delays Tokyo measured (28.5 to 196.3 ms, median 85.9; the replay uses 22). It matches 151 ms after acceptance.
+- **Exit:** no exit is decided before the settlement notice, one of 26 measured delays after the match (1,600.0 to 2,580.2 ms, median 1,858.6). TAKE_C1000 then takes at the first 1 s Binance calm. The exit IOC is accepted 24.7 ms after sending and matches 151 ms later.
+- **Expected P&L:** each action's P&L averaged over the 10 x 26 delays.
+
+| MOVE_top10 + 3c, take at the 1 s calm | total | days > 0 | Sharpe (day eq.) | max DD | filled / actions |
+|---|---:|---:|---:|---:|---:|
+| replay (stored + 0 ms) | +$738 | 7/7 | 2.67 | $13 | 332 / 2,754 |
+| entry delay only | +$190 | 7/7 | 1.34 | $19 | 162.9 / 2,754 |
+| settlement-gated exit only | +$745 | 7/7 | 2.57 | $16 | 325 / 2,754 |
+| **both (measured execution)** | +$190 | 7/7 | 1.29 | $19 | 162.9 / 2,754 |
+
+By acceptance delay (each over the 26 settlement delays): positive at every delay up to 129.0 ms, negative at 193.6 and 196.3 ms.
+
+| accepted after (ms) | 28.5 | 40.5 | 50.4 | 64.1 | 78.5 | 93.4 | 114.1 | 129.0 | 193.6 | 196.3 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| total | +$592 | +$385 | +$326 | +$232 | +$169 | +$111 | +$94 | +$72 | -$42 | -$43 |
+| days > 0 | 7 | 7 | 7 | 7 | 7 | 6 | 6 | 5 | 2 | 2 |
+
+- **Execution luck:** 200 draws, each giving every action one (delay, settlement) pair at random. The total runs +$120 / +$189 / +$246 (p5 / median / p95). Days > 0 run 6 / 7 / 7, and the total is positive in 100% of draws. These are execution randomness only, not a sampling interval.
+- **Other exits under the measured execution:**
+  - Taking at the settlement notice, with no calm wait: +$178 (7/7).
+  - The maker exit at the median settlement: +$195 (7/7).
+  - Holding to resolution, entry delay only: +$81 (5/7).
+- **Other cells (both, take at the calm):** DIRECT_TB_s3_top10 + 3c -$360 (0/7); DECOMP_s10_top1 + 3c +$21 (6/7); DECOMP_s10_top1 + 10c -$7 (2/7); MOVE_top1 + 3c +$26 (3/7). The control (random move onsets) makes -$5,873.
+- **Statuses and CPU:** 0 actions unloaded. 15.7 CPU min in total, rehearsal included.
+- **Not a selection:** taking at the settlement notice has the higher Sharpe here (1.69 against 1.29). It is an observation after seeing the result, not a change to the frozen exit.
+- **Limits:**
+  - The delays come from one 11-minute probe on a Saturday.
+  - Each action's delay is drawn independently of the move, although the probe saw slower acceptance after larger bursts, which are the line's entries.
+  - The book feed keeps the replay's 53.1 ms (Tokyo measured 67.8 on 11-28).
+  - The exit IOC keeps the replay's rule.
+  - No new days were read: 11-20..26 were already read by this line.
+<!-- /CHASE_FORWARD_TOKYO_20261128_CLAUDE -->
 <!-- TOKYO_TAKER_CHECK_20261128_CLAUDE -->
 ## 2026-11-28 — Tokyo's taker timing checked from its raw records: the hold is 150 ms from acceptance and a quiet take matches 5.5 ms later than the replay's 172; but a BUY sent after a Binance move is accepted a median 85.9 ms after sending (the replay: 22), and bought shares can be sold only after settlement, a median 1.86 s after the match; the chase line's replay assumes neither
 
