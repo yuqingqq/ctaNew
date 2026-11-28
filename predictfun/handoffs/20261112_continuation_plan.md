@@ -1,0 +1,25 @@
+# Remaining model gaps — full-engine continuation study
+
+User authorized proceeding on 2026-11-12 and confirmed that no new Tokyo capture containing wallet events exists yet. Live queue/fill timing calibration therefore remains a data dependency. This study addresses simulator-side re-entry, finite-horizon queue value, fill opportunity over time and incoming executable volume.
+
+The existing short labels use same-price reset and approximate future admissions. The new builder forks the **complete execution state** at an actual neutral decision. KEEP continues default quoting; PULL cancels the selected side, waits one second, then resumes the same default policy at the then-known touch. Both use the existing matcher, reservations, delayed fill notices, token buckets, inventory limits, opposite side and hard stops. No separate shadow matcher or arbitrary queue bonus is added.
+
+Measure both paths at 2, 10 and 30 seconds; 10 seconds is the declared primary target. The two-second result isolates the old horizon's limitation without retaining its reset approximation. The 30-second result measures later opportunities and remaining horizon sensitivity. It does not establish value beyond 30 seconds. Each fill uses its own 1s/5s markouts; inventory risk uses the actual branch inventory. All local values remain distinct from portfolio P&L.
+
+All neutral generations remain in the population ledger. A deterministic hash selects one quarter of generation identities for forks, independently of fills, to keep the full-state replay cost bounded. Decisions too near S240 are explicit 30s-censored statuses; missing marks are explicit statuses. Every KEEP fork must reproduce the neutral future fills exactly. Full neutral fills, requests, windows and causal feature rows must match the earlier v4 artifacts.
+
+The opportunity model predicts cumulative own-side first-fill probabilities, quantities over each horizon, and incoming same-side executable tape volume at the original decision price. These are horizon forecasts, not precise live timestamps. Quantity, timing, flow, favorable/adverse value and inventory components share coherent empirical outcome weights. Earlier-day calibration reweights whole paired outcomes. Pinned parameters, unchanged market/queue features, no threshold tuning.
+
+Nine consumed build dates: Oct23–27, Oct31, Nov1–3. Six chronological test dates: Oct26–27, Oct31, Nov1–3. Each fold reserves the last preceding day for calibration. Raw/calibrated and market/queue comparisons share core data. The old direct model remains a benchmark but has a different target and one extra training day. Nulls preserve counts within day/side/hour/age/inventory sign, with 500 shuffles and 1,000 UTC-day bootstrap draws. This is exploratory research, not untouched validation.
+
+Execution order: source and declaration commits; four-window smoke with exact parity; all nine complete neutral builds and reconciled forks; six chronological fits; saved-model reconstruction, opportunity and local selection report; human review. A failed stage stops and preserves its output. The durable driver runs one numerical process in the Codex slot/core 8, allowing the other authorized research slot to remain available. Progress is mirrored in `predictfun/HANDOFF.md`, `predictfun/STATUS.yml` and `data/predict_fun/research/continuation_20261112/progress.json`.
+
+New strategy promotion still requires a separately frozen full sequential replay after the target/model repair passes. This study does not change live code, maker-rebate accounting, loss budgets or protected data.
+
+## Superseding implementation receipts
+
+v1 stopped at the mandatory real-data KEEP-fork check. Its horizon-filtered event heap had not been re-heapified. v2 repairs that ordering and passed the four-window smoke (279 neutral generations, 16 paired actions; receipt as of 2026-11-12T10:51:04.749200+00:00). The full v2 build was stopped before completion or fitting for an additional event-clock review: equal-time trades execute before decisions and must not be counted as future flow. v3 corrects that comparator/flow boundary and adds a planted equal-clock regression plus refusal of the old behavior. Eight synthetic controls pass. No model result or threshold was selected. Canonical new receipts: `reviews/continuation_20261112_v3/`; driver: `research/continuation_driver_v3.py`. All failed and stopped sources/artifacts remain preserved.
+
+## Execution status
+
+As of 2026-11-12T11:12:41.296392+00:00, the v3 driver and post-run audit supervisor are running. The v3 smoke passes on 4 windows, 279 neutral generations and 16 paired actions (smoke as-of 2026-11-12T10:56:29.676853+00:00). Full-day builds and model results are pending. The supervisor queues the independently declared artifact audit and gain/loss/inventory diagnostics after the build/fit driver succeeds. Current stage is in `data/predict_fun/research/continuation_20261112_v3/progress.json`; per-stage logs are under its `logs/` directory. This status does not claim predictive improvement, live calibration or a promoted strategy.
