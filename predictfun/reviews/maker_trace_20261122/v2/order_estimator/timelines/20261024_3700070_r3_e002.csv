@@ -1,0 +1,36 @@
+episode_id,t_ms,event,case_key,detail
+20261024_3700070_r3_e002,1792824401025,leg_maker,,buy 0.50 @ 0.54 hash 0xd7a389b8 sid 01a16ca9-5c81 lo_hard 1792824399025 status ok; pos after +7.67
+20261024_3700070_r3_e002,1792824406582,leg_maker,,sell 2.93 @ 0.58 hash 0x0ab0df19 sid 01a16ca9-7236 lo_hard 1792824404582 status ok; pos after +4.75
+20261024_3700070_r3_e002,1792824406590,leg_maker,,sell 7.07 @ 0.58 hash 0x0ab0df19 sid 01a16ca9-723e lo_hard 1792824404590 status ok; pos after -2.33
+20261024_3700070_r3_e002,1792824406653,leg_maker,,sell 10.00 @ 0.59 hash 0xf04c7b70 sid 01a16ca9-727d lo_hard 1792824404653 status ok; pos after -12.33
+20261024_3700070_r3_e002,1792824415351,leg_maker,,buy 4.99 @ 0.66 hash 0x7b68d58b sid 01a16ca9-9477 lo_hard 1792824413351 status ok; pos after -7.34
+20261024_3700070_r3_e002,1792824415353,leg_maker,,buy 5.01 @ 0.66 hash 0x7b68d58b sid 01a16ca9-9479 lo_hard 1792824413353 status ok; pos after -2.33
+20261024_3700070_r3_e002,1792824417721,leg_maker,,buy 2.86 @ 0.69 hash 0xb89568f7 sid 01a16ca9-9db9 lo_hard 1792824415721 status ok; pos after +0.53
+20261024_3700070_r3_e002,1792824417764,leg_maker,,buy 7.14 @ 0.69 hash 0xb89568f7 sid 01a16ca9-9de4 lo_hard 1792824415764 status ok; pos after +7.67
+20261024_3700070_r3_e002,1792824418935,leg_taker,,sell 6.56 @ 0.61 hash 0xbbc16f6f sid 01a16ca9-a277 lo_hard 1792824416935 status ok; pos after +1.12
+20261024_3700070_r3_e002,1792824419020,leg_maker,,sell 10.00 @ 0.62 hash 0xf11e3c5b sid 01a16ca9-a2cc lo_hard 1792824417020 status ok; pos after -8.88
+20261024_3700070_r3_e002,1792824419504,leg_maker,,buy 10.00 @ 0.58 hash 0x32cce8e1 sid 01a16ca9-a4b0 lo_hard 1792824417504 status ok; pos after +1.12
+20261024_3700070_r3_e002,1792824420184,leg_maker,,sell 1.64 @ 0.54 hash 0x4610a5e5 sid 01a16ca9-a758 lo_hard 1792824418184 status ok; pos after -0.52
+20261024_3700070_r3_e002,1792824420203,leg_maker,,sell 1.49 @ 0.54 hash 0x4610a5e5 sid 01a16ca9-a76b lo_hard 1792824418203 status ok; pos after -2.02
+20261024_3700070_r3_e002,1792824420387,leg_maker,,sell 10.00 @ 0.55 hash 0x075d6b23 sid 01a16ca9-a823 lo_hard 1792824418387 status ok; pos after -12.02
+20261024_3700070_r3_e002,1792824420748,leg_maker,,sell 10.00 @ 0.56 hash 0xac2fed09 sid 01a16ca9-a98c lo_hard 1792824418748 status ok; pos after -32.02
+20261024_3700070_r3_e002,1792824420748,leg_maker,,sell 10.00 @ 0.57 hash 0x45164a0a sid 01a16ca9-a98c lo_hard 1792824418748 status ok; pos after -32.02
+20261024_3700070_r3_e002,1792824420863,leg_maker,,sell 1.49 @ 0.56 hash 0x144238d4 sid 01a16ca9-a9ff lo_hard 1792824418863 status ok; pos after -33.51
+20261024_3700070_r3_e002,1792824422394,leg_maker,,buy 10.00 @ 0.57 hash 0x9c185e3b sid 01a16ca9-affa lo_hard 1792824420394 status ok; pos after -23.51
+20261024_3700070_r3_e002,1792824425910,leg_maker,,buy 10.00 @ 0.58 hash 0xf1864022 sid 01a16ca9-bdb6 lo_hard 1792824423910 status ok; pos after -13.51
+20261024_3700070_r3_e002,1792824429728,leg_maker,,buy 2.38 @ 0.61 hash 0x478af4f0 sid 01a16ca9-cca0 lo_hard 1792824427728 status ok; pos after -11.13
+20261024_3700070_r3_e002,1792824431801,leg_taker,,buy 3.24 @ 0.62 hash 0xf741a5e9 sid 01a16ca9-d4b9 lo_hard 1792824429801 status ok; pos after -3.57
+20261024_3700070_r3_e002,1792824431801,leg_taker,,buy 4.32 @ 0.62 hash 0xf741a5e9 sid 01a16ca9-d4b9 lo_hard 1792824429801 status ok; pos after -3.57
+20261024_3700070_r3_e002,1792824431809,case_take,take|20261024|3700070|0x57fbc891e89184da071ae9d97e745531cd7f718a|01a16ca9-d4c1-70f3-b747-a0ef362f0a97,reversal_reducing +3.84 sh @ 0.62
+20261024_3700070_r3_e002,1792824431809,leg_taker,,buy 3.84 @ 0.62 hash 0xf3d54bec sid 01a16ca9-d4c1 lo_hard 1792824429809 status ok; pos after +10.70
+20261024_3700070_r3_e002,1792824431809,leg_taker,,buy 10.00 @ 0.62 hash 0xf3d54bec sid 01a16ca9-d4c1 lo_hard 1792824429809 status ok; pos after +10.70
+20261024_3700070_r3_e002,1792824431809,leg_taker,,buy 0.43 @ 0.62 hash 0xf3d54bec sid 01a16ca9-d4c1 lo_hard 1792824429809 status ok; pos after +10.70
+20261024_3700070_r3_e002,1792824435221,leg_maker,,sell 7.19 @ 0.63 hash 0x20d2b541 sid 01a16ca9-e215 lo_hard 1792824433221 status ok; pos after +3.51
+20261024_3700070_r3_e002,1792824436154,leg_maker,,buy 10.00 @ 0.60 hash 0x2a86c46d sid 01a16ca9-e5ba lo_hard 1792824434154 status ok; pos after +13.51
+20261024_3700070_r3_e002,1792824441082,leg_taker,,sell 15.22 @ 0.43 hash 0x9b05fcd6 sid 01a16ca9-f8fa lo_hard 1792824439082 status ok; pos after -11.71
+20261024_3700070_r3_e002,1792824441082,leg_taker,,sell 10.00 @ 0.42 hash 0x9b05fcd6 sid 01a16ca9-f8fa lo_hard 1792824439082 status ok; pos after -11.71
+20261024_3700070_r3_e002,1792824443630,leg_taker,,buy 22.99 @ 0.38 hash 0xc73e5cfa sid 01a16caa-02ee lo_hard 1792824441630 status ok; pos after +16.89
+20261024_3700070_r3_e002,1792824443630,leg_taker,,buy 0.58 @ 0.38 hash 0xf83c53e0 sid 01a16caa-02ee lo_hard 1792824441630 status ok; pos after +16.89
+20261024_3700070_r3_e002,1792824443630,leg_taker,,buy 2.00 @ 0.38 hash 0xf83c53e0 sid 01a16caa-02ee lo_hard 1792824441630 status ok; pos after +16.89
+20261024_3700070_r3_e002,1792824443630,leg_taker,,buy 3.04 @ 0.38 hash 0xf83c53e0 sid 01a16caa-02ee lo_hard 1792824441630 status ok; pos after +16.89
+20261024_3700070_r3_e002,1792824449399,leg_maker,,sell 10.00 @ 0.43 hash 0xd701d892 sid 01a16caa-1977 lo_hard 1792824447399 status ok; pos after +6.89

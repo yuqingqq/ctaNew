@@ -1,0 +1,157 @@
+{
+  "asof": "2026-11-14T09:47:14.006142+00:00",
+  "kind": "synthetic_source_review_no_historical_data_or_fitting",
+  "source_sha256": {
+    "pf_order_harm_v3.py": "77cbcc9f28c4a4d87b60c6a868478fb1a387e1943f217dadb92f5f57df2004a1",
+    "pf_order_harm_policy_v2.py": "7528743bb5901d388a4f0fb95f44683e4b12d60ac7d3f18eb0af98d28e81f15e",
+    "pf_joint_ladder_v3.py": "2d1b54a88fc5186973b032d0a0dcd2b1d1116cb3264fe00bd30c2f3bd9f0cb94",
+    "pf_kp_s4.py": "4f173446bf07d7141a96bddf02470e38e66aa64b2b28a380eeb7dec9343530cc",
+    "pf_review_queue_reach.py": "dee291da1cf4d6e52fd3c714713ecefcc94eaff9f2197ff561699f30d3c20ad3"
+  },
+  "label_population": {
+    "current": [
+      {
+        "fill": false,
+        "in_memory_repair": false,
+        "immediate_notice": false,
+        "fill_notice_ms": null,
+        "cancel_sent_ms": 1000.0,
+        "decisions_before_500": [
+          200.0,
+          450.0
+        ],
+        "client_resting_450": true,
+        "callback_at_450": true
+      },
+      {
+        "fill": true,
+        "in_memory_repair": false,
+        "immediate_notice": false,
+        "fill_notice_ms": 500.0,
+        "cancel_sent_ms": 400.0,
+        "decisions_before_500": [
+          200.0
+        ],
+        "client_resting_450": false,
+        "callback_at_450": false
+      }
+    ],
+    "defect_caught": true,
+    "in_memory_repair": [
+      {
+        "fill": false,
+        "in_memory_repair": true,
+        "immediate_notice": false,
+        "fill_notice_ms": null,
+        "cancel_sent_ms": 1000.0,
+        "decisions_before_500": [
+          200.0,
+          450.0
+        ],
+        "client_resting_450": true,
+        "callback_at_450": true
+      },
+      {
+        "fill": true,
+        "in_memory_repair": true,
+        "immediate_notice": false,
+        "fill_notice_ms": 500.0,
+        "cancel_sent_ms": null,
+        "decisions_before_500": [
+          200.0,
+          450.0
+        ],
+        "client_resting_450": true,
+        "callback_at_450": true
+      }
+    ],
+    "observed_fill_positive_control": {
+      "fill": true,
+      "in_memory_repair": true,
+      "immediate_notice": true,
+      "fill_notice_ms": 400.0,
+      "cancel_sent_ms": null,
+      "decisions_before_500": [
+        200.0
+      ],
+      "client_resting_450": false,
+      "callback_at_450": false
+    }
+  },
+  "terminal_metric": {
+    "before_end_positive_control": {
+      "trade_time_ms": 59990.0,
+      "included_fill_times_ms": [
+        59990.0
+      ],
+      "selected_mark_time_ms": 60000.0,
+      "reported_vend_dollars": 0.3,
+      "actual_cash_plus_inventory_at_60s": 0.3,
+      "common_mark_after_cancellations_dollars": -3.0,
+      "violations": {
+        "leg": 0,
+        "order": 0,
+        "live": 0,
+        "priority": 0,
+        "collision": 0,
+        "position": 0,
+        "cap": 0
+      }
+    },
+    "post_end_counterexample": {
+      "trade_time_ms": 60010.0,
+      "included_fill_times_ms": [
+        60010.0
+      ],
+      "selected_mark_time_ms": 60000.0,
+      "reported_vend_dollars": 0.3,
+      "actual_cash_plus_inventory_at_60s": 0.0,
+      "common_mark_after_cancellations_dollars": -3.0,
+      "violations": {
+        "leg": 0,
+        "order": 0,
+        "live": 0,
+        "priority": 0,
+        "collision": 0,
+        "position": 0,
+        "cap": 0
+      }
+    },
+    "defect_caught": true,
+    "after_cancel_no_fill_control": {
+      "trade_time_ms": 60030.0,
+      "included_fill_times_ms": [],
+      "selected_mark_time_ms": 60000.0,
+      "reported_vend_dollars": 0.0,
+      "actual_cash_plus_inventory_at_60s": 0.0,
+      "common_mark_after_cancellations_dollars": 0.0,
+      "violations": {
+        "leg": 0,
+        "order": 0,
+        "live": 0,
+        "priority": 0,
+        "collision": 0,
+        "position": 0,
+        "cap": 0
+      }
+    }
+  },
+  "cadence": {
+    "every_steps": 5,
+    "cadence_ms": 250,
+    "callback_times_ms": [
+      50,
+      100,
+      300
+    ],
+    "actual_score_times_ms": [
+      50.0,
+      300.0
+    ],
+    "pulls": [
+      false,
+      false,
+      true
+    ]
+  }
+}

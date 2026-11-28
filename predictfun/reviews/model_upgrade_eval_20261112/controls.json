@@ -1,0 +1,16 @@
+{
+  "as_of": "2026-11-12T11:28:09.681407+00:00",
+  "status": "PASS",
+  "declaration_sha": "97f4e92ce1055adaeaefaea907d878c0c1e3a979bc77be7214e35cbd64d96162",
+  "controls": [
+    "overlapping interval union",
+    "known-bad summed duration",
+    "score boundary",
+    "rescore cadence",
+    "nonfinite prediction refusal",
+    "positive paired value",
+    "missing mark accounting",
+    "unmatched window refusal",
+    "day interval refusal"
+  ]
+}

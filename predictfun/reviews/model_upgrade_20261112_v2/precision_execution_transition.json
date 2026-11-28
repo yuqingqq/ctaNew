@@ -1,0 +1,29 @@
+{
+  "as_of": "2026-11-12T12:48:55.535459+00:00",
+  "status": "SUPERSEDED_IDLE_WAITERS",
+  "workers": [
+    {
+      "pid": 674377,
+      "argv": "/home/yuqing/pricer-sol/venv/bin/python3 /tmp/cta-model-upgrade-20261112/predictfun/research/model_eval_driver.py ",
+      "children": []
+    },
+    {
+      "pid": 761197,
+      "argv": "/home/yuqing/pricer-sol/venv/bin/python3 /tmp/cta-model-upgrade-20261112/predictfun/research/model_eval_finish.py 674377 ",
+      "children": []
+    },
+    {
+      "pid": 860873,
+      "argv": "/home/yuqing/pricer-sol/venv/bin/python3 /tmp/cta-model-upgrade-20261112/predictfun/research/model_age_driver.py 761197 ",
+      "children": []
+    },
+    {
+      "pid": 998391,
+      "argv": "/home/yuqing/pricer-sol/venv/bin/python3 /tmp/cta-model-upgrade-20261112/predictfun/research/model_forecast_finish.py 860873 ",
+      "children": []
+    }
+  ],
+  "reason": "Preserve original replay evidence; prepare a precision-corrected replay pipeline bound to frozen float32 order-state training arithmetic. Upstream and model driver continue unchanged.",
+  "resumed_model_driver_pid": 1320642,
+  "audit_slot_attempt": "run_light refused core9 occupied before Python started; no numerical stage ran"
+}

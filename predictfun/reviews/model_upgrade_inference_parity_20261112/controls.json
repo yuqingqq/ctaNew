@@ -1,0 +1,10 @@
+{
+  "as_of": "2026-11-12T14:55:04.654420+00:00",
+  "status": "PASS",
+  "declaration_sha": "bcd730b64c7b9f4f4135ec1ad66bb21aede56310bddb20cf5b7f706d20504dd4",
+  "actual_window_queries": 6,
+  "original_own_state_exact": true,
+  "corrected_context_precision_retained": true,
+  "uncorrected_window_refused": true,
+  "corrected_hook_policy_tests": 4
+}

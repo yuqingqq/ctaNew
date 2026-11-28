@@ -1,0 +1,475 @@
+{
+  "as_of": "2026-11-13T17:46:07.922570+00:00",
+  "status": "EXACT_REPORT_RECONSTRUCTION_WITH_PORTFOLIO_LIMITS",
+  "producer_as_of": "2026-11-13T16:12:36Z",
+  "declaration_sha": "5aa9086f73993b3ec3cdae85b23ed82fc5eae19473206932a20056327020b35e",
+  "days": [
+    "20261023",
+    "20261024",
+    "20261025",
+    "20261026",
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "counts": {
+    "20261023": {
+      "events": 13170,
+      "segs": 173212,
+      "ours": 2360
+    },
+    "20261024": {
+      "events": 11794,
+      "segs": 149588,
+      "ours": 3806
+    },
+    "20261025": {
+      "events": 11717,
+      "segs": 145068,
+      "ours": 4297
+    },
+    "20261026": {
+      "events": 13281,
+      "segs": 171148,
+      "ours": 1755
+    },
+    "20261027": {
+      "events": 11284,
+      "segs": 145148,
+      "ours": 1442
+    },
+    "20261031": {
+      "events": 7529,
+      "segs": 79746,
+      "ours": 2136
+    },
+    "20261101": {
+      "events": 8449,
+      "segs": 91178,
+      "ours": 2886
+    },
+    "20261102": {
+      "events": 12336,
+      "segs": 145138,
+      "ours": 1812
+    },
+    "20261103": {
+      "events": 11159,
+      "segs": 133467,
+      "ours": 1244
+    }
+  },
+  "report_and_posthoc_exact": true,
+  "producer_readings": {
+    "R540": {
+      "share": 0.42865717010248483,
+      "usual": 0.3394182953390083,
+      "lower": 0,
+      "higher": 9,
+      "label": "THICK-WHERE-RUN-OVER"
+    },
+    "R541": {
+      "top5": -3.4011650874662447,
+      "field": -4.20878733619017,
+      "neg_days": 9,
+      "better_days": 9,
+      "worse_days": 0,
+      "label": "THEY-LOSE-THERE / LESS-THAN-THE-FIELD"
+    },
+    "R542": {
+      "big": 0.04880611813791692,
+      "small": 0.03512916308679414,
+      "ratio": 1.389333358649363,
+      "higher": 9,
+      "lower": 0,
+      "label": "TAKE-INTO-BIG-MOVES"
+    },
+    "R543 big, reverts": {
+      "share": 0.40998449588276387,
+      "top5_cps": -0.9443585070204705,
+      "field_cps": -1.7157462986733882
+    },
+    "R543 big, trends": {
+      "share": 0.33806180384705153,
+      "top5_cps": 1.824843660451319,
+      "field_cps": 1.630514322625114
+    },
+    "R544": {
+      "usd_day": 7964.788655210875,
+      "pos": 9,
+      "neg": 0,
+      "label": "NET-POSITIVE"
+    }
+  },
+  "producer_daily_metadata": {
+    "20261023": {
+      "stat": {
+        "registry": 288,
+        "outside_day": 0,
+        "sealed_or_forward": 0,
+        "no_outcome": 0,
+        "untimed_legs_0_60": 2093,
+        "untimed_shares_0_60": 20830.638290695933,
+        "windows": 288,
+        "window_sides": 576,
+        "real_atbest_q": {
+          "field": 759730.3009301744,
+          "top 5": 404257.36273188057
+        },
+        "excluded": 24,
+        "truncated": 1089,
+        "zero_move": 0,
+        "ref_rows": 4438,
+        "grid_steps": 345600,
+        "grid_steps_without_row": 0,
+        "events_differ": 0,
+        "ldg_differ": 0,
+        "unpaired_windows": 0,
+        "planted_caught": {
+          "MUT_PATH_SIGN": true,
+          "MUT_RUNOVER_PEAK": true,
+          "MUT_CHASE_REV": true
+        }
+      },
+      "days": 1.0
+    },
+    "20261024": {
+      "stat": {
+        "registry": 288,
+        "outside_day": 0,
+        "sealed_or_forward": 0,
+        "no_outcome": 0,
+        "untimed_legs_0_60": 1023,
+        "untimed_shares_0_60": 10108.96713956579,
+        "windows": 288,
+        "window_sides": 576,
+        "real_atbest_q": {
+          "top 5": 300667.59273282206,
+          "field": 610701.817525619
+        },
+        "excluded": 10,
+        "truncated": 1038,
+        "zero_move": 0,
+        "ref_rows": 6561,
+        "grid_steps": 345600,
+        "grid_steps_without_row": 0,
+        "events_differ": 0,
+        "ldg_differ": 0,
+        "unpaired_windows": 0,
+        "planted_caught": {
+          "MUT_PATH_SIGN": true,
+          "MUT_RUNOVER_PEAK": true,
+          "MUT_CHASE_REV": true
+        }
+      },
+      "days": 1.0
+    },
+    "20261025": {
+      "stat": {
+        "registry": 288,
+        "outside_day": 0,
+        "sealed_or_forward": 0,
+        "no_outcome": 0,
+        "untimed_legs_0_60": 1316,
+        "untimed_shares_0_60": 13038.545279926448,
+        "windows": 288,
+        "window_sides": 576,
+        "real_atbest_q": {
+          "field": 671801.5601399535,
+          "top 5": 238596.75193439267
+        },
+        "excluded": 19,
+        "truncated": 1046,
+        "zero_move": 0,
+        "ref_rows": 6780,
+        "grid_steps": 345600,
+        "grid_steps_without_row": 0,
+        "events_differ": 0,
+        "ldg_differ": 0,
+        "unpaired_windows": 0,
+        "planted_caught": {
+          "MUT_PATH_SIGN": true,
+          "MUT_RUNOVER_PEAK": true,
+          "MUT_CHASE_REV": true
+        }
+      },
+      "days": 1.0
+    },
+    "20261026": {
+      "stat": {
+        "registry": 288,
+        "outside_day": 0,
+        "sealed_or_forward": 0,
+        "no_outcome": 0,
+        "untimed_legs_0_60": 3191,
+        "untimed_shares_0_60": 39785.99813006458,
+        "windows": 288,
+        "window_sides": 576,
+        "real_atbest_q": {
+          "field": 853590.129364561,
+          "top 5": 446865.2901939127
+        },
+        "excluded": 16,
+        "truncated": 1129,
+        "zero_move": 0,
+        "ref_rows": 3565,
+        "grid_steps": 345600,
+        "grid_steps_without_row": 0,
+        "events_differ": 0,
+        "ldg_differ": 0,
+        "unpaired_windows": 0,
+        "planted_caught": {
+          "MUT_PATH_SIGN": true,
+          "MUT_RUNOVER_PEAK": true,
+          "MUT_CHASE_REV": true
+        }
+      },
+      "days": 1.0
+    },
+    "20261027": {
+      "stat": {
+        "registry": 288,
+        "outside_day": 0,
+        "sealed_or_forward": 0,
+        "no_outcome": 0,
+        "untimed_legs_0_60": 2964,
+        "untimed_shares_0_60": 32617.169265447075,
+        "windows": 288,
+        "window_sides": 576,
+        "real_atbest_q": {
+          "field": 809963.713054559,
+          "top 5": 459141.46336332744
+        },
+        "excluded": 13,
+        "truncated": 948,
+        "zero_move": 0,
+        "ref_rows": 3539,
+        "grid_steps": 345600,
+        "grid_steps_without_row": 0,
+        "events_differ": 0,
+        "ldg_differ": 0,
+        "unpaired_windows": 0,
+        "planted_caught": {
+          "MUT_PATH_SIGN": true,
+          "MUT_RUNOVER_PEAK": true,
+          "MUT_CHASE_REV": true
+        }
+      },
+      "days": 1.0
+    },
+    "20261031": {
+      "stat": {
+        "registry": 288,
+        "outside_day": 0,
+        "sealed_or_forward": 0,
+        "no_outcome": 0,
+        "untimed_legs_0_60": 762,
+        "untimed_shares_0_60": 9077.803427559644,
+        "windows": 288,
+        "window_sides": 576,
+        "real_atbest_q": {
+          "field": 421678.6072271168,
+          "top 5": 240562.08422831242
+        },
+        "excluded": 0,
+        "truncated": 579,
+        "zero_move": 0,
+        "ref_rows": 4549,
+        "grid_steps": 345600,
+        "grid_steps_without_row": 0,
+        "events_differ": 0,
+        "ldg_differ": 0,
+        "unpaired_windows": 0,
+        "planted_caught": {
+          "MUT_PATH_SIGN": true,
+          "MUT_RUNOVER_PEAK": true,
+          "MUT_CHASE_REV": true
+        }
+      },
+      "days": 1.0
+    },
+    "20261101": {
+      "stat": {
+        "registry": 288,
+        "outside_day": 0,
+        "sealed_or_forward": 0,
+        "no_outcome": 0,
+        "untimed_legs_0_60": 981,
+        "untimed_shares_0_60": 10717.451728936834,
+        "windows": 288,
+        "window_sides": 576,
+        "real_atbest_q": {
+          "field": 413141.9900212111,
+          "top 5": 241936.55131903873
+        },
+        "excluded": 7,
+        "truncated": 646,
+        "zero_move": 0,
+        "ref_rows": 6297,
+        "grid_steps": 345600,
+        "grid_steps_without_row": 0,
+        "events_differ": 0,
+        "ldg_differ": 0,
+        "unpaired_windows": 0,
+        "planted_caught": {
+          "MUT_PATH_SIGN": true,
+          "MUT_RUNOVER_PEAK": true,
+          "MUT_CHASE_REV": true
+        }
+      },
+      "days": 1.0
+    },
+    "20261102": {
+      "stat": {
+        "registry": 288,
+        "outside_day": 0,
+        "sealed_or_forward": 0,
+        "no_outcome": 0,
+        "untimed_legs_0_60": 1228,
+        "untimed_shares_0_60": 14628.328666538513,
+        "windows": 288,
+        "window_sides": 576,
+        "real_atbest_q": {
+          "field": 666729.9543354587,
+          "top 5": 360491.2976734921
+        },
+        "excluded": 4,
+        "truncated": 1029,
+        "zero_move": 0,
+        "ref_rows": 3451,
+        "grid_steps": 345600,
+        "grid_steps_without_row": 0,
+        "events_differ": 0,
+        "ldg_differ": 0,
+        "unpaired_windows": 0,
+        "planted_caught": {
+          "MUT_PATH_SIGN": true,
+          "MUT_RUNOVER_PEAK": true,
+          "MUT_CHASE_REV": true
+        }
+      },
+      "days": 1.0
+    },
+    "20261103": {
+      "stat": {
+        "registry": 288,
+        "outside_day": 0,
+        "sealed_or_forward": 0,
+        "no_outcome": 0,
+        "untimed_legs_0_60": 2426,
+        "untimed_shares_0_60": 38118.44680133401,
+        "windows": 288,
+        "window_sides": 576,
+        "real_atbest_q": {
+          "field": 585996.223103771,
+          "top 5": 284196.88131695887
+        },
+        "excluded": 6,
+        "truncated": 910,
+        "zero_move": 0,
+        "ref_rows": 3169,
+        "grid_steps": 345600,
+        "grid_steps_without_row": 0,
+        "events_differ": 0,
+        "ldg_differ": 0,
+        "unpaired_windows": 0,
+        "planted_caught": {
+          "MUT_PATH_SIGN": true,
+          "MUT_RUNOVER_PEAK": true,
+          "MUT_CHASE_REV": true
+        }
+      },
+      "days": 1.0
+    }
+  },
+  "statuses": {
+    "excluded": 99,
+    "truncated": 8414,
+    "zero_move": 0
+  },
+  "controls": {
+    "original_positive": true,
+    "original_mutations": {
+      "MUT_PATH_SIGN": true,
+      "MUT_RUNOVER_PEAK": true,
+      "MUT_CHASE_REV": true
+    },
+    "repeated_event_accumulation": {
+      "physical_maker_fills": 2,
+      "physical_shares": 10.0,
+      "physical_value_cents": 5.0,
+      "overlapping_event_maker_rows": 4,
+      "reported_shares": 20.0,
+      "reported_value_cents": 10.0,
+      "distinct_events_have_identical_saved_rows": true
+    },
+    "disjoint_event_negative_control": true,
+    "endpoint_without_future_coverage": {
+      "last_frame_ms": 1500.0,
+      "requested_endpoint_ms": 4200.0,
+      "output": [
+        4,
+        1200.0,
+        4
+      ],
+      "assigned_case": "big, trends"
+    },
+    "complete_endpoint_positive": {
+      "output": [
+        4,
+        1200.0,
+        0
+      ],
+      "assigned_case": "big, reverts"
+    },
+    "historical_repeated_fill_count": null,
+    "historical_uncovered_endpoint_count": null
+  },
+  "original_event_weighted_summaries": [
+    {
+      "case": "big, trends",
+      "aggregate_rows": 56555,
+      "event_weighted_shares": 3983412.1802614694,
+      "into_mark_usd_per_day": -5923.774894634089,
+      "away_mark_usd_per_day": 6168.336416279558,
+      "total_mark_usd_per_day": 244.56152164546853,
+      "unique_portfolio_value": null
+    },
+    {
+      "case": "big, reverts",
+      "aggregate_rows": 30099,
+      "event_weighted_shares": 2410787.213248506,
+      "into_mark_usd_per_day": 4393.456359398146,
+      "away_mark_usd_per_day": -1101.5214020386302,
+      "total_mark_usd_per_day": 3291.934957359514,
+      "unique_portfolio_value": null
+    },
+    {
+      "case": "ALL",
+      "aggregate_rows": 195859,
+      "event_weighted_shares": 13896119.162388083,
+      "into_mark_usd_per_day": 1589.740650038503,
+      "away_mark_usd_per_day": 6375.048005172373,
+      "total_mark_usd_per_day": 7964.788655210875,
+      "unique_portfolio_value": null
+    }
+  ],
+  "unique_fill_identity_available": false,
+  "historical_duplicate_amount": null,
+  "portfolio_value_verified": false,
+  "model_changed": false,
+  "raw_tape_replayed": false,
+  "validation": false,
+  "live_changed": false,
+  "limits": [
+    "A fill may enter multiple overlapping event windows; summing event marks is not a unique portfolio total.",
+    "Saved rows omit event, fill, order and signer identities, preventing exact deduplication or maker-level hedge attribution.",
+    "Realized move case and peak are future-conditioned descriptions, not decision-time signals.",
+    "Endpoint selection falls back to the last valid frame without requiring observed endpoint coverage.",
+    "Group-side marks do not establish that each maker offset its inventory or reduced portfolio risk.",
+    "The simulated comparison independently replays six rungs and does not establish joint reserved-capacity or inventory constraints.",
+    "Five-second fill marks omit the portfolio path, terminal inventory, later exits and live fill calibration."
+  ]
+}

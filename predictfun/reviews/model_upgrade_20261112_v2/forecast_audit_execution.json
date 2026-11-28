@@ -1,0 +1,9 @@
+{
+  "as_of": "2026-11-12T12:07:20.262326+00:00",
+  "status": "PASS",
+  "pid": 998391,
+  "upstream_age_pid": 860873,
+  "driver_sha": "b889025042b4f8465f0d9997629cb4874a9dcba9de4b5369f2952bc2d857c7d7",
+  "declaration_sha": "473258d7330e7889475a65a756f4cd31a1794b8095a2356fa87a5f5fa054fbeb",
+  "scheduling": "Read-only forecast reconstruction and same-target calibration run after age sensitivity; core8/global worker cap retained. Synthetic horizon/refusal controls passed before any new model test results."
+}

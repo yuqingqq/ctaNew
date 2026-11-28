@@ -1,0 +1,8 @@
+{
+  "as_of": "2026-11-12T14:46:07.011537+00:00",
+  "source_commit": "1eb6c1511a095de4a796be6819676d488ebc0b5f",
+  "scope": "Bounded read-only smoke inference profiling; active full replay continues unchanged.",
+  "slot": "claude",
+  "shared_cap": 2,
+  "active_replay_pid": 2277844
+}

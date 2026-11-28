@@ -1,0 +1,27 @@
+{
+  "as_of": "2026-11-12T13:48:25.984562+00:00",
+  "source_commit": "f63bca812261ebc19c772cada131fb5eab3734a4",
+  "source_sha": {
+    "predictfun/research/pf_model_precision_audit.py": "e333c95e2574cd0e2dcf08be68477085f7f69218bcd6cfed3a874157933b3461"
+  },
+  "input_sha": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/data_20261023.json": "96be634c85c2c4560ad5a2ee1316bca71a1325238851cd6ed148f7dae5f2a9f0",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/features/20261023.parquet": "df315f4780fd0ca36eb0393913b393f1c89ec5e6f60fd9235bf5a2e70d4b3c6c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/data_20261024.json": "d2f99d2c38f49e4b2c8b3b561a41fafc78c00863ffa306bda0942b91c45fa9d4",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/features/20261024.parquet": "963805f52504f359247c6f8b6059cd3c36bafc4ae093b522da359029dc663dda",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/data_20261025.json": "f93f6e283436978d77065213a885a6da631eac56e725d3dba4f28b6bd793254f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/features/20261025.parquet": "b2f8b86bf2a02ed6f6128da6fd161bfd6d1ff2f5c19b7c14f0bf6792d8e4b19c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/data_20261026.json": "87e0122f3f571027b644b6e975268d39f2dd1c87615a49b7a3bb14ee48272680",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/features/20261026.parquet": "f14b11c0d3529fa4ac29b78025b88b4441e4b24dccfb180e5a3e4e32cdca245b"
+  },
+  "days": [
+    "20261023",
+    "20261024",
+    "20261025",
+    "20261026"
+  ],
+  "design": "Reconstruct inherited d_bnimb250/d_pfimb250 at each neutral action from the same grid clock. Compare original float32 subtraction and replay float64 subtraction against frozen training values. Evaluate their effect on the already-fitted first fold without model selection or refitting. This is arithmetic integration evidence, not trading performance.",
+  "controls": "Exact original arithmetic positive; planted float64 mismatch refusal; warm-up NaN, future mutation and invalid history controls.",
+  "validation": false,
+  "live_changed": false
+}

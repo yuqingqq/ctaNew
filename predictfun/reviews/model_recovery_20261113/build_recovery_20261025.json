@@ -1,0 +1,45 @@
+{
+  "as_of": "2026-11-13T04:43:46.593936+00:00",
+  "status": "PASS",
+  "stage": "recovery",
+  "day": "20261025",
+  "smoke": false,
+  "windows": 288,
+  "generations": 14973,
+  "actions": 1714,
+  "neutral_statuses": {
+    "accepted_no_cancel": 6340,
+    "not_sampled": 5030,
+    "postonly_refused": 1888,
+    "forked": 1714,
+    "censored_30s": 1
+  },
+  "target_statuses": {
+    "eligible": 1714
+  },
+  "short_statuses": {
+    "eligible": 1714
+  },
+  "cancel_statuses": {
+    "requested": 1714
+  },
+  "hashes": {
+    "captures.jsonl.gz": "7591afe3538f85f2a14f661432c2d9e046258fd9c84eb88c8e0d3d8b89ecf6d2",
+    "targets.parquet": "8e9c9aae1cfdd41ca623ee182e3a61e3c89c531e7e0a01d8d3ff945e34529373",
+    "paired.parquet": "8ddfc3fd48808f3e07b1cd437f183fb2b1a8d2755bbc487904227c00f9f71b85",
+    "population.parquet": "716f75401f53c6c779787e7957c2735226b25694868dd79daae37528c5f0c482",
+    "generations/default.parquet": "51d98faa8d0e41349117f7eabc67aa2b459e6609564f9f4382c7e38214bfc8f9",
+    "independent_windows.parquet": "718ed43e9585e7cc8e85fa88bf5a20329ebff6468c31554f300c6126e77e5f91",
+    "win/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_DDEFAULT__mid_szAM-5-25-95.parquet": "f53f9c568c4833fa3da97b1fffd9089cb78294233b687261a2c23c1363b055d8",
+    "fills/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_DDEFAULT__mid_szAM-5-25-95.parquet": "1c3bc8ea3f14966b7f2a04d76f264615e68aa625051e0fc34a21353cba4f7600",
+    "requests/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_DDEFAULT__mid_szAM-5-25-95.parquet": "2e2f02bfbd3dc0c17affe51cc9980c6ebe76bca099b9d2cc2b4a062cad00c45f"
+  },
+  "neutral_exact": true,
+  "keep_forks_reconciled": 1714,
+  "continuation_rule": "recovery:f98eed8af54d37294751f6c303c0b723ac26d7774af2f242907e766f16cdd520",
+  "recovery_receipt_sha": "6b62cf0e6fd19b5665eefad367ff15e8c338824f70ab5885658f058aa8ec924b",
+  "reference_receipt_sha": "584187e5f85c3070a77ded01f5dcce995ef0f35c864ea717b1bd76901bb3fe13",
+  "generated_source_sha": "fafd198dcb8b91d47598fe91a7e9d8974b4a7a08c2dc530858e6f5623f517a98",
+  "declaration_sha": "3a54b294f438ca0348ac67a59e7f9ba7395d20a714604e8506196f78b8882d75",
+  "validation": false
+}

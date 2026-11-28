@@ -1,0 +1,18 @@
+{
+  "as_of": "2026-11-12T16:43:11.038224+00:00",
+  "source_commit": "1b32a54cc4fc06b7151379128297448c9446e6ee",
+  "source_sha": {
+    "predictfun/research/pf_model_age_entry_parity.py": "31c98b669524731b75b2782c2b664c3d238ca696f22ad959aaa800a0502da152"
+  },
+  "correction_declaration_sha": "53d0a669b6fcdd503cd981cbb46e1c6d03ecae5721d0d80c3fe29d75a07abd5d",
+  "reference_sha": {
+    "declaration.json": "0960a232d5bc90924a26994d4f56d27e8a8fa673bc4b247cc19995c83ef2e168",
+    "prepare_20261026.json": "39918023a00a9b032f8f79f69a2d8ec8ded5d23120272364324609fc1e0ce49a",
+    "smoke_age0_20261026.json": "1dc21c051a48e20cd35a81e0eaaf32e44d2953731b4804440c6bb961a6763fd7",
+    "smoke_age0_20261026_age_check.json": "7dd6f43123363188f07f20a996822329a40b912775951ca1ba58aae82014eea5",
+    "smoke_age0_20261026_precision.json": "dd3a6bc17c9cd63266a8773943be395d334bd421da0f3db2c34fe3d58cd7ef97"
+  },
+  "design": "Run the unchanged corrected age entrypoint itself at floor0 on the original first eight windows, all five policies, with isolated outputs. Copy only the original declaration and model preparation bytes. Require exact values and bytes for all22win/fill/request/generation/inference/independent artifacts against the existing age0 smoke, identical generated engine source, original no-op reference parity, and precision reconstruction.",
+  "controls": "Identical DataFrames accepted; one altered cell refused. Actual independent engine output must match the fixed original smoke artifacts. No reference output data are copied into the new namespace.",
+  "limits": "Implementation integration check on eight consumed windows; no new model, policy, performance result or empirical fill-age rule. Original simulation/results and full evaluation remain unchanged."
+}

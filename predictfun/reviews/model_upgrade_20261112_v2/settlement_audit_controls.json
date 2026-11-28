@@ -1,0 +1,83 @@
+{
+  "as_of": "2026-11-12T14:16:48.848833+00:00",
+  "status": "PASS",
+  "declaration_sha": "b2d30fdcdeeb49b5f329824bf4386b96a88c04d06d2fd98a6e437fc57a7c3ac6",
+  "population": [
+    {
+      "day": "20261023",
+      "windows": 288,
+      "ties": 2,
+      "tie_ids": [
+        3667409,
+        3695066
+      ]
+    },
+    {
+      "day": "20261024",
+      "windows": 288,
+      "ties": 2,
+      "tie_ids": [
+        3700070,
+        3720866
+      ]
+    },
+    {
+      "day": "20261025",
+      "windows": 288,
+      "ties": 3,
+      "tie_ids": [
+        3725695,
+        3730792,
+        3734883
+      ]
+    },
+    {
+      "day": "20261026",
+      "windows": 288,
+      "ties": 1,
+      "tie_ids": [
+        3787674
+      ]
+    },
+    {
+      "day": "20261027",
+      "windows": 288,
+      "ties": 0,
+      "tie_ids": []
+    },
+    {
+      "day": "20261031",
+      "windows": 288,
+      "ties": 2,
+      "tie_ids": [
+        4012260,
+        4030073
+      ]
+    },
+    {
+      "day": "20261101",
+      "windows": 288,
+      "ties": 4,
+      "tie_ids": [
+        4044495,
+        4045408,
+        4048413,
+        4061921
+      ]
+    },
+    {
+      "day": "20261102",
+      "windows": 288,
+      "ties": 0,
+      "tie_ids": []
+    },
+    {
+      "day": "20261103",
+      "windows": 288,
+      "ties": 0,
+      "tie_ids": []
+    }
+  ],
+  "positive_control": true,
+  "known_bad_refusals": 5
+}

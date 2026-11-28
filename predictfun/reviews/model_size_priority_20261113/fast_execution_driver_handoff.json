@@ -1,0 +1,20 @@
+{
+  "as_of": "2026-11-13T12:16:46.992400+00:00",
+  "status": "RETIRED_WAITING_DRIVER",
+  "previous_pid": 1167074,
+  "previous_driver_started_sha": "ba30efa265b40f8387c157d445791d42e7f87cc8b3c7a91204bb326fd488fcb5",
+  "fast_declaration_sha": "3fb7540f58d3733be4ce9baf96305e628adc899622d24e6701ebeecdeb82e900",
+  "historical_size_stage_started": false,
+  "previous_process_still_live": false,
+  "previous_command": [
+    "/home/yuqing/pricer-sol/venv/bin/python3",
+    "/tmp/cta-model-upgrade-20261112/predictfun/research/model_size_priority_experiment_driver.py"
+  ],
+  "previous_children": [],
+  "previous_status_snapshot": "Name:\tpython3\nUmask:\t0002\nState:\tT (stopped)\nTgid:\t1167074\nNgid:\t0\nPid:\t1167074\nPPid:\t1\nTracerPid:\t0\nUid:\t1001\t1001\t1001\t1001\nGid:\t1001\t1001\t1001\t1001\nFDSize:\t64\nGroups:\t117 1001 \nNStgid:\t1167074\nNSpid:\t1167074\nNSpgid:\t1167074\nNSsid:\t1167074\nKthread:\t0\nVmPeak:\t  427676 kB\nVmSize:\t  427540 kB\nVmLck:\t       0 kB\nVmPin:\t       0 kB\nVmHWM:\t  124844 kB\nVmRSS:\t  124844 kB\nRssAnon:\t   63616 kB\nRssFile:\t   61228 kB\nRssShmem:\t       0 kB\nVmData:\t  153600 kB\nVmStk:\t     140 kB\nVmExe:\t    2956 kB\nVmLib:\t  145764 kB\nVmPTE:\t     536 kB\nVmSwap:\t       0 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t2\nSigQ:\t0/115228\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\t0000000000000000\nSigIgn:\t0000000001001000\nSigCgt:\t0000000100000002\nCapInh:\t0000000000000000\nCapPrm:\t0000000000000000\nCapEff:\t0000000000000000\nCapBnd:\t000001ffffffffff\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t0\nSeccomp_filters:\t0\nSpeculation_Store_Bypass:\tthread vulnerable\nSpeculationIndirectBranch:\tconditional enabled\nCpus_allowed:\tffff\nCpus_allowed_list:\t0-15\nMems_allowed:\t00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t137\nnonvoluntary_ctxt_switches:\t11\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n",
+  "previous_log_sha": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "declaration_log_sha": "8027cd3af6f66a95049fe21fc62a98c5be6006cf712a8fd03175d7006f53c543",
+  "preparation_source_commit": "9b9649c724649a3e22f40ffae91a9a5a8d363aca",
+  "preparation_source_sha": "bfc4e1293f745120d030d983109ab06444e8e9823bd781f9ef4cc3720f64395a",
+  "reason": "Source-bound exact-container optimization prepared before any size historical stage; original driver was idle with no children. Original source, start receipt and log preserved."
+}

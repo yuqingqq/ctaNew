@@ -1,0 +1,127 @@
+{
+  "as_of": "2026-11-15T08:36:18.669092+00:00",
+  "status": "PASS",
+  "day": "20261031",
+  "checks": {
+    "populations": {
+      "core": {
+        "n": 19667,
+        "depth_statuses": {
+          "observed": 19638,
+          "invalid_future_book": 22,
+          "missing_deadline_book": 4,
+          "book_gap": 3
+        },
+        "economic_statuses": {
+          "eligible": 19589,
+          "withdrawal=missing_mark;short=eligible": 77,
+          "withdrawal=missing_mark;short=missing_mark": 1
+        },
+        "profiles": {
+          "q5": {
+            "n": 11438,
+            "observed": 11417
+          },
+          "q50": {
+            "n": 8229,
+            "observed": 8221
+          }
+        }
+      },
+      "calibration": {
+        "n": 4600,
+        "depth_statuses": {
+          "observed": 4586,
+          "invalid_future_book": 9,
+          "book_gap": 5
+        },
+        "economic_statuses": {
+          "eligible": 4599,
+          "withdrawal=missing_mark;short=eligible": 1
+        },
+        "profiles": {
+          "q5": {
+            "n": 2651,
+            "observed": 2643
+          },
+          "q50": {
+            "n": 1949,
+            "observed": 1943
+          }
+        }
+      },
+      "test": {
+        "n": 3004,
+        "depth_statuses": {
+          "observed": 3001,
+          "book_gap": 3
+        },
+        "economic_statuses": {
+          "eligible": 3002,
+          "withdrawal=missing_mark;short=eligible": 2
+        },
+        "profiles": {
+          "q5": {
+            "n": 1784,
+            "observed": 1781
+          },
+          "q50": {
+            "n": 1220,
+            "observed": 1220
+          }
+        }
+      }
+    },
+    "all_predictions_reconstructed": true,
+    "common_depth_training_population": true,
+    "chronology_pass": true,
+    "economic_outcomes_do_not_filter_depth": true,
+    "independent_input_verification_required": true,
+    "estimated_fill_probability": false,
+    "policy_value_proven": false
+  },
+  "input_identity": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261023_q5.json": "6bfd315bbd8ba2c54a148b76ce20e2579f18f660063d35e02960510de70a8ae1",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261023/q5/training/training_actions.parquet": "f8c4c7377a5a79405b7a4a6f183389768f41eead67c0ef4a2361883e299641e0",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261023_q50.json": "6defcb3f1671bc99691676597b7399b4496cf67ee744dee867b44b17fea8f07a",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261023/q50/training/training_actions.parquet": "63800a171a8e4ea9575aebc7618fee34d23320594d2985f7a4e24d5122a7ba0b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261024_q5.json": "856ef6cbc3a7d8207e0aa706f70110c0d102698140ec2ef01fe293f2fc8f08cd",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261024/q5/training/training_actions.parquet": "d1b6e338d4be0a9b9b7b37e4c4d5e77c34177961f1f45f8f80e1ec349490934a",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261024_q50.json": "cc71614cc6213de4561280430d6bd725645d473ce46bce8160f1edddb6495718",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261024/q50/training/training_actions.parquet": "d2563058f7384f2a0c5d49e9078142c77bc4a398e1e0836751b1fee1488d744e",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261025_q5.json": "12d2be47b2425e666c1c7085bc9d2c38a25cf436ee1bf9ff08758ded7a75f88f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261025/q5/training/training_actions.parquet": "0116d019ead645162ca8397d161ce0705c1f04d8d35e1f31de857aa78b2e1ed2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261025_q50.json": "811485f3fc9d0d973df058f5b99e2b53d893944c3598033452cb09e27cf00c94",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261025/q50/training/training_actions.parquet": "f3faecf02f5d978257c5c559f06414a030eb3214584aff9d28360750859762c4",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261026_q5.json": "2a4456f665f0051ec9dd9bd4a805a678d973aca980faf1837df548946d1843bc",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261026/q5/training/training_actions.parquet": "54f743e9f7ce5392b79254a8cff1701039108cb89a1ba5e988474bce17013afd",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261026_q50.json": "b5ca1ea91267bbe138fbc6edb0697f3c796503638e05d2e14d7c61b17dadd484",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261026/q50/training/training_actions.parquet": "609fe57fbe3dbc75c00d1452d42a7ebe0bf63af983d00e010d4b517dd76c1cad",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261027_q5.json": "7f633a6e8dedb0893d92cc56defb11c2d4111459db2d34493c059e008c2f368e",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261027/q5/training/training_actions.parquet": "2c9f3394a502e9de577ee196362de72215700d8135e4938700b64d9752140e78",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261027_q50.json": "73620f960574bcb99ed5715ed73786a06a6a90c109713ef5c64be279b2aaf668",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261027/q50/training/training_actions.parquet": "950f08675553ff5831b945da3096f0ffb0dd7f43127c41885daeb8a48acfc901",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261031_q5.json": "604132de835e16ecc76f5691120fc840487eadf6f01782d27c7a2ed38a49329e",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261031/q5/training/training_actions.parquet": "0a31b5cc7b96e40f2a4a11be8c77b29baf8bef40f548a63935795d13acee9e36",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261031_q50.json": "31540329683e9156819ee7f728f5f60e94940c35420c5633fa5ed2576d4132aa",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261031/q50/training/training_actions.parquet": "ce32659bbd30811d3abea1b9170de8e9f13ace36d765ce3bbf99d344493e2c34"
+  },
+  "hashes": {
+    "calibration_predictions.parquet": "50869f6d432c88124d56189dd2f82d5b21de767463f9996b622c047d1c961b4b",
+    "fit_construction.json": "838c0307f744b8c8463940f0e915d7b5e270151d78241ba010fec07eee9f97a3",
+    "history_1.txt": "4c28cc86e7a62a285c640f490a429ee44db5961572594554dcc8647732c0e70b",
+    "history_2.txt": "19a4ba3933f75aff8c4f5ad5c130fa1a29c6818856a8751387d330b11ce701dc",
+    "history_3.txt": "c02a90a296f478cc7ebacaa003378fa244520cccd35c2c5ae3625545863c1b0c",
+    "history_4.txt": "5fddd2ad8820f8a840ef4c0754bafce1fc0d7e353863bf5fa66e98c37d835f1c",
+    "history_5.txt": "d312ce4e8069d8e1057a44374aa9437aea2fee6a45baf5a6c88564df132c8155",
+    "static_1.txt": "45b17404c67b9941f3cf5b11c96ade1f70afa2fb83ecc27b69c3d26fc476fcf2",
+    "static_2.txt": "ca33fdd1ba34955aed30fe963fb0520155e3944f9bb8fe4efff58874e492431d",
+    "static_3.txt": "0786477c80c67f50eaa166e0a96db6395c85d52063a39365af5da9fc057c4f18",
+    "static_4.txt": "6c9ed85280bb8f4fa8949c2142fb6ee3a422773404251f1fdd0417f601d8c560",
+    "static_5.txt": "81327bdab54cbb14f9fea8be67015fcaa0580a7a383086b3002d0cf908308507",
+    "test_predictions.parquet": "e8aa86ce5f06769986124891555f64fefddbb2d87ece77788d9339be89a5c0b0"
+  },
+  "declaration_sha": "b55263801d6bbed42a43e7e3cc6f17563146ca7fdd5af965580fb0afb17a35f1",
+  "validation": false,
+  "live_changed": false
+}

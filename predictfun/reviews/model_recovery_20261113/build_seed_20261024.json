@@ -1,0 +1,45 @@
+{
+  "as_of": "2026-11-13T03:27:14.925686+00:00",
+  "status": "PASS",
+  "stage": "seed",
+  "day": "20261024",
+  "smoke": false,
+  "windows": 288,
+  "generations": 15372,
+  "actions": 1802,
+  "neutral_statuses": {
+    "accepted_no_cancel": 6565,
+    "not_sampled": 5166,
+    "postonly_refused": 1839,
+    "forked": 1802
+  },
+  "target_statuses": {
+    "eligible": 1795,
+    "missing_continuation_mark": 7
+  },
+  "short_statuses": {
+    "eligible": 1802
+  },
+  "cancel_statuses": {
+    "requested": 1802
+  },
+  "hashes": {
+    "captures.jsonl.gz": "a6e1b827a0f1f5556bebfa8ad7aede452bda3774e94bb621d4289342076b221b",
+    "targets.parquet": "701d46dfa4013dbbfb308bcdfb82bcb113f7ae599e390c4a5da9305e10119169",
+    "paired.parquet": "88094a420bb8712dcd82e7d98e55c2b730061205f76fbe96494603eb762731d0",
+    "population.parquet": "dbd0f3f0b615ee6bb74f910969f7776c4f54b57fa184f95f5e7a85a90d0b2115",
+    "generations/default.parquet": "be648ddb9f09fac99c2384386f674ab6769ee57b8da30ecfaa7b559cbfb6435a",
+    "independent_windows.parquet": "ea158c9302c0b7637a949c86eecb6cb9892ae57e45fb880111f7aea721b1244e",
+    "win/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_DDEFAULT__mid_szAM-5-25-95.parquet": "f5415f2165333f62aedae1e17612b0ee935d2810688f11c71e3e55b66241465a",
+    "fills/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_DDEFAULT__mid_szAM-5-25-95.parquet": "ca75072fd912cd7511316621b54003d12f54f9c36cb5b0f40f1a9701036c3d01",
+    "requests/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_DDEFAULT__mid_szAM-5-25-95.parquet": "14d61b09794c0b6366c69bc6fa0dc81a128c66116d14b51a3deca2f7590c7135"
+  },
+  "neutral_exact": true,
+  "keep_forks_reconciled": 1802,
+  "continuation_rule": "captured_original_1000ms_timer",
+  "recovery_receipt_sha": null,
+  "reference_receipt_sha": "a1602aaf8b81339105661f5e0b82cd45b81a77aaa7471b4ab75d73f7c986d358",
+  "generated_source_sha": "6cd0291ec20ba44bc64afc3804bd330a42534b9eb8a3c3af6796d3cbfd0324ee",
+  "declaration_sha": "3a54b294f438ca0348ac67a59e7f9ba7395d20a714604e8506196f78b8882d75",
+  "validation": false
+}

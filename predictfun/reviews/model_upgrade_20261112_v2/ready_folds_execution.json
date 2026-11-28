@@ -1,0 +1,26 @@
+{
+  "as_of": "2026-11-12T13:53:19.414779+00:00",
+  "status": "DECLARED",
+  "source_commit": "479c2ffa6d1164fbd6f2e234af3f741bc2c6b583",
+  "source_sha": {
+    "predictfun/research/model_upgrade_ready_folds.py": "8bd8b812ee7085028d81e7ca89ce3c567369ef3f04eba3aae03d3733a5ab2293",
+    "predictfun/research/model_upgrade_driver_first_fold.py": "9e67e4a5361f0b53cdd6cfc11cbd4262c1df451bfadae0d005a8d1317186ee05"
+  },
+  "days": [
+    "20261027",
+    "20261031",
+    "20261101"
+  ],
+  "input_receipt_sha": {
+    "20261027": "e72f1bfd2b1fb887a4674e69161bb48e96940b382b26ad5f6c8a5778201cbc6e",
+    "20261031": "fa4401803a6255ed4ba7504a3025a2c1b0a8cb661236cfda0bfded0b44b5ed23",
+    "20261101": "6102e7e28cad1377e1da30e420822359f7a4cbe41371f9a05caebb7299d3a899"
+  },
+  "stopped_idle_pid": 1320642,
+  "stopped_command": "/usr/bin/python3 /tmp/cta-model-upgrade-20261112/predictfun/research/model_upgrade_driver_v3.py ",
+  "stopped_children": [],
+  "evaluation_driver_continues": 1944044,
+  "slot": "idle claude/core9",
+  "global_research_worker_cap": 2,
+  "scope": "Three original frozen chronological folds only. Stop idle model waiter to avoid duplicate writes; restart unchanged model driver after success, retaining all remaining full stages on core8. No scientific change or automatic retry."
+}

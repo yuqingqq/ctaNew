@@ -1,0 +1,131 @@
+{
+  "as_of": "2026-11-15T08:36:56.080877+00:00",
+  "status": "PASS",
+  "day": "20261101",
+  "checks": {
+    "populations": {
+      "core": {
+        "n": 24267,
+        "depth_statuses": {
+          "observed": 24224,
+          "invalid_future_book": 31,
+          "book_gap": 8,
+          "missing_deadline_book": 4
+        },
+        "economic_statuses": {
+          "eligible": 24188,
+          "withdrawal=missing_mark;short=eligible": 78,
+          "withdrawal=missing_mark;short=missing_mark": 1
+        },
+        "profiles": {
+          "q5": {
+            "n": 14089,
+            "observed": 14060
+          },
+          "q50": {
+            "n": 10178,
+            "observed": 10164
+          }
+        }
+      },
+      "calibration": {
+        "n": 3004,
+        "depth_statuses": {
+          "observed": 3001,
+          "book_gap": 3
+        },
+        "economic_statuses": {
+          "eligible": 3002,
+          "withdrawal=missing_mark;short=eligible": 2
+        },
+        "profiles": {
+          "q5": {
+            "n": 1784,
+            "observed": 1781
+          },
+          "q50": {
+            "n": 1220,
+            "observed": 1220
+          }
+        }
+      },
+      "test": {
+        "n": 3449,
+        "depth_statuses": {
+          "observed": 3443,
+          "invalid_future_book": 4,
+          "book_gap": 2
+        },
+        "economic_statuses": {
+          "eligible": 3443,
+          "withdrawal=missing_mark;short=eligible": 6
+        },
+        "profiles": {
+          "q5": {
+            "n": 2048,
+            "observed": 2045
+          },
+          "q50": {
+            "n": 1401,
+            "observed": 1398
+          }
+        }
+      }
+    },
+    "all_predictions_reconstructed": true,
+    "common_depth_training_population": true,
+    "chronology_pass": true,
+    "economic_outcomes_do_not_filter_depth": true,
+    "independent_input_verification_required": true,
+    "estimated_fill_probability": false,
+    "policy_value_proven": false
+  },
+  "input_identity": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261023_q5.json": "6bfd315bbd8ba2c54a148b76ce20e2579f18f660063d35e02960510de70a8ae1",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261023/q5/training/training_actions.parquet": "f8c4c7377a5a79405b7a4a6f183389768f41eead67c0ef4a2361883e299641e0",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261023_q50.json": "6defcb3f1671bc99691676597b7399b4496cf67ee744dee867b44b17fea8f07a",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261023/q50/training/training_actions.parquet": "63800a171a8e4ea9575aebc7618fee34d23320594d2985f7a4e24d5122a7ba0b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261024_q5.json": "856ef6cbc3a7d8207e0aa706f70110c0d102698140ec2ef01fe293f2fc8f08cd",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261024/q5/training/training_actions.parquet": "d1b6e338d4be0a9b9b7b37e4c4d5e77c34177961f1f45f8f80e1ec349490934a",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261024_q50.json": "cc71614cc6213de4561280430d6bd725645d473ce46bce8160f1edddb6495718",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261024/q50/training/training_actions.parquet": "d2563058f7384f2a0c5d49e9078142c77bc4a398e1e0836751b1fee1488d744e",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261025_q5.json": "12d2be47b2425e666c1c7085bc9d2c38a25cf436ee1bf9ff08758ded7a75f88f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261025/q5/training/training_actions.parquet": "0116d019ead645162ca8397d161ce0705c1f04d8d35e1f31de857aa78b2e1ed2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261025_q50.json": "811485f3fc9d0d973df058f5b99e2b53d893944c3598033452cb09e27cf00c94",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261025/q50/training/training_actions.parquet": "f3faecf02f5d978257c5c559f06414a030eb3214584aff9d28360750859762c4",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261026_q5.json": "2a4456f665f0051ec9dd9bd4a805a678d973aca980faf1837df548946d1843bc",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261026/q5/training/training_actions.parquet": "54f743e9f7ce5392b79254a8cff1701039108cb89a1ba5e988474bce17013afd",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261026_q50.json": "b5ca1ea91267bbe138fbc6edb0697f3c796503638e05d2e14d7c61b17dadd484",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261026/q50/training/training_actions.parquet": "609fe57fbe3dbc75c00d1452d42a7ebe0bf63af983d00e010d4b517dd76c1cad",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261027_q5.json": "7f633a6e8dedb0893d92cc56defb11c2d4111459db2d34493c059e008c2f368e",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261027/q5/training/training_actions.parquet": "2c9f3394a502e9de577ee196362de72215700d8135e4938700b64d9752140e78",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261027_q50.json": "73620f960574bcb99ed5715ed73786a06a6a90c109713ef5c64be279b2aaf668",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261027/q50/training/training_actions.parquet": "950f08675553ff5831b945da3096f0ffb0dd7f43127c41885daeb8a48acfc901",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261031_q5.json": "604132de835e16ecc76f5691120fc840487eadf6f01782d27c7a2ed38a49329e",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261031/q5/training/training_actions.parquet": "0a31b5cc7b96e40f2a4a11be8c77b29baf8bef40f548a63935795d13acee9e36",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261031_q50.json": "31540329683e9156819ee7f728f5f60e94940c35420c5633fa5ed2576d4132aa",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261031/q50/training/training_actions.parquet": "ce32659bbd30811d3abea1b9170de8e9f13ace36d765ce3bbf99d344493e2c34",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261101_q5.json": "3cddabe945b088c98f28b8f1639e130c61e60accfecb6ddc01d80abda29b8e7b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261101/q5/training/training_actions.parquet": "5bbf8c8b73d11ca08bc53977e9d3b36f5a7949beb65e08921e880d38aeae873c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261101_q50.json": "7a8e24fd5848296b925adc9bc49c224bf52d6bbed1e341c1fa515e842c4bcd1c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261101/q50/training/training_actions.parquet": "5baa38aefdb20f71b734a1e51b0726500771a447dbd1c55b9b9668608d74430c"
+  },
+  "hashes": {
+    "calibration_predictions.parquet": "1928a36963fee2587c8cc45b1251499a5016257eb9ab1c88b4b7365b29ca1f14",
+    "fit_construction.json": "35dd2576690f9f0d09af23d25f1948a739dadfec890cbbf38e363d80b5db5ff8",
+    "history_1.txt": "a2a0b3e63af2cd231df440180840cf6572b50fcd76dab3f2e7e17b601915a40c",
+    "history_2.txt": "33b1f00d3b6dcc525f10a6b0307825f820e7cb0229abafbbab03a4f090724fa2",
+    "history_3.txt": "2e1ee00a930f0a372b6d450c68efb6d3cedbc18f6a5ca6bef86b4ad044a2b7d3",
+    "history_4.txt": "a8865d140052265d90b929491d9f9191955634592ee19c19d74e8ca0bfd69cbd",
+    "history_5.txt": "02fec157b433bd79f4f43fe95179aa8e6a485e48bed9da4f0ffb0ca69243d3ea",
+    "static_1.txt": "841ab1b2b4258e038854ab05cc67999bd84af08268dde24e154092f8f4904670",
+    "static_2.txt": "239f399ee3553baab88f3b24bbdf282c015965d2d164968b39c61a79330bf6f3",
+    "static_3.txt": "ae79339d9861e2a86a91a5fbcb203992a65953db9581063178879acc5a77b54d",
+    "static_4.txt": "555419866783e4d6585559ad6614c69a2b89cee1d3a387502cfbbe88b188b0d8",
+    "static_5.txt": "135433f381bb9db4462c8e916011b80434a1d12a467bf9618b2870709271ff14",
+    "test_predictions.parquet": "e4bb17c5b5c645f2898c87d80e0cf808d264e55421c6104f212541b30735fe0c"
+  },
+  "declaration_sha": "b55263801d6bbed42a43e7e3cc6f17563146ca7fdd5af965580fb0afb17a35f1",
+  "validation": false,
+  "live_changed": false
+}

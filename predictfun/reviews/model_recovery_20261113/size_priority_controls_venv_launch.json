@@ -1,0 +1,11 @@
+{
+  "as_of": "2026-11-13T07:57:46.181342+00:00",
+  "status": "PASS",
+  "pid": 3412927,
+  "log": "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/logs/size_priority_controls_driver_venv.log",
+  "supersedes": {
+    "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/size_priority_controls_import_failure.json",
+    "sha": "44745ed1727090caa5ed42eac31f02bb4dcb6cd93ec91b12e708d3fa7471c0dd"
+  },
+  "scope": "Launcher interpreter correction only; no test attempt or historical run retried."
+}

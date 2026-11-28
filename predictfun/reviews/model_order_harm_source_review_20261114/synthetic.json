@@ -1,0 +1,78 @@
+{
+  "asof": "2026-11-14T05:56:43.183980+00:00",
+  "kind": "synthetic_source_controls_not_historical_frequency",
+  "sources": {
+    "pf_queue_place.py": {
+      "sha256": "82a69aed6340be016ce7ed43bb1005dfba5da7eff76663c427a3dcd2da5bd922",
+      "function_line": 125
+    },
+    "pf_next_price.py": {
+      "sha256": "d7445bc2bc6470ef0f23573c72c082eb18e840092f68031262927bd7eb610a3e",
+      "function_line": 121
+    },
+    "pf_order_harm.py": {
+      "sha256": "15aca0b8bdd6d21aefa4d6f00e8c2764b0c67e4b56717dc0cb0413e0a925f56a",
+      "branch_function_line": 90
+    }
+  },
+  "cases": {
+    "future_queue_feature": {
+      "decision_ms": 250,
+      "changed_frame_ms": 300,
+      "results": [
+        {
+          "a0": 100.0,
+          "ahead": 100.0
+        },
+        {
+          "a0": 900.0,
+          "ahead": 900.0
+        }
+      ],
+      "causal_control_passed": true,
+      "future_change_refused": true
+    },
+    "overlapping_rows": {
+      "distinct_physical_fills": 1,
+      "decision_rows": 2,
+      "one_row_delta": -2.0,
+      "summed_row_delta": -4.0,
+      "latency_exclusion_control_passed": true
+    },
+    "terminal_mismatch": {
+      "reference_end_ms": 60000,
+      "pull": {
+        "end": 64000.0,
+        "last_decision": 59950,
+        "n": 20
+      },
+      "fork_function_line": 75
+    }
+  },
+  "instrument_sha256": "0bad86ad78ac4429aa1acc25bd0d4366d49dcdcd14d4a60f910ffb80f4729c93",
+  "reviewed_source_sha256": {
+    "pf_order_harm.py": "15aca0b8bdd6d21aefa4d6f00e8c2764b0c67e4b56717dc0cb0413e0a925f56a",
+    "pf_joint_ladder.py": "79c1a68eb05059c821e81a6b4bfbbb13ec7fb8bb70177974cea83d1b9b9cc97a"
+  },
+  "joint_snapshot": {
+    "asof": "2026-11-14T05:56:43.190412+00:00",
+    "completed_days": 6,
+    "totals": {
+      "windows": 1728,
+      "parity_checked": 577,
+      "parity_bad": 0,
+      "parity_skipped": 30527
+    },
+    "driver_tail": [
+      "05:50:52Z start jl_eval_20261026",
+      "05:52:41Z start jl_eval_20261027",
+      "05:54:31Z start jl_eval_20261031",
+      "05:56:06Z start jl_eval_20261101"
+    ]
+  },
+  "harm_snapshot": {
+    "row_days": 0,
+    "fit_days": 0,
+    "report_exists": false
+  }
+}

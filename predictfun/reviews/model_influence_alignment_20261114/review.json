@@ -1,0 +1,39 @@
+{
+  "asof": "2026-11-14T05:25:28.982994+00:00",
+  "kind": "source_and_receipt_review_not_replay",
+  "source_revision": "54408bcd",
+  "controls": {
+    "valid_digest_passed": true,
+    "corrupted_digest_refused": true
+  },
+  "artifacts": {
+    "predictfun/reviews/influence_20261114/influence.txt": "e023fcf2ca9ff62139bdf57d437e813ac61e40abd6b014ca13ccd3e855e957c7",
+    "predictfun/reviews/influence_20261114/influence.json": "0fcfed923aedc38295bce8254b4cae44e50396fc425160c32138d0f0e9770232",
+    "predictfun/reviews/next_price_20261114/next_price.txt": "c131ac6d9993c1b6d4da31c466cb704bc6d524133df1bfefcc1b9d4381765aea",
+    "predictfun/reviews/next_price_20261114/next_price.json": "a96d676d3850c277a0fd9b0ec1665709a74a6eaa398fc613498e8a7e21bb42b9",
+    "predictfun/reviews/next_price_20261114/next_price_posthoc.txt": "981888fba6b91ec3ebd86dfeabe7ed446772e51c12997014467a7033dd7114b9",
+    "predictfun/reviews/next_price_20261114/next_price_posthoc2.txt": "4ff380ed7ff1c1708e12b93908bfa9344ab03f6360b50dbce27d6e0482a588b2"
+  },
+  "sources": {
+    "predictfun/research/pf_future_best.py": "bbe6dbf406ca0da9a2f5dbe6025b52a0fe8a2dc14fb04057e34422034930f7f3",
+    "predictfun/research/pf_influence.py": "5c5bd6f61da5800fcc67045b8c5ec3b4ab61eede3a4383ac244f5dd405f6ac55",
+    "predictfun/research/pf_stop_depth.py": "819d5e06d32b647cdac96cca0f9f9191eb033c9a9b6c1cfd160df3f0228aae46",
+    "predictfun/research/pf_pull_depth.py": "a8670b2e9751f16dce37aab7c18ce35cc31fa3431e392b9a7397f4375a9114ef",
+    "predictfun/research/pf_target_test.py": "5aa308e4fd69ab01b03ef7a36071fc4cb3ed2290951a6c800bc5d1c9bada68ba"
+  },
+  "onsets": {
+    "onsets": 269938,
+    "onset_rows": 269605,
+    "onset_no_pbn": 333,
+    "onset_invalid": 0,
+    "fv_events": 34813
+  },
+  "target_test_snapshot": {
+    "scored_days": 9,
+    "evaluated_days": 2,
+    "report_exists": false,
+    "missing_onset_predictions": 0,
+    "max_onset_prediction_difference": 0.0
+  },
+  "review_instrument_sha256": "2ed4d031e31997eeebdbfa2e32520e1f3d7803ec110e08e5a6afce7b8baa4aac"
+}

@@ -1,0 +1,16 @@
+{
+  "as_of": "2026-11-11T23:24:23.237007+00:00",
+  "status": "DRIVER_AND_METADATA_WATCHER_RESUMED",
+  "driver_pid": 2447808,
+  "watcher_pid": 2447868,
+  "driver_log": "/home/yuqing/ctaNew/data/predict_fun/research/default_pull_20261111_v4/logs/driver_resumed_20261111T232421Z.log",
+  "watcher_log": "/home/yuqing/ctaNew/data/predict_fun/research/default_pull_20261111_v4/logs/publication_watcher_20261111T232421Z.log",
+  "frozen_source_unchanged": true,
+  "completed_eval_days": [
+    "20261026",
+    "20261027",
+    "20261031",
+    "20261101"
+  ],
+  "scope": "Resume unchanged frozen driver from first incomplete stage with disk-backed stdout. All completed stage log hashes checked by driver; recovered November 1 integrity recorded separately. No test thresholds, models or policies changed."
+}

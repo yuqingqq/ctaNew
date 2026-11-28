@@ -1,0 +1,7 @@
+{
+  "as_of": "2026-11-12T16:29:33.222879+00:00",
+  "status": "PASS",
+  "declaration_sha": "53d0a669b6fcdd503cd981cbb46e1c6d03ecae5721d0d80c3fe29d75a07abd5d",
+  "empty_and_numeric_boundaries": true,
+  "known_bad_refusals": 5
+}

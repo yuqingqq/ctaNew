@@ -1,0 +1,42 @@
+{
+  "as_of": "2026-11-12T23:15:07.844108+00:00",
+  "status": "PASS",
+  "source_commit": "df379b9cfb643867e67b4a6ed19c2d10f592b1ea",
+  "source_sha": {
+    "predictfun/research/pf_model_recovery_capture.py": "1a047690588829ac39f8e5905345f2c34abf4e6b103991411599c033aa05d581",
+    "predictfun/research/tests/test_model_recovery_capture.py": "4d53765cdd0606cec20681b12cf9954ba3547b26f98802aee9c7276f36262d3c",
+    "predictfun/research/pf_model_recovery_target.py": "5797326be7d7e9bffc58da1486a63c7fb65524b9086fdda13b49a5dd32eda266"
+  },
+  "command": [
+    "/home/yuqing/ctaNew/predictfun/research/run_light.sh",
+    "model_recovery_capture_controls_v2",
+    "--",
+    "/home/yuqing/pricer-sol/venv/bin/python3",
+    "-m",
+    "predictfun.research.tests.test_model_recovery_capture"
+  ],
+  "slot": "claude",
+  "test_observation": {
+    "tool_exit_code": 0,
+    "tests_run": 5,
+    "result": "OK",
+    "standalone_stdout_saved": false
+  },
+  "wrapper_record": "2026-11-12T23:11:11Z tag=model_recovery_capture_controls_v2 rc=0 peak_rss_mib=145 wall_s=6.16 cpu_user_s=6.04 memavail_start_gib=22 disk_free_gib=496->496 slot=claude",
+  "wrapper_record_sha": "2428e8fd0c34a4a06db4e5180206cefb11b769bc84f9307741a194e05250c713",
+  "previous_fixture_failure": {
+    "wrapper_record": "2026-11-12T23:10:27Z tag=model_recovery_capture_controls rc=1 peak_rss_mib=145 wall_s=6.92 cpu_user_s=6.79 memavail_start_gib=22 disk_free_gib=496->496 slot=claude",
+    "reason": "The initial one-tick move did not make the pending price invalid, so the test correctly refused a vacuous pending-create example. The fixture was changed to a three-tick move while an80ms create was pending; production capture code and the assertion were unchanged."
+  },
+  "upstream_declaration_sha": "e497cf4ad16161ace53974028678af25816ef8ea9ddfa77968e4cd056a587ed8",
+  "controls": [
+    "Exact baseline/capture parity for paired labels, population, independent windows and complete engine return including fills/requests",
+    "All captured generation economic fills equal raw engine branch fills at2/10/30s",
+    "Synthetic95ms cancellation uses actual recorded effect rather than the fixture row22ms proxy",
+    "Pending-create cancellation occurs and matches the engine effective-time formula; complete output unchanged",
+    "Corrupted quantity, duplicate/mismatched tranche and missing source anchors refused"
+  ],
+  "scope": "Implementation integration controls on synthetic data only. The capture is read-only and does not change any frozen file or running process. Historical neutral population integration, explicit no-effect target status, paired recovery policy and model fitting/evaluation are incomplete. No new scientific experiment declaration or performance claim.",
+  "validation": false,
+  "live_changed": false
+}

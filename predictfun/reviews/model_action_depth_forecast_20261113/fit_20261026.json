@@ -1,0 +1,119 @@
+{
+  "as_of": "2026-11-15T08:35:20.768442+00:00",
+  "status": "PASS",
+  "day": "20261026",
+  "checks": {
+    "populations": {
+      "core": {
+        "n": 9782,
+        "depth_statuses": {
+          "observed": 9769,
+          "invalid_future_book": 7,
+          "missing_deadline_book": 4,
+          "book_gap": 2
+        },
+        "economic_statuses": {
+          "eligible": 9745,
+          "withdrawal=missing_mark;short=eligible": 37
+        },
+        "profiles": {
+          "q5": {
+            "n": 5704,
+            "observed": 5695
+          },
+          "q50": {
+            "n": 4078,
+            "observed": 4074
+          }
+        }
+      },
+      "calibration": {
+        "n": 4564,
+        "depth_statuses": {
+          "observed": 4558,
+          "invalid_future_book": 6
+        },
+        "economic_statuses": {
+          "eligible": 4552,
+          "withdrawal=missing_mark;short=eligible": 12
+        },
+        "profiles": {
+          "q5": {
+            "n": 2638,
+            "observed": 2632
+          },
+          "q50": {
+            "n": 1926,
+            "observed": 1926
+          }
+        }
+      },
+      "test": {
+        "n": 5321,
+        "depth_statuses": {
+          "observed": 5311,
+          "invalid_future_book": 9,
+          "book_gap": 1
+        },
+        "economic_statuses": {
+          "eligible": 5292,
+          "withdrawal=missing_mark;short=eligible": 28,
+          "withdrawal=missing_mark;short=missing_mark": 1
+        },
+        "profiles": {
+          "q5": {
+            "n": 3096,
+            "observed": 3090
+          },
+          "q50": {
+            "n": 2225,
+            "observed": 2221
+          }
+        }
+      }
+    },
+    "all_predictions_reconstructed": true,
+    "common_depth_training_population": true,
+    "chronology_pass": true,
+    "economic_outcomes_do_not_filter_depth": true,
+    "independent_input_verification_required": true,
+    "estimated_fill_probability": false,
+    "policy_value_proven": false
+  },
+  "input_identity": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261023_q5.json": "6bfd315bbd8ba2c54a148b76ce20e2579f18f660063d35e02960510de70a8ae1",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261023/q5/training/training_actions.parquet": "f8c4c7377a5a79405b7a4a6f183389768f41eead67c0ef4a2361883e299641e0",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261023_q50.json": "6defcb3f1671bc99691676597b7399b4496cf67ee744dee867b44b17fea8f07a",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261023/q50/training/training_actions.parquet": "63800a171a8e4ea9575aebc7618fee34d23320594d2985f7a4e24d5122a7ba0b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261024_q5.json": "856ef6cbc3a7d8207e0aa706f70110c0d102698140ec2ef01fe293f2fc8f08cd",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261024/q5/training/training_actions.parquet": "d1b6e338d4be0a9b9b7b37e4c4d5e77c34177961f1f45f8f80e1ec349490934a",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261024_q50.json": "cc71614cc6213de4561280430d6bd725645d473ce46bce8160f1edddb6495718",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261024/q50/training/training_actions.parquet": "d2563058f7384f2a0c5d49e9078142c77bc4a398e1e0836751b1fee1488d744e",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261025_q5.json": "12d2be47b2425e666c1c7085bc9d2c38a25cf436ee1bf9ff08758ded7a75f88f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261025/q5/training/training_actions.parquet": "0116d019ead645162ca8397d161ce0705c1f04d8d35e1f31de857aa78b2e1ed2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261025_q50.json": "811485f3fc9d0d973df058f5b99e2b53d893944c3598033452cb09e27cf00c94",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261025/q50/training/training_actions.parquet": "f3faecf02f5d978257c5c559f06414a030eb3214584aff9d28360750859762c4",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261026_q5.json": "2a4456f665f0051ec9dd9bd4a805a678d973aca980faf1837df548946d1843bc",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261026/q5/training/training_actions.parquet": "54f743e9f7ce5392b79254a8cff1701039108cb89a1ba5e988474bce17013afd",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build_20261026_q50.json": "b5ca1ea91267bbe138fbc6edb0697f3c796503638e05d2e14d7c61b17dadd484",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/build/20261026/q50/training/training_actions.parquet": "609fe57fbe3dbc75c00d1452d42a7ebe0bf63af983d00e010d4b517dd76c1cad"
+  },
+  "hashes": {
+    "calibration_predictions.parquet": "6b2cfb5f7539492c84e3cc8a126d33155076089fc4e1e91cd12e86fc50a381bb",
+    "fit_construction.json": "9081fe6871acf2c37f79451c1b91498261d80e21597bbce3097d116accd95615",
+    "history_1.txt": "4989254dce8e13384fc1b942cc3b8b7798b97e30c3e65579a9715e7daf7350d8",
+    "history_2.txt": "5c16809df139d8937cd96fb4970a2564aa7f84cd0e584b8f0754d619a586ef1e",
+    "history_3.txt": "5c3d81c4a59a6c5cd5bb1bbd9ffa145b9f211e8e225e0054481f46d67ca24be7",
+    "history_4.txt": "9ce523d59c3db9f00078c129ed74c0479e4ff80184120ef4235b8727b32cf554",
+    "history_5.txt": "53ce2659b5583505808ee986b624178eae25f0dc42fb5da955b9519401623037",
+    "static_1.txt": "1edcdce2639e26b1ea1c5b2a7a9fdf0236098f80db2d26d0f59b7389a083ab52",
+    "static_2.txt": "5cb3f6670150fad2e8662ce996a5006150b587c2b9f669cf8144d08b56b4b257",
+    "static_3.txt": "26177211099c2479ac28c507b19151047d9da73bf31b320735a6c4e4ee8f6d93",
+    "static_4.txt": "96198af70f9b657740a2035dc967a459536528d14b1fc42b01d15ecdaf3e3404",
+    "static_5.txt": "695342970c8084f3a9bbc81d696a42e9ce52a85a93afe6197cffd3a731886060",
+    "test_predictions.parquet": "5ff99fd836aeaf6a489f7bd52e3b1982d441b2ce375007888563d177e56aebf4"
+  },
+  "declaration_sha": "b55263801d6bbed42a43e7e3cc6f17563146ca7fdd5af965580fb0afb17a35f1",
+  "validation": false,
+  "live_changed": false
+}

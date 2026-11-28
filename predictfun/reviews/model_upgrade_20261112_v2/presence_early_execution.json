@@ -1,0 +1,9 @@
+{
+  "as_of": "2026-11-12T15:26:54.797496+00:00",
+  "source_commit": "74147da4f1c8de112b2fa57ba8595bd34259e92f",
+  "source_sha": "55a13828c5e9c1febdb3439b4604bf653e12985c0582e5128538555f621cbda0",
+  "slot": "claude",
+  "shared_cap": 2,
+  "scope": "Bounded declaration, synthetic controls and descriptive phase partition for completed primary Oct26 only; active full replay remains unchanged.",
+  "active_reference_pid": 2646745
+}

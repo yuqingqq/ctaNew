@@ -1,0 +1,22 @@
+{
+  "as_of": "2026-11-13T12:55:39.921244+00:00",
+  "status": "STARTED",
+  "source_commit": "2f6df830a87bcf62586713fccb5653915e30aba7",
+  "source_sha": {
+    "predictfun/research/pf_action_depth_target.py": "5f8469472baff6d54ce3a90bd85bde2210083e717df0d13798240a130334a550",
+    "predictfun/research/tests/test_action_depth_target.py": "2248244147e74d2d36aeb75b5a34465402c27d6f3c223deb3ad0fa71a2040c00"
+  },
+  "command": [
+    "/home/yuqing/ctaNew/predictfun/research/run_light.sh",
+    "action_depth_target_controls_v1",
+    "--",
+    "/home/yuqing/pricer-sol/venv/bin/python3",
+    "-m",
+    "unittest",
+    "-v",
+    "predictfun.research.tests.test_action_depth_target"
+  ],
+  "expected_tests": 8,
+  "historical_payload_read": false,
+  "live_changed": false
+}

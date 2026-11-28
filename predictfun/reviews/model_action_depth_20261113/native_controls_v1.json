@@ -1,0 +1,26 @@
+{
+  "as_of": "2026-11-13T13:07:48.482668+00:00",
+  "status": "PASS",
+  "source_commit": "a0456b5c427bae223e8ab0c58168d392ad2c1fd4",
+  "source_sha": {
+    "predictfun/research/pf_action_depth_target.py": "5f8469472baff6d54ce3a90bd85bde2210083e717df0d13798240a130334a550",
+    "predictfun/research/tests/test_action_depth_target.py": "2248244147e74d2d36aeb75b5a34465402c27d6f3c223deb3ad0fa71a2040c00",
+    "predictfun/research/pf_action_depth_native.py": "eaaf11747de3e17b46f030c95153f58044a9ffc742e8a94877df6a0bf0007545",
+    "predictfun/research/tests/test_action_depth_native.py": "3bc860918f64e073ff6356e8d52a6b6f4c312c049a641b790fcd646abc9477be"
+  },
+  "prerequisite_sha": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/declaration.json": "3a54b294f438ca0348ac67a59e7f9ba7395d20a714604e8506196f78b8882d75",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_size_priority_20261113/declaration.json": "cea782c5c074158c44b52f302e79907f23808123535e6cbf01a77f5c40b5183c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_20261113/target_controls_v1.json": "4b31f9e5ec94ac281a860806671fb0b0fd38a57a2cf8839c7f473b6de59db0b1"
+  },
+  "exit_code": 0,
+  "expected_tests": 13,
+  "reported_test_counts": [
+    "13"
+  ],
+  "log_sha": "31dd5cd8cf9f2fdb397d10d19b9f02c9dd99c88663499a442872244ff389d97b",
+  "started_receipt_sha": "d323b4192ec15500ddd8503d8edfa717ebb47d9ac3f3093b16dbe2db8de5cf00",
+  "historical_payload_read": false,
+  "live_changed": false,
+  "scope": "Synthetic target and native engine deadline/population controls. No historical extraction, fitted model, forecast-performance estimate or policy change."
+}

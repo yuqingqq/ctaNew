@@ -1,0 +1,8 @@
+{
+  "as_of": "2026-11-12T14:55:03.330164+00:00",
+  "source_commit": "9b866f7c8f70dbbd0d61f7a9daf9f71779a319a9",
+  "scope": "Bounded eight-window five-policy equivalence preflight, using exact feature-container substitution; original full replay and driver unchanged.",
+  "slot": "claude",
+  "shared_cap": 2,
+  "active_reference_replay_pid": 2277844
+}

@@ -1,0 +1,17 @@
+{
+  "as_of": "2026-11-13T08:32:49.817599+00:00",
+  "status": "PASS",
+  "exit_code": 0,
+  "source_commit": "93ee8ef6a6cdfeebe8dd9867baab95509a9e713a",
+  "source_sha": {
+    "predictfun/research/pf_size_priority_policy.py": "92bde5e539e962d20b40070e668dbb0e746c947d9e2952c0d8a19520495c0828",
+    "predictfun/research/tests/test_size_priority_policy.py": "ca35556017bbc8f2a67f9d51835d423c80da68c9b1e953c3fb27e13f37d1f1fd",
+    "predictfun/research/model_size_priority_controls_driver.py": "f50c8ffb8c6ac8486e6cb7a4e24f3599862051f77b0d97b6c27864141169e0ed"
+  },
+  "log_sha": "d9193bbfb03c3d34228f9e0c51a2dfb46956deae06bc037293b56c833616ba24",
+  "started_receipt_sha": "95e72ffe5192ab1aa31124d8da4e4e648182bf240f0ed4b15bf983216fe7b454",
+  "unittest_cases": 8,
+  "historical_payload_read": false,
+  "live_changed": false,
+  "scope": "Quantity/reservation and causal-state unit tests. Full engine integration, partial-action ledger, paired continuation labels and historical evaluation remain."
+}

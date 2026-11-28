@@ -1,0 +1,48 @@
+{
+  "as_of": "2026-11-12T14:00:36.274572+00:00",
+  "status": "PASS",
+  "day": "20261027",
+  "fit_sha": "21054488c0335704f57d42d22ed7a1a86d6354c5f497b6bda9394eca4dd09151",
+  "model_sha": {
+    "static10.txt": "cbddf6d9260ff128903c3ada960c0de32ade1bc6f8c07955d59027002699f97c",
+    "history10.txt": "1a8954d838ff741ec517f59df6e79aa495dfce8f22b0a54e99e16cee55775969",
+    "causal_guard_bid.txt": "72621344437e9f6dad2d6e2f8c153e44c26cfad15e5a9a49e354f0372b07f8f4",
+    "causal_guard_ask.txt": "7a876ffb0d0dfa3bfcf2c8cb68ca79b1b10c269763b19a585ed9d22cbcb6674a"
+  },
+  "lines": [
+    [
+      -0.038707215376269165,
+      -0.025615307717546134,
+      -0.006018787110928348,
+      0.005062459392661911
+    ],
+    [
+      -0.030884309284259087,
+      -0.024270335687570973,
+      -0.006531333237375943,
+      0.004035033796921917
+    ]
+  ],
+  "threshold_counts": [
+    [
+      103610,
+      103630,
+      102196,
+      92704
+    ],
+    [
+      103610,
+      103630,
+      102196,
+      92704
+    ]
+  ],
+  "threshold_days": [
+    "20261023",
+    "20261024",
+    "20261025"
+  ],
+  "calibration_day": "20261026",
+  "declaration_sha": "4db0034cb7e0c527afe6da374bb7445e3189738e4a1ef6e371e2e84a32f36f2c",
+  "original_prepare_sha": "595d9fea87f8e06c246b07d41d2be55c1809e01a14bb73c236b68a00838ed1c7"
+}

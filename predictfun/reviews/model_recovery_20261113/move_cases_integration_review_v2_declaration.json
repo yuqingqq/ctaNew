@@ -1,0 +1,123 @@
+{
+  "as_of": "2026-11-13T17:46:04.769444+00:00",
+  "source_commit": "24e6a4267c9cc13729366f77885c924b21bc6823",
+  "source_sha": {
+    "predictfun/research/model_move_cases_integration_review.py": "3df62f19ba6b29c45141d055530648c24a102e7f7dcb78f41899f74b4eefd589",
+    "predictfun/research/model_move_down_integration_review.py": "ff4adefdaff438375ae17ca7d097ad3874e56b1e925e30f52331e538b353c20f",
+    "predictfun/research/model_recovery_stage_review.py": "d8b838d1b3c76aa6c5aea8d892b9f437271a117eafddbdbef741ee752be4c279",
+    "predictfun/research/model_learn_pull_integration_review.py": "32129f8d2bc5653eccd84398a93d29e06081c4e1241d802e4c1e2919ffa59a05"
+  },
+  "producer_commit": "81ae9c60833b3b28e759e4260c015b76ffb41b75",
+  "producer_source_sha": {
+    "/home/yuqing/ctaNew/predictfun/research/pf_move_cases.py": "106c3fd61b55352d562cd5c56d5e7936b154d6b8476bc6c8ee957cbf37e77499",
+    "/home/yuqing/ctaNew/predictfun/research/run_move_cases.sh": "c871571428370dac30a176d824ca95d5a68e64678849daa7b0d41be48efc67fb",
+    "/home/yuqing/ctaNew/predictfun/research/pf_kp_s4.py": "4f173446bf07d7141a96bddf02470e38e66aa64b2b28a380eeb7dec9343530cc",
+    "/home/yuqing/ctaNew/predictfun/research/pf_pull_depth.py": "a8670b2e9751f16dce37aab7c18ce35cc31fa3431e392b9a7397f4375a9114ef",
+    "/home/yuqing/ctaNew/predictfun/research/pf_robust_check.py": "f7b70ab8c1e431efdcd24c9d93162e5014cde4604a45436cb57d820870fee104",
+    "/home/yuqing/ctaNew/predictfun/research/pf_qr_queue_race.py": "a6d9eef39f9550136488aaec4d912b7da1712712c07512473a41b2c427288145",
+    "/home/yuqing/ctaNew/predictfun/research/pf_timing_split.py": "de33ec3e64f22f2db8226c1cbc85ea230e6cc1bb1a478773cc5a978da4997b48"
+  },
+  "input_sha": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/move_cases.txt": "eb62de59d5441360f921ee2cb8ee9b7a18152666ffbe3310a64ba627dc8c5ea6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/move_cases.json": "b2148336b2359f496b8ceb7f01ff2539f874c6b30b04c27c79934ebf5226e1e8",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/posthoc.txt": "df477e64bf06695dcf05d197944e73b5878621a4480aa331d24468c03b908306",
+    "/home/yuqing/ctaNew/predictfun/handoffs/20261113_move_cases_results.md": "31fefdaa5949babd6955cdce82338ef8095b94e81ff429f34cc6ca0ac10dbe32",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/day_20261023.json": "74098e35dc6df124ceee2b6768b8f64d73442fc8a57140e4c655709dc5633392",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/events_20261023.parquet": "67d1f7c5d388d32703bad6d65f933f778641b6f3eb3ddc29c8e2cb011466ae12",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/segs_20261023.parquet": "5f592d29244072a3f46bc50f2e6adc09386ef60ba6fa449b13325e2f04c1c73f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/ours_20261023.parquet": "848105e58a51ebc587732a287e32ff2d4ca5779881d99b02b2b2058f3f433a38",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/day_20261024.json": "7d09190482016267d63ec0c7fecb02057c09e87bb11532746951d029b666b467",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/events_20261024.parquet": "3443f63e5607254e6da9b4fd87f2d62886a25077710b36f6c4f37d2df082f52a",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/segs_20261024.parquet": "95e23f8ae906c0073a443a962b3118eb8a3e706217c39b15e8b3d1dd707b363d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/ours_20261024.parquet": "1f931dd81d9cb6f04b8e4c92e844d065459ef0779478f2e7f086461cc44c55a8",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/day_20261025.json": "7013af50af78e6fd84e207a10e063f52e7c99f5fcd5fed262d8c2f78687c68e4",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/events_20261025.parquet": "b5b28514d9fdf2e747bbdc73bebc4138da2fe7c27f21407df384b95db10128e7",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/segs_20261025.parquet": "037575ce62e914ec95adde46021f835720492355768f6be64f453bebf28d3007",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/ours_20261025.parquet": "4135ddc5d9b7c5e0313cc948d6386638dc544510869b867ae424a367688b4ba5",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/day_20261026.json": "fbaf8130d5c7240e009c889b0dd6d1e0ffd7894576e584e5ff29bfc45a83e709",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/events_20261026.parquet": "409998b2d468d797c1709ff1f89443f2819b036652a64ff892eb12d1ea008bcf",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/segs_20261026.parquet": "72ac3c68ff9e47b3ae19cec858e1807199e984b9690aeeccd6d669c6e60ee55f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/ours_20261026.parquet": "19a17f9595085fbce524c8f0a6d00720e4d377dcc5bfeb06b29d9409a7df5ee8",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/day_20261027.json": "2a7eabba213cf68b63897243652abccb04bfd50bcd1a28fac4ace0d48abdf8d6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/events_20261027.parquet": "458aa58496ff4bfd4f820a9decc357ca7830f9c04a3f9e9ffed14f0cfba04c65",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/segs_20261027.parquet": "d549deb579b187e5217a4fe41a2dc995c631ce85a01c7dd2221a8a1f9f762f01",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/ours_20261027.parquet": "2af9d9f63dc72ac7e63820aa013e01b175b2f5eeb5af12dc1b13b52613dcd14a",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/day_20261031.json": "a284d0998f1985dc326c41818e616edd195706a185d2ea6c8e59f6817d8e8557",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/events_20261031.parquet": "ab71edfdd8c468d7dce82a82b1490e8af48ac90144e2933d6f53930781ed8c4b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/segs_20261031.parquet": "933be9bcb2f466ba29dd64f842df3f5382275c885436330eca2687bf44b6aa40",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/ours_20261031.parquet": "e5d900ecc94a998a7bc4b3d181a4748b88db56579a38375dcae27c24221e4035",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/day_20261101.json": "8f90052c8d0dd4c5c961dc46237d51830a0d91c5b01f1560bc61a6c6db0b11ec",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/events_20261101.parquet": "5b70c73aa4f7abd43152d55f6c6aa4b5844ccf31a917f7bf5da4683bd1a7c907",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/segs_20261101.parquet": "a6fbe99f84d053d73855fce4cc34f3b461ddb8ff51ac21ca10e8a0bc60aead14",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/ours_20261101.parquet": "7725d288a1fc0f1e8afc4d110697195199c605bf6f8a84c67f8ebb262b0afd74",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/day_20261102.json": "a7c7af03282632e87202c1434e3ed1c7f602f5507594ff51476b4f4a74fe2697",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/events_20261102.parquet": "6a72973c0a82b89c86ee8ed7b7effed65761a29ff382341cbf3dfeea5d31a2f1",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/segs_20261102.parquet": "fd2b17e69a37e1e92f8c86902ffefacfeba0b2c3797bfcb1447b0198cd506394",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/ours_20261102.parquet": "89895e1da771a2dc3926cbc41aa6a0f135e1f0e6e81189d068c95eca6b99b1cf",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/day_20261103.json": "44068eb3f7efc7f625c8405df889635a86fc45308a3b1c2322d87b454ec39f49",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/events_20261103.parquet": "338013117c8800046c7d085fdeeb8b33f1f08551cc7016bc4e666ae2705fefe9",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/segs_20261103.parquet": "f32b8b4f41acab3d09b03bc7e39e4f62f6bb37c921017bf241841d03b19346dc",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_cases_20261113/ours_20261103.parquet": "9d2c2822ca2bd067e9d72f1ebec06dba94c2093576618a67b4df83133980236f"
+  },
+  "scope": "Reconstruct MOVE-CASES while testing whether its totals are portfolio values.\n\nExact report/posthoc calculations over published consumed-day tables, plus\nexact source counterexamples for repeated event attribution and unobserved\npath endpoints. No raw replay, fitted model, policy choice, new interval,\nprotected-day input or live change.\n",
+  "controls": {
+    "original_positive": true,
+    "original_mutations": {
+      "MUT_PATH_SIGN": true,
+      "MUT_RUNOVER_PEAK": true,
+      "MUT_CHASE_REV": true
+    },
+    "repeated_event_accumulation": {
+      "physical_maker_fills": 2,
+      "physical_shares": 10.0,
+      "physical_value_cents": 5.0,
+      "overlapping_event_maker_rows": 4,
+      "reported_shares": 20.0,
+      "reported_value_cents": 10.0,
+      "distinct_events_have_identical_saved_rows": true
+    },
+    "disjoint_event_negative_control": true,
+    "endpoint_without_future_coverage": {
+      "last_frame_ms": 1500.0,
+      "requested_endpoint_ms": 4200.0,
+      "output": [
+        4,
+        1200.0,
+        4
+      ],
+      "assigned_case": "big, trends"
+    },
+    "complete_endpoint_positive": {
+      "output": [
+        4,
+        1200.0,
+        0
+      ],
+      "assigned_case": "big, reverts"
+    },
+    "historical_repeated_fill_count": null,
+    "historical_uncovered_endpoint_count": null
+  },
+  "days": [
+    "20261023",
+    "20261024",
+    "20261025",
+    "20261026",
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "prior_failed_attempt": {
+    "source_commit": "6c442ecb",
+    "log": "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/logs/move_cases_integration_review_v1.log",
+    "log_sha": "f21fb37e5b6d0c9befb4d3b96000e7477f76fc7d59a062709b041c640fca9d4f",
+    "stage": "synthetic controls before declaration or historical table reads",
+    "reason": "Audit wrapper omitted the producer xa=1-x binding; supplied unchanged binding in v2.",
+    "prior_declaration_written": false,
+    "prior_result_written": false
+  },
+  "validation": false,
+  "live_changed": false
+}

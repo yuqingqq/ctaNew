@@ -1,0 +1,156 @@
+{
+  "as_of": "2026-11-12T16:45:28.875122+00:00",
+  "status": "PASS",
+  "source_commit": "1b32a54cc4fc06b7151379128297448c9446e6ee",
+  "parity_declaration_sha": "725182a39e1bb62bedc61e64c919b5a01af2b3a64eb96e4142b39732ec0b6004",
+  "correction_declaration_sha": "53d0a669b6fcdd503cd981cbb46e1c6d03ecae5721d0d80c3fe29d75a07abd5d",
+  "reference_run_sha": "1dc21c051a48e20cd35a81e0eaaf32e44d2953731b4804440c6bb961a6763fd7",
+  "corrected_run_sha": "d6584abc1a04f86b18eaaada3fef34c3f4c42db791d43e8fe9db9f820f230608",
+  "populations": [
+    {
+      "mode": "default",
+      "windows": 8,
+      "generations": 734,
+      "fills": 360
+    },
+    {
+      "mode": "legacy_guard",
+      "windows": 8,
+      "generations": 512,
+      "fills": 10
+    },
+    {
+      "mode": "causal_guard",
+      "windows": 8,
+      "generations": 751,
+      "fills": 21
+    },
+    {
+      "mode": "static10",
+      "windows": 8,
+      "generations": 831,
+      "fills": 82
+    },
+    {
+      "mode": "history10",
+      "windows": 8,
+      "generations": 859,
+      "fills": 84
+    }
+  ],
+  "artifacts": [
+    {
+      "artifact": "win/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_UDEFAULT__mid_szAM-5-25-95.parquet",
+      "rows": 8,
+      "sha": "cda66a05651bd14cf35db382b4757400f174d92d33fd9b65e62a7aa67d2f6467"
+    },
+    {
+      "artifact": "fills/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_UDEFAULT__mid_szAM-5-25-95.parquet",
+      "rows": 360,
+      "sha": "3556700381b7d5c7c39de5e5c7f09a9e1f615aecab760d0368bbb0baffb8534b"
+    },
+    {
+      "artifact": "requests/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_UDEFAULT__mid_szAM-5-25-95.parquet",
+      "rows": 1261,
+      "sha": "e5c731da1c234f9dc72cfaf7a7af5c5ccc18da1a11b87d39997157e7c10b5c7a"
+    },
+    {
+      "artifact": "generations/default.parquet",
+      "rows": 734,
+      "sha": "b9287eaff73c024b941ee321ba2858fa7ca53b38a1c9c6c85c9773315690631c"
+    },
+    {
+      "artifact": "win/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_ULEGACY__mid_szAM-5-25-95.parquet",
+      "rows": 8,
+      "sha": "8163b4579ea78ad4901ba40c2f4e4a6973eb00e430a278d91726651a6588c20c"
+    },
+    {
+      "artifact": "fills/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_ULEGACY__mid_szAM-5-25-95.parquet",
+      "rows": 10,
+      "sha": "39d343a71651f81ba0b1bcee4ad58360fbde528236079a888f34da0c951b6cdf"
+    },
+    {
+      "artifact": "requests/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_ULEGACY__mid_szAM-5-25-95.parquet",
+      "rows": 1022,
+      "sha": "87f3d9f97b3055ae801f63209d5fff635943f1255be8229712741926cf8b59b1"
+    },
+    {
+      "artifact": "generations/legacy_guard.parquet",
+      "rows": 512,
+      "sha": "a02cac8b33cc1b936914c5751b9845a474c38fd3ea33341d25d112292f301b18"
+    },
+    {
+      "artifact": "win/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_UGUARD__mid_szAM-5-25-95.parquet",
+      "rows": 8,
+      "sha": "a77b5448accfabbcbf71ea05b4d807e86519e6629ff3ae3c26ff2eb14a92aa46"
+    },
+    {
+      "artifact": "fills/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_UGUARD__mid_szAM-5-25-95.parquet",
+      "rows": 21,
+      "sha": "66a093f4a1797970b8c97319946e0e310a5552f93fc1257db0dbb6f3a496d1e5"
+    },
+    {
+      "artifact": "requests/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_UGUARD__mid_szAM-5-25-95.parquet",
+      "rows": 1492,
+      "sha": "c0a8684fecf0f2b5caee5ff4c7213adc7b5fc13a7aba24355b7d07db74a74101"
+    },
+    {
+      "artifact": "generations/causal_guard.parquet",
+      "rows": 751,
+      "sha": "aa407736c387d465267b6e0a2e608e23b63a2723af753de3b6b56542a4e7c73b"
+    },
+    {
+      "artifact": "win/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_USTATIC__mid_szAM-5-25-95.parquet",
+      "rows": 8,
+      "sha": "2ae8622f732713c4eea228f88d7f161ed7eb981dda15a2095d71831c09068b59"
+    },
+    {
+      "artifact": "fills/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_USTATIC__mid_szAM-5-25-95.parquet",
+      "rows": 82,
+      "sha": "53417f60c45b3d1e8de09e89fd3b5b106ac015136ab3a81f79bfeb9b78ce6989"
+    },
+    {
+      "artifact": "requests/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_USTATIC__mid_szAM-5-25-95.parquet",
+      "rows": 1604,
+      "sha": "368f9cc2a7049f450c6a5063d001ae66dc22492ddb252d1359371f7f443d2741"
+    },
+    {
+      "artifact": "generations/static10.parquet",
+      "rows": 831,
+      "sha": "44f7e42f2904ee75db253df5a291b67a486b6ff5ce2373f110220f37dbfb81fb"
+    },
+    {
+      "artifact": "win/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_UHISTORY__mid_szAM-5-25-95.parquet",
+      "rows": 8,
+      "sha": "bf0e53866905050aad87fa8ca15aacb26b64cc9a5cdcb34fc88c2881bad324d0"
+    },
+    {
+      "artifact": "fills/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_UHISTORY__mid_szAM-5-25-95.parquet",
+      "rows": 84,
+      "sha": "5c508769afbcde79913724ad7919d25f477e68a060f19f563bf969289b16cf70"
+    },
+    {
+      "artifact": "requests/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_UHISTORY__mid_szAM-5-25-95.parquet",
+      "rows": 1649,
+      "sha": "fc26fc4a2d16c795a890e67643528ca00fa2bfd2076cc8555eb332665d6eeb21"
+    },
+    {
+      "artifact": "generations/history10.parquet",
+      "rows": 859,
+      "sha": "e480237a31b3a0ffeff778937ab53bc44baac39f25019239db4cbbe134a86f4e"
+    },
+    {
+      "artifact": "independent_windows.parquet",
+      "rows": 40,
+      "sha": "7e6c364e55681b6fd121d75746d8201f55026a81b8d4de311ac75a7da9eb0570"
+    },
+    {
+      "artifact": "inference_audit.parquet",
+      "rows": 12,
+      "sha": "f03abd5d0379dda0c7e525f529dec4c2bc34b28d475cc3c1f3dfa1d1e978c55d"
+    }
+  ],
+  "all_values_and_bytes_exact": true,
+  "generated_engine_equal": true,
+  "limits": "Implementation integration check on eight consumed windows; no new model, policy, performance result or empirical fill-age rule. Original simulation/results and full evaluation remain unchanged."
+}

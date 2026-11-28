@@ -1,0 +1,11 @@
+{
+  "as_of": "2026-11-12T16:43:10.590249+00:00",
+  "source_commit": "1b32a54cc4fc06b7151379128297448c9446e6ee",
+  "correction_declaration_sha": "53d0a669b6fcdd503cd981cbb46e1c6d03ecae5721d0d80c3fe29d75a07abd5d",
+  "active_primary_pid": 3436856,
+  "slot": "claude",
+  "shared_cap": 2,
+  "scope": "Bounded isolated eight-window zero-floor replay through the corrected age entrypoint; no full strategy job or original artifact changed.",
+  "log": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_age_entry_parity_20261112/run.log",
+  "automatic_retry": false
+}

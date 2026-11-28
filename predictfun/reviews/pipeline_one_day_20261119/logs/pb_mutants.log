@@ -1,0 +1,20 @@
+ 0 none (must pass): rc 0 -> passed
+ 1 B1 export parts never checked against their receipt: rc 1 -> caught: PIPELINE BENCH SELFTEST FAILED: the benchmark accepted an export part changed after its receipt | a refused benchmark left output (an export part changed after its receipt)
+ 2 B1 chronology never refuses: rc 1 -> caught: PIPELINE BENCH SELFTEST FAILED: the benchmark accepted an evaluation day in training | a refused benchmark left output (an evaluation day in training)
+ 3 B2 never refuses: rc 1 -> caught: PIPELINE BENCH SELFTEST FAILED: the benchmark accepted a label among the inputs | a refused benchmark left output (a label among the inputs)
+ 4 B3 never refuses: rc 1 -> caught: PIPELINE BENCH SELFTEST FAILED: the benchmark accepted the mapping as a product of means | a refused benchmark left output (the mapping as a product of means)
+ 5 B4 never refuses: rc 1 -> caught: PIPELINE BENCH SELFTEST FAILED: the benchmark accepted a saved model replaced after fitting | a refused benchmark left output (a saved model replaced after fitting)
+ 6 B5 never refuses: rc 1 -> caught: PIPELINE BENCH SELFTEST FAILED: an expected quantity above the known remaining (no clip) refused by another control: PIPELINE BENCH FAILED -> no output: B3 post 0 20261027 J: the mapped value is not s
+ 7 a refused benchmark leaves its partial output: rc 1 -> caught: PIPELINE BENCH SELFTEST FAILED: a refused benchmark left output (the mapping as a product of means) | a refused benchmark left output (a saved model replaced after fitting) | a refused benchmark left 
+ 8 the mapping without the edge term: rc 1 -> caught: PIPELINE BENCH SELFTEST FAILED: the synthetic benchmark refused: PIPELINE BENCH FAILED -> no output: B3 post 0 20261027 J: the mapped value is not s * (ref - p) * E[q] + E[q * move] of its heads | B3 
+ 9 E[q] without the fill probability: rc 1 -> caught: PIPELINE BENCH SELFTEST FAILED: the synthetic benchmark refused: PIPELINE BENCH FAILED -> no output: B3 post 0 20261027 J: the mapped value is not s * (ref - p) * E[q] + E[q * move] of its heads | B3 
+10 every row counted as filled: rc 1 -> caught: PIPELINE BENCH SELFTEST FAILED: synthetic recovery: gate {'post': 'PASS', 'retain': 'PASS'} | the benchmark accepted the mapping as a product of means | a refused benchmark left output (the mapping as
+11 Q1 band widened to [0.5, 2]: rc 1 -> caught: PIPELINE BENCH SELFTEST FAILED: planted readings: {'Q1 AMOUNT': 'CALIBRATED-IN-AMOUNT', 'Q2 MOVE TERM': 'MOVE-TERM-INFORMATIVE', 'amount_ratio': 1.05, 'move_ratio': 1.0, 'move_rank': 1.0, 'fill_auc': 
+12 Q2 ignores the rank: rc 1 -> caught: PIPELINE BENCH SELFTEST FAILED: planted edge cases: Q2 MOVE-TERM-NOT-SHOWN / MOVE-TERM-INFORMATIVE, Q3 tie NOT-BEYOND-FAIR-EDGE, Q4 zero NOT-IDENTIFIED
+13 Q2 ignores the amount: rc 1 -> caught: PIPELINE BENCH SELFTEST FAILED: planted edge cases: Q2 MOVE-TERM-INFORMATIVE / MOVE-TERM-NOT-SHOWN, Q3 tie NOT-BEYOND-FAIR-EDGE, Q4 zero NOT-IDENTIFIED
+14 Q3 a tie counts as beyond: rc 1 -> caught: PIPELINE BENCH SELFTEST FAILED: planted edge cases: Q2 MOVE-TERM-NOT-SHOWN / MOVE-TERM-NOT-SHOWN, Q3 tie RANKS-BEYOND-FAIR-EDGE, Q4 zero NOT-IDENTIFIED
+15 Q4 a zero decile counts as losing: rc 1 -> caught: PIPELINE BENCH SELFTEST FAILED: planted edge cases: Q2 MOVE-TERM-NOT-SHOWN / MOVE-TERM-NOT-SHOWN, Q3 tie NOT-BEYOND-FAIR-EDGE, Q4 zero LOSING-DECILE-IDENTIFIED
+16 the gate ignores the amount calibration: rc 1 -> caught: PIPELINE BENCH SELFTEST FAILED: the mapping gate on planted readings: {'post': 'PASS', 'retain': 'PASS'} / {'post': 'PASS', 'retain': 'FAIL'}
+17 the gate ignores the ranking: rc 1 -> caught: PIPELINE BENCH SELFTEST FAILED: the mapping gate on planted readings: {'post': 'PASS', 'retain': 'PASS'} / {'post': 'FAIL', 'retain': 'PASS'}
+pipeline bench mutation check passed: the unchanged copy passes its selftest, 17 / 17 planted code errors are caught by a check
+2026-11-19T04:54:43Z tag=pb_mutants rc=0 peak_rss_mib=239 wall_s=220.92 cpu_user_s=205.92 memavail_start_gib=23 disk_free_gib=436->436 slot=claude

@@ -1,0 +1,130 @@
+{
+  "asof": "2026-11-14T08:34:52.553095+00:00",
+  "consumed_dates": [
+    "20261023",
+    "20261024",
+    "20261025",
+    "20261026",
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "invariance": {
+    "dates": [
+      "20261023",
+      "20261031",
+      "20261103"
+    ],
+    "checks": 6912,
+    "decisions": 9835924,
+    "differ": 0
+  },
+  "parity": {
+    "dates": [
+      "20261023",
+      "20261031",
+      "20261103"
+    ],
+    "checks": 15552,
+    "differ": 0
+  },
+  "replay": {
+    "days": 9,
+    "runs": 163296,
+    "violations": {
+      "leg": 0,
+      "order": 0,
+      "live": 0,
+      "priority": 0,
+      "collision": 0,
+      "position": 0,
+      "cap": 0
+    },
+    "regression_bad": {}
+  },
+  "exposure": {
+    "dates": [
+      "20261023",
+      "20261024",
+      "20261025",
+      "20261026",
+      "20261027",
+      "20261031",
+      "20261101"
+    ],
+    "runs": 72576,
+    "hard_over": {
+      "hard2": 0,
+      "hard5": 0,
+      "hard10": 0
+    },
+    "soft2_overs_by_day": {
+      "20261023": 2583,
+      "20261024": 2592,
+      "20261025": 2592,
+      "20261026": 2592,
+      "20261027": 2592,
+      "20261031": 2592,
+      "20261101": 2592
+    },
+    "complete": false
+  },
+  "artifact_sha256": {
+    "invariance_20261023.json": "07503ff7cb4fad1e9602d26c97963287d6bd5fda4341ff0dea55397e1fb7bb65",
+    "invariance_20261031.json": "523740d82ace10d6c52ae48334b27c39fce982ce6086ab225977cf888729e5dd",
+    "invariance_20261103.json": "37cae8bc2c28ded1062ac13f01c8bb723af51fc737d789d83324105321636a39",
+    "parity_20261023.json": "ac0b1328d0c2d6d685857bd4d6dc352d026803bce95b731ed191a553d563b03d",
+    "parity_20261031.json": "ac0b1328d0c2d6d685857bd4d6dc352d026803bce95b731ed191a553d563b03d",
+    "parity_20261103.json": "ac0b1328d0c2d6d685857bd4d6dc352d026803bce95b731ed191a553d563b03d",
+    "day_20261023.json": "63a08c8c4e42517560c5d20010cadb82a4f50b8fd8b7cc14007042ddf0219e5c",
+    "day_20261024.json": "250114044896d26fce5d3611b724003af991f9175499dbdb6808cf7d6732165b",
+    "day_20261025.json": "0cca739004c6e45ac9b0bb68843edab7a75de7a8a20fc018227dcb5af5ce030c",
+    "day_20261026.json": "5fa91dace6f160b0978e3a1104c1cdfe698c81de045197f8b3c4194dba978755",
+    "day_20261027.json": "d0100736472609a73a72c149bd8944756044c7ee16e968cb75121c826d28a518",
+    "day_20261031.json": "165b70eecacb3be5140fc3f18fb2563ca93ce9fb3e80529b65f9fa223653e32f",
+    "day_20261101.json": "29b2e50d7572eaf9712eb2d3d78579cc940b870a452643b3d092b6d30e6f7618",
+    "day_20261102.json": "6a7fc32aa5c02ffd72e7505fbe3cd9da1e6bd5ba78210b1efd0c90741f677046",
+    "day_20261103.json": "3221dfc1284ac0750101121d615f98f7ec227e1961b4e4371d3dea5f5e0bc6cf",
+    "exposure_20261023.json": "3277fd6e7e5f7a7111f5e4eeadfb6677451d8694a0ca7c18b598e0b4e8593569",
+    "exposure_20261024.json": "4a648a89068af975ef9a26eaa78cf0722184cd9a4593d5410835e42e2199e887",
+    "exposure_20261025.json": "e423c1fddcffa881cd107a614399f3ade4431ea6fbdf066e848b9f4eb149ffdc",
+    "exposure_20261026.json": "82e4bba2428744e325499fbadd971366fab166c1362773dfa90f812b71da31b0",
+    "exposure_20261027.json": "64b668ccf95a7268a40e1d86eec73b62bf0b254597b3bda15ed4626606ca72e0",
+    "exposure_20261031.json": "8942d251a99ecb61aca0c878bb22fdcd8dc77ef60109ce0f15a434ef221214b3",
+    "exposure_20261101.json": "37116a2099eb3267028eeec8697fc3348d8c1d623062ca8ae9ae29c35c6bf1eb",
+    "joint_ladder_v3.txt": "9ac1fa69fff1def8a1c013ad0392a029d8372d41927789cb8404f2fbaea15b74",
+    "joint_ladder_v3.json": "d10ac69bbf7159917523f84dd9b21e8a62f745f97895b70ee38d0666740ccc09"
+  },
+  "report_header": "JOINT-LADDER v3, 9 consumed replay days, first 60 s, both sides of the guard ladder, shared position, decisions on client-known state, caps hard / soft = K x 30 sh; as of 2026-11-14T07:52:32Z; controls passed: decision invariance 6912 checks (9835924 decisions) on 3 days with every venue event after the cut changed, 0 differ; conservation / accounting on all 163296 runs, 0 violations; compat soft-2 / no-cap = v1 row for row; compat independent-mode parity 15552 checks, 0 differ; max true exposure under the hard caps {'hard2': 60.000000000000114, 'hard5': 150.00000000000006, 'hard10': 300.0000000000001} sh; fills without a 1 s value 0",
+  "policy_files_present": [],
+  "scope": "Small extracted-source controls and saved receipt/source identity review; no historical replays, refits, forward-day reads or independent PnL recomputation.",
+  "source": {
+    "pf_joint_ladder_v3.py": {
+      "commit": "eb735795",
+      "sha256": "2d1b54a88fc5186973b032d0a0dcd2b1d1116cb3264fe00bd30c2f3bd9f0cb94",
+      "matches_commit": true
+    },
+    "pf_order_harm_policy.py": {
+      "commit": "041edeee",
+      "sha256": "ecb980a45a7495884b06eda5891617452749566dba195e252eb8441ab7f24e4e",
+      "matches_commit": true
+    },
+    "pf_joint_ladder_v3_exposure.py": {
+      "commit": "273bbe8f",
+      "sha256": "44e4b7372874cd7190d69f35350d302294a15dfaf32c9d04c799ab6c6f6d74e2",
+      "matches_commit": true
+    },
+    "pf_joint_ladder_v3_posthoc.py": {
+      "commit": "87ebe59c",
+      "sha256": "700d93b999c9b45d67f75d9195a88432bc53721f7b912b87f2496ade9c8b09f3",
+      "matches_commit": true
+    },
+    "pf_order_harm_v2.py": {
+      "commit": "abf5638e",
+      "sha256": "fac15d080f5253d048a0fb86c44e9134a5205c28cdb3081120bf58f2585f4cdb",
+      "matches_commit": true
+    }
+  }
+}

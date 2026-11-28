@@ -1,0 +1,153 @@
+{
+  "as_of": "2026-11-13T17:39:36.414326+00:00",
+  "source_commit": "a8200982b02532674d744e6bcb665010574c31ae",
+  "source_sha": {
+    "predictfun/research/model_learn_pull_integration_review.py": "32129f8d2bc5653eccd84398a93d29e06081c4e1241d802e4c1e2919ffa59a05",
+    "predictfun/research/model_move_down_integration_review.py": "ff4adefdaff438375ae17ca7d097ad3874e56b1e925e30f52331e538b353c20f",
+    "predictfun/research/model_recovery_stage_review.py": "d8b838d1b3c76aa6c5aea8d892b9f437271a117eafddbdbef741ee752be4c279"
+  },
+  "producer_commit": "81ae9c60833b3b28e759e4260c015b76ffb41b75",
+  "producer_source_sha": {
+    "/home/yuqing/ctaNew/predictfun/research/pf_learn_pull.py": "57a49dedaf1d48aa56b801b12cfd584bb74c75a5f3ef84026f5a8669bc707dbd",
+    "/home/yuqing/ctaNew/predictfun/research/run_learn_pull.sh": "2a972f57ca4724526797de6356a9d5562d65152904adad03f0829ff3c1a56d37",
+    "/home/yuqing/ctaNew/predictfun/research/pf_exit_check.py": "dd5f426e42366af7b8588602c06a0c9aadec0d91f1d5af4e8f173b7f35c06f3b",
+    "/home/yuqing/ctaNew/predictfun/research/pf_move_cases.py": "106c3fd61b55352d562cd5c56d5e7936b154d6b8476bc6c8ee957cbf37e77499",
+    "/home/yuqing/ctaNew/predictfun/research/pf_kp_s4.py": "4f173446bf07d7141a96bddf02470e38e66aa64b2b28a380eeb7dec9343530cc",
+    "/home/yuqing/ctaNew/predictfun/research/pf_pull_depth.py": "a8670b2e9751f16dce37aab7c18ce35cc31fa3431e392b9a7397f4375a9114ef",
+    "/home/yuqing/ctaNew/predictfun/research/pf_robust_check.py": "f7b70ab8c1e431efdcd24c9d93162e5014cde4604a45436cb57d820870fee104",
+    "/home/yuqing/ctaNew/predictfun/research/pf_qr_queue_race.py": "a6d9eef39f9550136488aaec4d912b7da1712712c07512473a41b2c427288145"
+  },
+  "input_sha": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/learn_pull.txt": "6757c3a39beb872a9abfab766a8b9fb11983efa5417ec88f02e6aec46e335206",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/learn_pull.json": "185e75c85099b69481df6468adbf3c4110e5aadb474c9e26692953bc0aa0bed9",
+    "/home/yuqing/ctaNew/predictfun/handoffs/20261113_learn_pull_results.md": "b02a26442088b825ca8a3396fdc748a7fa12fec47d81646017df91cf90ffb277",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/day_20261023.json": "97f8cc914985a84537b4f9f3ac64b0acd55ebe61da8333248272b6e38051ae60",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/obs_20261023.parquet": "0ce055f91cadf01088cf833ffc0a7bd830cd20a3253bfb6c2ddc39880541b9a9",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/bigfills_20261023.parquet": "cdda56233d491603f1737d8c4154b56074c5a448189762157f3513fc286a6b35",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/bigevents_20261023.parquet": "9b98a82eb5fb84f0fba4ab07e9cf0454232718edb50243dd4a7a7dbc49d3ce58",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/day_20261024.json": "bf4480e55caad13943e11037972cb3ad67fdc92c86f3f67320b66699bb0d9ab2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/obs_20261024.parquet": "b294f0cd9ec42746a1e8a13a0c8fd5e1a6ca301631d638cd12973d692ebd5d11",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/bigfills_20261024.parquet": "325446be51d829c25cae4f9bde6239d8a97c38f4a2d1852679734006813ade78",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/bigevents_20261024.parquet": "6d6a7ed91a85d0e4036e73de63ef7ee6d301121f71d8a7448b38e42ec41f75d7",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/day_20261025.json": "3a7d74750776a548aea38d77df2532d0807cc854066b527356f8d1d074477092",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/obs_20261025.parquet": "2c562913c4cdb1c24426297c1ac4363abc3068be7012a572506bea1a936ee2fc",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/bigfills_20261025.parquet": "a1cdbf601dcf0fce4840c46dcd3d5ef39854d1e7abe31182aa1a3dac05d99cf5",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/bigevents_20261025.parquet": "e2a84ce29a571efb923e6c2988e1397f54316afea74a7ce127e3e9b6c22ec848",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/day_20261026.json": "3bde671b402e2efed50ca862eee91f35ba87f1fad151a63a7fa60034897b816a",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/obs_20261026.parquet": "e7f4c6fa34c3f706d6134e4c7d5c955c3443e7a22a80105e742872dd2b60e083",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/bigfills_20261026.parquet": "12520bfb44d6dd551d92f3d64798caed1227f05552a985dc8854b75ed30973a8",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/bigevents_20261026.parquet": "32edd000d7bf16f3406f06806e6b0a8ce352caf9752e1a3a73c85499a5e9788d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/day_20261027.json": "99e1aec5cb2ba94a1cd37d0d9b9a579284b58be3576a0135f9dde413fa74b3cc",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/obs_20261027.parquet": "0788a945dd323ebfc63c008cb1249209d9cc41ba031aab9f13fe6a50cf3add71",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/bigfills_20261027.parquet": "92223beafd041de82b4b78e003d94fde7a564806f060ed7e2c8335f5ef535c5f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/bigevents_20261027.parquet": "60cc14098bdf1ccff0fa31dcbdcba69db334949ddbfcec92f1b6e57e10c34667",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/day_20261031.json": "0f495a0e06d61267694acece7c5ec0014202d07496586283128e09c0f9d73e72",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/obs_20261031.parquet": "2a2727a04dfcc90d6b0ab0c9b3a6e857484215fd09b3f07cf2cf4b109619f325",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/bigfills_20261031.parquet": "8d0b563bf28a8cb9826555430615aee20c0a0f02f01b82e29fb2d1226727a856",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/bigevents_20261031.parquet": "c23a9671d6507cde747dcdfc5241fe17ede94546d1cb3561d63a0f4d1f2ac7f7",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/day_20261101.json": "344b17aca88e5e7e72fd0bbfe05c73adb5b9197fc809addc3a05038fbfbdb461",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/obs_20261101.parquet": "be268c24947cd48106cb9e208a85d08ac8a6f09507eed7428d5ed1a1eb6b7600",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/bigfills_20261101.parquet": "16e900fb5d496a8a3bd78f10e6861eb9184461fb523567be420c23bf6b7c47f4",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/bigevents_20261101.parquet": "83099f4019de7588d2b76723e709255bb2e02bb937d8171e420063f4efabea58",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/day_20261102.json": "7113231be556bed745a5face35e6d9e5e1078c8e6ec04b221fb3dc15e71c7637",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/obs_20261102.parquet": "1bf9c3fc68aaa1e89090ef2bfe9da3b342c1d56c5117cbb59e9410bd3bfafe0e",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/bigfills_20261102.parquet": "ec5ced477289cd83ec3c54c1ae0857c67a85db44266b10f95ef068a20cea8c89",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/bigevents_20261102.parquet": "c9b9a9014d7ac2fb081a57cb1dc46291784c4ca48333ac0b4d90318c429cdf77",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/day_20261103.json": "cf7441b691f262b7d9ac55879fe082585bda1faf2f1ae33c4b18618d0431f0b5",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/obs_20261103.parquet": "f9b60f8467f2dff99978623a1221de7cb1a199db02f364179d470306a693a416",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/bigfills_20261103.parquet": "172b65b5b03d6508600b99a8706f2a7292a6167276fe6ee3244714f066074866",
+    "/home/yuqing/ctaNew/data/predict_fun/research/learn_pull_20261113/bigevents_20261103.parquet": "1675635ec25cc0ff332839c4722435bd71fce0de1a1be5aed9215008560be0ec"
+  },
+  "controls": {
+    "producer_positive": true,
+    "producer_mutations": {
+      "MUT_OUTCOME_INV": true,
+      "MUT_TAKER_SIGN": true,
+      "MUT_PULL_LATE": true
+    },
+    "gone_not_cancellation": {
+      "output": {
+        "signer": 7,
+        "p": 50,
+        "t1": 100.0,
+        "t2": 300.0,
+        "gap": 200.0,
+        "stayed": 0,
+        "through": 0,
+        "vol_p": 3.0
+      },
+      "exhausted_world": {
+        "initial_queue": [
+          [
+            7,
+            5.0
+          ],
+          [
+            9,
+            45.0
+          ]
+        ],
+        "maker7_residual_after_proof": 0.0,
+        "maker7_cancelled": false,
+        "total_after_proof": 45.0,
+        "next_trade_maker": 9
+      },
+      "cancelled_world": {
+        "initial_queue": [
+          [
+            7,
+            50.0
+          ]
+        ],
+        "maker7_residual_after_proof": 45.0,
+        "maker7_cancelled": true,
+        "total_after_proof": 45.0,
+        "next_trade_maker": 9
+      },
+      "same_observed_trades": true
+    },
+    "stayed_not_order_retention": {
+      "output": {
+        "signer": 7,
+        "p": 50,
+        "t1": 100.0,
+        "t2": 300.0,
+        "gap": 200.0,
+        "stayed": 1,
+        "through": 0,
+        "vol_p": 3.0
+      },
+      "original_or_replacement_hash_unobserved": true
+    },
+    "no_presence_and_ambiguous_interval_refused": true,
+    "price_present_not_at_best": true,
+    "absent_price_refused": true,
+    "feature_time_can_follow_hidden_action": {
+      "proof_ms": 100.0,
+      "cancellation_ms": 200.0,
+      "feature_ms": 900.0,
+      "next_trade_ms": 1000.0
+    },
+    "gap_depends_on_future_next_trade": [
+      900.0,
+      1900.0
+    ],
+    "leave_one_day_out_includes_later_training_dates": true,
+    "historical_misclassification_frequency": null
+  },
+  "scope": "Audit the published maker next-trade study before using it as model evidence.\n\nReconstruct descriptive report calculations from saved consumed-day tables.\nReuse (do not refit or verify) the published R554 classifier figures. Exercise\nthe exact producer functions on observable-equivalent exhausted/cancelled and\nretained/replaced orders. No new historical policy, forecast, null, interval,\nselection, protected-day read or live change.\n",
+  "days": [
+    "20261023",
+    "20261024",
+    "20261025",
+    "20261026",
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "published_R554_reused_not_verified": true,
+  "validation": false,
+  "live_changed": false
+}

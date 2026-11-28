@@ -1,0 +1,37 @@
+{
+  "as_of": "2026-11-13T12:16:46.894626+00:00",
+  "source_commit": "9673088202fdffc4bccf74aeba9eebb1569236df",
+  "source_sha": {
+    "predictfun/research/pf_size_priority_fast_features.py": "0395aac56fe58ba910cbdf9ba2674793a53f3560ae8dc93ee8f4ac2b6d0fbe32",
+    "predictfun/research/pf_size_priority_fast_spec.py": "e70b20b136306f1c06e3d0519ba262872939475c61d20ab472df3e06b81c9a25",
+    "predictfun/research/pf_size_priority_fast_execution.py": "a7bde638dc1091eedf6ecbd438a3182c1f4443884ea2d21bd0ec00788c35242d",
+    "predictfun/research/model_size_priority_experiment_fast_driver.py": "78fec02ee9d81ad17213019066e23d719af6efc7e1a29800868c1e8fe9173b6f",
+    "predictfun/research/tests/test_size_priority_fast_features.py": "a8b9df23a41dc7d5274c55b826fd608a02acfdcfb5acf79582d94f51cfc5f862",
+    "predictfun/research/tests/test_size_priority_fast_execution.py": "132d08b4c291f7e95ee5eaef9314b00ac633c72edf21d135043b8105fb10899c"
+  },
+  "prerequisite_sha": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_size_priority_20261113/declaration.json": "cea782c5c074158c44b52f302e79907f23808123535e6cbf01a77f5c40b5183c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_size_priority_20261113/controls.json": "71aa1798f2cd401636925cd9c0fddce9dc9dcec9b7fa0ba769d97bb61c48c503",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_size_priority_20261113/driver_started.json": "ba30efa265b40f8387c157d445791d42e7f87cc8b3c7a91204bb326fd488fcb5",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/size_priority_fast_execution_controls.json": "3777296bf53a159feab403d903129057f9a7b8da8d822fe2b775698dfe8b391e",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/logs/size_priority_fast_execution_controls.log": "040e954d0c673d39058be7513e1e40f77480c7bb9f71462d5885639b0e1476c5",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/size_priority_fast_features_controls_v1.json": "7920d10ac23637f9d9faac376da55ecf3c94995f99cfbeacd8f2100a2184eff0",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/logs/size_priority_fast_features_controls_v1.log": "923cdf0eebee26550243acb545712278392b421347dbd6e0d848f7f3f134dd24",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/size_priority_fast_features_controls_v2.json": "c646f0cc11789da5ba276930867f27381c82d60b7b226b3c7ffeb09f4fc318b8",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/logs/size_priority_fast_features_controls_v2.log": "f022080ffcbf7c53542257f75534a44b65f9c8025c62a914213f4b81de2373e3"
+  },
+  "scientific_declaration_sha": "cea782c5c074158c44b52f302e79907f23808123535e6cbf01a77f5c40b5183c",
+  "original_source_commit": "8a8f4c18e352dc3ae9a88487fe613550e10730be",
+  "transformed_feature_sha": "3073043a4bd73de3827554dc93517aa9b3b1c24ca250e2f89288174f1466fedf",
+  "controls_sha": "3777296bf53a159feab403d903129057f9a7b8da8d822fe2b775698dfe8b391e",
+  "prior_driver_started_sha": "ba30efa265b40f8387c157d445791d42e7f87cc8b3c7a91204bb326fd488fcb5",
+  "design": "Replace only inference single-row pandas containers with the exact committed NumPy calculations and a unique-key row container. Preserve every source feature, float32 delta, validation, trained model, policy rule, action population, risk gate, scenario and task order. Batch construction and the saved-inference verifier retain the original SizeHistory. Publish explicit computational provenance on every stage and both reports; reconstruct reports with that metadata and bind all supplemental sources/controls at final evidence. No historical size stage existed at declaration.",
+  "supersedes": "Original pure waiting size driver execution route only; preserve its source/start/log. No failed or completed historical sized calculation is overwritten.",
+  "multiplicity": {
+    "new_models": 0,
+    "new_policies": 0,
+    "new_thresholds": 0
+  },
+  "validation": false,
+  "live_changed": false
+}

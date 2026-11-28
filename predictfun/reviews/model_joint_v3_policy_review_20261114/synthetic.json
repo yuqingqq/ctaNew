@@ -1,0 +1,249 @@
+{
+  "asof": "2026-11-14T08:34:52.546548+00:00",
+  "kind": "source_synthetic_review_not_historical_policy_performance",
+  "source_sha256": {
+    "pf_joint_ladder_v3.py": "2d1b54a88fc5186973b032d0a0dcd2b1d1116cb3264fe00bd30c2f3bd9f0cb94",
+    "pf_order_harm_policy.py": "ecb980a45a7495884b06eda5891617452749566dba195e252eb8441ab7f24e4e",
+    "pf_future_best.py": "bbe6dbf406ca0da9a2f5dbe6025b52a0fe8a2dc14fb04057e34422034930f7f3"
+  },
+  "repaired_future_rejection": [
+    {
+      "prefix_at_zero": [
+        [
+          0.0,
+          0,
+          0,
+          "place",
+          50
+        ],
+        [
+          0.0,
+          0,
+          1,
+          "cap",
+          49
+        ],
+        [
+          0.0,
+          1,
+          0,
+          "place",
+          52
+        ],
+        [
+          0.0,
+          1,
+          1,
+          "cap",
+          53
+        ]
+      ],
+      "second_bid_at_zero": false,
+      "violations": {
+        "leg": 0,
+        "order": 0,
+        "live": 0,
+        "priority": 0,
+        "collision": 0,
+        "position": 0,
+        "cap": 0
+      }
+    },
+    {
+      "prefix_at_zero": [
+        [
+          0.0,
+          0,
+          0,
+          "place",
+          50
+        ],
+        [
+          0.0,
+          0,
+          1,
+          "cap",
+          49
+        ],
+        [
+          0.0,
+          1,
+          0,
+          "place",
+          52
+        ],
+        [
+          0.0,
+          1,
+          1,
+          "cap",
+          53
+        ]
+      ],
+      "second_bid_at_zero": false,
+      "violations": {
+        "leg": 0,
+        "order": 0,
+        "live": 0,
+        "priority": 0,
+        "collision": 0,
+        "position": 0,
+        "cap": 0
+      }
+    }
+  ],
+  "planted_old_bug": [
+    {
+      "prefix_at_zero": [
+        [
+          0.0,
+          0,
+          0,
+          "place",
+          50
+        ],
+        [
+          0.0,
+          0,
+          1,
+          "cap",
+          49
+        ],
+        [
+          0.0,
+          1,
+          0,
+          "place",
+          52
+        ],
+        [
+          0.0,
+          1,
+          1,
+          "cap",
+          53
+        ]
+      ],
+      "second_bid_at_zero": false,
+      "violations": {
+        "leg": 0,
+        "order": 0,
+        "live": 0,
+        "priority": 0,
+        "collision": 0,
+        "position": 0,
+        "cap": 0
+      }
+    },
+    {
+      "prefix_at_zero": [
+        [
+          0.0,
+          0,
+          0,
+          "place",
+          50
+        ],
+        [
+          0.0,
+          0,
+          1,
+          "place",
+          49
+        ],
+        [
+          0.0,
+          1,
+          0,
+          "place",
+          52
+        ],
+        [
+          0.0,
+          1,
+          1,
+          "cap",
+          53
+        ]
+      ],
+      "second_bid_at_zero": true,
+      "violations": {
+        "leg": 0,
+        "order": 0,
+        "live": 0,
+        "priority": 0,
+        "collision": 0,
+        "position": 0,
+        "cap": 0
+      }
+    }
+  ],
+  "old_bug_refused": true,
+  "known_cap_change_positive_control": {
+    "prefix_at_zero": [
+      [
+        0.0,
+        0,
+        0,
+        "place",
+        50
+      ],
+      [
+        0.0,
+        0,
+        1,
+        "place",
+        49
+      ],
+      [
+        0.0,
+        1,
+        0,
+        "place",
+        52
+      ],
+      [
+        0.0,
+        1,
+        1,
+        "place",
+        53
+      ]
+    ],
+    "second_bid_at_zero": true,
+    "violations": {
+      "leg": 0,
+      "order": 0,
+      "live": 0,
+      "priority": 0,
+      "collision": 0,
+      "position": 0,
+      "cap": 0
+    }
+  },
+  "policy_cadence": {
+    "example": [
+      {
+        "t_ms": 50,
+        "score": 0.1,
+        "OH_pull": false,
+        "FB_pull": false
+      },
+      {
+        "t_ms": 100,
+        "score": 0.9,
+        "OH_pull": false,
+        "FB_pull": true
+      },
+      {
+        "t_ms": 250,
+        "score": 0.9,
+        "OH_pull": true,
+        "FB_pull": true
+      }
+    ],
+    "new_order_immediate_pull_control": true,
+    "altered_cadence_refused": true,
+    "interpretation": "Declared cadence difference, not an implementation bug or measured economic effect"
+  }
+}

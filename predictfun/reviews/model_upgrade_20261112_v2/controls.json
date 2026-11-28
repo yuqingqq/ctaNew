@@ -1,0 +1,21 @@
+{
+  "as_of": "2026-11-12T11:24:53.899118+00:00",
+  "status": "PASS",
+  "source_commit": "35200a75e730b5969598d82ba665922afb022654",
+  "declaration_sha": "507da9caad303bf71b476e2e506d0814a74077bc39f64bbffa730614f37e1883",
+  "checks": [
+    "future mutation",
+    "known-bad future selection",
+    "same-price depth",
+    "changed-price refusal",
+    "missing-history status",
+    "stale current refusal",
+    "feature whitelist",
+    "unsorted/duplicate clocks",
+    "batch/row identity",
+    "chronology and action identity",
+    "matched ranking",
+    "null control",
+    "day interval"
+  ]
+}

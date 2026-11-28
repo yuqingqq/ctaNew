@@ -1,0 +1,89 @@
+{
+  "as_of": "2026-11-14T18:33:43.993301+00:00",
+  "status": "PASS",
+  "day": "20261102",
+  "profile": "q50",
+  "scenario": "stress",
+  "mode": "default",
+  "smoke": false,
+  "capture": false,
+  "windows": 288,
+  "arm": "MICRO|G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP50+XNA+XMIN1+XV+RO60+S240+SZDEFAULT|mid|AM:50:50:95",
+  "grid_identity": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/data_20261102.json": "d94b02b166babf7f203dd251d00243c65c2bc99a279f2ab7573585c4194e1fe2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/context/20261102.json": "847fe1785c7fb1e7946087fd62672bf6c136f7175a4431574d1c70ac6b6de1b9",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261102/rows_rl_d2_pk.parquet": "5b3a5333183f257de9b5f39f467537e214272889f8f09d3050659c8db786fee1"
+  },
+  "prerequisite_sha": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/registry.parquet": "c21b61f114b805a1d5462780266a6c8cec88e1b82d9b568b2a6ada29ce1077dc"
+  },
+  "generated_source_sha": "328889d9ca4ab1971ea64208a7a2e84c7d675a09fa9276fbcad1afc84a322da3",
+  "checks": {
+    "accounting": {
+      "windows": 288,
+      "generations": 16353,
+      "fill_records": 16648,
+      "generation_statuses": {
+        "accepted_no_cancel": 13087,
+        "postonly_refused": 3266
+      },
+      "settlement": {
+        "windows": 288,
+        "tie_windows": 0,
+        "fills": 16648,
+        "tie_fills": 0,
+        "tie_shares": 0.0,
+        "correction_usd": 1.0824674490095276e-13,
+        "raw_settlement_usd": -3198.804785113605,
+        "corrected_settlement_usd": -3198.8047851136052
+      },
+      "missing_mark_windows": 3,
+      "hashes": {
+        "valued_windows.parquet": "1ca6a662f7ea9e0c9e9c0255e14eab34139f8dc9ce2c2f1b5191bb9f3b1d07c9",
+        "presence.parquet": "c2f183c5d6af3423e1dd093545d458a3738243eac9bec3503a0731ecbeb27292",
+        "accounting_windows.parquet": "43813ce827c3e2a4be5e2ae924883a6bf0d066e7af45054b294c7d03d9a56587"
+      },
+      "note": "Equal configured inventory limits do not establish equal realized risk."
+    },
+    "policy": {
+      "windows": 288,
+      "counts": {
+        "scores": 0,
+        "learned_pulls": 0,
+        "recovery_observations": 0,
+        "placements": 16353,
+        "cancel_requests": 13057,
+        "guard_decisions": 0
+      },
+      "all_policy_events_reconstructed": true,
+      "all_sampled_forecasts_reconstructed": true,
+      "native_fill_records": 16648,
+      "source_trade_legs": 659585,
+      "complete_identity_repeat_orders": 2422,
+      "all_original_trade_provenance_reconstructed": true
+    }
+  },
+  "hashes": {
+    "accounting_windows.parquet": "43813ce827c3e2a4be5e2ae924883a6bf0d066e7af45054b294c7d03d9a56587",
+    "capstate.json": "d03b76a5ceb2376295e15b36ddfc07db0e39843f3a2079f962256d6f7a539ef9",
+    "fills/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP50_XNA_XMIN1_XV_RO60_S240_SZDEFAULT__mid_szAM-50-50-95.parquet": "bcfe1bd675bf929dd9e8f6db1367c457f9c7282adb521cfd0d726af03017beba",
+    "generations/default.parquet": "178a8b0e9da6feceb2338fe3b0565b70912e23b9fa85f698381c6c03f5178e3b",
+    "independent_windows.parquet": "43813ce827c3e2a4be5e2ae924883a6bf0d066e7af45054b294c7d03d9a56587",
+    "policy_construction.json": "7e4ec961077505af2a20d6c9807a3a1c96ccbfa9b2fd2e0ab611fdc0fe0cc82d",
+    "policy_evidence.jsonl.gz": "a4ffa82ddcda03b1497a062fc90f5f0e020d2c66ec74cee98435fd1817177e94",
+    "presence.parquet": "c2f183c5d6af3423e1dd093545d458a3738243eac9bec3503a0731ecbeb27292",
+    "requests/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP50_XNA_XMIN1_XV_RO60_S240_SZDEFAULT__mid_szAM-50-50-95.parquet": "74e64897727026bf67d216add7d4423d7a490807e3ed52dad64d9d93e4103f8f",
+    "summary.json": "6b3c7737c4dd9849f4d212e9f5311b4172949113db76b4b1519de7cd0ca8f99d",
+    "valued_windows.parquet": "1ca6a662f7ea9e0c9e9c0255e14eab34139f8dc9ce2c2f1b5191bb9f3b1d07c9",
+    "win/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP50_XNA_XMIN1_XV_RO60_S240_SZDEFAULT__mid_szAM-50-50-95.parquet": "19b403f933b5b937d19863e520de8f427c54c1aa646b3677e1ca555852d1f863"
+  },
+  "declaration_sha": "cea782c5c074158c44b52f302e79907f23808123535e6cbf01a77f5c40b5183c",
+  "validation": false,
+  "live_changed": false,
+  "fast_execution": {
+    "declaration_sha": "3fb7540f58d3733be4ce9baf96305e628adc899622d24e6701ebeecdeb82e900",
+    "controls_sha": "3777296bf53a159feab403d903129057f9a7b8da8d822fe2b775698dfe8b391e",
+    "driver_handoff_sha": "3ef7eda31f51ee172ef794cfc2f5bdfbc92715f14c0ad40258700ced54398be9",
+    "transformed_feature_sha": "3073043a4bd73de3827554dc93517aa9b3b1c24ca250e2f89288174f1466fedf"
+  }
+}

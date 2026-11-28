@@ -1,0 +1,26 @@
+{
+  "as_of": "2026-11-12T15:26:55.262104+00:00",
+  "source_commit": "74147da4f1c8de112b2fa57ba8595bd34259e92f",
+  "source_sha": {
+    "predictfun/research/pf_model_presence_detail.py": "55a13828c5e9c1febdb3439b4604bf653e12985c0582e5128538555f621cbda0",
+    "predictfun/research/model_presence_finish.py": "2cd4b86458aea40503426b2831d580ab40cc8073946d8c52a80e8959df8c7bf3",
+    "predictfun/research/pf_model_eval_policy.py": "bd6110d0d9e737112f5bde6f7400df559f5e2f18d45bdab05862fed55b7fd7a8",
+    "predictfun/research/pf_default_pull_hooks.py": "d22348d05a491cc76cfb086a825262dd20dbf154268e9e739ea1448076787f4b"
+  },
+  "phases_ms": {
+    "entry_0_60": [
+      0.0,
+      60000.0
+    ],
+    "reduce_only_60_240_1": [
+      60000.0,
+      240100.0
+    ]
+  },
+  "replay_declaration_sha": "4db0034cb7e0c527afe6da374bb7445e3189738e4a1ef6e371e2e84a32f36f2c",
+  "age_declaration_sha": "0960a232d5bc90924a26994d4f56d27e8a8fa673bc4b247cc19995c83ef2e168",
+  "design": "Read-only union of actual accepted generation intervals by window/side, partitioned at the existing 60000 ms reduce-only boundary. Report side-time fraction, time with any quote, and time with both sides quoted, on 0\u201360 s, 60\u2013240.1 s, and the whole window. Reconcile every phase partition and original whole-window side union exactly; retain all 288 windows, zero-presence windows and generation statuses. Generation counts describe the whole day and repeat across phase rows. No new policy, model, threshold, performance objective or selection.",
+  "motivation": "After the first complete primary day, the already-declared whole-window side-time fraction was seen to include the fixed reduce-only phase. This supplement makes its denominator and the distinction between average side exposure and any-order uptime explicit. Phase-specific values have not been inspected before this declaration.",
+  "controls": "Cross-boundary overlapping orders reconcile; side-time, any-side and two-side unions differ correctly. Naive summed lifetimes, missing accepted clock, duplicate generation and outside-window interval are refused.",
+  "limits": "Descriptive consumed-history exposure, not executable or fillable liquidity, live uptime or a new success gate. One-day checkpoints carry no interval. Full reports require all six declared dates; original primary/stress/age conclusions remain unchanged."
+}

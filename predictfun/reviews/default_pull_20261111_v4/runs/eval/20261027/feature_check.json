@@ -1,0 +1,39 @@
+{
+  "as_of": "2026-11-11T22:01:04.451865+00:00",
+  "status": "PASS",
+  "checks_sha": "c34cefafab7e591bf698437460bd12ec5bc0739e3529a47cb422682760fa8c6d",
+  "cache_sha": "7f169da05924f911c31419bdc7eb63e66a79ffe9a533652111b3b0ea22745153",
+  "rows": [
+    {
+      "mode": "matched_guard",
+      "decisions": 0,
+      "generation_sha": "65ad48359dfa00916c0f635e29e5295cf508eabd425adf87678645bfe9d270e0"
+    },
+    {
+      "mode": "pressure",
+      "decisions": 0,
+      "generation_sha": "223b1004533659b3f7b8ae636b6dff3a7d1cf76162dfbe5a752848d17b223725"
+    },
+    {
+      "mode": "floor",
+      "decisions": 0,
+      "generation_sha": "6ab8c04548e8328b04291d0caf0c63507fae8996553553031a7730ba9b0b69ea"
+    },
+    {
+      "mode": "market",
+      "decisions": 31527,
+      "generation_sha": "cf66864b2922272f6d3836438e7b07af108b0d0dda7f5c4ba3bd7dd5dfa65372"
+    },
+    {
+      "mode": "queue",
+      "decisions": 34572,
+      "generation_sha": "6a2ac8ccfe74768d98f73dbd5a1b78e5b1b2c084224faabe27a5c23f124237e4"
+    },
+    {
+      "mode": "queue_cost",
+      "decisions": 34387,
+      "generation_sha": "e986aab40cee49e588eb54bc0e95adf31a61caf5e60ba104e531a6dbd7f0fd9a"
+    }
+  ],
+  "controls": "Exact identity passes; changed-feature refusal fires; no future/stale feature time accepted."
+}

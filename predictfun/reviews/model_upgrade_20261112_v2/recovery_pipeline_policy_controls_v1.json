@@ -1,0 +1,40 @@
+{
+  "as_of": "2026-11-13T00:04:52.991083+00:00",
+  "status": "PASS",
+  "source_commit": "d64ec719e1c80fbf07128b47cc56f445f15ab285",
+  "source_sha": {
+    "predictfun/research/pf_recovery_experiment_build.py": "68a2db30d93b0f9ff036d6829a8d9bdb6689ca26999cce598a0fda5798ae406a",
+    "predictfun/research/pf_recovery_experiment_data.py": "3c0a846254402135c8a3ca3d3d7d7f81b0137450cfc75dabefbb98ec2399545a",
+    "predictfun/research/pf_recovery_experiment_run.py": "dcde41381c1fbad428def1c367abeaa549d94c36949a6b037e0816fa8d4509c2",
+    "predictfun/research/pf_recovery_experiment_features.py": "7d66710348ade89e8ad27319fcc8465947a32e8ba9f7dd763e205195499cb9fd",
+    "predictfun/research/pf_recovery_experiment_policy.py": "2cd46e035c2b29690c7286f5235dbbd9b9d066c1df13a14c564a6f8a561bb8ae",
+    "predictfun/research/pf_recovery_experiment_spec.py": "cb295546bbd2d5738f942ffd9b5883950d9fff46a413d53988c8b4bba2303198",
+    "predictfun/research/pf_recovery_experiment_fit.py": "1e5a9ee0790cf7ef4a045befc9f27aa6515f4871e328be664f24b0dae957ddd5",
+    "predictfun/research/tests/test_recovery_experiment.py": "233f83309c175acafffce948ce2a84695f56f6dfb73ae8607a665ebab667d8e9",
+    "predictfun/research/tests/test_recovery_experiment_policy.py": "487a92c182bb77e8d2d98c781dfadf44d7f17aa4c32cca400c543d02836795d9"
+  },
+  "inherited_controls_sha": {
+    "recovery_primitive_controls_v1.json": "453d59b7d0934482318fd5e33d6e1da148e58050487566dc8821ff42a3d44053",
+    "recovery_capture_controls_v1.json": "069383415b2f2d4c7da16c8daf3614f4b42d883a5bd4f4f95aff205feb064d63",
+    "recovery_value_and_fork_controls_v1.json": "42b67a424b3d19bbd0ede10b6aebf10deff84c18389afc660ffd6cc754f7b9b4"
+  },
+  "suites": {
+    "pipeline": {
+      "tests": 6,
+      "log": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/recovery_pipeline_final_controls.log",
+      "log_sha": "19a1f7e8616ed44c8688d728881c8a2e2e7d0473f2b4c30084a8fb89cbc89799",
+      "wrapper_record": "2026-11-13T00:01:20Z tag=model_recovery_pipeline_final_controls rc=0 peak_rss_mib=235 wall_s=4.16 cpu_user_s=3.98 memavail_start_gib=22 disk_free_gib=496->496 slot=claude"
+    },
+    "policy": {
+      "tests": 5,
+      "log": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/recovery_policy_final_controls.log",
+      "log_sha": "ac5080db0468db1ca35813005c6a5067f2a3ce8cae8234e7f3e028198e32d3b3",
+      "wrapper_record": "2026-11-12T23:59:18Z tag=model_recovery_policy_final_controls rc=0 peak_rss_mib=224 wall_s=5.59 cpu_user_s=5.35 memavail_start_gib=22 disk_free_gib=495->495 slot=claude"
+    }
+  },
+  "scope": "Synthetic controls of the actual historical builder interface, capture serialization, exact neutral/target reconciliation, complete generation/sample population, market-only causal recovery features, stale/unknown handling, chronological split refusals, pinned saved-model reconstruction, full-engine repeated pull/re-entry, same-clock initial recovery observations and independent sampled inference reconstruction. Historical model/data outcomes have not been run.",
+  "historical_builds_started": false,
+  "scientific_design_frozen": false,
+  "live_changed": false,
+  "remaining": "Complete local/sequential reporting, experiment declaration, orchestration and artifact review before historical smoke/build/fit/replay. This implementation commit is not a complete scientific freeze."
+}

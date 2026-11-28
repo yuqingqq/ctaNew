@@ -1,0 +1,74 @@
+{
+  "as_of": "2026-11-13T14:06:27.391114+00:00",
+  "source_commit": "7fd72b0cea74afa77e76f9861cf3af32d12e14a6",
+  "source_sha": {
+    "predictfun/research/model_future_best_report_audit.py": "5cd229aec5c291c704b3b6559c38794dbe77b586b763a5e6d15a7b921a906e60"
+  },
+  "input_sha": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/future_best_integration_source_review.json": "4195cf5531379f38d7040723d82be9bf93c18ab27724eee14015e034996a1385",
+    "/home/yuqing/ctaNew/data/predict_fun/research/future_best_20261113/future_best.json": "0398585b1c1f171e8ec84ca827d31e93795a07a0e4b43e4724b296dd41f0a148",
+    "/home/yuqing/ctaNew/data/predict_fun/research/future_best_20261113/future_best.txt": "8c5d277a33f9057ac62e96b382d4768be1637030ec38ea9617d341a9312ba0fd",
+    "/home/yuqing/ctaNew/data/predict_fun/research/future_best_20261113/day_20261023.json": "d2a9c883cdbd6755f2a299c32b264ca48d58f8d3a46e205f900c7e814fde9dfc",
+    "/home/yuqing/ctaNew/data/predict_fun/research/future_best_20261113/fills_20261023.parquet": "ca6a6d6e2335c24f638857a872ecf280670662892edf04e4f27ffe3d00d95de2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/future_best_20261113/levfills_20261023.parquet": "d3af03335134f5489217e3cd0595ee0a38d8ec31c4f078a5f641a0d237417692",
+    "/home/yuqing/ctaNew/data/predict_fun/research/future_best_20261113/day_20261024.json": "93679438ada6aa925459d327e9bb72fc7b8368661385f576834243d738aff240",
+    "/home/yuqing/ctaNew/data/predict_fun/research/future_best_20261113/fills_20261024.parquet": "7a37756a6e24a3b615ab1693921f4056a884bcde95dc9c0f45f3c4a5e63b923b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/future_best_20261113/levfills_20261024.parquet": "52a0eb187e21acd5027f8715212a2e1ccc6c34ea6186b87de91c7e2d4fee6581",
+    "/home/yuqing/ctaNew/data/predict_fun/research/future_best_20261113/day_20261025.json": "279f8df65dc7d4122276ef152e4218d5f071b1ab080a0f4687bf1bb1a6c4ff2c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/future_best_20261113/fills_20261025.parquet": "3116c942c0a6706b56eb730bcf67c95e3976880eb3d688659137f181f5e432da",
+    "/home/yuqing/ctaNew/data/predict_fun/research/future_best_20261113/levfills_20261025.parquet": "dfa3e7d59d93c1165fdb629df68951bae3dc3ebc153577189fac0ab9171da9da",
+    "/home/yuqing/ctaNew/data/predict_fun/research/future_best_20261113/day_20261026.json": "298ab748c0f1ceb2658f07e6697312f40643d9e1203c0a911c83ca81e5513f38",
+    "/home/yuqing/ctaNew/data/predict_fun/research/future_best_20261113/fills_20261026.parquet": "c5f5595fb10a4db7b3552ecdc8fd050af4ba36e465f82af9751b11d83a1ef45c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/future_best_20261113/levfills_20261026.parquet": "c69052ca6b17457501eb54e5d1a1573821c3589433c6a8be246d11bd978e5681",
+    "/home/yuqing/ctaNew/data/predict_fun/research/future_best_20261113/day_20261027.json": "2be70eae3a6428400fa87da189a3a2b25ecf5b937657109c72e375740a7920b6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/future_best_20261113/fills_20261027.parquet": "415882decad74b516c3d53287ebd8f704bd8861123fbdb39fab3639ceb612dda",
+    "/home/yuqing/ctaNew/data/predict_fun/research/future_best_20261113/levfills_20261027.parquet": "a1d4d316894adff7d342b75e5112aaab6997ea7af074ad8e6d043fa2895d7336",
+    "/home/yuqing/ctaNew/data/predict_fun/research/future_best_20261113/day_20261031.json": "6f9936de5ee583d27aace512b14e53d7dbc448ca0e442cecd610231820b7adde",
+    "/home/yuqing/ctaNew/data/predict_fun/research/future_best_20261113/fills_20261031.parquet": "44ce2cc0734ae74212c6d2e57fc5932eb58429fe535bba5ba7490001d1856851",
+    "/home/yuqing/ctaNew/data/predict_fun/research/future_best_20261113/levfills_20261031.parquet": "af1eed765a3b21b18509dfe170d78d653f8e9a592d9da0987c8400661e9afaaa",
+    "/home/yuqing/ctaNew/data/predict_fun/research/future_best_20261113/day_20261101.json": "94ef108ba0e614942132f06119e01184cab459964fda4ee6c89ce7f14d0fa34c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/future_best_20261113/fills_20261101.parquet": "810d2f6ad23bd7411c5dee10818994e0af706fb70c72f60c6c6e3333c0b5049c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/future_best_20261113/levfills_20261101.parquet": "69cd601bf3d5fafe235444992248156d5ac4aca6ab690fe48f08aec7139a98ce",
+    "/home/yuqing/ctaNew/data/predict_fun/research/future_best_20261113/day_20261102.json": "3fcc478f173d7ab9f1654741a1c3a68145b2cd280a1fd1d168f7fbce848f46be",
+    "/home/yuqing/ctaNew/data/predict_fun/research/future_best_20261113/fills_20261102.parquet": "c645f3c5e6789cc251877b06da252baf9f2d7fe01839d05c2dd97fe90549e778",
+    "/home/yuqing/ctaNew/data/predict_fun/research/future_best_20261113/levfills_20261102.parquet": "a977ef8ef0334b27f55191532e4261e387cf11f32132be1457f470013b6f6754",
+    "/home/yuqing/ctaNew/data/predict_fun/research/future_best_20261113/day_20261103.json": "d7c39efe7064dc71ebd8732313416ff95ff438043ba0044c7e4cccd32f42ce21",
+    "/home/yuqing/ctaNew/data/predict_fun/research/future_best_20261113/fills_20261103.parquet": "cf2b001dc8b1447f48f0e2a18ad74a305c1b3244daf5f01ff0f3e76692de7c48",
+    "/home/yuqing/ctaNew/data/predict_fun/research/future_best_20261113/levfills_20261103.parquet": "655021d94713fd7bcdea610ccfacaeb1ae21b041a0d44e5f1b052d903e6ca547"
+  },
+  "controls": [
+    "original program retained with added diagnostic; changed report refused",
+    "weighted value/count positive and sign refusal",
+    "29/30 fill boundary and verdict controls",
+    "complete day metadata positive and failed-clock refusal"
+  ],
+  "days": [
+    "20261023",
+    "20261024",
+    "20261025",
+    "20261026",
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "producer_source_identity": {
+    "/home/yuqing/ctaNew/predictfun/research/pf_future_best.py": {
+      "original_sha": "684791231e5fad56344547f2e6c4a7a31ecd929529613efe4e3d023c7c8e5198",
+      "current_sha": "bbe6dbf406ca0da9a2f5dbe6025b52a0fe8a2dc14fb04057e34422034930f7f3",
+      "original_definitions_unchanged": true
+    },
+    "/home/yuqing/ctaNew/predictfun/research/run_future_best.sh": {
+      "original_sha": "0db9248d06c116aae9e36b9988fdc9b01b90da88d8d7e4106e01a79e03b182db",
+      "current_sha": "0db9248d06c116aae9e36b9988fdc9b01b90da88d8d7e4106e01a79e03b182db",
+      "original_definitions_unchanged": true
+    }
+  },
+  "supersedes_attempt": {
+    "log": "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/logs/future_best_report_audit_v1.log",
+    "log_sha": "c802a32efe1aea7ecfd9a7ccc5f590d58de648d8135b0653e23684f42f28d98f",
+    "reason": "v1 refused changed source before reading payloads; v2 binds the original commit and checks original definitions unchanged."
+  },
+  "scope": "Deterministic reconstruction of published aged-fill values/counts and declared 30-fill day gate. No new statistical test, model, policy or performance threshold. Nine consumed days only."
+}

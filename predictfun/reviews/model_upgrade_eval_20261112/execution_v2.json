@@ -1,0 +1,14 @@
+{
+  "as_of": "2026-11-12T11:31:30.894884+00:00",
+  "status": "PASS",
+  "pid": 674377,
+  "supersedes": {
+    "pid": 654409,
+    "log": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_eval_20261112/driver.log",
+    "sha": "9c579bf6d990caebd319689810727ef061c9ed49d8adce1b1ef987fc4b096c81",
+    "status": "IMPORT_FAILED_BEFORE_ANY_STAGE"
+  },
+  "change": "Replay waiter needs the project virtualenv because its spec imports the policy feature schema. Restarted unchanged source with that interpreter and single-thread environment. Failed launch preserved. No numerical stage or replay artifact existed.",
+  "driver_sha": "cc4703796a041d28dd03d20566059c8771084431ee40176662cedaadc4d2803c",
+  "declaration_sha": "97f4e92ce1055adaeaefaea907d878c0c1e3a979bc77be7214e35cbd64d96162"
+}

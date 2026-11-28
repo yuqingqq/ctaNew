@@ -1,0 +1,375 @@
+{
+  "as_of": "2026-11-12T14:46:19.144585+00:00",
+  "status": "PASS",
+  "declaration_sha": "94df1d0b82680ab02b6132f2759af36e691242db17de854ee0adb0032090d30e",
+  "unique_inference_cases": 12,
+  "repeated_inferences": 1200,
+  "wall_seconds": 7.528138144873083,
+  "profiled_total_seconds": 7.516084453000004,
+  "top_self_time": [
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method builtins.isinstance>",
+      "primitive_calls": 5412000,
+      "calls": 5415600,
+      "self_seconds": 0.7356557450000001,
+      "cumulative_seconds": 1.331277819
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/construction.py",
+      "line": 531,
+      "function": "sanitize_array",
+      "primitive_calls": 267600,
+      "calls": 267600,
+      "self_seconds": 0.7273051060000001,
+      "cumulative_seconds": 2.243794807
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/internals/construction.py",
+      "line": 999,
+      "function": "convert",
+      "primitive_calls": 135600,
+      "calls": 135600,
+      "self_seconds": 0.346601963,
+      "cumulative_seconds": 0.64060644
+    },
+    {
+      "file": "/tmp/cta-model-upgrade-20261112/predictfun/research/pf_model_upgrade_features.py",
+      "line": 53,
+      "function": "batch",
+      "primitive_calls": 1200,
+      "calls": 1200,
+      "self_seconds": 0.31917982100000003,
+      "cumulative_seconds": 4.538293256
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/internals/construction.py",
+      "line": 553,
+      "function": "_homogenize",
+      "primitive_calls": 2400,
+      "calls": 2400,
+      "self_seconds": 0.269440611,
+      "cumulative_seconds": 2.629237476
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method builtins.len>",
+      "primitive_calls": 1182000,
+      "calls": 1764000,
+      "self_seconds": 0.239942481,
+      "cumulative_seconds": 0.335986177
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/dtypes/generic.py",
+      "line": 43,
+      "function": "_instancecheck",
+      "primitive_calls": 1244400,
+      "calls": 1244400,
+      "self_seconds": 0.23857829700000002,
+      "cumulative_seconds": 0.5325748840000001
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/dtypes/generic.py",
+      "line": 38,
+      "function": "_check",
+      "primitive_calls": 1244400,
+      "calls": 1244400,
+      "self_seconds": 0.20585866800000002,
+      "cumulative_seconds": 0.293620626
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method builtins.getattr>",
+      "primitive_calls": 1808400,
+      "calls": 1808400,
+      "self_seconds": 0.14410912,
+      "cumulative_seconds": 0.144886712
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/arrays/string_arrow.py",
+      "line": 194,
+      "function": "_from_sequence",
+      "primitive_calls": 8400,
+      "calls": 8400,
+      "self_seconds": 0.14103679900000002,
+      "cumulative_seconds": 0.22392170300000003
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/numpy/_core/numeric.py",
+      "line": 290,
+      "function": "full",
+      "primitive_calls": 146400,
+      "calls": 146400,
+      "self_seconds": 0.12694629400000002,
+      "cumulative_seconds": 0.211466601
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/internals/managers.py",
+      "line": 2436,
+      "function": "_stack_arrays",
+      "primitive_calls": 6000,
+      "calls": 6000,
+      "self_seconds": 0.114970709,
+      "cumulative_seconds": 0.22716238300000002
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/construction.py",
+      "line": 718,
+      "function": "_sanitize_ndim",
+      "primitive_calls": 267600,
+      "calls": 267600,
+      "self_seconds": 0.100448256,
+      "cumulative_seconds": 0.36801714100000005
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/arrays/arrow/array.py",
+      "line": 819,
+      "function": "__iter__",
+      "primitive_calls": 128400,
+      "calls": 128400,
+      "self_seconds": 0.09942136,
+      "cumulative_seconds": 0.100035233
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/indexes/range.py",
+      "line": 1266,
+      "function": "__len__",
+      "primitive_calls": 531600,
+      "calls": 531600,
+      "self_seconds": 0.08608419,
+      "cumulative_seconds": 0.129568657
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/construction.py",
+      "line": 780,
+      "function": "_maybe_repeat",
+      "primitive_calls": 267600,
+      "calls": 267600,
+      "self_seconds": 0.07964795000000001,
+      "cumulative_seconds": 0.23434068700000002
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/arrays/arrow/array.py",
+      "line": 722,
+      "function": "__getitem__",
+      "primitive_calls": 24000,
+      "calls": 24000,
+      "self_seconds": 0.07898716700000001,
+      "cumulative_seconds": 0.109580679
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/base.py",
+      "line": 567,
+      "function": "to_numpy",
+      "primitive_calls": 24000,
+      "calls": 24000,
+      "self_seconds": 0.077724973,
+      "cumulative_seconds": 0.144901413
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/internals/managers.py",
+      "line": 1205,
+      "function": "iget",
+      "primitive_calls": 24000,
+      "calls": 24000,
+      "self_seconds": 0.072645049,
+      "cumulative_seconds": 0.155570489
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/common.py",
+      "line": 596,
+      "function": "require_length_match",
+      "primitive_calls": 262800,
+      "calls": 262800,
+      "self_seconds": 0.07032648500000001,
+      "cumulative_seconds": 0.21002799100000002
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/numpy/_core/numeric.py",
+      "line": 2337,
+      "function": "isclose",
+      "primitive_calls": 7200,
+      "calls": 7200,
+      "self_seconds": 0.068887028,
+      "cumulative_seconds": 0.112572632
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method numpy.asarray>",
+      "primitive_calls": 187200,
+      "calls": 187200,
+      "self_seconds": 0.066688443,
+      "cumulative_seconds": 0.066688443
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/internals/construction.py",
+      "line": 375,
+      "function": "dict_to_mgr",
+      "primitive_calls": 1200,
+      "calls": 1200,
+      "self_seconds": 0.0648903,
+      "cumulative_seconds": 1.8997184900000001
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/construction.py",
+      "line": 757,
+      "function": "_sanitize_str_dtypes",
+      "primitive_calls": 259200,
+      "calls": 259200,
+      "self_seconds": 0.064773469,
+      "cumulative_seconds": 0.08975585600000001
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'append' of 'list' objects>",
+      "primitive_calls": 542400,
+      "calls": 542400,
+      "self_seconds": 0.062398573000000006,
+      "cumulative_seconds": 0.062398573000000006
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/generic.py",
+      "line": 6131,
+      "function": "__finalize__",
+      "primitive_calls": 26400,
+      "calls": 26400,
+      "self_seconds": 0.061635893000000004,
+      "cumulative_seconds": 0.08802567700000001
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pyarrow/compute.py",
+      "line": 467,
+      "function": "take",
+      "primitive_calls": 2400,
+      "calls": 2400,
+      "self_seconds": 0.060924477000000005,
+      "cumulative_seconds": 0.062018142000000005
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/frame.py",
+      "line": 4337,
+      "function": "__getitem__",
+      "primitive_calls": 25200,
+      "calls": 25200,
+      "self_seconds": 0.060911107000000006,
+      "cumulative_seconds": 1.702308527
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/construction.py",
+      "line": 430,
+      "function": "extract_array",
+      "primitive_calls": 267600,
+      "calls": 267600,
+      "self_seconds": 0.058713039,
+      "cumulative_seconds": 0.077410516
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/internals/managers.py",
+      "line": 2367,
+      "function": "_grouping_func",
+      "primitive_calls": 262800,
+      "calls": 262800,
+      "self_seconds": 0.057886483,
+      "cumulative_seconds": 0.115097377
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/lightgbm/basic.py",
+      "line": 1286,
+      "function": "__inner_predict_np2d",
+      "primitive_calls": 1200,
+      "calls": 1200,
+      "self_seconds": 0.055434277000000004,
+      "cumulative_seconds": 0.086165106
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/common.py",
+      "line": 305,
+      "function": "maybe_iterable_to_list",
+      "primitive_calls": 127200,
+      "calls": 127200,
+      "self_seconds": 0.052537722,
+      "cumulative_seconds": 0.16900863000000002
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/arrays/arrow/array.py",
+      "line": 1671,
+      "function": "to_numpy",
+      "primitive_calls": 4800,
+      "calls": 4800,
+      "self_seconds": 0.050608120000000006,
+      "cumulative_seconds": 0.073383987
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/dtypes/common.py",
+      "line": 1821,
+      "function": "pandas_dtype",
+      "primitive_calls": 62400,
+      "calls": 62400,
+      "self_seconds": 0.045846934000000006,
+      "cumulative_seconds": 0.09686299000000001
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method numpy.empty>",
+      "primitive_calls": 157200,
+      "calls": 157200,
+      "self_seconds": 0.044731682,
+      "cumulative_seconds": 0.044731682
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/generic.py",
+      "line": 6208,
+      "function": "__setattr__",
+      "primitive_calls": 50400,
+      "calls": 50400,
+      "self_seconds": 0.043921949,
+      "cumulative_seconds": 0.043921949
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'reduce' of 'numpy.ufunc' objects>",
+      "primitive_calls": 15600,
+      "calls": 15600,
+      "self_seconds": 0.040255373000000004,
+      "cumulative_seconds": 0.040255373000000004
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/series.py",
+      "line": 1756,
+      "function": "to_dict",
+      "primitive_calls": 1200,
+      "calls": 1200,
+      "self_seconds": 0.039709343,
+      "cumulative_seconds": 0.158073232
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/generic.py",
+      "line": 258,
+      "function": "__init__",
+      "primitive_calls": 28800,
+      "calls": 28800,
+      "self_seconds": 0.03893212,
+      "cumulative_seconds": 0.048316158000000005
+    },
+    {
+      "file": "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/indexes/base.py",
+      "line": 486,
+      "function": "__new__",
+      "primitive_calls": 4800,
+      "calls": 4800,
+      "self_seconds": 0.038826862000000004,
+      "cumulative_seconds": 0.498083339
+    }
+  ],
+  "exact_saved_features": true,
+  "saved_scores_reconstructed": true,
+  "corrupt_score_refused": true,
+  "limits": "A small repeated inference microbenchmark, not a whole-engine profile, end-to-end latency estimate, independent statistical sample or strategy-performance test. cProfile adds overhead. Do not infer an optimization speedup without a separately checked comparison."
+}

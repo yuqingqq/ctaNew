@@ -1,0 +1,42 @@
+{
+  "as_of": "2026-11-12T16:27:38.570171+00:00",
+  "status": "CHECKER_FAILED_AFTER_REPLAY_PASS",
+  "execution_sha": "274f000d16e1a3aaf5f82c559fe651bc8d3b6e7f7046e887104d82bae98c6495",
+  "failed_run_sha": "59f99a08c8dbccb2c52d330bfe867f2602f98a61f4dcf8865efdd0f0806f795d",
+  "log_sha": "0a31635ef7621b4f3129c222673d6f2b000349ebe2b2fdeb885a88134b391fd3",
+  "error": "np.isfinite on empty object-typed age_ms Series",
+  "populations": [
+    {
+      "mode": "default",
+      "fills": 198,
+      "dtype": "float64",
+      "fill_sha": "7c9dce7915c510a37c52882a2f0ff2352be7088bb6e0948d1120a66beed18d1b"
+    },
+    {
+      "mode": "legacy_guard",
+      "fills": 0,
+      "dtype": "object",
+      "fill_sha": "8851915d9bcb3469771f2893bdd33b460b0098030bd91d926b3f611f59a69d1e"
+    },
+    {
+      "mode": "causal_guard",
+      "fills": 0,
+      "dtype": "object",
+      "fill_sha": "8851915d9bcb3469771f2893bdd33b460b0098030bd91d926b3f611f59a69d1e"
+    },
+    {
+      "mode": "static10",
+      "fills": 2,
+      "dtype": "float64",
+      "fill_sha": "096f7ff5c846462ccf84a16867f4efc8784f476ec69d91e765389a34fc43cf7e"
+    },
+    {
+      "mode": "history10",
+      "fills": 2,
+      "dtype": "float64",
+      "fill_sha": "19f42934f62b87fe405f11a428dc01d9f642884784cf8b584c22cc490e3411d3"
+    }
+  ],
+  "original_artifacts_preserved": true,
+  "engine_rerun": false
+}

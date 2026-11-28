@@ -1,0 +1,12 @@
+{
+  "as_of": "2026-11-12T04:04:32.590667+00:00",
+  "old_driver_pid": 2447808,
+  "status": "CURRENT_REPLAY_VERIFIED_AND_OLD_DRIVER_RETIRED",
+  "completed_stage": "stress_20261101",
+  "recovered_marker": true,
+  "log_sha": "a3b3d0ffdc9a62dd5c090cbd7a2d233bff4180457b6dc82fe2d21219fb925c36",
+  "feature_decisions": 93420,
+  "source_sha": "2ec0dc94bc5ce59080407d1e3b23379aade1df07129cea2289532e635da2eefb",
+  "authorization_sha": "bb52c17c316e1ed0b1514b6468dd028779547d66c2751d4a1ff5582074725f64",
+  "scope": "Scheduling transition only. Successful current replay and all saved artifact hashes verified; numerical output unchanged."
+}

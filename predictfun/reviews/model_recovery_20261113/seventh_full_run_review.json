@@ -1,0 +1,43 @@
+{
+  "as_of": "2026-11-13T11:42:53.645329+00:00",
+  "status": "SOURCE_ARTIFACT_REVIEW",
+  "run_as_of": "2026-11-13T11:39:37.721484+00:00",
+  "run_receipt_sha": "ee43fc07e7dadf1b442c471a5672618af1226ff85daad70b0ad66389d3440588",
+  "artifact_count": 25,
+  "artifact_sha": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/replay/stress/20261026/independent_windows.parquet": "1a1cdc8b9bbcd4c25665a1330d43e72730b38f97dd39a1f4944e63eec83d2951",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/replay/stress/20261026/valued_windows.parquet": "df9e1ced49faeff859270b9fb31ab1bd076a362e2ce2b24785f254901bb43e10",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/replay/stress/20261026/inference_audit.parquet": "3f57f811e70275ccb38e7267eb410f0fe02b63c902b9eb7db438bd24fd538067",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/replay/stress/20261026/recovery_events.jsonl.gz": "62798cac24dad49378e90e78b805d646f3fefb3daa287e24281dfb151a3eaf20",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/replay/stress/20261026/summary.json": "501a3f46543bd2abfb723043948891b3a59d3420df0fbf4ef000538fd2963ad0",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/replay/stress/20261026/win/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_RDEFAULT__mid_szAM-5-25-95.parquet": "0d3e4ddfea9c4e384f0fd62d3c27a30e0c54336a99238623e5d13aa7ed80bcf4",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/replay/stress/20261026/fills/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_RDEFAULT__mid_szAM-5-25-95.parquet": "7f6bb9c7dadd6a6656fbbe2ce15f9005d2e9c67d6561bc7b49ca82c6ed50bff8",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/replay/stress/20261026/requests/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_RDEFAULT__mid_szAM-5-25-95.parquet": "fda42832ed8d3f54a5743249005dc88b5a20da85a437245e14a4466249e0cbf0",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/replay/stress/20261026/generations/default.parquet": "d717eb54651f78473fe3181241005a9fed093a8f74c5cebe9c5f9cf23856b695",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/replay/stress/20261026/presence/default.parquet": "7c4ae0d65fda17478f12fe4a346d90bc9f055fb40012f35e82cd50127f7d871d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/replay/stress/20261026/win/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_RDIRECT__mid_szAM-5-25-95.parquet": "6b0f67436c2d3c871249023e1aedbb70f4c384df88bbd36013d5f41ec9cad9eb",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/replay/stress/20261026/fills/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_RDIRECT__mid_szAM-5-25-95.parquet": "fd8141c955a3756d0d2b80633bec43569a5baa0da49764624742c2992f6d29c2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/replay/stress/20261026/requests/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_RDIRECT__mid_szAM-5-25-95.parquet": "cf88297cf18b9a093f6ab5fc82f113201acdad49c1c30940601cd82485e2a2e9",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/replay/stress/20261026/generations/direct10.parquet": "8eed6277a551f15fa948586ef6e564c45363e92b1d020d3d458e8577d33e7f22",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/replay/stress/20261026/presence/direct10.parquet": "bc252543ae2b5cf8d00b683b4bb67e3dc52d866629e191a4ff336dd818ca575d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/replay/stress/20261026/win/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_RCOMPONENTS__mid_szAM-5-25-95.parquet": "03195f90a36632d058c38bcded17f62afd389a3fcfc50fcaca880aeb974916bb",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/replay/stress/20261026/fills/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_RCOMPONENTS__mid_szAM-5-25-95.parquet": "5837eaa41af0da079e465a5de2fa5f825d6fd7e75ef3245b829ce3612a9893ed",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/replay/stress/20261026/requests/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_RCOMPONENTS__mid_szAM-5-25-95.parquet": "83b369c16d134d6903842bc3e1740990e51fd1f6cf3a8499781777648f66af20",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/replay/stress/20261026/generations/components10.parquet": "05cc49138dd531ed4f38e083bc85de012956aa5ec7a89f8a5bada507cd6a2681",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/replay/stress/20261026/presence/components10.parquet": "04716e6ecb459b4a4979a74d68c5a76e90165cf1641ec4bb18580e181b93c600",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/replay/stress/20261026/win/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_RSELECTIVE__mid_szAM-5-25-95.parquet": "d4c5982a27f953fddbbb1ffadd9aa818be3e1cd09f15e34718186e51a1aab097",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/replay/stress/20261026/fills/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_RSELECTIVE__mid_szAM-5-25-95.parquet": "e958b51a75a4d6c67ebed431fe882eb91e9136bef10e59a4c81989103e2e79fc",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/replay/stress/20261026/requests/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_RSELECTIVE__mid_szAM-5-25-95.parquet": "233631a358b3eb0e2bfd067da8d8597f67caa606f87bb78135a5808044dbf2ec",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/replay/stress/20261026/generations/selective10.parquet": "73e4f7d753820244dd6f7f1f88c57a1d6d95057754e99b4c1ae10fd05180dc81",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/replay/stress/20261026/presence/selective10.parquet": "10a8639c57fbc542af3e00bbc1dcaf70243cfc4e4eb75298d2d2df385b684b09"
+  },
+  "mirror_count": 3,
+  "accounting_v2": {
+    "declaration_sha": "c38f6acdcfd9dd9fac27345d86e4663afcd0cb828c8db3b13ebc979009056123",
+    "controls_sha": "b9163cad6c5e07586285f89d381afbc438b394bbc54b6a139fbc767b0107fa29",
+    "failed_attempt_sha": "62c4d8b1f91e9c3d201a28fd06e6b9d9b49a804a577a99779a8eaa4d95a6f6de",
+    "raw_parity_sha": "68277f8c926ef5b0d4f74ae8ce9e259180a5521aebaff3f184a497a72413dbf1"
+  },
+  "provenance_controls": "Actual correction chain accepted; four corrupted links refused.",
+  "scope": "Named artifact hash/receipt review of Oct26/stress. Published reconstruction and population counts are inherited from the frozen runner, not a second replay. Seven of18 scenario-days complete. No final policy verdict."
+}

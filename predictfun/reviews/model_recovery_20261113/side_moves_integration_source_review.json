@@ -1,0 +1,181 @@
+{
+  "as_of": "2026-11-13T14:51:28.012859+00:00",
+  "status": "SOURCE_ARTIFACT_REVIEW",
+  "source_commit": "c519f08648ede94ab8654e4c585250f3a976d208",
+  "source_sha": {
+    "predictfun/research/model_side_moves_integration_review.py": "74664db270c2310a6d5d835087a5741f0e90fa50c21d4d2a970ec285eb79ad32"
+  },
+  "producer_commit": "36637b1f04f193317e0788cd3b097c694744ed70",
+  "producer_source_sha": {
+    "/home/yuqing/ctaNew/predictfun/research/pf_side_moves.py": "562e72e5eb79f373d7f5e0cd5f1327ce3c6dd433cc0a5d7c73283e536c9a03ab",
+    "/home/yuqing/ctaNew/predictfun/research/run_side_moves.sh": "3ad2587e7c59e1d4d64eb8cbf5076ccf5b4a89f814728ad6634cca8a34d41752"
+  },
+  "artifact_sha": {
+    "/home/yuqing/ctaNew/predictfun/handoffs/20261113_side_moves_results.md": "d93a77e287fc30978ac861aaf31f7f8397b6be8cabdb6b86d964db9394dc2f9f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/side_moves.json": "fe049b53b55db20571aeefaa7624f61345fa5c5c92fe9c7dc1887c70d9e2245e",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/side_moves.txt": "e8aa90a17452db09e3e4dfc794a622207aa76fd410ea2c4917d6315273586bca",
+    "/home/yuqing/ctaNew/predictfun/research/pf_kp_s4.py": "4f173446bf07d7141a96bddf02470e38e66aa64b2b28a380eeb7dec9343530cc",
+    "/home/yuqing/ctaNew/predictfun/research/pf_qr_queue_race.py": "a6d9eef39f9550136488aaec4d912b7da1712712c07512473a41b2c427288145",
+    "/home/yuqing/ctaNew/predictfun/research/pf_queue_place.py": "82a69aed6340be016ce7ed43bb1005dfba5da7eff76663c427a3dcd2da5bd922",
+    "/home/yuqing/ctaNew/predictfun/research/pf_timing_split.py": "de33ec3e64f22f2db8226c1cbc85ea230e6cc1bb1a478773cc5a978da4997b48",
+    "/home/yuqing/ctaNew/predictfun/research/pf_pull_depth.py": "a8670b2e9751f16dce37aab7c18ce35cc31fa3431e392b9a7397f4375a9114ef",
+    "/home/yuqing/ctaNew/predictfun/research/pf_gap_top_makers.py": "33feed2507215e0c8cd7b66d768337e97ea4a2a6504be67e7bbc7866f67a82e5",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/day_20261023.json": "de65bac4483ec00604f23a264d555293ca89cfabd152846b11abc3629de63862",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/orders_20261023.parquet": "ca4fc98a57344535aade426c5d2fffa7ef0500c6276258f6624717e895d0de5c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/makers_20261023.parquet": "65ce06bfb5c57a1cca543e0437ffae32c659f48ddb020511c42e088c90f6dcef",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/runover_20261023.parquet": "f638a5d051835d4f38f06f2a403864a93cf89f24f51548b39b0947209032f7cc",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/ours_20261023.parquet": "0d9f3a309e0178fff1161c13eb02ce3897c5f1529e296e74bd73a7a406c41e5b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/pull_depth_20261113/events_20261023.parquet": "f44049ab986108428c3ee16e861de119c523b3e68884eecba404d8903c627736",
+    "/home/yuqing/ctaNew/data/predict_fun/research/orders_20261113/map_20261023.parquet": "7fb3b53fa383ba39635204ff8bb071407b88f6e1ac027178a931b965f7a7736a",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/day_20261024.json": "f5a799165e59130c21e8d016d7a4e32a9db70c691782ea254386edad81f1bb93",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/orders_20261024.parquet": "7222e42a12988ce758f7f2cc0b7dc67844e324b9e6da1b212744bd110e5ae020",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/makers_20261024.parquet": "156d8945af6ba18bcccf00199d2d8a63aded5b02f39a1d97eaf50db8c65ba117",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/runover_20261024.parquet": "9269d8590de2edcae8354c8129df4a29300f1db4268d1f58ae81d8b208cbb5e7",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/ours_20261024.parquet": "4ac4f72ffc556bfab5d217c50a2dedbac3b962d7f801f34dd300d172fd64e460",
+    "/home/yuqing/ctaNew/data/predict_fun/research/pull_depth_20261113/events_20261024.parquet": "c510f2881e83e3855a355e75eb7718a61ed32d113ae545ff508169a8a6c6e074",
+    "/home/yuqing/ctaNew/data/predict_fun/research/orders_20261113/map_20261024.parquet": "b0d6e6d92bcbc756e721622f12034d9619e2aec5987aef9d43e4c102cfd140a6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/day_20261025.json": "be493950e0d7f0836a1aa7de53bb0c930922ce19390c689984bb26e12be574a0",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/orders_20261025.parquet": "6de58f52ebaef03e74513ca7792459202b4cd7f425406a3867065655b0dbdc6d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/makers_20261025.parquet": "0d4ddc12f4b007f63834acf765b35ee50ba8b84e391380852d21f8f261777252",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/runover_20261025.parquet": "c70cd074546480cc320f6180e225a48fbfe10760a3dd4a12f13feeaecffe32ab",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/ours_20261025.parquet": "c3ba8222c696985319947fd33627e8dea8b2cead4069a38752ceb6d309059ca3",
+    "/home/yuqing/ctaNew/data/predict_fun/research/pull_depth_20261113/events_20261025.parquet": "073d3a4c6149f29bc0c4326f83e7f685fb1ea6a0a1e3704a928bc3ae11675ad0",
+    "/home/yuqing/ctaNew/data/predict_fun/research/orders_20261113/map_20261025.parquet": "1d4a98df39a2aac071cae44ae2a2b76f711be21965249df1bf3e4435c8855db2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/day_20261026.json": "48f776e44407fde0fb790a5ea6ec2d75ac7781def5477b02cda38c2c2f03528c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/orders_20261026.parquet": "5ad3b550d49d16fd2cdedaccb44699caea914de55230ad0ff779d38cbacabc0d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/makers_20261026.parquet": "6e14889f34668151b30fb686eae3382975a3667d7c91291c61527f2e6b658a78",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/runover_20261026.parquet": "f2b5379f29a577d575346918073fea6982d0b214b5eb1cea7c9fac823ab47df6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/ours_20261026.parquet": "6fb8d5c29cc13dd7f061f0f736b54ad58f1719033b064a109acbdc8b63500268",
+    "/home/yuqing/ctaNew/data/predict_fun/research/pull_depth_20261113/events_20261026.parquet": "727da0a556ffa4f4459383fddb9dfa9a45c21a5b968b7db37e57b045e8d8d264",
+    "/home/yuqing/ctaNew/data/predict_fun/research/orders_20261113/map_20261026.parquet": "67d4ca356df7a946c22df0f35b67941b49b3d1d6db2097c0ef42adcd1c3b450f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/day_20261027.json": "48fada63a9733c4af4cad10c1f79dc0afd686e27afc78fc22b22e7edc4f49a19",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/orders_20261027.parquet": "ad83b9b5caa91e9cf465581166dd57975374d7829fba55f80be02e0111b69f95",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/makers_20261027.parquet": "407d45acfcc1e629e4ad7db7cef16df026a1e46cfa9ab29cd26d43b24f6aea86",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/runover_20261027.parquet": "2a40d6c9141a94b236100c3de8469d0a51b520ef034c9e546a939f95c284ed18",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/ours_20261027.parquet": "29e7800b9ed3c8adc22b16924f06a9848201045270cf25e575b491ac891229af",
+    "/home/yuqing/ctaNew/data/predict_fun/research/pull_depth_20261113/events_20261027.parquet": "0dfa1418e2c6255ce5cd388a2fcfb1d34c9b4cf0eb2cdd088b18bd14bee9a233",
+    "/home/yuqing/ctaNew/data/predict_fun/research/orders_20261113/map_20261027.parquet": "2334d5c39a747ce42120aa1f47d07f504d9e7306b71bfafc8e6a412301ee8144",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/day_20261031.json": "16d1190625dd57e3ec725b45bea231548e0c78dbb4509b23440a19a3d0e0bd82",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/orders_20261031.parquet": "0abd3ac2ac2ccfc625f7ce04600536b65e7958ddb42fd4e4c28ac63373c0f9b8",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/makers_20261031.parquet": "19aacd7d5124d7c31e995a66b7433b4384c3cec014912fcef4cf124f062c8e20",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/runover_20261031.parquet": "1863201e39ec1540a48f092d118a0e74f9a25e44ba2311a7badd6f4cf343b056",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/ours_20261031.parquet": "87f6c2ff692a2b2a3f8a2e2f1c52fe09480de701ba00dcefd13a66f9e2ef1bad",
+    "/home/yuqing/ctaNew/data/predict_fun/research/pull_depth_20261113/events_20261031.parquet": "8ad3171e3685c3a148953a71ad02cddf199846f190e6eb2f059170c0071c0b62",
+    "/home/yuqing/ctaNew/data/predict_fun/research/orders_20261113/map_20261031.parquet": "766f09c41f5bff75862b35a93963319565ee47ab64c3ce7aa7828e7c3c3d1b45",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/day_20261101.json": "44da5f11abe9dd5990cd277a65ff58c467a01e6ce551a1fbe5ca315005954701",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/orders_20261101.parquet": "08d5e1474963206879077caf857e8b7fc9c7185364742abad783500fd417168b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/makers_20261101.parquet": "5bf5a58f40cdb54da0a66fc3ad61a0435db1eb83afdbdb0980cf959c72e8c4f1",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/runover_20261101.parquet": "b0d03df5f2c43fd555b46a5e4bf0cea84cc647d13a5072197b41315d828469d6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/ours_20261101.parquet": "a3fc97a8cb14b038f23ecfa368fa433ff6197d5f70c30072deb1aad5a72e10fe",
+    "/home/yuqing/ctaNew/data/predict_fun/research/pull_depth_20261113/events_20261101.parquet": "50f0f7126e1ffbc438d3b8e77e0c4c7820ce231f603cbb68152361c1a9dc870f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/orders_20261113/map_20261101.parquet": "a0d493e972953bbc6c2bf21db407d98f1d2fc539e29b055be6df5fb0b9b3b174",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/day_20261102.json": "360f7d604423b2bdea2ec4887609fe1583197c091854c3d4b5eedcc31295f3f5",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/orders_20261102.parquet": "940f024935feebf185619640680fa1cda128aacddedce84441639f4cc7776203",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/makers_20261102.parquet": "aab04adeceffd49750187ee9f319cdbfdba8202b4a14efdbd9f699d09ae18341",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/runover_20261102.parquet": "d332b5fa5f5a209602a2b7902185d1313d702b9079f58a93df1e1e147d6a8eb2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/ours_20261102.parquet": "b1704c821d89292dbdbd96cbba19a74aeda6d56548264153e50da082b073dfb7",
+    "/home/yuqing/ctaNew/data/predict_fun/research/pull_depth_20261113/events_20261102.parquet": "3779ad4956d35b13f2560675c0785b40b6405d172098bd79ffe8b7805ce9c1ce",
+    "/home/yuqing/ctaNew/data/predict_fun/research/orders_20261113/map_20261102.parquet": "7b1b55fc806a42e2458ae51c91f29ef910de4651d0358d88587ae519f0ac2c81",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/day_20261103.json": "70f27a713dbda2caee30ddf50ba6a43a1918963f00cd80327b5226e4426b3bba",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/orders_20261103.parquet": "e05e9089e482e663c9afc9e18e9182652e2e42838014f90358e93d1a621f9464",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/makers_20261103.parquet": "76a57a81635d2f79d419f7b67cd2ab72e7a540f3cec3793c341d2ea00059854d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/runover_20261103.parquet": "a1b789f70c99e1ec6ad4d92643a303646bff6a27d592832d2ecbd209a6071793",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/ours_20261103.parquet": "762662a7d1ee86aae9a7be1c7465f4d9a2d6035be994d371d038b7b68569a208",
+    "/home/yuqing/ctaNew/data/predict_fun/research/pull_depth_20261113/events_20261103.parquet": "1e940df23e28f584bc36efdb92da795afdd560b3bcfa28b45b27d91a37bf4468",
+    "/home/yuqing/ctaNew/data/predict_fun/research/orders_20261113/map_20261103.parquet": "0541ffefbc9e8b9dc0fb2090edfc414415b66211004c398f038f28b3db7a7214"
+  },
+  "artifact_count": 72,
+  "measurement_controls": {
+    "original_positive_control": true,
+    "original_mutations_caught": {
+      "MUT_AHEAD_SELF": true,
+      "MUT_KEPT_ANY": true,
+      "MUT_JOIN_EARLY": true
+    },
+    "counterexamples": {
+      "move_is_not_cancellation": {
+        "join": true,
+        "old_price_observed_again": true,
+        "old_hash_observed_again": false,
+        "compatible_old_order_sizes": [
+          5.0,
+          10.0
+        ],
+        "interpretation": "A fully exhausted old order and a cancelled residual can generate the same MOVE fill pattern. The old-price proof also does not establish that the order was still active at birth."
+      },
+      "kept_and_one_second_survival_differ": {
+        "producer_kept": true,
+        "native_held_one_second": false,
+        "interpretation": "The same old order can refill 100 ms after birth and then exhaust. Ten-second refill evidence and exact one-second survival have different horizons and denominators."
+      },
+      "rested_reference_can_follow_birth": {
+        "birth_ms": 1000.0,
+        "onset_ms": 1050.0,
+        "first_proof_ms": 1020.0,
+        "origin": "RESTED",
+        "interpretation": "RESTED means a fill before the reference/onset, which can be later than birth. It does not uniformly establish resting before the new best formed."
+      },
+      "ahead_is_prior_executed_volume": {
+        "computed_ahead_shares": 20.0,
+        "compatible_b_placement_ms": [
+          1050.0,
+          1190.0
+        ],
+        "interpretation": "The same fills allow B to have rested behind A or to arrive after A exhausted. Post-birth volume before B first fills is not its observed queue depth at placement."
+      },
+      "tied_fill_order_requires_provenance": {
+        "row_reversal_changes_first_order": true,
+        "interpretation": "At equal anchor/price, first-order rank follows input row order. This synthetic sensitivity does not establish the historical frequency or whether the upstream row order is correct."
+      }
+    },
+    "historical_affected_counts": null
+  },
+  "saved_identity_controls": {
+    "columns": {
+      "ordr": [
+        "day",
+        "kind",
+        "grp",
+        "rank",
+        "ahead",
+        "gap",
+        "q",
+        "v",
+        "origin"
+      ],
+      "mkr": [
+        "day",
+        "kind",
+        "grp",
+        "join",
+        "jgap",
+        "obs",
+        "kept"
+      ],
+      "ror": [
+        "day",
+        "kind",
+        "grp",
+        "q",
+        "v1"
+      ],
+      "our": [
+        "day",
+        "kind",
+        "state",
+        "jgap",
+        "held_1s"
+      ]
+    },
+    "fill_order_event_identity_preserved": false,
+    "positive_complete_identity_control": true,
+    "actual_schemas_refused_as_identity_reconstruction": true,
+    "implication": "Aggregates cannot recover exact event/maker/order linkage or overlap from these saved tables alone."
+  },
+  "performance_recomputed": false,
+  "historical_payload_computed": false,
+  "validation": false,
+  "live_changed": false,
+  "model_integration": "Asymmetric move/retain is a candidate action-space hypothesis, not an identified maker policy. SIDE-MOVES does not use the fitted PULL-DEPTH probabilities; earlier nested-depth-model leakage is not automatically a finding about these fill-pattern aggregates. Current recovery/size/depth freezes stay unchanged.",
+  "remaining": "Matched orders/events and timestamps, actual cancellation-versus-exhaustion, source tie order, one-second mark freshness, fixed-cohort size/risk controls and joint-budget sequential policy value remain unresolved."
+}

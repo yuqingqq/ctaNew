@@ -1,0 +1,24 @@
+{
+  "as_of": "2026-11-12T14:04:24.277811+00:00",
+  "status": "PASS",
+  "execution_sha": "62fd99be26c451744d0d51a1038eff9c323446b602a3d5b9705e32151f57359d",
+  "completed": [
+    {
+      "stage": "data_20261102",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/data_20261102.json",
+      "sha": "d94b02b166babf7f203dd251d00243c65c2bc99a279f2ab7573585c4194e1fe2"
+    },
+    {
+      "stage": "fit_20261102",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/fit_20261102.json",
+      "sha": "103eb3be3358b2a2ea04ffd21c78537c0683224862e7b4b01a9fa8ca9a0dde3e"
+    },
+    {
+      "stage": "prepare_20261102",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_eval_20261112_v2/prepare_20261102.json",
+      "sha": "3143842abcadf0594905ba503dd9c6ed1b6b422d7ff37bd0dbe4a005fc401c2b"
+    }
+  ],
+  "resumed_model_driver_pid": 2071865,
+  "scope": "Fifth original chronological fold only; final input/fit and complete reports/portfolios pending."
+}

@@ -1,0 +1,92 @@
+{
+  "as_of": "2026-11-13T03:11:03.330168+00:00",
+  "purpose": "Advance the frozen independent seed capture audit before first model fitting; operational sequencing only.",
+  "driver": {
+    "pid": 3592076,
+    "state": "S",
+    "parent": 1,
+    "start_ticks": 681103241,
+    "argv": [
+      "/home/yuqing/pricer-sol/venv/bin/python3",
+      "/tmp/cta-model-upgrade-20261112/predictfun/research/model_recovery_driver.py"
+    ]
+  },
+  "worker": {
+    "pid": 744022,
+    "state": "R",
+    "parent": 744021,
+    "start_ticks": 681992758,
+    "argv": [
+      "/home/yuqing/pricer-sol/venv/bin/python3",
+      "-m",
+      "predictfun.research.pf_recovery_experiment_build",
+      "seed",
+      "20261024"
+    ]
+  },
+  "lineage": [
+    {
+      "pid": 744022,
+      "state": "R",
+      "parent": 744021,
+      "start_ticks": 681992758,
+      "argv": [
+        "/home/yuqing/pricer-sol/venv/bin/python3",
+        "-m",
+        "predictfun.research.pf_recovery_experiment_build",
+        "seed",
+        "20261024"
+      ]
+    },
+    {
+      "pid": 744021,
+      "state": "S",
+      "parent": 744009,
+      "start_ticks": 681992757,
+      "argv": [
+        "/usr/bin/time",
+        "-f",
+        "%M %e %U",
+        "-o",
+        "/tmp/claude-1001/pf_time.744009",
+        "/home/yuqing/pricer-sol/venv/bin/python3",
+        "-m",
+        "predictfun.research.pf_recovery_experiment_build",
+        "seed",
+        "20261024"
+      ]
+    },
+    {
+      "pid": 744009,
+      "state": "S",
+      "parent": 3592076,
+      "start_ticks": 681992754,
+      "argv": [
+        "bash",
+        "/home/yuqing/ctaNew/predictfun/research/run_light.sh",
+        "model_recovery_build_seed_20261024",
+        "--",
+        "/home/yuqing/pricer-sol/venv/bin/python3",
+        "-m",
+        "predictfun.research.pf_recovery_experiment_build",
+        "seed",
+        "20261024"
+      ]
+    },
+    {
+      "pid": 3592076,
+      "state": "S",
+      "parent": 1,
+      "start_ticks": 681103241,
+      "argv": [
+        "/home/yuqing/pricer-sol/venv/bin/python3",
+        "/tmp/cta-model-upgrade-20261112/predictfun/research/model_recovery_driver.py"
+      ]
+    }
+  ],
+  "declaration_sha": "3a54b294f438ca0348ac67a59e7f9ba7395d20a714604e8506196f78b8882d75",
+  "verifier_sha": "d62575086413a966015376e21ec23aa27b09ca6366a6bb03308cb41390d7069f",
+  "action": "SIGSTOP only the pure driver; the current Oct24 numerical build and wrapper continue. After successful build, run both full seed capture reconstructions on core8, then SIGCONT this same driver identity.",
+  "controls": "Exact live command/start identity checked; intentionally wrong worker command refused. No signals sent to numerical workers.",
+  "scope": "No source, model, label, policy, threshold or success-gate changes."
+}

@@ -1,0 +1,16 @@
+{
+  "as_of": "2026-11-12T11:29:08.071172+00:00",
+  "status": "PASS",
+  "source_commit": "262445db02da53c2fafbf2d3f51e5249afe68167",
+  "drivers": {
+    "model_upgrade_driver_v3.py": 654408,
+    "model_eval_driver.py": 654409
+  },
+  "previous_idle_driver_stopped": 508053,
+  "reason": "Manual synthetic controls completed while the numerical pipeline was waiting. Restart the idle waiter so it skips the completed control receipt instead of repeating that stage.",
+  "resources": "Only brief synthetic controls borrowed the idle second slot (PF_SLOT=claude/core9); existing core8 continuation worker stayed active. No third numerical worker. All data, fits and portfolio replays remain queued for core8 after upstream driver and audit finisher.",
+  "controls": {
+    "model_upgrade_20261112_v2": "affe8b52c54b868379ffec37799e9434510115984135cc9731d6df545ea6e25c",
+    "model_upgrade_eval_20261112": "65b2abdd8cbc9254c73b15c54f4d0423239f9620dfc16cef69c0461a4b5f38ad"
+  }
+}

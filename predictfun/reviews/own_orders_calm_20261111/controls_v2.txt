@@ -1,0 +1,27 @@
+test_arithmetic_activity_and_future_invariance (predictfun.research.tests.test_order_policy.Controls.test_arithmetic_activity_and_future_invariance) ... ok
+test_calm_requires_history_and_known_inputs (predictfun.research.tests.test_order_policy.Controls.test_calm_requires_history_and_known_inputs) ... ok
+test_chronology_and_planted_incremental_signal (predictfun.research.tests.test_order_policy.Controls.test_chronology_and_planted_incremental_signal) ... ok
+test_competing_priority_volume_conserved (predictfun.research.tests.test_order_policy.Controls.test_competing_priority_volume_conserved) ... ok
+test_displayed_cap_stress_and_competing_pending_cancel (predictfun.research.tests.test_order_policy.Controls.test_displayed_cap_stress_and_competing_pending_cancel) ... ok
+test_features_not_latent_queue_or_unnotified_fills (predictfun.research.tests.test_order_policy.Controls.test_features_not_latent_queue_or_unnotified_fills) ... ok
+test_filter_only_new_increasing (predictfun.research.tests.test_order_policy.Controls.test_filter_only_new_increasing) ... ok
+test_frozen_source_and_bad_anchor (predictfun.research.tests.test_order_policy.Controls.test_frozen_source_and_bad_anchor) ... ok
+test_hold_one_generation_one_second_and_hard_stop (predictfun.research.tests.test_order_policy.Controls.test_hold_one_generation_one_second_and_hard_stop) ... ok
+test_label_latency_prefix_and_zero_outcomes (predictfun.research.tests.test_order_policy.Controls.test_label_latency_prefix_and_zero_outcomes) ... ok
+test_matched_null_and_day_refusal (predictfun.research.tests.test_order_policy.Controls.test_matched_null_and_day_refusal) ... ok
+test_preserved_queue_and_exact_cancel_boundary (predictfun.research.tests.test_order_policy.Controls.test_preserved_queue_and_exact_cancel_boundary) ... ok
+test_price_identity_and_thinning (predictfun.research.tests.test_order_policy.Controls.test_price_identity_and_thinning) ... ok
+test_protected_reader_refusal (predictfun.research.tests.test_order_policy.Controls.test_protected_reader_refusal) ... ok
+test_reconciler_and_known_bad_artifact (predictfun.research.tests.test_order_policy.Controls.test_reconciler_and_known_bad_artifact) ... ok
+test_seed_pending_fixed_size_and_expiry (predictfun.research.tests.test_order_policy.Controls.test_seed_pending_fixed_size_and_expiry) ... ok
+test_size_pending_inventory_and_stale_refusals (predictfun.research.tests.test_order_policy.Controls.test_size_pending_inventory_and_stale_refusals) ... ok
+test_strict_marks_do_not_backfill (predictfun.research.tests.test_order_policy.Controls.test_strict_marks_do_not_backfill) ... ok
+test_conflicting_label_refuses (predictfun.research.tests.test_order_fit_v2.Controls.test_conflicting_label_refuses) ... ok
+test_different_known_state_is_different_action (predictfun.research.tests.test_order_fit_v2.Controls.test_different_known_state_is_different_action) ... ok
+test_duplicate_action_is_counted_once (predictfun.research.tests.test_order_fit_v2.Controls.test_duplicate_action_is_counted_once) ... ok
+
+----------------------------------------------------------------------
+Ran 21 tests in 0.354s
+
+OK
+2026-11-11T16:38:07Z tag=own_orders_v2_controls rc=0 peak_rss_mib=205 wall_s=1.24 cpu_user_s=1.04 memavail_start_gib=24 disk_free_gib=516->516

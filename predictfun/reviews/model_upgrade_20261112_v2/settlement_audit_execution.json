@@ -1,0 +1,11 @@
+{
+  "as_of": "2026-11-12T14:17:12.054964+00:00",
+  "pid": 2189202,
+  "source_commit": "ac339f205b9078de17186ec7d249c1f2f28dff72",
+  "driver_sha": "1cb135ca5938628df96c80a348e0d364625ed369844c2e6613ec8d1b7c4f06d6",
+  "declaration_sha": "b2d30fdcdeeb49b5f329824bf4386b96a88c04d06d2fd98a6e437fc57a7c3ac6",
+  "controls_sha": "88f3c113af7f1e4a67f303d708d2c0a51312c15961a3b608509e142bd97abc47",
+  "wait_for": "corrected model_eval_driver_v2.py chain exit and free core8; complete primary/age result receipts required",
+  "log": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/settlement_finisher.log",
+  "automatic_retry": false
+}

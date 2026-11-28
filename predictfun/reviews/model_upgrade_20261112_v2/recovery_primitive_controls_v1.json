@@ -1,0 +1,43 @@
+{
+  "as_of": "2026-11-12T23:02:11.407377+00:00",
+  "status": "PASS",
+  "source_commit": "e1f3a436fc10812327b77c31e18e2288f36f64f3",
+  "source_sha": {
+    "predictfun/research/pf_model_recovery_target.py": "5797326be7d7e9bffc58da1486a63c7fb65524b9086fdda13b49a5dd32eda266",
+    "predictfun/research/pf_model_recovery_policy.py": "7c905756dbdb604d9f08a9ae9c7fc304f2145d9d96d131e0f5eede3327b6d171",
+    "predictfun/research/tests/test_model_recovery.py": "7afeddfcd7ffc6f74aa33d5ce044d268f1e863c8c15b3e67a618a2830462a7cc",
+    "predictfun/research/tests/test_model_recovery_engine.py": "b4f991969fe5e6b79af313e79e3b08de44a7df68abb9eafefdf286638d72442f"
+  },
+  "command": [
+    "/home/yuqing/ctaNew/predictfun/research/run_light.sh",
+    "model_recovery_combined_controls",
+    "--",
+    "/home/yuqing/pricer-sol/venv/bin/python3",
+    "-m",
+    "unittest",
+    "predictfun.research.tests.test_model_recovery",
+    "predictfun.research.tests.test_model_recovery_engine"
+  ],
+  "slot": "claude",
+  "start": "2026-11-12T23:02:08.035002+00:00",
+  "end": "2026-11-12T23:02:11.407389+00:00",
+  "returncode": 0,
+  "tests": 17,
+  "log": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/recovery_primitive_combined_controls.log",
+  "log_sha": "3693e692a438051d6a0157c95762c64790ff51e8dd3a5143d866de65188fcc07",
+  "scope": "Implementation controls only. Fourteen pure target/recovery controls plus three synthetic full-engine clock controls in one process. No historical tape or label build; no model fit, score, threshold selection, scientific declaration or performance result. Complete pipeline, neutral data integration, actual delayed/no-effect cancellation cases and same-rule recovery continuation/replay remain required.",
+  "controls": [
+    "Own fill value at decision/cancel/horizon boundaries",
+    "Missing marks and censored coverage retained as statuses",
+    "No-fill eligible zeros",
+    "Duplicate action/generation/tranche and identity/overfill refusals",
+    "Unavoidable economic prefix and corruption refusal",
+    "Safe observation duration with unsafe/unknown/gap resets",
+    "Duplicate/conflicting/backward clock refusal",
+    "Synthetic full-engine cancellation boundary",
+    "Synthetic full-engine coincident decision trade",
+    "Deliberately inconsistent engine latency refusal"
+  ],
+  "validation": false,
+  "live_changed": false
+}

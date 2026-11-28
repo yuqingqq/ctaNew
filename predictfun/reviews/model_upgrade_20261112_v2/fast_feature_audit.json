@@ -1,0 +1,95 @@
+{
+  "as_of": "2026-11-12T14:52:28.077036+00:00",
+  "status": "PASS",
+  "declaration_sha": "e120c7de8e3994a3760a65e4846fa7a2ca64742a81e87ade2b4a4edea09cfbc9",
+  "generated_source_sha": "b6b26b7b0b5d3c6d6d4c63e46884091bd2a88be30b4de7a02a08a50f183e8c00",
+  "population": [
+    {
+      "day": "20261023",
+      "n": 1924,
+      "exact": true
+    },
+    {
+      "day": "20261024",
+      "n": 1787,
+      "exact": true
+    },
+    {
+      "day": "20261025",
+      "n": 1712,
+      "exact": true
+    },
+    {
+      "day": "20261026",
+      "n": 2013,
+      "exact": true
+    },
+    {
+      "day": "20261027",
+      "n": 1758,
+      "exact": true
+    },
+    {
+      "day": "20261031",
+      "n": 1224,
+      "exact": true
+    },
+    {
+      "day": "20261101",
+      "n": 1301,
+      "exact": true
+    },
+    {
+      "day": "20261102",
+      "n": 1811,
+      "exact": true
+    },
+    {
+      "day": "20261103",
+      "n": 1810,
+      "exact": true
+    }
+  ],
+  "source_features": {
+    "20261023": "df315f4780fd0ca36eb0393913b393f1c89ec5e6f60fd9235bf5a2e70d4b3c6c",
+    "20261024": "963805f52504f359247c6f8b6059cd3c36bafc4ae093b522da359029dc663dda",
+    "20261025": "b2f8b86bf2a02ed6f6128da6fd161bfd6d1ff2f5c19b7c14f0bf6792d8e4b19c",
+    "20261026": "f14b11c0d3529fa4ac29b78025b88b4441e4b24dccfb180e5a3e4e32cdca245b",
+    "20261027": "483e7badeb22bd97b9fa76dffa9ca47151235ff69d39563f460064775b8240c8",
+    "20261031": "da1c42dfeb4eb2b44accbc98844426ae67c8933caeb94463641735913c2d4eb0",
+    "20261101": "789def36fd3dc7188c66515d778e35e2ea94ade2eb7fc9838f407d4f72819cfd",
+    "20261102": "b6f51219b663244ef0d6512f0c6a3f10693dc77288a2d9148d74750bf4e5222d",
+    "20261103": "10ccc8e7613a62208c18797fb39f8e93c96ae24315535388d2919e21d990ddcf"
+  },
+  "smoke_cases": 12,
+  "exact_features": true,
+  "future_invariant": true,
+  "known_bad_refusals": true,
+  "timings": [
+    {
+      "round": 0,
+      "version": "original",
+      "calls": 1200,
+      "seconds": 2.5818149968981743
+    },
+    {
+      "round": 0,
+      "version": "containers",
+      "calls": 1200,
+      "seconds": 0.3062234716489911
+    },
+    {
+      "round": 1,
+      "version": "containers",
+      "calls": 1200,
+      "seconds": 0.3061180403456092
+    },
+    {
+      "round": 1,
+      "version": "original",
+      "calls": 1200,
+      "seconds": 2.5748012671247125
+    }
+  ],
+  "limits": "No live replay implementation has changed. Exact full-engine no-op parity is required separately before adopting this path. Feature equality on consumed actions does not alone prove path equality or a full-engine speedup."
+}

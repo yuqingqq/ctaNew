@@ -1,0 +1,9 @@
+{
+  "as_of": "2026-11-13T07:29:21.006482+00:00",
+  "status": "FAILED",
+  "pid": 3149455,
+  "started_receipt_sha": "3f66cee6c9ffc41c6a24e6cd6a7e52a6cc0bea557f9e1d3c97cc084d2b36b030",
+  "log_sha": "2f8f0eebca776b1e733b913ca90298f98328a87405998089c92911d1b1a6bea5",
+  "error": "System Python lacks numpy imported by the inherited driver. No worker or scientific stage started.",
+  "correction": "Use the existing project venv interpreter for the pure orchestration process; scientific worker interpreter and all sources unchanged."
+}

@@ -1,0 +1,24 @@
+CHRONOLOGICAL PREDICTION BENCHMARK (pf_pipeline_bench.py): train 20261023, 20261024, 20261025; evaluate 20261027 (consumed; per decision, not per action)
+  POST - MAPPING GATE (J): PASS
+    side 0 20261027 J: CALIBRATED-IN-AMOUNT, MOVE-TERM-INFORMATIVE, RANKS-BEYOND-FAIR-EDGE, LOSING-DECILE-IDENTIFIED; value rank +0.0401 (fair edge +0.0232); amount 0.970, move 0.930, fill AUC 0.650, n 14,669
+    side 0 20261027 D: NOT-APPLICABLE, NOT-APPLICABLE, RANKS-BEYOND-FAIR-EDGE, LOSING-DECILE-IDENTIFIED; value rank +0.0472 (fair edge +0.0232); amount nan, move nan, fill AUC nan, n 14,669
+    side 0 20261027 M: CALIBRATED-IN-AMOUNT, MOVE-TERM-INFORMATIVE, RANKS-BEYOND-FAIR-EDGE, LOSING-DECILE-IDENTIFIED; value rank +0.0256 (fair edge +0.0232); amount 0.956, move 0.958, fill AUC 0.602, n 14,669
+    side 0 20261027 F: CALIBRATED-IN-AMOUNT, MOVE-TERM-INFORMATIVE, BASELINE, LOSING-DECILE-IDENTIFIED; value rank +0.0232 (fair edge +0.0232); amount 1.014, move 0.867, fill AUC 0.508, n 14,669
+    side 0 20261027 J value deciles (predicted / realized mean c): -36.69/-30.14 | -24.45/-16.12 | -19.80/-18.79 | -16.54/-16.54 | -13.72/-16.17 | -11.11/-14.80 | -8.59/-13.07 | -5.92/-10.45 | -2.97/-7.89 | +2.59/-5.51
+    side 1 20261027 J: CALIBRATED-IN-AMOUNT, MOVE-TERM-INFORMATIVE, RANKS-BEYOND-FAIR-EDGE, LOSING-DECILE-IDENTIFIED; value rank +0.0534 (fair edge -0.0148); amount 0.974, move 0.945, fill AUC 0.646, n 14,669
+    side 1 20261027 D: NOT-APPLICABLE, NOT-APPLICABLE, RANKS-BEYOND-FAIR-EDGE, LOSING-DECILE-IDENTIFIED; value rank +0.0531 (fair edge -0.0148); amount nan, move nan, fill AUC nan, n 14,669
+    side 1 20261027 M: CALIBRATED-IN-AMOUNT, MOVE-TERM-INFORMATIVE, RANKS-BEYOND-FAIR-EDGE, LOSING-DECILE-IDENTIFIED; value rank +0.0475 (fair edge -0.0148); amount 0.930, move 0.910, fill AUC 0.605, n 14,669
+    side 1 20261027 F: CALIBRATED-IN-AMOUNT, MOVE-TERM-NOT-SHOWN, BASELINE, LOSING-DECILE-IDENTIFIED; value rank -0.0148 (fair edge -0.0148); amount 1.040, move 0.831, fill AUC 0.510, n 14,669
+    side 1 20261027 J value deciles (predicted / realized mean c): -36.10/-36.38 | -24.97/-19.71 | -20.55/-18.12 | -17.26/-14.41 | -14.39/-15.22 | -11.77/-13.31 | -9.25/-13.68 | -6.63/-9.79 | -3.62/-9.29 | +1.88/-2.62
+  RETAIN - MAPPING GATE (J): PASS
+    side 0 20261027 J: CALIBRATED-IN-AMOUNT, MOVE-TERM-INFORMATIVE, RANKS-BEYOND-FAIR-EDGE, LOSING-DECILE-IDENTIFIED; value rank +0.1200 (fair edge +0.0474); amount 0.953, move 0.890, fill AUC 0.776, n 703,520
+    side 0 20261027 D: NOT-APPLICABLE, NOT-APPLICABLE, RANKS-BEYOND-FAIR-EDGE, LOSING-DECILE-IDENTIFIED; value rank +0.1131 (fair edge +0.0474); amount nan, move nan, fill AUC nan, n 703,520
+    side 0 20261027 M: CALIBRATED-IN-AMOUNT, MOVE-TERM-INFORMATIVE, RANKS-BEYOND-FAIR-EDGE, LOSING-DECILE-IDENTIFIED; value rank +0.1067 (fair edge +0.0474); amount 0.946, move 0.881, fill AUC 0.757, n 703,520
+    side 0 20261027 F: CALIBRATED-IN-AMOUNT, MOVE-TERM-INFORMATIVE, BASELINE, LOSING-DECILE-IDENTIFIED; value rank +0.0474 (fair edge +0.0474); amount 0.983, move 0.845, fill AUC 0.647, n 703,520
+    side 0 20261027 J value deciles (predicted / realized mean c): -26.62/-26.74 | -14.45/-16.43 | -10.93/-12.58 | -8.39/-10.45 | -6.26/-9.09 | -4.42/-6.61 | -2.89/-3.25 | -1.67/-1.95 | -0.70/-0.68 | +1.15/-0.08
+    side 1 20261027 J: CALIBRATED-IN-AMOUNT, MOVE-TERM-INFORMATIVE, RANKS-BEYOND-FAIR-EDGE, LOSING-DECILE-IDENTIFIED; value rank +0.1201 (fair edge +0.0543); amount 0.986, move 1.011, fill AUC 0.780, n 701,020
+    side 1 20261027 D: NOT-APPLICABLE, NOT-APPLICABLE, RANKS-BEYOND-FAIR-EDGE, LOSING-DECILE-IDENTIFIED; value rank +0.1096 (fair edge +0.0543); amount nan, move nan, fill AUC nan, n 701,020
+    side 1 20261027 M: CALIBRATED-IN-AMOUNT, MOVE-TERM-INFORMATIVE, RANKS-BEYOND-FAIR-EDGE, LOSING-DECILE-IDENTIFIED; value rank +0.1033 (fair edge +0.0543); amount 0.947, move 0.946, fill AUC 0.762, n 701,020
+    side 1 20261027 F: CALIBRATED-IN-AMOUNT, MOVE-TERM-INFORMATIVE, BASELINE, LOSING-DECILE-IDENTIFIED; value rank +0.0543 (fair edge +0.0543); amount 1.055, move 0.852, fill AUC 0.649, n 701,020
+    side 1 20261027 J value deciles (predicted / realized mean c): -30.09/-24.86 | -17.34/-17.77 | -13.01/-13.42 | -9.86/-10.41 | -7.27/-7.69 | -5.10/-4.88 | -3.30/-3.36 | -1.89/-1.86 | -0.81/-0.89 | +0.97/-0.71
+LIMITS: consumed days; per-decision tables (rows of one order overlap); economic value only through the simulator; queue rule M; no live validation.

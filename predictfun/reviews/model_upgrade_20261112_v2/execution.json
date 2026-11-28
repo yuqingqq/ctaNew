@@ -1,0 +1,8 @@
+{
+  "as_of": "2026-11-12T11:13:31.748881+00:00",
+  "status": "PASS",
+  "source_commit": "2e15184780852c37828f594dabc0b240e5a7e26c",
+  "driver_sha": "ca9d64f58a5e5374e7ea719ee3208462e7f4471871ec56997618530173d16b11",
+  "supersedes_driver": "model_upgrade_driver.py",
+  "change": "Wait for the continuation driver AND its audit finisher to exit before taking the Codex slot. No model, data or policy change."
+}

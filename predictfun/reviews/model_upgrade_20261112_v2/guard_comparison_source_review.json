@@ -1,0 +1,30 @@
+{
+  "as_of": "2026-11-13T02:15:29.597599+00:00",
+  "status": "PASS",
+  "scope": "Exact file-identity verification plus human static source review of named callbacks. PASS denotes unchanged artifact identity; it is not a new model-performance, chronology or live-calibration test.",
+  "artifact_sha": {
+    "/tmp/cta-model-upgrade-20261112/predictfun/research/pf_model_eval_policy.py": "bd6110d0d9e737112f5bde6f7400df559f5e2f18d45bdab05862fed55b7fd7a8",
+    "/tmp/cta-model-upgrade-20261112/predictfun/research/pf_default_pull_hooks.py": "d22348d05a491cc76cfb086a825262dd20dbf154268e9e739ea1448076787f4b",
+    "/tmp/cta-model-upgrade-20261112/predictfun/research/pf_order_policy_engine.py": "09f37691da8f903083a63699680b61c1b3aa495ecddd8fb2d0e1e23a9ba0d999",
+    "/tmp/cta-model-upgrade-20261112/predictfun/research/pf_step4_ladder_v3.py": "d678e7c3c4e47c6d60ebc031edf8d7fc7317210d5e58ff301d92d7ae0ece5f17",
+    "/tmp/cta-model-upgrade-20261112/predictfun/research/pf_order_policy_spec.py": "859f4ad61791d17e31f6af1f13ff8e5be3af95e2628ce51ad11bb94c41a077d0",
+    "/tmp/cta-model-upgrade-20261112/predictfun/research/pf_recovery_experiment_policy.py": "2cd46e035c2b29690c7286f5235dbbd9b9d066c1df13a14c564a6f8a561bb8ae",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/declaration.json": "3a54b294f438ca0348ac67a59e7f9ba7395d20a714604e8506196f78b8882d75",
+    "/tmp/cta-model-upgrade-20261112/predictfun/handoffs/20261113_model_guard_comparison_review.md": "ecc08bd771ff6f418f4ed485cbaeccb4f40865d429dbf2098d2d5385539187a2"
+  },
+  "source_declaration_sha": "3a54b294f438ca0348ac67a59e7f9ba7395d20a714604e8506196f78b8882d75",
+  "source_commit": "78285fe02d00962abc5f7148e6001a8f39a0ddc6",
+  "review": "predictfun/handoffs/20261113_model_guard_comparison_review.md",
+  "observed_identities": [
+    "pf_order_policy_engine.source -> own.window guard_state callback",
+    "pf_step4_ladder_v3.guard_state",
+    "pf_model_eval_policy.install.Hook.targets causal_guard branch",
+    "pf_model_eval_policy.due",
+    "pf_default_pull_hooks.Hook.targets default branch",
+    "pf_recovery_experiment_policy.install.Hook.targets"
+  ],
+  "interpretation": "Guard benchmark combines learned prediction with admission and immediate movement responses; STATIC10/HISTORY10 share the post-placement scoring schedule. No new variant or outcome inferred.",
+  "frozen_next_experiment_changed": false,
+  "validation": false,
+  "live_changed": false
+}

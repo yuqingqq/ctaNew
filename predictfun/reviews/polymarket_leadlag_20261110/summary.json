@@ -1,0 +1,332 @@
+{
+  "as_of": "2026-11-10T07:45:01.836662+00:00",
+  "result_as_of": "2026-11-10T07:38:30.368644+00:00",
+  "report_sha": "c537daecf7f181ee565acf1c390d9600f2a16ca391fe658d2bdd9fdd2c03b8b3",
+  "presentation_source_sha": "f96a87ad385eaec20b765292a9a3096f3a2fb0ff0105632c03277ae867766fe1",
+  "role": "Post-result aggregation/presentation only; frozen analysis remains unchanged.",
+  "phases": [
+    {
+      "phase": [
+        5,
+        60
+      ],
+      "windows": 71,
+      "peak_lag_ms": -100,
+      "peak_correlation": 0.22007635448078833,
+      "peak_pair_n": 38479,
+      "zero_lag_eligible_n": 38549,
+      "scheduled_n": 39050,
+      "coverage_percent": 98.71702944942382,
+      "daily": [
+        {
+          "day": "20261023",
+          "peak_lag_ms": -100,
+          "asymmetry_200ms": -0.11658359658740275
+        },
+        {
+          "day": "20261024",
+          "peak_lag_ms": -100,
+          "asymmetry_200ms": -0.14294459703387263
+        },
+        {
+          "day": "20261025",
+          "peak_lag_ms": -200,
+          "asymmetry_200ms": -0.05489873102907399
+        },
+        {
+          "day": "20261026",
+          "peak_lag_ms": -200,
+          "asymmetry_200ms": -0.1372101997004253
+        },
+        {
+          "day": "20261027",
+          "peak_lag_ms": -200,
+          "asymmetry_200ms": -0.1707075764688511
+        },
+        {
+          "day": "20261031",
+          "peak_lag_ms": 0,
+          "asymmetry_200ms": -0.09103278692732203
+        },
+        {
+          "day": "20261101",
+          "peak_lag_ms": -100,
+          "asymmetry_200ms": -0.2532620334668149
+        },
+        {
+          "day": "20261102",
+          "peak_lag_ms": -200,
+          "asymmetry_200ms": -0.2599610903506608
+        },
+        {
+          "day": "20261103",
+          "peak_lag_ms": -100,
+          "asymmetry_200ms": -0.20826386471338998
+        }
+      ]
+    },
+    {
+      "phase": [
+        60,
+        180
+      ],
+      "windows": 71,
+      "peak_lag_ms": -100,
+      "peak_correlation": 0.1873180433764465,
+      "peak_pair_n": 81057,
+      "zero_lag_eligible_n": 81125,
+      "scheduled_n": 85200,
+      "coverage_percent": 95.21713615023474,
+      "daily": [
+        {
+          "day": "20261023",
+          "peak_lag_ms": -100,
+          "asymmetry_200ms": -0.1673710256573817
+        },
+        {
+          "day": "20261024",
+          "peak_lag_ms": -200,
+          "asymmetry_200ms": -0.11494674527102382
+        },
+        {
+          "day": "20261025",
+          "peak_lag_ms": -500,
+          "asymmetry_200ms": -0.04231424526668155
+        },
+        {
+          "day": "20261026",
+          "peak_lag_ms": -100,
+          "asymmetry_200ms": -0.11491312150027685
+        },
+        {
+          "day": "20261027",
+          "peak_lag_ms": -500,
+          "asymmetry_200ms": -0.06229658974214612
+        },
+        {
+          "day": "20261031",
+          "peak_lag_ms": -100,
+          "asymmetry_200ms": -0.05528919070320977
+        },
+        {
+          "day": "20261101",
+          "peak_lag_ms": -100,
+          "asymmetry_200ms": -0.10635899122719474
+        },
+        {
+          "day": "20261102",
+          "peak_lag_ms": -100,
+          "asymmetry_200ms": -0.20641798945337622
+        },
+        {
+          "day": "20261103",
+          "peak_lag_ms": -100,
+          "asymmetry_200ms": -0.24405051854668716
+        }
+      ]
+    },
+    {
+      "phase": [
+        180,
+        240
+      ],
+      "windows": 71,
+      "peak_lag_ms": -200,
+      "peak_correlation": 0.23225905604662728,
+      "peak_pair_n": 28209,
+      "zero_lag_eligible_n": 28334,
+      "scheduled_n": 42600,
+      "coverage_percent": 66.51173708920187,
+      "daily": [
+        {
+          "day": "20261023",
+          "peak_lag_ms": -100,
+          "asymmetry_200ms": -0.10862879617944694
+        },
+        {
+          "day": "20261024",
+          "peak_lag_ms": -500,
+          "asymmetry_200ms": -0.04984173320264057
+        },
+        {
+          "day": "20261025",
+          "peak_lag_ms": -100,
+          "asymmetry_200ms": -0.05894719345452902
+        },
+        {
+          "day": "20261026",
+          "peak_lag_ms": -500,
+          "asymmetry_200ms": -0.1047599455146635
+        },
+        {
+          "day": "20261027",
+          "peak_lag_ms": -100,
+          "asymmetry_200ms": -0.0745724772551346
+        },
+        {
+          "day": "20261031",
+          "peak_lag_ms": -200,
+          "asymmetry_200ms": -0.17950618097158796
+        },
+        {
+          "day": "20261101",
+          "peak_lag_ms": -200,
+          "asymmetry_200ms": -0.36237099619454083
+        },
+        {
+          "day": "20261102",
+          "peak_lag_ms": -200,
+          "asymmetry_200ms": -0.2563686727623376
+        },
+        {
+          "day": "20261103",
+          "peak_lag_ms": -200,
+          "asymmetry_200ms": -0.18455505410929068
+        }
+      ]
+    },
+    {
+      "phase": [
+        240,
+        295
+      ],
+      "windows": 71,
+      "peak_lag_ms": -500,
+      "peak_correlation": 0.19732550312053018,
+      "peak_pair_n": 5873,
+      "zero_lag_eligible_n": 6018,
+      "scheduled_n": 39050,
+      "coverage_percent": 15.41101152368758,
+      "daily": [
+        {
+          "day": "20261023",
+          "peak_lag_ms": 0,
+          "asymmetry_200ms": -0.07790563122908338
+        },
+        {
+          "day": "20261024",
+          "peak_lag_ms": -100,
+          "asymmetry_200ms": -0.2529425693301546
+        },
+        {
+          "day": "20261025",
+          "peak_lag_ms": -100,
+          "asymmetry_200ms": -0.10086325674445407
+        },
+        {
+          "day": "20261026",
+          "peak_lag_ms": -100,
+          "asymmetry_200ms": 0.04397595052749581
+        },
+        {
+          "day": "20261027",
+          "peak_lag_ms": -500,
+          "asymmetry_200ms": -0.050031753168669674
+        },
+        {
+          "day": "20261031",
+          "peak_lag_ms": -200,
+          "asymmetry_200ms": -0.5057887617037007
+        },
+        {
+          "day": "20261101",
+          "peak_lag_ms": 100,
+          "asymmetry_200ms": -0.2282296876827864
+        },
+        {
+          "day": "20261102",
+          "peak_lag_ms": 0,
+          "asymmetry_200ms": -0.08757891804901063
+        },
+        {
+          "day": "20261103",
+          "peak_lag_ms": 0,
+          "asymmetry_200ms": -0.07258158496302575
+        }
+      ]
+    }
+  ],
+  "forecast": [
+    {
+      "horizon_s": 0.5,
+      "test_dates": 6,
+      "windows": 47,
+      "eligible_n": 10107,
+      "scheduled_n": 13630,
+      "excluded_n": 3523,
+      "baseline_mse": 2.873899744028973,
+      "plus_pm_mse": 2.8610924453475377,
+      "zero_mse": 3.388715741565252,
+      "improvement_percent": 0.4456418045912891,
+      "improved_dates": 5
+    },
+    {
+      "horizon_s": 1.0,
+      "test_dates": 6,
+      "windows": 47,
+      "eligible_n": 10108,
+      "scheduled_n": 13630,
+      "excluded_n": 3522,
+      "baseline_mse": 7.740775842307888,
+      "plus_pm_mse": 7.710208016458401,
+      "zero_mse": 8.248046102097348,
+      "improvement_percent": 0.39489356715919743,
+      "improved_dates": 5
+    },
+    {
+      "horizon_s": 5.0,
+      "test_dates": 6,
+      "windows": 47,
+      "eligible_n": 10090,
+      "scheduled_n": 13630,
+      "excluded_n": 3540,
+      "baseline_mse": 47.56068374904941,
+      "plus_pm_mse": 47.52008091487566,
+      "zero_mse": 47.52470267591675,
+      "improvement_percent": 0.0853705854776705,
+      "improved_dates": 4
+    }
+  ],
+  "coverage_exclusions": [
+    {
+      "phase": [
+        5,
+        60
+      ],
+      "scheduled": 39050,
+      "invalid_mid_endpoint": 44,
+      "stale_endpoint": 457,
+      "eligible": 38549
+    },
+    {
+      "phase": [
+        60,
+        180
+      ],
+      "scheduled": 85200,
+      "invalid_mid_endpoint": 3429,
+      "stale_endpoint": 646,
+      "eligible": 81125
+    },
+    {
+      "phase": [
+        180,
+        240
+      ],
+      "scheduled": 42600,
+      "invalid_mid_endpoint": 13926,
+      "stale_endpoint": 340,
+      "eligible": 28334
+    },
+    {
+      "phase": [
+        240,
+        295
+      ],
+      "scheduled": 39050,
+      "invalid_mid_endpoint": 32977,
+      "stale_endpoint": 55,
+      "eligible": 6018
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "as_of": "2026-11-12T15:43:53.576454+00:00",
+  "source_commit": "e120056dd74df606757dca40f1bd12befac99d22",
+  "source_sha": {
+    "predictfun/research/pf_model_evidence_check.py": "b2cc672417b7b90fd35d33a14d985e05137be60120bae0e6c5d3f0a1f939d4ae"
+  },
+  "design": "Verify completed model, replay, inference, settlement, fill-detail and phase-presence evidence at the exact named artifacts. Require six dates and three scenarios, all five policies, zero-floor and age500 smoke controls, and recompute declared objective booleans from paired values. Bind hashes and actual parquet row counts; do not refit or change any statistic or policy.",
+  "limits": "Integrity and completeness instrument, not a new independent statistical estimator or live validation. Existing numerical reconciliation/forecast audits remain the sources for their claims. A PASS can accompany a negative model result. Full human interpretation and goal completion audit remain required.",
+  "controls": "Complete coverage accepted; missing/duplicate coverage refused. Correct artifact hash accepted; altered bytes refused. Positive strategy predicate accepted; planted contradictory improvement refused. Real first-day run checked separately before the full chain is available."
+}

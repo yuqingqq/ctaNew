@@ -1,0 +1,13 @@
+{
+  "as_of": "2026-11-13T07:29:21.359565+00:00",
+  "status": "PASS",
+  "pid": 3159222,
+  "declaration_sha": "c38f6acdcfd9dd9fac27345d86e4663afcd0cb828c8db3b13ebc979009056123",
+  "controls_sha": "b9163cad6c5e07586285f89d381afbc438b394bbc54b6a139fbc767b0107fa29",
+  "log": "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/logs/driver_accounting_v2_venv.log",
+  "supersedes": {
+    "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/accounting_v2_runner_import_failure.json",
+    "sha": "b7ff2bd1092a83f36f226e26e08b7067bb7bb62a69670a40b58ba91fb21d1c06"
+  },
+  "scope": "Correct launcher interpreter only; one replacement driver. No scientific retry occurred for failed import."
+}

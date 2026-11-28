@@ -1,0 +1,11 @@
+{
+  "as_of": "2026-11-12T15:27:44.365447+00:00",
+  "pid": 2820757,
+  "source_commit": "74147da4f1c8de112b2fa57ba8595bd34259e92f",
+  "driver_sha": "2cd4b86458aea40503426b2831d580ab40cc8073946d8c52a80e8959df8c7bf3",
+  "declaration_sha": "0b4c8b33054a8c9a4f4991c090734da7dd82bab89921b011bbbe5688359faff5",
+  "controls_sha": "0829d2c772067c7697ea7837abe1bee1d5dddf5ba1d1c1ee4a218e16fb12d398",
+  "wait_for": "Corrected evaluation and settlement finisher exit, both corrected settlement results, free core8; skip the already-verified Oct26 primary presence receipt.",
+  "log": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/presence_finisher.log",
+  "automatic_retry": false
+}

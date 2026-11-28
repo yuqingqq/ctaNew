@@ -1,0 +1,17 @@
+{
+  "as_of": "2026-11-13T07:33:32.836065+00:00",
+  "status": "PASS",
+  "smoke_sha": "5fff4d97062febaf004325f639a64a739f3d71f3f94bf50af3445b99366d5142",
+  "parity_sha": "68277f8c926ef5b0d4f74ae8ce9e259180a5521aebaff3f184a497a72413dbf1",
+  "declaration_sha": "c38f6acdcfd9dd9fac27345d86e4663afcd0cb828c8db3b13ebc979009056123",
+  "controls_sha": "b9163cad6c5e07586285f89d381afbc438b394bbc54b6a139fbc767b0107fa29",
+  "log_sha": "e9ab268bd06e6385c1f2f6c0a8f4be0e24561382ff89101230a9423bc8e4dbf8",
+  "receipt_copies_match": true,
+  "parity_artifacts_checked": 38,
+  "smoke_top_level_artifacts_checked": 5,
+  "presence_artifacts_checked": 4,
+  "provenance_checker": "pf_recovery_accounting_v2_spec.verify_provenance",
+  "provenance_positive_control": true,
+  "corrupted_provenance_refusals": 4,
+  "scope": "Post-hoc metadata/provenance review only. Scientific decisions and replay paths unchanged."
+}

@@ -1,0 +1,19 @@
+{
+  "as_of": "2026-11-13T12:55:40.046611+00:00",
+  "status": "PASS",
+  "source_commit": "2f6df830a87bcf62586713fccb5653915e30aba7",
+  "source_sha": {
+    "predictfun/research/pf_action_depth_target.py": "5f8469472baff6d54ce3a90bd85bde2210083e717df0d13798240a130334a550",
+    "predictfun/research/tests/test_action_depth_target.py": "2248244147e74d2d36aeb75b5a34465402c27d6f3c223deb3ad0fa71a2040c00"
+  },
+  "exit_code": 0,
+  "expected_tests": 8,
+  "reported_test_counts": [
+    "8"
+  ],
+  "log_sha": "fd0934aaabc82592d2cb36a80f2ccabdc03234d622ed3543e27b5a4f1b3c0d14",
+  "started_receipt_sha": "9942c813acd47794b5110c220ec50d455b9fa829c107d08359a3289a790c68fc",
+  "historical_payload_read": false,
+  "live_changed": false,
+  "scope": "Synthetic recorded-book target semantics and refusals only. No historical extraction, fitted model, forecast-performance estimate or policy change."
+}

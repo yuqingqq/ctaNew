@@ -1,0 +1,110 @@
+{
+  "as_of": "2026-11-12T11:31:47.691115+00:00",
+  "status": "PASS",
+  "declaration_sha": "b379f28f02b83dcb611df749c2eec7c00869272eb83a269380fa74c9ce13ce44",
+  "populations": [
+    {
+      "day": "20261023",
+      "feature_keys": 1728000,
+      "prediction_keys": 1728000,
+      "missing_score_keys": 385493,
+      "unmatched_feature_keys": 0,
+      "market_sides": 576,
+      "mutation_checks": 1152,
+      "changed_clock_sets": 0,
+      "examples": []
+    },
+    {
+      "day": "20261024",
+      "feature_keys": 1728000,
+      "prediction_keys": 1728000,
+      "missing_score_keys": 381249,
+      "unmatched_feature_keys": 0,
+      "market_sides": 576,
+      "mutation_checks": 1152,
+      "changed_clock_sets": 0,
+      "examples": []
+    },
+    {
+      "day": "20261025",
+      "feature_keys": 1728000,
+      "prediction_keys": 1728000,
+      "missing_score_keys": 396646,
+      "unmatched_feature_keys": 0,
+      "market_sides": 576,
+      "mutation_checks": 1152,
+      "changed_clock_sets": 0,
+      "examples": []
+    },
+    {
+      "day": "20261026",
+      "feature_keys": 1728000,
+      "prediction_keys": 1728000,
+      "missing_score_keys": 387656,
+      "unmatched_feature_keys": 0,
+      "market_sides": 576,
+      "mutation_checks": 1152,
+      "changed_clock_sets": 0,
+      "examples": []
+    },
+    {
+      "day": "20261027",
+      "feature_keys": 1728000,
+      "prediction_keys": 1728000,
+      "missing_score_keys": 396856,
+      "unmatched_feature_keys": 0,
+      "market_sides": 576,
+      "mutation_checks": 1152,
+      "changed_clock_sets": 0,
+      "examples": []
+    },
+    {
+      "day": "20261031",
+      "feature_keys": 1728000,
+      "prediction_keys": 1728000,
+      "missing_score_keys": 370954,
+      "unmatched_feature_keys": 0,
+      "market_sides": 576,
+      "mutation_checks": 1152,
+      "changed_clock_sets": 0,
+      "examples": []
+    },
+    {
+      "day": "20261101",
+      "feature_keys": 1728000,
+      "prediction_keys": 1728000,
+      "missing_score_keys": 390240,
+      "unmatched_feature_keys": 0,
+      "market_sides": 576,
+      "mutation_checks": 1152,
+      "changed_clock_sets": 0,
+      "examples": []
+    },
+    {
+      "day": "20261102",
+      "feature_keys": 1728000,
+      "prediction_keys": 1728000,
+      "missing_score_keys": 405472,
+      "unmatched_feature_keys": 0,
+      "market_sides": 576,
+      "mutation_checks": 1152,
+      "changed_clock_sets": 0,
+      "examples": []
+    },
+    {
+      "day": "20261103",
+      "feature_keys": 1728000,
+      "prediction_keys": 1728000,
+      "missing_score_keys": 403998,
+      "unmatched_feature_keys": 0,
+      "market_sides": 576,
+      "mutation_checks": 1152,
+      "changed_clock_sets": 0,
+      "examples": []
+    }
+  ],
+  "score_value_clock_sets_invariant": true,
+  "complete_score_availability_on_feature_grid": false,
+  "controls": "Finite-score quote invariance, missing-score refusal, regular-grid mutation invariance and known-bad off-grid clock sensitivity passed.",
+  "scope": "Clock-set invariance alone does not prove duplicate event processing or portfolio path invariance. Availability remains inherited when any observable feature key lacks a finite original score. This audit is not a replacement for full replay parity or chronological training."
+}

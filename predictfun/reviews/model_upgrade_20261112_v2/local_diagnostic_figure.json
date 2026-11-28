@@ -1,0 +1,24 @@
+{
+  "as_of": "2026-11-12T15:57:51.822858+00:00",
+  "status": "PASS",
+  "source_commit": "3b0316733f26944cbaf376e5b5f071c492a8bdfe",
+  "source_sha": "8989ff4182face405e7d1c47984af779d00bda5e96d49385257799422b59bc73",
+  "local_result_sha": "8c1987b1f3ce32aaaf343ccfb4ddc39f7cdf97255e9229f7f6640b159cf2e784",
+  "forecast_audit_sha": "33dfc3090d3d10002a41f77c7bfb99dcfda971307ad30b40d458d3a1912234ab",
+  "artifact_sha": {
+    "local_diagnostic_v1.png": "b8d29036013b09fab39d185af74a45ca3ca28791d3d7f4ed6990488e8941e253",
+    "local_diagnostic_v1.svg": "0c7636a4788546cf6c4ff21c162a658f5ee43979490d419f453e55fc1faf3135"
+  },
+  "n": 9917,
+  "days": [
+    "20261026",
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "missing_mark": 60,
+  "renderer_version": "3.10.9",
+  "scope": "Visualization of existing frozen local metrics only; no new model, selection, uncertainty estimator or portfolio claim."
+}

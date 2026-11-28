@@ -1,0 +1,14 @@
+{"stage": "bench", "kind": "post", "seconds": 54, "rss": 361}
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/research/pf_pipeline_bench.py", line 352, in <module>
+    bench()
+  File "/home/yuqing/ctaNew/predictfun/research/pf_pipeline_bench.py", line 209, in bench
+    del trs; C.guard('pipeline bench')
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/ctaNew/predictfun/research/pf_flow_price_common.py", line 120, in guard
+    require(I.K.rss_mib() < 2048., 'RSS cap at ' + where)
+  File "/home/yuqing/ctaNew/predictfun/research/pf_flow_price_common.py", line 42, in require
+    raise ValueError(message)
+ValueError: RSS cap at pipeline bench
+2026-11-19T04:41:59Z tag=pb_run rc=1 peak_rss_mib=3419 wall_s=233.55 cpu_user_s=194.70 memavail_start_gib=23 disk_free_gib=437->436 slot=claude
+FAILED pb_run

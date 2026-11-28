@@ -1,0 +1,51 @@
+{
+  "as_of": "2026-11-12T14:00:26.632418+00:00",
+  "status": "DECLARED",
+  "source_commit": "6f3e9e7dbaf0fdfe525537534d3c762c41f0719d",
+  "replay_declaration_sha": "4db0034cb7e0c527afe6da374bb7445e3189738e4a1ef6e371e2e84a32f36f2c",
+  "tasks": [
+    {
+      "stage": "prepare_20261027",
+      "args": [
+        "prepare",
+        "20261027"
+      ],
+      "receipt": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_eval_20261112_v2/prepare_20261027.json"
+    },
+    {
+      "stage": "prepare_20261031",
+      "args": [
+        "prepare",
+        "20261031"
+      ],
+      "receipt": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_eval_20261112_v2/prepare_20261031.json"
+    },
+    {
+      "stage": "prepare_20261101",
+      "args": [
+        "prepare",
+        "20261101"
+      ],
+      "receipt": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_eval_20261112_v2/prepare_20261101.json"
+    },
+    {
+      "stage": "detail_controls",
+      "args": [
+        "detail",
+        "controls"
+      ],
+      "receipt": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_eval_20261112_v2/detail_controls.json"
+    },
+    {
+      "stage": "age_controls",
+      "args": [
+        "age",
+        "controls"
+      ],
+      "receipt": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_age_20261112_v2/controls.json"
+    }
+  ],
+  "scope": "Run already-declared preparation and controls early in the idle second slot. No model/policy/scenario changes and no full replay. Existing evaluation driver is idle and upstream continuation driver remains active.",
+  "slot": "claude/core9",
+  "global_research_worker_cap": 2
+}

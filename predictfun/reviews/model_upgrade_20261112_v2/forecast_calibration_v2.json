@@ -1,0 +1,558 @@
+{
+  "as_of": "2026-11-12T14:28:17.154268+00:00",
+  "status": "PASS",
+  "version": 2,
+  "n": 9917,
+  "days": [
+    "20261026",
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "results": {
+    "static2": {
+      "n": 9917,
+      "target_horizon_ms": 2000,
+      "predicted_mean_c": -1.321724838455279,
+      "observed_mean_c": -1.5375223112519991,
+      "rmse_c": 13.49666477649338,
+      "mae_c": 5.6130226916046215,
+      "earlier_core_mean_rmse_c": 13.41469174570576,
+      "mse_improvement_c2": -2.2060054567308782,
+      "kept": 2426,
+      "predicted_kept_c": 2503.514321213951,
+      "actual_kept_same_horizon_c": -2841.4161057159954,
+      "common_10s_cross_horizon_rmse_c": 15.763182095934924
+    },
+    "static10": {
+      "n": 9917,
+      "target_horizon_ms": 10000,
+      "predicted_mean_c": -1.1568690626271239,
+      "observed_mean_c": -1.2420246811519455,
+      "rmse_c": 15.787238390198649,
+      "mae_c": 7.658184546141506,
+      "earlier_core_mean_rmse_c": 15.698542214489288,
+      "mse_improvement_c2": -2.792668328859776,
+      "kept": 3075,
+      "predicted_kept_c": 4484.11925269411,
+      "actual_kept_same_horizon_c": -2184.3970651930945,
+      "common_10s_cross_horizon_rmse_c": 15.787238390198649
+    },
+    "history10": {
+      "n": 9917,
+      "target_horizon_ms": 10000,
+      "predicted_mean_c": -1.2534817715346904,
+      "observed_mean_c": -1.2420246811519455,
+      "rmse_c": 15.762322516992457,
+      "mae_c": 7.727888213649769,
+      "earlier_core_mean_rmse_c": 15.698542214489288,
+      "mse_improvement_c2": -2.0065834695851947,
+      "kept": 3184,
+      "predicted_kept_c": 5017.467293387259,
+      "actual_kept_same_horizon_c": -1593.9188581532655,
+      "common_10s_cross_horizon_rmse_c": 15.762322516992457
+    },
+    "joint10": {
+      "n": 9917,
+      "target_horizon_ms": 10000,
+      "predicted_mean_c": -1.1226084024580922,
+      "observed_mean_c": -1.2420246811519455,
+      "rmse_c": 15.683668147480732,
+      "mae_c": 7.086991645452194,
+      "earlier_core_mean_rmse_c": 15.698542214489288,
+      "mse_improvement_c2": 0.4667810998005564,
+      "kept": 0,
+      "predicted_kept_c": 0.0,
+      "actual_kept_same_horizon_c": 0.0,
+      "common_10s_cross_horizon_rmse_c": 15.683668147480732
+    }
+  },
+  "calibration": [
+    {
+      "family": "static2",
+      "target_horizon_ms": 2000,
+      "bin": "[-inf, -5.0)",
+      "n": 309,
+      "predicted_c": -5.921323687536722,
+      "observed_c": -3.151005375096453
+    },
+    {
+      "family": "static2",
+      "target_horizon_ms": 2000,
+      "bin": "[-5.0, -1.0)",
+      "n": 5195,
+      "predicted_c": -2.453108978405604,
+      "observed_c": -1.6759030034838918
+    },
+    {
+      "family": "static2",
+      "target_horizon_ms": 2000,
+      "bin": "[-1.0, -0.1)",
+      "n": 1817,
+      "predicted_c": -0.566499138635955,
+      "observed_c": -1.3793426327318452
+    },
+    {
+      "family": "static2",
+      "target_horizon_ms": 2000,
+      "bin": "[-0.1, 0.0)",
+      "n": 170,
+      "predicted_c": -0.047884982396854306,
+      "observed_c": -1.293825454662901
+    },
+    {
+      "family": "static2",
+      "target_horizon_ms": 2000,
+      "bin": "[0.0, 0.1)",
+      "n": 169,
+      "predicted_c": 0.05001345365845068,
+      "observed_c": -0.17848132140441864
+    },
+    {
+      "family": "static2",
+      "target_horizon_ms": 2000,
+      "bin": "[0.1, 1.0)",
+      "n": 1214,
+      "predicted_c": 0.5077092327190621,
+      "observed_c": -1.4196108429912417
+    },
+    {
+      "family": "static2",
+      "target_horizon_ms": 2000,
+      "bin": "[1.0, 5.0)",
+      "n": 1042,
+      "predicted_c": 1.7981336110965371,
+      "observed_c": -1.0439973119071793
+    },
+    {
+      "family": "static2",
+      "target_horizon_ms": 2000,
+      "bin": "[5.0, inf)",
+      "n": 1,
+      "predicted_c": 5.047816262139813,
+      "observed_c": 0.0
+    },
+    {
+      "family": "static10",
+      "target_horizon_ms": 10000,
+      "bin": "[-inf, -5.0)",
+      "n": 450,
+      "predicted_c": -5.993937489021335,
+      "observed_c": -3.0659144223851653
+    },
+    {
+      "family": "static10",
+      "target_horizon_ms": 10000,
+      "bin": "[-5.0, -1.0)",
+      "n": 4793,
+      "predicted_c": -2.5912840543910955,
+      "observed_c": -1.4315428431864752
+    },
+    {
+      "family": "static10",
+      "target_horizon_ms": 10000,
+      "bin": "[-1.0, -0.1)",
+      "n": 1470,
+      "predicted_c": -0.5665717359948543,
+      "observed_c": -1.3474991507846041
+    },
+    {
+      "family": "static10",
+      "target_horizon_ms": 10000,
+      "bin": "[-0.1, 0.0)",
+      "n": 129,
+      "predicted_c": -0.051418233323554496,
+      "observed_c": 0.6907627234784615
+    },
+    {
+      "family": "static10",
+      "target_horizon_ms": 10000,
+      "bin": "[0.0, 0.1)",
+      "n": 143,
+      "predicted_c": 0.05150497052587489,
+      "observed_c": -3.011474938277865
+    },
+    {
+      "family": "static10",
+      "target_horizon_ms": 10000,
+      "bin": "[0.1, 1.0)",
+      "n": 1211,
+      "predicted_c": 0.5207260787982123,
+      "observed_c": -0.6200098175320834
+    },
+    {
+      "family": "static10",
+      "target_horizon_ms": 10000,
+      "bin": "[1.0, 5.0)",
+      "n": 1679,
+      "predicted_c": 2.147229879245142,
+      "observed_c": -0.5832760976431404
+    },
+    {
+      "family": "static10",
+      "target_horizon_ms": 10000,
+      "bin": "[5.0, inf)",
+      "n": 42,
+      "predicted_c": 5.737042695992422,
+      "observed_c": -0.5619926677422403
+    },
+    {
+      "family": "history10",
+      "target_horizon_ms": 10000,
+      "bin": "[-inf, -5.0)",
+      "n": 770,
+      "predicted_c": -6.436435556922218,
+      "observed_c": -4.8701475966895
+    },
+    {
+      "family": "history10",
+      "target_horizon_ms": 10000,
+      "bin": "[-5.0, -1.0)",
+      "n": 4460,
+      "predicted_c": -2.6277655137689133,
+      "observed_c": -1.1739730868929088
+    },
+    {
+      "family": "history10",
+      "target_horizon_ms": 10000,
+      "bin": "[-1.0, -0.1)",
+      "n": 1354,
+      "predicted_c": -0.5652459773805661,
+      "observed_c": -1.1251271189611436
+    },
+    {
+      "family": "history10",
+      "target_horizon_ms": 10000,
+      "bin": "[-0.1, 0.0)",
+      "n": 149,
+      "predicted_c": -0.047069785798869966,
+      "observed_c": -1.4354642198919425
+    },
+    {
+      "family": "history10",
+      "target_horizon_ms": 10000,
+      "bin": "[0.0, 0.1)",
+      "n": 160,
+      "predicted_c": 0.04764460753184309,
+      "observed_c": -0.38297180083784976
+    },
+    {
+      "family": "history10",
+      "target_horizon_ms": 10000,
+      "bin": "[0.1, 1.0)",
+      "n": 1091,
+      "predicted_c": 0.53994304377595,
+      "observed_c": -0.9298733673533032
+    },
+    {
+      "family": "history10",
+      "target_horizon_ms": 10000,
+      "bin": "[1.0, 5.0)",
+      "n": 1891,
+      "predicted_c": 2.2112845267117627,
+      "observed_c": -0.2908559999832197
+    },
+    {
+      "family": "history10",
+      "target_horizon_ms": 10000,
+      "bin": "[5.0, inf)",
+      "n": 42,
+      "predicted_c": 5.6958870335871365,
+      "observed_c": 0.7585040412264895
+    },
+    {
+      "family": "joint10",
+      "target_horizon_ms": 10000,
+      "bin": "[-5.0, -1.0)",
+      "n": 6772,
+      "predicted_c": -1.23827817394413,
+      "observed_c": -1.7275431024965537
+    },
+    {
+      "family": "joint10",
+      "target_horizon_ms": 10000,
+      "bin": "[-1.0, -0.1)",
+      "n": 3145,
+      "predicted_c": -0.873541409611208,
+      "observed_c": -0.19657770202772007
+    }
+  ],
+  "supersedes": {
+    "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/result.json",
+    "sha": "8c1987b1f3ce32aaaf343ccfb4ddc39f7cdf97255e9229f7f6640b159cf2e784",
+    "scope": "Forecast calibration/error interpretation only. Original STATIC2-versus10s numbers retained explicitly as cross-horizon diagnostics; original common10s action-policy comparisons remain their declared estimand."
+  },
+  "sources": {
+    "20261023": {
+      "feature_sha": "df315f4780fd0ca36eb0393913b393f1c89ec5e6f60fd9235bf5a2e70d4b3c6c",
+      "data_receipt_sha": "96be634c85c2c4560ad5a2ee1316bca71a1325238851cd6ed148f7dae5f2a9f0"
+    },
+    "20261024": {
+      "feature_sha": "963805f52504f359247c6f8b6059cd3c36bafc4ae093b522da359029dc663dda",
+      "data_receipt_sha": "d2f99d2c38f49e4b2c8b3b561a41fafc78c00863ffa306bda0942b91c45fa9d4"
+    },
+    "20261025": {
+      "feature_sha": "b2f8b86bf2a02ed6f6128da6fd161bfd6d1ff2f5c19b7c14f0bf6792d8e4b19c",
+      "data_receipt_sha": "f93f6e283436978d77065213a885a6da631eac56e725d3dba4f28b6bd793254f"
+    },
+    "20261026": {
+      "feature_sha": "f14b11c0d3529fa4ac29b78025b88b4441e4b24dccfb180e5a3e4e32cdca245b",
+      "data_receipt_sha": "87e0122f3f571027b644b6e975268d39f2dd1c87615a49b7a3bb14ee48272680"
+    },
+    "20261027": {
+      "feature_sha": "483e7badeb22bd97b9fa76dffa9ca47151235ff69d39563f460064775b8240c8",
+      "data_receipt_sha": "17dd136f7455a023e54ad5ab65be3b4bb9be0e46b2d890eacd7e51b293e0b133"
+    },
+    "20261031": {
+      "feature_sha": "da1c42dfeb4eb2b44accbc98844426ae67c8933caeb94463641735913c2d4eb0",
+      "data_receipt_sha": "bcef39412f6d153938c0897c5676375f245de1afadd4a6b2bc511e3eb2d89e69"
+    },
+    "20261101": {
+      "feature_sha": "789def36fd3dc7188c66515d778e35e2ea94ade2eb7fc9838f407d4f72819cfd",
+      "data_receipt_sha": "57f7f1170263157dd222e8853edaa3aeffb6ca21d234d2d5489637e4ea97bbb5"
+    },
+    "20261102": {
+      "feature_sha": "b6f51219b663244ef0d6512f0c6a3f10693dc77288a2d9148d74750bf4e5222d",
+      "data_receipt_sha": "d94b02b166babf7f203dd251d00243c65c2bc99a279f2ab7573585c4194e1fe2"
+    },
+    "20261103": {
+      "feature_sha": "10ccc8e7613a62208c18797fb39f8e93c96ae24315535388d2919e21d990ddcf",
+      "data_receipt_sha": "0ad7494076408e76ffa14d39c91b5591cce6a4aeade7f019dbb03c2c0844d819"
+    }
+  },
+  "folds": [
+    {
+      "day": "20261026",
+      "core_days": [
+        "20261023",
+        "20261024"
+      ],
+      "calibration_day": "20261025",
+      "fit_sha": "f671e600b33e4f4963bf292cf3eec2f7b67a417ebe80db7c6ef4f403cf7721d3"
+    },
+    {
+      "day": "20261027",
+      "core_days": [
+        "20261023",
+        "20261024",
+        "20261025"
+      ],
+      "calibration_day": "20261026",
+      "fit_sha": "21054488c0335704f57d42d22ed7a1a86d6354c5f497b6bda9394eca4dd09151"
+    },
+    {
+      "day": "20261031",
+      "core_days": [
+        "20261023",
+        "20261024",
+        "20261025",
+        "20261026"
+      ],
+      "calibration_day": "20261027",
+      "fit_sha": "df83fb83c6c87902f2e6bcae3a7751f62394015726e4634584d19f54915fd0a9"
+    },
+    {
+      "day": "20261101",
+      "core_days": [
+        "20261023",
+        "20261024",
+        "20261025",
+        "20261026",
+        "20261027"
+      ],
+      "calibration_day": "20261031",
+      "fit_sha": "8c88b77a13dea10a3bb82d5012ccaf878e3da81c7abde2756e167e11e6d69015"
+    },
+    {
+      "day": "20261102",
+      "core_days": [
+        "20261023",
+        "20261024",
+        "20261025",
+        "20261026",
+        "20261027",
+        "20261031"
+      ],
+      "calibration_day": "20261101",
+      "fit_sha": "103eb3be3358b2a2ea04ffd21c78537c0683224862e7b4b01a9fa8ca9a0dde3e"
+    },
+    {
+      "day": "20261103",
+      "core_days": [
+        "20261023",
+        "20261024",
+        "20261025",
+        "20261026",
+        "20261027",
+        "20261031",
+        "20261101"
+      ],
+      "calibration_day": "20261102",
+      "fit_sha": "6a301aa8b1f0b965694ecc12124147ec95911d7faca81a1c426f275bafc44910"
+    }
+  ],
+  "reconstructed": [
+    {
+      "day": "20261026",
+      "population": "calibration",
+      "n": 1712,
+      "families": [
+        "static2",
+        "static10",
+        "history10",
+        "joint10",
+        "causal_guard"
+      ],
+      "saved_sha": "f8d1e148cfe707aa0630581d73787e83afd67866921e7776af09e3255806defd"
+    },
+    {
+      "day": "20261026",
+      "population": "predictions",
+      "n": 2013,
+      "families": [
+        "static2",
+        "static10",
+        "history10",
+        "joint10",
+        "causal_guard"
+      ],
+      "saved_sha": "e4694576402f43634ab39475b763be77738fc8189fd577156274fe5042a346f6"
+    },
+    {
+      "day": "20261027",
+      "population": "calibration",
+      "n": 2013,
+      "families": [
+        "static2",
+        "static10",
+        "history10",
+        "joint10",
+        "causal_guard"
+      ],
+      "saved_sha": "2eff8a5d20bc33c1df2620568cfe15740dbe0aa6ca1fb31d4a89dfbc903fad0d"
+    },
+    {
+      "day": "20261027",
+      "population": "predictions",
+      "n": 1758,
+      "families": [
+        "static2",
+        "static10",
+        "history10",
+        "joint10",
+        "causal_guard"
+      ],
+      "saved_sha": "6ab100524c25a47d7ba79bd5dfa6ae60a4fbca649c3087bf67f1d7cc671e9ea5"
+    },
+    {
+      "day": "20261031",
+      "population": "calibration",
+      "n": 1758,
+      "families": [
+        "static2",
+        "static10",
+        "history10",
+        "joint10",
+        "causal_guard"
+      ],
+      "saved_sha": "c8f7ed5d167c757eb55df1ad88f0ce304cd23575db55c0fe588388944192c7df"
+    },
+    {
+      "day": "20261031",
+      "population": "predictions",
+      "n": 1224,
+      "families": [
+        "static2",
+        "static10",
+        "history10",
+        "joint10",
+        "causal_guard"
+      ],
+      "saved_sha": "c6a6a3ba72eb60d7c0bfebec590a49e4fd7d41c68a3050f0c8fa2f8fbd526a65"
+    },
+    {
+      "day": "20261101",
+      "population": "calibration",
+      "n": 1224,
+      "families": [
+        "static2",
+        "static10",
+        "history10",
+        "joint10",
+        "causal_guard"
+      ],
+      "saved_sha": "0fd2412ed114a47cc05bd11d564f32d4c0fa15b3011b6277fc3202b618613878"
+    },
+    {
+      "day": "20261101",
+      "population": "predictions",
+      "n": 1301,
+      "families": [
+        "static2",
+        "static10",
+        "history10",
+        "joint10",
+        "causal_guard"
+      ],
+      "saved_sha": "e8277d18be4c1bb659491e66d9c6d4e7e917bdaa7f22cd641a410651e40c8437"
+    },
+    {
+      "day": "20261102",
+      "population": "calibration",
+      "n": 1301,
+      "families": [
+        "static2",
+        "static10",
+        "history10",
+        "joint10",
+        "causal_guard"
+      ],
+      "saved_sha": "2bb28c715bcae9e22656d4d53581b884aa44ac6863d4d2ecfccc77dc50ee6349"
+    },
+    {
+      "day": "20261102",
+      "population": "predictions",
+      "n": 1811,
+      "families": [
+        "static2",
+        "static10",
+        "history10",
+        "joint10",
+        "causal_guard"
+      ],
+      "saved_sha": "2e16fe623289c535089ad9054bef246d606127d2459b31f112e266bf59b2e546"
+    },
+    {
+      "day": "20261103",
+      "population": "calibration",
+      "n": 1811,
+      "families": [
+        "static2",
+        "static10",
+        "history10",
+        "joint10",
+        "causal_guard"
+      ],
+      "saved_sha": "c03ee8d8969607ef77659f207fb1cc27f22202d30c1255e2327c911b742c9770"
+    },
+    {
+      "day": "20261103",
+      "population": "predictions",
+      "n": 1810,
+      "families": [
+        "static2",
+        "static10",
+        "history10",
+        "joint10",
+        "causal_guard"
+      ],
+      "saved_sha": "8328a3acc50f0d7f30a004da165025f52e709c6cc1ef6b2efa6ce75378dd72e0"
+    }
+  ],
+  "declaration_sha": "473258d7330e7889475a65a756f4cd31a1794b8095a2356fa87a5f5fa054fbeb",
+  "validation": false,
+  "promoted": false,
+  "limits": "Consumed-day calibration and exact artifact reconstruction; no refitting or new candidate selection. Baseline is earlier-core mean; uncertainty remains at the day unit. Execution and live-fill limitations are unaffected."
+}

@@ -1,0 +1,18 @@
+{
+  "as_of": "2026-11-12T12:05:46.875301+00:00",
+  "source_commit": "81109594021759f5eea6326ecccef0a78e6cc352",
+  "source_sha": {
+    "predictfun/research/pf_model_forecast_audit.py": "a2c09004d35933d3041247c5fd28c60a021fe26f850b8c45e6406b7b534e71c0",
+    "predictfun/research/model_forecast_finish.py": "b889025042b4f8465f0d9997629cb4874a9dcba9de4b5369f2952bc2d857c7d7"
+  },
+  "model_declaration_sha": "507da9caad303bf71b476e2e506d0814a74077bc39f64bbffa730614f37e1883",
+  "horizons_ms": {
+    "static2": 2000,
+    "static10": 10000,
+    "history10": 10000,
+    "joint10": 10000
+  },
+  "design": "Independent saved-artifact forecast reconstruction on every chronological test and calibration population, including direct models, joint forecasts and earlier-only guard. Check action/feature/model/receipt identity, reconstruct forecasts without refitting, and compute forecast calibration against each family own training horizon. Compare to the earlier-core-only mean target, never a mean fitted on the outer test. Preserve common10s action-selection comparisons from the original report.",
+  "correction": "The original report computes STATIC2 forecast error, observed calibration-bin value and actual kept advantage against10s outcomes although that model predicts2s. Preserve those numbers as explicitly cross-horizon diagnostics, and supersede their interpretation as same-target forecast calibration using a version2 receipt. Other families already predict10s. No model, policy, threshold, data, fitted calibrator or selection changes.",
+  "controls": "Perfect own-target forecast has zero error; the same score against the other horizon has nonzero error. Nonfinite score and unknown family refused. Positive saved-output equality and corrupted prediction refusal. All counts/as-of and consumed-history caveats retained."
+}

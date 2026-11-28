@@ -1,0 +1,14 @@
+{
+  "as_of": "2026-11-11T16:38:09.466973+00:00",
+  "version": 2,
+  "supersedes": "training population of original declaration; no original model was fit",
+  "original_declaration_sha": "5f9c37d050d286449a021f7aaa0fb5bd97e2ca034dda231639b64c32c48b3c13",
+  "source_commit": "f167d50beda7628c6d7fb778080f858bce08f81a",
+  "source_sha": {
+    "predictfun/research/pf_own_order_fit_v2.py": "50aec6efd274596fbcbe445b963ea5ba469425151141bfc913d6c19865786257",
+    "predictfun/research/run_own_order_v2.sh": "324d64c4a1bd6029fa388181cba05ed1c59c288216a7157703163fcbd32300a2",
+    "predictfun/research/tests/test_order_fit_v2.py": "41bf8ca2e3efd3385ba9d46cc514a99d75fbb1c9aa96225b88ccdcf9050854b5"
+  },
+  "method": "Train on unique action identity (day/window/send/activation/first-cancel/initial-size plus all causal observed features), retaining reference when paths agree. Duplicate keys with conflicting labels refuse the fit. Path-specific neutral evaluation remains separate. No threshold, feature, model parameter, policy, label, null or test date changes.",
+  "validation": "Positive duplicate control and known-bad conflicting-label refusal. Full18 original controls retained. Declaration before any model fit or policy evaluation."
+}

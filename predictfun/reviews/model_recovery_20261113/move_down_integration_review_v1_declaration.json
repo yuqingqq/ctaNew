@@ -1,0 +1,237 @@
+{
+  "as_of": "2026-11-13T15:02:37.298567+00:00",
+  "source_commit": "9cae506c5b0377065fb0624fc1fea0e3dba9703d",
+  "source_sha": {
+    "predictfun/research/model_move_down_integration_review.py": "ff4adefdaff438375ae17ca7d097ad3874e56b1e925e30f52331e538b353c20f"
+  },
+  "producer_commit": "3695d17ca1a07b63ddec6c54c6fe3b54784351c2",
+  "producer_source_sha": {
+    "/home/yuqing/ctaNew/predictfun/research/pf_move_down.py": "ac2d388474c6dd247c41d37ac4f075e704eea2f68c34c06704ddcc9cf6cd5421",
+    "/home/yuqing/ctaNew/predictfun/research/run_move_down.sh": "4d6856bcc24c9d7bbcea9c0f291b8ba8f1d485354084af963a876abf918d5261",
+    "/home/yuqing/ctaNew/predictfun/research/pf_queue_place.py": "82a69aed6340be016ce7ed43bb1005dfba5da7eff76663c427a3dcd2da5bd922",
+    "/home/yuqing/ctaNew/predictfun/research/pf_side_moves.py": "562e72e5eb79f373d7f5e0cd5f1327ce3c6dd433cc0a5d7c73283e536c9a03ab",
+    "/home/yuqing/ctaNew/predictfun/research/pf_kp_s4.py": "4f173446bf07d7141a96bddf02470e38e66aa64b2b28a380eeb7dec9343530cc",
+    "/home/yuqing/ctaNew/predictfun/research/pf_best_gap.py": "2e07922c2eb47675f443852fe0707ebfbce411889aa0569754519058c9e7d3dc",
+    "/home/yuqing/ctaNew/predictfun/research/pf_pull_depth.py": "a8670b2e9751f16dce37aab7c18ce35cc31fa3431e392b9a7397f4375a9114ef",
+    "/home/yuqing/ctaNew/predictfun/research/pf_timing_split.py": "de33ec3e64f22f2db8226c1cbc85ea230e6cc1bb1a478773cc5a978da4997b48",
+    "/home/yuqing/ctaNew/predictfun/research/pf_depth_timing.py": "1e51024d9db458b69da37e32e73a8308a644b30d60d8d6cc6ea9fc5012441b97"
+  },
+  "input_sha": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/move_down.json": "65fc1cf5dd8d04cdb41b258fa973540f20823c1b42edf378eef4194d2d86fd05",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/move_down.txt": "c958ffad1316b6d758a281b6f73a090e77a4ad433afdf14d9c600d892d3a4659",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/day_20261023.json": "b5809f53e67c496cc9258879ef69e9d1b174a0170c6a51a35eef1dc9e01b6544",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/fills_20261023.parquet": "5948dbd39dc6af157c7f17d28615b94588e5173862c96e66bb2926ea048e009c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/levfills_20261023.parquet": "abf9f5656ce6b3557eca5452f5b8b600c19cb5dd705d2bb1c329f224a8b5c50c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/presence_20261023.parquet": "f9e84fcb87ea2c95c53374d3f7a3f08528eb536d53f6cd0374ef54bd19f4b31c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/whygone_20261023.parquet": "2e3135dc008f6cdc5493f534c113162b7ce29aa3826cfbc0f73dd598cb9a67f6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/pull_depth_20261113/events_20261023.parquet": "f44049ab986108428c3ee16e861de119c523b3e68884eecba404d8903c627736",
+    "/home/yuqing/ctaNew/data/predict_fun/research/pull_depth_20261113/pred_20261023.parquet": "470da1b72f8dd64b58d7c9193c65e8ad91bef642873661a80e4bf3fffb18bc61",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/day_20261024.json": "dec1800404453dc929feb12443bb4784a3db946355a76869f43b8dcbd524d36a",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/fills_20261024.parquet": "6efc00e183d0eed097327d708fdd00fa03f5a5524c2f3b53f715d9af31bbd6fa",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/levfills_20261024.parquet": "d56ebfcfd5dcd4b402f0bfa1362ea6cd9beddd02f5cecf79284477dcc65c9279",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/presence_20261024.parquet": "a59d3dbfbeb88edfdd26f48993f91163559163e4beee9a6f1ba0589b24895d93",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/whygone_20261024.parquet": "dc892cccfc470a8a2e87c95fa68113d38517ccab177b32e156770af757df0388",
+    "/home/yuqing/ctaNew/data/predict_fun/research/pull_depth_20261113/events_20261024.parquet": "c510f2881e83e3855a355e75eb7718a61ed32d113ae545ff508169a8a6c6e074",
+    "/home/yuqing/ctaNew/data/predict_fun/research/pull_depth_20261113/pred_20261024.parquet": "1c51b9fa8f616ddfe0647872f77af1a9d8f8eb2b2d248c4d6844069a5013cbcf",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/day_20261025.json": "ffdd18aa5686ad05b8f417a14f5619ffbeceba2a14d87a73e96fcfef33ff7abb",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/fills_20261025.parquet": "dc7d06c678e66354d0d7a93e27e0dd86e85e675299460e29cffa3a81de9dddc2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/levfills_20261025.parquet": "269978b856d78e8abbcce0edd15a2be3fcef0a1a23501d98114bf45a377b91b0",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/presence_20261025.parquet": "045c39e1e74b2e32ff7762852de2002478b26c900dff97a7575b3cd2c9196fd0",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/whygone_20261025.parquet": "a595cec2acfc7833a8cb71b770fed6311006dd73cf09c9a9fa541b4b273e1153",
+    "/home/yuqing/ctaNew/data/predict_fun/research/pull_depth_20261113/events_20261025.parquet": "073d3a4c6149f29bc0c4326f83e7f685fb1ea6a0a1e3704a928bc3ae11675ad0",
+    "/home/yuqing/ctaNew/data/predict_fun/research/pull_depth_20261113/pred_20261025.parquet": "2498cb0c6cd4e07ef5acab125821ca13bce445594e1d5f8d1bd4970e1ff85598",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/day_20261026.json": "7fef8d1da0bfe894607b88b012d27a9a9a9fa1f0964e145b1962ce886194e5e8",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/fills_20261026.parquet": "71d8bf1a057d53bc997a7c09f381daaf6672007e3194f1986ef17c63b95bdcc3",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/levfills_20261026.parquet": "fadbd91e23a89fd2fdd0d9222dd2039855533b10ee75a2d6d0e8c1871d816823",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/presence_20261026.parquet": "195690c28a2e5d9218ca8bcf597ef0c3dd1999c75ac4bb07ae7f18d418555e6a",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/whygone_20261026.parquet": "4b6eafa43077045b1878159429a9cb689b0e6b7d627962a4129600d3e90d2cf2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/pull_depth_20261113/events_20261026.parquet": "727da0a556ffa4f4459383fddb9dfa9a45c21a5b968b7db37e57b045e8d8d264",
+    "/home/yuqing/ctaNew/data/predict_fun/research/pull_depth_20261113/pred_20261026.parquet": "eb1a8268bc02e02522f9ea7ac5211c2dc818767db2577498d1d777bee2878d1b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/day_20261027.json": "ae00eb72a76fa1d2a39b6a67cb34455ba7bafee4fe9a356c6323d31bca8c0126",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/fills_20261027.parquet": "9fd213187664e9a639df09e518d8912974b59ec8e57bbc2e02fb25a0c264fc0f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/levfills_20261027.parquet": "bb5fff9df937ecedc1b5a73c10556d728d6b69514fd9a4c9b5f8a1a3685d1f2c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/presence_20261027.parquet": "79a02f10f5473961a2115ab1fec358c28dd55fa35a3fa51d82546e2eea59305b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/whygone_20261027.parquet": "6302ef241e78d062a6e69c409642f1e3fa1a568cc94e310ec668f6f8b85c6ed1",
+    "/home/yuqing/ctaNew/data/predict_fun/research/pull_depth_20261113/events_20261027.parquet": "0dfa1418e2c6255ce5cd388a2fcfb1d34c9b4cf0eb2cdd088b18bd14bee9a233",
+    "/home/yuqing/ctaNew/data/predict_fun/research/pull_depth_20261113/pred_20261027.parquet": "5e3235203ce9bf967c04ed7bac83c6893521e8bc55d4c33b5468dc6cec834416",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/day_20261031.json": "3560a3da15eca026a76d205ea98cd9263acd6e04c12ef274e8a8513f57eabcd7",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/fills_20261031.parquet": "d3d8ebdcb808a60ddd5b7685d3371c52232f0219656a71e5e6f92b60545fa468",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/levfills_20261031.parquet": "d31bafca24a32701f10faa4a37565ad0e9e83a7fca7d3d6109c749b45204d349",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/presence_20261031.parquet": "c755fb8298bff49c545f5d67db3bad83732cb65523d8f0acb46a34b7262baf6e",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/whygone_20261031.parquet": "a2405e630830c8ee0d64eb3d595771942235cd8c611841cecb633796173c61a9",
+    "/home/yuqing/ctaNew/data/predict_fun/research/pull_depth_20261113/events_20261031.parquet": "8ad3171e3685c3a148953a71ad02cddf199846f190e6eb2f059170c0071c0b62",
+    "/home/yuqing/ctaNew/data/predict_fun/research/pull_depth_20261113/pred_20261031.parquet": "98f5c5104f540ca1f129eab1c947229efa9b4eb4b0a8ecfe7ba8e16d4ab3bc3e",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/day_20261101.json": "3110050eb1d5765109bc89229ffa2f26e95334773ac9a8b45777b303bfdbdf67",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/fills_20261101.parquet": "a51d4f6c617b2adb16799ed55a081bffc0cf0883806af3a7010247d98913dfd5",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/levfills_20261101.parquet": "db79d18f63c26e78918a668b3da94cd988145e1d6b94e771a17e2cbf53f291f4",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/presence_20261101.parquet": "51206494adc894752bf2b742f4a94bb5301c849355cc83b7f85e438067f59ad5",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/whygone_20261101.parquet": "457b84751069c74dc2e28b0a01bb2e380a9cbda787e0c30e74c2eadc1770b8cb",
+    "/home/yuqing/ctaNew/data/predict_fun/research/pull_depth_20261113/events_20261101.parquet": "50f0f7126e1ffbc438d3b8e77e0c4c7820ce231f603cbb68152361c1a9dc870f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/pull_depth_20261113/pred_20261101.parquet": "83141d1e9733ec69133fb22e6221df50d88bfb138cc2e8f2b9b1ff5a00b12e2f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/day_20261102.json": "89a38ea1ee5d6757e15e108a6146f1a0c2b98d9e0e76a30dc1898dcab1ad74d8",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/fills_20261102.parquet": "46eae15af845763ec34b11ee5f60dd4722d970185b9edcce223f8653cef1818b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/levfills_20261102.parquet": "b3e4081be8bf4d663996afbd2bd6bd866a959aed20de749c911ec4deb76cb5d1",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/presence_20261102.parquet": "63957844ae214e3035beffccb4e72604f3fdb56cacd7d4f638ef214ec62e55b7",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/whygone_20261102.parquet": "96131256f655e0fb2e7aa7daeac085af9bf7b30c13d89c83ad8c836457946827",
+    "/home/yuqing/ctaNew/data/predict_fun/research/pull_depth_20261113/events_20261102.parquet": "3779ad4956d35b13f2560675c0785b40b6405d172098bd79ffe8b7805ce9c1ce",
+    "/home/yuqing/ctaNew/data/predict_fun/research/pull_depth_20261113/pred_20261102.parquet": "3ab9691a501a6dd454466338a7d8832aa213ca3e3055d9871c40a48c51741cf2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/day_20261103.json": "9a572add8f63d0a98acf0718903b62f001eb0560cb5c523b5bf6100924f1eb2e",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/fills_20261103.parquet": "68d5935a2a9a77aa745ef87250cdb322e5f0f1a6eccc6b1196294c213057bc6b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/levfills_20261103.parquet": "78a70ebba38fb00ed38ec7dc7140321b03da88f75da899ee2fca008aa20c133d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/presence_20261103.parquet": "ac933c7ffc9fad1a9f14151dae7ae90ed02e392e5ab9be452f846e7f6b8df2fb",
+    "/home/yuqing/ctaNew/data/predict_fun/research/move_down_20261113/whygone_20261103.parquet": "efb9486afcee93cbef177c373043610cd7e6dbbc3a32249ad29749751d55e516",
+    "/home/yuqing/ctaNew/data/predict_fun/research/pull_depth_20261113/events_20261103.parquet": "1e940df23e28f584bc36efdb92da795afdd560b3bcfa28b45b27d91a37bf4468",
+    "/home/yuqing/ctaNew/data/predict_fun/research/pull_depth_20261113/pred_20261103.parquet": "1684f432e99d9d94e3cc805e2fce27d1142c1884b8d250033781444bd6f6bd12"
+  },
+  "source_controls": {
+    "original_positive": true,
+    "original_mutations": {
+      "MUT_NO_TAIL": true,
+      "MUT_ANY_EPISODE": true,
+      "MUT_MOVE_SIGN": true
+    },
+    "cancellation_clock_positive": {
+      "reported_state": "HELD-OLD",
+      "reported_reason": "trig",
+      "reported_dt": 500.0,
+      "actual_reason": "trig",
+      "actual_end_ms": 1540.0,
+      "cancel_request_ms": 1500.0,
+      "cancel_effective_ms": 1540.0,
+      "full_fill_ms": null
+    },
+    "pending_fill_counterexample": {
+      "reported_state": "HELD-OLD",
+      "reported_reason": "trig",
+      "reported_dt": 900.0,
+      "actual_reason": "filled",
+      "actual_end_ms": 1920.0,
+      "cancel_request_ms": 1900.0,
+      "cancel_effective_ms": 1940.0,
+      "full_fill_ms": 1920.0
+    },
+    "one_second_boundary_counterexample": {
+      "reported_state": "HELD-OLD",
+      "reported_reason": "trig",
+      "reported_dt": 990.0,
+      "actual_reason": "still live",
+      "actual_end_ms": 2030.0,
+      "cancel_request_ms": 1990.0,
+      "cancel_effective_ms": 2030.0,
+      "full_fill_ms": null
+    },
+    "already_pending_counterexample": {
+      "reported_state": "HELD-OLD",
+      "reported_reason": "trig",
+      "reported_dt": -10.0,
+      "actual_reason": "trig",
+      "actual_end_ms": 1030.0,
+      "cancel_request_ms": 990.0,
+      "cancel_effective_ms": 1030.0,
+      "full_fill_ms": null
+    },
+    "R521_omits_declared_minimum": true,
+    "R521_sparse_counterexample": {
+      "MD": {
+        "label": "HELPS",
+        "up": {
+          "M0": 9,
+          "M50": 9,
+          "M250": 9
+        },
+        "down": {
+          "M0": 0,
+          "M50": 0,
+          "M250": 0
+        },
+        "diff": {
+          "M0": 1.0,
+          "M50": 1.0,
+          "M250": 1.0
+        },
+        "all_trades_M50": 1.0,
+        "sign_holds_M250": true
+      },
+      "MDP": {
+        "label": "HELPS",
+        "up": {
+          "M0": 9,
+          "M50": 9,
+          "M250": 9
+        },
+        "down": {
+          "M0": 0,
+          "M50": 0,
+          "M250": 0
+        },
+        "diff": {
+          "M0": 1.0,
+          "M50": 1.0,
+          "M250": 1.0
+        },
+        "all_trades_M50": 1.0,
+        "sign_holds_M250": true
+      },
+      "MDF": {
+        "label": "HELPS",
+        "up": {
+          "M0": 9,
+          "M50": 9,
+          "M250": 9
+        },
+        "down": {
+          "M0": 0,
+          "M50": 0,
+          "M250": 0
+        },
+        "diff": {
+          "M0": 1.0,
+          "M50": 1.0,
+          "M250": 1.0
+        },
+        "all_trades_M50": 1.0,
+        "sign_holds_M250": true
+      },
+      "FAST": {
+        "label": "HELPS",
+        "up": {
+          "M0": 9,
+          "M50": 9,
+          "M250": 9
+        },
+        "down": {
+          "M0": 0,
+          "M50": 0,
+          "M250": 0
+        },
+        "diff": {
+          "M0": 1.0,
+          "M50": 1.0,
+          "M250": 1.0
+        },
+        "all_trades_M50": 1.0,
+        "sign_holds_M250": true
+      }
+    },
+    "historical_affected_counts": null
+  },
+  "aggregate_controls": [
+    "weighted values, age selection and sign refusal",
+    "metadata positive and bad clock refusal",
+    "day verdict positive/empty and 29/30 population boundary"
+  ],
+  "days": [
+    "20261023",
+    "20261024",
+    "20261025",
+    "20261026",
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "scope": "Bounded audit of published MOVE-DOWN outputs, not a policy experiment.\n\nReconstruct the existing readings, check the declared cell minimum, and\nexercise exact producer code on cancellation-clock counterexamples. No new\nmodel, threshold, null, confidence interval, raw-tape replay or forward day.\n",
+  "validation": false,
+  "live_changed": false
+}

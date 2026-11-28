@@ -1,0 +1,41 @@
+{
+  "as_of": "2026-11-12T11:51:57.104142+00:00",
+  "source_commit": "a36dec60050f4827e472d50b98439565f5fa5be5",
+  "source_sha": {
+    "predictfun/research/pf_model_age_stress.py": "481b54df4a2ca15394be60f622a12d4ae98be2cc4e0a99bf57d443f3ae730389",
+    "predictfun/research/model_age_driver.py": "a0c6b8a99db10bdcfc6badeb9d37c369885d817e22640ef1a56f8935b60a8d61"
+  },
+  "base_declaration_sha": "97f4e92ce1055adaeaefaea907d878c0c1e3a979bc77be7214e35cbd64d96162",
+  "prior_age_diagnostic_sha": "36f0ea6adadef989e29caeec6e197bec0c0fc04b9fd4904c280cb9c4f68fe60e",
+  "days": [
+    "20261026",
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "minimum_fill_age_ms": 500.0,
+  "timing": {
+    "shift": -50,
+    "place": 40,
+    "cancel": 22,
+    "notice": 100,
+    "queue": "M"
+  },
+  "primary": "history10",
+  "validation": false,
+  "design": "Separate stress condition, declared before new model results. Keep the same five frozen policies, models, sizes, reservations, primary execution clocks and queueM. All potential fills younger than500ms since actual activation receive zero credit. Public prints still update queue ahead; blocked quantity does not consume own remaining quantity, change cash/inventory, or schedule a fill notice. Later decisions and fills evolve through the full sequential engine. No retroactive deletion of fills or post-hoc PnL subtraction.",
+  "interpretation": "A deliberately conservative sensitivity to an unreliable fill region, not an empirical calibration, real venue matching rule, or a formal lower bound. Real young fills exist. Previous age precision estimates are not used as per-fill probabilities.",
+  "evaluation": "Complete six-day portfolios at matched inventory limits. HISTORY10 versus STATIC10 and earlier-only guard on common marked windows, with missing counts, day intervals, inventory-square time and terminal exposure. Existing primary/stress results remain unchanged. Report whether original predicates also survive this extra condition; never promote on the stress alone.",
+  "controls": "Synthetic age0/499.999/500ms boundaries, preserved remaining/trade quantity and no future/invalid age. Zero-floor eight-window full-engine parity against existing primary replay for every policy and all win/fill/request/generation/independent artifacts.500ms smoke and full runs must have no younger fills, independent engine reconciliation, and nonzero blocked opportunities. No-op control is not a candidate.",
+  "multiplicity": {
+    "new_policies": 0,
+    "new_models": 0,
+    "additional_stress_conditions": 1,
+    "age_floors_tested": 1,
+    "total_execution_conditions": 3
+  },
+  "live_changed": false,
+  "promoted": false
+}

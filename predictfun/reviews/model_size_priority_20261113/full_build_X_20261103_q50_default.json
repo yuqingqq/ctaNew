@@ -1,0 +1,135 @@
+{
+  "as_of": "2026-11-14T05:25:38.219267+00:00",
+  "status": "PASS",
+  "day": "20261103",
+  "profile": "q50",
+  "scenario": "X",
+  "mode": "default",
+  "smoke": false,
+  "capture": true,
+  "windows": 288,
+  "arm": "MICRO|G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP50+XNA+XMIN1+XV+RO60+S240+DDEFAULT|mid|AM:50:50:95",
+  "grid_identity": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/data_20261103.json": "0ad7494076408e76ffa14d39c91b5591cce6a4aeade7f019dbb03c2c0844d819",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/context/20261103.json": "55d061140ed92870980c49fdbe9bf4c33998c5618e791a3f78a3ddcfc0b2f893",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261103/rows_rl_d2_pk.parquet": "0f2e4b38f6e3fc022078d65297cc3124b9ce9da7b8994369f345b4088c867ec3"
+  },
+  "prerequisite_sha": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_size_priority_20261113/full_run_X_20261103_q50_default.json": "77db657a56020d87da067854ef671214c6f6942c6ee286b6ea0d2c623b069487",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261103/registry.parquet": "b1f1e3cb0ad1936347490c4996d1274a356889ae1a9edcf97a45f33834703b17"
+  },
+  "generated_source_sha": "b7038b204332f12f7222171077f2e8cae2a2334794fa802827d0080582824bb8",
+  "checks": {
+    "accounting": {
+      "windows": 288,
+      "generations": 16003,
+      "fill_records": 19582,
+      "generation_statuses": {
+        "accepted_no_cancel": 13958,
+        "postonly_refused": 2045
+      },
+      "settlement": {
+        "windows": 288,
+        "tie_windows": 0,
+        "fills": 19582,
+        "tie_fills": 0,
+        "tie_shares": 0.0,
+        "correction_usd": -9.775513731824503e-14,
+        "raw_settlement_usd": -2964.984298806873,
+        "corrected_settlement_usd": -2964.984298806873
+      },
+      "missing_mark_windows": 3,
+      "hashes": {
+        "valued_windows.parquet": "a19e8278ee63adfa07fd675fe1e9be03f5abf4c9494378bf3e955372bdd1aa3a",
+        "presence.parquet": "eaa3a98d20f7020e9905136084e58e6508f9fc56a80bfde18d8f41c762c4ec6c",
+        "accounting_windows.parquet": "fea7e977bb138497117ad692c33b09609a0a1c40bc707f327cc315481a6643f4"
+      },
+      "note": "Equal configured inventory limits do not establish equal realized risk."
+    },
+    "neutral": {
+      "counts": {
+        "win": 288,
+        "fills": 19582,
+        "requests": 28699,
+        "generations": 16003
+      },
+      "native_requests_fills_windows_exact": true,
+      "generation_economics_exact": true
+    },
+    "captures": {
+      "n": 1958,
+      "statuses": {
+        "eligible": 1954,
+        "missing_mark": 4
+      },
+      "short_statuses": {
+        "eligible": 1958
+      },
+      "paired_counts": {
+        "windows": 288,
+        "neutral_generations": 16003,
+        "observations": 8222,
+        "labeled_actions": 1958,
+        "captures": 1958
+      },
+      "all_withdrawal_labels_reconstructed": true,
+      "trade_windows": 288,
+      "source_trade_legs": 664637,
+      "neutral_fill_records": 19582,
+      "all_fill_provenance_reconstructed": true
+    },
+    "features": {
+      "n": 1958,
+      "statuses": {
+        "eligible": 1954,
+        "missing_mark": 4
+      },
+      "all_saved_features_reconstructed": true,
+      "all_metadata_and_targets_preserved": true,
+      "independent_grid_verification_required": true
+    },
+    "join": {
+      "n": 1958,
+      "statuses": {
+        "eligible": 1954,
+        "withdrawal=missing_mark;short=eligible": 4
+      },
+      "fingerprint": "42f658d535b3c7c2679e3b11a71cd40c9d8b956ea363a8189c3345266ab65490"
+    }
+  },
+  "hashes": {
+    "accounting_windows.parquet": "fea7e977bb138497117ad692c33b09609a0a1c40bc707f327cc315481a6643f4",
+    "capstate.json": "03b68c2a87a2fe474aa23ffd391eaf7406a7096dd492a8901b0a4ccc0295aa87",
+    "fills/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP50_XNA_XMIN1_XV_RO60_S240_DDEFAULT__mid_szAM-50-50-95.parquet": "d3575c94623e97712c7b5a516fa91cb267985316cdc864a779404e14aa9e3cab",
+    "generations/default.parquet": "8adec89b4d29da6edc2a4ba1ec17810595c8d21389a2f5b852312d90d42f62ae",
+    "independent_windows.parquet": "03cd11a1393fa931c5745bf8319b98c6a8583c7c511ace672ea629123536f01d",
+    "presence.parquet": "eaa3a98d20f7020e9905136084e58e6508f9fc56a80bfde18d8f41c762c4ec6c",
+    "requests/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP50_XNA_XMIN1_XV_RO60_S240_DDEFAULT__mid_szAM-50-50-95.parquet": "03728ea5bba9485930bbf59f6c6fe6663f1a46c84ef9f772291498d10c3c460f",
+    "residual/actions.parquet": "b46184833032cfc92b7b1f9096d4b0679d63fb1f0c4d67e00523cbedcf4eaee0",
+    "residual/captures.jsonl.gz": "174aa52cc016f193d48add28225965f4c4bac26d188086b640280255778d2323",
+    "residual/construction.json": "7103dd223080a91013b5f54b6a8a87513547ff8f6212b1e93e2bd30986e3f35a",
+    "residual/feature_construction.json": "bdf49c3b6aa34ede034c25c499002772caed61bd6227b0b3c0a63da36eb860e5",
+    "residual/features.parquet": "8a179575c1185df8e69c33ad53ce792d25e05c9c260d26870495569ae07f3069",
+    "residual/observations.parquet": "44ed90224b78b0bfa16c2432170c2187b637cd67024551a054b7ab5ca3ab9a16",
+    "residual/population.parquet": "ea1adf58bd1993b22926dcb5df8b3878e2f7d80d9de39f06078f30a7ffddf5e9",
+    "residual/trade_provenance.jsonl.gz": "136ffbbb4ac9ebe3d087da807feacbe6f0d74378aae125a945cc6f650042dd36",
+    "residual/trade_provenance_construction.json": "4ee38bbc5cec5d5d88207631d6f712f085cf6291de9b31904bf3f25b28901baf",
+    "residual/windows.parquet": "3db0e4fde7378a4e102e55cefd4556b1701ac12ab2e65f987433e9025c6696d5",
+    "residual/withdrawal_captures.jsonl.gz": "a4f5335075ddc7e0a15a976004321c55135ea683508a2f9b248164433cc24eea",
+    "residual/withdrawal_construction.json": "1120996ac897f5cc5bccc82aef6c02bc99fdd4579974336f3e99cac8098252d6",
+    "residual/withdrawal_targets.parquet": "f43803cacc97abc7239d83896957bf9f2bfa75eaeaca9f97745043a92f89c7f1",
+    "summary.json": "88965b831cb5aad5c0703071afe4624170a75dcc05a4780276e078a4dda2d845",
+    "training_actions.parquet": "a3872da62b2736680c6218c8072fdb60ef51fe240829872e50b48ce6d04ed219",
+    "valued_windows.parquet": "a19e8278ee63adfa07fd675fe1e9be03f5abf4c9494378bf3e955372bdd1aa3a",
+    "win/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP50_XNA_XMIN1_XV_RO60_S240_DDEFAULT__mid_szAM-50-50-95.parquet": "306bdfea5664f64152a0d21b07447497dae91abf31e5daf2128bac68111500b8"
+  },
+  "declaration_sha": "cea782c5c074158c44b52f302e79907f23808123535e6cbf01a77f5c40b5183c",
+  "validation": false,
+  "live_changed": false,
+  "fast_execution": {
+    "declaration_sha": "3fb7540f58d3733be4ce9baf96305e628adc899622d24e6701ebeecdeb82e900",
+    "controls_sha": "3777296bf53a159feab403d903129057f9a7b8da8d822fe2b775698dfe8b391e",
+    "driver_handoff_sha": "3ef7eda31f51ee172ef794cfc2f5bdfbc92715f14c0ad40258700ced54398be9",
+    "transformed_feature_sha": "3073043a4bd73de3827554dc93517aa9b3b1c24ca250e2f89288174f1466fedf"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "as_of": "2026-11-13T14:39:25.497304+00:00",
+  "status": "REFUSED_BEFORE_DECLARATION",
+  "source_commit": "da7bfb306b362a9643d8a6680f8a8005c7f5c38b",
+  "control_sha": "83c4c4b7cc7b84e4d6d0519425953ee7edea93cf532849ee694bef169210f676",
+  "missing_control_source": [
+    "predictfun/research/model_recovery_proxy_audit_driver.py"
+  ],
+  "historical_payload_read": false,
+  "declaration_written": false,
+  "reason": "Declaration source closure omitted a slot-control helper; all 76 synthetic tests passed but the freeze correctly refused incomplete source binding."
+}

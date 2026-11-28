@@ -1,0 +1,15 @@
+{
+  "as_of": "2026-11-11T18:55:25.105556+00:00",
+  "state": "PREPARED_NOT_RUN",
+  "source_commit": "05d5a9361864981234903855d1997d18a4f58ccd",
+  "source_sha": "584ec6e7fa7382d5097e5fde7e7942dc93db42ebf18fe6b8217c79c87feac295",
+  "run_after": "All26 stages and pf_default_pull_completion_v3 PASS; shared numeric slot free.",
+  "module": "predictfun.research.pf_default_pull_plot",
+  "purpose": "Display all24 predeclared paired trading-value/exposure comparisons for six policies, two baselines and two execution scenarios; no new fitting/selection.",
+  "controls": "Expected24 synthetic populations accepted; impossible common-window count refused at render time.",
+  "artifacts": [
+    "tradeoff.png",
+    "tradeoff.pdf",
+    "tradeoff_receipt.json"
+  ]
+}

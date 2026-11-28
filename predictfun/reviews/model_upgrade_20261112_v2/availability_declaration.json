@@ -1,0 +1,30 @@
+{
+  "as_of": "2026-11-12T11:33:08.480005+00:00",
+  "source_commit": "1cfd9fde34f9edfcac6a9ae72bfdc0ad73975438",
+  "source_sha": "8086811f917c898da940db1bba40fbfd3bfb0d3539a4e69ce976f17a21050e41",
+  "model_declaration_sha": "507da9caad303bf71b476e2e506d0814a74077bc39f64bbffa730614f37e1883",
+  "clock_audit_sha": "60f8d31a9ac89b11e8f8ad91497f055ce924acaf8310afc233dde8130f0f3005",
+  "input_sha": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261023/preds_t60k.parquet": "1d04f4079933ff37498f5cd5c475ec8a3d96d417da5fd5f48fd2a7eb8b306745",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261023/rows_rl_d2_pk.parquet": "08a869a600ab411a7884e2214f390a42c2f527c065151afa7b4da10a21233750",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261024/preds_t60k.parquet": "4a81efd59fad6fe11cb97c15cc7ec57eda9048df64ed61acf81e2f4604d29922",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261024/rows_rl_d2_pk.parquet": "112e48d765bb3b086c1c34153080650e795b0d4a43bd674e0eb5b1c92827bca2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261025/preds_t60k.parquet": "e311faa032c1586f13acd95171823f1a241fa53983fdee5a638e7bb58ea10f57",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261025/rows_rl_d2_pk.parquet": "e1c2f43f98971b5a877927fa14c4ed3c85ac229cd2f846547ba8dda6938c9a7b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261026/preds_t60k.parquet": "2eadf2440b82657fa13601e30fb47115d93ca5bd3bd82b19614010c67801b959",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261026/rows_rl_d2_pk.parquet": "30ca5564b0f22a5613e0b94baab6a279f7e08117ae9ee1c9023e37f8d076a04e",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261027/preds_t60k.parquet": "b0f92acd2b5bca2eae2e4b66b44e4ae1a9d5a2a92d117e72de6be111ad2a8c69",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261027/rows_rl_d2_pk.parquet": "7f169da05924f911c31419bdc7eb63e66a79ffe9a533652111b3b0ea22745153",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261031/preds_t60k.parquet": "cd973564779f5b98510fe880b9befd3474d7068cccf5cae5e75572569ec40f08",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261031/rows_rl_d2_pk.parquet": "8e3c6cfe265afad17deaa1ead6282ce5d2649aac7ca658e3d0d422851b050920",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261101/preds_t60k.parquet": "1f163ad9023dd45fb1996425e7a6abf2f935cc6c0a4353a1a6c20369a94d7ce1",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261101/rows_rl_d2_pk.parquet": "aa19022ade494241cdebd994871259da243797685d01f22754ee14da7557d868",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261102/preds_t60k.parquet": "5581a19ecd7c1a17108f6465a2d3b5df9cd5615377f70704eaad0f993b0badf0",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261102/rows_rl_d2_pk.parquet": "5b3a5333183f257de9b5f39f467537e214272889f8f09d3050659c8db786fee1",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261103/preds_t60k.parquet": "d076036d7c3f6fda1c33c4272134990a9a2466167f5cb132093136b3161df6eb",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261103/rows_rl_d2_pk.parquet": "0f2e4b38f6e3fc022078d65297cc3124b9ce9da7b8994369f345b4088c867ec3",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step4/minute_lines_t60k.json": "3852fec9e0fa36d164c5482688574663bc4230033911ce0d47049e04ac87735d"
+  },
+  "design": "Explain all absent inherited scores on the same nine consumed feature grids. Required keys are t_rel<240 and known pf_mid, exactly the observable live mask in pf_step5_guard_preds.write. Start-known processing may add finite sentinel values outside this mask; it cannot justify a missing score inside the mask. Report both categories. Synthetic complete availability positive and planted missing required score must differ. No outcomes, fitting, policy changes or new model selection.",
+  "mask_source_sha": "15d84613d74a9d0f08c501a279ebd28372e501ae5fb057b65162fa159f6e0f56"
+}

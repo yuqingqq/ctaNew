@@ -1,0 +1,15 @@
+{
+  "as_of": "2026-11-12T12:39:16.531822+00:00",
+  "status": "DECLARED",
+  "source_commit": "c8df8ce9bda38b108ecec81c8561b89a64938fc5",
+  "driver_sha": "9e67e4a5361f0b53cdd6cfc11cbd4262c1df451bfadae0d005a8d1317186ee05",
+  "stopped_idle_pid": 723465,
+  "verified_input_receipts": {
+    "20261023": "9671a7f7a23a4be82f8900aaa1d1ec9a65dafb0ff452ae3996f091f9d225f754",
+    "20261024": "a1602aaf8b81339105661f5e0b82cd45b81a77aaa7471b4ab75d73f7c986d358",
+    "20261025": "584187e5f85c3070a77ded01f5dcce995ef0f35c864ea717b1bd76901bb3fe13",
+    "20261026": "9d6e1e28a0c056a63a3e6c7c8477920d5ee21c8d2c6579559c7c99f8761c6a2d"
+  },
+  "scope": "Process completed days24/25/26, fit the already-frozen first fold26, prepare its replay and run the predeclared eight-window primary smoke. No changed data, model parameters, targets, policy, test dates or selection. Full six-day comparisons remain required.",
+  "resources": "Temporarily borrow an idle second slot for this bounded integration check; one numerical worker, global cap2 and run_light memory/disk protections. Stop the own idle waiter first to prevent duplicate stages; resume unchanged original core8 pipeline after successful smoke. Do not interrupt upstream or other research jobs."
+}

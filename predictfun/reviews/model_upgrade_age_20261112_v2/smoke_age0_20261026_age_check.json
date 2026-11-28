@@ -1,0 +1,36 @@
+{
+  "as_of": "2026-11-12T16:21:20.819436+00:00",
+  "status": "PASS",
+  "floor_ms": 0.0,
+  "blocked_opportunities": 0,
+  "fill_age_checks": [
+    {
+      "mode": "default",
+      "fills": 360,
+      "minimum_age_ms": 3.546630859375
+    },
+    {
+      "mode": "legacy_guard",
+      "fills": 10,
+      "minimum_age_ms": 5.0
+    },
+    {
+      "mode": "causal_guard",
+      "fills": 21,
+      "minimum_age_ms": 4.0
+    },
+    {
+      "mode": "static10",
+      "fills": 82,
+      "minimum_age_ms": 0.0
+    },
+    {
+      "mode": "history10",
+      "fills": 84,
+      "minimum_age_ms": 0.0
+    }
+  ],
+  "zero_floor_exact": true,
+  "summary_sha": "9255b1159023583224277edbc477d14bbe6174438103f58ecc3e7a3ad7602e8b",
+  "declaration_sha": "0960a232d5bc90924a26994d4f56d27e8a8fa673bc4b247cc19995c83ef2e168"
+}

@@ -1,0 +1,10 @@
+{
+  "as_of": "2026-11-13T07:28:13.713393+00:00",
+  "status": "PASS",
+  "pid": 3149455,
+  "declaration_sha": "c38f6acdcfd9dd9fac27345d86e4663afcd0cb828c8db3b13ebc979009056123",
+  "controls_sha": "b9163cad6c5e07586285f89d381afbc438b394bbc54b6a139fbc767b0107fa29",
+  "log": "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/logs/driver_accounting_v2.log",
+  "original_failed_driver_terminal": true,
+  "scope": "Single replacement pure driver; unchanged frozen task sequence routed through versioned accounting adapter. No automatic retry of further failures."
+}

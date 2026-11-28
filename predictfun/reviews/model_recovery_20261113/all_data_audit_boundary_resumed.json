@@ -1,0 +1,28 @@
+{
+  "as_of": "2026-11-13T07:08:59.659753+00:00",
+  "status": "PASS",
+  "resume_requested_at": "2026-11-13T07:08:59.659655+00:00",
+  "driver_before": {
+    "pid": 3592076,
+    "state": "T",
+    "start_ticks": 681103241,
+    "argv": [
+      "/home/yuqing/pricer-sol/venv/bin/python3",
+      "/tmp/cta-model-upgrade-20261112/predictfun/research/model_recovery_driver.py"
+    ]
+  },
+  "driver_after": {
+    "pid": 3592076,
+    "state": "S",
+    "start_ticks": 681103241,
+    "argv": [
+      "/home/yuqing/pricer-sol/venv/bin/python3",
+      "/tmp/cta-model-upgrade-20261112/predictfun/research/model_recovery_driver.py"
+    ]
+  },
+  "held_receipt_sha": "7a11d42e7122e1051f78817a82b362d98f4a222d657651482caa327450c00231",
+  "all_data_evidence_sha": "ea5b41f304b879ddbbc3c1378620f3cdbcf4d1bc661745e6a8717fae81943f6e",
+  "stress_smoke_sha": "33524bbcd4433adb436e34bf3c84915e8fdd9a6ffed475a70be9ac4793030753",
+  "checkpoint_log_sha": "088742f5286b05c0a449c43421baef860c2a6f3bd37ce105e76aa2f5b3a17c68",
+  "scope": "Supersedes the all-data audit held state. Same pure launcher resumed after the stress smoke finished and the committed frozen-verifier checkpoint passed on all nine recovery days. No numerical worker interrupted or retried. Proxy forecast audit stays queued on core9. No model, target, policy, gate or live change."
+}

@@ -1,0 +1,8 @@
+{
+  "as_of": "2026-11-13T07:57:45.770948+00:00",
+  "status": "FAILED",
+  "pid": 3412581,
+  "log_sha": "0bdff0acbff433b2be0aba4e7458467cc15e854b41ca95d1f02400873b09695b",
+  "error": "System Python cannot import numpy through the reused launcher helper; no tests or workers started.",
+  "correction": "Launch the unchanged orchestration source with the project venv interpreter and one-thread libraries."
+}

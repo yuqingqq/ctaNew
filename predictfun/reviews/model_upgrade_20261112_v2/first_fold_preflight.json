@@ -1,0 +1,39 @@
+{
+  "as_of": "2026-11-12T12:42:30.374356+00:00",
+  "status": "PASS",
+  "execution_sha": "636257a662c482d6efa5a534dc4d69cd88ee44d5fd4256fcfa686ebaf26fe0fa",
+  "completed": [
+    {
+      "stage": "data_20261024",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/data_20261024.json",
+      "sha": "d2f99d2c38f49e4b2c8b3b561a41fafc78c00863ffa306bda0942b91c45fa9d4"
+    },
+    {
+      "stage": "data_20261025",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/data_20261025.json",
+      "sha": "f93f6e283436978d77065213a885a6da631eac56e725d3dba4f28b6bd793254f"
+    },
+    {
+      "stage": "data_20261026",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/data_20261026.json",
+      "sha": "87e0122f3f571027b644b6e975268d39f2dd1c87615a49b7a3bb14ee48272680"
+    },
+    {
+      "stage": "fit_20261026",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/fit_20261026.json",
+      "sha": "f671e600b33e4f4963bf292cf3eec2f7b67a417ebe80db7c6ef4f403cf7721d3"
+    },
+    {
+      "stage": "prepare_20261026",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_eval_20261112/prepare_20261026.json",
+      "sha": "e1d4ed5037db9cda012e2bc677420acb0d211b04e20a4ac2ac43ab67e0d5061b"
+    },
+    {
+      "stage": "smoke_X_20261026",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_eval_20261112/smoke_X_20261026.json",
+      "sha": "46e006f105ac8830192d37f7a45caa9fb4dee097af8441a41f89607946bd3e14"
+    }
+  ],
+  "resumed_model_driver_pid": 1320642,
+  "scope": "One predeclared chronological fold and eight-window smoke only. No complete six-day performance claim, model selection or live change."
+}

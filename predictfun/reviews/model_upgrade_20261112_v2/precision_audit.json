@@ -1,0 +1,106 @@
+{
+  "as_of": "2026-11-12T13:48:29.562956+00:00",
+  "status": "PASS",
+  "rows": [
+    {
+      "day": "20261023",
+      "n": 1924,
+      "fixed_exact": true,
+      "old_mismatch_rows": 745,
+      "fields": {
+        "d_bnimb250": {
+          "mismatches": 187,
+          "maximum_abs_error": 5.960464477539063e-08
+        },
+        "d_pfimb250": {
+          "mismatches": 634,
+          "maximum_abs_error": 5.960464477539063e-08
+        }
+      }
+    },
+    {
+      "day": "20261024",
+      "n": 1787,
+      "fixed_exact": true,
+      "old_mismatch_rows": 687,
+      "fields": {
+        "d_bnimb250": {
+          "mismatches": 149,
+          "maximum_abs_error": 5.960464477539063e-08
+        },
+        "d_pfimb250": {
+          "mismatches": 594,
+          "maximum_abs_error": 5.960464477539063e-08
+        }
+      }
+    },
+    {
+      "day": "20261025",
+      "n": 1712,
+      "fixed_exact": true,
+      "old_mismatch_rows": 623,
+      "fields": {
+        "d_bnimb250": {
+          "mismatches": 128,
+          "maximum_abs_error": 5.960464477539063e-08
+        },
+        "d_pfimb250": {
+          "mismatches": 541,
+          "maximum_abs_error": 5.960464477539063e-08
+        }
+      }
+    },
+    {
+      "day": "20261026",
+      "n": 2013,
+      "fixed_exact": true,
+      "old_mismatch_rows": 858,
+      "fields": {
+        "d_bnimb250": {
+          "mismatches": 250,
+          "maximum_abs_error": 5.960464477539063e-08
+        },
+        "d_pfimb250": {
+          "mismatches": 712,
+          "maximum_abs_error": 5.960464477539063e-08
+        }
+      }
+    }
+  ],
+  "effects": [
+    {
+      "day": "20261026",
+      "family": "static2",
+      "n": 2013,
+      "changed_predictions": 0,
+      "changed_signs": 0,
+      "maximum_abs_score_difference": 0.0,
+      "model_sha": "fd7a2f5dbe3a8210735955e6ff327019634742f73749bc34c3661e745c485ff3",
+      "fit_sha": "f671e600b33e4f4963bf292cf3eec2f7b67a417ebe80db7c6ef4f403cf7721d3"
+    },
+    {
+      "day": "20261026",
+      "family": "static10",
+      "n": 2013,
+      "changed_predictions": 0,
+      "changed_signs": 0,
+      "maximum_abs_score_difference": 0.0,
+      "model_sha": "3ad66374886d4a5aa44c3d9b8983020cdf9d13993df8980ff8c115d7aa75ff57",
+      "fit_sha": "f671e600b33e4f4963bf292cf3eec2f7b67a417ebe80db7c6ef4f403cf7721d3"
+    },
+    {
+      "day": "20261026",
+      "family": "history10",
+      "n": 2013,
+      "changed_predictions": 0,
+      "changed_signs": 0,
+      "maximum_abs_score_difference": 0.0,
+      "model_sha": "a59a2a7b29266e38def6732045c1a49a1dc07da44a07c90a45d2b885f31e760c",
+      "fit_sha": "f671e600b33e4f4963bf292cf3eec2f7b67a417ebe80db7c6ef4f403cf7721d3"
+    }
+  ],
+  "original_replay_arithmetic_matches_training": false,
+  "corrected_arithmetic_matches_training": true,
+  "declaration_sha": "859d1494f2ae73aeb95f66ccbcf95cbe72f4e0b3d060737cbdd29d8b08e6ec47",
+  "scope": "Consumed neutral actions and first-fold fixed predictions. No full-policy performance or validation claim."
+}

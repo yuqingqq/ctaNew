@@ -1,0 +1,282 @@
+{
+  "as_of": "2026-11-13T07:31:17.805098+00:00",
+  "status": "PASS",
+  "day": "20261026",
+  "scenario": "age500",
+  "smoke": true,
+  "variants": [
+    {
+      "mode": "default",
+      "windows": 8,
+      "generations": 800,
+      "fills": 198,
+      "statuses": {
+        "accepted_no_cancel": 666,
+        "postonly_refused": 134
+      },
+      "settlement": {
+        "windows": 8,
+        "tie_windows": 1,
+        "fills": 198,
+        "tie_fills": 25,
+        "tie_shares": 76.73076923076923,
+        "correction_usd": 1.5543122344752192e-15,
+        "raw_settlement_usd": -5.664258203993191,
+        "corrected_settlement_usd": -5.664258203993189
+      },
+      "presence": [
+        {
+          "phase": "entry_0_60",
+          "windows": 8,
+          "duration_ms": 480000.0,
+          "side_ms": 660888.142578125,
+          "any_ms": 420986.259765625,
+          "both_ms": 239901.8828125
+        },
+        {
+          "phase": "reduce_only_60_240_1",
+          "windows": 8,
+          "duration_ms": 1440800.0,
+          "side_ms": 42695.77099609375,
+          "any_ms": 42563.77099609375,
+          "both_ms": 132.0
+        },
+        {
+          "phase": "whole_0_240_1",
+          "windows": 8,
+          "duration_ms": 1920800.0,
+          "side_ms": 703583.9135742188,
+          "any_ms": 463550.03076171875,
+          "both_ms": 240033.8828125
+        }
+      ],
+      "presence_sha": "0d3b4b441378d9db1ea02846ad00b02884b4d2be2ebc8e0444bef89aa9c0e9f4",
+      "hashes": {
+        "win": "0d5661f946cae79a0ba5833eb436ea4871c222cf3f07a1af1c1e924ade5c082f",
+        "fills": "7c9dce7915c510a37c52882a2f0ff2352be7088bb6e0948d1120a66beed18d1b",
+        "requests": "3a054bff2dd06a48fe7fa599ad26540a1a462d3ef424b326d528f55c73bbcff2"
+      },
+      "generation_sha": "5462cefaded3497f7800eac4877ef555ec9ab65f412836d93f56d6e4a5ab2d19"
+    },
+    {
+      "mode": "direct10",
+      "windows": 8,
+      "generations": 448,
+      "fills": 0,
+      "statuses": {
+        "pulled": 415,
+        "accepted_no_cancel": 16,
+        "postonly_refused": 10,
+        "scored_keep": 7
+      },
+      "settlement": {
+        "windows": 8,
+        "tie_windows": 1,
+        "fills": 0,
+        "tie_fills": 0,
+        "tie_shares": 0.0,
+        "correction_usd": 0.0,
+        "raw_settlement_usd": 0.0,
+        "corrected_settlement_usd": 0.0
+      },
+      "presence": [
+        {
+          "phase": "entry_0_60",
+          "windows": 8,
+          "duration_ms": 480000.0,
+          "side_ms": 72792.47241210938,
+          "any_ms": 70317.63452148438,
+          "both_ms": 2474.837890625
+        },
+        {
+          "phase": "reduce_only_60_240_1",
+          "windows": 8,
+          "duration_ms": 1440800.0,
+          "side_ms": 66.0,
+          "any_ms": 66.0,
+          "both_ms": 0.0
+        },
+        {
+          "phase": "whole_0_240_1",
+          "windows": 8,
+          "duration_ms": 1920800.0,
+          "side_ms": 72858.47241210938,
+          "any_ms": 70383.63452148438,
+          "both_ms": 2474.837890625
+        }
+      ],
+      "presence_sha": "573e98b44dd1a3adb02cbeed87e38ae927c11f0f237db688a386c2347ad81e49",
+      "hashes": {
+        "win": "9c71de1c2dcac9bcc2abcfd2fd5a149ae838c4c4edd22c12a7ba73b2ed7ff766",
+        "fills": "8851915d9bcb3469771f2893bdd33b460b0098030bd91d926b3f611f59a69d1e",
+        "requests": "2b4f5b425efa1ba6a83c5054a89997aa522ca1e678fd61d9b6a6a1f7b59c3e87"
+      },
+      "generation_sha": "004febc37b9d583368ed412dacc7e2bae6d2308e36627788806fcdf3bf33b24d"
+    },
+    {
+      "mode": "components10",
+      "windows": 8,
+      "generations": 458,
+      "fills": 2,
+      "statuses": {
+        "pulled": 421,
+        "accepted_no_cancel": 15,
+        "postonly_refused": 13,
+        "scored_keep": 9
+      },
+      "settlement": {
+        "windows": 8,
+        "tie_windows": 1,
+        "fills": 2,
+        "tie_fills": 0,
+        "tie_shares": 0.0,
+        "correction_usd": 1.1102230246251565e-16,
+        "raw_settlement_usd": -0.30000000000000004,
+        "corrected_settlement_usd": -0.29999999999999993
+      },
+      "presence": [
+        {
+          "phase": "entry_0_60",
+          "windows": 8,
+          "duration_ms": 480000.0,
+          "side_ms": 73887.5849609375,
+          "any_ms": 71003.86474609375,
+          "both_ms": 2883.72021484375
+        },
+        {
+          "phase": "reduce_only_60_240_1",
+          "windows": 8,
+          "duration_ms": 1440800.0,
+          "side_ms": 2971.381103515625,
+          "any_ms": 2971.381103515625,
+          "both_ms": 0.0
+        },
+        {
+          "phase": "whole_0_240_1",
+          "windows": 8,
+          "duration_ms": 1920800.0,
+          "side_ms": 76858.96606445312,
+          "any_ms": 73975.24584960938,
+          "both_ms": 2883.72021484375
+        }
+      ],
+      "presence_sha": "c4a8c0c1f697f13ae740e151ddaf87d2c049ab7a041b4cba6d36b8a58547a06e",
+      "hashes": {
+        "win": "e0be2735fb93653f3d2f72dab6229a1e4cafc80f01c01973840cd04610659354",
+        "fills": "bfe3194841b820b08ff7ab8ae09779b03773a2bd44fa576040285a6f08568b4c",
+        "requests": "034cea30dbd860ada9fb8384d707bc2525bcc70ad52cc6df212bef9f4c969992"
+      },
+      "generation_sha": "53a2e75ef2120e9ff1969c9c254b7f7862bc4e1fe452f96fad118add7f8c68b9"
+    },
+    {
+      "mode": "selective10",
+      "windows": 8,
+      "generations": 406,
+      "fills": 4,
+      "statuses": {
+        "pulled": 333,
+        "scored_keep": 46,
+        "accepted_no_cancel": 16,
+        "postonly_refused": 11
+      },
+      "settlement": {
+        "windows": 8,
+        "tie_windows": 1,
+        "fills": 4,
+        "tie_fills": 0,
+        "tie_shares": 0.0,
+        "correction_usd": 8.326672684688674e-17,
+        "raw_settlement_usd": -0.19999999999999996,
+        "corrected_settlement_usd": -0.19999999999999987
+      },
+      "presence": [
+        {
+          "phase": "entry_0_60",
+          "windows": 8,
+          "duration_ms": 480000.0,
+          "side_ms": 126763.93310546875,
+          "any_ms": 120444.33471679688,
+          "both_ms": 6319.598388671875
+        },
+        {
+          "phase": "reduce_only_60_240_1",
+          "windows": 8,
+          "duration_ms": 1440800.0,
+          "side_ms": 66.0,
+          "any_ms": 66.0,
+          "both_ms": 0.0
+        },
+        {
+          "phase": "whole_0_240_1",
+          "windows": 8,
+          "duration_ms": 1920800.0,
+          "side_ms": 126829.93310546875,
+          "any_ms": 120510.33471679688,
+          "both_ms": 6319.598388671875
+        }
+      ],
+      "presence_sha": "cfe5c3571687badf7e01d30da93efcc9a87b385545b9ca130f9c87c9bc7b18d8",
+      "hashes": {
+        "win": "49c98974d8e46a35696880fcabf9b51acacb330b8dbd46f79ae1fe69387baf53",
+        "fills": "b79df9dce35a0ffb6e72d95311de3a998a5a80b2765fde46cba159b4ffa0064e",
+        "requests": "05be09d5a20af88cb32f3d0593827e2358399a85ba9076ccb5ae637790ebc9ff"
+      },
+      "generation_sha": "2c6c97c501d2a3a42a378ca7d6fcafe2df840efe8f7072a945189b38cd94c260"
+    }
+  ],
+  "hashes": {
+    "independent_windows.parquet": "d7deeb01ba7af619bd88c3b4a54b80666770d6301e735cd2f8fb2137009d6e29",
+    "valued_windows.parquet": "38560ab59f84b011441db66b706a7c87646d990cd091f9dbc116c407838017d1",
+    "inference_audit.parquet": "071ed17981228ee0244abbd0f9339371466663fffc8e9c98a9fefabcafd79025",
+    "recovery_events.jsonl.gz": "593e0c41ce1b205f3ae94e72838b0c248a9e87bd1daa2411d463ce6f94ed3f2e",
+    "summary.json": "32363282b20e217750c9f71f1db9d068d4b918dceba869633f05caef4418c916"
+  },
+  "inference_rows_reconstructed": 5,
+  "recovery_events_reconstructed": true,
+  "age_audit": {
+    "floor_ms": 500.0,
+    "suppressed_opportunity_events": 663,
+    "fill_age_checks": [
+      {
+        "mode": "default",
+        "fills": 198,
+        "minimum_age_ms": 502.0
+      },
+      {
+        "mode": "direct10",
+        "fills": 0,
+        "minimum_age_ms": null
+      },
+      {
+        "mode": "components10",
+        "fills": 2,
+        "minimum_age_ms": 752.0
+      },
+      {
+        "mode": "selective10",
+        "fills": 4,
+        "minimum_age_ms": 651.0
+      }
+    ],
+    "zero_floor_exact": false
+  },
+  "default_neutral_exact": true,
+  "generated_source_sha": "22a63d248ba025f30a746302ce1f11f416cf893057d56a0119b2463fee3e60e3",
+  "baseline_receipt_sha": "c7bd9983cb223ffc48fca0cc1b26850fb69110ec38705903fc9e0c848c2f5d1e",
+  "fit_receipt_sha": "4d71318199417ad9bce8f8ed37dedc208aa1c587efc8b5b13b674a962ab2559e",
+  "registry_sha": "172173018e75a05cb83dd810daf93633fd3f3e2fe91412b760e5ebb0016ea772",
+  "declaration_sha": "3a54b294f438ca0348ac67a59e7f9ba7395d20a714604e8506196f78b8882d75",
+  "validation": false,
+  "semantic_supersedes": {
+    "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/empty_fill_age500_failure.json",
+    "sha": "62c4d8b1f91e9c3d201a28fd06e6b9d9b49a804a577a99779a8eaa4d95a6f6de",
+    "fields": "failed age500 smoke post-simulation accounting"
+  },
+  "artifact_folder": "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/replay_smoke_v2/age500/20261026",
+  "accounting_v2": {
+    "declaration_sha": "c38f6acdcfd9dd9fac27345d86e4663afcd0cb828c8db3b13ebc979009056123",
+    "controls_sha": "b9163cad6c5e07586285f89d381afbc438b394bbc54b6a139fbc767b0107fa29",
+    "failed_attempt_sha": "62c4d8b1f91e9c3d201a28fd06e6b9d9b49a804a577a99779a8eaa4d95a6f6de",
+    "raw_parity_sha": "68277f8c926ef5b0d4f74ae8ce9e259180a5521aebaff3f184a497a72413dbf1"
+  }
+}

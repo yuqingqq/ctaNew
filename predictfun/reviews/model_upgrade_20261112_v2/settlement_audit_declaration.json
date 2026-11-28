@@ -1,0 +1,38 @@
+{
+  "as_of": "2026-11-12T14:16:42.935158+00:00",
+  "source_commit": "ac339f205b9078de17186ec7d249c1f2f28dff72",
+  "source_sha": {
+    "predictfun/research/pf_model_settlement_audit.py": "845566474a97fb9af66afb4fdab27231a3a3e9fc3201ce833983d18ecbd6af1e",
+    "predictfun/research/model_settlement_finish.py": "1cb135ca5938628df96c80a348e0d364625ed369844c2e6613ec8d1b7c4f06d6",
+    "predictfun/research/pf_model_eval_report.py": "a83cbc5466b5c1f0ee392c9de98de397671c4824574042097fdb2c68a862a285",
+    "predictfun/research/pf_order_policy_verify.py": "229de075bf15a7e36ca8a3d9a37d8e513f6adb6ad55c233929564047eb286d75",
+    "predictfun/research/pf_order_policy_hooks.py": "caf46c8bc7515c52b2692a39fa04d319ea42734e01b82938d10a1315577398c5",
+    "predictfun/research/pf_continuation_build.py": "ec2a7cf7abf750534d14372611d705df57cfb1e6f4e0d025aeff7777092c57f7"
+  },
+  "registry_sha": {
+    "20261023": "660d09ea425a4da5bf2b59d87e1d4693a121cfde47b5bfcdda6db6c1a86ce591",
+    "20261024": "21482f2cbec32188e80d5f80926f99bf87158507643c307ae4d177cb89e7c9c0",
+    "20261025": "f5fec8709ef9868574909ae982ef6bbf851909bb4cd7e1cafadfbc1f7b740f28",
+    "20261026": "172173018e75a05cb83dd810daf93633fd3f3e2fe91412b760e5ebb0016ea772",
+    "20261027": "096b08b011fc9e5de1e22cdc46f416adbd522fdb9b19eabad00591937c2fc356",
+    "20261031": "5b1675d112399d3852b9680dcd31ff5d577bce481e90b7d520e47885a1596893",
+    "20261101": "64d8472e1061bbc71804ef3b3a7129973a4f9fd140aaba1a23546107da435def",
+    "20261102": "c21b61f114b805a1d5462780266a6c8cec88e1b82d9b568b2a6ada29ce1077dc",
+    "20261103": "b1f1e3cb0ad1936347490c4996d1274a356889ae1a9edcf97a45f33834703b17"
+  },
+  "replay_declaration_sha": "4db0034cb7e0c527afe6da374bb7445e3189738e4a1ef6e371e2e84a32f36f2c",
+  "age_declaration_sha": "0960a232d5bc90924a26994d4f56d27e8a8fa673bc4b247cc19995c83ef2e168",
+  "rule_source": "https://dev.predict.fun/concepts/resolution",
+  "rule_accessed_utc": "2026-11-12",
+  "rule": "CHAINLINK up/down rounds resolve 50/50 when end and start prices are equal; each outcome share then pays0.5USDT.",
+  "design": "Independently reprice every frozen full-run fill and cash-plus-terminal-inventory at0.5 on equal-price registry windows. Preserve all paths, models, inputs, marked values and risk. Supersede settlement/carry fields in complete version3 copies of primary and age result receipts; retain original receipts and raw registry valuation. Recompute paired settlement day intervals only, using the original six UTC-day cluster design.",
+  "scope": "Continuation targets use own-fill average1s/5s book marks less inventory-square penalty, not settlement. Primary marked_strict is cash plus terminal inventory at a book mark. Neither changes. Generation/fill settlement identities still verify the frozen raw engine before correction.",
+  "controls": "Known tie with both sides and non-tie unchanged; exact fill/window cash-net-payout reconciliation; corrupted payout, missing/duplicate registry, reversed side and unknown outcome refusals.",
+  "multiplicity": {
+    "new_models": 0,
+    "new_policies": 0,
+    "new_thresholds": 0
+  },
+  "validation": false,
+  "live_changed": false
+}

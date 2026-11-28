@@ -1,0 +1,29 @@
+{
+  "as_of": "2026-11-12T14:07:05.244142+00:00",
+  "status": "PASS",
+  "execution_sha": "e84dd1873924748bafb2bdd39e5f8ebfaec456c41cfc9925fa546a1c0887e686",
+  "completed": [
+    {
+      "stage": "data_20261102",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/data_20261102.json",
+      "sha": "d94b02b166babf7f203dd251d00243c65c2bc99a279f2ab7573585c4194e1fe2"
+    },
+    {
+      "stage": "fit_20261102",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/fit_20261102.json",
+      "sha": "103eb3be3358b2a2ea04ffd21c78537c0683224862e7b4b01a9fa8ca9a0dde3e"
+    },
+    {
+      "stage": "prepare_20261102",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_eval_20261112_v2/prepare_20261102.json",
+      "sha": "3143842abcadf0594905ba503dd9c6ed1b6b422d7ff37bd0dbe4a005fc401c2b"
+    }
+  ],
+  "resumed_model_driver_pid": 2071865,
+  "scope": "Fifth original chronological fold only; final input/fit and complete reports/portfolios pending.",
+  "semantic_supersedes": {
+    "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/fifth_fold.json",
+    "sha": "e2e18aec48c247dd48cafad3b55b8c8ba8b49b148b18c5f6315b5b37c86e0513",
+    "reason": "Bind corrected, complete input-verification provenance; completed stages and their identities are unchanged."
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "as_of": "2026-11-12T15:03:41.839392+00:00",
+  "source_commit": "fc03928bfa1aa5d8bdfceda1343d5c7336a2d977",
+  "scope": "Isolated child process sampled by its parent; active full replay is untouched. Existing-process attach returned Permission Denied; no escalation attempted.",
+  "slot": "claude",
+  "shared_cap": 2,
+  "active_reference_pid": 2277844
+}

@@ -1,0 +1,23 @@
+{
+  "as_of": "2026-11-13T08:17:55.205423+00:00",
+  "status": "PASS",
+  "pid": 3597883,
+  "source_commit": "18d25ce18c6ede003b772928acef7a379db077e7",
+  "source_sha": {
+    "predictfun/research/pf_size_priority_policy.py": "92bde5e539e962d20b40070e668dbb0e746c947d9e2952c0d8a19520495c0828",
+    "predictfun/research/pf_size_priority_policy_v2.py": "e41d0e19da6491bb55a4bdf62cf7bc2ab005b6cca017bfde0a6df0c56f01dc15",
+    "predictfun/research/pf_size_priority_ledger.py": "f1d73b8e1a289c1ae523e7fd777e74bc18ed427322cfc59056625f9c7824a3cc",
+    "predictfun/research/pf_size_priority_observer.py": "0aaf29bc3df5d558a6a7319b0462353d59013b93e23283720275a6766818da6f",
+    "predictfun/research/model_size_priority_controls_driver.py": "f50c8ffb8c6ac8486e6cb7a4e24f3599862051f77b0d97b6c27864141169e0ed",
+    "predictfun/research/model_recovery_proxy_audit_driver.py": "fb047914e747dfee0c2e46042046b1598f2fe412d8471698ef7a95430cdb2162",
+    "predictfun/research/tests/test_size_priority_policy_v2.py": "fe0c771a7a5774eb52906ac4fbab5058ad9193fb49805e6582825e3ff4107a51",
+    "predictfun/research/tests/test_size_priority_ledger.py": "b404c93bc66da01546c7007a8ba6ce9247714ccc41dcd0afcd8698757f024ed7",
+    "predictfun/research/tests/test_size_priority_native.py": "b05508268fd3748fe3002aa55107063ae8b0d5cd2dca51e4a2050b4de1a8d7fc",
+    "predictfun/research/model_size_priority_native_controls_driver.py": "090565acfbb84408cb64a84da5807260d52c27626a48636efec58fd179c970c9"
+  },
+  "experiment_declaration_sha": "3a54b294f438ca0348ac67a59e7f9ba7395d20a714604e8506196f78b8882d75",
+  "tests_expected": 23,
+  "test_status": "NOT_RUN",
+  "controls": "Completion accepts 23 successful tests and rejects wrong count/nonzero exit.",
+  "scope": "Synthetic installed-reservation, partial-action ledger and native-engine observation controls only. No historical payloads, fork labels, fit or live action."
+}

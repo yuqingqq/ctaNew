@@ -1,0 +1,39 @@
+{
+  "as_of": "2026-11-13T07:06:36.209738+00:00",
+  "status": "PASS",
+  "driver_before": {
+    "pid": 3592076,
+    "state": "S",
+    "start_ticks": 681103241,
+    "argv": [
+      "/home/yuqing/pricer-sol/venv/bin/python3",
+      "/tmp/cta-model-upgrade-20261112/predictfun/research/model_recovery_driver.py"
+    ]
+  },
+  "driver_after": {
+    "pid": 3592076,
+    "state": "T",
+    "start_ticks": 681103241,
+    "argv": [
+      "/home/yuqing/pricer-sol/venv/bin/python3",
+      "/tmp/cta-model-upgrade-20261112/predictfun/research/model_recovery_driver.py"
+    ]
+  },
+  "workers": [
+    {
+      "pid": 2935972,
+      "state": "R",
+      "start_ticks": 683441404,
+      "argv": [
+        "/home/yuqing/pricer-sol/venv/bin/python3",
+        "-m",
+        "predictfun.research.pf_recovery_experiment_run",
+        "20261026",
+        "stress",
+        "smoke"
+      ]
+    }
+  ],
+  "checkpoint_source_sha": "31830763a869f06ea3cbe4020fc62749fabb44197b91e7779241c78dbe176317",
+  "scope": "Hold only the same pure launcher at a completed-stage boundary to run the already prepared full-data capture check on the allocated core8 slot. Current numerical smoke finishes normally. Auxiliary slot is occupied by another owner; proxy audit remains independently queued. Resume the same launcher after a successful checkpoint. No numerical worker, target, model, policy or success criterion changed."
+}

@@ -1,0 +1,40 @@
+{
+  "as_of": "2026-11-12T23:36:41.509362+00:00",
+  "status": "PASS",
+  "source_commit": "6538eaf77a2a9e0a9b9b6eee5b4d3dbb7191617a",
+  "source_sha": {
+    "predictfun/research/pf_model_recovery_target.py": "5797326be7d7e9bffc58da1486a63c7fb65524b9086fdda13b49a5dd32eda266",
+    "predictfun/research/pf_model_recovery_policy.py": "7c905756dbdb604d9f08a9ae9c7fc304f2145d9d96d131e0f5eede3327b6d171",
+    "predictfun/research/pf_model_recovery_capture.py": "1a047690588829ac39f8e5905345f2c34abf4e6b103991411599c033aa05d581",
+    "predictfun/research/pf_model_recovery_labels.py": "93df39d494ee4fa6bda975973d615f05939b38358372b39b8db9a9ec06b76298",
+    "predictfun/research/pf_model_recovery_fork.py": "4c433ac527a047e1b83ab5dbb892adc50359090a85f91c5136660de266690f9d",
+    "predictfun/research/tests/test_model_recovery_labels.py": "40a28321d1b58847322a4ba7d845cca8d554324de30ea1267886b3b62b9f50d1",
+    "predictfun/research/tests/test_model_recovery_fork.py": "89d96b1eea978a98b12e30097f0576a6801f96445922ecfb373fab1f3d8eed76"
+  },
+  "inherited_controls_sha": {
+    "recovery_primitive_controls_v1.json": "453d59b7d0934482318fd5e33d6e1da148e58050487566dc8821ff42a3d44053",
+    "recovery_capture_controls_v1.json": "069383415b2f2d4c7da16c8daf3614f4b42d883a5bd4f4f95aff205feb064d63"
+  },
+  "label_controls": {
+    "tests": 8,
+    "tool_exit_code": 0,
+    "result": "OK",
+    "standalone_stdout_saved": false,
+    "wrapper_record": "2026-11-12T23:26:40Z tag=model_recovery_label_controls_v3 rc=0 peak_rss_mib=131 wall_s=1.46 cpu_user_s=1.35 memavail_start_gib=22 disk_free_gib=496->496 slot=claude"
+  },
+  "fork_controls": {
+    "tests": 6,
+    "tool_exit_code": 0,
+    "result": "OK",
+    "log": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/recovery_fork_final_controls.log",
+    "log_sha": "b06b68aedfb15b6dc9aa18fd1f215c1d27d873afaf75294486840046a81a1e15"
+  },
+  "corrected_fixture": {
+    "wrapper_record": "2026-11-12T23:26:22Z tag=model_recovery_label_controls_v2 rc=1 peak_rss_mib=131 wall_s=1.44 cpu_user_s=1.35 memavail_start_gib=22 disk_free_gib=495->495 slot=claude",
+    "reason": "The new common-prefix mark corruption initially changed both synthetic branches because the fixture shared a dictionary. Deep-copying branch inputs and asserting distinct identities made it a real one-branch corruption. The strengthened checker then refused it."
+  },
+  "scope": "Synthetic implementation controls, not historical results. Complete cash/net reconciliation, exact short-plus-remainder value identity, retained later positive fills, missing/censored/unresolved/no-effect statuses, actual recovery gating inside full-engine forks, current-touch re-entry and exact original neutral/KEEP parity. Scores in the recovery tests are deterministic synthetic callbacks, not trained models.",
+  "remaining": "Historical builder and complete neutral ledger, causal trained score callback, chronology and declared controlled model comparisons, full new-policy sequential replay and conservative execution remain incomplete. No scientific candidate freeze or new performance claim.",
+  "validation": false,
+  "live_changed": false
+}

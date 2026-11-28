@@ -1,0 +1,21 @@
+{
+  "as_of": "2026-11-12T13:30:25.609329+00:00",
+  "status": "DECLARED",
+  "source_commit": "10a004417248d026db11a980f47a64cdb39537af",
+  "source_sha": {
+    "predictfun/research/model_precision_preflight_driver.py": "e7c9c7d032c74d105498c99910ad74084ef68ee71308ec844dfec015868f6a82",
+    "predictfun/research/model_upgrade_driver_first_fold.py": "9e67e4a5361f0b53cdd6cfc11cbd4262c1df451bfadae0d005a8d1317186ee05",
+    "predictfun/research/pf_model_precision_audit.py": "e333c95e2574cd0e2dcf08be68477085f7f69218bcd6cfed3a874157933b3461",
+    "predictfun/research/pf_model_eval_v2.py": "033832f6d941ab8520b53a562cdccc281001d87d58ff5aa909e407af9c366bdc",
+    "predictfun/research/model_eval_driver_v2.py": "01a508b0b528a908fd5e93b6c1993526449e15479be86a45b1dffc8112c9a5bb"
+  },
+  "wait_for_pid": 1320727,
+  "wait_for_identity": "bash predictfun/research/run_fv3.sh",
+  "stopped_idle_pid": 1417682,
+  "stopped_command": "/home/yuqing/pricer-sol/venv/bin/python3 /tmp/cta-model-upgrade-20261112/predictfun/research/model_eval_driver_v2.py ",
+  "stopped_children": [],
+  "model_driver_continues": 1320642,
+  "slot": "claude/core9 only after other driver exits and slot is available",
+  "global_research_worker_cap": 2,
+  "scope": "Only precision audit, corrected declarations/controls and first-fold prepare/eight-window smoke. On success resume the unchanged full corrected evaluation driver, which retains core8. Preserve failures without retry. No candidate/model/policy/scenario changes."
+}

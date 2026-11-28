@@ -1,0 +1,33 @@
+{
+  "as_of": "2026-11-13T03:29:14.429063+00:00",
+  "status": "PASS",
+  "resume_requested_at": "2026-11-13T03:29:14.428946+00:00",
+  "driver_before": {
+    "pid": 3592076,
+    "state": "T",
+    "start_ticks": 681103241,
+    "argv": [
+      "/home/yuqing/pricer-sol/venv/bin/python3",
+      "/tmp/cta-model-upgrade-20261112/predictfun/research/model_recovery_driver.py"
+    ]
+  },
+  "driver_after": {
+    "pid": 3592076,
+    "state": "R",
+    "start_ticks": 681103241,
+    "argv": [
+      "/home/yuqing/pricer-sol/venv/bin/python3",
+      "/tmp/cta-model-upgrade-20261112/predictfun/research/model_recovery_driver.py"
+    ]
+  },
+  "seed_evidence_sha": "8b42cb397132413da2cbc4cdfa9f68e23fa6a3bb99f61269f3b87d8d96dfef74",
+  "proxy_declaration_sha": "7a38428e7c2603c5006fa834e4955b9be9d28c1472cf24f90f9d933675a7b5af",
+  "held_receipt_sha": "f125eb761e6261f25c335baaf1574bf1a8120f106ab48dd80dad7d5a05bad7c3",
+  "advanced_data_receipt_sha": "311b8badccbef36d1fe6effb4d81fb847fdc5c6b594eef3f3e14a36be0de5fab",
+  "log_sha": {
+    "data_seed_20261024.log": "0ee4b769aa0af1b9697204f96e0d1f547a5fe2bb4c70d423f5518d939111cee1",
+    "seed_evidence.log": "55996f753ab8fd9920b4ccc24335bd5c125d01e8768ca4d96ca63cb22e95843e",
+    "proxy_audit_declare.log": "1da934cb8a4121617d522223dc40380de5072948511bddda3d376790f5bd5778"
+  },
+  "scope": "Same pure driver resumed after successful seed data attachment, frozen capture reconstruction and prefit proxy-audit controls. No numerical worker interrupted or retried; no model or policy changed."
+}

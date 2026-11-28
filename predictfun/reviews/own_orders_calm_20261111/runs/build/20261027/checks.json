@@ -1,0 +1,53 @@
+{
+  "as_of": "2026-11-11T16:40:18.862168+00:00",
+  "day": "20261027",
+  "group": "build",
+  "variants": [
+    {
+      "mode": "reference",
+      "windows": 288,
+      "generations": 33265,
+      "fills": 610,
+      "statuses": {
+        "rung_cancel": 10121,
+        "replace_or_resize": 6767,
+        "pending_create_cancel": 6523,
+        "hard_guard_or_outside_band": 4403,
+        "size_or_known_fill": 4079,
+        "eligible": 1281,
+        "postonly_refused": 59,
+        "accepted_no_cancel": 32
+      },
+      "hashes": {
+        "win": "6bb79bf294922432994617616ecf70060791db3f5630de1e519cf7d1376241b4",
+        "fills": "fa2060cca20f39ce6383597ffe55036a3f482b318a2c4553ebdbfe725bac680d",
+        "requests": "0fbb0bc78e69847952f92a4989e93b66a6b0cbe4e9afb58e57f3c02d16d13647"
+      },
+      "generation_sha": "a75785c0d25586a8509d307199f106d2f48a2c8b8c27ff0137b496ecd47a4bdc"
+    },
+    {
+      "mode": "calm_seed",
+      "windows": 288,
+      "generations": 33355,
+      "fills": 610,
+      "statuses": {
+        "rung_cancel": 10120,
+        "replace_or_resize": 6770,
+        "pending_create_cancel": 6537,
+        "hard_guard_or_outside_band": 4477,
+        "size_or_known_fill": 4079,
+        "eligible": 1281,
+        "postonly_refused": 59,
+        "accepted_no_cancel": 32
+      },
+      "hashes": {
+        "win": "6bb79bf294922432994617616ecf70060791db3f5630de1e519cf7d1376241b4",
+        "fills": "fa2060cca20f39ce6383597ffe55036a3f482b318a2c4553ebdbfe725bac680d",
+        "requests": "1edf11cf38768223eabc74b076dc5f916ceb055e49baf8ecbb7b1c0b031f728f"
+      },
+      "generation_sha": "ec137871d76e69227da340a87fd4fe7c37ffc37dfb85efe609c9a2b67e744cc8"
+    }
+  ],
+  "reference_exact": true,
+  "status": "PASS"
+}

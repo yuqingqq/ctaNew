@@ -1,0 +1,9 @@
+{
+  "as_of": "2026-11-12T14:29:17.168153+00:00",
+  "source_commit": "d9c2ec15931aa93365a6d036afd02c5f1ebf6aa5",
+  "detail_declaration_sha": "8f7faf6c04cbe320c43ee37429aac99c128da4e18e212a610d515f37f69fc004",
+  "result_sha": "8c1987b1f3ce32aaaf343ccfb4ddc39f7cdf97255e9229f7f6640b159cf2e784",
+  "scope": "Advance the already-declared local branch value decomposition after the complete model result; no sequential artifacts, refitting or selection changes.",
+  "slot": "claude",
+  "shared_cap": 2
+}

@@ -1,0 +1,8 @@
+{
+  "as_of": "2026-11-12T14:51:50.693051+00:00",
+  "source_commit": "c9910e5890470f12aeebc49caaefc221daeae6a7",
+  "scope": "Read-only exact feature audit on nine consumed dates and matched-container microbenchmark; active full replay remains unchanged.",
+  "slot": "claude",
+  "shared_cap": 2,
+  "active_replay_pid": 2277844
+}

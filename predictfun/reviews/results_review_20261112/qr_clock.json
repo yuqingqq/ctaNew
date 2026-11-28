@@ -1,0 +1,74 @@
+{
+  "as_of": "2026-11-12T10:38:34.440059+00:00",
+  "status": "SYNTHETIC_CLOCK_FINDING_CONFIRMED",
+  "source_commit": "9053263d16cb54b1ad6f249bf41d7cc62349e54f",
+  "source_sha": "65fe8c933178e1d67ce55084cd7f6af708f34163927f82ac32949671a9fbdab6",
+  "qr_source_sha": "a6d9eef39f9550136488aaec4d912b7da1712712c07512473a41b2c427288145",
+  "historical_results_recomputed": false,
+  "raw_payloads_read": false,
+  "assumptions": {
+    "birth_ms": 100.0,
+    "current_feed_known_ms": 160.0,
+    "common_history_until_ms": 95.0,
+    "unchanged_place_ms": 40.0
+  },
+  "fast_30": {
+    "schedule_a": [
+      [
+        90.0,
+        51,
+        160.0
+      ]
+    ],
+    "schedule_b": [
+      [
+        90.0,
+        52,
+        160.0
+      ]
+    ],
+    "events_a": [
+      {
+        "send_ms": 90.0,
+        "live_ms": 130.0,
+        "price": 51
+      }
+    ],
+    "events_b": [
+      {
+        "send_ms": 90.0,
+        "live_ms": 130.0,
+        "price": 52
+      }
+    ],
+    "prefix_a": [
+      {
+        "send_ms": 90.0,
+        "live_ms": 130.0,
+        "price": 51
+      }
+    ],
+    "prefix_b": [
+      {
+        "send_ms": 90.0,
+        "live_ms": 130.0,
+        "price": 52
+      }
+    ],
+    "prefix_invariant": false
+  },
+  "controls": {
+    "existing_qr_selftest": true,
+    "existing_mutations": {
+      "MUT_GHOST_NOCAP": true,
+      "MUT_CHAIN_ANYPRICE": true,
+      "MUT_NO_GRACE": true,
+      "L_PLACE": true
+    },
+    "causal_150_prefix_invariant": true,
+    "causal_schedule_accepted": true,
+    "future_schedule_refused": true,
+    "unsorted_schedule_refused": true
+  },
+  "interpretation": "The exact QR schedule mutates a pre-birth action when only the future birth price changes. With unchanged40ms placement, the30ms arm submits10ms before the birth; it is not a causal implementation of a30ms total reaction. Historical bias size/direction is not estimated. PartA/C decomposition and all other results remain preserved. A new source+receipt is needed for a causal speed study."
+}

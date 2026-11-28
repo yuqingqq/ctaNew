@@ -1,0 +1,24 @@
+{
+  "as_of": "2026-11-12T14:21:51.047460+00:00",
+  "days": [
+    "20261026",
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102"
+  ],
+  "inputs": {
+    "20261026": "ace55a3933acc31453f9725bbf4411b1f70138f273362d7f4397f390d6a7d2c8",
+    "20261027": "595d9fea87f8e06c246b07d41d2be55c1809e01a14bb73c236b68a00838ed1c7",
+    "20261031": "fbc288c103dfaa31854dd1415658776deb9d93e98a51206a2aa3ca517f6ec618",
+    "20261101": "3e19a658b3acbac8a429442dc4278b4648f1763187185663a43808e14198c893",
+    "20261102": "3143842abcadf0594905ba503dd9c6ed1b6b422d7ff37bd0dbe4a005fc401c2b"
+  },
+  "scope": "Copy the five already-frozen preparation receipts into the independently declared age-stress root. No model fitting, policy change, simulation or performance inspection.",
+  "slot": "claude",
+  "shared_cap": 2,
+  "source_sha": {
+    "pf_model_eval_v2.py": "033832f6d941ab8520b53a562cdccc281001d87d58ff5aa909e407af9c366bdc",
+    "pf_model_age_stress.py": "481b54df4a2ca15394be60f622a12d4ae98be2cc4e0a99bf57d443f3ae730389"
+  }
+}

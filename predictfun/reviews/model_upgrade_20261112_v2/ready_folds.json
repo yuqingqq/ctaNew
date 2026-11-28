@@ -1,0 +1,44 @@
+{
+  "as_of": "2026-11-12T13:55:29.730888+00:00",
+  "status": "PASS",
+  "execution_sha": "0dcbaa3a283d06b5208ec1297fa51854148dedf97c1190d47d84dc098df2ed65",
+  "completed": [
+    {
+      "stage": "data_20261027",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/data_20261027.json",
+      "sha": "17dd136f7455a023e54ad5ab65be3b4bb9be0e46b2d890eacd7e51b293e0b133"
+    },
+    {
+      "stage": "data_20261031",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/data_20261031.json",
+      "sha": "bcef39412f6d153938c0897c5676375f245de1afadd4a6b2bc511e3eb2d89e69"
+    },
+    {
+      "stage": "data_20261101",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/data_20261101.json",
+      "sha": "57f7f1170263157dd222e8853edaa3aeffb6ca21d234d2d5489637e4ea97bbb5"
+    },
+    {
+      "stage": "fit_20261027",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/fit_20261027.json",
+      "sha": "21054488c0335704f57d42d22ed7a1a86d6354c5f497b6bda9394eca4dd09151"
+    },
+    {
+      "stage": "fit_20261031",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/fit_20261031.json",
+      "sha": "df83fb83c6c87902f2e6bcae3a7751f62394015726e4634584d19f54915fd0a9"
+    },
+    {
+      "stage": "fit_20261101",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/fit_20261101.json",
+      "sha": "8c88b77a13dea10a3bb82d5012ccaf878e3da81c7abde2756e167e11e6d69015"
+    }
+  ],
+  "resumed_model_driver_pid": 1983093,
+  "days": [
+    "20261027",
+    "20261031",
+    "20261101"
+  ],
+  "scope": "Scheduling only; three previously declared chronological folds. No parameter, feature, target or policy change; six-day reports and full sequential evaluation still required."
+}

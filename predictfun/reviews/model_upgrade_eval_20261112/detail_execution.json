@@ -1,0 +1,13 @@
+{
+  "as_of": "2026-11-12T11:40:50.107995+00:00",
+  "status": "PASS",
+  "pid": 761197,
+  "upstream_replay_pid": 674377,
+  "driver_sha": "f4618238783022c008bf3477efc9ff4f5e5eb747277a8ca573c474279c59b465",
+  "declaration_sha": "2274ad3b81412e180d9995ea3a718d5a39a93306c2af9d8f1bf330d5cc32e436",
+  "manual_control_attempt": {
+    "status": "RESOURCE_REFUSED_BEFORE_PYTHON_STARTED",
+    "log_sha": "2dec0649c8adc2420fa01ae258c753450c98abdd009cc41bae628bce97d8c569"
+  },
+  "scheduling": "Independent second-slot AGE study started before control launch. Resource guard refused overlap; no extra worker launched. Detail controls and reports queued on core8 after frozen replay driver completes. No retry or source modification."
+}

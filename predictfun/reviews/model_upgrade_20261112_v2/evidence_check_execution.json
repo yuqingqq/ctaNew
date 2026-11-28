@@ -1,0 +1,10 @@
+{
+  "as_of": "2026-11-12T15:44:46.575414+00:00",
+  "source_commit": "e120056dd74df606757dca40f1bd12befac99d22",
+  "declaration_sha": "c8bc405a3a1dba4bcf53a0ef978023284b335d2aea3af473467e7055c457573e",
+  "controls_sha": "316bd666989bff44449c466c3a067b9b5293758e1932e426068ac5b379bcee5d",
+  "slot": "claude",
+  "shared_cap": 2,
+  "active_reference_pid": 2646745,
+  "scope": "Bounded declaration and synthetic/refusal controls plus completed Oct26 artifact verification only. Full evidence check remains pending; no new worker or pipeline change."
+}

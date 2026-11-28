@@ -1,0 +1,12 @@
+{
+  "as_of": "2026-11-12T16:19:04.012701+00:00",
+  "orchestration_head": "e4835be1027fa13418d2c91953a2dccd1b0d9e2b",
+  "source_commit": "f63bca812261ebc19c772cada131fb5eab3734a4",
+  "age_declaration_sha": "0960a232d5bc90924a26994d4f56d27e8a8fa673bc4b247cc19995c83ef2e168",
+  "primary_reference_sha": "1c170fc00822705b48d704e93dd9f6f90af47dd2a3b8bd587e973e8bce66223a",
+  "active_primary_pid": 3013930,
+  "slot": "claude",
+  "shared_cap": 2,
+  "scope": "Advance final age preparation and the two predeclared eight-window age0/age500 smoke gates on the idle second slot. Same frozen pipeline; no full strategy job moved, no retry or new policy.",
+  "automatic_retry": false
+}

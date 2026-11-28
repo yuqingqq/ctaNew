@@ -1,0 +1,32 @@
+{
+  "as_of": "2026-11-12T14:01:04.033196+00:00",
+  "status": "PASS",
+  "execution_sha": "6c3127ec7da9c590b5d59dc9e5d8517883368113a9cc4f9ea8c2f993c6b32686",
+  "completed": [
+    {
+      "stage": "prepare_20261027",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_eval_20261112_v2/prepare_20261027.json",
+      "sha": "595d9fea87f8e06c246b07d41d2be55c1809e01a14bb73c236b68a00838ed1c7"
+    },
+    {
+      "stage": "prepare_20261031",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_eval_20261112_v2/prepare_20261031.json",
+      "sha": "fbc288c103dfaa31854dd1415658776deb9d93e98a51206a2aa3ca517f6ec618"
+    },
+    {
+      "stage": "prepare_20261101",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_eval_20261112_v2/prepare_20261101.json",
+      "sha": "3e19a658b3acbac8a429442dc4278b4648f1763187185663a43808e14198c893"
+    },
+    {
+      "stage": "detail_controls",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_eval_20261112_v2/detail_controls.json",
+      "sha": "548dff08582e49e55fec4b86679bdfe9044f79a95b87640c67c2b4af4db243b0"
+    },
+    {
+      "stage": "age_controls",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_age_20261112_v2/controls.json",
+      "sha": "66cc05df2704c63c3c2e8e272b8b64e1789820383dae2faf047ce7f8b03c4369"
+    }
+  ]
+}

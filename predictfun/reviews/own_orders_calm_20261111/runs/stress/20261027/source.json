@@ -1,0 +1,13 @@
+{
+  "generated_sha": "5c3dc7c4c6a49e75e4d903000a24081cbe10f345d51e7c981291ce6f90250511",
+  "source_sha": "09f37691da8f903083a63699680b61c1b3aa495ecddd8fb2d0e1e23a9ba0d999",
+  "timing": {
+    "shift": -250,
+    "place": 80,
+    "cancel": 100,
+    "notice": 250,
+    "queue": "L"
+  },
+  "day": "20261027",
+  "group": "stress"
+}

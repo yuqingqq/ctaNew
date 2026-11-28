@@ -1,0 +1,2051 @@
+{
+  "as_of": "2026-11-15T08:39:08.614478+00:00",
+  "status": "PASS",
+  "days": [
+    "20261026",
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "results": {
+    "q5": {
+      "n": 15282,
+      "observed": 15257,
+      "daily": [
+        {
+          "day": "20261026",
+          "n": 3096,
+          "observed": 3090,
+          "statuses": {
+            "observed": 3090,
+            "invalid_future_book": 6
+          },
+          "economic_statuses": {
+            "eligible": 3080,
+            "withdrawal=missing_mark;short=eligible": 15,
+            "withdrawal=missing_mark;short=missing_mark": 1
+          },
+          "brier": {
+            "static": 0.11769407218478618,
+            "history": 0.11112113402400649,
+            "profile": 0.1335452912349577
+          }
+        },
+        {
+          "day": "20261027",
+          "n": 2651,
+          "observed": 2643,
+          "statuses": {
+            "observed": 2643,
+            "book_gap": 4,
+            "invalid_future_book": 4
+          },
+          "economic_statuses": {
+            "eligible": 2650,
+            "withdrawal=missing_mark;short=eligible": 1
+          },
+          "brier": {
+            "static": 0.10159724973594149,
+            "history": 0.09576438374166084,
+            "profile": 0.11810610351792249
+          }
+        },
+        {
+          "day": "20261031",
+          "n": 1784,
+          "observed": 1781,
+          "statuses": {
+            "observed": 1781,
+            "book_gap": 3
+          },
+          "economic_statuses": {
+            "eligible": 1783,
+            "withdrawal=missing_mark;short=eligible": 1
+          },
+          "brier": {
+            "static": 0.07991356689765534,
+            "history": 0.07727215247401957,
+            "profile": 0.09565771303081676
+          }
+        },
+        {
+          "day": "20261101",
+          "n": 2048,
+          "observed": 2045,
+          "statuses": {
+            "observed": 2045,
+            "invalid_future_book": 2,
+            "book_gap": 1
+          },
+          "economic_statuses": {
+            "eligible": 2043,
+            "withdrawal=missing_mark;short=eligible": 5
+          },
+          "brier": {
+            "static": 0.08884098693223474,
+            "history": 0.08701584115044253,
+            "profile": 0.10315681510541153
+          }
+        },
+        {
+          "day": "20261102",
+          "n": 2935,
+          "observed": 2932,
+          "statuses": {
+            "observed": 2932,
+            "invalid_future_book": 3
+          },
+          "economic_statuses": {
+            "eligible": 2924,
+            "withdrawal=missing_mark;short=eligible": 11
+          },
+          "brier": {
+            "static": 0.11376224096644594,
+            "history": 0.1104278302274964,
+            "profile": 0.13260855277839428
+          }
+        },
+        {
+          "day": "20261103",
+          "n": 2768,
+          "observed": 2766,
+          "statuses": {
+            "observed": 2766,
+            "invalid_future_book": 2
+          },
+          "economic_statuses": {
+            "eligible": 2767,
+            "withdrawal=missing_mark;short=eligible": 1
+          },
+          "brier": {
+            "static": 0.11298143668492047,
+            "history": 0.10820703461945898,
+            "profile": 0.13667816256393878
+          }
+        }
+      ],
+      "comparisons": {
+        "static_vs_profile": {
+          "equal_day_gain": 0.017493847471576226,
+          "day_gains": [
+            0.01585121905017152,
+            0.016508853781980998,
+            0.015744146133161413,
+            0.014315828173176781,
+            0.018846311811948346,
+            0.023696725879018304
+          ],
+          "day_interval": [
+            0.015326807259137832,
+            0.020126861900693505
+          ],
+          "complete_days": 6,
+          "interval_status": "DAY_BOOTSTRAP"
+        },
+        "history_vs_profile": {
+          "equal_day_gain": 0.021657376999059452,
+          "day_gains": [
+            0.022424157210951215,
+            0.022341719776261648,
+            0.018385560556797187,
+            0.016140973954968996,
+            0.022180722550897883,
+            0.0284711279444798
+          ],
+          "day_interval": [
+            0.01859572656815284,
+            0.024412678466542093
+          ],
+          "complete_days": 6,
+          "interval_status": "DAY_BOOTSTRAP"
+        },
+        "history_vs_static": {
+          "equal_day_gain": 0.004163529527483227,
+          "day_gains": [
+            0.0065729381607796955,
+            0.0058328659942806504,
+            0.002641414423635774,
+            0.0018251457817922145,
+            0.0033344107389495364,
+            0.004774402065461494
+          ],
+          "day_interval": [
+            0.002765188697821474,
+            0.005486736852421954
+          ],
+          "complete_days": 6,
+          "interval_status": "DAY_BOOTSTRAP"
+        }
+      },
+      "calibration": [
+        {
+          "family": "static",
+          "depth": 1,
+          "bin": 0,
+          "n": 727,
+          "predicted": 0.08083254587069222,
+          "observed": 0.10178817056396149
+        },
+        {
+          "family": "static",
+          "depth": 1,
+          "bin": 1,
+          "n": 3643,
+          "predicted": 0.1527613566431988,
+          "observed": 0.16552292066977767
+        },
+        {
+          "family": "static",
+          "depth": 1,
+          "bin": 2,
+          "n": 3331,
+          "predicted": 0.2482252890108995,
+          "observed": 0.2512758931251876
+        },
+        {
+          "family": "static",
+          "depth": 1,
+          "bin": 3,
+          "n": 2339,
+          "predicted": 0.34674823732463195,
+          "observed": 0.3219324497648568
+        },
+        {
+          "family": "static",
+          "depth": 1,
+          "bin": 4,
+          "n": 1744,
+          "predicted": 0.44665721778048223,
+          "observed": 0.4248853211009174
+        },
+        {
+          "family": "static",
+          "depth": 1,
+          "bin": 5,
+          "n": 1281,
+          "predicted": 0.5481748374142358,
+          "observed": 0.5284933645589384
+        },
+        {
+          "family": "static",
+          "depth": 1,
+          "bin": 6,
+          "n": 958,
+          "predicted": 0.6483278011617317,
+          "observed": 0.6524008350730689
+        },
+        {
+          "family": "static",
+          "depth": 1,
+          "bin": 7,
+          "n": 716,
+          "predicted": 0.7464542646955313,
+          "observed": 0.7653631284916201
+        },
+        {
+          "family": "static",
+          "depth": 1,
+          "bin": 8,
+          "n": 424,
+          "predicted": 0.8429727648957022,
+          "observed": 0.875
+        },
+        {
+          "family": "static",
+          "depth": 1,
+          "bin": 9,
+          "n": 94,
+          "predicted": 0.9249852161502511,
+          "observed": 0.9787234042553191
+        },
+        {
+          "family": "static",
+          "depth": 2,
+          "bin": 0,
+          "n": 4792,
+          "predicted": 0.0676868951434158,
+          "observed": 0.08034223706176961
+        },
+        {
+          "family": "static",
+          "depth": 2,
+          "bin": 1,
+          "n": 5271,
+          "predicted": 0.14284153609335956,
+          "observed": 0.1470309239233542
+        },
+        {
+          "family": "static",
+          "depth": 2,
+          "bin": 2,
+          "n": 2508,
+          "predicted": 0.24421284454550032,
+          "observed": 0.2117224880382775
+        },
+        {
+          "family": "static",
+          "depth": 2,
+          "bin": 3,
+          "n": 1222,
+          "predicted": 0.3445444396517052,
+          "observed": 0.32160392798690673
+        },
+        {
+          "family": "static",
+          "depth": 2,
+          "bin": 4,
+          "n": 636,
+          "predicted": 0.44471832531117234,
+          "observed": 0.4606918238993711
+        },
+        {
+          "family": "static",
+          "depth": 2,
+          "bin": 5,
+          "n": 405,
+          "predicted": 0.5452961595344497,
+          "observed": 0.5506172839506173
+        },
+        {
+          "family": "static",
+          "depth": 2,
+          "bin": 6,
+          "n": 218,
+          "predicted": 0.6445489973785995,
+          "observed": 0.7339449541284404
+        },
+        {
+          "family": "static",
+          "depth": 2,
+          "bin": 7,
+          "n": 146,
+          "predicted": 0.7468967064883809,
+          "observed": 0.8972602739726028
+        },
+        {
+          "family": "static",
+          "depth": 2,
+          "bin": 8,
+          "n": 57,
+          "predicted": 0.8366675330651198,
+          "observed": 0.9473684210526315
+        },
+        {
+          "family": "static",
+          "depth": 2,
+          "bin": 9,
+          "n": 2,
+          "predicted": 0.9097004067064096,
+          "observed": 1.0
+        },
+        {
+          "family": "static",
+          "depth": 3,
+          "bin": 0,
+          "n": 9552,
+          "predicted": 0.05456617143358979,
+          "observed": 0.06815326633165829
+        },
+        {
+          "family": "static",
+          "depth": 3,
+          "bin": 1,
+          "n": 3625,
+          "predicted": 0.13921693934945628,
+          "observed": 0.12827586206896552
+        },
+        {
+          "family": "static",
+          "depth": 3,
+          "bin": 2,
+          "n": 1092,
+          "predicted": 0.24186767269680554,
+          "observed": 0.22344322344322345
+        },
+        {
+          "family": "static",
+          "depth": 3,
+          "bin": 3,
+          "n": 470,
+          "predicted": 0.3446551973687856,
+          "observed": 0.3617021276595745
+        },
+        {
+          "family": "static",
+          "depth": 3,
+          "bin": 4,
+          "n": 249,
+          "predicted": 0.4463860768031472,
+          "observed": 0.4457831325301205
+        },
+        {
+          "family": "static",
+          "depth": 3,
+          "bin": 5,
+          "n": 121,
+          "predicted": 0.5438359475358753,
+          "observed": 0.6363636363636364
+        },
+        {
+          "family": "static",
+          "depth": 3,
+          "bin": 6,
+          "n": 75,
+          "predicted": 0.6363535388499009,
+          "observed": 0.7333333333333333
+        },
+        {
+          "family": "static",
+          "depth": 3,
+          "bin": 7,
+          "n": 54,
+          "predicted": 0.743150979884946,
+          "observed": 0.8888888888888888
+        },
+        {
+          "family": "static",
+          "depth": 3,
+          "bin": 8,
+          "n": 19,
+          "predicted": 0.8336359172063187,
+          "observed": 1.0
+        },
+        {
+          "family": "static",
+          "depth": 4,
+          "bin": 0,
+          "n": 12498,
+          "predicted": 0.040896868805635776,
+          "observed": 0.053528564570331255
+        },
+        {
+          "family": "static",
+          "depth": 4,
+          "bin": 1,
+          "n": 1934,
+          "predicted": 0.13628226259835793,
+          "observed": 0.12202688728024819
+        },
+        {
+          "family": "static",
+          "depth": 4,
+          "bin": 2,
+          "n": 455,
+          "predicted": 0.23876036160198297,
+          "observed": 0.25934065934065936
+        },
+        {
+          "family": "static",
+          "depth": 4,
+          "bin": 3,
+          "n": 174,
+          "predicted": 0.34341583199763054,
+          "observed": 0.3505747126436782
+        },
+        {
+          "family": "static",
+          "depth": 4,
+          "bin": 4,
+          "n": 91,
+          "predicted": 0.4482212270808312,
+          "observed": 0.5604395604395604
+        },
+        {
+          "family": "static",
+          "depth": 4,
+          "bin": 5,
+          "n": 52,
+          "predicted": 0.546321848285065,
+          "observed": 0.6153846153846154
+        },
+        {
+          "family": "static",
+          "depth": 4,
+          "bin": 6,
+          "n": 32,
+          "predicted": 0.6403351646075519,
+          "observed": 0.84375
+        },
+        {
+          "family": "static",
+          "depth": 4,
+          "bin": 7,
+          "n": 17,
+          "predicted": 0.7446060392294853,
+          "observed": 0.9411764705882353
+        },
+        {
+          "family": "static",
+          "depth": 4,
+          "bin": 8,
+          "n": 4,
+          "predicted": 0.8450465889541336,
+          "observed": 1.0
+        },
+        {
+          "family": "static",
+          "depth": 5,
+          "bin": 0,
+          "n": 14170,
+          "predicted": 0.02795443602180257,
+          "observed": 0.04079040225829217
+        },
+        {
+          "family": "static",
+          "depth": 5,
+          "bin": 1,
+          "n": 790,
+          "predicted": 0.13461321624868977,
+          "observed": 0.14177215189873418
+        },
+        {
+          "family": "static",
+          "depth": 5,
+          "bin": 2,
+          "n": 162,
+          "predicted": 0.23804665957436946,
+          "observed": 0.2839506172839506
+        },
+        {
+          "family": "static",
+          "depth": 5,
+          "bin": 3,
+          "n": 66,
+          "predicted": 0.3486691785905692,
+          "observed": 0.48484848484848486
+        },
+        {
+          "family": "static",
+          "depth": 5,
+          "bin": 4,
+          "n": 36,
+          "predicted": 0.44550229574539224,
+          "observed": 0.5555555555555556
+        },
+        {
+          "family": "static",
+          "depth": 5,
+          "bin": 5,
+          "n": 18,
+          "predicted": 0.5522894707587711,
+          "observed": 0.7777777777777778
+        },
+        {
+          "family": "static",
+          "depth": 5,
+          "bin": 6,
+          "n": 7,
+          "predicted": 0.6386676300474444,
+          "observed": 0.7142857142857143
+        },
+        {
+          "family": "static",
+          "depth": 5,
+          "bin": 7,
+          "n": 7,
+          "predicted": 0.733845955699092,
+          "observed": 1.0
+        },
+        {
+          "family": "static",
+          "depth": 5,
+          "bin": 8,
+          "n": 1,
+          "predicted": 0.8250304512944922,
+          "observed": 1.0
+        },
+        {
+          "family": "history",
+          "depth": 1,
+          "bin": 0,
+          "n": 1736,
+          "predicted": 0.07075976205947304,
+          "observed": 0.097926267281106
+        },
+        {
+          "family": "history",
+          "depth": 1,
+          "bin": 1,
+          "n": 3651,
+          "predicted": 0.1492020106733344,
+          "observed": 0.18679813749657628
+        },
+        {
+          "family": "history",
+          "depth": 1,
+          "bin": 2,
+          "n": 2716,
+          "predicted": 0.24753757118364741,
+          "observed": 0.2544182621502209
+        },
+        {
+          "family": "history",
+          "depth": 1,
+          "bin": 3,
+          "n": 1948,
+          "predicted": 0.34711472739044974,
+          "observed": 0.32494866529774125
+        },
+        {
+          "family": "history",
+          "depth": 1,
+          "bin": 4,
+          "n": 1368,
+          "predicted": 0.4481612105696026,
+          "observed": 0.4093567251461988
+        },
+        {
+          "family": "history",
+          "depth": 1,
+          "bin": 5,
+          "n": 1141,
+          "predicted": 0.5491296859701669,
+          "observed": 0.48378615249780893
+        },
+        {
+          "family": "history",
+          "depth": 1,
+          "bin": 6,
+          "n": 896,
+          "predicted": 0.6490963283064557,
+          "observed": 0.6138392857142857
+        },
+        {
+          "family": "history",
+          "depth": 1,
+          "bin": 7,
+          "n": 800,
+          "predicted": 0.7479321913102167,
+          "observed": 0.73625
+        },
+        {
+          "family": "history",
+          "depth": 1,
+          "bin": 8,
+          "n": 607,
+          "predicted": 0.8472339211584099,
+          "observed": 0.8434925864909391
+        },
+        {
+          "family": "history",
+          "depth": 1,
+          "bin": 9,
+          "n": 394,
+          "predicted": 0.9383540213615064,
+          "observed": 0.9695431472081218
+        },
+        {
+          "family": "history",
+          "depth": 2,
+          "bin": 0,
+          "n": 6204,
+          "predicted": 0.05959243562921831,
+          "observed": 0.08123791102514506
+        },
+        {
+          "family": "history",
+          "depth": 2,
+          "bin": 1,
+          "n": 4261,
+          "predicted": 0.14231104211885087,
+          "observed": 0.1480873034498944
+        },
+        {
+          "family": "history",
+          "depth": 2,
+          "bin": 2,
+          "n": 1971,
+          "predicted": 0.2437712263218973,
+          "observed": 0.22019279553526128
+        },
+        {
+          "family": "history",
+          "depth": 2,
+          "bin": 3,
+          "n": 1028,
+          "predicted": 0.3448430844881899,
+          "observed": 0.31712062256809337
+        },
+        {
+          "family": "history",
+          "depth": 2,
+          "bin": 4,
+          "n": 654,
+          "predicted": 0.4466897666844217,
+          "observed": 0.39755351681957185
+        },
+        {
+          "family": "history",
+          "depth": 2,
+          "bin": 5,
+          "n": 370,
+          "predicted": 0.544933967907815,
+          "observed": 0.5135135135135135
+        },
+        {
+          "family": "history",
+          "depth": 2,
+          "bin": 6,
+          "n": 290,
+          "predicted": 0.6487218563978445,
+          "observed": 0.6103448275862069
+        },
+        {
+          "family": "history",
+          "depth": 2,
+          "bin": 7,
+          "n": 210,
+          "predicted": 0.7479964624041889,
+          "observed": 0.819047619047619
+        },
+        {
+          "family": "history",
+          "depth": 2,
+          "bin": 8,
+          "n": 157,
+          "predicted": 0.8523679501706358,
+          "observed": 0.9044585987261147
+        },
+        {
+          "family": "history",
+          "depth": 2,
+          "bin": 9,
+          "n": 112,
+          "predicted": 0.9320742564567757,
+          "observed": 0.9910714285714286
+        },
+        {
+          "family": "history",
+          "depth": 3,
+          "bin": 0,
+          "n": 10216,
+          "predicted": 0.04810712257573768,
+          "observed": 0.06587705559906029
+        },
+        {
+          "family": "history",
+          "depth": 3,
+          "bin": 1,
+          "n": 2924,
+          "predicted": 0.138762845293909,
+          "observed": 0.13406292749658003
+        },
+        {
+          "family": "history",
+          "depth": 3,
+          "bin": 2,
+          "n": 995,
+          "predicted": 0.2406643174793617,
+          "observed": 0.2150753768844221
+        },
+        {
+          "family": "history",
+          "depth": 3,
+          "bin": 3,
+          "n": 418,
+          "predicted": 0.3429722674648793,
+          "observed": 0.31100478468899523
+        },
+        {
+          "family": "history",
+          "depth": 3,
+          "bin": 4,
+          "n": 258,
+          "predicted": 0.4455941020930268,
+          "observed": 0.41472868217054265
+        },
+        {
+          "family": "history",
+          "depth": 3,
+          "bin": 5,
+          "n": 137,
+          "predicted": 0.5455092743104861,
+          "observed": 0.5401459854014599
+        },
+        {
+          "family": "history",
+          "depth": 3,
+          "bin": 6,
+          "n": 108,
+          "predicted": 0.6496879604767443,
+          "observed": 0.6203703703703703
+        },
+        {
+          "family": "history",
+          "depth": 3,
+          "bin": 7,
+          "n": 68,
+          "predicted": 0.7467706992283856,
+          "observed": 0.8529411764705882
+        },
+        {
+          "family": "history",
+          "depth": 3,
+          "bin": 8,
+          "n": 94,
+          "predicted": 0.8494475940787004,
+          "observed": 0.925531914893617
+        },
+        {
+          "family": "history",
+          "depth": 3,
+          "bin": 9,
+          "n": 39,
+          "predicted": 0.931864243323638,
+          "observed": 0.9743589743589743
+        },
+        {
+          "family": "history",
+          "depth": 4,
+          "bin": 0,
+          "n": 12763,
+          "predicted": 0.03576387790876805,
+          "observed": 0.051711979942019905
+        },
+        {
+          "family": "history",
+          "depth": 4,
+          "bin": 1,
+          "n": 1556,
+          "predicted": 0.1368798753107577,
+          "observed": 0.12403598971722365
+        },
+        {
+          "family": "history",
+          "depth": 4,
+          "bin": 2,
+          "n": 435,
+          "predicted": 0.23969088454905818,
+          "observed": 0.21379310344827587
+        },
+        {
+          "family": "history",
+          "depth": 4,
+          "bin": 3,
+          "n": 185,
+          "predicted": 0.34018231328504345,
+          "observed": 0.2918918918918919
+        },
+        {
+          "family": "history",
+          "depth": 4,
+          "bin": 4,
+          "n": 91,
+          "predicted": 0.4458709247602705,
+          "observed": 0.46153846153846156
+        },
+        {
+          "family": "history",
+          "depth": 4,
+          "bin": 5,
+          "n": 64,
+          "predicted": 0.5449871464116047,
+          "observed": 0.640625
+        },
+        {
+          "family": "history",
+          "depth": 4,
+          "bin": 6,
+          "n": 48,
+          "predicted": 0.6492146234737667,
+          "observed": 0.6875
+        },
+        {
+          "family": "history",
+          "depth": 4,
+          "bin": 7,
+          "n": 54,
+          "predicted": 0.7505792412259275,
+          "observed": 0.8333333333333334
+        },
+        {
+          "family": "history",
+          "depth": 4,
+          "bin": 8,
+          "n": 39,
+          "predicted": 0.8458435985874255,
+          "observed": 0.7948717948717948
+        },
+        {
+          "family": "history",
+          "depth": 4,
+          "bin": 9,
+          "n": 22,
+          "predicted": 0.9245226117333941,
+          "observed": 1.0
+        },
+        {
+          "family": "history",
+          "depth": 5,
+          "bin": 0,
+          "n": 14226,
+          "predicted": 0.02389979421882196,
+          "observed": 0.03845072402643048
+        },
+        {
+          "family": "history",
+          "depth": 5,
+          "bin": 1,
+          "n": 652,
+          "predicted": 0.13626620358510871,
+          "observed": 0.15337423312883436
+        },
+        {
+          "family": "history",
+          "depth": 5,
+          "bin": 2,
+          "n": 168,
+          "predicted": 0.23946784410603444,
+          "observed": 0.25595238095238093
+        },
+        {
+          "family": "history",
+          "depth": 5,
+          "bin": 3,
+          "n": 57,
+          "predicted": 0.3430290867562975,
+          "observed": 0.2982456140350877
+        },
+        {
+          "family": "history",
+          "depth": 5,
+          "bin": 4,
+          "n": 36,
+          "predicted": 0.44595894901507865,
+          "observed": 0.4166666666666667
+        },
+        {
+          "family": "history",
+          "depth": 5,
+          "bin": 5,
+          "n": 47,
+          "predicted": 0.5472459386150277,
+          "observed": 0.7446808510638298
+        },
+        {
+          "family": "history",
+          "depth": 5,
+          "bin": 6,
+          "n": 34,
+          "predicted": 0.6434792630582682,
+          "observed": 0.6470588235294118
+        },
+        {
+          "family": "history",
+          "depth": 5,
+          "bin": 7,
+          "n": 18,
+          "predicted": 0.7469881510031331,
+          "observed": 0.9444444444444444
+        },
+        {
+          "family": "history",
+          "depth": 5,
+          "bin": 8,
+          "n": 14,
+          "predicted": 0.845855984115018,
+          "observed": 1.0
+        },
+        {
+          "family": "history",
+          "depth": 5,
+          "bin": 9,
+          "n": 5,
+          "predicted": 0.9240337334495565,
+          "observed": 1.0
+        },
+        {
+          "family": "profile",
+          "depth": 1,
+          "bin": 3,
+          "n": 15257,
+          "predicted": 0.35595367592430566,
+          "observed": 0.34875794717179
+        },
+        {
+          "family": "profile",
+          "depth": 2,
+          "bin": 1,
+          "n": 15257,
+          "predicted": 0.1919456398874701,
+          "observed": 0.19315723929999346
+        },
+        {
+          "family": "profile",
+          "depth": 3,
+          "bin": 1,
+          "n": 15257,
+          "predicted": 0.11537529196478684,
+          "observed": 0.12060038015337222
+        },
+        {
+          "family": "profile",
+          "depth": 4,
+          "bin": 0,
+          "n": 15257,
+          "predicted": 0.0734127042377993,
+          "observed": 0.07957003342727928
+        },
+        {
+          "family": "profile",
+          "depth": 5,
+          "bin": 0,
+          "n": 15257,
+          "predicted": 0.046249201697155545,
+          "observed": 0.05341810316575998
+        }
+      ],
+      "alignment_null": {
+        "draws": 500,
+        "observed_gain": 0.0041635295274832255,
+        "shuffled_mean_gain": -3.021907500018783e-05,
+        "shuffled_p95_gain": 0.0003531628252345834,
+        "conditional_tail_fraction": 0.001996007984031936,
+        "movable_actions": 10175,
+        "status": "DESCRIPTIVE_ALIGNMENT",
+        "strata": [
+          "day",
+          "side",
+          "hour",
+          "age_bin",
+          "inv_sign",
+          "decision_kind",
+          "notified_partial",
+          "distance_bin",
+          "static_bin"
+        ],
+        "scope": "Within-date matched forecast-vector shuffles; serial exchangeability is not assumed. No cancel-policy value or statistical validation is established."
+      },
+      "exploratory_forecast_screen_passed": true,
+      "validation": false,
+      "policy_value_proven": false
+    },
+    "q50": {
+      "n": 10869,
+      "observed": 10853,
+      "daily": [
+        {
+          "day": "20261026",
+          "n": 2225,
+          "observed": 2221,
+          "statuses": {
+            "observed": 2221,
+            "invalid_future_book": 3,
+            "book_gap": 1
+          },
+          "economic_statuses": {
+            "eligible": 2212,
+            "withdrawal=missing_mark;short=eligible": 13
+          },
+          "brier": {
+            "static": 0.10946283921320976,
+            "history": 0.10481223920178027,
+            "profile": 0.12243263938363774
+          }
+        },
+        {
+          "day": "20261027",
+          "n": 1949,
+          "observed": 1943,
+          "statuses": {
+            "observed": 1943,
+            "invalid_future_book": 5,
+            "book_gap": 1
+          },
+          "economic_statuses": {
+            "eligible": 1949
+          },
+          "brier": {
+            "static": 0.09597321511331768,
+            "history": 0.08740412407174601,
+            "profile": 0.11218783845142105
+          }
+        },
+        {
+          "day": "20261031",
+          "n": 1220,
+          "observed": 1220,
+          "statuses": {
+            "observed": 1220
+          },
+          "economic_statuses": {
+            "eligible": 1219,
+            "withdrawal=missing_mark;short=eligible": 1
+          },
+          "brier": {
+            "static": 0.06868656987655909,
+            "history": 0.06597988972553251,
+            "profile": 0.08599115906217712
+          }
+        },
+        {
+          "day": "20261101",
+          "n": 1401,
+          "observed": 1398,
+          "statuses": {
+            "observed": 1398,
+            "invalid_future_book": 2,
+            "book_gap": 1
+          },
+          "economic_statuses": {
+            "eligible": 1400,
+            "withdrawal=missing_mark;short=eligible": 1
+          },
+          "brier": {
+            "static": 0.0780194077288518,
+            "history": 0.07712259740418317,
+            "profile": 0.08990186773619821
+          }
+        },
+        {
+          "day": "20261102",
+          "n": 2116,
+          "observed": 2114,
+          "statuses": {
+            "observed": 2114,
+            "invalid_future_book": 1,
+            "missing_deadline_book": 1
+          },
+          "economic_statuses": {
+            "eligible": 2106,
+            "withdrawal=missing_mark;short=eligible": 10
+          },
+          "brier": {
+            "static": 0.10666550326581563,
+            "history": 0.10274655426998626,
+            "profile": 0.1260414010992108
+          }
+        },
+        {
+          "day": "20261103",
+          "n": 1958,
+          "observed": 1957,
+          "statuses": {
+            "observed": 1957,
+            "invalid_future_book": 1
+          },
+          "economic_statuses": {
+            "eligible": 1954,
+            "withdrawal=missing_mark;short=eligible": 4
+          },
+          "brier": {
+            "static": 0.10832590515739901,
+            "history": 0.10385816516688849,
+            "profile": 0.12873145539263744
+          }
+        }
+      ],
+      "comparisons": {
+        "static_vs_profile": {
+          "equal_day_gain": 0.016358820128354903,
+          "day_gains": [
+            0.01296980017042798,
+            0.016214623338103376,
+            0.01730458918561803,
+            0.011882460007346413,
+            0.019375897833395175,
+            0.020405550235238434
+          ],
+          "day_interval": [
+            0.014030527965659869,
+            0.018665357135578996
+          ],
+          "complete_days": 6,
+          "interval_status": "DAY_BOOTSTRAP"
+        },
+        "history_vs_profile": {
+          "equal_day_gain": 0.020560465214194277,
+          "day_gains": [
+            0.017620400181857468,
+            0.02478371437967504,
+            0.020011269336644613,
+            0.012779270332015036,
+            0.023294846829224544,
+            0.024873290225748954
+          ],
+          "day_interval": [
+            0.0168070414107191,
+            0.023770020896119525
+          ],
+          "complete_days": 6,
+          "interval_status": "DAY_BOOTSTRAP"
+        },
+        "history_vs_static": {
+          "equal_day_gain": 0.004201645085839374,
+          "day_gains": [
+            0.004650600011429487,
+            0.008569091041571664,
+            0.002706680151026583,
+            0.0008968103246686232,
+            0.003918948995829369,
+            0.004467739990510519
+          ],
+          "day_interval": [
+            0.0025292629543738282,
+            0.006044261840377888
+          ],
+          "complete_days": 6,
+          "interval_status": "DAY_BOOTSTRAP"
+        }
+      },
+      "calibration": [
+        {
+          "family": "static",
+          "depth": 1,
+          "bin": 0,
+          "n": 654,
+          "predicted": 0.07986930755008194,
+          "observed": 0.07492354740061162
+        },
+        {
+          "family": "static",
+          "depth": 1,
+          "bin": 1,
+          "n": 2827,
+          "predicted": 0.15151610198793475,
+          "observed": 0.16200919702865227
+        },
+        {
+          "family": "static",
+          "depth": 1,
+          "bin": 2,
+          "n": 2461,
+          "predicted": 0.24754692900377373,
+          "observed": 0.2385209264526615
+        },
+        {
+          "family": "static",
+          "depth": 1,
+          "bin": 3,
+          "n": 1585,
+          "predicted": 0.346193571329489,
+          "observed": 0.32429022082018927
+        },
+        {
+          "family": "static",
+          "depth": 1,
+          "bin": 4,
+          "n": 1127,
+          "predicted": 0.44629412020840553,
+          "observed": 0.4525288376220053
+        },
+        {
+          "family": "static",
+          "depth": 1,
+          "bin": 5,
+          "n": 819,
+          "predicted": 0.5483036694966765,
+          "observed": 0.5006105006105006
+        },
+        {
+          "family": "static",
+          "depth": 1,
+          "bin": 6,
+          "n": 636,
+          "predicted": 0.6475080961769576,
+          "observed": 0.6477987421383647
+        },
+        {
+          "family": "static",
+          "depth": 1,
+          "bin": 7,
+          "n": 438,
+          "predicted": 0.7459576799341343,
+          "observed": 0.7420091324200914
+        },
+        {
+          "family": "static",
+          "depth": 1,
+          "bin": 8,
+          "n": 243,
+          "predicted": 0.8433137181133689,
+          "observed": 0.8724279835390947
+        },
+        {
+          "family": "static",
+          "depth": 1,
+          "bin": 9,
+          "n": 63,
+          "predicted": 0.9238108442799073,
+          "observed": 0.9841269841269841
+        },
+        {
+          "family": "static",
+          "depth": 2,
+          "bin": 0,
+          "n": 3836,
+          "predicted": 0.06619318618661635,
+          "observed": 0.0810740354535975
+        },
+        {
+          "family": "static",
+          "depth": 2,
+          "bin": 1,
+          "n": 3800,
+          "predicted": 0.14207894741383437,
+          "observed": 0.13447368421052633
+        },
+        {
+          "family": "static",
+          "depth": 2,
+          "bin": 2,
+          "n": 1563,
+          "predicted": 0.24308699167410028,
+          "observed": 0.218170185540627
+        },
+        {
+          "family": "static",
+          "depth": 2,
+          "bin": 3,
+          "n": 786,
+          "predicted": 0.3449189850622747,
+          "observed": 0.3422391857506361
+        },
+        {
+          "family": "static",
+          "depth": 2,
+          "bin": 4,
+          "n": 418,
+          "predicted": 0.44511835616433293,
+          "observed": 0.42822966507177035
+        },
+        {
+          "family": "static",
+          "depth": 2,
+          "bin": 5,
+          "n": 213,
+          "predicted": 0.5465609695761405,
+          "observed": 0.6103286384976526
+        },
+        {
+          "family": "static",
+          "depth": 2,
+          "bin": 6,
+          "n": 134,
+          "predicted": 0.6490186759366836,
+          "observed": 0.7089552238805971
+        },
+        {
+          "family": "static",
+          "depth": 2,
+          "bin": 7,
+          "n": 68,
+          "predicted": 0.7440899822966955,
+          "observed": 0.8382352941176471
+        },
+        {
+          "family": "static",
+          "depth": 2,
+          "bin": 8,
+          "n": 32,
+          "predicted": 0.8426057693691859,
+          "observed": 0.9375
+        },
+        {
+          "family": "static",
+          "depth": 2,
+          "bin": 9,
+          "n": 3,
+          "predicted": 0.9138601608372273,
+          "observed": 1.0
+        },
+        {
+          "family": "static",
+          "depth": 3,
+          "bin": 0,
+          "n": 7226,
+          "predicted": 0.05170197440879299,
+          "observed": 0.0595073346249654
+        },
+        {
+          "family": "static",
+          "depth": 3,
+          "bin": 1,
+          "n": 2379,
+          "predicted": 0.1387029680885376,
+          "observed": 0.1273644388398487
+        },
+        {
+          "family": "static",
+          "depth": 3,
+          "bin": 2,
+          "n": 689,
+          "predicted": 0.24105397165812106,
+          "observed": 0.21335268505079827
+        },
+        {
+          "family": "static",
+          "depth": 3,
+          "bin": 3,
+          "n": 285,
+          "predicted": 0.3426909018339777,
+          "observed": 0.34385964912280703
+        },
+        {
+          "family": "static",
+          "depth": 3,
+          "bin": 4,
+          "n": 129,
+          "predicted": 0.45266863853017375,
+          "observed": 0.5193798449612403
+        },
+        {
+          "family": "static",
+          "depth": 3,
+          "bin": 5,
+          "n": 67,
+          "predicted": 0.5428903267113654,
+          "observed": 0.7313432835820896
+        },
+        {
+          "family": "static",
+          "depth": 3,
+          "bin": 6,
+          "n": 42,
+          "predicted": 0.6501366145463012,
+          "observed": 0.7380952380952381
+        },
+        {
+          "family": "static",
+          "depth": 3,
+          "bin": 7,
+          "n": 20,
+          "predicted": 0.7362367527784064,
+          "observed": 0.9
+        },
+        {
+          "family": "static",
+          "depth": 3,
+          "bin": 8,
+          "n": 16,
+          "predicted": 0.8302857969599582,
+          "observed": 0.9375
+        },
+        {
+          "family": "static",
+          "depth": 4,
+          "bin": 0,
+          "n": 9209,
+          "predicted": 0.03817822674046874,
+          "observed": 0.04636768378759909
+        },
+        {
+          "family": "static",
+          "depth": 4,
+          "bin": 1,
+          "n": 1202,
+          "predicted": 0.13690097127872522,
+          "observed": 0.11813643926788686
+        },
+        {
+          "family": "static",
+          "depth": 4,
+          "bin": 2,
+          "n": 235,
+          "predicted": 0.2423835788554256,
+          "observed": 0.2765957446808511
+        },
+        {
+          "family": "static",
+          "depth": 4,
+          "bin": 3,
+          "n": 106,
+          "predicted": 0.3429499176307379,
+          "observed": 0.36792452830188677
+        },
+        {
+          "family": "static",
+          "depth": 4,
+          "bin": 4,
+          "n": 47,
+          "predicted": 0.44402832635321676,
+          "observed": 0.574468085106383
+        },
+        {
+          "family": "static",
+          "depth": 4,
+          "bin": 5,
+          "n": 29,
+          "predicted": 0.5439139923681252,
+          "observed": 0.7586206896551724
+        },
+        {
+          "family": "static",
+          "depth": 4,
+          "bin": 6,
+          "n": 14,
+          "predicted": 0.6350260034877335,
+          "observed": 0.7857142857142857
+        },
+        {
+          "family": "static",
+          "depth": 4,
+          "bin": 7,
+          "n": 7,
+          "predicted": 0.7622353666908573,
+          "observed": 1.0
+        },
+        {
+          "family": "static",
+          "depth": 4,
+          "bin": 8,
+          "n": 4,
+          "predicted": 0.8114213766194388,
+          "observed": 1.0
+        },
+        {
+          "family": "static",
+          "depth": 5,
+          "bin": 0,
+          "n": 10272,
+          "predicted": 0.025586561809052496,
+          "observed": 0.036799065420560745
+        },
+        {
+          "family": "static",
+          "depth": 5,
+          "bin": 1,
+          "n": 420,
+          "predicted": 0.13545212823659208,
+          "observed": 0.1261904761904762
+        },
+        {
+          "family": "static",
+          "depth": 5,
+          "bin": 2,
+          "n": 99,
+          "predicted": 0.24581107582459683,
+          "observed": 0.36363636363636365
+        },
+        {
+          "family": "static",
+          "depth": 5,
+          "bin": 3,
+          "n": 28,
+          "predicted": 0.34470798283180365,
+          "observed": 0.6071428571428571
+        },
+        {
+          "family": "static",
+          "depth": 5,
+          "bin": 4,
+          "n": 14,
+          "predicted": 0.43979054307222293,
+          "observed": 0.5714285714285714
+        },
+        {
+          "family": "static",
+          "depth": 5,
+          "bin": 5,
+          "n": 10,
+          "predicted": 0.5587133205571908,
+          "observed": 0.8
+        },
+        {
+          "family": "static",
+          "depth": 5,
+          "bin": 6,
+          "n": 6,
+          "predicted": 0.6363784999988384,
+          "observed": 0.8333333333333334
+        },
+        {
+          "family": "static",
+          "depth": 5,
+          "bin": 7,
+          "n": 3,
+          "predicted": 0.7439151716857951,
+          "observed": 1.0
+        },
+        {
+          "family": "static",
+          "depth": 5,
+          "bin": 8,
+          "n": 1,
+          "predicted": 0.8096604070991656,
+          "observed": 1.0
+        },
+        {
+          "family": "history",
+          "depth": 1,
+          "bin": 0,
+          "n": 1483,
+          "predicted": 0.06810045044363708,
+          "observed": 0.100472016183412
+        },
+        {
+          "family": "history",
+          "depth": 1,
+          "bin": 1,
+          "n": 2681,
+          "predicted": 0.1472202206540975,
+          "observed": 0.15703095859753824
+        },
+        {
+          "family": "history",
+          "depth": 1,
+          "bin": 2,
+          "n": 1884,
+          "predicted": 0.24647952683100383,
+          "observed": 0.2489384288747346
+        },
+        {
+          "family": "history",
+          "depth": 1,
+          "bin": 3,
+          "n": 1311,
+          "predicted": 0.34722712004199136,
+          "observed": 0.34172387490465295
+        },
+        {
+          "family": "history",
+          "depth": 1,
+          "bin": 4,
+          "n": 984,
+          "predicted": 0.4456597096797443,
+          "observed": 0.4115853658536585
+        },
+        {
+          "family": "history",
+          "depth": 1,
+          "bin": 5,
+          "n": 792,
+          "predicted": 0.5480543711558199,
+          "observed": 0.4797979797979798
+        },
+        {
+          "family": "history",
+          "depth": 1,
+          "bin": 6,
+          "n": 597,
+          "predicted": 0.647477265126933,
+          "observed": 0.5711892797319933
+        },
+        {
+          "family": "history",
+          "depth": 1,
+          "bin": 7,
+          "n": 510,
+          "predicted": 0.7471842258393974,
+          "observed": 0.7313725490196078
+        },
+        {
+          "family": "history",
+          "depth": 1,
+          "bin": 8,
+          "n": 371,
+          "predicted": 0.8470909586960783,
+          "observed": 0.862533692722372
+        },
+        {
+          "family": "history",
+          "depth": 1,
+          "bin": 9,
+          "n": 240,
+          "predicted": 0.9369947197630484,
+          "observed": 0.9708333333333333
+        },
+        {
+          "family": "history",
+          "depth": 2,
+          "bin": 0,
+          "n": 4897,
+          "predicted": 0.057241901800435306,
+          "observed": 0.07719011639779456
+        },
+        {
+          "family": "history",
+          "depth": 2,
+          "bin": 1,
+          "n": 2906,
+          "predicted": 0.14171608991482218,
+          "observed": 0.14211975223675155
+        },
+        {
+          "family": "history",
+          "depth": 2,
+          "bin": 2,
+          "n": 1281,
+          "predicted": 0.2445907856403576,
+          "observed": 0.2373145979703357
+        },
+        {
+          "family": "history",
+          "depth": 2,
+          "bin": 3,
+          "n": 701,
+          "predicted": 0.3454389832857791,
+          "observed": 0.29101283880171186
+        },
+        {
+          "family": "history",
+          "depth": 2,
+          "bin": 4,
+          "n": 366,
+          "predicted": 0.4474258255641415,
+          "observed": 0.40437158469945356
+        },
+        {
+          "family": "history",
+          "depth": 2,
+          "bin": 5,
+          "n": 240,
+          "predicted": 0.5452396914063378,
+          "observed": 0.5083333333333333
+        },
+        {
+          "family": "history",
+          "depth": 2,
+          "bin": 6,
+          "n": 176,
+          "predicted": 0.648462113836042,
+          "observed": 0.6306818181818182
+        },
+        {
+          "family": "history",
+          "depth": 2,
+          "bin": 7,
+          "n": 128,
+          "predicted": 0.7493051279818714,
+          "observed": 0.7578125
+        },
+        {
+          "family": "history",
+          "depth": 2,
+          "bin": 8,
+          "n": 99,
+          "predicted": 0.849501997253072,
+          "observed": 0.9191919191919192
+        },
+        {
+          "family": "history",
+          "depth": 2,
+          "bin": 9,
+          "n": 59,
+          "predicted": 0.9375302126491278,
+          "observed": 0.9830508474576272
+        },
+        {
+          "family": "history",
+          "depth": 3,
+          "bin": 0,
+          "n": 7682,
+          "predicted": 0.04540917697796209,
+          "observed": 0.058318146316063524
+        },
+        {
+          "family": "history",
+          "depth": 3,
+          "bin": 1,
+          "n": 1876,
+          "predicted": 0.1396862754652727,
+          "observed": 0.12686567164179105
+        },
+        {
+          "family": "history",
+          "depth": 3,
+          "bin": 2,
+          "n": 615,
+          "predicted": 0.24094284805098728,
+          "observed": 0.2
+        },
+        {
+          "family": "history",
+          "depth": 3,
+          "bin": 3,
+          "n": 266,
+          "predicted": 0.34643131285174134,
+          "observed": 0.32706766917293234
+        },
+        {
+          "family": "history",
+          "depth": 3,
+          "bin": 4,
+          "n": 146,
+          "predicted": 0.44958110587650035,
+          "observed": 0.4315068493150685
+        },
+        {
+          "family": "history",
+          "depth": 3,
+          "bin": 5,
+          "n": 88,
+          "predicted": 0.5493089814441835,
+          "observed": 0.5568181818181818
+        },
+        {
+          "family": "history",
+          "depth": 3,
+          "bin": 6,
+          "n": 62,
+          "predicted": 0.6482855480820495,
+          "observed": 0.6774193548387096
+        },
+        {
+          "family": "history",
+          "depth": 3,
+          "bin": 7,
+          "n": 57,
+          "predicted": 0.7497576861078694,
+          "observed": 0.8771929824561403
+        },
+        {
+          "family": "history",
+          "depth": 3,
+          "bin": 8,
+          "n": 38,
+          "predicted": 0.8542976265253742,
+          "observed": 0.9210526315789473
+        },
+        {
+          "family": "history",
+          "depth": 3,
+          "bin": 9,
+          "n": 23,
+          "predicted": 0.937009511134652,
+          "observed": 1.0
+        },
+        {
+          "family": "history",
+          "depth": 4,
+          "bin": 0,
+          "n": 9340,
+          "predicted": 0.03306199299868704,
+          "observed": 0.04357601713062099
+        },
+        {
+          "family": "history",
+          "depth": 4,
+          "bin": 1,
+          "n": 994,
+          "predicted": 0.13810716309076015,
+          "observed": 0.12877263581488935
+        },
+        {
+          "family": "history",
+          "depth": 4,
+          "bin": 2,
+          "n": 233,
+          "predicted": 0.24421637713188585,
+          "observed": 0.22317596566523606
+        },
+        {
+          "family": "history",
+          "depth": 4,
+          "bin": 3,
+          "n": 106,
+          "predicted": 0.34506811682445326,
+          "observed": 0.3584905660377358
+        },
+        {
+          "family": "history",
+          "depth": 4,
+          "bin": 4,
+          "n": 63,
+          "predicted": 0.4423187955446329,
+          "observed": 0.3968253968253968
+        },
+        {
+          "family": "history",
+          "depth": 4,
+          "bin": 5,
+          "n": 37,
+          "predicted": 0.5491571000759004,
+          "observed": 0.7027027027027027
+        },
+        {
+          "family": "history",
+          "depth": 4,
+          "bin": 6,
+          "n": 22,
+          "predicted": 0.643376053929691,
+          "observed": 0.7272727272727273
+        },
+        {
+          "family": "history",
+          "depth": 4,
+          "bin": 7,
+          "n": 23,
+          "predicted": 0.7428845380395105,
+          "observed": 0.8695652173913043
+        },
+        {
+          "family": "history",
+          "depth": 4,
+          "bin": 8,
+          "n": 22,
+          "predicted": 0.846059000730765,
+          "observed": 0.8636363636363636
+        },
+        {
+          "family": "history",
+          "depth": 4,
+          "bin": 9,
+          "n": 13,
+          "predicted": 0.9366835659612703,
+          "observed": 1.0
+        },
+        {
+          "family": "history",
+          "depth": 5,
+          "bin": 0,
+          "n": 10243,
+          "predicted": 0.021563829165261773,
+          "observed": 0.03416967685248462
+        },
+        {
+          "family": "history",
+          "depth": 5,
+          "bin": 1,
+          "n": 407,
+          "predicted": 0.13503121385096317,
+          "observed": 0.13022113022113022
+        },
+        {
+          "family": "history",
+          "depth": 5,
+          "bin": 2,
+          "n": 80,
+          "predicted": 0.2405298402425582,
+          "observed": 0.325
+        },
+        {
+          "family": "history",
+          "depth": 5,
+          "bin": 3,
+          "n": 42,
+          "predicted": 0.3422347827377019,
+          "observed": 0.40476190476190477
+        },
+        {
+          "family": "history",
+          "depth": 5,
+          "bin": 4,
+          "n": 26,
+          "predicted": 0.4409265442297038,
+          "observed": 0.6538461538461539
+        },
+        {
+          "family": "history",
+          "depth": 5,
+          "bin": 5,
+          "n": 20,
+          "predicted": 0.5546647980688484,
+          "observed": 0.7
+        },
+        {
+          "family": "history",
+          "depth": 5,
+          "bin": 6,
+          "n": 8,
+          "predicted": 0.6368331425468248,
+          "observed": 0.75
+        },
+        {
+          "family": "history",
+          "depth": 5,
+          "bin": 7,
+          "n": 9,
+          "predicted": 0.7398568108413296,
+          "observed": 1.0
+        },
+        {
+          "family": "history",
+          "depth": 5,
+          "bin": 8,
+          "n": 15,
+          "predicted": 0.8613975769774412,
+          "observed": 0.9333333333333333
+        },
+        {
+          "family": "history",
+          "depth": 5,
+          "bin": 9,
+          "n": 3,
+          "predicted": 0.9169027778463694,
+          "observed": 1.0
+        },
+        {
+          "family": "profile",
+          "depth": 1,
+          "bin": 3,
+          "n": 10853,
+          "predicted": 0.34258342616747284,
+          "observed": 0.3260849534690869
+        },
+        {
+          "family": "profile",
+          "depth": 2,
+          "bin": 1,
+          "n": 10853,
+          "predicted": 0.18211838856320375,
+          "observed": 0.1774624527780337
+        },
+        {
+          "family": "profile",
+          "depth": 3,
+          "bin": 1,
+          "n": 10853,
+          "predicted": 0.10659890367925713,
+          "observed": 0.10669860867962776
+        },
+        {
+          "family": "profile",
+          "depth": 4,
+          "bin": 0,
+          "n": 10853,
+          "predicted": 0.0670993808852052,
+          "observed": 0.06855247397033079
+        },
+        {
+          "family": "profile",
+          "depth": 5,
+          "bin": 0,
+          "n": 10853,
+          "predicted": 0.04112913543699243,
+          "observed": 0.04689947479959458
+        }
+      ],
+      "alignment_null": {
+        "draws": 500,
+        "observed_gain": 0.004201645085839378,
+        "shuffled_mean_gain": 0.001962010681264159,
+        "shuffled_p95_gain": 0.002280847041003259,
+        "conditional_tail_fraction": 0.001996007984031936,
+        "movable_actions": 5662,
+        "status": "DESCRIPTIVE_ALIGNMENT",
+        "strata": [
+          "day",
+          "side",
+          "hour",
+          "age_bin",
+          "inv_sign",
+          "decision_kind",
+          "notified_partial",
+          "distance_bin",
+          "static_bin"
+        ],
+        "scope": "Within-date matched forecast-vector shuffles; serial exchangeability is not assumed. No cancel-policy value or statistical validation is established."
+      },
+      "exploratory_forecast_screen_passed": true,
+      "validation": false,
+      "policy_value_proven": false
+    }
+  },
+  "prerequisite_sha": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/fit_20261026.json": "ec3e058f0ee7d8ffd5be1ca4720f00c7b783e005da0f6447bb44ffc4bba59214",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/fit_20261027.json": "65b209462dbd6cac7f97ba334a88c9c5f6f87ae187dfeaabbf0c374aa8330692",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/fit_20261031.json": "3a1f7f55cccc5ffbf30658052e68c5485000c13a474af77e2c3c49f608313d64",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/fit_20261101.json": "4474171849ed0ce076f71d81464a15576533a402d2b483808523f7b93f33aaef",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/fit_20261102.json": "0169e999e2688a920309c2c72901cb2d78e8d4e7bb7c406442c5cb5655329420",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_forecast_20261113/fit_20261103.json": "397d9ce8eb544cca6243f456f432ea816447f460830352444c20c239424924d6"
+  },
+  "primary_exploratory_forecast_screen_passed": true,
+  "declaration_sha": "b55263801d6bbed42a43e7e3cc6f17563146ca7fdd5af965580fb0afb17a35f1",
+  "validation": false,
+  "policy_value_proven": false,
+  "promoted": false,
+  "limits": "Nine consumed dates; six earlier-only outer dates. Saved neutral actions, not selected fills. Forecast metric and conditional alignment only; no measured queue-value or policy improvement. Full sequential value/risk comparisons and live fill calibration remain separate requirements."
+}

@@ -1,0 +1,32 @@
+{
+  "as_of": "2026-11-12T16:30:38.069459+00:00",
+  "status": "HELD_AT_NEXT_STAGE_BOUNDARY",
+  "pid": 1944044,
+  "start_ticks": "677237793",
+  "args": [
+    "/home/yuqing/pricer-sol/venv/bin/python3",
+    "/tmp/cta-model-upgrade-20261112/predictfun/research/model_eval_driver_v2.py"
+  ],
+  "descendants": [
+    {
+      "pid": 3013919,
+      "args": "bash /home/yuqing/ctaNew/predictfun/research/run_light.sh model_eval_v2_run_X_20261031 -- /home/yuqing/pricer-sol/venv/bin/python3 -m predictfun.research.pf_model_eval_v2 run 20261031 X",
+      "state": "S",
+      "start_ticks": "677946273"
+    },
+    {
+      "pid": 3013929,
+      "args": "/usr/bin/time -f %M %e %U -o /tmp/claude-1001/pf_time.3013919 /home/yuqing/pricer-sol/venv/bin/python3 -m predictfun.research.pf_model_eval_v2 run 20261031 X",
+      "state": "S",
+      "start_ticks": "677946276"
+    },
+    {
+      "pid": 3013930,
+      "args": "/home/yuqing/pricer-sol/venv/bin/python3 -m predictfun.research.pf_model_eval_v2 run 20261031 X",
+      "state": "R",
+      "start_ticks": "677946276"
+    }
+  ],
+  "correction_declaration_sha": "53d0a669b6fcdd503cd981cbb46e1c6d03ecae5721d0d80c3fe29d75a07abd5d",
+  "scope": "SIGSTOP only the original Python scheduler; its current wrapper/numerical child continues. Retire scheduler only after descendants finish and the current stage passes; then launch versioned scheduler and dependency waiters."
+}

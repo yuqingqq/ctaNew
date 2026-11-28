@@ -1,0 +1,44 @@
+THE LEARNED KEEP / PULL RULE MODEL-J THROUGH THE SCENARIO BANK (pf_pipeline_policy.py; 20261027; c summed; pull at the first live step whose predicted RETAIN value is below 0; the benchmark's RETAIN mapping gate: PASS; local marks at END, not P&L)
+  29,338 states with a path (28,038 eligible); MODEL-J pulls 27,630 orders at a predicted loss; contract parity 1,998 / 1,998 (2 atoms refused); CONTROLS: YES (P0a-P0f)
+
+  scenario                       E A+0   E MODEL-J        V A+0    V MODEL-J          dV  pulls A+0   pulls J       V KEEP  V PULL-ALL   (V = value; PULL-ALL value = KEEP + its improvement)
+  M50|A58|L37|N100             +59,472      +4,234     -181,823      -23,790    +158,033     13,861    27,630     -443,038     -23,346
+  S1lo|A58|L37|N100             -2,730      +5,536     -317,242      -43,701    +273,541     13,639    27,622     -539,550     -42,628
+  S1mid|A58|L37|N100           +44,015      +2,330     -215,146      -35,159    +179,987     13,863    27,626     -466,928     -33,491
+  S1hi|A58|L37|N100            +56,693      +2,399     -115,523      -18,961     +96,562     13,867    27,620     -312,018     -17,617
+  S2lo|A58|L37|N100             +4,823      +2,322     -351,057      -78,952    +272,105     13,315    27,617     -582,548     -75,172
+  S2hi|A58|L37|N100             +5,367      +2,712       +7,581       +1,785      -5,796     13,870    27,600       +9,408        +351
+  S3lo|A58|L37|N100             +9,126      +1,654     -244,471      -36,563    +207,907     13,660    27,608     -428,811     -31,945
+  S3hi|A58|L37|N100            +53,222      +1,172      -82,778      -14,495     +68,284     13,912    27,621     -255,742     -12,495
+  SThi|A58|L37|N100            +76,157      +3,782     -140,473      -26,670    +113,803     13,921    27,629     -405,045     -25,043
+  EVhi|A58|L37|N100             +2,092         -29      +35,572         +329     -35,243     13,898    27,615      +63,963          -0
+  M50|A15|L37|N100             +59,755      +5,880     -198,155      -43,309    +154,846     13,906    27,624     -457,725     -42,080
+  M50|A100|L37|N100            +60,958      +3,700     -166,889       -8,554    +158,335     13,686    27,282     -432,756      -6,885
+  M50|A58|L0|N100              +58,807      +2,200     -157,747      -15,210    +142,537     13,861    27,630     -407,926     -13,988
+  M50|A58|L100|N100            +37,900      +4,979     -238,835      -45,714    +193,120     13,861    27,630     -488,508     -46,155
+  M50|A58|L37|N160             +59,055      +4,265     -181,823      -23,790    +158,033     13,882    27,630     -443,038     -23,346
+  M50|A58|L37|N660             +59,067      +4,397     -181,823      -23,790    +158,033     13,945    27,630     -443,038     -23,346
+  M50|A58|L37+13%x4000|N100     +49,171      +3,232     -259,339     -114,698    +144,640     13,861    27,630     -487,431    -114,273
+  M0|A58|L37|N100              +55,394      +1,660     -159,367      -22,595    +136,772     13,876    27,630     -400,714     -20,452
+  M250|A58|L37|N100             -3,275      +5,381     -318,309      -43,609    +274,700     13,636    27,619     -538,998     -42,485
+
+  C1 / C3 / C12 at B (MODEL-J): E by age -226 / +2,844 / +1,616; B1a +2,295 / +1,555; cancel-pending 307 fills / -8,296 c / 3.0%; by source WS +2,693 | E2 +1,172 | imputed +90 | mixed +280
+
+READINGS (declared before the predictions were read)
+  P1 E ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+  P3 V ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+  P1-NY E WITHOUT FILLS ON ORDERS < 100 MS OLD ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+  P3-NY V WITHOUT FILLS ON ORDERS < 100 MS OLD ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+  P4 V - KEEP ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+  P5 V - V(PULL-ALL) ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+  C2 E AT M250 vs M50: HOLDS-AT-M250
+  C2 V AT M250 vs M50: HOLDS-AT-M250
+  C1 B1a-WEIGHTED E AT B: HOLDS-SIGN
+  D1 V - V(A+0) ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+  D2 E - E(A+0) ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+  D1-NY V - V(A+0) WITHOUT FILLS ON ORDERS < 100 MS OLD ACROSS TESTED SCENARIOS: NOT-STABLE-IN-TESTED-SCENARIOS
+  D1 AT M250 vs M50: HOLDS-AT-M250
+  BENCH RETAIN MAPPING GATE: PASS
+  CONTROLS: YES
+
+LIMITS: one consumed day (G = 1); the model is one of the benchmark's 8 candidates; the model's own-fill inputs are B's in every scenario; local marks, not P&L; queue rule M only (C5); no order-level validation (C10).

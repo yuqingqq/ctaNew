@@ -1,0 +1,54 @@
+{
+  "as_of": "2026-11-13T12:18:57.568164+00:00",
+  "status": "SOURCE_ARTIFACT_REVIEW",
+  "artifact_sha": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_size_priority_20261113/declaration.json": "cea782c5c074158c44b52f302e79907f23808123535e6cbf01a77f5c40b5183c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_size_priority_20261113/controls.json": "71aa1798f2cd401636925cd9c0fddce9dc9dcec9b7fa0ba769d97bb61c48c503",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_size_priority_20261113/driver_started.json": "ba30efa265b40f8387c157d445791d42e7f87cc8b3c7a91204bb326fd488fcb5",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/size_priority_fast_execution_controls.json": "3777296bf53a159feab403d903129057f9a7b8da8d822fe2b775698dfe8b391e",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/logs/size_priority_fast_execution_controls.log": "040e954d0c673d39058be7513e1e40f77480c7bb9f71462d5885639b0e1476c5",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/size_priority_fast_features_controls_v1.json": "7920d10ac23637f9d9faac376da55ecf3c94995f99cfbeacd8f2100a2184eff0",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/logs/size_priority_fast_features_controls_v1.log": "923cdf0eebee26550243acb545712278392b421347dbd6e0d848f7f3f134dd24",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/size_priority_fast_features_controls_v2.json": "c646f0cc11789da5ba276930867f27381c82d60b7b226b3c7ffeb09f4fc318b8",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/logs/size_priority_fast_features_controls_v2.log": "f022080ffcbf7c53542257f75534a44b65f9c8025c62a914213f4b81de2373e3",
+    "/tmp/cta-model-upgrade-20261112/predictfun/research/pf_size_priority_fast_features.py": "0395aac56fe58ba910cbdf9ba2674793a53f3560ae8dc93ee8f4ac2b6d0fbe32",
+    "/tmp/cta-model-upgrade-20261112/predictfun/research/pf_size_priority_fast_spec.py": "e70b20b136306f1c06e3d0519ba262872939475c61d20ab472df3e06b81c9a25",
+    "/tmp/cta-model-upgrade-20261112/predictfun/research/pf_size_priority_fast_execution.py": "a7bde638dc1091eedf6ecbd438a3182c1f4443884ea2d21bd0ec00788c35242d",
+    "/tmp/cta-model-upgrade-20261112/predictfun/research/model_size_priority_experiment_fast_driver.py": "78fec02ee9d81ad17213019066e23d719af6efc7e1a29800868c1e8fe9173b6f",
+    "/tmp/cta-model-upgrade-20261112/predictfun/research/tests/test_size_priority_fast_features.py": "a8b9df23a41dc7d5274c55b826fd608a02acfdcfb5acf79582d94f51cfc5f862",
+    "/tmp/cta-model-upgrade-20261112/predictfun/research/tests/test_size_priority_fast_execution.py": "132d08b4c291f7e95ee5eaef9314b00ac633c72edf21d135043b8105fb10899c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_size_priority_20261113/fast_execution_declaration.json": "3fb7540f58d3733be4ce9baf96305e628adc899622d24e6701ebeecdeb82e900",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_size_priority_20261113/fast_execution_driver_handoff.json": "3ef7eda31f51ee172ef794cfc2f5bdfbc92715f14c0ad40258700ced54398be9",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_size_priority_20261113/fast_driver_started.json": "39c93a81ad16fc68333648dae748c6648bcd8a4fcd18236e8718fb7fd3f796a5",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_size_priority_20261113/fast_preparation_started.json": "962a22b905655104a7ba7585a9807c22394b35d09c669b0bdc3137e64b1637f3",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_size_priority_20261113/fast_preparation_finished.json": "d0431ccddae0360dc7446e87db96fc7eb5d6eb9bedc94f23b623184be654934a",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_size_priority_20261113/logs/fast_declaration.log": "8027cd3af6f66a95049fe21fc62a98c5be6006cf712a8fd03175d7006f53c543",
+    "/tmp/cta-model-upgrade-20261112/predictfun/research/model_size_priority_experiment_fast_prepare.py": "bfc4e1293f745120d030d983109ab06444e8e9823bd781f9ef4cc3720f64395a"
+  },
+  "artifact_count": 22,
+  "mirror_checked_receipts": [
+    "fast_execution_declaration.json",
+    "fast_execution_driver_handoff.json",
+    "fast_driver_started.json",
+    "fast_preparation_started.json",
+    "fast_preparation_finished.json"
+  ],
+  "mirror_count": 3,
+  "active_driver_pid": 1576587,
+  "active_driver_command": [
+    "/home/yuqing/pricer-sol/venv/bin/python3",
+    "/tmp/cta-model-upgrade-20261112/predictfun/research/model_size_priority_experiment_fast_driver.py"
+  ],
+  "retired_driver_pid": 1167074,
+  "retired_driver_absent": true,
+  "fast_execution": {
+    "declaration_sha": "3fb7540f58d3733be4ce9baf96305e628adc899622d24e6701ebeecdeb82e900",
+    "controls_sha": "3777296bf53a159feab403d903129057f9a7b8da8d822fe2b775698dfe8b391e",
+    "driver_handoff_sha": "3ef7eda31f51ee172ef794cfc2f5bdfbc92715f14c0ad40258700ced54398be9",
+    "transformed_feature_sha": "3073043a4bd73de3827554dc93517aa9b3b1c24ca250e2f89288174f1466fedf"
+  },
+  "historical_size_stages": 0,
+  "pending_declared_tasks": 169,
+  "provenance_controls": "Actual computational chain accepted; all four corrupted provenance links refused.",
+  "scope": "Supplemental source/artifact/committed-content and live process review. No independent historical replay or strategy-performance claim."
+}

@@ -1,0 +1,37 @@
+{
+  "asof": "2026-11-14T09:47:14.025778+00:00",
+  "source": {
+    "pf_order_harm_v3.py": {
+      "commit": "f481b01b",
+      "sha256": "77cbcc9f28c4a4d87b60c6a868478fb1a387e1943f217dadb92f5f57df2004a1",
+      "matches_commit": true
+    },
+    "pf_order_harm_policy_v2.py": {
+      "commit": "f481b01b",
+      "sha256": "7528743bb5901d388a4f0fb95f44683e4b12d60ac7d3f18eb0af98d28e81f15e",
+      "matches_commit": true
+    }
+  },
+  "findings": [
+    "label_population_uses_unobserved_fills_via_legacy_cancel_timestamp",
+    "portfolio_metric_includes_post_terminal_fills",
+    "model_cadence_still_250ms"
+  ],
+  "experiments_launched": false,
+  "historical_data_read": false,
+  "protected_forward_days_read": false,
+  "research_source_changed": false,
+  "synthetic_controls": {
+    "label_defect_caught": true,
+    "terminal_defect_caught": true
+  },
+  "run_status": {
+    "order_harm_v3_20261114": [],
+    "order_harm_policy_v2_20261114": []
+  },
+  "limitations": [
+    "No historical frequency or PnL effect estimated",
+    "No full experiment executed; no performance verdict",
+    "Upstream guard and FRONT-PULL fits remain leave-one-day-out"
+  ]
+}

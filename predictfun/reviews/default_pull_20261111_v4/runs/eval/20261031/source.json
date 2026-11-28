@@ -1,0 +1,12 @@
+{
+  "generated_sha": "be097d4f40fb78dc29e4f409e3fc2c17d5804d18133c977e00871387ec559145",
+  "timing": {
+    "shift": -50,
+    "place": 40,
+    "cancel": 22,
+    "notice": 100,
+    "queue": "M"
+  },
+  "day": "20261031",
+  "group": "eval"
+}

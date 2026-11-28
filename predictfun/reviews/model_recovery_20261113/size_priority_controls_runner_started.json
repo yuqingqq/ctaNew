@@ -1,0 +1,19 @@
+{
+  "as_of": "2026-11-13T07:57:46.548000+00:00",
+  "status": "PASS",
+  "pid": 3412927,
+  "source_commit": "93ee8ef6a6cdfeebe8dd9867baab95509a9e713a",
+  "source_sha": {
+    "predictfun/research/pf_size_priority_policy.py": "92bde5e539e962d20b40070e668dbb0e746c947d9e2952c0d8a19520495c0828",
+    "predictfun/research/tests/test_size_priority_policy.py": "ca35556017bbc8f2a67f9d51835d423c80da68c9b1e953c3fb27e13f37d1f1fd",
+    "predictfun/research/model_size_priority_controls_driver.py": "f50c8ffb8c6ac8486e6cb7a4e24f3599862051f77b0d97b6c27864141169e0ed"
+  },
+  "controls": [
+    "exact receipt identity positive and six corrupt identity refusals",
+    "free/busy auxiliary slot and global cap controls",
+    "shell-chain positive/refusals",
+    "test-count/exit-code positive/refusals"
+  ],
+  "experiment_declaration_sha": "3a54b294f438ca0348ac67a59e7f9ba7395d20a714604e8506196f78b8882d75",
+  "scope": "Synthetic policy unit controls only; no historical runner, fitted model or live change. Wait for the active deep-pull shell chain and a free auxiliary slot."
+}

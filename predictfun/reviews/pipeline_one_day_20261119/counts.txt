@@ -1,0 +1,4 @@
+scenarios 19; MODEL-J value above A+0 in 17/19 (not at S2hi|A58|L37|N100, EVhi|A58|L37|N100); above PULL-ALL in 3/19 (S2hi|A58|L37|N100, EVhi|A58|L37|N100, M50|A58|L100|N100); above KEEP in 17/19; MODEL-J E > 0 in 18/19; A+0 E > 0 in 17/19
+at B (c): KEEP -443,038; A+0 -181,823; MODEL-J -23,790; PULL-ALL -23,346; MODEL-J - PULL-ALL -444; pulls A+0 13,861, MODEL-J 27,630
+RETAIN decisions 1,404,540 of 27,881 orders; predicted value below 0 in 93.2%; orders pulled 27,630 (99.1%), at the first live step 26,815 (97.1% of the pulled)
+POST rows 29,338; predicted POST value above 0 in 6.4%; realized mean value of those -5.97 c (1,892 orders), of all -15.10 c

@@ -1,0 +1,11 @@
+{
+  "as_of": "2026-11-12T23:59:24.045823+00:00",
+  "status": "PASS",
+  "day": "20261027",
+  "scenario": "age500",
+  "smoke": false,
+  "n": 439,
+  "inference_sha": "5ebf363388e4533caed6cbda80f47212b4208b5c36ff93724a6560964868a278",
+  "declaration_sha": "0960a232d5bc90924a26994d4f56d27e8a8fa673bc4b247cc19995c83ef2e168",
+  "scope": "All saved sampled features reconstructed from the frozen grid and saved order state; two inherited delta fields independently rebuilt. Other endogenous order state remains covered by engine checks."
+}

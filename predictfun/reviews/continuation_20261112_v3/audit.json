@@ -1,0 +1,164 @@
+{
+  "as_of": "2026-11-12T14:25:27.283832+00:00",
+  "status": "PASS",
+  "audit_declaration_sha": "c987d679c31a1ca3b22aae355d7caf50afa4ae82717a6171a2e675e50bf2d947",
+  "source_sha": "8c56daafb91a118b5dc301ad7b30564adb98dd583b78080170b26ad729f5ba6b",
+  "result_sha": "f123a932d2435ad80c41df959908c59e071a36fbfe5e0165495adce49ed991dd",
+  "input_hashes_verified": 619,
+  "shared_receipts_verified": 23,
+  "forecast_rows_reconstructed": 49585,
+  "actions": 9917,
+  "models": 12,
+  "metrics_recomputed": 155,
+  "populations": [
+    {
+      "day": "20261023",
+      "generations": 18115,
+      "sampled_actions": 1939,
+      "usable": 1924,
+      "statuses": {
+        "accepted_no_cancel": 7722,
+        "not_sampled": 5903,
+        "postonly_refused": 2551,
+        "forked": 1939
+      },
+      "paired_statuses": {
+        "eligible": 1924,
+        "missing_mark": 15
+      }
+    },
+    {
+      "day": "20261024",
+      "generations": 15372,
+      "sampled_actions": 1802,
+      "usable": 1787,
+      "statuses": {
+        "accepted_no_cancel": 6565,
+        "not_sampled": 5166,
+        "postonly_refused": 1839,
+        "forked": 1802
+      },
+      "paired_statuses": {
+        "eligible": 1787,
+        "missing_mark": 15
+      }
+    },
+    {
+      "day": "20261025",
+      "generations": 14973,
+      "sampled_actions": 1714,
+      "usable": 1712,
+      "statuses": {
+        "accepted_no_cancel": 6340,
+        "not_sampled": 5030,
+        "postonly_refused": 1888,
+        "forked": 1714,
+        "censored_30s": 1
+      },
+      "paired_statuses": {
+        "eligible": 1712,
+        "missing_mark": 2
+      }
+    },
+    {
+      "day": "20261026",
+      "generations": 19116,
+      "sampled_actions": 2033,
+      "usable": 2013,
+      "statuses": {
+        "accepted_no_cancel": 8527,
+        "not_sampled": 6082,
+        "postonly_refused": 2473,
+        "forked": 2033,
+        "censored_30s": 1
+      },
+      "paired_statuses": {
+        "eligible": 2013,
+        "missing_mark": 20
+      }
+    },
+    {
+      "day": "20261027",
+      "generations": 15992,
+      "sampled_actions": 1762,
+      "usable": 1758,
+      "statuses": {
+        "accepted_no_cancel": 6805,
+        "not_sampled": 5432,
+        "postonly_refused": 1992,
+        "forked": 1762,
+        "censored_30s": 1
+      },
+      "paired_statuses": {
+        "eligible": 1758,
+        "missing_mark": 4
+      }
+    },
+    {
+      "day": "20261031",
+      "generations": 9475,
+      "sampled_actions": 1225,
+      "usable": 1224,
+      "statuses": {
+        "not_sampled": 3710,
+        "accepted_no_cancel": 3514,
+        "forked": 1225,
+        "postonly_refused": 1026
+      },
+      "paired_statuses": {
+        "eligible": 1224,
+        "missing_mark": 1
+      }
+    },
+    {
+      "day": "20261101",
+      "generations": 10653,
+      "sampled_actions": 1305,
+      "usable": 1301,
+      "statuses": {
+        "accepted_no_cancel": 4077,
+        "not_sampled": 3943,
+        "postonly_refused": 1328,
+        "forked": 1305
+      },
+      "paired_statuses": {
+        "eligible": 1301,
+        "missing_mark": 4
+      }
+    },
+    {
+      "day": "20261102",
+      "generations": 17944,
+      "sampled_actions": 1829,
+      "usable": 1811,
+      "statuses": {
+        "accepted_no_cancel": 7770,
+        "not_sampled": 5662,
+        "postonly_refused": 2683,
+        "forked": 1829
+      },
+      "paired_statuses": {
+        "eligible": 1811,
+        "missing_mark": 18
+      }
+    },
+    {
+      "day": "20261103",
+      "generations": 17103,
+      "sampled_actions": 1823,
+      "usable": 1810,
+      "statuses": {
+        "accepted_no_cancel": 7345,
+        "not_sampled": 5264,
+        "postonly_refused": 2670,
+        "forked": 1823,
+        "censored_30s": 1
+      },
+      "paired_statuses": {
+        "eligible": 1810,
+        "missing_mark": 13
+      }
+    }
+  ],
+  "scope": "Exact saved artifact reconstruction and population/metric audit; not untouched or live validation. No new fitted model or policy variant."
+}

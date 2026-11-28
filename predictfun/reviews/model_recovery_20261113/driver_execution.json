@@ -1,0 +1,12 @@
+{
+  "as_of": "2026-11-13T00:35:11.662322+00:00",
+  "status": "STARTED",
+  "pid": 3592076,
+  "driver": "/tmp/cta-model-upgrade-20261112/predictfun/research/model_recovery_driver.py",
+  "driver_sha": "db62f13150400e8d60f4cc083a6a53da38982937c36fe48270763631298e07de",
+  "declaration_sha": "3a54b294f438ca0348ac67a59e7f9ba7395d20a714604e8506196f78b8882d75",
+  "controls_sha": "23f1eaf43ea408c73fb7b71ee03d9269fbfebf4949eb4ef726ab3b581553db4f",
+  "log": "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/driver.log",
+  "tasks": 60,
+  "scheduling": "Pure waiter/orchestrator. Waits for current prior report/correction/presence workers and then runs only one core8/Codex numerical worker through the shared wrapper. No automatic retries or protected dates."
+}

@@ -1,0 +1,47 @@
+{
+  "as_of": "2026-11-13T01:50:13.864514+00:00",
+  "source_commit": "31ae25eef29351b6c1b643c02373ccc6bd643257",
+  "source_sha": {
+    "predictfun/research/pf_model_cancel_frontier_detail.py": "ff4af3e33cd74087e7a8f13b6fe321df724e1095f75335704b5b2fff50c849cd",
+    "predictfun/research/pf_model_eval_policy.py": "bd6110d0d9e737112f5bde6f7400df559f5e2f18d45bdab05862fed55b7fd7a8",
+    "predictfun/research/pf_model_eval_detail.py": "7f49495b794596541f5b09ae7b51c3377779b81d9b5471265896bdc52f5bd80d",
+    "predictfun/research/pf_order_policy_spec.py": "859f4ad61791d17e31f6af1f13ff8e5be3af95e2628ce51ad11bb94c41a077d0"
+  },
+  "upstream_path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_eval_20261112_v2/fill_value_detail.json",
+  "upstream_sha": "f9d77f2ea3772b72c9cc9411b4f9f8fb5bdbbb73525f36e7e76aab45f05c6181",
+  "days": [
+    "20261026",
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "timings": {
+    "X": {
+      "shift": -50,
+      "place": 40,
+      "cancel": 22,
+      "notice": 100,
+      "queue": "M"
+    },
+    "stress": {
+      "shift": -250,
+      "place": 80,
+      "cancel": 100,
+      "notice": 250,
+      "queue": "L"
+    }
+  },
+  "minimum_score_age_ms": 100.0,
+  "bands": [
+    "before_model_eligible",
+    "eligible_before_min_effect",
+    "at_or_after_min_effect"
+  ],
+  "design": "Account for every already-reconciled fill by actual order age: below 100 ms, 100 ms up to but excluding 100 ms plus configured cancel latency, and the remainder. Report complete per-day/policy/scenario counts, quantities, missing strict marks and signed 1s/5s/mean values; each partition must equal the existing total. The first two bands precede the earliest possible learned cancel effect for STATIC10/HISTORY10. Actual scoring/cancel effect can be later. Guard/default bands are age descriptions only.",
+  "inferential_design": "Post-result descriptive accounting, no test, null, confidence interval, model fit, threshold selection, new candidate or frozen-policy change.",
+  "controls": "Exact 100/122/200 ms boundaries, positive/negative/zero values, missing marks and empty populations accepted. Negative/nonfinite ages, inconsistent activation, invalid quantity/infinite value, missing/duplicate bands and altered totals refused.",
+  "limits": "Conditional on fills produced by each existing policy. Not a decision-time training population, counterfactual avoidability estimate or fresh-entry value. Earlier base risk/price/data cancellations, withholding, price or size changes remain different actions. Fill marks are not portfolio marked/settlement P&L. Primary/stress failure and the next experiment remain unchanged.",
+  "validation": false
+}

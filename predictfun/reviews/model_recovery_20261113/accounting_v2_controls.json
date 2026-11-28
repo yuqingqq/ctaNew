@@ -1,0 +1,76 @@
+{
+  "as_of": "2026-11-13T07:28:02.056099+00:00",
+  "status": "PASS",
+  "declaration_sha": "c38f6acdcfd9dd9fac27345d86e4663afcd0cb828c8db3b13ebc979009056123",
+  "actual_failed_attempt": [
+    {
+      "mode": "default",
+      "windows": 8,
+      "fills": 198,
+      "settlement": {
+        "windows": 8,
+        "tie_windows": 1,
+        "fills": 198,
+        "tie_fills": 25,
+        "tie_shares": 76.73076923076923,
+        "correction_usd": 1.5543122344752192e-15,
+        "raw_settlement_usd": -5.664258203993191,
+        "corrected_settlement_usd": -5.664258203993189
+      }
+    },
+    {
+      "mode": "direct10",
+      "windows": 8,
+      "fills": 0,
+      "settlement": {
+        "windows": 8,
+        "tie_windows": 1,
+        "fills": 0,
+        "tie_fills": 0,
+        "tie_shares": 0.0,
+        "correction_usd": 0.0,
+        "raw_settlement_usd": 0.0,
+        "corrected_settlement_usd": 0.0
+      }
+    },
+    {
+      "mode": "components10",
+      "windows": 8,
+      "fills": 2,
+      "settlement": {
+        "windows": 8,
+        "tie_windows": 1,
+        "fills": 2,
+        "tie_fills": 0,
+        "tie_shares": 0.0,
+        "correction_usd": 1.1102230246251565e-16,
+        "raw_settlement_usd": -0.30000000000000004,
+        "corrected_settlement_usd": -0.29999999999999993
+      }
+    },
+    {
+      "mode": "selective10",
+      "windows": 8,
+      "fills": 4,
+      "settlement": {
+        "windows": 8,
+        "tie_windows": 1,
+        "fills": 4,
+        "tie_fills": 0,
+        "tie_shares": 0.0,
+        "correction_usd": 8.326672684688674e-17,
+        "raw_settlement_usd": -0.19999999999999996,
+        "corrected_settlement_usd": -0.19999999999999987
+      }
+    }
+  ],
+  "groups": [
+    "original_settlement_controls",
+    "synthetic_empty_and_input_immutability",
+    "nonzero_nonfinite_empty_portfolio_refusals",
+    "empty_schema_registry_refusals",
+    "nonempty_parity_and_bad_fills",
+    "actual_failed_empty_and_nonempty_parity",
+    "frame_and_event_parity_falsifiers"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "as_of": "2026-11-12T12:52:50.763458+00:00",
+  "status": "QUEUED",
+  "pid": 1417682,
+  "source_commit": "e9f88d7bed17bdb3bd6a8ad8aa0cb9172fdb452e",
+  "stages": "Wait for completed model comparison and upstream workers; precision audit; corrected declarations and controls; six-day primary/stress replay; component diagnostics; sequential age500; own-horizon forecast audit.",
+  "slot": "codex/core8",
+  "global_research_worker_cap": 2,
+  "early_core9_launch": "Refused while another research study occupied the slot; no numerical audit or correction controls have run yet.",
+  "supersedes_waiters": [
+    674377,
+    761197,
+    860873,
+    998391
+  ],
+  "model_driver_pid": 1320642,
+  "live_changed": false
+}

@@ -1,0 +1,8 @@
+rank,kind,dim1,v1,dim2,v2,n,overlap_ok
+1,order,touch_join_or_improve,contradicted,inventory_offset,compatible,1,True
+1,order,touch_join_or_improve,timing_sensitive,inventory_offset,contradicted,2,True
+1,order,touch_join_or_improve,timing_sensitive,inventory_offset,timing_sensitive,1,True
+1,take,take_class,add,directional,insufficient_comparison,1,True
+1,take,take_class,add,directional,timing_sensitive,1,True
+1,take,take_class,reduce_partial,directional,insufficient_comparison,1,True
+1,take,take_class,reduce_partial,directional,timing_sensitive,1,True

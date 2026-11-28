@@ -1,0 +1,29 @@
+{
+  "as_of": "2026-11-13T03:11:03.331059+00:00",
+  "status": "PASS",
+  "driver": {
+    "pid": 3592076,
+    "state": "T",
+    "parent": 1,
+    "start_ticks": 681103241,
+    "argv": [
+      "/home/yuqing/pricer-sol/venv/bin/python3",
+      "/tmp/cta-model-upgrade-20261112/predictfun/research/model_recovery_driver.py"
+    ]
+  },
+  "worker": {
+    "pid": 744022,
+    "state": "R",
+    "parent": 744021,
+    "start_ticks": 681992758,
+    "argv": [
+      "/home/yuqing/pricer-sol/venv/bin/python3",
+      "-m",
+      "predictfun.research.pf_recovery_experiment_build",
+      "seed",
+      "20261024"
+    ]
+  },
+  "plan_sha": "18a2a721538aafd70e23b3cc30841cb715115c093d2513b801a88d2f8a407ddb",
+  "scope": "Pure driver held; current full numerical worker remains active. Resume after the declared seed audit."
+}

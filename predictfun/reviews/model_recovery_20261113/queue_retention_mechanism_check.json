@@ -1,0 +1,145 @@
+{
+  "as_of": "2026-11-13T07:46:35.686593+00:00",
+  "status": "PASS",
+  "source_commit": "b57507bf8689b47d7e2237a2339051f6ec9b30fe",
+  "source_sha": "0c9d353cc6e269e297a33c8bea8cca3d53d7d70c51a3371b2a9304505219d926",
+  "scientific_declaration_sha": "3a54b294f438ca0348ac67a59e7f9ba7395d20a714604e8506196f78b8882d75",
+  "simulator_sha": "4f173446bf07d7141a96bddf02470e38e66aa64b2b28a380eeb7dec9343530cc",
+  "reviewed_simulator_sha": "4f173446bf07d7141a96bddf02470e38e66aa64b2b28a380eeb7dec9343530cc",
+  "public_repeat_counter_sha": "5cb593e4e117b0e473d8ae403d382070782fe9d981cdf8bba18d91eef4339284",
+  "reviewed_report_sha": "fe8ae866d1a3d818ca9249fcc339a288dc814c2806be281596c63383b014511a",
+  "cases": [
+    {
+      "size": 5.0,
+      "queue_rule": "M",
+      "fills": [
+        {
+          "trade_index": 0,
+          "at_ms": 100.0,
+          "shares": 5.0,
+          "order_age_ms": 60.0
+        }
+      ],
+      "orders": [
+        {
+          "active_ms": 40.0,
+          "end_ms": 100.0,
+          "ahead_at_activation": 0.0,
+          "refused": false
+        },
+        {
+          "active_ms": 240.0,
+          "end_ms": 522.0,
+          "ahead_at_activation": 20.0,
+          "refused": false
+        }
+      ],
+      "filled_shares": 5.0
+    },
+    {
+      "size": 50.0,
+      "queue_rule": "M",
+      "fills": [
+        {
+          "trade_index": 0,
+          "at_ms": 100.0,
+          "shares": 5.0,
+          "order_age_ms": 60.0
+        },
+        {
+          "trade_index": 1,
+          "at_ms": 300.0,
+          "shares": 5.0,
+          "order_age_ms": 260.0
+        }
+      ],
+      "orders": [
+        {
+          "active_ms": 40.0,
+          "end_ms": 522.0,
+          "ahead_at_activation": 0.0,
+          "refused": false
+        }
+      ],
+      "filled_shares": 10.0
+    },
+    {
+      "size": 5.0,
+      "queue_rule": "U",
+      "fills": [
+        {
+          "trade_index": 0,
+          "at_ms": 100.0,
+          "shares": 5.0,
+          "order_age_ms": 60.0
+        },
+        {
+          "trade_index": 1,
+          "at_ms": 300.0,
+          "shares": 5.0,
+          "order_age_ms": 60.0
+        }
+      ],
+      "orders": [
+        {
+          "active_ms": 40.0,
+          "end_ms": 100.0,
+          "ahead_at_activation": 0.0,
+          "refused": false
+        },
+        {
+          "active_ms": 240.0,
+          "end_ms": 300.0,
+          "ahead_at_activation": 20.0,
+          "refused": false
+        },
+        {
+          "active_ms": 440.0,
+          "end_ms": 522.0,
+          "ahead_at_activation": 20.0,
+          "refused": false
+        }
+      ],
+      "filled_shares": 10.0
+    },
+    {
+      "size": 50.0,
+      "queue_rule": "U",
+      "fills": [
+        {
+          "trade_index": 0,
+          "at_ms": 100.0,
+          "shares": 5.0,
+          "order_age_ms": 60.0
+        },
+        {
+          "trade_index": 1,
+          "at_ms": 300.0,
+          "shares": 5.0,
+          "order_age_ms": 260.0
+        }
+      ],
+      "orders": [
+        {
+          "active_ms": 40.0,
+          "end_ms": 522.0,
+          "ahead_at_activation": 0.0,
+          "refused": false
+        }
+      ],
+      "filled_shares": 10.0
+    }
+  ],
+  "repeated_fill_fixture": {
+    "fill_records": 3,
+    "same_event_distinct_identities": 1,
+    "separate_event_distinct_identities": 3,
+    "reported_count_both": 3
+  },
+  "queue_gain_falsifier_refused": true,
+  "identity_equivalence_falsifier_refused": true,
+  "historical_payload_read": false,
+  "new_models": 0,
+  "live_changed": false,
+  "scope": "Synthetic mechanism proof in reviewed S4, not historical profitability or live queue calibration. Larger retained quantity survives a partial fill; exhausted small quantity re-enters behind later depth. Nothing-ahead control removes this fixture advantage. Repeated fill records need distinct taker identities before comparison with public orders."
+}

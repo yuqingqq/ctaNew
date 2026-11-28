@@ -1,0 +1,13 @@
+{
+  "as_of": "2026-11-13T18:18:56.548214+00:00",
+  "status": "PASS",
+  "predecessor_sha": "3bd21750832f5e65efbcf52b7d3ec94ab5b3db3e8493440ea0b80c25dcc8c6a7",
+  "declaration_sha": "cea782c5c074158c44b52f302e79907f23808123535e6cbf01a77f5c40b5183c",
+  "pid": 1576587,
+  "fast_execution": {
+    "declaration_sha": "3fb7540f58d3733be4ce9baf96305e628adc899622d24e6701ebeecdeb82e900",
+    "controls_sha": "3777296bf53a159feab403d903129057f9a7b8da8d822fe2b775698dfe8b391e",
+    "driver_handoff_sha": "3ef7eda31f51ee172ef794cfc2f5bdfbc92715f14c0ad40258700ced54398be9",
+    "transformed_feature_sha": "3073043a4bd73de3827554dc93517aa9b3b1c24ca250e2f89288174f1466fedf"
+  }
+}

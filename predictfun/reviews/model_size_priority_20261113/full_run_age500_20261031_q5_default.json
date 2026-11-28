@@ -1,0 +1,94 @@
+{
+  "as_of": "2026-11-14T22:41:59.527948+00:00",
+  "status": "PASS",
+  "day": "20261031",
+  "profile": "q5",
+  "scenario": "age500",
+  "mode": "default",
+  "smoke": false,
+  "capture": false,
+  "windows": 288,
+  "arm": "MICRO|G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP50+XNA+XMIN1+XV+RO60+S240+SZDEFAULT|mid|AM:5:5:95",
+  "grid_identity": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/data_20261031.json": "bcef39412f6d153938c0897c5676375f245de1afadd4a6b2bc511e3eb2d89e69",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/context/20261031.json": "40b8f3fe46ef7b8b32b2ca1f612099d445ef0a9f63dadbfb3c93b574cf319ff0",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261031/rows_rl_d2_pk.parquet": "8e3c6cfe265afad17deaa1ead6282ce5d2649aac7ca658e3d0d422851b050920"
+  },
+  "prerequisite_sha": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261031/registry.parquet": "5b1675d112399d3852b9680dcd31ff5d577bce481e90b7d520e47885a1596893"
+  },
+  "generated_source_sha": "d873f810001a474fa2d3569d2d50559c1e4d06b5a99132075664a705dabd4edf",
+  "checks": {
+    "accounting": {
+      "windows": 288,
+      "generations": 14333,
+      "fill_records": 6000,
+      "generation_statuses": {
+        "accepted_no_cancel": 12612,
+        "postonly_refused": 1721
+      },
+      "settlement": {
+        "windows": 288,
+        "tie_windows": 2,
+        "fills": 6000,
+        "tie_fills": 36,
+        "tie_shares": 117.7841798941799,
+        "correction_usd": 0.5364814814814729,
+        "raw_settlement_usd": -375.178307035181,
+        "corrected_settlement_usd": -374.6418255536995
+      },
+      "missing_mark_windows": 12,
+      "hashes": {
+        "valued_windows.parquet": "b6dfbdc4d4a9777aea6e174f0bd02730f95070de72f459adc9626d6d824f8b3b",
+        "presence.parquet": "7d5bc1f75e02d63ab9937cdcc4f284a03c038a0493d41c7a653b4ca91a130e22",
+        "accounting_windows.parquet": "fc128de0ebbe50713dd5dca8a5c7ca8c4f5d057e4c825f46be203d1db0ce670f"
+      },
+      "note": "Equal configured inventory limits do not establish equal realized risk."
+    },
+    "policy": {
+      "windows": 288,
+      "counts": {
+        "scores": 0,
+        "learned_pulls": 0,
+        "recovery_observations": 0,
+        "placements": 14333,
+        "cancel_requests": 10424,
+        "guard_decisions": 0
+      },
+      "all_policy_events_reconstructed": true,
+      "all_sampled_forecasts_reconstructed": true,
+      "native_fill_records": 6000,
+      "source_trade_legs": 446330,
+      "complete_identity_repeat_orders": 985,
+      "all_original_trade_provenance_reconstructed": true
+    },
+    "age": {
+      "fills": 6000,
+      "minimum_age_ms": 500.0
+    },
+    "suppressed_opportunity_events": 12881
+  },
+  "hashes": {
+    "accounting_windows.parquet": "fc128de0ebbe50713dd5dca8a5c7ca8c4f5d057e4c825f46be203d1db0ce670f",
+    "capstate.json": "2b64ef3d68c56393c1b25f84da688078b378861676758e5c9b04525e2214a111",
+    "fills/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP50_XNA_XMIN1_XV_RO60_S240_SZDEFAULT__mid_szAM-5-5-95.parquet": "9e455d33a62c0a7783d90c9fcbc45a3e929eac0b51dca610800c06e4e167a823",
+    "generations/default.parquet": "bbc1306b72828670b95bfdd5f2ab2df85a12c62f3cd1d73fb2a9039b2eb85446",
+    "independent_windows.parquet": "fc128de0ebbe50713dd5dca8a5c7ca8c4f5d057e4c825f46be203d1db0ce670f",
+    "policy_construction.json": "aeb4e5d7b99cb9b398228426b9ab75c634f108ae94333458e0bc977cd3e0f589",
+    "policy_evidence.jsonl.gz": "a890048f580df445a089b48096426c0f1e32d566515baabbc6a2c8deb99ed358",
+    "presence.parquet": "7d5bc1f75e02d63ab9937cdcc4f284a03c038a0493d41c7a653b4ca91a130e22",
+    "requests/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP50_XNA_XMIN1_XV_RO60_S240_SZDEFAULT__mid_szAM-5-5-95.parquet": "87164ee400dcd8734a9cc13ee5821d950318ebf6cb6c9f7fad121c127f8fa881",
+    "summary.json": "ec98182c8fdfc648df419820177e32fe51b284ea8ea5ed78dad5b644ed0c2a3c",
+    "valued_windows.parquet": "b6dfbdc4d4a9777aea6e174f0bd02730f95070de72f459adc9626d6d824f8b3b",
+    "win/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP50_XNA_XMIN1_XV_RO60_S240_SZDEFAULT__mid_szAM-5-5-95.parquet": "3a61fc9582d1ab7ae91bcbc7ef8aade88f21e279883098e1c392de9acc15fa04"
+  },
+  "declaration_sha": "cea782c5c074158c44b52f302e79907f23808123535e6cbf01a77f5c40b5183c",
+  "validation": false,
+  "live_changed": false,
+  "fast_execution": {
+    "declaration_sha": "3fb7540f58d3733be4ce9baf96305e628adc899622d24e6701ebeecdeb82e900",
+    "controls_sha": "3777296bf53a159feab403d903129057f9a7b8da8d822fe2b775698dfe8b391e",
+    "driver_handoff_sha": "3ef7eda31f51ee172ef794cfc2f5bdfbc92715f14c0ad40258700ced54398be9",
+    "transformed_feature_sha": "3073043a4bd73de3827554dc93517aa9b3b1c24ca250e2f89288174f1466fedf"
+  }
+}

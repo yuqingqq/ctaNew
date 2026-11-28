@@ -1,0 +1,45 @@
+{
+  "as_of": "2026-11-12T10:42:33.924218+00:00",
+  "status": "REVIEW_COMPLETE_WITH_CAUSAL_CLOCK_FINDING",
+  "source_commit": "9053263d16cb54b1ad6f249bf41d7cc62349e54f",
+  "sources": {
+    "qr": {
+      "path": "predictfun/reviews/qr_20261112/qr.json",
+      "sha256": "7d8665a00218339e454367c0499485362dbdd9dfa634357f35b1e610ccdb193a"
+    },
+    "default_pull": {
+      "path": "predictfun/reviews/default_pull_20261111_v4/comparison_final.json",
+      "sha256": "e84214cd58030c8b510aaf3be4c6b9167a86e01778e8aa5a8f8dea9728649fba"
+    },
+    "joint_fill": {
+      "path": "predictfun/reviews/joint_fill_20261112/result.json",
+      "sha256": "633caa0332b19919245c69294b2bec3275d1a6b6ffef8b831458491c027bb885"
+    }
+  },
+  "evidence": {
+    "path": "predictfun/reviews/results_review_20261112/qr_clock.json",
+    "sha256": "a855aab142b37eb3b8dac01086739f33a6451dd58aa496d66871e7aff194d1ba"
+  },
+  "review": {
+    "path": "predictfun/handoffs/20261112_new_results_insights.md",
+    "sha256": "6d8cd456019f787ae5cab6adcad6751d87c8651c6cf1e7aeb144ac9e24d01863"
+  },
+  "supersedes_interpretation": {
+    "artifact": "predictfun/reviews/qr_20261112/qr.json",
+    "sha256": "7d8665a00218339e454367c0499485362dbdd9dfa634357f35b1e610ccdb193a",
+    "scope": "Causal and actionable fast-entry speed interpretation, especially FB30 and its economic comparisons; original numerical fields preserved.",
+    "reason": "Future birth price changes the action prefix before the birth: at unchanged40ms placement, requested30ms activation schedules submission10ms before the birth.",
+    "replacement": "Do not treat these fast-arm economic results as causal latency evidence. Declare observation/decision/activation clocks explicitly and issue a corrected speed study.",
+    "unaffected_by_this_finding": [
+      "Part A queue decomposition",
+      "Part C live-order queue decomposition",
+      "Original historical tables preserved",
+      "Full default-pull portfolio and joint-fill studies"
+    ]
+  },
+  "historical_bias_recomputed": false,
+  "new_raw_data_read": false,
+  "new_strategy_variants": 0,
+  "live_changes": false,
+  "economic_validation": false
+}

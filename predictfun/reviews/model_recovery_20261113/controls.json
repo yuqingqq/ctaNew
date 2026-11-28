@@ -1,0 +1,28 @@
+{
+  "as_of": "2026-11-13T00:34:55.580407+00:00",
+  "status": "PASS",
+  "suites": {
+    "pipeline": {
+      "tests": 6,
+      "log": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/recovery_experiment_freeze_pipeline.log",
+      "log_sha": "77aa596c639a358dccf50f486245b6c056a1620eea35ee21b6d602d5d258f088",
+      "wrapper_record": "2026-11-13T00:25:41Z tag=recovery_freeze_pipeline rc=0 peak_rss_mib=234 wall_s=4.16 cpu_user_s=3.97 memavail_start_gib=22 disk_free_gib=495->495 slot=claude"
+    },
+    "policy": {
+      "tests": 6,
+      "log": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/recovery_experiment_freeze_policy.log",
+      "log_sha": "5f37c62ac09de58982f4c3ff5a202f427365050e5c9b88cbe79a2f70156b6b28",
+      "wrapper_record": "2026-11-13T00:25:46Z tag=recovery_freeze_policy rc=0 peak_rss_mib=224 wall_s=6.86 cpu_user_s=6.64 memavail_start_gib=22 disk_free_gib=495->495 slot=claude"
+    },
+    "reports": {
+      "tests": 3,
+      "log": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/recovery_experiment_freeze_reports_v2.log",
+      "log_sha": "e86973f046e3b0d7e8ab0ffc1a2f37ddb5a6e93438ad1840db39dff1fd2175c3",
+      "wrapper_record": "2026-11-13T00:30:17Z tag=recovery_freeze_reports_v2 rc=0 peak_rss_mib=192 wall_s=1.20 cpu_user_s=1.03 memavail_start_gib=22 disk_free_gib=495->495 slot=claude"
+    }
+  },
+  "source_commit": "78285fe02d00962abc5f7148e6001a8f39a0ddc6",
+  "declaration_sha": "3a54b294f438ca0348ac67a59e7f9ba7395d20a714604e8506196f78b8882d75",
+  "scope": "Synthetic builder, captured targets, causal features, chronological/pinned fits, repeated recovery policies, no-op/young-fill stress, independent inference, matched nulls/day intervals and computed success gates. Includes positive and known-bad refusal cases.",
+  "historical_outcomes_used": false
+}

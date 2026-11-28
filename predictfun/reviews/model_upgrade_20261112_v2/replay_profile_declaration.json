@@ -1,0 +1,11 @@
+{
+  "as_of": "2026-11-12T14:46:07.782327+00:00",
+  "source_commit": "1eb6c1511a095de4a796be6819676d488ebc0b5f",
+  "source_sha": "4aaacdf8b453fb63b1c9c48da98174d87c81233f1b18b7d5bfbbde136d3dbee9",
+  "replay_declaration_sha": "4db0034cb7e0c527afe6da374bb7445e3189738e4a1ef6e371e2e84a32f36f2c",
+  "smoke_receipt_sha": "6657cb4aaadacdbfd46f10d2646d1d0d3dd6cfce10d341a6f78fbb902983c6d0",
+  "day": "20261026",
+  "repeats": 100,
+  "design": "Reconstruct every saved first-day eight-window smoke inference from the frozen grid and order state, and verify exact features and saved model scores. Profile100repetitions of the same inference cases using cProfile. Positive feature/score equality and deliberately corrupted score refusal precede timing. No fitting, model selection, policy change or replay mutation.",
+  "limits": "A small repeated inference microbenchmark, not a whole-engine profile, end-to-end latency estimate, independent statistical sample or strategy-performance test. cProfile adds overhead. Do not infer an optimization speedup without a separately checked comparison."
+}

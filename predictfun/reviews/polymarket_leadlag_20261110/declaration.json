@@ -1,0 +1,1591 @@
+{
+  "as_of": "2026-11-10T07:35:17.960225+00:00",
+  "source_commit": "e4034cad844197f7db05d43db836ce74d4f3489d",
+  "preparation": "d45809d8 refused scalar Up-index during declaration, before any output or lead-lag outcome; integer scalar/one-element integer array now validated explicitly, no numeric design change.",
+  "source_sha": {
+    "predictfun/research/pf_pm_leadlag_data.py": "c862f213d6211e629cebe12960c6710ced6fc1a1df19a3ba8f852164113bdbaf",
+    "predictfun/research/pf_pm_leadlag_stats.py": "4356b0ea334ee528e97429b77b397dcae3319565260c1785b401fc91f4431a34",
+    "predictfun/research/tests/test_pm_leadlag.py": "3e008013dcb830223dcfe920d5665a83cdf0dd01d968be3bee8651f68ee3a3ff"
+  },
+  "input_sha": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261023/registry.parquet": "660d09ea425a4da5bf2b59d87e1d4693a121cfde47b5bfcdda6db6c1a86ce591",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261023/btc-updown-5m-1792713600.jsonl.gz": "458706a029993751459d272ab59577948978b6b8440a6d2ecad3714b475ff76f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261023/books/part_20261023_00.parquet": "63ac47983562be17075a43637c53f0c93564bf358b36206779c8044803e70320",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_00.csv.gz": "20087cc14ff83bb3778585742caa22e7815f7a1ffd48d5758dd116ff0e91de40",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261023/btc-updown-5m-1792724400.jsonl.gz": "c78703111daf0275892a77ab18c4b98f77fe5f4ecea2f3ff887c34701b522928",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261023/books/part_20261023_03.parquet": "489ca7e6acadbd30651ce1af35bb63b33a772e2619a12ab5d0117c25b24e765e",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_03.csv.gz": "6129759850d5ba48688792bf1a5bafc22c9326ece79330a260a8a01803f37500",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261023/btc-updown-5m-1792735200.jsonl.gz": "eeef2638fb827294e2e15f87b9975456484d62faed6717874abeca6e5f272d41",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261023/books/part_20261023_06.parquet": "13c7ce23b286e15561218576f4ae29ff71ed03dd2d20a36bea28cbe5a608d5fa",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_06.csv.gz": "bc2b21508f07cf427931626f0fcc7fc3a4e17afe02ee32cf5899089a1729624a",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261023/btc-updown-5m-1792746000.jsonl.gz": "84683ae7096a680fbfebfe7ad1a3e10d1630efa3b78d80a919f497d9e95d34a0",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261023/books/part_20261023_09.parquet": "0e9063e70fc2d407763beb4835a9c30dcf7268424511c2e81c9cd9a86af4e9d7",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_09.csv.gz": "593c70a016673ec06831f1fd01b0f1c1d4bfa7ed488916cddd69349c3b1d64dc",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261023/btc-updown-5m-1792756800.jsonl.gz": "21a0b9171fa15dd43030c0bdff8c44196db2d199a6a7e9f9cc87e909af0ed571",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261023/books/part_20261023_12.parquet": "9a23a0fed3f212db53eabbb54ac1bb20538c315e069188a91c2d42ed3976de02",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_12.csv.gz": "793dcfee006891259ebcd5ad0984b7b393e50c90f0beb907681f05bb83f78f93",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261023/btc-updown-5m-1792767600.jsonl.gz": "5f45b70dee034f7deb7f81a8081fb9b37f3c4eba8ec46dc254b81faf4a03527b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261023/books/part_20261023_15.parquet": "cb6344c3b2a05ea0bf4ab071dbd44798fa72926b51f8f2de531579673658b0a9",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_15.csv.gz": "8a442666e2b21cac72fb5abb051a7f7ce854a9f25ba34b96ad398fe8b0ec3af4",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261023/btc-updown-5m-1792778400.jsonl.gz": "604e24ed54b6be422a5b6169403f51d7b0c55a7a2a4ba1f9f70bc4a834520d91",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261023/books/part_20261023_18.parquet": "d395d31bd8e45bb9fd40ed5aeed3eca27e03c9890c4d3437d2640c9a93d9b8b9",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_18.csv.gz": "1a4d08a0e485c1e06b8a6f2acd32e4540ea55ed078f5d4f54bac63e562492cc1",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261023/btc-updown-5m-1792789200.jsonl.gz": "998f959cf48d468ba2654a13a9bae8cbf20c0c98c44801f48f41c5e878c00c5d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261023/books/part_20261023_21.parquet": "24db7ae2af9df8444222afe7e822b2c6e6cafff655762b77c4fa9d7fc40426b9",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_21.csv.gz": "66ac687eb9e8aab2785c5e389119a5cac26399a749842046477904e74feacd46",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/registry.parquet": "21482f2cbec32188e80d5f80926f99bf87158507643c307ae4d177cb89e7c9c0",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261024/btc-updown-5m-1792800000.jsonl.gz": "733754c331b85112d60ca153ff7849af0da64f589d1eb3b8bcaeaa7f5583722d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_00.parquet": "dc5b5d721958ac8bd8596850d1ea7f73c3c8e400de6eaddbf7e1e4ad9d34338d",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_00.csv.gz": "d56b7ec4d45ebe5742c174544b3a0199a4f8ded39c1a144ff91e1f1fa074235c",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261024/btc-updown-5m-1792810800.jsonl.gz": "19fe55891905251e6defc485cf139b34a0e6e7cbc5c1f0f8feee07059f6524fd",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_03.parquet": "aef6334676ee309a9fd2cfdb62dc860ea4712d96c29412cf02ae09815e0dbbc3",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_03.csv.gz": "e3f72c2551940353856347481873cf59e722bb3b8d1c5b5c946750a4c5cba8ef",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261024/btc-updown-5m-1792821600.jsonl.gz": "3236c445b38121f434f138c53471d86315982ebae86c6dd5b9363665a74ccaa9",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_06.parquet": "90367d42af56fa28eb54b6bfa215a532e2c69a3ad7812d51a84e46e115325529",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_06.csv.gz": "3fcadc80b9e387e6ae2823fd4137d8883c8d7d3a8d93524902d837e60718d646",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261024/btc-updown-5m-1792832400.jsonl.gz": "59e5cfe1d215086c3923059f53b312822b72d42ce87e0c4df9e18db435f4c951",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_09.parquet": "faadff5459fd51a067c222099d19ae87a4bf949611b9aa7173fce86f83d57271",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_09.csv.gz": "ebbe64fb0155e9cf5e0f9a3f2b9e9067d3b2d1f01a0f58457611304d9c249e45",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261024/btc-updown-5m-1792843200.jsonl.gz": "38402a53fdf357811e5ad5b6524690bc97a0d477b7c03770f65e8e365e03bb2a",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_12.parquet": "a5f08b666b996adab95022390a9b3be19faa0d2a3266878f608e19d23ce34d77",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_12.csv.gz": "5016eb52631a66fe0b3c53387187046c5161a38724debca251240007a1292ff3",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261024/btc-updown-5m-1792854000.jsonl.gz": "285ba889292560b6104198047f629d0123d09417965abb5eaa62ac85a6e3e5eb",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_15.parquet": "18d8b5c3fdb013ca124dfad388ea5e3777176072c0613001b3ead0a18f745c8e",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_15.csv.gz": "adfd389fc0a75ae7c8cf9bb94459f59c080f539fa3672a97fd0989c28baa7b7c",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261024/btc-updown-5m-1792864800.jsonl.gz": "800508d3d79f3984dafbbadde1e014aae49c1e09688b2ad91cd2aac43605386d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_18.parquet": "2de00fa35c1bad57595b4adb5225cf9d23c63faaff07289593e3067fe8fa3c71",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_18.csv.gz": "32226d52a4d83d2088917d8daf464392d17ac6f1cedd6bd6cbd419cb3d559636",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261024/btc-updown-5m-1792875600.jsonl.gz": "3366abc5cbb5b1b8dee61f8376c69d3faa6631c0d8e1e87fa47fb109040b7788",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_21.parquet": "5e5f2a975dedc4b481c99fcd04c09e42f3d223b19679dbdbc7a801ba53260807",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_21.csv.gz": "9ea0d8924e447948a9edda576310b0e4baa33e8d91aa2a62ab47ae239f876af5",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/registry.parquet": "f5fec8709ef9868574909ae982ef6bbf851909bb4cd7e1cafadfbc1f7b740f28",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261025/btc-updown-5m-1792886400.jsonl.gz": "22e85eb8735d5034686affc2c352d12ce558da4de7fffcb5e62ec32a19814e6d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_00.parquet": "bc6be83cf2430edbfe1db9ac3b1ced99e448b998276f3377f32b86747cbeaf54",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_00.csv.gz": "1f1381fcaac2ae7768b2aff08600d055560d6f7bdcd9209ca2b63d8a3637267c",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261025/btc-updown-5m-1792897200.jsonl.gz": "da1970621804b6612065d49c0981c46602d65848b055a7e2a1c6954d3f1cbed8",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_03.parquet": "af87bfa9cb2458370693b2bcc7769689e99c08343065ebc2357c07784999ebbd",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_03.csv.gz": "a79e318dc3f824e73e64b302a0ffb4391017803138fdb8be97d39283ce39dec2",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261025/btc-updown-5m-1792908000.jsonl.gz": "fd25ee5a9e40ee169eb262afe090e5f1c74c46e5c2742ce64ed69782d8c8f665",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_06.parquet": "6ed926fe04f5a380f9e868e6566899ecec838db14f5c90380b946d3527fd9918",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_06.csv.gz": "3bb4213c3c1f1dc7b9252aebe82332fafc19c133a55610c8e318abbf49d1b331",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261025/btc-updown-5m-1792918800.jsonl.gz": "eaa8c247e7f2f9f91fb34731e891a74e540f350c1cc53d55cad7f4fe56759ff8",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_09.parquet": "35db307fb278cb4063679e4654e1feb5e15f8c979932082e7045a0fa7e6fe350",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_09.csv.gz": "d7cb7865928c79887809a620698d6eaf239b0f2fa84447fc14afa510982be2bf",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261025/btc-updown-5m-1792929600.jsonl.gz": "7cb066ff5135f6ccdedf873d08fce889b240c1901f78c8d138616b42e7cef2d4",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_12.parquet": "e288feab62a0a16dbae1d61fbde62bf347ef9f4a40368f5e45b45fe1fb72dfd7",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_12.csv.gz": "a277f6cb3c6f7b1be8f199110d037bdacf6a5f6467d262917de4c36ac78d6cf8",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261025/btc-updown-5m-1792940400.jsonl.gz": "a658176ba1f19ff5b89886a273b1d9b4fcd52793f6ff38d88a100b5e2e2665a7",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_15.parquet": "1d2970913303632d613af4ab33229914972f00dc8b5820159ac63f94af6a01cb",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_15.csv.gz": "d3397399391d9014c054e5dae33ee34632643ad09b17655f6747a672b1f94682",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261025/btc-updown-5m-1792951200.jsonl.gz": "484875a47ca595a599a23af2edfc58ced1444062bc6722c13f1257fb2dd33de9",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_18.parquet": "067814d281c6bd7ebb7bfe8192ba2ed5242632a858114b37031e379519fc144c",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_18.csv.gz": "bae45ff85422b10b890a409a56364197a8d45666f525c1ab49467a3adf63ac7a",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261025/btc-updown-5m-1792962000.jsonl.gz": "0a092c597fe4141b0b5fa7d9200971badb1ce4e95a44a9e8243662f148b26a05",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_21.parquet": "acca61d6ce285b2b003bf659c2b2a17c6fb7f35cd6405b031a3b0a8fa9ee47da",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_21.csv.gz": "302eca9589e2f55af64969263ce4588bde28e19c3a9948bb662c7d65f9b6a05f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/registry.parquet": "172173018e75a05cb83dd810daf93633fd3f3e2fe91412b760e5ebb0016ea772",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261026/btc-updown-5m-1792972800.jsonl.gz": "3a252a09a443e111ea69bc5c8a940b6469cdd8f39aa911ad4d4daf783c7f91d2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_00.parquet": "bdb2473d99c056aeeffd409721da4020856c03789e5a0ba165379952466ec424",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_00.csv.gz": "1ab096b655f11bfcbdf813474471723bb8d1ac5e421ced211bb1142d53bd4472",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261026/btc-updown-5m-1792983600.jsonl.gz": "5acc278c09deedcb3f0ded2c295c3cff152b92bcd2477024a45e4a932e3c2fc3",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_03.parquet": "7f4326923dd4b049b2f682f5b5cb94d3a7614b91ed744408dc7c620d4e742e45",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_03.csv.gz": "716bc756840c6999d5e8f4f3a6e1af032d891392c258cde31c90856834f7a444",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261026/btc-updown-5m-1792994400.jsonl.gz": "b7dc05eb46aeade056c16a9314e3f2f1d6083d51766a2429c87d944e6e0c0dc2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_06.parquet": "3b5ba42249b2ed0fdb4c4442a5884ad6ced9c12d2c3b1399994b0e0369a66f55",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_06.csv.gz": "c0ec009372a6ad50e6b6826a6aa28813fc97f590c5ecfe0631fb02760ba9d399",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261026/btc-updown-5m-1793005200.jsonl.gz": "d4432e0856580dc5afd05a991a68f19e6325c2625bd37df52db815fa5d5cd833",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_09.parquet": "9ca133fe29ef95a6bf0d6175329289dde2ae91f2b2e9d16b78148fb861843549",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_09.csv.gz": "706288ae8c0d103de8f88655a646f80aab084fafe4b9f656b800c32eef832635",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261026/btc-updown-5m-1793016000.jsonl.gz": "e78e460a553e6444462bb6588004cfda33dae5de2e977e661d2e74a5f8633690",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_12.parquet": "dfe4e9e36d5a5d5e1f45ea819ddc2faacb02d9f59c372780315cdaf4bafdd310",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_12.csv.gz": "6cfaf43dc177f2c03c1ff196bc87d3eee7ed3704047c6a424fce3fa4629920ea",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261026/btc-updown-5m-1793026800.jsonl.gz": "e2373c3128fa975fb4e9dcd08688c5d3b218e6b79d24b4aaf5b7e3e7134d26ca",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_15.parquet": "9598a0bf43d4c8472e389bc709345098e3ca219c5b0b71ddd155d6d111673011",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_15.csv.gz": "c7859296c2cdb2b269de62c6f4568445486f07706c8d68fdfc6bfe525b108ae5",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261026/btc-updown-5m-1793037600.jsonl.gz": "0647c8a7e26fd7e4d52871b03f4cd6d65261d95e2d72519d842231b37a1be8c1",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_18.parquet": "5d792e2af752eafb869b0f110f34f2bd451bcb4d8bb3c88cbf32fed853b0690d",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_18.csv.gz": "734716acc2e7f4e0635ca4de5fa88bea298ea734bd9a29685113df833a7de6c6",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261026/btc-updown-5m-1793048400.jsonl.gz": "3a89764c266768c0c5235eff1244b1b3ebd8a02666a167be4f65cbb25bccd645",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_21.parquet": "5b7abb1f6ad1cfbfe61c541fd3eb965d071dc34f9042d9015fe418952422817e",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_21.csv.gz": "e74cb6f573fa5d42c9648dde1d59a6df86b62c026f4e9c27e5cf597f00094d77",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/registry.parquet": "096b08b011fc9e5de1e22cdc46f416adbd522fdb9b19eabad00591937c2fc356",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261027/btc-updown-5m-1793059200.jsonl.gz": "e65c20b385deec84223edaa1a8a1c99c6cb0229599b9f17132770025625e52c2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_00.parquet": "67a13b079d92e7a844d9e046d61da1b6c4ee0af04fd97b53337dc5d84e2cbff9",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_00.csv.gz": "2bad777c823c59f2c496f65027183108c6521a1b9d8b63deb250071fb138f0cc",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261027/btc-updown-5m-1793070000.jsonl.gz": "d6df47a0ab6e6068243fea9f6149e8a06c24553f9aba098b380c06ec6fd27a01",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_03.parquet": "f6902fba1c0fb3a849de4fcba6a84dfb98dfb83713e539b39fc8deb5c92f50f4",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_03.csv.gz": "a774322e3533fa6727eb7b9509a8a61154b45d69748dcc3bb0474491839db389",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261027/btc-updown-5m-1793080800.jsonl.gz": "006b8b63c9f47c92a7d9a47f671919825eb338da3361804291fe5177a4ca1a3a",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_06.parquet": "58b9ec8cee3eab688210fb49822f2f2607095ab14936e22ea932b3fb4f062df3",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_06.csv.gz": "38a5c9683a4bbeb7cba2f8dcd3512edd86e13ae9b8db58f8c59100543942ebb3",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261027/btc-updown-5m-1793091600.jsonl.gz": "6b4bd43f618fe9872a2335283f2945b0f9e04599a19abfa70ffbba0469d5d22e",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_09.parquet": "192d724a46d33c457117ec7a757c5ef4094dcc94d9d3db0caf9492c1123b7d8c",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_09.csv.gz": "1d3ffed0711817485832ba7d9b48799ef53bd2b843eb5633daad11cd64cfddf6",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261027/btc-updown-5m-1793102400.jsonl.gz": "d77eb1f314a5d1d4c49988583c8aebaa27145f0608095f6288f33c96ed27e0ac",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_12.parquet": "d78ba15f2b081154708b45d2e477c7ca0475d6ca538d1798a8ae673f279b41f8",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_12.csv.gz": "c4a3215b7a67521776665cba4eec37f5bd856f2738a306cf8030cbd3d4470708",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261027/btc-updown-5m-1793113200.jsonl.gz": "2c86cab72dd0e6615cd5cf7a15ec8adccf5c982a864cbd930d7a88f0605e03ae",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_15.parquet": "6b743106d26a7d10d7f9d548c09844daf776cdf7dcccc4bc9456cf2a02fca5f4",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_15.csv.gz": "b54a2c02e24348e5c1797f559c0f9cb1452954ca595741aaf29d31c8833415aa",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261027/btc-updown-5m-1793124000.jsonl.gz": "90377b8bf37438d314febd26fb6447447254ce9d5735aa08eb807df68cab295f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_18.parquet": "8385aae6920a4b2739c204575a296ac2c3ac9d2228b33f120e20d7e0ad5de62b",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_18.csv.gz": "5da9b6e174cd89d58e04252624eb7ee7c34040bffcfef6249d7cf1f762849de2",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261027/btc-updown-5m-1793134800.jsonl.gz": "5ea136630c76b58924cfbd5a8cba58fbbb8f46e1c63351939535ec4bb60b1e05",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_21.parquet": "48e0f022333b1f6e2b4121cf1674d80f82c7db32b44fcdb0078b64f63fb11389",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_21.csv.gz": "754e76ba0cd613e08a998f85f89c8866058f56715af11962fc454558ecbfa3c9",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261031/registry.parquet": "5b1675d112399d3852b9680dcd31ff5d577bce481e90b7d520e47885a1596893",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261031/btc-updown-5m-1793404800.jsonl.gz": "52ce6f98a56fbd778d8b34af152bcfdcf31c2706ffa74c875f87e14b1159b362",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261031/books/part_20261031_00.parquet": "b555d04dc62b9f476de729a0c1624c86459e9b9838aa220f4ad9131a27c214a6",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261031_00.csv.gz": "827dfec5ee471f3ae17d2dd4e701dce01b6ef56aa15bbe7030b814d5743bf1e6",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261031/btc-updown-5m-1793415600.jsonl.gz": "2c66482db6bb7a46d813767262eeb7d396367323795541d09aaa48423a4b968a",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261031/books/part_20261031_03.parquet": "aaa92527df60dbdd7c818e50f4647cf025f38b6a84833c788ac845e2e89cb065",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261031_03.csv.gz": "94653b62b53b07293def968780a0d0f68c4fecd7ee1ac640103b19d2823d6b07",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261031/btc-updown-5m-1793426400.jsonl.gz": "724c93de3c18688bbfa588559eb2d8b106acc59a6fddcd1a17a035f420314ba6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261031/books/part_20261031_06.parquet": "24c44099978e5330afef5a7bc08e9751239126d93cb0d74d950adfbf6be54f86",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261031_06.csv.gz": "590c1e2e8c67272848ac525cc9d84fba1e2660c409deb08783eba85940d7d559",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261031/btc-updown-5m-1793437200.jsonl.gz": "42d71190e5b5db6fb37b63f24d8b22424685410b9e1b146cbae11ac52d1576d5",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261031/books/part_20261031_09.parquet": "ddba6821d150eff656861377c5cb717ee581076a905d17ac769b4f2a5c72ecad",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261031_09.csv.gz": "a694ae63327ac741fff756e1328c8730b66b6bb398498321ad748bd55b7bae98",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261031/btc-updown-5m-1793448000.jsonl.gz": "c402bf5632b046b63f7d2a9e2856b8426e16d2416550f9a6eb8b9d6b025821f9",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261031/books/part_20261031_12.parquet": "a5feeaa0339aa07abf060d090735f1d950fca4f1d6bb9ecbcb07ba2748e589d9",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261031_12.csv.gz": "f253f65f1b688270d540acaddfdc0a18c3eac97fb31485a9b48fdd98956f0317",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261031/btc-updown-5m-1793458800.jsonl.gz": "a533a61b5df365aecbaa256da4f4ded42f52c0aba4e56a3b9b5efab5598dcf12",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261031/books/part_20261031_15.parquet": "dc2cf17be403889390623ffbbc9ee9ba7ed44810b45dfc25a7e4503160aa59a9",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261031_15.csv.gz": "b621d60e1a0a8d6fe4ba0fb7bf718296bd50debede662712bcb698844cbe5a89",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261031/btc-updown-5m-1793469600.jsonl.gz": "abf81632d921f85522a7435277be88960cb497e5ec2b850e089e26f3b499d2e9",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261031/books/part_20261031_18.parquet": "0a3f600675e9ea7aba49d81f53c808b4a534e557b51a48e2924598268f4c7c47",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261031_18.csv.gz": "7f962401212ebec83e651eb69dc2f6ed123cbc452fa4cc5efb1f04d766ecd15e",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261031/btc-updown-5m-1793480400.jsonl.gz": "08a04c62787cad53918b12de01376ec76566e151e909ac05d72ab256b0234997",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261031/books/part_20261031_21.parquet": "1876a62fb996a46edcd3695653685caf04d3ef040a8e90b289d3362510881ef5",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261031_21.csv.gz": "4f338ab70a61112f0fe943af5af16078bf748f69682038c8282ebab02b0b855c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261101/registry.parquet": "64d8472e1061bbc71804ef3b3a7129973a4f9fd140aaba1a23546107da435def",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261101/btc-updown-5m-1793491200.jsonl.gz": "544a56d297e7ec7bb62725a95cc91bf7c9426175a6f893393a0e9c21092b5c49",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261101/books/part_20261101_00.parquet": "918ef9186ed3180e7ca5585179cc76fef6b85c4968fb388ccca65ac91868565c",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261101_00.csv.gz": "1024cbe04a85eef01907bac353a15bc2e6e712f04aeea81205c6a5167d6b970c",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261101/btc-updown-5m-1793502000.jsonl.gz": "4f79254dde665237844aee7e8ddf5dea00b57e985a7c8f2554da90c2cce32880",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261101/books/part_20261101_03.parquet": "b70c10205baf0c60ea48101da7d68bbc0acb882259167491b261989394ac3dea",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261101_03.csv.gz": "41db4cdda33619932bbb0109ba8826a2d8d2e4f955a56344716335bc943399c6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261101/books/part_20261101_06.parquet": "5bb30526a373d3162574a8b431dd04afe61aac98c0a10dcae72e3e8b72c63d29",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261101_06.csv.gz": "ad4f1cd762f9fcf469445a23fe6984529245caa84916b4d95b3f175bd2e72a11",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261101/btc-updown-5m-1793523600.jsonl.gz": "438ae737fe58d1ed15f037fcf2e29ebda9b64f9d42d00c58d149adedf49782e4",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261101/books/part_20261101_09.parquet": "cbe8605ab9fe9dd76478ea82f7671c9d957db08fa2a578d63612e464b44bd99e",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261101_09.csv.gz": "f2724f099e314094fb985a67d82387fc5e3bf16fc00636893da833c0948ae751",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261101/btc-updown-5m-1793534400.jsonl.gz": "eb2595af67a585118dfcbbcdb934116346cdc4230f76336174000719c6ddbd65",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261101/books/part_20261101_12.parquet": "145701a69afd7dd412720a42b33fb0821487bbef921d07ab16f6436ee9076bfe",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261101_12.csv.gz": "292a0afb933570c1a70812699f2efb409d56290a8e69f6a302bbf50140548a7f",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261101/btc-updown-5m-1793545200.jsonl.gz": "ef0f71757f9ea0c45440bc5ac1de7a14e00725798ac74839cd5bc93e36b7600d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261101/books/part_20261101_15.parquet": "6ee1b82fc61722657d91713879c60b8e519051fa2feead2233febaefc4a56304",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261101_15.csv.gz": "fd8fdf5eeadbc28aeacef1dcbe736a6eac7b936bece93e8bed0f5123f5695fdd",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261101/btc-updown-5m-1793556000.jsonl.gz": "aa49909afe5c394a64bc08de6c77623e2d6390e6de71ffe9ce424f75d613f273",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261101/books/part_20261101_18.parquet": "0fae8206df9c9c080aed8405547663873f4defaebc2cdb50224d4136f70e13f2",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261101_18.csv.gz": "19b728c2d1381425e1af06cf603c9a5e831d79fd00c05cd069a45911067c9b59",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261101/btc-updown-5m-1793566800.jsonl.gz": "1da4d2f4226fc60884b0616dd61b7f24a2fafa65bbbd90e3f6564760e14ae71b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261101/books/part_20261101_21.parquet": "780e679d5f4dd3f53aee84673c94e740f886294339747500fe042ed0ffa28613",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261101_21.csv.gz": "3bf81908ebb7a0900b2c825e5c748d0ca3d8108215f242ba01517605034d4934",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/registry.parquet": "c21b61f114b805a1d5462780266a6c8cec88e1b82d9b568b2a6ada29ce1077dc",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261102/btc-updown-5m-1793577600.jsonl.gz": "ad5f48cad9e8998ce7e4241c61a218239d28f793e8e311751adbd8b6c3b02da3",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_00.parquet": "3670fc2593203830b63e2449a7ec8e8c61b7e8b191b2e3474f5771eb9f603de4",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_00.csv.gz": "9e89d8c8d969048d7ecb11c1baa2d8d50fffce5b7fab2032dcd97fc8287e2956",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261102/btc-updown-5m-1793588400.jsonl.gz": "603f8f626f3d3441dff36fb28308f3b1dac3cb686710855534b410b04209a37b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_03.parquet": "d9d4856b8879415acb910d83f94ff830fc65f3e8210925eeab7555911c8c1f9a",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_03.csv.gz": "dd6864a09560e724193308c31e51d3676ed420e2ce8bc8d1659c2af225383199",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261102/btc-updown-5m-1793599200.jsonl.gz": "ba2559ddce82d24f9c7e68b73f41fbca9ce7913620d06eddfe4c6c5aa70e523b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_06.parquet": "1be3b769739aaeb4df0cef3526288749391ef36cc80f958081738fc72e257b3d",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_06.csv.gz": "f2199239e2a9e77b8c2cf020596a1a11a3b3a6da49e3eafc191e8db5a8eccd81",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261102/btc-updown-5m-1793610000.jsonl.gz": "179423172e2029708bd2032ca7c6ed09f04d7f88acfafc065e0916d4d64a796c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_09.parquet": "088d53ae9021319f0ab69970b4ffd50c97c902e0d17979eac92d8c42647f0096",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_09.csv.gz": "1640dc0365d98beb3e5d1032af1315fc0b95e20cf9bcc2023a10d0c28b4371fe",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261102/btc-updown-5m-1793620800.jsonl.gz": "2efbc93f018dbc5b53497a2cb3f2a88812a2a6786201ee0328f739a2dcef59e8",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_12.parquet": "a12ca03ced6da9ef64d4b8b5d712794d52de4b224ba39b8c4bc576a0d11a5093",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_12.csv.gz": "0a7e07c03e16315f342b7b7cb22f4440be3c27e240f69eff91430d244bc0277a",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261102/btc-updown-5m-1793631600.jsonl.gz": "1afcaffbc94441c4ad8497844bece8935e8412326ab157e2ed1db3f31a99b32c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_15.parquet": "0217006451587e3eb771cf2b5779aaa21838b9e55158482e701b41ca8baa4eb9",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_15.csv.gz": "15553c9e19f4b3c38827b4b55af6246d0d80429ad1148df06a6c5338bac6b172",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261102/btc-updown-5m-1793642400.jsonl.gz": "3125732b41f4d0077cdd56f91d6afbd5f04fc533a7c01528493e9e12e45f6336",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_18.parquet": "80a40ac615e51551b14ce41e65998d31925c0b8ab0ed615c0aadaff19bb5f2d3",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_18.csv.gz": "9db448a0eebbfdcc00e293b8041562fa14834f293839e05b7ed57ce2ff34623b",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261102/btc-updown-5m-1793653200.jsonl.gz": "4ebb43aa86a4486ac223656a393a3014095f893b4c76ce3be461f0fb095e4f1b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_21.parquet": "46f59e13b00d1e6abed5fa575f43f2294b96ad2456e47ac1353a4c8877b4b578",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_21.csv.gz": "d4d63c515a9fc99f98a03335c4df1a1ae4872fede501473a4a20af645b3d4777",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261103/registry.parquet": "b1f1e3cb0ad1936347490c4996d1274a356889ae1a9edcf97a45f33834703b17",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261103/btc-updown-5m-1793664000.jsonl.gz": "f2eed3f44c19164058862e5219ea467e278e3b6d3fb9b80e7aa50c9f70ec721a",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261103/books/part_20261103_00.parquet": "feeaf2a8f03258b10578ee24c0258ed6e6e4ebdab75c4ced1bb8b6c344213b21",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261103_00.csv.gz": "0c00e4116c789e2e11796580d3a4eca2668721a4500eb5c48bbadbe722aded17",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261103/btc-updown-5m-1793674800.jsonl.gz": "d54dfb31315a42202a0ccb779caaa80c812e59e347120b8496b83d8e7657fd6d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261103/books/part_20261103_03.parquet": "ee6c6b25271f065b7d19a9b9b38b0976d781f7bdd5599f7427837d3ba042b1f4",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261103_03.csv.gz": "309f2d4a03934fe0e8c2e7512f042111c2c2d941bb924f00236ec24b80e00d7d",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261103/btc-updown-5m-1793685600.jsonl.gz": "7254e1e777d45ac113e3a76db74054079856e6afce01084e4cbedd7de727844c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261103/books/part_20261103_06.parquet": "b487bcc7391357ae82325e51b2954710db4476ad174c44d328ce9dad4be9e999",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261103_06.csv.gz": "cf76abb63c707b234348b97952f1267b5c5f7a071a47027c21302ea0ef1f702a",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261103/btc-updown-5m-1793696400.jsonl.gz": "23d9e57952725a89b1135e674465a0c93175ad760859e514a337a901bee248f2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261103/books/part_20261103_09.parquet": "136c30771c1c9318409e528b80f27114165ef7b1aa2aa61cf6f468b2c7f441d9",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261103_09.csv.gz": "93c87bbbd12e56188376012552c109f3fd05396752ae66fad4c9cf9c63613d5e",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261103/btc-updown-5m-1793707200.jsonl.gz": "1d822c9b48a2babbf41e4d88064cef2602e5839dfae67bce168deea9a00e13c8",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261103/books/part_20261103_12.parquet": "80febc92a397ca349dfde1a9d8d8c70743616034345c93252ccabcb221cb2469",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261103_12.csv.gz": "b919cdfa245fe98e615d5922f67ab6b224a2c65e9e49abc425fce4a5b8b0a5a7",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261103/btc-updown-5m-1793718000.jsonl.gz": "eb09fdac23588d3fd58da5db62ecb9a32b463cf78e7efe9605a5688cd5fd9cc4",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261103/books/part_20261103_15.parquet": "51325b3beb83428c1d0bd23efd838672f642e815b3cf5815d04f7264740fc1b9",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261103_15.csv.gz": "1dab32319349c0315e33d46852097569c8dff49ee4d9a9570e4a39b8c8570907",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261103/btc-updown-5m-1793728800.jsonl.gz": "80dfcc075ce1d48e2dfa62321788c19d0bc6a4380ad23b547a9984bdc473a7c0",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261103/books/part_20261103_18.parquet": "d58662b853075ae87f4ee4f711692b47a8f3c1e91e67d337bb214899ee2181e9",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261103_18.csv.gz": "92a84f772bfdf0861e8b0be7830375bbb004b2f5e7950a0d40992b2b04937685",
+    "/home/yuqing/ctaNew/data/pm_5min/raw/20261103/btc-updown-5m-1793739600.jsonl.gz": "c1a85cb3598e11edb66e82381eb40b2da526fd7302713d91535c9e6e1e2cbe8c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261103/books/part_20261103_21.parquet": "10bd200b5767b57278d54787a1966578853bae13e5d10f2f4048117775803f0b",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261103_21.csv.gz": "c1ae6954a9a45c0350914f53e81bcaffc7bc1c8a2116b0689eb6914278f8d6e3",
+    "/home/yuqing/ctaNew/data/predict_fun/research/polymarket_leadlag_20261110/pm_metadata.json": "d51435427d1301030f5cafa4c17d459dd55da1709fa8e24b558801da3faea694"
+  },
+  "population": [
+    {
+      "day": "20261023",
+      "hour": 0,
+      "ws": 1792713600,
+      "mid": 3655838,
+      "slug": "btc-updown-5m-1792713600",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261023/btc-updown-5m-1792713600.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261023/books/part_20261023_00.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_00.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261023",
+      "hour": 3,
+      "ws": 1792724400,
+      "mid": 3660235,
+      "slug": "btc-updown-5m-1792724400",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261023/btc-updown-5m-1792724400.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261023/books/part_20261023_03.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_03.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261023",
+      "hour": 6,
+      "ws": 1792735200,
+      "mid": 3662309,
+      "slug": "btc-updown-5m-1792735200",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261023/btc-updown-5m-1792735200.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261023/books/part_20261023_06.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_06.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261023",
+      "hour": 9,
+      "ws": 1792746000,
+      "mid": 3663715,
+      "slug": "btc-updown-5m-1792746000",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261023/btc-updown-5m-1792746000.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261023/books/part_20261023_09.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_09.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261023",
+      "hour": 12,
+      "ws": 1792756800,
+      "mid": 3665609,
+      "slug": "btc-updown-5m-1792756800",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261023/btc-updown-5m-1792756800.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261023/books/part_20261023_12.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_12.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261023",
+      "hour": 15,
+      "ws": 1792767600,
+      "mid": 3669127,
+      "slug": "btc-updown-5m-1792767600",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261023/btc-updown-5m-1792767600.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261023/books/part_20261023_15.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_15.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261023",
+      "hour": 18,
+      "ws": 1792778400,
+      "mid": 3678464,
+      "slug": "btc-updown-5m-1792778400",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261023/btc-updown-5m-1792778400.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261023/books/part_20261023_18.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_18.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261023",
+      "hour": 21,
+      "ws": 1792789200,
+      "mid": 3691133,
+      "slug": "btc-updown-5m-1792789200",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261023/btc-updown-5m-1792789200.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261023/books/part_20261023_21.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_21.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261024",
+      "hour": 0,
+      "ws": 1792800000,
+      "mid": 3695091,
+      "slug": "btc-updown-5m-1792800000",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261024/btc-updown-5m-1792800000.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_00.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_00.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261024",
+      "hour": 3,
+      "ws": 1792810800,
+      "mid": 3696813,
+      "slug": "btc-updown-5m-1792810800",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261024/btc-updown-5m-1792810800.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_03.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_03.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261024",
+      "hour": 6,
+      "ws": 1792821600,
+      "mid": 3699981,
+      "slug": "btc-updown-5m-1792821600",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261024/btc-updown-5m-1792821600.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_06.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_06.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261024",
+      "hour": 9,
+      "ws": 1792832400,
+      "mid": 3701678,
+      "slug": "btc-updown-5m-1792832400",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261024/btc-updown-5m-1792832400.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_09.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_09.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261024",
+      "hour": 12,
+      "ws": 1792843200,
+      "mid": 3704000,
+      "slug": "btc-updown-5m-1792843200",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261024/btc-updown-5m-1792843200.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_12.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_12.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261024",
+      "hour": 15,
+      "ws": 1792854000,
+      "mid": 3707382,
+      "slug": "btc-updown-5m-1792854000",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261024/btc-updown-5m-1792854000.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_15.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_15.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261024",
+      "hour": 18,
+      "ws": 1792864800,
+      "mid": 3712454,
+      "slug": "btc-updown-5m-1792864800",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261024/btc-updown-5m-1792864800.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_18.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_18.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261024",
+      "hour": 21,
+      "ws": 1792875600,
+      "mid": 3719185,
+      "slug": "btc-updown-5m-1792875600",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261024/btc-updown-5m-1792875600.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261024/books/part_20261024_21.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_21.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261025",
+      "hour": 0,
+      "ws": 1792886400,
+      "mid": 3723772,
+      "slug": "btc-updown-5m-1792886400",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261025/btc-updown-5m-1792886400.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_00.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_00.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261025",
+      "hour": 3,
+      "ws": 1792897200,
+      "mid": 3727040,
+      "slug": "btc-updown-5m-1792897200",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261025/btc-updown-5m-1792897200.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_03.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_03.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261025",
+      "hour": 6,
+      "ws": 1792908000,
+      "mid": 3732447,
+      "slug": "btc-updown-5m-1792908000",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261025/btc-updown-5m-1792908000.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_06.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_06.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261025",
+      "hour": 9,
+      "ws": 1792918800,
+      "mid": 3736442,
+      "slug": "btc-updown-5m-1792918800",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261025/btc-updown-5m-1792918800.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_09.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_09.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261025",
+      "hour": 12,
+      "ws": 1792929600,
+      "mid": 3740938,
+      "slug": "btc-updown-5m-1792929600",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261025/btc-updown-5m-1792929600.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_12.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_12.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261025",
+      "hour": 15,
+      "ws": 1792940400,
+      "mid": 3756123,
+      "slug": "btc-updown-5m-1792940400",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261025/btc-updown-5m-1792940400.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_15.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_15.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261025",
+      "hour": 18,
+      "ws": 1792951200,
+      "mid": 3765484,
+      "slug": "btc-updown-5m-1792951200",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261025/btc-updown-5m-1792951200.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_18.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_18.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261025",
+      "hour": 21,
+      "ws": 1792962000,
+      "mid": 3777696,
+      "slug": "btc-updown-5m-1792962000",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261025/btc-updown-5m-1792962000.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261025/books/part_20261025_21.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_21.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261026",
+      "hour": 0,
+      "ws": 1792972800,
+      "mid": 3787215,
+      "slug": "btc-updown-5m-1792972800",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261026/btc-updown-5m-1792972800.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_00.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_00.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261026",
+      "hour": 3,
+      "ws": 1792983600,
+      "mid": 3791975,
+      "slug": "btc-updown-5m-1792983600",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261026/btc-updown-5m-1792983600.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_03.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_03.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261026",
+      "hour": 6,
+      "ws": 1792994400,
+      "mid": 3798874,
+      "slug": "btc-updown-5m-1792994400",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261026/btc-updown-5m-1792994400.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_06.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_06.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261026",
+      "hour": 9,
+      "ws": 1793005200,
+      "mid": 3804118,
+      "slug": "btc-updown-5m-1793005200",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261026/btc-updown-5m-1793005200.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_09.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_09.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261026",
+      "hour": 12,
+      "ws": 1793016000,
+      "mid": 3808371,
+      "slug": "btc-updown-5m-1793016000",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261026/btc-updown-5m-1793016000.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_12.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_12.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261026",
+      "hour": 15,
+      "ws": 1793026800,
+      "mid": 3821174,
+      "slug": "btc-updown-5m-1793026800",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261026/btc-updown-5m-1793026800.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_15.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_15.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261026",
+      "hour": 18,
+      "ws": 1793037600,
+      "mid": 3833192,
+      "slug": "btc-updown-5m-1793037600",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261026/btc-updown-5m-1793037600.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_18.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_18.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261026",
+      "hour": 21,
+      "ws": 1793048400,
+      "mid": 3844168,
+      "slug": "btc-updown-5m-1793048400",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261026/btc-updown-5m-1793048400.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261026/books/part_20261026_21.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_21.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261027",
+      "hour": 0,
+      "ws": 1793059200,
+      "mid": 3853227,
+      "slug": "btc-updown-5m-1793059200",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261027/btc-updown-5m-1793059200.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_00.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_00.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261027",
+      "hour": 3,
+      "ws": 1793070000,
+      "mid": 3856216,
+      "slug": "btc-updown-5m-1793070000",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261027/btc-updown-5m-1793070000.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_03.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_03.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261027",
+      "hour": 6,
+      "ws": 1793080800,
+      "mid": 3861545,
+      "slug": "btc-updown-5m-1793080800",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261027/btc-updown-5m-1793080800.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_06.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_06.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261027",
+      "hour": 9,
+      "ws": 1793091600,
+      "mid": 3866277,
+      "slug": "btc-updown-5m-1793091600",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261027/btc-updown-5m-1793091600.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_09.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_09.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261027",
+      "hour": 12,
+      "ws": 1793102400,
+      "mid": 3868537,
+      "slug": "btc-updown-5m-1793102400",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261027/btc-updown-5m-1793102400.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_12.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_12.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261027",
+      "hour": 15,
+      "ws": 1793113200,
+      "mid": 3873313,
+      "slug": "btc-updown-5m-1793113200",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261027/btc-updown-5m-1793113200.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_15.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_15.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261027",
+      "hour": 18,
+      "ws": 1793124000,
+      "mid": 3878682,
+      "slug": "btc-updown-5m-1793124000",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261027/btc-updown-5m-1793124000.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_18.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_18.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261027",
+      "hour": 21,
+      "ws": 1793134800,
+      "mid": 3885429,
+      "slug": "btc-updown-5m-1793134800",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261027/btc-updown-5m-1793134800.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261027/books/part_20261027_21.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_21.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261031",
+      "hour": 0,
+      "ws": 1793404800,
+      "mid": 4008798,
+      "slug": "btc-updown-5m-1793404800",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261031/btc-updown-5m-1793404800.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261031/books/part_20261031_00.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261031_00.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261031",
+      "hour": 3,
+      "ws": 1793415600,
+      "mid": 4010502,
+      "slug": "btc-updown-5m-1793415600",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261031/btc-updown-5m-1793415600.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261031/books/part_20261031_03.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261031_03.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261031",
+      "hour": 6,
+      "ws": 1793426400,
+      "mid": 4012484,
+      "slug": "btc-updown-5m-1793426400",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261031/btc-updown-5m-1793426400.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261031/books/part_20261031_06.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261031_06.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261031",
+      "hour": 9,
+      "ws": 1793437200,
+      "mid": 4015475,
+      "slug": "btc-updown-5m-1793437200",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261031/btc-updown-5m-1793437200.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261031/books/part_20261031_09.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261031_09.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261031",
+      "hour": 12,
+      "ws": 1793448000,
+      "mid": 4019212,
+      "slug": "btc-updown-5m-1793448000",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261031/btc-updown-5m-1793448000.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261031/books/part_20261031_12.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261031_12.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261031",
+      "hour": 15,
+      "ws": 1793458800,
+      "mid": 4022855,
+      "slug": "btc-updown-5m-1793458800",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261031/btc-updown-5m-1793458800.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261031/books/part_20261031_15.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261031_15.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261031",
+      "hour": 18,
+      "ws": 1793469600,
+      "mid": 4027038,
+      "slug": "btc-updown-5m-1793469600",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261031/btc-updown-5m-1793469600.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261031/books/part_20261031_18.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261031_18.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261031",
+      "hour": 21,
+      "ws": 1793480400,
+      "mid": 4033854,
+      "slug": "btc-updown-5m-1793480400",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261031/btc-updown-5m-1793480400.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261031/books/part_20261031_21.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261031_21.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261101",
+      "hour": 0,
+      "ws": 1793491200,
+      "mid": 4036727,
+      "slug": "btc-updown-5m-1793491200",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261101/btc-updown-5m-1793491200.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261101/books/part_20261101_00.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261101_00.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261101",
+      "hour": 3,
+      "ws": 1793502000,
+      "mid": 4039735,
+      "slug": "btc-updown-5m-1793502000",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261101/btc-updown-5m-1793502000.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261101/books/part_20261101_03.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261101_03.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261101",
+      "hour": 6,
+      "ws": 1793512800,
+      "mid": 4042996,
+      "slug": "btc-updown-5m-1793512800",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261101/btc-updown-5m-1793512800.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261101/books/part_20261101_06.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261101_06.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": [
+        "pm"
+      ]
+    },
+    {
+      "day": "20261101",
+      "hour": 9,
+      "ws": 1793523600,
+      "mid": 4045508,
+      "slug": "btc-updown-5m-1793523600",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261101/btc-updown-5m-1793523600.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261101/books/part_20261101_09.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261101_09.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261101",
+      "hour": 12,
+      "ws": 1793534400,
+      "mid": 4050972,
+      "slug": "btc-updown-5m-1793534400",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261101/btc-updown-5m-1793534400.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261101/books/part_20261101_12.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261101_12.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261101",
+      "hour": 15,
+      "ws": 1793545200,
+      "mid": 4067079,
+      "slug": "btc-updown-5m-1793545200",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261101/btc-updown-5m-1793545200.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261101/books/part_20261101_15.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261101_15.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261101",
+      "hour": 18,
+      "ws": 1793556000,
+      "mid": 4077574,
+      "slug": "btc-updown-5m-1793556000",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261101/btc-updown-5m-1793556000.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261101/books/part_20261101_18.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261101_18.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261101",
+      "hour": 21,
+      "ws": 1793566800,
+      "mid": 4088052,
+      "slug": "btc-updown-5m-1793566800",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261101/btc-updown-5m-1793566800.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261101/books/part_20261101_21.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261101_21.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261102",
+      "hour": 0,
+      "ws": 1793577600,
+      "mid": 4093463,
+      "slug": "btc-updown-5m-1793577600",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261102/btc-updown-5m-1793577600.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_00.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_00.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261102",
+      "hour": 3,
+      "ws": 1793588400,
+      "mid": 4097209,
+      "slug": "btc-updown-5m-1793588400",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261102/btc-updown-5m-1793588400.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_03.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_03.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261102",
+      "hour": 6,
+      "ws": 1793599200,
+      "mid": 4101293,
+      "slug": "btc-updown-5m-1793599200",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261102/btc-updown-5m-1793599200.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_06.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_06.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261102",
+      "hour": 9,
+      "ws": 1793610000,
+      "mid": 4104095,
+      "slug": "btc-updown-5m-1793610000",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261102/btc-updown-5m-1793610000.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_09.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_09.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261102",
+      "hour": 12,
+      "ws": 1793620800,
+      "mid": 4109651,
+      "slug": "btc-updown-5m-1793620800",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261102/btc-updown-5m-1793620800.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_12.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_12.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261102",
+      "hour": 15,
+      "ws": 1793631600,
+      "mid": 4120610,
+      "slug": "btc-updown-5m-1793631600",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261102/btc-updown-5m-1793631600.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_15.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_15.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261102",
+      "hour": 18,
+      "ws": 1793642400,
+      "mid": 4130148,
+      "slug": "btc-updown-5m-1793642400",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261102/btc-updown-5m-1793642400.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_18.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_18.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261102",
+      "hour": 21,
+      "ws": 1793653200,
+      "mid": 4139167,
+      "slug": "btc-updown-5m-1793653200",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261102/btc-updown-5m-1793653200.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_21.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_21.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261103",
+      "hour": 0,
+      "ws": 1793664000,
+      "mid": 4144087,
+      "slug": "btc-updown-5m-1793664000",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261103/btc-updown-5m-1793664000.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261103/books/part_20261103_00.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261103_00.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261103",
+      "hour": 3,
+      "ws": 1793674800,
+      "mid": 4149761,
+      "slug": "btc-updown-5m-1793674800",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261103/btc-updown-5m-1793674800.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261103/books/part_20261103_03.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261103_03.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261103",
+      "hour": 6,
+      "ws": 1793685600,
+      "mid": 4153159,
+      "slug": "btc-updown-5m-1793685600",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261103/btc-updown-5m-1793685600.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261103/books/part_20261103_06.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261103_06.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261103",
+      "hour": 9,
+      "ws": 1793696400,
+      "mid": 4158297,
+      "slug": "btc-updown-5m-1793696400",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261103/btc-updown-5m-1793696400.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261103/books/part_20261103_09.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261103_09.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261103",
+      "hour": 12,
+      "ws": 1793707200,
+      "mid": 4161732,
+      "slug": "btc-updown-5m-1793707200",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261103/btc-updown-5m-1793707200.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261103/books/part_20261103_12.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261103_12.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261103",
+      "hour": 15,
+      "ws": 1793718000,
+      "mid": 4165181,
+      "slug": "btc-updown-5m-1793718000",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261103/btc-updown-5m-1793718000.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261103/books/part_20261103_15.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261103_15.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261103",
+      "hour": 18,
+      "ws": 1793728800,
+      "mid": 4172217,
+      "slug": "btc-updown-5m-1793728800",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261103/btc-updown-5m-1793728800.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261103/books/part_20261103_18.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261103_18.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    },
+    {
+      "day": "20261103",
+      "hour": 21,
+      "ws": 1793739600,
+      "mid": 4180105,
+      "slug": "btc-updown-5m-1793739600",
+      "paths": {
+        "pm": "/home/yuqing/ctaNew/data/pm_5min/raw/20261103/btc-updown-5m-1793739600.jsonl.gz",
+        "pf": "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261103/books/part_20261103_21.parquet",
+        "bn": "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261103_21.csv.gz"
+      },
+      "predict_contract": {
+        "feed": "0x0003ef42b4d20a19409a187c39670a6f5be7ce17fc78c290d25eb45bbf769d37",
+        "provider": "CHAINLINK",
+        "symbol": "BTCUSDT"
+      },
+      "missing_files": []
+    }
+  ],
+  "design": "72 scheduled BTC windows: first5min of every third UTC hour,9 previously consumed dates. Missing windows remain statuses; no backfill. This samples days, not all288 windows/day.",
+  "unit": "Neutral100ms diagnostic grid, not order actions, fills or independent samples. No execution or PnL claim.",
+  "clocks": "Primary local receipt clock; separate source-clock diagnostic sorted by venue timestamp, not a causal executable clock. No offset fitted.",
+  "prices": "Published Up BBO only; preserve invalid rows; strict two-sided 0<bid<ask<100, no cross-token reconstruction.",
+  "freshness_ms": [
+    1000,
+    5000
+  ],
+  "grid_ms": 100,
+  "lag_ms": [
+    -5000,
+    -3000,
+    -2000,
+    -1000,
+    -500,
+    -200,
+    -100,
+    0,
+    100,
+    200,
+    500,
+    1000,
+    2000,
+    3000,
+    5000
+  ],
+  "phases_s": [
+    [
+      5,
+      60
+    ],
+    [
+      60,
+      180
+    ],
+    [
+      180,
+      240
+    ],
+    [
+      240,
+      295
+    ]
+  ],
+  "correlation": "Within-window/phase centered100ms mid changes; positive lag means PM change precedes Predict change. Both lag endpoints remain in same phase/window.",
+  "null": {
+    "draws": 500,
+    "seed": 20261110,
+    "method": "circular shifts of PM changes within each window/phase by >=10s; family maximum of absolute positive-minus-negative-lag asymmetry across7lags x4phases=28, primary receipt/1s freshness only"
+  },
+  "prediction": "Expanding chronological ridge: first3 dates train, next6 test; primary1s future Predict mid change, 0.5s/5s descriptive. Baseline Predict past0.2/1/5s moves, Binance past0.3/1/5s moves and fixed current p(1-p)/sqrt(time-left) interactions, current Predict mid/spread/time/phase; add PM past0.2/1/5s moves. Standardize train only; fixed ridge penalty1. No tuning, no settlement labels. Same eligible rows for both models; zero-change forecast also scored.",
+  "inference": "Descriptive sampled-window study. Report per-day stability and shifted-clock null; no confidence intervals or independent-validation claim from incomplete-day sampling.",
+  "contracts": "Historical Polymarket metadata names BTC/USD TWAP. Predict registry and current docs identify its own reference round. Same UTC window is not identical strike/payoff; phases retained separately.",
+  "protections": "No Nov4..6,Nov9..13 quote or outcome payloads; no live/frozen changes; single light process."
+}

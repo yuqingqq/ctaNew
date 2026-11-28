@@ -1,0 +1,21 @@
+{
+  "as_of": "2026-11-12T16:29:32.768683+00:00",
+  "source_commit": "dbffb3ace23300de40d7272da05a6947cf08f73d",
+  "source_sha": {
+    "predictfun/research/pf_model_age_v3.py": "007d76a44270811562217640bff89764c46f19228366edc7121addf4a3037c53",
+    "predictfun/research/model_eval_driver_v3.py": "d18ddebc478db6d617a542bbf6d1f5676577b2b9b034626ca9bdc7ca372bb88e",
+    "predictfun/research/model_settlement_finish_v2.py": "212ff18ec9fd9ea7a6a1452d59b159dc9e4c05fc644e3065684a843de15951da",
+    "predictfun/research/model_presence_finish_v2.py": "b8c40a2cb7039a9640ea9a98356bb04b1a7be7394c66df5d180b70cd8de9d603"
+  },
+  "age_declaration_sha": "0960a232d5bc90924a26994d4f56d27e8a8fa673bc4b247cc19995c83ef2e168",
+  "base_declaration_sha": "4db0034cb7e0c527afe6da374bb7445e3189738e4a1ef6e371e2e84a32f36f2c",
+  "failure_receipt_sha": "3cbafea79803da4a60e014447a326c3d4d17d3bf0dd692b3fe94001ae38f8162",
+  "failed_smoke_run_sha": "59f99a08c8dbccb2c52d330bfe867f2602f98a61f4dcf8865efdd0f0806f795d",
+  "correction": "The frozen age validator calls np.isfinite on an empty object-typed Series and raises TypeError. Accept empty fill tables only when the age column exists; retain zero fills and null minimum age. Nonempty tables must have a numeric age dtype, finite values and every age at or above the unchanged floor.",
+  "engine": "Use the unchanged corrected replay configure/install and unchanged age source/configure functions, followed by the corrected post-run age checker and unchanged precision reconstruction. Models, inputs, engine source, clocks, fill suppression, quantities, policy, size/risk and report criteria remain frozen.",
+  "recovery": "Reuse only the exact already-reconciled failed age500 smoke artifacts. Preserve its original run receipt, logs and failure receipt. Write the previously absent age-check/precision receipts with explicit v3 checker provenance; no engine rerun. Future full age runs use the same engine followed by this checker.",
+  "scheduling": "Versioned driver routes only age run commands to this adapter. Versioned pure waiters recognize that driver; original source files and declarations stay unchanged.",
+  "controls": "Empty object table and exact numeric boundary accepted; missing age column, below-floor, NaN, infinity and nonnumeric nonempty ages refused.",
+  "validation": false,
+  "live_changed": false
+}

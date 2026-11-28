@@ -1,0 +1,32 @@
+{
+  "as_of": "2026-11-12T14:00:46.929857+00:00",
+  "status": "PASS",
+  "day": "20261102",
+  "smoke": false,
+  "windows": 288,
+  "generations": 17944,
+  "fork_actions": 1829,
+  "statuses": {
+    "accepted_no_cancel": 7770,
+    "not_sampled": 5662,
+    "postonly_refused": 2683,
+    "forked": 1829
+  },
+  "paired_statuses": {
+    "eligible": 1811,
+    "missing_mark": 18
+  },
+  "keep_forks_reconciled": 1829,
+  "neutral_exact": true,
+  "hashes": {
+    "win": "3061ae52da814d05d2c56c4baf2f54e30cb05106ff9935047193276cbcc13c4e",
+    "fills": "0f0c886550c64f70c4e88a6762eba9d64d38665326ff80438a201d1c0abda2d3",
+    "requests": "358d8b0c6bf702e1377f1e8a31a86723059ba196fec46db1f7c18b1baf311d56",
+    "paired.parquet": "bc50389508cba215ef61638a5026b3dc74e28dcf23af40ced36fa185d97e25d4",
+    "population.parquet": "dd40869855ddb3cc482fae91a8d8e77c03085f684173fa4fa471313f57b38faa",
+    "generations/default.parquet": "8519d488d8e4798c5a41c6be34e6681891c4caf9b1703b94504bcfd16744a19a",
+    "independent_windows.parquet": "ff934a0dbd028754d279b66a0bd86ab3e6154446d83f6f30af05d45dabdff4ff"
+  },
+  "source_sha": "b058ed36c8f1563f9ef19fe5b020c2fa2b7be040bda0ed34b83df722930a8b8a",
+  "declaration_sha": "e497cf4ad16161ace53974028678af25816ef8ea9ddfa77968e4cd056a587ed8"
+}

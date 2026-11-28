@@ -1,0 +1,41 @@
+{
+  "as_of": "2026-11-13T01:19:33.032258+00:00",
+  "status": "PASS",
+  "floor_ms": 500.0,
+  "blocked_opportunities": 21924,
+  "fill_age_checks": [
+    {
+      "mode": "default",
+      "fills": 4790,
+      "minimum_age_ms": 500.0
+    },
+    {
+      "mode": "legacy_guard",
+      "fills": 70,
+      "minimum_age_ms": 505.0
+    },
+    {
+      "mode": "causal_guard",
+      "fills": 63,
+      "minimum_age_ms": 510.0
+    },
+    {
+      "mode": "static10",
+      "fills": 177,
+      "minimum_age_ms": 502.0
+    },
+    {
+      "mode": "history10",
+      "fills": 109,
+      "minimum_age_ms": 501.0
+    }
+  ],
+  "zero_floor_exact": false,
+  "summary_sha": "e3d2835d6dae0f270c337c61e1fd438838d4542ee628ed59b53b3f430e563d01",
+  "declaration_sha": "0960a232d5bc90924a26994d4f56d27e8a8fa673bc4b247cc19995c83ef2e168",
+  "checker_version": 3,
+  "checker_declaration_sha": "53d0a669b6fcdd503cd981cbb46e1c6d03ecae5721d0d80c3fe29d75a07abd5d",
+  "run_sha": "ce90241b153e0c96a745f72026061f0a3133ba742c0bd73791c91a2b0c48d3f4",
+  "recovered_completed_simulation": false,
+  "failure_receipt_sha": null
+}

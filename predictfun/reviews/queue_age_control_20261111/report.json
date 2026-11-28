@@ -1,0 +1,522 @@
+{
+  "as_of": "2026-11-11T15:48:39.642985+00:00",
+  "declaration": {
+    "as_of": "2026-11-11T15:46:13.466747+00:00",
+    "source_commit": "b0895dfd754cdf3de6389f54fb5d76b80fd45f8b",
+    "source_sha": "8eb51d962eb902b4b6791dbe846b2476f765b0fc058e9b544a0bd25ee13d1d4c",
+    "accounting_source_sha": "676db5919137cf6a2c2b0c309b84297d28f78ad43e518d3b548d7463cc9f6183",
+    "accounting_report_sha": "838dcbb49e6c7c8384e3ad1beef4241e17731d072a89004de135e9c18174b070",
+    "original_declaration_sha": "35bc0877d9b0a1821e859919d33ea026de3b0b0758d025390e322085c8ed67e0",
+    "input_sha": {
+      "20261023.parquet": "54a0c28a7d3b54f026b294e1ef07dfc348bbc6207df568087d84830bb107d042",
+      "20261023_fills.parquet": "be9d0f0c9a33c18b5f3342f4a7eff8a448a0e8a1ff829078b11f9149f13de1dd",
+      "20261023_build.json": "b01e7f294e75073fed48ca400946078e51cdb65094692c3bfdb291d950e4c12e",
+      "20261024.parquet": "5e128374220cc033798ac1d8889e3d2de46de15d196904468f7b6383fc827f7c",
+      "20261024_fills.parquet": "f1f0c9a67b00899a5537341c7a3eb2567e4bf53599b9347dbe488edea38881c5",
+      "20261024_build.json": "c32fa29afaa1e98509527c526fdcd2cd89d0bf266759ff99b47ff72c075af384",
+      "20261025.parquet": "9b9baf505be44103024202892a0d38422c6eaf3b89734a15e7d934dfc34e5bb1",
+      "20261025_fills.parquet": "69cd008d23fe7337cede49aaa42e21de9c9f8fcd4dde317805793d7021b55061",
+      "20261025_build.json": "252ff8dbda279e1eefef31a002bd7a17fa8c3102add11f55e81ecee2040ebca7",
+      "20261026.parquet": "9204244c7029c612f6f59a40ef33265299b6d6da6364df8c978e19a654d785b7",
+      "20261026_fills.parquet": "9edd1809f3e3c6ace42e52ba2d5316d54741f0e2fb6758593afc76e6cdc2459a",
+      "20261026_build.json": "5c7fb0e343ecf88c34e139b1b6f6bfc50ec232f369cb85e78e06f4b639ade8fb",
+      "20261027.parquet": "6a585c30912b4242539e11782de2fd512a5f2d95ac46e38872458b125a97ea70",
+      "20261027_fills.parquet": "39ef7a5df181a542ae26f1e80af89b83939a66412d9d1282b43e90016e7c128a",
+      "20261027_build.json": "b6eb8fcd39d21e8e3c8035772122c9e6249e87380f393b2578617f15d0065b12",
+      "20261031.parquet": "c110a82d52647f11c1bcf7dcc181b8d614b51c7c95b0ddf4fa63007244bcbabf",
+      "20261031_fills.parquet": "33d082c0da78533411c210e4484f2dfc3891c84cae2ec8204c957d4f3f35a331",
+      "20261031_build.json": "7e08a4c287696b965a17e6eb1245afc7e92152421729554d4ecc83bc2167453c",
+      "20261101.parquet": "d0c9a8bf184f62eff4c21827d3618c9e7616745e696daa96a8b62b32d7b04742",
+      "20261101_fills.parquet": "bdef91e9225ba5f0e608bda8d92a35b211dc0c10868ad33944ac155b49b560da",
+      "20261101_build.json": "5faa9b4628355a9941bf498ed1f74d3b2b2de2e6e980d3b578d5a8e108cb4c56",
+      "20261102.parquet": "cc6853506de372d84bffb713c9aed1f3832af54070da025aa698c622600527a7",
+      "20261102_fills.parquet": "df1c0f110dde43fc54f8d023eabfcfd8d9d9389e74bcca2fa798c740e458e781",
+      "20261102_build.json": "b09bfa275337b06392406d5a3ef754d63652389c696ee10eb9022470465888e9",
+      "20261103.parquet": "30fa7e9f7bec28ddc9bbeb990d76ec6d46ad3a1d4728c09d5e9087ed7bb4d566",
+      "20261103_fills.parquet": "487e02fc5e532cca55f41e8a504d2e29a09f4536c4336c13d9e2873680023831",
+      "20261103_build.json": "591ca81f32a7a501d83a6699ae33d2c2ec599f9063156ed558fbe8e7d0842619"
+    },
+    "design": "Add order_age_ms to the market-only baseline before inspecting original PnL results. Same labels, chronological folds, pinned parameters, portfolio, null500, day intervals, and timing scenarios. Reuse the unchanged original queue candidate; no candidate selection or new tuning.",
+    "purpose": "Queue versus market_age isolates incremental queue size/progress information from age and remaining lease. Original queue versus market is joint order-state value.",
+    "multiplicity": {
+      "feature_sets_total": 3,
+      "candidate_policies": 1,
+      "comparators": 2,
+      "scenarios": 3
+    },
+    "limits": "No Oct28-30/Nov4-6/Nov9-13 quote/outcome reads. Frozen strategy/loss budget/live code unchanged. One light numeric process.",
+    "original_source_commit": "68769426bd852a1d0a9b58956dcfaa726f409154",
+    "columns": [
+      "bn_r25",
+      "bn_r50",
+      "bn_r100",
+      "bn_r250",
+      "bn_r500",
+      "bn_r1000",
+      "bn_r3000",
+      "bn_imb",
+      "bn_age",
+      "bn_flow250",
+      "bn_flow1000",
+      "bn_flow5000",
+      "bn_ntr1000",
+      "pf_spread",
+      "pf_mid",
+      "pf_micro_dev",
+      "pf_imb1",
+      "pf_imb3",
+      "pf_lbs",
+      "pf_las",
+      "pf_age",
+      "pf_nfr1000",
+      "pf_dm250",
+      "pf_dm1000",
+      "pf_dm5000",
+      "pf_pend_bid1000",
+      "pf_pend_ask1000",
+      "pf_pend_tot5000",
+      "t_rel",
+      "sigma",
+      "basis_bps",
+      "gap",
+      "side",
+      "order_price",
+      "known_remaining",
+      "inventory",
+      "other_reserved",
+      "d_bnimb250",
+      "d_pfimb250",
+      "activity_ratio",
+      "order_age_ms"
+    ]
+  },
+  "folds": [
+    {
+      "day": "20261026",
+      "train_days": [
+        "20261023",
+        "20261024",
+        "20261025"
+      ],
+      "train_n": 15483
+    },
+    {
+      "day": "20261027",
+      "train_days": [
+        "20261023",
+        "20261024",
+        "20261025",
+        "20261026"
+      ],
+      "train_n": 20315
+    },
+    {
+      "day": "20261031",
+      "train_days": [
+        "20261023",
+        "20261024",
+        "20261025",
+        "20261026",
+        "20261027"
+      ],
+      "train_n": 25555
+    },
+    {
+      "day": "20261101",
+      "train_days": [
+        "20261023",
+        "20261024",
+        "20261025",
+        "20261026",
+        "20261027",
+        "20261031"
+      ],
+      "train_n": 32284
+    },
+    {
+      "day": "20261102",
+      "train_days": [
+        "20261023",
+        "20261024",
+        "20261025",
+        "20261026",
+        "20261027",
+        "20261031",
+        "20261101"
+      ],
+      "train_n": 38422
+    },
+    {
+      "day": "20261103",
+      "train_days": [
+        "20261023",
+        "20261024",
+        "20261025",
+        "20261026",
+        "20261027",
+        "20261031",
+        "20261101",
+        "20261102"
+      ],
+      "train_n": 43253
+    }
+  ],
+  "summary": [
+    {
+      "config": "L50",
+      "arm": "market_age",
+      "windows": 1728,
+      "days": 6,
+      "stop_value_usd": -1051.2332772837533,
+      "settle_value_usd": -1186.6359802691807,
+      "missing_stop": 289,
+      "missing_settle": 0,
+      "settlement_carry_usd": -13.767443044928923,
+      "inventory_square_s": 16919833.050631188,
+      "terminal_abs_mean": 4.513328045448599,
+      "shares": 58272.05915693371,
+      "orders": 53320,
+      "fills": 16408,
+      "spread_usd": -26.398300618684072,
+      "mo1_usd": -900.7208344901894,
+      "mo5_usd": -968.1966483529768,
+      "mo60_usd": -1250.0189191919715,
+      "missing_mark_groups": 241
+    },
+    {
+      "config": "M50",
+      "arm": "market_age",
+      "windows": 1728,
+      "days": 6,
+      "stop_value_usd": -1084.8943634285445,
+      "settle_value_usd": -1181.6143184846946,
+      "missing_stop": 301,
+      "missing_settle": 0,
+      "settlement_carry_usd": -30.65240887590593,
+      "inventory_square_s": 17405279.63125282,
+      "terminal_abs_mean": 4.5615125243228265,
+      "shares": 63472.799464833675,
+      "orders": 52737,
+      "fills": 17992,
+      "spread_usd": 23.166300342304968,
+      "mo1_usd": -848.4208226912612,
+      "mo5_usd": -932.152409585118,
+      "mo60_usd": -1195.5155944242322,
+      "missing_mark_groups": 271
+    },
+    {
+      "config": "L250slow",
+      "arm": "market_age",
+      "windows": 1728,
+      "days": 6,
+      "stop_value_usd": -1310.769554579416,
+      "settle_value_usd": -1590.9894056127243,
+      "missing_stop": 303,
+      "missing_settle": 0,
+      "settlement_carry_usd": -115.03560686630276,
+      "inventory_square_s": 17980540.03443413,
+      "terminal_abs_mean": 4.53347416728511,
+      "shares": 66959.35536852108,
+      "orders": 51770,
+      "fills": 19000,
+      "spread_usd": 117.92800660775777,
+      "mo1_usd": -1394.719291742355,
+      "mo5_usd": -1475.479134371369,
+      "mo60_usd": -1647.173115012503,
+      "missing_mark_groups": 285
+    }
+  ],
+  "deltas": [
+    {
+      "config": "L50",
+      "metric": "stop_value_c",
+      "status": "missing_mark"
+    },
+    {
+      "config": "L50",
+      "metric": "settle_value_c",
+      "sum": 139.34629154736947,
+      "days_positive": 5,
+      "per_day": {
+        "20261026": 34.53414852545275,
+        "20261027": -0.5242245992143926,
+        "20261031": 58.780074762605246,
+        "20261101": 12.28790788851663,
+        "20261102": 1.8582112186120385,
+        "20261103": 32.410173751397224
+      },
+      "interval": {
+        "n_days": 6,
+        "mean": 23.224381924561584,
+        "low": 7.893265558769145,
+        "high": 40.865976192104846
+      }
+    },
+    {
+      "config": "L50",
+      "metric": "inventory_square_s",
+      "sum": 116303.08638671346,
+      "days_positive": 4,
+      "per_day": {
+        "20261026": -101611.79090170209,
+        "20261027": 96727.85558106242,
+        "20261031": 960.252430651306,
+        "20261101": 142238.0777615695,
+        "20261102": 8049.239307765416,
+        "20261103": -30060.5477926331
+      },
+      "interval": {
+        "n_days": 6,
+        "mean": 19383.84773111891,
+        "low": -42389.19760837561,
+        "high": 88741.93010069792
+      }
+    },
+    {
+      "config": "L50",
+      "metric": "terminal_abs",
+      "sum": 11.45064296393622,
+      "days_positive": 4,
+      "per_day": {
+        "20261026": -41.760093120874735,
+        "20261027": 60.64565833940848,
+        "20261031": -27.08563134466336,
+        "20261101": 5.957683759713197,
+        "20261102": 7.886957963063624,
+        "20261103": 5.806067367289016
+      },
+      "interval": {
+        "n_days": 6,
+        "mean": 1.90844049398937,
+        "low": -23.119554470368016,
+        "high": 28.090728167319117
+      }
+    },
+    {
+      "config": "M50",
+      "metric": "stop_value_c",
+      "status": "missing_mark"
+    },
+    {
+      "config": "M50",
+      "metric": "settle_value_c",
+      "sum": 102.89620048789361,
+      "days_positive": 5,
+      "per_day": {
+        "20261026": 29.062620282326566,
+        "20261027": 10.423707697137411,
+        "20261031": 56.89090934960998,
+        "20261101": 16.488564994629336,
+        "20261102": -10.99554753573695,
+        "20261103": 1.0259456999272785
+      },
+      "interval": {
+        "n_days": 6,
+        "mean": 17.14936674798227,
+        "low": 1.5908368381568287,
+        "high": 36.76379395423856
+      }
+    },
+    {
+      "config": "M50",
+      "metric": "inventory_square_s",
+      "sum": -71693.80641630976,
+      "days_positive": 3,
+      "per_day": {
+        "20261026": -122558.80268310214,
+        "20261027": 9542.422023859783,
+        "20261031": -38600.391834428985,
+        "20261101": 141075.9102171144,
+        "20261102": 11329.893036791911,
+        "20261103": -72482.83717654474
+      },
+      "interval": {
+        "n_days": 6,
+        "mean": -11948.967736051627,
+        "low": -70179.06686302193,
+        "high": 62360.39452188131
+      }
+    },
+    {
+      "config": "M50",
+      "metric": "terminal_abs",
+      "sum": -115.54484694023924,
+      "days_positive": 1,
+      "per_day": {
+        "20261026": -53.28153410959292,
+        "20261027": -1.2511405959041237,
+        "20261031": -48.660371804540034,
+        "20261101": -2.7999911072735078,
+        "20261102": 0.8014228499978433,
+        "20261103": -10.353232172926498
+      },
+      "interval": {
+        "n_days": 6,
+        "mean": -19.257474490039872,
+        "low": -37.432296999991,
+        "high": -2.342109795335428
+      }
+    },
+    {
+      "config": "L250slow",
+      "metric": "stop_value_c",
+      "status": "missing_mark"
+    },
+    {
+      "config": "L250slow",
+      "metric": "settle_value_c",
+      "sum": -12.408116847837782,
+      "days_positive": 3,
+      "per_day": {
+        "20261026": -34.90373002674281,
+        "20261027": -12.182987204683766,
+        "20261031": 0.2677041548297014,
+        "20261101": 26.27251017969634,
+        "20261102": 20.911332239175593,
+        "20261103": -12.772946190112844
+      },
+      "interval": {
+        "n_days": 6,
+        "mean": -2.0680194746396308,
+        "low": -17.77977941635605,
+        "high": 14.635596621401758
+      }
+    },
+    {
+      "config": "L250slow",
+      "metric": "inventory_square_s",
+      "sum": -281946.28366423835,
+      "days_positive": 2,
+      "per_day": {
+        "20261026": -103838.5993430476,
+        "20261027": -82783.52983893902,
+        "20261031": -182488.07856409135,
+        "20261101": 77483.45185959373,
+        "20261102": -34172.56272497865,
+        "20261103": 43853.034947224565
+      },
+      "interval": {
+        "n_days": 6,
+        "mean": -46991.04727737306,
+        "low": -123074.16692620506,
+        "high": 22947.32399130999
+      }
+    },
+    {
+      "config": "L250slow",
+      "metric": "terminal_abs",
+      "sum": -157.1160827723326,
+      "days_positive": 2,
+      "per_day": {
+        "20261026": -78.72980704863532,
+        "20261027": -53.32759468421287,
+        "20261031": -64.2736899899258,
+        "20261101": 81.36201794810208,
+        "20261102": -49.47900485197774,
+        "20261103": 7.3319958543170625
+      },
+      "interval": {
+        "n_days": 6,
+        "mean": -26.186013795388764,
+        "low": -64.21726197671937,
+        "high": 22.54016976786293
+      }
+    }
+  ],
+  "neutral_summary": [
+    {
+      "config": "L50",
+      "arm": "queue",
+      "n": 32922,
+      "utility_c_mean": -1.1237411904768584,
+      "keep": 7320,
+      "cancel": 19133,
+      "rejoin": 6469
+    },
+    {
+      "config": "L50",
+      "arm": "market_age",
+      "n": 32922,
+      "utility_c_mean": -1.1893923913599438,
+      "keep": 7573,
+      "cancel": 19225,
+      "rejoin": 6124
+    },
+    {
+      "config": "M50",
+      "arm": "queue",
+      "n": 32336,
+      "utility_c_mean": -1.0841631542361363,
+      "keep": 7120,
+      "cancel": 18912,
+      "rejoin": 6304
+    },
+    {
+      "config": "M50",
+      "arm": "market_age",
+      "n": 32336,
+      "utility_c_mean": -1.0946186256408776,
+      "keep": 7335,
+      "cancel": 19025,
+      "rejoin": 5976
+    },
+    {
+      "config": "L250slow",
+      "arm": "queue",
+      "n": 32799,
+      "utility_c_mean": -1.8098175021272873,
+      "keep": 7370,
+      "cancel": 18775,
+      "rejoin": 6654
+    },
+    {
+      "config": "L250slow",
+      "arm": "market_age",
+      "n": 32799,
+      "utility_c_mean": -2.0865201278409846,
+      "keep": 7519,
+      "cancel": 18947,
+      "rejoin": 6333
+    }
+  ],
+  "null": {
+    "draws": 500,
+    "seed": 20261111,
+    "family": 3,
+    "observed_utility_delta_usd": {
+      "L50": 21.613688354729383,
+      "M50": 3.380881233437176,
+      "L250slow": 90.75569420783555
+    },
+    "family_p": {
+      "L50": 0.23552894211576847,
+      "M50": 0.4411177644710579,
+      "L250slow": 0.001996007984031936
+    },
+    "null_max_p95": 52.53092959299264
+  },
+  "verified_windows": 5184,
+  "selected_sha": {
+    "20261026_L50_selected.parquet": "7db611029b211098d53e7c2049dd891392a21fadf48fbc1e8d8cdc8f95ae6db8",
+    "20261026_M50_selected.parquet": "f12403e56192e20dcecc310ab3663986510e123e1db9a077fe3f7688016ba589",
+    "20261026_L250slow_selected.parquet": "b34b0bf1e773a6668cb64f8ca653dbbdfbd9579639103eb8ee380dd44f773d84",
+    "20261027_L50_selected.parquet": "28c30cda06ed7258407fcf6d571a816cca9f998aaf80199396ef584c10bf889f",
+    "20261027_M50_selected.parquet": "ec7ba61396f34699a6d4bbdf76d91bf079c9282f5f0cd8e740a11099cf49c1e2",
+    "20261027_L250slow_selected.parquet": "4da4024a2ace71809e15ad6eb541a6c2d66f2543c00f12caf7c8d56a3189c973",
+    "20261031_L50_selected.parquet": "6411de55fd95c459ddc5475d33ab9a128f0abaac2225b2d7bd2d066b76f21213",
+    "20261031_M50_selected.parquet": "021254343561cbb43fdb0f22c8aea1b5f5702935c8059fde44f8057ee305b9eb",
+    "20261031_L250slow_selected.parquet": "357ed8b15c327e87c5f6022cec716a67ccea6ec8b09afa36f221c57c7289b50d",
+    "20261101_L50_selected.parquet": "378f0679359663de342b894205c7cb4b28a6a0b6597f21508b2112757d57d3cb",
+    "20261101_M50_selected.parquet": "84fe5725a6b59d89e75c1525cb5b33f8e5149df0fc8d76d6139dababac1207eb",
+    "20261101_L250slow_selected.parquet": "2f991c937869885e9fdf5ae5db8ad43864df65972232f19f50e5192434604021",
+    "20261102_L50_selected.parquet": "8e98a1df2db50fa93cca08867c54067b474deaac7420c9b5b875611895e7852d",
+    "20261102_M50_selected.parquet": "debced07cd98a9176adfcc26dff24fd79de3da6c2c228694dfb4fa12989c547e",
+    "20261102_L250slow_selected.parquet": "2187575f83bc38d8c984e740db5fbf8481a4c105b6563d4c3b6c9513c459ff21",
+    "20261103_L50_selected.parquet": "7d5a6b7abafb2a5cbb44339cd40ebdc97ea960d8222b03b3308f7ca816537d37",
+    "20261103_M50_selected.parquet": "dfdc152d17937916f5d4602aa74dcd71eff2d53863f8abdef8583575e1124753",
+    "20261103_L250slow_selected.parquet": "276d26f02e62736441b7adc702f9d335b8ed2b552bfbfe03fbf917a2b9b393e1"
+  },
+  "portfolio_sha": "7194764821697df91d8462d9bb43d8189e1bca82d2b9963f6bd784cb8a918461",
+  "prediction_sha": "9cae1e26febe4006f0836720d4a6d68aeb407d05f634fd808f5ca0b5e687d015",
+  "limits": "Consumed dates, uncalibrated simulated queues, fixed-entry continuation only. Missing marks are counts; partial sums are not complete PnL. No deployment claim."
+}

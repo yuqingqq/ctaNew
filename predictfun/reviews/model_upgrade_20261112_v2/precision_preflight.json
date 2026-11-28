@@ -1,0 +1,39 @@
+{
+  "as_of": "2026-11-12T13:50:57.186858+00:00",
+  "status": "PASS",
+  "execution_sha": "303539ffa8f7e5d94d075d3b911143b97ffae75064f6f4a4aab5747022042709",
+  "completed": [
+    {
+      "stage": "precision_declare",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/precision_audit_declaration.json",
+      "sha": "859d1494f2ae73aeb95f66ccbcf95cbe72f4e0b3d060737cbdd29d8b08e6ec47"
+    },
+    {
+      "stage": "precision_audit",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/precision_audit.json",
+      "sha": "c61c4fbffa2ed5e02f0e4faac9d7152b5f64b93dd2425e7cc0dccfdfd21896f1"
+    },
+    {
+      "stage": "eval_declare",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_eval_20261112_v2/declaration.json",
+      "sha": "4db0034cb7e0c527afe6da374bb7445e3189738e4a1ef6e371e2e84a32f36f2c"
+    },
+    {
+      "stage": "eval_controls",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_eval_20261112_v2/controls.json",
+      "sha": "8823a19b848f94218942307511b734ab3e94c97c80cac6d966f546d2bc485f8b"
+    },
+    {
+      "stage": "prepare_20261026",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_eval_20261112_v2/prepare_20261026.json",
+      "sha": "ace55a3933acc31453f9725bbf4411b1f70138f273362d7f4397f390d6a7d2c8"
+    },
+    {
+      "stage": "smoke_X_20261026",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_eval_20261112_v2/smoke_X_20261026_precision.json",
+      "sha": "8ea58804dfea4d01d00e365e5001f1571258ffa92a027a1fa8b9b31f41bb2238"
+    }
+  ],
+  "resumed_eval_driver_pid": 1944044,
+  "scope": "Arithmetic correction and first-fold integration only; full evaluation still queued on core8. No model selection or live change."
+}

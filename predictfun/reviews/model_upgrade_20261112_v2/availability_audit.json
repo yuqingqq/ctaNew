@@ -1,0 +1,100 @@
+{
+  "as_of": "2026-11-12T11:33:25.235376+00:00",
+  "status": "PASS",
+  "declaration_sha": "2900b8426e1306d33c885821b96e47457bdac8db37afe12b835d8b9a78050113",
+  "populations": [
+    {
+      "day": "20261023",
+      "rows": 1728000,
+      "required_keys": 1342487,
+      "missing_required_keys": 0,
+      "nonrequired_keys": 385513,
+      "missing_nonrequired_keys": 385493,
+      "stopped_keys": 345600,
+      "missing_mid_before_stop_keys": 39913
+    },
+    {
+      "day": "20261024",
+      "rows": 1728000,
+      "required_keys": 1346751,
+      "missing_required_keys": 0,
+      "nonrequired_keys": 381249,
+      "missing_nonrequired_keys": 381249,
+      "stopped_keys": 345600,
+      "missing_mid_before_stop_keys": 35649
+    },
+    {
+      "day": "20261025",
+      "rows": 1728000,
+      "required_keys": 1331354,
+      "missing_required_keys": 0,
+      "nonrequired_keys": 396646,
+      "missing_nonrequired_keys": 396646,
+      "stopped_keys": 345600,
+      "missing_mid_before_stop_keys": 51046
+    },
+    {
+      "day": "20261026",
+      "rows": 1728000,
+      "required_keys": 1340344,
+      "missing_required_keys": 0,
+      "nonrequired_keys": 387656,
+      "missing_nonrequired_keys": 387656,
+      "stopped_keys": 345600,
+      "missing_mid_before_stop_keys": 42056
+    },
+    {
+      "day": "20261027",
+      "rows": 1728000,
+      "required_keys": 1331144,
+      "missing_required_keys": 0,
+      "nonrequired_keys": 396856,
+      "missing_nonrequired_keys": 396856,
+      "stopped_keys": 345600,
+      "missing_mid_before_stop_keys": 51256
+    },
+    {
+      "day": "20261031",
+      "rows": 1728000,
+      "required_keys": 1357046,
+      "missing_required_keys": 0,
+      "nonrequired_keys": 370954,
+      "missing_nonrequired_keys": 370954,
+      "stopped_keys": 345600,
+      "missing_mid_before_stop_keys": 25354
+    },
+    {
+      "day": "20261101",
+      "rows": 1728000,
+      "required_keys": 1337760,
+      "missing_required_keys": 0,
+      "nonrequired_keys": 390240,
+      "missing_nonrequired_keys": 390240,
+      "stopped_keys": 345600,
+      "missing_mid_before_stop_keys": 44640
+    },
+    {
+      "day": "20261102",
+      "rows": 1728000,
+      "required_keys": 1322528,
+      "missing_required_keys": 0,
+      "nonrequired_keys": 405472,
+      "missing_nonrequired_keys": 405472,
+      "stopped_keys": 345600,
+      "missing_mid_before_stop_keys": 59872
+    },
+    {
+      "day": "20261103",
+      "rows": 1728000,
+      "required_keys": 1324002,
+      "missing_required_keys": 0,
+      "nonrequired_keys": 403998,
+      "missing_nonrequired_keys": 403998,
+      "stopped_keys": 345600,
+      "missing_mid_before_stop_keys": 58398
+    }
+  ],
+  "missing_scores_all_outside_observable_live_mask": true,
+  "controls": "Complete live availability positive and planted missing required score both detected.",
+  "scope": "Availability on the exact cached observable feature grid, not proof that every source feature is causal. Known-clock limits and the separately corrected start-price context still apply."
+}

@@ -1,0 +1,51 @@
+{
+  "as_of": "2026-11-12T14:03:11.035303+00:00",
+  "status": "DECLARED",
+  "source_commit": "6f3e9e7dbaf0fdfe525537534d3c762c41f0719d",
+  "day": "20261102",
+  "build_receipt_sha": "3ca12647507246978add889b0934518a016360c5b4fb446accbf0a504aad0209",
+  "input_hashes_verified": {
+    "win": "3061ae52da814d05d2c56c4baf2f54e30cb05106ff9935047193276cbcc13c4e",
+    "fills": "0f0c886550c64f70c4e88a6762eba9d64d38665326ff80438a201d1c0abda2d3",
+    "requests": "358d8b0c6bf702e1377f1e8a31a86723059ba196fec46db1f7c18b1baf311d56",
+    "paired.parquet": "bc50389508cba215ef61638a5026b3dc74e28dcf23af40ced36fa185d97e25d4",
+    "population.parquet": "dd40869855ddb3cc482fae91a8d8e77c03085f684173fa4fa471313f57b38faa",
+    "generations/default.parquet": "8519d488d8e4798c5a41c6be34e6681891c4caf9b1703b94504bcfd16744a19a",
+    "independent_windows.parquet": "ff934a0dbd028754d279b66a0bd86ab3e6154446d83f6f30af05d45dabdff4ff"
+  },
+  "model_declaration_sha": "507da9caad303bf71b476e2e506d0814a74077bc39f64bbffa730614f37e1883",
+  "replay_declaration_sha": "4db0034cb7e0c527afe6da374bb7445e3189738e4a1ef6e371e2e84a32f36f2c",
+  "availability_helper_sha": "9e67e4a5361f0b53cdd6cfc11cbd4262c1df451bfadae0d005a8d1317186ee05",
+  "stopped_idle_pid": 1983093,
+  "stopped_command": "/usr/bin/python3 /tmp/cta-model-upgrade-20261112/predictfun/research/model_upgrade_driver_v3.py ",
+  "stopped_children": [],
+  "tasks": [
+    {
+      "stage": "data_20261102",
+      "module": "pf_model_upgrade_data",
+      "args": [
+        "20261102"
+      ],
+      "receipt": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/data_20261102.json"
+    },
+    {
+      "stage": "fit_20261102",
+      "module": "pf_model_upgrade_fit",
+      "args": [
+        "20261102"
+      ],
+      "receipt": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/fit_20261102.json"
+    },
+    {
+      "stage": "prepare_20261102",
+      "module": "pf_model_eval_v2",
+      "args": [
+        "prepare",
+        "20261102"
+      ],
+      "receipt": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_eval_20261112_v2/prepare_20261102.json"
+    }
+  ],
+  "scope": "Advance fifth frozen chronological fold in idle slot9. Restart unchanged model waiter after success; no model/feature/policy/scenario changes or retries.",
+  "global_research_worker_cap": 2
+}

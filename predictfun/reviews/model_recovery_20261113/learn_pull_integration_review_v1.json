@@ -1,0 +1,505 @@
+{
+  "as_of": "2026-11-13T17:39:41.719097+00:00",
+  "status": "DESCRIPTIVE_RECONSTRUCTION_WITH_LABEL_LIMITS",
+  "producer_as_of": "2026-11-13T16:48:15Z",
+  "declaration_sha": "0c0ebf6906ce8c599145fa6e8ff851948e1ebb4b674d622b9fef45cf45b8da72",
+  "days": [
+    "20261023",
+    "20261024",
+    "20261025",
+    "20261026",
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "counts": {
+    "20261023": {
+      "obs": 25046,
+      "bigfills": 47396,
+      "bigevents": 4011
+    },
+    "20261024": {
+      "obs": 24031,
+      "bigfills": 43290,
+      "bigevents": 3424
+    },
+    "20261025": {
+      "obs": 23143,
+      "bigfills": 45001,
+      "bigevents": 3463
+    },
+    "20261026": {
+      "obs": 26927,
+      "bigfills": 47391,
+      "bigevents": 4339
+    },
+    "20261027": {
+      "obs": 25715,
+      "bigfills": 40398,
+      "bigevents": 3385
+    },
+    "20261031": {
+      "obs": 13839,
+      "bigfills": 19669,
+      "bigevents": 1969
+    },
+    "20261101": {
+      "obs": 14909,
+      "bigfills": 25257,
+      "bigevents": 2173
+    },
+    "20261102": {
+      "obs": 20066,
+      "bigfills": 39927,
+      "bigevents": 4172
+    },
+    "20261103": {
+      "obs": 19477,
+      "bigfills": 37198,
+      "bigevents": 3652
+    }
+  },
+  "observed_next_trade_membership": [
+    {
+      "group": "top 5",
+      "n": 78294,
+      "not_refilled": 21765,
+      "not_refilled_fraction": 0.27799065062456896,
+      "guard_signal_fraction": 0.5983727999591284,
+      "absent_original_or_residual_quantity": true,
+      "absent_order_hash": true
+    },
+    {
+      "group": "field",
+      "n": 114859,
+      "not_refilled": 46022,
+      "not_refilled_fraction": 0.40068257602799956,
+      "guard_signal_fraction": 0.5789185000740038,
+      "absent_original_or_residual_quantity": true,
+      "absent_order_hash": true
+    }
+  ],
+  "producer_readings": {
+    "R550": {
+      "ratio": 1.7431971194646456,
+      "higher_days": 9,
+      "label": "AVOID-ADVERSE"
+    },
+    "R552": {
+      "value": 0.24734561632444094,
+      "pos": 8,
+      "neg": 1,
+      "label": "OUR-EXTRA-PULLS-COST"
+    },
+    "R553": {
+      "value": 0.5006211998734161,
+      "pos": 7,
+      "neg": 2,
+      "label": "THEY-PULL-NEEDLESSLY"
+    },
+    "R555": {
+      "ratio": 1.1049264664177594,
+      "higher_days": 9,
+      "label": "NOT-SHOWN"
+    },
+    "R554": {
+      "auc": {
+        "all": 0.7820368083832739,
+        "v only": 0.5895250774983455,
+        "inventory only": 0.5265810920052635
+      },
+      "top_gain": [
+        [
+          "gap",
+          54883.14112615585
+        ],
+        [
+          "P",
+          43796.455102443695
+        ],
+        [
+          "size_p",
+          14861.865008354187
+        ],
+        [
+          "x_pf_pend_bid1000",
+          8107.655160903931
+        ],
+        [
+          "own_d250",
+          6183.896070480347
+        ],
+        [
+          "inv",
+          6048.289679050446
+        ],
+        [
+          "sigma",
+          4051.3681020736694
+        ],
+        [
+          "x_d_bnimb250",
+          3331.3339805603027
+        ],
+        [
+          "adv_pf_imb1",
+          2952.9296317100525
+        ],
+        [
+          "adv_bn_r250",
+          2731.889663219452
+        ]
+      ]
+    }
+  },
+  "descriptive_report_exact": true,
+  "R554_model_values_reused_not_independently_reproduced": true,
+  "producer_daily_metadata": {
+    "20261023": {
+      "stat": {
+        "registry": 288,
+        "outside_day": 0,
+        "sealed_or_forward": 0,
+        "no_outcome": 0,
+        "untimed_legs_0_60": 2093,
+        "untimed_shares_0_60": 20830.638290695933,
+        "windows": 288,
+        "window_sides": 576,
+        "obs": 25046,
+        "e2_ambiguous": 7018,
+        "same_stamp": 6604,
+        "big_events": 4011,
+        "grid_steps": 345600,
+        "grid_steps_without_row": 0,
+        "events_differ": 0,
+        "unpaired_windows": 0,
+        "inv_missing": 0,
+        "planted_caught": {
+          "MUT_OUTCOME_INV": true,
+          "MUT_TAKER_SIGN": true,
+          "MUT_PULL_LATE": true
+        }
+      },
+      "days": 1.0
+    },
+    "20261024": {
+      "stat": {
+        "registry": 288,
+        "outside_day": 0,
+        "sealed_or_forward": 0,
+        "no_outcome": 0,
+        "untimed_legs_0_60": 1023,
+        "untimed_shares_0_60": 10108.96713956579,
+        "windows": 288,
+        "window_sides": 576,
+        "obs": 24031,
+        "e2_ambiguous": 6018,
+        "same_stamp": 5003,
+        "big_events": 3424,
+        "grid_steps": 345600,
+        "grid_steps_without_row": 0,
+        "events_differ": 0,
+        "unpaired_windows": 0,
+        "inv_missing": 0,
+        "planted_caught": {
+          "MUT_OUTCOME_INV": true,
+          "MUT_TAKER_SIGN": true,
+          "MUT_PULL_LATE": true
+        }
+      },
+      "days": 1.0
+    },
+    "20261025": {
+      "stat": {
+        "registry": 288,
+        "outside_day": 0,
+        "sealed_or_forward": 0,
+        "no_outcome": 0,
+        "untimed_legs_0_60": 1316,
+        "untimed_shares_0_60": 13038.545279926448,
+        "windows": 288,
+        "window_sides": 576,
+        "obs": 23143,
+        "e2_ambiguous": 6358,
+        "same_stamp": 5069,
+        "big_events": 3463,
+        "grid_steps": 345600,
+        "grid_steps_without_row": 0,
+        "events_differ": 0,
+        "unpaired_windows": 0,
+        "inv_missing": 0,
+        "planted_caught": {
+          "MUT_OUTCOME_INV": true,
+          "MUT_TAKER_SIGN": true,
+          "MUT_PULL_LATE": true
+        }
+      },
+      "days": 1.0
+    },
+    "20261026": {
+      "stat": {
+        "registry": 288,
+        "outside_day": 0,
+        "sealed_or_forward": 0,
+        "no_outcome": 0,
+        "untimed_legs_0_60": 3191,
+        "untimed_shares_0_60": 39785.99813006458,
+        "windows": 288,
+        "window_sides": 576,
+        "obs": 26927,
+        "e2_ambiguous": 7001,
+        "same_stamp": 6239,
+        "big_events": 4339,
+        "grid_steps": 345600,
+        "grid_steps_without_row": 0,
+        "events_differ": 0,
+        "unpaired_windows": 0,
+        "inv_missing": 0,
+        "planted_caught": {
+          "MUT_OUTCOME_INV": true,
+          "MUT_TAKER_SIGN": true,
+          "MUT_PULL_LATE": true
+        }
+      },
+      "days": 1.0
+    },
+    "20261027": {
+      "stat": {
+        "registry": 288,
+        "outside_day": 0,
+        "sealed_or_forward": 0,
+        "no_outcome": 0,
+        "untimed_legs_0_60": 2964,
+        "untimed_shares_0_60": 32617.169265447075,
+        "windows": 288,
+        "window_sides": 576,
+        "obs": 25715,
+        "e2_ambiguous": 7074,
+        "same_stamp": 6371,
+        "big_events": 3385,
+        "grid_steps": 345600,
+        "grid_steps_without_row": 0,
+        "events_differ": 0,
+        "unpaired_windows": 0,
+        "inv_missing": 0,
+        "planted_caught": {
+          "MUT_OUTCOME_INV": true,
+          "MUT_TAKER_SIGN": true,
+          "MUT_PULL_LATE": true
+        }
+      },
+      "days": 1.0
+    },
+    "20261031": {
+      "stat": {
+        "registry": 288,
+        "outside_day": 0,
+        "sealed_or_forward": 0,
+        "no_outcome": 0,
+        "untimed_legs_0_60": 762,
+        "untimed_shares_0_60": 9077.803427559644,
+        "windows": 288,
+        "window_sides": 576,
+        "obs": 13839,
+        "e2_ambiguous": 2694,
+        "same_stamp": 6855,
+        "big_events": 1969,
+        "grid_steps": 345600,
+        "grid_steps_without_row": 0,
+        "events_differ": 0,
+        "unpaired_windows": 0,
+        "inv_missing": 0,
+        "planted_caught": {
+          "MUT_OUTCOME_INV": true,
+          "MUT_TAKER_SIGN": true,
+          "MUT_PULL_LATE": true
+        }
+      },
+      "days": 1.0
+    },
+    "20261101": {
+      "stat": {
+        "registry": 288,
+        "outside_day": 0,
+        "sealed_or_forward": 0,
+        "no_outcome": 0,
+        "untimed_legs_0_60": 981,
+        "untimed_shares_0_60": 10717.451728936834,
+        "windows": 288,
+        "window_sides": 576,
+        "obs": 14909,
+        "e2_ambiguous": 3830,
+        "same_stamp": 6212,
+        "big_events": 2173,
+        "grid_steps": 345600,
+        "grid_steps_without_row": 0,
+        "events_differ": 0,
+        "unpaired_windows": 0,
+        "inv_missing": 0,
+        "planted_caught": {
+          "MUT_OUTCOME_INV": true,
+          "MUT_TAKER_SIGN": true,
+          "MUT_PULL_LATE": true
+        }
+      },
+      "days": 1.0
+    },
+    "20261102": {
+      "stat": {
+        "registry": 288,
+        "outside_day": 0,
+        "sealed_or_forward": 0,
+        "no_outcome": 0,
+        "untimed_legs_0_60": 1228,
+        "untimed_shares_0_60": 14628.328666538513,
+        "windows": 288,
+        "window_sides": 576,
+        "obs": 20066,
+        "e2_ambiguous": 4498,
+        "same_stamp": 7814,
+        "big_events": 4172,
+        "grid_steps": 345600,
+        "grid_steps_without_row": 0,
+        "events_differ": 0,
+        "unpaired_windows": 0,
+        "inv_missing": 0,
+        "planted_caught": {
+          "MUT_OUTCOME_INV": true,
+          "MUT_TAKER_SIGN": true,
+          "MUT_PULL_LATE": true
+        }
+      },
+      "days": 1.0
+    },
+    "20261103": {
+      "stat": {
+        "registry": 288,
+        "outside_day": 0,
+        "sealed_or_forward": 0,
+        "no_outcome": 0,
+        "untimed_legs_0_60": 2426,
+        "untimed_shares_0_60": 38118.44680133401,
+        "windows": 288,
+        "window_sides": 576,
+        "obs": 19477,
+        "e2_ambiguous": 4783,
+        "same_stamp": 7968,
+        "big_events": 3652,
+        "grid_steps": 345600,
+        "grid_steps_without_row": 0,
+        "events_differ": 0,
+        "unpaired_windows": 0,
+        "inv_missing": 0,
+        "planted_caught": {
+          "MUT_OUTCOME_INV": true,
+          "MUT_TAKER_SIGN": true,
+          "MUT_PULL_LATE": true
+        }
+      },
+      "days": 1.0
+    }
+  },
+  "statuses": {
+    "e2_ambiguous": 49274,
+    "same_stamp": 58135,
+    "inv_missing": 0,
+    "unpaired_windows": 0
+  },
+  "controls": {
+    "producer_positive": true,
+    "producer_mutations": {
+      "MUT_OUTCOME_INV": true,
+      "MUT_TAKER_SIGN": true,
+      "MUT_PULL_LATE": true
+    },
+    "gone_not_cancellation": {
+      "output": {
+        "signer": 7,
+        "p": 50,
+        "t1": 100.0,
+        "t2": 300.0,
+        "gap": 200.0,
+        "stayed": 0,
+        "through": 0,
+        "vol_p": 3.0
+      },
+      "exhausted_world": {
+        "initial_queue": [
+          [
+            7,
+            5.0
+          ],
+          [
+            9,
+            45.0
+          ]
+        ],
+        "maker7_residual_after_proof": 0.0,
+        "maker7_cancelled": false,
+        "total_after_proof": 45.0,
+        "next_trade_maker": 9
+      },
+      "cancelled_world": {
+        "initial_queue": [
+          [
+            7,
+            50.0
+          ]
+        ],
+        "maker7_residual_after_proof": 45.0,
+        "maker7_cancelled": true,
+        "total_after_proof": 45.0,
+        "next_trade_maker": 9
+      },
+      "same_observed_trades": true
+    },
+    "stayed_not_order_retention": {
+      "output": {
+        "signer": 7,
+        "p": 50,
+        "t1": 100.0,
+        "t2": 300.0,
+        "gap": 200.0,
+        "stayed": 1,
+        "through": 0,
+        "vol_p": 3.0
+      },
+      "original_or_replacement_hash_unobserved": true
+    },
+    "no_presence_and_ambiguous_interval_refused": true,
+    "price_present_not_at_best": true,
+    "absent_price_refused": true,
+    "feature_time_can_follow_hidden_action": {
+      "proof_ms": 100.0,
+      "cancellation_ms": 200.0,
+      "feature_ms": 900.0,
+      "next_trade_ms": 1000.0
+    },
+    "gap_depends_on_future_next_trade": [
+      900.0,
+      1900.0
+    ],
+    "leave_one_day_out_includes_later_training_dates": true,
+    "historical_misclassification_frequency": null
+  },
+  "cancellation_labels_identified": false,
+  "causal_policy_value_verified": false,
+  "historical_false_gone_or_false_stayed_count": null,
+  "source_replay_performed": false,
+  "validation": false,
+  "live_changed": false,
+  "limits": [
+    "A sole-maker stopping fill plus aggregate residual depth does not prove that maker has quantity left.",
+    "GONE is lack of a later signer fill; it does not distinguish full fill from cancellation.",
+    "STAYED identifies the same signer, not continued existence or priority of the same order.",
+    "The frame predicate tests presence among shown levels, not best-price or maker identity.",
+    "Features at next-trade minus 100ms may follow the hidden pull; gap uses the future next-trade time.",
+    "R554 uses leave-one-day-out including later dates and inherited P score limitations.",
+    "The guard is a signal fired on maker-selected intervals, not our sequential order availability.",
+    "Next-trade volume-weighted marks are neither our counterfactual fills nor portfolio value.",
+    "Part B event fills do not prove continuous quoting; saved aggregate rows lack event/fill identity.",
+    "Within-window inferred position is not full inventory; groups are ranked by observed volume."
+  ]
+}

@@ -1,0 +1,202 @@
+{
+  "as_of": "2026-11-12T15:06:04.775072+00:00",
+  "status": "PASS",
+  "smoke": true,
+  "day": "20261026",
+  "scenario": "X",
+  "populations": [
+    {
+      "mode": "default",
+      "windows": 8,
+      "generations": 734,
+      "fills": 360
+    },
+    {
+      "mode": "legacy_guard",
+      "windows": 8,
+      "generations": 512,
+      "fills": 10
+    },
+    {
+      "mode": "causal_guard",
+      "windows": 8,
+      "generations": 751,
+      "fills": 21
+    },
+    {
+      "mode": "static10",
+      "windows": 8,
+      "generations": 831,
+      "fills": 82
+    },
+    {
+      "mode": "history10",
+      "windows": 8,
+      "generations": 859,
+      "fills": 84
+    }
+  ],
+  "artifacts": [
+    {
+      "artifact": "win/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_UDEFAULT__mid_szAM-5-25-95.parquet",
+      "rows": 8,
+      "optimized_sha": "cda66a05651bd14cf35db382b4757400f174d92d33fd9b65e62a7aa67d2f6467",
+      "reference_sha": "cda66a05651bd14cf35db382b4757400f174d92d33fd9b65e62a7aa67d2f6467",
+      "bytes_equal": true
+    },
+    {
+      "artifact": "fills/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_UDEFAULT__mid_szAM-5-25-95.parquet",
+      "rows": 360,
+      "optimized_sha": "3556700381b7d5c7c39de5e5c7f09a9e1f615aecab760d0368bbb0baffb8534b",
+      "reference_sha": "3556700381b7d5c7c39de5e5c7f09a9e1f615aecab760d0368bbb0baffb8534b",
+      "bytes_equal": true
+    },
+    {
+      "artifact": "requests/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_UDEFAULT__mid_szAM-5-25-95.parquet",
+      "rows": 1261,
+      "optimized_sha": "e5c731da1c234f9dc72cfaf7a7af5c5ccc18da1a11b87d39997157e7c10b5c7a",
+      "reference_sha": "e5c731da1c234f9dc72cfaf7a7af5c5ccc18da1a11b87d39997157e7c10b5c7a",
+      "bytes_equal": true
+    },
+    {
+      "artifact": "generations/default.parquet",
+      "rows": 734,
+      "optimized_sha": "b9287eaff73c024b941ee321ba2858fa7ca53b38a1c9c6c85c9773315690631c",
+      "reference_sha": "b9287eaff73c024b941ee321ba2858fa7ca53b38a1c9c6c85c9773315690631c",
+      "bytes_equal": true
+    },
+    {
+      "artifact": "win/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_ULEGACY__mid_szAM-5-25-95.parquet",
+      "rows": 8,
+      "optimized_sha": "8163b4579ea78ad4901ba40c2f4e4a6973eb00e430a278d91726651a6588c20c",
+      "reference_sha": "8163b4579ea78ad4901ba40c2f4e4a6973eb00e430a278d91726651a6588c20c",
+      "bytes_equal": true
+    },
+    {
+      "artifact": "fills/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_ULEGACY__mid_szAM-5-25-95.parquet",
+      "rows": 10,
+      "optimized_sha": "39d343a71651f81ba0b1bcee4ad58360fbde528236079a888f34da0c951b6cdf",
+      "reference_sha": "39d343a71651f81ba0b1bcee4ad58360fbde528236079a888f34da0c951b6cdf",
+      "bytes_equal": true
+    },
+    {
+      "artifact": "requests/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_ULEGACY__mid_szAM-5-25-95.parquet",
+      "rows": 1022,
+      "optimized_sha": "87f3d9f97b3055ae801f63209d5fff635943f1255be8229712741926cf8b59b1",
+      "reference_sha": "87f3d9f97b3055ae801f63209d5fff635943f1255be8229712741926cf8b59b1",
+      "bytes_equal": true
+    },
+    {
+      "artifact": "generations/legacy_guard.parquet",
+      "rows": 512,
+      "optimized_sha": "a02cac8b33cc1b936914c5751b9845a474c38fd3ea33341d25d112292f301b18",
+      "reference_sha": "a02cac8b33cc1b936914c5751b9845a474c38fd3ea33341d25d112292f301b18",
+      "bytes_equal": true
+    },
+    {
+      "artifact": "win/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_UGUARD__mid_szAM-5-25-95.parquet",
+      "rows": 8,
+      "optimized_sha": "a77b5448accfabbcbf71ea05b4d807e86519e6629ff3ae3c26ff2eb14a92aa46",
+      "reference_sha": "a77b5448accfabbcbf71ea05b4d807e86519e6629ff3ae3c26ff2eb14a92aa46",
+      "bytes_equal": true
+    },
+    {
+      "artifact": "fills/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_UGUARD__mid_szAM-5-25-95.parquet",
+      "rows": 21,
+      "optimized_sha": "66a093f4a1797970b8c97319946e0e310a5552f93fc1257db0dbb6f3a496d1e5",
+      "reference_sha": "66a093f4a1797970b8c97319946e0e310a5552f93fc1257db0dbb6f3a496d1e5",
+      "bytes_equal": true
+    },
+    {
+      "artifact": "requests/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_UGUARD__mid_szAM-5-25-95.parquet",
+      "rows": 1492,
+      "optimized_sha": "c0a8684fecf0f2b5caee5ff4c7213adc7b5fc13a7aba24355b7d07db74a74101",
+      "reference_sha": "c0a8684fecf0f2b5caee5ff4c7213adc7b5fc13a7aba24355b7d07db74a74101",
+      "bytes_equal": true
+    },
+    {
+      "artifact": "generations/causal_guard.parquet",
+      "rows": 751,
+      "optimized_sha": "aa407736c387d465267b6e0a2e608e23b63a2723af753de3b6b56542a4e7c73b",
+      "reference_sha": "aa407736c387d465267b6e0a2e608e23b63a2723af753de3b6b56542a4e7c73b",
+      "bytes_equal": true
+    },
+    {
+      "artifact": "win/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_USTATIC__mid_szAM-5-25-95.parquet",
+      "rows": 8,
+      "optimized_sha": "2ae8622f732713c4eea228f88d7f161ed7eb981dda15a2095d71831c09068b59",
+      "reference_sha": "2ae8622f732713c4eea228f88d7f161ed7eb981dda15a2095d71831c09068b59",
+      "bytes_equal": true
+    },
+    {
+      "artifact": "fills/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_USTATIC__mid_szAM-5-25-95.parquet",
+      "rows": 82,
+      "optimized_sha": "53417f60c45b3d1e8de09e89fd3b5b106ac015136ab3a81f79bfeb9b78ce6989",
+      "reference_sha": "53417f60c45b3d1e8de09e89fd3b5b106ac015136ab3a81f79bfeb9b78ce6989",
+      "bytes_equal": true
+    },
+    {
+      "artifact": "requests/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_USTATIC__mid_szAM-5-25-95.parquet",
+      "rows": 1604,
+      "optimized_sha": "368f9cc2a7049f450c6a5063d001ae66dc22492ddb252d1359371f7f443d2741",
+      "reference_sha": "368f9cc2a7049f450c6a5063d001ae66dc22492ddb252d1359371f7f443d2741",
+      "bytes_equal": true
+    },
+    {
+      "artifact": "generations/static10.parquet",
+      "rows": 831,
+      "optimized_sha": "44f7e42f2904ee75db253df5a291b67a486b6ff5ce2373f110220f37dbfb81fb",
+      "reference_sha": "44f7e42f2904ee75db253df5a291b67a486b6ff5ce2373f110220f37dbfb81fb",
+      "bytes_equal": true
+    },
+    {
+      "artifact": "win/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_UHISTORY__mid_szAM-5-25-95.parquet",
+      "rows": 8,
+      "optimized_sha": "bf0e53866905050aad87fa8ca15aacb26b64cc9a5cdcb34fc88c2881bad324d0",
+      "reference_sha": "bf0e53866905050aad87fa8ca15aacb26b64cc9a5cdcb34fc88c2881bad324d0",
+      "bytes_equal": true
+    },
+    {
+      "artifact": "fills/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_UHISTORY__mid_szAM-5-25-95.parquet",
+      "rows": 84,
+      "optimized_sha": "5c508769afbcde79913724ad7919d25f477e68a060f19f563bf969289b16cf70",
+      "reference_sha": "5c508769afbcde79913724ad7919d25f477e68a060f19f563bf969289b16cf70",
+      "bytes_equal": true
+    },
+    {
+      "artifact": "requests/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_UHISTORY__mid_szAM-5-25-95.parquet",
+      "rows": 1649,
+      "optimized_sha": "fc26fc4a2d16c795a890e67643528ca00fa2bfd2076cc8555eb332665d6eeb21",
+      "reference_sha": "fc26fc4a2d16c795a890e67643528ca00fa2bfd2076cc8555eb332665d6eeb21",
+      "bytes_equal": true
+    },
+    {
+      "artifact": "generations/history10.parquet",
+      "rows": 859,
+      "optimized_sha": "e480237a31b3a0ffeff778937ab53bc44baac39f25019239db4cbbe134a86f4e",
+      "reference_sha": "e480237a31b3a0ffeff778937ab53bc44baac39f25019239db4cbbe134a86f4e",
+      "bytes_equal": true
+    },
+    {
+      "artifact": "independent_windows.parquet",
+      "rows": 40,
+      "optimized_sha": "7e6c364e55681b6fd121d75746d8201f55026a81b8d4de311ac75a7da9eb0570",
+      "reference_sha": "7e6c364e55681b6fd121d75746d8201f55026a81b8d4de311ac75a7da9eb0570",
+      "bytes_equal": true
+    },
+    {
+      "artifact": "inference_audit.parquet",
+      "rows": 12,
+      "optimized_sha": "f03abd5d0379dda0c7e525f529dec4c2bc34b28d475cc3c1f3dfa1d1e978c55d",
+      "reference_sha": "f03abd5d0379dda0c7e525f529dec4c2bc34b28d475cc3c1f3dfa1d1e978c55d",
+      "bytes_equal": true
+    }
+  ],
+  "all_values_exact": true,
+  "all_bytes_equal": true,
+  "declaration_sha": "43226b1e34e7cdc4a44c3de9096017c944a71e9f7fb404876232b84eb2c42d61",
+  "optimized_receipt_sha": "f1d2fe5beaafda8cf43d48d90b88920af6d704e4524d08dc96c99283d7ab7b4b",
+  "reference_receipt_sha": "6657cb4aaadacdbfd46f10d2646d1d0d3dd6cfce10d341a6f78fbb902983c6d0",
+  "generated_engine_equal": true,
+  "limits": "Exact parity on one declared consumed date at primary timing only. Not a new prediction or trading-performance result. Main evaluation adoption remains separate."
+}

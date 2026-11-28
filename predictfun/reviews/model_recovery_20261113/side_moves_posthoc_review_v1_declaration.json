@@ -1,0 +1,125 @@
+{
+  "as_of": "2026-11-13T15:19:21.767580+00:00",
+  "source_commit": "b1337e7e4c4f25071de14118f3f52b2b47d6e8e2",
+  "source_sha": {
+    "predictfun/research/model_side_moves_posthoc_review.py": "ddd9f72ccb898829bf2b716433e4ad7b5b0cbe94401165d6a490a97208add90a"
+  },
+  "producer_commit": "6e49d5ff469991e5e385a20f6d4fecccd5ece3e8",
+  "artifact_sha": {
+    "/home/yuqing/ctaNew/predictfun/research/pf_side_moves.py": "597d8ae5fd61abc2f64fc0d7375841eb820b8b98cdd6300c70ea3c55e3e901d8",
+    "/tmp/cta-model-upgrade-20261112/predictfun/research/model_side_moves_integration_review.py": "74664db270c2310a6d5d835087a5741f0e90fa50c21d4d2a970ec285eb79ad32",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc.txt": "63690a396507b0b8d523cbbc329a9dafb946be13beb0399ca2422e35495c0cf3",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/side_moves.json": "fe049b53b55db20571aeefaa7624f61345fa5c5c92fe9c7dc1887c70d9e2245e",
+    "/home/yuqing/ctaNew/predictfun/handoffs/20261113_side_moves_results.md": "63c28c597f89c00be1abf8c35b4be14c85ad96fe72e61f3bb60b7aa933d38ff4",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/day_20261023.json": "de65bac4483ec00604f23a264d555293ca89cfabd152846b11abc3629de63862",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/ordx_20261023.parquet": "2fe1f8e4744e9eaee48b0a61f0abe3a340a2d32cd13090f26cc9a8fb3c6c3387",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/mkx_20261023.parquet": "4a80589cd9731ecea3d649a65e2ce8df840d7a3fe436c39d12f33fe4e4358e91",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/swx_20261023.parquet": "3ad3f4daaddb6818866b7341c89e7137a716779c8fa103645ec2c2303587c2b3",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/day_20261024.json": "f5a799165e59130c21e8d016d7a4e32a9db70c691782ea254386edad81f1bb93",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/ordx_20261024.parquet": "0197710bd7728adc6de429f5f0012c86b5673284d07ac26350fa0624ea04c648",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/mkx_20261024.parquet": "262e29c74d76c213a632291dba5eaf77cf91bb9150189c24a6a264153056b2e2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/swx_20261024.parquet": "9887054c6521016a9715548a941c40d75e2351f93994f42cbe640a740ce3a07f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/day_20261025.json": "be493950e0d7f0836a1aa7de53bb0c930922ce19390c689984bb26e12be574a0",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/ordx_20261025.parquet": "45daaae358f46aba2bff31dec44fed479e59e561e20228a0896d35f0abd2cda7",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/mkx_20261025.parquet": "8336608b244ca500b205a34db69046fdad94828c4c1547aee2f08f1cf2d90947",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/swx_20261025.parquet": "1dc371a2b992af4b7d418291d80130a39bf3170f2fc0c5c123e52f11dcc06c69",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/day_20261026.json": "48f776e44407fde0fb790a5ea6ec2d75ac7781def5477b02cda38c2c2f03528c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/ordx_20261026.parquet": "570efb1b2853ee2e6a4ee1ea3cbab4f5ad312149929f19c9d31508b275a06ac3",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/mkx_20261026.parquet": "9c00ba8850cd118e51663472771b68a35156377ae43263fd1336fef212416ce0",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/swx_20261026.parquet": "0c8ff60dcced26a4e5765a29f6d7143d3a5ecd6a162324b96520a100946c5560",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/day_20261027.json": "48fada63a9733c4af4cad10c1f79dc0afd686e27afc78fc22b22e7edc4f49a19",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/ordx_20261027.parquet": "e1214f97daf5e86b391bab798a8ade9662b0151edc77550c4c0b949a9b7c2ebb",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/mkx_20261027.parquet": "7f9562ee2feac24195f4110116a736e15bd4039757183748f1173c9d2c63d1fb",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/swx_20261027.parquet": "3eb4718c1b0bd99fa9358ead5f5385530f2474411098c686b52ca4820f459292",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/day_20261031.json": "16d1190625dd57e3ec725b45bea231548e0c78dbb4509b23440a19a3d0e0bd82",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/ordx_20261031.parquet": "f0b196377a6fbbd0009fe5810e9e75a9257d3c2c3081624f2d033f6a0e6a2977",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/mkx_20261031.parquet": "5fd14aea2602d72157fc0232a517dea6e070f1f08dc1ffbbea907b8a8f2f337f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/swx_20261031.parquet": "a7b6e24ae90cab22c37b0277cc80d63350b37395a1191b7cce75d1b4f87003b4",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/day_20261101.json": "44da5f11abe9dd5990cd277a65ff58c467a01e6ce551a1fbe5ca315005954701",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/ordx_20261101.parquet": "9e01438bd4f05ceaa5814855806b09f3ebc0f6bc552f0acf741d0ef265568dc9",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/mkx_20261101.parquet": "2678ac87f1cefd30cf169dfeb9ad890151250d734a0425fea41af40822ca7025",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/swx_20261101.parquet": "583e838d928195cb89ccea99e959b8a99a2e6c56080787b83e1e52efccd858d4",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/day_20261102.json": "360f7d604423b2bdea2ec4887609fe1583197c091854c3d4b5eedcc31295f3f5",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/ordx_20261102.parquet": "b169c9049d44b0f289f58c1f2de474becc88571247883092926ec4d654ac38be",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/mkx_20261102.parquet": "af5f2c315b5100ea9fa0d507e4c122bbd8e183b4d076c2441677c3b0bb200be7",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/swx_20261102.parquet": "2488a2dd596ad45760019567e6b467dc8215102ac4879d67caef85d33ad9c0ae",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/day_20261103.json": "70f27a713dbda2caee30ddf50ba6a43a1918963f00cd80327b5226e4426b3bba",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/ordx_20261103.parquet": "3839b278f2d79f848d620a308a48b21c99803a16d0d57f066649eb4d54b28e55",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/mkx_20261103.parquet": "ed875ff3a67281c0206f1437546217698c3cf2dcc0ead3df8347e6842b6c7418",
+    "/home/yuqing/ctaNew/data/predict_fun/research/side_moves_20261113/posthoc/swx_20261103.parquet": "4f30b0657ba2b96d368a8ed381e26afffe4ff1690524e39a6e59f751769719b8"
+  },
+  "days": [
+    "20261023",
+    "20261024",
+    "20261025",
+    "20261026",
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "controls": {
+    "original_controls": {
+      "original_positive_control": true,
+      "original_mutations_caught": {
+        "MUT_AHEAD_SELF": true,
+        "MUT_KEPT_ANY": true,
+        "MUT_JOIN_EARLY": true
+      },
+      "counterexamples": {
+        "move_is_not_cancellation": {
+          "join": true,
+          "old_price_observed_again": true,
+          "old_hash_observed_again": false,
+          "compatible_old_order_sizes": [
+            5.0,
+            10.0
+          ],
+          "interpretation": "A fully exhausted old order and a cancelled residual can generate the same MOVE fill pattern. The old-price proof also does not establish that the order was still active at birth."
+        },
+        "kept_and_one_second_survival_differ": {
+          "producer_kept": true,
+          "native_held_one_second": false,
+          "interpretation": "The same old order can refill 100 ms after birth and then exhaust. Ten-second refill evidence and exact one-second survival have different horizons and denominators."
+        },
+        "rested_reference_can_follow_birth": {
+          "birth_ms": 1000.0,
+          "onset_ms": 1050.0,
+          "first_proof_ms": 1020.0,
+          "origin": "RESTED",
+          "interpretation": "RESTED means a fill before the reference/onset, which can be later than birth. It does not uniformly establish resting before the new best formed."
+        },
+        "ahead_is_prior_executed_volume": {
+          "computed_ahead_shares": 20.0,
+          "compatible_b_placement_ms": [
+            1050.0,
+            1190.0
+          ],
+          "interpretation": "The same fills allow B to have rested behind A or to arrive after A exhausted. Post-birth volume before B first fills is not its observed queue depth at placement."
+        },
+        "tied_fill_order_requires_provenance": {
+          "row_reversal_changes_first_order": true,
+          "interpretation": "At equal anchor/price, first-order rank follows input row order. This synthetic sensitivity does not establish the historical frequency or whether the upstream row order is correct."
+        }
+      },
+      "historical_affected_counts": null
+    },
+    "known_prior_hash_positive": true,
+    "new_hash_refused": true,
+    "different_denominators": {
+      "pre_window_group_volume_share": 0.49,
+      "own_later_fill_share_with_prior_proof": 0.025,
+      "implication": "A large share of the pre-window market volume does not prove most later own orders were pre-positioned."
+    },
+    "prior_window_not_identified_causal_trade": true,
+    "at_birth_tie_counts_as_prebirth": true,
+    "historical_causal_trade_or_strict_tie_frequency": null
+  },
+  "aggregate_controls": [
+    "weighted proof/count positive and all-shares falsifier"
+  ],
+  "scope": "Check the new SIDE-MOVES pre-birth evidence without inferring hidden actions.\n\nSource counterexamples and deterministic aggregates of already published,\nconsumed-day tables. No new policy, statistical test or historical replay.\n",
+  "validation": false,
+  "live_changed": false
+}

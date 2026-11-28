@@ -1,0 +1,20 @@
+{
+  "as_of": "2026-11-13T00:50:40.393157+00:00",
+  "status": "PASS",
+  "declaration_sha": "3a54b294f438ca0348ac67a59e7f9ba7395d20a714604e8506196f78b8882d75",
+  "receipts": {
+    "smoke_seed_20261023.json": "f2c719534093a6cb70a9a73252937b4c99b2edfb5df261b70df7db99666e011f",
+    "smoke_data_seed_20261023.json": "aa9abbee25e6ad7b6aedf1321648a4aa185406a69fc0d9e1c54e6f60374f74e3",
+    "smoke_seed_evidence_20261023.json": "bb5042aa6ab3df63dce6eedf798cba06037e6fe7eb422a64d431698511aadd24"
+  },
+  "logs": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/logs/smoke_seed.log": "427699e010bf9a61f46ceb6b14adfe19f59186dc701ef2e6d110df96a81b6590",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/logs/smoke_data_seed.log": "d25ba30e1835c2c30b725b125e2b94f9c0dae187cd5921383086d446774a0748"
+  },
+  "scope": "Executed only the frozen four-window seed smoke, its feature attachment and captured-target integrity check on an observed-free spare slot. The original full age runs retain core8. These already-completed PASS stages will be skipped by the queued driver; no new model was fitted or selected.",
+  "generation_population": 279,
+  "sampled_actions": 16,
+  "windows": 4,
+  "validation": false,
+  "live_changed": false
+}

@@ -1,0 +1,19 @@
+{
+  "as_of": "2026-11-11T18:59:26.242432+00:00",
+  "status": "PASS",
+  "checks_sha": "3d0dfe91eeb9249f9e2461321b09d8c1c9b2d1d847e733833d13050d9cbf2c08",
+  "cache_sha": "30ca5564b0f22a5613e0b94baab6a279f7e08117ae9ee1c9023e37f8d076a04e",
+  "rows": [
+    {
+      "mode": "reference",
+      "decisions": 0,
+      "generation_sha": "0fc159fa945acbd65d9ad3d9165428560f02715972eb5baddd29d204a81c90ab"
+    },
+    {
+      "mode": "default",
+      "decisions": 7451,
+      "generation_sha": "50d75e554909f8d5e9b710374c77bcf71a6c5e904a0a2a83bb01ef1acd16cb3e"
+    }
+  ],
+  "controls": "Exact identity passes; changed-feature refusal fires; no future/stale feature time accepted."
+}

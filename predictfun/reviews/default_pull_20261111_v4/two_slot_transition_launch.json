@@ -1,0 +1,9 @@
+{
+  "as_of": "2026-11-12T03:20:38.377860+00:00",
+  "transition_pid": 405170,
+  "current_driver_pid": 2447808,
+  "current_worker_pid": 365350,
+  "log": "/home/yuqing/ctaNew/data/predict_fun/research/default_pull_20261111_v4/logs/two_slot_transition_20261112.log",
+  "state": "waiting_for_current_replay_to_finish",
+  "source_commit": "aac5fec2"
+}

@@ -1,0 +1,8 @@
+{
+  "as_of": "2026-11-11T18:04:27.757957+00:00",
+  "type": "launch interruption",
+  "prior_driver_pid": 3728428,
+  "status": "STOPPED_BEFORE_REPLAY",
+  "evidence": "Driver/child absent, zero-byte smoke log, no smoke output directory. Background launch ended with tool command scope. Controls completed successfully. Retry foreground persistent exec session; no numerical artifact overwritten.",
+  "empty_log_sha": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

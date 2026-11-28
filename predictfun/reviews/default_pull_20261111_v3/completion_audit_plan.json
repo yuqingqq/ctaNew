@@ -1,0 +1,12 @@
+{
+  "as_of": "2026-11-11T18:31:21.695737+00:00",
+  "state": "PREPARED_NOT_RUN",
+  "source_commit": "4652b475f676f291746f11c46323951cfced216f",
+  "wrapper_sha": "8f6dde742da94daa7d5936ceae6277e6239e6ec97c73704f4fbc6190a0278618",
+  "base_auditor_sha": "ad75334c931a93e370686371625d2964dbe1c0f62369b470979192617af7ddf7",
+  "supersedes": "completion_audit_plan.json for v2 output; same requirements now target canonical v3 plus immutable runtime parity.",
+  "run_after": "All26 v3 driver stages, then the shared numeric slot is free.",
+  "module": "predictfun.research.pf_default_pull_completion_v3",
+  "changes_policy": false,
+  "changes_null_or_selection": false
+}

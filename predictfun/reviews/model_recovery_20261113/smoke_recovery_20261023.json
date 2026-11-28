@@ -1,0 +1,44 @@
+{
+  "as_of": "2026-11-13T03:30:23.657537+00:00",
+  "status": "PASS",
+  "stage": "recovery",
+  "day": "20261023",
+  "smoke": true,
+  "windows": 4,
+  "generations": 279,
+  "actions": 16,
+  "neutral_statuses": {
+    "accepted_no_cancel": 117,
+    "not_sampled": 75,
+    "postonly_refused": 71,
+    "forked": 16
+  },
+  "target_statuses": {
+    "eligible": 16
+  },
+  "short_statuses": {
+    "eligible": 16
+  },
+  "cancel_statuses": {
+    "requested": 16
+  },
+  "hashes": {
+    "captures.jsonl.gz": "6f05bfbcdd37cb00f76ad28737f65fc4cde891bca4c3395e9217ced7709bda4c",
+    "targets.parquet": "000a5cbe123924f2b0cef3ab198abaa4cbb7c103dfa3c22dd82c1db0d70db31e",
+    "paired.parquet": "1d2af1ec2efcff86d8f127cffe662bf1175a8a0ff2ea7fac283ff0921e0b2966",
+    "population.parquet": "ed41d5ef45236f13811dbf6176a5a3297763d1864d812cba8dc5510b749debb9",
+    "generations/default.parquet": "e3607028da5872890d9aa31843cc80ae085a5e26db4cbf77e8523be98cbb0954",
+    "independent_windows.parquet": "e19206022eda98c3ece647b78e9eb9704677e579f5feb233bebfff4d7230ec9f",
+    "win/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_DDEFAULT__mid_szAM-5-25-95.parquet": "5d1c9564ed1d6d7971293ac5790c8b677a70b370739714b14ee496b71e5fab04",
+    "fills/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_DDEFAULT__mid_szAM-5-25-95.parquet": "c8a88ce97fa168d4e0d3ce98c1cd7f6a9211ba0b19f300e3e6700d4bbe87272f",
+    "requests/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_DDEFAULT__mid_szAM-5-25-95.parquet": "f3fd5c974eb1341cfb332d11685b26077fad2c61fa1d445801d66ca818ffdd40"
+  },
+  "neutral_exact": true,
+  "keep_forks_reconciled": 16,
+  "continuation_rule": "recovery:f98eed8af54d37294751f6c303c0b723ac26d7774af2f242907e766f16cdd520",
+  "recovery_receipt_sha": "6b62cf0e6fd19b5665eefad367ff15e8c338824f70ab5885658f058aa8ec924b",
+  "reference_receipt_sha": "9671a7f7a23a4be82f8900aaa1d1ec9a65dafb0ff452ae3996f091f9d225f754",
+  "generated_source_sha": "fafd198dcb8b91d47598fe91a7e9d8974b4a7a08c2dc530858e6f5623f517a98",
+  "declaration_sha": "3a54b294f438ca0348ac67a59e7f9ba7395d20a714604e8506196f78b8882d75",
+  "validation": false
+}

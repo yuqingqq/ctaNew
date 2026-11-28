@@ -1,0 +1,55 @@
+{
+  "as_of": "2026-11-13T03:28:16.740240+00:00",
+  "source_commit": "75c39780809a25123cef11b7bc3c3bf64d6d3e33",
+  "source_sha": {
+    "predictfun/research/pf_recovery_proxy_audit.py": "a831bd3eef5466274ce09fa6f0dd23d2e91112c445eae25ddabce96bbaae7600"
+  },
+  "experiment_declaration_sha": "3a54b294f438ca0348ac67a59e7f9ba7395d20a714604e8506196f78b8882d75",
+  "control_count": 7,
+  "controls": [
+    "perfect forecast improves on fixed mean",
+    "equal baseline and exact zero boundary",
+    "bad forecast produces negative improvement",
+    "empty shape and nonfinite refusals",
+    "positive complete-day interval",
+    "partial and duplicate day refusals",
+    "corrupted feature equality refusal"
+  ],
+  "seed_days": [
+    "20261023",
+    "20261024"
+  ],
+  "calibration_day": "20261025",
+  "test_days": [
+    "20261026",
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "population": "Every saved neutral sampled action on the seven dates after the two seed dates; all short-target statuses retained. Forecast errors use explicitly eligible short targets only.",
+  "target": "The original generation marked fill value during the 250ms after actual cancellation effect, in cents. Same short target as the fixed market-only recovery model. Not full Q10.",
+  "baseline": "One constant equal to the eligible short-target mean on both seed days only; never refit the mean on calibration or test outcomes.",
+  "metrics": "Daily and pooled RMSE, MAE, bias, squared-error improvement versus the seed mean; fixed score bins and the nonnegative-estimate region. The one preceding calibration date is descriptive only. The six-date uncertainty resamples UTC days1000times, seed20261113, for the mean of daily MSE improvements (equal day weights). No action-selection null or trading-performance inference is made by this forecast audit.",
+  "bins": [
+    null,
+    -5.0,
+    -1.0,
+    -0.1,
+    0.0,
+    0.1,
+    1.0,
+    5.0,
+    null
+  ],
+  "bins_convention": "Left closed, right open; null endpoints mean unbounded.",
+  "verification": "Reconstruct every action market feature from the original corrected causal grid; verify source/data/model identities and preserve all actions in a saved prediction artifact.",
+  "multiplicity": {
+    "new_model_fits": 0,
+    "new_policy_variants": 0,
+    "new_operating_thresholds": 0
+  },
+  "limits": "Consumed history; neutral resting-order proxy, not identified fresh-entry value or calibration on recovery-wait states. No tuning, refitting, policy selection, or change to the frozen strategy success gates from this diagnostic.",
+  "validation": false
+}

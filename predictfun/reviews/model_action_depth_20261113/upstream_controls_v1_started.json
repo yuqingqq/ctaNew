@@ -1,0 +1,62 @@
+{
+  "as_of": "2026-11-13T14:25:44.324003+00:00",
+  "status": "QUEUED",
+  "pid": 2744800,
+  "test_status": "NOT_RUN",
+  "source_commit": "16d2bd184b47e1e018b23883c3d0116a703736ac",
+  "source_sha": {
+    "predictfun/research/model_action_depth_controls_driver.py": "9c3841ec309d2e96f08e6f80bdae0019e756ada157d2d8124d1dda64cfd7f0a3",
+    "predictfun/research/model_size_priority_controls_once_v2.py": "f19f6b404e433747c4decc4854dbe1a690493328b3036997aad95fd5bd0fa53d",
+    "predictfun/research/model_recovery_proxy_audit_driver.py": "fb047914e747dfee0c2e46042046b1598f2fe412d8471698ef7a95430cdb2162",
+    "predictfun/research/pf_action_depth_target.py": "5f8469472baff6d54ce3a90bd85bde2210083e717df0d13798240a130334a550",
+    "predictfun/research/pf_action_depth_native.py": "eaaf11747de3e17b46f030c95153f58044a9ffc742e8a94877df6a0bf0007545",
+    "predictfun/research/pf_action_depth_artifacts.py": "196a63526bfe8bca2f6a7546b784eb82327b51a3203b2ae8ba0f2ffae353098e",
+    "predictfun/research/pf_action_depth_training.py": "76ec048f09bfd7c71b14a741c689ebaa8b48bc64978b7ac6e1d07e5a8629e6bd",
+    "predictfun/research/pf_action_depth_book_source.py": "1d409884fc556665dbce1967c46abf7a97691150bfd67d4bfa1f33ddd2c89737",
+    "predictfun/research/pf_action_depth_manager.py": "e7e54cfd0d767e00d3c8118510cbf222cef40dd704edef2e695da38c9386b726",
+    "predictfun/research/pf_action_depth_fit.py": "239e6b059e94128b6efa12c3528ad30089e26c3047f487b58a90fcf52b914f17",
+    "predictfun/research/pf_action_depth_saved.py": "81778264dfa100b00eff0438c5b92d15fead18b3ac3a6b7e657bf093d0bcd5d3",
+    "predictfun/research/pf_action_depth_upstream.py": "8140bb0b90feda13fbe7b79b552537c7c9243dbafe54e676f0a235cb1e21cbc2",
+    "predictfun/research/tests/test_action_depth_target.py": "2248244147e74d2d36aeb75b5a34465402c27d6f3c223deb3ad0fa71a2040c00",
+    "predictfun/research/tests/test_action_depth_native.py": "3bc860918f64e073ff6356e8d52a6b6f4c312c049a641b790fcd646abc9477be",
+    "predictfun/research/tests/test_action_depth_artifacts.py": "edaa7ca7222b068fa7f8a4d10cd03f093058f82a93569b5c26566063226e09f0",
+    "predictfun/research/tests/test_action_depth_training.py": "e082a6fc6a17c48064c9397c9d631b09cc190fe5104a86d129e94226dfb2c5d2",
+    "predictfun/research/tests/test_action_depth_book_source.py": "de7ee8c8a5025044a78239bb012c5578fa369b89f737370a61f007119b18b109",
+    "predictfun/research/tests/test_action_depth_manager.py": "838b613b9ec2dbf128e609b28821f281765b1259180f18e6159143f552fc5f7c",
+    "predictfun/research/tests/test_action_depth_fit.py": "b94d33ebb2bc9d7a8bac282db62443f8ce76639b3ae28d9460191d877bfce999",
+    "predictfun/research/tests/test_action_depth_saved.py": "45e6c430a0d0e6f510a5d34087ba0b4e8541c4149b67171da6e44c176c7e162c",
+    "predictfun/research/tests/test_action_depth_upstream.py": "6b3a09fa10c221a4fe7f4192ddf2ca9bbbfa8bc1853e9cb706b0c4053649ea8e"
+  },
+  "prerequisite_sha": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_recovery_20261113/declaration.json": "3a54b294f438ca0348ac67a59e7f9ba7395d20a714604e8506196f78b8882d75",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_size_priority_20261113/declaration.json": "cea782c5c074158c44b52f302e79907f23808123535e6cbf01a77f5c40b5183c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/model_action_depth_20261113/saved_controls_v2.json": "9e677fb673c8e48528b05480ce05b91399a25edf6cbeea93f83ee0b631ef3e56"
+  },
+  "expected_tests": 65,
+  "command": [
+    "/home/yuqing/ctaNew/predictfun/research/run_light.sh",
+    "action_depth_upstream_controls_v1",
+    "--",
+    "/home/yuqing/pricer-sol/venv/bin/python3",
+    "-m",
+    "unittest",
+    "-v",
+    "predictfun.research.tests.test_action_depth_target",
+    "predictfun.research.tests.test_action_depth_native",
+    "predictfun.research.tests.test_action_depth_artifacts",
+    "predictfun.research.tests.test_action_depth_training",
+    "predictfun.research.tests.test_action_depth_book_source",
+    "predictfun.research.tests.test_action_depth_manager",
+    "predictfun.research.tests.test_action_depth_fit",
+    "predictfun.research.tests.test_action_depth_saved",
+    "predictfun.research.tests.test_action_depth_upstream"
+  ],
+  "launcher_controls": [
+    "exact successful test-count positive and three wrong-count/exit refusals",
+    "whole research shell-chain positive and unrelated/wrapper refusals",
+    "free auxiliary slot positive and occupied/global-cap refusals"
+  ],
+  "historical_payload_read": false,
+  "live_changed": false,
+  "scope": "Bounded synthetic controls after every active research shell chain and auxiliary slot release."
+}

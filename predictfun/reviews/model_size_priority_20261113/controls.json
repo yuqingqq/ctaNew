@@ -1,0 +1,10 @@
+{
+  "as_of": "2026-11-13T11:30:43.835126+00:00",
+  "status": "PASS",
+  "source_commit": "8a8f4c18e352dc3ae9a88487fe613550e10730be",
+  "declaration_sha": "cea782c5c074158c44b52f302e79907f23808123535e6cbf01a77f5c40b5183c",
+  "control_receipt_sha": "eac19559a35e20122dd043f712f37501a09ee3b24c480870a56c99fb67942948",
+  "control_as_of": "2026-11-13T11:28:40.361760+00:00",
+  "control_log_sha": "ae06cfb51aba4235bcf3c31fc4c6e394ec6b16d6ae4558b4fdea5d09099ed9d1",
+  "historical_payload_read": false
+}

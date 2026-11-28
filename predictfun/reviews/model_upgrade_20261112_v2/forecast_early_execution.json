@@ -1,0 +1,10 @@
+{
+  "as_of": "2026-11-12T14:28:13.209666+00:00",
+  "source_commit": "d9c2ec15931aa93365a6d036afd02c5f1ebf6aa5",
+  "audit_declaration_sha": "473258d7330e7889475a65a756f4cd31a1794b8095a2356fa87a5f5fa054fbeb",
+  "source_sha": "a2c09004d35933d3041247c5fd28c60a021fe26f850b8c45e6406b7b534e71c0",
+  "result_sha": "8c1987b1f3ce32aaaf343ccfb4ddc39f7cdf97255e9229f7f6640b159cf2e784",
+  "scope": "Advance the already-declared read-only forecast reconstruction after all six fits and complete local result; no model or selection changes.",
+  "slot": "claude",
+  "shared_cap": 2
+}

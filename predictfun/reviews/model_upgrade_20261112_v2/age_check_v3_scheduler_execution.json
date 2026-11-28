@@ -1,0 +1,60 @@
+{
+  "as_of": "2026-11-12T16:34:23.331351+00:00",
+  "status": "STARTED",
+  "declaration_sha": "53d0a669b6fcdd503cd981cbb46e1c6d03ecae5721d0d80c3fe29d75a07abd5d",
+  "controls_sha": "e226482a9a00dd172ab89126ffe138acc2a2ac806a3fa4453ed88087166246ee",
+  "smoke_integrity_sha": "6615570692b9a3d3cce43f51b37c64028e14277f019056dc904511b871103305",
+  "held_receipt_sha": "c2bd2e4d76186d53a45460dbaa5fe34007694bc43cfa80df1f14a9a54eeba99e",
+  "retired_idle": [
+    {
+      "pid": 2820757,
+      "args": [
+        "/home/yuqing/pricer-sol/venv/bin/python3",
+        "/tmp/cta-model-upgrade-20261112/predictfun/research/model_presence_finish.py"
+      ],
+      "start_ticks": "677818511",
+      "state": "S"
+    },
+    {
+      "pid": 2189202,
+      "args": [
+        "/home/yuqing/pricer-sol/venv/bin/python3",
+        "/tmp/cta-model-upgrade-20261112/predictfun/research/model_settlement_finish.py"
+      ],
+      "start_ticks": "677395280",
+      "state": "S"
+    },
+    {
+      "pid": 1944044,
+      "args": [
+        "/home/yuqing/pricer-sol/venv/bin/python3",
+        "/tmp/cta-model-upgrade-20261112/predictfun/research/model_eval_driver_v2.py"
+      ],
+      "start_ticks": "677237793",
+      "state": "T"
+    }
+  ],
+  "launched": [
+    {
+      "pid": 3436837,
+      "script": "/tmp/cta-model-upgrade-20261112/predictfun/research/model_eval_driver_v3.py",
+      "source_sha": "d18ddebc478db6d617a542bbf6d1f5676577b2b9b034626ca9bdc7ca372bb88e",
+      "log": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/eval_driver_v3.log"
+    },
+    {
+      "pid": 3436838,
+      "script": "/tmp/cta-model-upgrade-20261112/predictfun/research/model_settlement_finish_v2.py",
+      "source_sha": "212ff18ec9fd9ea7a6a1452d59b159dc9e4c05fc644e3065684a843de15951da",
+      "log": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/settlement_finisher_v2.log"
+    },
+    {
+      "pid": 3436839,
+      "script": "/tmp/cta-model-upgrade-20261112/predictfun/research/model_presence_finish_v2.py",
+      "source_sha": "b8c40a2cb7039a9640ea9a98356bb04b1a7be7394c66df5d180b70cd8de9d603",
+      "log": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/presence_finisher_v2.log"
+    }
+  ],
+  "completed_stage_sha": "21fadfaa0e7d24e88de2f6a3b562697e2a068c83b7ea02800ef2eaed236311a1",
+  "completed_precision_sha": "3ecf8f495dd8c62a0ca305f287aa0988d4952407fd0acd4d26f5efa230ea52d4",
+  "scope": "Old scheduler and pure waiters retired only after the active full replay completed normally and all descendants were terminal. Same original task list, with eight age run commands routed through the validated post-run empty-fill checker. No numerical worker interrupted; no automatic retry."
+}

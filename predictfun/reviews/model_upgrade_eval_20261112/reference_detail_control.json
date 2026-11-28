@@ -1,0 +1,14 @@
+{
+  "as_of": "2026-11-12T11:45:05.404914+00:00",
+  "status": "PASS",
+  "day": "20261026",
+  "windows": 288,
+  "fills_reconciled": 11369,
+  "generations_reconciled": 19116,
+  "horizons_s": [
+    1,
+    5
+  ],
+  "declaration_sha": "151a27a80e6e39281405a2c76db4dbe30a77d7a3de30772c1a3a30ae7c72ae16",
+  "scope": "Integration control on an existing complete default replay day, before new model results. Exact full-day fill/generation identities and strict1s/5s marks; no fitting, new policy, tuning or performance comparison. Synthetic falsifiers from the detail pipeline must pass first."
+}

@@ -1,0 +1,18 @@
+{
+  "as_of": "2026-11-13T04:03:24.911686+00:00",
+  "status": "PASS",
+  "source_commit": "2f30cab996ae4a657a3bb273b131675845017a37",
+  "source_sha": {
+    "predictfun/research/model_recovery_proxy_audit_driver.py": "fb047914e747dfee0c2e46042046b1598f2fe412d8471698ef7a95430cdb2162"
+  },
+  "pid": 1289091,
+  "controls": [
+    "exact receipt identity positive and six corrupt identity refusals",
+    "free/busy auxiliary slot and global cap controls"
+  ],
+  "audit_declaration_sha": "7a38428e7c2603c5006fa834e4955b9be9d28c1472cf24f90f9d933675a7b5af",
+  "fit_receipt_sha": "6b62cf0e6fd19b5665eefad367ff15e8c338824f70ab5885658f058aa8ec924b",
+  "experiment_declaration_sha": "3a54b294f438ca0348ac67a59e7f9ba7395d20a714604e8506196f78b8882d75",
+  "slot": "claude/core9 only when free; bounded diagnostic",
+  "scope": "Operational launcher for the unchanged predeclared forecast audit; no new model or policy."
+}

@@ -1,0 +1,26 @@
+{
+  "as_of": "2026-11-12T22:40:51.995057+00:00",
+  "status": "PASS",
+  "start": "2026-11-12T22:40:32.438005+00:00",
+  "end": "2026-11-12T22:40:51.995122+00:00",
+  "returncode": 0,
+  "command": [
+    "/home/yuqing/ctaNew/predictfun/research/run_light.sh",
+    "model_settlement_primary_early",
+    "--",
+    "/home/yuqing/pricer-sol/venv/bin/python3",
+    "-m",
+    "predictfun.research.pf_model_settlement_audit",
+    "run",
+    "primary"
+  ],
+  "slot": "claude",
+  "log": "/home/yuqing/ctaNew/data/predict_fun/research/model_upgrade_20261112_v2/settlement_primary_early.log",
+  "log_sha": "1ec408e09e986a4c233f97a5e30da5f941a140c92e197a7008682e057cdd7440",
+  "declaration_sha": "b2d30fdcdeeb49b5f329824bf4386b96a88c04d06d2fd98a6e437fc57a7c3ac6",
+  "original_report_sha": "fb1c3d075d9b7d0d4c8d3778f5f9a9c46861420886c2fef5490068c9feb42e2d",
+  "corrected_report_sha": "82b043d614db18b728d8c20a9c27637c387927275858685f8754bdf6b2b2e533",
+  "driver_pid": 3436837,
+  "driver_identity": "/home/yuqing/pricer-sol/venv/bin/python3 /tmp/cta-model-upgrade-20261112/predictfun/research/model_eval_driver_v3.py ",
+  "scope": "Advance the already-declared independent primary/stress settlement audit after its complete result exists. Driver and finishers unchanged; final settlement finisher reuses existing PASS receipt. No model, replay, score, marked value, risk, or selection change."
+}

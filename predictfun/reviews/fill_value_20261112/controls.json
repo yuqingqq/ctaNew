@@ -1,0 +1,7 @@
+{
+  "status": "PASS",
+  "probability": "perfect and reversed verified; invalid refused",
+  "actions": "duplicate, corrupt value, overfill and missing capacity refused",
+  "features": "future chronology and outcome feature refused",
+  "accounting": "quantity, mark and inventory moments reconstructed; support and baseline controls passed"
+}

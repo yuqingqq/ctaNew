@@ -1,0 +1,8 @@
+{
+  "as_of": "2026-11-12T11:06:23.439441+00:00",
+  "status": "PASS",
+  "source_commit": "248f85fdff9e6f01261eef3ed75fe9665c6b23cc",
+  "driver_sha": "7df6f68d9639a307e39a508ea13ee4828bde05b8649e37d62d8ee554c4cbc885",
+  "supersedes_driver": "model_upgrade_driver.py",
+  "change": "Wait for the upstream persistent driver as well as its worker, avoiding races between stages. No numerical/model/population change. Initial waiter stopped before controls or data build."
+}

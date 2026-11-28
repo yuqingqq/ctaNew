@@ -1,0 +1,197 @@
+{
+  "as_of": "2026-11-13T15:19:22.055598+00:00",
+  "status": "SOURCE_AND_WEIGHTED_PROOF_REVIEW",
+  "report_as_of": "2026-11-13T15:12:02Z",
+  "declaration_sha": "4f6386737346ad864f27f8d07026c7387f92c9d33b2a2835fdfddffd30f75718",
+  "days": [
+    "20261023",
+    "20261024",
+    "20261025",
+    "20261026",
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "counts": {
+    "20261023": {
+      "ordx": 34121,
+      "mkx": 51683,
+      "swx": 29036
+    },
+    "20261024": {
+      "ordx": 29095,
+      "mkx": 48555,
+      "swx": 29704
+    },
+    "20261025": {
+      "ordx": 27938,
+      "mkx": 49328,
+      "swx": 31934
+    },
+    "20261026": {
+      "ordx": 33466,
+      "mkx": 51045,
+      "swx": 27386
+    },
+    "20261027": {
+      "ordx": 32738,
+      "mkx": 45582,
+      "swx": 23686
+    },
+    "20261031": {
+      "ordx": 14747,
+      "mkx": 23529,
+      "swx": 14632
+    },
+    "20261101": {
+      "ordx": 17557,
+      "mkx": 26992,
+      "swx": 18501
+    },
+    "20261102": {
+      "ordx": 26430,
+      "mkx": 41085,
+      "swx": 23324
+    },
+    "20261103": {
+      "ordx": 23975,
+      "mkx": 34974,
+      "swx": 17649
+    }
+  },
+  "controls": {
+    "original_controls": {
+      "original_positive_control": true,
+      "original_mutations_caught": {
+        "MUT_AHEAD_SELF": true,
+        "MUT_KEPT_ANY": true,
+        "MUT_JOIN_EARLY": true
+      },
+      "counterexamples": {
+        "move_is_not_cancellation": {
+          "join": true,
+          "old_price_observed_again": true,
+          "old_hash_observed_again": false,
+          "compatible_old_order_sizes": [
+            5.0,
+            10.0
+          ],
+          "interpretation": "A fully exhausted old order and a cancelled residual can generate the same MOVE fill pattern. The old-price proof also does not establish that the order was still active at birth."
+        },
+        "kept_and_one_second_survival_differ": {
+          "producer_kept": true,
+          "native_held_one_second": false,
+          "interpretation": "The same old order can refill 100 ms after birth and then exhaust. Ten-second refill evidence and exact one-second survival have different horizons and denominators."
+        },
+        "rested_reference_can_follow_birth": {
+          "birth_ms": 1000.0,
+          "onset_ms": 1050.0,
+          "first_proof_ms": 1020.0,
+          "origin": "RESTED",
+          "interpretation": "RESTED means a fill before the reference/onset, which can be later than birth. It does not uniformly establish resting before the new best formed."
+        },
+        "ahead_is_prior_executed_volume": {
+          "computed_ahead_shares": 20.0,
+          "compatible_b_placement_ms": [
+            1050.0,
+            1190.0
+          ],
+          "interpretation": "The same fills allow B to have rested behind A or to arrive after A exhausted. Post-birth volume before B first fills is not its observed queue depth at placement."
+        },
+        "tied_fill_order_requires_provenance": {
+          "row_reversal_changes_first_order": true,
+          "interpretation": "At equal anchor/price, first-order rank follows input row order. This synthetic sensitivity does not establish the historical frequency or whether the upstream row order is correct."
+        }
+      },
+      "historical_affected_counts": null
+    },
+    "known_prior_hash_positive": true,
+    "new_hash_refused": true,
+    "different_denominators": {
+      "pre_window_group_volume_share": 0.49,
+      "own_later_fill_share_with_prior_proof": 0.025,
+      "implication": "A large share of the pre-window market volume does not prove most later own orders were pre-positioned."
+    },
+    "prior_window_not_identified_causal_trade": true,
+    "at_birth_tie_counts_as_prebirth": true,
+    "historical_causal_trade_or_strict_tie_frequency": null
+  },
+  "adverse_new_price": {
+    "UP|top 5": {
+      "n": 13006,
+      "shares": 395729.34115891997,
+      "proven_rows": 2690,
+      "proven_shares": 65933.52804393257,
+      "proven_fraction_of_later_shares": 0.16661268494987458,
+      "prior_window_fill_records": 13875,
+      "prior_window_group_shares": 467505.82751935336,
+      "prior_window_all_shares": 956602.9291612884,
+      "prior_window_group_share": 0.4887146100725867
+    },
+    "UP|field": {
+      "n": 34305,
+      "shares": 514696.6964838398,
+      "proven_rows": 2475,
+      "proven_shares": 44316.36988979015,
+      "proven_fraction_of_later_shares": 0.08610191243219213,
+      "prior_window_fill_records": 27005,
+      "prior_window_group_shares": 489097.1016419351,
+      "prior_window_all_shares": 956602.9291612884,
+      "prior_window_group_share": 0.5112853899274133
+    },
+    "DOWN|top 5": {
+      "n": 11554,
+      "shares": 337090.3804177096,
+      "proven_rows": 2305,
+      "proven_shares": 54257.883819408285,
+      "proven_fraction_of_later_shares": 0.16095945470818235,
+      "prior_window_fill_records": 12190,
+      "prior_window_group_shares": 395111.90711863164,
+      "prior_window_all_shares": 837032.0573273177,
+      "prior_window_group_share": 0.47203915747294356
+    },
+    "DOWN|field": {
+      "n": 31262,
+      "shares": 477922.80234549154,
+      "proven_rows": 2334,
+      "proven_shares": 45030.14602212343,
+      "proven_fraction_of_later_shares": 0.094220543152848,
+      "prior_window_fill_records": 24365,
+      "prior_window_group_shares": 441920.15020868595,
+      "prior_window_all_shares": 837032.0573273177,
+      "prior_window_group_share": 0.5279608425270563
+    }
+  },
+  "other_side_large_observed_volume": {
+    "UP|top 5": {
+      "n": 3027,
+      "kept": 717,
+      "kept_fraction": 0.23686818632309217,
+      "inference": "Observed same-hash refills in a future-volume-selected population; not a matched survival/cancellation rate."
+    },
+    "UP|field": {
+      "n": 7823,
+      "kept": 674,
+      "kept_fraction": 0.08615620605905663,
+      "inference": "Observed same-hash refills in a future-volume-selected population; not a matched survival/cancellation rate."
+    },
+    "DOWN|top 5": {
+      "n": 4081,
+      "kept": 958,
+      "kept_fraction": 0.23474638568978193,
+      "inference": "Observed same-hash refills in a future-volume-selected population; not a matched survival/cancellation rate."
+    },
+    "DOWN|field": {
+      "n": 10212,
+      "kept": 874,
+      "kept_fraction": 0.08558558558558559,
+      "inference": "Observed same-hash refills in a future-volume-selected population; not a matched survival/cancellation rate."
+    }
+  },
+  "prior_declared_readings_independently_recomputed": false,
+  "validation": false,
+  "live_changed": false,
+  "integration": "Pre-birth refill evidence supports retaining useful residuals and testing pre-positioned layers. It does not establish majority pre-positioning, identify the transition-causing taker, or convert missing later fills into observed cancellation. Frozen size/depth experiments remain unchanged."
+}

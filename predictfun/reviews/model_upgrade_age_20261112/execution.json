@@ -1,0 +1,9 @@
+{
+  "as_of": "2026-11-12T11:52:34.199878+00:00",
+  "status": "PASS",
+  "pid": 860873,
+  "upstream_detail_pid": 761197,
+  "driver_sha": "a0c6b8a99db10bdcfc6badeb9d37c369885d817e22640ef1a56f8935b60a8d61",
+  "declaration_sha": "1c07a9f12ae665c3a349ac3df698b10bf720e3c08afcfcbf63191eef8440047c",
+  "scheduling": "Wait for frozen base replays and their component diagnostics before taking core8; shared run_light worker cap retained. Synthetic controls completed in the idle second slot. No model, threshold, prior execution assumption or completed result changed."
+}

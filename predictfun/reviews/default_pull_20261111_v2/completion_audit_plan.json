@@ -1,0 +1,17 @@
+{
+  "as_of": "2026-11-11T18:20:19.282972+00:00",
+  "state": "PREPARED_NOT_RUN",
+  "source_commit": "63704e50ce041025bf52720796edfb1754e73997",
+  "source_sha": "ad75334c931a93e370686371625d2964dbe1c0f62369b470979192617af7ddf7",
+  "run_after": "All26 v2 driver stages have completed and the shared numeric slot is free.",
+  "purpose": [
+    "Reconstruct actual policy generation scores from saved models and compare threshold decisions/cancel times.",
+    "Check all22 replay runs, direct feature receipts, input hashes, chronological action counts, all16 arm/scenario populations and paired marked totals.",
+    "Calculate union of simulated resting intervals; original aggregate order-time diagnostic may overlap during pending cancellations.",
+    "Verify source and per-stage log identities before final conclusion."
+  ],
+  "controls": "Correct score/hash/lifetime positives and changed score/hash/overlap/reversed-interval falsifiers execute with the checker.",
+  "command": "run_light.sh default_pull_completion -- bash -c <worktree python -m predictfun.research.pf_default_pull_completion>",
+  "changes_policy": false,
+  "changes_null_or_selection": false
+}

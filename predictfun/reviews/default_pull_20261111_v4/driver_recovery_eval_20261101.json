@@ -1,0 +1,170 @@
+{
+  "as_of": "2026-11-11T23:24:01.957663+00:00",
+  "status": "COMPLETED_REPLAY_RECOVERED",
+  "stage": "eval_20261101",
+  "previous_driver_pid": 199624,
+  "old_processes_absent": [
+    199624,
+    2065013
+  ],
+  "driver_state_before": {
+    "completed": [
+      "controls",
+      "smoke",
+      "build_20261023",
+      "build_20261024",
+      "build_20261025",
+      "build_20261026",
+      "build_20261027",
+      "build_20261031",
+      "build_20261101",
+      "build_20261102",
+      "build_20261103",
+      "fit",
+      "model_diagnostic",
+      "eval_20261026",
+      "eval_20261027",
+      "eval_20261031"
+    ],
+    "stages": {
+      "controls": {
+        "as_of": "2026-11-11T19:16:54.511169+00:00",
+        "stage": "controls",
+        "state": "complete",
+        "detail": "Passed; logs/controls.log plus artifact/feature checks retained.",
+        "driver_pid": "199624"
+      },
+      "smoke": {
+        "as_of": "2026-11-11T19:17:37.972088+00:00",
+        "stage": "smoke",
+        "state": "complete",
+        "detail": "Passed; logs/smoke.log plus artifact/feature checks retained.",
+        "driver_pid": "199624"
+      },
+      "build_20261023": {
+        "as_of": "2026-11-11T19:26:48.614005+00:00",
+        "stage": "build_20261023",
+        "state": "complete",
+        "detail": "Passed; logs/build_20261023.log plus artifact/feature checks retained.",
+        "driver_pid": "199624"
+      },
+      "build_20261024": {
+        "as_of": "2026-11-11T19:35:44.760164+00:00",
+        "stage": "build_20261024",
+        "state": "complete",
+        "detail": "Passed; logs/build_20261024.log plus artifact/feature checks retained.",
+        "driver_pid": "199624"
+      },
+      "build_20261025": {
+        "as_of": "2026-11-11T19:44:29.083393+00:00",
+        "stage": "build_20261025",
+        "state": "complete",
+        "detail": "Passed; logs/build_20261025.log plus artifact/feature checks retained.",
+        "driver_pid": "199624"
+      },
+      "build_20261026": {
+        "as_of": "2026-11-11T19:53:50.454560+00:00",
+        "stage": "build_20261026",
+        "state": "complete",
+        "detail": "Passed; logs/build_20261026.log plus artifact/feature checks retained.",
+        "driver_pid": "199624"
+      },
+      "build_20261027": {
+        "as_of": "2026-11-11T20:02:44.403680+00:00",
+        "stage": "build_20261027",
+        "state": "complete",
+        "detail": "Passed; logs/build_20261027.log plus artifact/feature checks retained.",
+        "driver_pid": "199624"
+      },
+      "build_20261031": {
+        "as_of": "2026-11-11T20:11:34.502572+00:00",
+        "stage": "build_20261031",
+        "state": "complete",
+        "detail": "Passed; logs/build_20261031.log plus artifact/feature checks retained.",
+        "driver_pid": "199624"
+      },
+      "build_20261101": {
+        "as_of": "2026-11-11T20:20:10.656338+00:00",
+        "stage": "build_20261101",
+        "state": "complete",
+        "detail": "Passed; logs/build_20261101.log plus artifact/feature checks retained.",
+        "driver_pid": "199624"
+      },
+      "build_20261102": {
+        "as_of": "2026-11-11T20:29:13.598768+00:00",
+        "stage": "build_20261102",
+        "state": "complete",
+        "detail": "Passed; logs/build_20261102.log plus artifact/feature checks retained.",
+        "driver_pid": "199624"
+      },
+      "build_20261103": {
+        "as_of": "2026-11-11T20:38:06.258037+00:00",
+        "stage": "build_20261103",
+        "state": "complete",
+        "detail": "Passed; logs/build_20261103.log plus artifact/feature checks retained.",
+        "driver_pid": "199624"
+      },
+      "fit": {
+        "as_of": "2026-11-11T20:38:36.404523+00:00",
+        "stage": "fit",
+        "state": "complete",
+        "detail": "Passed; logs/fit.log plus artifact/feature checks retained.",
+        "driver_pid": "199624"
+      },
+      "eval_20261026": {
+        "as_of": "2026-11-11T21:20:20.594411+00:00",
+        "stage": "eval_20261026",
+        "state": "complete",
+        "detail": "Passed; logs/eval_20261026.log plus artifact/feature checks retained.",
+        "driver_pid": "199624"
+      },
+      "model_diagnostic": {
+        "as_of": "2026-11-11T21:20:20.421339+00:00",
+        "stage": "model_diagnostic",
+        "state": "complete",
+        "detail": "Frozen neutral-action diagnostic completed; portfolio and stress comparisons remain pending.",
+        "driver_pid": null
+      },
+      "eval_20261027": {
+        "as_of": "2026-11-11T22:01:04.820222+00:00",
+        "stage": "eval_20261027",
+        "state": "complete",
+        "detail": "Passed; logs/eval_20261027.log plus artifact/feature checks retained.",
+        "driver_pid": "199624"
+      },
+      "eval_20261031": {
+        "as_of": "2026-11-11T22:42:12.791386+00:00",
+        "stage": "eval_20261031",
+        "state": "complete",
+        "detail": "Passed; logs/eval_20261031.log plus artifact/feature checks retained.",
+        "driver_pid": "199624"
+      },
+      "eval_20261101": {
+        "as_of": "2026-11-11T22:42:12.899952+00:00",
+        "stage": "eval_20261101",
+        "state": "running",
+        "detail": "v4: observed empty levels are known, retaining all data and inventory controls.",
+        "driver_pid": "199624"
+      },
+      "driver": {
+        "as_of": "2026-11-11T23:22:19.557825+00:00",
+        "stage": "driver",
+        "state": "interrupted",
+        "detail": "Driver interrupted; completed stages retained.",
+        "driver_pid": "199624"
+      }
+    },
+    "as_of": "2026-11-11T23:22:19.557825+00:00",
+    "stage": "driver",
+    "state": "interrupted",
+    "detail": "Driver interrupted; completed stages retained.",
+    "driver_pid": "199624"
+  },
+  "log_sha": "48c8cf0b82736003971006c586677b411dc6e82108c8e7e26713a18c14dfc6a8",
+  "numeric_exit_line": "2026-11-11T22:42:12Z tag=default_pull_v4_eval_20261101 rc=0 peak_rss_mib=1584 wall_s=2406.54 cpu_user_s=2404.47 memavail_start_gib=24 disk_free_gib=512->511",
+  "checks_sha": "90fdfa48d3fe11e37e76e94c254abe15cf4ad465616babcd61ca2a580c2378b0",
+  "feature_check_sha": "cff2e1f382c6ee21a43b1f6c01f20292be8a83aefb3d550f915af88ea75eb85e",
+  "checkpoint_sha": "2e1f6ee12991b7715e2b30447c9e67af665eb493b2d72e9fede74255309892c3",
+  "controls": "Success line accepted; planted rc=1 refused; checkpoint positive/hash/date controls and all saved artifact hashes passed",
+  "scope": "Recovered only missing driver completion marker after numerical exit 0. Original numerical artifacts/log unchanged; no numerical rerun or policy change. Exact source of driver signal was not observed."
+}

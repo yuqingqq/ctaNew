@@ -1,0 +1,18 @@
+{
+  "as_of": "2026-11-13T12:16:47.494341+00:00",
+  "status": "PASS",
+  "previous_pid": 1167074,
+  "new_pid": 1576587,
+  "new_driver_started_sha": "39c93a81ad16fc68333648dae748c6648bcd8a4fcd18236e8718fb7fd3f796a5",
+  "declaration_log_sha": "8027cd3af6f66a95049fe21fc62a98c5be6006cf712a8fd03175d7006f53c543",
+  "fast_execution": {
+    "declaration_sha": "3fb7540f58d3733be4ce9baf96305e628adc899622d24e6701ebeecdeb82e900",
+    "controls_sha": "3777296bf53a159feab403d903129057f9a7b8da8d822fe2b775698dfe8b391e",
+    "driver_handoff_sha": "3ef7eda31f51ee172ef794cfc2f5bdfbc92715f14c0ad40258700ced54398be9",
+    "transformed_feature_sha": "3073043a4bd73de3827554dc93517aa9b3b1c24ca250e2f89288174f1466fedf"
+  },
+  "preparation_started_sha": "962a22b905655104a7ba7585a9807c22394b35d09c669b0bdc3137e64b1637f3",
+  "source_commit": "9b9649c724649a3e22f40ffae91a9a5a8d363aca",
+  "instrument_sha": "bfc4e1293f745120d030d983109ab06444e8e9823bd781f9ef4cc3720f64395a",
+  "historical_size_stage_started": false
+}

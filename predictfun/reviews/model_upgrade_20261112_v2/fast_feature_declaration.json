@@ -1,0 +1,25 @@
+{
+  "as_of": "2026-11-12T14:51:51.099414+00:00",
+  "source_commit": "c9910e5890470f12aeebc49caaefc221daeae6a7",
+  "source_sha": {
+    "predictfun/research/pf_model_fast_features.py": "973b786113652fa095ac5c1fe6fef7d29c1bdfda7c6b7b00b90f10bc11271d5f",
+    "predictfun/research/pf_model_fast_feature_audit.py": "a45815eacc689eba349392b6617689c083a0896ad83109a4738c530b07de33ac"
+  },
+  "generated_source_sha": "b6b26b7b0b5d3c6d6d4c63e46884091bd2a88be30b4de7a02a08a50f183e8c00",
+  "data_receipts": {
+    "20261023": "96be634c85c2c4560ad5a2ee1316bca71a1325238851cd6ed148f7dae5f2a9f0",
+    "20261024": "d2f99d2c38f49e4b2c8b3b561a41fafc78c00863ffa306bda0942b91c45fa9d4",
+    "20261025": "f93f6e283436978d77065213a885a6da631eac56e725d3dba4f28b6bd793254f",
+    "20261026": "87e0122f3f571027b644b6e975268d39f2dd1c87615a49b7a3bb14ee48272680",
+    "20261027": "17dd136f7455a023e54ad5ab65be3b4bb9be0e46b2d890eacd7e51b293e0b133",
+    "20261031": "bcef39412f6d153938c0897c5676375f245de1afadd4a6b2bc511e3eb2d89e69",
+    "20261101": "57f7f1170263157dd222e8853edaa3aeffb6ca21d234d2d5489637e4ea97bbb5",
+    "20261102": "d94b02b166babf7f203dd251d00243c65c2bc99a279f2ab7573585c4194e1fe2",
+    "20261103": "0ad7494076408e76ffa14d39c91b5591cce6a4aeade7f019dbb03c2c0844d819"
+  },
+  "replay_declaration_sha": "4db0034cb7e0c527afe6da374bb7445e3189738e4a1ef6e371e2e84a32f36f2c",
+  "profile_sha": "780f8a76ca48ef0c448d5b119aa34093b3a3d6480c61d2edf569e0586de09448",
+  "design": "Exact single-row feature calculation copied from the frozen History.batch function with only final pandas packaging replaced by an ordered float array/dict. Lightweight input columns preserve to_numpy(float) conversion. No arithmetic, market lookup, missing-data rule, feature set, model or policy changes. Compare every saved eligible action feature on all nine consumed days to the frozen training feature parquet. Also verify saved smoke features, future-mutation invariance, stale-history/invalid-side refusal, corrupted-feature refusal and ambiguous-transform refusal.",
+  "benchmark": "First eight-window smoke inference cases,100repetitions each; alternate original and container-only versions in two measured rounds after parity checks. No cProfile. Match live state container fields: STATIC plus unused guard_v/guard_margin/seed/calm set to0. These four fields are excluded from feature arithmetic. The prior diagnostic profile passed the larger saved audit row, so its absolute timings are not the live input-container cost. This remains a repeated-call microbenchmark, not whole-engine performance.",
+  "limits": "No live replay implementation has changed. Exact full-engine no-op parity is required separately before adopting this path. Feature equality on consumed actions does not alone prove path equality or a full-engine speedup."
+}

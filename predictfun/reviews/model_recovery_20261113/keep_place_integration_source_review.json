@@ -1,0 +1,248 @@
+{
+  "as_of": "2026-11-13T09:22:17.304615+00:00",
+  "status": "SOURCE_ARTIFACT_REVIEW",
+  "report_as_of": "2026-11-13T09:05:51Z",
+  "artifact_sha": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_place_20261113/keep_place.json": "392701c05a911e524912e141167ba6564db870638096067fbce399be0587720d",
+    "/home/yuqing/ctaNew/predictfun/research/pf_keep_place.py": "41d00a526db5a3f16fadf6b125dbed918f98da2043e018d7ef0bb8eb762004e8",
+    "/home/yuqing/ctaNew/predictfun/research/pf_front_pull_size.py": "5cb593e4e117b0e473d8ae403d382070782fe9d981cdf8bba18d91eef4339284",
+    "/home/yuqing/ctaNew/predictfun/research/pf_kp_s4.py": "4f173446bf07d7141a96bddf02470e38e66aa64b2b28a380eeb7dec9343530cc",
+    "/home/yuqing/ctaNew/predictfun/handoffs/20261113_keep_place_and_gap_review.md": "8040cef9791f1d64045b53bad061efd3c37d6cce44f308ac484d20e8b7a801dd",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_place_20261113/eval_20261023.json": "c66f4a03feda0132c5678609819293ce90e0d4b0d2bf29c99e7789d8da80d5ac",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_place_20261113/eval_20261024.json": "50bbff8d693abf345d8ee81dbf1253f3dd74cfba36e3019739ca8a9028d342cb",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_place_20261113/eval_20261025.json": "3ca0ae0161d2f783c07ad8a2dcd79b3a1ad1999eb1d7a19df096215014dd7944",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_place_20261113/eval_20261026.json": "2dfb4a9ac899a951d6bfb5b9eb8fb09c2f0ca50340c8c4825987add2940fa02e",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_place_20261113/eval_20261027.json": "908ece0a37e7578e16ff6976d9550607a3bbea8a2e09197e3c6536d583fe4365",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_place_20261113/eval_20261031.json": "75ec7de7b570802665d7f4b8abacce14045275b1657ec8a59cde31dd8d6d1e76",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_place_20261113/eval_20261101.json": "cd4c2df148ab6f4d467c0b026fb5483299bf84e909163830234678d4ed2ac9c9",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_place_20261113/eval_20261102.json": "2d9fd5b1ca4ed5d8d4171c14b70eb03d8b3964db2f20e2dbe217304cf2169962",
+    "/home/yuqing/ctaNew/data/predict_fun/research/keep_place_20261113/eval_20261103.json": "73fcef56b2b239f3366cc9913b3b450032ecd7ca87a21eeb707a61c52086d29f"
+  },
+  "days": [
+    "20261023",
+    "20261024",
+    "20261025",
+    "20261026",
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "populations": [
+    {
+      "day": "20261023",
+      "registry": 288,
+      "outside_day": 0,
+      "sealed_or_forward": 0,
+      "no_outcome": 0,
+      "untimed_legs_0_60": 2093,
+      "untimed_shares_0_60": 20830.638290695933,
+      "windows": 288,
+      "window_sides": 576,
+      "c1_differ": 0,
+      "align_rows": 65548,
+      "align_bad": 0,
+      "grid_steps": 345600,
+      "grid_steps_without_row": 0
+    },
+    {
+      "day": "20261024",
+      "registry": 288,
+      "outside_day": 0,
+      "sealed_or_forward": 0,
+      "no_outcome": 0,
+      "untimed_legs_0_60": 1023,
+      "untimed_shares_0_60": 10108.96713956579,
+      "windows": 288,
+      "window_sides": 576,
+      "c1_differ": 0,
+      "align_rows": 65740,
+      "align_bad": 0,
+      "grid_steps": 345600,
+      "grid_steps_without_row": 0
+    },
+    {
+      "day": "20261025",
+      "registry": 288,
+      "outside_day": 0,
+      "sealed_or_forward": 0,
+      "no_outcome": 0,
+      "untimed_legs_0_60": 1316,
+      "untimed_shares_0_60": 13038.545279926448,
+      "windows": 288,
+      "window_sides": 576,
+      "c1_differ": 0,
+      "align_rows": 65604,
+      "align_bad": 0,
+      "grid_steps": 345600,
+      "grid_steps_without_row": 0
+    },
+    {
+      "day": "20261026",
+      "registry": 288,
+      "outside_day": 0,
+      "sealed_or_forward": 0,
+      "no_outcome": 0,
+      "untimed_legs_0_60": 3191,
+      "untimed_shares_0_60": 39785.99813006458,
+      "windows": 288,
+      "window_sides": 576,
+      "c1_differ": 0,
+      "align_rows": 65866,
+      "align_bad": 0,
+      "grid_steps": 345600,
+      "grid_steps_without_row": 0
+    },
+    {
+      "day": "20261027",
+      "registry": 288,
+      "outside_day": 0,
+      "sealed_or_forward": 0,
+      "no_outcome": 0,
+      "untimed_legs_0_60": 2964,
+      "untimed_shares_0_60": 32617.169265447075,
+      "windows": 288,
+      "window_sides": 576,
+      "c1_differ": 0,
+      "align_rows": 65790,
+      "align_bad": 0,
+      "grid_steps": 345600,
+      "grid_steps_without_row": 0
+    },
+    {
+      "day": "20261031",
+      "registry": 288,
+      "outside_day": 0,
+      "sealed_or_forward": 0,
+      "no_outcome": 0,
+      "untimed_legs_0_60": 762,
+      "untimed_shares_0_60": 9077.803427559644,
+      "windows": 288,
+      "window_sides": 576,
+      "c1_differ": 0,
+      "align_rows": 65666,
+      "align_bad": 0,
+      "grid_steps": 345600,
+      "grid_steps_without_row": 0
+    },
+    {
+      "day": "20261101",
+      "registry": 288,
+      "outside_day": 0,
+      "sealed_or_forward": 0,
+      "no_outcome": 0,
+      "untimed_legs_0_60": 981,
+      "untimed_shares_0_60": 10717.451728936834,
+      "windows": 288,
+      "window_sides": 576,
+      "c1_differ": 0,
+      "align_rows": 65762,
+      "align_bad": 0,
+      "grid_steps": 345600,
+      "grid_steps_without_row": 0
+    },
+    {
+      "day": "20261102",
+      "registry": 288,
+      "outside_day": 0,
+      "sealed_or_forward": 0,
+      "no_outcome": 0,
+      "untimed_legs_0_60": 1228,
+      "untimed_shares_0_60": 14628.328666538513,
+      "windows": 288,
+      "window_sides": 576,
+      "c1_differ": 0,
+      "align_rows": 65946,
+      "align_bad": 0,
+      "grid_steps": 345600,
+      "grid_steps_without_row": 0
+    },
+    {
+      "day": "20261103",
+      "registry": 288,
+      "outside_day": 0,
+      "sealed_or_forward": 0,
+      "no_outcome": 0,
+      "untimed_legs_0_60": 2426,
+      "untimed_shares_0_60": 38118.44680133401,
+      "windows": 288,
+      "window_sides": 576,
+      "c1_differ": 0,
+      "align_rows": 65946,
+      "align_bad": 0,
+      "grid_steps": 345600,
+      "grid_steps_without_row": 0
+    }
+  ],
+  "reported_readings": {
+    "R440 KPS": "HURTS",
+    "R440 KPS days_up_down": [
+      [
+        0,
+        0
+      ],
+      [
+        9,
+        9
+      ]
+    ],
+    "R441 KPS": "0 of 3",
+    "R442 KPS": "0 of 6",
+    "R440 KPN": "HURTS",
+    "R440 KPN days_up_down": [
+      [
+        0,
+        0
+      ],
+      [
+        9,
+        9
+      ]
+    ],
+    "R441 KPN": "0 of 3",
+    "R442 KPN": "0 of 6",
+    "R440 KPF": "NOT-SHOWN",
+    "R440 KPF days_up_down": [
+      [
+        4,
+        2
+      ],
+      [
+        5,
+        7
+      ]
+    ],
+    "R441 KPF": "0 of 3",
+    "R442 KPF": "0 of 6",
+    "R443": {
+      "KPS": {
+        "pulls": 69096.77777777778,
+        "deep_swept": 0.6045947485289291,
+        "deep_highP": 0.13439818447440513,
+        "front": 0.7651693517599211
+      },
+      "KPN": {
+        "pulls": 25755.666666666668,
+        "deep_swept": 0.6819303819929642,
+        "deep_highP": 0.6665990162470562,
+        "front": 0.7775582975095473
+      },
+      "KPF": {
+        "pulls": 179125.88888888888,
+        "deep_swept": 0.644207108998306,
+        "deep_highP": 0.13046423674843266,
+        "front": 0.6939795896129993
+      },
+      "LDG": {
+        "pulls": 77513.33333333333,
+        "deep_swept": 0.6285187821302081,
+        "deep_highP": 0.11921229670694418,
+        "front": 0.6872730252208554
+      }
+    }
+  },
+  "scope": "Manual source and named report review, not an independent replay or full numerical reconstruction. Original negative policy comparisons remain. Independent rung budgets, future-day fit contamination, post-hoc young-fill exclusion and repeated-record identity caveats remain inherited. No conclusion that repeated taker fills, simultaneous ladder depth, queue calibration or risk matching are closed.",
+  "live_changed": false,
+  "validation": false
+}

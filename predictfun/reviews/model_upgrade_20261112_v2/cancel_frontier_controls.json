@@ -1,0 +1,8 @@
+{
+  "as_of": "2026-11-13T01:50:13.864985+00:00",
+  "status": "PASS",
+  "declaration_sha": "8f90835a96b8ea543c24a54033835e5bc5043c10cd23544b5e3a40267ca27622",
+  "source_sha": "ff4af3e33cd74087e7a8f13b6fe321df724e1095f75335704b5b2fff50c849cd",
+  "positive_boundaries_and_missing_values": true,
+  "known_bad_refusals": 9
+}

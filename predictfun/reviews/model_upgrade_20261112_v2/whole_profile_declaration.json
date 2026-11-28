@@ -1,0 +1,10 @@
+{
+  "as_of": "2026-11-12T15:03:42.242110+00:00",
+  "source_commit": "fc03928bfa1aa5d8bdfceda1343d5c7336a2d977",
+  "source_sha": "c47d4fb837456f6d49a15ce69b35aa95baefc5063c09e39408b5e9fd2dcd2706",
+  "replay_declaration_sha": "43226b1e34e7cdc4a44c3de9096017c944a71e9f7fb404876232b84eb2c42d61",
+  "sampler_path": "/home/yuqing/pricer-sol/venv/bin/py-spy",
+  "sampler_sha": "9b4d1f39b2a47ae44f4c6a46f615dcc0287d7755beba5065f32391951e07d594",
+  "method": "Launch an isolated eight-window five-policy child under py-spy,20Hz,nonblocking,raw stacks,full filenames,until child exits. The sampler is the child parent; no attachment to the active full replay or permission escalation. Profiling output is operational evidence, not a trading statistic. Require original accounting, inference reconstruction and exact artifact parity after completion.",
+  "limits": "A single consumed-day eight-window execution sample, including loading and checks. Nonblocking samples can be missed or inconsistent. Do not infer full-day speedups, model skill or latency calibration from these samples."
+}
