@@ -44,9 +44,12 @@ import chase_forward as CF  # noqa: E402
 C, TR, CT, WT, MM, VR, I = CF.C, CF.TR, CF.CT, CF.WT, CF.MM, CF.VR, CF.I
 PS, P3, FE, DCm = CF.PS, CF.P3, CF.FE, CF.DCm
 DAY, VDAY, VHOURS = '20261128', '20261102', (13, 14)
+THR = float(json.loads((H / 'chase_forward_refit.json').read_text())['thresholds']['MOVE_top10'])
 OUT = WT.OUT / 'chase_tokyo_2b'
 RESULT, VRESULT = H / 'chase_tokyo_2b.json', H / 'chase_tokyo_2b_validate.json'
-WARM_MS, REL_TOL = 60000., 1e-9
+WARM_MS, REL_TOL, TOL32 = 60000., 1e-9, 1e-6
+# TOL32: research's window sums are differences of running totals counted from the first file it reads, so the float32 inputs move by a
+# few units in the last place with the data's start (the validation on 11-02: <= 8 ulps, <= 1e-6 absolute); exact counts are reported too.
 LEGS_COLS = dict(mid='int64', side='int64', shares='float64', t_ms2='float64', how2='int64', taker='object', ambiguous='bool', ptick='float64')
 FIRE_COLS = dict(day='object', rank='int64', t_set='float64', fire='float64', d='float64')
 
@@ -255,13 +258,14 @@ def score(day, od):
 
 
 # ------------------------------------------------------------------------------------------------------------------ compare
-def same_values(a, b, f32):
-    """Per row: both NaN, or equal (float32 exactly, or float64 within REL_TOL relative)."""
+def same_values(a, b, f32, tol32=0.):
+    """Per row: both NaN, or equal (float32 values within tol32 x max(1, |b|), 0 = exactly; float64 within REL_TOL relative)."""
     a, b = np.asarray(a, float), np.asarray(b, float)
     if f32:
         a, b = a.astype(np.float32).astype(float), b.astype(np.float32).astype(float)
     nan = np.isnan(a) & np.isnan(b)
-    ok = np.abs(a - b) <= REL_TOL * np.maximum(1., np.abs(b)) if not f32 else (a == b)
+    with np.errstate(invalid='ignore'):
+        ok = np.abs(a - b) <= (tol32 if f32 else REL_TOL) * np.maximum(1., np.abs(b))
     return nan | ok
 
 
@@ -276,19 +280,23 @@ def compare(Rx, Tk, kf, f32, start_ms):
     both = m[m._merge == 'both']
     per = {}
     for c in kf:
-        ok = same_values(both[f'{c}_r'], both[f'{c}_t'], c in f32)
+        ok = same_values(both[f'{c}_r'], both[f'{c}_t'], c in f32, TOL32)
+        exact = same_values(both[f'{c}_r'], both[f'{c}_t'], c in f32)
         bad = both[~ok]
-        per[c] = dict(n=int(len(both)), differ=int((~ok).sum()), nan_mismatch=int((np.isnan(bad[f'{c}_r'].to_numpy(float)) != np.isnan(bad[f'{c}_t'].to_numpy(float))).sum()),
+        per[c] = dict(n=int(len(both)), differ=int((~ok).sum()), differ_exact=int((~exact).sum()), nan_mismatch=int((np.isnan(bad[f'{c}_r'].to_numpy(float)) != np.isnan(bad[f'{c}_t'].to_numpy(float))).sum()),
                       max_abs=float(np.nanmax(np.abs(bad[f'{c}_r'].to_numpy(float) - bad[f'{c}_t'].to_numpy(float)))) if len(bad) and np.isfinite(bad[f'{c}_r'].to_numpy(float) - bad[f'{c}_t'].to_numpy(float)).any() else None,
                       example=None if not len(bad) else dict(t=float(bad.t.iloc[0]), d=float(bad.d.iloc[0]), research=float(bad[f'{c}_r'].iloc[0]), tokyo=float(bad[f'{c}_t'].iloc[0])))
     rows_all = np.ones(len(both), bool)
     for c in kf:
-        rows_all &= same_values(both[f'{c}_r'], both[f'{c}_t'], c in f32)
+        rows_all &= same_values(both[f'{c}_r'], both[f'{c}_t'], c in f32, TOL32)
     pm = same_values(both.pred_r, both.pred_t, False) if 'pred_r' in both else np.zeros(len(both), bool)
+    dp = np.abs(both.pred_r.to_numpy(float) - both.pred_t.to_numpy(float)) if 'pred_r' in both else np.zeros(0)
+    ab = (both.MOVE_r.to_numpy(float) >= THR) == (both.MOVE_t.to_numpy(float) >= THR) if 'MOVE_r' in both else np.zeros(0, bool)
     only_r, only_t = m[m._merge == 'left_only'], m[m._merge == 'right_only']
     return dict(matched=int(len(both)), research_only=int(len(only_r)), tokyo_only=int(len(only_t)),
                 tokyo_only_decisions=collections.Counter(only_t['decision'].astype(str)).most_common(12) if 'decision' in only_t else [],
-                rows_all_inputs_equal=int(rows_all.sum()), pred_equal=int(pm.sum()), per_input=per), both
+                rows_all_inputs_equal=int(rows_all.sum()), pred_equal=int(pm.sum()), pred_max_abs_diff=float(np.nanmax(dp)) if len(dp) and np.isfinite(dp).any() else None,
+                above_threshold_agree=int(ab.sum()), per_input=per), both
 
 
 # ------------------------------------------------------------------------------------------------------------------ stages
@@ -349,6 +357,25 @@ def stage_run():
     print(DAY, len(X), 'rows', int(X.act.sum()), 'actions', int((X.act & X.early).sum()), 'in scope', flush=True)
 
 
+def validation_detail(kf):
+    """The validation rows (OUT/validate/rows, hour 14 of 11-02) against CHASE_TAKES' stored rows: per input the rows that differ exactly,
+    their largest absolute difference and float32 units in the last place, and NaN mismatches."""
+    X = CF.fwd_frame((VDAY,), kf, OUT / 'validate' / 'rows')
+    Pp = pd.read_parquet(WT.OUT / 'chase_takes' / f'{VDAY}_points.parquet'); Lb = pd.read_parquet(WT.OUT / 'chase_takes' / f'{VDAY}_labels.parquet')
+    S = Lb.merge(Pp, on=['day', 't', 'd'])
+    h14 = WT.OD_day_ms(VDAY) + VHOURS[1] * 3600000.
+    m = X[(X.t >= h14) & (X.t < h14 + 3600000.)].merge(S[['t', 'd'] + kf], on=['t', 'd'], suffixes=('_r', '_t'))
+    out = {}
+    for c in kf:
+        a, b = m[f'{c}_r'].to_numpy(float), m[f'{c}_t'].to_numpy(float)
+        bad = ~((np.isnan(a) & np.isnan(b)) | (a == b))
+        if bad.any():
+            d = np.abs(a[bad] - b[bad])
+            ulp = d / np.spacing(np.abs(b[bad]).astype(np.float32)).astype(float)
+            out[c] = dict(rows=int(bad.sum()), max_abs=float(np.nanmax(d)), max_ulps_f32=float(np.nanmax(ulp)), nan_mismatch=int((np.isnan(a[bad]) != np.isnan(b[bad])).sum()))
+    return dict(rows=int(len(m)), inputs=out, max_abs=max((v['max_abs'] for v in out.values()), default=0.), nan_mismatch=sum(v['nan_mismatch'] for v in out.values()))
+
+
 def stage_compare(src):
     C.require(not RESULT.exists(), f'{RESULT.name} exists (write-once)')
     hd = Path(src) / 'tokyo-chase-stage1-20261128'
@@ -366,6 +393,7 @@ def stage_compare(src):
     acts_r = X[(X.t >= start_ms + WARM_MS) & X.act]
     acts_t = Tk[Tk.decision.astype(str) == 'act']
     acts_r = acts_r.assign(t=acts_r.t.astype(float), d=acts_r.d.astype(float)); acts_t = acts_t.assign(t=acts_t.t.astype(float), d=acts_t.d.astype(float))
+    res['validation'] = validation_detail(kf) | dict(result=json.loads(VRESULT.read_text()))
     res.update(asof=dt.datetime.now(dt.timezone.utc).isoformat(), day=DAY, threshold=thr, start_ms=start_ms, warm_ms=WARM_MS, float32_inputs=f32,
                research_rows=int(len(X)), research_actions=int(len(acts_r)), research_actions_in_scope=int((acts_r.early).sum()),
                tokyo_actions=int(len(acts_t)), actions_both=int(len(acts_r.merge(acts_t, on=['t', 'd']))),
@@ -400,11 +428,14 @@ def selftest():
     # the comparison: an identical pair agrees, a planted float32-visible change and a NaN mismatch are counted, one-sided points listed
     kf, f32 = ['a', 'b'], ['a']
     Rx = pd.DataFrame(dict(t=[1e6, 1e6 + 1, 1e6 + 2], d=[1., 1., -1.], a=np.array([0.1, 0.2, 0.3], np.float32), b=[1.5, np.nan, 2.], pred=[1., 2., 3.]))
-    Tk = pd.DataFrame(dict(recv_ns=[1, 2, 3, 4], t=[1e6, 1e6, 1e6 + 1, 1e6 + 3], d=[1., 1., 1., 1.], a=[0.9, 0.1, 0.2000001, 0.4], b=[9., 1.5, 7., 1.],
+    Tk = pd.DataFrame(dict(recv_ns=[1, 2, 3, 4], t=[1e6, 1e6, 1e6 + 1, 1e6 + 3], d=[1., 1., 1., 1.], a=[0.9, 0.1, 0.21, 0.4], b=[9., 1.5, 7., 1.],
                            pred=[0., 1., 2., 4.], decision=['x', 'act', 'below', 'below']))
     res, _ = compare(Rx, Tk, kf, f32, 1e6 - WARM_MS)
     C.require(res['matched'] == 2 and res['research_only'] == 1 and res['tokyo_only'] == 1, f'compare counts {res}')
-    C.require(res['per_input']['a']['differ'] == 1 and res['per_input']['b']['differ'] == 1 and res['per_input']['b']['nan_mismatch'] == 1, f"per input {res['per_input']}")
+    C.require(res['per_input']['a']['differ'] == 1 and res['per_input']['a']['differ_exact'] == 1 and res['per_input']['b']['differ'] == 1
+              and res['per_input']['b']['nan_mismatch'] == 1, f"per input {res['per_input']}")
+    C.require(same_values([1.0000001], [1.0], True, TOL32)[0] and not same_values([1.0000001], [1.0], True)[0] and not same_values([1.01], [1.0], True, TOL32)[0],
+              'the float32 tolerance: 1 ulp passes with TOL32, fails exactly; 1% fails')
     C.require(res['rows_all_inputs_equal'] == 1 and res['pred_equal'] == 2, f'rows {res}')
     C.require(same_values([0.1], [0.1 + 1e-12], False)[0] and not same_values([0.1], [0.1 + 1e-6], False)[0], 'float64 tolerance')
     global RESULT
